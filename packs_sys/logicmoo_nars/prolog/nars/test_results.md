@@ -1,14 +1,15 @@
+`baseKB:  ?- do_nars_example_tests.`
+`% not_add_history(run_nars_example_tests).`
 
 ```prolog
-baseKB:  ?- do_nars_example_tests.
-% not_add_history(run_nars_example_tests).
+TEST: ?- revision([inheritance(bird,swimmer),[1,0.8]],[inheritance(bird,swimmer),[0,0.5]],_119084).
+```
+EXPECTED: `_119084=[inheritance(bird,swimmer),[0.8,0.83]]`
+
+```diff
++SUCCESS!
 ```
 
-```prolog
-TEST: ?- revision([inheritance(bird,swimmer),[1,0.8]],[inheritance(bird,swimmer),[0,0.5]],_35114).
-```
-EXPECTED: `_35114=[inheritance(bird,swimmer),[0.8,0.83]]`
-SUCCESS!
 ```prolog
 % [ '='(
 %      [ inheritance(bird,swimmer),
@@ -19,10 +20,14 @@ SUCCESS!
 
 
 ```prolog
-TEST: ?- choice([inheritance(swan,bird),[1,0.8]],[inheritance(swan,bird),[0,0.5]],_39832).
+TEST: ?- choice([inheritance(swan,bird),[1,0.8]],[inheritance(swan,bird),[0,0.5]],_123796).
 ```
-EXPECTED: `_39832=[inheritance(swan,bird),[1,0.8]]`
-SUCCESS!
+EXPECTED: `_123796=[inheritance(swan,bird),[1,0.8]]`
+
+```diff
++SUCCESS!
+```
+
 ```prolog
 % [ '='(
 %      [ inheritance(swan,bird),
@@ -33,10 +38,14 @@ SUCCESS!
 
 
 ```prolog
-TEST: ?- choice([inheritance(swan,bird),[1,0.5]],[inheritance(penguin,bird),[0.8,0.9]],_44306).
+TEST: ?- choice([inheritance(swan,bird),[1,0.5]],[inheritance(penguin,bird),[0.8,0.9]],_128270).
 ```
-EXPECTED: `_44306=[inheritance(penguin,bird),[0.8,0.9]]`
-SUCCESS!
+EXPECTED: `_128270=[inheritance(penguin,bird),[0.8,0.9]]`
+
+```diff
++SUCCESS!
+```
+
 ```prolog
 % [ '='(
 %      [ inheritance(penguin,bird),
@@ -47,10 +56,14 @@ SUCCESS!
 
 
 ```prolog
-TEST: ?- inference([inheritance(bird,animal),[1,0.9]],[inheritance(robin,bird),[1,0.9]],[inheritance(robin,animal),_48956]).
+TEST: ?- inference([inheritance(bird,animal),[1,0.9]],[inheritance(robin,bird),[1,0.9]],[inheritance(robin,animal),_21256]).
 ```
-EXPECTED: `_48956=[1,0.81]`
-SUCCESS!
+EXPECTED: `_21256=[1,0.81]`
+
+```diff
++SUCCESS!
+```
+
 ```prolog
 % [ '='(
 %      [1,0.81],
@@ -59,10 +72,14 @@ SUCCESS!
 
 
 ```prolog
-TEST: ?- inference([inheritance(robin,animal),[1,0.9]],[inheritance(robin,bird),[1,0.9]],[inheritance(bird,animal),_51670]).
+TEST: ?- inference([inheritance(robin,animal),[1,0.9]],[inheritance(robin,bird),[1,0.9]],[inheritance(bird,animal),_23970]).
 ```
-EXPECTED: `_51670=[1,0.45]`
-SUCCESS!
+EXPECTED: `_23970=[1,0.45]`
+
+```diff
++SUCCESS!
+```
+
 ```prolog
 % [ '='(
 %      [1,0.44751381215469616],
@@ -71,10 +88,14 @@ SUCCESS!
 
 
 ```prolog
-TEST: ?- inference([inheritance(bird,animal),[1,0.9]],[inheritance(robin,animal),[1,0.9]],[inheritance(robin,bird),_54426]).
+TEST: ?- inference([inheritance(bird,animal),[1,0.9]],[inheritance(robin,animal),[1,0.9]],[inheritance(robin,bird),_26726]).
 ```
-EXPECTED: `_54426=[1,0.45]`
-SUCCESS!
+EXPECTED: `_26726=[1,0.45]`
+
+```diff
++SUCCESS!
+```
+
 ```prolog
 % [ '='(
 %      [1,0.44751381215469616],
@@ -83,10 +104,14 @@ SUCCESS!
 
 
 ```prolog
-TEST: ?- inference([inheritance(robin,bird),[1,0.9]],[inheritance(bird,animal),[1,0.9]],[inheritance(animal,robin),_57182]).
+TEST: ?- inference([inheritance(robin,bird),[1,0.9]],[inheritance(bird,animal),[1,0.9]],[inheritance(animal,robin),_29482]).
 ```
-EXPECTED: `_57182=[1,0.45]`
-SUCCESS!
+EXPECTED: `_29482=[1,0.45]`
+
+```diff
++SUCCESS!
+```
+
 ```prolog
 % [ '='(
 %      [1,0.44751381215469616],
@@ -95,10 +120,14 @@ SUCCESS!
 
 
 ```prolog
-TEST: ?- inference([inheritance(swan,bird),[0.9,0.8]],[inheritance(bird,swan),_59926]).
+TEST: ?- inference([inheritance(swan,bird),[0.9,0.8]],[inheritance(bird,swan),_32226]).
 ```
-EXPECTED: `_59926=[1,0.42]`
-SUCCESS!
+EXPECTED: `_32226=[1,0.42]`
+
+```diff
++SUCCESS!
+```
+
 ```prolog
 % [ '='(
 %      [1,0.4186046511627907],
@@ -107,10 +136,14 @@ SUCCESS!
 
 
 ```prolog
-TEST: ?- inference([inheritance(swan,robin),[0.9,0.8]],[inheritance(robin,swan),[0.9,0.8]],[similarity(swan,robin),_62674]).
+TEST: ?- inference([inheritance(swan,robin),[0.9,0.8]],[inheritance(robin,swan),[0.9,0.8]],[similarity(swan,robin),_34974]).
 ```
-EXPECTED: `_62674=[0.81,0.64]`
-SUCCESS!
+EXPECTED: `_34974=[0.81,0.64]`
+
+```diff
++SUCCESS!
+```
+
 ```prolog
 % [ '='(
 %      [0.81,0.6400000000000001],
@@ -119,10 +152,14 @@ SUCCESS!
 
 
 ```prolog
-TEST: ?- inference([inheritance(swan,swimmer),[1,0.9]],[inheritance(swan,bird),[1,0.9]],[similarity(bird,swimmer),_65440]).
+TEST: ?- inference([inheritance(swan,swimmer),[1,0.9]],[inheritance(swan,bird),[1,0.9]],[similarity(bird,swimmer),_37740]).
 ```
-EXPECTED: `_65440=[1,0.45]`
-SUCCESS!
+EXPECTED: `_37740=[1,0.45]`
+
+```diff
++SUCCESS!
+```
+
 ```prolog
 % [ '='(
 %      [1,0.44751381215469616],
@@ -131,10 +168,14 @@ SUCCESS!
 
 
 ```prolog
-TEST: ?- inference([inheritance(sport,competition),[1,0.9]],[inheritance(chess,competition),[1,0.9]],[similarity(chess,sport),_68242]).
+TEST: ?- inference([inheritance(sport,competition),[1,0.9]],[inheritance(chess,competition),[1,0.9]],[similarity(chess,sport),_40542]).
 ```
-EXPECTED: `_68242=[1,0.45]`
-SUCCESS!
+EXPECTED: `_40542=[1,0.45]`
+
+```diff
++SUCCESS!
+```
+
 ```prolog
 % [ '='(
 %      [1,0.44751381215469616],
@@ -143,10 +184,14 @@ SUCCESS!
 
 
 ```prolog
-TEST: ?- inference([inheritance(swan,swimmer),[1,0.9]],[similarity(gull,swan),[0.9,0.9]],[inheritance(gull,swimmer),_71050]).
+TEST: ?- inference([inheritance(swan,swimmer),[1,0.9]],[similarity(gull,swan),[0.9,0.9]],[inheritance(gull,swimmer),_43350]).
 ```
-EXPECTED: `_71050=[0.9,0.73]`
-SUCCESS!
+EXPECTED: `_43350=[0.9,0.73]`
+
+```diff
++SUCCESS!
+```
+
 ```prolog
 % [ '='(
 %      [0.9,0.7290000000000001],
@@ -155,10 +200,14 @@ SUCCESS!
 
 
 ```prolog
-TEST: ?- inference([inheritance(chess,competition),[1,0.9]],[similarity(sport,competition),[0.9,0.9]],[inheritance(chess,sport),_73842]).
+TEST: ?- inference([inheritance(chess,competition),[1,0.9]],[similarity(sport,competition),[0.9,0.9]],[inheritance(chess,sport),_46142]).
 ```
-EXPECTED: `_73842=[0.9,0.73]`
-SUCCESS!
+EXPECTED: `_46142=[0.9,0.73]`
+
+```diff
++SUCCESS!
+```
+
 ```prolog
 % [ '='(
 %      [0.9,0.7290000000000001],
@@ -167,10 +216,14 @@ SUCCESS!
 
 
 ```prolog
-TEST: ?- inference([similarity(swan,robin),[0.8,0.9]],[similarity(gull,swan),[0.9,0.8]],[similarity(gull,robin),_76640]).
+TEST: ?- inference([similarity(swan,robin),[0.8,0.9]],[similarity(gull,swan),[0.9,0.8]],[similarity(gull,robin),_48940]).
 ```
-EXPECTED: `_76640=[0.72,0.71]`
-SUCCESS!
+EXPECTED: `_48940=[0.72,0.71]`
+
+```diff
++SUCCESS!
+```
+
 ```prolog
 % [ '='(
 %      [0.7200000000000001,0.7056000000000001],
@@ -179,12 +232,16 @@ SUCCESS!
 
 
 ```prolog
-TEST: ?- inference([instance(tweety,bird),[1,0.9]],[inheritance(_79422,_79424),_79428]).
+TEST: ?- inference([instance(tweety,bird),[1,0.9]],[inheritance(_51722,_51724),_51728]).
 ```
-EXPECTED: `_79422=ext_set([tweety])`
-EXPECTED: `_79424=bird`
-EXPECTED: `_79428=[1,0.9]`
-SUCCESS!
+EXPECTED: `_51722=ext_set([tweety])`
+EXPECTED: `_51724=bird`
+EXPECTED: `_51728=[1,0.9]`
+
+```diff
++SUCCESS!
+```
+
 ```prolog
 % [ '='(
 %      ext_set([tweety]),
@@ -197,12 +254,16 @@ SUCCESS!
 
 
 ```prolog
-TEST: ?- inference([property(raven,black),[1,0.9]],[inheritance(_83980,_83982),_83986]).
+TEST: ?- inference([property(raven,black),[1,0.9]],[inheritance(_56280,_56282),_56286]).
 ```
-EXPECTED: `_83980=raven`
-EXPECTED: `_83982=int_set([black])`
-EXPECTED: `_83986=[1,0.9]`
-SUCCESS!
+EXPECTED: `_56280=raven`
+EXPECTED: `_56282=int_set([black])`
+EXPECTED: `_56286=[1,0.9]`
+
+```diff
++SUCCESS!
+```
+
 ```prolog
 % [ raven=raven,
 %   '='(
@@ -215,12 +276,16 @@ SUCCESS!
 
 
 ```prolog
-TEST: ?- inference([inst_prop(tweety,yellow),[1,0.9]],[inheritance(_88538,_88540),_88544]).
+TEST: ?- inference([inst_prop(tweety,yellow),[1,0.9]],[inheritance(_60838,_60840),_60844]).
 ```
-EXPECTED: `_88538=ext_set([tweety])`
-EXPECTED: `_88540=int_set([yellow])`
-EXPECTED: `_88544=[1,0.9]`
-SUCCESS!
+EXPECTED: `_60838=ext_set([tweety])`
+EXPECTED: `_60840=int_set([yellow])`
+EXPECTED: `_60844=[1,0.9]`
+
+```diff
++SUCCESS!
+```
+
 ```prolog
 % [ '='(
 %      ext_set([tweety]),
@@ -235,12 +300,16 @@ SUCCESS!
 
 
 ```prolog
-TEST: ?- inference([inheritance(ext_set([tweety]),ext_set([birdie])),[1,0.8]],[similarity(_94612,_94614),_94618]).
+TEST: ?- inference([inheritance(ext_set([tweety]),ext_set([birdie])),[1,0.8]],[similarity(_66912,_66914),_66918]).
 ```
-EXPECTED: `_94612=ext_set([tweety])`
-EXPECTED: `_94614=ext_set([birdie])`
-EXPECTED: `_94618=[1,0.8]`
-SUCCESS!
+EXPECTED: `_66912=ext_set([tweety])`
+EXPECTED: `_66914=ext_set([birdie])`
+EXPECTED: `_66918=[1,0.8]`
+
+```diff
++SUCCESS!
+```
+
 ```prolog
 % [ '='(
 %      ext_set([tweety]),
@@ -255,12 +324,16 @@ SUCCESS!
 
 
 ```prolog
-TEST: ?- inference([inheritance(int_set([smart]),int_set([bright])),[1,0.8]],[similarity(_100676,_100678),_100682]).
+TEST: ?- inference([inheritance(int_set([smart]),int_set([bright])),[1,0.8]],[similarity(_72976,_72978),_72982]).
 ```
-EXPECTED: `_100676=int_set([smart])`
-EXPECTED: `_100678=int_set([bright])`
-EXPECTED: `_100682=[1,0.8]`
-SUCCESS!
+EXPECTED: `_72976=int_set([smart])`
+EXPECTED: `_72978=int_set([bright])`
+EXPECTED: `_72982=[1,0.8]`
+
+```diff
++SUCCESS!
+```
+
 ```prolog
 % [ '='(
 %      int_set([smart]),
@@ -275,10 +348,14 @@ SUCCESS!
 
 
 ```prolog
-TEST: ?- inference([similarity(ext_set([tweety]),ext_set([birdie])),[1,0.9]],[similarity(tweety,birdie),_106746]).
+TEST: ?- inference([similarity(ext_set([tweety]),ext_set([birdie])),[1,0.9]],[similarity(tweety,birdie),_79046]).
 ```
-EXPECTED: `_106746=[1,0.9]`
-SUCCESS!
+EXPECTED: `_79046=[1,0.9]`
+
+```diff
++SUCCESS!
+```
+
 ```prolog
 % [ '='(
 %      [1,0.9],
@@ -287,10 +364,14 @@ SUCCESS!
 
 
 ```prolog
-TEST: ?- inference([similarity(int_set([smart]),int_set([bright])),[0.8,0.9]],[similarity(smart,bright),_109370]).
+TEST: ?- inference([similarity(int_set([smart]),int_set([bright])),[0.8,0.9]],[similarity(smart,bright),_81670]).
 ```
-EXPECTED: `_109370=[0.8,0.9]`
-SUCCESS!
+EXPECTED: `_81670=[0.8,0.9]`
+
+```diff
++SUCCESS!
+```
+
 ```prolog
 % [ '='(
 %      [0.8,0.9],
@@ -299,10 +380,14 @@ SUCCESS!
 
 
 ```prolog
-TEST: ?- inference([inheritance(swan,swimmer),[0.9,0.9]],[inheritance(swan,bird),[0.8,0.9]],_111936).
+TEST: ?- inference([inheritance(swan,swimmer),[0.9,0.9]],[inheritance(swan,bird),[0.8,0.9]],_84236).
 ```
-EXPECTED: `_111936=[inheritance(swan,ext_intersection([swimmer,bird])),[0.72,0.81]];_111936=[inheritance(swan,int_intersection([swimmer,bird])),[0.98,0.81]];_111936=[inheritance(swan,ext_difference(swimmer,bird)),[0.18,0.81]]`
-SUCCESS!
+EXPECTED: `_84236=[inheritance(swan,ext_intersection([swimmer,bird])),[0.72,0.81]];_84236=[inheritance(swan,int_intersection([swimmer,bird])),[0.98,0.81]];_84236=[inheritance(swan,ext_difference(swimmer,bird)),[0.18,0.81]]`
+
+```diff
++SUCCESS!
+```
+
 ```prolog
 % [ ('='(
 %       [ inheritance(swan,
@@ -329,10 +414,14 @@ SUCCESS!
 
 
 ```prolog
-TEST: ?- inference([inheritance(sport,competition),[0.9,0.9]],[inheritance(chess,competition),[0.8,0.9]],_21082).
+TEST: ?- inference([inheritance(sport,competition),[0.9,0.9]],[inheritance(chess,competition),[0.8,0.9]],_100530).
 ```
-EXPECTED: `_21082=[inheritance(int_intersection([sport,chess]),competition),[0.72,0.81]];_21082=[inheritance(ext_intersection([sport,chess]),competition),[0.98,0.81]];_21082=[inheritance(int_difference(sport,chess),competition),[0.18,0.81]]`
-SUCCESS!
+EXPECTED: `_100530=[inheritance(int_intersection([sport,chess]),competition),[0.72,0.81]];_100530=[inheritance(ext_intersection([sport,chess]),competition),[0.98,0.81]];_100530=[inheritance(int_difference(sport,chess),competition),[0.18,0.81]]`
+
+```diff
++SUCCESS!
+```
+
 ```prolog
 % [ ('='(
 %       [ inheritance(
@@ -365,10 +454,14 @@ SUCCESS!
 
 
 ```prolog
-TEST: ?- inference([inheritance(swan,swimmer),[0.9,0.8]],[inheritance(swan,ext_intersection([swimmer,bird])),_37460]).
+TEST: ?- inference([inheritance(swan,swimmer),[0.9,0.8]],[inheritance(swan,ext_intersection([swimmer,bird])),_116896]).
 ```
-EXPECTED: `_37460=[0.9,0.44]`
-SUCCESS!
+EXPECTED: `_116896=[0.9,0.44]`
+
+```diff
++SUCCESS!
+```
+
 ```prolog
 % [ '='(
 %      [0.9,0.4444444444444445],
@@ -377,10 +470,14 @@ SUCCESS!
 
 
 ```prolog
-TEST: ?- inference([inheritance(swan,swimmer),[0.9,0.8]],[inheritance(swan,int_intersection([swimmer,bird])),_40262]).
+TEST: ?- inference([inheritance(swan,swimmer),[0.9,0.8]],[inheritance(swan,int_intersection([swimmer,bird])),_119698]).
 ```
-EXPECTED: `_40262=[0.9,0.72]`
-SUCCESS!
+EXPECTED: `_119698=[0.9,0.72]`
+
+```diff
++SUCCESS!
+```
+
 ```prolog
 % [ '='(
 %      [0.9,0.7200000000000001],
@@ -389,10 +486,14 @@ SUCCESS!
 
 
 ```prolog
-TEST: ?- inference([inheritance(swan,swimmer),[0.9,0.8]],[inheritance(swan,ext_difference(swimmer,bird)),_43060]).
+TEST: ?- inference([inheritance(swan,swimmer),[0.9,0.8]],[inheritance(swan,ext_difference(swimmer,bird)),_122496]).
 ```
-EXPECTED: `_43060=[0.9,0.44]`
-SUCCESS!
+EXPECTED: `_122496=[0.9,0.44]`
+
+```diff
++SUCCESS!
+```
+
 ```prolog
 % [ '='(
 %      [0.9,0.4444444444444445],
@@ -401,10 +502,14 @@ SUCCESS!
 
 
 ```prolog
-TEST: ?- inference([inheritance(swan,swimmer),[0.9,0.8]],[negation(inheritance(swan,ext_difference(bird,swimmer))),_45850]).
+TEST: ?- inference([inheritance(swan,swimmer),[0.9,0.8]],[negation(inheritance(swan,ext_difference(bird,swimmer))),_125286]).
 ```
-EXPECTED: `_45850=[0.9,0.72]`
-SUCCESS!
+EXPECTED: `_125286=[0.9,0.72]`
+
+```diff
++SUCCESS!
+```
+
 ```prolog
 % [ '='(
 %      [0.9,0.7200000000000001],
@@ -413,10 +518,14 @@ SUCCESS!
 
 
 ```prolog
-TEST: ?- inference([inheritance(sport,competition),[0.9,0.8]],[inheritance(int_intersection([sport,chess]),competition),_48652]).
+TEST: ?- inference([inheritance(sport,competition),[0.9,0.8]],[inheritance(int_intersection([sport,chess]),competition),_128088]).
 ```
-EXPECTED: `_48652=[0.9,0.44]`
-SUCCESS!
+EXPECTED: `_128088=[0.9,0.44]`
+
+```diff
++SUCCESS!
+```
+
 ```prolog
 % [ '='(
 %      [0.9,0.4444444444444445],
@@ -425,10 +534,14 @@ SUCCESS!
 
 
 ```prolog
-TEST: ?- inference([inheritance(sport,competition),[0.9,0.8]],[inheritance(ext_intersection([sport,chess]),competition),_51454]).
+TEST: ?- inference([inheritance(sport,competition),[0.9,0.8]],[inheritance(ext_intersection([sport,chess]),competition),_19458]).
 ```
-EXPECTED: `_51454=[0.9,0.72]`
-SUCCESS!
+EXPECTED: `_19458=[0.9,0.72]`
+
+```diff
++SUCCESS!
+```
+
 ```prolog
 % [ '='(
 %      [0.9,0.7200000000000001],
@@ -437,10 +550,14 @@ SUCCESS!
 
 
 ```prolog
-TEST: ?- inference([inheritance(sport,competition),[0.9,0.8]],[inheritance(int_difference(sport,chess),competition),_54252]).
+TEST: ?- inference([inheritance(sport,competition),[0.9,0.8]],[inheritance(int_difference(sport,chess),competition),_22256]).
 ```
-EXPECTED: `_54252=[0.9,0.44]`
-SUCCESS!
+EXPECTED: `_22256=[0.9,0.44]`
+
+```diff
++SUCCESS!
+```
+
 ```prolog
 % [ '='(
 %      [0.9,0.4444444444444445],
@@ -449,10 +566,14 @@ SUCCESS!
 
 
 ```prolog
-TEST: ?- inference([inheritance(sport,competition),[0.9,0.8]],[negation(inheritance(int_difference(chess,sport),competition)),_57042]).
+TEST: ?- inference([inheritance(sport,competition),[0.9,0.8]],[negation(inheritance(int_difference(chess,sport),competition)),_25046]).
 ```
-EXPECTED: `_57042=[0.9,0.72]`
-SUCCESS!
+EXPECTED: `_25046=[0.9,0.72]`
+
+```diff
++SUCCESS!
+```
+
 ```prolog
 % [ '='(
 %      [0.9,0.7200000000000001],
@@ -461,10 +582,14 @@ SUCCESS!
 
 
 ```prolog
-TEST: ?- inference([inheritance(swan,bird),[1,0.8]],[inheritance(swan,ext_intersection([swimmer,bird])),[0,0.8]],[inheritance(swan,swimmer),_59876]).
+TEST: ?- inference([inheritance(swan,bird),[1,0.8]],[inheritance(swan,ext_intersection([swimmer,bird])),[0,0.8]],[inheritance(swan,swimmer),_27880]).
 ```
-EXPECTED: `_59876=[0,0.64]`
-SUCCESS!
+EXPECTED: `_27880=[0,0.64]`
+
+```diff
++SUCCESS!
+```
+
 ```prolog
 % [ '='(
 %      [0,0.6400000000000001],
@@ -473,10 +598,14 @@ SUCCESS!
 
 
 ```prolog
-TEST: ?- inference([inheritance(swan,bird),[0,0.8]],[inheritance(swan,int_intersection([swimmer,bird])),[1,0.8]],[inheritance(swan,swimmer),_62676]).
+TEST: ?- inference([inheritance(swan,bird),[0,0.8]],[inheritance(swan,int_intersection([swimmer,bird])),[1,0.8]],[inheritance(swan,swimmer),_30680]).
 ```
-EXPECTED: `_62676=[1,0.64]`
-SUCCESS!
+EXPECTED: `_30680=[1,0.64]`
+
+```diff
++SUCCESS!
+```
+
 ```prolog
 % [ '='(
 %      [1,0.6400000000000001],
@@ -485,10 +614,14 @@ SUCCESS!
 
 
 ```prolog
-TEST: ?- inference([inheritance(swan,swimmer),[1,0.8]],[inheritance(swan,ext_difference(swimmer,bird)),[0,0.8]],[inheritance(swan,bird),_65458]).
+TEST: ?- inference([inheritance(swan,swimmer),[1,0.8]],[inheritance(swan,ext_difference(swimmer,bird)),[0,0.8]],[inheritance(swan,bird),_33462]).
 ```
-EXPECTED: `_65458=[1,0.64]`
-SUCCESS!
+EXPECTED: `_33462=[1,0.64]`
+
+```diff
++SUCCESS!
+```
+
 ```prolog
 % [ '='(
 %      [1,0.6400000000000001],
@@ -497,10 +630,14 @@ SUCCESS!
 
 
 ```prolog
-TEST: ?- inference([inheritance(swan,bird),[0,0.8]],[inheritance(swan,ext_difference(swimmer,bird)),[0,0.8]],[inheritance(swan,swimmer),_68228]).
+TEST: ?- inference([inheritance(swan,bird),[0,0.8]],[inheritance(swan,ext_difference(swimmer,bird)),[0,0.8]],[inheritance(swan,swimmer),_36232]).
 ```
-EXPECTED: `_68228=[0,0.64]`
-SUCCESS!
+EXPECTED: `_36232=[0,0.64]`
+
+```diff
++SUCCESS!
+```
+
 ```prolog
 % [ '='(
 %      [0,0.6400000000000001],
@@ -509,10 +646,14 @@ SUCCESS!
 
 
 ```prolog
-TEST: ?- inference([inheritance(sport,competition),[1,0.8]],[inheritance(int_intersection([sport,chess]),competition),[0,0.8]],[inheritance(chess,competition),_71024]).
+TEST: ?- inference([inheritance(sport,competition),[1,0.8]],[inheritance(int_intersection([sport,chess]),competition),[0,0.8]],[inheritance(chess,competition),_39028]).
 ```
-EXPECTED: `_71024=[0,0.64]`
-SUCCESS!
+EXPECTED: `_39028=[0,0.64]`
+
+```diff
++SUCCESS!
+```
+
 ```prolog
 % [ '='(
 %      [0,0.6400000000000001],
@@ -521,10 +662,14 @@ SUCCESS!
 
 
 ```prolog
-TEST: ?- inference([inheritance(sport,competition),[0,0.8]],[inheritance(ext_intersection([sport,chess]),competition),[1,0.8]],[inheritance(chess,competition),_73824]).
+TEST: ?- inference([inheritance(sport,competition),[0,0.8]],[inheritance(ext_intersection([sport,chess]),competition),[1,0.8]],[inheritance(chess,competition),_41828]).
 ```
-EXPECTED: `_73824=[1,0.64]`
-SUCCESS!
+EXPECTED: `_41828=[1,0.64]`
+
+```diff
++SUCCESS!
+```
+
 ```prolog
 % [ '='(
 %      [1,0.6400000000000001],
@@ -533,10 +678,14 @@ SUCCESS!
 
 
 ```prolog
-TEST: ?- inference([inheritance(sport,competition),[1,0.8]],[inheritance(int_difference(sport,chess),competition),[0,0.8]],[inheritance(chess,competition),_76606]).
+TEST: ?- inference([inheritance(sport,competition),[1,0.8]],[inheritance(int_difference(sport,chess),competition),[0,0.8]],[inheritance(chess,competition),_44610]).
 ```
-EXPECTED: `_76606=[1,0.64]`
-SUCCESS!
+EXPECTED: `_44610=[1,0.64]`
+
+```diff
++SUCCESS!
+```
+
 ```prolog
 % [ '='(
 %      [1,0.6400000000000001],
@@ -545,10 +694,14 @@ SUCCESS!
 
 
 ```prolog
-TEST: ?- inference([inheritance(chess,competition),[0,0.8]],[inheritance(int_difference(sport,chess),competition),[0,0.8]],[inheritance(sport,competition),_79376]).
+TEST: ?- inference([inheritance(chess,competition),[0,0.8]],[inheritance(int_difference(sport,chess),competition),[0,0.8]],[inheritance(sport,competition),_47380]).
 ```
-EXPECTED: `_79376=[0,0.64]`
-SUCCESS!
+EXPECTED: `_47380=[0,0.64]`
+
+```diff
++SUCCESS!
+```
+
 ```prolog
 % [ '='(
 %      [0,0.6400000000000001],
@@ -557,10 +710,14 @@ SUCCESS!
 
 
 ```prolog
-TEST: ?- inference([inheritance(swan,ext_intersection([swimmer,bird])),[0.9,0.8]],[inheritance(swan,swimmer),_82140]).
+TEST: ?- inference([inheritance(swan,ext_intersection([swimmer,bird])),[0.9,0.8]],[inheritance(swan,swimmer),_50144]).
 ```
-EXPECTED: `_82140=[0.9,0.72]`
-SUCCESS!
+EXPECTED: `_50144=[0.9,0.72]`
+
+```diff
++SUCCESS!
+```
+
 ```prolog
 % [ '='(
 %      [0.9,0.7200000000000001],
@@ -569,10 +726,14 @@ SUCCESS!
 
 
 ```prolog
-TEST: ?- inference([inheritance(swan,int_intersection([swimmer,bird])),[0.9,0.8]],[inheritance(swan,swimmer),_84948]).
+TEST: ?- inference([inheritance(swan,int_intersection([swimmer,bird])),[0.9,0.8]],[inheritance(swan,swimmer),_52952]).
 ```
-EXPECTED: `_84948=[0.9,0.44]`
-SUCCESS!
+EXPECTED: `_52952=[0.9,0.44]`
+
+```diff
++SUCCESS!
+```
+
 ```prolog
 % [ '='(
 %      [0.9,0.4444444444444445],
@@ -581,10 +742,14 @@ SUCCESS!
 
 
 ```prolog
-TEST: ?- inference([inheritance(swan,ext_difference(swimmer,bird)),[0.9,0.8]],[inheritance(swan,swimmer),_87740]).
+TEST: ?- inference([inheritance(swan,ext_difference(swimmer,bird)),[0.9,0.8]],[inheritance(swan,swimmer),_55744]).
 ```
-EXPECTED: `_87740=[0.9,0.72]`
-SUCCESS!
+EXPECTED: `_55744=[0.9,0.72]`
+
+```diff
++SUCCESS!
+```
+
 ```prolog
 % [ '='(
 %      [0.9,0.7200000000000001],
@@ -593,10 +758,14 @@ SUCCESS!
 
 
 ```prolog
-TEST: ?- inference([inheritance(swan,ext_difference(swimmer,bird)),[0.9,0.8]],[negation(inheritance(swan,bird)),_90536]).
+TEST: ?- inference([inheritance(swan,ext_difference(swimmer,bird)),[0.9,0.8]],[negation(inheritance(swan,bird)),_58540]).
 ```
-EXPECTED: `_90536=[0.9,0.72]`
-SUCCESS!
+EXPECTED: `_58540=[0.9,0.72]`
+
+```diff
++SUCCESS!
+```
+
 ```prolog
 % [ '='(
 %      [0.9,0.7200000000000001],
@@ -605,10 +774,14 @@ SUCCESS!
 
 
 ```prolog
-TEST: ?- inference([inheritance(int_intersection([sport,chess]),competition),[0.9,0.8]],[inheritance(sport,competition),_93338]).
+TEST: ?- inference([inheritance(int_intersection([sport,chess]),competition),[0.9,0.8]],[inheritance(sport,competition),_61342]).
 ```
-EXPECTED: `_93338=[0.9,0.72]`
-SUCCESS!
+EXPECTED: `_61342=[0.9,0.72]`
+
+```diff
++SUCCESS!
+```
+
 ```prolog
 % [ '='(
 %      [0.9,0.7200000000000001],
@@ -617,10 +790,14 @@ SUCCESS!
 
 
 ```prolog
-TEST: ?- inference([inheritance(ext_intersection([sport,chess]),competition),[0.9,0.8]],[inheritance(sport,competition),_96146]).
+TEST: ?- inference([inheritance(ext_intersection([sport,chess]),competition),[0.9,0.8]],[inheritance(sport,competition),_64150]).
 ```
-EXPECTED: `_96146=[0.9,0.44]`
-SUCCESS!
+EXPECTED: `_64150=[0.9,0.44]`
+
+```diff
++SUCCESS!
+```
+
 ```prolog
 % [ '='(
 %      [0.9,0.4444444444444445],
@@ -629,10 +806,14 @@ SUCCESS!
 
 
 ```prolog
-TEST: ?- inference([inheritance(int_difference(sport,chess),competition),[0.9,0.8]],[inheritance(sport,competition),_98938]).
+TEST: ?- inference([inheritance(int_difference(sport,chess),competition),[0.9,0.8]],[inheritance(sport,competition),_66942]).
 ```
-EXPECTED: `_98938=[0.9,0.72]`
-SUCCESS!
+EXPECTED: `_66942=[0.9,0.72]`
+
+```diff
++SUCCESS!
+```
+
 ```prolog
 % [ '='(
 %      [0.9,0.7200000000000001],
@@ -641,10 +822,14 @@ SUCCESS!
 
 
 ```prolog
-TEST: ?- inference([inheritance(int_difference(sport,chess),competition),[0.9,0.8]],[negation(inheritance(chess,competition)),_101734]).
+TEST: ?- inference([inheritance(int_difference(sport,chess),competition),[0.9,0.8]],[negation(inheritance(chess,competition)),_69738]).
 ```
-EXPECTED: `_101734=[0.9,0.72]`
-SUCCESS!
+EXPECTED: `_69738=[0.9,0.72]`
+
+```diff
++SUCCESS!
+```
+
 ```prolog
 % [ '='(
 %      [0.9,0.7200000000000001],
@@ -653,10 +838,14 @@ SUCCESS!
 
 
 ```prolog
-TEST: ?- inference([inheritance(bird,animal),[0.9,0.8]],[inheritance(ext_intersection([swimmer,bird]),ext_intersection([swimmer,animal])),_104552]).
+TEST: ?- inference([inheritance(bird,animal),[0.9,0.8]],[inheritance(ext_intersection([swimmer,bird]),ext_intersection([swimmer,animal])),_72556]).
 ```
-EXPECTED: `_104552=[0.9,0.72]`
-SUCCESS!
+EXPECTED: `_72556=[0.9,0.72]`
+
+```diff
++SUCCESS!
+```
+
 ```prolog
 % [ '='(
 %      [0.9,0.7200000000000001],
@@ -665,10 +854,14 @@ SUCCESS!
 
 
 ```prolog
-TEST: ?- inference([inheritance(ext_intersection([swimmer,bird]),ext_intersection([swimmer,animal])),[0.9,0.8]],[inheritance(bird,animal),_107406]).
+TEST: ?- inference([inheritance(ext_intersection([swimmer,bird]),ext_intersection([swimmer,animal])),[0.9,0.8]],[inheritance(bird,animal),_75410]).
 ```
-EXPECTED: `_107406=[0.9,0.44]`
-SUCCESS!
+EXPECTED: `_75410=[0.9,0.44]`
+
+```diff
++SUCCESS!
+```
+
 ```prolog
 % [ '='(
 %      [0.9,0.4444444444444445],
@@ -677,10 +870,14 @@ SUCCESS!
 
 
 ```prolog
-TEST: ?- inference([inheritance(bird,animal),[0.9,0.8]],[inheritance(int_intersection([swimmer,bird]),int_intersection([swimmer,animal])),_110254]).
+TEST: ?- inference([inheritance(bird,animal),[0.9,0.8]],[inheritance(int_intersection([swimmer,bird]),int_intersection([swimmer,animal])),_78258]).
 ```
-EXPECTED: `_110254=[0.9,0.72]`
-SUCCESS!
+EXPECTED: `_78258=[0.9,0.72]`
+
+```diff
++SUCCESS!
+```
+
 ```prolog
 % [ '='(
 %      [0.9,0.7200000000000001],
@@ -689,10 +886,14 @@ SUCCESS!
 
 
 ```prolog
-TEST: ?- inference([inheritance(int_intersection([swimmer,bird]),int_intersection([swimmer,animal])),[0.9,0.8]],[inheritance(bird,animal),_113108]).
+TEST: ?- inference([inheritance(int_intersection([swimmer,bird]),int_intersection([swimmer,animal])),[0.9,0.8]],[inheritance(bird,animal),_81112]).
 ```
-EXPECTED: `_113108=[0.9,0.44]`
-SUCCESS!
+EXPECTED: `_81112=[0.9,0.44]`
+
+```diff
++SUCCESS!
+```
+
 ```prolog
 % [ '='(
 %      [0.9,0.4444444444444445],
@@ -701,10 +902,14 @@ SUCCESS!
 
 
 ```prolog
-TEST: ?- inference([similarity(bird,animal),[0.9,0.8]],[similarity(ext_intersection([swimmer,bird]),ext_intersection([swimmer,animal])),_115956]).
+TEST: ?- inference([similarity(bird,animal),[0.9,0.8]],[similarity(ext_intersection([swimmer,bird]),ext_intersection([swimmer,animal])),_83960]).
 ```
-EXPECTED: `_115956=[0.9,0.72]`
-SUCCESS!
+EXPECTED: `_83960=[0.9,0.72]`
+
+```diff
++SUCCESS!
+```
+
 ```prolog
 % [ '='(
 %      [0.9,0.7200000000000001],
@@ -713,10 +918,14 @@ SUCCESS!
 
 
 ```prolog
-TEST: ?- inference([similarity(ext_intersection([swimmer,bird]),ext_intersection([swimmer,animal])),[0.9,0.8]],[similarity(bird,animal),_118810]).
+TEST: ?- inference([similarity(ext_intersection([swimmer,bird]),ext_intersection([swimmer,animal])),[0.9,0.8]],[similarity(bird,animal),_86814]).
 ```
-EXPECTED: `_118810=[0.9,0.44]`
-SUCCESS!
+EXPECTED: `_86814=[0.9,0.44]`
+
+```diff
++SUCCESS!
+```
+
 ```prolog
 % [ '='(
 %      [0.9,0.4444444444444445],
@@ -725,10 +934,14 @@ SUCCESS!
 
 
 ```prolog
-TEST: ?- inference([similarity(bird,animal),[0.9,0.8]],[similarity(int_intersection([swimmer,bird]),int_intersection([swimmer,animal])),_121658]).
+TEST: ?- inference([similarity(bird,animal),[0.9,0.8]],[similarity(int_intersection([swimmer,bird]),int_intersection([swimmer,animal])),_89662]).
 ```
-EXPECTED: `_121658=[0.9,0.72]`
-SUCCESS!
+EXPECTED: `_89662=[0.9,0.72]`
+
+```diff
++SUCCESS!
+```
+
 ```prolog
 % [ '='(
 %      [0.9,0.7200000000000001],
@@ -737,10 +950,14 @@ SUCCESS!
 
 
 ```prolog
-TEST: ?- inference([similarity(int_intersection([swimmer,bird]),int_intersection([swimmer,animal])),[0.9,0.8]],[similarity(bird,animal),_124512]).
+TEST: ?- inference([similarity(int_intersection([swimmer,bird]),int_intersection([swimmer,animal])),[0.9,0.8]],[similarity(bird,animal),_92516]).
 ```
-EXPECTED: `_124512=[0.9,0.44]`
-SUCCESS!
+EXPECTED: `_92516=[0.9,0.44]`
+
+```diff
++SUCCESS!
+```
+
 ```prolog
 % [ '='(
 %      [0.9,0.4444444444444445],
@@ -749,10 +966,14 @@ SUCCESS!
 
 
 ```prolog
-TEST: ?- inference([inheritance(bird,animal),[0.9,0.8]],[inheritance(ext_difference(bird,swimmer),ext_difference(animal,swimmer)),_127340]).
+TEST: ?- inference([inheritance(bird,animal),[0.9,0.8]],[inheritance(ext_difference(bird,swimmer),ext_difference(animal,swimmer)),_95344]).
 ```
-EXPECTED: `_127340=[0.9,0.72]`
-SUCCESS!
+EXPECTED: `_95344=[0.9,0.72]`
+
+```diff
++SUCCESS!
+```
+
 ```prolog
 % [ '='(
 %      [0.9,0.7200000000000001],
@@ -761,10 +982,14 @@ SUCCESS!
 
 
 ```prolog
-TEST: ?- inference([inheritance(ext_difference(bird,swimmer),ext_difference(animal,swimmer)),[0.9,0.8]],[inheritance(bird,animal),_130138]).
+TEST: ?- inference([inheritance(ext_difference(bird,swimmer),ext_difference(animal,swimmer)),[0.9,0.8]],[inheritance(bird,animal),_98142]).
 ```
-EXPECTED: `_130138=[0.9,0.44]`
-SUCCESS!
+EXPECTED: `_98142=[0.9,0.44]`
+
+```diff
++SUCCESS!
+```
+
 ```prolog
 % [ '='(
 %      [0.9,0.4444444444444445],
@@ -773,10 +998,14 @@ SUCCESS!
 
 
 ```prolog
-TEST: ?- inference([inheritance(bird,animal),[0.9,0.8]],[inheritance(int_difference(bird,swimmer),int_difference(animal,swimmer)),_21514]).
+TEST: ?- inference([inheritance(bird,animal),[0.9,0.8]],[inheritance(int_difference(bird,swimmer),int_difference(animal,swimmer)),_100934]).
 ```
-EXPECTED: `_21514=[0.9,0.72]`
-SUCCESS!
+EXPECTED: `_100934=[0.9,0.72]`
+
+```diff
++SUCCESS!
+```
+
 ```prolog
 % [ '='(
 %      [0.9,0.7200000000000001],
@@ -785,10 +1014,14 @@ SUCCESS!
 
 
 ```prolog
-TEST: ?- inference([inheritance(int_difference(bird,swimmer),int_difference(animal,swimmer)),[0.9,0.8]],[inheritance(bird,animal),_24312]).
+TEST: ?- inference([inheritance(int_difference(bird,swimmer),int_difference(animal,swimmer)),[0.9,0.8]],[inheritance(bird,animal),_103732]).
 ```
-EXPECTED: `_24312=[0.9,0.44]`
-SUCCESS!
+EXPECTED: `_103732=[0.9,0.44]`
+
+```diff
++SUCCESS!
+```
+
 ```prolog
 % [ '='(
 %      [0.9,0.4444444444444445],
@@ -797,10 +1030,14 @@ SUCCESS!
 
 
 ```prolog
-TEST: ?- inference([similarity(bird,animal),[0.9,0.8]],[similarity(ext_difference(bird,swimmer),ext_difference(animal,swimmer)),_27104]).
+TEST: ?- inference([similarity(bird,animal),[0.9,0.8]],[similarity(ext_difference(bird,swimmer),ext_difference(animal,swimmer)),_106524]).
 ```
-EXPECTED: `_27104=[0.9,0.72]`
-SUCCESS!
+EXPECTED: `_106524=[0.9,0.72]`
+
+```diff
++SUCCESS!
+```
+
 ```prolog
 % [ '='(
 %      [0.9,0.7200000000000001],
@@ -809,10 +1046,14 @@ SUCCESS!
 
 
 ```prolog
-TEST: ?- inference([similarity(ext_difference(bird,swimmer),ext_difference(animal,swimmer)),[0.9,0.8]],[similarity(bird,animal),_29902]).
+TEST: ?- inference([similarity(ext_difference(bird,swimmer),ext_difference(animal,swimmer)),[0.9,0.8]],[similarity(bird,animal),_109322]).
 ```
-EXPECTED: `_29902=[0.9,0.44]`
-SUCCESS!
+EXPECTED: `_109322=[0.9,0.44]`
+
+```diff
++SUCCESS!
+```
+
 ```prolog
 % [ '='(
 %      [0.9,0.4444444444444445],
@@ -821,10 +1062,14 @@ SUCCESS!
 
 
 ```prolog
-TEST: ?- inference([similarity(bird,animal),[0.9,0.8]],[similarity(int_difference(bird,swimmer),int_difference(animal,swimmer)),_32694]).
+TEST: ?- inference([similarity(bird,animal),[0.9,0.8]],[similarity(int_difference(bird,swimmer),int_difference(animal,swimmer)),_112114]).
 ```
-EXPECTED: `_32694=[0.9,0.72]`
-SUCCESS!
+EXPECTED: `_112114=[0.9,0.72]`
+
+```diff
++SUCCESS!
+```
+
 ```prolog
 % [ '='(
 %      [0.9,0.7200000000000001],
@@ -833,10 +1078,14 @@ SUCCESS!
 
 
 ```prolog
-TEST: ?- inference([similarity(int_difference(bird,swimmer),int_difference(animal,swimmer)),[0.9,0.8]],[similarity(bird,animal),_35492]).
+TEST: ?- inference([similarity(int_difference(bird,swimmer),int_difference(animal,swimmer)),[0.9,0.8]],[similarity(bird,animal),_114912]).
 ```
-EXPECTED: `_35492=[0.9,0.44]`
-SUCCESS!
+EXPECTED: `_114912=[0.9,0.44]`
+
+```diff
++SUCCESS!
+```
+
 ```prolog
 % [ '='(
 %      [0.9,0.4444444444444445],
@@ -845,10 +1094,14 @@ SUCCESS!
 
 
 ```prolog
-TEST: ?- inference([inheritance(bird,animal),[0.9,0.8]],[inheritance(ext_difference(swimmer,animal),ext_difference(swimmer,bird)),_38284]).
+TEST: ?- inference([inheritance(bird,animal),[0.9,0.8]],[inheritance(ext_difference(swimmer,animal),ext_difference(swimmer,bird)),_117704]).
 ```
-EXPECTED: `_38284=[0.9,0.72]`
-SUCCESS!
+EXPECTED: `_117704=[0.9,0.72]`
+
+```diff
++SUCCESS!
+```
+
 ```prolog
 % [ '='(
 %      [0.9,0.7200000000000001],
@@ -857,10 +1110,14 @@ SUCCESS!
 
 
 ```prolog
-TEST: ?- inference([inheritance(ext_difference(swimmer,animal),ext_difference(swimmer,bird)),[0.9,0.8]],[inheritance(bird,animal),_41082]).
+TEST: ?- inference([inheritance(ext_difference(swimmer,animal),ext_difference(swimmer,bird)),[0.9,0.8]],[inheritance(bird,animal),_120502]).
 ```
-EXPECTED: `_41082=[0.9,0.44]`
-SUCCESS!
+EXPECTED: `_120502=[0.9,0.44]`
+
+```diff
++SUCCESS!
+```
+
 ```prolog
 % [ '='(
 %      [0.9,0.4444444444444445],
@@ -869,10 +1126,14 @@ SUCCESS!
 
 
 ```prolog
-TEST: ?- inference([inheritance(bird,animal),[0.9,0.8]],[inheritance(int_difference(swimmer,animal),int_difference(swimmer,bird)),_43874]).
+TEST: ?- inference([inheritance(bird,animal),[0.9,0.8]],[inheritance(int_difference(swimmer,animal),int_difference(swimmer,bird)),_123294]).
 ```
-EXPECTED: `_43874=[0.9,0.72]`
-SUCCESS!
+EXPECTED: `_123294=[0.9,0.72]`
+
+```diff
++SUCCESS!
+```
+
 ```prolog
 % [ '='(
 %      [0.9,0.7200000000000001],
@@ -881,10 +1142,14 @@ SUCCESS!
 
 
 ```prolog
-TEST: ?- inference([inheritance(int_difference(swimmer,animal),int_difference(swimmer,bird)),[0.9,0.8]],[inheritance(bird,animal),_46672]).
+TEST: ?- inference([inheritance(int_difference(swimmer,animal),int_difference(swimmer,bird)),[0.9,0.8]],[inheritance(bird,animal),_126092]).
 ```
-EXPECTED: `_46672=[0.9,0.44]`
-SUCCESS!
+EXPECTED: `_126092=[0.9,0.44]`
+
+```diff
++SUCCESS!
+```
+
 ```prolog
 % [ '='(
 %      [0.9,0.4444444444444445],
@@ -893,10 +1158,14 @@ SUCCESS!
 
 
 ```prolog
-TEST: ?- inference([similarity(bird,animal),[0.9,0.8]],[similarity(ext_difference(swimmer,animal),ext_difference(swimmer,bird)),_49464]).
+TEST: ?- inference([similarity(bird,animal),[0.9,0.8]],[similarity(ext_difference(swimmer,animal),ext_difference(swimmer,bird)),_128884]).
 ```
-EXPECTED: `_49464=[0.9,0.72]`
-SUCCESS!
+EXPECTED: `_128884=[0.9,0.72]`
+
+```diff
++SUCCESS!
+```
+
 ```prolog
 % [ '='(
 %      [0.9,0.7200000000000001],
@@ -905,10 +1174,14 @@ SUCCESS!
 
 
 ```prolog
-TEST: ?- inference([similarity(ext_difference(swimmer,animal),ext_difference(swimmer,bird)),[0.9,0.8]],[similarity(bird,animal),_52262]).
+TEST: ?- inference([similarity(ext_difference(swimmer,animal),ext_difference(swimmer,bird)),[0.9,0.8]],[similarity(bird,animal),_19822]).
 ```
-EXPECTED: `_52262=[0.9,0.44]`
-SUCCESS!
+EXPECTED: `_19822=[0.9,0.44]`
+
+```diff
++SUCCESS!
+```
+
 ```prolog
 % [ '='(
 %      [0.9,0.4444444444444445],
@@ -917,10 +1190,14 @@ SUCCESS!
 
 
 ```prolog
-TEST: ?- inference([similarity(bird,animal),[0.9,0.8]],[similarity(int_difference(swimmer,animal),int_difference(swimmer,bird)),_55054]).
+TEST: ?- inference([similarity(bird,animal),[0.9,0.8]],[similarity(int_difference(swimmer,animal),int_difference(swimmer,bird)),_22614]).
 ```
-EXPECTED: `_55054=[0.9,0.72]`
-SUCCESS!
+EXPECTED: `_22614=[0.9,0.72]`
+
+```diff
++SUCCESS!
+```
+
 ```prolog
 % [ '='(
 %      [0.9,0.7200000000000001],
@@ -929,10 +1206,14 @@ SUCCESS!
 
 
 ```prolog
-TEST: ?- inference([similarity(int_difference(swimmer,animal),int_difference(swimmer,bird)),[0.9,0.8]],[similarity(bird,animal),_57852]).
+TEST: ?- inference([similarity(int_difference(swimmer,animal),int_difference(swimmer,bird)),[0.9,0.8]],[similarity(bird,animal),_25412]).
 ```
-EXPECTED: `_57852=[0.9,0.44]`
-SUCCESS!
+EXPECTED: `_25412=[0.9,0.44]`
+
+```diff
++SUCCESS!
+```
+
 ```prolog
 % [ '='(
 %      [0.9,0.4444444444444445],
@@ -941,10 +1222,14 @@ SUCCESS!
 
 
 ```prolog
-TEST: ?- inference([inheritance(ext_set([earth]),ext_set([venus,mars,pluto])),[0.9,0.8]],[inheritance(ext_set([earth]),ext_set([pluto,saturn])),[0.7,0.8]],_60576).
+TEST: ?- inference([inheritance(ext_set([earth]),ext_set([venus,mars,pluto])),[0.9,0.8]],[inheritance(ext_set([earth]),ext_set([pluto,saturn])),[0.7,0.8]],_28136).
 ```
-EXPECTED: `_60576=[inheritance(ext_set([earth]),ext_set([pluto])),[0.63,0.64]];_60576=[inheritance(ext_set([earth]),ext_set([venus,mars,pluto,saturn])),[0.97,0.64]];_60576=[inheritance(ext_set([earth]),ext_set([venus,mars])),[0.27,0.64]]`
-SUCCESS!
+EXPECTED: `_28136=[inheritance(ext_set([earth]),ext_set([pluto])),[0.63,0.64]];_28136=[inheritance(ext_set([earth]),ext_set([venus,mars,pluto,saturn])),[0.97,0.64]];_28136=[inheritance(ext_set([earth]),ext_set([venus,mars])),[0.27,0.64]]`
+
+```diff
++SUCCESS!
+```
+
 ```prolog
 % [ ('='(
 %       [ inheritance(
@@ -977,10 +1262,14 @@ SUCCESS!
 
 
 ```prolog
-TEST: ?- inference([inheritance(int_set([red,green,blue]),int_set([colorful])),[0.9,0.8]],[inheritance(int_set([purple,green]),int_set([colorful])),[0.7,0.8]],_82204).
+TEST: ?- inference([inheritance(int_set([red,green,blue]),int_set([colorful])),[0.9,0.8]],[inheritance(int_set([purple,green]),int_set([colorful])),[0.7,0.8]],_49746).
 ```
-EXPECTED: `_82204=[inheritance(int_set([green]),int_set([colorful])),[0.63,0.64]];_82204=[inheritance(int_set([red,blue,purple,green]),int_set([colorful])),[0.97,0.64]];_82204=[inheritance(int_set([red,blue]),int_set([colorful])),[0.271,0.64]]`
-SUCCESS!
+EXPECTED: `_49746=[inheritance(int_set([green]),int_set([colorful])),[0.63,0.64]];_49746=[inheritance(int_set([red,blue,purple,green]),int_set([colorful])),[0.97,0.64]];_49746=[inheritance(int_set([red,blue]),int_set([colorful])),[0.271,0.64]]`
+
+```diff
++SUCCESS!
+```
+
 ```prolog
 % [ ('='(
 %       [ inheritance(
@@ -1013,10 +1302,14 @@ SUCCESS!
 
 
 ```prolog
-TEST: ?- inference([inheritance(product([acid,base]),reaction),[1,0.9]],_103830).
+TEST: ?- inference([inheritance(product([acid,base]),reaction),[1,0.9]],_71354).
 ```
-EXPECTED: `_103830=[inheritance(acid,ext_image(reaction,[nil,base])),[1,0.9]];_103830=[inheritance(base,ext_image(reaction,[acid,nil])),[1,0.9]]`
-SUCCESS!
+EXPECTED: `_71354=[inheritance(acid,ext_image(reaction,[nil,base])),[1,0.9]];_71354=[inheritance(base,ext_image(reaction,[acid,nil])),[1,0.9]]`
+
+```diff
++SUCCESS!
+```
+
 ```prolog
 % [ ('='(
 %       [ inheritance(acid,
@@ -1040,10 +1333,14 @@ SUCCESS!
 
 
 ```prolog
-TEST: ?- inference([inheritance(acid,ext_image(reaction,[nil,base])),[1,0.9]],_115526).
+TEST: ?- inference([inheritance(acid,ext_image(reaction,[nil,base])),[1,0.9]],_83050).
 ```
-EXPECTED: `_115526=[inheritance(product([acid,base]),reaction),[1,0.9]]`
-SUCCESS!
+EXPECTED: `_83050=[inheritance(product([acid,base]),reaction),[1,0.9]]`
+
+```diff
++SUCCESS!
+```
+
 ```prolog
 % [ '='(
 %      [ inheritance(
@@ -1058,10 +1355,14 @@ SUCCESS!
 
 
 ```prolog
-TEST: ?- inference([inheritance(acid,ext_image(reaction,[acid,nil])),[1,0.9]],_121678).
+TEST: ?- inference([inheritance(acid,ext_image(reaction,[acid,nil])),[1,0.9]],_89202).
 ```
-EXPECTED: `_121678=[inheritance(product([acid,acid]),reaction),[1,0.9]]`
-SUCCESS!
+EXPECTED: `_89202=[inheritance(product([acid,acid]),reaction),[1,0.9]]`
+
+```diff
++SUCCESS!
+```
+
 ```prolog
 % [ '='(
 %      [ inheritance(
@@ -1076,10 +1377,14 @@ SUCCESS!
 
 
 ```prolog
-TEST: ?- inference([inheritance(neutralization,product([acid,base])),[1,0.9]],_127836).
+TEST: ?- inference([inheritance(neutralization,product([acid,base])),[1,0.9]],_95360).
 ```
-EXPECTED: `_127836=[inheritance(int_image(neutralization,[nil,base]),acid),[1,0.9]];_127836=[inheritance(int_image(neutralization,[acid,nil]),base),[1,0.9]]`
-SUCCESS!
+EXPECTED: `_95360=[inheritance(int_image(neutralization,[nil,base]),acid),[1,0.9]];_95360=[inheritance(int_image(neutralization,[acid,nil]),base),[1,0.9]]`
+
+```diff
++SUCCESS!
+```
+
 ```prolog
 % [ ('='(
 %       [ inheritance(
@@ -1107,10 +1412,14 @@ SUCCESS!
 
 
 ```prolog
-TEST: ?- inference([inheritance(int_image(neutralization,[nil,base]),acid),[1,0.9]],_28480).
+TEST: ?- inference([inheritance(int_image(neutralization,[nil,base]),acid),[1,0.9]],_107056).
 ```
-EXPECTED: `_28480=[inheritance(neutralization,product([acid,base])),[1,0.9]]`
-SUCCESS!
+EXPECTED: `_107056=[inheritance(neutralization,product([acid,base])),[1,0.9]]`
+
+```diff
++SUCCESS!
+```
+
 ```prolog
 % [ '='(
 %      [ inheritance(neutralization,
@@ -1123,10 +1432,14 @@ SUCCESS!
 
 
 ```prolog
-TEST: ?- inference([inheritance(int_image(neutralization,[acid,nil]),base),[1,0.9]],_34632).
+TEST: ?- inference([inheritance(int_image(neutralization,[acid,nil]),base),[1,0.9]],_113208).
 ```
-EXPECTED: `_34632=[inheritance(neutralization,product([acid,base])),[1,0.9]]`
-SUCCESS!
+EXPECTED: `_113208=[inheritance(neutralization,product([acid,base])),[1,0.9]]`
+
+```diff
++SUCCESS!
+```
+
 ```prolog
 % [ '='(
 %      [ inheritance(neutralization,
@@ -1139,10 +1452,14 @@ SUCCESS!
 
 
 ```prolog
-TEST: ?- inference([inheritance(bird,animal),[0.9,0.8]],[inheritance(product([bird,plant]),product([animal,plant])),_40880]).
+TEST: ?- inference([inheritance(bird,animal),[0.9,0.8]],[inheritance(product([bird,plant]),product([animal,plant])),_119456]).
 ```
-EXPECTED: `_40880=[0.9,0.8]`
-SUCCESS!
+EXPECTED: `_119456=[0.9,0.8]`
+
+```diff
++SUCCESS!
+```
+
 ```prolog
 % [ '='(
 %      [0.9,0.8],
@@ -1151,10 +1468,14 @@ SUCCESS!
 
 
 ```prolog
-TEST: ?- inference([inheritance(product([plant,bird]),product([plant,animal])),[0.9,0.8]],[inheritance(bird,animal),_43534]).
+TEST: ?- inference([inheritance(product([plant,bird]),product([plant,animal])),[0.9,0.8]],[inheritance(bird,animal),_122110]).
 ```
-EXPECTED: `_43534=[0.9,0.8]`
-SUCCESS!
+EXPECTED: `_122110=[0.9,0.8]`
+
+```diff
++SUCCESS!
+```
+
 ```prolog
 % [ '='(
 %      [0.9,0.8],
@@ -1163,10 +1484,14 @@ SUCCESS!
 
 
 ```prolog
-TEST: ?- inference([inheritance(neutralization,reaction),[0.9,0.8]],[inheritance(ext_image(neutralization,[acid,nil]),ext_image(reaction,[acid,nil])),_46212]).
+TEST: ?- inference([inheritance(neutralization,reaction),[0.9,0.8]],[inheritance(ext_image(neutralization,[acid,nil]),ext_image(reaction,[acid,nil])),_124788]).
 ```
-EXPECTED: `_46212=[0.9,0.72]`
-SUCCESS!
+EXPECTED: `_124788=[0.9,0.72]`
+
+```diff
++SUCCESS!
+```
+
 ```prolog
 % [ '='(
 %      [0.9,0.7200000000000001],
@@ -1175,10 +1500,14 @@ SUCCESS!
 
 
 ```prolog
-TEST: ?- inference([inheritance(ext_image(neutralization,[acid,nil]),ext_image(reaction,[acid,nil])),[0.9,0.8]],[inheritance(neutralization,reaction),_49034]).
+TEST: ?- inference([inheritance(ext_image(neutralization,[acid,nil]),ext_image(reaction,[acid,nil])),[0.9,0.8]],[inheritance(neutralization,reaction),_127610]).
 ```
-EXPECTED: `_49034=[0.9,0.44]`
-SUCCESS!
+EXPECTED: `_127610=[0.9,0.44]`
+
+```diff
++SUCCESS!
+```
+
 ```prolog
 % [ '='(
 %      [0.9,0.4444444444444445],
@@ -1187,10 +1516,14 @@ SUCCESS!
 
 
 ```prolog
-TEST: ?- inference([inheritance(neutralization,reaction),[0.9,0.8]],[inheritance(int_image(neutralization,[acid,nil]),int_image(reaction,[acid,nil])),_51850]).
+TEST: ?- inference([inheritance(neutralization,reaction),[0.9,0.8]],[inheritance(int_image(neutralization,[acid,nil]),int_image(reaction,[acid,nil])),_130426]).
 ```
-EXPECTED: `_51850=[0.9,0.72]`
-SUCCESS!
+EXPECTED: `_130426=[0.9,0.72]`
+
+```diff
++SUCCESS!
+```
+
 ```prolog
 % [ '='(
 %      [0.9,0.7200000000000001],
@@ -1199,10 +1532,14 @@ SUCCESS!
 
 
 ```prolog
-TEST: ?- inference([inheritance(int_image(neutralization,[acid,nil]),int_image(reaction,[acid,nil])),[0.9,0.8]],[inheritance(neutralization,reaction),_54672]).
+TEST: ?- inference([inheritance(int_image(neutralization,[acid,nil]),int_image(reaction,[acid,nil])),[0.9,0.8]],[inheritance(neutralization,reaction),_21368]).
 ```
-EXPECTED: `_54672=[0.9,0.44]`
-SUCCESS!
+EXPECTED: `_21368=[0.9,0.44]`
+
+```diff
++SUCCESS!
+```
+
 ```prolog
 % [ '='(
 %      [0.9,0.4444444444444445],
@@ -1211,10 +1548,14 @@ SUCCESS!
 
 
 ```prolog
-TEST: ?- inference([inheritance(soda,base),[0.9,0.8]],[inheritance(ext_image(reaction,[nil,base]),ext_image(reaction,[nil,soda])),_57488]).
+TEST: ?- inference([inheritance(soda,base),[0.9,0.8]],[inheritance(ext_image(reaction,[nil,base]),ext_image(reaction,[nil,soda])),_24184]).
 ```
-EXPECTED: `_57488=[0.9,0.72]`
-SUCCESS!
+EXPECTED: `_24184=[0.9,0.72]`
+
+```diff
++SUCCESS!
+```
+
 ```prolog
 % [ '='(
 %      [0.9,0.7200000000000001],
@@ -1223,10 +1564,14 @@ SUCCESS!
 
 
 ```prolog
-TEST: ?- inference([inheritance(ext_image(reaction,[nil,base]),ext_image(reaction,[nil,soda])),[0.9,0.8]],[inheritance(soda,base),_60330]).
+TEST: ?- inference([inheritance(ext_image(reaction,[nil,base]),ext_image(reaction,[nil,soda])),[0.9,0.8]],[inheritance(soda,base),_27026]).
 ```
-EXPECTED: `_60330=[0.9,0.44]`
-SUCCESS!
+EXPECTED: `_27026=[0.9,0.44]`
+
+```diff
++SUCCESS!
+```
+
 ```prolog
 % [ '='(
 %      [0.9,0.4444444444444445],
@@ -1235,10 +1580,14 @@ SUCCESS!
 
 
 ```prolog
-TEST: ?- inference([inheritance(soda,base),[0.9,0.8]],[inheritance(int_image(neutralization,[nil,base]),int_image(neutralization,[nil,soda])),_63166]).
+TEST: ?- inference([inheritance(soda,base),[0.9,0.8]],[inheritance(int_image(neutralization,[nil,base]),int_image(neutralization,[nil,soda])),_29862]).
 ```
-EXPECTED: `_63166=[0.9,0.72]`
-SUCCESS!
+EXPECTED: `_29862=[0.9,0.72]`
+
+```diff
++SUCCESS!
+```
+
 ```prolog
 % [ '='(
 %      [0.9,0.7200000000000001],
@@ -1247,10 +1596,14 @@ SUCCESS!
 
 
 ```prolog
-TEST: ?- inference([inheritance(int_image(neutralization,[nil,base]),int_image(neutralization,[nil,soda])),[0.9,0.8]],[inheritance(soda,base),_66008]).
+TEST: ?- inference([inheritance(int_image(neutralization,[nil,base]),int_image(neutralization,[nil,soda])),[0.9,0.8]],[inheritance(soda,base),_32704]).
 ```
-EXPECTED: `_66008=[0.9,0.44]`
-SUCCESS!
+EXPECTED: `_32704=[0.9,0.44]`
+
+```diff
++SUCCESS!
+```
+
 ```prolog
 % [ '='(
 %      [0.9,0.4444444444444445],
@@ -1259,10 +1612,14 @@ SUCCESS!
 
 
 ```prolog
-TEST: ?- revision([implication(inheritance(robin,flyer),inheritance(robin,bird)),[1,0.8]],[implication(inheritance(robin,flyer),inheritance(robin,bird)),[0,0.5]],_68752).
+TEST: ?- revision([implication(inheritance(robin,flyer),inheritance(robin,bird)),[1,0.8]],[implication(inheritance(robin,flyer),inheritance(robin,bird)),[0,0.5]],_35448).
 ```
-EXPECTED: `_68752=[implication(inheritance(robin,flyer),inheritance(robin,bird)),[0.8,0.83]]`
-SUCCESS!
+EXPECTED: `_35448=[implication(inheritance(robin,flyer),inheritance(robin,bird)),[0.8,0.83]]`
+
+```diff
++SUCCESS!
+```
+
 ```prolog
 % [ '='(
 %      [ implication(
@@ -1277,10 +1634,14 @@ SUCCESS!
 
 
 ```prolog
-TEST: ?- revision([equivalence(inheritance(robin,flyer),inheritance(robin,bird)),[1,0.8]],[equivalence(inheritance(robin,flyer),inheritance(robin,bird)),[0,0.5]],_74450).
+TEST: ?- revision([equivalence(inheritance(robin,flyer),inheritance(robin,bird)),[1,0.8]],[equivalence(inheritance(robin,flyer),inheritance(robin,bird)),[0,0.5]],_41128).
 ```
-EXPECTED: `_74450=[equivalence(inheritance(robin,flyer),inheritance(robin,bird)),[0.8,0.83]]`
-SUCCESS!
+EXPECTED: `_41128=[equivalence(inheritance(robin,flyer),inheritance(robin,bird)),[0.8,0.83]]`
+
+```diff
++SUCCESS!
+```
+
 ```prolog
 % [ '='(
 %      [ equivalence(
@@ -1295,10 +1656,14 @@ SUCCESS!
 
 
 ```prolog
-TEST: ?- choice([implication(inheritance(robin,flyer),inheritance(robin,bird)),[1,0.8]],[implication(inheritance(robin,flyer),inheritance(robin,bird)),[0,0.5]],_80148).
+TEST: ?- choice([implication(inheritance(robin,flyer),inheritance(robin,bird)),[1,0.8]],[implication(inheritance(robin,flyer),inheritance(robin,bird)),[0,0.5]],_46808).
 ```
-EXPECTED: `_80148=[implication(inheritance(robin,flyer),inheritance(robin,bird)),[1,0.8]]`
-SUCCESS!
+EXPECTED: `_46808=[implication(inheritance(robin,flyer),inheritance(robin,bird)),[1,0.8]]`
+
+```diff
++SUCCESS!
+```
+
 ```prolog
 % [ '='(
 %      [ implication(
@@ -1313,10 +1678,14 @@ SUCCESS!
 
 
 ```prolog
-TEST: ?- choice([implication(inheritance(robin,flyer),inheritance(robin,bird)),[0.8,0.9]],[implication(inheritance(robin,swimmer),inheritance(robin,bird)),[1,0.5]],_85530).
+TEST: ?- choice([implication(inheritance(robin,flyer),inheritance(robin,bird)),[0.8,0.9]],[implication(inheritance(robin,swimmer),inheritance(robin,bird)),[1,0.5]],_52190).
 ```
-EXPECTED: `_85530=[implication(inheritance(robin,flyer),inheritance(robin,bird)),[0.8,0.9]]`
-SUCCESS!
+EXPECTED: `_52190=[implication(inheritance(robin,flyer),inheritance(robin,bird)),[0.8,0.9]]`
+
+```diff
++SUCCESS!
+```
+
 ```prolog
 % [ '='(
 %      [ implication(
@@ -1331,10 +1700,14 @@ SUCCESS!
 
 
 ```prolog
-TEST: ?- inference([implication(inheritance(robin,bird),inheritance(robin,animal)),[0.9,0.8]],[implication(inheritance(robin,flyer),inheritance(robin,bird)),[1,0.5]],_91000).
+TEST: ?- inference([implication(inheritance(robin,bird),inheritance(robin,animal)),[0.9,0.8]],[implication(inheritance(robin,flyer),inheritance(robin,bird)),[1,0.5]],_57660).
 ```
-EXPECTED: `_91000=[implication(inheritance(robin,flyer),inheritance(robin,animal)),[0.9,0.36]]`
-SUCCESS!
+EXPECTED: `_57660=[implication(inheritance(robin,flyer),inheritance(robin,animal)),[0.9,0.36]]`
+
+```diff
++SUCCESS!
+```
+
 ```prolog
 % [ '='(
 %      [ implication(
@@ -1349,10 +1722,14 @@ SUCCESS!
 
 
 ```prolog
-TEST: ?- inference([equivalence(inheritance(robin,bird),inheritance(robin,animal)),[0.9,0.8]],[equivalence(inheritance(robin,flyer),inheritance(robin,bird)),[1,0.5]],_96642).
+TEST: ?- inference([equivalence(inheritance(robin,bird),inheritance(robin,animal)),[0.9,0.8]],[equivalence(inheritance(robin,flyer),inheritance(robin,bird)),[1,0.5]],_63284).
 ```
-EXPECTED: `_96642=[equivalence(inheritance(robin,flyer),inheritance(robin,animal)),[0.9,0.4]]`
-SUCCESS!
+EXPECTED: `_63284=[equivalence(inheritance(robin,flyer),inheritance(robin,animal)),[0.9,0.4]]`
+
+```diff
++SUCCESS!
+```
+
 ```prolog
 % [ '='(
 %      [ equivalence(
@@ -1367,10 +1744,14 @@ SUCCESS!
 
 
 ```prolog
-TEST: ?- inference([implication(inheritance(robin,bird),inheritance(robin,animal)),[0.9,0.8]],[implication(inheritance(robin,bird),inheritance(robin,flyer)),[1,0.5]],_102324).
+TEST: ?- inference([implication(inheritance(robin,bird),inheritance(robin,animal)),[0.9,0.8]],[implication(inheritance(robin,bird),inheritance(robin,flyer)),[1,0.5]],_68948).
 ```
-EXPECTED: `_102324=[implication(inheritance(robin,flyer),inheritance(robin,animal)),[0.9,0.29]]`
-SUCCESS!
+EXPECTED: `_68948=[implication(inheritance(robin,flyer),inheritance(robin,animal)),[0.9,0.29]]`
+
+```diff
++SUCCESS!
+```
+
 ```prolog
 % [ '='(
 %      [ implication(
@@ -1385,10 +1766,14 @@ SUCCESS!
 
 
 ```prolog
-TEST: ?- inference([implication(inheritance(robin,bird),inheritance(robin,animal)),[0.9,0.8]],[implication(inheritance(robin,flyer),inheritance(robin,animal)),[1,0.5]],_107960).
+TEST: ?- inference([implication(inheritance(robin,bird),inheritance(robin,animal)),[0.9,0.8]],[implication(inheritance(robin,flyer),inheritance(robin,animal)),[1,0.5]],_74566).
 ```
-EXPECTED: `_107960=[implication(inheritance(robin,flyer),inheritance(robin,bird)),[1,0.26]]`
-SUCCESS!
+EXPECTED: `_74566=[implication(inheritance(robin,flyer),inheritance(robin,bird)),[1,0.26]]`
+
+```diff
++SUCCESS!
+```
+
 ```prolog
 % [ '='(
 %      [ implication(
@@ -1403,10 +1788,14 @@ SUCCESS!
 
 
 ```prolog
-TEST: ?- inference([implication(inheritance(robin,flyer),inheritance(robin,bird)),[0.9,0.8]],[implication(inheritance(robin,bird),inheritance(robin,animal)),[1,0.5]],_113572).
+TEST: ?- inference([implication(inheritance(robin,flyer),inheritance(robin,bird)),[0.9,0.8]],[implication(inheritance(robin,bird),inheritance(robin,animal)),[1,0.5]],_80160).
 ```
-EXPECTED: `_113572=[implication(inheritance(robin,animal),inheritance(robin,flyer)),[1,0.26]]`
-SUCCESS!
+EXPECTED: `_80160=[implication(inheritance(robin,animal),inheritance(robin,flyer)),[1,0.26]]`
+
+```diff
++SUCCESS!
+```
+
 ```prolog
 % [ '='(
 %      [ implication(
@@ -1421,10 +1810,14 @@ SUCCESS!
 
 
 ```prolog
-TEST: ?- inference([implication(inheritance(robin,flyer),inheritance(robin,animal)),[0.9,0.8]],_119202).
+TEST: ?- inference([implication(inheritance(robin,flyer),inheritance(robin,animal)),[0.9,0.8]],_85772).
 ```
-EXPECTED: `_119202=[implication(inheritance(robin,animal),inheritance(robin,flyer)),[1,0.42]]`
-SUCCESS!
+EXPECTED: `_85772=[implication(inheritance(robin,animal),inheritance(robin,flyer)),[1,0.42]]`
+
+```diff
++SUCCESS!
+```
+
 ```prolog
 % [ '='(
 %      [ implication(
@@ -1439,10 +1832,14 @@ SUCCESS!
 
 
 ```prolog
-TEST: ?- inference([equivalence(inheritance(robin,flyer),inheritance(robin,bird)),[0.9,0.8]],[implication(inheritance(robin,flyer),inheritance(robin,bird)),_124826]).
+TEST: ?- inference([equivalence(inheritance(robin,flyer),inheritance(robin,bird)),[0.9,0.8]],[implication(inheritance(robin,flyer),inheritance(robin,bird)),_91378]).
 ```
-EXPECTED: `_124826=[0.9,0.72]`
-SUCCESS!
+EXPECTED: `_91378=[0.9,0.72]`
+
+```diff
++SUCCESS!
+```
+
 ```prolog
 % [ '='(
 %      [0.9,0.7200000000000001],
@@ -1451,10 +1848,14 @@ SUCCESS!
 
 
 ```prolog
-TEST: ?- inference([implication(inheritance(robin,flyer),inheritance(robin,bird)),[0.9,0.8]],[implication(inheritance(robin,bird),inheritance(robin,flyer)),[0.9,0.8]],_127556).
+TEST: ?- inference([implication(inheritance(robin,flyer),inheritance(robin,bird)),[0.9,0.8]],[implication(inheritance(robin,bird),inheritance(robin,flyer)),[0.9,0.8]],_94108).
 ```
-EXPECTED: `_127556=[equivalence(inheritance(robin,flyer),inheritance(robin,bird)),[0.81,0.64]]`
-SUCCESS!
+EXPECTED: `_94108=[equivalence(inheritance(robin,flyer),inheritance(robin,bird)),[0.81,0.64]]`
+
+```diff
++SUCCESS!
+```
+
 ```prolog
 % [ '='(
 %      [ equivalence(
@@ -1469,10 +1870,14 @@ SUCCESS!
 
 
 ```prolog
-TEST: ?- inference([similarity(swan,bird),[0.9,0.8]],[inheritance(swan,bird),_22054]).
+TEST: ?- inference([similarity(swan,bird),[0.9,0.8]],[inheritance(swan,bird),_99774]).
 ```
-EXPECTED: `_22054=[0.9,0.72]`
-SUCCESS!
+EXPECTED: `_99774=[0.9,0.72]`
+
+```diff
++SUCCESS!
+```
+
 ```prolog
 % [ '='(
 %      [0.9,0.7200000000000001],
@@ -1481,10 +1886,14 @@ SUCCESS!
 
 
 ```prolog
-TEST: ?- inference([inheritance(swan,bird),[0.9,0.8]],[similarity(swan,bird),_24840]).
+TEST: ?- inference([inheritance(swan,bird),[0.9,0.8]],[similarity(swan,bird),_102560]).
 ```
-EXPECTED: `_24840=[0.9,0.44]`
-SUCCESS!
+EXPECTED: `_102560=[0.9,0.44]`
+
+```diff
++SUCCESS!
+```
+
 ```prolog
 % [ '='(
 %      [0.9,0.4444444444444445],
@@ -1493,10 +1902,14 @@ SUCCESS!
 
 
 ```prolog
-TEST: ?- inference([inheritance(swan,bird),[1,0.8]],[inheritance(bird,swan),[0.1,0.8]],_27564).
+TEST: ?- inference([inheritance(swan,bird),[1,0.8]],[inheritance(bird,swan),[0.1,0.8]],_105284).
 ```
-EXPECTED: `_27564=[similarity(swan,bird),[0.1,0.64]]`
-SUCCESS!
+EXPECTED: `_105284=[similarity(swan,bird),[0.1,0.64]]`
+
+```diff
++SUCCESS!
+```
+
 ```prolog
 % [ '='(
 %      [ similarity(swan,bird),
@@ -1507,12 +1920,16 @@ SUCCESS!
 
 
 ```prolog
-TEST: ?- inference([implication(inheritance(robin,bird),inheritance(robin,animal)),[0.9,0.8]],[implication(inheritance(robin,bird),inheritance(robin,flyer)),[0.9,0.8]],[equivalence(_32324,_32326),_32330]).
+TEST: ?- inference([implication(inheritance(robin,bird),inheritance(robin,animal)),[0.9,0.8]],[implication(inheritance(robin,bird),inheritance(robin,flyer)),[0.9,0.8]],[equivalence(_110038,_110040),_110044]).
 ```
-EXPECTED: `_32324=inheritance(robin,flyer)`
-EXPECTED: `_32326=inheritance(robin,animal)`
-EXPECTED: `_32330=[0.82,0.39]`
-SUCCESS!
+EXPECTED: `_110038=inheritance(robin,flyer)`
+EXPECTED: `_110040=inheritance(robin,animal)`
+EXPECTED: `_110044=[0.82,0.39]`
+
+```diff
++SUCCESS!
+```
+
 ```prolog
 % [ '='(
 %      inheritance(robin,flyer),
@@ -1527,12 +1944,16 @@ SUCCESS!
 
 
 ```prolog
-TEST: ?- inference([implication(inheritance(robin,bird),inheritance(robin,animal)),[0.9,0.8]],[implication(inheritance(robin,flyer),inheritance(robin,animal)),[0.9,0.8]],[equivalence(_36346,_36348),_36352]).
+TEST: ?- inference([implication(inheritance(robin,bird),inheritance(robin,animal)),[0.9,0.8]],[implication(inheritance(robin,flyer),inheritance(robin,animal)),[0.9,0.8]],[equivalence(_114060,_114062),_114066]).
 ```
-EXPECTED: `_36346=inheritance(robin,flyer)`
-EXPECTED: `_36348=inheritance(robin,bird)`
-EXPECTED: `_36352=[0.82,0.39]`
-SUCCESS!
+EXPECTED: `_114060=inheritance(robin,flyer)`
+EXPECTED: `_114062=inheritance(robin,bird)`
+EXPECTED: `_114066=[0.82,0.39]`
+
+```diff
++SUCCESS!
+```
+
 ```prolog
 % [ '='(
 %      inheritance(robin,flyer),
@@ -1547,10 +1968,14 @@ SUCCESS!
 
 
 ```prolog
-TEST: ?- inference([implication(inheritance(robin,bird),inheritance(robin,animal)),[0.9,0.8]],[equivalence(inheritance(robin,flyer),inheritance(robin,animal)),[0.9,0.8]],_40250).
+TEST: ?- inference([implication(inheritance(robin,bird),inheritance(robin,animal)),[0.9,0.8]],[equivalence(inheritance(robin,flyer),inheritance(robin,animal)),[0.9,0.8]],_117964).
 ```
-EXPECTED: `_40250=[implication(inheritance(robin,bird),inheritance(robin,flyer)),[0.81,0.58]]`
-SUCCESS!
+EXPECTED: `_117964=[implication(inheritance(robin,bird),inheritance(robin,flyer)),[0.81,0.58]]`
+
+```diff
++SUCCESS!
+```
+
 ```prolog
 % [ '='(
 %      [ implication(
@@ -1565,10 +1990,14 @@ SUCCESS!
 
 
 ```prolog
-TEST: ?- inference([implication(inheritance(robin,bird),inheritance(robin,animal)),[0.9,0.8]],[equivalence(inheritance(robin,flyer),inheritance(robin,bird)),[0.9,0.8]],_45898).
+TEST: ?- inference([implication(inheritance(robin,bird),inheritance(robin,animal)),[0.9,0.8]],[equivalence(inheritance(robin,flyer),inheritance(robin,bird)),[0.9,0.8]],_123594).
 ```
-EXPECTED: `_45898=[implication(inheritance(robin,flyer),inheritance(robin,animal)),[0.81,0.58]]`
-SUCCESS!
+EXPECTED: `_123594=[implication(inheritance(robin,flyer),inheritance(robin,animal)),[0.81,0.58]]`
+
+```diff
++SUCCESS!
+```
+
 ```prolog
 % [ '='(
 %      [ implication(
@@ -1583,10 +2012,14 @@ SUCCESS!
 
 
 ```prolog
-TEST: ?- inference([implication(inheritance(robin,bird),inheritance(robin,animal)),[0.9,0.8]],[implication(inheritance(robin,bird),inheritance(robin,flyer)),[0.9,0.8]],_51546).
+TEST: ?- inference([implication(inheritance(robin,bird),inheritance(robin,animal)),[0.9,0.8]],[implication(inheritance(robin,bird),inheritance(robin,flyer)),[0.9,0.8]],_129224).
 ```
-EXPECTED: `_51546=[implication(inheritance(robin,bird),conjunction([inheritance(robin,animal),inheritance(robin,flyer)])),[0.81,0.64]];_51546=[implication(inheritance(robin,bird),disjunction([inheritance(robin,animal),inheritance(robin,flyer)])),[0.99,0.64]]`
-SUCCESS!
+EXPECTED: `_129224=[implication(inheritance(robin,bird),conjunction([inheritance(robin,animal),inheritance(robin,flyer)])),[0.81,0.64]];_129224=[implication(inheritance(robin,bird),disjunction([inheritance(robin,animal),inheritance(robin,flyer)])),[0.99,0.64]]`
+
+```diff
++SUCCESS!
+```
+
 ```prolog
 % [ ('='(
 %       [ implication(
@@ -1614,10 +2047,14 @@ SUCCESS!
 
 
 ```prolog
-TEST: ?- inference([implication(inheritance(robin,bird),inheritance(robin,animal)),[0.9,0.8]],[implication(inheritance(robin,flyer),inheritance(robin,animal)),[0.9,0.8]],_66388).
+TEST: ?- inference([implication(inheritance(robin,bird),inheritance(robin,animal)),[0.9,0.8]],[implication(inheritance(robin,flyer),inheritance(robin,animal)),[0.9,0.8]],_32468).
 ```
-EXPECTED: `_66388=[implication(disjunction([inheritance(robin,bird),inheritance(robin,flyer)]),inheritance(robin,animal)),[0.81,0.64]];_66388=[implication(conjunction([inheritance(robin,bird),inheritance(robin,flyer)]),inheritance(robin,animal)),[0.99,0.64]]`
-SUCCESS!
+EXPECTED: `_32468=[implication(disjunction([inheritance(robin,bird),inheritance(robin,flyer)]),inheritance(robin,animal)),[0.81,0.64]];_32468=[implication(conjunction([inheritance(robin,bird),inheritance(robin,flyer)]),inheritance(robin,animal)),[0.99,0.64]]`
+
+```diff
++SUCCESS!
+```
+
 ```prolog
 % [ ('='(
 %       [ implication(
@@ -1645,10 +2082,14 @@ SUCCESS!
 
 
 ```prolog
-TEST: ?- inference([inheritance(robin,animal),[0.9,0.9]],[inheritance(robin,flyer),[0.9,0.9]],[conjunction([inheritance(robin,animal),inheritance(robin,flyer)]),_81352]).
+TEST: ?- inference([inheritance(robin,animal),[0.9,0.9]],[inheritance(robin,flyer),[0.9,0.9]],[conjunction([inheritance(robin,animal),inheritance(robin,flyer)]),_47402]).
 ```
-EXPECTED: `_81352=[0.81,0.81]`
-SUCCESS!
+EXPECTED: `_47402=[0.81,0.81]`
+
+```diff
++SUCCESS!
+```
+
 ```prolog
 % [ '='(
 %      [0.81,0.81],
@@ -1657,10 +2098,14 @@ SUCCESS!
 
 
 ```prolog
-TEST: ?- inference([inheritance(robin,animal),[0.9,0.8]],[inheritance(robin,flyer),[0.9,0.8]],[disjunction([inheritance(robin,animal),inheritance(robin,flyer)]),_84122]).
+TEST: ?- inference([inheritance(robin,animal),[0.9,0.8]],[inheritance(robin,flyer),[0.9,0.8]],[disjunction([inheritance(robin,animal),inheritance(robin,flyer)]),_50172]).
 ```
-EXPECTED: `_84122=[0.99,0.64]`
-SUCCESS!
+EXPECTED: `_50172=[0.99,0.64]`
+
+```diff
++SUCCESS!
+```
+
 ```prolog
 % [ '='(
 %      [0.99,0.6400000000000001],
@@ -1669,10 +2114,14 @@ SUCCESS!
 
 
 ```prolog
-TEST: ?- inference([implication(inheritance(robin,bird),inheritance(robin,animal)),[0.9,0.8]],[implication(inheritance(robin,bird),conjunction([inheritance(robin,animal),inheritance(robin,flyer)])),_86932]).
+TEST: ?- inference([implication(inheritance(robin,bird),inheritance(robin,animal)),[0.9,0.8]],[implication(inheritance(robin,bird),conjunction([inheritance(robin,animal),inheritance(robin,flyer)])),_52982]).
 ```
-EXPECTED: `_86932=[0.9,0.44]`
-SUCCESS!
+EXPECTED: `_52982=[0.9,0.44]`
+
+```diff
++SUCCESS!
+```
+
 ```prolog
 % [ '='(
 %      [0.9,0.4444444444444445],
@@ -1681,10 +2130,14 @@ SUCCESS!
 
 
 ```prolog
-TEST: ?- inference([implication(inheritance(robin,bird),inheritance(robin,animal)),[0.9,0.8]],[implication(inheritance(robin,bird),disjunction([inheritance(robin,animal),inheritance(robin,flyer)])),_89758]).
+TEST: ?- inference([implication(inheritance(robin,bird),inheritance(robin,animal)),[0.9,0.8]],[implication(inheritance(robin,bird),disjunction([inheritance(robin,animal),inheritance(robin,flyer)])),_55808]).
 ```
-EXPECTED: `_89758=[0.9,0.72]`
-SUCCESS!
+EXPECTED: `_55808=[0.9,0.72]`
+
+```diff
++SUCCESS!
+```
+
 ```prolog
 % [ '='(
 %      [0.9,0.7200000000000001],
@@ -1693,10 +2146,14 @@ SUCCESS!
 
 
 ```prolog
-TEST: ?- inference([implication(inheritance(robin,bird),inheritance(robin,animal)),[0.9,0.8]],[implication(disjunction([inheritance(robin,bird),inheritance(robin,flyer)]),inheritance(robin,animal)),_92590]).
+TEST: ?- inference([implication(inheritance(robin,bird),inheritance(robin,animal)),[0.9,0.8]],[implication(disjunction([inheritance(robin,bird),inheritance(robin,flyer)]),inheritance(robin,animal)),_58640]).
 ```
-EXPECTED: `_92590=[0.9,0.44]`
-SUCCESS!
+EXPECTED: `_58640=[0.9,0.44]`
+
+```diff
++SUCCESS!
+```
+
 ```prolog
 % [ '='(
 %      [0.9,0.4444444444444445],
@@ -1705,10 +2162,14 @@ SUCCESS!
 
 
 ```prolog
-TEST: ?- inference([implication(inheritance(robin,bird),inheritance(robin,animal)),[0.9,0.8]],[implication(conjunction([inheritance(robin,bird),inheritance(robin,flyer)]),inheritance(robin,animal)),_95416]).
+TEST: ?- inference([implication(inheritance(robin,bird),inheritance(robin,animal)),[0.9,0.8]],[implication(conjunction([inheritance(robin,bird),inheritance(robin,flyer)]),inheritance(robin,animal)),_61466]).
 ```
-EXPECTED: `_95416=[0.9,0.72]`
-SUCCESS!
+EXPECTED: `_61466=[0.9,0.72]`
+
+```diff
++SUCCESS!
+```
+
 ```prolog
 % [ '='(
 %      [0.9,0.7200000000000001],
@@ -1717,10 +2178,14 @@ SUCCESS!
 
 
 ```prolog
-TEST: ?- inference([inheritance(robin,animal),[0.9,0.8]],[conjunction([inheritance(robin,animal),inheritance(robin,flyer)]),_98224]).
+TEST: ?- inference([inheritance(robin,animal),[0.9,0.8]],[conjunction([inheritance(robin,animal),inheritance(robin,flyer)]),_64274]).
 ```
-EXPECTED: `_98224=[0.9,0.44]`
-SUCCESS!
+EXPECTED: `_64274=[0.9,0.44]`
+
+```diff
++SUCCESS!
+```
+
 ```prolog
 % [ '='(
 %      [0.9,0.4444444444444445],
@@ -1729,10 +2194,14 @@ SUCCESS!
 
 
 ```prolog
-TEST: ?- inference([inheritance(robin,animal),[0.9,0.8]],[disjunction([inheritance(robin,animal),inheritance(robin,flyer)]),_101026]).
+TEST: ?- inference([inheritance(robin,animal),[0.9,0.8]],[disjunction([inheritance(robin,animal),inheritance(robin,flyer)]),_67076]).
 ```
-EXPECTED: `_101026=[0.9,0.72]`
-SUCCESS!
+EXPECTED: `_67076=[0.9,0.72]`
+
+```diff
++SUCCESS!
+```
+
 ```prolog
 % [ '='(
 %      [0.9,0.7200000000000001],
@@ -1741,10 +2210,14 @@ SUCCESS!
 
 
 ```prolog
-TEST: ?- inference([implication(inheritance(robin,bird),inheritance(robin,flyer)),[1,0.8]],[implication(inheritance(robin,bird),conjunction([inheritance(robin,animal),inheritance(robin,flyer)])),[0,0.8]],[implication(inheritance(robin,bird),inheritance(robin,animal)),_103902]).
+TEST: ?- inference([implication(inheritance(robin,bird),inheritance(robin,flyer)),[1,0.8]],[implication(inheritance(robin,bird),conjunction([inheritance(robin,animal),inheritance(robin,flyer)])),[0,0.8]],[implication(inheritance(robin,bird),inheritance(robin,animal)),_69952]).
 ```
-EXPECTED: `_103902=[0,0.64]`
-SUCCESS!
+EXPECTED: `_69952=[0,0.64]`
+
+```diff
++SUCCESS!
+```
+
 ```prolog
 % [ '='(
 %      [0,0.6400000000000001],
@@ -1753,10 +2226,14 @@ SUCCESS!
 
 
 ```prolog
-TEST: ?- inference([implication(inheritance(robin,bird),inheritance(robin,flyer)),[0,0.8]],[implication(inheritance(robin,bird),disjunction([inheritance(robin,animal),inheritance(robin,flyer)])),[1,0.8]],[implication(inheritance(robin,bird),inheritance(robin,animal)),_106744]).
+TEST: ?- inference([implication(inheritance(robin,bird),inheritance(robin,flyer)),[0,0.8]],[implication(inheritance(robin,bird),disjunction([inheritance(robin,animal),inheritance(robin,flyer)])),[1,0.8]],[implication(inheritance(robin,bird),inheritance(robin,animal)),_72794]).
 ```
-EXPECTED: `_106744=[1,0.64]`
-SUCCESS!
+EXPECTED: `_72794=[1,0.64]`
+
+```diff
++SUCCESS!
+```
+
 ```prolog
 % [ '='(
 %      [1,0.6400000000000001],
@@ -1765,10 +2242,14 @@ SUCCESS!
 
 
 ```prolog
-TEST: ?- inference([implication(inheritance(robin,bird),inheritance(robin,animal)),[1,0.8]],[implication(disjunction([inheritance(robin,bird),inheritance(robin,flyer)]),inheritance(robin,animal)),[0,0.8]],[implication(inheritance(robin,flyer),inheritance(robin,animal)),_109578]).
+TEST: ?- inference([implication(inheritance(robin,bird),inheritance(robin,animal)),[1,0.8]],[implication(disjunction([inheritance(robin,bird),inheritance(robin,flyer)]),inheritance(robin,animal)),[0,0.8]],[implication(inheritance(robin,flyer),inheritance(robin,animal)),_75628]).
 ```
-EXPECTED: `_109578=[0,0.64]`
-SUCCESS!
+EXPECTED: `_75628=[0,0.64]`
+
+```diff
++SUCCESS!
+```
+
 ```prolog
 % [ '='(
 %      [0,0.6400000000000001],
@@ -1777,10 +2258,14 @@ SUCCESS!
 
 
 ```prolog
-TEST: ?- inference([implication(inheritance(robin,bird),inheritance(robin,animal)),[0,0.8]],[implication(conjunction([inheritance(robin,bird),inheritance(robin,flyer)]),inheritance(robin,animal)),[1,0.8]],[implication(inheritance(robin,flyer),inheritance(robin,animal)),_112420]).
+TEST: ?- inference([implication(inheritance(robin,bird),inheritance(robin,animal)),[0,0.8]],[implication(conjunction([inheritance(robin,bird),inheritance(robin,flyer)]),inheritance(robin,animal)),[1,0.8]],[implication(inheritance(robin,flyer),inheritance(robin,animal)),_78470]).
 ```
-EXPECTED: `_112420=[1,0.64]`
-SUCCESS!
+EXPECTED: `_78470=[1,0.64]`
+
+```diff
++SUCCESS!
+```
+
 ```prolog
 % [ '='(
 %      [1,0.6400000000000001],
@@ -1789,10 +2274,14 @@ SUCCESS!
 
 
 ```prolog
-TEST: ?- inference([inheritance(robin,bird),[1,0.8]],[conjunction([inheritance(robin,bird),inheritance(robin,flyer)]),[0,0.8]],_115108).
+TEST: ?- inference([inheritance(robin,bird),[1,0.8]],[conjunction([inheritance(robin,bird),inheritance(robin,flyer)]),[0,0.8]],_81158).
 ```
-EXPECTED: `_115108=[inheritance(robin,flyer),[0,0.64]]`
-SUCCESS!
+EXPECTED: `_81158=[inheritance(robin,flyer),[0,0.64]]`
+
+```diff
++SUCCESS!
+```
+
 ```prolog
 % [ '='(
 %      [ inheritance(robin,flyer),
@@ -1803,10 +2292,14 @@ SUCCESS!
 
 
 ```prolog
-TEST: ?- inference([inheritance(robin,bird),[0,0.8]],[disjunction([inheritance(robin,bird),inheritance(robin,flyer)]),[1,0.8]],_119778).
+TEST: ?- inference([inheritance(robin,bird),[0,0.8]],[disjunction([inheritance(robin,bird),inheritance(robin,flyer)]),[1,0.8]],_85822).
 ```
-EXPECTED: `_119778=[inheritance(robin,flyer),[1,0.64]]`
-SUCCESS!
+EXPECTED: `_85822=[inheritance(robin,flyer),[1,0.64]]`
+
+```diff
++SUCCESS!
+```
+
 ```prolog
 % [ '='(
 %      [ inheritance(robin,flyer),
@@ -1817,10 +2310,14 @@ SUCCESS!
 
 
 ```prolog
-TEST: ?- inference([implication(inheritance(robin,bird),conjunction([inheritance(robin,animal),inheritance(robin,flyer)])),[0.9,0.8]],[implication(inheritance(robin,bird),inheritance(robin,animal)),_124542]).
+TEST: ?- inference([implication(inheritance(robin,bird),conjunction([inheritance(robin,animal),inheritance(robin,flyer)])),[0.9,0.8]],[implication(inheritance(robin,bird),inheritance(robin,animal)),_90580]).
 ```
-EXPECTED: `_124542=[0.9,0.72]`
-SUCCESS!
+EXPECTED: `_90580=[0.9,0.72]`
+
+```diff
++SUCCESS!
+```
+
 ```prolog
 % [ '='(
 %      [0.9,0.7200000000000001],
@@ -1829,10 +2326,14 @@ SUCCESS!
 
 
 ```prolog
-TEST: ?- inference([implication(inheritance(robin,bird),disjunction([inheritance(robin,animal),inheritance(robin,flyer)])),[0.9,0.8]],[implication(inheritance(robin,bird),inheritance(robin,animal)),_127374]).
+TEST: ?- inference([implication(inheritance(robin,bird),disjunction([inheritance(robin,animal),inheritance(robin,flyer)])),[0.9,0.8]],[implication(inheritance(robin,bird),inheritance(robin,animal)),_93412]).
 ```
-EXPECTED: `_127374=[0.9,0.44]`
-SUCCESS!
+EXPECTED: `_93412=[0.9,0.44]`
+
+```diff
++SUCCESS!
+```
+
 ```prolog
 % [ '='(
 %      [0.9,0.4444444444444445],
@@ -1841,10 +2342,14 @@ SUCCESS!
 
 
 ```prolog
-TEST: ?- inference([implication(disjunction([inheritance(robin,bird),inheritance(robin,flyer)]),inheritance(robin,animal)),[0.9,0.8]],[implication(inheritance(robin,bird),inheritance(robin,animal)),_130200]).
+TEST: ?- inference([implication(disjunction([inheritance(robin,bird),inheritance(robin,flyer)]),inheritance(robin,animal)),[0.9,0.8]],[implication(inheritance(robin,bird),inheritance(robin,animal)),_96238]).
 ```
-EXPECTED: `_130200=[0.9,0.72]`
-SUCCESS!
+EXPECTED: `_96238=[0.9,0.72]`
+
+```diff
++SUCCESS!
+```
+
 ```prolog
 % [ '='(
 %      [0.9,0.7200000000000001],
@@ -1853,10 +2358,14 @@ SUCCESS!
 
 
 ```prolog
-TEST: ?- inference([implication(conjunction([inheritance(robin,bird),inheritance(robin,flyer)]),inheritance(robin,animal)),[0.9,0.8]],[implication(inheritance(robin,bird),inheritance(robin,animal)),_21566]).
+TEST: ?- inference([implication(conjunction([inheritance(robin,bird),inheritance(robin,flyer)]),inheritance(robin,animal)),[0.9,0.8]],[implication(inheritance(robin,bird),inheritance(robin,animal)),_99070]).
 ```
-EXPECTED: `_21566=[0.9,0.44]`
-SUCCESS!
+EXPECTED: `_99070=[0.9,0.44]`
+
+```diff
++SUCCESS!
+```
+
 ```prolog
 % [ '='(
 %      [0.9,0.4444444444444445],
@@ -1865,10 +2374,14 @@ SUCCESS!
 
 
 ```prolog
-TEST: ?- inference([conjunction([inheritance(robin,bird),inheritance(robin,flyer)]),[0.9,0.8]],[inheritance(robin,bird),_24368]).
+TEST: ?- inference([conjunction([inheritance(robin,bird),inheritance(robin,flyer)]),[0.9,0.8]],[inheritance(robin,bird),_101872]).
 ```
-EXPECTED: `_24368=[0.9,0.72]`
-SUCCESS!
+EXPECTED: `_101872=[0.9,0.72]`
+
+```diff
++SUCCESS!
+```
+
 ```prolog
 % [ '='(
 %      [0.9,0.7200000000000001],
@@ -1877,10 +2390,14 @@ SUCCESS!
 
 
 ```prolog
-TEST: ?- inference([disjunction([inheritance(robin,bird),inheritance(robin,flyer)]),[0.9,0.8]],[inheritance(robin,bird),_27176]).
+TEST: ?- inference([disjunction([inheritance(robin,bird),inheritance(robin,flyer)]),[0.9,0.8]],[inheritance(robin,bird),_104680]).
 ```
-EXPECTED: `_27176=[0.9,0.44]`
-SUCCESS!
+EXPECTED: `_104680=[0.9,0.44]`
+
+```diff
++SUCCESS!
+```
+
 ```prolog
 % [ '='(
 %      [0.9,0.4444444444444445],
@@ -1889,10 +2406,14 @@ SUCCESS!
 
 
 ```prolog
-TEST: ?- inference([implication(p,q),[0.9,0.8]],[implication(conjunction([p,r]),conjunction([q,r])),_29988]).
+TEST: ?- inference([implication(p,q),[0.9,0.8]],[implication(conjunction([p,r]),conjunction([q,r])),_107492]).
 ```
-EXPECTED: `_29988=[0.9,0.72]`
-SUCCESS!
+EXPECTED: `_107492=[0.9,0.72]`
+
+```diff
++SUCCESS!
+```
+
 ```prolog
 % [ '='(
 %      [0.9,0.7200000000000001],
@@ -1901,10 +2422,14 @@ SUCCESS!
 
 
 ```prolog
-TEST: ?- inference([implication(conjunction([p,r]),conjunction([q,r])),[0.9,0.8]],[implication(p,q),_32836]).
+TEST: ?- inference([implication(conjunction([p,r]),conjunction([q,r])),[0.9,0.8]],[implication(p,q),_110340]).
 ```
-EXPECTED: `_32836=[0.9,0.44]`
-SUCCESS!
+EXPECTED: `_110340=[0.9,0.44]`
+
+```diff
++SUCCESS!
+```
+
 ```prolog
 % [ '='(
 %      [0.9,0.4444444444444445],
@@ -1913,10 +2438,14 @@ SUCCESS!
 
 
 ```prolog
-TEST: ?- inference([implication(p,q),[0.9,0.8]],[implication(disjunction([p,r]),disjunction([q,r])),_35678]).
+TEST: ?- inference([implication(p,q),[0.9,0.8]],[implication(disjunction([p,r]),disjunction([q,r])),_113182]).
 ```
-EXPECTED: `_35678=[0.9,0.72]`
-SUCCESS!
+EXPECTED: `_113182=[0.9,0.72]`
+
+```diff
++SUCCESS!
+```
+
 ```prolog
 % [ '='(
 %      [0.9,0.7200000000000001],
@@ -1925,10 +2454,14 @@ SUCCESS!
 
 
 ```prolog
-TEST: ?- inference([implication(disjunction([p,r]),disjunction([q,r])),[0.9,0.8]],[implication(p,q),_38526]).
+TEST: ?- inference([implication(disjunction([p,r]),disjunction([q,r])),[0.9,0.8]],[implication(p,q),_116030]).
 ```
-EXPECTED: `_38526=[0.9,0.44]`
-SUCCESS!
+EXPECTED: `_116030=[0.9,0.44]`
+
+```diff
++SUCCESS!
+```
+
 ```prolog
 % [ '='(
 %      [0.9,0.4444444444444445],
@@ -1937,10 +2470,14 @@ SUCCESS!
 
 
 ```prolog
-TEST: ?- inference([equivalence(p,q),[0.9,0.8]],[equivalence(conjunction([p,r]),conjunction([q,r])),_41368]).
+TEST: ?- inference([equivalence(p,q),[0.9,0.8]],[equivalence(conjunction([p,r]),conjunction([q,r])),_118872]).
 ```
-EXPECTED: `_41368=[0.9,0.72]`
-SUCCESS!
+EXPECTED: `_118872=[0.9,0.72]`
+
+```diff
++SUCCESS!
+```
+
 ```prolog
 % [ '='(
 %      [0.9,0.7200000000000001],
@@ -1949,10 +2486,14 @@ SUCCESS!
 
 
 ```prolog
-TEST: ?- inference([equivalence(conjunction([p,r]),conjunction([q,r])),[0.9,0.8]],[equivalence(p,q),_44216]).
+TEST: ?- inference([equivalence(conjunction([p,r]),conjunction([q,r])),[0.9,0.8]],[equivalence(p,q),_121720]).
 ```
-EXPECTED: `_44216=[0.9,0.44]`
-SUCCESS!
+EXPECTED: `_121720=[0.9,0.44]`
+
+```diff
++SUCCESS!
+```
+
 ```prolog
 % [ '='(
 %      [0.9,0.4444444444444445],
@@ -1961,10 +2502,14 @@ SUCCESS!
 
 
 ```prolog
-TEST: ?- inference([equivalence(p,q),[0.9,0.8]],[equivalence(disjunction([p,r]),disjunction([q,r])),_47058]).
+TEST: ?- inference([equivalence(p,q),[0.9,0.8]],[equivalence(disjunction([p,r]),disjunction([q,r])),_124562]).
 ```
-EXPECTED: `_47058=[0.9,0.72]`
-SUCCESS!
+EXPECTED: `_124562=[0.9,0.72]`
+
+```diff
++SUCCESS!
+```
+
 ```prolog
 % [ '='(
 %      [0.9,0.7200000000000001],
@@ -1973,10 +2518,14 @@ SUCCESS!
 
 
 ```prolog
-TEST: ?- inference([equivalence(disjunction([p,r]),disjunction([q,r])),[0.9,0.8]],[equivalence(p,q),_49906]).
+TEST: ?- inference([equivalence(disjunction([p,r]),disjunction([q,r])),[0.9,0.8]],[equivalence(p,q),_127410]).
 ```
-EXPECTED: `_49906=[0.9,0.44]`
-SUCCESS!
+EXPECTED: `_127410=[0.9,0.44]`
+
+```diff
++SUCCESS!
+```
+
 ```prolog
 % [ '='(
 %      [0.9,0.4444444444444445],
@@ -1985,10 +2534,14 @@ SUCCESS!
 
 
 ```prolog
-TEST: ?- inference([negation(inheritance(robin,bird)),[0.9,0.8]],_52658).
+TEST: ?- inference([negation(inheritance(robin,bird)),[0.9,0.8]],_130162).
 ```
-EXPECTED: `_52658=[inheritance(robin,bird),[0.1,0.8]]`
-SUCCESS!
+EXPECTED: `_130162=[inheritance(robin,bird),[0.1,0.8]]`
+
+```diff
++SUCCESS!
+```
+
 ```prolog
 % [ '='(
 %      [ inheritance(robin,bird),
@@ -1999,10 +2552,14 @@ SUCCESS!
 
 
 ```prolog
-TEST: ?- inference([inheritance(robin,bird),[0.2,0.8]],[negation(inheritance(robin,bird)),_57282]).
+TEST: ?- inference([inheritance(robin,bird),[0.2,0.8]],[negation(inheritance(robin,bird)),_22966]).
 ```
-EXPECTED: `_57282=[0.8,0.8]`
-SUCCESS!
+EXPECTED: `_22966=[0.8,0.8]`
+
+```diff
++SUCCESS!
+```
+
 ```prolog
 % [ '='(
 %      [0.8,0.8],
@@ -2011,10 +2568,14 @@ SUCCESS!
 
 
 ```prolog
-TEST: ?- inference([implication(negation(inheritance(penguin,flyer)),inheritance(penguin,swimmer)),[0.1,0.8]],[implication(negation(inheritance(penguin,swimmer)),inheritance(penguin,flyer)),_59978]).
+TEST: ?- inference([implication(negation(inheritance(penguin,flyer)),inheritance(penguin,swimmer)),[0.1,0.8]],[implication(negation(inheritance(penguin,swimmer)),inheritance(penguin,flyer)),_25662]).
 ```
-EXPECTED: `_59978=[0,0.42]`
-SUCCESS!
+EXPECTED: `_25662=[0,0.42]`
+
+```diff
++SUCCESS!
+```
+
 ```prolog
 % [ '='(
 %      [0,0.4186046511627907],
@@ -2023,10 +2584,14 @@ SUCCESS!
 
 
 ```prolog
-TEST: ?- inference([implication(inheritance(robin,bird),inheritance(robin,animal)),[0.9,0.8]],[inheritance(robin,bird),[1,0.5]],_62640).
+TEST: ?- inference([implication(inheritance(robin,bird),inheritance(robin,animal)),[0.9,0.8]],[inheritance(robin,bird),[1,0.5]],_28324).
 ```
-EXPECTED: `_62640=[inheritance(robin,animal),[0.9,0.36]]`
-SUCCESS!
+EXPECTED: `_28324=[inheritance(robin,animal),[0.9,0.36]]`
+
+```diff
++SUCCESS!
+```
+
 ```prolog
 % [ '='(
 %      [ inheritance(robin,animal),
@@ -2037,10 +2602,14 @@ SUCCESS!
 
 
 ```prolog
-TEST: ?- inference([implication(inheritance(robin,bird),inheritance(robin,animal)),[0.9,0.8]],[inheritance(robin,animal),[1,0.5]],_67308).
+TEST: ?- inference([implication(inheritance(robin,bird),inheritance(robin,animal)),[0.9,0.8]],[inheritance(robin,animal),[1,0.5]],_32986).
 ```
-EXPECTED: `_67308=[inheritance(robin,bird),[1,0.26]]`
-SUCCESS!
+EXPECTED: `_32986=[inheritance(robin,bird),[1,0.26]]`
+
+```diff
++SUCCESS!
+```
+
 ```prolog
 % [ '='(
 %      [ inheritance(robin,bird),
@@ -2051,10 +2620,14 @@ SUCCESS!
 
 
 ```prolog
-TEST: ?- inference([inheritance(robin,animal),[0.9,0.8]],[inheritance(robin,flyer),[1,0.5]],[implication(inheritance(robin,flyer),inheritance(robin,animal)),_72052]).
+TEST: ?- inference([inheritance(robin,animal),[0.9,0.8]],[inheritance(robin,flyer),[1,0.5]],[implication(inheritance(robin,flyer),inheritance(robin,animal)),_37724]).
 ```
-EXPECTED: `_72052=[0.9,0.29]`
-SUCCESS!
+EXPECTED: `_37724=[0.9,0.29]`
+
+```diff
++SUCCESS!
+```
+
 ```prolog
 % [ '='(
 %      [0.9,0.28571428571428575],
@@ -2063,10 +2636,14 @@ SUCCESS!
 
 
 ```prolog
-TEST: ?- inference([inheritance(robin,animal),[1,0.5]],[equivalence(inheritance(robin,flyer),inheritance(robin,animal)),[0.9,0.8]],_74750).
+TEST: ?- inference([inheritance(robin,animal),[1,0.5]],[equivalence(inheritance(robin,flyer),inheritance(robin,animal)),[0.9,0.8]],_40422).
 ```
-EXPECTED: `_74750=[inheritance(robin,flyer),[0.9,0.36]]`
-SUCCESS!
+EXPECTED: `_40422=[inheritance(robin,flyer),[0.9,0.36]]`
+
+```diff
++SUCCESS!
+```
+
 ```prolog
 % [ '='(
 %      [ inheritance(robin,flyer),
@@ -2077,10 +2654,14 @@ SUCCESS!
 
 
 ```prolog
-TEST: ?- inference([inheritance(robin,animal),[0.9,0.8]],[inheritance(robin,flyer),[1,0.5]],[equivalence(inheritance(robin,flyer),inheritance(robin,animal)),_79524]).
+TEST: ?- inference([inheritance(robin,animal),[0.9,0.8]],[inheritance(robin,flyer),[1,0.5]],[equivalence(inheritance(robin,flyer),inheritance(robin,animal)),_45190]).
 ```
-EXPECTED: `_79524=[0.9,0.29]`
-SUCCESS!
+EXPECTED: `_45190=[0.9,0.29]`
+
+```diff
++SUCCESS!
+```
+
 ```prolog
 % [ '='(
 %      [0.9000000000000001,0.2857142857142857],
@@ -2089,10 +2670,14 @@ SUCCESS!
 
 
 ```prolog
-TEST: ?- inference([implication(conjunction([a1,a2,a3]),c),[0.9,0.9]],[a2,[0.9,0.9]],_82280).
+TEST: ?- inference([implication(conjunction([a1,a2,a3]),c),[0.9,0.9]],[a2,[0.9,0.9]],_47946).
 ```
-EXPECTED: `_82280=[implication(conjunction([a1,a3]),c),[0.81,0.66]]`
-SUCCESS!
+EXPECTED: `_47946=[implication(conjunction([a1,a3]),c),[0.81,0.66]]`
+
+```diff
++SUCCESS!
+```
+
 ```prolog
 % [ '='(
 %      [ implication(
@@ -2107,10 +2692,14 @@ SUCCESS!
 
 
 ```prolog
-TEST: ?- inference([implication(conjunction([a1,a2,a3]),c),[0.9,0.9]],[implication(conjunction([a1,a3]),c),[0.9,0.9]],[a2,_88836]).
+TEST: ?- inference([implication(conjunction([a1,a2,a3]),c),[0.9,0.9]],[implication(conjunction([a1,a3]),c),[0.9,0.9]],[a2,_54490]).
 ```
-EXPECTED: `_88836=[0.9,0.42]`
-SUCCESS!
+EXPECTED: `_54490=[0.9,0.42]`
+
+```diff
++SUCCESS!
+```
+
 ```prolog
 % [ '='(
 %      [0.9,0.42163100057836905],
@@ -2119,10 +2708,14 @@ SUCCESS!
 
 
 ```prolog
-TEST: ?- inference([implication(conjunction([a1,a3]),c),[0.9,0.9]],[a2,[0.9,0.9]],[implication(conjunction([a2,a1,a3]),c),_91684]).
+TEST: ?- inference([implication(conjunction([a1,a3]),c),[0.9,0.9]],[a2,[0.9,0.9]],[implication(conjunction([a2,a1,a3]),c),_57338]).
 ```
-EXPECTED: `_91684=[0.9,0.42]`
-SUCCESS!
+EXPECTED: `_57338=[0.9,0.42]`
+
+```diff
++SUCCESS!
+```
+
 ```prolog
 % [ '='(
 %      [0.9,0.42163100057836905],
@@ -2131,10 +2724,14 @@ SUCCESS!
 
 
 ```prolog
-TEST: ?- inference([implication(conjunction([a1,a2,a3]),c),[0.9,0.9]],[implication(b2,a2),[0.9,0.9]],_94392).
+TEST: ?- inference([implication(conjunction([a1,a2,a3]),c),[0.9,0.9]],[implication(b2,a2),[0.9,0.9]],_60046).
 ```
-EXPECTED: `_94392=[implication(conjunction([a1,b2,a3]),c),[0.81,0.66]]`
-SUCCESS!
+EXPECTED: `_60046=[implication(conjunction([a1,b2,a3]),c),[0.81,0.66]]`
+
+```diff
++SUCCESS!
+```
+
 ```prolog
 % [ '='(
 %      [ implication(
@@ -2149,10 +2746,14 @@ SUCCESS!
 
 
 ```prolog
-TEST: ?- inference([implication(conjunction([a1,a2,a3]),c),[0.9,0.9]],[implication(conjunction([a1,b2,a3]),c),[0.9,0.9]],[implication(b2,a2),_101082]).
+TEST: ?- inference([implication(conjunction([a1,a2,a3]),c),[0.9,0.9]],[implication(conjunction([a1,b2,a3]),c),[0.9,0.9]],[implication(b2,a2),_66724]).
 ```
-EXPECTED: `_101082=[0.9,0.42]`
-SUCCESS!
+EXPECTED: `_66724=[0.9,0.42]`
+
+```diff
++SUCCESS!
+```
+
 ```prolog
 % [ '='(
 %      [0.9,0.42163100057836905],
@@ -2161,10 +2762,14 @@ SUCCESS!
 
 
 ```prolog
-TEST: ?- inference([implication(conjunction([a1,b2,a3]),c),[0.9,0.9]],[implication(b2,a2),[0.9,0.9]],_103774).
+TEST: ?- inference([implication(conjunction([a1,b2,a3]),c),[0.9,0.9]],[implication(b2,a2),[0.9,0.9]],_69416).
 ```
-EXPECTED: `_103774=[implication(conjunction([a1,a2,a3]),c),[0.9,0.42]]`
-SUCCESS!
+EXPECTED: `_69416=[implication(conjunction([a1,a2,a3]),c),[0.9,0.42]]`
+
+```diff
++SUCCESS!
+```
+
 ```prolog
 % [ '='(
 %      [ implication(
@@ -2179,196 +2784,240 @@ SUCCESS!
 
 
 ```prolog
-TEST: ?- revision([implication(inheritance(_110330,bird),inheritance(_110330,flyer)),[0.9,0.8]],[implication(inheritance(_110384,bird),inheritance(_110384,flyer)),[1,0.5]],_110314).
+TEST: ?- revision([implication(inheritance(_75960,bird),inheritance(_75960,flyer)),[0.9,0.8]],[implication(inheritance(_76014,bird),inheritance(_76014,flyer)),[1,0.5]],_75944).
 ```
-EXPECTED: `_110314=[implication(inheritance(_110384,bird),inheritance(_110384,flyer)),[0.92,0.83]]`
-SUCCESS!
+EXPECTED: `_75944=[implication(inheritance(_76014,bird),inheritance(_76014,flyer)),[0.92,0.83]]`
+
+```diff
++SUCCESS!
+```
+
 ```prolog
 % [ '='(
 %      [ implication(
-%           inheritance(_118330,bird),
-%           inheritance(_118330,flyer)),
+%           inheritance(_83942,bird),
+%           inheritance(_83942,flyer)),
 %        [0.9200000000000002,0.8333333333333334] ],
 %      [ implication(
-%           inheritance(_118330,bird),
-%           inheritance(_118330,flyer)),
+%           inheritance(_83942,bird),
+%           inheritance(_83942,flyer)),
 %        [0.92,0.83] ]) ].
 ```
 
 
 ```prolog
-TEST: ?- inference([implication(inheritance(_118754,bird),inheritance(_118754,animal)),[1,0.9]],[implication(inheritance(_118802,robin),inheritance(_118802,bird)),[1,0.9]],_118738).
+TEST: ?- inference([implication(inheritance(_84366,bird),inheritance(_84366,animal)),[1,0.9]],[implication(inheritance(_84414,robin),inheritance(_84414,bird)),[1,0.9]],_84350).
 ```
-EXPECTED: `_118738=[implication(inheritance(_118802,robin),inheritance(_118802,animal)),[1,0.81]]`
-SUCCESS!
+EXPECTED: `_84350=[implication(inheritance(_84414,robin),inheritance(_84414,animal)),[1,0.81]]`
+
+```diff
++SUCCESS!
+```
+
 ```prolog
 % [ '='(
 %      [ implication(
-%           inheritance(_126506,robin),
-%           inheritance(_126506,animal)),
+%           inheritance(_92118,robin),
+%           inheritance(_92118,animal)),
 %        [1,0.81] ],
 %      [ implication(
-%           inheritance(_126506,robin),
-%           inheritance(_126506,animal)),
+%           inheritance(_92118,robin),
+%           inheritance(_92118,animal)),
 %        [1,0.81] ]) ].
 ```
 
 
 ```prolog
-TEST: ?- inference([implication(inheritance(_126930,bird),inheritance(_126930,animal)),[1,0.9]],[implication(inheritance(_126978,robin),inheritance(_126978,animal)),[1,0.9]],_126914).
+TEST: ?- inference([implication(inheritance(_92542,bird),inheritance(_92542,animal)),[1,0.9]],[implication(inheritance(_92590,robin),inheritance(_92590,animal)),[1,0.9]],_92526).
 ```
-EXPECTED: `_126914=[implication(inheritance(_126978,robin),inheritance(_126978,bird)),[1,0.45]]`
-SUCCESS!
+EXPECTED: `_92526=[implication(inheritance(_92590,robin),inheritance(_92590,bird)),[1,0.45]]`
+
+```diff
++SUCCESS!
+```
+
 ```prolog
 % [ '='(
 %      [ implication(
-%           inheritance(_23716,robin),
-%           inheritance(_23716,bird)),
+%           inheritance(_100426,robin),
+%           inheritance(_100426,bird)),
 %        [1,0.44751381215469616] ],
 %      [ implication(
-%           inheritance(_23716,robin),
-%           inheritance(_23716,bird)),
+%           inheritance(_100426,robin),
+%           inheritance(_100426,bird)),
 %        [1,0.45] ]) ].
 ```
 
 
 ```prolog
-TEST: ?- inference([implication(inheritance(_24140,robin),inheritance(_24140,animal)),[1,0.9]],[implication(inheritance(_24188,robin),inheritance(_24188,bird)),[1,0.9]],_24124).
+TEST: ?- inference([implication(inheritance(_100850,robin),inheritance(_100850,animal)),[1,0.9]],[implication(inheritance(_100898,robin),inheritance(_100898,bird)),[1,0.9]],_100834).
 ```
-EXPECTED: `_24124=[implication(inheritance(_24188,bird),inheritance(_24188,animal)),[1,0.45]]`
-SUCCESS!
+EXPECTED: `_100834=[implication(inheritance(_100898,bird),inheritance(_100898,animal)),[1,0.45]]`
+
+```diff
++SUCCESS!
+```
+
 ```prolog
 % [ '='(
 %      [ implication(
-%           inheritance(_32042,bird),
-%           inheritance(_32042,animal)),
+%           inheritance(_108734,bird),
+%           inheritance(_108734,animal)),
 %        [1,0.44751381215469616] ],
 %      [ implication(
-%           inheritance(_32042,bird),
-%           inheritance(_32042,animal)),
+%           inheritance(_108734,bird),
+%           inheritance(_108734,animal)),
 %        [1,0.45] ]) ].
 ```
 
 
 ```prolog
-TEST: ?- inference([implication(inheritance(_32466,feathered),inheritance(_32466,bird)),[1,0.9]],[equivalence(inheritance(_32514,flyer),inheritance(_32514,bird)),[1,0.9]],_32450).
+TEST: ?- inference([implication(inheritance(_109158,feathered),inheritance(_109158,bird)),[1,0.9]],[equivalence(inheritance(_109206,flyer),inheritance(_109206,bird)),[1,0.9]],_109142).
 ```
-EXPECTED: `_32450=[implication(inheritance(_32514,feathered),inheritance(_32514,flyer)),[1,0.81]]`
-SUCCESS!
+EXPECTED: `_109142=[implication(inheritance(_109206,feathered),inheritance(_109206,flyer)),[1,0.81]]`
+
+```diff
++SUCCESS!
+```
+
 ```prolog
 % [ '='(
 %      [ implication(
-%           inheritance(_40218,feathered),
-%           inheritance(_40218,flyer)),
+%           inheritance(_116910,feathered),
+%           inheritance(_116910,flyer)),
 %        [1,0.81] ],
 %      [ implication(
-%           inheritance(_40218,feathered),
-%           inheritance(_40218,flyer)),
+%           inheritance(_116910,feathered),
+%           inheritance(_116910,flyer)),
 %        [1,0.81] ]) ].
 ```
 
 
 ```prolog
-TEST: ?- inference([implication(inheritance(_40642,feathered),inheritance(_40642,flyer)),[1,0.9]],[implication(inheritance(_40690,feathered),inheritance(_40690,bird)),[1,0.9]],_40626).
+TEST: ?- inference([implication(inheritance(_117334,feathered),inheritance(_117334,flyer)),[1,0.9]],[implication(inheritance(_117382,feathered),inheritance(_117382,bird)),[1,0.9]],_117318).
 ```
-EXPECTED: `_40626=[implication(inheritance(_40690,bird),inheritance(_40690,flyer)),[1,0.45]]`
-SUCCESS!
+EXPECTED: `_117318=[implication(inheritance(_117382,bird),inheritance(_117382,flyer)),[1,0.45]]`
+
+```diff
++SUCCESS!
+```
+
 ```prolog
 % [ '='(
 %      [ implication(
-%           inheritance(_48544,bird),
-%           inheritance(_48544,flyer)),
+%           inheritance(_125218,bird),
+%           inheritance(_125218,flyer)),
 %        [1,0.44751381215469616] ],
 %      [ implication(
-%           inheritance(_48544,bird),
-%           inheritance(_48544,flyer)),
+%           inheritance(_125218,bird),
+%           inheritance(_125218,flyer)),
 %        [1,0.45] ]) ].
 ```
 
 
 ```prolog
-TEST: ?- inference([implication(conjunction([inheritance(_48978,feathered),inheritance(_48978,flyer)]),inheritance(_48978,bird)),[1,0.9]],[implication(inheritance(_49038,swimmer),inheritance(_49038,feathered)),[1,0.9]],_48952).
+TEST: ?- inference([implication(conjunction([inheritance(_125652,feathered),inheritance(_125652,flyer)]),inheritance(_125652,bird)),[1,0.9]],[implication(inheritance(_125712,swimmer),inheritance(_125712,feathered)),[1,0.9]],_125626).
 ```
-EXPECTED: `_48952=[implication(conjunction([inheritance(_49038,swimmer),inheritance(_49038,flyer)]),inheritance(_49038,bird)),[1,0.81]]`
-SUCCESS!
+EXPECTED: `_125626=[implication(conjunction([inheritance(_125712,swimmer),inheritance(_125712,flyer)]),inheritance(_125712,bird)),[1,0.81]]`
+
+```diff
++SUCCESS!
+```
+
 ```prolog
 % [ '='(
 %      [ implication(
-%           conjunction([ inheritance(_60402,swimmer),
-%                         inheritance(_60402,flyer) ]),
-%           inheritance(_60402,bird)),
+%           conjunction([ inheritance(_25646,swimmer),
+%                         inheritance(_25646,flyer) ]),
+%           inheritance(_25646,bird)),
 %        [1,0.81] ],
 %      [ implication(
-%           conjunction([ inheritance(_60402,swimmer),
-%                         inheritance(_60402,flyer) ]),
-%           inheritance(_60402,bird)),
+%           conjunction([ inheritance(_25646,swimmer),
+%                         inheritance(_25646,flyer) ]),
+%           inheritance(_25646,bird)),
 %        [1,0.81] ]) ].
 ```
 
 
 ```prolog
-TEST: ?- inference([implication(conjunction([inheritance(_60934,feathered),inheritance(_60934,flyer)]),inheritance(_60934,bird)),[1,0.9]],[implication(conjunction([inheritance(_60934,swimmer),inheritance(_60934,flyer)]),inheritance(_60934,bird)),[1,0.9]],_60908).
+TEST: ?- inference([implication(conjunction([inheritance(_26178,feathered),inheritance(_26178,flyer)]),inheritance(_26178,bird)),[1,0.9]],[implication(conjunction([inheritance(_26178,swimmer),inheritance(_26178,flyer)]),inheritance(_26178,bird)),[1,0.9]],_26152).
 ```
-EXPECTED: `_60908=[implication(inheritance(_60934,swimmer),inheritance(_60934,feathered)),[1,0.45]]`
-SUCCESS!
+EXPECTED: `_26152=[implication(inheritance(_26178,swimmer),inheritance(_26178,feathered)),[1,0.45]]`
+
+```diff
++SUCCESS!
+```
+
 ```prolog
 % [ '='(
 %      [ implication(
-%           inheritance(_68870,swimmer),
-%           inheritance(_68870,feathered)),
+%           inheritance(_34096,swimmer),
+%           inheritance(_34096,feathered)),
 %        [1,0.44751381215469616] ],
 %      [ implication(
-%           inheritance(_68870,swimmer),
-%           inheritance(_68870,feathered)),
+%           inheritance(_34096,swimmer),
+%           inheritance(_34096,feathered)),
 %        [1,0.45] ]) ].
 ```
 
 
 ```prolog
-TEST: ?- inference([implication(conjunction([inheritance(_69304,swimmer),inheritance(_69304,flyer)]),inheritance(_69304,bird)),[1,0.9]],[implication(inheritance(_69364,swimmer),inheritance(_69364,feathered)),[1,0.9]],_69278).
+TEST: ?- inference([implication(conjunction([inheritance(_34530,swimmer),inheritance(_34530,flyer)]),inheritance(_34530,bird)),[1,0.9]],[implication(inheritance(_34590,swimmer),inheritance(_34590,feathered)),[1,0.9]],_34504).
 ```
-EXPECTED: `_69278=[implication(conjunction([inheritance(_69364,feathered),inheritance(_69364,flyer)]),inheritance(_69364,bird)),[1,0.45]]`
-SUCCESS!
+EXPECTED: `_34504=[implication(conjunction([inheritance(_34590,feathered),inheritance(_34590,flyer)]),inheritance(_34590,bird)),[1,0.45]]`
+
+```diff
++SUCCESS!
+```
+
 ```prolog
 % [ '='(
 %      [ implication(
-%           conjunction([ inheritance(_80938,feathered),
-%                         inheritance(_80938,flyer) ]),
-%           inheritance(_80938,bird)),
+%           conjunction([ inheritance(_46134,feathered),
+%                         inheritance(_46134,flyer) ]),
+%           inheritance(_46134,bird)),
 %        [1,0.44751381215469616] ],
 %      [ implication(
-%           conjunction([ inheritance(_80938,feathered),
-%                         inheritance(_80938,flyer) ]),
-%           inheritance(_80938,bird)),
+%           conjunction([ inheritance(_46134,feathered),
+%                         inheritance(_46134,flyer) ]),
+%           inheritance(_46134,bird)),
 %        [1,0.45] ]) ].
 ```
 
 
 ```prolog
-TEST: ?- inference([implication(conjunction([inheritance(_81470,feathered),inheritance(_81470,flyer)]),inheritance(_81470,bird)),[1,0.9]],[implication(inheritance(_81530,swimmer),inheritance(_81530,feathered)),[1,0.9]],_81444).
+TEST: ?- inference([implication(conjunction([inheritance(_46666,feathered),inheritance(_46666,flyer)]),inheritance(_46666,bird)),[1,0.9]],[implication(inheritance(_46726,swimmer),inheritance(_46726,feathered)),[1,0.9]],_46640).
 ```
-EXPECTED: `_81444=[implication(conjunction([inheritance(_81530,swimmer),inheritance(_81530,flyer)]),inheritance(_81530,bird)),[1,0.81]]`
-SUCCESS!
+EXPECTED: `_46640=[implication(conjunction([inheritance(_46726,swimmer),inheritance(_46726,flyer)]),inheritance(_46726,bird)),[1,0.81]]`
+
+```diff
++SUCCESS!
+```
+
 ```prolog
 % [ '='(
 %      [ implication(
-%           conjunction([ inheritance(_92894,swimmer),
-%                         inheritance(_92894,flyer) ]),
-%           inheritance(_92894,bird)),
+%           conjunction([ inheritance(_58090,swimmer),
+%                         inheritance(_58090,flyer) ]),
+%           inheritance(_58090,bird)),
 %        [1,0.81] ],
 %      [ implication(
-%           conjunction([ inheritance(_92894,swimmer),
-%                         inheritance(_92894,flyer) ]),
-%           inheritance(_92894,bird)),
+%           conjunction([ inheritance(_58090,swimmer),
+%                         inheritance(_58090,flyer) ]),
+%           inheritance(_58090,bird)),
 %        [1,0.81] ]) ].
 ```
 
 
 ```prolog
-TEST: ?- inference([implication(inheritance(_93416,bird),inheritance(_93416,animal)),[1,0.9]],[inheritance(robin,bird),[1,0.9]],_93400).
+TEST: ?- inference([implication(inheritance(_58612,bird),inheritance(_58612,animal)),[1,0.9]],[inheritance(robin,bird),[1,0.9]],_58596).
 ```
-EXPECTED: `_93400=[inheritance(robin,animal),[1,0.81]]`
-SUCCESS!
+EXPECTED: `_58596=[inheritance(robin,animal),[1,0.81]]`
+
+```diff
++SUCCESS!
+```
+
 ```prolog
 % [ '='(
 %      [ inheritance(robin,animal),
@@ -2379,10 +3028,14 @@ SUCCESS!
 
 
 ```prolog
-TEST: ?- inference([implication(inheritance(_97970,bird),inheritance(_97970,animal)),[1,0.9]],[inheritance(robin,animal),[1,0.9]],_97954).
+TEST: ?- inference([implication(inheritance(_63166,bird),inheritance(_63166,animal)),[1,0.9]],[inheritance(robin,animal),[1,0.9]],_63150).
 ```
-EXPECTED: `_97954=[inheritance(robin,bird),[1,0.45]]`
-SUCCESS!
+EXPECTED: `_63150=[inheritance(robin,bird),[1,0.45]]`
+
+```diff
++SUCCESS!
+```
+
 ```prolog
 % [ '='(
 %      [ inheritance(robin,bird),
@@ -2393,10 +3046,14 @@ SUCCESS!
 
 
 ```prolog
-TEST: ?- inference([inheritance(robin,animal),[1,0.9]],[equivalence(inheritance(_102638,bird),inheritance(_102638,animal)),[1,0.9]],_102586).
+TEST: ?- inference([inheritance(robin,animal),[1,0.9]],[equivalence(inheritance(_67828,bird),inheritance(_67828,animal)),[1,0.9]],_67776).
 ```
-EXPECTED: `_102586=[inheritance(robin,bird),[1,0.81]]`
-SUCCESS!
+EXPECTED: `_67776=[inheritance(robin,bird),[1,0.81]]`
+
+```diff
++SUCCESS!
+```
+
 ```prolog
 % [ '='(
 %      [ inheritance(robin,bird),
@@ -2407,10 +3064,14 @@ SUCCESS!
 
 
 ```prolog
-TEST: ?- inference([implication(conjunction([inheritance(_107166,feathered),inheritance(_107166,flyer)]),inheritance(_107166,bird)),[1,0.9]],[inheritance(swan,feathered),[1,0.9]],_107140).
+TEST: ?- inference([implication(conjunction([inheritance(_72356,feathered),inheritance(_72356,flyer)]),inheritance(_72356,bird)),[1,0.9]],[inheritance(swan,feathered),[1,0.9]],_72330).
 ```
-EXPECTED: `_107140=[implication(inheritance(swan,flyer),inheritance(swan,bird)),[1,0.81]]`
-SUCCESS!
+EXPECTED: `_72330=[implication(inheritance(swan,flyer),inheritance(swan,bird)),[1,0.81]]`
+
+```diff
++SUCCESS!
+```
+
 ```prolog
 % [ '='(
 %      [ implication(
@@ -2425,10 +3086,14 @@ SUCCESS!
 
 
 ```prolog
-TEST: ?- inference([conjunction([inheritance(var(_112650,[]),bird),inheritance(var(_112650,[]),swimmer)]),[1,0.9]],[inheritance(swan,bird),[1,0.9]],[inheritance(swan,swimmer),_112746]).
+TEST: ?- inference([conjunction([inheritance(var(_77840,[]),bird),inheritance(var(_77840,[]),swimmer)]),[1,0.9]],[inheritance(swan,bird),[1,0.9]],[inheritance(swan,swimmer),_77936]).
 ```
-EXPECTED: `_112746=[1,0.42]`
-SUCCESS!
+EXPECTED: `_77936=[1,0.42]`
+
+```diff
++SUCCESS!
+```
+
 ```prolog
 % [ '='(
 %      [1,0.42631578947368426],
@@ -2437,10 +3102,14 @@ SUCCESS!
 
 
 ```prolog
-TEST: ?- inference([conjunction([inheritance(var(_115550,[]),flyer),inheritance(var(_115550,[]),bird),inheritance(var(_115550,[]),swimmer)]),[1,0.9]],[inheritance(swan,bird),[1,0.9]],_115524).
+TEST: ?- inference([conjunction([inheritance(var(_80740,[]),flyer),inheritance(var(_80740,[]),bird),inheritance(var(_80740,[]),swimmer)]),[1,0.9]],[inheritance(swan,bird),[1,0.9]],_80714).
 ```
-EXPECTED: `_115524=[conjunction([inheritance(swan,flyer),inheritance(swan,swimmer)]),[1,0.42]]`
-SUCCESS!
+EXPECTED: `_80714=[conjunction([inheritance(swan,flyer),inheritance(swan,swimmer)]),[1,0.42]]`
+
+```diff
++SUCCESS!
+```
+
 ```prolog
 % [ '='(
 %      [ conjunction([ inheritance(swan,flyer),
@@ -2453,37 +3122,45 @@ SUCCESS!
 
 
 ```prolog
-TEST: ?- inference([inheritance(robin,animal),[1,0.9]],[inheritance(robin,bird),[1,0.9]],_122718).
+TEST: ?- inference([inheritance(robin,animal),[1,0.9]],[inheritance(robin,bird),[1,0.9]],_87890).
 ```
-EXPECTED: `_122718=[implication(inheritance(_122824,bird),inheritance(_122824,animal)),[1,0.45]];_122718=[equivalence(inheritance(_122824,bird),inheritance(_122824,animal)),[1,0.45]];_122718=[conjunction([inheritance(var(_122948,[]),bird),inheritance(var(_122948,[]),animal)]),[1,0.81]]`
-FAILED!
+EXPECTED: `_87890=[implication(inheritance(_87996,bird),inheritance(_87996,animal)),[1,0.45]];_87890=[equivalence(inheritance(_87996,bird),inheritance(_87996,animal)),[1,0.45]];_87890=[conjunction([inheritance(var(_88120,[]),bird),inheritance(var(_88120,[]),animal)]),[1,0.81]]`
+
+```diff
+-FAILED!
+```
+
 ```prolog
 % [ ('='(Term_List,
 %       [ implication(
-%            inheritance(_30500,bird),
-%            inheritance(_30500,animal)),
+%            inheritance(_106594,bird),
+%            inheritance(_106594,animal)),
 %         [1,0.45] ]) ;
 %     '='(Term_List,
 %        [ equivalence(
-%             inheritance(_30500,bird),
-%             inheritance(_30500,animal)),
+%             inheritance(_106594,bird),
+%             inheritance(_106594,animal)),
 %          [1,0.45] ]) ;
 %    '='(Term_List,
 %       [ conjunction([ inheritance(
-%                          var(_30576,[]),
+%                          var(_106670,[]),
 %                          bird),
 %                       inheritance(
-%                          var(_30576,[]),
+%                          var(_106670,[]),
 %                          animal) ]),
 %         [1,0.81] ])) ].
 ```
 
 
 ```prolog
-TEST: ?- inference([inheritance(sport,competition),[1,0.9]],[inheritance(chess,competition),[1,0.9]],_31096).
+TEST: ?- inference([inheritance(sport,competition),[1,0.9]],[inheritance(chess,competition),[1,0.9]],_107190).
 ```
-EXPECTED: `_31096=[implication(inheritance(sport,_31204),inheritance(chess,_31204)),[1,0.45]];_31096=[equivalence(inheritance(sport,_31204),inheritance(chess,_31204)),[1,0.45]];_31096=[conjunction([inheritance(chess,var(_31326,[])),inheritance(sport,var(_31326,[]))]),[1,0.81]]`
-FAILED!
+EXPECTED: `_107190=[implication(inheritance(sport,_107298),inheritance(chess,_107298)),[1,0.45]];_107190=[equivalence(inheritance(sport,_107298),inheritance(chess,_107298)),[1,0.45]];_107190=[conjunction([inheritance(chess,var(_107420,[])),inheritance(sport,var(_107420,[]))]),[1,0.81]]`
+
+```diff
+-FAILED!
+```
+
 ```prolog
 % [ ('='(Term_List,
 %       [ implication(
@@ -2497,32 +3174,36 @@ FAILED!
 %          [1,0.45] ]) ;
 %    '='(Term_List,
 %       [ conjunction([ inheritance(chess,
-%                          var(_50916,[])),
+%                          var(_20126,[])),
 %                       inheritance(sport,
-%                          var(_50916,[])) ]),
+%                          var(_20126,[])) ]),
 %         [1,0.81] ])) ].
 ```
 
 
 ```prolog
-TEST: ?- inference([inheritance(key1,ext_image(open,[nil,lock1])),[1,0.9]],[inheritance(key1,key),[1,0.9]],_51452).
+TEST: ?- inference([inheritance(key1,ext_image(open,[nil,lock1])),[1,0.9]],[inheritance(key1,key),[1,0.9]],_20308).
 ```
-EXPECTED: `_51452=[implication(inheritance(_51576,key),inheritance(_51576,ext_image(open,[nil,lock1]))),[1,0.45]];_51452=[conjunction([inheritance(var(_51658,[]),key),inheritance(var(_51658,[]),ext_image(open,[nil,lock1]))]),[1,0.81]]`
-FAILED!
+EXPECTED: `_20308=[implication(inheritance(_20432,key),inheritance(_20432,ext_image(open,[nil,lock1]))),[1,0.45]];_20308=[conjunction([inheritance(var(_20514,[]),key),inheritance(var(_20514,[]),ext_image(open,[nil,lock1]))]),[1,0.81]]`
+
+```diff
+-FAILED!
+```
+
 ```prolog
 % [ ('='(Term_List,
 %       [ implication(
-%            inheritance(_67132,key),
-%            inheritance(_67132,
+%            inheritance(_35988,key),
+%            inheritance(_35988,
 %               ext_image(open,
 %                  [nil,lock1]))),
 %         [1,0.45] ]) ;
 %    '='(Term_List,
 %       [ conjunction([ inheritance(
-%                          var(_67172,[]),
+%                          var(_36028,[]),
 %                          key),
 %                       inheritance(
-%                          var(_67172,[]),
+%                          var(_36028,[]),
 %                          ext_image(open,
 %                             [nil,lock1])) ]),
 %         [1,0.81] ])) ].
@@ -2530,63 +3211,71 @@ FAILED!
 
 
 ```prolog
-TEST: ?- inference([implication(inheritance(_67708,key),inheritance(lock1,ext_image(open,[_67708,nil]))),[1,0.9]],[inheritance(lock1,lock),[1,0.9]],_67692).
+TEST: ?- inference([implication(inheritance(_36564,key),inheritance(lock1,ext_image(open,[_36564,nil]))),[1,0.9]],[inheritance(lock1,lock),[1,0.9]],_36548).
 ```
-EXPECTED: `_67692=[implication(conjunction([inheritance(_67708,key),inheritance(_67850,lock)]),inheritance(_67850,ext_image(open,[_67708,nil]))),[1,0.45]];_67692=[conjunction([implication(inheritance(_67708,key),inheritance(var(_67850,[]),ext_image(open,[_67708,nil]))),inheritance(var(_67850,[]),lock)]),[1,0.81]]`
-FAILED!
+EXPECTED: `_36548=[implication(conjunction([inheritance(_36564,key),inheritance(_36706,lock)]),inheritance(_36706,ext_image(open,[_36564,nil]))),[1,0.45]];_36548=[conjunction([implication(inheritance(_36564,key),inheritance(var(_36706,[]),ext_image(open,[_36564,nil]))),inheritance(var(_36706,[]),lock)]),[1,0.81]]`
+
+```diff
+-FAILED!
+```
+
 ```prolog
 % [ ('='(Term_List,
 %       [ implication(
-%            conjunction([ inheritance(_86756,key),
-%                          inheritance(_86768,lock) ]),
-%            inheritance(_86768,
+%            conjunction([ inheritance(_55612,key),
+%                          inheritance(_55624,lock) ]),
+%            inheritance(_55624,
 %               ext_image(open,
-%                  [_86756,nil]))),
+%                  [_55612,nil]))),
 %         [1,0.45] ]) ;
 %    '='(Term_List,
 %       [ conjunction([ implication(
 %                          inheritance(CAR,key),
 %                          inheritance(
-%                             var(_86768,[]),
+%                             var(_55624,[]),
 %                             ext_image(open,
 %                                [CAR,nil]))),
 %                       inheritance(
-%                          var(_86768,[]),
+%                          var(_55624,[]),
 %                          lock) ]),
 %         [1,0.81] ])) ].
 ```
 
 
 ```prolog
-TEST: ?- inference([conjunction([inheritance(var(_87422,[]),key),inheritance(lock1,ext_image(open,[var(_87422,[]),nil]))]),[1,0.9]],[inheritance(lock1,lock),[1,0.9]],_87396).
+TEST: ?- inference([conjunction([inheritance(var(_56278,[]),key),inheritance(lock1,ext_image(open,[var(_56278,[]),nil]))]),[1,0.9]],[inheritance(lock1,lock),[1,0.9]],_56252).
 ```
-EXPECTED: `_87396=[implication(inheritance(_87554,lock),conjunction([inheritance(_87554,ext_image(open,[var(_87422,[_87554]),nil])),inheritance(var(_87422,[_87554]),key)])),[1,0.45]];_87396=[conjunction([inheritance(var(_87682,[]),lock),inheritance(var(_87682,[]),ext_image(open,[var(_87422,[]),nil])),inheritance(var(_87422,[]),key)]),[1,0.81]]`
-FAILED!
+EXPECTED: `_56252=[implication(inheritance(_56410,lock),conjunction([inheritance(_56410,ext_image(open,[var(_56278,[_56410]),nil])),inheritance(var(_56278,[_56410]),key)])),[1,0.45]];_56252=[conjunction([inheritance(var(_56538,[]),lock),inheritance(var(_56538,[]),ext_image(open,[var(_56278,[]),nil])),inheritance(var(_56278,[]),key)]),[1,0.81]]`
+
+```diff
+-FAILED!
+```
+
 ```prolog
 % [ ('='(Term_List,
 %       [ implication(
-%            inheritance(_109914,lock),
+%            inheritance(_78770,lock),
 %            conjunction([ inheritance(CAR,
 %                             ext_image(open,
-%                                [ var(_109948,
+%                                [ var(_78804,
 %                                     [CAR]),
 %                                  nil ])),
 %                          inheritance(
-%                             var(_109948,
+%                             var(_78804,
 %                                [CAR]),
 %                             key) ])),
 %         [1,0.45] ]) ;
 %    '='(Term_List,
 %       [ conjunction([ inheritance(
-%                          var(_110012,[]),
+%                          var(_78868,[]),
 %                          lock),
 %                       inheritance(
-%                          var(_110012,[]),
+%                          var(_78868,[]),
 %                          ext_image(open,
-%                             [ var(_109948,[]),
+%                             [ var(_78804,[]),
 %                               nil ])),
 %                       inheritance(
-%                          var(_109948,[]),
+%                          var(_78804,[]),
 %                          key) ]),
 %         [1,0.81] ])) ].
 ```

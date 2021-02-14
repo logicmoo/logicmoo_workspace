@@ -24,14 +24,24 @@ do_nars_example_tests:-
 run_nars_example_tests:-
   forall(nal_examples:nal_example_test(Goal, Results),
          do_nars_example_test(Goal, Results)).
-
+/*
+```diff
+- text in red
++ text in green
+! text in orange
+# text in gray
+@@ text in purple (and bold)@@
+```
+*/
 do_nars_example_test(Goal, ResultsExpected):-   
   format('~N~n```prolog~nTEST: ?- ~q.~n```',[Goal]),
   % term_variables(Goal,Vs),
   maplist([R]>>format('~NEXPECTED: `~q`',[R]), ResultsExpected),
   ((call(Goal),narz_check_results(ResultsExpected))
-    -> format('~NSUCCESS!~n```prolog',[])
-     ; format('~NFAILED!~n```prolog',[])),!,
+    -> format('~N~n```diff~n+SUCCESS!~n```',[])
+     ; format('~N~n```diff~n-FAILED!~n```',[])
+     ), !,
+  format('~n~n```prolog',[]),
   mu:dbug1(ResultsExpected),
   format('```~n~n',[]).
 
