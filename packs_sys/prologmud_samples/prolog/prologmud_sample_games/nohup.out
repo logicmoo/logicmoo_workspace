@@ -1,40 +1,53 @@
-[I 210213 03:03:25 butterfly.server:363] Starting server
-[I 210213 03:03:25 butterfly.server:371] Starting loop
+[I 210213 16:34:21 butterfly.server:363] Starting server
+[I 210213 16:34:21 butterfly.server:371] Starting loop
 /opt/logicmoo_workspace/packs_web/butterfly/butterfly.server.py:384: DeprecationWarning: The 'warn' method is deprecated, use 'warning' instead
   log.warn('Butterfly is ready, open your browser to: %s' % url)
-[W 210213 03:03:25 butterfly.server:384] Butterfly is ready, open your browser to: http://0.0.0.0:3100/
-[I 210213 03:03:25 butterfly.server:363] Starting server
-[I 210213 03:03:25 butterfly.server:371] Starting loop
+[W 210213 16:34:21 butterfly.server:384] Butterfly is ready, open your browser to: http://0.0.0.0:3100/
+[I 210213 16:34:21 butterfly.server:363] Starting server
+[I 210213 16:34:21 butterfly.server:371] Starting loop
 /opt/logicmoo_workspace/packs_web/butterfly/butterfly.server.py:384: DeprecationWarning: The 'warn' method is deprecated, use 'warning' instead
   log.warn('Butterfly is ready, open your browser to: %s' % url)
-[W 210213 03:03:25 butterfly.server:384] Butterfly is ready, open your browser to: http://0.0.0.0:3101/
-[I 210213 03:03:25 butterfly.server:363] Starting server
-[I 210213 03:03:25 butterfly.server:371] Starting loop
+[W 210213 16:34:21 butterfly.server:384] Butterfly is ready, open your browser to: http://0.0.0.0:3101/
+[I 210213 16:34:21 butterfly.server:363] Starting server
+[I 210213 16:34:21 butterfly.server:371] Starting loop
 /opt/logicmoo_workspace/packs_web/butterfly/butterfly.server.py:384: DeprecationWarning: The 'warn' method is deprecated, use 'warning' instead
   log.warn('Butterfly is ready, open your browser to: %s' % url)
-[W 210213 03:03:25 butterfly.server:384] Butterfly is ready, open your browser to: http://0.0.0.0:3102/
-[I 210213 03:03:25 butterfly.server:363] Starting server
-[I 210213 03:03:25 butterfly.server:371] Starting loop
+[W 210213 16:34:21 butterfly.server:384] Butterfly is ready, open your browser to: http://0.0.0.0:3102/
+[I 210213 16:34:21 butterfly.server:363] Starting server
+[I 210213 16:34:21 butterfly.server:371] Starting loop
 /opt/logicmoo_workspace/packs_web/butterfly/butterfly.server.py:384: DeprecationWarning: The 'warn' method is deprecated, use 'warning' instead
   log.warn('Butterfly is ready, open your browser to: %s' % url)
-[W 210213 03:03:25 butterfly.server:384] Butterfly is ready, open your browser to: http://0.0.0.0:3103/
-[I 210213 03:03:25 butterfly.server:363] Starting server
-[I 210213 03:03:25 butterfly.server:371] Starting loop
+[W 210213 16:34:21 butterfly.server:384] Butterfly is ready, open your browser to: http://0.0.0.0:3103/
+[I 210213 16:34:21 butterfly.server:363] Starting server
+[I 210213 16:34:21 butterfly.server:371] Starting loop
 /opt/logicmoo_workspace/packs_web/butterfly/butterfly.server.py:384: DeprecationWarning: The 'warn' method is deprecated, use 'warning' instead
   log.warn('Butterfly is ready, open your browser to: %s' % url)
-[W 210213 03:03:25 butterfly.server:384] Butterfly is ready, open your browser to: http://0.0.0.0:3123/
-[I 210213 03:03:25 butterfly.server:363] Starting server
-[I 210213 03:03:25 butterfly.server:371] Starting loop
+[W 210213 16:34:21 butterfly.server:384] Butterfly is ready, open your browser to: http://0.0.0.0:3123/
+[I 210213 16:34:21 butterfly.server:363] Starting server
+[I 210213 16:34:21 butterfly.server:371] Starting loop
 /opt/logicmoo_workspace/packs_web/butterfly/butterfly.server.py:384: DeprecationWarning: The 'warn' method is deprecated, use 'warning' instead
   log.warn('Butterfly is ready, open your browser to: %s' % url)
-[W 210213 03:03:25 butterfly.server:384] Butterfly is ready, open your browser to: http://0.0.0.0:3125/
-[I 210213 03:03:25 butterfly.server:363] Starting server
-[I 210213 03:03:25 butterfly.server:371] Starting loop
+[W 210213 16:34:21 butterfly.server:384] Butterfly is ready, open your browser to: http://0.0.0.0:3125/
+[I 210213 16:34:21 butterfly.server:363] Starting server
+[I 210213 16:34:21 butterfly.server:371] Starting loop
 /opt/logicmoo_workspace/packs_web/butterfly/butterfly.server.py:384: DeprecationWarning: The 'warn' method is deprecated, use 'warning' instead
   log.warn('Butterfly is ready, open your browser to: %s' % url)
-[W 210213 03:03:25 butterfly.server:384] Butterfly is ready, open your browser to: http://0.0.0.0:3401/
-[I 210213 03:03:25 butterfly.server:363] Starting server
-[I 210213 03:03:25 butterfly.server:371] Starting loop
+[W 210213 16:34:21 butterfly.server:384] Butterfly is ready, open your browser to: http://0.0.0.0:3401/
+[I 210213 16:34:21 butterfly.server:363] Starting server
+[I 210213 16:34:21 butterfly.server:371] Starting loop
 /opt/logicmoo_workspace/packs_web/butterfly/butterfly.server.py:384: DeprecationWarning: The 'warn' method is deprecated, use 'warning' instead
   log.warn('Butterfly is ready, open your browser to: %s' % url)
-[W 210213 03:03:25 butterfly.server:384] Butterfly is ready, open your browser to: http://0.0.0.0:3904/
+[W 210213 16:34:21 butterfly.server:384] Butterfly is ready, open your browser to: http://0.0.0.0:3904/
+[W 210213 16:49:55 web:2239] 404 GET /robots.txt (114.119.157.56) 0.98ms
+Traceback (most recent call last):
+  File "/opt/logicmoo_workspace/packs_web/butterfly/butterfly.server.py", line 386, in <module>
+    ioloop.start()
+  File "/usr/local/lib/python3.8/dist-packages/tornado/platform/asyncio.py", line 199, in start
+    self.asyncio_loop.run_forever()
+  File "/usr/lib/python3.8/asyncio/base_events.py", line 570, in run_forever
+    self._run_once()
+  File "/usr/lib/python3.8/asyncio/base_events.py", line 1823, in _run_once
+    event_list = self._selector.select(timeout)
+  File "/usr/lib/python3.8/selectors.py", line 468, in select
+    fd_event_list = self._selector.poll(timeout, max_ev)
+KeyboardInterrupt
