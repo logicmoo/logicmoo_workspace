@@ -2,7 +2,7 @@
 
 %%% NLP in NAL example, Step 2 %%%
 
-:- ['nal.pl'].
+:- [library(nars/nars)].
 
 % Derived sentence 4
 represent([rpb(Cs), 'eat', 'fish'], inheritance(product([Cs, fish]), food), [1, 0.45]).

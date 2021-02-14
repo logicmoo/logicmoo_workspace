@@ -1,3 +1,7 @@
+:- [library(nars/nars)].
+
+end_of_file.
+
 Give the system three judgments, with the default truth-value ?1, 0.9?:
 
 (1)     {“cat” * cat} ? stand-for	

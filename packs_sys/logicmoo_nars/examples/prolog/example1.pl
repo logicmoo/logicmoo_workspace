@@ -1,6 +1,6 @@
 %%% NLP in NAL example, Step 1 %%%
 
-:- ['nal.pl'].
+:- [library(nars/nars)].
 
 % Given sentence 1
 represent(['cat'], cat, [1, 0.9]). represent(['fish'], fish, [1, 0.9]).
