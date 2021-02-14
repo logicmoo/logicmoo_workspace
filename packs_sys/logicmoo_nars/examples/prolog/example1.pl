@@ -19,6 +19,8 @@ represent([Ws, Wr, rpb(X)], inheritance(product([Cs, X]), Cr), V) :-
 
 % To show the results, type "represent(X, Y, V)."
 
+:- printAll(represent(X, Y, V)).
+
 
 
        

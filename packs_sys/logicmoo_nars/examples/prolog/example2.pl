@@ -29,3 +29,4 @@ represent([Ws, Wr, Wo], inheritance(product([Cs, Co]), Cr), V) :-
 
 % To show the results, type "represent(['dog', 'eat', X], Y, V)."
 
+:- printAll(represent(['dog', 'eat', X], Y, V)).
