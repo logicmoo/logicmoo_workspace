@@ -329,6 +329,7 @@ load_rest:-
    load_nomic_mu,   
    load_before_compile,
    use_module(library(instant_prolog_docs)),
+   baseKB:ensure_loaded(library(narsese)),
    add_history((mmake, autodoc_test)),
    load_rest2,
    !.
@@ -341,8 +342,7 @@ load_rest2:-
 load_rest3:-   
    baseKB:ensure_loaded(library(logicmoo_cg)),
    baseKB:ensure_loaded(library(logicmoo_ec)),
-   baseKB:ensure_loaded(library(logicmoo_nlu)),
-   baseKB:ensure_loaded(library(narsese)),
+   baseKB:ensure_loaded(library(logicmoo_nlu)),   
    baseKB:ensure_loaded(library(logicmoo_clif)),
    baseKB:ensure_loaded(library('logicmoo/common_logic/common_logic_sumo.pfc')),   
    system:reexport(pldata(kb_0988)),

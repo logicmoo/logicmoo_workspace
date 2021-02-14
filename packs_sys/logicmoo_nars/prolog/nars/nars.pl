@@ -11,22 +11,44 @@
 
 :- use_module(library(nars/nal_reader)). 
 
-% will change later what we consider "enough" ground
+% will change later to what we consider "enough" ground
 narz_ground(G):-  ground(G).
 
 nars_string(Name):- atom(Name) ; string(Name).
 
 do_nars_example_tests:- 
-  ensure_loaded(library('nars/../../examples/prolog/nars_examples')),
-  forall(nars_example_test(Goal, Results),
+  use_module(library('nars/../../examples/prolog/nal_examples'),[nal_example_test/2]),
+  add_history(run_nars_example_tests),
+  run_nars_example_tests.
+
+run_nars_example_tests:-
+  forall(nal_examples:nal_example_test(Goal, Results),
          do_nars_example_test(Goal, Results)).
 
-do_nars_example_test(Goal, ResultsExpected):-
-  must_or_rtrace((call(Goal), narz_check_results(ResultsExpected))).
+do_nars_example_test(Goal, ResultsExpected):-   
+  format('~N~n```prolog~nTEST: ?- ~q.~n```',[Goal]),
+  % term_variables(Goal,Vs),
+  maplist([R]>>format('~NEXPECTED: `~q`',[R]), ResultsExpected),
+  ((call(Goal),narz_check_results(ResultsExpected))
+    -> format('~NSUCCESS!~n```prolog',[])
+     ; format('~NFAILED!~n```prolog',[])),!,
+  mu:dbug1(ResultsExpected),
+  format('```~n~n',[]).
 
-narz_check_results([R1;R2]):- !, narz_check_results(R1), narz_check_results(R2).
+narz_check_results([R1;R2]):- !, narz_check_results(R1) ; narz_check_results(R2).
 narz_check_results([R1|RS]):- !, narz_check_results(R1), !, narz_check_results(RS).
-narz_check_results(R):- call(R).
+narz_check_results([]):-!.
+narz_check_results(R):- call(R),!.
+narz_check_results(R=V):- nars_close_enough(R,V).
+
+nars_close_enough(R,V):- number(R),number(V),!, RV is abs(R-V), RV < 0.02 .
+nars_close_enough(R,V):- (\+ compound(R) ; \+ compound(V)),!, R==V, !.
+nars_close_enough([R|RT],[V|VT]):- !, nars_close_enough(R,V),nars_close_enough(RT,VT).
+nars_close_enough(R,V):- 
+  compound_name_arguments(R,F,RA),
+  compound_name_arguments(V,F,VA),
+  maplist(nars_close_enough,RA,VA).
+
 %like to distinguish "eaten by tiger" from "eating tiger" (/, eat, tiger, _) vs. (/, eat, _, tiger)
 %now: (eat /2 tiger) vs. (eat /1 tiger)
 
@@ -162,13 +184,14 @@ use_nars_config(Absolute):-  open(Absolute, read, In),
 
 nars_ctx(default).
 
-%revision
+%revision/3
+revision([S, T1], [S, T2], [S, T]):- nars_revision([S, T1], [S, T2], [S, T]).
 
 nars_revision([S, T1], [S, T2], [S, T]):-
  	narz_f_rev(T1, T2, T).
 
-%NARS choice/2
-choice(X, Y):- nars_choice(X, Y).
+%NARS choice/3
+choice(X, Y, Z):- nars_choice(X, Y, Z).
 
 nars_choice([S, [F1, C1]], [S, [_F2, C2]], [S, [F1, C1]]):-
  	C1 >= C2, !.
@@ -186,7 +209,7 @@ infer(T1, T):- nars_infer(T1, T).
 nars_infer(T1, T):-  nars_ctx(Ctx), nars_inference(Ctx, [T1, [1, 0.9]], T).
 
 nars_infer(inheritance(W1, ext_image(ext_image(represent, [nil, inheritance(product([X, T2]), R)]), [nil, W2, W3])), inheritance(W1, ext_image(represent, [nil, X])), [inheritance(ext_image(represent, [nil, Y]), ext_image(ext_image(represent, [nil, inheritance(product([Y, T2]), R)]), [nil, W2, W3])), V]):-
-  nars_ctx(Ctx), narz_f_ind([1, 0.9], [1, 0.9], V), !.
+   narz_f_ind([1, 0.9], [1, 0.9], V), !.
 
 nars_infer(inheritance(W3, ext_image(ext_image(represent, [nil, inheritance(product([T1, X]), R)]), [W1, W2, nil])), inheritance(W3, ext_image(represent, [nil, X])), [inheritance(ext_image(represent, [nil, Y]), ext_image(ext_image(represent, [nil, inheritance(product([T1, Y]), R)]), [W1, W2, nil])), V]):-
  narz_f_ind([1, 0.9], [1, 0.9], V), !.
@@ -379,11 +402,11 @@ nars_inference(_Ctx, [implication(conjunction(L), C), T1], [M, T2], [S, T]):-
  	S == implication(conjunction([M|L]), C), narz_f_ind(T1, T2, T).
 
 nars_inference(_Ctx, [implication(conjunction(Lm), C), T1], [implication(A, M), T2], [implication(P, C), T]):-
- 	nonvar(Lm), replace(Lm, M, La, A), narz_reduce(conjunction(La), P), narz_f_ded(T1, T2, T).
+ 	nonvar(Lm), narz_replace(Lm, M, La, A), narz_reduce(conjunction(La), P), narz_f_ded(T1, T2, T).
 nars_inference(_Ctx, [implication(conjunction(Lm), C), T1], [implication(conjunction(La), C), T2], [implication(A, M), T]):-
- 	nonvar(Lm), replace(Lm, M, La, A), narz_f_abd(T1, T2, T).
+ 	nonvar(Lm), narz_replace(Lm, M, La, A), narz_f_abd(T1, T2, T).
 nars_inference(_Ctx, [implication(conjunction(La), C), T1], [implication(A, M), T2], [implication(P, C), T]):-
- 	nonvar(La), replace(Lm, M, La, A), narz_reduce(conjunction(Lm), P), narz_f_ind(T1, T2, T).
+ 	nonvar(La), narz_replace(Lm, M, La, A), narz_reduce(conjunction(Lm), P), narz_f_ind(T1, T2, T).
 
 %% variable introduction
 
@@ -463,9 +486,9 @@ nars_inheritance(_Ctx, S, int_difference(S, P)):-
  	narz_ground(S), narz_ground(P).
 
 nars_inheritance(_Ctx, product(L1), R):-
- 	narz_ground(L1), member(ext_image(R, L2), L1), replace(L1, ext_image(R, L2), L2).
+ 	narz_ground(L1), member(ext_image(R, L2), L1), narz_replace(L1, ext_image(R, L2), L2).
 nars_inheritance(_Ctx, R, product(L1)):-
- 	narz_ground(L1), member(int_image(R, L2), L1), replace(L1, int_image(R, L2), L2).
+ 	narz_ground(L1), member(int_image(R, L2), L1), narz_replace(L1, int_image(R, L2), L2).
 
 %NARS similarity/2
 similarity(X, Y):- nars_ctx(Ctx), nars_similarity(Ctx, X, Y).
@@ -499,13 +522,13 @@ nars_implication(_Ctx, disjunction(L1), disjunction(L2)):-
  	narz_ground(L1), narz_ground(L2), subset(L1, L2).
 
 nars_implication(_Ctx, inheritance(S, P), inheritance(ext_intersection(Ls), ext_intersection(Lp))):-
- 	narz_ground(Ls), narz_ground(Lp), replace(Ls, S, L, P), narz_same(L, Lp).
+ 	narz_ground(Ls), narz_ground(Lp), narz_replace(Ls, S, L, P), narz_same(L, Lp).
 nars_implication(_Ctx, inheritance(S, P), inheritance(int_intersection(Ls), int_intersection(Lp))):-
- 	narz_ground(Ls), narz_ground(Lp), replace(Ls, S, L, P), narz_same(L, Lp).
+ 	narz_ground(Ls), narz_ground(Lp), narz_replace(Ls, S, L, P), narz_same(L, Lp).
 nars_implication(_Ctx, similarity(S, P), similarity(ext_intersection(Ls), ext_intersection(Lp))):-
- 	narz_ground(Ls), narz_ground(Lp), replace(Ls, S, L, P), narz_same(L, Lp).
+ 	narz_ground(Ls), narz_ground(Lp), narz_replace(Ls, S, L, P), narz_same(L, Lp).
 nars_implication(_Ctx, similarity(S, P), similarity(int_intersection(Ls), int_intersection(Lp))):-
- 	narz_ground(Ls), narz_ground(Lp), replace(Ls, S, L, P), narz_same(L, Lp).
+ 	narz_ground(Ls), narz_ground(Lp), narz_replace(Ls, S, L, P), narz_same(L, Lp).
 
 nars_implication(_Ctx, inheritance(S, P), inheritance(ext_difference(S, M), ext_difference(P, M))):-
  	narz_ground(M).
@@ -548,13 +571,13 @@ nars_implication(_Ctx, negation(disjunction(L)), negation(M)):-
  	narz_include([M], L).
 
 nars_implication(_Ctx, implication(S, P), implication(conjunction(Ls), conjunction(Lp))):-
- 	narz_ground(Ls), narz_ground(Lp), replace(Ls, S, L, P), narz_same(L, Lp).
+ 	narz_ground(Ls), narz_ground(Lp), narz_replace(Ls, S, L, P), narz_same(L, Lp).
 nars_implication(_Ctx, implication(S, P), implication(disjunction(Ls), disjunction(Lp))):-
- 	narz_ground(Ls), narz_ground(Lp), replace(Ls, S, L, P), narz_same(L, Lp).
+ 	narz_ground(Ls), narz_ground(Lp), narz_replace(Ls, S, L, P), narz_same(L, Lp).
 nars_implication(_Ctx, equivalence(S, P), equivalence(conjunction(Ls), conjunction(Lp))):-
- 	narz_ground(Ls), narz_ground(Lp), replace(Ls, S, L, P), narz_same(L, Lp).
+ 	narz_ground(Ls), narz_ground(Lp), narz_replace(Ls, S, L, P), narz_same(L, Lp).
 nars_implication(_Ctx, equivalence(S, P), equivalence(disjunction(Ls), disjunction(Lp))):-
- 	narz_ground(Ls), narz_ground(Lp), replace(Ls, S, L, P), narz_same(L, Lp).
+ 	narz_ground(Ls), narz_ground(Lp), narz_replace(Ls, S, L, P), narz_same(L, Lp).
 
 
 %NARS equivalence/2
@@ -667,9 +690,9 @@ narz_reduce(product(product(L), T), product(L1)):-
  	append(L, [T], L1), !.
 
 narz_reduce(ext_image(product(L1), L2), T1):-
- 	member(T1, L1), replace(L1, T1, L2), !.
+ 	member(T1, L1), narz_replace(L1, T1, L2), !.
 narz_reduce(int_image(product(L1), L2), T1):-
- 	member(T1, L1), replace(L1, T1, L2), !.
+ 	member(T1, L1), narz_replace(L1, T1, L2), !.
 
 narz_reduce(negation(negation(S)), S):-
  	!.
@@ -736,7 +759,7 @@ narz_replace([H|T1], H1, [H|T2], H2):-
 narz_dependant(var(V, L), Y, var(V, [Y|L])):-
  	!.
 narz_dependant([H|T], Y, [H1|T1]):-
- 	dependent(H, Y, H1), narz_dependant(T, Y, T1), !.
+ 	narz_dependant(H, Y, H1), narz_dependant(T, Y, T1), !.
 narz_dependant(inheritance(S, P), Y, inheritance(S1, P1)):-
  	narz_dependant(S, Y, S1), narz_dependant(P, Y, P1), !.
 narz_dependant(ext_image(R, A), Y, ext_image(R, A1)):-
@@ -881,7 +904,7 @@ input_event(Event) :- heap_add(1.0, Event, belief_events_queue).
 
 derive_event(Event) :- priority(Event, P), heap_add(P, Event, belief_events_queue).
 
-inference_step(_) :- (heap_get(Priority, Event, belief_events_queue),
+inference_step(_) :- (heap_get(_Priority, Event, belief_events_queue),
                       heap_get(Priority2, Event2, belief_events_queue),
                       heap_add(Priority2, Event2, belief_events_queue), %undo removal of the second premise (TODO)
                       inference(Event,Event2,Conclusion), 

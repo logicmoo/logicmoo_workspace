@@ -7,6 +7,6 @@
 :- set_module(base(system)).
 
 :- reexport(library(nars/nars)).
-% :- reexport(library(nars/nal_reader)).
+:- reexport(library(nars/nal_reader)).
 
 

@@ -95,10 +95,10 @@
 :- dynamic(mpred_prolog_only_module/1).
 /*
 */
-:- if(exists_source(library(pldoc))).
+%:- if(exists_source(library(pldoc))).
 
-  :- use_module(library(pldoc)).
   /*
+  :- use_module(library(pldoc)).
   :- use_module(library(http/thread_httpd)).
   :- use_module(library(http/http_parameters)).
   %:- use_module(swi(library/http/html_write)).
@@ -138,7 +138,7 @@
 :- use_module(library(doc_http)).
 %:- use_module(library(doc_html)).
 */
-:- endif.
+% :- endif.
 /*
 :- if(exists_source(library(pldoc))).
 :- use_module(library(pldoc), []).

@@ -10,11 +10,11 @@
 % it into a Prolog interpreter.
 %
 
-
+:- module(nal_examples,[nal_example_test/2]).
 
 % ----- NAL-1 ----- %
 
-%% revision
+%= revision
 
 
 nal_example_test(
@@ -22,7 +22,7 @@ nal_example_test(
  [ R = [inheritance(bird, swimmer), [0.8, 0.83]] ]). 
 
 
-%% choice
+%= choice
 
 nal_example_test(
   choice([inheritance(swan, bird), [1, 0.8]], [inheritance(swan, bird), [0, 0.5]], R) ,
@@ -34,35 +34,35 @@ nal_example_test(
  [ R = [inheritance(penguin, bird), [0.8, 0.9]] ]). 
 
 
-%% deduction
+%= deduction
 
 nal_example_test(
   inference([inheritance(bird, animal), [1, 0.9]], [inheritance(robin, bird), [1, 0.9]], [inheritance(robin, animal), T]) ,
  [ T = [1, 0.81] ]). 
 
 
-%% induction
+%= induction
 
 nal_example_test(
   inference([inheritance(robin, animal), [1, 0.9]], [inheritance(robin, bird), [1, 0.9]], [inheritance(bird, animal), T]) ,
  [ T = [1, 0.45] ]). 
 
 
-%% abduction
+%= abduction
 
 nal_example_test(
   inference([inheritance(bird, animal), [1, 0.9]], [inheritance(robin, animal), [1, 0.9]], [inheritance(robin, bird), T]) ,
  [ T = [1, 0.45] ]). 
 
 
-%% examplification
+%= examplification
 
 nal_example_test(
   inference([inheritance(robin, bird), [1, 0.9]], [inheritance(bird, animal), [1, 0.9]], [inheritance(animal, robin), T]) ,
  [ T = [1, 0.45] ]). 
 
 
-%% convension
+%= convension
 
 nal_example_test(
   inference([inheritance(swan, bird), [0.9, 0.8]], [inheritance(bird, swan), T]) ,
@@ -71,14 +71,14 @@ nal_example_test(
 
 % ----- NAL-2 ----- %
 
-%% inheritance to similarity
+%= inheritance to similarity
 
 nal_example_test(
   inference([inheritance(swan, robin), [0.9, 0.8]], [inheritance(robin, swan), [0.9, 0.8]], [similarity(swan, robin), T]) ,
  [ T = [0.81, 0.64] ]). 
 
 
-%% comparison
+%= comparison
 
 nal_example_test(
   inference([inheritance(swan, swimmer), [1, 0.9]], [inheritance(swan, bird), [1, 0.9]], [similarity(bird, swimmer), T]) ,
@@ -89,7 +89,7 @@ nal_example_test(
  [ T = [1, 0.45] ]). 
 
 
-%% analogy
+%= analogy
 
 nal_example_test(
   inference([inheritance(swan, swimmer), [1, 0.9]], [similarity(gull, swan), [0.9, 0.9]], [inheritance(gull, swimmer), T]) ,
@@ -100,14 +100,14 @@ nal_example_test(
  [ T = [0.9, 0.73] ]). 
 
 
-%% resemblance
+%= resemblance
 
 nal_example_test(
   inference([similarity(swan, robin), [0.8, 0.9]], [similarity(gull, swan), [0.9, 0.8]], [similarity(gull, robin), T]) ,
  [ T = [0.72, 0.71] ]). 
 
 
-%% instance and property
+%= instance and property
 
 nal_example_test(
   inference([instance(tweety, bird), [1, 0.9]], [inheritance(S, P), T]) ,
@@ -128,7 +128,7 @@ nal_example_test(
    T = [1, 0.9] ]). 
 
 
-%% set definition
+%= set definition
 
 nal_example_test(
   inference([inheritance(ext_set([tweety]), ext_set([birdie])), [1, 0.8]], [similarity(S, P), T]) ,
@@ -143,7 +143,7 @@ nal_example_test(
    T = [1, 0.8] ]). 
 
 
-%% structure transformation
+%= structure transformation
 
 nal_example_test(
   inference([similarity(ext_set([tweety]), ext_set([birdie])), [1, 0.9]], [similarity(tweety, birdie), T]) ,
@@ -156,7 +156,7 @@ nal_example_test(
 
 % ----- NAL-3 ----- %
 
-%% compound construction, two premises
+%= compound construction, two premises
 
 nal_example_test(
   inference([inheritance(swan, swimmer), [0.9, 0.9]], [inheritance(swan, bird), [0.8, 0.9]], R) ,
@@ -171,7 +171,7 @@ nal_example_test(
    R = [inheritance(int_difference(sport, chess), competition), [0.18, 0.81]] ]). 
 
 
-%% compound construction, single premise
+%= compound construction, single premise
 
 nal_example_test(
   inference([inheritance(swan, swimmer), [0.9, 0.8]], [inheritance(swan, ext_intersection([swimmer, bird])), V]) ,
@@ -206,7 +206,7 @@ nal_example_test(
  [ V = [0.9, 0.72] ]). 
 
 
-%% compound destruction, two premises
+%= compound destruction, two premises
 
 nal_example_test(
   inference([inheritance(swan, bird), [1, 0.8]], [inheritance(swan, ext_intersection([swimmer, bird])), [0, 0.8]], [inheritance(swan, swimmer), T]) ,
@@ -241,7 +241,7 @@ nal_example_test(
  [ V = [0, 0.64] ]). 
 
 
-%% compound destruction, single premise
+%= compound destruction, single premise
 
 nal_example_test(
   inference([inheritance(swan, ext_intersection([swimmer, bird])), [0.9, 0.8]], [inheritance(swan, swimmer), V]) ,
@@ -276,7 +276,7 @@ nal_example_test(
  [ V = [0.9, 0.72] ]). 
 
 
-%% operation on both sides of a relation
+%= operation on both sides of a relation
 
 nal_example_test(
   inference([inheritance(bird, animal), [0.9, 0.8]], [inheritance(ext_intersection([swimmer, bird]), ext_intersection([swimmer, animal])), V]) ,
@@ -375,7 +375,7 @@ nal_example_test(
  [ V = [0.9, 0.44] ]). 
 
 
-%% set operations
+%= set operations
 
 nal_example_test(
   inference([inheritance(ext_set([earth]), ext_set([venus, mars, pluto])), [0.9, 0.8]], [inheritance(ext_set([earth]), ext_set([pluto, saturn])), [0.7, 0.8]], R) ,
@@ -392,7 +392,7 @@ nal_example_test(
 
 % ----- NAL-4 ----- %
 
-%% extensional image
+%= extensional image
 
 nal_example_test(
   inference([inheritance(product([acid, base]), reaction), [1, 0.9]], C) ,
@@ -408,7 +408,7 @@ nal_example_test(
  [ C = [inheritance(product([acid, acid]), reaction), [1, 0.9]] ]). 
 
 
-%% intensional image
+%= intensional image
 
 nal_example_test(
   inference([inheritance(neutralization, product([acid, base])), [1, 0.9]], C) ,
@@ -424,7 +424,7 @@ nal_example_test(
  [ C = [inheritance(neutralization, product([acid, base])), [1, 0.9]] ]). 
 
 
-%% operation on both sides of a relation
+%= operation on both sides of a relation
 
 nal_example_test(
   inference([inheritance(bird, animal), [0.9, 0.8]], [inheritance(product([bird, plant]), product([animal, plant])), V]) ,
@@ -469,7 +469,7 @@ nal_example_test(
 
 % ----- NAL-5 ----- %
 
-%% revision
+%= revision
 
 nal_example_test(
   revision([implication(inheritance(robin, flyer), inheritance(robin, bird)), [1, 0.8]], [implication(inheritance(robin, flyer), inheritance(robin, bird)), [0, 0.5]], R) ,
@@ -480,7 +480,7 @@ nal_example_test(
  [ R = [equivalence(inheritance(robin, flyer), inheritance(robin, bird)), [0.8, 0.83]] ]). 
 
 
-%% choice
+%= choice
 
 nal_example_test(
   choice([implication(inheritance(robin, flyer), inheritance(robin, bird)), [1, 0.8]], [implication(inheritance(robin, flyer), inheritance(robin, bird)), [0, 0.5]], R) ,
@@ -491,7 +491,7 @@ nal_example_test(
  [ R = [implication(inheritance(robin, flyer), inheritance(robin, bird)), [0.8, 0.9]] ]). 
 
 
-%% deduction
+%= deduction
 
 nal_example_test(
   inference([implication(inheritance(robin, bird), inheritance(robin, animal)), [0.9, 0.8]], [implication(inheritance(robin, flyer), inheritance(robin, bird)), [1, 0.5]], R) ,
@@ -502,28 +502,28 @@ nal_example_test(
  [ R = [equivalence(inheritance(robin, flyer), inheritance(robin, animal)), [0.9, 0.4]] ]). 
 
 
-%% induction
+%= induction
 
 nal_example_test(
   inference([implication(inheritance(robin, bird), inheritance(robin, animal)), [0.9, 0.8]], [implication(inheritance(robin, bird), inheritance(robin, flyer)), [1, 0.5]], R) ,
  [ R = [implication(inheritance(robin, flyer), inheritance(robin, animal)), [0.9, 0.29]] ]). 
 
 
-%% abduction
+%= abduction
 
 nal_example_test(
   inference([implication(inheritance(robin, bird), inheritance(robin, animal)), [0.9, 0.8]], [implication(inheritance(robin, flyer), inheritance(robin, animal)), [1, 0.5]], R) ,
  [ R = [implication(inheritance(robin, flyer), inheritance(robin, bird)), [1, 0.26]] ]). 
 
 
-%% examplification
+%= examplification
 
 nal_example_test(
   inference([implication(inheritance(robin, flyer), inheritance(robin, bird)), [0.9, 0.8]], [implication(inheritance(robin, bird), inheritance(robin, animal)), [1, 0.5]], R) ,
  [ R = [implication(inheritance(robin, animal), inheritance(robin, flyer)), [1, 0.26]] ]). 
 
 
-%% convension
+%= convension
 
 nal_example_test(
   inference([implication(inheritance(robin, flyer), inheritance(robin, animal)), [0.9, 0.8]], R) ,
@@ -550,7 +550,7 @@ nal_example_test(
  [ R = [similarity(swan, bird), [0.1, 0.64]] ]). 
 
 
-%% comparison
+%= comparison
 
 nal_example_test(
   inference([implication(inheritance(robin, bird), inheritance(robin, animal)), [0.9, 0.8]], [implication(inheritance(robin, bird), inheritance(robin, flyer)), [0.9, 0.8]], [equivalence(A, B), V]) ,
@@ -560,13 +560,13 @@ nal_example_test(
 
 nal_example_test(
   inference([implication(inheritance(robin, bird), inheritance(robin, animal)), [0.9, 0.8]], [implication(inheritance(robin, flyer), inheritance(robin, animal)), [0.9, 0.8]], [equivalence(A, B), V]) ,
- [ R = [equivalence(inheritance(robin, flyer), inheritance(robin, bird)), [0.818182, 0.387855]] ;
+ [ % R = [equivalence(inheritance(robin, flyer), inheritance(robin, bird)), [0.818182, 0.387855]] ;
    A = inheritance(robin, flyer),
    B = inheritance(robin, bird),
    V = [0.82, 0.39] ]). 
 
 
-%% analogy
+%= analogy
 
 nal_example_test(
   inference([implication(inheritance(robin, bird), inheritance(robin, animal)), [0.9, 0.8]], [equivalence(inheritance(robin, flyer), inheritance(robin, animal)), [0.9, 0.8]], R) ,
@@ -577,7 +577,7 @@ nal_example_test(
  [ R = [implication(inheritance(robin, flyer), inheritance(robin, animal)), [0.81, 0.58]] ]). 
 
 
-%% compound construction, two premises
+%= compound construction, two premises
 
 nal_example_test(
   inference([implication(inheritance(robin, bird), inheritance(robin, animal)), [0.9, 0.8]], [implication(inheritance(robin, bird), inheritance(robin, flyer)), [0.9, 0.8]], R) ,
@@ -598,7 +598,7 @@ nal_example_test(
  [ V = [0.99, 0.64] ]). 
 
 
-%% compound construction, single premise
+%= compound construction, single premise
 
 nal_example_test(
   inference([implication(inheritance(robin, bird), inheritance(robin, animal)), [0.9, 0.8]], [implication(inheritance(robin, bird), conjunction([inheritance(robin, animal), inheritance(robin, flyer)])), V]) ,
@@ -625,7 +625,7 @@ nal_example_test(
  [ V = [0.9, 0.72] ]). 
 
 
-%% compound destruction, two premises
+%= compound destruction, two premises
 
 nal_example_test(
   inference([implication(inheritance(robin, bird), inheritance(robin, flyer)), [1, 0.8]], [implication(inheritance(robin, bird), conjunction([inheritance(robin, animal), inheritance(robin, flyer)])), [0, 0.8]], [implication(inheritance(robin, bird), inheritance(robin, animal)), T]) ,
@@ -652,7 +652,7 @@ nal_example_test(
  [ R = [inheritance(robin, flyer), [1, 0.64]] ]). 
 
 
-%% compound destruction, single premise
+%= compound destruction, single premise
 
 nal_example_test(
   inference([implication(inheritance(robin, bird), conjunction([inheritance(robin, animal), inheritance(robin, flyer)])), [0.9, 0.8]], [implication(inheritance(robin, bird), inheritance(robin, animal)), V]) ,
@@ -679,7 +679,7 @@ nal_example_test(
  [ V = [0.9, 0.44] ]). 
 
 
-%% operation on both sides of a relation
+%= operation on both sides of a relation
 
 nal_example_test(
   inference([implication(p, q), [0.9, 0.8]], [implication(conjunction([p, r]), conjunction([q, r])), V]) ,
@@ -714,7 +714,7 @@ nal_example_test(
  [ V = [0.9, 0.44] ]). 
 
 
-%% negation
+%= negation
 
 nal_example_test(
   inference([negation(inheritance(robin, bird)), [0.9, 0.8]], R) ,
@@ -729,7 +729,7 @@ nal_example_test(
  [ T = [0, 0.42] ]). 
 
 
-%% conditional inference
+%= conditional inference
 
 nal_example_test(
   inference([implication(inheritance(robin, bird), inheritance(robin, animal)), [0.9, 0.8]], [inheritance(robin, bird), [1, 0.5]], R) ,
@@ -778,7 +778,7 @@ nal_example_test(
 
 % ----- NAL-6 ----- %
 
-%% variable unification
+%= variable unification
 
 nal_example_test(
   revision([implication(inheritance(X, bird), inheritance(X, flyer)), [0.9, 0.8]], [implication(inheritance(Y, bird), inheritance(Y, flyer)), [1, 0.5]], R) ,
@@ -821,7 +821,7 @@ nal_example_test(
  [ R = [implication(conjunction([inheritance(Y, swimmer), inheritance(Y, flyer)]), inheritance(Y, bird)), [1, 0.81]] ]). 
 
 
-%% variable elimination
+%= variable elimination
 
 nal_example_test(
   inference([implication(inheritance(X, bird), inheritance(X, animal)), [1, 0.9]], [inheritance(robin, bird), [1, 0.9]], R) ,
@@ -848,35 +848,35 @@ nal_example_test(
  [ R = [conjunction([inheritance(swan, flyer), inheritance(swan, swimmer)]), [1, 0.42]] ]). 
 
 
-%% variable introduction
+%= variable introduction
 
 nal_example_test(
   inference([inheritance(robin, animal), [1, 0.9]], [inheritance(robin, bird), [1, 0.9]], R) ,
- [ R = [implication(inheritance(_G650, bird), inheritance(_G650, animal)), [1, 0.45]] ;
-   R = [equivalence(inheritance(_G650, bird), inheritance(_G650, animal)), [1, 0.45]] ;
-   R = [conjunction([inheritance(var(_G655, []), bird), inheritance(var(_G655, []), animal)]), [1, 0.81]] ]). 
+ [ R = [implication(inheritance(G650, bird), inheritance(G650, animal)), [1, 0.45]] ;
+   R = [equivalence(inheritance(G650, bird), inheritance(G650, animal)), [1, 0.45]] ;
+   R = [conjunction([inheritance(var(G655, []), bird), inheritance(var(G655, []), animal)]), [1, 0.81]] ]). 
 
 nal_example_test(
   inference([inheritance(sport, competition), [1, 0.9]], [inheritance(chess, competition), [1, 0.9]], R) ,
- [ R = [implication(inheritance(sport, _G738), inheritance(chess, _G738)), [1, 0.45]] ;
-   R = [equivalence(inheritance(sport, _G738), inheritance(chess, _G738)), [1, 0.45]] ;
-   R = [conjunction([inheritance(chess, var(_G742, [])), inheritance(sport, var(_G742, []))]), [1, 0.81]] ]). 
+ [ R = [implication(inheritance(sport, G738), inheritance(chess, G738)), [1, 0.45]] ;
+   R = [equivalence(inheritance(sport, G738), inheritance(chess, G738)), [1, 0.45]] ;
+   R = [conjunction([inheritance(chess, var(G742, [])), inheritance(sport, var(G742, []))]), [1, 0.81]] ]). 
 
 
-%% multiple variables
+%= multiple variables
 
 nal_example_test(
   inference([inheritance(key1, ext_image(open, [nil, lock1])), [1, 0.9]], [inheritance(key1, key), [1, 0.9]], R) ,
- [ R = [implication(inheritance(_G836, key), inheritance(_G836, ext_image(open, [nil, lock1]))), [1, 0.45]] ;
-   R = [conjunction([inheritance(var(_G841, []), key), inheritance(var(_G841, []), ext_image(open, [nil, lock1]))]), [1, 0.81]] ]). 
+ [ R = [implication(inheritance(G836, key), inheritance(G836, ext_image(open, [nil, lock1]))), [1, 0.45]] ;
+   R = [conjunction([inheritance(var(G841, []), key), inheritance(var(G841, []), ext_image(open, [nil, lock1]))]), [1, 0.81]] ]). 
 
 nal_example_test(
   inference([implication(inheritance(X, key), inheritance(lock1, ext_image(open, [X, nil]))), [1, 0.9]], [inheritance(lock1, lock), [1, 0.9]], R) ,
- [ R = [implication(conjunction([inheritance(X, key), inheritance(_G1233, lock)]), inheritance(_G1233, ext_image(open, [X, nil]))), [1, 0.45]] ;
-   R = [conjunction([implication(inheritance(X, key), inheritance(var(_G1233, []), ext_image(open, [X, nil]))), inheritance(var(_G1233, []), lock)]), [1, 0.81]] ]). 
+ [ R = [implication(conjunction([inheritance(X, key), inheritance(G1233, lock)]), inheritance(G1233, ext_image(open, [X, nil]))), [1, 0.45]] ;
+   R = [conjunction([implication(inheritance(X, key), inheritance(var(G1233, []), ext_image(open, [X, nil]))), inheritance(var(G1233, []), lock)]), [1, 0.81]] ]). 
 
 nal_example_test(
   inference([conjunction([inheritance(var(X, []), key), inheritance(lock1, ext_image(open, [var(X, []), nil]))]), [1, 0.9]],[inheritance(lock1, lock), [1, 0.9]], R) ,
- [ R = [implication(inheritance(_G1367, lock), conjunction([inheritance(_G1367, ext_image(open, [var(X, [_G1367]), nil])), inheritance(var(X, [_G1367]), key)])), [1, 0.45]] ;
-   R = [conjunction([inheritance(var(_G1372, []), lock), inheritance(var(_G1372, []), ext_image(open, [var(X, []), nil])), inheritance(var(X, []), key)]), [1, 0.81]] ]). 
+ [ R = [implication(inheritance(G1367, lock), conjunction([inheritance(G1367, ext_image(open, [var(X, [G1367]), nil])), inheritance(var(X, [G1367]), key)])), [1, 0.45]] ;
+   R = [conjunction([inheritance(var(G1372, []), lock), inheritance(var(G1372, []), ext_image(open, [var(X, []), nil])), inheritance(var(X, []), key)]), [1, 0.81]] ]). 
 
