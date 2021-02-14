@@ -1,39 +1,47 @@
-
 % nal.pl
 % Non-Axiomatic Logic in Prolog
 % Version: 1.1, September 2012
 % GNU Lesser General Public License
-% Author: Pei Wang
+% Author: Pei Wang/Pat Hammer/Douglas Miles
 
-:- module(nal, []).
+:- module(nars, [nars_main/1,nars_main/0]).
 
-:- nars_set_module(class(library)).
-:- nars_set_module(base(system)).
+:- set_module(class(library)).
+:- set_module(base(system)).
 
+:- use_module(library(nars/nal_reader)). 
+
+% will change later what we consider "enough" ground
 narz_ground(G):-  ground(G).
 
-nars_example_test(Goal, ResultsExpected):-
-  call(Goal), check_results(ResultsExpected).
+nars_string(Name):- atom(Name) ; string(Name).
 
-check_results([R1;R2]):-  check_results(R1), check_results(R2).
-check_results([R1|RS]):-  check_results(R1), !, check_results(RS).
-check_results(R):-  call(R).
+do_nars_example_tests:- 
+  ensure_loaded(library('nars/../../examples/prolog/nars_examples')),
+  forall(nars_example_test(Goal, Results),
+         do_nars_example_test(Goal, Results)).
+
+do_nars_example_test(Goal, ResultsExpected):-
+  must_or_rtrace((call(Goal), narz_check_results(ResultsExpected))).
+
+narz_check_results([R1;R2]):- !, narz_check_results(R1), narz_check_results(R2).
+narz_check_results([R1|RS]):- !, narz_check_results(R1), !, narz_check_results(RS).
+narz_check_results(R):- call(R).
 %like to distinguish "eaten by tiger" from "eating tiger" (/, eat, tiger, _) vs. (/, eat, _, tiger)
 %now: (eat /2 tiger) vs. (eat /1 tiger)
 
 use_nars_config_info(List):-  is_list(List), !, maplist(use_nars_config_info, List).
-use_nars_config_info([]):- !.
 use_nars_config_info(element(_, [], List)):- !, use_nars_config_info(List).
-use_nars_config_info(element(_, [name=Name, value=Value], _)):- !,
-use_nars_config_info(Name=Value).
+use_nars_config_info(element(_, [name=Name, value=Value], _)):- !, use_nars_config_info(Name=Value).
 use_nars_config_info(Name=Value):- nars_string(Name), downcase_atom(Name, NameD), NameD\=Name, !, use_nars_config_info(NameD=Value).
 use_nars_config_info(Name=Value):- nars_string(Value), downcase_atom(Value, ValueD), ValueD\=Value, !, use_nars_config_info(Name=ValueD).
 use_nars_config_info(Name=Value):-  atom(Value), atom_number(Value, Number), use_nars_config_info(Name=Number).
 %use_nars_config_info(Ignore):- nars_string(Ignore), !.
 %use_nars_config_info(NameValue):-  dmsg(use_nars_config_info(NameValue)), fail.
-use_nars_config_info(Name=Value):-  number(Value), !, nb_setval(Name, Value).
+%use_nars_config_info(Name=Value):-  number(Value), !, nb_setval(Name, Value).
 use_nars_config_info(Name=Value):-  nb_setval(Name, Value).
 use_nars_config_info(_).
+
 
 % default gobals
 :-  use_nars_config_info(volume=100).
@@ -94,7 +102,7 @@ use_nars_config_info(_).
 :-  use_nars_config_info(curiosity_desire_priority_mul=0.1).
 :-  use_nars_config_info(curiosity_desire_durability_mul=0.3).
 :-  use_nars_config_info(curiosity_for_operator_only=false).
-:-  use_nars_config_info(break_nal _hol_boundary=false).
+:-  use_nars_config_info(break_nal_hol_boundary=false).
 :-  use_nars_config_info(question_generation_on_decision_making=false).
 :-  use_nars_config_info(how_question_generation_on_decision_making=false).
 :-  use_nars_config_info(anticipation_confidence=0.1).
@@ -847,4 +855,60 @@ u_or([N0 | Nt], N):-
 u_w2c(W, C):-
  	K = 1, C is (W / (W + K)), !.
 
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%memory.pl
+
+%11.1.2 State accumulation using engines - https://www.swi-prolog.org/pldoc/man?section=engine-state
+:- use_module(library(heaps)).
+
+create_heap(E) :- empty_heap(H), engine_create(_, update_heap(H), E).
+update_heap(H) :- engine_fetch(Command), ( update_heap(Command, Reply, H, H1) ->  true; H1 = H, Reply = false ), engine_yield(Reply), update_heap(H1).
+
+update_heap(add(Priority, Key), true, H0, H) :- add_to_heap(H0, Priority, Key, H).
+update_heap(get(Priority, Key), Priority-Key, H0, H) :- get_from_heap(H0, Priority, Key, H).
+
+heap_add(Priority, Key, E) :- engine_post(E, add(Priority, Key), true).
+
+heap_get(Priority, Key, E) :- engine_post(E, get(Priority, Key), Priority-Key).
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%control.pl
+
+priority([_, [F,C]], P) :- narz_f_exp([F, C], E), P is E.
+
+input_event(Event) :- heap_add(1.0, Event, belief_events_queue).
+
+derive_event(Event) :- priority(Event, P), heap_add(P, Event, belief_events_queue).
+
+inference_step(_) :- (heap_get(Priority, Event, belief_events_queue),
+                      heap_get(Priority2, Event2, belief_events_queue),
+                      heap_add(Priority2, Event2, belief_events_queue), %undo removal of the second premise (TODO)
+                      inference(Event,Event2,Conclusion), 
+                      derive_event(Conclusion),
+                      write(Conclusion), nl
+                     ; true ).
+
+nars_main :- create_heap(belief_events_queue), nars_main(1).
+nars_main(T) :- read_nal(X),
+     (X = 1, write("performing 1 inference steps:"), nl, 
+     inference_step(T), write("done with 1 additional inference steps."), nl,  
+       nars_main(T+1) ; 
+       X \= 1, write("Input: "), write(X), nl, input_event(X), nars_main(T+1)).
+
+% read_nal(X):- read(X).
+read_nal(X):- nal_read_clause(current_input, X).
+
+%test:
+%nars_main.
+%[inheritance(cat,animal), [1.0, 0.9]].
+%[inheritance(animal,being), [1.0, 0.9]].
+%1.
+%output:
+%performing 1 inference steps:
+%[inheritance(cat,being),[1.0,0.81]]
+%done with 1 additional inference steps.
+
+
 :-  fixup_exports.
+

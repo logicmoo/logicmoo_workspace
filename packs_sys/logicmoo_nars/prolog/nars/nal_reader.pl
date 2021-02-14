@@ -2,7 +2,8 @@
 % Read Non_Axiomatic Logic from Prolog
 :-module(nal_reader,[
             nal_test/0,
-            nal_test/1, 
+            nal_test/1,
+            nal_read_clause/2,
            % nal_test/2,
           %  nal_call/2,
             nal_call/3                   

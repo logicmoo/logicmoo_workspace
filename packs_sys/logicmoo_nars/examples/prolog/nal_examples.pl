@@ -787,7 +787,7 @@ nal_example_test(
 nal_example_test(
   inference([implication(inheritance(X, bird), inheritance(X, animal)), [1, 0.9]], [implication(inheritance(Y, robin), inheritance(Y, bird)), [1, 0.9]], R) ,
  [ R = [implication(inheritance(Y, robin), inheritance(Y, animal)), [1, 0.81]] ]). 
-
+  
 nal_example_test(
   inference([implication(inheritance(X, bird), inheritance(X, animal)), [1, 0.9]], [implication(inheritance(Y, robin), inheritance(Y, animal)), [1, 0.9]], R) ,
  [ R = [implication(inheritance(Y, robin), inheritance(Y, bird)), [1, 0.45]] ]). 
