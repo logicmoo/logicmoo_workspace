@@ -357,7 +357,7 @@ parse_for_kind([H|T], [TargetH|TargetT]) --> {nonvar(T), !},
   parse_for_kind(T, TargetT), !.
 
 parse_for_kind(tfstate, X) --> [X], !.
-parse_for_kind(string, X, S, []) :- maplist(any_to_string,S,SX),atomics_to_string(SX,' ',X).
+parse_for_kind(string, X, S, []) :- must_maplist(any_to_string,S,SX),atomics_to_string(SX,' ',X).
 parse_for_kind(text, X, S, E) :- parse_for_kind(string, X, S, E).
 parse_for_kind(optional(Kind, Value), Target) --> !, (parse_for_kind(Kind, Target); {Value=Target}).
 parse_for_kind(or(X, _), Target) --> parse_for_kind(X, Target).
@@ -583,7 +583,7 @@ to_string_lc([], ""):- !.
 to_string_lc(S, L):- atomic(S), S\=[], !, string_lower(S, L).
 to_string_lc(S, L):- compound_name_arguments(S, 's', SS), !, to_string_lc(SS, L).
 to_string_lc(S, L):- catch(text_to_string(L, S), _, fail), !, string_lower(S, L).
-to_string_lc(S, L):- is_list(S), !, maplist(to_string_lc, S, W), atomics_to_string(W, ' ', L).
+to_string_lc(S, L):- is_list(S), !, must_maplist(to_string_lc, S, W), atomics_to_string(W, ' ', L).
 to_string_lc(A, S):- format(string(S), '~w', [A]).
 
 adv_to_string_lc(A, LC):- is_x_instance(A), inst_of(A, Type, _), A\=@=Type, !, adv_to_string_lc(Type, LC).
@@ -645,7 +645,7 @@ sub_term_atom(Term, T) :-
 
 
 
-to_wordlist_atoms_adv(Sentence, WordsA):- to_word_list(Sentence, Words), maplist(any_to_atom, Words, WordsA), !.
+to_wordlist_atoms_adv(Sentence, WordsA):- to_word_list(Sentence, Words), must_maplist(any_to_atom, Words, WordsA), !.
 to_wordlist_atoms_adv(Sentence, WordsA):- into_text80(Sentence, WordsA), !.
 
 

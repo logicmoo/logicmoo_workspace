@@ -220,7 +220,7 @@ makep:-
  ; true
  ),
  print_message(silent, make(reload(Reload))),
- maplist(reload_file, Reload),
+ must_maplist(reload_file, Reload),
  print_message(silent, make(done(Reload))),
  ( prolog:make_hook(after, Reload)
  -> true

@@ -121,7 +121,7 @@ map_tree_pred(Pred,Arg1,Arg2):- call(Pred,Arg1,Arg2),!.
 map_tree_pred(_ ,Arg1,Arg2):- \+ compound(Arg1), !, Arg2=Arg1.
 map_tree_pred(Pred,Arg1,Arg2):- 
   compound_name_arguments(Arg1,F1,ArgS1),
-  maplist(map_tree_pred(Pred),ArgS1,ArgS2),
+  must_maplist(map_tree_pred(Pred),ArgS1,ArgS2),
   compound_name_arguments(Arg2,F1,ArgS2).
 
 user:portray(Term):- notrace(no_memlists(Term)), !.

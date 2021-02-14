@@ -38,7 +38,7 @@ pretty :- \+ flag_level_compare(pretty, =(0)).
 player_pprint(Doer, Logic, always):- xtreme_english, !, must(print_english(Doer, Logic)).
 player_pprint(_Doer, D, K):- pprint(D, K).
 
-% print_english(Doer, Logic):- is_list(Logic), !, maplist(print_english(Doer), Logic).
+% print_english(Doer, Logic):- is_list(Logic), !, must_maplist(print_english(Doer), Logic).
 print_english(Doer, Logic):- logic2english(Doer, Logic, Text), write(Text). % pprint(Text, always).
 
 
@@ -62,7 +62,7 @@ list2eng(Obj, Some, English):-
 punct_or(Punct, Else, Value):- member(Else=Value, Punct)-> true ; Else=Value.
 
 list2eng(Punct, Obj, Some, English):-  is_list(Some), !,
-  maplist(logic2english(Obj), Some, SomeUnused),
+  must_maplist(logic2english(Obj), Some, SomeUnused),
   exclude(unused_text, SomeUnused, SomeGone),
   list2eng_a(Punct, Obj, SomeGone, English).
 list2eng(Punct, Obj, Some, English) :-
@@ -146,7 +146,7 @@ logic2eng(Context, Inst, TheThing):- atom(Inst), inst_of(Inst, Type, N), !,
 /*logic2eng(_Obj, Prop, [String]):- compound(Prop), \+ xtreme_english, !, format(atom(String), ' {{ ~q }} ', [Prop]), !.
 logic2eng( Obj, Prop, [cap(N), Value, aux(be), English]):- Prop =..[N, V| Range],
  logic2eng(Obj, V, Value),
- maplist(logic2eng(Obj), Range, English).
+ must_maplist(logic2eng(Obj), Range, English).
 %logic2eng(_Obj, Prop, [String]):- format(atom(String), '~w', [Prop]), !.
 */
 
@@ -391,7 +391,7 @@ logic2eng(_Obj, has_rel(Value, TF) , [TF, 'that it has, ', Value]).
 logic2eng( Obj, oper(Act, Precond, PostCond), OUT) :-
  (xtreme_english->OUT = ['{{', if, 'action: ', ActE, ' test:', PrecondE, 'resulting: ', PostCondE, '}}'];
  OUT = []),
- maplist(logic2eng(Obj), [Act, Precond, PostCond], [ActE, PrecondE, PostCondE]).
+ must_maplist(logic2eng(Obj), [Act, Precond, PostCond], [ActE, PrecondE, PostCondE]).
 
 
 % logic2eng( Obj, Prop, English):- Prop =..[N, Obj1, A| VRange], Obj1==Obj, Prop2 =..[N, A| VRange], logic2eng( Obj, Prop2, English).
@@ -418,7 +418,7 @@ logic2eng(_Obj, Prop, [String]):- format(atom(String), '~p', [Prop]), !.
 
 logic2eng( Obj, Prop, [cap(N), Value, aux(be), English]):- Prop =..[N, V| Range],
    logic2eng(Obj, V, Value),
-   maplist(logic2eng(Obj), Range, English).
+   must_maplist(logic2eng(Obj), Range, English).
 
 
 atom_needs_quotes(V):-format(atom(VV), '~q', [V]), V\==VV.

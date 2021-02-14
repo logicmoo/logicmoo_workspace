@@ -66,11 +66,11 @@ simplify_dbug_3(Z, List, O):-
  ( List = [_|_], append(LeftSide, Open, List),
   ((var(Open);Open \= [_|_])), !, assertion(is_list(LeftSide)),
  clip_cons(Z, LeftSide, '...'(Open), O))), debug_var('CO', Open), debug_var('OC', Clipped).
-simplify_dbug_3(Z, G, GG):- is_list(G), must_det(maplist(simplify_dbug_3(Z), G, GG)), !.
+simplify_dbug_3(Z, G, GG):- is_list(G), must_det(must_maplist(simplify_dbug_3(Z), G, GG)), !.
 simplify_dbug_3(_, {O}, {O}):- !.
 simplify_dbug_3(Z, G, GG):- 
  compound_name_arguments(G, F, GL), % F\==unused_percept_props, !,
- maplist(simplify_dbug_3(Z), GL, GGL), !, 
+ must_maplist(simplify_dbug_3(Z), GL, GGL), !, 
  compound_name_arguments(GG, F, GGL).
 simplify_dbug_3(_, G, G).
 
@@ -107,8 +107,8 @@ clip_cons(Z, List, ClipTail, {Len, LeftS, ClipTail}):- fail,
  Len>MaxLen,
  length(Left, MaxLen),
  append(Left, _, List), !,
- maplist(simplify_dbug(Z), Left, LeftS).
-clip_cons(Z, Left, _, List):-maplist(simplify_dbug(Z), Left, List).
+ must_maplist(simplify_dbug(Z), Left, LeftS).
+clip_cons(Z, Left, _, List):-must_maplist(simplify_dbug(Z), Left, List).
 
 
 found_bug(S0, Bug):- has_list_functor(S0), !, found_list_bug(S0, Bug).
