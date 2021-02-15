@@ -1,3 +1,4 @@
+
 :- object(xpce_o).
 
    :- include('xpce_includes.lgt').
@@ -97,7 +98,7 @@
 :- object(background,
     extends(graphical)).
 
-    colour(black).
+    colour(white).
 
     init :-
         ::colour(Colour),
@@ -119,10 +120,10 @@
     implements(animated)).
 
    :- public([diameter/1, x_velocity/1, y_velocity/1]).
-   diameter(15).
+   diameter(20). % 15
    x_velocity(_XV_).
    y_velocity(_YV_).
-   colour(white).
+   colour(black).
 
    init :-
        ::diameter(Diameter),
@@ -163,8 +164,8 @@
 
     :- private(move_step/1).
     :- public([start_size/2, start_pos/2]).
-    start_size(20, 80).
-    colour(white).
+    start_size(40, 160).
+    colour(blue).
 
     init :-
         ::colour(Colour),
@@ -176,7 +177,7 @@
         window::display(Self, point(X, Y)).
 
     :- public(up/0).
-    up :-
+    up :- 
         ^^position(X, Y),
         ::move_step(S),
         NY is Y - S,
@@ -206,6 +207,21 @@
    start_pos(40, Y) :-
        background::size(_, H), Y is H//2.
    move_step(5).
+   colour(green).
+
+   :- public(update/1).
+   update(Ball) :-
+        window::size(Width, _), Margin is Width//2,
+        Ball::position(BX, BY), BX > Margin,
+        ^^position(_, Y),
+	% format(user_error, "~q ", [BY]),
+	1 is floor(BY) rem 3,
+        ( Y > BY-60, ::up
+        ; Y < BY+20, ::down
+        ),
+	^^draw. 
+    update(_).
+
 :- end_object.
 
 
@@ -245,8 +261,9 @@
 
    game_loop(Ball) :-
        Ball::update(NewBall),
+       player::update(NewBall),
        computer::update(NewBall),
-       sleep(0.02),
+       sleep(0.001),
        game_loop(NewBall).
 
 :- end_object.
