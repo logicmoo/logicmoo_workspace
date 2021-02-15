@@ -438,19 +438,21 @@ optional(_) --> [].
 optional(O,X) --> {debug_var(X,O),append_term(X,O,XO)},!,optional(XO).
 
 mw(X) --> cspace,!, mw(X).
-mw(X) --> X,!,owhite.
+mw(X) --> X,!, owhite.
 
-owhite --> {notrace(nb_current(whitespace,preserve))},!.
+owhite --> {notrace(nb_current('$dcgm_whitespace',preserve))},!.
 owhite --> cwhite.
 owhite --> [].
 
 
 
 % cwhite --> comment_expr(S,I,CP),!,{assert(t_l:'$last_comment'('$COMMENT'(S,I,CP)))},!,owhite.
-cwhite --> file_comment_expr(CMT),!,{assert(t_l:'$last_comment'(CMT))},!,owhite.
-cwhite --> {notrace(nb_current(whitespace,preserve))}, !, {fail}.
 cwhite --> cspace,!,owhite.
+cwhite --> {notrace(nb_current('$dcgm_comments',consume))},file_comment_expr(CMT),!,{assert(t_l:'$last_comment'(CMT))},!,owhite.
+cwhite --> {notrace(nb_current('$dcgm_whitespace',preserve))}, !, {fail}.
+
 cspace --> [C], {nonvar(C),charvar(C),!,C\==10,bx(C =< 32)}.
+
 charvar(C):- integer(C)-> true; (writeln(charvar(C)),break,fail).
 
 one_blank --> [C],!,{C =< 32}.
@@ -705,9 +707,9 @@ is_eof_codes(end_of_file).
 is_eof_codes(-1).
 
 file_eof(I,O):- I==end_of_file,!,O=[].
-file_eof --> [X],{ var(X), X = -1},!.
 file_eof --> [X],{ attvar(X), X = -1},!.
 file_eof --> [X],{ attvar(X), X = end_of_file},!.
+file_eof --> [X],{ var(X), X = -1},!.
 
 expr_with_text(Out,DCG,O,S,E):- 
    zalwayz(lazy_list_character_count(StartPos,S,M)),%integer(StartPos),
@@ -743,6 +745,7 @@ dcg_peek(Grammar,List,List):- (var(Grammar)->((N=2;N=1;between(3,20,N)),length(G
 eoln --> [C],!, {nonvar(C),charvar(C),eoln(C)},!.
 eoln(10).
 eoln(13).
+eoln --> \+ dcg_peek([_]).
 
 parse_meta_term(Pred, S, Expr) :- is_stream(S),!, parse_meta_stream(Pred, S,Expr).
 parse_meta_term(Pred, string(String), Expr) :- !,parse_meta_ascii(Pred, String, Expr).

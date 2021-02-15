@@ -144,23 +144,32 @@ nal_copula(X) -->
          ;  nal_o(`=>` ,X,                           unknown_impl )
          .
 
-nal_term(S)--> nal_word(S)                         % an atomic constant, term,         
+nal_term(N) --> nal_term_old(O), {old_to_new(O,N)}.
+nal_term_old(S)
+       --> nal_word(S)                         % an atomic constant, term,         
         ;  nal_variable(S)                     % an atomic variable, term, 
         ;  nal_compound_term(S)                % a, term, with internal structure 
         ;  nal_statement(S)                    % a statement can serve as a, term, 
         .
 
-nal_term_0(S)-->  nal_word_0(S)                       % an atomic constant, term,         
+nal_term_0(N) --> nal_term_0_old(O), {old_to_new(O,N)}.
+nal_term_0_old(S) 
+        -->  nal_word_0(S)                       % an atomic constant, term,         
         ;  nal_variable_0(S)                     % an atomic variable, term, 
         ;  nal_compound_term_0(S)                % a, term, with internal structure 
         ;  nal_statement_0(S)                    % a statement can serve as a, term, 
         .
 
-nal_term_1(S)--> nal_word(S)                        % an atomic constant, term,         
+nal_term_1(N) --> nal_term_1_old(O), {old_to_new(O,N)}.
+nal_term_1_old(S)
+        --> nal_word(S)                        % an atomic constant, term,         
         ;  nal_variable(S)                     % an atomic variable, term, 
         ;  nal_compound_term(S)                % a, term, with internal structure 
         .
 
+old_to_new(rel([R, var(arg, L) | B]), ext_image(New)):- length(Left,L), append(Left,Right,[R|B]), append(Left,['_'|Right],New).
+old_to_new(rel([R, var(int, L) | B]), int_image(New)):- length(Left,L), append(Left,Right,[R|B]), append(Left,['_'|Right],New).
+old_to_new(X,X).
 nal_compound_term(X)--> mw(nal_compound_term_0(X)).
 
 nal_compound_term_0('exec'([S]))--> `^`,!,nal_term_1(S).
@@ -217,7 +226,8 @@ nal_variable_0(var(X,W))
     -->nal_o(`$`, X, ind), nal_word_0(W)      % independent variable 
       ;nal_o(`#`, X, dep), nal_word_0(W)      % dependent variable 
       ;nal_o(`?`, X, query), nal_word_0(W)    % query variable in question 
-      ;nal_o(`/`, X, arg), nal_word_0(W)    % query variable in params 
+      ;nal_o(`/`, X, arg), nal_word_0(W)      % query variable in params 
+      ;nal_o(`\\`,X, int), nal_word_0(W)      % query variable in .... 
       .
 
 nal_variable_0(('_')) --> `_`.
@@ -244,6 +254,7 @@ nal_budget(nal_budget_pdq(P,D,Q))--> `$`,!, nal_priority(P), optional(( `;`, nal
 
 nal_word(E) --> mw(nal_word_0(E)).
 
+nal_word_0('+'(E)) --> `+`,dcg_basics:integer(E),!.
 nal_word_0(E) --> dcg_basics:number(E),!.
 nal_word_0(E) --> quoted_string(E),!.
 nal_word_0(E) --> dcg_peek([C]),{char_type(C,alpha)},!, nal_rsymbol([],E),!.
@@ -335,28 +346,36 @@ nal_test_file(File):- open(File,read,In),
   flatten([OutL],Out),
   maplist(wdmsg,Out),!.
 
-
+% NAL file reader
 nal_file(end_of_file) --> file_eof,!.
-% WANT? 
-nal_file(O) --> cwhite,!,nal_file(O).
-nal_file([]) -->  \+ dcg_peek([_]),!.
-nal_file(outputMustContain(O)) --> `''outputMustContain('`, read_string_until(Str,`')`),{phrase(nal_task(O),Str,[])}. 
-nal_file('1Answer'(O)) --> `' Answer `, read_string_until(Str,(`{`,read_string_until(_,eoln))),{phrase(nal_task(O),Str,[])}. 
-% nal_file(planStepLPG(Name,Expr,Value)) --> owhite,sym_or_num(Name),`:`,owhite, nal(Expr),owhite, `[`,sym_or_num(Value),`]`,owhite.  %   0.0003:   (PICK-UP ANDY IBM-R30 CS-LOUNGE) [0.1000]
-% nal_file(Term,Left,Right):- eoln(EOL),append(LLeft,[46,EOL|Right],Left),nal_read_term_from_codes(LLeft,Term,[double_quotes(string),syntax_errors(fail)]),!.
-% nal_file(Term,Left,Right):- append(LLeft,[46|Right],Left), ( \+ member(46,Right)),nal_read_term_from_codes(LLeft,Term,[double_quotes(string),syntax_errors(fail)]),!.
-nal_file(do_steps(N)) --> dcg_basics:number(N),!.
-nal_file(N=V) -->  mw(`*`), nal_word(N), mw(`=`), nal_term(V).
-nal_file(nal_in(H,V3)) -->  `IN:`,  nal_task(H), optional(nal_three_vals(V3)).
-nal_file(nal_out(H,V3)) -->  `OUT:`,  nal_task(H), optional(nal_three_vals(V3)).
-nal_file(H) --> nal_task(H).
-nal_file(nal_term(H)) --> nal_term(H).
-nal_file(english(Text)) --> read_string_until_no_esc(Str,eoln), 
+nal_file(O) --> cspace, !, nal_file(O).
+nal_file([]) -->  \+ dcg_peek([_]), !.
+nal_file(Comment) --> nal_comment_expr(Comment).
+nal_file(O) --> nal_file_element(O), !, owhite.
+% fallback to english in a file
+nal_file(unk_english(Text)) --> read_string_until_no_esc(Str,eoln), 
   {atom_string(Str,Text)},!. %split_string(Str, "", "\s\t\r\n", Text).
+
+% nal_file(planStepLPG(Name,Expr,Value)) --> owhite,sym_or_num(Name),`:`,owhite, nal(Expr),owhite, `[`,sym_or_num(Value),`]`,owhite.  %   0.0003:   (PICK-UP ANDY IBM-R30 CS-LOUNGE) [0.1000]
+% nal_file(Term,Left,Right):- eoln(EOL),append(LLeft,[46,EOL|Right],Left),read_term_from_codes(LLeft,Term,[double_quotes(string),syntax_errors(fail)]),!.
+% nal_file(Term,Left,Right):- append(LLeft,[46|Right],Left), ( \+ member(46,Right)),read_term_from_codes(LLeft,Term,[double_quotes(string),syntax_errors(fail)]),!.
+
+% non-standard
+nal_file_element(outputMustContain(O)) --> `''outputMustContain('`, !, trace, read_string_until(Str,`')`),{fmt(Str),phrase(nal_task(O),Str,[])}. 
+nal_file_element('1Answer'(O) ) --> `' Answer `, read_string_until(Str,(`{`,read_string_until(_,eoln))),{phrase(nal_task(O),Str,[])}. 
+nal_file_element(N=V          ) -->  `*`, nal_word(N), mw(`=`), nal_term(V).
+nal_file_element(nal_in(H,V3))  -->  `IN:`,   nal_task(H), optional(nal_three_vals(V3)).
+nal_file_element(nal_out(H,V3)) -->  `OUT:`,  nal_task(H), optional(nal_three_vals(V3)).
+% standard
+nal_file_element(do_steps(N)) --> dcg_basics:number(N),!.
+nal_file_element(H) --> nal_task(H).
+nal_file_element(nal_term(H)) --> nal_term(H).
+% nal_read_clause("'the detective claims that tim lives in graz",A)
+
 
 % {1 : 4;3} 
 nal_three_vals(V3)--> `{`, read_string_until_no_esc(Str,(`}`;eoln)), 
-  {nal_read_term_from_codes(Str,V3,[double_quotes(string),syntax_errors(fail)])},!.
+  {read_term_from_codes(Str,V3,[double_quotes(string),syntax_errors(fail)])},!.
 
 
 %nal_file_with_comments(O,with_text(O,Txt),S,E):- copy_until_tail(S,Copy),text_to_string_safe(Copy,Txt),!.
@@ -365,52 +384,18 @@ nal_three_vals(V3)--> `{`, read_string_until_no_esc(Str,(`}`;eoln)),
 :- thread_local(t_l:sreader_options/2).
 
 
-nal_a_test("'the detective claims that tim lives in graz").
 
-nal_a_test("'Revision ------
-
-'Bird is a type of swimmer.
-<bird --> swimmer>.
-
-'Bird is probably not a type of swimmer.
-<bird --> swimmer>. %0.10;0.60%
-
-1
-
-'Bird is very likely to be a type of swimmer.
-''outputMustContain('<bird --> swimmer>. %0.87;0.91%')").
-
-nal_a_test("
-
-'the detective claims that tim lives in graz
-'<{tim} --> (/,livingIn,_,{graz})>.
-'and lawyer claims that this is not the case
-<{tim} --> (/,livingIn,_,{graz})>. %0%
-100
-'the first deponent, a psychologist,
-'claims that people with sunglasses are more aggressive
-<<(*,$1,sunglasses) --> own> ==> <$1 --> [aggressive]>>.
-'the third deponent claims, that he has seen tom with sunglasses on:
-<(*,{tom},sunglasses) --> own>.
-'the teacher claims, that people who are aggressive tend to be murders
-<<$1 --> [aggressive]> ==> <$1 --> murder>>.
-'the second deponent claims, that if the person lives in Graz, he is surely the murder
-<<$1 --> (/,livingIn,_,{graz})> ==> <$1 --> murder>>.
-'who is the murder?
-<{?who} --> murder>?
-''outputMustContain('<{tom} --> murder>. %1.00;0.73%')
-
-").
-
-
-
-nal_test:- forall(nal_a_test(Test),nal_test(Test)).
+nal_test:- fmt('\nNAL TEST'), forall(nal_is_test(_,Test),nal_test(Test)).
 
 
 :- use_module(library(dcg/basics)).
 
 % try_reader_test(Test):- is_stream(Test), !, \+ is_compound(Test), open_string(Test,Stream), try_reader_test(Stream).
-nal_test(Test):- nal_call('dmsg',Test,Out),dmsg(Out).
+nal_test(Test):- 
+  fmt("\n-----------------------------\n"),
+  fmt(Test), 
+  fmt("-----------------------------\n"),
+  nal_call('dmsg',Test,Out),dmsg(Out).
 
 
 nal_zave_varname(N,V):- debug_var(N,V),!.
@@ -468,7 +453,7 @@ nal_call(Ctx, List, Out):- is_list(List),!, maplist(nal_call(Ctx),List, OutL),fl
 nal_call(Ctx, InnerCtx=json(List), Out):- !,  nal_call([InnerCtx|Ctx], List, Out).
 
 nal_call(Ctx, List, Out):- 
-   nal_sub_term(Sub, List), nonvar(Sub), 
+   sub_term(Sub, List), nonvar(Sub), 
    nal_rule_rewrite(Ctx, Sub, NewSub),
    % ignore((NewSub=='$',wdmsg(nal_rule_rewrite(_Ctx, Sub, NewSub)))),
    nonvar(NewSub), Sub\==NewSub,
@@ -507,3 +492,293 @@ nal_into_tokenized(Text,TokenizedText):-
 */
 
 :- fixup_exports.
+
+nal_is_test(read, "'the detective claims that tim lives in graz").
+nal_is_test(read, "<{tim} --> (/,livingIn,_,{graz})>.").
+nal_is_test(read, "<bird --> swimmer>. %0.87;0.91%").
+nal_is_test(read, "''outputMustContain('<bird --> swimmer>. %0.87;0.91%')").
+nal_is_test(read, "1").
+
+nal_is_test(read, "$1").
+nal_is_test(read, "#1").
+nal_is_test(read, "?1").
+nal_is_test(read, "/1").
+nal_is_test(read, "\\1").
+% like to distinguish 
+%         "eaten by tiger" vs. "eating tiger"  
+% before:  (/,eat,tiger,_) vs. (/,eat,_,tiger)
+% now:      (eat /2 tiger) vs. (eat /1 tiger)
+nal_is_test(read, "'eating tiger").
+nal_is_test(read, "(eat /1 tiger)").
+nal_is_test(read, "(/,eat,_,tiger)").
+nal_is_test(read, "'eaten by tiger").
+nal_is_test(read, "(eat /2 tiger)").
+nal_is_test(read, "(/,eat,tiger,_)").
+nal_is_test(read, "'intensional eating").
+nal_is_test(read, "(eat \\1 tiger)").
+nal_is_test(read, "(\\,eat,_,tiger)").
+nal_is_test(read, "(eat \\2 tiger)").
+nal_is_test(read, "(\\,eat,tiger,_)").
+
+% 
+nal_is_test(exec, "'Revision ------
+
+'Bird is a type of swimmer.
+<bird --> swimmer>.
+
+'Bird is probably not a type of swimmer.
+<bird --> swimmer>. %0.10;0.60%
+
+1
+
+'Bird is very likely to be a type of swimmer.
+''outputMustContain('<bird --> swimmer>. %0.87;0.91%')").
+
+nal_is_test(exec, "
+********** revision
+  IN: <bird --> swimmer>. %1.00;0.90% {0 : 1} 
+  IN: <bird --> swimmer>. %0.10;0.60% {0 : 2} 
+1
+ OUT: <bird --> swimmer>. %0.87;0.91% {1 : 1;2} 
+").
+
+nal_is_test(exec, "********** deduction
+  IN: <bird --> animal>. %1.00;0.90% {0 : 1} 
+  IN: <robin --> bird>. %1.00;0.90% {0 : 2} 
+1
+ OUT: <robin --> animal>. %1.00;0.81% {1 : 2;1} 
+ OUT: <animal --> robin>. %1.00;0.45% {1 : 2;1} ").
+
+nal_is_test(exec, "
+********** abduction
+  IN: <sport --> competition>. %1.00;0.90% {0 : 1} 
+  IN: <chess --> competition>. %0.90;0.90% {0 : 2} 
+1
+ OUT: <sport --> chess>. %1.00;0.42% {1 : 2;1} 
+ OUT: <chess --> sport>. %0.90;0.45% {1 : 2;1} 
+ OUT: <chess <-> sport>. %0.90;0.45% {1 : 2;1} 
+ OUT: <(&,chess,sport) --> competition>. %1.00;0.81% {1 : 2;1} 
+ OUT: <(|,chess,sport) --> competition>. %0.90;0.81% {1 : 2;1} 
+ OUT: <<sport --> $1> ==> <chess --> $1>>. %0.90;0.45% {1 : 2;1} 
+ OUT: <<chess --> $1> ==> <sport --> $1>>. %1.00;0.42% {1 : 2;1} 
+ OUT: <<chess --> $1> <=> <sport --> $1>>. %0.90;0.45% {1 : 2;1} 
+ OUT: (&&,<chess --> #1>,<sport --> #1>). %0.90;0.81% {1 : 2;1} 
+").
+
+nal_is_test(exec, "
+********* induction
+  IN: <swan --> swimmer>. %0.90;0.90% {0 : 1} 
+  IN: <swan --> bird>. %1.00;0.90% {0 : 2} 
+1
+ OUT: <bird --> swimmer>. %0.90;0.45% {1 : 2;1} 
+ OUT: <swimmer --> bird>. %1.00;0.42% {1 : 2;1} 
+ OUT: <bird <-> swimmer>. %0.90;0.45% {1 : 2;1} 
+ OUT: <swan --> (|,bird,swimmer)>. %1.00;0.81% {1 : 2;1} 
+ OUT: <swan --> (&,bird,swimmer)>. %0.90;0.81% {1 : 2;1} 
+ OUT: <<$1 --> swimmer> ==> <$1 --> bird>>. %1.00;0.42% {1 : 2;1} 
+ OUT: <<$1 --> bird> ==> <$1 --> swimmer>>. %0.90;0.45% {1 : 2;1} 
+ OUT: <<$1 --> bird> <=> <$1 --> swimmer>>. %0.90;0.45% {1 : 2;1} 
+ OUT: (&&,<#1 --> bird>,<#1 --> swimmer>). %0.90;0.81% {1 : 2;1} 
+").
+
+nal_is_test(exec, "
+********** exemplification
+  IN: <robin --> bird>. %1.00;0.90% {0 : 1} 
+  IN: <bird --> animal>. %1.00;0.90% {0 : 2} 
+1
+ OUT: <robin --> animal>. %1.00;0.81% {1 : 2;1} 
+ OUT: <animal --> robin>. %1.00;0.45% {1 : 2;1} 
+").
+
+nal_is_test(exec, "
+********** conversion
+  IN: <bird --> swimmer>. %1.00;0.90% {0 : 1} 
+  IN: <swimmer --> bird>?  {0 : 2} 
+2
+ OUT: <swimmer --> bird>. %1.00;0.47% {2 : 1} 
+").
+
+nal_is_test(exec, "
+********** y/n question
+  IN: <bird --> swimmer>. %1.00;0.90% {0 : 1} 
+  IN: <bird --> swimmer>?  {0 : 2} 
+1
+ OUT: <bird --> swimmer>. %1.00;0.90% {0 : 1} 
+").
+
+nal_is_test(exec, "
+********** wh-question
+  IN: <bird --> swimmer>. %1.00;0.80% {0 : 1} 
+  IN: <?1 --> swimmer>?  {0 : 2} 
+1
+ OUT: <bird --> swimmer>. %1.00;0.80% {0 : 1} 
+").
+
+nal_is_test(exec, "
+
+'the detective claims that tim lives in graz
+'<{tim} --> (/,livingIn,_,{graz})>.
+'and lawyer claims that this is not the case
+<{tim} --> (/,livingIn,_,{graz})>. %0%
+100
+'the first deponent, a psychologist,
+'claims that people with sunglasses are more aggressive
+<<(*,$1,sunglasses) --> own> ==> <$1 --> [aggressive]>>.
+'the third deponent claims, that he has seen tom with sunglasses on:
+<(*,{tom},sunglasses) --> own>.
+'the teacher claims, that people who are aggressive tend to be murders
+<<$1 --> [aggressive]> ==> <$1 --> murder>>.
+'the second deponent claims, that if the person lives in Graz, he is surely the murder
+<<$1 --> (/,livingIn,_,{graz})> ==> <$1 --> murder>>.
+'who is the murder?
+<{?who} --> murder>?
+''outputMustContain('<{tom} --> murder>. %1.00;0.73%')
+
+").
+
+nal_is_test(read, "
+' Custom truth values These are added by appending {0.0 0.9} instead of %0.0;0.9% as we believe this increased the readability.
+
+' Example
+
+********** wh-question
+  IN: <bird --> swimmer>. %1.00;0.80% {0 : 1} 
+  IN: <?1 --> swimmer>?  {0 : 2} 
+1
+ OUT: <bird --> swimmer>. %1.00;0.80% {0 : 1} 
+
+' can now be
+
+
+********** wh-question
+  IN: <bird --> swimmer>. {1.0 0.80} {0 : 1} 
+  IN: <?1 --> swimmer>?  {0 : 2} 
+1
+ OUT: <bird --> swimmer>. {1.0 0.80} {0 : 1} 
+
+").
+
+nal_is_test(read, "
+'Images
+
+(/,rel,_,b) 
+
+' has to be written as
+
+(rel /1 b), 
+
+' and image as
+
+(/,rel,a,_) 
+
+' as
+
+(rel /2 a)
+
+' same for \ with \1 and \2.
+
+").
+
+nal_is_test(read, "
+'Intervals, to measure expected time distances between events, are always learned by ONA and stored as meta-data, they are not part of the Narsese I/O format anymore. Hence a sequence
+
+(&/,a,+5,b)
+
+' becomes
+
+(&/,a,b)
+
+' or
+
+(a &/ b)
+
+' and also the interval for implications is not used anymore.
+
+").
+
+nal_is_test(read, "
+'Operators The syntactic sugar
+
+(^op,arg_1,arg_2,arg_3,arg_n)
+
+' is not supported anymore, instead the full notation has to be used which is supported by both systems:
+
+<(*,arg_1,arg_2,arg_3,arg_n) --> ^op>
+
+' though for operations without arguments, the following shortcut can be used:
+
+^op
+
+").
+
+nal_is_test(read, "
+'Restrictions
+
+'1. Copulas in ONA are binary, since it's using an array-based heap for terms. 
+' While there are ways to encode n-ary relations in a binary heap, the ONA philosophy, following KISS, 
+' encourages the use of left-nesting, which is also used by the system itself to compose sequences of events:
+
+((a &/ b) &/ c).
+
+").
+
+nal_is_test(read, "
+'2. The parallel temporal copula &| is not implemented, please use &/ for now, again due to KISS. 
+' If the order does not matter in some background knowledge we want to give the system, in addition to
+
+<(a &/ b) =/> c>
+
+' also give it
+
+<(b &/ a) =/> c>
+
+' to achieve the same as with &| for now.
+").
+
+nal_is_test(read, "
+'Optional syntactic improvements
+' The ONA parser does not require commas, and doesn't distinguish between < and (, also it supports infix format.
+
+<(|,a,b) --> M>. 
+
+' can be written as
+
+<(a | b) --> M>. 
+
+' or even as
+
+((a | b) --> M).
+
+' Note: Spaces cannot be omitted.
+").
+
+nal_is_test(read, "
+'Tim is alive.
+
+<{Tim} --> [alive]>.
+
+'Tim is a human.
+
+<{Tim} --> human>.
+").
+
+nal_is_test(read, "
+'Humans are a lifeform.
+
+<human --> lifeform>.
+
+'Lifeforms are like machines.
+
+<lifeform <-> machine>.
+").
+
+nal_is_test(read, "
+'Tom eats chocolate.
+
+<(*,{Tom},chocolate) --> eat>.
+
+<{Tom} --> (/,eat,_,chocolate)>.
+
+<chocolate --> (/,eat,{Tom},_)>.
+").
+
