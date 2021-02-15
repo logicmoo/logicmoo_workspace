@@ -1,3 +1,6 @@
+
+:- expects_dialect(lps).
+
 % Conway's game of life.
 % cells assumed dead by default
 % x-y represents that the cell at column x and row y is alive

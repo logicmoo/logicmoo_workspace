@@ -1,3 +1,6 @@
+
+:- expects_dialect(lps).
+
 % Exemplify external events defined as (polled) Prolog predicates
 % TODO: We need more control over this, to specify predicates and their calling patterns
 maxTime(5).

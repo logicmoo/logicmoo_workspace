@@ -1,3 +1,6 @@
+
+:- expects_dialect(lps).
+
 /*
 This LPS program simulates a matrix of burning cells. 
 A burning cell ignites neighbours towards one of several wind directions, 

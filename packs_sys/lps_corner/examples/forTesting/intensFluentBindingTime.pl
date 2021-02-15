@@ -1,3 +1,6 @@
+
+:- expects_dialect(lps).
+
 maxTime(10).
 
 withinPeriod(First-Last) at T if

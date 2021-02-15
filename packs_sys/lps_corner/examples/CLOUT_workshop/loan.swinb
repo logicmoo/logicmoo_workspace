@@ -62,6 +62,9 @@ Although the first sentence of clause 1 expresses an obligation, nowhere in the 
 </div>
 
 <div class="nb-cell program" name="p1">
+
+:- expects_dialect(lps).
+
 end_of_day(2014/6/2)
 initiates liable_to_litigation(lender)
 if requested(borrower, 1000, 2014/6/1), 

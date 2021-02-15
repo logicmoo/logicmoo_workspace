@@ -1,3 +1,6 @@
+
+:- expects_dialect(lps).
+
 :- use_module(library(date)).
 maxTime(10).
 

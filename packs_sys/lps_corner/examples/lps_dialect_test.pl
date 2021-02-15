@@ -1,4 +1,7 @@
 
+:- expects_dialect(lps).
+
+
 
 :- expects_dialect(lps).
 

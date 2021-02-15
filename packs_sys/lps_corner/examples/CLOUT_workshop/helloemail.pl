@@ -1,3 +1,6 @@
+
+:- expects_dialect(lps).
+
 actions lps_terminate.
 
 if lps_user(User,Email), User \== unknown_user

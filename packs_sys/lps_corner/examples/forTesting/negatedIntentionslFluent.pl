@@ -1,3 +1,6 @@
+
+:- expects_dialect(lps).
+
 % By BK, modified by MC: 
 % single ballot per program instance, added pre conditions and method names as in Solidity original
 maxTime(15).

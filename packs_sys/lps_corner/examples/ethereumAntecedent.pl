@@ -1,3 +1,6 @@
+
+:- expects_dialect(lps).
+
 too_little_wei(_).
 actions organize(_).
 

@@ -1,3 +1,6 @@
+
+:- expects_dialect(lps).
+
 /* Original:
 (The insured is the Holder, the insurer is the Counterparty)
 insureGoods(goodsPremium, principal, penalty, t1, t2, goodsInsured) =

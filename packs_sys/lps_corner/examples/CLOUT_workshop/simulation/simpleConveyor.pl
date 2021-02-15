@@ -1,3 +1,6 @@
+
+:- expects_dialect(lps).
+
 % Based on https://www.youtube.com/watch?v=5ms_idvN8Tg 
 
 :- include(example('SimulationKit.pl')).

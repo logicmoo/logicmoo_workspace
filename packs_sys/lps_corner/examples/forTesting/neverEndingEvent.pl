@@ -1,3 +1,6 @@
+
+:- expects_dialect(lps).
+
 % "Never-ending composite event" hack. 
 % However we can NOT use this in preconditions... as these bind time to the current cycle transition
 maxTime(10).

@@ -1,3 +1,6 @@
+
+:- expects_dialect(lps).
+
 :- include(example('loanAgreementPostConditionsRTbase.pl')).
 % Borrower cures a violation of representation or warrant
 observe request(borrower, 1000) at '2014-06-01T10:00'. % request on time at 10:00.

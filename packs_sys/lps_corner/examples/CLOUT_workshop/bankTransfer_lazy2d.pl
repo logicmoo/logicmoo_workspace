@@ -1,3 +1,6 @@
+
+:- expects_dialect(lps).
+
 maxRealTime(20).
 minCycleTime(0.25).
 actions		transfer(From, To, Amount).

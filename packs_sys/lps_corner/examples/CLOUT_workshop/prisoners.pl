@@ -1,3 +1,6 @@
+
+:- expects_dialect(lps).
+
 maxTime(5).
 fluents		total_years_in_jail(_,_).
 actions		refuses(_), bears_witness(_), gets(_,_).

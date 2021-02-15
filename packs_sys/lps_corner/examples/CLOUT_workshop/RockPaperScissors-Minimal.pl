@@ -1,3 +1,6 @@
+
+:- expects_dialect(lps).
+
 % these could be inferred:
 events player_input(_Sender,_Choice,_Value).
 actions send(_Winner,_Prize). 

@@ -1,3 +1,6 @@
+
+:- expects_dialect(lps).
+
 % A collection of "classes", related groups of fluents and other predicates representing some real world "object",
 % for simple simulations on a 2D pixel space
 % By Miguel Calejo and Bob Kowalski, 2019; all rights reserved; academic usage allowed;

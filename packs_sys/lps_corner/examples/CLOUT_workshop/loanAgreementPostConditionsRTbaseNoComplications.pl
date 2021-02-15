@@ -1,3 +1,6 @@
+
+:- expects_dialect(lps).
+
 :- include(example('loanAgreementPostConditionsRTbase.pl')).
 % The simplest case with no complications:
 %

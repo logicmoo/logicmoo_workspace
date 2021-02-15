@@ -1,3 +1,6 @@
+
+:- expects_dialect(lps).
+
 /*
 Original first example from https://nakamotoinstitute.org/contract-language/ :
 future(rightA="1 round lot pork bellies",

@@ -1,3 +1,6 @@
+
+:- expects_dialect(lps).
+
 events switch.
 actions switch.
 fluents lightOn.

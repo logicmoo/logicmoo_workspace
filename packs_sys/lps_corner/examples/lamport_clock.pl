@@ -1,3 +1,6 @@
+
+:- expects_dialect(lps).
+
 % Lamport's clock example in LPS
 % by Jacinto Dávila and Bob Kowalski (based on Lamport's Clock Protocol spec.)
 

@@ -1,3 +1,6 @@
+
+:- expects_dialect(lps).
+
 fluents on(_,_).
 m1 from T1 if initiate on(a,b) from T1.
 m2 from T1 if initiate on(a,c) from T1.

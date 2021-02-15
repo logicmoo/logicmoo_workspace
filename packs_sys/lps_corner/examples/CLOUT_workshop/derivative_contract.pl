@@ -1,3 +1,6 @@
+
+:- expects_dialect(lps).
+
 % contract for derivative of UCITS ETF FTSE MIB
 % https://www.bloomberg.com/quote/ETFMIB:IM
 % INCOMPLETE, missing receiving of investment

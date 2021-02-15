@@ -1,3 +1,6 @@
+
+:- expects_dialect(lps).
+
 maxTime(7).
 fluents		available(_).
 actions		pickup(_,_), putdown(_,_).

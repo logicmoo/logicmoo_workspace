@@ -1,3 +1,6 @@
+
+:- expects_dialect(lps).
+
 /* Showing if-then-else originating an iteration like behavior, inspired on RAK's:
 	An agent goes to a place if 
 	whenever the agent is not at the place then the agent takes one step towards the place

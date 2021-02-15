@@ -1,3 +1,6 @@
+
+:- expects_dialect(lps).
+
 fluents left(_Position), right(_Position), searching(_Content).
 initially left(0), right(9), searching(60).
 actions sample(_Position).

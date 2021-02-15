@@ -1,3 +1,6 @@
+
+:- expects_dialect(lps).
+
 % From Sam Yong's MSc thesis report, page 78
 % Backtracking across cycles... works although the implementation does not do that, instead 
 % relies on "ethernally available fluent goals"...

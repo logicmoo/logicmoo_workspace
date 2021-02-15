@@ -1,3 +1,6 @@
+
+:- expects_dialect(lps).
+
 % see diningPhilosphers-client.pl
 maxRealTime(180).
 minCycleTime(0.01).

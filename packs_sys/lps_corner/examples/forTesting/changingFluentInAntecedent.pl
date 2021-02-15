@@ -1,3 +1,6 @@
+
+:- expects_dialect(lps).
+
 maxTime(4).
 played(a).
 played(b).

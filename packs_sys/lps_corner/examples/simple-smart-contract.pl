@@ -1,3 +1,6 @@
+
+:- expects_dialect(lps).
+
 maxTime(16).
 fluents account(_,_).
 actions transfers(_,_,_).

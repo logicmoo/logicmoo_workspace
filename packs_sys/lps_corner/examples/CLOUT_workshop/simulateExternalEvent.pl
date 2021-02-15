@@ -1,3 +1,6 @@
+
+:- expects_dialect(lps).
+
 % Technique to simulate an "outside world" event new_lustrum(_) every 5 cycles
 
 

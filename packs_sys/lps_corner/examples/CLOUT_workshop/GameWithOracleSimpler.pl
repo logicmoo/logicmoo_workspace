@@ -1,3 +1,6 @@
+
+:- expects_dialect(lps).
+
 % Inspired on http://www.liquidity-lang.org/doc/tutorial/game.html, a single player game
 % Simple standalone version, not on Tezos blockchain
 maxTime(10).

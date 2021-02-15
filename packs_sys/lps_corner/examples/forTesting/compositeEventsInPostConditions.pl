@@ -1,3 +1,6 @@
+
+:- expects_dialect(lps).
+
 real_date(Y/M/D) at T if 
 	real_time(Now) at T, stamp_date_time(Now,date(Y,M,D,_,_,_,_,_,_),local).
 

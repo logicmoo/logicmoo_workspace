@@ -1,3 +1,6 @@
+
+:- expects_dialect(lps).
+
 /* Adapted by RAK from the simplified loan agreement in Flood and Goodenough, 2015. 
 Contract as automaton: the computational representation of financial agreements.
 https://pdfs.semanticscholar.org/b7ad/4e46b58094de72d9e82510ba38cb7e0521e4.pdf

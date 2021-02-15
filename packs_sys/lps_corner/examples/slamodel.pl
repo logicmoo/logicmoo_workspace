@@ -1,3 +1,6 @@
+
+:- expects_dialect(lps).
+
 % slamodel.lps SLA Model as a smart contract
 % version alfa 1.0 Jacinto Dávila
 % 

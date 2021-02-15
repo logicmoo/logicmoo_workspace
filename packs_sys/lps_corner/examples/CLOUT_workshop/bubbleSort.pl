@@ -1,3 +1,6 @@
+
+:- expects_dialect(lps).
+
 % bubble sort with relational data structure .
 maxTime(5).
 fluents	location(_, _).

@@ -1,3 +1,6 @@
+
+:- expects_dialect(lps).
+
 % RK's SOS recognizer/generator
 maxTime(40).
 events switch, sos, flash.

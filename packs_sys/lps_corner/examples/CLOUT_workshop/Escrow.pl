@@ -1,3 +1,6 @@
+
+:- expects_dialect(lps).
+
 /* From section 2.2 in http://csp2017.mimuw.edu.pl/data/uploads/papers/CSP2017_paper_24.pdf :
 1. Either the Buyer or the Seller begins a transaction. Buyer and Seller agree to the terms of the transaction via Escrow.com.
 2. The Buyer deposits the payment to the secure Escrow account.

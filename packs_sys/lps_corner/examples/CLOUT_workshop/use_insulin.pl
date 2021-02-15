@@ -1,3 +1,6 @@
+
+:- expects_dialect(lps).
+
 /* This is based on the example in Bench-Capon, 
 Persuasion in practical argument using value-based argumentation
 frameworks. Journal of Logic and Computation, 13(3):429–448, 2003.

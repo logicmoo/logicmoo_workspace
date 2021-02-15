@@ -10,6 +10,9 @@ For example:
 </div>
 
 <div class="nb-cell program">
+
+:- expects_dialect(lps).
+
 % This is a comment, preceeded by %. 
 % The following two sentences declare the fluents and events in this example.
 % 

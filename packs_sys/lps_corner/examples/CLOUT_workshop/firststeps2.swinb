@@ -9,6 +9,9 @@ Goals can be postive or negative. We will see examples of negative goals (also c
 </div>
 
 <div class="nb-cell program">
+
+:- expects_dialect(lps).
+
 fluents lightOn, lightOff.
 events switch.
 actions switch.

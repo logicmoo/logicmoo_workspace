@@ -1,3 +1,6 @@
+
+:- expects_dialect(lps).
+
 % bankTransfer
 
 maxTime(30).

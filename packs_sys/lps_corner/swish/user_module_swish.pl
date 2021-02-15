@@ -80,7 +80,8 @@ swish_config:config(include_alias,	system).
 
 :- multifile pengines:prepare_module/3.
 pengines:prepare_module(_Module, swish, _Options) :- 
-	style_check(-discontiguous), style_check(-singleton).
+	style_check(-discontiguous), style_check(-singleton),
+        format(user_error,"~N~q~n",[pengines:prepare_module(Module, swish, Options)]).
 
 % If you consider refactoring this out to somewhere else: somehow these must be after use_module('../../swish/swish'):
 

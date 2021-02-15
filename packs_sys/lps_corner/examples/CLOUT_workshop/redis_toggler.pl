@@ -1,3 +1,6 @@
+
+:- expects_dialect(lps).
+
 % Minimal example to toggle a Redis binary tag value
 % First you need to call (only once) create(RedisHost,Password)
 

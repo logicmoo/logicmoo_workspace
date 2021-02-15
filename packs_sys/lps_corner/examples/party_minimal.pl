@@ -1,3 +1,6 @@
+
+:- expects_dialect(lps).
+
 % This ilustrates a bug: 
 % the askMoney action is not firing because the timeless predicate parent's second solution is not being considered
 maxTime(5).

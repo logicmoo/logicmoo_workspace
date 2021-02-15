@@ -1,3 +1,6 @@
+
+:- expects_dialect(lps).
+
 events to(_Agent,_Right).
 
 simulatedRealTimeBeginning('2002-06-01'). 

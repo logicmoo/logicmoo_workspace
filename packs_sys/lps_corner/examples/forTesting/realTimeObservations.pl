@@ -1,3 +1,6 @@
+
+:- expects_dialect(lps).
+
 maxRealTime(5).
 % See datetime formats in  http://www.swi-prolog.org/pldoc/doc_for?object=parse_time/3
 simulatedRealTimeBeginning('2014-05-31'). 

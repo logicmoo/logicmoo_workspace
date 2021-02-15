@@ -1,3 +1,6 @@
+
+:- expects_dialect(lps).
+
 maxTime(9).
 
 initially balance(bob,0),balance(fariba,100).

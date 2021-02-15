@@ -1,3 +1,6 @@
+
+:- expects_dialect(lps).
+
 /*
 Example hooking a Java computation to each LPS cycle, using InterProlog and Java as a SWI-Prolog subprocess.
 See also myHook.pl for more details.

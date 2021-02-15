@@ -1,3 +1,6 @@
+
+:- expects_dialect(lps).
+
 % Force saving at cycle 5:
 
 if true then lps_save_finish_execution('life_saved_state.pl') from 5.

@@ -48,6 +48,9 @@ The first sentence of the first clause of the loan agreement expresses an obliga
 </div>
 
 <div class="nb-cell program" name="p1">
+
+:- expects_dialect(lps).
+
 if 	end_of_day(2/6/2014) to T,
 	requested(borrower, 1000) at T, not advanced(lender, 1000) at T
 then legal_action_against(lender) from T.

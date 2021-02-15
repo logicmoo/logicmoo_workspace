@@ -1,3 +1,6 @@
+
+:- expects_dialect(lps).
+
 % Originally at http://demo.logicalcontracts.com/example/employment_contract.pl
 % Employment contract, for one employee
 % It owns a (possibly) blockchain Ethereum account exclusive for this employee

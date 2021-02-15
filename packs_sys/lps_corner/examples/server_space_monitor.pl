@@ -1,3 +1,6 @@
+
+:- expects_dialect(lps).
+
 % Notice that this background server needs relaunching after SWI Prolog restarts.
 % TODO: improve LPS engine to avoid the above problem.
 maxRealTime(604800). % 86400 * 7 days

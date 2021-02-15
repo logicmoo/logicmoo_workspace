@@ -1,3 +1,6 @@
+
+:- expects_dialect(lps).
+
 :- include(example('loanAgreementPostConditionsRTbase.pl')).
 % The borrower defaults, by paying but not notifying the payment,
 % the payment of 0 does not become due, and the contract terminates "correctly".

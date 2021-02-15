@@ -9,6 +9,9 @@ Consider the following, more elaborate variant of the light switch example:
 </div>
 
 <div class="nb-cell program">
+
+:- expects_dialect(lps).
+
 maxTime(5).
 fluents light(_,_), location(_,_).
 actions switch(_,_, _), goto(_,_).

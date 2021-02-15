@@ -1,3 +1,6 @@
+
+:- expects_dialect(lps).
+
 % just rains.lps
 
 actions rain(_).

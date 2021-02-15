@@ -1,3 +1,6 @@
+
+:- expects_dialect(lps).
+
 /* From "Step by Step Towards Creating a Safe Smart Contract: Lessons and Insights from a Cryptocurrency Lab",
 Delmolino et.al. */
 % Approximates version in Fig.3

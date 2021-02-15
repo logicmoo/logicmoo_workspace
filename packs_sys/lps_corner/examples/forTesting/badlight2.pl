@@ -1,3 +1,6 @@
+
+:- expects_dialect(lps).
+
 maxTime(12).
 fluents light(_,_), location(_,_).
 actions switch(_,_, _), goto(_,_).

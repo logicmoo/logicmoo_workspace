@@ -1,3 +1,6 @@
+
+:- expects_dialect(lps).
+
 % oneprisoner.lps
 % solving the prisoner dilema from the stand point of one agent
 % coder: Jacinto Dávila

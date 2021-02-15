@@ -1,3 +1,6 @@
+
+:- expects_dialect(lps).
+
 % Basd on prospectiveGoat.pl, but with RK fixes
 maxTime(10).
 actions row(_,_), transport(_,_,__).

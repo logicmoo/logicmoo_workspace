@@ -1,3 +1,6 @@
+
+:- expects_dialect(lps).
+
 % Masochistic agent
 maxTime(10).
 events shot.

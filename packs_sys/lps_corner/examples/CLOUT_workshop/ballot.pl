@@ -1,3 +1,6 @@
+
+:- expects_dialect(lps).
+
 % single ballot per program instance, added method names as in Solidity original
 % http://solidity.readthedocs.io/en/v0.4.24/solidity-by-example.html
 % The representation could be extended to allow multiple ballots at the same time

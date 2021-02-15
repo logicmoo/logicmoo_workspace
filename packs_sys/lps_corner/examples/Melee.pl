@@ -1,6 +1,7 @@
 
 :- expects_dialect(lps).
 
+
 /* output from ?- dumplps*/
 
 next_to(Unit,Type)at T if

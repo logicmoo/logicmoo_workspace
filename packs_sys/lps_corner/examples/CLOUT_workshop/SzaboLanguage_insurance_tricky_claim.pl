@@ -1,3 +1,6 @@
+
+:- expects_dialect(lps).
+
 :- include(example('SzaboLanguage_insurance_base.pl')).
 
 % can't claim when it arrives

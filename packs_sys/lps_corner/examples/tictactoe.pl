@@ -1,3 +1,6 @@
+
+:- expects_dialect(lps).
+
 maxTime(5).
 fluents on(_,_).
 actions place(_,_).

@@ -1,3 +1,6 @@
+
+:- expects_dialect(lps).
+
 /* Shortest sorting algorithm:-) A single logical implication, universally quantified on the antecedent.
 Maps the ordeable feature into time. Just a cute programming pearl, don't do anything serious with this. */
 

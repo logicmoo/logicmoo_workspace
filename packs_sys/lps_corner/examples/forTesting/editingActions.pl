@@ -1,3 +1,6 @@
+
+:- expects_dialect(lps).
+
 maxTime(5).
 fluents gotit(_).
 if true then initiate gotit(1), initiate gotit(2), update Old to 13 in gotit(Old) from 3.

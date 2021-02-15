@@ -1,3 +1,6 @@
+
+:- expects_dialect(lps).
+
 maxTime(5).
 actions		transfer(From, To, Amount).
 % following commented out: all actions are serialised, producing cumulative effects IF using updates

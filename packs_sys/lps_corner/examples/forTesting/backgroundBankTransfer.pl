@@ -1,3 +1,6 @@
+
+:- expects_dialect(lps).
+
 % golps('examples/forTesting/backgroundBankTransfer.pl',[background(ID),silent])
 % interpreter:get_fluents(ID,[balance(bob,X)],Cycle,Values)
 % threadutil:threads.

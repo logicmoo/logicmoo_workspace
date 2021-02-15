@@ -521,3 +521,5 @@ eggdrop -m
 gdb -x gdbinit -return-child-result --args /opt/logicmoo_workspace/bin/swipl -l run_mud_server.pl
 gdb -x gdbinit -return-child-result --args /opt/logicmoo_workspace/bin/swipl -l run_mud_server.pl
 gdb -x gdbinit -return-child-result --args /opt/logicmoo_workspace/bin/swipl -l run_mud_server.pl
+cd /opt/logicmoo_workspace/packs_sys/eggdrop/conf/
+eggdrop -m

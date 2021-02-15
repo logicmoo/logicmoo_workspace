@@ -1,3 +1,6 @@
+
+:- expects_dialect(lps).
+
 actions send/2.
 events receive_message/3.
 observe receive_message(bob, scissors, 1000), receive_message(fariba, paper, 1000) from 1 to 2.

@@ -1,3 +1,6 @@
+
+:- expects_dialect(lps).
+
 % Dining philosophers, detaching the dining table and cutlery from the guests and their seating arrangements 
 % First start the program in diningPhilosphers-table.pl; then execute this program with the engine command below
 % You may have to edit the other program's thread ID, lps1, check the output when starting the table

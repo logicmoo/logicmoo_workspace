@@ -1,3 +1,6 @@
+
+:- expects_dialect(lps).
+
 % golps('examples/forTesting/backgroundRain2.lps',[background(ID)])
 % inject_events(ID,[rain(-1)],Result)
 % inject_events(ID,[lps_terminate],Result)

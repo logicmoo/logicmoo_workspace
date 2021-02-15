@@ -1,3 +1,6 @@
+
+:- expects_dialect(lps).
+
 % Note the execution of this program is very sensitive to the order 
 % in which the clauses for make_on and make_clear are written.
 

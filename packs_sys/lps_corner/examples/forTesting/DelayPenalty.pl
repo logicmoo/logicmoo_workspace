@@ -1,3 +1,6 @@
+
+:- expects_dialect(lps).
+
 /* Late Delivery and Penalty. In case of delayed delivery except for
  Force Majeure cases, the Seller shall pay to the Buyer for every 2 weeks of
  delay penalty amounting to 10.5% of total value of the Equipment whose

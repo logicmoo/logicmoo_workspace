@@ -19,6 +19,9 @@ For example:
 </div>
 
 <div class="nb-cell program">
+
+:- expects_dialect(lps).
+
 happy(bob) at T if lightOn at T.
 happy(dad) at T if lightOff at T.
 </div>
