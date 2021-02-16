@@ -39,14 +39,18 @@ retractall_near(M:Call) :-
            erase(Ref)).
 
 real(R) :-
-    ( float(R)
+    ( R == 1.5NaN
+    ->fail
+    ; float(R)
     ->true
     ; rational(R),
       \+ integer(R)
     ).
 
 rnum(R) :-
-    ( float(R)
+    ( R == 1.5NaN
+    ->fail
+    ; float(R)
     ->true
     ; rational(R)
     ).
