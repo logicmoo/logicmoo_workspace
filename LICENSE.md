@@ -105,12 +105,12 @@ This Agreement is the entire agreement between YOU and LOGICMOO and supersedes a
 
 
 Using or installing the SOFTWARE means that YOU accept and agree to be bound by the "Terms and Conditions". From time to time LOGICMOO may notify "Users" about updates or new versions of the SOFTWARE, in whole or part. When you download, install or use the updated or new versions of the SOFTWARE, you are bound by these "Terms and Conditions". If you do not agree to abide by these terms, you may not use the SOFTWARE.
+```
 
 
 
 
-
-
+```
 =========================================================================
 		  GNU LESSER GENERAL PUBLIC LICENSE
 		       Version 2.1, February 1999
