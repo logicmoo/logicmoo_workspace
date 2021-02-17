@@ -1,9 +1,8 @@
 ```
-Copyright (c) 2017 Douglas Miles, LOGICMOO and [CHANGELOG.md] 
-All rights reserved.
+LOGICMOO SOFTWARE Platform Copyright© 1995-2021 Douglas Miles, LOGICMOO, Inc., Vancouver, WA,
+USA. and [CHANGELOG.md]
 
-LOGICMOO SOFTWARE Platform Copyright© 1995-2021 LOGICMOO, Inc., Vancouver, WA,
-USA.
+All rights reserved.
 
 The LOGICMOO SOFTWARE Platform consists of code,that represents or supports the
 representation of facts and rules pertaining to consensus reality. The LOGICMOO
