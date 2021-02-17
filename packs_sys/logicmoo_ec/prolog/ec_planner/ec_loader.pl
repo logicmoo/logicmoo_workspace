@@ -1489,6 +1489,7 @@ arg_info(axiom_head,anti_trajectory,v(fluent,time,fluent,offset)).
 arg_info_arity(Type,F,A):- arg_info(Type,F,Info), (atom(Info) -> A=1 ; functor(Info,_,A)).
 
 :- export(lock_ec_pred/2).
+lock_ec_pred(_,_):- !.
 lock_ec_pred(F,A):- current_predicate(system:F/A),!.
 lock_ec_pred(F,A):- 
   module_transparent(system:F/A),

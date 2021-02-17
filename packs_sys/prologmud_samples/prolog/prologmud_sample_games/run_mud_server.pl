@@ -72,7 +72,6 @@ load_package_dirs:-
 
 %:- dmsg("Ensure run_mud_server").
 %:- rtrace(dmsg2("Ensure Run_MUD_SERVER1")).
-%:- break.
 
 
 %:- '$set_source_module'(baseKB).
@@ -140,7 +139,8 @@ check_startup_flags:-
 :- initialization(check_startup_flags, now).
 :- initialization(check_startup_flags, restore_state).
 
-mud_baseKB :- '$set_typein_module'(baseKB),'$set_source_module'(baseKB),module(baseKB).
+system:set_modules(M) :- '$set_typein_module'(M),'$set_source_module'(M),module(M).
+:- set_modules(baseKB).
 
 % ==============================================
 % WWW Support
@@ -210,8 +210,7 @@ do_setup_history:-
   (lar),
   (lst)]),
   
-  maplist(add_hist, [ 
-   mud_baseKB,
+  maplist(add_hist, [    
    % rtrace,
    load_nomic_mu,% autoload_all([verbose(true)]), 
    import_some,
@@ -245,8 +244,7 @@ try_zebra:- mpred_trace_all, zebra00,
 
 load_nomic_mu:- 
   % set_prolog_flag(cant_qsave_logicmoo,true),
-  mud_baseKB,
-  baseKB:ensure_loaded(library(nomic_mu)),
+  mu:ensure_loaded(library(nomic_mu)),
   add_hist(srv_mu_main),
   add_history(mu:srv_mu),
   !.
@@ -272,11 +270,43 @@ dont_export(_,goal_expansion,_).
 dont_export(_,clause_expansion,_).
 
 
+expose_all:- !.
 expose_all:-
      forall((current_predicate(M:F/A),functor(P,F,A),
        (predicate_property(M:P,imported_from(RM))->true;RM=M),
        \+ dont_export(M,F,A)),
        (catch((RM:export(RM:F/A),system:import(RM:F/A)),E,nop(dmsg(E))))).
+
+
+% test LPS is not broken yet
+system:lps_0( '/opt/logicmoo_workspace/packs_sys/lps_corner/examples/binaryChop2.pl' ).
+
+system:lps_2(M):- 
+  lps_0(File), ignore(File = '/opt/logicmoo_workspace/packs_sys/lps_corner/examples/binaryChop2.pl'), 
+  absolute_file_name(File,M), M:call(use_module(library(lps_corner))).
+
+system:lps_3(M):- 
+   interpreter:check_lps_program_module(M),
+   M:consult(M),
+   %listing(db:actions/1),
+   %listing(interpreter:actions/1),
+   interpreter:get_lps_program_module(M),
+   notrace(elsewhere:listing(M:_)),
+   M:golps(X),
+   %listing(interpreter:lps_program_module/1),
+   notrace(wdmsg(X)),
+   abolish_module(M),!.
+
+abolish_module(M):-
+ notrace(forall(
+   (current_predicate(M:F/A),functor(P,F,A), \+ predicate_property(M:P, imported_from(_)), \+ predicate_property(M:P, static)),
+    retractall(M:P))),!,
+   (exists_file(M) -> unload_file(M) ; true).
+
+
+lps_1:- lps_2(_DB).
+
+system:lps_2:- lps_2(M), lps_3(M).
 
 
 :- multifile(rdf_rewrite:arity/2).
@@ -292,14 +322,13 @@ load_before_compile:-
    %set_prolog_flag(verbose_file_search,true), 
    use_module(library(sandbox)),
 
-   use_module(library(lps_corner)),
+   %use_module(library(lps_corner)),
    use_module(library(logicmoo_webui)),      
-   use_module(library(logicmoo_lps)),
+   %use_module(library(logicmoo_lps)),
    %set_prolog_flag(verbose_file_search,false),
    
    %:- use_module(library(logicmoo_nlu)).
 
-   mud_baseKB,
    /*
    ignore(catch(pack_install(rocksdb),_,true)),
    ignore(catch(pack_install(sldnfdraw),_,true)),
@@ -323,6 +352,21 @@ start_network:-
    threads,statistics,
    !.
 
+fdict:- dmsg:fmt90(lps_visualization(_22488{groups:[_22052{content:"left(A)",id:"left/1",order:3,subgroupStack:"false"},
+   _22078{content:"right(A)",id:"right/1",order:3,subgroupStack:"false"},_22104{content:"searching(A)",id:"searching/1",order:3,
+    subgroupStack:"false"},_22130{content:"Actions",id:"action",order:4}],items:[_22152{content:"0",end:2,group:"left/1",id:0,
+    start:1,subgroup:"0",title:"Fluent left(0) initiated at 1<br/>and terminated at transition to 2"},_22190{content:"5",end:4,
+    group:"left/1",id:1,start:2,subgroup:"5",title:"Fluent left(5) initiated at 2<br/>and terminated at transition to 4"},
+    _22228{content:"7",end:21,group:"left/1",id:2,start:4,subgroup:"7",
+    title:"Fluent left(7) initiated at 4<br/>and terminated at transition to 21"},_22266{content:"7",end:21,
+    group:"right/1",id:3,start:3,subgroup:"7",title:"Fluent right(7) initiated at 3<br/>and terminated at transition to 21"},
+    _22304{content:"9",end:3,group:"right/1",id:4,start:1,subgroup:"9",
+    title:"Fluent right(9) initiated at 1<br/>and terminated at transition to 3"},
+    _22342{content:"60",end:21,group:"searching/1",id:5,start:1,subgroup:"60",
+     title:"Fluent searching(60) initiated at 1<br/>and terminated at transition to 21"},
+    _22380{content:"sample(4)",group:"action",id:6,start:2,style:"color:green",title:"happens(sample(4),1,2)",type:"point"},
+    _22418{content:"sample(7)",group:"action",id:7,start:3,style:"color:green",title:"happens(sample(7),2,3)",type:"point"},
+    _22456{content:"sample(6)",group:"action",id:8,start:4,style:"color:green",title:"happens(sample(6),3,4)",type:"point"}]},[])).
 
 load_rest:- 
    nodebug,
@@ -335,16 +379,20 @@ load_rest:-
    !.
 
 % for when dmiles is doing fast testing
-load_rest2:- gethostname('logicmoo.org'), !.
+% load_rest2:- gethostname('logicmoo.org'), !.
 load_rest2:-
    locally(set_prolog_flag(verbose_load,true),load_rest3).
 
-load_rest3:-   
+load_rest3:-
+   set_modules(baseKB),
    baseKB:ensure_loaded(library(logicmoo_cg)),
    baseKB:ensure_loaded(library(logicmoo_ec)),
-   baseKB:ensure_loaded(library(logicmoo_nlu)),   
+   baseKB:ensure_loaded(library(logicmoo_nlu)),
    baseKB:ensure_loaded(library(logicmoo_clif)),
    baseKB:ensure_loaded(library('logicmoo/common_logic/common_logic_sumo.pfc')),   
+   add_hist(try_zebra),
+   add_hist(start_all),
+   add_hist(qsave_logicmoo),
    system:reexport(pldata(kb_0988)),
    (current_prolog_flag(gui_tracer,true)->noguitracer;true),
    % run_before_qsave,
@@ -363,9 +411,9 @@ normalize_imports(M):-
 
 normalize_and_save_imports :- forall(current_module(M),normalize_imports(M)).
 
-qsave_logicmoo :-
-   mud_baseKB,
-   %load_before_compile,
+
+qsave_logicmoo :-   
+   load_before_compile,
    set_prolog_flag(lisp_repl_goal,true),
    current_prolog_flag(stack_limit,Stack_limit),
    qsave_program(logicmoo_server,
@@ -376,10 +424,10 @@ qsave_logicmoo :-
        goal(prolog),
        undefined(ignore), 
        op(save),
-       map('logicmoo_server.map'),
+       % map('logicmoo_server.map'),
        foreign(no_save),
        autoload(true),       
-       stand_alone(true)]),
+       stand_alone(false)]),
    add_history(start_all),
    !.
 
@@ -392,9 +440,8 @@ import_some:-
          (predicate_property(M:P,imported_from(RM))->true;RM=M)),
          (RM:export(RM:F/A),rtrace:import(RM:F/A))), !.
 
-start_rest:- 
-   load_rest,
-   mud_baseKB,
+start_rest:-    
+   load_rest,  
    % rtrace,
    %load_nomic_mu,% autoload_all([verbose(true)]), 
    import_some,
@@ -402,8 +449,11 @@ start_rest:-
    start_rest2,
    !.
 
+% start_rest2:- \+ gethostname('logicmoo.org'), !.
 start_rest2:- \+ current_predicate(baseKB:start_runtime_mud/0), !.
 start_rest2:- 
+
+   set_modules(baseKB),
    baseKB:start_runtime_mud,
    run_setup_now,  
    baseKB:start_mud_telnet, 
@@ -432,7 +482,6 @@ skip_sandboxing:-
 
 :- skip_sandboxing.
 
-baseKB:start_rest:- start_rest.
 
 start_all :- start_network, start_rest.
 
@@ -440,6 +489,16 @@ start_all :- start_network, start_rest.
 % :- use_module(library(pfc_lib)).
 
 :- load_before_compile.
+
+lps_sanity:- Limit = 1000,
+ catch(call_with_depth_limit(lps_2, Limit, R), E,(R=E)),
+   format(user_error,"~N ~q~n",[lps_sanity=R]),
+   ((integer(R),R<Limit)-> true; (dumpST,break,fail)),
+   must(fdict).
+
+:- lps_sanity.
+
+
 :- noguitracer, tnodebug.
 
 :- initialization(start_network,restore).
@@ -455,7 +514,6 @@ start_all :- start_network, start_rest.
 %:- abolish(user:prolog_load_file/2).
 %:- dynamic(user:prolog_load_file/2).
 
-%:- prolog.
 
 :- load_rest.
 :- initialization(start_rest,restore).
@@ -673,9 +731,12 @@ start_all :- start_network, start_rest.
 
 % :- mu:srv_mu.
 
-% :- prolog. 
+:- add_history((mmake, autodoc_test)).
 
-:- add_hist((mmake, autodoc_test)).
+:- lps_sanity.
+
+%:- prolog. 
 
 end_of_file.
+
 

@@ -675,7 +675,7 @@ nal_is_test(read, "
 
 (rel /2 a)
 
-' same for \ with \1 and \2.
+' same for \\ with \\1 and \\2.
 
 ").
 

@@ -37,7 +37,8 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 %% All LPS engine state persists here
 %% The local predicate definitions MUST NOT be dynamic, see note in copy_from_module below 
 
-:- module(db, [ display/2,
+:- module(db, [    
+        display/2,
 	lps_goal_id_counter/1,
 	action/1,
 	current_goal/1,
@@ -92,58 +93,73 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 :- writeln("LPS requires SWI-Prolog"), throw(swi_prolog_required).
 :- endif.
 
-:- thread_local lps_goal_id_counter/1.
-:- thread_local display/2.
-:- thread_local action/1.
-:- thread_local current_goal/1.
-:- thread_local current_time/1.
-:- thread_local real_time_beginning/1.
-:- thread_local lps_updating_current_state/0.
+tl_preds(X):-
+ X = [
+   lps_goal_id_counter/1,
+   display/2,
+   action/1,
+   current_goal/1,
+   current_time/1,
+   real_time_beginning/1,
+   lps_updating_current_state/0,
 % convenience to encode a bunch of declarations in Wei or other syntaxes:
-:- thread_local (events)/1, (prolog_events)/1, (fluents)/1, (actions)/1, (unserializable)/1.
-:- thread_local d_pre/1.
-:- thread_local depth/1.
-:- thread_local event/1.
-:- thread_local expanded_consequent/2.
-:- thread_local failed/3.
-:- thread_local fluent/1.
-:- thread_local happens/3.
-:- thread_local initial_state/1.
-:- thread_local (initiated)/3.
-:- thread_local l_events/2. 
-:- thread_local l_int/2.
-:- thread_local l_timeless/2.
-:- thread_local (observe)/2.
-:- thread_local option/1.
-:- thread_local reactive_rule/2.
-:- thread_local expanded_reactive_rule/2.
-:- thread_local reactive_rule/3. % adds priority
-:- thread_local expanded_reactive_rule/3.
-:- thread_local state/1.
-:- thread_local next_state/1.
-:- thread_local steps/1.
-:- thread_local succ_t/2.
-:- thread_local (terminated)/3.
-:- thread_local tried/3.
-:- thread_local updated/4.
-:- thread_local used/1.
-:- thread_local maxTime/1. % LPS cycles
-:- thread_local maxRealTime/1. % seconds
-:- thread_local minCycleTime/1. % seconds
-:- thread_local simulatedRealTimePerCycle/1, simulatedRealTimeBeginning/1.
-:- thread_local lps_test_result_item/3.
-:- thread_local lps_test_action_ancestor/3.
-:- thread_local lps_test_result/3.
-:- thread_local lps_failed_test/2.
-:- thread_local lps_test_options/1.
-:- thread_local lps_saved_state/8.
-:- thread_local '_currenty__defining'/1.
-:- thread_local head_hint/3.
+   (events)/1, (prolog_events)/1, (fluents)/1, (actions)/1, (unserializable)/1,
+   d_pre/1,
+   depth/1,
+   event/1,
+   expanded_consequent/2,
+   failed/3,
+   fluent/1,
+   happens/3,
+   initial_state/1,
+   (initiated)/3,
+   l_events/2, 
+   l_int/2,
+   l_timeless/2,
+   (observe)/2,
+   option/1,
+   reactive_rule/2,
+   expanded_reactive_rule/2,
+   reactive_rule/3, % adds priority
+   expanded_reactive_rule/3,
+   state/1,
+   next_state/1,
+   steps/1,
+   succ_t/2,
+   (terminated)/3,
+   tried/3,
+   updated/4,
+   used/1,
+   maxTime/1, % LPS cycles
+   maxRealTime/1, % seconds
+   minCycleTime/1, % seconds
+   simulatedRealTimePerCycle/1, simulatedRealTimeBeginning/1,
+   lps_test_result_item/3,
+   lps_test_action_ancestor/3,
+   lps_test_result/3,
+   lps_failed_test/2,
+   lps_test_options/1,
+   lps_saved_state/8,
+   '_currenty__defining'/1,
+   head_hint/3].
+
+
+:- export(define_lps_into_module/1).
+define_lps_into_module(Into):-  db:tl_preds(List),maplist(define_lps_pred_into_module(Into),List).
+
+:- export(define_lps_pred_into_module/2).
+define_lps_pred_into_module(Into, F/A):- 
+     functor(H,F,A), (\+ predicate_property(Into:H,defined) ; true) -> (Into:discontiguous(F/A),Into:thread_local(F/A)) ; true.
+
+:- define_lps_into_module(db).
 
 % TODO: somehow runing tests a second time still originates "Clauses of interpreter:terminated/3 , etc. are not together..."
 % It may be necessary to inject these declarations in the Wei syntax file...
+
 :- discontiguous( ((initiated) /3, (terminated)/3, updated/4, l_events/2, reactive_rule/3, reactive_rule/2, l_int/2, l_timeless/2,
-	action/1, fluent/1, event/1, d_pre/1, happens/3, display/2 )).
+	action/1, fluent/1, event/1, d_pre/1, happens/3
+	% , display/2 
+	)).
 
 :- use_module(library(lists), [append/3,member/2]).
 
@@ -173,8 +189,22 @@ uretractall(X) :- interpreter:uretractall(X).
 
 % Assert into this module all clauses in module M
 % Hacky code; this module MUST have only static predicates, so they're protected against malicious redifinitions in the LPS program
-copy_from_module(M) :- 
-	current_predicate(M:F/N), functor(H,F,N), 
-	(\+ predicate_property(H,defined) -> thread_local(H) ; true),
-	catch(retractall(H),_,fail), clause(M:H,B), catch(assert((H:-B)),_,fail), fail.
-copy_from_module(_).
+
+copy_from_module(M):- prolog_load_context(module, Into), copy_from_module(M, Into).
+
+:- export(copy_from_module/2).
+copy_from_module(M, Into) :- 
+	current_predicate(M:F/N), 
+	functor(H,F,N),
+	\+ predicate_property(M:H, imported_from(_)),
+	transfer_into_module(M, Into , F/N), fail.
+copy_from_module(M, Into):- 
+        db:tl_preds(List),
+	maplist(copy_from_module(M, Into),List).
+copy_from_module(_,_).
+
+:- export(transfer_into_module/3).
+transfer_into_module(M, Into, F/N):-  functor(H,F,N),
+	(\+ predicate_property(Into:H,defined) -> Into:thread_local(H) ; true),
+	catch(Into:retractall(H),_,fail), clause(M:H,B), catch(Into:assert((H:-B)),_,fail).
+

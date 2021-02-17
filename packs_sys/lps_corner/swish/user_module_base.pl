@@ -400,6 +400,11 @@ sandbox:safe_primitive(interpreter:uassertz(_)).
 sandbox:safe_primitive(interpreter:uretract(_)). 
 sandbox:safe_primitive(interpreter:uretractall(_)). 
 
+% For debugging:
+sandbox:safe_primitive(swish_highlight:server_tokens(_)).  % swish_highlight:server_tokens(source).
+sandbox:safe_primitive(swish_highlight:show_mirror(_)).
+
+
 /** 
 	system_fluent(Fluent) is det 
 

@@ -35,7 +35,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 :- module(lps_server_UI, [ check_user_server_usage/0, lps_user_is_super/0, user_is_known/0, check_powerful_user/1, term_rendering//3]).
 
-
+% :- meta_predicate any_call(0).
 :- multifile(lps_server_UI:term_rendering/5).
 
 :- use_module(library(http/html_write)).

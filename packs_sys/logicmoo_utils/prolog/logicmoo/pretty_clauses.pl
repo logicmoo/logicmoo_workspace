@@ -320,7 +320,7 @@ mention_s_l:-
 o_s_l_diff:- s_l(F2,L2), ec_reader:o_s_l(F1,L1), (F1 \= F2; ( Diff is abs(L1-L2), Diff > 0)), !.
 
 maybe_o_s_l:- \+ o_s_l_diff, !.
-maybe_o_s_l:- e_source_location(F,L),retractall(ec_reader:o_s_l(_,_)),asserta(ec_reader:o_s_l(F,L)),!.
+maybe_o_s_l:- notrace(e_source_location(F,L)),retractall(ec_reader:o_s_l(_,_)),asserta(ec_reader:o_s_l(F,L)),!.
 maybe_o_s_l.
 
 output_line_count(L):- nb_current('$ec_output_stream',Outs),is_stream(Outs),line_count(Outs,L).
@@ -359,7 +359,7 @@ e_source_location(F,L):- stream_property(S, file_name(F)),stream_property(S, inp
 e_source_location(F,L):- stream_property(S, file_name(F)),atom_concat(_,'.e',F), any_line_count(S,L),!.
 
 :- export(s_l/2).
-s_l(F,L):- e_source_location(B,L2), !, L is L2-1, absolute_file_name(B,F).
+s_l(F,L):- notrace(e_source_location(B,L2)), !, L is L2-1, absolute_file_name(B,F).
 s_l(F,L):- source_location(F,L2), !, L is L2-1.
 % s_l(F,L):- ec_reader:o_s_l(F,L). 
 s_l(F,L):- any_stream(F,S), any_line_count(S,L),any_line_count(_,L), !.

@@ -188,6 +188,42 @@ is_lps_alt_user_module(_User,Out):- gensym(lps, Out).
 % is_lps_alt_user_module(db).
 
 
+lps_operators(M,[
+  op(900,fy,(M:not)), 
+  op(1200,xfx,(M:then)),
+  op(1185,fx,(M:if)),
+  op(1190,xfx,(M:if)),
+  op(1100,xfy,(M:else)), 
+  op(1050,xfx,(M:terminates)),
+  op(1050,xfx,(M:initiates)),
+  op(1050,xfx,(M:updates)),
+  % Rejected    (      op(1050,fx,impossible), 
+  op(1050,fx,(M:observe)),
+  op(1050,fx,(M:false)),
+  op(1050,fx,(M:initially)),
+  op(1050,fx,(M:fluents)),
+  op(1050,fx,(M:events)),
+  op(1050,fx,(M:prolog_events)),
+  op(1050,fx,(M:actions)),
+  op(1050,fx,(M:unserializable)),
+  % notice ',' has priority 1000
+  op(999,fx,(M:update)),
+  op(999,fx,(M:initiate)),
+  op(999,fx,(M:terminate)),
+  op(997,xfx,(M:in)),
+  op(995,xfx,(M:at)),
+  op(995,xfx,(M:during)),
+  op(995,xfx,(M:from)), 
+  op(994,xfx,(M:to)), % from's priority higher
+  op(1050,xfy,(M:(::))),
+  
+  % lps.js syntax extras
+  op(1200,xfx,(M:(<-))),
+  op(1050,fx,(M:(<-))),
+  % -> is already defined as 1050, xfy, which will do given that lps.js does not support if-then-elses
+  op(700,xfx,((M:(<=))))
+]).
+
 push_lps_dialect:-
    calc_dialect_module(M),
    push_lps_dialect_now(M, M).   
@@ -207,43 +243,11 @@ push_lps_dialect_now(Was, M):-
    notrace(lps_repl:ensure_loaded(library(lps_corner))),
    %notrace(system:ensure_loaded(library(broadcast))),
    interpreter:check_lps_program_module(M),
-   multifile(M:actions/1),dynamic(M:actions/1),
-   dialect_input_stream(StreamIn),
-   style_check(-discontiguous), style_check(-singleton),
-   push_operators(M:[
-     op(900,fy,(M:not)), 
-     op(1200,xfx,(M:then)),
-     op(1185,fx,(M:if)),
-     op(1190,xfx,(M:if)),
-     op(1100,xfy,(M:else)), 
-     op(1050,xfx,(M:terminates)),
-     op(1050,xfx,(M:initiates)),
-     op(1050,xfx,(M:updates)),
-% Rejected    (      op(1050,fx,impossible), 
-     op(1050,fx,(M:observe)),
-     op(1050,fx,(M:false)),
-     op(1050,fx,(M:initially)),
-     op(1050,fx,(M:fluents)),
-     op(1050,fx,(M:events)),
-     op(1050,fx,(M:prolog_events)),
-     op(1050,fx,(M:actions)),
-     op(1050,fx,(M:unserializable)),
-% notice ',' has priority 1000
-     op(999,fx,(M:update)),
-     op(999,fx,(M:initiate)),
-     op(999,fx,(M:terminate)),
-     op(997,xfx,(M:in)),
-     op(995,xfx,(M:at)),
-     op(995,xfx,(M:during)),
-     op(995,xfx,(M:from)), 
-     op(994,xfx,(M:to)), % from's priority higher
-     op(1050,xfy,(M:(::))),
-
-% lps.js syntax extras
-     op(1200,xfx,(M:(<-))),
-     op(1050,fx,(M:(<-))),
-% -> is already defined as 1050, xfy, which will do given that lps.js does not support if-then-elses
-     op(700,xfx,((M:(<=))))],Undo),
+   M:style_check(-discontiguous), M:style_check(-singleton),
+   db:define_lps_into_module(M),
+   dialect_input_stream(StreamIn),   
+   lps_operators(M, Ops),
+   push_operators(M:Ops, Undo),
    %ignore(retract(tmp:module_dialect_lps(StreamIn,_,_,_))), 
    asserta(tmp:module_dialect_lps(StreamIn,Was,M,Undo)),!.
 
@@ -270,6 +274,35 @@ pop_lps_dialect:-
 
 
 
+                 /*******************************
+                 *         SYNTAX HOOKS         *
+                 *******************************/
+
+:- multifile
+    prolog:alternate_syntax/4.
+
+
+prolog:alternate_syntax(lps, Module,
+                        emacs_lps_mode:push_lps_operators(Module),
+                        emacs_lps_mode:pop_lps_operators).
+
+
+/* - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+Note that we could generalise this to deal with all included files.
+- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - */
+
+push_lps_operators :-
+    '$set_source_module'(M, M),
+    push_lps_operators(M).
+
+push_lps_operators(Module) :-
+    lps_operators(Module, Ops),
+    push_operators(Module:Ops).
+
+pop_lps_operators :-
+    pop_operators.
+
+
 user:goal_expansion(In, Out) :-
     prolog_load_context(dialect, lps),
     lps_gOAL_expansion(In, Out).
@@ -294,6 +327,4 @@ system:term_expansion(In, PosIn, Out, PosOut) :- In == end_of_file,
    PosIn = PosOut.
       
       
-
-
 

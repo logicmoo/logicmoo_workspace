@@ -1,5 +1,6 @@
 
 :- expects_dialect(lps).
+:- use_module(library(lps_syntax)).
 
 % trash.lps
 maxTime(10).

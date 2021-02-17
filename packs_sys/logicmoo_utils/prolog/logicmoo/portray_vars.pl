@@ -26,7 +26,7 @@
 :- use_module(library(check)).
 
 
-:- use_module(library(edinburgh)).
+%:- use_module(library(edinburgh)).
 :- use_module(library(debug)).
 :- use_module(library(prolog_stack)).
 :- use_module(library(make)).
