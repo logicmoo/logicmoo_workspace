@@ -1,4 +1,4 @@
-
+```
 
 Copyright (c) 2017 Douglas Miles, LOGICMOO and [CHANGELOG.md] 
 All rights reserved.
@@ -564,3 +564,4 @@ DAMAGES.
 		     END OF TERMS AND CONDITIONS
 
 
+```
