@@ -11,7 +11,6 @@ packs_sys/prologmud_samples/prolog/prologmud_sample_games/nohup.out
 #packs_sys/logicmoo_ec/ext/PKnows/
 /DEAD
 *.sav*/
-*.sav
 /~html~/
 ./logicmoo_workspace.vtg~
 

@@ -299,8 +299,8 @@ system:lps_3(M):-
 
 abolish_module(M):-
  notrace(forall(
-   (current_predicate(M:F/A),functor(P,F,A), \+ predicate_property(M:P, imported_from(_)), \+ predicate_property(M:P, static)),
-    retractall(M:P))),!,
+   (current_predicate(M:F/A), functor(P,F,A), \+ predicate_property(M:P, imported_from(_))),
+    (predicate_property(M:P, static) -> abolish(M:F/A) ; retractall(M:P)))),!,
    (exists_file(M) -> unload_file(M) ; true).
 
 
