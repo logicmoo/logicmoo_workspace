@@ -44,7 +44,7 @@
 :- use_module(library(camel_snake)).
 :- use_module(library(extend_args)).
 :- use_module(library(extra_messages)).
-:- use_module(library(foldnl)).
+:- use_module(library(foldil)).
 :- use_module(library(foreign/foreign_props)).
 :- use_module(library(key_value)).
 :- use_module(library(lists)).
@@ -1023,7 +1023,7 @@ sanitize_csym([C|L], S1) -->
 
 declare_struct_union_ini(union, Spec, TPDL, Name) -->
     ["typedef enum {"],
-    foldnl(ds_union_ini_1(union, Name), 0, TPDL),
+    foldil(ds_union_ini_1(union, Name), 0, TPDL),
     ["} "+Name+"_utype;"],
     {ctype_ini(Spec, Decl)},
     [Decl+" {",
@@ -1035,7 +1035,7 @@ declare_struct_union_ini(struct, _, _, _) --> [].
 declare_struct_union_ini(enum, Spec, TPDL, Name) -->
     {ctype_ini(Spec, CIni)},
     [CIni+" {"],
-    foldnl(ds_union_ini_1(enum, Name), 0, TPDL),
+    foldil(ds_union_ini_1(enum, Name), 0, TPDL),
     {ctype_end(Spec, CEnd)},
     ["}"+CEnd+";"].
 
