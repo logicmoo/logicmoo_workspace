@@ -3,7 +3,7 @@
     Author:        Edison Mera Menendez
     E-mail:        efmera@gmail.com
     WWW:           https://github.com/edisonm/xlibrary
-    Copyright (C): 2021, Process Design Center, Breda, The Netherlands.
+    Copyright (C): 2018, Process Design Center, Breda, The Netherlands.
     All rights reserved.
 
     Redistribution and use in source and binary forms, with or without
@@ -32,61 +32,44 @@
     POSSIBILITY OF SUCH DAMAGE.
 */
 
-:- module(foldnl,
-          [foldnl/5,
-           foldnl/6,
-           foldnl/7,
-           foldnl/8]).
+:- module(foldil,
+          [foldil/5,
+           foldil/6,
+           foldil/7,
+           foldil/8]).
 
-%!  foldnl(:Goal, +NList, +V0, -V).
-%!  foldnl(:Goal, +NList1, +NList2, +V0, -V).
-%!  foldnl(:Goal, +NList1, +NList2, +NList3, +V0, -V).
-%!  foldnl(:Goal, +NList1, +NList2, +NList3, +NList4, +V0, -V).
+:- use_module(library(apply)).
 
-foldnl(Goal, List) -->
-    foldnl_(List, Goal).
+:- meta_predicate
+    foldil(4, +, +, ?, ?),
+    foldil(5, +, +, +, ?, ?),
+    foldil(6, +, +, +, ?, ?, ?),
+    foldil(7, +, +, +, ?, ?, ?, ?).
 
-foldnl_([], _) -->
-    !.
-foldnl_([H|T], Goal) -->
-    !,
-    foldnl_(H, Goal),
-    foldnl_(T, Goal).
-foldnl_(E, Goal) -->
-    call(Goal, E).
+foldil(Goal, I1, List, V1, V) :-
+    foldl(goali(Goal), List, I1-V1, _-V).
 
-foldnl(Goal, List1, List2) -->
-    foldnl_(List1, List2, Goal).
+foldil(Goal, I1, List1, List2, V1, V) :-
+    foldl(goali(Goal), List1, List2, I1-V1, _-V).
 
-foldnl_([], [], _) -->
-    !.
-foldnl_([H1|T1], [H2|T2], Goal) -->
-    !,
-    foldnl_(H1, H2, Goal),
-    foldnl_(T1, T2, Goal).
-foldnl_(E1, E2, Goal) -->
-    call(Goal, E1, E2).
+foldil(Goal, I1, List1, List2, List3, V1, V) :-
+    foldl(goali(Goal), List1, List2, List3, I1-V1, _-V).
 
-foldnl(Goal, List1, List2, List3) -->
-    foldnl_(List1, List2, List3, Goal).
+foldil(Goal, I1, List1, List2, List3, List4, V1, V) :-
+    foldl(goali(Goal), List1, List2, List3, List4, I1-V1, _-V).
 
-foldnl_([], [], [], _) -->
-    !.
-foldnl_([H1|T1], [H2|T2], [H3|T3], Goal) -->
-    !,
-    foldnl_(H1, H2, H3, Goal),
-    foldnl_(T1, T2, T3, Goal).
-foldnl_(E1, E2, E3, Goal) -->
-    call(Goal, E1, E2, E3).
+goali(Goal, H, I1-V1, I-V) :-
+    call(Goal, I1, H, V1, V),
+    succ(I1, I).
 
-foldnl(Goal, List1, List2, List3, List4) -->
-    foldnl_(List1, List2, List3, List4, Goal).
+goali(Goal, H1, H2, I1-V1, I-V) :-
+    call(Goal, I1, H1, H2, V1, V),
+    succ(I1, I).
 
-foldnl_([], [], [], [], _) -->
-    !.
-foldnl_([H1|T1], [H2|T2], [H3|T3], [H4|T4], Goal) -->
-    !,
-    foldnl_(H1, H2, H3, H4, Goal),
-    foldnl_(T1, T2, T3, T4, Goal).
-foldnl_(E1, E2, E3, E4, Goal) -->
-    call(Goal, E1, E2, E3, E4).
+goali(Goal, H1, H2, H3, I1-V1, I-V) :-
+    call(Goal, I1, H1, H2, H3, V1, V),
+    succ(I1, I).
+
+goali(Goal, H1, H2, H3, H4, I1-V1, I-V) :-
+    call(Goal, I1, H1, H2, H3, H4, V1, V),
+    succ(I1, I).
