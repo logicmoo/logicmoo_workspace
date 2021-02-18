@@ -81,7 +81,7 @@ lps_program_module(M) :- interpreter:lps_program_module(M).
 :- use_module(library(http/term_html)).
 
 :- if(true). % exists_source(swish(lib/render))
-:- user:ensure_loaded(library('../swish/user_module_base')).
+:- user:ensure_loaded(('../swish/user_module_base')).
 %:- use_module(/packs_web/swish/lib/render.plswish(lib/render)).
 :- use_module('/opt/logicmoo_workspace/packs_web/swish/lib/render').
 :- else.

@@ -50,7 +50,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 % explicit imports below, commenting this to avoid "weak imports" warnings 
 % :- use_module(library('../engine/interpreter.P')).
-:- use_module(library('../utils/visualizer.P')).
+:- use_module(('../utils/visualizer.P')).
 
 :- multifile sandbox:safe_primitive/1.
 

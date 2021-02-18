@@ -5,7 +5,7 @@
 
 :- module_transparent(lps_term_expander/3).
 
-:- use_module(library('../utils/psyntax.P'),[ 
+:- use_module(('../utils/psyntax.P'),[ 
 	lps2p_file/2, lps2p/3, syntax2p_file/4, syntax2p/4, syntax2p_literal/7, golps/2, golps/1, dumpjs/2, dumpjs/1,
 	file_generator_name/2, may_clear_hints/0,term_colours/2,timeless_ref/1, set_top_term/1, dumploaded/2
 	]).
