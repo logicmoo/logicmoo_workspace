@@ -32,67 +32,58 @@
     POSSIBILITY OF SUCH DAMAGE.
 */
 
-:- module(foldnl,
-          [foldnl/4,
-           foldnl/5,
-           foldnl/6,
-           foldnl/7]).
+:- module(mapnlist,
+          [mapnlist/2,
+           mapnlist/3,
+           mapnlist/4,
+           mapnlist/5]).
 
 :- meta_predicate
-    foldnl(3, +, +, -),
-    foldnl(4, +, +, +, -),
-    foldnl(5, +, +, +, +, -),
-    foldnl(6, +, +, +, +, +, -).
+    mapnlist(1, ?),
+    mapnlist(2, ?, ?),
+    mapnlist(3, ?, ?, ?),
+    mapnlist(4, ?, ?, ?, ?).
 
-%!  foldnl(:Goal, +NList, +V0, -V).
-%!  foldnl(:Goal, +NList1, +NList2, +V0, -V).
-%!  foldnl(:Goal, +NList1, +NList2, +NList3, +V0, -V).
-%!  foldnl(:Goal, +NList1, +NList2, +NList3, +NList4, +V0, -V).
+mapnlist(Goal, List) :-
+    mapnlist_(List, Goal).
 
-foldnl(Goal, List) -->
-    foldnl_(List, Goal).
-
-foldnl_([], _) -->
-    !.
-foldnl_([H|T], Goal) -->
+mapnlist_([], _) :- !.
+mapnlist_([H|T], Goal) :-
     !,
-    foldnl_(H, Goal),
-    foldnl_(T, Goal).
-foldnl_(E, Goal) -->
-    call(Goal, E).
+    mapnlist_(H, Goal),
+    mapnlist_(T, Goal).
+mapnlist_(E1, Goal) :-
+    call(Goal, E1).
 
-foldnl(Goal, List1, List2) -->
-    foldnl_(List1, List2, Goal).
+mapnlist(Goal, List1, List2) :-
+    mapnlist_(List1, List2, Goal).
 
-foldnl_([], [], _) -->
-    !.
-foldnl_([H1|T1], [H2|T2], Goal) -->
+mapnlist_([], [], _) :- !.
+mapnlist_([H1|T1], [H2|T2], Goal) :-
     !,
-    foldnl_(H1, H2, Goal),
-    foldnl_(T1, T2, Goal).
-foldnl_(E1, E2, Goal) -->
+    mapnlist_(H1, H2, Goal),
+    mapnlist_(T1, T2, Goal).
+mapnlist_(E1, E2, Goal) :-
     call(Goal, E1, E2).
 
-foldnl(Goal, List1, List2, List3) -->
-    foldnl_(List1, List2, List3, Goal).
+mapnlist(Goal, List1, List2, List3) :-
+    mapnlist_(List1, List2, List3, Goal).
 
-foldnl_([], [], [], _) -->
-    !.
-foldnl_([H1|T1], [H2|T2], [H3|T3], Goal) -->
+mapnlist_([], [], [], _) :- !.
+mapnlist_([H1|T1], [H2|T2], [H3|T3], Goal) :-
     !,
-    foldnl_(H1, H2, H3, Goal),
-    foldnl_(T1, T2, T3, Goal).
-foldnl_(E1, E2, E3, Goal) -->
+    mapnlist_(H1, H2, H3, Goal),
+    mapnlist_(T1, T2, T3, Goal).
+mapnlist_(E1, E2, E3, Goal) :-
     call(Goal, E1, E2, E3).
 
-foldnl(Goal, List1, List2, List3, List4) -->
-    foldnl_(List1, List2, List3, List4, Goal).
+mapnlist(Goal, List1, List2, List3, List4) :-
+    mapnlist_(List1, List2, List3, List4, Goal).
 
-foldnl_([], [], [], [], _) -->
-    !.
-foldnl_([H1|T1], [H2|T2], [H3|T3], [H4|T4], Goal) -->
+mapnlist_([], [], [], [], _) :- !.
+mapnlist_([H1|T1], [H2|T2], [H3|T3], [H4|T4], Goal) :-
     !,
-    foldnl_(H1, H2, H3, H4, Goal),
-    foldnl_(T1, T2, T3, T4, Goal).
-foldnl_(E1, E2, E3, E4, Goal) -->
+    mapnlist_(H1, H2, H3, H4, Goal),
+    mapnlist_(T1, T2, T3, T4, Goal).
+mapnlist_(E1, E2, E3, E4, Goal) :-
     call(Goal, E1, E2, E3, E4).
