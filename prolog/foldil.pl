@@ -32,44 +32,44 @@
     POSSIBILITY OF SUCH DAMAGE.
 */
 
-:- module(foldnl,
-          [foldnl/5,
-           foldnl/6,
-           foldnl/7,
-           foldnl/8]).
+:- module(foldil,
+          [foldil/5,
+           foldil/6,
+           foldil/7,
+           foldil/8]).
 
 :- use_module(library(apply)).
 
 :- meta_predicate
-    foldnl(4, +, +, ?, ?),
-    foldnl(5, +, +, +, ?, ?),
-    foldnl(6, +, +, +, ?, ?, ?),
-    foldnl(7, +, +, +, ?, ?, ?, ?).
+    foldil(4, +, +, ?, ?),
+    foldil(5, +, +, +, ?, ?),
+    foldil(6, +, +, +, ?, ?, ?),
+    foldil(7, +, +, +, ?, ?, ?, ?).
 
-foldnl(Goal, I1, List, V1, V) :-
-    foldl(goaln(Goal), List, I1-V1, _-V).
+foldil(Goal, I1, List, V1, V) :-
+    foldl(goali(Goal), List, I1-V1, _-V).
 
-foldnl(Goal, I1, List1, List2, V1, V) :-
-    foldl(goaln(Goal), List1, List2, I1-V1, _-V).
+foldil(Goal, I1, List1, List2, V1, V) :-
+    foldl(goali(Goal), List1, List2, I1-V1, _-V).
 
-foldnl(Goal, I1, List1, List2, List3, V1, V) :-
-    foldl(goaln(Goal), List1, List2, List3, I1-V1, _-V).
+foldil(Goal, I1, List1, List2, List3, V1, V) :-
+    foldl(goali(Goal), List1, List2, List3, I1-V1, _-V).
 
-foldnl(Goal, I1, List1, List2, List3, List4, V1, V) :-
-    foldl(goaln(Goal), List1, List2, List3, List4, I1-V1, _-V).
+foldil(Goal, I1, List1, List2, List3, List4, V1, V) :-
+    foldl(goali(Goal), List1, List2, List3, List4, I1-V1, _-V).
 
-goaln(Goal, H, I1-V1, I-V) :-
+goali(Goal, H, I1-V1, I-V) :-
     call(Goal, I1, H, V1, V),
     succ(I1, I).
 
-goaln(Goal, H1, H2, I1-V1, I-V) :-
+goali(Goal, H1, H2, I1-V1, I-V) :-
     call(Goal, I1, H1, H2, V1, V),
     succ(I1, I).
 
-goaln(Goal, H1, H2, H3, I1-V1, I-V) :-
+goali(Goal, H1, H2, H3, I1-V1, I-V) :-
     call(Goal, I1, H1, H2, H3, V1, V),
     succ(I1, I).
 
-goaln(Goal, H1, H2, H3, H4, I1-V1, I-V) :-
+goali(Goal, H1, H2, H3, H4, I1-V1, I-V) :-
     call(Goal, I1, H1, H2, H3, H4, V1, V),
     succ(I1, I).
