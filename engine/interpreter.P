@@ -382,7 +382,8 @@ resolveUntilAction(happens(E,T1_,T2_),A,Ball,Cont) :- % premature, we delay
 	% \+ a_real_time_event(E),
 	!,
 	Ball=later(happens(E,T1_,T2_),A),Cont=happens(E,T1_,T2_). 
-resolveUntilAction(happens(E,T1,T2),A,B,C) :- macroaction(E), !, % general case, spawn disjuntive goals
+resolveUntilAction(happens(E,T1_,T2_),A,B,C) :- macroaction(E), !, % general case, spawn disjuntive goals
+	expression_to_time(T1_,T1), expression_to_time(T2_,T2),
 	findall(l_events(happens(E,T1,T2),Body), (
 		l_events(happens(E,T1,T2),Body_),
 		% hack to make sure the event complies to its finish limit
