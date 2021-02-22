@@ -65,7 +65,7 @@
         abdemo(Goals,ResidueIn,ResidueOut,NegationsIn,NegationsOut)
 */
 
-
+:- if( current_prolog_flag(logicmoo_planner,planner19a)).
 
 abdemo(Gs,R) :- abdemo(Gs,[[],[]],R,[],N).
 
@@ -676,4 +676,4 @@ or(false,false,false).
 or(false,true,true).
 
 
-
+:- endif.

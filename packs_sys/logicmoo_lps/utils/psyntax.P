@@ -794,7 +794,7 @@ do_not_transform_may_hint(simulatedRealTimeBeginning(_),lps2p,_,_,lps_delimiter-
 % pretty printing for all syntaxes 
 % NOTE: this might be better rewritten using a separate module for the lps.js compatible printing, to ignore some lps.swi operators
 % pretty_write_withvars(Clause,Translator,VarsList)
-pretty_write_withvars(Term,Tran,Vars) :- pretty_write(Term,Tran,0,Vars,user_output).
+pretty_write_withvars(Term,Tran,Vars) :- guess_varname_list(Vars+Term,NewVs), pretty_write(Term,Tran,0,NewVs,user_output).
 
 pretty_write(Term,Translator,Stream) :- pretty_write(Term,Translator,0,[],Stream).
 

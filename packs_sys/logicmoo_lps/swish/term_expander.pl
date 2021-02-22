@@ -73,10 +73,19 @@ is_lps_module_and_stream_ok(Module):- debugging(lps(term_expand)),
 %is_lps_module_and_stream_ok(Module):- tmp:module_dialect_lps(_,_,Module,_), !.
 
 lps_term_expander(Module,NiceTerm,ExpandedTerm):- 
-  current_prolog_flag(emulated_dialect,lps) ,
+  current_prolog_flag(emulated_dialect,lps),
   is_lps_module_and_stream_ok(Module),!,
   % context_module(user), % LPS programs are in the user module
-  lps_f_term_expansion(Module,NiceTerm,ExpandedTerm),!.
+  lps_f_term_expansion(Module,NiceTerm,ExpandedTerm),!,
+  prolog_load_context(variable_names, Vars),
+  maybe_save_varname_info(NiceTerm,Vars,module(Module)),
+  maybe_save_varname_info(ExpandedTerm,Vars,module(Module)),!.
+
+maybe_save_varname_info(ExpandedTerm,Vars,Why):-
+  expand_to_hb(ExpandedTerm,H,B),
+  ignore((Vars\==[], assertz(varname_cache:varname_info(H,B,Vars,Why)))),!.
+  
+  
   
 maybe_inform(_Module,NiceTerm,ExpandedTerm):-   
   ignore(((debugging(lps(term_expand)),

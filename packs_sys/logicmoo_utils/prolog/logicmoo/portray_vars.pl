@@ -281,11 +281,20 @@ implode_varnames_pred(P2, N=V):- atomic(N),!, ignore(call(P2,N,V)),!.
 implode_varnames_pred(P2, [NV|Vars]):- implode_varnames_pred(P2, NV), implode_varnames_pred(P2, Vars).
 implode_varnames_pred(P2, G):- term_variables(G,Vs),maplist(implode_varnames_pred(P2),Vs).
   
+guess_varname_list(Term,NewVs):- guess_pretty(Term), term_variables(Term,Vs), vees_to_varname_list(Vs,NewVs).
+
+vees_to_varname_list([],[]).
+vees_to_varname_list([V|Vs],[N=V|NewVs]):- 
+  once(get_var_name(V,N);gensym('_',N)),
+  vees_to_varname_list(Vs,NewVs).
 
 guess_pretty(H):- pretty_enough(H), !.
 guess_pretty(O):- mort((ignore(guess_pretty1(O)),ignore(guess_varnames2(O,_)))).
 
+maybe_xfr_varname(CV,V):- get_var_name(CV,Name),may_debug_var(Name,V).
+
 guess_pretty1(H):- pretty_enough(H), !.
+guess_pretty1(H):- term_variables(H,Vs),copy_term(H+Vs,CH+CVs),try_get_varname_cache(CH),CVs\=@=Vs,maplist(maybe_xfr_varname,CVs,Vs).
 guess_pretty1(O):- mort(( ignore(pretty1(O)),ignore(pretty_two(O)),ignore(pretty_three(O)),ignore(pretty_final(O)))),!.
 %make_pretty(I,O):- is_user_output,!,shrink_naut_vars(I,O), pretty1(O),pretty_three(O),pretty_final(O).
 %make_pretty(I,O):- I=O, pretty1(O),pretty_three(O),pretty_final(O).
@@ -308,6 +317,8 @@ guess_varnames2(Each, isNamed(V,H), isNamed(V,H)):- var(V), \+ variable_name(V,_
    flag(skolem_count,SKN,SKN+1),
    toCamelcase(F,UF),atom_concat_w_blobs(UF,SKN,UF1),
    call(Each,UF1,V),!.
+
+
 guess_varnames2(Each,H,H ):- H=..[F,V],var(V),
   \+ variable_name(V,_), 
   \+ atom_concat_w_blobs('sk',_,F), 
