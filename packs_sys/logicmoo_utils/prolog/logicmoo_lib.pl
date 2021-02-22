@@ -322,14 +322,14 @@ logicmoo_webbot:- whenever_flag_permits(load_network,load_library_system(library
 % LOAD CYC KB EXTENSIONS
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 :- load_library_system(library(logicmoo_plarkc)).
-:- use_module(logicmoo_plarkc).
+%:- use_module(logicmoo_plarkc).
 :- check_clause_counts.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 :- dmsg("[Mostly Required] logicmoo_clif").
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 :- load_library_system(library(logicmoo_clif)).
-:- use_module(logicmoo_clif).
+%:- use_module(llibrary(logicmoo_clif)).
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 :- dmsg("SETUP CYC KB EXTENSIONS (TINYKB)").

@@ -523,3 +523,8 @@ gdb -x gdbinit -return-child-result --args /opt/logicmoo_workspace/bin/swipl -l 
 gdb -x gdbinit -return-child-result --args /opt/logicmoo_workspace/bin/swipl -l run_mud_server.pl
 cd /opt/logicmoo_workspace/packs_sys/eggdrop/conf/
 eggdrop -m
+cd /opt/logicmoo_workspace/packs_sys/eggdrop/conf/
+eggdrop -m
+ssh 10.0.0.138
+cd /opt/logicmoo_workspace/packs_sys/eggdrop/conf/
+eggdrop -m

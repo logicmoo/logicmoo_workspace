@@ -13,8 +13,8 @@
 
 :- set_prolog_flag(expect_pfc_file, never).
 :- use_module(library(clpr), []).
-:- use_module(library(logicmoo_util_body_reorder)).
-:- use_module(library(logicmoo_util_autocut)).
+:- use_module(library(body_reordering/logicmoo_util_body_reorder)).
+:- use_module(library(body_reordering/logicmoo_util_autocut)).
 :- gripe_time(60, baseKB:ensure_loaded(library('logicmoo/plarkc/logicmoo_i_cyc_rewriting'))).
 
 

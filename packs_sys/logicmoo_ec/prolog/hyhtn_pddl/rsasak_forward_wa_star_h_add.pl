@@ -5,7 +5,7 @@ pddl_structs.
 % [Required] Load the Logicmoo Library Utils
 :- use_module(library(logicmoo_common)).
 :- use_module(library(logicmoo_planner)).
-:- ensure_loaded(library(multimodal_dcg)).
+% :- ensure_loaded(library(logicmoo/multimodal_dcg)).
 :- ensure_loaded(library(statistics)).
 :- expects_dialect(sicstus).
 :-use_module(library(timeout)).

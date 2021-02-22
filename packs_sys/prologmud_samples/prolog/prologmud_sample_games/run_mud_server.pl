@@ -278,24 +278,6 @@ expose_all:-
        (catch((RM:export(RM:F/A),system:import(RM:F/A)),E,nop(dmsg(E))))).
 
 
-% test LPS is not broken yet
-system:lps_0( '/opt/logicmoo_workspace/packs_sys/lps_corner/examples/binaryChop2.pl' ).
-
-system:lps_2(M):- 
-  lps_0(File), ignore(File = '/opt/logicmoo_workspace/packs_sys/lps_corner/examples/binaryChop2.pl'), 
-  absolute_file_name(File,M), M:call(use_module(library(lps_corner))).
-
-system:lps_3(M):- 
-   interpreter:check_lps_program_module(M),
-   M:consult(M),
-   %listing(db:actions/1),
-   %listing(interpreter:actions/1),
-   interpreter:get_lps_program_module(M),
-   notrace(elsewhere:listing(M:_)),
-   M:golps(X),
-   %listing(interpreter:lps_program_module/1),
-   notrace(wdmsg(X)),
-   abolish_module(M),!.
 
 abolish_module(M):-
  notrace(forall(
@@ -304,9 +286,31 @@ abolish_module(M):-
    (exists_file(M) -> unload_file(M) ; true).
 
 
-lps_1:- lps_2(_DB).
 
-system:lps_2:- lps_2(M), lps_3(M).
+
+% test LPS is not broken yet
+system:lps_sanity:- lps_sanity(library('../examples/binaryChop2.pl' )).
+
+lps_insanity(File):- 
+   absolute_file_name(File,M),
+   unload_file(M),
+   M:use_module(library(lps_corner)),
+   interpreter:check_lps_program_module(M),  
+   M:consult(M),
+   %listing(db:actions/1),
+   %listing(interpreter:actions/1),
+   interpreter:get_lps_program_module(M),
+   notrace(elsewhere:listing(M:_)),
+   M:golps(X),
+   %listing(interpreter:lps_program_module/1),
+   notrace(wdmsg(X)),!.
+
+
+lps_sanity(File):- Limit = 1000,
+ catch(call_with_depth_limit(lps_insanity(File), Limit, R), E,(R=E)),
+   format(user_error,"~N ~q~n",[lps_sanity=R]),
+   ((integer(R),R<Limit)-> true; (dumpST,break,fail)).
+
 
 
 :- multifile(rdf_rewrite:arity/2).
@@ -322,7 +326,7 @@ load_before_compile:-
    %set_prolog_flag(verbose_file_search,true), 
    use_module(library(sandbox)),
 
-   %use_module(library(lps_corner)),
+   use_module(library(logicmoo_lps)),
    use_module(library(logicmoo_webui)),      
    %use_module(library(logicmoo_lps)),
    %set_prolog_flag(verbose_file_search,false),
@@ -352,26 +356,12 @@ start_network:-
    threads,statistics,
    !.
 
-fdict:- dmsg:fmt90(lps_visualization(_22488{groups:[_22052{content:"left(A)",id:"left/1",order:3,subgroupStack:"false"},
-   _22078{content:"right(A)",id:"right/1",order:3,subgroupStack:"false"},_22104{content:"searching(A)",id:"searching/1",order:3,
-    subgroupStack:"false"},_22130{content:"Actions",id:"action",order:4}],items:[_22152{content:"0",end:2,group:"left/1",id:0,
-    start:1,subgroup:"0",title:"Fluent left(0) initiated at 1<br/>and terminated at transition to 2"},_22190{content:"5",end:4,
-    group:"left/1",id:1,start:2,subgroup:"5",title:"Fluent left(5) initiated at 2<br/>and terminated at transition to 4"},
-    _22228{content:"7",end:21,group:"left/1",id:2,start:4,subgroup:"7",
-    title:"Fluent left(7) initiated at 4<br/>and terminated at transition to 21"},_22266{content:"7",end:21,
-    group:"right/1",id:3,start:3,subgroup:"7",title:"Fluent right(7) initiated at 3<br/>and terminated at transition to 21"},
-    _22304{content:"9",end:3,group:"right/1",id:4,start:1,subgroup:"9",
-    title:"Fluent right(9) initiated at 1<br/>and terminated at transition to 3"},
-    _22342{content:"60",end:21,group:"searching/1",id:5,start:1,subgroup:"60",
-     title:"Fluent searching(60) initiated at 1<br/>and terminated at transition to 21"},
-    _22380{content:"sample(4)",group:"action",id:6,start:2,style:"color:green",title:"happens(sample(4),1,2)",type:"point"},
-    _22418{content:"sample(7)",group:"action",id:7,start:3,style:"color:green",title:"happens(sample(7),2,3)",type:"point"},
-    _22456{content:"sample(6)",group:"action",id:8,start:4,style:"color:green",title:"happens(sample(6),3,4)",type:"point"}]},[])).
-
 load_rest:- 
    nodebug,
    load_nomic_mu,   
    load_before_compile,
+  baseKB:ensure_loaded(library(logicmoo_cg)),
+  baseKB:ensure_loaded(library(logicmoo_ec)),
    use_module(library(instant_prolog_docs)),
    baseKB:ensure_loaded(library(narsese)),
    add_history((mmake, autodoc_test)),
@@ -379,14 +369,11 @@ load_rest:-
    !.
 
 % for when dmiles is doing fast testing
-% load_rest2:- gethostname('logicmoo.org'), !.
+load_rest2:- gethostname('logicmoo.org'), !.
 load_rest2:-
    locally(set_prolog_flag(verbose_load,true),load_rest3).
-
 load_rest3:-
    set_modules(baseKB),
-   baseKB:ensure_loaded(library(logicmoo_cg)),
-   baseKB:ensure_loaded(library(logicmoo_ec)),
    baseKB:ensure_loaded(library(logicmoo_nlu)),
    baseKB:ensure_loaded(library(logicmoo_clif)),
    baseKB:ensure_loaded(library('logicmoo/common_logic/common_logic_sumo.pfc')),   
@@ -451,6 +438,7 @@ start_rest:-
 
 % start_rest2:- \+ gethostname('logicmoo.org'), !.
 start_rest2:- \+ current_predicate(baseKB:start_runtime_mud/0), !.
+
 start_rest2:- 
 
    set_modules(baseKB),
@@ -490,11 +478,6 @@ start_all :- start_network, start_rest.
 
 :- load_before_compile.
 
-lps_sanity:- Limit = 1000,
- catch(call_with_depth_limit(lps_2, Limit, R), E,(R=E)),
-   format(user_error,"~N ~q~n",[lps_sanity=R]),
-   ((integer(R),R<Limit)-> true; (dumpST,break,fail)),
-   must(fdict).
 
 :- lps_sanity.
 

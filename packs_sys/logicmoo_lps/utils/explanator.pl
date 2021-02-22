@@ -111,9 +111,9 @@ explanationNarrative(Tree) --> {Tree=..[Node|Children]}, html(li([span(Node),ul(
 	(events)/1, (fluents)/1, (actions)/1, (unserializable)/1]).
 :- endif.
 
-:- use_module('../../lps_corner/engine/interpreter.P',[ callprolog/1, replace_term/4, check_lps_program_swish_module/0, check_load_postmortem/0,
+:- use_module('../engine/interpreter.P',[ callprolog/1, replace_term/4, check_lps_program_swish_module/0, check_load_postmortem/0,
 	simulatedRealTimeBeginning/1, simulatedRealTimePerCycle/1]).
-:- use_module('../../lps_corner/utils/psyntax.P',[syntax2p/4,syntax2p_literal/7]).
+:- use_module('../utils/psyntax.P',[syntax2p/4,syntax2p_literal/7]).
 
 :- thread_local(micro_state/2). % used to simulate serialized actions
 micro_assert(F,T) :- asserta(micro_state(F,T)).

@@ -58,9 +58,16 @@ run_lps_db_now(DB,File):-
    wdmsg(dB(DB,X)).
 
 abolish_lps_module(DB):- 
- forall((current_predicate(DB:F/A),functor(P,F,A),\+ predicate_property(DB:P,imported_from(_))),abolish(DB:F/A)).
+ forall((current_predicate(DB:F/A),functor(P,F,A),\+ predicate_property(DB:P,imported_from(_))),abolish(DB:F/A)), !.
+abolish_lps_module(M):-
+ notrace(forall(
+   (current_predicate(M:F/A), functor(P,F,A), \+ predicate_property(M:P, imported_from(_))),
+    (predicate_property(M:P, static) -> abolish(M:F/A) ; retractall(M:P)))),!,
+   (exists_file(M) -> unload_file(M) ; true).
 
-%load_lps_corner:-!.
+
+load_lps_corner:-!.
+load_lps_corner:- lps_corner:use_module(library(lps_corner)).
 
 test_logicmoo_lps(Files):- run_lps(Files).
 

@@ -94,6 +94,9 @@ index((safe_univ0), 2, hook_database, hook_database).
 index((my_module_sensitive_code), 1, hook_database, hook_database).
 index((add_library_search_path), 2, logicmoo_common, logicmoo_common).
 index((locally), 2, logicmoo_common, logicmoo_common).
+index((logicmoo_webbot), 0, logicmoo_lib, logicmoo_lib).
+index((setup_logicmoo_operators), 0, logicmoo_lib, logicmoo_lib).
+index((rescan_pack_autoload_packages), 0, logicmoo_packages, logicmoo_packs).
 index((maybe_notrace), 1, logicmoo_startup, logicmoo_startup).
 index((absolute_startup_script), 1, logicmoo_startup, logicmoo_startup).
 index((before_boot), 1, logicmoo_startup, logicmoo_startup).

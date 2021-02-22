@@ -1,8 +1,14 @@
 
-:- expects_dialect(lps).
+% :- expects_dialect(lps).
 
 
 /* output from ?- dumplps*/
+
+observe([start_game(amanda),start_game(katherine),start_game(peter),start_game(tom),start_game(alex)],2).
+observe([],3).
+observe([],4).
+observe([],5).
+% observe([],T) :- T<15.
 
 next_to(Unit,Type)at T if
     position(Unit,south,X,Y)at T,
@@ -1528,13 +1534,7 @@ heal(Unit,H)from T1 to T2 initiates health(Unit,H1) if
 heal(Unit,H)from T1 to T2 initiates turns(Unit,0).
 heal(Unit,H)from T1 to T2 initiates cycles(T) if
     modu(T,T1).
-observe([start_game(amanda),start_game(katherine),start_game(peter),start_game(tom),start_game(alex)],1).
-observe([],2).
-observe([],3).
-observe([],4).
-observe([],5).
-observe([],T) :-
-    T<15.
+
 false
     turn(Unit,N,D,X,Y)from T1 to T2,
     turn(Unit,N1,D1,X1,Y1)from T1 to T2.
@@ -1977,4 +1977,5 @@ false
 event(start_game(_24248)).
 
 event(fire(_24248,_24250)).
+
 
