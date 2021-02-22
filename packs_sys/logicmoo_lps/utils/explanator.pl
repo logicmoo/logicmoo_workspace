@@ -134,7 +134,7 @@ happens(E,T1,T2) :- lps_test_result_item((events),T2,E), T1 is T2-1 ; lps_test_r
 % Load test (postmortem) data from our server cache
 init_lps_swish :- 
 	check_lps_program_swish_module, 
-	catch(check_load_postmortem, must_execute_program_first, (writeln('EXECUTING PROGRAM FIRST..'),godc(_))),
+	catch(check_load_postmortem, must_execute_program_first, (print_message(informational,'Executing program first..'-[]),godc(_))),
 	% reconstruct system fluents not part of the stored state:
 	retractall(reconstructed_fluent(_,_)),
 	((simulatedRealTimeBeginning(SB), parse_time(SB, SBNow), setof(T,F^state(F,T),Cycles)) -> 
@@ -181,10 +181,15 @@ explanationTreeHTML(Node,[]) :-
 	!.
 explanationTreeHTML(Node,Tree) :- 
 	%???? Used=..[Type,X], assert(explanation_tree_used(Used)),
-	node_type(Node,Type,_,RelaxedNode),
+	node_type(Node,Type,X,RelaxedNode),
 	once( explanation_tree_relation(RelaxedNode,Label,Children) ), % pick the first, TODO: should pick the smallest
 	assert(explanation_tree_used(Node)),
-	Tree = [li([],"~a: ~w"-[Type,Label]) | UL],
+	% cf. colours in lps_corner/swish/web/lps/lps.css
+	(X=happens(_,_,_) -> Style="color: #E19735;";
+		X=holds(_,_) -> Style="color: #1A1A1A; background: #D7DCF5;";
+		Type=clause -> Style="font-style: italic;";
+		Style=""),
+	Tree = [li(span([style=Style,title="~w"-[X]], "~a: ~w"-[Type,Label])) | UL],
 	explanationTreeHTML(Children,CH),
 	(CH==[]->UL=[];UL=[ul(CH)]).
 
@@ -283,7 +288,9 @@ remove_variants([X|L],NL) :- member(XX,L), variant(X,XX), !, remove_variants(L,N
 remove_variants([X|L],[X|NL]) :- remove_variants(L,NL).
 remove_variants([],[]).
 
-pretty_explanation(E,PE) :- once(syntax2p(PE,[],lps2p,E)).
+pretty_explanation(E,PE) :- syntax2p(PE,[],lps2p,E), PE\=E, !.
+pretty_explanation(E,PE) :- syntax2p_literal(PE,[],lps2p,[_,_], _ETL, _, E), PE\=E, !.
+pretty_explanation(E,E).
 
 
 % w(+Goal,+Ancestors,-Explanation,-Interval) Why is (ground) Fluent true. Or why is the answer "wrong". 

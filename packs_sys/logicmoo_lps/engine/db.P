@@ -37,8 +37,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 %% All LPS engine state persists here
 %% The local predicate definitions MUST NOT be dynamic, see note in copy_from_module below 
 
-:- module(db, [    
-        display/2,
+:- module(db, [ display/2,
 	lps_goal_id_counter/1,
 	action/1,
 	current_goal/1,
@@ -145,9 +144,11 @@ tl_preds(X):-
 
 
 :- export(define_lps_into_module/1).
-define_lps_into_module(Into):-  db:tl_preds(List),maplist(define_lps_pred_into_module(Into),List).
+define_lps_into_module(Into):-  db:tl_preds(List),
+   maplist(define_lps_pred_into_module(Into),List).
 
 :- export(define_lps_pred_into_module/2).
+define_lps_pred_into_module(Into, F/A):- thread_local(Into:F/A), !.
 define_lps_pred_into_module(Into, F/A):- 
      functor(H,F,A), (\+ predicate_property(Into:H,defined) ; true) -> (Into:discontiguous(F/A),Into:thread_local(F/A)) ; true.
 
@@ -157,9 +158,7 @@ define_lps_pred_into_module(Into, F/A):-
 % It may be necessary to inject these declarations in the Wei syntax file...
 
 :- discontiguous( ((initiated) /3, (terminated)/3, updated/4, l_events/2, reactive_rule/3, reactive_rule/2, l_int/2, l_timeless/2,
-	action/1, fluent/1, event/1, d_pre/1, happens/3
-	% , display/2 
-	)).
+	action/1, fluent/1, event/1, d_pre/1, happens/3, display/2 )).
 
 :- use_module(library(lists), [append/3,member/2]).
 
@@ -189,7 +188,11 @@ uretractall(X) :- interpreter:uretractall(X).
 
 % Assert into this module all clauses in module M
 % Hacky code; this module MUST have only static predicates, so they're protected against malicious redifinitions in the LPS program
-
+copy_from_module(M) :- 
+	current_predicate(M:F/N), functor(H,F,N), 
+	(\+ predicate_property(H,defined) -> thread_local(H) ; true),
+	catch(retractall(H),_,fail), clause(M:H,B), catch(assert((H:-B)),_,fail), fail.
+copy_from_module(_).
 copy_from_module(M):- prolog_load_context(module, Into), copy_from_module(M, Into).
 
 :- export(copy_from_module/2).

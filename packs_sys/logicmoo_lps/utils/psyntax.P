@@ -34,8 +34,10 @@
 % DMILES Deal with Zero-Arity compounds
 unswi_functor(P,F,A):- \+ compound(P),!,functor(P,F,A).
 unswi_functor(P,F,A):- compound_name_arity(P,F,A).
+
 guarded_univ(P =.. L):- compound(P),!,compound_name_arguments(P,F,Args),L=[F|Args].
-guarded_univ(P =.. L):- catch(P =.. L,E,(throw(error(guarded_univ(P =.. L),E)))).
+guarded_univ(P =.. L):- !, catch(P =.. L,E,(throw(error(guarded_univ(P =.. L),E)))).
+guarded_univ(PL):- throw(guarded_univ(PL)).
 
 :- if(current_module(swish)). 
 % first, SWISH specific; see comments in interpreter.P
@@ -352,7 +354,6 @@ term_in_stream(In, Included, Term, Vars) :-
 %  a fact means that some head was read before and tagged as Sort
 %  used only when transforming from some nicer to Wei syntax 
 %  Declared is 'true' if a declaration (not just usage) was detected
-
 head_hint(_,_):- current_prolog_flag(lps_translation_only,true),!,fail.
 head_hint(X,Sort) :- head_hint(X,Sort,_), !.
 head_hint(X,fluent) :- intensional(X).

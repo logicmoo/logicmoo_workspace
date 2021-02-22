@@ -1,5 +1,5 @@
 
-% :- expects_dialect(lps).
+:- expects_dialect(lps).
 
 
 /* output from ?- dumplps*/

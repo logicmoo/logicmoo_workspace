@@ -94,7 +94,8 @@ gojson(JSON) :- gojson(_File,[],[],JSON,_DFAgraph).
 gojson(File,Options,Results,JSON,DFAgraph) :- 
 	visualization_options(SD),
 	subtract(Options,SD,Options_NoVis),
-	( go(File,[make_test,swish|Options_NoVis],Results) -> true ; writeln('gojson PROGRAM FAILED')), 
+	( go(File,[make_test,swish|Options_NoVis],Results) -> true ; print_message(warning,'PROGRAM FAILED')), 
+	print_message(informational,"Preparing visualization..."-[]),
 	visual(File,Options,JSON,DFAgraph).
 
 visual(File,lps_visualization(Timeline,Sequence),DFAgraph) :- 

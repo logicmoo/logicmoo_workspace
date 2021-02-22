@@ -29,7 +29,7 @@ expects_dialect/1:
 @author Douglas R. Miles
 */
 
-:- module(lps, [pop_lps_dialect/0,push_lps_dialect/0,dialect_input_stream/1]).
+:- module(lps, [pop_lps_dialect/0,push_lps_dialect/0,dialect_input_stream/1, calc_load_module_lps/1]).
 % :- asserta(swish:is_a_module).
 
 
@@ -140,15 +140,34 @@ prolog:message(lps_unsupported(Goal)) -->
 
 :- use_module(library(pengines),[pengine_self/1]). 
 
-calc_dialect_module(OM):- pengine_self(OM),!.
-calc_dialect_module(OM):- 
+calc_load_module_lps(OM):- pengine_self(OM),!.
+calc_load_module_lps(OM):- 
      '$current_typein_module'(TM), 
      prolog_load_context(module,Load),strip_module(_,Strip,_),
      context_module(Ctx),'$current_source_module'(SM),
      ((SM==Load,SM\==user)-> M = SM ;
      ((TM\==Load,TM\==user) -> M = TM ; (M = SM))),
      OM=Load,
-     lps_debug([ti=TM,load=Load,strip=Strip,ctx=Ctx,sm=SM,lps=M,using=OM]).     
+     lps_debug([ti=TM,load=Load,strip=Strip,ctx=Ctx,sm=SM,lps=M,using=OM]),!.     
+
+calc_load_module_lps(M):- 
+    (member(Call,[
+     prolog_load_context(module,M),
+     pengine_self(M),
+     '$current_source_module'(M),
+     '$current_typein_module'(M),
+     interpreter:lps_program_module(M),
+     strip_module(_,M,_),
+     context_module(M),
+     source_location(M,_)]),
+    call(Call),
+    lps_debug(calc_load_module_lps(Call)),
+    \+ likely_reserved_module(M)); interpreter:must_lps_program_module(M).
+
+likely_reserved_module(M):- M=user; 
+  module_property(M,P), member(P,[class(library),class(system),exported_operators([_|_]),exports([_|_])]).
+  
+
 
 
     :- volatile(tmp:module_dialect_lps/4).
@@ -174,7 +193,7 @@ lps:setup_dialect:-
 
 
 % :- prolog_dialect:asserta((())).
-:- thread_local(interpreter:lps_program_module/1).
+% :- thread_local(interpreter:lps_program_module/1).
 
 
 get_lps_alt_user_module(_User,LPS_USER):- interpreter:lps_program_module(LPS_USER),!.
@@ -225,7 +244,7 @@ lps_operators(M,[
 ]).
 
 push_lps_dialect:-
-   calc_dialect_module(M),
+   calc_load_module_lps(M),
    push_lps_dialect_now(M, M).   
   
 push_lps_dialect_now(User, User):-  
@@ -283,8 +302,8 @@ pop_lps_dialect:-
 
 
 prolog:alternate_syntax(lps, Module,
-                        emacs_lps_mode:push_lps_operators(Module),
-                        emacs_lps_mode:pop_lps_operators).
+                        lps:push_lps_operators(Module),
+                        lps:pop_lps_operators).
 
 
 /* - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
