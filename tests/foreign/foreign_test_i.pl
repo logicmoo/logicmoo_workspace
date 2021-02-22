@@ -20,6 +20,18 @@
 :- use_foreign_source('foreign_test.for').
 :- gen_foreign_library(plbin(foreign_test_i)).
 
+/* TBD: enable list_int/1
+:- type nlist_int/1 + sgen.
+
+nlist_int(X) :- nlist(int, X).
+%nlist_int(Y) :- int(Y).
+
+:- type list_int/1 + sgen.
+
+list_int(l(X)) :- list(int, X).
+% list_int(i(Y)) :- int(Y).
+*/
+
 :- type negative_t/1 is (foreign(is_negative_t), tgen([gett, unif])).
 
 :- type enum_example_t/1 + tgen.
@@ -241,6 +253,11 @@ ireverse3(X, Y) :- reverse(X, Y).
 % :- pred u(list(list(list(num))), list(list(int)), list(int), int)
 %     is foreign(c_u).
 
+:- style_check(-singleton).
+:- pred test_array(+M:size_t, +array(num, [M, N]), -R:num) is (foreign, returns(R)).
+:- style_check(+singleton).
+:- pred fill_array(+M:size_t, +N:size_t, -array(num, [M, N])) is (foreign).
+
 /*
 :- true pred s(-list(list(list(num))):LLL, -list(list(int)):LLN, -list(int):LN, -int:N)
     is (foreign(c_s),
@@ -249,8 +266,3 @@ ireverse3(X, Y) :- reverse(X, Y).
         size_of(LN, N)
        ).
 */
-
-:- style_check(-singleton).
-:- pred test_array(+M:size_t, +array(num, [M, N]), -R:num) is (foreign, returns(R)).
-:- style_check(+singleton).
-:- pred fill_array(+M:size_t, +N:size_t, -array(num, [M, N])) is (foreign).

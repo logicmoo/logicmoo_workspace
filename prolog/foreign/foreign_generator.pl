@@ -482,7 +482,7 @@ generate_init(Init) --> ["    "+Init+"();"].
 write_register_sentence(foreign(Opts, _), M, _, PredName, Arity, BindName, Line) :-
     nmember(lang(Lang), Opts),
     lang(Lang),
-    !,  
+    !,
     write_init_import_binding(M, PredName, Arity, BindName, Line).
 write_register_sentence(_, M, CM, PredName, Arity, BindName, Line) :-
     write_register_foreign_native(M, CM, PredName, Arity, BindName, Line).
@@ -640,7 +640,7 @@ implement_type_getter_union_end(union) -->
      "    };"],
     implement_type_end.
 implement_type_getter_union_end(cdef  ) --> [].
-implement_type_getter_union_end(struct) --> implement_type_end.
+implement_type_getter_union_end(struct) --> [].
 implement_type_getter_union_end(enum  ) --> implement_type_end.
 
 enum_elem(Name, Term, Name+"_"+Suff) :- enum_suff(Term, Suff).
@@ -683,7 +683,7 @@ implement_type_getter(func_end(SubType, _), _, _) -->
     ( {SubType = union}
     ->["        break;",
        "    }"]
-    ; []
+    ; implement_type_end
     ).
 implement_type_getter(atomic(SubType, Name), Spec, Term) -->
     {enum_elem(Name, Term, Elem)},
@@ -703,7 +703,7 @@ implement_type_getter(atomic(SubType, Name), Spec, Term) -->
     [Indent+GetArg+";"],
     ( {SubType = union}
     ->[Indent+"break;"]
-    ; []
+    ; implement_type_end
     ).
 implement_type_getter(dict_ini(SubType, Name, M, _), Spec, Term) -->
     ( {SubType = union}
@@ -735,7 +735,7 @@ implement_type_getter(dict_end(SubType, _, _), _, _) -->
     ( {SubType = union}
     ->["        break;",
        "    }"]
-    ; []
+    ; implement_type_end
     ).
 
 implement_type_getter_dict_ini(Module, PName, CName, Spec, Name) -->
@@ -809,7 +809,7 @@ implement_type_unifier(atomic(SubType, Name), Spec, Term) -->
     [Indent+SetArg+";"],
     ( {SubType = union}
     ->[Indent+"break;"]
-    ; []
+    ; implement_type_end
     ).
 implement_type_unifier(union_ini(SubType, Spec, _), Term, Name) -->
     implement_type_unifier_union_ini(SubType, Spec, Term, Name).
@@ -850,7 +850,7 @@ implement_type_unifier_union_end(union) -->
      "    };"],
     implement_type_end.
 implement_type_unifier_union_end(cdef  ) --> [].
-implement_type_unifier_union_end(struct) --> implement_type_end.
+implement_type_unifier_union_end(struct) --> [].
 implement_type_unifier_union_end(enum  ) --> implement_type_end.
 
 implement_type_unifier(func_ini(SubType, Spec), Term, Name) -->
@@ -893,7 +893,7 @@ implement_type_unifier(func_end(SubType, _), _, _) -->
     ( {SubType = union}
     ->["        break;",
        "    }"]
-    ; []
+    ; implement_type_end
     ).
 implement_type_unifier(dict_ini(SubType, Name, _, _), Spec, Term) -->
     ( {SubType = union}
@@ -934,7 +934,7 @@ implement_type_unifier(dict_end(SubType, _, Tag), _, Term) -->
     ( {SubType = union}
     ->["        break;",
        "    }"]
-    ; []
+    ; implement_type_end
     ).
 
 spec_pointer(chrs(_)).
