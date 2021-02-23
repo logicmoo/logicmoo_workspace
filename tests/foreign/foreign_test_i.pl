@@ -20,6 +20,11 @@
 :- use_foreign_source('foreign_test.for').
 :- gen_foreign_library(plbin(foreign_test_i)).
 
+:- type my_nlist_int/1 + tgen.
+
+my_nlist_int(Node) :- int(Node).
+my_nlist_int(List) :- list(my_nlist_int, List).
+
 /* TBD: enable list_int/1
 :- type nlist_int/1 + sgen.
 

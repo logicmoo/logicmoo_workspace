@@ -32,9 +32,10 @@
     POSSIBILITY OF SUCH DAMAGE.
 */
 
-:- module(foreign_generator, [generate_library/5,
-                              collect_prop/4,
-                              gen_foreign_library/3]).
+:- module(foreign_generator,
+          [generate_library/5,
+           collect_prop/4,
+           gen_foreign_library/3]).
 
 :- use_module(library(apply)).
 :- use_module(library(filesex)).
@@ -502,11 +503,11 @@ write_register_foreign_native(M, CM, PredName, Arity, BindName, L) :-
 write_init_import_binding(M, PN, A, BN,
                           "    "+BN+" = PL_predicate(\""+PN+"\", "+A+", \""+M+"\");").
 
-:- meta_predicate findall_tp(+,5,5,?,?).
+:- meta_predicate findall_tp(+,4,5,?,?).
 
 findall_tp(Module, TypeProps, Call) -->
     findall(List,
-            ( call(TypeProps, Module, _, TypePropLDictL, Pos, _Asr),
+            ( call(TypeProps, Module, TypePropLDictL, Pos, _Asr),
               maplist(apply_dict_tp, TypePropLDictL),
               phrase(type_components(Module, TypePropLDictL, Call, Pos), List)
             )).
@@ -544,6 +545,9 @@ is_type(CM, Head) :-
            once(prop_asr(glob, type(_), _, Asr))
          )).
 
+type_props(M, TypePropLDictL, Pos, Asr) :-
+    type_props(M, _, TypePropLDictL, Pos, Asr).
+
 type_props(M, Type, TypePropLDictL, Pos, Asr) :-
     type_props1(M, Type, TDict, Pos, Asr),
     type_props2(M, Type, TDict, TypePropLDictL, Asr).
@@ -558,13 +562,35 @@ type_props2(M, Type, TDict, TypePropLDictL, Asr) :-
     ; TypePropLDictL1 = [t(Type, [], TGlobL, TDict)]
     ),
     phrase(foldl(auto_generated_types(M), TypePropLDictL1, TypePropLDictL2),
-           TypePropLDictL, [Type-TypePropLDictL2]).
+           TypePropLDictL3, [Type-TypePropLDictL2]),
+    maplist(resolve_special_terms, TypePropLDictL3, TypePropLDictL).
+
+resolve_special_term(V, V) :- var(V).
+resolve_special_term([], nil).
+resolve_special_term([H|T], edge(H, T)).
+resolve_special_term(T, T).
+
+resolve_special_terms(Type1-TypePropLDictL1, Type-TypePropLDictL) :-
+    resolve_special_arg(Type1, Type),
+    maplist(resolve_special_term2, TypePropLDictL1, TypePropLDictL).
+
+resolve_special_arg(Type1, Type) :-
+    Type1 =.. List1,
+    once(append(Left, [Last1], List1)),
+    once(resolve_special_term(Last1, Last)),
+    append(Left, [Last], List),
+    Type =.. List.
+
+resolve_special_term2(t(Type1, PropL, GlobL, Dict), t(Type, PropL, GlobL, Dict)) :- resolve_special_arg(Type1, Type).
 
 type_props1(CM, Head, Dict, Pos, Asr) :-
     % Only consider assertions defined in this module
     asr_head_prop(Asr, CM, Head, check, prop, Dict, _, Pos),
     % But tye type definition could come from a different place
     is_type(CM, Head).
+
+type_props_nf(Opts1, Module, TypePropLDictL, Pos, Asr) :-
+    type_props_nf(Opts1, Module, _, TypePropLDictL, Pos, Asr).
 
 type_props_nf(Opts1, Module, Type, TypePropLDictL, Pos, Asr) :-
     type_props(Module, Type, TypePropLDictL, Pos, Asr),
@@ -580,7 +606,7 @@ type_props_nf(Opts1, Module, Type, TypePropLDictL, Pos, Asr) :-
               lang(Lang)
             )).
 
-type_props_nft(Opt, Module, Type, TypePropLDictL, Pos, Asr) :-
+type_props_nft(Opt, Module, TypePropLDictL, Pos, Asr) :-
     type_props_nf(Opt, Module, Type, TypePropLDictL, Pos, Asr),
     % Don't create getters and unifiers for
     % typedefs, they are just casts:
@@ -879,7 +905,10 @@ type_unifiers_elem_names(SubType, Term, Name, Arg, Indent, PName, CNameArg, PNam
       Indent = "        "
     ; CRecordName = Arg,
       camel_snake(PRecordName, Arg),
-      Indent = "    "
+      ( SubType = union_type
+      ->Indent = "        "
+      ; Indent = "    "
+      )
     ),
     CNameArg = CName+"->"+CRecordName,
     PNameArg = PName+"_"+PRecordName.
@@ -1226,19 +1255,33 @@ type_components_one(M, SubType, TSpec, Name, Call, Loc, t(Type, PropL, _, _)) --
         SubType = union
       }
     ->call(Call, func_ini(SubType, TSpec), Term, Name),
-      findall(Lines,
-              ( compound(Term),
-                arg(N, Term, Arg),
-                phrase(( { member(Prop, PropL),
-                           match_known_type(Prop, M, Name, Spec, Arg)
-                         },
-                         call(Call, func_rec(SubType, N, Term, Name), Spec, Arg)
-                       ->[]
-                       ; {print_message(
-                              warning,
-                              at_location(Loc, ignored_type(func(Name), Arg)))}
-                       ), Lines)
-              )),
+      ( {compound(Term)}
+      ->findall(Lines,
+                ( arg(N, Term, Arg),
+                  phrase(( { member(Prop, PropL),
+                             match_known_type(Prop, M, Name, Spec, Arg)
+                           },
+                           call(Call, func_rec(SubType, N, Term, Name), Spec, Arg)
+                         ->[]
+                         ; {print_message(
+                                warning,
+                                at_location(Loc, ignored_type(func(Name), Arg)))}
+                         ), Lines)
+                ))
+      ; { atom(Term),
+          SubType = union
+        }
+      ->( { once(member(Prop, PropL)),
+            match_known_type(Prop, M, Name, Spec, Arg)
+          },
+          call(Call, func_rec(union_type, 1, Term, Name), Spec, Arg)
+        ->[]
+        ; {print_message(
+               warning,
+               at_location(Loc, ignored_type(func(Name), _)))}
+        )
+      ; []
+      ),
       call(Call, func_end(SubType, TSpec), Term, Name)
     ; { select(dict_t(Desc, Term), PropL, PropL1)
       ; select(dict_t(Tag, Desc, Term), PropL, PropL1)
@@ -2033,7 +2076,7 @@ match_known_type(Type, M, _, Spec, A) -->
       functor(Head, Name, Arity),
       % Note: type_props will call match_unknown_type internally,
       % that is why this clause is only valid for match_known_type
-      type_props(M, _, HeadTypePropLDictL, _, _)
+      type_props(M, HeadTypePropLDictL, _, _)
     },
     ( { HeadTypePropLDictL = [Head-[t(Head2, [], _, _)]],
         Head == Head2
