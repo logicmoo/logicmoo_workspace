@@ -100,7 +100,7 @@ restapi_request(PartialURL,ID) :-
 restapi_request_result(RequestID,Result) :- restapi_request_result_(RequestID,Result).
 
 :- multifile interpreter:premature_system_action/1. % LPS engine hook
-interpreter:premature_system_action(restapi_request_result(RequestID,_)) :- \+ restapi_request_result_(RequestID,_), print_message(warning,"cucu"), !. % so we do not block the LPS interpreter
+interpreter:premature_system_action(restapi_request_result(RequestID,_)) :- \+ restapi_request_result_(RequestID,_), !. % so we do not block the LPS interpreter
 
 :- multifile sandbox:safe_primitive/1.
 :- if(current_module(swish)).
