@@ -10,8 +10,19 @@ packs_sys/prologmud_samples/prolog/prologmud_sample_games/nohup.out
 .git/
 #packs_sys/logicmoo_ec/ext/PKnows/
 /DEAD
+*.sav*
 *.sav*/
 /~html~/
 ./logicmoo_workspace.vtg~
+packs_sys/prologmud_samples/prolog/prologmud_sample_games/.ssh/
+packs_usr/OSCAR-web-page/
+packs_usr/aop/
+packs_usr/cTI/
+packs_usr/johnpollock.us/
+packs_usr/readylog/
+packs_usr/redplushunter/
+packs_web/lps_corner/
+pldoc/
+/pyswip-0.2.3/
 
 

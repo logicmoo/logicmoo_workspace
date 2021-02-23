@@ -1,11 +1,26 @@
 #!/bin/bash
 if [[ $EUID -ne 0 ]]; then
-   echo ""
+   echo "#* "
    echo -e "\e[1;31mERROR This script must be run as root. \e[0m"
-   echo ""
+   echo "#* "
    return 1 2>/dev/null
    exit 1
-else
+fi
+
+./logicmoo_env.sh
+
+DIR="$LOGICMOO_WS/lib/deps_installed"
+
+if [ -d "$DIR" ]; then
+
+    echo "#* "
+    echo "#* GOOD: Logicmoo Deps are hopefully installed"
+    echo "#*   (if there was a problem with them rm -rf ${DIR} and restart this script)"
+    echo "#* "
+    return 0 2>/dev/null
+    exit 0
+
+fi
 
 (
  chmod +x *.md
@@ -45,9 +60,9 @@ else
   apt install -y libjpeg62-turbo-dev > /dev/null 2>&1
   apt install -y python3-pip python-pip
   pip3 install tornado asyncio butterfly
-  echo "Maybe: apt install openjdk-11-jdk openjdk-11-jdk-headless"
+  echo "#* Maybe: apt install openjdk-11-jdk openjdk-11-jdk-headless"
 
+  mkdir "${DIR}"
 )
 
-fi
 

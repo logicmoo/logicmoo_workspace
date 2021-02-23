@@ -30,13 +30,8 @@ fi
 
 cd logicmoo_workspace
 
-#git fetch --recurse-submodules
-#git submodule init
-#git submodule update
-#git submodule sync --recursive
-git pull --recurse-submodules
-(source ./INSTALL-DEPS.md)
-#(source ./INSTALL.md)
+(source ./INSTALL.md)
+
 echo -e "\e[1;32m Type: source ./StartLogicmoo.sh \e[0m"
 
 fi

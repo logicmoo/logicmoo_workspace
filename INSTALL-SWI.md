@@ -1,11 +1,34 @@
 #!/bin/bash
 
-( ./INSTALL-DEPS.md )
+./logicmoo_env.sh .
 
-./logicmoo_env.sh
+DIR="$LOGICMOO_WS/lib/swipl"
+
+if [ -d "$DIR" ]; then
+
+    echo "#* "
+    echo "#* GOOD: SWI-Prolog is hopefully installed"
+    echo "#*   (if there was a problem with them rm -rf ${DIR} and restart this script)"
+    echo "#* "
+    return 0 2>/dev/null
+    exit 0
+
+
+fi
+
+echo "#* "
+echo "#* Install deps..."
+echo "#* "
+
+( cd $LOGICMOO_WS
+  ./INSTALL-DEPS.md )
 
 (
 cd $LOGICMOO_WS
+
+echo "#* "
+echo "#* Installing swipl in ${DIR}..."
+echo "#* "
 
 #mkdir -p bin/
 #mkdir .local/share/swi-prolog/pack -p
@@ -32,5 +55,7 @@ git status)
  make install)
 
 )
+
 stty sane
+
 
