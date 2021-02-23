@@ -1,8 +1,9 @@
-% library to access a REDIS server via the redis-cli CLI utility
+% library to access a REDIS server via boththe redis-cli CLI utility
 % /Applications/SWI-Prolog8.1.1.app/Contents/MacOS/swipl -l redisclient.pl
 %TODO: add psubscribe(Pattern) ?
 :- module(redisclient,[
-    create/2, create/3, get_key/2, set_key/2, get_keys/1, get_channels/1, kill_all/0
+    create/2, create/3, get_key/2, set_key/2, get_keys/1, get_channels/1, kill_all/0,
+    restapi_login/3, restapi_request/2, restapi_request_result/2
     ]).
 :- use_module(library(process)).
 
@@ -60,3 +61,49 @@ read_lines_until(Marker,Stream,Lines) :-
 
 kill_all :- retract(client(PID,_,_)), process_kill(PID), fail.
 kill_all.
+
+%%%%%% New interface, using REST API provided by VH for the OpenSCADA project, February 2021
+:- use_module(library(http/http_client)).
+:- use_module(library(http/json)).
+
+:- thread_local restapi_token/1, restapi_server_base/1.
+
+%! restapi_login(+ServerURLbase,+User,+Password) is det
+%  ServerURLbase is the server URL up to and including .../restapi
+%  obtain a token and stores it for other predicates to use during the same goal
+restapi_login(ServerURL,User,Pass) :-
+    (catch(lps_server_UI:user_is_known,_,fail)->true; throw("non authenticated user")), 
+    must_be(atomic,User), must_be(atomic,Pass),
+    format(string(Text),'{"username":"~a","password":"~a"}',[User,Pass]),
+    format(string(URL),"~a/api-token-auth/",[ServerURL]),
+    http_post(URL, atom(Text), Result, [request_header('Content-Type'='application/json')]),
+    Result = json([token=T]),
+    retractall(restapi_token(_)), assert(restapi_token(T)),
+    retractall(restapi_server_base(_)), assert(restapi_server_base(ServerURL)).
+
+%! restapi_request(+PartialURL,-ID) is det
+% submits an assynchronous request using the stored token, succeeding immediately; then use restapi_request_result/2
+% e.g. tag/devices/ , tag/tag2/ , home/homes/
+restapi_request(PartialURL,ID) :- 
+    restapi_server_base(Base), format(string(URL),"~a~a",[Base,PartialURL]),
+    restapi_token(Token), format(string(Auth),"token ~a",[Token]),
+    gensym(restapi,ID),
+    thread_create((
+        http_get(URL, Result, [request_header('Content-Type'='application/json'),request_header('Authorization'=Auth)]), assert(restapi_request_result_(ID,Result))),
+        _TID,[]).
+
+:- dynamic restapi_request_result_/2.
+
+%! restapi_request_result(+RequestID,-Result)
+%  Succeeds if there is already a result for RequestID, made with restapi_request/2.
+%  Result is a json([...]) term
+restapi_request_result(RequestID,Result) :- restapi_request_result_(RequestID,Result).
+
+:- multifile interpreter:premature_system_action/1. % LPS engine hook
+interpreter:premature_system_action(restapi_request_result(RequestID,_)) :- \+ restapi_request_result_(RequestID,_), print_message(warning,"cucu"), !. % so we do not block the LPS interpreter
+
+:- multifile sandbox:safe_primitive/1.
+:- if(current_module(swish)).
+sandbox:safe_primitive(redisclient:restapi_login(_,_,_)).
+sandbox:safe_primitive(redisclient:restapi_request(_,_)).
+:-endif.
