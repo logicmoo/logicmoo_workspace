@@ -1,7 +1,7 @@
 #!/bin/bash
 
-% Installs with 
-%   source <(curl -sS https://logicmoo.org/gitlab/logicmoo/logicmoo_workspace/-/raw/master/web_install.sh)
+# Installs with 
+#   source <(curl -sS https://logicmoo.org/gitlab/logicmoo/logicmoo_workspace/-/raw/master/web_install.sh)
 
 if [[ $EUID -ne 0 ]]; then
    echo ""
