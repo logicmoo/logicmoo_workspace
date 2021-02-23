@@ -522,7 +522,7 @@ verbatum_anon(Verb):- verbatum_anon_one_or_zero_arg(Verb).
 
 verbatum_anon_one_or_zero_arg(Verb):- member(Verb, [
  prolog, make, update_changed_files, cls,
- ls, cd, pwd, debug,
+ ls, cd, pwd, debug, mems,
  useragent, echo, halt, english,
  mem, types, props,
  memory, model, properties, state, status, perceptq, help, threads,
@@ -644,6 +644,8 @@ sub_term_atom(Term, T) :-
  sub_term_atom(Term, List).
 
 
+%to_wordlist_atoms_adv(Sentence, WordsA):- 
+%   codelist_to_forms(`( a b "good" #\\. )`,F), to_untyped(F,FF), writeq(FF).
 
 to_wordlist_atoms_adv(Sentence, WordsA):- to_word_list(Sentence, Words), must_maplist(any_to_atom, Words, WordsA), !.
 to_wordlist_atoms_adv(Sentence, WordsA):- into_text80(Sentence, WordsA), !.

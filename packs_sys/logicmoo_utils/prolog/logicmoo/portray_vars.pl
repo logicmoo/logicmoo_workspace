@@ -139,7 +139,11 @@ p_n_atom_filter_var_chars(AtomR,UP):- name(AtomR,Chars),filter_var_chars(Chars,[
 
 atom_codes_w_blobs(Atom,Codes):-atom(Atom)->atom_codes(Atom,Codes);format(codes(Codes),"~w",[Atom]).
 
+debug_var0(R,V):- is_dict(V), dict_pairs(V,VV,_), !, debug_var0(R,VV).
+debug_var0(V,R):- is_dict(V), dict_pairs(V,VV,_), !, debug_var0(VV,R).
+debug_var0(V,NonVar):-var(V),nonvar(NonVar),!,debug_var0(NonVar,V).
 debug_var0(_,NonVar):-nonvar(NonVar),!.
+debug_var0(Var,TwoVars):- var(Var),var(TwoVars),!, ignore((get_var_name(Var,Name),debug_var0(Name,TwoVars))).
 debug_var0(Var,_):- var(Var),!.
 debug_var0([C|S],Var):- \+ ground(C+S),!,afix_varname('List',Var).
 debug_var0([C|S],Var):- notrace(catch(atom_codes_w_blobs(Atom,[C|S]),_,fail)),!,afix_varname(Atom,Var).
@@ -301,7 +305,7 @@ guess_pretty1(O):- mort(( ignore(pretty1(O)),ignore(pretty_two(O)),ignore(pretty
 
 :- export(guess_varnames/1).
 
-guess_varnames(IO):- guess_varnames(IO,_).
+guess_varnames(IO):- guess_varnames(IO,_),!.
 
 guess_varnames(I,O):- guess_pretty1(I), guess_varnames2(I,O).
 
@@ -365,6 +369,8 @@ may_debug_var_v(R,V):- nonvar(R),var(V),may_debug_var(R,V).
 may_debug_var_weak(_,V):- var(V), variable_name(V,_),!.
 may_debug_var_weak(R,V):- may_debug_var(R,V),!.
 
+may_debug_var(R,V):- is_dict(V), dict_pairs(V,VV,_), !, may_debug_var(R,VV).
+may_debug_var(V,R):- is_dict(V), dict_pairs(V,VV,_), !, may_debug_var(VV,R).
 may_debug_var(_,V):- var(V), variable_name(V,IsGood),is_good_name(IsGood),!.
 %may_debug_var(R,V):- var(V), variable_name(V,_), atom(R), \+ is_good_name(R).
 may_debug_var(R,V):- debug_var(R,V).
@@ -375,6 +381,8 @@ pretty_enough(H):- ground(H), !.
 pretty_enough('$VAR'(_)):- !.
 pretty_enough(H):- compound_name_arity(H,_,0), !.
 
+name_one(R,V):- is_dict(V), dict_pairs(V,VV,_), !, name_one(R,VV).
+name_one(V,R):- is_dict(V), dict_pairs(V,VV,_), !, name_one(VV,R).
 name_one(V,R):- var(V), nonvar(R),!, name_one_var(R,V).
 name_one(R,V):- var(V), nonvar(R),!, name_one_var(R,V).
 name_one(_,_).
@@ -382,12 +390,14 @@ name_one(_,_).
 name_one_var([_|_],V):- debug_var('List',V).
 name_one_var(R,V):- debug_var(R,V).
 
+pretty_element(NV):- ignore((NV=..[_,N,V],ignore(pretty1(N=V)))).
+
 pretty1(H):- pretty_enough(H),!.
 pretty1(as_rest(Name, Rest, _)):- may_debug_var_v(Name,Rest).
 pretty1(get_var(Env, Name, Val)):- may_debug_var('GEnv',Env),may_debug_var(Name,Val).
 pretty1(deflexical(Env,_Op, Name, Val)):- may_debug_var('SEnv',Env),may_debug_var(Name,Val).
 pretty1(set_var(Env,Name, Val)):- may_debug_var('SEnv',Env),may_debug_var(Name,Val).
-
+pretty1(Dict):- is_dict(Dict), dict_pairs(Dict,Tag,Pairs), maplist(pretty_element,Pairs), may_debug_var('Dict',Tag).
 pretty1(f_slot_value(_Env, Name, Val)):- may_debug_var(slot,Name,Val),!.
 %pretty1(get_kw(ReplEnv, RestNKeys, test, test, f_eql, true, True)
 pretty1(Env=RIGHT):- compound(RIGHT),RIGHT=[List|_],compound(List),var(Env),List=[H|_],compound(H),H=bv(_,_), may_debug_var('Env',Env),

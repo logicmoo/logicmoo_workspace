@@ -453,7 +453,7 @@ cwhite --> {notrace(nb_current('$dcgm_whitespace',preserve))}, !, {fail}.
 
 cspace --> [C], {nonvar(C),charvar(C),!,C\==10,bx(C =< 32)}.
 
-charvar(C):- integer(C)-> true; (writeln(charvar(C)),break,fail).
+charvar(C):- integer(C)-> true; (writeln(charvar(C)),only_debug(break),fail).
 
 one_blank --> [C],!,{C =< 32}.
 
@@ -486,18 +486,35 @@ escaped_char(Code)  --> [C], {escape_to_char([C],Code)},!.
 
 escape_to_char(Txt,Code):- notrace_catch_fail((sformat(S,'_=`\\~s`',[Txt]),read_from_chars(S,_=[Code]))),!.
 
+zalwayz_debug:- current_prolog_flag(zalwayz,debug).
+
+never_zalwayz(Goal):-
+ locally(current_prolog_flag(zalwayz,false),Goal).
+
+zalwayz_zalwayz(Goal):-
+ locally(current_prolog_flag(zalwayz,debug),Goal).
+
+
+zalwayz(G,H,T):- \+ zalwayz_debug, !, phrase(G,H,T).
 zalwayz(G,H,T):- phrase(G,H,T),!.
 zalwayz(G,H,T):- nb_current('$translation_stream',S),is_stream(S), \+ stream_property(S,tty(true)),!,always_b(G,H,T).
 zalwayz(G,H,T):- always_b(G,H,T).
 
-always_b(G,H,T):- break,H=[_|_],writeq(phrase_h(G,H,T)),dcg_print_start_of(H),writeq(phrase(G,H,T)),!,trace,ignore(rtrace(phrase(G,H,T))),!,notrace,dcg_print_start_of(H),writeq(phrase(G,H,T)), break,!,fail.
-always_b(G,H,T):- writeq(phrase(G,H,T)),dcg_print_start_of(H),writeq(phrase(G,H,T)),!,trace,ignore(rtrace(phrase(G,H,T))),!,notrace,dcg_print_start_of(H),writeq(phrase(G,H,T)), break,!,fail.
+only_debug(G):- \+ zalwayz_debug, !, nop(G),!.
+only_debug(G):- !, call(G).
+
+%zalwayz(G):-  !, zalwayz(G).
+zalwayz(G):- \+ zalwayz_debug, !, notrace(catch(G,_,fail)),!.
+zalwayz(G):- must(G).
+%zalwayz(P,S,L):-  !, zalwayz(P,S,L).
+
+always_b(G,H,T):- only_debug(break),H=[_|_],writeq(phrase_h(G,H,T)),dcg_print_start_of(H),writeq(phrase(G,H,T)),!,trace,ignore(rtrace(phrase(G,H,T))),!,notrace,dcg_print_start_of(H),writeq(phrase(G,H,T)), only_debug(break),!,fail.
+always_b(G,H,T):- writeq(phrase(G,H,T)),dcg_print_start_of(H),writeq(phrase(G,H,T)),!,only_debug(trace),ignore(rtrace(phrase(G,H,T))),!,notrace,dcg_print_start_of(H),writeq(phrase(G,H,T)), break,!,fail.
 
 dcg_print_start_of(H):- (length(L,3000);length(L,300);length(L,30);length(L,10);length(L,1);length(L,0)),append(L,_,H),!,format('~NTEXT: ~s~n',[L]),!.
-bx(CT2):- notrace_catch_fail(CT2,E,(writeq(E:CT2),break)),!.
+bx(CT2):- notrace_catch_fail(CT2,E,(writeq(E:CT2),only_debug(break))),!.
 notrace_catch_fail(G,E,C):- catch(G,E,C),!.
 notrace_catch_fail(G):- catch(G,_,fail),!.
-zalwayz(G):- must(G).
 clean_fromt_ws([],[]).
 clean_fromt_ws([D|DCodes],Codes):- 
   ((\+ char_type(D,white), \+ char_type(D,end_of_line)) -> [D|DCodes]=Codes ; clean_fromt_ws(DCodes,Codes)).
@@ -699,6 +716,13 @@ phrase_from_buffer_codes(Grammar, In):-
    notrace((remove_pending_buffer_codes(In,NewCodes),
    NewCodes \== [])),!,
    (must_or_rtrace(phrase(Grammar, NewCodes, More))->append_buffer_codes(In,More);(append_buffer_codes(In,NewCodes),!,fail)).
+
+
+skipping_buffer_codes(Goal):- 
+ setup_call_cleanup(
+   notrace((remove_pending_buffer_codes(In,OldCodes), clear_pending_buffer_codes)),
+     Goal,
+     notrace((clear_pending_buffer_codes,append_buffer_codes(In,OldCodes)))).
 
 is_eof_codes(Codes):- var(Codes),!,fail.
 is_eof_codes(Codes):- Codes == [],!.

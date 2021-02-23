@@ -351,22 +351,48 @@ read_line_to_tokens(Agent, In, Prev, Tokens):-
 clean_tokens(Tokens0, Tokens1):- is_list(Tokens0), exclude(=(' '), Tokens0, Tokens1), !.
 clean_tokens(Tokens0, Tokens0).
 
+
+safety_for_lreader([],[]):-!.
+safety_for_lreader([C|Rest],Out):-  char_code('"',C),!,double_quoted_string(Str,[C|Rest],Next),safety_for_lreader(Next,R),string_codes(Str,Codes),flatten([`"`,Codes,`"`,R],Out).
+safety_for_lreader([C|Rest],Out):- char_code('\'',C),!,single_quoted_string(Str,[C|Rest],Next),safety_for_lreader(Next,R),string_codes(Str,Codes),flatten([`{"`,Codes,`"}`,R],Out).
+safety_for_lreader([C|Rest],Out):- safety_for_lreader0(C,C0),!,safety_for_lreader(Rest,R0),flatten([C0,R0],Out).
+safety_for_lreader0(C,Out):- char_type(C, punct),!,append(` "~+~`,[C|`" `],Out).
+safety_for_lreader0(A,A).
+
+name_the_vars(N=V):- add_var_to_env(N,V),!.
+name_the_vars(N=V):- ignore(V='$VAR'(N)).
+
+
+
+fixup_stokens(List,List):- (var(List);[]==List;number(List)),!.
+fixup_stokens([A|List],[R|RList]):- !, fixup_stokens(A,R), fixup_stokens(List,RList).
+fixup_stokens('$STRING'(Text),R):- text_to_string(Text,String), to_string_or_symbol(String,R).
+fixup_stokens(String,Atom):- string(String), !, string_to_atom(String,Mid), fixup_stokens(Mid,Atom),!.
+fixup_stokens(String,Atom):- \+ atomic(String),!,Atom=String.
+fixup_stokens(String,Number):- atom(String), atom_number(String, Number), !.
+fixup_stokens(List,List).
+
+to_string_or_symbol(String,Symbol):- string_concat("~+~",Sym,String),!,string_to_atom(Sym,Symbol).
+to_string_or_symbol(String,String):-!.
+
+line_to_ptokens(LineCodes, Tokens):- 
+ current_prolog_flag(allow_variable_name_as_functor,AVAF),
+ set_prolog_flag(allow_variable_name_as_functor,true),
+ call_cleanup(
+  xnotrace(catch((read_term_from_codes(LineCodes, Term, [syntax_errors(quiet), var_prefix(false),
+  variable_names(Vars), cycles(true), dotlists(true), singletons(_)])), _, fail)),
+  set_prolog_flag(allow_variable_name_as_functor,AVAF)),
+ maplist(name_the_vars,Vars),
+ Tokens=Term, !.
+
+
+line_to_tokens(Line, Tokens):- string_codes(Line,LineCodes), line_to_tokens(LineCodes, _, Tokens).
+
 line_to_tokens([], _, []):-!.
+line_to_tokens(LineCodes, NegOne, Tokens):- var(NegOne),!, NegOne is -1, line_to_tokens(LineCodes, NegOne, Tokens).
 line_to_tokens(NegOne, NegOne, end_of_file):-!.
 line_to_tokens(end_of_file, _NegOne, end_of_file):-!.
 line_to_tokens([NegOne], NegOne, end_of_file):-!.
-
-
-line_to_tokens(LineCodes, _NegOne, Tokens) :-
- last(LineCodes, L),
- memberchk(L, [46, 41|`.)`]),
- xnotrace(catch((read_term_from_codes(LineCodes, Term,
-  [syntax_errors(error), var_prefix(false),
-  % variables(Vars),
-  variable_names(VNs), cycles(true), dotlists(true), singletons(_)])), _, fail)),
- nb_setval('$variable_names', VNs),
- Tokens=Term, !.
-
 line_to_tokens(LineCodes, NegOne, Tokens) :-
  append([L], NewLineCodes, LineCodes),
  member(L, [10, 13, 32]), !,
@@ -375,14 +401,35 @@ line_to_tokens(LineCodes, NegOne, Tokens) :-
  append(NewLineCodes, [L], LineCodes),
  member(L, [10, 13, 32]), !,
  line_to_tokens(NewLineCodes, NegOne, Tokens).
-
 line_to_tokens(LineCodes, _, Tokens):-
  ignore(log_codes(LineCodes)), !,
- tokenize_mw(LineCodes, TokenCodes), !,
- % Convert list of list of codes to list of atoms:
- findall(Atom, (member(Codes, TokenCodes), atom_codes(Atom, Codes)), Tokens),
+ line_to_stokens(LineCodes, Tokens), !,
  nop(save_to_history(LineCodes)),
  !.
+
+
+line_to_stokens(LineCodes, Tokens) :- last(LineCodes, L), memberchk(L, [46, 41|`.)`]),
+ line_to_ptokens(LineCodes, Tokens), !.
+  
+line_to_stokens(LineCodes, Tokens):- 
+ notrace((
+  current_predicate(parse_sexpr_string/2),  
+  safety_for_lreader(LineCodes,LineCodes2),   
+  sformat(S,'( ~s )',[LineCodes2]), 
+  skipping_buffer_codes(parse_sexpr_string(S,Tokens0)), 
+  to_untyped(Tokens0,Tokens1), 
+  fixup_stokens(Tokens1,Tokens), 
+  dmsg(parse_sexpr_string(Tokens)),
+  !)).
+
+line_to_stokens(LineCodes, Tokens):- line_to_ptokens(LineCodes, Tokens), !.
+
+line_to_stokens(LineCodes, Tokens):- tokenize_mw(LineCodes, TokenCodes), !,
+ % Convert list of list of codes to list of atoms:
+ findall(Atom, (member(Codes, TokenCodes), atom_codes(Atom, Codes)), Tokens),!.
+
+
+
 
 :- multifile(prolog:history/2).
 save_to_history(LineCodes):-

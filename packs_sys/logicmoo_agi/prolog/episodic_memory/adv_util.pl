@@ -19,6 +19,7 @@
 :- '$set_source_module'(mu).
 :- op(700, xfx, (univ_safe)).
 
+call_z(P, G):- call(P, G).
 
 % Miscellaneous generic utility predicates.
 
@@ -219,7 +220,25 @@ must_input_state(S0):- quietly(check4bugs(input, S0)).
 must_output_state(S0):- quietly(check4bugs(output, S0)).
 %must_state(S0):- quietly(check4bugs(anon, S0)).
 
-call_z(P, G):- call(P, G).
+:- meta_predicate mu:api_invoke(+).
+:- meta_predicate mu:api_invoke(+,?,?).
+:- meta_predicate mu:apply_act(+,?,?).
+:- meta_predicate mu:aXiom(+).
+:- meta_predicate mu:aXiom(+,?,?).
+:- meta_predicate mu:call_lf(?,0).
+:- meta_predicate mu:call_z(1,?).
+:- meta_predicate mu:eVent(*,+).
+:- meta_predicate mu:eVent(*,+,*,?).
+:- meta_predicate mu:map_apply_findall(+,?,?).
+:- meta_predicate mu:munl_call(0).
+:- meta_predicate mu:must_act(+,?,?).
+:- meta_predicate mu:rapply_state(1,+,-,?).
+:- meta_predicate mu:reframed_call(4,*,?).
+:- meta_predicate mu:reframed_call(4,?,?,?,?).
+:- meta_predicate mu:thread_create_adv(0,?,+).
+
+
+
 mw_numbervars(G, S, E):- numbervars(G, S, E, [attvar(skip)]).
 
 :- module_transparent(apply_state//3).

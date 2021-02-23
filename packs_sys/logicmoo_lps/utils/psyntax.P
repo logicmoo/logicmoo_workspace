@@ -798,7 +798,7 @@ pretty_write_withvars(Term,Tran,Vars) :- guess_varname_list(Vars+Term,NewVs), pr
 
 pretty_write(Term,Translator,Stream) :- pretty_write(Term,Translator,0,[],Stream).
 
-my_write(S,T,Vars) :- my_write(S,T,Vars,lps2p).
+my_write(S,T,Vars) :- guess_varname_list(Vars+S+T,NewVs),  my_write(S,T,NewVs,lps2p).
 
 % my_write(Stream,Term,Vars,Translator) like writeq but printing nice variable names
 my_write(S,T,Vars,_) :- var(T), !, write_term(S,T,[quoted(true),variable_names(Vars)]).

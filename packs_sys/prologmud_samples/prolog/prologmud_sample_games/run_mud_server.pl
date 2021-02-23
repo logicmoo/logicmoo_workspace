@@ -289,24 +289,30 @@ abolish_module(M):-
 
 
 % test LPS is not broken yet
+melee:- lps_sanity(library('../examples/Melee')).
 system:lps_sanity:- lps_sanity(library('../examples/binaryChop2.pl' )).
 
 lps_insanity(File):- 
-   absolute_file_name(File,M),
+   absolute_file_name(File,M,[access(read),extensions(['.pl','P','lps','pfc.pl',''])]),
+   M\==File,!,lps_insanity(M).
+
+lps_insanity(M):-
    unload_file(M),
    M:use_module(library(lps_corner)),
    interpreter:check_lps_program_module(M),  
-   M:consult(M),
+   M:reconsult(M),
    %listing(db:actions/1),
    %listing(interpreter:actions/1),
    interpreter:get_lps_program_module(M),
    notrace(elsewhere:listing(M:_)),
-   M:golps(X),
+   wdmsg(running(M)),
+   % M:golps(X),
+   M:godc(X),
    %listing(interpreter:lps_program_module/1),
-   notrace(wdmsg(X)),!.
+   notrace(print_tree(X)),!.
 
 
-lps_sanity(File):- Limit = 1000,
+lps_sanity(File):- Limit = 110580,
  catch(call_with_depth_limit(lps_insanity(File), Limit, R), E,(R=E)),
    format(user_error,"~N ~q~n",[lps_sanity=R]),
    ((integer(R),R<Limit)-> true; (dumpST,break,fail)).
@@ -480,6 +486,7 @@ start_all :- start_network, start_rest.
 
 
 :- lps_sanity.
+:- melee.
 
 
 :- noguitracer, tnodebug.
@@ -655,22 +662,6 @@ start_all :- start_network, start_rest.
 %:- meta_predicate mpred_type_constraints:'__aux_wrapper_594d82f1742fe8b6586d0fcc675e4bd8258e4541'(0).
 :- meta_predicate mpred_type_constraints:freeze_rev(0,?).
 :- meta_predicate mpred_type_constraints:lazy_1(0).
-:- meta_predicate mu:api_invoke(+).
-:- meta_predicate mu:api_invoke(+,?,?).
-:- meta_predicate mu:apply_act(+,?,?).
-:- meta_predicate mu:aXiom(+).
-:- meta_predicate mu:aXiom(+,?,?).
-:- meta_predicate mu:call_lf(?,0).
-:- meta_predicate mu:call_z(1,?).
-:- meta_predicate mu:eVent(*,+).
-:- meta_predicate mu:eVent(*,+,*,?).
-:- meta_predicate mu:map_apply_findall(+,?,?).
-:- meta_predicate mu:munl_call(0).
-:- meta_predicate mu:must_act(+,?,?).
-:- meta_predicate mu:rapply_state(1,+,-,?).
-:- meta_predicate mu:reframed_call(4,*,?).
-:- meta_predicate mu:reframed_call(4,?,?,?,?).
-:- meta_predicate mu:thread_create_adv(0,?,+).
 :- meta_predicate parser_sharing:try_maybe_f(*,0,*).
 :- meta_predicate psyntax:dumploaded(0,*).
 :- meta_predicate rdf_describe:rdf_bounded_description(3,+,*,+,-).

@@ -1,10 +1,10 @@
 maxTime(7).
 
 initial_state([
-	location(d, 1),
-	location(c, 2)
-	, location(b, 3),
-    location(a,4)]
+location(d, 1),
+location(c, 2),
+location(b, 3),
+location(a,4)]
 ).
 
  % Changed incr(N1, N2) to N2 is N1 + 1. Bug with incr.% Changed in_order to Y@<X. Bug with in_order.

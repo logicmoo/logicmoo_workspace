@@ -45,6 +45,8 @@
 :- meta_predicate write_trans(+,*,2,?).
 
 
+
+
 def_is_characterp(CH):- current_predicate(is_characterp/1),!,call(call,is_characterp,CH).
 def_is_characterp_def('#\\'(_)).
 
@@ -729,12 +731,11 @@ to_char(N,C):- text_to_string_safe(N,Str),name_to_charcode(Str,Code),to_char(Cod
 to_char(N,'#\\'(S)):- integer(N),!,char_code_to_char(N,S),!.
 to_char(N,'#\\'(N)).
 
-
 char_code_int(Char,Code):- notrace_catch_fail(char_code(Char,Code)),!.
 char_code_int(Char,Code):- notrace_catch_fail(atom_codes(Char,[Code])),!.
 char_code_int(Char,Code):- atom(Char),name_to_charcode(Char,Code),!.
-char_code_int(Char,Code):- var(Char),!,wdmsg(char_code_int(Char,Code)),break.
-char_code_int(Char,Code):- wdmsg(char_code_int(Char,Code)),break.
+char_code_int(Char,Code):- var(Char),!,wdmsg(char_code_int(Char,Code)), only_debug(break).
+char_code_int(Char,Code):- wdmsg(char_code_int(Char,Code)),only_debug(break).
 
 char_code_to_char(N,S):- atom(N),atom_codes(N,[_]),!,S=N.
 char_code_to_char(N,S):- atom(N),!,S=N.
@@ -859,6 +860,7 @@ copy_lvars(Term,Vars,NTerm,VarsO):-
     (svar(F,_)-> copy_lvars( [F|Args],Vars,NTerm,VarsO);
     % construct copy term
        (copy_lvars(Args,Vars,NArgs,VarsO), NTerm=..[F|NArgs])),!.  
+
 
 
 %= 	 	 

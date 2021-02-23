@@ -500,6 +500,7 @@ write_using_pprint_recurse(Term):- write_using_pprint(Term),!,fail.
 write_using_pprint_recurse(Term):- is_list(Term),!, \+ (member(T,Term), \+ atomic(T)).
 write_using_pprint_recurse(Term):- compound(Term),!, \+ (arg(_,Term,T), \+ atomic(T)).
 
+pair_to_colon(P,C):- P=..[_,K,V],C=..[':',K,V],!.
 
 mu_prolog_pprint(Term,Options):- output_line_position(Tab), mu_prolog_pprint(Tab,Term,Options).
 mu_prolog_pprint(Tab,Term,Options):- mu:prolog_pprint(Term,[left_margin(Tab)|Options]).
@@ -521,6 +522,14 @@ inperent([F|_],TTs,Term,Ts):- fail, \+ is_list_functor(F),
       functor(TTsS,F,2),     
      ((nonvar(Term), Term=TTsS);(nonvar(Ts), Ts=TTsS)).
 
+
+recalc_tab(Tab,     _):- number(Tab), !, fail.
+recalc_tab(now+N, Tab):- output_line_position(Now), Tab is N+Now.
+recalc_tab(now-N, Tab):- output_line_position(Now), Tab is N-Now.
+recalc_tab(TabC,  Tab):- compound(TabC), Tab is TabC.
+recalc_tab(now,   Tab):- output_line_position(Tab).
+
+pt0(FS,Final,Term,TpN):- recalc_tab(TpN, New),!, pt0(FS,Final,Term, New).
 pt0(_,Final,Term,Tab) :- 
    is_arity_lt1(Term), !,
    prefix_spaces(Tab), portray_with_vars(Term),write(Final), nop(pt_nl).
@@ -531,6 +540,24 @@ pt0(_,Final,Term,Tab) :-
 
 pt0(FS,Final,[T|Ts],Tab):- !,
    pt0_list(FS,Final,[T|Ts],Tab).
+
+
+pt0(FS,Final,q(E,V,G),Tab):- atom(E), !, T=..[E,V,G],!, pt0(FS,Final,T,Tab).
+
+pt0(FS,Final,Term,Tab) :- 
+   Term=..[S,N,V],
+   ((current_op(P, xfx, S)); (S=':', atom(N))), !, % atomic(N), 
+   pt0([P|FS], ' ', N, Tab), pt0([P|FS], ' ',S,now),nl, pt0([P|FS], Final,V, Tab+ 3 ).
+
+pt0(FS,Final,Term,Tab0) :- 
+   is_dict(Term),
+   Tab is Tab0+1,Tab2 is Tab+4,
+   dict_pairs(Term, Tag, Pairs),
+   format(atom(LC2),'}~w',[Final]),!,
+   prefix_spaces(Tab0),pt0([], '{',Tag,Tab),
+   maplist(pair_to_colon,Pairs,Colons),
+   (Colons=[A|As]-> (pt0([dict|FS], '',A,Tab2), pt_args([dict|FS],LC2,As,Tab2)); write(LC2)).
+
 
 /*
 pt0(FS,Final,TTs,Tab) :- 
@@ -546,6 +573,7 @@ pt0(FS, Final,T,Tab) :-
    must_or_rtrace(pt0_functor(FS,Final,F,Tab,I0,LC2)),
    write_simple(A0), write_simple_each(Left),
    pt_args([F|FS],LC2,[R|Rest],I0).
+
 
 pt0(FS, Final,T,Tab) :- 
    T=..[F,A0], !,   
@@ -568,17 +596,6 @@ pt0(_, Final,Term,Tab) :- fail, write_using_pprint_recurse(Term),
 */
 
 
-pt0(FS,Final,q(E,V,G),Tab):- atom(E), !, T=..[E,V,G],!, pt0(FS,Final,T,Tab).
-
-pt0([Fs|FS],Final,T,Tab0) :- 
-   T=..[F,A,As], 
-   Fs == F,   
-   major_conj(F),
-   Tab is Tab0,
-   prefix_spaces(Tab0),write(' '),
-   sformat(FinA, " ~w ",[F]), print_tree_with_final(A,FinA),
-   format(atom(LC2),'~w',[Final]),
-   pt0([F|FS],LC2,As,Tab).
 
 
 pt0(FS,Final,T,Tab0) :- 
@@ -656,10 +673,12 @@ is_arity_lt1(A) :- compound_name_arity(A,_,0),!.
 is_arity_lt1(A) :- functor(A,'$VAR',_),!.
 is_arity_lt1(A) :- functor(A,'-',_),!.
 is_arity_lt1(A) :- functor(A,'+',_),!.
+is_arity_lt1(V) :- is_dict(V), !, fail.
 is_arity_lt1(S) :- is_charlist(S),!.
 is_arity_lt1(S) :- is_codelist(S),!.
 
 as_is(V):- var(V).
+as_is(V) :- is_dict(V), !, fail.
 as_is(A) :- is_arity_lt1(A), !.
 as_is(A) :- functor(A,F,_), simple_f(F).
 as_is(A):- is_list(A), maplist(is_arity_lt1,A).

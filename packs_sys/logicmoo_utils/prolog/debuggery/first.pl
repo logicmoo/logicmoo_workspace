@@ -458,7 +458,7 @@ dupe_term(E,EE):- duplicate_term(E,EE),E=EE.
 get_varname_list(VsOut,'$variable_names'):- nb_current('$variable_names',Vs),Vs\==[],!,check_variable_names(Vs,VsOut),!.
 get_varname_list(VsOut,'$old_variable_names'):- nb_current('$old_variable_names',Vs),Vs\==[],!,check_variable_names(Vs,VsOut),!.
 
-get_varname_list(VsOut):- get_varname_list(VsOut,_).
+get_varname_list(VsOut):- get_varname_list(VsOut,_),!.
 get_varname_list([]).
 
 set_varname_list(VsIn):- check_variable_names(VsIn,Vs),

@@ -8,6 +8,7 @@ observe([start_game(amanda),start_game(katherine),start_game(peter),start_game(t
 observe([],3).
 observe([],4).
 observe([],5).
+observe([in_sight(katherine,person)],25).
 % observe([],T) :- T<15.
 
 next_to(Unit,Type)at T if
