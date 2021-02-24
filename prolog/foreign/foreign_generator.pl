@@ -1269,10 +1269,10 @@ type_components_one(M, SubType, TSpec, Name, Call, Loc, t(Type, PropL, _, _)) --
                          ), Lines)
                 ))
       ; { atom(Term),
-          SubType = union
+          SubType = union,
+          PropL = [Prop]
         }
-      ->( { once(member(Prop, PropL)),
-            match_known_type(Prop, M, Name, Spec, Arg)
+      ->( { match_known_type(Prop, M, Name, Spec, Arg)
           },
           call(Call, func_rec(union_type, 1, Term, Name), Spec, Arg)
         ->[]
