@@ -45,8 +45,8 @@
 :- use_module(library(pfc)).
  
 :- add_to_search_path(pfclib,'.').
-
-
+:- expects_dialect(pfc).
+:- must(prolog_load_context(dialect,pfc)).
   /*
   :-
          op(990,xfx,(':=')),

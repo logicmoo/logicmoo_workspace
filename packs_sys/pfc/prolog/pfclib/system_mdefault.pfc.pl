@@ -31,6 +31,7 @@
 % Douglas Miles
 */
 
+:- expects_dialect(pfc).
 
 :- sanity(is_pfc_file).
 

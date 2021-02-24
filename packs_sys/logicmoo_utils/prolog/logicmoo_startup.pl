@@ -305,18 +305,24 @@ add_pack_path(Y):-  \+ user:file_search_path(pack,Y) ->asserta(user:file_search_
 % Enable History
 % ==============================================
 :- if(\+ current_predicate(setup_hist0/0)).
-:- if(exists_source(library(editline))). 
-:- if(\+ current_prolog_flag(windows,true)).
+:- if(current_prolog_flag(windows, false)).
+
+:- if(exists_source(library(editline))).
 :- use_module(library(editline)).
-:- endif.
 :- else.
 :- if(exists_source(library(readline))).
-:- use_module(library(readline)).
-:- endif.
+ :- use_module(library(readline)).
+:- else.
+ :- if(exists_source(library(editline))).
+  :- use_module(library(editline)).
+ :- endif.
 :- endif.
 setup_hist0:-  '$toplevel':setup_history.
-:- setup_hist0.
+:- initialize(setup_hist0, now).
 :- endif.
+:- endif.
+:- endif.
+
    
 
 % :- predicate_inheritance:kb_global(plunit:loading_unit/4).

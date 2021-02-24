@@ -62,6 +62,9 @@
 :- endif.
 %:- '$def_modules'([clause_expansion/2],O),dmsg_pretty('$def_modules'([clause_expansion/2],O)),nl.
 
+:- expects_dialect(pfc).
+:- sanity(prolog_load_context(dialect,pfc)).
+
 :- sanity(is_pfc_file).
 
 :- dynamic(pfcSanityA/0).

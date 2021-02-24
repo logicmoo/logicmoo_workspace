@@ -549,7 +549,7 @@ smart_format(X,Y):- smart_format([X,Y]).
 smart_format(DDD):- \+ is_list(DDD),!, format('~q',[DDD]).
 
 smart_format([X,Y]):- is_regular_format_args(X,Y),!,catch(format(X,Y),error(smart_format(A),B),writeq(smart_format(X,Y)=error(smart_format(A),B))),!.
-smart_format([X|More]):- (compound(X);is_output(X)),!,with_output_to(X,smart_format(More)),!.
+smart_format([X|More]):- (compound(X);is_stream(X)),!,with_output_to(X,smart_format(More)),!.
 smart_format([X,Y]):- smart_format(X-Y),!.
 
 fmt0(X,Y):-catchvvnt((smart_format(X,Y),flush_output_safe),E,dfmt(E:smart_format(X,Y))).

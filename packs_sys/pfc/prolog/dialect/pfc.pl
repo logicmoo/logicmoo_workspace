@@ -230,9 +230,9 @@ push_pfc_dialect_now(User, User):-
 
 push_pfc_dialect_now(Was, M):-
    notrace(M:ensure_loaded(library(pfc_lib))),
-   pfc:check_pfc_program_module(M),
-   M:style_check(-discontiguous), M:style_check(-singleton),
-   baseKB:define_pfc_into_module(M),
+   %pfc:check_pfc_program_module(M),
+   %M:style_check(-discontiguous), M:style_check(-singleton),
+   %baseKB:define_pfc_into_module(M),
    dialect_input_stream(StreamIn),   
    pfc_operators(M, Ops),
    push_operators(M:Ops, Undo),
