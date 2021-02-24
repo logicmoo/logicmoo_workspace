@@ -822,6 +822,7 @@ full_transform(Why,MH,MHH):- has_skolem_attrvars(MH),!,
 %full_transform(Op,==> CI,SentO):- nonvar(CI),!, full_transform(Op,CI,SentO).
 %full_transform(Op,isa(I,C),SentO):- nonvar(C),!,must_ex(fully_expand_real(Op,isa(I,C),SentO)),!.
 %full_transform(_,CI,SentO):- CI univ_safe [_C,I], atom(I),!,if_defined(do_renames(CI,SentO),CI=SentO),!.
+full_transform(Why,M:H,M:HH):- atom(M), !, notrace(full_transform(Why,H,HH)).
 full_transform(Why,MH,MHH):-
  must_det(fully_expand_real(change(assert,Why),MH,MHH)),!,
  nop(sanity(on_f_debug(same_modules(MH,MHH)))).
@@ -1250,17 +1251,32 @@ mpred_ain(MTP,S):- mpred_ain_cm(MTP,P,AM,SM),
   mpred_ain_now4(SM,AM,P,S).
 
 
-mpred_ain_now4(SM,ToMt,P,(mfl4(VarNameZ,FromMt,File,Lineno),UserWhy)):- sanity(stack_check),ToMt \== FromMt,!,
+mpred_ain_now4(SM,ToMt,P,(mfl4(VarNameZ,FromMt,File,Lineno),UserWhy)):- 
+ fail,  sanity(stack_check),ToMt \== FromMt,!,
   mpred_ain_now4(SM,ToMt,P,(mfl4(VarNameZ,ToMt,File,Lineno),UserWhy)).
 
-mpred_ain_now4(SM0,AM0,PIn,S):- SM0==AM0, is_code_module(AM0),!,
+mpred_ain_now4(SM0,AM0,PIn,S):- 
+ fail, 
+  SM0==AM0, is_code_module(AM0),!,
   notrace((get_assert_to(AM),get_query_from(SM))),!,mpred_ain_now4(SM,AM,PIn,S).
-  
-mpred_ain_now4(SM,AM,PIn,S):- % module_sanity_check(SM),
-  nop(module_sanity_check(AM)),
+
+mpred_ain_now4(SM,AM,PIn,S):-   
+  true,
+  mpred_ain_now5(SM,AM,PIn,S).
+:- module_transparent(pnotrace/1).
+pnotrace(P):- !, call(P).
+pnotrace(P):- notrace(P).
+
+
+% rtrace_if_booted(G):- current_prolog_flag(pfc_booted,true),!, rtrace(G).
+rtrace_if_booted(G):- call(G).
+% trace_if_booted:- current_prolog_flag(pfc_booted,true),!,trace
+trace_if_booted:- true.
+
+mpred_ain_now5(SM,AM,PIn,S):- % module_sanity_check(SM),
   call_from_module(AM, 
     with_source_module(SM,
-      locally_tl(current_defaultAssertMt(AM), SM:mpred_ain_now(AM:PIn,S)))).
+      locally_tl(current_defaultAssertMt(AM), rtrace_if_booted(SM:mpred_ain_now(SM:PIn,S))))).
 
 mpred_ain_now(PIn,S):-
   PIn=P, % must_ex(add_eachRulePreconditional(PIn,P)),  

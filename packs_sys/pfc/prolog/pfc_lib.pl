@@ -792,13 +792,15 @@ module_uses_pfc(SM):- current_predicate(SM:'$uses_pfc_toplevel'/0).
 :- module_transparent(pfc_goal_expansion/4).
 pfc_goal_expansion(I,P,O,PO):- 
  quietly(( 
-     \+ source_location(_,_),
      callable(I),          
+     current_prolog_flag(emulated_dialect, pfc),
      var(P), % Not a file goal     
+     \+ source_location(_,_),
      \+ current_prolog_flag(xref,true), 
      \+ current_prolog_flag(mpred_te,false),
      '$current_typein_module'(CM),
      prolog_load_context(module,SM),
+     % trace,
      ((SM \== CM) -> module_uses_pfc(SM); module_uses_pfc(CM)), 
      (I \= (CM : call_u(_))), (I \= call_u(_)))),
      fully_expand(I,M),
@@ -840,6 +842,36 @@ bct(A,B):- throw(bct(A,B)).
 :- lock_predicate('bct'/2).
 
 
+:-hook_database:export(pfc_lib:mpred_ain/1).
+:-hook_database:export(pfc_lib:mpred_aina/1).
+:-hook_database:export(pfc_lib:mpred_ainz/1).
+
+:- expose_api(add_pfc_to_module/6).
+:- module_transparent(export_most/1).
+:- meta_predicate(export_most(:)).
+export_most(M:F/A):- 
+  ignore((\+ atom_concat('$',_,F),
+  expose_api(M:F/A))).
+
+%:- module_property(pfc_lib,exports(PredList)),
+   %writeq(exports(PredList)),
+   %maplist(export_most,PredList).
+:- M=pfc_lib, forall(source_file(M:P,_),(cna_functor_safe(P,F,A),export_most(M:F/A))).
+
+%:- fixundef_later.
+%:- set_prolog_flag(retry_undefined, kb_shared).
+:- meta_predicate baseKB:t(1,?).
+:- meta_predicate baseKB:t(2,?,?).
+:- meta_predicate baseKB:t(3,?,?,?).
+:- meta_predicate baseKB:t(4,?,?,?,?).
+:- meta_predicate baseKB:t(5,?,?,?,?,?).
+:- meta_predicate baseKB:t(6,?,?,?,?,?,?).
+:- meta_predicate baseKB:t(7,?,?,?,?,?,?,?).
+
+
+
+
+
 :- multifile(system:goal_expansion/4).
 :- module_transparent(system:goal_expansion/4).
 :- system:import(pfc_goal_expansion/4).
@@ -857,8 +889,6 @@ system:clause_expansion(I,O):-
 
 %:- set_prolog_flag(read_attvars,false).
 
-:- retractall(t_l:disable_px).
-
 
 :- set_prolog_flag(subclause_expansion,true).
 :- set_prolog_flag(mpred_te,true).
@@ -866,37 +896,13 @@ system:clause_expansion(I,O):-
 
 :- set_prolog_flag(expect_pfc_file,unknown).
 :- set_prolog_flag(expect_pfc_file,never).
-:- set_prolog_flag(pfc_booted,true).
 
 :- set_prolog_flag(retry_undefined, kb_shared).
 :- set_prolog_flag(pfc_ready, true).
 
-:-hook_database:export(pfc_lib:mpred_ain/1).
-:-hook_database:export(pfc_lib:mpred_aina/1).
-:-hook_database:export(pfc_lib:mpred_ainz/1).
+:- retractall(t_l:disable_px).
 
-:- expose_api(add_pfc_to_module/6).
-:- module_transparent(export_most/1).
-:- meta_predicate(export_most(:)).
-export_most(M:F/A):- 
-  ignore((\+ atom_concat('$',_,F),
-  expose_api(M:F/A))).
-
-%:- module_property(pfc_lib,exports(PredList)),
-   %writeq(exports(PredList)),
-   %maplist(export_most,PredList).
-:- M=pfc_lib, forall(source_file(M:P,_),(cna_functor_safe(P,F,A),export_most(M:F/A))).
-   
 :- baseKB:ensure_loaded(library('pfclib/system_autoexec.pfc')).
 
-%:- fixundef_later.
-%:- set_prolog_flag(retry_undefined, kb_shared).
-:- meta_predicate baseKB:t(1,?).
-:- meta_predicate baseKB:t(2,?,?).
-:- meta_predicate baseKB:t(3,?,?,?).
-:- meta_predicate baseKB:t(4,?,?,?,?).
-:- meta_predicate baseKB:t(5,?,?,?,?,?).
-:- meta_predicate baseKB:t(6,?,?,?,?,?,?).
-:- meta_predicate baseKB:t(7,?,?,?,?,?,?,?).
-
+:- set_prolog_flag(pfc_booted,true).
 
