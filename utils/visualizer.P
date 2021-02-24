@@ -205,9 +205,10 @@ visual(File,Options,lps_visualization(Timeline,Sequence),DFAgraph) :-
 		\+ functor(G,/,2), % not a fluent
 		my_term_to_atom(G,Gatom), my_term_to_atom(X,Atom),
 		% T2_ is T2+1,
+		T1_ is T1+1,
 		(G==observation -> (S='color:Peru', More=[type:point,start:T2])
 			; G==action -> (S='color:green', More=[type:point,start:T2])
-			; G==composite -> (S='', More=[className:compositeEvent,start:T1,end:T2])
+			; G==composite -> (S='', More=[className:compositeEvent,start:T1_,end:T2])
 			; (S='color:#E19735', More=[type:point,start:T2])),
 		make_json_object([id:ID,content:Atom,group:Gatom,style:S,title:Tip|More],Item),
 		my_term_to_atom(happens(X,T1,T2),Tip),
