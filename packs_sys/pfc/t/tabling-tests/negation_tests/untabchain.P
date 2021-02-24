@@ -1,0 +1,17 @@
+
+/* */
+
+test(N,Str):- 
+	win(2,N),
+	writeln(Str,won).
+
+win(A,N):- chain(A,B,N),\+ win(B,N).
+
+chain(A,B,N):- 
+	integer(A),
+	A > 0,
+	A =< N,
+	B is A + 1.
+
+
+

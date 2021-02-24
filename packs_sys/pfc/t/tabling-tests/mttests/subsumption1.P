@@ -1,0 +1,58 @@
+
+
+:- table q/2.
+:- use_subsumptive_tabling(q/2).
+
+p(A,A,_N).
+p(A,C,N) :- A < N, B is A + 1, p(B, C, N).
+
+q(X,N) :- p(1,X,N).
+
+/* Test subsuming before subsumed */
+sc1(N) :- q(X,N), q(X,N).
+
+sc2(N) :- q(1,N), q(2,N), q(3,N), q(4,N), q(_X,N).
+
+:- import xsb_thread_create/2, xsb_thread_join/2,xsb_thread_self/1 from thread.
+
+test:- 
+	xsb_thread_create(tloop2(150),One),
+	xsb_thread_create(tloop2(150),Two),
+	xsb_thread_create(tloop2(150),Three),
+	xsb_thread_create(tloop2(150),Four),
+	xsb_thread_create(tloop2(150),Five),
+	xsb_thread_create(tloop2(150),Six),
+%	join_list([One,Two,Three]).
+	xsb_thread_join([One,Two,Three,Four,Five,Six],_Exits),
+	writeln('finished_subsumption1.1'),
+	fail.
+test:- 
+	xsb_thread_create(tloop1(150),One),
+	xsb_thread_create(tloop1(150),Two),
+	xsb_thread_create(tloop1(150),Three),
+	xsb_thread_create(tloop1(150),Four),
+	xsb_thread_create(tloop1(150),Five),
+	xsb_thread_create(tloop1(150),Six),
+	xsb_thread_join([One,Two,Three,Four,Five,Six],_Exits),
+	writeln('finished_subsumption1.2'),
+	fail.
+test.
+
+
+tloop1(0):- !.
+%	xsb_thread_self( Id ).
+%	writeln(finished(Id)).
+tloop1(N):- 
+	(sc1(N),fail ; true),
+	abolish_table_pred(q/2),
+	N1 is N - 1,
+	tloop1(N1).
+
+tloop2(0):- !.
+%	xsb_thread_self( Id ),
+%	writeln(finished(Id)).
+tloop2(N):- 
+	(sc2(N),fail ; true),
+	abolish_table_pred(q/2),
+	N1 is N - 1,
+	tloop2(N1).

@@ -1,0 +1,12 @@
+
+:- import check_variant/1,check_variant/2 from tables.
+
+:- index(cmp/3,trie).
+
+test:- assert(cmp(a,b,c)),assert(cmp(d,e,f)),fail.
+test:- check_variant(cmp(a,b,c)),writeln(first_passed),fail.
+test:- check_variant(cmp(d,e,f)),writeln(second_passed),fail.
+test:- check_variant(cmp(_X,e,f)),writeln(third_failed),fail.
+test:- check_variant(cmp(d,e,_X)),writeln(fourth_failed),fail.
+test:- check_variant(cmp(d,e,_X),1),writeln(fifth_passed),fail.
+test.

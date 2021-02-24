@@ -1,0 +1,14 @@
+:- table p/2, q/1.
+
+p( X, Y ) :-  q( X ),  q( Y ).
+
+
+q( a ) :- p( X, Y ).
+
+q( b ).
+
+
+:- old_first all.
+:- traces all.
+
+?- p( X, Y ).  % expected:  p( b, b ),  p( b, a ),  p( a, b ),  p( a, a ),

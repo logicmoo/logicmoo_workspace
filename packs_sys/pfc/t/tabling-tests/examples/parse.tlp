@@ -1,0 +1,26 @@
+%% An example attributed to David S. Warren, taken from from "Linear Tabling
+%% Strategies and Optimizations" by Neng-Fa Zhou, Taisuke Sato and
+%% Yi-Dong Shen.
+
+%% A string given as facts
+c( 0, a, 1 ).
+c( 1, b, 2 ).
+c( 2, b, 3 ).
+c( 3, a, 4 ).
+c( 4, b, 5 ).
+c( 5, b, 6 ).
+c( 6, a, 7 ).
+c( 7, a, 8 ).
+c( 8, c, 9 ).
+
+
+%% Is this a sentence of the regular expression "(a|b)*" ?
+:- table p/2.
+
+p( X, Y ) :-  p( X, Z ),  c( Z, a, Y ).
+p( X, Y ) :-  p( X, Z ),  c( Z, b, Y ).
+p( X, X ).
+
+?- p( 0, 8 ).    % expected: Yes
+
+?- \+ p( 0, 9 ).    % expected: No

@@ -1,0 +1,48 @@
+:- compiler_options([spec_off]).
+
+:- import print_incomplete_tables/0 from tables.
+:- import table_dump/2 from dump_table.
+
+test:- p(5,foo(a)),fail.
+test:- q(5,foo(a)),fail.
+test:- test_dump,fail.
+test.
+
+:- table p/2.
+
+p(0,_):- !,table_dump(p(_,_),[details(true)]).
+p(3,A):- p(5,A).
+p(N,A):- N1 is N - 1,p(N1,A).
+
+
+:- table q/2.
+q(0,_):- !,print_incomplete_tables.
+q(3,A):- q(5,A).
+q(N,A):- N1 is N - 1,q(N1,A).
+
+
+:- import slash/1 from machine.
+:- import concat_atom/2 from string.
+:- import stat_set_flag/2 from machine.
+
+test_dump:- set_prolog_flag(exception_pre_action,print_incomplete_tables),
+	    catch(r(5,scc(a)),_,cat_abort_file).
+
+:- table r/2.
+r(0,_):- !,abort.
+r(3,A):- r(5,A).
+r(N,A):- N1 is N - 1,r(N1,A).
+
+:- import get_scc_dumpfile/1 from tables.
+:- import shell/1 from shell.
+cat_abort_file:-
+	get_scc_dumpfile(F),
+	open(F,read,Str),
+	cat_abort_file_1(Str),
+	close(Str),
+	shell(['rm ',F]).
+
+cat_abort_file_1(Str):-
+	repeat,
+	read(Str,T),
+	(T == end_of_file -> true ; writeln(T),fail),!.

@@ -1,0 +1,11 @@
+%% An example that shows the "new style" of coinduction may miss some answers.
+
+:- coinductive1 p/1.
+
+p( [ a | X ] ) :-  p( X ).
+
+p( [ b | X ] ) :-  p( X ).
+
+:- topl p/1.
+
+% Try this with: ?- p( A ).  and with  ?- p( [a, b, a | _ ] ).

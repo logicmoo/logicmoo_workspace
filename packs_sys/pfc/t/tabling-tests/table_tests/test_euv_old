@@ -1,0 +1,7 @@
+test(a,negative_loops(dependent))
+test(b,negative_loops(dependent))
+test(c,negative_loops(dependent))
+test(c,radial_restraint)
+test(d,negative_loops(dependent))
+test(d,unsafe_negation)
+test_win_1(negative_loops(dependent))

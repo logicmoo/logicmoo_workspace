@@ -1,0 +1,15 @@
+
+/* Simple test for tabling.  A table is created sequentially, using
+dynamic code, then after the table is completed, threads read from the
+table concurrentl N times. This tests concurrent reads as well as
+concurrent tabletry. Threads are sharing a table, but this shouldn't
+matter for now. */
+:- thread_shared num_is/1.
+:- dynamic num_is/1.
+
+:- load_dyn(tableread_dyn1).
+
+:- assert((concurr_initialize(tableread(N,_)):- 
+		retractall(num_is(_)),
+		assert(num_is(N)),
+		(tableread_table(_),fail;true))).

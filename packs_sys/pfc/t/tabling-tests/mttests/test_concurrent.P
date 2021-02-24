@@ -1,0 +1,157 @@
+
+/* This is the main Prolog testing file.  Each concurrent test should
+start with a call to test_concurrent_goal/1 if the number of threads
+is set to be greater than 1, and gen_result/1 if the number of threads
+is set to 1.  Each predicate performs a sequential initialization, a
+possibly concurrent test invoked after a random delay, then a
+sequential finalization.  At the end, each thread should write to an
+output file for comparison.  In the concurrent case, each thread
+writes to a file <File_ThreadId>.  After execution, each of these
+files is compared to a canonical file to see if the execution was
+correct. */
+
+:- import concat_atom/2 from string.
+:- import thread_create/2,
+	  thread_join/2, 
+	  thread_self/1 from thread.
+%:- import mutex_init/1,
+%	  mutex_lock/1,
+%	  mutex_unlock/1 from thread.
+
+:- import mt_srand/0, random_pause/1 from mttestutils.
+:- import numbervars/3 from num_vars.
+:- import write_term/3 from write_term.
+
+:- import copy_term/2,member/2 from basics.
+
+:- dynamic concurr_initialize/1.
+:- dynamic concurr_finish/1.
+
+:- dynamic test_thread_number/1.
+
+/* gentest.sh uses this predicate for testing the MT engine */
+
+test_concurrent_goal(M,File,Goal):- 
+	retractall(test_thread_number(_)),
+	assert(test_thread_number(M)),
+	call_init(Goal),
+	mt_srand,
+%	mutex_init(MUT),
+	make_duplicate_goals(M,test_single(File,Goal,MUT),List),
+	exec_goals(List,Ids),
+	join_list(Ids),
+	call_finish(Goal).
+
+
+exec_goals([],[]).
+exec_goals([Goal|Grest],[Id|Rest]):- 
+	thread_create(Goal,Id),
+	exec_goals(Grest,Rest).
+
+join_list([]).
+join_list([Id|Rest]):- 
+	thread_join(Id,_),
+	join_list(Rest).	
+	
+exec_goals_and_join([],[]).
+exec_goals_and_join([Goal|Grest],[Id|Rest]):- 
+	random_pause(10),
+	thread_create(Goal,Id),
+	thread_join(Id,_Exit),
+	exec_goals_and_join(Grest,Rest).
+
+make_duplicate_goals(0,_Goal,[]):-!.
+make_duplicate_goals(N,Goal,[Goal|Rest]):-
+	N1 is N - 1,
+	make_duplicate_goals(N1,Goal,Rest).
+
+thread_open(File,Mode,Handle):- 
+	thread_self(Id),
+	number_chars(Id,L),
+	atom_chars(Atom_id,L),
+	concat_atom([File,'.',Atom_id],Real_file),
+	open(Real_file,Mode,Handle).
+
+test_single(File,Goal,MUT):- 
+%	mutex_lock(MUT),
+	thread_open(File,write,Handle),	
+%	mutex_unlock(MUT),
+	functor(Goal,_,N),
+	arg(N,Goal,Handle),
+	writeln(calling(Goal)),
+	call(Goal),
+	writeln(finished(Goal)),
+	close(Handle).
+
+gen_result(File,Goal):- 
+	retractall(test_thread_number(_)),
+	assert(test_thread_number(1)),
+	call_init(Goal),
+	open(File,write,Handle),	
+	functor(Goal,_,N),
+	arg(N,Goal,Handle),
+	writeln(calling(Goal)),
+	call(Goal),
+	writeln(finished(Goal)),
+	close(Handle),
+	call_finish(Goal).
+
+call_init(Goal):- 
+	(concurr_initialize(Goal) ; true).
+
+call_finish(Goal):- 
+	(concurr_finish(Goal) ; true).
+
+%----------------------------------
+% writes variables as A,B,C, ...
+%----------------------------------
+nv_writeln(Str,Term):- 
+	\+ \+ (	numbervars(Term,0,_),
+		write_term(Str,Term,[numbervars(true)]) ),
+	nl(Str).
+
+
+%----------------------------------
+% Used to iterated  tabled calls
+%----------------------------------
+
+table_loop(N,Call):- 
+	(call(Call),fail ; true),
+	table_loop_1(N,Call).
+	
+table_loop_1(0,Call):- !,call(Call).
+table_loop_1(N,Call):- 
+	abolish_table_pred(Call),
+	N > 0,
+	(call(Call),fail ; true),
+	N1 is N - 1,
+	table_loop_1(N1,Call).
+
+% Assumes Call and each call in List is already ts.
+table_loop_list(0,Call,_List):- !,call(Call).
+table_loop_list(N,Call,List):- 
+	N > 0,
+	abolish_table_pred(Call),
+	(call(Call),fail ; true),
+	N1 is N - 1,
+	table_loop_list(N1,Call,List).
+
+
+%----------------------------------
+% Used to create goals with which to construct SCCs.
+%----------------------------------
+
+make_goals(N,Term,GoalList):- 
+	Term =.. [Funct|Args],
+	make_goals(1,N,Funct,Args,GoalList).	
+
+make_goals(N,N,InpF,Arglist,[Goal]):- !,
+	concat_atom([InpF,'_',N],NewF),
+	copy_term(Arglist,Newlist),
+	Goal =..[NewF|Newlist].
+make_goals(M,N,InpF,Arglist,[Goal|Rest]):- 
+	concat_atom([InpF,'_',M],NewF),
+	copy_term(Arglist,Newlist),
+	Goal =..[NewF|Newlist],
+	M1 is M + 1,
+	make_goals(M1,N,InpF,Arglist,Rest).

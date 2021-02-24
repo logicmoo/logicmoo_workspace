@@ -1,0 +1,143 @@
+
+:- import get_answer_dependencies/3, immed_ans_depends_ptr/2,
+          trans_ans_depends_ptr/2 from tables.
+:- import get_residual_sccs/3 from tables.
+:- import get_residual_sccs/5 from tables.
+:- import numbervars/1 from num_vars.
+
+:- set_prolog_flag(max_table_answer_action, bounded_rationality).
+:- set_prolog_flag(max_table_answer_depth, 3).
+:- import explain_u_val/3 from tables.
+
+test:- test(Ans,Reason),writeln(test(Ans,Reason)),fail.
+test:- abolish_all_tables,win(_),fail.
+test:- explain_u_val(win(_),win(1),A),writeln(test_win_1(A)),fail.
+test.
+
+test(_,_):- p1(_),fail.
+test(X,A):- 
+%	      get_residual_sccs(p1(Y),p1(X),Sccs,Deps,Signs),
+%	      writeln(scc(Sccs,Deps,Signs)),
+              explain_u_val(p1(_),p1(X),A).
+
+
+
+
+:- table temp/0.
+temp:- temp1.
+
+:- table temp1/0.
+temp1:- undefined.
+
+%------------------------------
+:- table pb/1.
+pb(f(X)):- pb(X). %writeln(found(f(X))).
+pb(a).
+
+:- import u_not/1 from tables.
+:- table pu/1.
+pu(a):- u_not(p4(_)).
+
+:- table p1/1, p11/1, p2/1, p3/1, p4/1, p5/1, p6/1, p7/1.
+
+p1(X):- p2(X).
+p1(X):- p3(X).
+p1(X):- p11(X).
+%p1(X):- p4(X).
+
+p11(X):- p1(X).
+
+p2(X):- p4(X).
+p2(X):- p5(X).
+
+p3(X):- p6(X).
+p3(X):- p7(X).
+
+p4(a):- undefined.
+p5(b):- undefined.
+p6(c):- bratit(X),X = f(f(f(f(1)))).
+p7(d):- pu(_).
+
+:- table n1/1, n2/1, n3/1,n4/1.
+n1(X):- tnot(n2(X)),tnot(n4(X)).
+n2(X):- tnot(n3(X)).
+n3(_X):- undefined.
+n4(_X):- fail.
+
+:- table m1/1, m2/1, m3/1, m4/1.
+m1(X):- m2(X).
+m2(X):- m1(X).
+m2(X):- m3(X).
+m3(X):- tnot(m4(X)).
+m4(X):- tnot(m3(X)).
+
+:- table bratit/1.
+bratit(f(X)):- bratit(X).
+bratit(2).
+
+time_test(T):- 
+	cputime(Bef),time_win,cputime(Aft),T  is Aft - Bef.
+
+time_win:- win(0),fail.
+time_win:-  get_residual_sccs(win(0),win(0),_Scc).
+
+/*
+No answer lookup: 
+1.125 for 100,000 (win cycle)
+0.6140 for 50,000
+
+Answer Lookup 
+1.53 for 100,000 (win cycle)
+*/
+
+:- table win/1.
+win(X) :- move(X,Y), tnot(win(Y)).
+
+move(1,2).
+move(2,3).
+move(3,4).
+move(4,1).
+
+
+end_of_file.
+
+test1:- abolish_all_tables,p1(_),fail.
+test1:- get_answer_dependencies(p1(_X),p1(a),AnsPtr2),writeln(AnsPtr2).
+
+test1(_):- abolish_all_tables,undefined,fail.
+test1(AnsPtr):- get_answer_dependencies(undefined,undefined,AnsPtr).
+
+test2(X):-       abolish_all_tables,n1(a),fail.
+test2(AnsPtr):-  get_answer_dependencies(n1(a),n1(a),AnsPtr).
+
+test1(_Reason,_Type):-   abolish_all_tables,p4(_X),fail.
+test1(Reason,Type):-   explain_u_val(p4(_X),p4(a),Reason,Type).
+
+test2(_Reason,_Type):-   abolish_all_tables,pu(_X),fail.
+test2(Reason,Type):-   explain_u_val(pu(_X),pu(a),Reason,Type).
+
+test3(_Reason,_Type):-   abolish_all_tables,pb(_X),fail.
+test3(Reason,Type):-   explain_u_val(pb(_X),pb(f(f(f(f(_))))),Reason,Type).
+
+:- import explain_u_val/4 from tables.
+test:- test_scc,fail.
+test:- test_win,fail.
+test:- test_scc1,fail.
+test:- test_scc2.
+
+test_scc:- abolish_all_tables,p1(_),fail.
+test_scc:- get_residual_sccs(p1(_),p1(a),Scc),numbervars(Scc),
+	writeln(test_scc(Scc)).
+
+test_win:- abolish_all_tables,win(0),fail.
+test_win:- get_residual_sccs(win(0),win(0),Scc),writeln(test_win(Scc)).
+
+test_scc1:- abolish_all_tables,n1(a),fail.
+test_scc1:- get_residual_sccs(n1(a),n1(a),Scc),writeln(test_scc1(Scc)).
+
+test_scc2:- abolish_all_tables,m1(a),fail.
+test_scc2:- get_residual_sccs(m1(a),m1(a),Scc,Deps,Signs),
+	writeln(test_scc2_scc(Scc)),
+	writeln(test_scc2_deps(Deps)),
+	writeln(test_scc2_sign(Signs)).
+

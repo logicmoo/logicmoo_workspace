@@ -1,0 +1,15 @@
+%% A very simple example of "new style" coinduction:
+%% p( t ) should succeed for every term t, and give only one answer.
+
+:- coinductive1 p/1.
+
+p( X ) :-  q( X ).
+
+q( X ) :-  r( X ).
+
+r( X ) :-  p( X ).
+
+
+:- topl q/0.
+
+q :-  p( hoho ).

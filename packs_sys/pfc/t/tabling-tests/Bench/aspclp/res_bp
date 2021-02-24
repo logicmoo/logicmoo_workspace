@@ -1,0 +1,7 @@
+block(8890.0).
+color(5710.0).
+hamming(1380.0).
+hamilton(940.0).
+knapsack(1370.0).
+protein(15060.0).
+schur(15600.0).

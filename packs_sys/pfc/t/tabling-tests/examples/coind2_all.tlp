@@ -1,0 +1,18 @@
+%% A simple example of coinduction that also tests the "transparency" of
+%% findall.
+%% p( t, Y ) should instantiate Y to a variant of t for every t.
+
+%% We need once/1, because we are using "old style" coinduction.
+
+:- coinductive0 p/2.
+
+p( _, Y ) :-  findall( T, once( s( T ) ), Bag ),  member( Y, Bag ).
+
+s( X ) :-  r( X ).
+
+r( X ) :-  p( X, _ ).
+
+
+:- topl q/1.
+
+q( X ) :-  p( hoho, X ).

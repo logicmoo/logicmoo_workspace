@@ -1,0 +1,14 @@
+-------
+-------
+answer(p(a,1))
+answer(p(a,2))
+answer(p(a,3))
+answer(p(a,4))
+answer(s(a,1))
+answer(s(a,2))
+answer(s(a,3))
+answer(s(a,4))
+answer(s(b,1))
+answer(s(b,2))
+answer(s(b,3))
+answer(s(b,4))

@@ -1,0 +1,45 @@
+%%% An example that demonstrates the inadequacy of the old version of
+%%% verifier.pl, by Brian W. DeVries.
+%%% The new version seems to run correctly.
+
+:- ['verifier.tlp'].
+
+proposition(p).
+proposition(q).
+
+state(s0).
+state(s1).
+state(s2).
+
+
+holds(s0, p).   holds(s0, q).
+holds(s1, p).
+holds(s2, p).   holds(s2, q).
+
+
+
+% Swap the order of these two transitions and win prizes
+% * If s0 -> s2 (i.e., trans( s0, s2 ) is tried first, the old version of the
+%   verifier looped  for the query q0.  The new version is OK, and gives
+%   a counterexample.
+%   HOWEVER, if s0 -> s1 is tried first, q0 succeeds instead of giving a
+%            counterexample.
+
+trans(s0, s1).
+trans(s0, s2).
+
+trans(s1, s1).
+trans(s2, s2).
+
+
+:- topl q0/0, q1/0, q2/0, q3/0, q4/0, q5/0, q6/0, q7/0.
+
+q0 :- check(s0, ~ (g p ^ g q)).    % should find a counterexample  !!!!
+q1 :- check(s0, ~ (g (p ^ q))).    % should find a counterexample
+q2 :- check(s0, ~ g q).            % should find a counterexample
+q3 :- check(s0, ~ g p).            % should find a counterexample
+q4 :- check(s0,   f p).            % should succeed
+q5 :- check(s0,   f q).            % should succeed
+q6 :- check(s1,   f q).            % should find a counterexample
+q7 :- check(s0,  g ~q).            % should find a counterexample
+

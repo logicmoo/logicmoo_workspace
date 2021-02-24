@@ -1,0 +1,162 @@
+/*
+   Simple tests for trie asserts: More will be added as and
+   when thought of.
+   Author: Prasad Rao
+   Date :  090195
+*/
+  
+
+:- import 	
+	trie_retract/1, 
+	trie_retract_all/1,
+
+	trie_assert/1,
+	trie_retract/1,
+	trie_retract_all/1 from tables.
+
+:- import  member/2 from basics.
+
+:- import 
+	numle/2,
+	same_elems/2,
+	findall_s/3,
+	list_diff/3,
+	delete/3  from utils.
+
+%---------------------------------------
+
+:- export test/0.
+
+%easy aliases
+a(X) :- trie_assert(X).
+r(X) :- trie_retract(X).
+ra(X) :- trie_retract_all(X).
+
+
+
+test:- 
+	write('Trie assert tests:'),
+	test_retract,
+	test_unary,
+	test_binary,
+	test_undef_retract,
+	test_structures,
+	test_cross_product,
+	test_kostis_bug,
+%	count_up_and_down,
+	!,
+	writeln('ok ')
+	;
+	writeln(' fail').
+
+test_retract :-
+	a(p001(1)),
+	a(p001(2)),
+	r(p001(2)),
+	findall(X,p001(X),L),
+	(L = [1] -> true; writeln(retract_failed(L,[1]))).
+
+	
+
+generate_ugly_structure(0, test_3_str(a,b,c)).
+generate_ugly_structure(N,test_3_str(S,S,S)) :-
+	N > 0,
+	N1 is N - 1,
+	generate_ugly_structure(N1,S).
+
+
+test_structures:- 
+	(
+		numle(5,X),
+		generate_ugly_structure(X,S),
+		a(S),
+		fail
+	;
+		true),
+	(
+		numle(5,Y),
+		generate_ugly_structure(Y,S1),
+		(call(S1)->true;writeln('Failure')),
+		fail
+	;
+		true),
+	ra(test_3_str(_,_,_)),
+	\+ test_3_str(_,_,_).
+
+
+test_cross_product:- 
+	(
+		numle(40,X),
+		numle(40,Y),
+		a(w_binary_1(X,Y)),
+		fail
+	;
+		true),
+	(	
+		numle(40,X1),
+		numle(40,Y1),
+		(w_binary_1(X1,Y1)->true;writeln(failed)),
+		fail
+	;
+		true),
+	findall(X2,numle(40,X2),Lt40),
+	findall_s(X3,w_binary_1(X3,27),Lt40),
+	findall_s(X4,w_binary_1(27,X4),Lt40),
+	(
+		numle(40,X5),
+		numle(40,Y5),
+		r(w_binary_1(X5,Y5)),
+		fail
+	;
+		true),
+	findall(a(X6,Y6),w_binary_1(X6,Y6),[]).
+
+
+test_kostis_bug:-
+	trie_assert(kos_foo(X,X,X)),
+	kos_foo(1,1,Y),
+	nonvar(Y).
+
+
+		
+
+test_undef_retract:- r(undefined_pred),!,fail;true.
+
+test_unary:-
+	TestNum = 200,
+	findall(X1,numle(TestNum,X1),L),
+	test_unary_1(TestNum,L),
+	r(w_test_unary(23)),
+	delete(23,L,L1),
+	findall_s(X4,w_test_unary(X4),L1),
+	LList = [1,34,56,91,75,83,199],
+	trl1(LList),
+	list_diff(LList,L1,L2),
+	findall_s(X5,w_test_unary(X5),L2),
+	TestNum1 is TestNum + 5,
+	\+ w_test_unary(TestNum1),
+	a(w_test_unary(_)),
+	w_test_unary(TestNum1),
+	ra(w_test_unary(_)),
+	findall_s(X6,w_test_unary(X6),[]).
+
+test_unary_1(TestNum,L) :- (numle(TestNum,X2),a(w_test_unary(X2)),fail;true),
+	findall_s(X3,w_test_unary(X3),L).
+
+test_binary:-
+	a(w_test_binary(a,1)),
+	a(w_test_binary(b,1)),
+	a(w_test_binary(c,1)),
+	a(w_test_binary(d,2)),
+	a(w_test_binary(e,2)),
+	a(w_test_binary(f,3)),
+	a(w_test_binary(g,3)),
+	(TN3 = 67,numle(TN3,TBN),a(w_test_binary(h,TBN)),fail;true),
+	findall_s(TBN1,w_test_binary(TBN1,_),SetB),
+	ra(w_test_binary(_,1)),
+	list_diff([a,b,c],SetB,SetB1),
+	findall_s(TBN2,w_test_binary(TBN2,_),SetB2),
+	same_elems(SetB1,SetB2).
+
+trl1(X)		:- member(Y,X),r(w_test_unary(Y)),fail;true.
+

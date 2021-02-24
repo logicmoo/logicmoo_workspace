@@ -1,0 +1,28 @@
+----------------------
+----------------------
+----------------------
+----------------------
+----------------------
+----------------------
+----------------------
+----------------------
+details = p(A,B) - subgoals(3) - details([p(C,D) - times_called(1) - answers(5) - [p(3,1) - t,p(3,2) - t,p(2,b) - u,p(1,b) - u,p(1,a) - t] - completed,p(1,b) - times_called(1) - answers(1) - [p(1,b) - u] - completed,p(2,b) - times_called(1) - answers(1) - [p(2,b) - u] - completed]).
+details = p(A,B) - subgoals(3) - details([p(C,D) - times_called(1) - answers(5) - [p(3,1) - t,p(3,2) - t,p(2,b) - u,p(1,b) - u,p(1,a) - t] - completed,p(1,b) - times_called(1) - answers(1) - [p(1,b) - u] - completed,p(2,b) - times_called(1) - answers(1) - [p(2,b) - u] - completed]).
+details = p(A,B) - subgoals(3) - details([p(C,D) - times_called(1) - answers(5) - completed,p(1,b) - times_called(1) - answers(1) - completed,p(2,b) - times_called(1) - answers(1) - completed]).
+results_4(summary = p(A,B) - subgoals(3) - total_times_called(3) - total_answers(7))
+results_5(details = p(A,B) - subgoals(3) - details([p(C,D) - times_called(1) - answers(5) - [p(3,1) - t,p(3,2) - t,p(2,b) - u,p(1,b) - u,p(1,a) - t] - completed,p(1,b) - times_called(1) - answers(1) - [p(1,b) - u] - completed,p(2,b) - times_called(1) - answers(1) - [p(2,b) - u] - completed]))
+results_6(details = p(A,B) - subgoals(3) - details([p(C,D) - times_called(1) - answers(5) - [p(3,1) - t,p(3,2) - t,p(2,b) - u,p(1,b) - u,p(1,a) - t] - completed,p(1,b) - times_called(1) - answers(1) - [p(1,b) - u] - completed,p(2,b) - times_called(1) - answers(1) - [p(2,b) - u] - completed]))
+results_6(summary = p(A,B) - subgoals(3) - total_times_called(3) - total_answers(7))
+summary = p(A,B) - subgoals(3) - total_times_called(3) - total_answers(7).
+summary = p(A,B) - subgoals(3) - total_times_called(3) - total_answers(7).
+summary = p(A,B) - subgoals(3) - total_times_called(3) - total_answers(7).
+summary = p(A,B) - subgoals(3) - total_times_called(3) - total_answers(7).
+summary = p(A,B) - subgoals(3) - total_times_called(3) - total_answers(7).
+test 1 
+test 2 
+test 2a 
+test 3 details = p(A,B) - subgoals(3) - details([p(C,D) - times_called(1) - answers(5) - [p(3,1) - t,p(3,2) - t,p(2,b) - u,p(1,b) - u,p(1,a) - t] - completed,p(1,b) - times_called(1) - answers(1) - [p(1,b) - u] - completed,p(2,b) - times_called(1) - answers(1) - [p(2,b) - u] - completed]).
+test 4 
+test 5 details = p(A,B) - subgoals(3) - details([p(C,D) - times_called(1) - answers(5) - [p(3,1) - t,p(3,2) - t,p(2,b) - u,p(1,b) - u,p(1,a) - t] - completed,p(1,b) - times_called(1) - answers(1) - [p(1,b) - u] - completed,p(2,b) - times_called(1) - answers(1) - [p(2,b) - u] - completed]).
+test 6 
+test 7 caughtit_2(domain_error([summary(<true/False>),details(<subgoals/answers/false>),results(<var>),output(<true/false>)],badopt))

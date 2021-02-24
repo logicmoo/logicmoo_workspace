@@ -1,0 +1,20 @@
+:- compiler_options([spec_off]).
+
+:- [cycle].
+
+time2048:-
+	writeln('--------------------------------------------------------'),
+	cputime(T),
+	time2048(10),cputime(T1),Tot is T1 - T, Tot = Tot, writeln(ok).
+
+time2048(0):-!.
+time2048(N):-
+	abolish_all_tables,
+	(win(1),fail; true),
+	N1 is N - 1,
+%	statistics,
+	time2048(N1).
+
+:- table win/1.
+win(X):- move2k(X,Y),tnot(win(Y)).
+

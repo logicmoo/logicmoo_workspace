@@ -1,0 +1,38 @@
+
+%%
+%%              A <---> B
+%%             ^ ^     /
+%%            /   \   /
+%%           /     v v
+%%          D       C
+%%          |
+%%          |
+%%          v
+%%          E
+%%
+
+edge( a, b ).
+edge( a, c ).
+
+edge( b, a ).
+edge( b, c ).
+
+edge( c, a ).
+
+edge( d, e ).
+edge( d, a ).
+
+
+:- table path/2 .
+
+path( A, B ) :-  edge( A, B ).
+
+path( A, B ) :-  path( A, C ), path( C, B ).
+
+?- path( a, a ).      % expected:  yes
+?- \+ path( a, d ).      % expected:  no
+?- path( c, c ).      % expected:  yes
+?- path( c, b ).      % expected:  yes
+?- \+ path( c, e ).      % expected:  no
+?- path( _X, _Y ).    % expected:  see the picture
+?- findall( [ X, Y ], path( X, Y ), Bag ).

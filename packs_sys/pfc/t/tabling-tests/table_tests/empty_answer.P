@@ -1,0 +1,29 @@
+/* Juliana Freire - March 25th, 96
+ * tests whether the checking for deleted answers works correctly
+ */
+
+:- import get_calls/3, get_returns/3, delete_return/2 from tables.
+
+arc(1,2).
+arc(2,3).
+arc(2,4).
+arc(4,1).
+
+:- table path/2.
+
+path(X,Y) :- arc(X,Y).
+path(X,Y) :- path(X,Z), arc(Z,Y).
+
+test :- 
+	path(_X1,_Y1),
+	path(X,Y), % writeln(path(X,Y)), 
+	(((X=1, Y=2); (X=2, Y=2)) ->
+	    get_calls(path(_,_),Cs,Oskel),
+	    get_returns(Cs,Oskel,Leaf),
+	    delete_return(Cs,Leaf),  % delete first answer
+	    % writeln(deleted(X,Y)),
+	    fail
+	;
+	    fail
+        ).
+test :- writeln('Empty answer OK').

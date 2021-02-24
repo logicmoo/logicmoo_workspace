@@ -1,0 +1,61 @@
+
+:- import close_open_tables/1 from machine.
+:- import xsb_error_get_tag/2 from error_handler.
+
+test:- test_failure,fail.
+test:-  p(7,Y),writeln(on_failure(p(7,Y))),fail.
+test:- catch(test_error,E,(xsb_error_get_tag(E,X),writeln(error_caught(X)))),fail.
+test:- close_open_tables(non_memory_error), fail.
+test:- test_list_failure,fail.
+test:- l(a,Y),writeln(on_failure(l(a,Y))),fail.
+test:- catch(test_list_error,E,(xsb_error_get_tag(E,X),writeln(list_error_caught(X)))),fail.
+test.
+
+test_warn:- 
+	abolish_all_tables,
+	set_prolog_flag(max_table_answer_depth,4),
+	set_prolog_flag(max_table_answer_action,warning),
+	p([1,a],_X).
+
+test_error:- 
+	abolish_all_tables,
+	set_prolog_flag(max_table_answer_depth,4),
+	set_prolog_flag(max_table_answer_action,error),
+	p([4,3],_Y).
+
+test_failure:- 
+	abolish_all_tables,
+	set_prolog_flag(max_table_answer_depth,4),
+	set_prolog_flag(max_table_answer_action,failure),
+	p(7,_Y).
+
+:- table p/2.
+p(Y,f(X)):- p(Y,X).
+p(_,a).
+
+%--------------------------------------------------------
+
+test_list_warn:- 
+	abolish_all_tables,
+	set_prolog_flag(max_table_answer_list_depth,4),
+	set_prolog_flag(max_table_answer_list_action,warning),
+	l(a,_X).
+
+test_list_error:- 
+	abolish_all_tables,
+	set_prolog_flag(max_table_answer_list_depth,4),
+	set_prolog_flag(max_table_answer_list_action,error),
+	l(a,_Y).
+
+test_list_failure:- 
+	abolish_all_tables,
+	set_prolog_flag(max_table_answer_list_depth,4),
+	set_prolog_flag(max_table_answer_list_action,failure),
+	l(a,_X).
+
+:- table l/2.
+l(Y,[Y|X]):- l(Y,X).
+l(Y,[Y]).
+
+
+

@@ -1,0 +1,26 @@
+
+/* This test considers concurrent ts table creation and completion.
+Answers are returned in the simplest manner */
+:- import for/3 from basics.
+
+:- import random_pause/1 from mttestutils.
+
+:- thread_shared num_is/1.
+:- dynamic num_is/1.
+
+:- assert((concurr_initialize(tablewrite(N,_)):- 
+		retractall(num_is(_)),
+		assert(num_is(N)))).
+
+tablewrite(N,Str):-	
+	num_is(N),
+	table_loop(100,table_call_a(N,X)),
+	writeln(Str,X),
+	fail.
+tablewrite(_,_).
+
+:- table table_call_a/2.
+
+table_call_a(N,X):- 
+	random_pause(100),
+	for(X,1,N).

@@ -1,0 +1,66 @@
+:- compiler_options([xpp_on,ciao_directives]).
+
+#include "thread_defs_xsb.h"
+
+:- export random_pause/1, mt_random/3, mt_random/1, mt_srand/0, for/3.
+
+:- import mt_random_request/3 from machine.
+
+:- comment(random_pause/1,"This predicate randomly sleeps between 0
+and N units of time, where the unit of time is the time taken to
+execute 1 loop of @tt{bebusy/1}.").
+
+random_pause(N):- 
+	mt_random_interval(N,R),
+	bebusy(R).
+
+%-----------------------------------------------------------------------
+% random(+L, +U, -R) binds R to a random integer in [L,U) when L and U
+% are integers, or to a random floating number in [L,U) otherwise.
+%-----------------------------------------------------------------------
+
+mt_random_interval(Num, R) :-
+	Num1 is 2 * Num,		% linux hack since random is signed.
+	mt_random_request(MT_RANDOM_INTERVAL,Num1,R).
+
+mt_srand:- 
+	mt_random_request(INIT_MT_RANDOM,_,_).
+
+mt_random(Num):- 
+	mt_random_request(MT_RANDOM,Num,_).
+	
+:- comment(mt_bebusy/1, "This predicate is used to allow pausing for
+periods of time shorter than supported by the system call sleep/1.
+machine_dependent_factor/1 is scaled to the number of iterations
+required for 1 milliseconds of cputime to elapse (on my machine).  It
+cannot support exact timings, of course, but may be useful for varying
+thread testing.").
+
+machine_dependent_factor(2000).
+
+bebusy(0):- !.
+bebusy(N):- 
+	machine_dependent_factor(Factor),
+	bebusy_1(Factor),
+	N1 is N - 1,
+	bebusy(N1).
+
+bebusy_1(0):- !.
+bebusy_1(N):- 
+	N1 is N - 1,
+	bebusy_1(N1).
+
+
+%%% for(?I,+B1,+B2) nondeterministically binds I to all integer values
+%%% from B1 to B2.  B1 and B2 must be integers, but either may be larger.
+for(I,B1,B2) :-
+	(B1 =< B2
+	 ->	forup(I,B1,B2)
+	 ;	fordown(I,B1,B2)
+	).
+
+forup(L,L,H) :- L =< H.
+forup(I,L,H) :- L < H, L1 is L+1, forup(I,L1,H).
+
+fordown(H,H,L) :- H >= L.
+fordown(I,H,L) :- H > L, H1 is H-1, fordown(I,H1,L).

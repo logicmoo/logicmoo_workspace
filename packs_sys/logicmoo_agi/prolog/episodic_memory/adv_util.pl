@@ -241,9 +241,10 @@ must_output_state(S0):- quietly(check4bugs(output, S0)).
 
 mw_numbervars(G, S, E):- numbervars(G, S, E, [attvar(skip)]).
 
-:- module_transparent(apply_state//3).
+:- module_transparent(apply_state//4).
 :- meta_predicate(apply_state(1, *, +, -)).
 :- meta_predicate(apply_state(1, *, +, -, +, -)).
+
 
 apply_state(Z, Goal, S0, S2, DCG0, DCG2):-
   DCG0=S0,
@@ -252,8 +253,7 @@ apply_state(Z, Goal, S0, S2, DCG0, DCG2):-
 
 rapply_state(Z, S0, S2, Goal):- apply_state(Z, Goal, S0, S2).
 
-:- module_transparent(apply_state//1).
-%:- meta_predicate(apply_state(Z, //, +, -)).
+:- module_transparent(apply_state//2).
 
 apply_state(_, _NonGoal, S0, _S2) :- xnotrace(must_input_state(S0)), fail.
 apply_state(_, NonGoal, S0, S2) :- \+ callable(NonGoal), !, trace, S0=S2.
@@ -301,13 +301,17 @@ apply_state(Z, Goal, S0, S2) :- is_state_ignorer(Goal), !, call_z(Z, Goal), S0=S
 apply_state(Z, Goal, S0, S2) :- is_state_getter(Goal), !, call_z(Z, call(Goal, S0)), S0=S2.
 apply_state(Z, sg(Goal), S0, S2) :- !, call_z(Z, call(Goal, S0)), S0 = S2.
 apply_state(Z, Goal, S0, S2) :- is_state_setter(Goal), !, call_z(Z, call(Goal, S0, S2)), !, xnotrace(must_output_state(S2)).
-apply_state(Z, Meta, S0, S2) :- is_state_meta(Meta, N), length(Left, N), Meta univ_safe [F|MetaL], !,
+apply_state(Z, Meta, S0, S2) :- 
+   is_state_meta(Meta, N), 
+   length(Left, N), 
+   Meta univ_safe [F|MetaL], !,
    append(Left, [Goal|MetaR], MetaL),
    append(Left, [apply_state(Z, Goal, S0, S2)|MetaR], MetaC),
    apply(call(F), MetaC),
    xnotrace(must_output_state(S2)).
 
-apply_state(Z, Goal, S0, S2) :- call_z(Z, call(Goal, S0, S2)), !, xnotrace(must_output_state(S2)).
+apply_state(Z, Goal, S0, S2) :- 
+   call_z(Z, call(Goal, S0, S2)), !, xnotrace(must_output_state(S2)).
 
 % apply_state(Z, Goal, S0, S2) :- xnotrace(append_goal_mw(Goal, [S0, S2], Call)), must_mw1(Call), xnotrace(must_output_state(S2)).
 

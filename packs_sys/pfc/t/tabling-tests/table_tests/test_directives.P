@@ -1,0 +1,81 @@
+
+/* Only test in sequential engine */
+test:- 
+	(xsb_configuration(engine_mode,'multi-threading') -> 
+	    load_dync(test_directives_old),
+	    (prop(X,Y),write(prop(X,Y)),writeln('.'),fail ; true)
+	 ;  test_dirs).
+
+test_dirs:- 
+	(dynamic d1/1),
+	predicate_property(d1(_X),P),
+	write(prop(d1,P)),writeln('.'),fail.
+test_dirs:- 
+	(dynamic d2/1 as incremental),
+	predicate_property(d2(_X),P),
+	write(prop(d2,P)),writeln('.'),fail.
+test_dirs:- 
+	(dynamic d3/1 as opaque),
+	predicate_property(d3(_X),P),
+	write(prop(d3,P)),writeln('.'),fail.
+test_dirs:- 
+	(table t1/1),
+	predicate_property(t1(_X),P),
+	write(prop(t1,P)),writeln('.'),fail.
+test_dirs:- 
+	(table t2/1 as incremental),
+	predicate_property(t2(_X),P),
+	write(prop(t2,P)),writeln('.'),fail.
+tes_dirst:- 
+	(table t3/1 as opaque),
+	predicate_property(t3(_X),P),
+	write(prop(t3,P)),writeln('.'),fail.
+test_dirs:- 
+	(table t4/1 as variant),
+	predicate_property(t4(_X),P),
+	write(prop(t4,P)),writeln('.'),fail.
+test_dirs:- 
+	(table t5/1 as subsumptive),
+	predicate_property(t5(_X),P),
+	write(prop(t5,P)),writeln('.'),fail.
+test_dirs:- 
+	catch( ((table non_tabled/1),
+    	         predicate_property(non_tabled(_X),P),
+	         write(prop(non_tabled,P)),writeln('.')),
+		error(permission_error(_,_,_),_B,_C),
+		(write(prop(non_tabled,caught_permission_error_0)),writeln('.'))),
+	 fail.
+test_dirs:- test_dirs_1.
+test_dirs.
+
+:- table p/1.
+
+p(1).
+
+test_dirs_1:- p(_),fail.
+test_dirs_1:- predicate_property(p(_),Prop),write(prop(p1,Prop)),writeln('.'),fail.
+test_dirs_1:- catch((table p/1 as incremental),error(permission_error(_,_,_),_,_),
+	(write(prop(inc,caught_permission_error_1)),writeln('.'))),fail.
+test_dirs_1:- abolish_table_pred(p/1),fail.
+test_dirs_1:- (table p/1 as incremental),predicate_property(p(_),Prop),
+	write(prop(p2,Prop)),writeln('.'),fail.
+test_dirs_1:- p(_),fail.
+test_dirs_1:- catch((table p/1 as opaque),error(permission_error(_,_,_),_,_),
+	(write(prop(opaque,caught_permission_error_2)),writeln('.'))),fail.
+test_dirs_1:- abolish_table_call(p(_)),fail.
+test_dirs_1:- (table p/1 as opaque),predicate_property(p(_),Prop),
+	write(prop(p3,Prop)),writeln('.'),fail.
+test_dirs_1:- p(_),fail.
+test_dirs_1:- catch((table p/1 as nonincremental),error(permission_error(_,_,_),_,_),
+	(write(prop(opaque,caught_permission_error_3)),writeln('.'))),fail.
+test_dirs_1:- abolish_table_call(p(_)),fail.
+test_dirs_1:- (table p/1 as nonincremental),predicate_property(p(_),Prop),
+	write(prop(p4,Prop)),writeln('.'),fail.
+test_dirs_1:- (dynamic dd/1 as incremental),predicate_property(dd(_),Prop),
+	write(prop(dd1,Prop)),writeln('.'),fail.
+test_dirs_1:- (dynamic dd/1 as opaque),predicate_property(dd(_),Prop),
+	write(prop(dd2,Prop)),writeln('.'),fail.
+test_dirs_1.
+
+
+non_tabled(1).

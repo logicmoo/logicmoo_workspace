@@ -1,0 +1,11 @@
+:- table path/2 .
+
+path( A, B ) :-  edge( A, B ).
+
+path( A, B ) :-  path( A, C ), path( C, B ).
+
+:- support edge/2.
+
+:- load_support 'support.pl'.
+
+?- path( X, Y ).

@@ -1,0 +1,20 @@
+
+/* */
+
+:- table win/2.
+
+test(N,Str):- 
+	win(1,N),
+	writeln(Str,won).
+
+win(A,N):- cycle(A,B,N),tnot(win(B,N)).
+
+cycle(A,B,N):- 
+	integer(A),
+	A > 0,
+	(A < N -> 
+	    B is A + 1
+	  ; (A == N -> (B = 1 ; B = A) ) ).
+
+
+

@@ -1,0 +1,22 @@
+:- compiler_options([spec_off]).
+
+test:- 	  buildlist(100000,_L), writeln(table_as_intern_working).
+
+test_ni:- buildlist_1(20000,_L).
+
+:- table buildlist/2 as intern.
+buildlist(0,[]):- !.
+buildlist(N,[N|T]):- 
+	N1 is N - 1,
+	buildlist(N1,T).
+
+test_1(N):- 
+	  buildlist_1(N,L).
+
+:- table buildlist_1/2.
+buildlist_1(0,[]):- !.
+buildlist_1(N,[N|T]):- 
+	N1 is N - 1,
+	buildlist_1(N1,T).
+
+	  

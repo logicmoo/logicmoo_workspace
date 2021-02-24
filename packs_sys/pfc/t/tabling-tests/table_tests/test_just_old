@@ -1,0 +1,8 @@
+[(not edge(2,1),[(not (2,1) = (2,3),[]),(not (2,1) = (2,2),[]),(not (2,1) = (1,2),[])]),(reach(2,2),_$ref(table)),(not edge(2,1),[(not (2,1) = (2,3),[]),(not (2,1) = (2,2),[]),(not (2,1) = (1,2),[])]),(reach(2,3),_$ref(table)),(not edge(3,1),[(not (3,1) = (2,3),[]),(not (3,1) = (2,2),[]),(not (3,1) = (1,2),[])])]
+[(not edge(3,1),[(not (3,1) = (2,3),[]),(not (3,1) = (2,2),[]),(not (3,1) = (1,2),[])]),(tnot reach(3,A),_$ref(sk_not))]
+[(number(1),[]),(0 is 1 - 1,[])]
+[(occurs(1,toxicDischarge,Squamish),[(river(Squamish),[]),(tnot abby_normal(Squamish),_$ref(tnot))]),(fishPopulationOf(1,Squamish,trout,400),[])]
+[(q,_$ref(table))]
+[(reach(1,2),_$ref(table)),(edge(2,3),[])]
+[(tnot a,_$ref(sk_not))]
+[(tnot q,_$ref(tnot))]

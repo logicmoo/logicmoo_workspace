@@ -1,0 +1,15 @@
+
+%%
+%%              A <---> B
+
+edge( a, b ).
+edge( b, a ).
+
+
+:- table path/2 .
+
+path( A, B ) :-  edge( A, B ).
+
+path( A, B ) :-  path( A, C ), path( C, B ).
+
+?- path( X, Y ).

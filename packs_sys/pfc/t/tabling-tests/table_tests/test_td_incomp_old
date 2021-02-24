@@ -1,0 +1,15 @@
+
+details = p(A,B) - subgoals(6) - details([p(0,foo(a)) - times_called(1) - answers(0) - [] - scc(6),p(1,foo(a)) - times_called(1) - answers(0) - [] - scc(5),p(2,foo(a)) - times_called(1) - answers(0) - [] - scc(4),p(3,foo(a)) - times_called(1) - answers(0) - [] - scc(1),p(4,foo(a)) - times_called(1) - answers(0) - [] - scc(1),p(5,foo(a)) - times_called(2) - answers(0) - [] - scc(1)]).
+q(0, foo(a)) - scc(4,6).
+q(1, foo(a)) - scc(3,5).
+q(2, foo(a)) - scc(2,4).
+q(3, foo(a)) - scc(1,1).
+q(4, foo(a)) - scc(1,1).
+q(5, foo(a)) - scc(1,1).
+r(0,scc(a)) - scc(4,6)
+r(1,scc(a)) - scc(3,5)
+r(2,scc(a)) - scc(2,4)
+r(3,scc(a)) - scc(1,1)
+r(4,scc(a)) - scc(1,1)
+r(5,scc(a)) - scc(1,1)
+summary = p(A,B) - subgoals(6) - total_times_called(7) - total_answers(0).

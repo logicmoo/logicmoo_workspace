@@ -1,0 +1,8 @@
+answer(s(a,1))
+answer(s(a,2))
+answer(s(a,3))
+answer(s(a,4))
+answer2(p(a,1))
+answer2(p(a,2))
+answer2(p(a,3))
+answer2(p(a,4))

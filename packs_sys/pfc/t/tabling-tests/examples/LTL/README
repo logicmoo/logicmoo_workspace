@@ -1,0 +1,154 @@
+--------------------------------------------------------------------------------
+
+NOTE: 1. Each of the examples in this directory has three versions:
+
+           - File whose name ends with ".tlp" are for direct execution in
+             "dra".  They use "verifier.tlp" (see below)
+
+           - Files whose name ends with "_v.pl" include the experimental
+             verifier in pure Prolog (v.pl).  Some of them work, some not:
+             this is work in progress.
+
+           - Other files whose name ends with ".pl" include the translated
+             version of the verifier (i.e., "verifier.pl").  The examples can
+             be executed directly in Prolog, but some queries may loop, and
+             will have to be interrupted by the user.
+
+
+      2. If you want to try the examples directly in your logic programming
+          system (without tabling), then it's best to comment out the
+          directive ":- table tverify_ / 3." in "verifier.pl" after you
+          translate "verifier.clp".
+
+
+
+..........................................................................
+
+This directory includes the following files:
+
+v.pl:
+        This is a straightforward Prolog program that attempts to emulate the
+        functions of "verifier.tlp" with a completely different algorithm, by
+        visiting each node once and appropriately simplifying the LTL formula
+        at each node.  It works on all our examples, but we have no proof of
+        correctness, and the simplification rules probably need some
+        extension.
+
+verifier.clp:
+        A version of "verifier.tlp" (see below) that can be translated to
+        "verifier.pl" by using "../../../coind/translate_colp".
+
+verifier.tlp:
+        A version of Gopal Gupta's elegant "interpreter for Linear Temporal
+        Logic" (more specifically, a program that verifies whether a given
+        LTL formula holds in a given state of a given automaton). It
+        automatically negates the query and produces a counterexample if the
+        query fails.
+
+        The program contains both tabled and coinductive predicates (however,
+        each predicate is either tabled or coinductive, not both). To execute
+        it, just load an example that includes "verifier.tlp" into
+        "dra". (See "../../README" for more information.)
+
+        NOTE: Brian W. DeVries discovered that this program sometimes gives the
+              wrong result. See the example in file "bwd_once_bitten.tlp".
+
+verifier2.tlp:
+        A version of verifier.tlp that does not use assert/retract and
+        negation.  (NOTE: This is just for testing, there is no consistency
+        checking.)
+
+bwd_next_global.tlp:
+bwd_future_and_fail.tlp:
+bwd_once_bitten.tlp:
+        Ingenious examples by Brian W. DeVries that demonstrate two different
+        reasons why the old version of  "verifier.tlp" will not always work
+        correctly.  The layout and comments slightly edited by F.K.
+        The verifier has been modified to accomodate the first two examples.
+        NOTE:
+            The query q0 in bwd_once_bitten.tlp DOES NOT RUN PROPERLY with the
+            current verifier: the result depends on the order of transitions.
+            We suspect this is because the current execution strategy for
+            coinduction is too simplistic.
+
+bwd_next_global_v.tlp:
+bwd_future_and_fail_v.tlp:
+bwd_once_bitten_v.tlp:
+        Versions of the bwd_... examples that run with v.pl.  They seem to
+        run without problems.
+
+consistency_checker.pl:
+        A program that checks whether the definition of an automaton is
+        internally consitent.  Used by the verifier.
+
+looping_prefix.pl:
+        A program that cuts off a prefix suitable for presentation from a
+        path that is a counterexample.  Used by the verifier.
+
+normalize.pl:
+        Simple normalization of LTL expressions, used by the verifier.
+
+operators.pl:
+        Operator declarations, used by the verifier (and the normalizer).
+
+partition_graph.pl:
+        Finds the partitions of a graph. Used by consistency_checker.pl.
+
+coind_example.pl:
+coind_example.tlp:
+coind_example_v.pl:
+        A very simple example for the verifier. Tests proper working of
+        coinduction.
+
+errors.tlp:
+errors.pl:
+        A version of "example3" into which a number of errors have been
+        introduced to test the diagnostics of the verifier.
+
+example.pl:
+example.tlp:
+example_v.tlp:
+        The definition of a simple automaton and some convenient LTL
+        queries.
+
+example2.pl:
+example2.tlp:
+example2_v.tlp:
+        A somewhat more complex example similar to "example".
+
+example3.pl:
+example3.tlp:
+example3_v.tlp:
+        A smaller example.
+
+example4.pl:
+example4.tlp:
+example4_v.tlp:
+        A small example that attempts to catch a possible error in treating
+        conjunctions when one conjunct is true along one path, and the other
+        along another.
+
+simple_example.tlp:
+        A trivial example of a one-state automaton.
+
+small_example.pl:
+small_example.tlp:
+small_example_v.tlp:
+        An even smaller example, good for tracing while troubleshooting the
+        tabling interpreter.
+
+microwave.pl:
+microwave.tlp:
+microwave_v.tlp:
+        Another example in the same spirit.  This one is actually a
+        (somewhat simplified) model of a microwave oven.
+
+microwave2.tlp:
+        A version of microwave.tlp that uses verifier2.tlp instead of
+        verifier.tlp.  Since negation is not allowed, explicit "notholds"
+        facts have been added.
+
+two_loops.tlp:
+        A simple example of an automaton with three states.
+
+--------------------------------------------------------------------------------

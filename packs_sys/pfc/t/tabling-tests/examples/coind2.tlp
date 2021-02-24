@@ -1,0 +1,16 @@
+%% A very simple example of "old-style" coinduction:
+%% p( t ) should succeed for every term t, but the number of answers is
+%% infinite.
+
+:- coinductive0 p/1.
+
+p( X ) :-  q( X ).
+
+q( X ) :-  r( X ).
+
+r( X ) :-  p( X ).
+
+
+:- topl q/0.
+
+q :-  p( hoho ).

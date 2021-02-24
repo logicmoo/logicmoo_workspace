@@ -1,0 +1,43 @@
+
+test:- 
+	(table p1/2 as dynamic),
+	assert((p1(X,Y):- p1(X,Z),e(Z,Y))),
+	assert((p1(X,Y):- e(X,Y))),
+	p1(1,X),writeln(p1(1,X)),fail.
+test:- 
+	(dynamic p2/2 as tabled),
+	assert((p2(X,Y):- p2(X,Z),e(Z,Y))),
+	assert((p2(X,Y):- e(X,Y))),
+	p2(1,X),writeln(p2(1,X)),fail.
+test:- 
+%	(predicate_property(p2(_,_),P),writeln(P),fail ; true),
+	assert((p3(X,Y):- p3(X,Z),e(Z,Y))),
+	assert((p3(X,Y):- e(X,Y))),
+	p3(1,X),writeln(p3(1,X)),fail.
+test:- 
+%	(predicate_property(p2(_,_),P),writeln(P),fail ; true),
+	assert((p4(X,Y):- p4(X,Z),e(Z,Y))),
+	assert((p4(X,Y):- e(X,Y))),
+	p4(1,X),writeln(p4(1,X)),fail.
+
+% test some error conditions.
+test:- 	catch((dynamic [a,b]),error(domain_error(_,_),context(_,_)),writeln(caught_domain_error)),fail.
+test:- 	
+	catch((dynamic X),error(instantiation_error,context(_,_)),
+	      writeln(caught_instantiation_error_1)),
+	fail.
+test:- 	
+	catch((dynamic X,Y),error(instantiation_error,context(_,_)),
+	      writeln(caught_instantiation_error_2)),
+	fail.
+test:- 	
+	catch((dynamic 1),error(type_error(_,_),context(_,_)),
+	      writeln(caught_callable_error)),
+	fail.
+test.
+
+e(1,2).
+e(1,3).
+
+:- dynamic p3/2 as tabled.
+:- table p4/2 as dyn.

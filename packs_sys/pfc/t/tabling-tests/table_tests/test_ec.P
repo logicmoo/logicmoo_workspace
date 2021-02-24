@@ -1,0 +1,96 @@
+:- compiler_options([spec_off]).
+%?- set_prolog_flag(ctrace,on).
+%:- import get_answer_number/2 from tables.
+:- import conset/2, coninc/2 from gensym.
+
+max(X,Y,Z):- X > Y -> Z = X ; Z = Y.
+
+%-----------
+
+:- table zeno(max/3-0).
+
+zeno(0.5):- conset('_$zeno',1).
+zeno(X):- 
+	zeno(Y),
+	X is Y + 0.5*(1 - Y),
+	coninc('_$zeno',New),
+	writeln(zeno(New,X)).
+
+%-----------
+
+:- table zeno_1(max/3-0) as approximate(use_first(10)).
+
+zeno_1(0.5):- conset('_$zeno_1',1).
+zeno_1(X):- 
+	zeno_1(Y),
+	X is Y + 0.5*(1 - Y),
+	coninc('_$zeno_1',New),
+	writeln(zeno_1(New,X)).
+
+%-----------
+
+:- table zeno_2(max/3-0) as approximate(epsilon(0.0005)).
+
+zeno_2(0.5):- conset('_$zeno_2',1).
+zeno_2(X):- 
+	zeno_2(Y),
+	X is Y + 0.5*(1 - Y),
+	coninc('_$zeno_2',New),
+	writeln(zeno_2(New,X)).
+
+%-----------
+
+:- table p/1  as approximate(use_first(10)).
+%:- table p/1.
+p(s(X)):- p(X).
+p(0).
+
+
+%-----------
+% tests fix of a compiler bug.
+:- table zeno_3(_,max/3-0) as approximate(use_first(10)).
+
+zeno_3(_,0.5):- conset('_$zeno_3',1).
+zeno_3(A,X):- 
+	zeno_3(A,Y),
+	X is Y + 0.5*(1 - Y),
+	coninc('_$zeno_3',New),
+	writeln(zeno_3(A,New,X)).
+
+
+%-----------
+% tests a different path in the compiler
+
+:- table b/2, c/2.
+:- table a/2 as approximate(use_first(2)).
+
+a(X,Y):- b(X,Y).
+a(a1,a2).
+
+b(X,Y):- c(X,Y).
+b(b1,b2).
+
+c(X,Y):- a(X,Y).
+c(c1,c2).
+
+%-----------
+/* TLS: abolishing */
+
+test:- p(_X),fail.
+test:- abolish_all_tables,fail.
+test:- zeno(_X),fail.
+test:- abolish_all_tables,fail.
+test:- zeno_1(_X),fail.
+test:- abolish_all_tables,fail.
+test:- zeno_2(_X),fail.
+test:- abolish_all_tables,fail.
+test:- zeno_3(a,_X),fail.
+test:- abolish_all_tables,fail.
+test:- a(X,Y),writeln(a(X,Y)),fail.
+test.
+
+
+/*
+:- import early_complete_on_nth/2 from tables.
+:- import get_breg/1 from machine.
+*/

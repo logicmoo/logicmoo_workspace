@@ -1,0 +1,11 @@
+:- table p/2 .
+:- topl p/2 .
+
+p( A, A ).
+p( a, a ).
+p( a, b ).
+
+?-  p( U, V ).   % expected: p( U, U ), p( a, a ), p( a, b )
+?-  p( W, W ).   % expected: p( W, W ), p( a, a )
+?-  p( a, X ).   % expected: p( a, a ), p( a, b )
+?-  p( Y, b ).   % expected: p( b, b ), p( a, b )

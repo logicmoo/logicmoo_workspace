@@ -1,0 +1,244 @@
+Dept = cse, Avgsal = 22250.0000
+Dept = cse, Count = 4
+Dept = cse, Maxsal = 25000
+Dept = cse, Minsal = 20000
+Dept = cse, SalList = [20000,22000,22000,25000]
+Dept = cse, SalList(reduce) = [20000,22000,22000,25000]
+Dept = cse, Sumsal = 89000
+Dept = lin, Avgsal = 36000.0000
+Dept = lin, Count = 2
+Dept = lin, Maxsal = 51000
+Dept = lin, Minsal = 21000
+Dept = lin, SalList = [21000,51000]
+Dept = lin, SalList(reduce) = [21000,51000]
+Dept = lin, Sumsal = 72000
+I = 1, Val = false
+I = 1, Val = true
+I = 2, Val = top
+I = 3, Val = false
+I = 3, Val = true
+I = 4, Val = top
+Node = 0, NumTargs = 5
+Node = 1, NumTargs = 5
+Node = 10, NumTargs = 5
+Node = 11, NumTargs = 5
+Node = 12, NumTargs = 5
+Node = 13, NumTargs = 5
+Node = 14, NumTargs = 5
+Node = 15, NumTargs = 5
+Node = 16, NumTargs = 5
+Node = 17, NumTargs = 5
+Node = 18, NumTargs = 5
+Node = 19, NumTargs = 5
+Node = 2, NumTargs = 5
+Node = 20, NumTargs = 5
+Node = 21, NumTargs = 5
+Node = 22, NumTargs = 5
+Node = 23, NumTargs = 5
+Node = 24, NumTargs = 5
+Node = 25, NumTargs = 5
+Node = 26, NumTargs = 5
+Node = 27, NumTargs = 5
+Node = 28, NumTargs = 5
+Node = 29, NumTargs = 5
+Node = 3, NumTargs = 5
+Node = 30, NumTargs = 5
+Node = 31, NumTargs = 5
+Node = 32, NumTargs = 5
+Node = 33, NumTargs = 5
+Node = 34, NumTargs = 5
+Node = 35, NumTargs = 5
+Node = 36, NumTargs = 5
+Node = 37, NumTargs = 5
+Node = 38, NumTargs = 5
+Node = 39, NumTargs = 5
+Node = 4, NumTargs = 5
+Node = 40, NumTargs = 5
+Node = 41, NumTargs = 5
+Node = 42, NumTargs = 5
+Node = 43, NumTargs = 5
+Node = 44, NumTargs = 5
+Node = 45, NumTargs = 5
+Node = 46, NumTargs = 5
+Node = 47, NumTargs = 5
+Node = 48, NumTargs = 5
+Node = 49, NumTargs = 5
+Node = 5, NumTargs = 5
+Node = 50, NumTargs = 5
+Node = 51, NumTargs = 5
+Node = 52, NumTargs = 5
+Node = 53, NumTargs = 5
+Node = 54, NumTargs = 5
+Node = 55, NumTargs = 5
+Node = 56, NumTargs = 5
+Node = 57, NumTargs = 5
+Node = 58, NumTargs = 5
+Node = 59, NumTargs = 5
+Node = 6, NumTargs = 5
+Node = 60, NumTargs = 5
+Node = 61, NumTargs = 5
+Node = 62, NumTargs = 5
+Node = 63, NumTargs = 5
+Node = 64, NumTargs = 5
+Node = 65, NumTargs = 5
+Node = 66, NumTargs = 5
+Node = 67, NumTargs = 5
+Node = 68, NumTargs = 5
+Node = 69, NumTargs = 5
+Node = 7, NumTargs = 5
+Node = 70, NumTargs = 5
+Node = 71, NumTargs = 5
+Node = 72, NumTargs = 5
+Node = 73, NumTargs = 5
+Node = 74, NumTargs = 5
+Node = 75, NumTargs = 5
+Node = 76, NumTargs = 5
+Node = 77, NumTargs = 5
+Node = 78, NumTargs = 5
+Node = 79, NumTargs = 5
+Node = 8, NumTargs = 5
+Node = 80, NumTargs = 5
+Node = 81, NumTargs = 5
+Node = 82, NumTargs = 5
+Node = 83, NumTargs = 5
+Node = 84, NumTargs = 5
+Node = 85, NumTargs = 5
+Node = 86, NumTargs = 5
+Node = 87, NumTargs = 5
+Node = 88, NumTargs = 5
+Node = 89, NumTargs = 5
+Node = 9, NumTargs = 5
+Node = 90, NumTargs = 5
+Node = 91, NumTargs = 5
+Node = 92, NumTargs = 5
+Node = 93, NumTargs = 5
+Node = 94, NumTargs = 5
+Node = 95, NumTargs = 5
+Node = 96, NumTargs = 5
+Node = 97, NumTargs = 5
+Node = 98, NumTargs = 5
+Node = 99, NumTargs = 1
+[0,16]
+[11,12]
+[12,22]
+[13,28]
+[14,2]
+[15,12]
+[16,14]
+[17,10]
+[18,8]
+[19,6]
+[20,14]
+[21,4]
+[22,12]
+[23,10]
+[24,8]
+[25,8]
+[26,14]
+[27,10]
+[29,12]
+[3,6]
+[30,6]
+[31,20]
+[32,14]
+[33,6]
+[34,14]
+[35,12]
+[36,14]
+[37,6]
+[38,12]
+[39,16]
+[40,10]
+[41,8]
+[42,16]
+[43,10]
+[44,14]
+[45,8]
+[46,8]
+[47,14]
+[48,8]
+[49,14]
+[50,18]
+[51,10]
+[52,10]
+[53,12]
+[54,16]
+[55,12]
+[56,8]
+[57,16]
+[58,18]
+[59,14]
+[60,16]
+[61,10]
+[62,12]
+[63,14]
+[64,12]
+[65,10]
+[66,22]
+[67,12]
+[68,12]
+[69,14]
+[7,12]
+[70,14]
+[71,10]
+[72,26]
+[73,10]
+[74,12]
+[75,12]
+[76,16]
+[77,14]
+[78,16]
+[79,12]
+[80,16]
+[81,22]
+[82,12]
+[83,14]
+[84,16]
+[85,12]
+[86,14]
+[87,14]
+[88,16]
+[89,16]
+[90,16]
+[91,18]
+[92,16]
+[93,14]
+[94,14]
+[95,16]
+[96,16]
+[97,18]
+[98,14]
+[99,15]
+[[],[a,b,c,d],100000]
+[[a,b,c,d],81000]
+[[a,b,c,d],[],65610]
+[[a,b,c],[d],72900]
+[[a,b],[c,d],81000]
+[[a],[b,c,d],90000]
+[place(p1,1),place(p2,2),place(p3,3)]
+[place(p1,2),place(p2,1),place(p3,3)]
+[place(p1,2),place(p2,1),place(p3,omega)]
+[place(p1,2),place(p2,2),place(p3,omega)]
+filterMax(salary(cse),25000)
+filterMax(salary(lin),51000)
+filterMin(salary(cse),20000)
+filterMin(salary(lin),21000)
+fmax(p(a,A),1)
+fmax(p(a,b),3)
+fmax(p(a,b),3)
+fmax(p(a,c),2)
+fmax(p(a,c),2)
+fmax(p(b,c),3)
+fpo2(A,A)
+fpo2(a,a)
+fpo2(b,c)
+p([A,B|C],[D|E])
+p([a],[c,d])
+p(a,A)
+po1_1(a,b,p(f(1),g(A)))
+po1_1(a,b,p(f(b),g(b)))
+po1_2(a,c,p(f(2),g(2)))
+po1_2(a,c,p(f(c),g(c)))
+po1_3(a,c,p(f(2),g(2)))
+po1_3(a,c,p(f(c),g(c)))
+po1_3(b,c,p(f(A),g(2)))

@@ -1,0 +1,141 @@
+%% A parser and denotational interpreter for a small Pascal-like language,
+%% by Gopal Gupta.
+
+% Slightly adapted by F.K., with almost no changes to the original style.
+% Added a few comments, renamed some predicates, fixed a couple of minor errors.
+% Made multiplication bind more tightly than addition.
+% Made the grammar left-recursive where appropriate, since we have tabling.
+% Removed a cut.
+
+% main: composing syntax and semantics
+
+:- topl main/3.
+
+main(Vala, Valb, Output) :-  p1(Prog),
+	program(P, Prog, []), prog_eval(P, Vala, Valb, Output).
+
+% an example program: z = y ^ x.
+p1([  	z,  :=,  1,  ;,
+	while,  x, >, 0, do,
+	   z,  :=,  z,  *,  y,  ;,
+	   x,  :=,  x,  -, 1, od
+   ]).
+
+
+% Syntax:
+
+:- table express/3, term/3, comd1/3.
+
+program(p(X)) --> comd(X).
+
+comd(X) --> comd1(X).
+comd(comb(X,Y)) --> comd1(X),[;],comd(Y).
+
+comd1(assign(I,E)) --> id(I),[:=],express(E).
+comd1(ce(B,Y,Z)) --> [if],bool(B),[then],comd(Y),[else],comd(Z).
+comd1(while(B, C))  --> [while], bool(B), [do], comd(C), [od].
+
+factor(id(X)) --> id(X).
+factor(num(X)) --> n(X).
+factor(e(X)) --> ['('],express(X),[')'].
+
+express(X) --> term(X).
+express(add(X,Y)) --> express(X),[+],term(Y).
+express(sub(X,Y)) --> express(X),[-],term(Y).
+
+term(X) --> factor(X).
+term(multi(X,Y)) --> term(X),[*],factor(Y).
+
+bool(equal(X,Y)) --> express(X),[=],express(Y).
+bool(greater(X,Y)) --> express(X),[>],express(Y).
+bool(less(X,Y)) --> express(X),[<],express(Y).
+
+% only 4 variables allowed:
+id(w) --> [w].
+id(x) --> [x].
+id(y) --> [y].
+id(z) --> [z].
+
+n(0) --> [0].
+n(1) --> [1].
+n(2) --> [2].
+n(3) --> [3].
+n(4) --> [4].
+n(5) --> [5].
+n(6) --> [6].
+n(7) --> [7].
+n(8) --> [8].
+n(9) --> [9].
+
+
+
+% Semantics:
+
+% assumption: "x" and "y" are input variables, "z" is the output variable.
+prog_eval(p(Comm), Vala, Valb, Output) :-
+	initialize_store(Store),
+	update(x, Vala, Store, Mmidstore),
+	update(y, Valb, Mmidstore, Midstore),
+	command(Comm, Midstore, Newstore),
+	access(z, Newstore, Output).
+
+command(comb(C1, C2), Store, Outstore) :-
+	command(C1, Store, Newstore),
+	command(C2, Newstore, Outstore).
+
+command(while(B, C), Store, Outstore) :-
+	(boolean(B, Store) ->
+            command(C, Store, Newstore),
+            command(while(B, C), Newstore, Outstore)
+        ;Outstore=Store
+        ).
+
+command(ce(B, C1, C2), Store, Outstore) :-
+	(boolean(B, Store) ->
+            command(C1, Store, Outstore)
+        ;command(C2, Store, Outstore)
+        ).
+
+command(assign(I, E), Store, Outstore) :-
+	expression(E, Store, Val),
+	update(I, Val, Store, Outstore).
+
+expression(add(E1, E2), Store, Result) :-
+	expression(E1, Store, Val_E1),
+	expression(E2, Store, Val_E2),
+	Result is Val_E1+Val_E2.
+expression(sub(E1, E2), Store, Result) :-
+	expression(E1, Store, Val_E1),
+	expression(E2, Store, Val_E2),
+	Result is Val_E1-Val_E2.
+expression(multi(E1, E2), Store, Result) :-
+	expression(E1, Store, Val_E1),
+	expression(E2, Store, Val_E2),
+	Result is Val_E1*Val_E2.
+expression(id(X), Store, Result) :-
+	access(X, Store, Result).
+expression(num(X), _, X).
+
+boolean(greater(E1, E2), Store) :-
+	expression(E1, Store, Eval1),
+	expression(E2, Store, Eval2),
+	Eval1 > Eval2.
+boolean(less(E1, E2), Store) :-
+	expression(E1, Store, Eval1),
+	expression(E2, Store, Eval2),
+	Eval1 < Eval2.
+boolean(equal(E1, E2), Store) :-
+	expression(E1, Store, Eval),
+	expression(E2, Store, Eval).
+
+
+% Semantic Algebra of store
+
+initialize_store([(w,0),(x,0),(z,0),(y,0)]).
+
+access(Id, [(Id,Val)|_], Val).
+access(Id, [_|R], Val) :- access(Id,R,Val).
+
+update(Id,NewV,[(Id,_)|R],[(Id,NewV)|R]).
+update(Id,NewV,[P|R],[P|R1]) :- update(Id,NewV,R,R1).
+%-------------------------------------------------------------------------------

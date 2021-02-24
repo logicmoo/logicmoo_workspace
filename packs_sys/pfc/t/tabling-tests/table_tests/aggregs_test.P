@@ -1,0 +1,281 @@
+%:- import start_forest_view/1 from tables.
+%?- start_forest_view(userout).
+
+:- import bagReduce/4, bagPO/3, bagPOv/2, bagOf/2, 
+	bagMin/2, bagMax/2, bagSum/2, bagCount/2, bagAvg/2, bagPO/4,
+	filterReduce/4, filterPO/3, filterPO/2, filterPOA/4,
+	filterMin/2, filterMax/2 from aggregs.
+:- import subsumes_chk/2,variant/2 from subsumes.
+:- import numbervars/3, numbervars/1 from num_vars.
+
+% Don't abstract -- no finite model.
+?- set_prolog_flag(max_table_subgoal_depth,10).
+
+/***********************************************************************/
+:- import abolish_table_info/0 from machine.
+:- import abolish_table_pred/1 from tables.
+:- import member/2 from basics.
+at :- abolish_table_info.
+:- [edge_dag].	% data for testing shortest path
+?- [subsumes].
+
+:- compiler_options([spec_off]).
+
+/* test data and query: test. */
+test :- at,fail.
+test :- 
+	ainterp(app([a,b],[c,d],R),V),
+	writeln([R,V]),fail.
+test :- 
+	ainterp(app(X,Y,[a,b,c,d]),V),
+	writeln([X,Y,V]),fail.
+test :- 
+	bagPO(hi_call,p(X,Y),subsumed),
+	numbervars(p(X,Y),0,_),writeln(p(X,Y)),fail.
+test :- 
+	bagOf(sal(Dept),M), sortbag(M,S),
+	write('Dept'=Dept),write(', '),writeln('SalList'=S),fail.
+test :- 
+	% a funny way to do bagOf, inefficient! and not recommended!
+	bagReduce(sal(Dept),M,cons,[]), sortbag(M,S),
+	write('Dept'=Dept),write(', '), writeln('SalList(reduce)'=S),fail.
+test :- 
+	bagMin(sal(Dept),M),
+	write('Dept'=Dept),write(', '),writeln('Minsal'=M),fail.
+test :- 
+	bagMax(sal(Dept),M),
+	write('Dept'=Dept),write(', '),writeln('Maxsal'=M),fail.
+test :- 
+	bagAvg(sal(Dept),M),
+	write('Dept'=Dept),write(', '),writeln('Avgsal'=M),fail.
+test :- 
+	bagCount(sal(Dept),M),
+	write('Dept'=Dept),write(', '),writeln('Count'=M),fail.
+test :- 
+	bagSum(sal(Dept),M),
+	write('Dept'=Dept),write(', '),writeln('Sumsal'=M),fail.
+test :- 
+	bagPO(tp(I),V,po),
+	write('I'=I),write(', '),writeln('Val'=V),fail.
+% bigger tests.
+/****/
+test :- 
+	bagMin(sp(0,T),Dist), writeln([T,Dist]),fail.
+test :- 
+	bagCount(targsof(X),Count),
+	write('Node'=X),write(', '),writeln('NumTargs'=Count),fail.
+test:- filterReduce(p(a,X),max,neginf,Y),nvarwriteln(fmax(p(a,X),Y)),fail.
+
+test:- 	filterReduce(p(a,b),max,neginf,Y),nvarwriteln(fmax(p(a,b),Y)),fail.
+
+test:- 	filterReduce(p(X,c),max,neginf,Y),nvarwriteln(fmax(p(X,c),Y)),fail.
+
+test:- 	filterPO(po1(a,b),Var,subsumes_chk),nvarwriteln(po1_1(a,b,Var)),fail.
+
+test:- 	filterPO(po1(a,c),Var,subsumes_chk),nvarwriteln(po1_2(a,c,Var)),fail.
+
+test:- filterPO(po1(X,c),Var,subsumes_chk),nvarwriteln(po1_3(X,c,Var)),fail.
+
+test:- filterPO(fpo2(X,Y),aliasPrefer),nvarwriteln(fpo2(X,Y)),fail.
+
+test:- filterMax(salary(Dept),Sal),writeln(filterMax(salary(Dept),Sal)),fail.
+
+test:- filterMin(salary(Dept),Sal),writeln(filterMin(salary(Dept),Sal)),fail.
+
+test:- filterPOA(place,Place,more_general_than,abstract),writeln(Place),fail.
+
+test.
+
+test1:-  bagPO(Y,v(X,Y),Min,(=<)),writeln(bpo1(X,Y,Min)),fail.
+
+test2:-  bagPO(Y,X^v(X,Y),Min,(=<)),writeln(bpo2(X,Y,Min)),fail.
+
+v(a,2).  
+v(b,4).  
+v(_,3).
+
+varlte(v(_,B1),v(_,B2)):- B1 =< B2.
+varlte(B1,B2):- number(B1),number(B2),B1 =< B2.
+
+
+%filterPOA(place,Place,more_general_than,abstract)
+place([place(p1,1),place(p2,2),place(p3,3)]).
+place([place(p1,2),place(p2,1),place(p3,3)]).
+place([place(p1,2),place(p2,1),place(p3,6)]).
+place([place(p1,2),place(p2,2),place(p3,4)]).
+
+more_general_than([],[]).
+more_general_than([place(P,N1)|R1],[place(P,N2)|R2]):- 
+	N2 @=< N1,
+	more_general_than(R1,R2).
+
+abstract([],Answer,Answer):-!.
+abstract(Lists,Answer,NewAnswer):-
+	factor(Lists,Places),
+	abstract_1(Places,Answer,NewAnswer).
+
+factor([],[]).
+factor([[place(P1,N)|L1]|R1],[place(P1,Max)|R2]):-
+	factor_1(R1,N,Rn,Max),
+	(L1 == [] -> Rnew = Rn ; Rnew = [L1|Rn]),
+	factor(Rnew,R2).
+factor([[]|R],R1):- 
+	factor(R,R1).
+	
+factor_1([],Max,[],Max).
+factor_1([[place(_,M)|L1]|R1],N,[L1|Rnew],Max):- 
+	(N @< M -> N1 = M ; N1 = N),
+	factor_1(R1,N1,Rnew,Max).
+factor_1([[]|R],N,R1,Max):- 
+	factor_1(R,N,R1,Max).
+
+abstract_1([],[],[]). 
+abstract_1([place(P,N)|R1],[place(P,Ans)|R2],[place(P,NewAns)|R3]):- 
+	(N @< Ans -> NewAns = omega ; NewAns = Ans),
+	abstract_1(R1,R2,R3).
+
+
+fpo2(a,b).
+fpo2(a,c).
+fpo2(a,a).
+fpo2(b,c).
+fpo2(X,X).
+
+%aliasPrefer(fpo2(X,X),fpo2(Y,Z)):- \+ \+ (X = Y), \+ (Y == Z).
+aliasPrefer(fpo2(X,X),fpo2(Y,_Z)):- variant(X,Y).
+	
+nvarwriteln(Term):-
+	numbervars(Term),
+	writeln(Term).
+
+max(X,Y,Y):- \+ number(X),!.
+max(X,Y,X):- \+ number(Y),!.
+max(X,Y,Z):- (X > Y -> Z = X ; Z = Y).
+
+min(X,Y,Y):- \+ number(X),!.
+min(X,Y,X):- \+ number(Y),!.
+min(One,Two,Min):- One > Two -> Min = Two ; Min = One.
+
+sortbag(B,S) :- 
+	findall(p(X,_),member(X,B),L),
+	sort(L,L1),
+	findall(X,member(p(X,_),L1),S).
+
+%%:- table empp/2.	% to eliminate duplicates
+empp(Dept,Sal) :- emp(_,Dept,Sal).
+
+emp(david,cse,20000).
+emp(phil,cse,25000).
+emp(iv,cse,22000).
+emp(sas,cse,22000).
+emp(richard,lin,21000).
+emp(mark,lin,51000).
+
+/* Have to put ALL hilog declarations together.  This is a serious
+problem. */
+
+% to use this table decl, must compile(aggregs,[unfold_off,spec_repr]).
+%%:- table sal(_)(_).
+sal(Dept)(Sal) :- empp(Dept,Sal).
+
+salary(Dept,Sal):- emp(_,Dept,Sal).
+
+po1(a,X,p(f(X),g(X))).
+po1(a,b,p(f(1),g(2))).
+po1(a,b,p(f(1),g(_))).
+po1(a,c,p(f(2),g(2))).
+po1(b,c,p(f(_),g(2))).
+
+:- hilog po.
+po(false,top).
+po(true,top).
+po(bot,top).
+po(bot,true).
+po(bot,false).
+
+/* test data for partial order */
+
+tp(1)(bot).
+tp(1)(false).
+tp(1)(true).
+tp(2)(bot).
+tp(2)(true).
+tp(2)(top).
+tp(3)(false).
+tp(3)(true).
+tp(4)(bot).
+tp(4)(true).
+tp(4)(false).
+tp(4)(top).
+
+/* This defines sp(X,Y) as a set of (some short) distances from X to
+Y.  Then one can find the shortest paths between points 0 and X, e.g.,
+by calling bagMin(sp(0,X),Min). */
+
+sp(X,Y)(D) :- edge(X,Y,D).
+sp(X,Y)(D) :- bagMin(sp(X,Z),D1),edge(Z,Y,D2),D is D1+D2.
+
+targsof(X)(Y) :- edge(X,Y,_).
+
+:- hilog cons.		% for (badly) defining bagOf in terms of bagReduce
+cons(Y,X,[X|Y]).
+
+:- hilog minimum.
+minimum(X,Y,Z) :- X @< Y -> Z=X ; Z=Y.
+:- hilog maximum.
+maximum(X,Y,Z) :- X @< Y -> Z=Y ; Z=X.
+:- hilog sum.
+sum(X,Y,Z) :- Z is X+Y.
+:- hilog successor.
+successor(X,_Y,Z) :- Z is X+1.
+:- hilog sumcount.
+sumcount([S|C],X,[S1|C1]) :- S1 is S+X, C1 is C+1.
+
+/*******************************************************/
+p(a,_X,1).
+p(a,b,2).
+p(a,b,3).
+p(a,c,2).
+p(b,c,3).
+
+%	bagMax(sal(Dept),M),
+
+bag_p(a,_X)(1).
+bag_p(a,b)(2).
+bag_p(a,b)(3).
+bag_p(a,c)(2).
+
+/*******************************************************/
+/* An annotated logic meta-interpreter */
+
+ainterp(G,N) :- bagMax(ainterp(G),N).
+
+ainterp(true)(100000) :- !.
+ainterp((A,B))(N) :- !,
+	ainterp(A,N1),ainterp(B,N2),
+	minimum(N1,N2,N).
+ainterp(A)(N) :- arule(A,B)(N1), ainterp(B,N2), N is floor(N1*N2).
+
+
+arule(app([],L,L),true)(1.0).
+arule(app([X|L1],L2,[X|L3]),app(L1,L2,L3))(0.9).
+
+arule(a,true)(1.0).
+arule(a,true)(0.5).
+arule(b,(a,c))(0.9).
+arule(c,true)(0.5).
+arule(c,(b,a))(0.4).
+
+% to use bagPOv to get lubs by subsumption.
+:- hilog subsumed.
+subsumed(X,Y) :- subsumes_chk(Y,X).
+
+p(a,b).
+p([a],[c,d]).
+p([a,b,c],[c,d,e,f]).
+p(a,_X).
+p([_,_|_],[_|_]).
+
+:- hilog hi_call.
+hi_call(X) :- call(X).
+

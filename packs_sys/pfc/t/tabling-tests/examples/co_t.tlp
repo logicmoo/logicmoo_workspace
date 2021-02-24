@@ -1,0 +1,48 @@
+
+
+
+:- use_module(library(dra)).
+:- use_module(library(coinduction)).
+
+%% A simple example of a predicate that is both coinductive and tabled.
+
+% A number.
+num( 0 ).
+num( s( N ) ) :-  num( N ).
+
+% A stream of numbers.
+:- coinductive stream/1 .
+
+stream( [ H | T ] ) :-  num( H ),  stream( T ).
+
+
+% Drop some "occurrence" of arg1 from arg2, yielding arg3.
+% ("Occurrence" of X = something unifiable with X.)
+
+:- table drop/3.
+
+drop( H, [ H | T ] , T  ).
+drop( H, [ _ | T ] , T1 ) :-  drop( H, T, T1 ).
+
+
+% Are there infinitely many "occurrences" of arg1 in arg2?
+% We table this in order to avoid generating an infinite number of semantically
+% equivalent results on failure.
+
+:- coinductive comember/2 .
+
+
+comember( X, L ) :-  drop( X, L, L1 ),  comember( X, L1 ).
+
+:- table      comember/2 .
+
+
+% Queries:  (CAUTION: Eclipse loops on q2 and q3)
+
+:- topl q1/0, q3/0.
+
+q1:-   X = [ 0, s( 0 ), s( s( 0 ) ) ],      comember( s( 0 ), X ).         % no
+
+q2 :-  X = [ 0, s( 0 ), s( s( 0 ) ) | X ],  comember( s( 0 ), X ).         % yes
+
+q3 :-  \+ q2.                                                              % no

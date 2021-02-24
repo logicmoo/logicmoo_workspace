@@ -1,0 +1,5 @@
+unif_gg([true,true])
+unif_gv([true,false])
+unif_gv([true,true])
+var_gg([true,true])
+var_gv([true,false])

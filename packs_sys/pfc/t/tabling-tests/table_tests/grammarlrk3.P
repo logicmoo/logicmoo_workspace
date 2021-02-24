@@ -1,0 +1,150 @@
+%:- import start_forest_view/1 from tables.
+%?- start_forest_view(userout).
+:- set_prolog_flag(max_table_subgoal_depth,200).
+
+/* explore building ``LR(k)'' tables using intern, and using them.
+
+This doesn't quite do it the way I'd like.  It doesn't use the
+indexing capabilities of the tries.
+
+parse with tabling to get a lr(k)-like algorithm.  This passes a
+set of follow-ing strings as the follow set. */
+
+:- import length/2,append/3,member/2 from basics.
+:- import get_calls/3, get_returns/2, trie_assert/1 from tables.
+:- import new_trie/1, delete_trie/1, trie_intern/5, trie_interned/4
+	from intern.
+test :- setup; setup; setup; writeln(ok).
+at :- abolish_all_tables.
+pt(G) :- get_calls(G,C,R),writeln(G),get_returns(C,R),tab(2),writeln(G),fail.
+
+setup :-	% make calls that will be needed
+	at,
+	gencalls([s],[['$','$']]),
+	fail.
+setup :-	% change the calls to be interned
+	retractall(trieFirstKs(_,_,_)),
+	clean_tries,
+	get_calls(firstKs(SF,Follows,Firsts),C,R),
+	list_to_trieId(Follows,FollowTrie),
+	get_returns(C,R),
+	list_to_trieId(Firsts,FirstTrie),
+	trie_assert(trieFirstKs(SF,FollowTrie,FirstTrie)),
+	fail.
+
+:- table gencalls/2.
+gencalls([],_Fols).
+gencalls([Sym|SF],Fols) :-
+	nonterminal(Sym),
+	firstKs(SF,Fols,Folsym),
+	rule(Sym,RB),
+	gencalls(RB,Folsym),
+	gencalls(SF,Fols).
+gencalls([T|SF],Fols) :-
+	\+ nonterminal(T),
+	gencalls(SF,Fols).
+
+:- dynamic list_trieId/2.
+list_to_trieId(List,TrieId) :-
+	(list_trieId(List,TrieId)
+	 ->	true
+	 ;	intern_list(List,TrieId),
+		trie_assert(list_trieId(List,TrieId))
+	).
+
+intern_list(List,TrieId) :-
+	new_trie(TrieId),
+	insert_to_trie(TrieId,List).
+
+insert_to_trie(TrieId,List) :-
+	member(El,List),
+	trie_intern(El,TrieId,_,_,_),
+	fail.
+insert_to_trie(_,_).
+
+clean_tries :-
+	retract(list_trieId(_,TrieId)),
+	delete_trie(TrieId),
+	fail.
+clean_tries.
+
+:- table parse/4.
+parse(Sym,Follows,Str0,Str) :-
+	rule(Sym,RB),
+	parseSF(RB,Follows,Str0,Str),
+	writeln(p((Sym-->RB),Str0,Str)).
+
+parseSF([],Follows,Str0,Str) :- !,Str0=Str,
+	next_str(Follows,Str).
+parseSF([Sym|SF],Follows,Str0,Str) :- 
+	nonterminal(Sym),
+	trieFirstKs(SF,Follows,FollowsSym),
+	parse(Sym,FollowsSym,Str0,Str1),
+	parseSF(SF,Follows,Str1,Str).
+parseSF([Term|SF],Follows,Str0,Str) :- 
+	word(Str0,Term,Str1),
+	parseSF(SF,Follows,Str1,Str).
+
+:- table firstKs/3.  % not nec, but for LR(k) table.
+firstKs(SF,Follows,Firsts) :-
+	findall(First,
+		(member(Follow,Follows),
+		 same_length(Follow,First),
+		 firstK(SF,Follow,First)),
+		Firsts).
+
+next_str(TrieId,Str) :- trie_interned(List,TrieId,_,_),next_strL(List,Str).
+
+next_strL([],_).
+next_strL(['$'|_],S) :- \+ word(S,_,_).  % end of string
+next_strL([Sym|Syms],S) :- word(S,Sym,S1),next_strL(Syms,S1).
+
+
+:- table firstK/3.
+% firstK(SF,Follow,First)
+firstK(_,_,[]).
+firstK([],[S|Follows],[S|Firsts]) :- append(Firsts,_,Follows).
+firstK([NT|SF],Follow,First) :-
+	nonterminal(NT),
+	same_length(Follow,NTFollow),
+	firstK(SF,Follow,NTFollow),
+	rule(NT,Body),
+	firstK(Body,NTFollow,First).
+firstK([T|SF],Follows,[T|Firsts]) :-
+	\+ nonterminal(T),
+	firstK(SF,Follows,Firsts).
+
+same_length([],[]).
+same_length([_|I],[_|O]) :- same_length(I,O).
+
+nonterminal(S) :- rule(S,_),!.
+
+%%| ?- setup.
+%%| ?- list_trieId([['$','$']],IFol),parse(s,IFol,0,14).
+
+/* S -> A B.
+   A -> aA | a.
+   B -> Bb | b.
+*/
+rule(s,[an,bn]).
+rule(an,[a,an]).
+rule(an,[a]).
+rule(bn,[bn,b]).
+rule(bn,[b]).
+
+word(0,a,1).
+word(1,a,2).
+word(2,a,3).
+word(3,a,4).
+word(4,a,5).
+word(5,a,6).
+word(6,a,7).
+word(7,a,8).
+word(8,a,9).
+word(9,a,10).
+word(10,a,11).
+word(11,a,12).
+word(12,b,13).
+word(13,b,14).
+%word(14,'$',15).
+%word(15,'$',16).
