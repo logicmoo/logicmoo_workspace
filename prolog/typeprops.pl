@@ -327,6 +327,12 @@ tlist(T, E) :- type(T, E).
 :- type nlist/2.
 :- meta_predicate nlist(1, ?).
 
+nlist(T, X) :- type(T, X).
+nlist(T, L) :- list(nlist(T), L).
+
+/* Note: this definition could lead to il-formed lists, like [a|b], that is why
+ * we prefer the definition above
+
 nlist(Type, NList) :- nlist_(NList, Type).
 
 nlist_([], _).
@@ -335,6 +341,7 @@ nlist_([X|Xs], T) :-
         nlist_(Xs, T).
 nlist_(X, T) :-
         type(T, X).
+*/
 
 :- type char/1.
 char(A) :- atm(A). % size(A)=1
