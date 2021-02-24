@@ -577,7 +577,8 @@ get_first_user_reason0(_,(M,ax)):-get_source_mfl(M).
 %:- pfc_lib:import(mpred_at_box:defaultAssertMt/1).
 
 :- module_transparent((get_source_mfl)/1).
-get_source_mfl(M):- current_why(M), nonvar(M) , M =mfl4(_VarNameZ,_,_,_).
+get_source_mfl(M):- current_why(M), nonvar(M), M =(mfl4(_VarNameZ,_,_,_),_).
+get_source_mfl(M):- current_why(M), nonvar(M), M =mfl4(_VarNameZ,_,_,_).
 get_source_mfl(mfl4(VarNameZ,M,F,L)):- defaultAssertMt(M), current_source_location(F,L),varnames_load_context(VarNameZ).
 
 get_source_mfl(mfl4(VarNameZ,M,F,L)):- defaultAssertMt(M), current_source_file(F:L),varnames_load_context(VarNameZ).
@@ -1186,13 +1187,13 @@ mpred_ain_cm(MTP,P,AM,SM):- mpred_ain_cm0(MTP,P,AM,SM),
   ((bad_assert_module(AM);bad_assert_module(SM))->(rtrace(mpred_ain_cm0(MTP,_P,_AM,_SM)),break);true).
 % mpred_ain_cm(SM:(==>(AM:P)),P,AM,SM):- SM\==AM, current_predicate(SM:spft/3),!,decl_assertable_module(SM).
 
-mpred_ain_cm0(AM:P,P,AM,SM):- nonvar(P),nonvar(P),decl_assertable_module(AM),guess_pos_source_to(SM),!.
+mpred_ain_cm0(AM:P,P,AM,SM):- nonvar(AM),nonvar(P),decl_assertable_module(AM),guess_pos_source_to(SM),!.
 mpred_ain_cm0(SM:(==>(AM:P)),==>P,AM,SM):- AM==SM,!,decl_assertable_module(AM).
 mpred_ain_cm0(SM:(==>(_:(AM:P :- B))),==>(AM:P :- SM:B),AM,SM):- nonvar(P), decl_assertable_module(AM).
 mpred_ain_cm0(SM:(==>(AM:P)),==>P,AM,AM):- decl_assertable_module(AM),!,decl_assertable_module(SM).
 mpred_ain_cm0((==>(AM:P)),==>P,AM,AM):- decl_assertable_module(AM),!.
 mpred_ain_cm0((==>(P)),==>P,AM,SM):- get_assert_to(AM), guess_pos_source_to(SM),!.
-mpred_ain_cm0(AM:(==>(P)),==>P,AM,AM):- !.
+mpred_ain_cm0(AM:(==>(P)),==>P,AM,AM):- decl_assertable_module(AM),!.
 mpred_ain_cm0(P,P,AM,SM):- get_assert_to(AM), guess_pos_source_to(SM),!.
 
 
@@ -1276,7 +1277,8 @@ trace_if_booted:- true.
 mpred_ain_now5(SM,AM,PIn,S):- % module_sanity_check(SM),
   call_from_module(AM, 
     with_source_module(SM,
-      locally_tl(current_defaultAssertMt(AM), rtrace_if_booted(SM:mpred_ain_now(SM:PIn,S))))).
+      locally_tl(current_defaultAssertMt(AM), 
+         with_current_why(S,rtrace_if_booted(SM:mpred_ain_now(SM:PIn,S)))))).
 
 mpred_ain_now(PIn,S):-
   PIn=P, % must_ex(add_eachRulePreconditional(PIn,P)),  

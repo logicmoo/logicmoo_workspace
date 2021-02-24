@@ -244,6 +244,7 @@ pfc_expects_dialect(pfc,Stream,Was,M):-
    %notrace(M:ensure_loaded(library(pfc_lib))),
    M:use_module(library(pfc_lib)),
    M:use_module(library(dialect/pfc)),
+   M:set_fileAssertMt(M),
    dynamic(Was:'=-=>'/2),
    pfc_operators(M, Ops),
    push_operators(M:Ops, Undo),
