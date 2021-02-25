@@ -9,6 +9,7 @@ pfcVersion(1.8).
 only_support1.
 use_old_names:- fail.
 
+:- meta_predicate(call_SYS(*)).
 :- meta_predicate(sys_assert(:)).
 :- meta_predicate(sys_clause(:,?)).
 :- meta_predicate(sys_clause(:,?,-)).
@@ -47,18 +48,20 @@ bagof_PFC(T,C,L):- bagof(T,C,L)*->true;L=[].
 :- module_transparent('term_expansion_PFC'/2).
 
 is_external_directive(module(_,_)).
+is_external_directive(trace).
 is_external_directive(_:P):- !, is_external_directive(P).
 is_exernal_term(begin_of_file).
 is_exernal_term(end_of_file).
 %term_expansion_PFC((P==>Q),(:- add_PFC(('<-'(Q,P))))).  % speed-up attempt
 term_expansion_PFC(P, _):- is_exernal_term(P), !, fail.
-term_expansion_PFC((:- P),(:- call_PFC(P))):- !, fail, \+ is_external_directive(P).
 term_expansion_PFC((P==>Q),(:- add_PFC((P==>Q)))).
 term_expansion_PFC(('<-'(P,Q)),(:- add_PFC(('<-'(P,Q))))).
 term_expansion_PFC((P<==>Q),(:- add_PFC((P<==>Q)))).
 term_expansion_PFC((RuleName :::: Rule),(:- add_PFC((RuleName :::: Rule)))).
-term_expansion_PFC((==>P),(:- add_PFC(P))).
+term_expansion_PFC('==>'(P),(:- add_PFC(P))).
+term_expansion_PFC('=>'(P),(:- add_PFC(P))).
 term_expansion_PFC(_,_):- \+ prolog_load_context(dialect, pfc), !, fail.
+term_expansion_PFC((:- P),(:- call_PFC(P))):- !, \+ is_external_directive(P).
 term_expansion_PFC(P,(:- add_PFC(P))).
 %   File   : pfccore.pl
 %   Author : Tim Finin, finin@prc.unisys.com
@@ -831,8 +834,9 @@ call_PFC(P) :-
   bt(P,Trigger),
   pfcGetSupport(bt(P,Trigger),S),
   fcEvalLHS(Trigger,S),
-  fail.
-
+  fail. 
+  % keep going ...
+call_PFC(P) :- predicate_property(P, built_in), !, call_SYS(P).
 call_PFC(F) :-
   %= this is probably not advisable due to extreme inefficiency.
   var(F)    ->  pfcFact(F) ;
@@ -1763,12 +1767,12 @@ pfcSelectJustificationNode(Js,Index,Step) :-
       M:export(M:F/A),
    \+ predicate_property(M:H,transparent),
 %    dra_w(M:H),
-   format(user_error,'~N~q.~n',[FM:module_transparent(M:F/A)]),
+   % (format(user_error,'~N~q.~n',[FM:module_transparent(M:F/A)]),
    \+ atom_concat('__aux',_,F), FM:module_transparent(M:F/A)))).
 
 
 :- multifile('term_expansion'/2).
 :- module_transparent('term_expansion'/2).
-term_expansion(I, PosIn, O, PosOut):- nonvar(I), prolog_load_context(dialect, pfc), term_expansion_PFC(I,O), PosOut=PosIn.
+term_expansion(I, PosIn, O, PosOut):- notrace(nonvar(I)), term_expansion_PFC(I,O), PosOut=PosIn.
 
 
