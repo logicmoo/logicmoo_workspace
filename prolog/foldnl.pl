@@ -36,18 +36,21 @@
           [foldnl/4,
            foldnl/5,
            foldnl/6,
-           foldnl/7]).
+           foldnl/7,
+           foldnl/8]).
 
 :- meta_predicate
     foldnl(3, +, +, -),
     foldnl(4, +, +, +, -),
     foldnl(5, +, +, +, +, -),
-    foldnl(6, +, +, +, +, +, -).
+    foldnl(6, +, +, +, +, +, -),
+    foldnl(7, +, +, +, +, +, +, -).
 
 %!  foldnl(:Goal, +NList, +V0, -V).
 %!  foldnl(:Goal, +NList1, +NList2, +V0, -V).
 %!  foldnl(:Goal, +NList1, +NList2, +NList3, +V0, -V).
 %!  foldnl(:Goal, +NList1, +NList2, +NList3, +NList4, +V0, -V).
+%!  foldnl(:Goal, +NList1, +NList2, +NList3, +NList4, +NList5, +V0, -V).
 
 foldnl(Goal, List) -->
     foldnl_(List, Goal).
@@ -96,3 +99,15 @@ foldnl_([H1|T1], [H2|T2], [H3|T3], [H4|T4], Goal) -->
     foldnl_(T1, T2, T3, T4, Goal).
 foldnl_(E1, E2, E3, E4, Goal) -->
     call(Goal, E1, E2, E3, E4).
+
+foldnl(Goal, List1, List2, List3, List4, List5) -->
+    foldnl_(List1, List2, List3, List4, List5, Goal).
+
+foldnl_([], [], [], [], [], _) -->
+    !.
+foldnl_([H1|T1], [H2|T2], [H3|T3], [H4|T4], [H5|T5], Goal) -->
+    !,
+    foldnl_(H1, H2, H3, H4, H5, Goal),
+    foldnl_(T1, T2, T3, T4, T5, Goal).
+foldnl_(E1, E2, E3, E4, E5, Goal) -->
+    call(Goal, E1, E2, E3, E4, E5).

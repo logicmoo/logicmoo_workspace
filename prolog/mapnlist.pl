@@ -36,13 +36,15 @@
           [mapnlist/2,
            mapnlist/3,
            mapnlist/4,
-           mapnlist/5]).
+           mapnlist/5,
+           mapnlist/6]).
 
 :- meta_predicate
     mapnlist(1, ?),
     mapnlist(2, ?, ?),
     mapnlist(3, ?, ?, ?),
-    mapnlist(4, ?, ?, ?, ?).
+    mapnlist(4, ?, ?, ?, ?),
+    mapnlist(5, ?, ?, ?, ?, ?).
 
 mapnlist(Goal, List) :-
     mapnlist_(List, Goal).
@@ -87,3 +89,14 @@ mapnlist_([H1|T1], [H2|T2], [H3|T3], [H4|T4], Goal) :-
     mapnlist_(T1, T2, T3, T4, Goal).
 mapnlist_(E1, E2, E3, E4, Goal) :-
     call(Goal, E1, E2, E3, E4).
+
+mapnlist(Goal, List1, List2, List3, List4, List5) :-
+    mapnlist_(List1, List2, List3, List4, List5, Goal).
+
+mapnlist_([], [], [], [], [], _) :- !.
+mapnlist_([H1|T1], [H2|T2], [H3|T3], [H4|T4], [H5|T5], Goal) :-
+    !,
+    mapnlist_(H1, H2, H3, H4, H5, Goal),
+    mapnlist_(T1, T2, T3, T4, T5, Goal).
+mapnlist_(E1, E2, E3, E4, E5, Goal) :-
+    call(Goal, E1, E2, E3, E4, E5).
