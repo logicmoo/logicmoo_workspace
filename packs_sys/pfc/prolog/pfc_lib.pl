@@ -13,6 +13,7 @@
 :- module(pfc_lib,[]).
 :- set_module(class(library)).
 
+:- if(( false , \+ clause(pfcVersion(_),_))).
 
 :- multifile(user:prolog_load_file/2).
 :- dynamic(user:prolog_load_file/2).      
@@ -906,3 +907,4 @@ system:clause_expansion(I,O):-
 
 :- set_prolog_flag(pfc_booted,true).
 
+:- endif.

@@ -2,15 +2,24 @@
 %   Author : Tim Finin, finin@umbc.edu
 %   Updated: 10/11/87, ...
 %   Purpose: consult system file for ensure
+% :- module(baseKB,[add_PFC/1, add_PFC/2]).
 
-pfcVersion(1.2).
+pfcVersion(1.8).
 
-only_support1:- fail.
-use_old_names.
+only_support1.
+use_old_names:- fail.
 
+:- meta_predicate(sys_assert(:)).
+:- meta_predicate(sys_clause(:,?)).
+:- meta_predicate(sys_clause(:,?,-)).
+:- meta_predicate(sys_asserta(:)).
+:- meta_predicate(sys_assertz(:)).
+:- meta_predicate(sys_retract(:)).
+:- meta_predicate(sys_retractall(:)).
 call_SYS(H):- call(H).
 dynamic_SYS(P):- functor(P,F,A),dynamic(F/A).
-sys_clause(H,B):- clause(H,B).
+sys_clause_0(H,B):- clause(H,B).
+sys_clause(H,B):- predicate_property(H,number_of_clauses(_)), clause(H,B).
 sys_clause(H,B,R):- clause(H,B,R).
 sys_asserta(H):- asserta(H).
 sys_assertz(H):- assertz(H).
@@ -37,12 +46,20 @@ bagof_PFC(T,C,L):- bagof(T,C,L)*->true;L=[].
 :- endif.
 :- module_transparent('term_expansion_PFC'/2).
 
+is_external_directive(module(_,_)).
+is_external_directive(_:P):- !, is_external_directive(P).
+is_exernal_term(begin_of_file).
+is_exernal_term(end_of_file).
 %term_expansion_PFC((P==>Q),(:- add_PFC(('<-'(Q,P))))).  % speed-up attempt
+term_expansion_PFC(P, _):- is_exernal_term(P), !, fail.
+term_expansion_PFC((:- P),(:- call_PFC(P))):- !, fail, \+ is_external_directive(P).
 term_expansion_PFC((P==>Q),(:- add_PFC((P==>Q)))).
 term_expansion_PFC(('<-'(P,Q)),(:- add_PFC(('<-'(P,Q))))).
 term_expansion_PFC((P<==>Q),(:- add_PFC((P<==>Q)))).
 term_expansion_PFC((RuleName :::: Rule),(:- add_PFC((RuleName :::: Rule)))).
 term_expansion_PFC((==>P),(:- add_PFC(P))).
+term_expansion_PFC(_,_):- \+ prolog_load_context(dialect, pfc), !, fail.
+term_expansion_PFC(P,(:- add_PFC(P))).
 %   File   : pfccore.pl
 %   Author : Tim Finin, finin@prc.unisys.com
 %   Updated: 10/11/87, ...
@@ -94,7 +111,7 @@ add(X) :- add_PFC(X).
 
 %= add_PFC(P,S) asserts P into the dataBase with support from S.
 
-add_PFC(P) :-  add_PFC(P,(user,user)).
+add_PFC(P) :- add_PFC(P,(user,user)).
 
 :- if(use_old_names).
 add_PFC(('=>'(P)),S) :- add_PFC(P,S).
@@ -313,7 +330,7 @@ pfcBtPtCombine(Head,Body,Support) :-
   fail.
 pfcBtPtCombine(_,_,_) :- !.
 
-pfcGetTriggerQuick(Trigger) :-  sys_clause(Trigger,true).
+pfcGetTriggerQuick(Trigger) :-  sys_clause_0(Trigger,true).
 
 %=
 %=
@@ -657,12 +674,20 @@ fcpt(Fact,F) :-
 		[F,Body]),
   fcEvalLHS(Body,(Fact,pt(F,Body))),
   fail.
+fcpt(_,_).
 
 %fcpt(Fact,F) :- 
 %  pfcGetTriggerQuick(pt(presently(F),Body)),
 %  fcEvalLHS(Body,(presently(Fact),pt(presently(F),Body))),
 %  fail.
 
+fcnt1(_Fact,F) :-
+  support1(X,_,nt(F,Condition,Body)),
+  Condition,
+  rem_PFC(X,(_,nt(F,Condition,Body))),
+  fail.
+fcnt1(_,_).
+fcnt(Fact,F):- only_support1, !, fcnt1(Fact,F).
 fcnt(_Fact,F) :-
   support3(nt(F,Condition,Body),X,_),
   Condition,
@@ -1135,8 +1160,10 @@ pfcConjoin(C1,C2,(C1,C2)).
 % the database and should not be present in an empty pfc database
 
 pfcDatabaseTerm(support1/3).
+:- if( \+ only_support1 ).
 pfcDatabaseTerm(support2/3).
 pfcDatabaseTerm(support3/3).
+:- endif.
 pfcDatabaseTerm(pt/3).
 pfcDatabaseTerm(bt/3).
 pfcDatabaseTerm(nt/4).
@@ -1550,12 +1577,13 @@ pfcDescendants(P,L) :-
 %=
 
 %= pfcAddSupport(+Fact,+Support)
-
+pfcAddSupport(P,(Fact,Trigger)) :- only_support1, !, sys_assert(support1(P,Fact,Trigger)).
 pfcAddSupport(P,(Fact,Trigger)) :-
   sys_assert(support1(P,Fact,Trigger)),
   sys_assert(support2(Fact,Trigger,P)),
   sys_assert(support3(Trigger,P,Fact)).
 
+pfcGetSupport(P,(Fact,Trigger)) :- only_support1, !, support1(P,Fact,Trigger).
 pfcGetSupport(P,(Fact,Trigger)) :-
    nonvar(P)         -> support1(P,Fact,Trigger) 
    ; nonvar(Fact)    -> support2(Fact,Trigger,P) 
@@ -1565,6 +1593,7 @@ pfcGetSupport(P,(Fact,Trigger)) :-
 
 % There are three of these to try to efficiently handle the cases
 % where some of the arguments are not bound but at least one is.
+pfcRemSupport(P,(Fact,Trigger)) :- only_support1, !, pfcRetractOrWarn(support1(P,Fact,Trigger)).
 
 pfcRemSupport(P,(Fact,Trigger)) :-
   nonvar(P),
@@ -1633,8 +1662,10 @@ pfc_trigger_key(X,X).
 :- thread_local(whymemory_PFC/2).
 
 :- dynamic(support1/3).
+:- if( \+ only_support1 ).
 :- dynamic(support2/3).
 :- dynamic(support3/3).
+:- endif.
 
 pfcWhy :- 
   whymemory_PFC(P,_),
@@ -1732,11 +1763,12 @@ pfcSelectJustificationNode(Js,Index,Step) :-
       M:export(M:F/A),
    \+ predicate_property(M:H,transparent),
 %    dra_w(M:H),
+   format(user_error,'~N~q.~n',[FM:module_transparent(M:F/A)]),
    \+ atom_concat('__aux',_,F), FM:module_transparent(M:F/A)))).
 
 
 :- multifile('term_expansion'/2).
 :- module_transparent('term_expansion'/2).
-term_expansion(I,O):-term_expansion_PFC(I,O).
+term_expansion(I, PosIn, O, PosOut):- nonvar(I), prolog_load_context(dialect, pfc), term_expansion_PFC(I,O), PosOut=PosIn.
 
 

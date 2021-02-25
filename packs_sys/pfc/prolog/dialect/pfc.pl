@@ -81,7 +81,7 @@ pfc_expects_dialect(Dialect):-
   pfc:(prolog_load_context(dialect, Was),
   dialect_input_stream_pfc(Stream),
   pfc_debug(pfc_expects_dialect(Dialect,Stream,Was,M)))),
-  must(pfc_expects_dialect(Dialect,Stream,Was,M)),
+  pfc_expects_dialect(Dialect,Stream,Was,M),
   pfc_debug(state).
 
   
@@ -216,14 +216,14 @@ pfc:setup_dialect:- pfc_expects_dialect(pfc).
    
 
 pfc_operators(M,[
-              op(1200,xfx,(M:(<-))),
-              op(1050,fx,(M:(<-))),  
-              op(1200,xfx,(M:(==>))),
-              op(1050,fx,(M:(==>))),
-              op(300,fy,(M:'-')),
-              op(1200,xfx,(M:('=-=>'))),              
-              op(1200,xfx,(M:(<==>)))
-]).
+%op(300,fy,(M:'-')),
+%op(1200,xfx,(M:('=-=>'))),              
+op(500,fx, M: ('~')),
+op(1050,xfx,M: ('==>')),
+op(1050,xfx,M: ('<==>')),
+op(1050,xfx,M: ('<-')),
+op(1100,fx,M: ('==>')),
+op(1150,xfx,M: ('::::'))]).
 
 other_dialect(Dialect):- Dialect\==pfc.
 
@@ -242,9 +242,10 @@ pfc_expects_dialect(Next,StreamNow,Was,M):- tmp:module_dialect_pfc(Next,StreamBe
 :- system:import(pfc:pfc_expects_dialect/1).
 pfc_expects_dialect(pfc,Stream,Was,M):-
    %notrace(M:ensure_loaded(library(pfc_lib))),
-   M:use_module(library(pfc_lib)),
    M:use_module(library(dialect/pfc)),
-   M:set_fileAssertMt(M),
+   M:ensure_loaded(library('../t/vlibs/pfc_1_8_full')),
+   
+   ((false, \+ clause(pfcVersion(1.8),true))-> (M:use_module(library(pfc_lib)),M:set_fileAssertMt(M));true),     
    dynamic(Was:'=-=>'/2),
    pfc_operators(M, Ops),
    push_operators(M:Ops, Undo),
@@ -305,16 +306,8 @@ user:goal_expansion(In, Out) :-
     pfc_dialect_expansion(In, Out).
 
 
-system:term_expansion(In, PosIn, Out, PosOut) :- 
-  prolog_load_context(dialect, pfc),
-  In == (:- include(system('date_utils.pl'))), 
-  PosIn=PosOut, 
-  expects_dialect(swi),
-  Out = [(:- expects_dialect(swi)),
-         (:- include(system('date_utils.pl'))),
-         (:- expects_dialect(pfc))],!.
 
-system:term_expansion(In, PosIn, Out, PosOut) :- In == end_of_file,
+system:term_expansion(In, PosIn, Out, PosOut) :- notrace(In == end_of_file),
    prolog_load_context(dialect, pfc),
    dialect_input_stream_pfc(Stream),
    prolog_load_context(module, M),
