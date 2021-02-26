@@ -57,7 +57,7 @@ check_assert(MP):- strip_module(MP,M,P), pfcType(P,Type), (Type\=rule(_) -> true
 :- endif.
 */
 :- module_transparent('term_expansion_PFC'/3).
-
+:- use_module(library(dialect/pfc)).
 is_external_directive(module(_,_)).
 is_external_directive(encoding(_)).
 is_external_directive(trace).
@@ -66,10 +66,10 @@ is_exernal_term(end_of_file).
 %term_expansion_PFC('==>'(P,Q),(:- add_PFC(('<-'(Q,P))))).  % speed-up attempt
 term_expansion_PFC(_, P, _):- notrace(var(P)), !, fail.
 term_expansion_PFC(_, P, _):- is_exernal_term(P), !, fail.
-term_expansion_PFC(M, Term,(:- M:add_PFC(Term))):- pfcType(Term,rule(_)), !.
+term_expansion_PFC(M, Term, (:- M:add_PFC(Term))):- pfcType(Term,rule(_)), !.
 term_expansion_PFC(_, _, _):- \+ prolog_load_context(dialect, pfc), !, fail.
-term_expansion_PFC(M, P, _):- \+ pfctmp:module_dialect_pfc(_,_,_,M,_), !, fail, trace, throw(\+ pfctmp:module_dialect_pfc(term_expansion_PFC(M, P, _))), !, fail.
-term_expansion_PFC(M, (:- P),(:- M:call_PFC(P))):- !, \+ is_external_directive(P).
+term_expansion_PFC(M, (:- P), (:- M:call_PFC(P))):- !, \+ is_external_directive(P).
+term_expansion_PFC(M, P, _):- \+ expecting_pfc_dialect, print_message(warn, term_expansion_PFC(M, P, _)), !, fail.
 term_expansion_PFC(M, P, (:- M:add_PFC(P))).
 %   File   : pfccore.pl
 %   Author : Tim Finin, finin@prc.unisys.com
@@ -1795,15 +1795,19 @@ pfcSelectJustificationNode(Js,Index,Step) :-
   nth0(StepNo,Justification,Step).
  
 
-:-source_location(S,_),prolog_load_context(module,FM),
+:- 
+ source_location(S,_),
+ prolog_load_context(module,FM),
  forall(source_file(M:H,S),
   ignore((functor(H,F,A),
    \+ atom_concat('$',_,F),
-      M:export(M:F/A),
+   upcase_atom(F,U), \+ downcase_atom(F,U),
+   M:export(M:F/A),
+   \+ atom_concat('__aux',_,F),
    \+ predicate_property(M:H,transparent),
-%    dra_w(M:H),
-   % (format(user_error,'~N~q.~n',[FM:module_transparent(M:F/A)]),
-   \+ atom_concat('__aux',_,F), FM:module_transparent(M:F/A)))).
+   % dra_w(M:H),
+   % format(user_error,'~N~q.~n',[FM:module_transparent(M:F/A)]),
+   FM:module_transparent(M:F/A)))).
 
 
 %= fcTmsMode is one of {none,local,cycles} and controles the tms alg.
@@ -1813,13 +1817,13 @@ pfcSelectJustificationNode(Js,Index,Step) :-
 :- pfcDefault(pfcSearch(_), pfcSearch(direct)).
 
 
-:- multifile(term_expansion/2).
-:- module_transparent(term_expansion/2).
+:- multifile(system:term_expansion/2).
+:- module_transparent(system:term_expansion/2).
 %:- meta_predicate(term_expansion(:,-)).
-:- export(term_expansion/2).
-term_expansion(MIn, Out):- 
+%:- export(system:term_expansion/2).
+system:term_expansion(MIn, Out):- 
    notrace(strip_module(MIn,MM,In)),
    notrace(nonvar(In)), 
    (MIn==In->prolog_load_context(module, M);MM=M),
-   term_expansion_PFC(M, In,Out).
+   term_expansion_PFC(M,In,Out).
 
