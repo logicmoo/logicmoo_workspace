@@ -1245,8 +1245,7 @@ pfcPrintFacts(P,C) :-
 
 pfcPrintitems([]).
 pfcPrintitems([H|T]) :-
-  numbervars(H,0,_),
-  format("~n  ~q",[H]),
+  \+ \+ (numbervars(H,0,_), format("~n  ~q",[H])),
   pfcPrintitems(T).
 
 pfcClassifyFacts([],[],[],[]).
@@ -1726,7 +1725,11 @@ pfcCommand(N,_,_) :-
 pfcCommand(X,_,_) :-
  format("~n~w is an unrecognized command, enter h. for help.",[X]),
  fail.
-  
+
+why_PFC(P):- 
+  justifications_PFC(P,Js),
+  pfcShowJustifications(P,Js), !.
+
 pfcShowJustifications(P,Js) :-
   format("~nJustifications for ~q:",[P]),
   pfcShowJustification1(Js,1).
