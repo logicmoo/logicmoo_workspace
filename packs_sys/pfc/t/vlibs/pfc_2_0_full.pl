@@ -87,7 +87,7 @@
   mpred_set_default/2,
   mpred_ain/1,mpred_ain/1,mpred_ain/2,
   action_is_undoable/1,
-  mpred_assumption/1,mpred_assumptions/2,mpred_axiom/1,bagof_or_nil/3,bases_union/2,brake/1,build_rhs/3,
+  mpred_assumption/1,mpred_assumptions/2,mpred_axiom/1,bagof_PFC/3,bases_union/2,brake/1,build_rhs/3,
   mpred_BC_CACHE0/2,
   build_neg_test/4,build_rule/3,build_code_test/3,
   build_trigger/4,
@@ -7925,7 +7925,7 @@ is_hidden_pft(_,(why_marked(_),ax)).
 
 
 pp_mask(Type,MM,Mask):-   
-  bagof_or_nil(Mask,lookup_kb(MM,Mask),Nts),
+  bagof_PFC(Mask,lookup_kb(MM,Mask),Nts),
   list_to_set_variant(Nts,NtsSet),!,
   pp_mask_list(Type,MM,NtsSet).
 
@@ -7968,7 +7968,7 @@ pp_db_triggers(MM):-
 pp_db_supports(MM):-
   % temporary hack.
   format("~N~nSupports in [~w]...~n",[MM]),
-  with_exact_kb(MM, bagof_or_nil((P >= S), mpred_get_support(P,S),L)),
+  with_exact_kb(MM, bagof_PFC((P >= S), mpred_get_support(P,S),L)),
   list_to_set_variant(L,LS),
   pp_db_items(LS),!.
 
@@ -8547,8 +8547,8 @@ mpred_descendants(P,L):-
 
 :- meta_predicate(bagof_nr(?,^,*)).
 bagof_nr(T,G,B):- no_repeats(B,(bagof(T,G,B))).
-:- meta_predicate(bagof_or_nil(?,^,-)).
-bagof_or_nil(T,G,B):- (bagof_nr(T,G,B) *-> true; B=[]).
+:- meta_predicate(bagof_PFC(?,^,-)).
+bagof_PFC(T,G,B):- (bagof_nr(T,G,B) *-> true; B=[]).
 
 
 :- meta_predicate(sanity_check(0,0)).
@@ -8675,7 +8675,7 @@ closest_uu(H,P,PP,Result):-
 */
 
 mpred_collect_supports(Tripples):-
-  bagof_or_nil(Tripple, mpred_support_relation(Tripple), Tripples).
+  bagof_PFC(Tripple, mpred_support_relation(Tripple), Tripples).
 
 mpred_support_relation((P,F,T)):- lookup_spft(P,F,T).
 

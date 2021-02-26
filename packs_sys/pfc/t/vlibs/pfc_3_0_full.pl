@@ -133,7 +133,7 @@ import_everywhere(BaseKB):-
 
 tilded_negation.
 
-bagof_or_nil(T,G,L):- bagof(T,G,L)*->true;L=[].
+bagof_PFC(T,G,L):- bagof(T,G,L)*->true;L=[].
 setof_or_nil(T,G,L):- setof(T,G,L)*->true;L=[].
 
 add(X):- pfcAdd(X).
@@ -1709,11 +1709,11 @@ pfcClassifyFacts([H|T],User,[H|Pfc],Rule) :-
 pfcPrintRules :-
   printLine,
   pfcPrintf("Rules:...~n",[]),
-  bagof_or_nil((P==>Q),clause((P==>Q),true),R1),
+  bagof_PFC((P==>Q),clause((P==>Q),true),R1),
   pfcPrintitems(R1),
-  bagof_or_nil((P<==>Q),clause((P<==>Q),true),R2),
+  bagof_PFC((P<==>Q),clause((P<==>Q),true),R2),
   pfcPrintitems(R2),
-  bagof_or_nil((P<-Q),clause((P<-Q),true),R3),
+  bagof_PFC((P<-Q),clause((P<-Q),true),R3),
   pfcPrintitems(R3),
   printLine.
 
@@ -2037,7 +2037,7 @@ pfcChild(P,Q) :-
   pfcType(Trig,trigger),
   pfcChild(P,Trig).
 
-pfcChildren(P,L) :- bagof_or_nil(C,pfcChild(P,C),L).
+pfcChildren(P,L) :- bagof_PFC(C,pfcChild(P,C),L).
 
 % pfcDescendant(P,Q) is true iff P is a justifier for Q.
 
@@ -2050,7 +2050,7 @@ pfcDescendant1(P,Q,Seen) :-
   (P=X ; pfcDescendant1(P,X,[X|Seen])).
   
 pfcDescendants(P,L) :- 
-  bagof_or_nil(Q,pfcDescendant1(P,Q,[]),L).
+  bagof_PFC(Q,pfcDescendant1(P,Q,[]),L).
 
 
 
@@ -2869,7 +2869,7 @@ pp_mask(Type,MMMask):- strip_module(MMMask,MM,Mask),pp_4_mask(Type,MM,Mask,Mask)
 pp_mask(Type,MMMask,Template):- strip_module(MMMask,MM,Mask),pp_4_mask(Type,MM,Mask,Template).
 
 pp_4_mask(Type,MM,Mask,Template):-   
-  bagof_or_nil(Template,Mask^lookup_kb(MM,Mask),Nts),
+  bagof_PFC(Template,Mask^lookup_kb(MM,Mask),Nts),
   list_to_set_variant(Nts,NtsSet),!,
   pp__mask_list(Type,MM,NtsSet).
 
@@ -2917,7 +2917,7 @@ pp_db_triggers(MM):-
 pp_db_supports(MM):-
   % temporary hack.
   format("~N~nSupports in [~w]...~n",[MM]),
-  with_exact_kb(MM, bagof_or_nil((P >= S), pfcGetSupport(P,S),L)),
+  with_exact_kb(MM, bagof_PFC((P >= S), pfcGetSupport(P,S),L)),
   list_to_set_variant(L,LS),
   pp_db_items(LS),!.
 

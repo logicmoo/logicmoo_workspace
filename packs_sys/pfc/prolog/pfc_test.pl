@@ -180,7 +180,9 @@ message_hook_handle(T,Type,Warn):-
   ((current_prolog_flag(runtime_debug, N),N>2) -> true ; source_location(_,_)),
   memberchk(Type,[error,warning]),once(inform_message_hook(T,Type,Warn)),fail.
 
+:- if(current_predicate(fixup_exports/0)).
 :- fixup_exports.
+:- endif.
 
 user:message_hook(T,Type,Warn):- 
    Type \== silent,Type \== debug, Type \== informational,

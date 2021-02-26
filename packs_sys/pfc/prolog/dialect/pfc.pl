@@ -56,7 +56,7 @@ expects_dialect/1:
 pfc_debug(_):-!.
 pfc_debug(I):- ignore(notrace(pfc_debug0(I))).
 pfc_debug0(state):-!,prolog_load_context(dialect,D),
-  G=tmp:module_dialect_pfc(_,_,_,M,_),predicate_property(G,number_of_clauses(NC)),
+  G=pfctmp:module_dialect_pfc(_,_,_,M,_),predicate_property(G,number_of_clauses(NC)),
   pfc_debug(prolog_load_context(dialect,D,NC)),
   forall((G,current_op(X,fy,(M:'-'))), pfc_debug(current_op(X,fy,(M:'-'))+G)),
   current_op(X,fy,-),
@@ -206,8 +206,8 @@ likely_reserved_module(M):- M=user;
 
 
 
-    :- volatile(tmp:module_dialect_pfc/5).
-:- thread_local(tmp:module_dialect_pfc/5).
+    :- volatile(pfctmp:module_dialect_pfc/5).
+:- thread_local(pfctmp:module_dialect_pfc/5).
 
 
 :- system:module_transparent(prolog_dialect:expects_dialect/1). 
@@ -232,40 +232,40 @@ other_dialect(Dialect):- Dialect\==pfc.
 pfc_expects_dialect(SWI,Stream,_,M):- other_dialect(SWI),!,pfc_pop_dialect(Stream,M), expects_dialect(SWI).
 %pfc_expects_dialect(SWI,_,Bin,_):- other_dialect(SWI),other_dialect(Bin),!, expects_dialect(SWI).
 pfc_expects_dialect(WAS,_,WAS,_):- !. % expects_dialect(WAS).
-pfc_expects_dialect(Next,Stream,Was,M):- tmp:module_dialect_pfc(Next,Stream,Was,M,_Undo), !.
-pfc_expects_dialect(Next,StreamNow,Was,M):- tmp:module_dialect_pfc(Next,StreamBefore,Was,M,_Undo),
+pfc_expects_dialect(Next,Stream,Was,M):- pfctmp:module_dialect_pfc(Next,Stream,Was,M,_Undo), !.
+pfc_expects_dialect(Next,StreamNow,Was,M):- pfctmp:module_dialect_pfc(Next,StreamBefore,Was,M,_Undo),
    StreamNow \== StreamBefore,!,
-   retract(tmp:module_dialect_pfc(Next,StreamBefore,Was,M,Undo)),
-   asserta(tmp:module_dialect_pfc(Next,StreamNow,Was,M,Undo)),!.
+   retract(pfctmp:module_dialect_pfc(Next,StreamBefore,Was,M,Undo)),
+   asserta(pfctmp:module_dialect_pfc(Next,StreamNow,Was,M,Undo)),!.
 
 :- system:module_transparent(pfc:pfc_expects_dialect/1).
 :- system:import(pfc:pfc_expects_dialect/1).
 pfc_expects_dialect(pfc,Stream,Was,M):-
    %notrace(M:ensure_loaded(library(pfc_lib))),
    M:use_module(library(dialect/pfc)),
-   ((current_prolog_flag(pfc_version,1.8);clause(pfcVersion(1.8),true)) -> M:ensure_loaded(library('../t/vlibs/pfc_1_8_full'));
+   ( ( \+ current_prolog_flag(pfc_version,2.0)) -> M:ensure_loaded(library('../t/vlibs/pfc_1_8_full'));
       (M:use_module(library(pfc_lib)),M:set_fileAssertMt(M))),
    % dynamic(Was:'=-=>'/2),
    pfc_operators(M, Ops),
    push_operators(M:Ops, Undo),
-   %ignore(retract(tmp:module_dialect_pfc(Dialect,Stream,_,_,_))), 
-   asserta(tmp:module_dialect_pfc(pfc,Stream,Was,M,Undo)),!.
+   %ignore(retract(pfctmp:module_dialect_pfc(Dialect,Stream,_,_,_))), 
+   asserta(pfctmp:module_dialect_pfc(pfc,Stream,Was,M,Undo)),!.
   
 
-dialect_input_stream_pfc(Stream):- prolog_load_context(stream,Stream)->true;current_input(Stream).
+dialect_input_stream_pfc(Stream):- prolog_load_context(source,Stream)->true; Stream = user_input.
 
 :- system:module_transparent(pfc:pfc_pop_dialect/2).
 :- system:import(pfc:pfc_pop_dialect/2).
 pfc_pop_dialect(Stream,M):-
     dialect_input_stream_pfc(Stream),
-    retract(tmp:module_dialect_pfc(pfc,Stream,Was,M,Undo)),!,
+    retract(pfctmp:module_dialect_pfc(pfc,Stream,Was,M,Undo)),!,
     pfc_debug(pop_pfc_dialect1(Stream,M->Was)),
     pop_operators(Undo),    
     %nop('$set_source_module'(Was)),!,
     pfc_debug(state).
 
 pfc_pop_dialect(Stream,M):-
-    retract(tmp:module_dialect_pfc(pfc,Stream,Was,M,Undo)),!,
+    retract(pfctmp:module_dialect_pfc(pfc,Stream,Was,M,Undo)),!,
     print_message(warning, format('~q', [warn_pop_pfc_dialect_fallback(Stream,M->Was)])),
     pfc_debug(pop_pfc_dialect2(Stream,M->Was)),
     pop_operators(Undo),    
@@ -305,14 +305,20 @@ user:goal_expansion(In, Out) :-
     pfc_dialect_expansion(In, Out).
 
 
-
-system:term_expansion(In, PosIn, Out, PosOut) :- notrace(In == end_of_file),
+:- multifile(term_expansion/2).
+:- module_transparent(term_expansion/2).
+%:- meta_predicate(term_expansion(:,-)).
+%:- export(term_expansion/2).
+term_expansion(MIn, Out):- 
+   notrace(strip_module(MIn,MM,In)),
+   notrace(nonvar(In)), 
+   (MIn==In->prolog_load_context(module, M);MM=M),
+   notrace(In == end_of_file),
    prolog_load_context(dialect, pfc),
    dialect_input_stream_pfc(Stream),
    prolog_load_context(module, M),
    pfc_pop_dialect(Stream,M),!,
-   Out = In,
-   PosIn = PosOut.
+   Out = In.
       
       
 

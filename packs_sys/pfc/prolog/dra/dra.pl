@@ -64,7 +64,7 @@
           exit_dra_call/0,
           init_dra_call/0,
           process_dra_ective/1,
-					(table)/1,
+					(table_dra)/1,
 				  (coinductive0)/1,
 				  (coinductive1)/1,
           (tnot)/1,
@@ -73,7 +73,7 @@
           print_tables/0,
 
 
-          op( 1010, fy, 'table'  ),    % allow  " table p/k ,"
+          op( 1010, fy, 'table_dra'  ),    % allow  " table p/k ,"
           op( 1010, fy, 'old_first'  ),    % allow  " old_first p/k ,"
           op( 1010, fy, 'never_table'  ),    % allow  " traces  p/k ,"
           op( 1010, fy, 'coinductive0'  ),    % allow  " coinductive0 p/k ,"
@@ -138,7 +138,7 @@
    Some predicates are "tabled", because the user has declared them to be such
    by using an appropriate directive, e.g.,
 
-       :-table p/2 .
+       :-table_dra p/2 .
 
    All calls to a tabled predicate that are present in the interpreted program
    are called "tabled calls".  Instances of such calls are called "tabled
@@ -174,7 +174,7 @@
  
        a) Tabled and coinductive predicates should be declared as such in
           the program file, e.g.,
-              :-table       ancestor/2.
+              :-table_dra       ancestor/2.
               :-coinductive0  comember/2.
               :-coinductive1 comember/2.
  
@@ -340,7 +340,7 @@
    The tables (implemented as dynamic predicates of Prolog) are:
 
 
-   -- is_tabled( generic head )
+   -- is_tabled_dra( generic head )
    -- is_coinductive0( generic head )
    -- is_coinductive1( generic head )
 	 -- is_old_first( generic head )
@@ -412,7 +412,7 @@
            following example (which is simplistic in that the computation itself
            is trivial):
 
-               program:  :-table p/2.
+               program:  :-table_dra p/2.
                          p( A, A ).
                          p( a, b ).
 
@@ -638,8 +638,8 @@
 
 :- if(\+ current_predicate(system:'$exit_dra'/0)).
 
-system:'$exit_dra'.
-system:'$enter_dra'.
+system:'$exit_dra':-true.
+system:'$enter_dra':-true.
 
 :- endif.
 
@@ -668,7 +668,7 @@ add_clauses(H,B):- directive_source_file(File),'$compile_aux_clauses'([(H:-B)], 
 directive_source_file(File):-prolog_load_context(source,File),!.
 directive_source_file(File):-prolog_load_context(module,File),!.
 
-property_pred((table),is_tabled).
+property_pred((table_dra),is_tabled_dra).
 property_pred(coinductive0,is_coinductive0).
 property_pred(coinductive1,is_coinductive1).
 property_pred((traces),is_traced).
@@ -678,7 +678,7 @@ property_pred(never_tabled,is_never_tabled).
 property_pred(hilog,is_hilog).
 property_pred(topl,is_topl).
 
-table(Mask):- process_dra_ective(table(Mask)).
+table_dra(Mask):- process_dra_ective(table_dra(Mask)).
 coinductive0(Mask):-process_dra_ective(coinductive0(Mask)).
 coinductive1(Mask):-process_dra_ective(coinductive1(Mask)).
 topl(Mask):-process_dra_ective(topl(Mask)).
@@ -686,7 +686,7 @@ topl(Mask):-process_dra_ective(topl(Mask)).
 make_db_pred(D,F):-
     DG=..[D,_],
     (predicate_property(M:DG,_)->true;(predicate_property(DG,imported_from(M))->true;M=system)),
-    module_transparent(M:DG), add_clauses(M:DG , process_dra_ective(DG)), 
+    module_transparent(M:F/1), add_clauses(M:DG , process_dra_ective(DG)), 
    ( \+ current_op(_,fy,user:D) -> op(1010,fy,user:D) ; true),
     dynamic(F/1),
     multifile(F/1).
@@ -726,20 +726,20 @@ set_meta(TGoal,is_coinductive1):- !,
     dra_asserta_new(is_coinductive1(TGoal)).
 
 set_meta(TGoal,is_never_tabled):- !,
-    dra_retract_all(is_tabled(TGoal)),
+    dra_retract_all(is_tabled_dra(TGoal)),
     dra_retract_all(is_old_first(TGoal)),
     dra_retract_all( (TGoal :- !, dra_call_tabled(TGoal) )),
     (is_never_tabled(TGoal)-> true ; dra_asserta_new(is_never_tabled(TGoal))).
 
-set_meta(TGoal,is_tabled):-
+set_meta(TGoal,is_tabled_dra):-
     dra_retract_all(is_never_tabled(TGoal)),
-    dra_asserta_new(is_tabled(TGoal)),
+    dra_asserta_new(is_tabled_dra(TGoal)),
     add_clauses( TGoal ,  (!, dra_call_tabled(TGoal))),
     functor(TGoal,F,A),discontiguous(F/A).    
     %interp(dra_call_tabled,TGoal).
 
 set_meta(TGoal,is_old_first):-
-    set_meta(TGoal,is_tabled),
+    set_meta(TGoal,is_tabled_dra),
     dra_asserta_new(is_old_first(TGoal)).
 
 set_meta(TGoal,Atom):- Assert=..[Atom,TGoal],
@@ -778,7 +778,7 @@ is_never_tabled(Pred):-functor(Pred,F,A),functor(TPred,F,A),asserta(is_table_ok(
 
 is_builtin(Pred) :-is_swi_builtin( Pred ).
 is_builtin(Pred) :-functor(Pred,F,_),atom_concat('$',_,F).
-% is_builtin(Pred) :-source_file(Pred,File),is_file_meta(File,is_never_tabled), \+ clause(is_tabled(Pred),true).
+% is_builtin(Pred) :-source_file(Pred,File),is_file_meta(File,is_never_tabled), \+ clause(is_tabled_dra(Pred),true).
 
 
 %------------------------------------------------------------------------------
@@ -1321,7 +1321,7 @@ is_variant_of_ancestor( Goal,
 
 :-dynamic (is_coinductive0)/1 .
 :-dynamic (is_coinductive1)/1 .
-:-dynamic (is_tabled)/1 .
+:-dynamic (is_tabled_dra)/1 .
 :-dynamic (is_old_first)/1 .
 :-dynamic (is_traced)/1.
 
@@ -1333,7 +1333,7 @@ dra_version('DRA ((c) UTD 2009) version 0.97 (beta), June 2011 - LOGICMOO').
 initialize_table:- abolish_tables,
       retractall( is_coinductive0( _ )  ),
       retractall( is_coinductive1( _ ) ),
-      retractall( is_tabled( _ )       ),
+      retractall( is_tabled_dra( _ )       ),
       retractall( is_old_first( _ )    ),
       dra_must((dra_version( Version ),
       dra_w( Version ))).
@@ -1354,7 +1354,7 @@ abolish_tables :-                                        % invoked by top_level
 
 
 %  Administration  %
-:-op( 1010, fy, table       ).    % allow  ":-table p/k ."
+:-op( 1010, fy,table_dra       ).    % allow  ":-table_dra p/k ."
 :-op( 1010, fy, old_first    ).    % allow  ":-old_first p/k ."
 :-op( 1010, fy, never_table        ).    % allow  ":-traces  p/k ."
 :-op( 1010, fy, coinductive0  ).    % allow  ":-coinductive0 p/k ."
@@ -1372,7 +1372,7 @@ abolish_tables :-                                        % invoked by top_level
 legal_directive((coinductive( _))  ).
 % legal_directive( (coinductive0 _)  ).
 legal_directive( (coinductive1 _) ).
-legal_directive( (table _)       ).
+legal_directive( (table_dra _)       ).
 legal_directive( (dynamic _)      ).
 legal_directive( (old_first _)    ).
 legal_directive( (multifile _)    ).
@@ -1476,7 +1476,7 @@ exit_dra_call:-
 
 
 % Print information about the number of steps and the answer table.
-print_statistics :-  quietly((      
+print_statistics :-  notrace((      
         dra_getval_flag( step_counter, NSteps ),
         dra_getval_flag( number_of_answers, NAns ),
         dra_getval_flag( old_table_size, OldNAns ),
@@ -1528,7 +1528,7 @@ print_statistics :-  quietly((
 
 
 dra_interp(CuttedOut, Goal, Stack, Hyp,  Level ):- assertion(nonvar(Goal)),
-   is_tabled(Goal),!,
+   is_tabled_dra(Goal),!,
    dra_call_tabled(Cutted, Goal, Stack, Hyp, Level ),
   ((var(Cutted);non_cutted(Goal,Cutted, CuttedOut))->true;(!,fail)).
 
@@ -1657,7 +1657,7 @@ dra_interp(CuttedOut, NeverTable, Stack, Hyp,  Level ):- % is_never_tabled(Never
 
 dra_interp(CuttedOut, Goal, Stack, Hyp,  Level ):- fail, is_cut_ok(Goal),
   % Should read the new default
-  set_meta(Goal,is_tabled),!,
+  set_meta(Goal,is_tabled_dra),!,
   dra_call_tabled(Cutted, Goal, Stack, Hyp,  Level ),
   ((var(Cutted);non_cutted(Goal,Cutted, CuttedOut))->true;(!,fail)). 
 
@@ -2839,7 +2839,8 @@ complete_goal( Goal, Level ) :-
 
 :- endif.
 
-
+% convert 
+dra_term_expansion(replacement, (:- table(X)),(:- table_dra(X))).
 
 
 
@@ -2858,7 +2859,10 @@ complete_goal( Goal, Level ) :-
 
 :- retract(was_access_level(Was)),set_prolog_flag(access_level,Was).
 
-
+:- system:import(dra_term_expansion/2).
+system:term_expansion(I,IP,O,OP):-
+  current_prolog_flag(dra_tabling, Type),
+  dra_term_expansion(Type, I,O),IP=OP.
 
 
 :- if(fail).
@@ -2866,6 +2870,6 @@ complete_goal( Goal, Level ) :-
 :- make.
 :- check.
 :- gxref.
-:- listing(tnot).
-:- listing(table).
+:- listing((tnot)/1).
+:- listing((table_dra)/1).
 :- endif.

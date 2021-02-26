@@ -5,9 +5,9 @@
 
 :- expects_dialect(pfc).
 
+%:- trace.
 a(1).
 a(2).
-% :- trace.
 a(2) <==> b(1).
 
 :- listing(b/1).
