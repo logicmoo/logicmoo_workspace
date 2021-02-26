@@ -1,7 +1,13 @@
 :- use_module(library(assertions)).
 :- use_module(foreign_test_i).
+:- use_module(my_nlist_int).
 :- use_module(library(lists)).
 :- begin_tests(foreign).
+
+test(nlist_int) :-
+    X = [1,[2],[3,4]],
+    test_nlist(X, Y),
+    assertion(X==Y).
 
 test(enum_example) :-
     f_enum_example(element(a), X, Y, I),

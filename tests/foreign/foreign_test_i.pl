@@ -20,23 +20,6 @@
 :- use_foreign_source('foreign_test.for').
 :- gen_foreign_library(plbin(foreign_test_i)).
 
-:- type my_nlist_int/1 + tgen.
-
-my_nlist_int(Node) :- int(Node).
-my_nlist_int(List) :- list(my_nlist_int, List).
-
-/* TBD: enable list_int/1
-:- type nlist_int/1 + sgen.
-
-nlist_int(X) :- nlist(int, X).
-%nlist_int(Y) :- int(Y).
-
-:- type list_int/1 + sgen.
-
-list_int(l(X)) :- list(int, X).
-% list_int(i(Y)) :- int(Y).
-*/
-
 :- type negative_t/1 is (foreign(is_negative_t), tgen([gett, unif])).
 
 :- type enum_example_t/1 + tgen.

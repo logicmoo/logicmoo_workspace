@@ -643,8 +643,7 @@ implement_type_getter_union_ini_join(SubType, Spec, Term, Name, UType) -->
     implement_type_getter_ini(PName, CName, Spec, Name),
     ["    term_t __args = PL_new_term_refs(2);",
      "    int __utype;",
-     "    __rtcheck(PL_unify_functor(__args, PL_new_functor(PL_new_atom(\""+Func+"\"), 1)));",
-     "    __rtcheck(PL_unify_arg(1, __args, "+PName+"));",
+     "    __rtcheck(PL_unify_term(__args, PL_FUNCTOR_CHARS, \""+Func+"\", 1, PL_TERM, "+PName+"));",
      "    __rtcheck(__rtctype(PL_call_predicate(__"+CM+", PL_Q_NORMAL,",
      "                                          __foreign_generator_call_idx, __args),",
      "                        __args, "+Name+"));",
@@ -701,9 +700,12 @@ implement_type_getter(func_rec(SubType, N, Term, Name), Spec, Arg) -->
       CNameArg="&"+CName+"->"+CRecordName+"",
       PNameArg=PName+"_"+PRecordName
     },
-    [Indent+"term_t "+PNameArg+"=PL_new_term_ref();",
-     Indent+"__rtcheck(PL_get_arg("+N+","+PName+","+PNameArg+"));"],
-    {c_get_argument_getter(Spec, CNameArg, PNameArg, GetArg)},
+    ( {SubType = union_type}
+    ->{c_get_argument_getter(Spec, CNameArg, PName, GetArg)}
+    ; [Indent+"term_t "+PNameArg+"=PL_new_term_ref();",
+       Indent+"__rtcheck(PL_get_arg("+N+","+PName+","+PNameArg+"));"],
+      {c_get_argument_getter(Spec, CNameArg, PNameArg, GetArg)}
+    ),
     [Indent+GetArg+";"].
 implement_type_getter(func_end(SubType, _), _, _) -->
     ( {SubType = union}
@@ -852,8 +854,7 @@ implement_type_unifier_union_ini_join(SubType, Spec, Term, Name, UType) -->
     implement_type_unifier_ini(PName, CName, Name, Spec),
     ["    term_t __args = PL_new_term_refs(2);",
      "    __rtcheck(PL_put_integer(__args, "+UType+"));",
-     "    __rtcheck(PL_unify_functor(__args + 1, PL_new_functor(PL_new_atom(\""+Func+"\"), 1)));",
-     "    __rtcheck(PL_unify_arg(1, __args + 1, "+PName+"));",
+     "    __rtcheck(PL_unify_term(__args + 1, PL_FUNCTOR_CHARS, \""+Func+"\", 1, PL_TERM, "+PName+"));",
      "    __rtcheck(__rtctype(PL_call_predicate(__"+CM+", PL_Q_NORMAL,",
      "                                          __foreign_generator_idx_call, __args),",
      "                        __args, "+Name+"));"
@@ -891,8 +892,13 @@ implement_type_unifier(func_ini(SubType, Spec), Term, Name) -->
     ).
 implement_type_unifier(func_rec(SubType, N, Term, Name), Spec, Arg) -->
     {type_unifiers_elem_names(SubType, Term, Name, Arg, Indent, PName, CNameArg, PNameArg)},
-    type_unifiers_elem_settle(Spec, Indent, CNameArg, PNameArg),
-    [Indent+"__rtcheck(PL_unify_arg("+N+","+PName+","+PNameArg+"));"].
+    ( {SubType = union_type}
+    ->{c_set_argument(Spec, out, CNameArg, PName, SetArg)}
+    ; [Indent+"term_t "+PNameArg+"=PL_new_term_ref();",
+       Indent+"__rtcheck(PL_unify_arg("+N+","+PName+","+PNameArg+"));"],
+      {c_set_argument(Spec, out, CNameArg, PNameArg, SetArg)}
+    ),
+    [Indent+SetArg+";"].
 
 type_unifiers_elem_names(SubType, Term, Name, Arg, Indent, PName, CNameArg, PNameArg) :-
     func_pcname(Name, PName, CName),
@@ -912,11 +918,6 @@ type_unifiers_elem_names(SubType, Term, Name, Arg, Indent, PName, CNameArg, PNam
     ),
     CNameArg = CName+"->"+CRecordName,
     PNameArg = PName+"_"+PRecordName.
-
-type_unifiers_elem_settle(Spec, Indent, CNameArg, PNameArg) -->
-    [Indent+"term_t "+PNameArg+"=PL_new_term_ref();"],
-    {c_set_argument(Spec, out, CNameArg, PNameArg, SetArg)},
-    [Indent+SetArg+";"].
 
 implement_type_unifier(func_end(SubType, _), _, _) -->
     ( {SubType = union}
@@ -948,8 +949,10 @@ implement_type_unifier(dict_rec(SubType, _, Term, _N, NameL), Spec, Arg) -->
     ).
 
 type_unifiers_elem_dict_settle(Spec, Arg, Indent, CNameArg, PNameArg) -->
-    type_unifiers_elem_settle(Spec, Indent, CNameArg, PNameArg),
-    [Indent+"FI_put_desc(__tail, \""+Arg+"\", "+PNameArg+");"].
+    [Indent+"term_t "+PNameArg+"=PL_new_term_ref();"],
+    [Indent+"FI_put_desc(__tail, \""+Arg+"\", "+PNameArg+");"],
+    {c_set_argument(Spec, out, CNameArg, PNameArg, SetArg)},
+    [Indent+SetArg+";"].
 
 with_wrapper(Ini, Goal, End) -->
     [Ini],
@@ -1883,8 +1886,7 @@ bind_outs_arguments(Head, M, CM, Comp, Call, Succ, Glob, (_ as _/BN +_)) -->
     ),
     bind_call_predicate(CM, Glob, BN),
     ( {compound(Head)}
-    ->findall(["    term_t "+PArg+"="+BN+"_args + "+Idx1+";",
-               "    "+SetArg+";"],
+    ->findall(Line,
               ( arg(Idx, Head, Arg),
                 succ(Idx1, Idx),
                 bind_argument(Head, M, CM, Comp, Call, Succ, Glob, Arg, Spec, Mode),
@@ -1895,7 +1897,11 @@ bind_outs_arguments(Head, M, CM, Comp, Call, Succ, Glob, (_ as _/BN +_)) -->
                 ; CArg = Arg
                 ),
                 PArg = "_p_"+Arg,
-                c_get_argument(Spec, InvM, CArg, PArg, SetArg)
+                c_get_argument(Spec, InvM, CArg, PArg, SetArg),
+                ( Mode = out,
+                  Line = "    term_t "+PArg+"="+BN+"_args + "+Idx1+";"
+                ; Line = "    "+SetArg+";"
+                )
               )),
       ( { memberchk(returns(Arg, _), Glob)
         ; memberchk(returns_state(_), Glob),
