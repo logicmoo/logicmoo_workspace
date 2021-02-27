@@ -307,6 +307,7 @@ get_fallBackAssertMt(M):- guess_maybe_assertMt(M),clause_bq(mtHybrid(M)),!.
 get_fallBackAssertMt(M):- guess_maybe_assertMt(M),is_mtCanAssert(M),!.
 get_fallBackAssertMt(M):- guess_maybe_assertMt(M).
 
+guess_maybe_assertMt(M):- source_module(M).
 guess_maybe_assertMt(M):- '$current_source_module'(M).
 %guess_maybe_assertMt(M):- context_module(M).
 guess_maybe_assertMt(M):- loading_source_file(File),clause_bq(baseKB:file_to_module(File,M)).

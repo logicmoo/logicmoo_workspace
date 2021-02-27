@@ -236,8 +236,9 @@ dir_from(Rel,Y):-
 :- export(add_pack_path/1).
 add_pack_path(packs_xtra):-pack_property(logicmoo_nlu,_),!.
 add_pack_path(packs_sys):-pack_property(logicmoo_base,_),!.
-add_pack_path(Rel):- ( \+ atom(Rel) ; \+ is_absolute_file_name(Rel)),!,
-   dir_from(Rel,Y), Y\==Rel, add_pack_path(Y).
+add_pack_path(Rel):- ( \+ atom(Rel) ; \+ is_absolute_file_name(Rel)),
+   dir_from(Rel,Y), Y\==Rel, add_pack_path(Y), !.
+add_pack_path(Y):- (\+ atom(Y) ; \+ exists_directory(Y)),!.
 add_pack_path(Y):- attach_packs(Y),!.
 add_pack_path(Y):-  \+ user:file_search_path(pack,Y) ->asserta(user:file_search_path(pack,Y));true.
 

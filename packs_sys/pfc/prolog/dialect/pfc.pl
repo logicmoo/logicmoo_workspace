@@ -259,8 +259,9 @@ pfc_expects_dialect(Next,StreamNow,Was,M):- pfctmp:module_dialect_pfc(Next,Strea
 pfc_expects_dialect(pfc,Source,Was,M):-
    %notrace(M:ensure_loaded(library(pfc_lib))),
    M:use_module(library(dialect/pfc)),
-   ( ( \+ current_prolog_flag(pfc_version,2.0)) -> M:ensure_loaded(library('../t/vlibs/pfc_1_8_full'));
-      (M:use_module(library(pfc_lib)),M:set_fileAssertMt(M))),
+  (  ((false, \+ (current_prolog_flag(pfc_version,v(2,0,_))))) -> 
+      (M:ensure_loaded(library('../t/vlibs/pfc_1_8_full')),M:decl_module(M));
+      (set_prolog_flag(pfc_version,v(2,0,0)),M:use_module(library(pfc_lib)))),
    % dynamic(Was:'=-=>'/2),
    pfc_operators(M, Ops),
    push_operators(M:Ops, Undo),
@@ -273,16 +274,8 @@ dialect_input_stream_pfc(Source):- prolog_load_context(source,Source)->true; Sou
 :- system:module_transparent(pfc:pfc_pop_dialect/2).
 :- system:import(pfc:pfc_pop_dialect/2).
 pfc_pop_dialect(Source,M):-
-    dialect_input_stream_pfc(Source),
     retract(pfctmp:module_dialect_pfc(pfc,Source,Was,M,Undo)),!,
-    pfc_debug(pop_pfc_dialect1(Source,M->Was)),
-    pop_operators(Undo),    
-    %nop('$set_source_module'(Was)),!,
-    pfc_debug(state).
-
-pfc_pop_dialect(Source,M):-
-    retract(pfctmp:module_dialect_pfc(pfc,Source,Was,M,Undo)),!,
-    print_message(warning, format('~q', [warn_pop_pfc_dialect_fallback(Source,M->Was)])),
+    %print_message(warning, format('~q', [warn_pop_pfc_dialect_fallback(Source,M->Was)])),
     pfc_debug(pop_pfc_dialect2(Source,M->Was)),
     pop_operators(Undo),    
     %nop('$set_source_module'(Was)),!,
@@ -330,7 +323,7 @@ system:term_expansion(MIn, Out):-
    (MIn==In->prolog_load_context(module, M);MM=M),
    notrace(In == end_of_file),
    prolog_load_context(dialect, pfc),
-   dialect_input_stream_pfc(Source),
+   prolog_load_context(file, Source),
    prolog_load_context(module, M),
    pfc_pop_dialect(Source,M),!,
    Out = In.

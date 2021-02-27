@@ -13,7 +13,7 @@
 :- module(pfc_lib,[]).
 :- set_module(class(library)).
 
-:- if(current_prolog_flag(pfc_version,2.0)).
+%:- if(( (current_prolog_flag(pfc_version, v(2,0,_))))).
 
 :- multifile(user:prolog_load_file/2).
 :- dynamic(user:prolog_load_file/2).      
@@ -33,6 +33,14 @@ user:prolog_load_file(ModuleSpec, Options):- fail,
 %user:prolog_load_file(_,_):- get_lang(pl),!,fail.
 %user:prolog_load_file(_,_):- set_file_lang(pl),set_lang(pl),fail.
 
+locate_library(Pack):-  exists_source(library(Pack)),!.
+locate_library(Pack):-  prolog_load_context(directory,Dir),  atomic_list_concat(['../../',Pack], Try),    
+   ((absolute_file_name(Try, Res, [relative_to(Dir), file_type(directory), access(read), file_errors(fail)]),exists_directory(Res)) 
+     -> (atomic_list_concat([Res,'..'], Parent),attach_packs(Parent,[duplicate(keep)])) ; pack_install( Pack )).
+
+:- locate_library(logicmoo_utils).
+:- locate_library(dictoo).
+:- locate_library(predicate_streams).
 
 :- set_prolog_flag(retry_undefined, none).
 :- use_module(library(logicmoo_utils)).
@@ -907,4 +915,4 @@ system:clause_expansion(I,O):-
 
 :- set_prolog_flag(pfc_booted,true).
 
-:- endif.
+%:- endif.

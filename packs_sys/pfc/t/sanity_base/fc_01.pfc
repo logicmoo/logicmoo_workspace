@@ -4,19 +4,27 @@
 % Douglas Miles
 %  cls ; kill -9 %1 ; swipl -g "ensure_loaded(pack(logicmoo_base/t/sanity_base/fc_01.pfc'))."
 
-:- include(test_header).
+%:- include(test_header).
 %:- use_module(library(pfc)).
-%:- use_module(library(pfc_test)).
+:- use_module(library(pfc_test)).
+
+:- expects_dialect(pfc).
 
 % :- set_prolog_flag(lm_pfc_lean,true).
+%:- trace.
+%:- break.
 :- mpred_trace_exec.
 
 a11 ==> b11.
 a11.
 
+:- listing(a11).
+
 % :- pp_DB.
+:- mpred_why(b11).
 
 :- mpred_test(b11).
+
 
 end_of_file.
 

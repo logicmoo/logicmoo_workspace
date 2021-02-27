@@ -814,7 +814,7 @@ clause_true_anywhere(G):- strip_module(G,M,S),!,
 
 
 current_assertion_module(M):- if_defined(defaultAssertMt(M),M=baseKB).
-suggest_m(M):- prolog_load_context(module,M),!.
+suggest_m(M):- prolog_load_context(module, M),!.
 suggest_m(M):- (if_defined(defaultAssertMt(M),fail);current_module_ordered(M)),is_visible_module(M).
 
 

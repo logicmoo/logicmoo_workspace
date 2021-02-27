@@ -20,13 +20,13 @@ test_header_include.
 :- mpred_trace_exec.
 
 a11 ==> b11.
-b11 ==> a11.
-a11.
+
+:- rtrace(add_PFC(a11)).
+
+:- break.
 
 :- mpred_test(a11).
 :- mpred_test(b11).
-
-:- mpred_trace_exec.
 
 \+ a11.
 

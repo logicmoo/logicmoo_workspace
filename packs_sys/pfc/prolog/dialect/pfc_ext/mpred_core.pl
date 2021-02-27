@@ -81,7 +81,6 @@
   mpred_remove1/2,
   check_never_assert/1,check_never_retract/1,
   oinfo/1,
-  why_was_true/1,
   mpred_fwc0/1,
   with_no_mpred_trace_exec/1,
   mpred_set_default/2,
@@ -210,6 +209,21 @@ nr_lc_ex(G):- no_repeats(loop_check(G,trace_or_throw(looped(G)))).
 :- system:use_module(library(edinburgh)).
 :- system:use_module(library(ordsets)).
 :- system:use_module(library(oset)).
+
+pfcReset :- mpred_reset.
+add_PFC(P) :- mpred_ain(   P).
+rem_PFC(P) :- mpred_ain(\+ P).
+add_PFC(P,S) :- mpred_ain(   P,S).
+rem_PFC(P,S) :- mpred_ain(\+ P,S).
+
+rem2_PFC(P) :- mpred_remove2(P).
+remove_PFC(P) :- mpred_remove(P).
+
+% rem2_PFC(P,S) :- mpred_remove2(P,S).
+% remove_PFC(P,S) :- mpred_remove(P,S).
+
+
+
 
 %:- include(library(pfc_test)).
 :- meta_predicate
@@ -4208,15 +4222,16 @@ mpred_must(\+ G):-!, ( \+ call_u(G) -> true ; (log_failure(failed_mpred_test(\+ 
 mpred_must(G):- (call_u(G) -> true ; (ignore(sanity(why_was_true(\+ G))),(log_failure(failed_mpred_test(G))),!,break_ex)).
 
 
-why_was_true((A,B)):- !,mpred_why(A),mpred_why(B).
-why_was_true(P):- predicate_property(P,dynamic),mpred_why(P),!.
-why_was_true(P):- dmsg_pretty(justfied_true(P)),!.
-
 
 mpred_load_term(:- module(_,L)):-!, call_u_no_bc(maplist(export,L)).
 mpred_load_term(:- TermO):- call_u_no_bc(TermO).
 mpred_load_term(TermO):-mpred_ain_object(TermO).
 
+:- export(why_was_true/1).
+
+why_was_true((A,B)):- !,mpred_why(A),mpred_why(B).
+why_was_true(P):- predicate_property(P,dynamic),mpred_why(P),!.
+why_was_true(P):- dmsg_pretty(justfied_true(P)),!.
 
 %
 %  These control whether or not warnings are printed at all.

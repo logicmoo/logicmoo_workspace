@@ -2845,8 +2845,6 @@ dra_term_expansion(replacement, (:- table(X)),(:- table_dra(X))).
 
 
 
-
-
 :-source_location(S,_),prolog_load_context(module,FM),
  forall(source_file(M:H,S),
   ignore((functor(H,F,A),
@@ -2860,9 +2858,9 @@ dra_term_expansion(replacement, (:- table(X)),(:- table_dra(X))).
 :- retract(was_access_level(Was)),set_prolog_flag(access_level,Was).
 
 :- system:import(dra_term_expansion/2).
-system:term_expansion(I,IP,O,OP):-
-  current_prolog_flag(dra_tabling, Type),
-  dra_term_expansion(Type, I,O),IP=OP.
+system:term_expansion(I,O):-
+  notrace((current_prolog_flag(dra_tabling, Type), Type\==false)),
+  dra_term_expansion(Type, I,O).
 
 
 :- if(fail).
