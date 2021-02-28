@@ -1,7 +1,7 @@
 /*
-  LPS test results file generated on 2021-2-3 at 16:19:44
+  LPS test results file generated on 2021-2-28 at 11:40:45
   on Prolog swi(8,1,9,[]) for program file:
-  examples/forTesting/bobObservationBug.pl_.P
+  /Users/mc/git/lps_corner/examples/forTesting/bobObservationBug.pl_.P
 */
 
 :-dynamic lps_test_result/3,lps_test_result_item/3,lps_test_action_ancestor/3,lps_test_options/1.
@@ -20,7 +20,7 @@ lps_test_result(fluents,3,0).
 lps_test_result(events,4,0).
 lps_test_result(fluents,4,0).
 lps_test_result(events,5,0).
-lps_test_result(composites,5,1).
+lps_test_result(composites,5,3).
 lps_test_result(fluents,5,0).
 lps_test_result(events,6,0).
 lps_test_result(fluents,6,0).
@@ -30,7 +30,7 @@ lps_test_result(events,8,1).
 lps_test_result(composites,8,1).
 lps_test_result(fluents,8,2).
 lps_test_result(events,9,1).
-lps_test_result(composites,9,2).
+lps_test_result(composites,9,4).
 lps_test_result(fluents,9,3).
 lps_test_result(events,10,0).
 lps_test_result(composites,10,1).
@@ -42,7 +42,7 @@ lps_test_result(events,12,0).
 lps_test_result(composites,12,1).
 lps_test_result(fluents,12,3).
 lps_test_result(events,13,0).
-lps_test_result(composites,13,2).
+lps_test_result(composites,13,4).
 lps_test_result(fluents,13,3).
 lps_test_result(events,14,0).
 lps_test_result(composites,14,1).
@@ -54,7 +54,7 @@ lps_test_result(events,16,0).
 lps_test_result(composites,16,1).
 lps_test_result(fluents,16,3).
 lps_test_result(events,17,0).
-lps_test_result(composites,17,2).
+lps_test_result(composites,17,4).
 lps_test_result(fluents,17,3).
 lps_test_result(events,18,0).
 lps_test_result(composites,18,1).
@@ -66,7 +66,7 @@ lps_test_result(events,20,0).
 lps_test_result(composites,20,1).
 lps_test_result(fluents,20,3).
 lps_test_result(events,21,0).
-lps_test_result(composites,21,2).
+lps_test_result(composites,21,4).
 lps_test_result(fluents,21,3).
 lps_test_result(events,22,1).
 lps_test_result(composites,22,1).
@@ -78,7 +78,7 @@ lps_test_result(events,24,0).
 lps_test_result(composites,24,1).
 lps_test_result(fluents,24,4).
 lps_test_result(events,25,0).
-lps_test_result(composites,25,2).
+lps_test_result(composites,25,4).
 lps_test_result(fluents,25,4).
 lps_test_result(events,26,2).
 lps_test_result(composites,26,1).
@@ -90,18 +90,22 @@ lps_test_result(events,28,0).
 lps_test_result(composites,28,1).
 lps_test_result(fluents,28,6).
 lps_test_result(events,29,0).
-lps_test_result(composites,29,2).
+lps_test_result(composites,29,4).
 lps_test_result(fluents,29,6).
 lps_test_result(events,30,0).
 lps_test_result(composites,30,1).
 lps_test_result(fluents,30,6).
 % lps_test_result_item(Stage,Cycle,TestTerm)
+lps_test_result_item(composites,5,happens(real_date_end(2014/5/31),4,5)).
+lps_test_result_item(composites,5,happens(real_date_begin(2014/6/1),4,5)).
 lps_test_result_item(composites,5,happens(end_of_day(2014/5/31),4,5)).
 lps_test_result_item(events,8,request(borrower,1000)).
 lps_test_result_item(composites,8,happens(potential_default(represent_warrant(exceed_assets_liabilities)),7,8)).
 lps_test_result_item(fluents,8,requested(borrower,1000)).
 lps_test_result_item(fluents,8,potential_defaulted(represent_warrant(exceed_assets_liabilities))).
 lps_test_result_item(events,9,advance(lender,1000)).
+lps_test_result_item(composites,9,happens(real_date_end(2014/6/1),8,9)).
+lps_test_result_item(composites,9,happens(real_date_begin(2014/6/2),8,9)).
 lps_test_result_item(composites,9,happens(potential_default(represent_warrant(exceed_assets_liabilities)),7,9)).
 lps_test_result_item(composites,9,happens(end_of_day(2014/6/1),8,9)).
 lps_test_result_item(fluents,9,requested(borrower,1000)).
@@ -119,6 +123,8 @@ lps_test_result_item(composites,12,happens(potential_default(represent_warrant(e
 lps_test_result_item(fluents,12,requested(borrower,1000)).
 lps_test_result_item(fluents,12,potential_defaulted(represent_warrant(exceed_assets_liabilities))).
 lps_test_result_item(fluents,12,advanced(lender,1000)).
+lps_test_result_item(composites,13,happens(real_date_end(2014/6/2),12,13)).
+lps_test_result_item(composites,13,happens(real_date_begin(2014/6/3),12,13)).
 lps_test_result_item(composites,13,happens(potential_default(represent_warrant(exceed_assets_liabilities)),7,13)).
 lps_test_result_item(composites,13,happens(end_of_day(2014/6/2),12,13)).
 lps_test_result_item(fluents,13,requested(borrower,1000)).
@@ -136,6 +142,8 @@ lps_test_result_item(composites,16,happens(potential_default(represent_warrant(e
 lps_test_result_item(fluents,16,requested(borrower,1000)).
 lps_test_result_item(fluents,16,potential_defaulted(represent_warrant(exceed_assets_liabilities))).
 lps_test_result_item(fluents,16,advanced(lender,1000)).
+lps_test_result_item(composites,17,happens(real_date_end(2014/6/3),16,17)).
+lps_test_result_item(composites,17,happens(real_date_begin(2014/6/4),16,17)).
 lps_test_result_item(composites,17,happens(potential_default(represent_warrant(exceed_assets_liabilities)),7,17)).
 lps_test_result_item(composites,17,happens(end_of_day(2014/6/3),16,17)).
 lps_test_result_item(fluents,17,requested(borrower,1000)).
@@ -153,6 +161,8 @@ lps_test_result_item(composites,20,happens(potential_default(represent_warrant(e
 lps_test_result_item(fluents,20,requested(borrower,1000)).
 lps_test_result_item(fluents,20,potential_defaulted(represent_warrant(exceed_assets_liabilities))).
 lps_test_result_item(fluents,20,advanced(lender,1000)).
+lps_test_result_item(composites,21,happens(real_date_end(2014/6/4),20,21)).
+lps_test_result_item(composites,21,happens(real_date_begin(2014/6/5),20,21)).
 lps_test_result_item(composites,21,happens(potential_default(represent_warrant(exceed_assets_liabilities)),7,21)).
 lps_test_result_item(composites,21,happens(end_of_day(2014/6/4),20,21)).
 lps_test_result_item(fluents,21,requested(borrower,1000)).
@@ -174,6 +184,8 @@ lps_test_result_item(fluents,24,requested(borrower,1000)).
 lps_test_result_item(fluents,24,potential_defaulted(represent_warrant(exceed_assets_liabilities))).
 lps_test_result_item(fluents,24,advanced(lender,1000)).
 lps_test_result_item(fluents,24,notified(lender,default(represent_warrant(exceed_assets_liabilities)),2014/6/5)).
+lps_test_result_item(composites,25,happens(real_date_end(2014/6/5),24,25)).
+lps_test_result_item(composites,25,happens(real_date_begin(2014/6/6),24,25)).
 lps_test_result_item(composites,25,happens(potential_default(represent_warrant(exceed_assets_liabilities)),7,25)).
 lps_test_result_item(composites,25,happens(end_of_day(2014/6/5),24,25)).
 lps_test_result_item(fluents,25,requested(borrower,1000)).
@@ -203,6 +215,8 @@ lps_test_result_item(fluents,28,advanced(lender,1000)).
 lps_test_result_item(fluents,28,notified(lender,default(represent_warrant(exceed_assets_liabilities)),2014/6/5)).
 lps_test_result_item(fluents,28,remedied(represent_warrant(exceed_assets_liabilities))).
 lps_test_result_item(fluents,28,notified(borrower,remedy(represent_warrant(exceed_assets_liabilities)),2014/6/6)).
+lps_test_result_item(composites,29,happens(real_date_end(2014/6/6),28,29)).
+lps_test_result_item(composites,29,happens(real_date_begin(2014/6/7),28,29)).
 lps_test_result_item(composites,29,happens(potential_default(represent_warrant(exceed_assets_liabilities)),7,29)).
 lps_test_result_item(composites,29,happens(end_of_day(2014/6/6),28,29)).
 lps_test_result_item(fluents,29,requested(borrower,1000)).

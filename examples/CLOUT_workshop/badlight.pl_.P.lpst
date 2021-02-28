@@ -1,10 +1,10 @@
 /*
-  LPS test results file generated on 2017-3-30 at 12:9:1
-  on Prolog swi(7,5,2,[]) for program file:
-  /Users/mc/git/lps_corner/examples/forTesting/badlight.lps_.P
+  LPS test results file generated on 2021-2-28 at 16:54:57
+  on Prolog swi(8,1,9,[]) for program file:
+  /Users/mc/git/lps_corner/examples/CLOUT_workshop/badlight.pl_.P
 */
 
-:-dynamic lps_test_result/3,lps_test_result_item/3,lps_test_options/1.
+:-dynamic lps_test_result/3,lps_test_result_item/3,lps_test_action_ancestor/3,lps_test_options/1.
 
 % LPS options prior to the test:
 lps_test_options([dc]).
@@ -126,3 +126,4 @@ lps_test_result_item(fluents,12,light(bedroom,off)).
 lps_test_result_item(fluents,12,light(bathroom,off)).
 lps_test_result_item(fluents,12,location(dad,livingroom)).
 lps_test_result_item(fluents,12,light(livingroom,off)).
+% lps_test_action_ancestor(Call,T1,T2)

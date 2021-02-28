@@ -1295,10 +1295,15 @@ go_finish(File,ResultFluents,T0,T1,Outcome) :-
 
 
 interesting_composites(Interesting_CEs) :-
-	setof(composite_event([happens(CE_template,Start,End)],happens(CE_template,Start,End)), CE^Fl^Cond^Change^TT1^TT2^CE_^EF^EN^(
-		(terminated(CE, Fl, Cond);initiated(CE,Fl, Cond); updated(CE,Change,Fl, Cond)), 
-		CE=happens(CE_,TT1,TT2), nonvar(CE_), functor(CE_,EF,EN), functor(CE_template,EF,EN),
-		macroaction(CE_template)
+	setof(composite_event([happens(CE_template,Start,End)],happens(CE_template,Start,End)), CE^Fl^Cond^Change^TT1^TT2^CE_^EF^EN^Body^(
+		CE=happens(CE_,TT1,TT2),
+		(
+			(terminated(CE, Fl, Cond);initiated(CE,Fl, Cond); updated(CE,Change,Fl, Cond))
+			; l_events(CE,Body) % ... and composite that may react to observations too
+		),
+		% we probably could keep the events bound as in their definitions, but that would grow the size of the reactive rules list
+		nonvar(CE_), functor(CE_,EF,EN), functor(CE_template,EF,EN),
+		macroaction(CE_template) % this could be refactored into above, but it's significant cost (and it's one-time)
 		), Interesting_CEs
 	) -> true ; Interesting_CEs=[].
 		
@@ -3028,6 +3033,7 @@ mustBeDelayed(holds(_,T_)) :-
 	expression_to_time(T_,T), ground(T), current_time(Now),  T>Now, !.
 mustBeDelayed(happens(_,T1_,T2_)) :- 
 	expression_to_time(T1_,T1), expression_to_time(T2_,T2), current_time(Now),  (ground(T1),T1>Now;ground(T2),T2>Now+1), !.
+mustBeDelayed(G) :- G=..[Op,_,_], supported_time_comparison(Op), not ground(G), !.
 
 % must be called after structured date processing!
 % mustBeProcessedNow(L) is used when unfolding atoms in antecedents of rules.
@@ -3309,10 +3315,8 @@ d_body(B) :- u_user_predicate(B).
 % In addition to reactive_rule(Antecedent,Consequent) terms, the rules lists may contain 
 % composite_event(CE_goal,happens(CE,Start,End)), to constantly compute some "interesting" composite events;
 % for these the goals lists will contain event(happens(CE,Start,End)) terms
-% dc_process(A,B,C,D,E) :- writeln(dc_process(A,B,C,D,E)), fail. % for debugging
-
+% dc_process([First|_],_,_,_,_) :- current_time(T), writeln(dc_process/T/First), fail. % for debugging
 dc_process([], Rs, Rs, NG, NG) :- !.
-
 % Antecedent is []. Add Consequent as new goal/tree.
 dc_process([reactive_rule([], C) | Rs], AccRi, NRi, AccG, NGi):- !, 
 	goal_ID_inc(ID),
@@ -3325,8 +3329,11 @@ dc_process([composite_event([], happens(CE,Start,End)) | Rs], AccRi, NRi, AccG, 
 		;
 		(ground(End),End<T) -> % too late to solve, no longer relevant
 			dc_process(Rs, AccRi, NRi, AccG, NGi)
-		; throw(inconsistent_ce_time-happens(CE,Start,End)/T)).
-
+		% ; throw(inconsistent_ce_time-happens(CE,Start,End)/T)
+		; (ground(End), End>T) ->
+			dc_process(Rs, [composite_event([], happens(CE,Start,End))|AccRi], NRi, AccG, NGi)
+		; throw(inconsistent_ce_time-happens(CE,Start,End)/T)
+	).
 % Too late to solve, no longer relevant.
 dc_process([Rule | Rs], AccRi, NRi, AccG, NGi):-
 	% Rule=..[_,[L |_],_],
@@ -3340,7 +3347,6 @@ dc_process([Rule | Rs], AccRi, NRi, AccG, NGi):-
 	),
 	!,
 	dc_process(Rs, AccRi, NRi, AccG, NGi).
-
 dc_process([Rule | Rs], AccRi, NRi, AccG, NGi):- 
 	Rule=..[F,[E | Ls], C],
 	real_time_literal(E,TransformedE),

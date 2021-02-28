@@ -1,7 +1,7 @@
 /*
-  LPS test results file generated on 2021-2-28 at 17:33:21
+  LPS test results file generated on 2021-2-28 at 16:49:39
   on Prolog swi(8,1,9,[]) for program file:
-  /Users/mc/git/lps_corner/examples/CLOUT_workshop/sos.pl_.P
+  /Users/mc/git/lps_corner/examples/forTesting/sos.pl_.P
 */
 
 :-dynamic lps_test_result/3,lps_test_result_item/3,lps_test_action_ancestor/3,lps_test_options/1.
@@ -154,21 +154,21 @@ lps_test_result_item(fluents,39,lightOn).
 lps_test_result_item(fluents,40,lightOn).
 % lps_test_action_ancestor(Call,T1,T2)
 lps_test_action_ancestor(flash,38,41).
-lps_test_action_ancestor(sos,38,_5410).
-lps_test_action_ancestor(flash,38,_5410).
+lps_test_action_ancestor(sos,38,_13554).
+lps_test_action_ancestor(flash,38,_13554).
 lps_test_action_ancestor(sos,26,35).
 lps_test_action_ancestor(flash,32,35).
-lps_test_action_ancestor(flash,32,_5410).
+lps_test_action_ancestor(flash,32,_13554).
 lps_test_action_ancestor(flash,29,32).
-lps_test_action_ancestor(flash,29,_5410).
+lps_test_action_ancestor(flash,29,_13554).
 lps_test_action_ancestor(flash,26,29).
-lps_test_action_ancestor(sos,26,_5410).
-lps_test_action_ancestor(flash,26,_5410).
+lps_test_action_ancestor(sos,26,_13554).
+lps_test_action_ancestor(flash,26,_13554).
 lps_test_action_ancestor(sos,14,23).
 lps_test_action_ancestor(flash,20,23).
-lps_test_action_ancestor(flash,20,_5410).
+lps_test_action_ancestor(flash,20,_13554).
 lps_test_action_ancestor(flash,17,20).
-lps_test_action_ancestor(flash,17,_5410).
+lps_test_action_ancestor(flash,17,_13554).
 lps_test_action_ancestor(flash,14,17).
-lps_test_action_ancestor(sos,14,_5410).
-lps_test_action_ancestor(flash,14,_5410).
+lps_test_action_ancestor(sos,14,_13554).
+lps_test_action_ancestor(flash,14,_13554).

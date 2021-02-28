@@ -94,7 +94,7 @@ gojson(JSON) :- gojson(_File,[],[],JSON,_DFAgraph).
 gojson(File,Options,Results,JSON,DFAgraph) :- 
 	visualization_options(SD),
 	subtract(Options,SD,Options_),
-	( go(File,[make_test,swish|Options_],Results) -> true ; print_message(warning,'PROGRAM FAILED')), 
+	( go(File,[make_test,swish|Options_],Results) -> true ; print_message(warning,'PROGRAM FAILED'-[])), 
 	print_message(informational,"Preparing visualization..."-[]),
 	visual(File,Options,JSON,DFAgraph).
 
@@ -135,19 +135,23 @@ visual(File,Options,lps_visualization(Timeline,Sequence),DFAgraph) :-
 		(XX=lps_meta(happens(X,T1,T2)) -> true ; XX=X,  TT2=T2)
 	), SimpleEvents),
 	
-	findall(t(X,T1-T2,composite), (
+	(setof(t(X,T1-T2,composite), T1_^T2_^(
 		member(composites,Options),
-		(lps_test_result_item(composites,T2,happens(X,T1,T2)); lps_test_action_ancestor(X,T1,T2)),
-		nonvar(T2), % discard unfinished events
+		(lps_test_result_item(composites,T2_,happens(X,T1_,T2_)); lps_test_action_ancestor(X,T1_,T2_)),
+		nonvar(T2_), % discard unfinished events
+		T2_ \= '$VAR'(_), % hack, due to use of numbervars prior to asserting test tuples
+		((var(T1_);T1_='$VAR'(_))->T1=1;T1=T1_),
+		T2=T2_,
 		T2>T1+1 % "simple composites" are reported as events; also, discard trivial action ancestors
 		% T1 \== 0, % hack to discard irrelevant initial "transition"
-	), Composites),
+	), Composites) -> true;Composites=[]),
 	
 	append([RangedFluents,SimpleEvents,Composites],Ranged),
 	
 	% all we care for state diagrams; longer composite may trigger postconditions...
 	% but we will not show them, as it would be eird to relate an older than the previous state:
 	append(FluentTuples,SimpleEvents,FluentsEtAl), 
+	print_message(informational,"Collected events and fluents..."-[]),
 	(member(abstract_numbers,Options)->AN=true; AN=false),
 	(member(non_reflexive,Options)->NR=true; NR=false),
 	dfa_graph(FluentsEtAl,AN,NR,DFAgraph),
@@ -186,6 +190,7 @@ visual(File,Options,lps_visualization(Timeline,Sequence),DFAgraph) :-
 	% Render fluents
 	% Let's find the end of time; since real time was introduced, we can't rely on endTime(_),
 	% so we need to find the last time of all events and fluents
+	print_message(informational,"Finding the end of time..."-[]),
 	findall(T2,member(t(_,_-T2,_),Ranged),Times),
 	sort(Times,SortedTimes),
 	( append(_,[LastTime],SortedTimes) -> LastRelevantTime is LastTime+1 ; LastRelevantTime = 1),

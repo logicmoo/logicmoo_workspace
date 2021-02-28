@@ -1,7 +1,7 @@
 /*
-  LPS test results file generated on 2018-2-28 at 16:54:10
-  on Prolog swi(7,7,2,[]) for program file:
-  /Users/mc/git/logicalcontracts/examples/forTesting/backtrackExample3.lpsw_.P
+  LPS test results file generated on 2021-2-28 at 11:1:53
+  on Prolog swi(8,1,9,[]) for program file:
+  /Users/mc/git/lps_corner/examples/forTesting/backtrackExample3.lpsw_.P
 */
 
 :-dynamic lps_test_result/3,lps_test_result_item/3,lps_test_action_ancestor/3,lps_test_options/1.
@@ -18,6 +18,7 @@ lps_test_result(fluents,2,0).
 lps_test_result(events,3,1).
 lps_test_result(fluents,3,0).
 lps_test_result(events,4,2).
+lps_test_result(composites,4,3).
 lps_test_result(fluents,4,0).
 lps_test_result(events,5,0).
 lps_test_result(fluents,5,0).
@@ -57,7 +58,10 @@ lps_test_result_item(events,2,e2).
 lps_test_result_item(events,3,a1).
 lps_test_result_item(events,4,a3).
 lps_test_result_item(events,4,a2).
+lps_test_result_item(composites,4,happens(m1,2,4)).
+lps_test_result_item(composites,4,happens(m2,3,4)).
+lps_test_result_item(composites,4,happens(n1,2,4)).
 % lps_test_action_ancestor(Call,T1,T2)
 lps_test_action_ancestor(m1,2,4).
 lps_test_action_ancestor(n1,2,4).
-lps_test_action_ancestor(m1,2,_1370).
+lps_test_action_ancestor(m1,2,_4042).
