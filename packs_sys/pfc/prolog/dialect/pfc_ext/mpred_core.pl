@@ -178,7 +178,7 @@ push_current_choice/1,
 
 
 
- get_fc_mode/3,mpred_rem_support_if_exists/2,get_tms_mode/2,
+ get_fc_mode/2,mpred_rem_support_if_exists/2,get_tms_mode/2,
 
   stop_trace/1,with_mpred_trace_exec/1,
   select_next_fact/1,supporters_list/2,triggerSupports/2,well_founded/1,well_founded_list/2,
@@ -215,7 +215,8 @@ add_PFC(P) :- mpred_ain(   P).
 rem_PFC(P) :- mpred_ain(\+ P).
 add_PFC(P,S) :- mpred_ain(   P,S).
 rem_PFC(P,S) :- mpred_ain(\+ P,S).
-
+why_PFC(P) :- mpred_why(P).
+pfcFact(P) :- mpred_fact(P).
 rem2_PFC(P) :- mpred_remove2(P).
 remove_PFC(P) :- mpred_remove(P).
 
@@ -1147,8 +1148,8 @@ pp_qu:- call_u_no_bc(listing(que/1)).
 mpred_set_default(GeneralTerm,Default):-
   clause_u(GeneralTerm,true) -> true ; assert_u_no_dep(Default).
 
-%  tms is one of {none,local,cycles} and controles the tms alg.
-% :- mpred_set_default(tms(_),tms(cycles)).
+%  tms is one of {none,local,full} and controls the tms alg.
+% :- mpred_set_default(tms(_),tms(full)).
 
 % Pfc Propagation strategy. pm(X) where P is one of {direct,depth,breadth}
 % :- must_ex(mpred_set_default(pm(_), pm(direct))).
@@ -1777,22 +1778,6 @@ mpred_unique_u(P):- t_l:exact_assertions,!, \+ clause_asserted_u(P).
 mpred_unique_u(P):- \+ clause_asserted_u(P).
 
 
-%% get_fc_mode(+P,+S,-Mode) is semidet.
-%
-% return Mode to forward assertion P in the prolog db.
-%
-
-%get_fc_mode(_P,_S,direct):-!.
-get_fc_mode(mpred_prop(_,_,_,_),_S,direct).
-get_fc_mode(P,_S,Mode):- notrace(get_unnegated_mfa(P,M,F,A)),mpred_prop(M,F,A,Mode),is_fwc_mode(Mode),!.
-get_fc_mode(P,_S,direct):- compound(P),functor(P,_,1).
-get_fc_mode(_P,_S,Mode):- get_fc_mode(Mode).
-
-get_fc_mode0(Mode):- t_l:mpred_fc_mode(Mode),!.
-get_fc_mode0(Mode):- lookup_m(pm(Mode)),!.
-get_fc_mode0(Mode):- !, Mode=direct.
-get_fc_mode(Mode):- notrace(get_fc_mode0(Mode)).
-
 
 :- thread_local(t_l:mpred_fc_mode/1).
 
@@ -1802,7 +1787,65 @@ get_fc_mode(Mode):- notrace(get_fc_mode0(Mode)).
 %
 with_fc_mode(Mode,Goal):- locally_tl(mpred_fc_mode(Mode),((Goal))).
 
-set_fc_mode(Mode):- asserta(t_l:mpred_fc_mode(Mode)).
+
+%% get_fc_mode(+P,+S,-Mode) is semidet.
+%
+% return Mode to forward assertion P in the prolog db.
+%
+get_fc_mode(mpred_prop(_,_,_,_),direct).
+get_fc_mode(P,Mode):- notrace(get_unnegated_mfa(P,M,F,A)),mpred_prop(M,F,A,Mode),is_fc_mode(Mode),!.
+get_fc_mode(P,direct):- compound(P),functor(P,_,1).
+get_fc_mode(_P,Mode):- get_fc_mode(Mode).
+get_fc_mode(Mode):- notrace(get_fc_mode0(Mode)).
+get_fc_mode0(Mode):- t_l:mpred_fc_mode(Mode),!.
+get_fc_mode0(Mode):- lookup_m(pm(Mode)),!.
+get_fc_mode0(Mode):- !, Mode=direct.
+set_fc_mode(Mode):- asserta(t_l:mpred_fc_mode(Mode)),
+   retractall_u(pm(_)), asserta_u(pm(Mode)).
+
+
+is_fc_mode(direct).
+is_fc_mode(thread).
+is_fc_mode(depth).
+is_fc_mode(paused).
+is_fc_mode(breadth).
+is_fc_mode(next).
+is_fc_mode(last).
+
+
+:- thread_local(t_l:mpred_tms_mode/1).
+
+%% with_tms_mode(+Mode,:Goal) is semidet.
+%
+% Temporariliy changes to forward chaining propagation mode while running the Goal
+%
+with_tms_mode(Mode,Goal):- locally_tl(mpred_tms_mode(Mode),((Goal))).
+
+
+%% get_tms_mode(+P,+S,-Mode) is semidet.
+%
+% return Mode to forward assertion P in the prolog db.
+%
+get_tms_mode(mpred_prop(_,_,_,_),local).
+get_tms_mode(P,Mode):- notrace(get_unnegated_mfa(P,M,F,A)),mpred_prop(M,F,A,Mode),is_tms_mode(Mode),!.
+get_tms_mode(_P,Mode):- get_tms_mode(Mode).
+
+get_tms_mode(Mode):- notrace(get_tms_mode0(Mode)).
+get_tms_mode0(Mode):- t_l:mpred_tms_mode(Mode),!.
+get_tms_mode0(Mode):- lookup_m(tms(Mode)),!.
+get_tms_mode0(Mode):-  Mode=full.
+
+set_tms_mode(Mode):- asserta(t_l:mpred_tms_mode(Mode)),
+   retractall_u(tms(_)), asserta_u(tms(Mode)).
+
+
+is_tms_mode(local).
+is_tms_mode(full).
+%is_tms_mode(deep).
+is_tms_mode(none).
+
+
+
 
 %% mpred_enqueue(+P,+S) is det.
 %
@@ -1817,27 +1860,20 @@ mpred_enqueue(P,_):- show_mpred_success(que,lookup_m(que(P,_))),!.
 %mpred_enqueue(P,S):- locally_each(t_l:busy(P),mpred_enqueue2(P,S)).
 mpred_enqueue(P,S):-
  (var(S)->current_why(S);true),
- (notrace(get_fc_mode(P,S,Mode)) 
+ (notrace(get_fc_mode(P,Mode)) 
   -> mpred_enqueue_w_mode(S,Mode,P)
    ; mpred_error("No pm mode")).
 
 mpred_enqueue_w_mode(S,Mode,P):-
-       (Mode=direct  -> mpred_enqueue_direct(S,P) ;
-        Mode=thread  -> mpred_enqueue_thread(S,P) ;
-	Mode=depth   -> mpred_asserta_w_support(que(P,S),S) ;
-        Mode=paused  -> mpred_asserta_w_support(que(P,S),S) ;
-	Mode=breadth -> mpred_assertz_w_support(que(P,S),S) ;
-        Mode=next   -> mpred_asserta_w_support(que(P,S),S) ;
-        Mode=last -> mpred_assertz_w_support(que(P,S),S) ;
-	true     -> mpred_error("Unrecognized pm mode: ~p", Mode)).
+ (Mode=direct  -> mpred_enqueue_direct(S,P) ;
+  Mode=thread  -> mpred_enqueue_thread(S,P) ;
+  Mode=depth   -> mpred_asserta_w_support(que(P,S),S) ;
+  Mode=paused  -> mpred_asserta_w_support(que(P,S),S) ;
+  Mode=breadth -> mpred_assertz_w_support(que(P,S),S) ;
+  Mode=next    -> mpred_asserta_w_support(que(P,S),S) ;
+  Mode=last    -> mpred_assertz_w_support(que(P,S),S) ;
+  true         -> mpred_error("Unrecognized pm mode: ~p", Mode)).
 
-is_fwc_mode(direct).
-is_fwc_mode(thread).
-is_fwc_mode(depth).
-is_fwc_mode(paused).
-is_fwc_mode(breadth).
-is_fwc_mode(next).
-is_fwc_mode(last).
 
 
 get_support_module(mfl4(_,Module,_,_), Module).
@@ -2202,7 +2238,7 @@ mpred_remove2(P,S) :-
       ; true).
 
 mpred_retract_is_complete(mfl4(_VarNameZ,_,_,_)):-!.
-mpred_retract_is_complete(P) :- \+ mpred_supported(local,P), \+ call_u(P).
+mpred_retract_is_complete(P) :- get_tms_mode(P,Mode), \+ mpred_supported(Mode,P), \+ call_u(P).
 
 mpred_retract(P):- mpred_withdraw(P), mpred_retract_is_complete(P),!,mpred_trace_msg('    Withdrew: ~p',[P]).
 mpred_retract(P):- mpred_retract_preconds(P), mpred_retract_is_complete(P),!,mpred_trace_msg('    Retracted: ~p~n',[P]).
@@ -2218,7 +2254,7 @@ ok_left_over(_,arity(_,_)).
 mpred_retract_preconds(P):- mpred_retract_1preconds(P).
 
 mpred_retract_1preconds(P):- 
-  supporters_list0(P,WhyS),
+  supporters_list_prefered(P,WhyS),
   member(S,WhyS),
   mpred_db_type(S,fact(_)),
   mpred_children(S,Childs),
@@ -2228,7 +2264,7 @@ mpred_retract_1preconds(P):-
   show_call(mpred_retract(S)).  
 
 mpred_retract_1preconds(P):- 
-  supporters_list0(P,WhyS),
+  supporters_list_prefered(P,WhyS),
   member(S,WhyS),
   mpred_db_type(S,fact(_)),
   mpred_children(S,Childs),
@@ -2239,7 +2275,7 @@ mpred_retract_1preconds(P):-
 
 
 mpred_retract1(P):- 
-  supporters_list0(P,WhyS),
+  supporters_list_prefered(P,WhyS),
   must_maplist(mpred_retract_if_fact,WhyS).
 
 
@@ -2395,6 +2431,18 @@ remove_if_unsupported0(P):- mpred_trace_msg('~p',[sv_still_supported(P)]), doall
 
 is_single_valued(P):- get_unnegated_functor(P,F,_)->call_u(prologSingleValued(F)).
 
+/*
+
+%% remove_if_unsupported( +Why, ?P) is semidet.
+%
+% Remove If Unsupported.
+%
+remove_if_unsupported(Why,P) :- is_ftVar(P),!,trace_or_throw_ex(warn(var_remove_if_unsupported(Why,P))).
+remove_if_unsupported(Why,P) :- ((\+ ground(P), P \= (_:-_) , P \= ~(_) ) -> mpred_trace_msg(warn(nonground_remove_if_unsupported(Why,P))) ;true),
+   (((mpred_tms_supported(local,P,How),How\=unknown(_)) -> mpred_trace_msg(still_supported(How,Why,local,P)) ; (  mpred_undo(Why,P)))),!.
+   % mpred_run.
+
+*/
 
 
 %%  mpred_fwc(+X) is det.
@@ -2603,9 +2651,6 @@ mpred_do_fact(Fact):-
   mpred_do_fcnt(Fact,Copy),
   nop(mpred_do_clause(Fact,true)).
 
-
-get_tms_mode(_P,Mode):- lookup_m(tms(ModeO)),!,ModeO=Mode.
-get_tms_mode(_P,Mode):- Mode=local.
 
 
 % do all positive triggers
@@ -2939,11 +2984,11 @@ call_mp(M,P1):- notrace(predicate_property(M:P1,defined)),!, M:call(P1).
 
 
 %call_mp(M,H):- is_static_predicate(H),!,M:call(H).
-%call_mp(M,H):- is_static_predicate(H),!,show_pred_info(H),dtrace(call_mp(M,H)).
+% call_mp(M,H):- is_static_predicate(H),!,show_pred_info(H),dtrace(call_mp(M,H)).
 
-call_mp(M,P1):- trace, !,M:call(P1).
+call_mp(M,P1):- !, trace, !, M:call(P1).
 % @TODO NEVER GETS HERE 
-call_mp(M,P):- safe_functor(P,F,A), call_u_mp_fa(M,P,F,A).
+call_mp(M,P):- safe_functor(P,F,A), catch(call_u_mp_fa(M,P,F,A),_,rtrace(call_u_mp_fa(M,P,F,A))).
 
 
 %% mpred_call_1( +VALUE1, ?G, ?VALUE3) is semidet.
@@ -3921,7 +3966,6 @@ mpred_reset_kb_0(Module):-
 
 mpred_reset_kb_0(Module):- mpred_reseted_kb_check(Module),!.
 
-
 mpred_reseted_kb_check(Module):- with_exact_kb(Module,mpred_reseted_kb_check_0(Module)).
 
 mpred_reseted_kb_check_0(Module):- \+ mpred_database_item(Module,_),!,mpred_trace_msg("Reset DB complete for ~p",[Module]).
@@ -3977,7 +4021,7 @@ mpred_retract_i_or_warn_2(X):- mpred_trace_msg("Couldn't retract_i: ~p.~n",[X]),
 %   for Pfc.
 
 %:- mpred_set_default(baseKB:mpred_warnings(_), baseKB:mpred_warnings(true)).
-%  tms is one of {none,local,cycles} and controles the tms alg.
+%  tms is one of {none,local,full} and controls the tms alg.
 % :- during_boot(mpred_set_default(mpred_warnings(_), mpred_warnings(true))).
 
 %  mpred_fact(P) is true if fact P was asserted into the database via add.

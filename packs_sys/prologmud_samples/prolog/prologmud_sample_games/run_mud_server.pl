@@ -40,7 +40,7 @@ W:\opt\logicmoo_workspace\packs_sys\logicmoo_utils\prolog;W:\opt\logicmoo_worksp
 :- getenv('DISPLAY',_)->true;setenv('DISPLAY', '10.0.0.122:0.0').
 %:- (notrace(gtrace),nodebug).
 %:- set_prolog_flag(verbose_load,true).
-:- set_prolog_flag(pfc_version,2.0).
+:- set_prolog_flag(pfc_version,v(2,0,0)).
 :- set_prolog_flag(dmsg_level,always).
 
 :- discontiguous rdf11:'$exported_op'/3. 

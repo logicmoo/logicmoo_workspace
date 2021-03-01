@@ -1884,6 +1884,7 @@
 						<F N="packs_sys/pfc/t/vlibs/pfc_2_2_full.pl"/>
 						<F N="packs_sys/pfc/t/vlibs/pfc_3_0_full.pl"/>
 					</Folder>
+					<F N="packs_sys/pfc/t/sieve_ar.pl"/>
 					<F N="packs_sys/pfc/t/try_logicmoo_examples.pl"/>
 				</Folder>
 				<F N="packs_sys/pfc/LICENSE.md"/>

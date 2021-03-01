@@ -1,8 +1,9 @@
 {
-  "name": "logicmoo_worksapce"
+  "name": "logicmoo_workspace"
 , "files":
- [ { "directory": "packs_sys", "filters": ["*.cpp", "*.h", "*.ui",  "*.pfc",  "*.pl", "CMakeLists.txt", "Find*.cmake"], "recursive": 1 } ]
- [ { "directory": "packs_xtra", "filters": ["*.cpp", "*.h", "*.ui",  "*.pfc",  "*.pl", "CMakeLists.txt", "Find*.cmake"], "recursive": 1 } ]
- [ { "directory": "packs_lib", "filters": ["*.cpp", "*.h", "*.ui",  "*.pfc",  "*.pl", "CMakeLists.txt", "Find*.cmake"], "recursive": 1 } ]
+ [ { "directory": "packs_sys/logicmoo_agi/prolog/episodic_memory", "filters": ["*.cpp", "*.h", "*.ui",  "*.pfc",  "*.pl", "*.P", "CMakeLists.txt", "Find*.cmake"], "recursive": 1 } ]
+ [ { "directory": "packs_sys/prologmud_samples/prolog", "filters": ["*.cpp", "*.h", "*.ui",  "*.pfc",  "*.pl", "*.P", "CMakeLists.txt", "Find*.cmake"], "recursive": 1 } ]
+ [ { "directory": ".", "filters": ["*.*"], "recursive": 0 } ]
+ [ { "directory": ".", "filters": [".*"], "recursive": 0 } ]
 }
 

@@ -36,7 +36,7 @@
 
 %  *** predicates for exploring supports of a fact *****
 
-justification(F,J):- supporters_list(F,J).
+justification(F,J):- supporters_list_how(F,J).
 
 justifications(F,Js):- bagof_nr(J,justification(F,J),Js).
 
@@ -58,32 +58,34 @@ mpred_info0(O):-
   %quietly(call_with_inference_limit(ignore(on_xf_cont(deterministically_must(mpred_why_1(O)))),4000,_)),
   ignore(on_xf_cont(deterministically_must(mpred_why_1(O)))),
   dmsg_pretty("======================================================================="),
+  findall(mpred_supported(Mode,O),is_tms_mode(Mode),SupportedModes),
   must_maplist(mp_printAll(O),
   [   mpred_db_type(O,v),  
-      +(mpred_child(O,v)),
+      mpred_child(O,v),
       % mpred_fact(O),
       mpred_axiom(O),
       well_founded(O),
-      mpred_supported(local,O),
-      mpred_supported(cycles,O),
       mpred_assumption(O),
       call(listing(O)),
-      get_mpred_is_tracing(O)]),
+      get_mpred_is_tracing(O),
+      get_tms_mode(O,v)|
+      SupportedModes]),
  dmsg_pretty("=======================================================================")))).
 
-mp_printAll(S,+(O)):- subst(O,v,V,CALL),CALL\==O,!,
+mp_printAll(S,call(O)):- !, subst(O,S,s,NAME),nl,flush_output,fmt("==================\n"),
+  doall(((flush_output,deterministically_must(catch(call_u(O),E,(fmt9(error(E)),fail))),flush_output)*->true;wdmsg_pretty(fail=NAME))),nl.
+
+mp_printAll(S,+(O)):- subst(O,v,V,CALL), CALL\==O,!,
   subst(O,S,s,NAME),safe_functor(O,F,_),!,
-  nl,flush_output, fmt("=================="),wdmsg_pretty(NAME),wdmsg_pretty("---"),flush_output,!,
-  doall(((flush_output,call_u(CALL),flush_output)*->fmt9(V);(fail=F))),nl,fmt("=================="),nl,flush_output.
-mp_printAll(S,call(O)):- !,
-  subst(O,S,s,NAME),
-  nl,flush_output,fmt("=================="),wdmsg_pretty(NAME),wdmsg_pretty("---"),flush_output,!,
-  doall(((flush_output,deterministically_must(call_u(O)),flush_output)*->true;wdmsg_pretty(false=NAME))),fmt("=================="),nl,flush_output.
-mp_printAll(S,(O)):- subst(O,v,V,CALL),CALL\==O,!,
-  subst(O,S,s,NAME),safe_functor(O,F,_),
-  nl,flush_output, fmt("=================="),wdmsg_pretty(NAME),wdmsg_pretty("---"),flush_output,!,
-  doall(((flush_output,deterministically_must(call_u(CALL)),flush_output)*->fmt9(V);(fail=F))),nl,fmt("=================="),nl,flush_output.
+  nl,flush_output, fmt("==================\n"),%wdmsg_pretty(NAME),wdmsg_pretty("---"),flush_output,!,
+  doall(((flush_output,call_u(CALL),flush_output)*->fmt9(F=V);(fmt9(fail=NAME)))),fresh_line,fmt("==================\n"),flush_output.
+
+mp_printAll(S,(O)):- subst(O,v,V,CALL),CALL\==O,!, subst(O,S,s,NAME),safe_functor(O,F,_),
+  format('~N',[]),flush_output, fmt("==================\n"),
+  doall(((flush_output,call_u(CALL),flush_output)*->fmt9(F=V);fmt9(fail=NAME))),nl.
+
 mp_printAll(S,(O)):-  !,  safe_functor(O,F,A),mp_nnvv(S,O,F,A),flush_output.
+
 mp_nnvv(_,(O),F,1):- !, doall(((flush_output,deterministically_must(call_u(O)),flush_output)*->wdmsg_pretty(+F);wdmsg_pretty(-F))).
 mp_nnvv(S,(O),_,_):- !, subst(O,S,s,NAME), !,
   doall(((flush_output,deterministically_must(call_u(O)),flush_output)*->wdmsg_pretty(-NAME);wdmsg_pretty(+NAME))).
@@ -137,7 +139,6 @@ mpred_assumption(P):- nonvar(P),
  % fail,
   % added prohibited_check
   (current_prolog_flag(explicitly_prohibited_check,false) -> true ; \+ mpred_axiom(~ N)).
-
 
 :- set_prolog_flag(explicitly_prohibited_check,false).
 
@@ -393,7 +394,7 @@ mpred_why_1(P):- ((callable(P), ((must_ex((mpred_why_justs(P))))))) *-> true ; m
 
 mpred_why_1_fallback(NX):-  
   (number(NX)-> true ; clear_proofs),
-  trace,
+  nop(trace),
   pfcWhy0(NX),!.
 mpred_why_1_fallback(P):- mpred_why_sub(P).
 
@@ -645,7 +646,7 @@ mpred_why_maybe(_,(F:-P)):-!,wdmsgl(F:-P),!.
 mpred_why_maybe(F,P):-wdmsgl(F:-P),!.
 mpred_why_maybe(_,P):-ignore(mpred_why_1(P)).
 
-mpred_why_sub(P):- trace, loop_check(mpred_why_sub0(P),true).
+mpred_why_sub(P):- nop(trace), loop_check(mpred_why_sub0(P),true).
 mpred_why_sub0(P):- mpred_why_2(P,Why),!,wdmsg_pretty(:-mpred_why_1(P)),wdmsgl(mpred_why_maybe(P),Why).
 mpred_why_sub0(P):-loop_check(mpred_why_sub_lc(P),trace_or_throw_ex(mpred_why_sub_lc(P)))-> \+ \+ call(t_l:whybuffer(_,_)),!.
 mpred_why_sub_lc(P):- 
@@ -770,11 +771,34 @@ mpred_supported(P):-
 %  depends on the TMS mode supplied.
 %
 mpred_supported(local,P):- !, mpred_get_support(P,_),!, not_rejected(P).
-mpred_supported(cycles,P):-  !, well_founded(P),!, not_rejected(P).
+mpred_supported(full,P):-  !, well_founded(P),!, not_rejected(P).
+% mpred_supported(deep,P) :- mpred_deep_support(_How,P).
 mpred_supported(How,P):- ignore(How=unknown),not_rejected(P).
+
+%% mpred_tms_supported( +Mode, ?P, ?How) is semidet.
+%
+% PFC Truth Maintainence/wff Supported.
+%
+mpred_tms_supported(P,How):-
+  must_ex(get_tms_mode(P,Mode))->
+  mpred_tms_supported0(Mode,P,How).
+
+mpred_tms_supported0(local,P,How) :-  mpred_get_support(P,How). % ,sanity(mpred_deep_support(How,S)).
+mpred_tms_supported0(full,P,How) :-  well_founded(P,How).
+mpred_tms_supported0(deep,P,How) :- mpred_deep_support(How,P).
+
 
 not_rejected(~P):- nonvar(P),  \+ mpred_get_support(P,_).
 not_rejected(P):-  \+ mpred_get_support(~P,_).
+
+%% mpred_tms_supported( +P, ?How) is semidet.
+%
+% PFC Truth Maintainence/wff Supported.
+%
+
+mpred_tms_supported(Mode,P,How) :- is_ftVar(Mode),get_tms_mode(P,tms(Mode)),!,mpred_tms_supported0(Mode,P,How).
+mpred_tms_supported(Mode,P,How) :- mpred_tms_supported0(Mode,P,How).
+mpred_tms_supported(How,_P,unknown(How)).
 
 %% well_founded(+Fact) is semidet.
 %
@@ -783,19 +807,44 @@ not_rejected(P):-  \+ mpred_get_support(~P,_).
 %
 well_founded(Fact):- each_E(well_founded_0,Fact,[_]).
 
+%% well_founded( +Fact, ?How) is semidet.
+%
+% a fact is well founded if it is supported by the user
+% or by a set of facts and a rules, all of which are well founded.
+%
+well_founded(Fact,How) :- well_founded_0_how(Fact,[],How).
+
 well_founded_0(F,_):-
   % supported by user (axiom) or an "absent" fact (assumption).
   (mpred_axiom(F) ; mpred_assumption(F)),
   !.
-
 well_founded_0(F,Descendants):-
   % first make sure we aren't in a loop.
   (\+ memberchk(F,Descendants)),
   % find a justification.
-  supporters_list0(F,Supporters),!,
+  supporters_list_prefered(F,Supporters),!,
   % all of whose members are well founded.
   well_founded_list(Supporters,[F|Descendants]),
   !.
+
+%% well_founded_0_how( ?F, ?VALUE2, :TermHow) is semidet.
+%
+% PFC Well-formed Formula.
+%
+well_founded_0_how(F,_,How) :-
+  % supported by user (mpred_axiom) or an "absent" fact (assumption).
+  ((mpred_axiom(F),How =mpred_axiom(F) ); (mpred_assumption(F),How=mpred_assumption(F))),
+  !.
+
+well_founded_0_how(F,Descendants,wff(Supporters)) :-
+  % first make sure we aren''t in a loop.
+  (\+ memberchk(F,Descendants)),
+  % find a justification.
+  supporters_list_how(F,Supporters),
+  % all of whose members are well founded.
+  well_founded_list_how(Supporters,[F|Descendants]),
+  !.
+
 
 %%  well_founded_list(+List,-Decendants) is det.
 %
@@ -805,15 +854,140 @@ well_founded_list([],_).
 well_founded_list([X|Rest],L):-
   well_founded_0(X,L),
   well_founded_list(Rest,L).
+%% well_founded_list_how(+L1, ?L2) is semidet.
+%
+%  simply maps well_founded_0_how over the list.
+%
+well_founded_list_how([],_).
+well_founded_list_how([X|Rest],L) :-
+  well_founded_0_how(X,L,_How),
+  well_founded_list_how(Rest,L).
 
-%% supporters_list(+F,-ListofSupporters) is det.
+%= mpred_tms_supported(+P,-How) succeeds if P is "supported". What "How" means
+%= depends on the TMS mode selected.
+
+
+:- module_transparent((well_founded_list_how)/2).
+:- module_transparent((well_founded_0_how)/3).
+
+
+
+% baseKB:hook_one_minute_timer_tick:- statistics.
+
+
+%% mpred_scan_tms( +P) is semidet.
+%
+% PFC Scan Truth Maintainence/wff.
+%
+mpred_scan_tms(P):-mpred_get_support(P,(S,SS)),
+  (S==SS-> true;
+   once((mpred_deep_support(_How,P)->true;
+     (mpred_trace_msg(warn(now_maybe_unsupported(mpred_get_support(P,(S,SS)),fail))))))).
+
+
+%% user_atom( +U) is semidet.
+%
+% User Atom.
+%
+user_atom(mfl4(_VarNameZ,_,_,_)):-!.
+user_atom(ax).
+user_atom(s(_)).
+
+
+%% mpred_deep_support( +How, ?M) is semidet.
+%
+% PFC Deep Support.
+%
+mpred_deep_support(_How,unbound):-!,fail.
+mpred_deep_support(How,M):-mpred_deep_support_how(How,M).
+
+
+%% mpred_deep_support_how( +U, ?U) is semidet.
+%
+% PFC Deep Support Primary Helper.
+%
+mpred_deep_support_how(user_atom(U),(U,ax)):-user_atom(U),!.
+mpred_deep_support_how(How,(A==>_)):-!,mpred_deep_support(How,A).
+mpred_deep_support_how(pt(HowA,HowB),pt(A,B)):-!,mpred_deep_support(HowA,A),mpred_deep_support(HowB,B).
+mpred_deep_support_how(HowA->HowB,(A->B)):-!,mpred_deep_support(HowA,A),mpred_deep_support(HowB,B).
+mpred_deep_support_how(HowA/HowB,(A/B)):-!,mpred_deep_support(HowA,A),mpred_deep_support(HowB,B).
+mpred_deep_support_how((HowA,HowB),(A,B)):-!,mpred_deep_support(HowA,A),mpred_deep_support(HowB,B).
+mpred_deep_support_how(How,rhs(P)):-!,maplist(mpred_deep_support,How,P).
+mpred_deep_support_how(mpred_call_only_facts(\+ P),\+ call_u(P)):-!,mpred_call_only_facts(\+ P).
+mpred_deep_support_how(mpred_call_only_facts(P),call_u(P)):-!,mpred_call_only_facts(P).
+mpred_deep_support_how(mpred_call_only_facts(P),{P}):-!,mpred_call_only_facts(P).
+mpred_deep_support_how(S==>How,P):-mpred_get_support(P,S),mpred_deep_support(How,S),!.
+mpred_deep_support_how(mpred_call_only_facts(\+(P)),\+(P)):-!, mpred_call_only_facts(\+(P)).
+mpred_deep_support_how(user_atom(P),P):-user_atom(P),!.
+mpred_deep_support_how(mpred_call_only_facts((P)),P):-mpred_call_only_facts(P).
+
+
+%% mpred_get_support_precanonical_plus_more( +P, ?Sup) is semidet.
+%
+% PFC Get Support Precanonical Plus More.
+%
+mpred_get_support_precanonical_plus_more(P,Sup):- 
+  mpred_get_support_one(P,Sup)*->true;
+  ((fully_expand(mpred_get_support_precanonical_plus_more,P,PE),!,
+    P\=@=PE,mpred_get_support_one(PE,Sup))).
+
+%% mpred_get_support_one( +P, ?Sup) is semidet.
+%
+% PFC Get Support One.
+%
+mpred_get_support_one(P,Sup):- mpred_get_support(P,Sup)*->true;
+  (mpred_get_support_via_clause_db(P,Sup)*->true;
+     mpred_get_support_via_sentence(P,Sup)).
+
+
+%% mpred_get_support_via_sentence( +Var, ?VALUE2) is semidet.
+%
+% PFC Get Support Via Sentence.
+%
+mpred_get_support_via_sentence(Var,_):-is_ftVar(Var),!,fail.
+mpred_get_support_via_sentence((A,B),(FC,TC)):-!, mpred_get_support_precanonical_plus_more(A,(FA,TA)),mpred_get_support_precanonical_plus_more(B,(FB,TB)),conjoin(FA,FB,FC),conjoin(TA,TB,TC).
+mpred_get_support_via_sentence(true,g):-!.
+mpred_get_support_via_sentence(G,call_u(G)):- call_u(G).
+
+
+
+%% mpred_get_support_via_clause_db( :TermP, ?OUT) is semidet.
+%
+% PFC Get Support Via Clause Database.
+%
+mpred_get_support_via_clause_db(\+ P,OUT):- mpred_get_support_via_clause_db(~(P),OUT).
+mpred_get_support_via_clause_db(\+ P,(naf(g),g)):- !, predicate_property(P,number_of_clauses(_)),\+ clause(P,_Body).
+mpred_get_support_via_clause_db(P,OUT):- predicate_property(P,number_of_clauses(N)),N>0,
+   clause_u(P,Body),(Body==true->Sup=(g);
+    (support_ok_via_clause_body(P),mpred_get_support_precanonical_plus_more(Body,Sup))),
+   OUT=(Sup,g).
+
+
+
+%% support_ok_via_clause_body( +H) is semidet.
+%
+% Support Ok Via Clause Body.
+%
+support_ok_via_clause_body(_H):-!,fail.
+support_ok_via_clause_body(H):- get_functor(H,F,A),support_ok_via_clause_body(H,F,A).
+
+
+%% support_ok_via_clause_body( +VALUE1, ?F, ?VALUE3) is semidet.
+%
+% Support Ok Via Clause Body.
+%
+support_ok_via_clause_body(_,(\+),1):-!,fail.
+support_ok_via_clause_body(_,F,_):- lookup_u(rtArgsVerbatum(F)),!,fail.
+support_ok_via_clause_body(H,F,A):- should_call_for_facts(H,F,A).
+
+%% supporters_list_how(+F,-ListofSupporters) is det.
 %
 % where ListOfSupports is a list of the
 % supports for one justification for fact F -- i.e. a list of facts which,
 % together allow one to deduce F.  One of the facts will typically be a rule.
 % The supports for a user-defined fact are: [ax].
 %
-supporters_list(F,ListO):- no_repeats_cmp(same_sets,ListO,supporters_list_each(F,ListO)).
+supporters_list_how(F,ListO):- no_repeats_cmp(same_sets,ListO,supporters_list_each(F,ListO)).
 
 same_sets(X,Y):-
   flatten([X],FX),sort(FX,XS),
@@ -821,12 +995,12 @@ same_sets(X,Y):-
   YS=@=XS.
 
 supporters_list_each(F,ListO):-   
-   supporters_list0(F,ListM),
+   supporters_list_prefered(F,ListM),
    expand_supporters_list(ListM,ListM,ListO).
 
 expand_supporters_list(_, [],[]):-!.
 expand_supporters_list(Orig,[F|ListM],[F|NewListOO]):-
-   supporters_list0(F,FList),
+   supporters_list_prefered(F,FList),
    list_difference_variant(FList,Orig,NewList),
    % NewList\==[],
    append(Orig,NewList,NewOrig),
@@ -877,9 +1051,9 @@ memberchk_variant(X, [Y|Ys]) :-
    ;   memberchk_variant(X, Ys)
    ).
 
-:- module_transparent(supporters_list0/2).
-supporters_list0(Var,[is_ftVar(Var)]):-is_ftVar(Var),!.
-supporters_list0(F,OUT):-  
+:- module_transparent(supporters_list_prefered/2).
+supporters_list_prefered(Var,[is_ftVar(Var)]):-is_ftVar(Var),!.
+supporters_list_prefered(F,OUT):-  
  pfc_with_quiet_vars_lock(supporters_list00(F,OUT)).
 
 :- module_transparent(supporters_list00/2).
