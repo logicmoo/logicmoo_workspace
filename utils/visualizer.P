@@ -155,7 +155,7 @@ visual(File,Options,lps_visualization(Timeline,Sequence),DFAgraph) :-
 	(member(abstract_numbers,Options)->AN=true; AN=false),
 	(member(non_reflexive,Options)->NR=true; NR=false),
 	dfa_graph(FluentsEtAl,AN,NR,DFAgraph),
-	
+	print_message(informational,"Prepared internal structures..."-[]),
 	% Find groups
 	(setof(G, T^X^member(t(X,T,G),Ranged), GroupIds)->true;GroupIds=[]), % allow for empty timelines
 	(member(stacked_fluents,Options)->Stacked=[];Stacked=[subgroupStack:false]),
@@ -190,7 +190,7 @@ visual(File,Options,lps_visualization(Timeline,Sequence),DFAgraph) :-
 	% Render fluents
 	% Let's find the end of time; since real time was introduced, we can't rely on endTime(_),
 	% so we need to find the last time of all events and fluents
-	print_message(informational,"Finding the end of time..."-[]),
+	% print_message(informational,"Finding the end of time..."-[]),
 	findall(T2,member(t(_,_-T2,_),Ranged),Times),
 	sort(Times,SortedTimes),
 	( append(_,[LastTime],SortedTimes) -> LastRelevantTime is LastTime+1 ; LastRelevantTime = 1),

@@ -1936,7 +1936,7 @@ write_test_file_(ProgramName,ToFile) :-
 	write('  on Prolog '), current_prolog_flag(version_data,P), write(P),
 	writeln(' for program file:'),
 	write('  '), writeln(ProgramName), writeln('*/'), nl,
-	write((:- dynamic lps_test_result/3, lps_test_result_item/3, lps_test_action_ancestor/3, lps_test_options/1)), writeln('.'),
+	write((:- thread_local lps_test_result/3, lps_test_result_item/3, lps_test_action_ancestor/3, lps_test_options/1)), writeln('.'),
 	nl,
 	writeln('% LPS options prior to the test:'),
 	setof(O,option(O),Options),

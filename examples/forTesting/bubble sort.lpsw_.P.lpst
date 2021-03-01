@@ -1,10 +1,10 @@
 /*
-  LPS test results file generated on 2021-2-28 at 17:40:56
+  LPS test results file generated on 2021-3-1 at 11:9:22
   on Prolog swi(8,1,9,[]) for program file:
   /Users/mc/git/lps_corner/examples/forTesting/bubble sort.lpsw_.P
 */
 
-:-dynamic lps_test_result/3,lps_test_result_item/3,lps_test_action_ancestor/3,lps_test_options/1.
+:-thread_local lps_test_result/3,lps_test_result_item/3,lps_test_action_ancestor/3,lps_test_options/1.
 
 % LPS options prior to the test:
 lps_test_options([dc]).
