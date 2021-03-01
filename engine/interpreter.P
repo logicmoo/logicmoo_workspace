@@ -213,6 +213,7 @@ lps_utils_directory(UD) :-
 :- multifile user:file_search_path/2.
 user:file_search_path(system, S) :- lps_engine_directory(D), atomic_list_concat([D,'/system'],S). % Apparently needed on SWI-Prolog 7.7.19 and later
 user:file_search_path(example, S) :- lps_examples_directory(ED), atomic_list_concat([ED,'/CLOUT_workshop'],S).
+user:file_search_path(lps_utils, D) :- lps_utils_directory(D). 
 
 cputime(T) :- T is cputime.
 

@@ -57,7 +57,7 @@ pengines:prepare_module(_Module, swish, _Options) :-
 	syntax2p/4,dumploaded/2,term_colours/2,may_clear_hints/0,timeless_ref/1,set_top_term/1
 	]).
 :- use_module('../utils/states_explorer.pl',[explore/2]).
-:- use_module('../utils/redis-client.pl').
+:- use_module('../utils/redisclient.pl').
 :- use_module('../utils/explanator').
 
 

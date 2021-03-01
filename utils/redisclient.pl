@@ -1,9 +1,10 @@
-% library to access a REDIS server via boththe redis-cli CLI utility
+% library to access a REDIS server via both the redis-cli CLI utility
 % /Applications/SWI-Prolog8.1.1.app/Contents/MacOS/swipl -l redisclient.pl
 %TODO: add psubscribe(Pattern) ?
 :- module(redisclient,[
     create/2, create/3, get_key/2, set_key/2, get_keys/1, get_channels/1, kill_all/0,
-    restapi_login/3, restapi_request/2, restapi_request_result/2
+    restapi_login/3, restapi_request/3, restapi_request/2, restapi_request_result/2,
+    restapi_server_base/1
     ]).
 :- use_module(library(process)).
 
@@ -81,16 +82,23 @@ restapi_login(ServerURL,User,Pass) :-
     retractall(restapi_token(_)), assert(restapi_token(T)),
     retractall(restapi_server_base(_)), assert(restapi_server_base(ServerURL)).
 
-%! restapi_request(+PartialURL,-ID) is det
+%! restapi_request(+PartialURL,-ID,+HandlerGoal) is det
 % submits an assynchronous request using the stored token, succeeding immediately; then use restapi_request_result/2
 % e.g. tag/devices/ , tag/tag2/ , home/homes/
-restapi_request(PartialURL,ID) :- 
-    restapi_server_base(Base), format(string(URL),"~a~a",[Base,PartialURL]),
+restapi_request(PartialURL,ID,G) :- 
+    restapi_server_base(Base), format(atom(URL),"~a~a",[Base,PartialURL]),
     restapi_token(Token), format(string(Auth),"token ~a",[Token]),
     gensym(restapi,ID),
     thread_create((
-        http_get(URL, Result, [request_header('Content-Type'='application/json'),request_header('Authorization'=Auth)]), assert(restapi_request_result_(ID,Result))),
+        catch(
+            http_get(URL, Result, [request_header('Content-Type'='application/json'),request_header('Authorization'=Auth)]),
+            Ex,
+            (print_message(error,Ex), fail)), 
+        assert(restapi_request_result_(ID,Result)),
+        once(G)),
         _TID,[]).
+
+restapi_request(PartialURL,ID) :- restapi_request(PartialURL,ID,true).
 
 :- dynamic restapi_request_result_/2.
 
