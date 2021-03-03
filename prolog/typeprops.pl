@@ -338,7 +338,7 @@ nlist(T, L) :- list(nlist(T), L).
 :- meta_predicate nlist(1, ?).
 
 nlist(T) :- term(T).
-nlist(T, L) :- list(nlist, L).
+nlist(L) :- list(nlist, L).
 
 /* Note: this definition could lead to il-formed lists, like [a|b], that is why
  * we prefer the definition above
