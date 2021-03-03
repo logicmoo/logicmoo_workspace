@@ -61,9 +61,9 @@ declare_inst_type(Inst, Type, S0, S2):-
 
 init_objects :-
   with_mutex(get_advstate,
-    init_objects_in_mutex).
+    init_objects_from_mutex).
 
-init_objects_in_mutex :-
+init_objects_from_mutex :-
  get_advstate(S0),
  retractall(advstate_db(_)),
  must_mw1(get_objects(true, OldObjectList, S0)),

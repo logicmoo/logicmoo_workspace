@@ -6,7 +6,9 @@
 % Copyright: Public domain.
 
 :- use_module(library(assert_db_local)).
-:- l_install.
+:- install_L.
+:- disable_L.
+:- enable_L.
 
 top :- clean, primes(10000), fail.
 top.
@@ -28,8 +30,10 @@ clean :-
     retractall(prime(_)),
     retractall(candidate(_)).
 
+setup(N):- forall(between(2, N, I), assertz(candidate(I))).
+
 primes(N) :-
-    forall(between(2, N, I), assertz(candidate(I))),
+    setup(N),
     sieve(N).
 
 sieve(Max) :-
@@ -52,6 +56,5 @@ sieve(_, _, _).
 
 :- clean.
 
-:- N=4, \+ ( between(1, N, I),
-         \+ assertz(candidate(I))
-       ).
+:- setup(40).
+:- listing(clean).

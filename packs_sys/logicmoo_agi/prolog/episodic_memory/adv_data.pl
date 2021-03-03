@@ -71,10 +71,10 @@ dest_target(spatially(to, Dest), Target):- nonvar(Dest), !, dest_target(Dest, Ta
 dest_target(loc(_, _, _, Target), Target):- nonvar(Target), !.
 
 
-:- dynamic(istate/1).
 % empty intial state
-:- retractall(istate(_)).
-:- asserta(istate([ structure_label(istate), propOf(istate, world) ])).
+:- ensure_state_context(istate).
+:- clear_state_context(istate).
+:- set_state_context(istate).
 
 % this hacks the state above
 :- push_to_state([in(floyd, pantry)]).
@@ -327,6 +327,7 @@ type_props(screendoor, [
    % 5 = save game |  4 = debug | 3 = look at Obj | 2 =  | 1 = basic fun info
    % prop_depth = 3, % what prop level to get
    % Basic fun type_props
+   inherit(character),
    inherit(autoscan),
    look_depth = 3,
    user_mode = 2, % 1 = fun-only, normal, debug

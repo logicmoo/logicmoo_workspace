@@ -264,10 +264,10 @@ push_2_state(StateInfo):- StateInfo=..[F, Obj, E1, E2|More], functor_arity_state
   StateInfoNew=..[F, Obj, [E1, E2|More]], !, push_2_state(StateInfoNew).
 push_2_state(StateInfo):- props_to_list(StateInfo, StateInfo2)->StateInfo2\=[StateInfo], !, push_2_state(StateInfo2).
 
-push_2_state(assert_text(Text)):- must(eng2log(istate, Text, Translation, [])), push_2_state(Translation).
-push_2_state(assert_text(Where, Text)):- !, must(eng2log(Where, Text, Translation, [])), push_2_state(Translation).
+push_2_state(assert_text(Text)):- trace, must(eng2log(istate, Text, Translation, [])), push_2_state(Translation).
+push_2_state(assert_text(Where, Text)):-  trace, !, must(eng2log(Where, Text, Translation, [])), push_2_state(Translation).
 
-push_2_state(StateInfo):- is_state_info(StateInfo), !, must_or_rtrace(declare(StateInfo, istate, _)), must_or_rtrace(update_running(StateInfo)).
+push_2_state(StateInfo):- is_state_info(StateInfo), !, get_state_context(Ctx), must_or_rtrace(declare(StateInfo, Ctx, _)), must_or_rtrace(update_running(StateInfo)).
 push_2_state(StateInfo):- wdmsg(warn(push_2_state(StateInfo))), trace, forall(arg(_, StateInfo, Sub), push_2_state(Sub)).
 
 correct_props(_Obj, PropsIn, PropsOut):- props_to_list(PropsIn, PropsOut), !.
@@ -334,7 +334,7 @@ correct_prop(AdjsInfo, sp(Adjs, Info)):- pos_to_sp(Adjs), compound_name_argument
 
 correct_prop(sp(Adjs, TypeS), Out):- is_list(TypeS), must_maplist(correct_some(Adjs), TypeS, Out).
 correct_prop(sp(Adjs, Atom), Out):-  check_atom(Atom), 
-  push_to_state(type_props(Atom, [traits(Atom), sp=Adjs])), !,
+  nop(push_to_state(type_props(Atom, [traits(Atom), sp=Adjs]))), !,
   % make_class_desc_sp(Adjs, Atom, ClassDesc), push_to_state(type_props(Atom, [class_desc([ClassDesc])])),
   must(correct_prop(inherit(Atom), Out)).
 

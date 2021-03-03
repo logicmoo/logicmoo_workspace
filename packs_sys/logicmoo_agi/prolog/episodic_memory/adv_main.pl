@@ -98,21 +98,23 @@ adventure_reset :-
  must_mw1((
  test_ordering, !,
  init_logging, !,
- retractall(advstate_db(_)), !,
- istate(S0), !,
+ get_state_context(Before),
  player_format('=============================================~n', []),
  player_format('RESET STATE~n', []),
- player_format('=============================================~n', []),
- set_advstate(S0))), !.
+ clear_state_context(Before),
+ transfer_context(istate,Before),
+ player_format('=============================================~n', []))).
 
+adventure_ensure_inited :-  
+ set_state_context(advstate_db),
+ get_advstate(S0), \+ in_model(h(_,_,_,_), S0), 
+ !, adventure_reset.
+adventure_ensure_inited.
 
 adventure_init :-
- ((get_advstate(S0), S0\==[]) -> true; (adventure_reset, get_advstate(S0))),
- must_mw1((
- retractall(advstate_db(_)), !,
- set_advstate(S0),
- init_objects, !,
- get_advstate(S1))),
+ set_state_context(advstate_db),
+ adventure_ensure_inited, !,
+ get_advstate(S1),
    player_format('=============================================~n', []),
    player_format('INIT STATE~n', []),
    player_format('=============================================~n', []),
@@ -130,7 +132,7 @@ adventure:-
  player_format('=============================================~n', []),
  player_format('Welcome to Marty\'s Prolog Adventure Prototype~n', []),
  player_format('=============================================~n', []),
- setup_player_console,
+ setup_player_console,!,
  % start_missing_threads,
  mainloop,
  !.
