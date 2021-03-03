@@ -330,6 +330,16 @@ tlist(T, E) :- type(T, E).
 nlist(T, X) :- type(T, X).
 nlist(T, L) :- list(nlist(T), L).
 
+%!  nlist(NL)
+%
+%   A nested list
+
+:- type nlist/1.
+:- meta_predicate nlist(1, ?).
+
+nlist(T) :- term(T).
+nlist(T, L) :- list(nlist, L).
+
 /* Note: this definition could lead to il-formed lists, like [a|b], that is why
  * we prefer the definition above
 
