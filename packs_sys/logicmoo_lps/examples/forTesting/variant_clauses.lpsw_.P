@@ -2,21 +2,21 @@
 initial_state([f(1,2)]).
 
 observe([start],2).
-observe([],_7290) :-
-    _7290>2,
-    _7290<6.
+observe([],_3912) :-
+    _3912>2,
+    _3912<6.
 
-reactive_rule([happens(start,_7290,_7292)],[happens(composite,_7292,_7306)]).
+reactive_rule([happens(start,_3912,_3914)],[happens(composite,_3914,_3928)]).
 
-l_events(happens(composite,_7290,_7292),[holds(f(_7296,_7298),_7290),different(_7296,1),happens(a(_7296),_7290,_7292)]).
-l_events(happens(composite,_7290,_7292),[holds(f(_7296,_7298),_7290),happens(a(_7298),_7290,_7292)]).
+l_events(happens(composite,_3912,_3914),[holds(f(_3918,_3920),_3912),different(_3918,1),happens(a(_3918),_3912,_3914)]).
+l_events(happens(composite,_3912,_3914),[holds(f(_3918,_3920),_3912),happens(a(_3920),_3912,_3914)]).
 
-fluent(f(_7288,_7290)).
+fluent(f(_3910,_3912)).
 
-action(a(_7288)).
+action(a(_3910)).
 
 event(start).
 
-l_timeless(different(_7288,_7290),[_7288\==_7290]).
+l_timeless(different(_3910,_3912),[_3910\==_3912]).
 
 maxTime(5).

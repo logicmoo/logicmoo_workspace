@@ -27,9 +27,11 @@ expects_dialect/1:
 @tbd	The dialect-compatibility packages are developed in a
 	`demand-driven' fashion.  Please contribute to this package. Fill it in!
 @author Douglas R. Miles
+
 */
 
-:- module(lps, [pop_lps_dialect/0,push_lps_dialect/0,dialect_input_stream/1, calc_load_module_lps/1]).
+:- module(lps, [lps_pop_dialect/2, lps_expects_dialect/1, expecting_lps_dialect/0, 
+   lps_debug/1, lps_expects_dialect/4,dialect_input_stream_lps/1]).
 % :- asserta(swish:is_a_module).
 
 
@@ -51,8 +53,28 @@ expects_dialect/1:
 % :- notrace(system:ensure_loaded(library(operators))).
 
 
-lps_debug(Info):- ignore(notrace((debug(lps(dialect),'~N% ~p.',[Info])))).
-% lps_debug(X):- format(user_error,'~N% LPS_DEBUG: ~q.~n',[X]),flush_output(user_error).
+% lps_debug(Info):- ignore(notrace((debug(lps(dialect),'~N% ~p.',[Info])))).
+lps_debug(_):-!.
+lps_debug(I):- ignore(notrace(lps_debug0(I))).
+
+lps_debug0(state):- !, lps_state.
+lps_debug0(X):- format(user_error,'~N% LPS_DEBUG: ~p.~n',[X]),flush_output(user_error).
+
+show_all_debug_lps(G):- ignore(((G *-> lps_debug0(G);lps_debug0(failed(G))),fail)).
+
+
+lps_state:-!,
+  show_all_debug_lps(prolog_load_context(dialect,_)),
+  G = lpstmp:module_dialect_lps(_,_,_,Module,_),
+  OP = current_op(_,fy,(Module:'-')),
+  show_all_debug_lps((G,OP)),
+  show_all_debug_lps(predicate_property(G,number_of_clauses(_))),
+  Module = user, show_all_debug_lps((OP)).
+
+:- export(lps:lps_state/0).
+:- system:import(lps:lps_state/0).
+
+
 
 %%	lps_dialect_expansion(+In, +Out)
 %
@@ -60,11 +82,39 @@ lps_debug(Info):- ignore(notrace((debug(lps(dialect),'~N% ~p.',[Info])))).
 %	expansions  below  maintain  optimization    from   compilation.
 %	Defining them as predicates would loose compilation.
 
-lps_dialect_expansion(expects_dialect(Dialect), Out):- 
-   % in case it is used more than once
-   swi \== Dialect -> 
+lps_dialect_expansion(expects_dialect(Dialect), lps_expects_dialect(Dialect)):-!.
+
+lps_expects_dialect(Dialect):-  
+ prolog_load_context(module, Module),  
+ notrace((
+  lps:(prolog_load_context(dialect, Was),
+  dialect_input_stream_lps(Source),
+  lps_debug(lps_expects_dialect(Dialect,Source,Was,Module))))),
+  lps_expects_dialect(Dialect,Source,Was,Module),
+  lps_debug(state).
+
+expecting_lps_dialect:- 
+ notrace((
+  prolog_load_context(dialect, lps),
+  prolog_load_context(module, Module),
+  dialect_input_stream_lps(Source),
+  lpstmp:module_dialect_lps(lps,Source,_,Module,_Undo))).
+
+
+  %prolog_load_context(dialect, Was)
+%  ((Was==lps, Dialect\==lps)-> lps_pop_dialect ; true),
+%  expects_dialect(Dialect).
+
+/*
+ % current_prolog_flag(emulated_dialect, lps) 
+ dumpST,
+ wdmsg(expects_dialect(Dialect)),
+   fail,
+   % in case it is used more than once   
+   lps == Dialect -> 
        Out = debug(lps(term_expansion),'~q.',[(expects_dialect(Dialect))])
-     ; Out=pop_lps_dialect.
+     ; Out=lps_pop_dialect.
+*/
 /*
 lps_dialect_expansion(eval_arith(Expr, Result),
 	      Result is Expr).
@@ -156,59 +206,35 @@ calc_load_module_lps(Module):-
      pengine_self(Module),
      '$current_source_module'(Module),
      '$current_typein_module'(Module),
-     interpreter:lps_program_module(Module),
+     get_lps_program_module(Module),
      strip_module(_,Module,_),
      context_module(Module),
      source_location(Module,_)]),
     call(Call),
     lps_debug(calc_load_module_lps(Call)),
-    \+ likely_reserved_module(Module)); interpreter:must_lps_program_module(Module).
+    \+ likely_reserved_module(Module)).
+calc_load_module_lps(Module):- set_lps_program_module(Module).
+
+
 get_lps_program_module(Module):- interpreter:lps_program_module(Module).
 
 set_lps_program_module(Module):- interpreter:must_lps_program_module(Module).
 
 likely_reserved_module(Module):- Module=user; 
   module_property(Module,P), member(P,[class(library),class(system),exported_operators([_|_]),exports([_|_])]).
-  
 
-
-
-    :- volatile(tmp:module_dialect_lps/4).
+/*
+:- volatile(tmp:module_dialect_lps/4).
 :- thread_local(tmp:module_dialect_lps/4).
 
+    :- volatile(lpstmp:module_dialect_lps/5).
+:- thread_local(lpstmp:module_dialect_lps/5).
 
-:- lps:export(lps:push_lps_dialect/0). 
-:- system:import(lps:push_lps_dialect/0). 
 
 :- system:module_transparent(lps:setup_dialect/0). 
-:- system:module_transparent(lps:pop_lps_dialect/0).
-:- system:module_transparent(lps:push_lps_dialect/0).
-%:- system:module_transparent(lps:lps_expects_dialect/2).
-
-lps:setup_dialect:- 
-    lps_debug(push_lps_dialect),lps_debug(ops),
-    (push_lps_dialect->true;(trace,push_lps_dialect)),
-    lps_debug(continue_lps_dialect),lps_debug(ops).
-
 :- system:module_transparent(prolog_dialect:expects_dialect/1). 
-%:- prolog_dialect:import(lps:push_lps_dialect/0). 
-
-
-
-% :- prolog_dialect:asserta((())).
-% :- thread_local(interpreter:lps_program_module/1).
-
-
-get_lps_alt_user_module(_User,LPS_USER):- interpreter:lps_program_module(LPS_USER),!.
-get_lps_alt_user_module( user, db):-!.
-get_lps_alt_user_module( User,LPS_USER):- is_lps_alt_user_module(User,LPS_USER),!.
-%get_lps_alt_user_module(_User,LPS_USER):- interpreter:lps_program_module(LPS_USER),!.
-
-% is_lps_alt_user_module(user,db):-!.
-is_lps_alt_user_module(_User,Out):- gensym(lps, Out).
-
-% is_lps_alt_user_module(db).
-
+lps:setup_dialect:- lps_expects_dialect(lps).
+   
 
 lps_operators(Module,[
   op(900,fy,(Module:not)), 
@@ -246,6 +272,7 @@ lps_operators(Module,[
   op(700,xfx,((Module:(<=))))
 ]).
 
+
 add_lps_to_module(Module):-
    notrace(interpreter:ensure_loaded(library('../engine/interpreter.P'))),
    notrace(lps_term_expander:ensure_loaded(library('../swish/term_expander.pl'))),
@@ -256,49 +283,43 @@ add_lps_to_module(Module):-
    db:define_lps_into_module(Module),
    !.
 
-push_lps_dialect:-
-   calc_load_module_lps(Module),
-   lps_expects_dialect(Module, Module).   
+other_dialect(Dialect):- Dialect==swi.
+
+:- system:module_transparent(lps:lps_expects_dialect/4).
+:- system:import(lps:lps_expects_dialect/4).
+lps_expects_dialect(SWI,Source,_,Module):- other_dialect(SWI),!,lps_pop_dialect(Source,Module), expects_dialect(SWI).
+%lps_expects_dialect(SWI,_,Bin,_):- other_dialect(SWI),other_dialect(Bin),!, expects_dialect(SWI).
+lps_expects_dialect(WAS,_,WAS,_):- !. % expects_dialect(WAS).
+lps_expects_dialect(Next,Source,Was,Module):- lpstmp:module_dialect_lps(Next,Source,Was,Module,_Undo), !.
+lps_expects_dialect(Next,StreamNow,Was,Module):- lpstmp:module_dialect_lps(Next,StreamBefore,Was,Module,_Undo),
+   StreamNow \== StreamBefore,!,
+   retract(lpstmp:module_dialect_lps(Next,StreamBefore,Was,Module,Undo)),
+   asserta(lpstmp:module_dialect_lps(Next,StreamNow,Was,Module,Undo)),!.
   
-lps_expects_dialect(User, User):-  
-  User==user,
-  get_lps_alt_user_module(User,LPS_USER),
-  LPS_USER\==user,
-  lps_debug(alt_module(User,LPS_USER)),
-  '$set_source_module'(LPS_USER),!,
-  lps_expects_dialect(User, LPS_USER).
-
-
-lps_expects_dialect(Was, Module):-
+:- system:module_transparent(lps:lps_expects_dialect/1).
+:- system:import(lps:lps_expects_dialect/1).
+lps_expects_dialect(lps,Source,Was,Module):-
    add_lps_to_module(Module),
-   dialect_input_stream(Source),   
    lps_operators(Module, Ops),
    push_operators(Module:Ops, Undo),
-   %ignore(retract(tmp:module_dialect_lps(Source,_,_,_))), 
-   asserta(tmp:module_dialect_lps(Source,Was,Module,Undo)),!.
+   %ignore(retract(lpstmp:module_dialect_lps(Dialect,Source,_,_,_))), 
+   asserta(lpstmp:module_dialect_lps(lps,Source,Was,Module,Undo)),!.
+  
 
-dialect_input_stream(Source):- prolog_load_context(source,Source)->true;current_input(Source).
-% dialect_input_stream(Source):- prolog_load_context(stream,Source)->true;current_input(Source).
+dialect_input_stream_lps(Source):- prolog_load_context(source,Source)->true; Source = user_input.
 
-pop_lps_dialect:-
-    dialect_input_stream(Source),
-    retract(tmp:module_dialect_lps(Source,Was,Module,Undo)),!,
-    pop_operators(Undo),
-    lps_debug(pop_lps_dialect(Source,Module->Was)),
-    %nop('$set_source_module'(Was)),!,
-    lps_debug(ops).
-pop_lps_dialect:-
-    retract(tmp:module_dialect_lps(Source,Was,Module,Undo)),!,
-    print_message(warning, format('~q', [warn_pop_lps_dialect_fallback(Source,Module->Was)])),
-    %dumpST,
-    %lps_debug(ops),
+:- system:module_transparent(lps:lps_pop_dialect/2).
+:- system:import(lps:lps_pop_dialect/2).
+lps_pop_dialect(Source,Module):-
+    retract(lpstmp:module_dialect_lps(lps,Source,Was,Module,Undo)),!,
+    %print_message(warning, format('~q', [warn_pop_lps_dialect_fallback(Source,Module->Was)])),
+    lps_debug(pop_lps_dialect2(Source,Module->Was)),
     pop_operators(Undo),    
     %nop('$set_source_module'(Was)),!,
-    lps_debug(ops).
-pop_lps_dialect:- 
-   lps_debug(ops),
-   print_message(warning, format('~q', [missing_pop_lps_dialect_fallback])).
-
+    lps_debug(state).
+lps_pop_dialect(Source,Module):- 
+   lps_debug(print_message(warning, format('~q', [missing_pop_lps_dialect_fallback(Source,Module)]))),
+   lps_debug(state).
 
 
                  /*******************************
@@ -311,47 +332,39 @@ pop_lps_dialect:-
 
 prolog:alternate_syntax(lps, Module,
                         lps:push_lps_operators(Module),
-                        lps:pop_lps_operators).
+                        lps:pop_lps_operators(Module)).
 
 
 /* - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 Note that we could generalise this to deal with all included files.
 - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - */
 
-push_lps_operators :-
-    '$set_source_module'(Module, Module),
-    push_lps_operators(Module).
-
 push_lps_operators(Module) :-
     lps_operators(Module, Ops),
     push_operators(Module:Ops).
 
-pop_lps_operators :-
+pop_lps_operators(_) :-
     pop_operators.
 
 
-user:goal_expansion(In, Out) :-
-    prolog_load_context(dialect, lps),
+user:goal_expansion(In, Out) :-    
     lps_dialect_expansion(In, Out).
 
 
-
-system:term_expansion(In, PosIn, Out, PosOut) :- 
-  prolog_load_context(dialect, lps),
-  In == (:- include(system('date_utils.pl'))), 
-  PosIn=PosOut, 
-  expects_dialect(swi),
-  Out = [(:- expects_dialect(swi)),
-         (:- include(system('date_utils.pl'))),
-         (:- expects_dialect(lps))],!.
-
-system:term_expansion(In, PosIn, Out, PosOut) :- In == end_of_file,
+:- multifile(system:term_expansion/2).
+:- module_transparent(system:term_expansion/2).
+% :- export(system:term_expansion/2).
+system:term_expansion(MIn, Out):- 
+   notrace(strip_module(MIn,MM,In)),
+   notrace(nonvar(In)), 
+   (MIn==In->prolog_load_context(module, Module);MM=Module),
+   notrace(In == end_of_file),
    prolog_load_context(dialect, lps),
-   dialect_input_stream(Source),
-   tmp:module_dialect_lps(Source,_,_,_),
-   pop_lps_dialect,!,
-   Out = In,
-   PosIn = PosOut.
+   prolog_load_context(file, Source),
+   prolog_load_context(module, Module),
+   lps_pop_dialect(Source,Module),!,
+   Out = In.
       
       
+
 

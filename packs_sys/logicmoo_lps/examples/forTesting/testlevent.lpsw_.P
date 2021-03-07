@@ -1,32 +1,32 @@
 
-event(start_game(_2488)).
+event(start_game(_5256)).
 
-action(moveperson(_2488,_2490,_2492)).
-action(genbelief(_2488,_2490)).
+action(moveperson(_5256,_5258,_5260)).
+action(genbelief(_5256,_5258)).
 
 event(newbelief).
 
-fluent(fact(_2488)).
-fluent(belief(_2488,_2490)).
-fluent(object(_2488,_2490)).
-fluent(position(_2488,_2490,_2492)).
+fluent(fact(_5256)).
+fluent(belief(_5256,_5258)).
+fluent(object(_5256,_5258)).
+fluent(position(_5256,_5258,_5260)).
 
 initial_state([fact(unit1),position(unit1,1,1),belief(2,1),object(3,1)]).
 
-l_timeless(increment(_2488,_2490),[_2490 is _2488+1]).
+l_timeless(increment(_5256,_5258),[_5258 is _5256+1]).
 
-terminated(happens(moveperson(_2488,_2490,_2492),_2498,_2500),position(_2488,_2506,_2508),[]).
+terminated(happens(moveperson(_5256,_5258,_5260),_5266,_5268),position(_5256,_5274,_5276),[]).
 
-initiated(happens(moveperson(_2488,_2490,_2492),_2498,_2500),position(_2488,_2490,_2492),[]).
+initiated(happens(moveperson(_5256,_5258,_5260),_5266,_5268),position(_5256,_5258,_5260),[]).
 
-terminated(happens(genbelief(_2488,_2490),_2496,_2498),belief(_2502,_2504),[]).
+terminated(happens(genbelief(_5256,_5258),_5264,_5266),belief(_5270,_5272),[]).
 
-initiated(happens(genbelief(_2488,_2490),_2496,_2498),belief(_2488,_2490),[]).
+initiated(happens(genbelief(_5256,_5258),_5264,_5266),belief(_5256,_5258),[]).
 
-reactive_rule([happens(start_game(_2488),_2494,_2496)],[happens(newbelief,_2508,_2510),tc(_2496=<_2508)],95).
+reactive_rule([happens(start_game(_5256),_5262,_5264)],[happens(newbelief,_5276,_5278),tc(_5264=<_5276)],95).
 
-l_events(happens(newbelief,_2490,_2492),[holds(belief(_2496,_2498),_2490),increment(_2496,_2516),holds(not object(_2516,_2498),_2490),happens(genbelief(_2516,_2498),_2490,_2492)]).
-l_events(happens(newbelief,_2490,_2492),[holds(belief(_2496,_2498),_2490),increment(_2498,_2516),holds(not object(_2496,_2516),_2490),happens(genbelief(_2496,_2516),_2490,_2492)]).
+l_events(happens(newbelief,_5258,_5260),[holds(belief(_5264,_5266),_5258),increment(_5264,_5284),holds(not object(_5284,_5266),_5258),happens(genbelief(_5284,_5266),_5258,_5260)]).
+l_events(happens(newbelief,_5258,_5260),[holds(belief(_5264,_5266),_5258),increment(_5266,_5284),holds(not object(_5264,_5284),_5258),happens(genbelief(_5264,_5284),_5258,_5260)]).
 
 observe([start_game(unit1)],2).
 observe([],3).

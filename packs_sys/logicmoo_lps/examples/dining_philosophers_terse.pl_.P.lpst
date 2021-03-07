@@ -1,7 +1,7 @@
 /*
-  LPS test results file generated on 2018-2-28 at 16:50:39
-  on Prolog swi(7,7,2,[]) for program file:
-  /Users/mc/git/logicalcontracts/examples/dining_philosophers_terse.lps_.P
+  LPS test results file generated on 2021-2-28 at 17:36:25
+  on Prolog swi(8,1,9,[]) for program file:
+  /Users/mc/git/lps_corner/examples/dining_philosophers_terse.pl_.P
 */
 
 :-dynamic lps_test_result/3,lps_test_result_item/3,lps_test_action_ancestor/3,lps_test_options/1.
@@ -20,12 +20,14 @@ lps_test_result(fluents,3,1).
 lps_test_result(events,4,2).
 lps_test_result(fluents,4,1).
 lps_test_result(events,5,2).
+lps_test_result(composites,5,2).
 lps_test_result(fluents,5,5).
 lps_test_result(events,6,2).
 lps_test_result(fluents,6,1).
 lps_test_result(events,7,2).
 lps_test_result(fluents,7,1).
 lps_test_result(events,8,2).
+lps_test_result(composites,8,2).
 lps_test_result(fluents,8,5).
 lps_test_result(events,9,1).
 lps_test_result(fluents,9,3).
@@ -65,6 +67,8 @@ lps_test_result_item(events,4,eat(philosopher(4))).
 lps_test_result_item(fluents,4,available(fork(1))).
 lps_test_result_item(events,5,putdown_forks(fork(4),philosopher(4),fork(0))).
 lps_test_result_item(events,5,putdown_forks(fork(2),philosopher(2),fork(3))).
+lps_test_result_item(composites,5,happens(dine(philosopher(2)),2,5)).
+lps_test_result_item(composites,5,happens(dine(philosopher(4)),2,5)).
 lps_test_result_item(fluents,5,available(fork(1))).
 lps_test_result_item(fluents,5,available(fork(4))).
 lps_test_result_item(fluents,5,available(fork(0))).
@@ -78,6 +82,8 @@ lps_test_result_item(events,7,eat(philosopher(1))).
 lps_test_result_item(fluents,7,available(fork(0))).
 lps_test_result_item(events,8,putdown_forks(fork(1),philosopher(1),fork(2))).
 lps_test_result_item(events,8,putdown_forks(fork(3),philosopher(3),fork(4))).
+lps_test_result_item(composites,8,happens(dine(philosopher(3)),2,8)).
+lps_test_result_item(composites,8,happens(dine(philosopher(1)),2,8)).
 lps_test_result_item(fluents,8,available(fork(0))).
 lps_test_result_item(fluents,8,available(fork(1))).
 lps_test_result_item(fluents,8,available(fork(2))).
@@ -97,8 +103,8 @@ lps_test_action_ancestor(dine(philosopher(3)),2,8).
 lps_test_action_ancestor(dine(philosopher(1)),2,8).
 lps_test_action_ancestor(dine(philosopher(2)),2,5).
 lps_test_action_ancestor(dine(philosopher(4)),2,5).
-lps_test_action_ancestor(dine(philosopher(1)),2,_8362).
-lps_test_action_ancestor(dine(philosopher(3)),2,_8362).
-lps_test_action_ancestor(dine(philosopher(0)),2,_8362).
-lps_test_action_ancestor(dine(philosopher(2)),2,_8362).
-lps_test_action_ancestor(dine(philosopher(4)),2,_8362).
+lps_test_action_ancestor(dine(philosopher(1)),2,_13308).
+lps_test_action_ancestor(dine(philosopher(3)),2,_13308).
+lps_test_action_ancestor(dine(philosopher(0)),2,_13308).
+lps_test_action_ancestor(dine(philosopher(2)),2,_13308).
+lps_test_action_ancestor(dine(philosopher(4)),2,_13308).

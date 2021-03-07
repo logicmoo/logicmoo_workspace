@@ -266,6 +266,7 @@ lps_utils_directory(UD) :-
 :- multifile user:file_search_path/2.
 user:file_search_path(system, S) :- lps_engine_directory(D), atomic_list_concat([D,'/system'],S). % Apparently needed on SWI-Prolog 7.7.19 and later
 user:file_search_path(example, S) :- lps_examples_directory(ED), atomic_list_concat([ED,'/CLOUT_workshop'],S).
+user:file_search_path(lps_utils, D) :- lps_utils_directory(D). 
 
 cputime(T) :- T is cputime.
 
@@ -1076,7 +1077,7 @@ lps_program_clause_file(Pred,Body,File) :-
 	% exception(error(permission_error(access,private_procedure,read_util:read_line_to_codes/2),context(system:clause/3,_4882))) 
 	qcatch_f(clause(M:Pred,Body,Ref)), 
 	(prolog_clause:clause_info(Ref, File, _TermPos, _VarOffsets, _) -> true ; File=asserted),
-	File \== asserted,
+	% ?? File \== asserted,
 	\+ excluded_file(File).
 
 user_prolog_clause(Pred,Body) :- 
@@ -3093,6 +3094,7 @@ mustBeDelayed(holds(_,T_)) :-
 	expression_to_time(T_,T), ground(T), current_time(Now),  T>Now, !.
 mustBeDelayed(happens(_,T1_,T2_)) :- 
 	expression_to_time(T1_,T1), expression_to_time(T2_,T2), current_time(Now),  (ground(T1),T1>Now;ground(T2),T2>Now+1), !.
+mustBeDelayed(G) :- G=..[Op,_,_], supported_time_comparison(Op), not ground(G), !.
 
 % must be called after structured date processing!
 % mustBeProcessedNow(L) is used when unfolding atoms in antecedents of rules.
@@ -3374,8 +3376,7 @@ d_body(B) :- u_user_predicate(B).
 % In addition to reactive_rule(Antecedent,Consequent) terms, the rules lists may contain 
 % composite_event(CE_goal,happens(CE,Start,End)), to constantly compute some "interesting" composite events;
 % for these the goals lists will contain event(happens(CE,Start,End)) terms
-% dc_process(A,B,C,D,E) :- writeln(dc_process(A,B,C,D,E)), fail. % for debugging
-
+% dc_process([First|_],_,_,_,_) :- current_time(T), writeln(dc_process/T/First), fail. % for debugging
 dc_process([], Rs, Rs, NG, NG) :- !.
 
 % Antecedent is []. Add Consequent as new goal/tree.
@@ -3390,8 +3391,11 @@ dc_process([composite_event([], happens(CE,Start,End)) | Rs], AccRi, NRi, AccG, 
 		;
 		(ground(End),End<T) -> % too late to solve, no longer relevant
 			dc_process(Rs, AccRi, NRi, AccG, NGi)
-		; throw(inconsistent_ce_time-happens(CE,Start,End)/T)).
-
+		% ; throw(inconsistent_ce_time-happens(CE,Start,End)/T)
+		; (ground(End), End>T) ->
+			dc_process(Rs, [composite_event([], happens(CE,Start,End))|AccRi], NRi, AccG, NGi)
+		; throw(inconsistent_ce_time-happens(CE,Start,End)/T)
+	).
 % Too late to solve, no longer relevant.
 dc_process([Rule | Rs], AccRi, NRi, AccG, NGi):-
 	% Rule=..[_,[L |_],_],

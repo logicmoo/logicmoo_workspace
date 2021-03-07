@@ -94,7 +94,7 @@ gojson(JSON) :- gojson(_File,[],[],JSON,_DFAgraph).
 gojson(File,Options,Results,JSON,DFAgraph) :- 
 	visualization_options(SD),
 	subtract(Options,SD,Options_NoVis),
-	( go(File,[make_test,swish|Options_NoVis],Results) -> true ; print_message(warning,'PROGRAM FAILED')), 
+	( go(File,[make_test,swish|Options_NoVis],Results) -> true ; print_message(warning,'PROGRAM FAILED'-[])), 
 	print_message(informational,"Preparing visualization..."-[]),
 	visual(File,Options,JSON,DFAgraph).
 
@@ -134,23 +134,27 @@ visual(File,Options,lps_visualization(Timeline,Sequence),DFAgraph) :-
 		(XX=lps_meta(happens(X,T1,T2)) -> true ; XX=X,  TT2=T2)
 	), SimpleEvents),
 	
-	findall(t(X,T1-T2,composite), (
+	(setof(t(X,T1-T2,composite), T1_^T2_^(
 		member(composites,Options),
-		(lps_test_result_item(composites,T2,happens(X,T1,T2)); lps_test_action_ancestor(X,T1,T2)),
-		nonvar(T2), % discard unfinished events
+		(lps_test_result_item(composites,T2_,happens(X,T1_,T2_)); lps_test_action_ancestor(X,T1_,T2_)),
+		nonvar(T2_), % discard unfinished events
+		T2_ \= '$VAR'(_), % hack, due to use of numbervars prior to asserting test tuples
+		((var(T1_);T1_='$VAR'(_))->T1=1;T1=T1_),
+		T2=T2_,
 		T2>T1+1 % "simple composites" are reported as events; also, discard trivial action ancestors
 		% T1 \== 0, % hack to discard irrelevant initial "transition"
-	), Composites),
+	), Composites) -> true;Composites=[]),
 	
 	append([RangedFluents,SimpleEvents,Composites],Ranged),
 	
 	% all we care for state diagrams; longer composite may trigger postconditions...
 	% but we will not show them, as it would be eird to relate an older than the previous state:
 	append(FluentTuples,SimpleEvents,FluentsEtAl), 
+	print_message(informational,"Collected events and fluents..."-[]),
 	(member(abstract_numbers,Options)->AN=true; AN=false),
 	(member(non_reflexive,Options)->NR=true; NR=false),
 	dfa_graph(FluentsEtAl,AN,NR,DFAgraph),
-	
+	print_message(informational,"Prepared internal structures..."-[]),
 	% Find groups
 	(setof(G, T^X^member(t(X,T,G),Ranged), GroupIds)->true;GroupIds=[]), % allow for empty timelines
 	(member(stacked_fluents,Options)->Stacked=[];Stacked=[subgroupStack:false]),
@@ -166,6 +170,7 @@ visual(File,Options,lps_visualization(Timeline,Sequence),DFAgraph) :-
 		G1 = [EventsGroup|FluentGroups]
 		; 
 		G1 = FluentGroups),
+	print_message(informational,"Doing something else..."-[]),
 	( member(t(_,_,action),Ranged) -> 
 		make_json_object([id:action,content:'Actions',order:4],ActionsGroup),
 		append(G1,[ActionsGroup],Groups_)
@@ -185,6 +190,7 @@ visual(File,Options,lps_visualization(Timeline,Sequence),DFAgraph) :-
 	% Render fluents
 	% Let's find the end of time; since real time was introduced, we can't rely on endTime(_),
 	% so we need to find the last time of all events and fluents
+	print_message(informational,"Finding the end of time..."-[]),
 	findall(T2,member(t(_,_-T2,_),Ranged),Times),
 	sort(Times,SortedTimes),
 	( append(_,[LastTime],SortedTimes) -> LastRelevantTime is LastTime+1 ; LastRelevantTime = 1),
@@ -203,15 +209,17 @@ visual(File,Options,lps_visualization(Timeline,Sequence),DFAgraph) :-
 		member(t(X,T1-T2,G),Ranged),  
 		\+ functor(G,/,2), % not a fluent
 		my_term_to_atom(G,Gatom), my_term_to_atom(X,Atom),
-		T2_ is T2+1,
-		(G==observation -> S='color:Peru', More=[type:point,start:T2]
-			; G==action -> S='color:green', More=[type:point,start:T2] 
-			; G==composite -> S='', More=[className:compositeEvent,start:T1,end:T2_] 
-			; S='color:#E19735', More=[type:point,start:T2]),
+		% T2_ is T2+1,
+		T1_ is T1+1,
+		(G==observation -> (S='color:Peru', More=[type:point,start:T2])
+			; G==action -> (S='color:green', More=[type:point,start:T2])
+			; G==composite -> (S='', More=[className:compositeEvent,start:T1_,end:T2])
+			; (S='color:#E19735', More=[type:point,start:T2])),
 		make_json_object([id:ID,content:Atom,group:Gatom,style:S,title:Tip|More],Item),
 		my_term_to_atom(happens(X,T1,T2),Tip),
 		get_increment_counter(IDs,ID)
 	), Others),
+	print_message(informational,"Almost done..."-[]),
 	append(Fluents,Others,Items),
 	(beginningOfSimulatedRealTime(RTB) -> 
 		simulatedRealTimePerCycle(RTC), make_json_object([begin:RTB,cycle:RTC],BC), SRT = [simulatedRealTime:BC] 
