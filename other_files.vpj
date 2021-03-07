@@ -2174,6 +2174,55 @@
 						Excludes=""/>
 				</Folder>
 			</Folder>
+			<Folder Name="programk">
+				<Folder Name="aiml">
+					<Folder Name="special">
+						<F N="packs_xtra/programk/aiml/special/20q.aiml"/>
+						<F N="packs_xtra/programk/aiml/special/battledome.aiml"/>
+						<F N="packs_xtra/programk/aiml/special/binary.aiml"/>
+						<F N="packs_xtra/programk/aiml/special/blackjack.aiml"/>
+						<F N="packs_xtra/programk/aiml/special/blackjack2.aiml"/>
+						<F N="packs_xtra/programk/aiml/special/bornin.aiml"/>
+						<F N="packs_xtra/programk/aiml/special/botcompare.aiml"/>
+						<F N="packs_xtra/programk/aiml/special/calendar.aiml"/>
+						<F N="packs_xtra/programk/aiml/special/copyme.aiml"/>
+						<F N="packs_xtra/programk/aiml/special/currency.aiml"/>
+						<F N="packs_xtra/programk/aiml/special/daystoxmas.aiml"/>
+						<F N="packs_xtra/programk/aiml/special/drphil.aiml"/>
+						<F N="packs_xtra/programk/aiml/special/gender.aiml"/>
+						<F N="packs_xtra/programk/aiml/special/happy.aiml"/>
+						<F N="packs_xtra/programk/aiml/special/highroller.aiml"/>
+						<F N="packs_xtra/programk/aiml/special/horoscope.aiml"/>
+						<F N="packs_xtra/programk/aiml/special/howmany.aiml"/>
+						<F N="packs_xtra/programk/aiml/special/knockknock.aiml"/>
+						<F N="packs_xtra/programk/aiml/special/Learn-XEducate.aiml"/>
+						<F N="packs_xtra/programk/aiml/special/learn.aiml"/>
+						<F N="packs_xtra/programk/aiml/special/learn3rd.aiml"/>
+						<F N="packs_xtra/programk/aiml/special/learn4rd.aiml"/>
+						<F N="packs_xtra/programk/aiml/special/lucene-assert.aiml"/>
+						<F N="packs_xtra/programk/aiml/special/lucene-assertz.aiml"/>
+						<F N="packs_xtra/programk/aiml/special/lucene-qa.aiml"/>
+						<F N="packs_xtra/programk/aiml/special/Lucene.aiml"/>
+						<F N="packs_xtra/programk/aiml/special/luckyslots.aiml"/>
+						<F N="packs_xtra/programk/aiml/special/maths.aiml"/>
+						<F N="packs_xtra/programk/aiml/special/numberdrop.aiml"/>
+						<F N="packs_xtra/programk/aiml/special/numberones.aiml"/>
+						<F N="packs_xtra/programk/aiml/special/onthisday.aiml"/>
+						<F N="packs_xtra/programk/aiml/special/poker.aiml"/>
+						<F N="packs_xtra/programk/aiml/special/popTest.aiml"/>
+						<F N="packs_xtra/programk/aiml/special/quizfacts.aiml"/>
+						<F N="packs_xtra/programk/aiml/special/README-MitsukuChatbot.html"/>
+						<F N="packs_xtra/programk/aiml/special/seasons.aiml"/>
+						<F N="packs_xtra/programk/aiml/special/shutup.aiml"/>
+						<F N="packs_xtra/programk/aiml/special/tictactoe.aiml"/>
+						<F N="packs_xtra/programk/aiml/special/whatday_eng.aiml"/>
+						<F N="packs_xtra/programk/aiml/special/whatday_usa.aiml"/>
+						<F N="packs_xtra/programk/aiml/special/wordplay.aiml"/>
+						<F N="packs_xtra/programk/aiml/special/yomama.aiml"/>
+						<F N="packs_xtra/programk/aiml/special/zbert.aiml"/>
+					</Folder>
+				</Folder>
+			</Folder>
 		</Folder>
 		<F N="AUTHORS.rst"/>
 		<F N="buildenv.sh"/>

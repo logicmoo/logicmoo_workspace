@@ -236,7 +236,7 @@ system_fluent(Fl) :- interpreter:system_fluent(Fl).
 
 % :- use_module(lps_server_UI).
 
-:- user:ensure_loaded(term_expander).
+:- lps_term_expander:ensure_loaded(term_expander).
 
 :- endif.
 
