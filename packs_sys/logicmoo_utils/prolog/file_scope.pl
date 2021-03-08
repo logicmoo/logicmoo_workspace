@@ -313,7 +313,7 @@ filescope_did(_).
 
 :- if( \+ current_predicate(set_skip_file_expansion/2)).
 :- dynamic(lmcache:skip_file_expansion/2).
-:- dynamic(lmcache:skip_file_expansion/2).
+
 set_skip_file_expansion(File,TF):-   
    retractall(lmcache:skip_file_expansion(File,_)),
    asserta(lmcache:skip_file_expansion(File,TF)),

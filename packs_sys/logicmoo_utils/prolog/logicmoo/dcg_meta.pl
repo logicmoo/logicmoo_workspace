@@ -761,7 +761,7 @@ get_some_with_comments(O,_,O,_,_):- compound(O),functor(O,'$COMMENT',_),!.
 get_some_with_comments(O,Txt,with_text(O,Str),S,_E):-append(Txt,_,S),!,text_to_string(Txt,Str).
 
 
-dcg_peek(Grammar,List,List):- (var(Grammar)->((N=2;N=1;between(3,20,N)),length(Grammar,N)); true),phrase(Grammar,List,_),!.
+dcg_peek_meta(Grammar,List,List):- (var(Grammar)->((N=2;N=1;between(3,20,N)),length(Grammar,N)); true),phrase(Grammar,List,_),!.
 
 
 
@@ -769,7 +769,7 @@ dcg_peek(Grammar,List,List):- (var(Grammar)->((N=2;N=1;between(3,20,N)),length(G
 eoln --> [C],!, {nonvar(C),charvar(C),eoln(C)},!.
 eoln(10).
 eoln(13).
-eoln --> \+ dcg_peek([_]).
+eoln --> \+ dcg_peek_meta([_]).
 
 parse_meta_term(Pred, S, Expr) :- is_stream(S),!, parse_meta_stream(Pred, S,Expr).
 parse_meta_term(Pred, string(String), Expr) :- !,parse_meta_ascii(Pred, String, Expr).

@@ -310,23 +310,27 @@ pop_pfc_operators(_) :-
     pop_operators.
 
 
+term_expansion_pfc_eof(M):-   
+   prolog_load_context(dialect, pfc),
+   prolog_load_context(file, Source),
+   pfc_pop_dialect(Source,M),!.
+
+:- system:import(term_expansion_pfc_eof/1).
+
 user:goal_expansion(In, Out) :-    
     pfc_dialect_expansion(In, Out).
 
 
 :- multifile(system:term_expansion/2).
 :- module_transparent(system:term_expansion/2).
-% :- export(system:term_expansion/2).
+
 system:term_expansion(MIn, Out):- 
    notrace(strip_module(MIn,MM,In)),
-   notrace(nonvar(In)), 
-   (MIn==In->prolog_load_context(module, M);MM=M),
    notrace(In == end_of_file),
-   prolog_load_context(dialect, pfc),
-   prolog_load_context(file, Source),
-   prolog_load_context(module, M),
-   pfc_pop_dialect(Source,M),!,
-   Out = In.
+   (MIn==In->prolog_load_context(module, M);MM=M),
+   term_expansion_pfc_eof(M),
+   fail.
+
       
       
 
