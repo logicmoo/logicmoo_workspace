@@ -297,3 +297,4 @@ is_agent(diver).
 is_agent(agent).
 is_agent(Agent):- call_u(subsort(Agent,agent)),!.
 
+

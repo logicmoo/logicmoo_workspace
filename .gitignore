@@ -24,5 +24,6 @@ packs_usr/redplushunter/
 packs_web/lps_corner/
 pldoc/
 /pyswip-0.2.3/
-
+/Mirrors/
+*.vtg*
 

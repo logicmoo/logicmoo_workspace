@@ -12,6 +12,8 @@
 :- use_module(library(logicmoo_ocl)).
 :- use_module(library(ec_planner/ec_reader)).
 :- use_module(library(ec_planner/ec_lps_convert)).
+:- use_module(library(lps_pddl/lps_pddl_convert)).
+
 
 %test_logicmoo_ec:- run_tests.
 
@@ -22,6 +24,8 @@
 user:prolog_file_type(pel, prolog).
 user:prolog_file_type(e, prolog).
 
+:- listing(test_lps_pddl_ereader/0).
 
+:- break.
 
 

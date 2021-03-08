@@ -318,13 +318,13 @@ term_expansion_pfc_eof(M):-
 :- system:import(term_expansion_pfc_eof/1).
 
 user:goal_expansion(In, Out) :-    
-    pfc_dialect_expansion(In, Out).
+    pfc_dialect_expansion(In, Out), In\=@=Out.
 
 
 :- multifile(system:term_expansion/2).
 :- module_transparent(system:term_expansion/2).
 
-system:term_expansion(MIn, Out):- 
+system:term_expansion(MIn, _Out):- 
    notrace(strip_module(MIn,MM,In)),
    notrace(In == end_of_file),
    (MIn==In->prolog_load_context(module, M);MM=M),
