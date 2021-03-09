@@ -1,5 +1,5 @@
 
-:- module(lps_term_expander, [lps_term_expander/3,lps_f_term_expansion_now/3]).
+:- module(lps_term_expander, [lps_term_expander/3,lps_f_term_expansion_now/3, lps_f_term_expansion/3]).
 
 :- nodebug(lps(term_expand)).
 

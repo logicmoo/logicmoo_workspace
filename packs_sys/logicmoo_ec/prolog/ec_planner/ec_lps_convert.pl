@@ -88,8 +88,8 @@ print_lps_syntax(Color,Lps):-
 
 lps_xform(Mod,Lps,Prolog):- 
  locally(current_prolog_flag(lps_translation_only_HIDE,true),
-   locally(t_l:lps_program_module(Mod),
-    must_or_rtrace(lps_f_term_expansion_now(Mod,Lps,Prolog)))),!.
+   locally(t_l:is_lps_program_module(Mod),
+    must_or_rtrace(lps_term_expander:lps_f_term_expansion_now(Mod,Lps,Prolog)))),!.
 
 :- export_transparent(with_lps_operators2/2).
 with_lps_operators2(M,Goal):- 

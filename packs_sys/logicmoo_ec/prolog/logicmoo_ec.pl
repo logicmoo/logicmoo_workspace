@@ -26,6 +26,8 @@ user:prolog_file_type(e, prolog).
 
 :- listing(test_lps_pddl_ereader/0).
 
-:- break.
+:- listing(test_logicmoo_ec_lps_reader/0).
+
+%:- break.
 
 

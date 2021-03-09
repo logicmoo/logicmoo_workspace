@@ -70,7 +70,7 @@ def_compile_all(I,O):- wdmsg(undefined_compile_all(I)),I=O.
 %:- use_module(eightball).
 
 :- thread_local(t_l:sreader_options/2).
-kif_ok:- t_l:sreader_options(logicmoo_read_kif,true).
+kif_ok:- t_l:sreader_options(logicmoo_read_kif,true),!.
 
 
 :- meta_predicate((with_lisp_translation(+,1),input_to_forms_debug(+,:))).
@@ -677,6 +677,7 @@ to_untyped(S,S):- string(S),!.
 to_untyped(S,S):- number(S),!.
 %to_untyped(S,O):- atom(S),notrace_catch_fail(atom_number(S,O)),!.
 to_untyped(Var,'$VAR'(Name)):-svar(Var,Name),!.
+to_untyped('?'(Var),'$VAR'(Name)):-svar_fixvarname(Var,Name),!.
 to_untyped(Atom,Atom):- \+ compound(Atom),!.
 to_untyped('@'(Var),'$VAR'(Name)):-svar_fixvarname(Var,Name),!.
 to_untyped('#'(S),O):- !, (nonvar(S)->to_untyped(S,O) ; O='#'(S)).
@@ -873,14 +874,14 @@ svar(SVAR,UP):- nonvar(UP),!,trace_or_throw(nonvar_svar(SVAR,UP)).
 svar(Var,Name):- var(Var),!,zalwayz(svar_fixvarname(Var,Name)).
 svar('$VAR'(Var),Name):-number(Var),Var > -1, !, zalwayz(format(atom(Name),'~w',['$VAR'(Var)])),!.
 svar('$VAR'(Name),VarName):-!,zalwayz(svar_fixvarname(Name,VarName)).
+svar('?'(Name),NameU):-svar_fixvarname(Name,NameU),!.
 svar(_,_):- \+ kif_ok,!,fail.
+svar(VAR,Name):-atom(VAR),atom_concat_or_rtrace('?',A,VAR),non_empty_atom(A),svar_fixvarname(VAR,Name),!.
 svar([],_):-!,fail.
 svar('#'(Name),NameU):-!,svar(Name,NameU),!.
-svar('?'(Name),NameU):-svar_fixvarname(Name,NameU),!.
 svar('@'(Name),NameU):-svar_fixvarname(Name,NameU),!.
 % svar(VAR,Name):-atom(VAR),atom_concat_or_rtrace('_',_,VAR),svar_fixvarname(VAR,Name),!.
 svar(VAR,Name):-atom(VAR),atom_concat_or_rtrace('@',A,VAR),non_empty_atom(A),svar_fixvarname(VAR,Name),!.
-svar(VAR,Name):-atom(VAR),atom_concat_or_rtrace('?',A,VAR),non_empty_atom(A),svar_fixvarname(VAR,Name),!.
 
 
 :- export(svar_fixvarname/2).
