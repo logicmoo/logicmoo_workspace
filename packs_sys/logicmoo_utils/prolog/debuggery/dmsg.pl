@@ -606,16 +606,13 @@ new_line_if_needed:- flush_output,format('~N',[]),flush_output.
 %
 % Fmt9.
 %
-fmt9(Msg):- new_line_if_needed, must(fmt90(Msg)),!,new_line_if_needed.
+fmt9(Msg):- new_line_if_needed, must((fmt90(Msg))),!,new_line_if_needed.
 
 fmt90(fmt0(F,A)):-on_x_fail(fmt0(F,A)),!.
 fmt90(Msg):- dzotrace(on_x_fail(((string(Msg)),smart_format(Msg,[])))),!.
 
-fmt90(V):- mesg_color(V,C), !, catch(pprint_ecp(C, V),_,fail),!.
-fmt90(Msg):- 
- on_x_fail((with_output_to(string(S),
-   on_x_fail(if_defined_local(portray_clause_w_vars(Msg),fail))),
-    format('~s',[S]))),!.
+fmt90(V):- on_x_fail(mesg_color(V,C)), catch(pprint_ecp(C, V),_,fail),!. % (dumpST,format('~N~q. % ~q. ~n',[fmt90(V),E]),fail)
+fmt90(Msg):- on_x_fail((with_output_to(string(S),portray_clause_w_vars(Msg)))),format('~s',[S]),!.
 fmt90(Msg):- dzotrace(on_x_fail(format('~p',[Msg]))),!.
 fmt90(Msg):- dzotrace(writeq(fmt9(Msg))).
 
@@ -892,7 +889,7 @@ grab_varnames2([AttV|AttVS],Vs2):-
      (get_attr(AttV,vn,Name) -> Vs2 = [Name=AttV|VsMid] ; VsMid=       Vs2),!.
    
 
-% dzotrace(G):- notrace(G).
+dzotrace(G):- notrace(G),!.
 dzotrace(G):- call(G).
 
 %= 	 	 

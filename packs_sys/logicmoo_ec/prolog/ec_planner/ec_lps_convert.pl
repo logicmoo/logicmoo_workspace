@@ -6,6 +6,7 @@
    assert_lps/1,
    test_logicmoo_ec_lps_reader/0,
    test_lps_ereader/0,
+   print_lps_syntax/2,
    test_logicmoo_ec_sanity/0,
    test_logicmoo_ec_reader_2/0,
    test_logicmoo_ec_lps_reader/2,test_logicmoo_ec_lps_reader/1]).

@@ -72,6 +72,12 @@ def_compile_all(I,O):- wdmsg(undefined_compile_all(I)),I=O.
 :- thread_local(t_l:sreader_options/2).
 kif_ok:- t_l:sreader_options(logicmoo_read_kif,true),!.
 
+with_kif_ok(G):-
+  locally(t_l:sreader_options(logicmoo_read_kif,true),G).
+
+with_kif_not_ok(G):-
+  locally(t_l:sreader_options(logicmoo_read_kif,false),G).
+
 
 :- meta_predicate((with_lisp_translation(+,1),input_to_forms_debug(+,:))).
 :- meta_predicate sexpr_vector(*,//,

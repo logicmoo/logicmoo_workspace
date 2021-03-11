@@ -563,8 +563,7 @@ pt0(_,Final,Term,Tab) :-
    as_is(Term), !,
    prefix_spaces(Tab), portray_with_vars(Term),write(Final), nop(pt_nl).
 
-pt0(FS,Final,[T|Ts],Tab):- !,
-   pt0_list(FS,Final,[T|Ts],Tab).
+pt0(FS,Final,[T|Ts],Tab):- !, must(pt0_list(FS,Final,[T|Ts],Tab)).
 
 
 pt0(FS,Final,q(E,V,G),Tab):- atom(E), !, T=..[E,V,G],!, pt0(FS,Final,T,Tab).
@@ -683,9 +682,10 @@ pt_args( FS, Final,[A|R],Tab) :- R==[], write(', '), prefix_spaces(Tab), pt0(FS,
 pt_args( FS, Final,[A0,A|As],Tab) :- 
    splice_off([A0,A|As],[_,L1|Left],Rest), !, 
    write(', '), write_simple(A0), write_simple_each([L1|Left]), 
-   output_line_position(New), write(', '), nl, 
+   output_line_position(New), 
+   %write(', '), nl, 
    Avr is round(((New - Tab)/2 + Tab)) + 4, !,
-   prefix_spaces(Avr), 
+   % prefix_spaces(Avr), 
    pt_args([lf|FS],Final,Rest,Avr).  
 pt_args( FS, Final,[A|As],Tab) :- !,  write(', '), prefix_spaces(Tab), 
    pt0([lf|FS],'',A,Tab),

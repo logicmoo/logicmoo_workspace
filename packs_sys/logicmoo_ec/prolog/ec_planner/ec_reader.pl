@@ -87,7 +87,9 @@ builtin_pred(initially).
 is_quantifier_type(thereExists,( & )):- use_some.
 is_quantifier_type(forAll,all).
 is_quantifier_type(thereExists,exists).
+is_quantifier_type(forsome,exists).
 is_quantifier_type(X,Y):- atom(X), is_quantifier_type(_,X),Y=X.
+is_quantifier_type(forall,all).
 
 % used by ec_loader
 
