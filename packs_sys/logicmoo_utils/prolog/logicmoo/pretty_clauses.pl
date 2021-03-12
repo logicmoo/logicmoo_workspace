@@ -303,14 +303,17 @@ echo_format(Fmt, Args):- real_format(Fmt, Args), ttyflush, !.
 
 is_outputing_to_file:- 
   current_output(S),
-  stream_property(S,file_name(_)).
+  stream_property_s(S,file_name(_)).
+
+stream_property_s(S,P):- on_x_fail(stream_property(S,P)).
 
 get_ansi_dest(S):- \+ is_outputing_to_file,!,current_output(S).
 get_ansi_dest(S):- S = user_error, !.
 get_ansi_dest(S):- S = user_output, !.
 
 with_output_to_ansi_dest(Goal):- 
-  get_ansi_dest(AnsiDest),with_output_to(AnsiDest,(Goal,ttyflush)),ttyflush.
+  get_ansi_dest(AnsiDest),stream_property_s(AnsiDest,output),
+  with_output_to(AnsiDest,(Goal,ttyflush)),ttyflush.
   
 
 put_out(Char):- put(Char),
@@ -380,26 +383,27 @@ was_s_l(B,L):- retractall(ec_reader:o_s_l(_,_)),asserta(ec_reader:o_s_l(B,L)), o
 e_source_location(F,L):- nb_current('$ec_input_stream',Ins), any_line_count(Ins,L), any_stream(F,Ins),!.
 e_source_location(F,L):- nb_current('$ec_input_file',FS), absolute_file_name(FS,F), any_stream(F,Ins), any_line_count(Ins,L),!.
 e_source_location(F,L):- current_stream(F, read, S), atom(F), atom_concat(_,'.e',F), any_line_count(S,L),!.
-e_source_location(F,L):- stream_property(S, file_name(F)),stream_property(S, input), atom_concat(_,'.e',F), any_line_count(S,L),!.
-e_source_location(F,L):- stream_property(S, file_name(F)),atom_concat(_,'.e',F), any_line_count(S,L),!.
+e_source_location(F,L):- stream_property_s(S, file_name(F)),stream_property_s(S, input), atom_concat(_,'.e',F), any_line_count(S,L),!.
+e_source_location(F,L):- stream_property_s(S, file_name(F)),atom_concat(_,'.e',F), any_line_count(S,L),!.
 
 :- export(s_l/2).
-s_l(F,L):- notrace(e_source_location(B,L2)), !, L is L2-1, absolute_file_name(B,F).
+s_l(F,L):- notrace(on_x_fail(e_source_location(B,L2))), !, L is L2-1, absolute_file_name(B,F).
 s_l(F,L):- source_location(F,L2), !, L is L2-1.
 % s_l(F,L):- ec_reader:o_s_l(F,L). 
 s_l(F,L):- any_stream(F,S), any_line_count(S,L),any_line_count(_,L), !.
 s_l(unknown,0).
 
 any_stream(F,S):- is_stream(F),var(S),!,F=S.
-any_stream(F,S):- stream_property(S, file_name(F)),stream_property(S, input).
+any_stream(F,S):- stream_property_s(S, file_name(F)),stream_property_s(S, input).
 any_stream(F,S):- current_stream(F, read, S), atom(F).
-any_stream(F,S):- stream_property(S, file_name(F)).
+any_stream(F,S):- stream_property_s(S, file_name(F)).
 any_stream(F,S):- current_stream(F, _, S), atom(F).
+
 any_line_count(_,L):- nonvar(L),!.
 any_line_count(F,L):- nonvar(F), \+ is_stream(F), any_stream(F,S), any_line_count(S,L),!.
-any_line_count(S,L):- line_count(S, L),!.
-any_line_count(S,L):- character_count(S, C), L is C * -1,!.
-any_line_count(S,L):- line_or_char_count(S, L),!.
+any_line_count(S,L):- on_x_fail(line_count(S, L)),!.
+any_line_count(S,L):- on_x_fail(character_count(S, C)), L is C * -1,!.
+any_line_count(S,L):- on_x_fail(line_or_char_count(S, L)),!.
 any_line_count(_,0).
 
 :- fixup_exports.

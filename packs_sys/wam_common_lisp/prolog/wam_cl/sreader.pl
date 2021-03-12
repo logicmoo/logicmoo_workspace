@@ -428,21 +428,28 @@ sexpr0(OBJ)--> `#<`,!,zalwayz(ugly_sexpr_cont(OBJ)),!.
 
 sexpr0(E)                      --> !,zalwayz(sym_or_num(E)), swhite,!.
 
-sym_or_num(('+1-')) --> `+1-`,!,swhite.
-sym_or_num(('-1+')) --> `-1+`,!,swhite.
 
+priority_symbol((`#+`)).
+priority_symbol((`#-`)).
+priority_symbol((`#false`)).
+priority_symbol((`#true`)).
+priority_symbol((`#nil`)).
+priority_symbol((`#null`)).
+priority_symbol((`#f`)).
+priority_symbol((`#t`)).
+priority_symbol((`+1+`)).
+priority_symbol((`+1-`)).
+priority_symbol((`-#+`)).
+priority_symbol((`-1+`)).
+priority_symbol((`-1-`)).
+priority_symbol((`1+`)).
+priority_symbol((`1-`)).
 
-sym_or_num(('-1-')) --> `-1-`,swhite,!.
-sym_or_num(('-1+')) --> `-1+`,swhite,!.
-sym_or_num(('+1+')) --> `+1-`,swhite,!.
+sym_or_num(S) --> [C1,C2], {priority_symbol([C1,C2|Rest])},Rest,swhite,{name(S,[C1,C2|Rest])}.
 sym_or_num('$COMPLEX'(L)) --> `#C(`,!, swhite, sexpr_list(L), swhite.
 %sym_or_num((E)) --> unsigned_number(S),{number_string(E,S)}.
-sym_or_num(('1+')) --> `1+`,swhite,!.
-sym_or_num(('1-')) --> `1-`,swhite,!.
 %sym_or_num((E)) --> unsigned_number(S),{number_string(E,S)}.
-sym_or_num(('#+')) --> `#+`,swhite,!.
-sym_or_num(('#-')) --> `#-`,swhite,!.
-sym_or_num(('-#+')) --> `-#+`,swhite,!.
+
 sym_or_num((E)) --> lnumber(E),swhite,!.
 sym_or_num(E) --> rsymbol_maybe(``,E),!.
 %sym_or_num('#'(E)) --> [C],{atom_codes(E,[C])}.

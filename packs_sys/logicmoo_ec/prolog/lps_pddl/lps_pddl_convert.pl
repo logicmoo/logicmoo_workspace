@@ -32,22 +32,65 @@
 
 
 assert_1pddl_pddl(Stuff):- 
+ must_or_rtrace_l((
   downcase_terms(Stuff,DCStuff1),
   with_kif_ok(to_untyped(DCStuff1,DCStuff)),
   print_tree_cmt('Translating',green,DCStuff),
-  assert_pddl([],DCStuff).
+  assert_pddl([],DCStuff))).
    
+
+
+skipped_pddl_file('/prob01').
+skipped_pddl_file('/prob02').
+skipped_pddl_file('/prob03').
+skipped_pddl_file('/prob04').
+%skipped_pddl_file('/prob05').
+skipped_pddl_file('/prob06').
+skipped_pddl_file('/prob07').
+skipped_pddl_file('/prob08').
+skipped_pddl_file('/prob09').
+skipped_pddl_file('3.pddl').
+skipped_pddl_file('5.pddl').
+skipped_pddl_file('7.pddl').
+skipped_pddl_file('9.pddl').
+skipped_pddl_file('/prob1').
+skipped_pddl_file(File):- tmp_pddl:took_test(File,_,_).
+
+:- dynamic(tmp_pddl:took_test/3).
+:- volatile(tmp_pddl:took_test/3).
+
+assert_overwrite(M:Pred):- duplicate_term(Pred,Dupe),functor(Dupe,_,A),nb_setarg(A,Dupe,_),
+ retractall(M:Dupe),
+ asserta(M:Pred).
 
 include_e_lps_pddl_file_now(Type,MFile):- strip_module(MFile,M,File), include_e_lps_pddl_file_now(Type,M,File).
 include_e_lps_pddl_file_now(Type,M,File):- absolute_file_name(File,AbsFile),File\==AbsFile,exists_file(AbsFile), !,include_e_lps_pddl_file_now(Type,M,AbsFile).
 
 %include_e_lps_pddl_file_now(_Type,_Ctx,File):- 
 %   with_lisp_translation(File,pprint_ecp(yellow)),!.
-include_e_lps_pddl_file_now(_Type,_Ctx,File):- 
-   with_lisp_translation(File,assert_1pddl_pddl),!.
+
+include_e_lps_pddl_file_now(_Type,_Ctx,File):- skipped_pddl_file(S), atom_contains(File,S),!.
+
+include_e_lps_pddl_file_now(Type,_Ctx,File):-
+  assert_overwrite(tmp_pddl:took_test(File,state,started)),
+  guess_output_name(Type,File,OutputFile),
+  file_directory_name(OutputFile,Dir),
+  make_directory_path(Dir),
+   setup_call_cleanup(
+    open(OutputFile,write,OS),
+    with_lisp_translation(File,assert_1pddl_pddl),
+    close(OS)),!.
+
+guess_output_name(Type,File,OutputFile):-
+  file_directory_name(File,Dir),
+  file_base_name(Dir,Dir0),
+  file_base_name(File,ShortName),
+  atomic_list_concat(['/tmp/lmws/',Dir0,'-',ShortName,'.',Type],OutputFile),!.
+  
+  
 
 
-load_e_lps_pddl_file(Type,File):- update_changed_files,  
+load_e_lps_pddl_file(Type,File):- %update_changed_files,  
   retractall(etmp:pddl_option(load(_), _)), include_e_lps_pddl_file(Type,File).
 %load_e_lps_pddl_file(Type,File):- retractall(etmp:pddl_option(load(_), _)), include_e_lps_pddl_file(Type,File).
 
@@ -56,12 +99,12 @@ include_e_lps_pddl_file(Type,File):- is_list(File), !, maplist(include_e_lps_pdd
 include_e_lps_pddl_file(Type,File):- wdmsg(include_e_lps_pddl_file(Type,File)),fail.
 include_e_lps_pddl_file(Type,File):- needs_resolve_local_files(File,Resolved),!,include_e_lps_pddl_file(Type,Resolved).
 include_e_lps_pddl_file(Type,File):- absolute_file_name(File,DB), exists_file(DB),!, 
-  update_changed_files, was_s_l(File,1),  
+  was_s_l(File,1),  
   strip_module(_,M,_), prolog_statistics:time(M:include_e_lps_pddl_file_now(Type,File)),!.
 include_e_lps_pddl_file(Type,File):- throw(with_abs_paths(include_e_lps_pddl_file(Type),File)).
 
 
-test_logicmoo_lps_pddl_reader(File):- test_logicmoo_lps_pddl_reader(lps, File).
+test_logicmoo_lps_pddl_reader(File):- update_changed_files, test_logicmoo_lps_pddl_reader(lps, File).
 test_logicmoo_lps_pddl_reader(Proc1,File):- load_e_lps_pddl_file(Proc1,File).
 
 solve_files_w_lps(DomainFile, ProblemFile):- 
@@ -72,23 +115,41 @@ solve_files_w_lps(DomainFile, ProblemFile):-
   test_logicmoo_lps_pddl_reader(DomainFile),
   !.
 
+
+pre_pddl_tests:- retractall(tmp_pddl:took_test(_,_,_)),!.
+
+
 test_logicmoo_lps_pddl_reader:-  
+ pre_pddl_tests,
+ test_logicmoo_lps_pddl_reader(pddl('benchmarks/airport/p29-airport4halfMUC-p8.pddl')),
  test_logicmoo_lps_pddl_reader(pddl('orig_pddl_parser/test/blocks/domain-blocks.pddl')),
- test_logicmoo_lps_pddl_reader(pddl('../uw-yale-pddl/domains/transplan/domain.pddl')).
+ test_logicmoo_lps_pddl_reader(pddl('benchmarks/elevators-opt11-strips/domain.pddl')), 
+ test_logicmoo_lps_pddl_reader(pddl('benchmarks/nomystery-opt11-strips/domain.pddl')),
+ test_logicmoo_lps_pddl_reader(ext('flp/worlds/flp/flp.d.pddl')),
+ !.
 
 :- add_history((cls, test_logicmoo_lps_pddl_reader)).
 
 test_logicmoo_lps_pddl_reader0:- 
+  test_logicmoo_lps_pddl_reader,
+  test_logicmoo_lps_pddl_reader(pddl('ZenoTravel/zeon_p14a_dp.pddl')),
   test_logicmoo_lps_pddl_reader(pddl('transplan/domain.pddl')),
   test_logicmoo_lps_pddl_reader(pddl('elearning/domain.pddl')),
   !.
 
-test_logicmoo_lps_pddl_reader1:- 
-   test_logicmoo_lps_pddl_reader(pddl('../uw-yale-pddl/strict-domains/mystery/*.pddl')),
-   test_logicmoo_lps_pddl_reader(pddl('*/*.pddl')).
 
-test_logicmoo_pddl_reader_2:- 
- test_logicmoo_lps_pddl_reader(pddl('benchmarks/*/*/*/*.pddl')).
+test_logicmoo_lps_pddl_reader1:- 
+  test_logicmoo_lps_pddl_reader0,
+   test_logicmoo_lps_pddl_reader(pddl('../uw-yale-pddl/*/*/*.pddl')),
+   test_logicmoo_lps_pddl_reader(pddl('*/*.pddl')),
+   !.
+
+
+test_logicmoo_lps_pddl_reader2:- 
+ test_logicmoo_lps_pddl_reader1,
+ test_logicmoo_lps_pddl_reader(pddl('*/*/*/*.pddl')),
+ test_logicmoo_lps_pddl_reader(pddl('*/*/*.pddl')),
+ !.
 
 :- ensure_loaded(library(logicmoo/util_structs)).
 :- ensure_loaded(library(statistics)).
@@ -113,44 +174,94 @@ already_lps_pddl(mpred_prop(_,_)):-!.
 already_lps_pddl(sort(_)):-!.
 already_lps_pddl(subsort(_,_)):-!.
 
-into_pterm( Why,I,O):- must_or_rtrace_l((into_pterm_0( Why,I,M),our_sterm2pterm(M,O))).
+into_pterm( Ctx,I,O):- must_or_rtrace_l((with_kif_ok(to_untyped(I,M)),our_sterm2pterm(Ctx,M,O))).
 
 atomic_or_var(Form):- ( \+ compound_gt(Form,0) ; Form='$VAR'(_); Form='$STRING'(_)),!.
 
 get_svars(P,Vars):- findall(VAR, (sub_term(VAR,P),compound(VAR),VAR='$VAR'(_)), List), list_to_set(List,Vars).
 
-into_pterm_0(_Why,Decl,Res):- atomic_or_var(Decl),!, Res = Decl. % Was Res = t(Decl)
+% our_sterm2pterm( Ctx,[Compound],Res):- !, our_sterm2pterm( Ctx,Compound,Res).
+%our_sterm2pterm( Ctx,[A|List],Res):- atom(A),is_list(List),!, Res =.. [A|List].
+%our_sterm2pterm( Ctx,[A|List],Res):- compound(A),is_list(List),!,append_termlist(A,List,Res),!.
+%our_sterm2pterm( Ctx,List,Res):- Res =..[t|List].
+% our_sterm2pterm( Ctx,Decl,t(Decl)).
 
-into_pterm_0( Why,all(Decl,H),all(Decl,Res)):- into_pterm_0( Why,H,Res).
-into_pterm_0( Why,exists(Decl,H),exists(Decl,Res)):- into_pterm_0( Why,H,Res).
-
-into_pterm_0( Why,Compound,Res):- \+ is_list(Compound),!,compound_name_arguments_maybe_zero(Compound,F,Args),!,into_pterm_0( Why,[F|Args],Res).
-into_pterm_0(_Why,[VAR|LIST],[VAR|LIST]):- (var(VAR);svar(VAR,_)),!.
-
-into_pterm_0( Why,[(',')|X],Res):- into_pterm_0( Why,[and|X],Res).
-into_pterm_0( Why,[and,X],Res):- !, into_pterm_0( Why,X,Res).
-into_pterm_0( Why,[and,X|L],and(Res,LRes)):- into_pterm_0( Why,X,Res), into_pterm_0( Why,L,[and|LRes]).
-into_pterm_0( Why,[or,X],Res):- !, into_pterm_0( Why,X,Res).
-into_pterm_0( Why,[or,X|L],or(Res,LRes)):- into_pterm_0( Why,X,Res), into_pterm_0( Why,L,[or|LRes]).
-into_pterm_0( Why,[not,X],not(Res)):- !, into_pterm_0( Why,X,Res).
-into_pterm_0( Why,I,O):- our_sterm2pterm(Why, I,O),!.
-% into_pterm_0( Why,[Compound],Res):- !, into_pterm_0( Why,Compound,Res).
-%into_pterm_0( Why,[A|List],Res):- atom(A),is_list(List),!, Res =.. [A|List].
-%into_pterm_0( Why,[A|List],Res):- compound(A),is_list(List),!,append_termlist(A,List,Res),!.
-%into_pterm_0( Why,List,Res):- Res =..[t|List].
-% into_pterm_0( Why,Decl,t(Decl)).
 
 our_sterm2pterm(I,O):- our_sterm2pterm(domain,I,O).
 
-our_sterm2pterm(_Ctx,VAR,VAR):-var(VAR),!.
-our_sterm2pterm( Ctx,In,Out):-nonvar(Out),!,our_sterm2pterm( Ctx,In,OutM),must(Out=OutM).
-our_sterm2pterm(_Ctx,'?'(Down),'?'(UP)):- svar_fixvarname(Down,UP),!.
-our_sterm2pterm(_Ctx,KVList,T):- append(_,[_Item,'-',_Type],KVList),into_typed_params(KVList,T).
-%our_sterm2pterm( Ctx,QDown,'?'(UP)):- \+ is_list(QDown),svar_fixvarname(QDown,UP),!.
-our_sterm2pterm(domain,[S],S):-atom(S),!. % ,atom_concat(':',_,S),!.
-our_sterm2pterm(_Ctx,[S],S):-atom(S),!. % ,atom_concat(':',_,S),!.
-our_sterm2pterm(_Ctx,[Item,'-',Type],Item1):- atom(Type),Item1=typed(Type,Item).
+no_cmpd_change(NC):- \+ compound(NC),!,fail.
+no_cmpd_change(isa(_,_)).
+no_cmpd_change(typed(_,_)).
 
+
+is_pddl_special(_,when).
+is_pddl_special(_,while).
+is_pddl_special(_,'increase').
+is_pddl_special(_,'decrease').
+is_pddl_special(_,'assign').
+is_pddl_special(_,'scale-up').
+is_pddl_special(_,'scale-down').
+is_pddl_special(_,'total-cost').
+is_pddl_special(_,'minimize').
+is_pddl_special(_,'maximize').
+is_pddl_special(_,'object').
+is_pddl_special(_,'exists').
+is_pddl_special(_,'forall').
+is_pddl_special(_,'imply').
+is_pddl_special(_,'either').
+is_pddl_special(_,'at').
+is_pddl_special(_,'over').
+is_pddl_special(_,'start').
+is_pddl_special(_,'end').
+is_pddl_special(_,'all').
+is_pddl_special(_,'always').
+is_pddl_special(_,'sometime').
+is_pddl_special(_,'within').
+is_pddl_special(_,'at-most-once').
+is_pddl_special(_,'sometime-after').
+is_pddl_special(_,'sometime-before').
+is_pddl_special(_,'always-within').
+is_pddl_special(_,'hold-during').
+is_pddl_special(_,'hold-after').
+is_pddl_special(_,'total-time').
+is_pddl_special(_,'is-violated').
+is_pddl_special(_,'scale-down').
+is_pddl_special(_,'assign').
+
+
+pddl_replace(_Ctx,PRED,_):- \+ atom(PRED), !, fail.
+pddl_replace(_,'#f',pddl_f).
+pddl_replace(_,'#t',pddl_t).
+pddl_replace(_,'-',pddl_minus).
+pddl_replace(Ctx,PRED,NEWPRED):- is_pddl_special(OkWhen,PRED),is_ok_when(OkWhen,Ctx),atom_concat('pddl_',PRED,NEWPRED).
+
+is_ok_when(V1,V2):- (var(V1); var(V2)),!.
+is_ok_when(V1,V2):- is_list(V1), !, member(E,V1), is_ok_when(E,V2).
+is_ok_when(V1,V2):- is_list(V2), !, member(E,V2), is_ok_when(E,V1).
+is_ok_when(V1,V2):- V1==V2.
+
+
+our_sterm2pterm( Ctx,In,Out):-nonvar(Out),!,our_sterm2pterm( Ctx,In,OutM),!,must(Out=OutM).
+our_sterm2pterm(_Ctx,VAR,VAR):- var(VAR),!.
+our_sterm2pterm(_Ctx,M,'$VAR'(Name)):- with_kif_ok(svar(M,Name)),!.
+our_sterm2pterm(_Ctx,Decl,Res):- atomic_or_var(Decl),!, Res = Decl. % Was Res = t(Decl)
+our_sterm2pterm(_Ctx,NC,NC):- no_cmpd_change(NC),!.
+our_sterm2pterm( Ctx,P,O):- \+ is_list(P), !, P=..[F|ARGS], our_sterm2pterm(Ctx,[F|ARGS],O).
+our_sterm2pterm(_Ctx,KVList,T):- if_into_typed_params(KVList,T).
+%our_sterm2pterm( Ctx,QDown,'?'(UP)):- \+ is_list(QDown),svar_fixvarname(QDown,UP),!.
+%our_sterm2pterm(domain,[S],S):-atomic_or_var(S),!. % ,atom_concat(':',_,S),!.
+our_sterm2pterm(_Ctx,[S],S):-atomic_or_var(S),!. % ,atom_concat(':',_,S),!.
+our_sterm2pterm( Ctx,[LIST],O):- is_list(LIST),!,our_sterm2pterm( Ctx, LIST, O),!.
+our_sterm2pterm( Ctx,[PRED|LIST],OUT):- atom(PRED),pddl_replace(Ctx,PRED,NEWPRED),!,our_sterm2pterm( Ctx,[NEWPRED|LIST],OUT).
+our_sterm2pterm( Ctx,[all,Decl,H],all(Params,Res)):-!, must_into_typed_params(Decl,Params), our_sterm2pterm( Ctx,H,Res).
+our_sterm2pterm( Ctx,[exists,Decl,H],exists(Params,Res)):-!, must_into_typed_params(Decl,Params), our_sterm2pterm( Ctx,H,Res).
+our_sterm2pterm( Ctx,[(',')|X],Res):- !, our_sterm2pterm( Ctx,[and|X],Res).
+our_sterm2pterm( Ctx,[(';')|X],Res):- !, our_sterm2pterm( Ctx,[or|X],Res).
+our_sterm2pterm( Ctx,[and,X],Res):- !, our_sterm2pterm( Ctx,X,Res).
+our_sterm2pterm( Ctx,[and,X|L],and(Res,LRes)):- our_sterm2pterm( Ctx,X,Res), our_sterm2pterm( Ctx,L,[and|LRes]).
+our_sterm2pterm( Ctx,[or,X],Res):- !, our_sterm2pterm( Ctx,X,Res).
+our_sterm2pterm( Ctx,[or,X|L],or(Res,LRes)):- our_sterm2pterm( Ctx,X,Res), our_sterm2pterm( Ctx,L,[or|LRes]).
+our_sterm2pterm( Ctx,[not,X],not(Res)):- !, our_sterm2pterm( Ctx,X,Res).
 our_sterm2pterm( Ctx,[S,Vars,SLIST],POUT):-atom(S),is_quantifier_type(S,SQ),into_typed_params(Vars,PVars),our_sterm2pterm( Ctx,SLIST,TERM),POUT=..[SQ,PVars,TERM].
 our_sterm2pterm( Ctx,[S,Vars|SLIST],POUT):-atom(S),is_quantifier_type(S,SQ),into_typed_params(Vars,PVars),our_sterm2pterm_list( Ctx,SLIST,TERM),POUT=..[SQ,PVars,TERM].
 our_sterm2pterm( Ctx,[S|SLIST],PTERM):-atom(S),atom_concat(':',_,S),
@@ -163,7 +274,7 @@ our_sterm2pterm( Ctx,SLIST,PLIST):- is_list(SLIST),!,our_sterm2pterm_list(Ctx,SL
 our_sterm2pterm(_Ctx,VAR,VAR):-!.
 
 our_sterm2pterm_list(_Ctx,[],[]).
-our_sterm2pterm_list( Ctx,[Item,'-',Type|List],[H|T]):- atom(Type),H==typed(Type,Item),our_sterm2pterm_list(Ctx,List,T).
+our_sterm2pterm_list(_Ctx,KVList,T):- is_type_param_list(KVList), !, KVList=T.
 our_sterm2pterm_list( Ctx,[Item|List],[H|T]):- our_sterm2pterm( Ctx,Item,H),our_sterm2pterm_list(Ctx,List,T).
 
 into_plus_minus(Conds,Pos,Neg):- 
@@ -184,12 +295,17 @@ into_disables([and|Args],Enables):- !, maplist(into_disables,Args,EnablesL),appe
 into_disables(Effect,Enables):- compound(Effect), compound_name_arguments_maybe_zero(Effect,and,Args),maplist(into_disables,Args,EnablesL),append(EnablesL,Enables).
 into_disables(_,[]).
 
+is_empty(Rule):-  (Rule == [] ; Rule == and ; Rule == true; Rule == or ), !.
+is_empty([Rule]):- nonvar(Rule), is_empty(Rule).
 
+add_conjuncts(Empty,Types,Types):- is_empty(Empty).
+add_conjuncts(Types,Empty,Types):- is_empty(Empty).
+add_conjuncts(Pre,Types,[and,Pre,Types]).
 
 
 % assert_1pddl([constant|Ctx],C):- compound(C),
 
-and_to_comma(Rule, true):- (Rule == [] ; Rule == and ; Rule == [and] ), !.
+and_to_comma(Rule, true):- is_empty(Rule).
 and_to_comma(Rule0,Rule):- atomic_or_var(Rule0),!, Rule0=Rule.
 and_to_comma(Rule0,Rule):- into_pterm(and_to_comma,Rule0,Rule1),and_to_comma_0(Rule1,Rule).
 
@@ -203,11 +319,14 @@ and_to_comma_0(A,AA):-
    maplist(and_to_comma_0,As,AAs),
    compound_name_arguments(AA,F,AAs).
 
+is_pddl_amethod(Atom):- \+ atom(Atom), !, fail.
+is_pddl_amethod(process).
+is_pddl_amethod(event).
 is_pddl_amethod(action).
 is_pddl_amethod(task).
 is_pddl_amethod(method).
-is_pddl_amethod('durative-action').
-
+is_pddl_amethod(KW):- atom_concat('durative-',M,KW),!,is_pddl_amethod(M).
+is_pddl_amethod(KW):- un_kw_directive(KW,M),!,is_pddl_amethod(M).
 %assert_pddl(Ctx,_,include(F)):- include_e_lps_pddl_file_now(Type,Ctx:F).
 %assert_pddl(Ctx,_,load(F)):- include_e_lps_pddl_file_now(Type,Ctx:F). 
 %assert_pddl(Ctx,_,include(F)):- !, with_e_file(assert_pddl(Ctx),current_output, [pddl(F)]). 
@@ -217,15 +336,14 @@ is_pddl_amethod('durative-action').
 assert_pddl(Ctx,Form):- \+ compound_gt(Form,0),!,assert_1pddl(Ctx,Form).
 assert_pddl(Ctx,t(Type,Inst)):- atom(Type), M=..[Type,Inst],!,assert_pddl(Ctx,M),!.
 %assert_pddl(Ctx,Form):- already_lps_pddl(Form),!,assert_1pddl(Ctx,Form).
-assert_pddl(Ctx,Form):- \+ is_list(Form),!,assert_1pddl(Ctx,Form).
+assert_pddl(Ctx,Form):- \+ is_list(Form),!,must_or_rtrace_l(assert_1pddl(Ctx,Form)).
 
 assert_pddl(Ctx,Form):- 
   Form = [ define, Decl|Rest],
   into_pterm( define,Decl,Named),
   assert_pddl([Named|Ctx],Rest),!.
 
-assert_pddl(Ctx,Form):- is_pddl_amethod(Method),
-  Form = [ Method, Decl|Rest],
+assert_pddl(Ctx,Form):- Form = [ Method, Decl|Rest], is_pddl_amethod(Method),
   into_pterm( named_method,Decl,Named),
   assert_pddl([Method|Ctx],[Named|Rest]),!.
 
@@ -248,14 +366,29 @@ assert_pddl(Ctx,[KW,Data|Rest]):- Data\==[],
   assert_pddl(Ctx,Rest),!.
 */
 
-assert_pddl([init|Ctx],Data):-  map_pddl_list(assert_pddl([s(initially)|Ctx]),Data).
-assert_pddl(Ctx,Data):- \+ is_list(Data),!,assert_pddl(Ctx,[Data]).
-assert_pddl([AtomS|Ctx],Data):- atom(AtomS),atom_concat(Atom,'s',AtomS),!, map_pddl_list(assert_pddl([Atom|Ctx]),Data).
+%assert_pddl([init|Ctx],Data):-  map_pddl_list(assert_pddl([s(initially)|Ctx]),Data).
+assert_pddl(Ctx,Data):- \+ is_list(Data),!, assert_pddl(Ctx,[Data]).
+
+assert_pddl([AtomS|Ctx],Data):- atom(AtomS),item_list(Atom,AtomS),!, map_pddl_list(assert_1pddl([Atom|Ctx]),Data).
+assert_pddl([One,Ctx],SData):- atom(One),!, assert_1pddl([One,Ctx],SData).
 assert_pddl([s(Pred)|Ctx],SData):- our_sterm2pterm(SData,Data), !,assert_1pddl([Pred|Ctx],Data).
-assert_pddl([One,Ctx],SData):- atom(One),!, sterm22pterm(SData,Data),!,assert_1pddl([One,Ctx],Data).
 assert_pddl(Ctx,[ KW, Decl|Rest]):-  un_kw_directive(KW,Atom), assert_pddl(Ctx,[ Atom, Decl|Rest]), !.
-assert_pddl(Ctx,Form):- wdmsg(assert_pddl(Ctx,Form)),fail.
+assert_pddl(Ctx,Form):- pprint_ecp_cmt(pink,assert_pddl(Ctx,Form)),fail.
 assert_pddl(Ctx,Form):- assert_1pddl(Ctx,Form), !.
+
+
+not_item_list(vars).
+not_item_list(functions).
+
+item_list(_,NIL):- not_item_list(NIL),!,fail.
+item_list(event,events).
+item_list(fluent,fluents).
+item_list(initially,init).
+item_list(predicate,predicates).
+item_list(invariant,timeless).
+item_list(subtype,types).
+item_list(Action,Actions):- atom_concat(Action,"s",Actions), \+ atom_concat(_,"s",Action).
+% item_list(Action,Actions):- arg_info(domain,Action,arginfo),atom_concat(Action,"s",Actions).
 
 
 assert_pddl_pairs(_,[]).
@@ -282,7 +415,8 @@ kw_soon(Rest):-
 kw_directive(KW,NewType):- atom(KW), atom_concat(':',Stuff,KW), downcase_atom(Stuff,NewType),!.
 
 un_kw_directive(KW,NewType):- kw_directive(KW,NewType),!.
-un_kw_directive(KW,NewType):- atom(KW), downcase_atom(KW,NewType),!, KW\==NewType.
+un_kw_directive(KW,NewType):- atom(KW), downcase_atom(KW,NewType),!, KW \==NewType.
+ 
 
 
 pddl_type_of(X,Y):- into_typed(X,typed(Y,_)),!.
@@ -292,13 +426,8 @@ pddl_value_of(X,Y):- into_typed(X,typed(_,Y)).
 pddl_value_of(F,F).
 
 as_isa_list([],[]).
-as_isa_list([G|L],[isa(V,T)|LL]):- into_typed(G,typed(V,T)), as_isa_list(L,LL).
+as_isa_list([G|L],[isa(V,T)|LL]):- into_typed(G,typed(T,V)), as_isa_list(L,LL).
 as_isa_list([_|L],LL):- as_isa_list(L,LL).
-
-
-maybe_unlistify([C],C):- nonvar(C),!.
-maybe_unlistify([C|AND],CAND):-and_to_comma([and,C|AND],CAND),!.
-maybe_unlistify(C,C).
 
 same_keys(X,Y):- must((unkw_s(X,X1),unkw_s(Y,Y1))), !,  Y1==X1.
 
@@ -309,26 +438,36 @@ select_within(N,V,Form,NForm):- select([NN|V],Form,NForm),atom(NN),same_keys(NN,
 select_within(N,V,Form,NForm):- append(Left,[NN,V|Right],Form),atom(NN),same_keys(NN,N),append(Left,Right,NForm),!.
 select_within(N,V,Form,NForm):- append(NForm,[NN|V],Form),atom(NN),same_keys(NN,N),!.
 
-pddl_param_type(Why,_):-var(Why),!,fail.
+pddl_param_type(Ctx,_):-var(Ctx),!,fail.
 pddl_param_type(':vars',typed).
 pddl_param_type(':parameters',typed).
+pddl_param_type(':objects',typed).
 pddl_param_type(':domain-variables',typed).
+pddl_param_type(':effects',at_effect).
+%pddl_param_type(Ctx,CtxO):-nonvar(Ctx),Ctx=CtxO.
 
-pddl_param_type(Why,WhyO):-nonvar(Why),Why=WhyO.
+at_effect(I,I).
 
-maybe_convert(N,V0,V,Else):- member(Why,[N,Else,V0]),pddl_param_type(Why,typed),!,into_typed_params(V0,V),!.
-%maybe_convert(N,V0,V,Else):- member(Why,[N,Else,V0]),pddl_param_type(Why,['and']),!,into_pterm(maybe_convert,V0,V),!.
+dont_convert(_Effect,I,I).
+
+type_how(typed,into_typed_params).
+
+maybe_convert(N,V0,V,Else):- member(Ctx,[N,Else,V0]),nonvar(Ctx),pddl_param_type(Ctx,What),type_how(What,Call),!,call(Call,V0,V),!.
+%maybe_convert(N,V0,V,Else):- member(Ctx,[N,Else,V0]),pddl_param_type(Ctx,['and']),!,into_pterm(maybe_convert,V0,V),!.
 maybe_convert(_,V,V,_):-!.
 
 unkw_s(N,KW):- atom(N),atom_concat(':',M,N), !, unkw_s(M,KW).
 unkw_s(N,KW):- downcase_atom(N,KW).
+
+get_1pair_value((N1;N2),V,Form,NForm,Else):- !, 
+  (get_1pair_value( N1,V,Form,NForm,Else) -> V\==Else) -> true ; get_1pair_value( N2,V,Form,NForm,Else).
 
 get_1pair_value( N,V,Form,NForm,Else):- select_within(N,V0,Form,NForm),maybe_convert(N,V0,V,Else),!.
 get_1pair_value( _,V,Form, Form,Else):- V = Else,!.
 
 get_pair_values([],Form,Form):-!.
 get_pair_values(ndv(N,E,V),Form,FormOut):- !, get_1pair_value(N,V,Form, FormOut, E),!.
-get_pair_values(prop(N,E,V),Form,FormOut):- !, get_1pair_value(N,V,Form, FormMID, E),!, (V==E -> FormOut=FormMID ; FormOut=[N,V|FormMID]).
+get_pair_values(prop(N,E),Form,FormOut):- !, get_1pair_value(N,V,Form, FormMID, E),!, (V==E -> FormOut=FormMID ; FormOut=[N,V|FormMID]).
 get_pair_values([Op|Rest],Form,FormOut):-
   get_pair_values(Op,Form,FormM),!,
   get_pair_values(Rest,FormM,FormOut).
@@ -342,27 +481,18 @@ never:- set_prolog_flag(debugger_write_options,
   [quoted(true), max_depth(100), spacing(next_argument)]).
 % assert_1pddl([_Ctx],Form):- Form ==[], 
 
-assert_1pddl(Ctx,Form):- pprint_ecp_cmt(white,assert_1pddl(Ctx,Form)),fail.
-
-assert_1pddl([Atom|Ctx], [V,Dash,Type|More]):- Dash=='-', !, 
-  assert_1pddl([Atom|Ctx], typed(Type,V)),
-  assert_1pddl([Atom|Ctx], More).
-
-assert_1pddl([Length|_], []):-  is_pddl_prop_holder(Length),!.
-assert_1pddl([Length|Ctx], [Domain|Props]):-  is_pddl_prop_holder(Length),!,
-  assert_1pddl([Length|Ctx], Domain),
-  assert_1pddl([Length|Ctx], Props).
+assert_1pddl([Length|Ctx], [Domain|Props]):-  is_pddl_prop_holder(Length),!,maplist(assert_1pddl([Length|Ctx]), [Domain|Props]).
 	
 assert_1pddl([AM|Ctx],[Name|Form]):- is_pddl_amethod(AM),
  must_or_rtrace_l((get_pair_values([
      ndv(':vars',[],Vars),
      ndv(':parameters',[],Params),
-     prop(':expansion',[],Expansion),
-     prop(':name',[],NameF),
-     prop(':only-in-expansions',[],OiEs),
-     prop(':duration',1,Dur),
-     prop(':tasks',['and'],Tasks),     
-     ndv(':precondition',['and'],Pre),
+     prop(':expansion',[]),
+     prop(':name',[]),
+     prop(':only-in-expansions',[]),
+     prop(':duration',1),
+     prop(':tasks',[]),     
+     ndv((':precondition';':condition'),['and'],Pre),
      ndv(':effect',['and'],Effect)]
                                    ,Form,ExtraInfo),
    our_sterm2pterm(Form,PForm),   
@@ -375,14 +505,14 @@ assert_1pddl([AM|Ctx],[Name|Form]):- is_pddl_amethod(AM),
    % must(into_plus_minus(Pre,PrePos,PreNeg)),
    %into_plus_minus(Effect,Enables,Disables),  
    compound_name_arguments_maybe_zero(Action,Name,VParams),
-   compound_name_arguments_maybe_zero(ActionKey,Name,SVars),
-   assert_lps_pl(action_type(Ctx,AM,Action,ActionKey)),
-   debug_var('T1', T1),
-   debug_var('T2', T2),
-   Rule0 = if(initiates(Action, at(Effect, T2)), at((Pre, Types, T2>T1),T1)),
-   and_to_comma(Rule0,Rule),
-   assert_lps_pl(Rule),
+   compound_name_arguments_maybe_zero(ActionKey,AM,[Name|SVars]),
+   assert_lps_pl(action_type(Ctx,ActionKey,AM,Action)),
+   add_conjuncts(Types,Pre,PreWithTypes),
+   % Rule0 = if(initiates(Action, Effect), PreWithTypes), and_to_comma(Rule0,Rule),
+   assert_lps_pl(rule(Ctx,ActionKey,Action,Effect,[if(PreWithTypes)])),
    assert_pddl_pairs([ActionKey|Ctx],ExtraInfo))).
+
+assert_1pddl(Last,[]):- last(Last,domain(_)), !.
 
 assert_1pddl([predicate|Ctx],[Name|Params]):- 
   must(atom(Name)),
@@ -390,23 +520,47 @@ assert_1pddl([predicate|Ctx],[Name|Params]):-
     into_typed_params(Params,RParams),
     maplist(pddl_type_of,RParams,TParams),!,
     compound_name_arguments_maybe_zero(Lps,Name,TParams),
-  assert_1pddl([':predicate'|Ctx],Lps))).
+  assert_lps_pl(predicate(Ctx,Lps)))).
 
-assert_1pddl([domain(_)],[]):- !.
+assert_1pddl([functions|Ctx],[[Name|Params],'-',Result|More]):-
+  must(atom(Name)),
+  must_or_rtrace((
+    into_typed_params(Params,RParams),
+    maplist(pddl_type_of,RParams,TParams),!,
+    compound_name_arguments_maybe_zero(Lps,Name,TParams),
+  assert_lps_pl(function(Ctx,Lps,Result)))),
+  assert_1pddl([functions|Ctx],More).
+
+assert_1pddl([functions|Ctx],[[Name|Params]|More]):-
+  must(atom(Name)),
+  must_or_rtrace((
+    into_typed_params(Params,RParams),
+    maplist(pddl_type_of,RParams,TParams),!,
+    compound_name_arguments_maybe_zero(Lps,Name,TParams),
+  assert_lps_pl(function(Ctx,Lps,'any')))),
+  assert_1pddl([functions|Ctx],More).
+
+
+
+ 
+assert_1pddl([derived|Ctx],[[Name|Params],PreConds]):- 
+ must_or_rtrace_l((
+  into_typed_params(Params,Typed),as_isa_list(Typed,Types),
+  maplist(arg(2),Typed,ParamVars),
+  compound_name_arguments_maybe_zero(RHS,Name,ParamVars),
+  add_conjuncts(Types,PreConds,LHS),
+  assert_lps_pl(implication(Ctx,LHS,RHS)))).
 
 assert_1pddl([axiom|Ctx],Form):- 
  must_or_rtrace_l((
-  get_1pair_value(':vars',Value1a,Form,Form0,[]),
-  get_1pair_value(':context',Value2,Form0,Form1,['and']),
-  get_1pair_value(':implies',Value3,Form1,LeftOver,'$error'))),  
+  get_1pair_value(':vars',Vars,Form,Form0,[]),
+  get_1pair_value(':context',Pre,Form0,Form1,['and']),
+  get_1pair_value(':implies',PostCond,Form1,LeftOver,'$error'))),  
  must_or_rtrace_l((
-  into_typed_params(Value1a,Value1b),as_isa_list(Value1b,Value1),
-  listify(Value2,Value2L),
-  append(Value2L,Value1,Value12),
-  and_to_comma(Value12,Precond),
-  and_to_comma(Value3,PostCond),
-  maplist(maybe_unlistify,[Ctx,Precond,PostCond],[UCtx,UPrecond,UPostCond]),
-  assert_lps_pl(implication(UCtx,UPrecond,UPostCond)),
+  must(PostCond \== '$error'),
+  into_typed_params(Vars,Value1b),as_isa_list(Value1b,Isas),
+  add_conjuncts(Isas,Pre,Precond),
+  assert_lps_pl(implication(Ctx,Precond,PostCond)),
   assert_pddl_pairs([implication|Ctx],LeftOver))).
 
  
@@ -415,17 +569,41 @@ assert_1pddl([KW,action(N,RParams)|Ctx],PreConds):- kw_directive(KW,Directive),
    maplist(pddl_value_of,RParams,VParams),
    assert_1pddl([action_types(N,TParams)|Ctx],[]),
    maplist(pddl_type_of,RParams,TParams),
-   into_pterm( Why,PreConds,Conds),
+   into_pterm( Ctx,PreConds,Conds),
    assert_1pddl([Directive,action(N,VParams)|Ctx],Conds),!.
 */
 
-assert_1pddl(Ctx,Form):- Ctx=[Pred|Rest],atom(Pred),is_list(Rest),NewForm=..Ctx, append_term_pddl(NewForm,Form,Data),!,assert_lps_pl(Data).
-assert_1pddl(Ctx,Form):- Ctx=[NewForm|Rest],is_list(Rest),append_termlist(NewForm,Rest,RData),append_term_pddl(RData,Form,Data),!,assert_lps_pl(Data).
+ %assert_1pddl([type,domain(midominio)],typed(object,boolean)).
+
+ %  assert_lps_pl(type(domain(midominio),typed(object,boolean))).
+
+assert_1pddl([requirement,File],Inst):- 
+  %constant,object,type
+  assert_lps_pl(requirement(File,Inst)),!.
+ 
+assert_1pddl([FormatType,File],typed(Type,Inst)):- 
+  %constant,object,type
+  (atom(FormatType) -> LPS =.. [FormatType,File,Inst,Type]; LPS = is_typed(File,FormatType,Inst,Type)),
+  assert_lps_pl(LPS),!.
+
+assert_1pddl([Atom|Ctx], KVList):- if_into_typed_params(KVList,Params), !, maplist(assert_1pddl([Atom|Ctx]),Params).
+assert_1pddl(Ctx,Form):- pprint_ecp_cmt(white,assert_1pddl(Ctx,Form)),fail.
+
+assert_1pddl(Ctx,Form):- Ctx=[Front|Rest],is_list(Rest),into_context(Rest,RRest),
+   (atom(Front) -> NewForm=..[Front,RRest]; append_termlist(Front,[RRest],NewForm)),
+   append_term_pddl(NewForm,Form,Data),!,assert_lps_pl(Data).
 assert_1pddl(_Ctx,Form):- assert_lps_pl(Form),!.
 
+typify(any, Item,Typed):- \+ atomic_or_var(Item), into_typed_name(Item,Typed), !.
+typify(Type,Item,typed(Type,Item)).
+
+is_type_param_list([_|VList]):- member('-',VList),!.
+is_type_param_list(KVList):- member(typed(_,_),KVList),!.
+
 into_typed_params([], []):-!.
-into_typed_params([Item, Dash, Type|List], [H|T]) :- Dash=='-',! , H=..[typed,Type,Item], into_typed_params(List, T).
-into_typed_params([H|List], [HH|T]):- into_typed(H,HH),into_typed_params(List, T).
+into_typed_params(List, _) :- \+ ground(List), throw(\+ ground(List)).
+into_typed_params(List, AllParms) :- append(Items,['-',Type|Right],List),maplist(typify(Type),Items,Params),!,into_typed_params(Right, Rest), append(Params, Rest, AllParms).
+into_typed_params(Items,Params):- maplist(typify(any),Items,Params).
 
 into_typed(G,H):- into_typed_name(G,M),maybe_into_named_var(M,H).
 
@@ -434,27 +612,50 @@ maybe_into_named_var(M,V):- M=V.
 
 into_typed_name(H,          typed(any,H)) :- atomic_or_var(H),!.
 into_typed_name(  isa(I,T), typed(T,I)).
-into_typed_name(typed(T,I), typed(T,I)) .
+into_typed_name(typed(T,I), typed(T,I)).
+into_typed_name('-'(T,I),   typed(T,I)).
 into_typed_name(G,          typed(T,I)):- compound(G),compound_name_arguments(G,T,[I]),!.
 into_typed_name(H,          typed(any,H1)):- our_sterm2pterm(H,H1). 
 
+if_into_typed_params(KVList,Params):- is_type_param_list(KVList), into_typed_params(KVList,Params).
+must_into_typed_params(KVList,Params):- must_or_trace(if_into_typed_params(KVList,Params)).
+
+into_context(X,X):- atomic_or_var(X).
+into_context([X],Y):- into_context(X,Y),!.
+into_context(List,Y):- is_list(List),reverse(List,RList), Y=..[ctx|RList],!.
+into_context(Y,Y):- functor(Y,ctx,_).
+into_context(Y,ctx(Y)).
+
 map_pddl_list(_Pred,[]).
-map_pddl_list(Pred1,[Item,'-',Type|List]):- Item1=..[typed,Type,Item], !, 
-  map_pddl_list(Pred1,[Item1|List]).
-map_pddl_list(Pred1,[[Item,'-',Type]|List]):- Item1=..[typed,Type,Item], !, 
-  map_pddl_list(Pred1,[Item1|List]).
+map_pddl_list(Pred1,KVList):- if_into_typed_params(KVList,Params),!, maplist(Pred1,Params).
 map_pddl_list(Pred1,[Item1|List]):- call(Pred1,Item1),map_pddl_list(Pred1,List).
 
-must_or_rtrace_l((A,B)):- !, must_or_rtrace_l(A), must_or_rtrace_l(B).
+must_or_rtrace_l((A,B)):- !, must_or_rtrace_l(A),!, must_or_rtrace_l(B).
 must_or_rtrace_l((C->A;B)):- !, (C-> must_or_rtrace_l(A);must_or_rtrace_l(B)).
-must_or_rtrace_l(A):- must_or_rtrace(A).
+must_or_rtrace_l(A):- must_or_rtrace(A),!.
 
 append_term_pddl(X,Y,Z):- compound_gt(X,0),X=..[KW|ARGS],kw_directive(KW,NewType),X2=..[NewType|ARGS],!,append_term_pddl(X2,Y,Z).
 append_term_pddl(X,Y,Z):- 
   append_term(X,Y,Z).
 
-assert_lps_pl(Lps0):- 
-  with_kif_ok(to_untyped(Lps0,Lps)),
+assert_lps_pl(Pre):-
+  must_or_rtrace_l((with_kif_ok(to_untyped(Pre,Lps)),
+  Lps=..[F,D|Args],
+  into_context(D,DU),
+  maplist(unlistify_arg,Args,ULArgs),
+  Lps0=..[F,DU|ULArgs],
+  assert_lps_pl_core(Lps0))).
+
+unlistify_arg(C,C):- atomic_or_var(C),!.
+unlistify_arg([C],O):- !, unlistify_arg(C,O).
+unlistify_arg([C|AND],CAND):-and_to_comma([C|AND],CAND),!.
+unlistify_arg(C,C).
+
+
+assert_lps_pl_core(Lps):-  
+  pprint_ecp(cyan,(Lps)),!.
+
+assert_lps_pl_core(Lps):-  
   pprint_ecp_cmt(cyan,assert_lps_pl(Lps)),
   lps_xform(Lps,Prolog),!,
   ((Lps\==Prolog
@@ -583,6 +784,8 @@ argtype_pred(event,events).
 argtype_pred(fluent,fluents).
 argtype_pred(action,actions).
 argtype_pred(predicate,predicates).
+argtype_pred(invariant,timeless).
+argtype_pred(function,functions).
 argtype_pred(Action,Actions):- arg_info(domain,Action,arginfo),atom_concat(Action,"s",Actions).
 
 protify(both,Form,[Lps1,Lps2]):- protify(events,Form,Lps1),protify(action,Form,Lps2).

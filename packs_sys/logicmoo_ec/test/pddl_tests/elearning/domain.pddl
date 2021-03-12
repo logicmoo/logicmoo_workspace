@@ -49,7 +49,7 @@ Training Authoring Formatting GraphicDesign Administration Quality  - lane
 (:tag Summary "0")
 )
 :duration (= ?duration 1.0)
-:condition(belongs_to_lane ?w Training)
+:condition (belongs_to_lane ?w Training)
 :effect (completed a0))
 
 (:durative-action A1
@@ -328,10 +328,10 @@ Training Authoring Formatting GraphicDesign Administration Quality  - lane
 :parameters (?x - parameter)
 (:method if_A9
 :precondition (value ?x false)
-:tasks (A9?w1))
+:tasks (A9 ?w1))
 (:method if_A8
 :precondition (value ?x true)
-:tasks (A8?w1))
+:tasks (A8 ?w1))
 )
 
 (:task BlockPB2

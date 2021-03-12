@@ -809,10 +809,10 @@ current_source_location0(M,module):- source_module(M),!.
 current_source_location0(M,typein):- '$current_typein_module'(M).
 
 line_or_char_count(S,_):- \+ is_stream(S),!,fail.
-line_or_char_count(S,L):- line_count(S,L),L\==0,!.
-line_or_char_count(S,L):- stream_property(S,position(P)),stream_position_data(line_count,P,L),!.
-line_or_char_count(S,L):- line_position(S,L),L\==1,!.
-line_or_char_count(S,L):- character_count(S,C),L is -C.
+line_or_char_count(S,L):- on_x_fail((stream_property(S,position(P)),stream_position_data(line_count,P,L))),!.
+line_or_char_count(S,L):- on_x_fail(line_count(S,L)),L\==0,!.
+line_or_char_count(S,L):- on_x_fail(line_position(S,L)),L\==1,!.
+line_or_char_count(S,L):- on_x_fail(character_count(S,C)),L is -C.
 
 :-export(current_why/1).
 :-module_transparent(current_why/1).
