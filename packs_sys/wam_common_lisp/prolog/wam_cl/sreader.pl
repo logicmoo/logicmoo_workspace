@@ -15,6 +15,7 @@
   with_lisp_translation/2,
   to_untyped/2,
   ok_var_name/1,
+  with_all_rest_info/1,
   svar_fixvarname/2,
   sexpr_sterm_to_pterm/2,
   lisp_read/2,
@@ -106,7 +107,7 @@ with_lisp_translation(Other,Pred1):-
 
 with_lisp_translation_stream(In,Pred1):- 
    repeat,
-      once(lisp_read(In,O)),
+      once((lisp_read(In,O))),
       (O== end_of_file 
          -> (with_all_rest_info(Pred1),!) ; 
          (((once((zalwayz(call_proc(Pred1,O))))),fail))).
@@ -117,7 +118,7 @@ with_all_rest_info(Pred1):-
  forall(clause(t_l:s_reader_info(O2),_,Ref),
   (zalwayz(once(call(Pred1,O2))),erase(Ref))),!.
 
-parse_sexpr_untyped(I,O):- quietly_sreader((parse_sexpr(I,M))),!,quietly_sreader((to_untyped(M,O))),!.
+parse_sexpr_untyped(I,O):- notrace((parse_sexpr(I,M))),!,quietly_sreader((to_untyped(M,O))),!.
 
 read_pending_whitespace(In):- repeat, peek_char(In,Code),
    (( \+ char_type(Code,space), \+ char_type(Code,white))-> ! ; (get_char(In,_),fail)).
@@ -188,7 +189,7 @@ with_kifvars(Goal):-
 
 
 
-:- thread_local(t_l:fake_buffer_codes/2).
+%:- thread_local(t_l:fake_buffer_codes/2).
 
 
 %% parse_sexpr( :TermS, -Expr) is det.
@@ -196,13 +197,13 @@ with_kifvars(Goal):-
 % Parse S-expression.
 %
 
-parse_sexpr(S, Expr) :- parse_meta_term(file_sexpr_with_comments, S, Expr).
+parse_sexpr(S, Expr) :- notrace(parse_meta_term(file_sexpr_with_comments, S, Expr)),!.
 
 %% parse_sexpr_ascii( +Codes, -Expr) is det.
 %
 % Parse S-expression Codes.
 %
-parse_sexpr_ascii(S, Expr) :- parse_meta_ascii(file_sexpr_with_comments, S,Expr).
+parse_sexpr_ascii(S, Expr) :- notrace(parse_meta_ascii(file_sexpr_with_comments, S,Expr)),!.
 
 
 parse_sexpr_ascii_as_list(Text, Expr) :- txt_to_codes(Text,DCodes),
@@ -215,13 +216,13 @@ parse_sexpr_ascii_as_list(Text, Expr) :- txt_to_codes(Text,DCodes),
 % Parse S-expression That maybe sees string from Codes.
 %
 parse_sexpr_string(S,Expr):- 
- locally_setval('$maybe_string',t,parse_sexpr(string(S), Expr)).
+ locally_setval('$maybe_string',t,parse_sexpr(string(S), Expr)),!.
 
 %% parse_sexpr_stream( +Stream, -Expr) is det.
 %
 % Parse S-expression from a Stream
 %
-parse_sexpr_stream(S,Expr):- parse_meta_stream(file_sexpr_with_comments,S,Expr).
+parse_sexpr_stream(S,Expr):- notrace(parse_meta_stream(file_sexpr_with_comments,S,Expr)),!.
 
 :- export('//'(file_sexpr,1)).
 :- export('//'(sexpr,1)).
@@ -255,7 +256,7 @@ get_sexpr_with_comments(O,Txt,with_text(O,Str),S,_E):-append(Txt,_,S),!,text_to_
 
 file_sexpr(end_of_file) --> file_eof,!.
 % WANT? 
-file_sexpr(O) --> sblank,!,file_sexpr(O).
+file_sexpr(O) --> sblank,!,file_sexpr(O),!.
 % file_sexpr(planStepLPG(Name,Expr,Value)) --> swhite,sym_or_num(Name),`:`,swhite, sexpr(Expr),swhite, `[`,sym_or_num(Value),`]`,swhite.  %   0.0003:   (PICK-UP ANDY IBM-R30 CS-LOUNGE) [0.1000]
 % file_sexpr(Term,Left,Right):- eoln(EOL),append(LLeft,[46,EOL|Right],Left),read_term_from_codes(LLeft,Term,[double_quotes(string),syntax_errors(fail)]),!.
 % file_sexpr(Term,Left,Right):- append(LLeft,[46|Right],Left), ( \+ member(46,Right)),read_term_from_codes(LLeft,Term,[double_quotes(string),syntax_errors(fail)]),!.
@@ -365,7 +366,7 @@ ugly_sexpr_cont('$OBJ'(sugly,S))                 -->  read_string_until(S,`>`), 
 
 %sexpr(L)                   --> sblank,!,sexpr(L),!.
 %sexpr(_) --> `)`,!,{trace,break,throw_reader_error(": an object cannot start with #\\)")}.
-sexpr(X,H,T):- zalwayz(sexpr0(X),H,M),zalwayz(swhite,M,T), if_debugging(sreader,(wdmsg(sexpr(X)))),!.
+sexpr(X,H,T):- zalwayz(sexpr0(X),H,M),zalwayz(swhite,M,T), nop(if_debugging(sreader,(wdmsg(sexpr(X))))),!.
 %sexpr(X,H,T):- zalwayz(sexpr0(X,H,T)),!,swhite.
 
 sexpr0(L)                      --> sblank,!,sexpr(L),!.
@@ -445,7 +446,6 @@ priority_symbol((`-1-`)).
 priority_symbol((`1+`)).
 priority_symbol((`1-`)).
 
-sym_or_num(S) --> [C1,C2], {priority_symbol([C1,C2|Rest])},Rest,swhite,{name(S,[C1,C2|Rest])}.
 sym_or_num('$COMPLEX'(L)) --> `#C(`,!, swhite, sexpr_list(L), swhite.
 %sym_or_num((E)) --> unsigned_number(S),{number_string(E,S)}.
 %sym_or_num((E)) --> unsigned_number(S),{number_string(E,S)}.
@@ -537,8 +537,11 @@ sexpr_string(X)--> read_string_until(X,`"`).
 % sexpr_string([32|S]) --> [C],{eoln(C)}, sexpr_string(S).
 %sexpr_string([C|S],End) --> [C],!,sexpr_string(S,End).
 
-rsymbol(Chars,E) --> [C], {sym_char(C)},!, sym_continue(S), {append(Chars,[C|S],AChars),string_to_atom(AChars,E)},!.
-rsymbol_cont(Prepend,E) --> sym_continue(S), {append(Prepend,S,AChars),string_to_atom(AChars,E)},!.
+rsymbol_chars([C1,C2|Rest]) --> [C1,C2], {priority_symbol([C1,C2|Rest])},Rest,!.
+rsymbol_chars([C|S])--> [C], {sym_char(C)},!, sym_continue(S),!.
+%rsymbol_cont(Prepend,E) --> sym_continue(S), {append(Prepend,S,AChars),string_to_atom(AChars,E)},!.
+
+rsymbol(Chars,E) --> rsymbol_chars(List), {append(Chars,List,AChars),string_to_atom(AChars,E)},!.
 
 rsymbol_maybe(Prepend,ES) --> rsymbol(Prepend,E),{maybe_string(E,ES)},!.
 
@@ -723,12 +726,12 @@ to_untyped(['#'(Backquote),Rest],Out):- Backquote == backquote, !,to_untyped(['#
 to_untyped(['#'(S)|Rest],OOut):- nonvar(S), is_list(Rest),must_maplist(to_untyped,[S|Rest],[F|Mid]), 
           ((atom(F),t_l:s2p(F))-> Out=..[F|Mid];Out=[F|Mid]),
           to_untyped(Out,OOut).
-to_untyped(ExprI,ExprO):- ExprI=..[F|Expr],atom_concat_or_rtrace('$',_,F),must_maplist(to_untyped,Expr,TT),ExprO=..[F|TT].
+to_untyped(ExprI,ExprO):- ExprI=..[F|Expr],atom_concat_or_rtrace('$',_,F),!,must_maplist(to_untyped,Expr,TT),ExprO=..[F|TT].
 
 % to_untyped([H|T],Forms):-is_list([H|T]),zalwayz(text_to_string_safe([H|T],Forms);maplist(to_untyped,[H|T],Forms)).
-to_untyped([H|T],[HH|TT]):-!,zalwayz((to_untyped(H,HH),to_untyped(T,TT))).
+to_untyped([H|T],[HH|TT]):-!,zalwayz((to_untyped(H,HH),!,to_untyped(T,TT))).
 to_untyped(ExprI,ExprO):- zalwayz(ExprI=..Expr),
-  must_maplist(to_untyped,Expr,[HH|TT]),(atom(HH)-> ExprO=..[HH|TT] ; ExprO=[HH|TT]).
+  must_maplist(to_untyped,Expr,[HH|TT]),(atom(HH)-> ExprO=..[HH|TT] ; ExprO=[HH|TT]),!.
 % to_untyped(Expr,Forms):-def_compile_all(Expr,Forms),!.
 
 to_number(S,S):-number(S),!.
