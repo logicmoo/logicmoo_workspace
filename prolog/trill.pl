@@ -254,6 +254,7 @@ execute_query(M,QueryType,QueryArgsNC,Expl,QueryOptions):-
   ( dif(QueryArgsNotPresent,[]) ->
     (print_message(warning,iri_not_exists(QueryArgsNotPresent)),!,false) ; true
   ),
+  set_up_reasoner(M),
   find_explanations(M,QueryType,QueryArgs,Expl,QueryOptions),
   ( query_option(QueryOptions,return_prob,Prob) ->
     (
@@ -290,7 +291,6 @@ find_n_explanations_time_limit(M,QueryType,QueryArgs,Expl,MonitorNExpl,MonitorTi
 
 
 find_single_explanation(M,QueryType,QueryArgs,Expl,Opt):-
-  set_up_reasoner(M),
   build_abox(M,Tableau,QueryType,QueryArgs), % will expand the KB without the query
   (absence_of_clashes(Tableau) ->  % TODO if QueryType is inconsistent no check
     (
@@ -1147,6 +1147,9 @@ apply_all_rules(M,Tab0,EA,Tab):-
   Tab=Tab1;
   apply_all_rules(M,Tab1,EA,Tab)).
 
+apply_det_rules(M,_,Tab,_,Tab):-
+  check_time_monitor(M),!.
+
 apply_det_rules(M,[],Tab0,EA,Tab):-
   M:setting_trill(nondet_rules,Rules),
   apply_nondet_rules(M,Rules,Tab0,EA,Tab).
@@ -1158,6 +1161,9 @@ apply_det_rules(M,[H|_],Tab0,EA,Tab):-
 apply_det_rules(M,[_|T],Tab0,EA,Tab):-
   apply_det_rules(M,T,Tab0,EA,Tab).
 
+
+apply_nondet_rules(M,_,Tab,_,Tab):-
+  check_time_monitor(M),!.
 
 apply_nondet_rules(_,[],Tab,_EA,Tab).
 
