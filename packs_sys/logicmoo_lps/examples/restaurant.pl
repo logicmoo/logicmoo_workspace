@@ -25,25 +25,25 @@ initially
     table(id6,5),
     table(id7,6),
     table(id8,8),
-    free(id1),
-    free(id2),
-    free(id3),
-    free(id4),
-    free(id5),
-    free(id6),
-    free(id7),
-    free(id8),
+    is_free(id1),
+    is_free(id2),
+    is_free(id3),
+    is_free(id4),
+    is_free(id5),
+    is_free(id6),
+    is_free(id7),
+    is_free(id8),
     waiting_staff(andy),
     waiting_staff(becca),
     waiting_staff(charlie),
     waiting_staff(danni),
     errand_boy(jim).
 
-observe([sign_in(andy),sign_in(becca)],1).
-observe([arrive([person_1,personO,person_3]),arrive([person_4,personT_S,person_6])],2).
-observe([],3).
-observe([],4).
-observe([],5).
+observe([sign_in(andy),sign_in(becca)],11).
+observe([arrive([person_1,personO,person_3]),arrive([person_4,personT_S,person_6])],12).
+observe([],13).
+observe([],14).
+observe([],15).
 
 lps_number(People,Size):- my_length(People,Size).
 
@@ -89,7 +89,7 @@ fluent(menu(_)).
 fluent(portion(_,_)).
 fluent(biggest_table(_,_)).
 fluent(table(_,_)).
-fluent(free(_)).
+fluent(is_free(_)).
 fluent(waiting_staff(_)).
 fluent(errand_boy(_)).
 fluent(on_duty(_)).
@@ -107,12 +107,12 @@ leave_duty(Staff)from T1 to _T2 terminates on_duty(Staff) if
 leave_duty(Staff)from T1 to _T2 terminates staff_status(Staff,_Status) if
     staff_status(Staff,available)at T1.
 
-guide(What,T_S954,Table)from T_S946 to T_S948 terminates free(Table) if
+guide(What,T_S954,Table)from T_S946 to T_S948 terminates is_free(Table) if
     table(Table,T_S978)at T_S946.
 
 guide(Staff,_People,_TId)from _T1 to _T2 terminates staff_status(Staff,available).
 
-reserve(What,T_S954,Table)from T_S946 to T_S948 terminates free(T_S954) if
+reserve(What,T_S954,Table)from T_S946 to T_S948 terminates is_free(T_S954) if
     table(T_S954,T_S978)at T_S946.
 
 update_no_show(Person,_N)from _T1 to _T2 terminates no_show(Person,_X).
@@ -180,12 +180,12 @@ get_serving(What,N)from _T1 to _T2 initiates portion(What,N1) if
 
 free_table(TId,Size)at T if
     table(TId,Size)at T,
-    free(TId)at T.
+    is_free(TId)at T.
 
 free_table(TId,Size)at T if
     table(TId,Size2)at T,
     lps_leq(Size,Size2),
-    free(TId)at T.
+    is_free(TId)at T.
 
 blacklisted(Person)at T if
     no_show(Person,N)at T,

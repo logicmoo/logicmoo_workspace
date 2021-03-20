@@ -1,3 +1,4 @@
+%:- prolog_load_context(file, File), throw(wrong_file(File)).
 % =========================================
 % Goal/Plan translating
 % =========================================
@@ -24,9 +25,9 @@ test_logicmoo_ec_sanity:- test_lps_ereader.
   export(P),
   module_transparent(P).
 */
-:- use_module(library(logicmoo_lps)).
-% system:ec_current_domain(X):- wdmsg(ec_current_domain(X)),fail.
-:- user:use_module(library('ec_planner/ec_planner_dmiles')).
+%:- use_module(library(logicmoo_lps)).
+% system:local_database(X):- wdmsg(local_database(X)),fail.
+%:- user:use_module(library('ec_planner/ec_planner_dmiles')).
 :- use_module(library(ec_planner/ec_reader)).
 
 :- use_module(library(lps_corner)).
@@ -74,7 +75,7 @@ assert_ep(Mod,Form):-
 assert_post(Mod,Form,Lps):- nortrace, is_list(Lps),!, maplist(assert_post(Mod,Form),Lps).
 assert_post(Mod,t(Type,Inst),_):- atom(Type), M=..[Type,Inst],!,assert_post(Mod,M,M),!.
 assert_post(Mod,_Form,Lps):- 
-  lps_xform(Mod,Lps,Prolog),!,
+  lps_xform_ec(Mod,Lps,Prolog),!,
   must_or_rtrace((Lps\==Prolog->(ignore(( /*(Form\==Prolog,Lps==Prolog)-> */
     print_lps_syntax(yellow,Lps),
      nop(pprint_ecp(yellow,Lps)))),
@@ -87,7 +88,7 @@ print_lps_syntax(Color,Lps):-
   ec_lps_convert:with_lps_operators2(pretty_clauses,pretty_clauses:clause_to_string(Lps,S))),
     real_ansi_format(hfg(Color), '~N~s.~N', [S]),!.
 
-lps_xform(Mod,Lps,Prolog):- 
+lps_xform_ec(Mod,Lps,Prolog):- 
  locally(current_prolog_flag(lps_translation_only_HIDE,true),
    locally(t_l:is_lps_program_module(Mod),
     must_or_rtrace(lps_term_expander:lps_f_term_expansion_now(Mod,Lps,Prolog)))),!.
@@ -224,7 +225,7 @@ over_pass(2,_Top, holds_at(Fluent, From, To),holds(Fluent, From, To)):- !.
 
 
 %over_pass(_Pass,_Top,happensAt(Event,Time),at(observe(Event),Time)):- !.
-over_pass(_Pass,_Top,Form,LpsO):- Form=..[EFP,X], argtype_pred(EFP,_), protify(EFP,X,Lps),!,flatten([Lps],LpsO).
+over_pass(_Pass,_Top,Form,LpsO):- Form=..[EFP,X], argtype_pred4lps(EFP,_), protify(EFP,X,Lps),!,flatten([Lps],LpsO).
 over_pass(_Pass,_Top,X=Y,Lps):- callable(X),append_term(X,Y,Lps).
 over_pass(Pass,Top,','(X1,X2),(Lps1,Lps2)):- over_pass(Pass,Top,X1,Lps1),over_pass(Pass,Top,X2,Lps2).
 over_pass(Pass,Top,'<->'(X1,X2),[Lps1,Lps2]):- simply_atomic_or_conj(X1),simply_atomic_or_conj(X2), over_pass(Pass,Top,'->'(X1,X2),Lps1),over_pass(Pass,Top,'->'(X2,X1),Lps2).
@@ -267,30 +268,30 @@ simply_atomic_arg(A):- var(A);simply_atomic(A).
 
 assert_lps_try_harder_now((X2 if X1),(if X1 then X2)):- simply_atomic_or_conj(X1), simply_atomic_or_conj(X2).
 assert_lps_try_harder(Prolog):- assert_lps_try_harder_now(Prolog,Again),
-  lps_xform(lps_test_mod,Again,PrologAgain),Again\==PrologAgain,!, 
+  lps_xform_ec(lps_test_mod,Again,PrologAgain),Again\==PrologAgain,!, 
    print_lps_syntax(yellow,Again),
    pprint_ecp_cmt(cyan,PrologAgain),
    pprint_ecp_cmt(white,"% ================================="),
    !.
 assert_lps_try_harder(Prolog):- pprint_ecp(red,Prolog).
 
-argtype_pred(event,events).
-argtype_pred(fluent,fluents).
-argtype_pred(action,actions).
-argtype_pred(predicate,predicates).
-argtype_pred(Action,Actions):- arg_info(domain,Action,arginfo),atom_concat(Action,"s",Actions).
+argtype_pred4lps(event,events).
+argtype_pred4lps(fluent,fluents).
+argtype_pred4lps(action,actions).
+argtype_pred4lps(predicate,predicates).
+argtype_pred4lps(Action,Actions):- arg_info(domain,Action,arginfo),atom_concat(Action,"s",Actions).
 
 protify(both,Form,[Lps1,Lps2]):- protify(events,Form,Lps1),protify(action,Form,Lps2).
 protify(Type,Form,Lps):- is_list(Form),!,maplist(protify(Type),Form,Lps).
-protify(Type,Form,Lps):- argtype_pred(Type,LPSType), \+ callable(Form),!,Lps=..[LPSType,[Form]].
-protify(Type,Form,Lps):- argtype_pred(Type,LPSType), \+ compound(Form),!,Lps=..[LPSType,[Form/0]].
-protify(Type,F/A, Lps):- argtype_pred(Type,LPSType), integer(A),!,Lps=..[LPSType,[F/A]].
+protify(Type,Form,Lps):- argtype_pred4lps(Type,LPSType), \+ callable(Form),!,Lps=..[LPSType,[Form]].
+protify(Type,Form,Lps):- argtype_pred4lps(Type,LPSType), \+ compound(Form),!,Lps=..[LPSType,[Form/0]].
+protify(Type,F/A, Lps):- argtype_pred4lps(Type,LPSType), integer(A),!,Lps=..[LPSType,[F/A]].
 protify(Type,(X1,X2),[Lps1,Lps2]):- !, protify(Type,X1,Lps1),protify(Type,X2,Lps2).
 %protify(Type,X,Lps):- cfunctor(X,F,A),Lps=(F/A).
 protify(Event,X,LPS):- ((event) == Event), compound(X), arg(1,X,Agent),
   is_agent(Agent),
   !,protify(both,X,LPS).
-protify(Type,X,[mpred_prop(X,Type),LPS]):- argtype_pred(Type,LPSType),protify(LPSType,X,LPS).
+protify(Type,X,[mpred_prop(X,Type),LPS]):- argtype_pred4lps(Type,LPSType),protify(LPSType,X,LPS).
 protify(LPSType,X,LPS):- cfunctor(X,F,A),cfunctor(_Lps,F,A),!,Pred=..[LPSType,[F/A]],LPS=[Pred].
 
 is_agent(Agent):- \+ atom(Agent),!,fail.

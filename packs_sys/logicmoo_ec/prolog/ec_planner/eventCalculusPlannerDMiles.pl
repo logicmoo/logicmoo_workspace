@@ -1,3 +1,10 @@
+:- use_module(library(logicmoo_common)).
+:- style_check(-discontiguous).
+:- style_check(-singleton).
+:- use_module(ec_common).
+
+:- include('planner19a.pl').
+end_of_file.
 /*
 % NomicMUD: A MUD server written in Prolog
 %
@@ -15,7 +22,7 @@
 %
 */
 %Ensure temporal points are generated correctly under PROLOG
-:-ensure_loaded('iwfms/genSymPatches.pl').
+%:-ensure_loaded('iwfms/genSymPatches.pl').
 
 %Sort plans based on ordering
 :-ensure_loaded('iwfms/sortPlans.pl').
@@ -38,10 +45,10 @@
 
 % :- include(ec_common_swi).
 
-:- prolog_flag(compiling,_,profiledcode).
+%:- prolog_flag(compiling,_,profiledcode).
 
 %Ensures Prolog is not lazy and does return the entire result rather than predicate(...)
-:- prolog_flag(toplevel_print_options,_,[quoted(true),numbervars(true),portrayed(true)]).                   
+%:- prolog_flag(toplevel_print_options,_,[quoted(true),numbervars(true),portrayed(true)]).                   
  
 %Ensure rules included are added rather than overwriting.
 :- multifile valid_html_form/2.
@@ -129,7 +136,6 @@
    corresponds to length of plan.
 */
 
-% :- style_check(+discontiguous).
 /* TOP LEVEL */
 
 
@@ -157,14 +163,14 @@ Modified Joseph Wilk 21/01/04
 plan(Gs,[HA,BA] ):- plan(Gs,[HA,BA], 199, 0 ).
 
 plan(Gs,[SortedPlan, FinalOrderings], MaxDepth, HighLevel) :- 
- abdemo(Gs,[HA,BA], MaxDepth, HighLevel ),
+ abdemo4(Gs,[HA,BA], MaxDepth, HighLevel ),
  mapToTotalOrderPlan( HA, BA ,ValidOrderings),
  sortPlan([HA,ValidOrderings], SortedPlan),
  reduceLoops(HA, ValidOrderings, FinalOrderings).
 
-abdemo(Gs,[HA,BA] ):- abdemo(Gs,[HA,BA], 199, 0 ).
+abdemo(Gs,[HA,BA] ):- abdemo4(Gs,[HA,BA], 199, 0 ).
   
-abdemo(Gs,[HA,BA], MaxDepth, HighLevel) :-
+abdemo4(Gs,[HA,BA], MaxDepth, HighLevel) :-
    init_gensym(t), 
    abdemo_top(Gs,[[[],[]],[[],[]]],[[HA,HC],[BA,BC]],[],N,0, MaxDepth, HighLevel).
   
@@ -184,14 +190,14 @@ abdemo_top(Gs,R1,R3,N1,N3,D, MaxDepth, HighLevel) :-
 abdemo_cont([[HA,TC],RB],[[HA,TC],RB],N,N,MaxDepth,HighLevel) :-  all_executable(HA, HighLevel), !.
 
 abdemo_cont([[HA,HC],[BA,BC]],R2,N1,N3,MaxDepth,HighLevel) :-
-   writeNoln('Abstract plan: '), writeNoln(HA), writeYesln(BA),
+   write('Abstract plan: '), write(HA), writeln(BA),
    refine([[HA,HC],[BA,BC]],N1,Gs,R1,N2),
    % Cut added here to prevent continous refinement with not(clipped(_,_,_)) added to goal
    % when generating multiple solutions. 
    % This does not have the implication that if something has mutliple refinements then only one of them
    % will be choosen. This is due to the fact that expand goals are treated in abdemo.
    !,
-   action_count([[HA,HC],[BA,BC]],D),
+   action_count([[HA,HC],[BA,BC]]),
    abdemo_top(Gs,R1,R2,N2,N3,D,MaxDepth, HighLevel)
    
    %Joseph Wilk cut added 15/03/2004 AND removed 16/03/2004
@@ -205,12 +211,12 @@ Joseph Wilk
 Modified 21/01/2004 - Support for bound on search */
 
 abdemo_id(Gs,R1,R2,N1,N2,D, MaxDepth) :- 
- D >= MaxDepth, writeNoln('No solution found within bound '), writeNoln(MaxDepth), fail. %So Stop searching
+ D >= MaxDepth, write('No solution found within bound '), write(MaxDepth), fail. %So Stop searching
 
 abdemo_id(Gs,R1,R2,N1,N2,D, MaxDepth) :-
-   D < MaxDepth, writeYesln('=============================================================================='),
-   writeNoln('Depth: '), writeYesln(D),writeNoln('goals: '),writeYesln(Gs), 
-   writeYesln('=============================================================================='), abdemo(Gs,R1,R2,N1,N2,D).
+   D < MaxDepth, writeln('=============================================================================='),
+   write('Depth: '), writeln(D),write('goals: '),writeln(Gs), 
+   writeln('=============================================================================='), abdemo(Gs,R1,R2,N1,N2).
 
    
 /* Removed by Joe - No longer needed since the planner does not use iterative deepening 
@@ -244,14 +250,33 @@ all_executable([happens(A,T1,T2)|R] ,HighLevel) :- (HighLevel =:= 0 ->  true ; (
 
 :- discontiguous abdemo/6.
 
-abdemo(Gs,[[HA,TC1],[BA,TC2]],R,N1,N2,D) :-
+abdemo(Gs,[[HA,TC1],[BA,TC2]],R,N1,N2) :-
   ec_trace(on,0),
    dbginfo('Goals'=Gs),
    dbginfo('Happens'=HA),
    dbginfo('Befores'=BA),     
    dbginfo('Nafs'=N1), fail.
 
-abdemo([],R,R,N,N,D):-!.
+abdemo([],R,R,N,N).
+
+abdemo([holds_at(F1,T3)|Gs1],R1,R6,N1,N5):- 
+  F1 = neg(F) -> 
+  abdemo_cons_holds_at_neg(F,T3,Gs1,R1,R6,N1,N5);
+  abdemo_cons_holds_at_pos(F1,T3,Gs1,R1,R6,N1,N5).
+
+
+should_swap_goals(G1,G2):- \+ functor(G1,_,1), functor(G2,_,1),!.
+should_swap_goals(G1,G2):- reduce_goal(G1,R1),reduce_goal(G2,R2),!, 
+   term_variables(R1,Vs1),term_variables(R2,Vs2),should_swap_goals(R1,Vs1,R2,V2),!.
+
+reduce_goal(G,G):- \+ compound(G),!.
+reduce_goal(holds_at(G1,_),G2):- !, reduce_goal(G1,G2).
+reduce_goal(holds_at(G1,_,_),G2):- !, reduce_goal(G1,G2).
+reduce_goal(G,G).
+
+% should_swap_goals(R1,Vs1,R2,V2).
+should_swap_goals(diff(_,_),_,NotDif,_):- NotDif \= diff(_,_).
+should_swap_goals(_R1,[_|Vs1],_R2,[]).
 
 /*
    Now we have two clauses which are meta-level representations of the two
@@ -268,27 +293,12 @@ abdemo([],R,R,N,N,D):-!.
    clauses in the object-level program. Instead, they're put straight into
    the residue. Resolving happens goals is the job of the refinement phase.
 */
-
-abdemo([holds_at(F1,T)|Gs1],R1,R3,N1,N4,D) :-
- 
-    F1 \= neg(_F2), 
+abdemo_cons_holds_at_pos(F1,T,Gs1,R1,R3,N1,N4) :-   
    abresolve(initially(F1),R1,Gs2,R1,B),
    append(Gs2,Gs1,Gs3), add_neg([clipped(0,F1,T)],N1,N2),
-   abdemo_naf([clipped(0,F1,T)],R1,R2,N2,N3,D),
-   abdemo(Gs3,R2,R3,N3,N4,D).
+   abdemo_naf([clipped(0,F1,T)],R1,R2,N2,N3),
+   abdemo(Gs3,R2,R3,N3,N4).
 
-should_swap_goals(G1,G2):- \+ functor(G1,_,1), functor(G2,_,1),!.
-should_swap_goals(G1,G2):- reduce_goal(G1,R1),reduce_goal(G2,R2),!, 
-   term_variables(R1,Vs1),term_variables(R2,Vs2),should_swap_goals(R1,Vs1,R2,V2),!.
-
-reduce_goal(G,G):- \+ compound(G),!.
-reduce_goal(holds_at(G1,_),G2):- !, reduce_goal(G1,G2).
-reduce_goal(holds_at(G1,_,_),G2):- !, reduce_goal(G1,G2).
-reduce_goal(G,G).
-
-% should_swap_goals(R1,Vs1,R2,V2).
-should_swap_goals(diff(_,_),_,NotDif,_):- NotDif \= diff(_,_).
-should_swap_goals(_R1,[_|Vs1],_R2,[]).
 
 /*
    The order in which resolution steps are carried out in the next
@@ -297,22 +307,20 @@ should_swap_goals(_R1,[_|Vs1],_R2,[]).
    we've added the corresponding happens and before "b" facts to the residue.
 */
 
-abdemo([holds_at(F1,T3)|Gs1],R1,R6,N1,N5,D) :-
-   
-  F1 \= neg(F2), 
+abdemo_cons_holds_at_pos(F1,T3,Gs1,R1,R6,N1,N5) :-   
    abresolve(initiates(A,F1,T1),R1,Gs2,R1,B1),
    %Provides Different ways to resolve a goal when backtracking
    abresolve(happens(A,T1,T2),R1,[],R2,B2),
    abresolve(b(T2,T3),R2,[],R3,B3),
-   append(Gs2,Gs1,Gs3), check_nafs(B2,N1,R3,R4,N1,N2,D),
+   append(Gs2,Gs1,Gs3), check_nafs(B2,N1,R3,R4,N1,N2),
    add_neg([clipped(T1,F1,T3)],N2,N3),
-   abdemo_naf([clipped(T1,F1,T3)],R4,R5,N3,N4,D),
-   abdemo(Gs3,R5,R6,N4,N5,D),
+   abdemo_naf([clipped(T1,F1,T3)],R4,R5,N3,N4),
+   abdemo(Gs3,R5,R6,N4,N5),
     
-   writeNoln('action:'),
-   writeYesln(A),
-   writeNoln('precondition:'),
-   writeYesln(Gs2). 
+   write('action:'),
+   writeln(A),
+   write('precondition:'),
+   writeln(Gs2). 
    
 
 /*
@@ -325,27 +333,24 @@ abdemo([holds_at(F1,T3)|Gs1],R1,R6,N1,N5,D) :-
      happens(A,T1,T2) and T2 < T3 and
      terminates(A,F,T1) and not declipped(T1,F,T2)
 */
-
-abdemo([holds_at(neg(F),T)|Gs1],R1,R3,N1,N4,D) :-
+abdemo_cons_holds_at_neg(F,T,Gs1,R1,R3,N1,N4) :-
    abresolve(initially(neg(F)),R1,Gs2,R1,B),
    append(Gs2,Gs1,Gs3), add_neg([declipped(0,F,T)],N1,N2),
-   abdemo_naf([declipped(0,F,T)],R1,R2,N2,N3,D),
-   abdemo(Gs3,R2,R3,N3,N4,D).
-
-    
-   
-abdemo([holds_at(neg(F),T3)|Gs1],R1,R6,N1,N5,D) :-
+   abdemo_naf([declipped(0,F,T)],R1,R2,N2,N3),
+   abdemo(Gs3,R2,R3,N3,N4).
+ 
+abdemo_cons_holds_at_neg(F,T3,Gs1,R1,R6,N1,N5) :-
    abresolve(terminates(A,F,T1),R1,Gs2,R1,B1),
    abresolve(happens(A,T1,T2),R1,[],R2,B2),
    abresolve(b(T2,T3),R2,[],R3,B3),
-   append(Gs2,Gs1,Gs3), check_nafs(B2,N1,R3,R4,N1,N2,D),
+   append(Gs2,Gs1,Gs3), check_nafs(B2,N1,R3,R4,N1,N2),
    add_neg([declipped(T1,F,T3)],N2,N3),
-   abdemo_naf([declipped(T1,F,T3)],R4,R5,N3,N4,D),
-   abdemo(Gs3,R5,R6,N4,N5,D),
-  writeNoln('terminate action:'),
-  writeYesln(A),
-  writeNoln('precondition:'),
-  writeYesln(Gs2).
+   abdemo_naf([declipped(T1,F,T3)],R4,R5,N3,N4),
+   abdemo(Gs3,R5,R6,N4,N5),
+  write('terminate action:'),
+  writeln(A),
+  write('precondition:'),
+  writeln(Gs2).
    
    
 /*
@@ -357,14 +362,14 @@ abdemo([holds_at(neg(F),T3)|Gs1],R1,R6,N1,N5,D) :-
    of sub-goals between compound events wherever possible.
 */
 
-abdemo([happens(A,T1,T2)|Gs],R1,R4,N1,N3,D) :-
+abdemo([happens(A,T1,T2)|Gs],R1,R4,N1,N3) :-
    !, abresolve(happens(A,T1,T2),R1,[],R2,B), 
     
-   check_nafs(B,N1,R2,R3,N1,N2,D), abdemo(Gs,R3,R4,N2,N3,D).
+   check_nafs(B,N1,R2,R3,N1,N2), abdemo(Gs,R3,R4,N2,N3).
 
-abdemo([happens(A,T)|Gs],R1,R4,N1,N3,D) :-
+abdemo([happens(A,T)|Gs],R1,R4,N1,N3) :-
    !, abresolve(happens(A,T),R1,[],R2,B),
-   check_nafs(B,N1,R2,R3,N1,N2,D), abdemo(Gs,R3,R4,N2,N3,D).
+   check_nafs(B,N1,R2,R3,N1,N2), abdemo(Gs,R3,R4,N2,N3).
 
 /*
    The next clause deals with the expansion of compound actions. These appear
@@ -382,17 +387,17 @@ abdemo([happens(A,T)|Gs],R1,R4,N1,N3,D) :-
    definition, then those recorded in the negations list.
 */
 
-abdemo([expand([happens(A,T1,T2)|Bs])|Gs1],R1,R8,N1,N8,D) :-
+abdemo([expand([happens(A,T1,T2)|Bs])|Gs1],R1,R8,N1,N8) :-
    !, axiom(happens(A,T1,T2),Gs2),
    add_sub_actions(Gs2,R1,R2,N1,N2,D,Hs),
-   solve_befores(Bs,R2,R3,N2,N3,D),
-   abdemo_holds_ats(Gs2,R3,R4,N3,N4,D),
+   solve_befores(Bs,R2,R3,N2,N3),
+   abdemo_holds_ats(Gs2,R3,R4,N3,N4),
    % Joseph Wilk - Failure here causes a re-loop and matches another composite action resolution
    
-   solve_other_goals(Gs2,R4,R5,N4,N5,D),
-   check_clipping(Gs2,R5,R6,N5,N6,D),
-   check_sub_action_nafs(Hs,N1,R6,R7,N6,N7,D),
-   abdemo(Gs1,R7,R8,N7,N8,D).
+   solve_other_goals(Gs2,R4,R5,N4,N5),
+   check_clipping(Gs2,R5,R6,N5,N6),
+   check_sub_action_nafs(Hs,N1,R6,R7,N6,N7),
+   abdemo(Gs1,R7,R8,N7,N8).
 
   
     
@@ -402,23 +407,25 @@ abdemo([expand([happens(A,T1,T2)|Bs])|Gs1],R1,R8,N1,N8,D) :-
    constraints (ie: holds_at if holds_at clauses).
 */
 
-abdemo([not(G)|Gs],R1,R3,N1,N4,D) :-
-   !, abdemo_naf([G],R1,R2,N1,N2,D), add_neg([G],N2,N3),
-   abdemo(Gs,R2,R3,N3,N4,D).
+abdemo([not(G)|Gs],R1,R3,N1,N4) :-
+   !, abdemo_naf([G],R1,R2,N1,N2), add_neg([G],N2,N3),
+   abdemo(Gs,R2,R3,N3,N4).
    
-abdemo([G|Gs1],R1,R3,N1,N2,D) :-
+abdemo([G|Gs1],R1,R3,N1,N2) :-
    abresolve(G,R1,Gs2,R2,B), append(Gs2,Gs1,Gs3),
-     notrace((iv_list_to_set(Gs3,Gs4),(((Gs3\==Gs4)-> (!,fail) ; true)))),
-     ignore(Gs3 = Gs4),
-   abdemo(Gs3,R2,R3,N1,N2,D).
+    % avoid duplicate ops ?!
+    % (some_duped_ops(Gs3) -> ( wdmsg(some_dupe_ops(Gs3)), !, fail) ; true),
+   abdemo(Gs3,R2,R3,N1,N2).
+   
+some_duped_ops(Gs3):- iv_list_to_set(Gs3,Gs4), !, Gs3\==Gs4.
    
 %CUT added by JOE 13/03/2004 AND REMOVED! 17052004:3:23pm due to the fact that only the goal was being re-evaluated
 
 % currently catches abstract actions!!!!
-abdemo([G|Gs],R1,R3,N1,N2,D ) :- writeNoln( 'currently unknown information about(may be compound!):'), writeYesln(G), fail.
+abdemo([G|Gs],R1,R3,N1,N2,D ) :- write( 'currently unknown information about(may be compound!):'), writeln(G), fail.
 
-abdemo([G1,G2|Gs1],R1,R6,N1,N5,D):- fail, \+ \+  should_swap_goals(G1,G2),!, 1 is random(2),
-  abdemo([G2,G1|Gs1],R1,R6,N1,N5,D).
+abdemo([G1,G2|Gs1],R1,R6,N1,N5):- fail, \+ \+  should_swap_goals(G1,G2),!, 1 is random(2),
+  abdemo([G2,G1|Gs1],R1,R6,N1,N5).
 
 
 /*
@@ -427,15 +434,15 @@ Removed Joseph Wilk - depth first search is used instead!
 
 check_depth(R,D,L) :- ec_trace(on,1), 
    action_count(R,L), 
-   writeNoln('Actions:'),
-   writeYesln(R),
-   writeNoln('Action count:'), writeNoln(L), fail.
+   write('Actions:'),
+   writeln(R),
+   write('Action count:'), write(L), fail.
   
 %Keep track of the current action depth
 check_depth(R,D,L) :- action_count(R,L), L =< D, D =< 1000.
 
 % The action list is greater than the current Depth
-check_depth(R,D,L) :- ec_trace(on, 1), writeNoln('Maximum bound reached'),!, fail.
+check_depth(R,D,L) :- ec_trace(on, 1), write('Maximum bound reached'),!, fail.
 */
 
 
@@ -453,18 +460,18 @@ action_count([[HA,TC],RB],L) :- length(HA,L).
 /* The following collection of predicates are called by abdemo(expand). */
 
 
-abdemo_holds_ats([],R,R,N,N,D).
+abdemo_holds_ats([],R,R,N,N).
 
-abdemo_holds_ats([holds_at(F,T)|Gs],R1,R3,N1,N3,D) :-
+abdemo_holds_ats([holds_at(F,T)|Gs],R1,R3,N1,N3) :-
    !, 
-   abdemo([holds_at(F,T)],R1,R2,N1,N2,D),
+   abdemo([holds_at(F,T)],R1,R2,N1,N2),
    %cut added Joseph Wilk 16/03/2004
    !,
    
-   abdemo_holds_ats(Gs,R2,R3,N2,N3,D).
+   abdemo_holds_ats(Gs,R2,R3,N2,N3).
 
-abdemo_holds_ats([G|Gs],R1,R2,N1,N2,D) :-
- abdemo_holds_ats(Gs,R1,R2,N1,N2,D).
+abdemo_holds_ats([G|Gs],R1,R2,N1,N2) :-
+ abdemo_holds_ats(Gs,R1,R2,N1,N2).
 
 
 non_regular_goal(G):- \+ regular_goal(G).
@@ -476,22 +483,22 @@ regular_goal(b(_T1, _T2)).
 regular_goal(not(Clip)):- nonvar(Clip), 
   (Clip = clipped(_T1,_F,_T2) ; Clip = declipped(_DT1,_FD,_DT2)).
 
-solve_other_goals([],R,R,N,N,D).
+solve_other_goals([],R,R,N,N).
 
-solve_other_goals([G|Gs],R1,R3,N1,N3,D) :-
+solve_other_goals([G|Gs],R1,R3,N1,N3) :-
    non_regular_goal(G), !,
-   abdemo([G],R1,R2,N1,N2,D),
-   solve_other_goals(Gs,R2,R3,N2,N3,D).
+   abdemo([G],R1,R2,N1,N2),
+   solve_other_goals(Gs,R2,R3,N2,N3).
 
-solve_other_goals([G|Gs],R1,R2,N1,N2,D) :-
-   solve_other_goals(Gs,R1,R2,N1,N2,D).
+solve_other_goals([G|Gs],R1,R2,N1,N2) :-
+   solve_other_goals(Gs,R1,R2,N1,N2).
 
    
    
 % Modified Joseph Wilk 24/02/2004 7:54pm
 % The idea is if we hit this clause we are backtracking and only want to move backwards not forwards
 
-% solve_other_goals([G|Gs],R1,R2,N1,N2,D) :-  fail.
+% solve_other_goals([G|Gs],R1,R2,N1,N2) :-  fail.
 
 
 
@@ -511,9 +518,7 @@ add_sub_actions([happens(A,T1,T2)|Gs],R1,R3,N1,N3,D,Hs2) :-
 
 add_sub_actions([happens(A,T)|Gs],R1,R3,N1,N3,D,Hs2) :-
    !, 
-     
-   abresolve(happens(A,T),R1,[],R2,B), 
-    
+   abresolve(happens(A,T),R1,[],R2,B),     
    add_sub_actions(Gs,R2,R3,N2,N3,D,Hs1), cond_add(B,happens(A,T,T),Hs1,Hs2).
 
 add_sub_actions([b(T1,T2)|Gs],R1,R3,N1,N3,D,Hs) :-
@@ -525,41 +530,36 @@ add_sub_actions([G|Gs],R1,R2,N1,N2,D,Hs) :-
 
 
 cond_add(false,H,Hs,Hs) :- !.
-
 cond_add(true,H,Hs,[H|Hs]).
 
 
-solve_befores([],R,R,N,N,D).
+solve_befores([],R,R,N,N).
+solve_befores([b(T1,T2)|Gs],R1,R3,N1,N3) :-
+   !, abdemo([b(T1,T2)],R1,R2,N1,N2),
+   solve_befores(Gs,R2,R3,N2,N3),!. %CUT introduced by JOSEPH WILK 30/05/04
+solve_befores([G|Gs],R1,R2,N1,N2) :-
+   solve_befores(Gs,R1,R2,N1,N2),!. %CUT introduced by JOSEPH WILK 30/05/04
 
 
+check_sub_action_nafs([],N1,R,R,N2,N2) :- !. 
 
-solve_befores([b(T1,T2)|Gs],R1,R3,N1,N3,D) :-
-   !, abdemo([b(T1,T2)],R1,R2,N1,N2,D),
-   solve_befores(Gs,R2,R3,N2,N3,D),!. %CUT introduced by JOSEPH WILK 30/05/04
-
-solve_befores([G|Gs],R1,R2,N1,N2,D) :-
-   solve_befores(Gs,R1,R2,N1,N2,D),!. %CUT introduced by JOSEPH WILK 30/05/04
+check_sub_action_nafs([happens(A,T1,T2)|Hs],N1,R1,R3,N2,N4) :-
+   check_nafs(A,T1,T2,N1,R1,R2,N2,N3),
+   check_sub_action_nafs(Hs,N1,R2,R3,N3,N4).
 
 
-check_sub_action_nafs([],N1,R,R,N2,N2,D) :- !. 
+check_clipping([],R,R,N,N) :- !. 
 
-check_sub_action_nafs([happens(A,T1,T2)|Hs],N1,R1,R3,N2,N4,D) :-
-   check_nafs(A,T1,T2,N1,R1,R2,N2,N3,D),
-   check_sub_action_nafs(Hs,N1,R2,R3,N3,N4,D).
+check_clipping([not(clipped(T1,F,T2))|Gs],R1,R3,N1,N3) :-
+   !, abdemo_naf([clipped(T1,F,T2)],R1,R2,N1,N2),
+   check_clipping(Gs,R2,R3,N2,N3).
 
+check_clipping([not(declipped(T1,F,T2))|Gs],R1,R3,N1,N3) :-
+   !, abdemo_naf([declipped(T1,F,T2)],R1,R2,N1,N2),
+   check_clipping(Gs,R2,R3,N2,N3).
 
-check_clipping([],R,R,N,N,D) :- !. 
-
-check_clipping([not(clipped(T1,F,T2))|Gs],R1,R3,N1,N3,D) :-
-   !, abdemo_naf([clipped(T1,F,T2)],R1,R2,N1,N2,D),
-   check_clipping(Gs,R2,R3,N2,N3,D).
-
-check_clipping([not(declipped(T1,F,T2))|Gs],R1,R3,N1,N3,D) :-
-   !, abdemo_naf([declipped(T1,F,T2)],R1,R2,N1,N2,D),
-   check_clipping(Gs,R2,R3,N2,N3,D).
-
-check_clipping([G|Gs],R1,R2,N1,N2,D) :-
-   check_clipping(Gs,R1,R2,N1,N2,D).
+check_clipping([G|Gs],R1,R2,N1,N2) :-
+   check_clipping(Gs,R1,R2,N1,N2).
 
 
 
@@ -687,7 +687,7 @@ abresolve((G1,G2),ResidueIn,Goals,ResidueOut,Flag):- !,
 abresolve(G,R,[],[G|R],false) :-  abducible(G).
 
 abresolve(G,R,Gs,R,false) :-   
-   writeYesln('--------------------'), writeYesln(G),writeYesln('--------------------'),
+   writeln('--------------------'), writeln(G),writeln('--------------------'),
    axiom(G,Gs).
 
 abresolve(G,R,[],[G|R],false) :-  current_predicate(_,G),catch(G,_,fail).
@@ -717,10 +717,10 @@ abresolve(G,R,[],[G|R],false) :-  current_predicate(_,G),catch(G,_,fail).
 */
 
 
-abdemo_nafs([],R,R,N,N,D).
+abdemo_nafs([],R,R,N,N).
 
-abdemo_nafs([N|Ns],R1,R3,N1,N3,D) :-
-   abdemo_naf(N,R1,R2,N1,N2,D), abdemo_nafs(Ns,R2,R3,N2,N3,D).
+abdemo_nafs([N|Ns],R1,R3,N1,N3) :-
+   abdemo_naf(N,R1,R2,N1,N2), abdemo_nafs(Ns,R2,R3,N2,N3).
 
 
 /*
@@ -751,19 +751,19 @@ Impossible introduced 21/01/04
    component actions. ***
 */
 
-abdemo_naf([clipped(T1,F,T4)|Gs1],R1,R2,N1,N2,D) :-
+abdemo_naf([clipped(T1,F,T4)|Gs1],R1,R2,N1,N2) :-
    !, findall(Gs3,
     (abresolve(terms_or_rels_or_imposs(A,F,T2),R1,Gs2,R1,false),
      abresolve(happens(A,T2,T3),R1,[],R1,false),
     append([b(T1,T3),b(T2,T4)|Gs2],Gs1,Gs3)),Gss),
-   abdemo_nafs(Gss,R1,R2,N1,N2,D).
+   abdemo_nafs(Gss,R1,R2,N1,N2).
 
-abdemo_naf([declipped(T1,F,T4)|Gs1],R1,R2,N1,N2,D) :-
+abdemo_naf([declipped(T1,F,T4)|Gs1],R1,R2,N1,N2) :-
    !, findall(Gs3,
     (abresolve(inits_or_rels_or_imposs(A,F,T2),R1,Gs2,R1,false),
     abresolve(happens(A,T2,T3),R1,[],R1,false),
     append([b(T1,T3),b(T2,T4)|Gs2],Gs1,Gs3)),Gss),
-   abdemo_nafs(Gss,R1,R2,N1,N2,D).
+   abdemo_nafs(Gss,R1,R2,N1,N2).
 
 /*
    To show the classical negation of holds_at(F) (which is what we want), we
@@ -780,13 +780,13 @@ abdemo_naf([declipped(T1,F,T4)|Gs1],R1,R2,N1,N2,D) :-
 
 /* DANGER: Cut in next clause rules out other ways to solve holds_at(F2,T). */
 
-abdemo_naf([holds_at(F1,T)|Gs1],R1,R3,N1,N3,D) :-
+abdemo_naf([holds_at(F1,T)|Gs1],R1,R3,N1,N3) :-
    opposite(F1,F2), copy_term(Gs1,Gs2),
-   abdemo([holds_at(F2,T)],R1,R2,N1,N2,D), !,
-   abdemo_naf_cont(R1,Gs2,R2,R3,N1,N3,D).
+   abdemo([holds_at(F2,T)],R1,R2,N1,N2), !,
+   abdemo_naf_cont(R1,Gs2,R2,R3,N1,N3).
 
-abdemo_naf([holds_at(F,T)|Gs],R1,R2,N1,N2,D) :-
-   !, abdemo_naf(Gs,R1,R2,N1,N2,D).
+abdemo_naf([holds_at(F,T)|Gs],R1,R2,N1,N2) :-
+   !, abdemo_naf(Gs,R1,R2,N1,N2).
 
 /*
    Special facilities for handling temporal ordering facts are built in.
@@ -798,26 +798,26 @@ abdemo_naf([holds_at(F,T)|Gs],R1,R2,N1,N2,D) :-
    b(Y,X) to the residue.
 */
 
-abdemo_naf([b(X,Y)|Gs],R,R,N,N,D) :- X == Y, !.
+abdemo_naf([b(X,Y)|Gs],R,R,N,N) :- X == Y, !.
 
-abdemo_naf([b(X,Y)|Gs],R,R,N,N,D) :- demo_before(Y,X,R), !.
+abdemo_naf([b(X,Y)|Gs],R,R,N,N) :- demo_before(Y,X,R), !.
 
-abdemo_naf([b(X,Y)|Gs1],R1,R2,N1,N2,D) :-
+abdemo_naf([b(X,Y)|Gs1],R1,R2,N1,N2) :-
    !, append(Gs1,[postponed(b(X,Y))],Gs2),
-   abdemo_naf(Gs2,R1,R2,N1,N2,D).
+   abdemo_naf(Gs2,R1,R2,N1,N2).
 
 /*
-   A before "b" fact is only added to the residue as a last resort. Accordingly,
+   A before fact is only added to the residue as a last resort. Accordingly,
    if we encounter a b(X,Y) goal and cannot show b(Y,X), we
    postpone that goal until we've tried other possibilities. A postponed
    before goal appears in the goal list as postponed(b(X,Y)).
 */
 
-abdemo_naf([postponed(b(X,Y))|Gs],R1,R2,N,N,D) :-
+abdemo_naf([postponed(b(X,Y))|Gs],R1,R2,N,N) :-
    \+ demo_beq(X,Y,R1), add_before(Y,X,R1,R2).
 
-abdemo_naf([postponed(b(X,Y))|Gs],R1,R2,N1,N2,D) :-
-   !, abdemo_naf(Gs,R1,R2,N1,N2,D).
+abdemo_naf([postponed(b(X,Y))|Gs],R1,R2,N1,N2) :-
+   !, abdemo_naf(Gs,R1,R2,N1,N2).
 
 /* 
    We drop through to the general case for goals other than special event
@@ -826,17 +826,18 @@ abdemo_naf([postponed(b(X,Y))|Gs],R1,R2,N1,N2,D) :-
 
 /* DANGER: Cut in next clause rules out other ways to solve G. */
 
-abdemo_naf([not(G)|Gs1],R1,R3,N1,N3,D) :-
-   copy_term(Gs1,Gs2), abdemo([G],R1,R2,N1,N2,D), !,
-   abdemo_naf_cont(R1,Gs2,R2,R3,N1,N3,D).
+abdemo_naf([not(G)|Gs1],R1,R3,N1,N3) :-
+   copy_term(Gs1,Gs2), 
+   abdemo([G],R1,R2,N1,N2), !,
+   abdemo_naf_cont(R1,Gs2,R2,R3,N1,N3).
 
-abdemo_naf([not(G)|Gs],R1,R2,N1,N2,D) :- !, abdemo_naf(Gs,R1,R2,N1,N2,D).
+abdemo_naf([not(G)|Gs],R1,R2,N1,N2) :- !, abdemo_naf(Gs,R1,R2,N1,N2).
 
-abdemo_naf([G|Gs1],R,R,N,N,D) :- \+ abresolve(G,R,Gs2,R,false), !.
+abdemo_naf([G|Gs1],R,R,N,N) :- \+ abresolve(G,R,Gs2,R,false), !.
 
-abdemo_naf([G1|Gs1],R1,R2,N1,N2,D) :-
+abdemo_naf([G1|Gs1],R1,R2,N1,N2) :-
    findall(Gs2,(abresolve(G1,R1,Gs3,R1,false),append(Gs3,Gs1,Gs2)),Gss),
-   abdemo_nafs(Gss,R1,R2,N1,N2,D).
+   abdemo_nafs(Gss,R1,R2,N1,N2).
 
 
 /*
@@ -846,10 +847,11 @@ abdemo_naf([G1|Gs1],R1,R2,N1,N2,D) :-
    no need to look for other ways to prove the negation of the overall goal.
 */
 
-abdemo_naf_cont(R1,_Gs,R2,R2,N,N,D).
+abdemo_naf_cont(_R1,_Gs,R2,R2,N,N).
+abdemo_naf_cont(R1,Gs,R2,R3,N1,N2) :-
+   R1 \= R2, abdemo_naf(Gs,R1,R3,N1,N2).
 
-abdemo_naf_cont(R1,Gs,R2,R3,N1,N2,D) :-
-   R1 \= R2, abdemo_naf(Gs,R1,R3,N1,N2,D).
+
 
 
 /*
@@ -865,29 +867,29 @@ abdemo_naf_cont(R1,Gs,R2,R3,N1,N2,D) :-
 */
 
 
-check_nafs(false,N1,R,R,N2,N2,D) :- !.
+check_nafs(false,N1,R,R,N2,N2) :- !.
 
-check_nafs(true,N,[[[happens(A,T1,T2)|HA],TC],RB],R,N1,N2,D) :-
-   check_nafs(A,T1,T2,N,[[[happens(A,T1,T2)|HA],TC],RB],R,N1,N2,D).
+check_nafs(true,N,[[[happens(A,T1,T2)|HA],TC],RB],R,N1,N2) :-
+   check_nafs(A,T1,T2,N,[[[happens(A,T1,T2)|HA],TC],RB],R,N1,N2).
 
-check_nafs(A,T1,T2,[],R,R,N,N,D).
+check_nafs(A,T1,T2,[],R,R,N,N).
 
-check_nafs(A,T1,T2,[N|Ns],R1,R3,N1,N3,D) :-
-   check_naf(A,T1,T2,N,R1,R2,N1,N2,D),
-   check_nafs(A,T1,T2,Ns,R2,R3,N2,N3,D).
+check_nafs(A,T1,T2,[N|Ns],R1,R3,N1,N3) :-
+   check_naf(A,T1,T2,N,R1,R2,N1,N2),
+   check_nafs(A,T1,T2,Ns,R2,R3,N2,N3).
 
 
-check_naf(A,T2,T3,[clipped(T1,F,T4)],R1,R2,N1,N2,D) :-
+check_naf(A,T2,T3,[clipped(T1,F,T4)],R1,R2,N1,N2) :-
    !, findall([b(T1,T3),b(T2,T4)|Gs],
     (abresolve(terms_or_rels_or_imposs(A,F,T2),R1,Gs,R1,false)),Gss),
-   abdemo_nafs(Gss,R1,R2,N1,N2,D).
+   abdemo_nafs(Gss,R1,R2,N1,N2).
 
-check_naf(A,T2,T3,[declipped(T1,F,T4)],R1,R2,N1,N2,D) :-
+check_naf(A,T2,T3,[declipped(T1,F,T4)],R1,R2,N1,N2) :-
    !, findall([b(T1,T3),b(T2,T4)|Gs],
     (abresolve(inits_or_rels(A,F,T2),R1,Gs,R1,false)),Gss),
-   abdemo_nafs(Gss,R1,R2,N1,N2,D).
+   abdemo_nafs(Gss,R1,R2,N1,N2).
 
-check_naf(A,T1,T2,N,R1,R2,N1,N2,D) :- abdemo_naf(N,R1,R2,N1,N2,D).
+check_naf(A,T1,T2,N,R1,R2,N1,N2) :- abdemo_naf(N,R1,R2,N1,N2).
 
 
 
@@ -1174,4 +1176,7 @@ opposite(neg(F),F) :- !.
 opposite(F,neg(F)).
 
 
+ec_trace(on,0).
+
+:- include('abdemo_tests.pl').
 

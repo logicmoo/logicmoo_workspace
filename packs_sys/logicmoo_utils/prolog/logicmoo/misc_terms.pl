@@ -405,13 +405,14 @@ list_to_conjuncts(I,O):-list_to_conjuncts((,),I,O).
 %
 % List Converted To Conjuncts.
 %
+list_to_conjuncts(_,V,V):- var(V),!.
+list_to_conjuncts(_,[],true):-!.
 list_to_conjuncts(_,V,V):-not(compound(V)),!.
-list_to_conjuncts(_,[],true).
-list_to_conjuncts(OP,[H],HH):-list_to_conjuncts(OP,H,HH).
+list_to_conjuncts(OP,[H],HH):-list_to_conjuncts(OP,H,HH),!.
 list_to_conjuncts(OP,[H|T],Body):-!,
     list_to_conjuncts(OP,H,HH),
     list_to_conjuncts(OP,T,TT),
-    conjoin_op(OP,HH,TT,Body).
+    conjoin_op(OP,HH,TT,Body),!.
 list_to_conjuncts(_,H,H).
 
 

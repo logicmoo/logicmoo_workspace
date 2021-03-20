@@ -117,7 +117,7 @@ do_test(test_np_box_agent) :-  forall(do_test_gen(What), local_demo([holds_at(Wh
 
 
 
-:-include(library('ec_planner/ec_test_incl')).
+:-include(('../ec_test_incl')).
 
 /*
 
@@ -164,7 +164,7 @@ axiom(initially(neg(has_occured(Event))),[]):- executable(Event).
 
 :- run_tests.
 
-% :- halt.
+%:- halt.
 
 
 

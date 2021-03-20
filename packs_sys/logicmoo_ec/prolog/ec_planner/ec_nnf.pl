@@ -115,15 +115,15 @@ non_expandable0(Fml):- arg(_,Fml,E), var(E),!.
 
 correct_holds(_,Fml,Fml):- var_or_atomic(Fml),!.
 correct_holds(_,Fml,Fml):- arg(1,Fml,Var), var(Var),!.
-correct_holds(neg, not(initially(NegP)),initially((P))):- compound(NegP),NegP=neg(P).
-correct_holds(neg, not(initially(P)),initially(neg(P))):-!.
-correct_holds(neg, not(holds_at(NegP,T)),holds_at((P),T)):- compound(NegP),NegP=neg(P).
-correct_holds(neg, not(holds_at(P,T)),holds_at(neg(P),T)).
-correct_holds(neg, not(diff(P,T)),equals(P,T)).
-correct_holds(neg, holds_at(not(P),T),holds_at(neg(P),T)).
-correct_holds(inward,  not(holds_at(P,T)),holds_at(not(P),T)).
-correct_holds(outward2, holds_at(neg(P),T),not(holds_at(P,T))).
-correct_holds(outward, holds_at(not(P),T),not(holds_at(P,T))).
+correct_holds( /**/ not, not(initially(NegP)),initially((P))):- compound(NegP),NegP= /**/ not(P).
+correct_holds( /**/ not, not(initially(P)),initially( /**/ not(P))):-!.
+correct_holds( /**/ not, not( /**/ holds(NegP,T)), /**/ holds((P),T)):- compound(NegP),NegP= /**/ not(P).
+correct_holds( /**/ not, not( /**/ holds(P,T)), /**/ holds( /**/ not(P),T)).
+correct_holds( /**/ not, not(diff(P,T)),equals(P,T)).
+correct_holds( /**/ not,  /**/ holds(not(P),T), /**/ holds( /**/ not(P),T)).
+correct_holds(inward,  not( /**/ holds(P,T)), /**/ holds(not(P),T)).
+correct_holds(outward2,  /**/ holds( /**/ not(P),T),not( /**/ holds(P,T))).
+correct_holds(outward,  /**/ holds(not(P),T),not( /**/ holds(P,T))).
 correct_holds(IO, P,PP):-
   compound_name_arguments(P,F,Args),
   maplist(correct_holds(IO),Args,FArgs),
@@ -828,21 +828,21 @@ if we impose arbitrary ordering on the elements of $D=\{d_1,...,d_n\}$
 $A\cup D$ is inconsistent\\if ',' only if\\
 there is some $i$, $1\leq i \leq n$ such that
 $A\cup \{d_1,...,d_{i-1}\}$ is consistent ','\\
-$A\cup \{d_1,...,d_{i-1}\}\models \neg d_i$.
+$A\cup \{d_1,...,d_{i-1}\}\models \ /**/ not d_i$.
 \end{center}
 \end{lemma}
 \begin{proof}
 If $A \cup D $ is inconsistent there is some least $i$ such
 that $A\cup \{d_1,...,d_i\}$ is inconsistent. Then we must have
 $A\cup \{d_1,...,d_{i-1}\}$ is consistent (as $i$ is minimal) ','
-$A\cup \{d_1,...,d_{i-1}\}\models \neg d_i$ (by inconsistency).
+$A\cup \{d_1,...,d_{i-1}\}\models \ /**/ not d_i$ (by inconsistency).
 \end{proof}
 
 This lemma says that we can show that ${\cal F}\cup C \cup \{d_1,...,d_n\}$ is 
 consistent if we can show that for all $i$, $1\leq i \leq n$,
-${\cal F}\cup C\cup \{d_1,...,d_{i-1}\}\not\vdash \neg d_i$.
+${\cal F}\cup C\cup \{d_1,...,d_{i-1}\}\not\vdash \ /**/ not d_i$.
 If our theorem prover can show there is no proof of all of
-the $\neg d_i$, then we have consistency.
+the $\ /**/ not d_i$, then we have consistency.
 
 This lemma indicates that we can implement Theorist by incrementally failing to
 prove inconsistency. We need to try to prove the negation of the
@@ -856,7 +856,7 @@ $g$ is explainable from ${\cal F},\Delta$ if ',' only if there is a ground
 proof of $g$ from ${\cal F}\cup D$ where $D=\{d_1,...,d_n\}$
 is a set of ground instances
 of elements of $\Delta$ such that
-${\cal F} \wedge C \wedge \{d_1,...,d_{i-1}\}\not\vdash \neg d_i$
+${\cal F} \wedge C \wedge \{d_1,...,d_{i-1}\}\not\vdash \ /**/ not d_i$
 for all $i,1\leq i \leq n$.
 \end{theorem}
 \begin{proof}
@@ -866,7 +866,7 @@ is consistent. So there is a ground proof of $g$ from ${\cal F} \cup D$.
 By the preceding lemma
 ${\cal F}\cup D \cup C$ is consistent so there can be no sound proof
 of inconsistency. That is, we cannot prove
-${\cal F} \wedge C \wedge \{d_1,...,d_{i-1}\}\vdash \neg d_i$ for any $i$.
+${\cal F} \wedge C \wedge \{d_1,...,d_{i-1}\}\vdash \ /**/ not d_i$ for any $i$.
 \end{proof}
 
 This leads us to the refinement of algorithm \ref{basic-alg}:
@@ -875,7 +875,7 @@ to explain $g$ from ${\cal F},\Delta$
 \begin{enumerate}
 \item Build a ground proof of $g$ from ${\cal F}\cup \Delta$. Make $D$ 
 the set of instances of elements of $\Delta$ used in the proof.
-\item For each $i$, try to prove $\neg d_i$ from ${\cal F} \wedge C
+\item For each $i$, try to prove $\ /**/ not d_i$ from ${\cal F} \wedge C
 \wedge \{d_1,...,d_{i-1}\}$. If all
 such proofs fail, $D$ is an explanation for $g$.
 \end{enumerate}
@@ -903,18 +903,18 @@ when there are variables in the $D$ generated.
 \begin{example}\em
 Let $ \Delta = \{p(X)\}$. That is, any instance of $p$ can be used if it is
 consistent.
-Let ${\cal F} = \{ \forall Y (p(Y) \Rightarrow g), \neg p(a)\}$. That is, $g$ is
+Let ${\cal F} = \{ \forall Y (p(Y) \Rightarrow g), \ /**/ not p(a)\}$. That is, $g$ is
 true if there is a $Y$ such that $p(Y)$.
 
 According to our semantics,
 $g$ is explainable with the explanation $\{p(b)\}$,
-which is consistent with ${\cal F}$ (consider the interpretation $I=\{\neg p(a),p(b)\}$
+which is consistent with ${\cal F}$ (consider the interpretation $I=\{\ /**/ not p(a),p(b)\}$
 on the domain $\{a,b\}$), ',' implies $g$.
 
 However,
 if we try to prove $g$, we generate $D=\{p(Y)\}$ where $Y$ is free
 (implicitly a universally quantified variable).
-The existence of the fact $\neg p(a)$ should not make it
+The existence of the fact $\ /**/ not p(a)$ should not make it
 inconsistent, as we want $g$ to be explainable.
 \end{example}
 \begin{theorem}
@@ -976,10 +976,10 @@ Consider the two alternate set of facts:
 \begin{eqnarray*}
 \Delta&=\{&p(X)\ \}\\
 {\cal F}_1&=\{&\forall X \ p(X) \wedge q(X) \Rightarrow g,\\
-&&\neg p(a),\\
+&&\ /**/ not p(a),\\
 &&q(b) \ \}\\
 {\cal F}_2&=\{&\forall X \ p(X) \wedge q(X) \Rightarrow g,\\
-&&\neg p(a),\\
+&&\ /**/ not p(a),\\
 &&q(a) \ \}
 \end{eqnarray*}
 Suppose we try to explain $g$ by first explaining $p$ ',' then explaining $q$.
@@ -1023,20 +1023,20 @@ $L_1 \vee L_2 \vee ... \vee L_n$
 \end{verse}
 then we create the $n$ rules
 \begin{verse}
-$L_1 \leftarrow \neg L_2 \wedge ... \wedge \neg L_n$\\
-$L_2 \leftarrow \neg L_1 \wedge \neg L_3 \wedge ... \wedge \neg L_n$\\
+$L_1 \leftarrow \ /**/ not L_2 \wedge ... \wedge \ /**/ not L_n$\\
+$L_2 \leftarrow \ /**/ not L_1 \wedge \ /**/ not L_3 \wedge ... \wedge \ /**/ not L_n$\\
 $...$\\
-$L_n \leftarrow \neg L_1 \wedge ... \wedge \neg L_{n-1}$
+$L_n \leftarrow \ /**/ not L_1 \wedge ... \wedge \ /**/ not L_{n-1}$
 \end{verse}
 as rules. Each of these can then be used to prove the left hand literal
 if we know the other literals are false. Here we are treating the negation
-of an atom as a different Prolog atom (i.e.,\ we treat $\neg p(\overline{X})$
+of an atom as a different Prolog atom (i.e.,\ we treat $\ /**/ not p(\overline{X})$
 as an atom $notp(\overline{X})$).
 \item the ancestor cancellation rule. While trying to prove $L$ we can assume
-$\neg L$. We have a subgoal proven if it unifies with the negation of
+$\ /**/ not L$. We have a subgoal proven if it unifies with the negation of
 an ancestor in the proof tree.
 This is an instance of proof by contradiction. We can see this as assuming
-$\neg L$ ',' then when we have proven $L$ we can discharge the assumption.
+$\ /**/ not L$ ',' then when we have proven $L$ we can discharge the assumption.
 \end{enumerate}
 
 One property of the deduction system that we want is the ability to
@@ -1093,7 +1093,7 @@ by distribution into
 The alternate \cite{poole:clausal} is to create a new relation $p$ parameterised
 with the variables in common with $\alpha$ ',' $\beta \wedge \gamma$.
 We can then replace $\beta \wedge \gamma$ by $p$ ',' then add
-\[(\neg p \vee \beta)\wedge (\neg p \vee \gamma)\]
+\[(\ /**/ not p \vee \beta)\wedge (\ /**/ not p \vee \gamma)\]
 to the set of formulae.
 
 This can be embedded into the compiler by using
@@ -1122,10 +1122,10 @@ For each Theorist predicate symbol $r$ there are 4 target predicate
 symbols, with the following informal meanings:
 \begin{description}
 \item[prv\_tru\_r] meaning $r$ can be proven from the facts ',' the constraints.
-\item[prv\_not\_r] meaning $\neg r$ can be proven from the facts 
+\item[prv\_not\_r] meaning $\ /**/ not r$ can be proven from the facts 
 ',' the constraints.
 \item[ex\_tru\_r] meaning $r$ can be explained from ${\cal F},\Delta$.
-\item[ex\_not\_r] meaning $\neg r$ can be explained from ${\cal F},\Delta$.
+\item[ex\_not\_r] meaning $\ /**/ not r$ can be explained from ${\cal F},\Delta$.
 \end{description}
 
 The arguments to these built predicate symbols will contain all
@@ -1144,7 +1144,7 @@ sequence of its arguments),
 we have the corresponding target relations
 \[prv\_tru\_r( - args - , Ths, Anc)\]
 \[prv\_not\_r( - args - , Ths, Anc)\]
-which are to mean that $r$ (';' $\neg r$) can be proven
+which are to mean that $r$ (';' $\ /**/ not r$) can be proven
 >from the facts ',' ground hypotheses
 $Ths$ with ancestor structure $Anc$.
 These extra arguments are:
@@ -1164,7 +1164,7 @@ if it unifies with its negated ancestors.
 Declaratively,
 \[prv\_tru\_r( - args - , Ths, anc(P,N))\]
 means
-\[{\cal F}\cup Ths \cup \neg P \cup N \models r(-args-)\]
+\[{\cal F}\cup Ths \cup \ /**/ not P \cup N \models r(-args-)\]
 
 \subsubsection{Explaining}
 There are two target relations for explaining associated with
@@ -1175,7 +1175,7 @@ For the source relation:
 we have two target new relations for explaining $r$:
 \[ex\_tru\_r( - args - , Ths, Anc, Ans)\]
 \[ex\_not\_r( - args - , Ths, Anc, Ans)\]
-These mean that $r(-args-)$ (';' $\neg r(-args-)$) can be explained, with
+These mean that $r(-args-)$ (';' $\ /**/ not r(-args-)$) can be explained, with
 \begin{description}
 \item[$Ths$] is the structure of the incrementally built hypotheses
 used in explaining $r$. There are two statuses of hypotheses we
@@ -1209,7 +1209,7 @@ proving the goal, ',' $A_2$ is the answers after proving the goal.
 The semantics of
 \[ex\_tru\_r(-args-,ths(T_1,T_2,D_1,D_2),anc(P,N),ans(A_1,A_2))\]
 is defined by
-\[{\cal F}\cup T_2 \cup D_2 \cup \neg P \cup N \cup A_2 \models r(-args-) \]
+\[{\cal F}\cup T_2 \cup D_2 \cup \ /**/ not P \cup N \cup A_2 \models r(-args-) \]
 where $T_1\subseteq T_2$, $D_1\subseteq D_2$ ',' $A_1\subseteq A_2$, ','
 such that
 \[{\cal F}\cup T_2 \hbox{ is consistent}\]
@@ -1341,7 +1341,7 @@ $prv\_tru\_p(Z,Y,D,anc([gr(X,Y)|H],I)).$
 \end{prolog}
 That is, we can prove $gr$ if we can prove $f$ ',' $p$.
 Having $gr(X,Y)$ in the ancestors means that we can prove $gr(X,Y)$
-by assuming that $\neg gr(X,Y)$ ',' then proving $gr(X,Y)$.
+by assuming that $\ /**/ not gr(X,Y)$ ',' then proving $gr(X,Y)$.
 \end{example}
 
 \begin{example} \em the fact
@@ -2264,7 +2264,7 @@ list_scens(N,[H|T]) :-
 
 /* \end{verbatim}
 
-$expl2not(G,T0,T1)$ is true if ground $\neg G$ is explainable starting from
+$expl2not(G,T0,T1)$ is true if ground $\ /**/ not G$ is explainable starting from
 scenario $T0$, with resulting explanation $T1$. No disjunctive answers are
 formed.
 \index{expl2}

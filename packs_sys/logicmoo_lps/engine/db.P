@@ -162,11 +162,12 @@ define_lps_pred_into_module(Into, F/A):-
 
 :- use_module(library(lists), [append/3,member/2]).
 
-my_load_dyn(F,WithWarnings) :- 
+my_load_dyn(F,WithWarnings) :-   
 	(style_check('?'(singleton))->Old=true;Old=false),
 	(WithWarnings==true -> style_check('+'(singleton)) ; style_check('-'(singleton))),
 	interpreter:get_lps_program_module(M),
 	% load_files([F],[module(M)]),
+  M:unload_file(F),
 	M:load_files([F],[]),
 	(Old==true -> style_check('+'(singleton)) ; style_check('-'(singleton))).
 	

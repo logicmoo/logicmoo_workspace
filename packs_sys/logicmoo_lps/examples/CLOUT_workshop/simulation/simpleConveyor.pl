@@ -3,7 +3,8 @@
 
 % Based on https://www.youtube.com/watch?v=5ms_idvN8Tg 
 
-:- include(example('SimulationKit.pl')).
+%:- include(example('SimulationKit.pl')).
+:- include(('./SimulationKit.pl')).
 
 % Simple conveyor revisited:
 if true at 1 then

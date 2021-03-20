@@ -353,7 +353,7 @@ maybe_o_s_l:- \+ o_s_l_diff, !.
 maybe_o_s_l:- notrace(e_source_location(F,L)),retractall(ec_reader:o_s_l(_,_)),asserta(ec_reader:o_s_l(F,L)),!.
 maybe_o_s_l.
 
-output_line_count(L):- nb_current('$ec_output_stream',Outs),is_stream(Outs),on_f_fail(line_count(Outs,L)), !.
+output_line_count(L):- nb_current('$ec_output_stream',Outs),is_stream(Outs),on_x_fail(line_count(Outs,L)), !.
 output_line_count(L):- line_count(current_output,L).
 
 output_line_position(L):- line_position(current_output,L).

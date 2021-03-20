@@ -1,3 +1,5 @@
+:- expects_dialect(lps).
+
 % Object: realized as the "primary key" (and first argument) of some predicates,
 %	its identifier is a classname(id) term
 % TODO: add pseudo random noise to the simulation and sensors

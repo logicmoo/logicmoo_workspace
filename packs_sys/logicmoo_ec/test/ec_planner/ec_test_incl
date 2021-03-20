@@ -1,0 +1,5 @@
+:- use_module(library(logicmoo_common)).
+:- use_module(library(logicmoo_packs)).
+
+:- include(library(ec_planner/ec_test_incl)).
+

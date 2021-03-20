@@ -6,7 +6,11 @@
 % PACK LOADER
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 :- use_module(library(prolog_pack)).
+
 :- if( \+ prolog_pack:current_pack(logicmoo_base)).
+
+:- attach_packs('/opt/logicmoo_workspace/packs_sys',[duplicate(keep)]).
+
 :- multifile(user:file_search_path/2).
 :-   dynamic(user:file_search_path/2).
 :- prolog_load_context(directory,Dir),
@@ -48,4 +52,5 @@ rescan_pack_autoload_packages:- dmsg("AUTOLOADING PACKAGES..."),
 %:- reload_library_index.
 %:- autoload([verbose(true)]).
 :- reload_library_index.
+
 

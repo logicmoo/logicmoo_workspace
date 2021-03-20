@@ -14,17 +14,18 @@ is_sicstus:- \+ current_prolog_flag(version_data,swi(_,_,_,_)).
 % Axiom Access
 % =========================================
 
-:- module_transparent(ec_current_domain/1).
-:- export(ec_current_domain/1).
-:- system:import(ec_current_domain/1).
-
-:- module_transparent(ec_current_domain_bi/1).
-:- export(ec_current_domain_bi/1).
-:- system:import(ec_current_domain_bi/1).
+:- module_transparent(local_database/1).
+:- export(local_database/1).
+:- system:import(local_database/1).
 
 :- module_transparent(ec_current_domain_db/1).
 :- export(ec_current_domain_db/1).
 :- system:import(ec_current_domain_db/1).
+
+:- module_transparent(ec_current_domain_db_name/1).
+:- dynamic(ec_current_domain_db_name/1).
+:- export(ec_current_domain_db_name/1).
+:- system:import(ec_current_domain_db_name/1).
 
 :- module_transparent(user:ec_current_domain_db/2).
 :- dynamic(user:ec_current_domain_db/2).
@@ -32,25 +33,9 @@ is_sicstus:- \+ current_prolog_flag(version_data,swi(_,_,_,_)).
 :- system:import(user:ec_current_domain_db/2).
 
 
-:- reexport(library(ec_planner/ec_loader)).
-:- use_module(library(ec_planner/ec_loader)).
+:- reexport((ec_loader)).
+:- use_module((ec_loader)).
 
-ec_predicate_template(Var):- ec_current_domain(predicate(Pred)), functor(Pred,F,A), functor(Var,F,A).
-
-ec_current_domain(Var):- notrace(var(Var)),!,ec_predicate_template(Var),ec_current_domain(Var).
-ec_current_domain(Var):- ec_current_domain_bi(Var).
-%ec_current_domain(Var):- ec_current_domain_db(Var).
-
-ec_current_domain_bi(Var):- notrace(var(Var)),!, throw(ec_current_domain_var(Var)).
-%ec_current_domain_bi(axiom(G,Gs)):- !, axiom(G,Gs).
-ec_current_domain_bi(G):- ec_current_domain_db(G).
-ec_current_domain_bi(G):- ec_current_domain_db(axiom(G,B)), B==[].
-ec_current_domain_bi(executable(G)):- var(G), ec_current_domain_bi(event(Ax)), functor(Ax,F,A), functor(G,F,A).
-ec_current_domain_bi(executable(G)):- compound(G), functor(G,F,A), functor(Ax,F,A), ec_current_domain_bi(event(Ax)).
-
-ec_current_domain_db(axiom(call(G), [])):- nonvar(G),rtrace(G).
-ec_current_domain_db(G):- user:ec_current_domain_db(G, _REF).
-:- lock_predicate(ec_current_domain_db/1).
  
 
 % =========================================
@@ -152,7 +137,7 @@ dbginfo(NV):- catch_ignore(portray_clause(:- NV)), !.
 % Plan Portrayal
 % =========================================
 
-write_plan_len(A,B):- length(A,AL), length(B,BL),write_plan(AL,BL).
+write_plan_len(A,B):- length(A,AL), length(B,BL),write('Lengths of '), write_plan(AL,BL).
 write_plan(HA,BA):- write('Plan: '), write(HA), write('-'), write(BA), write('    ').
 /* Emulates the writeNoln(1) function */
 
@@ -165,5 +150,114 @@ writeYesln(A):- write(A),fresh_line.
 
 writenl(A):- write(A),fresh_line.
 
+
+
+
+ec_predicate_template(axiom(_,_)).
+ec_predicate_template(predicate(_)).
+ec_predicate_template(fluent(_)).
+ec_predicate_template(event(_)).
+ec_predicate_template(action(_)).
+ec_predicate_template(function(_,_)).
+ec_predicate_template(Var):- local_database(predicate(Pred)), functor(Pred,F,A), functor(Var,F,A).
+
+local_database(Var):- notrace(var(Var)),!,ec_predicate_template(Var),ec_current_domain_db(Var).
+local_database(G):- ec_current_domain_db(G).
+
+%local_database(Var):- ec_current_domain_db(Var).
+
+system:show_ec_current_domain_db:- 
+   pprint_ecp_cmt(yellow,showing_ec_current_domain_db),
+   forall(ec_current_domain_db(G),pprint_ecp(yellow,G)),
+   pprint_ecp_cmt(yellow,shown_ec_current_domain_db).
+
+   listing(user:ec_current_domain_db/2).
+
+ec_current_domain_db(axiom(call(G), [])):- nonvar(G),!, rtrace(G).
+
+ec_current_domain_db(G):- user:ec_current_domain_db(G, _REF).
+ec_current_domain_db(G):- lps_current_domain_db(G).
+ec_current_domain_db(holds(G,Zero),Gs):- is_zero(Zero), ec_current_domain_db(initially(G),Gs).
+ec_current_domain_db(G):- var(G), !, fail.
+ec_current_domain_db(event(G)):- lps_current_domain_db(action(G)).
+ec_current_domain_db(G):- G \= axiom(_,_), ec_current_domain_db(axiom(G,B)), B==[].
+%ec_current_domain_db(Var):- notrace(var(Var)),!, throw(ec_current_domain_var(Var)).
+%ec_current_domain_db(axiom(G,Gs)):- !, axiom(G,Gs).
+%ec_current_domain_db(event(G)):- var(G),!, ec_current_domain_db(predicate(Ax)), functor(Ax,F,A), functor(G,F,A).
+
+
+:- lock_predicate(ec_current_domain_db/1).
+
+
+:- use_module(library(lps_corner),[u_call_lps/1]).
+
+:- multifile(u_call_contrib/2).
+:- dynamic(u_call_contrib/2).
+:- module_transparent(u_call_contrib/2).
+u_call_contrib(M,G):- user:ec_current_domain_db(G,M).
+
+
+%lps_call(G):- current_predicate(_,G), !, call(G).
+lps_call(G):- interpreter:u_call_lps(G).
+
+lps_current_domain_db(initially(F)):- lps_call(initial_state(List)),member(F,List).
+lps_current_domain_db(event(F)):- lps_call(events(List)),member(F,List).
+lps_current_domain_db(action(F)):- lps_call(actions(List)),member(F,List). %lps_call(action(F)).
+lps_current_domain_db(action(F)):- lps_call(action(F)).
+lps_current_domain_db(axiom(Head, Body)):- lps_axiom(Head,Body).
+
+
+lps_axiom(happens(Head,T),[/*holds(true,T)*/]):- lps_call(observe(Heads, T)), member(Head,Heads).
+lps_axiom( initiates(Action,Fluent, T), Pre):- lps_call(initiated(happens(Action, T, _T2), Fluent, Pre)).
+lps_axiom(terminates(Action,Fluent, T), Pre):-   lps_call(terminated(happens(Action, T, _T2), Fluent, Pre)).
+lps_axiom(Head,Body):- lps_call(reactive_rule(Body,Heads)), member(Head,Heads).
+lps_axiom(Head,Body):- lps_call(l_timeless(Head, Body)).
+lps_axiom(Head,Body):- lps_call(l_int(Head, Body)).
+lps_axiom(Head,Body):- lps_call(l_events(Head, Body)). % Head=happens(_Event, _T1, _T2),
+lps_axiom(Head,Body):- lps_d_axiom(Head,Body).
+
+
+%ec_current_domain_db(axiom(Head, Body)):- fail, lps_call(d_pre(Cond)), select(Item,Conds,Body), opposite(Item,Head).
+% Possible Blockers
+lps_d_axiom(Head,[BlockerCond|Body]):- 
+   lps_call(d_pre(Conds)), 
+   select(Head,Conds,Rest), term_variables(Head,HeadVars), 
+   select(Blocker,Rest,Body), 
+   (functor(Head,happens,_)-> \+ functor(Blocker,happens,_) ; true),
+   d_pre_w_vars(HeadVars,Blocker),
+   opposite(Blocker,BlockerCond).
+
+d_pre_w_vars([],_Blocker):-!.
+d_pre_w_vars(HeadVars,Blocker):- term_variables(Blocker,BlockerVars),
+   member(BV,BlockerVars),member(HV,HeadVars), HV==BV,!.
+
+
+
+
+
+
+% ec_current_domain_db(predicate(F)):- lps_call(ext_prolog_predicates(List)),member(F,List).
+
+/*
+ec_current_domain_db(axiom(..)):-  lps_call(l_events(happens(eat_food(A), B, _), [holds(hunger(A, 20), B)]).
+
+fluents([left(A), right(A), searching(_)]).
+
+l_int(holds(found(A), B), [holds(left(A), B), holds(right(A), B)]).
+l_events(happens(eat_food(A), B, _), [holds(hunger(A, 20), B)]).
+l_events(happens(do_sample, A, B), [holds(left(C), A), holds(right(D), _), E is (D+C)div 2, happens(sample(E), _, B)]).
+d_pre([happens(collect_wood(A, _, _, _), B, C), happens(collect_wood(A, _, _, _), B, C)]).
+d_pre([happens(collect_wood(A, _, _, _), B, C), happens(change_animal(A, _, _, _, _, _, _), B, C)]).
+d_pre([happens(break_tree(A, _, _), B, C), happens(turn_hit_shelter(A, _, _, _, _, _, _, _, _), B, C)]).
+d_pre([happens(break_tree(A, _, _), B, C), happens(turn_hit(A, _, _, _, _, _, _), B, C)]).
+d_pre([happens(break_tree(A, _, _), B, C), happens(hit_shelter(A, _, _, _, _, _), B, C)]).
+d_pre([happens(break_tree(A, _, _), B, C), happens(hit_from(A, _, _, _), B, C)]).
+d_pre([happens(break_tree(A, _, _), B, C), happens(eat(A, _, _, _, _, _, _), B, C)]).
+d_pre([happens(break_tree(A, _, _), B, C), happens(collect_wood(A, _, _, _), B, C)]).
+d_pre([happens(break_tree(A, _, _), B, C), happens(collect_food(A, _, _, _, _, _, _, _, _), B, C)]).
+d_pre([happens(break_tree(A, _, _), B, C), happens(change_animal(A, _, _, _, _, _, _), B, C)]).
+*/
+
 :- fixup_exports.
+
 

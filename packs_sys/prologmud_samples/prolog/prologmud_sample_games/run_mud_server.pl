@@ -21,31 +21,39 @@ W:\opt\logicmoo_workspace\packs_sys\logicmoo_utils\prolog;W:\opt\logicmoo_worksp
 
 
 */
-:- discontiguous rdf11:'$exported_op'/3.
-:- discontiguous phil:'$exported_op'/3.
-:- discontiguous lemur:'$exported_op'/3. 
 
-:- multifile rdf11:'$exported_op'/3.
-:- multifile phil:'$exported_op'/3.
-:- multifile lemur:'$exported_op'/3. 
+pre_run_mud_server:-
+  (noguitracer),(tnodebug),
+  discontiguous(rdf11:'$exported_op'/3),
+  discontiguous(phil:'$exported_op'/3),
+  discontiguous(lemur:'$exported_op'/3),
+  multifile(rdf11:'$exported_op'/3),
+  multifile(phil:'$exported_op'/3),
+  multifile(lemur:'$exported_op'/3),
 
-:- multifile swish_help:help_files/1.
+  multifile(swish_help:help_files/1),
+  multifile(cp_label:rdf_link/4),
+  dynamic(cp_label:rdf_link/4),
+  
+  multifile(swish_render_rdf:rdf_link/4),
+  dynamic(swish_render_rdf:rdf_link/4),
+  
+  (getenv('DISPLAY',_)->true;setenv('DISPLAY','10,0,0,122:0,0')),
+  %(notrace(gtrace),nodebug),
+  %set_prolog_flag(verbose_load,true),
+  set_prolog_flag(pfc_version,v(2,0,0)),
+  set_prolog_flag(dmsg_level,always),
+  
+  discontiguous(rdf11:'$exported_op'/3),
+  discontiguous(phil:'$exported_op'/3),
+  discontiguous(lemur:'$exported_op'/3),
+  multifile(rdf_rewrite:arity/2),
+  dynamic(rdf_rewrite:arity/2),!.
 
 
-:- multifile(cp_label:rdf_link/4).
-:- dynamic(cp_label:rdf_link/4).
-:- multifile(swish_render_rdf:rdf_link/4).
-:- dynamic(swish_render_rdf:rdf_link/4).
+:- initialization(pre_run_mud_server, now).
+:- initialization(pre_run_mud_server, restore_state).
 
-:- getenv('DISPLAY',_)->true;setenv('DISPLAY', '10.0.0.122:0.0').
-%:- (notrace(gtrace),nodebug).
-%:- set_prolog_flag(verbose_load,true).
-:- set_prolog_flag(pfc_version,v(2,0,0)).
-:- set_prolog_flag(dmsg_level,always).
-
-:- discontiguous rdf11:'$exported_op'/3. 
-:- discontiguous phil:'$exported_op'/3.
-:- discontiguous lemur:'$exported_op'/3.
 
 attach_packs_relative(Rel):-
    once(((
@@ -54,40 +62,47 @@ attach_packs_relative(Rel):-
       absolute_file_name(Rel,PackDir,[file_type(directory),file_errors(fail)])),
     writeln(attach_packs(PackDir)),attach_packs(PackDir)));writeln(failed(attach_packs_relative_web(Rel)))).
 
-load_package_dirs:-
-  findall(PackDir,'$pack':pack(Pack, PackDir),Before),  
+load_package_dirs_0:-
   ignore(( \+ exists_source(library(logicmoo_common)), attach_packs_relative('../../..'))),
-  findall(PackDir,'$pack':pack(Pack, PackDir),After),
-  (Before==After -> writeln(load_package_dirs(After)) ; true),
+  attach_packs('/opt/logicmoo_workspace/packs_sys',[duplicate(keep)]),
+  attach_packs('/opt/logicmoo_workspace/packs_lib',[duplicate(keep)]),
+  attach_packs('/opt/logicmoo_workspace/packs_web',[duplicate(keep)]),
+  !.
+
+load_package_dirs_1:-
   ignore(catch(make_directory('/tmp/tempDir/pack'),_,true)),
   (user:file_search_path(pack,'/tmp/tempDir/pack') -> true ; asserta(user:file_search_path(pack,'/tmp/tempDir/pack'))),
   attach_packs('/tmp/tempDir/pack'),
   pack_install(logicmoo_utils,[upgrade(true),interactive(false)]),
-  pack_list_installed,
   !.
- 
+
+load_package_dirs:-
+  findall(PackDir,'$pack':pack(Pack, PackDir),Before),  
+  load_package_dirs_0,
+  load_package_dirs_1,
+  findall(PackDir,'$pack':pack(Pack, PackDir),After),
+  (Before\==After -> writeln(load_package_dirs(After)) ; true),
+  pack_list_installed,
+  use_module(library(logicmoo_common)),
+  % use_module(library(logicmoo_packs)).
+  !.
+
 :- initialization(load_package_dirs, now).
 :- initialization(load_package_dirs, restore_state).
 
+set_startup_flags:-
+  set_prolog_flag(runtime_speed, 0), % 1 = default
+  set_prolog_flag(runtime_debug, 3), % 2 = important but dont sacrifice other features for it
+  set_prolog_flag(runtime_safety, 3),  % 3 = very important
+  set_prolog_flag(unsafe_speedups, false),
+  set_prolog_flag(logicmoo_message_hook,dumpst),
+  set_prolog_flag(encoding,text),
+  set_prolog_flag(lisp_repl_goal,true),
+  current_prolog_flag('argv',Is),writeq(current_prolog_flag('argv',Is)),!,nl,
+  !.
 
-%:- dmsg("Ensure run_mud_server").
-%:- rtrace(dmsg2("Ensure Run_MUD_SERVER1")).
-
-
-%:- '$set_source_module'(baseKB).
-%:- 'module'(baseKB).
-%:- set_prolog_flag(runtime_speed,0). % 0 = dont care
-:- set_prolog_flag(runtime_speed, 0). % 1 = default
-:- set_prolog_flag(runtime_debug, 3). % 2 = important but dont sacrifice other features for it
-:- set_prolog_flag(runtime_safety, 3).  % 3 = very important
-:- set_prolog_flag(unsafe_speedups, false).
-:- set_prolog_flag(logicmoo_message_hook,dumpst).
-:- set_prolog_flag(encoding,text).
-:- set_prolog_flag(lisp_repl_goal,true).
-
-% :- initialization(shell('./PreStartMUD.sh'),program).
-
-:- current_prolog_flag('argv',Is),writeq(current_prolog_flag('argv',Is)),!,nl.
+:- initialization(set_startup_flags, now).
+:- initialization(set_startup_flags, restore_state).
 
 
 :- use_module(library(prolog_deps)).
@@ -140,7 +155,11 @@ check_startup_flags:-
 :- initialization(check_startup_flags, restore_state).
 
 system:set_modules(M) :- '$set_typein_module'(M),'$set_source_module'(M),module(M).
-:- set_modules(baseKB).
+set_modules_baseKB :- set_modules(baseKB).
+
+:- initialization(set_modules_baseKB, restore_state).
+:- initialization(set_modules_baseKB, now).
+
 
 % ==============================================
 % WWW Support
@@ -249,7 +268,6 @@ load_nomic_mu:-
   add_history(mu:srv_mu),
   !.
 
-:- user:use_module(library(eggdrop)).
 
 % ==============================================
 % =========== LOGICMOO COMPILATION =============
@@ -289,22 +307,41 @@ abolish_module(M):-
 
 
 % test LPS is not broken yet
-melee:- lps_sanity(library('../examples/Melee')).
-system:lps_sanity:- lps_sanity(library('../examples/binaryChop2.pl' )).
+melee:- lps_sanity(lps_tests('Melee')).
+system:lps_sanity:- lps_sanity(lps_tests('binaryChop2.pl' )).
+restaurant:- lps_sanity(lps_tests('restaurant')).
+goat:- lps_sanity(lps_tests('goat')).
+ballot:- lps_sanity(lps_tests('Ballot')).
+
+user:file_search_opath(lps_tests, library(A)):- 
+ arg(_,
+  v('../test/lps_planner/lps_demo/',
+   '../test/ec_planner/abdemo/',
+    '../examples/',
+     '../test/lps_user_examples/'), A).
+
+
+lps_demo_tests:- lps_sanity(lps_tests('lps_demo_tests')),lps_demo_tests_run.
+lps_demo_test_1:- lps_sanity(lps_tests('lps_demo_test_1')),lps_demo_test_1_run.
+lps_demo_test_2:- lps_sanity(lps_tests('lps_demo_test_2')),lps_demo_test_2_run.
+lps_demo_test_3:- lps_sanity(lps_tests('lps_demo_test_3')),lps_demo_test_3_run.
+lps_demo_test_4:- lps_sanity(lps_tests('lps_demo_test_4')),lps_demo_test_4_run.
+lps_demo_test_5:- lps_sanity(lps_tests('lps_demo_test_5')),lps_demo_test_5_run.
+lps_demo_test_9:- lps_sanity(lps_tests('lps_demo_test_9')),lps_demo_test_9_run.
 
 lps_insanity(File):- 
-   absolute_file_name(File,M,[access(read),extensions(['.pl','P','lps','pfc.pl',''])]),
+   absolute_file_name(File,M,[access(read),extensions(['pl','P','lps','pfc.pl',''])]),
    M\==File,!,lps_insanity(M).
 
 lps_insanity(M):-
-   unload_file(M),
    M:use_module(library(lps_corner)),
    interpreter:check_lps_program_module(M),  
-   M:reconsult(M),
+   M:unload_file(M),
+   M:consult(M),
    %listing(db:actions/1),
    %listing(interpreter:actions/1),
    interpreter:get_lps_program_module(M),
-   notrace(elsewhere:listing(M:_)),
+   notrace(from_elsewhere:listing(M:_)),
    wdmsg(running(M)),
    % M:golps(X),
    M:godc(X),
@@ -319,8 +356,6 @@ lps_sanity(File):- Limit = 110580,
 
 
 
-:- multifile(rdf_rewrite:arity/2).
-:- dynamic(rdf_rewrite:arity/2).                         
 /*
  (1) * /usr/local/share/swi-prolog/pack
    (2)   /usr/share/swi-prolog/pack
@@ -329,6 +364,8 @@ lps_sanity(File):- Limit = 110580,
 
 */
 load_before_compile:- 
+   set_prolog_flag(ec_loader,false),
+   skip_sandboxing,
    %set_prolog_flag(verbose_file_search,true), 
    use_module(library(sandbox)),
 
@@ -355,31 +392,37 @@ load_before_compile:-
 %start_network:- 
 %   load_before_compile,!.
 
-start_network:-       
+call_safely(G):- must_or_rtrace(G).
+
+start_network:-  
+  maplist(call_safely,
+   [
    load_before_compile,
+   user:use_module(library(eggdrop)),
    egg_go,   
    webui_start_swish_and_clio,
-   threads,statistics,
+   threads,statistics]),
    !.
 
 load_rest:- 
-   nodebug,
+  maplist(call_safely,
+  [
+   nodebug,   
    load_nomic_mu,   
    load_before_compile,
-  baseKB:ensure_loaded(library(logicmoo_cg)),
-  baseKB:ensure_loaded(library(logicmoo_ec)),
+   baseKB:ensure_loaded(library(logicmoo_cg)),
+   baseKB:ensure_loaded(library(logicmoo_ec)),
    use_module(library(instant_prolog_docs)),
    baseKB:ensure_loaded(library(narsese)),
    add_history((mmake, autodoc_test)),
-   load_rest2,
+   load_rest2]),
    !.
 
 % for when dmiles is doing fast testing
 load_rest2:- gethostname('logicmoo.org'), !.
-load_rest2:-
-   locally(set_prolog_flag(verbose_load,true),load_rest3).
+load_rest2:- locally(set_prolog_flag(verbose_load,true),load_rest3).
 load_rest3:-
-   set_modules(baseKB),
+   set_modules_baseKB,
    baseKB:ensure_loaded(library(logicmoo_nlu)),
    baseKB:ensure_loaded(library(logicmoo_clif)),
    baseKB:ensure_loaded(library('logicmoo/common_logic/common_logic_sumo.pfc')),   
@@ -442,12 +485,10 @@ start_rest:-
    start_rest2,
    !.
 
-% start_rest2:- \+ gethostname('logicmoo.org'), !.
+start_rest2:- \+ gethostname('logicmoo.org'), !.
 start_rest2:- \+ current_predicate(baseKB:start_runtime_mud/0), !.
-
 start_rest2:- 
-
-   set_modules(baseKB),
+   set_modules_baseKB,
    baseKB:start_runtime_mud,
    run_setup_now,  
    baseKB:start_mud_telnet, 
@@ -465,6 +506,7 @@ skip_sandboxing(F):- functor(P,F,1),
   sandbox:asserta((P:-!)).
 
 skip_sandboxing:-
+ set_prolog_flag(no_sandbox, true),
  maplist(skip_sandboxing,
   [safe_goal,
    safe_call,
@@ -479,14 +521,13 @@ skip_sandboxing:-
 
 start_all :- start_network, start_rest.
 
-:- set_prolog_flag(no_sandbox, true).
 % :- use_module(library(pfc_lib)).
 
 :- load_before_compile.
 
 
-:- lps_sanity.
-:- melee.
+%:- lps_sanity.
+%:- goat.
 
 
 :- noguitracer, tnodebug.
@@ -707,10 +748,11 @@ start_all :- start_network, start_rest.
 
 :- add_history((mmake, autodoc_test)).
 
-:- lps_sanity.
+%:- lps_sanity.
 
-%:- prolog. 
+% :- prolog. 
 
 end_of_file.
+
 
 

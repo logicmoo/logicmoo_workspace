@@ -1,6 +1,7 @@
 :- include('../ec_test_incl').
 
-        /*
+
+/*
 
    Formulae for the mail delivery domain.
 
@@ -109,4 +110,4 @@ executable(go_to_room(Agnt,R)).
 
 :- run_tests.
 
-:- halt.
+% :- halt.

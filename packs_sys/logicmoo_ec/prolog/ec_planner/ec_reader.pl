@@ -23,6 +23,10 @@
     
 
 */
+%:- include(ec_reader_no_lps).
+
+%end_of_file.
+
 :- module(ec_reader,[convert_e/1, set_ec_option/2, verbatum_functor/1, builtin_pred/1, s_l/2,
    with_e_file/3, 
    convert_e/2,
@@ -32,6 +36,7 @@
    e_reader_testf/0,
    e_reader_testf/1,
    echo_format/2]).
+
 
 
 
@@ -74,7 +79,7 @@ is_non_sort(NoListF):- non_list_functor(NoListF).
 builtin_pred(initiates).
 builtin_pred(terminates).
 builtin_pred(releases).
-builtin_pred(holds_at).
+builtin_pred(holds).
 builtin_pred(happens).
 builtin_pred(declipped).
 builtin_pred(clipped).
@@ -482,13 +487,13 @@ fix_predname('implies', '->').
 fix_predname('=>', '->').
 fix_predname('if', '->').
 
-fix_predname(holds_at, holds_at).
+fix_predname(/**/holds, /**/holds).
+fix_predname(holdsat, /**/holds).
+fix_predname(holds_at, /**/holds).
 fix_predname(happens, happens_at).
 fix_predname(initiates, initiates_at).
 fix_predname(terminates, terminates_at).
 fix_predname(releases, releases_at).
-
-fix_predname(holdsat, holds_at).
 fix_predname(releasedat, released_at).
 fix_predname(at, at_loc).
 fix_predname(holds, pred_holds).
@@ -512,7 +517,7 @@ e_to_pel('$VAR'(HT), '$VAR'(HT)):-!.
 e_to_pel(X, Y):- \+ compound(X), !, must(my_unCamelcase(X, Y)).
 e_to_pel(X, Y):- compound_name_arity(X, F, 0), !, my_unCamelcase(F, FF), compound_name_arity(Y, FF, 0).
 e_to_pel(not(Term),not(Term)):- var(Term),!.
-e_to_pel(not(holds_at(Term,Time)),holds_at(O,Time)):-  !, e_to_pel(not(Term), O).
+e_to_pel(not(/**/holds(Term,Time)),/**/holds(O,Time)):-  !, e_to_pel(not(Term), O).
 e_to_pel(not(Term),not(O)):- !, e_to_pel(Term, O).
 e_to_pel(Prop,O):- 
   Prop =.. [ThereExists,NotVars,Term0],
@@ -531,8 +536,8 @@ e_to_pel(Prop,O):-
   e_to_pel(Term,O),!.
 
 %e_to_pel(X, Y):- e_to_ax(X, Y),X\=@=Y,!,e_to_pel(X, Y).
-%e_to_pel(neg(C),O):-e_to_pel(holds_at(neg(N),V),O):- compound(C),holds_at(N,V)=C,
-%e_to_pel(neg(holds_at(N,V)),O):-e_to_pel((holds_at(neg(N),V)),O).
+%e_to_pel(/**/not(C),O):-e_to_pel(/**/holds(/**/not(N),V),O):- compound(C),/**/holds(N,V)=C,
+%e_to_pel(/**/not(/**/holds(N,V)),O):-e_to_pel((/**/holds(/**/not(N),V)),O).
 e_to_pel(t(X, [Y]), O):- nonvar(Y), !, e_to_pel(t(X, Y), O).
 e_to_pel(load(X), load(X)):-!.
 e_to_pel(include(X), include(X)):-!.
@@ -803,29 +808,29 @@ till_eof(In) :-
 end_of_file.            
 
 exists(T, 
-  ~holds_at(positivelyBuoyant(Diver), T) & 
-  ~holds_at(neutrallyBuoyant(Diver), T) & 
-  ~holds_at(negativelyBuoyant(Diver), T)).
+  ~/**/holds(positivelyBuoyant(Diver), T) & 
+  ~/**/holds(neutrallyBuoyant(Diver), T) & 
+  ~/**/holds(negativelyBuoyant(Diver), T)).
  implies that is a T that the Diver is not in the water.
 
 all([Diver:diver,T:time], 
-  (holds_at(~positivelyBuoyant(Diver), T) & 
-   holds_at(~neutrallyBuoyant(Diver), T) & 
-   holds_at(~negativelyBuoyant(Diver), T)).
- -> holds_at(~inWater(Diver),T)).
+  (/**/holds(~positivelyBuoyant(Diver), T) & 
+   /**/holds(~neutrallyBuoyant(Diver), T) & 
+   /**/holds(~negativelyBuoyant(Diver), T)).
+ -> /**/holds(~inWater(Diver),T)).
 
 all([Diver:diver,T:time], 
-  (holds_at(~positivelyBuoyant(Diver), T) & 
-   holds_at(~neutrallyBuoyant(Diver), T) & 
-   holds_at(~negativelyBuoyant(Diver), T)).
- -> ~holds_at(inWater(Diver),T)).
+  (/**/holds(~positivelyBuoyant(Diver), T) & 
+   /**/holds(~neutrallyBuoyant(Diver), T) & 
+   /**/holds(~negativelyBuoyant(Diver), T)).
+ -> ~/**/holds(inWater(Diver),T)).
 
 
  implies that is a T that the Diver is not in the water.
 
 
 exists(T, 
-  ~holds_at(positivelyBuoyant(Diver), T) & 
-  ~holds_at(neutrallyBuoyant(Diver), T) & 
-  ~holds_at(negativelyBuoyant(Diver), T)).
+  ~/**/holds(positivelyBuoyant(Diver), T) & 
+  ~/**/holds(neutrallyBuoyant(Diver), T) & 
+  ~/**/holds(negativelyBuoyant(Diver), T)).
 

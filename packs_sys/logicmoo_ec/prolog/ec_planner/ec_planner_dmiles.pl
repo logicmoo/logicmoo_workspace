@@ -17,11 +17,12 @@
 
 :- module(ec,[abdemo_special/3]).
 
+
 testing_msg(X):- wdmsg(X).
 
 :- use_module(library((pfc_lib))).
 
-%%executable(P):- mpred_props(
+%%event(P):- mpred_props(
 % :- use_module(ec_loader).
 :- use_module(ec_common).
 
@@ -42,11 +43,25 @@ next_d(D1, D2):- D1<90,!,D2 is D1+60.
 next_d(D1, D2):- D2 is D1+300.
 
 :- style_check(-singleton).
+:- module_transparent(local_database/1).
+:- dynamic(local_database/1).
+:- export(local_database/1).
+:- system:import(local_database/1).
+
+abdemo(Goal):- 
+ listify(Goal,GoalL),
+ show_ec_current_domain_db,
+ pprint_ecp_cmt(blue, '?-'(abdemo(GoalL))), R = [PS, BS, NS], 
+ (abdemo(GoalL, [PS, BS], NS) -> (pprint_ecp_cmt(green, success(GoalL)),pprint_ecp_cmt(cyan, R)) ; pprint_ecp_cmt(red, failed(GoalL))). 
+
+abdemo(Gs, R, N) :-
+     ticks(Z1), abdemo(Gs, [[], []], R, [], N), ticks(Z2), 
+     Z is (Z2-Z1)/60, write('Total time taken '), writeln(Z), nl.
 
 % abdemo_special(long,Gs,R):-abdemo_timed(Gs,R).
 abdemo_special(W,Gs,R):- \+ is_list(Gs),!, functor(Gs,F,_),!, 
   abdemo_special(W+F,[Gs],R).
-abdemo_special(loops,Gs,R):- write(cant_abdemo(loops,Gs,R)),!,nl.
+%abdemo_special(loops,Gs,R):- write(cant_abdemo(loops,Gs,R)),!,nl.
 abdemo_special(_,Gs,R):- abdemo_timed(Gs,[R,N]), write_plan_len(R,N), nl, write_plan(R,[]).
 
 abdemo_special(depth(Low,High),Gs,R):- 
@@ -65,6 +80,8 @@ abdemo_top_xfrm(Gs,Gss):-
   When = t,
   must(fix_goal(When,Gs,Gs0)), !,
   must(fix_time_args(When,Gs0,Gss)),!.
+
+:- discontiguous ec:abdemo_top/8.
 
 abdemo_top(Gs,R1,R3,N1,N3,D) :-
   must(nonvar(Gs)),
@@ -99,12 +116,19 @@ iv_remove_same_key([V1-_|T0], V, T) :-
     iv_remove_same_key(T0, V, T).
 iv_remove_same_key(L, _, L).
 
-ec_trace(O,0):- O=on.
-ec_trace(O,1):- O=on.
+%ec_trace(O,0):- fail, O=on.
+%ec_trace(O,1):- O=on, !.
 
-%borked %:- include('eventCalculusPlannerDMiles_OLD.pl').        
+%borked %
+%:- include('eventCalculusPlannerDMiles_OLD.pl').        
 
-% :- include('eventCalculusPlannerDMiles.pl').        
+%:- include('eventCalculusPlannerDMiles.pl').        
+
+abdemo_timed(Gs,[HA,BA]) :-
+     ticks(Z1),
+     abdemo(Gs,[HA,BA]),
+     write_plan(HA,BA),
+     ticks(Z2), Z is (Z2-Z1)/60, write('Total time taken '), writenl(Z), nl.
 
 /*
 :- include('planner115.pl').        
@@ -112,6 +136,7 @@ abdemo_top(Gs,R1,R3,N1,N3,D, _MaxDepth, _HighLevel) :-
   must(nonvar(Gs)),
   abdemo_id(Gs,R1,R2,N1,N2,D), !, 
   abdemo_cont(R2,R3,N2,N3).
+
 */
 /*
 :- include('planner42.pl').        
@@ -120,12 +145,17 @@ abdemo_top(Gs,R1,R3,N1,N3,D, _MaxDepth, _HighLevel) :-
   abdemo(Gs,R1,R2,N1,N2), !, 
   abdemo_cont(R2,R3,N2,N3).
 */
-:- include('planner19a.pl').        
+/*
+*/
 abdemo_top(Gs,R1,R3,N1,N3,D, _MaxDepth, _HighLevel) :-
   must(nonvar(Gs)),
   abdemo(Gs,R1,R2,N1,N2), !, 
   abdemo_cont(R2,R3,N2,N3).
 
+:- include('planner19a.pl').        
+:- set_prolog_flag(ec_loader,false).
 :- fixup_exports.
 
+
+:- include('./abdemo_tests.pl').
 

@@ -1,4 +1,7 @@
-:- module(logicmoo_ocl_and_pddl,[test_blocks/0,test_domain/1,test_all/0,test_rest/0,test_sas/0,test_dir_files_sas/1,test_dir_files_sas/3]).
+:- module(logicmoo_ocl_and_pddl,[
+
+  solve_files_w_ocl/2,
+  test_blocks/0,test_domain/1,test_all/0,test_rest/0,test_sas/0,test_dir_files_sas/1,test_dir_files_sas/3]).
 
 
 
@@ -115,7 +118,7 @@ save_ocl_operators(A):-dmsg(save_ocl_operators(A)), % varnames_for_assert(A,CA,V
    must(( 
       prop_get_nvlist(A,
          [(preconditions)=Precon,positiv_effect=Pos,negativ_effect=Neg, assign_effect=Af, (parameters)= UT, 
-                 parameter_types=SPT,parameters_decl=PDs]),
+                 parameter_types=SPT,parameters_decl=_PDs]),
      UT=..[_|ARGS],     
      SPT=..[_|PTs], 
      nop(must_maplist(record_var_names,Vars)),
@@ -130,13 +133,13 @@ save_ocl_operators(A):-dmsg(save_ocl_operators(A)), % varnames_for_assert(A,CA,V
      get_one_isa(S,X,REVALLHINTS),
      SC = sc(S,X,Neg=>Pos),
      OP = operator(UT,SE,SC,[]),
-     varnames_for_assert(OP,COP,_Vars),
+     varnames_for_assert(OP,COP,Vars),
      env_aif(COP))).
 
 env_aif(G):-functor(G,F,_),wdmsg(F:-G), assertz_new(ocl:G).
 
 save_ocl_predicates(Decl):-dmsg(save_ocl_predicates(Decl)),prop_get(parameter_types,Decl,PTDecl),   
-   env_aif(predicates([PTDecl])),PTDecl=..[F|PTypes],must_maplist(save_ocl_types,PTypes).
+   env_aif(predicates([PTDecl])),PTDecl=..[_F|PTypes],must_maplist(save_ocl_types,PTypes).
 
 save_ocl_types(Atom):- atom( Atom ),!, save_ocl_types([Atom]-type).
 save_ocl_types(Obj):- Obj=..[Type,List],!,save_ocl_types(List-Type).
@@ -399,6 +402,7 @@ domain_name0(Name):- bb_get(currentProblem, P),prop_get(domain_name,P,Name).
 domain_name0(Name):- user:is_saved_type(domain,Name,_).
 domain_name0(Name):- user:is_saved_type(problem,_,P),prop_get(domain_name,P,Name).
 
+:- export(problem_name/1).
 problem_name(Name):- use_local_pddl, no_repeats(problem_name0(Name)).
 problem_name0(Name):- bb_get(currentProblem, P),prop_get(problem_name,P,Name).
 problem_name0(Name):- user:is_saved_type(problem,Name,_).
@@ -927,7 +931,7 @@ test_sas_sanity:-
 
 pddl_dir(PDDLDir,Dir):- atom(PDDLDir),absolute_file_name(PDDLDir,Dir0),expand_file_name(Dir0,DirS),DirS\==[],!,member(Dir,DirS).
 pddl_dir(PDDLDir,Dir):- atom(PDDLDir),absolute_file_name(pddl(PDDLDir),Dir0),expand_file_name(Dir0,DirS),DirS\==[],!,member(Dir,DirS).
-pddl_dir(PDDLDir,Dir):- absolute_file_name(PDDLDir,Dir),expand_file_name(Dir0,DirS),member(Dir,DirS).
+pddl_dir(PDDLDir,Dir):- absolute_file_name(PDDLDir,Dir0),expand_file_name(Dir0,DirS),member(Dir,DirS).
 
 test_rest:-	
 	test_dir_sas('ipc2008-no-cybersec/seq-opt/parcprinter-strips/'),
@@ -941,6 +945,7 @@ test_rest:-
         expand_file_name('../pddl/ipc2008-no-cybersec/?*?/*/',O),
         forall(member(E,O),test_dir_sas(E)).
 
+/*
 test_dir_files_sas(PDDLDir,D,P):- pddl_dir(PDDLDir,Dir), directory_file_path(Dir,D,DF), directory_file_path(Dir,P,PF),
         test_parse_file(DF),test_parse_file(PF),
         solve_files(DF,PF),!.
@@ -979,4 +984,4 @@ test_dir_files_sas(Dir):-
 
 
 
-
+*/
