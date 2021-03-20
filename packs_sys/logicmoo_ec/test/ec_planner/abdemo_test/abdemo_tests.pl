@@ -1,36 +1,6 @@
 
 :- style_check(-discontiguous).
 
-:- if( \+ current_predicate( ec_current_domain_bi /1)).
-ec_current_domain_bi(G):- call(G).
-:- endif.
-
-:- if( \+ current_predicate( ec_trace /2)).
-ec_trace(on, 0).
-:- endif.
-
-
-:- if( \+ current_predicate( ticks /1)).
-ticks(Z1):-statistics(runtime, [Z1, _]).
-:- endif.
-
-:- if( \+ current_predicate( dbginfo /1)).
-dbginfo(R):- pprint_ecp_cmt(yellow, R).
-:- endif.
-
-:- if( \+ current_predicate( init_gensym /1)).
-init_gensym(_).
-:- endif.
-
-
-demo_test(Goal):- compound(Goal), !, abdemo(Goal).
-demo_test(Match):- mmake, 
-  forall((demo_test(Name, Type, Goal),once(match_test(Match,Name);match_test(Match,Type))),
-    (pprint_ecp_cmt(blue, do(demo_test(Name, Type))),  %Type \== slow, 
-  abdemo(Goal))).
-
-match_test(X,Y):- (var(X);var(Y)),!.
-match_test(X,Y):- term_to_atom(X,X1),term_to_atom(Y,Y1), (sub_atom(X1,_,_,_,Y1) ; sub_atom(Y1,_,_,_,X1)),!.
 
 
 
@@ -75,7 +45,6 @@ get_t_arg(beq(B1, B2), B1, B2):-!.
 get_t_arg(B, B1, B2):- functor(B, _, A), arg(A, B, B1), A2 is A -1, arg(A2, B, B2).
 */
 
-:- multifile(demo_test/3).
 
 :- if(false).
 

@@ -152,7 +152,6 @@ writenl(A):- write(A),fresh_line.
 
 
 
-
 ec_predicate_template(axiom(_,_)).
 ec_predicate_template(predicate(_)).
 ec_predicate_template(fluent(_)).
@@ -177,7 +176,7 @@ ec_current_domain_db(axiom(call(G), [])):- nonvar(G),!, rtrace(G).
 
 ec_current_domain_db(G):- user:ec_current_domain_db(G, _REF).
 ec_current_domain_db(G):- lps_current_domain_db(G).
-ec_current_domain_db(holds(G,Zero),Gs):- is_zero(Zero), ec_current_domain_db(initially(G),Gs).
+ec_current_domain_db(holds(G,Zero)):- is_zero(Zero), ec_current_domain_db(initially(G),Gs).
 ec_current_domain_db(G):- var(G), !, fail.
 ec_current_domain_db(event(G)):- lps_current_domain_db(action(G)).
 ec_current_domain_db(G):- G \= axiom(_,_), ec_current_domain_db(axiom(G,B)), B==[].

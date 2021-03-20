@@ -1,64 +1,39 @@
-
 :- expects_dialect(lps).
 
 maxTime(10).
 
-fluents on(_,_), ontable(_), clear(_), handempty, holding(_).
+actions drain_tank, cool_tank, open_valve, turn_off_boiler.
 
-fluents enabled_action_pick_up(X).
+events plant_safe.
 
-actions pick_up(X).
-
-enabled_action_pick_up(X) at T if clear(X) at T, ontable(X) at T, handempty at T.
-pick_up(X) initiates holding(X) if enabled_action_pick_up(X).
-pick_up(X) terminates ontable(X) if enabled_action_pick_up(X).
-pick_up(X) terminates clear(X) if enabled_action_pick_up(X).
-pick_up(X) terminates handempty if enabled_action_pick_up(X).
-
-fluents enabled_action_put_down(X).
-actions put_down(X).
-enabled_action_put_down(X) at T if holding(X) at T.
-put_down(X) initiates clear(X) if enabled_action_put_down(X).
-put_down(X) initiates handempty if enabled_action_put_down(X).
-put_down(X) initiates ontable(X) if enabled_action_put_down(X).
-put_down(X) terminates holding(X) if enabled_action_put_down(X).
-
-fluents enabled_action_stack(X, Y).
-actions stack(X, Y).
-enabled_action_stack(X, Y) at T if holding(X) at T, clear(Y) at T.
-stack(X, Y) initiates clear(X) if enabled_action_stack(X, Y).
-stack(X, Y) initiates handempty if enabled_action_stack(X, Y).
-stack(X, Y) initiates on(X, Y) if enabled_action_stack(X, Y).
-stack(X, Y) terminates holding(X) if enabled_action_stack(X, Y).
-stack(X, Y) terminates clear(Y) if enabled_action_stack(X, Y).
-
-fluents enabled_action_unstack(X, Y).
-actions unstack(X, Y).
-enabled_action_unstack(X, Y) at T if on(X, Y) at T, clear(X) at T, handempty at T.
-unstack(X, Y) initiates holding(X) if enabled_action_unstack(X, Y).
-unstack(X, Y) initiates clear(Y) if enabled_action_unstack(X, Y).
-unstack(X, Y) terminates clear(X) if enabled_action_unstack(X, Y).
-unstack(X, Y) terminates handempty if enabled_action_unstack(X, Y).
-unstack(X, Y) terminates on(X, Y) if enabled_action_unstack(X, Y).
+fluents
+  tank_empty,
+  temperature_low,
+  pressure_normal,
+  valve_open,
+  boiler_off.
 
 
-initially clear(c), clear(a), clear(b), ontable(c),  ontable(a),  ontable(b), handempty.
+plant_safe at T if tank_empty at T, temperature_low at T.
+drain_tank initiates tank_empty if pressure_normal.
+cool_tank initiates temperature_low.
+pressure_normal at T if valve_open at T.
+pressure_normal at T if boiler_off at T.
+open_valve initiates valve_open.
+turn_off_boiler initiates boiler_off.
 
-% observe on(c, b), on(c, b)  from 8 to 9.
-% observe on(b, a)  from 8 to 9.
-% observe on(c, b)  from 8 to 9.
-if true at 6 then on(b, a) at 6.
-observe unstack(c,b) from 7.
+observe plant_safe from 8.
 
-:- multifile(ec:demo_test/3).
-ec:demo_test(lps_demo_tests_run, lps_demo, [holds(on(b, a), T), holds(on(c, b),T)]).
 
-baseKB:lps_demo_tests_run_all:- demo_test(lps_demo).
-baseKB:lps_demo_tests_run:- abdemo([holds(on(b, a), T), holds(on(c, b),T)]).
-baseKB:lps_demo_tests_run_tweak:- abdemo([on(b, a),on(c, b)]).
+:- multifile(ec:demo_test/1).
+ec:demo_test(lps_demo_tests_run, lps_demo, [holds(plant_safe,9)]).
+
+baseKB:lps_demo_tests_run:- abdemo([holds(plant_safe,9)]).
 
 /** <examples>
 ?- go(Timeline).
 */
 
+
+baseKB:lps_demo_tests_run_all:- demo_test(lps_demo).
 

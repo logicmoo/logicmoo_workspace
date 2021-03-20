@@ -58,8 +58,8 @@ pre_run_mud_server:-
 attach_packs_relative(Rel):-
    once(((
     (working_directory(Dir,Dir);prolog_load_context(directory,Dir)),
-    (absolute_file_name(Rel,PackDir,[relative_to(Dir),file_type(directory),file_errors(fail)]);
-      absolute_file_name(Rel,PackDir,[file_type(directory),file_errors(fail)])),
+    (absolute_file_name(Rel,PackDir,[relative_to(Dir),file_type(directory),solutions(all),file_errors(fail)]);
+      absolute_file_name(Rel,PackDir,[file_type(directory),solutions(all),file_errors(fail)])),
     writeln(attach_packs(PackDir)),attach_packs(PackDir)));writeln(failed(attach_packs_relative_web(Rel)))).
 
 load_package_dirs_0:-
@@ -313,21 +313,22 @@ restaurant:- lps_sanity(lps_tests('restaurant')).
 goat:- lps_sanity(lps_tests('goat')).
 ballot:- lps_sanity(lps_tests('Ballot')).
 
-user:file_search_opath(lps_tests, library(A)):- 
- arg(_,
-  v('../test/lps_planner/lps_demo/',
-   '../test/ec_planner/abdemo/',
-    '../examples/',
-     '../test/lps_user_examples/'), A).
+:- dynamic(user:file_search_path/2).
+:- multifile(user:file_search_path/2).
+user:file_search_path(lps_tests, Dir):-
+ %absolute_file_name(library('.'),LibDir,[file_type(directory),solutions(all),access(exist),file_errors(fail)]),
+ member(A,['../test/lps_planner/','../test/ec_planner/abdemo_test/','../test/lps_user_examples/','../examples/']),
+ absolute_file_name(library(A),Dir,[ /*relative_to(LibDir),*/ file_type(directory),solutions(all),access(exist),file_errors(fail)]),
+ exists_directory(Dir).
 
 
-lps_demo_tests:- lps_sanity(lps_tests('lps_demo_tests')),lps_demo_tests_run.
-lps_demo_test_1:- lps_sanity(lps_tests('lps_demo_test_1')),lps_demo_test_1_run.
-lps_demo_test_2:- lps_sanity(lps_tests('lps_demo_test_2')),lps_demo_test_2_run.
-lps_demo_test_3:- lps_sanity(lps_tests('lps_demo_test_3')),lps_demo_test_3_run.
-lps_demo_test_4:- lps_sanity(lps_tests('lps_demo_test_4')),lps_demo_test_4_run.
-lps_demo_test_5:- lps_sanity(lps_tests('lps_demo_test_5')),lps_demo_test_5_run.
-lps_demo_test_9:- lps_sanity(lps_tests('lps_demo_test_9')),lps_demo_test_9_run.
+lps_demo_tests:- lps_sanity(lps_tests('lps_demo_tests')).
+lps_demo_test_1:- lps_sanity(lps_tests('lps_demo_test_1')).
+lps_demo_test_2:- lps_sanity(lps_tests('lps_demo_test_2.pl')).
+lps_demo_test_3:- lps_sanity(lps_tests('lps_demo_test_3.pl')).
+lps_demo_test_4:- lps_sanity(lps_tests('lps_demo_test_4.pl')).
+lps_demo_test_5:- lps_sanity(lps_tests('lps_demo_test_5.pl')).
+lps_demo_test_9:- lps_sanity(lps_tests('lps_demo_test_9.pl')).
 
 lps_insanity(File):- 
    absolute_file_name(File,M,[access(read),extensions(['pl','P','lps','pfc.pl',''])]),
@@ -344,15 +345,22 @@ lps_insanity(M):-
    notrace(from_elsewhere:listing(M:_)),
    wdmsg(running(M)),
    % M:golps(X),
-   M:godc(X),
+   ignore((M:godc(X),
    %listing(interpreter:lps_program_module/1),
-   notrace(print_tree(X)),!.
+   notrace(print_tree(X)))),!,
+   run_tests_from_file(M).
 
+run_tests_from_file(File):- 
+ forall((clause(ec:demo_test(Name, Type, Goal),Body,R),clause_property(R,source(File))),
+  (forall(call(Body),
+   (pprint_ecp_cmt(blue, do(demo_test(Name, Type))),  %Type \== slow, 
+     abdemo(Goal))))).
 
 lps_sanity(File):- Limit = 110580,
  catch(call_with_depth_limit(lps_insanity(File), Limit, R), E,(R=E)),
    format(user_error,"~N ~q~n",[lps_sanity=R]),
    ((integer(R),R<Limit)-> true; (dumpST,break,fail)).
+
 
 
 

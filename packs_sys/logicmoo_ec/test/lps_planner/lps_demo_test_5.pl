@@ -1,13 +1,13 @@
 
 :- expects_dialect(lps).
 
-maxTime(10).
+maxTime(50).
 
 
 /*
 lps_pddl_convert:test_logicmoo_lps_pddl_readerA :-
     pre_pddl_tests,
-    test_logicmoo_lps_pddl_reader(pddl('assembly/domain*1.pddl')),
+    test_logicmoo_lps_pddl_reader(pddl('assembly/domain*5.pddl')),
     test_logicmoo_lps_pddl_reader(pddl('assembly/prob20.pddl')),
     !.
 */
@@ -58,7 +58,7 @@ isa(socket, assembly).
 isa(device, assembly).
 isa(doodad_3, assembly).
 isa(kludge_4, assembly).
-isa(hack_1, assembly).
+isa(hack_5, assembly).
 isa(gimcrack_2, assembly).
 isa(frob, assembly).
 isa(valve, assembly).
@@ -87,7 +87,7 @@ isa(clamp, resource).
 
 initially available(doodad_3).
 initially available(kludge_4).
-initially available(hack_1).
+initially available(hack_5).
 initially available(gimcrack_2).
 initially available(valve).
 initially available(tube).
@@ -119,7 +119,7 @@ initially part_of(widget, socket).
 initially part_of(fastener, socket).
 initially part_of(doodad_3, device).
 initially part_of(kludge_4, device).
-initially part_of(hack_1, device).
+initially part_of(hack_5, device).
 initially part_of(gimcrack_2, device).
 initially part_of(valve, frob).
 initially part_of(tube, frob).
@@ -142,7 +142,7 @@ initially part_of(mount, fastener).
 initially assemble_order(plug, device, socket).
 initially assemble_order(widget, plug, socket).
 initially assemble_order(doodad_3, kludge_4, device).
-initially assemble_order(hack_1, doodad_3, device).
+initially assemble_order(hack_5, doodad_3, device).
 initially assemble_order(gimcrack_2, doodad_3, device).
 initially assemble_order(valve, tube, frob).
 initially assemble_order(doodad, sprocket, plug).
@@ -150,7 +150,8 @@ initially assemble_order(hoozawhatsie, unit, widget).
 initially assemble_order(thingumbob, hoozawhatsie, widget).
 
 :- multifile(ec:demo_test/3).
-ec:demo_test(lps_demo_test_1_run, lps_demo, [holds(complete(socket),8)]).
+ec:demo_test(lps_demo_test_5_run, lps_demo, [holds(complete(socket),8)]).
 
-baseKB:lps_demo_test_1_run :- abdemo([complete(socket) at 8]).
+baseKB:lps_demo_test_5_run :- abdemo([holds(complete(socket),8)]).
+
 

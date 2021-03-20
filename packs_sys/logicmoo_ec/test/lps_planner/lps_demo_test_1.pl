@@ -3,154 +3,294 @@
 
 maxTime(10).
 
+actions drain_tank, cool_tank, open_valve, turn_off_boiler.
 
-/*
-lps_pddl_convert:test_logicmoo_lps_pddl_readerA :-
-    pre_pddl_tests,
-    test_logicmoo_lps_pddl_reader(pddl('assembly/domain*1.pddl')),
-    test_logicmoo_lps_pddl_reader(pddl('assembly/prob20.pddl')),
-    !.
+events plant_safe.
+
+fluents
+  tank_empty,
+  temperature_low,
+  pressure_normal,
+  valve_open,
+  boiler_off.
+
+
+plant_safe at T if tank_empty at T, temperature_low at T.
+drain_tank initiates tank_empty if pressure_normal.
+cool_tank initiates temperature_low.
+pressure_normal at T if valve_open at T.
+pressure_normal at T if boiler_off at T.
+open_valve initiates valve_open.
+turn_off_boiler initiates boiler_off.
+
+observe plant_safe from 8.
+
+
+%:- multifile(ec:demo_test/3).
+ec:demo_test(lps_demo_test_1, lps_demo, [holds(plant_safe,9)]).
+
+%baseKB:lps_demo_test_1_run:- abdemo([holds(plant_safe,9)]).
+
+/** <examples>
+?- go(Timeline).
 */
-subtype(assembly, object).
-subtype(resource, object).
 
-fluents available((either, resource, assembly)).
-fluents complete(assembly).
-fluents requires(assembly, resource).
-fluents committed(resource, assembly).
-fluents incorporated(assembly, assembly).
-fluents part_of(assembly, assembly).
-fluents to_be_removed(assembly, assembly).
-fluents assemble_order(assembly, assembly, assembly).
-fluents transient_part(assembly, assembly).
-fluents remove_order(assembly, assembly, assembly).
+end_of_file.
 
-fluents enabled_action_commit(Res, As).
-actions commit(Res, As).
-enabled_action_commit(Res, As)at T0 if isa(Res, resource), isa(As, assembly), available(Res)at T0.
-commit(Res, As)initiates committed(Res, As)if enabled_action_commit(Res, As).
-commit(Res, As)terminates available(Res)if enabled_action_commit(Res, As).
+?- lps_demo_test_1.
 
-fluents enabled_action_release(Res, As).
-actions release(Res, As).
-enabled_action_release(Res, As)at T0 if isa(Res, resource), isa(As, assembly), committed(Res, As)at T0.
-release(Res, As)initiates available(Res)if enabled_action_release(Res, As).
-release(Res, As)terminates committed(Res, As)if enabled_action_release(Res, As).
+OUTPUTS AS:
 
-fluents enabled_action_assemble(Part, Whole, Res, Prev, P, Tp).
-actions assemble(Part, Whole).
-enabled_action_assemble(Part, Whole, Res, Prev, P, Tp)at T0 if isa(Part, assembly), isa(Whole, assembly), all(typed(resource, Res), pddl_imply(requires(Whole, Res), committed(Res, Whole)))at T0, (part_of(Part, Whole);transient_part(Part, Whole))at T0, available(Part)at T0, all(typed(assembly, Prev), pddl_imply(assemble_order(Prev, Part, Whole), incorporated(Prev, Whole)))at T0.
-assemble(Part, Whole)initiates incorporated(Part, Whole)if enabled_action_assemble(Part, Whole, Res, Prev, P, Tp).
-assemble(Part, Whole)initiates complete(Whole)if enabled_action_assemble(Part, Whole, Res, Prev, P, Tp), not exists(typed(assembly, P),  (part_of(P, Whole), not P=Part, not incorporated(P, Whole))), not exists(typed(assembly, Tp),  (transient_part(Tp, Whole), incorporated(Tp, Whole))).
-assemble(Part, Whole)initiates available(Whole)if enabled_action_assemble(Part, Whole, Res, Prev, P, Tp), not exists(typed(assembly, P),  (part_of(P, Whole), not P=Part, not incorporated(P, Whole))), not exists(typed(assembly, Tp),  (transient_part(Tp, Whole), incorporated(Tp, Whole))).
-assemble(Part, Whole)terminates available(Part)if enabled_action_assemble(Part, Whole, Res, Prev, P, Tp).
+% % From /mnt/sdc1/logicmoo_workspace.1/packs_sys/logicmoo_ec/prolog/logicmoo_planner.pl:14
+% running('/mnt/sdc1/logicmoo_workspace.1/packs_sys/logicmoo_ec/test/lps_planner/lps_demo_test_1.pl').
+% Preparing visualization...
+% Collected events and fluents...
+% Prepared internal structures...
+% Doing something else...
+% Finding the end of time...
+% Almost done...
+lps_visualization(
+   Dict{groups:[ Dict2{
+                      content:"Events",
+                      id:"event",
+                      order:1} ],
+        items:[ Dict1{
+                     content:"plant_safe",
+                     group:"event",
+                     id:0,
+                     start:9,
+                     style:"color:#E19735",
+                     title:"happens(plant_safe,8,9)",
+                     type:"point"} ]},
+   []).
+ %  do(demo_test(lps_demo_test_1,lps_demo)).
 
-fluents enabled_action_remove(Part, Whole, Res, Prev, P, Tp).
-actions remove(Part, Whole).
-enabled_action_remove(Part, Whole, Res, Prev, P, Tp)at T0 if isa(Part, assembly), isa(Whole, assembly), isa(Res, resource),
-  all(typed(resource, Res), pddl_imply(requires(Whole, Res), committed(Res, Whole)))at T0, incorporated(Part, Whole)at T0, (transient_part(Part, Whole), all(typed(assembly, Prev), pddl_imply(remove_order(Prev, Part, Whole), incorporated(Prev, Whole)));part_of(Part, Whole), not exists(typed(assembly, Prev),  (assemble_order(Prev, Part, Whole), incorporated(Prev, Whole))))at T0.
-remove(Part, Whole)initiates available(Part)if enabled_action_remove(Part, Whole, Res, Prev, P, Tp).
-remove(Part, Whole)initiates complete(Whole)if enabled_action_remove(Part, Whole, Res, Prev, P, Tp), not exists(typed(assembly, P),  (part_of(P, Whole), not incorporated(P, Whole))), not exists(typed(assembly, Tp),  (transient_part(Tp, Whole), not Tp=Part, incorporated(Tp, Whole))).
-remove(Part, Whole)initiates available(Whole)if enabled_action_remove(Part, Whole, Res, Prev, P, Tp), not exists(typed(assembly, P),  (part_of(P, Whole), not incorporated(P, Whole))), not exists(typed(assembly, Tp),  (transient_part(Tp, Whole), not Tp=Part, incorporated(Tp, Whole))).
-remove(Part, Whole)terminates incorporated(Part, Whole)if enabled_action_remove(Part, Whole, Res, Prev, P, Tp).
+ %  showing_ec_current_domain_db.
 
-isa(socket, assembly).
-isa(device, assembly).
-isa(doodad_3, assembly).
-isa(kludge_4, assembly).
-isa(hack_1, assembly).
-isa(gimcrack_2, assembly).
-isa(frob, assembly).
-isa(valve, assembly).
-isa(tube, assembly).
-isa(plug, assembly).
-isa(doodad, assembly).
-isa(kludge, assembly).
-isa(sprocket, assembly).
-isa(wire, assembly).
-isa(hack, assembly).
-isa(bracket, assembly).
-isa(widget, assembly).
-isa(unit, assembly).
-isa(connector, assembly).
-isa(hoozawhatsie, assembly).
-isa(thingumbob, assembly).
-isa(fastener, assembly).
-isa(gimcrack, assembly).
-isa(contraption, assembly).
-isa(foobar, assembly).
-isa(whatsis, assembly).
-isa(coil, assembly).
-isa(mount, assembly).
-isa(hammock, resource).
-isa(clamp, resource).
+% From /mnt/sdc1/logicmoo_workspace.1/packs_sys/logicmoo_ec/prolog/logicmoo_planner.pl:14
 
-initially available(doodad_3).
-initially available(kludge_4).
-initially available(hack_1).
-initially available(gimcrack_2).
-initially available(valve).
-initially available(tube).
-initially available(doodad).
-initially available(kludge).
-initially available(wire).
-initially available(hack).
-initially available(bracket).
-initially available(unit).
-initially available(connector).
-initially available(hoozawhatsie).
-initially available(thingumbob).
-initially available(gimcrack).
-initially available(contraption).
-initially available(foobar).
-initially available(whatsis).
-initially available(coil).
-initially available(mount).
-initially requires(device, clamp).
-initially requires(frob, hammock).
-initially requires(plug, clamp).
-initially requires(sprocket, clamp).
-initially requires(widget, clamp).
-initially requires(fastener, clamp).
-initially part_of(device, socket).
-initially part_of(frob, socket).
-initially part_of(plug, socket).
-initially part_of(widget, socket).
-initially part_of(fastener, socket).
-initially part_of(doodad_3, device).
-initially part_of(kludge_4, device).
-initially part_of(hack_1, device).
-initially part_of(gimcrack_2, device).
-initially part_of(valve, frob).
-initially part_of(tube, frob).
-initially part_of(doodad, plug).
-initially part_of(kludge, plug).
-initially part_of(sprocket, plug).
-initially part_of(wire, sprocket).
-initially part_of(hack, sprocket).
-initially part_of(bracket, sprocket).
-initially part_of(unit, widget).
-initially part_of(connector, widget).
-initially part_of(hoozawhatsie, widget).
-initially part_of(thingumbob, widget).
-initially part_of(gimcrack, fastener).
-initially part_of(contraption, fastener).
-initially part_of(foobar, fastener).
-initially part_of(whatsis, fastener).
-initially part_of(coil, fastener).
-initially part_of(mount, fastener).
-initially assemble_order(plug, device, socket).
-initially assemble_order(widget, plug, socket).
-initially assemble_order(doodad_3, kludge_4, device).
-initially assemble_order(hack_1, doodad_3, device).
-initially assemble_order(gimcrack_2, doodad_3, device).
-initially assemble_order(valve, tube, frob).
-initially assemble_order(doodad, sprocket, plug).
-initially assemble_order(hoozawhatsie, unit, widget).
-initially assemble_order(thingumbob, hoozawhatsie, widget).
+predicate(dummy).
 
-:- multifile(ec:demo_test/3).
-ec:demo_test(lps_demo_test_1_run, lps_demo, [holds(complete(socket),8)]).
+mpred_prop(dummy,predicate).
 
-baseKB:lps_demo_test_1_run :- abdemo([complete(socket) at 8]).
+% From /mnt/sdc1/logicmoo_workspace.1/packs_sys/logicmoo_ec/prolog/logicmoo_planner.pl:14
+
+event(plant_safe).
+
+event(plant_safe).
+
+% From /mnt/sdc1/logicmoo_workspace.1/packs_sys/logicmoo_ec/prolog/logicmoo_planner.pl:14
+
+action(drain_tank).
+
+action(cool_tank).
+
+% From /mnt/sdc1/logicmoo_workspace.1/packs_sys/logicmoo_ec/prolog/logicmoo_planner.pl:14
+
+action(open_valve).
+
+action(turn_off_boiler).
+
+% From /mnt/sdc1/logicmoo_workspace.1/packs_sys/logicmoo_ec/prolog/logicmoo_planner.pl:14
+
+action(drain_tank).
+
+action(cool_tank).
+
+% From /mnt/sdc1/logicmoo_workspace.1/packs_sys/logicmoo_ec/prolog/logicmoo_planner.pl:14
+
+action(open_valve).
+
+action(turn_off_boiler).
+
+% From /mnt/sdc1/logicmoo_workspace.1/packs_sys/logicmoo_ec/prolog/logicmoo_planner.pl:14
+
+axiom(happens(plant_safe, 9),
+    []).
+
+axiom(happens(plant_safe, 9),
+    []).
+
+% From /mnt/sdc1/logicmoo_workspace.1/packs_sys/logicmoo_ec/prolog/logicmoo_planner.pl:14
+
+axiom(initiates(drain_tank, tank_empty, Time_at_Initiates),
+    [holds(pressure_normal, Time_at_Initiates)]).
+
+axiom(initiates(cool_tank, temperature_low, Initiates),
+    []).
+
+% From /mnt/sdc1/logicmoo_workspace.1/packs_sys/logicmoo_ec/prolog/logicmoo_planner.pl:14
+
+axiom(initiates(open_valve, valve_open, Initiates),
+    []).
+
+axiom(initiates(turn_off_boiler, boiler_off, Initiates),
+    []).
+
+% From /mnt/sdc1/logicmoo_workspace.1/packs_sys/logicmoo_ec/prolog/logicmoo_planner.pl:14
+
+axiom(initiates(drain_tank, tank_empty, Time_at_Initiates),
+    [holds(pressure_normal, Time_at_Initiates)]).
+
+axiom(initiates(cool_tank, temperature_low, Initiates),
+    []).
+
+% From /mnt/sdc1/logicmoo_workspace.1/packs_sys/logicmoo_ec/prolog/logicmoo_planner.pl:14
+
+axiom(initiates(open_valve, valve_open, Initiates),
+    []).
+
+axiom(initiates(turn_off_boiler, boiler_off, Initiates),
+    []).
+
+% From /mnt/sdc1/logicmoo_workspace.1/packs_sys/logicmoo_ec/prolog/logicmoo_planner.pl:14
+
+axiom(holds(plant_safe, Time_at),
+    [holds(tank_empty, Time_at), holds(temperature_low, Time_at)]).
+
+axiom(holds(pressure_normal, Time_at),
+    [holds(valve_open, Time_at)]).
+
+% From /mnt/sdc1/logicmoo_workspace.1/packs_sys/logicmoo_ec/prolog/logicmoo_planner.pl:14
+
+axiom(holds(pressure_normal, Time_at),
+    [holds(boiler_off, Time_at)]).
+
+axiom(holds(plant_safe, Time_at),
+    [holds(tank_empty, Time_at), holds(temperature_low, Time_at)]).
+
+% From /mnt/sdc1/logicmoo_workspace.1/packs_sys/logicmoo_ec/prolog/logicmoo_planner.pl:14
+
+axiom(holds(pressure_normal, Time_at),
+    [holds(valve_open, Time_at)]).
+
+axiom(holds(pressure_normal, Time_at),
+    [holds(boiler_off, Time_at)]).
+
+ %  shown_ec_current_domain_db.
+
+ %  ?-do_abdemo([holds(plant_safe,9)]).
+
+ %  showing_ec_current_domain_db.
+
+% From /mnt/sdc1/logicmoo_workspace.1/packs_sys/logicmoo_ec/prolog/logicmoo_planner.pl:14
+
+predicate(dummy).
+
+mpred_prop(dummy,predicate).
+
+% From /mnt/sdc1/logicmoo_workspace.1/packs_sys/logicmoo_ec/prolog/logicmoo_planner.pl:14
+
+event(plant_safe).
+
+event(plant_safe).
+
+% From /mnt/sdc1/logicmoo_workspace.1/packs_sys/logicmoo_ec/prolog/logicmoo_planner.pl:14
+
+action(drain_tank).
+
+action(cool_tank).
+
+% From /mnt/sdc1/logicmoo_workspace.1/packs_sys/logicmoo_ec/prolog/logicmoo_planner.pl:14
+
+action(open_valve).
+
+action(turn_off_boiler).
+
+% From /mnt/sdc1/logicmoo_workspace.1/packs_sys/logicmoo_ec/prolog/logicmoo_planner.pl:14
+
+action(drain_tank).
+
+action(cool_tank).
+
+% From /mnt/sdc1/logicmoo_workspace.1/packs_sys/logicmoo_ec/prolog/logicmoo_planner.pl:14
+
+action(open_valve).
+
+action(turn_off_boiler).
+
+% From /mnt/sdc1/logicmoo_workspace.1/packs_sys/logicmoo_ec/prolog/logicmoo_planner.pl:14
+
+axiom(happens(plant_safe, 9),
+    []).
+
+axiom(happens(plant_safe, 9),
+    []).
+
+% From /mnt/sdc1/logicmoo_workspace.1/packs_sys/logicmoo_ec/prolog/logicmoo_planner.pl:14
+
+axiom(initiates(drain_tank, tank_empty, Time_at_Initiates),
+    [holds(pressure_normal, Time_at_Initiates)]).
+
+axiom(initiates(cool_tank, temperature_low, Initiates),
+    []).
+
+% From /mnt/sdc1/logicmoo_workspace.1/packs_sys/logicmoo_ec/prolog/logicmoo_planner.pl:14
+
+axiom(initiates(open_valve, valve_open, Initiates),
+    []).
+
+axiom(initiates(turn_off_boiler, boiler_off, Initiates),
+    []).
+
+% From /mnt/sdc1/logicmoo_workspace.1/packs_sys/logicmoo_ec/prolog/logicmoo_planner.pl:14
+
+axiom(initiates(drain_tank, tank_empty, Time_at_Initiates),
+    [holds(pressure_normal, Time_at_Initiates)]).
+
+axiom(initiates(cool_tank, temperature_low, Initiates),
+    []).
+
+% From /mnt/sdc1/logicmoo_workspace.1/packs_sys/logicmoo_ec/prolog/logicmoo_planner.pl:14
+
+axiom(initiates(open_valve, valve_open, Initiates),
+    []).
+
+axiom(initiates(turn_off_boiler, boiler_off, Initiates),
+    []).
+
+% From /mnt/sdc1/logicmoo_workspace.1/packs_sys/logicmoo_ec/prolog/logicmoo_planner.pl:14
+
+axiom(holds(plant_safe, Time_at),
+    [holds(tank_empty, Time_at), holds(temperature_low, Time_at)]).
+
+axiom(holds(pressure_normal, Time_at),
+    [holds(valve_open, Time_at)]).
+
+% From /mnt/sdc1/logicmoo_workspace.1/packs_sys/logicmoo_ec/prolog/logicmoo_planner.pl:14
+
+axiom(holds(pressure_normal, Time_at),
+    [holds(boiler_off, Time_at)]).
+
+axiom(holds(plant_safe, Time_at),
+    [holds(tank_empty, Time_at), holds(temperature_low, Time_at)]).
+
+% From /mnt/sdc1/logicmoo_workspace.1/packs_sys/logicmoo_ec/prolog/logicmoo_planner.pl:14
+
+axiom(holds(pressure_normal, Time_at),
+    [holds(valve_open, Time_at)]).
+
+axiom(holds(pressure_normal, Time_at),
+    [holds(boiler_off, Time_at)]).
+
+ %  shown_ec_current_domain_db.
+Total time taken 0.05 !!!! For Plan:
+
+% From /mnt/sdc1/logicmoo_workspace.1/packs_sys/logicmoo_ec/prolog/logicmoo_planner.pl:14
+
+ /*   [ [happens(cool_tank, t27), happens(open_valve, t26), happens(drain_tank, t17)],
+          [b(t27, 9), b(t26, 9), b(t26, t17), b(t17, 9)],
+          [ [clipped(t27, temperature_low, 9)],
+            [clipped(t26, valve_open, t17)],
+            [clipped(t17, tank_empty, 9)]
+          ]
+        ].
+ */
+
+ %  success(do_abdemo([holds(plant_safe,9)])).
+
+ lps_sanity=100
+true.
+
+baseKB:  ?-
 

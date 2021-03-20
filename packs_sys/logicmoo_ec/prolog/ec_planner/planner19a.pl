@@ -239,6 +239,7 @@ abresolve(is(X,Y),R,[],R,false) :- !, X is Y.
 abresolve(G,R,[],[G|R],false) :- local_database(predicate(G)).
 abresolve(G,R,Gs,R,false) :- axiom_local(G,Gs).
 
+axiom_local(G,Gs):- local_database(axiom(G,Gs)).
 
 /*
    add_neg(N,Ns1,Ns2) adds goal N to the list of (lists of) negations Ns1,
@@ -580,8 +581,6 @@ resolve(is(X,Y),R,[]) :- !, X is Y.
 resolve(call(G),R,[]) :- !, call(G).
 
 resolve(G,R,Gs) :- axiom_local(G,Gs).
-
-axiom_local(G,Gs):- local_database(axiom(G,Gs)).
 
 is_zero(0).
 

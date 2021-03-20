@@ -43,16 +43,25 @@ next_d(D1, D2):- D1<90,!,D2 is D1+60.
 next_d(D1, D2):- D2 is D1+300.
 
 :- style_check(-singleton).
-:- module_transparent(local_database/1).
-:- dynamic(local_database/1).
-:- export(local_database/1).
-:- system:import(local_database/1).
+%:- module_transparent(local_database/1).
+%:- dynamic(local_database/1).
+%:- export(local_database/1).
+%:- system:import(local_database/1).
 
-abdemo(Goal):- 
+
+abdemo_call(Goal):- 
+ show_ec_current_domain_db,
+ pprint_ecp_cmt(blue, '?-'(Goal)), 
+ (Goal -> (pprint_ecp_cmt(green, success(Goal))) ; pprint_ecp_cmt(red, failed(Goal))). 
+
+abdemo(call(Goal)):- !, abdemo_call(Goal).
+abdemo(Goal):- !, abdemo_call(do_abdemo(Goal)).
+
+do_abdemo(Goal):- 
  listify(Goal,GoalL),
  show_ec_current_domain_db,
- pprint_ecp_cmt(blue, '?-'(abdemo(GoalL))), R = [PS, BS, NS], 
- (abdemo(GoalL, [PS, BS], NS) -> (pprint_ecp_cmt(green, success(GoalL)),pprint_ecp_cmt(cyan, R)) ; pprint_ecp_cmt(red, failed(GoalL))). 
+ R = [PS, BS, NS], 
+ (abdemo(GoalL, [PS, BS], NS), pprint_ecp_cmt(cyan, R)).
 
 abdemo(Gs, R, N) :-
      ticks(Z1), abdemo(Gs, [[], []], R, [], N), ticks(Z2), 
@@ -157,5 +166,38 @@ abdemo_top(Gs,R1,R3,N1,N3,D, _MaxDepth, _HighLevel) :-
 :- fixup_exports.
 
 
-:- include('./abdemo_tests.pl').
+:- multifile(demo_test/3).
+:- if( \+ current_predicate( ec_current_domain_bi /1)).
+ec_current_domain_bi(G):- call(G).
+:- endif.
+
+:- if( \+ current_predicate( ec_trace /2)).
+ec_trace(on, 0).
+:- endif.
+
+
+:- if( \+ current_predicate( ticks /1)).
+ticks(Z1):-statistics(runtime, [Z1, _]).
+:- endif.
+
+:- if( \+ current_predicate( dbginfo /1)).
+dbginfo(R):- pprint_ecp_cmt(yellow, R).
+:- endif.
+
+:- if( \+ current_predicate( init_gensym /1)).
+init_gensym(_).
+:- endif.
+
+
+demo_test(Goal):- compound(Goal), !, abdemo(Goal).
+demo_test(Match):- mmake, 
+  forall((demo_test(Name, Type, Goal),once(match_test(Match,Name);match_test(Match,Type))),
+    (pprint_ecp_cmt(blue, do(demo_test(Name, Type))),  %Type \== slow, 
+  abdemo(Goal))).
+
+match_test(X,Y):- (var(X);var(Y)),!.
+match_test(X,Y):- term_to_atom(X,X1),term_to_atom(Y,Y1), (sub_atom(X1,_,_,_,Y1) ; sub_atom(Y1,_,_,_,X1)),!.
+
+
+:- include(library('../test/ec_planner/abdemo_test/abdemo_tests.pl')).
 
