@@ -35,7 +35,7 @@ page1=page2.
 
 [book,time]
 HoldsAt(BookClosed(book),time) <->
-!{page} HoldsAt(BookIsOpenTo(book,page),time).
+! {page} HoldsAt(BookIsOpenTo(book,page),time).
 
 ; A precondition axiom states that
 ; for an agent to open a book to a page,

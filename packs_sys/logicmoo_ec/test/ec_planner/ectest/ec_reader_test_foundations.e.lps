@@ -1,18 +1,17 @@
-:-was_s_l('/pack/logicmoo_ec/test/ec_planner/ectest/ec_reader_test_examples.e',9038).
 % From E: 
 % 
-% :-call_pel_directive(translate(unskipped,'/pack/logicmoo_ec/test/ec_planner/ectest/ec_reader_test_foundations.e.lps')).
+% ':-'(call_pel_directive(translate(unskipped,'/mnt/sdc1/logicmoo_workspace.1/packs_sys/logicmoo_ec/test/ec_planner/ectest/ec_reader_test_foundations.e.lps'))).
 :- call_pel_directive(translate(unskipped,
-                                '/pack/logicmoo_ec/test/ec_planner/ectest/ec_reader_test_foundations.e.lps')).
+                                '/mnt/sdc1/logicmoo_workspace.1/packs_sys/logicmoo_ec/test/ec_planner/ectest/ec_reader_test_foundations.e.lps')).
 :-include(library('ec_planner/ec_test_incl')).
 :-expects_dialect(lps).
-:-was_s_l('/pack/logicmoo_ec/test/ec_planner/ectest/ec_reader_test_examples.e',9038).
+:-was_s_l('/mnt/sdc1/logicmoo_workspace.1/packs_sys/logicmoo_ec/test/ec_planner/ectest/ec_reader_test_examples.e',9038).
 % From E: 
 % 
-% :-call_pel_directive(translate(begining,'/pack/logicmoo_ec/test/ec_planner/ectest/ec_reader_test_foundations.e.lps')).
+% ':-'(call_pel_directive(translate(begining,'/mnt/sdc1/logicmoo_workspace.1/packs_sys/logicmoo_ec/test/ec_planner/ectest/ec_reader_test_foundations.e.lps'))).
 :- call_pel_directive(translate(begining,
-                                '/pack/logicmoo_ec/test/ec_planner/ectest/ec_reader_test_foundations.e.lps')).
-% Sat, 10 Oct 2020 15:32:28 GMT File: <stream>(0x559e4b408d00)%; ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+                                '/mnt/sdc1/logicmoo_workspace.1/packs_sys/logicmoo_ec/test/ec_planner/ectest/ec_reader_test_foundations.e.lps')).
+% Sun, 21 Mar 2021 23:28:42 GMT File: <stream>(0x5555672c8300)%; ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 %; FILE: foundations/Root.e
 %; ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 %;
@@ -26,7 +25,7 @@
 %; IBM - Initial implementation
 %;
 
-:-was_s_l('/pack/logicmoo_ec/test/ec_planner/ectest/ec_reader_test_foundations.e',18).
+:-was_s_l('/mnt/sdc1/logicmoo_workspace.1/packs_sys/logicmoo_ec/test/ec_planner/ectest/ec_reader_test_foundations.e',18).
 % sort boolean
 % From E: 
 % 
@@ -34,13 +33,13 @@
 sort(boolean).
 
 % sort integer
-:-was_s_l('/pack/logicmoo_ec/test/ec_planner/ectest/ec_reader_test_foundations.e',18).
+:-was_s_l('/mnt/sdc1/logicmoo_workspace.1/packs_sys/logicmoo_ec/test/ec_planner/ectest/ec_reader_test_foundations.e',18).
 % From E: 
 % 
 % sort(integer).
 sort(integer).
 
-:-was_s_l('/pack/logicmoo_ec/test/ec_planner/ectest/ec_reader_test_foundations.e',20).
+:-was_s_l('/mnt/sdc1/logicmoo_workspace.1/packs_sys/logicmoo_ec/test/ec_planner/ectest/ec_reader_test_foundations.e',20).
 % reified sort predicate
 % From E: 
 % 
@@ -48,7 +47,7 @@ sort(integer).
 reified_sorts([predicate/0]).
 
 % reified sort function
-:-was_s_l('/pack/logicmoo_ec/test/ec_planner/ectest/ec_reader_test_foundations.e',20).
+:-was_s_l('/mnt/sdc1/logicmoo_workspace.1/packs_sys/logicmoo_ec/test/ec_planner/ectest/ec_reader_test_foundations.e',20).
 % From E: 
 % 
 % reified_sort(function).
@@ -83,21 +82,21 @@ reified_sorts([function/0]).
 %; }
 %;
 
-:-was_s_l('/pack/logicmoo_ec/test/ec_planner/ectest/ec_reader_test_foundations.e',57).
+:-was_s_l('/mnt/sdc1/logicmoo_workspace.1/packs_sys/logicmoo_ec/test/ec_planner/ectest/ec_reader_test_foundations.e',57).
 % sort time: integer
 % From E: 
 % 
 % subsort(time,integer).
-subsort(time,integer).
+subsort(time, integer).
 
 % sort offset: integer
-:-was_s_l('/pack/logicmoo_ec/test/ec_planner/ectest/ec_reader_test_foundations.e',57).
+:-was_s_l('/mnt/sdc1/logicmoo_workspace.1/packs_sys/logicmoo_ec/test/ec_planner/ectest/ec_reader_test_foundations.e',57).
 % From E: 
 % 
 % subsort(offset,integer).
-subsort(offset,integer).
+subsort(offset, integer).
 
-:-was_s_l('/pack/logicmoo_ec/test/ec_planner/ectest/ec_reader_test_foundations.e',60).
+:-was_s_l('/mnt/sdc1/logicmoo_workspace.1/packs_sys/logicmoo_ec/test/ec_planner/ectest/ec_reader_test_foundations.e',60).
 % reified sort fluent
 % From E: 
 % 
@@ -105,74 +104,75 @@ subsort(offset,integer).
 reified_sorts([fluent/0]).
 
 % reified sort event
-:-was_s_l('/pack/logicmoo_ec/test/ec_planner/ectest/ec_reader_test_foundations.e',60).
+:-was_s_l('/mnt/sdc1/logicmoo_workspace.1/packs_sys/logicmoo_ec/test/ec_planner/ectest/ec_reader_test_foundations.e',60).
 % From E: 
 % 
 % reified_sort(event).
 reified_sorts([event/0]).
 
-:-was_s_l('/pack/logicmoo_ec/test/ec_planner/ectest/ec_reader_test_foundations.e',63).
+:-was_s_l('/mnt/sdc1/logicmoo_workspace.1/packs_sys/logicmoo_ec/test/ec_planner/ectest/ec_reader_test_foundations.e',63).
 % predicate Happens(event,time)
 % From E: 
 % 
-% predicate(happens_at(event,time)).
-mpred_prop(happens_at(event,time),predicate).
-:-was_s_l('/pack/logicmoo_ec/test/ec_planner/ectest/ec_reader_test_foundations.e',63).
-predicates([happens_at/2]).
+% predicate(happens(event,time)).
+mpred_prop(happens(event, time), predicate).
+:-was_s_l('/mnt/sdc1/logicmoo_workspace.1/packs_sys/logicmoo_ec/test/ec_planner/ectest/ec_reader_test_foundations.e',63).
+predicates([happens/2]).
 
 % predicate HoldsAt(fluent,time)
 % From E: 
 % 
-% predicate(holds_at(fluent,time)).
-:-was_s_l('/pack/logicmoo_ec/test/ec_planner/ectest/ec_reader_test_foundations.e',63).
-mpred_prop(holds_at(fluent,time),predicate).
-predicates([holds_at/2]).
+% predicate(holds(fluent,time)).
+mpred_prop(holds(fluent, time), predicate).
+:-was_s_l('/mnt/sdc1/logicmoo_workspace.1/packs_sys/logicmoo_ec/test/ec_planner/ectest/ec_reader_test_foundations.e',63).
+predicates([holds/2]).
 
-:-was_s_l('/pack/logicmoo_ec/test/ec_planner/ectest/ec_reader_test_foundations.e',65).
+:-was_s_l('/mnt/sdc1/logicmoo_workspace.1/packs_sys/logicmoo_ec/test/ec_planner/ectest/ec_reader_test_foundations.e',65).
 % predicate ReleasedAt(fluent,time)
 % From E: 
 % 
 % predicate(released_at(fluent,time)).
-mpred_prop(released_at(fluent,time),predicate).
-:-was_s_l('/pack/logicmoo_ec/test/ec_planner/ectest/ec_reader_test_foundations.e',65).
+mpred_prop(released_at(fluent, time), predicate).
+:-was_s_l('/mnt/sdc1/logicmoo_workspace.1/packs_sys/logicmoo_ec/test/ec_planner/ectest/ec_reader_test_foundations.e',65).
 predicates([released_at/2]).
 
 % predicate Initiates(event,fluent,time)
 % From E: 
 % 
 % predicate(initiates_at(event,fluent,time)).
-:-was_s_l('/pack/logicmoo_ec/test/ec_planner/ectest/ec_reader_test_foundations.e',65).
-mpred_prop(initiates_at(event,fluent,time),predicate).
-predicates([initiates_at/3]).
+mpred_prop(initiates(event, fluent, time), predicate).
+:-was_s_l('/mnt/sdc1/logicmoo_workspace.1/packs_sys/logicmoo_ec/test/ec_planner/ectest/ec_reader_test_foundations.e',65).
+predicates([initiates/3]).
 
-:-was_s_l('/pack/logicmoo_ec/test/ec_planner/ectest/ec_reader_test_foundations.e',67).
+:-was_s_l('/mnt/sdc1/logicmoo_workspace.1/packs_sys/logicmoo_ec/test/ec_planner/ectest/ec_reader_test_foundations.e',67).
 % predicate Terminates(event,fluent,time)
 % From E: 
 % 
 % predicate(terminates_at(event,fluent,time)).
-mpred_prop(terminates_at(event,fluent,time),predicate).
-:-was_s_l('/pack/logicmoo_ec/test/ec_planner/ectest/ec_reader_test_foundations.e',67).
-predicates([terminates_at/3]).
+mpred_prop(terminates(event, fluent, time), predicate).
+:-was_s_l('/mnt/sdc1/logicmoo_workspace.1/packs_sys/logicmoo_ec/test/ec_planner/ectest/ec_reader_test_foundations.e',67).
+predicates([terminates/3]).
 
 % predicate Releases(event,fluent,time)
 % From E: 
 % 
 % predicate(releases_at(event,fluent,time)).
-:-was_s_l('/pack/logicmoo_ec/test/ec_planner/ectest/ec_reader_test_foundations.e',67).
-mpred_prop(releases_at(event,fluent,time),predicate).
-predicates([releases_at/3]).
+mpred_prop(releases(event, fluent, time), predicate).
+:-was_s_l('/mnt/sdc1/logicmoo_workspace.1/packs_sys/logicmoo_ec/test/ec_planner/ectest/ec_reader_test_foundations.e',67).
+predicates([releases/3]).
 
-:-was_s_l('/pack/logicmoo_ec/test/ec_planner/ectest/ec_reader_test_foundations.e',69).
+:-was_s_l('/mnt/sdc1/logicmoo_workspace.1/packs_sys/logicmoo_ec/test/ec_planner/ectest/ec_reader_test_foundations.e',69).
 % predicate Trajectory(fluent,time,fluent,offset)
 % From E: 
 % 
-% predicate(trajectory(fluent,time,fluent,offset)).
-mpred_prop(trajectory(fluent,time,fluent,offset),predicate).
-:-was_s_l('/pack/logicmoo_ec/test/ec_planner/ectest/ec_reader_test_foundations.e',69).
+% predicate(trajectory(fluent, time, fluent, 
+%              offset)).
+mpred_prop(trajectory(fluent, time, fluent, offset), predicate).
+:-was_s_l('/mnt/sdc1/logicmoo_workspace.1/packs_sys/logicmoo_ec/test/ec_planner/ectest/ec_reader_test_foundations.e',69).
 predicates([trajectory/4]).
 
 
-:-was_s_l('/pack/logicmoo_ec/test/ec_planner/ectest/ec_reader_test_foundations.e',71).
+:-was_s_l('/mnt/sdc1/logicmoo_workspace.1/packs_sys/logicmoo_ec/test/ec_planner/ectest/ec_reader_test_foundations.e',71).
 %; End of file.
 %; ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 %; FILE: foundations/DEC.e
@@ -200,21 +200,21 @@ predicates([trajectory/4]).
 %; }
 %;
 
-:-was_s_l('/pack/logicmoo_ec/test/ec_planner/ectest/ec_reader_test_foundations.e',102).
+:-was_s_l('/mnt/sdc1/logicmoo_workspace.1/packs_sys/logicmoo_ec/test/ec_planner/ectest/ec_reader_test_foundations.e',102).
 % sort time: integer
 % From E: 
 % 
 % subsort(time,integer).
-subsort(time,integer).
+subsort(time, integer).
 
 % sort offset: integer
-:-was_s_l('/pack/logicmoo_ec/test/ec_planner/ectest/ec_reader_test_foundations.e',102).
+:-was_s_l('/mnt/sdc1/logicmoo_workspace.1/packs_sys/logicmoo_ec/test/ec_planner/ectest/ec_reader_test_foundations.e',102).
 % From E: 
 % 
 % subsort(offset,integer).
-subsort(offset,integer).
+subsort(offset, integer).
 
-:-was_s_l('/pack/logicmoo_ec/test/ec_planner/ectest/ec_reader_test_foundations.e',105).
+:-was_s_l('/mnt/sdc1/logicmoo_workspace.1/packs_sys/logicmoo_ec/test/ec_planner/ectest/ec_reader_test_foundations.e',105).
 % reified sort fluent
 % From E: 
 % 
@@ -222,66 +222,66 @@ subsort(offset,integer).
 reified_sorts([fluent/0]).
 
 % reified sort event
-:-was_s_l('/pack/logicmoo_ec/test/ec_planner/ectest/ec_reader_test_foundations.e',105).
+:-was_s_l('/mnt/sdc1/logicmoo_workspace.1/packs_sys/logicmoo_ec/test/ec_planner/ectest/ec_reader_test_foundations.e',105).
 % From E: 
 % 
 % reified_sort(event).
 reified_sorts([event/0]).
 
-:-was_s_l('/pack/logicmoo_ec/test/ec_planner/ectest/ec_reader_test_foundations.e',108).
+:-was_s_l('/mnt/sdc1/logicmoo_workspace.1/packs_sys/logicmoo_ec/test/ec_planner/ectest/ec_reader_test_foundations.e',108).
 % predicate Happens(event,time)
 % From E: 
 % 
-% predicate(happens_at(event,time)).
-mpred_prop(happens_at(event,time),predicate).
-:-was_s_l('/pack/logicmoo_ec/test/ec_planner/ectest/ec_reader_test_foundations.e',108).
-predicates([happens_at/2]).
+% predicate(happens(event,time)).
+mpred_prop(happens(event, time), predicate).
+:-was_s_l('/mnt/sdc1/logicmoo_workspace.1/packs_sys/logicmoo_ec/test/ec_planner/ectest/ec_reader_test_foundations.e',108).
+predicates([happens/2]).
 
 % predicate HoldsAt(fluent,time)
 % From E: 
 % 
-% predicate(holds_at(fluent,time)).
-:-was_s_l('/pack/logicmoo_ec/test/ec_planner/ectest/ec_reader_test_foundations.e',108).
-mpred_prop(holds_at(fluent,time),predicate).
-predicates([holds_at/2]).
+% predicate(holds(fluent,time)).
+mpred_prop(holds(fluent, time), predicate).
+:-was_s_l('/mnt/sdc1/logicmoo_workspace.1/packs_sys/logicmoo_ec/test/ec_planner/ectest/ec_reader_test_foundations.e',108).
+predicates([holds/2]).
 
-:-was_s_l('/pack/logicmoo_ec/test/ec_planner/ectest/ec_reader_test_foundations.e',110).
+:-was_s_l('/mnt/sdc1/logicmoo_workspace.1/packs_sys/logicmoo_ec/test/ec_planner/ectest/ec_reader_test_foundations.e',110).
 % predicate ReleasedAt(fluent,time)
 % From E: 
 % 
 % predicate(released_at(fluent,time)).
-mpred_prop(released_at(fluent,time),predicate).
-:-was_s_l('/pack/logicmoo_ec/test/ec_planner/ectest/ec_reader_test_foundations.e',110).
+mpred_prop(released_at(fluent, time), predicate).
+:-was_s_l('/mnt/sdc1/logicmoo_workspace.1/packs_sys/logicmoo_ec/test/ec_planner/ectest/ec_reader_test_foundations.e',110).
 predicates([released_at/2]).
 
-:-was_s_l('/pack/logicmoo_ec/test/ec_planner/ectest/ec_reader_test_foundations.e',112).
+:-was_s_l('/mnt/sdc1/logicmoo_workspace.1/packs_sys/logicmoo_ec/test/ec_planner/ectest/ec_reader_test_foundations.e',112).
 % predicate Initiates(event,fluent,time)
 % From E: 
 % 
 % predicate(initiates_at(event,fluent,time)).
-mpred_prop(initiates_at(event,fluent,time),predicate).
-:-was_s_l('/pack/logicmoo_ec/test/ec_planner/ectest/ec_reader_test_foundations.e',112).
-predicates([initiates_at/3]).
+mpred_prop(initiates(event, fluent, time), predicate).
+:-was_s_l('/mnt/sdc1/logicmoo_workspace.1/packs_sys/logicmoo_ec/test/ec_planner/ectest/ec_reader_test_foundations.e',112).
+predicates([initiates/3]).
 
 % predicate Terminates(event,fluent,time)
 % From E: 
 % 
 % predicate(terminates_at(event,fluent,time)).
-:-was_s_l('/pack/logicmoo_ec/test/ec_planner/ectest/ec_reader_test_foundations.e',112).
-mpred_prop(terminates_at(event,fluent,time),predicate).
-predicates([terminates_at/3]).
+mpred_prop(terminates(event, fluent, time), predicate).
+:-was_s_l('/mnt/sdc1/logicmoo_workspace.1/packs_sys/logicmoo_ec/test/ec_planner/ectest/ec_reader_test_foundations.e',112).
+predicates([terminates/3]).
 
-:-was_s_l('/pack/logicmoo_ec/test/ec_planner/ectest/ec_reader_test_foundations.e',114).
+:-was_s_l('/mnt/sdc1/logicmoo_workspace.1/packs_sys/logicmoo_ec/test/ec_planner/ectest/ec_reader_test_foundations.e',114).
 % predicate Releases(event,fluent,time)
 % From E: 
 % 
 % predicate(releases_at(event,fluent,time)).
-mpred_prop(releases_at(event,fluent,time),predicate).
-:-was_s_l('/pack/logicmoo_ec/test/ec_planner/ectest/ec_reader_test_foundations.e',114).
-predicates([releases_at/3]).
+mpred_prop(releases(event, fluent, time), predicate).
+:-was_s_l('/mnt/sdc1/logicmoo_workspace.1/packs_sys/logicmoo_ec/test/ec_planner/ectest/ec_reader_test_foundations.e',114).
+predicates([releases/3]).
 
 
-:-was_s_l('/pack/logicmoo_ec/test/ec_planner/ectest/ec_reader_test_foundations.e',116).
+:-was_s_l('/mnt/sdc1/logicmoo_workspace.1/packs_sys/logicmoo_ec/test/ec_planner/ectest/ec_reader_test_foundations.e',116).
 % [fluent,time]
 % (HoldsAt(fluent,time) &
 %  !ReleasedAt(fluent,time+1) &
@@ -290,18 +290,18 @@ predicates([releases_at/3]).
 % From E: 
 % 
 % '->'(
-%    (holds_at(Fluent,Time) , 
-%      not(released_at(Fluent,Time+1)) , 
-%     not(
-%        exists(
-%           [Event], 
-%           (happens_at(Event,Time) , 
-%            terminates_at(Event,Fluent,Time))))), 
-%    holds_at(Fluent,Time+1)).
+%    ','(
+%       holds(Fluent,Time), 
+%       ','(
+%          not(released_at(Fluent,Time+1)), 
+%          not(thereExists(Event, 
+%                 ','(
+%                    happens(Event,Time), 
+%                    terminates_at(Event,Fluent,Time)))))), 
+%    holds(Fluent,Time+1)).
  %   [Time, Time+1].
-:-was_s_l('/pack/logicmoo_ec/test/ec_planner/ectest/ec_reader_test_foundations.e',116).
-holds_at(Fluent, Time), not(released_at(Fluent, Time+1)), false((happens_at(Event, Time), terminates_at(Event, Fluent, Time))) ->
-    holds_at(Fluent, Time+1).
+:-was_s_l('/mnt/sdc1/logicmoo_workspace.1/packs_sys/logicmoo_ec/test/ec_planner/ectest/ec_reader_test_foundations.e',116).
+if(not(holds(Fluent, Time+1)),  (not(holds(Fluent, Time));released_at(Fluent, Time+1);thereExists(Event,  (loc_at(Event, Time), terminates(Event, at(Fluent, Time)))))).
 
 
 % [fluent,time]
@@ -309,43 +309,46 @@ holds_at(Fluent, Time), not(released_at(Fluent, Time+1)), false((happens_at(Even
 %  !ReleasedAt(fluent,time+1) &
 %  !({event} Happens(event,time) & Initiates(event,fluent,time))) ->
 % !HoldsAt(fluent,time+1).
-:-was_s_l('/pack/logicmoo_ec/test/ec_planner/ectest/ec_reader_test_foundations.e',123).
+:-was_s_l('/mnt/sdc1/logicmoo_workspace.1/packs_sys/logicmoo_ec/test/ec_planner/ectest/ec_reader_test_foundations.e',123).
 % From E: 
 % 
 % '->'(
-%    (holds_at(not(Fluent),Time) , 
-%      not(released_at(Fluent,Time+1)) , 
-%     not(
-%        exists(
-%           [Event], 
-%           (happens_at(Event,Time) , 
-%            initiates_at(Event,Fluent,Time))))), 
-%    holds_at(not(Fluent),Time+1)).
+%    ','(
+%       holds(
+%          not(Fluent), 
+%          Time), 
+%       ','(
+%          not(released_at(Fluent,Time+1)), 
+%          not(thereExists(Event, 
+%                 ','(
+%                    happens(Event,Time), 
+%                    initiates_at(Event,Fluent,Time)))))), 
+%    holds(
+%       not(Fluent), 
+%       Time+1)).
  %   [Time, Time+1].
-:-was_s_l('/pack/logicmoo_ec/test/ec_planner/ectest/ec_reader_test_foundations.e',123).
-false(holds_at(Fluent, Time)), not(released_at(Fluent, Time+1)), false((happens_at(Event, Time), initiates_at(Event, Fluent, Time))) ->
-    holds_at(not(Fluent), Time+1).
+:-was_s_l('/mnt/sdc1/logicmoo_workspace.1/packs_sys/logicmoo_ec/test/ec_planner/ectest/ec_reader_test_foundations.e',123).
+if(holds(Fluent, Time+1),  (holds(Fluent, Time);released_at(Fluent, Time+1);thereExists(Event,  (loc_at(Event, Time), initiates(Event, at(Fluent, Time)))))).
 
 
 % [fluent,time]
 % (!ReleasedAt(fluent,time) &
 %  !({event} Happens(event,time) & Releases(event,fluent,time))) ->
 % !ReleasedAt(fluent,time+1).
-:-was_s_l('/pack/logicmoo_ec/test/ec_planner/ectest/ec_reader_test_foundations.e',129).
+:-was_s_l('/mnt/sdc1/logicmoo_workspace.1/packs_sys/logicmoo_ec/test/ec_planner/ectest/ec_reader_test_foundations.e',129).
 % From E: 
 % 
 % '->'(
-%    (not(released_at(Fluent,Time)) , 
-%     not(
-%        exists(
-%           [Event], 
-%           (happens_at(Event,Time) , 
-%            releases_at(Event,Fluent,Time))))), 
+%    ','(
+%       not(released_at(Fluent,Time)), 
+%       not(thereExists(Event, 
+%              ','(
+%                 happens(Event,Time), 
+%                 releases_at(Event,Fluent,Time))))), 
 %    not(released_at(Fluent,Time+1))).
  %   [Time, Time+1].
-:-was_s_l('/pack/logicmoo_ec/test/ec_planner/ectest/ec_reader_test_foundations.e',129).
-not(released_at(Fluent, Time)), false((happens_at(Event, Time), releases_at(Event, Fluent, Time))) ->
-    not(released_at(Fluent, Time+1)).
+:-was_s_l('/mnt/sdc1/logicmoo_workspace.1/packs_sys/logicmoo_ec/test/ec_planner/ectest/ec_reader_test_foundations.e',129).
+if(released_at(Fluent, Time+1),  (released_at(Fluent, Time);thereExists(Event,  (loc_at(Event, Time), terminates(Event, at(Fluent, Time)))))).
 
 
 % [fluent,time]
@@ -354,71 +357,76 @@ not(released_at(Fluent, Time)), false((happens_at(Event, Time), releases_at(Even
 %    (Initiates(event,fluent,time) |
 %     Terminates(event,fluent,time)))) ->
 % ReleasedAt(fluent,time+1).
-:-was_s_l('/pack/logicmoo_ec/test/ec_planner/ectest/ec_reader_test_foundations.e',134).
+:-was_s_l('/mnt/sdc1/logicmoo_workspace.1/packs_sys/logicmoo_ec/test/ec_planner/ectest/ec_reader_test_foundations.e',134).
 % From E: 
 % 
 % '->'(
-%    (released_at(Fluent,Time) , 
-%     not(
-%        exists(
-%           [Event], 
-%           (happens_at(Event,Time) , 
-%            (initiates_at(Event,Fluent,Time) ; 
-%             terminates_at(Event,Fluent,Time)))))), 
+%    ','(
+%       released_at(Fluent,Time), 
+%       not(thereExists(Event, 
+%              ','(
+%                 happens(Event,Time), 
+%                 ';'(
+%                    initiates_at(Event,Fluent,Time), 
+%                    terminates_at(Event,Fluent,Time)))))), 
 %    released_at(Fluent,Time+1)).
  %   [Time, Time+1].
-:-was_s_l('/pack/logicmoo_ec/test/ec_planner/ectest/ec_reader_test_foundations.e',134).
-released_at(Fluent, Time), not((happens_at(Event, Time), false((not(initiates_at(Event, Fluent, Time)), not(terminates_at(Event, Fluent, Time)))))) ->
-    released_at(Fluent, Time+1).
+:-was_s_l('/mnt/sdc1/logicmoo_workspace.1/packs_sys/logicmoo_ec/test/ec_planner/ectest/ec_reader_test_foundations.e',134).
+if(not(released_at(Fluent, Time+1)),  (not(released_at(Fluent, Time));thereExists(Event,  (loc_at(Event, Time), (initiates(Event, at(Fluent, Time));terminates(Event, at(Fluent, Time))))))).
 
 
 % [event,fluent,time]
 % (Happens(event,time) & Initiates(event,fluent,time)) ->
 % (HoldsAt(fluent,time+1) & !ReleasedAt(fluent,time+1)).
-:-was_s_l('/pack/logicmoo_ec/test/ec_planner/ectest/ec_reader_test_foundations.e',141).
+:-was_s_l('/mnt/sdc1/logicmoo_workspace.1/packs_sys/logicmoo_ec/test/ec_planner/ectest/ec_reader_test_foundations.e',141).
 % From E: 
 % 
 % '->'(
-%    (happens_at(Event,Time) , 
-%     initiates_at(Event,Fluent,Time)), 
-%    (holds_at(Fluent,Time+1) , 
-%     not(released_at(Fluent,Time+1)))).
+%    ','(
+%       happens(Event,Time), 
+%       initiates_at(Event,Fluent,Time)), 
+%    ','(
+%       holds(Fluent,Time+1), 
+%       not(released_at(Fluent,Time+1)))).
  %   [Time, Time+1].
-happens_at(Event, Time), initiates(Event, at(Fluent, Time)) ->
-    holds_at(Fluent, Time+1),
-    not(released_at(Fluent, Time+1)).
+ if((not(holds(Fluent, Time+1));released_at(Fluent, Time+1)),
+       (not(holds(Event, Time));not(initiates(Event, at(Fluent, Time))))).
 
 
 % [event,fluent,time]
 % (Happens(event,time) & Terminates(event,fluent,time)) ->
 % (!HoldsAt(fluent,time+1) & !ReleasedAt(fluent,time+1)).
-:-was_s_l('/pack/logicmoo_ec/test/ec_planner/ectest/ec_reader_test_foundations.e',145).
+:-was_s_l('/mnt/sdc1/logicmoo_workspace.1/packs_sys/logicmoo_ec/test/ec_planner/ectest/ec_reader_test_foundations.e',145).
 % From E: 
 % 
 % '->'(
-%    (happens_at(Event,Time) , 
-%     terminates_at(Event,Fluent,Time)), 
-%    (holds_at(not(Fluent),Time+1) , 
-%     not(released_at(Fluent,Time+1)))).
+%    ','(
+%       happens(Event,Time), 
+%       terminates_at(Event,Fluent,Time)), 
+%    ','(
+%       holds(
+%          not(Fluent), 
+%          Time+1), 
+%       not(released_at(Fluent,Time+1)))).
  %   [Time, Time+1].
-happens_at(Event, Time), terminates(Event, at(Fluent, Time)) ->
-    holds_at(not(Fluent), Time+1),
-    not(released_at(Fluent, Time+1)).
+ if((holds(Fluent, Time+1);released_at(Fluent, Time+1)),
+       (not(holds(Event, Time));not(terminates(Event, at(Fluent, Time))))).
 
 
 % [event,fluent,time]
 % (Happens(event,time) & Releases(event,fluent,time)) ->
 % ReleasedAt(fluent,time+1).
-:-was_s_l('/pack/logicmoo_ec/test/ec_planner/ectest/ec_reader_test_foundations.e',149).
+:-was_s_l('/mnt/sdc1/logicmoo_workspace.1/packs_sys/logicmoo_ec/test/ec_planner/ectest/ec_reader_test_foundations.e',149).
 % From E: 
 % 
 % '->'(
-%    (happens_at(Event,Time) , 
-%     releases_at(Event,Fluent,Time)), 
+%    ','(
+%       happens(Event,Time), 
+%       releases_at(Event,Fluent,Time)), 
 %    released_at(Fluent,Time+1)).
  %   [Time, Time+1].
-happens_at(Event, Time), releases_at(Event, Fluent, Time) ->
-    released_at(Fluent, Time+1).
+ if(not(released_at(Fluent, Time+1)),
+       (not(holds(Event, Time));not(terminates(Event, at(Fluent, Time))))).
 
 
 %; End of file.
@@ -448,25 +456,25 @@ happens_at(Event, Time), releases_at(Event, Fluent, Time) ->
 %; }
 %;
 
-:-was_s_l('/pack/logicmoo_ec/test/ec_planner/ectest/ec_reader_test_foundations.e',183).
+:-was_s_l('/mnt/sdc1/logicmoo_workspace.1/packs_sys/logicmoo_ec/test/ec_planner/ectest/ec_reader_test_foundations.e',183).
 % predicate Started(fluent,time)
 % From E: 
 % 
 % predicate(started(fluent,time)).
-mpred_prop(started(fluent,time),predicate).
-:-was_s_l('/pack/logicmoo_ec/test/ec_planner/ectest/ec_reader_test_foundations.e',183).
+mpred_prop(started(fluent, time), predicate).
+:-was_s_l('/mnt/sdc1/logicmoo_workspace.1/packs_sys/logicmoo_ec/test/ec_planner/ectest/ec_reader_test_foundations.e',183).
 predicates([started/2]).
 
 % predicate Stopped(fluent,time)
 % From E: 
 % 
 % predicate(stopped(fluent,time)).
-:-was_s_l('/pack/logicmoo_ec/test/ec_planner/ectest/ec_reader_test_foundations.e',183).
-mpred_prop(stopped(fluent,time),predicate).
+mpred_prop(stopped(fluent, time), predicate).
+:-was_s_l('/mnt/sdc1/logicmoo_workspace.1/packs_sys/logicmoo_ec/test/ec_planner/ectest/ec_reader_test_foundations.e',183).
 predicates([stopped/2]).
 
 
-:-was_s_l('/pack/logicmoo_ec/test/ec_planner/ectest/ec_reader_test_foundations.e',186).
+:-was_s_l('/mnt/sdc1/logicmoo_workspace.1/packs_sys/logicmoo_ec/test/ec_planner/ectest/ec_reader_test_foundations.e',186).
 % [fluent,time]
 % Started(fluent,time) <->
 % (HoldsAt(fluent,time) |
@@ -475,61 +483,59 @@ predicates([stopped/2]).
 % 
 % <->(
 %    started(Fluent,Time), 
-%    (holds_at(Fluent,Time) ; 
-%     exists(
-%        [Event], 
-%        (happens_at(Event,Time) , 
-%         initiates_at(Event,Fluent,Time))))).
+%    ';'(
+%       holds(Fluent,Time), 
+%       thereExists(Event, 
+%          ','(
+%             happens(Event,Time), 
+%             initiates_at(Event,Fluent,Time))))).
  %   [Time].
-:-was_s_l('/pack/logicmoo_ec/test/ec_planner/ectest/ec_reader_test_foundations.e',186).
-started(Fluent, Time) <->
-    (   holds_at(Fluent, Time)
-    ;   exists([Event],
-                (happens_at(Event, Time), initiates(Event, at(Fluent, Time))))
-    ).
+:-was_s_l('/mnt/sdc1/logicmoo_workspace.1/packs_sys/logicmoo_ec/test/ec_planner/ectest/ec_reader_test_foundations.e',186).
+if((not(holds(Fluent, Time)), not(thereExists(Event,  (loc_at(Event, Time), initiates(Event, at(Fluent, Time)))))), not(started(Fluent, Time))),
+if(not(started(Fluent, Time)),  (not(holds(Fluent, Time)), not(thereExists(Event,  (loc_at(Event, Time), initiates(Event, at(Fluent, Time))))))).
 
 
 % [fluent,time]
 % Stopped(fluent,time) <->
 % (!HoldsAt(fluent,time) |
 %  ({event} Happens(event,time) & Terminates(event,fluent,time))).
-:-was_s_l('/pack/logicmoo_ec/test/ec_planner/ectest/ec_reader_test_foundations.e',192).
+:-was_s_l('/mnt/sdc1/logicmoo_workspace.1/packs_sys/logicmoo_ec/test/ec_planner/ectest/ec_reader_test_foundations.e',192).
 % From E: 
 % 
 % <->(
 %    stopped(Fluent,Time), 
-%    (holds_at(not(Fluent),Time) ; 
-%     exists(
-%        [Event], 
-%        (happens_at(Event,Time) , 
-%         terminates_at(Event,Fluent,Time))))).
+%    ';'(
+%       holds(
+%          not(Fluent), 
+%          Time), 
+%       thereExists(Event, 
+%          ','(
+%             happens(Event,Time), 
+%             terminates_at(Event,Fluent,Time))))).
  %   [Time].
-:-was_s_l('/pack/logicmoo_ec/test/ec_planner/ectest/ec_reader_test_foundations.e',192).
-stopped(Fluent, Time) <->
-    (   false(holds_at(Fluent, Time))
-    ;   exists([Event],
-                (happens_at(Event, Time), terminates(Event, at(Fluent, Time))))
-    ).
+:-was_s_l('/mnt/sdc1/logicmoo_workspace.1/packs_sys/logicmoo_ec/test/ec_planner/ectest/ec_reader_test_foundations.e',192).
+if((holds(Fluent, Time), not(thereExists(Event,  (loc_at(Event, Time), terminates(Event, at(Fluent, Time)))))), not(stopped(Fluent, Time))),
+if(not(stopped(Fluent, Time)),  (holds(Fluent, Time), not(thereExists(Event,  (loc_at(Event, Time), terminates(Event, at(Fluent, Time))))))).
 
 % predicate Initiated(fluent,time)
-:-was_s_l('/pack/logicmoo_ec/test/ec_planner/ectest/ec_reader_test_foundations.e',195).
+:-was_s_l('/mnt/sdc1/logicmoo_workspace.1/packs_sys/logicmoo_ec/test/ec_planner/ectest/ec_reader_test_foundations.e',195).
 % From E: 
 % 
 % predicate(initiated(fluent,time)).
-mpred_prop(initiated(fluent,time),predicate).
+mpred_prop(initiated(fluent, time), predicate).
 predicates([initiated/2]).
 
-:-was_s_l('/pack/logicmoo_ec/test/ec_planner/ectest/ec_reader_test_foundations.e',197).
+:-was_s_l('/mnt/sdc1/logicmoo_workspace.1/packs_sys/logicmoo_ec/test/ec_planner/ectest/ec_reader_test_foundations.e',197).
 % predicate Terminated(fluent,time)
 % From E: 
 % 
 % predicate(terminated(fluent,time)).
-mpred_prop(terminated(fluent,time),predicate).
-:-was_s_l('/pack/logicmoo_ec/test/ec_planner/ectest/ec_reader_test_foundations.e',197).
+mpred_prop(terminated(fluent, time), predicate).
+:-was_s_l('/mnt/sdc1/logicmoo_workspace.1/packs_sys/logicmoo_ec/test/ec_planner/ectest/ec_reader_test_foundations.e',197).
 predicates([terminated/2]).
 
 
-:-was_s_l('/pack/logicmoo_ec/test/ec_planner/ectest/ec_reader_test_foundations.e',199).
+:-was_s_l('/mnt/sdc1/logicmoo_workspace.1/packs_sys/logicmoo_ec/test/ec_planner/ectest/ec_reader_test_foundations.e',199).
 % [fluent,time]
 % Initiated(fluent,time) <->
 % (Started(fluent,time) &
@@ -538,39 +544,37 @@ predicates([terminated/2]).
 % 
 % <->(
 %    initiated(Fluent,Time), 
-%    (started(Fluent,Time) , 
-%     not(
-%        exists(
-%           [Event], 
-%           (happens_at(Event,Time) , 
-%            terminates_at(Event,Fluent,Time)))))).
+%    ','(
+%       started(Fluent,Time), 
+%       not(thereExists(Event, 
+%              ','(
+%                 happens(Event,Time), 
+%                 terminates_at(Event,Fluent,Time)))))).
  %   [Time].
-:-was_s_l('/pack/logicmoo_ec/test/ec_planner/ectest/ec_reader_test_foundations.e',199).
-initiated(Fluent, Time) <->
-    started(Fluent, Time),
-    false((happens_at(Event, Time), terminates_at(Event, Fluent, Time))).
+:-was_s_l('/mnt/sdc1/logicmoo_workspace.1/packs_sys/logicmoo_ec/test/ec_planner/ectest/ec_reader_test_foundations.e',199).
+if((not(started(Fluent, Time));thereExists(Event,  (loc_at(Event, Time), terminates(Event, at(Fluent, Time))))), not(initiated(Fluent, Time))),
+if(not(initiated(Fluent, Time)),  (not(started(Fluent, Time));thereExists(Event,  (loc_at(Event, Time), terminates(Event, at(Fluent, Time)))))).
 
 
 % [fluent,time]
 % Terminated(fluent,time) <->
 % (Stopped(fluent,time) &
 %  !({event} Happens(event,time) & Initiates(event,fluent,time))).
-:-was_s_l('/pack/logicmoo_ec/test/ec_planner/ectest/ec_reader_test_foundations.e',205).
+:-was_s_l('/mnt/sdc1/logicmoo_workspace.1/packs_sys/logicmoo_ec/test/ec_planner/ectest/ec_reader_test_foundations.e',205).
 % From E: 
 % 
 % <->(
 %    terminated(Fluent,Time), 
-%    (stopped(Fluent,Time) , 
-%     not(
-%        exists(
-%           [Event], 
-%           (happens_at(Event,Time) , 
-%            initiates_at(Event,Fluent,Time)))))).
+%    ','(
+%       stopped(Fluent,Time), 
+%       not(thereExists(Event, 
+%              ','(
+%                 happens(Event,Time), 
+%                 initiates_at(Event,Fluent,Time)))))).
  %   [Time].
-:-was_s_l('/pack/logicmoo_ec/test/ec_planner/ectest/ec_reader_test_foundations.e',205).
-terminated(Fluent, Time) <->
-    stopped(Fluent, Time),
-    false((happens_at(Event, Time), initiates_at(Event, Fluent, Time))).
+:-was_s_l('/mnt/sdc1/logicmoo_workspace.1/packs_sys/logicmoo_ec/test/ec_planner/ectest/ec_reader_test_foundations.e',205).
+if((not(stopped(Fluent, Time));thereExists(Event,  (loc_at(Event, Time), initiates(Event, at(Fluent, Time))))), not(terminated(Fluent, Time))),
+if(not(terminated(Fluent, Time)),  (not(stopped(Fluent, Time));thereExists(Event,  (loc_at(Event, Time), initiates(Event, at(Fluent, Time)))))).
 
 
 %; End of file.
@@ -601,42 +605,44 @@ terminated(Fluent, Time) <->
 %; }
 %;
 
-:-was_s_l('/pack/logicmoo_ec/test/ec_planner/ectest/ec_reader_test_foundations.e',241).
+:-was_s_l('/mnt/sdc1/logicmoo_workspace.1/packs_sys/logicmoo_ec/test/ec_planner/ectest/ec_reader_test_foundations.e',241).
 % predicate Clipped(time,fluent,time)
 % From E: 
 % 
 % predicate(clipped(time,fluent,time)).
-mpred_prop(clipped(time,fluent,time),predicate).
-:-was_s_l('/pack/logicmoo_ec/test/ec_planner/ectest/ec_reader_test_foundations.e',241).
+mpred_prop(clipped(time, fluent, time), predicate).
+:-was_s_l('/mnt/sdc1/logicmoo_workspace.1/packs_sys/logicmoo_ec/test/ec_planner/ectest/ec_reader_test_foundations.e',241).
 predicates([clipped/3]).
 
 % predicate Declipped(time,fluent,time)
 % From E: 
 % 
 % predicate(declipped(time,fluent,time)).
-:-was_s_l('/pack/logicmoo_ec/test/ec_planner/ectest/ec_reader_test_foundations.e',241).
-mpred_prop(declipped(time,fluent,time),predicate).
+mpred_prop(declipped(time, fluent, time), predicate).
+:-was_s_l('/mnt/sdc1/logicmoo_workspace.1/packs_sys/logicmoo_ec/test/ec_planner/ectest/ec_reader_test_foundations.e',241).
 predicates([declipped/3]).
 
-:-was_s_l('/pack/logicmoo_ec/test/ec_planner/ectest/ec_reader_test_foundations.e',244).
+:-was_s_l('/mnt/sdc1/logicmoo_workspace.1/packs_sys/logicmoo_ec/test/ec_planner/ectest/ec_reader_test_foundations.e',244).
 % predicate Trajectory(fluent,time,fluent,offset)
 % From E: 
 % 
-% predicate(trajectory(fluent,time,fluent,offset)).
-mpred_prop(trajectory(fluent,time,fluent,offset),predicate).
-:-was_s_l('/pack/logicmoo_ec/test/ec_planner/ectest/ec_reader_test_foundations.e',244).
+% predicate(trajectory(fluent, time, fluent, 
+%              offset)).
+mpred_prop(trajectory(fluent, time, fluent, offset), predicate).
+:-was_s_l('/mnt/sdc1/logicmoo_workspace.1/packs_sys/logicmoo_ec/test/ec_planner/ectest/ec_reader_test_foundations.e',244).
 predicates([trajectory/4]).
 
 % predicate AntiTrajectory(fluent,time,fluent,offset)
 % From E: 
 % 
-% predicate(antiTrajectory(fluent,time,fluent,offset)).
-:-was_s_l('/pack/logicmoo_ec/test/ec_planner/ectest/ec_reader_test_foundations.e',244).
-mpred_prop(antiTrajectory(fluent,time,fluent,offset),predicate).
+% predicate(antiTrajectory(fluent, time, fluent, 
+%              offset)).
+mpred_prop(antiTrajectory(fluent, time, fluent, offset), predicate).
+:-was_s_l('/mnt/sdc1/logicmoo_workspace.1/packs_sys/logicmoo_ec/test/ec_planner/ectest/ec_reader_test_foundations.e',244).
 predicates([antiTrajectory/4]).
 
 
-:-was_s_l('/pack/logicmoo_ec/test/ec_planner/ectest/ec_reader_test_foundations.e',247).
+:-was_s_l('/mnt/sdc1/logicmoo_workspace.1/packs_sys/logicmoo_ec/test/ec_planner/ectest/ec_reader_test_foundations.e',247).
 % [event,fluent,fluent2,offset,time]
 % Happens(event,time) &
 % Initiates(event,fluent,time) &
@@ -644,20 +650,25 @@ predicates([antiTrajectory/4]).
 % Trajectory(fluent,time,fluent2,offset) &
 % !Clipped(time,fluent,time+offset) ->
 % HoldsAt(fluent2,time+offset).
-:-was_s_l('/pack/logicmoo_ec/test/ec_planner/ectest/ec_reader_test_foundations.e',247).
+:-was_s_l('/mnt/sdc1/logicmoo_workspace.1/packs_sys/logicmoo_ec/test/ec_planner/ectest/ec_reader_test_foundations.e',247).
 % From E: 
 % 
 % '->'(
-%    (happens_at(Event,Time) , 
-%      initiates_at(Event,Fluent,Time) , 
-%      0<Offset , 
-%      trajectory(Fluent,Time,Fluent2,Offset) , 
-%     not(clipped(Time,Fluent,Time+Offset))), 
-%    holds_at(Fluent2,Time+Offset)).
+%    ','(
+%       happens(Event,Time), 
+%       ','(
+%          initiates_at(Event,Fluent,Time), 
+%          ','(
+%             0<Offset, 
+%             ','(
+%                trajectory(Fluent, Time, Fluent2, 
+%                   Offset), 
+%                not(clipped(Time,Fluent,Time+Offset)))))), 
+%    holds(Fluent2,Time+Offset)).
  %   [Time, Time+Offset].
-:-was_s_l('/pack/logicmoo_ec/test/ec_planner/ectest/ec_reader_test_foundations.e',247).
-happens_at(Event, Time), initiates(Event, at(Fluent, Time)), 0<Offset, trajectory(Fluent, Time, Fluent2, Offset), not(clipped(Time, Fluent, Time+Offset)) ->
-    holds_at(Fluent2, Time+Offset).
+:-was_s_l('/mnt/sdc1/logicmoo_workspace.1/packs_sys/logicmoo_ec/test/ec_planner/ectest/ec_reader_test_foundations.e',247).
+ if(not(holds(Fluent2, Time+Offset)),
+       (not(holds(Event, Time));not(initiates(Event, at(Fluent, Time)));not(comparison(0, Offset, <));not(trajectory(Fluent, Time, Fluent2, Offset));clipped(Time, Fluent, Time+Offset))).
 
 
 % [event,fluent,fluent2,offset,time]
@@ -667,26 +678,31 @@ happens_at(Event, Time), initiates(Event, at(Fluent, Time)), 0<Offset, trajector
 % AntiTrajectory(fluent,time,fluent2,offset) &
 % !Declipped(time,fluent,time+offset) ->
 % HoldsAt(fluent2,time+offset).
-:-was_s_l('/pack/logicmoo_ec/test/ec_planner/ectest/ec_reader_test_foundations.e',256).
+:-was_s_l('/mnt/sdc1/logicmoo_workspace.1/packs_sys/logicmoo_ec/test/ec_planner/ectest/ec_reader_test_foundations.e',256).
 % From E: 
 % 
 % '->'(
-%    (happens_at(Event,Time) , 
-%      terminates_at(Event,Fluent,Time) , 
-%      0<Offset , 
-%      antiTrajectory(Fluent,Time,Fluent2,Offset) , 
-%     not(declipped(Time,Fluent,Time+Offset))), 
-%    holds_at(Fluent2,Time+Offset)).
+%    ','(
+%       happens(Event,Time), 
+%       ','(
+%          terminates_at(Event,Fluent,Time), 
+%          ','(
+%             0<Offset, 
+%             ','(
+%                antiTrajectory(Fluent, Time, Fluent2, 
+%                   Offset), 
+%                not(declipped(Time,Fluent,Time+Offset)))))), 
+%    holds(Fluent2,Time+Offset)).
  %   [Time, Time+Offset].
-:-was_s_l('/pack/logicmoo_ec/test/ec_planner/ectest/ec_reader_test_foundations.e',256).
-happens_at(Event, Time), terminates(Event, at(Fluent, Time)), 0<Offset, antiTrajectory(Fluent, Time, Fluent2, Offset), not(declipped(Time, Fluent, Time+Offset)) ->
-    holds_at(Fluent2, Time+Offset).
+:-was_s_l('/mnt/sdc1/logicmoo_workspace.1/packs_sys/logicmoo_ec/test/ec_planner/ectest/ec_reader_test_foundations.e',256).
+ if(not(holds(Fluent2, Time+Offset)),
+       (not(holds(Event, Time));not(terminates(Event, at(Fluent, Time)));not(comparison(0, Offset, <));not(antiTrajectory(Fluent, Time, Fluent2, Offset));declipped(Time, Fluent, Time+Offset))).
 
 
 %; End of file.
-:-was_s_l('/pack/logicmoo_ec/test/ec_planner/ectest/ec_reader_test_foundations.e',262).
+:-was_s_l('/mnt/sdc1/logicmoo_workspace.1/packs_sys/logicmoo_ec/test/ec_planner/ectest/ec_reader_test_foundations.e',262).
 % From E: 
 % 
-% :-call_pel_directive(translate(ending,'/pack/logicmoo_ec/test/ec_planner/ectest/ec_reader_test_foundations.e.lps')).
+% ':-'(call_pel_directive(translate(ending,'/mnt/sdc1/logicmoo_workspace.1/packs_sys/logicmoo_ec/test/ec_planner/ectest/ec_reader_test_foundations.e.lps'))).
 :- call_pel_directive(translate(ending,
-                                '/pack/logicmoo_ec/test/ec_planner/ectest/ec_reader_test_foundations.e.lps')).
+                                '/mnt/sdc1/logicmoo_workspace.1/packs_sys/logicmoo_ec/test/ec_planner/ectest/ec_reader_test_foundations.e.lps')).

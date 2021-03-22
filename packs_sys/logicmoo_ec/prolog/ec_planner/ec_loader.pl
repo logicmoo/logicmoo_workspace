@@ -75,10 +75,14 @@ foundations_file('foundations/EC.e').
 foundations_file('foundations/Root.e').
 :- export_transparent(load_e_cond/2).
 
+resolve_local_files_quietly(S0,S1):- quietly(resolve_local_files(S0,S1)).
+
+quietly_needs_resolve_local_files(S0,S1):- quietly(needs_resolve_local_files(S0,S1)).
+
 load_e_cond(F,Cond):- into_dec_pl, cond_load_e(Cond,F).
 load_e_cond(S0,How):-
  must((
-  ((resolve_local_files(S0,SS), 
+  ((resolve_local_files_quietly(S0,SS), 
   SS\==[])
    -> must_maplist(load_e_cond(How), SS)
    ; pprint_ecp_cmt(red, load(How,S0))))),!.
@@ -91,26 +95,26 @@ current_loading_proc(Proc1):- Proc1 = assert_e, !.
 % filetype_to_proc(FileType,Proc1).
 filetype_to_proc(pl,assert_ele_cond_load_e).
 filetype_to_proc(pel,pprint_ecp(blue)).
-filetype_to_proc(lps,assert_e).
+filetype_to_proc(lps,assert_ep4lps(db)).
 
 :- export_transparent(cond_load_e/2).
 
-assert_e(X):- ec_lps_convert:assert_ep(lps_test_mod,X).
+assert_e(X):- ec_lps_convert:assert_ep4lps(db,X).
 % assert_e(X):- assert_ele(X).
 
 cond_load_e(Cond,EndsWith):- is_list(EndsWith),!,must_maplist(cond_load_e(Cond),EndsWith).
 cond_load_e(changed,F):- etmp:ec_option(load(F), loaded),!.
 cond_load_e(changed,EndsWith):- atom(EndsWith),foundations_file(Already),atom_concat(_,Already,EndsWith),!.
 cond_load_e(Cond,F):- etmp:ec_option(load(F), loading), Cond\==recursed, !.
-cond_load_e(Cond,F):- needs_resolve_local_files(F, L), !, must_maplist(cond_load_e(Cond), L).  
+cond_load_e(Cond,F):- quietly_needs_resolve_local_files(F, L), !, must_maplist(cond_load_e(Cond), L).  
 cond_load_e(_,F):- is_filename(F), \+ atom_concat(_,'.e',F), !.
-cond_load_e(Cond,F):- needs_resolve_local_files(F, L), !, must_maplist(cond_load_e(Cond), L).  
+cond_load_e(Cond,F):- quietly_needs_resolve_local_files(F, L), !, must_maplist(cond_load_e(Cond), L).  
 %cond_load_e(include,_):- nb_current('$load_cond', cvt_e_pl),!. 
 %cond_load_e(include,_):- nb_current('$load_cond', translate_e_to_filetype( PlExt)),!. 
 cond_load_e(Cond,F):- Req = [pl],
    \+ nb_current('$output_lang',Req), !,
    locally(b_setval('$output_lang',Req), cond_load_e(Cond,F)).
-cond_load_e(Cond, S0):- resolve_local_files(S0,SS), SS==[], !, pprint_ecp_cmt(red, load(Cond,S0)),!.
+cond_load_e(Cond, S0):- resolve_local_files_quietly(S0,SS), SS==[], !, pprint_ecp_cmt(red, load(Cond,S0)),!.
 cond_load_e(Cond,F):-
    pprint_ecp_cmt(green, loading(Cond, F)),
    current_prolog_flag(occurs_check,Was),
@@ -138,7 +142,7 @@ load_e_into_memory(F):-
 translate_e_to_pfc(F):- translate_e_to_filetype(pfc,F),!.
 
 :- export_transparent(translate_e_to_filetype/2).
-translate_e_to_filetype(FileType,F):- needs_resolve_local_files(F, L), !, must_maplist(translate_e_to_filetype(FileType), L),!. 
+translate_e_to_filetype(FileType,F):- quietly_needs_resolve_local_files(F, L), !, must_maplist(translate_e_to_filetype(FileType), L),!. 
 translate_e_to_filetype(FileType,F):- calc_filename_ext(FileType,F,E,PL), translate_e_to_filetype( FileType,E,PL),!.
 
 filetype_to_dialect(pl,pfc).
@@ -176,13 +180,15 @@ translate_e_to_filetype_5(FileType, Mod, F, OutputName):-
      (current_loading_proc(Proc1),with_e_file(Mod:Proc1, OutputName, F))))),
    flag('$ec_translate_depth', _, Was)).
 
-calc_filename_ext(MEx,F,FE,PL):- strip_module(MEx,_,Ext), Ext\==MEx,!, calc_filename_ext(Ext,F,FE,PL).
-calc_filename_ext(pel,F,FE,PL):- calc_pel_filename(F,FE,PL),!.
-calc_filename_ext(Ext,F,FE,PL):- compound(Ext), compound_name_arity(Ext,Out,_),calc_filename_ext(Out,F,FE,PL).
-calc_filename_ext(Ext,F,FE,PL):- atom_concat(Was,Ext,F),PL=F,!,calc_filename_ext(Ext,Was,FE,_).
-calc_filename_ext(Ext,F,FE,PL):- atom_concat(Was,'.e',F),FE=F,!,calc_filename_ext(Ext,Was,_,PL).
-calc_filename_ext(Ext,F,FE,OutputName):- FE=F, calc_where_to(outdir('.', Ext), F, OutputName).
-                        
+calc_filename_ext(MEx,F,FE,PL):- strip_module(MEx,_,Ext), show_call((calc_filename_ext_1(Ext,F,FE,PL))), !.
+calc_filename_ext_1(pel,F,FE,PL):- calc_pel_filename(F,FE,PL),!.
+calc_filename_ext_1(Ext,F,FE,PL):- compound(Ext), compound_name_arity(Ext,Out,_),calc_filename_ext_1(Out,F,FE,PL).
+calc_filename_ext_1(Ext,F,FE,PL):- atom_concat(Was,Ext,F),PL=F,!,calc_filename_ext_1(Ext,Was,FE,_).
+%calc_filename_ext_1(Ext,F,FE,PL):- =(Was,F),FE=F, calc_filename_ext_1(Ext,Was,_,PL), exists_file(PL),!.
+%calc_filename_ext_1(Ext,F,FE,PL):- atom_concat(Was,'.e',F),FE=F,!,calc_filename_ext_1(Ext,Was,_,PL).
+calc_filename_ext_1(Ext,F,FE,OutputName):- FE=F, calc_where_to(outdir('.', Ext), F, OutputName).
+
+
 calc_pel_filename(F,FE,F):- atom_concat(Was,'.pel',F),!,atom_concat(Was,'.e',FE).
 calc_pel_filename(F,FE,F):- atom_concat(Was,'.e.pl',F),!,atom_concat(Was,'.e',FE).
 calc_pel_filename(F,FE,F):- atom_concat(Was,'.pl',F),!,atom_concat(Was,'.e',FE).
@@ -191,11 +197,11 @@ calc_pel_filename(F,F,PL):- atom_concat(Was,'.e',F), atom_concat(Was,'.e.pl',PL)
 calc_pel_filename(F,F,PL):- atom_concat(Was,'.e',F), atom_concat(Was,'.pl',PL),exists_file(PL).
 
 :- export_transparent(load_e_pl/1).
-load_e_pl(F):- needs_resolve_local_files(F, L), !, must_maplist(load_e_pl, L),!. 
+load_e_pl(F):- quietly_needs_resolve_local_files(F, L), !, must_maplist(load_e_pl, L),!. 
 load_e_pl(F):- to_e_pl(F,E,PL),load_e_pl(E,PL),!.
 
 :- export_transparent(cvt_e_pl/1).
-cvt_e_pl(F):- needs_resolve_local_files(F, L), !, must_maplist(cvt_e_pl, L),!. 
+cvt_e_pl(F):- quietly_needs_resolve_local_files(F, L), !, must_maplist(cvt_e_pl, L),!. 
 cvt_e_pl(F):- to_e_pl(F,E,PL), cvt_e_pl(E,PL),!.
                         
 to_e_pl(F,FE,PL):- calc_filename_ext(pel,F,FE,PL),!.
@@ -207,7 +213,8 @@ get_date_atom(Atom):-
    get_time(Now),stamp_date_time(Now, Date, 'UTC'), 
    format_time(atom(Atom),'%a, %d %b %Y %T GMT', Date, posix),!.
 
-cvt_e_pl(F0,OutputName):-
+cvt_e_pl(F0,OutputName):- dumpST,
+ wdmsg(call(trans_e)), break,
  absolute_file_name(F0,F),
  ( 
  (( ( fail, \+ should_update(OutputName))) -> true ;

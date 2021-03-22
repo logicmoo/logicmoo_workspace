@@ -411,7 +411,7 @@ logically_matches(KB,A,B):- once(corrected_modal_recurse(KB,A,AM)),A\=@=AM,!,log
 logically_matches(_,A,A).
 
 
-is_leave_alone(P):- \+ compound(P),!.
+is_leave_alone(P):- \+ compound_gt(P, 0),!.
 is_leave_alone(P):- leave_as_is_logically(P),!.
 is_leave_alone(P):- functor(P,F,A),is_leave_alone_pfa(P,F,A).
 

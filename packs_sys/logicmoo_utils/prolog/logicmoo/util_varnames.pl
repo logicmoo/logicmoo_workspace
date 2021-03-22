@@ -590,8 +590,8 @@ get_clause_vars_copy(H0,MHB):-
     source_variables_lv(AllS),
     must((copy_term(H0+AllS,MHB+CAllS),
     term_slots(MHB,Slots),
-   % all_different_vars(Slots),
-    lock_vars(Slots),
+    all_different_vars(Slots),
+    % lock_vars(Slots),
     as_clause_no_m( MHB,  H, B),
     must_maplist(set_varname(write_functor),CAllS),
     get_clause_vars_hb_int(H,B))),!.
@@ -648,9 +648,9 @@ fix_varcase_name(N,VN):-atom_subst_frak_0(N,'-','_',O),atom_subst_frak_0(O,'?','
 %
 % No Variables Needed.
 %
+no_vars_needed(H):- is_ftVar(H),!.
 no_vars_needed(H):- (t_l:dont_varname; ( ground(H) ; \+ compound(H))) ,!.
 no_vars_needed(A:H):-atom(A),!,no_vars_needed(H).
-no_vars_needed(H):-var(H),!.
 no_vars_needed('$VAR'(_)):-!.
 no_vars_needed(H):- compound(H),H=varname_info(_,_,_,_),!.
 

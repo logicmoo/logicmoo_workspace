@@ -1,18 +1,17 @@
-:-was_s_l('/pack/logicmoo_ec/test/ec_planner/ectest/Example1.e',30).
 % From E: 
 % 
-% :-call_pel_directive(translate(unskipped,'/pack/logicmoo_ec/test/ec_planner/ectest/Example2.e.lps')).
+% ':-'(call_pel_directive(translate(unskipped,'/mnt/sdc1/logicmoo_workspace.1/packs_sys/logicmoo_ec/test/ec_planner/ectest/Example2.e.lps'))).
 :- call_pel_directive(translate(unskipped,
-                                '/pack/logicmoo_ec/test/ec_planner/ectest/Example2.e.lps')).
+                                '/mnt/sdc1/logicmoo_workspace.1/packs_sys/logicmoo_ec/test/ec_planner/ectest/Example2.e.lps')).
 :-include(library('ec_planner/ec_test_incl')).
 :-expects_dialect(lps).
-:-was_s_l('/pack/logicmoo_ec/test/ec_planner/ectest/Example1.e',30).
+:-was_s_l('/mnt/sdc1/logicmoo_workspace.1/packs_sys/logicmoo_ec/test/ec_planner/ectest/Example1.e',30).
 % From E: 
 % 
-% :-call_pel_directive(translate(begining,'/pack/logicmoo_ec/test/ec_planner/ectest/Example2.e.lps')).
+% ':-'(call_pel_directive(translate(begining,'/mnt/sdc1/logicmoo_workspace.1/packs_sys/logicmoo_ec/test/ec_planner/ectest/Example2.e.lps'))).
 :- call_pel_directive(translate(begining,
-                                '/pack/logicmoo_ec/test/ec_planner/ectest/Example2.e.lps')).
-% Sat, 10 Oct 2020 15:32:29 GMT File: <stream>(0x559e4b409d00)%;
+                                '/mnt/sdc1/logicmoo_workspace.1/packs_sys/logicmoo_ec/test/ec_planner/ectest/Example2.e.lps')).
+% Sun, 21 Mar 2021 23:28:44 GMT File: <stream>(0x5555672b0a00)%;
 %; Copyright (c) 2005 IBM Corporation and others.
 %; All rights reserved. This program and the accompanying materials
 %; are made available under the terms of the Common Public License v1.0
@@ -23,47 +22,47 @@
 %; IBM - Initial implementation
 %;
 
-:-was_s_l('/pack/logicmoo_ec/test/ec_planner/ectest/Example2.e',11).
+:-was_s_l('/mnt/sdc1/logicmoo_workspace.1/packs_sys/logicmoo_ec/test/ec_planner/ectest/Example2.e',11).
 % load foundations/Root.e
 % From E: 
 % 
-% :-call_pel_directive(load('foundations/Root.e')).
+% ':-'(call_pel_directive(load('foundations/Root.e'))).
 :- call_pel_directive(load('foundations/Root.e')).
 
 % load foundations/EC.e
-:-was_s_l('/pack/logicmoo_ec/test/ec_planner/ectest/Example2.e',11).
+:-was_s_l('/mnt/sdc1/logicmoo_workspace.1/packs_sys/logicmoo_ec/test/ec_planner/ectest/Example2.e',11).
 % From E: 
 % 
-% :-call_pel_directive(load('foundations/EC.e')).
+% ':-'(call_pel_directive(load('foundations/EC.e'))).
 :- call_pel_directive(load('foundations/EC.e')).
 
-:-was_s_l('/pack/logicmoo_ec/test/ec_planner/ectest/Example2.e',14).
+:-was_s_l('/mnt/sdc1/logicmoo_workspace.1/packs_sys/logicmoo_ec/test/ec_planner/ectest/Example2.e',14).
 % sort agent
 % From E: 
 % 
 % sort(agent).
 sort(agent).
 
-:-was_s_l('/pack/logicmoo_ec/test/ec_planner/ectest/Example2.e',16).
+:-was_s_l('/mnt/sdc1/logicmoo_workspace.1/packs_sys/logicmoo_ec/test/ec_planner/ectest/Example2.e',16).
 % fluent Awake(agent)
 % From E: 
 % 
 % fluent(awake(agent)).
-mpred_prop(awake(agent),fluent).
-:-was_s_l('/pack/logicmoo_ec/test/ec_planner/ectest/Example2.e',16).
+mpred_prop(awake(agent), fluent).
+:-was_s_l('/mnt/sdc1/logicmoo_workspace.1/packs_sys/logicmoo_ec/test/ec_planner/ectest/Example2.e',16).
 fluents([awake/1]).
 
 % event WakeUp(agent)
 % From E: 
 % 
 % event(wakeUp(agent)).
-:-was_s_l('/pack/logicmoo_ec/test/ec_planner/ectest/Example2.e',16).
+:-was_s_l('/mnt/sdc1/logicmoo_workspace.1/packs_sys/logicmoo_ec/test/ec_planner/ectest/Example2.e',16).
 events([wakeUp/1]).
-mpred_prop(wakeUp(agent),action).
+mpred_prop(wakeUp(agent), action).
 actions([wakeUp/1]).
 
 
-:-was_s_l('/pack/logicmoo_ec/test/ec_planner/ectest/Example2.e',19).
+:-was_s_l('/mnt/sdc1/logicmoo_workspace.1/packs_sys/logicmoo_ec/test/ec_planner/ectest/Example2.e',19).
 % [agent,time]
  % Initiates(WakeUp(agent),Awake(agent),time).
 % From E: 
@@ -73,16 +72,10 @@ actions([wakeUp/1]).
 %    awake(Agent), 
 %    Time).
  %   [Time].
-wakeUp(Agent)initiates awake(Agent).
-:-was_s_l('/pack/logicmoo_ec/test/ec_planner/ectest/Example2.e',19).
+:-was_s_l('/mnt/sdc1/logicmoo_workspace.1/packs_sys/logicmoo_ec/test/ec_planner/ectest/Example2.e',19).
+initiates(wakeUp(Agent),awake(Agent)).
 
- /*  initiated(happens(wakeUp(Agent),Time_From,Time_Until),
-   	  awake(Agent),
-   	  []).
- */
- %  "% =================================".
-
-:-was_s_l('/pack/logicmoo_ec/test/ec_planner/ectest/Example2.e',21).
+:-was_s_l('/mnt/sdc1/logicmoo_workspace.1/packs_sys/logicmoo_ec/test/ec_planner/ectest/Example2.e',21).
 % agent James
 % From E: 
 % 
@@ -91,38 +84,39 @@ agent(james).
 
 
 % !HoldsAt(Awake(James),0).
-:-was_s_l('/pack/logicmoo_ec/test/ec_planner/ectest/Example2.e',21).
+:-was_s_l('/mnt/sdc1/logicmoo_workspace.1/packs_sys/logicmoo_ec/test/ec_planner/ectest/Example2.e',21).
 % From E: 
 % 
-% holds_at(not(awake(james)),0).
-initially not awake(james).
- %  initial_state([not(awake(james))]).
- %  "% =================================".
+% holds(
+%    not(awake(james)), 0).
+:-was_s_l('/mnt/sdc1/logicmoo_workspace.1/packs_sys/logicmoo_ec/test/ec_planner/ectest/Example2.e',21).
+initially(not(awake(james))).
 
 
-:-was_s_l('/pack/logicmoo_ec/test/ec_planner/ectest/Example2.e',23).
+:-was_s_l('/mnt/sdc1/logicmoo_workspace.1/packs_sys/logicmoo_ec/test/ec_planner/ectest/Example2.e',23).
 % HoldsAt(Awake(James),1).
 % From E: 
 % 
-% holds_at(awake(james),1).
-holds_at(awake(james),1).
+% holds(
+%    awake(james), 1).
+:-was_s_l('/mnt/sdc1/logicmoo_workspace.1/packs_sys/logicmoo_ec/test/ec_planner/ectest/Example2.e',23).
+holds(awake(james),1).
 
-:-was_s_l('/pack/logicmoo_ec/test/ec_planner/ectest/Example2.e',25).
+:-was_s_l('/mnt/sdc1/logicmoo_workspace.1/packs_sys/logicmoo_ec/test/ec_planner/ectest/Example2.e',25).
 % range time 0 1
 % From E: 
 % 
-% :-call_pel_directive(range(time,0,1)).
+% ':-'(call_pel_directive(range(time,0,1))).
 :- call_pel_directive(range(time, 0, 1)).
 
 % range offset 1 1
-:-was_s_l('/pack/logicmoo_ec/test/ec_planner/ectest/Example2.e',25).
+:-was_s_l('/mnt/sdc1/logicmoo_workspace.1/packs_sys/logicmoo_ec/test/ec_planner/ectest/Example2.e',25).
 % From E: 
 % 
-% :-call_pel_directive(range(offset,1,1)).
+% ':-'(call_pel_directive(range(offset,1,1))).
 :- call_pel_directive(range(offset, 1, 1)).
 % From E: 
 % 
-% :-call_pel_directive(translate(ending,'/pack/logicmoo_ec/test/ec_planner/ectest/Example2.e.lps')).
-:-was_s_l('/pack/logicmoo_ec/test/ec_planner/ectest/Example2.e',25).
+% ':-'(call_pel_directive(translate(ending,'/mnt/sdc1/logicmoo_workspace.1/packs_sys/logicmoo_ec/test/ec_planner/ectest/Example2.e.lps'))).
 :- call_pel_directive(translate(ending,
-                                '/pack/logicmoo_ec/test/ec_planner/ectest/Example2.e.lps')).
+                                '/mnt/sdc1/logicmoo_workspace.1/packs_sys/logicmoo_ec/test/ec_planner/ectest/Example2.e.lps')).

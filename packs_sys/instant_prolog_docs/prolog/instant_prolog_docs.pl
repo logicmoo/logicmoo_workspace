@@ -61,9 +61,9 @@
             portray_clause_pi_UD/2,
             predicate_decl_module/2,
             autodoc_pred/2,
-            autodoc_files/0,
-            autodoc_file/1,
+            autodoc_file_0s/0,
             autodoc_file_0/1,
+            autodoc_file_0_0/1,
             scan_and_list_file_preds/1,
             name_to_mode/4,
             mode_to_name/4,
@@ -571,40 +571,41 @@ autodoc_output_path(File, PlDocFile):-
          (PlDocFile1\==PlDocFile0->PlDocFile=PlDocFile1;PlDocFile=user))),
    (PlDocFile == user -> true ;(file_directory_name(PlDocFile, Dir), make_directory_path(Dir))), !.
 
-% autodoc_file(library(logicmoo_user)).
+% autodoc_file_0(library(logicmoo_user)).
 %  list_file_preds(library(logicmoo/util/logicmoo_util_bb_env)).
 
 
 
 %= 	 	
 
-%% skip_autodoc_file( ?/mnt/sdc1/logicmoo_workspace.1/packs_sys/lps_corner/swish/lps_server_UI.pl) is semidet.
+%% skip_autodoc_file_0( ?/mnt/sdc1/logicmoo_workspace.1/packs_sys/lps_corner/swish/lps_server_UI.pl) is semidet.
 %
 % Skip Autodoc File.
 %
-skip_autodoc_file('/mnt/sdc1/logicmoo_workspace.1/packs_sys/lps_corner/swish/lps_server_UI.pl').
+skip_autodoc_file_0('/mnt/sdc1/logicmoo_workspace.1/packs_sys/lps_corner/swish/lps_server_UI.pl').
 
 :- op(1200, xfy, ('==>>')).
 :- op(1200, xfy, ('::=')).
 
 %= 	 	
 
-%% autodoc_file( :TermFile) is semidet.
+%% autodoc_file_0( :TermFile) is semidet.
 %
 % Autodoc File.
 %
-autodoc_file(File):- var(File), !, no_repeats(varname_cache:varname_info_file(File)), autodoc_file(File).
-autodoc_file(*):-!, autodoc_files.
-autodoc_file(module(M)):- !, autodoc_module(M).
-autodoc_file(File):- ( \+ atom(File) ; \+ exists_file(File) ), !,
-   forall(must(filematch(File, E)), autodoc_file(E)).
-autodoc_file(File):- skip_autodoc_file(File), !, autodoc_dbg(skip_autodoc_file(File)).
+autodoc_file(File):- with_vars_unlocked(autodoc_file_0(File)),!.
+autodoc_file_0(File):- var(File), !, no_repeats(varname_cache:varname_info_file(File)), autodoc_file_0(File).
+autodoc_file_0(*):-!, autodoc_file_0s.
+autodoc_file_0(module(M)):- !, autodoc_module(M).
+autodoc_file_0(File):- ( \+ atom(File) ; \+ exists_file(File) ), !,
+   forall(must(filematch(File, E)), autodoc_file_0(E)).
+autodoc_file_0(File):- skip_autodoc_file_0(File), !, autodoc_dbg(skip_autodoc_file_0(File)).
 
-autodoc_file(File):-
+autodoc_file_0(File):-
   autodoc_setup,
   each_call_cleanup(
    tell(user_error),
-   instant_prolog_docs:autodoc_file_0(File),
+   instant_prolog_docs:autodoc_file_0_0(File),
    told), !.
 
   
@@ -615,11 +616,11 @@ autodoc_dbg(E):- guess_pretty(E), with_output_to(current_output,mu:dbug1(E)).
 
 %= 	 	
 
-%% autodoc_file_0( ?File) is semidet.
+%% autodoc_file_0_0( ?File) is semidet.
 %
 % Autodoc File  Primary Helper.
 %
-autodoc_file_0(File):-
+autodoc_file_0_0(File):-
   show_call(_, autodoc_output_path(File, PlDocFile)),
   nop(read_source_file_vars(File)),
   retractall(t_l:last_predicate_help_shown(_, _, _)),
@@ -925,16 +926,16 @@ autodoc_stream_0(LineByLineStream, File, In):-
 
 %= 	 	
 
-%% autodoc_files is semidet.
+%% autodoc_file_0s is semidet.
 %
 % Autodoc Files.
 %
-autodoc_files:-
+autodoc_file_0s:-
       autodoc_setup, !,
       doall((
        no_repeats(varname_cache:varname_info_file(File)),
        once(atom_contains(File, 'logicmoo')),
-       must_det_l(autodoc_file(File)))).
+       must_det_l(autodoc_file_0(File)))).
 
 
 %= 	 	
@@ -1669,10 +1670,10 @@ mpred_prolog_only_module(M):-atom_concat(common_logic_, _, M).
 % Autodoc Test.
 %
 autodoc_test:-
-  autodoc_file(library(episodic_memory/'adv_action.pl')),
-  autodoc_file(library(episodic_memory/'*.pl')),
-  autodoc_file(library(instant_prolog_docs)),
-  %autodoc_file(library(logicmoo/'*.pl')),
+  autodoc_file_0(library(episodic_memory/'adv_action.pl')),
+  autodoc_file_0(library(episodic_memory/'*.pl')),
+  autodoc_file_0(library(instant_prolog_docs)),
+  %autodoc_file_0(library(logicmoo/'*.pl')),
   !.
 
 

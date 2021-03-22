@@ -19,6 +19,18 @@
 */
 
 
+
+abdemo_info(GGs,R1,R3,N1,N2):- (ec_trace(on,Level) ; \+ ec_trace(on,1)), !, fail.
+
+abdemo_info(Gs,[[HA,TC1],[BA,TC2]],R,N1,N2) :-   
+   dbginfo('Goals'=Gs),
+   dbginfo('Happens'=HA),
+   dbginfo('Befores'=BA),
+   dbginfo('Rs'=R),
+   dbginfo('Nafs'=N1),!, fail.
+
+abdemo_info(GGs,R1,R3,N1,N2):- ec_trace(on,1), dbginfo(abdemo(GGs,R1,R3,N1,N2)), fail.
+
 /*
 
    This is an abductive meta-interpreter for abduction with negation-as-
@@ -76,19 +88,7 @@ abdemo(Gs,R) :-
 
 abdemo(GGs,R1,R3,N1,N2):- abdemo_info(GGs,R1,R3,N1,N2), fail.
 
-abdemo([],R,R,N,N):-!.
 
-
-abdemo_info(GGs,R1,R3,N1,N2):- (ec_trace(on,Level) ; \+ ec_trace(on,1)), !, fail.
-
-abdemo_info(Gs,[[HA,TC1],[BA,TC2]],R,N1,N2) :-   
-   dbginfo('Goals'=Gs),
-   dbginfo('Happens'=HA),
-   dbginfo('Befores'=BA),
-   dbginfo('Rs'=R),
-   dbginfo('Nafs'=N1),!, fail.
-
-abdemo_info(GGs,R1,R3,N1,N2):- ec_trace(on,1), dbginfo(abdemo(GGs,R1,R3,N1,N2)), fail.
 
 /*
    The next few clauses are the result of compiling the axioms of
@@ -99,6 +99,9 @@ abdemo_info(GGs,R1,R3,N1,N2):- ec_trace(on,1), dbginfo(abdemo(GGs,R1,R3,N1,N2)),
    DANGER: The cut in the following clause is a source of incompleteness,
    but without it we get duplicate solutions.
 */
+
+
+abdemo([],R,R,N,N):-!.
 
 abdemo([holds(F,T)|Gs],R1,R2,N1,N3) :-
      demo([holds(F,T)],R1,N1,N2), !, 
@@ -116,8 +119,9 @@ abdemo([holds(F,T)|Gs],R1,R2,N1,N3) :-
 */
 
 abdemo([holds(F1,T)|Gs1],R1,R3,N1,N4) :-
-     F1 \= /**/not(F2), abresolve(holds(F1,Zero),R1,Gs2,R1,_B),
-     is_zero(Zero),
+     F1 \= /**/not(F2), 
+     get_zero(Zero),
+     abresolve(holds(F1,Zero),R1,Gs2,R1,_B),     
      append(Gs2,Gs1,Gs3), add_neg([clipped(Zero,F1,T)],N1,N2),
      abdemo_naf([clipped(Zero,F1,T)],R1,R2,N2,N3),
      abdemo(Gs3,R2,R3,N3,N4).
@@ -151,8 +155,9 @@ abdemo([holds(F1,T3)|Gs1],R1,R7,N1,N6) :-
 */
 
 abdemo([holds(/**/not(F),T)|Gs1],R1,R3,N1,N4) :-
-     abresolve(holds(/**/not(F),Zero),R1,Gs2,R1,B),
-     is_zero(Zero),
+     get_zero(Zero),
+     abresolve(holds(/**/not(F),Zero),R1,Gs2,R1,B),    
+     set_zero(Zero),
      append(Gs2,Gs1,Gs3), add_neg([declipped(Zero,F,T)],N1,N2),
      abdemo_naf([declipped(Zero,F,T)],R1,R2,N2,N3),     
      abdemo(Gs3,R2,R3,N3,N4).
@@ -450,8 +455,9 @@ check_naf(_A,_T2,N,R1,R2,N1,N2) :- abdemo_naf(N,R1,R2,N1,N2).
 demo([],R,N,N).
 
 demo([holds(F1,T)|Gs1],R,N1,N3) :-
-     F1 \= /**/not(F2), resolve(holds(F1,Zero),R,Gs2),
-     is_zero(Zero),
+     F1 \= /**/not(F2), 
+     get_zero(Zero),
+     resolve(holds(F1,Zero),R,Gs2),
      demo_naf([clipped(Zero,F1,T)],R),
      append(Gs2,Gs1,Gs3), add_neg([clipped(Zero,F1,T)],N1,N2),
      demo(Gs3,R,N2,N3).
@@ -465,8 +471,8 @@ demo([holds(F1,T2)|Gs1],R,N1,N4) :-
      demo(Gs4,R,N3,N4).
 
 demo([holds(/**/not(F),T)|Gs1],R,N1,N3) :-
+     get_zero(Zero),
      resolve(holds(/**/not(F),Zero),R,Gs2),
-     is_zero(Zero),
      demo_naf([declipped(Zero,F,T)],R),
      append(Gs2,Gs1,Gs3), add_neg([declipped(Zero,F,T)],N1,N2),
      demo(Gs3,R,N2,N3).
@@ -495,7 +501,7 @@ demo([G|Gs1],R,N1,N3) :-
    of the residue.
 */
 
-demo_before(Zero,Y,R) :- is_zero(Zero), !.
+demo_before(Zero,Y,R) :- get_zero(Zero), !.
 demo_before(X,Y,R) :- member(b(X,Y),R).
 
 /* demo_beq is demo before or equal. */
@@ -582,7 +588,13 @@ resolve(call(G),R,[]) :- !, call(G).
 
 resolve(G,R,Gs) :- axiom_local(G,Gs).
 
-is_zero(0).
+get_zero(0):- !.
+get_zero(start).
+get_zero(t0).
+get_zero(begin).
+get_zero(init).
+
+set_zero(0).
 
 /*
    demo_nafs([G1...Gn],R) demos not(G1) and ... and not(Gn).

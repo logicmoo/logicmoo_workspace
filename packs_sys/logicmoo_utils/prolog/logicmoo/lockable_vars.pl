@@ -1,6 +1,8 @@
 :- module(lockable_vars,[
    lock_vars/1,
    unlock_vars/1,
+   with_vars_unlocked/1,
+   with_vars_relocked/1,
    with_vars_locked/1,
    with_vars_locked/2,
    with_some_vars_locked/2,
@@ -24,8 +26,8 @@
 
 lock_vars(Term):-lock_vars(lockable_vars:just_fail,Term).
 
-just_fail(_):-fail.
-skip_varlocks:- !.
+just_fail(_):- notrace( \+ skip_varlocks).
+%skip_varlocks:- !.
 skip_varlocks:- current_prolog_flag(skip_varlocks , TF),!,TF==true.
 skip_varlocks:- current_prolog_flag(unsafe_speedups , true) ,!.
 
@@ -46,9 +48,11 @@ lock_these_vars_now(Notify,N0,[Var|Vars],PVs):-!,
    lock_these_vars_now(Notify,N,Vars,PVs).
 lock_these_vars_now(_,_,[],_).
 
-vl:attr_unify_hook(InSLock,Value):- InSLock = slock(InLock,Else,Sorted),!,
+vl:attr_unify_hook(InSLock,Value):- with_vars_unlocked(vl_attr_unify_hook(InSLock,Value)).
+
+vl_attr_unify_hook(InSLock,Value):- InSLock = slock(InLock,Else,Sorted),!,
   check_slock(InLock,Else,InSLock,Sorted,Value).
-vl:attr_unify_hook(A,B):- vlauh(A,B),!.
+vl_attr_unify_hook(A,B):- vlauh(A,B),!.
 
 vlauh(when_rest(Notify,N,_Var,VVs),VarValue):- 
     arg(NN,VVs,Was),Was==VarValue,
@@ -59,11 +63,14 @@ vlauh(when_rest(Notify,N,_Var,VVs),VarValue):-
 %vlauh(when_rest(_,_,Var,_),VarValue):- unify_name_based0(Var, VarValue).
 %vlauh(_,VarValue):- locking_verbatum_var(VarValue),!,variable_name_or_ref(VarValue,_),!.
 
-%vlauh(_,_):- \+ thread_self_main,!,fail.
+vlauh(_,_):- on_x_fail(( \+ thread_self_main)),!,fail.
 %vlauh(_,_):- thread_self_main,!.
 vlauh(when_rest(Notify,N,Var,VVs),VarValue):- 
   \+ (var(VarValue);locking_verbatum_var(VarValue)),!,               
   dmsg(error_locked_var(when_rest(Notify,N,Var,VVs),VarValue)),
+  dumpST,
+  dmsg(error_locked_var(when_rest(Notify,N,Var,VVs),VarValue)),
+  break,
   call(Notify,VarValue),!.
 
 vlauh(when_rest(Notify,N,Var,VVs),VarValue):- var(VarValue),!,
@@ -106,7 +113,7 @@ combine_varnames(Name1,Name2,Name):-
 % Unlock Variables.
 %
 
-unlock_vars(_Var):- notrace(skip_varlocks),!.
+%unlock_vars(_Var):- notrace(skip_varlocks),!.
 unlock_vars(Term):- must(quietly((term_attvars(Term,Vs),maplist(delete_vl,Vs)))).
 
 delete_vl( Var):- var(Var),!, del_attr(Var,vl).
@@ -146,14 +153,23 @@ with_vars_locked(Vars,Goal):-
    with_vars_slocked(lookup_how,Sorted,Goal).
    %set_prolog_flag(access_level,system), 
 
+:- meta_predicate(with_vars_unlocked(:)).
+with_vars_unlocked(Goal):- 
+  locally(current_prolog_flag(skip_varlocks,true), Goal).
+
+:- meta_predicate(with_vars_relocked(0)).
+with_vars_relocked(Goal):- 
+  locally(current_prolog_flag(skip_varlocks,false), Goal).
+
 :- meta_predicate(with_vars_locked(1,+,:)).
 with_vars_locked(Else,Vars,Goal):- 
    term_variables(Vars,Vs),sort(Vs,Sorted),!,
    with_vars_slocked(Else,Sorted,Goal).
    %set_prolog_flag(access_level,system), 
 
-
-vl1:attr_unify_hook(InLock,Value):- 
+vl1:attr_unify_hook(InLock,Value):- with_vars_unlocked(vl1_attr_unify_hook(InLock,Value)).
+  
+vl1_attr_unify_hook(InLock,Value):- 
   (var(Value)
     -> put_attr(Value,vl1,InLock)
     ; (InLock=vlock(YesNo,Else),

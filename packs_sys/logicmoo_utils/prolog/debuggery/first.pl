@@ -542,7 +542,8 @@ unnumbervars_and_save(X,YO):-
 %
 % Unnumbervars And Save.
 %
-unnumbervars4(Var,Vs,Vs,Var):- \+ compound(Var),!.
+unnumbervars4(Var,Vs,Vs,Var):- \+ compound(Var), !.
+unnumbervars4(Var,Vs,Vs,Var):- compound_name_arity(Var,_,0), !.
 unnumbervars4((I,TermIn),VsIn,NewVs,(O,TermOut)):- !,unnumbervars4(I,VsIn,VsM,O),unnumbervars4(TermIn,VsM,NewVs,TermOut).
 unnumbervars4((I:TermIn),VsIn,NewVs,(O:TermOut)):- !,unnumbervars4(I,VsIn,VsM,O),unnumbervars4(TermIn,VsM,NewVs,TermOut).
 unnumbervars4([I|TermIn],VsIn,NewVs,[O|TermOut]):- !,unnumbervars4(I,VsIn,VsM,O),unnumbervars4(TermIn,VsM,NewVs,TermOut).

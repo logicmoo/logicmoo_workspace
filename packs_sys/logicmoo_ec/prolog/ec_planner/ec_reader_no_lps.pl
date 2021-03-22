@@ -27,7 +27,7 @@
    echo_format/1, echo_format/2]).
 
 
-
+:- throw(use_ec_reader).
 :- use_module(library(logicmoo/portray_vars)).
 
 
@@ -178,15 +178,6 @@ resolve_file(S0,SS):- atom(S0), file_base_name(S0,S1), S0\==S1, resolve_file(S1,
 needs_resolve_local_files(F, L):- \+ is_stream(F), \+ is_filename(F),
   resolve_local_files(F, L), !,  L \= [], L \= [F].
 
-chop_e(InputNameE,InputName):- atom_concat(InputName,'.e',InputNameE),!.
-chop_e(InputName,InputName).
-
-:- export(calc_where_to/3).
-calc_where_to(outdir(Dir, Ext), InputNameE, OutputFile):- 
-    chop_e(InputNameE,InputName),
-    atomic_list_concat([InputName, '.', Ext], OutputName),
-    make_directory_path(Dir),
-    absolute_file_name(OutputName, OutputFile, [relative_to(Dir)]).
 
 :- set_ec_option(overwrite_translated_files,false).
 
@@ -274,7 +265,7 @@ e_to_pl(Why, Out, Ins):-
       assertion(current_output(Out)),       
       e_io(Why, Ins).
 
-:- nb_setval(ec_input_file,[]).
+:- nb_setval('$ec_input_file',[]).
         
 %e_io(Why, Ins):- dmsg(e_io(Why, Ins)), fail.
 e_io(Why, Ins):-  

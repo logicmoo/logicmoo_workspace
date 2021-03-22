@@ -150,6 +150,12 @@ writeYesln(A):- write(A),fresh_line.
 
 writenl(A):- write(A),fresh_line.
 
+user:file_search_path(ec,D):- catch( (findall(D,relative_from_ec(D),L),dedupe_files(L,S),member(D,S)),_,fail).
+relative_from_ec(F):- nb_current('$ec_input_file', F), atom(F), F \== [].
+relative_from_ec(D):- catch( (expand_file_search_path(library('ec_planner'),D)),_,fail),exists_directory(D).
+relative_from_ec(D):- catch( (expand_file_search_path(library('ec_planner/../../ext/ec_sources'),D)),_,fail),exists_directory(D).
+relative_from_ec(D):- catch( (expand_file_search_path(library('../test/ec_planner/'),D)),_,fail),exists_directory(D).
+relative_from_ec(D):- catch( (expand_file_search_path(library('../test/ec_planner/ectest'),D)),_,fail),exists_directory(D).
 
 
 ec_predicate_template(axiom(_,_)).
@@ -172,11 +178,11 @@ system:show_ec_current_domain_db:-
 
    listing(user:ec_current_domain_db/2).
 
-ec_current_domain_db(axiom(call(G), [])):- nonvar(G),!, rtrace(G).
+ec_current_domain_db(axiom(call(G), [])):- nonvar(G),!, call(G).
 
 ec_current_domain_db(G):- user:ec_current_domain_db(G, _REF).
 ec_current_domain_db(G):- lps_current_domain_db(G).
-ec_current_domain_db(holds(G,Zero)):- is_zero(Zero), ec_current_domain_db(initially(G),Gs).
+ec_current_domain_db(holds(G,Zero)):- get_zero(Zero), ec_current_domain_db(initially(G),Gs).
 ec_current_domain_db(G):- var(G), !, fail.
 ec_current_domain_db(event(G)):- lps_current_domain_db(action(G)).
 ec_current_domain_db(G):- G \= axiom(_,_), ec_current_domain_db(axiom(G,B)), B==[].

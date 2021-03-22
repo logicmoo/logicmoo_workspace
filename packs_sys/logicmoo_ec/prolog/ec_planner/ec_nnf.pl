@@ -56,7 +56,8 @@ clausify_pnf(PNF, Cla):-
 clausify_pnf(PNF, Cla):-
   rtrace(clausify_pnf1(PNF, Cla)),!.
 
-clausify_pnf1(PNF, Cla):-
+clausify_pnf1(PNFIn, Cla):-
+ expandQuants(_KB,PNFIn,PNF),
  tolerate_elaboration(PNF,PNF0),
  clausify_pnf_v2(PNF0, Cla0),!,
  modal_cleansup(Cla0,Cla),
@@ -108,6 +109,7 @@ to_wasvar(N=V):-
 var_or_atomic(Fml):- notrace(var_or_atomic0(Fml)).
 var_or_atomic0(Fml):- \+ compound_gt(Fml,0), !.
 var_or_atomic0('$VAR'(_)).
+var_or_atomic0('$STRING'(_)).
 
 non_expandable(Fml):- notrace(non_expandable0(Fml)).
 non_expandable0(Fml):- var_or_atomic0(Fml),!.
@@ -262,7 +264,12 @@ nnf(until2(PU,A,B),FreeV,NNF,Paths) :- !,
 nnf(all(X,F),FreeV,all(X,NNF),Paths) :- !,
 	nnf(F,[X|FreeV],NNF,Paths).
 
-nnf(exists(X,Fml),FreeV,NNF,Paths) :- % trace, 
+nnf(exists(X,Fml),FreeV,NNF,Paths) :- is_ftVar(X), % trace, 
+        !,
+	skolem_v2(Fml,X,FreeV,FmlSk),
+	nnf(FmlSk,FreeV,NNF,Paths).
+
+nnf(quant(atleast(1),X,Fml),FreeV,NNF,Paths) :- is_ftVar(X), % trace, 
         !,
 	skolem_v2(Fml,X,FreeV,FmlSk),
 	nnf(FmlSk,FreeV,NNF,Paths).
@@ -319,7 +326,8 @@ nnf(not(Fml),FreeV,NNF,Paths) :- compound(Fml),
                                   % circ_until(_CP,PU),
                                   Fml1 = ( all(_,NNB) ; until2(PU,NNB,','(NNA,NNB))));
 	 Fml = all(X,F)   -> Fml1 = exists(X,not(F));
-	 Fml = exists(X,F)    -> Fml1 = all(X,not(F));
+	 Fml = quant(atleast(1),X,F)    -> Fml1 = all(X,not(F));
+   Fml = exists(X,F)    -> Fml1 = all(X,not(F));
 /*
 	 Fml = not(atleast(N,X,F)) -> Fml1 = atmost(N,X,F);
 	 Fml = not(atmost(N,X,F)) -> Fml1 = atleast(N,X,F);
