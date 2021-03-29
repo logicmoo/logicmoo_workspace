@@ -1597,7 +1597,7 @@ assert_axiom(M,Axiom,_) :-
 assert_axiom(M,Axiom,O) :-
         assert(M:Axiom),
 	assert(M:ontologyAxiom(O,Axiom)),
-        !.
+  !.
 
 
 %% retract_axiom(+Module,+Axiom:axiom)
@@ -3052,7 +3052,7 @@ owl_parse_axiom(M,negativePropertyAssertion(PX,A,B),_,X) :-
 parse_annotation_assertions(M) :- 
 	( M:trdf_setting(rind,RIND) -> true ; RIND = []),!,
 	forall((M:aNN(X,AP,AV),findall( aNN(annotation(X,AP,AV),AP1,AV1),
-				      M:aNN(annotation(X,AP,AV),AP1,AV1),ANN), \+member(X,RIND), \+name(X,[95, 58, 68, 101, 115, 99, 114, 105, 112, 116, 105, 111, 110|_])),
+				      M:aNN(annotation(X,AP,AV),AP1,AV1),ANN), \+member(X,RIND), atomic(X), \+name(X,[95, 58, 68, 101, 115, 99, 114, 105, 112, 116, 105, 111, 110|_])),
 	       (   assert_axiom(M,annotationAssertion(AP,X,AV)),
 		  %  VV 10/3/2010 keep annotation/3
 		  % retract(annotation(X,AP,AV)),

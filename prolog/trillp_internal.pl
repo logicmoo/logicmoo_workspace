@@ -140,10 +140,10 @@ modify_ABox(M,Tab0,sameIndividual(LF),L0-CP0,Tab):-
   sort(LF,LFS),
   LS = LFS,!,
   dif(L0-CP0,Expl1-CP1),
-  ((dif(L0,[]),subset(L0,Expl1)) -> 
+  ((dif(L0,[]),subset([L0],[Expl1])) -> 
      Expl = L0
    ;
-     (subset(Expl1,L0) -> fail 
+     (subset([Expl1],[L0]) -> fail 
       ;
         (test(M,L0,Expl1),or_f(M,L0-CP0,Expl1-CP1,Expl))
      )
@@ -166,10 +166,10 @@ modify_ABox(M,Tab0,differentIndividuals(LF),L0-CP0,Tab):-
   sort(LF,LFS),
   LS = LFS,!,
   dif(L0-CP0,Expl1-CP1),
-  ((dif(L0,[]),subset(L0,Expl1)) -> 
+  ((dif(L0,[]),subset([L0],[Expl1])) -> 
      Expl = L0
    ;
-     (subset(Expl1,L0) -> fail 
+     (subset([Expl1],[L0]) -> fail 
       ;
         (test(M,L0,Expl1),or_f(M,L0-CP0,Expl1-CP1,Expl))
      )
@@ -186,10 +186,10 @@ modify_ABox(M,Tab0,C,Ind,L0-CP0,Tab):-
   get_abox(Tab0,ABox0),
   findClassAssertion(C,Ind,Expl1-CP1,ABox0),!,
   dif(L0-CP0,Expl1-CP1),
-  ((dif(L0,[]),subset(L0,Expl1)) -> 
+  ((dif(L0,[]),subset([L0],[Expl1])) -> 
      Expl = L0
    ;
-     (subset(Expl1,L0) -> fail 
+     (subset([Expl1],[L0]) -> fail 
       ;
         (test(M,L0,Expl1),or_f(M,L0-CP0,Expl1-CP1,Expl))
      )
@@ -209,7 +209,7 @@ modify_ABox(M,Tab0,P,Ind1,Ind2,L0-CP0,Tab):-
   get_abox(Tab0,ABox0),
   findPropertyAssertion(P,Ind1,Ind2,Expl1-CP1,ABox0),!,
   dif(L0-CP0,Expl1-CP1),
-  ((dif(L0,[]),subset(L0,Expl1)) -> 
+  ((dif(L0,[]),subset([L0],[Expl1])) -> 
      Expl = L0
    ;
      % L0 is the new explanation, i.e. the \psi and Expl1 is the old label of an essertion
