@@ -34,8 +34,8 @@
 
 :- module(nmember, [nmember/2]).
 
-nmember(E, L, _) :- nmember(E, L).
-nmember(E, _, L) :- nmember(E, L).
+nmember(E, L) :- nmember(E, L, []).
 
-nmember(E, E).
-nmember(E, [L|T]) :- nmember(E, L, T).
+nmember(E, E, _) :- E \= [].
+nmember(E, [L|T], _) :- nmember(E, L, T).
+nmember(E, _, [L|T]) :- nmember(E, L, T).
