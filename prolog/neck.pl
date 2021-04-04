@@ -65,26 +65,43 @@ necki.
 
 necki --> [].
 
+current_seq_lit(Seq, Lit, Left, Right) :-
+    current_seq_lit(Seq, Lit, true, Left, true, Right).
+
+conj(T, C, C) :- T == true.
+conj(C, T, C) :- T == true.
+conj(A, B, (A, B)).
+
+current_seq_lit(S, _, _, _, _, _) :-
+    var(S),
+    !,
+    fail.
+current_seq_lit(S, S, L, L, R, R).
+current_seq_lit((H, T), S, L1, L, R1, R) :-
+    ( once(conj(T, R1, R2)),
+      current_seq_lit(H, S, L1, L, R2, R)
+    ; once(conj(L1, H, L2)),
+      current_seq_lit(T, S, L2, L, R1, R)
+    ).
+
 term_expansion_hb(Head, Body1, NeckBody, Pattern, ClauseL) :-
+    % (var(Head)->gtrace;true),
     '$current_source_module'(M),
-    sequence_list(Body1, List, []),
-    once(( append(Left, [Neck|Right], List),
-           nonvar(Neck),
+    once(( current_seq_lit(Body1, Neck, Static, Right),
            memberchk(Neck, [neck, neck(X, X), necki, necki(X, X)])
          )),
-    list_sequence(Left, Static),
-    once(( append(LRight, RRight, Right),
-           \+ ( sub_term(Lit, RRight),
-                nonvar(Lit),
-                Lit == !
-              ) % We can not move the part above a cut to a separate clause
+    once(( current_seq_lit(Right, !, LRight, SepBody),
+           \+ current_seq_lit(SepBody, !, _, _)
+           % We can not move the part above a cut to a separate clause
+         ; LRight = true,
+           SepBody = Right
          )),
     term_variables(Head, HVars),
     '$expand':mark_vars_non_fresh(HVars),
     expand_goal(M:Static, Expanded),
     ( memberchk(Neck, [neck, neck(_, _)]),
-      RRight = [_, _|_],
-      list_sequence(RRight, SepBody),
+      nonvar(SepBody),
+      SepBody = (_, _),
       expand_goal(M:SepBody, M:ExpBody),
       term_variables(t(Head, Expanded, LRight), VarHU),
       '$expand':remove_var_attr(VarHU, '$var_info'),
@@ -102,28 +119,30 @@ term_expansion_hb(Head, Body1, NeckBody, Pattern, ClauseL) :-
       ),
       format(atom(FNB), '__aux_neck_~w:~w_~w', [IM, PI, Hash]),
       SepHead =.. [FNB|ArgNB],
-      append(LRight, [SepHead], NeckL),
-      list_sequence(NeckL, NeckBody),
-      findall(Pattern, Expanded, ClauseL),
+      conj(LRight, SepHead, NeckBody),
+      findall(Pattern, Expanded, ClauseL1),
       ( '$get_predicate_attribute'(M:SepHead, defined, 1)
       ->true
-      ; ClauseL \= [_]
+      ; ClauseL1 \= [_]
       )
     ->( '$get_predicate_attribute'(M:SepHead, defined, 1)
-      ->true
-      ; '$expand':compile_aux_clauses([SepHead :- ExpBody])
+      ->ClauseL = ClauseL1
+      ; phrase(( ( {nonvar(F)}
+                 ->[(:- discontiguous IM:F/A)]
+                 ; []
+                 ),
+                 [(SepHead :- ExpBody)|ClauseL1]
+               ), ClauseL)
       )
-    ; list_sequence(Right, RSequence),
-      expand_goal(M:RSequence, M:NeckBody),
+    ; expand_goal(M:Right, M:NeckBody),
       findall(Pattern, Expanded, ClauseL)
     ).
 
 term_expansion((Head :- Body), ClauseL) :-
     term_expansion_hb(Head, Body, NB, (Head :- NB), ClauseL).
 term_expansion((Head --> Body), ClauseL) :-
-    sequence_list(Body, List, []),
-    append(_, [Neck|_], List),
-    Neck == neck,
+    current_seq_lit(Body, Neck, _, _),
+    memberchk(Neck, [neck, necki]),
     dcg_translate_rule((Head --> Body), _, (H :- B), _),
     term_expansion_hb(H, B, NB, (H :- NB), ClauseL).
 term_expansion((:- Body), ClauseL) :-
