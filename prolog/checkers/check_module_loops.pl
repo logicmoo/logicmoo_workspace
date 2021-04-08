@@ -66,13 +66,16 @@ normalize_loop(Loop, Norm) :-
                   ))).
 
 loops_pairs(Loop, warning-Loc/Loop) :-
-    Loop = [LoadedIn, Module|_],
-    ( module_property(Module, file(File)),
-      ( loc_declaration(           Alias,     LoadedIn, use_module,   From)
+    Loop = [LoadedIn|List],
+    ( ( loc_declaration(           Alias,     LoadedIn, use_module,   From)
       ; loc_declaration(use_module(Alias, _), LoadedIn, use_module_2, From)
       ),
       absolute_file_name(Alias, AF, [file_errors(fail), file_type(prolog)]),
-      File == AF
+      ( List = []
+      ; List = [Module|_],
+        module_property(Module, file(File)),
+        File == AF
+      )
     ->from_location(From, Loc)
     ; Loc = []
     ).
