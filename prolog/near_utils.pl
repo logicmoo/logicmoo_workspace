@@ -1,5 +1,6 @@
 :- module(near_utils,
           [fact_near/1,
+           fact_near/2,
            retract_near/1,
            retractall_near/1,
            real_near/2,
