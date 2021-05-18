@@ -39,6 +39,7 @@
             op(1150, fx, compilation_predicate)
           ]).
 
+:- use_module(library(sequence_list)).
 :- reexport(library(compound_expand)).
 
 :- meta_predicate
@@ -52,6 +53,8 @@ compilation_module(A, B) :- use_module(A, B).
 
 compilation_predicate(_).
 
+compilation_predicate_clause(F/A) --> ['$compilation_predicate'(F, A)].
+
 term_expansion((:- compilation_module(Alias)),
                [(:- discontiguous '$compilation_module'/2),
                 '$compilation_module'(Alias, all),
@@ -60,10 +63,10 @@ term_expansion((:- compilation_module(Alias, Exports)),
                [(:- discontiguous '$compilation_module'/2),
                 '$compilation_module'(Alias, Exports),
                 (:- use_module(Alias, Exports))]).
-term_expansion((:- compilation_predicate(F/A)),
-               [(:- discontiguous '$compilation_predicate'/2),
-                '$compilation_predicate'(F, A)]).
-
+term_expansion((:- compilation_predicate(Seq)),
+               [(:- discontiguous '$compilation_predicate'/2)|ClauseL]) :-
+    sequence_list(Seq, List, []),
+    foldl(compilation_predicate_clause, List, ClauseL, []).
 term_expansion(end_of_file, end_of_file) :-
     prolog_load_context(module, Context),
     prolog_load_context(source, Source),
