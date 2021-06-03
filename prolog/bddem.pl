@@ -23,7 +23,7 @@
   add_prod/4,
   add_sum/4,
   ret_strategy/4,
-  compute_best_strategy/5,
+  % compute_best_strategy/5,
   debug_cudd_var/2
   ]).
 /** <module> bddem
@@ -286,8 +286,16 @@ andc(Env,(_,A),(_,B),(Env,C)):-
     and(Env,A,B,C)
   ).
 
+/**
+ * andcnf(++Environment:int,++A:couple,++B:couple,--AandB:couple) is semidet
+ * 
+ * A and B are couples (Environment, BDDA) and  (Environment, BDDB) respectively
+ * Returns in AandB a couple (Environment, BDDAandB) where BDDAandB is pointer to a BDD belonging to environment Environment
+ * representing the conjunction of BDDs BDDA and BDDB.
+ */
 andcnf(Env,(_,A),(_,B),(Env,C)):-
   and(Env,A,B,C).
+
 /**
  * bdd_notc(++Environment:int,++EBDD:couple,--NotEBDD:couple) is det
  *
@@ -404,36 +412,31 @@ or_listc1([H|T],Env,B0,B1):-
  * Value is in 0..(length(Theta)-1)
  */
 
-/*
+/**
  * probability_dd(++Environment:int,++BDD:int,--ADD:int) is det
  * 
- * Converts the BDD passed as argument into an ADD.
+ * Converts the BDD belonging to environment Environment into an ADD.
 */
 
-/*
+/**
   * add_prod(++Environment:int,++ADDIn:int,++Utility:int,--ADDOut:int) is det
   *
-  * Multiply the ADD passed as argument with the Utility.
+  * Multiplies the ADD belonging to environment Environment 
+  * with the value Utility and stores the result in ADDOut.
 */
 
-/* 
+/**
  * add_sum(++Environment:int,++ADD1:int,++ADD2:int,--ADDOut:int) is det
  * 
- * Computes the sum ADD1+ADD2. Stores the result in ADDOut.
+ * Computes the sum of the two ADDs ADD1 ADD2 belonging to environment Environment. 
+ * The result in saved in ADDOut.
 */
 
-/*
+/**
  * ret_strategy(++Environment:int,++ADD:int,--Decision:list,--Cost:int) is det
  *
- * Computes the optimal strategy.
-*/
-
-/*
- * ret_strategy(++Environment:int,++ADD:int,--Decision:list,--Cost:int, ++MaxNumberOfChoices:int, ++Precise:int) is det
- *
- * Computes the optimal strategy with number of choices = MaxNumberOfChoices
- * if precise = 1. If precise = 0 then number of choices =< MaxNumberOfChoices
- * 
+ * Computes the optimal strategy given a pointer to the ADD belonging to environment Environment.
+ * Decision is a list of selected facts, Cost is the total cost.
 */
 
 /**
