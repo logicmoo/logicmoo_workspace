@@ -419,10 +419,10 @@ or_listc1([H|T],Env,B0,B1):-
 */
 
 /**
-  * add_prod(++Environment:int,++ADDIn:int,++Utility:int,--ADDOut:int) is det
-  *
-  * Multiplies the ADD belonging to environment Environment 
-  * with the value Utility and stores the result in ADDOut.
+ * add_prod(++Environment:int,++ADDIn:int,++Utility:float,--ADDOut:int) is det
+ *
+ * Multiplies the ADD belonging to environment Environment 
+ * with the value Utility and stores the result in ADDOut.
 */
 
 /**
