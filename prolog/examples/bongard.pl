@@ -15,7 +15,7 @@ https://dtai.cs.kuleuven.be/static/ACE/doc/
 /** <examples>
 ?- induce_hplp([train],P),test_hplp(P,[test],LL,AUCROC,ROC,AUCPR,PR). % learn the structure and the parameters and test the result
 ?- induce_hplp_par([train],P),test_hplp(P,[test],LL,AUCROC,ROC,AUCPR,PR). % learn the parameteters and test the result
-?- inside(P),test_hplp(P,[test],LL,AUCROC,ROC,AUCPR,PR). % test the input theory
+?- in(P),test_hplp(P,[test],LL,AUCROC,ROC,AUCPR,PR). % test the input theory
 ?- induce_hplp_par([all],P).
 ?- induce_hplp([all],P).
 */
