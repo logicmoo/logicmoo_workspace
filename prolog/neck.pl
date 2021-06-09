@@ -38,10 +38,7 @@
                  necki/2]).
 
 :- use_module(library(lists)).
-:- use_module(library(occurs)).
 :- use_module(library(ordsets)).
-:- use_module(library(sequence_list)).
-:- use_module(library(list_sequence)).
 :- reexport(library(compound_expand)).
 
 %!  neck is det.
@@ -85,7 +82,6 @@ current_seq_lit((H, T), S, L1, L, R1, R) :-
     ).
 
 term_expansion_hb(Head, Body1, NeckBody, Pattern, ClauseL) :-
-    % (var(Head)->gtrace;true),
     '$current_source_module'(M),
     once(( current_seq_lit(Body1, Neck, Static, Right),
            memberchk(Neck, [neck, neck(X, X), necki, necki(X, X)])
