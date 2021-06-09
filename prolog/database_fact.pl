@@ -168,6 +168,7 @@ database_retract_fact(PRetract, M, Fact) :-
 database_query_fact(clause(A, _),       system,     F) :- clause_head(A, F).
 database_query_fact(clause(A, _, _),    system,     F) :- clause_head(A, F).
 database_query_fact(unfold_goal(_,A,_), refactor,   F) :- clause_head(A, F).
+database_query_fact(fact_near(A),       near_utils, F) :- clause_head(A, F).
 database_query_fact(fact_near(A, _),    near_utils, F) :- clause_head(A, F).
 
 pi_to_head(PI, H) :- nonvar(PI) -> PI=F/A, fa_to_head(F, A, H) ; true.
