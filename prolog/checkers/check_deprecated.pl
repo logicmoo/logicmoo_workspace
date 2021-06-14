@@ -55,9 +55,9 @@ deprecated_predicate(MGoal, Comment, DFrom, CFrom) :-
     prop_asr(head, MGoal, DFrom, Asr),
     prop_asr(glob, deprecated(_), _, Asr),
     curr_prop_asr(comm, Comment, CFrom, Asr).
-deprecated_predicate(M:Goal, " Use ~q instead."-[Alt], [], []) :-
+deprecated_predicate(M:Goal, AltMsg, [], []) :-
     predicate_property(M:Goal, implementation_module(IM)),
-    deprecated_predicate(Goal, IM, Alt).
+    deprecated_predicate(Goal, IM, AltMsg).
 
 checker:check(deprecated, Result, Options) :-
     check_deprecated(Options, Result).

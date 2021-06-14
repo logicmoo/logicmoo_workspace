@@ -34,6 +34,7 @@
 
 :- module(database_fact,
           [database_fact/1,
+           database_fact/2,
            database_fact/3,
            database_fact_ort/4,
            database_def_fact/2,
@@ -75,11 +76,11 @@ is_meta(G) :-
     database_query_fact/3.
 
 :- meta_predicate
-    database_fact(0).
+    database_fact(0),
+    database_fact(0, -).
 
-database_fact(M:G) :-
-    predicate_property(M:G, implementation_module(IM)),
-    database_fact(IM:G, _).
+database_fact(MG) :-
+    database_fact(MG, _).
 database_fact(MG) :-
     prop_asr(head, MG, _, Asr),
     prop_asr(glob, database(_), _, Asr).
@@ -108,7 +109,9 @@ database_fact_ort(dec,     G, M, F) :- database_dec_fact(G, M, F).
 database_fact_ort(retract, G, M, F) :- database_retract_fact(G, M, F).
 database_fact_ort(query,   G, M, F) :- database_query_fact(G, M, F).
 
-database_fact(M:G, F) :- database_fact_ort(_, G, M, F).
+database_fact(M:G, F) :-
+    predicate_property(M:G, implementation_module(IM)),
+    database_fact_ort(_, G, IM, F).
 
 database_def_fact(M:H, F) :- database_def_fact(H, M, F).
 
