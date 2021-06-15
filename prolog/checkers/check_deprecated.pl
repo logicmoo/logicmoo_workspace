@@ -93,7 +93,7 @@ prolog:message(acheck(deprecated, (Loc/PI)-CommentLocCIL)) -->
     foldl(comment_referenced_by, CommentLocCIL).
 
 comment_referenced_by((Loc/Comment)-LocCIL) -->
-    ["    "], Loc, [Comment, " Referenced by", nl],
+    ["    "], Loc, [Comment, ". Referenced by", nl],
     referenced_by(LocCIL).
 
 :- public collect_deprecated/3.
