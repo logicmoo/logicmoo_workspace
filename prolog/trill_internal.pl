@@ -394,7 +394,8 @@ find_sub_sup_class(M,exactCardinality(N,R),exactCardinality(N,S),subPropertyOf(R
 
 %concept for concepts exactCardinality
 find_sub_sup_class(M,exactCardinality(N,R,C),exactCardinality(N,R,D),Ax):-
-  find_sub_sup_class(M,C,D,Ax).
+  find_sub_sup_class(M,C,D,Ax),
+  atomic(D).
 
 %role for concepts exactCardinality
 find_sub_sup_class(M,exactCardinality(N,R,C),exactCardinality(N,S,C),subPropertyOf(R,S)):-
@@ -406,7 +407,8 @@ find_sub_sup_class(M,maxCardinality(N,R),maxCardinality(N,S),subPropertyOf(R,S))
 
 %concept for concepts maxCardinality
 find_sub_sup_class(M,maxCardinality(N,R,C),maxCardinality(N,R,D),Ax):-
-  find_sub_sup_class(M,C,D,Ax).
+  find_sub_sup_class(M,C,D,Ax),
+  atomic(D).
 
 %role for concepts maxCardinality
 find_sub_sup_class(M,maxCardinality(N,R,C),maxCardinality(N,S,C),subPropertyOf(R,S)):-
@@ -418,7 +420,8 @@ find_sub_sup_class(M,minCardinality(N,R),minCardinality(N,S),subPropertyOf(R,S))
 
 %concept for concepts minCardinality
 find_sub_sup_class(M,minCardinality(N,R,C),minCardinality(N,R,D),Ax):-
-  find_sub_sup_class(M,C,D,Ax).
+  find_sub_sup_class(M,C,D,Ax),
+  atomic(D).
 
 %role for concepts minCardinality
 find_sub_sup_class(M,minCardinality(N,R,C),minCardinality(N,S,C),subPropertyOf(R,S)):-

@@ -1544,7 +1544,8 @@ find_sub_sup_class(M,C,D,equivalentClasses(L)):-
 
 %concept for concepts allValuesFrom
 find_sub_sup_class(M,allValuesFrom(R,C),allValuesFrom(R,D),Ax):-
-  find_sub_sup_class(M,C,D,Ax).
+  find_sub_sup_class(M,C,D,Ax),
+  atomic(D).
 
 %role for concepts allValuesFrom
 find_sub_sup_class(M,allValuesFrom(R,C),allValuesFrom(S,C),subPropertyOf(R,S)):-
@@ -1552,7 +1553,8 @@ find_sub_sup_class(M,allValuesFrom(R,C),allValuesFrom(S,C),subPropertyOf(R,S)):-
 
 %concept for concepts someValuesFrom
 find_sub_sup_class(M,someValuesFrom(R,C),someValuesFrom(R,D),Ax):-
-  find_sub_sup_class(M,C,D,Ax).
+  find_sub_sup_class(M,C,D,Ax),
+  atomic(D).
 
 %role for concepts someValuesFrom
 find_sub_sup_class(M,someValuesFrom(R,C),someValuesFrom(S,C),subPropertyOf(R,S)):-
