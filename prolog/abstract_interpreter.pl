@@ -124,6 +124,7 @@ evaluable_body_hook(format(Out, Format, Args), _,
                     (compound(Out), nonvar(Format), ground(Args))).
 evaluable_body_hook(sort(A, _), _, (is_list(A), maplist(nonvar, A))).
 evaluable_body_hook(A==B, _, (A==B;A\=B)).
+evaluable_body_hook(A=..B, _, (is_list(B),B=[E|_],atomic(E);atomic(A);compound(A))).
 
 replace_goal_hook(retractall(_), _, true).
 replace_goal_hook(retract(_),    _, true).
