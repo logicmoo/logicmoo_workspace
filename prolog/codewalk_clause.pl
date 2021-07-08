@@ -242,14 +242,14 @@ walk_called_ontrace(Goal, Caller, M, Opts) :-
     option(from(From), Opts),
     call(OnTrace, M2:Goal, Caller, From).
 
-walk_called_3(Goal, Caller, M, Opts) :-
+walk_called_3(Goal, _, M, Opts) :-
     (   predicate_property(M:Goal, implementation_module(IM)),
         prolog:called_by(Goal, IM, M, Called)
     ;   prolog:called_by(Goal, Called)
     ),
     Called \== [],
     !,
-    walk_called_by(Called, Caller, M, Opts).
+    walk_called_by(Called, M:Goal, M, Opts).
 walk_called_3(Meta, Caller, M, Opts) :-
     (   inferred_meta_predicate(M:Meta, Head)
     ;   predicate_property(M:Meta, meta_predicate(Head))
