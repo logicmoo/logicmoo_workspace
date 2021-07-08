@@ -46,6 +46,7 @@
 :- use_module(library(location_utils)).
 :- use_module(library(from_utils)).
 :- use_module(library(referenced_by)).
+:- use_module(library(extra_location)).
 :- use_module(library(group_pairs_or_sort)).
 
 :- multifile
@@ -98,7 +99,13 @@ find_alternatives(M:F/A, AL) :-
                      AM \= M,
                      \+ predicate_property(AM:H, imported_from(_)),
                      ( module_property(AM, file(AF))
-                     ->( library_alias(AF, AA)
+                     ->
+                       \+ ( member(Decl, [multifile, discontiguous, dynamic]),
+                            loc_declaration(H, AM, Decl, From),
+                            from_to_file(From, File),
+                            File \= AF
+                          ),
+                       ( library_alias(AF, AA)
                        ->true
                        ; AA = AF
                        )
@@ -127,8 +134,7 @@ hide_undef(asr_head_prop(_, _, _, _, _, _, _, _), assertions).
 collect_undef(MCall, Caller, From) :-
     \+ hide_undef(MCall),
     normalize_pi(MCall, PI),
-    normalize_pi(Caller, CI),
-    update_fact_from(undef(PI, CI), From).
+    update_fact_from(undef(PI, Caller), From).
 
 prolog:message(acheck(undefined)) -->
     ['Undefined Predicates',nl,
