@@ -413,7 +413,7 @@ RUN apt-get update -qq && apt-get install -y \
 
 FROM ubuntu:18.04 AS ccls
 RUN apt-get update \
-	&& apt-get upgrade -y \
+	# && apt-get upgrade -y \
 	&& apt-get install -y build-essential cmake clang libclang-dev zlib1g-dev git wget \
 	&& git clone --depth=1 --recursive https://github.com/MaskRay/ccls \
 	&& cd ccls \
@@ -467,7 +467,7 @@ RUN apt-get update \
 
 # Emacs PreReqs (added this when Emacs was ~28.0.50)
 RUN apt-get update \
-        && apt-get upgrade -y \
+       # && apt-get upgrade -y \
 	&& apt-get install -y build-essential git autoconf texinfo libgnutls28-dev libxml2-dev libncurses5-dev libjansson-dev \
                               libjpeg-dev libpng-dev libgif-dev libtiff-dev libjson*-dev libxf*-dev
 # Emacs
