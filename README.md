@@ -1,22 +1,17 @@
 # LogicMOO's Parent Project 
 
+Documentation  http://logicmoo.org/xwiki/
 
 =========
 
 # Install/Run  Methods
 
+
 ## From web-installer 
- 
 ```bash
 source <(curl -sS https://raw.githubusercontent.com/logicmoo/logicmoo_workspace/master/web_install.sh)
-```
-
-## Docker without installing
-```bash
-docker run --rm -it --name logicmoo --privileged=true \  
-  -p 4000-4440:4000-4440 -p 4443:443 -p 3020:3020 \
-  logicmoo/logicmoo_workspace:latest
-
+cd /opt/logicmoo_workspace
+bash ./StartLogicmoo.sh
 ```
 
 ## Developer's Docker 
@@ -25,13 +20,10 @@ docker run --rm -it --name logicmoo --privileged=true \
 cd /opt
 git clone https://logicmoo.org/gitlab/logicmoo/logicmoo_workspace.git
 cd logicmoo_workspace
-
-./runFromDocker.sh -d  # the -d is for running detatched
+bash ./runFromDocker.sh -d  # the -d is for running detatched
 ```
 
-
-## Old Way (might work with older versions)
-
+## Old Way (might work with older versions, but it can very much damage/alter your system)
 ```bash
 cd /opt
 git clone --recursive https://logicmoo.org/gitlab/logicmoo/logicmoo_workspace.git
@@ -42,9 +34,7 @@ source ./INSTALL.md
 ```
 
 
-
-
-# Douglas' Docker pastebin
+# Douglas' pastebin
 ```
 docker kill logicmoo
 docker exec -it $(docker ps -n 1 -q) bash
@@ -52,9 +42,16 @@ docker network create -d macvlan --subnet=10.0.0.0/24 --gateway=10.0.0.1 -o pare
 docker run ./runFromDocker.sh --network="logicmoo_workspace_prologmud_vlan"
 docker kill $(docker ps -a -q)
 docker image prune --all -f
-docker rmi logicmoo/logicmoo_starter_image:latest 
+docker rmi logicmoo/logicmoo_starter_image:latest
 ```
-Initial starter Docs https://github.com/logicmoo/logicmoo_workspace/wiki
+
+## Docker without installing (poor choice as it has to download and build everything from docker which can take an hour and fail)
+```bash
+docker run -it --name logicmoo --privileged=true -p 4000-4440:4000-4440 -p 4443:443 -p 3020:3020 logicmoo/logicmoo_workspace:latest
+```
+
+OLD Doc urls
+Initial Docs https://github.com/logicmoo/logicmoo_workspace/wiki
 
 As well as https://docs.google.com/document/d/1fkOxnmI1LqxadvZuCRS-fGIEweIKyPn6AVGp5Yjse1I/edit
 
