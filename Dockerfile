@@ -3,6 +3,27 @@ FROM logicmoo/logicmoo_starter_image
 USER root
 LABEL maintainer = "logicmoo@gmail.com"
 
+
+RUN apt-get update \
+# ; mv /etc/apache2 /etc/apache2.logicmoo \
+# ; mv /var/www /var/www.logicmoo \
+  && apt purge -y nginx-common \
+#  && apt install -y apache2 # gitweb
+# && apt-get upgrade -y
+
+# ; mv /etc/apache2 /etc/apache2.dead \
+# ; mv /var/www /var/www.logicmoo.dead \
+# ; mv /etc/apache2.logicmoo /etc/apache2  \
+# ; mv /var/www.logicmoo /var/www ; /bin/true
+
+# RUN apt remove -y apache2
+RUN apt install -y apache2
+RUN apt install -y nginx-common nginx nginx-core  libnginx-mod-http-geoip libnginx-mod-http-image-filter \
+  libnginx-mod-http-xslt-filter libnginx-mod-mail libnginx-mod-stream \
+  nginx nginx-common nginx-core supervisord supervisor
+
+
+
 # SSHD
 EXPOSE 22    
 # Apache HTTP 
@@ -46,12 +67,12 @@ MAINTAINER RUN if [ ! -z "$LOGICMOO_EXTRAS" ]; \
 
 ENV HOME /root
 
-
-
 COPY docker/rootfs /
 
+RUN cat /etc/supervisor/supervisord.conf
+RUN ls -l /etc/supervisor/conf.d/supervisord*
+
 RUN echo enable some apache mods \
- && ( apt install -y apache2 ; /bin/true) \
  && a2dismod mpm_event \
  && a2enmod macro access_compat alias auth_basic authn_core authn_file authz_core authz_host authz_user autoindex deflate dir env \
  filter headers http2 mime mpm_prefork negotiation  php7.4 proxy proxy_ajp proxy_balancer proxy_connect proxy_express \
@@ -88,7 +109,10 @@ MAINTAINER RUN cd $LOGICMOO_WS && set -x \
  && cd $LOGICMOO_WS/packs_xtra/ \
  && git add logicmoo_pldata \
  && git commit -am "logicmoo_pldata-$(date)" \
- && echo rm -rf $LOGICMOO_WS/packs_xtra/logicmoo_pldata/*/
+ && rm -rf $LOGICMOO_WS/packs_xtra/logicmoo_pldata/*/
+
+#CMD $LOGICMOO_WS/StartLogicmoo.sh
+
 
 RUN wget -O /tmp/google-chrome-stable_current_amd64.deb https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb \
  && apt install /tmp/google-chrome-stable_current_amd64.deb
@@ -96,3 +120,5 @@ RUN wget -O /tmp/google-chrome-stable_current_amd64.deb https://dl.google.com/li
 #CMD $LOGICMOO_WS/StartLogicmoo.sh
 ENTRYPOINT ["/startup_logicmoo.sh"]
 ENTRYPOINT ["/startup.sh"]
+
+
