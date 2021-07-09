@@ -462,7 +462,7 @@ RUN apt-get update \
 	; mv /etc/apache2 /etc/apache2.dead \
 	; mv /var/www /var/www.logicmoo.dead \
 	; mv /etc/apache2.logicmoo /etc/apache2  \
-	; mv /var/www.logicmoo /var/www 
+	; mv /var/www.logicmoo /var/www ; /bin/true
 
 
 # Emacs (added this when Emacs was ~28.0.50)
