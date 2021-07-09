@@ -486,9 +486,9 @@ RUN ln -s /ccls/Release/ccls /usr/bin/ccls \
 	&& ln -s /ccls/clang+llvm-8.0.0-x86_64-linux-gnu-ubuntu-18.04/bin/clangd /usr/bin/clangd
 
 # Go
-COPY --from=go /go /go
-ENV PATH "${PATH}:/go/bin:/root/go/bin"
-RUN /go/bin/go get -u golang.org/x/tools/gopls
+MAINTAINER COPY --from=go /go /go
+MAINTAINER ENV PATH "${PATH}:/go/bin:/root/go/bin"
+MAINTAINER RUN /go/bin/go get -u golang.org/x/tools/gopls
 
 
 # Python
