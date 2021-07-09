@@ -452,13 +452,13 @@ RUN apt-get install -y python3-pip \
 
 
 # required for apt upgrade
-RUN apt-get update \
+MAINTAINER RUN apt-get update \
         ; mv /etc/apache2 /etc/apache2.logicmoo \
 	; mv /var/www /var/www.logicmoo \
 	; apt purge -y apache2 gitweb \
 	; apt install -y apache2 gitweb \
       # ; apt install -y gir1.2-harfbuzz-0.0 libgraphite2-dev libharfbuzz-dev libharfbuzz-gobject0 libicu-le-hb-dev libicu-le-hb0 libiculx60 \
-	; apt-get upgrade -y \
+      	; apt-get upgrade -y \
 	; mv /etc/apache2 /etc/apache2.dead \
 	; mv /var/www /var/www.logicmoo.dead \
 	; mv /etc/apache2.logicmoo /etc/apache2  \
