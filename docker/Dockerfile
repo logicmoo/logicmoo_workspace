@@ -387,7 +387,7 @@ MAINTAINER RUN mkdir -p /tmp/ros_setup_scripts_ubuntu && mv /ros-eloquent-deskto
 ENV USER=root
 ENV HOME=/root
 
-RUN curl -s https://raw.githubusercontent.com/ros/rosdistro/master/ros.asc | sudo apt-key add - \
+MAINTAINER RUN curl -s https://raw.githubusercontent.com/ros/rosdistro/master/ros.asc | sudo apt-key add - \
  && curl -sSL https://raw.githubusercontent.com/ros/rosdistro/master/ros.key -o /usr/share/keyrings/ros-archive-keyring.gpg \
  && curl http://repo.ros2.org/repos.key | sudo apt-key add -
 
