@@ -583,3 +583,4 @@ COPY rootfs /
 
 #ENTRYPOINT ["/startup_logicmoo.sh"]
 #ENTRYPOINT ["/startup.sh"]
+ENTRYPOINT ["/bin/sh", "-ec", "while :; do echo '.'; sleep 5 ; done"]
