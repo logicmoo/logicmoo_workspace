@@ -7,7 +7,9 @@
 #FROM centminmod/docker-ubuntu-vnc-desktop
 #FROM dickhub/ubuntu-xfce-vnc
 #FROM ct2034/vnc-ros-kinetic-full
-FROM tiryoh/ros2-desktop-vnc
+#FROM tiryoh/ros2-desktop-vnc
+#FROM ros:noetic-desktop-full
+FROM tiryoh/ros-desktop-vnc:noetic
 MAINTAINER FROM dorowu/ubuntu-desktop-lxde-vnc:bionic
 LABEL maintainer="Tiryoh<tiryoh@gmail.com>"
 #FROM aicampbell/vnc-ubuntu18-xfce
