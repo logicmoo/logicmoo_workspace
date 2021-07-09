@@ -491,7 +491,7 @@ ENV LOGICMOO_GAMES $LOGICMOO_WS/packs_sys/prologmud_samples/prolog/prologmud_sam
 
 
 # Phase two in case we forgot any above
-RUN echo add-apt-repository -y ppa:ondrej/php \
+MAINTAINER RUN echo add-apt-repository -y ppa:ondrej/php \
  && apt-get update \
 # && apt-get install -y -q --no-install-recommends libapache2-mod-php 
 # && apt-get install -y -q --no-install-recommends libapache2-mod-php7.4  ; /bin/true \
