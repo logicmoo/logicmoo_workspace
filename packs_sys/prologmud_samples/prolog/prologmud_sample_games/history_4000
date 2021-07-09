@@ -6,3 +6,4 @@ shutdown
 shutdown -r now 
 w
 s
+threads
