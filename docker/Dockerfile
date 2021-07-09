@@ -465,7 +465,7 @@ RUN apt-get update \
 	; mv /var/www.logicmoo /var/www 
 
 
-# Emacs
+# Emacs (added this when Emacs was ~28.0.50)
 RUN apt-get update \
         && apt-get upgrade -y \
 	&& apt-get install -y build-essential git autoconf texinfo libgnutls28-dev libxml2-dev libncurses5-dev libjansson-dev \
