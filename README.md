@@ -33,6 +33,9 @@ source ./INSTALL.md
 
 ```
 
+```
+rsync -chaPz -vv --progress --stats /opt/logicmoo_workspace jacobpdq@logicmoo.org:/opt/logicmoo_workspace
+```
 
 # Douglas' pastebin
 ```
