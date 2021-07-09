@@ -451,7 +451,7 @@ RUN apt-get install -y python3-pip \
 	 && rm -rf /var/lib/apt/lists/* 
 
 
-# required for apt upgrade
+# required for apt upgrade (which is requested in EMACS LSP DOCKER)
 MAINTAINER RUN apt-get update \
         ; mv /etc/apache2 /etc/apache2.logicmoo \
 	; mv /var/www /var/www.logicmoo \
