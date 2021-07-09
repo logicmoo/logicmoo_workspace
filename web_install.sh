@@ -42,6 +42,7 @@ git status -s
 
 (source ./INSTALL.md)
 
-echo -e "\e[1;32m If Docker is installed: ./runFromDocker.sh  (otherwise: source ./StartLogicmoo.sh)\e[0m"
+echo -e "\e[1;32m If Docker is installed: /opt/logicmoo_workspace/runFromDocker.sh
+         (otherwise: source /opt/logicmoo_workspace/StartLogicmoo.sh)\e[0m"
 
 )
