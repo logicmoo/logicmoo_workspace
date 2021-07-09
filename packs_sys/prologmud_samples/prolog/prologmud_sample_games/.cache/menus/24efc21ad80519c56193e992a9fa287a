@@ -405,48 +405,6 @@ applications-other
 lxde-other.directory
 2
 0
--_opt_logicmoo_workspace_packs_xtra_logicmoo_pldata_eclipse_.desktop
-Eclipse IDE
-
-
-
-3
-
-/opt/logicmoo_workspace/packs_xtra/logicmoo_pldata/eclipse/eclipse %u
-4
-0
-
-
-
-
--_opt_logicmoo_workspace_packs_sys_prologmud_samples_prolog_prologmud_sample_games_eclipse_modeling-2020-06_eclipse_.desktop
-Eclipse IDE
-
-
-
-3
-
-/opt/logicmoo_workspace/packs_sys/prologmud_samples/prolog/prologmud_sample_games/eclipse/modeling-2020-06/eclipse/eclipse %u
-4
-0
-
-
-
-
--_opt_logicmoo_workspace_packs_sys_prologmud_samples_prolog_prologmud_sample_games_eclipse-installer_.desktop
-Eclipse Installer
-
-
-
-3
-
-/opt/logicmoo_workspace/packs_sys/prologmud_samples/prolog/prologmud_sample_games/eclipse-installer/eclipse-inst %u
-4
-0
-
-
-
-
 -libreoffice-xsltfilter.desktop
 LibreOffice XSLT based filters
 
