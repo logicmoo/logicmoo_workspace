@@ -490,6 +490,9 @@ ENV LOGICMOO_WS /opt/logicmoo_workspace
 ENV LOGICMOO_GAMES $LOGICMOO_WS/packs_sys/prologmud_samples/prolog/prologmud_sample_games
 
 
+RUN apt-get update \
+ && apt-get install -y -q --no-install-recommends iputils-ping net-tools
+
 # Phase two in case we forgot any above
 MAINTAINER RUN echo add-apt-repository -y ppa:ondrej/php \
  && apt-get update \
