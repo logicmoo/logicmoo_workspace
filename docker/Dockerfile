@@ -22,7 +22,7 @@ EXPOSE 80
 # docker build -t logicmoo/logicmoo_starter_image:latest --no-cache --add-host=logicmoo.org:10.0.0.90 - < ./Dockerfile.distro
 #
 
-# USER root
+USER root
 LABEL maintainer = "logicmoo@gmail.com"
 
 ENV DEBIAN_FRONTEND noninteractive
