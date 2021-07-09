@@ -16,7 +16,7 @@ RUN apt-get update &&  apt-get upgrade -y
 # ; mv /etc/apache2.logicmoo /etc/apache2  \
 # ; mv /var/www.logicmoo /var/www ; /bin/true
 
-# RUN apt remove -y apache2
+RUN apt purge -y apache2
 RUN apt install -y apache2 nmap x11-apps vim
 RUN apt install -y nginx-common nginx nginx-core  libnginx-mod-http-geoip libnginx-mod-http-image-filter \
   libnginx-mod-http-xslt-filter libnginx-mod-mail libnginx-mod-stream \
