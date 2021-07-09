@@ -452,7 +452,7 @@ MAINTAINER RUN /go/bin/go get -u golang.org/x/tools/gopls
 
 
 # Python
-RUN apt-get install -y python3-pip \
+RUN apt-get install -y vim python3-pip \
 	&& pip3 install 'python-language-server[all]' \
 	 && echo apt autoclean -y \
 	 && echo apt autoremove -y \
