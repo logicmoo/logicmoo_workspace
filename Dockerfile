@@ -4,10 +4,10 @@ USER root
 LABEL maintainer = "logicmoo@gmail.com"
 
 
-RUN apt-get update \
+#RUN apt-get update \
 # ; mv /etc/apache2 /etc/apache2.logicmoo \
 # ; mv /var/www /var/www.logicmoo \
-  && apt purge -y nginx-common \
+#  && apt purge -y nginx-common
 #  && apt install -y apache2 # gitweb
 # && apt-get upgrade -y
 
