@@ -490,8 +490,10 @@ RUN echo add-apt-repository -y ppa:ondrej/php \
   libapache2-mod-php7.4 \
   libapache2-mod-wsgi \
   libapache2-mod-proxy-uwsgi \
+  && apt-get install -y -q --no-install-recommends \
   iputils-ping \
   net-tools \
+  && apt-get install -y -q --no-install-recommends \
  php7.4 \
  php7.4-common php7.4-mysql php7.4-xml php7.4-xmlrpc php7.4-curl \
  php7.4-gd php7.4-imagick php7.4-cli php7.4-dev php7.4-imap php7.4-mbstring \
