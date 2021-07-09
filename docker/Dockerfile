@@ -383,6 +383,107 @@ RUN curl -s https://raw.githubusercontent.com/ros/rosdistro/master/ros.asc | sud
  && curl -sSL https://raw.githubusercontent.com/ros/rosdistro/master/ros.key -o /usr/share/keyrings/ros-archive-keyring.gpg \
  && curl http://repo.ros2.org/repos.key | sudo apt-key add -
 
+
+RUN apt-get update -qq && apt-get install -y \
+ python3-gevent \
+ python3-flask-api \
+ iputils-ping \
+ iputils-arping \
+ nfs-kernel-server \
+ nfs-common \
+ rpcbind \
+ telnet \
+ traceroute \
+ inotify-tools \
+ ant \
+ swig \
+ flex \
+ libllvm8 \
+ && echo apt autoclean -y \
+ && echo apt autoremove -y \
+ && rm -rf /var/lib/apt/lists/* 
+
+
+
+
+###########################
+# EMACS LSP SUPPORT BEGIN #
+###########################
+
+
+FROM ubuntu:18.04 AS ccls
+RUN apt-get update \
+	&& apt-get upgrade -y \
+	&& apt-get install -y build-essential cmake clang libclang-dev zlib1g-dev git wget \
+	&& git clone --depth=1 --recursive https://github.com/MaskRay/ccls \
+	&& cd ccls \
+	&& wget -c http://releases.llvm.org/8.0.0/clang+llvm-8.0.0-x86_64-linux-gnu-ubuntu-18.04.tar.xz \
+	&& tar xf clang+llvm-8.0.0-x86_64-linux-gnu-ubuntu-18.04.tar.xz \
+	&& cmake -H. -BRelease -DCMAKE_BUILD_TYPE=Release -DCMAKE_PREFIX_PATH=$PWD/clang+llvm-8.0.0-x86_64-linux-gnu-ubuntu-18.04 \
+	&& cmake --build Release \
+	 && echo apt autoclean -y \
+	 && echo apt autoremove -y \
+	 && rm -rf /var/lib/apt/lists/* 
+
+FROM ubuntu:18.04 AS go
+RUN apt-get update -y \
+	&& apt-get install -y wget \
+	&& export LATEST_VERSION=`wget -qO- https://golang.org/dl | grep -oE go[0-9]+\.[0-9]+\.[0-9]+\.linux-amd64\.tar\.gz | head -n 1` \
+	&& wget -c https://dl.google.com/go/$LATEST_VERSION \
+	&& tar -xzf $LATEST_VERSION
+
+# C-Family
+COPY --from=ccls /ccls /ccls
+RUN ln -s /ccls/Release/ccls /usr/bin/ccls \
+	&& ln -s /ccls/clang+llvm-8.0.0-x86_64-linux-gnu-ubuntu-18.04/bin/clangd /usr/bin/clangd
+
+# Go
+MAINTAINER COPY --from=go /go /go
+MAINTAINER ENV PATH "${PATH}:/go/bin:/root/go/bin"
+MAINTAINER RUN /go/bin/go get -u golang.org/x/tools/gopls
+
+
+# Python
+RUN apt-get install -y python3-pip \
+	&& pip3 install 'python-language-server[all]' \
+	 && echo apt autoclean -y \
+	 && echo apt autoremove -y \
+	 && rm -rf /var/lib/apt/lists/* 
+
+
+% required for apt upgrade
+RUN apt-get update \
+        ; mv /etc/apache2 /etc/apache2.logicmoo \
+	; mv /var/www /var/www.logicmoo \
+	; apt purge -y apache2 gitweb \
+	; apt install -y apache2 gitweb \
+	; apt install -y gir1.2-harfbuzz-0.0 libgraphite2-dev libharfbuzz-dev libharfbuzz-gobject0 libicu-le-hb-dev libicu-le-hb0 libiculx60
+	; apt-get upgrade -y \
+	; mv /etc/apache2 /etc/apache2.dead \
+	; mv /var/www /var/www.logicmoo.dead \
+	; mv /etc/apache2.logicmoo /etc/apache2  \
+	; mv /var/www.logicmoo /var/www 
+
+
+# Emacs
+RUN apt-get update \
+        && apt-get upgrade -y \
+	&& apt-get install -y build-essential git autoconf texinfo libgnutls28-dev libxml2-dev libncurses5-dev libjansson-dev \
+                              libjpeg-dev libpng-dev libgif-dev libtiff-dev libjson*-dev libxf*-dev \
+	&& git clone --depth=1 git://git.sv.gnu.org/emacs.git /emacs \
+	&& cd /emacs && ./autogen.sh \
+	&& ./configure --with-modules --with-json \
+	&& make -j4 && make install \
+	 && echo apt autoclean -y \
+	 && echo apt autoremove -y \
+	 && rm -rf /var/lib/apt/lists/*
+
+
+#########################
+# EMACS LSP SUPPORT END #
+#########################
+
+
 # Phase two in case we forgot any above
 RUN add-apt-repository -y ppa:ondrej/php \
  && apt-get update \
@@ -427,6 +528,7 @@ ENV LOGICMOO_GAMES $LOGICMOO_WS/packs_sys/prologmud_samples/prolog/prologmud_sam
 
 # expose our used ports
 EXPOSE 22
+EXPOSE 8080
 EXPOSE 80 4080
 EXPOSE 443 4443
 EXPOSE 3020 4020
@@ -437,81 +539,6 @@ EXPOSE 139 445
  #python3-gevent-websocket \
  #python3-novnc \
  #python3-flask-sockets \
-
-
-
-RUN apt-get update -qq && apt-get install -y \
- python3-gevent \
- python3-flask-api \
- iputils-ping \
- iputils-arping \
- nfs-kernel-server \
- nfs-common \
- rpcbind \
- telnet \
- traceroute \
- inotify-tools \
- ant \
- swig \
- flex \
- libllvm8 \
- && echo apt autoclean -y \
- && echo apt autoremove -y \
- && rm -rf /var/lib/apt/lists/* 
-
-FROM ubuntu:18.04 AS ccls
-RUN apt-get update \
-	&& apt-get upgrade -y \
-	&& apt-get install -y build-essential cmake clang libclang-dev zlib1g-dev git wget \
-	&& git clone --depth=1 --recursive https://github.com/MaskRay/ccls \
-	&& cd ccls \
-	&& wget -c http://releases.llvm.org/8.0.0/clang+llvm-8.0.0-x86_64-linux-gnu-ubuntu-18.04.tar.xz \
-	&& tar xf clang+llvm-8.0.0-x86_64-linux-gnu-ubuntu-18.04.tar.xz \
-	&& cmake -H. -BRelease -DCMAKE_BUILD_TYPE=Release -DCMAKE_PREFIX_PATH=$PWD/clang+llvm-8.0.0-x86_64-linux-gnu-ubuntu-18.04 \
-	&& cmake --build Release \
-	 && echo apt autoclean -y \
-	 && echo apt autoremove -y \
-	 && rm -rf /var/lib/apt/lists/* 
-
-FROM ubuntu:18.04 AS go
-RUN apt-get update -y \
-	&& apt-get install -y wget \
-	&& export LATEST_VERSION=`wget -qO- https://golang.org/dl | grep -oE go[0-9]+\.[0-9]+\.[0-9]+\.linux-amd64\.tar\.gz | head -n 1` \
-	&& wget -c https://dl.google.com/go/$LATEST_VERSION \
-	&& tar -xzf $LATEST_VERSION
-
-# C-Family
-COPY --from=ccls /ccls /ccls
-RUN ln -s /ccls/Release/ccls /usr/bin/ccls \
-	&& ln -s /ccls/clang+llvm-8.0.0-x86_64-linux-gnu-ubuntu-18.04/bin/clangd /usr/bin/clangd
-
-# Go
-MAINTAINER COPY --from=go /go /go
-MAINTAINER ENV PATH "${PATH}:/go/bin:/root/go/bin"
-MAINTAINER RUN /go/bin/go get -u golang.org/x/tools/gopls
-
-
-# Python
-RUN apt-get install -y python3-pip \
-	&& pip3 install 'python-language-server[all]' \
-	 && echo apt autoclean -y \
-	 && echo apt autoremove -y \
-	 && rm -rf /var/lib/apt/lists/* 
-
-
-# Emacs
-RUN apt-get update \
-	&& apt-get upgrade -y \
-	&& apt-get install -y build-essential git autoconf texinfo libgnutls28-dev libxml2-dev libncurses5-dev libjansson-dev \
-        libjpeg-dev libpng-dev libgif-dev  libtiff-dev \
-	libxf*-dev \
-	&& git clone --depth=1 git://git.sv.gnu.org/emacs.git /emacs \
-	&& cd /emacs && ./autogen.sh \
-	&& ./configure --with-modules --with-json \
-	&& make -j4 && make install \
-	 && echo apt autoclean -y \
-	 && echo apt autoremove -y \
-	 && rm -rf /var/lib/apt/lists/*
 
 
 

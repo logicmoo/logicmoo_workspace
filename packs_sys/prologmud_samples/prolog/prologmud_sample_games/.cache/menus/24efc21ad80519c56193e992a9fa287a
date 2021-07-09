@@ -581,6 +581,20 @@ gazebo
 
 Development;Education;Science
 Run
+-ocaml.desktop
+OCaml
+
+ocaml
+
+5
+OCaml Toplevel
+ocaml
+1
+0
+
+
+Development;ConsoleOnly
+
 -python2.7.desktop
 Python (v2.7)
 Python Interpreter (v2.7)
