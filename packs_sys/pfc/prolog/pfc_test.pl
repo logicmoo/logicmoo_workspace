@@ -11,9 +11,18 @@
 % ===================================================================
 */
 :- if((prolog_load_context(source,File),prolog_load_context(file,File));current_prolog_flag(xref,true)).
-:- module(pfc_test,[why_was_true/1,mpred_test/1]).
+:- module(pfc_test,[mpred_test/1]).
 :- endif.                             
-%:- use_module(library(must_trace)).
+
+:- system:use_module(library(prolog_stack)).
+:- system:use_module(library(listing)).
+:- system:use_module(library(lists)).
+:- system:use_module(library(must_trace)).
+
+:- use_module(library(prolog_stack)).
+:- use_module(library(listing)).
+:- use_module(library(lists)).
+:- use_module(library(must_trace)).
 
 %:- dumpST.
 
@@ -180,7 +189,9 @@ message_hook_handle(T,Type,Warn):-
   ((current_prolog_flag(runtime_debug, N),N>2) -> true ; source_location(_,_)),
   memberchk(Type,[error,warning]),once(inform_message_hook(T,Type,Warn)),fail.
 
+:- if(current_predicate(fixup_exports/0)).
 :- fixup_exports.
+:- endif.
 
 user:message_hook(T,Type,Warn):- 
    Type \== silent,Type \== debug, Type \== informational,

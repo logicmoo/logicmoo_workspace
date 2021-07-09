@@ -1395,7 +1395,7 @@ genls(tRoom,tRegion).
 
 tAgent(iExplorer7).
 
-mud_listing(M):- cwc, xlisting((M,-completely_expanded,-spft,-nt,-pt,- (==>))).
+mud_listing(M):- cwc, xlisting((M,-completely_expanded,-'$spft',-'$nt',-'$pt',- (==>))).
 
 % :- mud_listing(iExplorer7).
 

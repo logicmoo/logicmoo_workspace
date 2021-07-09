@@ -1,3 +1,4 @@
+
 true.
 
 000001 there is a man.
@@ -5994,7 +5995,7 @@ fof(f1, axiom, (
 001184 Each of some girls lifts her own table.
 fof(f1, axiom, (
 ? [A] : ((! [B] : ((has_part(A,B))
-=> (? [C,D] : ((table(C)) &
+=> (? [C,D] : ((table C) &
 ((relation(C,of,B)) &
 (predicate2(D,lift,B,C))))))) &
 (object(A,girl,countable,na,geq,2))))).
@@ -6047,13 +6048,13 @@ fof(f2, axiom, (
 (relation(B,of,'Mary'))))))).
 001196 10 kg of laundry is on the table.
 fof(f1, axiom, (
-? [A,B,C] : ((table(A)) &
+? [A,B,C] : ((table A) &
 ((modifier_pp(B,on,A)) &
 ((predicate1(B,be,C)) &
 (object(C,laundry,mass,kg,eq,10))))))).
 001197 10 kg of laundry are on the table.
 fof(f1, axiom, (
-? [A,B,C] : ((table(A)) &
+? [A,B,C] : ((table A) &
 ((modifier_pp(B,on,A)) &
 ((predicate1(B,be,C)) &
 (object(C,laundry,mass,kg,eq,10))))))).
@@ -9099,9 +9100,9 @@ fof(f1, axiom, (
 (~(? [D] : ((predicate1(D,eat,B))
 | (? [E] : (predicate1(E,wait,B)))))))))))).
 001895 If there is a man then he sees a cat X and it is possible that X eats or that X waits.
-ERROR	DRS condition not supported: can	tptp/4	can(drs([],[drs([A],[predicate(A,eat,C)-1/18])v drs([B],[predicate(B,wait,C)-1/22])]))
+ERROR	DRS condition not supported: can	tptp/4	can(drs([],[drs([A],[predicate(A,eat,B)-1/18])v drs([C],[predicate(C,wait,B)-1/22])]))
 001896 If there is a man then he sees a cat X and it is necessary that X eats or that X waits.
-ERROR	DRS condition not supported: must	tptp/4	must(drs([],[drs([A],[predicate(A,eat,C)-1/18])v drs([B],[predicate(B,wait,C)-1/22])]))
+ERROR	DRS condition not supported: must	tptp/4	must(drs([],[drs([A],[predicate(A,eat,B)-1/18])v drs([C],[predicate(C,wait,B)-1/22])]))
 001897 If there is a man then he sees a cat X and it is false that X sees a mouse or that X sees a rat.
 fof(f1, axiom, (
 ! [A] : ((man(A))
@@ -9112,9 +9113,9 @@ fof(f1, axiom, (
 | (? [F,G] : ((rat(F)) &
 (predicate2(G,see,B,F))))))))))))).
 001898 If there is a man then he sees a cat X and it is necessary that X sees a mouse or that X sees a rat.
-ERROR	DRS condition not supported: must	tptp/4	must(drs([],[drs([A,B],[object(A,mouse,countable,na,eq,1)-1/20,predicate(B,see,E,A)-1/18])v drs([C,D],[object(C,rat,countable,na,eq,1)-1/26,predicate(D,see,E,C)-1/24])]))
+ERROR	DRS condition not supported: must	tptp/4	must(drs([],[drs([A,B],[object(A,mouse,countable,na,eq,1)-1/20,predicate(B,see,C,A)-1/18])v drs([D,E],[object(D,rat,countable,na,eq,1)-1/26,predicate(E,see,C,D)-1/24])]))
 001899 If there is a man then he sees a cat X and it is possible that X sees a mouse or that X sees a rat.
-ERROR	DRS condition not supported: can	tptp/4	can(drs([],[drs([A,B],[object(A,mouse,countable,na,eq,1)-1/20,predicate(B,see,E,A)-1/18])v drs([C,D],[object(C,rat,countable,na,eq,1)-1/26,predicate(D,see,E,C)-1/24])]))
+ERROR	DRS condition not supported: can	tptp/4	can(drs([],[drs([A,B],[object(A,mouse,countable,na,eq,1)-1/20,predicate(B,see,C,A)-1/18])v drs([D,E],[object(D,rat,countable,na,eq,1)-1/26,predicate(E,see,C,D)-1/24])]))
 001900 Every man hears a dog that does not bark and sees a cat that sleeps.
 fof(f1, axiom, (
 ! [A] : ((man(A))
@@ -9177,7 +9178,7 @@ fof(f1, axiom, (
 ((object(B,dog,countable,na,eq,2)) &
 (object(C,man,countable,na,eq,2)))))).
 001909 Every goat eats at most 0 things that are not some grass.
-ERROR	DRS condition not supported: [|]	tptp/4	[predicate(_,eat,_,C)-1/3,-drs([A,B],[object(A,grass,mass,na,na,na)-1/12,predicate(B,be,C,A)-1/9]),object(C,thing,countable,na,leq,0)-1/7]
+ERROR	DRS condition not supported: [|]	tptp/4	[predicate(_,eat,_,A)-1/3,-drs([B,C],[object(B,grass,mass,na,na,na)-1/12,predicate(C,be,A,B)-1/9]),object(A,thing,countable,na,leq,0)-1/7]
 001910 Everybody who is John is a man.
 fof(f1, axiom, (
 ! [A] : (((A='John') &
@@ -9675,7 +9676,7 @@ ERROR	DRS is empty	apply_converter/2	drs([],[])
 002040 A man that waits, buy a car!
 ERROR	DRS condition not supported: command	tptp/4	command(drs([A,B,C,D],[object(A,man,countable,na,eq,1)-1/2,predicate(B,wait,A)-1/4,object(C,car,countable,na,eq,1)-1/8,predicate(D,buy,A,C)-1/6]))
 002041 John and Mary, buy a car!
-ERROR	DRS condition not supported: command	tptp/4	command(drs([B,C,A],[has_part(A,named(John))-1/,object(B,car,countable,na,eq,1)-1/7,predicate(C,buy,A,B)-1/5,has_part(A,named(Mary))-1/,object(A,na,countable,na,eq,2)-1/]))
+ERROR	DRS condition not supported: command	tptp/4	command(drs([A,B,C],[has_part(C,named(John))-1/,object(A,car,countable,na,eq,1)-1/7,predicate(B,buy,C,A)-1/5,has_part(C,named(Mary))-1/,object(C,na,countable,na,eq,2)-1/]))
 002042 Some customers, buy a car!
 ERROR	DRS condition not supported: command	tptp/4	command(drs([A,B,C],[object(A,customer,countable,na,geq,2)-1/2,object(B,car,countable,na,eq,1)-1/6,predicate(C,buy,A,B)-1/4]))
 002043 John, be loved by Mary!
@@ -10725,7 +10726,7 @@ fof(f1, axiom, (
 fof(f1, axiom, (
 ~(? [A] : ((object(A,girl,countable,na,eq,2)) &
 (! [B] : ((has_part(A,B))
-=> (? [C,D] : ((table(C)) &
+=> (? [C,D] : ((table C) &
 (predicate2(D,lift,B,C)))))))))).
 002268 If there is a man then that John waits.
 ERROR	DRS is empty	apply_converter/2	drs([],[])
@@ -11235,7 +11236,7 @@ fof(f1, axiom, (
 ((has_part(C,A)) &
 ((has_part(C,B)) &
 (object(C,na,countable,na,eq,2))))))
-=> (? [D] : ((D= (A+B)/2) &
+=> (? [D] : ((D=(A+B)/2) &
 ((relation(D,of,C)) &
 (average(D)))))))).
 002364 [3.141, {1, 2, 3}, 4 + X, Y * (Z - 2), "ace"] is a list.
@@ -11261,7 +11262,7 @@ fof(f1, axiom, (
 ERROR	DRS condition not supported: [|]	tptp/4	[object(_,integer,countable,na,exactly,1)-1]
 002370 2*(3-5/17) >= 1/2.
 fof(f1, axiom, (
-2* (3-5/17)>=1/2)).
+2*(3-5/17)>=1/2)).
 002371 Is S contained by R1?
 fof(f1, conjecture, (
 ? [A,B,C] : (($true) &
@@ -13077,7 +13078,7 @@ fof(f1, axiom, (
 ? [A,B] : ((predicate1(A,exist,B)) &
 (apple(B))))).
 002753 at most 3 l of good milk X of John are in the fridge.
-ERROR	DRS condition not supported: [|]	tptp/4	[modifier_pp(A,in,C)-1,predicate(A,be,B)-1,relation(B,of,named(John))-1,object(C,fridge,countable,na,eq,1)-1,property(B,good,pos)-1,object(B,milk,mass,l,leq,3)-1]
+ERROR	DRS condition not supported: [|]	tptp/4	[modifier_pp(A,in,B)-1,predicate(A,be,C)-1,relation(C,of,named(John))-1,object(B,fridge,countable,na,eq,1)-1,property(C,good,pos)-1,object(C,milk,mass,l,leq,3)-1]
 002754 at least 3 l of good milk X which is owned by John is in the fridge.
 fof(f1, axiom, (
 ? [A,B,C,D] : ((fridge(A)) &
@@ -13326,13 +13327,13 @@ fof(f1, axiom, (
 ((object(C,na,countable,na,eq,2)) &
 (predicate1(D,wait,A)))))))))).
 002838 John who is larger than his own brother can work carefully in a year that is not 2006 and that is not in [1981, 1983, 1985].
-ERROR	DRS condition not supported: can	tptp/4	can(drs([A,D],[object(A,year,countable,na,eq,1)-1/14,-drs([B],[predicate(B,be,A,int(2006))-1/16]),-drs([C],[predicate(C,be,A)-1/21,modifier_pp(C,in,list([int(1981),int(1983),int(1985)]))-1/23]),predicate(D,work,named(John))-1/10,modifier_pp(D,in,A)-1/12,modifier_adv(D,carefully,pos)-1/11]))
+ERROR	DRS condition not supported: can	tptp/4	can(drs([A,B],[object(A,year,countable,na,eq,1)-1/14,-drs([C],[predicate(C,be,A,int(2006))-1/16]),-drs([D],[predicate(D,be,A)-1/21,modifier_pp(D,in,list([int(1981),int(1983),int(1985)]))-1/23]),predicate(B,work,named(John))-1/10,modifier_pp(B,in,A)-1/12,modifier_adv(B,carefully,pos)-1/11]))
 002839 If each of some men who are {John, Bill} gives a small text "abc" to a woman then John must buy 2 kg of food or knows that it is not provable that 2 km / (2.3 + 4) = X * 2.
 ERROR	DRS function set/1 not supported	arg_to_tptp/2	set([named(John),named(Bill)])
 002840 Who is mad-about John who is rich and who is as fond-of Mary as of Sue?
 ERROR	DRS query/2 not supported	cond_to_tptp/2	query(_,who)
 002841 At most 3 men own more than 5 cars. At most 5 cars are owned by more than 3 men.
-ERROR	DRS condition not supported: [|]	tptp/4	[predicate(_,own,B,A)-1,object(A,car,countable,na,greater,5)-1,object(B,man,countable,na,leq,3)-1]
+ERROR	DRS condition not supported: [|]	tptp/4	[predicate(_,own,A,B)-1,object(B,car,countable,na,greater,5)-1,object(A,man,countable,na,leq,3)-1]
 002842 There are at most 3 men. The men wait.
 ERROR	DRS condition not supported: [|]	tptp/4	[object(_,man,countable,na,leq,3)-1]
 002843 No man but John waits.
@@ -13343,9 +13344,9 @@ fof(f1, axiom, (
 002844 each of not at most 5 men owns each of not at most 8 cars.
 ERROR	DRS is empty	apply_converter/2	drs([],[])
 002845 each of at most 5 men owns each of less than 8 cars.
-ERROR	DRS condition not supported: [|]	tptp/4	[drs([A],[has_part(E,A)-1])=>drs([B],[[drs([C],[has_part(B,C)-1])=>drs([D],[predicate(D,own,A,C)-1]),object(B,car,countable,na,less,8)-1]]),object(E,man,countable,na,leq,5)-1]
+ERROR	DRS condition not supported: [|]	tptp/4	[drs([A],[has_part(B,A)-1])=>drs([C],[[drs([D],[has_part(C,D)-1])=>drs([E],[predicate(E,own,A,D)-1]),object(C,car,countable,na,less,8)-1]]),object(B,man,countable,na,leq,5)-1]
 002846 every man owns each of at most 5 cars.
-ERROR	DRS condition not supported: [|]	tptp/4	[drs([A],[has_part(C,A)-1])=>drs([B],[predicate(B,own,_,A)-1]),object(C,car,countable,na,leq,5)-1]
+ERROR	DRS condition not supported: [|]	tptp/4	[drs([A],[has_part(B,A)-1])=>drs([C],[predicate(C,own,_,A)-1]),object(B,car,countable,na,leq,5)-1]
 002847 at most 1 kg of water flows.
 ERROR	DRS condition not supported: [|]	tptp/4	[predicate(_,flow,A)-1,object(A,water,mass,kg,leq,1)-1]
 002849 A card manually is taken by John.
@@ -15434,11 +15435,11 @@ ERROR	DRS condition not supported: :	tptp/4	_:drs([A,B],[object(A,beer,countable
 003228 John wants to be loved by Mary.
 ERROR	DRS condition not supported: :	tptp/4	_:drs([A],[predicate(A,love,named(Mary),named(John))-1])
 003229 Every man wants to be loved by a woman who wants to be protected by the man.
-ERROR	DRS condition not supported: :	tptp/4	_:drs([A,B,C,E],[object(A,woman,countable,na,eq,1)-1,predicate(B,want,A,C)-1,C:drs([D],[predicate(D,protect,F,A)-1]),predicate(E,love,A,F)-1])
+ERROR	DRS condition not supported: :	tptp/4	_:drs([A,B,C,D],[object(A,woman,countable,na,eq,1)-1,predicate(B,want,A,C)-1,C:drs([E],[predicate(E,protect,F,A)-1]),predicate(D,love,A,F)-1])
 003230 Every man can want to love a woman.
-ERROR	DRS condition not supported: can	tptp/4	can(drs([A,B],[predicate(A,want,E,B)-1/4,B:drs([C,D],[object(C,woman,countable,na,eq,1)-1/8,predicate(D,love,E,C)-1/6])]))
+ERROR	DRS condition not supported: can	tptp/4	can(drs([A,B],[predicate(A,want,C,B)-1/4,B:drs([D,E],[object(D,woman,countable,na,eq,1)-1/8,predicate(E,love,C,D)-1/6])]))
 003231 Every man can want to attempt to try to love a woman.
-ERROR	DRS condition not supported: can	tptp/4	can(drs([A,B],[predicate(A,want,D,B)-1/4,B:drs([C,E],[predicate(C,attempt,D,E)-1/6,E:drs([F,G],[predicate(F,try,D,G)-1/8,G:drs([H,I],[object(H,woman,countable,na,eq,1)-1/12,predicate(I,love,D,H)-1/10])])])]))
+ERROR	DRS condition not supported: can	tptp/4	can(drs([A,B],[predicate(A,want,C,B)-1/4,B:drs([D,E],[predicate(D,attempt,C,E)-1/6,E:drs([F,G],[predicate(F,try,C,G)-1/8,G:drs([H,I],[object(H,woman,countable,na,eq,1)-1/12,predicate(I,love,C,H)-1/10])])])]))
 003232 John wants to can swim.
 ERROR	DRS is empty	apply_converter/2	drs([],[])
 003233 John wants to must swim.
@@ -15564,17 +15565,17 @@ fof(f1, axiom, (
 ((object(D,woman,countable,na,geq,3)) &
 (object(B,man,countable,na,geq,2))))))).
 003269 At most 2 men give at most 3 women at most 4 apples.
-ERROR	DRS condition not supported: [|]	tptp/4	[[[predicate(_,give,C,A,B)-1,object(A,apple,countable,na,leq,4)-1],object(B,woman,countable,na,leq,3)-1],object(C,man,countable,na,leq,2)-1]
+ERROR	DRS condition not supported: [|]	tptp/4	[[[predicate(_,give,A,B,C)-1,object(B,apple,countable,na,leq,4)-1],object(C,woman,countable,na,leq,3)-1],object(A,man,countable,na,leq,2)-1]
 003270 At most 2 men give themselves at most 4 apples.
 ERROR	DRS condition not supported: [|]	tptp/4	[[predicate(_,give,A,B,A)-1,object(B,apple,countable,na,leq,4)-1],object(A,man,countable,na,leq,2)-1]
 003271 At most 2 men give themselves themselves.
 ERROR	DRS condition not supported: [|]	tptp/4	[predicate(_,give,A,A,A)-1,object(A,man,countable,na,leq,2)-1]
 003272 every man owns each of at most 5 cars that are expensive.
-ERROR	DRS condition not supported: [|]	tptp/4	[drs([A],[has_part(C,A)-1])=>drs([B],[predicate(B,own,_,A)-1]),predicate(_,be,C,D)-1,property(D,expensive,pos)-1,object(C,car,countable,na,leq,5)-1]
+ERROR	DRS condition not supported: [|]	tptp/4	[drs([A],[has_part(B,A)-1])=>drs([C],[predicate(C,own,_,A)-1]),predicate(_,be,B,D)-1,property(D,expensive,pos)-1,object(B,car,countable,na,leq,5)-1]
 003273 John has at most 3 cars. Mary loves them.
 ERROR	DRS condition not supported: [|]	tptp/4	[object(A,car,countable,na,leq,3)-1,predicate(_,have,named(John),A)-1]
 003274 John owns at most 3 cars that do not start.
-ERROR	DRS condition not supported: [|]	tptp/4	[object(B,car,countable,na,leq,3)-1,-drs([A],[predicate(A,start,B)-1]),predicate(_,own,named(John),B)-1]
+ERROR	DRS condition not supported: [|]	tptp/4	[object(A,car,countable,na,leq,3)-1,-drs([B],[predicate(B,start,A)-1]),predicate(_,own,named(John),A)-1]
 003275 John owns at most 3 cars that have at most 3 wheels.
 ERROR	DRS condition not supported: [|]	tptp/4	[object(A,car,countable,na,leq,3)-1/6,[object(B,wheel,countable,na,leq,3)-1/12,predicate(_,have,A,B)-1/8],predicate(_,own,named(John),A)-1/2]
 003276 John quickly knows that Mary sleeps.
@@ -15650,7 +15651,7 @@ ERROR	DRS condition not supported: :	tptp/4	_:drs([A,B,C],[object(A,bar,countabl
 003293 John in the morning wants to swim in the evening.
 ERROR	DRS condition not supported: :	tptp/4	_:drs([A,B],[predicate(A,swim,named(John))-1/7,modifier_pp(A,in,B)-1/8,object(B,evening,countable,na,eq,1)-1/10])
 003294 Every man in the morning wants to in the evening say that he likes the day completely.
-ERROR	DRS condition not supported: :	tptp/4	_:drs([A,B,C],[predicate(A,say,E,B)-1/11,modifier_pp(A,in,C)-1/8,B:drs([D,F],[predicate(D,like,E,F)-1/14,modifier_adv(D,completely,pos)-1/17,object(F,day,countable,na,eq,1)-1/16]),object(C,evening,countable,na,eq,1)-1/10])
+ERROR	DRS condition not supported: :	tptp/4	_:drs([A,B,C],[predicate(A,say,D,B)-1/11,modifier_pp(A,in,C)-1/8,B:drs([E,F],[predicate(E,like,D,F)-1/14,modifier_adv(E,completely,pos)-1/17,object(F,day,countable,na,eq,1)-1/16]),object(C,evening,countable,na,eq,1)-1/10])
 003295 Every man for no reason in every location meets a woman between two houses after no search.
 fof(f1, axiom, (
 ! [A] : ((man(A))
@@ -15960,9 +15961,9 @@ fof(f1, axiom, (
 003369 John hits yourself.
 ERROR	DRS is empty	apply_converter/2	drs([],[])
 003370 John and Mary, buy a dog!
-ERROR	DRS condition not supported: command	tptp/4	command(drs([B,C,A],[has_part(A,named(John))-1/,object(B,dog,countable,na,eq,1)-1/7,predicate(C,buy,A,B)-1/5,has_part(A,named(Mary))-1/,object(A,na,countable,na,eq,2)-1/]))
+ERROR	DRS condition not supported: command	tptp/4	command(drs([A,B,C],[has_part(C,named(John))-1/,object(A,dog,countable,na,eq,1)-1/7,predicate(B,buy,C,A)-1/5,has_part(C,named(Mary))-1/,object(C,na,countable,na,eq,2)-1/]))
 003371 John and Mary, hit yourselves!
-ERROR	DRS condition not supported: command	tptp/4	command(drs([B,A],[has_part(A,named(John))-1/,predicate(B,hit,A,A)-1/5,has_part(A,named(Mary))-1/,object(A,na,countable,na,eq,2)-1/]))
+ERROR	DRS condition not supported: command	tptp/4	command(drs([A,B],[has_part(B,named(John))-1/,predicate(A,hit,B,B)-1/5,has_part(B,named(Mary))-1/,object(B,na,countable,na,eq,2)-1/]))
 003372 John and Mary, hit yourself!
 ERROR	DRS is empty	apply_converter/2	drs([],[])
 003373 John and Mary hit yourselves.
@@ -15985,11 +15986,11 @@ ERROR	DRS is empty	apply_converter/2	drs([],[])
 003378 John, you wait!
 ERROR	DRS is empty	apply_converter/2	drs([],[])
 003379 John and Mary, sell your own car!
-ERROR	DRS condition not supported: command	tptp/4	command(drs([B,C,A],[has_part(A,named(John))-1/,relation(B,of,A)-1/6,object(B,car,countable,na,eq,1)-1/8,predicate(C,sell,A,B)-1/5,has_part(A,named(Mary))-1/,object(A,na,countable,na,eq,2)-1/]))
+ERROR	DRS condition not supported: command	tptp/4	command(drs([A,B,C],[has_part(C,named(John))-1/,relation(A,of,C)-1/6,object(A,car,countable,na,eq,1)-1/8,predicate(B,sell,C,A)-1/5,has_part(C,named(Mary))-1/,object(C,na,countable,na,eq,2)-1/]))
 003380 John and Mary, buy a dog that likes you!
-ERROR	DRS condition not supported: command	tptp/4	command(drs([B,C,D,A],[has_part(A,named(John))-1/,object(B,dog,countable,na,eq,1)-1/7,predicate(C,like,B,A)-1/9,predicate(D,buy,A,B)-1/5,has_part(A,named(Mary))-1/,object(A,na,countable,na,eq,2)-1/]))
+ERROR	DRS condition not supported: command	tptp/4	command(drs([A,B,C,D],[has_part(D,named(John))-1/,object(A,dog,countable,na,eq,1)-1/7,predicate(B,like,A,D)-1/9,predicate(C,buy,D,A)-1/5,has_part(D,named(Mary))-1/,object(D,na,countable,na,eq,2)-1/]))
 003381 John and Mary, buy a dog that is owned by Bill and that likes you!
-ERROR	DRS condition not supported: command	tptp/4	command(drs([B,C,D,E,A],[has_part(A,named(John))-1/,object(B,dog,countable,na,eq,1)-1/7,predicate(C,own,named(Bill),B)-1/10,predicate(D,like,B,A)-1/15,predicate(E,buy,A,B)-1/5,has_part(A,named(Mary))-1/,object(A,na,countable,na,eq,2)-1/]))
+ERROR	DRS condition not supported: command	tptp/4	command(drs([A,B,C,D,E],[has_part(E,named(John))-1/,object(A,dog,countable,na,eq,1)-1/7,predicate(B,own,named(Bill),A)-1/10,predicate(C,like,A,E)-1/15,predicate(D,buy,E,A)-1/5,has_part(E,named(Mary))-1/,object(E,na,countable,na,eq,2)-1/]))
 003382 A man, hit himself!
 ERROR	DRS is empty	apply_converter/2	drs([],[])
 003383 A man, hit yourself!
@@ -16015,7 +16016,7 @@ ERROR	DRS condition not supported: command	tptp/4	command(drs([A,B,C,D,E],[objec
 003393 John and you, wait!
 ERROR	DRS is empty	apply_converter/2	drs([],[])
 003394 John, trust a woman and yourself!
-ERROR	DRS condition not supported: command	tptp/4	command(drs([A,C,B],[object(A,woman,countable,na,eq,1)-1/5,has_part(B,A)-1/,predicate(C,trust,named(John),B)-1/3,has_part(B,named(John))-1/,object(B,na,countable,na,eq,2)-1/]))
+ERROR	DRS condition not supported: command	tptp/4	command(drs([A,B,C],[object(A,woman,countable,na,eq,1)-1/5,has_part(C,A)-1/,predicate(B,trust,named(John),C)-1/3,has_part(C,named(John))-1/,object(C,na,countable,na,eq,2)-1/]))
 003395 All men see a dog that likes them.
 fof(f1, axiom, (
 ! [A] : ((man(A))
@@ -16953,9 +16954,9 @@ ERROR	DRS query/2 not supported	cond_to_tptp/2	query(_,which)
 003555 a woman carries the woman from who to her?
 ERROR	DRS query/2 not supported	cond_to_tptp/2	query(_,who)
 003556 exactly 1 woman who sees a man who loves her waits.
-ERROR	DRS condition not supported: [|]	tptp/4	[object(B,woman,countable,na,exactly,1)-1/3,object(A,man,countable,na,eq,1)-1/7,predicate(_,love,A,B)-1/9,predicate(_,see,B,A)-1/5,predicate(_,wait,B)-1/11]
+ERROR	DRS condition not supported: [|]	tptp/4	[object(A,woman,countable,na,exactly,1)-1/3,object(B,man,countable,na,eq,1)-1/7,predicate(_,love,B,A)-1/9,predicate(_,see,A,B)-1/5,predicate(_,wait,A)-1/11]
 003557 exactly 1 woman asks a woman of her.
-ERROR	DRS condition not supported: [|]	tptp/4	[object(B,woman,countable,na,exactly,1)-1/3,object(A,woman,countable,na,eq,1)-1/6,relation(A,of,A)-1/7,predicate(_,ask,B,A)-1/4]
+ERROR	DRS condition not supported: [|]	tptp/4	[object(A,woman,countable,na,exactly,1)-1/3,object(B,woman,countable,na,eq,1)-1/6,relation(B,of,B)-1/7,predicate(_,ask,A,B)-1/4]
 003558 John sees a cat that likes the cat that smiles.
 fof(f1, axiom, (
 ? [A,B,C,D,E] : ((predicate2(A,see,'John',B)) &
@@ -17616,7 +17617,7 @@ ERROR	DRS query/2 not supported	cond_to_tptp/2	query(_,which)
 003692 At most 3 men eat or the men drink.
 ERROR	DRS condition not supported: [|]	tptp/4	[predicate(_,eat,A)-1/5,object(A,man,countable,na,leq,3)-1/4]
 003693 At most 3 men eat or drink.
-ERROR	DRS condition not supported: [|]	tptp/4	[drs([A],[predicate(A,eat,C)-1/5])v drs([B],[predicate(B,drink,C)-1/7]),object(C,man,countable,na,leq,3)-1/4]
+ERROR	DRS condition not supported: [|]	tptp/4	[drs([A],[predicate(A,eat,B)-1/5])v drs([C],[predicate(C,drink,B)-1/7]),object(B,man,countable,na,leq,3)-1/4]
 003694 Every dog barks or a cat does not sleep.
 fof(f1, axiom, (
 (! [A] : ((dog(A))

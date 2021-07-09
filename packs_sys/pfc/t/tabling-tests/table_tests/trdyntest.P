@@ -1,0 +1,10 @@
+
+test :-
+	load_dyn('trdat.P'),
+	Y = [1],
+	findall(X,p(X),L),
+	(L = Y -> true;
+	writeln(load_dyn_did_not_do_trie_assert(L,Y))).
+
+
+

@@ -38,6 +38,7 @@
 :- mpred_unload_file.
 
 :- file_begin(pfc).
+:- expects_dialect(pfc).
 
 :- sanity(is_pfc_file).
 

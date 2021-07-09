@@ -9,9 +9,9 @@
   ",
 
  "menu":[
-   { "group": "cplint",  "rank":  9000 },
+	{ "group": "cplint",  "rank":  9000 },
 	{ "group": "trill",    "rank":   9100 },
-   { "group": "examples",  "rank":  10000 },
+	{ "group": "examples",  "rank":  10000 },
 	{ "group": "tutorials","rank":  20000 },
 	{ "group": "logicmoo", "rank":  30000 },
 	{ "group": "lps",      "rank":  30001 },
@@ -30,7 +30,7 @@
       "group":"tutorials"
     },
   { "file":"rdf_examples.swinb", "title":"Using SWISH with ClioPatria and RDF queries/examples", "group":"tutorials" },
-  { "file":"dict.swinb",		 "title":"Dict tutorial" , "group":"tutorials" },
+  { "file":"dict.swinb",	 "title":"Dict tutorial" , "group":"tutorials" },
 
 "## Trill",	
     

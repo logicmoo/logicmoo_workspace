@@ -1,4 +1,4 @@
-:- include('../ec_test_incl').
+:- include(library('../ec_test_incl')).
 
         /*
 

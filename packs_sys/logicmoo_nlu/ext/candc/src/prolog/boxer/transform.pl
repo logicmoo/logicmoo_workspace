@@ -171,6 +171,9 @@ trans(gbxc(C,N,X1,Y1), N1, gbxc(C,N,nil,Att,Str,X2,Y2), N3, Tags1-Tags3):- !,
    Conjuction (Coordination)
 ------------------------------------------------------------------------- */
 
+trans(conj(C\C,X,Y),N1,Cat,N2,Tags):- 
+   trans(conj(C\C,C,X,Y),N1,Cat,N2,Tags).
+
 %trans(conj(np:nb\np:nb,np:nb,X1,Y1), N1, conj(np\np,np,nil,Att,X2,Y2), N3, Tags1-Tags3):- 
 %   X1 =.. [t,conj|Cs], !,
 %   X3 =.. [t,conj:np|Cs], 

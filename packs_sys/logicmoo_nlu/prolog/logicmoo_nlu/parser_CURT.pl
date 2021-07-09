@@ -36,7 +36,7 @@ curt80 :- locally(tracing80,
             locally(t_l:useOnlyExternalDBs,
              locally(lmconf:use_cyc_database,
               (told, repeat, prompt_read('CURT80> ', U),
-                            to_word_list(U, WL), ((WL==[bye];WL==[end, '_', of, '_', file];((mmake, curt80(WL, State), State==stop))))))))).
+                            into_lexical_segs(U, WL), ((WL==[bye];WL==[end, '_', of, '_', file];((mmake, curt80(WL, State), State==stop))))))))).
 
 curt80(Input, State):-  curtUpdate(Input, CurtsMoves, State),
    curtPredicates:curtOutput(CurtsMoves).

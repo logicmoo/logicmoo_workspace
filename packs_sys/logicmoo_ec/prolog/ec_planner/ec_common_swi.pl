@@ -22,7 +22,8 @@ prolog_flag(F,Old,New):- ignore(current_prolog_flag(F,Old)),set_prolog_flag(F,Ne
 /* Emulates the writeNoln(1) function */
 
 :- fixup_exports.
-  
+
+:- multifile(system:clause_w_names/5).
 system:clause_w_names(Head,Body,ClauseRef,file=line_of(Line,File),Vs):-   
   clause(Head,Body,ClauseRef),
   clause(CHead,CBody,ClauseRef),

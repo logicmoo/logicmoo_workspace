@@ -1817,6 +1817,8 @@ makeCycRenames1:-
     forall(builtin_rn_or_rn_new(C,P),format('(safely-rename-or-merge "~w" "~w")~n',[C,P])),
     told.
 
+add_rename(_KB,M:(:-Goal)):- !, M:call(Goal).
+add_rename(KB,(:-Goal)):- !, KB:call(Goal).
 add_rename(KB,MRNCP):- strip_module(MRNCP,_,RNCP),asserta(KB:RNCP).
 
 load_renames(File):- \+ exists_source(File), !, dmsg(warning(missing_file(File))).

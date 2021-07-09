@@ -16,6 +16,7 @@
 % Main file.
 %
 */
+:- '$set_source_module'(mu).
 
 %:- system:use_module(library(console_input)).
 %:- system:use_module(library(date)).
@@ -50,31 +51,36 @@ simply_debug_opts([len=5]).
 
 get_zoption(Z, N, V, E):- member(N=V, Z)->true;V=E.
 
-simplify_dbug(G, GG):- notrace((simply_debug_opts(Z),simplify_dbug(Z, G, GG))).
+simplify_dbug(G, GG):- quietly((simply_debug_opts(Z),simplify_dbug(Z, G, GG))).
 
-simplify_dbug(Z, G, GG):- notrace((simplify_dbug_3(Z, G, GP),simplify_goal_printed(GP,GG))).
+simplify_dbug(Z, G, GG):- quietly((simplify_dbug_3(Z, G, GP),simplify_goal_printed(GP,GG))).
 
-simplify_dbug_3(_, G, GG):- \+ compound(G), !, GG=G.
+simplify_dbug_3(Z, G, GG):- nonvar(GG),!, simplify_dbug_3(Z, G, GGG),!, GGG=GG.
+simplify_dbug_3(_, G, G):- \+ compound(G).
+simplify_dbug_3(_, '$VAR'(G), '$VAR'(G)):- !.
 simplify_dbug_3(_, (X \= Y), (X \= Y)):- atom(X), debug_var(['Not', X], Y),!.
 simplify_dbug_3(_, (X \= Y), (X \= Y)):- atom(Y), debug_var(['Not', X], Y),!.
-simplify_dbug_3(_, List, '.|.|.'(O)):-  simplify_memlists(List, O),!.
+simplify_dbug_3(_, List, '.*.*.'(O)):-  simplify_memlists(List, O),!.
 simplify_dbug_3(Z, List, O):-
  ( is_list(List) -> clip_cons(Z, List, '...'(Clipped), O) ;
  ( List = [_|_], append(LeftSide, Open, List),
   ((var(Open);Open \= [_|_])), !, assertion(is_list(LeftSide)),
  clip_cons(Z, LeftSide, '...'(Open), O))), debug_var('CO', Open), debug_var('OC', Clipped).
-simplify_dbug_3(Z, G, GG):- is_list(G), must_det(maplist(simplify_dbug_3(Z), G, GG)), !.
+simplify_dbug_3(Z, G, GG):- is_list(G), must_det(must_maplist(simplify_dbug_3(Z), G, GG)), !.
 simplify_dbug_3(_, {O}, {O}):- !.
 simplify_dbug_3(Z, G, GG):- 
- compound_name_arguments(G, F, GL), % F\==percept_props, !,
- maplist(simplify_dbug_3(Z), GL, GGL), !, 
+ compound_name_arguments(G, F, GL), % F\==unused_percept_props, !,
+ must_maplist(simplify_dbug_3(Z), GL, GGL), !, 
  compound_name_arguments(GG, F, GGL).
 simplify_dbug_3(_, G, G).
 
 
 mwmsg(G):- notrace(mwmsg_3(G)).
-mwmsg_3(G):- compound(G), compound_name_arity(G, _, 2), G=..[F, GG], !, dmsg(F:-GG).
-mwmsg_3(G):- simplify_dbug(G, GG)->guess_pretty(GG)->dmsg(GG).
+mwmsg_3(G):- compound(G), compound_name_arity(G, _, 1), G=..[F, GG], !, mwmsg_3(F:-GG).
+mwmsg_3(G):- simplify_dbug(G, G0),portray_vars:pretty_numbervars(G0, GG),mwmsg_4(GG).
+
+mwmsg_4(G):- !, dbug1_1(G).
+% mwmsg_4(G):- format('~N'),maybe_bfly_html(weto((nop(write('<pre>')),in_bfly(f,dmsg(G)),nop(write('</pre>\n'))))).
 
 %:- system:import(simplify_dbug/2).
 %:- listing(simplify_dbug/2).
@@ -104,8 +110,8 @@ clip_cons(Z, List, ClipTail, {Len, LeftS, ClipTail}):- fail,
  Len>MaxLen,
  length(Left, MaxLen),
  append(Left, _, List), !,
- maplist(simplify_dbug(Z), Left, LeftS).
-clip_cons(Z, Left, _, List):-maplist(simplify_dbug(Z), Left, List).
+ must_maplist(simplify_dbug(Z), Left, LeftS).
+clip_cons(Z, Left, _, List):-must_maplist(simplify_dbug(Z), Left, List).
 
 
 found_bug(S0, Bug):- has_list_functor(S0), !, found_list_bug(S0, Bug).
@@ -142,8 +148,8 @@ system_default_debug(YN):-
   reset_prolog_flag(YN, answer_format, '~p', '~q'),
   reset_prolog_flag(YN, answer_write_options, [quoted(true), portray(true), max_depth(10), spacing(next_argument)],
    [quoted(true), portray(true), max_depth(4), spacing(next_argument)]),
-  reset_prolog_flag(YN, debugger_write_options, [quoted(true), portray(false), max_depth(10), attributes(portray), spacing(next_argument)],
-   [quoted(true), portray(true), max_depth(4), attributes(portray), spacing(next_argument)]),
+  %reset_prolog_flag(YN, debugger_write_options, [quoted(true), portray(false), max_depth(10), attributes(portray), spacing(next_argument)],
+  % [quoted(true), portray(true), max_depth(4), attributes(portray), spacing(next_argument)]),
   reset_prolog_flag(YN, print_write_options, [portray(true), quoted(true), numbervars(true)],
    [portray(true), quoted(true), numbervars(true)]),
 
@@ -164,7 +170,7 @@ system_default_debug(YN):-
   reset_prolog_flag(YN, prompt_alternatives_on, determinism),
   reset_prolog_flag(YN, toplevel_goal, default),
   reset_prolog_flag(YN, toplevel_mode, backtracking),
-  reset_prolog_flag(YN, toplevel_residue_vars, false, true),
+ % reset_prolog_flag(YN, toplevel_residue_vars, false, true),
   reset_prolog_flag(YN, toplevel_print_anon, true),
   reset_prolog_flag(YN, toplevel_print_factorized, false, true),
   reset_prolog_flag(YN, write_attributes, ignore),

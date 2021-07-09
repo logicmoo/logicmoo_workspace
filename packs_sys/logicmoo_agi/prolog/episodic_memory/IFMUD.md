@@ -78,7 +78,8 @@ Weight is a kind of value. The weights are light, medium-weight, or heavy. A thi
 
 An electric light is a kind of device. Carry out switching on an electric light: now the noun is lit. Carry out switching off an electric light: now the noun is unlit. Carry out someone trying switching on an electric light: now the noun is lit. Carry out someone trying switching off an electric light: now the noun is unlit.
 
-Understand "shine [electric light]" as switching on. Instead of burning an electric light, try switching on the noun. Instead of turning the lamp, say "It is already positioned to shed the maximum amount of light over the room so that it is not possible to hide from it. This took some weeks of adjustments on your part, so you're disinclined to mess with it further."
+Understand "shine [electric light]" as switching on. Instead of burning an electric light, try switching on the noun. 
+Instead of turning the lamp, say "It is already positioned to shed the maximum amount of light over the room so that it is not possible to hide from it. This took some weeks of adjustments on your part, so you're disinclined to mess with it further."
 
 Understand "point [something] at [something]" or "shine [something] at [something]" or "turn [something] toward/towards/at [something]" as orienting it toward. Orienting it toward is an action applying to two things. Carry out orienting something toward something: say "It's hard to see what good that would do.". Instead of orienting an electric light toward the creature: try turning the noun.
 

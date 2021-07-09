@@ -1,7 +1,96 @@
-ERROR: Invalid ACE text:
-The word "retailer" is unknown.
-The word "retailer" is unknown.
-The word "retailer" is unknown.
-The word "retailer" is unknown.
-"If a message is from a <> retailer then the message is not important.": This is the first sentence that was not ACE. The sign <> indicates the position where parsing failed.
+
+INPUT TEXT:
+Junk-Rule: If a message is from a retailer then the message is not important.
+Delivery-Rule: If a message is from someone from who Karen awaits a delivery then the message is important.
+Delivery-Rule overrides Junk-Rule.
+Karen awaits a delivery from ParisCo.
+FaveCo is a retailer.
+BabyCo is a retailer.
+ParisCo is a retailer.
+FaveCo-Rule: If a message is from FaveCo then the message is important.
+FaveCo-Rule overrides Junk-Rule.
+Message110 is a message and is from ParisCo.
+Message116 is a message and is from FaveCo.
+Message211 is a message and is from BabyCo.
+
+RULES:
+pred_mod(be,named('Message110'),[modifier_pp(from,named('ParisCo'))]).
+pred_mod(be,named('Message116'),[modifier_pp(from,named('FaveCo'))]).
+pred_mod(be,named('Message211'),[modifier_pp(from,named('BabyCo'))]).
+pred_mod(await,named('Karen'),v(0),[modifier_pp(from,named('ParisCo'))]).
+object(named('BabyCo'),'BabyCo',named,na,eq,1).
+object(named('BabyCo'),retailer,countable,na,eq,1).
+object(named('FaveCo'),'FaveCo',named,na,eq,1).
+object(named('FaveCo'),retailer,countable,na,eq,1).
+object(named('Karen'),'Karen',named,na,eq,1).
+object(named('Message110'),'Message110',named,na,eq,1).
+object(named('Message110'),message,countable,na,eq,1).
+object(named('Message116'),'Message116',named,na,eq,1).
+object(named('Message116'),message,countable,na,eq,1).
+object(named('Message211'),'Message211',named,na,eq,1).
+object(named('Message211'),message,countable,na,eq,1).
+object(named('ParisCo'),'ParisCo',named,na,eq,1).
+object(named('ParisCo'),retailer,countable,na,eq,1).
+object(v(0),delivery,countable,na,eq,1).
+'Delivery-Rule':: group([property(A,important,pos)]) <- [pred_mod(await,named('Karen'),B,[modifier_pp(from,C)]), pred_mod(be,A,[modifier_pp(from,C)]), object(C,D,E,F,G,H), object(A,message,countable,na,eq,1), object(B,delivery,countable,na,eq,1)].
+'FaveCo-Rule':: group([property(A,important,pos)]) <- [pred_mod(be,A,[modifier_pp(from,named('FaveCo'))]), object(A,message,countable,na,eq,1)].
+'Junk-Rule':: -group([property(A,important,pos)]) <- [pred_mod(be,A,[modifier_pp(from,B)]), object(A,message,countable,na,eq,1), object(B,retailer,countable,na,eq,1)].
+overrides('Delivery-Rule','Junk-Rule').
+overrides('FaveCo-Rule','Junk-Rule').
+
+SIMPLE RULES:
+be(named('Message110'),[from(named('ParisCo'))]).
+be(named('Message116'),[from(named('FaveCo'))]).
+be(named('Message211'),[from(named('BabyCo'))]).
+await(named('Karen'),v(0),[from(named('ParisCo'))]).
+retailer(named('BabyCo')).
+retailer(named('FaveCo')).
+message(named('Message110')).
+message(named('Message116')).
+message(named('Message211')).
+retailer(named('ParisCo')).
+delivery(v(0)).
+'Delivery-Rule':: important(A) <- [await(named('Karen'),B,[from(C)]), be(A,[from(C)]), something(C), message(A), delivery(B)].
+'FaveCo-Rule':: important(A) <- [be(A,[from(named('FaveCo'))]), message(A)].
+'Junk-Rule':: -important(A) <- [be(A,[from(B)]), message(A), retailer(B)].
+overrides('Delivery-Rule','Junk-Rule').
+overrides('FaveCo-Rule','Junk-Rule').
+
+ANSWERSET #1:
+-group([property(named('Message211'),important,pos)]).
+group([property(named('Message110'),important,pos)]).
+group([property(named('Message116'),important,pos)]).
+pred_mod(be,named('Message110'),[modifier_pp(from,named('ParisCo'))]).
+pred_mod(be,named('Message116'),[modifier_pp(from,named('FaveCo'))]).
+pred_mod(be,named('Message211'),[modifier_pp(from,named('BabyCo'))]).
+pred_mod(await,named('Karen'),v(0),[modifier_pp(from,named('ParisCo'))]).
+object(named('BabyCo'),'BabyCo',named,na,eq,1).
+object(named('BabyCo'),retailer,countable,na,eq,1).
+object(named('FaveCo'),'FaveCo',named,na,eq,1).
+object(named('FaveCo'),retailer,countable,na,eq,1).
+object(named('Karen'),'Karen',named,na,eq,1).
+object(named('Message110'),'Message110',named,na,eq,1).
+object(named('Message110'),message,countable,na,eq,1).
+object(named('Message116'),'Message116',named,na,eq,1).
+object(named('Message116'),message,countable,na,eq,1).
+object(named('Message211'),'Message211',named,na,eq,1).
+object(named('Message211'),message,countable,na,eq,1).
+object(named('ParisCo'),'ParisCo',named,na,eq,1).
+object(named('ParisCo'),retailer,countable,na,eq,1).
+object(v(0),delivery,countable,na,eq,1).
+
+ANSWERTEXT #1:
+Message116 is important.
+Message110 is important.
+ParisCo is a retailer.
+Message211 is a message.
+Message116 is a message.
+Message110 is a message.
+FaveCo is a retailer.
+BabyCo is a retailer.
+Karen awaits a delivery from ParisCo.
+Message211 is from BabyCo.
+Message116 is from FaveCo.
+Message110 is from ParisCo.
+It is false that Message211 is important.
 

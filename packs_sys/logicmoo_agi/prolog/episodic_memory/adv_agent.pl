@@ -18,6 +18,7 @@
 %
 */
 
+:- '$set_source_module'(mu).
 
 :- meta_predicate with_agent_console(*, 0).
 /*
@@ -41,7 +42,7 @@ with_agents( Pred1, Agent):- with_agent_console(Agent, must(call(Pred1, Agent)))
 
 run_perceptq(Agent) :-
  declared(perceptq(Agent, PerceptQ)),
- set_advstate(perceptq(Agent, [])),
+ redeclare(perceptq(Agent, [])),
  invoke_percept_list(Agent, PerceptQ), !.
 run_perceptq(_Agent) :- !.
 
@@ -122,7 +123,7 @@ add_goals(_Agent, Goals, Mem0, Mem2) :-
  append(Goals, OldGoals, NewGoals),
  replace_thought(Agent, current_goals(Agent, NewGoals), Mem0, Mem2).
 
-add_intent( Agent, try(Doer, Action), Mem0, Mem2):-  Agent==Doer,
+add_intent( Agent, attempts(Doer, Action), Mem0, Mem2):-  Agent==Doer,
   add_intent( Agent, Action, Mem0, Mem2).
   
 add_intent( Agent, Action, Mem0, Mem2):- 
@@ -149,12 +150,12 @@ add_intent_all(Agent, [Action|Rest], Mem0, Mem2) :-
 
 :- defn_state_getter( invoke_introspect(agent, action, result)).
 
-invoke_introspect(Agent, try(Other,Command), Answer, M0) :- Other == Agent, !,
+invoke_introspect(Agent, attempts(Other,Command), Answer, M0) :- Other == Agent, !,
   invoke_introspect(Agent, Command, Answer, M0).
 
 invoke_introspect(Agent, path(There), Answer, M0) :- !,
-   declared(h(_, _, There), M0),
-   declared(h(_, Agent, Here), M0),
+   declared(h(spatial, _, _, There), M0),
+   declared(h(spatial, _, Agent, Here), M0),
   invoke_introspect(Agent, path(Here, There), Answer, M0).
 
 invoke_introspect(Agent, path(Here, There), Answer, M0) :-
@@ -185,7 +186,10 @@ recall_whereis(_S0, Agent, _WHQ, There, Answer, _ModelData) :-
    'recall a "', There, '".'].
 
 get_agent_prompt(Agent, Prompt):-
- must_mw1((get_object_props(Agent, Mem))),
+  get_object_props(Agent, Mem), !,
+  declared(prompt(Prompt), Mem).
+get_agent_prompt(Agent, Prompt):- fail, % trace,
+  must_or_rtrace(get_object_props(Agent, Mem)), !,
   declared(prompt(Prompt), Mem), !.
 
 console_decide_action(Agent, Mem0, Mem1):-
@@ -219,7 +223,7 @@ makep:-
  ; true
  ),
  print_message(silent, make(reload(Reload))),
- maplist(reload_file, Reload),
+ must_maplist(reload_file, Reload),
  print_message(silent, make(done(Reload))),
  ( prolog:make_hook(after, Reload)
  -> true
@@ -232,6 +236,8 @@ makep:-
 % CODE FILE SECTION
 %:- dbug1(ensure_loaded('adv_agents')).
 % %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+agent_somewhere( Agent, Here):- declared(h(spatial, in, Agent, Here), advstate),!.
+agent_somewhere(_Agent, "somewhere").
 
 
 decide_action(Agent) :-
@@ -240,7 +246,7 @@ decide_action(Agent) :-
  declared(memories(Agent, Mem0)),
  must_mw1(decide_action(Agent, Mem0, Mem2)),
  Mem0 \== Mem2, !,
- set_advstate(memories(Agent, Mem2)).
+ redeclare(memories(Agent, Mem2)).
 decide_action(_Agent) :- !.
 
 :- defn_mem_setter(run_perceptq(+agent)).
@@ -255,15 +261,15 @@ decide_action(Agent, Mem0, Mem9):- fail,
 
 decide_action(Agent, Mem0, Mem0) :-
  thought_check(Agent, intent(Agent, [Action|_]), Mem0),
- (declared(h(in, Agent, Here), advstate)->true;Here=somewhere),
- (trival_act(Action)->true;dbug(planner, '~w @ ~w: already about intent: ~w~n', [Agent, Here, Action])).
+ agent_somewhere(Agent,Here),
+ (trival_act(Action)->true;dbug1(planner(Agent, Here, Action))).
 
 decide_action(Agent, Mem0, Mem1) :-
  %must_mw1(thought(Agent, timestamp(T0), Mem0)),
  ensure_has_prompt(Agent),
  retract(mu_global:console_tokens(Agent, Words)), !,
  must_mw1((eng2cmd(Agent, Words, Action, Mem0),
- if_tracing(dbug(planner, 'Agent TODO ~p~n', [Agent: Words->Action])),
+ if_tracing(dbug1(add_intent(Agent: Words->Action))),
  add_intent( Agent, Action, Mem0, Mem1))).
 
 % Telnet client (Covered by the above)
@@ -299,7 +305,7 @@ decide_action(_Agent, Mem, Mem) :-
 decide_action(_Agent, Mem0, Mem0) :- !.
 
 decide_action(Agent, Mem0, Mem0) :-
- set_last_action(Agent, [ try(Agent, act3('auto',Agent,[]))]),
+ set_last_action(Agent, attempts(Agent, act3('auto',Agent,[]))),
  nop(dbug(decide_action, 'decide_action(~w) FAILED!~n', [Agent])).
 
 

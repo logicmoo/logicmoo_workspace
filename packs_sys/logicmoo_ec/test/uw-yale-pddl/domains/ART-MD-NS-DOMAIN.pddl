@@ -1,4 +1,4 @@
-(DEFINE (DOMAIN ART-MD-NS-DOMAIN)
+(define (domain ART-MD-NS-DOMAIN)
     (:requirements :adl)
   (:predicates (P-1) (P-2) (P-3) (P-4) (P-5) (P-6) (P-7) (P-8)
 	       (G-1) (G-2) (G-3) (G-4) (G-5) (G-6) (G-7) (G-8))

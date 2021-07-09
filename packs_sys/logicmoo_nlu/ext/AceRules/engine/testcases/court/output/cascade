@@ -1,12 +1,45 @@
-ERROR: Invalid ACE text:
-The word "buyer" is unknown.
-The word "buyer" is unknown.
-The word "external" is unknown.
-The word "employee" is unknown.
-The word "worker" is unknown; did you mean "worked"?
-The word "employee" is unknown.
-The word "worker" is unknown; did you mean "worked"?
-The word "wage-earner" is unknown.
-The word "wage-earner" is unknown.
-"Every customer is a <> buyer.": This is the first sentence that was not ACE. The sign <> indicates the position where parsing failed.
+
+INPUT TEXT:
+John is a manager.
+John is a customer.
+Every customer is a buyer.
+Every buyer is external.
+Every manager is an employee.
+Every employee is a worker.
+Every worker is a wage-earner.
+Every wage-earner is not a customer.
+
+RULES:
+-group([object(A,customer,countable,na,eq,1)]) <- [group([object(A,'wage-earner',countable,na,eq,1)])].
+group([property(A,external,pos)]) <- [group([object(A,buyer,countable,na,eq,1)])].
+group([object(A,buyer,countable,na,eq,1)]) <- [group([object(A,customer,countable,na,eq,1)])].
+group([object(A,employee,countable,na,eq,1)]) <- [object(A,manager,countable,na,eq,1)].
+group([object(A,worker,countable,na,eq,1)]) <- [group([object(A,employee,countable,na,eq,1)])].
+group([object(A,'wage-earner',countable,na,eq,1)]) <- [group([object(A,worker,countable,na,eq,1)])].
+group([object(named('John'),customer,countable,na,eq,1)]).
+object(named('John'),'John',named,na,eq,1).
+object(named('John'),manager,countable,na,eq,1).
+
+SIMPLE RULES:
+-customer(A) <- ['wage-earner'(A)].
+external(A) <- [buyer(A)].
+buyer(A) <- [customer(A)].
+employee(A) <- [manager(A)].
+worker(A) <- [employee(A)].
+'wage-earner'(A) <- [worker(A)].
+customer(named('John')).
+manager(named('John')).
+
+ANSWERSET #1:
+group([object(named('John'),employee,countable,na,eq,1)]).
+group([object(named('John'),'wage-earner',countable,na,eq,1)]).
+group([object(named('John'),worker,countable,na,eq,1)]).
+object(named('John'),'John',named,na,eq,1).
+object(named('John'),manager,countable,na,eq,1).
+
+ANSWERTEXT #1:
+John is a manager.
+John is a worker.
+John is a wage-earner.
+John is an employee.
 

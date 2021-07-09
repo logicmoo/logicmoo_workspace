@@ -1,0 +1,12 @@
+% call( Y ) is not so good:
+
+head( Whatever ) :-
+      (
+          p( X, Y )
+      ->
+          call( X )
+      ;
+          q( Z ),
+          call( Z ),
+          call( Y )
+      ).

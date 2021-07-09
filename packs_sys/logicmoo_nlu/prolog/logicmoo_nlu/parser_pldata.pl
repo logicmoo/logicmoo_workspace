@@ -29,6 +29,7 @@ get_it:-
 
 % term_expansion(G,I,GG,O):- compound(I),source_location(File,_),prolog_load_context(module,Module),using_shared_parser_data(Module,File),importing_clause(G,GG) -> G \== GG, I=O.
 
+
 :- 
 %  with_assertions
 %  [(user:term_expansion(_,_):-!,fail),(user:goal_expansion(_,_):-!,fail),(system:term_expansion(_,_):-!,fail),(system:goal_expansion(_,_):-!,fail)],
@@ -49,6 +50,7 @@ get_it:-
 % being in user is just to help debugging from console
 :- reexport(pldata(nl_iface)).
 :- endif.
+
 
 :- fixup_exports.
 

@@ -72,7 +72,32 @@ call_then_cut(G):-
 
 :- module_transparent(pt1/1).
 :- module_transparent(pt2/1).
-  
+
+
+/*
+?- undo((write(foo), nl)), !, (X=1; X=2).
+X = 1 ;
+X = 2.
+
+foo
+?- undo(writeln('done!')), (X=1; X=2), writeln(side_effect=X) undo(writeln(removing_side_effect=X)).
+X = 1 ;
+X = 2.
+
+done!
+?- undo(writeln('done!')),  (X=1; X=2).
+X = 1 ;
+X = 2.
+
+done!
+
+skip_tracing(G):-
+  setup_call_cleanup_redo(notrace,G,trace).
+
+undo(writeln('done!')), (X=1; X=2), writeln(side_effect=X) undo(writeln(removing_side_effect=X)).
+
+*/
+
 
 %! redo_call_cleanup(:Setup, :Goal, :Cleanup).
 %
@@ -82,7 +107,6 @@ call_then_cut(G):-
 redo_call_cleanup(Setup,Goal,Cleanup):- 
    assertion(each_call_cleanup:unshared_vars(Setup,Goal,Cleanup)),
    trusted_redo_call_cleanup(Setup,Goal,Cleanup).
-
 
 trusted_redo_call_cleanup(Setup,Goal,Cleanup):- 
    HdnCleanup = mquietly(Cleanup),   

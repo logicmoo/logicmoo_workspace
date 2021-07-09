@@ -16,61 +16,40 @@ fg > /dev/null 2>&1
 fg > /dev/null 2>&1
 
 if [[ "$SOURCED"=="1" ]] ; then
-    echo "The script was sourced."
+    echo "The script $0 WAS sourced."
 else
-    echo "The script WAS NOT sourced."
+    echo "The script $0 WAS NOT sourced."
 fi
 
+echo PATH=$PATH
 
+./PreStartMUD.sh
 
-# #( mkdir -p /tmp/tempDir/ ; cp -a tempDir/?* /tmp/tempDir/?* ;  cd  /tmp/tempDir/ ; ln  -s * -r /home/prologmud_server/lib/swipl/pack/prologmud_samples/prolog/prologmud_sample_games/ )
-
-#cls ; killall -9 swipl perl ; killall -9 swipl perl ;  swipl --irc --world --repl -g "[run_mud_server]" -s run_clio.pl
-#cls ; killall -9 swipl-prologmud perl ; killall -9 swipl perl ;  swipl -l run.pl -l run_mud_server.pl --irc --world --clio
 
 export OLDPWD="`pwd`"
 export NEWPWD="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
-#export SWIPL=/usr/local/lib/swipl-7.1.11/bin/x86_64-linux/swipl
 
-#pip3 install tornado asyncio butterfly
 
-# export LD_LIBRARY_PATH=/usr/lib/jvm/java-8-oracle/jre/lib/amd64/server/
-export LD_LIBRARY_PATH=/usr/lib/jvm/java-8-openjdk-amd64/jre/lib/amd64/server
 
-pathmunge () {
-        if ! echo "$PATH" | grep -Eq "(^|:)$1($|:)" ; then
-           if [ "$2" = "after" ] ; then
-              PATH="$PATH:$1"
-           else
-              PATH="$1:$PATH"
-           fi
-        fi
-}
-
-$LOGICMOO_WS/logicmoo_env.sh
-
-#export LOGICMOO_WS=/opt/logicmoo_workspace
+. $LOGICMOO_WS/logicmoo_env.sh
 
 pathmunge $LOGICMOO_WS/bin
 pathmunge /opt/logicmoo_workspace/packs_web/butterfly
 #pathmunge /opt/anaconda3/bin
 
-echo PATH=$PATH
-
-pidof  eggdrop >/dev/null
-if [[ $? -ne 0 ]] ; then
-        echo "Restarting eggdrop:     $(date)" 
-# ( cd $LOGICMOO_WS/packs_sys/eggdrop/conf/ ; eggdrop )
-fi
-
 
 if [[ -z "${LOGICMOO_BASE_PORT}" ]]; then
-  LOGICMOO_BASE_PORT=3000
+  LOGICMOO_BASE_PORT=4000
 fi
 
-#export RL_PREFIX='rlwrap -a -A -r -c -N -r'
+touch /opt/logicmoo_workspace/packs_sys/prologmud_samples/prolog/prologmud_sample_games/.swipl_history
+chmod 777 /opt/logicmoo_workspace/packs_sys/prologmud_samples/prolog/prologmud_sample_games/.swipl_history
+
+
+export RL_PREFIX=''
+# export RL_PREFIX='rlwrap -a -A -r -c -N -r'
 export USE_NET=1
-export USE_KB=0
+# export USE_KB=1
 export KBFILE=""
 
 
@@ -106,48 +85,56 @@ fi
 echo LOGICMOO_WS=$LOGICMOO_WS
 echo LOGICMOO_BASE_PORT=$LOGICMOO_BASE_PORT
 
-# killall -9 swipl-prologmud
-       
+if [[ "$(pidof eggdrop)"=="" ]] ; then
+ echo "Starting eggdrop:     $(date)" 
+ # ( cd $LOGICMOO_WS/packs_sys/eggdrop/conf/ ; sudo -u prologmud_server -- eggdrop -m )
+fi     
 
 export SWIPL="$LOGICMOO_WS/bin/swipl"
+SWIPL=/opt/logicmoo_workspace/bin/swipl
 # SWIPL=+" -G18G -L18G -T18G"
 # SWIPL=+" --signals=true --stack_limit=32g"
 # SWIPL=+" --pce=false"
 
 # export CMDARGS="-l run_mud_server.pl $* --all --world --lispsock --sumo --planner"
+export CMDARGS="run_mud_server.pl -g prolog $*"
 export CMDARGS="-l run_mud_server.pl $*"
 # CMDARGS=+" --sigma --www --docs --cliop --swish --plweb --elfinder"
 # CMDARGS=+" --tinykb --fullkb --rcyc --logtalk --nlu --pdt --irc"
 
-#unset DISPLAY
 
-#nvm use 8.0.0
-#nvm use --delete-prefix v8.0.0 --silent
-#node --version
+
+. $LOGICMOO_WS/packs_web/butterfly/bin/activate
+
+pip3 freeze > /tmp/requirements3a.txt 2>&1
+pip freeze > /tmp/requirements2a.txt 2>&1
+
+pip install tornado asyncio
 
 function start_redirect {
-   local PORT=$((200+$1))
+   local PORT=$((00+$1))
    local PORT100=$((100 + $1))
    local HIST=$PWD/history_$1
    local COMP=$PWD/completion_$1
    touch $HIST
 
    touch $COMP
-   lsof -t -i:$PORT100 | xargs --no-run-if-empty kill -9
+   echo "lsof -t -i:$PORT100 | xargs --no-run-if-empty kill -9"
+
+    local BUTTERFLY="$LOGICMOO_WS/packs_web/butterfly/butterfly.server.py"
+      BUTTERFLY="/usr/local/bin/butterfly.server.py"
 
 #   local START_REDIR="nohup node app.js -p ${PORT100} -c rlwrap -a -A -r -c -N -r --file=${COMP} --history-filename=${HIST} -s 1000 telnet localhost ${PORT}"
 #   local START_REDIR="nohup ttyd -r 100 -p ${PORT100}    rlwrap -a -A -r -c -N -r --file=${COMP} --history-filename=${HIST} -s 1000 telnet localhost ${PORT}"
-      local START_REDIR="nohup $LOGICMOO_WS/packs_web/butterfly/butterfly.server.py --debug --i-hereby-declare-i-dont-want-any-security-whatsoever --unsecure --host=0.0.0.0 --port=${PORT100} --cmd=\"/usr/bin/rlwrap -a -A -r -c -N -r --file=${COMP} --history-filename=${HIST} -s 1000 /usr/bin/telnet localhost ${PORT}\" "
-   START_REDIR="nohup $LOGICMOO_WS/packs_web/butterfly/butterfly.server.py --debug --i-hereby-declare-i-dont-want-any-security-whatsoever --unsecure --host=0.0.0.0 --port=${PORT100} --cmd=\"/usr/bin/telnet localhost ${PORT}\" "
+      local START_REDIR=""
+      START_REDIR="nohup $BUTTERFLY --i-hereby-declare-i-dont-want-any-security-whatsoever --unsecure --host=0.0.0.0 --port=${PORT100} --cmd=\"/usr/bin/rlwrap -a -A -r -c -N -r --file=${COMP} --history-filename=${HIST} -s 1000 /usr/bin/telnet localhost ${PORT}\" "
+      START_REDIR="nohup $BUTTERFLY --i-hereby-declare-i-dont-want-any-security-whatsoever --unsecure --host=0.0.0.0 --port=${PORT100} --cmd=\"/usr/bin/telnet localhost ${PORT}\" "
    echo $START_REDIR   
-   eval $START_REDIR & 
+  # eval $START_REDIR & 
 }
 
-     
-
 function kill_redirect {
-     lsof -t -i:$((100+$1)) | xargs --no-run-if-empty echo USE_NET=1 kill -9
-     lsof -t -i:$((100+$1)) | xargs --no-run-if-empty kill -9
+   echo "lsof -t -i:$((100+$1)) | xargs --no-run-if-empty $((100+$1)) kill -9"
 }
 
 
@@ -157,8 +144,8 @@ if [ $# -eq 0 ]
  then
     # //root
      if [[ $(id -u) == 0 ]]; then
-        export RUNFILE="${RL_PREFIX} ${SWIPL} ${KBFILE} ${CMDARGS} --nonet --repl --noworld"
-        export USE_NET=0
+        export RUNFILE="${RL_PREFIX} ${SWIPL} ${KBFILE} ${CMDARGS}"
+        export USE_NET=1
      else
         export RUNFILE="${RL_PREFIX} ${SWIPL} ${KBFILE} ${CMDARGS}" 
      fi
@@ -182,8 +169,6 @@ cls_putty() {
 }
 
 [[ -z "$LOGTALKHOME" ]] && export LOGTALKHOME=/usr/share/logtalk
-
-
 [[ -z "$LOGTALKUSER" ]] && export LOGTALKUSER=$LOGTALKHOME
 
 export COMMAND_LAST=8
@@ -208,10 +193,11 @@ list_descendants ()
 export WHOLE="gdb -x gdbinit -return-child-result --args ${RUNFILE}"
 #export WHOLE="gdb -x gdbinit -return-child-result -ex \"set pagination off\" -ex run -ex quit --args ${RUNFILE}"
 #export WHOLE="gdb -x gdbinit -return-child-result -ex \"set pagination off\" --args ${RUNFILE}"
-#export WHOLE="${RUNFILE}"
+export WHOLE="${RUNFILE}"
 
 if [[ $UID == 0 ]]; then
-  export WHOLE="sudo -u prologmud_server ${WHOLE}"
+  # export WHOLE="sudo -u prologmud_server ${WHOLE}"
+  echo WHOLE=$WHOLE
 fi
 
 echo "LOGICMOO_BASE_PORT=${LOGICMOO_BASE_PORT}"
@@ -223,7 +209,6 @@ do
       echo "You should rarely see this";
       echo cls_putty
    fi
-
     echo "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"
     echo "~~~~~~~~~~~~~KILL PREV~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"
     echo "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"
@@ -275,18 +260,22 @@ wasdir=""
          wasdir=$(dirname -- $0)
          # cd $LOGICMOO_WS/packs_web/wetty
          rm -f nohup.out
+         pip3 freeze > /tmp/requirements3w.txt
+         pip freeze > /tmp/requirements2w.txt
          start_redirect $(($LOGICMOO_BASE_PORT+0))
          start_redirect $(($LOGICMOO_BASE_PORT+1))
          start_redirect $(($LOGICMOO_BASE_PORT+2))
          start_redirect $(($LOGICMOO_BASE_PORT+3))
+         start_redirect $(($LOGICMOO_BASE_PORT+4))
          start_redirect $(($LOGICMOO_BASE_PORT+23))
          start_redirect $(($LOGICMOO_BASE_PORT+25))
-         start_redirect $(($LOGICMOO_BASE_PORT+301))
-         start_redirect $(($LOGICMOO_BASE_PORT+804))
+         #start_redirect $(($LOGICMOO_BASE_PORT+301))
+         #start_redirect $(($LOGICMOO_BASE_PORT+804))
          cat nohup.out
          cd $wasdir
      fi
-          
+
+     #export LD_LIBRARY_PATH=".:/usr/lib/jvm/java-11-openjdk-amd64/lib:/usr/local/lib:/usr/lib"
      
      echo "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"
      echo "~~~~~~~~~~~~~CURRENT-P~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"
@@ -317,21 +306,21 @@ wasdir=""
       echo "~~~~ EXIT CODE ${COMMAND_LAST} ~~~~"
       echo "~~~~~~~~~~~~~~~~~~~~~~~"
        if [[ "$USE_NET" == "1" ]]; then
-         lsof -t -i:$LOGICMOO_BASE_PORT | xargs --no-run-if-empty kill -9
+        # lsof -t -i:$LOGICMOO_BASE_PORT | xargs --no-run-if-empty kill -9
          kill_redirect $(($LOGICMOO_BASE_PORT+0))
          kill_redirect $(($LOGICMOO_BASE_PORT+1))
          kill_redirect $(($LOGICMOO_BASE_PORT+2))
          kill_redirect $(($LOGICMOO_BASE_PORT+3))
          kill_redirect $(($LOGICMOO_BASE_PORT+23))
          kill_redirect $(($LOGICMOO_BASE_PORT+25))
-         kill_redirect $(($LOGICMOO_BASE_PORT+301))
-         kill_redirect $(($LOGICMOO_BASE_PORT+804))
+         #kill_redirect $(($LOGICMOO_BASE_PORT+301))
+         #kill_redirect $(($LOGICMOO_BASE_PORT+804))
        fi
 
       reset -c -Q -w -I -w
       sleep 2
       if [[ "$COMMAND_LAST" == "4" ]]; then
-         echo cls
+          cls
       fi
      )
 done

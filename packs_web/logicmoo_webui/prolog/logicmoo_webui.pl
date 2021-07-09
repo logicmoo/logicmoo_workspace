@@ -23,7 +23,7 @@
 :- lmconfig:logicmoo_webui_dir(_) -> true;
   prolog_load_context(directory,Dir),asserta(lmconfig:logicmoo_webui_dir(Dir)).
 
-:- listing(lmconfig:logicmoo_webui_dir/1).
+%:- listing(lmconfig:logicmoo_webui_dir/1).
 
 attach_packs_relative_web_dir(Rel):-
    once(((
@@ -168,7 +168,7 @@ load_web_package_dirs:-
 %:- system:use_module(library(swi_compatibility)). %% autoloading swi_ide:auto_call/1 from /usr/lib/swipl/xpce/prolog/lib/swi_compatibility
 :- endif.
 
-sandbox:safe_primitive(dumpst:dumpST()).
+sandbox:safe_primitive(dumpst:dumpST).
 sandbox:safe_meta_predicate(system:notrace/1).
 
 :- if(\+ prolog_load_context(reloading,true)).
@@ -176,23 +176,31 @@ sandbox:safe_meta_predicate(system:notrace/1).
 :- use_module(library(pengines_sandbox)).
 :- endif.
 
+:- use_module(library(logicmoo_web_long_message)).
+
+inoxf(Goal):- ignore(notrace(on_x_fail(Goal))).
+
 webui_load_swish_and_clio:-
+   ignore(notrace(on_x_fail(webui_load_swish_and_clio_now))).
+
+webui_load_swish_and_clio_now:-
+   maplist(inoxf,[
    lmconfig:logicmoo_webui_dir(Dir),
    % trace,
    absolute_file_name('../../swish/run_swish_and_clio',Run,[relative_to(Dir),file_type(prolog),file_errors(fail)]),
    user:ensure_loaded(Run),
    swish_app:load_config('./config-enabled-swish'),
-   listing(swish_config:login_item/2),!.
+   listing(swish_config:login_item/2)]),!.
 
 
 webui_start_swish_and_clio:- 
+   maplist(inoxf,[
    webui_load_swish_and_clio,
    broadcast:broadcast(http(pre_server_start)),
    cp_server:cp_server([]),
+   set_long_message_server('https://logicmoo.org'),
    broadcast:broadcast(http(post_server_start)),
-   swish:start_swish_stat_collector,!.
-
-
+   swish:start_swish_stat_collector]),!.
 
 :- initialization(webui_start_swish_and_clio,restore).
 :- initialization(webui_start_swish_and_clio,program).

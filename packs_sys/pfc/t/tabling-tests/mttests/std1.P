@@ -1,0 +1,31 @@
+:- import get_call/2, table_state/2, get_returns/2 from tables.
+:- import abolish_table_info/0 from machine.
+ 
+test :- abolish_table_info, int(p(X,Y)),writeln([X,Y]),fail. 
+ 
+% interpreter 
+ 
+:- thread_shared int/1.
+:- table int/1. 
+ 
+int(G) :- rule(G,B),int_c(B).
+
+int_c(G) :- 
+        G == true   
+         ->     true 
+         ; G = (A,B) 
+         ->     int_c(A),int_c(B)
+         ; in_table(int(G),C,R)     % if completed table for this call 
+         ->     get_returns(C,R)
+         ;      int(G)
+        .
+
+in_table(Call,C,R) :-
+	get_call(Call,C,R), table_state(Call,complete).
+
+rule(p(X,Y),a(X,Y)).
+rule(p(X,Y),(p(X,Z),p(Z,Y))).
+rule(a(1,2),true).
+rule(a(2,3),true).
+rule(a(3,1),true).
+

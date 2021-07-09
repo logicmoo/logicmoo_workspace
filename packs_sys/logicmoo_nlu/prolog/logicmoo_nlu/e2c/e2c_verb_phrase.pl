@@ -60,23 +60,22 @@ ditrans_verb(Frame, X, Y, Z, LFO) --> ditrans_verb1(Frame, Time, X, Y, Z, LF),
 % NEW expand_lf(iza(Frame, timeFn(Time)) & LF, LFO)}.
 
 
+
 % paits her a picture
 ditrans_verb1(_Frame, pres+fin, X, Y, Z, doesAgentRecipientSomething(paints, X, Y, Z)) --> theText1(paints).
 ditrans_verb1(_Frame, pres+fin, X, Y, Z, doesAgentRecipientSomething(gave, X, Y, Z)) --> theText1(gave).
 ditrans_verb1( Frame, pres+fin, X, Y, Z, LFOut) --> named_var_match(startsWith('DTV'), Var, holdsIn(Frame, z(Var, X, Y, Z)), LFOut).
 ditrans_verb1(Frame, Time, X, Y, Z, LF) --> talk_verb(Frame, IV, dtv(X, Y, Z), Time, LF), nvd(IV, Frame).  % & iza(Frame, timeFn(Time)
 
-   talk_verb_lf(Frame, dtv(X, Y, Z), Write, Writes, Wrote, Written, Writing,
-                                             iza(Frame, a(event, Writing))
+   talk_verb_LF(Frame, dtv(X, Y, Z), Write, Writes, Wrote, Written, Writing,
+                                            ( iza(Frame, a(event, Writing))
                                              & doer(Frame, X)
                                              & t([Writing, "To"], Frame, Y)
-                                             & t(["object", Written], Frame, Z)) :-
-     talkdb:talk_db(ditransitive, Write, Writes, Wrote, Writing, Written).
+                                             & t(["object", Written], Frame, Z))) :-
+     talk_db_safer(ditransitive, Write, Writes, Wrote, Writing, Written).
 
 
-  talk_verb_lf(_Frame, dtv(X, Y, Z), write, writes, wrote, written, writing, doesAgentRecipientSomething(writes, X, Y, Z)).
-
-
+  talk_verb_LF(_Frame, dtv(X, Y, Z), write, writes, wrote, written, writing, doesAgentRecipientSomething(writes, X, Y, Z)).
 
 verb_phrase1_ditrans( Frame, X, verbPrep(Frame, X, LeftOfVerb, CycVerb, LeftOfPrep, CycPrep, RightOfPrep)) -->
   {fail}, scan_for_verb_prep(LeftOfVerb, _AtomVerb, LeftOfPrep, _AtomPrep, RightOfPrep, CycVerb, CycPrep).
@@ -111,25 +110,50 @@ trans_verb2( Frame, pres+fin, X, Y, LFOut) --> named_var_match(
                         [endsWith('ing'), endsWith('Event'), startsWith('V'), startsWith('TV')],
                                                                         Var, holdsIn(Frame, z(Var, X, Y)), LFOut).
 
-trans_verb2( Frame, Type, X, Y, holdsIn(Frame, z(Verbing, X, Y))) --> theText1(Formed), { my_clex_verb(Formed, _Verb, tv, Type, Verbing)}.
 trans_verb2( Frame, Time, X, Y, LF) --> talk_verb(Frame, IV, tv(X, Y), Time, LF), nvd(IV, Frame).  % & iza(Frame, timeFn(Time)
 
+trans_verb2( Frame, Type, X, Y, holdsIn(Frame, z(ActVerbing, X, Y))) --> 
+  theText1(Formed),
+    { my_clex_verb(Formed, _Verb, tv, Type, ActVerbing)}.
 
-my_clex_verb(Formed, Verb, tv, Type, Verbing):- clex_verb(Formed, Verb, tv, Type), to_evt_name(Verb, Verbing).
 
-% helper for talk_verb_lf/. . .
+my_clex_verb(Formed, Verb, Tv, Type, ActVerbing):- clex_verb(Formed, Verb, Tv, Type), to_evt_name(Verb, ActVerbing).
+
+
+talk_db_safer(Transitive, Write, Writes, Wrote, Writing, Written):- 
+  boosted_call(talkdb:talk_db(Transitive, Write, Writes, Wrote, Writing, Written)).
+
+% helper for talk_verb_LF/. . .
 talk_verb(Frame, IV, Type, Mod, LF) --> theText1(IV),
- {lf_talk_verb(Frame, IV, Type, Mod, LF, Root), put_attr(Frame, '$root', Root)}.
+ {boosted_call(form_talk_verb(Frame, IV, Type, Mod, LF, Root)), put_attr(Frame, '$root', Root)}.
 
 
-lf_talk_verb(Frame, IV, Type, nonfinite, LF, IV ) :- talk_verb_lf(Frame, Type, IV, _, _, _, _, LF).
-lf_talk_verb(Frame, IV, Type, pres+fin, LF, IW ) :- talk_verb_lf(Frame, Type, IW, IV, _, _, _, LF).
-lf_talk_verb(Frame, IV, Type, past+fin, LF, IW ) :- talk_verb_lf(Frame, Type, IW, _, IV, _, _, LF).
-lf_talk_verb(Frame, IV, Type, past+part, LF, IW ) :- talk_verb_lf(Frame, Type, IW, _, _, IV, _, LF).
-lf_talk_verb(Frame, IV, Type, pres+part, LF, IW ) :- talk_verb_lf(Frame, Type, IW, _, _, _, IV, LF).
-lf_talk_verb(Frame, IV, dtv(X, Y, Z), Type, holdsIn(Frame, z(Verbing, X, Y, Z)), Verb):- my_clex_verb(IV, Verb, dt, Type, Verbing).
-lf_talk_verb(Frame, IV, tv(X, Y), Type, holdsIn(Frame, z(Verbing, X, Y)), Verb):- my_clex_verb(IV, Verb, tv, Type, Verbing).
-lf_talk_verb(Frame, IV, iv(X), Type, holdsIn(Frame, z(Verbing, X, _)), Verb):- my_clex_verb(IV, Verb, iv, Type, Verbing).
+boosted_order(0, [pp,past+fin,infpl]).
+
+boosted_call(Call):-
+  findall(Call,Call,Possibles),
+  predsort(boosted_sort,Possibles,PossiblesSorted),
+  member(Call,PossiblesSorted).
+
+% @TODO
+boosted_sort(E1,E2,RO):- E1=@=E2, !, RO = (=).
+boosted_sort(E1,E2,RO):- 
+  boosted_value(E1,V1), 
+  boosted_value(E2,V2),
+  %wdmsg(compare(V1,V2)),
+  compare(V1,V2,RO), RO \== (=),!.
+
+boosted_value(E1,V1):- boosted_order(Prio,List), once((nth0(Nth,List,E), sub_term(S,E1),S==E, V1 is (Prio * 10 + Nth))).
+boosted_value(V1,V1).
+
+form_talk_verb(Frame, IV, Type, past+part, LF, IW ) :- talk_verb_LF(Frame, Type, IW, _, _, IV, _, LF).
+form_talk_verb(Frame, IV, Type, past+fin, LF, IW ) :- talk_verb_LF(Frame, Type, IW, _, IV, _, _, LF).
+form_talk_verb(Frame, IV, Type, pres+part, LF, IW ) :- talk_verb_LF(Frame, Type, IW, _, _, _, IV, LF).
+form_talk_verb(Frame, IV, Type, pres+fin, LF, IW ) :- talk_verb_LF(Frame, Type, IW, IV, _, _, _, LF).
+form_talk_verb(Frame, IV, Type, nonfinite, LF, IV ) :- talk_verb_LF(Frame, Type, IV, _, _, _, _, LF).
+form_talk_verb(Frame, IV, dtv(X, Y, Z), Type, holdsIn(Frame, z(ActVerbing, X, Y, Z)), Verb):- my_clex_verb(IV, Verb, dt, Type, ActVerbing).
+form_talk_verb(Frame, IV, tv(X, Y), Type, holdsIn(Frame, z(ActVerbing, X, Y)), Verb):- my_clex_verb(IV, Verb, tv, Type, ActVerbing).
+form_talk_verb(Frame, IV, iv(X), Type, holdsIn(Frame, z(ActVerbing, X, _)), Verb):- my_clex_verb(IV, Verb, iv, Type, ActVerbing).
 
 
 /*nlac(verbSemTrans, xGiveTheWord, 0, nartR(xPPCompFrameFn, ttTransitivePPFrameType, xOffTheWord),
@@ -137,22 +161,23 @@ lf_talk_verb(Frame, IV, iv(X), Type, holdsIn(Frame, z(Verbing, X, _)), Verb):- m
 */
 
 %                           nonfinite, pres+fin, past+fin, past+part, pres+part, LF
- talk_verb_lf(_Frame, tv(X, Y), meet, meets, met, met, meeting, z(meeting, X, Y)).
- talk_verb_lf(_Frame, tv(X, Y), concern, concerns, concerned, concerned, concerning, z(concerning, X, Y)).
- talk_verb_lf(_Frame, tv(X, Y), run, runs, ran, run, running, z(running, X, Y)).
-%talk_verb_lf(_Frame, tv(X, Y), write, writes, wrote, written, writing, z(writing, X, Y)).
+ talk_verb_LF(_Frame, tv(X, Y), meet, meets, met, met, meeting, z(meeting, X, Y)).
+ talk_verb_LF(_Frame, tv(X, Y), concern, concerns, concerned, concerned, concerning, z(concerning, X, Y)).
+ talk_verb_LF(_Frame, tv(X, Y), run, runs, ran, run, running, z(running, X, Y)).
+%talk_verb_LF(_Frame, tv(X, Y), write, writes, wrote, written, writing, z(writing, X, Y)).
 % OLD
- talk_verb_lf( Frame, tv(X, Y), Write, Writes, Wrote, Written, Writing,
+ talk_verb_LF( Frame, tv(X, Y), Write, Writes, Wrote, Written, Writing,
                                            iza(Frame, ProperEvent) & doer(Frame, X) & MadeObj) :-
-   talkdb:talk_db(transitive, Write, Writes, Wrote, Writing, Written),
+   talk_db_safer(transitive, Write, Writes, Wrote, Writing, Written),
    to_evt_name(Writing, ProperEvent),
-   make_object(Frame, Wrote, Y, MadeObj).
+   make_object(Frame, Written, Y, MadeObj).
+
 make_object(Frame, Written, Y, t(["object", Written], Frame, Y)).
 
 % NEW
 /*
-  talk_verb_lf( Frame, tv(X, Y), Write, Writes, Wrote, Written, Writing,
-                        talkdb:talk_db(transitive, Write, Writes, Wrote, Writing, Written).
+  talk_verb_LF( Frame, tv(X, Y), Write, Writes, Wrote, Written, Writing,
+                        talk_db_safer(transitive, Write, Writes, Wrote, Writing, Written).
 */
 % =================================================================
 % Intrans Verb
@@ -167,7 +192,7 @@ intrans_verb1(Frame, Time, X, LF)--> intrans_verb2(Frame, Time, X, LF), nop( \+ 
 intrans_verb2(_Frame, pres+fin, X, z(painting, X)) --> theText1(paints).
 intrans_verb2(_Frame, past+fin, X, z(writting, X, _)) --> theText1(wrote).
 intrans_verb2( Frame, pres+fin, X, LFOut) --> named_var_match(startsWith('IV'), Var, holdsIn(Frame, z(Var, X, _Y)), LFOut).
-intrans_verb2(_Frame, Type, X, z(Verbing, X, _)) --> theText1(Formed), { my_clex_verb(Formed, _Verb, iv, Type, Verbing)}.
+intrans_verb2(_Frame, Type, X, z(ActVerbing, X, _)) --> theText1(Formed), { my_clex_verb(Formed, _Verb, iv, Type, ActVerbing)}.
 
 intrans_verb2(Frame, Time, X, LF) --> talk_verb(Frame, IV, iv(X), Time, LF), nvd(IV, Frame).
 % fallback
@@ -175,19 +200,20 @@ intrans_verb2(Frame, Time, X, LF) --> talk_verb(Frame, IV, tv(X, _), Time, LF), 
 
 %                nonfinite, pres+fin, past+fin, past+part, pres+part, LF
 
- talk_verb_lf(_Frame, iv(X), halt, halts, halted, halted, halting, z(halting, X)).
+
+talk_verb_LF(_Frame, iv(X), halt, halts, halted, halted, halting, z(halting, X)).
 %OLD
-  talk_verb_lf(Frame, iv(X), Write, Writes, Wrote, Written, Writing,
+talk_verb_LF(Frame, iv(X), Write, Writes, Wrote, Written, Writing,
     iza(Frame, ProperEvent)
     & doer(Frame, X)) :-
     to_evt_name(Writing, ProperEvent),
-    talkdb:talk_db(intransitive, Write, Writes, Wrote, Writing, Written).
+    talk_db_safer(intransitive, Write, Writes, Wrote, Writing, Written).
 %NEW
 /*
- talk_verb_lf(Frame, iv(X), Write, Writes, Wrote, Written, Writing,
+ talk_verb_LF(Frame, iv(X), Write, Writes, Wrote, Written, Writing,
    iza(Frame, a(event, Writing))
    & doer(Frame, X)) :-
-                  talkdb:talk_db(intransitive, Write, Writes, Wrote, Writing, Written).
+                  talk_db_safer(intransitive, Write, Writes, Wrote, Writing, Written).
 */
 
 
@@ -196,7 +222,8 @@ intrans_verb2(Frame, Time, X, LF) --> talk_verb(Frame, IV, tv(X, _), Time, LF), 
 % =================================================================
 % Infinitival Verbs % @TODO
 % =================================================================
-talk_verb_lf(_Frame, infinitival(X, Y), want, wants, wanted, wanted, wanting, ((z(wanting, Y, X, Comp) & LFOut) & Comp & LFOut )).
+talk_verb_LF(_Frame, infinitival(X, Y), want, wants, wanted, wanted, wanting, 
+  ((z(wanting, Y, X, Comp) & LFOut) & Comp & LFOut )).
 
 %semantics is partially execution of
 % NP ^VP ^Y ^NP(X want(Y, X, VP(X)))
@@ -288,10 +315,10 @@ adverb1(X, MProps)  -->      theText1(Adv), {adv_lf(X, Adv, MProps)}.
 
 adv_lf(X, Adv, ISA) :- is_really_adv(Adv, RAdv), into_isa3(X, advFn(RAdv), ISA).
 
-is_really_adv(Adv):- parser_chat80:comp_adv_db(Adv).
-is_really_adv(Adv):- parser_chat80:sup_adv_db(Adv).
+is_really_adv(Adv):- if_defined(parser_chat80:comp_adv_lex(Adv)).
+is_really_adv(Adv):- if_defined(parser_chat80:sup_adv_lex(Adv)).
 is_really_adv(Adv):- talkdb:talk_db(adv, Adv).
-%is_really_adv(Adv):- parser_chat80:adverb_db(Adv).
+%is_really_adv(Adv):-  if_defined(parser_chat80:adverb_lex(Adv)).
 
 is_really_adv(Adv, RAdv):- clex_iface:clex_adv(Adv, RAdv, _).
 %is_really_adv(Adv, RAdv):- talkdb:talk_db(adv, RAdv, Adv).
@@ -310,11 +337,11 @@ to_evt_name(A, Out):- atom_concat(APC, 'ing', A), !, (is_captitalized(APC)-> A=O
 to_evt_name(A, Out):- to_evt_name2(A, Out).
 
 into_active(A, ING):- (into_active1(A, ING);into_active2(A, ING)), !.
-into_active1(A, ING):- talkdb:talk_db(_, A, _, _, ING, _), !.
-into_active1(A, ING):- talkdb:talk_db(_, _, A, _, ING, _), !.
-into_active1(A, ING):- talkdb:talk_db(_, _, _, A, ING, _), !.
-into_active1(A, ING):- talkdb:talk_db(_, _, _, _, ING, A), !.
-into_active1(A, ING):- talkdb:talk_db(_, _, _, _, A, _), !, A = ING.
+into_active1(A, ING):- talk_db_safer(_, A, _, _, ING, _), !.
+into_active1(A, ING):- talk_db_safer(_, _, A, _, ING, _), !.
+into_active1(A, ING):- talk_db_safer(_, _, _, A, ING, _), !.
+into_active1(A, ING):- talk_db_safer(_, _, _, _, ING, A), !.
+into_active1(A, ING):- talk_db_safer(_, _, _, _,   A, _), !, A = ING.
 into_active1(A, ING):- talkdb:talk_db(noun_or_verb, _, ING, A).
 into_active1(A, ING):- atom_contains(A, 'ing'), A = ING.
 into_active2(A, ING):- talkdb:talk_db(noun_or_verb, A, ING, _).

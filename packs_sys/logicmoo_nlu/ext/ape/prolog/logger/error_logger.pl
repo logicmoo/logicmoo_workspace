@@ -27,10 +27,16 @@
 	   get_messages_with_type/2,             % +Type, -AllMessages
 	   get_error_messages_with_type/2,       % +Type, -ErrorMessages
 	   get_warning_messages_with_type/2,     % +Type, -WarningMessages
-	   add_error_messagelist/4,              % +Type, +Position, +Subject, +DescriptionList
-	   add_error_message/4,                  % +Type, +Position, +Subject, +Description
-	   add_error_message_once/4,             % +Type, +Position, +Subject, +Description
-	   add_warning_message/4,                % +Type, +Position, +Subject, +Description
+
+          add_error_messagelist/4,              % +Type, +Position, +Subject, +DescriptionList
+          add_error_message/4,                  % +Type, +Position, +Subject, +Description
+          add_error_message_once/4,             % +Type, +Position, +Subject, +Description
+
+          add_werror_messagelist/4,              % +Type, +Position, +Subject, +DescriptionList
+          add_werror_message/4,                  % +Type, +Position, +Subject, +Description
+          add_werror_message_once/4,             % +Type, +Position, +Subject, +Description
+
+     add_warning_message/4,                % +Type, +Position, +Subject, +Description
 	   add_warning_message_once/4,           % +Type, +Position, +Subject, +Description
 	   add_messages/1,                       % +MessageList
 	   is_error_message/4,                   % +Type, +Position, +Subject, +Description
@@ -206,6 +212,11 @@ add_error_messagelist(Type, Position, Subject, [H | T]) :-
 	add_error_message(Type, Position, Subject, H),
 	add_error_messagelist(Type, Position, Subject, T).
 
+add_werror_messagelist(_Type, _Position, _Subject, []).
+
+add_werror_messagelist(Type, Position, Subject, [H | T]) :-
+	add_werror_message(Type, Position, Subject, H),
+	add_werror_messagelist(Type, Position, Subject, T).
 
 %% add_error_message(+Type:atom, +Position:term, +Subject:atom, +Description:atom) is det.
 %
@@ -217,12 +228,17 @@ add_error_messagelist(Type, Position, Subject, [H | T]) :-
 add_error_message(Type, Position, Subject, Description) :-
 	assert_message(error, Type, Position, Subject, Description).
 
-
 %% add_error_message_once(+Type, +Position, +Subject, +Description) is det.
 %
 
+add_werror_message_once(Type, Position, Subject, Description) :-
+	assert_message_once(warning, Type, Position, Subject, Description).
+
 add_error_message_once(Type, Position, Subject, Description) :-
-	assert_message_once(error, Type, Position, Subject, Description).
+	assert_message_once(warning, Type, Position, Subject, Description).
+
+add_werror_message(Type, Position, Subject, Description) :-
+	assert_message(warning, Type, Position, Subject, Description).
 
 
 %% add_warning_message(+Type, +Position, +Subject, +Description) is det.

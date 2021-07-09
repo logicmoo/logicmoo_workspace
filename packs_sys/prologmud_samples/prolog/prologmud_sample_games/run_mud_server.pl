@@ -21,62 +21,195 @@ W:\opt\logicmoo_workspace\packs_sys\logicmoo_utils\prolog;W:\opt\logicmoo_worksp
 
 
 */
-:- getenv('DISPLAY',_)->true;setenv('DISPLAY', '10.0.0.122:0.0').
-%:- (notrace(gtrace),nodebug).
-:- set_prolog_flag(verbose_load,true).
-:- set_prolog_flag(pfc_version,2.0).
-:- set_prolog_flag(dmsg_level,always).
+%:- set_prolog_flag(xpce, false).
 
-:- discontiguous rdf11:'$exported_op'/3. 
-:- discontiguous phil:'$exported_op'/3.
-:- discontiguous lemur:'$exported_op'/3.
+%:- reconsult('/opt/logicmoo_workspace/lib/swipl/xpce/prolog/lib/pce.pl').
+
+% :- dynamic(pce_principal:send/2).
+%:- lock_predicate(pce_principal:send/2).
+% :- use_module(library(jpl)).
+
+:- thread_local(t_l:squelch_message/0).
+
+:- meta_predicate(wo_messages(0)).
+wo_messages(G):- locally(t_l:squelch_message,G).
+
+squeltch:squelch_message(_):- t_l:squelch_message.
+
+push_msg(_) :- t_l:squelch_message, !.
+push_msg(Term) :-
+    nb_current('$inprint_message', Messages),
+    !,
+    \+ ( '$member'(Msg, Messages),
+         Msg=@=Term
+       ),
+    b_setval('$inprint_message', [Term|Messages]).
+push_msg(Term) :-
+    b_setval('$inprint_message', [Term]).
+
+pop_msg :- t_l:squelch_message, !.
+pop_msg :-
+    (   nb_current('$inprint_message', [_|Messages]),
+        Messages\==[]
+    ->  b_setval('$inprint_message', Messages)
+    ;   nb_delete('$inprint_message'),
+        b_setval('$inprint_message', [])
+    ).
+
+print_message_guarded(_,_) :- t_l:squelch_message, !.
+print_message_guarded(Level, Term) :-
+ '$messages':(
+    (   must_print(Level, Term)
+    ->  (   translate_message(Term, Lines, [])
+        ->  (   nonvar(Term),
+                (   notrace(user:thread_message_hook(Term, Level, Lines))
+                ->  true
+                ;   notrace(user:message_hook(Term, Level, Lines))
+                )
+            ->  true
+            ;   '$inc_message_count'(Level),
+                print_system_message(Term, Level, Lines),
+                maybe_halt_on_error(Level)
+            )
+        )
+    ;   true
+    )).
+
+:- multifile '$messages':print_message/2.
+:- dynamic '$messages':print_message/2.
+:- asserta(('$messages':print_message(A,B):- notrace((squeltch:squelch_message('$messages':print_message(A,B)))),!)).
+:- dynamic message_hook/3.
+:- multifile message_hook/3.
+:- asserta((message_hook(A, B, C):- notrace((squeltch:squelch_message(message_hook(A, B, C)))),!)).
+:- dynamic message_hook/1.
+:- multifile message_hook/1.
+:- asserta((message_hook(A):- notrace((squeltch:squelch_message(message_hook(A)))),!)).
+
+
+pre_run_mud_server:-
+ 
+ % volatile(http_log:log_stream/1),
+ volatile(http_log:log_stream/2),
+ volatile(prolog_listing:opened_source/3),
+  %(current_prolog_flag(xpce, true) -> (noguitracer,tnodebug) ; true),
+  discontiguous(rdf11:'$exported_op'/3),
+  discontiguous(phil:'$exported_op'/3),
+  discontiguous(lemur:'$exported_op'/3),
+  multifile(rdf11:'$exported_op'/3),
+  multifile(phil:'$exported_op'/3),
+  multifile(lemur:'$exported_op'/3),
+
+  multifile(swish_help:help_files/1),
+  multifile(cp_label:rdf_link/4),
+  dynamic(cp_label:rdf_link/4),
+  
+  multifile(swish_render_rdf:rdf_link/4),
+  dynamic(swish_render_rdf:rdf_link/4),
+  
+  (getenv('DISPLAY',_)->true;setenv('DISPLAY','10.0.0.78:0.0')),
+  %(notrace(gtrace),nodebug),
+  %set_prolog_flag(verbose_load,true),
+  set_prolog_flag(pfc_version,v(2,0,0)),
+  set_prolog_flag(dmsg_level,always),
+  
+  discontiguous(rdf11:'$exported_op'/3),
+  discontiguous(phil:'$exported_op'/3),
+  discontiguous(lemur:'$exported_op'/3),
+  multifile(rdf_rewrite:arity/2),
+  dynamic(rdf_rewrite:arity/2),!.
+
+never_catch:- 
+   current_prolog_flag(access_level,Was),
+   set_prolog_flag(access_level,system),
+   redefine_system_predicate(system:catch/3),
+   abolish(system:catch,3),
+   meta_predicate(system:catch(0,?,0)),
+   system:assert((catch(G,E,C):-mycatch(G,E,C))),   
+   set_prolog_flag(access_level,Was).
+
+
+
+:- initialization(pre_run_mud_server, now).
+:- initialization(pre_run_mud_server, restore_state).
+
+
+never_notrace:- 
+   abolish_notrace,
+   current_prolog_flag(access_level,Was),
+   set_prolog_flag(access_level,system),
+   redefine_system_predicate(system:notrace/1),
+   abolish(system:notrace,1),
+   meta_predicate(system:notrace(0)),
+   system:assert((notrace(G):-once(G))),   
+   set_prolog_flag(access_level,Was).
+%:- never_notrace.
+
+abolish_notrace:- redefine_system_predicate(system:notrace/0),abolish(system:notrace/0),asserta(system:notrace).
+
+never_portray:- 
+   current_prolog_flag(access_level,Was),
+   set_prolog_flag(access_level,system),
+   abolish(prolog:portray,1),dynamic(prolog:portray/1),
+   abolish(user:portray,1),dynamic(user:portray/1),
+   retractall(prolog:portray(_)),
+   retractall(user:portray(_)),
+   set_prolog_flag(access_level,Was).
 
 attach_packs_relative(Rel):-
    once(((
     (working_directory(Dir,Dir);prolog_load_context(directory,Dir)),
-    (absolute_file_name(Rel,PackDir,[relative_to(Dir),file_type(directory),file_errors(fail)]);
-      absolute_file_name(Rel,PackDir,[file_type(directory),file_errors(fail)])),
+    (absolute_file_name(Rel,PackDir,[relative_to(Dir),file_type(directory),solutions(all),file_errors(fail)]);
+      absolute_file_name(Rel,PackDir,[file_type(directory),solutions(all),file_errors(fail)])),
     writeln(attach_packs(PackDir)),attach_packs(PackDir)));writeln(failed(attach_packs_relative_web(Rel)))).
+
+load_package_dirs_0:-
+  ignore(( \+ exists_source(library(logicmoo_common)), attach_packs_relative('../../..'))),
+  attach_packs('/opt/logicmoo_workspace/packs_sys',[duplicate(keep)]),
+  attach_packs('/opt/logicmoo_workspace/packs_lib',[duplicate(keep)]),
+  attach_packs('/opt/logicmoo_workspace/packs_web',[duplicate(keep)]),
+  !.
+
+load_package_dirs_1:-
+  ignore(catch(make_directory('/tmp/tempDir/pack'),_,true)),
+  (user:file_search_path(pack,'/tmp/tempDir/pack') -> true ; asserta(user:file_search_path(pack,'/tmp/tempDir/pack'))),
+  attach_packs('/tmp/tempDir/pack'),  
+  % nop(pack_install(logicmoo_utils,[upgrade(true),interactive(false)])),
+  !.
 
 load_package_dirs:-
   findall(PackDir,'$pack':pack(Pack, PackDir),Before),  
-  ignore(( \+ exists_source(library(logicmoo_common)), attach_packs_relative('../../..'))),
+  load_package_dirs_0,
+  load_package_dirs_1,
   findall(PackDir,'$pack':pack(Pack, PackDir),After),
-  (Before==After -> writeln(load_package_dirs(After)) ; true),
-  ignore(catch(make_directory('/tmp/tempDir/pack'),_,true)),
-  (user:file_search_path(pack,'/tmp/tempDir/pack') -> true ; asserta(user:file_search_path(pack,'/tmp/tempDir/pack'))),
-  attach_packs('/tmp/tempDir/pack'),
-  pack_install(logicmoo_utils,[upgrade(true),interactive(false)]),
+  (Before\==After -> writeln(load_package_dirs(After)) ; true),
   pack_list_installed,
+  use_module(library(logicmoo_common)),
+  % use_module(library(logicmoo_packs)).
   !.
- 
+
 :- initialization(load_package_dirs, now).
 :- initialization(load_package_dirs, restore_state).
 
 
-%:- dmsg("Ensure run_mud_server").
-%:- rtrace(dmsg2("Ensure Run_MUD_SERVER1")).
-%:- break.
+set_startup_flags:-
+  set_prolog_flag(runtime_speed, 0), % 1 = default
+  set_prolog_flag(runtime_debug, 3), % 2 = important but dont sacrifice other features for it
+  set_prolog_flag(runtime_safety, 3),  % 3 = very important
+  set_prolog_flag(unsafe_speedups, false),
+  set_prolog_flag(logicmoo_message_hook,dumpst),
+  set_prolog_flag(encoding,text),
+  set_prolog_flag(lisp_repl_goal,prolog),
+  current_prolog_flag('argv',Is),writeq(current_prolog_flag('argv',Is)),!,nl,
+  !.
 
-
-%:- '$set_source_module'(baseKB).
-%:- 'module'(baseKB).
-%:- set_prolog_flag(runtime_speed,0). % 0 = dont care
-:- set_prolog_flag(runtime_speed, 0). % 1 = default
-:- set_prolog_flag(runtime_debug, 3). % 2 = important but dont sacrifice other features for it
-:- set_prolog_flag(runtime_safety, 3).  % 3 = very important
-:- set_prolog_flag(unsafe_speedups, false).
-:- set_prolog_flag(logicmoo_message_hook,dumpst).
-:- set_prolog_flag(encoding,text).
-:- set_prolog_flag(lisp_repl_goal,true).
-
-% :- initialization(shell('./PreStartMUD.sh'),program).
-
-:- current_prolog_flag('argv',Is),writeq(current_prolog_flag('argv',Is)),!,nl.
+:- initialization(set_startup_flags, now).
+:- initialization(set_startup_flags, restore_state).
 
 
 :- use_module(library(prolog_deps)).
 :- use_module(library(logicmoo_common)).
+
+%:- bfly.
 
 check_startup_flags:- 
    current_prolog_flag(argv,WasArgV),
@@ -99,7 +232,7 @@ check_startup_flags:-
    '--www', % https://logicmoo.org/*
    '--no-fork', '--workers=16', '--port=3020',
    %'--user=www-data',
-   '--sigma', % Sigma Inference Engine Server  https://logicmoo.org/logicmoo/
+   '--sigma', % Sigma Inference Engine Server  https://logicmoo.org/swish/lm_xref/
    '--cliop',  % https://logicmoo.org/cliopatria/
    '--irc', % Launch IRC Eggdrop Client
    '--swish', % https://logicmoo.org/swish/
@@ -124,7 +257,12 @@ check_startup_flags:-
 :- initialization(check_startup_flags, now).
 :- initialization(check_startup_flags, restore_state).
 
-mud_baseKB :- '$set_typein_module'(baseKB),'$set_source_module'(baseKB),module(baseKB).
+system:set_modules(M) :- '$set_typein_module'(M),'$set_source_module'(M),module(M).
+system:set_modules_baseKB :-  nop(set_modules(baseKB)).
+
+:- initialization(set_modules_baseKB, restore_state).
+:- initialization(set_modules_baseKB, now).
+
 
 % ==============================================
 % WWW Support
@@ -151,14 +289,17 @@ remove_undef_srch:- remove_undef_search.
 
 :- before_boot(remove_undef_srch).
 
-do_setup_history:-!.
+add_hist(X):- nop(add_history(X)).
+:- baseKB:import(add_hist/1).
+
+do_setup_history:-!. % this comments out the next lines
 do_setup_history:-  
  ((
   current_input(S),
   ignore(catch(prolog:history(S, load), _, true)),  
   logicmoo_startup:((
-  add_history([
-  (mpred_why(mudIsa(iCoffeeCup7, tSpatialThing))),
+  maplist(add_hist,
+[ (mpred_why(mudIsa(iCoffeeCup7, tSpatialThing))),
   (make:make_no_trace),
   (update_changed_files),
   (shell('./PreStartMUD.sh')),
@@ -191,8 +332,7 @@ do_setup_history:-
   (lar),
   (lst)]),
   
-  maplist(add_history, [ 
-   mud_baseKB,
+  maplist(add_hist, [    
    % rtrace,
    load_nomic_mu,% autoload_all([verbose(true)]), 
    import_some,
@@ -203,7 +343,11 @@ do_setup_history:-
    % adventure,
    % lar,
    baseKB:listing(mudAtLoc)]),
-  add_history((+ 1 = _Y)))))),
+
+   add_hist(try_zebra),
+   add_hist(start_all),
+   add_hist(qsave_logicmoo),
+  add_hist((+ 1 = _Y)))))),
   !.
 
 :- before_boot(do_setup_history).
@@ -217,19 +361,17 @@ zebra00:- [(pack(logicmoo_base/t/examples/fol/'einstein_simpler_04.pfc'))].
 %load_lpn :- prolog_load_context(directory,D), cd('/home/prologmud_server/lpn/www'),user:[server],cd(D).
 try_zebra:- mpred_trace_all, zebra00, 
  forall(trait(P),listing(P)),
- add_history(clif_show),
- add_history(listing(person)),
+ add_hist(clif_show),
+ add_hist(listing(person)),
  clif_show.
 
 load_nomic_mu:- 
   % set_prolog_flag(cant_qsave_logicmoo,true),
-  mud_baseKB,
-  baseKB:ensure_loaded(library(nomic_mu)),
-  add_history(srv_mu_main),
+  mu:ensure_loaded(library(nomic_mu)),
+  add_hist(srv_mu_main),
   add_history(mu:srv_mu),
   !.
 
-:- user:use_module(library(eggdrop)).
 
 % ==============================================
 % =========== LOGICMOO COMPILATION =============
@@ -250,6 +392,7 @@ dont_export(_,goal_expansion,_).
 dont_export(_,clause_expansion,_).
 
 
+expose_all:- !.
 expose_all:-
      forall((current_predicate(M:F/A),functor(P,F,A),
        (predicate_property(M:P,imported_from(RM))->true;RM=M),
@@ -257,8 +400,77 @@ expose_all:-
        (catch((RM:export(RM:F/A),system:import(RM:F/A)),E,nop(dmsg(E))))).
 
 
-:- multifile(rdf_rewrite:arity/2).
-:- dynamic(rdf_rewrite:arity/2).                         
+
+abolish_module(M):-
+ notrace(forall(
+   (current_predicate(M:F/A), functor(P,F,A), \+ predicate_property(M:P, imported_from(_))),
+    (predicate_property(M:P, static) -> abolish(M:F/A) ; retractall(M:P)))),!,
+   (exists_file(M) -> unload_file(M) ; true).
+
+
+
+
+% test LPS is not broken yet
+melee:- lps_sanity(lps_tests('Melee')).
+system:lps_sanity:- lps_sanity(lps_tests('binaryChop2.pl' )).
+restaurant:- lps_sanity(lps_tests('restaurant')).
+goat:- lps_sanity(lps_tests('goat')).
+ballot:- lps_sanity(lps_tests('Ballot')).
+
+:- dynamic(user:file_search_path/2).
+:- multifile(user:file_search_path/2).
+user:file_search_path(lps_tests, Dir):-
+ %absolute_file_name(library('.'),LibDir,[file_type(directory),solutions(all),access(exist),file_errors(fail)]),
+ member(A,['../test/lps_planner/','../test/ec_planner/abdemo_test/','../test/lps_user_examples/','../examples/']),
+ absolute_file_name(library(A),Dir,[ /*relative_to(LibDir),*/ file_type(directory),solutions(all),access(exist),file_errors(fail)]),
+ exists_directory(Dir).
+
+
+lps_demo_tests:- lps_sanity(lps_tests('lps_demo_tests')).
+lps_demo_test_1:- lps_sanity(lps_tests('lps_demo_test_1')).
+lps_demo_test_2:- lps_sanity(lps_tests('lps_demo_test_2.pl')).
+lps_demo_test_3:- lps_sanity(lps_tests('lps_demo_test_3.pl')).
+lps_demo_test_4:- lps_sanity(lps_tests('lps_demo_test_4.pl')).
+lps_demo_test_5:- lps_sanity(lps_tests('lps_demo_test_5.pl')).
+lps_demo_test_9:- lps_sanity(lps_tests('lps_demo_test_9.pl')).
+
+lps_insanity(File):- 
+   absolute_file_name(File,M,[access(read),extensions(['pl','P','lps','pfc.pl',''])]),
+   M\==File,!,lps_insanity(M).
+
+lps_insanity(M):-
+   M:use_module(library(lps_corner)),
+   interpreter:check_lps_program_module(M),  
+   M:unload_file(M),
+   M:consult(M),
+   %listing(db:actions/1),
+   %listing(interpreter:actions/1),
+   interpreter:get_lps_program_module(M),
+   notrace(from_elsewhere:listing(M:_)),
+   wdmsg(running(M)),
+   % M:golps(X),
+   ignore((M:godc(X),
+   %listing(interpreter:lps_program_module/1),
+   notrace(print_tree(X)))),!,
+   run_tests_from_file(M).
+
+run_tests_from_file(File):- 
+ forall((clause(ec:demo_test(Name, Type, Goal),Body,R),clause_property(R,source(File))),
+  (forall(call(Body),
+   (pprint_ecp_cmt(blue, do(demo_test(Name, Type))),  %Type \== slow, 
+     abdemo(Goal))))).
+
+lps_sanity(File):- Limit = 110580,
+ catch(call_with_depth_limit(lps_insanity(File), Limit, R), E,(R=E)),
+   format(user_error,"~N ~q~n",[lps_sanity=R]),
+   ((integer(R),R<Limit)-> true; (dumpST,break,fail)).
+
+
+baseKB:':-'(ConsqIn):- throw(':-'(ConsqIn)).
+:- lock_predicate(baseKB:':-'/1).
+
+% t:/opt/logicmoo_workspace/packs_sys/logicmoo_nlu/ext/pldata/plkb7166/kb7166_pt7_constant_renames.pldata
+
 /*
  (1) * /usr/local/share/swi-prolog/pack
    (2)   /usr/share/swi-prolog/pack
@@ -266,18 +478,39 @@ expose_all:-
    (4)   /etc/xdg/swi-prolog/pack
 
 */
-load_before_compile:- 
+
+:- multifile(html_write:html_meta/1).
+:- dynamic(html_write:html_meta/1).
+
+:-  use_module(library(prolog_autoload)).
+:-  use_module(library(qsave)).
+
+keep_user_module(Goal):- 
+   setup_call_cleanup('$current_typein_module'(WasTIM), 
+          setup_call_cleanup('$set_source_module'(Was,user), 
+          Goal, 
+          '$set_source_module'(_,Was)), 
+   '$set_typein_module'(WasTIM)).
+    
+load_before_compile:- keep_user_module(load_before_compile_now).
+load_before_compile_now:- 
+   set_prolog_flag(ec_loader,false),
+   skip_sandboxing,
    %set_prolog_flag(verbose_file_search,true), 
    use_module(library(sandbox)),
+    use_module(library(logicmoo_webui)),
+    webui_load_swish_and_clio,
+    webui_start_swish_and_clio,
+ % use_module(library(xlisting/xlisting_web)),
 
-   use_module(library(lps_corner)),
-   use_module(library(logicmoo_webui)),      
-   use_module(library(logicmoo_lps)),
+    use_module(library(logicmoo_lps)),
+    use_module(library(logicmoo/butterfly_console)),
+    use_module(library(logicmoo/pretty_clauses)),
+   %use_module(library(logicmoo_lps)),
    %set_prolog_flag(verbose_file_search,false),
    
    %:- use_module(library(logicmoo_nlu)).
 
-   mud_baseKB,
    /*
    ignore(catch(pack_install(rocksdb),_,true)),
    ignore(catch(pack_install(sldnfdraw),_,true)),
@@ -285,50 +518,101 @@ load_before_compile:-
    ignore(catch(pack_install(phil),_,true)),
    ignore(catch(pack_install(cplint_r),_,true)),
    */
-   ignore((
-    \+ exists_directory('/tmp/tempDir/') -> catch(shell('./PreStartMUD.sh'),_,true))),
-   %ignore(( exists_directory('/tmp/tempDir') -> cd('/tmp/tempDir'))),
-   webui_load_swish_and_clio,   
-   add_history(start_network).
+   % ignore(( \+ exists_directory('/tmp/tempDir/') -> catch(shell('./PreStartMUD.sh'),_,true))),
+   % ignore(( exists_directory('/tmp/tempDir') -> cd('/tmp/tempDir'))),
+    use_module(library(pfc_lib)),
+    use_module(library(xlisting/xlisting_web)),
+    use_module(library(lsp_server)),
+    baseKB:ensure_loaded(library(logicmoo_nlu)),!,
+    load_before_compile_now2.
+
+
+load_before_compile_now2:- 
+    baseKB:ensure_loaded(library(logicmoo_mud)),
+    baseKB:ensure_loaded(library(logicmoo_clif)),        
+    %register_logicmoo_browser,
+  % never_notrace,
+  % bfly_set(butterfly,t),
+    load_nomic_mu,
+    baseKB:ensure_loaded(library(logicmoo_cg)),
+    baseKB:ensure_loaded(library(logicmoo_ec)),        
+    baseKB:ensure_loaded(library('logicmoo/common_logic/common_logic_sumo.pfc')),   
+    %system:reexport(pldata(kb_0988)),
+    %ensure_loaded(pldata(kb_0988)),        
+    baseKB:ensure_loaded(library(narsese)),   
+    use_module(library(instant_prolog_docs)),
+    add_hist(start_network). 
+
 
 %start_network:- 
 %   load_before_compile,!.
+call_safely([H|T]):- !, maplist(call_safely,[H|T]).
+call_safely((G,!,G2)):- !, call_safely(G),!,call_safely(G2).
+call_safely((G,!)):- !, call_safely(G),!.
+call_safely((G,G2)):-!,call_safely(G),call_safely(G2).
+call_safely(G):- ignore(must_or_rtrace(G)),
+  nop(check_memory(G)).
 
-start_network:-       
-   load_before_compile,
+only_runtime(G):- (current_prolog_flag(logicmoo_compiling,true);compiling)-> true; call(G).
+
+start_lsp_server:-
+ lsp_server:
+   (set_prolog_flag(toplevel_prompt, ''),
+    debug(server),
+    debug(server, "Starting stdio client", []),
+    current_input(In),
+    set_stream(In, buffer(full)),
+    set_stream(In, newline(posix)),
+    set_stream(In, tty(false)),
+    set_stream(In, representation_errors(error)),
+    % handling UTF decoding in JSON parsing, but doing the auto-translation
+    % causes Content-Length to be incorrect
+    set_stream(In, encoding(octet)),
+    current_output(Out),
+    set_stream(Out, encoding(utf8)),
+    stdio_handler(A-A, In)).
+
+start_network:- only_runtime(keep_user_module(start_network_now)).
+start_network_now:-  
+  call_safely(
+   [
+   %load_before_compile,
+   user:use_module(library(eggdrop)),
    egg_go,   
    webui_start_swish_and_clio,
-   threads,statistics,
+   thread_create(start_lsp_server,_,[detached(true),alias(lsp_server)]),
+   threads,statistics]),
    !.
 
-
-load_rest:- 
-   nodebug,
-   load_nomic_mu,   
-   load_before_compile,
-   % load_rest2,
+load_rest:- keep_user_module(load_rest_now).
+load_rest_now:- 
+  call_safely(
+  [
+   nodebug,   
+   add_history((mmake, autodoc_test)),
+   load_rest2]),
    !.
 
-load_rest2:-
-   baseKB:ensure_loaded(library(logicmoo_nlu)),
-   baseKB:ensure_loaded(library(narsese)),
-   baseKB:ensure_loaded(library(logicmoo_clif)),
-   baseKB:ensure_loaded(library('logicmoo/common_logic/common_logic_sumo.pfc')),   
-   add_history(try_zebra),
-   add_history(start_all),
-   add_history(qsave_logicmoo),
-   system:reexport(pldata(kb_0988)),
-   (current_prolog_flag(gui_tracer,true)->noguitracer;true),
+% for when dmiles is doing fast testing
+load_rest2:- gethostname('logicmoo.org'), !.
+load_rest2:- locally(set_prolog_flag(verbose_load,true),load_rest3).
+
+load_rest3:- keep_user_module(load_rest3_now).
+load_rest3_now:-
+  call_safely(
+  [
+   set_modules_baseKB,
+   add_hist(try_zebra),
+   add_hist(start_all),
+   add_hist(qsave_logicmoo),
+  % (current_prolog_flag(gui_tracer,true)->noguitracer;true),
    % run_before_qsave,
    do_setup_history,
    nodebug,
-   baseKB:ensure_loaded(library(logicmoo_mud)),
-   baseKB:ensure_loaded(library(logicmoo_cg)),
-   baseKB:ensure_loaded(library(logicmoo_ec)),
-   finish_processing_world,
+   finish_processing_world]),
   !.
 
-:- add_history(load_before_compile).
+%:- add_hist(load_before_compile).
 
 :- dynamic(lmconfig:has_import_module/2).
 normalize_imports(M):- 
@@ -337,23 +621,36 @@ normalize_imports(M):-
 
 normalize_and_save_imports :- forall(current_module(M),normalize_imports(M)).
 
-qsave_logicmoo :-
-   mud_baseKB,
-   %load_before_compile,
+check_memory(_):- current_prolog_flag(check_memory,false),!.
+check_memory(_):- \+ current_prolog_flag(check_memory,true),!.
+check_memory(G):-
+  set_prolog_flag(debug,true),
+  set_prolog_flag(report_error,true),
+  set_prolog_flag(debug_on_error,true),
+  prolog_load_context(file,Y),
+  writeln(prolog_load_context(file,Y)),
+  gensym(akill,X),
+  qsave_program(X),
+  catch(process_create(path(true), [], []),
+    error(resource_error(no_memory),_),
+     (dumpST,wdmsg(no_memory(after,G)),break)).
+
+qsave_logicmoo :-   
+   load_before_compile,
    set_prolog_flag(lisp_repl_goal,true),
    current_prolog_flag(stack_limit,Stack_limit),
    qsave_program(logicmoo_server,
-   [   class(development), 
+     [ class(development), 
        verbose(true),
        stack_limit(Stack_limit),
        toplevel(prolog),
        goal(prolog),
        undefined(ignore), 
        op(save),
-       map('logicmoo_server.map'),
+       % map('logicmoo_server.map'),
        foreign(no_save),
        autoload(true),       
-       stand_alone(true)]),
+       stand_alone(false)]),
    add_history(start_all),
    !.
 
@@ -366,22 +663,32 @@ import_some:-
          (predicate_property(M:P,imported_from(RM))->true;RM=M)),
          (RM:export(RM:F/A),rtrace:import(RM:F/A))), !.
 
-start_rest:- !.
-start_rest:- 
-   load_rest,
-   mud_baseKB,
+start_rest:-
+  keep_user_module((    
+   %load_rest,  
    % rtrace,
    %load_nomic_mu,% autoload_all([verbose(true)]), 
    import_some,
    expose_all,
+   only_runtime(start_rest2))),
+   !.
+
+start_rest2:- \+ gethostname('logicmoo.org'), !.
+start_rest2:- \+ current_predicate(baseKB:start_runtime_mud/0), !.
+start_rest2:- 
+  keep_user_module((  
+  call_safely(
+  [
+    set_modules_baseKB,
    baseKB:start_runtime_mud,
    run_setup_now,  
    baseKB:start_mud_telnet, 
    % adventure,
    % lar,
    baseKB:listing(mudAtLoc),
-   threads,
+   threads]))),
    !.
+
 
 skip_sandboxing(F):- functor(P,F,1), 
   (SF1 = (sandbox:F/1)),
@@ -391,6 +698,7 @@ skip_sandboxing(F):- functor(P,F,1),
   sandbox:asserta((P:-!)).
 
 skip_sandboxing:-
+ set_prolog_flag(no_sandbox, true),
  maplist(skip_sandboxing,
   [safe_goal,
    safe_call,
@@ -402,239 +710,68 @@ skip_sandboxing:-
 
 :- skip_sandboxing.
 
-baseKB:start_rest:- start_rest.
+%:- break.
 
-start_all :- start_network, start_rest.
 
-:- set_prolog_flag(no_sandbox, true).
+
+start_all :- keep_user_module((start_network, start_rest)).
+
 % :- use_module(library(pfc_lib)).
 
-:- load_before_compile.
-:- noguitracer, tnodebug.
+:- keep_user_module((load_before_compile)).
 
-:- initialization(start_network,restore).
-:- if( \+ compiling).
-:- initialization(start_network,now).
+%:- lps_sanity.
+%:- goat.
+
+:- if( current_prolog_flag(xpce, true) ).
+%:- noguitracer, tnodebug.
 :- endif.
 
 
-:- set_prolog_flag(debug,true).
+un_used:- abolish(check:cross_module_call,2),  
+   asserta((check:cross_module_call(_Callee, _Context):- fail)).
+un_used:- abolish(error:permission_error,3),  
+   asserta((
+    error:permission_error(Operation, PermissionType, Culprit) :-
+    wdmsg((throw(error(permission_error(Operation,
+                                 PermissionType,
+                                 Culprit),
+                _)))))).
+
+
+
+%:- set_prolog_flag(debug,true).
 :- set_prolog_flag(access_level,system).
 
 
 %:- abolish(user:prolog_load_file/2).
 %:- dynamic(user:prolog_load_file/2).
+:- initialization(start_network,restore).
+:- if( \+ current_prolog_flag(logicmoo_compiling,false)).
+:- initialization(start_network,now).
+:- endif.
 
-%:- prolog.
 
 :- load_rest.
 :- initialization(start_rest,restore).
-:- if( \+ compiling).
+:- if( \+ current_prolog_flag(logicmoo_compiling,false)).
 :- initialization(start_rest,now).
 :- endif.
 % :- initialization(qsave_logicmoo, main).
-:- initialization(initialize,restore).
-:- if( \+ compiling).
-:- initialization(initialize,now).
+:- initialization(keep_user_module(initialize),restore).
+:- if( \+ current_prolog_flag(logicmoo_compiling,false)).
+:- initialization(keep_user_module(initialize),now).
 :- endif.
 
-:- volatile(http_log:log_stream/1).
-:- volatile(http_log:log_stream/2).
-:- volatile(prolog_listing:opened_source/3).
 %:- abolish( yall:(?)/0 ).
 %:- delete_import_module(user,pfc_lib).
 
-:- meta_predicate aleph:abgen(*,*,*,0).
-:- meta_predicate aleph:abgen(*,*,0).
-:- meta_predicate aleph:abgen(*,0).
-:- meta_predicate aleph:add_eqs(*,*,*,*,*,*,0).
-:- meta_predicate aleph:add_eqs(*,*,*,*,*,0).
-:- meta_predicate aleph:add_new_lit(*,*,*,*,*,*,0).
-:- meta_predicate aleph:aleph_induce_theory(*,*,0).
-:- meta_predicate aleph:aleph_induce_theory(*,0).
-:- meta_predicate aleph:create_worker_pool(*,*,*,*,0).
-:- meta_predicate aleph:cwinduce(0).
-:- meta_predicate aleph:estimate_clauselength_distribution(*,*,*,*,0).
-:- meta_predicate aleph:estimate_clauselength_scores(*,*,*,*,*,0).
-:- meta_predicate aleph:evalfn(*,*,0).
-:- meta_predicate aleph:execute_equality(0).
-:- meta_predicate aleph:find_clause(*,*,0).
-:- meta_predicate aleph:find_clause(*,0).
-:- meta_predicate aleph:find_theory(*,*,0).
-:- meta_predicate aleph:find_theory1(*,0).
-:- meta_predicate aleph:flatten(*,*,*,*,0).
-:- meta_predicate aleph:flatten_atom(*,*,*,*,*,*,*,0).
-:- meta_predicate aleph:flatten_atoms(*,*,*,*,0).
-:- meta_predicate aleph:flatten_lits(*,*,*,*,*,*,*,0).
-:- meta_predicate aleph:gcws(*,*,*,*,0).
-:- meta_predicate aleph:gcws(0).
-:- meta_predicate aleph:gen_abduced_atoms(*,*,0).
-:- meta_predicate aleph:get_atoms(*,*,*,*,*,0).
-:- meta_predicate aleph:get_atoms1(*,*,*,*,*,0).
-:- meta_predicate aleph:get_besthyp(*,0).
-:- meta_predicate aleph:get_gain(*,*,*,*,*,*,*,*,*,*,*,*,*,*,*,*,0).
-:- meta_predicate aleph:get_gains(*,*,*,*,*,*,*,*,*,*,*,*,*,*,*,0).
-:- meta_predicate aleph:get_refine_gain(*,*,*,*,*,*,*,*,*,*,*,0).
-:- meta_predicate aleph:get_sibgain(*,*,*,*,*,*,*,*,*,*,*,*,*,*,*,*,*,*,*,0).
-:- meta_predicate aleph:get_sibgains(*,*,*,*,*,*,*,*,*,*,*,*,*,*,*,0).
-:- meta_predicate aleph:get_theory_gain(*,*,*,*,*,*,*,*,*,*,0).
-:- meta_predicate aleph:graphsearch(*,*,0).
-:- meta_predicate aleph:insert_eqs(*,*,*,*,0).
-:- meta_predicate aleph:reduce(*,*,0).
-:- meta_predicate aleph:reduce(*,0).
-:- meta_predicate aleph:rls_refine(*,*,*,0).
-:- meta_predicate aleph:rls_search(*,*,*,*,*,0).
-:- meta_predicate aleph:rls_thread(*,*,*,*,*,0).
-:- meta_predicate aleph:rsat(*,0).
-:- meta_predicate aleph:rsat(0).
-:- meta_predicate aleph:sample_clauses(*,*,0).
-:- meta_predicate aleph:sample_nclauses(*,*,*,0).
-:- meta_predicate aleph:sat(*,*,0).
-:- meta_predicate aleph:sat(*,0).
-:- meta_predicate aleph:search(*,*,0).
-:- meta_predicate aleph:sphyp(0).
-:- meta_predicate aleph:theory_move(*,*,*,0).
-:- meta_predicate aleph:theorysearch(*,*,0).
-:- meta_predicate aleph:time(0,*,*).
-:- meta_predicate aleph:time_loop(*,0,*).
-:- meta_predicate aleph:tsearch(*,*,0).
-:- meta_predicate aleph:work(*,*,0).
-:- meta_predicate aleph:worker(*,*,0).
-:- meta_predicate ape_utils:cpu_time(0,*).
-:- meta_predicate baseKB:add_game_dir(*,0).
-:- meta_predicate baseKB:agent_coerce_for(2,*,?,?,?).
-:- meta_predicate baseKB:apply_cond(*,0).
-:- meta_predicate baseKB:call_close_and_detatch(*,*,*,0).
-:- meta_predicate baseKB:cycword_sem(*,*,0).
-:- meta_predicate baseKB:dcgParse213(//,//,//,*,*).
-:- meta_predicate baseKB:findall_set(?,0,*).
-:- meta_predicate baseKB:freeze_safe(?,0).
-:- meta_predicate baseKB:get_sorted_instances(?,*,3).
-:- meta_predicate baseKB:hooked_random_instance(*,*,0).
-:- meta_predicate baseKB:in_call(*,0,*,0).
-:- meta_predicate baseKB:intersect(*,*,*,*,0,-).
-:- meta_predicate baseKB:matcher_to_data_args(3,*,*,?,*,?).
-:- meta_predicate baseKB:nonvar_must_be(*,0).
-:- meta_predicate baseKB:now_try_game_dir(0).
-:- meta_predicate baseKB:punless(0,0).
-:- meta_predicate baseKB:random_instance_no_throw0(*,*,0).
-:- meta_predicate baseKB:run_mud_test_clause(:,0).
-:- meta_predicate baseKB:string_to_info(*,0).
-:- meta_predicate baseKB:t(1,?).
-:- meta_predicate baseKB:t(2,?,?).
-:- meta_predicate baseKB:t(3,?,?,?).
-:- meta_predicate baseKB:t(4,?,?,?,?).
-:- meta_predicate baseKB:t(5,?,?,?,?,?).
-:- meta_predicate baseKB:t(6,?,?,?,?,?,?).
-:- meta_predicate baseKB:t(7,?,?,?,?,?,?,?).
-:- meta_predicate baseKB:tdomcall(0).
-:- meta_predicate baseKB:telnet_repl_writer(*,*,*,0).
-:- meta_predicate baseKB:term_to_info(*,0).
-:- meta_predicate baseKB:test_call0(0).
-:- meta_predicate baseKB:thread_signal_blocked(*,0).
-:- meta_predicate baseKB:time_as(*,0).
-:- meta_predicate baseKB:time_as(0).
-:- meta_predicate baseKB:trye(0).
-:- meta_predicate baseKB:want_more_question(0).
-:- meta_predicate baseKB:with_domain_preds(1).
-:- meta_predicate baseKB:within_user(0).
-:- meta_predicate common_logic_compiler:map_each_subterm_compound(2,*,*).
-:- meta_predicate drs_to_coreace:conds_to_andlist(2,*,*).
-:- meta_predicate ec_loader:must_or_dumpst(0).
-:- meta_predicate ec_loader:only_dec_pl(0).
-:- meta_predicate ec_loader:only_lps(0).
-:- meta_predicate ec_nnf:if_dbg(0).
-:- meta_predicate ec_nnf:thmust(0).
-:- meta_predicate ec_reader:convert_e(1,+,+).
-:- meta_predicate ec_reader:trans_e(*,*,1,?,+,*).
-:- meta_predicate ec_reader:with_e_file_write2(1,?,+).
-:- meta_predicate get_ape_results:call_ape(0).
-:- meta_predicate grammar_words:try(0,*,*,*).
-:- meta_predicate grammar_words:word(*,0,*,*).
-:- meta_predicate grammar_words:word_initial(*,0,*,*).
-:- meta_predicate grammar_words:word_noninitial(*,0,*,*).
-:- meta_predicate grammar_words:words(*,0,*,*).
-:- meta_predicate grammar_words:words_initial(*,0,*,*).
-:- meta_predicate grammar_words:words_noninitial(*,0,*,*).
-:- meta_predicate icl_int:ex(0,*,*).
-:- meta_predicate icl_int:example_query(0).
-:- meta_predicate icl_int:explain(0).
-:- meta_predicate icl_int:explain(0,*).
-:- meta_predicate icl_int:explain(0,*,*).
-:- meta_predicate icl_int:prove(0,*,*,*,*,*,*,*).
-:- meta_predicate icl_int:prove1(0,*,*,*,*,*,*,*).
-:- meta_predicate icl_int:tprove(*,0,*,*,*,*,*,*,*).
-:- meta_predicate logicmoo_ocl:tdomcall(0).
-:- meta_predicate logicmoo_ocl:time_as(*,0).
-:- meta_predicate logicmoo_ocl:time_as(0).
-:- meta_predicate logicmoo_ocl:trye(0).
-:- meta_predicate logicmoo_ocl:with_domain_preds(1).
-:- meta_predicate logicmoo_startup:enotrace(0).
-:- meta_predicate logicmoo_startup:with_abs_paths(1,?).
-:- meta_predicate logicmoo_util_autocut:do_body(0).
-:- meta_predicate logicmoo_util_autocut:do_body(0,*,*).
-:- meta_predicate logicmoo_util_autocut:last_clause(0).
-:- meta_predicate logicmoo_util_autocut:last_clause(0,*).
-:- meta_predicate logicmoo_util_body_reorder:call_body_reorder_compare(*,*,0,0).
-:- meta_predicate logicmoo_util_body_reorder:call_body_reorder_key(*,*,*,0,0).
-:- meta_predicate logicmoo_util_body_reorder:reorder_if_var(*,0,0).
-:- meta_predicate lps_server_UI:any_call(0).
-:- meta_predicate mcintyre:take_a_sample(*,*,*,2,?).
-%:- meta_predicate mpred_type_constraints:'__aux_maplist/2_freeze_rev+1'(*,0).
-%:- meta_predicate mpred_type_constraints:'__aux_wrapper_594d82f1742fe8b6586d0fcc675e4bd8258e4541'(0).
-:- meta_predicate mpred_type_constraints:freeze_rev(0,?).
-:- meta_predicate mpred_type_constraints:lazy_1(0).
-:- meta_predicate mu:api_invoke(+).
-:- meta_predicate mu:api_invoke(+,?,?).
-:- meta_predicate mu:apply_act(+,?,?).
-:- meta_predicate mu:aXiom(+).
-:- meta_predicate mu:aXiom(+,?,?).
-:- meta_predicate mu:call_lf(?,0).
-:- meta_predicate mu:call_z(1,?).
-:- meta_predicate mu:eVent(*,+).
-:- meta_predicate mu:eVent(*,+,*,?).
-:- meta_predicate mu:map_apply_findall(+,?,?).
-:- meta_predicate mu:munl_call(0).
-:- meta_predicate mu:must_act(+,?,?).
-:- meta_predicate mu:rapply_state(1,+,-,?).
-:- meta_predicate mu:reframed_call(4,*,?).
-:- meta_predicate mu:reframed_call(4,?,?,?,?).
-:- meta_predicate mu:thread_create_adv(0,?,+).
-:- meta_predicate parser_sharing:try_maybe_f(*,0,*).
-:- meta_predicate psyntax:dumploaded(0,*).
-:- meta_predicate rdf_describe:rdf_bounded_description(3,+,*,+,-).
-:- meta_predicate rdf_describe:rdf_include_labels(3,+,+).
-:- meta_predicate rsasak_forward_wa_star_h_add:replc_structure_vars(2,-).
-:- meta_predicate rsasak_forward_wa_star_h_add:replc_structure_vars1(2,-).
-:- meta_predicate rsasak_pddl_parser:dcgStructSetOpt(*,*,3,?,?).
-:- meta_predicate rsasak_pddl_parser:dcgStructSetOptTraced(*,*,3,?,?).
-:- meta_predicate rsasak_pddl_parser:effected_typed_list(3,*,?,*).
-:- meta_predicate rsasak_pddl_parser:function_typed_list(3,*,?,*).
-:- meta_predicate rsasak_pddl_parser:oneOrMore(3,*,?,?).
-:- meta_predicate rsasak_pddl_parser:typed_list(3,*,?,*).
-:- meta_predicate rsasak_pddl_parser:typed_list0(3,*,?,*).
-:- meta_predicate rsasak_pddl_parser:typed_list_as_list(3,*,?,?).
-:- meta_predicate rsasak_pddl_parser:typed_list_exact(3,*,?,*).
-:- meta_predicate rsasak_pddl_parser:typed_list_keys(3,*,?,*).
-:- meta_predicate rsasak_pddl_parser:zeroOrMore(3,*,?,?).
-:- meta_predicate smtp:do_send_mail(*,*,*,1,*).
-:- meta_predicate smtp:do_send_mail_cont(*,*,*,1,*,*).
-:- meta_predicate smtp:error_cleanup(*,0).
-:- meta_predicate states_explorer:my_ite(0,0,0).
-:- meta_predicate swish_data_source:range(*,:,0).
-:- meta_predicate swish_filesystems:catch_reply(0,?,0).
-:- meta_predicate swish_svgtree:'__aux_maplist/3_filtered_tree+2'(*,*,3,+).
-:- meta_predicate talkdb:erase_when(2,?,?).
-:- meta_predicate talkdb:save_to_file(*,2,*).
-:- meta_predicate utility_translation:time_goal(0,*).
-:- meta_predicate utility_translation:timed_forall(0,0).
-:- meta_predicate verbnet_iface:is_reloading(0).
-:- meta_predicate xml_reader:error_catch(0,*,0).
-:- meta_predicate xml_reader:immediateCall(*,0).
-
 % swish_highlight:lazy_read_lines
 
-:- noguitracer, tnodebug.
+:- if( current_prolog_flag(xpce, true) ).
+%:- noguitracer, tnodebug.
+:- endif.
+
 
 % :- qsave_logicmoo.
 %:- setenv('DISPLAY', '192.168.88.1:0.0').
@@ -643,8 +780,49 @@ start_all :- start_network, start_rest.
 
 % :- mu:srv_mu.
 
+:- add_history((mmake, autodoc_test)).
+
+swi_ide:- \+ current_prolog_flag(xpce, true), !.
+swi_ide:- use_module(library(swi_ide)),
+ ( getenv('DISPLAY',_)
+   -> prolog_ide(thread_monitor)
+    ;true).
+
+:- add_history(swi_ide).
+:- add_history([run_mud_server]).
+:- add_history(forall(chat80(X),run_pipeline(X))).
+:- add_history(run_pipeline("is there a man who becomes the greatest tenor?")).
+:- add_history(test_chat80).
+:- add_history(forall(((ape_test(_,X);fracas(X);e2c(X)),!);chat80(X),run_pipeline(X))).
+:- add_history(never_notrace).
+:- add_history(bfly_set(butterfly,t)).
+:- add_history(bfly_tests).
+:- add_history(test_pp).
+:- add_history(x123).
+:- add_history(search4term).
+:- add_history(edit1term).
+%:- add_history(never_catch).
+
+:- meta_predicate(system:mycatch(0,?,0)).
+system:mycatch(G,_E,_C):- call(G),!.
+
+%:- break.
+
+%:- autoload_all.
+:- tdebug.
+:- tnodebug.
+:- gui_tracer:guitracer.
+:- gui_tracer:noguitracer.
+%:- bfly.
+
+%:- autoload_all.
+%:- never_notrace.
+%:- never_catch.
+
+%:- lps_sanity.
+
 % :- prolog. 
 
-
 end_of_file.
+
 

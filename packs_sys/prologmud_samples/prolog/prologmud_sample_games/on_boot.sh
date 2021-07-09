@@ -1,7 +1,5 @@
 #!/bin/bash
 
-#!/bin/bash
-
 cd ~/platform/
 
 echo "I am $USER, with uid $UID, with HOME=$HOME and PWD=$PWD"

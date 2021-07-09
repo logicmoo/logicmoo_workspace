@@ -1,0 +1,51 @@
+/*
+Dipti sent me the following program that is a very short pure Datalog
+program for which XSB gives the wrong answer.  I haven't seen a bug
+like this in years.  He says it worked in XSB version 2.4 but it
+doesn't work now.  We should try to fix it soon.  You know this code
+better than I, but if you don't have time, let me know and I'll see
+what I can do.
+
+Goal: execCode(workstation,X).
+
+Right answer is X=root and X=a
+It gives just X=a
+Works if 1st table decl is deleted
+Works if clause order is reversed.
+Works if clause 1 or 3 of accessFile is removed.
+Works if query is execCode(X,Y).
+*/
+
+test:- execCode(workstation,X),writeln(execCode(X)),fail.
+test.
+
+%% program
+:- table execCode/2.  % works if delete this table decl.
+:- table accessFile/3.
+
+execCode(H, root) :-
+%	writeln(execCode(H, root)),
+        accessFile(H, write, _Path).
+execCode(_H, a).
+
+accessFile(H, _Access, _Path) :-
+        execCode( H, _Usr).
+accessFile(Server, Access, ServerPath) :-
+        nfsMounted(Client, ClientPath, Server, ServerPath, Access),
+        accessFile(Client, Access, ClientPath).
+accessFile(_Server, _Access, _Path) :-
+        execCode(_Client, _User).
+
+nfsMounted(workstation, 'share', fileserver, 'export', write).
+
+display:- 
+	  get_calls_for_table(execCode/2,Call),
+	  write(Call),writeln(':'),
+	  get_returns_for_call(Call,Answer),
+	  tab(5),writeln(Answer),
+	  fail ; 
+	  get_calls_for_table(accessFile/3,Call),
+	  write(Call),writeln(':'),
+	  get_returns_for_call(Call,Answer),
+	  tab(5),writeln(Answer),
+	  fail.

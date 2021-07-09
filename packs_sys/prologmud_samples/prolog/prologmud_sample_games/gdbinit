@@ -3,7 +3,7 @@
 # Break on fatal errors and intended traps
 
 set breakpoint pending on
-break trap_gdb
+#break trap_gdb
 break sysError
 break fatalError
 set breakpoint pending off
@@ -77,7 +77,7 @@ define public
 end
 
 run
-#print $_exitcode
-#quit $_exitcode
-quit
+print $_exitcode
+quit $_exitcode
+#quit
 

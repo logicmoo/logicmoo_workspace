@@ -147,7 +147,7 @@ dumpST0(Frame,MaxDepth):- ignore(MaxDepth=5000),Term = dumpST(MaxDepth),
 %
 % Dump S True Stucture.
 %
-dumpST:- zotrace(with_all_dmsg((prolog_current_frame(Frame),b_setval('$dump_frame',Frame),dumpST1))).
+dumpST:- no_bfly(zotrace(with_all_dmsg((prolog_current_frame(Frame),b_setval('$dump_frame',Frame),dumpST1)))).
 
 
 :- thread_local(tlbugger:no_slow_io/0).
@@ -162,7 +162,7 @@ dumpST:- zotrace(with_all_dmsg((prolog_current_frame(Frame),b_setval('$dump_fram
 dumpST1:- current_prolog_flag(dmsg_level,never),!.
 dumpST1:- tlbugger:no_slow_io,!,dumpST0,!.
 dumpST1:- tlbugger:ifHideTrace,!.
-dumpST1:- show_current_source_location,loop_check_early(dumpST9,dumpST0).
+dumpST1:- show_current_source_location,!,loop_check_early(dumpST9,dumpST0).
 
 %= 	 	 
 
@@ -170,8 +170,9 @@ dumpST1:- show_current_source_location,loop_check_early(dumpST9,dumpST0).
 %
 % Dump S True Stucture.
 %
-dumpST(Depth):- zotrace((prolog_current_frame(Frame),b_setval('$dump_frame',Frame))),
-   loop_check_early(dumpST9(Depth),dumpST0(Depth)).
+dumpST(Depth):- 
+   no_bfly((zotrace((prolog_current_frame(Frame),b_setval('$dump_frame',Frame))),
+   loop_check_early(dumpST9(Depth),dumpST0(Depth)))).
 
 
 %= 	 	 
@@ -371,16 +372,16 @@ fdmsg(M):- logicmoo_util_catch:ddmsg(failed_fdmsg(M)).
 
 :-export(simplify_goal_printed/2).
 
-%= 	 	 
+
 printable_variable_name(Var, Name) :- nonvar(Name),!,must(printable_variable_name(Var, NameO)),!,Name=NameO.
-printable_variable_name(Var, Name) :- nonvar(Var),Var='$VAR'(_),format(atom(Name),"~w_",Var).
-printable_variable_name(Var, Name) :- nonvar(Var),format(atom(Name),"(_~q_)",Var).
+printable_variable_name(Var, Name) :- nonvar(Var),Var='$VAR'(Named), (nonvar(Named)-> Name=Named ; format(atom(Name),"~w_",[Var])).
+printable_variable_name(Var, Name) :- nonvar(Var),format(atom(Name),"(_~q_)",[Var]).
 printable_variable_name(Var,Name):- (get_attr(Var, vn, Name1);
   get_attr(Var, varnames, Name1)),
  (var_property(Var,name(Name2))-> 
    (Name1==Name2-> atom_concat(Name1,'_VN',Name) ; Name=(Name1:Name2)); 
     (atom(Name1)->atom_concat('?',Name1,Name);
-   format(atom(Name),"'$VaR'(~q)",Var))),!.
+   format(atom(Name),"'$VaR'(~q)",[Var]))),!.
 printable_variable_name(Var,Name):- v_name1(Var,Name),!.
 printable_variable_name(Var,Name):- v_name2(Var,Name),!. % ,atom_concat(Name1,'_TL',Name).
 
@@ -404,16 +405,17 @@ attrs_to_list(_ATTRS,[]).
 :- multifile(dumpst_hook:simple_rewrite/2).
 :- dynamic(dumpst_hook:simple_rewrite/2).
 
-simplify_var_printed(Var,'$avar'('$VAR'(Name))):- tlbugger:plain_attvars,must(printable_variable_name(Var,Name)),!.
-simplify_var_printed(Var,'$VAR'(Name)):- get_attrs(Var,att(vn, _, [])),printable_variable_name(Var, Name),!.
-simplify_var_printed(Var,'$avar'('$VAR'(Name))):- tlbugger:plain_attvars,must(printable_variable_name(Var,Name)),!.
-simplify_var_printed(Var,'$avar'(Dict)):- get_attrs(Var,ATTRS),must(printable_variable_name(Var,Name)),attrs_to_list(ATTRS,List),
+simplify_var_printed(Var,'aVar'('$VAR'(Name))):- tlbugger:plain_attvars,must(printable_variable_name(Var,Name)),!.
+simplify_var_printed(Var,'$VAR'(Name)):-  get_attrs(Var,att(vn, _, [])),printable_variable_name(Var, Name),!.
+simplify_var_printed(Var,'aVar'('$VAR'(Name))):- tlbugger:plain_attvars,must(printable_variable_name(Var,Name)),!.
+simplify_var_printed(Var,'aVar'(Dict)):- get_attrs(Var,ATTRS),must(printable_variable_name(Var,Name)),attrs_to_list(ATTRS,List),
                          dict_create(Dict,'$VAR'(Name),List).
 simplify_var_printed(Var,'$VAR'(Name)):- is_ftVar(Var),!,printable_variable_name(Var, Name).
 
 simplify_goal_printed(Var,Printed):- nonvar(Printed),!,simplify_goal_printed(Var,UnPrinted),ignore(Printed=UnPrinted),!.
-simplify_goal_printed(Var,Name):-is_ftVar(Var),\+ current_prolog_flag(variable_names_bad,true),simplify_var_printed(Var,Name),!.
-simplify_goal_printed(Var,VarO):-var(Var),!,VarO=Var.
+% simplify_goal_printed(Var,Name):-is_ftVar(Var), \+ current_prolog_flag(variable_names_bad,true), simplify_var_printed(Var,Name),!.
+simplify_goal_printed(Var,VarO):- var(Var),!,VarO=Var.
+simplify_goal_printed(Var,VarO):- is_ftVar(Var),!,VarO=Var.
 simplify_goal_printed(Var,Name):-cyclic_term(Var),!,Name=Var.
 simplify_goal_printed(setup_call_catcher_cleanup,sccc).
 % simplify_goal_printed(existence_error(X,Y),existence_error(X,Y)):-nl,writeq(existence_error(X,Y)),nl,fail.
@@ -434,8 +436,8 @@ simplify_goal_printed(must_det_lm(M,G),GS):-!,simplify_goal_printed(M:must_det_l
 simplify_goal_printed(M:G,MS:GS):-atom(M), simplify_m(M,MS),!,simplify_goal_printed(G,GS).
 simplify_goal_printed(dinterp(_,_,I,_),O):- !,simplify_goal_printed(I,O).
 simplify_goal_printed(call_term_expansion(_,A,_,B,_),O):- !, simplify_goal_printed(call_term_expansion_5('...',A,'...',B,'...'),O).
-simplify_goal_printed(A,'/.../'(Dir,SA)):- atom(A),atom_concat('/',_,A),directory_file_path(DirL,SA,A),directory_file_path(_,Dir,DirL),!.
-simplify_goal_printed(A,'...'(SA)):- atom(A),concat_atom([_,SA1|SA2],'logicmoo_',A),!,(SA2==[]->SA=SA1;SA=SA2).
+%simplify_goal_printed(A,'/.../'(Dir,SA)):- atom(A),atom_concat('/',_,A),directory_file_path(DirL,SA,A),directory_file_path(_,Dir,DirL),!.
+%simplify_goal_printed(A,'...'(SA)):- atom(A),concat_atom([_,SA1|SA2],'logicmoo_',A),!,(SA2==[]->SA=SA1;SA=SA2).
 simplify_goal_printed(GOAL=A,AS):- goal==GOAL,!,simplify_goal_printed(A,AS).
 simplify_goal_printed(Var,Var):- \+ compound(Var),!.
 simplify_goal_printed(P,O):- compound(P),compound_name_arguments(P,F,[I]),
@@ -548,9 +550,11 @@ dtrace:- wdmsg("DUMP_TRACE/0"), (thread_self_main->(dumpST,rtrace);(dumpST(30),a
 %:- redefine_system_predicate(system:dbreak()).
 
 :- thread_local(t_l:no_dbreak/0).
-dbreak:- wdmsg("DUMP_BREAK/0"),dumpST,wdmsg("DUMP_BREAK/0"),
+%dbreak:- wdmsg("DUMP_BREAK/0"), !, break, throw(abort).
+dbreak:- wdmsg("DUMP_BREAK/0"), !, throw(abort).
+dbreak:- wdmsg("DUMP_BREAK/0"),((ignore(on_x_fail(dumpST)), break,wdmsg("DUMP_BREAK/0"))),!,
   (t_l:no_dbreak -> wdmsg("NO__________________DUMP_BREAK/0") ;
-   (thread_self_main->(dumpST,dtrace(system:break),break);true)).
+      (thread_self_main->(dumpST,dtrace(system:break),break);true)).
 
 :- thread_local(tlbugger:has_auto_trace/1).
 :-meta_predicate(dtrace(0)).

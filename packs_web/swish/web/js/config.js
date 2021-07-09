@@ -94,12 +94,13 @@ if ( !config ) {
 	       setCachedConfig(config);
 	     },
 	     error: function() {
-	       alert("Failed to fetch configuration from server");
+			debugger;
+	        alert("Failed to fetch configuration from server");
 	     }
 	   });
   }
 }
-
+window.config = config;
 return config;
 });
 

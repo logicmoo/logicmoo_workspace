@@ -99,33 +99,37 @@ clex_call(F,A,B,C,D):- is_clex_pred(M,F,4),M:call(F,A,B,C,D).
 clex_call(F,A,B,C,D,E):- is_clex_pred(M,F,5),M:call(F,A,B,C,D,E).
 clex_call(F,A,B,C,D,E,G):- is_clex_pred(M,F,5),M:call(F,A,B,C,D,E,G).
 
-:- clex_pred(noun_pl/3).
-:- clex_pred(iv_infpl/2).
-:- clex_pred(noun_sg/3).
-:- clex_pred(mn_pl/2).
-:- clex_pred(dv_finsg/3).
-:- clex_pred(dv_pp/3).
-:- clex_pred(adj_itr_sup/2).
-:- clex_pred(prep/2).
-:- clex_pred(noun_mass/3).
-:- clex_pred(iv_finsg/2).
 :- clex_pred(adj_itr/2).
-:- clex_pred(tv_infpl/2).
-:- clex_pred(pndef_pl/3).
-:- clex_pred(adv_sup/2).
-:- clex_pred(adj_tr_comp/3).
 :- clex_pred(adj_itr_comp/2).
-:- clex_pred(tv_finsg/2).
-:- clex_pred(pndef_sg/3).
-:- clex_pred(adj_tr_sup/3).
-:- clex_pred(pn_sg/3).
-:- clex_pred(mn_sg/2).
-:- clex_pred(dv_infpl/3).
-:- clex_pred(adv/2).
-:- clex_pred(tv_pp/2).
-:- clex_pred(pn_pl/3).
-:- clex_pred(adv_comp/2).
+:- clex_pred(adj_itr_sup/2).
 :- clex_pred(adj_tr/3).
+:- clex_pred(adj_tr_comp/3).
+:- clex_pred(adj_tr_sup/3).
+:- clex_pred(adv/2).
+:- clex_pred(adv_comp/2).
+:- clex_pred(adv_sup/2).
+
+:- clex_pred(mn_pl/2).
+:- clex_pred(mn_sg/2).
+:- clex_pred(noun_mass/3).
+:- clex_pred(noun_pl/3).
+:- clex_pred(noun_sg/3).
+:- clex_pred(pn_pl/3).
+:- clex_pred(pn_sg/3).
+:- clex_pred(pndef_pl/3).
+:- clex_pred(pndef_sg/3).
+:- clex_pred(prep/2).
+
+:- clex_pred(tv_pp/2).
+:- clex_pred(dv_pp/3).
+
+:- clex_pred(iv_infpl/2).
+:- clex_pred(tv_infpl/2).
+:- clex_pred(dv_infpl/3).
+
+:- clex_pred(iv_finsg/2).
+:- clex_pred(tv_finsg/2).
+:- clex_pred(dv_finsg/3).
 
 
 :- clex_pred(clex_iface:clex_verb/4).
@@ -144,6 +148,10 @@ clex_verb(Formed, Verb, dv(Prep), infpl):- clex_call(dv_infpl,Formed, Verb, Prep
    both_of(_, Noun, Noun).
    both_of(RootNoun, Noun, NounI):- RootNoun\=Noun, Noun=NounI.
 
+/*
+pp = past+part
+pres+fin
+*/
 
 
 :- clex_pred(clex_iface:clex_mass_noun/3).
@@ -162,7 +170,7 @@ clex_noun(Noun, RootNoun, Type, SG, pn):- clex_noun2(Noun, RootNoun, Type, SG), 
    clex_noun0(Noun, RootNoun, mn, sg):- clex_call(mn_sg,Noun, RootNoun).
    clex_noun0(Noun, RootNoun, mn, pl):- clex_call(mn_pl,Noun, RootNoun).
 
-   clex_noun1(Noun, RootNoun, pl):- when_chat80(clex_call(noun_plu_db,Noun, RootNoun)).
+   clex_noun1(Noun, RootNoun, pl):- when_chat80(clex_call(noun_plu_db,Noun, RootNoun)), Noun\==ares.
    clex_noun1(RootNoun, RootNoun, sg):- when_chat80(clex_call(noun_sin_db,RootNoun)).
 
    clex_noun2(Noun, RootNoun, Type, sg):- clex_call(pn_sg,Noun, RootNoun, Type).
@@ -249,6 +257,6 @@ clex_dynload(M,F):- absolute_file_name(F, File, [access(read),file_type(prolog)]
 
 % apply_fixes:- clex_verb(Formed, Verb, dv(Prep), PP)
 
-% :- reexport(talk_db).                      
+% :- re export(talk_db).                      
 
 

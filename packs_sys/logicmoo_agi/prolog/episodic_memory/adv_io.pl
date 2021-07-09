@@ -17,6 +17,7 @@
 %
 */
 % Marty's Tokenizer/Scanner/Lexer, written in Prolog.
+:- '$set_source_module'(mu).
 /*
 :- module(adv_io, [
  read_line_to_tokens/4,
@@ -132,23 +133,24 @@ bug(_) :- debugging(adv(unknown), YN), !, YN.
 :- thread_local(pretty_tl:in_pretty_tree_rec/0).
 
 prolog_pprint_tree(Term):- \+ pretty_tl:in_pretty_tree, !,
-  setup_call_cleanup(asserta(pretty_tl:in_pretty_tree, Ref), print_tree(Term), erase(Ref)).
+  setup_call_cleanup(asserta(pretty_tl:in_pretty_tree, Ref), \+ \+ print_tree(Term), erase(Ref)).
 prolog_pprint_tree(Term):- \+ pretty_tl:in_pretty_tree_rec, !,
   setup_call_cleanup(asserta(pretty_tl:in_pretty_tree_rec, Ref), prolog_pprint(Term, [portray_goal(print_tree)]), erase(Ref)).
 prolog_pprint_tree(Term):-  prolog_pprint(Term), !.
 
-term_to_pretty_string(L, LinePrefix, SO):-
+
+adv_term_to_pretty_string(L, LinePrefix, SO):-
   string_concat("\n", LinePrefix, SC),
   sformat(S, '~@', [prolog_pprint_tree(L)]),
   split_string(S, "", "\s\t\n", [SS]),
   replace_in_string("\n", SC, SS, SSS),
   string_concat(LinePrefix, SSS, SO).
 
+/*
 :- export(prolog_pprint/2).
 prolog_pprint(Term):- prolog_pprint(Term, []).
 prolog_pprint(Term, Options):-
-   \+ \+ (portray_vars:pretty_numbervars(Term, Term2),
-     prolog_pprint_0(Term2, Options)), !.
+   \+ \+ ((portray_vars:pretty_numbervars(Term, Term2), prolog_pprint_0(Term2, Options))), !.
 
 
 % prolog_pprint_0(Term, Options):- Options ==[], pprint_ecp_cmt(blue, Term), !.
@@ -157,19 +159,50 @@ prolog_pprint(Term, Options):-
 prolog_pprint_0(Term, Options):-    \+ memberchk(right_margin(_), Options), !, prolog_pprint_0(Term, [right_margin(60)|Options]).
 prolog_pprint_0(Term, Options):-    \+ memberchk(portray(_), Options), !, prolog_pprint_0(Term, [portray(true)|Options]).
 prolog_pprint_0(Term, Options):- prolog_pretty_print:print_term(Term, [output(current_output)|Options]).
-
+*/
 :- thread_local(t_l:no_english/0).
 
-% :- mu:ensure_loaded(adv_debug).
+
+atom_occurs(SS,Sep,N):- atomic_list_concat([_|L],Sep,SS), length(L,N).
+
+print_tree_at_depth(Tree,N):- 
+  wots(SSS,print_tree(Tree,[html_depth(N)])),
+  prepend_trim(SSS,SS),write(SS).
+
+
+%:- mu:ensure_loaded(adv_debug).
+pprint(Term):- xnotrace(pprint_2(Term, always)).
+pprint(Term, When):- xnotrace(pprint_2(Term, When)).
+pprint_2(Term, When):- ignore(\+ pprint_3(Term, When)).
+pprint_3(Term, When) :- bug(When), !,
+ setup_call_cleanup(
+  flag('english', ELevel, ELevel+0), % put a little English on it
+  player_format('~N~@~N', [maybe_bfly_html(dbug1_2(Term))]),
+  flag('english', _, ELevel)), !.
+
+dbug1_2(Tree):-
+  wots(SSS,in_bfly(f,print_tree_at_depth(Tree,0))),
+  prepend_trim(SSS,SS), 
+  atom_occurs(SS,'\n',N),
+  (N =< 2 -> bugout4("", '~N~@~n', [mu:print_tree_at_depth(Tree,0)], always);
+             bugout4("", '~N~@~n', [mu:print_tree_at_depth(Tree,2)], always)).
+
+dbug1_1(Tree):-
+  wots(SSS,in_bfly(f,print_tree_at_depth(Tree,0))),
+  prepend_trim(SSS,SS), 
+  atom_occurs(SS,'\n',N),
+  (N =< 1 -> bugout4("", '~N/* ~@ */~n', [mu:print_tree_at_depth(Tree,0)], always);
+             bugout4("", '~N/* ~@ */~n', [mu:print_tree_at_depth(Tree,1)], always)).
+
 
 dbug1(_):- notrace(current_prolog_flag(dmsg_level, never)), !.
+dbug1(Fmt) :- compound(Fmt), compound_name_arity(Fmt,F,_), debugging(F,false), !.
 dbug1(Fmt) :-
- notrace(( \+ \+
-   ((guess_varnames(Fmt),
-     mu:simplify_dbug(Fmt, FmtSS),     
+ quietly(( \+ \+
+   ((mu:simplify_dbug(Fmt, FmtSS),     
      portray_vars:pretty_numbervars(FmtSS, FmtS),
-     locally(t_l:no_english, term_to_pretty_string(FmtS, "% ", SSS)),
-     bugout4("", '~s~n', [SSS], always))))).
+     locally_tl(no_english,maybe_bfly_html(dbug1_1(FmtS))))))).
+
 
 dbug(DebugDest, Fmt) :-
   xnotrace((compound(Fmt) -> dbug_3(DebugDest, '~p', Fmt) ; dbug_3(DebugDest, Fmt, []))).
@@ -182,13 +215,15 @@ dbug_3(DebugDest, Fmt, Args0) :-
   \+ \+
      ((must_maplist(mu:simplify_dbug, Args, ArgsS),
        portray_vars:pretty_numbervars(ArgsS, ArgsSO),
-       bugout4("% ", Fmt, ArgsSO, DebugDest))).
+       bugout4("", Fmt, ArgsSO, DebugDest))).
 
-bugout4(Prefix, Fmt, Args, DebugDest) :-
- bug(DebugDest),
- !,
- ansi_format([fg(cyan)], '~N~w', [Prefix]), ansi_format([fg(cyan)], Fmt, Args),
- overwrote_prompt, !.
+
+bugout4(Prefix, Fmt, Args, DebugDest) :- toplevel_pp(bfly), bug(DebugDest), !,
+ (empty_str(Prefix) -> true; color_format([fg(cyan)], '~N~w', [Prefix])),
+ format(Fmt, Args), overwrote_prompt, !.
+bugout4(Prefix, Fmt, Args, DebugDest) :- bug(DebugDest), !,
+ color_format([fg(cyan)], '~N~w', [Prefix]),
+ color_format([fg(cyan)], Fmt, Args), overwrote_prompt, !.
 bugout4(_, _, _, _).
 
 
@@ -196,16 +231,6 @@ bugout4(_, _, _, _).
 %:- set_stream(user_input, buffer(none)).
 %:- set_stream(user_input, timeout(0.1)).
 
-pprint(Term):- xnotrace(pprint_2(Term, always)).
-pprint(Term, When):- xnotrace(pprint_2(Term, When)).
-
-pprint_2(Term, When) :-
- bug(When),
- setup_call_cleanup(
-  flag('english', ELevel, ELevel+0), % put a little English on it
-  player_format('~N~@~N', [mu:prolog_pprint_tree(Term)]),
-  flag('english', _, ELevel)), !.
-pprint_2(_, _).
 
 
 :- export(stdio_player/1).
@@ -350,22 +375,48 @@ read_line_to_tokens(Agent, In, Prev, Tokens):-
 clean_tokens(Tokens0, Tokens1):- is_list(Tokens0), exclude(=(' '), Tokens0, Tokens1), !.
 clean_tokens(Tokens0, Tokens0).
 
+
+safety_for_lreader([],[]):-!.
+safety_for_lreader([C|Rest],Out):-  char_code('"',C),!,double_quoted_string(Str,[C|Rest],Next),safety_for_lreader(Next,R),string_codes(Str,Codes),flatten([`"`,Codes,`"`,R],Out).
+safety_for_lreader([C|Rest],Out):- char_code('\'',C),!,single_quoted_string(Str,[C|Rest],Next),safety_for_lreader(Next,R),string_codes(Str,Codes),flatten([`{"`,Codes,`"}`,R],Out).
+safety_for_lreader([C|Rest],Out):- safety_for_lreader0(C,C0),!,safety_for_lreader(Rest,R0),flatten([C0,R0],Out).
+safety_for_lreader0(C,Out):- char_type(C, punct),!,append(` "~+~`,[C|`" `],Out).
+safety_for_lreader0(A,A).
+
+name_the_vars(N=V):- add_var_to_env(N,V),!.
+name_the_vars(N=V):- ignore(V='$VAR'(N)).
+
+
+
+fixup_stokens(List,List):- (var(List);[]==List;number(List)),!.
+fixup_stokens([A|List],[R|RList]):- !, fixup_stokens(A,R), fixup_stokens(List,RList).
+fixup_stokens('$STRING'(Text),R):- text_to_string(Text,String), to_string_or_symbol(String,R).
+fixup_stokens(String,Atom):- string(String), !, string_to_atom(String,Mid), fixup_stokens(Mid,Atom),!.
+fixup_stokens(String,Atom):- \+ atomic(String),!,Atom=String.
+fixup_stokens(String,Number):- atom(String), atom_number(String, Number), !.
+fixup_stokens(List,List).
+
+to_string_or_symbol(String,Symbol):- string_concat("~+~",Sym,String),!,string_to_atom(Sym,Symbol).
+to_string_or_symbol(String,String):-!.
+
+line_to_ptokens(LineCodes, Tokens):- 
+ current_prolog_flag(allow_variable_name_as_functor,AVAF),
+ set_prolog_flag(allow_variable_name_as_functor,true),
+ call_cleanup(
+  xnotrace(catch((read_term_from_codes(LineCodes, Term, [syntax_errors(quiet), var_prefix(false),
+  variable_names(Vars), cycles(true), dotlists(true), singletons(_)])), _, fail)),
+  set_prolog_flag(allow_variable_name_as_functor,AVAF)),
+ maplist(name_the_vars,Vars),
+ Tokens=Term, !.
+
+
+line_to_tokens(Line, Tokens):- string_codes(Line,LineCodes), line_to_tokens(LineCodes, _, Tokens).
+
 line_to_tokens([], _, []):-!.
+line_to_tokens(LineCodes, NegOne, Tokens):- var(NegOne),!, NegOne is -1, line_to_tokens(LineCodes, NegOne, Tokens).
 line_to_tokens(NegOne, NegOne, end_of_file):-!.
 line_to_tokens(end_of_file, _NegOne, end_of_file):-!.
 line_to_tokens([NegOne], NegOne, end_of_file):-!.
-
-
-line_to_tokens(LineCodes, _NegOne, Tokens) :-
- last(LineCodes, L),
- memberchk(L, [46, 41|`.)`]),
- xnotrace(catch((read_term_from_codes(LineCodes, Term,
-  [syntax_errors(error), var_prefix(false),
-  % variables(Vars),
-  variable_names(VNs), cycles(true), dotlists(true), singletons(_)])), _, fail)),
- nb_setval('$variable_names', VNs),
- Tokens=Term, !.
-
 line_to_tokens(LineCodes, NegOne, Tokens) :-
  append([L], NewLineCodes, LineCodes),
  member(L, [10, 13, 32]), !,
@@ -374,14 +425,35 @@ line_to_tokens(LineCodes, NegOne, Tokens) :-
  append(NewLineCodes, [L], LineCodes),
  member(L, [10, 13, 32]), !,
  line_to_tokens(NewLineCodes, NegOne, Tokens).
-
 line_to_tokens(LineCodes, _, Tokens):-
  ignore(log_codes(LineCodes)), !,
- tokenize_mw(LineCodes, TokenCodes), !,
- % Convert list of list of codes to list of atoms:
- findall(Atom, (member(Codes, TokenCodes), atom_codes(Atom, Codes)), Tokens),
+ line_to_stokens(LineCodes, Tokens), !,
  nop(save_to_history(LineCodes)),
  !.
+
+
+line_to_stokens(LineCodes, Tokens) :- last(LineCodes, L), memberchk(L, [46, 41|`.)`]),
+ line_to_ptokens(LineCodes, Tokens), !.
+  
+line_to_stokens(LineCodes, Tokens):- 
+ notrace((
+  current_predicate(parse_sexpr_string/2),  
+  safety_for_lreader(LineCodes,LineCodes2),   
+  sformat(S,'( ~s )',[LineCodes2]), 
+  skipping_buffer_codes(parse_sexpr_string(S,Tokens0)), 
+  to_untyped(Tokens0,Tokens1), 
+  fixup_stokens(Tokens1,Tokens), 
+  dmsg(parse_sexpr_string(Tokens)),
+  !)).
+
+line_to_stokens(LineCodes, Tokens):- line_to_ptokens(LineCodes, Tokens), !.
+
+line_to_stokens(LineCodes, Tokens):- tokenize_mw(LineCodes, TokenCodes), !,
+ % Convert list of list of codes to list of atoms:
+ findall(Atom, (member(Codes, TokenCodes), atom_codes(Atom, Codes)), Tokens),!.
+
+
+
 
 :- multifile(prolog:history/2).
 save_to_history(LineCodes):-

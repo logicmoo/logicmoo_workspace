@@ -72,7 +72,8 @@ config has the following properties:
 :- http_handler(swish(logout), unity_logout, []).
 
 swish_config:login_item(unity, 10-Item) :-
-    http_absolute_location(icons('unity.png'), Img, []),
+    %http_absolute_location(icons('unity.png'), Img, [relative_to('/swish')]),
+    Img = 'icons/unity.png',
     Item = img([ src(Img),
                  class('login-with'),
                  'data-server'(unity),

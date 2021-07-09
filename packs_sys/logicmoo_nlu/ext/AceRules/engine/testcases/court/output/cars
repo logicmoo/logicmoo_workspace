@@ -1,4 +1,104 @@
-ERROR: Invalid ACE text:
-The word "reservation" is unknown.
-""R101" is a <> reservation.": This is the first sentence that was not ACE. The sign <> indicates the position where parsing failed.
+
+INPUT TEXT:
+"Zurich" is a branch.
+"Geneva" is a branch.
+"Basel" is a branch.
+"BMW 1" is a car and is at "Zurich".
+"BMW 2" is a car and is at "Geneva".
+"Toyota 1" is a car and is at "Basel".
+"Toyota 2" is a car and is at "Zurich".
+"VW 1" is a car and is at "Geneva".
+"VW 1" is red.
+"BMW 2" is faster than "VW 1".
+
+"R101" is a reservation.
+The customer of "R101" is John-Miller.
+The branch of "R101" is "Zurich".
+The day of "R101" is "14".
+
+RULES:
+of_relation(object(named('John-Miller'),customer,countable,na,eq,1),string('R101')).
+of_relation(object(string('14'),day,countable,na,eq,1),string('R101')).
+of_relation(object(string('Zurich'),branch,countable,na,eq,1),string('R101')).
+pred_mod(be,string('BMW 1'),[modifier_pp(at,string('Zurich'))]).
+pred_mod(be,string('BMW 2'),[modifier_pp(at,string('Geneva'))]).
+pred_mod(be,string('Toyota 1'),[modifier_pp(at,string('Basel'))]).
+pred_mod(be,string('Toyota 2'),[modifier_pp(at,string('Zurich'))]).
+pred_mod(be,string('VW 1'),[modifier_pp(at,string('Geneva'))]).
+property(string('VW 1'),red,pos).
+property(string('BMW 2'),fast,comp_than,string('VW 1')).
+object(named('John-Miller'),'John-Miller',named,na,eq,1).
+object(string('BMW 1'),car,countable,na,eq,1).
+object(string('BMW 2'),car,countable,na,eq,1).
+object(string('Basel'),branch,countable,na,eq,1).
+object(string('Geneva'),branch,countable,na,eq,1).
+object(string('R101'),reservation,countable,na,eq,1).
+object(string('Toyota 1'),car,countable,na,eq,1).
+object(string('Toyota 2'),car,countable,na,eq,1).
+object(string('VW 1'),car,countable,na,eq,1).
+object(string('Zurich'),branch,countable,na,eq,1).
+
+SIMPLE RULES:
+of(customer,named('John-Miller'),string('R101')).
+of(day,string('14'),string('R101')).
+of(branch,string('Zurich'),string('R101')).
+be(string('BMW 1'),[at(string('Zurich'))]).
+be(string('BMW 2'),[at(string('Geneva'))]).
+be(string('Toyota 1'),[at(string('Basel'))]).
+be(string('Toyota 2'),[at(string('Zurich'))]).
+be(string('VW 1'),[at(string('Geneva'))]).
+red(string('VW 1')).
+fast(string('BMW 2'),string('VW 1')).
+car(string('BMW 1')).
+car(string('BMW 2')).
+branch(string('Basel')).
+branch(string('Geneva')).
+reservation(string('R101')).
+car(string('Toyota 1')).
+car(string('Toyota 2')).
+car(string('VW 1')).
+branch(string('Zurich')).
+
+ANSWERSET #1:
+of_relation(object(named('John-Miller'),customer,countable,na,eq,1),string('R101')).
+of_relation(object(string('14'),day,countable,na,eq,1),string('R101')).
+of_relation(object(string('Zurich'),branch,countable,na,eq,1),string('R101')).
+pred_mod(be,string('BMW 1'),[modifier_pp(at,string('Zurich'))]).
+pred_mod(be,string('BMW 2'),[modifier_pp(at,string('Geneva'))]).
+pred_mod(be,string('Toyota 1'),[modifier_pp(at,string('Basel'))]).
+pred_mod(be,string('Toyota 2'),[modifier_pp(at,string('Zurich'))]).
+pred_mod(be,string('VW 1'),[modifier_pp(at,string('Geneva'))]).
+property(string('VW 1'),red,pos).
+property(string('BMW 2'),fast,comp_than,string('VW 1')).
+object(named('John-Miller'),'John-Miller',named,na,eq,1).
+object(string('BMW 1'),car,countable,na,eq,1).
+object(string('BMW 2'),car,countable,na,eq,1).
+object(string('Basel'),branch,countable,na,eq,1).
+object(string('Geneva'),branch,countable,na,eq,1).
+object(string('R101'),reservation,countable,na,eq,1).
+object(string('Toyota 1'),car,countable,na,eq,1).
+object(string('Toyota 2'),car,countable,na,eq,1).
+object(string('VW 1'),car,countable,na,eq,1).
+object(string('Zurich'),branch,countable,na,eq,1).
+
+ANSWERTEXT #1:
+"BMW 2" is faster than "VW 1".
+"VW 1" is red.
+"Zurich" is a branch.
+"VW 1" is a car.
+"Toyota 2" is a car.
+"Toyota 1" is a car.
+"R101" is a reservation.
+"Geneva" is a branch.
+"Basel" is a branch.
+"BMW 2" is a car.
+"BMW 1" is a car.
+"Zurich" is a branch of "R101".
+"14" is a day of "R101".
+John-Miller is a customer of "R101".
+"VW 1" is at "Geneva".
+"Toyota 2" is at "Zurich".
+"Toyota 1" is at "Basel".
+"BMW 2" is at "Geneva".
+"BMW 1" is at "Zurich".
 

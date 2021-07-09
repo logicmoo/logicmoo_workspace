@@ -160,7 +160,7 @@ set_x_of_point/3,
 set_y_of_point/2,
 set_y_of_point/3,
 */
-:- record point(x:integer=0, y:integer=0).
+:- record(point(x:integer=0, y:integer=0)).
      /*
         default_point(Point),
         point_x(Point, X),

@@ -37,9 +37,6 @@ function elFinderAutoloader($name) {
         } else if ($prefix === 'elFinderPlugin') {
             $file = ELFINDER_PHP_ROOT_PATH . '/plugins/' . substr($name, 14) . '/plugin.php';
             return (is_file($file) && include_once($file));
-        } else if ($prefix === 'elFinderEditor') {
-            $file = ELFINDER_PHP_ROOT_PATH . '/editors/' . substr($name, 14) . '/editor.php';
-            return (is_file($file) && include_once($file));
         }
     }
     return false;

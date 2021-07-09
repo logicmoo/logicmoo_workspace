@@ -89,8 +89,9 @@ menu_items([H|T]) --> menu_item(H), menu_items(T).
 menu_item(item(_Rank, Spec, Label)) -->
 	{ atomic(Spec) }, !,
 	{ (   \+ sub_atom(Spec, 0, _, _, 'http://'),
+        \+ sub_atom(Spec, 0, _, _, 'https://'),
 	      catch(http_location_by_id(Spec, Location), E,
-		    (   print_message(informational, E),
+		    (   nop(print_message(informational, E)),
 			fail))
 	  ->  true
 	  ;   Location = Spec
@@ -221,7 +222,7 @@ id_to_label(Atom, Capital) :-
 	;   Capital = Atom
 	).
 
-underscore_to_space(0'_, 32) :- !.
+underscore_to_space(0'_, 32) :- !. %'
 underscore_to_space(X, X).
 
 %%	local_user_logged_on is semidet.

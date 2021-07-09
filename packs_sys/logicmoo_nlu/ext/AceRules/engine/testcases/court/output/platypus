@@ -1,13 +1,58 @@
-ERROR: Invalid ACE text:
-The word "mammal" is unknown.
-The word "fur" is unknown; did you mean "far"?
-The word "mammal" is unknown.
-The word "lays" is unknown; did you mean "plays"?
-The word "mammal" is unknown.
-The word "bill" is unknown; did you mean "till"?
-The word "mammal" is unknown.
-The word "fur" is unknown; did you mean "far"?
-The word "lays" is unknown; did you mean "plays"?
-The word "bill" is unknown; did you mean "till"?
-"Every monotreme is a <> mammal.": This is the first sentence that was not ACE. The sign <> indicates the position where parsing failed.
+
+INPUT TEXT:
+R1: Every monotreme is a mammal.
+R2: Everything that has some fur is a mammal.
+R3: Nothing that lays some eggs is a mammal.
+R4: Nothing that has a bill is a mammal.
+R1 overrides R3.
+R2 overrides R4.
+Every platypus is a monotreme.
+Every platypus has some fur.
+Every platypus lays some eggs.
+Every platypus has a bill.
+John is a platypus.
+
+RULES:
+group([pred_mod(have,A,gv(2),[]),object(gv(2),fur,mass,na,na,na)]) <- [object(A,platypus,countable,na,eq,1)].
+group([pred_mod(have,A,gv(0),[]),object(gv(0),bill,countable,na,eq,1)]) <- [object(A,platypus,countable,na,eq,1)].
+group([pred_mod(lay,A,gv(1),[]),object(gv(1),egg,countable,na,geq,2)]) <- [object(A,platypus,countable,na,eq,1)].
+group([object(A,monotreme,countable,na,eq,1)]) <- [object(A,platypus,countable,na,eq,1)].
+object(named('John'),'John',named,na,eq,1).
+object(named('John'),platypus,countable,na,eq,1).
+'R1':: group([object(A,mammal,countable,na,eq,1)]) <- [group([object(A,monotreme,countable,na,eq,1)])].
+'R2':: group([object(A,mammal,countable,na,eq,1)]) <- [group([pred_mod(have,A,gv(2),[]),object(gv(2),fur,mass,na,na,na)]), object(A,B,C,D,E,F)].
+'R3':: -group([object(A,mammal,countable,na,eq,1)]) <- [group([pred_mod(lay,A,gv(1),[]),object(gv(1),egg,countable,na,geq,2)]), object(A,B,C,D,E,F)].
+'R4':: -group([object(A,mammal,countable,na,eq,1)]) <- [group([pred_mod(have,A,gv(0),[]),object(gv(0),bill,countable,na,eq,1)]), object(A,B,C,D,E,F)].
+overrides('R1','R3').
+overrides('R2','R4').
+
+SIMPLE RULES:
+group([have(A,gv(2),[]),fur(gv(2))]) <- [platypus(A)].
+group([have(A,gv(0),[]),bill(gv(0))]) <- [platypus(A)].
+group([lay(A,gv(1),[]),egg(gv(1))]) <- [platypus(A)].
+monotreme(A) <- [platypus(A)].
+platypus(named('John')).
+'R1':: mammal(A) <- [monotreme(A)].
+'R2':: mammal(A) <- [group([have(A,gv(2),[]),fur(gv(2))]), something(A)].
+'R3':: -mammal(A) <- [group([lay(A,gv(1),[]),egg(gv(1))]), something(A)].
+'R4':: -mammal(A) <- [group([have(A,gv(0),[]),bill(gv(0))]), something(A)].
+overrides('R1','R3').
+overrides('R2','R4').
+
+ANSWERSET #1:
+group([pred_mod(have,named('John'),gv(0),[]),object(gv(0),bill,countable,na,eq,1)]).
+group([pred_mod(have,named('John'),gv(2),[]),object(gv(2),fur,mass,na,na,na)]).
+group([pred_mod(lay,named('John'),gv(1),[]),object(gv(1),egg,countable,na,geq,2)]).
+group([object(named('John'),mammal,countable,na,eq,1)]).
+group([object(named('John'),monotreme,countable,na,eq,1)]).
+object(named('John'),'John',named,na,eq,1).
+object(named('John'),platypus,countable,na,eq,1).
+
+ANSWERTEXT #1:
+John is a platypus.
+John is a monotreme.
+John is a mammal.
+John lays at least 2 eggs.
+John has some fur.
+John has a bill.
 

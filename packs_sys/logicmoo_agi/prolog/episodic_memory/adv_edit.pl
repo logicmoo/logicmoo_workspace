@@ -16,7 +16,7 @@
 % Main file.
 %
 */
-
+:- '$set_source_module'(mu).
 
 %:- nop(ensure_loaded('adv_chat80')).
 
@@ -29,8 +29,10 @@ printable_state(S, S).
 
 
 include_functor(List, P):- compound(P), safe_functor(P, F, _), member(F, List), !.
+include_string(Search, P):- compound(P), sformat(S,"~p",[P]), sub_string(S,_,_,_,Search).
 
 % invoke_metacmd(Doer, Action, S0, S1)
+:- discontiguous invoke_metacmd/4. 
 :- add_help(quit, "Quits the game.").
 
 :- defn_state_setter( invoke_metacmd( agent, action)).
@@ -43,11 +45,11 @@ invoke_metacmd(_Doer, in_world(Agent, World, Cmd), S0, S1):- !, find_world(World
  invoke_metacmd(Agent, Cmd, W0, W1), !,
   save_world(World, W1, S0, S1).
 
-invoke_metacmd(Doer, try(Agent, Command)) --> !, {Doer\==Agent},
+invoke_metacmd(Doer, attempts(Agent, Command)) --> !, {Doer\==Agent},
   invoke_metacmd(Agent, Command).
 
 invoke_metacmd(Doer, quit(Agent)) -->
- replace_declare(wishes(Agent, quit)),
+ redeclare(wishes(Agent, quit)),
  {player_format(Doer, 'logging off~w ~n', [Agent]),
   player_format(Agent, 'Bye! (from ~w)~n', [Doer])}.
 
@@ -55,7 +57,7 @@ invoke_metacmd(Doer, help, S0, S0) :- !,
  with_agent_console(Doer, listing(mu_global:cmd_help)).
 
 :- add_help(english, "english <level>: turn on paraphrase generation.").
-invoke_metacmd(Doer, english, S0, S0) :- must_security_of(Doer, admin),
+invoke_metacmd(Doer, [english], S0, S0) :- must_security_of(Doer, admin),
  flag(english, Was, Was),
  player_format(Doer, '~w=~q~n', [english, Was]).
 invoke_metacmd(Doer, english(N0), S0, S0) :- must_security_of(Doer, admin),
@@ -63,6 +65,7 @@ invoke_metacmd(Doer, english(N0), S0, S0) :- must_security_of(Doer, admin),
  flag(english, _Was, N),
  flag(english, New, New),
  player_format(Doer, '~w=~q~n', [english, N]).
+
 
 :- add_help(rtrace, "Debbuging: Start the non-interactive tracer.").
 invoke_metacmd(Doer, rtrace, S0, S0) :- must_security_of(Doer, admin), rtrace.
@@ -91,54 +94,55 @@ invoke_metacmd(Doer, possess(NewAgent), S0, S0) :-
  retractall(console_controls_agent(_, NewAgent)),
  asserta(console_controls_agent(InputConsole, NewAgent)).
 
-invoke_metacmd(Doer, Echo, S0, S0) :-
- must_security_of(Doer, admin),
- Echo =.. [echo|Args],
- player_format(Doer, '~w~n', [Args]).
 
-invoke_metacmd(Doer, state, S0, S0) :-
- must_security_of(Doer, wizard),
- printable_state(S0, S),
- player_pprint(Doer, S, always),
- maybe_pause(Doer).
-invoke_metacmd(Doer, props, S0, S0) :-
- must_security_of(Doer, wizard),
- printable_state(S0, S),
- include(include_functor([props, h]), S, SP),
- reverse(SP, SPR),
- player_pprint(Doer, SPR, always),
- maybe_pause(Doer).
-invoke_metacmd(Doer, perceptq, S0, S0) :-
- must_security_of(Doer, wizard),
- printable_state(S0, S),
- include(include_functor([perceptq]), S, SP),
- reverse(SP, SPR),
- player_pprint(Doer, SPR, always),
- maybe_pause(Doer).
-invoke_metacmd(Doer, types, S0, S0) :-
- must_security_of(Doer, wizard),
- printable_state(S0, S),
- include(include_functor([type_props]), S, SP),
- reverse(SP, SPR),
- player_pprint(Doer, SPR, always),
- maybe_pause(Doer).
-invoke_metacmd(Doer, mems, S0, S0) :-
- must_security_of(Doer, wizard),
- printable_state(S0, S),
- include(@>=(props(_, _)), S, SP),
- reverse(SP, SPR),
- player_pprint(Doer, SPR, always),
- maybe_pause(Doer).
-invoke_metacmd(Doer, model, S0, S0) :-
- must_security_of(Doer, admin),
- agent_thought_model(Doer, ModelData, S0),
- player_pprint(Doer, ModelData, always),
- maybe_pause(Doer).
-invoke_metacmd(Doer, mem, S0, S0) :-
- must_security_of(Doer, admin),
+invoke_metacmd(Doer, Cmd, S0, S9) :-
+ command_to_list(Cmd,List),
+ invoke_metacmd_l(Doer, List, S0, S9).
+ 
+command_to_list(Atom,[Atom]):- atom(Atom),!.
+command_to_list(List,List):- is_list(List),!.
+command_to_list(Cmpd,[Cmd|List]):- compound(Cmpd), compound_name_arguments(Cmpd,Cmd,Args),flatten(Args,List),!.
+
+show_state_of(Doer, [], S0):- !,
+  printable_state(S0, S),
+  reverse(S, SR),
+  player_pprint(Doer, SR, always),
+  maybe_pause(Doer).
+show_state_of(Doer, ['.'|List], S0):- !, show_state_of(Doer, List, S0).
+show_state_of(Doer, ['"',Atom,'"'|Rest], S0):- atom_string(Atom,Str),
+  show_state_of(Doer, [Str|Rest], S0).
+show_state_of(Doer, [Atom|Rest], S0):- string(Atom),!,
+  printable_state(S0, S),
+  include(include_string(Atom), S, SP),
+  show_state_of(Doer, Rest, SP).
+show_state_of(Doer, ['props'|Rest], S0):-
+  printable_state(S0, S),!,
+  include(include_functor([props,h]), S, SP),
+  show_state_of(Doer, Rest, SP).
+show_state_of(Doer, ['types'|Rest], S0):-
+  printable_state(S0, S),!,
+  include(include_functor([type_props]), S, SP),
+  show_state_of(Doer, Rest, SP).
+show_state_of(Doer, ['mems'|Rest], S0):- 
+  printable_state(S0, S),!,
+  include(@>=(props(_, _)), S, SP),
+  show_state_of(Doer, Rest, SP).
+show_state_of(Doer, [Atom|Rest], S0):- atom(Atom),!,
+  printable_state(S0, S),
+  include(include_functor(Atom), S, SP),
+  show_state_of(Doer, Rest, SP).
+
+invoke_metacmd_l(Doer, [echo|List], S0, S0):- !, player_format(Doer, '~w~n', [List]).
+invoke_metacmd_l(Doer, [state|List], S, S) :- !, show_state_of(Doer, List, S).
+invoke_metacmd_l(Doer, [PPT|List], S, S) :- member(PPT,[props,perceptq,types,mems]),!,
+ show_state_of(Doer,[PPT|List], S),!.
+invoke_metacmd_l(Doer, [model|List], S0, S0) :-
+ agent_thought_model(Doer, Model, S0),
+ show_state_of(Doer, List, Model).
+invoke_metacmd_l(Doer, [mem|List], S0, S0) :-
  declared(memories(Doer, Memory), S0),
- player_pprint(Doer, memories(Doer, Memory), always),
- maybe_pause(Doer).
+ show_state_of(Doer, List, Memory).
+
 invoke_metacmd(Doer, make, S0, S0) :-
  must_security_of(Doer, wizard),
  thread_signal(main, make),
@@ -172,14 +176,14 @@ invoke_metacmd(Doer, inspect(Self, getprop(Target, NamedProperty)), S0, S0) :-
 invoke_metacmd(Doer, rez(Type), S0, S9) :-
  must_security_of(Doer, wizard),
  must_mw1((mu_current_agent(Agent),
- g_h(Prep, Agent, Here, S0),
+ g_h(spatial, Prep, Agent, Here, S0),
  create_new_unlocated(Type, Object, S0, S1),
- declare(h(Prep, Object, Here), S1, S9),
+ declare(h(spatial, Prep, Object, Here), S1, S9),
  player_format(Doer, 'You now see a ~w.~n', [Object]))).
 
 invoke_metacmd(Doer, derez(Object), S0, S1) :-
  must_security_of(Doer, wizard),
- undeclare(h(_, Object, _), S0, S1),
+ undeclare(h(spatial, _, Object, _), S0, S1),
  player_format(Doer, 'It vanishes instantly.~n', []).
 
 invoke_metacmd(Doer, PropCmd, S0, S1) :-

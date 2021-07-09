@@ -16,8 +16,12 @@
 :- module(ape_utils, [
 		cpu_time/2,
 		handle_unknown_words/4,
-		new_npid/1
+		new_npid/1    
 	]).
+
+
+:- use_module('../utils/logicmoo_ape_utils').
+
 
 
 /** <module> APE utils
@@ -56,7 +60,7 @@
 
 :-export(trace_failure/1).
 :-meta_predicate(trace_failure(0)).
-trace_failure(Goal):- (Goal *-> true ; (nop(trace),Goal)).
+trace_failure(Goal):- (Goal *-> true ; (notrace(trace),Goal)).
 
 cpu_time(Goal, Duration) :-
 	statistics(runtime, [Start | _]),

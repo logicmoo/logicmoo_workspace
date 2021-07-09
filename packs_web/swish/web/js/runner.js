@@ -1727,6 +1727,7 @@ define(["jquery", "config", "preferences", "utils",
           ctx.closest("body.swish")
             .swish('playFile', econtext.location);
         } else {
+			if(econtext!=undefined && econtext.editor != undefined)
           $(econtext.editor).prologEditor('gotoLine', econtext.location.line);
         }
       }

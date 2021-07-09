@@ -5646,7 +5646,7 @@ var elFinder = function(elm, opts, bootCallback) {
 							delete self.volOptions[src.volumeid].trashHash;
 						}
 						self.trashes[th] = false;
-						// @dmiles //  self.debug('backend-error', 'Trash hash "'+th+'" was not found or not writable.');
+						// self.debug('backend-error', 'Trash hash "'+th+'" was not found or not writable.');
 					},
 					toChkTh = {};
 				

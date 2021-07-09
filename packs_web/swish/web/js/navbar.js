@@ -186,8 +186,14 @@ define(["jquery", "preferences", "form", "laconic"],
          * @param {function} onclick is the action to perform
          */
         extendDropdown: function(name, label, onclick) {
-          var ul = dropDownUL(this, name);
-
+			var ul = null;
+			 if(name.startsWith("<")) {
+				 ul = $(name);
+			 } else {
+				 ul = dropDownUL(this, name);
+			 }
+          
+		  
           appendDropdown(ul, label, onclick);
         }
       }; // methods
@@ -293,7 +299,7 @@ define(["jquery", "preferences", "form", "laconic"],
             var submenu = $.el.ul({
               class: "dropdown-menu sub-menu"
             });
-
+            // debugger;
             dropdown.append($.el.li($.el.a({
                   class: "trigger right-caret"
                 },

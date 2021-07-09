@@ -36,6 +36,8 @@
 		tptplist_pp/1
 	]).
 
+:- use_module(ape('utils/logicmoo_ape_utils')).
+
 % Import the lexicons
 :- style_check(-discontiguous).
 :- consult(clex:clex_lexicon).
@@ -89,7 +91,7 @@ apply_converter(_, Drs, _) :-
 
 
 display_header(Number, Text) :-
-	format('~*t~d~6| ~w~n', [0'0, Number, Text]).
+	format('~*t~d~6| ~w~n', [0'0, Number, Text]). %'
 
 
 display_result(_, Result) :-

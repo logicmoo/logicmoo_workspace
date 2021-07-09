@@ -1,0 +1,511 @@
+:- op(1001,xfy, ('...' )).
+:- op(1200,xfx, ('--->')).
+
+%:- push_def(t_l:disable_px).
+
+:-asserta(t_l:disable_px).
+
+:- ignore(( \+(t_l:disable_px),trace,throw((\+(t_l:disable_px))))).
+:-asserta(tlxgproc:do_xg_process_te).
+
+/* Sentences */
+
+:- export(sentence80/5).
+
+sentence80(S) ---> wh_question(S), (terminator(?);[]) .
+sentence80(S) ---> yn_question(S), (terminator(?);[]) .
+sentence80(S) ---> imperative80(S), (terminator(!);[]) .
+% sentence80(S) ---> declarative(S), terminator(.) .
+sentence80(QS) ---> s(S,_),([Punct];[]),{punct_to_sent_type(Punct,S,QS)}.
+
+punct_to_sent_type((.),S,decl(S)).
+punct_to_sent_type((!),S,decl(S)).
+punct_to_sent_type((?),S,q(S)).
+punct_to_sent_type(_,S,decl(S)).
+
+/* Declarative sentence */
+
+declarative(decl(S)) ---> s(S,_).
+
+/* Wh-questions */
+
+wh_question(whq(X,S)) --->
+   variable_q(X,_,QCase,NPCase),
+   question80(QCase,NPCase,S).
+
+variable_q(X,Agmt,QCase,NPCase) ...
+      np(NP,Agmt,NPCase,_,_,Set,Mask) --->
+   whq(X,Agmt,NP,QCase),
+   {is_trace82(Set,Mask)}.
+variable_q(X,Agmt,compl,CCase) ...
+ pp(pp(Prep,NP),compl,Set,Mask) --->
+   prep(Prep),
+   whq(X,Agmt,NP,_),
+   {is_trace82(Set,Mask), is_compl_case(CCase)}.
+variable_q(X,Agmt,compl,VCase) ...
+      adv_phrase(pp(Prep,
+                  np(Agmt,
+                   np_head(
+                    int_det(X),[],Noun),[])),
+                 Set,Mask) --->
+   context_pron(Prep,Noun),
+   {is_trace82(Set,Mask), is_verb_case(VCase)}.
+variable_q(X,_,compl,VCase) ... 
+      pred(adj,value(Adj,wh(X)),Mask) --->
+   theText1(how),
+   adj(quant,Adj),
+   {is_empty_bits(Mask), is_verb_case(VCase)}.
+
+whq(X,Agmt,NP,undef) --->
+   int_det(X,Agmt),
+   {is_s_all(SAll)},
+   np(NP,Agmt,_,_,subj80,SAll,_).
+whq(X,3+No,np(3+No,wh(X),[adj(lf(Case))]),Case) ---> {t_l:useAltPOS}, int_pron(Case).
+whq(X,3+No,np(3+No,wh(X),[]),Case) ---> int_pron(Case).
+
+int_det(X,3+Agmt) ---> whose(X,Agmt).
+int_det(X,3+Agmt) ---> int_art(X,Agmt).
+
+whose(X,Agmt), np_head0(wh(X),Agmt,proper), gen_marker ---> theText1(whose).
+
+question80(QCase,NPCase,S) --->
+   {subj_qustion_db(QCase), is_to_role_case(subj80,_,NPCase)},
+   s(S,_).
+question80(QCase,NPCase,S) --->
+   fronted_verb(QCase,NPCase),
+   s(S,_).
+
+int_art(X,Agmt), det(DX,Agmt,def) ---> int_art(X,Agmt,DX).
+
+subj_qustion_db(subj80).
+subj_qustion_db(undef).
+
+/* Yes-no questions */
+
+yn_question(q(S)) --->
+   fronted_verb(nil,_),
+   s(S,_).
+
+fronted_verb(QCase,NPCase) ... 
+      verb_form(Root,Tense,Agmt,Role), neg_opt(_,Neg) --->
+   verb_form(Root,Tense,Agmt,_),
+   {verb_type_db(Root,aux+_),
+    is_to_role_case(QCase,Role,NPCase)},
+   neg_opt(_,Neg).
+
+/* Imperative sentences */
+
+imperative80(imp(S)) --->
+   imperative_verb,
+   s(S,_).
+
+imperative_verb,
+   [you],
+   verb_form(Root,imp+fin,2+sg,main) --->
+   verb_form(Root,inf,_,_).
+
+/* Basic sentence (actually, declarative sentence) */
+
+s(s(Subj,Verb,Args,Mods),Mask) --->
+   subj80(Subj,Agmt,Type),
+   s_vp(Subj,Agmt,Type,Verb,Args,Mods,Mask).
+
+s_vp(_Subj,Agmt,Type,Verb,Args,Mods,Mask) --->
+   verb(Verb,Agmt,Type,Voice),
+   {is_empty_bits(Nil), is_s_all(SAll)},
+   verb_args(Type,Voice,Args,Nil,Mask0),
+   {minus_mask(SAll,Mask0,Set), plus_mask(SAll,Mask0,Mask1)},
+   verb_mods(Mods,Set,Mask1,Mask).
+
+
+subj80(Subj,Agmt,O) ---> subj0(Subj,Agmt,O).
+subj0(there,_Agmt,_+be) ---> theText1(There),{txt_there_db(There,_Meaning)}.
+subj0(Subj,Agmt,_) --->
+   {is_s_all(SAll), is_subj_case(Case)},
+   np(Subj,Agmt,Case,_,subj80,SAll,_).
+
+/* Noun Phrase */
+np(AgmtKernelMods,Agmt,Case,Def,Role,Set,Mask) ---> np0(AgmtKernelMods,Agmt,Case,Def,Role,Set,Mask).
+
+np0(np(Agmt,Pronoun,[]),Agmt,NPCase,def,_,Set,Nil) --->
+   {is_pp(Set)},
+   pers_pron(Pronoun,Agmt,Case),
+   {is_empty_bits(Nil), is_to_role_case(Case,decl,NPCase)}.
+np0(np(Agmt,Kernel,Mods),Agmt,_Case,Def,Role,Set,Mask) --->
+   {is_pp(Set)},
+   np_head(Kernel,Agmt,Def+Type,PostMods,Mods),
+   {is_np_all(NPAll)},
+   np_compls(Type,Agmt,Role,PostMods,NPAll,Mask).
+% many of, one of
+np0(part(Det,NP),3+Number,_,indef,Role,Set,Mask) --->
+   {is_pp(Set)},
+   determiner(Det,Number,indef),
+   theText1(of),
+   {is_s_all(SAll), is_prep_case(Case)},
+   np(NP,3+pl,Case,def,Role,SAll,Mask).
+
+np_head(Kernel,Agmt,Type,PostMods,Mods) --->
+   np_head0(Kernel0,Agmt0,Type0),
+   possessive(Kernel0,Agmt0,Type0,Mods0,Mods0,
+              Kernel,Agmt,Type,PostMods,Mods).
+
+np_compls(proper,_,_,[],_,Nil) ---> {is_empty_bits(Nil)}.
+np_compls(common,Agmt,Case,Mods,Set0,Mask) --->
+   {is_np_all(NPAll)},
+   np_mods(Agmt,Case,Rel,Mods,Set0,Set,NPAll,Mask0),
+   relative(Agmt,Rel,Set,Mask0,Mask).
+
+/* Nuclear noun phrase */
+
+np_head0(nameOf(Name),3+sg,def+proper) ---> name(Name).
+
+:- style_check(-singleton).
+
+np_head0(np_head(Det,Adjs,Head),3+Number,Def+common) --->
+   determiner(Det,Number,Def),
+   adjs_opt(Adjs),
+   noun(Head,Number).
+np_head0(Pronoun,Agmt,def+proper), apos_s_or_apos --->
+   poss_pron(Pronoun,Agmt).
+np_head0(np_head(Det,[],Noun),3+sg,indef+common) --->
+   quantifier_pron(Det,Noun).
+
+/* Possessive construction */
+
+possessive(Kernel0,Agmt0,_,[],Mods0,
+           Kernel,Agmt,Type,PostMods,Mods) --->
+   gen_case,
+   np_head0(Kernel1,Agmt1,Type1),
+   possessive(Kernel1,Agmt1,Type1,PostMods1,
+              [pp(poss,np(Agmt0,Kernel0,Mods0))|PostMods1],
+              Kernel,Agmt,Type,PostMods,Mods).
+possessive(Kernel,Agmt,Type,PostMods,Mods,
+           Kernel,Agmt,Type,PostMods,Mods) ---> noText.
+
+% this next "[the]" cannot be replaced with theText1(the)!
+gen_case, [the] ---> {t_l:old_text},gen_marker.
+gen_case, [w(the,_)] ---> gen_marker.
+
+gen_marker ---> theText1(''''), an_s.
+
+an_s ---> textOpt([s]).
+
+/* Determiners */
+
+determiner(Det,Number,Def) ---> det(Det,Number,Def).
+determiner(Det,Number,Def) ---> quant_phrase(Det,Number,Def).
+
+% Measure is X
+quant_phrase(quant(Op,Quant),Number,Def) --->
+   quant_opt(Op,Def),
+   number(Quant,Number).
+
+% Measure is more / less than
+quant_opt(Op,indef) --->
+   neg_adv_opt(Op0,Op),
+   comp_adv(Op0),
+   theText1(than).
+
+% Measure is at least / most
+quant_opt(Op,indef) --->
+   theText1(at),
+   sup_adv(Adv),
+   {sup_op(Adv,Op)}.
+
+quant_opt(the,def) ---> theText1(the).
+quant_opt(same,indef) ---> noText.
+
+neg_adv_opt(Adv,not(Why)+Adv) ---> theText1(Not),{txt_not_db(Not,Why)}.
+neg_adv_opt(Adv,Adv) ---> noText.
+
+sup_op(least,not(_Why)+less).
+sup_op(most,not(_Why)+more).
+
+/* Noun phrase modifiers */
+
+np_mods(Agmt,Case,Mods0,[Mod|Mods],Set0,Set,_,Mask) --->
+   np_mod(Agmt,Case,Mod,Set0,Mask0),
+   {is_trace_bits(Trace), plus_mask(Trace,Mask0,Mask1), minus_mask(Set0,Mask1,Set1),
+    plus_mask(Mask0,Set0,Mask2)},
+   np_mods(Agmt,Case,Mods0,Mods,Set1,Set,Mask2,Mask).
+np_mods(_,_,Mods,Mods,Set,Set,Mask,Mask) ---> noText.
+
+np_mod(_,Case,PP,Set,Mask) ---> pp(PP,Case,Set,Mask).
+np_mod(Agmt,_Case,WH,Set,Mask) --->
+   reduced_relative(Agmt,WH,Set,Mask).
+
+/* Verb modifiers */
+
+verb_mods([Mod|Mods],Set0,_,Mask) --->
+   verb_mod(Mod,Set0,Mask0),
+   {is_trace_bits(Trace), plus_mask(Trace,Mask0,Mask1), minus_mask(Set0,Mask1,Set1),
+    plus_mask(Mask0,Set0,Mask2)},
+   verb_mods(Mods,Set1,Mask2,Mask).
+verb_mods([],_,Mask,Mask) ---> noText.
+
+verb_mod(Adv,Set,Mask) ---> adv_phrase(Adv,Set,Mask).
+verb_mod(Adv,Set,Nil) --->
+   {is_adv(Set)},
+   adverb(Adv),
+   {is_empty_bits(Nil)}.
+verb_mod(PP,Set,Mask) ---> pp(PP,compl,Set,Mask).
+
+adv_phrase(pp(Prep,NP),Set,Mask) --->
+   loc_pred_prep(Prep,OFPREP),
+   pp(pp(prep(OFPREP),NP),compl,Set,Mask).
+
+/* Adjectival Constructions */
+
+adjs_opt([Adj|Adjs]) --->
+   pre_adj(Adj),
+   adjs_opt(Adjs).
+adjs_opt([]) ---> noText.
+
+pre_adj(Adj) ---> adj(_,Adj).
+pre_adj(poss(Pronoun,Agreement)) ---> poss_pron(Pronoun,Agreement).
+pre_adj(Adj) --->  sup_phrase(Adj).
+
+sup_phrase(sup(most,Adj)) ---> sup_adj(Adj).
+sup_phrase(sup(Op,Adj)) --->
+   sup_adv(Op),
+   adj(quant,Adj).
+
+comp_phrase(comp(Comp,Adj,Arg),Mask) --->
+   comp(Comp,Adj),
+   {is_np_no_trace(NPNT), is_prep_case(Case)},
+   np(Arg,_,Case,_,compl,NPNT,Mask).
+
+% Measure is Numerically More
+comp(Comp,Adj) --->
+   comp_adv(Comp),
+   adj(quant,Adj),
+   theText1(than).
+
+% Measure is NON-Numerically More
+comp(more,Adj) --->
+   rel_adj(Adj),
+   theText1(than).
+
+% Measure is same = "as big as"  ?
+comp(same,Adj) --->
+   theText1(as),
+   adj(quant,Adj),
+   theText1(as).
+
+/* Prepositional Phrase */
+
+pp(pp(Prep,Arg),Case,Set,Mask) --->
+   prep(Prep),
+   {is_prep_case(NPCase)},
+   np(Arg,_,NPCase,_,Case,Set,Mask).
+
+/* Relative clause */
+
+relative(Agmt,[Rel],Set,_,Mask) --->
+   {is_pred(Set)},
+   rel_conj(Agmt,_Conj,Rel,Mask).
+relative(_,[],_,Mask,Mask) ---> noText.
+
+rel_conj(Agmt,Conj,Rel,Mask) --->
+   rel(Agmt,Rel0,Mask0),
+   rel_rest(Agmt,Conj,Rel0,Rel,Mask0,Mask).
+
+rel_rest(Agmt,Conj0,Rel0,Rel,_,Mask) --->
+   conj(Conj0,Conj,Rel0,Rel1,Rel),
+   rel_conj(Agmt,Conj,Rel1,Mask).
+rel_rest(_,_,Rel,Rel,Mask,Mask) ---> noText.
+
+rel(Agmt,rel(X,S),Mask) --->
+   mark_island,
+   variable(Agmt,X),
+   s(S,Mask0),
+   {is_trace_bits(Trace), minus_mask(Mask0,Trace,Mask)},
+   mark_dnalsi.
+
+variable(Agmt,X) ... np(np(Agmt,wh(X),[]),Agmt,_,_,_,Set,Mask) --->
+   theText1(that),
+   {is_trace82(Set,Mask)}.
+variable(Agmt0,X) ... np(NP,Agmt,NPCase,_,_,Set,Mask) --->
+   wh(X,Agmt0,NP,Agmt,NPCase),
+   {is_trace82(Set,Mask)}.
+variable(Agmt0,X) ... pp(pp(Prep,NP),compl,Set,Mask) --->
+   prep(Prep),
+   wh(X,Agmt0,NP,_Agmt,Case),
+   {is_trace82(Set,Mask), is_compl_case(Case)}.
+
+wh(X,Agmt,np(Agmt,wh(X),[]),Agmt,NPCase) --->
+   rel_pron(Case),
+   {is_to_role_case(Case,decl,NPCase)}.
+wh(X,Agmt0,np(Agmt,Kernel,[pp(Prep,NP)]),Agmt,_) --->
+   np_head0(Kernel,Agmt,_+common),
+   prep(Prep),
+   wh(X,Agmt0,NP,_,_).
+wh(X,Agmt0,NP,Agmt,Case) --->
+   whose(X,Agmt0),
+   {is_s_all(SAll)},
+   np(NP,Agmt,Case,def,subj80,SAll,_).
+
+/* Reduced relative clause */
+
+reduced_relative(Agmt,Rel,Set,Mask) --->
+   {is_pred(Set)},
+   reduced_rel_conj(Agmt,_Conj,Rel,Mask).
+
+reduced_rel_conj(Agmt,Conj,Rel,Mask) --->
+   reduced_rel(Agmt,Rel0,Mask0),
+   reduced_rel_rest(Agmt,Conj,Rel0,Rel,Mask0,Mask).
+
+reduced_rel_rest(Agmt,Conj0,Rel0,Rel,_,Mask) --->
+   conj(Conj0,Conj,Rel0,Rel1,Rel),
+   reduced_rel_conj(Agmt,Conj,Rel1,Mask).
+reduced_rel_rest(_,_,Rel,Rel,Mask,Mask) ---> noText.
+
+reduced_rel(Agmt,reduced_rel(X,S),Mask) --->
+   mark_island,
+   reduced_wh(Agmt,X),
+   s(S,Mask0),
+   {is_trace_bits(Trace), minus_mask(Mask0,Trace,Mask)},
+   mark_dnalsi.
+
+reduced_wh(Agmt,X),
+   np(np(Agmt,wh(X),[]),Agmt,NPCase,_,_,Set0,Mask0),
+   verb_form(be,pres+fin,Agmt,main),
+   neg_opt(_,Neg),
+   pred(Neg,Pred,Mask) --->
+   neg_opt(_,Neg),
+   pred(Neg,Pred,Mask),
+   {is_trace82(Set0,Mask0), is_subj_case(NPCase)}.
+reduced_wh(Agmt,X),
+   np(np(Agmt,wh(X),[]),Agmt,NPCase,_,_,Set,Mask),
+   verb(Verb,_,Type,Voice) --->
+   participle(Verb,Type,Voice),
+   {is_trace82(Set,Mask), is_subj_case(NPCase)}.
+reduced_wh(AgmtX,X),
+   np(Subj,Agmt,SCase,Def,_,Set0,Mask0) ...
+   np(np(AgmtX,wh(X),[]),AgmtX,VCase,_,_,Set,Mask) --->
+   {is_s_all(SAll), is_subj_case(SCase), is_verb_case(VCase)},
+   np(Subj,Agmt,_,Def,subj80,SAll,_),
+   {is_trace82(Set0,Mask0), is_trace82(Set,Mask)}.
+
+/* Verb phrase (less the complements) */
+
+verb(verb(Root,Voice,Time+fin,Aspect,Neg),Agmt,Type,Voice) --->
+   verb_form(Root0,Time+fin,Agmt,Role),
+   {verb_type_db(Root0,Type0)},
+   neg_opt(Type0,Neg),
+   rest_verb(Role,Root0,Root,Voice,Aspect),
+   {verb_type_db(Root,Type)}.
+
+neg_opt(aux+_,neg(WhyNot)) ---> theText1(Not),{txt_not_db(Not,WhyNot)}.
+neg_opt(_,pos(_)) ---> noText.
+
+rest_verb(aux,have,Root,Voice,[perf|Aspect]) --->
+   verb_form(Root0,past+part,_,_),
+   have_opt(Root0,Root,Voice,Aspect).
+rest_verb(aux,be,Root,Voice,Aspect) --->
+   verb_form(Root0,Tense0,_,_),
+   be(Tense0,Root0,Root,Voice,Aspect).
+rest_verb(aux,do,Root,active,[]) --->
+   verb_form(Root,inf,_,_).
+rest_verb(main,Root,Root,active,[]) ---> noText.
+
+have_opt(be,Root,Voice,Aspect) --->
+   verb_form(Root0,Tense0,_,_),
+   be(Tense0,Root0,Root,Voice,Aspect).
+have_opt(Root,Root,active,[]) ---> noText.
+
+be(past+part,Root,Root,passive,[]) ---> noText.
+be(pres+part,Root0,Root,Voice,[prog]) --->
+   passive_active(Root0,Root,Voice).
+
+passive_active(be,Root,passive) --->
+   verb_form(Root,past+part,_,_),
+   {verb_type_db(Root,Type), passive_vt(Type)}.
+passive_active(Root,Root,active) ---> noText.
+
+participle(verb(Root,Voice,inf,Aspect,Neg),Type,Voice) --->
+   neg_opt(_,Neg),
+   verb_form(Root,Tense,_,_),
+   {participle_vt(Tense,Voice,Aspect), verb_type_db(Root,Type)}.
+
+passive_vt(_+tv).
+passive_vt(_+ditrans(_Prep)).
+
+participle_vt(pres+part,active,[prog]).
+participle_vt(past+part,passive,[]).
+
+/* Extraposition brackets */
+
+mark_island ... mark_dnalsi ---> noText.
+
+/* Verb Arguments */
+
+verb_args(_+Type,Voice,AdvArgs,Mask0,Mask) --->
+   advs_opt(AdvArgs,Args,_),
+   verb_args(Type,Voice,Args,Mask0,Mask).
+
+% prefers to leave off obj
+verb_args(tv,active,[varg(dir,Dir)],_,Mask) --->
+   verb_arg(np,Dir,Mask).
+verb_args(ditrans(_Prep),_,[varg(Case,NP)|Obj],_,Mask) --->
+   verb_arg(np,NP,Mask0),
+   object_opt(Case,Obj,Mask0,Mask).
+
+verb_args(be,_,[void(Meaning)],Mask,Mask) ---> theText1(There),{txt_there_db(There,Meaning)}.
+verb_args(be,_,[varg(pred,P)],_,Mask) ---> pred_conj(_,P,Mask).
+verb_args(be,_,[varg(dir,P)],_,Mask) ---> verb_arg(np,P,Mask).
+verb_args(have,active,[varg(dir,P)],_,Mask) ---> verb_arg(np,P,Mask).
+verb_args(Type,_,[],Mask,Mask) ---> {no_args_vt(Type)}.
+
+object_opt(Case,AdvArg,Mask0,Mask) --->
+   {is_adv_bits(Adv), minus_mask(Adv,Mask0,Mask1)},
+   advs_opt(AdvArg,Obj,Mask1),
+   obj_opt(Case,Obj,Mask0,Mask).
+
+obj_opt(ind,[varg(dir,NP)],_,Mask) ---> verb_arg(np,NP,Mask).
+obj_opt(dir,[],Mask,Mask) ---> noText.
+
+pred_conj(Conj,Arg,Mask) --->
+   pred(_,Arg0,Mask0),
+   pred_rest(Conj,Arg0,Arg,Mask0,Mask).
+
+pred_rest(Conj0,Arg0,Arg,_,Mask) --->
+   conj(Conj0,Conj,Arg0,Arg1,Arg),
+   pred_conj(Conj,Arg1,Mask).
+pred_rest(_,Arg,Arg,Mask,Mask) ---> noText.
+
+verb_arg(np,NP,Mask) --->
+   {is_s_all(SAll), is_verb_case(VCase)},
+   np(NP,_,VCase,_,compl,SAll,Mask).
+
+pred(_,Adj,Mask) ---> adj_phrase(Adj,Mask).
+pred(neg(_TFScope),PP,Mask) ---> 
+   {is_s_all(SAll)},
+   pp(PP,compl,SAll,Mask).
+pred(_,Adv,Mask) --->
+   {is_s_all(SAll)},
+   adv_phrase(Adv,SAll,Mask).
+
+advs_opt([Adv|R0],R,Set) --->
+   {is_adv(Set)},
+   adverb(Adv),
+   advs_opt(R0,R,Set).
+advs_opt(R,R,_) ---> noText.
+
+adj_phrase(P,Nil) ---> adj(_,P), { is_empty_bits(Nil) }.
+adj_phrase(P,Mask) --->  comp_phrase(P,Mask).
+
+no_args_vt(tv).
+no_args_vt(ditrans(_Prep)).
+no_args_vt(iv).
+
+/* Conjunctions */
+
+conj(conj(Conj,Ctx0), conj(Conj,Ctx),Left,Right, conj(Conj,Left,Right)) ---> 
+   conj_list(Conj,Ctx0,Ctx).
+
+:-retract(tlxgproc:do_xg_process_te).
+
+:-retract(t_l:disable_px).
+
+end_of_file.

@@ -1,4 +1,9 @@
 
+:- if(\+ current_prolog_flag(pfc_version,2.0)).
+
+:- include(test_header_1_8).
+
+:- else.
 
 :- if(current_prolog_flag(test_header,_)).
 
@@ -90,4 +95,4 @@ test_header_include.
 
 :- ensure_loaded(library(pfc_test)).
 
-
+:- endif.

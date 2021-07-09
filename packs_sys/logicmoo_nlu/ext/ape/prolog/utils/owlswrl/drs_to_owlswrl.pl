@@ -45,6 +45,8 @@
 		transform_anonymous/2
 	]).
 
+:- use_module('../logicmoo_ape_utils').
+
 
 /** <module> Attempto DRS to OWL 2/SWRL translator
 

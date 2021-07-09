@@ -41,7 +41,7 @@ with_no_kif_var_coroutines(Goal):- locally_each(local_override(no_kif_var_corout
  :- meta_predicate bless_ex(*,*).
  :- meta_predicate reify(?).
  :- meta_predicate test_count(0,*).
- :- meta_predicate undo(0).
+% :- meta_predicate undo(0).
 
 :-  system:((
  op(1199,fx,('==>')), 
@@ -684,7 +684,7 @@ test_count(Goal,N):-
 
 
 %undo(Goal):- Redo = call(Goal), super_call_cleanup(true, (true; (Redo,setarg(1,Redo,true))), Redo).
-undo(Goal):- true; (Goal,fail).
+%undo(Goal):- true; (Goal,fail).
 
 /*
 % one list note on PNF  the Way i convert loves(joe,mary) to PNF...

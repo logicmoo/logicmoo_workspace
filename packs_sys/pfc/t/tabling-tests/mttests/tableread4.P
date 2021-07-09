@@ -1,0 +1,52 @@
+
+/* Same as tableread3, but perturbation of threads occurs at a
+different place.  Am unsure of the semantics of backtracking over
+join_list -- but we do need to handle it somehow */
+
+
+:- dynamic num_is/1.
+
+:- assert((concurr_initialize(tableread(N,_)):- 
+		retractall(num_is(_)),
+		assert(num_is(N)),
+		(tableread_table(_),fail;true))).
+
+:- table tableread_table/1.
+
+% This isn't good tabling style, but does make a good test.
+tableread_table(X):- 
+	test_thread_number(Threads),
+	num_is(N),
+	Spin is 10 * N,
+	make_duplicate_goals(Threads,spin(Spin),List),
+	exec_goals(List,Ids),
+	for(X,1,N),
+	join_list(Ids).
+
+spin(N):- 
+	num_is(N),
+	for(_X,1,N),
+	fail.
+spin(_).
+
+tableread(_,Str):- 
+	tableread_table(X),
+	writeln(Str,X),
+	fail.
+tableread(_,_).
+	
+%%% for(?I,+B1,+B2) nondeterministically binds I to all integer values
+%%% from B1 to B2.  B1 and B2 must be integers, but either may be larger.
+for(I,B1,B2) :-
+	(B1 =< B2
+	 ->	forup(I,B1,B2)
+	 ;	fordown(I,B1,B2)
+	).
+
+forup(L,L,H) :- L =< H.
+forup(I,L,H) :- L < H, L1 is L+1, forup(I,L1,H).
+
+fordown(H,H,L) :- H >= L.
+fordown(I,H,L) :- H > L, H1 is H-1, fordown(I,H1,L).
+
+

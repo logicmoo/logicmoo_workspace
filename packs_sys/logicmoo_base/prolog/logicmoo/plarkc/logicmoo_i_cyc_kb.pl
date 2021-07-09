@@ -202,7 +202,7 @@ inner_connective(F) :- get_LogicalConnective(F), \+ connective_arity0(F,_).
 
 baseKB:tAsserted(ist(MT,P)):- !, istAsserted(MT,P).
 baseKB:tAsserted(P):- 
-   asserted_id(P,_).
+  asserted_id(P,_).
 
 :- multifile(baseKB:ist/2).
 :- kb_global(baseKB:ist/2).
@@ -287,7 +287,7 @@ badz:- asserted_id(t(zzzz,A,B),ID),dmsg(asserted_id(t(zzzz,A,B),ID)),fail.
 test_kb_boxlog:- asserted_id(P,ID),nl,nl,compound(ID),wdmsg(asserted_id(P,ID)),test_boxlog(P).
 
 
-:- baseKB:ain((tAsserted(rtLogicalConnective(F))==>rtLogicalConnective(F))).
+%:- baseKB:ain((tAsserted(rtLogicalConnective(F))==>rtLogicalConnective(F))).
 
 :- baseKB:ain(rtArgsVerbatum(tAsserted)).
 

@@ -1,0 +1,43 @@
+%% Testing detection of singleton variables.
+
+p( V, 'V' ).                  % singleton V
+
+a( _, _X ) :-  b( _Y, Z ).    % only Z is a singleton
+
+% Note that Y is truly a singleton on the second branch in the first clause, but
+% not in the second!
+a(X) :- b(X, Y), c( Y ); d( Y ).
+a(X) :- b(X, Y), (c( Y ); d( Y )).
+
+
+% Here Y should be a singleton.
+a( 1 ) :- \+ b( Y ), c( Y ).
+
+% Here Y should be a singleton in the first branch
+a( 2 ) :- (\+ b( Y ); c( Y )), d( Y ).
+
+% Here Y should be a singleton in the first branch
+a(X) :-(b( Y ), fail ; c( X )), d( Y ).
+
+% Here X should be a singleton, and Y should be a singleton in the first branch
+a(X) :-(b( Y ), fail ; c( Y )), d( Y ).
+
+% Here d( Y ) should be dead code, X and Y singletons.
+a(X) :-(b( Y ), fail ; c( Y ), fail), d( Y ).
+
+
+a( 3 ) :-
+        ( b( Y ), c( X )
+        ; b( Y ), fail        % Y is singleton here
+        ; \+ b( Z )           % Z is singleton here
+        ),
+        d( X, Y, Z ).
+
+
+% Suppress uninteresting warnings:
+b(a).
+b(a,a).
+c(a).
+d(a).
+d(a,a,a).
+:- topl a/1, a/2, p/2.

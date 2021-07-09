@@ -154,12 +154,10 @@ header(Style, Head, Header, Footer, FooterTokens) :-
 	make_list(Header, HList),
 	make_list(Footer, FList),
 	append([ HList,
-		 [ \(cp_messages:html_requires(jquery)),
+		 [ '\\'(cp_messages:html_requires(jquery)),
 		   img([id('smiley-thinking'), src(Image)]),
 		   div(class(messages), Magic),
-		   \(cp_messages:js_script({|javascript||
-					    $("#smiley-thinking").hide(1000)|}))
-		 ],
+		   '\\'(cp_messages:js_script(\['\n    $("#smiley-thinking").hide(1000)']))],
 		 FList
 	       ], Body),
 	phrase(html_write:page(Style, Head, Body), Tokens),

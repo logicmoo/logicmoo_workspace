@@ -1,0 +1,156 @@
+:- op(1001,xfy, ... ).
+:- op(1200,xfx,'--->').
+
+
+:-asserta(tlxgproc:do_xg_process_te).
+
+/* Parts of speech */
+/*
+the TextC(W1,CYCPOS,Y=W1)  ---> {t_l:old_text,!},[W1],{W1=Y}.
+the TextC(W1,CYCPOS,Y=W1)  ---> {!},[w(W1,_)],{W1=Y}.
+the TextC(W1,CYCPOS,WHY) ---> [W2],{memoize_pos_to_db(WHY,CYCPOS,W2,W1)}.
+see newdict.pl
+*/
+
+theTextL(W1,_CYCPOS,Y=W1)  ---> {t_l:old_text,!},theText80(W1),{W1=Y}.
+theTextL(W1,_CYCPOS,Y=W1)  ---> {!},theText80(W1),{W1=Y}.
+theTextL(W1,_CYCPOS,WHY) ---> theText80(W1),{call(WHY)}.
+
+noText ---> [].
+
+theText1(IC)---> {t_l:old_text,!},[W0],{parser_tokenize:any_nb_to_atom(W0,W1),downcase_atom(W1,DC),(var(IC)->IC=DC;downcase_atom(IC,DC))}.
+theText1(Txt)---> [w(Txt,_)].
+
+theText1(W1,_CYCPOS)--->{t_l:old_text,!},[W1]. % compatible_pos_db(CW,CYCPOS),cw_db(W1,CW)
+theText1(Txt,_CYCPOS)---> [w(Txt,_)]. 
+
+theText80(Text)---> {is_list(Text),!},theText_cl(Text).
+theText80([W1])--->theText1(W1).
+theText80([W1,W2])---> {!}, theText1(W1),theText1(W2).
+theText80(DCG)---> {!,nonvar(DCG)}, DCG.
+theText80(Text)---> {Text=@=[_|_],!},theText_ol(Text).
+theText80(Text)---> {var(Text),dmsg(theText_DCG_VAR(Text)),!},theText_ol(Text).
+theText80(DCG)---> {dmsg(theText_DCG(DCG)),dtrace,nonvar(DCG)},DCG.
+%:- share_mp(theText80//1).
+
+
+theText_ol([W1,W2,W3])---> theText1(W1),theText1(W2),theText1(W3).
+theText_ol([W1,W2])---> theText1(W1),theText1(W2).
+theText_ol([W1])---> theText1(W1).
+
+theText_cl([]) ---> {!},[].
+theText_cl([W1|WL])---> theText1(W1),{!},theText_cl(WL).
+
+
+optText1(_,_,_)---> noText.
+optText1(W,POS,HOW)---> theTextC(W,POS,HOW).
+
+optText1(_,_)---> noText.
+optText1(W,POS)---> theText1(W,POS).
+
+opt_the ---> optText1(the,'Determiner').
+%opt_the ---> optTextC(The,'Determiner',The=the).
+
+optText(_Text) ---> noText.
+optText(Text) ---> theText80(Text).
+
+textOpt(Text) ---> theText80(Text).
+textOpt(_Text) ---> noText.
+
+
+
+noun(Noun,Agmt) ---> theText1(W,'Noun'), {no_repeats(noun_form_db(W,Noun,Agmt))}.
+noun(Noun,Agmt) ---> theTextC(W,_NounPOS,noun_form_db(W,Noun,Agmt)).
+
+det(det(Det),Number,Def) ---> theText1(W,'Determiner'), {no_repeats(det_db(W,Number,Det,Def))}.
+det(det(Det),Number,Def) ---> theTextC(W,'Determiner',det_db(W,Number,Det,Def)).
+det(generic,_,generic) ---> noText.
+
+adj(Type,adj(Adj)) ---> theText1(Adj,'Adjective'), {no_repeats(adj_db(Adj,Type)), \+ det_db(Adj)}.
+adj(Type,adj(Adj)) ---> theTextC(Adj,_Adjective,adj_db(Adj,Type)), {\+ det_db(Adj)}.
+
+prep(prep(Prep)) ---> theText1(Prep,'Preposition'), {prep_db(Prep)}.
+prep(prep(Prep)) ---> theTextC(Prep,'Preposition',prep_db(Prep)).
+
+rel_adj(adj(Adj)) ---> theText1(RAdj,'Adjective'), {no_repeats(rel_adj_db(RAdj,Adj))}.
+rel_adj(adj(Adj)) ---> theTextC(RAdj,_Adjective,rel_adj_db(RAdj,Adj)).
+
+sup_adj(adj(Adj)) ---> theText1(SAdj,'Adjective'), {no_repeats(sup_adj_db(SAdj,Adj))}.
+sup_adj(adj(Adj)) ---> theTextC(SAdj,_Adjective,sup_adj_db(SAdj,Adj)).
+
+%comp_adv(less) ---> [less].
+%comp_adv(more) ---> [more].
+comp_adv(W) ---> theText1(W,'Adverb'),{no_repeats(comp_adv_db(W))}.
+comp_adv(W) ---> theTextC(W,_Adverb,comp_adv_db(W)).
+
+
+%sup_adv(least) ---> [least].
+%sup_adv(most) ---> [most].
+sup_adv(W) ---> theText1(W,'Adverb'),{no_repeats(sup_adv_db(W))}.
+sup_adv(W) ---> theTextC(W,_Adverb,sup_adv_db(W)).
+
+rel_pron(Case) ---> theText1(W), {no_repeats(rel_pron_db(W,Case))}.
+rel_pron(Case) ---> theTextC(W,'Pronoun',rel_pron_db(W,Case)).
+
+
+
+human_name(X) ---> capitalized(FN),capitalized(SN),{atomic_list_concat([FN,'_',SN],X)}.
+
+verb_form(Verb,Tense,Agmt,_Role) ---> theText1(W), {no_repeats(verb_form_db(W,Verb,Tense,Agmt))}.
+%verb_form(Verb,Tense,Agmt,_Role) ---> theTextC(W,VerbPOS,v_db(W,Verb,Tense,Agmt,VerbPOS)).
+
+name_lex(Obj) ---> opt_the, theText80(Name), {no_repeats(name_db(Name,Obj))}.
+name_lex(Obj) ---> opt_the, theText1(W1),theText1(W2), {atomic_list_concat([W1,'_',W2],Name), no_repeats(name_db(Name,Obj))},{!}.
+name_lex(Obj) ---> opt_the, some_var(Obj).
+
+some_var(Obj) ---> opt_the, theText1(?), theText1(VarName), {foc_framevar(VarName,_VarFn,Obj)},{!}.
+% name(Obj) ---> opt_the, theTextC(Name,'ProperNoun',name_db([Name],Obj)).
+
+% covered next int_art (X,pl,quant(same,wh(X))) ---> [how,many].
+
+int_art(X,pl,quant(same,wh(X))) ---> { how_many_db(HowMany) },theText80(HowMany).
+int_art(X,Agmt,DX) ---> theText1(Art,'Determiner'), {no_repeats(int_art_db(Art,X,Agmt,DX))}.
+int_art(X,Agmt,DX) ---> theTextC(Art,_Determiner, int_art_db(Art,X,Agmt,DX) ).
+
+int_pron(Case) ---> theText1(Pron,'Pronoun'), {no_repeats(int_pron_db(Pron,Case))}.
+int_pron(Case) ---> theTextC(Pron,'Pronoun',int_pron_db(Pron,Case)).
+
+
+adverb(adv(Adv)) ---> theText1(Adv,'Adverb'), {no_repeats(adverb_db(Adv))}.
+adverb(adv(Adv)) ---> theTextC(Adv,_Adverb,adverb_db(Adv)).
+
+poss_pron(pronoun(Gender),Person+Number) ---> theText1(W,'Pronoun'), {no_repeats(poss_pron_db(W,Gender,Person,Number))}.
+poss_pron(pronoun(Gender),Person+Number) ---> theTextC(W,'Pronoun',poss_pron_db(W,Gender,Person,Number)).
+
+pers_pron(pronoun(Gender),Person+Number,Case) ---> theText1(W,'Pronoun'), {pers_pron_db(W,Gender,Person,Number,Case)}.
+pers_pron(pronoun(Gender),Person+Number,Case) ---> theTextC(W,'Pronoun',pers_pron_db(W,Gender,Person,Number,Case)).
+
+
+quantifier_pron(Det,Noun) ---> theText1(W,'Pronoun'),{no_repeats(quantifier_pron_db(W,Det,Noun))}.
+quantifier_pron(Det,Noun) ---> theTextC(W,'Pronoun',quantifier_pron_db(W,Det,Noun)).
+
+context_pron(prep(In),Place) ---> theText1(Where,'Pronoun') , {no_repeats(context_pron_db(In,Place,Where))}.
+context_pron(prep(In),Place) ---> theTextC(Where,'Pronoun',context_pron_db(In,Place,Where)).
+
+number_xg(nb(I),Number) ---> theText1(W,'Number-SP'), {no_repeats(number_db(W,I,Number))}.
+number_xg(nb(I),Number) ---> theTextC(W,'Number-SP',number_db(W,I,Number)).
+
+terminator(Type) ---> theText1(Term,'Symbol-SP'), {no_repeats(terminator_db(Term,Type))}.
+terminator(Type) ---> theTextC(Term,'Symbol-SP',terminator_db(Term,Type)).
+
+conj_list(_,list,list) ---> theText1(',','Symbol-SP').
+conj_list(Conj,list,end) ---> theText1(Conj,'Conjunction'), {no_repeats(conj_db(Conj))}.
+conj_list(_,list,list) ---> theTextC(T,'Symbol-SP',T=',').
+conj_list(Conj,list,end) ---> theTextC(Conj,'Conjunction',conj_db(Conj)).
+
+loc_pred_xg(Of,Prep1) --->
+   [East],
+   [Of],
+   {loc_pred_prep_db(Of,East,Prep1)}.
+loc_pred_xg(Of,OFPREP) ---> theText1(East), {no_repeats(loc_pred_prep_db(East,Of,OFPREP))}.
+loc_pred_xg(Of,OFPREP) ---> theTextC(East,'Preposition',loc_pred_prep_db(East,Of,OFPREP)).
+
+
+:-retract(tlxgproc:do_xg_process_te).
+
+

@@ -610,10 +610,10 @@ instTypePropsToType(instTypeProps,ttSpatialType222).
 %
 % Reduce Clause.
 %
-reduce_clause(Op,C,HB):-must(nonvar(C)),quietly_must(demodulize(Op,C,CB)),CB\=@=C,!,reduce_clause(Op,CB,HB).
+%reduce_clause(Op,C,HB):-must(nonvar(C)),quietly_must(demodulize(Op,C,CB)),CB\=@=C,!,reduce_clause(Op,CB,HB).
 reduce_clause(_,C,C):- t_l:into_goal_code,!.
-reduce_clause(Op,clause(C, B),HB):-!,reduce_clause(Op,(C :- B),HB).
-reduce_clause(Op,(C:- B),HB):- is_src_true(B),!,reduce_clause(Op,C,HB).
+% reduce_clause(Op,clause(C, B),HB):-!,reduce_clause(Op,(C :- B),HB).
+%reduce_clause(Op,(C:- B),HB):- is_src_true(B),!,reduce_clause(Op,C,HB).
 reduce_clause(_,C,C).
 
 
@@ -773,7 +773,7 @@ fully_expand(X,Y):- must((fully_expand(clause(unknown,cuz),X,Y))).
 
 %fully_expand(_,Var,Var):- \+ compound(Var),!.
 %fully_expand(Op,Sent,SentO):- safe_functor(Sent,F,A),should_fully_expand(F,A),!,must(fully_expand_real(Op,Sent,SentO)),!.
-fully_expand(Op,Sent,SentO):- quietly(fully_expand_real(Op,==>Sent,SentO)),!.
+fully_expand(Op,Sent,SentO):- fully_expand_real(Op,Sent,SentO),!.
 % fully_expand(Op,Sent,Sent):- sanity((ignore((fully_expand_real(Op,Sent,SentO)->sanity((Sent=@=SentO)))))).
 
 /*
@@ -1012,13 +1012,13 @@ do_renames_expansion(Sent,SentM):- if_defined(do_renames(Sent,SentM),=(Sent,Sent
 maybe_correctArgsIsa(_ ,SentO,SentO):-!.
 maybe_correctArgsIsa(Op,SentM,SentO):- locally_tl(infMustArgIsa,correctArgsIsa(Op,SentM,SentO)),!.
 
+fully_expand_clause(Op,':-'(Sent),Out):-!,fully_expand_goal(Op,Sent,SentO),!,must(Out=':-'(SentO)).
 fully_expand_clause(Op,Sent,SentO):- sanity(is_ftNonvar(Op)),sanity(var(SentO)),var(Sent),!,Sent=SentO.
 fully_expand_clause(Op,'==>'(Sent),(SentO)):-!,fully_expand_clause(Op,Sent,SentO),!.
 fully_expand_clause(Op,'=>'(Sent),(SentO)):-!,fully_expand_clause(Op,Sent,SentO),!.
 fully_expand_clause(Op,(B,H),Out):- !,must((fully_expand_clause(Op,H,HH),fully_expand_clause(Op,B,BB))),!,must(Out=(BB,HH)).
 fully_expand_clause(Op,Sent,SentO):- is_list(Sent),!,must_maplist(fully_expand_clause(Op),Sent,SentO).
 % fully_expand_clause(_,(:-(Sent)),(:-(Sent))):-!.
-fully_expand_clause(Op,':-'(Sent),Out):-!,fully_expand_goal(Op,Sent,SentO),!,must(Out=':-'(SentO)).
 
 fully_expand_clause(_,Sent,SentO):- t_l:infSkipFullExpand,!,must(Sent=SentO).
 
@@ -1400,8 +1400,8 @@ temp_comp(H,B,PRED,OUT):- nonvar(H),term_variables(B,Vs1),Vs1\==[], term_attvars
    must((term_variables(BO,Vs2),!,must_maplist(=,Vs1,Vs2),call(PRED,(H:-BO),OUT))).
 
 
-:- discontiguous db_expand_0/3.
-:- discontiguous(pfc_lib:db_expand_0/3).
+%:- discontiguous db_expand_0/3.
+%:- discontiguous(pfc_lib:db_expand_0/3).
 %% db_expand_0( ?Op, ^ Sent, -- SentO) is semidet.
 %
 % Database expand  Primary Helper.
@@ -1478,8 +1478,9 @@ db_expand_0(Op,upprop(A,F),ain(OO)):-!,expand_props(_Prefix,Op,props(A,F),OO),!.
 db_expand_0(Op,padd(A,F),ain(OO)):-!,expand_props(_Prefix,Op,props(A,F),OO),!.
 
 
-db_expand_0(Op,(call_u(CALL)),(call_u(CALLO))):-with_assert_op_override(Op,db_expand_0(Op,CALL,CALLO)).
-db_expand_0(_ ,include(CALL),(load_data_file_now(CALL))):- dtrace, !.
+db_expand_0(Op,(call_u(CALL)),(call_u(CALLO))):- with_assert_op_override(Op,db_expand_0(Op,CALL,CALLO)).
+%db_expand_0(_ ,include(CALL),(load_data_file_now(CALL))):- dtrace, !.
+db_expand_0(_ ,include(CALL),(include(CALL))):- !.
 
 db_expand_0(Op,=>(G),(GG)):-!,db_expand_0(Op,(G),(GG)).
 db_expand_0(Op,(G,B),(GGBB)):-!,db_expand_0(Op,G,GG),db_expand_0(Op,B,BB),conjoin_l(GG,BB,GGBB).
@@ -1516,6 +1517,33 @@ db_expand_0(Op,DECL,OUT):-
 
 db_expand_0(_,Sent,mpred_prop(M,F,A,RT)):- Sent  univ_safe  [RT,MFA],a(ttRelationType,RT),nonvar(MFA),get_mfa(MFA,M,F,A),atom(F),!.
 
+% @TODO uncomment IMMEDIATELY
+db_expand_0(Op,ClassTemplate,OUT):- \+ t_l:no_db_expand_props, db_expand_props(Op,ClassTemplate,OUT),!.
+% db_expand_0(Op,C,F/A):-compound_all_open(C),get_functor(C,F,A).
+db_expand_0(Op,IN,OUT):- IN  univ_safe  [F|Args],F==t,!,must(from_univ(_,Op,Args,OUT)).
+db_expand_0(Op,isa(A,F),OO):-atom(F),O  univ_safe  [F,A],!,db_expand_0(Op,O,OO).
+db_expand_0(Op,isa(A,F),OO):-is_ftNonvar(A),is_ftNonvar(F),expand_props(_Prefix,Op,props(A,F),OO),!.
+db_expand_0(_Op,isa(A,F),isa(A,F)):-!.
+db_expand_0(Op,props(A,F),OO):-expand_props(_Prefix,Op,props(A,F),OO),!.
+db_expand_0(Op,typeProps(A,F),EXP):-expand_props(_Prefix,Op,props(I,F),OO),!,fully_expand(Op,(isa(I,A)==>OO),EXP).
+
+% covered db_expand_0(_,arity(F,A),arity(F,A)):-atom(F),!.
+db_expand_0(Op,IN,OUT):- 
+   cnas(IN,F,Args),
+   % wdmsg_pfc(db_expand_0(Op,IN)),
+   sanity(F \== isa),
+   must_maplist(db_expand_0(Op),Args,ArgsO),
+   map_f(F,FO),OUT  univ_safe  [FO|ArgsO].
+
+
+/*
+db_expand_0(Op,Mt:Term,Mt:O):- is_kb_module(Mt),!,locally_tl(caller_module(baseKB,Mt),db_expand_0(Op,Term,O)).
+db_expand_0(Op,DB:Term,DB:O):- defaultAssertMt(DB),!,locally_tl(caller_module(db,DB),db_expand_0(Op,Term,O)).
+db_expand_0(Op,KB:Term,KB:O):- atom(KB),!,locally_tl(caller_module(prolog,KB),db_expand_0(Op,Term,O)).
+*/
+
+% db_expand_0(query(HLDS,Must),props(Obj,Props)):- is_ftNonvar(Obj),is_ftVar(Props),!,gather_props_for(query(HLDS,Must),Obj,Props).
+
 get_mfa(M:FA,M,F,A):- !, get_fa(FA,F,A).
 get_mfa(FA,M,F,A):- get_fa(FA,F,A),must(current_assertion_module(M)).
 
@@ -1538,8 +1566,6 @@ db_expand_set(Op,[TPRED,FARGS|Args],(meta_argtypes(FARGS),OUT)):-
 
 :- thread_local(t_l:no_db_expand_props/0).
 
-% @TODO uncomment IMMEDIATELY
-db_expand_0(Op,ClassTemplate,OUT):- \+ t_l:no_db_expand_props, db_expand_props(Op,ClassTemplate,OUT),!.
 
 db_expand_props(Op,DECL,O):- fail, arg(_,DECL,S),string(S),DECL  univ_safe  [F|Args],maplist(destringify,Args,ArgsO),
   ArgsO\=@=Args,!,DECLM  univ_safe  [F|ArgsO],db_expand_0(Op,DECLM,O).
@@ -1615,28 +1641,13 @@ db_expand_props(Op,typeProps(C,Props),(isa(I,C)==>mdefault(OOUT))):- (is_ftNonva
 
 */
 
-% db_expand_0(Op,C,F/A):-compound_all_open(C),get_functor(C,F,A).
 db_expand_props(Op,ClassTemplate,OUT):- ClassTemplate  univ_safe  [props,Inst,Second,Third|Props],!,
    must(expand_props(_Prefix,Op,props(Inst,[Second,Third|Props]),OUT)),!.
 db_expand_props(Op,arity(F,A),O):-expand_props(_Prefix,Op,props(F,arity(A)),O),!.
 
 maybe_ain_arity(F,A):- ignore((atom(F),integer(A),ain(arity(F,A)))).
 
-db_expand_0(Op,IN,OUT):- IN  univ_safe  [F|Args],F==t,!,must(from_univ(_,Op,Args,OUT)).
-db_expand_0(Op,isa(A,F),OO):-atom(F),O  univ_safe  [F,A],!,db_expand_0(Op,O,OO).
-db_expand_0(Op,isa(A,F),OO):-is_ftNonvar(A),is_ftNonvar(F),expand_props(_Prefix,Op,props(A,F),OO),!.
-db_expand_0(_Op,isa(A,F),isa(A,F)):-!.
-db_expand_0(Op,props(A,F),OO):-expand_props(_Prefix,Op,props(A,F),OO),!.
-db_expand_0(Op,typeProps(A,F),EXP):-expand_props(_Prefix,Op,props(I,F),OO),!,fully_expand(Op,(isa(I,A)==>OO),EXP).
 
-% covered db_expand_0(_,arity(F,A),arity(F,A)):-atom(F),!.
-db_expand_0(Op,IN,OUT):- 
-   cnas(IN,F,Args),
-   % wdmsg_pretty(db_expand_0(Op,IN)),
-   sanity(F \== isa),
-   must_maplist(db_expand_0(Op),Args,ArgsO),
-   map_f(F,FO),OUT  univ_safe  [FO|ArgsO].
-   
 isa_one_prop(NewInst,Type,OUT,ONEPROP):- ONEPROP = (isa(NewInst,Type)==>OUT).
 
 %= 	 	 
@@ -1708,14 +1719,6 @@ db_expand_argIsa(P,PO):-
 % Compound All Open.
 %
 compound_all_open(C):-compound(C),safe_functor(C,_,A),A>1,\+((arg(_,C,Arg),is_ftNonvar(Arg))),!.
-
-/*
-db_expand_0(Op,Mt:Term,Mt:O):- is_kb_module(Mt),!,locally_tl(caller_module(baseKB,Mt),db_expand_0(Op,Term,O)).
-db_expand_0(Op,DB:Term,DB:O):- defaultAssertMt(DB),!,locally_tl(caller_module(db,DB),db_expand_0(Op,Term,O)).
-db_expand_0(Op,KB:Term,KB:O):- atom(KB),!,locally_tl(caller_module(prolog,KB),db_expand_0(Op,Term,O)).
-*/
-
-% db_expand_0(query(HLDS,Must),props(Obj,Props)):- is_ftNonvar(Obj),is_ftVar(Props),!,gather_props_for(query(HLDS,Must),Obj,Props).
 
 replaced_module(_,_,_):-!, fail.
 replaced_module(_,V,_):- \+ atom(V),!,fail.
@@ -2341,12 +2344,12 @@ exact_args_f(install_converter).
 exact_args_f(installed_converter).
 exact_args_f(actn).
 exact_args_f(wid).
-exact_args_f(wdmsg_pretty).
+exact_args_f(wdmsg_pfc).
 exact_args_f(fol_to_pkif).
 exact_args_f(ftListFn).
 exact_args_f(vtActionTemplate).
 exact_args_f(txtConcatFn).
-exact_args_f(spft).
+exact_args_f('$spft').
 exact_args_f(skip_expand_fa).
 exact_args_f(sformat).
 exact_args_f(second_order).

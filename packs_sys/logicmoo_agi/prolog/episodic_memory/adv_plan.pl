@@ -16,6 +16,7 @@
 % Main file.
 %
 */
+:- '$set_source_module'(mu).
 
 action_invoke_goals(Agent, Mem0, Mem0):-
   \+ thought_check(Agent, current_goals(Agent, [_|_]), Mem0), !,
@@ -108,9 +109,9 @@ precond_matches_effect(Cond, Cond).
 precond_matches_effects(path(Here, There), StartEffects) :-
  find_path(Agent, Here, There, _Route, StartEffects).
 precond_matches_effects(exists(Object), StartEffects) :-
- in_model(h(_, Object, _), StartEffects)
+ in_model(h(spatial, _, Object, _), StartEffects)
  ;
- in_model(h(_, _, Object), StartEffects).
+ in_model(h(spatial, _, _, Object), StartEffects).
 precond_matches_effects(Cond, Effects) :-
  in_model(E, Effects),
  precond_matches_effect(Cond, E).
@@ -122,21 +123,21 @@ sequenced(_Self,
   [ %Preconds:
   Here \= Self, There \= Self,
   \+ props(Self, knows_verbs(goto, f)),
-  h(WasRel, Self, Here),
+  h(spatial, WasRel, Self, Here),
   props(Here, inherit(place, t)),
   props(There, inherit(place, t)),
   \+ in_state(~(open), There),
   \+ in_state(~(open), Here),
   \+ in_state(~(open), Dir),
   reverse_dir(Dir, RDir),
-  h(exit(Dir), Here, There), % path(Here, There)
+  h(spatial, fn(exit, Dir), Here, There), % path(Here, There)
   % %Action:
  did( Self, act3('go__dir',Self,[ Walk, Dir])),
   %PostConds:
-  ~h(WasRel, Self, Here),
+  ~h(spatial, WasRel, Self, Here),
   notice(Here, leaves(Self, Here, WasRel)),
-  notice(Self, msg([cap(subj(actor(Self))), does(Walk), from(place(Here)), via(exit(Dir)) , Rel, to(place(There))])),
-  h(Rel, Self, There),
+  notice(Self, msg([cap(subj(actor(Self))), does(Walk), from(place(Here)), via(fn(exit, Dir)) , Rel, to(place(There))])),
+  h(spatial, Rel, Self, There),
   notice(There, enters(Self, There, RDir))]).
 
 
@@ -375,7 +376,7 @@ conds_as_goals(ID, [C|R], [G|T]) :-
  conds_as_goals(ID, R, T).
 
 cond_equates(Cond0, Cond1) :- Cond0 = Cond1.
-cond_equates(h(X, Y, Z), h(X, Y, Z)).
+cond_equates(h(spatial, X, Y, Z), h(spatial, X, Y, Z)).
 cond_equates(~ ~ Cond0, Cond1) :- cond_equates(Cond0, Cond1).
 cond_equates(Cond0, ~ ~ Cond1) :- cond_equates(Cond0, Cond1).
 
@@ -501,8 +502,8 @@ choose_operator([goal(GoalID, exists(GoalCond))|Goals0], Goals0,
      plan(Steps, Order9, Bindings, NewLinks),
      Depth, Depth ) :-
  memberchk(step(start, oper(_Self, _Action, _Preconds, Effects)), Steps),
- ( in_model(h(_Prep, GoalCond, _Where), Effects);
- in_model(h(_Prep, _What, GoalCond), Effects)),
+ ( in_model(h(spatial, _Prep, GoalCond, _Where), Effects);
+ in_model(h(spatial, _Prep, _What, GoalCond), Effects)),
  add_ordering(before(start, GoalID), Order0, Order1),
  % Need to protect new link from all existing steps
  protect_link_all(causes(start, GoalCond, GoalID), Steps, Order1, Order9),
@@ -648,9 +649,9 @@ generate_plan(Knower, Agent, FullPlan, Mem0) :-
 
 
 path2dir1(Doer, Here, There,  act3('go__dir',Doer,[ _Walk, Dir]), ModelData):-
- in_model(h(exit(Dir), Here, There), ModelData).
+ in_model(h(spatial, fn(exit, Dir), Here, There), ModelData).
 path2dir1(Doer, Here, There,  act3('go__obj',Doer,[ _Walk, There]), ModelData) :-
- in_model(h(descended, Here, There), ModelData).
+ in_model(h(spatial, descended, Here, There), ModelData).
 
 path2directions(Doer, [Here, There], [GOTO], ModelData):-
   path2dir1(Doer, Here, There, GOTO, ModelData).
@@ -663,7 +664,7 @@ find_path1([First|_Rest], Dest, First, _ModelData) :-
  First = [Dest|_].
 find_path1([[Last|Trail]|Others], Dest, Route, ModelData) :-
  findall([Z, Last|Trail],
-   (in_model(h(_Prep, Last, Z), ModelData), \+ member(Z, Trail)),
+   (in_model(h(spatial, _Prep, Last, Z), ModelData), \+ member(Z, Trail)),
     List),
  append(Others, List, NewRoutes),
  find_path1(NewRoutes, Dest, Route, ModelData).

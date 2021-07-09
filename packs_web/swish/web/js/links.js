@@ -232,19 +232,32 @@ define(["jquery", "config", "modal"],
               modal.animate({scrollTop: target.position().top}, 2000);
               if (true) return;            
             } else {
-              accept();
-              if (href.startsWith("/swish/")) {
-                $(ev.target).closest(".swish").swish('playURL', {url: href});
-                return;
-              }
+			  if (href == "/swish/" || href == "/swish") {
+                  ev.stopPropagation();
+				  window.open(href, '_blank');
+                  return;
+			  }
 
-              if (href.startsWith("/")) {
-                debugger;
-                href = "/swish" + href;
+              accept();
+
+			  if(href.indexOf("?fa=")>=0 || href.startsWith("/swish/lm_xref")) {
+				// handled in term.js
+				return;
+			  }
+
+			  if (href.startsWith("/help")||href.startsWith("/file")||href.startsWith("/opt")) {
+				  href = "/swish" + href;
+			  }
+			  //debugger;
+              if (href.startsWith("/swish/") && !href.startsWith("/swish/lm_xref")) {
                 $(ev.target).closest(".swish").swish('playURL', {url: href});
                 return;
               }
-              if (href.startsWith(":")) {
+			  if(!href.startsWith("/") && !href.startsWith(":")) {
+				 window.open(href, '_blank');
+				 return;
+			  }
+	          if (href.startsWith(":")||href.startsWith("/oauth")||href.indexOf("help")>1) {
                 href = windowOrigin + href;
                 done = true;
                 ev.preventDefault();

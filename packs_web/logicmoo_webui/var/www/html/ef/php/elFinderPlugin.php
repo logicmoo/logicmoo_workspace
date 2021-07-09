@@ -6,8 +6,7 @@
  * @author Naoki Sawada
  * @license New BSD
  */
-class elFinderPlugin
-{
+class elFinderPlugin {
 	
 	/**
 	 * This plugin's options
@@ -20,11 +19,9 @@ class elFinderPlugin
 	 * Get current volume's options
 	 * 
 	 * @param object $volume
-     *
 	 * @return array options
 	 */
-    protected function getCurrentOpts($volume)
-    {
+	protected function getCurrentOpts($volume) {
 		$name = substr(get_class($this), 14); // remove "elFinderPlugin"
 		$opts = $this->opts;
 		if (is_object($volume)) {
@@ -40,18 +37,14 @@ class elFinderPlugin
 	 * Is enabled with options
 	 * 
 	 * @param array $opts
-     * @param elFinder $elfinder
-     *
 	 * @return boolean
 	 */
-    protected function iaEnabled($opts, $elfinder = null)
-    {
+	protected function iaEnabled($opts) {
 		if (! $opts['enable']) {
 			return false;
 		}
 		
 		if (isset($opts['offDropWith']) && ! is_null($opts['offDropWith']) && isset($_REQUEST['dropWith'])) {
-            // plugin enabled by default, disabled only if given key is pressed
 			$offDropWith = $opts['offDropWith'];
 			$action = (int)$_REQUEST['dropWith'];
 			if (! is_array($offDropWith)) {
@@ -80,4 +73,3 @@ class elFinderPlugin
 		return true;
 	}
 }
-

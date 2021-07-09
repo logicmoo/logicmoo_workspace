@@ -187,7 +187,7 @@ call_tokenizer(Text, GuessOnOff, SentencesOutput, SentencesToParse) :-
 		SentencesOutput = [Tokens],
 		SentencesToParse = [],
 		last(Tokens, LastToken),
-		add_error_message(sentence, '', LastToken, 'Every ACE text must end with . or ? or !.')
+		add_werror_message(sentence, '', LastToken, 'Every ACE text must end with . or ? or !.')
 	).
 
 call_parser(Sentences, StartID, Syntaxtrees, DrsReversed) :-

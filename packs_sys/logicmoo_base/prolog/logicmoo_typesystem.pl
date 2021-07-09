@@ -110,15 +110,15 @@ use_shared_module(USM):- with_no_mpred_expansions(baseKB:reexport(USM)).
 :- kb_shared(baseKB:never_retract_u/2).
 :- kb_shared(baseKB:mpred_prop/4).
 :- kb_shared(baseKB:do_and_undo/2).
-:- kb_shared(baseKB:spft/3).
-:- kb_shared(baseKB:bt/2).
+:- kb_shared(baseKB:'$spft'/4).
+:- kb_shared(baseKB:'$bt'/2).
 :- kb_shared(baseKB:hs/1).
-:- kb_shared(baseKB:nt/3).
+:- kb_shared(baseKB:'$nt'/3).
 :- kb_shared(baseKB:pk/3).
-:- kb_shared(baseKB:pt/2).
+:- kb_shared(baseKB:'$pt'/3).
 :- kb_shared(baseKB:que/2).
 :- kb_shared(baseKB:pm/1).
-:- kb_shared(baseKB:spft/3).
+:- kb_shared(baseKB:'$spft'/4).
 :- kb_shared(baseKB:tms/1).
 */
 :- system:use_module(library(logicmoo/subclause_expansion)).

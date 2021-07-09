@@ -1,0 +1,106 @@
+:- import trie_prge_insert/2,trie_prge_unify/2,
+	  trie_prge_delete/2 from intern. 
+:- import trie_pras_insert/2,trie_pras_unify/2,
+	  trie_pras_delete/2 from intern. 
+:- import trie_insert/2,trie_unify/2,trie_delete/2 from intern. 
+:- import trie_create/2, trie_truncate/1 from intern.
+
+test:- test0_prge,test1_prge,
+	test0_gen,test1_gen,test2_gen,
+	test0_pras,test1_pras,test2_pras.
+
+test0_prge:- 
+	trie_create(Rp,[type(prge)]),
+	trie_prge_insert(Rp,pair(a,1)),
+	trie_prge_insert(Rp,pair(b,2)),
+	test0_1_prge(Rp).
+
+test0_1_prge(Rp):- 
+	trie_prge_unify(Rp,pair(a,X)),
+	writeln(first(prge,0,X)),
+	trie_prge_unify(Rp,pair(b,Y)),
+	writeln(second(prge,0,Y)).
+
+test1_prge:- 
+	trie_create(Rp,[type(prge)]),
+	trie_prge_insert(Rp,pair(a,1)),
+	trie_prge_insert(Rp,pair(b,2)),
+	trie_prge_delete(Rp,pair(b,2)),
+	trie_prge_unify(Rp,pair(a,X)),
+	writeln(first(prge,1,X)),
+	trie_prge_unify(Rp,pair(b,Y)),
+	writeln(second(prge,1,Y)).
+test1_prge.
+
+test0_gen:- 
+	trie_create(Rp,[type(prge)]),
+	trie_insert(Rp,pair(a,1)),
+	trie_insert(Rp,pair(b,2)),
+	test0_1_gen(Rp).
+
+test0_1_gen(Rp):- 
+	trie_unify(Rp,pair(a,X)),
+	writeln(first(gen,0,X)),
+	trie_unify(Rp,pair(b,Y)),
+	writeln(second(gen,0,Y)).
+
+test1_gen:- 
+	trie_create(Rp,[type(prge)]),
+	trie_insert(Rp,pair(a,1)),
+	trie_insert(Rp,pair(b,2)),
+	trie_delete(Rp,pair(b,2)),
+	trie_unify(Rp,pair(a,X)),
+	writeln(first(gen,1,X)),
+	trie_unify(Rp,pair(b,Y)),
+	writeln(second(gen,1,Y)).
+test1_gen.
+
+test2_gen:- 
+	trie_create(_Rp,[type(prge),alias(foo)]),
+	trie_insert(foo,pair(a,1)),
+	trie_insert(foo,pair(b,2)),
+	trie_delete(foo,pair(b,2)),
+	trie_unify(foo,pair(a,X)),
+	writeln(first(gen,2,X)),
+	trie_unify(foo,pair(b,Y)),
+	writeln(second(gen,2,Y)).
+test2_gen.
+
+%------
+test0_pras:- 
+	trie_create(Rp,[type(pras)]),
+	trie_pras_insert(Rp,pair(a,1)),
+	trie_pras_insert(Rp,pair(b,2)),
+	test0_1_pras(Rp).
+
+test0_1_pras(Rp):- 
+	trie_pras_unify(Rp,pair(a,X)),
+	writeln(first(pras,0,X)),
+	trie_pras_unify(Rp,pair(b,Y)),
+	writeln(second(pras,0,Y)).
+
+test1_pras:- 
+	trie_create(Rp,[type(pras),alias(foopras)]),
+	assert(foopras(Rp)),
+	trie_pras_insert(Rp,pair(a,1)),
+	trie_pras_insert(Rp,pair(b,2)),
+	trie_pras_insert(Rp,pair(b,3)).
+test1_pras:- 
+	foopras(Rp),
+	trie_pras_unify(Rp,pair(a,X)),
+	writeln(first(pras,1,X)),
+	trie_pras_unify(Rp,pair(b,Y)),
+	writeln(second(pras,1,Y)).
+
+test2_pras:- 
+	trie_create(Rp,[type(pras)]),
+	trie_pras_insert(Rp,pair(a,1)),
+	trie_pras_insert(Rp,pair(b,2)),
+	trie_pras_delete(Rp,pair(a,X)),
+	trie_pras_unify(Rp,pair(b,X)),
+	writeln(first(pras,2,X)),
+	trie_pras_unify(Rp,pair(a,Y)),
+	writeln(second(pras,2,Y)).
+
+%------
+% test with writing & reading: multiple threads.

@@ -1,0 +1,476 @@
+<div class="notebook">
+
+<div class="nb-cell markdown" name="md1">
+The following is a draft representation of the simplified loan agreement in Flood and Goodenough, March 2017, [Contract as automaton: the computational representation of financial agreements.](https://www.financialresearch.gov/working-papers/files/OFRwp-2015-04_Contract-as-Automaton-The-Computational-Representation-of-Financial-Agreements.pdf) (referred to as FG below). 
+
+This draft representation has not been exhaustively tested, and probably needs extra work. However, it should give a fairly good idea of one approach to the use of LPS for representing legal documents. If you find any problems with the example or have any other comments, please email Bob Kowalski at rak@doc.ic.ac.uk.
+
+The FG formalisation is a collection of transitions of the form 
+
+	current state -&gt; event -&gt; next state. 
+
+The LPS formalisation below is similar, but represents state transitions in logical form as causal laws, which represent the effect of the event on the fluents (time-varying facts) that represent the current state. In ordinary English, it would be natural to express these causal laws in some such form as:
+
+```
+a fluent holds
+if an event happens 
+and other fluents hold.
+
+```
+In LPS we represent them in the form:
+
+```
+an event initiates (terminates or updates) a fluent 
+if other fluents hold.
+```
+The representation  by causal laws implements the contract as a passive agent, which simply monitors the  behaviour of the parties of the contract, taking into account any additional, relevant external events (such as the borrower becoming bankrupt) that the passive agent may observe.
+
+The representation could, alternatively, implement the contract as an active agent, which executes the contract by  gathering information from external sources or performing actions on behalf of the lender or borrower. Some of the causal laws would then be replaced by reactive rules, which generate the relevant actions. We do not explore this alternative here.
+
+The contract has only 11 clauses. We will focus on clauses 1-6 and 10. Clause 7 states that the agreement will be subject to the laws of New York State. Clause 8 states that any amendments or waivers under the agreement will be effective only if set forth in writing and executed by both parties; Clause 9 specifies further the jurisdiction of the State of New York. Clause 11 states that all communications should be made by email. The 11 clauses are prefaced by a short preamble:
+
+
+```
+Agreement
+
+This loan agreement dated June 1, 2014, by and between Lender Bank Co. 
+(“Lender”) and Borrower Corp. (Borrower), will set out the terms under 
+which Lender will extend credit in the principal amount of $1,000 to 
+Borrower with an un-compounded interest rate of 5% per annum, included 
+in the specified payment structure.
+```
+The preamble gives an overview of the agreement, and is ignored in the FG and LPS representations.
+
+```
+1. The Loan
+At the request of Borrower, to be given on June 1, 2014, 
+Lender will advance $1,000 to Borrower no later than June 2, 2014. 
+If Borrower does not make such a request, this agreement will terminate. 
+```
+The first sentence of this clause expresses an obligation. Such obligations are most commonly formalised in a modal deontic logic, whose logical form mirrors their natural language formulation. However, one of the defining characteristics of obligations is that they can be violated, resulting in a suboptimal state of affairs, involving penalties, remedies, or additional "contrary-to-duty" obligations. Formalising the treatment of violable obligations in modal logic has proved to be notoriously difficult.
+
+Violable obligations are similar to rules and exceptions. In natural language, we are inclined to say for example that all birds can fly, even though we know that there may be exceptions. It is possible (and tempting) to develop a logical representation that mirrors such natural, but potentially confusing ways of speaking. But it is simpler and less prone to error to formalise rules and exceptions more precisely, for example, by saying that all birds except penguins can fly, or that any bird that is not exceptional can fly, and penguins are exceptional. 
+
+The FG and LPS representations employ a similar, "more precise" approach to the representation of violable obligations, by representing them in the form:
+```
+If an obligation is violated, 
+then some associated suboptimal state of affairs, 
+penalty, remedy or new obligation arises.
+```
+
+Although the first sentence of clause 1 expresses an obligation, nowhere in the contract is there any mention of a remedy if the obligation is not satisfied. Both the FG and LPS representation, however, require an explicit representation of a remedy, or at least some representation of the less than ideal resulting state of affairs. FG represents the obligation and its remedy as a state transition in which the end of the day on June 1 2014 is an event that causes the lender to be liable to litigation. We can represent this in LPS by a causal law. The second sentence similarly represents explicitly the implicit intention of the contract that the contract terminates (correctly) if the borrower does not request the loan on the specified date.
+</div>
+
+<div class="nb-cell program" name="p1">
+
+:- expects_dialect(lps).
+
+end_of_day(2014/6/2)
+initiates liable_to_litigation(lender)
+if requested(borrower, 1000, 2014/6/1), 
+not advanced(lender, 1000).
+
+end_of_day(2014/6/1)
+initiates terminated
+if not requested(borrower, 1000, 2014/6/1).
+</div>
+
+<div class="nb-cell markdown" name="md6">
+Note that the red icon in the upper right-hand corner of the program above means that the program is local, and will be used only locally in the subsequent query, if there is one. This program will be overridden by the next program, which is global, indicated by the globe icon in the same corner.
+
+In the next program, to avoid syntax errors, we need to declare external events and fluents. We also need to include the causal relationships between the events of requesting and advancing the loan and the resulting fluents. 
+
+To simulate real time, we include the Prolog command/query 
+
+:- include(system('date_utils.pl')). 
+
+end_of_day(_) is a system event, and  real_date(Date) is a system fluent, both of which are defined by the real time simulation. System events and fluents do not need to be declared.
+</div>
+
+<div class="nb-cell program" data-background="true" name="p9">
+:- include(system('date_utils.pl')).  
+
+events 		request/2, advance/2.
+fluents 	requested/3, advanced/3, liable_to_litigation/1, terminated.
+
+request(Borrower, Amount) initiates requested(Borrower, Amount, Date)
+if real_date(Date).
+
+advance(Lender, Amount) initiates advanced(Lender, Amount, Date)
+if real_date(Date).
+
+end_of_day(2014/6/2)
+initiates liable_to_litigation(lender)
+if requested(borrower, 1000, 2014/6/1), 
+not advanced(lender, 1000, _).
+
+end_of_day(2014/6/1)
+initiates terminated
+if not requested(borrower, 1000, 2014/6/1).
+</div>
+
+<div class="nb-cell markdown" name="md2">
+The fluents requested(Borrower, Amount, Date) and advanced(Lender, Amount, Date)
+record the Dates of the corresponding events. This representation is very useful, because, for the sake of efficiency, LPS forgets events as soon as the resulting states are generated.
+</div>
+
+<div class="nb-cell markdown" name="md4">
+```
+2. Repayment
+Subject to the other terms of this agreement, 
+Borrower will repay the loan in the following payments:
+(a) Payment 1, due June 1, 2015, in the amount of $550, 
+representing a payment of $500 as half of the principal 
+and interest in the amount of $50.
+(b) Payment 2, due June 1, 2016, in the amount of $525, 
+representing a payment of $500 as the remaining half of 
+the principal and interest in the amount of $25.
+```
+This second clause expresses the obligation of the borrower to repay the loan, "subject to other terms of this agreement". These "other terms" include both an additional condition, stated in clause 10, that the repayments not be paid early, and contrary-to-duty obligations in case the repayments are not paid on time. Clause 10, in particular, states:
+
+```
+10. Time of the Essence; No Pre-Payment
+Timely performance is required for any action to be taken 
+under this agreement, and, except as may otherwise be 
+specifically provided herein, failure to take such action 
+on the day specified will constitute a binding failure to 
+take such action. Payments shall only be made on or after 
+the dates specified in Section 2 or on or after such other 
+date as may be required under Section 6;
+pre-payments made on earlier dates shall not be accepted.
+```
+
+Taking both clauses 2 and 10 into consideration, and representing the obligation in "contrary-to-duty" form, with an explicit representation of the less than ideal alternative, we obtain:
+</div>
+
+<div class="nb-cell program" data-background="true" name="p3">
+events 		pay/3.
+fluents 	paid/4, potential_defaulted/1.
+
+due(550, 2015/6/1). 
+due(525, 2016/6/1).
+
+end_of_day(Date) initiates
+potential_defaulted(pay(borrower, lender, Amount))
+if due(Amount, Date),
+not paid(borrower, lender, Amount, Date).
+
+false 	pay(borrower, lender, Amount), due(Amount, Date2), 
+		real_date(Date1), Date1 @&lt; Date2.
+</div>
+
+<div class="nb-cell markdown" name="md5">
+The inclusion of the Date of payment in the fluent paid(borrower, lender, Amount, Date) implements the requirement in clause 10 that the payment is made on the date the Amount is due, not earlier and not later. The (violable) prohibition from paying later is incorporated in the causal law in lines 7-10. The (inviolable) prohibition from paying earlier is represented by the (hard) constraint in lines 12-13.
+
+The relation between paying as an event and paid as a fluent is given by the causal law:
+</div>
+
+<div class="nb-cell program" data-background="true" name="p4">
+pay(Borrower, Lender, Amount) 	initiates paid(Borrower, Lender, Amount, Date)
+								if 	real_date(Date).
+</div>
+
+<div class="nb-cell markdown" name="md7">
+This part of the loan agreement is sufficient to deal with the ideal case in which both the lender and the borrower fulfil their obligations, and no contrary-to-duty situation arises. We can test this case by using simulated real time. 
+
+We will use the same simulated real time for other examples later. For this purpose, we create a global program for the real time simulation and a local program for separate cases.
+</div>
+
+<div class="nb-cell program" data-background="true" name="p16">
+simulatedRealTimeBeginning('2014-05-31'). % The date of the initial state at cycle 1.
+simulatedRealTimePerCycle(21600). % Each cycle = 21600 seconds = 1/4th of a day.
+maxTime(3200). % 3200 cycles = 800 days.
+</div>
+
+<div class="nb-cell program" name="p8">
+observe request(borrower, 1000) at '2014-06-01T15:00'. % at 15:00.
+observe advance(lender, 1000) at '2014-06-02T18:00'.
+observe pay(borrower,lender, 550) at '2015-06-01T12:00'.
+observe pay(borrower,lender, 525) at '2016-06-01T06:00'.
+</div>
+
+<div class="nb-cell markdown" name="md17">
+The query go(Timeline) will use the local program as well as all global programs, including those below. This is why the fluent terminated is displayed in the timeline.
+</div>
+
+<div class="nb-cell query" name="q2">
+go(Timeline).
+</div>
+
+<div class="nb-cell markdown" name="md11">
+You can experiment with the representation by commenting out some of the observations or changing some of their dates. 
+
+Clause 3 specifies representations and warrantees, which are commitments by the borrower to ensure that certain facts or conditions are true at the time of the agreement or during its lifetime. Clause 4, on the other hand, specifies covenants, which are commitments to perform certain actions in the future. These commitments in clauses 3 and 4 are obligations, which can be violated, resulting in contrary-to-duty obligations. Clause 5 specifies these contrary-to-duty obligations, treating them in the same way as potential defaults due to failure to make timely repayment of the loan.
+
+Let's go directly to clause 5, and come back to clauses 3 and 4 later:
+
+```
+5. Events of Default
+The Borrower will be in default under this agreement upon the 
+occurrence of any of the following events or conditions,
+provided they shall remain uncured within a period of two days 
+after notice is given to Borrower by Lender of their occurrence 
+(such an uncured event an “Event of Default”):
+(a) Borrower shall fail to make timely payment of any amount 
+due to Lender hereunder;
+(b) Any of the representation or warranties of Borrower under 
+this agreement shall prove untrue;
+(c) Borrower shall fail to perform any of its covenants 
+under this agreement;
+(d) Borrower shall file for bankruptcy or insolvency 
+under any applicable federal or state law.
+
+A default will be cured by the Borrower (i) remedying the potential 
+event of default and (ii) giving effective notice of such remedy 
+to the Lender. In the event of multiple events of default, the 
+first to occur shall take precedence for the purposes of specifying
+outcomes under this agreement.
+```
+The following causal law treats all of the cases (a-d) equally as potential defaults, which become actual if they are not cured within two days of notice.
+</div>
+
+<div class="nb-cell program" data-background="true" name="p7">
+events notify/2.
+fluents defaulted/2, notified/3, remedied/1, cured/1. 
+
+notify(Person, Message) initiates notified(Person, Message, Date)
+						if 	real_date(Date).
+
+end_of_day(Date2)
+initiates defaulted(Requirement, Date3) 
+if 	potential_defaulted( Requirement),
+	notified(lender, default(Requirement), Date1),
+	real_date_add(Date1, 2, Date2),
+	real_date_add(Date1, 3, Date3),
+	not defaulted(_, _), % In the event of multiple events of default,
+	% the first to occur shall take precedence 
+	% for the purposes of specifying outcomes under this agreement.
+	not cured(Requirement). 
+
+
+cured(Requirement) at T
+if 	remedied(Requirement) at T, 
+	notified(borrower, remedy(Requirement), _) at T.
+</div>
+
+<div class="nb-cell markdown" name="md8">
+Here real_date_add/3 is a system fluent. The fluent cured/1 is an intensional predicate. Intensional fluents are defined by logic program clauses in terms of extensional predicates, such as remedied and notified. Events and actions initiate, terminate and update only extensional predicates. Intensional predicates are initiated, terminated and updated as ramifications of updates of extensional predicates. (The inclusion of the time parameter "at T" is to avoid a syntax error.)
+
+The loan agreement does not specify remedies for potential defaults. However, it seems reasonable to assume that failure to make a payment is remedied by making the payment:
+</div>
+
+<div class="nb-cell program" data-background="true" name="p10">
+pay(borrower, lender, Amount)
+initiates 	remedied(pay(borrower, lender, Amount))
+if 	potential_defaulted(pay(borrower, lender, Amount)).
+</div>
+
+<div class="nb-cell markdown" name="md9">
+This deals with case (a). We still need to deal with cases (b-d). Consider case (d) first. As with case (a), an event causes a potential default:
+</div>
+
+<div class="nb-cell program" data-background="true" name="p6">
+events file/2.
+
+file(borrower, bankruptcy) initiates 
+potential_defaulted(bankruptcy_insolvency(borrower)).
+
+file(borrower, insolvency) initiates 
+potential_defaulted(bankruptcy_insolvency(borrower)).
+</div>
+
+<div class="nb-cell markdown" name="md12">
+The possible remedies for being bankrupt or insolvent are not specified in the contract. Moreover, the determination whether such a remedy has taken place might require human judgement. The easiest way to cater for this is to treat the determination of remedy as an external event, which can also apply in other cases of potential default:
+</div>
+
+<div class="nb-cell program" data-background="true" name="p11">
+events remedy/1.
+
+remedy(Requirement) initiates
+remedied(Requirement).
+</div>
+
+<div class="nb-cell markdown" name="md13">
+Notice that LPS inherits from Prolog the metalogical/higher-order feature that predicates such as remedy/1 can occur in the argument of another predicate, as in the case notified(borrower, remedy(Requirement), _).
+
+We can now turn our attention to case (b), which concerns the violation of a representation or warrant:
+
+```
+3. Representations and Warranties
+The Borrower represents and warrants, at the execution 
+of this agreement, at the request for the advance of funds 
+and at all times any repayment amount shall be outstanding, 
+the Borrower’s assets shall exceed its liabilities as 
+determined under an application of the FASB rules of accounting.
+```
+
+This clause expresses yet another obligation of the borrower. As with other obligations, both FG and LPS represent the obligation in its contrary-to-duty form, which is expressed in clause 5 (b), which states that a potential default occurs when any representations or warranties "shall prove untrue". Thus an event of a condition being proved untrue initiates a fluent of potential default. However, a condition being proved untrue is not the same as its becoming untrue. A condition, such as the borrower's assets exceeding its liabilities, can be true, but unproved. Or true at one time, but proved only at another (later) time.
+
+Clause 3 states that the proof should be determined by applying the FASB rules of accounting, which  are not part of the contract itself. The easiest way to cater for this, and for the possibility that the determination may also involve a degree of human judgement, is to follow the FG lead and treat the determination of proof of untruth as an external event. We also treat the determination of remedy as an external event, which is catered for by the declarations and causal law in the program fragments above.
+</div>
+
+<div class="nb-cell program" data-background="true" name="p12">
+events prove_untrue/1.
+
+prove_untrue(Requirement) initiates
+potential_defaulted(Requirement) if represents_warrants(borrower, Requirement).
+
+represents_warrants(borrower, 
+                   `borrower's assets exceed liabilities at time T 
+                    if borrower executes contract at time T
+                    or borrower requests funds at time T
+                    or due(Amount, Date) and T is on or before Date`).
+</div>
+
+<div class="nb-cell markdown" name="md14">
+The predicate represents_warrants/2 is a (timeless) Prolog predicate, which does not need to be declared. The second argument of the predicate is a Prolog term which (in slightly abreviated form) names the condition specified in clause 3. This name (enclosed in single quotes) has a logical form, which can be processed by means of a Prolog/LPS metainterpreter. This opens up the possibility of automating, in  whole or part, the proof required by the clause. However, the exploration of this possibility is beyond the the scope of this exercise.
+
+Clause 4 is similar to clause 3, and its representation is also similar:
+
+```
+4. Covenants:
+The Borrower covenants that at the execution of this agreement, 
+at the request for the advance of funds and at all times any 
+repayment amount shall be outstanding it will make timely payment
+of all state and federal taxes as and when due.
+```
+</div>
+
+<div class="nb-cell program" data-background="true" name="p5">
+events fails_to_perform/2.
+
+fails_to_perform(borrower, Requirement) initiates
+potential_defaulted(Requirement) if covenant(borrower, Requirement).
+
+covenant(borrower,
+         `pay borrower tax at time T 
+          if tax due at time T
+          and borrower executes contract at time T
+              or borrower requests funds at time T
+              or due(Amount, Date) and T is on or before Date`).
+</div>
+
+<div class="nb-cell markdown" name="md3">
+
+</div>
+
+<div class="nb-cell markdown" name="md10">
+```
+6. Acceleration on Default
+Upon the occurrence of an Event of Default all outstanding payments 
+under this agreement will become immediately due and payable, including 
+both principal and interest amounts, without further notice, presentment, 
+or demand to the Borrower.
+```
+Clause 6 expresses a further obligation, which can also be violated. But, again, the remedy is not stated in the contract. Following FG, we represent explicitly the implicit intention that, in case the borrower does not comply with this new obligation and the time does not exceed the statute of limitations in the State of New York, then the borrower is liable to litigation. We also represent explicitly the implicit intention that the contract terminates (correctly) if the borrower has defaulted but pays all outstanding payments immediately, or if the borrower has made all payments without default.
+
+Here the predicate total_due is an intensional predicate.
+</div>
+
+<div class="nb-cell program" data-background="true" name="p14">
+fluents total_due/1. 
+
+end_of_day(Date) initiates 
+liable_to_litigation(borrower)
+if 	defaulted(_, Date), 
+	Date @&lt; 2020/06/01, % within NY State Statute of Limitation. 
+	total_due(Sum),
+	not paid(borrower, lender, Sum, Date).
+
+
+pay(borrower, lender, Sum) initiates terminated
+if 	defaulted(_, Date),
+	real_date(Date),
+	total_due(Sum).
+
+pay(borrower, lender, 525) initiates terminated
+if 	not defaulted(_, _), 
+	paid(borrower, lender, 550,_).
+
+total_due(1075) at T if not paid(borrower, lender, 550,_) at T.
+total_due(525) at T if paid(borrower, lender, 550,_) at T, not paid(borrower, lender, 525,_) at T.
+</div>
+
+<div class="nb-cell markdown" name="md16">
+Here are some alternative scenarios, which illustrate the execution of the loan agreement above. You can comment or uncomment some of the observations or change dates, to explore other alternatives.
+</div>
+
+<div class="nb-cell program" name="p13">
+% Borrower is late with payment, 
+% but the late payment cures the default, 
+% but only if the borrower notifies the remedy.
+
+observe request(borrower, 1000) at '2014-06-01T10:00'. % request on time at 10:00.
+observe advance(lender, 1000) at '2014-06-01T15:00'. % advance on time at 15:00.
+observe notify(lender, default(pay(borrower, lender, 550))) at '2015-06-02'.
+observe pay(borrower, lender, 550) at '2015-06-03'. 
+observe notify(borrower, remedy(pay(borrower, lender, 550))) at '2015-06-03T15:00'.
+observe pay(borrower, lender, 525) at '2016-06-01'. % pay on time.
+</div>
+
+<div class="nb-cell query" name="q1">
+go(T).
+</div>
+
+<div class="nb-cell program" name="p17">
+% Borrower pays early. 
+%  The payment is rejected.
+% 
+
+observe request(borrower, 1000) at '2014-06-01T10:00'. % request on time at 10:00.
+observe advance(lender, 1000) at '2014-06-01T15:00'. % advance on time at 15:00.
+observe pay(borrower, lender, 550) at '2015-05-31'. % pay a day early, not allowed.observe notify(lender, default(pay(borrower, lender, 550))) at '2016-06-02'
+observe notify(lender, default(pay(borrower, lender, 550))) at '2015-06-02'.
+observe pay(borrower, lender, 525) at '2016-06-01'. % pay on time.
+</div>
+
+<div class="nb-cell query" name="q4">
+go(T).
+</div>
+
+<div class="nb-cell program" name="p15">
+% The lender advances the loan, 
+% but borrower doesn't make any payments
+% and the lender does not notify any defaults.
+
+observe request(borrower, 1000) at '2014-06-01T10:00'. % request on time at 10:00.
+observe advance(lender, 1000) at '2014-06-01T15:00'. % advance on time at 15:00.
+</div>
+
+<div class="nb-cell query" name="q3">
+go(T).
+</div>
+
+<div class="nb-cell program" name="p18">
+% Borrower pays early, in violation of the contract.
+% The lender complains. The borrower tries a trick.
+% The lender sticks to the rules.
+% 
+
+observe request(borrower, 1000) at '2014-06-01T10:00'. % request on time at 10:00.
+observe advance(lender, 1000) at '2014-06-01T15:00'. % advance on time at 15:00.
+observe pay(borrower, lender, 550) at '2015-05-31'. % pay a day early, not allowed.
+observe notify(lender, default(pay(borrower, lender, 550))) at '2015-06-02'.
+observe notify(borrower, remedy(pay(borrower, lender, 550))) at '2015-06-03T15:00'.
+observe pay(borrower, lender, 525) at '2016-06-01'. % pay on time.
+</div>
+
+<div class="nb-cell query" name="q5">
+go(T).
+</div>
+
+<div class="nb-cell program" name="p2">
+% The buyer defaults, but pays the total due
+
+observe request(borrower, 1000) at '2014-06-01T15:00'. % at 15:00.
+observe advance(lender, 1000) at '2014-06-02T18:00'.
+observe pay(borrower,lender, 550) at '2015-06-01T12:00'.
+observe pay(borrower,lender, 525) at '2016-06-06T06:00'. % change date: earlier or later.
+observe notify(lender, default(pay(borrower, lender, 525))) at '2016-06-02'.
+</div>
+
+<div class="nb-cell query" name="q6">
+go(T).
+</div>
+
+</div>

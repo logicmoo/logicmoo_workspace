@@ -59,7 +59,7 @@ tAnimal(iBob).
          
 
 :-  listing(needs).
-:-  listing(pt).
+:-  listing('$pt').
 
 
 :- '$set_source_module'(t123).

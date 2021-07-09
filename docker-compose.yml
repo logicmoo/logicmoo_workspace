@@ -1,0 +1,31 @@
+version: "2"
+services:
+    www:
+        build: .
+        ports: 
+            - "80:80"
+            - "443:443"
+        volumes:
+          - .:/opt/logicmoo_workspace
+        networks:
+            pub_net:
+                ipv4_address: 10.0.0.99
+networks:
+  pub_net:
+    driver: macvlan
+    driver_opts:
+      parent: eth0
+    ipam:
+      driver: default
+      config:
+        - subnet: 10.0.0.0/24
+          gateway: 10.0.0.1
+
+volumes:
+  shared:
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: "${PWD}/"
+

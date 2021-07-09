@@ -1,0 +1,56 @@
+* Prolog Language server
+
+Still a work-in-progress -- please open an issue if you have any issues or feature requests!.
+
+Currently supports showing documentation on hover, go to definition, go to callers, listing defined symbols in the file, and showing a limited number of diagnostics.
+
+Only tested with SWI-Prolog, as it heavily uses its introspection facilities to do its stuff.
+It should work with any relatively-recent version of SWI-Prolog, but for best results (for "find references" in particular), use a version with ~xref_called/5~ (8.1.5 or newer; past commit [[https://github.com/SWI-Prolog/swipl-devel/commit/303f6430de5c9d7e225d8eb6fb8bb8b59e7c5f8f][303f6430de5c]]).
+
+Installable as a pack like ~?- pack_install(lsp_server).~
+
+To use with Emacs, via [[https://github.com/emacs-lsp/lsp-mode][lsp-mode]]:
+
+#+begin_src emacs-lisp
+(lsp-register-client
+  (make-lsp-client
+   :new-connection
+   (lsp-stdio-connection (list "swipl"
+                               "-g" "use_module(library(lsp_server))."
+                               "-g" "lsp_server:main"
+                               "-t" "halt"
+                               "--" "stdio"))
+   :major-modes '(prolog-mode)
+   :priority 1
+   :multi-root t
+   :server-id 'prolog-ls))
+#+end_src
+
+To use with Vim/Neovim, via [[https://github.com/autozimu/LanguageClient-neovim][LanguageClient]]:
+
+#+begin_src viml
+let g:LanguageClient_serverCommands = {
+\ 'prolog': ['swipl',
+\            '-g', 'use_module(library(lsp_server)).',
+\            '-g', 'lsp_server:main',
+\            '-t', 'halt',
+\            '--', 'stdio']
+\ }
+#+end_src
+
+To use with Neovim, via [[https://github.com/neoclide/coc.nvim][CoC]], put the following in ~coc-settings.json~ (which you can access by using the command ~:CocConfig~).
+
+#+begin_src json
+{"languageserver": {
+  "prolog-lsp": {
+    "command": "swipl",
+    "args": ["-g", "use_module(library(lsp_server)).",
+             "-g", "lsp_server:main",
+             "-t", "halt",
+             "--", "stdio"
+            ],
+    "filetypes": ["prolog"]
+  }}
+}
+
+#+end_src

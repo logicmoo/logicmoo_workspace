@@ -30,24 +30,24 @@ tokens_to_acetext0([T,P],AceText):- atomic_list_concat([T,P],' ',AceText),!.
 tokens_to_acetext0([T,P|Tokens],AceText):- atomic_list_concat([T,P],' ',TP),!,tokens_to_acetext0([TP|Tokens],AceText).
 
 
-into_text80(I,O):- nonvar(I), 
-  parser_tokenize:(init_to_tokens(I,T),!,fast_break_atom_symbols(T,N),!,maplist(number_to_nb,N,O)),!.
+into_text80(I,O):- into_text80_atoms(I,O).
+   
+into_text80_atoms(I,O):- nonvar(I), parser_tokenize:(init_to_tokens(I,T),!,fast_break_atom_symbols(T,O)),!.
 
-into_text80_atoms(I,O):- nonvar(I), 
-  parser_tokenize:(init_to_tokens(I,T),!,fast_break_atom_symbols(T,O)),!.
+into_text80_string_list(I,O):- into_text80_atoms(I,M),maplist(any_to_string,M,O),!.
 
-into_text80_strings(I,O):- into_text80_atoms(I,N),maplist(any_to_string,N,O),!.
+into_text80_string(I,O):- into_text80_string_list(I,M), any_to_string(M, O).
 
-
-number_to_nb(nb(N),nb(N)):-!.
-number_to_nb(A,nb(N)):- atom(A),atom_number(A,N),!.
-number_to_nb(N,nb(N)):- number(N),!.
+%number_to_nb(nb(N),nb(N)):-!.
+%number_to_nb(A,nb(N)):- atom(A),atom_number(A,N),!.
+%number_to_nb(N,nb(N)):- number(N),!.
 number_to_nb(A,A).
 
 
 unquoted(I,S):- atom_concat('"',R,I),atom_concat(S,'"',R).
 requoted(I,S):- format(atom(S),'"~w"',I).
 
+%keep_unbroken(I):- atom_ upcase_atom(I),!.
 keep_unbroken(I):- \+ atom(I),!.
 keep_unbroken(I):- atom_concat('#$',_,I).
 
@@ -63,8 +63,13 @@ break_atom_symbols(['\'',I|List],[S|ListO]):- \+ keep_unbroken(I), !,
    atom_concat('\'',I,S),
    break_atom_symbols(List,ListO).
 
+break_atom_symbols(['?',I|List],[S|ListO]):- \+ keep_unbroken(I), !, 
+   atom_concat('XVAR',I,S),
+   break_atom_symbols(List,ListO).
+
 break_atom_symbols([I|List],[I|ListO]):- keep_unbroken(I), !, 
    break_atom_symbols(List,ListO).
+
 break_atom_symbols([I|List],[O|ListO]):-  unquoted(I,S),!,
   into_acetext(S,A),
   requoted(A,O),!,
@@ -105,8 +110,8 @@ split_from_end(S):- split_symbol(S), S \== '#'.
 
 :-share_mp(into_text80/2).
 
-init_to_tokens(I,T):- is_list(I),into_control80(I,T),!.
-init_to_tokens(I,T):- any_to_string(I,S),atom_string(A,S),!,tokenizer_tokenize(A,T).
+init_to_tokens(I,C):- is_list(I),!,into_control80(I,T),rejoin_pronouns(T,C),!.
+init_to_tokens(I,C):- any_to_string(I,S),atom_string(A,S),!,tokenizer_tokenize(A,T),into_control80(T,C).
 
 tokenizer_tokenize(A,T):- tokenizer:tokenize(A,M),!, rejoin_pronouns(M,T),!.
 
@@ -120,27 +125,33 @@ rejoin_pronouns([I|List],[I|ListO]):-
 
 % into_text80(I,O):- notrace((into_control80(I,M),!,break_atom_symbols(M,N),maplist(number_to_nb,N,O))).
 
-into_control80(NotList,Out):-  
-  string(NotList),string_to_atom(NotList,Atom),!,
-  into_control80(Atom,Out).
+%into_control80(W,Out):- throw(into_control80(W,Out)).
+into_control80(W,_Out):- var(W), throw(var_into_control80(W)).
+into_control80(NotList,Out):- string(NotList),string_to_atom(NotList,Atom),!, into_control80(Atom,Out).
+%into_control80(W,Out):- atom(W), \+ atom_contains(W, ' '),!, Out = [W].
+%into_control80(W,_Out):- format(user_error,"~Ninto_control80: ~q",[W]),flush_output(user_error),fail.
 into_control80(NotList,Out):-  atom(NotList),
-   on_x_fail(tokenizer_tokenize(NotList,Tokens)),!,
-   into_control80(Tokens,Out).
+   on_x_fail(tokenizer_tokenize(NotList,Tokens)), 
+   (Tokens\=[NotList] -> into_control80(Tokens,Out); Out=Tokens),!.
+into_control80(W,[Out]):- number(W), atom_number(Out,W).
+into_control80([W|ListIn],Out):- !, into_control80(W,H), into_control80(ListIn,T),!,append(H,T,Out).
+into_control80(w(_,L),Out):- member(txt(W),L),!,into_control80(W,Out).
+into_control80(w(W,_),Out):- !,listify(W,M),!,into_control80(M,Out).
+into_control80(span(_),[]):- !.
+into_control80(NotList,Out):-  findall(E,((sub_term(E,NotList),compound(E),E=w(_,_))), EL), EL\==[],!,into_control80(EL,Out).
 into_control80(NotList,Out):-  
    \+ is_list(NotList), 
    convert_to_atoms_list(NotList,List), !,
    into_control80(List,Out).
-into_control80([W|ListIn],Out):- 
-   any_to_atom(W,AW),W\=@=AW,
-   maplist(any_to_atom,ListIn,AList),!,
-   into_control80([AW|AList],Out).
-into_control80(ListIn,Out):- 
+
+into_control80(ListIn,Out):- fail,
    append(Left,[Last],ListIn), 
  ( \+ atom_length(Last,1),
    char_type_period(P), % covers Q, ! , etc
    atom_concat(Word,P,Last)),
    append(Left,[Word,P],ListMid),!,
    into_control80(ListMid,Out).
+
 /*
 into_control80(ListIn,Out):- 
    append(Left,[P],ListIn), 
@@ -154,7 +165,7 @@ into_control80([W,A,B|More],Out):- fail,
 into_control80(Out,Out):- !.
 
 
-any_nb_to_atom(nb(N),A):-!,any_to_atom(N,A),!.
+any_nb_to_atom(nb(N),A):- nonvar(N),!,any_to_atom(N,A),!.
 any_nb_to_atom(N,A):- any_to_atom(N,A).
 
 

@@ -458,7 +458,7 @@ dupe_term(E,EE):- duplicate_term(E,EE),E=EE.
 get_varname_list(VsOut,'$variable_names'):- nb_current('$variable_names',Vs),Vs\==[],!,check_variable_names(Vs,VsOut),!.
 get_varname_list(VsOut,'$old_variable_names'):- nb_current('$old_variable_names',Vs),Vs\==[],!,check_variable_names(Vs,VsOut),!.
 
-get_varname_list(VsOut):- get_varname_list(VsOut,_).
+get_varname_list(VsOut):- get_varname_list(VsOut,_),!.
 get_varname_list([]).
 
 set_varname_list(VsIn):- check_variable_names(VsIn,Vs),
@@ -473,7 +473,7 @@ add_var_to_env(NameS,Var):-
   % (NewName\==Name -> put_attr(Var, vn, NewName) ; true),
    (NewVar \==Var  -> put_attr(NewVar, vn, Name) ; true),
    (NewVs  \==VsIn -> put_variable_names(NewVs) ; true).
-   
+
 
 %% add_var_to_list(Name,Var,Vs,NewName,NewVar,NewVs) is det.
 add_var_to_list(Name,Var,Vs,NewName,NewVar,NewVs):- member(N0=V0,Vs), Var==V0,!,
@@ -542,7 +542,8 @@ unnumbervars_and_save(X,YO):-
 %
 % Unnumbervars And Save.
 %
-unnumbervars4(Var,Vs,Vs,Var):- \+ compound(Var),!.
+unnumbervars4(Var,Vs,Vs,Var):- \+ compound(Var), !.
+unnumbervars4(Var,Vs,Vs,Var):- compound_name_arity(Var,_,0), !.
 unnumbervars4((I,TermIn),VsIn,NewVs,(O,TermOut)):- !,unnumbervars4(I,VsIn,VsM,O),unnumbervars4(TermIn,VsM,NewVs,TermOut).
 unnumbervars4((I:TermIn),VsIn,NewVs,(O:TermOut)):- !,unnumbervars4(I,VsIn,VsM,O),unnumbervars4(TermIn,VsM,NewVs,TermOut).
 unnumbervars4([I|TermIn],VsIn,NewVs,[O|TermOut]):- !,unnumbervars4(I,VsIn,VsM,O),unnumbervars4(TermIn,VsM,NewVs,TermOut).

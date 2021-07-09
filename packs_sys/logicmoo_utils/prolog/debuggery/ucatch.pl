@@ -341,6 +341,11 @@ hide_non_user_console:-current_input(In),stream_property(In, close_on_exec(true)
 :- use_module(library(prolog_source)).
 :- use_module(library(date)).
 %:- use_module(library(editline)).
+:- unload_file(library(listing)).
+:- multifile(prolog_listing:or_layout/1).
+:- dynamic(prolog_listing:or_layout/1).
+:- multifile(prolog_listing:clause_term/4).
+:- dynamic(prolog_listing:clause_term/4).
 :- use_module(library(listing)).
 
 
@@ -545,7 +550,7 @@ current_error_stream_ucatch(Err):-
 %
 % Save Streams.
 %
-save_streams(_):-!.
+%save_streams(_):-!.
 save_streams(ID):-
   retractall((lmcache:thread_current_input(ID,_))),
   retractall((lmcache:thread_current_error_stream(ID,_))),
@@ -740,7 +745,7 @@ input_key(K):-thread_self(K).
 %
 % Show New Src Location.
 %
-show_new_src_location(FL):-input_key(K),show_new_src_location(K,FL).
+show_new_src_location(FL):-input_key(K),!,show_new_src_location(K,FL).
 
 
 %=
@@ -809,10 +814,10 @@ current_source_location0(M,module):- source_module(M),!.
 current_source_location0(M,typein):- '$current_typein_module'(M).
 
 line_or_char_count(S,_):- \+ is_stream(S),!,fail.
-line_or_char_count(S,L):- line_count(S,L),L\==0,!.
-line_or_char_count(S,L):- stream_property(S,position(P)),stream_position_data(line_count,P,L),!.
-line_or_char_count(S,L):- line_position(S,L),L\==1,!.
-line_or_char_count(S,L):- character_count(S,C),L is -C.
+line_or_char_count(S,L):- on_x_fail((stream_property(S,position(P)),stream_position_data(line_count,P,L))),!.
+line_or_char_count(S,L):- on_x_fail(line_count(S,L)),L\==0,!.
+line_or_char_count(S,L):- on_x_fail(line_position(S,L)),L\==1,!.
+line_or_char_count(S,L):- on_x_fail(character_count(S,C)),L is -C.
 
 :-export(current_why/1).
 :-module_transparent(current_why/1).
@@ -885,7 +890,8 @@ with_current_why(S,Call):-
 %
 % Source Module.
 %
-source_module(M):-nonvar(M),!,source_module(M0),!,(M0=M).
+source_module(M):- \+ prolog_load_context(file,_),!, '$current_typein_module'(M).
+source_module(M):- nonvar(M),!,source_module(M0),!,(M0=M).
 source_module(M):- '$current_source_module'(M),!.
 source_module(M):- '$set_source_module'(M,M),!.
 source_module(M):- loading_module(M),!.
@@ -947,10 +953,18 @@ source_variables_l(AllS):-
 :-export( show_source_location/0).
 show_source_location:- current_prolog_flag(dmsg_level,never),!.
 %show_source_location:- quietly((tlbugger:no_slow_io)),!.
-show_source_location:- get_source_location(FL),show_new_src_location(FL),!. 
+show_source_location:- get_source_location(FL)->show_new_src_location(FL),!. 
 show_source_location:- if_interactive((dumpST,dtrace)).
 
-show_current_source_location:- get_source_location(FL),format_to_error('~N% ~w ',[FL]). 
+:- thread_local(t_l:last_shown_current_source_location/1).
+
+show_current_source_location:- ignore((get_source_location(FL),!, show_current_source_location(FL))).
+show_current_source_location(FL):- t_l:last_shown_current_source_location(FL),!,
+                                   retractall(t_l:last_shown_current_source_location(_)),
+                                   format_to_error('~N% OOPSY ~w ',[FL]),!.
+show_current_source_location(FL):- retractall(t_l:last_shown_current_source_location(_)),
+                                   asserta(t_l:last_shown_current_source_location(FL)),!,
+                                   format_to_error('~N% OOPS ~w ',[FL]),!. 
 
 get_source_location(FL):- current_source_file(FL),nonvar(FL),!.
 get_source_location(F:L):- source_location(F,L),!.
@@ -1014,7 +1028,7 @@ not_ftCompound(A):- \+ is_ftCompound(A).
 is_ftVar(V):- zotrace(is_ftVar0(V)).
 is_ftVar0(V):- \+ compound(V),!,var(V).
 is_ftVar0('$VAR'(_)).
-is_ftVar0('avar'(_,_)).
+is_ftVar0('aVar'(_,_)).
 %:- mpred_trace_nochilds(is_ftVar/1).
 
 

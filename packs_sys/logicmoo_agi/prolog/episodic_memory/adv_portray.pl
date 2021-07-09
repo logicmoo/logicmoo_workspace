@@ -2,6 +2,7 @@
 % Our user:portray(Logic) English helpers
 % %%%%%%%%%%%%%%%
 
+:- '$set_source_module'(mu).
 
 :- use_module(library(logicmoo/portray_vars)).
 
@@ -90,6 +91,7 @@ adv_prolog_portray_simple_only(Term):-
   print_english_simple_only(Fmt, Term), !.
 
 adv_prolog_portray_now(Term):- fail,
+ \+ ( nb_current('$inprint_message', Messages), Messages\==[] ),
  \+ tracing, % fail,
  \+ \+ setup_call_cleanup(
       (flag('$adv_pp_level', Level, Level+2),
@@ -108,7 +110,7 @@ portray_string(Type, Term):- current_prolog_flag(double_quotes, Type), format('"
 
 :- thread_local(t_l:no_english/0).
 
-adv_prolog_portray_hook(Term) :- \+ tracing, \+ t_l:no_english, adv_prolog_portray(Term), !.
+adv_prolog_portray_hook(Term) :- \+ ( nb_current('$inprint_message', Messages), Messages\==[] ), \+ tracing, \+ t_l:no_english, adv_prolog_portray(Term), !.
 adv_prolog_portray_hook(Term) :- tracing, is_list(Term), member(E, Term), compound(E),
   ((E = inst(Some), format('[~w|...]', [inst(Some)]));(E = structure_label(Some), format('[~w|...]', [Some]))), !.
 
@@ -120,10 +122,10 @@ map_tree_pred(Pred,Arg1,Arg2):- call(Pred,Arg1,Arg2),!.
 map_tree_pred(_ ,Arg1,Arg2):- \+ compound(Arg1), !, Arg2=Arg1.
 map_tree_pred(Pred,Arg1,Arg2):- 
   compound_name_arguments(Arg1,F1,ArgS1),
-  maplist(map_tree_pred(Pred),ArgS1,ArgS2),
+  must_maplist(map_tree_pred(Pred),ArgS1,ArgS2),
   compound_name_arguments(Arg2,F1,ArgS2).
 
 user:portray(Term):- notrace(no_memlists(Term)), !.
 
-:- set_prolog_flag(debugger_write_options,[quoted(true),portray(true),max_depth(5000),attributes(dots)]).
+%:- set_prolog_flag(debugger_write_options,[quoted(true),portray(true),max_depth(5000),attributes(dots)]).
 

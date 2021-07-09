@@ -6,13 +6,15 @@
 % Version: 'logicmoo_module_aiml.pl' 1.0.0
 % Revision:  $Revision: 1.7 $
 % Revised At:   $Date: 2002/07/11 21:57:28 $
+% See https://nlp.stanford.edu/~wcmac/downloads/fracas.xml
 % ===================================================================
 
 :- module(fracas_iface, []).
 
 :- use_module(library(logicmoo_common)).
 :- use_module(library(logicmoo/xml_reader)).
-:- use_module(library(nomic_mu)).
+%:- use_module(library(logicmoo_nlu/e2c/e2c_fracas)).
+%:- use_module(library(nomic_mu)).
 
 :- set_prolog_flag(sgml_parser_defaults, [defaults(false), qualify_attributes(false), dialect(xml)]).
 :- set_prolog_flag(sgml_parser_callbacks, [max_errors(0), call(begin, on_begin), call(end, on_end)]).
@@ -87,19 +89,81 @@ do_test(problem_header(O)):- write('\n/*\n'), fmt(O), write('\n\n*/\n').
 
 do_test(O):- format('~N~q.~n', [:-O]), call(O).
 
-switch_test(N, _, _, _):- fmt(switch_test(N)).
-note(N, Note):-dmsg(note(N, Note)), !.
-problem(N, Else, Text):- dmsg(problem(N, Else, Text)), fail.
+switch_test(N, _, _, _):- dmsg(switch_test(N)), nb_setval('$fracas_test',N).
+
+note(_, Note):- nb_current('$fracas_test',N),problem(N, note, Note),!.
+
+:- abolish(fracas_test_problem/3).
+
+%problem(N, _Else, Text):- N == Text.
+problem(N, Else, Text):- part_of_test(Else,New),!,problem(N, New, Text).
+%problem(N, Else, Text):- \+ is_list(Else),flatten([fracas(N),Else],NewElse),!,problem(N, NewElse, Text).
+problem(N, Else, Text):- dmsg(fracas_test_problem(N, Else, Text)), fail.
 % problem(_N, _Else, _Text):-!.
+problem(N, Else, Text):- assertz_if_new(fracas_test_problem(N, Else, Text)),!.
 problem(_N, p, Text):- !, e2c(Text).
 problem(_N, q, Text):- !, e2c(Text).
 problem(_N, _, Text):- !, e2c(Text).
+
+:- multifile(parser_e2c:test_e2c/2).
+:- parser_e2c:export(parser_e2c:test_e2c/2).
+:- import(parser_e2c:test_e2c/2).
+:- dynamic(parser_e2c:test_e2c/2).
+
+parser_e2c:e2c_test(T,W):- e2c_fracas(T,W).
+
+e2c_fracas(NewText,[fracas_test_problem(N),oper(Why)]):- 
+  fracas_test_problem(N,zid,N),
+  once((findall(Why+Text,(fracas_iface:fracas_test_problem(N,Why,Text)),Items),
+  sort(Items,ItemsS),reverse(ItemsS,ItemsR))),
+  member(Why+Text,ItemsR),
+  once((reframe_text(N,Text,Why,NewText),string(NewText),
+  atomic_list_concat(AtLeastThreeWords," ",NewText),
+  AtLeastThreeWords = [_,_,_|_])).
+
+reframe_text(_,Text,zid,Write):- sformat(Write,'Your next test is named "~w".',[Text]).
+reframe_text(_,Text,ask,Write):- sformat(Write,'~w',[Text]).
+reframe_text(_,Text,tell,Write):- sformat(Write,'~w',[Text]).
+reframe_text(N,Text,hypothesis,Write):- fracas_iface:fracas_test_problem(N, fracas_answer, "no"),!, lower_first_word(Text,LText), sformat(Write,'You should not be able to infer that ~w',[LText]).
+reframe_text(_,Text,hypothesis,Write):- lower_first_word(Text,LText), sformat(Write,'You should be able to infer that ~w',[LText]).
+reframe_text(_,Text,'1stexpected_answer',Write):- lower_first_word(Text,LText), sformat(Write,'Your expected answer was ~w.',[LText]).
+reframe_text(_,Text,why,Write):-  lower_first_word(Text,LText), sformat(Write,'Your test is to seek ~w',[LText]).
+reframe_text(_,Text,_,Text). 
+
+lower_first_word(Text,LText):- name(Text,[C|Rest]),maybe_change_case(Text,C,L),text_to_string([L|Rest],LText).
+
+maybe_change_case(Text,C,L):-code_type(C,to_upper(L)), into_text80(Text,[W|_]),l_word(W),!.
+maybe_change_case(_,C,C).
+
+
+atom_starts_with(S,A):- atom_concat(S,_,A).
+
+fracas(LText):- e2c_fracas(X,_Y), \+ atom_starts_with("You",X), lower_first_word(X,LText).
+%e2c_fracas:- forall(e2c_fracas(X,_Y),run_pipeline(X)).
+:- add_history(forall(e2c_fracas(X,_Y),fmt('?- run_pipeline( ~p ). ',[X]))).
+
+l_word(F):- atom_length(F,1).
+l_word(F):- upcase_atom(F,U),U==F,!,fail.
+l_word(F):- l_human_name(H),atom_starts_with(H,F), !,fail.
+l_word(_).
+l_human_name('Mar'). l_human_name('Mik'). 
+l_human_name('Fido').
+l_human_name('Mic').
+l_human_name('Bill'). l_human_name('Jo'). l_human_name('Smith').
+l_human_name('Dumbo'). l_human_name('Kim'). l_human_name('Pav').
+%l_word(F):- to functionword(F).
+%l_word(most). l_word(most). l_word(both). l_word(a).
+
+part_of_test(p,tell).
+part_of_test(id,zid).
+part_of_test(q,ask).
+part_of_test(a,'1stexpected_answer').
+part_of_test(h,hypothesis).
 
 pi(_).
 
 :- fixup_exports.
 
-end_of_file.
 
 /*
 
@@ -638,7 +702,8 @@ Here's the breakdown by topic:
 :-problem('031', q, "Do at least three commissioners spend time at home?").
 :-problem('031', h, "At least three commissioners spend time at home.").
 :-problem('031', a, "Yes").
-:-note(problem, ' Typo in original problem: premise was "A least three..." ').
+:-note(problem, 'There was a typographical error in original problem').
+:-note(problem, 'The premise was "A least three..." ').
 
 
 :-switch_test('032', problem, [], ['fracas-problems']).
@@ -809,7 +874,8 @@ Here's the breakdown by topic:
 :-problem('047', q, "Do at least three commissioners spend a lot of time at home?").
 :-problem('047', h, "At least three commissioners spend a lot of time at home.").
 :-problem('047', a, "Don't know").
-:-note(problem, ' Typo in original problem: premise was "A least three..." ').
+:-note(problem, 'Was a typo in original problem').
+:-note(problem, 'The premise said "A least three..." ').
 
 
 :-switch_test('048', problem, [], ['fracas-problems']).
@@ -908,7 +974,10 @@ Here's the breakdown by topic:
 :-problem('056', q, "Did many delegates obtain interesting results from the survey?").
 :-problem('056', h, "Many delegates obtained interesting results from the survey.").
 :-problem('056', a, "Don't know").
-:-note(problem, '\n    This answer seems dubious to me.  Apparently the FraCaS people interpret\n    "many" as denoting a large proportion, whereas I interpret it as denoting a\n    large absolute number.  That is, if "many" is regarded as a binary\n    generalized quantifier, they want to say it\'s non-monotone in the first\n    argument (and upward-monotone in the second), whereas I would say it\'s\n    upward-monotone in both arguments.  Note that this problem is exactly the\n    inverse of problem fracas-72.\n  ').
+:-note(problem, 'This answer seems dubious to me.').  
+:-note(problem, 'Apparently the FraCaS people interpret "many" as denoting a large proportion, whereas I interpret it as denoting a large absolute number.').
+:-note(problem, 'That is, if "many" is regarded as a binary generalized quantifier, they want to say it\'s non-monotone in the first argument (and upward-monotone in the second), whereas I would say it\'s upward-monotone in both arguments.').
+:-note(problem, 'Note that this problem is exactly the inverse of problem fracas-72.\n  ').
 
 
 :-switch_test('057', problem, [], ['fracas-problems']).
@@ -945,7 +1014,7 @@ Here's the breakdown by topic:
 :-problem('060', q, "Are few committee members from southern Europe?").
 :-problem('060', h, "Few committee members are from southern Europe.").
 :-problem('060', a, "Don't know").
-:-note(problem, '\n    Note that this problem is exactly the inverse of problem fracas-76.\n  ').
+:-note(problem, ' Note that this problem is exactly the inverse of problem fracas-76.\n  ').
 
 
 :-switch_test('061', problem, [], ['fracas-problems']).
@@ -1075,7 +1144,7 @@ Here's the breakdown by topic:
 :-problem('072', q, "Did many British delegates obtain interesting results from the survey?").
 :-problem('072', h, "Many British delegates obtained interesting results from the survey.").
 :-problem('072', a, "Don't know").
-:-note(problem, '\n    Note that this problem is exactly the inverse of problem fracas-56.\n  ').
+:-note(problem, ' Note that this problem is exactly the inverse of problem fracas-56.\n  ').
 
 
 :-switch_test('073', problem, [], ['fracas-problems']).
@@ -1112,7 +1181,7 @@ Here's the breakdown by topic:
 :-problem('076', q, "Are few female committee members from southern Europe?").
 :-problem('076', h, "Few female committee members are from southern Europe.").
 :-problem('076', a, "Yes").
-:-note(problem, '\n    Note that this problem is exactly the inverse of problem fracas-60.  If the\n    answer is "yes", then apparently the FraCaS people interpret "few" as\n    denoting a small absolute number, rather than a small proportion.  That is, \n    if "few" is regarded as a binary generalized quantifier, they want to say\n    it\'s downward-monotone in the first argument, rather than non-monotone.\n    Contrast this with the treatment of "many" in fracas-56 and fracas-72, which\n    is apparently interpreted to be non-monotone in its first argument.\n  ').
+:-note(problem, ' Note that this problem is exactly the inverse of problem fracas-60.  If the answer is "yes", then apparently the FraCaS people interpret "few" as denoting a small absolute number, rather than a small proportion.  That is,  if "few" is regarded as a binary generalized quantifier, they want to say it\'s downward-monotone in the first argument, rather than non-monotone. Contrast this with the treatment of "many" in fracas-56 and fracas-72, which is apparently interpreted to be non-monotone in its first argument.\n  ').
 
 
 :-switch_test('077', problem, [], ['fracas-problems']).
@@ -1142,7 +1211,7 @@ Here's the breakdown by topic:
 :-problem('079', q, "Do at least three male commissioners spend time at home?").
 :-problem('079', h, "At least three male commissioners spend time at home.").
 :-problem('079', a, "Don't know").
-:-note(problem, ' Typo in original problem: premise was "A least three..." ').
+:-note(problem, 'The premise said "A least three..." in the original problem').
 
 
 :-switch_test('080', problem, [], ['fracas-problems']).
@@ -1857,7 +1926,7 @@ antecedents.
 :-problem('135', q, "Does MFI have a service contract for all its computers?").
 :-problem('135', h, "MFI has a service contract for all its computers.").
 :-problem('135', a, "Yes").
-:-problem('135', why, "This pattern of inference, unlike (134), tends to some theory\n    dependence. Although the inference seems correct in this example, compare\n    with (136)").
+:-problem('135', why, "This pattern of inference, unlike (134), tends to some theory dependence. Although the inference seems correct in this example, compare with (136)").
 
 
 :-switch_test('136', problem, [], ['fracas-problems']).
@@ -2208,7 +2277,7 @@ considerable background knowledge unless this is given explicitly.
 :-problem('162', q, "Does Bill own a slow red car?").
 :-problem('162', h, "Bill owns a slow red car.").
 :-problem('162', a, "Yes").
-:-problem('162', why, "When semantically parallel (e.g. fast/slow) modifiers appear on the\n    antecedent and one-anaphor, it appears that all non-parallel modifiers must\n    form part of the resolution.").
+:-problem('162', why, "When semantically parallel (e.g. fast/slow) modifiers appear on the antecedent and one-anaphor, it appears that all non-parallel modifiers must form part of the resolution.").
 
 
 /*
@@ -2711,7 +2780,7 @@ j= 89.
 :-problem('198', q, "Is John a university student?").
 :-problem('198', h, "John is a university student.").
 :-problem('198', a, "No / don't know").
-:-problem('198', why, "Non-affirmative: Adj N =/=> N\n    (Opinions differ about whether \"Adj N entails !N\")").
+:-problem('198', why, "Non-affirmative: Adj N =/=> N (Opinions differ about whether \"Adj N entails !N\")").
 
 
 :-switch_test('199', problem, [], ['fracas-problems']).
@@ -2722,7 +2791,7 @@ j= 89.
 :-problem('199', q, "Is John successful?").
 :-problem('199', h, "John is successful.").
 :-problem('199', a, "Yes (for a former university student)").
-:-problem('199', why, "Ordering between affirmative and non-affirmative adjectives affects which\n    adjectival predications are and aren't affirmed").
+:-problem('199', why, "Ordering between affirmative and non-affirmative adjectives affects which adjectival predications are and aren't affirmed").
 
 
 :-switch_test('200', problem, [], ['fracas-problems']).
@@ -2913,7 +2982,7 @@ comparison class they depend on.
 :-problem('213', q, "Is Mickey small?").
 :-problem('213', h, "Mickey is small.").
 :-problem('213', a, "??: Yes for a mouse; ?? No for an animal").
-:-problem('213', why, "Adjectives requiring a comparison class cannot usually be predicated in\n    the absence of a common noun, unless some comparison class is clear from\n    the wider context.").
+:-problem('213', why, "Adjectives requiring a comparison class cannot usually be predicated in the absence of a common noun, unless some comparison class is clear from the wider context.").
 
 
 /*
@@ -3310,7 +3379,7 @@ dog, the assessment scale would be different.
 :-problem('245', q, "Does APCOM has a more important customer than ITEL has?").
 :-problem('245', h, "APCOM has a more important customer than ITEL has.").
 :-problem('245', a, "Yes, on one reading of the premise").
-:-note(problem, '\n    Note ungrammaticality of question in original source: subject/verb agreement.\n  ').
+:-note(problem, ' Note ungrammaticality of question in original source: subject/verb agreement.\n  ').
 
 
 /*
@@ -3907,7 +3976,7 @@ verb phrases (or sentences).
 :-problem('285', q, "Did Smith spend two hours writing the report?").
 :-problem('285', h, "Smith spent two hours writing the report.").
 :-problem('285', a, "Don't know").
-:-problem('285', why, "Smith may have written the report in less than two hours. It is unclear\n    whether there are two different readings for the premise: one where Smith\n    takes exactly two hours, and one where he does it within two hours.").
+:-problem('285', why, "Smith may have written the report in less than two hours. It is unclear whether there are two different readings for the premise: one where Smith takes exactly two hours, and one where he does it within two hours.").
 
 
 :-switch_test('286', problem, [], ['fracas-problems']).
@@ -4474,7 +4543,7 @@ to other quantified NPs
 :-problem('335', q, "Did ITEL win the contract in 1992?").
 :-problem('335', h, "ITEL won the contract in 1992.").
 :-problem('335', a, "Don't know").
-:-note(problem, '\n    Sic: the original had "believed / said / denied / feared / hoped" in the\n    premise.  I changed this to just "tried".\n  ').
+:-note(problem, ' Sic: the original had "believed / said / denied / feared / hoped" in the premise.  I changed this to just "tried".\n  ').
 
 
 :-switch_test('336', problem, [], ['fracas-problems']).
@@ -4493,7 +4562,7 @@ to other quantified NPs
 :-problem('337', q, "Did ITEL win the contract in 1992?").
 :-problem('337', h, "ITEL won the contract in 1992.").
 :-problem('337', a, "Don't know").
-:-note(problem, '\n    Sic: the original had "tried / wanted" in the premise.  I changed this to\n    just "tried".\n  ').
+:-note(problem, ' Sic: the original had "tried / wanted" in the premise.  I changed this to just "tried".\n  ').
 
 
 :-switch_test('338', problem, [], ['fracas-problems']).

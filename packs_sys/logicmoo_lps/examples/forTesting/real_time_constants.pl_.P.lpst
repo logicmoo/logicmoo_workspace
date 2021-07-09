@@ -1,0 +1,54 @@
+/*
+  LPS test results file generated on 2021-2-28 at 16:52:33
+  on Prolog swi(8,1,9,[]) for program file:
+  /Users/mc/git/lps_corner/examples/forTesting/real_time_constants.pl_.P
+*/
+
+:-dynamic lps_test_result/3,lps_test_result_item/3,lps_test_action_ancestor/3,lps_test_options/1.
+
+% LPS options prior to the test:
+lps_test_options([dc]).
+
+% lps_test_result(Stage,Cycle,TestTerm)
+lps_test_result(fluents,0,0).
+lps_test_result(events,1,0).
+lps_test_result(fluents,1,0).
+lps_test_result(events,2,0).
+lps_test_result(composites,2,1).
+lps_test_result(fluents,2,0).
+lps_test_result(events,3,0).
+lps_test_result(composites,3,1).
+lps_test_result(fluents,3,0).
+lps_test_result(events,4,0).
+lps_test_result(composites,4,1).
+lps_test_result(fluents,4,0).
+lps_test_result(events,5,0).
+lps_test_result(composites,5,1).
+lps_test_result(fluents,5,0).
+lps_test_result(events,6,0).
+lps_test_result(composites,6,1).
+lps_test_result(fluents,6,0).
+lps_test_result(events,7,1).
+lps_test_result(composites,7,1).
+lps_test_result(fluents,7,0).
+lps_test_result(events,8,0).
+lps_test_result(composites,8,1).
+lps_test_result(fluents,8,0).
+lps_test_result(events,9,0).
+lps_test_result(composites,9,1).
+lps_test_result(fluents,9,0).
+lps_test_result(events,10,0).
+lps_test_result(composites,10,1).
+lps_test_result(fluents,10,0).
+% lps_test_result_item(Stage,Cycle,TestTerm)
+lps_test_result_item(composites,2,happens(real_time(1401624000.0),1,2)).
+lps_test_result_item(composites,3,happens(real_time(1401624000.0),2,3)).
+lps_test_result_item(composites,4,happens(real_time(1401667200.0),3,4)).
+lps_test_result_item(composites,5,happens(real_time(1401710400.0),4,5)).
+lps_test_result_item(composites,6,happens(real_time(1401753600.0),5,6)).
+lps_test_result_item(events,7,writeln(5-6)).
+lps_test_result_item(composites,7,happens(real_time(1401796800.0),6,7)).
+lps_test_result_item(composites,8,happens(real_time(1401840000.0),7,8)).
+lps_test_result_item(composites,9,happens(real_time(1401883200.0),8,9)).
+lps_test_result_item(composites,10,happens(real_time(1401926400.0),9,10)).
+% lps_test_action_ancestor(Call,T1,T2)

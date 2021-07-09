@@ -1,17 +1,45 @@
-precepts_to_mud(Precepts,VirtWorld):- create_empty_mud(VirtWorld), mud_from_precepts(VirtWorld, Precepts).
+:- module(sim_pipes,
+  [precepts_to_sim/2]).
+
+precepts_to_sim(Precepts,VWorld):- create_empty_sim(VWorld), run_narrative(VWorld, Precepts, VWorld).
+
+narrative_to_sim(Narrative,VWorld):- create_empty_sim(VWorld), run_narrative(VWorld, Narrative, VWorld).
+
+run_narrative(VWorldIn, Narrative, VWorldOut):-
+  forall(elementOf(E,Narrative), 
+   (resolve_narrative(E,VWorldIn,E2),
+    add_narrative(E2,VWorldOut))).
+
+% currently these are the same
+precepts_to_narrative(Precepts, Narrative):- copy_term(Precepts, Narrative).
+narrative_to_precepts(Precepts, Narrative):- copy_term(Narrative, Precepts).
+
+create_empty_sim(VWorld):- 
+  copy_prolog_sim(empty_sim, VWorld).
+
+copy_prolog_sim(World1, World2):- 
+  object_to_props(sim, World1, World1Props),
+  copy_term(World1Props,World2Props),
+  create_object(sim, World2, World2Props).
+
+create_object(Type, Obj, ObjProps):- 
+  (\+ ground(Obj)->gen_obj_sym(Type, Obj); true),
+  setprops(Obj,type(Type)),
+  setprops(Obj,ObjProps).
+
+
 
 %LOGICMOO perceives events in the real world (well in PrologMUD!) which become event sequences (we will call narratives).
-?- copy_prolog_mud(real_word, RealWorld), mud_get_precepts(RealWorld, Precepts).
+?- copy_prolog_sim(real_word, RealWorld), sim_get_precepts(RealWorld, Precepts), precepts_to_narrative(Precepts, Narrative).
 %Narratives may be replayed to create a copy of that of that original PrologMUD
-?- create_empty_mud(VirtWorld), precepts_to_mud($VirtWorld, $Precepts).
-
+?- narrative_to_sim($Narrative, VWorld).
 
 %This PrologMUD can be thought of as a Virtual World which LOGICMOO hallucinates.
-?- copy_prolog_mud($VirtWorld, Hallucination).
+?- copy_prolog_sim($VWorld, Hallucination).
 %This Virtual World can be re-experienced just the previous world was (as perceived events.)
-?- mud_get_precepts($Hallucination, HallucinatedPrecepts).
+?- sim_get_precepts($Hallucination, HallucinatedPrecepts).
 %Those perceived events can be re- “played” to create a copy in which LOGICMOO hallucinates yet another Virtual World of the Virtual World.
-?- create_empty_mud(HallucinatedVirtWorld), mud_from_precepts($VirtWorld, $Precepts).
+?- precepts_to_sim($HallucinatedPrecepts,HallucinatedVWorld).
 %This can be done indefinitely; those copies may become simpler or more complex (will be explained later (as pipelines))
 %The event sequences (which are narratives) are equivalent to “internal dialog “
 %“internal dialog” may be modified and then “played back” to created Imagined Worlds

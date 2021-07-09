@@ -1,218 +1,54 @@
-<!DOCTYPE html>
-<html>
-<head>
+<head></head>
+<body>
+ <p></p>
+ <p><a target="_blank" href="swish/">SWISH Console</a> (<a target="_blank" href="https://0.0.0.0:4443/swish">Secure</a>) </p>
+ <p><a target="_blank" href="http://0.0.0.0:3020/home">ClioPatria Console</a> (<a target="_blank" href="https://0.0.0.0:4443/home">Secure</a>) </p>
+ <p><a target="_blank" href="http://0.0.0.0:4100/">MUD Console</a> <span style="color:red;">*</span> (<a target="_blank" href="https://0.0.0.0:14100/">Secure</a>) </p>
+ <p><a target="_blank" href="http://0.0.0.0:4104/">NomicMU Console</a> <span style="color:red;">*</span> (<a target="_blank" href="https://0.0.0.0:14104/">Secure</a>)</p>
+ <p><a target="_blank" href="http://0.0.0.0:4123">Logicmoo Admin Console</a> (<a target="_blank" href="https://0.0.0.0:14123/">Secure</a>)</p>
+ <p><a target="_blank" href="http://0.0.0.0:4103">WAM-CL Console</a> <span style="color:red;">*</span> (<a target="_blank" href="https://0.0.0.0:14103/">Secure</a>)</p>
+ <p><a target="_blank" href="http://0.0.0.0:801/">VNC Server</a></p>
+ <p><a target="_blank" href="http://0.0.0.0:4125/">Login Server</a> (<a target="_blank" href="https://0.0.0.0:14125/">Secure</a>)</p>
+ <p><a target="_blank" href="https://logicmoo.org/public/">https://logicmoo.org/public/</a></p>
+ <p><a target="_blank" href="https://logicmoo.org/xwiki/">XWIKI</a></p>
+ <p><a target="_blank" href="https://logicmoo.org/gitlab/">GITLAB</a></p>
+ <p><a target="_blank" href="https://logicmoo.org/acewiki/">AceWiki</a></p>
+ <p><a target="_blank" href="https://logicmoo.org/acewiki2/">AceWiki Test</a></p>
+ <p><a target="_blank" href="https://logicmoo.org/aceeditor/">AceEditor</a></p>
+ 
+ <p>Links marked with <span style="color:red;">*</span> will connect and then immediately disconnect until Logicmoo is fully loaded </p>
+  
 
+  <script>
+      // delegate event for performance, and save attaching a million events to each anchor
+      document.addEventListener('click', function(event) {
+      var target = event.target; 
+      if (target.tagName.toLowerCase() == 'a')
+      {
+          var href = target.getAttribute('href');
+		  const url = document.createElement('a');
+		  url.setAttribute('href', href);
+		  if(url.hostname=="0.0.0.0") {
+			  url.hostname = window.location.host;
+			  target.href = url.href;
+			  target.port = url.port;
+		  }
+      }
+    }, false);
 
-<script type="text/javascript" src="/static/js/analytics.js"></script>
-<script type="text/javascript">archive_analytics.values.server_name="wwwb-app17.us.archive.org";archive_analytics.values.server_ms=141;</script>
-<link type="text/css" rel="stylesheet" href="/static/css/banner-styles.css"/>
+      document.querySelectorAll('*').forEach(function(node) {
+		  if (node.tagName.toLowerCase() == 'a')
+		  {
+			  var href = node.getAttribute('href');
+			  const url = document.createElement('a');
+			  url.setAttribute('href', href);
+			  if(url.hostname=="0.0.0.0") {
+				  url.hostname = window.location.host;
+				  node.href = url.href;
+				  node.port = url.port;
+			  }
+		  }
+      });
+ </script>
 
-
-<title>Welcome to Prologmoo.com</title>
-<base href="http://logicmoo.org/" target="main"/>
-<link rel="stylesheet" type="text/css" href="http://logicmoo.org/css/cliopatria.css">
-<link rel="stylesheet" type="text/css" href="http://logicmoo.org/css/fix_menu.css">
-<link rel="stylesheet" type="text/css" href="http://logicmoo.org/css/menu.css">
-<link rel="stylesheet" type="text/css" href="http://logicmoo.org/www/yui/2.7.0/build/autocomplete/assets/skins/sam/autocomplete.css">
-<script type="text/javascript" src="http://logicmoo.org/www/yui/2.7.0/build/utilities/utilities.js">
-</script>
-<script type="text/javascript" src="http://logicmoo.org/www/yui/2.7.0/build/datasource/datasource.js">
-</script>
-<script type="text/javascript" src="http://logicmoo.org/www/yui/2.7.0/build/autocomplete/autocomplete.js">
-</script>
-<meta http-equiv="content-type" content="text/html; charset=UTF-8">
-
-</head>
-
-<body class="yui-skin-sam cliopatria">
-
-
-<!-- BEGIN WAYBACK TOOLBAR INSERT -->
-<script type="text/javascript" src="/static/js/disclaim-element.js" ></script>
-<script type="text/javascript" src="/static/js/graph-calc.js" ></script>
-<script type="text/javascript">//<![CDATA[
-var __wm = (function(imgWidth,imgHeight,yearImgWidth,monthImgWidth){
-var wbPrefix = "/web/";
-var wbCurrentUrl = "http://logicmoo.org/";
-
-var firstYear = 1996;
-var displayDay = "8";
-var displayMonth = "Mar";
-var displayYear = "2016";
-var prettyMonths = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
-var $D=document,$=function(n){return document.getElementById(n)};
-var trackerVal,curYear = -1,curMonth = -1;
-var yearTracker,monthTracker;
-function showTrackers(val) {
-  if (val===trackerVal) return;
-  var $ipp=$("wm-ipp");
-  var $y=$("displayYearEl"),$m=$("displayMonthEl"),$d=$("displayDayEl");
-  if (val) {
-    $ipp.className="hi";
-  } else {
-    $ipp.className="";
-    $y.innerHTML=displayYear;$m.innerHTML=displayMonth;$d.innerHTML=displayDay;
-  }
-  yearTracker.style.display=val?"inline":"none";
-  monthTracker.style.display=val?"inline":"none";
-  trackerVal = val;
-}
-function trackMouseMove(event,element) {
-  var eventX = getEventX(event);
-  var elementX = getElementX(element);
-  var xOff = Math.min(Math.max(0, eventX - elementX),imgWidth);
-  var monthOff = xOff % yearImgWidth;
-
-  var year = Math.floor(xOff / yearImgWidth);
-  var monthOfYear = Math.min(11,Math.floor(monthOff / monthImgWidth));
-  // 1 extra border pixel at the left edge of the year:
-  var month = (year * 12) + monthOfYear;
-  var day = monthOff % 2==1?15:1;
-  var dateString = zeroPad(year + firstYear) + zeroPad(monthOfYear+1,2) +
-    zeroPad(day,2) + "000000";
-
-  $("displayYearEl").innerHTML=year+firstYear;
-  $("displayMonthEl").innerHTML=prettyMonths[monthOfYear];
-  // looks too jarring when it changes..
-  //$("displayDayEl").innerHTML=zeroPad(day,2);
-  var url = wbPrefix + dateString + '/' +  wbCurrentUrl;
-  $("wm-graph-anchor").href=url;
-
-  if(curYear != year) {
-    var yrOff = year * yearImgWidth;
-    yearTracker.style.left = yrOff + "px";
-    curYear = year;
-  }
-  if(curMonth != month) {
-    var mtOff = year + (month * monthImgWidth) + 1;
-    monthTracker.style.left = mtOff + "px";
-    curMonth = month;
-  }
-}
-function hideToolbar() {
-  $("wm-ipp").style.display="none";
-}
-function bootstrap() {
-  var $spk=$("wm-ipp-sparkline");
-  yearTracker=$D.createElement('div');
-  yearTracker.className='yt';
-  with(yearTracker.style){
-    display='none';width=yearImgWidth+"px";height=imgHeight+"px";
-  }
-  monthTracker=$D.createElement('div');
-  monthTracker.className='mt';
-  with(monthTracker.style){
-    display='none';width=monthImgWidth+"px";height=imgHeight+"px";
-  }
-  $spk.appendChild(yearTracker);
-  $spk.appendChild(monthTracker);
-
-  var $ipp=$("wm-ipp");
-  $ipp&&disclaimElement($ipp);
-}
-return{st:showTrackers,mv:trackMouseMove,h:hideToolbar,bt:bootstrap};
-})(525, 27, 25, 2);//]]>
-</script>
-<style type="text/css">
-body {
-  margin-top:0 !important;
-  padding-top:0 !important;
-  min-width:800px !important;
-}
-</style>
-<script type="text/javascript">__wm.bt();</script>
-<!-- END WAYBACK TOOLBAR INSERT -->
-
-<div id="cp-menu" class="menu"><a class="logo" href="http://logicmoo.org/home" style="float:left"></a>
-&nbsp;<ul id="nav">
-<li><a>Places</a>
-<ul>
-<li><a href="http://logicmoo.org/home" target="main">Home</a></li>
-<li><a href="http://logicmoo.org/browse/list_graphs" target="main">Graphs</a></li>
-<li><a href="http://logicmoo.org/browse/list_prefixes" target="main">Prefixes</a></li>
-</ul>
-</li>
-<li><a>Admin</a>
-<ul>
-<li><a href="http://logicmoo.org/admin/listUsers" target="main">Users</a></li>
-<li><a href="http://logicmoo.org/admin/settings" target="main">Settings</a></li>
-<li><a href="http://logicmoo.org/admin/configuration" target="main">Plugins</a></li>
-<li><a href="http://logicmoo.org/user/statistics" target="main">Statistics</a></li>
-</ul>
-</li>
-<li><a>Repository</a>
-<ul>
-<li><a href="http://logicmoo.org/user/loadFile" target="main">Load local file</a></li>
-<li><a href="http://logicmoo.org/prolog_sources" target="main">Load Prolog file</a></li>
-<li><a href="http://logicmoo.org/user/loadURL" target="main">Load from HTTP</a></li>
-<li><a href="http://logicmoo.org/user/loadLibraryRDF" target="main">Load from library</a></li>
-<li><a href="http://logicmoo.org/user/removeStatements" target="main">Remove triples</a></li>
-<li><a href="http://logicmoo.org/user/clearRepository" target="main">Clear repository</a></li>
-</ul>
-</li>
-<li><a>Query</a>
-<ul>
-<li><a href="http://logicmoo.org/yasgui/index.html" target="main">YASGUI SPARQL Editor</a></li>
-<li><a href="http://logicmoo.org/flint/index.html" target="main">Flint SPARQL Editor</a></li>
-<li><a href="http://logicmoo.org/user/query" target="main">Simple Form</a></li>
-</ul>
-</li>
-<li><a>Help</a>
-<ul>
-<li><a href="http://logicmoo.org/help/" target="main">Documentation</a></li>
-<li><a href="http://logicmoo.org/tutorial/" target="main">Tutorial</a></li>
-<li><a href="http://logicmoo.org/help/source" target="main">Roadmap</a></li>
-<li><a href="http://logicmoo.org/help/http" target="main">HTTP Services</a></li>
-</ul>
-</li>
-<li><a href="http://logicmoo.org/user/form/login" target="main">Login</a></li>
-</ul>
-</div>
-
-<table border="0" width="100%" id="table2" cellspacing="0" cellpadding="0">
-	<tr>
-		<td width="739" valign="top"><br>
-&nbsp;</td>
-		<td rowspan="2">
-		<ul style="box-sizing: border-box; padding: 0px 0px 0px 30px; margin: 15px 0px; color: rgb(51, 51, 51); font-family: Helvetica, arial, freesans, clean, sans-serif; font-size: 15.454545021057129px; font-style: normal; font-variant: normal; font-weight: normal; letter-spacing: normal; line-height: 23.18181800842285px; orphans: auto; text-align: start; text-indent: 0px; text-transform: none; white-space: normal; widows: auto; word-spacing: 0px; -webkit-text-stroke-width: 0px; background-color: rgb(255, 255, 255);">
-			<li >WIKI<span class="Apple-converted-space">&nbsp;</span><a target="_blank" href="https://github.com/logicmoo/PrologMUD/wiki" target="main">https://github.com/logicmoo/PrologMUD/wiki</a></li>
-			<li >SOURCE CODE<span class="Apple-converted-space">&nbsp;</span><a target="_blank" href="https://github.com/logicmoo/PrologMUD">https://github.com/logicmoo/PrologMUD</a></li>
-			<li >HOMEPAGE<span class="Apple-converted-space">&nbsp;</span><a target="_top" href="http://logicmoo.org/">http://logicmoo.org/</a></li>
-			<li >GOOGLEDOCS<span class="Apple-converted-space">&nbsp;</span><a target="_blank" href="https://drive.google.com/#folders/0B0QA19UX0ehlV1ZEaXEzc3hjTWM">https://drive.google.com/#folders/0B0QA19UX0ehlV1ZEaXEzc3hjTWM</a></li>
-			<li >LIVECODING<span style="color: #4183C4"><a target="_blank" href="https://www.livecoding.tv/logicmoo/">https://www.livecoding.tv/logicmoo</a></span></li>
-			<li >TELNET <a style="box-sizing: border-box; color: rgb(65, 131, 196); text-decoration: none;" href="telnet://logicmoo.org:3001"> 	telnet://logicmoo.org:3001</a></li>
-		</ul>
-		</td>
-	</tr>
-	<tr>
-		<td width="739"><ul style="box-sizing: border-box; padding: 0px 0px 0px 30px; margin: 15px 0px; color: rgb(51, 51, 51); font-family: Helvetica, arial, freesans, clean, sans-serif; font-size: 15.454545021057129px; font-style: normal; font-variant: normal; font-weight: normal; letter-spacing: normal; line-height: 23.18181800842285px; orphans: auto; text-align: start; text-indent: 0px; text-transform: none; white-space: normal; widows: auto; word-spacing: 0px; -webkit-text-stroke-width: 0px; background-color: rgb(255, 255, 255);">
-	<li >
-	<strong style="box-sizing: border-box; font-weight: 400;">WEB TELNET</strong><b><span class="Apple-converted-space">
-	</span></b><a target="main" href="http://logicmoo.org/port3101">http://logicmoo.org/port3101</a><b> </b>(TTYD)</li>
-	<li >CLIOPATRA <span class="Apple-converted-space">&nbsp;</span><a href="http://logicmoo.org/home" target="main">http://logicmoo.org/home</a>(is minorly modified)</li>
-    <li >SWISH <a target="main" href="http://logicmoo.org/swish/">http://logicmoo.org/swish/ </a>&nbsp;(Integrated into ClioPatria)</li>
-    <li >PROLOG <a target="main" href="http://logicmoo.org/swish/logicmoo/?search=tSet">http://logicmoo.org/swish/logicmoo/?search=tSet</a> </li>
-    <li >PACKS <a target="main" href="http://logicmoo.org/swish/pldoc/pack/">http://logicmoo.org/swish/pldoc/pack/</a> </li>
-            
-	<li >Edit via SWISH <a target="main" style="box-sizing: border-box; color: rgb(65, 131, 196); text-decoration: none;" 
-		href="http://logicmoo.org/swish/filesystem///mnt/dddd/workspace/swish/lib/filesys.pl">http://logicmoo.org/swish/filesystem///mnt/dddd/workspace/swish/lib/filesys.pl</a>(in_progress)
-</ul></td>
-	</tr>
-</table>
-<iframe name="main" id="main" src="http://logicmoo.org/main.html" width="100%" border="0" height="1000"></iframe>
-</body></html>
-
-
-
-
-<!--
-     FILE ARCHIVED ON 12:56:18 Mar 8, 2016 AND RETRIEVED FROM THE
-     INTERNET ARCHIVE ON 15:16:27 Sep 12, 2016.
-     JAVASCRIPT APPENDED BY WAYBACK MACHINE, COPYRIGHT INTERNET ARCHIVE.
-
-     ALL OTHER CONTENT MAY ALSO BE PROTECTED BY COPYRIGHT (17 U.S.C.
-     SECTION 108(a)(3)).
--->
-
-
-
+</body>

@@ -1,4 +1,4 @@
-:- include('../ec_test_incl').
+:- include('ec_test_incl').
 /*
    Test queries:
 
@@ -41,5 +41,5 @@ executable(turn_off_boiler).
 
 :- run_tests.
 
-:- halt.
+% :- halt.
 

@@ -619,7 +619,7 @@ defunctionalize_did(OP,Wff,PredifiedFunction,NextWff,Function,NewVar):-
 
 is_precond_like(Var):- \+ compound(Var),!.
 is_precond_like(SubTerm):- is_ftEquality(SubTerm),!.
-is_precond_like(spft(_,_,_)):- !.
+is_precond_like('$spft'(_MZ,_,_,_)):- !.
 is_precond_like({_}).
 
 has_function(OP,Term):- 
@@ -958,7 +958,7 @@ has_ftVar(Body):-compound(Body),arg(_,Body,Arg),has_ftVar(Arg),!.
 % If Is A Function.
 %
 is_function_pfa(_,_,F,_):- \+ atom(F),!,fail.
-is_function_pfa(_,_,spft,_):-!,fail.
+is_function_pfa(_,_,'$spft',_):-!,fail.
 is_function_pfa(_,_,'uSubLQuoteFn',_):- !,fail.
 is_function_pfa(_,_,'xQuoteFn',_):- !,fail.
 is_function_pfa(_,_,'uNARTFn',_):- !,fail.

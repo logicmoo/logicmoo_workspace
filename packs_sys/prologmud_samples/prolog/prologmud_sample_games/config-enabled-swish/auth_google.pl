@@ -149,4 +149,14 @@ oauth2:server_attribute(google, client_secret,
                         'jykqJiZikgMteL3vq0IhjPDC').
 oauth2:server_attribute(google, scope,
                         profile).
+%oauth2:server_attribute(google, authorization_endpoint, '/oauth').
+oauth2:server_attribute(google, authorization_endpoint, 'https://accounts.google.com/o/oauth2/v2/auth').
+oauth2:server_attribute(google, 'token_endpoint', 'https://oauth2.googleapis.com/token').
+
+oauth2:server_attribute(google, 'issuer', 'https://accounts.google.com').
+oauth2:server_attribute(google, 'device_authorization_endpoint', 'https://oauth2.googleapis.com/device/code').
+oauth2:server_attribute(google, 'userinfo_endpoint', 'https://openidconnect.googleapis.com/v1/userinfo').
+oauth2:server_attribute(google, 'revocation_endpoint', 'https://oauth2.googleapis.com/revoke').
+oauth2:server_attribute(google, 'jwks_uri', 'https://www.googleapis.com/oauth2/v3/certs').
+
 

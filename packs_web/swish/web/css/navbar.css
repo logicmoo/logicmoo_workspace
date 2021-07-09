@@ -69,3 +69,13 @@ a.accelerated span.accell-text
   position: absolute;
   right: 10px;
 }
+
+
+.navbar-nav > li > a {
+    padding-top: 6px;
+    padding-bottom: 6px;
+    padding: 6px 6px; 
+    line-hieght: 16px;
+    display: inline;
+}
+

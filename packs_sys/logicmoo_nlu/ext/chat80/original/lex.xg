@@ -1,0 +1,202 @@
+:- op(1001,xfy, ... ).
+:- op(1200,xfx,'--->').
+
+
+
+%theTextC(W1,CYCPOS,Y=W1)  ---> {t_l:old_text,!},[W1],{W1=Y}.
+% % DEAD theTextC(A,_,F=A,B,C,D,E) :- t_l:old_text, !,terminal(A, B, C, D, E),A=F, is_sane_nv(A).
+% % DEAD theTextC(A,_,F=A,B,C,D,E) :- !,terminal(w(A, _), B, C, D, E),A=F,is_sane_nv(A).
+theTextC(A,_,F=A,B,C,D,E) :- throw(theTextC(A,_,F=A,B,C,D,E)), !,terminal(W2A, B, C, D, E),w1(A,[W2A],[]),A=F,is_sane_nv(A).
+%theTextC(W1,CYCPOS,Y=W1)  ---> {!},[w(W1,_)],{W1=Y}.
+%theTextC(W1,CYCPOS,WHY) ---> [W2],{memoize_pos_to_lex80(WHY,CYCPOS,W2,W1)}.
+%theTextC(H,F,A,B,C,D) :- fail, is_sane(C), terminal(G, A, B, C, D),memoize_pos_to_lex80(E, F, G, H),is_sane_nv(H).
+/*
+theTextC(W1,_CYCPOS,Y=W1) ---> {t_l:old_text,!},[W1],{W1=Y}.
+%theTextC(W1,_CYCPOS,Y=W1) ---> {!},[w(W1,_)],{W1=Y}.
+theTextC(A,_,F=A,B,C,D,E) :- !,terminal(w(A, _), B, C, D, E),A=F,is_sane_nv(A).
+theTextC(W1,_CYCPOS,WHY) ---> {t_l:old_text,!},[W1],WHY.
+% theTextC(W1,CYCPOS,WHY) ---> {trace_or_throw(memoize_pos_to_lex(WHY,CYCPOS,W2,W1))},[W2],{memoize_pos_to_lex(WHY,CYCPOS,W2,W1)}.
+*/
+
+
+
+:-asserta(tlxgproc:do_xg_process_te).
+
+/* Parts of speech */
+/*
+the TextC(W1,CYCPOS,Y=W1)  ---> {t_l:old_text,!},[W1],{W1=Y}.
+the TextC(W1,CYCPOS,Y=W1)  ---> {!},[w(W1,_)],{W1=Y}.
+the TextC(W1,CYCPOS,WHY) ---> [W2],{memoize_pos_to_lex80(WHY,CYCPOS,W2,W1)}.
+see newdict.pl
+*/
+
+% theTextL(W1,_CYCPOS,Y=W1)  ---> {t_l:old_text,!},theTextL80(W1),{W1=Y}.
+theTextL(W1,_CYCPOS,Y=W1)  ---> {!},theTextL80(W1),{W1=Y}.
+theTextL(W1,_CYCPOS,WHY) ---> theTextL80(W1),{call(WHY)}.
+
+w001(Cmp)---> consume_spans_hack, next_as_word,{!},[Cmp],{assertion(nonvar(Cmp)),parser_e2c:add_prev_w2(Cmp)},consume_spans_hack.
+
+theText80_W2(Text,L) ---> w001(Cmp),{compound(Cmp),!,Cmp=w(Text,L)}.
+
+w01(Text) ---> w001(A), {atomic(A),!,A=Text}.
+w01(Text) ---> theText80_W2(Text,_).
+
+
+%w01(Text) ---> w001(A), {Text=A}.
+
+w1(Text) ---> w01(Text).
+
+move_ahead_spans(S1,S2,G,G):- partition(\=(span(_)),S1,W,S),!,append(W,S,S2).
+
+next_as_word(S1,S2,G,G):- select(W2,S1,SM),compound(W2),W2=w(_,_),!,S2=[W2|SM].
+next_as_word(S1,S1,G,G).
+
+noText ---> consume_spans_hack.
+
+nomoreText(S1,S1,G,G):- is_list(S1), \+ (member(W2,S1), compound(W2),W2=w(_,_)).
+
+consume_spans_hack ---> [span(NV)],{nonvar(NV),!,parser_e2c:add_prev_span(span(NV))},consume_spans_hack.
+consume_spans_hack ---> [].
+
+
+theText80Penn(A) --->{atomic(A),!},theText80(A).
+theText80Penn(Cmp) --->{compound(Cmp),!},w001(Cmp).
+theText80Penn(w(W,L1)) ---> theText80_W2(W,L2),{L1=L2}.
+
+
+theText80(IC) ---> w1(W0),{assertion(nonvar(W0);nonvar(IC)),parser_e2c:the_text_unif(IC,W0)}.
+%theText80(IC) ---> {t_l:old_text,!},[W0],{parser_tokenize:any_nb_to_atom(W0,W1),downcase_atom(W1,DC),(var(IC)->IC=DC;downcase_atom(IC,DC))}.
+%theText80(Text) ---> [w(Text,_)].
+
+% OLD theText80(W1,_CYCPOS) --->{t_l:old_text,!},[W1], {nop((compatible_pos_lex80(CW,CYCPOS),cw_lex80(W1,CW)))}.
+theText80(W1,_CYCPOS) ---> theText80(W1). %  {nop((compatible_pos_lex80(CW,CYCPOS),cw_lex80(W1,CW)))}.
+
+theTextL80(Text) ---> {var(Text),dmsg(theText_DCG_VAR(Text)),!},theText_ol(Text).
+theTextL80(Text) ---> {is_list(Text),!},theText_cl(Text).
+theTextL80(DCG) ---> {!,nonvar(DCG)}, DCG.
+% theTextL80///1 cut above never gets past here
+theTextL80(Text) ---> {Text=@=[_|_],!},theText_ol(Text).
+theTextL80(DCG) ---> {dmsg(theText_DCG(DCG)),dtrace,nonvar(DCG)},DCG.
+%:- share_mp(theTextL80//1).
+
+
+theText_ol([W1,W2,W3]) ---> theText80(W1),theText80(W2),theText80(W3).
+theText_ol([W1,W2]) ---> theText80(W1),theText80(W2).
+theText_ol([W1]) ---> theText80(W1).
+
+theText_cl([]) ---> {!},[].
+theText_cl([W1|WL]) ---> theText80(W1),{!},theText_cl(WL).
+
+
+optText1(_,_,_) ---> noText.
+optText1(W,POS,HOW) ---> theTextC(W,POS,HOW).
+
+optText1(_,_) ---> noText.
+optText1(W,POS) ---> theText80(W,POS).
+
+
+optText(_Text) ---> noText.
+optText(Text) ---> theTextL80(Text).
+
+textOpt(Text) ---> theTextL80(Text).
+textOpt(_Text) ---> noText.
+
+
+noun(Noun,Agmt) --->
+   theText80_W2(W,L), 
+   {noun_form_wlex(L,W,Noun,Agmt)}.
+
+det(det(Det),Number,Def) --->
+   theText80(W),
+   {det_lex(W,Number,Det,Def)}.
+det(generic,_,generic) ---> noText.
+
+adj(Type,adj(Adj)) --->
+   theText80(Adj),
+   {adj_lex(Adj,Type)}.
+
+prep(prep(Prep)) --->
+   theText80(Prep),
+   {prep_lex(Prep)}.
+
+comp_adj(adj(Adj)) --->
+   theText80(RAdj),
+   {comp_adj_lex(RAdj,Adj)}.
+
+sup_adj(adj(Adj)) --->
+   theText80(SAdj),
+   {sup_adj_lex(SAdj,Adj)}.
+
+
+
+comp_adv(W) ---> theText80(W),{comp_adv_lex(W)}.
+
+sup_adv(W) ---> theText80(W),{sup_adv_lex(W)}.
+
+
+rel_pron(Case) --->
+   theText80(W),
+   {rel_pron_lex(W,Case)}.
+
+verb_form80(Verb,Tense,Agmt,Role) --->
+   theText80_W2(W,L),
+   {verb_form_wlex(L,W,Verb,Tense,Agmt)}.
+
+name_xg(Name) --->
+   opt_the,
+   name_lex_txt(Name).
+
+name_lex_txt(Name) ---> theText80(Name), {name_LF(Name),!}.
+name_lex_txt(Name) ---> theTextL80([W1,'_',W2]),{!,atomic(W1),atomic(W2),atomic_list_concat([W1,'_',W2],Name),name_LF(Name)}.
+name_lex_txt(Name) ---> theTextL80([W1,W2]),{atomic(W1),atomic(W2),atomic_list_concat([W1,'_',W2],Name),name_LF(Name)}.
+
+int_art(X,pl,quantV(same,wh(X))) ---> {how_many_lex(HOWMANY)}, theTextL80(HOWMANY).
+int_art(X,Agmt,DX) --->
+   theText80(Art),
+   {int_art_lex(Art,X,Agmt,DX)}.
+
+int_pron(Case) --->
+   theText80(Pron),
+   {int_pron_lex(Pron,Case)}.
+
+adverb(adv(W)) --->
+   theText80(W),
+   {adverb_lex(W)}.
+
+poss_pron(pronoun(Gender),Person+Number) --->
+   theText80(W),
+   {poss_pron_lex(W,Gender,Person,Number)}.
+
+pers_pron(pronoun(Gender),Person+Number,Case) --->
+   theText80(W),
+   {pers_pron_lex(W,Gender,Person,Number,Case)}.
+
+quantifier_pron(Det,Noun) --->
+   theText80(W),
+   {quantifier_pron_lex(W,Det,Noun)}.
+
+context_pron(prep(In),Place) ---> {ctx_pron_lex(In,Place,Where)}, theText80(Where).
+
+
+number(I,Number) ---> theText80(W), {!,number_lex(W,I,Number)}.
+
+
+terminator(Type) --->
+   theText80(Term),
+   {terminator_lex(Term,Type)}.
+
+%opt_the ---> optText1(the,'Determiner').
+%opt_the ---> optTextC(The,'Determiner',The=the).
+opt_the ---> noText.
+opt_the ---> theText80(the).
+
+conj(_,list,list) ---> theText80(',').
+conj(Conj,list,end) --->
+   theText80(Conj),
+   {conj_lex(Conj)}.
+
+loc_pred(Of,P) --->
+   theText80(W),
+   {loc_pred_lex(Of,W,P)}.
+
+:-retract(tlxgproc:do_xg_process_te).

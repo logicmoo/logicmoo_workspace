@@ -1,0 +1,9 @@
+{
+  "defaultDomain": "FairyTaleCastle.PDDL",
+  "defaultOptions": "",
+  "cases": [
+    {
+      "problem": "hintproblem.PDDL"
+    }
+  ]
+}

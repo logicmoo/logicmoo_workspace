@@ -1,0 +1,6 @@
+test_scc([ret(undefined,undefined,1),ret(p4(A),p4(a),2),ret(p2(B),p2(a),3),ret(p5(C),p5(b),4)])
+test_scc1([ret(undefined,undefined,1),ret(n3(a),n3(a),2),ret(n2(a),n2(a),3)])
+test_scc2_deps([depends(2,1)])
+test_scc2_scc([ret(m4(a),m4(a),1),ret(m3(a),m3(a),1),ret(m2(a),m2(a),2),ret(m1(a),m1(a),2)])
+test_scc2_sign([sign(1,neg),sign(2,no_neg)])
+test_win([ret(win(10),win(10),1),ret(win(0),win(0),1),ret(win(1),win(1),1),ret(win(2),win(2),1),ret(win(3),win(3),1),ret(win(4),win(4),1),ret(win(5),win(5),1),ret(win(6),win(6),1),ret(win(7),win(7),1),ret(win(8),win(8),1),ret(win(9),win(9),1)])

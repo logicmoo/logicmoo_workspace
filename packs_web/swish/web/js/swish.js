@@ -114,6 +114,7 @@ require(["jquery", "config", "jswish", "plugin"],
   require(deps, function() {
     $(function() {
         $("body").swish(config.swish || {});
+
     });
   });
   });

@@ -815,7 +815,7 @@ define(["jquery", "config", "tabbed", "form",
                 $(dom).append(cell.nbCell('saveDOM'));
             });
             var str = stringifyNotebookDOM(dom);
-            debugger;
+            // debugger;
             return str;
 
           } else {
@@ -846,9 +846,9 @@ define(["jquery", "config", "tabbed", "form",
             }
             var thenbcells = $(dom).find(".nb-cell");
             if (isnew) {
-              debugger;
+              //debugger;
             } else {
-              debugger;
+              //debugger;
             }
 
             thenbcells.each(function() {
@@ -861,9 +861,9 @@ define(["jquery", "config", "tabbed", "form",
             var thisnbcell = this.find(".nb-cell");
             thisnbcell.nbCell('onload');
             if (isnew) {
-              debugger;
+              //debugger;
             } else {
-              debugger;
+              //debugger;
             }
             this.notebook('run_all', 'onload');
             this.notebook('updatePlaceHolder');

@@ -16,6 +16,7 @@
 % Main file.
 %
 */
+:- '$set_source_module'(mu).
 
 % Some Inform properties:
 % light - rooms that have light in them
@@ -72,13 +73,13 @@ is_m_type_functor(_, Type, Term):-
   is_type_functor(Type, F, A).
 
 
+is_type_functor(Type, F, A):- var(A), !,
+   type_functor(Type, Skel),
+   safe_functor(Skel, F, A).
 is_type_functor(Type, F, A):-
    safe_functor(Skel, F, A),
    type_functor(Type, Skel).
 
-%functor_arity_state(F, A):- is_spatial_rel(F).
-
-%functor_arity_state(F, A):- is_spatial_rel(F).
 
 
 %type_functor(state, holds_at(state, time)).
@@ -100,19 +101,17 @@ type_functor(memory, intent(agent, list(action))).
 type_functor(event, timestamp(ordinal, timept)).
 
 
-%type_functor(state_with_stamps, holds_at(h(domrel, inst, inst), timept)).
-
 
 type_functor(action, say(text)).  % undirected message
 %type_functor(action, touchable(agent, instance)).
-type_functor(state, h(domrel, inst, inst)).
+type_functor(state, h(domain, domrel, inst, inst)).
 type_functor(state, memories(inst, list(event))).
 type_functor(state, perceptq(inst, list(event))).
 type_functor(state, props(inst, list(nv))).
 type_functor(state, type_props(type, list(nv))).
 
 type_functor(event, attempts(agent, action)).
-type_functor(event, percept_props(agent, sense, inst, depth, list(nv))).
+type_functor(event, unused_percept_props(agent, sense, inst, depth, list(nv))).
 type_functor(event, time_passes(agent)).
 type_functor(event, act3('emote', agent,[ emotype, dest, statement])).
 
@@ -127,8 +126,7 @@ type_functor(maction, recall(agent, prop, inst2)).
 type_functor(maction, print_(agent, msg)). % for debug and agent feedback
 type_functor(maction, auto(agent)).
 type_functor(maction, inspect(agent, getprop(inst, nv))).
-type_functor(maction, try(agent, act3)).
-
+type_functor(maction, attempts(agent, act3)).
 
 type_functor(action,X):- type_functor(act3,X).
 
@@ -175,12 +173,12 @@ type_functor(mact3,go__prep_obj(agent, movetype, domrel, obj)).
 
 type_functor(event, move(agent, how, inst, from, prop, to)).
 
-type_functor(event, carrying(agent, list(inst))).
+type_functor(event, h(spatial, held_by,agent, list(inst))).
 type_functor(event, destroyed(inst)).
 type_functor(event, did(action)).
 type_functor(event, percept(agent, sense, depth, props)).
-type_functor(event, percept(agent, exit_list(in, dest, list(exit)))). % paths noticable
-type_functor(event, percept(agent, child_list(sense, dest, domrel, depth, list(inst)))).
+type_functor(event, percept(agent, fn_list(domain, fn, in, dest, list(exit)))). % paths noticable
+type_functor(event, percept(agent, child_list(domain, dest, domrel, list(inst)))).
 type_functor(event, failed(action, msg)). % some action has failed
 type_functor(event, transformed(inst, inst2)). % inst1 got derezed and rerezed as inst2
 
@@ -202,7 +200,6 @@ type_functor(nv, desc(sv(text))).
 type_functor(nv, prefix(sv(text))).
 type_functor(nv, door_to(inst)).
 type_functor(nv, effect(verb_targeted, script)). %
-type_functor(nv, breaks_into = type).
 type_functor(nv, has_rel(domrel, tf)).
 type_functor(nv, has_sense(sense)).
 type_functor(nv, can_be(verb, tf)).
@@ -212,14 +209,28 @@ type_functor(nv, has_sense(sense)).
 type_functor(nv, isnt(type)). % stops inheritance into some type
 type_functor(nv, inherit(type, tf)).
 type_functor(nv, inherited(type)).
-type_functor(nv, default_rel=type).
 type_functor(nv, inst(sv(term))).
-type_functor(nv, name = (sv(text))).
 type_functor(nv, oper(action, preconds, postconds)).
 type_functor(nv, emitting(sense, type)).
-% type_functor(nv, domrel=value).
+type_functor(nv, domrel=value).
+type_functor(nv, breaks_into = type).
+type_functor(nv, default_rel=type).
+type_functor(nv, name = (sv(text))).
+
 
 type_functor(Sen,Atom):- atom(Sen),atom_concat(is_,Sen,Sense), current_predicate(Sense/1),!,call(Sense,Atom),atom(Atom).
+
+:- multifile(user:argname_hook/4).
+:- dynamic(user:argname_hook/4).
+
+user:argname_hook(F,A,N,T):- 
+  ground(v(F,A)),A>0,
+  F \== (=),
+  type_functor(_,P),
+  functor(P,F,A),
+  arg(N,P,T),
+  nonvar(T).
+
 
 remember_arity(T, P):- safe_functor(P, F, A), asserta(type_functor_arity(T, F, A)).
 :- forall(type_functor(T, P), remember_arity(T, P)).

@@ -1,0 +1,16 @@
+diff --git a/src/os/pl-file.c b/src/os/pl-file.c
+index 2ac6d6ec9..30c1bc95e 100644
+--- a/src/os/pl-file.c
++++ b/src/os/pl-file.c
+@@ -578,8 +578,10 @@ save_stream_ref(atom_t aref, IOSTREAM *fd)
+ { stream_ref *ref = PL_blob_data(aref, NULL, NULL);
+   (void)fd;
+ 
+-  return PL_warning("Cannot save reference to <stream>(%p,%p)",
++  PL_warning("Cannot save reference to <stream>(%p,%p)",
+ 		    ref->read, ref->write);
++  return PL_error(NULL, 0, NULL, ERR_TYPE, ATOM_stream, aref);
++
+ }
+ 
+ 

@@ -1,0 +1,132 @@
+/* 
+Author: Miguel Calejo
+Contact:   info@interprolog.com, http://interprolog.com
+Copyright (c) 2016, Imperial College, London
+All rights reserved.
+
+Redistribution and use in source and binary forms, with or without
+modification, are permitted provided that the following conditions are
+met:
+
+1. Redistributions of source code must retain the above copyright
+notice, this list of conditions and the following disclaimer.
+
+2. Redistributions in binary form must reproduce the above copyright
+notice, this list of conditions and the following disclaimer in the
+documentation and/or other materials provided with the distribution.
+
+3. Neither the name of the copyright holder nor the names of its
+contributors may be used to endorse or promote products derived from
+this software without specific prior written permission.
+
+THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS
+IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED
+TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A
+PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
+HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED
+TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR
+PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
+LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
+NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+*/
+
+% Various LPS program checking utilities, working on the loaded program
+
+:- module(checker,[ 
+	check_js_compliance/1, lps_literals/1
+	]).
+
+% DMILES ADDED
+:- meta_predicate lps_literals(*,0).
+:- use_module('../engine/interpreter.P').
+
+% check_js_compliance(-Notices)  
+% Returns a list of notice(Type,Message,Position) (empty if no errors), indicating why the program is incompatible with lps.js
+% assumes the loaded program to have no lps.swi errors
+% Similar to check_syntax in interpreter.P, which could move to here!
+check_js_compliance(Notices) :- 
+	F = _, % useless?
+	% no updating of subterms; e.g. examples/CLOUT_workshop/RockPaperScissors.pl
+	findall( notice(error,ET,Pos), (
+		updated(Ev, Fl, Old-New, Cond), 
+		source_position(updated(Ev, Fl, Old-New, Cond),F,Pos,Vars),
+		(Old==Fl ->fail; buildError(Old,Vars,' must be the whole fluent, not just a part of it ',ET))
+		), 
+		OverDetailedUpdates),	
+	% No if-then-else; e.g. examples/CLOUT_workshop/goto_with_ifthenelse.pl
+	findall( notice(error,ET,Pos), (
+		lps_literals(L,Clause), member((I->T;E),L), 
+		source_position(Clause,F,Pos,Vars),
+		buildError((I->T;E),Vars,' if-then-else not supported, please refactor your clause ',ET)
+		),
+		ITE),	
+	% No editing actions, initiate/terminate/update; e.g. examples/forTesting/editingActions.pl
+	findall( notice(error,ET,Pos), (
+		lps_literals(L,Clause), member(happens(EA,_,_),L), nonvar(EA),
+		member(EA,[initiate(_),terminate(_),update(_,_)]),
+		source_position(Clause,F,Pos,Vars),
+		buildError(EA,Vars,' editing actions not supported, please create explicit action and a post condition ',ET)
+		),
+		EAs),	
+	% No meta fluents and events; e.g. examples/forTesting/meta.pl
+	findall( notice(error,ET,Pos), (
+		lps_literals(L,Clause), member(Lit,L), 
+		(Lit=holds(X,_);Lit=happens(X,_,_)), var(X),
+		source_position(Clause,F,Pos,Vars),
+		buildError(Lit,Vars,' an event or fluent cannot be a free variable ',ET)
+		),
+		Meta),	
+	% warn about ignored display/2 declarations; e.g. examples/CLOUT_workshop/burning.pl
+	findall( notice(warning,ET,Pos), (
+		Head=display(_,_),
+		interpreter:user_prolog_clause(Head,Body),
+		(Body==true -> Clause=Head; Clause=(Head:-Body)),
+		source_position(Clause,F,Pos,Vars),
+		buildError(Head,Vars,' visualization directive ignored ',ET)
+		),
+		Vis),	
+	% No \==, \= allowed; e.g. examples/bank account_terse.pl
+	findall( notice(error,ET,Pos), (
+		lps_literals(L,Clause), member(Lit,L), 
+		( Lit = (A \== B), Neg = (A==B) ; Lit = (A \= B), Neg = (A==B)),
+		source_position(Clause,F,Pos,Vars),
+		format(atom(Msg)," cannot use ~w, use not(~w) instead",[Lit,Neg]),
+		buildError(Lit,Vars,Msg,ET)
+		),
+		NegComparators),	
+	findall( notice(error,ET,Pos), (
+		lps_literals(L,Clause), member(Lit,L), 
+		% DMILES: dont count on this as an op yet
+		( Lit = (A =< B), Remedy = '<='(A,B) ),
+		source_position(Clause,F,Pos,Vars),
+		format(atom(Msg)," cannot use ~w, use ~w instead",[Lit,Remedy]),
+		buildError(Lit,Vars,Msg,ET)
+		),
+		Comparators),	
+	findall( notice(error,ET,Pos), (
+		lps_literals(L,Clause), member(findall(_,(G1,G2),_),L), 
+		source_position(Clause,F,Pos,Vars),
+		format(atom(Msg)," findall cannot have complex goals, please refactor by introducing a new predicate ",[(G1,G2)]),
+		buildError((G1,G2),Vars,Msg,ET)
+		),
+		Findall),	
+	% TODO: inspect literal argumentsin depth  to forbid Prolog-like operators and suggest replacement by regular functors
+	append([OverDetailedUpdates,ITE,EAs,Meta,Vis,NegComparators,Comparators,Findall],Notices).
+
+% lps_literals(-Goal,-EnclosingClause) a "clause"-like metapredicate to enumerate all head/body combinations
+lps_literals(Events,observe(Obs, Next)) :- interpreter:observe(Obs, Next), Previous is Next-1, findall(happens(Ev,Previous,Next),member(Ev,Obs),Events).
+lps_literals([E,holds(Fl,_)|Cond],terminated(E,Fl,Cond)) :- interpreter:terminated(E,Fl,Cond).
+lps_literals([E,holds(Fl,_)|Cond],initiated(E,Fl,Cond)) :- interpreter:initiated(E,Fl,Cond).
+lps_literals([E,holds(Fl,_)|Cond_],updated(E,Fl,Old-New,Cond)) :- 
+	interpreter:updated(E,Fl,Old-New,Cond), % this boils down to two rules in fact:
+	(Cond_=Cond ; interpreter:replace_term(Fl,Old,New,NewFl), Cond_=[holds(NewFl,_)|Cond]).
+lps_literals(L,d_pre(L)) :- interpreter:d_pre(L). % Arguably correct, given that pre conditions filter rather than generate, but we're looking for all constants...
+lps_literals(L,reactive_rule(H,B)) :- interpreter:reactive_rule(H,B), append(H,B,L).
+lps_literals([H|Body],Clause) :- 
+	(Clause=l_int(H,Body);Clause=l_events(H,Body);Clause=l_timeless(H,Body)), 
+	interpreter:Clause.
+lps_literals([Pred,Body],Clause) :- interpreter:user_prolog_clause(Pred,Body), (Body==true->Clause=Pred;Clause=(Pred:-Body)). 
+
+lps_literals(L) :- lps_literals(L,_).

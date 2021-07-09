@@ -20,6 +20,7 @@
 
 :- set_module(class(library)).
 
+
 :- op(700,xfx,prolog:('univ_safe')).
 :- discontiguous logicmoo_common:'$exported_op'/3.
 

@@ -104,9 +104,13 @@
       options = {};
     if (!options.getTextHover)
       options.getTextHover = cm.getHelper(CodeMirror.Pos(0, 0), "textHover");
-    if (!options.getTextHover)
-      throw new Error(
-          "Required option 'getTextHover' missing (text-hover addon)");
+    if (!options.getTextHover) {
+		//try again 
+		options.getTextHover = cm.getHelper(CodeMirror.Pos(0, 0), "textHover");
+		debugger;
+		throw new Error(
+			"Required option 'getTextHover' missing (text-hover addon)");
+	}
     return options;
   }
 

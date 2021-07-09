@@ -71,7 +71,7 @@ class elFinderSession implements elFinderSessionInterface
 	public function get($key, $empty = null)
 	{
 		$closed = false;
-        if (!$this->started) {
+		if (! $this->started) {
 			$closed = true;
 			$this->start();
 		}
@@ -87,7 +87,7 @@ class elFinderSession implements elFinderSessionInterface
 		}
 		
 		$checkFn = null;
-        if (!is_null($empty)) {
+		if (! is_null($empty)) {
 			if (is_string($empty)) {
 				$checkFn = 'is_string';
 			} elseif (is_array($empty)) {

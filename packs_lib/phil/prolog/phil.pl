@@ -39,14 +39,22 @@ This module provides algorithms for learning the structure and the parameters of
 
 :- thread_local  input_mod_hplp/1.
 
-:- meta_predicate induce_hplp(:,-).
-:- meta_predicate objective_hplp_func(:,-,-,-,-,-,-,-).
+/*
+Warning: 14:43:55.911 phil:induce_hplp_par_func/9 is declared as meta_predicate induce_hplp_par_func(:,-,-,-,-,-,-,-,-), but has no clauses
+Warning: 14:43:55.911 phil:setting_hplp/2 is declared as meta_predicate setting_hplp(:,-), but has no clauses
+Warning: 14:43:55.912 phil:objective_hplp_func/8 is declared as meta_predicate objective_hplp_func(:,-,-,-,-,-,-,-), but has no clauses
+Warning: 14:43:55.912 phil:induce_hplp_parameters/4 is declared as meta_predicate induce_hplp_parameters(:,-,-,-), but has no clauses
+Warning: 14:43:55.912 phil:induce_hplp_par_func/5 is declared as meta_predicate induce_hplp_par_func(:,-,-,-,-), but has no clauses
+
+*/
+%:- meta_predicate induce_hplp(:,-).
+%:- meta_predicate objective_hplp_func(:,-,-,-,-,-,-,-).
 
 :- meta_predicate induce_hplp_rules(:,-).
 :- meta_predicate induce_hplp_par(:,-).
-:- meta_predicate induce_hplp_par_func(:,-,-,-,-,-,-,-,-).
-:- meta_predicate induce_hplp_par_func(:,-,-,-,-).
-:- meta_predicate induce_hplp_parameters(:,-,-,-).
+%:- meta_predicate induce_hplp_par_func(:,-,-,-,-,-,-,-,-).
+%:- meta_predicate induce_hplp_par_func(:,-,-,-,-).
+:- meta_predicate induce_hplp_parameters(:,-,-).
 :- meta_predicate test_hplp(:,+,-,-,-,-,-).
 
 :- meta_predicate inference_hplp(:,+,-).
@@ -54,7 +62,7 @@ This module provides algorithms for learning the structure and the parameters of
 
 :- meta_predicate test_hplp_prob(:,+,-,-,-,-).
 :- meta_predicate set_hplp(:,+).
-:- meta_predicate setting_hplp(:,-).
+%:- meta_predicate setting_hplp(:,-).
 
 
 

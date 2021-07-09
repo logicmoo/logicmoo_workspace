@@ -1509,8 +1509,6 @@ put_egg(X,Y):-once(egg:stdio(_Agent,_InStream,OutStream)),
   once((sformat(S,X,Y),format(OutStream,'~s\n',[S]),!,flush_output(OutStream))).
 
 
-
-
 any_to_codes(Data,Codes):- notrace(any_to_codelist(Data,Codes)).
 
 any_to_codelist(Data,Codes):- var(Data),!, sformat(String,'~w',Data),string_codes(String,Codes),!.

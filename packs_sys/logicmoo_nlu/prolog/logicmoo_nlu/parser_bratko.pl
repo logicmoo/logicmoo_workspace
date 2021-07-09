@@ -117,13 +117,10 @@ m :- bratko.
 bratko :- locally(tracing80,
              with_no_assertions(lmconf:use_cyc_database,
                   locally(t_l:usePlBratko, (told, repeat, prompt_read('BRATKO> ',U),  
-                            to_wordlist_atoms(U,WL),(WL==[bye];WL==[end,'_',of,'_',file];bratko(WL)))))).
+                            into_lexical_segs(U,WL),(WL==[bye];WL==[end,'_',of,'_',file];bratko(WL)))))).
 
 :-export(bratko/1).
-bratko(Sentence):- to_wordlist_atoms(Sentence,Words),!,dmsg(sent_in_bratko(Words)),bratko(Words,Reply),  print_reply(Reply).
-
-to_wordlist_atoms(Sentence,WordsA):- to_word_list(Sentence,Words),maplist(any_to_atom,Words,WordsA),!.
-to_wordlist_atoms(Sentence,WordsA):- into_text80(Sentence,WordsA),!.
+bratko(Sentence):- into_lexical_segs(Sentence,Words),!,dmsg(sent_in_bratko(Words)),bratko(Words,Reply),  print_reply(Reply).
 
 :-export(bratko/2).
 bratko(Sentence,Reply) :-
@@ -149,7 +146,7 @@ bratko_reply(_,_,_,error('unknown type')).
 print_reply(Other) :-  fmt(Other).
 
 
-bratko_parse(Sentence,LF,Type):- \+ is_list(Sentence),!,to_wordlist_atoms(Sentence,WL),!,bratko_parse(WL,LF,Type).  
+bratko_parse(Sentence,LF,Type):- \+ is_list(Sentence),!,into_lexical_segs(Sentence,WL),!,bratko_parse(WL,LF,Type).  
 bratko_parse(Sentence,LF,query)     :-  question(LF,Sentence,[]).
 bratko_parse(Sentence,LF,assertion) :-  declarative(LF,nogap,Sentence,[]).
 

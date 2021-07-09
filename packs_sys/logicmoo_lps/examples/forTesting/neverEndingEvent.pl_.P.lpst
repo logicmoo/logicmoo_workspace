@@ -1,0 +1,78 @@
+/*
+  LPS test results file generated on 2021-2-28 at 11:5:37
+  on Prolog swi(8,1,9,[]) for program file:
+  /Users/mc/git/lps_corner/examples/forTesting/neverEndingEvent.pl_.P
+*/
+
+:-dynamic lps_test_result/3,lps_test_result_item/3,lps_test_action_ancestor/3,lps_test_options/1.
+
+% LPS options prior to the test:
+lps_test_options([dc]).
+
+% lps_test_result(Stage,Cycle,TestTerm)
+lps_test_result(fluents,0,0).
+lps_test_result(events,1,0).
+lps_test_result(fluents,1,0).
+lps_test_result(events,2,1).
+lps_test_result(composites,2,1).
+lps_test_result(fluents,2,0).
+lps_test_result(events,3,2).
+lps_test_result(composites,3,2).
+lps_test_result(fluents,3,0).
+lps_test_result(events,4,2).
+lps_test_result(composites,4,2).
+lps_test_result(fluents,4,0).
+lps_test_result(events,5,2).
+lps_test_result(composites,5,2).
+lps_test_result(fluents,5,0).
+lps_test_result(events,6,2).
+lps_test_result(composites,6,2).
+lps_test_result(fluents,6,0).
+lps_test_result(events,7,2).
+lps_test_result(composites,7,2).
+lps_test_result(fluents,7,0).
+lps_test_result(events,8,2).
+lps_test_result(composites,8,2).
+lps_test_result(fluents,8,0).
+lps_test_result(events,9,2).
+lps_test_result(composites,9,2).
+lps_test_result(fluents,9,0).
+lps_test_result(events,10,2).
+lps_test_result(composites,10,2).
+lps_test_result(fluents,10,0).
+% lps_test_result_item(Stage,Cycle,TestTerm)
+lps_test_result_item(events,2,play(miguel,13)).
+lps_test_result_item(composites,2,happens(played(miguel,13),1,2)).
+lps_test_result_item(events,3,play(miguel,14)).
+lps_test_result_item(events,3,boo(1,2)).
+lps_test_result_item(composites,3,happens(played(miguel,14),2,3)).
+lps_test_result_item(composites,3,happens(played(miguel,13),1,3)).
+lps_test_result_item(events,4,boo(2,3)).
+lps_test_result_item(events,4,boo(1,3)).
+lps_test_result_item(composites,4,happens(played(miguel,13),1,4)).
+lps_test_result_item(composites,4,happens(played(miguel,14),2,4)).
+lps_test_result_item(events,5,boo(1,4)).
+lps_test_result_item(events,5,boo(2,4)).
+lps_test_result_item(composites,5,happens(played(miguel,14),2,5)).
+lps_test_result_item(composites,5,happens(played(miguel,13),1,5)).
+lps_test_result_item(events,6,boo(2,5)).
+lps_test_result_item(events,6,boo(1,5)).
+lps_test_result_item(composites,6,happens(played(miguel,13),1,6)).
+lps_test_result_item(composites,6,happens(played(miguel,14),2,6)).
+lps_test_result_item(events,7,boo(1,6)).
+lps_test_result_item(events,7,boo(2,6)).
+lps_test_result_item(composites,7,happens(played(miguel,14),2,7)).
+lps_test_result_item(composites,7,happens(played(miguel,13),1,7)).
+lps_test_result_item(events,8,boo(2,7)).
+lps_test_result_item(events,8,boo(1,7)).
+lps_test_result_item(composites,8,happens(played(miguel,13),1,8)).
+lps_test_result_item(composites,8,happens(played(miguel,14),2,8)).
+lps_test_result_item(events,9,boo(1,8)).
+lps_test_result_item(events,9,boo(2,8)).
+lps_test_result_item(composites,9,happens(played(miguel,14),2,9)).
+lps_test_result_item(composites,9,happens(played(miguel,13),1,9)).
+lps_test_result_item(events,10,boo(2,9)).
+lps_test_result_item(events,10,boo(1,9)).
+lps_test_result_item(composites,10,happens(played(miguel,13),1,10)).
+lps_test_result_item(composites,10,happens(played(miguel,14),2,10)).
+% lps_test_action_ancestor(Call,T1,T2)

@@ -91,8 +91,8 @@ v('$sign'(A,'$display'(B,[vbar,[v,C]],D,E),'$sem'(F,G,H,I,J,K,L,M,N,O,P,Q),'$syn
 v('$sign'(A,'$display'(B,[vbar,[v,C]],D,E),'$sem'(F,G,H,I,J,K,L,M,N,O,P,Q),'$syn'(R,'$head'(S,T,U,V,W,'$vform'(X,'$inf'),'$bool'(Y,'$minus'),Z,A1,B1,'$vsubcat'(C1,'$noncopula'('$itr'))),'$nonlocal'(D1,E1,F1,'$inout'(G1,H1,H1),I1,J1,K1,L1,M1,N1,O1,P1,Q1)),R1,'$drs'(S1,T1,U1,drs(V1,W1),drs([J|V1],[predicate(J,R1,G)-T1/U1|W1]),X1,Y1,Z1),A2))-->get_position(U1),word_noninitial(C,iv_infpl(C,R1)).
 v('$sign'(A,'$display'(B,[vbar,[v,C]],D,E),'$sem'(F,G,H,I,J,K,L,M,N,O,P,Q),'$syn'(R,'$head'(S,T,U,V,W,'$vform'(X,'$inf'),'$bool'(Y,'$minus'),Z,A1,B1,'$vsubcat'(C1,'$noncopula'('$itr'))),'$nonlocal'(D1,E1,F1,'$inout'(G1,H1,H1),I1,J1,K1,L1,M1,N1,O1,P1,Q1)),C,'$drs'(R1,S1,T1,drs(U1,V1),drs([J|U1],[predicate(J,C,G)-S1/T1|V1]),W1,X1,Y1),Z1))-->words_noninitial([A2,:],verb_prefix(A2)),get_position(T1),word_noninitial(C),!.
 prep('$sign'(A,'$display'(B,[prep,C],D,E),F,G,H,'$drs'(I,J,K,L,M,N,O,P),Q))-->get_position(K),word(C,prep(C,H)),!.
-prep('$sign'(A,'$display'(B,[prep,C],D,E),F,G,H,'$drs'(I,J,K,L,M,N,O,P),Q))-->get_position(K),word_initial(C, (chars:to_lowercase(C,R),prep(R,H))).
-dep_prep('$sign'(A,'$display'(B,[prep,C],D,E),F,'$syn'(G,H,'$nonlocal'(I,J,K,L,M,N,C,O,P,Q,R,S,T)),U,V,W))-->{var(C)},!,word_noninitial(C, (prep(C,X);\+functionword(C))),!.
+prep('$sign'(A,'$display'(B,[prep,C],D,E),F,G,H,'$drs'(I,J,K,L,M,N,O,P),Q))-->get_position(K),word_initial(C,(chars:to_lowercase(C,R),prep(R,H))).
+dep_prep('$sign'(A,'$display'(B,[prep,C],D,E),F,'$syn'(G,H,'$nonlocal'(I,J,K,L,M,N,C,O,P,Q,R,S,T)),U,V,W))-->{var(C)},!,word_noninitial(C,(prep(C,X);\+functionword(C))),!.
 dep_prep('$sign'(A,'$display'(B,[prep,C],D,E),F,'$syn'(G,H,'$nonlocal'(I,J,K,L,M,N,C,O,P,Q,R,S,T)),U,V,W))-->word_noninitial(C).
 gender_transform(undef,'$gen'(A,B)).
 gender_transform(neutr,'$gen'(A,'$neutr')).

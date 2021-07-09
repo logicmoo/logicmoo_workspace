@@ -1,6 +1,42 @@
-ERROR: Invalid ACE text:
-The word "trustworthy" is unknown.
-The word "thief" is unknown.
-The word "thief" is unknown.
-"If there is someone X and it is not provable that X is a criminal then X is trustworthy <>.": This is the first sentence that was not ACE. The sign <> indicates the position where parsing failed.
+
+INPUT TEXT:
+If there is someone X and it is not provable that X is a criminal then X is trustworthy.
+Every thief is a criminal.
+John is a criminal.
+Bill is a thief.
+Mary is rich.
+
+RULES:
+group([property(A,trustworthy,pos)]) <- [object(A,B,C,D,E,F), ~group([object(A,criminal,countable,na,eq,1)])].
+group([object(A,criminal,countable,na,eq,1)]) <- [object(A,thief,countable,na,eq,1)].
+group([object(named('John'),criminal,countable,na,eq,1)]).
+property(named('Mary'),rich,pos).
+object(named('Bill'),'Bill',named,na,eq,1).
+object(named('Bill'),thief,countable,na,eq,1).
+object(named('John'),'John',named,na,eq,1).
+object(named('Mary'),'Mary',named,na,eq,1).
+
+SIMPLE RULES:
+trustworthy(A) <- [something(A), ~criminal(A)].
+criminal(A) <- [thief(A)].
+criminal(named('John')).
+rich(named('Mary')).
+thief(named('Bill')).
+
+ANSWERSET #1:
+group([property(named('Mary'),trustworthy,pos)]).
+group([object(named('Bill'),criminal,countable,na,eq,1)]).
+group([object(named('John'),criminal,countable,na,eq,1)]).
+property(named('Mary'),rich,pos).
+object(named('Bill'),'Bill',named,na,eq,1).
+object(named('Bill'),thief,countable,na,eq,1).
+object(named('John'),'John',named,na,eq,1).
+object(named('Mary'),'Mary',named,na,eq,1).
+
+ANSWERTEXT #1:
+Mary is rich.
+Mary is trustworthy.
+Bill is a thief.
+John is a criminal.
+Bill is a criminal.
 

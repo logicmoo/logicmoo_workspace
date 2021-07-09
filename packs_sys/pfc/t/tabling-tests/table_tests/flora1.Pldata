@@ -1,0 +1,693 @@
+/*
+Folks, if you fix the arithmetic exception bug, then here is a real program
+with a known set of answers. (The program you have was cut out of that
+program, but since it doesn't have any meaning, we don't know the right set
+of answers.). So, here is the program:
+
+Query:
+
+?- flora_mvd_rhs(pps,'flora_@'(produces,2),P),writeln(P),fail.
+
+Actually, it might need to be wrapped up with get-residual, since it uses
+tnot inside. But we believe that its model is 2-valued.
+
+Currently this query gives memory violation.
+
+Program:
+*/
+
+test :-	flora_mvd_rhs(pps,'flora_@'(produces,2),_P), fail.
+test :-	flora_mvd_rhs(pps,'flora_@'(produces,2),P), writeln(P), fail.
+
+/****** lib/flrheader.P: Prepended automatically by the FLORA compiler ******/
+
+
+:- table flora_fd/3.
+:- table flora_mvd/3.
+:- table flora_ifd/3.
+:- table flora_imvd/3.
+:- table flora_isa/2.
+:- table flora_sub/2.
+:- table flora_fs/3.
+:- table flora_mvs/3.
+
+
+:- import consult/1 from consult.
+
+:- import bootstrap_package/2, package_configuration/2 from packaging.
+
+:- import slash/1 from machine.
+
+%%:- import fmt_write_string/3 from file_io.
+
+:- import current_predicate/1 from curr_sym.
+
+
+flora_tag(noquery).
+
+
+/*
+?- flora_tag(query), !,
+   ( current_predicate(flora_print_all/2) ->
+       true
+     ;
+       ( package_configuration(dir(flora),D) ->
+	   true
+	 ;
+	   bootstrap_package(flora,flora),
+	   package_configuration(dir(flora),D)
+       ),
+       slash(S),
+       fmt_write_string(Lib,'%s%slib%sflrlib',f(D,S,S)),
+       consult(Lib)
+   ),
+   !.
+*/
+
+
+/************************** End of Header ***********************************/
+:- table flora_fd_rhs/2.
+flora_fd_rhs(A,B) :- flora_fd_rhs(A,B,_).
+
+:- auto_table.
+
+%%%    0:stage1.
+flora_isa(0,stage1).
+
+
+%%% pps[produces@(0)->> {golfC,golfCL,passatC,passatCL,motor14,motor18,wheel145, part1,part2,part3}].
+flora_mvd(pps,'flora_@'(produces,0),golfC).
+
+flora_mvd(pps,'flora_@'(produces,0),golfCL).
+
+flora_mvd(pps,'flora_@'(produces,0),passatC).
+
+flora_mvd(pps,'flora_@'(produces,0),passatCL).
+
+flora_mvd(pps,'flora_@'(produces,0),motor14).
+
+flora_mvd(pps,'flora_@'(produces,0),motor18).
+
+flora_mvd(pps,'flora_@'(produces,0),wheel145).
+
+flora_mvd(pps,'flora_@'(produces,0),part1).
+
+flora_mvd(pps,'flora_@'(produces,0),part2).
+
+flora_mvd(pps,'flora_@'(produces,0),part3).
+
+
+%%% golfC[hasConfig@(0)->newConfig(golfC,0)].
+flora_fd(golfC,'flora_@'(hasConfig,0),newConfig(golfC,0)).
+
+
+%%% golfCL[hasConfig@(0)->newConfig(golfCL,0)].
+flora_fd(golfCL,'flora_@'(hasConfig,0),newConfig(golfCL,0)).
+
+
+%%% passatC[hasConfig@(0)->newConfig(passatC,0)].
+flora_fd(passatC,'flora_@'(hasConfig,0),newConfig(passatC,0)).
+
+
+%%% passatCL[hasConfig@(0)->newConfig(passatCL,0)].
+flora_fd(passatCL,'flora_@'(hasConfig,0),newConfig(passatCL,0)).
+
+
+%%% motor14[hasConfig@(0)->newConfig(motor14,0)].
+flora_fd(motor14,'flora_@'(hasConfig,0),newConfig(motor14,0)).
+
+
+%%% newConfig(golfC,0)[needsPart->>{motor14,wheel145}].
+flora_mvd(newConfig(golfC,0),'flora_@'(needsPart),motor14).
+
+flora_mvd(newConfig(golfC,0),'flora_@'(needsPart),wheel145).
+
+
+%%% newConfig(golfCL,0)[needsPart->>{motor18,wheel145}].
+flora_mvd(newConfig(golfCL,0),'flora_@'(needsPart),motor18).
+
+flora_mvd(newConfig(golfCL,0),'flora_@'(needsPart),wheel145).
+
+
+%%% newConfig(passatC,0)[needsPart->>{motor14,wheel145}].
+flora_mvd(newConfig(passatC,0),'flora_@'(needsPart),motor14).
+
+flora_mvd(newConfig(passatC,0),'flora_@'(needsPart),wheel145).
+
+
+%%% newConfig(passatCL,0)[needsPart->>{motor18,wheel145}].
+flora_mvd(newConfig(passatCL,0),'flora_@'(needsPart),motor18).
+
+flora_mvd(newConfig(passatCL,0),'flora_@'(needsPart),wheel145).
+
+
+%%% newConfig(motor14,0)[needsPart->>{part1,part2,part3}].
+flora_mvd(newConfig(motor14,0),'flora_@'(needsPart),part1).
+
+flora_mvd(newConfig(motor14,0),'flora_@'(needsPart),part2).
+
+flora_mvd(newConfig(motor14,0),'flora_@'(needsPart),part3).
+
+
+%%%   removeFrom(passatC,motor14,0).
+removeFrom(passatC,motor14,0).
+
+
+%%% addTo(passatC,motor18,0).
+addTo(passatC,motor18,0).
+
+
+%%% start(wheel155,0).
+start(wheel155,0).
+
+
+%%% 0.ready_user[].
+flora_fd(0,'flora_@'(ready_user),flora_objref_fd(0,'flora_@'(ready_user))).
+
+
+%%% stop(part1,1).
+stop(part1,1).
+
+
+%%% removeFrom(golfCL,wheel145,1).
+removeFrom(golfCL,wheel145,1).
+
+
+%%% addTo(golfCL,wheel155,1).
+addTo(golfCL,wheel155,1).
+
+
+%%% 1.ready_user[].
+flora_fd(1,'flora_@'(ready_user),flora_objref_fd(1,'flora_@'(ready_user))).
+
+
+%%%   O[M@(T) -> Q] :- T:stage1, apply(O,M):edbscalar, O[M@(S) -> Q], T = S + 1, not O.change@(S,M)[].
+flora_fd(_h11842,'flora_@'(_h11860,_h11876),_h11954) :- 
+        flora_isa_rhs(_h11876,stage1),
+        flora_isa_rhs(apply(_h11842,_h11860),edbscalar),
+        flora_fd_rhs(_h11842,'flora_@'(_h11860,_h12154),_h11954),
+        is(_h12667,+(_h12154,1)),
+        =(_h11876,_h12667),
+        tnot(flora_fd_rhs(_h11842,'flora_@'(change,_h12154,_h11860))).
+
+
+%%%  O[M@(T) -> Q] :- T:stage1, apply(O,M):edbscalar, O[change@(S,M) -> Q], T = S + 1.
+flora_fd(_h13796,'flora_@'(_h13814,_h13830),_h13908) :- 
+        flora_isa_rhs(_h13830,stage1),
+        flora_isa_rhs(apply(_h13796,_h13814),edbscalar),
+        flora_fd_rhs(_h13796,'flora_@'(change,_h14104,_h13814),_h13908),
+        is(_h14505,+(_h14104,1)),
+        =(_h13830,_h14505).
+
+
+%%%  O[M@(T)->>Q] :- T:stage1, apply(O,M):edbmultivalued, O[M@(S)->>Q], T = S + 1, not delete(O,M,Q,S).
+flora_mvd(_h15632,'flora_@'(_h15650,_h15666),_h15744) :- 
+        flora_isa_rhs(_h15666,stage1),
+        flora_isa_rhs(apply(_h15632,_h15650),edbmultivalued),
+        flora_mvd_rhs(_h15632,'flora_@'(_h15650,_h15944),_h15744),
+        is(_h16409,+(_h15944,1)),
+        =(_h15666,_h16409),
+        tnot(delete(_h15632,_h15650,_h15744,_h15944)).
+
+
+%%%  O[M@(T)->>Q] :- T:stage1, apply(O,M):edbmultivalued, insert(O,M,Q,S), T = S + 1.
+flora_mvd(_h17440,'flora_@'(_h17458,_h17474),_h17552) :- 
+        flora_isa_rhs(_h17474,stage1),
+        flora_isa_rhs(apply(_h17440,_h17458),edbmultivalued),
+        insert(_h17440,_h17458,_h17552,_h17766),
+        is(_h18027,+(_h17766,1)),
+        =(_h17474,_h18027).
+
+
+%%%  apply(pps,produces):edbmultivalued.
+flora_isa(apply(pps,produces),edbmultivalued).
+
+
+%%% apply(P,hasConfig):edbscalar :- pps[produces@(S)->>P], S:state.
+flora_isa(apply(_h19206,hasConfig),edbscalar) :- 
+        flora_mvd_rhs(pps,'flora_@'(produces,_h19302),_h19206),
+        flora_isa_rhs(_h19302,state).
+
+
+%%% insert(pps,produces,P,S) :- start(P,S), S:stage4.
+insert(pps,produces,_h20177,_h20191) :- 
+        start(_h20177,_h20191),
+        flora_isa_rhs(_h20191,stage4).
+
+
+%%% delete(pps,produces,P,S) :- stop(P,S), S:stage4.
+delete(pps,produces,_h20938,_h20952) :- 
+        stop(_h20938,_h20952),
+        flora_isa_rhs(_h20952,stage4).
+
+
+%%% stop(P,S) :- P.hasConfig@(S)[needsPart->>Q], stop(Q,S), S:stage4.
+stop(_h21827,_h21841) :- 
+        flora_fd_rhs(_h21827,'flora_@'(hasConfig,_h21841),_h22164),
+        flora_mvd_rhs(_h22164,'flora_@'(needsPart),_h22042),
+        stop(_h22042,_h21841),
+        flora_isa_rhs(_h21841,stage4).
+
+
+%%% change(O,S,hasConfig) :- addTo(O,P,S), S:stage4.
+change(_h22959,_h22973,hasConfig) :- 
+        addTo(_h22959,_h23026,_h22973),
+        flora_isa_rhs(_h22973,stage4).
+
+
+%%% change(O,S,hasConfig) :- removeFrom(O,P,S), S:stage4.
+change(_h23756,_h23770,hasConfig) :- 
+        removeFrom(_h23756,_h23823,_h23770),
+        flora_isa_rhs(_h23770,stage4).
+
+
+%%% O[change@(S,hasConfig) -> newConfig(O,T)] :- change(O,S,hasConfig), T= S + 1, S:stage4.
+flora_fd(_h24837,'flora_@'(change,_h24865,hasConfig),newConfig(_h24837,_h24972)) :- 
+        change(_h24837,_h24865,hasConfig),
+        is(_h25226,+(_h24865,1)),
+        =(_h24972,_h25226),
+        flora_isa_rhs(_h24865,stage4).
+
+
+%%%  newConfig(O,T)[needsPart->>P] :- change(O,S,hasConfig), T= S + 1, O.hasConfig@(S)[needsPart->>P], not removeFrom(O,P,S), S:stage4.
+flora_mvd(newConfig(_h26563,_h26577),'flora_@'(needsPart),_h26667) :- 
+        change(_h26563,_h26712,hasConfig),
+        is(_h27165,+(_h26712,1)),
+        =(_h26577,_h27165),
+        flora_fd_rhs(_h26563,'flora_@'(hasConfig,_h26712),_h27189),
+        flora_mvd_rhs(_h27189,'flora_@'(needsPart),_h26667),
+        tnot(removeFrom(_h26563,_h26667,_h26712)),
+        flora_isa_rhs(_h26712,stage4).
+
+
+%%%  newConfig(O,T)[needsPart->>P] :- change(O,S,hasConfig), T= S + 1, addTo(O,P,S), S:stage4.
+flora_mvd(newConfig(_h28445,_h28459),'flora_@'(needsPart),_h28549) :- 
+        change(_h28445,_h28594,hasConfig),
+        is(_h28848,+(_h28594,1)),
+        =(_h28459,_h28848),
+        addTo(_h28445,_h28549,_h28594),
+        flora_isa_rhs(_h28594,stage4).
+
+
+%%%  stage1::state[ready_edb *-> true].
+flora_sub(stage1,state).
+
+flora_ifd(stage1,'flora_@'(ready_edb),true).
+
+
+%%% stage2::state[ready_idb *-> true].
+flora_sub(stage2,state).
+
+flora_ifd(stage2,'flora_@'(ready_idb),true).
+
+
+%%% stage3::state.
+flora_sub(stage3,state).
+
+
+%%% stage4::state[ready_changes *-> true].
+flora_sub(stage4,state).
+
+flora_ifd(stage4,'flora_@'(ready_changes),true).
+
+
+%%% S:stage2 :- S.ready_edb[].
+flora_isa(_h31230,stage2) :- 
+        flora_fd_rhs(_h31230,'flora_@'(ready_edb),_h31395).
+
+
+%%% S:stage3 :- S.ready_idb[].
+flora_isa(_h31759,stage3) :- 
+        flora_fd_rhs(_h31759,'flora_@'(ready_idb),_h31924).
+
+
+%%% S:stage4 :- S:stage3, S.ready_user[].
+flora_isa(_h32376,stage4) :- 
+        flora_isa_rhs(_h32376,stage3),
+        flora_fd_rhs(_h32376,'flora_@'(ready_user),_h32658).
+
+
+%%% T:stage1 :- S.ready_changes[], T= S + 1.
+flora_isa(_h33166,stage1) :- 
+        flora_fd_rhs(_h33230,'flora_@'(ready_changes),_h33376),
+        is(_h33464,+(_h33230,1)),
+        =(_h33166,_h33464).
+
+
+%%%   ?- pps[produces@(S)->>P].
+%?- flora_print_all(flora_mvd_rhs(pps,'flora_@'(produces,_h33899),_h33977),'.'(var('S',_h33899),'.'(var('P',_h33977),[]))).
+
+flora_tag(query).
+
+
+%%% ?- P.hasConfig@(S)[needsPart->>Q].
+%?- flora_print_all(','(flora_fd_rhs(_h34517,'flora_@'(hasConfig,_h34574),_h34710),flora_mvd_rhs(_h34710,'flora_@'(needsPart),_h34693)),'.'(var('P',_h34517),'.'(var('S',_h34574),'.'(var('Q',_h34693),[])))).
+
+flora_tag(query).
+
+
+%%%   
+
+/*** lib/flrtrailer1.P: appended automatically by the FLORA compiler  *******/
+
+
+/*****************************************************************************
+  closure rules for X::Y
+*****************************************************************************/
+:- table flora_subclass/2.
+
+flora_subclass(X,X) :- flora_sub(X,_).
+flora_subclass(X,X) :- flora_sub(_,X).
+flora_subclass(X,Y) :- flora_sub(X,Y).
+
+flora_subclass(X,Y) :-
+	flora_subclass(X,Z), 
+	flora_subclass(Z,Y),
+	(X \= Z -> true ; Z\=Y),
+	( X = Y ->
+	    write('*** Warning: cyclic subclass hierarchy: '),
+	    write(X), write('::'), write(Z), write('::'), write(Y), nl
+	  ;
+	    true
+	).
+
+
+/*****************************************************************************
+  closure rules for X:Y
+*****************************************************************************/
+:- table flora_isa/2.
+
+flora_isa(O,C) :-
+	flora_subclass(C1,C),
+	flora_isa(O,C1).
+
+
+/*****************************************************************************
+  rules for monotonic behavior inheritance
+*****************************************************************************/
+:- table flora_fd/3.
+:- table flora_mvd/3.
+:- table flora_ifd/3.
+:- table flora_imvd/3.
+
+flora_fd(O,MethodArgs,R) :-
+	flora_ifd(Class,MethodArgs,R),
+	( flora_isa(O,Class)
+	  ;
+	  flora_eql(Class,C), flora_isa(O,C)
+	).
+
+flora_mvd(O,MethodArgs,R) :-
+	flora_imvd(Class,MethodArgs,R),
+	( flora_isa(O,Class)
+	  ;
+	  flora_eql(Class,C), flora_isa(O,C)
+	).
+
+flora_ifd(Sub,MethodArgs,R) :-
+	flora_ifd(Class,MethodArgs,R),
+	( flora_subclass(Sub,Class)
+	  ;
+	  flora_eql(Class,S), flora_subclass(Sub,S)
+	).
+
+flora_imvd(Sub,MethodArgs,R) :-
+	flora_imvd(Class,MethodArgs,R),
+	( flora_subclass(Sub,Class)
+	  ;
+	  flora_eql(Class,S), flora_subclass(Sub,S)
+	).
+
+
+/*****************************************************************************
+  rules for congruence due to single-valued methods
+*****************************************************************************/
+:- table flora_eql/2.
+:- table flora_metheql/2.
+/*
+flora_eql(X,Y) :-
+	flora_fd(O,M1,X),
+	(M1=M2 ; flora_metheql(M1,M2)),
+	flora_fd(O,M2,Y),
+	not X=Y.
+*/
+flora_eql(X,Y) :-
+	flora_fd(O,M1,X),
+	flora_fd(O,M1,Y),
+	not X=Y.
+
+flora_eql(X,Y) :-
+	flora_fd(O,M1,X),
+	flora_metheql(M1,M2),
+	flora_fd(O,M2,Y),
+	not X=Y.
+
+flora_eql(X,Y) :-
+	flora_eql(O1,O2),
+	flora_fd(O1,M1,X),
+	(M1=M2 ; flora_metheql(M1,M2)),
+	flora_fd(O2,M2,Y),
+	not X=Y.
+
+flora_eql(X,Y) :-
+	flora_eql(X,Z),
+	flora_eql(Z,Y),
+	not X=Y.
+
+
+flora_metheql(X,Y) :-
+	( nonvar(X) ->
+	    functor(X,'flora_@',N), N >= 1,
+	    functor(Y,'flora_@',N)
+
+	  ; nonvar(Y) ->
+	    functor(Y,'flora_@',N), N >= 1,
+	    functor(X,'flora_@',N)
+	),
+	flora_argeql(X,Y,N),
+	not X=Y.
+
+
+flora_argeql(_,_,0).
+
+flora_argeql(X,Y,N) :-
+	N >= 1,
+	arg(N,X,Xn),
+	arg(N,Y,Yn),
+	(Xn=Yn ; flora_eql(Xn,Yn)),
+	M is N-1,
+	flora_argeql(X,Y,M).
+
+
+/*****************************************************************************
+  rules for object existence and empty result sets
+*****************************************************************************/
+:- table flora_exists/1.
+:- table flora_mvd/2.
+:- table flora_imvd/2.
+
+flora_exists(X) :- flora_fd(X,_,_).
+flora_exists(X) :- flora_fd(_,_,X).
+flora_exists(X) :- flora_mvd(X,_,_).
+flora_exists(X) :- flora_mvd(_,_,X).
+flora_exists(X) :- flora_ifd(X,_,_).
+flora_exists(X) :- flora_ifd(_,_,X).
+flora_exists(X) :- flora_imvd(X,_,_).
+flora_exists(X) :- flora_imvd(_,_,X).
+flora_exists(X) :- flora_isa(X,_).
+flora_exists(X) :- flora_isa(_,X).
+flora_exists(X) :- flora_sub(X,_).
+flora_exists(X) :- flora_sub(_,X).
+
+flora_exists(X) :-
+	flora_fd(_,M,_),
+	M =.. [_|L],
+	member(X,L).
+
+flora_exists(X) :-
+	flora_mvd(_,M,_),
+	M =.. [_|L],
+	member(X,L).
+
+flora_exists(X) :-
+	flora_ifd(_,M,_),
+	M =.. [_|L],
+	member(X,L).
+
+flora_exists(X) :-
+	flora_imvd(_,M,_),
+	M =.. [_|L],
+	member(X,L).
+
+
+flora_mvd(O,M) :- flora_mvd(O,M,_).
+
+flora_imvd(O,M) :- flora_imvd(O,M,_).
+
+
+/*****************************************************************************
+  rules for flattened path expressions on RHS
+*****************************************************************************/
+:- table flora_fd_rhs/3.
+:- table flora_mvd_rhs/3.
+:- table flora_ifd_rhs/3.
+:- table flora_imvd_rhs/3.
+:- table flora_mvd_rhs/2.
+:- table flora_imvd_rhs/2.
+:- table flora_isa_rhs/2.
+:- table flora_sub_rhs/2.
+
+
+/****************************************************************************/
+flora_fd_rhs(Object,Method,Result) :-
+	flora_fd(Object,M,Result),
+	(M=Method ; flora_metheql(M,Method)).
+
+flora_fd_rhs(Object,Method,Result) :-
+	flora_eql(Object,O),
+	flora_fd(O,M,Result),
+	(M=Method ; flora_metheql(M,Method)).
+
+flora_fd_rhs(Object,Method,Result) :-
+	flora_eql(Result,R),
+	flora_fd(Object,M,R),
+	(M=Method ; flora_metheql(M,Method)).
+
+flora_fd_rhs(Object,Method,Result) :-
+	flora_eql(Result,R),
+	flora_eql(Object,O),
+	flora_fd(O,M,R),
+	(M=Method ; flora_metheql(M,Method)).
+
+/****************************************************************************/
+flora_mvd_rhs(Object,Method,Result) :-
+	flora_mvd(Object,M,Result),
+	(M=Method ; flora_metheql(M,Method)).
+
+flora_mvd_rhs(Object,Method,Result) :-
+	flora_eql(Object,O),
+	flora_mvd(O,M,Result),
+	(M=Method ; flora_metheql(M,Method)).
+
+flora_mvd_rhs(Object,Method,Result) :-
+	flora_eql(Result,R),
+	flora_mvd(Object,M,R),
+	(M=Method ; flora_metheql(M,Method)).
+
+flora_mvd_rhs(Object,Method,Result) :-
+	flora_eql(Result,R),
+	flora_eql(Object,O),
+	flora_mvd(O,M,R),
+	(M=Method ; flora_metheql(M,Method)).
+
+/****************************************************************************/
+flora_ifd_rhs(Object,Method,Result) :-
+	flora_ifd(Object,M,Result),
+	(M=Method ; flora_metheql(M,Method)).
+
+flora_ifd_rhs(Object,Method,Result) :-
+	flora_eql(Object,O),
+	flora_ifd(O,M,Result),
+	(M=Method ; flora_metheql(M,Method)).
+
+flora_ifd_rhs(Object,Method,Result) :-
+	flora_eql(Result,R),
+	flora_ifd(Object,M,R),
+	(M=Method ; flora_metheql(M,Method)).
+
+flora_ifd_rhs(Object,Method,Result) :-
+	flora_eql(Result,R),
+	flora_eql(Object,O),
+	flora_ifd(O,M,R),
+	(M=Method ; flora_metheql(M,Method)).
+
+/****************************************************************************/
+flora_imvd_rhs(Object,Method,Result) :-
+	flora_imvd(Object,M,Result),
+	(M=Method ; flora_metheql(M,Method)).
+
+flora_imvd_rhs(Object,Method,Result) :-
+	flora_eql(Object,O),
+	flora_imvd(O,M,Result),
+	(M=Method ; flora_metheql(M,Method)).
+
+flora_imvd_rhs(Object,Method,Result) :-
+	flora_eql(Result,R),
+	flora_imvd(Object,M,R),
+	(M=Method ; flora_metheql(M,Method)).
+
+flora_imvd_rhs(Object,Method,Result) :-
+	flora_eql(Result,R),
+	flora_eql(Object,O),
+	flora_imvd(O,M,R),
+	(M=Method ; flora_metheql(M,Method)).
+
+/****************************************************************************/
+flora_mvd_rhs(Object,Method) :-
+	flora_mvd(Object,M),
+	(M=Method ; flora_metheql(M,Method)).
+
+flora_mvd_rhs(Object,Method) :-
+	flora_eql(Object,O),
+	flora_mvd(O,M),
+	(M=Method ; flora_metheql(M,Method)).
+
+/****************************************************************************/
+flora_imvd_rhs(Object,Method) :-
+	flora_imvd(Object,M),
+	(M=Method ; flora_metheql(M,Method)).
+
+flora_imvd_rhs(Object,Method) :-
+	flora_eql(Object,O),
+	flora_imvd(O,M),
+	(M=Method ; flora_metheql(M,Method)).
+
+/****************************************************************************/
+flora_isa_rhs(Object1,Object2) :-
+	flora_isa(Object1,Object2).
+
+flora_isa_rhs(Object1,Object2) :-
+	flora_eql(Object1,O1),
+	flora_isa(O1,Object2).
+
+flora_isa_rhs(Object1,Object2) :-
+	flora_eql(Object2,O2),
+	flora_isa(Object1,O2).
+
+flora_isa_rhs(Object1,Object2) :-
+	flora_eql(Object1,O1),
+	flora_eql(Object2,O2),
+	flora_isa(O1,O2).
+
+/****************************************************************************/
+flora_sub_rhs(Object1,Object2) :-
+	flora_subclass(Object1,Object2).
+
+flora_sub_rhs(Object1,Object2) :-
+	flora_eql(Object1,O1),
+	flora_subclass(O1,Object2).
+
+flora_sub_rhs(Object1,Object2) :-
+	flora_eql(Object2,O2),
+	flora_subclass(Object1,O2).
+
+flora_sub_rhs(Object1,Object2) :-
+	flora_eql(Object1,O1),
+	flora_eql(Object2,O2),
+	flora_subclass(O1,O2).
+
+/*****************************************************************************
+  complementary rules to protect against "undefined" error reported by XSB 
+*****************************************************************************/
+flora_fd(_,_,_)   :- fail.
+flora_mvd(_,_,_)  :- fail.
+flora_ifd(_,_,_)  :- fail.
+flora_imvd(_,_,_) :- fail.
+flora_fs(_,_,_)   :- fail.
+flora_mvs(_,_,_)  :- fail.
+flora_sub(_,_)    :- fail.
+flora_isa(_,_)    :- fail.
+
+
+/****************************  End of Trailer  ******************************/
+

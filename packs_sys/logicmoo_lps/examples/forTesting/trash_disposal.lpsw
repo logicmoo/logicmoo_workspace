@@ -1,0 +1,25 @@
+
+initial_state([locked(location2),bin_at(location2),bin_at(location3),trash_at(location1)]).
+
+reactive_rule([holds(trash_at(L1),T1)],[holds(bin_at(L2),T2),happens(dispose(L1,L2),T2,T3),tc(T1 =< T2)]).
+
+terminated(happens(unlock(L),_T1,_T2),locked(L),[]).
+terminated(happens(dispose(L1,L2),_T1,_T2),trash_at(L1),[]).
+
+d_pre([happens(dispose(L1,L2),T1,T2),holds(locked(L2),T1)]).
+
+observe([],2).
+observe([],3).
+observe([unlock(location2)],4).
+observe([],5).
+observe([],6).
+
+fluent(locked(_)).
+fluent(bin_at(_)).
+fluent(trash_at(_)).
+
+action(dispose(_,_)).
+
+event(unlock(_)).
+
+maxTime(5).

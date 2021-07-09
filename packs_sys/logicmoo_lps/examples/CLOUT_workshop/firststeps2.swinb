@@ -1,0 +1,111 @@
+<div class="notebook">
+
+<div class="nb-cell markdown">
+---+++ Reactive rules
+
+The LPS program in the previous notebook is entirely passive. It has no purpose of its own, other than simply to observe external events and update its internal state accordingly. Most programs and most intelligent agents are more active. They have their own goals, and they have their own _actions_, which they can perform (or execute), to satisfy their goals. In LPS, goals are satisfied by performing actions, to generate a model of the world in which those goals are true. 
+
+Goals can be postive or negative. We will see examples of negative goals (also called constraints) later. In the current restricted implementation of LPS, positive goals have the form of reactive rules (or just plain "rules"). Here is an extension of the previous example, in which the program has the goal of keeping the light on for as much time as possible.
+</div>
+
+<div class="nb-cell program">
+
+:- expects_dialect(lps).
+
+fluents lightOn, lightOff.
+events switch.
+actions switch.
+
+initially lightOff.
+
+observe switch from 1 to 2.
+observe switch from 3 to 4.
+observe switch from 10 to 11.
+
+% Whenever the light is off, then switch it on.
+% %
+if lightOff at T1 
+then switch from T1 to T2.
+
+switch initiates 	lightOn 	if lightOff.
+switch terminates 	lightOff 	if lightOff.
+switch initiates 	lightOff 	if lightOn.
+switch terminates 	lightOn 	if lightOn.
+</div>
+
+<div class="nb-cell query">
+go(Timeline).
+</div>
+
+<div class="nb-cell markdown">
+There are two kinds of events: actions and external events.  Here "switch" is both an external event and an action. Notice that the external event "switch from 1 to 2" satisfies the reactive rule at time T1 = 1, without the need to perform "switch from 1 to 2" as an action. However, to satisfy the rule at times T1 = 4 and T = 11, "switch" must be performed as an action from 4 to 5 and from 11 to 12, respectively. (In the current implementation this distinction between external events and actions is not displayed.)
+
+Having time in your program makes the meaning of the program logical. However, as a shortcut, it is often possible to write the same rule without stating time explicitly. You have to be careful using this feature, because LPS may have a different idea about the missing time than you do. In this case there is no problem:
+</div>
+
+<div class="nb-cell program">
+fluents lightOn, lightOff.
+events switch.
+actions switch.
+
+initially lightOff.
+
+observe switch from 1 to 2.
+observe switch from 3 to 4.
+observe switch from 10 to 11.
+
+if lightOff  
+then switch.
+
+switch initiates 	lightOn 	if lightOff.
+switch terminates 	lightOff 	if lightOff.
+switch initiates 	lightOff 	if lightOn.
+switch terminates 	lightOn 	if lightOn.
+</div>
+
+<div class="nb-cell query">
+go(Timeline).
+</div>
+
+<div class="nb-cell markdown">
+The rule in this program is a simple condition-action rule. It might be tempting to try to achieve the same, desired result with a simple condition-conclusion rule. For example:
+</div>
+
+<div class="nb-cell program">
+fluents lightOn, lightOff.
+events switch.
+actions switch.
+
+initially lightOff.
+
+observe switch from 1 to 2.
+observe switch from 3 to 4.
+observe switch from 10 to 11.
+
+if lightOff at T1 then lightOn at T2, T1 =&lt; T2.
+
+switch initiates 	lightOn 	if lightOff.
+switch terminates 	lightOff 	if lightOff.
+switch initiates 	lightOff 	if lightOn.
+switch terminates 	lightOn 	if lightOn.
+</div>
+
+<div class="nb-cell markdown">
+But the resulting program doesn't achieve the desired effect, because causal laws in LPS are completely passive: They cannot be used to generate actions, but can be used only to update states using actions and events that have been generated in some other way.
+</div>
+
+<div class="nb-cell query">
+go(Timeline).
+</div>
+
+<div class="nb-cell markdown">
+There is another problem with the condition-conclusion rule: LPS interprets times, such as T2, that occur only in the then-part of rules differently from times, such as T1, that occur in the if-part of rules. In this case, it interprets the condition-conclusion rule as meaning:
+
+	For all times T1, if lightOff at T1, then  
+	there exists a time T2 at the same time or after T1,    
+	such that lightOn at T2.
+    
+This does not specify the desired effect, even if causal laws could be used to generate actions.
+</div>
+
+</div>

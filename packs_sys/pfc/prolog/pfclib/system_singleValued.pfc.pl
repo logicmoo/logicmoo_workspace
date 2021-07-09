@@ -3,6 +3,7 @@
 :- set_fileAssertMt(baseKB).
 % ensure this file does not get unloaded with mpred_reset
 :- prolog_load_context(file,F), ain(mpred_unload_option(F,never)).
+:- expects_dialect(pfc).
 
 % asserting mpred_sv(p,2) causes p/2 to be treated as a mpred_sv, i.e.
 % if p(foo,1)) is a fact and we assert_db p(foo,2), then the forrmer assertion

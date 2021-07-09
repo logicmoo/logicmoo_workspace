@@ -1,5 +1,1 @@
-ERROR: Invalid ACE text:
-The word "employee" is unknown.
-The word "employee" is unknown.
-"Mary is an <> employee.": This is the first sentence that was not ACE. The sign <> indicates the position where parsing failed.
-
+ERROR: Program has no answer.

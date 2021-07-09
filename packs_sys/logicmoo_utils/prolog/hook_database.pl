@@ -694,7 +694,7 @@ put_clause_ref(Ref,V):- !, nop(dmsg(put_clause_ref(Ref,V))).
 put_clause_ref(Ref,V):-put_attr(V,cref,Ref).
 
 remove_term_attr_type(Term, Mod):- is_list(Mod),!,maplist(remove_term_attr_type(Term),Mod).
-remove_term_attr_type(Term, Mod):- quietly((term_attvars(Term,AVs),maplist(del_attr_type(Mod),AVs))).
+remove_term_attr_type(Term, Mod):- quietly((term_attvars(Term,AVs),term_attvars(AVs,AVs2),maplist(del_attr_type(Mod),AVs2))).
 
 :- op(700,xfx,'=@=').
 
@@ -814,7 +814,7 @@ clause_true_anywhere(G):- strip_module(G,M,S),!,
 
 
 current_assertion_module(M):- if_defined(defaultAssertMt(M),M=baseKB).
-suggest_m(M):- prolog_load_context(module,M),!.
+suggest_m(M):- prolog_load_context(module, M),!.
 suggest_m(M):- (if_defined(defaultAssertMt(M),fail);current_module_ordered(M)),is_visible_module(M).
 
 

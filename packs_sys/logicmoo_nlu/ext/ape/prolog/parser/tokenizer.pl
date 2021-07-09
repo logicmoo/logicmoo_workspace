@@ -22,10 +22,8 @@
 		is_digit/1
 	]).
 
-:- use_module('../logger/error_logger', [
-		add_error_message_once/4,
-		add_warning_message_once/4
-	]).
+
+:- use_module('../logger/error_logger').
 
 :- use_module('../utils/ace_niceace', [
         pronoun_split/2
@@ -66,6 +64,20 @@ Example:
 [2, men, can, not, like, '"#@"', and, :, every, '-thing', '.']
 
 */
+
+:- use_module('../utils/logicmoo_ape_utils').
+
+:- if( \+ current_predicate(is_codelist/1)).
+is_codelist([A|L]) :- maplist(is_codelist_code,[A|L]).
+is_codelist_code(H) :- integer(H). %, swish_render_codes_charset_code(ascii, H),
+:- export(is_codelist/1).
+:- endif.
+
+:- if( \+ current_predicate(is_charlist/1)).
+is_charlist([A|L]) :- maplist(is_charlist_char,[A|L]).
+is_charlist_char(H) :- atom(H), atom_length(H,1). 
+:- export(is_charlist/1).
+:- endif.
 
 %% tokenize(+ACEText:term, -Tokens:list) is det.
 %
@@ -318,7 +330,7 @@ is_special(38, '&').
 % e.g. the quotation mark or a backslash.
 %
 get_string([], [], []) :-
-	add_error_message_once(character, '', 'EOF', 'Every quoted string must end with ".').
+	add_werror_message_once(character, '', 'EOF', 'Every quoted string must end with ".').
 
 get_string([34 | Cs], [], Cs) :- !.
 
@@ -338,7 +350,7 @@ get_string([C | Cs], [C | Prefix], Remaining) :-
 % e.g. the quotation mark or a backslash.
 %
 get_qword([], [], []) :-
-	add_error_message_once(character, '', 'EOF', 'Every quoted word must end with `.').
+	add_werror_message_once(character, '', 'EOF', 'Every quoted word must end with `.').
 
 get_qword([96 | Cs], [], Cs) :- !.
 

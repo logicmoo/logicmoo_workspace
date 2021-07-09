@@ -3,7 +3,7 @@
                     xdrs2xml/2]).
 
 :- use_module(semlib(errors),[warning/2]).
-:- use_module(library(lists),[member/2,append/3]).
+:- use_module(library(lists),[member/2,append/3,select/3]).
 :- use_module(boxer(betaConversionDRT),[betaConvert/2]).
 :- use_module(boxer(alphaConversionDRT),[alphaConvertDRS/2]).
 :- use_module(boxer(drs2fdrs),[instDrs/1]).
@@ -624,6 +624,37 @@ tokentags2xml([Index:Tags|L],Stream):-
 ========================================================================*/
 
 tags2xml([],_,_):- !.
+
+tags2xml(L1,Stream,Tab):- 
+   select(sem:'EXS',L1,L2), 
+   select(sem:'NOW',L2,L3), !,
+   tags2xml([sem:'ENS'|L3],Stream,Tab).
+
+tags2xml(L1,Stream,Tab):- 
+   select(sem:'EXS',L1,L2),
+   select(sem:'PST',L2,L3), !,
+   tags2xml([sem:'EPS'|L3],Stream,Tab).
+
+tags2xml(L1,Stream,Tab):- 
+   select(sem:'EXS',L1,L2),
+   select(sem:'FUT',L2,L3), !,
+   tags2xml([sem:'EFS'|L3],Stream,Tab).
+
+tags2xml(L1,Stream,Tab):- 
+   select(sem:'EXG',L1,L2),
+   select(sem:'EXS',L2,L3), !,
+   tags2xml([sem:'EXG'|L3],Stream,Tab).
+
+tags2xml(L1,Stream,Tab):- 
+   select(sem:'EXT',L1,L2),
+   select(sem:'EXS',L2,L3), !,
+   tags2xml([sem:'EXT'|L3],Stream,Tab).
+
+tags2xml(L1,Stream,Tab):- 
+   select(sem:Removed,L1,L2),
+   select(sem:Sem,L2,L3), !,
+   warning('double semantic tag detected: ~p',[Removed]),
+   tags2xml([sem:Sem|L3],Stream,Tab).
 
 tags2xml([lemma:Lemma|L],Stream,Tab):- !,
    symbol(Lemma,NiceLemma),

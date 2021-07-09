@@ -1,0 +1,113 @@
+Narsese
+Tony Lofthouse edited this page on Dec 19, 2020 · 16 revisions
+ONA's syntax is mostly compatible with OpenNAR's: https://github.com/opennars/opennars/wiki/Narsese-Grammar-(Input-Output-Format) Most of Narsese is supported, but there are minor differences:
+
+BNF
+task ::= sentence
+
+sentence ::= belief | question | goal 
+
+belief ::= statement '. [tense] [truth]
+
+goal ::= statement '! [tense] [desire] 
+
+question ::= statement '? [tense]
+
+statement ::= compound-statement [ copula compound-statement ]
+
+copula ::== '--> | '<-> | '==> | '=/> | '=|>
+
+compound-statement ::=   ['!] compound-term [ statement-operator compound-term ]   // Infix
+                       | ['!] statement-operator compound-term compound-term       // Prefix		
+
+statement-operator ::= '&& | '&/ | '&|
+
+compound-term ::=   term [ term-operator term ]     // Infix
+                  | term-operator term term	    // Prefix
+
+term-operator ::== '& | '| | '- | '~ | '* | '/1 | '/2 | '\1 | '\2
+
+term ::= ['^] word | set | var | ( statement ) | < statement >
+
+set ::= '{ term [term] '} | '[ term [term] ']
+
+var ::= '$ word | '# word | '? word
+
+word ::= { letter | digit | _ | ” | ' }+
+
+truth ::= '{ float float '}
+
+desire ::= '{ float float '}
+
+tense ::= ':|: //indicating "current time"
+Other
+Custom truth values
+
+These are added by appending {0.0 0.9} instead of %0.0;0.9% as we believe this increased the readability.
+
+Images
+
+(/,rel,_,b) has to be written as
+
+(rel /1 b), and image as
+
+(/,rel,a,_) as
+
+(rel /2 a), same for \ with \1 and \2.
+
+Intervals
+
+Intervals, to measure expected time distances between events, are always learned by ONA and stored as meta-data, they are not part of the Narsese I/O format anymore. Hence a sequence
+
+(&/,a,+5,b)
+
+becomes
+
+(&/,a,b)
+
+or
+
+(a &/ b)
+
+and also the interval for implications is not used anymore.
+
+Operators
+
+The syntactic sugar
+
+(^op,arg_1,...,arg_n)
+is not supported anymore, instead the full notation has to be used which is supported by both systems:
+
+<(*,arg_1,...,arg_n) --> ^op>
+though for operations without arguments, the following shortcut can be used:
+
+^op
+Restrictions
+
+1.
+
+Copulas in ONA are binary, since it's using an array-based heap for terms. While there are ways to encode n-ary relations in a binary heap, the ONA philosophy, following KISS, encourages the use of left-nesting, which is also used by the system itself to compose sequences of events:
+
+((a &/ b) &/ c).
+
+2.
+
+The parallel temporal copula &| is not implemented, please use &/ for now, again due to KISS. If the order does not matter in some background knowledge we want to give the system, in addition to
+
+<(a &/ b) =/> c>
+also give it
+
+<(b &/ a) =/> c>
+to achieve the same as with &| for now.
+
+Optional syntactic improvements
+
+The ONA parser does not require commas, and doesn't distinguish between < and (, also it supports infix format.
+
+<(|,a,b) --> M>. can be written as
+
+<(a | b) --> M>. or even as
+
+((a | b) --> M).
+
+Note: Spaces cannot be omitted.

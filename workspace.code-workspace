@@ -1,0 +1,170 @@
+{
+	"folders": [
+		{
+			"path": "."
+		},
+	],
+	"extensions": {
+		"recommendations": [
+			"arthurwang.vsc-prolog",
+			//  "AlanizPalomeraMiguelAngel.prolog",
+			// "rebornix.prolog",
+		]
+	},
+	"settings": {
+		"git.ignoreLimitWarning": true,
+		"files.watcherExclude": {
+			"**/.git/objects/**": true,
+			"**/.git/subtree-cache/**": true,
+			"**/node_modules/*/**": true,
+			"**/~*/**": true,
+			"**/*~/**": true,
+			"**/~*": true,
+			"**/*~": true,
+		},
+		"terminal.integrated.scrollback": 99999,
+		"prolog.dialect": "swi",
+		"editor.minimap.showSlider": "always",
+		"gitlens.advanced.messages": {
+			"suppressGitMissingWarning": true
+		},
+		"vs-kubernetes": {
+			"vscode-kubernetes.kubectl-path.windows": "C:\\Users\\logicmoo\\.vs-kubernetes\\tools\\kubectl\\kubectl.exe",
+			"vscode-kubernetes.minikube-path.windows": "C:\\Users\\logicmoo\\.vs-kubernetes\\tools\\minikube\\windows-amd64\\minikube.exe",
+			"vscode-kubernetes.helm-path.windows": "C:\\Users\\logicmoo\\.vs-kubernetes\\tools\\helm\\windows-amd64\\helm.exe",
+			"vscode-kubernetes.helm-path.linux": "/home/logicmoo/.vs-kubernetes/tools/helm/linux-amd64/helm",
+			"vscode-kubernetes.minikube-path.linux": "/home/logicmoo/.vs-kubernetes/tools/minikube/linux-amd64/minikube",
+			"vscode-kubernetes.kubectl-path.linux": "/home/logicmoo/.vs-kubernetes/tools/kubectl/kubectl"
+		},
+		"redhat.telemetry.enabled": true,
+		"editor.suggestSelection": "first",
+		"vsintellicode.modify.editor.suggestSelection": "automaticallyOverrodeDefaultValue",
+		"workbench.iconTheme": "pvs",
+		"logico-dev-toolbox.PSUpdateDate": "3/23/2021",
+		"pddlParser.executableOrService": "/root/.vscode-server-insiders/data/User/globalStorage/jan-dolejsi.pddl/val/Val-20210215.2-Linux/bin/Parser",
+		"pddl.validatorPath": "/root/.vscode-server-insiders/data/User/globalStorage/jan-dolejsi.pddl/val/Val-20210215.2-Linux/bin/Validate",
+		"pddl.valueSeqPath": "/root/.vscode-server-insiders/data/User/globalStorage/jan-dolejsi.pddl/val/Val-20210215.2-Linux/bin/ValueSeq",
+		"pddl.valStepPath": "/root/.vscode-server-insiders/data/User/globalStorage/jan-dolejsi.pddl/val/Val-20210215.2-Linux/bin/ValStep",
+		"files.autoSave": "afterDelay",
+		"pddl.selectedPlanner": "http://solver.planning.domains/solve",
+		"workbench.editor.enablePreview": false,
+		"atomKeymap.promptV3Features": true,
+		"files.associations": {
+			"*.rmd": "markdown",
+			"*.pl": "prolog"
+		},
+		"workbench.editorAssociations": [
+			{
+				"viewType": "jupyter-notebook",
+				"filenamePattern": "*.ipynb"
+			}
+		],
+		"workbench.colorTheme": "Visual Studio Light Theme (2017)",
+		"cmake.configureOnOpen": true,
+		"sync.gist": "d02b9ddba7a3ef786610f66d4b9ccd05",
+		"sync.autoDownload": true,
+		"sync.quietSync": true,
+		"sync.autoUpload": true,
+		"sync.forceDownload": true,
+		"sync.forceUpload": true,
+		"editor.renderControlCharacters": true,
+		"remote.SSH.remotePlatform": {
+			"10.0.0.180": "linux"
+		},
+		"files.exclude": {
+			"**/.git/objects/**": true,
+			"**/*~": true,
+			"**/*~/**": true,
+			"**/~*": true,
+			"**/~*/**": true
+		},
+		"gitlens.defaultDateFormat": null,
+		"terminal.integrated.confirmOnExit": true,
+		"terminal.integrated.showExitAlert": false,
+		"terminal.integrated.cursorBlinking": true,
+		"typescript.tsc.autoDetect": "off",
+		"editor.insertSpaces": false,
+	},
+	"launch": {
+		"inputs": [
+			{
+				"type": "command",
+				"command": "@command:prolog.load.document",
+				"id": "666",
+				"args": [
+					"packs_sys/prologmud_samples/prolog/prologmud_sample_games/run_mud_server.pl"
+				],
+			}
+		],
+		"configurations": [
+			{
+				"name": "Launch Extension",
+				"type": "extensionHost",
+				"request": "launch",
+				"runtimeExecutable": "${execPath}",
+				"args": [
+					"--extensionDevelopmentPath=${workspaceRoot}"
+				],
+				"stopOnEntry": false,
+				"sourceMaps": true,
+				"outFiles": [
+					"${workspaceRoot}/out/src/**/*.js"
+				],
+				"preLaunchTask": "npm: watch"
+			},
+			{
+				"type": "node",
+				"request": "attach",
+				"name": "Attach to Extension Host",
+				"protocol": "inspector",
+				"port": 5870,
+				"restart": true,
+				"outFiles": [
+					"${workspaceRoot}/out/src"
+				]
+			}
+		],
+		"compounds": [
+			{
+				"name": "Launch LOGICMOO Server",
+				"configurations": [
+					"Debug Prolog Files",
+					{
+						"folder": "logicmoo_workspace",
+						"file": "packs_sys/prologmud_samples/prolog/prologmud_sample_games/run_mud_server.pl",
+					},
+				]
+			}
+		]
+	},
+	"tasks": {
+		"version": "2.0.0",
+		"tasks": [
+			{
+				"label": "Prolog",
+				"type": "shell",
+				"command": "./StartLogicmoo.sh",
+				"problemMatcher": [
+					"$platformio"
+				],
+				"group": {
+					"kind": "build",
+					"isDefault": true
+				}
+			},
+			{
+				"label": "Run tests",
+				"type": "shell",
+				"command": "./scripts/test.sh",
+				"windows": {
+					"command": ".\\scripts\\test.cmd"
+				},
+				"group": "test",
+				"presentation": {
+					"reveal": "always",
+					"panel": "new"
+				}
+			}
+		]
+	},
+}

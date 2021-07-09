@@ -1,0 +1,6 @@
+test :- 
+	load_dyn('testdyntable.D'),
+	p(X,Y),
+	writeln(p(X,Y)),
+	fail.
+

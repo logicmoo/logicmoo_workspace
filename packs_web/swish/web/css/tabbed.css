@@ -69,7 +69,7 @@ span.tab-dirty {
 }
 
 .nav > li > a.compact.data-dirty > span.tab-dirty {
-  display: inline-block;
+  /* display: inline-block; */
 }
 
 a.tab-chat {
@@ -77,7 +77,7 @@ a.tab-chat {
 }
 
 a.tab-chat.chat-available {
-  display: inline-block;
+  /* display: inline-block; */
   height: 30px;
   width: 22px;
 }
@@ -91,7 +91,7 @@ a.tab-chat.chat-available {
 a.tab-chat.chat-alert {
   position: relative;
   vertical-align: middle;
-  display: inline-block;
+  /* display: inline-block; */
   height: 30px;
   width: 22px;
 }
@@ -158,7 +158,7 @@ label.tabbed-right {
   background-repeat: no-repeat;
   background-size: 70%;
   background-position: 50% 40%;
-  display: inline-block;
+ /* display: inline-block; */
   vertical-align: middle;
   height: 30px;
   width: 30px;
@@ -170,7 +170,7 @@ label.tabbed-right {
 }
 
 .tabbed-profile .select-profile {
-  display: inline-block;
+  /* display: inline-block; */
 }
 
 form.search-sources {

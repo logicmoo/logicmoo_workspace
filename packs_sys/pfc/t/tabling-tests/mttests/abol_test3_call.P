@@ -1,0 +1,38 @@
+
+arc(1,2).
+arc(2,3).
+arc(2,4).
+arc(4,1).
+
+:- table spath/2.
+:- thread_shared spath/2.
+
+spath(X,Y) :- arc(X,Y).
+spath(X,Y) :- spath(X,Z), arc(Z,Y).
+
+:- table ppath/2.
+
+ppath(X,Y) :- arc(X,Y).
+ppath(X,Y) :- ppath(X,Z), arc(Z,Y).
+
+:- import xsb_thread_create/2, xsb_thread_join/2 from thread.
+
+test:- spath(1,_),fail.
+test:- ppath(1,_),fail.
+test:- get_residual(spath(1,Y),_),writeln(answer(s(a,Y))),fail.
+test:- get_residual(ppath(1,Y),_),writeln(answer(p(a,Y))),fail.
+
+test:- xsb_thread_create(abolish_table_call(ppath(1,_)),ID1),
+	xsb_thread_create(abolish_table_call(spath(1,_)),ID2),
+	xsb_thread_join(ID2,_),
+	xsb_thread_join(ID1,_),
+	fail.
+test:- get_residual(spath(1,Y),_),writeln(answer(s(a,Y))),fail.
+test:- get_residual(ppath(1,Y),_),writeln(answer(p(a,Y))),fail.
+
+test:- gc_tables(_),fail.
+test:- get_residual(spath(1,Y),_),writeln(answer(s(a,Y))),fail.
+test:- get_residual(ppath(1,Y),_),writeln(answer(p(a,Y))),fail.
+
+end_of_file.
+

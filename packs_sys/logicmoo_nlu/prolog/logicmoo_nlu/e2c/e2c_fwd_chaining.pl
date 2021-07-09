@@ -35,7 +35,7 @@ baseKB:sanity_test:- t33fa.
 system:nl_fwd :- locally(tracing80,
              with_no_assertions(lmconf:use_cyc_database,
                   locally(t_l:usePlTalk, (told, repeat, prompt_read('E2FC> ', U),
-                            to_wordlist_atoms(U, WL), (WL==[bye];WL==[end, '_', of, '_', file];ain(nl_fwd(WL))))))).
+                            into_lexical_segs(U, WL), (WL==[bye];WL==[end, '_', of, '_', file];ain(nl_fwd(WL))))))).
 
 irc_cmd:irc_invoke_pipeline(Channel, User, Say, Args):- invoke_irc_pipeline(Channel, User, Say, Args).
 
@@ -102,7 +102,7 @@ add_conversion(From, Pred, To) ==>
 
 % ==> add_conversion(lf80, parser_e2c:prelogic_to_pfc, pfc_lf).
 
-==> add_conversion(input, parser_e2c:to_wordlist_atoms, text80).
+==> add_conversion(input, parser_e2c:into_lexical_segs, text80).
 ==> add_conversion(text80, parser_e2c:e2c_parse, lf_e2c).
 ==> add_conversion(lf_e2c, parser_e2c:e2c_clausify, clause_e2c).
 ==> add_conversion(clause_e2c, parser_e2c:e2c_reply, reply_e2c).

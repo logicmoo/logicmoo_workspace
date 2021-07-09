@@ -28,6 +28,13 @@
 
 :- set_module(class(library)).
 
+:- if(exists_source(library(logicmoo_web_long_message))).
+:- use_module(library(logicmoo_web_long_message)).
+:- endif.
+
+maybe_http_port(Port):-
+ thread_propery(_,alias(Alias)),atom_concat('httpd@',X,Alias),atom_concat(APort,'_1',X),atom_number(APort,Port).
+
 :- dynamic(lmconf:irc_bot_nick/1).
 lmconf:irc_bot_nick("PrologMUD").
 reg_egg_builtin(PIs):- % baseKB:ain(prologBuiltin(PIs)),
@@ -194,7 +201,7 @@ bot_nick("PrologMUD").
 %
 % Ctrl Server.
 %
-ctrl_server('gitlab').
+ctrl_server('localhost').
 
 
 
@@ -393,10 +400,10 @@ consultation_thread(CtrlNick,Port):-
       put_egg('.set nick ~w\n',[PrologMUDNick]),
       must(egg:stdio(CtrlNick,IN,_)),!,
       % loop
-      join_chans,
       put_egg('.msg nickserv identify ~w\n',[CtrlNick]),
-
+      put_egg('.-chan ##AGI\n',[]),
       put_egg('.console #logicmoo\n',[]),
+      join_chans,
       say_owner("hi therre!"),
       repeat,
         % nop(quietly(update_changed_files_eggdrop)),
@@ -405,7 +412,7 @@ consultation_thread(CtrlNick,Port):-
          once(quietly(consultation_codes(CtrlNick,Port,Text))),
          fail.
 
-join_chans:- maplist(join,['##prolog','#ai','##AGI','#logicmoo']).
+join_chans:- maplist(join,['##prolog','#ai','##narrative-ai','##logic','#logicmoo']).
 
 :- dynamic(tmp:last_say_owner/1).
 say_owner(Info):- get_time(Date), ignore(if_catch_fail(say_owner(Info,Date))).
@@ -667,8 +674,7 @@ tg_name_text(StringIn, Name, Value) :-
         name_value_split(String, "> ", NameA, Value),
         filter_tg_name(NameA, Name).
 
-filter_tg_name(StringIn, Name):- replace_in_string("[d]","",StringIn,String),StringIn\==String,!,filter_tg_name(String, Name).
-filter_tg_name(StringIn, Name):- replace_in_string("[m]","",StringIn,String),StringIn\==String,!,filter_tg_name(String, Name).
+filter_tg_name(StringIn, Name):- arg(_,v("<",">"," ","[m]","[d]"),R),replace_in_string(R,"",StringIn,String),StringIn\==String,!,filter_tg_name(String, Name).
 filter_tg_name(NameString, Name):- filter_chars(is_printing_alpha_char,NameString, Name).
 
 filter_chars(How,NameString, Name):- get_text_restore_pred(NameString,DataPred),!,
@@ -686,6 +692,13 @@ is_printing_alpha_char(X):- char_type(X,digit),!.
 %
 % Irc Event.
 %
+
+ircEvent(Channel,_Agent,say(W)):-
+   name_value_split(W, '> ', Ctx, Call),
+   atom_contains(Ctx,'<'),
+   filter_tg_name(Ctx, Name),
+   locally(t_l:session_prefix(Name),
+     ircEvent(Channel,Name,say(Call))),!.
 
 ircEvent(Channel,User,Method):-  my_wdmsg((ircEventNow(Channel,User,Method))),fail.
 ircEvent(Channel,Agent,Event) :- format(codes(Codes),"~w",[ircEvent(Channel,Agent,Event)]),
@@ -767,7 +780,6 @@ ircEventUsed(Channel,Agent,ctcp(ACTION,W)):- notrace(maybe_chat_command(Channel,
 % Call -> call_for_results
 ircEventUsed(Channel,Agent,call(CALL,Vs)):- irc_filtered_call(Channel,Agent,CALL,Vs).
 
-
 ircEventUsed_as_call(Channel,Agent,say(W)):-
    name_value_split(W, ': ', Ctx, Call),
    \+ atom_contains(Ctx,' '),
@@ -822,7 +834,7 @@ into_what('_',Type):- Type=_.
 into_what('all',Type):- Type=_.
 into_what(W2,Type):- Type=W2.
 
-subst_string(In,Before,After,Out):- atomics_to_string(List,Before,In),atomics_to_string(List,After,Out).
+egg_subst_string(In,Before,After,Out):- atomics_to_string(List,Before,In),atomics_to_string(List,After,Out).
 
 do_and_show_fallbacks(PM,Channel,Agent, Modality,W2):-
   do_fallbacks(PM,Channel,Agent, Modality,W2),
@@ -843,7 +855,7 @@ do_fallbacks(+,Channel,Agent,_Modality,W2):- into_what(W2,Type), ignore((retract
                                                  asserta(lmconf:chat_isWith(W2,Channel,Agent)).
 do_fallbacks(-,Channel,Agent,_Modality,W2):- into_what(W2,Type), ignore((retract(lmconf:chat_isWith(Type,Channel,Agent)),fail)),
                                                  !.
-do_fallbacks(PM,Channel,Agent, Modality,W2):- subst_string(W2,","," ",W3),atomic_list_concat(ListR," ",W3),
+do_fallbacks(PM,Channel,Agent, Modality,W2):- egg_subst_string(W2,","," ",W3),atomic_list_concat(ListR," ",W3),
                                         reverse(ListR,List),maplist(do_fallbacks(PM,Channel,Agent, Modality),List).
 
 maybe_chat_command(Channel,Agent, Modality,W0):- trim_text(W0,W1),W1\==W0, !, maybe_chat_command(Channel,Agent, Modality,W1).
@@ -1126,12 +1138,14 @@ irc_really_call(Channel,Agent,CALL, Vs):-
        (b_setval('$variable_names',Vs), b_setval('$term',CALL),
                     use_agent_module(Agent)),
              (nop((stream_property(X,alias(current_output)),set_stream(X,alias(user_output)))),
-                AgentModule:catch((CALL),E,
+                catch(emlmp(AgentModule:CALL),E,
                  (((my_wdmsg(E),say(Agent,[Channel,': ',E])),!,fail)))),
                     save_agent_module(Agent)))),
    !.
 
 
+emlmp(Goal):- current_predicate(maybe_long_message_printer/2),!,maybe_long_message_printer(4, Goal).
+emlmp(Goal):- call(Goal).
 
 %% cit is det.
 %
@@ -1281,13 +1295,13 @@ write_v(V):- writeq(V).
 write_varvalues2([]):-!,flush_all_output.
 write_varvalues2(Vs):-
    flush_all_output,
-   write('% '),
+   write(' % '),
    write_varvalues3(Vs),
    copy_term(Vs,Vs,Goals),
    write_goals(Goals),!,
    flush_all_output.
 
-writeqln(G):-writeq(G),write(' ').
+writeqln(G):-writeq(G),write(' '),nl.
 
 write_goals([]):-!.
 write_goals(List):- write('\n%    Residual Goals: '),write_goals0(List),!,write(' ').

@@ -1,0 +1,104 @@
+% Don't abstract -- no finite model.
+?- set_prolog_flag(max_table_subgoal_depth,10).
+
+test :- sentence(_, _, _), fail.
+test :- nl.
+
+sentence(_, ParseTree, PF) :-
+	Sent = ['John',talked,to,'Mary',about,this,person] ,
+	S = 'S',
+	g_parse(S, _Features, ParseTree, Sent, []),
+	ParseTree = PF .
+
+:- table g_parse/5.
+
+g_parse('', _, 'rotten tree') --> [].
+g_parse(NT, Fs, ParseTree,S1,Sn) :-
+	rule(NT,R1,R2,R3,R4,HeadList),
+	g_parse(R1, Fs1, ST1,S1,S2),
+	g_parse(R2, Fs2, ST2,S2,S3),
+	g_parse(R3, Fs3, ST3,S3,S4),
+	g_parse(R4, Fs4, ST4,S4,S5),
+	
+	 check_compls_of_heads(Fs1, Fs2, Fs3, Fs4, R2, R3, R4, HeadList),
+	 pass_up_features(HeadList, [Fs1,Fs2,Fs3,Fs4], Fs),
+	 build_parse_tree1(ST1, ST2, ST3, ST4, ParseTree), S5 = Sn
+	.
+g_parse(NT, fs(F,C), ParseTree) --> 
+	[Word], 
+	{
+	 lex_item(NT,Word),	% Word is a lexical item
+	 ParseTree =.. [NT,Word],
+	 (features(NT,Word,Feat) -> F = [Feat] ; F = []),
+	 find_complements(NT, Word, C)	% it can be highly non-deterministic
+					% (do not cut or be very careful)
+	}.
+
+build_parse_tree1(ST1, ST2, ST3, ST4, asd(ST1,ST2,ST3,ST4)).
+
+check_compls_of_heads(Fs1, Fs2, Fs3, Fs4, R2, R3, R4, HeadList) :-
+	( HeadList = [1] , write('  8  ') , ! , write('  9  ') ,
+		Fs1 = fs(_,C),
+		( nonvar(C)  ,
+			C = [compl(R2,_),compl(R3,_),compl(R4,_)],
+			check_compl_feats(C, [Fs2,Fs3,Fs4])
+		; var(C)
+		) 
+	; HeadList = [2]
+	; HeadList = []
+	).
+
+check_compl_feats([], _).
+check_compl_feats([CF|CFs], [Feat|Feats]) :-
+	CF = compl(_,CompFeatList),
+	Feat = fs(F,_),
+	is_subset(CompFeatList, F),
+	check_compl_feats(CFs, Feats).
+
+pass_up_features([], _, fs([],_)).
+pass_up_features([Head], FeatureList, fs(F,_)) :-
+	puf(Head, FeatureList, F).
+
+puf(1, [fs(F,_)|_], F).
+puf(2, [_,fs(F,_)|_], F).
+
+find_complements(Cat, Word, [C1,C2,C3]) :-
+	( (lex_item(Cat,Word),
+	   compls(Cat,Word,DBCompls)) -> true ; DBCompls = []
+	),
+	hi_find_compls(DBCompls, [C1,C2,C3|_]) .
+
+hi_find_compls([], [compl('',[]),compl('',[]),compl('',[])]).	% pad
+hi_find_compls([compl(Cat,Opt,CFL)|DBCompls], Compls) :-
+	( Opt =:= 1 -> Compls = [compl(Cat,CFL)|Rest]
+	; Compls = [compl(Cat,CFL)|Rest]
+	; Compls = Rest
+	),
+	hi_find_compls(DBCompls, Rest).
+
+is_subset([],_) .
+is_subset([A],[A]) .
+
+compls('P',to,[compl('NP',1,[])]).
+compls('P',about,[compl('NP',1,[])]).
+compls('V',talked,[compl('PP',0,[dat]),compl('PP',0,[com])]).
+
+lex_item('Det', this).
+lex_item('N', 'John').
+lex_item('N', 'Mary').
+lex_item('N', person).
+lex_item('P', to).
+lex_item('P', about).
+lex_item('V', talked).
+
+features('P', to, dat).
+features('P', about, com).
+
+rule('S','NP','VP','','',[]).
+rule('NP','N','','','',[1]).
+rule('NP','Det','N','','',[2]).
+rule('VP','VP','PP','','',[1]).
+rule('VP','V','PP','','',[1]).
+rule('VP','V','PP','PP','',[1]).
+rule('PP','P','NP','','',[1]).
+

@@ -17,9 +17,14 @@
 
 % ?- use_module(library(logicmoo_nlu/parser_lexical)).
 
+:- multifile(check:list_undefined/1).
+:- dynamic(check:list_undefined/1).
 :- use_module(library(make)), use_module(library(check)), redefine_system_predicate(check:list_undefined/1).
-:- abolish(check:list_undefined/1).
-:- assert(check:list_undefined(_)).
+%:- abolish(check:list_undefined/1).
+:- asserta((check:list_undefined(Stuff):- Stuff==[], wdmsg(list_undefined(Stuff)),!)).
+:- listing(check:list_undefined).
+% :- break.
+
 
 :- use_module(library(pfc_lib)).
 :- use_module(nl_pipeline).
@@ -43,22 +48,33 @@
 :- kb_global(baseKB:nlfw/4).
 %:- share_mp(nlf:f/4).
 
-connect_preds(HF, BF):-
+:- use_module(parser_lexical_gen). 
+
+guess_strip_module(M:F,M,F):- !.
+guess_strip_module(MF,M,MF):- atom(MF), functor(P,MF,2),!,guess_strip_module(P,M,_).
+guess_strip_module(MF,M,MF):- predicate_module(MF,M).
+guess_strip_module(MF,M,F):- strip_module(MF,M,F).
+
+connect_preds(HMF, BMF):- 
+ guess_strip_module(HMF,HM,HF),
+ guess_strip_module(BMF,BM,BF),
  forall(between(1, 13, N),
  ( length(ARGS, N),
+   share_mp(BM:BF/N),multifile(HM:HF/N),dynamic(HM:HF/N),
    H=..[HF|ARGS],
    B=..[BF|ARGS],
-   asserta_new(H:- B))).
+   multifile(BM:BF/N),dynamic(BM:BF/N),   
+   asserta_if_new(HM:(H:- BM:B)))).
 
-:- connect_preds(cyckb_t, cyckb_h).
-:- connect_preds(cyckb_h, ac).
-
-:- use_module(parser_lexical_gen). 
 
 common_logic_kb_hooks:cyckb_t(A, B, C):- cyckb_p2(A, [B, C]).
 common_logic_kb_hooks:cyckb_t(A, B, C, D):- cyckb_p2(A, [B, C, D]).
 common_logic_kb_hooks:cyckb_t(A, B, C, D, E):- cyckb_p2(A, [B, C, D, E]).
 common_logic_kb_hooks:cyckb_t(A, B, C, D, E, F):- cyckb_p2(A, [B, C, D, E, F]).
+
+:- connect_preds(common_logic_kb_hooks:cyckb_t, cyckb_h).
+:- connect_preds(cyckb_h, kb0988:ac).
+%:- connect_preds(ac, t).
 
 cyckb_p2(A, BC):- \+ is_list(BC), !, between(2, 10, N), length(BC, N), cyckb_p2(A, BC).
 cyckb_p2(A, [B, C|D]):- atom(C), downcase_atom(C, C), cvt_to_real_string(C, S), cyckb_p3(A, B, [S|D]).
@@ -247,7 +263,7 @@ text_to_cycword(String, Pos, C, cyckb_h(Pred, C, BaseWord)):-
   base_to_cycword(BaseWord, Pred, C).
 
 to_base_form(String, Used, BaseWord):- \+ atom(String), string_to_atom(String, Atom), !, to_base_form(Atom, Used, BaseWord).
-to_base_form(String, Used, BaseWord):- fail, call_lex_arg_type(text(a), text(base), String, BaseWord, Used).
+to_base_form(String, Used, BaseWord):- call_lex_arg_type(text(a), text(base), String, BaseWord, Used).
 to_base_form(String, 'xtAgentitiveNoun', BaseWord):- morph_stem(String, BaseWord, 'er').
 to_base_form(String, 'xtAdverb', BaseWord):- morph_stem(String, BaseWord, 'ly').
 to_base_form(String, 'xtUn', BaseWord):- morph_stem(String, 'un', BaseWord).
@@ -285,9 +301,15 @@ subtype_index(_, text(a), text(str), Value, CArg, PreCall, PostCall):-  PreCall 
 %subtype_index(_, text(a), text(base), Value, CArg, PreCall, PostCall):- PreCall = (CArg = Value), PostCall = true.
                                                
 %subtype_index(_, W, any(W), Value, CArg, PreCall, PostCall):- !, PreCall = freeze(CArg, sub_var(Value, CArg)), PostCall = true.
-subtype_index(_, W, any(W), Value, CArg, PreCall, PostCall):-  PreCall = true, PostCall = sub_var(Value, CArg).
-subtype_index(_, W, seq(W), Value, CArg, PreCall, PostCall):- /*atom(W), */ PreCall = (CArg = [_|_]), PostCall = sub_var(Value, CArg).
+subtype_index(_, W, any(W), Value, CArg, PreCall, PostCall):-  PreCall = true, PostCall = sub_value_word(Value, CArg).
+%subtype_index(_, W, seq(W), Value, CArg, PreCall, PostCall):- /*atom(W), */ PreCall = (CArg = [_|_]), PostCall = member(Value, CArg).
+subtype_index(_, W, seq(W), Value, CArg, PreCall, PostCall):- /*atom(W), */ PreCall = (CArg = [_|_]), PostCall = sub_value_word(Value, CArg).
 subtype_index(_, W, listof(W), Value, CArg, PreCall, PostCall):- PreCall = (CArg = [_|_]), PostCall = member(Value, CArg).
+
+sub_value_word(_Valu, CArg):- var(CArg),!,fail.
+sub_value_word(Value, CArg):- is_list(CArg),!,CArg=[CArgF],sub_value_word(Value, CArgF).
+sub_value_word(Value, CArg):- \+ compound(CArg),!,Value==CArg.
+sub_value_word(Value, CArg):- arg(_,CArg,CArgF),sub_value_word(Value, CArgF).
 
 doable_type(_, DoType, Type):- nonvar(DoType),
   % DoType\==text(str),
@@ -317,15 +339,50 @@ get_vv(X, Arg):- compound(Arg), Arg = +(X).
 get_test_verbs(V):- wnframes:s(_, _, V, v, _, _).
 baseKB:sanity_test:- forall(get_test_verbs(V), lex_info(V)).
 
-:- export(lex_winfo/1).
-lex_winfo(Value):- lex_tinfo(text(a), Value).
 
-:- export(lex_tinfo/2).
-lex_tinfo(Type, Value):-
+
+:- export(lex_winfo/1).
+lex_winfo(Value):- 
+  lex_winfo(Value,R),
+  maplist(wdmsg, R).
+
+merge_lists(L,R):- (L==[] ; R ==[]),!.
+merge_lists(L,R):- nb_set_add(L,R),nb_set_add(R,L).
+
+:- export(lex_winfo/2).
+lex_winfo(W2,R):- is_list(W2),!, maplist(lex_winfo,W2,R),!.
+lex_winfo(W2,R):- (var(W2);W2=span(_)),!,R=W2.
+%lex_winfo(W2,W2):-!.
+lex_winfo(W2,W2O):- W2=W2O, W2 = w(Word, Had),!, 
+  nonvar(Word), !,  is_list(Had), 
+  (member(lex_winfo,Had) -> true; 
+     (lex_winfo_r(Word,R),unlevelize(R,R2),nb_set_add(W2,[lex_winfo|R2]))).
+lex_winfo(Word,W2):- lex_winfo_r(Word,Had),  W2 = w(Word, [lex_winfo|Had]),!.
+lex_winfo(W,W):-!.
+
+
+lex_winfo_r(Word,R):- lex_tinfo(text(a), Word, R).
+
+
+:- export(lex_tinfo/3).
+lex_tinfo(Type, Value,DatumF):-
  findall(Datum, get_info_about_type(_All, 0, Type, Value, Datum), DatumL),
    correct_dos(DatumL, DatumF),
-   maplist(wdmsg, DatumF), !.
+   nop(maplist(wdmsg, DatumF)), !.
 
+
+
+unlevelize(R1,R2):- is_list(R1),!,maplist(unlevelize,R1,R2).
+unlevelize(X,Y):- unlevelize0(X,M),!,unlevelize(M,Y).
+unlevelize(X,X).
+
+unlevelize0(level(_, 0, _, X, _),X):- !.
+unlevelize0(level(_, _, _, X, _),X):- !.
+unlevelize0(text_to_cycword(_, _,_,X),X):-!.
+unlevelize0(todo(_, cycpred,X), cycpred):-  atom(X),!.
+unlevelize0(todo(_, X,Y),Z):- atom(X),append_term(X,Y,Z).
+unlevelize0(todo(_, X,Y),eq(X,Y)):-!.
+%unlevelize0(todo(_, X,Y),Z):- append_term(X,Y,Z).
 
 
 call_lex_arg_type(TypeIn, TypeOut, Value, Result, C):-
@@ -417,7 +474,7 @@ make_new_todos(Kind, Was, Level, [C|CRest], [P|PRest], In, Out):-
 make_new_todos(Kind, Was, Level, [C|CRest], [P|PRest], In, Out):-
  make_new_todos(Kind, Was, Level, CRest, PRest, In, Mid),
  % wdmsg(adding_todo(Level, P, C)),
- add_if_new(Mid, todo(Agent,Level, P, C), Out), !.
+ add_if_new(Mid, todo(Level, P, C), Out), !.
 
 
 add_if_new(Done, Doing, NewDone):-
@@ -430,7 +487,7 @@ lexfw_info(String):-
  lexfw_info(_AllKind, String, Datum),
  lex_print(Datum).
 
-:- kb_global(do_e2c_fwd/1).
+:- kb_global(do_e2c_fwd/2).
 :- kb_global(nl_pass1/1).
 :- export(lexfw_info/3).
 lexfw_info(_Kind, String, Out):-
@@ -517,23 +574,22 @@ segment(N, M, Len, StringW, Ace):-
 %:- ain((nlfw(M, N, cycpos(Pos, C, W), Ace))==> \+ nlfw(M, N, xclude(Pos, C, W), Ace)).
 */
 
-:- export(lex_info/1).
-lex_info(String):-
- lex_info(_AllKinds, String, Datum),
- lex_print(Datum).
+
 
 :- export(lex_info/3).
 lex_info(Kind, String, Out):-
+ must_det_l((
  into_text100_atoms(String, Words), % maplist(into_dm, Words, Todo),
  into_acetext(Words, Ace), cvt_to_real_string(Ace, SAce),
- call_corenlp(SAce,[],Todo),
+ text_to_corenlp(SAce,[],Todo),
  maplist(print_reply_colored,Todo), print_reply_colored("==============================================================="),
  Level = 0,
+ ignore((Todo=[])),
  findall(sentence(N,WS,Info),member(sentence(N,WS,Info),Todo),Sents),
  maplist(remove_broken_corefs(Sents),Todo,NewTodo),
  lex_info(Kind, Level, NewTodo, [text80(Words)], Datum),
  % maplist(lex_winfo(Kind, Level, Words), Words, Datums),append(Datums, Datum),
- filter_mmw(Datum, Out), !.
+ filter_mmw(Datum, Out))), !.
 
 lex_winfo(Kind, Level, Words, String, Datum):-
  cvt_to_atom(String, AString),
@@ -542,7 +598,6 @@ lex_winfo(Kind, Level, Words, String, Datum):-
 %into_dm(String, txt(AString)):- cvt_to_atom(String, AString).
 
 didnt_do(Todo, skipped(Todo)).
-
 
 remove_broken_corefs(Sents,coref(Sent,_, _, _,_,_,_,_,_,_,_),[]):- \+ member(sentence(Sent,_,_),Sents),!.
 remove_broken_corefs(_Sents,sentence(N,Words,Info),sent(N,Words,Info)).
@@ -596,7 +651,7 @@ lex_info_impl(Kind, Level, [todo(Type, Value)| Todo], Done, Out):- !,
 
 lex_info_impl(Kind, _Lev__, [todo(Level, DoType, Value)| Todo], Done, Out):-
  doable_type(Level, DoType, Type),
- Doing = todo(Agent,Level, Type, Value),
+ Doing = todo( /*_Agent,*/ Level, Type, Value),
  add_if_new(Done, Doing, NewDone),
  findall(Info, get_info_about_type(Kind, Level, Type, Value, Info), More),
  add_do_more(More, Todo, NewDone, NewTodo),
@@ -784,8 +839,8 @@ searches_arg(_F, _A, Arg):- atom_length(Arg, Len), Len<4, !, fail.
 %  morph_atoms(causer, [[W, -er]]).
 
 
+:- abolish(tmp:saved_denote_lex/3).
 :- dynamic(tmp:saved_denote_lex/3).
-:- retractall(tmp:saved_denote_lex(_, _, _)).
 %get_lex_info(Kind, text(a), String, Out):- catch(downcase_atom(String, DCAtom), _, fail), DCAtom\==String, !, get_lex_info(Kind, text(a), DCAtom, Out).
 get_lex_info(_Kind, Type, DCAtom, Out):- tmp:saved_denote_lex(Type, DCAtom, Out), !.
 get_lex_info(Kind, Type, DCAtom, Out):- do_lex_info(Kind, Type, DCAtom, Out), asserta(tmp:saved_denote_lex(Type, DCAtom, Out)), !.
@@ -882,12 +937,12 @@ lex_arg_type( sem, 0, framenet, frels(+(see_also), concept(fn2), concept(fn2), d
 lex_arg_type( sem, 0, framenet, frels(+(subframe), concept(fn2), concept(fn2), data, data)).
 lex_arg_type( sem, 0, framenet, frels(+(using), concept(fn2), data, /* concept(fn2), */ data, data)).
 
-lex_arg_type( syn, 0, framenet, fsr(text(a)-pos, concept(fn), data)).
+%lex_arg_type( syn, 0, framenet, fsr(text(a)-pos, concept(fn), data)).
 lex_arg_type( sem, 0, framenet, semtype(concept(fn), data, data)).
 lex_arg_type( syn, 0, mu, thetaRole(text(a), data, concept(tt2), data, data, concept(tt2), text(str), text(str), data)).
 
 lex_arg_type( sem, 0, tt0, ttholds(concept(tt), concept(tt))).
-lex_arg_type( sem, 0, tt0, ttholds(text(a), concept(tt))).
+lex_arg_type( sem, 0, tt0, ttholds(data, concept(tt))).
 lex_arg_type( sem, 0, tt0, ttholds(data, id(tt), pos)).
 lex_arg_type( sem, 0, tt0, ttholds(data, id(tt), pos, data)).
 lex_arg_type( sem, 0, tt0, ttholds(data, id(tt), pos, data, concept(tt))).
@@ -900,48 +955,48 @@ lex_arg_type( syn, f(0), nldata_freq_pdat, text_bpos(data, text(a), pos)).
 lex_arg_type( sem, 0, nldata_colloc_pdat, mws(seq(text(a)), pos)).
 lex_arg_type( sem, 0, nldata_dictionary_some01, dictionary(pos, seq(text(a)), seq(text(a)))).
 
-lex_arg_type( sem, 0, parser_chat80, adj_sign_db(text(base), data)).
+lex_arg_type( sem, 0, parser_chat80, adj_sign_lex(text(base), data)).
 % lex_arg_type( sem, 0, parser_chat80, adjunction_lf(text(base), data, data)).
 lex_arg_type( syn, 0, parser_chat80, adjunction_lf(any(text(a)), data, data, data)).
-lex_arg_type( syn, 0, parser_chat80, aggr_adj_db(text(a), data, data, text(base))).
-lex_arg_type( syn, 0, parser_chat80, aggr_noun_db(text(a), data, data, text(base))).
+lex_arg_type( syn, 0, parser_chat80, aggr_adj_lex(text(a), data, data, text(base))).
+lex_arg_type( syn, 0, parser_chat80, aggr_noun_lex(text(a), data, data, text(base))).
 lex_arg_type( sem, 0, parser_chat80, borders(text(base), text(base))).
 lex_arg_type( sem, 0, parser_chat80, city(text(base), text(base), data)).
-lex_arg_type( sem, 0, parser_chat80, comparator_db(text(base), data, data, data, data)).
+lex_arg_type( sem, 0, parser_chat80, comparator_lex(text(base), data, data, data, data)).
 lex_arg_type( sem, 0, parser_chat80, contains(text(base), text(base))).
 lex_arg_type( sem, 0, parser_chat80, contains0(text(base), text(base))).
-lex_arg_type( sem, 0, parser_chat80, context_pron_db(text(base), data, data)).
-% lex_arg_type( sem, 0, parser_chat80, adj_db(text(a), data)).
+lex_arg_type( sem, 0, parser_chat80, context_pron_lex(text(base), data, data)).
+% lex_arg_type( sem, 0, parser_chat80, adj_lex(text(a), data)).
 lex_arg_type( sem, 0, parser_chat80, country(text(base), text(base), data, data, data, data, text(base), text(base))).
-lex_arg_type( sem, 0, parser_chat80, det_db(text(base), data, text(base), data)).
+lex_arg_type( sem, 0, parser_chat80, det_lex(text(base), data, text(base), data)).
 lex_arg_type( sem, 0, parser_chat80, in_continent(text(base), text(base))).
-lex_arg_type( sem, 0, parser_chat80, int_art_db(text(a), data, data, data)).
-lex_arg_type( sem, 0, parser_chat80, int_pron_db(text(a), data)).
+lex_arg_type( sem, 0, parser_chat80, int_art_lex(text(a), data, data, data)).
+lex_arg_type( sem, 0, parser_chat80, int_pron_lex(text(a), data)).
 lex_arg_type( sem, 0, parser_chat80, intrans_LF(text(base), data, data, data, data, data)).
-%lex_arg_type( sem, 0, parser_chat80, inverse_db(text(a), data, text(a))).
+%lex_arg_type( sem, 0, parser_chat80, inverse_lex(text(a), data, text(a))).
 lex_arg_type( sem, 0, parser_chat80, latitude80(text(base), data)).
-lex_arg_type( sem, 0, parser_chat80, loc_pred_prep_db(text(a), data, data)).
-lex_arg_type( sem, 0, parser_chat80, measure_op_db(text(a), data, data, data)).
-lex_arg_type( sem, 0, parser_chat80, measure_unit_type_db(text(a), data, data, data)).
-lex_arg_type( syn, 0, parser_chat80, meta_noun_db(text(a), data, data, data, data, data, data)).
+lex_arg_type( sem, 0, parser_chat80, loc_pred_prep_lex(text(a), data, data)).
+lex_arg_type( sem, 0, parser_chat80, measure_op_lex(text(a), data, data, data)).
+lex_arg_type( sem, 0, parser_chat80, measure_unit_type_lex(text(a), data, data, data)).
+lex_arg_type( syn, 0, parser_chat80, meta_noun_lex(text(a), data, data, data, data, data, data)).
 %lex_arg_type( sem, 0, parser_chat80, name_db(seq(text(a)), text(base))).
-lex_arg_type( syn, 0, parser_chat80, pers_pron_db(text(a), pos, data, pos, pos)).
-lex_arg_type( syn, 0, parser_chat80, poss_pron_db(text(a), pos, data, pos)).
+lex_arg_type( syn, 0, parser_chat80, pers_pron_lex(text(a), pos, data, pos, pos)).
+lex_arg_type( syn, 0, parser_chat80, poss_pron_lex(text(a), pos, data, pos)).
 lex_arg_type( syn, 0, parser_chat80, pronoun_to_var(text(a), upcase(text(a)))).
 %lex_arg_type( sem, 0, parser_chat80, punct_to_sent_type(text(base), data, pos)).
-lex_arg_type( sem, 0, parser_chat80, quantifier_pron_db(text(a), text(base), data)).
-lex_arg_type( sem, 0, parser_chat80, ratio_db(text(base), text(base), data, data)).
-lex_arg_type( sem, 0, parser_chat80, rel_adj_db(text(a), text(base))).
-lex_arg_type( sem, 0, parser_chat80, rel_pron_db(text(a), pos)).
+lex_arg_type( sem, 0, parser_chat80, quantifier_pron_lex(text(a), text(base), data)).
+lex_arg_type( sem, 0, parser_chat80, ratio_lex(text(base), text(base), data, data)).
+lex_arg_type( sem, 0, parser_chat80, rel_adj_lex(text(a), text(base))).
+lex_arg_type( sem, 0, parser_chat80, rel_pron_lex(text(a), pos)).
 lex_arg_type( sem, 0, parser_chat80, river_pathlist(text(base), any(text(base)))).
-lex_arg_type( sem, 0, parser_chat80, sup_adj_db(text(a), text(base))).
+lex_arg_type( sem, 0, parser_chat80, sup_adj_lex(text(a), text(base))).
 lex_arg_type( sem, 0, parser_chat80, sup_op(text(a), data)).
-lex_arg_type( syn, 0, parser_chat80, terminator_db(text(a), data)).
+lex_arg_type( syn, 0, parser_chat80, terminator_lex(text(a), data)).
 lex_arg_type( sem, 0, parser_chat80, tr_number(text(a), data)).
 lex_arg_type( sem, 0, parser_chat80, trans_LF(text(a), data, data, data, data, data, data, data, data)).
 lex_arg_type( sem, 0, parser_chat80, type_measured_by_pred_db(data, data, text(a))).
-lex_arg_type( sem, 0, parser_chat80, units_db(text(a), data)).
-lex_arg_type( sem, 0, parser_chat80, regular_past_db(text(a), text(base))).
+lex_arg_type( sem, 0, parser_chat80, units_lex(text(a), data)).
+lex_arg_type( sem, 0, parser_chat80, regular_past_lex(text(a), text(base))).
 lex_arg_type( sem, 0, parser_chat80, subj_obj_LF(data, text(a), data, data, data, data, data)).
 
 lex_arg_type( sem, 0, parser_e2c, aux_lf(text(a), data, data, data)).
@@ -1016,7 +1071,7 @@ same_atoms(A1, A2):- A1==A2->true;(A2\==[], A1\==[], downcase_atom(A1, V1), down
 binds_atomic:attr_unify_hook(C, Val):- binds_with(C, Val).
 
 
-:- set_prolog_flag(debugger_write_options, [quoted(true), portray(true), max_depth(20), attributes(dots)]).
+%:- set_prolog_flag(debugger_write_options, [quoted(true), portray(true), max_depth(20), attributes(dots)]).
 :- fixup_exports.
 /* first_clause_only tests  */
 
@@ -1033,13 +1088,22 @@ test(first_clause_only, all(X == [1, 2])) :-
 :- end_tests(first_clause_only).
 */
 
-test_lex_info:- lex_info('There are 5 houses with five different owners.').
+test_lex_info:- forall(lex_info(X),lex_info(X)).
 
-test_lex_info:- lex_info(".\nThe Norwegian lives in the first house.\n.").
+baseKB:feature_test:-test_lex_info.
+
+:- export(lex_info/1).
+lex_info(String):- nonvar(String),!,
+ lex_info(_AllKinds, String, Datum),
+ lex_print(Datum).
+
+lex_info('There are 5 houses with five different owners.').
+
+lex_info(".\nThe Norwegian lives in the first house.\n.").
         
-test_lex_info:- lex_info("Rydell used his straw to stir the foam and ice remaining at the bottom of his tall plastic cup, as though he were hoping to find a secret prize.").
+lex_info("Rydell used his straw to stir the foam and ice remaining at the bottom of his tall plastic cup, as though he were hoping to find a secret prize.").
 
-test_lex_info:- lex_info('
+lex_info('
  These five owners drink a certain type of beverage, smoke a certain brand of cigar and keep a certain pet.
  No owners have the same pet, smoke the same brand of cigar or drink the same beverage.
  The man who smokes Blends has a neighbor who drinks water.

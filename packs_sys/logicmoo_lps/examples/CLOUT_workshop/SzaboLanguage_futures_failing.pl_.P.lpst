@@ -1,0 +1,51 @@
+/*
+  LPS test results file generated on 2021-2-28 at 11:57:6
+  on Prolog swi(8,1,9,[]) for program file:
+  /Users/mc/git/lps_corner/examples/CLOUT_workshop/SzaboLanguage_futures_failing.pl_.P
+*/
+
+:-dynamic lps_test_result/3,lps_test_result_item/3,lps_test_action_ancestor/3,lps_test_options/1.
+
+% LPS options prior to the test:
+lps_test_options([dc]).
+
+% lps_test_result(Stage,Cycle,TestTerm)
+lps_test_result(fluents,0,0).
+lps_test_result(events,1,0).
+lps_test_result(fluents,1,0).
+lps_test_result(events,2,0).
+lps_test_result(fluents,2,0).
+lps_test_result(events,3,0).
+lps_test_result(composites,3,3).
+lps_test_result(fluents,3,0).
+lps_test_result(events,4,0).
+lps_test_result(fluents,4,0).
+lps_test_result(events,5,0).
+lps_test_result(composites,5,3).
+lps_test_result(fluents,5,0).
+lps_test_result(events,6,0).
+lps_test_result(fluents,6,0).
+lps_test_result(events,7,0).
+lps_test_result(composites,7,3).
+lps_test_result(fluents,7,0).
+lps_test_result(events,8,1).
+lps_test_result(fluents,8,0).
+lps_test_result(events,9,0).
+lps_test_result(composites,9,3).
+lps_test_result(fluents,9,0).
+% lps_test_result_item(Stage,Cycle,TestTerm)
+lps_test_result_item(composites,3,happens(real_date_end(2002/7/1),2,3)).
+lps_test_result_item(composites,3,happens(real_date_begin(2002/7/2),2,3)).
+lps_test_result_item(composites,3,happens(end_of_day(2002/7/1),2,3)).
+lps_test_result_item(composites,5,happens(real_date_end(2002/7/2),4,5)).
+lps_test_result_item(composites,5,happens(real_date_begin(2002/7/3),4,5)).
+lps_test_result_item(composites,5,happens(end_of_day(2002/7/2),4,5)).
+lps_test_result_item(composites,7,happens(real_date_end(2002/7/3),6,7)).
+lps_test_result_item(composites,7,happens(real_date_begin(2002/7/4),6,7)).
+lps_test_result_item(composites,7,happens(end_of_day(2002/7/3),6,7)).
+lps_test_result_item(events,8,holder to "1 round lot pork bellies").
+lps_test_result_item(composites,9,happens(real_date_end(2002/7/4),8,9)).
+lps_test_result_item(composites,9,happens(real_date_begin(2002/7/5),8,9)).
+lps_test_result_item(composites,9,happens(end_of_day(2002/7/4),8,9)).
+lps_test_result_item(end,-1,failure).
+% lps_test_action_ancestor(Call,T1,T2)

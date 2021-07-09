@@ -1,6 +1,11 @@
-:- include('../ec_test_incl').
 
-        /*
+
+:- use_module(library(logicmoo_common)).
+:- use_module(library(logicmoo_packs)).
+
+:- include(library(ec_planner/ec_test_incl)).
+
+/*
 
    Formulae for the mail delivery domain.
 
@@ -107,6 +112,6 @@ executable(put_down(robot,P)).
 executable(go_to_room(robot,R)).
 
 
-:- run_tests.
+%:- run_tests.
 
-:- halt.
+%:- halt.

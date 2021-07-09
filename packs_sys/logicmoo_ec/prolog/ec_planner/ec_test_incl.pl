@@ -12,7 +12,7 @@
                           
 :- style_check(-singleton).
 
-% :- use_module('./ec_loader').
+:- use_module('./ec_loader').
 
 
 

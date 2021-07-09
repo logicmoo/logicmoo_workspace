@@ -176,13 +176,14 @@ share_mfa(M,F,A):- MFA=M:F/A,
 
 share_mfa_pt2(system,_,_):-!.
 share_mfa_pt2(M,F,A):- MFA=M:F/A,   
+ must_det_l((
    format(user_error,'~N% :- ~q.~n',[share_mfa_pt2(M,F,A)]),
    import_and_export(parser_sharing,MFA),
    import_and_export(parser_all,MFA),
    def_nl_pred(M,F,A),
    '$current_source_module'(SM),import_and_export(SM,MFA),
    '$current_typein_module'(CM),import_and_export(CM,MFA),
-   import_and_export(system,MFA),
+   import_and_export(system,MFA))),
    !.
 
 :- share_mp((share_mp)/1).

@@ -2,19 +2,122 @@
 % %%%%%%%%%%%%%%%%%%%%%%% Grammar %%%%%%%%%%%%%%%%%%%%%%%
 % =================================================================
 
+ char_type_sentence(w(W,_),Type):- !, char_type_sentence(W,Type).
  char_type_sentence(?, ask).
  char_type_sentence((.), tell).
  char_type_sentence((.), act).
  char_type_sentence((!), act).
  char_type_sentence((!), tell).
 
-utterance(Type, LF, S, E):- var(Type), is_list(S), append(First, [ Char], S),
-  \+ \+ char_type_sentence(Char, _), !,
-  char_type_sentence(Char, Type), utterance(Type, LF, First, E).
+partition_segs(Segs,W2s,Spans):- partition(\=(span(_)),Segs,W2s,Spans),!.
 
-utterance(act, LF) -->   quietly(imperative(LF)).
-utterance(ask, LF) -->   quietly(question(LF)).
-utterance(tell, LF) -->  declarative(LF).
+write_simple_seg(w(W,_)):-!,write_cyan(W).
+write_simple_seg(span(W)):-is_list(W),member(S,W),ignore(member('#'(T),W)),compound(S),S=seg(B,E),!,write_cyan(span(B,T,E)).
+write_simple_seg(span([W1,W2|_])):-!,write_cyan(span_(W1,W2)).
+write_cyan(P):- color_format(hfg(cyan),'<~w>',[P]).
+
+user:portray(X):- notrace((tracing,compound(X),write_simple_seg(X))),!.
+
+
+utterance(Type, LF, Sentence, E):- (into_lexical_segs(Sentence,Segs)->Sentence\==Segs),!,utterance(Type, LF, Segs, E).
+utterance(Type, LF, Segs, E):-  var(Type), is_list(S), partition_segs(Segs,W2s,_Spans), last(W2s,Char),
+  char_type_sentence(Char, Type),
+  select(Char,S,_First),!,
+  utterance(Type, LF, Segs, UE),
+  phrase(UE,optional(Char),E).
+  
+
+  %append([Char],ES,E).
+
+utterance(Type, LFOut, Sentence, E):- 
+ (grab_primary_segs(0,Sentence,Segs,true,Primary)->Sentence\==Segs),!,
+   conjoin_lf(Primary,LF,LFOut),
+   utterance(Type, LF, Segs, E).
+
+
+utterance(Type, LFOut)-->
+ {b_setval('$prev_w2s',[]),b_setval('$prev_spans',[])},
+  utterance2(Type, LF),
+  {b_getval('$prev_spans',Spans),
+  list_to_conjuncts('&',Spans,SpansLF),
+  conjoin_lf(SpansLF,LF,LFOut)}.
+
+
+utterance2(act, LF) -->   quietly(imperative(LF)).
+utterance2(ask, LF) -->   quietly(question(LF)).
+utterance2(tell, LF) -->  declarative(LF).
+utterance2(Type, warn(unparsed(Type,Sentence)), Sentence, []).
+
+phrase_unit('VP',X,_,X).
+phrase_unit('PP',X,_,X).
+phrase_unit('NP',_,X,X).
+%phrase_unit('S1',_,X,X).
+%phrase_unit('S',_,X,X).
+%phrase_unit(_,_,X,X).
+
+is_word_between(B,E,W2):- W2=w(_,L),
+  member(loc(N),L),between(B,E,N).
+
+loc_of(W2,N):- W2=w(_,L), member(loc(N),L).
+
+insert_just_before0(_,Item,[],[Item]):- !.
+insert_just_before0(E,Item,[W2|SegsM2],[Item,W2|SegsM2]):- loc_of(W2,N),N>E,!.
+insert_just_before0(E,Item,[W2|SegsM2],[W2|SegsM3]):- insert_just_before(E,Item,SegsM2,SegsM3).
+
+insert_just_before(E,Item,In,Out):- 
+  sort_words(In,Mid),
+  insert_just_before0(E,Item,Mid,MidM),
+  sort_words(MidM,Out).
+ 
+
+get_word_range(B,E,SegsM,Range,SegsM2):- partition(is_word_between(B,E),SegsM,Range,SegsM2).
+
+grab_primary_segs(Sz,SegsI,SegsO,LFI,LFOut):- Sz==0, select(span(L),SegsI,SegsM), 
+  member(alt(span),L), \+ member(seg(X,X),L),!,
+  wdmsg(dropping_alt(L)),
+  grab_primary_segs(Sz,SegsM,SegsO,LFI,LFOut).
+
+grab_primary_segs(Sz,SegsI,SegsO,LFI,LFOut):- % Sz==0,
+  select(span(L),SegsI,SegsM),
+  nop(singleton(Range)),
+  member(phrase(NP),L), member(NP,['NP','WHNP']),
+ once((
+  member('#'(Ref),L),
+  member(childs(0),L),
+  member(seg(B,E),L),
+  get_word_range(B,E,SegsM,Range,SegsM2),
+  member(txt(Words),L), p_n_atom(Words,VarNameU),
+  p_n_atom(Ref,RefU),
+  atomic_list_concat(['XVAR',RefU,VarNameU,B,E],'_',VarName),
+  FullInfo = [loc(B),pos(NP),equals(VarName)
+  % ,words(Range)
+  |L],
+  insert_just_before(E,w(VarName,FullInfo),SegsM2,SegsM3),
+  LFMid1 = info(VarName,FullInfo),
+  !)),
+  member(txt(Words),L), 
+  %phrase(noun_phrase(subj,X,true,LFNP),Range,[]), conjoin_lf(LFNP, LFMid1, LFMid2),!,
+  conjoin_lf(LFI, LFMid1, LFMid3),!,
+  grab_primary_segs(Sz,SegsM3,SegsO,LFMid3,LFOut).
+
+  
+grab_primary_segs(Sz,SegsI,SegsO,LFI,LFOut):-  fail,
+ Sz==0,
+ select(span(L),SegsI,SegsM), 
+ once((member(seg(X,XX),L),XX is X+ Sz,
+  (Sz == 0 -> LX=X ; (member(phrase(NVP),L), phrase_unit(NVP,X,XX,LX))),
+  W2 = w(W,L2), member(W2,SegsI),member(loc(LX),L2),nb_set_add(W2,L),
+  %member(txt(Words),L),
+  p_n_atom(W,VarNameU),
+  atom_concat(VarNameU,LX,VarName),
+  %debug_var(VarName,Var), % = '$VAR'(VarName),
+  LFMid1 = info(VarName,W2))),
+  conjoin_lf(LFI, LFMid1, LFMid2),!,
+  grab_primary_segs(Sz,SegsM,SegsO,LFMid2, LFOut).
+
+grab_primary_segs(Sz,SegsI,SegsO,LFI,LFOut):- Sz<4,
+  Sz2 is Sz+ 1, !, grab_primary_segs(Sz2,SegsI,SegsO,LFI,LFOut).
+grab_primary_segs(_Sz,SegsI,SegsI,LFIOut,LFIOut).   
 
 parse_for('evtState', Evt, LF, LFOut) --> theText1(to), verb_phrase(Evt, _, VerbLF), conjoin_lf(LF, VerbLF, LFOut).
 parse_for('evtState', Evt, LF, LFOut) --> frame_sentence(Evt, VerbLF), conjoin_lf(LF, VerbLF, LFOut).
@@ -22,7 +125,7 @@ parse_for('evtState', Evt, LF, LFOut) --> frame_sentence(Evt, VerbLF), conjoin_l
 system:sentence_breaker(A) :-
     parser_e2c:
     (   make,
-        to_wordlist_atoms(A, C),
+        into_lexical_segs(A, C),
         call_print_reply(list(List)=B,
                          parser_e2c:sentence_breaker(true, List, B, C, D)),
         !,
@@ -42,6 +145,7 @@ sentence_part(LF, Other, LF) --> [Other].
 % =================================================================
 % Imperative sentences
 % =================================================================
+imperative(IC, A, B) :- notrace(as_w2_segs(A, C)),!,imperative(IC, C, B).
 imperative(do(X, LFOut)) --> verb_phrase(_NewFrame, X, LFOut), optionalText1('!'), optionalText1('.'), nvd('Speaker', X).
 
 % =================================================================
@@ -49,6 +153,7 @@ imperative(do(X, LFOut)) --> verb_phrase(_NewFrame, X, LFOut), optionalText1('!'
 % =================================================================
 
 % [if|when|whenever] Cond then Result
+declarative(IC, A, B) :- notrace(as_w2_segs(A, C)),!,declarative(IC, C, B).
 declarative(LFOut) --> (theText1(if);theBaseForm(when)), frame_sentence(_Frame1, LHS), {add_quant(all, LHS)},
      optionalText1(', '), theText1(then), frame_sentence(_Frame2, RHS), {add_quant(exists, RHS), expand_quants(LHS=>RHS, LFOut)}, !.
 % declarative(LFOut) --> frame_sentence0(_Frame, LFOut).
@@ -135,6 +240,7 @@ sentence_inv(X, LFOut) -->  aux(_Tense+fin/_Form, S0, LFOut), noun_phrase(subj, 
 % "What do you think?"
 % "How are you?"
 % "How will you?"
+interogative(IC, A, B) :- notrace(as_w2_segs(A, C)),!,interogative(IC, C, B).
 interogative(LFOut => answer(X))   -->  whpron(X, LF, LFOut), verb_phrase(_NewFrame, X, LF).  % verb Form be _Tense+fin
 % "where is joe walking?"
 interogative(LFOut => answer(X))   -->  whpron(X, LF, LFOut), sentence_inv(X, LF).   % was gap(noun_phrase, X)

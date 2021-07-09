@@ -19,6 +19,8 @@
 		serialize_term_into_atom/2   % +Term, -Atom
 	]).
 
+:- use_module(logicmoo_ape_utils).
+
 /** <module> Term serializer
 
 The purpose of this module is to provide a single official

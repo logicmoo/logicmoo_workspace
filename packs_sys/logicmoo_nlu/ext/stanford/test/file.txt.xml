@@ -1,0 +1,724 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-stylesheet href="CoreNLP-to-HTML.xsl" type="text/xsl"?>
+<root>
+  <document>
+    <docId>file.txt</docId>
+    <sentences>
+      <sentence id="1">
+        <tokens>
+          <token id="1">
+            <word>The</word>
+            <lemma>the</lemma>
+            <CharacterOffsetBegin>0</CharacterOffsetBegin>
+            <CharacterOffsetEnd>3</CharacterOffsetEnd>
+            <POS>DT</POS>
+            <NER>O</NER>
+            <Speaker>PER0</Speaker>
+          </token>
+          <token id="2">
+            <word>licenses</word>
+            <lemma>licens</lemma>
+            <CharacterOffsetBegin>4</CharacterOffsetBegin>
+            <CharacterOffsetEnd>12</CharacterOffsetEnd>
+            <POS>NNS</POS>
+            <NER>O</NER>
+            <Speaker>PER0</Speaker>
+          </token>
+          <token id="3">
+            <word>for</word>
+            <lemma>for</lemma>
+            <CharacterOffsetBegin>13</CharacterOffsetBegin>
+            <CharacterOffsetEnd>16</CharacterOffsetEnd>
+            <POS>IN</POS>
+            <NER>O</NER>
+            <Speaker>PER0</Speaker>
+          </token>
+          <token id="4">
+            <word>most</word>
+            <lemma>most</lemma>
+            <CharacterOffsetBegin>17</CharacterOffsetBegin>
+            <CharacterOffsetEnd>21</CharacterOffsetEnd>
+            <POS>JJS</POS>
+            <NER>O</NER>
+            <Speaker>PER0</Speaker>
+          </token>
+          <token id="5">
+            <word>software</word>
+            <lemma>software</lemma>
+            <CharacterOffsetBegin>22</CharacterOffsetBegin>
+            <CharacterOffsetEnd>30</CharacterOffsetEnd>
+            <POS>NN</POS>
+            <NER>O</NER>
+            <Speaker>PER0</Speaker>
+          </token>
+          <token id="6">
+            <word>and</word>
+            <lemma>and</lemma>
+            <CharacterOffsetBegin>31</CharacterOffsetBegin>
+            <CharacterOffsetEnd>34</CharacterOffsetEnd>
+            <POS>CC</POS>
+            <NER>O</NER>
+            <Speaker>PER0</Speaker>
+          </token>
+          <token id="7">
+            <word>other</word>
+            <lemma>other</lemma>
+            <CharacterOffsetBegin>35</CharacterOffsetBegin>
+            <CharacterOffsetEnd>40</CharacterOffsetEnd>
+            <POS>JJ</POS>
+            <NER>O</NER>
+            <Speaker>PER0</Speaker>
+          </token>
+          <token id="8">
+            <word>practical</word>
+            <lemma>practical</lemma>
+            <CharacterOffsetBegin>41</CharacterOffsetBegin>
+            <CharacterOffsetEnd>50</CharacterOffsetEnd>
+            <POS>JJ</POS>
+            <NER>O</NER>
+            <Speaker>PER0</Speaker>
+          </token>
+          <token id="9">
+            <word>works</word>
+            <lemma>work</lemma>
+            <CharacterOffsetBegin>51</CharacterOffsetBegin>
+            <CharacterOffsetEnd>56</CharacterOffsetEnd>
+            <POS>NNS</POS>
+            <NER>O</NER>
+            <Speaker>PER0</Speaker>
+          </token>
+          <token id="10">
+            <word>are</word>
+            <lemma>be</lemma>
+            <CharacterOffsetBegin>57</CharacterOffsetBegin>
+            <CharacterOffsetEnd>60</CharacterOffsetEnd>
+            <POS>VBP</POS>
+            <NER>O</NER>
+            <Speaker>PER0</Speaker>
+          </token>
+          <token id="11">
+            <word>designed</word>
+            <lemma>design</lemma>
+            <CharacterOffsetBegin>61</CharacterOffsetBegin>
+            <CharacterOffsetEnd>69</CharacterOffsetEnd>
+            <POS>VBN</POS>
+            <NER>O</NER>
+            <Speaker>PER0</Speaker>
+          </token>
+          <token id="12">
+            <word>to</word>
+            <lemma>to</lemma>
+            <CharacterOffsetBegin>70</CharacterOffsetBegin>
+            <CharacterOffsetEnd>72</CharacterOffsetEnd>
+            <POS>TO</POS>
+            <NER>O</NER>
+            <Speaker>PER0</Speaker>
+          </token>
+          <token id="13">
+            <word>take</word>
+            <lemma>take</lemma>
+            <CharacterOffsetBegin>73</CharacterOffsetBegin>
+            <CharacterOffsetEnd>77</CharacterOffsetEnd>
+            <POS>VB</POS>
+            <NER>O</NER>
+            <Speaker>PER0</Speaker>
+          </token>
+          <token id="14">
+            <word>away</word>
+            <lemma>away</lemma>
+            <CharacterOffsetBegin>78</CharacterOffsetBegin>
+            <CharacterOffsetEnd>82</CharacterOffsetEnd>
+            <POS>RB</POS>
+            <NER>O</NER>
+            <Speaker>PER0</Speaker>
+          </token>
+          <token id="15">
+            <word>your</word>
+            <lemma>you</lemma>
+            <CharacterOffsetBegin>83</CharacterOffsetBegin>
+            <CharacterOffsetEnd>87</CharacterOffsetEnd>
+            <POS>PRP$</POS>
+            <NER>O</NER>
+            <Speaker>PER0</Speaker>
+          </token>
+          <token id="16">
+            <word>freedom</word>
+            <lemma>freedom</lemma>
+            <CharacterOffsetBegin>88</CharacterOffsetBegin>
+            <CharacterOffsetEnd>95</CharacterOffsetEnd>
+            <POS>NN</POS>
+            <NER>O</NER>
+            <Speaker>PER0</Speaker>
+          </token>
+          <token id="17">
+            <word>to</word>
+            <lemma>to</lemma>
+            <CharacterOffsetBegin>96</CharacterOffsetBegin>
+            <CharacterOffsetEnd>98</CharacterOffsetEnd>
+            <POS>TO</POS>
+            <NER>O</NER>
+            <Speaker>PER0</Speaker>
+          </token>
+          <token id="18">
+            <word>share</word>
+            <lemma>share</lemma>
+            <CharacterOffsetBegin>99</CharacterOffsetBegin>
+            <CharacterOffsetEnd>104</CharacterOffsetEnd>
+            <POS>VB</POS>
+            <NER>O</NER>
+            <Speaker>PER0</Speaker>
+          </token>
+          <token id="19">
+            <word>and</word>
+            <lemma>and</lemma>
+            <CharacterOffsetBegin>105</CharacterOffsetBegin>
+            <CharacterOffsetEnd>108</CharacterOffsetEnd>
+            <POS>CC</POS>
+            <NER>O</NER>
+            <Speaker>PER0</Speaker>
+          </token>
+          <token id="20">
+            <word>change</word>
+            <lemma>change</lemma>
+            <CharacterOffsetBegin>109</CharacterOffsetBegin>
+            <CharacterOffsetEnd>115</CharacterOffsetEnd>
+            <POS>VB</POS>
+            <NER>O</NER>
+            <Speaker>PER0</Speaker>
+          </token>
+          <token id="21">
+            <word>the</word>
+            <lemma>the</lemma>
+            <CharacterOffsetBegin>116</CharacterOffsetBegin>
+            <CharacterOffsetEnd>119</CharacterOffsetEnd>
+            <POS>DT</POS>
+            <NER>O</NER>
+            <Speaker>PER0</Speaker>
+          </token>
+          <token id="22">
+            <word>works</word>
+            <lemma>work</lemma>
+            <CharacterOffsetBegin>120</CharacterOffsetBegin>
+            <CharacterOffsetEnd>125</CharacterOffsetEnd>
+            <POS>NNS</POS>
+            <NER>O</NER>
+            <Speaker>PER0</Speaker>
+          </token>
+          <token id="23">
+            <word>.</word>
+            <lemma>.</lemma>
+            <CharacterOffsetBegin>125</CharacterOffsetBegin>
+            <CharacterOffsetEnd>126</CharacterOffsetEnd>
+            <POS>.</POS>
+            <NER>O</NER>
+            <Speaker>PER0</Speaker>
+          </token>
+        </tokens>
+        <dependencies type="basic-dependencies">
+          <dep type="root">
+            <governor idx="0">ROOT</governor>
+            <dependent idx="11">designed</dependent>
+          </dep>
+          <dep type="det">
+            <governor idx="2">licenses</governor>
+            <dependent idx="1">The</dependent>
+          </dep>
+          <dep type="nsubj:pass">
+            <governor idx="11">designed</governor>
+            <dependent idx="2">licenses</dependent>
+          </dep>
+          <dep type="case">
+            <governor idx="5">software</governor>
+            <dependent idx="3">for</dependent>
+          </dep>
+          <dep type="amod">
+            <governor idx="5">software</governor>
+            <dependent idx="4">most</dependent>
+          </dep>
+          <dep type="nmod">
+            <governor idx="2">licenses</governor>
+            <dependent idx="5">software</dependent>
+          </dep>
+          <dep type="cc">
+            <governor idx="9">works</governor>
+            <dependent idx="6">and</dependent>
+          </dep>
+          <dep type="amod">
+            <governor idx="9">works</governor>
+            <dependent idx="7">other</dependent>
+          </dep>
+          <dep type="amod">
+            <governor idx="9">works</governor>
+            <dependent idx="8">practical</dependent>
+          </dep>
+          <dep type="conj">
+            <governor idx="5">software</governor>
+            <dependent idx="9">works</dependent>
+          </dep>
+          <dep type="aux:pass">
+            <governor idx="11">designed</governor>
+            <dependent idx="10">are</dependent>
+          </dep>
+          <dep type="mark">
+            <governor idx="13">take</governor>
+            <dependent idx="12">to</dependent>
+          </dep>
+          <dep type="xcomp">
+            <governor idx="11">designed</governor>
+            <dependent idx="13">take</dependent>
+          </dep>
+          <dep type="advmod">
+            <governor idx="13">take</governor>
+            <dependent idx="14">away</dependent>
+          </dep>
+          <dep type="nmod:poss">
+            <governor idx="16">freedom</governor>
+            <dependent idx="15">your</dependent>
+          </dep>
+          <dep type="obj">
+            <governor idx="13">take</governor>
+            <dependent idx="16">freedom</dependent>
+          </dep>
+          <dep type="mark">
+            <governor idx="18">share</governor>
+            <dependent idx="17">to</dependent>
+          </dep>
+          <dep type="advcl">
+            <governor idx="13">take</governor>
+            <dependent idx="18">share</dependent>
+          </dep>
+          <dep type="cc">
+            <governor idx="20">change</governor>
+            <dependent idx="19">and</dependent>
+          </dep>
+          <dep type="conj">
+            <governor idx="18">share</governor>
+            <dependent idx="20">change</dependent>
+          </dep>
+          <dep type="det">
+            <governor idx="22">works</governor>
+            <dependent idx="21">the</dependent>
+          </dep>
+          <dep type="obj">
+            <governor idx="18">share</governor>
+            <dependent idx="22">works</dependent>
+          </dep>
+          <dep type="punct">
+            <governor idx="11">designed</governor>
+            <dependent idx="23">.</dependent>
+          </dep>
+        </dependencies>
+        <dependencies type="collapsed-dependencies">
+          <dep type="root">
+            <governor idx="0">ROOT</governor>
+            <dependent idx="11">designed</dependent>
+          </dep>
+          <dep type="det">
+            <governor idx="2">licenses</governor>
+            <dependent idx="1">The</dependent>
+          </dep>
+          <dep type="nsubj:pass">
+            <governor idx="11">designed</governor>
+            <dependent idx="2">licenses</dependent>
+          </dep>
+          <dep type="case">
+            <governor idx="5">software</governor>
+            <dependent idx="3">for</dependent>
+          </dep>
+          <dep type="amod">
+            <governor idx="5">software</governor>
+            <dependent idx="4">most</dependent>
+          </dep>
+          <dep type="nmod:for">
+            <governor idx="2">licenses</governor>
+            <dependent idx="5">software</dependent>
+          </dep>
+          <dep type="cc">
+            <governor idx="9">works</governor>
+            <dependent idx="6">and</dependent>
+          </dep>
+          <dep type="amod">
+            <governor idx="9">works</governor>
+            <dependent idx="7">other</dependent>
+          </dep>
+          <dep type="amod">
+            <governor idx="9">works</governor>
+            <dependent idx="8">practical</dependent>
+          </dep>
+          <dep type="conj:and">
+            <governor idx="5">software</governor>
+            <dependent idx="9">works</dependent>
+          </dep>
+          <dep type="aux:pass">
+            <governor idx="11">designed</governor>
+            <dependent idx="10">are</dependent>
+          </dep>
+          <dep type="mark">
+            <governor idx="13">take</governor>
+            <dependent idx="12">to</dependent>
+          </dep>
+          <dep type="xcomp">
+            <governor idx="11">designed</governor>
+            <dependent idx="13">take</dependent>
+          </dep>
+          <dep type="advmod">
+            <governor idx="13">take</governor>
+            <dependent idx="14">away</dependent>
+          </dep>
+          <dep type="nmod:poss">
+            <governor idx="16">freedom</governor>
+            <dependent idx="15">your</dependent>
+          </dep>
+          <dep type="obj">
+            <governor idx="13">take</governor>
+            <dependent idx="16">freedom</dependent>
+          </dep>
+          <dep type="mark">
+            <governor idx="18">share</governor>
+            <dependent idx="17">to</dependent>
+          </dep>
+          <dep type="advcl">
+            <governor idx="13">take</governor>
+            <dependent idx="18">share</dependent>
+          </dep>
+          <dep type="cc">
+            <governor idx="20">change</governor>
+            <dependent idx="19">and</dependent>
+          </dep>
+          <dep type="conj:and">
+            <governor idx="18">share</governor>
+            <dependent idx="20">change</dependent>
+          </dep>
+          <dep type="det">
+            <governor idx="22">works</governor>
+            <dependent idx="21">the</dependent>
+          </dep>
+          <dep type="obj">
+            <governor idx="18">share</governor>
+            <dependent idx="22">works</dependent>
+          </dep>
+          <dep type="punct">
+            <governor idx="11">designed</governor>
+            <dependent idx="23">.</dependent>
+          </dep>
+        </dependencies>
+        <dependencies type="collapsed-ccprocessed-dependencies">
+          <dep type="root">
+            <governor idx="0">ROOT</governor>
+            <dependent idx="11">designed</dependent>
+          </dep>
+          <dep type="det">
+            <governor idx="2">licenses</governor>
+            <dependent idx="1">The</dependent>
+          </dep>
+          <dep type="nsubj:pass">
+            <governor idx="11">designed</governor>
+            <dependent idx="2">licenses</dependent>
+          </dep>
+          <dep type="case">
+            <governor idx="5">software</governor>
+            <dependent idx="3">for</dependent>
+          </dep>
+          <dep type="amod">
+            <governor idx="5">software</governor>
+            <dependent idx="4">most</dependent>
+          </dep>
+          <dep type="nmod:for">
+            <governor idx="2">licenses</governor>
+            <dependent idx="5">software</dependent>
+          </dep>
+          <dep type="cc">
+            <governor idx="9">works</governor>
+            <dependent idx="6">and</dependent>
+          </dep>
+          <dep type="amod">
+            <governor idx="9">works</governor>
+            <dependent idx="7">other</dependent>
+          </dep>
+          <dep type="amod">
+            <governor idx="9">works</governor>
+            <dependent idx="8">practical</dependent>
+          </dep>
+          <dep type="nmod:for" extra="true">
+            <governor idx="2">licenses</governor>
+            <dependent idx="9">works</dependent>
+          </dep>
+          <dep type="conj:and">
+            <governor idx="5">software</governor>
+            <dependent idx="9">works</dependent>
+          </dep>
+          <dep type="aux:pass">
+            <governor idx="11">designed</governor>
+            <dependent idx="10">are</dependent>
+          </dep>
+          <dep type="mark">
+            <governor idx="13">take</governor>
+            <dependent idx="12">to</dependent>
+          </dep>
+          <dep type="xcomp">
+            <governor idx="11">designed</governor>
+            <dependent idx="13">take</dependent>
+          </dep>
+          <dep type="advmod">
+            <governor idx="13">take</governor>
+            <dependent idx="14">away</dependent>
+          </dep>
+          <dep type="nmod:poss">
+            <governor idx="16">freedom</governor>
+            <dependent idx="15">your</dependent>
+          </dep>
+          <dep type="obj">
+            <governor idx="13">take</governor>
+            <dependent idx="16">freedom</dependent>
+          </dep>
+          <dep type="mark">
+            <governor idx="18">share</governor>
+            <dependent idx="17">to</dependent>
+          </dep>
+          <dep type="advcl">
+            <governor idx="13">take</governor>
+            <dependent idx="18">share</dependent>
+          </dep>
+          <dep type="cc">
+            <governor idx="20">change</governor>
+            <dependent idx="19">and</dependent>
+          </dep>
+          <dep type="advcl" extra="true">
+            <governor idx="13">take</governor>
+            <dependent idx="20">change</dependent>
+          </dep>
+          <dep type="conj:and">
+            <governor idx="18">share</governor>
+            <dependent idx="20">change</dependent>
+          </dep>
+          <dep type="det">
+            <governor idx="22">works</governor>
+            <dependent idx="21">the</dependent>
+          </dep>
+          <dep type="obj">
+            <governor idx="18">share</governor>
+            <dependent idx="22">works</dependent>
+          </dep>
+          <dep type="punct">
+            <governor idx="11">designed</governor>
+            <dependent idx="23">.</dependent>
+          </dep>
+        </dependencies>
+        <dependencies type="enhanced-dependencies">
+          <dep type="root">
+            <governor idx="0">ROOT</governor>
+            <dependent idx="11">designed</dependent>
+          </dep>
+          <dep type="det">
+            <governor idx="2">licenses</governor>
+            <dependent idx="1">The</dependent>
+          </dep>
+          <dep type="nsubj:pass">
+            <governor idx="11">designed</governor>
+            <dependent idx="2">licenses</dependent>
+          </dep>
+          <dep type="nsubj:xsubj" extra="true">
+            <governor idx="13">take</governor>
+            <dependent idx="2">licenses</dependent>
+          </dep>
+          <dep type="case">
+            <governor idx="5">software</governor>
+            <dependent idx="3">for</dependent>
+          </dep>
+          <dep type="amod">
+            <governor idx="5">software</governor>
+            <dependent idx="4">most</dependent>
+          </dep>
+          <dep type="nmod:for">
+            <governor idx="2">licenses</governor>
+            <dependent idx="5">software</dependent>
+          </dep>
+          <dep type="cc">
+            <governor idx="9">works</governor>
+            <dependent idx="6">and</dependent>
+          </dep>
+          <dep type="amod">
+            <governor idx="9">works</governor>
+            <dependent idx="7">other</dependent>
+          </dep>
+          <dep type="amod">
+            <governor idx="9">works</governor>
+            <dependent idx="8">practical</dependent>
+          </dep>
+          <dep type="nmod:for" extra="true">
+            <governor idx="2">licenses</governor>
+            <dependent idx="9">works</dependent>
+          </dep>
+          <dep type="conj:and">
+            <governor idx="5">software</governor>
+            <dependent idx="9">works</dependent>
+          </dep>
+          <dep type="aux:pass">
+            <governor idx="11">designed</governor>
+            <dependent idx="10">are</dependent>
+          </dep>
+          <dep type="mark">
+            <governor idx="13">take</governor>
+            <dependent idx="12">to</dependent>
+          </dep>
+          <dep type="xcomp">
+            <governor idx="11">designed</governor>
+            <dependent idx="13">take</dependent>
+          </dep>
+          <dep type="advmod">
+            <governor idx="13">take</governor>
+            <dependent idx="14">away</dependent>
+          </dep>
+          <dep type="nmod:poss">
+            <governor idx="16">freedom</governor>
+            <dependent idx="15">your</dependent>
+          </dep>
+          <dep type="obj">
+            <governor idx="13">take</governor>
+            <dependent idx="16">freedom</dependent>
+          </dep>
+          <dep type="mark">
+            <governor idx="18">share</governor>
+            <dependent idx="17">to</dependent>
+          </dep>
+          <dep type="advcl:to">
+            <governor idx="13">take</governor>
+            <dependent idx="18">share</dependent>
+          </dep>
+          <dep type="cc">
+            <governor idx="20">change</governor>
+            <dependent idx="19">and</dependent>
+          </dep>
+          <dep type="advcl:to" extra="true">
+            <governor idx="13">take</governor>
+            <dependent idx="20">change</dependent>
+          </dep>
+          <dep type="conj:and">
+            <governor idx="18">share</governor>
+            <dependent idx="20">change</dependent>
+          </dep>
+          <dep type="det">
+            <governor idx="22">works</governor>
+            <dependent idx="21">the</dependent>
+          </dep>
+          <dep type="obj">
+            <governor idx="18">share</governor>
+            <dependent idx="22">works</dependent>
+          </dep>
+          <dep type="punct">
+            <governor idx="11">designed</governor>
+            <dependent idx="23">.</dependent>
+          </dep>
+        </dependencies>
+        <dependencies type="enhanced-plus-plus-dependencies">
+          <dep type="root">
+            <governor idx="0">ROOT</governor>
+            <dependent idx="11">designed</dependent>
+          </dep>
+          <dep type="det">
+            <governor idx="2">licenses</governor>
+            <dependent idx="1">The</dependent>
+          </dep>
+          <dep type="nsubj:pass">
+            <governor idx="11">designed</governor>
+            <dependent idx="2">licenses</dependent>
+          </dep>
+          <dep type="nsubj:xsubj" extra="true">
+            <governor idx="13">take</governor>
+            <dependent idx="2">licenses</dependent>
+          </dep>
+          <dep type="case">
+            <governor idx="5">software</governor>
+            <dependent idx="3">for</dependent>
+          </dep>
+          <dep type="amod">
+            <governor idx="5">software</governor>
+            <dependent idx="4">most</dependent>
+          </dep>
+          <dep type="nmod:for">
+            <governor idx="2">licenses</governor>
+            <dependent idx="5">software</dependent>
+          </dep>
+          <dep type="cc">
+            <governor idx="9">works</governor>
+            <dependent idx="6">and</dependent>
+          </dep>
+          <dep type="amod">
+            <governor idx="9">works</governor>
+            <dependent idx="7">other</dependent>
+          </dep>
+          <dep type="amod">
+            <governor idx="9">works</governor>
+            <dependent idx="8">practical</dependent>
+          </dep>
+          <dep type="nmod:for" extra="true">
+            <governor idx="2">licenses</governor>
+            <dependent idx="9">works</dependent>
+          </dep>
+          <dep type="conj:and">
+            <governor idx="5">software</governor>
+            <dependent idx="9">works</dependent>
+          </dep>
+          <dep type="aux:pass">
+            <governor idx="11">designed</governor>
+            <dependent idx="10">are</dependent>
+          </dep>
+          <dep type="mark">
+            <governor idx="13">take</governor>
+            <dependent idx="12">to</dependent>
+          </dep>
+          <dep type="xcomp">
+            <governor idx="11">designed</governor>
+            <dependent idx="13">take</dependent>
+          </dep>
+          <dep type="advmod">
+            <governor idx="13">take</governor>
+            <dependent idx="14">away</dependent>
+          </dep>
+          <dep type="nmod:poss">
+            <governor idx="16">freedom</governor>
+            <dependent idx="15">your</dependent>
+          </dep>
+          <dep type="obj">
+            <governor idx="13">take</governor>
+            <dependent idx="16">freedom</dependent>
+          </dep>
+          <dep type="mark">
+            <governor idx="18">share</governor>
+            <dependent idx="17">to</dependent>
+          </dep>
+          <dep type="advcl:to">
+            <governor idx="13">take</governor>
+            <dependent idx="18">share</dependent>
+          </dep>
+          <dep type="cc">
+            <governor idx="20">change</governor>
+            <dependent idx="19">and</dependent>
+          </dep>
+          <dep type="advcl:to" extra="true">
+            <governor idx="13">take</governor>
+            <dependent idx="20">change</dependent>
+          </dep>
+          <dep type="conj:and">
+            <governor idx="18">share</governor>
+            <dependent idx="20">change</dependent>
+          </dep>
+          <dep type="det">
+            <governor idx="22">works</governor>
+            <dependent idx="21">the</dependent>
+          </dep>
+          <dep type="obj">
+            <governor idx="18">share</governor>
+            <dependent idx="22">works</dependent>
+          </dep>
+          <dep type="punct">
+            <governor idx="11">designed</governor>
+            <dependent idx="23">.</dependent>
+          </dep>
+        </dependencies>
+        <kbp/>
+      </sentence>
+    </sentences>
+    <coreference/>
+  </document>
+</root>

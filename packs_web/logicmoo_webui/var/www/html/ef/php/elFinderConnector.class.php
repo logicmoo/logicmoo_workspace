@@ -5,8 +5,7 @@
  *
  * @author Dmitry (dio) Levashov
  **/
-class elFinderConnector
-{
+class elFinderConnector {
 	/**
 	 * elFinder instance
 	 *
@@ -17,7 +16,7 @@ class elFinderConnector
 	/**
 	 * Options
 	 *
-     * @var array
+	 * @var aray
 	 **/
 	protected $options = array();
 	
@@ -41,18 +40,16 @@ class elFinderConnector
 	 * 
 	 * @var string
 	 */
-    protected static $contentType = 'Content-Type: application/json; charset=utf-8';
+	protected static $contentType = 'Content-Type: application/json';
 	
 	/**
 	 * Constructor
 	 *
 	 * @param $elFinder
 	 * @param bool $debug
-     *
 	 * @author Dmitry (dio) Levashov
 	 */
-    public function __construct($elFinder, $debug = false)
-    {
+	public function __construct($elFinder, $debug=false) {
 		
 		$this->elFinder = $elFinder;
 		$this->reqMethod = strtoupper($_SERVER["REQUEST_METHOD"]);
@@ -65,11 +62,9 @@ class elFinderConnector
 	 * Execute elFinder command and output result
 	 *
 	 * @return void
-     * @throws Exception
 	 * @author Dmitry (dio) Levashov
-     */
-    public function run()
-{
+	 **/
+	public function run() {
 		$isPost = $this->reqMethod === 'POST';
 		$src    = $isPost ? $_POST : $_GET;
 		$maxInputVars = (! $src || isset($src['targets']))? ini_get('max_input_vars') : null;
@@ -164,13 +159,10 @@ class elFinderConnector
 	 * Output json
 	 *
 	 * @param  array  data to output
-     *
 	 * @return void
-     * @throws elFinderAbortException
 	 * @author Dmitry (dio) Levashov
-     */
-    protected function output(array $data)
-    {
+	 **/
+	protected function output(array $data) {
 		// unlock session data for multiple access
 		$this->elFinder->getSession()->close();
 		// client disconnect should abort
@@ -265,12 +257,10 @@ class elFinderConnector
 	 * Remove null & stripslashes applies on "magic_quotes_gpc"
 	 * 
 	 * @param  mixed  $args
-     *
 	 * @return mixed
 	 * @author Naoki Sawada
 	 */
-    protected function input_filter($args)
-    {
+	protected function input_filter($args) {
 		static $magic_quotes_gpc = NULL;
 		
 		if ($magic_quotes_gpc === NULL)

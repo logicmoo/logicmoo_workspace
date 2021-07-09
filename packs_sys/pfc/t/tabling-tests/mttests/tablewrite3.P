@@ -1,0 +1,20 @@
+
+/* This test considers concurrent ts table creation and completion.
+In addition, a suspension is created, along with a non-trivial SCC */
+
+:- import random_pause/1 from mttestutils.
+
+test(Str):- 
+	table_call_a(Str).
+
+:- table table_call_a/1.
+table_call_a(Str):- 
+	random_pause(1000),
+	writeln(Str,'in a'),
+	table_call_b(Str).
+
+:- table table_call_b/1.
+table_call_b(Str):- 
+	random_pause(1000),
+	writeln(Str,'in b'),
+	table_call_a(Str).

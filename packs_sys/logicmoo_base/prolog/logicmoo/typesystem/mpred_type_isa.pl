@@ -948,9 +948,10 @@ isa_backchaing_1(I,C):- fail,
 %  (isa/2) asserted.
 %
 
-isa_asserted(I,C):-  compound(I),!,no_repeats(loop_check(isa_asserted_0(I,C))).
-isa_asserted(I,C):-  ground(I:C),!,no_loop_check(no_repeats(loop_check(isa_asserted_0(I,C)))).
-isa_asserted(I,C):-  no_repeats(loop_check(isa_asserted_0(I,C))).
+%isa_asserted(I,C):-  compound(I),!,no_repeats(loop_check(isa_asserted_0(I,C))).
+%isa_asserted(I,C):-  ground(I:C),!,no_loop_check(no_repeats(loop_check(isa_asserted_0(I,C)))).
+%isa_asserted(I,C):-  no_repeats(loop_check(isa_asserted_0(I,C))).
+isa_asserted(I,C):- isa_asserted_0(I,C).
 % isa_asserted(I,C):- !, call_u(isa(I,C)).
 %isa_asserted(I,C):- ((lc_tcall(isa(I,C),no_repeats(loop_check(isa_asserted_0(I,C)))))).
 %isa_asserted(I,CC):-no_repeats((isa_asserted_0(I,C),call_u(genls(C,CC)))).
@@ -972,7 +973,7 @@ isa_asserted_0(I,C):-  clause_b(mudIsa(I,C)).
 %isa_asserted_0(I,C):- ((t_l:useOnlyExternalDBs,!);baseKB:use_cyc_database),(kbp_t([isa,I,C]);kbp_t([C,I])).
 
 isa_asserted_0(I,C):- quietly((atom(C),G=..[C,I],current_predicate(C,M:G))),!,on_x_fail(M:G).
-isa_asserted_0(I,C):-  not_mud_isa(I,C),!,fail.
+isa_asserted_0(I,C):- nonvar(I),nonvar(C),not_mud_isa(I,C),!,fail.
 isa_asserted_0(_,C):- nonvar(C),sanity(\+ is_ftVar(C)), clause_b(completelyAssertedCollection(C)),!,fail.
 % isa_asserted_0(I,_):- sanity(\+ is_ftVar(I)), clause_b(completeIsaAsserted(I)),!,fail.
 isa_asserted_0(I,C):- var(I),!,tSetOrdered(C),isa_asserted_0(I,C).

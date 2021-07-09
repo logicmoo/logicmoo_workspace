@@ -14,7 +14,7 @@
 %
 */
 
-
+:- '$set_source_module'(mu).
 
 load_bt_file(File):-
   asserta(is_bt_file(File)),
@@ -47,7 +47,7 @@ add_bt_meta_processing(Ax):-
 is_wrap_bt(_, Var):- var(Var), !.
 is_wrap_bt(_, !):- !, fail.
 is_wrap_bt(_, Atom):- \+ compound(Atom), !.
-is_wrap_bt(h, G):- is_bt_metacall(G).
+is_wrap_bt(t, G):- is_bt_metacall(G).
 is_bt_metacall(H):- compound(H), safe_functor(H, F, A), is_metacall_bt(F, A).
 is_metacall_bt(F, _):- is_metacall_bt(F).
 is_metacall_bt(', ').
@@ -59,8 +59,8 @@ is_metacall_bt('->').
 
 plus_2_p(P, PSE):- append_term(P, [_], PS), append_term(PS, [_], PSE).
 
-maybe_append_term(b, _Was, H, H):- (H==!), !.
-maybe_append_term(b, _Was, H, HH):- compound(H),
+maybe_append_term(body, _Was, H, H):- (H==!), !.
+maybe_append_term(body, _Was, H, HH):- compound(H),
    current_predicate(_, H), plus_2_p(H, PSE), \+ current_predicate(_, PSE), !,
    append_term({}, H, HH).
 maybe_append_term(_, Was, H, HH):- append_term(Was, H, HH).
@@ -70,19 +70,19 @@ expand_bt(_, H, HH):- (\+ nb_current('$bt_context', _) ; nb_current('$bt_context
 expand_bt(C, H, HH):- nb_current('$bt_context', Was), expand_bt(C, Was, H, HH), !.
 
 expand_bt(C, Was, Var, HH):-  var(Var), !, maybe_append_term(C, Was, Var, HH).
-expand_bt(C, Was, (A, B), (A, BB)):- C==b, (A == !), !, expand_bt(C, Was, B, BB).
-expand_bt(C, Was, (A, B), (AA, BB)):- C==b, !, expand_bt(C, Was, A, AA), expand_bt(C, Was, B, BB).
-expand_bt(C, Was, (A;B), (AA;BB)):-  C==b, !, expand_bt(C, Was, A, AA), expand_bt(C, Was, B, BB).
+expand_bt(C, Was, (A, B), (A, BB)):- C==body, (A == !), !, expand_bt(C, Was, B, BB).
+expand_bt(C, Was, (A, B), (AA, BB)):- C==body, !, expand_bt(C, Was, A, AA), expand_bt(C, Was, B, BB).
+expand_bt(C, Was, (A;B), (AA;BB)):-  C==body, !, expand_bt(C, Was, A, AA), expand_bt(C, Was, B, BB).
 expand_bt(C, Was, H, HH):- is_wrap_bt(C, H), maybe_append_term(C, Was, H, HH), !.
 expand_bt(_, Was, H, HH):- compound(H), safe_functor(H, F, _), safe_functor(Was, WF, _), F==WF, !, H=HH.
-expand_bt(C, Was, H, HH):- compound(H), is_bt_metacall(H), H=..[F|ArgsH],
+expand_bt(C, Was, H, HH):- C\==head, compound(H), is_bt_metacall(H), H=..[F|ArgsH],
    must_maplist(expand_bt(C, Was), ArgsH, ArgsHH),
    HH =.. [F|ArgsHH].
 expand_bt(C, Was, HB, HHBB):- compound(HB), wom_functor(HB, F, _),
    is_metasent_bt(F, C),
    HB=..[F, H|ArgsB],
-   expand_bt(h, Was, H, HH),
-   must_maplist(expand_bt(b, Was), ArgsB, ArgsBB),
+   expand_bt(head, Was, H, HH),
+   must_maplist(expand_bt(body, Was), ArgsB, ArgsBB),
    HHBB =.. [F, HH|ArgsBB].
 
 % expand_bt(c, _Was, H, H):-!.
@@ -121,11 +121,11 @@ bt_accept(Assert):- \+ \+ ((expand_bt(c, Assert, AssertO), bt_accept_low(AssertO
 :- export(bt_term_expansion/3).
 :- module_transparent(bt_term_expansion/3).
 bt_term_expansion(_M, (H ==>> B), Out):- !,
-  must((expand_bt(h, H, HH), expand_bt(b, B, BB),
+  must((expand_bt(head, H, HH), expand_bt(body, B, BB),
   bt_accept_low(HH ==>> BB),
   maybe_dcg(HH, BB, Out))).
 bt_term_expansion(_M, (H ::= B), Out):- !,
-  must((expand_bt(h, H, HH), expand_bt(b, B, BB),
+  must((expand_bt(head, H, HH), expand_bt(body, B, BB),
   expand_term((HH:-BB), Out),
   bt_accept_low(HH ::= BB))).
 

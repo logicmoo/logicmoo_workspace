@@ -2,34 +2,164 @@
    which uses `.cm-s-prolog span.cm-atom`, etc.
 */
 .fold             {display:none;}
-.pl-ellipsis      {color:blue; text-decoration:underline;}
-.pl-functor:hover {color:blue; text-decoration:underline;}
-.pl-infix:hover   {color:blue; text-decoration:underline;}
-.pl-var		  {color:#800;}  /* Normal variable */
-.pl-ovar	  {color:#800; font-weight: bold;}  /* Answer field output */
-.pl-anon	  {color:#800;}  /* _ */
-.pl-avar	  {color:#888;}  /* _GXXX */
-.pl-var		  {color:#800;}
-.pl-atom	  {color:#730;}
-.pl-quoted-atom   {color:#008; white-space:pre;}
-.pl-functor	  {color:#000; font-style: italic;}
-.pl-comment	  {color:#060; font-style: italic;}
+.pl-ellipsis      {text-decoration:underline;}
+.pl-functor:hover {text-decoration:underline;}
+.pl-infix:hover   {text-decoration:underline;}
+
+/*
+.pl-var		  {color:#800; mix-blend-mode: difference;}  // Normal variable 
+.pl-ovar	  {color:#800; mix-blend-mode: difference; font-weight: bold;}  // Answer field output 
+.pl-anon	  {color:#800; mix-blend-mode: difference;}  // _ 
+.pl-avar	  {color:#888; mix-blend-mode: difference;}  // _GXXX
+.pl-var		  {color:#800; mix-blend-mode: difference;}
+.pl-atom	  {color:#yellow; mix-blend-mode: difference;}
+.pl-quoted-atom   {color:#008; mix-blend-mode: difference; white-space:pre;}
+.pl-functor	  {color: rgb(0, 255, 255); mix-blend-mode: difference; font-style: italic;}
+.pl-comment	  {color:#060; mix-blend-mode: difference; font-style: italic;}
+.pl-int{color:white; mix-blend-mode: difference;}
+*/
 
 /* just to make elements more visible
-.pl-curl{color:yellow;}
-.pl-compound{color:green;}
-.pl-functor{color:magenta;}
-.pl-list{color:grey;}
-.pl-var-tail{color:yellow;}
-.pl-nonvar-tail{color:yellow;}
-.pl-prefix{color:violet;}
-.pl-postfix{color:violet;}
-.pl-infix{color:violet;}
-.pl-dict{color:brown;}
-.pl-tag{color:yellow;}
-.pl-key{color:yellow;}
-.pl-atom{color:red;}
-.pl-string{color:yellow;}
-.pl-int{color:black;}
-.pl-float{color:yellow;}
+.pl-curl{color:yellow; mix-blend-mode: difference;}
+.pl-compound{color:green; mix-blend-mode: difference;}
+.pl-functor{color:magenta; mix-blend-mode: difference;}
+.pl-list{color:grey; mix-blend-mode: difference;}
+.pl-var-tail{color:yellow; mix-blend-mode: difference;}
+.pl-nonvar-tail{color:yellow; mix-blend-mode: difference;}
+.pl-prefix{color:violet; mix-blend-mode: difference;}
+.pl-postfix{color:violet; mix-blend-mode: difference;}
+.pl-infix{color:violet; mix-blend-mode: difference;}
+.pl-dict{color:brown; mix-blend-mode: difference;}
+.pl-tag{color:yellow; mix-blend-mode: difference;}
+.pl-key{color:yellow; mix-blend-mode: difference;}
+.pl-atom{color:red; mix-blend-mode: difference;}
+.pl-string{color:yellow; mix-blend-mode: difference;}
+.pl-float{color:yellow; mix-blend-mode: difference;}
 */
+
+.container{
+ border-radius:3px;
+ padding:5px;
+ width: 60%;
+ margin: 0 auto;
+}
+
+h2{
+ font-weight: normal;
+ font-size: 25px;
+}
+h2:hover{
+ cursor: pointer;
+}
+
+/* Context menu */
+.context-menu{
+ display: none;
+ position: absolute;
+ border: 1px solid black;
+ border-radius: 3px;
+ width: 200px;
+ background: white;
+ box-shadow: 10px 10px 5px #888888;
+}
+
+.context-menu ul{
+ list-style: none;
+ padding: 2px;
+}
+
+.context-menu ul li{
+ padding: 5px 2px;
+ margin-bottom: 3px;
+ color: white;
+ font-weight: bold;
+ background-color: darkturquoise;
+
+}
+
+.context-menu ul li:hover{
+ cursor: pointer;
+ background-color: #7fffd4;
+}
+
+/* Colors */
+.Gainsboro ,.Orange ,.Plum {
+ width:15px;
+ height:15px;
+ border: 0px solid black;
+ display: inline-block;
+ margin-right: 5px;
+}
+
+.Gainsboro {
+ background-color: Gainsboro ;
+}
+.Orange {
+ background-color: Orange ;
+}
+.Plum {
+ background-color: Plum ;
+}
+
+ul.tools {
+    display: none;
+    list-style: none;
+    box-shadow: 0px 0px 4px rgba(0,0,0,.5);
+    border: solid 1px #000;
+    position: absolute;
+    background: #fff;
+}
+ul.tools li {
+    display: inline-block;
+    width: 10px;
+    height: 20px;
+    border: solid 1px #000;
+    margin: 5px;
+    padding: 5px 10px;
+    cursor: pointer;
+}
+
+element.style {
+    position: relative;
+    min-height: 100%;
+    top: 0px;
+}
+html, body {
+    //font-family: Verdana,sans-serif;
+    //font-size: 10px;
+    // line-height: 1.5;
+}
+body {
+    margin: 1;
+}
+input[type="checkbox"] {width:10px; height:10px; }
+
+pre {
+    overflow: auto;
+    text-align: left;
+}
+
+#expend {
+  display:none;  
+}
+
+#expend + .smalldesc {
+  max-height:104px;
+  overflow:hidden;
+  transition:all .3s ease;
+}
+
+#expend:checked + .smalldesc {
+  max-height:10250px;  
+}
+
+label {
+  color:blue;
+  text-decoration:underline;
+  cursor:pointer;
+}
+
+label:hover {
+  text-decoration:none;  
+}
+

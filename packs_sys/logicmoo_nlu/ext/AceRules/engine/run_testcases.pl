@@ -33,7 +33,15 @@ Runs all the testcases that can be found.
 % Runs all the testcases that are found in the directory "testcases/" and stores the
 % results in the same directory.
 
-run_testcases :-
+run_testcases :- 
+    user:file_search_path(ace_rules, Dir),!,
+    setup_call_cleanup(
+      working_directory(Was, Dir),    
+      run_testcases_here,
+      working_directory(_, Was)).
+
+
+run_testcases_here :-
     expand_file_name('testcases/court/input/*', CourtFiles),
     run_files_court(CourtFiles),
     expand_file_name('testcases/stable/input/*', StableFiles),

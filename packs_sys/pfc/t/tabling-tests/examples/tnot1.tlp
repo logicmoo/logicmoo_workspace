@@ -1,0 +1,40 @@
+
+:- table p/1.
+p(b).
+p(c) :- tnot p(a).
+p(X) :- t(X,Y,Z), tnot p(Y), tnot p(Z).
+
+t(a,b,a). t(a,a,b). t(c,c,c).
+
+/*
+
+tnot/1 vs.  ${\tt '\backslash+'/1}$
+
+Subject to some semantic restrictions, an XSB programmer can intermix the use of tabled negation ( tnot/1) with Prolog's 
+   negation (  ${\tt '\backslash+'/1}$, or equivalently fail_if/1 or not/1). These restrictions are discussed in detail below 
+  -- for now we focus on differences in behavior or these two predicates in stratified programs. Recall that  
+   ${\tt '\backslash+'(S)}$ calls $S$ and if $S$ has a solution, Prolog , executes a cut over the subtree created by  ${\tt '\backslash+'(S)}$, 
+   and fails. tnot/1 on the other hand, does not execute a cut, so that all subgoals in the computation path begun by the 
+   negative call will be completely evaluated. The major reason for not executing the cut is to insure that XSB evaluates ground queries 
+   to Datalog programs with negation with polynomial data complexity. As seen in Section 5.2, this 
+   property cannot be preserved if negation ``cuts'' over tables.
+
+There are other small differences between tnot/1 and  ${\tt '\backslash+'/1}$ illustrated in the following exercise.
+
+Exercise 5.3.3   In general, making a call to non-ground negative subgoal in Prolog may be unsound (cf. [29]), 
+but the following program illustrates a case in which non-ground negation is sound.
+
+ See http://www3.cs.stonybrook.edu/~sbprolog/manual1/node74.html#sec:control
+
+*/
+
+ngr_p:- \+ ngr_p(_).
+
+ngr_p(a).
+% Its tabled analog is
+
+:- table ngr_tp/1.
+
+ngr_tp:- tnot(ngr_tp(_)).
+ngr_tp(a).
+

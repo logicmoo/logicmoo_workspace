@@ -16,6 +16,9 @@
 :- dynamic
     user:pfc_resource/2,
     user:pfc_resource/3.
+:- volatile
+    user:pfc_resource/2,
+    user:pfc_resource/3.
 :- multifile
     user:pfc_resource/2,
     user:pfc_resource/3.
@@ -228,7 +231,7 @@ pfc_zip_prop_arg(size,   2).
 pfc_zip_prop_arg(time,   5).
 pfc_zip_prop_arg(offset, 6).
 
-
+:- volatile(user:resource/2).
 :- asserta(user:resource(app/pfc_res, pfc_res(.))).
 :- asserta(user:file_search_path(pfc_res, 'res://app/pfc_res')).
 

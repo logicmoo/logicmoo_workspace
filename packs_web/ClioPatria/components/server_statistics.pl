@@ -231,9 +231,9 @@ http_workers([H|T], OE) -->
 	http_workers(T, OE2).
 
 http_worker(H, OE) -->
-	{ thread_statistics(H, locallimit, LL),
-	  thread_statistics(H, globallimit, GL),
-	  thread_statistics(H, traillimit, TL),
+	{ thread_statistics(H, local, LL),
+	  thread_statistics(H, global, GL),
+	  thread_statistics(H, trail, TL),
 	  thread_statistics(H, localused, LU),
 	  thread_statistics(H, globalused, GU),
 	  thread_statistics(H, trailused, TU),

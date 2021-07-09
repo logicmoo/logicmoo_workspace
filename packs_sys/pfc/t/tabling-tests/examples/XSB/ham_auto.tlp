@@ -1,0 +1,99 @@
+/* File:      ham.P
+** Author(s): Jiyang Xu
+** Contact:   xsb-contact@cs.sunysb.edu
+**
+** Copyright (C) ECRC 1990
+**
+** XSB is free software; you can redistribute it and/or modify it under the
+** terms of the GNU Library General Public License as published by the Free
+** Software Foundation; either version 2 of the License, or (at your option)
+** any later version.
+**
+** XSB is distributed in the hope that it will be useful, but WITHOUT ANY
+** WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+** FOR A PARTICULAR PURPOSE.  See the GNU Library General Public License for
+** more details.
+**
+** You should have received a copy of the GNU Library General Public License
+** along with XSB; if not, write to the Free Software Foundation,
+** Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
+**
+** $Id: ham.P,v 1.1.1.1 1998/11/05 17:00:59 sbprolog Exp $
+**
+*/
+
+% Adapted by F.K. @ UTD
+
+:- topl demo/0.
+
+:- dynamic cycle_ham/2, edge/2.
+
+
+/************************************************************************/
+% the problem consists in finding a closed path through a graph such
+% that all the nodes of the graph are visited once. (Hamiltonian path)
+/************************************************************************/
+
+demo :- flag(ham_count,_,0),cycle_ham([a,b,c,d,e,f,g,h,i,j,k,l,m,n,o,p,q,r,s,t], Sol),
+        flag(ham_count,N,N+1),
+	write(Sol), nl, fail.
+demo :- flag(ham_count,C,0),write(ham_count=C),nl.
+
+cycle_ham( [X|Y], [X, T|L] ):-
+        chain_ham( [X|Y], [], [T|L] ),
+        edge( T, X ).		%  the last connection
+
+chain_ham( [X|Y], K, L ):-
+        delete( Z, Y, T ),
+        edge( X, Z ),
+        chain_ham( [Z|T], [X|K], L ).
+chain_ham( [X], L, [X|L] ).
+
+delete( X, [U|Y], [U|Z] ):-
+        delete( X, Y, Z ).
+delete( X, [X|Y], Y ).
+
+edge( X, Y ):-
+        connect( X, L ),
+        el1( Y, L ).
+
+el1( X, [X|_] ).
+el1( X, [_|L] ):-
+	el1( X, L ).
+
+connect( a, [b, j, k] ).
+connect( b, [a, c, p] ).
+connect( c, [b, d, l] ).
+connect( d, [c, e, q] ).
+connect( e, [d, f, m] ).
+connect( f, [e, g, r] ).
+connect( g, [f, h, n] ).
+connect( h, [i, g, s] ).
+connect( i, [j, h, o] ).
+connect( j, [a, i, t] ).
+connect( k, [o, l, a] ).
+connect( l, [k, m, c] ).
+connect( m, [l, n, e] ).
+connect( n, [m, o, g] ).
+connect( o, [n, k, i] ).
+connect( p, [b, q, t] ).
+connect( q, [p, r, d] ).
+connect( r, [q, s, f] ).
+connect( s, [r, t, h] ).
+connect( t, [p, s, j] ).
+
+/*-----------------------------------------
+	this is another graph example
+connect( 0, [1, 2, 3, 4, 5, 6, 7, 8, 9] ).
+connect( 1, [0, 2, 3, 4, 5, 6, 7, 8, 9] ).
+connect( 2, [0, 1, 3, 4, 5, 6, 7, 8, 9] ).
+connect( 3, [0, 1, 2, 4, 5, 6, 7, 8, 9] ).
+connect( 4, [0, 1, 2, 3, 5, 6, 7, 8, 9] ).
+connect( 5, [0, 1, 2, 3, 4, 6, 7, 8, 9] ).
+connect( 6, [0, 1, 2, 3, 4, 5, 7, 8, 9] ).
+connect( 7, [0, 1, 2, 3, 4, 5, 6, 8, 9] ).
+connect( 8, [0, 1, 2, 3, 4, 5, 6, 7, 9] ).
+connect( 9, [0, 1, 2, 3, 4, 5, 6, 7, 8] ).
+-----------------------------------------*/
+
+?- demo.

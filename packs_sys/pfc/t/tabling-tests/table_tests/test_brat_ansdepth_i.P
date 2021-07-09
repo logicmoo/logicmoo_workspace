@@ -1,0 +1,128 @@
+:- compiler_options([spec_off]).
+
+:- set_prolog_flag(max_table_answer_action, bounded_rationality).
+%:- set_prolog_flag(max_table_answer_depth, 7).
+:- set_prolog_flag(heap_garbage_collection,none).
+
+%:- import start_forest_view/1 from tables.
+%?- start_forest_view(userout).
+:- import numbervars/1 from num_vars.
+
+%test_core_dump:- s and s1.
+
+test:- testp.
+test:- testq1.
+test:- testq2.
+test:- testq3.
+test:- testr1.
+test:- testr.
+test:- tests.
+test:- tests1.
+test:- tests2.
+test:- tests3.
+test:- tests4.
+test:- tests5.
+test:- tests6.
+test.
+
+test1:- s(A,B),writeln(s(A,B)),fail.
+test1:- s1(A,B),writeln(s1(A,B)),fail.
+
+testp:- p(X),get_residual(p(X),L),numbervars([X,Y,L]),
+	writeln(get_residual(p(X),L)),fail.
+testq1:- q1(X,Y),get_residual(q1(X,Y),L),numbervars([X,Y,L]),
+	 writeln(get_residual(q1(X,Y),L)),fail.
+testq2:- q2(X,Y),get_residual(q2(X,Y),L),numbervars([X,Y,L]),
+	 writeln(get_residual(q2(X,Y),L)),fail.
+testq3:- q3(X,Y),get_residual(q3(X,Y),L),numbervars([X,Y,L]),
+	 writeln(get_residual(q3(X,Y),L)),fail.
+testr1:- r1(X,Y),get_residual(r1(X,Y),L),numbervars([X,Y,L]),
+	 writeln(get_residual(r1(X,Y),L)),fail.
+testr:- r(X,Y),get_residual(r(X,Y),L),numbervars([X,Y,L]),
+	writeln(get_residual(r(X,Y),L)),fail.
+tests:- s(X,Y),get_residual(s(X,Y),L),numbervars([X,Y,L]),
+	writeln(get_residual(s(X,Y),L)),fail.
+tests1:- s1(X,Y,Z),get_residual(s1(X,Y,Z),L),numbervars([X,Y,Z,L]),
+	 writeln(get_residual(s1(X,Y,Z),L)),fail.
+tests2:- s2(X,Y,Z),get_residual(s2(X,Y,Z),L),numbervars([X,Y,Z,L]),
+	 writeln(get_residual(s2(X,Y,Z),L)),fail.
+tests3:- s3(X,Y,Z),get_residual(s3(X,Y,Z),L),numbervars([X,Y,Z,L]),
+	 writeln(get_residual(s3(X,Y,Z),L)),fail.
+tests4:- s4(X,Y),get_residual(s4(X,Y),L),numbervars([X,Y,L]),
+	 writeln(get_residual(s4(X,Y),L)),fail.
+tests5:- s5(X,Y),get_residual(s5(X,Y),L),numbervars([X,Y,L]),
+	 writeln(get_residual(s5(X,Y),L)),fail.
+tests6:- s6(X,Y),get_residual(s6(X,Y),L),numbervars([X,Y,L]),
+	 writeln(get_residual(s6(X,Y),L)),fail.
+
+:- table p/1 as answer_abstract(7).
+p(f(X)):- p(X). %writeln(found(f(X))).
+p(a).
+
+:- table q1/2 as answer_abstract(7).
+q1(b,f(X)):- q1(_,X). %writeln(found(f(X))).
+q1(b,a).
+
+:- table q2/2 as answer_abstract(7).
+q2(f(X),b):- q2(X,_). %writeln(q(f(X))).
+q2(a,b).
+
+:- table q3/2 as answer_abstract(7).
+q3(f(X),b):- q3(X,b). %writeln(q(f(X))).
+q3(a,b).
+
+:- table r1/2 as answer_abstract(7).
+r1(f(X,a),Y):- r1(X,Y). %writeln(r1(X)).
+r1(a,b).
+
+:- table r/2 as answer_abstract(7).
+r(f(X,X),b):- r(X,b). %writeln(r(f(X,X))).
+r(a,b).
+
+:- table s/2 as answer_abstract(7).
+s(f(X,X),g(1)):- s(X,g(1)). %writeln(r(f(X,X))).
+s(a,g(1)).
+
+:- table s1/3 as answer_abstract(7).
+s1(f(X,X),g(1),h(Y,Y)):- s1(X,g(1),Y). %writeln(r(f(X,X))).
+s1(a,g(1),b).
+
+:- table s2/3 as answer_abstract(7).
+s2(f(f(X,X)),g(1),h(Y,Y)):- s2(X,g(1),Y). %writeln(r(f(X,X))).
+s2(a,g(1),b).
+
+:- table s3/3 as answer_abstract(7).
+s3(h(Y,Y),g(1),f(f(X,X))):- s3(Y,g(1),X). %writeln(r(f(X,X))).
+s3(a,g(1),b).
+
+:- table s4/2 as answer_abstract(7).
+s4(h(f(Y),Y),g(1)):- s4(Y,g(1)). %writeln(r(f(X,X))).
+s4(a,g(1)).
+
+% should also do on 3.
+:- table s5/2 as answer_abstract(7).
+s5(h(f(Y),g(a)),g(1)):- s5(Y,g(1)). %writeln(r(f(X,X))).
+s5(a,g(1)).
+
+:- table s6/2 as answer_abstract(7).
+s6(h(f(Y),g(a)),g(b)):- s6(Y,_). %writeln(r(f(X,X))).
+s6(a,g(b)).
+
+
+:- table d1/2 as answer_abstract(7).
+d1(h(f(h(f(a))),h(f(a))),g(1)).
+
+:- table s7/1 as answer_abstract(7).
+s7(f(X,X)):- s7(X). %writeln(r(f(X,X))).
+s7(a).
+
+:- table d2/1 as answer_abstract(7).
+d2(f(f(f(a,a),f(a,a)),f(f(a,a),f(a,a)))).
+
+:- table d3/1 as answer_abstract(7).
+d3(f(f(f(f(a))))).
+
+:- table d4/3 as answer_abstract(7).
+d4(f(f(f(a,a),f(a,a)),f(f(a,a),f(a,a))),g(1),
+  h(h(h(b,b),h(b,b)),h(h(b,b),h(b,b)))).
+

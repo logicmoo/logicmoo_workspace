@@ -30,8 +30,6 @@ decl_talk_db_data(F/A):-dynamic(F/A),multifile(F/A),export(F/A).
 :- decl_talk_db_data(talk_db/4).
 :- decl_talk_db_data(talk_db/5).
 :- decl_talk_db_data(talk_db/6).
-:- decl_talk_db_data(talk_db/4).
-:- decl_talk_db_data(talk_db/6).
 
 
 /*
@@ -156,16 +154,17 @@ show_size_left(Message):-
 
 use_new_morefile:- fail.
 
-check_marker(Type,Possibles):- \+ compound(Type), !,
-  member(W, Possibles), atom(W), 
+check_marker(Type,Possibles):- 
+  notrace(\+ compound(Type)), !,
+  notrace((member(W, Possibles), atom(W), 
   concat_atom_safe([Type,Base],':',W), !,
-  fill_in_blanks(Base,Possibles).
+  fill_in_blanks(Base,Possibles))).
 
 check_marker(Marks,Possibles):- 
-   member(W,Possibles), atom(W),
+   notrace((member(W,Possibles), atom(W),
    arg(_,Marks,Type),
    concat_atom_safe([Type,Base],':',W), !,
-   fill_in_blanks(Base,Possibles).
+   fill_in_blanks(Base,Possibles))).
 
 fill_in_blanks( Base,[H|T]):- ignore(H=Base), !, fill_in_blanks(Base,T).
 fill_in_blanks(_Base,[]).
@@ -175,37 +174,45 @@ fill_in_blanks(_Base,[]).
 
 % was talk_db([F, A|List]):- talk_db_argsIsa(F, N_Minus1, _), length(List, N_Minus1), apply(talk_db, [F, A|List]).
 % talk_db([F,A|List]):- talk_db_argsIsa(F,N,_), length(List,N),apply(talk_db,[F,A|List]).
-talk_db([F,A|List]):- between(0,4,N), length(List,N), apply(talk_db,[F,A|List]).
+talk_db(X):- quietly(talk_db0(X)).
+  talk_db0([F,A|List]):- between(0,4,N), length(List,N), apply(talk_db,[F,A|List]).
 
-talk_db(VerbType,Jacket,Jackets,Jacketed,Jacketing,Jacketed):- nonvar(Jacket), \+ parser_chat80:plt,
-  talk_db(noun_or_verb,Jackets,Jacketing,Jacket),
-  clause(talkdb:talk_db(VerbType,Jackets,Jackets,Jacketed,Jacketing,Jacketed),true).
+talk_db(Ditransitive, Jacket,Jackets,Jacketed,Jacketing,Jacketen):-
+  quietly(talk_db0(Ditransitive, Jacket,Jackets,Jacketed,Jacketing,Jacketen)).
+
+  talk_db0(VerbType,Jacket,Jackets,Jacketed,Jacketing,Jacketed):- nonvar(Jacket), \+ parser_chat80:plt,
+    talk_db(noun_or_verb,Jackets,Jacketing,Jacket),
+    clause(talkdb:talk_db(VerbType,Jackets,Jackets,Jacketed,Jacketing,Jacketed),true).
+  
+  
+  talk_db0(transitive, Jacket,Jackets,Jacketed,Jacketing,Jacketed):- 
+              check_marker(v('tv','v'),[Jacket,Jackets,Jacketed,Jacketing]).
+  
+  talk_db0(intransitive, Jacket,Jackets,Jacketed,Jacketing,Jacketed):- 
+              check_marker(v('iv','v'),[Jacket,Jackets,Jacketed,Jacketing]).
+  
+  talk_db0(ditransitive, Jacket,Jackets,Jacketed,Jacketing,Jacketed):- 
+              check_marker(v('dv','v'),[Jacket,Jackets,Jacketed,Jacketing]).
 
 
-talk_db(transitive, Jacket,Jackets,Jacketed,Jacketing,Jacketed):- 
-            check_marker(v('tv','v'),[Jacket,Jackets,Jacketed,Jacketing]).
+talk_db(Type,A):- quietly(talk_db0(Type,A)).
+  talk_db0(adj,Word):- check_marker('jj',[Word]).
+  talk_db0(adv,Word):- check_marker('av',[Word]).
+  talk_db0(Type,A):- atom(A), concat_atom_safe([Type,_],':', A).
 
-talk_db(intransitive, Jacket,Jackets,Jacketed,Jacketing,Jacketed):- 
-            check_marker(v('iv','v'),[Jacket,Jackets,Jacketed,Jacketing]).
+talk_db(Type,A,B):- quietly(talk_db0(Type,A,B)).
+  talk_db0(noun1,Sing,Plural):- check_marker(v('n','cn'),[Sing,Plural]).
+  talk_db0(noun2,Sing,Sing):- check_marker(v('n','mn'),[Sing]).
+  talk_db0(Type,A,B):- check_marker(Type,[A,B]).
+  talk_db0(noun1,Sing,Sing):- talk_db(noun2,Sing).
+  talk_db0(superl, far, aftermost).
+  talk_db0(superl, close, formest).
+  talk_db0(superl, far, furthest).
 
-talk_db(ditransitive, Jacket,Jackets,Jacketed,Jacketing,Jacketed):- 
-            check_marker(v('dv','v'),[Jacket,Jackets,Jacketed,Jacketing]).
-
-
-talk_db(noun1,Sing,Plural):- check_marker(v('n','cn'),[Sing,Plural]).
-talk_db(noun2,Sing,Sing):- check_marker(v('n','mn'),[Sing]).
-talk_db(adj,Word):- check_marker('jj',[Word]).
-talk_db(adv,Word):- check_marker('av',[Word]).
-talk_db(Type,A):- atom(A), concat_atom_safe([Type,_],':', A).
-talk_db(Type,A,B):- check_marker(Type,[A,B]).
 talk_db(Type,A,B,C):- check_marker(Type,[A,B,C]).
 talk_db(Type,A,B,D,C):- check_marker(Type,[A,B,C,D]).
 
 
-talk_db(noun1,Sing,Sing):- talk_db(noun2,Sing).
-talk_db(superl, far, aftermost).
-talk_db(superl, close, formest).
-talk_db(superl, far, furthest).
 
 :- show_size_left("Including talk_db.nldata").
 %:- include('talk_db.nldata').
@@ -333,7 +340,7 @@ save_to_file(Name,Belongs,F):-
 % :- forall((S=adv,talkdb:talk_db(S,X)), ignore((show_success((S=S,retract(talkdb:talk_db(adj,X))))))).
 
 :- fixup_exports. 
-:- fixup_exports_system.%  system:reexport(talk_db).
+:- fixup_exports_system.%  system:re export(talk_db).
 
 % =================================
 % some random talk_db/2-6 from the other file (to help see the meanings)

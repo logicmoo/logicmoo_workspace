@@ -187,6 +187,13 @@
 
 :- module(refres, [resolve_anaphors/2]).
 
+:- if( \+ current_predicate(ape_numbervars/3)).
+ape_numbervars(DRSCopy, Zero, N) :-
+    numbervars(DRSCopy, Zero, N, [attvar(skip)]).
+:- export(ape_numbervars/3).
+:- system:import(ape_numbervars/3).
+:- endif.
+
 %%%:- check.
 
 :- dynamic(variable_defined/3).
@@ -458,7 +465,7 @@ resolve_one_anaphor(drs(ReferentsIn, ConditionsIn), ConditionsAllIn, ConditionsA
       ProperNamesOut = ProperNamesIn,
       AntecedentsOut = AntecedentsIn,
       atom_concat('Unresolved anaphor: ', AnaphorTokens, ErrorText),
-	  add_error_message_once(anaphor, AnaphorSID-AnaphorTID, ErrorText, 'Identify correct accessible antecedent.')
+	  add_werror_message_once(anaphor, AnaphorSID-AnaphorTID, ErrorText, 'Identify correct accessible antecedent.')
     )
   ;
     % definite noun phrase
@@ -476,7 +483,7 @@ resolve_one_anaphor(drs(ReferentsIn, ConditionsIn), ConditionsAllIn, ConditionsA
         CurrentNestingLevel >= DRSNestingLevel
         ->
         atom_concat('Redefined variable: ', VariableName, ErrorText),
-        add_error_message_once(anaphor, AnaphorSID - AnaphorTID, ErrorText, 'Assign unique variables.')
+        add_werror_message_once(anaphor, AnaphorSID - AnaphorTID, ErrorText, 'Assign unique variables.')
       ;
         true
       )
@@ -686,7 +693,7 @@ resolve_one_anaphor(drs(ReferentsIn, ConditionsIn), ConditionsAllIn, ConditionsA
     ConditionsAllOut = ConditionsAllIn,
     AntecedentsOut = AntecedentsIn,
     ProperNamesOut = ProperNamesIn,
-    add_error_message_once(anaphor, AnaphorSID-AnaphorTID, 'Unrecognised anaphor.', 'Send screenshot to APE developers.')
+    add_werror_message_once(anaphor, AnaphorSID-AnaphorTID, 'Unrecognised anaphor.', 'Send screenshot to APE developers.')
   ).
 
 
@@ -774,7 +781,7 @@ check_for_redefined_variables([Antecedent|Antecedents]) :-
     Referent2 == AntecedentReferent2
     ->
     atom_concat('Redefined variable: ', VariableName, ErrorText),
-    add_error_message_once(anaphor, AntecedentSID1 - AntecedentTID1, ErrorText, 'Assign unique variables.')
+    add_werror_message_once(anaphor, AntecedentSID1 - AntecedentTID1, ErrorText, 'Assign unique variables.')
   ;
     % variable is not redefined
     true
@@ -812,7 +819,7 @@ define_new_variable(variable(_Referent, VariableName)-SentenceIndex/TokenIndex, 
     CurrentNestingLevel >= DRSNestingLevel
     ->
     atom_concat('Redefined variable: ', VariableName, ErrorText),
-    add_error_message_once(anaphor, SentenceIndex-TokenIndex, ErrorText, 'Assign unique variables.')
+    add_werror_message_once(anaphor, SentenceIndex-TokenIndex, ErrorText, 'Assign unique variables.')
   ;
     true
   ),
@@ -1061,7 +1068,7 @@ noun_phrase_conjunction_refers_to_itself(Conditions) :-
       true
     ;
       % there are less than N has_part/2 branches meaning that there are anaphoric references within the noun phrase conjunction
-      add_error_message_once(anaphor, Sentence - '', 'Noun phrase conjunction refers anaphorically to itself.', 'Remove anaphoric references from noun phrase conjunction.')
+      add_werror_message_once(anaphor, Sentence - '', 'Noun phrase conjunction refers anaphorically to itself.', 'Remove anaphoric references from noun phrase conjunction.')
     ),
     noun_phrase_conjunction_refers_to_itself(RestConditions)
   ;

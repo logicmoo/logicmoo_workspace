@@ -16,6 +16,7 @@
 % Main file.
 %
 */
+:- '$set_source_module'(mu).
 
 :- dynamic(mu_global:cmd_help/2).
 :- multifile(mu_global:cmd_help/2).

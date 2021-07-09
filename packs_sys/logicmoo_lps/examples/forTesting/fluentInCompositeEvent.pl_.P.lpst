@@ -1,0 +1,54 @@
+/*
+  LPS test results file generated on 2021-2-28 at 11:9:57
+  on Prolog swi(8,1,9,[]) for program file:
+  /Users/mc/git/lps_corner/examples/forTesting/fluentInCompositeEvent.pl_.P
+*/
+
+:-dynamic lps_test_result/3,lps_test_result_item/3,lps_test_action_ancestor/3,lps_test_options/1.
+
+% LPS options prior to the test:
+lps_test_options([dc]).
+
+% lps_test_result(Stage,Cycle,TestTerm)
+lps_test_result(fluents,0,2).
+lps_test_result(events,1,0).
+lps_test_result(fluents,1,2).
+lps_test_result(events,2,1).
+lps_test_result(composites,2,1).
+lps_test_result(fluents,2,2).
+lps_test_result(events,3,1).
+lps_test_result(composites,3,1).
+lps_test_result(fluents,3,2).
+lps_test_result(events,4,1).
+lps_test_result(composites,4,1).
+lps_test_result(fluents,4,2).
+lps_test_result(events,5,1).
+lps_test_result(composites,5,1).
+lps_test_result(fluents,5,2).
+% lps_test_result_item(Stage,Cycle,TestTerm)
+lps_test_result_item(fluents,0,hungry).
+lps_test_result_item(fluents,0,neighbourHome).
+lps_test_result_item(fluents,1,hungry).
+lps_test_result_item(fluents,1,neighbourHome).
+lps_test_result_item(events,2,borrowFood).
+lps_test_result_item(composites,2,happens(getFood,1,2)).
+lps_test_result_item(fluents,2,hungry).
+lps_test_result_item(fluents,2,neighbourHome).
+lps_test_result_item(events,3,borrowFood).
+lps_test_result_item(composites,3,happens(getFood,2,3)).
+lps_test_result_item(fluents,3,hungry).
+lps_test_result_item(fluents,3,neighbourHome).
+lps_test_result_item(events,4,borrowFood).
+lps_test_result_item(composites,4,happens(getFood,3,4)).
+lps_test_result_item(fluents,4,hungry).
+lps_test_result_item(fluents,4,neighbourHome).
+lps_test_result_item(events,5,borrowFood).
+lps_test_result_item(composites,5,happens(getFood,4,5)).
+lps_test_result_item(fluents,5,hungry).
+lps_test_result_item(fluents,5,neighbourHome).
+% lps_test_action_ancestor(Call,T1,T2)
+lps_test_action_ancestor(getFood,5,6).
+lps_test_action_ancestor(getFood,4,5).
+lps_test_action_ancestor(getFood,3,4).
+lps_test_action_ancestor(getFood,2,3).
+lps_test_action_ancestor(getFood,1,2).

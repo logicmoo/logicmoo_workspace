@@ -44,7 +44,7 @@ do_import/4,
 
 :- create_prolog_flag(retry_undefined, none,[type(term),keep(true)]).
 
-:- use_module(library(logicmoo/no_loops),[is_parent_goal/1,is_parent_goal/2]).
+:- use_module(library(logicmoo/no_loops),[is_parent_goal/1,is_parent_goal/2, lco_goal_expansion/2]).
 
 :- meta_predicate decl_as(*,+).
 :- meta_predicate decl_as_rev(+,*).
@@ -143,7 +143,7 @@ dumpST_dbreak:- dumpST,break.
 % baseKBOnly mark_mark/3 must be findable from every module (dispite the fact that baseKB is not imported)
 % :- dynamic baseKB:mpred_prop/4.
 
-% hybrid_support (like spft/3) must be defined directly in every module and then aggregated thru genlMts (thus to baseKB)
+% hybrid_support (like '$spft'/4) must be defined directly in every module and then aggregated thru genlMts (thus to baseKB)
 /*
 is_parent_goal(G):- prolog_current_frame(F),is_parent_goal(F,G).
 % The user must ensure the checked parent goal is not removed from the stack due 
@@ -394,11 +394,11 @@ system:inherit_above(Mt,Query):-
    Query\=do_inherit_above(_,_),
    do_inherit_above(Mt,Query).
 
-never_move(spft,_).
+never_move('$spft',_).
 never_move(mpred_prop,_).
 never_move(meta_argtypes,_).
-never_move(pt,_).
-never_move(bct,_).
+never_move('$pt',_).
+never_move('$bt',_).
 never_move(tc,_).
 never_move(proven_tru,_).
 never_move(is_pfc_file,_):- dumpST,break.
@@ -410,6 +410,8 @@ never_move(is_pfc_file,_):- dumpST,break.
 :- thread_local(t_l:exact_kb/1).
 system:do_inherit_above(Mt,_):- t_l:exact_kb(Mt),!,fail.
 %system:do_inherit_above(user,G):- !, fail, baseKB:call(G).
+
+system:do_inherit_above(_Mt,_QueryIn):- !, fail.
 
 system:do_inherit_above(Mt,QueryIn):- 
    functor(QueryIn,F,A),\+ never_move(F,A),
@@ -438,6 +440,7 @@ system:do_call_inherited(MtAbove,Query):-
    \+ current_predicate(_,MtAbove:Query),
    functor(Query,F,A) -> create_predicate_inheritance(do_call_inherited(MtAbove,Query),MtAbove,F,A) -> fail.
 
+system:do_call_inherited(_Mt,_QueryIn):- !, fail.
 system:do_call_inherited(MtAbove,Query):- !, on_x_debug(MtAbove:Query).
 system:do_call_inherited(MtAbove,Query):- on_x_debug(call(call,ireq(MtAbove:Query))).
   

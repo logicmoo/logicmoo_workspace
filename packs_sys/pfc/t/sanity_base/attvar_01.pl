@@ -18,7 +18,7 @@ sk1:attr_unify_hook(_,_).
 :- read_attvars(true).
 % :- set_prolog_flag(assert_attvars,true).
 
-sk1_in(avar([vn='Ex'],[sk1='SKF-666'])).
+sk1_in(aVar([vn='Ex'],[sk1='SKF-666'])).
 
 :- listing(sk1_in/1).
 

@@ -1,5 +1,31 @@
-ERROR: Invalid ACE text:
-The word "gun" is unknown; did you mean "run"?
-The word "gun" is unknown; did you mean "run"?
-"John has a <> gun.": This is the first sentence that was not ACE. The sign <> indicates the position where parsing failed.
+
+INPUT TEXT:
+John has a gun.
+John does not have a gun.
+Every dog hates Bill.
+Mary waits.
+
+RULES:
+-group([pred_mod(have,named('John'),gv(0),[]),object(gv(0),gun,countable,na,eq,1)]).
+group([pred_mod(hate,A,named('Bill'),[])]) <- [object(A,dog,countable,na,eq,1)].
+group([pred_mod(have,named('John'),gv(0),[]),object(gv(0),gun,countable,na,eq,1)]).
+pred_mod(wait,named('Mary'),[]).
+object(named('Bill'),'Bill',named,na,eq,1).
+object(named('John'),'John',named,na,eq,1).
+object(named('Mary'),'Mary',named,na,eq,1).
+
+SIMPLE RULES:
+-group([have(named('John'),gv(0),[]),gun(gv(0))]).
+hate(A,named('Bill'),[]) <- [dog(A)].
+group([have(named('John'),gv(0),[]),gun(gv(0))]).
+wait(named('Mary'),[]).
+
+ANSWERSET #1:
+pred_mod(wait,named('Mary'),[]).
+object(named('Bill'),'Bill',named,na,eq,1).
+object(named('John'),'John',named,na,eq,1).
+object(named('Mary'),'Mary',named,na,eq,1).
+
+ANSWERTEXT #1:
+Mary waits.
 

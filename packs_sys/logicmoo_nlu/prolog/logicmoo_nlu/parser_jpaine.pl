@@ -151,7 +151,7 @@ sentence(Struc) -->
 %   noun_phrase(
 %       Struc : return structure,
 %       Pers  : np 'person' = first | second | third,
-%       Nnum  : np 'number' = sing | plur,
+%       Nnum  : np 'number' = sg | pl,
 %       Gap   : transformed np (if any),
 %       Gapout: output gap if Gap not resolved
 %   )
@@ -178,7 +178,7 @@ noun_phrase(Struc,Pers,Num,Gap,Gapout) -->
 %
 %   determiner(
 %       Struc : return structure,
-%       Dnum  : det 'number' = sing | plur
+%       Dnum  : det 'number' = sg | pl
 %   )
 %
 %   No determiner is considered to pluralize the np, ie:
@@ -187,7 +187,7 @@ noun_phrase(Struc,Pers,Num,Gap,Gapout) -->
 %
 
 determiner(Struc,Dnum) --> [Word], {lexdet(Word,_Det,Dnum)}, {Struc = det(Word)}.
-determiner(Struc,Dnum) --> [], {Dnum = plur}, {Struc = det(nil)}.
+determiner(Struc,Dnum) --> [], {Dnum = pl}, {Struc = det(nil)}.
 
 %
 %   noun_bar is here just a noun with arguments.  A treatment
@@ -195,7 +195,7 @@ determiner(Struc,Dnum) --> [], {Dnum = plur}, {Struc = det(nil)}.
 %
 %   noun_bar(
 %       Struc : return structure,
-%       Nnum  : noun 'number' parsed = sing | plur
+%       Nnum  : noun 'number' parsed = sg | pl
 %       )
 %
 
@@ -223,9 +223,9 @@ adjectives(Struc) -->
 %   mass nouns should be considered as noun_bars in this system!
 %
 
-noun(Struc,Nnum) --> [Word], {Nnum = sing}, {lexnoun(Word,_)},
+noun(Struc,Nnum) --> [Word], {Nnum = sg}, {lexnoun(Word,_)},
     {Struc = noun(Word)}.
-noun(Struc,Nnum) --> [Word], {Nnum = plur}, {lexnoun(_,Word)},
+noun(Struc,Nnum) --> [Word], {Nnum = pl}, {lexnoun(_,Word)},
     {Struc = noun(Word)}.
 
 %
@@ -340,10 +340,10 @@ modal(Struc,Mpers,Vpers,Mnum,Vbnum,Mgap,Vbgap) --> [],
 %
 
 verb(Struc,Pers,Vnum,Scat) --> [Word],
-    {Pers \== third; Vnum = plur}, {lexverb(Scat,Word,_,_)},
+    {Pers \== third; Vnum = pl}, {lexverb(Scat,Word,_,_)},
     {Struc = verb(Word)}.
 verb(Struc,Pers,Vnum,Scat) --> [Word],
-    {Pers = third}, {Vnum = sing}, {lexverb(Scat,_,Word,_)},
+    {Pers = third}, {Vnum = sg}, {lexverb(Scat,_,Word,_)},
     {Struc = verb(Word)}.
 verb(Struc,_Pers,Vnum,Scat) --> [Word],
     {Vnum \== inf}, {lexverb(Scat,_,_,Word)},
@@ -757,7 +757,7 @@ structures and how Gibberish can be expanded to suit:
         a cat or dog will go and see the stamp.
 
         doesn't parse because the vp-level 'conj' expects both
-        "will go" and "see" to be third & sing.  Conjunction at
+        "will go" and "see" to be third & sg.  Conjunction at
         the vbar level will be needed to handle such a sentence.
         The nbar rule could use a similar arrangement.
 
@@ -779,8 +779,8 @@ representation is no use for highly inflected languages.
 /*  lexdet( Word+, Syn+, Number+ ):
 */
 lexdet(the,the,_).
-lexdet(a,a,sing).
-lexdet(an,a,sing).
+lexdet(a,a,sg).
+lexdet(an,a,sg).
 
 
 /*  lexadjective( Word+ ):
@@ -844,7 +844,7 @@ lexprep(with).
 
 /*  lexconj( Word+, Number ):
 */
-lexconj(and,plur).
-lexconj(or,sing).
+lexconj(and,pl).
+lexconj(or,sg).
 
 

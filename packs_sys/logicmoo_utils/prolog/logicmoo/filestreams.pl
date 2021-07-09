@@ -311,15 +311,15 @@ file_open_read(File,In):-open(File,read,In,[]),!,see(In),current_input(In).
 % :- module(http_ssl_plugin, []).
 % % % OFF 
 :- if(exists_source(library(ssl))).
-:- system:use_module(library(ssl),[]).
+% % TODO :- system:use_module(library(ssl),[]).
 :- endif.
 
 % % % OFF :- system:use_module(library(socket),[]).
 % % % OFF :- system:use_module(library(debug),[]).
 % % % OFF :- system:use_module(library(option),[]).
-:- system:use_module(library(http/thread_httpd),[]).
+% % TODO  :- system:use_module(library(http/thread_httpd),[]).
 % % % OFF 
-:- system:use_module(library(http/http_header)).
+% % TODO  :- system:use_module(library(http/http_header)).
 
 /* Part of LogicMOO Base SSL plugin for HTTP libraries
 
@@ -344,7 +344,7 @@ SWI-Prolog installation directory.
 		 /*******************************
 		 *	    SERVER HOOKS	*
 		 *******************************/
-
+/*
 %%	thread_httpd:make_socket_hook(?Port, :OptionsIn, -OptionsOut)
 %%								is semidet.
 %
@@ -436,7 +436,8 @@ ssl_failed(Read, Write, E) :-
 	close(Read,  [force(true)]),
 	throw(E).
 
-
+*/
+  /*
 		 /*******************************
 		 *	   CLIENT HOOKS		*
 		 *******************************/
@@ -475,9 +476,9 @@ ssl_protocol_hook(Parts, PlainStreamPair, StreamPair, Options) :-
         stream_pair(StreamPair, In, Out).
 
 ssl_exit(SSL, _PlainIn, _PlainOut, In, Out):- safely_try_close(Out),safely_try_close(In),safely_try_close(SSL).
-
+*/
 safely_try_close(Out):- ignore(catch(close(Out),_,true)).
-
+/*
 %	http:open_options(Parts, Options) is nondet.
 %  
 %  Hook To [http:open_options/2] For Module Logicmoo_util_filestreams.
@@ -524,7 +525,7 @@ negotiate_http_connect(StreamPair, Address):-
 	->  true
         ;   throw(error(proxy_rejection(Message), _))
         ).
-
+*/
 
 :- multifile(package_path/2).
 
@@ -545,6 +546,8 @@ package_path(Pkg,PkgPath):-atom(Pkg),T=..[Pkg,'.'],expand_file_search_path(T,Pkg
 % File Converted To Stream Ssl Verify.
 %
 file_to_stream_ssl_verify(_SSL, _ProblemCert, _AllCerts, _FirstCert, _Error) :- !.
+
+
 :- export(text_to_stream/2).
 
 %= 	 	 

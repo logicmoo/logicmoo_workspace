@@ -13,8 +13,6 @@ index((with_predicate_input_stream), 3, predicate_streams, predicate_streams).
 index((with_predicate_output_stream), 3, predicate_streams, predicate_streams).
 index((is_predicate_stream), 1, predicate_streams, predicate_streams).
 index((current_predicate_stream), 1, predicate_streams, predicate_streams).
-index((on_stream_close), 2, predicate_streams, predicate_streams).
-index((on_stream_read), 2, predicate_streams, predicate_streams).
 index((set_current_input), 1, predicate_streams, predicate_streams).
 index((set_current_output), 1, predicate_streams, predicate_streams).
 index((set_current_error), 1, predicate_streams, predicate_streams).

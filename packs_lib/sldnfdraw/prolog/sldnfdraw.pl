@@ -102,7 +102,7 @@ http://endif.unife.it/it/ricerca-1/aree-di-ricerca/informazione/ingegneria-infor
 
 :-meta_predicate set_depth(:).
 :-meta_predicate draw_goal(:).
-:-meta_predicate draw_goal(:,+).
+%:-meta_predicate draw_goal(:,+).
 :-meta_predicate draw(:,+,+,+).
 :-meta_predicate draw(:,+,+,+,+,-).
 :-meta_predicate print_builtin_children(+,:,+,+,+,+,+).
@@ -814,8 +814,7 @@ name_head([A|R],[A|Head]):- name_head(R,Head).
 printvar([]):- !.
 printvar([L|Ls]):- write(L),nl,printvar(Ls).
 
-printlista():- nb_getval(lista_prog,V), printvar(V).
-
+printlista:- nb_getval(lista_prog,V), printvar(V).
 
 read_clausola(Str):- read_term(Str,T,[variable_names(V)]),mymatch(T,H,B),!,clausola_prog(H,B,V).
 

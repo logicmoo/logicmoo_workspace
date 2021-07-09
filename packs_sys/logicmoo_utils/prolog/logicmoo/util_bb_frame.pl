@@ -14,35 +14,46 @@
 
 nb_current_no_nil(N,V):- nb_current(N,V),V\==[].
 
+was_named_graph(NG,Name,Info2):- compound(NG),compound_name_arguments(NG,named_graph,[Name,Info1]), nonvar(Info1), var(Info2), Info1=Info2.
+
 push_frame(Info,Frame):- atom(Frame),must(nb_current_no_nil(Frame,CG)),!,push_frame(Info,CG).
 %push_frame(named_graph(Name,Info), Frame):- var(Frame),!,named_graph(Name,Info)=Frame. 
 %push_frame(named_graph(Name,Info), Frame):- named_graph(Name,Info)=Frame,!.
-push_frame(Info, Frame):- var(Frame), nb_current_no_nil(named_graph,F), Frame = named_graph(F,[]),!, push_frame(Info, Frame).
-push_frame(Info, Frame):- var(Frame), !, gensym(frame, F), Frame = named_graph(anonymous(F),[]), push_frame(Info, Frame).
+push_frame(Info, _Frame):- var(Info),!.
+push_frame(Info, Frame):- var(Frame), nb_current_no_nil(named_graph,F),
+  compound_name_arguments(Frame,named_graph,[F,[]]), !,
+  push_frame(Info, Frame).
 
-push_frame(named_graph(Name,Info), named_graph(Name,Frame)):- !,push_frame(Info, Frame).
+push_frame(Info, Frame):- var(Frame), !, gensym(frame, F), compound_name_arguments(Frame, named_graph,[anonymous(F),[]]), push_frame(Info, Frame).
 
-push_frame(named_graph(Name,named_graph(Name,Info)), Frame):- !, push_frame(named_graph(Name,Info), Frame).
-push_frame(named_graph(_Name,named_graph(Name,Info)), Frame):- !, push_frame(named_graph(Name,Info), Frame).
 
-push_frame(named_graph(_Name,[]), _Frame):-!.
-
+push_frame(Cmpd1, Cmpd2):-was_named_graph(Cmpd1,Name1, Info), was_named_graph(Cmpd2, Name2, Frame), Name1==Name2, !,push_frame(Info, Frame).
+push_frame(Cmpd, Frame):- was_named_graph(Cmpd, Name, Info2), was_named_graph(Info2, Name, Info), !, 
+  compound_name_arguments(NewArg,named_graph,[Name,Info]),
+  push_frame(NewArg, Frame).
+push_frame(Cmpd, Frame):- was_named_graph(Cmpd,_Name, Info2), was_named_graph(Info2, Name, Info), !, 
+  compound_name_arguments(NewArg,named_graph,[Name,Info]),
+  push_frame(NewArg, Frame).
+push_frame(Cmpd,_Frame):- was_named_graph(Cmpd,_Name, Info2), Info2 ==[].
+/*
 push_frame(named_graph(Name,[H|List]), Frame):- fail, nonvar(H),!,
  push_frame(named_graph(Name,H), Frame),
  push_frame(named_graph(Name,List), Frame).
+*/
+push_frame(Cmpd, Frame):- was_named_graph(Cmpd, anonymous(_),Info), !, push_frame(Info, Frame).
+push_frame(Cmpd, Frame):- was_named_graph(Cmpd, Name, Info),
+   compound_sub_term(Sub, Frame), 
+   was_named_graph(Sub, Name, SubFrame), !, 
+   push_frame(Info, SubFrame).
 
+
+push_frame(Info, call(Frame)):- !,call(Frame,Info),!.
 push_frame(Info, cg(Frame)):- !, push_frame(Info, Frame),!.
 push_frame(Info, _Frame):- Info==[],!.
 push_frame([I1|I2], Frame):- !, push_frame(I1, Frame), push_frame(I2, Frame).
 push_frame('&'(I1,I2), Frame):- !, push_frame(I1, Frame), push_frame(I2, Frame).
 
 push_frame(Info, Frame):- do_eval_or_same(Info, BetterInfo), Info\=@=BetterInfo, push_frame(BetterInfo, Frame).
-
-push_frame(named_graph(anonymous(_),Info), Frame):- !, push_frame(Info, Frame).
-push_frame(named_graph(Name,Info), Frame):- 
-   compound_sub_term(Sub,Frame), 
-   Sub=named_graph(Name,SubFrame), !, 
-   push_frame(Info, SubFrame).
 
 push_frame(Info, Frame):- member(Sub, Frame), Sub==Info, !.
 push_frame(Info, Frame):- Frame = [H|T],!, setarg(2, Frame, [H|T]), setarg(1, Frame, Info).

@@ -1,14 +1,14 @@
-#4v: eggdrop v1.6.21 -- PrologMUD -- written Fri Dec  4 09:00:00 2020
+#4v: eggdrop v1.6.21 -- PrologMUD -- written Wed Apr 21 15:00:00 2021
 swipl      - hjlmnoptx               
 --HOSTS -telnet!*@*
---LASTON 1607070471 partyline
+--LASTON 1619016788 partyline
 --PASS +JyD2701Nt2S1
 --XTRA created 1605555086
 dmiles     - hjlmnoptx               
 --HOSTS -telnet!telnet@*.0.0.1
---XTRA created 1605555551
---PASS +20ESc0B4uTt1
 --LASTON 1605556870 partyline
+--PASS +20ESc0B4uTt1
+--XTRA created 1605555551
 ::#logicmoo bans
 ::##prolog bans
 ::#frdcsa bans

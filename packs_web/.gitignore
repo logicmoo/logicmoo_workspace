@@ -3,4 +3,9 @@
 ~*
 ~
 .git
+cplint-book-template/
+prolexa/
+prolog-book-template/
+swish-friguzzi/
+swish-swi/
 

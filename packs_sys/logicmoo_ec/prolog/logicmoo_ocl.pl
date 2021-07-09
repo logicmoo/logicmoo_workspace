@@ -42,7 +42,7 @@ term_expansion(A,B):-env_term_expansion(A,B).
 :- ensure_loaded(hyhtn_pddl/hyhtn_new).
 
 %:- ensure_loaded(hyhtn_pddl/hyhtn_works).
-%:- ensure_loaded(hyhtn_pddl/pddl_as_ocl)).
-%% :-include(logicmoo_hyhtn_works).
+:- ensure_loaded(hyhtn_pddl/pddl_as_ocl).
+% :-include(logicmoo_hyhtn_works).
 
 :- fixup_exports.

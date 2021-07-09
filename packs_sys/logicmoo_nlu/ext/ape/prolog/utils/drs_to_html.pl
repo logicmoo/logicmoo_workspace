@@ -28,6 +28,8 @@
 
 */
 
+:- use_module(logicmoo_ape_utils, [unnumbervars/2, ape_numbervars/3]).
+
 
 % Operators used in the DRS.
 :- op(400, fx, -).

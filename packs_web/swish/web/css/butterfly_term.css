@@ -1,0 +1,37 @@
+/* Must be synchronized with codemirror/theme/prolog.css,
+   which uses `.cm-s-prolog span.cm-atom`, etc.
+*/
+.fold             {display:none;}
+.pl-ellipsis      {text-decoration:underline;}
+.pl-functor:hover {text-decoration:underline;}
+.pl-infix:hover   {text-decoration:underline;}
+.pl-var		  {color:#800; mix-blend-mode: difference;}  /* Normal variable */
+.pl-ovar	  {color:#800; mix-blend-mode: difference; font-weight: bold;}  /* Answer field output */
+.pl-anon	  {color:#800; mix-blend-mode: difference;}  /* _ */
+.pl-avar	  {color:#888; mix-blend-mode: difference;}  /* _GXXX */
+.pl-var		  {color:#800; mix-blend-mode: difference;}
+.pl-atom	  {color:#yellow; text-decoration:underline;}
+.pl-quoted-atom   {color:#yellow; white-space:pre;}
+.pl-functor	  {color: rgb(0, 255, 255); mix-blend-mode: difference; font-style: italic;}
+.pl-comment	  {color:#060; mix-blend-mode: difference; font-style: italic;}
+.pl-int{mix-blend-mode: difference;}
+
+/* just to make elements more visible
+.pl-curl{color:yellow; mix-blend-mode: difference;}
+.pl-compound{color:green; mix-blend-mode: difference;}
+.pl-functor{color:magenta; mix-blend-mode: difference;}
+.pl-list{color:grey; mix-blend-mode: difference;}
+.pl-var-tail{color:yellow; mix-blend-mode: difference;}
+.pl-nonvar-tail{color:yellow; mix-blend-mode: difference;}
+.pl-prefix{color:violet; mix-blend-mode: difference;}
+.pl-postfix{color:violet; mix-blend-mode: difference;}
+.pl-infix{color:violet; mix-blend-mode: difference;}
+.pl-dict{color:brown; mix-blend-mode: difference;}
+.pl-tag{color:yellow; mix-blend-mode: difference;}
+.pl-key{color:yellow; mix-blend-mode: difference;}
+.pl-atom{color:red; mix-blend-mode: difference;}
+.pl-string{color:yellow; mix-blend-mode: difference;}
+.pl-float{color:yellow; mix-blend-mode: difference;}
+*/
+
+

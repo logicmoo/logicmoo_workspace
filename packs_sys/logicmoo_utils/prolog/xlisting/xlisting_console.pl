@@ -19,6 +19,7 @@
           use_xlisting/1,
           get_print_mode/1,               
           xlisting_1/1,
+           is_listing_hidden/1,
             bad_pred/1,
             blob_info/3,            
             bookeepingPredicateXRef/1,
@@ -32,7 +33,7 @@
             get_search_ref/2,
             get_search_ref0/2,
             get_search_ref_tl/2,
-            is_listing_hidden_00/1,
+            is_listing_hidden_00/2,
             is_listing_hidden/1,
             m_clause/4,
             m_clause0/4,
@@ -56,7 +57,8 @@
             plisting/1,
             portray_hb/2,
             portray_hbr/3,
-            portray_one_line/1,
+            portray_phbr/4,
+            portray_one_line/2,
             pp_listing/1,
             predicateUsesCall/1,
             printAll/1,
@@ -86,7 +88,7 @@
             synth_clause_ref/5,
             synth_in_listing/1,
             term_matches_hb/3,
-            term_matches_hb/4,
+         
             term_matches_unify/3,
             unify_in_thread/2,
             unify_in_thread_tl/2,
@@ -138,7 +140,7 @@
         get_search_ref/2,
         get_search_ref0/2,
         get_search_ref_tl/2,        
-        is_listing_hidden_00/1,
+        is_listing_hidden_00/2,
         is_listing_hidden/1,
         m_clause/4,
         m_clause0/4,
@@ -162,7 +164,8 @@
         plisting_0/1,
         portray_hb/2,
         portray_hbr/3,
-        portray_one_line/1,
+        portray_phbr/4,
+        portray_one_line/2,
         pp_listing/1,
         predicateUsesCall/1,
         print_clause_properties/2,
@@ -190,8 +193,7 @@
         synth_clause_for_large/6,
         synth_clause_ref/5,
         synth_in_listing/1,
-        term_matches_hb/3,
-        term_matches_hb/4,
+        term_matches_hb/3,       
         term_matches_unify/3,
         unmake_search_key/2,
         update_changed_files/0,
@@ -208,12 +210,11 @@
 :- use_module(library(gensym)).
 :- use_module(library(when)).
 
-
 :- use_module(library(backcomp)).
 :- use_module(library(debug)).
 :- use_module(library(occurs)).
 :- use_module(library(check)).
-:- use_module(library(edinburgh)).
+%:- use_module(library(edinburgh)).
 :- use_module(library(debug)).
 :- use_module(library(prolog_stack)).
 :- use_module(library(make)).
@@ -269,7 +270,7 @@ mstatistics:-
   blob_count(L,NA),
   save_atoms,
   fmt((stack/clauses/mem/new + O/C/T-Tm/NA = c(OdC)/a(OdA-AM-PerAtom))),!,
-  (NA<1000->fmt(L);true).
+  ((number(NA),NA<1000)->fmt(L);true).
 
 
 %= 	 	 
@@ -378,7 +379,7 @@ to_matcher_pi(M,Name/Arity, Head) :- var(Arity),!, current_predicate(M:Name/Arit
 	functor(Head, Name, Arity).
 to_matcher_pi(M,Name//DCGArity, M:Term) :- 
         var(DCGArity),!,
-        current_predicate(Name/Arity),  Arity>=2,
+        current_predicate(Name/Arity), integer(Arity), Arity>=2,
 	functor(Term, Name, Arity).
 to_matcher_pi(M,Name//DCGArity, M:Term) :- 
         between(0,40,DCGArity),!,
@@ -503,11 +504,11 @@ searchable_of_clause_1(H,T,List):-searchable_of_clause_0(H,List1),searchable_of_
 	 
 
 
-% load statistics to keep ifprolog from overriding time/1.
-:- abolish(system:time/1).
-:- abolish(time/1).
-:- abolish(ifprolog:time,1).
-:- use_module(library(statistics),[time/1]).
+% load statistics to keep ifprolog from overriding time/1 ?
+%:- abolish(system:time/1).
+%:- abolish(time/1).
+%:- abolish(ifprolog:time,1).
+%:- use_module(library(statistics),[time/1]).
 	 	 
 
 %% searchable_terms( ?T) is semidet.
@@ -664,9 +665,9 @@ save_search_ref_tl(Ref,Atomic):-nb_setval(Atomic,[Ref]).
 %
 % Shared Hide Data.
 %
-baseKB:shared_hide_data(lmcache:varname_info/4):- !,is_listing_hidden(hideMeta).
-baseKB:shared_hide_data(lmcache:_):- is_listing_hidden(hideMeta).
-baseKB:shared_hide_data(wid):- is_listing_hidden(hideMeta).
+baseKB:shared_hide_data(lmcache:varname_info/4):- !,is_listing_hidden(metaInfo).
+baseKB:shared_hide_data(lmcache:_):- is_listing_hidden(metaInfo).
+baseKB:shared_hide_data(wid):- is_listing_hidden(metaInfo).
 
 
 %= 	 	 
@@ -675,30 +676,36 @@ baseKB:shared_hide_data(wid):- is_listing_hidden(hideMeta).
 %
 % Listing Filter.
 %
-is_listing_hidden(P):-quietly(is_listing_hidden_00(P)).
+is_listing_hidden(MP):- \+ \+ nquietly((strip_module(MP,M,P),is_listing_hidden_00(M,P))).
 
 :- export(is_listing_hidden/1).
 :- baseKB:import(is_listing_hidden/1).
 
+nquietly(G):- call(G).
+%nquietly(G):- quietly(G).
 %= 	 	 
 
-%% is_listing_hidden_00( :TermP) is semidet.
+%% is_listing_hidden_00(_, :TermP) is semidet.
 %
 % Hide Data Primary Helper.
 %
-is_listing_hidden_00(_):- !, fail.
-is_listing_hidden_00(P):-var(P),!,fail.
-is_listing_hidden_00(~(_)):-!,fail.
-is_listing_hidden_00(hideMeta):-is_listing_hidden(showAll),!,fail.
-is_listing_hidden_00(P):-t_l:tl_hide_data(P),!.
-is_listing_hidden_00(P):-baseKB:shared_hide_data(P),!.
-is_listing_hidden_00(_/_):-!,fail.
-is_listing_hidden_00(rnc):-!,fail.
-is_listing_hidden_00(P):- compound(P),functor(P,F,A), (is_listing_hidden_00(F/A);is_listing_hidden_00(F)).
-is_listing_hidden_00(spft):- is_listing_hidden(hideMeta),!.
-% %%% is_listing_hidden_00(P):- predicate_property(P,number_of_clauses(N)),N > 50000,\+ is_listing_hidden(showAll), \+ is_listing_hidden(showHUGE),!.
-is_listing_hidden_00(M:P):- atom(M),(is_listing_hidden(M);is_listing_hidden_00(P)).
 
+% is_listing_hidden_00(_,_):- !, fail.
+is_listing_hidden_00(_,M:P):- atom(M),is_listing_hidden_00(M,P).
+is_listing_hidden_00(_,P):-var(P),!,fail.
+is_listing_hidden_00(_,~(_)):-!,fail.
+is_listing_hidden_00(_,metaInfo):- is_listing_hidden(showAll),!,fail.
+is_listing_hidden_00(_,P):-t_l:tl_hide_data(P),!.
+is_listing_hidden_00(_,P):-baseKB:shared_hide_data(P),!.
+is_listing_hidden_00(_,_/_):-!,fail.
+is_listing_hidden_00(M,P):- is_meta_info_pred(M:P),!,is_listing_hidden(metaInfo).
+is_listing_hidden_00(M,F/A):- compound_name_arity(P,F,A), predicate_property(M:P,number_of_clauses(N)),N>100,is_listing_hidden(largePreds).
+is_listing_hidden_00(M,P):- compound(P),functor(P,F,A), (is_listing_hidden_00(M,F/A);is_listing_hidden_00(M,F)).
+is_listing_hidden_00(_,'$spft'):- is_listing_hidden(metaInfo),!.
+% %%% is_listing_hidden_00(_,P):- predicate_property(P,number_of_clauses(N)),N > 50000,\+ is_listing_hidden(showAll), \+ is_listing_hidden(showHUGE),!.
+
+is_meta_info_pred(rnc).
+is_meta_info_pred(_):- fail.
 
 :- meta_predicate unify_listing(:).
 
@@ -791,12 +798,17 @@ xlisting:- xlisting([]).
 :- create_prolog_flag(retry_undefined,default,[type(term),keep(true)]).
 
 %= 	 	 
+:- thread_local(etmp:last_s_l/2).
 
 %% xlisting( ?Match) is semidet.
 %
 % Xlisting.
 %
-xlisting(Match):- retractall(lmcache:completely_expanded(_,_)),retractall(t_l:no_xlisting(Match)),xlisting_0(Match).
+xlisting(Match):-
+  retractall(etmp:last_s_l(_,_)), 
+  retractall(lmcache:completely_expanded(_,_)),
+  retractall(t_l:no_xlisting(_)),
+  xlisting_0(Match).
 
 xlisting_0(Match):- \+ \+ t_l:no_xlisting(Match),!.
 xlisting_0([]):- '$current_source_module'(M),!,listing(M:_),'$current_typein_module'(TM),(TM==M->true;listing(TM:_)),!.
@@ -847,7 +859,7 @@ plisting(Match):- locally(t_l:no_xlisting(Match),xlisting:plisting_0(Match)).
 plisting_0(Match):- findall(G,to_mpi_matcher(Match,G),Gs),
   forall(member(H,Gs),
     ignore((synth_clause_for(H,B,R,_SIZE,SYNTH),SYNTH,
-     once(portray_hbr(H,B,R)),fail))).
+     once(portray_phbr(portray_hbr,H,B,R)),fail))).
 
 
 :- export(mpred_match_listing/1).
@@ -884,25 +896,29 @@ mpred_match_listing_skip_pi(How,Match,SkipPI):-
 %
 % Get Matcher Code.
 %
-get_matcher_code(Match,H,B,MATCHER):-  atom(Match),!, MATCHER= once(term_matches_unify(99,Match,((H:-B)))).
-get_matcher_code(Match,H,B,MATCHER):-  MATCHER = term_matches_hb(Match,H,B).
+get_matcher_code(Match,H,B,MATCHER):-  atom(Match),!, MATCHER= notrace(term_matches_unify(99,Match,((H:-B)))).
+get_matcher_code(Match,H,B,MATCHER):-  MATCHER = notrace(term_matches_term(Match,(H:-B))).
 
 :- meta_predicate xlisting_inner(3,+,+).
 
 %= 	 	 
 
+
 %% xlisting_inner( :PRED3Pred, +Match, +SkipPI) is semidet.
 %
 % Xlisting Inner.
 %
-xlisting_inner(Pred,Match,SkipPI):-  
+xlisting_inner(_,portray_phbr(PW,Match),SkipPI):-!,
+  xlisting_inner(portray_phbr(PW),Match,SkipPI).
+ 
+xlisting_inner(Printer,Match,SkipPI):-  
  must_det_l((
-   get_matcher_code(Match,H,B,MATCHER),
-   PRINT = must(ignore((once(call(Pred,H,B,Ref))))),   
-   PREDZ = ( (synth_clause_for(H,B,Ref,Size,SYNTH)), \+member(H,SkipPI)),
+   get_matcher_code(Match,H,B,MATCHER),!,
+   PRINT = must(ignore((once(call(Printer,H,B,Ref))))),   
+   PREDZ = ( (synth_clause_for(H,B,Ref,Size,SYNTH)), \+member(H,SkipPI), \+is_listing_hidden(H)),
    forall(PREDZ,
      must(( 
-      (is_listing_hidden(wholePreds),Size<100) 
+      (is_listing_hidden(wholePreds),integer(Size),Size<100)
         -> 
           ( \+ \+ ((SYNTH,MATCHER)) -> (forall(SYNTH,PRINT)) ; true) 
          ; 
@@ -920,7 +936,7 @@ xlisting_inner(Pred,Match,SkipPI):-
 % Hook To [user:prolog_list_goal/1] For Module Logicmoo_util_term_listing.
 % Prolog List Goal.
 %
-user:prolog_list_goal(Goal):- quietly(xlisting(Goal)). % writeq(hello(prolog_list_goal(Goal))),nl.
+user:prolog_list_goal(Goal):- nquietly(xlisting(Goal)). % writeq(hello(prolog_list_goal(Goal))),nl.
 
 
 % :- dynamic(buggery_ok/0).
@@ -998,7 +1014,7 @@ sourceTextPredicateSource(_):-fail.
 %
 % plisting  Secondary Helper.
 %
-plisting_1:-plisting(spft(_,_,_,_)).
+plisting_1:-plisting('$spft'(_,_,_,_)).
 
 
 %= 	 	 
@@ -1014,9 +1030,9 @@ synth_clause_for(G,true,0,222, SYNTH):- G=M:H, xlisting_config:xlisting_always(G
    %SYNTH = on_x_fail(G).
 
 synth_clause_for(G,true,0,244,SYNTH):-  bookeepingPredicateXRef(G), 
-  quietly(( \+ is_listing_hidden(hideMeta))), SYNTH=on_x_fail(G).
+  nquietly(( \+ is_listing_hidden(metaInfo))), SYNTH=on_x_fail(G).
 
-synth_clause_for(G,B,Ref,Size,SYNTH):- cur_predicate(_,G), (((quietly(( \+ bookeepingPredicateXRef(G), \+ sourceTextPredicate(G), 
+synth_clause_for(G,B,Ref,Size,SYNTH):- cur_predicate(_,G), (((nquietly(( \+ bookeepingPredicateXRef(G), \+ sourceTextPredicate(G), 
                                                                 \+ is_listing_hidden(G))))), 
                                                                 SYNTH = (synth_clause_ref(G,B,Ref,Size,SYNTH2),SYNTH2)).
 synth_clause_for(G,true,0,223, SYNTH):-  sourceTextPredicate(G), \+ is_listing_hidden(G), SYNTH = on_x_fail(G).
@@ -1059,9 +1075,13 @@ synth_clause_ref(_:no_xlisting(_),_B,_Ref, _Size, _CALL):-!,fail.
 synth_clause_ref(_:in_prolog_listing(_),_B,_Ref, _Size, _CALL):-!,fail.
 synth_clause_ref(_:varname_info(_,_,_,_),_B,_Ref,_Size, _CALL):- \+ is_listing_hidden(showAll),!,fail.
 
-synth_clause_ref(M:H,B,Ref, 250, SYNTH):- \+ is_listing_hidden(hideMeta), SYNTH= (findall(PP,predicate_property(M:H,PP),PPL),Ref=0,CPPL=..[pp|PPL],B=M:(pp(CPPL))).
+synth_clause_ref(M:H,'$info'(B),Ref, 250, SYNTH):- \+ is_listing_hidden(metaInfo), 
+  SYNTH= (findall(PP,predicate_property(M:H,PP),PPL),Ref=0,
+  %CPPL=..['$'|PPL],
+  CPPL=PPL,
+  B=M:('$predicate_property'(H,CPPL))).
 synth_clause_ref(MHG,B,Ref, 213, SYNTH):- predicateUsesCall(MHG),synth_in_listing(MHG), !, 
-  SYNTH= (on_x_fail(MHG),Ref=0,B=predicateUsedCall).
+  SYNTH= (on_x_fail(MHG),Ref=0,B='$info'(predicateUsedCall)).
 
 synth_clause_ref(M:H,B,Ref, 200, SYNTH):-     
     xlisting_config:xlisting_always(M:H),!, SYNTH= m_clause(M,H,B,Ref).
@@ -1107,7 +1127,7 @@ synth_in_listing(MH):- ( \+ is_listing_hidden(MH), \+ sourceTextPredicateSource(
 %
 % Term Matches Head+body.
 %
-term_matches_hb(HO,H,B):-term_matches_hb(999,HO,H,B).
+term_matches_term(HO,HB):-term_matches_hb(999,HO,HB),!.
 
 %= 	 	 
 
@@ -1115,61 +1135,84 @@ term_matches_hb(HO,H,B):-term_matches_hb(999,HO,H,B).
 %
 % Term Matches Head+body.
 %
-term_matches_hb(_,Var,_,_):-var(Var),!.
+term_matches_hb(_,Var,_):-var(Var),!.
 
-term_matches_hb(_,[],_,_):-!.
-term_matches_hb(D,_,_,_):- D<0,!,fail.
-term_matches_hb(_,noinfo,_,info(_)):-!,fail. 
+term_matches_hb(_,[],_):-!.
+term_matches_hb(D,_,_):- integer(D), D<0,!,fail.
 
-term_matches_hb(D,M:HO,H,B):-!,term_matches_hb(D,(module(M),HO),H,B).
-term_matches_hb(D,unify(HO),H,B):- !,term_matches_unify(D,HO,(H:-B)).
-term_matches_hb(D,[F1],H,B):-!,term_matches_hb(D,F1,H,B),!.
-term_matches_hb(D,[F1+FS],H,B):-!,term_matches_hb(D,(F1,FS),H,B).
-term_matches_hb(D,(F1+FS),H,B):-!,term_matches_hb(D,(F1,FS),H,B).
-term_matches_hb(D,(F1-FS),H,B):-!,term_matches_hb(D,(F1),H,B), \+(term_matches_hb(D,FS,H,B)).
-term_matches_hb(D,(F1,FS),H,B):-!,term_matches_hb(D,F1,H,B),term_matches_hb(D,FS,H,B).
-term_matches_hb(D,(F1;FS),H,B):-!, (term_matches_hb(D,F1,H,B);term_matches_hb(D,FS,H,B)).
-term_matches_hb(D,[F1|FS],H,B):-!,term_matches_hb(D,(F1;FS),H,B).
-term_matches_hb(D,-(C),H,B):-nonvar(C),!,\+(term_matches_hb(D,C,H,B)).
-term_matches_hb(D,not(C),H,B):-nonvar(C),!,\+(term_matches_hb(D,C,H,B)).
-term_matches_hb(D,+(C),H,B):-nonvar(C),!, term_matches_hb(D,C,H,B).
-term_matches_hb(_,module(M),H,_):-!,predicate_property(H,imported_from(M)).
-term_matches_hb(D,h(P),H,_):-!,term_matches_hb(D,P,H,666666).
-term_matches_hb(D,b(P),_,B):-!,term_matches_hb(D,P,B,666666).
-term_matches_hb(_,string(HO),H,B):- nonvar(HO),any_to_atom(HO,HS),!, with_output_to(string(H1B1),write_canonical((H:-B))), (sub_atom_icasechk(HS,_,H1B1);sub_atom_icasechk(H1B1,_,HS)),!.
-term_matches_hb(_,depth(Depth,HO),H,B):- term_matches_hb(Depth,HO,H,B).
-term_matches_hb(D,contains(HO),H,B):- !,term_matches_hb(D,string(HO),H,B).
-term_matches_hb(D,F/A,H,B):-atom(F),var(A),!,term_matches_hb(D,functor(F),H,B).
-term_matches_hb(D,F/A,H,B):-var(F),integer(A),!,term_matches_hb(D,arity(A),H,B).
+term_matches_hb(D,noinfo,H):- !, \+ term_matches_hb(D,unify('$info'(_)),H).
 
-term_matches_hb(D,F/A,H,B):-atom(F),integer(A),!,functor(P,F,A),!, (term_matches_unify(D,P,H);term_matches_unify(D,P,B)).
-% term_matches_hb(D,P,H,B):- (term_matches_unify(D,P,H);term_matches_unify(D,P,B)).
-term_matches_hb(D,HO,H,B):- \+ \+ term_matches_unify(D,HO,(H:-B)).
+term_matches_hb(D,head(P),HB):-!,expand_to_hb(HB,H,_),strip_module(H,_,H0), !, term_matches_hb(D,P,H0).
+term_matches_hb(D,body(P),HB):-!,expand_to_hb(HB,_,B), term_matches_hb(D,P,B).
+term_matches_hb(_,unify(N,HO),HB):- !,term_matches_unify(N,HO,HB).
+term_matches_hb(D,unify(HO),HB):- !,term_matches_unify(D,HO,HB).
+term_matches_hb(D,(F1+FS),HB):-!,term_matches_hb(D,(F1),HB), \+ \+(term_matches_hb(D,FS,HB)).
+term_matches_hb(D,(F1-FS),HB):-!,term_matches_hb(D,(F1),HB), \+(term_matches_hb(D,FS,HB)).
+term_matches_hb(D,(F1,FS),HB):-!,term_matches_hb(D,F1,HB),term_matches_hb(D,FS,HB).
+term_matches_hb(D,(F1;FS),HB):-!, (term_matches_hb(D,F1,HB);term_matches_hb(D,FS,HB)).
+term_matches_hb(D,[F1],HB):-!,term_matches_hb(D,F1,HB),!.
+term_matches_hb(D,[F1|FS],HB):-!,term_matches_hb(D,(F1;FS),HB).
+term_matches_hb(D,-(C),HB):-nonvar(C),!,\+(term_matches_hb(D,C,HB)).
+term_matches_hb(D,not(C),HB):-nonvar(C),!,\+(term_matches_hb(D,C,HB)).
+term_matches_hb(D,+(C),HB):-nonvar(C),!, term_matches_hb(D,C,HB).
+term_matches_hb(D,M:HO,HB):-!,term_matches_hb(D,(module(M),HO),HB).
+%term_matches_hb(_,cistring(HO),HB):- nonvar(HO),any_to_atom(HO,HS),!, with_output_to(string(H1B1),write_canonical((H:-B))), (sub_atom_icasechk(HS,_,H1B1);sub_atom_icasechk(H1B1,_,HS)),!.
+term_matches_hb(_,depth(Depth,HO),HB):- term_matches_hb(Depth,HO,HB).
+term_matches_hb(D,F/A,HB):-atom(F),var(A),!,term_matches_hb(D,functor(F),HB).
+term_matches_hb(D,F/A,HB):-var(F),integer(A),!,term_matches_hb(D,arity(A),HB).
+term_matches_hb(D,F/A,HB):-atom(F),integer(A),!,functor(P,F,A),!,expand_to_hb(HB,H,B), (term_matches_unify(D,P,H);term_matches_unify(D,P,B)).
+term_matches_hb(D,F/A,HB):-var(F),var(A),!,fail,term_matches_hb(D,call1(compound),HB).
+% term_matches_hb(D,P,HB):- (term_matches_unify(D,P,H);term_matches_unify(D,P,B)).
+term_matches_hb(_,contains(HO),HB):- !, my_wildcard_match(HO,HB,false).
+term_matches_hb(_,match(HO),HB):- !, my_wildcard_match(HO,HB,true).
+term_matches_hb(D,HO,HB):- expand_to_hb(HB,H,B),
+ (term_matches_unify(D,HO,H); 
+   (B\==H,B\==true,term_matches_unify(D,HO,B))).
 
 
-% ?- xlisting((h(depth(0,pt/2)),same(tBird(A)))).
+% ?- xlisting((head(depth(0,'$pt'/3)),same(tBird(A)))).
 
 :- export(term_matches_unify/3).
 
+my_wildcard_match(HO,HB,TF):- 
+  nonvar(HO),any_to_string(HO,HS),!, with_output_to(string(H1B1),write_canonical((HB))),!,
+  my_wildcard_match_1(HS,H1B1,TF).
+
+my_wildcard_match_1(HS,H1B1,false):- !, (sub_atom_icasechk(HS,_,H1B1);sub_atom_icasechk(H1B1,_,HS)),!.
+my_wildcard_match_1(HS,H1B1,TF):- wildcard_match(HS,H1B1,[case_sensitive(TF)]),!.
 %= 	 	 
+
+term_matches_module(M,F):- atom(F),!,current_predicate(M:F/A),
+ compound_name_arity(HB,F,A), \+ predicate_property(M:HB, imported_from(_)).
+term_matches_module(M,HB):- compound(HB),!,compound_name_arity(HB,F,A), 
+  \+ predicate_property(M:HB, imported_from(_)), current_predicate(M:F/A).
 
 %% term_matches_unify( :GoalR, ?V, ?V) is semidet.
 %
 % Term Matches Unify.
 %
-term_matches_unify(D,unify(HO),H,B):- nonvar(HO),!,term_matches_hb(D,HO,H,B).
-term_matches_unify(_R,same(HO),V):-HO=@=V.
-term_matches_unify(_R,_,V):- var(V),!,fail.
-term_matches_unify(_R,V,V):-!.
-term_matches_unify(_R,A,Str):- string(Str),atom(A),!,atom_string(A,Str).
-term_matches_unify(_R,_,V):- \+ compound(V),!,fail.
+term_matches_unify(_,M,V):- var(M),!, var(V),!.
+term_matches_unify(_,call1(HO),V):- callable(HO),call(HO,V), !.
+term_matches_unify(_,M,V):- var(V),!,M==var,fail.
+term_matches_unify(_,same(HO),V):-HO=@=V,!.
+term_matches_unify(_,V1,V2):- V1=@=V2,!.
+%(sub_atom_icasechk(HS,_,H1B1);sub_atom_icasechk(H1B1,_,HS)),!.
+term_matches_unify(_,A,Str):- string(Str),atom(A),!,atom_string(A,Str).
+term_matches_unify(_,unify(HO),V):- nonvar(HO),!, \+ HO \= V, !.
+term_matches_unify(_,module(M),HB):- term_matches_module(M,HB).
+term_matches_unify(_,functor(F),H):- atom(H),!,H==F.
+term_matches_unify(_,functor(F),H):- !, compound_name_arity(H,F,_).
+term_matches_unify(_,arity(R),H):- atom(H),!,xin_range(0,R).
+term_matches_unify(_,arity(R),H):- !, compound(H), compound_name_arity(H,_,A), xin_range(A,R).
+term_matches_unify(_,_,V):- \+ compound(V),!,fail.
 %term_matches_unify(D,F/A,HB):- atom(F),integer(A),!, compound_name_arity(P,F,A), term_matches_unify(D,P,HB).
-term_matches_unify(_R,arity(A),H):- functor(H,_,A).
-term_matches_unify(_R,functor(F),H):- functor(H,F,_).
-term_matches_unify(0,_,_):-!,fail.
+%term_matches_unify(R,M,O):- compound(O), sub_term(I,O), nonvar(I), term_matches_unify(R,M,I),!.
+term_matches_unify(0,_,_):- !,fail.
 term_matches_unify(R,HO,V):- RR is R -1, compound_name_arguments(V,F,ARGS),member(E,[F|ARGS]),term_matches_unify(RR,HO,E),!.
 
-
+xin_range(A,R):- number(R),!,A == R.
+xin_range(A,between(L,H)):- !, between(L,H,A).
+xin_range(A,R):- R=..[F|List],C=..[F,A|List],call(C),!.
 
 %= 	 	 
 
@@ -1418,33 +1461,44 @@ bad_pred(M:P):-!,atom(M),bad_pred(P).
 %bad_pred(P):-predicate_property(P,imported_from(_)),predicate_property(P,static).
 %bad_pred(P):-predicate_property(P,foreign).
 
+:- export(portray_phbr/4).
 :- export(portray_hbr/3).
 :- export(portray_hb/2).
 
-:- use_module(library(listing)).
-
 %= 	 	 
 
-%% portray_hbr( :TermH, :TermB, ?R) is semidet.
+%% portray_phbr(PW, :TermH, :TermB, ?R) is semidet.
 %
 % Portray Hbr.
 %
-portray_hbr(M: P, M:pp(PPL),_):- (atom(P);compound(P)),format('~N~n'),
-       in_cmt(writeq(P=PPL)),!,format('~N~n').
+portray_hbr(H,B,R):-
+ portray_phbr(print_tree_stop,H,B,R),!.
 
-portray_hbr(M:P,M:predicate_property(P,Props),_):- (atom(P);compound(P)),
+% print_tree_stop(H):- functor_color(H,C),ansicall(current_output,C,print_tree_stop_1(H)).
+print_tree_stop(H):- print_tree_stop_1(H),!.
+
+print_tree_stop_1(H):- \+ in_pp(ansi), !, print_tree_with_final(H,'.').
+print_tree_stop_1(H):-  pprint_ecp(yellow,H).
+
+portray_phbr(_PW,M: P, M:pp(PPL),_):- (atom(P);compound(P)),format('~N~n'),
+       in_cmt(print(P=PPL)),!,format('~N~n').
+
+portray_phbr(PW,M:P,'$info'(M:'$predicate_property'(P,Props)),_):- (atom(P);compound(P)),
        % functor(P,F,A), NEWH = pp(M:F/A,Props),
-       NEWH = Props,
-       in_cmt(portray_one_line(NEWH)),!.
+       pprint_ecp_cmt([hfg(black)],portray_hb1(PW,'$predicate_property'(P),Props)),!.
 
-portray_hbr(H,B,R):- var(R), clause_u_here(H,B,R), nonvar(R),!, portray_hbr(H,B,R).
-portray_hbr(H,B,in_cmt(NV)):- in_cmt(portray_hbr(H,B,NV)),!.
-portray_hbr(H,B,R):- nonvar(R),catch(clause_property(R,module(M)),_,fail),
-  (((prolog_listing:list_clause(M:H,B,R,_Soure,[source(true)])));
-     ((prolog_listing:list_clause(_,_,R,_Soure,[source(true)])))),!.
-portray_hbr(H,B,R):- portray_refinfo(R),portray_hb1(H,B).
+portray_phbr(PW,H,B,Ref):- var(Ref), clause_u_here(H,B,Ref), nonvar(Ref),!, portray_phbr(PW,H,B,Ref),!.
+portray_phbr(PW,H,B,in_cmt(NV)):- in_cmt(portray_phbr(PW,H,B,NV)),!.
 
-clause_u_here(H,B,R):- catch(call(call,clause_u(H,B,R)),_,clause(H,B,R)).
+portray_phbr(_,H,B,Ref) :- nonvar(Ref),
+    catch(clause_property(Ref,module(M)),_,fail),
+    once((on_x_fail(((prolog_listing_list_clause((M:(H:-B)),Ref,_,[source(true)])))); 
+          (on_x_fail((prolog_listing_list_clause(_,Ref,_,[source(true)])))))).          
+
+portray_phbr(PW,H,B,Ref):- 
+ portray_refinfo(Ref),portray_hb1(PW,H,B).
+
+clause_u_here(H,B,Ref):- catch(call(call,clause_u(H,B,Ref)),_,clause(H,B,Ref)).
 
 portray_refinfo(R):- (var(R) ; R == 0),!.
 portray_refinfo(R):- \+ catch(clause_property(R,module(_)),_,fail), in_cmt(format('Ref: ~p',[R])),!.
@@ -1460,51 +1514,16 @@ source_file_info(R,F:L):- (clause_property(R,line_count(L));L= (-1)), (clause_pr
 % Portray Head+body.
 %
 
-portray_hb(H,B):- portray_hb1(H,B).
+portray_hb(H,B):- portray_hb1(print_tree,H,B),!.
+portray_hb(H,B):- portray_hb1(print_ecp(white),H,B).
 
 
-portray_hb1(H,B):- B==true, !, format('~N'), portray_one_line(H),format('~N').
-portray_hb1(H,B):- format('~N'), portray_one_line((H:-B)), format('~N').
+portray_hb1(PW,H,B):- B==true, !, portray_one_line(PW,H),format('~N').
+portray_hb1(PW,H,B):-  portray_one_line(PW,(H:-B)), format('~N').
 
-/*
-prolog_listing:list_clause(M:H, B, R, Source, Options).
 
-list_clause(_Head, _Body, Ref, _Source, Options) :-
-    option(source(true), Options),
-    (   clause_property(Ref, file(File)),
-        clause_property(Ref, line_count(Line)),
-        catch(source_clause_string(File,
-                                   Line,
-                                   String,
-                                   Repositioned),
-              _,
-              fail),
-        debug(listing(source),
-              'Read ~w:~d: "~s"~n',
-              [File, Line, String])
-    ->  !,
-        (   Repositioned==true
-        ->  comment('% From ~w:~d~n', [File, Line])
-        ;   true
-        ),
-        writeln(String)
-    ;   decompiled
-    ->  fail
-    ;   asserta(decompiled),
-        comment('% From database (decompiled)~n', []),
-        fail
-    ).
-list_clause(Module:Head, Body, Ref, Source, Options) :-
-    restore_variable_names(Module,
-                           Head,
-                           Body,
-                           Ref,
-                           Options),
-    write_module(Module, Source, Head),
-    portray_clause((Head:-Body)).
-*/
 
-:- export(portray_one_line/1).
+:- export(portray_one_line/2).
 :- thread_local(baseKB:portray_one_line_hook/1).
 
 :- meta_predicate(catch_each(:,-,-)).
@@ -1516,19 +1535,27 @@ catch_each(M:G,E,Or):-
   (Module:catchv(M:B,E,(nb_setarg(1,LE,E),fail))))->!;(LE = ex(W),throw(W)))),E,Or).
 
 
-%% portray_one_line( ?H) is semidet.
+%% portray_one_line(PW, ?H) is semidet.
 %
 % Portray One Line.
 %
-portray_one_line(H):- quietly((tlbugger:no_slow_io,!, writeq(H),write('.'),nl)),!.
-portray_one_line(H):-  quietly((catch_each(portray_one_line0(H),_,(writeq(H),write('.'),nl)))),!.
+portray_one_line(_,H):- nquietly((tlbugger:no_slow_io,!, writeq(H),write('.'),nl)),!.
+portray_one_line(PW,H):-  nquietly((catch_each(portray_one_line0(PW,H),_,(writeq(H),write('.'),nl)))),!.
 
-portray_one_line0(H):- baseKB:portray_one_line_hook(H),!.
-portray_one_line0(H):- maybe_separate(H,(format('~N'))),fail.
-portray_one_line0(H):- \+ \+ ((logicmoo_varnames:get_clause_vars(H), portray_clause(H))),!.
-portray_one_line0(H):- on_x_fail(user:portray(H)),write('.'),nl,!.
-portray_one_line0(H):- print(H),write('.'),nl,!.
-portray_one_line0(H):- writeq(H),write('.'),nl,!.
+portray_one_line0(_,H):- baseKB:portray_one_line_hook(H),!.
+portray_one_line0(_,H):- maybe_separate(H,(format('~N~n'))),fail.
+portray_one_line0(PW,H):- \+ \+ ((logicmoo_varnames:get_clause_vars(H), portray_one_line1(PW,H))),!.
+portray_one_line0(PW,H):- portray_one_line1(PW,H),!.
+
+portray_one_line1(PW,H):- ignore(mort(xlisting_console:catch(portray_one_line2(PW,H),_,fail))),!.
+
+%portray_one_line2(_PW,H):- write_term(H,[portray(true),nl(false)]),!,write('.'),nl.
+portray_one_line2( PW,H):- on_x_fail(call(PW,H)),!.
+portray_one_line2(_PW,H):- print(H),!,write('.'),nl.
+%portray_one_line2(_PW,H):- on_x_fail(user:portray(H)),!,write('.'),nl.
+portray_one_line2(_PW,H):- on_x_fail(pprint_ecp(green,H)),!.
+portray_one_line2(_PW,H):- writeq(H),!,write('.'),nl.
+portray_one_line2(_PW,H):- display(H),!,write('.'),nl.
 
 
 :- thread_local t_l:last_portray_key/1.
@@ -1629,126 +1656,21 @@ use_listing_vars(TF):-set_prolog_flag(util_varnames,TF).
 :- multifile(baseKB:hook_mpred_listing/1).
 :- dynamic(baseKB:hook_mpred_listing/1).
 
-% Hook that prints additional information about source code
-:- multifile prolog:locate_clauses/2.
 
-%= 	 	 
-
-:- if(true).
-%% locate_clauses( ?A, ?OutOthers) is semidet.
-%
-% Hook To [prolog:locate_clauses/2] For Module Logicmoo_util_term_listing.
-% Locate Clauses.
-%
-prolog:locate_clauses(A, OutOthers) :- 
- buggery_ok,
- ( \+ t_l:in_prolog_locate_clauses(A)),
- locally(t_l:in_prolog_locate_clauses(A),
- (       
-   locally(t_l:in_prolog_listing(A),
-    ( 
-    ignore((predicate_property(baseKB:hook_mpred_listing(A),number_of_clauses(C)),C>0,
-      current_prolog_flag(xlisting,true),doall(call_no_cuts(baseKB:hook_mpred_listing(A))))),    
-   prolog:locate_clauses(A, OutOthers))))),!.
-:- endif.
-
-% Replacement that prints variables in source code
-
-%= 	 	 
-
-% prolog_listing:portray_clause(Stream, Term, M:Options) :- xlisting:prolog_listing_portray_clause(Stream, Term, M:Options).
 
 :- export(get_print_mode/1).
 get_print_mode(PM):- nonvar(PM),!,get_print_mode(PMR),!,PM==PMR.
 get_print_mode(PM):- t_l:print_mode(PM),!.
-
-
 get_print_mode(html):- on_x_log_fail(this_http_current_request(_)),!.
-get_print_mode(bhtml):- getenv('COLORTERM',butterfly),!.
+get_print_mode(bfly):- getenv('COLORTERM',butterfly),!.
 get_print_mode(text).
 
 :- use_module(library(http/http_wrapper)). % ([is_cgi_stream/1,cgi_property/2]).
 this_http_current_request(Request) :-
-     current_output(CGI),
-    http_stream:(is_cgi_stream(CGI), 
-    cgi_property(CGI, request(Request))).
-
-:- if(false).
+    current_output(CGI),
+    http_stream:((is_cgi_stream(CGI), 
+    cgi_property(CGI, request(Request)))).
 
 
-%% prolog_listing_list_clauses( ?Pred, ?Source) is semidet.
-%
-% Prolog Listing List Clauses.
-%
-prolog_listing_list_clauses(Pred, Source) :-  current_prolog_flag(util_varnames,true),!,
-      % scan_for_varnames,
-       strip_module(Pred, Module, Head),   
-      (current_prolog_flag(listing_docs,true)-> autodoc_pred(Module,Pred); true),
-       (    clause(Pred, Body),
-           once(( get_clause_vars_copy((Head:-Body),ForPrint),
-            prolog_listing:write_module(Module, Source, Head),
-            prolog_listing:portray_clause(ForPrint))),
-	    fail
-	;   true
-	).
-
-
-       
-
-% System Version 7.3.9
-prolog_listing_list_clauses(Pred, Source) :-
-  prolog_listing:
-  ((      strip_module(Pred, Module, Head),
-	(   clause(Pred, Body),
-	    write_module(Module, Source, Head),
-	    portray_clause((Head:-Body)),
-	    fail
-	;   true
-	))).
-
-
-% Safe
-prolog_listing_portray_clause(Stream, Term, M:Options) :- fail,
-	must_be(list, Options),
-	prolog_listing:meta_options(is_meta, M:Options, QOptions),
-	\+ \+ ( must(call(call,serialize_attvars,Term, Copy)),
-		% numbervars(Copy, 0, _,[ singletons(true), attvar(Skip)]),
-                prolog_listing:do_portray_clause(Stream, Copy, QOptions)
-	      ),!.
-
-:- abolish(user:listing/1).
-:- reconsult(library(listing)).
-:- user:reconsult(library(listing)).
-
-:- redefine_system_predicate(prolog_listing:portray_clause/3).
-:- abolish(prolog_listing:portray_clause/3).
-:- meta_predicate prolog_listing:portray_clause(+,+,:).
-:- prolog_listing:export(prolog_listing:portray_clause/3).
-
-
-
-% Original
-prolog_listing:portray_clause(Stream, Term, M:Options) :-
-	must_be(list, Options),
-	meta_options(is_meta, M:Options, QOptions),
-	\+ \+ ( copy_term_nat(Term, Copy),
-		numbervars(Copy, 0, _,
-			   [ singletons(true)
-			   ]),
-		prolog_listing:do_portray_clause(Stream, Copy, QOptions)
-	      ).
-
-
-%% list_clauses( ?Pred, ?Context) is semidet.
-%
-% Override of [prolog_listing:list_clauses/2] For variable name printing and otehr attributes.
-% List Clauses.
-%
-:- redefine_system_predicate(prolog_listing:list_clauses/2).
-:- abolish(prolog_listing:list_clauses/2).
-prolog_listing:list_clauses(Pred, Context):- prolog_listing_list_clauses(Pred, Context).
-
-:- endif.
-
-%:- fixup_exports.
+:- fixup_exports.
 

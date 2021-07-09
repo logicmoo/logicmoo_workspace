@@ -29,7 +29,7 @@ do_one_var(Mode, EoF, X, Var, Asserts, Fixes):- \+ is_list(Var), !,
 
 do_one_var(Mode, EoF, X, [VarName| Types], [Grok|Asserts], [Fix|Fixes]):-
   \+ number(VarName),
-  var(X), var_name(VarName, X, Fix),
+  var(X), cg_var_name(VarName, X, Fix),
   add_mode(Mode, cg_quantz(EoF, ?(X)), Grok),
   do_one_var(Mode, EoF, X, Types, Asserts, Fixes).
 do_one_var(Mode, EoF, X, [Number| Types], [Grok|Asserts], Fixes):-
@@ -40,8 +40,8 @@ do_one_var(Mode, EoF, X, [Type| Types], [cg_type(?(X),Type)|Asserts], Fixes):-
   do_one_var(Mode, EoF, X, Types, Asserts, Fixes).
 do_one_var(_Mode, _EoF, _X, [], [], []).
 
-var_name('?'(X), X, []):-!.
-var_name(X, X, [X = '?'(X)]).
+cg_var_name('?'(X), X, []):-!.
+cg_var_name(X, X, [X = '?'(X)]).
 
 % ==========================================================================
 % unchop/3 - unchops (joins) things into a list

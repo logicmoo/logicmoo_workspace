@@ -1,0 +1,15 @@
+bulk_first([pair(word(2),dog),pair(word(1),man),pair(sentence(5),[a,man,sleeps]),pair(sentence(3),[a,man,sleeps]),pair(sentence(2),[a,man,snores]),pair(sentence(1),[a,dog,walks])])
+bulk_second([pair(sentence(5),[a,man,sleeps]),pair(sentence(3),[a,man,sleeps]),pair(sentence(2),[a,man,snores]),pair(sentence(1),[a,dog,walks])])
+child_first(3,1)
+child_second(3,2)
+first(0,1)
+first(1,1)
+first(gen,1,1)
+first(gen,2,1)
+parent_first(3,1)
+second(0,2)
+second(1,2)
+test4_finished
+test5_checks_ok
+test6_checks_ok
+test7_checks_ok

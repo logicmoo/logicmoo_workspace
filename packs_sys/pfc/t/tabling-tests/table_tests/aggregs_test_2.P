@@ -1,0 +1,72 @@
+
+test:- p1(X,Y),writeln(p1(X,Y)),fail.
+test:- p2(X,Y),writeln(p2(X,Y)),fail.
+test:- p3(X,Y),writeln(p3(X,Y)),fail.
+test:- p4(X,Y),writeln(p4(X,Y)),fail.
+test:- p5(X,Y),writeln(p5(X,Y)),fail.
+test.
+	
+:- table p1(_,max/3-zero/1).
+
+p1(a,1).
+p1(a,2).
+p1(b,3).
+p1(b,4).
+
+max(X,Y,Z):- (X > Y -> Z = X ; Z = Y).
+
+zero(0).
+
+%-----------
+
+:- table p2(_,min(X,Y,Z)-10).
+
+p2(a,1).
+p2(a,2).
+p2(b,3).
+p2(b,4).
+
+min(X,Y,Z):- (X < Y -> Z = X ; Z = Y).
+
+
+%-----------
+
+:- table p3(_,le(X,Y)).
+
+p3(a,1).
+p3(a,2).
+p3(b,3).
+p3(b,4).
+
+le(X,Y):- X =< Y.
+
+%-----------
+
+:- table p4(_,ge/2).
+
+p4(a,1).
+p4(a,2).
+p4(b,3).
+p4(b,4).
+
+ge(X,Y):- X >= Y.
+
+%-----------
+
+:- table p5(_,belnap/3-bottom).
+
+belnap(X,X,X):- !.
+belnap(bottom,X,X):- !.
+belnap(X,bottom,X):- !.
+belnap(_,_,top):- !.
+
+p5(a,t).
+p5(a,f).
+p5(b,bottom).
+p5(b,f).
+
+end_of_file.
+
+:- table p6(_,belnap/3).
+
+p6(a,b).

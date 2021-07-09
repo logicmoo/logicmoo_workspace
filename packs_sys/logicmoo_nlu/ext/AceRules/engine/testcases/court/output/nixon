@@ -1,7 +1,34 @@
-ERROR: Invalid ACE text:
-The word "pacifist" is unknown.
-The word "republican" is unknown.
-The word "pacifist" is unknown.
-The word "republican" is unknown.
-"Every quaker is a <> pacifist.": This is the first sentence that was not ACE. The sign <> indicates the position where parsing failed.
+
+INPUT TEXT:
+Quaker-Rule: Every quaker is a pacifist.
+Republican-Rule: No republican is a pacifist.
+Nixon is a quaker.
+Nixon is a republican.
+Republican-Rule overrides Quaker-Rule.
+
+RULES:
+object(named('Nixon'),'Nixon',named,na,eq,1).
+object(named('Nixon'),quaker,countable,na,eq,1).
+object(named('Nixon'),republican,countable,na,eq,1).
+'Quaker-Rule':: group([object(A,pacifist,countable,na,eq,1)]) <- [object(A,quaker,countable,na,eq,1)].
+'Republican-Rule':: -group([object(A,pacifist,countable,na,eq,1)]) <- [object(A,republican,countable,na,eq,1)].
+overrides('Republican-Rule','Quaker-Rule').
+
+SIMPLE RULES:
+quaker(named('Nixon')).
+republican(named('Nixon')).
+'Quaker-Rule':: pacifist(A) <- [quaker(A)].
+'Republican-Rule':: -pacifist(A) <- [republican(A)].
+overrides('Republican-Rule','Quaker-Rule').
+
+ANSWERSET #1:
+-group([object(named('Nixon'),pacifist,countable,na,eq,1)]).
+object(named('Nixon'),'Nixon',named,na,eq,1).
+object(named('Nixon'),quaker,countable,na,eq,1).
+object(named('Nixon'),republican,countable,na,eq,1).
+
+ANSWERTEXT #1:
+Nixon is a republican.
+Nixon is a quaker.
+It is false that Nixon is a pacifist.
 

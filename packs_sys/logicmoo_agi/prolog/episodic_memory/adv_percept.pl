@@ -16,6 +16,7 @@
 % Main file.
 %
 */
+:- '$set_source_module'(mu).
 
 %:- nop(ensure_loaded('adv_chat80')).
 %:- ensure_loaded(adv_main).
@@ -63,18 +64,18 @@ can_sense(Agent, Sense, Thing, S0, S9):- can_sense(Agent, Sense, Thing, S0), S9=
 can_sense(_Agent, _See, Star, _State) :- is_star(Star), !.
 can_sense(Agent, Sense, Thing, S0) :- Agent == Thing, !, can_sense_here(Agent, Sense, S0).
 can_sense(_Agent, Sense, Here, S0) :- fail,
-  getprop(Here, has_rel(exit(_), t), S0),
+  getprop(Here, has_rel(fn(exit, _), t), S0),
   sense_here0(Sense, in, Here, S0), !.
 
 can_sense(Agent, Sense, Thing, S0) :-
   can_sense_here(Agent, Sense, S0),
   from_loc(Agent, Here, S0),
-  (Thing=Here;  open_traverse(Thing, Here, S0)), !.
+  (Thing=Here;  open_traverse(Thing, Here, S0)).
 /*can_sense(Agent, Sense, Thing, S0) :-
  % get_open_traverse(_Open, Sense, _Traverse, Sense),
  can_sense_here(Agent, Sense, S0),
- h(Sense, Agent, Here, S0),
- (Thing=Here; h(Sense, Thing, Here, S0)).
+ h(spatial, Sense, Agent, Here, S0),
+ (Thing=Here; h(spatial, Sense, Thing, Here, S0)).
 */
 can_sense(Agent, Sense, Thing, _State):- fail,
  dbug1(pretending_can_sense(Agent, Sense, Thing, Agent)), !.
@@ -107,10 +108,10 @@ send_percept(Agent, Event, S0, S2) :-
 invoke_percept_list(_Agent, [], S0, S0):-!.
 % invoke_percept_list(Agent, Events, _S0, _S2) :- dmsg( invoke_percept_list(Agent, Events)), fail.
 invoke_percept_list(Agent, Events, S0, S2) :-
-  maybe_undeclare(memories(Agent, Mem0), S0, S1),
+  pre_redeclare(memories(Agent, Mem0), S0, S1),
   agent_clock_time_prev(Agent, timestamp(Stamp, _OldNow), Events),
   with_agent_console(Agent, process_percept_list(Agent, Events, Stamp, Mem0, Mem3)),
-  replace_declare(memories(Agent, Mem3), S1, S2).
+  redeclare(memories(Agent, Mem3), S1, S2).
 
 % %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % CODE FILE SECTION
@@ -163,6 +164,15 @@ sensory_verb(taste, taste).
 sensory_verb(smell, smell).
 sensory_verb(touch, feel).
 
+sensible_pred(_Sense, _At).
+sense_to_domain(_Sense, Spatially):-  spatial_domain(Spatially).
+pred_to_domain(P, Spatially):- is_spatial_rel(P),!, spatial_domain(Spatially).
+verb_to_domain(_Verb, Spatially):-  spatial_domain(Spatially).
+domain_to_default_fn(_,exit).
+
+:- defn_state_none(spatial_domain(-domain)).
+spatial_domain(spatial).
+
 
 action_sensory(Action, Sense):-
  compound(Action),
@@ -189,7 +199,7 @@ verb_sensory(eat, taste).
 verb_sensory(feel, touch).
 verb_sensory(goto, see).
 verb_sensory(Verb, Sense):- nonvar(Verb), is_sense(Verb), Sense=Verb.
-verb_sensory(Verb, Sense):- subsetof(Verb, Verb2), Verb\=Verb2,
+verb_sensory(Verb, Sense):- requires_spatially(Verb, Verb2), Verb\=Verb2,
  verb_sensory(Verb2, Sense), \+ is_sense(Verb).
 verb_sensory(Verb, Sense):- verb_alias(Verb, Verb2), Verb\=Verb2,
  verb_sensory(Verb2, Sense), \+ is_sense(Verb).
@@ -219,7 +229,10 @@ percept_intent( Agent, Actions, Mem0, Mem2):- add_intent_all(Agent, Actions, Mem
 %process_percept_do_auto(Agent, with_msg(Percept, _Msg), Timestamp, M0, M2) :- !,
 % process_percept_do_auto(Agent, Percept, Timestamp, M0, M2).
 
+must_be_args_bound(Cmpd):- arg(_,Cmpd,E),var(E),!,dumpST,dbug1(not_args_bound(Cmpd)),trace_or_throw(not_args_bound(Cmpd)).
+
 :- defn_mem_setter(process_percept_auto//3).
+process_percept_do_auto(Agent, Percept, Stamp, M0, M0) :- must_be_args_bound(process_percept_do_auto(Agent, Percept, Stamp, M0)).
 process_percept_do_auto(_Agent, msg(_), _Stamp, M0, M0) :- !.
 process_percept_do_auto(_Agent, [], _Stamp, M0, M0) :- !.
 process_percept_do_auto(Agent, [Percept|Tail], Stamp, M0, M9) :-
@@ -229,34 +242,35 @@ process_percept_do_auto(Agent, [Percept|Tail], Stamp, M0, M9) :-
 process_percept_do_auto(Agent, Percept, _Stamp, M0, M0) :- was_own_self(Agent, Percept), !.
 
 % Auto examine room items
-process_percept_do_auto(Agent, percept(Agent, Sense, Depth, child_list(_Here, _Prep, Objects)), _Stamp, Mem0, Mem2) :-
+process_percept_do_auto(Agent, percept(Agent, Sense, Depth, child_list(_Spatially, _Here, _Prep, Objects)), _Stamp, Mem0, Mem2) :-
  agent_thought_model(Agent, _ModelData, Mem0), Depth > 1,
  % getprop(Agent, model_depth = ModelDepth, advstate),
- DepthLess is Depth - 1,
+ DepthLess is Depth - 1, 
  findall( act3('examine__D5',Agent,[ Sense, child, Obj, DepthLess]),
    ( member(Obj, Objects),
       Obj \== Agent), % ( \+ member(props(Obj, _), ModelData); true),
    Actions),
  percept_intent( Agent, Actions, Mem0, Mem2).
+ 
 
 process_percept_do_auto(_Agent, _Percept, _Timestamp, M0, M0):-  \+ declared(inherited(autonomous), M0), !.
 
 % Auto Answer
 process_percept_do_auto(Agent, act3('emote',Speaker,[ EmoteType, Agent, Words]), _Stamp, Mem0, Mem1) :-
- trace, consider_text(Speaker, EmoteType, Agent, Words, Mem0, Mem1).
+  consider_text(Speaker, EmoteType, Agent, Words, Mem0, Mem1).
 process_percept_do_auto(Agent, act3('emote',Speaker,[ EmoteType, Star, WordsIn]), _Stamp, Mem0, Mem1) :- is_star(Star),
  addressing_whom(WordsIn, Whom, Words),
  Whom == Agent,
  consider_text(Speaker, EmoteType, Agent, Words, Mem0, Mem1).
 
 % Auto take
-process_percept_do_auto(Agent, percept_props(Agent, Sense, Object, Depth, PropList), _Stamp, Mem0, Mem2) :-
+process_percept_do_auto(Agent, unused_percept_props(Agent, Sense, Object, Depth, PropList), _Stamp, Mem0, Mem2) :-
   Depth > 1,
  (member(inherited(shiny), PropList)),
  Object \== Agent,
- dbug(autonomous, '~w: ~p~n', [Agent, percept_props(Agent, Sense, Object, Depth, PropList)]),
+ dbug(autonomous, '~w: ~p~n', [Agent, unused_percept_props(Agent, Sense, Object, Depth, PropList)]),
  agent_thought_model(Agent, ModelData, Mem0),
- \+ h(descended, Object, Agent, ModelData), % Not holding it?
+ \+ h(spatial, descended, Object, Agent, ModelData), % Not holding it?
  add_intent_all([ act3('take',Agent,[ Object]), print_(Agent, 'My shiny precious!')], Mem0, Mem2).
 
 
@@ -268,7 +282,7 @@ addressing_whom(List, Agent, Words):- Words = [_|_], append(_, [Agent|Words], Li
 
 %was_own_self(Agent, say(Agent, _)).
 was_own_self(Agent, (act3('emote',Agent,[ _, _Targ, _]))).
-was_own_self(Agent, try(Agent, act3('emote',Agent,[ _, _Targ, _]))).
+was_own_self(Agent, attempts(Agent, act3('emote',Agent,[ _, _Targ, _]))).
 was_own_self(Agent, act3('emote',Agent,[ _, _Targ, _])).
 % was_own_self(Agent, Action):- action_doer(Action, Was), Was == Agent.
 
@@ -285,10 +299,14 @@ process_percept_player(Agent1, percept(Agent2, _, _, _), _Stamp, Mem0, Mem0) :- 
 %process_percept_player(Agent1, percept(Agent2, _, _, _), _Stamp, Mem0, Mem0) :- Agent1 \== Agent2, !.
 %process_percept_player(Agent, Percept, _Stamp, Mem0, Mem0) :- sub_term(Sub, Percept), compound(Sub), Sub=depth(_KnowsD, DepthN), getprop(Agent, look_depth = LookDepth, advstate), DepthN > LookDepth, !.
 process_percept_player(Agent, Percept, _Stamp, Mem0, Mem0) :-
- percept2txt(Agent, Percept, Text), !, player_format(Agent, '~N~w~n', [Text]), !.
+ percept2txt(Agent, Percept, Text), !, 
+ ignore((filtered_percept_text(Agent,Text),
+   player_format(Agent, '~N~w~n', [Text]))), !.
 
-process_percept_player(Agent, Percept, _Stamp, M0, M0) :-
- player_format(Agent, '~N~q~n', [Agent:Percept]).
+process_percept_player(Agent, Percept, _Stamp, M0, M0) :- player_format(Agent, '~N~q~n', [Agent:Percept]).
+
+filtered_percept_text(A,T):- E=pre_txt(A,T),(nb_current(filtered_percept_text,Was);Was=[]),!,
+  ((nth0(N,Was,EE),EE=@=E)-> (!,N>6) ; nb_setval(filtered_percept_text,[E|Was])).
 
 is_player(Agent):- \+ is_non_player(Agent).
 is_non_player(Agent):- inst_of(Agent, floyd, _).
@@ -299,6 +317,7 @@ is_non_player(Agent):- inst_of(Agent, floyd, _).
 process_percept_main(_Agent, [], _Stamp, Mem0, Mem0) :- !.
 process_percept_main(Agent, Percept, Stamp, Mem0, Mem2) :-
  % dbug(always, '~N1 percept ~q !~n', [percept(Percept)]),
+ nb_setval(filtered_percept_text,[]),
  quietly(process_percept_player(Agent, Percept, Stamp, Mem0, Mem1)),
  process_percept_do_auto(Agent, Percept, Stamp, Mem1, Mem2), !.
 process_percept_main(Agent, Percept, Stamp, Mem0, Mem0):-

@@ -222,7 +222,8 @@ mpred_unload_file(File):-
   findall(
     mpred_withdraw(Data,(mfl4(VarNameZ,Module, File, LineNum),AX)),
     % clause_u
-    call_u(spft(Data, mfl4(VarNameZ,Module, File, LineNum),AX)),
+    get_mz(MZ),
+    call_u('$spft'(MZ,Data, mfl4(VarNameZ,Module, File, LineNum),AX)),
                     ToDo),
      length(ToDo,Len),
      dmsg_pretty(mpred_unload_file(File,Len)),
@@ -1105,7 +1106,7 @@ checked_clause_count(genls(_,_)).
 checked_clause_count((_ <- _)).
 checked_clause_count((_ ==> _)).
 checked_clause_count((_ <==> _)).
-%checked_clause_count(spft(_,_,ax)).
+%checked_clause_count('$spft'(_,_,_,ax)).
 checked_clause_count(agent_command(_,_)).
 checked_clause_count(how_virtualize_file(_,_,_)).
 

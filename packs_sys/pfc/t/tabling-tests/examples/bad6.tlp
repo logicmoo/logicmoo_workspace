@@ -1,0 +1,8 @@
+% p/1, q/1 declared but not defined,  q/0 defined but not called:
+
+:- table p/1.
+:- coinductive0 p/1, q/1.
+
+p( a, b ).
+
+q :- p( X, Y ).   % singleton X, Y

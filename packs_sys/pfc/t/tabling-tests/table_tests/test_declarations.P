@@ -1,0 +1,49 @@
+
+/* Only test in sequential engine */
+test:- 
+	(xsb_configuration(engine_mode,'multi-threading') -> 
+	    load_dync(test_declarations_old),
+	    (prop(X,Y),write(prop(X,Y)),writeln('.'),fail ; true)
+	 ;  test_decs).
+
+
+:- dynamic d1/1.
+:- dynamic d2/1 as incremental.
+:- dynamic d3/1 as opaque.
+:- table t1/1.
+:- table t2/1 as incremental.
+:- table t3/1 as opaque.
+:- table t4/1 as variant.
+:- table t5/1 as subsumptive.
+
+t1(1).
+t2(1).
+t3(1).
+t4(1).
+t5(1).
+
+test_decs:- 
+	predicate_property(d1(_X),P),
+	write(prop(d1,P)),writeln('.'),fail.
+test_decs:- 
+	predicate_property(d2(_X),P),
+	write(prop(d2,P)),writeln('.'),fail.
+test_decs:- 
+	predicate_property(d3(_X),P),
+	write(prop(d3,P)),writeln('.'),fail.
+test_decs:- 
+	predicate_property(t1(_X),P),
+	write(prop(t1,P)),writeln('.'),fail.
+test_decs:- 
+	predicate_property(t2(_X),P),
+	write(prop(t2,P)),writeln('.'),fail.
+test_decs:- 
+	predicate_property(t3(_X),P),
+	write(prop(t3,P)),writeln('.'),fail.
+test_decs:- 
+	predicate_property(t4(_X),P),
+	write(prop(t4,P)),writeln('.'),fail.
+test_decs:- 
+	predicate_property(t5(_X),P),
+	write(prop(t5,P)),writeln('.'),fail.
+test.

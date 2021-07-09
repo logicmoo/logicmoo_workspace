@@ -7,8 +7,17 @@
 %  cls ; kill -9 %1 ; swipl -g "ensure_loaded(pack(logicmoo_base/t/examples/base/'sanity_abc.pfc'))."
 
 %  was_module(header_sane,[]).
-:- include(test_header).
 
+:- module(header_sane,[test_header_include/0]).
+test_header_include.
+%:- endif.
+
+:- expects_dialect(pfc).
+
+% :- include(test_header).
+:- module(header_sane).
+
+:- mpred_trace_exec.
 
 a11 ==> b11.
 b11 ==> a11.
@@ -20,6 +29,10 @@ a11.
 :- mpred_trace_exec.
 
 \+ a11.
+
+:- break.
+:- rtrace.
+:- nortrace.
 
 :- mpred_test(\+ a11).
 :- mpred_test(\+ b11).

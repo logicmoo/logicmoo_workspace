@@ -1,18 +1,100 @@
-ERROR: Invalid ACE text:
-The word "belongs-to" is unknown.
-The word "family" is unknown.
-The word "notification" is unknown.
-The word "emergency" is unknown.
-The word "illness" is unknown.
-The word "belongs-to" is unknown.
-The word "family" is unknown.
-The word "illness" is unknown.
-The word "emergency" is unknown.
-The word "belongs-to" is unknown.
-The word "family" is unknown.
-The word "belongs-to" is unknown.
-The word "family" is unknown.
-The word "notification" is unknown.
-The word "illness" is unknown.
-"If a message is from someone who belongs-to <> the family of Fred then the message is important.": This is the first sentence that was not ACE. The sign <> indicates the position where parsing failed.
+
+INPUT TEXT:
+Family-Rule: If a message is from someone who belongs-to the family of Fred then the message is important.
+Daisy-Rule: If a message is from Daisy then the message is not important.
+Emergency-Rule: If a message is a notification of an emergency then the message is important.
+Daisy-Rule overrides Family-Rule.
+Emergency-Rule overrides Daisy-Rule.
+Emergency-Rule overrides Family-Rule.
+If there is an illness of someone who belongs-to the family of Fred then the illness is an emergency.
+Betty belongs-to the family of Fred.
+Daisy belongs-to the family of Fred.
+Item19 is a message that is from Betty.
+Item20 is a message that is from Daisy.
+Item115 is a message that is from Daisy.
+Item115 is a message that is a notification of an illness of Daisy.
+
+RULES:
+group([object(A,emergency,countable,na,eq,1)]) <- [of_relation(object(B,family,countable,na,eq,1),named('Fred')), of_relation(object(A,illness,countable,na,eq,1),C), pred_mod('belong-to',C,B,[]), object(C,D,E,F,G,H)].
+of_relation(object(named('Item115'),notification,countable,na,eq,1),v(0)).
+of_relation(object(v(0),illness,countable,na,eq,1),named('Daisy')).
+of_relation(object(v(1),family,countable,na,eq,1),named('Fred')).
+pred_mod(be,named('Item115'),[modifier_pp(from,named('Daisy'))]).
+pred_mod(be,named('Item19'),[modifier_pp(from,named('Betty'))]).
+pred_mod(be,named('Item20'),[modifier_pp(from,named('Daisy'))]).
+pred_mod('belong-to',named('Betty'),v(1),[]).
+pred_mod('belong-to',named('Daisy'),v(1),[]).
+object(named('Betty'),'Betty',named,na,eq,1).
+object(named('Daisy'),'Daisy',named,na,eq,1).
+object(named('Fred'),'Fred',named,na,eq,1).
+object(named('Item115'),'Item115',named,na,eq,1).
+object(named('Item115'),message,countable,na,eq,1).
+object(named('Item19'),'Item19',named,na,eq,1).
+object(named('Item19'),message,countable,na,eq,1).
+object(named('Item20'),'Item20',named,na,eq,1).
+object(named('Item20'),message,countable,na,eq,1).
+'Daisy-Rule':: -group([property(A,important,pos)]) <- [pred_mod(be,A,[modifier_pp(from,named('Daisy'))]), object(A,message,countable,na,eq,1)].
+'Emergency-Rule':: group([property(A,important,pos)]) <- [group([object(B,emergency,countable,na,eq,1)]), of_relation(object(A,notification,countable,na,eq,1),B), object(A,message,countable,na,eq,1)].
+'Family-Rule':: group([property(A,important,pos)]) <- [of_relation(object(B,family,countable,na,eq,1),named('Fred')), pred_mod('belong-to',C,B,[]), pred_mod(be,A,[modifier_pp(from,C)]), object(C,D,E,F,G,H), object(A,message,countable,na,eq,1)].
+overrides('Daisy-Rule','Family-Rule').
+overrides('Emergency-Rule','Daisy-Rule').
+overrides('Emergency-Rule','Family-Rule').
+
+SIMPLE RULES:
+emergency(A) <- [of(family,B,named('Fred')), of(illness,A,C), 'belong-to'(C,B,[]), something(C)].
+of(notification,named('Item115'),v(0)).
+of(illness,v(0),named('Daisy')).
+of(family,v(1),named('Fred')).
+be(named('Item115'),[from(named('Daisy'))]).
+be(named('Item19'),[from(named('Betty'))]).
+be(named('Item20'),[from(named('Daisy'))]).
+'belong-to'(named('Betty'),v(1),[]).
+'belong-to'(named('Daisy'),v(1),[]).
+message(named('Item115')).
+message(named('Item19')).
+message(named('Item20')).
+'Daisy-Rule':: -important(A) <- [be(A,[from(named('Daisy'))]), message(A)].
+'Emergency-Rule':: important(A) <- [emergency(B), of(notification,A,B), message(A)].
+'Family-Rule':: important(A) <- [of(family,B,named('Fred')), 'belong-to'(C,B,[]), be(A,[from(C)]), something(C), message(A)].
+overrides('Daisy-Rule','Family-Rule').
+overrides('Emergency-Rule','Daisy-Rule').
+overrides('Emergency-Rule','Family-Rule').
+
+ANSWERSET #1:
+-group([property(named('Item20'),important,pos)]).
+group([property(named('Item115'),important,pos)]).
+group([property(named('Item19'),important,pos)]).
+group([object(v(0),emergency,countable,na,eq,1)]).
+of_relation(object(named('Item115'),notification,countable,na,eq,1),v(0)).
+of_relation(object(v(0),illness,countable,na,eq,1),named('Daisy')).
+of_relation(object(v(1),family,countable,na,eq,1),named('Fred')).
+pred_mod(be,named('Item115'),[modifier_pp(from,named('Daisy'))]).
+pred_mod(be,named('Item19'),[modifier_pp(from,named('Betty'))]).
+pred_mod(be,named('Item20'),[modifier_pp(from,named('Daisy'))]).
+pred_mod('belong-to',named('Betty'),v(1),[]).
+pred_mod('belong-to',named('Daisy'),v(1),[]).
+object(named('Betty'),'Betty',named,na,eq,1).
+object(named('Daisy'),'Daisy',named,na,eq,1).
+object(named('Fred'),'Fred',named,na,eq,1).
+object(named('Item115'),'Item115',named,na,eq,1).
+object(named('Item115'),message,countable,na,eq,1).
+object(named('Item19'),'Item19',named,na,eq,1).
+object(named('Item19'),message,countable,na,eq,1).
+object(named('Item20'),'Item20',named,na,eq,1).
+object(named('Item20'),message,countable,na,eq,1).
+
+ANSWERTEXT #1:
+Item19 is important.
+Item115 is important.
+Item20 is a message.
+Item19 is a message.
+Item115 is a message.
+Item115 is a notification of an emergency X1.
+Daisy belongs-to a family X2 of Fred.
+Betty belongs-to the family X2.
+Item20 is from Daisy.
+Item19 is from Betty.
+Item115 is from Daisy.
+The emergency X1 is an illness of Daisy.
+It is false that Item20 is important.
 

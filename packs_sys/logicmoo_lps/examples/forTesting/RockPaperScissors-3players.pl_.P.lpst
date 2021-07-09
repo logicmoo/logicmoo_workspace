@@ -1,0 +1,78 @@
+/*
+  LPS test results file generated on 2021-2-28 at 11:24:5
+  on Prolog swi(8,1,9,[]) for program file:
+  /Users/mc/git/lps_corner/examples/forTesting/RockPaperScissors-3players.pl_.P
+*/
+
+:-dynamic lps_test_result/3,lps_test_result_item/3,lps_test_action_ancestor/3,lps_test_options/1.
+
+% LPS options prior to the test:
+lps_test_options([dc]).
+
+% lps_test_result(Stage,Cycle,TestTerm)
+lps_test_result(fluents,0,0).
+lps_test_result(events,1,0).
+lps_test_result(fluents,1,0).
+lps_test_result(events,2,1).
+lps_test_result(composites,2,1).
+lps_test_result(fluents,2,1).
+lps_test_result(events,3,2).
+lps_test_result(fluents,3,3).
+lps_test_result(events,4,2).
+lps_test_result(composites,4,6).
+lps_test_result(fluents,4,3).
+lps_test_result(events,5,0).
+lps_test_result(composites,5,1).
+lps_test_result(fluents,5,3).
+lps_test_result(events,6,1).
+lps_test_result(fluents,6,4).
+lps_test_result(events,7,0).
+lps_test_result(fluents,7,4).
+lps_test_result(events,8,0).
+lps_test_result(fluents,8,4).
+lps_test_result(events,9,0).
+lps_test_result(fluents,9,4).
+% lps_test_result_item(Stage,Cycle,TestTerm)
+lps_test_result_item(events,2,init).
+lps_test_result_item(composites,2,happens(finalize,2,2)).
+lps_test_result_item(fluents,2,reward(0)).
+lps_test_result_item(events,3,player_input(miguel,rock,1000)).
+lps_test_result_item(events,3,player_input(fariba,rock,1000)).
+lps_test_result_item(fluents,3,played(miguel,rock)).
+lps_test_result_item(fluents,3,played(fariba,rock)).
+lps_test_result_item(fluents,3,reward(2000)).
+lps_test_result_item(events,4,send(fariba,1000)).
+lps_test_result_item(events,4,send(miguel,1000)).
+lps_test_result_item(composites,4,happens(finalize,3,4)).
+lps_test_result_item(composites,4,happens(finalize,4,4)).
+lps_test_result_item(composites,4,happens(send_rewards(draw,miguel,miguel),3,4)).
+lps_test_result_item(composites,4,happens(send_rewards(draw,miguel,fariba),3,4)).
+lps_test_result_item(composites,4,happens(send_rewards(draw,fariba,miguel),3,4)).
+lps_test_result_item(composites,4,happens(send_rewards(draw,fariba,fariba),3,4)).
+lps_test_result_item(fluents,4,played(miguel,rock)).
+lps_test_result_item(fluents,4,played(fariba,rock)).
+lps_test_result_item(fluents,4,reward(0)).
+lps_test_result_item(composites,5,happens(finalize,5,5)).
+lps_test_result_item(fluents,5,played(miguel,rock)).
+lps_test_result_item(fluents,5,played(fariba,rock)).
+lps_test_result_item(fluents,5,reward(0)).
+lps_test_result_item(events,6,player_input(bob,rock,1000)).
+lps_test_result_item(fluents,6,played(miguel,rock)).
+lps_test_result_item(fluents,6,played(fariba,rock)).
+lps_test_result_item(fluents,6,played(bob,rock)).
+lps_test_result_item(fluents,6,reward(1000)).
+lps_test_result_item(fluents,7,played(miguel,rock)).
+lps_test_result_item(fluents,7,played(fariba,rock)).
+lps_test_result_item(fluents,7,played(bob,rock)).
+lps_test_result_item(fluents,7,reward(1000)).
+lps_test_result_item(fluents,8,played(miguel,rock)).
+lps_test_result_item(fluents,8,played(fariba,rock)).
+lps_test_result_item(fluents,8,played(bob,rock)).
+lps_test_result_item(fluents,8,reward(1000)).
+lps_test_result_item(fluents,9,played(miguel,rock)).
+lps_test_result_item(fluents,9,played(fariba,rock)).
+lps_test_result_item(fluents,9,played(bob,rock)).
+lps_test_result_item(fluents,9,reward(1000)).
+% lps_test_action_ancestor(Call,T1,T2)
+lps_test_action_ancestor(finalize,3,4).
+lps_test_action_ancestor(send_rewards(draw,fariba,miguel),3,4).

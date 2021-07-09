@@ -16,8 +16,10 @@
 % Main file.
 %
 */
+:- '$set_source_module'(mu).
 :- op(700, xfx, (univ_safe)).
 
+call_z(P, G):- call(P, G).
 
 % Miscellaneous generic utility predicates.
 
@@ -42,6 +44,14 @@ clock_time(T):- statistics(walltime, [X, _]), T is ('//'(X , 100))/10.
 
 :- dynamic(is_state_pred/2).
 is_state_pred(F, N):- atom(F), !, is_state_pred(P, N), safe_functor(P, F, _).
+
+:- multifile(user:argname_hook/4).
+:- dynamic(user:argname_hook/4).
+user:argname_hook(F,_,N,T):- 
+  is_state_pred(P,_),
+  functor(P,F,Short),
+  once(arg(N,P,T);(OneorTwo is T - Short, nth1(OneorTwo,['StateIn','StateOut'],T))),
+  nonvar(T).
 
 defn_state_pred(Getter, '//'(F, A), N):- !, functor(P, F, A), !, defn_state_pred(Getter, P, N).
 defn_state_pred(get_advstate, P, N):- is_state_pred(P, N), !.
@@ -78,7 +88,7 @@ defn_get_set_wrapper(Getter, M, F, A, _, 2):-
    asserta_if_undef(M, PP,
     with_mutex(Mutex, (call(Getter, S0), M:PPS0, call(Setter, S9)))).
   %asserta_if_undef(M, PP,
-   %with_mutex(Mutex, (pprint(enter(PP), trace), call(Getter, S0), M:PPS0, call(Setter, S9), pprint(exit(PP), trace)))).
+   %with_mutex(Mutex, (pprint(enter(PP), trace), call(Getter, S0), M:PPS0, call(Setter, S9), pprint(fn(exit, PP), trace)))).
 
 getter_to_setter(get_advstate, set_advstate).
 getter_to_setter(get_memory(A), set_memory(A)).
@@ -179,7 +189,7 @@ apply_forall(Forall, Apply, S0, S1):-
 
 findall(E, Goal, L, S0, S2):- apply_state(call, findall(E, Goal, L), S0, S2).
 
-map_apply_findall(Goal, M1, M2):- call(Goal, M1, M2).
+apply_to_goal(Goal, M1, M2):- call(Goal, M1, M2).
 
 
 %unless(G, Else, S0, S2):- apply_state(Z, unless(G, Else), S0, S2).
@@ -210,12 +220,32 @@ must_input_state(S0):- quietly(check4bugs(input, S0)).
 must_output_state(S0):- quietly(check4bugs(output, S0)).
 %must_state(S0):- quietly(check4bugs(anon, S0)).
 
-call_z(P, G):- call(P, G).
+:- meta_predicate api_invoke(+,?,?).
+:- meta_predicate aXiom(+).
+:- meta_predicate aXiom(+,?,?).
+:- meta_predicate call_z(1,?).
+:- meta_predicate eVent(*,+,*,?).
+:- meta_predicate rapply_state(1,+,-,?).
+
+%:- meta_predicate api_invoke(+).
+%:- meta_predicate apply_act(+,?,?).
+%:- meta_predicate call_lf(?,0).
+%:- meta_predicate eVent(*,+).
+%:- meta_predicate map_apply_findall(+,?,?).
+%:- meta_predicate munl_call(0).
+%:- meta_predicate must_act(+,?,?).
+%:- meta_predicate reframed_call(4,*,?).
+%:- meta_predicate reframed_call(4,?,?,?,?).
+%:- meta_predicate thread_create_adv(0,?,+).
+
+
+
 mw_numbervars(G, S, E):- numbervars(G, S, E, [attvar(skip)]).
 
-:- module_transparent(apply_state//3).
+:- module_transparent(apply_state//4).
 :- meta_predicate(apply_state(1, *, +, -)).
 :- meta_predicate(apply_state(1, *, +, -, +, -)).
+
 
 apply_state(Z, Goal, S0, S2, DCG0, DCG2):-
   DCG0=S0,
@@ -224,8 +254,7 @@ apply_state(Z, Goal, S0, S2, DCG0, DCG2):-
 
 rapply_state(Z, S0, S2, Goal):- apply_state(Z, Goal, S0, S2).
 
-:- module_transparent(apply_state//1).
-%:- meta_predicate(apply_state(Z, //, +, -)).
+:- module_transparent(apply_state//2).
 
 apply_state(_, _NonGoal, S0, _S2) :- xnotrace(must_input_state(S0)), fail.
 apply_state(_, NonGoal, S0, S2) :- \+ callable(NonGoal), !, trace, S0=S2.
@@ -273,13 +302,17 @@ apply_state(Z, Goal, S0, S2) :- is_state_ignorer(Goal), !, call_z(Z, Goal), S0=S
 apply_state(Z, Goal, S0, S2) :- is_state_getter(Goal), !, call_z(Z, call(Goal, S0)), S0=S2.
 apply_state(Z, sg(Goal), S0, S2) :- !, call_z(Z, call(Goal, S0)), S0 = S2.
 apply_state(Z, Goal, S0, S2) :- is_state_setter(Goal), !, call_z(Z, call(Goal, S0, S2)), !, xnotrace(must_output_state(S2)).
-apply_state(Z, Meta, S0, S2) :- is_state_meta(Meta, N), length(Left, N), Meta univ_safe [F|MetaL], !,
+apply_state(Z, Meta, S0, S2) :- 
+   is_state_meta(Meta, N), 
+   length(Left, N), 
+   Meta univ_safe [F|MetaL], !,
    append(Left, [Goal|MetaR], MetaL),
    append(Left, [apply_state(Z, Goal, S0, S2)|MetaR], MetaC),
    apply(call(F), MetaC),
    xnotrace(must_output_state(S2)).
 
-apply_state(Z, Goal, S0, S2) :- call_z(Z, call(Goal, S0, S2)), !, xnotrace(must_output_state(S2)).
+apply_state(Z, Goal, S0, S2) :- 
+   call_z(Z, call(Goal, S0, S2)), !, xnotrace(must_output_state(S2)).
 
 % apply_state(Z, Goal, S0, S2) :- xnotrace(append_goal_mw(Goal, [S0, S2], Call)), must_mw1(Call), xnotrace(must_output_state(S2)).
 

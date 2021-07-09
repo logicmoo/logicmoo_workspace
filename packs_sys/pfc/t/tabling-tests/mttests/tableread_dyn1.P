@@ -1,0 +1,21 @@
+:- import for/3 from basics.
+
+:- thread_shared tableread_table/1.
+:- table tableread_table/1.
+
+tableread_table(X):- 
+	num_is(N),
+	for(X,1,N).
+
+:- thread_shared tableread/2.
+
+tableread(N,Str):-
+	writeln(entered_tableread),
+	for(_X,1,N),
+	tableread_table(_),
+	fail.	
+tableread(_,Str):- 
+	tableread_table(X),
+	writeln(Str,X),
+	fail.
+tableread(_,_).

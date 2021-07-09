@@ -2,7 +2,8 @@
 
 
 % % % OFF :- system:use_module(library(pfc_lib)).
-:- file_begin(pfc).
+:- expects_dialect(pfc).
+
 %:- set_defaultAssertMt(xlisting_web).
 :- set_fileAssertMt(xlisting_web).% WAS OFF  :- system:use_module(library(pfc)).
 
@@ -20,14 +21,14 @@
 
 % :- mpred_trace_exec.
 :- kb_global(baseKB:param_default_value/2).
-==> singleValueInArg(param_default_value,2).
+singleValueInArg(param_default_value,2).
 
 :- kb_global(xlisting_web:combo_default_value/3).
-==> singleValueInArg(combo_default_value,3).
+singleValueInArg(combo_default_value,3).
 
 combo_default_value(human_language,1,'EnglishLanguage').
-combo_default_value(N,_,V) ==> param_default_value(N,V).
-combo_default_value(Pred,Arity,_Value)==> {kb_shared(Pred/Arity)}.
+param_default_value(N,V):- combo_default_value(N,_,V).
+% combo_default_value(Pred,Arity,_Value) ==> {kb_shared(Pred/Arity)}.
 %:- brea.
 
 
@@ -35,7 +36,7 @@ combo_default_value(Pred,Arity,_Value)==> {kb_shared(Pred/Arity)}.
 %
 % Human Language.
 %
-
+:- kb_global(baseKB:human_language/1).
 human_language("AlbanianLanguage").
 human_language("ArabicLanguage").
 human_language("BasqueLanguage").
@@ -77,7 +78,8 @@ param_default_value(find,'tHumanHead').
      'context'='BaseKB',
      'flang'='CLIF','find'='tHumanHead','xref'='Overlap','POS'='N',
      'humanLang'='EnglishLanguage','olang'='CLIF','sExprs'='1',
-     'webDebug'='1','displayStart'='0','displayMax'='100000']),xlisting_web:ain(param_default_value(N,V))).
+     'webDebug'='1','displayStart'='0','displayMax'='100000']),
+  xlisting_web:ain(param_default_value(N,V))).
 
 
 combo_default_value(logic_lang_name,2,'CLIF').
@@ -100,6 +102,7 @@ combo_default_value(prover_name,2,'proverPTTP').
 %
 % Prover Name.
 %
+:- kb_global(prover_name/2).
 prover_name(proverCyc,"CycL (LogicMOO)").
 prover_name(proverPFC,"PFC").
 prover_name(proverPTTP,"PTTP (LogicMOO)").
@@ -176,6 +179,4 @@ xaction_menu_item('prologPfc',"Impl $item in PFC").
 xaction_menu_item('Monotonic',"Treat $item Monotonic").
 xaction_menu_item('NonMonotonic',"Treat $item NonMonotonic").   
 
-
-:- set_fileAssertMt(baseKB).
 

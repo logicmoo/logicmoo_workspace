@@ -39,6 +39,7 @@
             bugger_term_expansion/2,
             bugger_term_expansion/3,
             buggeroo/0,
+            if_debug_module/1,
             call_or_list/1,
             call_skipping_n_clauses/2,
             caller_module/1,
@@ -460,10 +461,10 @@
 :- ifprolog:import(date:day_of_the_week/2).
 :- ifprolog:import(date:day_of_the_year/2).
 */
+:- meta_predicate(if_debug_module(:)).
+if_debug_module(MG):- strip_module(MG,M,_),(debugging(M)-> MG; true).
 
-
-
-not_debugging:- \+ tracing, \+ current_prolog_flag(debug,true).
+not_debugging:- \+ ( nb_current('$inprint_message', Messages), Messages\==[] ), \+ tracing, \+ current_prolog_flag(debug,true).
 
 /*
 %% all_source_file_predicates_are_transparent() is det.

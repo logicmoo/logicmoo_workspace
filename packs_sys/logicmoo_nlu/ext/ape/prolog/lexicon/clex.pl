@@ -12,11 +12,21 @@
 % You should have received a copy of the GNU Lesser General Public License along with the Attempto
 % Parsing Engine (APE). If not, see http://www.gnu.org/licenses/.
 
-
+:- if( current_module(clex) ).
 :- module(clex_ape, [
 		clex_switch/1,     % ?Switch
 		set_clex_switch/1  % +Switch
 	]).
+:- format(user_error,"Renaming CLEX interface module from 'clex' to 'clex_ape' ",[]).
+:- else.
+:- module(clex, [
+		clex_switch/1,     % ?Switch
+		set_clex_switch/1  % +Switch
+	]).
+:- format(user_error,"Keeping CLEX interface module 'clex' ",[]).
+:- endif.
+
+	
 :- use_module(library(error)).
 
 /** <module> Common Lexicon Interface
@@ -28,11 +38,11 @@ the executable.
 @version 2008-07-17
 */
 
+
+:- if(exists_source(pldata(clex_iface))).
 :- reexport(pldata(clex_iface)).
 
-
-/*
-DMILES @TODO
+:- else.
 
 
 %% clex_file(-ClexFile)
@@ -40,14 +50,44 @@ DMILES @TODO
 % This predicate defines the clex-file that is loaded and compiled into the executable. In order to
 % change this, you have to edit the source code and recompile.
 
-clex_file(pldata('clex_lexicon_user1.nldata')).
-%clex_file(clex_lexicon).
+clex_file(pldata('clex_lexicon_user1.nldata')):- exists_source(pldata('clex_lexicon_user1.nldata')).
+clex_file(clex_lexicon):- exists_source(clex_lexicon).
+clex_file(clex_lexicon):- exists_source('./clex_lexicon').
+clex_file(clex_lexicon):- exists_source(clex_lexicon_small).
 %clex_file(clex_lexicon_small).
 %clex_file('').
 
 
 % The predicates for the lexicon entries are declared dynamic. In this way, they don't fail if
 % no entry exists.
+
+:- multifile(adj_itr/2).
+:- multifile(adj_itr_comp/2).
+:- multifile(adj_itr_sup/2).
+:- multifile(adj_tr/3).
+:- multifile(adj_tr_comp/3).
+:- multifile(adj_tr_sup/3).
+:- multifile(adv/2).
+:- multifile(adv_comp/2).
+:- multifile(adv_sup/2).
+:- multifile(dv_finsg/3).
+:- multifile(dv_infpl/3).
+:- multifile(dv_pp/3).
+:- multifile(iv_finsg/2).
+:- multifile(iv_infpl/2).
+:- multifile(mn_pl/2).
+:- multifile(mn_sg/2).
+:- multifile(noun_mass/3).
+:- multifile(noun_pl/3).
+:- multifile(noun_sg/3).
+:- multifile(pn_pl/3).
+:- multifile(pn_sg/3).
+:- multifile(pndef_pl/3).
+:- multifile(pndef_sg/3).
+:- multifile(prep/2).
+:- multifile(tv_finsg/2).
+:- multifile(tv_infpl/2).
+:- multifile(tv_pp/2).
 
 :- dynamic adv/2.
 :- dynamic adv_comp/2.
@@ -82,10 +122,13 @@ clex_file(pldata('clex_lexicon_user1.nldata')).
 :- style_check(-discontiguous).
 %:- clex_file(ClexFile), ( ClexFile == '' ; load_files(ClexFile, [encoding(utf8)]) ).
 :- forall(clex_file(ClexFile), ( ClexFile == '' ; load_files(ClexFile, [encoding(iso_latin_1)]) )).
-%:-include(clex_lexicon).
 %:-include(library(pldata/clex_lexicon_user1)).
 :- style_check(+discontiguous).
-*/
+
+:- endif.
+
+
+:- include(clex_lexicon).
 
 %% clex_switch(?Switch)
 %

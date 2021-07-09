@@ -61,9 +61,7 @@
  *
  * 以下のものは非対応
  *   BITMAPV4HEADER と BITMAPV5HEADER に含まれる色空間に関する様々な機能
- *
  * @param $filename_or_stream_or_binary
- *
  * @return bool|resource
  */
 

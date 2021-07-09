@@ -1,0 +1,306 @@
+/* I finally got around to looking at Michaels issue about the
+slowness of trie_unintern(_nr).  As he noted, there was an unnecessary
+list traversal in internLeaf() which made things very slow.  I fixed
+this so that trie_unintern_nr is now quite fast, and also added a new
+trie_intern/2 for when you dont want to save the Leaf and Substitution
+Factor.  The times are promising, but there are still some issues,
+starting with trie_unintern.
+
+On my Mac, cpu times are: 
+
+To intern 8 million facts as below takes 6.6 secs with trie_intern/4 (via time_create/2)
+To intern 8 million facts as below takes 4.2 secs with trie_intern/2 (via time_create/2)
+
+To traverse the trie, without doing anything other than unification 2.7 secs (via time_traverse/1)
+To delete the trie with delete_trie takes 0.6 seconds (via time_delete)
+To unintern_nr all nodes in the trie takes 5.3 seconds (via time_unintern_nr)
+To unintern all nodes in the trie takes -- too long (via time_unintern)
+
+I'll check out delete_branch, which is what trie_dispose calls.  I'll
+also check about adding some sort of garbage collection and avoidance
+of stack expansion over the next few days.
+
+To retractall the trie 9.1 secs
+unintern 11.7 secs
+Time = 26.7040
+
+*/
+
+:- import new_trie/1 , trie_intern/4, trie_interned/4, trie_interned/2,  trie_unintern_nr/2,
+	  trie_unintern/2, delete_trie/1, bulk_trie_intern/2,trie_retractall/2  from intern.
+
+:- import member/2 from basics.
+
+make_list(0,[]):- !.
+make_list(N,[N|T]):- 
+	N1 is N - 1,
+	make_list(N1,T).
+
+init:- 
+	new_trie(Trie),
+	assert(ptrie(Trie)),
+	new_trie(HTrie),
+	assert(htrie(HTrie)),
+	new_trie(RTrie),
+	assert(rtrie(RTrie)).
+
+%-------
+
+time_create(N,Time):- 
+	cputime(Before),
+	intern_trie(N),
+	cputime(After),
+	Time is After - Before.
+
+:- import trie_intern/2 from intern.
+
+intern_trie(N):- 
+	ptrie(Trie),
+	make_list(N,List),
+	member(One,List),
+	member(Two,List),
+	member(Three,List),
+%	trie_intern(p(One,Two,Three),Trie,_,_),
+	trie_intern(p(One,Two,Three),Trie),
+	fail.
+intern_trie(_N).
+
+%-------
+
+bulk_time_create(N,Time):- 
+	cputime(Before),
+	ptrie(Trie),
+	bulk_trie_intern(bulk_create(_Term,N),Trie),
+	cputime(After),
+	Time is After - Before.
+
+bulk_create(p(One,Two,Three),N):- 
+	make_list(N,List),
+	member(One,List),
+	member(Two,List),
+	member(Three,List).
+
+%-------
+
+time_traverse(Time):- 
+	ptrie(Root),
+	cputime(Before),
+	time_traverse_1(Root),
+	cputime(After),
+	Time is After - Before.
+
+time_traverse_1(X):- 
+	trie_interned(p(_One,_Two,_Three),X),
+	fail.
+time_traverse_1(_X).
+
+%-------
+
+time_delete(Time):- 
+	ptrie(Root),
+	cputime(Before),
+	delete_trie(Root),
+	cputime(After),
+	Time is After - Before.
+
+%-------
+
+time_unintern_nr(Time):- 
+	ptrie(Root),
+	cputime(Before),
+	time_unintern_nr_1(Root),
+	cputime(After),
+	Time is After - Before.
+
+time_unintern_nr_1(Root):- 
+	trie_interned(p(_One,_Two,_Three),Root,Leaf,_),
+	trie_unintern_nr(Root,Leaf),
+	fail.
+time_unintern_nr_1(_Root).
+
+%-------
+
+time_retractall(Time):- 
+	ptrie(Root),
+	cputime(Before),
+	trie_retractall(p(_,_,_),Root),
+	cputime(After),
+	Time is After - Before.
+
+time_test(N):-
+	init,
+	time_create(N,T1),writeln(time_create(T1)),
+	time_traverse(T2),writeln(time_traverse(T2)),
+	time_unintern_nr(T5),writeln(time_unintern_nr(T5)),
+	time_delete(T4),writeln(time_delete(T4)),
+	bulk_time_create(N,T3),writeln(bulk_time_create(T3)),
+	time_retractall(T6),writeln(time_retractall(T6)).
+
+time_test1(N):-
+	init,
+	time_create(N,_T1),writeln(time_create),
+	time_traverse(_T2),writeln(time_traverse),
+	time_unintern_nr(_T5),writeln(time_unintern_nr),
+	time_delete(_T4),writeln(time_delete),
+	bulk_time_create(N,_T3),writeln(bulk_time_create),
+	time_retractall(_T6),writeln(time_retractall).
+
+:- table r/3.
+r(a,b,c).
+r(1,2,3).
+
+test1:- rtrie(Trie),
+   r(X,Y,Z),
+   trie_intern(r(X,Y,Z),Trie),
+   delete_trie(Trie),
+   fail.
+test1:- writeln(delete_test).
+
+test:- 
+	time_test1(50),
+	test1.
+
+%------------------------------------------------------------------------------
+% should hash.
+int_test_hash:- 
+	htrie(Trie),
+	ptrie(PTrie),
+	trie_intern(p(1,2),PTrie),
+	trie_intern(p(1,3),PTrie),
+	trie_intern(r(1,2),Trie),
+	trie_intern(r(1,3),Trie),
+	trie_intern(r(1,4),Trie),
+	trie_intern(r(1,5),Trie),
+	trie_intern(r(1,6),Trie),
+	trie_intern(r(1,7),Trie),
+	trie_interned(p(1,_X),PTrie,_,_),
+	trie_intern(r(1,8),Trie),
+	trie_intern(r(1,9),Trie),
+	trie_intern(r(1,10),Trie).
+% should not hash
+int_hash_test_1:- 
+	htrie(Trie),
+	ptrie(PTrie),
+	trie_intern(p(1,2),PTrie),
+	trie_intern(p(1,3),PTrie),
+	trie_intern(r(1,2),Trie),
+	trie_intern(r(1,3),Trie),
+	trie_intern(r(1,4),Trie),
+	trie_intern(r(1,5),Trie),
+	trie_intern(r(1,6),Trie),
+	trie_intern(r(1,7),Trie),
+	trie_interned(p(1,_X),PTrie,_,_),
+	trie_interned(r(1,_Y),Trie,_,_),
+	trie_intern(r(1,8),Trie),
+	trie_intern(r(1,9),Trie),
+	trie_intern(r(1,10),Trie).
+% should hash
+bulk_hash_test:- 
+	htrie(Trie),
+	bulk_trie_intern(r_insert(_Term,1,10),Trie).
+% should not hash
+bulk_hash_test_1:- 
+	htrie(Trie),
+	trie_intern(r(1,2),Trie),
+	trie_intern(r(1,3),Trie),
+	trie_intern(r(1,4),Trie),
+	trie_interned(r(1,_Y),Trie,_,_),
+	bulk_trie_intern(r_insert(_Term,1,10),Trie).
+% should reclaim
+unintern_test:- 
+	htrie(Trie),
+	ptrie(PTrie),
+	trie_intern(p(1,2),PTrie),
+	trie_intern(p(1,3),PTrie,Leaf,_),
+	trie_intern(r(1,2),Trie),
+	trie_intern(r(1,3),Trie),
+	trie_intern(r(1,4),Trie),
+	trie_intern(r(1,5),Trie),
+	trie_intern(r(1,6),Trie),
+	trie_intern(r(1,7),Trie),
+	trie_interned(p(1,_X),PTrie,_,_),
+%	trie_interned(r(1,3),Trie,Leaf,_),
+	trie_unintern(Trie,Leaf),
+	trie_intern(r(1,9),Trie),
+	trie_intern(r(1,10),Trie).
+% should not reclaim
+unintern_test_1:- 
+	htrie(Trie),
+	ptrie(PTrie),
+	trie_intern(p(1,2),PTrie),
+	trie_intern(p(1,3),PTrie),
+	trie_intern(r(1,2),Trie),
+	trie_intern(r(1,3),Trie),
+	trie_intern(r(1,4),Trie),
+	trie_intern(r(1,5),Trie),
+	trie_intern(r(1,6),Trie),
+	trie_intern(r(1,7),Trie),
+	trie_interned(r(1,X),Trie,_,_),
+	trie_interned(p(1,X),PTrie,_,_),
+	trie_interned(r(1,3),Trie,Leaf,_),
+	trie_unintern(Trie,Leaf),
+	trie_intern(r(1,9),Trie),
+	trie_intern(r(1,10),Trie).
+% should reclaim
+delete_test:- 
+	htrie(Trie),
+	trie_intern(r(1,2),Trie),
+	trie_intern(r(1,3),Trie),
+	trie_intern(r(1,4),Trie),
+	trie_intern(r(1,5),Trie),
+	trie_intern(r(1,6),Trie),
+	trie_intern(r(1,7),Trie),
+	delete_trie(Trie).
+% should abort
+delete_test_1:- 
+	htrie(Trie),
+	trie_intern(r(1,2),Trie),
+	trie_intern(r(1,3),Trie),
+	trie_intern(r(1,4),Trie),
+	trie_intern(r(1,5),Trie),
+	trie_intern(r(1,6),Trie),
+	trie_interned(r(1,_X),Trie,_Leaf,_),
+	trie_intern(r(1,7),Trie),
+	delete_trie(Trie).
+% should reclaim
+retractall_test:- 
+	htrie(Trie),
+	ptrie(PTrie),
+	trie_intern(p(1,2),PTrie),
+	trie_intern(p(1,3),PTrie),
+	trie_intern(r(1,2),Trie),
+	trie_intern(r(1,3),Trie),
+	trie_intern(r(1,4),Trie),
+	trie_intern(r(1,5),Trie),
+	trie_intern(r(1,6),Trie),
+	trie_intern(r(1,7),Trie),
+	trie_interned(p(1,_X),PTrie,_,_),
+%	trie_interned(r(1,3),Trie,Leaf,_),
+	trie_retractall(r(1,3),Trie),
+	trie_intern(r(1,9),Trie),
+	trie_intern(r(1,10),Trie).
+% should not reclaim
+retractall_test_1:- 
+	htrie(Trie),
+	ptrie(PTrie),
+	trie_intern(p(1,2),PTrie),
+	trie_intern(p(1,3),PTrie),
+	trie_intern(r(1,2),Trie),
+	trie_intern(r(1,3),Trie),
+	trie_intern(r(1,4),Trie),
+	trie_intern(r(1,5),Trie),
+	trie_intern(r(1,6),Trie),
+	trie_intern(r(1,7),Trie),
+	trie_interned(p(1,_X),PTrie,_,_),
+	trie_interned(r(1,3),Trie,_Leaf,_),
+	trie_retractall(r(1,3),Trie),
+	trie_intern(r(1,9),Trie),
+	trie_intern(r(1,10),Trie).
+
+:- import for/3 from basics.
+r_insert(r(1,N),From,To):-
+	for(N,From,To).
+
+
+end_of_file.
+

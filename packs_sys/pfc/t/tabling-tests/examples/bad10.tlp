@@ -1,0 +1,9 @@
+% Non-contiguous declaration.
+
+:- topl p/1, q/1.
+
+p( a ).
+
+q( b ).
+
+p( c ).

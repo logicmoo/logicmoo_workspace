@@ -16,6 +16,8 @@
 % Main file.
 %
 */
+:- '$set_source_module'(mu).
+
 
 
 % get_all_props(Object, AllProps, S0):- findall(Prop, getprop(Object, Prop, S0), AllProps).
@@ -49,6 +51,9 @@ inherited_prop1(_Orig, AlreadyUsed, _Object, Prop, PropList, _S0):-
 
 direct_props(Object, PropList, State):-
  (var(State)->get_advstate(State); true),
+ direct_props2(Object, PropList, State).
+
+direct_props2(Object, PropList, State):-
  (declared(props(Object, PropList), State)
  *-> true
  ; ( declared(type_props(Object, PropList), State)
@@ -75,7 +80,7 @@ delprop(Object, Prop, S0, S2) :- /*notrace*/(must_mw1((correct_props(Object, Pro
 delprop_(Object, Prop, S0, S2) :-
  must_mw1(declared(props(Object, PropList), S0, S1)),
  select_from(Prop, PropList, NewPropList),
- replace_declare(props(Object, NewPropList), S1, S2).
+ redeclare(props(Object, NewPropList), S1, S2).
 
 % Remove Prop Always. @TODO @BUG may not undo side-effects
 :- defn_state_setter(delprop_always(thing, nv)).
@@ -95,7 +100,7 @@ setprop_from_create(Object, Prop, S0, S2) :-
 setprop_(Object, Prop, S0, S2) :-
   assertion(is_list(S0)),
   \+ declared(props(Object, _), S0),
-  replace_declare(props(Object, []), S0, S1), !,
+  redeclare(props(Object, []), S0, S1), !,
   setprop_(Object, Prop, S1, S2).
 setprop_(Object, [P|PropS], S0, S2) :- !, setprop_(Object, P, S0, S1), setprop_(Object, PropS, S1, S2).
 setprop_(Object, Prop, S0, S2) :-
@@ -106,11 +111,13 @@ setprop_(Object, Prop, S0, S2) :-
  (select_from(Old, PropList, PropList2) ->
  (upmerge_prop(F, A, Old, Prop, Merged) ->
   ((Old==Merged, fail) -> S2=S0; % no update
-  (append([Merged], PropList2, PropList3), replace_declare(props(Object, PropList3), S1, S2)));
-      append([Prop], PropList, PropList3), replace_declare(props(Object, PropList3), S1, S2));
- (    append([Prop], PropList, PropList3), replace_declare(props(Object, PropList3), S1, S2))).
+  (append([Merged], PropList2, PropList3), redeclare(props(Object, PropList3), S1, S2)));
+      append([Prop], PropList, PropList3), redeclare(props(Object, PropList3), S1, S2));
+ (    append([Prop], PropList, PropList3), redeclare(props(Object, PropList3), S1, S2))).
 
 
+old_figment(h(Spatially, fn(Exit, D),X,_), h, 4, h(Spatially, fn(Exit, D),X,_)):- nonvar(X),!.
+old_figment(h(Spatially,_,X,_), h, 4, h(Spatially,_,X,_)):- nonvar(X),!.
 old_figment(Prop, F, A, Old):-
  (var(A)-> safe_functor(Prop, F, A); true),
  duplicate_term(Prop, Old),
@@ -128,7 +135,7 @@ updateprop_from_create(Object, Prop, S0, S2) :- /*notrace*/((correct_props(Objec
 updateprop_(Object, Prop, S0, S2) :-
   assertion(is_list(S0)),
   \+ declared(props(Object, _), S0),
-  replace_declare(props(Object, []), S0, S1), !,
+  redeclare(props(Object, []), S0, S1), !,
   updateprop_(Object, Prop, S1, S2).
 
 updateprop_(Object, Prop, S0, S2) :-
@@ -143,10 +150,10 @@ updateprop_1(Object, Prop, PropList, S0, S2) :-
  old_figment(Prop, F, A, Old),
  (select_from(Old, PropList, PropList2) ->
  (upmerge_prop(F, A, Old, Prop, Merged) ->
-     ((Old==Merged, fail) -> replace_declare(props(Object, PropList), S0, S2) ; % no update
-       (append([Merged], PropList2, PropList3), replace_declare(props(Object, PropList3), S0, S2)));
-           append([Prop], PropList, PropList3), replace_declare(props(Object, PropList3), S0, S2));
-          (append([Prop], PropList, PropList3), replace_declare(props(Object, PropList3), S0, S2))).
+     ((Old==Merged, fail) -> redeclare(props(Object, PropList), S0, S2) ; % no update
+       (append([Merged], PropList2, PropList3), redeclare(props(Object, PropList3), S0, S2)));
+           append([Prop], PropList, PropList3), redeclare(props(Object, PropList3), S0, S2));
+          (append([Prop], PropList, PropList3), redeclare(props(Object, PropList3), S0, S2))).
 
 
 
@@ -163,15 +170,14 @@ collector_prop(desc).
 single_valued_prop(name).
 single_valued_prop(desc).
 single_valued_prop(prefix).
-single_valued_prop(mass).
-single_valued_prop(volume).
 single_valued_prop(sp).
 
+single_valued_prop(mass).
+single_valued_prop(volume).
 
-
+is_spatial_rel(in).
 is_spatial_rel(worn_by).
 is_spatial_rel(held_by).
-is_spatial_rel(in).
 is_spatial_rel(on).
 is_spatial_rel(exit).
 
@@ -236,17 +242,18 @@ stores_props(props(Object, PropList), Object, PropList).
 
 
 
+push_to_state(Info):- push_2_state(Info), !.
 push_to_state(Info):- must_or_rtrace(push_2_state(Info)).
 
 
 %push_2_state(State):- push_to_obj(world, State).
 push_2_state(StateInfo):- end_of_list == StateInfo, !.
-%push_2_state(sp(Adjs, TypeS)):- is_list(TypeS), maplist([E]>>push_2_state(sp(Adjs, E)), TypeS).
+%push_2_state(sp(Adjs, TypeS)):- is_list(TypeS), must_maplist([E]>>push_2_state(sp(Adjs, E)), TypeS).
 %push_2_state(sp(Adjs, Atom)):- push_2_state(type_props(Atom, [inherit(Adjs)])), push_2_state(inherit(Atom)).
 push_2_state(StateInfo):- is_codelist(StateInfo), any_to_string(StateInfo, SStateInfo), !, push_2_state(SStateInfo).
 push_2_state(StateInfo):- is_charlist(StateInfo), any_to_string(StateInfo, SStateInfo), !, push_2_state(SStateInfo).
 push_2_state(StateInfo):- string(StateInfo), parse_kind(state, StateInfo, Logic), push_2_state(Logic).
-push_2_state(StateInfo):- is_list(StateInfo), !, maplist(push_2_state, StateInfo).
+push_2_state(StateInfo):- is_list(StateInfo), !, must_maplist(push_2_state, StateInfo).
 push_2_state(StateInfo):- \+ compound(StateInfo), trace_or_throw(unknown_push_to_state(StateInfo)), !.
 push_2_state(type(Type, Conj)):-  !, push_2_state(props(type(Type), Conj)).
 push_2_state(props(type(Type), Conj)):- !, props_to_list(Conj, List), push_2_state(type_props(Type, List)).
@@ -256,13 +263,15 @@ push_2_state(type_props(Obj, Conj0)):-
 push_2_state(type_props(Obj, Conj)):-
   (props_to_list(Conj, List) -> Conj\== List), !, push_2_state(type_props(Obj, List)).
 
-push_2_state(StateInfo):- StateInfo=..[F, Obj, E1, E2|More], functor_arity_state(F, 2), !, StateInfoNew=..[F, Obj, [E1, E2|More]], !, push_2_state(StateInfoNew).
+push_2_state(StateInfo):- StateInfo=..[F, Obj, E1, E2|More], functor_arity_state(F, 2), !,
+  StateInfoNew=..[F, Obj, [E1, E2|More]], !, push_2_state(StateInfoNew).
 push_2_state(StateInfo):- props_to_list(StateInfo, StateInfo2)->StateInfo2\=[StateInfo], !, push_2_state(StateInfo2).
 
-push_2_state(assert_text(Text)):- must(eng2log(istate, Text, Translation, [])), push_2_state(Translation).
-push_2_state(assert_text(Where, Text)):- !, must(eng2log(Where, Text, Translation, [])), push_2_state(Translation).
+push_2_state(assert_text(Text)):- trace, must(eng2log(istate, Text, Translation, [])), push_2_state(Translation).
+push_2_state(assert_text(Where, Text)):-  trace, !, must(eng2log(Where, Text, Translation, [])), push_2_state(Translation).
 
-push_2_state(StateInfo):- is_state_info(StateInfo), !, declare(StateInfo, istate, _), update_running(StateInfo).
+push_2_state(StateInfo):- is_state_info(StateInfo), !, get_state_context(Ctx), must_or_rtrace(declare(StateInfo, Ctx, _)), 
+  must_or_rtrace(update_running(StateInfo)).
 push_2_state(StateInfo):- wdmsg(warn(push_2_state(StateInfo))), trace, forall(arg(_, StateInfo, Sub), push_2_state(Sub)).
 
 correct_props(_Obj, PropsIn, PropsOut):- props_to_list(PropsIn, PropsOut), !.
@@ -313,6 +322,7 @@ negate_prop(UnNegated, Negated):-
   append(Left, [NegLast], NewArgs),
   Negated=..[F|NewArgs], !.
 
+:- op(700, fx, ('~')).
 
 correct_prop(NC, NO):- var(NC), !, NC = NO.
 correct_prop(NC, nc(NC)):- var(NC), throw(correct_prop(NC, nc(NC))), !.
@@ -328,12 +338,13 @@ correct_prop(AdjsInfo, sp(Adjs, Info)):- pos_to_sp(Adjs), compound_name_argument
 
 correct_prop(sp(Adjs, TypeS), Out):- is_list(TypeS), must_maplist(correct_some(Adjs), TypeS, Out).
 correct_prop(sp(Adjs, Atom), Out):-  check_atom(Atom), 
-  push_to_state(type_props(Atom, [traits(Atom), sp=Adjs])), !,
+  nop(push_to_state(type_props(Atom, [traits(Atom), sp=Adjs]))), !,
   % make_class_desc_sp(Adjs, Atom, ClassDesc), push_to_state(type_props(Atom, [class_desc([ClassDesc])])),
   must(correct_prop(inherit(Atom), Out)).
 
-correct_prop(HPRED, h(FS, X, Y)):- HPRED=..[F, S, X, Y], is_spatial_rel(F), !, FS=..[F, S].
-correct_prop(HPRED, h(F, X, Y)):- HPRED=..[F, X, Y], is_spatial_rel(F), !.
+correct_prop(h(F, X, Y), h(Spatially, F, X, Y)):- must(pred_to_domain(F, Spatially)), !.
+correct_prop(HPRED, h(Spatially, FS, X, Y)):- HPRED=..[F, S, X, Y], pred_to_domain(F, Spatially), !, FS=fn(F, S).
+correct_prop(HPRED, h(Spatially, F, X, Y)):- HPRED=..[F, X, Y], pred_to_domain(F, Spatially), !.
 correct_prop(          SV, N=V):- SV=..[N, V], single_valued_prop(N), !.
 
 correct_prop( (can(Verb)), can_be(Verb, t)):- nop(check_atom(Verb)).
@@ -367,4 +378,4 @@ merge_value(_, 1, _, A, R):- number(A), !, A=R.
 merge_value(_, 1, _, _, _):- !, fail.
 merge_value(_F, _, _B, A, R):- R = A.
 
-
+:- fixup_exports.

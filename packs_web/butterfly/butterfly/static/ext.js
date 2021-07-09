@@ -148,7 +148,8 @@
     butterfly.bell("pasted");
     data = e.clipboardData.getData('text/plain');
     data = data.replace(/\r\n/g, '\n').replace(/\n/g, '\r');
-    size = 1024;
+    //size = 1024;
+	size = data.length;
     send = function() {
       butterfly.send(data.substring(0, size));
       data = data.substring(size);
@@ -593,7 +594,14 @@
 
   })();
 
+  //window.consoleSuspend = false;
+
   document.addEventListener('keydown', function(e) {
+
+	if(window.consoleSuspend) {
+			return true;
+	}
+
     var r, ref, ref1;
     if (ref = e.keyCode, indexOf.call([16, 17, 18, 19], ref) >= 0) {
       return true;
@@ -810,4 +818,4 @@
 
 }).call(this);
 
-//# sourceMappingURL=ext.js.map
+// unused # sourceMappingURL=ext.js.map

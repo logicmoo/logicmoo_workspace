@@ -62,7 +62,7 @@ get_dcg_meta_reader_options(N,V):- t_l:dcg_meta_reader_options(N,V).
 
 
 % Portray ASCII code sequences (for debugging DCGs)
-user:portray(List):- compound(List),functor([_,_],F,A),functor(List,F,A),
+user:portray(List):- compound(List),compound_name_arity([_,_],F,A),compound_name_arity(List,F,A),
     List=[H|_],integer(H),H>9,user_portray_dcg_seq(List).
 
 user_portray_dcg_seq(List):- \+ is_list(List),!,between(32,1,Len),length(Left,Len),append(Left,_,List), ground(Left),!,
@@ -172,7 +172,7 @@ decl_dcgTest_startsWith(X,Y,Z):- nonvar(Y),!,do_dcgTest(X,dcgStartsWith(Y),Z).
 getText([],[]).
 getText(L,Txt):-member([txt|Txt],L),!.
 getText([L|List],Text):-getText(L,Text1),getText(List,Text2),append(Text1,Text2,Text),!.
-getText(F,S):-functor(F,_,3),arg(2,F,S),!.
+getText(F,S):-compound_name_arity(F,_,3),arg(2,F,S),!.
 getText(S,S).
 
 
@@ -438,20 +438,22 @@ optional(_) --> [].
 optional(O,X) --> {debug_var(X,O),append_term(X,O,XO)},!,optional(XO).
 
 mw(X) --> cspace,!, mw(X).
-mw(X) --> X,!,owhite.
+mw(X) --> X,!, owhite.
 
-owhite --> {notrace(nb_current(whitespace,preserve))},!.
+owhite --> {notrace(nb_current('$dcgm_whitespace',preserve))},!.
 owhite --> cwhite.
 owhite --> [].
 
 
 
 % cwhite --> comment_expr(S,I,CP),!,{assert(t_l:'$last_comment'('$COMMENT'(S,I,CP)))},!,owhite.
-cwhite --> file_comment_expr(CMT),!,{assert(t_l:'$last_comment'(CMT))},!,owhite.
-cwhite --> {notrace(nb_current(whitespace,preserve))}, !, {fail}.
 cwhite --> cspace,!,owhite.
+cwhite --> {notrace(nb_current('$dcgm_comments',consume))},file_comment_expr(CMT),!,{assert(t_l:'$last_comment'(CMT))},!,owhite.
+cwhite --> {notrace(nb_current('$dcgm_whitespace',preserve))}, !, {fail}.
+
 cspace --> [C], {nonvar(C),charvar(C),!,C\==10,bx(C =< 32)}.
-charvar(C):- integer(C)-> true; (writeln(charvar(C)),break,fail).
+
+charvar(C):- integer(C)-> true; (writeln(charvar(C)),only_debug(break),fail).
 
 one_blank --> [C],!,{C =< 32}.
 
@@ -484,18 +486,35 @@ escaped_char(Code)  --> [C], {escape_to_char([C],Code)},!.
 
 escape_to_char(Txt,Code):- notrace_catch_fail((sformat(S,'_=`\\~s`',[Txt]),read_from_chars(S,_=[Code]))),!.
 
+zalwayz_debug:- current_prolog_flag(zalwayz,debug).
+
+never_zalwayz(Goal):-
+ locally(current_prolog_flag(zalwayz,false),Goal).
+
+zalwayz_zalwayz(Goal):-
+ locally(current_prolog_flag(zalwayz,debug),Goal).
+
+
+zalwayz(G,H,T):- \+ zalwayz_debug, !, phrase(G,H,T).
 zalwayz(G,H,T):- phrase(G,H,T),!.
 zalwayz(G,H,T):- nb_current('$translation_stream',S),is_stream(S), \+ stream_property(S,tty(true)),!,always_b(G,H,T).
 zalwayz(G,H,T):- always_b(G,H,T).
 
-always_b(G,H,T):- break,H=[_|_],writeq(phrase_h(G,H,T)),dcg_print_start_of(H),writeq(phrase(G,H,T)),!,trace,ignore(rtrace(phrase(G,H,T))),!,notrace,dcg_print_start_of(H),writeq(phrase(G,H,T)), break,!,fail.
-always_b(G,H,T):- writeq(phrase(G,H,T)),dcg_print_start_of(H),writeq(phrase(G,H,T)),!,trace,ignore(rtrace(phrase(G,H,T))),!,notrace,dcg_print_start_of(H),writeq(phrase(G,H,T)), break,!,fail.
+only_debug(G):- \+ zalwayz_debug, !, nop(G),!.
+only_debug(G):- !, call(G).
+
+%zalwayz(G):-  !, zalwayz(G).
+zalwayz(G):- \+ zalwayz_debug, !, notrace(catch(G,_,fail)),!.
+zalwayz(G):- must(G).
+%zalwayz(P,S,L):-  !, zalwayz(P,S,L).
+
+always_b(G,H,T):- only_debug(break),H=[_|_],writeq(phrase_h(G,H,T)),dcg_print_start_of(H),writeq(phrase(G,H,T)),!,trace,ignore(rtrace(phrase(G,H,T))),!,notrace,dcg_print_start_of(H),writeq(phrase(G,H,T)), only_debug(break),!,fail.
+always_b(G,H,T):- writeq(phrase(G,H,T)),dcg_print_start_of(H),writeq(phrase(G,H,T)),!,only_debug(trace),ignore(rtrace(phrase(G,H,T))),!,notrace,dcg_print_start_of(H),writeq(phrase(G,H,T)), break,!,fail.
 
 dcg_print_start_of(H):- (length(L,3000);length(L,300);length(L,30);length(L,10);length(L,1);length(L,0)),append(L,_,H),!,format('~NTEXT: ~s~n',[L]),!.
-bx(CT2):- notrace_catch_fail(CT2,E,(writeq(E:CT2),break)),!.
+bx(CT2):- notrace_catch_fail(CT2,E,(writeq(E:CT2),only_debug(break))),!.
 notrace_catch_fail(G,E,C):- catch(G,E,C),!.
 notrace_catch_fail(G):- catch(G,_,fail),!.
-zalwayz(G):- must(G).
 clean_fromt_ws([],[]).
 clean_fromt_ws([D|DCodes],Codes):- 
   ((\+ char_type(D,white), \+ char_type(D,end_of_line)) -> [D|DCodes]=Codes ; clean_fromt_ws(DCodes,Codes)).
@@ -698,6 +717,13 @@ phrase_from_buffer_codes(Grammar, In):-
    NewCodes \== [])),!,
    (must_or_rtrace(phrase(Grammar, NewCodes, More))->append_buffer_codes(In,More);(append_buffer_codes(In,NewCodes),!,fail)).
 
+
+skipping_buffer_codes(Goal):- 
+ setup_call_cleanup(
+   notrace((remove_pending_buffer_codes(In,OldCodes), clear_pending_buffer_codes)),
+     Goal,
+     notrace((clear_pending_buffer_codes,append_buffer_codes(In,OldCodes)))).
+
 is_eof_codes(Codes):- var(Codes),!,fail.
 is_eof_codes(Codes):- Codes == [],!.
 is_eof_codes(Codes):- Codes = [Code],!,is_eof_codes(Code).
@@ -705,9 +731,9 @@ is_eof_codes(end_of_file).
 is_eof_codes(-1).
 
 file_eof(I,O):- I==end_of_file,!,O=[].
-file_eof --> [X],{ var(X), X = -1},!.
 file_eof --> [X],{ attvar(X), X = -1},!.
 file_eof --> [X],{ attvar(X), X = end_of_file},!.
+file_eof --> [X],{ var(X), X = -1},!.
 
 expr_with_text(Out,DCG,O,S,E):- 
    zalwayz(lazy_list_character_count(StartPos,S,M)),%integer(StartPos),
@@ -731,11 +757,11 @@ expr_with_text2(Out,DCG,O,StartPos,M,ME,EndPos,S,E):-
 
 %expr_with_text(Out,DCG,O,S,E):- 
 %   call(DCG,S,E) -> append(S,Some,E) -> get_some_with_comments(O,Some,Out,S,E),!.
-get_some_with_comments(O,_,O,_,_):- compound(O),functor(O,'$COMMENT',_),!.
+get_some_with_comments(O,_,O,_,_):- compound(O),compound_name_arity(O,'$COMMENT',_),!.
 get_some_with_comments(O,Txt,with_text(O,Str),S,_E):-append(Txt,_,S),!,text_to_string(Txt,Str).
 
 
-dcg_peek(Grammar,List,List):- (var(Grammar)->((N=2;N=1;between(3,20,N)),length(Grammar,N)); true),phrase(Grammar,List,_),!.
+dcg_peek_meta(Grammar,List,List):- (var(Grammar)->((N=2;N=1;between(3,20,N)),length(Grammar,N)); true),phrase(Grammar,List,_),!.
 
 
 
@@ -743,6 +769,7 @@ dcg_peek(Grammar,List,List):- (var(Grammar)->((N=2;N=1;between(3,20,N)),length(G
 eoln --> [C],!, {nonvar(C),charvar(C),eoln(C)},!.
 eoln(10).
 eoln(13).
+eoln --> \+ dcg_peek_meta([_]).
 
 parse_meta_term(Pred, S, Expr) :- is_stream(S),!, parse_meta_stream(Pred, S,Expr).
 parse_meta_term(Pred, string(String), Expr) :- !,parse_meta_ascii(Pred, String, Expr).

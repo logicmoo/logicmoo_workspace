@@ -11,7 +11,6 @@
 
 % :-module(parser_ape,[]).
 
-
 % ==============================================================================
 :- use_module(library(logicmoo_nlu/parser_sharing)).
 :- shared_parser_data(talkdb:talk_db/3).
@@ -20,6 +19,8 @@
    assertz(user:file_search_path(ape,Dir)).
 :- absolute_file_name(logicmoo_nlu_ext('ape/prolog'),Dir,[file_type(directory)]),
    asserta(user:file_search_path(ape,Dir)).
+
+
 
 
 %warning(F,A):- sformat(S,F,A), dmsg(warning(S)).
@@ -84,5 +85,16 @@
 :- reexport(ape('utils/xmlterm_to_xmlatom')).
 
 :- reexport(ape('utils/serialize_term')).
+
+
+% See T:\opt\logicmoo_workspace\packs_sys\logicmoo_nlu\ext\ape\examples\output_tests.pl
+% See T:/opt/logicmoo_workspace/packs_sys/logicmoo_nlu/ext/ape/tests/acetexts.nldata
+:- ensure_loaded(ape('tests/acetexts')).
+% See T:/opt/logicmoo_workspace/packs_sys/logicmoo_nlu/ext/ape/tests/test_owlswrl.pl
+:- ensure_loaded(ape('tests/test_owlswrl')).
+
+
+:- ensure_loaded(ape('../AceRules/engine/run_acerules')).
+:- ensure_loaded(ape('../AceRules/engine/run_testcases')).
 
 %:- reexport(ape('utils/owlswrl/get_owl_output')).

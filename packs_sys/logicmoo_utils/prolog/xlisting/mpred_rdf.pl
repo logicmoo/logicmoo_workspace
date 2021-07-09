@@ -443,8 +443,7 @@ rdf_assert_ignored(DB):-t_l:rdf_asserting(_,DB),!.
 rdf_assert_ignored(':-'(_)).
 rdf_assert_ignored(G):-not(compound(atom(G))),!.
 rdf_assert_ignored(_):-flag(rdf_assert_hook_max,W,W),W>4000,!.
-rdf_assert_ignored(spft(_,_,_)).
-rdf_assert_ignored(spft(_,_,_,_)).
+rdf_assert_ignored('$spft'(_,_,_,_)).
 rdf_assert_ignored(support2(_,_,_)).
 rdf_assert_ignored(support3(_,_,_)).
 rdf_assert_ignored(isa(tCol,tCol)).

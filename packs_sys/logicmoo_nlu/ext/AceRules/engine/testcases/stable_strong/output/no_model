@@ -1,12 +1,1 @@
-ERROR: Invalid ACE text:
-The word "buyer" is unknown.
-The word "buyer" is unknown.
-The word "external" is unknown.
-The word "employee" is unknown.
-The word "worker" is unknown; did you mean "worked"?
-The word "employee" is unknown.
-The word "worker" is unknown; did you mean "worked"?
-The word "wage-earner" is unknown.
-The word "wage-earner" is unknown.
-"Every customer is a <> buyer.": This is the first sentence that was not ACE. The sign <> indicates the position where parsing failed.
-
+ERROR: Program has no answer.

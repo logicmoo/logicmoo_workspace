@@ -1,7 +1,55 @@
-ERROR: Invalid ACE text:
-The word "catholic" is unknown.
-The word "catholic" is unknown.
-The word "religious" is unknown.
-The word "religious" is unknown.
-"Mary is a <> catholic.": This is the first sentence that was not ACE. The sign <> indicates the position where parsing failed.
+
+INPUT TEXT:
+If there is someone X and it is not provable that X is a n:criminal_x then X is not a criminal.
+Every n:criminal_x is a criminal.
+Mary is a n:criminal_x.
+Mary is a catholic.
+Every catholic is religious.
+Nobody who is religious is a n:criminal_x.
+John waits.
+Bill is a n:criminal_x.
+
+RULES:
+-group([object(A,criminal,countable,na,eq,1)]) <- [object(A,B,C,D,E,F), ~group([object(A,criminal_x,countable,na,eq,1)])].
+-group([object(A,criminal_x,countable,na,eq,1)]) <- [group([property(A,religious,pos)]), object(A,B,C,D,E,F)].
+group([property(A,religious,pos)]) <- [object(A,catholic,countable,na,eq,1)].
+group([object(A,criminal,countable,na,eq,1)]) <- [group([object(A,criminal_x,countable,na,eq,1)])].
+group([object(named('Bill'),criminal_x,countable,na,eq,1)]).
+group([object(named('Mary'),criminal_x,countable,na,eq,1)]).
+pred_mod(wait,named('John'),[]).
+object(named('Bill'),'Bill',named,na,eq,1).
+object(named('John'),'John',named,na,eq,1).
+object(named('Mary'),'Mary',named,na,eq,1).
+object(named('Mary'),catholic,countable,na,eq,1).
+
+SIMPLE RULES:
+-criminal(A) <- [something(A), ~criminal_x(A)].
+-criminal_x(A) <- [religious(A), something(A)].
+religious(A) <- [catholic(A)].
+criminal(A) <- [criminal_x(A)].
+criminal_x(named('Bill')).
+criminal_x(named('Mary')).
+wait(named('John'),[]).
+catholic(named('Mary')).
+
+ANSWERSET #1:
+-group([object(named('John'),criminal,countable,na,eq,1)]).
+-group([object(named('Mary'),criminal,countable,na,eq,1)]).
+group([property(named('Mary'),religious,pos)]).
+group([object(named('Bill'),criminal,countable,na,eq,1)]).
+group([object(named('Bill'),criminal_x,countable,na,eq,1)]).
+pred_mod(wait,named('John'),[]).
+object(named('Bill'),'Bill',named,na,eq,1).
+object(named('John'),'John',named,na,eq,1).
+object(named('Mary'),'Mary',named,na,eq,1).
+object(named('Mary'),catholic,countable,na,eq,1).
+
+ANSWERTEXT #1:
+Mary is religious.
+Mary is a catholic.
+Bill is a n:criminal_x .
+Bill is a criminal.
+John waits.
+It is false that John is a criminal.
+It is false that Mary is a criminal.
 

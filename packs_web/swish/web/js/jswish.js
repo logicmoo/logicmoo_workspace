@@ -80,6 +80,8 @@ define(["jquery",
   preferences.setDefault("preserve-state", false);
   preferences.setInform("preserve-state", ".unloadable");
 
+  window.setupPanesOnce = false;
+
   (function($) {
     var pluginName = 'swish';
 
@@ -192,10 +194,6 @@ define(["jquery",
           $("body").swish('populateExamples', navbar, dropdown);
         },
 
-        "PFC": function(navbar, dropdown) {
-          $("body").swish('populateExtendedExamples', navbar, dropdown,
-            config.http.locations.swish_extended_examples + "/pfc");
-        },
         "Logicmoo": function(navbar, dropdown) {
           $("body").swish('populateExtendedExamples', navbar, dropdown,
             config.http.locations.swish_extended_examples + "/logicmoo");
@@ -208,7 +206,10 @@ define(["jquery",
           $("body").swish('populateExtendedExamples', navbar, dropdown,
             config.http.locations.swish_extended_examples + "/lps_corner");
         },
-
+        "PFC": function(navbar, dropdown) {
+          $("body").swish('populateExtendedExamples', navbar, dropdown,
+            config.http.locations.swish_extended_examples + "/pfc");
+        },
         "Aleph": function(navbar, dropdown) {
           $("body").swish('populateExtendedExamples', navbar, dropdown,
             config.http.locations.swish_extended_examples + "/aleph");
@@ -303,13 +304,16 @@ define(["jquery",
        * telling this is a limited version.
        */
       _init: function(options) {
+
+        if(!window.setupPanesOnce) {		
         swishLogo();
         setupModal();
         setupPanes();
         setupResize();
         setupUnload();
-        aboutLink();
+        // aboutLink();
         // $("#search").search();
+		}
 
         options = options || {};
         this.addClass("swish");
@@ -389,6 +393,10 @@ define(["jquery",
        * the state to the browser local store.
        */
       preserve_state: function() {
+
+	    var swish = this;
+		if(swish.option == undefined) return false;
+
         if (swish.option.preserve_state == false)
           return false;
         if (preferences.getVal("preserve-state") == false)
@@ -533,6 +541,7 @@ define(["jquery",
         if (existing && existing.storage('expose', "Already open"))
           return this; /* FIXME: go to line */
 
+		//debugger;
         $.ajax({
           url: options.url,
           type: "GET",
@@ -658,18 +667,22 @@ define(["jquery",
               var ex = data[i];
               var title;
               var options;
-              if (ex.type == "group") {
+			  
+              if (ex.type == "group" || ex.type == "submenu") {
+				  //debugger;
                 title = ex.title || ex.file || ex.href;
                 options = {};
                 options.action = null;
                 options.type = "submenu";
                 options.items = ["a", "b", "c"];
-                options.typeIcon = "json";
+				if(ex.items !== undefined) {
+				   options.items = ex.items;
+				}
+                options.typeIcon = "folder";
                 $("#navbar").navbar('appendDropdown', dropdown, title, options);
                 continue;
                 /*
-                <li>
-                  <a class="trigger left-caret"><span class="dropdown-icon glyphicon glyphicon-paperclip"></span>Open recent</a>
+                <li><a class="trigger left-caret"><span class="dropdown-icon glyphicon glyphicon-paperclip"></span>Open recent</a>
                   <ul class="dropdown-menu sub-menu" style="display: block;">
                       <li><a><span class="dropdown-icon type-icon swinb"></span>Hangout.swinb</a></li>
                       <li><a><span class="dropdown-icon type-icon pl"></span>fooo.pl</a></li>
@@ -694,19 +707,21 @@ define(["jquery",
                   continue;
                   */
                 } else {
+				   // debugger;
                   title = ex.title;
                   options = that.swish('openExampleFunction', ex);
                   if (name)
                     options.typeIcon = name.split('.').pop();
                 }
               }
+			  if(ex.typeIcon !== undefined) {
+				 options.typeIcon = ex.typeIcon;
+			  }
               $("#navbar").navbar('extendDropdown', dropdown, title, options);
-
-
             }
           },
           error: function(jqXHR1) {
-            // modal.ajaxError(jqXHR1);
+             modal.ajaxError(jqXHR1);
           }
         });
         return this;
@@ -1013,6 +1028,7 @@ define(["jquery",
      */
     function swishLogo() {
       $(".swish-logo")
+ /*
         .append($.el.b($.el.span({
             style: "color:darkblue"
           }, "LOGIC"),
@@ -1037,6 +1053,7 @@ define(["jquery",
           $.el.span({
             style: "color:maroon"
           }, " + PFC")))
+*/
         .css("margin-left", "30px")
         .css("font-size", "24px")
         .addClass("navbar-brand");
@@ -1069,6 +1086,7 @@ define(["jquery",
      * Setup the panes and allow for resizing them
      */
     function setupPanes() {
+      window.setupPanesOnce = true;
       $(".tile").tile();
       $(window).resize(function() {
         $(".tile").tile('resize');

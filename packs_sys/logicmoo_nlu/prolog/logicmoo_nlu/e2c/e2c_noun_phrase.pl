@@ -3,7 +3,7 @@
 % =================================================================
 
 :- ensure_loaded(e2c_quantifiers).
-
+:- ensure_loaded(library(body_reordering/logicmoo_util_body_reorder)).
 % what the product is
 noun_phrase9(SO, X, LF, Out) --> theText1(what), noun_phrase(SO, Y, LF, LF0),
   theText1(is), conjoin_lf(LF0 , what_is(Y, X), Out).
@@ -12,7 +12,9 @@ noun_phrase9(_SO, X, LF, exist(X, LF & iza(X, 'tType'))) --> theText1([a, certai
 
 :- decl_is_dcg(noun_phrase(_SO, _X, _LF, _LFOut)).
 
+noun_phrase(_SO, X, LF, LFOut) --> theTextW2(_Text,L),{member(phrase('NP'),L),member(equals(Root),L),!,conjoin_lf(LF , equalsVar(X,Root), LFOut)}.
 noun_phrase(_SO, X, LF, LFOut) --> {sub_compound(iza(V, What), LF), V==X, nonvar(What)}, parse_for(What, X, LF, LFOut).
+
 noun_phrase(SO, X, LF, LFOut) -->
    ignore_quant(LF),
    noun_phrase0(SO, X, LF, LFOut),
@@ -29,14 +31,14 @@ noun_phrase0(SO, X, LF, LFOut) -->
 
 % "her friend" liked "his friend"
 noun_phrase1(SO, X, LF0, LFOut) -->
-  theText1(Her), {nl_call(poss_pron_db, Her, Fem, Pers, SgOrpl)},
-  dcg_when([_], noun_phrase1(obj(_K), X, LF0, LF1)),
-  add_traits(Y, [posessedBy(X, Y), gender(Fem), person(Pers), v_arg(SO), SgOrpl], LF1, LFOut).
+  theText1(Her), {nl_call(poss_pron_lex, Her, Fem, Pers, SgOrpl)},
+  dcg_when(theText1(_), noun_phrase1(obj(_K), X, LF0, LF1)),
+  add_traits(Y, [owner(X, Y), gender(Fem), person(Pers), v_arg(SO), SgOrpl], LF1, LFOut).
 
 % happy friends
 % evil bush
 noun_phrase1(SO, X, LF, LFOut) -->
-    dcg_when([_, _],
+    dcg_when((theText1(_),theText1(_)),
       dcg_and(dcg_thru_2args(noun_pre_mod(SO, X), LF, PreProps), [_|_])),
     % {PreProps \== LF}, !,
     noun_phrase1(SO, X, PreProps, LFOut).
@@ -50,13 +52,13 @@ noun_phrase2(SO, X, LF, LFOut) -->
 
 % "hers" liked "hers"
 noun_phrase2(SO, X, LF0, LFOut) -->
-  theText1(Hers), {atom_concat(Her, 's', Hers), nl_call(poss_pron_db, Her, Fem, Pers, SgOrpl)},
-  add_traits(Y, [posessedBy(X, Y), gender(Fem), person(Pers), v_arg(SO), SgOrpl], LF0, LFOut), nvd(Hers, X).
+  theText1(Hers), {atom_concat(Her, 's', Hers), nl_call(poss_pron_lex, Her, Fem, Pers, SgOrpl)},
+  add_traits(Y, [owner(X, Y), gender(Fem), person(Pers), v_arg(SO), SgOrpl], LF0, LFOut), nvd(Hers, X).
 
 % "his" liked "his"
 noun_phrase2(SO, X, LF0, LFOut) -->
-  theText1(His), {nl_call(poss_pron_db, His, Gender, Pers, SgOrpl)},
-  add_traits(Y, [posessedBy(X, Y), gender(Gender), person(Pers), v_arg(SO), SgOrpl], LF0, LFOut), nvd(His, X).
+  theText1(His), {nl_call(poss_pron_lex, His, Gender, Pers, SgOrpl)},
+  add_traits(Y, [owner(X, Y), gender(Gender), person(Pers), v_arg(SO), SgOrpl], LF0, LFOut), nvd(His, X).
 
 % Fred
 noun_phrase2(_SO, X, LF, LF) --> proper_noun(X).
@@ -83,7 +85,7 @@ adjective1(X, MProps) --> named_var_match(contains('ADJ'), Var, iza(X, Var), MPr
 adjective1(X, MProps)  -->  {nop( \+ dcg_peek(verb1(_V)))}, theText1(Adj), {nop(Adj \== liked), adj_lf(X, Adj, MProps)}.
 
  adj_lf(X, Adj, ISA) :-
-   ((   (parser_chat80:adj_db( Adj, _), RAdj=Adj);
+   ((   (if_defined(parser_chat80:adj_lex( Adj, _)), RAdj=Adj);
          clex_iface:clex_adj(Adj, RAdj, _);
          talkdb:talk_db(_, RAdj, Adj);
         (talkdb:talk_db(adj, Adj), RAdj=Adj))),
@@ -99,7 +101,7 @@ near_noun_mod(_SO, X, LF, Out) --> theText1([hapilly, maried]), conjoin_lf(LF , 
 % "of London"
 noun_post_mod(SO, X, LF, Out) --> theText1(of), noun_phrase(SO, Y, LF, LF0), conjoin_lf(LF0, of(X, Y), Out).
 % "owned by me"
-noun_post_mod(SO, X, LF, Out) --> theText1([owned, by]), noun_phrase(SO, Y, LF & posessedBy(X, Y), Out).
+noun_post_mod(SO, X, LF, Out) --> theText1([owned, by]), noun_phrase(SO, Y, LF & owner(X, Y), Out).
 noun_post_mod(SO, X, LF, Out)  --> prepositional_phrase(SO, X, _Frame, LF, Out).
 noun_post_mod(SO, X, LF, Out)  --> rel_clause(SO, X, LF, Out).
 noun_post_mod(_SO, _X, LF, LF)  --> theText1(each);theText1(all).
@@ -115,7 +117,8 @@ noun_post_mod(SO, X, LF, Out) --> near_noun_mod(SO, X, LF, Out).
 
 :-add_e2c("every human programmer happily writes a not a program.", tell).
 
-pos_or_neg(-) --> theText1(not), plt, !, optionalText1('a'), optionalText1('an').
+pos_or_neg(-) --> theText1(not), % plt, !,
+                                 optionalText1('a'), optionalText1('an').
 pos_or_neg(-) --> theText1(not).
 pos_or_neg(-) --> theText1(non), optionalText1('-').
 pos_or_neg(-) --> theText1(Neg), {atomic(Neg), neg_to_pos(Neg, Pos)}, !, dcg_push_w2(Pos).
@@ -160,7 +163,7 @@ whpron(X, LF, Out) --> theText1(WH), {whpron_dict(WH, Type)}, !, add_traits(X, [
   whpron_dict(Which, tThing):- talkdb:talk_db(pronoun, Which), atom_concat('w', _, Which).
 
 
-% pers_pron_db
+% pers_pron_lex
 %pronoun(_SO, X, _LF, _Out) --> determiner(X, _), !, {fail}.
 
 pronoun(SO, X, LF, Out) --> theText1(noone), dcg_push_w2(nobody), !, pronoun(SO, X, LF, Out).
@@ -173,11 +176,11 @@ pronoun(SO, X, LF, Out) --> theText1(WH), {WH=him;WH=he}, !, add_traits(X, [pron
 
 %pronoun(SO, X, LF, Out) --> theText1(one), dcg_push_w2(someone), !, pronoun(SO, X, LF, Out).
 
-pronoun(SO, X, LF, Out) --> theText1(Nobody), {nl_call(quantifier_pron_db, Nobody, No, Body), pronoun_ok(_Subj, SO)},
+pronoun(SO, X, LF, Out) --> theText1(Nobody), {nl_call(quantifier_pron_lex, Nobody, No, Body), pronoun_ok(_Subj, SO)},
  {pronoun_var(Body, VarFn, X)},
   add_traits(X, [pronounQuantFn(Nobody), quant(No), varnamedFn(VarFn), Body], LF, Out), !.
 
-pronoun(SO, X, LF, Out) --> theText1(She), {nl_call(pers_pron_db, She, Fem, Third, Sing, Subj), nop(pronoun_ok(Subj, SO))},
+pronoun(SO, X, LF, Out) --> theText1(She), {nl_call(pers_pron_lex, She, Fem, Third, Sing, Subj), nop(pronoun_ok(Subj, SO))},
  {pronoun_var(She, VarFn, X)},
   add_traits(X, [pronounPersonalFn(She), gender(Fem), person(Third), varnamedFn(VarFn), Sing, v_arg(Subj)], LF, Out), !.
 
@@ -240,7 +243,7 @@ proper_noun(Entity) --> quietly((w2txt(PN), {pn_lf(PN, Entity)})).
    was_propercase(Name):- atomic(Name), atom_length(Name, L), L>1, toPropercase(Name, PC), !, PC==Name.
 
     pn_dict(Name):- was_propercase(Name), !.
-    pn_dict(Name):- parser_chat80:name_template_db(Name, _).
+    pn_dict(Name):- parser_chat80:name_template_LF(Name, _).
 
 
     %pn_dict(Name):- atom(Name), downcase_atom(Name, Down),
@@ -267,7 +270,7 @@ proper_noun(Entity) --> quietly((w2txt(PN), {pn_lf(PN, Entity)})).
 % person/unperson
 noun(SO, X, LF) --> maybe_negated_dcg(noun1(SO, X), LF).
 noun(SO, X, LF) --> pronoun(SO, X, true, LF).
-noun(_SO, X, LF) --> named_var_match(len(1), X, true, LF).
+ohnun(_SO, X, LF) --> named_var_match(len(1), X, true, LF).
 
 noun1(SO, X, LF) --> theText1(N), {N\==are, noun_lf(SO, X, N, LF)}, nvd(N, X).
 % noun1(SO, X, LF) --> named_var_match(Sub, SO, X, true, LF).
@@ -291,6 +294,7 @@ noun1(SO, X, LF) --> theText1(N), {N\==are, noun_lf(SO, X, N, LF)}, nvd(N, X).
 % =================================================================
 named_var_match(Sub, X, LF, Out) --> w2txt(?), w2txt(VarName), {sub_var_match(Sub, VarName, _VarFn, X, LF, Out)}, !.
 named_var_match(Sub, X, LF, Out) --> w2txt(QVAR), {atom_concat('?', VarName, QVAR), sub_var_match(Sub, VarName, _VarFn, X, LF, Out)}, !.
+named_var_match(Sub, X, LF, Out) --> w2txt(QVAR), {atom_concat('varref', VarName, QVAR), sub_var_match(Sub, VarName, _VarFn, X, LF, Out)}, !.
 
 %var_match(pronoun(_X), VarName):- !, pronoun_to_var(VarName, _).
 var_match(len(X), VarName):- !, atom_length(VarName, Len), Len==X.
@@ -327,5 +331,5 @@ pronoun_to_var(they, 'Them').
 pronoun_to_var(PN, VarFn):- talkdb:talk_db(personal, PN), toPropercase(PN, VarFn).
 pronoun_to_var(PN, VarFn):- reflexive_pronoun(PN, _, _), toPropercase(PN, VarFn).
 pronoun_to_var(PN, VarFn):- reorder_if_var(PN, atom_concat(PN, 'self', Self), reflexive_pronoun(Use, Self, _)), toPropercase(Use, VarFn).
-pronoun_to_var(PN, VarFn):- nl_call(quantifier_pron_db, PN, No, Body), atom_concat(No, Body, VarName), toPropercase(VarName, VarFn).
+pronoun_to_var(PN, VarFn):- nl_call(quantifier_pron_lex, PN, No, Body), atom_concat(No, Body, VarName), toPropercase(VarName, VarFn).
 

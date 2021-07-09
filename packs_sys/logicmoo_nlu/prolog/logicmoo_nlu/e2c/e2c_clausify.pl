@@ -16,7 +16,7 @@ into_split(np,'').
 
 into_args80('Event',_,A,Out):- atom(A),!, must(to_evt_name(A,Out)).
 into_args80(_Mode,_X, A, wazVar(A)):- var(A),!.
-into_args80(_Mode, X,quant(same,nb(N)),countOf(X,same,N)):-!.
+into_args80(_Mode, X,quant(same,(N)),countOf(X,same,N)):-!.
 into_args80( Mode,_X,A,Out):- atom(A),downcase_atom(A,A), toPropercase(A,APC),atom_concat(APC,Mode,Out),!.
 into_args80(_,_X,A,A).
 
@@ -30,13 +30,14 @@ is_captitalized(A):-any_to_string(A,S),name(S,[N,_]), code_type(N,to_lower(L)),!
 e2c_clausify(C, F):- e2c_clausify(C, F, _), !.
 
 % Vars
-e2c_clausify(A,A, []):- structureless(A),!.
+e2c_clausify(A, A, []):- structureless(A),!.
 % Universals
 e2c_clausify( q(all, X, F0), F, [X|V]) :- !, e2c_clausify(F0, F, V).
 % Implications
 e2c_clausify((A0 => C0), (A => C), V) :- !, clausify_antecedent(A0, A, V)-> e2c_clausify(C0, C).
 % Conjunctions
-e2c_clausify(      A0C0,    ACOut, []) :- compound(A0C0), functor(A0C0,CONJ,_), is_junct(CONJ,NCONJ), 
+e2c_clausify(      A0C0,    ACOut, []) :- 
+  compound(A0C0), functor(A0C0,CONJ,_), is_junct(CONJ,NCONJ), 
   show_failure(pred_juncts_to_list(CONJ,A0C0,List)), 
   must(filter_lits(NCONJ,List,ListF)),
   must_maplist(e2c_clausify,ListF,NewList),
@@ -89,7 +90,7 @@ clausify_literal(L, L).
 % OLD
 make_time_info(Frame, Time, z(Writing, X, Y), Out):- nonvar(Writing), !,
   to_evt_name(Writing, ProperEvent),
-  make_time_info(Frame, Time, iza(Frame, ProperEvent) & doer(Frame, X) & objectOf(Frame, Y), Out).
+  make_time_info(Frame, Time, iza(Frame, ProperEvent) & doer(Frame, X) & patient(Frame, Y), Out).
 
 make_time_info(Frame, Time, z(Writing, X), Out):- nonvar(Writing), !,
   to_evt_name(Writing, ProperEvent),
@@ -132,7 +133,7 @@ expand_lf(_,_, quant(X, Type), true):-
 
 expand_lf(C,N, z(Writing, X, Y ), Out):- 
   to_evt_name(Writing, ProperEvent),
-  expand_lf(C,N, iza(Frame, ProperEvent) & doer(Frame, X) & objectOf(Frame, Y), Out).
+  expand_lf(C,N, iza(Frame, ProperEvent) & doer(Frame, X) & patient(Frame, Y), Out).
 
 expand_lf(C,N,A,B):- compound_name_arity(A,P,0),!,expand_lf(C,N,P,BP),compound_name_arguments(B,BP,0),!.
 

@@ -1,0 +1,124 @@
+# On Logicmoo's LAN: 
+#
+#  docker build -t logicmoo/logicmoo_workspace  --add-host=logicmoo.org:10.0.0.90 - < ./Dockerfile
+# 
+# Elsewhere
+#
+#  docker build -t logicmoo/logicmoo_workspace - < ./Dockerfile
+#
+FROM logicmoo/logicmoo_starter_image
+
+USER root
+LABEL maintainer = "logicmoo@gmail.com"
+
+# Set environment variables
+ARG LOGICMOO_EXTRAS
+ENV LANG en_US.UTF-8
+ENV LANGUAGE en_US.UTF-8
+ENV SHELL /bin/bash
+
+
+# who/where
+ENV LOGICMOO_USER prologmud_server
+ENV LOGICMOO_WS /opt/logicmoo_workspace
+ENV LOGICMOO_GAMES $LOGICMOO_WS/packs_sys/prologmud_samples/prolog/prologmud_sample_games
+
+RUN mkdir -p $LOGICMOO_WS
+
+MAINTAINER RUN if [ ! -z "$LOGICMOO_EXTRAS" ]; \
+ then \
+  curl -O http://mirror.umd.edu/eclipse/technology/epp/downloads/release/2020-06/R/eclipse-java-2020-06-R-linux-gtk-x86_64.tar.gz \
+  && tar -zxvf eclipse-java-2020-06-R-linux-gtk-x86_64.tar.gz -C /usr/ \
+  && ln -s /usr/eclipse/eclipse /usr/bin/eclipse \
+  && rm -f eclipse-java-2020-06-R-linux-gtk-x86_64.tar.gz \
+ fi
+
+
+EXPOSE 22
+EXPOSE 80
+EXPOSE 443
+EXPOSE 3020
+EXPOSE 3080
+EXPOSE 3100
+EXPOSE 3101
+EXPOSE 3102
+EXPOSE 3103
+EXPOSE 3123
+EXPOSE 3125
+EXPOSE 3200
+EXPOSE 3201
+EXPOSE 3202
+EXPOSE 3203
+EXPOSE 3223
+EXPOSE 3225
+EXPOSE 3334
+EXPOSE 3401
+EXPOSE 3501
+EXPOSE 3904
+EXPOSE 4000
+EXPOSE 4001
+EXPOSE 4002
+EXPOSE 4003
+EXPOSE 4004
+EXPOSE 4005
+EXPOSE 4006
+
+RUN mkdir -p $LOGICMOO_WS/../
+WORKDIR $LOGICMOO_WS/../
+ENV HOME /root
+# check out our repo
+RUN mkdir -p /opt \
+ && cd /opt ; pwd \
+ && git clone https://github.com/logicmoo/logicmoo_workspace $LOGICMOO_WS \
+ && cd $LOGICMOO_WS ; pwd \
+ && git config --local http.sslVerify false \
+ && git submodule update --init \
+ && git pull --recurse-submodules
+
+WORKDIR $LOGICMOO_WS
+# Pull in fixes
+MAINTAINER RUN cd $LOGICMOO_WS \
+ && git fetch origin \
+ && git pull --recurse-submodules
+
+# do local updates
+MAINTAINER RUN ./INSTALL.md
+
+# make our process running user
+RUN adduser --disabled-password --gecos "" --no-create-home $LOGICMOO_USER --home $LOGICMOO_GAMES \
+ ; chown -R $LOGICMOO_USER $LOGICMOO_GAMES
+
+# apache config
+RUN cp -a $LOGICMOO_WS/packs_web/logicmoo_webui/etc/* /etc \
+ && cp -a -n $LOGICMOO_WS/packs_web/logicmoo_webui/var/* /var \
+ # shell config \
+ ; cp -a -n $LOGICMOO_WS/etc/* /etc
+
+# install swi-prolog
+MAINTAINER RUN cd $LOGICMOO_WS && ./INSTALL-SWI.md
+
+# set up our runtime stuff (give root better shell stuff and our likely history commands)
+RUN cp -f $LOGICMOO_GAMES/.??*rc ~root/ \
+ && cp -n $LOGICMOO_GAMES/.bash* ~root/ \
+ && cp -n $LOGICMOO_GAMES/.profile* ~root/ \
+ && touch $LOGICMOO_GAMES/history_3804 \
+ && touch $LOGICMOO_GAMES/completion_3804 \
+ && touch $LOGICMOO_GAMES/nohup.out \
+ && chown $LOGICMOO_USER $LOGICMOO_GAMES/completion_* \
+ && chown $LOGICMOO_USER $LOGICMOO_GAMES/history_* \
+ && chown $LOGICMOO_USER $LOGICMOO_GAMES/nohup.out \
+ && chown -R $LOGICMOO_USER $LOGICMOO_WS/packs_sys/eggdrop/ \
+ && chown -R $LOGICMOO_USER $LOGICMOO_WS/packs_sys/logicmoo_nlu/ext/pldata/ \
+# in case of symlinking \
+ \
+ && chown -R $LOGICMOO_USER $LOGICMOO_WS/packs_sys/logicmoo_nlu/ext/pldata/plkb0988/ \
+ && chown -R $LOGICMOO_USER $LOGICMOO_WS/packs_sys/logicmoo_nlu/ext/pldata/plkb0988/src~/ \
+ && chown -R $LOGICMOO_USER $LOGICMOO_WS/packs_web/butterfly
+MAINTAINER WORKDIR $LOGICMOO_WS
+EXPOSE 57575
+MAINTAINER CMD ["butterfly", "--unsecure", "--host=0.0.0.0"]
+# ENTRYPOINT ["/opt/Logicmoo_docker/run.sh"]
+MAINTAINER ENTRYPOINT ["/opt/Logicmoo_docker/start.sh"]
+
+ENTRYPOINT /opt/logicmoo_workspace/StartLogicmoo.sh
+

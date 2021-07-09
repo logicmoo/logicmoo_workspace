@@ -37,6 +37,11 @@
 :- dynamic   user:file_search_path/2.
 :- multifile user:file_search_path/2.
 
+:- expects_dialect(swi).
+
+:- autoload(library(lists),[member/2,append/3]).
+:- autoload(library(debug),[debug/3]).
+
 
 :- if( \+ current_predicate(add_absolute_search_folder/2)).
 
@@ -236,8 +241,9 @@ dir_from(Rel,Y):-
 :- export(add_pack_path/1).
 add_pack_path(packs_xtra):-pack_property(logicmoo_nlu,_),!.
 add_pack_path(packs_sys):-pack_property(logicmoo_base,_),!.
-add_pack_path(Rel):- ( \+ atom(Rel) ; \+ is_absolute_file_name(Rel)),!,
-   dir_from(Rel,Y), Y\==Rel, add_pack_path(Y).
+add_pack_path(Rel):- ( \+ atom(Rel) ; \+ is_absolute_file_name(Rel)),
+   dir_from(Rel,Y), Y\==Rel, add_pack_path(Y), !.
+add_pack_path(Y):- (\+ atom(Y) ; \+ exists_directory(Y)),!.
 add_pack_path(Y):- attach_packs(Y),!.
 add_pack_path(Y):-  \+ user:file_search_path(pack,Y) ->asserta(user:file_search_path(pack,Y));true.
 
@@ -305,18 +311,24 @@ add_pack_path(Y):-  \+ user:file_search_path(pack,Y) ->asserta(user:file_search_
 % Enable History
 % ==============================================
 :- if(\+ current_predicate(setup_hist0/0)).
-:- if(exists_source(library(editline))). 
-:- if(\+ current_prolog_flag(windows,true)).
+:- if(current_prolog_flag(windows, false)).
+
+:- if(exists_source(library(editline))).
 :- use_module(library(editline)).
-:- endif.
 :- else.
 :- if(exists_source(library(readline))).
-:- use_module(library(readline)).
-:- endif.
+ :- use_module(library(readline)).
+:- else.
+ :- if(exists_source(library(editline))).
+  :- use_module(library(editline)).
+ :- endif.
 :- endif.
 setup_hist0:-  '$toplevel':setup_history.
-:- setup_hist0.
+:- initialize(setup_hist0, now).
 :- endif.
+:- endif.
+:- endif.
+
    
 
 % :- predicate_inheritance:kb_global(plunit:loading_unit/4).
@@ -362,13 +374,16 @@ app_argv(Atom):- \+ atom(Atom),!,current_app_argv(Atom).
 app_argv(Atom):- app_argv_off(Atom),!,fail.
 app_argv(Atom):- app_argv1(Atom),!.
 app_argv(Atom):- atom_concat(Pos,'=yes',Atom),!,app_argv1(Pos).
-app_argv(Atom):- app_argv1('--all'), atom_concat('--',_Stem,Atom), \+ atom_concat('--no',_Stem2,Atom),!.
+app_argv(Atom):- \+ is_argv_neg(Atom), app_argv1('--all'), atom_concat('--',_Stem,Atom).
 
 app_argv_ok(Atom):- app_argv1(Atom),!.
 app_argv_ok(Atom):- \+ app_argv_off(Atom).
 
+is_argv_neg(Neg):- atom_concat('--no',_,Neg).
+
+app_argv_off(Neg):- is_argv_neg(Neg),!,fail.
 app_argv_off(Atom):- atom_concat('--',Pos,Atom), atom_concat('--no',Pos,Neg),app_argv1(Neg),!.
-app_argv_off(Pos):- atom_concat('--no',Pos,Neg),app_argv1(Neg),!.
+app_argv_off(Pos):-  atom_concat('--no',Pos,Neg),app_argv1(Neg),!.
 app_argv_off(Pos):- atom_concat(Pos,'=no',Neg),app_argv1(Neg),!.
 
 app_argv1(Atom):- current_app_argv(List),member(Atom,List).
@@ -647,7 +662,7 @@ fav_debug:-
  %set_prolog_flag(debug,true),
  set_prolog_flag(debug_on_error,true),
  set_prolog_flag(debugger_show_context,true),
- set_prolog_flag(debugger_write_options,[quoted(true), portray(true), max_depth(10), attributes(write)]),
+ %set_prolog_flag(debugger_write_options,[quoted(true), portray(true), max_depth(10), attributes(write)]),
  set_prolog_flag(report_error,true),
  set_prolog_flag(runtime_debug, 3), % 2 = important but dont sacrifice other features for it
  set_prolog_flag(runtime_safety, 3),  % 3 = very important
@@ -660,6 +675,25 @@ fav_debug:-
 
 %setup_hist:-  '$toplevel':setup_history.
 %:- setup_hist.
+
+:- dynamic(goal_main_interval/2).
+:- meta_predicate(do_each_main_interval(:, +)).
+do_each_main_interval(Goal, Interval):- 
+ term_to_atom(Goal, Name),
+ retractall(goal_main_interval(Name,_)), 
+ asserta(goal_main_interval(Name,Interval)),
+ (((thread_property(T,alias(Name)),
+     thread_property(T,status(running))))
+    -> true ; 
+    thread_create(do_each_main_interval(Goal, Name, Interval),_ID,
+       [detached(true),alias(Name)])).
+
+do_each_main_interval(Goal, Name, Interval):- 
+  repeat,
+  thread_signal(main,call(Goal)),
+  (goal_main_interval(Name,DInterval)->true;DInterval=Interval),
+  sleep(DInterval),
+  fail.
 
 
 bt:-
@@ -967,6 +1001,7 @@ init_logicmoo :- ensure_loaded(library(logicmoo_repl)),init_why(during_booting,i
 :- use_module(library(prolog_history)).
 
 add_history(O):- is_list(O), member(E,O), compound(E), !, maplist(add_history,O).
+%add_history(O):- !, wdmsg(not_add_history(O)),!.
 add_history(O):- 
    ignore_not_not((nonvar(O),make_historial(O,A),add_history0(A))),!.
 
@@ -975,22 +1010,43 @@ ignore_not_not(G):- ignore((catch((( \+ \+ (ignore(once(G))))),_,fail))),!.
 make_historial(M:O,A):- (M==user),!, make_historial(O,A).
 make_historial(whenever_flag_permits(_,O),A):-!,make_historial(O,A).
 make_historial(add_history(O),A):-!,make_historial(O,A).
-make_historial(O,A):-ground(O),format(string(A), '~W', [O, [fullstop(true),portrayed(true),quoted(true),numbervars(true)]]),!.
+make_historial(O,A):-ground(O),
+  without_color(format(string(A), '~W', [O, [fullstop(true),portrayed(true),quoted(true),numbervars(true)]])),!.
 make_historial(O,A):-
     prolog_load_context(variable_names, Bindings),
-    format(string(A), '~W', [O, [fullstop(true),portray(true),quoted(true),variable_names(Bindings)]]).
+    without_color(format(string(A), '~W', [O, [fullstop(true),portray(true),quoted(true),variable_names(Bindings)]])).
 
 %:- multifile prolog:history/2.
+:- nb_setval('$without_color',[]).
+without_color(G):- locally_tl(print_mode(plain),with_b_setval('$without_color',true,G)).
+with_color(G):- with_b_setval('$without_color',false,G).
+with_b_setval(Name,Value,Goal):-
+ (nb_current(Name,Was)->true;Was=[]),
+ (Was == [] -> New=Value ; New=Value),
+  scce_orig(
+    b_setval(Name,New),
+    Goal,
+    b_setval(Name,Was)).
 
-add_history0(_):- notrace(app_argv('--nohistory')),!.
-add_history0(A):- current_input(S),
+
+default_history_file(File):- 
+   catch(prolog_history:dir_history_file('.', File), E,
+            (print_message(warning, E),fail)),!.
+ 
+:- set_prolog_flag(history, 5000).
+add_history0(_):- notrace(app_argv('--no-history')),!.
+add_history0(A):- 
+   prolog_history(enable), 
+   current_input(S),
    forall(retract('$history':'$history'(_,A)),true),
                   prolog:history(S,add(A)),
                   ignore((
                      stream_property(UI,file_no(0)),
                      ( \+ same_streams(S,UI)),
-                        ignore(retract('$history':'$history'(_,A))), 
-                        prolog:history(user_input,add(A)))),!.
+                        forall(retract('$history':'$history'(_,A)),true),
+                        prolog:history(user_input,add(A)))),!,
+   ignore((default_history_file(File),prolog:history(_, save(File)))).
+
 
 
 nb_linkval_current(N,V):-duplicate_term(V,VV),V=VV,nb_linkval(N,VV),nb_current(N,V).
@@ -1034,7 +1090,7 @@ fixup_exports_system:-   (prolog_load_context(source,SF)-> reexport(SF) ; true).
 
 %:- logicmoo_startup:use_module(library(option),[options/3]).
 
-logicmoo_base_port(Base):- getenv_or('LOGICMOO_BASE_PORT',Base,3000),!.
+logicmoo_base_port(Base):- getenv_or('LOGICMOO_BASE_PORT',Base,4000),!.
 logicmoo_base_port(Base):- app_argv1(One),\+ is_list(One),
    (atom(One)-> (atomic_list_concat([_,Atom],'port=',One),atom_number(Atom,Base20))),!,Base is Base20 -20,
    setenv('LOGICMOO_BASE_PORT',Base).

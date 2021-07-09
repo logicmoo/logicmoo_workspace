@@ -77,6 +77,11 @@ namespace NLP {
   inline bool operator ==(Word w1, Word w2){ return w1.id_ == w2.id_; }
   inline bool operator ==(Word w, None){ return (int)w.id_ == 0; }
   inline bool operator ==(Word w, Sentinel){ return (int)w.id_ == 1; }
+  inline bool operator ==(const std::string &str, Word w) {
+    (void)str;
+    (void)w;
+    return 0;
+  }
 
   inline bool operator !=(Word w1, Word w2){ return w1.id_ != w2.id_; }
   inline bool operator !=(Word w, None){ return (int)w.id_ != 0; }

@@ -1,0 +1,64 @@
+maxTime(7).
+
+initial_state([
+	location(d, 1),
+    location(c, 2),
+    location(b, 3),
+    location(a,4)]
+).
+
+ % Changed incr(N1, N2) to N2 is N1 + 1. Bug with incr.% Changed in_order to Y@<X. Bug with in_order.
+reactive_rule(
+	[holds(location(X, N1), T1), N2 is N1 +1,  holds(location(Y, N2), T1),Y@<X],
+	[happens(swapped(N1, N2), T2, T3)]  ).
+
+/*
+% Removed extra condition tc(T1 =<T2) from consequent of rule.
+reactive_rule(
+	[holds(location(X, N1), T1), incr(N1, N2),  holds(location(Y, N2), T1),in_order(Y, X)],
+	[happens(swapped(N1, N2), T2, T3)]  ).
+
+
+Works with Prolog =<. Sometimes doesn't work with tc.
+reactive_rule(
+	[holds(location(X, N1), T1), incr(N1, N2),  holds(location(Y, N2), T1), in_order(Y, X)],
+	[happens(swapped(N1, N2), T2, T3), tc(T1 =< T2)]  ).
+
+
+ l_timeless(in_order(X, Y), [X@<Y]).
+
+% l_timeless(in_order(c, d), []).
+% in_order(c, d).
+l_timeless(incr(X, X1), [X1 is X + 1]).
+*/
+
+% swapped may not work if the order of the two clauses below is
+% reversed. Perhaps for good reasons.
+
+
+l_events(
+	happens(swapped(N1, N2), T1, T2),
+	[holds(location(X, N1), T1), holds(location(Y, N2), T1), Y@<X, happens(swap(X, N1, Y, N2), T1, T2)]
+).
+
+l_events(
+	happens(swapped(N1, N2), T, T),
+	[holds(location(X, N1), T), holds(location(Y, N2), T), X@<Y]
+).
+
+initiated( happens(swap(X, N1, Y, N2), _T1, _T2), location(X, N2), []).
+initiated( happens(swap(X, N1, Y, N2), _T1, _T2), location(Y, N1), []).
+terminated( happens(swap(X, N1, Y, N2), _T1, _T2), location(X, N1), []).
+terminated( happens(swap(X ,N1, Y, N2), _T1, _T2), location(Y, N2), []).
+
+initiated( happens(insert(X, N), _T1, _T2), location(X, N), []).
+
+initiated( happens(replace(X, N), _T1, _T2), location(X, N), []).
+terminated( happens(replace(X, N), _T1, _T2), location(Y, N), []).
+
+d_pre([happens(swap(X, N1, Y, N2), T1, T2), happens(swap(Y, N2, Z, N3), T1, T2)]).
+
+fluent(location(_, _)).
+action(swap(_,_,_,_)).
+event(insert(_, _)).
+event(replace(_, _)).

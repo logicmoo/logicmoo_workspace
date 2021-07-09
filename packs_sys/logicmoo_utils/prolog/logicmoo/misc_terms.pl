@@ -362,15 +362,16 @@ pred1_juncts_to_list(Pred1,AB,ABL):-AB=..[F,A,B],
   pred1_juncts_to_list(Pred1,A,AL),
   pred1_juncts_to_list(Pred1,B,BL),
   append(AL,BL,ABL).
-pred1_juncts_to_list(Pred1,AB,AL):-AB=..[F,A],!,
-  call(Pred1,F),
+pred1_juncts_to_list(Pred1,AB,AL):-AB=..[F,A],
+  call(Pred1,F),!,
   pred1_juncts_to_list(Pred1,A,AL).
 
-pred1_juncts_to_list(Pred1,AB,ABL):-AB=..[F,A|ABB],call(Pred1,F),
+pred1_juncts_to_list(Pred1,AB,ABL):-AB=..[F,A|ABB],
+  call(Pred1,F),
   pred1_juncts_to_list(Pred1,A,AL),
   B=..[F|ABB],  
   pred1_juncts_to_list(Pred1,B,BL),
-  append(AL,BL,ABL).
+  append(AL,BL,ABL),!.
 pred1_juncts_to_list(_Pred1,Lit,[Lit]).
 
 %= 	 	 
@@ -405,13 +406,14 @@ list_to_conjuncts(I,O):-list_to_conjuncts((,),I,O).
 %
 % List Converted To Conjuncts.
 %
+list_to_conjuncts(_,V,V):- var(V),!.
+list_to_conjuncts(_,[],true):-!.
 list_to_conjuncts(_,V,V):-not(compound(V)),!.
-list_to_conjuncts(_,[],true).
-list_to_conjuncts(OP,[H],HH):-list_to_conjuncts(OP,H,HH).
+list_to_conjuncts(OP,[H],HH):-list_to_conjuncts(OP,H,HH),!.
 list_to_conjuncts(OP,[H|T],Body):-!,
     list_to_conjuncts(OP,H,HH),
     list_to_conjuncts(OP,T,TT),
-    conjoin_op(OP,HH,TT,Body).
+    conjoin_op(OP,HH,TT,Body),!.
 list_to_conjuncts(_,H,H).
 
 
@@ -653,6 +655,7 @@ apply_term(T,LST,HEAD):- (LST==[] -> HEAD= T ; (HEAD= T -> LST=[] )).
 %
 % Append Termlist.
 %
+append_termlist(M:Call,EList,Out):- nonvar(M),!,append_termlist(Call,EList,CallE),M:CallE=Out.
 append_termlist(Call,EList,CallE):- var(Call),must(is_list(EList)),!,must((append([t,Call],EList,ListE), CallE=..ListE)).
 append_termlist(Call,EList,CallE):-must(is_list(EList)),!,must((Call=..LeftSide, append(LeftSide,EList,ListE), CallE=..ListE)).
 

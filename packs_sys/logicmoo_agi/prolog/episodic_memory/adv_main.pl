@@ -19,6 +19,7 @@
 %:- use_module(library(pfc)).
 
 :- use_module(library(logicmoo_common)).
+:- '$set_source_module'(mu).
 
 
 /*
@@ -76,7 +77,7 @@ extra :- true. % Fuller, but questionable if needed yet.
 :- ensure_loaded(adv_log2eng).
 :- ensure_loaded(adv_eng2cmd).
 
-:- ensure_loaded(adv_lexicon).
+%:- ensure_loaded(adv_lexicon).
 
 :- ensure_loaded(adv_quasiquote).
 
@@ -97,21 +98,23 @@ adventure_reset :-
  must_mw1((
  test_ordering, !,
  init_logging, !,
- retractall(advstate_db(_)), !,
- istate(S0), !,
+ get_state_context(Before),
  player_format('=============================================~n', []),
  player_format('RESET STATE~n', []),
- player_format('=============================================~n', []),
- set_advstate(S0))), !.
+ clear_state_context(Before),
+ copy_prolog_sim(istate,Before),
+ player_format('=============================================~n', []))).
 
+adventure_ensure_inited :-  
+ set_state_context(advstate_db),
+ get_advstate(S0), \+ in_model(h(_,_,_,_), S0), 
+ !, adventure_reset.
+adventure_ensure_inited.
 
 adventure_init :-
- ((get_advstate(S0), S0\==[]) -> true; (adventure_reset, get_advstate(S0))),
- must_mw1((
- retractall(advstate_db(_)), !,
- set_advstate(S0),
- init_objects, !,
- get_advstate(S1))),
+ set_state_context(advstate_db),
+ adventure_ensure_inited, !,
+ get_advstate(S1),
    player_format('=============================================~n', []),
    player_format('INIT STATE~n', []),
    player_format('=============================================~n', []),
@@ -129,7 +132,7 @@ adventure:-
  player_format('=============================================~n', []),
  player_format('Welcome to Marty\'s Prolog Adventure Prototype~n', []),
  player_format('=============================================~n', []),
- setup_player_console,
+ setup_player_console,!,
  % start_missing_threads,
  mainloop,
  !.
@@ -167,7 +170,7 @@ my_ttyflush:-
    flush_output_s(current_error),
    !)).
 
-main_once:-
+each_pre_clean_up:-
   nop(( my_ttyflush,
    sleep(0.005),
    set_prolog_flag(gc, true),
@@ -176,7 +179,10 @@ main_once:-
    garbage_collect_clauses,
    garbage_collect,
    set_prolog_flag(gc, false),
-   my_ttyflush)),
+   my_ttyflush)).
+
+main_once:-
+   each_pre_clean_up,
    update_network_connections,
    get_live_agents(LiveAgents),
    my_ttyflush, !,
@@ -205,13 +211,13 @@ update_network_connections_in_mutex:-
  %create_new_unlocated('watch', Watch),
     %create_new_unlocated('bag', Bag),
     %create_new_unlocated('coins', Coins),
-     % h(worn_by, Watch, Agent),
-    %h(in, Bag, Coins),
-    %h(held_by, Bag, Agent),
+     % h(Spatially, worn_by, Watch, Agent),
+    %h(Spatially, in, Bag, Coins),
+    %h(Spatially, held_by, Bag, Agent),
 create_agent_conn(Agent, Named, Info):-
-  set_advstate(props(Agent,
+  update_running(props(Agent,
         [name(Named), inherit(telnet, t), inherit(humanoid, t), inherit(player, t), info(Info)])),
-  set_advstate(h(in, Agent, kitchen)),
+  update_running(h(spatial, in, Agent, kitchen)),
   get_advstate(S0),
   mu_create_object(Agent, S0, S9),
   set_advstate(S9).
@@ -221,7 +227,7 @@ create_agent_conn(Agent, Named, Info):-
 telnet_decide_action(Agent, Mem0, Mem0):-
  % If actions are queued, no further thinking required.
  thought_check(Agent, intent(Agent, [Action|_]), Mem0),
- (declared_advstate(h(in, Agent, Here))->true;Here=somewhere),
+ agent_somewhere(Agent,Here),
  dbug(telnet, '~w @ ~w telnet: Already about to: ~w~n', [Agent, Here, Action]).
 
 telnet_decide_action(Agent, Mem0, Mem1) :-
@@ -235,11 +241,11 @@ telnet_decide_action(Agent, Mem, Mem) :-
  fail.
 
 
+:- use_module(library(instant_prolog_docs),[autodoc_file/1]).
 %:- if(\+ prolog_load_context(reloading, t)).
-%:- initialization(adventure, main).
+:- autodoc_file(library(episodic_memory/'*.pl')).
 %:- endif.
 
-% TODO: try converting this to a true "repeat" loop.
 /*main_loop(State) :-
  declared(quit, State), !.
 main_loop(State) :-
@@ -264,4 +270,4 @@ main_loop(_) :-
  dbug(general, 'main_loop() FAILED!~n').
 */
 
-
+:- fixup_exports.

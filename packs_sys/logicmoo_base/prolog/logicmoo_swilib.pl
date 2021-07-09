@@ -16,6 +16,28 @@
 % ===================================================================
 */
 
+:- module(logicmoo_swilib,[]).
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% MISC UTILS
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+:- user:use_module(library(logicmoo_common)).
+
+start_x_ide:- current_prolog_flag(logicmoo_headless,true),!.
+start_x_ide:- 
+  quietly((prolog_ide(thread_monitor),prolog_ide(debug_monitor),
+   % prolog_ide(open_debug_status),
+   guitracer,
+   use_module(library(pce_prolog_xref)),
+   noguitracer)).
+
+:- add_history(start_x_ide).
+
+:- fixup_exports.
+
+end_of_file.
+
+
 :- module(logicmoo_swilib,[logicmoo_goal/0,logicmoo_run_goal/0,logicmoo_toplevel/0,add_history_ideas/0,start_x_ide/0]).
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -197,7 +219,7 @@ logicmoo_toplevel:- dmsg("logicmoo_toplevel"),
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % (X)WINDOWS (DE)BUGGERY
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-start_x_ide:- !.
+
 start_x_ide:- current_prolog_flag(logicmoo_headless,true),!.
 start_x_ide:- 
   quietly((prolog_ide(thread_monitor),prolog_ide(debug_monitor),

@@ -16,6 +16,7 @@
 % Main file.
 %
 */
+:- '$set_source_module'(mu).
 
 :- dynamic(mu_tmp:no_autostart/0).
 :- volatile(mu_tmp:no_autostart/0).
@@ -43,8 +44,13 @@ adv_server(Port) :-
    [ alias(Alias)
    ]).
 
+address_to_host(Peer,Host):- % exception(error(socket_error(host_not_found,_),_))
+  notrace(catch(tcp_host_to_address(Host, Peer),_,fail)),!.
+address_to_host(Peer,Term):- Peer=..List,atomic_list_concat(List,'-',Term),!.
+address_to_host(Term,Term):- !.
+
 peer_alias(Prefix, Peer, Host, Alias):-
- (tcp_host_to_address(Host, Peer);Host=Peer),
+ notrace(catch(address_to_host(Peer,Host),_,Peer=Host)),
  format(string(S), '~w@~w_', [Host, Prefix]),
  gensym(S, Alias), !.
 
@@ -87,6 +93,21 @@ setup_IO_props(InStream, OutStream):-
  set_stream(user_output, newline(dos)),
  set_stream(user_input, eof_action(eof_code)), !.
 
+
+copy_IO_props(InStream, OutStream):- 
+ stream_property(UserIn,file_no(0)),
+ copy_stream_props(UserIn,InStream),
+ stream_property(UserOut,file_no(1)),
+ copy_stream_props(UserOut,OutStream),!.
+
+copy_stream_props(From,To):-
+ forall(member(Prop,[tty,timeout,representation_errors,record_position,newline,locale,
+   eof_action,encoding,close_on_exec,close_on_abort,buffer_size,buffer]),
+   copy_stream_prop(From,Prop,To)).
+copy_stream_prop(From,Prop,To):- functor(SP,Prop,1),
+  ignore((stream_property(From,SP), notrace(catch(set_stream(To,SP),_,true)))).
+
+
 adv_serve_client(InStream, OutStream, Host, Peer, Alias) :-
  !,
  nodebug, set_prolog_flag(gui_tracer, false),
@@ -119,6 +140,8 @@ adventure_client_cleanp(Id, Alias, InStream, OutStream):-
  ignore(notice_agent_discon(Id, Alias, InStream, OutStream)),
  retractall(mu_global:console_io_player(_, OutStream, _)),
  retractall(mu_global:console_io_player(InStream, _, _)),
+ retractall(mu_global:wants_quit( Id, _, _)),
+ retractall(mu_global:wants_quit( _, _, _)), % might coause a bug later
  ignore_srv_catch(close(InStream)),
  ignore_srv_catch(close(OutStream)),
  ignore_srv_catch(thread_detach(Id)).
@@ -195,19 +218,25 @@ adventure_client_process(Id, Alias, InStream, OutStream, Host, Peer):-
  repeat,
  mu_global:console_io_player(InStream, OutStream, CurrentAgent),
  adv_tlnet_readloop(Id, InStream, OutStream, CurrentAgent),
- needs_logout_p(Id, InStream, CurrentAgent), !.
+ needs_logout_p(Id, InStream, CurrentAgent, Why),
+ wdmsg(needs_logout_p(Id, InStream, CurrentAgent, Why)), !.
+ 
 
-needs_logout_p(Id, InStream, _Agent):-
-  mu_global:wants_quit(Id, _, _);
-  mu_global:wants_quit(_, InStream, _).
-needs_logout_p(_, InStream, _Agent):-
+needs_logout_p(_, InStream, _Agent, no_input_stream):-
   \+ mu_global:console_io_player(InStream, _, _).
-needs_logout_p(_, InStream, Agent):-
-  mu_global:wants_quit(_, _, Agent),
-  \+ (( mu_global:console_io_player(InStream, _, Other), Other\==Agent)).
+needs_logout_p(_, InStream, Agent, agent_wants_quit(Id, IS, Agent)):-
+  mu_global:wants_quit(Id, IS, Agent),
+  \+ (( mu_global:console_io_player(InStream, _, Other), Other\==Agent)),
+  mu_global:wants_quit(Id, IS, Agent),!.
+needs_logout_p(Id, _InStream, _Agent, id_wants_quit(Id, IS, WasAgent)):- 
+  mu_global:wants_quit(Id, IS, WasAgent),!.
+needs_logout_p(_Id, InStream, _Agent, instream_wants_quit(WasId, InStream, WasAgent)):- 
+  mu_global:wants_quit(WasId, InStream, WasAgent),!.
+
 
 adv_tlnet_readloop(Id, InStream, _OutStream, Agent):-
- needs_logout_p(Id, InStream, Agent),
+ needs_logout_p(Id, InStream, Agent, Why),
+ wdmsg(Why),
  sleep(0.1), !.
 adv_tlnet_readloop(_Id, _InStream, OutStream, Agent):-
  tflush(OutStream),
@@ -231,11 +260,13 @@ adv_tlnet_words(Id, InStream, Agent, Words0):-
   adv_tlnet_words(Id, InStream, Agent, Words).
 adv_tlnet_words(Id, InStream, Agent, []):-
   adv_tlnet_words( Id, InStream, Agent, [wait]).
-adv_tlnet_words(Id, InStream, Agent, [quit]):-
+
+adv_tlnet_words(Id, InStream, Agent, [Quit]):- Quit == quit,
   adv_tlnet_words(Id, InStream, Agent, end_of_file).
-adv_tlnet_words(Id, InStream, Agent, end_of_file):-
+
+adv_tlnet_words(Id, InStream, Agent, end_of_file):- fail, 
   asserta(mu_global:wants_quit(Id, InStream, Agent)),
-  dbug(always, '~q~n', [mu_global:wants_quit(Id, InStream, Agent)]), !.
+  dbug(always, '~q~n', [end_of_file -> mu_global:wants_quit(Id, InStream, Agent)]), !.
 
 adv_tlnet_words(_Id, _InStream, _Agent, [prolog]):- !, prolog.
 adv_tlnet_words(Id, InStream, Agent, Words):-

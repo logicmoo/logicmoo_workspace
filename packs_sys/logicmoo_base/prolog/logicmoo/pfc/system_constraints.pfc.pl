@@ -1,7 +1,6 @@
 %:- module(system_constraints,[]).
 %:- set_module(class(development)).
 :- '$set_source_module'(baseKB).
-:- use_module(library(pfc)).
 
 /** <module> system_constraints
 % =============================================
@@ -36,6 +35,7 @@
 % Douglas Miles
 */
 
+:- expects_dialect(pfc).
 
 :- file_begin(pfc).
 
@@ -104,9 +104,11 @@ weak_test("Weak0","weAk2").
 
 %:- listing(weak_test/2).
 
+:- mpred_trace_exec.
 :- if(\+ current_predicate(mpred_test/1)).
 :- use_module(library(pfc_test)).
 :- endif.
+:- mpred_notrace_exec.
 
 :- if((current_prolog_flag(runtime_safety,D),D>2)).
 :- mpred_test((weak_test(weak1,"WeAK2")))->true;(writeln(mpred_test(weak_test(weak1,"WeAK2"))),break).

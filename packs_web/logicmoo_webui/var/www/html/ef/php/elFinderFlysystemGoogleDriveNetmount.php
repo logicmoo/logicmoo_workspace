@@ -60,7 +60,6 @@ class elFinderVolumeFlysystemGoogleDriveNetmount extends \Hypweb\elFinderFlysyst
      * Call from elFinder::netmout() before volume->mount()
      *
      * @param $options
-     *
      * @return Array
      * @author Naoki Sawada
      */
@@ -231,7 +230,6 @@ class elFinderVolumeFlysystemGoogleDriveNetmount extends \Hypweb\elFinderFlysyst
      *
      * @param $netVolumes
      * @param $key
-     *
      * @return bool
      * @internal param array $options
      */
@@ -255,7 +253,6 @@ class elFinderVolumeFlysystemGoogleDriveNetmount extends \Hypweb\elFinderFlysyst
      * false - otherwise
      *
      * @param array $opts
-     *
      * @return bool
      * @author Naoki Sawada
      */
@@ -307,7 +304,7 @@ class elFinderVolumeFlysystemGoogleDriveNetmount extends \Hypweb\elFinderFlysyst
         $opts['filesystem'] = $filesystem;
         $opts['separator'] = '/';
         $opts['checkSubfolders'] = true;
-        if (!isset($opts['alias'])) {
+        if (! isset($opts['alias'])) {
             $opts['alias'] = 'GoogleDrive';
         }
         
@@ -326,8 +323,7 @@ class elFinderVolumeFlysystemGoogleDriveNetmount extends \Hypweb\elFinderFlysyst
     /**
      * @inheritdoc
      */
-    protected function tmbname($stat)
-    {
+	protected function tmbname($stat) {
 		return $this->netMountKey.substr(substr($stat['hash'], strlen($this->id)), -38).$stat['ts'].'.png';
 	}
 

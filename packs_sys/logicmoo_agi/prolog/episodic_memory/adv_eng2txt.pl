@@ -1,5 +1,7 @@
 
 
+:- '$set_source_module'(mu).
+
 % Inform notation
 % 'c'  character)
 % "string" string
@@ -159,7 +161,7 @@ compile_eng(Context, DetWord, AThing) :-
  compile_eng(Context, [Det, Word], AThing), !.
 
 /*compile_eng(Context, Prop, Text):- \+ atomic(Prop),
- logic2eng(you, Prop, TextMid), !,
+ logic2english(you, Prop, TextMid), !,
  compile_eng(Context, ['\n'|TextMid], Text), !.
 */
 compile_eng(_Context, Prop, Prop).
@@ -235,7 +237,7 @@ insert_spaces([], []).
 
 make_atomic(_, Atom, Atom) :- atomic(Atom), !.
 make_atomic(Context, Some, Text):- is_list(Some),
-  maplist(make_atomic(Context), Some, Stuff), atomic_list_concat(Stuff, ' ', Text), !.
+  must_maplist(make_atomic(Context), Some, Stuff), atomic_list_concat(Stuff, ' ', Text), !.
 
 make_atomic(_Context, anglify(NewCtx, Some), Text):- !,
   logic2english(NewCtx, Some, Term),
@@ -251,7 +253,7 @@ make_atomic(Context, cap(Some), Text):- !,
 
 
 make_atomic(Context, Logic, Text):- fail, Logic =.. [F|Some],
-  maplist(logic2english(Context), Some, Stuff),
+  must_maplist(logic2english(Context), Some, Stuff),
   Term =.. [F|Stuff],
   term_to_atom(Term, Text), !.
 make_atomic(_, Term, Atom) :-  format(atom(Atom), '~p', [Term]), !.
@@ -280,7 +282,7 @@ compile_eng_txt(Context, Eng, Text):-
 compile_eng_txt_pt2(Context, EngIn, Text) :-
  assertion(nonvar(EngIn)),
  flatten([EngIn], Eng),
- maplist(compile_eng(Context), Eng, Compiled),
+ must_maplist(compile_eng(Context), Eng, Compiled),
  % Flatten any sub-lists.
  flatten([Compiled], FlatList),
  % Convert terms to atom-strings.

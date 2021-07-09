@@ -232,19 +232,28 @@ loop_check_term_frame(Call,KeyS,GoaL,SearchFrame,LoopCaught):-
  % set_prolog_flag(debug,true),
  set_prolog_flag(last_call_optimisation,false),
  % set_prolog_flag(gc,false),
+ !, 
+ (prolog_frame_attribute(SearchFrame, parent_goal, loop_check_term_frame(_,KeyS,GoaL,_,_)) 
+   -> LoopCaught ;  Call).
+
+
+%   (loop_check_term_frame_grovel(Call,KeyS,GoaL,SearchFrame,LoopCaught),true)),true.
+
+/*
+loop_check_term_frame(Call,KeyS,GoaL,SearchFrame,LoopCaught):- 
+ % set_prolog_flag(debug,true),
+ set_prolog_flag(last_call_optimisation,false),
+ % set_prolog_flag(gc,false),
  !,
-   (prolog_frame_attribute(SearchFrame,parent_goal,
-      loop_check_term_frame(_,KeyS,GoaL,_,_))
+   (prolog_frame_attribute(SearchFrame, parent_goal, loop_check_term_frame(_,KeyS,GoaL,_,_))
     -> (LoopCaught,true)
     ;  (loop_check_term_frame_grovel(Call,KeyS,GoaL,SearchFrame,LoopCaught),true)),true.
 
 loop_check_term_frame_grovel(Call,KeyS,GoaL,SearchFrame,LoopCaught):-  !,
-  ( notrace(parent_frame_goal_0(SearchFrame,
-      loop_check_term_frame_grovel(_,KeyS,GoaL,_,_)))
+  (  notrace(parent_frame_goal_0(SearchFrame, loop_check_term_frame_grovel(_,KeyS,GoaL,_,_)))
     -> (LoopCaught,true)
     ;  (Call,true)).
-
-
+*/
 
 is_parent_goal(G):- prolog_current_frame(F),is_parent_goal(F,G).
 % The user must ensure the checked parent goal is not removed from the stack due 

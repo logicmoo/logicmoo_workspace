@@ -1,0 +1,16 @@
+:- table p/2, q/1, r/1.
+
+p( X, Y ) :-  q( X ),  r( Y ).
+
+
+q( a ) :- p( X, Y ).
+
+q( b ).
+
+
+r( X ) :-  q( X ), r( X ).
+
+r( X ) :-  q( X ).
+
+
+?- p( X, Y ).  % expected:  p( b, b ),  p( a, b ),  p( b, a ),  p( a, a )

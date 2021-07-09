@@ -43,7 +43,7 @@
 
 :- op(200,fy,(-)).
 
-:- set_prolog_flag(verbose_load,true).
+%:- set_prolog_flag(verbose_load,true).
 
 
 
@@ -129,8 +129,8 @@ user:prolog_load_file(ModuleSpec, Options) :-
 % [Optionaly] Solve the Halting problem
 :-use_module(library(process)).
 % :-use_module(library(pce)).
-:- has_gui_debug -> true ; remove_pred(pce_principal,send,2).
-:- has_gui_debug -> true ; remove_pred(pce_principal,new,2).
+%:- has_gui_debug -> true ; remove_pred(pce_principal,send,2).
+%:- has_gui_debug -> true ; remove_pred(pce_principal,new,2).
 
 
 :- export(add_game_dir/2).
@@ -594,7 +594,7 @@ rescan_disk_files:-
 
 :- multifile(prolog:make_hook/2).
 :- dynamic(prolog:make_hook/2).
-prolog:make_hook(after, []):- rescan_disk_files.
+prolog:make_hook(after, []):- once(rescan_disk_files),fail.
 
 :- rescan_disk_files.
 

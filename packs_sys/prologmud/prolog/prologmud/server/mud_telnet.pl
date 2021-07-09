@@ -96,7 +96,7 @@ sanify_thread(ID):-
 % TELNET REPL + READER
 % ===========================================================
 start_mud_telnet :-  app_argv1('--nonet'),!.
-start_mud_telnet:-
+start_mud_telnet:- 
   logicmoo_base_port(Base),
   WebPort is Base, % + 1000,
   whenever(run_network,start_mud_telnet(WebPort)).
@@ -117,7 +117,9 @@ start_mud_telnet(Port):-
       start_tnet(login_and_run_debug,  Port+1  , "MUD Debug"),
       start_tnet(login_and_run_xhtml,  Port+2  , "MUDLET Telnet"),
       start_tnet(               repl,  Port+3  , "WAM-CL Telnet"),
-      start_tnet(             prolog,  Port+23 , "PROLOG Telnet"),
+      % Port+4 = srv_mu
+      % Port+23 = "screen -rx"
+      start_tnet(             prolog,  Port+25 , "PROLOG Telnet"),
       !.
 
 golorpish:- nodebugx(golorp).
@@ -366,7 +368,7 @@ prompt_read_telnet(In,Out,Prompt,Atom):-
       (IAtom==end_of_file -> (call(assert,lmcache:wants_logout(O)),Atom='quit') ; IAtom=Atom),!.
 
 prompt_read(In,Out,Prompt,Atom):-
-     with_output_to(Out,ansi_format([reset,hfg(white),bold],'~w',[Prompt])),flush_output(Out),
+     with_output_to(Out,color_format([reset,hfg(white),bold],'~w',[Prompt])),flush_output(Out),
      repeat,read_code_list_or_next_command_with_prefix(In,Atom),!.
 
 local_to_words_list(Atom,Words):-var(Atom),!,Words = Atom.
@@ -771,6 +773,7 @@ start_telnet :-
 :- all_source_file_predicates_are_transparent.
 :- fixup_exports.
 
+golorp_start :- !.
 golorp_start :- app_argv('--nogolorp'),!.
 golorp_start:- logicmoo_base_port(Port),
     ensure_loaded('/opt/logicmoo_workspace/packs_xtra/logicmoo_packages/prolog/golorp/load'),

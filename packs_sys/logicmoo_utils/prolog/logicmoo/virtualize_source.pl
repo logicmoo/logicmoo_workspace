@@ -527,7 +527,7 @@ virtualize_ereq(ttRelationType,1).
 
 
 
-virtualize_ereq(spft,3).
+virtualize_ereq('$spft',4).
 virtualize_ereq(==>,_).
 virtualize_ereq(<==>,_).
 virtualize_ereq((<--),2).

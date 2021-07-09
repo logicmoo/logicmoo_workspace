@@ -9,7 +9,7 @@ source <(curl -sS https://logicmoo.org/gitlab/logicmoo/logicmoo_workspace/-/raw/
 ```
 
 # Eggdrop (Unsupported)
-```bash
+# ```bash
 
 cd /opt/logicmoo_workspace#
 chmod 777 ~prologmud_server/.bash_history

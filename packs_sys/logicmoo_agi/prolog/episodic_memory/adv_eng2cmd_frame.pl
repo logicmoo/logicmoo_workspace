@@ -5,6 +5,7 @@
 :- discontiguous(verb_frame1/4).
 
 
+:- '$set_source_module'(mu).
 
 /*
    Take the sentence:
@@ -148,7 +149,9 @@ eng2flogic_test([some, love, we, gave, to, sally]).
 eng2flogic_test([to, sally, we, gave, some, love]).
 
 
-run_end2cmd_tests:- make,
+baseKB:feature_test:-test_eng2flogic.
+
+test_eng2flogic:- 
   forall(eng2flogic_test(English), eng2flogic(English)).
 
 
@@ -262,6 +265,7 @@ cont_parse_dataframe([FrameArg| FrameArgS], Text, Action, Frame):-
   cont_parse_dataframe(FrameArgS, Right, Action, Frame).
 
 
+:- op(700, fx, ('~')).
 
 % _Player_1 give sally love
 verb_frame1(Action, Give,
@@ -411,8 +415,8 @@ verb_frame1(Action, Put, % to-region, of-container
  [done_by(Action, Doer),
   cntrls(Doer, Instr), can_reach(Instr, Place),
   part_of(Place, Container),
-  or(h(How, Place, Container), h(How, Container, Place)),
-  post(h(How, Container, Object))]):- arg(_, v(put, place), Put).
+  or(h(spatial, How, Place, Container), h(spatial, How, Container, Place)),
+  post(h(spatial, How, Container, Object))]):- arg(_, v(put, place), Put).
 
 
 % %%%%%%%%%%%%%%
@@ -421,7 +425,7 @@ verb_frame1(Action, Put, % to-region, of-container
 /*
 reframed_call( Pred, Agent, [dig, ShapeHole],  act3('dig',Agent,[ ShapeHole, Where, Instr]), M) :- fail,
  in_agent_model(Agent, inst(Agent), M),
- in_agent_model(Agent, h(_, Agent, Where), M),
+ in_agent_model(Agent, h(spatial, _, Agent, Where), M),
  Instr=shovel.
 */
 

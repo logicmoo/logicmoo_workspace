@@ -1,0 +1,12 @@
+./*.*
+./rootfs/root
+./rootfs/usr
+./rootfs/usr/local
+#./rootfs/var
+#./rootfs/etc
+./rootfs/etc/letsencrypt
+#./rootfs/etc/apache2
+./rootfs/etc/profile.d
+./rootfs/etc/supervisor
+#./rootfs/etc/nginx
+

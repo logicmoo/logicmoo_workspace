@@ -1,0 +1,97 @@
+/*
+  LPS test results file generated on 2021-2-28 at 17:3:31
+  on Prolog swi(8,1,9,[]) for program file:
+  /Users/mc/git/lps_corner/examples/CLOUT_workshop/diningPhilosophers.pl_.P
+*/
+
+:-dynamic lps_test_result/3,lps_test_result_item/3,lps_test_action_ancestor/3,lps_test_options/1.
+
+% LPS options prior to the test:
+lps_test_options([dc]).
+
+% lps_test_result(Stage,Cycle,TestTerm)
+lps_test_result(fluents,0,5).
+lps_test_result(events,1,0).
+lps_test_result(fluents,1,5).
+lps_test_result(events,2,4).
+lps_test_result(fluents,2,1).
+lps_test_result(events,3,4).
+lps_test_result(composites,3,2).
+lps_test_result(fluents,3,5).
+lps_test_result(events,4,4).
+lps_test_result(fluents,4,1).
+lps_test_result(events,5,4).
+lps_test_result(composites,5,2).
+lps_test_result(fluents,5,5).
+lps_test_result(events,6,2).
+lps_test_result(fluents,6,3).
+lps_test_result(events,7,2).
+lps_test_result(composites,7,1).
+lps_test_result(fluents,7,5).
+% lps_test_result_item(Stage,Cycle,TestTerm)
+lps_test_result_item(fluents,0,available(fork1)).
+lps_test_result_item(fluents,0,available(fork2)).
+lps_test_result_item(fluents,0,available(fork3)).
+lps_test_result_item(fluents,0,available(fork4)).
+lps_test_result_item(fluents,0,available(fork5)).
+lps_test_result_item(fluents,1,available(fork1)).
+lps_test_result_item(fluents,1,available(fork2)).
+lps_test_result_item(fluents,1,available(fork3)).
+lps_test_result_item(fluents,1,available(fork4)).
+lps_test_result_item(fluents,1,available(fork5)).
+lps_test_result_item(events,2,pickup(kant,fork5)).
+lps_test_result_item(events,2,pickup(kant,fork1)).
+lps_test_result_item(events,2,pickup(aristotle,fork3)).
+lps_test_result_item(events,2,pickup(aristotle,fork4)).
+lps_test_result_item(fluents,2,available(fork2)).
+lps_test_result_item(events,3,putdown(aristotle,fork3)).
+lps_test_result_item(events,3,putdown(aristotle,fork4)).
+lps_test_result_item(events,3,putdown(kant,fork5)).
+lps_test_result_item(events,3,putdown(kant,fork1)).
+lps_test_result_item(composites,3,happens(dine(kant),1,3)).
+lps_test_result_item(composites,3,happens(dine(aristotle),1,3)).
+lps_test_result_item(fluents,3,available(fork2)).
+lps_test_result_item(fluents,3,available(fork3)).
+lps_test_result_item(fluents,3,available(fork4)).
+lps_test_result_item(fluents,3,available(fork5)).
+lps_test_result_item(fluents,3,available(fork1)).
+lps_test_result_item(events,4,pickup(hume,fork4)).
+lps_test_result_item(events,4,pickup(hume,fork5)).
+lps_test_result_item(events,4,pickup(plato,fork2)).
+lps_test_result_item(events,4,pickup(plato,fork3)).
+lps_test_result_item(fluents,4,available(fork1)).
+lps_test_result_item(events,5,putdown(plato,fork2)).
+lps_test_result_item(events,5,putdown(plato,fork3)).
+lps_test_result_item(events,5,putdown(hume,fork4)).
+lps_test_result_item(events,5,putdown(hume,fork5)).
+lps_test_result_item(composites,5,happens(dine(hume),3,5)).
+lps_test_result_item(composites,5,happens(dine(plato),3,5)).
+lps_test_result_item(fluents,5,available(fork1)).
+lps_test_result_item(fluents,5,available(fork2)).
+lps_test_result_item(fluents,5,available(fork3)).
+lps_test_result_item(fluents,5,available(fork4)).
+lps_test_result_item(fluents,5,available(fork5)).
+lps_test_result_item(events,6,pickup(socrates,fork1)).
+lps_test_result_item(events,6,pickup(socrates,fork2)).
+lps_test_result_item(fluents,6,available(fork3)).
+lps_test_result_item(fluents,6,available(fork4)).
+lps_test_result_item(fluents,6,available(fork5)).
+lps_test_result_item(events,7,putdown(socrates,fork1)).
+lps_test_result_item(events,7,putdown(socrates,fork2)).
+lps_test_result_item(composites,7,happens(dine(socrates),5,7)).
+lps_test_result_item(fluents,7,available(fork3)).
+lps_test_result_item(fluents,7,available(fork4)).
+lps_test_result_item(fluents,7,available(fork5)).
+lps_test_result_item(fluents,7,available(fork1)).
+lps_test_result_item(fluents,7,available(fork2)).
+% lps_test_action_ancestor(Call,T1,T2)
+lps_test_action_ancestor(dine(socrates),5,7).
+lps_test_action_ancestor(dine(socrates),5,_1872).
+lps_test_action_ancestor(dine(hume),3,5).
+lps_test_action_ancestor(dine(plato),3,5).
+lps_test_action_ancestor(dine(plato),3,_1872).
+lps_test_action_ancestor(dine(hume),3,_1872).
+lps_test_action_ancestor(dine(kant),1,3).
+lps_test_action_ancestor(dine(aristotle),1,3).
+lps_test_action_ancestor(dine(aristotle),1,_1872).
+lps_test_action_ancestor(dine(kant),1,_1872).

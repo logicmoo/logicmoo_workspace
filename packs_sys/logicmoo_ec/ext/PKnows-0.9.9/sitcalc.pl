@@ -15,12 +15,12 @@
 :- discontiguous(causes_false/3).
 
 %
-%  action_with_vars(A,Vs)  -  get an action term with variable arguments
+%  term_with_vars(prim_action,A,Vs)  -  get an action term with variable arguments
 %
 %  This predicate binds A to an action term with all arguments set to
 %  variables, and Vs to a matching variable list.
 %
-action_with_vars(A,Vs) :-
+term_with_vars(prim_action,A,Vs) :-
     prim_action(At),
     At =.. [F|ArgTypes],
     awv_collect(ArgTypes,Args,Vs),
@@ -67,15 +67,15 @@ make_cknows_fml(F,CK) :-
 %
 adp_fluent(F,A,C) :-
     var(A), !,
-    (bagof(Ft,adp_fluent_bagof(F,A,Ft),Fts) ->
+    (bagof(Ft,adp_fluent_enum_actions(F,A,Ft),Fts) ->
         joinlist(('|'),Fts,Ftmp),
         simplify(Ftmp,C)
     ;
         C=F
     ).
 
-adp_fluent_bagof(F,A,F1) :-
-    action_with_vars(A1,V),
+adp_fluent_enum_actions(F,A,F1) :-
+    term_with_vars(prim_action,A1,V),
     adp_fluent(F,A1,F1t),
     F1 = ?(V : (F1t & (A=A1))).
 
@@ -112,15 +112,15 @@ regression(F,A,Fr) :-
 %  If A is free, find all actions which could affect F.
 regression(F,A,Fr) :-
     var(A),
-    (bagof(Ft,B^regression_bagof(F,A,B,Ft),Fts) ->
+    (bagof(Ft,B^regression_enum_actions(F,A,B,Ft),Fts) ->
         joinlist(('|'),Fts,Ftmp),
         simplify((Ftmp | ((A=nil) & F)),Fr)
     ;
         Fr=F
     ).
 
-regression_bagof(F,A,B,Ft) :-
-    action_with_vars(B,V),
+regression_enum_actions(F,A,B,Ft) :-
+    term_with_vars(prim_action,B,V),
     regression1(F,B,Ftr),
     Ft = ?(V : (Ftr & (A=B))).
 
@@ -288,7 +288,7 @@ pcond_d1(F,C,P1) :-
     ).
 
 pcond_d1_bagof(F,C,Cnt) :-
-    action_with_vars(A,Vs),
+    term_with_vars(prim_action,A,Vs),
     regression(F,A,R),
     adp_fluent(C,A,Ec),
     Cnt = !(Vs : (R | ~Ec)).

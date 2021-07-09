@@ -1,0 +1,46 @@
+{
+    // Use IntelliSense to learn about possible attributes.
+    // Hover to view descriptions of existing attributes.
+    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+        
+        {
+            "type": "pddl-happenings",
+            "request": "launch",
+            "name": "PDDL: Plan Happenings",
+            "program": "${command:PddlPlanHappenings}",
+            "stopOnEntry": true
+        },
+        {
+            "name": "Debug Prolog Files",
+            "type": "prolog",
+            "request": "launch",
+            "runtimeExecutable": "/usr/bin/swipl",
+            "runtimeArgs": [],
+            "env": {},
+            "program": "${file}",
+            "cwd": "${fileDirname}",
+            "startupQuery": "start",
+            "stopOnEntry": true,
+            "traceCmds": {
+                "continue": [
+                    "leap",
+                    "l"
+                ],
+                "stepover": [
+                    "skip",
+                    "s"
+                ],
+                "stepinto": [
+                    "creep",
+                    "c"
+                ],
+                "stepout": [
+                    "up",
+                    "u"
+                ]
+            }
+        }
+    ]
+}

@@ -1,0 +1,34 @@
+
+event(start_game(_5256)).
+
+action(moveperson(_5256,_5258,_5260)).
+action(genbelief(_5256,_5258)).
+
+event(newbelief).
+
+fluent(fact(_5256)).
+fluent(belief(_5256,_5258)).
+fluent(object(_5256,_5258)).
+fluent(position(_5256,_5258,_5260)).
+
+initial_state([fact(unit1),position(unit1,1,1),belief(2,1),object(3,1)]).
+
+l_timeless(increment(_5256,_5258),[_5258 is _5256+1]).
+
+terminated(happens(moveperson(_5256,_5258,_5260),_5266,_5268),position(_5256,_5274,_5276),[]).
+
+initiated(happens(moveperson(_5256,_5258,_5260),_5266,_5268),position(_5256,_5258,_5260),[]).
+
+terminated(happens(genbelief(_5256,_5258),_5264,_5266),belief(_5270,_5272),[]).
+
+initiated(happens(genbelief(_5256,_5258),_5264,_5266),belief(_5256,_5258),[]).
+
+reactive_rule([happens(start_game(_5256),_5262,_5264)],[happens(newbelief,_5276,_5278),tc(_5264=<_5276)],95).
+
+l_events(happens(newbelief,_5258,_5260),[holds(belief(_5264,_5266),_5258),increment(_5264,_5284),holds(not object(_5284,_5266),_5258),happens(genbelief(_5284,_5266),_5258,_5260)]).
+l_events(happens(newbelief,_5258,_5260),[holds(belief(_5264,_5266),_5258),increment(_5266,_5284),holds(not object(_5264,_5284),_5258),happens(genbelief(_5264,_5284),_5258,_5260)]).
+
+observe([start_game(unit1)],2).
+observe([],3).
+observe([],4).
+observe([],5).

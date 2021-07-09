@@ -23,6 +23,10 @@
     
 
 */
+%:- include(ec_reader_no_lps).
+
+%end_of_file.
+
 :- module(ec_reader,[convert_e/1, set_ec_option/2, verbatum_functor/1, builtin_pred/1, s_l/2,
    with_e_file/3, 
    convert_e/2,
@@ -33,6 +37,9 @@
    e_reader_testf/1,
    echo_format/2]).
 
+:- meta_predicate convert_e(1,+,+).
+:- meta_predicate trans_e(*,*,1,?,+,*).
+:- meta_predicate with_e_file_write2(1,?,+).
 
 
 :- use_module(library(logicmoo/portray_vars)).
@@ -74,7 +81,7 @@ is_non_sort(NoListF):- non_list_functor(NoListF).
 builtin_pred(initiates).
 builtin_pred(terminates).
 builtin_pred(releases).
-builtin_pred(holds_at).
+builtin_pred(holds).
 builtin_pred(happens).
 builtin_pred(declipped).
 builtin_pred(clipped).
@@ -87,7 +94,9 @@ builtin_pred(initially).
 is_quantifier_type(thereExists,( & )):- use_some.
 is_quantifier_type(forAll,all).
 is_quantifier_type(thereExists,exists).
+is_quantifier_type(forsome,exists).
 is_quantifier_type(X,Y):- atom(X), is_quantifier_type(_,X),Y=X.
+is_quantifier_type(forall,all).
 
 % used by ec_loader
 
@@ -161,6 +170,20 @@ should_update(_):- etmp:ec_option(overwrite_translated_files,never),!,fail.
 should_update(_):- etmp:ec_option(overwrite_translated_files,always),!.
 should_update(_):- !.
 
+
+
+chop_e(InputNameE,InputName):- atom_concat(InputName,'.e',InputNameE),!.
+chop_e(InputName,InputName).
+
+:- export(calc_where_to/3).
+calc_where_to(outdir(Dir, Ext), InputNameE, OutputFile):- 
+    chop_e(InputNameE,InputName),
+    (atomic_list_concat([InputNameE, '.', Ext], OutputName0),exists_file(OutputName0) -> 
+      OutputName =OutputName0 ;
+       atomic_list_concat([InputName, '.', Ext, '.pl'], OutputName)),
+    make_directory_path(Dir),
+    absolute_file_name(OutputName, OutputFile, [relative_to(Dir)]).
+
 :- export(include_e/1).
 include_e(F):- with_e_file(do_convert_e, current_output, F).
 
@@ -189,7 +212,7 @@ with_e_file(Proc1, Out, F):-  \+ is_stream(F), \+ is_filename(F),
    L\=[F], !, maplist(with_e_file(Proc1, Out), L).
 
 
-with_e_file(Proc1, Out, F):- nonvar(F), needs_resolve_local_files(F, L), !, maplist(with_e_file(Proc1, Out), L).  
+with_e_file(Proc1, Out, F):- nonvar(F), quietly_needs_resolve_local_files(F, L), !, maplist(with_e_file(Proc1, Out), L).  
 
 % Out is a misdirected stream
 with_e_file(Proc1, Outs, Ins):- 
@@ -211,7 +234,7 @@ with_e_file(Proc1, outdir(Dir, Ext), F):- is_filename(F), !,
    with_e_file(Proc1, OutputName, F).
 
 with_e_file(Proc1, Out, F):- is_filename(F), !, 
-  absolute_file_name(F,AF),
+  quietly(absolute_file_name(F,AF)),
     locally(b_setval('$ec_input_file',AF),
       setup_call_cleanup(
         open(F, read, Ins),    
@@ -237,7 +260,8 @@ with_e_file(Proc1, Out, Ins):-
       assertion(current_output(Out)),       
       e_io(Proc1, Ins).
 
-:- nb_setval(ec_input_file,[]).
+:- nb_setval('$ec_input_file',[]).
+:- nb_setval('$ec_input_stream',[]).
 
 
 with_e_file_write1(MProc1, OutputName, Ins):-  \+ is_stream(OutputName), 
@@ -309,9 +333,13 @@ read_some_vars(Codes, Vars):-
   must(e_read3(Codes, VarNames)), !, 
   varnames_as_list(VarNames, Vars).
 
-varnames_as_list({A},[A]):- atom(A),!.
-varnames_as_list({A,B},Vars):- !,varnames_as_list({A},Vars1),varnames_as_list({B},Vars2),append(Vars1,Vars2,Vars).
-varnames_as_list(VarNames,Vars):- assertion(is_list(VarNames)), !, VarNames=Vars.
+varnames_as_list( A,[A]):- (atom(A);string(A)), !.
+varnames_as_list( A, [A]):- var(A),!.
+varnames_as_list('$VAR'(A), Vars):- !, varnames_as_list(A,Vars).
+varnames_as_list({A},Vars):- !, varnames_as_list(A,Vars).
+varnames_as_list([A],Vars):- !, varnames_as_list(A,Vars).
+varnames_as_list([A|B],Vars):- !,varnames_as_list(A,Vars1),varnames_as_list(B,Vars2),append(Vars1,Vars2,Vars).
+varnames_as_list((A,B),Vars):- !,varnames_as_list(A,Vars1),varnames_as_list(B,Vars2),append(Vars1,Vars2,Vars).
 
 upcased_functors(G):- 
  notrace((allow_variable_name_as_functor = N, 
@@ -425,15 +453,23 @@ e_read3(String, Term):-
 
 
 insert_vars(Term, [], Term, []).
-insert_vars(Term0, [V|LL], Term, [V=VV|Has]):-
+insert_vars(_, [V|_], _, _):- assertion(ground(V)),fail.
+insert_vars(Term0, [V|LL], Term, [V=VV|Has]):- var(V),
   insert1_var(Term0, V, VV, Term1), 
   insert_vars(Term1, LL, Term, Has).
-
+insert_vars(Term0, ['$VAR'(V)|LL], Term, Has):-
+  insert_vars(Term0, [V|LL], Term, Has).
+insert_vars(Term0, [V|LL], Term, Has):-
+  assertion(atomic(V)),
+  atom_string(Vs,V), svar('$VAR'(Vs), PV),
+  notrace((subst(Term0,'$VAR'(Vs), '$VAR'(PV), Term1),
+  subst(Term1,'$VAR'(V), '$VAR'(PV), Term2),
+  subst(Term2, V, '$VAR'(PV), Term9))),
+  insert_vars(Term9, LL, Term, Has).
 
 insert1_var(Term0, V, VV, Term1):- 
   debug_var(V, VV), 
   subst(Term0, V, VV, Term1).
-
 
 map_callables(_, Term0, Term):- \+ callable(Term0), !, Term0=Term.
 map_callables(_, Term0, Term):- []== Term0, !, Term =[].
@@ -480,13 +516,14 @@ fix_predname('implies', '->').
 fix_predname('=>', '->').
 fix_predname('if', '->').
 
-fix_predname(holds_at, holds_at).
-fix_predname(happens, happens_at).
+fix_predname(/**/holds, /**/holds).
+fix_predname(holdsat, /**/holds).
+fix_predname(holds_at, /**/holds).
+%fix_predname(happens, happens_at).
+fix_predname(happens_at, happens ).
 fix_predname(initiates, initiates_at).
 fix_predname(terminates, terminates_at).
 fix_predname(releases, releases_at).
-
-fix_predname(holdsat, holds_at).
 fix_predname(releasedat, released_at).
 fix_predname(at, at_loc).
 fix_predname(holds, pred_holds).
@@ -499,10 +536,15 @@ fix_predname(F, New):- downcase_atom(F, DC), F\==DC, !, fix_predname(DC, New).
 
 system:call_pel_directive(B):- pprint_ecp_cmt(red,call_pel_directive(B)).
 
-
+
+
 my_unCamelcase(X, Y):- atom(X), fix_predname(X, Y), !.
 my_unCamelcase(X, Y):- atom(X), upcase_atom(X, X), !, downcase_atom(X, Y).
 my_unCamelcase(X, Y):- unCamelcase(X, Y), !.
+
+neg_quant(NotVs,Vars):- compound(NotVs), NotVs=[Not,Vars], member(Not,[neg,(!),not]),!.
+neg_quant(NotVs,Vars):- compound(NotVs), NotVs=[Not|Vars], member(Not,[neg,(!),not]),!.
+neg_quant(NotVs,Vars):- compound(NotVs), NotVs=..[Not,Vars], member(Not,[neg,(!),not]),!.
 
 :- export(e_to_pel/2).
 e_to_pel(C, C):- \+ callable(C), !.
@@ -510,27 +552,58 @@ e_to_pel('$VAR'(HT), '$VAR'(HT)):-!.
 e_to_pel(X, Y):- \+ compound(X), !, must(my_unCamelcase(X, Y)).
 e_to_pel(X, Y):- compound_name_arity(X, F, 0), !, my_unCamelcase(F, FF), compound_name_arity(Y, FF, 0).
 e_to_pel(not(Term),not(Term)):- var(Term),!.
-e_to_pel(not(holds_at(Term,Time)),holds_at(O,Time)):-  !, e_to_pel(not(Term), O).
+e_to_pel(not(/**/holds(Term,Time)),/**/holds(O,Time)):-  !, e_to_pel(not(Term), O).
 e_to_pel(not(Term),not(O)):- !, e_to_pel(Term, O).
-e_to_pel(Prop,O):- 
-  Prop =.. [ThereExists,NotVars,Term0],
+
+e_to_pel(Prop,O):-
+  Prop =.. [ThereExists,NotVs,_Term0],
   is_quantifier_type(ThereExists,_Exists),
-  conjuncts_to_list(NotVars,NotVarsL), select(NotVs,NotVarsL,Rest),compound(NotVs),not(Vars)=NotVs,
+  atom(NotVs), insert_vars(Prop, [NotVs], QProp, _Has),
+  e_to_pel(QProp,O).
+
+e_to_pel(Prop,O):- 
+  Prop =.. [ThereExists,NotVs,Term0],
+  is_quantifier_type(ThereExists,_Exists),
+  is_list(NotVs), NotVs=[Vars],
+  QProp =.. [ThereExists,Vars,Term0],
+  e_to_pel(QProp,O).
+
+e_to_pel(Prop,O):- 
+  Prop =.. [ThereExists,NotVs,Term0],
+  is_quantifier_type(ThereExists,_Exists),
+  neg_quant(NotVs,Vars),
+  QProp =.. [ThereExists,Vars,Term0],
+  e_to_pel(not(QProp),O).
+
+
+e_to_pel(Prop,O):- 
+  Prop =.. [ThereExists,NotVs,Term0],
+  is_quantifier_type(ThereExists,_Exists),
+  neg_quant(NotVs,Vars),
+  QProp =.. [ThereExists,Vars,Term0],
+  e_to_pel(not(QProp),O).
+
+e_to_pel(Prop,O):- 
+  Prop =.. [ThereExists,NotVarZ,Term0],
+  is_quantifier_type(ThereExists,_Exists),
+  conjuncts_to_list(NotVarZ,NotVarsL), select(NotVs,NotVarsL,Rest),
+  compound(NotVs), NotVs=..[Not,Vars], member(Not,[neg,(!),not]),
   is_list(Vars),%forall(member(E,Vars),ground(E)),!,
   (Rest==[]->Term1= Term0 ; list_to_conjuncts(Rest,NotVarsRest),conjoin(NotVarsRest,Term0,Term1)), 
   QProp =.. [ThereExists,Vars,Term1], 
   e_to_pel(not(QProp),O).
+
 e_to_pel(Prop,O):- 
   Prop =.. [ThereExists,Vars,Term0], 
   is_quantifier_type(ThereExists,Exists),
-  is_list(Vars), forall(member(E,Vars),ground(E)),
+  is_list(Vars), forall(member(E,Vars),atom(E)),
   QProp =.. [Exists,Vars,Term0],
   insert_vars(QProp, Vars, Term, _Has),
   e_to_pel(Term,O),!.
 
 %e_to_pel(X, Y):- e_to_ax(X, Y),X\=@=Y,!,e_to_pel(X, Y).
-%e_to_pel(neg(C),O):-e_to_pel(holds_at(neg(N),V),O):- compound(C),holds_at(N,V)=C,
-%e_to_pel(neg(holds_at(N,V)),O):-e_to_pel((holds_at(neg(N),V)),O).
+%e_to_pel(/**/not(C),O):-e_to_pel(/**/holds(/**/not(N),V),O):- compound(C),/**/holds(N,V)=C,
+%e_to_pel(/**/not(/**/holds(N,V)),O):-e_to_pel((/**/holds(/**/not(N),V)),O).
 e_to_pel(t(X, [Y]), O):- nonvar(Y), !, e_to_pel(t(X, Y), O).
 e_to_pel(load(X), load(X)):-!.
 e_to_pel(include(X), include(X)):-!.
@@ -560,7 +633,8 @@ vars_verbatum(Term):- \+ compound_gt(Term, 0), !.
 vars_verbatum(Term):- compound_name_arity(Term, F, A), (verbatum_functor(F);verbatum_functor(F/A)), !.
 
 add_ec_vars(Term0, Term, Vs):- vars_verbatum(Term0), !, Term0=Term, Vs=[].
-add_ec_vars(Term0, Term, Vs):-        
+add_ec_vars(Term0, Term, Vs):-   
+       
   get_vars(universal, UniVars),
   get_vars(existential,ExtVars),
   insert_vars(Term0, UniVars, Term1, VsA),!,  
@@ -666,8 +740,8 @@ ec_on_each_read(Proc1, NonlistF, E):- univ_safe(Cmp , [NonlistF, E]), ec_on_read
 
 on_convert_ele(Var):- var(Var), !, throw(var_on_convert_ele(Var)).
 on_convert_ele(translate(Event, Outfile)):- !, must((mention_s_l, echo_format('~N% translate: ~w  File: ~w ~n',[Event, Outfile]))).
-on_convert_ele(include(S0)):- resolve_local_files(S0,SS), !, maplist(include_e, SS), !.
-%on_convert_ele(load(S0)):- resolve_local_files(S0,SS), !, maplist(load_e, SS), !.  
+on_convert_ele(include(S0)):- resolve_local_files_quietly(S0,SS), !, maplist(include_e, SS), !.
+%on_convert_ele(load(S0)):- resolve_local_files_quietly(S0,SS), !, maplist(load_e, SS), !.  
 on_convert_ele(end_of_file):-!.
 on_convert_ele(SS):- must(echo_format('~N')), must(pprint_ecp(e,SS)).
 
@@ -801,29 +875,29 @@ till_eof(In) :-
 end_of_file.            
 
 exists(T, 
-  ~holds_at(positivelyBuoyant(Diver), T) & 
-  ~holds_at(neutrallyBuoyant(Diver), T) & 
-  ~holds_at(negativelyBuoyant(Diver), T)).
+  ~/**/holds(positivelyBuoyant(Diver), T) & 
+  ~/**/holds(neutrallyBuoyant(Diver), T) & 
+  ~/**/holds(negativelyBuoyant(Diver), T)).
  implies that is a T that the Diver is not in the water.
 
 all([Diver:diver,T:time], 
-  (holds_at(~positivelyBuoyant(Diver), T) & 
-   holds_at(~neutrallyBuoyant(Diver), T) & 
-   holds_at(~negativelyBuoyant(Diver), T)).
- -> holds_at(~inWater(Diver),T)).
+  (/**/holds(~positivelyBuoyant(Diver), T) & 
+   /**/holds(~neutrallyBuoyant(Diver), T) & 
+   /**/holds(~negativelyBuoyant(Diver), T)).
+ -> /**/holds(~inWater(Diver),T)).
 
 all([Diver:diver,T:time], 
-  (holds_at(~positivelyBuoyant(Diver), T) & 
-   holds_at(~neutrallyBuoyant(Diver), T) & 
-   holds_at(~negativelyBuoyant(Diver), T)).
- -> ~holds_at(inWater(Diver),T)).
+  (/**/holds(~positivelyBuoyant(Diver), T) & 
+   /**/holds(~neutrallyBuoyant(Diver), T) & 
+   /**/holds(~negativelyBuoyant(Diver), T)).
+ -> ~/**/holds(inWater(Diver),T)).
 
 
  implies that is a T that the Diver is not in the water.
 
 
 exists(T, 
-  ~holds_at(positivelyBuoyant(Diver), T) & 
-  ~holds_at(neutrallyBuoyant(Diver), T) & 
-  ~holds_at(negativelyBuoyant(Diver), T)).
+  ~/**/holds(positivelyBuoyant(Diver), T) & 
+  ~/**/holds(neutrallyBuoyant(Diver), T) & 
+  ~/**/holds(negativelyBuoyant(Diver), T)).
 

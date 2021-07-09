@@ -177,7 +177,7 @@ agent_call_command_now_3(Agent,CMD):-
   padd(Agent,mudLastCommand(CMD)).
 
 agent_call_command_all_fallback(Agent,CMD):- if_defined(agent_call_command_fallback(Agent,CMD)),!.
-agent_call_command_all_fallback(_Agent,CMD):- nop(xlisting(CMD)).
+agent_call_command_all_fallback(_Agent,CMD):- fail, nop(xlisting(CMD)).
 
 :-export(send_command_completed_message/4).
 send_command_completed_message(Agent,Where,Done,CMD):-
@@ -316,7 +316,6 @@ random_instance_no_throw0(Type,Value,Test):-
 
 
 get_dettached_npc(P):- random_instance_no_throw(tAgent,P, \+ isa(P,tHumanControlled)).
-:- listing(get_dettached_npc/1).
 
 
 :-multifile(system:random_instance/3).

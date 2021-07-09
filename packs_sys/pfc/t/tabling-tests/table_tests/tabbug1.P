@@ -1,0 +1,10 @@
+:- table p/1.
+
+p(X) :- X = a, p(X).
+p(a).
+
+:- import get_calls/3 from tables.
+
+:- p(X),fail.
+
+test :- get_calls(p(a),C,R), writeln(a(R)),fail.

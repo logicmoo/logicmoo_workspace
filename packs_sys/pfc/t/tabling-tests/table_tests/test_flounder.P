@@ -1,0 +1,32 @@
+
+:- import u_not/1 from tables.
+:- import numbervars/1 from num_vars.
+
+test:- p(_X),get_residual(p(1),R),numbervars(R),writeln(test(p(1),R)),fail.
+test:- r(_X),get_residual(r(1),R),numbervars(R),writeln(test(r(1),R)),fail.
+test:- i_1(_X),get_residual(i_1(1),R),numbervars(R),writeln(test(i(1),R)),fail.
+test:- m_1(_X),get_residual(m_1(1),R),numbervars(R),writeln(test(m(1),R)),fail.
+test.
+
+
+:- table p/1.
+p(1):- u_not(q(_X)).
+
+:- table r/1.
+r(1):- u_not(q(X)),s(X).
+
+:- table q/1.
+q(1).
+
+s(1).
+
+:- table i_1/1, i_2/1 as incremental.
+i_1(1):- u_not(i_2(_X)).
+
+i_2(2).
+
+:- table m_1/1.
+:- table m_2/1 as incremental.
+m_1(1):- u_not(m_2(_X)).
+
+m_2(2).

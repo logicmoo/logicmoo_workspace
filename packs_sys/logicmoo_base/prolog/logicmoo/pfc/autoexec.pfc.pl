@@ -1,6 +1,6 @@
 %:- set_module(class(development)).
+%:- use_module(library(pfc)).
 :- '$set_source_module'(baseKB).
-:- use_module(library(pfc)).
 
 /* <module>
 % =============================================
@@ -107,6 +107,7 @@
 %:- ensure_abox(baseKB).
 
 :- set_prolog_flag(expect_pfc_file,always).
+:- expects_dialect(pfc).
 
 
 :- ensure_loaded('system_basic.pfc').

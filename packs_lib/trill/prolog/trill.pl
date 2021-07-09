@@ -3581,6 +3581,8 @@ sandbox:safe_meta(trill:load_kb(_),[]).
 sandbox:safe_meta(trill:load_owl_kb(_),[]).
 sandbox:safe_meta(trill:set_tableau_expansion_rules(_,_),[]).
 
+/*
+
 :- use_module(library(utility_translation)).
 
 user:term_expansion((:- trill),[]):-
@@ -3603,3 +3605,6 @@ user:term_expansion((:- tornado),[]):-
   set_up(M),
   utility_translation:set_up_kb_loading(M),
   trill:add_kb_prefixes(M:['disponte'='http://ml.unife.it/disponte#','owl'='http://www.w3.org/2002/07/owl#']).
+
+*/
+

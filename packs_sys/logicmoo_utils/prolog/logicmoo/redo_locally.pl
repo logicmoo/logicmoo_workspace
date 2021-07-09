@@ -46,6 +46,7 @@
 :- set_module(class(library)).
 % WAS OFF  :- system:use_module(library(no_repeats)).
 % % % OFF :- system:use_module(library(logicmoo/each_call)).
+:- use_module('./each_call').
 
 
 %% locally_hide_each( :Fact, :Call) is nondet.

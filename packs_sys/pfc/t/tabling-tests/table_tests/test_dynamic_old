@@ -1,0 +1,12 @@
+caught_callable_error
+caught_domain_error
+caught_instantiation_error_1
+caught_instantiation_error_2
+p1(1,2)
+p1(1,3)
+p2(1,2)
+p2(1,3)
+p3(1,2)
+p3(1,3)
+p4(1,2)
+p4(1,3)

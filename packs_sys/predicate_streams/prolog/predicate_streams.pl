@@ -10,9 +10,9 @@
 
             is_predicate_stream/1,           % +Stream
             current_predicate_stream/1,      % ?Stream
-            on_stream_close/2,               % ?Stream, +Goal
+            tl:on_stream_close/2,               % ?Stream, +Goal
 			tl:on_stream_write/2,               % ?Stream, +Pred1
-			on_stream_read/2,                % ?Stream, +Pred1
+			tl:on_stream_read/2,                % ?Stream, +Pred1
 
             set_current_input/1,             % +Stream
             set_current_output/1,            % +Stream
@@ -61,28 +61,32 @@ no_op(_).
 
 :- use_module(library(prolog_stream)).
 
+current_predicate_stream(S):- psg:i_current_predicate_stream(S).
 
-%! current_predicate_stream(?Stream) is nondet.
+%! psg:i_current_predicate_stream(?Stream) is nondet.
 %
 %  Current Streams made by this API
 %
-:- dynamic(current_predicate_stream/1).
-:- volatile(current_predicate_stream/1).
+:- multifile(psg:i_current_predicate_stream/1).
+:- dynamic(psg:i_current_predicate_stream/1).
+:- volatile(psg:i_current_predicate_stream/1).
+:- multifile(tl:on_stream_write/2).
+:- thread_local(tl:on_stream_write/2).
 
 % Hooks
 :- if(true).
 :- thread_local(tl:on_stream_write/2).
-:- thread_local(on_stream_close/2).
-:- thread_local(on_stream_read/2).
+:- thread_local(tl:on_stream_close/2).
+:- thread_local(tl:on_stream_read/2).
 :- else.
 :- dynamic(tl:on_stream_write/2).
-:- dynamic(on_stream_close/2).
-:- dynamic(on_stream_read/2).
+:- dynamic(tl:on_stream_close/2).
+:- dynamic(tl:on_stream_read/2).
 :- endif.
 
 :- volatile(tl:on_stream_write/2).
-:- volatile(on_stream_close/2).
-:- volatile(on_stream_read/2).
+:- volatile(tl:on_stream_close/2).
+:- volatile(tl:on_stream_read/2).
 
 
 :- meta_predicate(redo_cleanup_each(0,0,0)).
@@ -213,7 +217,7 @@ know_original_user_input:-
 %
 is_predicate_stream(Stream):-
    must_be(nonvar,Stream),
-   current_predicate_stream(Stream).
+   psg:i_current_predicate_stream(Stream).
 
 
 % =====================================================
@@ -329,6 +333,8 @@ with_predicate_input_stream(Pred1,Stream,Goal):-
 
 :- if((fail , exists_source(library(loop_check)))).
 
+:- multifile(pshook:stream_write/2).
+:- dynamic(pshook:stream_write/2).
 pshook:stream_write(Stream,Data):- 
   loop_check(stream_write_0(Stream,Data),true).
 
@@ -346,6 +352,9 @@ stream_write_0(Stream,Data):-
 
 :- else.
 
+:- if( \+ current_predicate(pshook:stream_write/2)).
+:- multifile(pshook:stream_write/2).
+:- dynamic(pshook:stream_write/2).
 pshook:stream_write(Stream,Data):-
   forall(tl:on_stream_write(Stream,Pred1),stream_write_3(Stream,Pred1,Data)).
 
@@ -358,11 +367,9 @@ stream_write_3(Stream,Pred1,Data):-
     once((call(Pred1,Data))),
     erase(Ref)).
 
-:- endif.
-
 :- '$hide'(stream_write/2).
 
-pshook:stream_read(Stream,Data):- on_stream_read(Stream,Pred1) *-> call(Pred1,Data) ; Data = -1.
+pshook:stream_read(Stream,Data):- tl:on_stream_read(Stream,Pred1) *-> call(Pred1,Data) ; Data = -1.
 
 :- '$hide'(stream_read/2).
 force_close(Stream):- whatevah(close(Stream,[force(true)])).
@@ -370,14 +377,21 @@ force_close(Stream):- whatevah(close(Stream,[force(true)])).
 
 pshook:stream_close(Stream):-
   quietly((
-   retract(current_predicate_stream(Stream)),   
+   retract(psg:i_current_predicate_stream(Stream)),   
    maybe_restore_input(Stream), % this is a so we dont hit the tracer in Ctrl-C
    (stream_property(Stream,output)-> stream_close_output(Stream) ; true),
-   whatevah(forall(retract(on_stream_read(Stream,Pred1)),
-        nop(debug(predicate_streams,'~N% ~q.~n',[(stream_close(Stream):-on_stream_read(Pred1))])))),
-   forall(retract(on_stream_close(Stream,Call)),whatevah(Call)))),!.
+   whatevah(forall(retract(tl:on_stream_read(Stream,Pred1)),
+        nop(debug(predicate_streams,'~N% ~q.~n',[(stream_close(Stream):-tl:on_stream_read(Pred1))])))),
+   forall(retract(tl:on_stream_close(Stream,Call)),whatevah(Call)))),!.
 pshook:stream_close(_Stream).
 :- '$hide'(stream_close/1).  
+
+:- endif.
+
+
+:- endif.
+
+
 
 
 
@@ -399,7 +413,7 @@ stream_close_output(_).
 new_predicate_output_stream(Pred1,Stream):-
   open_prolog_stream(pshook, write, Stream, []),
    asserta(tl:on_stream_write(Stream,Pred1)),
-   assert(current_predicate_stream(Stream)),
+   assert(psg:i_current_predicate_stream(Stream)),
    thread_at_exit(force_close(Stream)).
 
 %! new_predicate_input_stream(:Pred1,-Stream)
@@ -411,8 +425,8 @@ new_predicate_output_stream(Pred1,Stream):-
 
 new_predicate_input_stream(Pred1,Stream):-
   open_prolog_stream(pshook, read, Stream, []),
-   assert(current_predicate_stream(Stream)),
-   asserta(on_stream_read(Stream,Pred1)),
+   assert(psg:i_current_predicate_stream(Stream)),
+   asserta(tl:on_stream_read(Stream,Pred1)),
    set_stream(Stream, buffer_size(1)),
    thread_at_exit(force_close(Stream)).
 

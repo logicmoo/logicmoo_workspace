@@ -91,6 +91,8 @@ For the developer: to see the internals, use:
 		drs_to_drslist/2
 	]).
 
+:- use_module(logicmoo_ape_utils, [unnumbervars/2, ape_numbervars/3]).
+
 /*
 :- debug(verbose).
 :- debug(that).

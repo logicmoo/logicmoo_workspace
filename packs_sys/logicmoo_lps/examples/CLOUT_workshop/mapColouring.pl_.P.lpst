@@ -1,0 +1,28 @@
+/*
+  LPS test results file generated on 2017-9-18 at 18:22:27
+  on Prolog swi(7,5,8,[]) for program file:
+  /Users/mc/git/logicalcontracts/examples/CLOUT_workshop/mapColouring.pl_.P
+*/
+
+:-dynamic lps_test_result/3,lps_test_result_item/3,lps_test_options/1.
+
+% LPS options prior to the test:
+lps_test_options([dc]).
+
+% lps_test_result(Stage,Cycle,TestTerm)
+lps_test_result(fluents,0,0).
+lps_test_result(events,1,0).
+lps_test_result(fluents,1,0).
+lps_test_result(events,2,4).
+lps_test_result(fluents,2,0).
+lps_test_result(events,3,0).
+lps_test_result(fluents,3,0).
+lps_test_result(events,4,0).
+lps_test_result(fluents,4,0).
+lps_test_result(events,5,0).
+lps_test_result(fluents,5,0).
+% lps_test_result_item(Stage,Cycle,TestTerm)
+lps_test_result_item(events,2,paint(uz,red)).
+lps_test_result_item(events,2,paint(az,red)).
+lps_test_result_item(events,2,paint(oz,yellow)).
+lps_test_result_item(events,2,paint(iz,blue)).

@@ -11,6 +11,9 @@ Introduction
 This document explains how to test APE including the various DRS translators
 that APE contains.
 
+It is recommended to run `bash rtest.bash d` first because it downloads the large
+lexicon used by all the test scripts in this directory.
+
 All the test scripts in this directory depend on a larger lexicon than included
 with APE. In order to download the required lexicon, first run
 

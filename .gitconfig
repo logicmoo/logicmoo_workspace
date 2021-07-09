@@ -1,3 +1,23 @@
-[user]
-	name = Douglas Miles
-	email = logicmoo@gmail.com
+[core]
+	repositoryformatversion = 0
+	filemode = true
+	bare = false
+	logallrefupdates = true
+[remote "origin"]
+	url = https://logicmoo.org/gitlab/logicmoo/logicmoo_workspace.git
+	fetch = +refs/heads/*:refs/remotes/origin/*
+[branch "master"]
+	remote = origin
+	merge = refs/heads/master
+[submodule "packs_xtra/logicmoo_pldata"]
+	url = https://logicmoo.org/gitlab/logicmoo/logicmoo_pldata.git
+	active = true
+[submodule "wiki"]
+	url = https://logicmoo.org/gitlab/logicmoo/logicmoo_wiki.git
+	active = true
+[remote "github"]
+	url = https://github.com/logicmoo/logicmoo_workspace.git
+	fetch = +refs/heads/*:refs/remotes/github/*
+[lfs "https://logicmoo.org/gitlab/logicmoo/logicmoo_workspace.git/info/lfs"]
+	access = basic
+	locksverify = true

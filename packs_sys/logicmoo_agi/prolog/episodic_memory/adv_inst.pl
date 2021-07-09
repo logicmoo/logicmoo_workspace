@@ -16,7 +16,8 @@
 % Main file.
 %
 */
-:- ensure_loaded(adv_naming).
+:- '$set_source_module'(mu).
+% :- ensure_loaded(adv_naming).
 
 create_new_unlocated(Type, Inst, S0, S2):-
  inst_sep(Sep),
@@ -56,13 +57,13 @@ declare_inst_type(Inst, Type, S0, S2):-
   (member(sp(adjs, _), PropList1)-> PropList1=PropList;  [sp(nouns, [Type])|PropList1]=PropList),
   list_to_set([shape=Type, traits([Type]), inherit(Type, t)|PropList], Set),
   %undeclare_alw ays(props(Inst, _), S0, S1),
-  replace_declare(props(Inst, Set), S0, S2).
+  redeclare(props(Inst, Set), S0, S2).
 
 init_objects :-
   with_mutex(get_advstate,
-    init_objects_in_mutex).
+    init_objects_from_mutex).
 
-init_objects_in_mutex :-
+init_objects_from_mutex :-
  get_advstate(S0),
  retractall(advstate_db(_)),
  must_mw1(get_objects(true, OldObjectList, S0)),
@@ -88,11 +89,12 @@ may_contain_insts(h).
 
 
 create_instances(Suffix, Info, [Prop|TODO], S0, S3):-
- Prop =.. [F, Pred | Objs],
- may_contain_insts(F), member(Obj, Objs), is_non_instance(Obj), !,
+ Prop =.. [F, Type, Pred | Objs],
+ may_contain_insts(F), 
+ member(Obj, Objs), is_non_instance(Obj), !,
  must_mw1((select_from(Prop, S0, S1))),
  must_mw1((create_objs(Objs, NewObjs, Suffix, Info, S1, S2),
- NewProp =.. [F, Pred | NewObjs],
+ NewProp =.. [F, Type, Pred | NewObjs],
  create_instances(Suffix, Info, TODO, [NewProp|S2], S3))).
 
 create_instances(Suffix, Info, [_|TODO], S0, S2):-
@@ -117,7 +119,7 @@ mu_create_object(Object, S0, S9) :-
  object_props_or(Object, PropList, [], S0), !,
  dbug1(mu_create_object(Object, PropList)),
  %  undeclare_al ways(props(Object, _), S0, S2),
- replace_declare(props(Object, [co(PropList)]), S0, S3),
+ redeclare(props(Object, [co(PropList)]), S0, S3),
  create_objprop(creation, Object, PropList, S3, S4),
  create_objprop(instance, Object, PropList, S4, S9).
 /*
@@ -144,12 +146,12 @@ create_objprop(Why, Object, Prop, S0, S1):- /*notrace*/((correct_props(Object, P
  % Each agent empties their percept queue as they see fit.
 create_objprop(_Why, Object, inherit(perceptq, t), S0, S0):- declared(perceptq(Object, _), S0), !.
 create_objprop(_Why, Object, inherit(perceptq, t), S0, S1):- !,
- replace_declare(perceptq(Object, []), S0, S1).
+ redeclare(perceptq(Object, []), S0, S1).
 
  % Most agents store memories of percepts, world model, goals, etc.
 create_objprop(_Why, Object, inherit(memorizer, t), S0, S0):- declared(memories(Object, _), S0), !.
 create_objprop(_Why, Self, inherit(memorizer, t), S0, S2):- !, clock_time(Now),
- replace_declare(memories(Self, [
+ redeclare(memories(Self, [
   propOf(memories, Self),
  structure_label(mem(Self)),
  timestamp(0, Now),
@@ -199,7 +201,9 @@ create_objprop(_Why, Object, Prop, S0, S2):-
 
 
 create_1obj(Suffix, _Info, the(Type), Inst, S0, S2):- !,
- must_mw1(create_new_suffixed_unlocated(Suffix, Type, Inst, S0, S2)).
+ must_mw1(create_new_suffixed_unlocated(Suffix, Type, Inst, S0, S2)),
+ nop((pprint(S2),!,break)).
+
 create_1obj(Suffix, _Info, a(Type), Inst, S0, S2):-  !, atom_concat(Suffix, '_A', NewSuffix),
  must_mw1(create_new_suffixed_unlocated(NewSuffix, Type, Inst, S0, S2)).
 create_1obj(Suffix, _Info, s(Type), Inst, S0, S2):- trace, !, atom_concat(Suffix, '_S', NewSuffix),
@@ -207,7 +211,9 @@ create_1obj(Suffix, _Info, s(Type), Inst, S0, S2):- trace, !, atom_concat(Suffix
 
 create_1obj(Suffix, Info, the(Type), Inst, S0, S2):- find_recent(Suffix, Type, Inst, S0, S2)->true;create_1obj(Suffix, Info, Type, Inst, S0, S2).
 create_1obj(_Suffix, _Info, I, I, S0, S0):- is_x_instance(I), !.
-create_1obj(Suffix, Info, Type, Inst, S0, S2):- atom(Type), !, create_1obj(Suffix, Info, the(Type), Inst, S0, S2).
+
+create_1obj(Suffix, Info, Type, Inst, S0, S2):- 
+  atom(Type), !, create_1obj(Suffix, Info, the(Type), Inst, S0, S2).
 create_1obj(_Suffix, _Info, I, I, S0, S0):- assertion(atom(I)), !.
 
 find_recent(_Suffix, Type, Inst, S0, S0):- declared(props(Inst, PropList), S0), declared(instance(Type), PropList).

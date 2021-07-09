@@ -175,13 +175,12 @@ load_package_dirs:-
 :- use_module(library(logicmoo_common)).
 
 check_startup_flags:- 
-   current_prolog_flag(argv,WasArgV),
-   ignore((  
+ current_prolog_flag(argv,WasArgV),
+ ignore((  
            \+ ((member(E,WasArgV), 
                 atom_concat('--',_,E))),
    append(WasArgV,[
    '--',   
-
    '--mud', % Load MUD server
    '--world', % Load MUD server World
    %'--nonet' '--noworld',
@@ -213,9 +212,9 @@ check_startup_flags:-
    '--defaults'
    ], NewArgV),
    set_prolog_flag('argv',NewArgV))),
-   current_prolog_flag(argv,Is),
-   asserta(lmconf:saved_app_argv(Is)),
-   writeq(set_prolog_flag('argv',Is)),!,nl.
+ current_prolog_flag(argv,Is),
+ (\+ lmconf:saved_app_argv(_) -> asserta(lmconf:saved_app_argv(Is)) ; true),
+ writeq(set_prolog_flag('argv',Is)),!,nl.
 
 :- initialization(check_startup_flags, now).
 :- initialization(check_startup_flags, restore_state).

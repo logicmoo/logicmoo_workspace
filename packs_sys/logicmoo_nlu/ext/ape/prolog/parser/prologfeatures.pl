@@ -43,6 +43,10 @@ Morgan Kaufmann Publishers Inc., 1995.
 @version 2008-02-15
 */
 
+:- if( \+ current_predicate(system:ape_numbervars/3)).
+system:ape_numbervars(DRSCopy, Zero, N) :-
+    numbervars(DRSCopy, Zero, N, [attvar(skip)]).
+:- endif.
 
 :- op(700, xfx, :=).
 :- op(695, xfx, intro).

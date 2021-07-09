@@ -16,6 +16,8 @@
 % Main file.
 %
 */
+:- '$set_source_module'(mu).
+
 :- ensure_loaded('adv_props').
 
 % %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -64,27 +66,30 @@ save_term(Filename, How, _) :-
 
 
 
+copy_prolog_sim(From,Into):-
+ setup_call_cleanup(
+ get_state_context(Before),
+  must_mw1((
+   set_state_context(From),
+   get_advstate(InitState),
+   set_state_context(Into),
+   set_advstate(InitState),
+   init_objects)),
+ get_state_context(Before)), !.
+
 :- multifile(extra_decl/2).
 :- dynamic(extra_decl/2).
 :- dynamic(undo/2).
 %undO([u, u, u, u, u, u, u, u])).
-:- dynamic(advstate_db/1).
-advstate_db([]).
-
-is_pred1_state(advstate_db).
-is_pred1_state(istate).
-is_pred1_state(statest).
-is_pred1_state(parseFrame(_)).
 
 
-:- nb_setval(advstate_var, []).
-:- thread_initialization(nb_setval(advstate_var, [])).
+get_advstate(State):- get_state_context(Ctx), get_advstate(Ctx, State).
 
-get_advstate_varname(Varname):- nb_current(advstate_var, Varname), Varname\==[], !.
-% get_advstate_varname(advstate_db).
+get_advstate(Ctx, State):- atom(Ctx), nb_current(Ctx, State), !.
+get_advstate(Ctx, State):- var(State), !, findall(State1, call(Ctx,State1), StateL), 
+  flatten([structure_label(cur_state)|StateL], State).
 
-get_advstate_db(State):- var(State), !, findall(State1, advstate_db(State1), StateL), flatten([structure_label(cur_state), StateL], State).
-get_advstate_db(State):- advstate_db(State).
+get_advstate(Ctx, State):- call(Ctx,State), !.
 
 into_ref(State, State):-!.
 into_ref(State, StateRef):- notrace(get_attr(State, refValue, _)->StateRef=State;put_attr(StateRef, refValue, State)).
@@ -99,54 +104,51 @@ refValue:attribute_goals(Var)-->
 
 restore_refValue(Var, Store):- nb_getval(Store, Value), put_attr(Var, refValue, Value).
 
-get_advstate(StateRef):- notrace((get_advstate_0(State), into_ref(State, StateRef))).
-get_advstate_0(State):- with_mutex(get_advstate,
-  ((get_advstate_varname(Var), nb_current(Var, PreState), PreState\==[]) -> State=PreState ; get_advstate_db(State))).
 
 /*add_advstate(State):- from_ref(State, State0),
-  with_mutex(get_advstate, must_mw1(set_advstate_db_1(State0))),
+  with_mutex(get_advstate, must_mw1(add_advstate_db(Ctx,State0))),
   nop(with_mutex(save_advstate, must_mw1(save_term(library('episodic_memory/adv_state_db.pl'), append , State0)))), !.
 */
 
 update_running(StateInfo):-
+ % dbug1(update_running(StateInfo)),
   ignore((get_advstate(S0), !, declare(StateInfo, S0, S1), !, set_advstate(S1))), !.
 % update_running(_StateInfo).
 
 
-set_advstate(StateRef):- notrace((from_ref(StateRef, State), set_advstate_0(State))).
+set_advstate(State):- get_state_context(Ctx), set_advstate(Ctx, State).
 
-set_advstate_0(State):-
-  with_mutex(get_advstate, ((get_advstate_varname(Var), nb_current(Var, PreState), PreState\==[]) ->
-   nb_setval(Var, State) ; set_advstate_db(State))).
+set_advstate(Ctx, State):- atom(Ctx), nb_current(Ctx, _), must_be(list,State), !, nb_setval(Ctx, State). 
+set_advstate(Ctx, State):- from_ref(Ctx, Ctx0), Ctx0\==Ctx, !, set_advstate(Ctx0, State).
+set_advstate(Ctx, State):-  
+  append_term(Ctx,_,Retractall),
+  retractall(Retractall),
+  add_advstate_db(Ctx,State),
+  nop(record_saved(Ctx)), !.
 
-set_advstate_db(State):- from_ref(State, State0),
-  notrace((set_advstate_db_1(State0),
-  nop(record_saved(State0)))), !.
+odd_state(State):- \+ compound(State),!.
+odd_state([istate|_More]).
 
+add_advstate_db(_,Nil):- Nil==[], !.
+add_advstate_db(Ctx,State):- odd_state(State), dumpST, dmsg(add_advstate_db(Ctx,State)), break.
+add_advstate_db(Ctx,[H|T]):- !, 
+   add_advstate_db(Ctx,H),
+   add_advstate_db(Ctx,T).
 
-set_advstate_db_1(Nil):- Nil==[], !.
-set_advstate_db_1(State):- \+ callable(State), dumpST, dmsg(set_advstate_db(State)), break.
-set_advstate_db_1([H|T]):- is_list(T), !, % retractall(advstate_db(_)),
-   set_advstate_db_1(H),
-   set_advstate_db_1(T).
-
-set_advstate_db_1(structure_label(_Label)).
-set_advstate_db_1(State):-
-   compound(State),
-   % dmsg(set_advstate_db_1(State)),
-   compound_name_arguments(State, Pred, [Object|StateL]) ,
-   must_be(ground, Object),
+% add_advstate_db(Ctx,type_props(player, [traits(player), sp=nouns])):- dumpST,break.
+add_advstate_db(_,structure_label(cur_state)):-!.
+add_advstate_db(Ctx,State):- 
+   % dmsg(add_advstate_db(Ctx,State)),
+   compound_name_arguments(State, Pred, StateL) ,
+   % must_be(ground, Object),
    append(WithoutLastArg, [_NewData], StateL),
    append(WithoutLastArg, [_OldData], PreStateL),
-   PreState =.. [Pred, Object|PreStateL],
-   forall(clause(advstate_db(PreState), true, Ref), erase(Ref)),
-   asserta(advstate_db(State)), !.
-
-set_advstate_db_1(State):- dumpST, dmsg(set_advstate_db(State)), break.
+   compound_name_arguments(PreState, Pred, PreStateL),
+   nop((append_term(Ctx,PreState,Remove),forall(clause(Remove, true, Ref), erase(Ref)))),
+   append_term(Ctx,State,Add),asserta(Add), !.
 
 get_advstate_fork(StateC):- get_advstate(State), duplicate_term(State, StateC).
 
-declared_advstate(Fact):- \+ is_list(Fact), advstate_db(Fact), !.
 declared_advstate(Fact):- get_advstate(State), declared(Fact, State).
 
 % %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -172,7 +174,7 @@ declared_advstate(Fact):- get_advstate(State), declared(Fact, State).
 update_agent_model_props(Agent, Figment, M0, M1) :-  agent_mem(Agent, M0, M1, A0, A1),
   memorize_edit_0(Agent, append, Figment, A0, A1).
 
-:- meta_predicate(memorize_edit(+, 3, *, *, *)).
+:- meta_predicate(memorize_edit_0(+, 3, *, *, *)).
 memorize_edit_0(_Agent, Pred3, Figment, M0, M2) :- assertion(\+ is_list(Figment)),
  must_mw1((
    Figment =.. [Name, Value], OldFigment =.. [Name, OldValue],
@@ -233,26 +235,28 @@ forget_ always(Agent, Figment0, M0, M1) :-   agent_mem(Agent, M0, M1, A0, A1),
 must_unlistify(Figment0, Figment):- is_list(Figment0), !, must_mw1(Figment0=[Figment]).
 must_unlistify(Figment, Figment).
 
-in_agent_model(Agent, Fact, State):- in_model(Fact, State)*-> true ; (agent_thought_model(Agent, ModelData, State), in_model(Fact, ModelData)).
+in_agent_model(Agent, Fact, State):- in_model(Fact, State)*-> true ; 
+  (agent_thought_model(Agent, ModelData, State), in_model(Fact, ModelData)).
 
-in_model(E, L):- quietly(in_model0(E, L)).
+in_model(E, L):- in_model0(E, L).
 
 in_model0(E, L):- \+ is_list(L), declared_link(declared, E, L).
 in_model0(E, L):- compound(E), E = holds_at(_, _), !, member(E, L).
-in_model0(E, L):- member(EE, L), same_element(EE, E).
+in_model0(E, L):- member(EE, L), same_h_element(EE, EO),E=EO.
 
-same_element(E, E) :- !.
-same_element(holds_at(E, T), E):- nonvar(T).
+same_h_element(E, E) :- !.
+same_h_element(holds_at(E, T), E):- nonvar(T).
 
 agent_mem(_Agent, Mem0, Mem1, AMem0, AMem1):- Mem0=AMem0, Mem1=AMem1.
 agent_mem(_Agent, Mem0, AMem0):- Mem0=AMem0.
 
 :- defn_state_getter(agent_thought_model(agent, model)).
-agent_thought_model(Agent, ModelData, M0):- var(M0), get_advstate(State), !, member(memories(Agent, M0), State), agent_thought_model(Agent, ModelData, M0).
-agent_thought_model(Agent, ModelData, M0):- \+ is_list(M0), !, declared_link(agent_thought_model(Agent), ModelData, M0).
-agent_thought_model(Agent, ModelData, M0) :- memberchk(propOf(memories, Agent), M0), ModelData = M0, !.
-agent_thought_model(Agent, ModelData, M0):- declared(memories(Agent, M1), M0), !,
-  agent_thought_model(Agent, ModelData, M1).
+agent_thought_model(Agent, ModelData, M0):- agent_thought_model_0(Agent, ModelData, M0).
+agent_thought_model_0(Agent, ModelData, M0):- var(M0), get_advstate(State), !, member(memories(Agent, M0), State), agent_thought_model(Agent, ModelData, M0).
+agent_thought_model_0(Agent, ModelData, M0):- \+ is_list(M0), !, declared_link(agent_thought_model(Agent), ModelData, M0).
+agent_thought_model_0(Agent, ModelData, M0) :- memberchk(propOf(memories, Agent), M0), ModelData = M0, !.
+agent_thought_model_0(Agent, ModelData, M0):- declared(memories(Agent, M1), M0), !,
+  agent_thought_model_0(Agent, ModelData, M1).
 
 
 :- export(declare/3).
@@ -297,6 +301,7 @@ select_always(Item, List, ListWithoutItem) :- select_from(Item, List, ListWithou
 :- export(declare/3).
 :- defn_state_setter(declare(fact)).
 
+declare(h(A,B,C), State, NewState):- dbug1(bad_arity_declare(h(A,B,C), State, NewState)),!,dumpST,break.
 declare(Fact, State, NewState):- must_mw1(declare_0(Fact, State, NewState)).
 
 declare_0(Fact, State, NewState) :- notrace((assertion(var(NewState)), is_list(State))), !, notrace(declare_list(Fact, State, NewState)).
@@ -349,18 +354,22 @@ declare_list(HasList, State, [NewFront|NewState]) :-
 declare_list(Fact, State, NewState) :- append([Fact], State, NewState).
 
 
-maybe_undeclare(Fact, State, NewState):- declared(Fact, State), NewState=State.
-%maybe_undeclare(Fact, State, NewState):- undeclare(Fact, State, NewState).
-
 append_toplevel_props(perceptq(Agent, Events), S0, S2):-
  must_mw1((
- maybe_undeclare(perceptq(Agent, Queue), S0, S1),
+ pre_redeclare(perceptq(Agent, Queue), S0, S1),
  append(Queue, Events, NewQueue),
- replace_declare(perceptq(Agent, NewQueue), S1, S2),
+ redeclare(perceptq(Agent, NewQueue), S1, S2),
  declared(perceptq(Agent, RQueue), S0, _),
  is_list(RQueue))).
 
-replace_declare(Fact, State, NewState):-
+
+:- defn_state_setter( pre_redeclare( + fact)).
+pre_redeclare(Fact, State, NewState):- declared(Fact, State),!, NewState=State.
+pre_redeclare(Fact, State, NewState):- must_mw1(functor(Fact,_,Arg)), ignore(arg(Arg,Fact,[])), NewState=[Fact|State],!.
+%pre_redeclare(Fact, State, NewState):- undeclare(Fact, State, NewState).
+
+:- defn_state_setter( redeclare( + fact)).
+redeclare(Fact, State, NewState):-
  must_mw1((old_figment(Fact, _F, A, Old),
  (undeclare(Old, State, MidState);(State=MidState, ignore(arg(A, Old, [])))),
  nop(episodic_mem($agent, replace(Old, Fact))),
@@ -379,17 +388,17 @@ undeclare_always(Fact, State, NewState) :- select_always(Fact, State, NewState).
 % declared(Fact, State) :- player_local(Fact, Player), !, declared(wishes(Player, Fact), State).
 
 declared(State) :- % dumpST, throw
-  (with_mutex(get_advstate, advstate_db(State))).
+  declared_advstate(State).
 
 :- export(declared/2).
 :- defn_state_getter(declared(fact)).
-declared(Fact, State) :- quietly(declared_0(Fact, State)).
+declared(Fact, State) :- declared_0(Fact, State).
 
 declared_0(Fact, State) :-
-  quietly(( is_list(State)->declared_list(Fact, State);declared_link(declared, Fact, State))).
+  is_list(State)->declared_list(Fact, State);declared_link(declared, Fact, State).
 
 declared_list(Fact, State) :- assertion(is_list(State)), member(Fact, State).
-declared_list(Fact, State) :- member(link(VarName), State), declared_link(declared, Fact, VarName).
+declared_list(Fact, State) :- member(link(VarName), State), nonvar(VarName), declared_link(declared, Fact, VarName).
 declared_list(Fact, State) :- member(propOf(_, Object), State), declared_link(declared, Fact, Object).
 
 :- meta_predicate(declared_link(2, ?, *)).
@@ -399,13 +408,18 @@ declared_link(Pred2, Fact, inst(Obj)):- declared_advstate(props(Obj, PropList)),
 declared_link(Pred2, Fact, type(Type)):- declared_advstate(type_props(Type, PropList)), call(Pred2, Fact, PropList).
 % declared_link(Pred2, Fact, inst_model(Obj, Type)):- declared_advstate(props(Type, PropList)), call(Pred2, Fact, PropList).
 declared_link(Pred2, Fact, Object):- nonvar(Object), extra_decl(Object, PropList), call(Pred2, Fact, PropList).
-declared_link(Pred2, Fact, Object):- get_advstate(State), direct_props(Object, PropList, State), call(Pred2, Fact, PropList), !.
+declared_link(Pred2, Fact, Object):- get_advstate(State), 
+   setup_call_cleanup(
+         flag('$direct_props2',X,X+1), 
+         ((X = 0, direct_props2(Object, PropList, State))),
+         flag('$direct_props2',_,X)),
+   call(Pred2, Fact, PropList), !.
 declared_link(declared, Fact, Object):- callable(Fact), Fact=..[F|List], Call=..[F, Object|List],
   current_predicate(_, Call), call(Call), !.
-declared_link(declared, Fact, Object):- callable(Fact), Fact=..[F|List], Call=..[F, Object|List], advstate_db(Call), !.
+declared_link(declared, Fact, Object):- callable(Fact), Fact=..[F|List], Call=..[F, Object|List], declared_advstate(Call), !.
 declared_link(Pred2, Fact, Object):- var(Object), get_advstate(State), member(Prop, State), arg(1, Prop, Object), arg(2, Prop, PropList),
   call(Pred2, Fact, PropList).
-declared_link(declared, Fact, _Object):- advstate_db(Fact), !.
+declared_link(declared, Fact, _Object):- declared_advstate(Fact), !.
 
 
 
@@ -428,6 +442,8 @@ is_state_info(StateInfo):- safe_functor(StateInfo, F, A),
 
 functor_arity_state(F, A):- is_type_functor(state, F, A).
 functor_arity_state(type, 2).
+%functor_arity_state(F, A):- is_spatial_rel(F).
+%functor_arity_state(F, A):- is_spatial_rel(F).
 
 episodic_mem(x(floyd, _), _Figment) :-!.
 episodic_mem(Agent, Figment) :- is_list(Figment), !, forall(member(F, Figment), episodic_mem(Agent, F)).
@@ -475,7 +491,7 @@ state_prop_0(OP, Fact, Pred1Name, OUT):- is_pred1_state(Pred1Name), append_term(
    append_term(Pred1Name, NewState, DBPredNewState), asserta(DBPredNewState),
    store_op(Pred1Name,NewState,OUT).   
 
-state_prop_0(OP, Fact, Object, Object):- throw(unsupported_state_prop(OP, Fact, Object, Object)).
+state_prop_0(OP, Fact, Object, Object):- dmsg(unsupported_state_prop(OP, Fact, Object, Object)),fail.
 
 state_prop_0(_OP, Fact, Object, Object):- callable(Fact), !, Fact=..[F|List],
   Call=..[F, NewArg|List],
@@ -485,4 +501,27 @@ state_prop_0(_OP, Fact, Object, Object):- callable(Fact), !, Fact=..[F|List],
   asserta(Call).
 
 store_op(VarName,_NewPropList,OUT):- ignore(VarName=OUT).
+
+:- dynamic(mu:adv_state_context/1).
+get_state_context(Ctx):- mu:adv_state_context(Ctx),!.
+set_state_context(Ctx):- asserta(mu:adv_state_context(Ctx)), ensure_state_context(Ctx).
+
+:- dynamic(mu:is_pred1_state/1).
+ensure_state_context(Ctx):- mu:is_pred1_state(Ctx), !.
+ensure_state_context(Ctx):- asserta_new(mu:is_pred1_state(Ctx)), fail.
+ensure_state_context(Ctx):- atom(Ctx), nb_setval(Ctx,[structure_label(Ctx) ]),fail.
+ensure_state_context(Ctx):- append_term(Ctx,_,P), functor(P,F,A), dynamic(F/A), clear_state_context(Ctx).
+
+
+clear_state_context(Ctx):- set_advstate(Ctx,[structure_label(Ctx) ]).
+
+notrace_state(G):- call(G).
+
+:- ensure_state_context(advstate_db).
+:- ensure_state_context(istate).
+:- ensure_state_context(statest).
+:- ensure_state_context(parseFrame(_)).
+
+:- fixup_exports.
+
 

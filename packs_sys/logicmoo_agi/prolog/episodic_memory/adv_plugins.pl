@@ -16,6 +16,7 @@
 %
 %
 */
+:- '$set_source_module'(mu).
 
 
 :- multifile(adv_global:nomic_config_dir/1).

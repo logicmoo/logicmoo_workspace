@@ -15,13 +15,14 @@
 %
 */
 
-:- module(ec,[abdemo_special/3]).
+:- module(ec,[abdemo_special/3,match_test/2]).
+
 
 testing_msg(X):- wdmsg(X).
 
 :- use_module(library((pfc_lib))).
 
-%%executable(P):- mpred_props(
+%%event(P):- mpred_props(
 % :- use_module(ec_loader).
 :- use_module(ec_common).
 
@@ -42,11 +43,34 @@ next_d(D1, D2):- D1<90,!,D2 is D1+60.
 next_d(D1, D2):- D2 is D1+300.
 
 :- style_check(-singleton).
+%:- module_transparent(local_database/1).
+%:- dynamic(local_database/1).
+%:- export(local_database/1).
+%:- system:import(local_database/1).
+
+
+abdemo_call(Goal):- 
+ show_ec_current_domain_db,
+ pprint_ecp_cmt(blue, '?-'(Goal)), 
+ (Goal -> (pprint_ecp_cmt(green, success(Goal))) ; pprint_ecp_cmt(red, failed(Goal))). 
+
+abdemo(call(Goal)):- !, abdemo_call(Goal).
+abdemo(Goal):- !, abdemo_call(do_abdemo(Goal)).
+
+do_abdemo(Goal):- 
+ listify(Goal,GoalL),
+ show_ec_current_domain_db,
+ R = [PS, BS, NS], 
+ (abdemo(GoalL, [PS, BS], NS), pprint_ecp_cmt(cyan, R)).
+
+abdemo(Gs, R, N) :-
+     ticks(Z1), abdemo(Gs, [[], []], R, [], N), ticks(Z2), 
+     Z is (Z2-Z1)/60, write('Total time taken '), writeln(Z), nl.
 
 % abdemo_special(long,Gs,R):-abdemo_timed(Gs,R).
 abdemo_special(W,Gs,R):- \+ is_list(Gs),!, functor(Gs,F,_),!, 
   abdemo_special(W+F,[Gs],R).
-abdemo_special(loops,Gs,R):- write(cant_abdemo(loops,Gs,R)),!,nl.
+%abdemo_special(loops,Gs,R):- write(cant_abdemo(loops,Gs,R)),!,nl.
 abdemo_special(_,Gs,R):- abdemo_timed(Gs,[R,N]), write_plan_len(R,N), nl, write_plan(R,[]).
 
 abdemo_special(depth(Low,High),Gs,R):- 
@@ -65,6 +89,8 @@ abdemo_top_xfrm(Gs,Gss):-
   When = t,
   must(fix_goal(When,Gs,Gs0)), !,
   must(fix_time_args(When,Gs0,Gss)),!.
+
+:- discontiguous ec:abdemo_top/8.
 
 abdemo_top(Gs,R1,R3,N1,N3,D) :-
   must(nonvar(Gs)),
@@ -99,12 +125,19 @@ iv_remove_same_key([V1-_|T0], V, T) :-
     iv_remove_same_key(T0, V, T).
 iv_remove_same_key(L, _, L).
 
-ec_trace(O,0):- O=on.
-ec_trace(O,1):- O=on.
+%ec_trace(O,0):- fail, O=on.
+%ec_trace(O,1):- O=on, !.
 
-%borked %:- include('eventCalculusPlannerDMiles_OLD.pl').        
+%borked %
+%:- include('eventCalculusPlannerDMiles_OLD.pl').        
 
-% :- include('eventCalculusPlannerDMiles.pl').        
+%:- include('eventCalculusPlannerDMiles.pl').        
+
+abdemo_timed(Gs,[HA,BA]) :-
+     ticks(Z1),
+     abdemo(Gs,[HA,BA]),
+     write_plan(HA,BA),
+     ticks(Z2), Z is (Z2-Z1)/60, write('Total time taken '), writenl(Z), nl.
 
 /*
 :- include('planner115.pl').        
@@ -112,6 +145,7 @@ abdemo_top(Gs,R1,R3,N1,N3,D, _MaxDepth, _HighLevel) :-
   must(nonvar(Gs)),
   abdemo_id(Gs,R1,R2,N1,N2,D), !, 
   abdemo_cont(R2,R3,N2,N3).
+
 */
 /*
 :- include('planner42.pl').        
@@ -120,12 +154,61 @@ abdemo_top(Gs,R1,R3,N1,N3,D, _MaxDepth, _HighLevel) :-
   abdemo(Gs,R1,R2,N1,N2), !, 
   abdemo_cont(R2,R3,N2,N3).
 */
-:- include('planner19a.pl').        
+/*
+*/
 abdemo_top(Gs,R1,R3,N1,N3,D, _MaxDepth, _HighLevel) :-
   must(nonvar(Gs)),
   abdemo(Gs,R1,R2,N1,N2), !, 
   abdemo_cont(R2,R3,N2,N3).
 
+:- include('ec_planner_current.pl').        
+:- set_prolog_flag(ec_loader,false).
 :- fixup_exports.
 
+
+:- multifile(demo_test/3).
+:- if( \+ current_predicate( ec_current_domain_bi /1)).
+ec_current_domain_bi(G):- call(G).
+:- endif.
+
+:- if( \+ current_predicate( ec_trace /2)).
+ec_trace(on, 0).
+:- endif.
+
+
+:- if( \+ current_predicate( ticks /1)).
+ticks(Z1):-statistics(runtime, [Z1, _]).
+:- endif.
+
+:- if( \+ current_predicate( dbginfo /1)).
+dbginfo(R):- pprint_ecp_cmt(yellow, R).
+:- endif.
+
+:- if( \+ current_predicate( init_gensym /1)).
+init_gensym(_).
+:- endif.
+
+
+:- export(demo_test/1).
+demo_test(Goal):- compound(Goal), !, abdemo(Goal).
+demo_test(Match):- mmake, 
+  forall((demo_test(Name, Type, Goal),once(match_test(Match,Name);match_test(Match,Type))),
+    demo_test(Name, Type, Goal)).
+
+:- multifile(demo_test/3).
+:- dynamic(demo_test/3).
+:- export(demo_test/3).
+:- system:import(demo_test/3).
+demo_test(Name, Type, Goal):- nonvar(Goal),
+ (pprint_ecp_cmt(blue, do(demo_test(Name, Type, Goal))),  %Type \== slow, 
+  abdemo(Goal)).
+
+
+match_test(X,Y):- (var(X);var(Y);X==[];Y==[]),!.
+match_test(X,Y):- is_list(X),member(XX,X),match_test(XX,Y),!.
+match_test(X,Y):- is_list(Y),member(YY,Y),match_test(X,YY),!.
+match_test(X,Y):- term_to_atom(X,X1),term_to_atom(Y,Y1), (sub_atom(X1,_,_,_,Y1) ; sub_atom(Y1,_,_,_,X1)),!.
+
+
+:- include(library('../test/ec_planner/abdemo_test/abdemo_tests.pl')).
 

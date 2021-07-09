@@ -48,7 +48,12 @@ define([ "jquery", "config", "form", "modal", "laconic" ],
 (function($) {
   var pluginName = 'sourcelist';
 
-  var current_query = {q: config.swish.default_query || ""};
+  var current_query = "";
+  if(config && config.swish) {
+	  current_query = {q: config.swish.default_query || ""};
+  } else {
+	  debugger;
+  }
   var current_profile;
   var query_cache = [];
   var pending = [];

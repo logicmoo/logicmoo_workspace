@@ -34,7 +34,7 @@ bbbb.
 
 :- mpred_reset_kb(user).
 
-:- listing(spft).
+:- listing('$spft').
 
 :- pp_DB.
 

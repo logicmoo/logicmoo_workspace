@@ -23,6 +23,10 @@
 		drs_to_drslist/2
 	]).
 
+
+:- use_module(logicmoo_ape_utils, [unnumbervars/2, ape_numbervars/3]).
+
+
 /** <module> DRS to TPTP converter
 
 Converts DRSs to fof-axioms, except for yes/no question-conditions which

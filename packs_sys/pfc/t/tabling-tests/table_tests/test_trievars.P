@@ -1,0 +1,78 @@
+:- import new_trie/1, trie_intern/2,trie_interned/2 from intern.
+:- import trie_intern/4 from intern.
+:- import numbervars/1 from num_vars.
+:- import length/2 from basics.
+
+test:- test_intern,test_assert,test_table.
+
+test_intern:- 
+       test_intern_1(800),
+       catch(test_intern_2(1000),error(A,context(_B,_C)),writeln(A)).
+
+test_intern_1(N):- 
+       new_trie(Trie),
+       makevarlist(N,L),
+       trie_intern(L,Trie),
+       fail.
+test_intern_1(_N):-
+       trie_interned(L,1),
+%       numbervars(L),
+	length(L,Len),
+       writeln(intern_length(Len)),
+       fail.
+test_intern_1(_N).
+
+test_intern_2(N):- 
+       new_trie(Trie),
+       makevarlist(N,L),
+       trie_intern(L,Trie,Leaf,Skel),
+       numbervars(Skel),
+       writeln(leaf(Leaf)),
+       writeln(skel(Skel)),
+       fail.
+test_intern_2(_N).
+
+%------------------------------------------------------------------
+:- index(p_assert/1,trie).
+
+test_assert:- 
+       test_assert_1(800).
+
+test_assert_1(N):- 
+       makevarlist(N,L),
+       assert(p_assert(L)),
+       fail.
+test_assert_1(_N):-
+       p_assert(L),
+       numbervars(L),
+	length(L,Len),
+       writeln(assert_length(Len)),
+       fail.
+test_assert_1(_N).
+
+%------------------------------------------------------------------
+:- table p_table/1.
+p_table(_).
+
+test_table:- 
+       test_table_1(800).
+
+test_table_1(N):- 
+       makevarlist(N,L),
+       p_table(L),
+       fail.
+test_table_1(N):-
+       makevarlist(N,L),
+       p_table(L),
+       numbervars(L),
+	length(L,Len),
+       writeln(table_length(Len)),
+       fail.
+test_table_1(_N).
+
+%------------------------------------------------------------------
+
+makevarlist(0,[]):-!.
+makevarlist(N,[_|T]):-
+	N1 is N - 1,
+	makevarlist(N1,T).

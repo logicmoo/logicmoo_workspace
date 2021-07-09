@@ -1,8 +1,1 @@
-ERROR: Invalid ACE text:
-The word "worker" is unknown; did you mean "worked"?
-The word "worker" is unknown; did you mean "worked"?
-The word "worker" is unknown; did you mean "worked"?
-The word "healthy" is unknown.
-The word "healthy" is unknown.
-"everybody who is not provably a <> worker is a manager.": This is the first sentence that was not ACE. The sign <> indicates the position where parsing failed.
-
+ERROR: Program has no answer.

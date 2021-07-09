@@ -1,21 +1,4 @@
-<div class="notebook">
-
-<div class="nb-cell html">
-<pre>
- NomicMU
-
-   If any of the bellow are not connecting
-   Saying only: 
-
-      Trying ::1...
-
-   retry in 5 minutes as the server likely restarting for running tests
-
-</pre>
-
-<iframe src="https://logicmoo.org:13904" frameborder="0" style="overflow:hidden;width:100%" height="800px" width="100%"></iframe>
-</div>
-
-
-</div>
+<div class="notebook"><div class="nb-cell html"><object data="https://logicmoo.org:14104/" width="100%" height="100%" type="text/html">
+<embed src="https://logicmoo.org:14104/" frameborder="0" style="overflow:hidden;width:100%" height="100%" width="100%">
+</object></div></div>
 

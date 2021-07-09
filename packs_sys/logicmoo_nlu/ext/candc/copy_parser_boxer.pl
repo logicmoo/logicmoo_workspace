@@ -38,8 +38,8 @@ user:file_search_path(lex,        logicmoo('candc/src/prolog/boxer/lex')).
 
 
 
-avar(V):-var(V),!.
-avar('$VAR'(_)).
+aVar(V):-var(V),!.
+aVar('$VAR'(_)).
 
 :- ensure_loaded(boxer(boxer)).
 
@@ -299,7 +299,7 @@ assert_drs(E):- not(ground(E)),numbervars(E),must(ground(E)),assert_drs(E).
 assert_drs(E):- not(ground(E)),trace,safe_numbervars(E,EE),trace,!,must(ground(EE)),assert_drs(EE).
 
 assert_drs(E):- loop_check_clauses(assert_drs(E),assert_drsdata(E)).
-assert_drs(E):- avar(E),!. % , assert_drsdata((erorr_var(E))).
+assert_drs(E):- aVar(E),!. % , assert_drsdata((erorr_var(E))).
 assert_drs([]).
 assert_drs(E):- not(compound(E)),!,trace,assert_drsdata((erorr_nc(E))).
 assert_drs(true(E)):-assert_drs_holds(E).
@@ -352,8 +352,8 @@ assert_drs(isaVarPos(Var,Male,Pos)):-
 assert_drs(t(POS,Recliner,Rule,PropList,R2004)):-assert_drs(word(R2004:PropList)),assert_drs_holds(tagV,R2004,V),arg(1,Rule,V),isaVarPos(V,Recliner,POS),assert_drs(Rule).
 
 assert_drs(E):- is_list(E),!,assert_drs_list(E).
-assert_drs(lam(V,E)):-avar(V),
- not(avar(E)),assert_drs(E).
+assert_drs(lam(V,E)):-aVar(V),
+ not(aVar(E)),assert_drs(E).
 assert_drs(ba(E)):-!,assert_drs(E).
 assert_drs(drs(Vars,Formulas)):-!, assert_drs(vars(Vars)),expand_drs_args(Formulas,EEL),assert_drsdata(EEL).
 assert_drs(xdrs(Vars,Formulas)):-!,assert_drs(words(Vars)),expand_drs_args(Formulas,EEL),assert_drsdata(EEL).
@@ -391,7 +391,7 @@ drs_filter(later(_,_)).
 % assert_drsdata/1
 % ------------------------------------------------------------------
 
-% assert_drsdata(E):- avar(E),!,assert_drsdata((erorr_var0(E))).
+% assert_drsdata(E):- aVar(E),!,assert_drsdata((erorr_var0(E))).
 assert_drsdata(E):- not(compound(E)),!,assert_drsdata((erorr_nc0(E))).
 assert_drsdata(E):- assert_drsdata_0(E),!.
 
@@ -412,7 +412,7 @@ assert_drsdata_0(E):-
 ignore_drs_term([]:[]).
 ignore_drs_term(lam(R10, R10)).
 
-expand_drs_args(V,V):- (avar(V);not(compound(V))),!.
+expand_drs_args(V,V):- (aVar(V);not(compound(V))),!.
 expand_drs_args([],[]):-!.
 expand_drs_args(skip(N,[A|B]),BB):-length(Len,N),append(Len,Rest,[A|B]),expand_drs_args(Rest,RestCleaned),append(Len,RestCleaned,BB),!.
 expand_drs_args([A|B],BB):-

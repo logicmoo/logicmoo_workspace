@@ -143,12 +143,12 @@ pp_item(MM,(H:-B)):- B ==true,pp_item(MM,H).
 pp_item(MM,H):- flag(show_asserions_offered,X,X+1),find_and_call(get_print_mode(html)), ( \+ \+ if_defined(pp_item_html(MM,H))),!.
 
 
-pp_item(MM,spft(W0,U,ax)):- W = (_KB:W0),!,pp_item(MM,U:W).
-pp_item(MM,spft(W0,F,U)):- W = (_KB:W0),atom(U),!,    fmt('~N%~n',[]),pp_item(MM,U:W), fmt('rule: ~p~n~n', [F]),!.
-pp_item(MM,spft(W0,F,U)):- W = (_KB:W0),         !,   fmt('~w~nd:       ~p~nformat:    ~p~n', [MM,W,F]),pp_item(MM,U).
-pp_item(MM,nt(Trigger0,Test,Body)) :- Trigger = (_KB:Trigger0), !, fmt('~w n-trigger: ~p~ntest: ~p~nbody: ~p~n', [MM,Trigger,Test,Body]).
-pp_item(MM,pt(F0,Body)):- F = (_KB:F0),             !,fmt('~w p-trigger:~n', [MM]), pp_item('',(F:-Body)).
-pp_item(MM,bct(F0,Body)):- F = (_KB:F0),             !,fmt('~w b-trigger:~n', [MM]), pp_item('',(F:-Body)).
+pp_item(MM,'$spft'(MZ,W0,U,ax)):- W = (MZ:W0),!,pp_item(MM,U:W).
+pp_item(MM,'$spft'(MZ,W0,F,U)):- W = (MZ:W0),atom(U),!,    fmt('~N%~n',[]),pp_item(MM,U:W), fmt('rule: ~p~n~n', [F]),!.
+pp_item(MM,'$spft'(MZ,W0,F,U)):- W = (MZ:W0),         !,   fmt('~w~nd:       ~p~nformat:    ~p~n', [MM,W,F]),pp_item(MM,U).
+pp_item(MM,'$nt'(Trigger0,Test,Body)) :- Trigger = (Trigger0), !, fmt('~w n-trigger: ~p~ntest: ~p~nbody: ~p~n', [MM,Trigger,Test,Body]).
+pp_item(MM,'$pt'(MZ,F0,Body)):- F = (MZ:F0),             !,fmt('~w p-trigger:~n', [MM]), pp_item('',(F:-Body)).
+pp_item(MM,'$bt'(F0,Body)):- F = (F0),             !,fmt('~w b-trigger:~n', [MM]), pp_item('',(F:-Body)).
 
 
 pp_item(MM,U:W):- !,format(string(S),'~w  ~w:',[MM,U]),!, pp_item(S,W).
@@ -237,9 +237,9 @@ pp_rules :-
 % Pretty Print Triggers.
 %
 pp_triggers :-
-     print_db_items("Positive triggers", pt(_,_,_)),
-     print_db_items("Negative triggers", nt(_,_,_,_)),
-     print_db_items("Goal triggers",bct(_,_,_)).
+     print_db_items("Positive triggers", '$pt'(_,_,_)),
+     print_db_items("Negative triggers", '$nt'(_,_,_)),
+     print_db_items("Goal triggers",'$bt'(_,_)).
 
 
 %= 	 	 
@@ -300,7 +300,7 @@ show_pred_info_0(MPI):-
         doall(show_call(why,call_u(isa(F,_)))),
        ((current_predicate(_,M:Head), (\+ predicate_property(M:Head,imported_from(_))))
           -> show_pred_info_00(M:Head); 
-             wdmsg_pretty(cannot_show_pred_info(Head))))),!.
+             wdmsg_pfc(cannot_show_pred_info(Head))))),!.
 
 
 %= 	 	 
@@ -445,7 +445,7 @@ mpred_list_triggers_1(~(What)):-var(What),!.
 mpred_list_triggers_1(~(_What)):-!.
 mpred_list_triggers_1(What):-var(What),!.
 mpred_list_triggers_1(What):- 
-   print_db_items('Supports User',spft_precanonical(P,mfl4(VarNameZ,_,_,_),ax),spft(P,mfl4(VarNameZ,_,_,_),ax),What),
+   print_db_items('Supports User',spft_precanonical(P,mfl4(VarNameZ,_,_,_),ax),'$spft'(MZ,P,mfl4(VarNameZ,_,_,_),ax),What),
    print_db_items('Forward Facts',(nesc(F)),F,What),
    print_db_items('Forward Rules',(_==>_),What),
  ignore((What\= ~(_),safe_functor(What,IWhat,_),
@@ -454,12 +454,12 @@ mpred_list_triggers_1(What):-
    print_db_items_and_neg('Subclass Of',genls(IWhat,_),IWhat),
    print_db_items_and_neg('Subclasses: ',genls(_,IWhat),IWhat))),
    forall(suggest_m(M),print_db_items('PFC Watches', mpred_prop(M,_,_,_),What)),
-   print_db_items('Triggers Negative', nt(_,_,_,_),What),
-   print_db_items('Triggers Goal',bct(_,_,_),What),
-   print_db_items('Triggers Positive',pt(_,_,_),What),
+   print_db_items('Triggers Negative', '$nt'(_,_,_),What),
+   print_db_items('Triggers Goal','$bt'(_,_),What),
+   print_db_items('Triggers Positive','$pt'(_,_,_),What),
    print_db_items('Bidirectional Rules',(_<==>_),What), 
-   dif(A,B),print_db_items('Supports Deduced',spft_precanonical(P,A,B),spft(P,A,B),What),
-   dif(G,ax),print_db_items('Supports Nonuser',spft_precanonical(P,G,G),spft(P,G,G),What),
+   dif(A,B),print_db_items('Supports Deduced',spft_precanonical(P,A,B),'$spft'(MZ,P,A,B),What),
+   dif(G,ax),print_db_items('Supports Nonuser',spft_precanonical(P,G,G),'$spft'(MZ,P,G,G),What),
    print_db_items('Backchaining Rules',(_<-_),What),
    % print_db_items('Edits',is_disabled_clause(_),What),
    print_db_items('Edits',is_edited_clause(_,_,_),What),
@@ -487,7 +487,7 @@ mpred_list_triggers_1(What):-
    !.     
 
 
-pinfo(F/A):- listing(F/A),safe_functor(P,F,A),findall(Prop,predicate_property(P,Prop),List),wdmsg_pretty(pinfo(F/A)==List),!.
+pinfo(F/A):- listing(F/A),safe_functor(P,F,A),findall(Prop,predicate_property(P,Prop),List),wdmsg_pfc(pinfo(F/A)==List),!.
 
 
 
@@ -590,9 +590,9 @@ pp_db_rules(MM):-
 
 
 pp_db_triggers(MM):- 
- pp_mask("Positive trigger",MM,pt(_,_)),
- pp_mask("Negative trigger",MM,nt(_,_,_)),
- pp_mask("Goal trigger",MM,bct(_,_)),!.
+ pp_mask("Positive trigger",MM,'$pt'(_,_,_)),
+ pp_mask("Negative trigger",MM,'$nt'(_,_,_)),
+ pp_mask("Goal trigger",MM,'$bt'(_,_)),!.
 
 pp_db_supports(MM):-
   % temporary hack.

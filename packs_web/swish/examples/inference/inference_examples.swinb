@@ -7,6 +7,10 @@ This notebook gives an overview of example programs for inference.
 Example files ending with =R= contain graphics elements produced by R.
 
 Examples divided by features:
+  - MPE inference: [bag_mpe.pl](example/inference/bag_mpe.pl), 
+    [bag_game_mpe.pl](example/inference/bag_game_mpe.pl), [eruption_mpe.pl](example/inference/eruption_mpe.pl)
+  - MAP inference: [bag_1.pl](example/inference/bag_1.pl)
+  - Viterbi inference: [bag_game_vit.pl](example/inference/bag_game_vit.pl), [eruption_vit.pl](example/inference/eruption_vit.pl)
   - Tabling: [path_tabling.swinb](example/inference/path_tabling.swinb)
   - Causal inference: [simpson.swinb](example/inference/simpson.swinb),
    [viral.swinb](example/inference/viral.swinb)
@@ -663,6 +667,22 @@ is done.
   - Diabetes mellitus type 2 example ([diabetes.swinb](example/inference/diabetes.swinb))  from Steffen Michels, Arjen Hommersom, Peter J. F. Lucas, Marina Velikova:
    A new probabilistic constraint logic programming language based on a generalised distribution semantics.   
    Artif. Intell. 228: 1-44 (2015)
+  - Drawing balls from an urn: examples for MPE/MAP inference, ([bag_mpe.pl](example/inference/bag_mpe.pl), 
+    [bag_1.pl](example/inference/bag_1.pl)).
+    From 
+    Dimitar Shterionov, Joris Renkens, Jonas Vlasselaer, Angelika Kimmig, Wannes Meert, and Gerda Janssens. 
+    The most probable explanation for probabilistic logic programs with annotated disjunctions. 
+    In International Conference on Inductive Logic Programming, volume 9046 of LNCS, 139–153. 2015
+  - Drawing balls from an urn game: examples for MPE/Viterbi inference, ([bag_game_mpe.pl](example/inference/bag_game_mpe.pl), 
+    [bag_game_vit.pl](example/inference/bag_game_vit.pl)). These example show the difference between MPE and Viterbi inference.
+    From 
+    Dimitar Shterionov, Joris Renkens, Jonas Vlasselaer, Angelika Kimmig, Wannes Meert, and Gerda Janssens. 
+    The most probable explanation for probabilistic logic programs with annotated disjunctions. 
+    In International Conference on Inductive Logic Programming, volume 9046 of LNCS, 139–153. 2015
+  - Eruption MPE and Viterbi inference ([eruption_mpe.pl](example/inference/eruption_mpe.pl), [eruption_vit.pl](example/inference/eruption_vit.pl)) 
+    Occurrence of an eruption or an earthquake at Stromboli. These example show the difference between MPE and Viterbi inference.
+    
+
 </div>
 
 </div>

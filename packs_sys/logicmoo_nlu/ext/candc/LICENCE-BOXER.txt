@@ -44,6 +44,9 @@ rented.
 Derivative Works in all publications of research based in whole or in
 part on their use through citation of the following publication:
 
+Johan Bos (2005): Towards Wide-Coverage Semantic Interpretation.
+Proceedings of Sixth International Workshop on Computational Semantics
+(IWCS-6).  Pages 42-53.
     J. Bos (2008): Wide-Coverage Semantic Analysis with Boxer.  In:
     J. Bos, R. Delmonte (eds): Semantics in Text Processing. STEP 2008
     Conference Proceedings, pp 277–286, Research in Computational
@@ -67,6 +70,7 @@ paid-up, worldwide, perpetual licence to:
         notified to the Licensee from time to time)
 
 	bos@meaningfactory.com
+	bos@di.uniroma1.it
 
         with feedback concerning Licensee's Derivative Works and, if
         requested, provide such persons with source code copies of

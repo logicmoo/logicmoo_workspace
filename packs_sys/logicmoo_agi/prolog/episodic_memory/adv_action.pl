@@ -16,7 +16,12 @@
 % Main file.
 %
 */
-*/
+
+:- '$set_source_module'(mu).
+
+:- op(1200, xfy, ('==>>')).
+:- op(1200, xfy, ('::=')).
+:- op(700, fx, ('~')).
 
 :- ensure_loaded(adv_axiom).
 
@@ -32,6 +37,10 @@ set_last_action(Agent, Action):-
 
 
 
+%! cmd_workarround( +VerbObj, -VerbObj2) is semidet.
+%
+% Cmd Workarround.
+%
 cmd_workarround(VerbObj, VerbObj2):-
  VerbObj=..VerbObjL,
  quietly(cmd_workarround_l(VerbObjL, VerbObjL2)),
@@ -46,14 +55,14 @@ cmd_workarround_l(ObjS, ObjS2):- fail,
  append(Left, [L, R, M|More], ObjS), atom(L), atom(R),
  current_atom(Atom), atomic_list_concat([L, RR], Atom, '_'), RR==R,
  append(Left, [Atom, M|More], ObjS2).
-% try(Agent, act3('look',Agent,[ Spatial])) at screen door
+% attempts(Agent, act3('look',Agent,[ spatial])) at screen door
 cmd_workarround_l( ObjS1, ObjS2):- append(L,[Verb1|R],ObjS1), verb_alias(Verb1, Verb2), append(L,[Verb2|R],ObjS2).
 
 cmd_workarround_l([Verb, Agent,ObjS], WA ):- is_list(ObjS),flatten([Verb, Agent,ObjS],WA).
-cmd_workarround_l([act3, Verb, Agent, ObjS], [try,Agent,act3(Verb,Agent,ObjS)]):- !.
+cmd_workarround_l([act3, Verb, Agent, ObjS], [attempts,Agent,act3(Verb,Agent,ObjS)]):- !.
 % look listen, smell ...
-cmd_workarround_l([Verb, Agent|ObjS], [try,Agent,act3('examine',Agent,[Sense|ObjS])]):-  sensory_verb(Sense, Verb),!.
-cmd_workarround_l([Verb, Agent|ObjS], [try,Agent,act3(Verb,Agent,ObjS)]):-  Verb\==try.
+cmd_workarround_l([Verb, Agent|ObjS], [attempts,Agent,act3('examine',Agent,[Sense|ObjS])]):-  sensory_verb(Sense, Verb),!.
+cmd_workarround_l([Verb, Agent|ObjS], [attempts,Agent,act3(Verb,Agent,ObjS)]):-  Verb\==attempts.
 
 is_ignorable(Var):- var(Var), !, fail.
 is_ignorable(at). is_ignorable(in). is_ignorable(to). is_ignorable(the). is_ignorable(a). is_ignorable(spatial).
@@ -63,61 +72,62 @@ verb_alias(look, examine) :- fail.
 
 
 % drop -> move -> touch
-subsetof(touch, touch).
-subsetof(move, touch).
-subsetof(drop, move).
-subsetof(eat, touch).
-subsetof(hit, touch).
-subsetof(put, drop).
-subsetof(give, drop).
-subsetof(take, move).
-subsetof(throw, drop).
-subsetof(open, touch).
-subsetof(close, touch).
-subsetof(lock, touch).
-subsetof(unlock, touch).
-subsetof(switch, touch).
+requires_verb(touch, touch).
+requires_verb(move, touch).
+requires_verb(drop, move).
+requires_verb(eat, touch).
+requires_verb(hit, touch).
+requires_verb(put, drop).
+requires_verb(give, drop).
+requires_verb(take, move).
+requires_verb(throw, drop).
+requires_verb(open, touch).
+requires_verb(close, touch).
+requires_verb(lock, touch).
+requires_verb(unlock, touch).
+requires_verb(switch, touch).
 
-subsetof(walk, goto).
+requires_verb(walk, goto).
 
 % feel <- taste <- smell <- look <- listen (by distance)
-subsetof(listen, examine).
-% subsetof(examine, examine).
-subsetof(look, examine).
+requires_verb(listen, examine).
+% requires_verb(examine, examine).
+requires_verb(look, examine).
 % in order to smell it you have to at least be in sight distance
-subsetof(smell, look).
-subsetof(eat, taste).
-subsetof(taste, smell).
-subsetof(taste, feel).
-subsetof(feel, examine).
-subsetof(feel, touch).
-subsetof(X, Y):- ground(subsetof(X, Y)), X=Y.
+requires_verb(smell, look).
+requires_verb(eat, taste).
+requires_verb(taste, smell).
+requires_verb(taste, feel).
+requires_verb(feel, examine).
+requires_verb(feel, touch).
+requires_verb(X, Y):- ground(requires_verb(X, Y)), X=Y.
 
-subsetof(SpatialVerb1, SpatialVerb2):- compound(SpatialVerb1), compound(SpatialVerb2), !,
+requires_verb(SpatialVerb1, SpatialVerb2):- compound(SpatialVerb1), compound(SpatialVerb2), !,
  SpatialVerb1=..[Verb1, Arg1|_],
  SpatialVerb2=..[Verb2, Arg2|_],
- subsetof(Verb1, Verb2),
- subsetof(Arg1, Arg2).
+ requires_verb(Verb1, Verb2),
+ requires_verb(Arg1, Arg2).
 
-subsetof(SpatialVerb, Verb2):- compound(SpatialVerb), safe_functor(SpatialVerb, Verb, _), !,
- subsetof(Verb, Verb2).
+requires_verb(SpatialVerb, Verb2):- compound(SpatialVerb), safe_functor(SpatialVerb, Verb, _), !,
+ requires_verb(Verb, Verb2).
 
-subsetof(Verb, SpatialVerb2):- compound(SpatialVerb2), safe_functor(SpatialVerb2, Verb2, _), !,
- subsetof(Verb, Verb2).
+requires_verb(Verb, SpatialVerb2):- compound(SpatialVerb2), safe_functor(SpatialVerb2, Verb2, _), !,
+ requires_verb(Verb, Verb2).
 
 % proper subset - C may not be a subset of itself.
-psubsetof(A, B):- A==B, !, fail.
-psubsetof(A, B) :- subsetof(A, B).
-psubsetof(A, C) :-
- subsetof(A, B),
- subsetof(B, C).
+proper_requires_spatially(A, B):- A==B, !, fail.
+proper_requires_spatially(A, B) :- requires_verb(A, B).
+proper_requires_spatially(A, C) :-
+ requires_verb(A, B),
+ requires_verb(B, C).
 
 
 maybe_pause(Agent):- stdio_player(CP), (Agent==CP -> wait_for_input([user_input], _, 0) ; true).
 
-invoke_command(Requester, try(Agent, Action)) ==>>  
+invoke_command(Requester, attempts(Agent, Action)) ==>>  
  {Requester==Agent},
  invoke_command(Agent, Action), !.
+
 invoke_command(Agent, Action) ==>>
  invoke_metacmd(Agent, Action),
   {overwrote_prompt(Agent)}, !.
@@ -142,9 +152,11 @@ invoke_intents( Agent) ==>>
  sg(declared(memories(Agent, Mem0))),
  {member( intent(Agent, []), Mem0)}, !.
 invoke_intents( Agent, S0, S9) :-
- maybe_undeclare(memories(Agent, Mem0), S0, S1),
- thought_check(Agent, intent(Agent, OldToDo), Mem0), append([Action], NewToDo, OldToDo), replace_thought(Agent, intent(Agent, NewToDo), Mem0, Mem2),
- replace_declare(memories(Agent, Mem2), S1, S2),
+ declared(memories(Agent, Mem0), S0, S1),
+ thought_check(Agent, intent(Agent, OldToDo), Mem0), 
+    append([Action], NewToDo, OldToDo), 
+ replace_thought(Agent, intent(Agent, NewToDo), Mem0, Mem2),
+ redeclare(memories(Agent, Mem2), S1, S2),
  set_last_action(Agent, Action),
  invoke_command(Agent, Action, S2, S9).
 invoke_intents( _Agent, S0, S0).
@@ -177,13 +189,13 @@ invoke_intents( _Agent, S0, S0).
 agent_try_action(Agent, Action, S0, S3) :-
  quietly_must((
  set_last_action(Agent, Action),
- maybe_undeclare(memories(Agent, Mem0), S0, S1),
+ pre_redeclare(memories(Agent, Mem0), S0, S1),
  memorize_attempting(Agent, Action, Mem0, Mem1),
- replace_declare(memories(Agent, Mem1), S1, S2))),
+ redeclare(memories(Agent, Mem1), S1, S2))),
  into_attempt(Agent, Action, AgentAction),
  once(show_failure(raise_aXiom_events( AgentAction, S2, S3));(S2=S3, dumpST)), !.
 
-into_attempt(Agent, Action, try(Agent,Action)):- \+ functor(Action, try, 2), !.
+into_attempt(Agent, Action, attempts(Agent,Action)):- \+ functor(Action, attempts, 2), !.
 into_attempt(_Agent, Action, AgentAction):- Action = AgentAction.
 
 %memorize_attempting(_Agent, Action, Mem0, Mem0):- has_depth(Action), !.
@@ -211,7 +223,7 @@ some_agent_clock_time(Agent, T0, OldNow, Mem):- nonvar(Mem),
   thought_check(Agent, timestamp(T0, OldNow), Mem), !.
  
 find_clock_time(Agent, T0, OldNow, _UMem):-
-   get_advstate(State), declared(preceptq(Agent, Mem), State),
+   get_advstate(State), declared(percept(Agent, Mem), State),
    some_agent_clock_time(Agent, T0, OldNow, Mem).
 find_clock_time(Agent, T0, OldNow, Mem0):- some_agent_clock_time(Agent, T0, OldNow, Mem0).
 find_clock_time(Agent, T0, OldNow, _UMem):-
@@ -230,9 +242,15 @@ trival_act(V):- \+ callable(V), !, fail.
 %trival_act(Action):- has_depth(Action).
 trival_act(V):- \+ compound(V), !, fail.
 trival_act(_):- !, fail.
-trival_act( try(_, X)):- !, trival_act( X).
+trival_act( attempts(_, X)):- !, trival_act( X).
 trival_act( act3('wait',_,[])).
 
+exclude_failures(X,Y):- apply:exclude((=(failed(_))),X,Y).
+
+satisfy_each_always(Context, Cond, Memory, NewMemory):-
+  satisfy_each(Context, Cond, Memory, NewMemory0), 
+  exclude_failures(NewMemory0,NewMemory),!.
+satisfy_each_always(_Context, _Cond, Memory, NewMemory):- exclude_failures(Memory,NewMemory).
 
 satisfy_each_cond(Ctxt, [], success(Ctxt)) ==>> !.
 satisfy_each_cond(Context, [Cond|CondList], Out) ==>>
@@ -240,32 +258,54 @@ satisfy_each_cond(Context, [Cond|CondList], Out) ==>>
   ((sg(member(failed(Why))) -> Out=failed(Why) ; satisfy_each_cond(Context, CondList, Out))), !.
 % satisfy_each_cond(_Context, [Cond|_CondList], failed(Cond)) ==>> !.
 
+satisfy_each(Ctx, MCond, S0, S9) :-  stripped_term(MCond, Cond), !, trace, satisfy_each(Ctx, Cond, S0, S9).
+satisfy_each(Ctx, Cond, S0, S9) :- 
+     exclude_failures(S0, S1), S0\==S1,!,
+     satisfy_each2(Ctx, Cond, S1, S9),!.
+satisfy_each(Ctx, Cond, S0, S9) :- 
+     satisfy_each2(Ctx, Cond, S0, S9),!.
 
-satisfy_each(Context, List) ==>> {is_list(List)}, !,
+satisfy_each2(Ctx, MCond, S0, S9) :-  stripped_term(MCond, Cond), !, trace, satisfy_each2(Ctx, Cond, S0, S9).
+satisfy_each2(Ctx, Cond) ==>> satisfy_each1(Ctx, Cond).
+satisfy_each2(_, Cond) ==>> [failed(Cond)].
+
+satisfy_each1(_Context, h(spatial, P, _X, _Y)) ==>> {P==takeable}, !.
+
+satisfy_each1(Context, List) ==>> {is_list(List)}, !,
   satisfy_each_cond(Context, List, Out), !,
   {dmust_tracing(Out\=failed(_))}.
 
-satisfy_each(_Ctx, A \= B) ==>> {dif(A, B)}, !.
+satisfy_each1(_Ctx, A \= B) ==>> {dif(A, B)}, !.
 
-satisfy_each(Context, believe(Beliver, Cond)) ==>>
-   maybe_undeclare(memories(Beliver, Memory)),
-   {satisfy_each(Context, Cond, Memory, NewMemory)}, !,
-   replace_declare(memories(Beliver, NewMemory)).
+satisfy_each1(_Ctxt, exists(Ex)) ==>> !, {ground(Ex)}.
 
-satisfy_each(postCond(_Action), event(Event), S0, S9) :-  raise_aXiom_events(Event, S0, S9).
 
-satisfy_each(Context, (C1, C2), S0, S9) :- !,
+satisfy_each1(Context, believe(Beliver, Cond)) ==>>
+   pre_redeclare(memories(Beliver, Memory)),
+   {satisfy_each_always(Context, Cond, Memory, NewMemory)}, !,
+   redeclare(memories(Beliver, NewMemory)).
+
+satisfy_each1(Context, believe(_Beliver, Cond)) ==>> !, satisfy_each(Context, Cond), !.
+   
+
+satisfy_each1(postCond(_Action), event(Event), S0, S9) :-  raise_aXiom_events(Event, S0, S9).
+
+satisfy_each1(Context, (C1, C2), S0, S9) :- !,
   satisfy_each(Context, C1, S0, S1),
   satisfy_each(Context, C2, S1, S9).
+satisfy_each1(Context, (C1 ; C2), S0, S9) :- !,
+  (satisfy_each1(Context, C1, S0, S9);
+   satisfy_each(Context, C2, S0, S9)).
 
-satisfy_each(Context, foreach(Cond, Event), S0, S9) :- findall(Event, phrase(Cond, S0, _), TODO), satisfy_each(Context, TODO, S0, S9).
-satisfy_each(_, percept_local(Where, Event)) ==>> !, queue_local_event([Event], [Where]).
-satisfy_each(_, percept(Agent, Event)) ==>> !, send_1percept(Agent, Event).
-satisfy_each(postCond(_Action), ~(Cond)) ==>> !, undeclare_always(Cond). % select_always//1
-satisfy_each(postCond(_Action), Cond) ==>> !, declare(Cond).
-satisfy_each(Context, ~(Cond)) ==>> !, (( \+ satisfy_each(Context, Cond)) ; [failed(Cond)] ).
-satisfy_each(_, Cond) ==>> declared(Cond).
-satisfy_each(_, Cond) ==>> [failed(Cond)].
+satisfy_each1(postCond(_Action), ~(Cond)) ==>> !, undeclare_always(Cond). % select_always//1
+satisfy_each1(Context, foreach(Cond, Event), S0, S9) :- findall(Event, phrase(Cond, S0, _), TODO), satisfy_each(Context, TODO, S0, S9).
+satisfy_each1(_, percept_local(Where, Event)) ==>> !, queue_local_event([Event], [Where]).
+satisfy_each1(_, percept(Agent, Event)) ==>> !, send_1percept(Agent, Event).
+satisfy_each1(Context, ~(Cond)) ==>> !, (( \+ satisfy_each1(Context, Cond)) ; [failed(Cond)] ).
+satisfy_each1(_, call(Cond)) ==>> (declared(Cond)*-> true; apply_aXioms(Cond)).
+satisfy_each1(_, Cond) ==>> declared(Cond), !.
+satisfy_each1(postCond(_Action), Cond) ==>> must(({old_figment(Cond, _F, _A, Old)},
+  undeclare_always(Old))), !, declare(Cond).
 
 
 oper_splitk(Agent, Action, Preconds, Postconds):-
@@ -278,17 +318,17 @@ split_k(_Agent, [], []) :- !.
 split_k(Agent, [b(P, [V|VS])|PrecondsK], Preconds):- !,
   split_k(Agent, [b(P, V), b(P, VS)|PrecondsK], Preconds).
 
-split_k(Agent, [~(k(P, X, Y))|PrecondsK], [believe(Agent, ~(h(P, X, Y))), ~(h(P, X, Y))|Preconds]):- !,
+split_k(Agent, [~(k(P, X, Y))|PrecondsK], [believe(Agent, ~(h(spatial, P, X, Y))), ~(h(spatial, P, X, Y))|Preconds]):- !,
   split_k(Agent, PrecondsK, Preconds).
-split_k(Agent, [k(P, X, Y)|PrecondsK], [believe(Agent, h(P, X, Y)), h(P, X, Y)|Preconds]):- !,
+split_k(Agent, [k(P, X, Y)|PrecondsK], [believe(Agent, h(spatial, P, X, Y)), h(spatial, P, X, Y)|Preconds]):- !,
   split_k(Agent, PrecondsK, Preconds).
-split_k(Agent, [~(b(P, X, Y))|PrecondsK], [believe(Agent, ~(h(P, X, Y)))|Preconds]):- !,
+split_k(Agent, [~(b(P, X, Y))|PrecondsK], [believe(Agent, ~(h(spatial, P, X, Y)))|Preconds]):- !,
   split_k(Agent, PrecondsK, Preconds).
-split_k(Agent, [b(P, X, Y)|PrecondsK], [believe(Agent, h(P, X, Y))|Preconds]):- !,
+split_k(Agent, [b(P, X, Y)|PrecondsK], [believe(Agent, h(spatial, P, X, Y))|Preconds]):- !,
   split_k(Agent, PrecondsK, Preconds).
 split_k(Agent, [isa(X, Y)|PrecondsK], [getprop(X, inherited(Y))|Preconds]):-
   split_k(Agent, PrecondsK, Preconds).
-split_k(Agent, [in(X, Y)|PrecondsK], [h(in, X, Y)|Preconds]):-
+split_k(Agent, [in(X, Y)|PrecondsK], [h(spatial, in, X, Y)|Preconds]):-
   split_k(Agent, PrecondsK, Preconds).
 split_k(Agent, [Cond|PrecondsK], [Cond|Preconds]):-
   split_k(Agent, PrecondsK, Preconds).
@@ -300,6 +340,7 @@ api_invoke( Action) ==>> apply_aXioms( Action).
 % apply_act( Action , S0, S9) :- apply_aXioms( Action , S0, S9).
 
 apply_aXioms( Action) ==>> aXiom(Action), !.
+apply_aXioms( Act, S0, S9):- axiom_Recalc_e(Act, RECALC, S0, S1),!, apply_aXioms(RECALC, S1, S9), !.
 apply_aXioms( Act, S0, S9) :- ((cmd_workarround(Act, NewAct) -> Act\==NewAct)), !, apply_aXioms( NewAct, S0, S9).
 apply_aXioms( Action, S0, S0) :-
   notrace((dbug(general, failed_aXiom( Action)))), !, fail, \+ tracing.
@@ -318,6 +359,10 @@ raise_aXiom_events( Action) ==>>
 act_required_posses('lock', 'key', $agent).
 act_required_posses('unlock', 'key', $agent).
 
+:- defn_state_none(verb_domain(action, -domain)).
+%verb_domain(touch, spatial).
+verb_domain(Verb, spatial):- requires_spatially(Verb, touch),!.
+verb_domain(_, spatial):-!.
 
 act_change_opposite(f, t):-!.
 act_change_opposite(t, f):-!.
@@ -388,14 +433,18 @@ required_reason(Agent, Required):- simplify_reason(Required, CUZ), event_failed(
 simplify_reason(_:Required, CUZ):- !, simplify_reason(Required, CUZ).
 simplify_reason(Required, CUZ):- simplify_dbug(Required, CUZ).
 
-reverse_dir(north, south, _).
+reverse_dir(north, south, _):-!.
+reverse_dir(south, north, _):-!.
 reverse_dir(reverse(ExitName), ExitName, _) :- nonvar(ExitName), !.
+reverse_dir(Dir, RDir, S0):- 
+ spatial_domain(Spatially),
+ h(Spatially, fn(exit, Dir), Here, There, S0),
+ h(Spatially, fn(exit, RDir), There, Here, S0), !.
+
 reverse_dir(Dir, RDir, S0):-
- h(exit(Dir), Here, There, S0),
- h(exit(RDir), There, Here, S0), !.
-reverse_dir(Dir, RDir, S0):-
- h(Dir, Here, There, S0),
- h(RDir, There, Here, S0), !.
+ h(Spatially, Dir, Here, There, S0),
+ h(Spatially, RDir, There, Here, S0), !.
+
 reverse_dir(Dir, reverse(Dir), _).
 
 
@@ -410,26 +459,39 @@ add_agent_intent( Agent, Action):-
 :- defn_state_setter(add_agent_intent( agent, action)).
 
 add_agent_intent( Agent, Action, S0, S9) :-
-  maybe_undeclare(memories(Agent, Mem0), S0, S1),
+  pre_redeclare(memories(Agent, Mem0), S0, S1),
   add_intent( Agent, Action, Mem0, Mem1),
-  replace_declare(memories(Agent, Mem1), S1, S9).
+  redeclare(memories(Agent, Mem1), S1, S9).
 
 add_agent_goal(Agent, Action, S0, S9) :-
-  maybe_undeclare(memories(Agent, Mem0), S0, S1),
+  pre_redeclare(memories(Agent, Mem0), S0, S1),
   add_goal(Agent, Action, Mem0, Mem1),
-  replace_declare(memories(Agent, Mem1), S1, S9).
+  redeclare(memories(Agent, Mem1), S1, S9).
 
 add_intent_look(Agent) ==>>
-  h(inside, Agent, _Somewhere),
-  add_agent_intent( Agent, try(Agent, act3('look',Agent,[]))).
+  h(spatial, inside, Agent, _Somewhere),
+  add_agent_intent( Agent, attempts(Agent, act3('look',Agent,[]))).
 
+% assert_if_new(arginfo_for(
+%                  ':-'(
+%                     uses_default_doer(Action),
+%                     (safe_functor(Action,Verb,_216776) ,
+%                      verbatum_anon(Verb))),
+%                  mfl4(Mfl4P_Num4_V, mu,
+%                     /.../(episodic_memory,'adv_action.pl'), 482),
+%                  [ uses_default_doer(Action),
+%                    verbatum_anon(Verb),
+%                    safe_functor(Action,Verb,_216776) ])).
 
 uses_default_doer(Action):- safe_functor(Action, Verb, _), verbatum_anon(Verb).
 uses_default_doer(Action):- \+ compound(Action).
+
 :- defn_state_none(action_doer(action, -agent)).
 action_doer(Action, Agent):- uses_default_doer(Action), !, must_mw1(mu_current_agent(Agent)), !.
 action_doer(Action, Agent):- arg(_, Action, Agent), nonvar(Agent), is_x_instance(Agent), !.
+
 action_doer(Action, Agent):- action_verb_agent_args(Action, _Verb, Agent, _Thing),!.
+
 action_doer(Action, Agent):- mu_current_agent(Agent), !, must_mw1(Action == Agent).
 action_doer(Action, Agent):- trace, throw(missing(action_doer(Action, Agent))).
 
@@ -442,7 +504,8 @@ action_verb_agent_thing(Action, Verb, Agent, Thing):-
   action_verb_agent_args(Action, Verb, Agent, Args),
   (Args=[[Thing]]->true;Args=[Thing]->true;Thing=_), !.
 
-action_verb_agent_args(event3(Verb, Agent, Args), Verb, Agent, Args):-!.
+action_verb_agent_args(Atom, Verb, Agent, _):- atom(Atom),!,Atom = Verb, mu_current_agent(Agent),!.
+action_verb_agent_args(event3(Verb, [Agent|Args], _), Verb, Agent, Args):-!.
 action_verb_agent_args(act3(Verb, Agent, Args), Verb, Agent, Args):-!.
 
 action_verb_agent_args(MetaAction, Verb, Agent, Args):- 
@@ -471,38 +534,41 @@ action_verb_agent_args(Action, Verb, Agent, Args):-
 
 
 /*
-disgorge(Doer, How, Container, At, Here, Vicinity, Msg) :-
-  findall(Inner, h(child, Inner, Container), Contents),
+disgorge(Doer, Verb, Container, At, Here, Vicinity, Msg) :-
+  findall(Inner, h(Spatially, child, Inner, Container), Contents),
   dbug(general, '~p contained ~p~n', [Container, Contents]),
-  moveto(Doer, How, Contents, At, Here, Vicinity, Msg).
-disgorge(Doer, How, _Container, _At, _Here, _Vicinity, _Msg).
+  moveto(Doer, Verb, Contents, At, Here, Vicinity, Msg).
+disgorge(Doer, Verb, _Container, _At, _Here, _Vicinity, _Msg).
 */
-disgorge(Doer, How, Container, Prep, Here, Vicinity, Msg) ==>>
-  findall(Inner, h(child, Inner, Container), Contents),
-   {dbug(general, '~p contained ~p~n', [Container, Contents])},
-  moveto(Doer, How, Contents, Prep, Here, Vicinity, Msg).
+disgorge(Doer, Verb, Container, Prep, Here, Vicinity, Msg) ==>>
+  verb_domain( Verb, Spatially),
+  findall(Inner, h(Spatially, child, Inner, Container), Contents),
+   {dbug(general, '~p childs: ~p~n', [Container, Contents])},
+  moveto(Doer, Verb, Contents, Prep, Here, Vicinity, Msg).
 
 :- defn_state_setter(moveto(agent, verb, listof(inst), domrel, dest, list(dest), msg)).
 moveto(Doer, Verb, List, At, Dest, Vicinity, Msg) ==>> {is_list(List)}, !,
  apply_mapl_rest_state(moveto(Doer, Verb), List, [At, Dest, Vicinity, Msg]).
+
 moveto(Doer, Verb, Object, At, Dest, Vicinity, Msg) ==>>
-  undeclare(h(_, Object, From)),
-  declare(h(At, Object, Dest)),
+  undeclare(h(spatial, _, Object, From)),
+  declare(h(spatial, At, Object, Dest)),
   queue_local_event([act3('move', Doer, [Verb, Object, From, At, Dest]), Msg], Vicinity).
 
 
-event_props( act3('throw',Agent,[ Thing, _Target, Prep, Here, Vicinity]),
+event_props( act3(Verb,Agent,[ Thing, _Target, Prep, Here, Vicinity]),
  [getprop(Thing, breaks_into(NewBrokenType)),
  dbug(general, 'object ~p is breaks_into~n', [Thing]),
- undeclare(h(_, Thing, _)),
- declare(h(Prep, NewBrokenType, Here)),
+  verb_domain( Verb, Spatially),
+  undeclare(h(Spatially, _, Thing, _)),
+  declare(h(Spatially, Prep, NewBrokenType, Here)),
  queue_local_event([transformed(Thing, NewBrokenType)], Vicinity),
- disgorge(Agent, do_throw, Thing, Prep, Here, Vicinity, 'Something falls out.')]).
+  disgorge(Agent, do_throw, Thing, Prep, Here, Vicinity, 'Something falls out.')]):- Verb = 'throw'.
 
 
 setloc_silent(Prep, Object, Dest) ==>>
- undeclare(h(_, Object, _)),
- declare(h(Prep, Object, Dest)).
+ undeclare(h(spatial, _, Object, _)),
+ declare(h(spatial, Prep, Object, Dest)).
 
 state_value(Opened=TF, Opened, TF):-!.
 state_value(NamedValue, Named, Value):-
@@ -527,7 +593,7 @@ change_state_0(Agent, Action, Thing, OpenedTF, S0, S):-
  expected_truth(required_reason(Agent, \+ getprop(Thing, can_be(Open, f), S0))),
 
  (
-   maybe_when(psubsetof(Open, touch), 
+   maybe_when(proper_requires_spatially(Open, touch), 
      required_reason(Agent, 
        will_need_touch(Agent, Thing, S0, _)))),
    required_reason(Agent, \+ getprop(Thing, OpenedTF, S0)),
@@ -553,5 +619,28 @@ change_state_0(Agent, Action, Thing, OpenedTF, S0, S):-
  setprop(Thing, OpenedTF, S1, S2))),
 
  queue_local_event([msg([Agent, ensures, Thing, is, OpenedTF])], [Here, Thing], S2, S), !.
+
+end_of_file.
+
+
+Some things that we call the proto-concepts
+
+
+** during = as a subpart of
+
+
+  Realize existance of a STAG
+  Realize an subpart of an STAG as a different STAG in which can be refered to
+  Realize STAG can be a slot-role for another STAG
+  Select STAG as a slot-role for another STAG
+  Create a new instance of STAG of type
+  Copy a new STAG from another STAG
+  Combine two STAGs to create a new STAG
+
+
+
+
+  
+
 
 

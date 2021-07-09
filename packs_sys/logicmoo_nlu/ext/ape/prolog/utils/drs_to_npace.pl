@@ -62,6 +62,7 @@ Usage:
 * ?- tnp("Every man who can see a dog is hated by a cat.").
 */
 
+:- use_module(logicmoo_ape_utils, [unnumbervars/2, ape_numbervars/3]).
 
 :- use_module(drs_to_sdrs).
 

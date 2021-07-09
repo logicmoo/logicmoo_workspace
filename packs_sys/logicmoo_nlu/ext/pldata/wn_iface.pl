@@ -27,7 +27,7 @@
 
 :- if(exists_source(wn_frames)).
 :- format(user_error,'~NLoading wn_frames.pl instead  ... ~n',[]).
-:- reexport(wn_frames).
+:- re export(wn_frames).
 :- format(user_error,'~NLoaded wn_frames. ~n',[]).
 :- endif.
 */

@@ -1,0 +1,12 @@
+%% An example that shows the "old style" of coinduction does not miss answers,
+%% but produces too many similar answers.
+
+:- coinductive0 p/1.
+
+p( [ a | X ] ) :-  p( X ).
+
+p( [ b | X ] ) :-  p( X ).
+
+:- topl p/1.
+
+% Try this with: ?- p( A ).  and with  ?- p( [a, b, a | _ ] ).

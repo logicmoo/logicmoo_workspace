@@ -735,8 +735,10 @@ clip_dir_sep(Where,Where):-!.
 %
 % My Absolute File Name.
 %
-my_absolute_file_name(F,A):-catch(expand_file_name(F,[A]),_,fail),F\=A,!.
-my_absolute_file_name(F,A):-catch(absolute_file_name(F,A),_,fail),!.
+my_absolute_file_name(F,A):-notrace(catch(expand_file_name(F,[A]),_,fail)),F\=A,!.
+my_absolute_file_name(F,A):-notrace(catch(absolute_file_name(F,A,[access(read),file_errors(fail),file_type(directory)]),_,fail)),!.
+my_absolute_file_name(F,A):-notrace(catch(absolute_file_name(F,A,[access(read),file_errors(fail),file_ext('')]),_,fail)),!.
+my_absolute_file_name(F,A):-notrace(catch(absolute_file_name(F,A),_,fail)),!.
 
 % register search path hook
 
@@ -748,7 +750,11 @@ my_absolute_file_name(F,A):-catch(absolute_file_name(F,A),_,fail),!.
 %
 % Join Path If Needed.
 %
-join_path_if_needed(A,B,C):-exists_directory(B)->B=C;directory_file_path(A,B,C).
+join_path_if_needed(_,B,C):- atom(B), exists_directory(B)->B=C,!.
+join_path_if_needed(A,B,C):- compound(B),!, my_absolute_file_name(B,BB),atom(BB),!,join_path_if_needed(A,BB,C).
+join_path_if_needed(A,B,C):- compound(A),!, my_absolute_file_name(A,AA),atom(AA),!,join_path_if_needed(AA,B,C).
+join_path_if_needed(A,B,C):- compound(C),!, my_absolute_file_name(C,CC),atom(CC),!,join_path_if_needed(A,B,CC).
+join_path_if_needed(A,B,C):- directory_file_path(A,B,C).
 
 
 %= 	 	 
@@ -757,17 +763,20 @@ join_path_if_needed(A,B,C):-exists_directory(B)->B=C;directory_file_path(A,B,C).
 %
 % Locally Converted To Dir.
 %
-locally_to_dir(Locally,Dir):- clause(user:file_search_path(logicmoo,RunDir),true),join_path_if_needed(RunDir,Locally,Directory),my_absolute_file_name(Directory,Dir),exists_directory(Dir),!.
-locally_to_dir(Directory,Dir):-my_absolute_file_name(Directory,Dir),exists_directory(Dir),!.
+locally_to_dir(Locally,Dir):- clause(user:file_search_path(logicmoo,RunDir),true),
+ join_path_if_needed(RunDir,Locally,Directory),
+ my_absolute_file_name(Directory,Dir),exists_directory(Dir),!.
+locally_to_dir(Directory,Dir):-  my_absolute_file_name(Directory,Dir),exists_directory(Dir),!.
 
 
 
 :- dynamic(local_directory_search/1).
 
 
-% user:file_search_path(library,ATLIB):-getenv('PATH_INDIGOLOG',AT),atom_concat(AT,'/lib',ATLIB).
-% user:file_search_path(indigolog,AT):-getenv('PATH_INDIGOLOG',AT).
-% user:file_search_path(logicmoo,Dir):-  local_directory_search(Locally), locally_to_dir(Locally,Dir).
+user:file_search_path(library,ATLIB):-  getenv('PATH_INDIGOLOG',AT),atom_concat(AT,'/lib',ATLIB).
+user:file_search_path(indigolog,AT):-  getenv('PATH_INDIGOLOG',AT).
+user:file_search_path(logicmoo,Dir):-  local_directory_search(Locally), locally_to_dir(Locally,Dir).
+user:file_search_path(Atom,Dir):- atom(Atom),upcase_atom(Atom,ATOM),atom_concat('PATH_',ATOM,Var), getenv(Var,AT), atom_string(Dir,AT).
 
 
 
@@ -792,10 +801,10 @@ local_directory_search_combined2(PL):-local_directory_search(A),local_directory_
 :- multifile(local_directory_search/1).
 :- dynamic(local_directory_search/1).
 % Add the locations that the MUD source files will be picked up by the system
-%local_directory_search('../..').
+local_directory_search('../..').
 %local_directory_search('~logicmoo-mud/cynd/startrek'). % home vtDirection CynD world
 % local_directory_search('.').
-% local_directory_search('..'). 
+local_directory_search('..'). 
 %local_directory_search('../runtime'). 
 %local_directory_search('../src_game'). % for user overrides and uploads
 %local_directory_search('../src_assets').  % for non uploadables (downloadables)
@@ -1000,13 +1009,9 @@ resolve_local_files_1(S0,SL):- expand_file_search_path(S0,S1),S0\==S1,resolve_lo
 resolve_local_files_1(S0,SS):- atom(S0), file_base_name(S0,S1), S0\==S1, resolve_local_files(S1,SS).
 %resolve_local_files_1(S0,SL):- atom(S0), resolve_local_files(ec(S0),SL).
 
-relative_from(F):- nb_current('$ec_input_file', F), atom(F), F \== [].
 relative_from(D):- working_directory(D,D),exists_directory(D).
 relative_from(F):- stream_property(_,file_name(F)),nonvar(F).
-relative_from(D):- catch( (expand_file_search_path(library('ec_planner'),D)),_,fail),exists_directory(D).
-relative_from(D):- catch( (expand_file_search_path(library('ec_planner/../../ext/ec_sources'),D)),_,fail),exists_directory(D).
 
-% user:file_search_path(ec,D):- catch( (findall(D,relative_from(D),L),dedupe_files(L,S),member(D,S)),_,fail).
 /*
 resolve_file(S0,SS):- atom(S0), exists_file(S0), !, SS=S0. 
 resolve_file(S0,SS):- absolute_file_name(S0, SS, [expand(true), file_errors(fail), access(read)]), !.
@@ -1025,12 +1030,7 @@ is_filename(F):- atom(F), \+ is_stream(F),
 %chop_e(InputNameE,InputName):- atom_concat(InputName,'.e',InputNameE),!.
 %chop_e(InputName,InputName).
 
-:- export(calc_where_to/3).
-calc_where_to(outdir(Dir, Ext), InputName, OutputFile):- 
-    % chop_e(InputNameE,InputName),
-    atomic_list_concat([InputName, '.', Ext], OutputName),
-    make_directory_path(Dir),
-    absolute_file_name(OutputName, OutputFile, [relative_to(Dir)]).
+
 
 contains_wildcard(Spec):- sformat(S,'~q',[Spec]),
    (sub_string(S, _, _, _, '*');sub_string(S, _, _, _, '?')),!.

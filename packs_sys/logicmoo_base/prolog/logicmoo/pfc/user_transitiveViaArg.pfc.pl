@@ -1,6 +1,7 @@
 %:- set_module(class(development)).
 :- '$set_source_module'(baseKB).
-:- use_module(library(pfc)).
+%:- use_module(library(pfc)).
+:- expects_dialect(pfc).
 
 :- set_prolog_flag_until_eof(do_renames,term_expansion).
 

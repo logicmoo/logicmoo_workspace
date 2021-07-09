@@ -53,7 +53,7 @@ chart89 :- locally(tracing80,
             with_no_assertions(t_l:useOnlyExternalDBs,
              with_no_assertions(lmconf:use_cyc_database,
               (told, repeat, prompt_read('CHART89> ',U),  
-                            to_word_list(U,WL),((WL==[bye];WL==[end,'_',of,'_',file];(mmake,once(chart89(WL)),fail)))))))).
+                            into_lexical_segs(U,WL),((WL==[bye];WL==[end,'_',of,'_',file];(mmake,once(chart89(WL)),fail)))))))).
 
 :- thread_local(t_l:into_form_code/0).
 :- asserta(t_l:into_form_code).

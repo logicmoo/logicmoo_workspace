@@ -1,8 +1,113 @@
-ERROR: Invalid ACE text:
-The word "makes" is unknown; did you mean "cakes"?
-The word "registration" is unknown.
-The word "registration" is unknown.
-The word "makes" is unknown; did you mean "cakes"?
-The word "registration" is unknown.
-"If a customer <> makes a registration and the customer is important and the customer wants a card then John gives the card to the customer after the registration.": This is the first sentence that was not ACE. The sign <> indicates the position where parsing failed.
+
+INPUT TEXT:
+Every customer is a human.
+Every clerk is not a customer.
+If a clerk knows a customer then the customer knows the clerk.
+If someone has a car and owns a house then he does not sleep in the car.
+If a customer makes a registration and the customer is important and the customer wants a card then John gives the card to the customer after the registration.
+Rich-Customer-Rule: If a customer is rich then the customer is important.
+Young-Customer-Rule: If a customer is young then the customer is not important.
+Rich-Customer-Rule overrides Young-Customer-Rule.
+Bill is a young and rich customer.
+Bill makes a registration and wants a card.
+John is a clerk that knows Bill.
+John has an expensive car and owns a big house.
+
+RULES:
+-group([pred_mod(sleep,A,[modifier_pp(in,B)])]) <- [pred_mod(own,A,C,[]), pred_mod(have,A,B,[]), object(A,D,E,F,G,H), object(B,car,countable,na,eq,1), object(C,house,countable,na,eq,1)].
+-group([object(A,customer,countable,na,eq,1)]) <- [object(A,clerk,countable,na,eq,1)].
+group([pred_mod(know,A,B,[])]) <- [group([object(A,customer,countable,na,eq,1)]), group([pred_mod(know,B,A,[])]), object(B,clerk,countable,na,eq,1)].
+group([pred_mod(know,named('John'),named('Bill'),[])]).
+group([pred_mod(give,named('John'),A,B,[modifier_pp(after,C)])]) <- [group([object(B,customer,countable,na,eq,1)]), group([property(B,important,pos)]), pred_mod(want,B,A,[]), pred_mod(make,B,C,[]), object(C,registration,countable,na,eq,1), object(A,card,countable,na,eq,1)].
+group([object(A,human,countable,na,eq,1)]) <- [group([object(A,customer,countable,na,eq,1)])].
+group([object(named('Bill'),customer,countable,na,eq,1)]).
+property(named('Bill'),rich,pos).
+property(named('Bill'),young,pos).
+property(v(0),big,pos).
+property(v(1),expensive,pos).
+pred_mod(have,named('John'),v(1),[]).
+pred_mod(make,named('Bill'),v(3),[]).
+pred_mod(own,named('John'),v(0),[]).
+pred_mod(want,named('Bill'),v(2),[]).
+object(named('Bill'),'Bill',named,na,eq,1).
+object(named('John'),'John',named,na,eq,1).
+object(named('John'),clerk,countable,na,eq,1).
+object(v(0),house,countable,na,eq,1).
+object(v(1),car,countable,na,eq,1).
+object(v(2),card,countable,na,eq,1).
+object(v(3),registration,countable,na,eq,1).
+'Rich-Customer-Rule':: group([property(A,important,pos)]) <- [group([object(A,customer,countable,na,eq,1)]), property(A,rich,pos)].
+'Young-Customer-Rule':: -group([property(A,important,pos)]) <- [group([object(A,customer,countable,na,eq,1)]), property(A,young,pos)].
+overrides('Rich-Customer-Rule','Young-Customer-Rule').
+
+SIMPLE RULES:
+-sleep(A,[in(B)]) <- [own(A,C,[]), have(A,B,[]), something(A), car(B), house(C)].
+-customer(A) <- [clerk(A)].
+know(A,B,[]) <- [customer(A), know(B,A,[]), clerk(B)].
+know(named('John'),named('Bill'),[]).
+give(named('John'),A,B,[after(C)]) <- [customer(B), important(B), want(B,A,[]), make(B,C,[]), registration(C), card(A)].
+human(A) <- [customer(A)].
+customer(named('Bill')).
+rich(named('Bill')).
+young(named('Bill')).
+big(v(0)).
+expensive(v(1)).
+have(named('John'),v(1),[]).
+make(named('Bill'),v(3),[]).
+own(named('John'),v(0),[]).
+want(named('Bill'),v(2),[]).
+clerk(named('John')).
+house(v(0)).
+car(v(1)).
+card(v(2)).
+registration(v(3)).
+'Rich-Customer-Rule':: important(A) <- [customer(A), rich(A)].
+'Young-Customer-Rule':: -important(A) <- [customer(A), young(A)].
+overrides('Rich-Customer-Rule','Young-Customer-Rule').
+
+ANSWERSET #1:
+-group([pred_mod(sleep,named('John'),[modifier_pp(in,v(1))])]).
+-group([object(named('John'),customer,countable,na,eq,1)]).
+group([property(named('Bill'),important,pos)]).
+group([pred_mod(know,named('Bill'),named('John'),[])]).
+group([pred_mod(know,named('John'),named('Bill'),[])]).
+group([pred_mod(give,named('John'),v(2),named('Bill'),[modifier_pp(after,v(3))])]).
+group([object(named('Bill'),customer,countable,na,eq,1)]).
+group([object(named('Bill'),human,countable,na,eq,1)]).
+property(named('Bill'),rich,pos).
+property(named('Bill'),young,pos).
+property(v(0),big,pos).
+property(v(1),expensive,pos).
+pred_mod(have,named('John'),v(1),[]).
+pred_mod(make,named('Bill'),v(3),[]).
+pred_mod(own,named('John'),v(0),[]).
+pred_mod(want,named('Bill'),v(2),[]).
+object(named('Bill'),'Bill',named,na,eq,1).
+object(named('John'),'John',named,na,eq,1).
+object(named('John'),clerk,countable,na,eq,1).
+object(v(0),house,countable,na,eq,1).
+object(v(1),car,countable,na,eq,1).
+object(v(2),card,countable,na,eq,1).
+object(v(3),registration,countable,na,eq,1).
+
+ANSWERTEXT #1:
+There is a car X1.
+There is a house X2.
+Bill is young.
+Bill is rich.
+Bill is important.
+John is a clerk.
+Bill is a human.
+Bill is a customer.
+John gives a card X3 to Bill after a registration X4.
+Bill wants the card X3.
+John owns the house X2.
+Bill makes the registration X4.
+John has the car X1.
+John knows Bill.
+Bill knows John.
+The car X1 is expensive.
+The house X2 is big.
+It is false that John sleeps in the car X1.
+It is false that John is a customer.
 

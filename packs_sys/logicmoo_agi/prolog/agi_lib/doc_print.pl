@@ -1,3 +1,4 @@
+
 :- style_check(-discontiguous).
 % Ran with (base) root@mail:/opt/logicmoo_workspace/packs_sys/logicmoo_ec/prolog/ec_planner# swipl -f /opt/logicmoo_workspace/.swiplrc -l ec_config.pl
 
@@ -8,6 +9,9 @@ expression([S,V,O]):- fail,  verb(X,V),subj(X,S),nl, obj(X,O), (S=(exemplar) -> 
    true.
 
 type_list(X,Y):-expression_l([X,contains,Y]),!.
+
+narrative_onto :- fail.
+
 %type_list(changeOf,[add,del,'Change']).
 %type_list(happeningOf,['start/Cont/Stop']).
 /*
@@ -61,15 +65,15 @@ expression_l([
 expression_l([
   [narrative],
   [contains],
-  [narrative,state,event]]).
+  [narrative,state,event]]) :- narrative_onto.
 expression_l([
   [event],
   [contains],
-  [(precept),(action),change(state)]]).
+  [(precept),(action),change(state)]]) :- narrative_onto.
 expression_l([
   [some(state)],
   [contains],
-  [(goal),(hasProp),(exemplar)]]).
+  [(goal),(hasProp),(exemplar)]]) :- narrative_onto.
 
 %type_list(event,[(precept),(action),change(state)]).
 %type_list(state,[(goal),(hasProp),(exemplar)]).
@@ -77,38 +81,68 @@ expression_l([
 expression_l([
   [state],
   +,precept, (=>),
-  [event,state]]).
+  [event,state]]) :- narrative_onto.
 
 expression_l([
   [event,state],
    ['enables/Disables',resultsIn,terminates],
-  [state,event]]).
+  [state,event]]) :- narrative_onto.
 
 expression_l([
   [action],
    causes,
-  [goal,action,hasProp,precept,exemplar,narrative]]).
+  [goal,action,hasProp,precept,exemplar,narrative]]) :- narrative_onto.
 
 expression_l([
   [goal,action,hasProp,precept],
   [contains],
-  [goal,action,hasProp]]).
+  [goal,action,hasProp]]) :- narrative_onto.
 
 
-expression_l([belief(state),'enables/Disables',action]).
-expression_l([doing(action),'Causes/Terminate',state]).
-expression_l([state,contains,[true(prop),false(prop)]]).
-expression_l([action,contains,[start(act),cont(act),stop(act)]]).
-expression_l([plan,contains,listOf(action)]).
+expression_l([belief(state),'enables/Disables',action]) :- narrative_onto.
+expression_l([doing(action),'Causes/Terminate',state]) :- narrative_onto.
+expression_l([state,contains,[true(prop),false(prop)]]) :- narrative_onto.
+expression_l([action,contains,[start(act),cont(act),stop(act)]]) :- narrative_onto.
+expression_l([plan,contains,listOf(action)]) :- narrative_onto.
 
+expression_l([some(happening),each([is,will,can]),optional(not),be,each([possible,impossible,happening]),each([before,after,when,during,exclusive-to]),
+   someone,each([has,will,could]),optional(not),each([start,stop,continue]),to,optional(not),each([want,notice,remember,forget,cause,prevent]),
+  some(happening),each([does,will,could]),optional(not),optional(start,stop,continue),to,optional(not),be,optional(not),each([possible,impossible,happening])]):-
+  fail.
+
+expression_l([some(happening),each([is,will,can]),optional(not),be,each([possible,impossible,happening]),each([before,after,when,during,exclusive-to]),
+  physics,each([has,will,could]),optional(not),each([start,stop,continue]),to,optional(not),each([cause,prevent]),
+  some(happening),each([does,will,could]),optional(not),optional(start,stop,continue),to,optional(not),be,optional(not),each([possible,impossible,happening])]):-
+ fail.
+expression_l([some(happening),each([is,will,can]),optional(not),be,each([possible,impossible,happening]),
+  each([before,after,during,exclusive-to]),
+  when,physics,each([has,will,could]),optional(not),each([cause,prevent]),
+  some(happening),'to/from',optional(not),each([start,stop,continue])]):-
+ fail.
+
+expression_l([some(happening),each([is,will,can]),optional(not),be,each([possible,impossible,occuring]),
+  each([before,after,during,exclusive-to]),some(happening)]).
+
+/*
+expression_l([some(stag),'is/isnt',instance,of,type]).
+expression_l([some(stag),'is/isnt',subpart,of,some(stag)]).
+expression_l([some(stag),'is/isnt',slot-role,of,some(stag)]).
+expression_l([some(stag),and,some(stag),'has/will/could',optional(not),combined,to,make,some(stag)]).
+*/
 expand_lists1([A|Lists],[A|VO]):- atom(A),!, expand_lists(Lists,VO).
 expand_lists1(Lists,VO):- expand_lists(Lists,VO).
+
 expand_lists([Expand|Lists],[S|VO]):- expand_ele(Expand,S), expand_lists(Lists,VO).
 expand_lists([],[]).
 
-expand_ele(Expand,S):- is_list(Expand),!,member(List,Expand),expand_ele(List,S).
+expand_ele(Atom,S):- var(Atom),!,S=Atom.
 expand_ele(Expand,S):- type_list(Expand,List),!,expand_ele(List,S).
-expand_ele(Expand,S):- compound(Expand),!,compound_name_arguments(Expand,F,[X]),
+expand_ele(Atom,S):- \+ compound(Atom),!,S=Atom.
+expand_ele(Expand,S):- is_list(Expand),!,member(List,Expand),expand_ele(List,S).
+expand_ele(Expand,S):- compound_name_arguments(Expand,'optional',List),!,expand_ele([''|List],S).
+expand_ele(some(X),S):- !, expand_ele(X,N),gensym(N,S).
+expand_ele(each(X),S):- !, expand_ele(X,S).
+expand_ele(Expand,S):- compound_name_arguments(Expand,F,[X]),
   expand_ele(F,FS),compound_name_arguments(S,FS,[Y]),expand_ele(X,Y).
 expand_ele(S,S).
 
@@ -178,5 +212,7 @@ nm:- mmake,
  %cls, 
  printall.
 %:- nm.
+
+end_of_file.
 
 

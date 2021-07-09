@@ -1,0 +1,104 @@
+/* File:      farmer.P
+** Author(s): Jiyang Xu
+** Contact:   xsb-contact@cs.sunysb.edu
+**
+** Copyright (C) ECRC 1990
+**
+** XSB is free software; you can redistribute it and/or modify it under the
+** terms of the GNU Library General Public License as published by the Free
+** Software Foundation; either version 2 of the License, or (at your option)
+** any later version.
+**
+** XSB is distributed in the hope that it will be useful, but WITHOUT ANY
+** WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+** FOR A PARTICULAR PURPOSE.  See the GNU Library General Public License for
+** more details.
+**
+** You should have received a copy of the GNU Library General Public License
+** along with XSB; if not, write to the Free Software Foundation,
+** Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
+**
+** $Id: farmer.P,v 1.1.1.1 1998/11/05 17:00:57 sbprolog Exp $
+**
+*/
+
+% Adapted by F.K. @ UTD
+
+:- if(current_predicate((topl)/1)).
+
+:- topl(demo/0).
+
+:- table(path/4).
+
+:- endif.
+
+/*
+
+Farmer Wolf Goat Cabbage ran 10k times
+
+NEW SWI Tabling/Non-Tabling:  
+% 3,305,123 inferences, 0.550 CPU in 0.550 seconds (100% CPU,  6,011,913 Lips)
+% 3,810,383 inferences, 0.441 CPU in 0.441 seconds (100% CPU,  8,647,303 Lips)
+
+OLD SWI Tabling/Non-Tabling:  
+% 2,661,828 inferences, 0.439 CPU in 0.439 seconds (100% CPU,  6,070,209 Lips)
+% 3,810,383 inferences, 0.380 CPU in 0.381 seconds (100% CPU, 10,023,585 Lips)
+
+*/
+
+
+/************************************************************************/
+% Here's a solution to the Farmer, Wolf, Goat/Goose,
+% Cabbage/Grain problem.  Improvements could be made by:
+%
+% 1.  Using a better data structure for states already
+% seen, e.g. a tree, a hash table, assert, or a bit set.
+%
+% 2.  Using best first search.
+%
+% Fortunately, we can separate these concerns from the
+% problem.
+%
+% Domain independent depth first search rules:
+/************************************************************************/
+
+demo :- solve(fwgc(e,e,e,e), fwgc(w,w,w,w), Sol), write_result(Sol), fail.
+demo.
+
+solve( S, G, P ) :- path( S, G, [S], P ).
+
+path( G, G, H, H ).
+path( S, G, H, P ) :-
+        move( S, N ),                   % move to a New state
+        safe( N ),                      % which is legal
+        not_already( N, H ),            % and not seen before
+        path( N, G, [N|H], P ).         % then complete the path
+
+not_already(N, H) :- \+ already(N, H).
+
+already( X, [X|_] ).
+already( X, [_|L] ):-
+        already( X, L ).
+
+move( fwgc( X, W, G, C ), fwgc( Y, W, G, C ) ) :-
+         opp( X, Y ). % farmer goes alone
+move( fwgc( X, X, G, C ), fwgc( Y, Y, G, C ) ) :-
+         opp( X, Y ). % farmer takes wolf
+move( fwgc( X, W, X, C ), fwgc( Y, W, Y, C ) ) :-
+         opp( X, Y ). % farmer takes goat
+move( fwgc( X, W, G, X ), fwgc( Y, W, G, Y ) ) :-
+         opp( X, Y ). % farmer takes cabbage
+
+opp( e, w ).
+opp( w, e ).
+
+safe( fwgc( X, _, X, _ ) ).
+safe( fwgc( X, X, _, X ) ).
+
+write_result(_):-!.
+write_result([]) :- nl.
+write_result([X|L]) :-
+        write(X), nl,
+        write_result(L).
+
+?- time(forall(between(0,10000,_G725060),demo)).

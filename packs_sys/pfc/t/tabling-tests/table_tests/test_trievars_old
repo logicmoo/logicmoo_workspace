@@ -1,0 +1,4 @@
+assert_length(800)
+intern_length(800)
+representation_error(less than MAX_ARITY)
+table_length(800)

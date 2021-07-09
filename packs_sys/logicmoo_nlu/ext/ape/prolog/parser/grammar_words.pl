@@ -36,7 +36,7 @@
 
 :- use_module('../logger/error_logger', [
 		add_warning_message_once/4,
-		add_error_message_once/4
+		add_werror_message_once/4
 	]).
 :- use_module('../lexicon/lexicon_interface').
 :- use_module('../lexicon/functionwords').
@@ -234,8 +234,8 @@ try(_, error(Type, SentenceID, Subject, Description)) -->
 	get_position(Pos),
 	{
 		PrevPos is Pos - 1,
-		add_error_message_once(Type, SentenceID-PrevPos, Subject, Description),
-		fail
+		add_werror_message_once(Type, SentenceID-PrevPos, Subject, Description),
+		nop(fail)
 	}.
 
 try(_, warning(Type, SentenceID, Subject, Description)) -->

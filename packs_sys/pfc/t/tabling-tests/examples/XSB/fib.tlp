@@ -1,0 +1,53 @@
+/* File:      fib.P
+** Author(s): Jiyang Xu, Kostis Sagonas
+** Contact:   xsb-contact@cs.sunysb.edu
+**
+** Copyright (C) The Research Foundation of SUNY, 1986, 1993-1998
+**
+** XSB is free software; you can redistribute it and/or modify it under the
+** terms of the GNU Library General Public License as published by the Free
+** Software Foundation; either version 2 of the License, or (at your option)
+** any later version.
+**
+** XSB is distributed in the hope that it will be useful, but WITHOUT ANY
+** WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+** FOR A PARTICULAR PURPOSE.  See the GNU Library General Public License for
+** more details.
+**
+** You should have received a copy of the GNU Library General Public License
+** along with XSB; if not, write to the Free Software Foundation,
+** Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
+**
+** $Id: fib.P,v 1.1.1.1 1998/11/05 17:00:58 sbprolog Exp $
+**
+*/
+
+% Adapted by F.K. @ UTD
+
+:- topl demo/1.
+
+:- table fib0/3.
+
+
+demo(N):-
+        (var(N)->(write('Enter N : '), read(N));true),
+        fib(N, Fib),
+        write('Fib of '), write(N), write(' is '), writeln(Fib).
+
+fib(end_of_file, end_of_file).
+fib(N, X) :- fib0(N, X, _).
+
+/* fib0(+Arg, -Result, -MinusOneRes) */
+
+fib0(0, 1, 0).
+fib0(1, 1, 1).
+fib0(N, X, X1) :-
+        N > 1,
+        N2 is N - 2,
+        fib0(N2, X2, X3),
+        X1 is X2 + X3,
+        X is X1+X2.
+
+?- forall(between(0,100,N),demo(N)).
+
+

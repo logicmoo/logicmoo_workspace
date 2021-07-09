@@ -28,16 +28,18 @@
 
 /* Logos */
 
-a.pengine-logo {
+a.swish-logo {
   position:absolute;
   top:4px;
   left:4px;
   width: 42px;
   height: 42px;
   /*background-image: url("../icons/logo.png");
+  red_bird.svg
+  logicmoo.ico
   background-image: url("../icons/red_bird.svg");*/
-  background-image: url("../icons/logicmoo.png");
-  background-size: 100%;
+  background-image: url("../icons/logicmoo.ico");
+  background-size: 50%;
 }
 
 /* jQuery splitter overrules.
@@ -95,3 +97,13 @@ iframe.swish-embedded-manual {
   background-color: #e7e7e7;
   color: #333;
 }
+
+
+.navbar-nav > li > a {
+    padding-top: 0px;
+    padding-bottom: 0px;
+    padding: 6px 6px; 
+    line-hieght: 16px;
+    display: inline;
+}
+

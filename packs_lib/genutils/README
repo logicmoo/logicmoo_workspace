@@ -1,0 +1,21 @@
+This package provides general utilities.
+
+---++++ listutils
+
+	* take/3 and drop/3, take_while/3 and drop_while/3
+	* rep/3 for build a list by repeating an element
+	* cons/3 and decons/3
+	* print_list/1, printq_list/1, print_numbered_list/1
+
+---++++ termutils
+
+	*	with_status_line/1
+		Provides an environment where messages printed with status/2 appear
+		over each other on one line. The environment makes sure that when 
+		a shorter line is printed after a longer one, the remaining characters
+		are erased.
+
+---++++ pairs
+
+	Tools for working with X-Y terms.
+

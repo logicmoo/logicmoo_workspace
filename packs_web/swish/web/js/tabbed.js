@@ -521,7 +521,10 @@ define(["jquery", "form", "config", "preferences", "modal",
           $(ul).on("shown.bs.tab", "a", function(ev) {
             var newContentID = $(ev.target).data("id");
             $("#" + newContentID + " .swish-event-receiver").trigger("activate-tab");
-            $("#" + newContentID + " .storage").storage("activate");
+            var s = $("#" + newContentID + " .storage")
+            if(s.storage) {
+			   $("#" + newContentID + " .storage").storage("activate");
+            }
           });
 
           if (this.tabbed('navContent').children().length == 0) {
@@ -554,7 +557,7 @@ define(["jquery", "form", "config", "preferences", "modal",
                   class: "sourcelist"
                 }));
               // BEGIN FILE-EXPLORER
-              var ss = $('<div><iframe id="the_iframe" src="/ef/elfinder.swish.html" width="100%" height="2900px" /></div>');
+              var ss = $('<div><iframe id="the_iframe" src="/ef/elfinder.swish.html" width="100%" height="700px" /></div>');
               $(ss).css('height', $(window).height() * 0.80);
               // $(ss).css('height', "20%");
               $(ss).css('width', "100%");
@@ -788,14 +791,14 @@ define(["jquery", "form", "config", "preferences", "modal",
             if (preferences.getVal("monaco-editor") || tabType == undefined) {
               this.tabbed('newMonacoEditor', tab, name, src);
               tab.tabbed('title', name, tabType.label);
-              debugger;
+              //debugger;
               return true;
             }
 
             if (preferences.getVal("ace-editor") || hasAceEditor) {
               this.tabbed('newAceEditor', tab, name, src);
               tab.tabbed('title', name, tabType.label);
-              debugger;
+              //debugger;
               return true;
             }
 
@@ -1324,7 +1327,6 @@ define(["jquery", "form", "config", "preferences", "modal",
         tabLabel: function(id, label, close, type) {
           var close_button;
           var chat;
-
           if (close) {
             close_button = glyphicon("remove", "xclose");
             $(close_button).attr("title", "Close tab");
@@ -1412,7 +1414,8 @@ define(["jquery", "form", "config", "preferences", "modal",
          */
         title: function(title, type) {
           var a = this.tabbed('anchor');
-
+		  var slashed = title.split('/');
+		  title = slashed[slashed.length-1];
           if (a) {
             a.find(".tab-title").text(title);
             if (type) {

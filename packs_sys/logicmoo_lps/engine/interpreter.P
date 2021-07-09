@@ -1,0 +1,3544 @@
+/* 
+LPS Interpreter, by Bob Kowalski and Fariba Sadri. 
+Contributions by David Wei and Miguel Calejo.
+
+Copyright (c) 2016, Imperial College, London
+All rights reserved.
+
+Redistribution and use in source and binary forms, with or without
+modification, are permitted provided that the following conditions are
+met:
+
+1. Redistributions of source code must retain the above copyright
+notice, this list of conditions and the following disclaimer.
+
+2. Redistributions in binary form must reproduce the above copyright
+notice, this list of conditions and the following disclaimer in the
+documentation and/or other materials provided with the distribution.
+
+3. Neither the name of the copyright holder nor the names of its
+contributors may be used to endorse or promote products derived from
+this software without specific prior written permission.
+
+THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS
+IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED
+TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A
+PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
+HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED
+TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR
+PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
+LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
+NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
+*/
+
+% RAK interpreter, based partly on Wei's interpreter. November-December
+% 2016.
+
+%%% LOAD THIS FILE to start LPS
+
+:- module(interpreter, [
+	go/0, go/1, go/2, go/3,
+	test_examples/0, test_examples_dc/0, build_all_test_results/0, do_test_suite/2, load_test_file_for/1, regenerate_file/1, check_load_postmortem/0, lps_test_result_item/3, lps_test_action_ancestor/3,
+	load_check_syntax/2, print_error/3, print_error/2, my_term_to_atom/2, collect_current_fluents/2, collect_current_actions/2, collect_guessed_declarations/1,
+	intensional/1,macroaction/1,d_event/1,system_fluent/1,system_action/1,action_/1,event_/1,updated/4,event_pred/1,(observe)/2, l_int/2, lps_program_module/1, display/2, misc_to_realtime/2, is_some_time/1,         
+ 	lps_engine_directory/1, uassert/1, uretractall/1, u_swiclause/3, cleanup_program/0, check_lps_program_module/1, get_lps_program_module/1, program_predicate/1, flat_sequence/2, user_prolog_clause/2,
+	must_lps_program_module/1, u_call_lps/1,
+	check_lps_program_swish_module/0, get_lps_program_hash/1, server_log_filename/2, lps_program_clause_file/3, callprolog/1, replace_term/4, abstract_numbers/2,
+	bindAllVars/1, lps_welcome_message/0, endTime/1, simulatedRealTimeBeginning/1, beginningOfSimulatedRealTime/1, simulatedRealTimePerCycle/1,
+	background_execution/7, inject_events_fetch_fluents/5, inject_events/3, get_fluents/4, get_rtb_fluent_event_templates/5,
+	premature_system_action/1, 
+	lps_ask/2, lps_ask/3, lps_outcome/2, lps_save_finish_execution/1, set_paused/1,
+	source_position/4, buildError/4, print_error_notices/1, date_stamp/1]).
+
+% This fact will contain this file's directory; its presence also denotes "LPS running"
+:- dynamic lps_engine_directory/1.
+
+is_supported_prolog :- current_prolog_flag(dialect, swi), !.
+is_supported_prolog :- current_prolog_flag(emulated_dialect, lps).
+
+:- if(\+ is_supported_prolog).
+:- writeln("LPS requires SWI-Prolog"), throw(swi_prolog_required).
+:- endif.
+
+
+:- meta_predicate cycle(*,*,0,*).
+:- meta_predicate findall_variants(?,0,-).
+:- meta_predicate has_no_future(*,*,0).
+:- meta_predicate time_limited(*,0,*).
+
+:- meta_predicate qcatch_f(0).
+:- meta_predicate qcatch_t(0).
+:- meta_predicate qcatch(0,?,0).
+
+
+:- module_transparent(qcatch/3).
+qcatch(G,E,F):-  tracing -> 
+  setup_call_cleanup(('$leash'(OldL, OldL),leash(-exception),notrace),
+    catch(G,E,true),
+    ('$leash'(_, OldL),trace,call(F))) 
+  ; catch(G,E,F).
+
+:- module_transparent(qcatch_f/1).
+qcatch_f(G):-  tracing -> 
+  setup_call_cleanup(('$leash'(OldL, OldL),leash(-exception),notrace),
+    catch(G,_,notrace(fail)),
+    ('$leash'(_, OldL),trace)) 
+  ; catch(G,_,fail).
+
+:- module_transparent(qcatch_f/1).
+qcatch_t(G):-  tracing -> 
+  setup_call_cleanup(('$leash'(OldL, OldL),leash(-exception),notrace),
+    catch(G,_,notrace(true)),
+    ('$leash'(_, OldL),trace)) 
+  ; catch(G,_,true).
+  
+
+:- user:ensure_loaded(library(dialect/lps)).
+
+:- if(current_module(swish)).
+
+% First a SWISH specificity - rather than use the db module, will use pengine's dynamic module (or a copy of it made into db, see background option)
+
+:- use_module(library(pengines),[pengine_self/1]).
+
+% If performance becomes bad (due to nonindexed access inside the pengine_self predicate) we should pass M as arg
+% Implementation note: execution specific states (cf. cleanup_engine) might be stored instead by simply using thread_local declarations
+
+display(X,Props) :- u_call(display(X,Props)).
+% d(X,Props) :- u_call(display(X,Props)).
+action(X) :- u_call(action(X)).
+current_goal(X) :- u_call(current_goal(X)).
+current_time(X) :- u_call(current_time(X)).
+real_time_beginning(X) :- u_call(real_time_beginning(X)).
+lps_updating_current_state :- u_call(lps_updating_current_state).
+d_pre(X) :- u_call(d_pre(X)).
+depth(X) :- u_call(depth(X)).
+event(X) :- u_call(event(X)).
+fluent(X) :- u_call(fluent(X)).
+happens(X,Y,Z) :- u_call(happens(X,Y,Z)).
+initial_state(X) :- u_call(initial_state(X)).
+initiated(X,Y,Z) :- u_call(initiated(X,Y,Z)).
+l_events(X,Y) :- u_call(l_events(X,Y)).
+l_int(X,Y) :- u_call(l_int(X,Y)).
+l_timeless(X,Y) :- u_call(l_timeless(X,Y)).
+maxTime(X) :- u_call(maxTime(X)). % LPS execution/simulation cycles
+maxRealTime(X) :- u_call(maxRealTime(X)). % real time (seconds, float)
+minCycleTime(X) :- u_call(minCycleTime(X)). % real time (seconds, float); AVOID in non-background SWISH!
+simulatedRealTimePerCycle(X) :- u_call(simulatedRealTimePerCycle(X)). % (seconds)
+simulatedRealTimeBeginning(X) :- u_call(simulatedRealTimeBeginning(X)). % date expression atom, cf. http://www.swi-prolog.org/pldoc/man?predicate=parse_time/3
+observe(X,Y) :- u_call(observe(X,Y)).
+% TODO: interference with SWI ???
+option(X) :- u_call(option(X)).
+reactive_rule(X,Y) :- u_call(reactive_rule(X,Y)).
+reactive_rule(X,Y,Z) :- u_call(reactive_rule(X,Y,Z)).
+state(X) :- u_call(state(X)).
+next_state(X) :- u_call(next_state(X)).
+steps(X) :- u_call(steps(X)).
+terminated(X,Y,Z) :- u_call(terminated(X,Y,Z)).
+tried(X,Y,Z) :- u_call(tried(X,Y,Z)).
+updated(A,B,C,D) :- u_call(updated(A,B,C,D)).
+used(X) :- u_call(used(X)).
+lps_test_options(X) :- u_call(lps_test_options(X)).
+lps_test_result_item(X,Y,Z) :- u_call(lps_test_result_item(X,Y,Z)).
+lps_test_action_ancestor(X,Y,Z) :- u_call(lps_test_action_ancestor(X,Y,Z)).
+lps_test_result(X,Y,Z) :- u_call(lps_test_result(X,Y,Z)).
+lps_failed_test(X,Y) :- u_call(lps_failed_test(X,Y)).
+lps_saved_state(A,B,C,D,E,F,G,H) :- u_call(lps_saved_state(A,B,C,D,E,F,G,H)).
+events(X) :- u_call(events(X)).
+prolog_events(X) :- u_call(prolog_events(X)).
+fluents(X) :- u_call(fluents(X)).
+actions(X) :- u_call(actions(X)).
+unserializable(X) :- u_call(unserializable(X)).
+
+
+my_load_dyn(X,Y) :- u_call(my_load_dyn(X,Y)).
+
+uassert(X) :- ignore(u_call(assert(X))). 
+uasserta(X) :- ignore(u_call(asserta(X))).
+uassertz(X) :- ignore(u_call(assertz(X))).
+uretractall(X) :- ignore(u_call(retractall(X))).
+% uretractall(X) :- must_lps_program_module(M), retractall(M:X).
+uretract(X) :- u_call(retract(X)).
+u_user_predicate(X) :- functor(X,F,N),  u_call(current_predicate(F/N)).
+%callprolog(G) :- predicate_property(G,built_in), !, qcatch_f(G,E,(print_error(callprolog,E),fail)). 
+%callprolog(G) :- must_lps_program_module(M), qcatch_f(call(M:G),E,(print_error(callprolog,E),fail)).
+% no reason to call outside M...! callprolog(G) :- predicate_property(G,built_in), !, call(G). 
+callprolog(G) :- u_call(G).
+
+u_swiclause(H,B,Ref) :- u_call(clause(H,B,Ref)).
+
+
+:- endif.
+
+% u_call(MG):- strip_module(MG,_,G),!, must_lps_program_module(M), catch(call(M:G),_,fail).
+u_call(G):- must_lps_program_module(M),  (u_call_contrib(M,G);u_call_lps(M,G)).
+
+u_call_lps(G):- must_lps_program_module(M), u_call_lps(M,G).
+u_call_lps(M, G):- quietly(catch(M:G,existence_error(_,_),fail)).
+
+:- multifile(u_call_contrib/2).
+:- dynamic(u_call_contrib/2).
+:- module_transparent(u_call_contrib/2).
+%u_call_contrib(M,G):- quietly(catch(M:G,existence_error(_,_),fail)).
+
+u_call(M,G):- quietly(catch(M:G,existence_error(_,_),fail)).
+
+
+must_lps_program_module(M):- t_l:is_lps_program_module(M)*->true;
+  (M=db -> true; ((print_error_throw(missing(t_l:is_lps_program_module/1, M))),ignore(M=db))).
+
+:- if(\+ current_module(swish)).
+% Still support vanilla SWI Prolog
+dont_use_right_now :- use_module('../engine/db.P',[display/2, % d/2,
+	action/1, current_time/1, real_time_beginning/1, d_pre/1 ,event/1,
+	fluent/1, happens/3, (initiated)/3, l_events/2, l_int/2,
+	l_timeless/2, (observe)/2, reactive_rule/2, reactive_rule/3, state/1, next_state/1,
+	steps/1, (terminated)/3, updated/4, used/1, maxTime/1, maxRealTime/1, minCycleTime/1, 
+	simulatedRealTimePerCycle/1, simulatedRealTimeBeginning/1,
+	current_goal/1, depth/1, tried/3, option/1, lps_updating_current_state/0,
+	initial_state/1,
+	lps_test_result_item/3, lps_test_action_ancestor/3, lps_test_result/3, lps_test_options/1, 
+	lps_failed_test/2, lps_saved_state/8,
+	(events)/1, (prolog_events)/1, (fluents)/1, (actions)/1, (unserializable)/1,
+	my_load_dyn/2,
+	head_hint/3]).
+
+db_lps_program_module(M):- t_l:is_lps_program_module(M)*->true;ignore(M=db).
+
+uassert(X) :-  u_call( assert(X)). 
+uasserta(X) :- u_call(asserta(X)).
+uassertz(X) :- u_call(assertz(X)).
+uretractall(X) :- u_call(retractall(X)).
+uretract(X) :- u_call(retract(X)).
+u_user_predicate(MX) :- strip_module(MX,_,X), functor(X,F,N),u_call(current_predicate(F/N)).
+
+callprolog(G) :- predicate_property(G,built_in), !, call(G). 
+callprolog(G) :- u_call(G).
+%callprolog(G) :- predicate_property(G,built_in), !, qcatch_f(G,E,(print_error(callprolog,E),fail)). 
+%callprolog(G) :- qcatch(db:G,E,(print_error(callprolog,E),fail)).
+
+u_swiclause(H,B,Ref) :- u_call(clause(H,B,Ref)).
+
+:- endif.
+
+% ...and finally the generic SWI support
+
+:- thread_local(t_l:is_lps_program_module/1). 
+
+lps_program_module(M):- t_l:is_lps_program_module(M)*->true;
+  (M=db -> true; ((print_error_throw(missing(t_l:is_lps_program_module/1, M))),ignore(M=db))).
+
+:- dynamic(non_t_l:a_lps_program_module/1). 
+
+% necessary to call at the beginning of any user goal from SWISH that interacts with the LPS program
+check_lps_program_swish_module(M) :- notrace(catch(pengine_self(M),_,fail)), !, 
+	check_lps_program_module(M), 
+	(\+ option(swish) -> uassert(option(swish)); true). % hack to keep swish presence testing simple on this end
+check_lps_program_swish_module(_).
+
+check_lps_program_swish_module :- check_lps_program_swish_module(_).
+
+:- prolog_load_context(directory, D), retractall(lps_engine_directory(_)), assert(lps_engine_directory(D)).
+
+:- op(900,fy,not).
+
+:- use_module(library(lists), [member/2, append/3, select/3, reverse/2]).
+% avoid annoying SWI warning: :- use_module(library(prolog_clause),[clause_info/5]).
+:- use_module(library(time)).
+
+append_lists([],[]).
+append_lists([X|Xs],L) :-
+	append(X,T,L),
+	append_lists(Xs,T).
+:- use_module(library(terms),[variant/2]).
+:- use_module(library(varnumbers),[numbervars/1]).
+term_to_codes(T,C) :- term_to_atom(T,A), atom_codes(A,C).
+my_term_to_atom(T,A) :- format(atom(A),'~W',[T,[numbervars(true)]]).
+concat_atom(L,A) :- atomic_list_concat(L,A).
+%:- use_module(format,[format/2]).
+:- use_module(library(dialect/sicstus/system),[datime/1,file_exists/1]).
+date_stamp(D) :- datime(Date), Date=..[_|Args], format(atom(D),"~d-~d-~d at ~d:~d:~d",Args).
+
+list_directory(D,F) :- directory_files(D,Files), member(F,Files).
+is_directory(D) :- exists_directory(D).
+expand_filename(F,Path) :- expand_file_name(F,[Path]).
+
+lps_examples_directory(ED) :- 
+	lps_engine_directory(D), file_directory_name(D,LPShome), 
+	concat_atom([LPShome,'/examples'],ED).
+
+lps_utils_directory(UD) :-
+	lps_engine_directory(D), file_directory_name(D,LPShome), 
+	concat_atom([LPShome,'/utils'],UD).
+
+:- multifile user:file_search_path/2.
+user:file_search_path(system, S) :- lps_engine_directory(D), atomic_list_concat([D,'/system'],S). % Apparently needed on SWI-Prolog 7.7.19 and later
+user:file_search_path(example, S) :- lps_examples_directory(ED), atomic_list_concat([ED,'/CLOUT_workshop'],S).
+user:file_search_path(lps_utils, D) :- lps_utils_directory(D). 
+
+cputime(T) :- T is cputime.
+
+% NO LONGER returns Pos as in http://www.swi-prolog.org/pldoc/man?predicate=read_term/2 (subterm_positions)
+% returns Pos as file(File,LineNumber,_one,_Char) - one line is known
+lps_source_position(Term,FileWithExt,file(FileWithExt,LineNumber,_One,_Char),Vars) :- 
+	functor(Term,F,N), functor(Term_,F,N), 
+	u_swiclause(Term_,Body,Ref), 
+	variant(Term,Term_),
+	!,
+	% VarOffSets goves the variable names (including anonymous...) but somehow I can't get it to be in sync with term_variables/2 
+	% TODO: we're loosing variable names when clauses have anonymous vars...
+	prolog_clause:clause_info(Ref, FileWithExt, _TermPos, _VarOffsets, [variable_names(Vars)]),
+	term_variables((Term_:-Body),VarValues), 
+	Term=Term_,
+	bindAllVars(VarValues,Vars),
+	clause_property(Ref,line_count(LineNumber)).
+
+:- multifile prolog:message//1.
+prolog:message(S-Args) --> {atomic(S),is_list(Args)},[S-Args].
+prolog:message(lps_error(accepting_declared_observations_even_with_preconditions_referring_next_state(E,C),_)) --> 
+	['Accepting ~w even though some conditions refer the next state, e.g. ~w'-[E,C]].
+prolog:message(lps_error(rejected_observations1(Events,Conditions),_)) --> 
+	['Rejected observations ~w attempting to satisfy false preconditions ~w'-[Events,Conditions]].
+prolog:message(lps_error(rejected_observations2(Events),_)) --> 
+	['Rejected observations ~w attempting to satisfy prospective false preconditions'-[Events]].
+prolog:message(lps_error(rejected_observations_0,_)) --> 
+	['Rejected all observations from 0 to 1 because there are prospective preconditions'].
+	
+prolog:message(lps_error(rejected_observations(Events,Conds),_)) --> 
+	['Rejected observations ~w violating ~w'-[Events,Conds]].
+prolog:message(lps_error(M, _)) --> [ 'LPS: ~w'-[M]].
+              
+print_syntax_error(Type,Message,Position) :- 
+	\+ \+ ( % avoid binding Message...
+	(var(Message)->Message='??';true),
+	print_message(Type,error(syntax_error(Message),Position)) % SWI's universal messaging pipeline
+	). 
+
+print_error(Type,Message,Position) :- option(swish), option(background(_)), !, % avoid disturbing SWISH's textual output
+	notrace(catch( http_log('lps ~w: ~w ~w', [Type,Message,Position]),_,true)),
+	do_write([Type,':',Message,' ',Position]).
+print_error(Type,Message,Position) :- 
+	print_message(Type,lps_error(Message,Position)). % SWI's universal messaging pipeline
+
+
+:- dynamic git_version_cache/1.
+:- use_module(library(git),[git_describe/2]).
+lps_welcome_message :-
+	get_git_version(V),
+	concat_atom(['LPS version ',V],M), 
+	my_writeln(M).
+
+% Git log hash "version"
+get_git_version(V) :- git_version_cache(V) , !.
+get_git_version(V) :- lps_engine_directory(D), git_hash(V,[directory(D)]), !, assert(git_version_cache(V)).
+get_git_version(V) :- V='???', assert(git_version_cache(V)).
+
+% Higher level engine version
+get_version(0.6).
+
+
+% resolveUntilAction(+Goal,+ActionAncestors,-Ball,-Continuation)  Misleading name: also stops when finding alternatives!
+% vaguely equivalent to reset(Goal,Ball,Continuation); rather than calling shift(Ball), Ball and Continuation
+% are explicit bound by the code below. Continuation == true means no "shift" (suspension) occurred, Goal has completed
+% Execute goal until finding a literal that needs delaying or parallel execution, 
+% then returns with a Ball, suspending computation; the Ball's first arguments convey the reason for suspending:
+% - a fluent or action was found that needs delaying
+% - a timeless goal, a fluent or action subgoal has more than one solution; by default (e.g. unless option(no_parallel)),
+%   all solutions to these are used in paralell, adding new goals to the "goal tree", that include the full continuation;
+%   see dc_resolve_goals_suspended/8 below; when one of these goals succeeds the others are marked discardable, and thus ignored 
+% ActionAncestors is a list of the current ancestors (happens(CompositEvent,T1,T2)), plus a last Discarder (initially var) element
+%   - for actions or composite events, otherwise it's [Discarder]. The Discarder var will be bound when the goal succeeds
+%  it is also included in Balls
+%
+resolveUntilAction(V,A,_,_) :- option(debug), writeln(rua-V/A), fail. % for debugging
+resolveUntilAction(V,_,_,_) :- var(V), !, throw(lps_var_goal). % a bug somewhere!
+resolveUntilAction(true,_,_,true) :- !.
+resolveUntilAction([],_,_,true) :- !.
+resolveUntilAction(G,Ancestors,B,C) :- is_list(G), parallelizable_conjunction(G,Branches,Gn), !, 
+	B=conjunction(Branches,Gn,Ancestors), C=true. % no point in delaying the conjunction on failure; let the branches worry about that.
+resolveUntilAction(lps_conjunction_control(OurSuccesses),_Ancestors,_Ball,C) :- ground(OurSuccesses), !, C=true. 
+% there's at least one conjunction branch to complete:
+resolveUntilAction(lps_conjunction_control(_OurSuccesses),_Ancestors,Ball,Cont) :- !,
+	Ball=conjunction_prunning, 
+	Cont=throw(inconsistent_conjunction_prunning). % this continuation must never get called
+resolveUntilAction([G1|Gn],A,B,C) :- !, 
+	resolveUntilAction(G1,A,B,C1), 
+	((var(B), C1\==true) -> throw(inconsistent_lps_ball1(G1,C1));true),
+	(var(B) -> resolveUntilAction(Gn,A,B,C) ; simplify_conjunction(C1,Gn,C)).
+resolveUntilAction((G1,Gn),A,B,C) :- !, 
+	resolveUntilAction(G1,A,B,C1), 
+	((var(B), C1\==true) -> throw(inconsistent_lps_ball2(G1,C1));true),
+	(var(B) -> resolveUntilAction(Gn,A,B,C) ; simplify_conjunction(C1,Gn,C)).
+% conditional expressions, e.g. "if-then-else"; 
+resolveUntilAction((Cond->Then;Else),Ancestors,Ball,Continuation) :- !, 
+	Ball=ite(Ancestors,Cond,Then,Else),Continuation=true.
+resolveUntilAction('$_wait'(Guard),A,Ball,Continuation) :- !, % delay a goal until Guard is true
+	(Guard -> Continuation=true ; Ball=later('$_wait'(Guard),A), Continuation='$_wait'(Guard)).
+% fluents:
+resolveUntilAction(G,Ancestors,Ball,Cont) :- 
+	premature_real_time_fluent(G),  % premature fluent, delay
+	!, Ball=later(G,Ancestors), Cont=G.
+resolveUntilAction(G,Ancestors,Ball,Cont) :- G = holds(_F,_T), real_time_literal(G,Goals), 
+	!, % extensional fluents with real times, in need of a quick rewrite
+	resolveUntilAction(Goals,Ancestors,Ball,Cont).
+resolveUntilAction(G,Ancestors,Ball,Cont) :- 
+	G = holds(_F,T_), 
+	ground(T_), expression_to_time(T_,T), current_time(Now), T>Now, % premature, delay
+	!, Ball=later(G,Ancestors), Cont=G.
+% fluent negation handled in query/1
+resolveUntilAction(holds(F,T),_A,_,true) :- option(no_parallel), query(holds(F,T)).
+resolveUntilAction(Fluent,Ancestors,B,C) :- 
+	\+ option(no_parallel), Fluent=holds(Pred,T), intensional(Pred), 
+	% treat this as a "first class" extensional system fluent instead; elsewhere we'll peek into its argument for future killing:
+	Pred \= real_date(_), 
+	!,
+	% spawn disjuntive goals; we'll dispense with delaying of intensional fluents by requiring
+	% that the head time argument is a free variable, and not occurring in the head;
+	% users should constrain time in bodies
+	findall(l_int(Fluent,Body), (
+		l_int(Fluent,Body_),
+		% hack to make sure timeless bodies get a chance to delay, via the extra 'true' "fluent":
+		(a_literal(Body_,holds(_,_)) -> Body=Body_ ; Body=(holds(true,T),Body_))
+		), Alternatives), 
+	Alternatives\=[],
+	(Alternatives = [l_int(Fluent,Body)] -> resolveUntilAction(Body,Ancestors,B,C) 
+		; B = l_ints_disjunction(l_int(Fluent,Body),Alternatives,Ancestors), C=true
+	).
+resolveUntilAction(Fl,Ancestors,B,C) :- % special fluent
+	Fl=holds(real_date(_),T),
+	\+ option(no_parallel), 
+	findall(Fl, query(Fl), Answers), Answers\=[], 
+	C=true,
+	((ground(T), Answers = [Fl]) -> true ; B=disjunction(Fl,Answers,Ancestors)).
+resolveUntilAction(holds(F,T),Ancestors,B,C) :- % spawn a new disjunctive goal for each extensional fluent answer:
+	\+ option(no_parallel),
+	findall(holds(F,T),query(holds(F,T)),Answers), Answers\=[],
+	((ground(T),Answers = [holds(F,T)]) -> C=true ; 
+	% eternally changing fluents... handled in dc_resolve_goals_suspended below:
+		(B=disjunction(holds(F,T),Answers,Ancestors), C=true 
+		)
+	).
+resolveUntilAction(holds(F,T),Ancestors,Ball,Cont) :- !, % on failure, delay if that makes sense
+	\+ ground(T), Ball=later(holds(F,T),Ancestors), Cont=holds(F,T). 
+% events/actions:
+% resolveUntilAction(V,_,_,_) :- V=happens(start(myConveyor),3+1,_), trace, fail. % for debugging
+resolveUntilAction(happens(E,T1,T2),A,B,C) :- 
+	option(no_parallel), % nonvar(T1) was erroneously being used as heuristic condition to dispense parallelism
+	macroaction(E), 
+	!,
+	l_events(happens(E,T1,T2),Body), resolveUntilAction(Body,[happens(E,T1,T2)|A],B,C).
+% no need to delay events with real times, the auxiliary fluents will delay
+resolveUntilAction(G,_Ancestors,_Ball,_Cont) :- 
+	outdated_real_time_event(G),
+	!, fail.
+resolveUntilAction(G,Ancestors,Ball,Cont) :- G = happens(_,_,_), real_time_literal(G,Goals), 
+	!, % events with real times, in need of a quick rewrite:
+	resolveUntilAction(Goals,Ancestors,Ball,Cont).
+resolveUntilAction(happens(_E,T1_,T2_),_A,_,_) :- % outdated action (as per LPS cycle time), we fail
+	current_time(Now),
+	(expression_to_time(T1_,T1), ground(T1),T1<Now ; expression_to_time(T2_,T2), ground(T2),T2<Now+1), 
+	!, fail. 
+resolveUntilAction(happens(E,T1_,T2_),A,Ball,Cont) :- % premature, we delay
+	current_time(Now), 
+	(ground(T1_), expression_to_time(T1_,T1), T1>Now ; ground(T2_), expression_to_time(T2_,T2), T2>Now+1, \+ macroaction(E); premature_system_action(E)),
+	% \+ a_real_time_event(E),
+	!,
+	Ball=later(happens(E,T1_,T2_),A),Cont=happens(E,T1_,T2_). 
+resolveUntilAction(happens(E,T1_,T2_),A,B,C) :- macroaction(E), !, % general case, spawn disjuntive goals
+	expression_to_time(T1_,T1), expression_to_time(T2_,T2),
+	findall(l_events(happens(E,T1,T2),Body), (
+		l_events(happens(E,T1,T2),Body_),
+		% hack to make sure the event complies to its finish limit
+		((T1\==T2,nonvar(T2)) -> Body = (Body_, holds(true,T), T=<T2-1) ; contains_var(T2,Body_) -> Body=Body_ ; Body = (Body_, holds(true,T2)))
+		), Alternatives), 
+	Alternatives\=[],
+	(Alternatives = [l_events(happens(E,T1,T2),Body)] -> 
+		resolveUntilAction(Body,[happens(E,T1,T2)|A],B,C) 
+		; B = l_events_disjunction(l_events(happens(E,T1,T2),Body),Alternatives,A), C=true
+	).
+resolveUntilAction(happens(E,T1_,T2_),_Ancestors,_B,true) :- 
+	expression_to_time(T1_,T1), current_time(T1), expression_to_time(T2_,T2), T2 is T1+1,
+	%TODO: should we handle disjunctions/multiple solutions like this, as for fluents? 
+	% Maybe not: causes failure of SzaboLanguage_insurance_irrelevant_events.pl and does NOT fix prospectiveGoat.pl...
+	% findall(happens(E,T1,T2),happens(E,T1,T2),Answers), Answers\=[],
+	% (Answers=[happens(E,T1,T2)] -> true ; B=disjunction(happens(E,T1,T2),Answers,Ancestors)).
+	((nonvar(E),E=not(RealE))-> \+ happens(RealE,T1,T2) ; happens(E,T1,T2)). 
+resolveUntilAction(happens(E,T1_,T2_),A,Ball,Cont) :- option(more_actions),
+	expression_to_time(T1_,T1), expression_to_time(T2_,T2), \+ ground(T1), \+ ground(T2),
+	!, % hack to (also) delay the action
+	resolveUntilAction( (holds(true,T1),happens(E,T1,T2)), A, Ball, Cont).
+resolveUntilAction(happens(E,T1_,T2_),A,_,Cont) :- 
+	% select and execute system action; 
+	expression_to_time(T1_,T1), current_time(T1), expression_to_time(T2_,T2), 
+	\+ ((nonvar(E),E=not(_))),
+	\+ happens(E,T1,T2), system_action(E), 
+	\+ functor(E,lps_terminate,_), % this will be handled in next clause: selection and "execution" elsewhere, at the beginning of the next cycle
+	!, % system actions can not be delayed below...
+	Cont=true,
+	T2 is T1+1,
+	check_lps_test_action_ancestors(A),
+	% TODO: this (executing) should perhaps be done later, after checking preconditions for all actions,
+	% as external side-effects will NOT be undone; although no preconditions can mention these actions,
+	% backtracking into here can still occur due to other actions violating preconditions:
+	( callprolog(E), uassertz(happens(E,T1,T2)), fail ; happens(E,T1,T2) ; uretractall(happens(E,T1,T2)), fail).
+resolveUntilAction(happens(E,T1_,T2_),A,_,true) :- % select action:
+	expression_to_time(T1_,T1), current_time(T1), expression_to_time(T2_,T2), 
+	\+ ((nonvar(E),E=not(_))),
+	\+ happens(E,T1,T2), 
+	T2 is T1+1,
+	action_(E), 
+	(event_(E) -> ground(E); true), % hack to allow literals used both as events and actions, e.g. when simulating 2 agents in the same program
+	% notice that simply imposing ground(E) would break editing actions, cf. examples/forTesting/editingActions.pl
+	check_lps_test_action_ancestors(A),
+	uassertz(happens(E,T1,T2)), 
+	( (d_pre(current,Conds),holds_all(Conds,T1,T2)) -> % inadmissible action, undo it
+		uretractall(happens(E,T1,T2)), fail 
+		; true),
+	(true ; \+ system_action(E), uretractall(happens(E,T1,T2)), fail). % undo on backtracking, except system_actions
+resolveUntilAction(happens(E,T1_,T2_),A,Ball,Cont) :- !, 
+	Ball=later(happens(E,T1,T2),A), Cont = happens(E,T1,T2), 
+	expression_to_time(T1_,T1), expression_to_time(T2_,T2), 
+	(\+ ground(T1), \+ ground(T2)), % worth delaying; 
+	% Possible TODO: are the free variables... time variables...? complicated to find out; the LPS developer should worry about this
+	((nonvar(E),E=not(RealE))-> \+ \+ happens(RealE,T1,T2) ; \+ happens(E,T1,T2)). 
+	% \+ happens(E,T1,T2) /*, action_(E)*/. 
+
+%deal with mixed time comparisons, involving both structured time and cycle time
+resolveUntilAction(G,A,Ball,Cont) :- mixed_time_comparison(G,NewG), !, 
+	resolveUntilAction(NewG,A,Ball,Cont).
+% timeless and time constraints:
+resolveUntilAction(tc(G),_A,_,Cont) :- ground(G), !, G, Cont=true.
+resolveUntilAction(tc(G), A, Ball, Cont) :- !, Ball = later(tc(G),A), Cont = tc(G).
+% not anymore: resolveUntilAction(call_continuation(G)) :- !, call_continuation(G).
+% TODO: should we deprecate/remove l_timeless ?
+resolveUntilAction(G,_A,_,true) :- option(no_parallel), !,
+	(\+l_timeless(G,_Body) -> callprolog(G) ; l_timeless(G,Body), evaluate(Body)).
+resolveUntilAction(G,_Ancestors,_B,true) :- (G = (not G_) ; G = (\+ G_)), !, % negation of timeless goals
+	 ( (\+l_timeless(G_,_Body) -> callprolog(G_) ; l_timeless(G_,Body), evaluate(Body)) -> fail 
+	 	; true).
+resolveUntilAction(G,Ancestors,B,true) :- 
+	findall(G, ( \+l_timeless(G,Body) -> callprolog(G) ; l_timeless(G,Body), evaluate(Body)), Answers), Answers\=[],
+	(Answers = [G] -> true ; B=disjunction(G,Answers,Ancestors)).
+
+% simplify_conjunction(+Goal1,+Goal2,-Goal)
+simplify_conjunction(G1,G2,_) :- (var(G1);var(G2)), throw(bad_simplify_conjunction(G1,G2)).
+simplify_conjunction(true,G,G) :- !.
+simplify_conjunction(G,true,G).
+simplify_conjunction(A,B,(A,B)).
+
+% The following predicates overlap significantly with resolveUntilAction, and might be refactorable with it:
+
+% a_literal(+Sequence,Literal)  
+% Generate all literals in a program clause, left to right. Negated fluents inclusive.
+a_literal(V,_) :- var(V), !, fail.
+a_literal((G1,G2),H) :- !, (a_literal(G1,H);a_literal(G2,H)).
+a_literal([G1|Gn],H) :- !, (a_literal(G1,H);a_literal(Gn,H)).
+a_literal((C->T;E),H) :- !, (a_literal(C,H);a_literal(T,H);a_literal(E,H)).
+a_literal(holds(F,T),holds(F,T)) :- !.
+a_literal(happens(E,T1,T2),happens(E,T1,T2)) :- !.
+a_literal(G,G) :- G \== [], G \== true.
+
+% flat_sequence(+Sequence,-FlatSequence)  
+% Returns a list of literals, including negated ones. May return more than one because of if-then-elses
+% Visit all literals in a program clause, left to right. Negated fluents inclusive.
+% Var literals unacceptable, will cause failure
+
+flat_sequence(S,FS) :- flat_sequence(S,FS,[]).
+
+% flat_sequence(S,Head,Tail) same, returning difference list
+flat_sequence(V,_,_) :- var(V), !, fail.
+flat_sequence((G1,G2),F1,Fn) :- !, flat_sequence(G1,F1,F2), flat_sequence(G2,F2,Fn).
+flat_sequence([G1|Gn],F1,Fn) :- !, flat_sequence(G1,F1,F2), flat_sequence(Gn,F2,Fn).
+flat_sequence((C->T;_E),F1,Fn) :- flat_sequence(C,F1,F2),flat_sequence(T,F2,Fn).
+flat_sequence((C->_T;E),F1,Fn) :- !, flat_sequence((not C),F1,F2),flat_sequence(E,F2,Fn).
+flat_sequence(holds(F,T),[holds(F,T)|Tail],Tail) :- !.
+flat_sequence(happens(E,T1,T2),[happens(E,T1,T2)|Tail],Tail) :- !.
+flat_sequence(true,Tail,Tail) :- !.
+flat_sequence([],Tail,Tail) :- !.
+flat_sequence(G,[G|Tail],Tail).
+
+
+% time_variables(+Goal,-Vars)  returns free time variables
+time_variables(G,UniqueVars) :- 
+	findall(T-G, ( 
+		a_literal(G,L), (L=holds(_,T);L=happens(_,T,_);L=happens(_,_,T);L=happens(E,_,_),a_real_time_event(E,T)), \+ ground(T) 
+		), Pairs), 
+	bind_and_extract(Pairs,G,Vars),  
+	sort(Vars,UniqueVars).
+bind_and_extract([T-G|Pairs],G,[T|Vars]) :- !, bind_and_extract(Pairs,G,Vars).
+bind_and_extract([],_,[]).
+
+% has_no_future(+Goal,+EventAncestors,-CounterExample)
+has_no_future(G,Ancestors,FK) :- 
+	future_killer(G,Ancestors,FK,T,K),
+	nonvar(K), ( misc_to_realtime(K,_) -> get_the_real_date(T) ; current_time(T)),
+	ground(FK), \+ FK. % If FK contains a time expression, it will be evaluated with the inequalities... for those that do arith eval
+has_no_future(G,_Ancestors,Lit) :- 
+	get_the_real_date(Today),
+	% find a structured time constant with no future
+	a_literal(G,Lit), 
+	(Lit=holds(real_date(RT),_) ; Lit=happens(E,_,_), a_real_time_event(E,RT)),
+	nonvar(RT), RT= _Year/_Month/_Second,
+	Today@>RT.
+
+
+get_the_real_date(Today) :- query( holds(real_date(Today),_) ).
+
+% future_killer(+Goal,+EventAncestors,-FutureKillerSubgoal,-TimeVar,-TimeValue) is nondet
+% Returns subgoals that may have no future because time only moves forward...
+% One could also consider comparison expressions in general (timeless), but we're not supporting dumb programs ;-)
+% Considers only simple expressions with a single mention of time
+future_killer(G,Ancestors,FK,T,K) :- 
+	time_variables(G,Gvars), time_variables(Ancestors,Avars), append(Avars,Gvars,Vars),
+	a_literal(G,FK_), limited_future_expression(FK_,FK,Vars,T,K).
+
+% limited_future_expression(+Subgoal,-ComparisonExpression,+TimeVars,-TimeVar,-FutureConstant) NOTE: looking into all fluents and events seems TOO EXPENSIVE!!!
+limited_future_expression(holds(_,FT),T@=<K,_Vars,T,K) :-  % fluents from the past are doomed to fail
+	ground(FT), is_structured_time(FT), !.
+limited_future_expression(holds(_,FT),T=<K,_Vars,T,K) :-  
+	ground(FT), !, expression_to_time(FT,K).
+limited_future_expression(happens(_,ET1,_ET2),Expr,_Vars,T,K) :- ground(ET1), 
+	( is_structured_time(ET1)-> Expr = (T@=<ET1) ; expression_to_time(ET1,K), Expr=(T=<K)). % events from the past are doomed to fail
+limited_future_expression(happens(_,_ET1,ET2),Expr,_Vars,T,K) :- ground(ET2), 
+	%  not T+1, because composite events may take zero time
+	( is_structured_time(ET2)-> Expr = (T@=<ET2) ; expression_to_time(ET2,K), Expr=(T=<K)), !. 
+limited_future_expression(T<K,T<K,Vars,T,K) :- member_equivalent_chk(T,Vars), !.
+limited_future_expression(T=<K,T=<K,Vars,T,K) :- member_equivalent_chk(T,Vars), !.
+limited_future_expression(T@<K,T@<K,Vars,T,K) :- member_equivalent_chk(T,Vars), !.
+limited_future_expression(T@=<K,T@=<K,Vars,T,K) :- member_equivalent_chk(T,Vars), !.
+limited_future_expression(K>T,K>T,Vars,T,K) :- member_equivalent_chk(T,Vars), !.
+limited_future_expression(K>=T,K>=T,Vars,T,K) :- member_equivalent_chk(T,Vars), !.
+limited_future_expression(K@>T,K@>T,Vars,T,K) :- member_equivalent_chk(T,Vars), !.
+limited_future_expression(K@>=T,K@>=T,Vars,T,K) :- member_equivalent_chk(T,Vars), !.
+
+
+member_equivalent_chk(X,[Y|_]) :- X==Y, !.
+member_equivalent_chk(X,[_|L]) :- member_equivalent_chk(X,L).
+
+% dc_resolve_goals(+GoalsAndBinders,-NewGoals) Alternative implementation of resolve_tree, used with option(dc)
+% Fails if some goal fails; 
+% Goals is a list of goal(ID,Discard,MyFailure,AllFailures,SharedVars,EventAncestors,G):
+% ID is an integer unique for this computation (different runs originating identic ID sequence)
+% if Discard==non_discardable, it's a "normal" goal, which must succeed; 
+% 	it may "succeed" by vanishing into its (typically disjunctive) continuations, that become new goals in this list
+% if Discard is a variable, G is one of several alternatives (continuations for some vanished goal) still under consideration; 
+% if Discard==yes, some alternative to G was solved, we can ignore G; 
+% MyFailure is a variable to be used as a mark for failure of G; AllFailures is a list of all such variables for a disjunction
+% SharedVars is a term used to link to similar terms in other goals (namely for parallel conjuntions)
+% In summary: 
+%  - when an alternative in a disjunction succeeds, all others are discarded
+%  - when an alternative in a disjunction fails, discard it (without failing the whole thing) if there is still a non-failed alternative
+% EventAncestors has a special last element: a discarder variable for the goal (typically a rule consequent), 
+%   to allow discarding irrelevant fluent alternatives
+% Evolved from a version based SWI's delimited continuations (reset/shift, cf. http://www.swi-prolog.org/pldoc/man?section=delcont )
+% Adopted an explicit implementation since SWI continuations can not be saved/restored, 
+% as they contain session dependent memory references.
+% a Binder is a binder(LambdaAllGoals,ConditionToEvaluate,Variable), and will cause the condition to be evaluated in every cycle; 
+% the Condition should also set the Variable, e.g. with 'yes', 
+
+dc_resolve_goals(Goals,NewGoals) :- 
+	simplify_goal_variants(Goals,Goals_),
+	dc_resolve_goals(Goals_,Goals_,NewGoals1),
+	check_binders(NewGoals1,NewGoals2), % check for failures, to bind if-then-else waiters
+	% if it made a difference, repeat once... but waiters first, as they may well discard subsequent goals
+	(NewGoals1\=NewGoals2 -> 
+		collect_waiters(NewGoals2,Waiters,Others), 
+		% format("~n waiters: ~w ~n",[Waiters]),
+		% seems a deadlock "opportunity"...this ordering may be worth looking into:
+		append(Waiters,Others,NewGoals2_), 
+		dc_resolve_goals(NewGoals2_,NewGoals2,NewGoals3) 
+		; NewGoals2=NewGoals3),
+	dc_resolve_goals_handle_failed(NewGoals3,NewGoals). 
+
+dc_resolve_goals_handle_failed(Goals,NewGoals) :- 
+	select(goal(ID,Discard,MyFailure,_OurFailures,_SharedVars,EventAncestors,G),Goals,PrunedGoals),
+	MyFailure==failed, 
+	!,
+	( (
+		Discard == non_discardable
+		;
+		last(EventAncestors,A), 
+		\+ (member(goal(_,_,_,_,_,Ancestors,_),PrunedGoals), last(Ancestors,Same), Same==A)
+		) ->
+		write_verbose(['DETECTED failed goal with NO alternatives ',ID, ' ', G,', backtracking',nl]),
+		fail
+		;
+		write_verbose(['DETECTED failed goal with alternatives ',ID, ' ', G,', ignoring it',nl]),
+		dc_resolve_goals_handle_failed(PrunedGoals,NewGoals)
+	).
+dc_resolve_goals_handle_failed(Goals,Goals).
+
+% collect_waiters(+Goals,Waiters,-OtherGoals)
+collect_waiters([goal(ID,Discard,MyFailure,OurFailures,Shared,Ancestors,G)|Goals],[goal(ID,Discard,MyFailure,OurFailures,Shared,Ancestors,G)|Waiters],Others) :- 
+	once(a_literal(G,W)), W='$_wait'(_), % check the leftmost; we could of course mark goal(...) with yet another argument...
+	!,
+	collect_waiters(Goals,Waiters,Others).
+collect_waiters([G|Goals],Waiters,[G|Others]) :- collect_waiters(Goals,Waiters,Others).
+collect_waiters([],[],[]).
+
+% discard similar goals, abstracting from ancestor minutiae but not from their free variables
+% simplify_goal_variants(Goals,Goals) :- !. % for debugging
+simplify_goal_variants([goal(ID,Discard,MyFailure,OurFailures,Shared,EventAncestors,G)|Goals],NewGoals) :- 
+	term_variables(EventAncestors,AncestorVars),
+	select(goal(ID2,Discard2,MyFailure2,OurFailures2,Shared2,EventAncestors2,G2),Goals,Pruned),
+	term_variables(EventAncestors2,AncestorVars2),
+	(Shared2==Shared;ground(Shared2)),
+	variant(Discard+MyFailure+OurFailures+AncestorVars+G, Discard2+MyFailure2+OurFailures2+AncestorVars2+G2),
+	!, 
+	write_verbose(['SIMPLIFIED ' ,ID2, ' because of ',ID, nl]),
+	simplify_goal_variants([goal(ID,Discard,MyFailure,OurFailures,Shared,EventAncestors,G)|Pruned],NewGoals). 
+simplify_goal_variants([G|Goals],[G|NewGoals]) :- !, simplify_goal_variants(Goals,NewGoals).
+simplify_goal_variants(Goals,Goals).	
+	
+check_binders(Goals,NewGoals) :- member(G,Goals), G\= binder(_Lambda,_Condition,_Var,_Why), !,
+	check_binders(Goals,Goals,NewGoals).
+check_binders(_Goals,[]). % no real goals left
+	
+check_binders([binder(Lambda,Condition,Var,Why)|Goals],All,NewGoals) :- !, 
+	(option(debug)->format("Evaluating ~w~n",[binder(All,Condition,Var,Why)]);true),
+	((var(Var),Lambda=All,Condition) -> 
+		NewGoals_=NewGoals %, format("...bound for ~w~n",[Why])
+		; [binder(Lambda,Condition,Var,Why)|NewGoals_]=NewGoals), 
+	check_binders(Goals,All,NewGoals_). 
+check_binders([X|Goals],All,[X|NewGoals]) :- !, check_binders(Goals,All,NewGoals).
+check_binders([],_,[]).
+
+% dc_resolve_goals(Goals,AllInitialGoals,NewGoals)
+dc_resolve_goals(Goals,_,_) :- % for debugging
+	option(debug), findall(Action, happens(Action, _, _), Actions), do_write([nl, 'CURRENT Events and actions are ',Actions,nl]),
+	writeln('GOALS:'),member(G,Goals), writeln(G), 
+	fail. 
+dc_resolve_goals([goal(ID,Discard,MyFailure,_OurFailures,_SharedVars,_Ancestors,G)|_Goals],_All,_NewGoals) :-
+	option(debug), format("dc_resolve_goals for ~w (discard==~w, failure==~w): ~w~n",[ID,Discard,MyFailure,G]), fail.
+% a few sanity checks first, while in debug mode:
+dc_resolve_goals([goal(ID,_Discard,MyFailure,OurFailures,_SharedVars,_EventAncestors,G)|_Goals],_All,_NewGoals) :-
+	option(debug),
+	must_be(list,OurFailures),
+	var(MyFailure), OurFailures=[_|_],
+	((member(V,OurFailures), V==MyFailure) -> true ; throw(bad_failures(ID,OurFailures,G))),
+	fail.
+dc_resolve_goals([goal(ID,_Discard,_MyFailure,_OurFailures,_SharedVars,EventAncestors,G)|Goals],_All,_NewGoals) :-
+	option(debug),
+	(member(goal(ID,_,_,_,_,_,_),Goals) -> throw(repeated_goal(ID,EventAncestors,G))).
+dc_resolve_goals([],_,[]) :- !.
+% these will be evaluated later:
+dc_resolve_goals([binder(Lambda,Condition,Var,Why)|Goals],All,[binder(Lambda,Condition,Var,Why)|NewGoals]) :- !, 
+	dc_resolve_goals(Goals,All,NewGoals).
+dc_resolve_goals([goal(ID,Discard,_Failed,_,_,_,G)|Goals],All,NewGoals) :- Discard == yes, % even if failed! var(Failed), 
+	!, % some alternative already succeeded! we can drop this goal
+	write_verbose(['DISCARDED ',ID,' ',G]),
+	dc_resolve_goals(Goals,All,NewGoals).
+dc_resolve_goals([goal(ID,Discard,MyFailure,OurFailures,SharedVars,EventAncestors,G)|Goals],All,NewGoals_) :- 
+	var(MyFailure), has_no_future(G,EventAncestors,Killer), 
+	!,
+	MyFailure=failed,
+	write_verbose(['FUTURELESS ',ID, ' ', G,' because of ',Killer, ' OurFailures:', OurFailures, nl]),
+	NewGoals_ = [goal(ID,Discard,MyFailure,OurFailures,SharedVars,EventAncestors,G)|NewGoals],
+	%\+ ground(OurFailures),
+	%NewGoals_=NewGoals, write_verbose([' neglecting futureless failure ']),
+	dc_resolve_goals(Goals,All,NewGoals).
+dc_resolve_goals([goal(ID,Discard,Failure,Failures,SharedVars,A,G)|Goals],All,NewGoals) :- var(Failure),
+	write_verbose(['Goal ',ID,' is ',G,'.',nl]),
+	% (ID==188 -> trace; true),
+	resolveUntilAction(G,A,Ball,Continuation),
+	( (var(Ball), Continuation\==true) -> throw(inconsistent_lps_ball3(G,Ball));true),
+	(true;write_verbose(['BACKTRACKING into previous goal ',ID, ' ', G,nl]),fail),
+	( (var(Ball);Ball==conjunction_prunning) -> 
+		% resolved G completely, or G is a completed parallel conjunction branch whose continuation can be discarded 
+		% (because some other pending branch will have it)
+		%writeln('SOLVED:'), writeln(G),
+		dc_resolve_goals(Goals,All,NewGoals) 
+	; % we suspended the execution:
+		%writeln('CONTINUATION:'), writeln(Continuation), nl, % uncomment for debugging
+		dc_resolve_goals_suspended(G,ID,Discard,Failure,Failures,SharedVars,Goals,Ball,Continuation,All,NewGoals)
+	).
+dc_resolve_goals([goal(ID,Discard,failed/*unify this:-)*/,OurFailures,_SharedVars,Ancestors,G)|Goals],All,NewGoals) :- 
+	% does NOT retry the failed goal later... by being consumed here
+	write_verbose([
+		'FAILED resolveUntilAction for ',ID,' ', G,' (discarder:',Discard,')',' failures:', 
+		OurFailures, ' ancestors:', Ancestors, nl]),
+	Discard \== non_discardable, % disjunctive alternatives may or not stay, otherwise we backtrack for sure
+	% we don't mind about a failed goal if it belongs to a disjunctive bunch with at least one branch left to execute
+	is_list(OurFailures),
+	% is there still an alternative goal which is active?
+	\+ ground(OurFailures), 			
+	write_verbose([' tolerating failure',nl]),
+	dc_resolve_goals(Goals,All,NewGoals).
+
+% Decide what to do, depending on the cause of suspension
+% dc_resolve_goals_suspended(+GoalWithSuspendedSubgoal,+ID,?Discard,Failure,Failures,+MoreGoals,+Ball,+Continuation,+AllGoals,-NewGoals)
+dc_resolve_goals_suspended(_TopG,ID,Discard,Failure,Failures,SharedVars,Goals,later(G,Ancestors),Continuation,AllGoals,NewGoals) :- !,
+	write_verbose([' Delayed ',G, ' while executing ',ID, nl]),
+	dc_resolve_goals(Goals,AllGoals,NewGoals_),
+	% Inherit goal alternative failure mark, push goal to end of queue:
+	goal_ID_inc(ChildID), add_goal_child(ID,ChildID),
+	append(NewGoals_,[goal(ID,Discard,Failure,Failures,SharedVars,Ancestors,Continuation)],NewGoals).
+
+dc_resolve_goals_suspended(_TopG,ID,Discard,Failure,_Failures,SharedVars,Goals,ite(Ancestors,Cond,Then,Else),Continuation,AllGoals,NewGoals) :- !,
+	% writeln(continuation-Continuation),
+	% last(Ancestors,RootAncestorDiscard), % get the variable marking success of the top goal 
+	(var(Discard) -> RootAncestorDiscard=Discard ; last(Ancestors,RootAncestorDiscard)),
+	goal_ID_inc(ID1), goal_ID_inc(ID2), add_goal_child(ID,ID1), add_goal_child(ID,ID2),
+	simplify_conjunction(Else,Continuation,ElseContinuation),
+	simplify_conjunction(Then,Continuation,ThenContinuation),
+	write_verbose([' Spawning 2 goals in parallel ',[ID1,ID2],' because of ',ite(Ancestors,Cond,Then,Else), nl]),
+	append(Goals,[
+		% discard the Else branch if condition succeeds:
+		goal(ID1,RootAncestorDiscard,Cfailed,[Cfailed,Efailed],DiscardE+SharedVars,Ancestors,(Cond,DiscardE=yes,ThenContinuation)), 
+		% Cfailed is not entirely set by descendents...hence the use of the goal_child relation:
+		binder(Lambda, (no_active_descendents(ID1,Lambda),C_has_failed=yes, discard_all_descendents(ID1,Lambda)), C_has_failed,ite), 
+		% wait until (the whole goal resolvent containing the ...) condition fails before trying Else:
+		goal(ID2,DiscardE,Efailed,[Cfailed,Efailed],DiscardE+SharedVars,Ancestors,('$_wait'(nonvar(C_has_failed)),/*RootAncestorDiscard=DiscardE,*/ElseContinuation)),
+		binder(_,( Cfailed==failed,Efailed==failed ; Cfailed==failed,nonvar(DiscardE)), Failure, ite_fail) % propagate failure info
+		], Goals_),
+	%dc_resolve_goals(Goals_,[Condition /* to avoid a premature spurious failure detection */|AllGoals],NewGoals).	
+	dc_resolve_goals(Goals_,AllGoals,NewGoals).	
+	
+dc_resolve_goals_suspended(_G,ID,Discard,_Failure,_Failures,SharedVars,Goals,conjunction(Branches,Gn,Ancestors),Continuation,AllGoals,NewGoals) :- !,
+	length(Branches,N), % TODO: propagate failure? when all branches have failed ?? what about shared vars???
+	make_branch_goals(Branches,ID,Discard,Ancestors,(Gn,Continuation),AllS,AllS,SharedVars,ExtraGoals),
+	write_verbose([' Spawning ',N,' conjunctive goals in parallel because of ',Branches, nl]),
+	append(ExtraGoals,Goals,Goals_),
+	dc_resolve_goals(Goals_,AllGoals,NewGoals).	
+	
+dc_resolve_goals_suspended(_G,ID,Discard,_OriginalFailed,_Failures,SharedVars,Goals,disjunction(SuspendedG,Answers,Ancestors),Continuation,AllGoals,NewGoals) :- !,
+	% build new goals, including the common Continuation albeit reflecting the different bindings in Answers,
+	% and ending with the setting of the common variable Discard
+	% last(Ancestors,RootAncestorDiscard), % get the variable marking success of the top goal 
+	(var(Discard) -> RootAncestorDiscard=Discard ; last(Ancestors,RootAncestorDiscard)),
+	((SuspendedG = holds(_F,T), \+ ground(T) /*, \+ ground(F)*/ )-> copy_term(SuspendedG+SharedVars+Ancestors+Continuation,BindingsForFuture) ; true),
+	simplify_conjunction(SuspendedG=Answer,Continuation,SuspCont),
+	findall(
+		goal(ChildID,_IgetBoundBelow,__Failed,_OurFailures,SharedVars,Ancestors,SuspCont), 
+		(member(Answer,Answers),goal_ID_inc(ChildID),add_goal_child(ID,ChildID)), 
+		ExtraGoals),
+	
+	bind_discarders_and_shared(ExtraGoals,SharedVars,RootAncestorDiscard),
+	length(ExtraGoals,N), length(OurFailures,N), 
+	% append(Failures,OurFailures,AllFailures),
+	% bind_failure_variables(ExtraGoals,OurFailures,AllFailures),
+	% The above two lines somehow make goat.lps execute badly
+	
+	% links Failed to OurFailures in all created goals:
+	( nonvar(BindingsForFuture) -> bind_failure_variables([_FutureGoalBelow|ExtraGoals],[Failed|OurFailures]) 
+		; bind_failure_variables(ExtraGoals,OurFailures)), 
+	% bind_failure_variables(ExtraGoals,OurFailures),
+	findall(ID_,member(goal(ID_,_,_,_,_,_,_),ExtraGoals),NewIDs),
+	write_verbose([' Spawning ',N,' disjunctive goals ',NewIDs,' for ',ID,' because of ',SuspendedG, nl]),
+	% execute the first answer first...then proceed with other goals, for some "fairness"
+	%ExtraGoals = [First|ExtraGoals_],
+	append(ExtraGoals,Goals,Goals_),
+	%append([First|Goals],ExtraGoals_,Goals_),
+	dc_resolve_goals(Goals_,AllGoals,NewGoals_),
+
+	% we'll get here if ExtraGoals have all succeeced, delayed....or failed but we have the following future:
+	% Now check if we need to add a "disjunctive alternative for the unknown future of state", e.g. in future cycles:
+	( nonvar(BindingsForFuture) -> 
+		% We really never know when a fluent answer set is "final"... later actions may affect it, so...:
+		BindingsForFuture = SuspendedG_+SharedVars+Ancestors_+Continuation_,
+		goal_ID_inc(AnotherID), add_goal_child(ID,AnotherID),
+		simplify_conjunction(SuspendedG_,Continuation_,SuspCont_),
+		append(NewGoals_,[goal(AnotherID,RootAncestorDiscard_,Failed,[Failed|OurFailures],SharedVars,Ancestors_,SuspCont_)],NewGoals),
+		last(Ancestors_,RootAncestorDiscard_), RootAncestorDiscard_=RootAncestorDiscard,
+		write_verbose([' Spawned one extra disjunctive goal ',AnotherID,' for the future because of ',ID,' ',SuspendedG, nl])
+		; NewGoals=NewGoals_).
+
+dc_resolve_goals_suspended(_G,ID,Discard,_Failure,_Failures,SharedVars,Goals,l_events_disjunction(l_events(happens(E,T1,T2),Body),Answers,Ancestors),Continuation,AllGoals,NewGoals) :-
+	% similar to the previous clause, except that in addition to different bindings there are different Body terms to consider:
+	% last(Ancestors,RootAncestorDiscard), % get the variable marking success of the top goal
+	(var(Discard) -> RootAncestorDiscard=Discard ; last(Ancestors,RootAncestorDiscard)),
+	findall(
+		%goal(_ID,_IgetBoundBelow, _Failed, _OurFailures, SharedVars, [happens(E,T1,T2)|Ancestors], (l_events(happens(E,T1,T2),Body)=Answer,Body,Continuation) ), 
+		goal(ChildID,_IgetBoundBelow, _Failed, _OurFailures, SharedVars, [happens(E,T1,T2)|Ancestors], BodyContinuation ), 
+		( member(l_events(happens(E,T1,T2),Body),Answers), simplify_conjunction(Body,Continuation,BodyContinuation), goal_ID_inc(ChildID), add_goal_child(ID,ChildID)),
+		%member(Answer,Answers), 
+		ExtraGoals),
+	bind_discarders_and_shared(ExtraGoals,SharedVars,RootAncestorDiscard),
+	length(ExtraGoals,N), length(OurFailures,N),
+	% append(Failures,OurFailures,AllFailures),
+	%   see related comment in the above clause
+	bind_failure_variables(ExtraGoals,OurFailures),
+	write_verbose([' Spawning ',N,' disjunctive goals for ',ID,' because of ',l_events(happens(E,T1,T2),Body), nl]),
+	append(ExtraGoals,Goals,Goals_),
+	dc_resolve_goals(Goals_,AllGoals,NewGoals).
+
+dc_resolve_goals_suspended(_G,ID,Discard,_Failure,_Failures,SharedVars,Goals,l_ints_disjunction(l_int(Fluent,Body),Answers,Ancestors),Continuation,AllGoals,NewGoals) :-
+	% last(Ancestors,RootAncestorDiscard), % get the variable marking success of the top goal
+	(var(Discard) -> RootAncestorDiscard=Discard ; last(Ancestors,RootAncestorDiscard)),
+	findall(
+		goal(ChildID,_IgetBoundBelow, _Failed, _OurFailures, SharedVars, Ancestors, BodyContinuation ), 
+		( member(l_int(Fluent,Body),Answers), simplify_conjunction(Body,Continuation,BodyContinuation), goal_ID_inc(ChildID), add_goal_child(ID,ChildID)),
+		ExtraGoals),
+	bind_discarders_and_shared(ExtraGoals,SharedVars,RootAncestorDiscard),
+	length(ExtraGoals,N), length(OurFailures,N),
+	bind_failure_variables(ExtraGoals,OurFailures),
+	write_verbose([' Spawning ',N,' disjunctive goals for ',ID,' because of ',l_int(Fluent,Body), nl]),
+	append(ExtraGoals,Goals,Goals_),
+	dc_resolve_goals(Goals_,AllGoals,NewGoals).
+
+	
+% make_branch_goals(+Branches,+ID,+DiscardVar,+Continuation,AllSuccesses,-SuccessVars,+SharedVars,-Goals) for parallelized conjunctions
+make_branch_goals([B|Bn],ID,Discard,A,Cont,AllS,[S|Sn],SharedVars,[goal(ChildID,RootAncestorDiscard,_,[],AllS+SharedVars,A,( B,S=yes,ControlCont) )|Goals]) :- !,
+	% last(A,RootAncestorDiscard), % get the variable marking success of the top goal
+	(var(Discard) -> RootAncestorDiscard=Discard ; last(A,RootAncestorDiscard)),
+	simplify_conjunction(lps_conjunction_control(AllS),Cont,ControlCont),
+	goal_ID_inc(ChildID), add_goal_child(ID,ChildID),
+	make_branch_goals(Bn,ID,Discard,A,Cont,AllS,Sn,SharedVars,Goals).
+make_branch_goals([],_,_,_,_,_AllS,[],_,[]).
+	
+% some more unification magic: wire the failure mark variables together
+% bind_failure_variables(ExtraGoals,OurFailures)
+bind_failure_variables(ExtraGoals,OurFailures) :- bind_failure_variables(ExtraGoals,OurFailures,OurFailures).
+
+bind_failure_variables([goal(_ID,_,Failed,AllFailures,_,_,_)|Goals],[Failed|Failures], AllFailures) :- !,
+	bind_failure_variables(Goals,Failures,AllFailures).
+bind_failure_variables([],[],_).
+	
+bind_discarders_and_shared([goal(_ID,Discard,_,_,SharedVars,Ancestors,_)|Goals],SharedVars,Discard) :- !, 
+	last(Ancestors,RootDiscard), 
+	(var(RootDiscard)->RootDiscard=Discard;true), % this certainly feels like a HACK;-)
+	bind_discarders_and_shared(Goals,SharedVars,Discard).
+bind_discarders_and_shared([],_SharedVars,_Discard).
+
+
+% parallelizable_conjunction(+Glist,-Branches,-Continuation)  
+% Glist starts with a sequence of 2+ parallelizable branches (macro actions that start at the same time), and the remaining goals are Continuation
+parallelizable_conjunction([happens(E,T1,T2)|Gn],[happens(E,T1,T2)|Branches],Continuation) :- macroaction(E),
+	parallelizable_conjunction(Gn,T1,Branches,Continuation), Branches=[_|_].
+
+parallelizable_conjunction([happens(E,T1,T2)|Gn],T1_,[happens(E,T1,T2)|Branches],Continuation) :- T1_==T1, macroaction(E), !,
+	parallelizable_conjunction(Gn,T1,Branches,Continuation).
+parallelizable_conjunction(G,_,[],G).
+
+lps_conjunction_control(_OurSuccesses) :- throw(bad_usage_of_lps_conjunction_control).
+
+% Goal IDs used to build trees of goals, in order to detect their failure
+:- thread_local(next_goal_id/1).
+set_goal_id(N) :- retractall(next_goal_id(_)), assert(next_goal_id(N)).
+goal_ID_inc(N) :- retract(next_goal_id(N)), !, New is N+1, assert(next_goal_id(New)).
+
+:- thread_local(goal_child/2). % ParentID, ChildID  A goal is a child of another if it replaces it in the goal list
+set_goal_children(Tuples) :- 
+	retractall(goal_child(_,_)), 
+	forall(member(T,Tuples), (assertion((T=goal_child(_,_),ground(T))), assert(T))).
+get_goal_children(Tuples) :- findall(goal_child(P,C),goal_child(P,C),Tuples).
+
+add_goal_child(ParentID,ChildID) :- 
+	must_be(integer,ParentID), must_be(integer,ChildID), 
+	assert(goal_child(ParentID,ChildID)).
+
+% goal_descendent(+ID,-DescendentID)    
+% Obtain all descendents
+goal_descendent(ID,Descendent) :- 
+	goal_child(ID,Child), (Descendent=Child ; goal_descendent(Child,Descendent)).
+	
+no_active_descendents(ID,AllGoals) :- member(goal(ID,_,Failed,_,_,_,_),AllGoals), Failed\==failed, 
+	!, fail.
+no_active_descendents(ID,AllGoals) :- member(goal(Descendent,_,Failed,_,_,_,_),AllGoals), Failed\==failed, goal_descendent(ID,Descendent), 
+	!, fail.
+no_active_descendents(_,_).
+
+% discard_all_descendents(ID,Goals) Mark all descendents of ID in Goals as discardable
+discard_all_descendents(ID,[goal(_,Discard,_, _, _, _, _ )|Goals]) :- nonvar(Discard), !,
+	discard_all_descendents(ID,Goals).
+discard_all_descendents(ID,[goal(ID2,yes,_, _, _, _, _ )|Goals]) :- (ID=ID2 ; goal_descendent(ID,ID2) ), !,
+	discard_all_descendents(ID,Goals).
+discard_all_descendents(ID,[_|Goals]) :- discard_all_descendents(ID,Goals).
+discard_all_descendents(_,[]).
+
+%TODO: add garbage collection at each cycle: remove obsolete children, namely to avoid bloating saved states (non trivial...)
+%TODO: (alternative) add option(no_if_then_else), which disables assertions of children and throws an exception if if-then-else is used
+
+% A cached representation of d_pre indicating its dependence on states ('current' only, or 'both' current and next ('both' also encompasses next-only))
+:- thread_local(d_pre/2).
+
+% Cache of all Prolog predicates available to be external fluents or actions
+:- thread_local(external_predicate_for_lps/1).
+
+:- thread_local(beginningOfSimulatedRealTime/1).
+
+:- multifile user:file_search_path/2.
+user:file_search_path(system, SD) :- 
+	lps_engine_directory(D), 
+	concat_atom([D,'/'],DD), % hack, don't know where to fetch OS-dependent separator
+	relative_file_name(SD,DD,'system').
+
+% flag reset at each interpreter cycle
+clean_state_flag('$_state'(false)).
+state_is_clean('$_state'(false)).
+state_changed(S) :- nb_setarg(1,S,true).
+
+%%% From here on, generic Prolog code
+
+print_error_throw(Term) :- print_error(error,throw(Term)),nop(throw).
+print_error_fail(Message):- print_error(error,Message), nop(fail).
+
+print_error(Type,Message) :- print_error(Type,Message,null).
+	
+my_load_dyn(F) :- my_load_dyn(F,false).
+
+% my_term_size(Item,Size)  
+my_term_size(T,1) :- var(T), !.
+my_term_size([T|TT],N) :- !, my_term_size(T,N1), my_term_size(TT,N2), N is N1+N2.
+my_term_size([],1) :- !.
+my_term_size(T,1) :- atomic(T), !.
+my_term_size(T,N) :- T=..[_|L], my_term_size(L,N2), N is N2+1.
+
+% Suffix typically being .extension
+% collects all files in Directory subtree, recursively
+all_files_in(Directory,Suffix,Files) :-
+	(is_list(Suffix)->Suffix=SuffixCodes;atom_codes(Suffix,SuffixCodes)),
+	findall( File, (
+		list_directory(Directory,F), 
+		F \== '.', F \== '..',
+		concat_atom([Directory,'/',F],FullF),
+		(is_directory(FullF) -> 
+			all_files_in(FullF,Suffix,DFiles), member(File,DFiles) 
+			; 
+			atom_codes(F,FC), 
+			append(_PFcodes,SuffixCodes,FC), 
+			concat_atom([Directory,'/',F],File))
+		),
+		Files).
+
+% for each .lpsw file (Wei syntax), generate its test result file
+% BEWARE, this will assume the WHOLE examples subtree runs well!
+build_all_test_results :- 
+	lps_examples_directory(ED),
+	all_files_in(ED,'.lpsw',Files),
+	writeln('Generating test results for files:'), writeln(Files),
+	do_test_suite(Files,[make_test,verbose]).
+
+% add rules to trigger "meta" actions which document the occurrence of composite events
+add_meta_reactive_rules :-
+	forall( l_events(E,_), 
+		uassert( expanded_reactive_rule([E],[happens(lps_meta(E),_T3,_)]) ) ),
+	uassert(action(lps_meta(_))). % No swish support, needs revision!
+	
+% Clean up execution of a single LPS program.
+cleanup_engine :- option(swish), !.
+cleanup_engine :- % should be refactored with exclude_from_user_program below...
+    temporary_predicate(P,C), G=..[C,P], G, fail.
+cleanup_engine.
+
+% temporary_predicate(TemporaryEnginePredicateTemplate,FunctorForCleanupGoal)
+% TODO: check whether retractall is adequate in background programs, because of thread_local
+temporary_predicate(observed_at(_,_),retractall).
+temporary_predicate(expanded_reactive_rule(_,_),uretractall).
+temporary_predicate(expanded_reactive_rule(_,_,_),uretractall).
+temporary_predicate(d_pre(_,_),retractall).
+temporary_predicate(external_predicate_for_lps(_),retractall).
+temporary_predicate(current_goal(_),uretractall).
+temporary_predicate(current_time(_),uretractall).
+temporary_predicate(real_time_beginning(_),uretractall).
+temporary_predicate(beginningOfSimulatedRealTime(_),retractall).
+temporary_predicate(depth(_),uretractall).
+temporary_predicate(expanded_consequent(_,_),uretractall).
+temporary_predicate(failed(_, _, _),uretractall).
+temporary_predicate(happens(_, _, _),uretractall).
+temporary_predicate(state(_),uretractall).
+temporary_predicate(next_state(_),uretractall).
+temporary_predicate(steps(_),uretractall).
+temporary_predicate(tried(_, _, _),uretractall).
+temporary_predicate(used(_),uretractall).
+temporary_predicate(lps_updating_current_state,uretractall).
+temporary_predicate(lps_failed_test(_,_),uretractall).
+temporary_predicate(lps_test_result(_,_,_),uretractall).
+temporary_predicate(lps_test_result_item(_,_,_),uretractall).
+temporary_predicate(lps_test_action_ancestor(_,_,_),uretractall).
+temporary_predicate(lps_test_options(_),uretractall).
+temporary_predicate(lps_saved_state(_,_,_,_,_,_,_,_),uretractall).
+
+
+% Clear an LPS program to run another LPS program.
+cleanup_program :- option(swish), !. % program is loaded into dynamic module
+cleanup_program :- program_predicate(P), uretractall(P), fail.
+cleanup_program.
+
+% Compute a shs256 hash  out of canonical representations of all LPS program clauses
+get_lps_program_hash(H) :- get_lps_program_hash(H,_Codes).
+
+get_lps_program_hash(Hash,Codes) :-
+	% Restricting to a single file would be wrong... several files may contribute to the user module: 
+	% once(lps_program_clause_file(_,_,File)),
+	% The WHOLE user module must be considered, as it may affect the program...(other modules too, but we're relying on swish's sandbox...)
+	(setof((Pred:-Body), File ^ lps_program_clause_file(Pred,Body,File),Clauses)->true;Clauses=[]),
+	% TODO: Somehow the following is producing different orderings with the explanator, so we use the setof....which is not quite equivalent
+	% findall((Pred:-Body), lps_program_clause_file(Pred,Body,_File),Clauses),
+	with_output_to_chars(( 
+		%(program_predicate(Pred), Pred, format('~k. ',[Pred]), fail ; true)
+		% the above missed timeless/Prolog predicates, so:
+		( member((Pred:-Body),Clauses), format('~k :- ~k. ',[Pred,Body]), fail ; true )
+		% M:listing doesn't work, always sends output to console 
+		), Codes), 
+	% atom_codes(AA,Codes), mylog(hashFROM-AA),
+	sha_hash(Codes,H,[algorithm(sha256)]), hash_atom(H,Hash).
+
+% File is the file containing the clause, or 'asserted'; notice this will likely return many
+% user module predicates; filter them out with program_predicate/1 if you must (cf. psyntax:dumploaded/1)
+lps_program_clause_file(Pred,Body,File) :- 
+	must_lps_program_module(M),
+	M:current_predicate(F/A), functor(Pred,F,A), \+ predicate_property(M:Pred,built_in), 
+	% \+ predicate_property(M:Pred, imported_from(_)), 
+	\+ exclude_from_user_program(Pred), 
+	% the following (weird) catch is because in backgound programs sometimes we would get a..
+	% exception(error(permission_error(access,private_procedure,read_util:read_line_to_codes/2),context(system:clause/3,_4882))) 
+	qcatch_f(clause(M:Pred,Body,Ref)), 
+	(prolog_clause:clause_info(Ref, File, _TermPos, _VarOffsets, _) -> true ; File=asserted),
+	% ?? File \== asserted,
+	\+ excluded_file(File).
+
+user_prolog_clause(Pred,Body) :- 
+	lps_program_clause_file(Pred,Body,_File), 
+	\+ program_predicate(Pred).
+
+% we need to exclude the postmortem predicates themselves...??
+exclude_from_user_program(P) :- temporary_predicate(P,_).
+exclude_from_user_program(mylog(_)).
+exclude_from_user_program(mylogFile(_)).
+exclude_from_user_program(option(_)). % kind of a hack, can't be added to temporary_predicate
+exclude_from_user_program('_currenty__defining'(_)).
+exclude_from_user_program(head_hint(_,_,_)).
+% others to exclude from system: screen_property, ...
+exclude_from_user_program(G) :- nonvar(G), functor(G,F,_), atom_chars(F,['$'|_]).
+
+excluded_file(File) :- current_prolog_flag(home, Home), atom_prefix(File,Home), !.
+excluded_file(File) :- lps_engine_directory(Home), atom_prefix(File,Home), !.
+excluded_file(File) :- lps_utils_directory(Home), atom_prefix(File,Home), !.
+excluded_file(File) :- sub_string(File,_,_,_,'/lps_corner/swish/'), !.
+excluded_file(File) :- sub_string(File,_,_,_,'swish/lib/'), !. % SWISH stuff
+excluded_file(File) :- sub_string(File,_,_,_,'/lc/'), !. % proprietary LogicalContracts code TODO: refactor this out of here
+
+program_predicate(actions(_)).
+program_predicate(unserializable(_)).
+program_predicate(action(_)).
+program_predicate(d_pre(_)).
+program_predicate(prolog_events(_)).
+program_predicate(events(_)).
+program_predicate(event(_)).
+program_predicate(fluents(_)).
+program_predicate(fluent(_)).
+program_predicate(initial_state(_)).
+program_predicate(initiated(_, _, _)).
+program_predicate(l_events(_, _)).
+program_predicate(l_int(_, _)).
+program_predicate(l_timeless(_, _)).
+program_predicate(observe(_, _)).
+program_predicate(reactive_rule(_, _)).
+program_predicate(reactive_rule(_, _, _)).
+program_predicate(terminated(_, _, _)).
+program_predicate(updated(_,_,_,_)).
+program_predicate(maxTime(_)).
+program_predicate(maxRealTime(_)).
+program_predicate(simulatedRealTimePerCycle(_)).
+program_predicate(simulatedRealTimeBeginning(_)).
+program_predicate(minCycleTime(_)).
+
+% generate two sets of pre conditions, as per their dependence (or not) on both current and next state
+preprocess_preconditions :- d_pre(Cond), classify_precondition(Cond,Type), assert(d_pre(Type,Cond)), fail.
+preprocess_preconditions :- ( option(non_prospective) ; \+ option(dc)), d_pre(both,_), !, 
+	print_error_throw(nextstate_dependency_with_non_prospective_option_or_lack_dc).
+preprocess_preconditions.
+
+% classify_precondition(+Precondition,-Type) 
+% Type will be either 'current' or 'both' (both current and next states are used)
+classify_precondition(Cond,Type) :- member(happens(_,_Current,Next),Cond), !, 
+	( (member(holds(_,T),Cond), T==Next) -> Type=both ; Type=current).
+classify_precondition(_Cond,both). % fluents must mean the next state... pointless otherwise
+
+% build the cache of all Prolog predicates callable from the LPS program 
+preprocess_external_predicate_for_lps :- 
+	u_call(current_predicate(F/A)), functor(Pred,F,A), 
+	\+ program_predicate(Pred), % might remove this to get into meta space...;-)
+	assert(external_predicate_for_lps(Pred)), fail.
+preprocess_external_predicate_for_lps :- % some special predicates for runtime editing of timeless predicates:
+	member(Pred,[uassert(_),uasserta(_),uassertz(_),uretract(_),uretractall(_)]),
+	assert(external_predicate_for_lps(Pred)), fail.
+preprocess_external_predicate_for_lps.
+
+
+% obtained from Kowalski's gorak 
+%
+% go(+File)
+%
+go(File) :- go(File, []).
+
+go :- go(_,[swish]). % makes sense only on swish
+
+go(File, OptionsList) :- go(File, OptionsList,[]).
+
+
+in_pengines_frame:- notrace(qcatch_t(in_pengines)).   % Logicmoo specific predicate
+
+/** 
+	go(+File, ?OptionsList, ?ResultFluents)  is det 
+
+	go(+File, ?OptionsList, ?ResultFluents)
+	Execute a LPS program until it fails or time runs out. 
+	
+	ResultsFluent is a list of FluentTemplate-FinalValues, which will return the values of the given fluents in the final state.
+	
+Some of the options available:
+	initialize_only
+	background(-ThreadID)
+	delta_state(+Deltas)  where Deltas is a list of +/- fluent tuple
+	restore(SavedState)   This has currently an intermittent bug
+	preamble_goal(Goal,Result) To fetch info after loading the LPs program and prior to the first cycle
+	timeout(Seconds)  maximum time allowed in the potentially infinite parts of the execution cycle
+	cycle_hook(Predicate,Fluents,Actions)  Allow an external Prolog predicate at each cycle to peek at some fluents and atomic events
+	observations(Obs)  Inject an initial set of observations
+*/
+go(File, OptionsList_, ResultFluents) :-
+        must_lps_program_module(DB),	
+
+	(  (in_pengines_frame,member(swish,OptionsList_)) -> 
+		(retractall(t_l:is_lps_program_module(_)),
+		check_lps_program_swish_module(Self),
+                
+		% On SWISH we already have the program loaded; let's see if we need to generate a sample(...) option to display some intensional fluents:
+		( ( 
+			\+ member(sample(_),OptionsList_), 
+			setof(F/N, Fl^Props^B^T^BB^Ref^( u_swiclause(display(Fl,Props),B,Ref), nonvar(Fl), l_int(holds(Fl,T),BB), functor(Fl,F,N) ),Sampled) 
+			) ->
+			%writeln(shouldSample-Sampled),
+			findall(Fl,(member(F/N,Sampled), functor(Fl,F,N)),Templates),
+			OptionsList=[sample(Templates)|OptionsList_]
+			; OptionsList=OptionsList_) )
+		; 
+                % Non-swish version
+		(retractall(t_l:is_lps_program_module(_)),asserta(t_l:is_lps_program_module(DB)), OptionsList=OptionsList_)
+	),
+
+	( member(background(ID),OptionsList) -> 
+		(var(ID) -> next_thread_alias(ID) ; true), % can accept some unique ID
+		lps_user(User,Email), % this is NOT available in the new thread, so we get it now
+		thread_create((
+			assert(background_execution(User,ID,0,0,0,0,[])),
+			DB = db,
+			qcatch(set_server_log(ID,User,Email),Ex,print_message(warning,"Could not prepare LPS log"-Ex)), 
+			% May copy SWISH's dynamic user module into our thread's db module:
+			(nonvar(Self) -> % under SWISH
+				asserta((t_l:is_lps_program_module(DB) :- !)), db:copy_from_module(Self)
+				% This hack never worked, and now we use a log file anyway:
+				% pengines_io:pengine_bind_io_to_html(DB), asserta((pengines_io:pengine_module(DB) :- !)) 
+			; assert(t_l:is_lps_program_module(DB))),
+			go_(File,OptionsList,ResultFluents)
+			),
+		     _TID,[alias(ID)]),
+		(member(preamble_goal(_,Result),OptionsList) -> thread_get_message(ID,preamble_result(Result)) ; true)
+	; go_(File,OptionsList,ResultFluents)).
+
+% hacky predicate that may be called from other than go... namely psyntax:dumploaded
+% check_lps_program_module(+Module)
+check_lps_program_module(M) :- var(M),!, throw(var_check_lps_program_module(M)).
+check_lps_program_module(M) :- t_l:is_lps_program_module(M), !.
+% check_lps_program_module(M) :- t_l:is_lps_program_module(W), W==M, !.
+check_lps_program_module(M) :- retractall(t_l:is_lps_program_module(_)), asserta(t_l:is_lps_program_module(M)).
+
+get_lps_program_module(M) :- once(t_l:is_lps_program_module(M)).
+
+next_thread_alias(NID) :- gensym(lps,NID).
+
+% background_execution(User,ThreadID,RealTimeBeginning,MaxRealT,MaxCycles, MinCycleTime,FInalState) Max... == 0 means no limit
+%  a still running execution will have thread_property(ThreadID, status(running))
+:- dynamic background_execution/7. 
+
+% server_log_filename(+ThreadID,-FilePath) 
+% TODO: probably should move this out to a more mutable place, e.g. /usr/log/
+server_log_filename(ID,FP) :- 
+	(atom(ID)->true;throw(bad_server_ID(ID))), 
+	lps_engine_directory(ED), concat_atom([ED,'/logs/'],LD),
+	(exists_directory(LD)->true;make_directory(LD)), 
+	concat_atom([LD,ID,'.log'],FP).
+
+:- thread_local(server_log_stream/1).
+:- thread_local(server_log_lines/1). % counter, to control approximate size; 
+
+set_server_log(ID,User,Email) :- 
+	server_log_filename(ID,FP), 
+	open(FP, write, S, [buffer(line)]),
+	assert(server_log_stream(S)),
+	assert(server_log_lines(0)),
+	my_format("~w\t~w~nStarting log for program ~w~n~n",[User,Email,ID]).
+	% To get all emails...: head -1 -q logicalcontracts/engine/logs/* | grep "@" | cut -f2 |sort -u
+	 /*, set_prolog_IO(user_input,S,S)*/
+
+close_server_log :- option(background(_)), retract(server_log_stream(S)), close(S), fail.
+close_server_log :- option(background(_)), retract(server_log_lines(_)), fail.
+close_server_log.
+
+% based on number of lines
+% simply use Linux's ulimit, or reimplement these mechanics down to the char if you must:
+check_log_size :- server_log_lines(N), !, 
+	NewN is N+1, 
+	MAXLINES=20000,
+	NewN =< MAXLINES, 
+	retractall(server_log_lines(_)),
+	asserta(server_log_lines(NewN)),
+	( NewN =:= MAXLINES-1 -> my_format("*** TRUNCATED LOG, after ~w lines ***~n",[MAXLINES]); true).
+check_log_size :- throw(failed_server_log_lines).
+	
+go_(File,OptionsList,ResultFluents) :-
+	forall(member(RF,ResultFluents), (nonvar(RF), RF=_-_)),
+	parse_options(OptionsList),
+	(nonvar(File) -> true; 
+			( (option(make_test), \+ option(swish)) -> print_error(error, 'ERROR in options: make_test requires a File name')
+			; true)),
+	cleanup_program, cleanup_engine,
+	
+	init_test_file(File,OptionsList),
+	(\+ option(swish) -> 
+		my_load_dyn(File)
+		; true),
+	preprocess_preconditions,
+	preprocess_external_predicate_for_lps,
+	collect_guessed_declarations(Facts),
+	forall(member(Fact,Facts),uassert(Fact)),
+	% fails if errors occur:
+	print_errors(File), 
+	(option(meta_actions) -> add_meta_reactive_rules ; true),
+	( initial_state(IS), assert_state_list(IS), fail ; true),
+	( option(delta_state(State)), member(F,State),
+		(
+			F = + Fluent -> uassert(state(Fluent)) ; 
+			F = - Fluent -> uretractall(state(Fluent)) ;
+			F = prolog(Fact), functor(Fact,Functor,Arity), t_l:is_lps_program_module(M),
+				M:thread_local(Functor/Arity), M:assert(Fact)
+		),
+		fail
+		; true
+	),
+	((observe(Events, 1)) -> print_error_throw(no_events_admissible_in_cycle_zero(Events)); true),
+	cputime(T0),
+    uassertz(current_goal(0)),
+    uassertz(depth(0)),
+	uassertz(used(0)),
+	cputime(T1),
+	findall(reactive_rule(A, C), (reactive_rule(A, C);reactive_rule(A,C,_P)), R0), % drop priorities, if any
+	
+	interesting_composites(Interesting_CEs),
+	append(R0,Interesting_CEs,R0_),
+	findall(S,(state(S), \+ system_fluent(S)),IS_),
+	test(fluents,0,IS_),
+	(simulatedRealTimeBeginning(SB)-> 
+		parse_time(SB, SBNow), assert(beginningOfSimulatedRealTime(SBNow)), uassertz(real_time_beginning(SBNow)),
+		RT=SBNow
+		;
+		get_time(RT), uassertz(real_time_beginning(RT))),
+	( option(background(TID)) -> 
+		(endTime(ET) -> true ; ET = 0),
+		% background programs get 20 seconds by default:
+		(maxRealTime(MaxRT) -> true ; MaxRT = 20.0, uassert((maxRealTime(MaxRT)))), 
+		minCycleTime_(MCT),
+		(MCT < 0.0001 -> throw(must_increase_minCycleTime(MCT)) ; true),
+		((MaxRT =< 0, ET =<0) -> throw(must_bound_maxRealTime_or_maxRealTime) ; true),
+		% Either MaxRT or ET is guaranteed to be not zero
+		once(retract(background_execution(User,TID,_,_,_,_,_))),
+		assert(background_execution(User,TID,RT,MaxRT,ET,MCT,[]))
+	; true),
+	( 
+		( option(restore(ExecutionFile)) ; lps_saved_state(_,_,_,_,_,_,_,_) /* intermediate state part of the program */ ) -> 
+		restore_execution(ExecutionFile,Ri,Gi)
+		; 
+		uassertz(current_time(0)), 
+		next_time, Ri=R0_, Gi=[],
+		set_goal_id(1), set_goal_children([]),
+		(system_fluent(SF,SFG), SFG, uassert(state(SF)), fail ; true) % initial state of all system fluents
+
+	),
+	clean_state_flag(StateFlag),
+	( member(preamble_goal(Preamble,Result),OptionsList) -> 
+		(Preamble -> true ; throw(preamble_goal_failed(Preamble))),
+		% if we're a server, hack a message into our own queue to be fetched by go above:
+		(option(background(TID)) -> thread_send_message(TID,preamble_result(Result)) ; true /* Result already bound */)
+		; true),
+	(option(initialize_only) -> true ;
+		(cycle(Ri, Gi,StateFlag) -> go_finish(File,ResultFluents,T0,T1,success) 
+			; go_finish(File,ResultFluents,T0,T1,failure), option(run_test))
+	).
+
+go_finish(File,ResultFluents,T0,T1,Outcome) :-
+	cputime(T2),
+	print_statistics(T0,T1,T2),
+	close_test_file(File,Outcome),
+	( option(background(TID)) -> % final state saved for debugging
+		findall(Fluent, (state(Fluent), \+ system_fluent(Fluent)), Fluents),
+		once(retract(background_execution(User,TID,RT,MaxRT,ET,MCT,_))),
+		assert(background_execution(User,TID,RT,MaxRT,ET,MCT,Fluents)),
+		close_server_log
+		; true),
+	collect_results(ResultFluents).
+
+
+interesting_composites(Interesting_CEs) :-
+	setof(composite_event([happens(CE_template,Start,End)],happens(CE_template,Start,End)), CE^Fl^Cond^Change^TT1^TT2^CE_^EF^EN^(
+		(terminated(CE, Fl, Cond);initiated(CE,Fl, Cond); updated(CE,Change,Fl, Cond)), 
+		CE=happens(CE_,TT1,TT2), nonvar(CE_), functor(CE_,EF,EN), functor(CE_template,EF,EN),
+		macroaction(CE_template)
+		), Interesting_CEs
+	) -> true ; Interesting_CEs=[].
+		
+% These internal predicates are necessary to aggregate all declarations
+% TODO: generate and assert all, to get indexing
+action_(A) :- system_action(A) ; editing_action(A) ; user_action_(A).
+user_action_(A) :- action(A) ; actions(Actions), member(A,Actions).
+editing_action(A) :- (A=initiate(F) ; A=terminate(F) ; A = update(_Old-_New,F) ), once(user_fluent_declaration(F)).
+event_(E) :- E = lps_terminate ; E = lps_terminate(_) ; user_event_(E).
+user_event_(E) :-  event(E) ; (prolog_events(Events);events(Events)), member(E,Events).
+
+fluent_(F) :- system_fluent(F) ; external_predicate_for_lps(F) ; user_fluent_declaration(F).
+user_fluent_declaration(F) :-  fluent(F) ; fluents(Fluents), member(F,Fluents).
+
+% Checks/generates all unique fluent templates declared by the user
+user_fluent(F) :- 
+	setof(Functor/Arity, Fluents^Body^T^FF^Functor^Arity^(
+		( fluent(FF) ; fluents(Fluents), member(FF,Fluents) ; l_int(holds(FF,T),Body)),
+		functor(FF,Functor,Arity)
+		), L), 
+	member(Functor/Arity,L), functor(F,Functor,Arity).
+
+
+% findall removing duplicates, by considering term variants to be "equal"
+findall_variants(T,G,Templates) :- 
+	findall(T,G,Solutions), predsort(variant_compare,Solutions,Templates).
+
+variant_compare(O,A,B):- variant(A,B)->O=(=);compare(O,A,B).
+
+
+% collect_guessed_declarations(-List). 
+%  This was originally in psyntax; it may be called more than once, but only the first run actually does anything
+collect_guessed_declarations(L) :-
+	findall(Fact,(
+		option(auto_declarations), uretract(head_hint(X,Type,false)), Type \== timeless, Fact=..[Type,X]
+		), L).
+
+collect_results([]) :- !.
+collect_results([F-R|FR]) :- (setof(F,T^query(holds(F,T)),R)->true;R=[]), collect_results(FR).
+
+% collect_fluents(+Fluents,-Instances)
+collect_current_fluents([F|Fluents],Instances) :- !,
+	(setof(F,query(holds(F,_)),R)->true;R=[]),
+	collect_current_fluents(Fluents,Instances1),
+	append(R,Instances1,Instances).
+collect_current_fluents([],[]).
+
+
+% collect_current_actions(Actions,Instances)  actions or events
+collect_current_actions([A|Actions],Instances) :- !,
+	(setof(A, happens(A,_,_) , R)->true;R=[]),
+	collect_current_actions(Actions,Instances1),
+	append(R,Instances1,Instances).
+collect_current_actions([],[]).
+	
+print_statistics(_,_,_) :- option(silent), !.
+print_statistics(T0,_T1,T2) :- 
+	TotalT is T2-T0,
+	current_time(Next), Cycles is Next-1,
+	(option(background(_)) -> thread_self(ID) ; ID=''),
+	my_nl,
+	my_format("**~s ~display cycles took ~f seconds **\n",[ID, Cycles,TotalT]).
+
+% check_syntax(File,-Notices) Returns a list of notice(Type,Message,Position)
+%  File will be var for SWISH.
+%  Type is 'error' or 'warning', Position is some term denoting a source file location
+%  Position will be 'unknown'... unless our environment provides a definition for lps_source_position/4
+%  Predicates called here typically have as second argument a notices list with a single
+%  element... or they simply fail
+check_syntax(F,Notices) :-
+	findall(N, (
+			Term=prolog_events(PEs),Term, member(PE,PEs),
+			(
+				\+ external_predicate_for_lps(PE),
+				source_position(Term,F,Pos,Vars),
+				buildError(PE,Vars,', a Prolog polling event, must be a defined predicate',ET), 
+				N=notice(error,ET,Pos)
+				;
+				once((event(PE);events(Evs),member(PE,Evs))),
+				source_position(Term,F,Pos,Vars),
+				buildError(PE,Vars,', a Prolog polling event, must not be defined also as a regular event',ET), 
+				N=notice(error,ET,Pos)
+			)
+			),
+		PEE),
+	findall(N, (
+			once(d_pre(both,C)), Term=observe(_, Next),Term, Next<2,
+			source_position(Term,F,Pos,Vars),
+			buildError(C,Vars,', a prospective precondition, forbids observations at time 1 ',ET), 
+			N=notice(error,ET,Pos) 
+			),
+		RO),
+	findall(N, (
+			(Term=fluent(Fl),Term ; Term=fluents(Fluents), Term, member(Fl,Fluents)),
+			external_predicate_for_lps(Fl),
+			source_position(Term,F,Pos,Vars),
+			buildError(Fl,Vars,' can not be an existing Prolog predicate',ET), 
+			N=notice(error,ET,Pos) 
+			),
+		FD),
+	findall(N, 
+		(
+			( Rule = reactive_rule(A, C) ; Rule = reactive_rule(A,C,_)), % TODO: should check priority too
+			Rule,
+			(source_position(Rule,F,Pos,Vars), 
+			(check_reactive_rule(A,Pos,Vars,[N]) ; check_reactive_rule(C,Pos,Vars,[N])))
+			), 
+		RR),
+	findall(N, 
+		(
+			l_int(P, B), 
+			source_position(l_int(P, B),F,Pos,Vars), 
+			( 
+				\+ ((nonvar(P), P = holds(_,_))), 
+				buildError(P,Vars,' is not a valid intensional predicate',ET),
+				N=notice(error,ET,Pos) 
+				;
+				P=holds(Pred,_), functor(Pred,FF,NN), functor(Pred_,FF,NN),
+				once((initial_state(IS), member(Pred_,IS))),
+				buildError(P,Vars,' intensional predicate cannot be included in initial state',ET),
+				N=notice(error,ET,Pos) 
+				;
+				P=holds(Pred,_), external_predicate_for_lps(Pred),
+				buildError(P,Vars,' intensional predicate must not be named as existing Prolog predicate',ET),
+				N=notice(error,ET,Pos) 
+				; 
+				check_lp_int(B,Pos,Vars,[N])) ), 
+		IP), 
+	findall(N, 
+		(
+			l_events(P, B), 
+			source_position(l_events(P, B),F,Pos,Vars),
+			( 
+				\+ ((nonvar(P), P = happens(_,_,_))), 
+				buildError(P,Vars,' is not a valid composite event predicate',ET), 
+				N=notice(error,ET,Pos) 
+				; 
+				nonvar(P), P = happens(A,_,_), system_action(A),
+				buildError(P,Vars,' can not be a system action or existing Prolog predicate',ET), 
+				N=notice(error,ET,Pos) 	
+				;
+				check_lp_events(B,Pos,Vars,[N]) 
+				;
+				nonvar(P), P = happens(A,T1,_), 
+				% find the last literal starting or ending at the head P time start:
+				once(( 
+					append(First,[Last|Rest],B), (Last=holds(_,T1_),T1==T1_;Last=happens(_,T1_,T2_),(T1==T1_;T1==T2_)), 
+					\+ (member(GG,Rest), (GG=holds(_,T1__),T1==T1__;GG=happens(_,T1__,T2__),(T1==T1__;T1==T2__)) )  
+					)), 
+				member(happens(Ev,TEv1,TEv2),First), TEv1\==T1,
+				buildError(happens(Ev,TEv1,TEv2),Vars,' must not use time earlier than the composite event head start time',ET), 
+				N=notice(error,ET,Pos) 	
+			)), 
+		CE),
+	findall(N, (d_pre(B),source_position(d_pre(B),F,Pos,Vars),check_d(B, d_pre, Pos, Vars, [N])), PC),
+	findall(N,(
+		initiated(Ev, Fl, Cond), 
+		source_position(initiated(Ev, Fl, Cond),F,Pos,Vars),
+		(
+			((nonvar(Ev), Ev = happens(Ev2, TT1, _)) -> 
+				( (d_event(Ev2), \+ editing_action(Ev2) ; nonvar(Ev2), Ev2=happens(Meta,_,_)) -> fail 
+				; 
+				(\+ l_events(Ev,_)->
+				buildError(Ev2,Vars,' in initiated post-condition must be an (event/action) predicate',ET), 
+				N=notice(error,ET,Pos)
+				/* This error condition is too strong; properly detecting it seems to require
+					a) Detecting the var binding prior to running, marking the postcondition
+					b) For such postconditions, detect if the event end time > start+1
+					Similar checks should exist also for terminated and updated below.
+				;
+				(nonvar(TT1);contains_var(TT1,Fl+Cond)),
+				buildError(TT1,Vars,' time start variable in initiated post-condition must not occur in condition nor fluent',ET), 
+				N=notice(error,ET,Pos)*/
+				)
+				)
+			; 
+				buildError(Ev,Vars,' is not a valid domain initiated post-condition predicate',ET), 
+				N=notice(error,ET,Pos)
+			)
+		;
+			\+ d_head(Fl), 
+			buildError(Fl,Vars,' in initiated post-condition must be an extensional fluent predicate',ET), 
+			N=notice(error,ET,Pos)
+		;
+			check_d(Cond, 'i post-condition', Pos, Vars,[N])
+		) ), 
+		PostI),
+	findall(N,(
+		terminated(Ev, Fl, Cond), 
+		source_position(terminated(Ev, Fl, Cond),F,Pos,Vars),
+		(
+			((nonvar(Ev), Ev = happens(Ev2, TT1, _)) -> 
+				( (d_event(Ev2), \+ editing_action(Ev2) ; nonvar(Ev2), Ev2=happens(Meta,_,_)) -> fail 
+				; 
+				(\+ l_events(Ev,_) ->
+				buildError(Ev2,Vars,' in terminated post-condition must be an (event/action) predicate',ET), 
+				N=notice(error,ET,Pos)
+				)
+				)
+			; 
+				buildError(Ev,Vars,' is not a valid domain terminated post-condition predicate',ET), 
+				N=notice(error,ET,Pos)
+			)
+		;
+			\+ d_head(Fl), 
+			buildError(Fl,Vars,' in terminated post-condition must be an extensional fluent predicate',ET), 
+			N=notice(error,ET,Pos)
+		;
+			check_d(Cond, 't post-condition', Pos, Vars,[N])
+		) ), 
+		PostT),
+	findall(N,(
+		updated(Ev, Fl, Change, Cond), 
+		source_position(updated(Ev, Fl, Change, Cond),F,Pos,Vars),
+		(
+			((nonvar(Ev), Ev = happens(Ev2, TT1, _)) -> 
+				( (d_event(Ev2), \+ editing_action(Ev2); nonvar(Ev2), Ev2=happens(Meta,_,_)) -> fail 
+				; 
+				(\+ l_events(Ev,_)->
+				buildError(Ev2,Vars,' in updated post-condition must be an (event/action) predicate',ET), 
+				N=notice(error,ET,Pos)
+				)
+				)
+			; 
+				buildError(Ev,Vars,' is not a valid domain updated post-condition predicate',ET), 
+				N=notice(error,ET,Pos)
+			)
+		;
+			\+ d_head(Fl), 
+			buildError(Fl,Vars,' in updated post-condition must be an extensional fluent predicate',ET), 
+			N=notice(error,ET,Pos)
+		;
+			check_d(Cond, 'u post-condition', Pos, Vars,[N])
+		;
+			check_fluent_change_vars(Change,Fl, Pos, Vars,[N])
+		) ), 
+		PostU),		
+	findall(N,(
+			unserializable(Actions), 
+			source_position(unserializable(Actions),F,Pos,Vars),
+			member(A,Actions),
+			\+ action_(A), 
+			buildError(A,Vars,' must also be declared as action',ET), 
+			N=notice(error,ET,Pos) 
+ 		), 
+		UA),
+	findall(N,(
+			(Term=actions(Actions),Term,member(A,Actions); Term=action(A),Term),
+			source_position(Term,F,Pos,Vars),
+			editing_action(A), 
+			buildError(A,Vars,' is a system editing action, cannot be declared as user action',ET), 
+			N=notice(error,ET,Pos) 
+ 		), 
+		EA),
+	append_lists([PEE,RO,FD,RR,IP,CE,PC,PostI,PostT,PostU,UA,EA],Notices).
+
+% buildError(BadSubterm,Vars,Message,NoticeSubterm)  Assume the new syntax to be the preferred for reporting errors:
+%  this introduces a dependency on psyntax, should probably have a hook or refactor further... oh well.
+buildError(BadSubterm,Vars,Message,NoticeSubterm) :-
+	copy_term(BadSubterm+Vars,BadSubterm_+Vars_),
+	buildError(BadSubterm_,Vars_,Vars,Message,NoticeSubterm).
+buildError(X,Vars_,Vars,M,subterm(X,MM)) :- qcatch_f(psyntax:syntax2p_literal(NicerTerm,[],lps2p,_,_,_,X)), !, 
+	Vars=Vars_, bindAllVars(Vars),
+	concat_terms([NicerTerm,M],MM). % should probably use SWI's term_string and make sure M quotes do not make it to the output
+buildError(X,Vars,Vars,M,subterm(X,MM)) :- bindAllVars(Vars), concat_terms([X,M],MM).
+
+% also closes var tailed lists
+bindAllVars([]) :- !.
+bindAllVars([VV|Vars]) :- 
+	arg(1,VV,Name), arg(2,VV,Value), 
+	(var(Value) -> Value=Name ; true), bindAllVars(Vars).
+
+% bindAllVars(+VarValues,?NameValuePairs).
+bindAllVars(Values,Pairs) :- length(Values,N), length(Pairs,N), !,
+	bindAllVars_(Values,Pairs).
+bindAllVars(_Values,_Pairs). % probably extra time or anonymous vars, we lost information in the transform, can't recover var names
+	
+bindAllVars_([V|Vs],[Pair|Pairs]) :- !, arg(2,Pair,V), bindAllVars_(Vs,Pairs).
+bindAllVars_([],_NameValuePairs).
+
+% May call an external predicate hook to find the position
+% position for Prolog Studio is t(CharPosition,TermIndex), for SWI / swish see lps_source_position/4 above
+source_position(Term,F,Position,Vars) :- qcatch_f(lps_source_position(Term,F,Position,Vars)), !.
+source_position(_,_,unknown,[]).
+	
+% fails if errors occur:
+% print_errors(_File) :- !.
+print_errors(File) :- 
+	check_syntax(File,Notices),
+	(option(background(_)) -> % can't print from background threads
+		(Notices = [] -> true ; Notices=[N|_], throw(N)) 
+		; true), 
+	print_error_notices(Notices),
+	((\+ option(silent), option(priority), \+ reactive_rule(_,_,_)) 
+		-> print_error(warning,'No rules with priority present!') 
+		; true),
+	((\+ option(silent), \+ option(priority), \+ reactive_rule(_,_))
+		-> print_error(warning,'No reactive rules are present!')
+		; true).
+
+% Fails after printing if there are error notices
+print_error_notices(Notices) :-
+	member(notice(Type,M,Position),Notices), 
+	((nonvar(M),M=subterm(_,M_))->true;M=M_),
+	print_syntax_error(Type,M_,Position), 
+	fail.
+print_error_notices(Notices) :- \+ member(notice(error,_M,_Position),Notices).
+	
+concat_terms(Terms,Atom) :- concat_terms(Terms,[],Codes), atom_codes(Atom,Codes).
+
+concat_terms([T1|Tn],C,Cn) :- term_to_codes(T1,C1), append(C,C1,C2), concat_terms(Tn,C2,Cn).
+concat_terms([],C,C).
+
+check_reactive_rule([H|T], Pos, Vars,NT) :-
+    reactive_conjunct(H),
+    !,
+    check_reactive_rule(T, Pos, Vars,NT).
+check_reactive_rule([H|_], Pos, Vars,[notice(error,ET,Pos)]) :- !,
+    buildError(H,Vars,' is not a valid reactive rule conjunct',ET).
+check_reactive_rule(H, Pos, Vars,[notice(error,ET,Pos)]) :- \+ is_list(H),
+    buildError(H,Vars,' must be a list',ET).
+    
+check_lp_int([H|T], Pos, Vars,NT) :-
+    l_int_body(H), !,
+    check_lp_int(T, Pos,Vars, NT).
+check_lp_int([H|_], Pos, Vars,[notice(error,ET,Pos)]) :-
+    buildError(H,Vars,' is not a valid L_int body',ET).
+
+check_lp_events([H|T], Pos, Vars,NT) :-
+    l_events_body(H), !,
+    check_lp_events(T, Pos, Vars,NT).
+check_lp_events([H|_], Pos, Vars, [notice(error,ET,Pos)]) :-
+    buildError(H,Vars,' is not a valid L_events body',ET).
+
+check_d([H|T], What, Pos, Vars, NT) :-
+    d_body(H), !,
+    check_d(T, What, Pos, Vars, NT).
+check_d([H|_], What, Pos, Vars, [notice(error,ET,Pos)]) :-
+    concat_terms([' is not a valid ',What,' body'],M),
+    buildError(H,Vars,M,ET).
+
+% For 'updated' post-conditions
+check_fluent_change_vars(Change,Fl, Pos, Vars,[notice(error,ET,Pos)]) :- 
+	(var(Change);Change \= _-_), 
+	!, 
+	 buildError(Fl,Vars,' lacks a valid update change (must be a term Old-New)',ET).
+check_fluent_change_vars(Old-New,Fl, Pos, Vars,[notice(error,ET,Pos)]) :- 
+	(is_list(Old), \+ is_list(New); is_list(New), \+ is_list(Old)), 
+	!, 
+	 buildError(Fl,Vars,' lacks a valid update change: both Old and new must be lists (or not)',ET).
+check_fluent_change_vars(Old-_New,Fl, Pos, Vars,[notice(error,ET,Pos)]) :- 
+	( is_list(Old) -> member(X,Old) ; X=Old),
+	\+ contains_var(X,Fl),
+	!, 
+	buildError(Fl,Vars,' lacks a valid update change: all Old vars must occur in it',ET).
+check_fluent_change_vars(_Old-New,Fl, Pos, Vars,[notice(error,ET,Pos)]) :- 
+	( is_list(New) -> member(X,New) ; X=New),
+	contains_var(X,Fl),
+	!, 
+	buildError(Fl,Vars,' lacks a valid update change: no New vars can occur in it',ET).
+		
+% this may be called by environment tools; see check_syntax/2
+load_check_syntax(File,Notices) :-
+	cleanup_program,
+	% Let's assume Prolog syntactic errors are reported elsewhere:
+	qcatch_t(my_load_dyn(File)), 
+	check_syntax(File,Notices).
+
+assert_state_list([H|T]) :- system_fluent(H), !,
+    	format(atom(Message),"ignoring initial state for system fluent ~w",[H]),
+	print_error(warning,Message),
+    	assert_state_list(T).
+assert_state_list([H|T]) :- !,
+    	uassertz(state(H)),
+    	assert_state_list(T).
+assert_state_list([]).
+
+
+% last cycle, or "maximum simulation time"
+endTime(T) :- maxTime(T), !.
+endTime(20) :- \+ maxRealTime(_). % default duration of execution, if no real time limit set
+
+% parse_options(OptionsList)  See code and comments below for precise semantics of each option...
+%
+parse_options(Options) :- 
+	uretractall(option(_)),
+	% when running a test the options will be imposed by the test file:
+	% (member(run_test,Options) -> Options=[_]; true),  commenting this out to allow 'dc' option to be added
+	( (member(initialize_only,Options), (member(background(_),Options))) ->
+		print_error_fail('initialize_only option incompatible with background')
+		; true),
+	( (member(silent,Options), (member(verbose,Options))) ->
+		print_error_fail('silent option incompatible with verbose')
+		; true),
+	( (member(cycle_hook(_),Options), (member(make_test,Options) ; member(manual,Options))) ->
+		print_error_fail('cycle_hook option incompatible with make_test and with manual')
+		; true),
+	( (member(meta_actions,Options), member(swish,Options)) ->
+		print_error_fail('meta_actions option not supported on SWISH.')
+		; true),	
+	( (member(manual,Options), member(make_test,Options), \+ member(swish,Options)) ->
+		print_error_fail('make_test option incompatible with manual option.')
+		; true),	
+	( ((member(run_test,Options);member(make_test,Options)), member(background(_),Options)) ->
+		print_error_fail('run_test or make_test option incompatible with background execution.')
+		; true),	
+	( ((member(run_test,Options);member(make_test,Options);member(no_parallel,Options); \+member(dc,Options)), member(restore(_),Options)) ->
+		print_error_fail('run_test/make_test/no_parallel options are incompatible with restore; restore also requires dc')
+		; true),	
+	( (\+ member(non_prospective,Options), \+ member(dc,Options)) ->
+		(print_error_fail('prospective option requires dc'), nop(breaks_it(Options =[_|Tail], nb_setarg(Options,1,[dc|Tail]))))
+		; true),	
+	parse_options_(Options).
+
+
+
+parse_options_([]) :- !.
+parse_options_([initialize_only|Rest]) :- !,
+    uassertz(option(initialize_only)),
+    parse_options_(Rest).	
+parse_options_([preamble_goal(Preamble,Result)|Rest]) :- !, 
+	% a goal executed once after the LPS program has loaded, just prior to the first cycle
+	% it must not fail
+    (nonvar(Preamble)->true; print_error_fail('Preamble goal must not be a variable')),
+    uassertz(option(preamble_goal(Preamble,Result))),
+    parse_options_(Rest).
+parse_options_([timeout(Max)|Rest]) :- !, 
+    (number(Max)->true; print_error_fail('timeout option argument must be a float (seconds) ')),
+    uassertz(option(timeout(Max))),
+    parse_options_(Rest).
+parse_options_([swish|Rest]) :- !, % don't cleanup db (nor load the program), the environment will do it
+    uassertz(option(swish)),
+    parse_options_(Rest).
+parse_options_([dc|Rest]) :- !,
+    (is_supported_prolog 
+    	-> uassertz(option(dc)) 
+    	; 
+    	print_error_fail('delimited continuations option is available only for SWI Prolog ')    	
+    	),
+    parse_options_(Rest).
+parse_options_([non_prospective|Rest]) :- !, 
+    uassertz(option(non_prospective)),
+    parse_options_(Rest).
+parse_options_([no_parallel|Rest]) :- !, % DEPRECATED...
+    (is_supported_prolog 
+    	-> uassertz(option(no_parallel)) 
+    	; 
+    	print_error_fail('no_parallel is a delimited continuations option, available only for SWI Prolog ')
+    	),
+    parse_options_(Rest).
+parse_options_([verbose|Rest]) :- !,
+    uassertz(option(verbose)),
+    parse_options_(Rest).
+% Increase the default maximum written term depth, to avoid '...' output
+parse_options_([silent|Rest]) :- !,
+    uassertz(option(silent)),
+    parse_options_(Rest).
+parse_options_([log_composites|Rest]) :- !,
+    uassertz(option(log_composites)),
+    parse_options_(Rest).
+parse_options_([sample(Fluents)|Rest]) :- !,
+	(is_list(Fluents) -> true; print_error_fail("sample(IntensionalFluents) must have a list argument")),
+	% can't check whether they're actually fluents... as the program is not loaded yet
+    uassertz(option(sample(Fluents))),
+    parse_options_(Rest).
+parse_options_([debug|Rest]) :- !,
+    uassertz(option(debug)),
+    parse_options_(Rest).
+parse_options_([make_test|Rest]) :- !,
+	uassertz(option(make_test)),
+	parse_options_(Rest).
+parse_options_([run_test|Rest]) :- !,
+	uassertz(option(run_test)),
+	parse_options_(Rest).
+parse_options_([meta_actions|Rest]) :- !,
+	uassertz(option(meta_actions)),
+	parse_options_(Rest).
+parse_options_([more_actions|Rest]) :- !,
+	uassertz(option(more_actions)),
+	parse_options_(Rest).
+parse_options_([cycle_hook(Predicate,Fluents,Actions)|Rest]) :- !,
+	% Fluents and (basic) Actions are lists of templates; the cycle hook predicate should collect all matching tuples
+	% see examples/external_interfaces/
+	((atom(Predicate),is_list(Fluents),is_list(Actions))->true
+	; print_error_fail('cycle_hook option first argument must be an atom, a predicate name; then fluent and action lists.')),
+	uassertz(option(cycle_hook(Predicate,Fluents,Actions))),
+	parse_options_(Rest).
+parse_options_([observations(Obs)|Rest]) :- !,
+	((is_list(Obs), forall(member(observe(L,T),Obs),(is_list(L),integer(T))) ) -> true
+	; print_error_fail('observations option must contain a list of observe(List,Time).')),
+	uassertz(option(observations(Obs))),
+	parse_options_(Rest).
+parse_options_([delta_state(State)|Rest]) :- !,
+	((is_list(State), forall(member(F,State), (nonvar(F), (F = + _ ; F = - _ ; F = prolog(FF), nonvar(FF), \+ functor(FF,':-',_)))) ) -> true
+	; print_error_fail('delta_state option must contain an argument with a list of +Fluent or -Fluent or prolog(FactToAssert).')),
+	uassertz(option(delta_state(State))),
+	parse_options_(Rest).
+% parameter for declaration generation by alternative syntaxes; default (absent) may help LPS program debugging
+% auto_declarations. 'true' will add fluent, event and action declarations guessed from usage; 
+parse_options_([auto_declarations|Rest]) :- !,
+	uassertz(option(auto_declarations)),
+	parse_options_(Rest).
+parse_options_([manual|Rest]) :- !,
+	(observe(_, _) -> 
+		print_error_fail('with ''manual'' option no observations in the program are allowed.')
+		;true),
+	uassertz(option(manual)),
+	parse_options_(Rest).
+parse_options_([background(ID)|Rest]) :- !,
+	(var(ID) -> 
+		print_error_fail('background thread failed to create.')
+		;true),
+	( \+ is_supported_prolog ->
+		print_error_fail('background execution requires SWI Prolog.')
+		;true),
+	uassertz(option(background(ID))),
+	parse_options_(Rest).
+parse_options_([restore(File)|Rest]) :- !,
+	(\+ atom(File) -> 
+		print_error_fail('restored option File name must be an atom.')
+		;true),
+	uassertz(option(restore(File))),
+	parse_options_(Rest).
+parse_options_([O|Rest]) :- 
+	format(atom(Message),"Ignored option: ~w",[O]),
+    	print_error(warning, Message), 
+    	parse_options_(Rest).
+
+% All interpreter output should use write_verbose or do_write, as these work in all settings - SWI barebones, swish and background server
+write_verbose(What) :-
+    ( option(verbose) ->
+        do_write(What)
+    ;
+        true
+    ).
+
+do_write(L) :- \+ is_list(L), !, do_write([L,nl]).
+% no longer needed, goes to a log file: do_write(L) :- option(background(_)), !, thread_self(ID), do_write_([ID,':'|L]).
+do_write(L) :- \+ \+ (numbervars(L),do_write_(L)).
+
+do_write_(_) :- option(silent), !.
+do_write_([]) :- !.
+do_write_([What|Rest]) :- var(What), !,
+	my_write(What),
+    do_write_(Rest).
+do_write_([pprint_goal(What)|Rest]) :- !,
+    pprint_goal(What),
+    do_write_(Rest).
+do_write_([nl|Rest]) :- !,
+	my_nl,
+    do_write_(Rest).
+do_write_([What|Rest]) :- !,
+	my_write(What),
+    do_write_(Rest).
+
+pprint_goal([]).
+
+pprint_goal([goal(_, [H|_])|Rest]) :- throw(deprecated_at_pprint_goal),
+    write(H),nl,
+    pprint_goal(Rest).
+
+pprint_goal([goal(_, _, [H|_])|Rest]) :- throw(deprecated_at_pprint_goal),
+    write(H),nl,
+    pprint_goal(Rest).
+
+pprint_goal([goal(_, _, _, _, _, _, [H|_])|Rest]) :- !,
+	my_writeln(H),
+    pprint_goal(Rest).
+
+pprint_goal([G|Rest]) :-
+	my_writeln(G),
+    pprint_goal(Rest).
+
+my_format(Format,Args) :- server_log_stream(S) -> (check_log_size -> format(S,Format,Args); true) ; format(Format,Args).
+my_write(X) :- server_log_stream(S)->(check_log_size->write(S,X);true);write(X).
+my_nl :- server_log_stream(S)->(check_log_size->nl(S);true);nl.
+my_writeln(X) :- my_write(X), my_nl.
+
+% init_test_file(+Filename,+Options)
+% Load test file for this program file  
+% if not running tests does nothing
+init_test_file(F,TopOptions) :- select(run_test,TopOptions,Extra), !, 
+	nl, write('*** Testing '), write(F), write(' ('), write(TopOptions), writeln(') ****'),
+	load_test_file_for(F),
+	lps_test_options(Options),
+	append(Options,Extra,RealOptions),
+	% add the options:
+	parse_options(RealOptions), % cleans options and loads from file...
+	uassert(option(run_test)). %...this one not being there
+init_test_file(_F,_O).
+
+load_test_file_for(F) :-
+	test_filename(F,TF),
+	 %  try source of F does not exist:    TODO: fix this circular dependency of psyntax
+	(file_exists(TF) -> TF=TF_ ; psyntax:file_generator_name(F,GF), test_filename(GF,TF_), file_exists(TF_)),
+	qcatch(my_load_dyn(TF_,false),E,true),
+	(nonvar(E) -> 
+		write(user_error, 'ERROR: could not load test file '), writeln(user_error,TF), writeln(user_error,E),
+		writeln(user_error,' To obtain a test file you need to execute your program with the make_test option: go(YourFile,[make_test])'),
+		fail
+		; true).
+
+% close_test_file(ProgramFile,Outcome) Outcome is success/failure
+%  a filed program will get a lps_test_result_item(end,-1,failure) fact, successful programs don't
+close_test_file(F,Outcome) :- var(F), option(make_test),option(swish), \+ option(background(_)), lps_postmortem_filename(TF), !,
+	(Outcome==failure -> uassert(lps_test_result_item(end,-1,failure)); true),
+	write_test_file_(F,TF).
+close_test_file(F,_) :- var(F), !.
+close_test_file(F,Outcome) :- option(make_test), \+ option(swish),  !,
+	(Outcome==failure -> uassert(lps_test_result_item(end,-1,failure)); true),
+	test_filename(F,TF),
+	write_test_file_(F,TF).
+close_test_file(F,Outcome) :- option(run_test), !,  
+	test_filename(F,TF),
+	nl,
+	% has the program erroneously failed or succeeded?
+	((Outcome == failure, \+ lps_test_result_item(end,-1,failure) ; Outcome == success, lps_test_result_item(end,-1,failure) ) -> 
+		uassert(lps_failed_test(end,program_failure)) 
+		; true),
+	( \+ lps_failed_test(_,_) -> Result=' (ok)'; Result=' (FAILED)'),
+	write('*** Tests ended with '), write(TF), write(Result), writeln(' ****').
+close_test_file(_F,_).
+
+write_test_file_(ProgramName,ToFile) :-
+	telling(Old), tell(ToFile),
+	date_stamp(D),
+	writeln('/*'), write('  LPS test results file generated on '), writeln(D), 
+	write('  on Prolog '), current_prolog_flag(version_data,P), write(P),
+	writeln(' for program file:'),
+	write('  '), writeln(ProgramName), writeln('*/'), nl,
+	write((:- dynamic lps_test_result/3, lps_test_result_item/3, lps_test_action_ancestor/3, lps_test_options/1)), writeln('.'),
+	nl,
+	writeln('% LPS options prior to the test:'),
+	setof(O,option(O),Options),
+	select(make_test,Options,RealOptions),
+	write(lps_test_options(RealOptions)), writeln('.'), nl,
+	writeln('% lps_test_result(Stage,Cycle,TestTerm)'),
+	(lps_test_result(S,C,T), writeq(lps_test_result(S,C,T)), writeln('.'), fail ; true),
+	writeln('% lps_test_result_item(Stage,Cycle,TestTerm)'),
+	(lps_test_result_item(S,C,T), writeq(lps_test_result_item(S,C,T)), writeln('.'), fail ; true),
+	writeln('% lps_test_action_ancestor(Call,T1,T2)'),
+	(lps_test_action_ancestor(S,C,T), writeq(lps_test_action_ancestor(S,C,T)), writeln('.'), fail ; true),
+	told, tell(Old), !.
+write_test_file_(_,F) :- 
+	print_message(error,'Failed to write ~a'-[F]).
+
+% test_filename(+ProgramFile,-TestFile)
+% Names the test file as the programs's plus '.lpst' (LPS test file)
+test_filename(PF,TF) :- 
+	expand_filename(PF,Path),
+	concat_atom([Path,'.lpst'],TF).
+
+lps_postmortem_filename(TF) :- qcatch_f(user:lps_postmortem_filename(TF)).
+
+% loads the "test file" / postmortem trace from the standard file location
+check_load_postmortem :- (lps_test_result_item(_,_,_);lps_test_result(_,_,_);lps_test_action_ancestor(_,_,_);lps_test_options(_)), !.
+check_load_postmortem :- lps_postmortem_filename(F), exists_file(F), !, my_load_dyn(F).
+check_load_postmortem :- option(swish), !, throw(must_execute_program_first).
+check_load_postmortem.
+
+	
+% test(Stage,Cycle,Term)
+% Remembers or checks that at this Stage and Cycle, Term is obtained
+% Requires the Term to be a LIST
+% if term size is too big an abstraction is stored, and it is NOT verified
+test(Stage,Cycle,Term) :- option(make_test), !,
+	is_list(Term),
+	\+ \+ (( 
+		numbervars(Term), length(Term,N), uassert(lps_test_result(Stage,Cycle,N)),
+		forall(member(Item,Term),assert_lps_test_result_item(Stage,Cycle,Item))
+		)).
+test(Stage,Cycle,Term) :- option(run_test), !,
+	% fails if the test fails:
+	( lps_test_result(Stage,Cycle,N) -> true 
+	  ; 
+	  	write('FAILED test '), writeln(Stage/Cycle/Term), 
+	  	writeln('Missing test fact.'), 
+	  	uassert(lps_failed_test(lps_test_result(Stage,Cycle,Term),missing_fact)), 
+	  	fail),
+	% lps_test_action_ancestor/3 is not used for testing
+	findall(Item,lps_test_result_item(Stage,Cycle,Item),Test), 
+	% numbervars(Test),
+	( \+ \+ ((length(Term,N), /*numbervars(Term),*/ test_items_ok(Term,Test)) )
+		-> true
+		; 
+		write('FAILED test '), writeln(Stage/Cycle/Term), write('Expected '), writeln(Test), 
+		uassert(lps_failed_test(lps_test_result(Stage,Cycle,Term),Test)),
+		fail).
+test(_,_,_).
+
+test_items_ok(Actual,Test) :- member(lps_gigantic(_),Test), !, 
+	test_items_ok_(Actual,Test).
+% other than for the above, which is too strict (likely not worthy implementing less strict...), 
+% order doesn't matter:
+test_items_ok(Actual,Test) :- sort(Actual,A), sort(Test,T), variant(A,T).
+
+% test_items_ok(+Actual,+Test)
+test_items_ok_([A|An],[lps_gigantic(Size)|Tn]) :- !,
+	% Must recalculate term size after numbervars, otherwise would be different:
+	\+ \+ (numbervars(A),my_term_size(A,Size_), Size_ == Size), 
+	test_items_ok_(An,Tn).
+test_items_ok_([A|An],[T|Tn]) :- !,
+  % variant_(A,T),
+	variant(A,T),
+	test_items_ok(An,Tn).
+test_items_ok_([],[]).
+
+% assert_lps_test_result_item(Stage,Cycle,Item) Gigantic terms are abstracted as lps_gigantic(Size)
+assert_lps_test_result_item(Stage,Cycle,Item) :- 
+	my_term_size(Item,Size), 
+	( Size > 1000 -> Item_=lps_gigantic(Size) ; Item_=Item),
+	uassert(lps_test_result_item(Stage,Cycle,Item_)).
+
+% check_lps_test_action_ancestors(+Calls) asserts lps_test_action_ancestor(Call,T1,T2) for each call, if a variant is not asserted yet
+% Notice that nonvar(T1) always, but T2 may be var; could improve performance with variant_sha1(+Term, -SHA1)
+% backtrackable, as these facts are interesting only for committed actions
+% On retrieving, latest calls will be returned first
+% HACK ALERT: the last of the "calls" is not a call... but the discarder variable for the top goal! See resolveUntilAction comments
+
+check_lps_test_action_ancestors(A) :- option(make_test), !, check_lps_test_action_ancestors_(A).
+check_lps_test_action_ancestors(_).
+
+check_lps_test_action_ancestors_([_]) :- !. % last element is NOT an event, it's a hacky marker
+check_lps_test_action_ancestors_([happens(E,T1,T2)|Ancestors]) :- !,
+	check_lps_test_action_ancestor(E,T1,T2), check_lps_test_action_ancestors_(Ancestors).
+check_lps_test_action_ancestors_([]).
+
+check_lps_test_action_ancestor(Call,T1,T2) :- lps_test_action_ancestor(Call_,T1,T2_), variant(T2,T2_), variant(Call,Call_), !.
+check_lps_test_action_ancestor(Call,T1,T2) :- uasserta(lps_test_action_ancestor(Call,T1,T2)). % use asserta so the next clause retracts the last one
+check_lps_test_action_ancestor(Call,T1,T2) :- uretract(lps_test_action_ancestor(Call,T1,T2)), !, fail. % retract only one!
+
+% test all programs in the LPS examples directory tree which have a .lpst file present
+% NOTICE that .lps files are transformed into .P files, so these are used for testing!!
+test_examples :- test_examples([]).
+
+test_examples_dc :- test_examples([dc]). % consider using the slower test_examples([dc,debug])
+
+test_examples(Options) :- 
+	lps_examples_directory(ED),
+	all_files_in(ED,'.lpst',TFiles),
+	atom_codes('.lpst',LPST),
+	findall(ProgramFile,(
+		member(TFile,TFiles), atom_codes(TFile,Tcodes),
+		append(PCodes,LPST,Tcodes),atom_codes(ProgramFile,PCodes)
+		),Files),
+	% check whether we need to regenerate some of these Files
+	regenerate(Files), !,
+	do_test_suite(Files,[run_test|Options]).
+
+regenerate([F|Files]) :- !, 
+	(regenerate_file(F)->true;true), regenerate(Files).
+regenerate([]).
+
+:- multifile regenerate_file/1.
+% regenerate(FileAtom) regenerate this file, foo.P or foo.lpsw, from foo.SomeSyntaxSpecificFileExpension, if this exists
+% alternative syntaxes should asserta a the generator
+regenerate_file(_) :- fail. % default case, do not generate (meaning, no source file exists that produced this one)
+
+% do_test_suite(Files,Options)  
+%  Options must contain make_test or run_test, optionally more; Files are either LPS or test result files resp.
+
+do_test_suite(Files,Options) :-
+	(member(run_test,Options);member(make_test,Options)), 
+	!,
+	writeln('*** Starting test suite, will report at the end...'),
+	do_test_suite(Files,Options,Results),
+	nl, write('*** Test suite ended ('), write(Options), writeln('):'),
+	( member(F-R,Results), write(F), write(': '), writeln(R), fail; true),
+	length(Results,N), findall(f,member(_-failed(_),Results),FL), length(FL,NF),
+	(NF==0->write('All '), write(N), writeln(' tests succeeded:-) !') ; write('FAILED '), write(NF/N), writeln(' tests:-(')),
+	writeln('*** End of test suite results').
+
+% do_test_suite(Files,Options,Results)  Results is a list of File - ok/failed
+do_test_suite([],_Option,[]) :- !.
+do_test_suite([F|Files],Options,[F-R|Results]) :- 
+	expand_filename(F,Path),
+	file_exists(Path),
+	!,
+	atom_codes(Path,PathCodes),
+	% TODO: cleanup this circular dependency with psyntax:
+	( ((surface_syntax_extension(PathCodes)->psyntax:golps(Path,Options) ; go(Path,Options)), 
+		\+ lps_failed_test(_,_) ) 
+		-> R=ok 
+		; 
+		findall(LPSR/Expected,lps_failed_test(LPSR,Expected),Failures), 
+		R=failed(Failures)
+	),
+	do_test_suite(Files,Options,Results).
+do_test_suite([F|Files],Options,[F-failed('Missing source file')|Results]) :- 
+	do_test_suite(Files,Options,Results).
+
+surface_syntax_extension(Codes) :- append(_,[46, 112, 108],Codes). % .pl
+surface_syntax_extension(Codes) :- append(_,[46, 108, 112, 115],Codes). % .lps
+
+% time_limited(+StepName,+G,?Timeout) 
+% Skips G if Timeout is true; timeout will be bound to true if time runs out; will remain unbound otherwise
+time_limited(_Step,_G,Timeout) :- nonvar(Timeout), !.
+time_limited(_,G,_) :- option(debug), !, G. % so stack traces are more useful
+time_limited(Step,G,Timeout) :-
+	(option(timeout(MaxTime)) -> true ; MaxTime = 0.75), % by default, less than a second max in each of the following steps
+	catch(call_with_time_limit(MaxTime,G),Ex,(Ex=time_limit_exceeded->Timeout=true;throw(Ex))),
+	(Timeout==true -> 
+		print_error_fail('execution timeout'(Step)) ; true).
+
+% seconds to sleep at the beginning of each cycle; assumes some defaults 
+minCycleTime_(MCT) :- minCycleTime(MCT), !.
+minCycleTime_(0.25) :- option(swish), option(background(_)), !.
+minCycleTime_(0.001) :- option(background(_)), !.
+minCycleTime_(0).
+
+:- thread_local engine_paused/0. % true if the engine is supposed to answer_thread_queries and nothing more
+
+set_paused(true) :- assert(engine_paused).
+set_paused(false) :- retractall(engine_paused).
+
+
+%  cycle(PartialReactiveRules,GoalState,PendingResponses,StateFlag)
+%  GoalState is a list (conjunction) of goal(ID,Discard,MyFailure,AllFailures,SharedVars,EventAncestors,G)
+%  Tree is a list representing the current branch of the tree.
+%  PendingResponses is a goal to execute as soon as the state is "stable", to report answers back to waiting clients
+cycle(Ri, Gi, StateFlag) :- cycle(Ri, Gi, true, StateFlag).
+
+cycle(_Ri, Gi, PendingResponses, _StateFlag) :-
+	current_time(Time), endTime(M), M < Time,
+	!,
+    answer_thread_queries, PendingResponses,
+	do_write([nl, ' Simulation time is up. Unsolved goals: ',nl,pprint_goal(Gi)]).
+cycle(_Ri, Gi, PendingResponses, _StateFlag) :-
+	maxRealTime(MaxRT),
+	get_real_time(Now), real_time_beginning(Begin), Duration is Now - Begin,
+	Duration > MaxRT,
+	!,
+    answer_thread_queries, PendingResponses,
+	do_write([nl, ' Real time is up. Unsolved goals: ',nl, pprint_goal(Gi)]).
+cycle(_Ri, Gi, PendingResponses, _StateFlag) :-
+	current_time(Time),  
+	% to avoid persisting in the saved state:
+	(uretract(happens(lps_terminate,T1,T2)), Cause=unknown ; uretract(happens(lps_terminate(Cause),T1,T2))),
+	!,
+    answer_thread_queries, PendingResponses,
+	(Time \== T2 -> do_write([nl,'*** Weird timing:', happens(lps_terminate,T1,T2), ' at ',Time]) ; true),
+	test(events,Time,[lps_terminate(Cause)]),
+	do_write([nl, 'Terminated due to ', lps_terminate(Cause), '. Unsolved goals: ',nl, pprint_goal(Gi)]).
+cycle(Ri, Gi, PendingResponses, _StateFlag) :-
+	% special case to allow save and suspend by program internal action; can't simply reuse lps_terminate,
+	% as the saved program would resume with... immediate lps_terminate.
+	retract(save_finish_execution(File)), 
+	!, 
+    answer_thread_queries, PendingResponses,
+	save_execution(File,Ri,Gi,_),
+	do_write([nl, 'Terminated due to lps_save_finish_execution. Saved to file ',File]).
+cycle(Ri, Gi, PendingResponses, StateFlag) :-
+	% (writeln('STATE:'), state(XX), writeln(XX), fail ; true),
+	(simulatedRealTimePerCycle(_) -> true ;
+		minCycleTime_(MCT),
+		(MCT<1.0 -> 
+			answer_thread_queries, sleep(MCT)
+			; % this is to make fluent queries possible while we "sleep":
+			get_time(Now), Until is Now+MCT,
+			repeat, answer_thread_queries, sleep(1), get_time(Later), Later>=Until
+		)
+	),
+	(engine_paused -> cycle(Ri, Gi, PendingResponses, StateFlag) 
+		; 
+		( option(cycle_hook(Predicate,_,_)) -> 
+			HookGoal =.. [Predicate,ExternalObservations],
+		(HookGoal -> true ; do_write([nl,'* LPS cycle hook goal failed, terminating.']), fail)
+		; ExternalObservations=[]),
+
+		current_time(Time),  Previous is Time - 1 ,Next is Time +1,
+
+		(option(manual) ->read_obs(UserObservations) ; UserObservations=[]),
+		append(UserObservations,ExternalObservations,ExternalObservations_),
+
+		% At this point last cycle events are still available
+			% TODO: ExternalObservations to be injected as new events
+		findall(Action, happens(Action, Previous, Time), Actions),
+		%	write_verbose([nl, '----- time is now ',Time,' -----',nl]),
+		%	write_verbose([nl, ' Events and actions from ', Previous, ' to
+		%	', Time,' are ',Actions,nl]),
+
+		( (Actions \= [] ; Time<3  ; option(debug) ) ->
+			(simulatedRealTimeBeginning(_) -> 
+				once(state(real_time(RT))), format_time(atom(RTA),"%FT%H:%M:%S",RT), % format compatible with parse_time 
+				do_write([nl, '----- time is now ',Time,' (',RTA,') -----',nl])
+				; do_write([nl, '----- time is now ',Time,' -----',nl])
+				),
+		
+			do_write([nl, ' Events from ', Previous, ' to ', Time,' were ',Actions,nl])			;
+			(0 is Time mod 10 -> 
+				do_write([Time,'...']),
+				(0 is Time mod 200 -> do_write([nl]); true)
+				; true)
+		),
+	
+		test(events,Time,Actions),
+		enter_step_0, % during updateFluents we need a hack to query the previous state, e.g. to locally change "current time"
+		(option(non_prospective) -> time_limited(updateFluents,updateFluents(Time),Timeout) 
+		; true),
+
+		PendingResponses,
+
+		leave_step_0,
+		% This processes antecedents of rules:
+		time_limited(process, (option(dc) -> dc_process(Ri, [], NRi, [], NewGi_) ; process(Ri, [], NRi, [], NewGi_)), Timeout),
+		split_goals_and_events(NewGi_,NewGi,CompositeEvents),
+		(nonvar(Timeout) -> NRi=Ri, NewGi=[] ; true),
+		write_verbose([nl,
+			' Process reactive rules at time ',Time, nl,'Old:  ',Ri, nl, ' New:  ', NRi,  nl,
+			' New goals at time ',Time, nl,NewGi, nl]),
+		append(Gi, NewGi, NGi), % Puts new goals at the end of the queue.
+		write_verbose([nl,' Current goal tree at time ',Time, nl,' All: ',NGi,nl]),
+		forall( action_(A), uretractall(tried(_, _, lpsClause(happens(A, _, _), [])))),
+		uretractall(happens(_, _, _)),
+
+		% these events are imposed, as they stem from previous actions; no point in checking preconditions here:
+		(member(Event,CompositeEvents), uassert(Event), fail; true), 
+		(CompositeEvents=[_|_] -> 
+			test(composites,Time,CompositeEvents),
+			enter_step_0,
+			updateNextStateFluents(Previous,false,StateFlag), 
+			leave_step_0,
+			copyNextState,
+			(option(log_composites) -> do_write([nl, ' Composite Events to ', Time,' are ',CompositeEvents,nl]) ; true)
+			; true),
+	
+		% only now do we have the full state:
+		findall(Fluent, (state(Fluent), \+ system_fluent(Fluent)), Fluents_), 
+		(option(sample(Templates)) -> 
+			findall(Fluent, (
+				member(Fluent,Templates), 
+				call_with_inference_limit( query(holds(Fluent,_)),1000,Res), 
+				% tricky limit; larger limits seem to provoke a cascade of "Unhandled exception: inference_limit_exceeded" on SWISH
+				(Res=inference_limit_exceeded -> throw('Fluent sample specification is too vague') ; true)
+				), IntensionalFluents), 
+			append(IntensionalFluents,Fluents_,Fluents)
+			; Fluents_=Fluents ),
+		test(fluents,Time,Fluents),
+		((\+ state_is_clean(StateFlag)) ->
+			do_write([nl,' State at time ',Time,' is ',Fluents, nl]);
+			true),
+		clean_state_flag(NewStateFlag),
+		% This resolves goals in the goal state.
+		% next_state(_) is now empty
+		( 
+			(option(dc) -> 
+				time_limited(resolveAndUpdate, (
+					% external events may be rejected, introducing Prolog choicepoints in updateEvents, that may be backtacked to
+					% all the way from a violated precondition below; notice this is NOT the case for (program declared) observations:
+					% these may be rejected or not but only immediately, and do not introduce choicepoints
+					updateEvents(Time, Next, NRi, NextGi, ExternalObservations_, ToReturn),
+					dc_resolve_goals(NGi,GoalTree), 
+					% if "prospecting", check all preconditions again, with the next state available:
+					% the following d_pre check is done for all, and not just for 'both' preconditions... to support one more check, after 
+					% the accumulated changes over the microstates in serializable actions, see updateNextStateFluents
+					( option(non_prospective) -> true ; 
+						updateNextStateFluents(Time,true,NewStateFlag), 
+						\+ (d_pre(_,Conds), 
+						% writeln(holds_all(Conds,Time,Next)), (Conds=[holds(current_state(_4636),_4632)|_]->trace;true), 
+						holds_all(Conds,Time,Next), write_verbose(['Violated precondition:',Conds])) ) 
+					), Timeout)
+				; 
+				% DEPRECATED:
+				updateEvents(Time, Next, NRi, NextGi, ExternalObservations_, ToReturn),
+				time_limited(resolve, resolve_tree(NGi, [], GoalTree), Timeout),
+				( option(non_prospective) -> time_limited(updateNextStateFluents2,updateNextStateFluents(Time,true,NewStateFlag), Timeout) ; true)
+			) 
+		; 
+			current_time(Time), % avoid cascading the following message to past cycles
+			length(Gi,Ngoals),
+			do_write([nl, ' Program has FAILED. ',Ngoals,' unsolved goals: ',nl,pprint_goal(Gi)]), 
+			%sort(Gi,Sorted), 
+			%once((member(Oldest,Sorted), Oldest = goal(_,_,_,_,_,_,_))), pprint_goal([nl, ' Oldest goal:',nl,Oldest,nl]),		
+			fail
+		),
+		% At this point we have both state and next_state available
+		(option(non_prospective) -> true ; copyNextState),
+	
+		(GoalTree = end -> % this will execute on timeout too
+			do_write([nl,' Exceeded number of steps. ',nl])	
+			;	
+			(option(dc) -> NextGi=GoalTree ; removeSolvedGoals(GoalTree, [], NextGi)),
+			next_time, 
+			!, % recover stack space... and no backtracking from cycle to cycle (search is carried on breath first in the goals list)
+			cycle(NRi, NextGi, ToReturn, NewStateFlag)
+		)
+	).
+
+get_real_time(RT) :- system_fluent(real_time(RT),G), G, !.
+
+
+:- thread_local(save_finish_execution/1).
+lps_save_finish_execution(File) :- assert(save_finish_execution(File)).
+
+% restore LPS execution state from file or fact pertaining to the user program
+restore_execution(ExecutionFile,Ri,Gi) :-
+	(nonvar(ExecutionFile) -> 
+		see(ExecutionFile), read(lps_saved_state(Requirements,Timing,NextGoalID,Children,Ri,Gi,Fluents,Events)), seen
+		; lps_saved_state(Requirements,Timing,NextGoalID,Children,Ri,Gi,Fluents,Events)
+	),
+	Timing = t(Beginning,NextCycle,_SavedAt),
+	Requirements = r(EngineVersion,Hash),
+	% get_lps_program_hash(OurHash,Codes), string_codes(HashString,Codes), mylog(ours-HashString),
+	get_lps_program_hash(OurHash),
+	(Hash==OurHash -> true ; throw(bad_hash_in_restored_file(ExecutionFile-Hash/OurHash))),
+	(compatible_engine(EngineVersion) -> true ;  throw(incompatible_engine_in_restored_file(ExecutionFile))),
+	uretractall(real_time_beginning(_)), uassert(real_time_beginning(Beginning)),
+	uretractall(state(_)), uretractall(happens(_,_,_)),
+	(member(Fluent,Fluents), uassertz(state(Fluent)), fail ; true),
+	(member(Event,Events), uassertz(Event), fail ; true),
+	uassertz(current_time(NextCycle)),
+	set_goal_id(NextGoalID), set_goal_children(Children).
+
+% TODO: this should include the underlying Prolog engine.
+compatible_engine(RequiredVersion) :-  get_version(OurEngine), OurEngine >= RequiredVersion.
+
+% save_execution(+File,+WorkingReactiveRules,+Goals,-ExecutionState) if File is nonvar, dump ExecutionState into it
+save_execution(File,Ri,Gi,ExecutionState) :- 
+	( option(no_parallel) -> throw(no_parallel_incompatible_with_saving) ; true),
+	current_time(NextCycle), next_goal_id(NextGoalID), get_goal_children(Children),
+	findall(Fluent,state(Fluent),Fluents), findall(happens(E,T1,T2),happens(E,T1,T2),Events),
+	% get_lps_program_hash(Hash,Codes), string_codes(HashString,Codes), mylog(saved-HashString),
+	get_lps_program_hash(Hash), 
+	get_version(EngineVersion),
+	real_time_beginning(Beginning), get_time(Now), stamp_date_time(Now, SavedAt, 'UTC'),
+	% the following term may be split, BUT not the Gi - goals have relevant shared variables, controlling disjuntive branches success/failure
+	% FUTURE NOTE:if splitting is necessary, make sure to uniquely name vars before writing, so bindings can be reconstructed after reading chunks
+	ExecutionState = lps_saved_state(r(EngineVersion,Hash),t(Beginning,NextCycle,SavedAt),NextGoalID,Children,Ri,Gi,Fluents,Events),
+	(nonvar(File) -> tell(File), write_canonical(ExecutionState), writeln('.'), told ; true).
+
+% Obtain events (observations) from the user
+read_obs(Obs) :-
+	writeln('What happened? Please type a list of events, ending with .'),
+    	read(Obs),
+    	( \+ is_list(Obs) ->
+        	write(user_error, 'ERROR: Input must be a list of valid events (possibly empty), e.g. [event3].'),nl,
+        	read_obs(Obs)
+    	;true).
+
+:- thread_local(observed_at/2). % to avoid repeating real time observations with low granularity
+
+% Update any observed events, including events injected from the outside, e.g. Java API
+% May also return fluent state for those event messages requesting it
+% Ri and Gi are the NEXT cycle's rules and goals, necessary for the save state operation
+updateEvents(Time, Next, Ri, Gi, ExternalObservations, ToReturn) :-
+	findall(E,(observe(Evs, Next),member(E, Evs) ; member(E,ExternalObservations)),Observations),
+	state(real_time(Now)),
+	findall(E,( 
+		qcatch_f(observe(Evs, RT)), 
+		misc_to_realtime(RT,RTseconds), RTseconds =< Now, 
+		% make sure real time moments do not repeat in different cycles:
+		\+ (observed_at(RTseconds,T), T\=Time), 
+		assert(observed_at(RTseconds,Time)), 
+		member(E, Evs)
+		),RTObservations),
+	append(Observations,RTObservations,AllObservations),
+	MAX_PROLOG_EVENTS = 500,
+	% prolog_events must not originate too many solutions
+	% TODO: either add an option(max_prolog_events(N)) or an explicit declaration in the program, 
+	% general or event specific	
+	findnsols(MAX_PROLOG_EVENTS,E,(prolog_events(PE), member(E,PE), callprolog(E)), PrologEvents), !,
+	((length(PrologEvents,N), N>=MAX_PROLOG_EVENTS) -> 
+		throw(more_than_10_solutions_for_prolog_event) 
+		; true),
+	append(AllObservations,PrologEvents,Events),
+	(Events=[_|_] ->
+		(d_pre(both,_C) -> 
+			ProspectiveConditions=true,
+			% print_error(warning, accepting_declared_observations_even_with_preconditions_referring_next_state(Events,C),null),
+			(Time==0 -> 
+				print_error(warning, rejected_observations_0,null),
+				Reject=true
+				; true)
+
+			; true),
+		(nonvar(Reject) -> true ; assert_events(Events,Time,Next)),
+		( (d_pre(current,Conds),holds_all(Conds,Time,Next)) -> 
+			retract_events(Events,Time,Next), 
+			%do_write(['Rejected observations ',Events,' violating ',Conds]) 
+			%print_error(warning, ['Rejected observations ',Events,' violating ',Conds],null)
+			print_error(warning, rejected_observations1(Events,Conds),null)
+			; 
+			( true ;
+				ProspectiveConditions==true,
+				retract_events(Events,Time,Next), 
+				print_error(warning, rejected_observations2(Events),null)
+				%print_error(warning, ['Rejected observations ',Events,' , attempting to satisfy prospective preconditions'],null)
+			)
+		)
+	;true),
+     % Try to add external events only after the internally declared observations were added
+     % No external events are accepted in the first cycle (for no particular reason other than to simplify the logic above...)
+     ( (option(background(_)), Time>0) -> receive_external_events(Time, Next, Ri, Gi, ToReturn); ToReturn=true).
+
+% misc_to_realtime(+ExternalForm,-RealTimeSeconds)
+% fails for LPS (cycle) time
+misc_to_realtime(V,_) :- var(V), !, fail.
+misc_to_realtime(A,RT) :- atom(A), !, atom_string(A,S), misc_to_realtime(S,RT).
+misc_to_realtime(S,RT) :- string(S), parse_time(S,_,RT).
+misc_to_realtime(Y/M/D/H/Min/S,RT) :- !, date_time_stamp(date(Y,M,D,H,Min,S,0,-,-),RT).
+misc_to_realtime(Y/M/D/H/Min,RT) :- !, date_time_stamp(date(Y,M,D,H,Min,0,0,-,-),RT).
+misc_to_realtime(Y/M/D/H,RT) :- !, date_time_stamp(date(Y,M,D,H,0,0,0,-,-),RT).
+misc_to_realtime(Y/M/D,RT) :- !, date_time_stamp(date(Y,M,D),RT).
+misc_to_realtime(Y/M,RT) :- misc_to_realtime(Y/M/1,RT).
+
+% is_cycle_time(+T)
+is_cycle_time(T) :- must_be(nonvar,T), integer(T).
+
+% is_time_expression(+TimeExpression)  No real division, because it is used to represent structured datetime.
+is_time_expression(T) :- nonvar(T), is_time_expression_(T), !.
+
+is_time_expression_(_+_).
+is_time_expression_(_-_).
+is_time_expression_(_*_).
+
+expression_to_time(E,T) :- ((ground(E),is_time_expression(E))->T is E;T=E).
+
+is_some_time(T) :- (integer(T); is_time_expression(T) ; misc_to_realtime(T,_)), !.
+
+is_structured_time(T) :- nonvar(T), T= _ / _.
+	
+% real_time_literal(+Literal,-GoalList) Rewrites a literal with real times into a sequence using only cycle times
+% Fails if no real time literal is present
+% Introduces some "time slack" via holds(true,..), so that the body isn't firmly glued to the precise boundaries of a day...
+real_time_literal(holds(_F,T),_) :- (var(T) ; is_cycle_time(T) ; is_time_expression(T)), !, fail.
+real_time_literal(holds(F,Y/M/D), [holds(real_date(Y/M/D),T), holds(F,T)] ) :- !.
+real_time_literal(happens(_E,T1,T2),_) :- once(( (var(T1) ; is_cycle_time(T1) ; is_time_expression(T1)) )), (var(T2) ; is_cycle_time(T2) ; is_time_expression(T2)), !, fail.
+real_time_literal(happens(E,RT1,T2),[
+	happens(real_date_begin(RT1),_,_T1), holds(true,T1), happens(E,T1,T2)
+	]) :- nonvar(RT1), RT1=_Y/_M/_D, (var(T2) ; is_cycle_time(T2) ; is_time_expression(T2)), !.
+real_time_literal(happens(E,T1,RT2),[
+	happens(E,T1,_T2), /*holds(true,T2),*/ happens(real_date_end(RT2_),_,_), RT2_ @=< RT2
+	]) :- nonvar(RT2), RT2=_Y/_M/_D, (var(T1) ; is_cycle_time(T1) ; is_time_expression(T1)), !.
+real_time_literal(happens(E,RT1,RT2),[
+	happens(real_date_begin(RT1),_,_T1), holds(true,T1), happens(E,T1,_T2), /*holds(true,T2),*/ happens(real_date_end(RT2_),_,_), RT2_ @=< RT2
+	]) :- nonvar(RT1), nonvar(RT2), RT1=_/_/_, RT2=_/_/_.
+
+a_real_time_event(real_date_begin(RT),RT).
+a_real_time_event(real_date_end(RT),RT).
+a_real_time_event(end_of_day(RT),RT).
+
+premature_real_time_fluent(holds(_,T)) :- ground(T), T = _Y/_M/_D, get_the_real_date(Today), T@>Today.
+
+premature_real_time_event(happens(_,T1,_T2)) :- 
+	get_the_real_date(Now),
+	nonvar(T1), T1=_/_/_, T1@>Now.
+	
+outdated_real_time_event(happens(_,T1,T2)) :- 
+	get_the_real_date(Now),
+	( nonvar(T2), T2=_/_/_, Now@>T2 ; nonvar(T1), T1=_/_/_, /* ?real_date_add(T1,1,T1_),*/ T1=T1_, Now@>T1_).
+	
+% mixed_time_comparison(+G,-NewG) 
+% used to rewrite time comparisons, so that (vaguer) structured time is used
+mixed_time_comparison(G,(holds(real_date(RT),T), NewComp)) :- 
+	ground(G), G=..[Op,A1,A2], supported_time_comparison(Op),
+	(is_structured_time(A1), integer(A2), T=A2, NewComp=..[Op,A1,RT] ; is_structured_time(A2), integer(A1), T=A1, NewComp=..[Op,RT,A2]),
+	!.
+
+supported_time_comparison(<).
+supported_time_comparison(=<).
+supported_time_comparison(@<).
+supported_time_comparison(@=<).
+supported_time_comparison(>).
+supported_time_comparison(>=).
+supported_time_comparison(@>).
+supported_time_comparison(@>=).
+
+/* Probably useless:
+real_time_to_interval(RT,Duration) :- stamp_date_time(RT,DT,local), dt_to_duration(DT,Duration).
+% Assume the interval duration to be the magnitude of the lowest significant quantity in the date structure? BAD IDEA!
+% Tricky because of leap years and different month durations...
+% See http://www.swi-prolog.org/pldoc/man?section=dattimedata
+% dt_to_duration(date(Y,M,D,H,Mn,S,_Off,_TZ,_DST),Duration)
+dt_to_duration(date(Y,0,0,0,0,0.0,_,_,_),Duration) :- !, 
+	date_time_stamp(date(Y,0,0,0,0,0.0,_,_,_),T1), NextY is Y+1, 
+	date_time_stamp(date(NextY,0,0,0,0,0.0,_,_,_),T2), Duration is T2-T1.
+dt_to_duration(date(Y,M,0,0,0,0.0,_,_,_),Duration) :- !, 
+	date_time_stamp(date(Y,M,0,0,0,0.0,_,_,_),T1), 
+	(M==12 -> NextY is Y+1, NextM=1 ; NextY=Y,NextM is M+1),
+	date_time_stamp(date(NextY,NextM,0,0,0,0.0,_,_,_),T2), Duration is T2-T1.
+dt_to_duration(date(_Y,_M,_D,0,0,0.0,_,_,_),86400.0) :- !.
+dt_to_duration(date(_Y,_M,_D,_H,0,0.0,_,_,_),3600.0) :- !.
+dt_to_duration(date(_Y,_M,_D,_H,_S,0.0,_,_,_),60.0) :- !.
+dt_to_duration(date(_Y,_M,_D,_H,_Mn,_S,_,_,_),1.0). 
+...so I ended up sticking with Y/M/D
+*/
+
+
+% receive_external_events(+Time,+Next,+Rules,+Goals,-ToReturn)  
+% ToReturn is a goal with message responses to clients, to be evaluated only at the end of the current cycle
+% (because it depends on fluent state, which at this precise moment is unreadable; also because events may rejected later)
+
+receive_external_events(Time, Next, Ri, Gi, ToReturn) :-
+	% Special way to inject GUI input events, which are NOT checked against preconditions:
+	findall(IE,retract(lps_GUI_event(IE)),InputEvents), 
+	assert_events(InputEvents,Time,Next),
+	% Now for other events:
+	collect_external_messages(Messages),
+	% the above split from the following as we'll backtrack over the event sequence
+	receive_external_events(Messages, Time, Next, Ri, Gi, ToReturn).
+	
+collect_external_messages([messageFrom(ClientID,MessageID,Events,After,Fluents)|Messages]) :-
+	thread_peek_message(messageFrom(ClientID,MessageID,Events,After,Fluents)), 
+     thread_get_message(messageFrom(ClientID,MessageID,Events,After,Fluents)),
+     !,
+     collect_external_messages(Messages).
+collect_external_messages([]).
+
+% First arg is the sequence of messages we got for this cycle
+receive_external_events([messageFrom(ClientID,MessageID,Events,After,Fluents)|Messages],Time, Next, Ri, Gi, ToReturn) :-
+     !,
+     ( (member(E,Events), (\+ ground(E) ; \+ event_(E))) -> 
+     	Result = failed('events must be declared and ground') 
+     	; 
+     	assert_events(Events,Time,Next),
+     	% We'll accept all or none:
+     	( (d_pre(current,Conds),holds_all(Conds,Time,Next)) -> % use only preconditions depending on the current state
+     		retract_events(Events,Time,Next), Result = failed('violated ordinary precondition') 
+     		; 
+     		Result = _
+     	)
+	),
+
+	(nonvar(Result) ->
+		% no need to postpone, report failure rightaway:
+     	MoreToReturn = ToReturn,
+     	thread_send_message(ClientID,resultFrom(MessageID,Result))
+     	;
+     	(Fluents=[_|_] -> % we need to sample fluents:
+	      	DoSample = findall(F, (
+	     			member(F,Fluents), 
+	     			% Special case, lps_saved_state:
+	     			(F=lps_saved_state(_,_,_,_,_,_,_,_) -> save_execution(_File,Ri,Gi,F); query(holds(F,_)))
+	     			), Values), 
+	     		
+	     	% sample later... or right now:
+	     	( After==true -> true ; DoSample )   
+	     	; 
+	     	Values=[], DoSample=true
+	     ),
+	     % Let's now tentatively leave the remote events applied
+	     (
+	     	% if these are not rejected by the "global" preconditions check after our cycle's goal execution, report acceptance:
+	     	Result = ok(Next,Values),
+	     	ToReturn = (DoSample, thread_send_message(ClientID,resultFrom(MessageID,Result)), MoreToReturn)
+	     	;
+	     	% if we backtrack into here... skip these events:
+	     	retract_events(Events,Time,Next),
+	     	Result = failed('global violation of preconditions'),
+	     	thread_send_message(ClientID,resultFrom(MessageID,Result )),
+	     	ToReturn=MoreToReturn
+	   	)
+	),
+     receive_external_events(Messages,Time,Next,Ri,Gi,MoreToReturn).
+receive_external_events([],_,_,_,_,true). % no more events to handle for now   
+
+% assert_events(Events,Time,Next)   Assert events 
+assert_events([E|Events],T1,T2) :- !, uassertz(happens(E,T1,T2)), assert_events(Events,T1,T2).
+assert_events([],_,_).
+
+% retract_events(Events,Time,Next) 
+retract_events([E|Events],T1,T2) :- !, uretractall(happens(E,T1,T2)), retract_events(Events,T1,T2).
+retract_events([],_,_).
+
+% inject_events(ID,Events,Result) Succeeds after the events are accepted or rejected by LPS execution ID; fails if bad arguments
+% ID is thread alias; Events must be a list of ground events; Result is either ok(InjectionCycle,[]) or failed(Message)
+inject_events(ID,Events,Result) :- send_events_fetch_fluents(ID,Events,MessageID), wait_for_outcome(MessageID,Result).
+
+% ID is thread alias; Events must be a list of ground events; Fluents is a list of templates 
+% Result is either ok(InjectionCycle,FluentValues) or failed(Message)
+inject_events_fetch_fluents(ID,Events,After,Fluents,Result) :-
+	send_events_fetch_fluents(ID,Events,After,Fluents,MessageID), wait_for_outcome(MessageID,Result).
+
+% send_events(ID,Events,MessageID) Assynchronous version of previous
+send_events_fetch_fluents(ID,Events,MessageID)  :- send_events_fetch_fluents(ID,Events,false,[],MessageID).
+
+send_events_fetch_fluents(ID,_,_,_,_) :- thread_self(ID), !, 
+	throw('ERROR: can not send external events into the same program instance.').
+send_events_fetch_fluents(_ID,Events,_,_,_) :- member(E,Events), \+ ground(E), !,
+	throw('ERROR: events must be ground ' - E).
+send_events_fetch_fluents(ID,Events,After,Fluents,MessageID) :- is_list(Events), is_list(Fluents),
+	thread_self(MyID), gensym(m,MessageID), thread_send_message(ID,messageFrom(MyID,MessageID,Events,After,Fluents)).
+
+lps_ask(ID,Events,MessageID) :- send_events_fetch_fluents(ID,Events,MessageID). % for use as system_action
+
+lps_ask(ID,Events) :- send_events_fetch_fluents(ID,Events,MessageID), wait_for_outcome(MessageID,Result), Result = ok(_,_).
+
+% blocks waiting for a message to be digested by the server thread
+wait_for_outcome(MessageID,Result) :- thread_get_message(resultFrom(MessageID,Result)).
+
+outcome_available(MessageID) :- thread_peek_message(resultFrom(MessageID,_)).
+
+lps_outcome(MessageID,Result) :- 
+	wait_for_outcome(MessageID,Result).  % for use as system_action; to be called only after outcome_available(MessageID)
+
+% answer_thread_queries   handle a number of queries
+% Each query is a goal whose last argument is the result to be returned to the client
+answer_thread_queries :- 
+	thread_peek_message(thread_query(ClientID,ThreadQuery)), 
+	thread_get_message(thread_query(ClientID,ThreadQuery)),
+	!,
+	current_time(Cycle),
+	once(ThreadQuery), 
+	(ThreadQuery=_:ThreadQuery_->true;ThreadQuery=ThreadQuery_),
+	functor(ThreadQuery_,_,Arity), arg(Arity,ThreadQuery_,Result),
+	thread_self(ID),
+	thread_send_message(ClientID,thread_result(ID,Cycle,Result)),
+	answer_thread_queries.
+answer_thread_queries.
+
+:- thread_local(lps_GUI_event/1).
+% postUIevent(+IE) somehow hacky means to inject GUI events
+postUIevent(IE) :- assertz(lps_GUI_event(IE)).
+
+% Evaluate goal Q in LPS thread ID at Cycle; Result will be bound to the last argument of Q
+% query_thread(+ID,+Q,-Cycle,-Result) 
+query_thread(ID,Q,Cycle,Result) :-
+	thread_self(MyID), thread_send_message(ID, thread_query(MyID,Q)), 
+	thread_get_message(thread_result(ID,Cycle,Result)).
+
+% get_fluents(+ThreadID,+Fluents,-Cycle,-Values). Query a LPS execution about fluent values "now". The local cycle (time) is also returned.
+% Fluents' ordering is determined by query/1
+get_fluents(ID,Fluents,Cycle,Values) :-
+	forall(member(F,Fluents),nonvar(F)),
+	query_thread(ID, findall(F, (member(F,Fluents),query(holds(F,_))), _Values), Cycle, Values).
+
+get_rtb_fluent_event_templates(ID,Cycle,Beginning,Fluents,Events) :- 
+	query_thread(ID, get_rtb_fluent_event_templates_(_), Cycle, [Beginning,Fluents,Events]).
+
+get_rtb_fluent_event_templates_([Beginning,Fluents,Events]) :- 
+	real_time_beginning(Beginning),
+	findall(F,user_fluent(F),Fluents),
+	findall(E,event_(E),Events).
+
+		
+enter_step_0 :- uassert(lps_updating_current_state).
+leave_step_0 :- uretractall(lps_updating_current_state).
+
+%   Destructively update the state. Used by the non_prospective option:
+updateFluents(Time) :-
+    	( is_supported_prolog ->
+    		(system_fluent(SF,SFG), uretractall(state(SF)), SFG,  uassertz(state(SF)), fail ; true)
+    		; true),
+	findall(Fl, (happens(Ev, Previous, Time), terminated(happens(Ev, Previous, Time), Fl, Cond), holds_all(Cond)), Terms),
+	findall(Fl, (happens(Ev, Previous, Time), initiated(happens(Ev, Previous, Time), Fl, Cond), holds_all(Cond)), Inits),
+	findall(TFl-IFl, (
+		happens(Ev,Previous,Time), updated(happens(Ev,Previous,Time),TFl,Old-New,Cond), 
+		replace_term(TFl,Old,New,IFl), state(TFl), holds_all(Cond)
+		), Updates),
+	forall(((member(Fl, Terms);member(Fl-_,Updates)), state(Fl)), uretractall(state(Fl))),
+    	forall(((member(Fl, Inits);member(_-Fl,Updates)), \+ state(Fl)), uassertz(state(Fl))).
+
+% support "prospective" constraint checking, by keeping both current and next state momentarily
+updateNextStateFluents(Previous,ExecSystemFluents,StateFlag) :-
+	Time is Previous+1,
+	% copy current state into next state:
+	uretractall(next_state(_)), 
+	( state(X), uassert(next_state(X)), fail ; true),
+	% We keep system fluent changes out of StateFlag
+	(ExecSystemFluents==true, system_fluent(SF,SFG), uretractall(next_state(SF)), SFG, uassertz(next_state(SF)), fail ; true),
+
+
+	% Editing actions (initiate/update/terminate) will be executed as serialized actions
+	
+	% Compute state changes, depending on whether actions can or not be serialized over "micro-cycles":
+	(unserializable(UActions)->true;UActions=[]),
+	findall( happens(Ev, Start, Time), (happens(Ev, Start, Time), \+ editing_action(Ev), \+ \+ member(Ev,UActions)), UAs),
+	findall( happens(Ev, Start, Time), (happens(Ev, Start, Time), \+ member(Ev,UActions)), SAs),
+	%writeln(Previous/Time),
+	%(writeln('HAPPENS:'), happens(EE,TT1,TT2), writeln(happens(EE,TT1,TT2)), fail; true),
+    	% We start by the unserializable actions:
+	findall(Fl, (member(A,UAs), terminated(A, Fl, Cond), holds_all(Cond)), Terms),
+	findall(Fl, (member(A,UAs), initiated(A, Fl, Cond), holds_all(Cond)), Inits),
+	findall(TFl-IFl, (
+		member(A,UAs), updated(A,TFl,Old-New,Cond),
+		replace_term(TFl,Old,New,IFl), next_state(TFl), holds_all(Cond)
+		), Updates),
+	% Actually change the state:
+	forall(((member(Fl, Terms);member(Fl-_,Updates))), (uretractall(next_state(Fl)), state_changed(StateFlag)) ),
+	forall(((member(Fl, Inits);member(_-Fl,Updates)), \+ next_state(Fl)), (uassertz(next_state(Fl)), state_changed(StateFlag)) ),
+
+	% Now the serializable actions (engine default), whose impact should be independent of any particular sequencing
+	% Furthermore, preconditions should not be violated over the intermediate micro states, nor at the end...
+	% Presently we only check it again at the end (see above)
+	( member(A,SAs), (
+		% fully apply one action at a time, so fluents may accumulate/aggregate... although this
+		% will only happen for UPDATED - terminated/initiated effects do NOT accumulate;
+		% implementation is too tricky and theory... may be even worse;-)
+		(A=happens(terminate(Fl),_,_) -> true ; terminated(A, Fl, Cond), holds_all(Cond)), uretractall(next_state(Fl)), state_changed(StateFlag), fail ;
+		(A=happens(initiate(Fl),_,_) -> true ; initiated(A, Fl, Cond), holds_all(Cond)), \+ next_state(Fl), uassertz(next_state(Fl)), state_changed(StateFlag), fail ;
+		% ...again, only updates get accumulated effects:
+		(
+			(A=happens(update(Old-New,TFl),_,_) -> 
+				replace_term(TFl,Old,New,IFl), next_state(TFl) ;
+				updated(A,TFl,Old-New,Cond), replace_term(TFl,Old,New,IFl), next_state(TFl), holds_all(Cond) ), 
+			uretractall(next_state(TFl)), uassertz(next_state(IFl)), state_changed(StateFlag), fail)
+		) 
+	; true) /*, for debugging:
+	(write_verbose('ACTIONS'), happens(EE,TT1,TT2), write_verbose(happens(EE,TT1,TT2)), fail; 
+	write_verbose('CURRENT'), state(XX), write_verbose(XX), fail ; 
+	write_verbose('NEXT'), next_state(XX), write_verbose(XX), fail ; 
+	true) */.    	
+updateNextStateFluents(_Previous,_,_) :- uretractall(next_state(_)), fail.
+
+% copies next_state into state
+copyNextState :-
+	uretractall(state(_)), 
+	( uretract(next_state(X)), uassert(state(X)), fail ; true).
+
+% replace_term(Term,Find,Replacement,NewTerm) Find is a list of subterms, or a single subterm
+replace_term(Term,Find,Replacement,NewTerm) :- is_list(Find), !, 
+    replace_terms(Find,Replacement,Term,NewTerm).
+replace_term(Term,Find,Replacement,NewTerm) :- replace_term_(Term,Find,Replacement,NewTerm).
+
+% replace_terms(SubTerms,Replacements,Term,NewTerm) replaces several subterms in a term
+replace_terms([Find|Subterms],[Replacement|Replacements],Term,NewTerm) :-
+    replace_term_(Term,Find,Replacement,Term2),
+    replace_terms(Subterms,Replacements,Term2,NewTerm).
+replace_terms([],[],T,T).
+
+% replace_term(Term,Find,Replacement,NewTerm)
+replace_term_(Term,Find,Replacement,NewTerm) :- Term==Find, !, Replacement=NewTerm.
+replace_term_(Term,_Find,_Replacement,NewTerm) :- (atomic(Term);var(Term)), !, Term=NewTerm.
+replace_term_(Term,Find,Replacement,NewTerm) :- 
+    Term=..[F|Args], replace_term_2(Args,Find,Replacement,NewArgs), NewTerm=..[F|NewArgs].
+
+replace_term_2([Term|Args],Find,Replacement,[NewTerm|NewArgs]) :- !,
+    replace_term_(Term,Find,Replacement,NewTerm), replace_term_2(Args,Find,Replacement,NewArgs).
+replace_term_2([],_,_,[]).
+
+
+% system fluents ; these are deemed uninteresting for testing or automatic visualization
+% system_fluent(?LPSFluent,-RealWorldGoal) 
+% RealWorldGoal goals is called to "sample" the real world at this point in real time; 
+%  if it has more than one solution, several fluent tuples will be added.
+system_fluent(real_time(RT), ( simulatedRealTimeBeginning(_) -> (
+	simulatedRealTimePerCycle(SCT), beginningOfSimulatedRealTime(SB), current_time(This), 
+	((lps_updating_current_state,This==1) -> RT = SB; RT is This*SCT+SB) % hacky code, cf. enter_step_0
+	) ; get_time(RT)) ).
+system_fluent(lps_user(UserID),lps_user(UserID)).
+system_fluent(lps_user(UserID,Email),lps_user(UserID,Email)).
+
+
+lps_user(User) :- lps_user(User,_Email).
+
+% Currently this is valid for SWISH only
+lps_user(User,Email) :- catch(user:lps_user(User,Email),_,fail), !.
+lps_user(unknown_user,unknown_email).
+
+% for introspection only:
+system_fluent(F) :- system_fluent(F,_).
+
+
+% system actions; they're simply called, with the exceptions noted:
+system_action(lps_terminate). % special handling, terminates execution
+system_action(lps_terminate(_)). % special handling, terminates execution
+system_action(A) :- external_predicate_for_lps(A).
+/* The above makes the following unnecessary:
+system_action(lps_save_finish_execution(_File)). % saves execution at the end of this cycle, and finishes it
+system_action(lps_ask(_,_)). % synchronous
+system_action(lps_ask(_,_,_)). % async
+system_action(lps_outcome(_,_)). % To avoid "blocking", this has specific delay logic
+system_action(writeln(_)).
+system_action(lps_send_email(_To,_Subject,_Body)).
+*/
+
+:- multifile premature_system_action/1. % so other modules may define non blocking action predicates
+premature_system_action(lps_outcome(MessageID,_)) :- \+ outcome_available(MessageID), !. % so we do not block the LPS interpreter
+
+% deprecated:
+removeSolvedGoals([], NextGi, NextGi).
+removeSolvedGoals([goal(GId, _, _, _, _, Branch) | GoalTree], AccGi, FinalGi):-
+     (Branch = [[] | _] ->
+        uretractall(tried(GId, _, _)), removeSolvedGoals(GoalTree, AccGi, FinalGi)
+      ; removeSolvedGoals(GoalTree, [goal(GId, _, _, _, _, Branch) | AccGi], FinalGi)).
+
+% process(RulesToProcess, RulesProcessed, FinalRules, GoalsSoFar, FinalGoals).
+%	
+process([], Rs, Rs, NG, NG) :- !.
+
+% Antecedent is []. Add Consequent as new goal/tree.
+process([reactive_rule([], C) | Rs], AccRi, NRi, AccG, NGi):- !, generate_id(GId),
+	process(Rs, AccRi, NRi, [goal(GId, _, _, _, _, [C]) | AccG], NGi ).
+
+% Cannot be resolved now. Leave for later.
+process([reactive_rule([L | Ls], C) | Rs], AccRi, NRi, AccG, NGi):-
+	(L = holds(_, T); L = happens(_,_, T)),
+	ground(T), current_time(Now), T > Now,
+	!,
+	process(Rs, [reactive_rule([L | Ls], C) | AccRi], NRi, AccG, NGi).
+
+% Negation of fluent P at time T = current time. If P holds then drop
+% the reactive rule. If P doesn't hold, then delete not P from the rule.
+% Need similar case for prolog atom.
+process([reactive_rule([L | Ls], C) | Rs], AccRi, NRi, AccG, NGi):-
+	(L = not(holds(P, T)); L = (holds(not(P), T))),!,
+	copy_term( reactive_rule([holds(P, T) |Ls], C), reactive_rule([holds(CP, CT) |CLs], CC) ),
+	current_time(Now),
+	(   query(holds(CP, Now)) -> (T==Now -> process(Rs, AccRi, NRi, AccG, NGi)
+				     ;	 process(Rs, [reactive_rule([L | Ls], C) | AccRi], NRi, AccG, NGi))
+	;   (T==Now ->  process([reactive_rule( CLs, CC) | Rs], AccRi, NRi, AccG, NGi)
+	    ;   (CT = Now, process([reactive_rule( CLs, CC)| Rs], [reactive_rule([L | Ls], C) |AccRi], NRi, AccG, NGi)))) .
+
+% Cannot be resolved now. Too late, no longer relevant.
+process([reactive_rule([L |_],_) | Rs], AccRi, NRi, AccG, NGi):-
+	(L = holds(_, T); L = happens(_,_, T)),
+	ground(T), current_time(Now), T < Now,
+	!,
+	process(Rs, AccRi, NRi, AccG, NGi).
+
+%Cannot be resolved now. Either delete or leave for later cycles.
+% Perhaps this clause can be made into or already is a special case of
+% the next clause. In fact, it might be possible to combine all four
+% clauses into one clause. Desirable?
+process([reactive_rule([L |Ls], C) | Rs], AccRi, NRi, AccG, NGi):-
+%	copy_term([L|Ls], [CL|_]), %copy_term not needed?
+	\+ lpsClause(L, _),
+	!,
+	(mustBeProcessedNow(L) -> process(Rs, AccRi, NRi, AccG, NGi)
+	;  process(Rs, [reactive_rule([L | Ls], C) | AccRi], NRi, AccG, NGi)).
+
+% Can be resolved now.
+process([reactive_rule([L |Ls], C) | Rs], AccRi, NRi, AccG, NGi) :-
+      copy_term(reactive_rule([L |Ls], C) , reactive_rule([CL |CLs], CC)),
+%      lpsClause(CL, Body),
+%	setof(lpsClause(CL, Body), lpsClause(CL, Body), AllClauses),
+%	nl, write(' all clauses that match the head of the reactive rule
+%	'), write(AllClauses), nl, setof(reactive_rule(Resolvent,CC),
+%	(member(lpsClause(CL, Body), AllClauses), append(Body, CLs,
+%	Resolvent)), NewR ),
+	findall(reactive_rule(Resolvent,CC) , 
+	(lpsClause(CL, Body),append(Body, CLs, Resolvent)), NewR ),
+%	nl, write(' all resolvents of the head '),write(L), write(' of
+%	the reactive rule are '),
+%	write(NewR), nl,
+	append(NewR, Rs, NextRs),
+       (mustBeProcessedNow(L)
+%	nl, write(' must be processed now '),write(L),
+            -> process(NextRs, AccRi, NRi, AccG, NGi)
+            ;  process(NextRs,[reactive_rule([L | Ls], C) | AccRi], NRi, AccG, NGi)).
+
+generate_id(New) :-
+	used(Id),New is Id+1, uretract(used(Id)), uassertz(used(New)).
+
+/* resolve_tree.
+% Goals already processed are in reverse of the original order. Original order needs to be recovered.
+% Difference lists could be used instead. Retract all tried actions is a
+% hack, to remove and tried actions not removed by clause 4 of resolve.
+% There should be a more elegant solution.
+%
+% There was a problem here, because removeSolvedGoals also reverses the goal tree
+% and better there than here. Also retracting tried clauses is better done elsewhere.
+resolve_tree([], NewAccG, FinalG) :-
+	reverse(NewAccG, FinalG),nl,
+	write('accumulated goals, and reversed goals:'), nl, write(NewAccG), nl, write(FinalG), nl,
+	uretractall(tried(_GoalId, _Depth, lpsClause(happens(_A,_T,_), []))).
+
+Notice that this assumes that atoms in goal lpsClauses B1 are written in temporal order.
+Otherwise it would be necessary to skip over L but retain L and continue to process Ls.
+This would be tricky.
+
+*/
+
+% resolve_tree(Goal/tree/branches still to be processed, Goals already processed, Final goals)
+% candidate actions happens(e,t, t+1) are asserted in the form happens(e,t, t+1) and,
+% if necessary, deleted on backtracking. Otherwise, they persist.
+%
+resolve_tree([], FinalG, FinalG).
+
+% terminate with message: Exceeded number of steps.
+resolve_tree(_Unfinished, _AccG, end):-
+	steps(N), N < 1, !.
+
+/*
+Alternatively, continue:
+resolve_tree(Unfinished, AccG, NextGoals):-
+	steps(N), N < 1, reverse(AccG, RevAccG), append(Unfinished, RevAccG, NextGoals),
+	nl,write(' Exceeded number of steps. '), nl.
+*/
+
+% An alternative to asserting and retracting depth is simply to compute
+% depth when necessary, or pass as a parameter of resolve.
+resolve_tree([goal(GoalId, _, _, _, _, [ [L|Ls] | Bs]) | Gs], AccG, FinalG) :-
+    steps(N), N > 1,
+	uretractall(current_goal(_)), uassertz(current_goal(GoalId)),
+	uretractall(depth(_)),length([ [L|Ls] | Bs], Depth),
+	uassertz(depth(Depth)),
+     resolve([L|Ls], Result),
+	write_verbose([' Goal is ',L, nl,'. Result/resolvent is ',Result,nl]),
+	(Result = fail -> (backtrack([goal(GoalId,_,_,_,_,[[L|Ls]|Bs])|Gs], NextTree, AccG, NewAccG)
+%	 nl, write(L), write(' fails. Backtracking: next tree '),
+%	 write(NextTree) nl, write('new accumulated tree '),
+%	 write(NewAccG), nl
+	 )
+	; (Result = later -> (continue([goal(GoalId,_,_,_,_,[[L|Ls]|Bs])|Gs], NextTree, AccG, NewAccG)
+%	nl, write('continue next tree '), write(NextTree),
+%	nl, write(' new accumulated tree '), write(NewAccG), nl
+	 )
+	; (advance(Result, [goal(GoalId, _,_, _,_,[ [L|Ls] | Bs]) | Gs], NextTree, AccG, NewAccG)
+%	nl, write('advance next tree '), write(NextTree),
+%	nl, write(' new accumulated tree '), write(NewAccG), nl
+	  ))
+	 
+	 ),
+	resolve_tree(NextTree, NewAccG, FinalG).
+
+% Clause -1. Time is earlier or later than Now: Result = fail or later.
+resolve([L|_], Result) :-
+	(L = holds(_, T); L = happens(_, T, _); L = not(holds(_, T))),
+	ground(T), current_time(Now),
+	(T > Now -> Result = later ; (T < Now -> Result = fail ; fail)),
+	!.
+
+% Clause 0. Negation of fluent P at time T = current time. If P holds
+% then fail. If P doesn't hold, then delete not P from the goal.
+% Need similar case for L the negation of a prolog atom.
+resolve([L | Ls],Result):-
+	(L = not(holds(P, T)); L = (holds(not(P), T))),!,
+	reduce_step, current_time(Now),
+	current_goal(GoalId),
+	depth(Depth),
+	copy_term([holds(P)|Ls],[holds(CP)| CLs]),
+	(tried(GoalId, Depth, not(CP))
+	-> ( uretractall(tried(GoalId, Depth, not(CP))),
+	      ((ground(T), T=<Now) -> Result = fail ; Result = later))
+	   ;(query(holds(CP, Now)) -> (T==Now -> Result = fail ; Result = later)
+	    ;  ( Result = CLs,  uassertz(tried(GoalId, Depth, not(CP))) ) )).
+
+
+%Clause 1. No clause resolves with L.
+resolve([L|_], Result) :-
+%		copy_term([L|Ls], [CL|_]), %copy_term not needed?
+		\+ (L = happens(A, _, _), action_(A)),
+		\+ lpsClause(L, _),
+		reduce_step,
+%		steps(S),
+%		write_verbose([nl,' no clause resolves with ', L,' after
+%		', S, ' steps', nl]),
+		\+ (L = happens(A, _, _), action_(A)),
+		(mustBeResolvedNow(L) -> Result = fail
+		; Result = later).
+
+% Clause 2. Untried clause resolves with L.
+resolve([L|Ls], Result) :-
+	copy_term([L|Ls], [CL|CLs]),
+	\+ (L = happens(A, _, _), action_(A)),
+	lpsClause(CL, Body),
+	reduce_step,
+%	steps(S),
+%	write_verbose([nl, ' Number of steps is ',S, nl]),
+	current_goal(GoalId), depth(Depth),
+	\+ tried(GoalId, Depth, lpsClause(CL, Body)),
+     uassertz(tried(GoalId, Depth, lpsClause(CL, Body))),
+	append(Body, CLs, Result).
+%	write(' -------- tried '), write([GoalId, Depth, lpsClause(CL,
+%	Body)]) , nl.
+
+% Clause 3. Clauses resolve with L, but all have been tried.
+resolve([L|Ls], Result) :-
+	%current_time(Now), Next is Now+1,
+	copy_term([L|Ls], [CL|_]),  %Don't need copy_term?
+	\+ (L = happens(A, _, _), action_(A)), % It seems we need something like this clause also for actions.
+	lpsClause(CL, _),
+	% !,
+	reduce_step,
+%	steps(S),
+%	write_verbose([nl, ' Number of steps is ',S, nl]),
+	current_goal(GoalId), depth(Depth),	!,
+    	findall(lpsClause(CL, Body), lpsClause(CL, Body), AllClauses),
+		%findall(lpsClause(L, Body), lpsClause(L, Body), AllClauses),
+%    write(' All clauses that resolve with '), write(L), write(' are '),
+%    nl, write(AllClauses), nl,
+    	forall(member(Clause, AllClauses), tried(GoalId, Depth, Clause) ),% Problem if this fails?
+%    write(' All clauses that resolve with '), write(L), write(' have
+%    been tried. '), nl,
+	(mustBeResolvedNow(L) -> (Result = fail
+%				 ,
+%	 write('failed all clauses tried  '), write(L), nl
+				 )
+	; (Result = later
+%	 , write('Try again later '), write(L), nl
+	  )
+	).
+
+% Clause 4. L is an action.
+resolve([L|Ls], Result) :-
+	L = happens(A, T, _), action_(A), current_time(Now),
+	copy_term([L|Ls], [CL|CLs]),
+	reduce_step,
+	current_goal(GoalId),
+	depth(Depth),
+%	do_write([nl, 'Trying action  ', L, nl]),
+	(tried(GoalId, Depth, lpsClause(CL, []))
+	-> ( uretractall(tried(GoalId, Depth, lpsClause(CL, []))),
+	   ((ground(T),  T =< Now) ->
+		      Result = fail
+	    ;  true),
+	   (tried(_,_, lpsClause(CL, [])) ->
+	      Result = fail
+	   ; (Result = later, uassertz(tried(GoalId, Depth, lpsClause(CL, []))), uretractall(happens(A,Now,_))  ) )  )
+        ;   (happens(A, Now, _) ->
+	              (	  Result = CLs, uassertz(tried(GoalId, Depth, lpsClause(CL, []))))
+	             ;candidateAction([L | Ls], Result) )).
+
+% candidateAction([CA| _], Result) Result == fail   Result==later...
+candidateAction([L| Ls], Result) :-
+	copy_term([L|Ls], [CL|CLs]),
+	current_time(Now), Next is Now+1,current_goal(GoalId),
+	L = happens(A, T, _), CL = happens(A, Now, Next),
+	depth(Depth),
+	( happens(A, Now, Next)-> true ; uassertz(happens(A, Now, Next))),
+	uassertz(tried(GoalId, Depth, lpsClause(CL, []))),
+%	do_write([nl, 'Trying candidate action ', L, nl]),
+	(( d_pre(Conds), holds_all(Conds,Now,Next)
+%	 , do_write([nl, 'Constraint ',Conds,' failed  ', nl])
+	 )->
+	(uretractall(happens(A, Now, Next)),
+	 (   T == Now -> Result = fail
+	            ;   (	 (member(happens(B,Now,Next), Conds), action_(B), B\=A) ->
+			                     Result = fail; Result = later )	) )
+	;  Result = CLs ).
+
+% must be called after structured date processing!
+mustBeDelayed(holds(_,T_)) :- 
+	expression_to_time(T_,T), ground(T), current_time(Now),  T>Now, !.
+mustBeDelayed(happens(_,T1_,T2_)) :- 
+	expression_to_time(T1_,T1), expression_to_time(T2_,T2), current_time(Now),  (ground(T1),T1>Now;ground(T2),T2>Now+1), !.
+mustBeDelayed(G) :- G=..[Op,_,_], supported_time_comparison(Op), not ground(G), !.
+
+% must be called after structured date processing!
+% mustBeProcessedNow(L) is used when unfolding atoms in antecedents of rules.
+% true if L is extensional fluent or basic event with known time, intensional fluent/composite event or timeless/Prolog
+mustBeProcessedNow(holds(_, T_)) :-
+	expression_to_time(T_,T), ground(T), current_time(Now),  T =< Now, !.
+mustBeProcessedNow(happens(_, _, T_)) :-
+	expression_to_time(T_,T), ground(T), current_time(Now),  T =< Now, !.
+%mustBeProcessedNow(holds(P, _)) :-
+%	intensional(P), \+ fluent_(P),!.
+	% Not necessary if extensional and intentional predicates are disjoint.
+mustBeProcessedNow(happens(A,_,_)) :-
+	macroaction(A), \+ action_(A),  !.
+	% Not necessary if actions and macroactions are disjoint.
+mustBeProcessedNow(P) :- prolog(P).
+
+prolog(P) :- \+ P = happens(_,_,_), \+ P = holds(_,_).
+
+% intensional(Predicate) Predicate without time
+intensional(P) :- functor(P,F,N), functor(Q,F,N), l_int(holds(Q, _), _), !.
+
+% TODO: this should use compound_name_arity(X,F,N) to deal with e.g. newbelief(), or with (slower) A=..L, ...
+macroaction(A):- functor(A,F,N), functor(Q,F,N), l_events(happens(Q, _,_), _), !.
+
+% deprecated:
+%mustBeResolvedNow is used when unfolding atoms in goal clauses.
+%
+mustBeResolvedNow(happens(_, T, _)) :- ground(T), current_time(Now), T =< Now, !.
+
+mustBeResolvedNow(holds(_, T)) :-  ground(T), current_time(Now), T =< Now, !.
+
+mustBeResolvedNow(P) :-	\+ P = happens(_, _, _), \+ P = holds(_,_).
+
+	/*
+mustBeResolvedNow(happens(X, T, _)) :-
+	action_(X), ground(T), current_time(Now), T == Now, !.
+mustBeResolvedNow(P) :- mustBeProcessedNow(P),
+	\+ (P = happens(_, _, T),ground(T), current_time(Now), T =< Now).
+
+*/
+
+% Top-level goal lpsClause B1 failed. Backtrack to LastB. Save B1 to retry later.
+%
+backtrack([goal(GoalId, _,_, _,_,[ B1]) | Gs], [NextBranch, goal(GoalId, _,_,_, _, [B1]) | Gs],
+	  [LastBranch | PreviousBs], PreviousBs):-
+	LastBranch = goal(GId, _,_, _,_,[LastLeaf | LastBs] ),
+	length(LastBs, Depth),
+	uretract(current_goal(_)), uassertz(current_goal(GId)),
+	uretract(depth(_)),
+	uretractall(tried(GoalId, _, _)),
+	(LastLeaf = []
+	->  (NextBranch = goal(GId, _,_,_,_,LastBs), uassertz(depth(Depth) ))
+	; (NextBranch = LastBranch, D is Depth+1, uassertz(depth(D)))).
+
+% Pop up one level.
+%
+backtrack([goal(GoalId,_,_,_,_,[_B1|Bs])|Gs], NextTree, AccG, NewAccG):-
+	Bs \= [],
+	depth(Depth), NewDepth is Depth - 1,
+	uretractall(depth(_)), uassertz(depth(NewDepth)),
+	uretractall(tried(GoalId, Depth, _)),
+	NextTree = [goal(GoalId,_,_,_, _,Bs)|Gs],
+	NewAccG = AccG.
+
+
+advance([], [goal(GoalId,_,_,_,_, [B1|Bs]) | Gs] , NextTree, AccG, NewAccG):-
+	!, NextTree = Gs,
+%	nl,write(' Next tree is  '), write(NextTree),nl,
+	NewAccG = [goal(GoalId,_,_,_,_,[[], B1 | Bs])| AccG],
+	(Gs = [] -> true ;(Gs =	[goal(GId,_, _,_,_,NextBranch) | _] ,
+	uretract(depth(_)), length(NextBranch,D), uassertz(depth(D)),
+	uretract(current_goal(_)), uassertz(current_goal(GId)))).
+
+advance(Resolvent, [goal(GoalId, _,_,_,_,[B1|Bs]) | Gs] , NextTree, AccG, NewAccG):-
+	\+ Resolvent = [],
+	NextTree = [goal(GoalId, _,_,_,_,[Resolvent, B1 | Bs]) | Gs], NewAccG = AccG,
+	depth(Depth), NewDepth is Depth +1, uretract(depth(Depth)),
+	uassertz(depth(NewDepth)).
+
+% Similar to advance with [].
+continue([goal(GoalId, _,_,_,_,[B1|Bs]) | Gs], NextTree,  AccG, NewAccG):-
+	NextTree = Gs,
+	uretractall(current_goal(_)), depth(Depth),
+	uretractall(depth(_)),
+	uretractall(tried(GoalId, Depth, _)),
+%	nl,write(' Next tree is  '), write(NextTree),nl,
+	NewAccG = [goal(GoalId, _,_,_,_,[B1 | Bs] ) | AccG],
+	(Gs = [] -> true ;(Gs =	[goal(GId, _,_,_,_,NextBranch) | _] ,
+	length(NextBranch,D), uassertz(depth(D)),
+	uassertz(current_goal(GId)))).
+
+
+% From Wei's interpreter:
+%
+% % next_time().  Succeeds to the next time point. Destructively updates current_time/1
+next_time :-
+    uretract(current_time(This)), !,
+    Next is This + 1,
+    uassertz(current_time(Next)),
+    (option(dc) -> true ; 
+    	% dc uses a time limit instead. 
+    	% if we need this capability later... reactivate this; beware that SWI's statistics(inferences,...) is global, not thread local
+	uretractall(steps(_)),
+	uassertz(steps(1000))
+	).
+
+reduce_step() :-
+    steps(C),
+    NC is C-1,
+    uretractall(steps(C)),
+    uassertz(steps(NC)).
+
+% holds_all(+PL). True if all predicates in PL hold in the augmented
+% state {S*_i, ev*_i, L_int, L_timeless}.
+holds_all(PL) :- evaluate(PL).
+
+% same but first binding time variables; notice that d_pre conditions have time variables already bound into a single interval
+% cf. psyntax:syntax2p_sequence
+holds_all(PL,Current,Next) :- 
+	% cf. classify_precondition/2
+	(member(happens(_,Current,Next),PL) -> true ; once(member(holds(_,Next),PL))),
+	holds_all(PL).
+
+% query(+P). True if P holds in the augmented state {S*_i, ev*_i, L_int,
+% L_timeless}.
+%
+
+query(L) :- option(dc), !, dc_query(L).
+
+% deprecated:
+query(holds(not(P), Now)) :-
+%    current_time(Now),  % Needs looking at more closely.
+    \+ l_int(holds(P, Now), _),
+    \+ state(P).
+query(holds(P, Now)) :-
+%    current_time(Now),  % Needs looking at more closely.
+    \+ l_int(holds(P, Now), _),
+    state(P).
+
+query(happens(P, X, Y)) :-
+    happens(P, X, Y).
+
+/*
+query(happens(P, Prev, Now)) :-
+    current_time(Now), % Needs looking at more closely.
+    succ_t(Prev, Now),
+    happens(P, Prev, Now).
+*/
+
+query(holds(not(P), Now)) :-
+%    current_time(Now), % Needs looking at more closely.
+    l_int(holds(P, Now), B),
+    \+ holds_all(B).
+query(holds(P, Now)) :-
+ %   current_time(Now), % Needs looking at more closely.
+    l_int(holds(P, Now), B),
+    holds_all(B).
+
+query(P) :-  
+	P \= holds(_, _), P \= happens(_,_, _),
+	% (l_timeless(P, B)-> evaluate(B); call(P)).
+    	(\+ l_timeless(P, _B) -> callprolog(P) ; l_timeless(P, B), evaluate(B)).
+
+%evaluate(X) :- write_verbose(evaluate(X)), fail. % for debugging
+evaluate([]).
+evaluate([P|Rest]) :- !, query(P), evaluate(Rest).
+evaluate((P,Rest)) :- query(P), evaluate(Rest).
+
+
+% fluent_pred(+Fl)
+%   True if Fl is a fluent predicate symbol.
+%
+fluent_pred(Fl) :-
+    % Extensional predicates, represent facts in the state S_i.
+    fluent_(Fl).
+fluent_pred(not(Fl)) :-
+    fluent_(Fl).
+fluent_pred(findall(_X,G,_L)) :- check_lp_int(G, _Pos, _Vars,[]).
+fluent_pred(Fl) :-
+    % Intensional predicates, defined in L_int.
+    functor(Fl,F,N), functor(Fll,F,N),
+    l_int(holds(Fll, _), _).
+fluent_pred(not(Fl)) :-
+    l_int(holds(Fl, _), _).
+
+
+% event_pred(+Ev)
+%   True if Ev is an event predicate symbol.
+%
+event_pred(Ev) :-
+    % Simple event predicates, internally generated actions.
+    action_(Ev) ; event_(Ev).
+event_pred(Ev) :-
+    % Composite event predicates, defined in L_events.
+    macroaction(Ev).
+
+% temp_constraint(+Term)
+%   True if Term is an atomic temporal constraint formula.
+%
+temp_constraint(<(_,_)).
+temp_constraint(=<(_,_)).
+
+% reactive_conjunct(+Conj)
+%   True if Conj is a valid conjunct in the antecedent or consequent of a
+%   reactive rule.
+%
+reactive_conjunct(true) :- !.
+reactive_conjunct(holds(P, _)) :- !,
+    functor(P,F,N), functor(PP,F,N),
+    fluent_pred(PP).
+reactive_conjunct(happens(E, _, _)) :- !,
+    event_pred(E).
+reactive_conjunct(X) :-
+    l_timeless(X, _), !.
+reactive_conjunct(tc(T)) :- !, % TODO: relax or revise
+    temp_constraint(T).
+reactive_conjunct(X) :- u_user_predicate(X).
+
+
+% l_int_body(+P)
+%
+l_int_body(holds(Fl,_)) :- var(Fl), !.
+l_int_body(holds(findall(_T,G,_L), _)) :- !,
+    l_int_body(G).
+l_int_body(holds(P, _)) :- !,
+    functor(P,F,N), functor(PP,F,N),
+    fluent_pred(PP).
+l_int_body(P) :-
+    functor(P,F,N), functor(PP,F,N),
+    l_timeless(PP, _), !.
+l_int_body(P) :- u_user_predicate(P).
+
+% l_events_body(+P)
+%
+l_events_body(holds(P, _)) :- var(P), !.
+l_events_body(holds(P, _)) :- !,
+    functor(P,F,N), functor(PP,F,N),
+    fluent_pred(PP).
+l_events_body(happens(P, _, _)) :- var(P), !.
+l_events_body(happens(P, _, _)) :- !,
+    functor(P,F,N), functor(PP,F,N),
+    event_pred(PP).
+l_events_body(tc(P)) :-
+    temp_constraint(P).
+l_events_body(P) :-
+    functor(P,F,N), functor(PP,F,N),
+    l_timeless(PP, _), !.
+l_events_body(P) :- u_user_predicate(P).
+
+% d_head(+H) domain constraint / post condition fluent
+%
+d_head(H) :- system_fluent(H), !, fail.
+d_head(H) :- external_predicate_for_lps(H), !, fail.
+d_head(H) :- fluent_(H).
+
+% d_event(+H)
+%
+d_event(H) :- action_(H).
+d_event(H) :- event_(H).
+
+% d_body(+B)
+%
+d_body(happens(B, _, _)) :- !,
+    d_event(B).
+d_body(holds(not(B), _)) :- !,
+	(is_list(B) -> check_d(B, negated_sequence, _Pos, _Vars, []) ; fluent_pred(B)).
+d_body(holds(B, _)) :- !,
+    fluent_pred(B).
+d_body(B) :-
+    functor(B,F,N), functor(BB,F,N),
+    l_timeless(BB, _), !.
+d_body(B) :- u_user_predicate(B).
+
+% Although this predicate is "generic", it works with SWI-only predicates, see resolveUntilAction etc. above
+% dc_process(RulesToProcess, RulesProcessed, FinalRules, GoalsSoFar, FinalGoals) 
+%  called as dc_process(Ri, [], NRi, [], NewGi)
+% alternative implementation of process/5 using delimited continuations (http://www.swi-prolog.org/pldoc/man?section=delcont)
+% Goals are represented as goal(...,G); see comments in dc_resolve_goals/2
+% In addition to reactive_rule(Antecedent,Consequent) terms, the rules lists may contain 
+% composite_event(CE_goal,happens(CE,Start,End)), to constantly compute some "interesting" composite events;
+% for these the goals lists will contain event(happens(CE,Start,End)) terms
+% dc_process([First|_],_,_,_,_) :- current_time(T), writeln(dc_process/T/First), fail. % for debugging
+dc_process([], Rs, Rs, NG, NG) :- !.
+
+% Antecedent is []. Add Consequent as new goal/tree.
+dc_process([reactive_rule([], C) | Rs], AccRi, NRi, AccG, NGi):- !, 
+	goal_ID_inc(ID),
+	dc_process(Rs, AccRi, NRi, [goal(ID,non_discardable,_,[],[],[DiscardChildren], (C,DiscardChildren=yes)) | AccG], NGi ).
+
+dc_process([composite_event([], happens(CE,Start,End)) | Rs], AccRi, NRi, AccG, NGi):- !, 
+	current_time(T),
+	(T=End->
+		dc_process(Rs, AccRi, NRi, [event(happens(CE,Start,End)) | AccG], NGi )
+		;
+		(ground(End),End<T) -> % too late to solve, no longer relevant
+			dc_process(Rs, AccRi, NRi, AccG, NGi)
+		% ; throw(inconsistent_ce_time-happens(CE,Start,End)/T)
+		; (ground(End), End>T) ->
+			dc_process(Rs, [composite_event([], happens(CE,Start,End))|AccRi], NRi, AccG, NGi)
+		; throw(inconsistent_ce_time-happens(CE,Start,End)/T)
+	).
+% Too late to solve, no longer relevant.
+dc_process([Rule | Rs], AccRi, NRi, AccG, NGi):-
+	% Rule=..[_,[L |_],_],
+	Rule=..[_,A,_],
+	current_time(Now), Next is Now+1,
+	member(L,A),
+	(
+		L = holds(_, T_), expression_to_time(T_,T), ground(T), T<Now
+		; 
+		L = happens(_,T1_, T2_), expression_to_time(T1_,T1), expression_to_time(T2_,T2), (ground(T1),T1<Now-1;ground(T2),T2<Next-1)
+	),
+	!,
+	dc_process(Rs, AccRi, NRi, AccG, NGi).
+
+dc_process([Rule | Rs], AccRi, NRi, AccG, NGi):- 
+	Rule=..[F,[E | Ls], C],
+	real_time_literal(E,TransformedE),
+	!,
+	append(TransformedE,Ls,Antecedent),
+	NewRule=..[F,Antecedent,C],
+	dc_process([NewRule | Rs], AccRi, NRi, AccG, NGi).
+dc_process([Rule | Rs], AccRi, NRi, AccG, NGi):-
+	Rule=..[_,[L|_],_],
+	mustBeDelayed(L),
+	!,
+	dc_process(Rs, [Rule |AccRi], NRi, AccG, NGi).
+dc_process([R|Rs],AccRi, NRi, AccG, NGi) :- member_chk_variant(R,AccRi), !, dc_process(Rs,AccRi, NRi, AccG, NGi).
+dc_process([Rule | Rs], AccRi, NRi, AccG, NGi):- 
+	Rule=..[F,[E | Ls], C],
+	( mustBeProcessedNow(E) -> ItMust=true; ItMust=false),
+	findall( RR, 
+		( lpsClause(E,Body), append(Body,Ls,Antecedent ), RR=..[F,Antecedent,C] ),
+		NewRules),
+	% writeln(E/newRules-NewRules),
+	(NewRules==[] -> % rule antecedent fails, discard it or postpone it:
+		( ItMust==true -> dc_process(Rs,AccRi, NRi, AccG, NGi) ; dc_process(Rs,[Rule|AccRi], NRi, AccG, NGi))
+		; % else, consider all new rules instead of the given one:
+		append(NewRules,Rs,RulesToProcess), 
+		(ItMust==true  -> dc_process(RulesToProcess,AccRi, NRi, AccG, NGi) ; dc_process(RulesToProcess,[Rule|AccRi], NRi, AccG, NGi)	)
+	).
+%dc_process([R|Rs],AccRi,NRi,AccG, NGi) :- dc_process(Rs,[R|AccRi],NRi,AccG, NGi).
+
+% split_goals_and_events(+NewGoalsAndEvents,-Goals,-CompositeEvents)
+split_goals_and_events([event(E)|GE],Goals,[E|Events]) :- !, split_goals_and_events(GE,Goals,Events).
+split_goals_and_events([G|GE],[G|Goals],Events) :- !, split_goals_and_events(GE,Goals,Events).
+split_goals_and_events([],[],[]).
+
+% lpsClause(+Head, Body) This has some overlap with query/1... TODO: this should be refactored
+lpsClause(happens(X, Y, Z), Body) :-  l_events(happens(X, Y, Z), Body).
+lpsClause(happens(X, T1_, T2_), Body) :- !, 
+	expression_to_time(T1_,T1), expression_to_time(T2_,T2), Body=[],
+	check_time_expression(T2), T1 is T2-1, % events vs fluents...
+	((nonvar(X),X=not(E)) -> \+ happens(E,T1,T2); happens(X, T1, T2)). 
+lpsClause(holds(H,T),Body) :- nonvar(H), H=not(X), !, check_time_expression(T), (is_list(X) -> Xs=X ; Xs=[holds(X,T)]), \+ evaluate(Xs), Body=[].
+lpsClause(holds(H,T),Body) :- nonvar(H), H=findall(X,G,L), !, check_time_expression(T), findall(X,evaluate(G),L), Body=[].
+lpsClause(holds(P,T),[]) :- nonvar(P), external_predicate_for_lps(P), !, check_time_expression(T), callprolog(P).
+lpsClause(holds(X, T), Body) :-  nonvar(X), l_int(holds(X, T), Body), may_bind_time(T,Body) .
+lpsClause(holds(X, T), Body) :- !, check_time_expression(T), state(X), Body=[].
+lpsClause(tc(P), []) :- !, callprolog(P).
+lpsClause(G,Body) :- mixed_time_comparison(G,NewG), !, lpsClause(NewG,Body).
+lpsClause(P, []) :- \+l_timeless(P,_), !, callprolog(P).
+lpsClause(Head, Body) :-  l_timeless(Head, Body).
+
+% Slightly different version of query for 'dc' option, separated to make sure it doesn't break the other variant of the interpreter
+% HACK ALERT: there's a messy overlap between current and next state in updateNextStateFluents, and get_real_now below
+% To be called after structured datetimes (../../..) have been handled
+% dc_query(X) :- write_verbose(dc_query(X)), fail. % for debugging
+dc_query(holds(Fl, Now)) :- nonvar(Fl), Fl=not(Ps), is_list(Ps), !, 
+	% we want to allow var fluents, for meta hacking
+	check_time_expression(Now), % this seems too strict for accessing the next_state during d_pre checks...
+	\+  holds_all(Ps).
+dc_query(holds(Fl, Now)) :- nonvar(Fl), Fl=not(P), !, \+ dc_query(holds(P,Now)).
+dc_query(holds(P, T)) :- 
+	get_real_now(RealNow),
+	ground(T), T<RealNow, !, throw(fluent_out_of_temporal_order(RealNow,holds(P, T))). % fail. 
+dc_query(holds(P,T)) :- P\= findall(_,_,_), external_predicate_for_lps(P), !, 
+	check_time_expression(T), 
+	callprolog(P).
+dc_query(holds(P, T)) :- 
+	\+ (nonvar(P), l_int(holds(P, _), _)),
+	get_real_now(RealNow), Next is RealNow+1,
+	% ( nonvar(T), T\== RealNow, throw(bad_dc_query(holds(P, T),Now,RealNow)) ; true),
+	dc_query_evaluate(P,T,RealNow,Next).
+dc_query(holds(P, T)) :- !, nonvar(P), % otherwise we could get into an infinite recursion
+	l_int(holds(P, T), B), 
+	/*
+	(a_literal(B,holds(_,_)) -> true ; % otherwise we need to bind time:
+		get_real_now(RealNow), Next is RealNow+1,
+		( option(non_prospective) -> T=RealNow ;
+			% let no choicepoints behind if we can:
+			( T==RealNow -> true  ; (T=RealNow ; T=Next) )
+		)
+	),
+	Doing it instead in resolveUntilAction */
+	holds_all(B).
+% can't do, would require keeping past events and fluent states: dc_query(happens(P, X, Y)) :- l_events(happens(P, X, Y),B), holds_all(B).
+dc_query(happens(P, X, Y)) :- !, happens(P, X, Y).
+dc_query(P) :-
+    	(\+ l_timeless(P, _B) -> callprolog(P) ; l_timeless(P, B), evaluate(B)).
+
+get_real_now(RealNow) :- 
+	current_time(Now),
+	( lps_updating_current_state -> RealNow is Now-1 ; RealNow=Now).
+
+% dc_query_evaluate(+Literal,?T,+RealNow,+Next)
+dc_query_evaluate(P,T_,RealNow,Next) :-
+	(ground(T_)->T is T_; is_time_expression(T) -> throw(unbound_time_expression(holds(P,T_))) ; T=T_),
+	dc_query_evaluate_(P,T,RealNow,Next).
+
+% Time expressions already evaluated:
+dc_query_evaluate_(P,_T,_RealNow,_Next) :- nonvar(P), P=findall(X,G,L), !, 
+	% Well formed programs (such as generated by psyntax) have _T bound to all fluents in G, so it will be checked later
+	findall(X,evaluate(G),L).
+dc_query_evaluate_(P,T,RealNow,Next) :-
+	( option(non_prospective) -> T=RealNow, state(P) ;
+		% let no choicepoints behind if we can:
+		( T==RealNow -> state(P)  ; (T=RealNow, state(P) ; T=Next, next_state(P)) )
+	).
+
+% Used to bind time on matching intensional fluent clauses in antecedents
+may_bind_time(_Time,Body) :- a_literal(Body,holds(_,_)), !.
+may_bind_time(T_,_) :- current_time(T), (ground(T_)-> T_ =:= T ; T=T_).
+
+check_time_expression(T) :- 
+	get_real_now(Now), (ground(T)-> T=:=Now ; T=Now).
+		
+member_chk_variant(X,[XX|_]) :- variant(X,XX), !.
+member_chk_variant(X,[_|L]) :- member_chk_variant(X,L).
+
+% abstract_numbers(+Term,-AbstractTerm)
+abstract_numbers(V,V) :- var(V), !.
+abstract_numbers(X,n) :- number(X), !.
+abstract_numbers(X,X) :- atomic(X), !.
+abstract_numbers([X|L],[AX|AL]) :- !, abstract_numbers(X,AX), abstract_numbers(L,AL).
+abstract_numbers(X,AX) :- X=..[F|Args], abstract_numbers(Args,AArgs), AX=..[F|AArgs].

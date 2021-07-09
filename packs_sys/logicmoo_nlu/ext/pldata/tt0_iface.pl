@@ -2,8 +2,8 @@
 
 
 
-% :- reexport(ac_xnl_iface).
-% :- reexport(clex_iface).
+% :- re export(ac_xnl_iface).
+% :- re export(clex_iface).
 
 prim_acts(Z):- ttholds(_,Y,primitive_action_tt),(ttholds(_,Z,Y)*->true; Z=Y).
 %prim_acts(Z):- ttholds(_,Y,primitive_action_tt),(ttholds(_,Z,Y)*->true; Z=Y).

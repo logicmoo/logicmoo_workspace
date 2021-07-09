@@ -1,0 +1,22 @@
+{
+    "name": "nao-pon/elfinder-flysystem-driver-ext",
+    "description": "A Flysystem Driver for elFinder extended version",
+    "license": "MIT",
+    "keywords": ["elfinder", "flysystem", "filesystem"],
+    "authors": [
+        {
+            "name": "Naoki Sawada",
+            "email": "hypweb@gmail.com"
+        }
+    ],
+    "require": {
+        "php": ">=5.4",
+        "barryvdh/elfinder-flysystem-driver": "^0.1.5|^0.2"
+    },
+    "autoload": {
+         "classmap": ["elFinderVolumeFlysystemExt.php"],
+         "psr-4": {
+            "Hypweb\\elFinderFlysystemDriverExt\\": "src/"
+        }
+    }
+}

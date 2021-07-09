@@ -1,0 +1,67 @@
+:- table a/0.
+:- table b/0.
+
+justify_pred(a).
+justify_pred(b).
+
+a:- b.
+b:- a.
+
+
+justify_pred(p).
+justify_pred(q).
+
+:- table p/0.
+:- table q/0.
+
+p:- tnot(q).
+q:- tnot(p).
+
+% abnormal -> abby_normal to avoid spurious output for testsuite.
+justify_pred(dies(_,_,_,_)).
+justify_pred(occurs(_,_,_)).
+justify_pred(river(_)).
+justify_pred(abby_normal(_)).
+justify_pred(fishPopulationOf(_,_,_,_)).
+
+%:- table dies/4.
+dies(S1,River,F,Y) :-
+        number(S1),
+        S is S1-1,
+        S > 0,
+        occurs(S,toxicDischarge,River),
+        fishPopulationOf(S,River,F,Y).
+
+river('Squamish').
+
+fishPopulationOf(1,'Squamish',trout,400).
+
+:- table abby_normal/1.
+abby_normal(foo).
+
+occurs(1,toxicDischarge,'Squamish'):- 
+        river(River),
+         tnot(abby_normal(River)).
+
+
+%:- export dies/4.
+%:- multifile(justify_pred/1).
+
+justify_pred(reach(_,_)).
+justify_pred(edge(_,_)).
+
+jp(reach(X,Y)).
+
+:- table reach/2.
+reach(X,Y):- reach(X,Z),edge(Z,Y).
+reach(X,Y):- edge(X,Y).
+
+edge(1,2).
+edge(2,2).
+edge(2,3).
+
+end_of_file.
+
+%:- table occurs/3.
+%occurs(1,toxicDischarge,'Squamish'):- tnot(occurs(1,toxicDischarge,'Squamish')).
+

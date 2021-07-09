@@ -19,8 +19,15 @@
 		verbalize_trace/2   % +Trace, -VerbTrace
 	]).
 
+
+:- prolog_load_context(directory,This),   
+   absolute_file_name(This,Dir,[file_type(directory)]),
+   asserta(user:file_search_path(ace_rules, Dir)).
 :- [parameters].
-:- parameter(ape_location, APELocation), assert(user:file_search_path(ape, APELocation)).
+:- parameter(ape_location, APELocation), 
+   absolute_file_name(APELocation,APELocationABS,[file_type(directory)]),
+   asserta(user:file_search_path(ape, APELocationABS)).
+
 
 :- use_module(logger).
 :- use_module(utils).

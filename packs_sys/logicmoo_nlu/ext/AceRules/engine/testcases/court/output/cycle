@@ -1,5 +1,1 @@
-ERROR: Invalid ACE text:
-The word "trustworthy" is unknown.
-The word "trustworthy" is unknown.
-"If someone X is a criminal then X is not trustworthy <>.": This is the first sentence that was not ACE. The sign <> indicates the position where parsing failed.
-
+ERROR: The program contains cycles.

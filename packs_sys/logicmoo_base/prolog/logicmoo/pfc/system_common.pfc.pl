@@ -1,8 +1,8 @@
 %:- module(system_common,[]).
 %:- set_module(class(development)).
 :- '$set_source_module'(baseKB).
-:- use_module(library(pfc)).
-
+%:- use_module(library(pfc)).
+:- expects_dialect(pfc).
 
 /** <module> system_common
 % =============================================
@@ -176,14 +176,15 @@ ttExpressionType(C)==> \+ completelyAssertedCollection(C).
 rtArgsVerbatum(onSpawn).
 
 onSpawn(When==>State)/nonvar(State) ==> ( When ==> onSpawn(State)).
-onSpawn(State)/mpred_literal(State) ==> {doSpawn(State)}.
+onSpawn(State)/mpred_literal(State) ==> {addSpawn(State)}.
 
 
 %:-ain(((ttModuleType(ModType),isa(Thing,ModType),isLoaded(Thing), \+ ttExpressionType(ModType) ==> isLoadedType(ModType)))).
 %==>(((onSpawn(Idea)==> ((isLoadedType(tSourceData),isRuntime) ==> {ain_expanded(Idea,())})))).
 
-onStart(Idea)/definitional(Idea) ==> Idea.
+onAlways(Idea)==>Idea.
 
+onStart(Idea)/definitional(Idea) ==> onAlways(Idea).
 ((onStart(Idea)/ ( \+ definitional(Idea))) ==> 
   (isRuntime ==> {get_startup_uu(UU),ain_expanded(Idea,UU)})).
 
@@ -740,6 +741,7 @@ arity(typeProps,2).
 % :- ain_expanded(==>(isa(isEach(prologMultiValued,prologOrdered,prologNegByFailure,meta_argtypes,prologPTTP,prologHybrid,predCanHaveSingletons,prologDynamic,prologBuiltin,functorIsMacro,prologListValued,prologSingleValued),functorDeclares))).
 % ==>(genls(isEach(prologMultiValued,prologOrdered,prologNegByFailure,prologHybrid,prologPTTP,prologDynamic,prologBuiltin,prologKIF,functorIsMacro,prologListValued,prologSingleValued),tPred)).
 :- assert_hasInstance(tCol,tCol).
+:- expects_dialect(pfc).
 :- file_begin(pfc).
 
  

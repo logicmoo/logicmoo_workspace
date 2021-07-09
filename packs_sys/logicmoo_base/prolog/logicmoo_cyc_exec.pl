@@ -53,7 +53,7 @@ checkCycAvailablity:- catchv((current_predicate(invokeSubL/2),ignore((invokeSubL
 
 
 
-:- use_module(library(jpl)).
+%:- use_module(library(jpl)).
 
 
 cyc_exec(X):-cyc_exec(X,_).

@@ -1,4 +1,6 @@
 
+:- '$set_source_module'(mu).
+
 % @TODO
 parse_kind(Type, String, Logic):- trace_or_throw(parse_kind(Type, String, Logic)).
 

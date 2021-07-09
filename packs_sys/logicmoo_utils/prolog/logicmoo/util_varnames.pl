@@ -207,7 +207,7 @@
 :- use_module(library(debug)).
 :- use_module(library(occurs)).
 :- use_module(library(check)).
-:- use_module(library(edinburgh)).
+%:- use_module(library(edinburgh)).
 :- use_module(library(debug)).
 :- use_module(library(prolog_stack)).
 :- use_module(library(make)).
@@ -219,7 +219,7 @@
 :- use_module(library(readutil)).
 :- abolish(system:time/1).
 :- use_module(library(statistics)).
-:- use_module(library(codesio)).
+%:- use_module(library(codesio)).
 :- use_module(library(charsio)).
 :- use_module(library(ssl)).
 :- use_module(library(prolog_codewalk)).
@@ -252,13 +252,6 @@ name_variable(_, _).
 :- nodebug(logicmoo(varnames)).
 
 
-
-%%	variable_name(+Var, -Name) is semidet.
-%
-%	True if Var has been assigned Name.
-
-variable_name(Var, Name) :- must(var(Var)),(get_attr(Var, vn, Name);var_property(Var,name(Name));get_attr(Var, varnames, Name)),!.
-
 variable_name_or_ref(Var, Name) :- get_var_name(Var, Name),!.
 variable_name_or_ref(Var, Name) :- format(atom(Name),'~q',[Var]).
 
@@ -278,7 +271,39 @@ vn:project_attributes(QueryVars, ResidualVars):- fail,dmsg(vn:proj_attrs(vn,Quer
 %
 vn:attribute_goals(Var) --> {get_var_name(Var,  Name)},!,[name_variable(Var,  Name)],!.
 
-get_var_name(V,N):-quietly(get_var_name0(V,N)),!.
+numbervars_using_vs(T,TT,Vs):- numbervars_using_vs_(Vs,T,TT).
+
+numbervars_using_vs_(Vs,T,TT):- var(T),get_var_name(T,VN,Vs),TT='$VAR'(VN),!.
+numbervars_using_vs_(_Vs,T,TT):- (ground(T); \+ compound(T)),!,TT=T.
+numbervars_using_vs_(Vs,T,TT):- compound_name_arguments(T,F,A),maplist(numbervars_using_vs_(Vs),A,AA),compound_name_arguments(TT,F,AA),!.
+
+get_var_name(T,VN,Vs):- member(N=V,Vs),V==T,!,VN=N.
+get_var_name(T,VN,_Vs):- get_var_name(T,VN),!.
+get_var_name(T,VN,_Vs):- term_to_atom(T,VN).
+
+
+
+
+grab_vn_varnames(Msg,Vs2):- term_attvars(Msg,AttVars),
+  %append(AttVars,Vars,AllVars),
+  sort(AttVars,AllVarS),
+  grab_each_vn_varname(AllVarS,Vs2).
+grab_each_vn_varname([],[]):-!.
+grab_each_vn_varname([AttV|AttVS],Vs2):-
+    grab_each_vn_varname(AttVS,VsMid),!,
+     (get_attr(AttV, vn, Name) -> Vs2 = [Name=AttV|VsMid] ; VsMid=       Vs2),!.
+
+
+get_var_name_or_fake(T,VN):- get_var_name(T,VN),!.
+get_var_name_or_fake(T,VN):- term_to_atom(T,VN).
+
+get_var_name(V,N):- notrace(get_var_name0(V,N)),!.
+:- export(get_var_name/2).
+%%	variable_name(+Var, -Name) is semidet.
+%
+%	True if Var has been assigned Name.
+
+variable_name(Var, Name) :- must(var(Var)),(get_attr(Var, vn, Name);var_property(Var,name(Name));get_attr(Var, varnames, Name)),!.
 
 get_var_name0(Var,Name):- nonvar(Name),!,must(get_var_name0(Var, NameO)),!,Name=NameO.
 get_var_name0(Var,Name):- nonvar(Var),!,get_var_name1(Var,Name),!.
@@ -288,22 +313,62 @@ get_var_name0(Var,Name):- nb_current('$variable_names', Vs),varname_of(Vs,Var,Na
 get_var_name0(Var,Name):- get_attr(Var, varnames, Name),!.
 get_var_name0(Var,Name):- nb_current('$old_variable_names', Vs),varname_of(Vs,Var,Name),!.
 get_var_name0(Var,Name):- get_varname_list(Vs),varname_of(Vs,Var,Name),!.
+get_var_name0(Var,Name):- notrace(catch(parent_goal('$toplevel':'$execute_goal2'(_, Vs),_),_,fail)),varname_of(Vs,Var,Name).
+
 % get_var_name0(Var,Name):- attvar(Var),get_varname_list(Vs),format(atom(Name),'~W',[Var, [variable_names(Vs)]]).
 
-varname_of(Vs,Var,Name):- member(NV,Vs), (compound(NV) -> (NV=(N=V),atomic(N), V==Var,!,N=Name) ; (!,fail)).
+varname_of(Vs,Var,Name):- compound(Vs), Vs=[NV|VsL],  ((compound(NV) , (NV=(N=V)),atomic(N), V==Var,!,N=Name) ; varname_of(VsL,Var,Name)).
 
 get_var_name1('$VAR'(Name),Name):- atom(Name),!.
 get_var_name1('$VAR'(Int),Name):- integer(Int),format(atom(A),"~w",['$VAR'(Int)]),!,A=Name.
 get_var_name1('$VAR'(Var),Name):- (var(Var)->get_var_name0(Var,Name);Name=Var),!.
 get_var_name1('$VAR'(Att3),Name):- !, get_var_name1(Att3,Name).
-get_var_name1('avar'(Att3),Name):- !, get_var_name1(Att3,Name).
-get_var_name1('avar'(Name,Att3),Value):- !, get_var_name1('$VAR'(Name),Value); get_var_name1('avar'(Att3),Value).
+get_var_name1('aVar'(Att3),Name):- !, get_var_name1(Att3,Name).
+get_var_name1('aVar'(Name,Att3),Value):- !, get_var_name1('$VAR'(Name),Value); get_var_name1('aVar'(Att3),Value).
 get_var_name1(att(vn,Name,_),Name):- !.
 get_var_name1(att(_,_,Rest),Name):- Rest\==[],get_var_name1(Rest,Name).
 get_var_name1(Var,Name):- get_attr(Var, vn, Name),!. % ground(Name),!.
 get_var_name1(Var,Name):- catch(call(call,oo_get_attr(Var, vn, Name)),_,fail),!. % ground(Name),!.
 get_var_name1(Var,Name):- nb_current('$variable_names', Vs),varname_of(Vs,Var,Name),!.
 
+
+term_varnames(Msg,Vs,Unnamed):- 
+  term_attvars(Msg,AttVars),term_variables(Msg,Vars),
+  append(AttVars,Vars,AllVars),
+  sort(AllVars,AllVarsS),
+  grab_each_varname(AllVarsS,Vs,Unnamed).
+grab_each_varname([],[],[]):-!.
+grab_each_varname([AttV|AttVS],[Name=AttV|Vs],Unnamed):- 
+   get_var_name(AttV, Name),!,
+   grab_each_varname(AttVS,Vs,Unnamed).
+grab_each_varname([AttV|AttVS],Vs,[AttV|Unnamed]):- 
+   grab_each_varname(AttVS,Vs,Unnamed).
+
+
+
+get_var_by_name(N,V):- nb_current('$variable_names',Vs), member_open(NV, Vs), NV=(N=V).
+get_var_by_name(N,V):- nb_current('$old_variable_names',Vs), member_open(NV, Vs), NV=(N=V).
+
+%% member_open( ?ARG1, :TermARG2) is det.
+%
+% Member Open.
+%
+member_open(C, [B|A]) :-  (nonvar(B),B=C) ; (nonvar(A),member_open(C, A)).
+
+%= 	 	 
+
+%% source_variables_lwv( ?AllS) is det.
+%
+% Source Variables Lwv.
+%
+source_variables_lwv(Msg,AllS):-
+  (prolog_load_context(variable_names,Vs1);Vs1=[]),
+   grab_vn_varnames(Msg,Vs2),
+   notrace(catch((parent_goal('$toplevel':'$execute_goal2'(_, Vs3),_);Vs3=[]),_,Vs3=[])),
+   ignore(Vs3=[]),
+   append([Vs3,Vs2,Vs1],All),!,list_to_set(All,AllS),!.
+   % set_varname_list( AllS).
+source_variables_lwv(_Msg,[]):-!.
 
 
 %:- public ((attr_unify_hook/2,attr_portray_hook/2)).
@@ -323,7 +388,7 @@ when_var_locked(What):- t_l:varname_lock(What),!.
 % Hook To [dom:attr_unify_hook/2] For Module Logicmoo_varnames.
 % Attr Unify Hook.
 %
-vn:attr_unify_hook(X,Y):- quietly(must(vn_auh_0(X,Y))).
+vn:attr_unify_hook(X,Y):- ignore(quietly(must(vn_auh_0(X,Y)))).
 
 vn_auh_0(_, Var):- cyclic_term(Var),!,fail.
 vn_auh_0(Var,_):- cyclic_term(Var),!,fail.
@@ -426,12 +491,13 @@ vmust(G):-!,call(G).
 %
 dcall_when(P,In,Out):- must(call(P,In,Out)),ignore((In\=@=Out,dmsg((dcall_when(P) :- (In,Out))))).
 
-:- create_prolog_flag(source_variables, false, [type(boolean)]).
+:- create_prolog_flag(source_variables, false, [type(boolean),keep(true)]).
 :- thread_local(t_l:dont_varname/0).
 :- thread_local(t_l:dont_varname_te/0).
 :- thread_local(t_l:try_varname_clause_next/1).
 
 
+% :- use_module('./redo_locally').
 %=
 
 %% no_varnaming( :GoalG) is semidet.
@@ -589,8 +655,8 @@ get_clause_vars_copy(H0,MHB):-
     source_variables_lv(AllS),
     must((copy_term(H0+AllS,MHB+CAllS),
     term_slots(MHB,Slots),
-   % all_different_vars(Slots),
-    lock_vars(Slots),
+    all_different_vars(Slots),
+    % lock_vars(Slots),
     as_clause_no_m( MHB,  H, B),
     must_maplist(set_varname(write_functor),CAllS),
     get_clause_vars_hb_int(H,B))),!.
@@ -647,9 +713,9 @@ fix_varcase_name(N,VN):-atom_subst_frak_0(N,'-','_',O),atom_subst_frak_0(O,'?','
 %
 % No Variables Needed.
 %
+no_vars_needed(H):- is_ftVar(H),!.
 no_vars_needed(H):- (t_l:dont_varname; ( ground(H) ; \+ compound(H))) ,!.
 no_vars_needed(A:H):-atom(A),!,no_vars_needed(H).
-no_vars_needed(H):-var(H),!.
 no_vars_needed('$VAR'(_)):-!.
 no_vars_needed(H):- compound(H),H=varname_info(_,_,_,_),!.
 
@@ -955,7 +1021,8 @@ save_to_clause_ref(ClauseRef,Vs,Why):- ain00(names(ClauseRef,Vs)),ain00(names_wh
 save_clause_vars(M,H,MB,B,Vs,Why:_):-atom(Why),!,save_clause_vars(M,H,MB,B,Vs,Why).
 save_clause_vars(M,H,MB,B,Vs,Why):- fail, locate_clause_ref(M,H,MB,B,ClauseRef),clause_ref_vars(ClauseRef,Was),
    ((Was=Vs) -> fail ; save_to_clause_ref(ClauseRef,Vs,Why)),!.
-save_clause_vars(_M,H,_MB,B,Vs,Why):- ain00(varname_cache:varname_info(H,B,Vs,Why)).
+save_clause_vars(_M,H,_MB,B,Vs,Why):- 
+  ain00(varname_cache:varname_info(H,B,Vs,Why)).
 
 
 %=
@@ -1405,7 +1472,7 @@ ensure_vars_labled(I,I).
 % Hook To [user:portray/1] For Module Logicmoo_varnames.
 % Portray.
 %
-user:portray(A) :- fail, \+ tracing,
+user:portray(A) :- fail, \+ ( nb_current('$inprint_message', Messages), Messages\==[] ), \+ tracing,
   catch(quietly(((compound(A);var(A)), current_prolog_flag(source_variables, true), set_prolog_flag(source_variables, false),
     call_cleanup((((user:portray(A) -> ! ; print_numbervars_maybe(A)))),set_prolog_flag(source_variables, true)))),E,(writeq(E),nl,fail)).
 
@@ -1519,7 +1586,7 @@ listing_vars_file.
 % Hook To [user:term_expansion/2] For Module Logicmoo_varnames.
 % Term Expansion.
 %
-%user:term_expansion(HB,_):- current_prolog_flag(source_variables,true),term_expansion_save_vars(HB),fail.
+system:term_expansion((H:-B),_):- current_prolog_flag(source_variables,true),term_expansion_save_vars((H:-B)),fail.
 
 % % % % OFF :- system:use_module(library(logicmoo_utils_all)).
 :- fixup_exports.

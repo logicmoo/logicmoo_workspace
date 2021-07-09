@@ -274,6 +274,7 @@ class elFinderVolumeDropbox2 extends elFinderVolumeDriver
      * Call from elFinder::netmout() before volume->mount().
      *
      * @return array
+     *
      * @author Naoki Sawada
      **/
     public function netmountPrepare($options)
@@ -671,9 +672,9 @@ class elFinderVolumeDropbox2 extends elFinderVolumeDriver
      * @param string $name new file name (optionaly)
      *
      * @return string|false
-     * @throws elFinderAbortException
+     *
      * @author Naoki Sawada
-     */
+     **/
     protected function copy($src, $dst, $name)
     {
         $srcStat = $this->stat($src);
@@ -700,12 +701,11 @@ class elFinderVolumeDropbox2 extends elFinderVolumeDriver
      *
      * @param string $path  file path
      * @param bool   $force try to remove even if file locked
-     * @param bool   $recursive
      *
      * @return bool
-     * @throws elFinderAbortException
+     *
      * @author Naoki Sawada
-     */
+     **/
     protected function remove($path, $force = false, $recursive = false)
     {
         $stat = $this->stat($path);
@@ -999,6 +999,7 @@ class elFinderVolumeDropbox2 extends elFinderVolumeDriver
      * @param string $path file path
      *
      * @return string
+     *
      * @author Naoki Sawada
      **/
     protected function _path($path)
@@ -1015,6 +1016,7 @@ class elFinderVolumeDropbox2 extends elFinderVolumeDriver
      * @param string $parent parent path
      *
      * @return bool
+     *
      * @author Naoki Sawada
      **/
     protected function _inpath($path, $parent)
@@ -1035,11 +1037,13 @@ class elFinderVolumeDropbox2 extends elFinderVolumeDriver
      * - (bool)   hidden  is object hidden. optionally
      * - (string) alias   for symlinks - link target path relative to root path. optionally
      * - (string) target  for symlinks - link target path. optionally.
+     *
      * If file does not exists - returns empty array or false.
      *
      * @param string $path file path
      *
      * @return array|false
+     *
      * @author Dmitry (dio) Levashov
      **/
     protected function _stat($path)
@@ -1057,6 +1061,7 @@ class elFinderVolumeDropbox2 extends elFinderVolumeDriver
      * @param string $path dir path
      *
      * @return bool
+     *
      * @author Naoki Sawada
      **/
     protected function _subdirs($path)
@@ -1451,6 +1456,7 @@ class elFinderVolumeDropbox2 extends elFinderVolumeDriver
      * @param array  $arc  archiver command and arguments (same as in $this->archivers)
      *
      * @return true
+     *
      * @author Dmitry (dio) Levashov,
      * @author Alexey Sukhotin
      **/
@@ -1468,6 +1474,7 @@ class elFinderVolumeDropbox2 extends elFinderVolumeDriver
      * @param array  $arc   archiver options
      *
      * @return string|bool
+     *
      * @author Dmitry (dio) Levashov,
      * @author Alexey Sukhotin
      **/

@@ -14,6 +14,8 @@
 
 :- set_module(class(library)).
 
+:- use_module(library(logicmoo_common)).
+
 %dcg_must_each_det(G, S, E):- phrase(G, S, E), !.
 quietly(DCG, S, E):- setup_call_cleanup(quietly(phrase(DCG, S, E)),true,true).
 % quietly(DCG,S,E):- quietly(phrase(DCG,S,E)).

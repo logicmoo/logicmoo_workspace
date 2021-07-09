@@ -1,12 +1,40 @@
-ERROR: Invalid ACE text:
-The word "trustworthy" is unknown.
-The word "trustworthy" is unknown.
-The word "thief" is unknown.
-The word "shoplifter" is unknown.
-The word "teenager" is unknown.
-The word "shoplifter" is unknown.
-The word "thief" is unknown.
-The word "shoplifter" is unknown.
-The word "teenager" is unknown.
-"If there is someone X and it is not provable that X is a criminal then X is trustworthy <>.": This is the first sentence that was not ACE. The sign <> indicates the position where parsing failed.
+
+INPUT TEXT:
+If there is someone X and it is not provable that X is a criminal then X is trustworthy.
+If someone X is trustworthy then X is a customer.
+Every thief is a criminal.
+Every shoplifter is a teenager.
+Every shoplifter is a thief.
+John is a shoplifter.
+John is not a teenager.
+
+RULES:
+-group([object(named('John'),teenager,countable,na,eq,1)]).
+group([property(A,trustworthy,pos)]) <- [object(A,B,C,D,E,F), ~group([object(A,criminal,countable,na,eq,1)])].
+group([object(A,customer,countable,na,eq,1)]) <- [group([property(A,trustworthy,pos)]), object(A,B,C,D,E,F)].
+group([object(A,criminal,countable,na,eq,1)]) <- [group([object(A,thief,countable,na,eq,1)])].
+group([object(A,teenager,countable,na,eq,1)]) <- [object(A,shoplifter,countable,na,eq,1)].
+group([object(A,thief,countable,na,eq,1)]) <- [object(A,shoplifter,countable,na,eq,1)].
+object(named('John'),'John',named,na,eq,1).
+object(named('John'),shoplifter,countable,na,eq,1).
+
+SIMPLE RULES:
+-teenager(named('John')).
+trustworthy(A) <- [something(A), ~criminal(A)].
+customer(A) <- [trustworthy(A), something(A)].
+criminal(A) <- [thief(A)].
+teenager(A) <- [shoplifter(A)].
+thief(A) <- [shoplifter(A)].
+shoplifter(named('John')).
+
+ANSWERSET #1:
+group([object(named('John'),criminal,countable,na,eq,1)]).
+group([object(named('John'),thief,countable,na,eq,1)]).
+object(named('John'),'John',named,na,eq,1).
+object(named('John'),shoplifter,countable,na,eq,1).
+
+ANSWERTEXT #1:
+John is a shoplifter.
+John is a thief.
+John is a criminal.
 

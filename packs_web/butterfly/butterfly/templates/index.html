@@ -10,16 +10,68 @@
     <meta name="author" content="Mounier Florian">
     <link rel="shortcut icon" href="{{ static_url('images/favicon.png') }}">
 
-    <title>Butterfly</title>
+    <title>LOGICMOO Butterfly</title>
     <link href="{{ static_url('main.css') }}" rel="stylesheet" id="style">
-  </head>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js" crossorigin="anonymous"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script> <!-- necessary for the "draggable" ui  -->
+<script src="/swish/lm_xref/pixmapx/popupmenu/scripts/Popup-plugin.js"></script>
+<script src="/swish/lm_xref/pixmapx/popupmenu/scripts/Example.js"></script>
 
-  <body spellcheck="false"
+<link rel="shortcut icon" href="/static/images/favicon.png?">
+<link rel="stylesheet" type="text/css" href="/swish/css/menu.css">
+<link rel="stylesheet" type="text/css" href="/swish/css/cliopatria.css">
+<script type="text/javascript" src="/swish/js/cliopatria.js"></script>
+<link type="text/css" rel="stylesheet" href="/swish/css/term.css">
+<link type="text/css" rel="stylesheet" href="/swish/css/butterfly_term.css">
+
+<link rel="stylesheet" type="text/css" href="/www/yui/2.7.0/build/autocomplete/assets/skins/sam/autocomplete.css">
+<script type="text/javascript" src="/www/yui/2.7.0/build/utilities/utilities.js"></script>
+<script type="text/javascript" src="/www/yui/2.7.0/build/datasource/datasource.js"></script>
+<script type="text/javascript" src="/www/yui/2.7.0/build/autocomplete/autocomplete.js"></script>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.qrcode/1.0/jquery.qrcode.min.js"></script>
+<script src="/swish/lm_xref/pixmapx/selected/js/social.selection.js"></script>
+<link rel="stylesheet" type="text/css" href="/swish/lm_xref/pixmapx/selected/css/social.selection.css">
+<link rel="stylesheet" type="text/css" href="/swish/lm_xref/pixmapx/selected/css/example.css">
+
+<link rel="stylesheet" type="text/css" href="/swish/lm_xref/pixmapx/popupmenu/styles/Popup-plugin.css">
+<link rel="stylesheet" type="text/css" href="/swish/lm_xref/pixmapx/popupmenu/styles/Example.css">
+<!--Use either font-awesome icons or Google icons with these links. Other icons could also be used if preferred-->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+
+<script data-main="/swish/js/swish" src="/node_modules/requirejs/require.js"></script>  
+</head>
+<body spellcheck="false"
         data-force-unicode-width="{{ 'yes' if options.force_unicode_width else 'no' }}"
         data-root-path="{{ options.uri_root_path }}"
         data-session-token={{ session }}>
+
+   <div id="hidden_swish_app" style="display:none; visibility:hidden">
+		<header class="navbar navbar-default">
+			<div class="container pull-left">
+				<div class="navbar-header">
+					<a href="/" class="pengine-logo">&nbsp;</a>
+					<a href="/" class="swish-logo">&nbsp;</a>
+				</div>
+				<nav id="navbar"></nav>
+			</div>
+		</header>
+		<div id="content" class="container">
+		  <div class="tile horizontal" data-split="60%">
+			<div class="prolog-editor"></div>
+			<div class="tile vertical" data-split="70%">
+			  <div class="prolog-runners"></div>
+			  <div class="prolog-query"></div>
+			</div>
+		  </div>
+		</div>
+   </div>
+
+   <pre>
     <textarea id="input-helper">
     </textarea>
+	</pre>
     <div id="input-view" class="hidden">
     </div>
     <div id="popup" class="hidden">
@@ -30,7 +82,9 @@
     <script src="{{ static_url('ext.%sjs' % (
                  '' if options.unminified else 'min.')) }}"></script>
     <script src="{{ reverse_url('LocalJsStatic') }}"></script>
+	<pre>
     <div id="packed"></div>
     <div id="term"></div>
+	</pre>
   </body>
 </html>

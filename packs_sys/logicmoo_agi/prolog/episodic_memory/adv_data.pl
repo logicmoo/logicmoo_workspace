@@ -17,6 +17,8 @@
 %
 */
 
+:- '$set_source_module'(mu).
+
 % Some Inform properties:
 % light - rooms that have light in them
 % can(eat) - can be eaten
@@ -69,62 +71,11 @@ dest_target(spatially(to, Dest), Target):- nonvar(Dest), !, dest_target(Dest, Ta
 dest_target(loc(_, _, _, Target), Target):- nonvar(Target), !.
 
 
-:- dynamic(istate/1).
 % empty intial state
-:- retractall(istate(_)).
-:- asserta(istate([ structure_label(istate), propOf(istate, world) ])).
+:- ensure_state_context(istate).
+:- clear_state_context(istate).
+:- set_state_context(istate).
 
-% this hacks the state above
-:- push_to_state([
-
-
-% Relationships
-
-in(floyd, pantry),
-in(player, kitchen),
-worn_by(watch, player),
-held_by(bag, player),
-
-in(coins, bag),
-held_by(wrench, floyd),
-
-% eng2log("A pantry exits south to a kitchen", exit(south, pantry, kitchen)),
-% add_e2c_trans("?NP1 exits ?DIR to ?NP2", exit(DIR, NP1, NP2)),
-exit(south, pantry, kitchen),
-exit(north, kitchen, pantry),
-exit(down, pantry, basement),
-exit(up, basement, pantry),
-exit(south, kitchen, garden),
-exit(north, garden, kitchen),
-exit(east, kitchen, dining_room),
-exit(west, dining_room, kitchen),
-exit(north, dining_room, living_room),
-exit(east, living_room, dining_room),
-exit(south, living_room, kitchen),
-exit(west, kitchen, living_room),
-
-
-in(shelf, pantry), % the shelf is in the pantry
-in(locker, pantry), % the locker is in the  pantry
-in(rock, garden),  % xformed:  in(rock_X1, garden).
-% there are rocks in the garden
-in( x(rock, 2), garden),    % xformed:  in(rock_X2, garden).
-%in( a(rock), garden),    % xformed:  in(rock_X2, garden).
-%in( a(rock), garden),    % in(rock_X3, garden).
-% in({atLeast(2)}/in(a(rock), garden)).
-                         %
-in(fountain, garden),
-in(mushroom, garden),
-in(shovel, basement), % FYI shovel has no type_props (this is a lttle test to see what happens)
-in(videocamera, living_room),
-in(fireplace, living_room),
-in(screendoor, kitchen),
-in(crate, kitchen),
-in(apple, crate),
-in(screendoor, garden),
-in(brklamp, garden)
-
-]).
 
 
 term_expansion(StateInfo, Pos, (:- push_to_state(StateInfo)), PosO):- mu:is_state_info(StateInfo), PosO=Pos.
@@ -171,7 +122,7 @@ dining_room type_props place.
 
    type_props(kitchen, [inherit(place), desc("cooking happens here")]),
 
-   h(reverse(on), table, table_leg),
+   on(table, table_leg),
    on(box, table),
    in(bowl, box),
    in(flour, bowl),
@@ -329,8 +280,9 @@ type_props(screendoor, [
    % 5 = save game |  4 = debug | 3 = look at Obj | 2 =  | 1 = basic fun info
    % prop_depth = 3, % what prop level to get
    % Basic fun type_props
+   inherit(character),
    inherit(autoscan),
-   look_depth = 2,
+   look_depth = 3,
    user_mode = 2, % 1 = fun-only, normal, debug
    access_level = admin, % guest, user, admin, wizard
    inherit(console), inherit(humanoid)]),
@@ -455,10 +407,10 @@ type_props(screendoor, [
   ~can(move),
   ~can(take),
    oper( ( act3('discard', $agent ,[ Thing])),
-    precond(h(child, $agent, Thing), ["dont have"]), % precond(Test, FailureMessage)
+    precond(h(spatial, child, $agent, Thing), ["dont have"]), % precond(Test, FailureMessage)
     body( ( act3('take', $agent,[ Thing, in, $self])))), % body(clause)
    % inherit(container),
-   has_rel(exit(_))
+   has_rel(fn(exit,_))
   ]),
 
  type_props(container, [
@@ -645,6 +597,53 @@ type_props(screendoor, [
 
   type_props(broken_videocam, [~can(switch), (powered= f), inherit(videocamera)]).
 
+% this hacks the state above
+:- push_to_state([in(floyd, pantry)]).
+
+:- push_to_state([
+
+
+% Relationships
+
+in(player, kitchen),
+worn_by(watch, player),
+held_by(bag, player),
+
+in(coins, bag),
+held_by(wrench, floyd),
+
+% eng2log("A pantry exits south to a kitchen", exit(south, pantry, kitchen)),
+% add_e2c_trans("?NP1 exits ?DIR to ?NP2", exit(DIR, NP1, NP2)),
+exit(north, kitchen, pantry), exit(south, pantry, kitchen),
+exit(down, pantry, basement), exit(up, basement, pantry),
+exit(south, kitchen, garden), exit(north, garden, kitchen),
+exit(west, kitchen, dining_room), exit(east, dining_room, kitchen),
+exit(west, dining_room, living_room), exit(east, living_room, dining_room), 
+
+
+
+in(shelf, pantry), % the shelf is in the pantry
+in(locker, pantry), % the locker is in the  pantry
+in(rock, garden),  % xformed:  in(rock_X1, garden).
+% there are rocks in the garden
+in( x(rock, 2), garden),    % xformed:  in(rock_X2, garden).
+%in( a(rock), garden),    % xformed:  in(rock_X2, garden).
+%in( a(rock), garden),    % in(rock_X3, garden).
+% in({atLeast(2)}/in(a(rock), garden)).
+                         %
+in(fountain, garden),
+in(water, fountain),
+in(mushroom, garden),
+in(shovel, basement), % FYI shovel has no type_props (this is a lttle test to see what happens)
+in(videocamera, living_room),
+in(fireplace, living_room),
+in(screendoor, kitchen),
+in(crate, kitchen),
+in(apple, crate),
+in(screendoor, garden),
+in(brklamp, garden)
+
+]).
 
 
 :- multifile(extra_decl/2).

@@ -1,0 +1,19 @@
+%%% An example that demonstrates the inadequacy of the old version of
+%%% verifier.pl, by Brian W. DeVries.
+%%% (The example runs in the new version).
+
+:- ['verifier.tlp'].
+
+proposition(p).
+
+state(s0).
+
+holds(s0, p).
+
+trans(s0, s0).
+
+
+:- topl q/0, q2/0.
+
+q :- check(s0, ~ (x g p)).     % should find a counterexample
+q2 :- check(s0, ~ (g p)).      % should find a counterexample

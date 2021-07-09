@@ -1,0 +1,11 @@
+% Calls to undefined predicates c, d, e.
+% a is defined, but uncalled (x is OK!).
+
+a :- b, c.
+a :- c, d.
+
+b :- e.
+
+:- topl x/0.
+
+x :- b.

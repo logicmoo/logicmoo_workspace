@@ -261,25 +261,33 @@ parseDomain(File, Output, R) :-
 
 :-thread_local(t_l:allow_sterm/0).
 
-sterm2pterm(VAR,VAR):-var(VAR),!.
-sterm2pterm(In,Out):-nonvar(Out),!,sterm2pterm(In,OutM),must(Out=OutM).
-sterm2pterm('?'(Down),'?'(UP)):- svar_fixvarname(Down,UP),!.
-sterm2pterm(KVList,T):- append(_,[_Item,'-',_Type],KVList),sterm2pterm_list(KVList,T).
-%sterm2pterm(QDown,'?'(UP)):- \+ is_list(QDown),svar_fixvarname(QDown,UP),!.
-sterm2pterm([S],S):-atom(S),!. % ,atom_concat(':',_,S),!.
-sterm2pterm([Item,'-',Type],Item1):- atom(Type),Item1=..[Type,Item].
-sterm2pterm([S|SLIST],PTERM):-atom(S),atom_concat(':',_,S),
-            sterm2pterm_list(SLIST,PLIST),           
-            PTERM=..[S,PLIST].
-sterm2pterm([S|SLIST],PTERM):-atom(S),\+ svar(S,_),!,
-            sterm2pterm_list(SLIST,PLIST),           
-            PTERM=..[S|PLIST].
-sterm2pterm(SLIST,PLIST):- is_list(SLIST),!,sterm2pterm_list(SLIST,PLIST).
-sterm2pterm(VAR,VAR):-!.
+sterm2pterm(_Ctx,VAR,VAR):-var(VAR),!.
+sterm2pterm( Ctx,In,Out):-nonvar(Out),!,sterm2pterm( Ctx,In,OutM),must(Out=OutM).
+sterm2pterm(_Ctx,'?'(Down),'?'(UP)):- svar_fixvarname(Down,UP),!.
+sterm2pterm( Ctx,KVList,T):- append(_,[_Item,'-',_Type],KVList),sterm2pterm_list(Ctx,KVList,T).
+%sterm2pterm( Ctx,QDown,'?'(UP)):- \+ is_list(QDown),svar_fixvarname(QDown,UP),!.
+sterm2pterm(domain,[S],S):-atom(S),!. % ,atom_concat(':',_,S),!.
+sterm2pterm(_Ctx,[S],S):-atom(S),!. % ,atom_concat(':',_,S),!.
+sterm2pterm(_Ctx,[Item,'-',Type],Item1):- atom(Type),Item1=typed(Type,Item).
 
-sterm2pterm_list([],[]).
-sterm2pterm_list([Item,'-',Type|List],[H|T]):- atom(Type),H=..[Type,Item],sterm2pterm_list(List,T).
-sterm2pterm_list([Item|List],[H|T]):- sterm2pterm(Item,H),sterm2pterm_list(List,T).
+sterm2pterm( Ctx,[S,Vars,SLIST],POUT):-atom(S),is_quantifier_type(S,_),sterm2pterm( Ctx,SLIST,PTERM),POUT=..[S,Vars,PTERM].
+sterm2pterm( Ctx,[S,Vars|SLIST],POUT):-atom(S),is_quantifier_type(S,_),sterm2pterm_list( Ctx,SLIST,PTERM),POUT=..[S,Vars,PTERM].
+sterm2pterm( Ctx,[S|SLIST],PTERM):-atom(S),atom_concat(':',_,S),
+            sterm2pterm_list(Ctx,SLIST,PLIST),           
+            PTERM=..[S,PLIST].
+sterm2pterm( Ctx,[S|SLIST],PTERM):-atom(S), \+ svar(S,_),!,            
+            sterm2pterm_list(Ctx,SLIST,PLIST),           
+            PTERM=..[S|PLIST].
+sterm2pterm( Ctx,SLIST,PLIST):- is_list(SLIST),!,sterm2pterm_list(Ctx,SLIST,PLIST).
+sterm2pterm(_Ctx,VAR,VAR):-!.
+
+sterm2pterm_list(_Ctx,[],[]).
+sterm2pterm_list( Ctx,[Item,'-',Type|List],[H|T]):- atom(Type),H==typed(Type,Item),sterm2pterm_list(Ctx,List,T).
+sterm2pterm_list( Ctx,[Item|List],[H|T]):- sterm2pterm( Ctx,Item,H),sterm2pterm_list(Ctx,List,T).
+
+invert_arg_context(domain,args).
+invert_arg_context(X,X).
+%invert_arg_context(args,domain).
 
 sterm(_) --> [')'],{!,fail}.
 sterm([]) --> ['(',')'],!.
@@ -344,7 +352,7 @@ domainBNF(domain(N, R, T, C, P, F, C, S))
 domainBNF(Output, List, R):- locally(tlbugger:skipMust, on_x_debug(domainBNF_dcg(Output, List, R))),!.
 domainBNF(Output, List, R):- locally(t_l:allow_sterm,locally(tlbugger:skipMust, on_x_debug(domainBNF_dcg(Output, List, R)))),!,
    portray_clause((domainBNF:-t_l:allow_sterm,Output)).
-domainBNF(Output, List, R):-  sterm(O, List, R), must_det_l((sterm2pterm(O,P),prop_put_extra_extra(Output,P),portray_clause((ed(Output):-P)))).
+domainBNF(Output, List, R):-  sterm(O, List, R), must_det_l((sterm2pterm( domain,O,P),prop_put_extra_extra(Output,P),portray_clause((ed(Output):-P)))).
 domainBNF(Output, List, R):- % trace,
              locally(-tlbugger:skipMust, on_x_debug(domainBNF_dcg(Output, List, R))),!.
 
@@ -677,7 +685,7 @@ parseProblem(F, O, R) :-
 problem_new(Output, List, R):- locally(tlbugger:skipMust, on_x_debug(problem_dcg(Output, List, R))),!.
 problem_new(Output, List, R):- locally(t_l:allow_sterm,locally(tlbugger:skipMust, on_x_debug(problem_dcg(Output, List, R)))),!,
    portray_clause((problem:-t_l:allow_sterm,Output)).
-% problem(P     , List, R):- dtrace,trace,must(sterm(O, List, R)),!,must(sterm2pterm(O,P)),!,portray_clause((ed:-P)).
+% problem(P     , List, R):- dtrace,trace,must(sterm(O, List, R)),!,must(sterm2pterm( Ctx,O,P)),!,portray_clause((ed:-P)).
 problem_new(Output, List, R):- must(problem_dcg(Output, List, R)),!.
 
 problem(New) --> {\+ old_rsasak}, problem_dcg(Struct). 

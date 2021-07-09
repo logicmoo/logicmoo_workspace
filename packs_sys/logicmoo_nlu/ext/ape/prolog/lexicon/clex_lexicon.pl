@@ -13,11 +13,39 @@
 % Parsing Engine (APE). If not, see http://www.gnu.org/licenses/.
 
 /* @TODO Ask Dmiles */
-end_of_file.
+% end_of_file.
+:- multifile(adj_itr/2).
+:- multifile(adj_itr_comp/2).
+:- multifile(adj_itr_sup/2).
+:- multifile(adj_tr/3).
+:- multifile(adj_tr_comp/3).
+:- multifile(adj_tr_sup/3).
+:- multifile(adv/2).
+:- multifile(adv_comp/2).
+:- multifile(adv_sup/2).
+:- multifile(dv_finsg/3).
+:- multifile(dv_infpl/3).
+:- multifile(dv_pp/3).
+:- multifile(iv_finsg/2).
+:- multifile(iv_infpl/2).
+:- multifile(mn_pl/2).
+:- multifile(mn_sg/2).
+:- multifile(noun_mass/3).
+:- multifile(noun_pl/3).
+:- multifile(noun_sg/3).
+:- multifile(pn_pl/3).
+:- multifile(pn_sg/3).
+:- multifile(pndef_pl/3).
+:- multifile(pndef_sg/3).
+:- multifile(prep/2).
+:- multifile(tv_finsg/2).
+:- multifile(tv_infpl/2).
+:- multifile(tv_pp/2).
 
 adj_itr('grown-up', 'grown-up').
 adj_itr(accepted, accepted).
 adj_itr(active, active).
+adj_itr('Italian', 'Italian').
 adj_itr(allowed, allowed).
 adj_itr(angry, angry).
 adj_itr(approximate, approximate).
@@ -837,6 +865,7 @@ noun_pl(flowers, flower, neutr).
 noun_pl(flows, flow, neutr).
 noun_pl(foods, food, neutr).
 noun_pl(forms, form, neutr).
+noun_pl('Italians', 'Italian', human).
 noun_pl(foxes, fox, neutr).
 noun_pl(fridges, fridge, neutr).
 noun_pl(friends, friend, human).

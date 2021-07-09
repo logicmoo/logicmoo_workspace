@@ -1,7 +1,1 @@
-ERROR: Invalid ACE text:
-The word "employee" is unknown.
-The word "employee" is unknown.
-The word "employee" is unknown.
-The word "employee" is unknown.
-"If someone X is a customer then X is not an <> employee.": This is the first sentence that was not ACE. The sign <> indicates the position where parsing failed.
-
+ERROR: The program contains cycles.

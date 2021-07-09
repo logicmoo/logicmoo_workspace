@@ -1,0 +1,42 @@
+/* tests delay and garbage collecting of tables with multiple active threads.*/
+
+arc(1,2).
+arc(2,3).
+arc(2,4).
+arc(4,1).
+
+:- table spath/2.
+:- thread_shared spath/2.
+
+spath(X,Y) :- arc(X,Y).
+spath(X,Y) :- spath(X,Z), arc(Z,Y).
+
+:- table ppath/2.
+
+ppath(X,Y) :- arc(X,Y).
+ppath(X,Y) :- ppath(X,Z), arc(Z,Y).
+
+:- import thread_create/2, thread_join/1 from thread.
+
+test:- spath(1,_),fail.
+
+test:- thread_create(test1,Id),
+	test2,
+	thread_join([Id]).
+
+test2:- ppath(1,_),fail.
+test2:- abolish_table_pred(ppath/2),fail.
+test2:- get_residual(spath(1,Y),_),writeln(answer(s(a,Y))),fail.
+test2:- get_residual(ppath(1,Y),_),writeln(answer1(p(a,Y))),fail.
+test2:- gc_tables(_),fail.
+test2.
+
+test1:- ppath(1,_),fail.
+test1:- ppath(1,X),abolish_table_pred(ppath/2),writeln(answer2(p(a,X))),fail.
+test1:- gc_tables(_),fail.
+test1:- get_residual(ppath(1,Y),_),writeln(answer2_2(p(a,Y))),fail.
+%test1:- sleep(1). %writeln(thread1_exiting).
+test1.
+
+end_of_file.
+

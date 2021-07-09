@@ -15,14 +15,83 @@
 
 
 /*
-  Around 10% of the 1500 lines of code are from Bratko chapter 17 page 455.
-   This comes from Pereira and Warren paper, AI journal, 1980
-   To see original: https://github.com/logicmoo/logicmoo_nlu/blob/master/prolog/logicmoo_nlu/parser_bratko.pl
+ E2C DESCRIPTION/UPDATE:   
 
+  The E2C (English-2-CommonLogic (Used to stand for Eng-2-CycL)) is a Semantic Role Labeling (SRL) https://en.wikipedia.org/wiki/Semantic_role_labeling toolkit
+
+ HISTORY/Summary:
+
+  Semantic role labeling is mostly used for machines to understand the roles of words within sentences. This benefits applications similar to Natural Language Processing programs that need to understand not just the words of languages, but how they can be used in varying sentences.
+
+  Nowadays statistical Neural Net models are used to try to do SRL.  The problem being though, like most NN technology, it is understood the layers of data at some stages are will be a bit messy and any ambiguities/wrongness/garbage found will be cleaned out by later NN stages.   Ideally, "Well its a Neural Net so we are not always going to find what we wanted or understand what we see .. but since NNs are how humans work.. it will fix itself in the end"  (That hasn't happened yet)  Further, projects like NLTK 3.0 removed the capability due to devs no longer understanding how the previous versions worked and assume NNs will broaden the coverage.  Since newer systems only have to be good enough they can be consumed by a Neural Net (or produce a Knowledge Graphs to be read by humans) they remain unusable for those whom use structured data and logical inference. 
+
+  LOGICMOO's first viable E2C version was created in 2002 using OpenCyc 0.6's content that was deleted before OpenCyc 2.0. (After all, it was never intended for OpenCyc to make use of that content.)  Those whom participated in LOGICMOO's development, already had been using SRL for decades, knew how good SRL was from Knowledge Engineering Environments at MIRTE Corp, S.R.I. and Cycorp. That SRL (logical form) had to be (and still is) better than what language models can produce mainly because we had to work directly in a "not so smart" Logical Inference Engines.  Our E2C continues from there that left off!
+
+
+
+ IMPLEMATION/Future:
+
+  Around 10% of the 1500 lines of code are from Bratko chapter 17 page 455.
+  This comes from Pereira and Warren paper, AI journal, 1980
+  To see original: https://github.com/logicmoo/logicmoo_nlu/blob/master/prolog/logicmoo_nlu/parser_bratko.pl
   What is fun and odd about Bratko's version was it goes straight from Text to Deep Logical-Form :)
 
    */
+
+:- discontiguous((form_talk_verb)/6).
+:- discontiguous((talk_verb_LF)/8).
+
 :- set_how_virtualize_file(false).
+
+term_depth(C,TD):-notrace(term_depth0(C,TD)).
+term_depth0(C,1):-var(C),!.
+term_depth0(C,0):-not(compound(C)),!.
+term_depth0(C,TDO):-is_list(C),!,findall(D,(member(T,C),term_depth0(T,D)),DL), max_list([0|DL],TD),TDO is TD+1,!.
+term_depth0(C,TDO):-C=..[_|LIST],findall(D,(member(T,LIST),term_depth0(T,D)),DL), max_list([0|DL],TD),TDO is TD+1,!.
+
+
+is_sane(C):-must((term_depth(C,D),D<100)).
+is_sane_nv(C):-must((nonvar(C),term_depth(C,D),D<100)).
+
+:-meta_predicate(deepen_local_0(+,0)).
+deepen_local_0(Local, Call):-
+  ( \+ retract(Local) -> setup_call_cleanup(true, one_must(Call,locally(Local,Call)), ignore(retract(Local)))  ; 
+     (setup_call_cleanup(true, 
+       one_must(Call,locally(Local,Call)), 
+        asserta(Local)))).
+
+%t_l:old_text.
+
+:- thread_local(t_l:useAltPOS/0).
+t_l:useAltPOS:- fail.
+
+:- share_mp(deepen_pos/1).
+:- export(deepen_pos/1).
+:-meta_predicate(deepen_pos(0)).
+% temp hack
+deepen_pos(Call):- !, call(Call).
+deepen_pos(Call):- Call *-> true ; deepen_pos_0(Call) *->  true ; locally(t_l:useAltPOS,deepen_pos_0(Call)).
+
+:- share_mp(deepen_pos_0/1).
+:-meta_predicate(deepen_pos_0(0)).
+:- thread_local(t_l:usePlTalk/0).
+deepen_pos_0(Call):- deepen_local_0(t_l:usePlTalk,Call).
+
+/*
+
+deepen_pos_0(Call):-
+  ( \+ retract(t_l:usePlTalk) -> setup_call_cleanup(true, one_must(Call,locally(t_l:usePlTalk,Call)), ignore(retract(t_l:usePlTalk)))  ; 
+     (setup_call_cleanup(true, 
+       one_must(Call,locally(t_l:usePlTalk,Call)), 
+        asserta(t_l:usePlTalk)))).
+*/
+
+
+call_until_failed([H,(!)|T]):- !,call_until_failed([(H,!)|T]).
+call_until_failed([H|T]):- !,
+  call(H)*->(call_until_failed(T),!);fmt(failed(H)).
+call_until_failed([]).
+
 
 :-
  op(1199, fx, ('==>')),
@@ -89,7 +158,7 @@ make_dcg_test_stub(M, F, A):-
    PrologHead =.. [F|PrologHeadArgs],
    append(_, [Out, W, E], PrologHeadArgs),
    TextHead =.. [F, S],
-   (Assert = ( system:TextHead:- M:(make, to_wordlist_atoms(S, W), call_print_reply(Out, M:PrologHead), !, E=[]))),
+   (Assert = ( system:TextHead:- M:(make, into_lexical_segs(S, W), call_print_reply(Out, M:PrologHead), !, ignore(E=[])))),
    M:assert_if_new(Assert).
 
 :- system:import(make_dcg_test_stub/3).
@@ -115,6 +184,9 @@ system:t33:- cls, make, t33s.
 system:t33s:- cls, test_e2c([sanity]).
 system:t33t:- cls, test_e2c([riddle]).
 system:t33ts:- cls, test_e2c([]). % all
+
+:- debug(parser_fwd).
+:- debug(parser_e2c).
 
 system:t33f:-
   mpred_trace_all,
@@ -150,9 +222,12 @@ is_testing_e2c(S, Traits, Type1-Type2):- !,
 run_e2c_test(S, _T):- e2c(S).
 
 add_e2c(S):- add_e2c(S, sanity).
+add_e2c(S, W):- nonvar(W), \+ is_list(W), !, add_e2c(S, [W]).
+add_e2c(S, W):- nonvar(S), \+ source_location(_,_),!,run_e2c_test(S, [requested|W]).
 add_e2c(S, W):-  clause(test_e2c(S, W), true), !.
 add_e2c(S, W):- listify(W, L), assertz(test_e2c(S, L)).
 
+sent_to_parsed(U,E):- deepen_pos(parser_chat80:sentence80(E,U,[],[],[])).
 
 :- export(test_e2c/1).
 :- export(test_e2c/2).
@@ -231,6 +306,17 @@ riddle(Level) :- forall(test_e2c(Text, riddle(Level)), e2c(Text)).
 :- thread_local(t_l:into_form_code/0).
 :- asserta(t_l:into_form_code).
 
+the_text_unif(IC,W0):- atom(W0),!,downcase_atom(W0,DC),(var(IC)->IC=DC;downcase_atom(IC,DC)).
+the_text_unif(IC,W0):- var(W0),!,nonvar(IC),!,the_text_unif(W0,IC).
+the_text_unif(IC,W0):- parser_tokenize:any_nb_to_atom(W0,W1),!,downcase_atom(W1,DC),(var(IC)->IC=DC;downcase_atom(IC,DC)).
+:- export(the_text_unif/2).
+
+add_prev_w2(W2):- (nb_current('$prev_w2s',Values);Values=[]),!,b_setval('$prev_w2s',[W2|Values]).
+get_prev_w2(Nth,E):- b_getval('$prev_w2s',Values),nth0(Nth,Values,E).
+
+add_prev_span(SPAN):- (nb_current('$prev_spans',Values);Values=[]),!,b_setval('$prev_spans',[SPAN|Values]).
+get_prev_span(Nth,E):- b_getval('$prev_spans',Values),nth0(Nth,Values,E).
+
 
 % =================================================================
 % %%%%%%%%%%%%%%%%%%%%%%% MAIN %%%%%%%%%%%%%%%%%%%%%%%
@@ -242,34 +328,40 @@ system:myb :- e2c.
 e2c :- locally(tracing80,
              with_no_assertions(lmconf:use_cyc_database,
                   locally(t_l:usePlTalk, (told, repeat, prompt_read('E2FC> ', U),
-                            to_wordlist_atoms(U, WL), (WL==[ bye];WL==[end, '_', of, '_', file];e2c(WL)))))).
+                            into_lexical_segs(U, WL), (WL==[ bye];WL==[end, '_', of, '_', file];e2c(WL)))))).
 
 :-export(e2c/1).
+
+e2c(S):- var(S),!,test_e2c(S, _T).
 e2c(Sentence):-
-  with_error_to_predicate(nop, make),
-   setup_call_cleanup(
-   must(notrace((to_wordlist_atoms(Sentence, Words), fmt('?-'(e2c(Sentence)))))),
-   (call_residue_vars(must(e2c_0(Words)), Vs), del_e2c_attributes(Vs)),
-   true), !.
+  % with_error_to_predicate(nop, make),
+   % mmake,
+   fmt('?-'(e2c(Sentence))),
+   (
+   clean_e2c_attributes((must(e2c_0(Sentence)))),
+   true,true), !.
 :-system:import(e2c/1).
 
 :-export(e2c_0/1).
 e2c_0(Words):-
   %cls, % ignore(also_show_chat80(Words)), !,
-  ignore_must(e2c_0(Words, Reply)), 
-  del_e2c_attributes(Reply),
+  clean_e2c_attributes((e2c_0(Words, Reply))), 
   print_reply_colored(Reply), !.
 
+clean_e2c_attributes(Goal):-
+   term_attvars(Goal,Vs1),
+   Goal,
+   term_attvars(Goal,Vs2),
+   must(del_e2c_attributes(Vs1+Vs2)).
 
 :-export(e2c/2).
-e2c(Sentence, Options):- callable(Options), set_e2c_options(Options), !, e2c(Sentence).
-e2c(Sentence, Reply):- e2c(Sentence, [], Reply).
+e2c(Sentence, Options):- callable(Options), set_e2c_options(Options), !, e2c(Sentence),!.
+e2c(Sentence, Reply):- e2c(Sentence, [], Reply),!.
 :-export(e2c/3).
 e2c(Sentence, Options, Reply):-
- quietly(to_wordlist_atoms(Sentence, WL)), !,
- set_e2c_options(Options),
- call_residue_vars(e2c_0(WL, Reply), Vs), !,
- del_e2c_attributes(Reply+Vs), !.
+ %quietly(into_lexical_segs(Sentence, WL)), !,
+ clean_e2c_attributes((set_e2c_options(Options),
+ call_residue_vars(e2c_0(Sentence, Reply)))),!.
 :-system:import(e2c/2).
 
 set_e2c_options(Options):- nb_setval('$e2c_options', Options).
@@ -279,38 +371,45 @@ e2c_0(Sentence, Reply) :-
    % must_or_rtrace
    % set_prolog_flag(debugger_write_options, [quoted(true), portray(false), max_depth(50), attributes(portray)]),
    e2c_parse0(Sentence, LF), % deepen_pos?
-   e2c_clausify_and_reply(LF, Reply).
+   e2c_clausify_and_reply(LF, Reply),!.
 
 e2c_0(Sentence,
-   error('FAILED!!!!! small bug'(Sentence))):- ansifmt(red, rtrace(e2c_0(Sentence))).
+   error('FAILED!!!!! small bug'(Sentence))):- nop(ansifmt(red, rtrace(e2c_0(Sentence)))).
 
 
 :- assert_if_new(baseKB:mpred_prop(parser_e2c, e2c_parse, 2, prologOnly)).
 
-e2c_parse(Sentence, LF):- cwc,
-  quietly(to_wordlist_atoms(Sentence, WL)), !,
-  e2c_parse0(WL, LF),
-  del_e2c_attributes(LF).
+e2c_parse(Sentence, Clause):- %cwc,  
+  clean_e2c_attributes((e2c_parse0(Sentence, LF),
+                   e2c_clausify(LF, Clause))),!.
 
 :- assert_if_new(baseKB:mpred_prop(parser_e2c, e2c_parse0, 2, prologOnly)).
 
-e2c_parse0(WL, LF):-
+e2c_parse0(Sentence, LF):-
   b_setval('$variable_names', []),
   retractall(t_l:usePlTalk),
   retractall(t_l:useAltPOS), !,
-  e2c_parse2(WL, LF).
+  into_lexical_segs(Sentence,Segs),
+  e2c_parse_segs(Segs, LF).
+%e2c_parse_segs(WL, LF):- deepen_pos(utterance(_How, LF, WL, []))-> ! ; e2c_parse3(WL, LF).
 
-%e2c_parse2(WL, LF):- deepen_pos(utterance(_How, LF, WL, []))-> ! ; e2c_parse3(WL, LF).
+as_w2_segs(Sentence,Segs):- into_lexical_segs(Sentence,Segs)->Sentence\==Segs,!.
 
-e2c_parse2(WL, LF):- no_repeats(LF, deepen_pos(utterance(_How, LF, WL, []))).
+
+e2c_parse_segs(WL, LF):- 
+  no_repeats(LF, (deepen_pos(utterance(_How, LF, WL, [])))).
 /*
-e2c_parse2(WL, LF):- fail, deepen_pos(e2c_parse3(WL, LF)).
+e2c_parse_segs(WL, LF):- fail, deepen_pos(e2c_parse3(WL, LF)).
 
 
 e2c_parse3(Sentence, Reply):- notrace(into_text80(Sentence, U)), !,
   also_chat80(U, Res),
   once((rewrite_result(_SF, verb, _VF, Res, Reply))).
 */
+  
+%:- e2c("Whenever someone enters the lobby they can see two books sitting on a lone shelf that is out of reach.")
+%:- e2c("Whenever someone enters the lobby they can see two books sitting on a lone shelf that are out of reach.")
+
 
 :- assert_if_new(baseKB:mpred_prop(parser_e2c, e2c_reply, 2, prologOnly)).
 
@@ -334,9 +433,8 @@ e2c_reply(_, error('unknown type')).
 :- include(e2c/e2c_clausify).
 
 e2c_clausify_and_reply(LF, Reply) :-
-   quietly((show_call(e2c_clausify(LF, Clause)),
-   e2c_reply(Clause, Reply),
-   del_e2c_attributes(Reply))), !.
+   quietly(clean_e2c_attributes(((e2c_clausify(LF, Clause)),
+   e2c_reply(Clause, Reply)))),!.
 
 
 % =================================================================
@@ -345,8 +443,6 @@ e2c_clausify_and_reply(LF, Reply) :-
 :- include(e2c/e2c_sentence).
 :- include(e2c/e2c_noun_phrase).
 :- discontiguous(verb_phrase1/5).
-:- discontiguous(talk_verb_lf/6).
-:- discontiguous(talk_verb_lf/8).
 :- include(e2c/e2c_verb_phrase).
 
 

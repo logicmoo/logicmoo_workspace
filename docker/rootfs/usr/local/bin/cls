@@ -1,0 +1,41 @@
+#!/bin/bash
+for i in {1..4}
+do
+    echo -e "\n"
+done
+
+clear
+reset -w
+tput reset
+perl -e 'print "\n"x512;'
+
+echo -e -n '\033\143'
+printf '\e[H \e2J' 
+echo -e -n '\033]50;ClearScrollback\a'
+echo -e -n "\ec\e[3J"
+echo -ne '\033c'
+printf '\033[2J\033[H\033[3J'
+echo -e -n '\eP\033]50;ClearScrollback\a\e\P\e\\\\'
+
+
+#0
+#sition the cursor to "Home" (Top Row, First Column)
+echo -en "\e[H"
+
+# Erase down: clear the screen from the cursor down to the bottom of the screen.
+echo -en "\e[J"
+
+# Note: this is supposed to clear the screen and position the cursor to home,
+# but it didn't work like that for me. It cleared the entire screen (above and 
+# below the cursor), but left the cursor at its last position.
+echo -en "\e[2J"
+
+# putting everything together
+echo -en "\e[H\e[J\e[3J"
+
+screen -S LogicmooServer -p 0 -X stuff ^F
+docker exec -it logicmoo screen -S LogicmooServer -p 0 -X stuff ^F
+clear
+screen -S LogicmooServer -p 0 -X stuff '\001\006'
+#screen -S LogicmooServer -p 0 -X screen scrollback 15000
+

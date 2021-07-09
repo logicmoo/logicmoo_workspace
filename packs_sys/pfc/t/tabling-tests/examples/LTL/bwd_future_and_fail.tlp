@@ -1,0 +1,24 @@
+%%% An example that demonstrates the inadequacy of the old version of
+%%% verifier.pl, by Brian W. DeVries.
+%%% The new version seems to run correctly.
+
+
+:- ['verifier.tlp'].
+
+proposition(p).
+proposition(q).
+
+state(s0).
+state(s1).
+
+
+holds(s1, p).
+
+trans(s1, s0).
+trans(s0, s1).
+
+
+:- topl q/0.
+
+% Infinite Loop! Wheeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee
+q :- check(s0, ~(f p ^ q)).  % Should succeed

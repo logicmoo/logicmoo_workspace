@@ -28,6 +28,7 @@
 :- op(500, xfx, v).
 
 :- encoding(utf8).
+:- style_check(-(singleton)).
 
 text_drs_eval(0, 1, 'there is a man.', drs([A], [object(A, man, countable, na, eq, 1)-1]), [[specification, [top_s, [topic, [quant, ['{there is}']], [np, [det, [a]], [nbar, [n, [man]]]]]], ['.']]], '2006-07-26-16-15-20', amadeus, '').
 text_drs_eval(0, 2, 'a flat mate runs.', drs([A, B], [object(A, mate, countable, na, eq, 1)-1, property(A, flat, pos)-1, predicate(B, run, A)-1]), [[specification, [s, [np, [det, [a]], [nbar, [adj, [flat]], [nbar, [n, [mate]]]]], [vp, [vbar, [v, [runs]]]]], ['.']]], '2005-08-03-12-55-49', blade17, '').

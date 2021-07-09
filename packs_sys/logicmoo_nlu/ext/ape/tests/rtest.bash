@@ -3,19 +3,49 @@
 # Usage:
 #
 # bash rtest.bash
+# bash rtest.bash d
 #
 # @author Kaarel Kaljurand
-# @version 2019-08-10
+# @version 2011-07-28
+#
+# If the commandline argument `d' is present then the latest version of
+# the regression testset is downloaded from the web.
+# Note that `curl' or `wget' must be installed to be able to download the regression testset.
+# In case you don't have `curl' or `wget',
+# download the testset manually before running the script (without `d', in this case).
 
 prolog=swipl
 #prolog=`which swipl`
+
+#downloader='curl -o'
+downloader='wget -O'
+
+clex='clex_lexicon.pl'
 
 echo "Using: `$prolog --version`"
 
 # Generate a timestamp.
 timestamp=`date '+%y%m%d-%H%M'`
 
-# Ensures a directory for the test results.
+# Download the latest testset.
+if [ $# -eq 1 ]
+then
+if [ $1 = "d" ]
+then
+echo "Downloading the latest ACE text set ... "
+$downloader acetexts.pl http://attempto.ifi.uzh.ch/cgi-bin/acetextset/get_acetexts.cgi
+echo "done."
+fi
+fi
+
+
+if [ ! -f $clex ]; then
+	echo "Downloading the large Clex lexicon (from github.com/Attempto/Clex)"
+	$downloader $clex https://raw.github.com/Attempto/Clex/master/$clex
+fi
+
+# Creates a directory for the test results.
+# If the directory already exists then an error message is printed (which you can ignore).
 mkdir -p testruns/
 
 # Convert fit-files into plp-files.

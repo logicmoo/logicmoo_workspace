@@ -1,0 +1,10 @@
+
+
+test:- p(a),fail.
+test:- p(b),fail.
+test:- abolish_table_call(p(X)),fail.
+test:- writeln(test_trans_bug_completed).
+
+:- table p/1.
+
+p(X):- undefined.

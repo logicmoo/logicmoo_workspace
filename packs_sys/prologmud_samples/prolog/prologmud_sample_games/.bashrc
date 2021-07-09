@@ -12,6 +12,10 @@
 # append to the history file, don't overwrite it
 shopt -s histappend
 
+if [ "$TERM" = "xterm" ]; then
+  export TERM=vt100
+fi
+
 # for setting history length see HISTSIZE and HISTFILESIZE in bash(1)
 HISTSIZE=1000
 HISTFILESIZE=2000
@@ -102,3 +106,4 @@ alias ls='ls --color=auto -A '
 alias cp='cp -i '
 alias mv='mv -i '
 
+source /opt/ros/eloquent/setup.bash

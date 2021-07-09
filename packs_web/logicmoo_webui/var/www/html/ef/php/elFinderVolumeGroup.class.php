@@ -5,8 +5,7 @@
  *
  * @author Naoki Sawada
  **/
-class elFinderVolumeGroup extends elFinderVolumeDriver
-{
+class elFinderVolumeGroup extends elFinderVolumeDriver {
 	
 	/**
 	 * Driver id
@@ -22,8 +21,7 @@ class elFinderVolumeGroup extends elFinderVolumeDriver
 	 * Constructor
 	 * Extend options with required fields
 	 */
-    public function __construct()
-    {
+	public function __construct() {
 		$this->options['type'] = 'group';
 		$this->options['path'] = '/';
 		$this->options['dirUrlOwn'] = true;
@@ -55,64 +53,56 @@ class elFinderVolumeGroup extends elFinderVolumeDriver
 	/**
 	 * @inheritdoc
 	 **/
-    protected function _dirname($path)
-    {
+	protected function _dirname($path) {
 		return '/';
 	}
 
 	/**
 	 * {@inheritDoc}
 	 **/
-    protected function _basename($path)
-    {
+	protected function _basename($path) {
 		return '';
 	}
 
 	/**
 	 * {@inheritDoc}
 	 **/
-    protected function _joinPath($dir, $name)
-    {
+	protected function _joinPath($dir, $name) {
 		return '/' . $name;
 	}
 	
 	/**
 	 * {@inheritDoc}
 	 **/
-    protected function _normpath($path)
-    {
+	protected function _normpath($path) {
 		return '/';
 	}
 	
 	/**
 	 * {@inheritDoc}
 	 **/
-    protected function _relpath($path)
-    {
+	protected function _relpath($path) {
 		return '/';
 	}
 	
 	/**
 	 * {@inheritDoc}
 	 **/
-    protected function _abspath($path)
-    {
+	protected function _abspath($path) {
 		return '/';
 	}
 	
 	/**
 	 * {@inheritDoc}
 	 **/
-    protected function _path($path)
-    {
+	protected function _path($path) {
 		return '/';
 	}
 	
 	/**
 	 * {@inheritDoc}
 	 **/
-    protected function _inpath($path, $parent)
-    {
+	protected function _inpath($path, $parent) {
 		return false;
 	}
 	
@@ -123,8 +113,7 @@ class elFinderVolumeGroup extends elFinderVolumeDriver
 	/**
 	 * {@inheritDoc}
 	 **/
-    protected function _stat($path)
-    {
+	protected function _stat($path) {
 		if ($path === '/') {
 			return array(
 				'size'   => 0,
@@ -154,8 +143,7 @@ class elFinderVolumeGroup extends elFinderVolumeDriver
 	/**
 	 * {@inheritDoc}
 	 **/
-    protected function _dimensions($path, $mime)
-    {
+	protected function _dimensions($path, $mime) {
 		return false;
 	}
 	/******************** file/dir content *********************/
@@ -163,32 +151,28 @@ class elFinderVolumeGroup extends elFinderVolumeDriver
 	/**
 	 * {@inheritDoc}
 	 **/
-    protected function readlink($path)
-    {
+	protected function readlink($path) {
 		return null;
 	}
 	
 	/**
 	 * {@inheritDoc}
 	 **/
-    protected function _scandir($path)
-    {
+	protected function _scandir($path) {
 		return array();
 	}
 
 	/**
 	 * {@inheritDoc}
 	 **/
-    protected function _fopen($path, $mode = 'rb')
-    {
+	protected function _fopen($path, $mode='rb') {
 		return false;
 	}
 
 	/**
 	 * {@inheritDoc}
 	 **/
-    protected function _fclose($fp, $path = '')
-    {
+	protected function _fclose($fp, $path='') {
 		return true;
 	}
 	
@@ -197,112 +181,98 @@ class elFinderVolumeGroup extends elFinderVolumeDriver
 	/**
 	 * {@inheritDoc}
 	 **/
-    protected function _mkdir($path, $name)
-    {
+	protected function _mkdir($path, $name) {
 		return false;
 	}
 	
 	/**
 	 * {@inheritDoc}
 	 **/
-    protected function _mkfile($path, $name)
-    {
+	protected function _mkfile($path, $name) {
 		return false;
 	}
 	
 	/**
 	 * {@inheritDoc}
 	 **/
-    protected function _symlink($source, $targetDir, $name)
-    {
+	protected function _symlink($source, $targetDir, $name) {
 		return false;
 	}
 	
 	/**
 	 * {@inheritDoc}
 	 **/
-    protected function _copy($source, $targetDir, $name)
-    {
+	protected function _copy($source, $targetDir, $name) {
 		return false;
 	}
 
 	/**
 	 * {@inheritDoc}
 	 **/
-    protected function _move($source, $targetDir, $name)
-    {
+	protected function _move($source, $targetDir, $name) {
 		return false;
 	}
 		
 	/**
 	 * {@inheritDoc}
 	 **/
-    protected function _unlink($path)
-    {
+	protected function _unlink($path) {
 		return false;
 	}
 
 	/**
 	 * {@inheritDoc}
 	 **/
-    protected function _rmdir($path)
-    {
+	protected function _rmdir($path) {
 		return false;
 	}
 	
 	/**
 	 * {@inheritDoc}
 	 **/
-    protected function _save($fp, $dir, $name, $stat)
-    {
+	protected function _save($fp, $dir, $name, $stat) {
 		return false;
 	}
 	
 	/**
 	 * {@inheritDoc}
 	 **/
-    protected function _getContents($path)
-    {
+	protected function _getContents($path) {
 		return false;
 	}
 	
 	/**
 	 * {@inheritDoc}
 	 **/
-    protected function _filePutContents($path, $content)
-    {
+	protected function _filePutContents($path, $content) {
 		return false;
 	}
 
 	/**
 	 * {@inheritDoc}
 	 **/
-    protected function _checkArchivers()
-    {
+	protected function _checkArchivers() {
 		return;
 	}
 
 	/**
 	 * {@inheritDoc}
 	 **/
-    protected function _chmod($path, $mode)
-    {
+	protected function _chmod($path, $mode) {
 		return false;
 	}
 
 	/**
 	 * {@inheritDoc}
 	 **/
-    protected function _findSymlinks($path)
-    {
+	protected function _findSymlinks($path) {
 		return false;
 	}
 
 	/**
 	 * {@inheritDoc}
 	 **/
-    protected function _extract($path, $arc)
-    {
+	protected function _extract($path, $arc) {
 		return false;
 	}
 	
