@@ -491,7 +491,20 @@ ENV LOGICMOO_GAMES $LOGICMOO_WS/packs_sys/prologmud_samples/prolog/prologmud_sam
 
 
 RUN apt-get update \
- && apt-get install -y -q --no-install-recommends tini screen nginx iputils-ping net-tools
+ && apt-get install -y -q --no-install-recommends screen nginx iputils-ping net-tools
+
+ENV TINI_VERSION v0.19.0
+ADD https://github.com/krallin/tini/releases/download/${TINI_VERSION}/tini /tini
+RUN chmod +x /tini
+RUN chmod +x run.sh
+RUN chmod 777 docker-entrypoint.sh
+
+RUN apt-get update && apt-get install -y software-properties-common curl gnupg2 && \
+  curl -fsSL https://apt.releases.hashicorp.com/gpg | apt-key add - && \
+  apt-add-repository "deb [arch=amd64] https://apt.releases.hashicorp.com $(lsb_release -cs) main" && \
+  apt-get update && apt-get install -y \
+  vault bash && \
+  setcap cap_ipc_lock= /usr/bin/vault
 
 # Phase two in case we forgot any above
 MAINTAINER RUN echo add-apt-repository -y ppa:ondrej/php \
