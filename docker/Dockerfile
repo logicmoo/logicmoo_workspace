@@ -491,7 +491,7 @@ ENV LOGICMOO_GAMES $LOGICMOO_WS/packs_sys/prologmud_samples/prolog/prologmud_sam
 
 
 RUN apt-get update \
- && apt-get install -y -q --no-install-recommends iputils-ping net-tools
+ && apt-get install -y -q --no-install-recommends tini screen nginx iputils-ping net-tools
 
 # Phase two in case we forgot any above
 MAINTAINER RUN echo add-apt-repository -y ppa:ondrej/php \
