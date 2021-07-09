@@ -51,6 +51,7 @@ ENV HOME /root
 COPY docker/rootfs /
 
 RUN echo enable some apache mods \
+ && ( apt install -y apache2 ; /bin/true) \
  && a2dismod mpm_event \
  && a2enmod macro access_compat alias auth_basic authn_core authn_file authz_core authz_host authz_user autoindex deflate dir env \
  filter headers http2 mime mpm_prefork negotiation  php7.4 proxy proxy_ajp proxy_balancer proxy_connect proxy_express \
@@ -87,7 +88,10 @@ MAINTAINER RUN cd $LOGICMOO_WS && set -x \
  && cd $LOGICMOO_WS/packs_xtra/ \
  && git add logicmoo_pldata \
  && git commit -am "logicmoo_pldata-$(date)" \
- && rm -rf $LOGICMOO_WS/packs_xtra/logicmoo_pldata/*/
+ && echo rm -rf $LOGICMOO_WS/packs_xtra/logicmoo_pldata/*/
+
+RUN wget -O /tmp/google-chrome-stable_current_amd64.deb https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb \
+ && apt install /tmp/google-chrome-stable_current_amd64.deb
 
 #CMD $LOGICMOO_WS/StartLogicmoo.sh
 ENTRYPOINT ["/startup_logicmoo.sh"]

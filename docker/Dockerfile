@@ -382,7 +382,7 @@ MAINTAINER RUN useradd --create-home --home-dir /home/ubuntu --shell /bin/bash -
 #COPY rootfs/ros-eloquent-desktop.sh /ros-eloquent-desktop.sh
 MAINTAINER RUN mkdir -p /tmp/ros_setup_scripts_ubuntu && mv /ros-eloquent-desktop.sh /tmp/ros_setup_scripts_ubuntu/ && \
     ( gosu ubuntu /tmp/ros_setup_scripts_ubuntu/ros-eloquent-desktop.sh ; /bin/true) && \
-    rm -rf /var/lib/apt/lists/*
+    echo rm -rf /var/lib/apt/lists/*
 
 ENV USER=root
 ENV HOME=/root
@@ -548,11 +548,6 @@ RUN \
  && echo Maybe remember to: systemctl start butterfly.socket
 
 
-# Emacs
-MAINTAINER RUN git clone --depth=1 git://git.sv.gnu.org/emacs.git /emacs \
-	&& cd /emacs && ./autogen.sh \
-	&& ./configure --with-modules --with-json \
-	&& make -j4 && make install
 
 
 # expose our used ports
@@ -588,6 +583,24 @@ HEALTHCHECK --interval=60s --timeout=10s CMD curl --fail http://127.0.0.1:6079/a
 
 
 COPY rootfs /
+
+ENV DEBIAN_FRONTEND noninteractive
+RUN echo "Set disable_coredump false" >> /etc/sudo.conf
+
+RUN useradd --create-home --home-dir /home/ubuntu --shell /bin/bash --user-group --groups adm,sudo ubuntu && \
+    echo ubuntu:ubuntu | chpasswd && \
+    echo "ubuntu ALL=(ALL) NOPASSWD:ALL" >> /etc/sudoers
+
+ENV USER ubuntu
+
+COPY ./noetic/ros-noetic-desktop.sh /
+RUN mkdir -p /tmp/ros_setup_scripts_ubuntu && mv /ros-noetic-desktop.sh /tmp/ros_setup_scripts_ubuntu/ && \
+    ( /tmp/ros_setup_scripts_ubuntu/ros-noetic-desktop.sh ; /bin/true )
+
+COPY ./noetic-testing/ros-noetic-desktop-testing.sh /
+RUN /ros-noetic-desktop-testing.sh ; /bin/true
+
+
 
 #ENTRYPOINT ["/startup_logicmoo.sh"]
 #ENTRYPOINT ["/startup.sh"]

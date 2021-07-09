@@ -1,5 +1,4 @@
 _HiStOrY_V2_
-call(make),call(pipeline_file_loading).\040
 call(make),call(run_pipeline("what\040rivers\040are\040there?")).\040
 call(make),call(run_pipeline("what\040countries\040are\040there\040in\040europe?")).\040
 call(make),call(run_pipeline("which\040country\040's\040capital\040is\040london?")).\040
@@ -99,3 +98,4 @@ make.
 test_chat80.
 make.
 test_chat80.
+make.

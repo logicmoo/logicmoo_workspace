@@ -1,10 +1,4 @@
 /opt/logicmoo_workspace/StartLogicmoo.sh
-fg
-cls
-prolog.
-bfly. call((bfly_set(butterfly),bfly_set(command_args,"4123"),bfly_set(ptty,"/dev/pts/15:::"))). bfly_start_link("http://logicmoo.org:14123/session/bc99b22e-035c-464a-be5e-e6cee2c58d7c").
-end_of_file.
-/opt/logicmoo_workspace/StartLogicmoo.sh
 /opt/logicmoo_workspace/StartLogicmoo.sh
 #!/bin/bash
 set -e
@@ -1998,3 +1992,9 @@ kill -9 %1
 emacs
 kill -9 %1
 kill -9 %1
+emacs
+ls
+ls
+swipl
+ps axf
+docker exec -it logicmoo sudo -u prologmud_server -- screen -rx LogicmooServer

@@ -172,6 +172,12 @@
 			</Folder>
 		</Folder>
 		<Folder Name="docker">
+			<Folder Name="noetic">
+				<F N="docker/noetic/Dockerfile"/>
+			</Folder>
+			<Folder Name="noetic-testing">
+				<F N="docker/noetic-testing/Dockerfile"/>
+			</Folder>
 			<Folder Name="rootfs">
 				<Folder Name="etc">
 					<Folder Name="apache2">
@@ -2355,6 +2361,26 @@
 			<F N="docker/Dockerfile"/>
 			<F N="docker/make-docker.sh"/>
 		</Folder>
+		<Folder Name="docker-ros-desktop-vnc">
+			<Folder Name="kinetic">
+				<F N="docker-ros-desktop-vnc/kinetic/Dockerfile"/>
+			</Folder>
+			<Folder Name="melodic">
+				<F N="docker-ros-desktop-vnc/melodic/Dockerfile"/>
+			</Folder>
+			<Folder Name="melodic-arm64">
+				<F N="docker-ros-desktop-vnc/melodic-arm64/Dockerfile"/>
+			</Folder>
+			<Folder Name="noetic">
+				<F N="docker-ros-desktop-vnc/noetic/Dockerfile"/>
+			</Folder>
+			<Folder Name="noetic-testing">
+				<F N="docker-ros-desktop-vnc/noetic-testing/Dockerfile"/>
+			</Folder>
+		</Folder>
+		<Folder Name="dockerz">
+			<F N="dockerz/Dockerfile"/>
+		</Folder>
 		<Folder Name="docs">
 			<Folder Name="_build">
 				<Folder Name="doctrees">
@@ -3192,6 +3218,7 @@
 					<F N="packs_lib/sparqlprog/tests/tests.pl"/>
 				</Folder>
 				<F N="packs_lib/sparqlprog/buildenv.sh"/>
+				<F N="packs_lib/sparqlprog/Dockerfile"/>
 				<F N="packs_lib/sparqlprog/install.pl"/>
 				<F N="packs_lib/sparqlprog/pack.pl"/>
 				<F N="packs_lib/sparqlprog/packplus.pl"/>
@@ -8133,6 +8160,16 @@
 						<F N="packs_sys/logicmoo_nlu/ext/AceRules/LICENSE.txt"/>
 						<F N="packs_sys/logicmoo_nlu/ext/AceRules/README.md"/>
 					</Folder>
+					<Folder Name="AceRules-GIT">
+						<Folder Name="docker">
+							<Folder Name="plain">
+								<F N="packs_sys/logicmoo_nlu/ext/AceRules-GIT/docker/plain/Dockerfile"/>
+							</Folder>
+							<Folder Name="with-smodels">
+								<F N="packs_sys/logicmoo_nlu/ext/AceRules-GIT/docker/with-smodels/Dockerfile"/>
+							</Folder>
+						</Folder>
+					</Folder>
 					<Folder Name="ape">
 						<Folder Name="examples">
 							<F N="packs_sys/logicmoo_nlu/ext/ape/examples/ace_to_ace.pl"/>
@@ -12021,9 +12058,105 @@
 			</Folder>
 			<Folder Name="prologmud_samples">
 				<Folder Name="prolog">
+					<Folder Name="prologmud_sample_games/.cache">
+						<Folder Name="google-cloud-tools-java">
+							<Folder Name="managed-cloud-sdk">
+								<Folder Name="LATEST">
+									<Folder Name="google-cloud-sdk/.install/.backup">
+										<Folder Name="platform">
+											<Folder Name="ext-runtime">
+												<Folder Name="go">
+													<Folder Name="data">
+														<F N="packs_sys/prologmud_samples/prolog/prologmud_sample_games/.cache/google-cloud-tools-java/managed-cloud-sdk/LATEST/google-cloud-sdk/.install/.backup/platform/ext-runtime/go/data/Dockerfile"/>
+													</Folder>
+												</Folder>
+												<Folder Name="nodejs">
+													<Folder Name="data">
+														<F N="packs_sys/prologmud_samples/prolog/prologmud_sample_games/.cache/google-cloud-tools-java/managed-cloud-sdk/LATEST/google-cloud-sdk/.install/.backup/platform/ext-runtime/nodejs/data/Dockerfile"/>
+													</Folder>
+												</Folder>
+											</Folder>
+										</Folder>
+									</Folder>
+									<Folder Name="google-cloud-sdk">
+										<Folder Name="platform">
+											<Folder Name="ext-runtime">
+												<Folder Name="go">
+													<Folder Name="data">
+														<F N="packs_sys/prologmud_samples/prolog/prologmud_sample_games/.cache/google-cloud-tools-java/managed-cloud-sdk/LATEST/google-cloud-sdk/platform/ext-runtime/go/data/Dockerfile"/>
+													</Folder>
+												</Folder>
+												<Folder Name="nodejs">
+													<Folder Name="data">
+														<F N="packs_sys/prologmud_samples/prolog/prologmud_sample_games/.cache/google-cloud-tools-java/managed-cloud-sdk/LATEST/google-cloud-sdk/platform/ext-runtime/nodejs/data/Dockerfile"/>
+													</Folder>
+												</Folder>
+											</Folder>
+											<Folder Name="google_appengine">
+												<Folder Name="lib">
+													<Folder Name="docker">
+														<Folder Name="docker">
+															<Folder Name="tests">
+																<F N="packs_sys/prologmud_samples/prolog/prologmud_sample_games/.cache/google-cloud-tools-java/managed-cloud-sdk/LATEST/google-cloud-sdk/platform/google_appengine/lib/docker/docker/tests/Dockerfile"/>
+															</Folder>
+															<F N="packs_sys/prologmud_samples/prolog/prologmud_sample_games/.cache/google-cloud-tools-java/managed-cloud-sdk/LATEST/google-cloud-sdk/platform/google_appengine/lib/docker/docker/Dockerfile"/>
+														</Folder>
+													</Folder>
+												</Folder>
+											</Folder>
+										</Folder>
+									</Folder>
+								</Folder>
+							</Folder>
+						</Folder>
+					</Folder>
 					<Folder Name="prologmud_sample_games/.config">
 						<Folder Name="butterfly">
 							<F N="packs_sys/prologmud_samples/prolog/prologmud_sample_games/.config/butterfly/butterfly.conf"/>
+						</Folder>
+					</Folder>
+					<Folder Name="prologmud_sample_games/.p2">
+						<Folder Name="pool">
+							<Folder Name="plugins">
+								<Folder Name="org.eclipse.linuxtools.docker.editor.ls_1.0.0.202006092019">
+									<Folder Name="language-server">
+										<Folder Name="node_modules">
+											<Folder Name="dockerfile-language-server-nodejs">
+												<F N="packs_sys/prologmud_samples/prolog/prologmud_sample_games/.p2/pool/plugins/org.eclipse.linuxtools.docker.editor.ls_1.0.0.202006092019/language-server/node_modules/dockerfile-language-server-nodejs/Dockerfile"/>
+											</Folder>
+											<Folder Name="dockerfile-language-service">
+												<Folder Name="node_modules">
+													<Folder Name="dockerfile-utils">
+														<F N="packs_sys/prologmud_samples/prolog/prologmud_sample_games/.p2/pool/plugins/org.eclipse.linuxtools.docker.editor.ls_1.0.0.202006092019/language-server/node_modules/dockerfile-language-service/node_modules/dockerfile-utils/Dockerfile"/>
+													</Folder>
+												</Folder>
+											</Folder>
+											<Folder Name="dockerfile-utils">
+												<F N="packs_sys/prologmud_samples/prolog/prologmud_sample_games/.p2/pool/plugins/org.eclipse.linuxtools.docker.editor.ls_1.0.0.202006092019/language-server/node_modules/dockerfile-utils/Dockerfile"/>
+											</Folder>
+										</Folder>
+									</Folder>
+								</Folder>
+								<Folder Name="org.eclipse.linuxtools.docker.editor.ls_1.0.0.202103091924">
+									<Folder Name="language-server">
+										<Folder Name="node_modules">
+											<Folder Name="dockerfile-language-server-nodejs">
+												<F N="packs_sys/prologmud_samples/prolog/prologmud_sample_games/.p2/pool/plugins/org.eclipse.linuxtools.docker.editor.ls_1.0.0.202103091924/language-server/node_modules/dockerfile-language-server-nodejs/Dockerfile"/>
+											</Folder>
+											<Folder Name="dockerfile-utils">
+												<F N="packs_sys/prologmud_samples/prolog/prologmud_sample_games/.p2/pool/plugins/org.eclipse.linuxtools.docker.editor.ls_1.0.0.202103091924/language-server/node_modules/dockerfile-utils/Dockerfile"/>
+											</Folder>
+										</Folder>
+									</Folder>
+								</Folder>
+								<Folder Name="org.eclipse.wildwebdeveloper_0.5.14.202102181620">
+									<Folder Name="node_modules">
+										<Folder Name="yaml-language-server">
+											<F N="packs_sys/prologmud_samples/prolog/prologmud_sample_games/.p2/pool/plugins/org.eclipse.wildwebdeveloper_0.5.14.202102181620/node_modules/yaml-language-server/Dockerfile"/>
+										</Folder>
+									</Folder>
+								</Folder>
+							</Folder>
 						</Folder>
 					</Folder>
 					<Folder Name="prologmud_sample_games">
@@ -12071,6 +12204,19 @@
 							<F N="packs_sys/prologmud_samples/prolog/prologmud_sample_games/config-enabled-swish/rlimit.pl"/>
 							<F N="packs_sys/prologmud_samples/prolog/prologmud_sample_games/config-enabled-swish/rpc.pl"/>
 							<F N="packs_sys/prologmud_samples/prolog/prologmud_sample_games/config-enabled-swish/user_profile.pl"/>
+						</Folder>
+						<Folder Name="lsp-docker">
+							<Folder Name="demo-projects">
+								<Folder Name="Dockerfile">
+									<F N="packs_sys/prologmud_samples/prolog/prologmud_sample_games/lsp-docker/demo-projects/Dockerfile/Dockerfile"/>
+								</Folder>
+							</Folder>
+							<Folder Name="lsp-docker-full">
+								<F N="packs_sys/prologmud_samples/prolog/prologmud_sample_games/lsp-docker/lsp-docker-full/Dockerfile"/>
+							</Folder>
+							<Folder Name="lsp-docker-langservers">
+								<F N="packs_sys/prologmud_samples/prolog/prologmud_sample_games/lsp-docker/lsp-docker-langservers/Dockerfile"/>
+							</Folder>
 						</Folder>
 						<Folder Name="src_game_nani">
 							<Folder Name="web">
@@ -13075,6 +13221,7 @@
 						<F N="packs_usr/myuser/myuser/tests/tests.pl"/>
 					</Folder>
 					<F N="packs_usr/myuser/myuser/debug.pl"/>
+					<F N="packs_usr/myuser/myuser/Dockerfile"/>
 					<F N="packs_usr/myuser/myuser/foo.pl"/>
 					<F N="packs_usr/myuser/myuser/install.pl"/>
 					<F N="packs_usr/myuser/myuser/load.pl"/>
@@ -13181,6 +13328,7 @@
 					<F N="packs_usr/myuser/tests/tests.pl"/>
 				</Folder>
 				<F N="packs_usr/myuser/debug.pl"/>
+				<F N="packs_usr/myuser/Dockerfile"/>
 				<F N="packs_usr/myuser/foo.pl"/>
 				<F N="packs_usr/myuser/install.pl"/>
 				<F N="packs_usr/myuser/load.pl"/>
@@ -15289,6 +15437,24 @@
 				<F N="packs_web/logicmoo_webui/pack.pl"/>
 				<F N="packs_web/logicmoo_webui/README.md"/>
 			</Folder>
+			<Folder Name="muddev">
+				<Folder Name="evennia">
+					<F N="packs_web/muddev/evennia/Dockerfile"/>
+				</Folder>
+			</Folder>
+			<Folder Name="node_modules">
+				<Folder Name="ace">
+					<Folder Name="build">
+						<Folder Name="demo">
+							<Folder Name="kitchen-sink">
+								<Folder Name="docs">
+									<F N="packs_web/node_modules/ace/build/demo/kitchen-sink/docs/Dockerfile"/>
+								</Folder>
+							</Folder>
+						</Folder>
+					</Folder>
+				</Folder>
+			</Folder>
 			<Folder Name="swish">
 				<Folder Name="applications">
 					<F N="packs_web/swish/applications/is_dir"/>
@@ -17244,6 +17410,13 @@
 					<F N="packs_xtra/logicmoo_pldata/AceWiki/LICENSE.txt"/>
 					<F N="packs_xtra/logicmoo_pldata/AceWiki/README.md"/>
 					<F N="packs_xtra/logicmoo_pldata/AceWiki/run-webapps-with-jettyrunner.sh"/>
+				</Folder>
+				<Folder Name="AceWikiBAD">
+					<Folder Name="docker">
+						<Folder Name="plain">
+							<F N="packs_xtra/logicmoo_pldata/AceWikiBAD/docker/plain/Dockerfile"/>
+						</Folder>
+					</Folder>
 				</Folder>
 				<Folder Name="bllip-parser">
 					<Folder Name="dockerfiles">
