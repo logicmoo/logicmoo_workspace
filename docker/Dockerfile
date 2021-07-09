@@ -382,7 +382,7 @@ MAINTAINER RUN useradd --create-home --home-dir /home/ubuntu --shell /bin/bash -
 #COPY rootfs/ros-eloquent-desktop.sh /ros-eloquent-desktop.sh
 MAINTAINER RUN mkdir -p /tmp/ros_setup_scripts_ubuntu && mv /ros-eloquent-desktop.sh /tmp/ros_setup_scripts_ubuntu/ && \
     ( gosu ubuntu /tmp/ros_setup_scripts_ubuntu/ros-eloquent-desktop.sh ; /bin/true) && \
-    rm -rf /var/lib/apt/lists/*
+    echo rm -rf /var/lib/apt/lists/*
 
 ENV USER=root
 ENV HOME=/root
@@ -588,6 +588,27 @@ HEALTHCHECK --interval=60s --timeout=10s CMD curl --fail http://127.0.0.1:6079/a
 
 
 COPY rootfs /
+
+ENV DEBIAN_FRONTEND noninteractive
+RUN echo "Set disable_coredump false" >> /etc/sudo.conf
+RUN apt-get update -q && \
+    apt-get upgrade -yq && \
+    apt-get install -yq wget curl git build-essential vim sudo lsb-release locales bash-completion tzdata gosu && \
+    rm -rf /var/lib/apt/lists/*
+RUN useradd --create-home --home-dir /home/ubuntu --shell /bin/bash --user-group --groups adm,sudo ubuntu && \
+    echo ubuntu:ubuntu | chpasswd && \
+    echo "ubuntu ALL=(ALL) NOPASSWD:ALL" >> /etc/sudoers
+
+COPY ./noetic-testing/ros-noetic-desktop-testing.sh /
+RUN gosu ubuntu /ros-noetic-desktop-testing.sh && \
+    echo rm -rf /var/lib/apt/lists/*
+COPY ./noetic/ros-noetic-desktop.sh /ros-noetic-desktop.sh
+RUN mkdir -p /tmp/ros_setup_scripts_ubuntu && mv /ros-noetic-desktop.sh /tmp/ros_setup_scripts_ubuntu/ && \
+    gosu ubuntu /tmp/ros_setup_scripts_ubuntu/ros-noetic-desktop.sh && \
+    echo rm -rf /var/lib/apt/lists/*
+
+#ENV USER ubuntu
+
 
 #ENTRYPOINT ["/startup_logicmoo.sh"]
 #ENTRYPOINT ["/startup.sh"]
