@@ -1,7 +1,3 @@
-/opt/logicmoo_workspace/StartLogicmoo.sh
-/opt/logicmoo_workspace/StartLogicmoo.sh
-#!/bin/bash
-set -e
 export SCREEN_CMD="sudo -u prologmud_server -- screen"
 #echo PTTY:TTY:PTS=$PTTY:$TTY:$PTS
 #whoami
@@ -1998,3 +1994,7 @@ ls
 swipl
 ps axf
 docker exec -it logicmoo sudo -u prologmud_server -- screen -rx LogicmooServer
+apt install nmap
+su -
+apt install xeyes
+apt install xeyes

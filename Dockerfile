@@ -17,7 +17,7 @@ RUN apt-get update \
 # ; mv /var/www.logicmoo /var/www ; /bin/true
 
 # RUN apt remove -y apache2
-RUN apt install -y apache2
+RUN apt install -y apache2 nmap x11-apps vim
 RUN apt install -y nginx-common nginx nginx-core  libnginx-mod-http-geoip libnginx-mod-http-image-filter \
   libnginx-mod-http-xslt-filter libnginx-mod-mail libnginx-mod-stream \
   nginx nginx-common nginx-core supervisord supervisor

@@ -55,10 +55,26 @@ if [ -n "$SSH_CLIENT" ] || [ -n "$SSH_TTY" ]; then
   set -o ignoreeof
 fi
 
-if [ -n "$DISPLAY" ] || [ -z "$DISPLAY" ]; then
-   echo Maybe: export DISPLAY=10.0.0.122:0.0
-   echo OR Maybe: export DISPLAY=:1
-fi
+
+#if [ -f /usr/bin/nmap ]; then
+   # Declare an array of string with type
+   declare -a StringArray=("10.0.0.78" "172.17.0.1" "127.0.0.1"  )   
+   for val in ${StringArray[@]}; do
+     if [ -n "$DISPLAY" ] || [ -z "$DISPLAY" ]; then
+      NMAP=$(nmap -p 6000  $val)
+      if echo "$NMAP" | grep "Host is up"  && echo "$NMAP" | grep "closed"; then       
+        export DISPLAY=$val:0.0
+      fi
+    fi
+   done   
+   if [ -n "$DISPLAY" ] || [ -z "$DISPLAY" ]; then
+      echo Maybe: export DISPLAY=10.0.0.78:0.0
+      echo OR Maybe: export DISPLAY=:1
+      # Iterate the string array using for loop
+   fi
+#fi
+
+echo "#* DISPLAY=$DISPLAY"
 
 if [[ -z "${LIBJVM}" ]]; then  
    echo "Finding/Setting LIBJVM..."

@@ -41,14 +41,10 @@ MAYBE (IN OTHER TERMINAL):  docker exec -it logicmoo sudo -u prologmud_server --
 OR (Bash IN OTHER TERMINAL):  docker exec -it logicmoo bash
 ```  (in green every few minutes)
 
-Open a terminal 
+Open a terminal and run
 ```
 
-
-
-
-
-
+```
 
 # Douglas' pastebin
 ```
