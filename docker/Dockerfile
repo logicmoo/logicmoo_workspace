@@ -581,5 +581,5 @@ HEALTHCHECK --interval=60s --timeout=10s CMD curl --fail http://127.0.0.1:6079/a
 
 COPY rootfs /
 
-ENTRYPOINT ["/startup_logicmoo.sh"]
-ENTRYPOINT ["/startup.sh"]
+#ENTRYPOINT ["/startup_logicmoo.sh"]
+#ENTRYPOINT ["/startup.sh"]

@@ -90,4 +90,5 @@ MAINTAINER RUN cd $LOGICMOO_WS && set -x \
  && rm -rf $LOGICMOO_WS/packs_xtra/logicmoo_pldata/*/
 
 #CMD $LOGICMOO_WS/StartLogicmoo.sh
-
+ENTRYPOINT ["/startup_logicmoo.sh"]
+ENTRYPOINT ["/startup.sh"]
