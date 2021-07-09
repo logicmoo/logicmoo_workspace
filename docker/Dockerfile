@@ -465,18 +465,16 @@ RUN apt-get update \
 	; mv /var/www.logicmoo /var/www ; /bin/true
 
 
-# Emacs (added this when Emacs was ~28.0.50)
+# Emacs PreReqs (added this when Emacs was ~28.0.50)
 RUN apt-get update \
         && apt-get upgrade -y \
 	&& apt-get install -y build-essential git autoconf texinfo libgnutls28-dev libxml2-dev libncurses5-dev libjansson-dev \
-                              libjpeg-dev libpng-dev libgif-dev libtiff-dev libjson*-dev libxf*-dev \
-	&& git clone --depth=1 git://git.sv.gnu.org/emacs.git /emacs \
+                              libjpeg-dev libpng-dev libgif-dev libtiff-dev libjson*-dev libxf*-dev
+# Emacs
+MAINTAINER RUN git clone --depth=1 git://git.sv.gnu.org/emacs.git /emacs \
 	&& cd /emacs && ./autogen.sh \
 	&& ./configure --with-modules --with-json \
-	&& make -j4 && make install \
-	 && echo apt autoclean -y \
-	 && echo apt autoremove -y \
-	 && rm -rf /var/lib/apt/lists/*
+	&& make -j4 && make install
 
 
 #########################
