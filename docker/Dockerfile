@@ -93,7 +93,7 @@ RUN mkdir -p /usr/share/man/man1 \
  r-base-dev \
  r-base \
  qt5-default \
- python-virtualenv \
+ #python-virtualenv \
  python-setuptools \
  python-dev \
  python3-pip \
@@ -180,7 +180,7 @@ RUN mkdir -p /usr/share/man/man1 \
  librhash0 \
  libreoffice \
  libreadline-dev \
- libreadline7 \
+ #libreadline7 \
  #libraptor2-dev \
  libraptor2-0 \
  libpthread-stubs0-dev \
@@ -203,7 +203,7 @@ RUN mkdir -p /usr/share/man/man1 \
  #libncurses6 \
  libmpx2 \
  #libmariadb3 \
- libmailutils5 \
+ #libmailutils5 \
  #libmagickwand-6.q16-6
  #libmagickcore-6.q16-6 \
  #libm17n-0 \
@@ -362,6 +362,12 @@ RUN mkdir -p /usr/share/man/man1 \
  && rm -rf /var/lib/apt/lists/* 
 
 RUN mkdir -p /var/lock/apache2 /var/run/apache2 /var/run/sshd /var/log/supervisor
+
+RUN sh -c 'echo "deb [trusted=yes] http://packages.ros.org/ros/ubuntu $(lsb_release -sc) main" > /etc/apt/sources.list.d/ros-latest.list' \
+ && curl -s https://raw.githubusercontent.com/ros/rosdistro/master/ros.asc | sudo apt-key add - \
+ && apt update \
+ && apt install ros-noetic-desktop-full
+
 #RUN cp /etc/ssh/sshd_config /etc/ssh/sshd_config.original
 #RUN chmod a-w /etc/ssh/sshd_config.original
 RUN echo 'root:ubuntu' | chpasswd
