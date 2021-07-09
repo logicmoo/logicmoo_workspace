@@ -452,7 +452,7 @@ MAINTAINER RUN /go/bin/go get -u golang.org/x/tools/gopls
 
 
 # Python
-RUN apt-get install -y vim python3-pip \
+RUN apt-get install -y python3-pip \
 	&& pip3 install 'python-language-server[all]' \
 	 && echo apt autoclean -y \
 	 && echo apt autoremove -y \
@@ -548,11 +548,6 @@ RUN \
  && echo Maybe remember to: systemctl start butterfly.socket
 
 
-# Emacs
-MAINTAINER RUN git clone --depth=1 git://git.sv.gnu.org/emacs.git /emacs \
-	&& cd /emacs && ./autogen.sh \
-	&& ./configure --with-modules --with-json \
-	&& make -j4 && make install
 
 
 # expose our used ports
@@ -593,7 +588,7 @@ ENV DEBIAN_FRONTEND noninteractive
 RUN echo "Set disable_coredump false" >> /etc/sudo.conf
 RUN apt-get update -q && \
     apt-get upgrade -yq && \
-    apt-get install -yq wget curl git build-essential vim sudo lsb-release locales bash-completion tzdata gosu && \
+    apt-get install -yq wget curl git vim build-essential vim sudo lsb-release locales bash-completion tzdata gosu && \
     rm -rf /var/lib/apt/lists/*
 RUN useradd --create-home --home-dir /home/ubuntu --shell /bin/bash --user-group --groups adm,sudo ubuntu && \
     echo ubuntu:ubuntu | chpasswd && \
