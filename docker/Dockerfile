@@ -22,9 +22,10 @@ EXPOSE 80
 # docker build -t logicmoo/logicmoo_starter_image:latest --no-cache --add-host=logicmoo.org:10.0.0.90 - < ./Dockerfile.distro
 #
 
-USER root
+# USER root
 LABEL maintainer = "logicmoo@gmail.com"
 
+ENV DEBIAN_FRONTEND noninteractive
 ARG DEBIAN_FRONTEND=noninteractive
 ARG --security-opt seccomp:unconfined
 
@@ -584,12 +585,8 @@ HEALTHCHECK --interval=60s --timeout=10s CMD curl --fail http://127.0.0.1:6079/a
 
 COPY rootfs /
 
-ENV DEBIAN_FRONTEND noninteractive
 RUN echo "Set disable_coredump false" >> /etc/sudo.conf
-RUN apt-get update -q && \
-    apt-get upgrade -yq && \
-    apt-get install -yq wget curl git vim build-essential vim sudo lsb-release locales bash-completion tzdata gosu && \
-    rm -rf /var/lib/apt/lists/*
+
 RUN useradd --create-home --home-dir /home/ubuntu --shell /bin/bash --user-group --groups adm,sudo ubuntu && \
     echo ubuntu:ubuntu | chpasswd && \
     echo "ubuntu ALL=(ALL) NOPASSWD:ALL" >> /etc/sudoers
