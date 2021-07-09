@@ -532,7 +532,8 @@ MAINTAINER RUN git clone --depth=1 git://git.sv.gnu.org/emacs.git /emacs \
 
 # expose our used ports
 EXPOSE 22
-EXPOSE 8123 5007 6001 5555 8543 #LSP (right?)
+#LSP (right?)
+EXPOSE 8123 5007 6001 5555 8543
 EXPOSE 80 4080
 EXPOSE 443 4443
 EXPOSE 3020 4020
