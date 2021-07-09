@@ -1,0 +1,268 @@
+[00:05:00] #logicmoo (+tn) : [m/7 o/0 h/0 v/0 n/7 b/0 e/0 I/0]
+[00:05:00] ##prolog (+tn) : [m/18 o/0 h/0 v/0 n/18 b/0 e/0 I/0]
+[00:05:00] @#frdcsa (+tn) : [m/2 o/1 h/0 v/0 n/1 b/0 e/0 I/0]
+[00:05:00] ##logic (+trn) : [m/14 o/2 h/0 v/0 n/12 b/0 e/0 I/0]
+[00:05:00] #ai (+tn) : [m/22 o/0 h/0 v/0 n/22 b/0 e/0 I/0]
+[00:05:00] ##narrative-ai (+stn) : [m/3 o/1 h/0 v/0 n/2 b/0 e/0 I/0]
+[00:05:00] #prolog (+tn) : [m/2 o/0 h/0 v/0 n/2 b/0 e/0 I/0]
+[00:10:00] #logicmoo (+tn) : [m/7 o/0 h/0 v/0 n/7 b/0 e/0 I/0]
+[00:10:00] ##prolog (+tn) : [m/18 o/0 h/0 v/0 n/18 b/0 e/0 I/0]
+[00:10:00] @#frdcsa (+tn) : [m/2 o/1 h/0 v/0 n/1 b/0 e/0 I/0]
+[00:10:00] ##logic (+trn) : [m/14 o/2 h/0 v/0 n/12 b/0 e/0 I/0]
+[00:10:00] #ai (+tn) : [m/21 o/0 h/0 v/0 n/21 b/0 e/0 I/0]
+[00:10:00] ##narrative-ai (+stn) : [m/3 o/1 h/0 v/0 n/2 b/0 e/0 I/0]
+[00:10:00] #prolog (+tn) : [m/2 o/0 h/0 v/0 n/2 b/0 e/0 I/0]
+[00:15:00] #logicmoo (+tn) : [m/7 o/0 h/0 v/0 n/7 b/0 e/0 I/0]
+[00:15:00] ##prolog (+tn) : [m/18 o/0 h/0 v/0 n/18 b/0 e/0 I/0]
+[00:15:00] @#frdcsa (+tn) : [m/2 o/1 h/0 v/0 n/1 b/0 e/0 I/0]
+[00:15:00] ##logic (+trn) : [m/14 o/2 h/0 v/0 n/12 b/0 e/0 I/0]
+[00:15:00] #ai (+tn) : [m/21 o/0 h/0 v/0 n/21 b/0 e/0 I/0]
+[00:15:00] ##narrative-ai (+stn) : [m/3 o/1 h/0 v/0 n/2 b/0 e/0 I/0]
+[00:15:00] #prolog (+tn) : [m/2 o/0 h/0 v/0 n/2 b/0 e/0 I/0]
+[00:19:41] PrologMUD joined #logicmoo.
+[00:19:41] PrologMUD joined ##prolog.
+[00:19:43] PrologMUD joined #frdcsa.
+[00:19:47] PrologMUD joined ##logic.
+[00:19:49] PrologMUD joined #ai.
+[00:19:51] PrologMUD joined ##narrative-ai.
+[00:19:53] PrologMUD joined #prolog.
+[00:20:00] #logicmoo is active but has no ops :(
+[00:20:00] ##prolog is active but has no ops :(
+[00:20:00] #logicmoo (+tn) : [m/6 o/0 h/0 v/0 n/6 b/0 e/0 I/0]
+[00:20:00] ##prolog (+tn) : [m/17 o/0 h/0 v/0 n/17 b/0 e/0 I/0]
+[00:20:00] @#frdcsa (+tn) : [m/1 o/1 h/0 v/0 n/0 b/0 e/0 I/0]
+[00:20:00] ##logic (+trn) : [m/13 o/2 h/0 v/0 n/11 b/0 e/0 I/0]
+[00:21:00] #ai is active but has no ops :(
+[00:21:00] #prolog is active but has no ops :(
+[00:22:03] Telnet connection: localhost.hsd1.wa.comcast.net/48002
+[00:22:03] Timeout/EOF ident connection
+[00:22:03] Logged in: swipl (telnet@localhost.hsd1.wa.comcast.net/48002)
+[00:22:03] #swipl# console swipl ""
+[00:22:03] #swipl# set nick PrologMUD
+[00:22:03] #swipl# msg nickserv identify swipl
+[00:22:03] #swipl# console #logicmoo
+[00:22:04] -NickServ (services@services.freenode.net)- Nick PrologMUD isn't registered.
+[00:25:00] #logicmoo (+tn) : [m/7 o/0 h/0 v/0 n/7 b/0 e/0 I/0]
+[00:25:00] ##prolog (+tn) : [m/18 o/0 h/0 v/0 n/18 b/0 e/0 I/0]
+[00:25:00] @#frdcsa (+tn) : [m/2 o/1 h/0 v/0 n/1 b/0 e/0 I/0]
+[00:25:00] ##logic (+trn) : [m/14 o/2 h/0 v/0 n/12 b/0 e/0 I/0]
+[00:25:00] #ai (+tn) : [m/21 o/0 h/0 v/0 n/21 b/0 e/0 I/0]
+[00:25:00] ##narrative-ai (+stn) : [m/3 o/1 h/0 v/0 n/2 b/0 e/0 I/0]
+[00:25:00] #prolog (+tn) : [m/2 o/0 h/0 v/0 n/2 b/0 e/0 I/0]
+[01:34:43] PrologMUD joined #logicmoo.
+[01:34:43] PrologMUD joined ##prolog.
+[01:34:44] PrologMUD joined #frdcsa.
+[01:34:49] PrologMUD joined ##agi.
+[01:34:51] PrologMUD joined ##logic.
+[01:34:53] PrologMUD joined #ai.
+[01:34:55] PrologMUD joined ##narrative-ai.
+[01:35:00] #logicmoo is active but has no ops :(
+[01:35:00] ##prolog is active but has no ops :(
+[01:35:00] ##AGI is active but has no ops :(
+[01:35:00] #logicmoo (+tn) : [m/7 o/0 h/0 v/0 n/7 b/0 e/0 I/0]
+[01:35:00] ##prolog (+tn) : [m/17 o/0 h/0 v/0 n/17 b/0 e/0 I/0]
+[01:35:00] #frdcsa (+tn) : [m/2 o/1 h/0 v/0 n/1 b/0 e/0 I/0]
+[01:35:00] ##AGI (+tn) : [m/8 o/0 h/0 v/0 n/8 b/0 e/0 I/0]
+[01:36:00] #ai is active but has no ops :(
+[01:37:05] Telnet connection: localhost.hsd1.wa.comcast.net/50078
+[01:37:05] Timeout/EOF ident connection
+[01:37:05] Logged in: swipl (telnet@localhost.hsd1.wa.comcast.net/50078)
+[01:37:05] #swipl# console swipl ""
+[01:37:05] #swipl# set nick PrologMUD
+[01:37:05] #swipl# msg nickserv identify swipl
+[01:37:05] #swipl# -chan ##AGI
+[01:37:05] #swipl# console #logicmoo
+[01:37:07] -NickServ (services@services.freenode.net)- Nick PrologMUD isn't registered.
+[01:40:00] #logicmoo (+tn) : [m/7 o/0 h/0 v/0 n/7 b/0 e/0 I/0]
+[01:40:00] ##prolog (+tn) : [m/17 o/0 h/0 v/0 n/17 b/0 e/0 I/0]
+[01:40:00] #frdcsa (+tn) : [m/2 o/1 h/0 v/0 n/1 b/0 e/0 I/0]
+[01:40:00] ##logic (+trn) : [m/13 o/2 h/0 v/0 n/11 b/0 e/0 I/0]
+[01:40:00] #ai (+tn) : [m/21 o/0 h/0 v/0 n/21 b/0 e/0 I/0]
+[01:40:00] ##narrative-ai (+stn) : [m/2 o/1 h/0 v/0 n/1 b/0 e/0 I/0]
+[01:45:00] #logicmoo (+tn) : [m/7 o/0 h/0 v/0 n/7 b/0 e/0 I/0]
+[01:45:00] ##prolog (+tn) : [m/17 o/0 h/0 v/0 n/17 b/0 e/0 I/0]
+[01:45:00] #frdcsa (+tn) : [m/2 o/1 h/0 v/0 n/1 b/0 e/0 I/0]
+[01:45:00] ##logic (+trn) : [m/13 o/2 h/0 v/0 n/11 b/0 e/0 I/0]
+[01:45:00] #ai (+tn) : [m/21 o/0 h/0 v/0 n/21 b/0 e/0 I/0]
+[01:45:00] ##narrative-ai (+stn) : [m/2 o/1 h/0 v/0 n/1 b/0 e/0 I/0]
+[06:58:50] PrologMUD joined #logicmoo.
+[06:58:52] PrologMUD joined ##prolog.
+[06:58:52] PrologMUD joined #frdcsa.
+[06:58:57] PrologMUD joined ##agi.
+[06:58:59] PrologMUD joined ##logic.
+[06:59:00] #logicmoo is active but has no ops :(
+[06:59:00] ##prolog is active but has no ops :(
+[06:59:01] PrologMUD joined #ai.
+[06:59:03] PrologMUD joined ##narrative-ai.
+[07:00:00] ##AGI is active but has no ops :(
+[07:00:00] #ai is active but has no ops :(
+[07:00:00] #logicmoo (+tn) : [m/8 o/0 h/0 v/0 n/8 b/0 e/0 I/0]
+[07:00:00] ##prolog (+tn) : [m/17 o/0 h/0 v/0 n/17 b/0 e/0 I/0]
+[07:00:00] #frdcsa (+tn) : [m/2 o/1 h/0 v/0 n/1 b/0 e/0 I/0]
+[07:00:00] ##AGI (+tn) : [m/8 o/0 h/0 v/0 n/8 b/0 e/0 I/0]
+[07:00:00] ##logic (+trn) : [m/14 o/2 h/0 v/0 n/12 b/0 e/0 I/0]
+[07:00:00] #ai (+tn) : [m/21 o/0 h/0 v/0 n/21 b/0 e/0 I/0]
+[07:00:00] ##narrative-ai (+stn) : [m/2 o/1 h/0 v/0 n/1 b/0 e/0 I/0]
+[07:05:00] #logicmoo (+tn) : [m/8 o/0 h/0 v/0 n/8 b/0 e/0 I/0]
+[07:05:00] ##prolog (+tn) : [m/17 o/0 h/0 v/0 n/17 b/0 e/0 I/0]
+[07:05:00] #frdcsa (+tn) : [m/2 o/1 h/0 v/0 n/1 b/0 e/0 I/0]
+[07:05:00] ##AGI (+tn) : [m/8 o/0 h/0 v/0 n/8 b/0 e/0 I/0]
+[07:05:00] ##logic (+trn) : [m/14 o/2 h/0 v/0 n/12 b/0 e/0 I/0]
+[07:05:00] #ai (+tn) : [m/21 o/0 h/0 v/0 n/21 b/0 e/0 I/0]
+[07:05:00] ##narrative-ai (+stn) : [m/2 o/1 h/0 v/0 n/1 b/0 e/0 I/0]
+[07:10:00] #logicmoo (+tn) : [m/8 o/0 h/0 v/0 n/8 b/0 e/0 I/0]
+[07:10:00] ##prolog (+tn) : [m/16 o/0 h/0 v/0 n/16 b/0 e/0 I/0]
+[07:10:00] #frdcsa (+tn) : [m/2 o/1 h/0 v/0 n/1 b/0 e/0 I/0]
+[07:10:00] ##AGI (+tn) : [m/8 o/0 h/0 v/0 n/8 b/0 e/0 I/0]
+[07:10:00] ##logic (+trn) : [m/14 o/2 h/0 v/0 n/12 b/0 e/0 I/0]
+[07:10:00] #ai (+tn) : [m/21 o/0 h/0 v/0 n/21 b/0 e/0 I/0]
+[07:10:00] ##narrative-ai (+stn) : [m/2 o/1 h/0 v/0 n/1 b/0 e/0 I/0]
+[07:12:59] PrologMUD joined #logicmoo.
+[07:13:00] #logicmoo is active but has no ops :(
+[07:13:01] PrologMUD joined ##prolog.
+[07:13:01] PrologMUD joined #frdcsa.
+[07:13:06] PrologMUD joined ##agi.
+[07:13:08] PrologMUD joined ##logic.
+[07:13:10] PrologMUD joined #ai.
+[07:13:12] PrologMUD joined ##narrative-ai.
+[07:14:00] ##prolog is active but has no ops :(
+[07:14:00] ##AGI is active but has no ops :(
+[07:14:00] #ai is active but has no ops :(
+[07:15:00] #logicmoo (+tn) : [m/8 o/0 h/0 v/0 n/8 b/0 e/0 I/0]
+[07:15:00] ##prolog (+tn) : [m/16 o/0 h/0 v/0 n/16 b/0 e/0 I/0]
+[07:15:00] #frdcsa (+tn) : [m/2 o/1 h/0 v/0 n/1 b/0 e/0 I/0]
+[07:15:00] ##AGI (+tn) : [m/8 o/0 h/0 v/0 n/8 b/0 e/0 I/0]
+[07:15:00] ##logic (+trn) : [m/14 o/2 h/0 v/0 n/12 b/0 e/0 I/0]
+[07:15:00] #ai (+tn) : [m/21 o/0 h/0 v/0 n/21 b/0 e/0 I/0]
+[07:15:00] ##narrative-ai (+stn) : [m/2 o/1 h/0 v/0 n/1 b/0 e/0 I/0]
+[07:28:50] PrologMUD joined #logicmoo.
+[07:28:51] PrologMUD joined ##prolog.
+[07:28:52] PrologMUD joined #frdcsa.
+[07:28:57] PrologMUD joined ##agi.
+[07:28:59] PrologMUD joined ##logic.
+[07:29:00] #logicmoo is active but has no ops :(
+[07:29:00] ##prolog is active but has no ops :(
+[07:29:01] PrologMUD joined #ai.
+[07:29:03] PrologMUD joined ##narrative-ai.
+[07:30:00] ##AGI is active but has no ops :(
+[07:30:00] #ai is active but has no ops :(
+[07:30:00] #logicmoo (+tn) : [m/8 o/0 h/0 v/0 n/8 b/0 e/0 I/0]
+[07:30:00] ##prolog (+tn) : [m/17 o/0 h/0 v/0 n/17 b/0 e/0 I/0]
+[07:30:00] #frdcsa (+tn) : [m/2 o/1 h/0 v/0 n/1 b/0 e/0 I/0]
+[07:30:00] ##AGI (+tn) : [m/8 o/0 h/0 v/0 n/8 b/0 e/0 I/0]
+[07:30:00] ##logic (+trn) : [m/14 o/2 h/0 v/0 n/12 b/0 e/0 I/0]
+[07:30:00] #ai (+tn) : [m/21 o/0 h/0 v/0 n/21 b/0 e/0 I/0]
+[07:30:00] ##narrative-ai (+stn) : [m/2 o/1 h/0 v/0 n/1 b/0 e/0 I/0]
+[07:43:42] PrologMUD joined #logicmoo.
+[07:43:43] PrologMUD joined ##prolog.
+[07:43:44] PrologMUD joined #frdcsa.
+[07:43:49] PrologMUD joined ##agi.
+[07:43:51] PrologMUD joined ##logic.
+[07:43:53] PrologMUD joined #ai.
+[07:43:55] PrologMUD joined ##narrative-ai.
+[07:44:00] #logicmoo is active but has no ops :(
+[07:44:00] ##prolog is active but has no ops :(
+[07:44:00] ##AGI is active but has no ops :(
+[07:45:00] #ai is active but has no ops :(
+[07:45:00] #logicmoo (+tn) : [m/8 o/0 h/0 v/0 n/8 b/0 e/0 I/0]
+[07:45:00] ##prolog (+tn) : [m/17 o/0 h/0 v/0 n/17 b/0 e/0 I/0]
+[07:45:00] #frdcsa (+tn) : [m/2 o/1 h/0 v/0 n/1 b/0 e/0 I/0]
+[07:45:00] ##AGI (+tn) : [m/8 o/0 h/0 v/0 n/8 b/0 e/0 I/0]
+[07:45:00] ##logic (+trn) : [m/14 o/2 h/0 v/0 n/12 b/0 e/0 I/0]
+[07:45:00] #ai (+tn) : [m/21 o/0 h/0 v/0 n/21 b/0 e/0 I/0]
+[07:45:00] ##narrative-ai (+stn) : [m/2 o/1 h/0 v/0 n/1 b/0 e/0 I/0]
+[07:45:56] Telnet connection: localhost.hsd1.wa.comcast.net/33578
+[07:45:56] Timeout/EOF ident connection
+[07:45:56] Logged in: swipl (telnet@localhost.hsd1.wa.comcast.net/33578)
+[07:45:56] #swipl# console swipl ""
+[07:45:56] #swipl# set nick PrologMUD
+[07:45:56] #swipl# msg nickserv identify swipl
+[07:45:56] #swipl# -chan ##AGI
+[07:45:56] #swipl# console #logicmoo
+[07:45:58] -NickServ (services@services.freenode.net)- Nick PrologMUD isn't registered.
+[07:50:00] #logicmoo (+tn) : [m/8 o/0 h/0 v/0 n/8 b/0 e/0 I/0]
+[07:50:00] ##prolog (+tn) : [m/17 o/0 h/0 v/0 n/17 b/0 e/0 I/0]
+[07:50:00] #frdcsa (+tn) : [m/2 o/1 h/0 v/0 n/1 b/0 e/0 I/0]
+[07:50:00] ##logic (+trn) : [m/14 o/2 h/0 v/0 n/12 b/0 e/0 I/0]
+[07:50:00] #ai (+tn) : [m/21 o/0 h/0 v/0 n/21 b/0 e/0 I/0]
+[07:50:00] ##narrative-ai (+stn) : [m/2 o/1 h/0 v/0 n/1 b/0 e/0 I/0]
+[07:55:00] #logicmoo (+tn) : [m/8 o/0 h/0 v/0 n/8 b/0 e/0 I/0]
+[07:55:00] ##prolog (+tn) : [m/17 o/0 h/0 v/0 n/17 b/0 e/0 I/0]
+[07:55:00] #frdcsa (+tn) : [m/2 o/1 h/0 v/0 n/1 b/0 e/0 I/0]
+[07:55:00] ##logic (+trn) : [m/14 o/2 h/0 v/0 n/12 b/0 e/0 I/0]
+[07:55:00] #ai (+tn) : [m/21 o/0 h/0 v/0 n/21 b/0 e/0 I/0]
+[07:55:00] ##narrative-ai (+stn) : [m/2 o/1 h/0 v/0 n/1 b/0 e/0 I/0]
+[08:00:00] #logicmoo (+tn) : [m/8 o/0 h/0 v/0 n/8 b/0 e/0 I/0]
+[08:00:00] ##prolog (+tn) : [m/17 o/0 h/0 v/0 n/17 b/0 e/0 I/0]
+[08:00:00] #frdcsa (+tn) : [m/2 o/1 h/0 v/0 n/1 b/0 e/0 I/0]
+[08:00:00] ##logic (+trn) : [m/14 o/2 h/0 v/0 n/12 b/0 e/0 I/0]
+[08:00:00] #ai (+tn) : [m/21 o/0 h/0 v/0 n/21 b/0 e/0 I/0]
+[08:00:00] ##narrative-ai (+stn) : [m/2 o/1 h/0 v/0 n/1 b/0 e/0 I/0]
+[08:05:00] #logicmoo (+tn) : [m/8 o/0 h/0 v/0 n/8 b/0 e/0 I/0]
+[08:05:00] ##prolog (+tn) : [m/17 o/0 h/0 v/0 n/17 b/0 e/0 I/0]
+[08:05:00] #frdcsa (+tn) : [m/2 o/1 h/0 v/0 n/1 b/0 e/0 I/0]
+[08:05:00] ##logic (+trn) : [m/14 o/2 h/0 v/0 n/12 b/0 e/0 I/0]
+[08:05:00] #ai (+tn) : [m/21 o/0 h/0 v/0 n/21 b/0 e/0 I/0]
+[08:05:00] ##narrative-ai (+stn) : [m/2 o/1 h/0 v/0 n/1 b/0 e/0 I/0]
+[08:10:00] #logicmoo (+tn) : [m/8 o/0 h/0 v/0 n/8 b/0 e/0 I/0]
+[08:10:00] ##prolog (+tn) : [m/17 o/0 h/0 v/0 n/17 b/0 e/0 I/0]
+[08:10:00] #frdcsa (+tn) : [m/2 o/1 h/0 v/0 n/1 b/0 e/0 I/0]
+[08:10:00] ##logic (+trn) : [m/14 o/2 h/0 v/0 n/12 b/0 e/0 I/0]
+[08:10:00] #ai (+tn) : [m/21 o/0 h/0 v/0 n/21 b/0 e/0 I/0]
+[08:10:00] ##narrative-ai (+stn) : [m/2 o/1 h/0 v/0 n/1 b/0 e/0 I/0]
+[08:15:00] #logicmoo (+tn) : [m/8 o/0 h/0 v/0 n/8 b/0 e/0 I/0]
+[08:15:00] ##prolog (+tn) : [m/17 o/0 h/0 v/0 n/17 b/0 e/0 I/0]
+[08:15:00] #frdcsa (+tn) : [m/2 o/1 h/0 v/0 n/1 b/0 e/0 I/0]
+[08:15:00] ##logic (+trn) : [m/14 o/2 h/0 v/0 n/12 b/0 e/0 I/0]
+[08:15:00] #ai (+tn) : [m/21 o/0 h/0 v/0 n/21 b/0 e/0 I/0]
+[08:15:00] ##narrative-ai (+stn) : [m/2 o/1 h/0 v/0 n/1 b/0 e/0 I/0]
+[08:20:00] #logicmoo (+tn) : [m/8 o/0 h/0 v/0 n/8 b/0 e/0 I/0]
+[08:20:00] ##prolog (+tn) : [m/17 o/0 h/0 v/0 n/17 b/0 e/0 I/0]
+[08:20:00] #frdcsa (+tn) : [m/2 o/1 h/0 v/0 n/1 b/0 e/0 I/0]
+[08:20:00] ##logic (+trn) : [m/14 o/2 h/0 v/0 n/12 b/0 e/0 I/0]
+[08:20:00] #ai (+tn) : [m/21 o/0 h/0 v/0 n/21 b/0 e/0 I/0]
+[08:20:00] ##narrative-ai (+stn) : [m/2 o/1 h/0 v/0 n/1 b/0 e/0 I/0]
+[08:25:00] #logicmoo (+tn) : [m/8 o/0 h/0 v/0 n/8 b/0 e/0 I/0]
+[08:25:00] ##prolog (+tn) : [m/17 o/0 h/0 v/0 n/17 b/0 e/0 I/0]
+[08:25:00] #frdcsa (+tn) : [m/2 o/1 h/0 v/0 n/1 b/0 e/0 I/0]
+[08:25:00] ##logic (+trn) : [m/14 o/2 h/0 v/0 n/12 b/0 e/0 I/0]
+[08:25:00] #ai (+tn) : [m/21 o/0 h/0 v/0 n/21 b/0 e/0 I/0]
+[08:25:00] ##narrative-ai (+stn) : [m/2 o/1 h/0 v/0 n/1 b/0 e/0 I/0]
+[08:29:10] PrologMUD joined #logicmoo.
+[08:29:11] PrologMUD joined ##prolog.
+[08:29:13] PrologMUD joined #frdcsa.
+[08:29:17] PrologMUD joined ##logic.
+[08:29:19] PrologMUD joined #ai.
+[08:29:21] PrologMUD joined ##narrative-ai.
+[08:30:00] #logicmoo is active but has no ops :(
+[08:30:00] ##prolog is active but has no ops :(
+[08:30:00] #ai is active but has no ops :(
+[08:30:00] #logicmoo (+tn) : [m/8 o/0 h/0 v/0 n/8 b/0 e/0 I/0]
+[08:30:00] ##prolog (+tn) : [m/17 o/0 h/0 v/0 n/17 b/0 e/0 I/0]
+[08:30:00] #frdcsa (+tn) : [m/2 o/1 h/0 v/0 n/1 b/0 e/0 I/0]
+[08:30:00] ##logic (+trn) : [m/14 o/2 h/0 v/0 n/12 b/0 e/0 I/0]
+[08:30:00] #ai (+tn) : [m/21 o/0 h/0 v/0 n/21 b/0 e/0 I/0]
+[08:30:00] ##narrative-ai (+stn) : [m/2 o/1 h/0 v/0 n/1 b/0 e/0 I/0]
+[08:36:28] PrologMUD joined #logicmoo.
+[08:36:29] PrologMUD joined ##prolog.
+[08:36:31] PrologMUD joined #frdcsa.
+[08:36:35] PrologMUD joined ##logic.
+[08:36:37] PrologMUD joined #ai.
+[08:36:39] PrologMUD joined ##narrative-ai.
+[08:37:00] #logicmoo is active but has no ops :(
+[08:37:00] ##prolog is active but has no ops :(
+[08:37:00] #ai is active but has no ops :(
+[08:38:39] Telnet connection: localhost.hsd1.wa.comcast.net/37096
+[08:38:39] Timeout/EOF ident connection
+[08:38:39] Logged in: swipl (telnet@localhost.hsd1.wa.comcast.net/37096)
+[08:38:39] #swipl# console swipl ""
+[08:38:39] #swipl# set nick PrologMUD
+[08:38:39] #swipl# msg nickserv identify swipl
+[08:38:39] #swipl# console #logicmoo
+[08:38:41] -NickServ (services@services.freenode.net)- Nick PrologMUD isn't registered.
+[08:40:00] #logicmoo (+tn) : [m/8 o/0 h/0 v/0 n/8 b/0 e/0 I/0]
+[08:40:00] ##prolog (+tn) : [m/17 o/0 h/0 v/0 n/17 b/0 e/0 I/0]
+[08:40:00] #frdcsa (+tn) : [m/2 o/1 h/0 v/0 n/1 b/0 e/0 I/0]
+[08:40:00] ##logic (+trn) : [m/14 o/2 h/0 v/0 n/12 b/0 e/0 I/0]
+[08:40:00] #ai (+tn) : [m/21 o/0 h/0 v/0 n/21 b/0 e/0 I/0]
+[08:40:00] ##narrative-ai (+stn) : [m/2 o/1 h/0 v/0 n/1 b/0 e/0 I/0]
