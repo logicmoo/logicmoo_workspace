@@ -494,10 +494,10 @@ RUN apt-get update \
  && apt-get install -y -q --no-install-recommends screen nginx iputils-ping net-tools
 
 ENV TINI_VERSION v0.19.0
-ADD https://github.com/krallin/tini/releases/download/${TINI_VERSION}/tini /tini
-RUN chmod +x /tini
-RUN chmod +x run.sh
-RUN chmod 777 docker-entrypoint.sh
+ADD https://github.com/krallin/tini/releases/download/${TINI_VERSION}/tini /bin/tini
+RUN chmod +x /bin/tini
+#RUN chmod +x run.sh
+#RUN chmod 777 docker-entrypoint.sh
 
 RUN apt-get update && apt-get install -y software-properties-common curl gnupg2 && \
   curl -fsSL https://apt.releases.hashicorp.com/gpg | apt-key add - && \
