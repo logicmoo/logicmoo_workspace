@@ -13,14 +13,6 @@ LABEL maintainer="Tiryoh<tiryoh@gmail.com>"
 #FROM aicampbell/vnc-ubuntu18-xfce
 EXPOSE 80
 
-# who/where
-ENV LANG C.UTF-8
-ENV LANGUAGE C.UTF-8
-ENV LC_ALL C.UTF-8
-ENV LOGICMOO_USER prologmud_server
-ENV LOGICMOO_WS /opt/logicmoo_workspace
-ENV LOGICMOO_GAMES $LOGICMOO_WS/packs_sys/prologmud_samples/prolog/prologmud_sample_games
-
 #
 # from root@debian10:/opt/logicmoo_workspace
 # we run..
@@ -522,6 +514,14 @@ RUN \
  && echo Maybe remember to: systemctl enable butterfly.socket \
  && echo Maybe remember to: systemctl start butterfly.socket
 
+
+# who/where
+ENV LANG C.UTF-8
+ENV LANGUAGE C.UTF-8
+ENV LC_ALL C.UTF-8
+ENV LOGICMOO_USER prologmud_server
+ENV LOGICMOO_WS /opt/logicmoo_workspace
+ENV LOGICMOO_GAMES $LOGICMOO_WS/packs_sys/prologmud_samples/prolog/prologmud_sample_games
 
 # Emacs
 MAINTAINER RUN git clone --depth=1 git://git.sv.gnu.org/emacs.git /emacs \
