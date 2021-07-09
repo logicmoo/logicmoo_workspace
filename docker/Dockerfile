@@ -483,7 +483,7 @@ MAINTAINER RUN git clone --depth=1 git://git.sv.gnu.org/emacs.git /emacs \
 
 
 # Phase two in case we forgot any above
-RUN # add-apt-repository -y ppa:ondrej/php \
+RUN echo add-apt-repository -y ppa:ondrej/php \
  && apt-get update \
  && apt-get install -y -q --no-install-recommends \
   libapache2-mod-php \
