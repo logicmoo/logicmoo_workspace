@@ -588,17 +588,17 @@ ENV DEBIAN_FRONTEND noninteractive
 RUN echo "Set disable_coredump false" >> /etc/sudo.conf
 
 RUN useradd --create-home --home-dir /home/ubuntu --shell /bin/bash --user-group --groups adm,sudo ubuntu && \
-    echo ubuntu:ubuntu | chpasswd && \
+    echo prologmud_server:ubuntu | chpasswd && \
     echo "ubuntu ALL=(ALL) NOPASSWD:ALL" >> /etc/sudoers
 
 ENV USER ubuntu
 
 COPY ./noetic/ros-noetic-desktop.sh /
 RUN mkdir -p /tmp/ros_setup_scripts_ubuntu && mv /ros-noetic-desktop.sh /tmp/ros_setup_scripts_ubuntu/ && \
-    ( gosu ubuntu /tmp/ros_setup_scripts_ubuntu/ros-noetic-desktop.sh ; /bin/true )
+    ( /tmp/ros_setup_scripts_ubuntu/ros-noetic-desktop.sh ; /bin/true )
 
 COPY ./noetic-testing/ros-noetic-desktop-testing.sh /
-RUN gosu ubuntu /ros-noetic-desktop-testing.sh ; /bin/true
+RUN /ros-noetic-desktop-testing.sh ; /bin/true
 
 
 

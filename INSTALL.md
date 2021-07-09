@@ -178,7 +178,7 @@ cd $LOGICMOO_WS \
  && chmod 777 $LOGICMOO_GAMES/completion_* \
  && chmod 777 $LOGICMOO_GAMES/history_* \
  && chmod 777 $LOGICMOO_GAMES/nohup* \
- && chown $LOGICMOO_USER $LOGICMOO_GAMES/*0*
+ && chown $LOGICMOO_USER $LOGICMOO_GAMES/*0* \
  && chmod 777 /opt/logicmoo_workspace/packs_sys/*/ \
  && chmod 777 /opt/logicmoo_workspace/packs_sys/*/*/ \
  && chmod 777 /opt/logicmoo_workspace/packs_sys/*/*/*/ \
