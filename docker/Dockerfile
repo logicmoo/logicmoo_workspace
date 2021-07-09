@@ -474,7 +474,9 @@ RUN apt-get update \
 	 && rm -rf /var/lib/apt/lists/* 
 
 FROM ubuntu:18.04 AS go
-RUN export LATEST_VERSION=`wget -qO- https://golang.org/dl | grep -oE go[0-9]+\.[0-9]+\.[0-9]+\.linux-amd64\.tar\.gz | head -n 1` \
+RUN 	&& apt-get upgrade -y \
+	&& apt-get install -y wget \
+	&& export LATEST_VERSION=`wget -qO- https://golang.org/dl | grep -oE go[0-9]+\.[0-9]+\.[0-9]+\.linux-amd64\.tar\.gz | head -n 1` \
 	&& wget -c https://dl.google.com/go/$LATEST_VERSION \
 	&& tar -xzf $LATEST_VERSION
 
@@ -509,18 +511,7 @@ RUN apt-get update \
 	 && echo apt autoremove -y \
 	 && rm -rf /var/lib/apt/lists/*
 
-# NPM installed language servers
-RUN apt-get install -y npm \
-	&& npm i -g \
-	bash-language-server \
-	vscode-css-languageserver-bin \
-	vscode-html-languageserver-bin \
-	dockerfile-language-server-nodejs \
-	typescript-language-server \
-	typescript \
-	 && echo apt autoclean -y \
-	 && echo apt autoremove -y \
-	 && rm -rf /var/lib/apt/lists/* 
+
 
 LABEL maintainer = "logicmoo@gmail.com"
 ################################################################################
