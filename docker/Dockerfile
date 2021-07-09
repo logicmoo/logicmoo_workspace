@@ -474,7 +474,7 @@ RUN apt-get update \
 	 && rm -rf /var/lib/apt/lists/* 
 
 FROM ubuntu:18.04 AS go
-RUN 	&& apt-get upgrade -y \
+RUN apt-get update -y \
 	&& apt-get install -y wget \
 	&& export LATEST_VERSION=`wget -qO- https://golang.org/dl | grep -oE go[0-9]+\.[0-9]+\.[0-9]+\.linux-amd64\.tar\.gz | head -n 1` \
 	&& wget -c https://dl.google.com/go/$LATEST_VERSION \
