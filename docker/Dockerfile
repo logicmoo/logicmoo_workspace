@@ -25,7 +25,6 @@ EXPOSE 80
 USER root
 LABEL maintainer = "logicmoo@gmail.com"
 
-ENV DEBIAN_FRONTEND noninteractive
 ARG DEBIAN_FRONTEND=noninteractive
 ARG --security-opt seccomp:unconfined
 
@@ -585,6 +584,7 @@ HEALTHCHECK --interval=60s --timeout=10s CMD curl --fail http://127.0.0.1:6079/a
 
 COPY rootfs /
 
+ENV DEBIAN_FRONTEND noninteractive
 RUN echo "Set disable_coredump false" >> /etc/sudo.conf
 
 RUN useradd --create-home --home-dir /home/ubuntu --shell /bin/bash --user-group --groups adm,sudo ubuntu && \
