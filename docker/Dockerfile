@@ -582,13 +582,14 @@ ENV HOME=/root \
 HEALTHCHECK --interval=60s --timeout=10s CMD curl --fail http://127.0.0.1:6079/api/health
 
 ENV DEBIAN_FRONTEND noninteractive
-RUN echo "Set disable_coredump false" >> /etc/sudo.conf
 
-RUN apt remove -y apache2 nginx-common && apt purge -y apache2 nginx-common && apt-get update && apt-get upgrade -y
+RUN apt remove -y apache2 nginx-common \
+ && apt purge -y apache2 nginx-common \
+ && apt-get update && apt-get upgrade -y
 
 RUN apt-get update && apt install -y nginx-common nginx nginx-core  libnginx-mod-http-geoip libnginx-mod-http-image-filter \
   libnginx-mod-http-xslt-filter libnginx-mod-mail libnginx-mod-stream \
-  nginx nginx-common nginx-core supervisor apache2 nmap x11-apps vim eggdrop default-jdk default-jre \
+  supervisor apache2 nmap x11-apps vim eggdrop default-jdk default-jre \
   iproute2 libgd3 libgeoip1 libmnl0 libwebp6 libxslt1.1 \
  && apt autoclean -y \
  && echo apt autoremove -y \
@@ -596,7 +597,7 @@ RUN apt-get update && apt install -y nginx-common nginx nginx-core  libnginx-mod
 
 COPY rootfs /
 
-
+RUN echo "Set disable_coredump false" >> /etc/sudo.conf
 RUN useradd --create-home --home-dir /home/ubuntu --shell /bin/bash --user-group --groups adm,sudo ubuntu && \
     echo ubuntu:ubuntu | chpasswd && \
     echo "ubuntu ALL=(ALL) NOPASSWD:ALL" >> /etc/sudoers
