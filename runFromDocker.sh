@@ -41,13 +41,13 @@ export LOGICMOO_WS=$DIR0
 
 if [ "${2}" == "commit" ]; then
 
-   git remote add github https://github.com/logicmoo/logicmoo_workspace.git
-   git remote add gitlab https://logicmoo.org/gitlab/logicmoo/logicmoo_workspace.git
+   git remote add --track master github https://github.com/logicmoo/logicmoo_workspace.git 2>/dev/null ; /bin/true
+   git remote add --track master gitlab https://logicmoo.org/gitlab/logicmoo/logicmoo_workspace.git 2>/dev/null ; /bin/true
 
    echo "Scanning changes for GIT ..."
    git status -s
 
-   git submodule foreach 'git commit -am "Docker $(date)" ; git push ; SUBM=$(basename `pwd`) ; echo $SUBM  ; cd .. ; git add $SUBM  ; /bin/true'
+   git submodule foreach 'git commit -am "Docker $(date)" ; git push origin HEAD:master ; SUBM=$(basename `pwd`) ; echo $SUBM  ; cd .. ; git add $SUBM  ; /bin/true'
    git commit -am "Docker $(date)"
    git push github master
 
