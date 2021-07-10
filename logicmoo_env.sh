@@ -63,7 +63,8 @@ then
    for val in ${StringArray[@]}; do
      if [ -n "$DISPLAY" ] || [ -z "$DISPLAY" ]; then
       NMAP=$(nmap -p 6000  $val)
-      if echo "$NMAP" | grep "Host is up"  && echo "$NMAP" | grep "closed"; then       
+     echo "$NMAP"
+      if echo "$NMAP" | grep "Host is up"  && echo "$NMAP" | grep "open"; then       
         export DISPLAY=$val:0.0
       fi
     fi

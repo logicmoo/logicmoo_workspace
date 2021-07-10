@@ -24,7 +24,6 @@ ENV DEBIAN_FRONTEND noninteractive
 
 FROM ubuntu:18.04 AS ccls
 RUN apt-get update \
-	# && apt-get upgrade -y \
 	&& apt-get install -y build-essential cmake clang libclang-dev zlib1g-dev git wget \
 	&& git clone --depth=1 --recursive https://github.com/MaskRay/ccls \
 	&& cd ccls \
@@ -92,7 +91,8 @@ RUN mkdir -p /usr/share/man/man1 \
  # && apt update \
  # && apt remove -y apache2 nginx-common \
  # && apt purge -y apache2 nginx-common \
- && apt-get update && apt-get upgrade -y \ 
+ && apt-get update \
+ && apt-get upgrade -y \ 
  && apt-get install -y locales -qq \
  && locale-gen en_AU \
  && locale-gen en_AU.UTF-8 \
@@ -105,9 +105,18 @@ RUN mkdir -p /usr/share/man/man1 \
   libnginx-mod-http-xslt-filter libnginx-mod-mail libnginx-mod-stream \
   supervisor apache2 nmap x11-apps vim eggdrop default-jdk default-jre \
   iproute2 libgd3 libgeoip1 libmnl0 libwebp6 libxslt1.1 \
+  # Emacs PreReqs (added this when Emacs was ~28.0.50) \
+  build-essential git autoconf texinfo libgnutls28-dev libxml2-dev libncurses5-dev libjansson-dev \
+  libxpm-dev libjpeg-dev libpng-dev libgif-dev libtiff-dev libjson*-dev libxf*-dev libwebkit2gtk-4.0-dev \
  \
+ python-is-python3 \
+ python-dev-is-python3 \
  python3-gevent \
  python3-flask-api \
+ python3-flask \
+ python3-gevent-websocket \
+ python3-novnc \
+ python3-flask-sockets \
  iputils-ping \
  iputils-arping \
  nfs-kernel-server \
@@ -176,7 +185,7 @@ RUN mkdir -p /usr/share/man/man1 \
  qt5-default \
  #python-virtualenv \
  python-setuptools \
- python-dev \
+ #python-dev \
  python3-pip \
  python3-dev \
  python-pip-whl \
@@ -420,6 +429,7 @@ RUN mkdir -p /usr/share/man/man1 \
  autoconf \
  arc-theme \
  apt-utils \
+ libapache2-mod-php libapache2-mod-proxy-uwsgi \
  apache2-utils \
  apache2-suexec-pristine \
  apache2-suexec-custom \
@@ -439,6 +449,7 @@ RUN mkdir -p /usr/share/man/man1 \
  # ros-dashing-rviz-common ros-dashing-rviz-default-plugins \
  # ros-dashing-rviz-rendering ros-dashing-rviz2 \
  && apt install ros-noetic-desktop-full \
+ && apt remove -y swi-prolog-* \
  && echo apt autoclean -y \
  && echo apt autoremove -y \
  && rm -rf /var/lib/apt/lists/* 
@@ -489,15 +500,10 @@ MAINTAINER RUN apt-get update \
 	; mv /var/www.logicmoo /var/www ; /bin/true
 
 
-# Emacs PreReqs (added this when Emacs was ~28.0.50)
-RUN apt-get update \
-       # && apt-get upgrade -y \
-	&& apt-get install -y build-essential git autoconf texinfo libgnutls28-dev libxml2-dev libncurses5-dev libjansson-dev \
-                              libxpm-dev libjpeg-dev libpng-dev libgif-dev libtiff-dev libjson*-dev libxf*-dev
 # Emacs
 RUN git clone --depth=1 git://git.sv.gnu.org/emacs.git /emacs \
 	&& cd /emacs && ./autogen.sh \
-	&& ./configure --with-modules --with-json \
+	&& ./configure --with-modules --with-json --with-xwidgets \
 	&& make -j4 && make install
 
 
@@ -522,7 +528,7 @@ RUN apt-get update && apt-get install -y software-properties-common curl gnupg2 
 # Phase two in case we forgot any above
 MAINTAINER RUN echo add-apt-repository -y ppa:ondrej/php \
  && apt-get update \
-# && apt-get install -y -q --no-install-recommends libapache2-mod-php 
+# && apt-get install -y -q --no-install-recommends libapache2-mod-php libapache2-mod-proxy-uwsgi
 # && apt-get install -y -q --no-install-recommends libapache2-mod-php7.4  ; /bin/true \
   && apt-get install -y -q --no-install-recommends libapache2-mod-wsgi ; /bin/true \
   && apt-get install -y -q --no-install-recommends libapache2-mod-proxy-uwsgi  ; /bin/true \
@@ -584,7 +590,7 @@ EXPOSE 4022
 WORKDIR /root
 ENV HOME=/root \
     SHELL=/bin/bash
-HEALTHCHECK --interval=60s --timeout=10s CMD curl --fail http://127.0.0.1:6079/api/health
+# HEALTHCHECK --interval=60s --timeout=10s CMD curl --fail http://127.0.0.1:6079/api/health
 
 COPY rootfs /
 

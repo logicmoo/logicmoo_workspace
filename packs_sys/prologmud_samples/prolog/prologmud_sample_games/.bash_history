@@ -1,32 +1,3 @@
-return 0 2>/dev/null
-#!/bin/bash
-set -e
-export SCREEN_CMD="sudo -u prologmud_server -- screen"
-#echo PTTY:TTY:PTS=$PTTY:$TTY:$PTS
-#whoami
-STUFF="^Mprolog.
-bfly. call((bfly_set(butterfly),bfly_set(command_args,\"${*}\"),bfly_set(ptty,\"${PTTY}:${TTY}:${PTY}:${PTS}\"))). bfly_start_link(\"${LOCATION}\").
-end_of_file.^M"
-echo STUFF=$STUFF
-(    $SCREEN_CMD -S LogicmooServer -p0 -X stuff "${STUFF}"; )
-echo $( 
-$SCREEN_CMD -rx LogicmooServer
-)
-return 0 2>/dev/null
-#!/bin/bash
-set -e
-export SCREEN_CMD="sudo -u prologmud_server -- screen"
-#echo PTTY:TTY:PTS=$PTTY:$TTY:$PTS
-#whoami
-STUFF="^Mprolog.
-bfly. call((bfly_set(butterfly),bfly_set(command_args,\"${*}\"),bfly_set(ptty,\"${PTTY}:${TTY}:${PTY}:${PTS}\"))). bfly_start_link(\"${LOCATION}\").
-end_of_file.^M"
-echo STUFF=$STUFF
-(    $SCREEN_CMD -S LogicmooServer -p0 -X stuff "${STUFF}"; )
-echo $( 
-$SCREEN_CMD -rx LogicmooServer
-)
-return 0 2>/dev/null
 #!/bin/bash
 set -e
 export SCREEN_CMD="sudo -u prologmud_server -- screen"
@@ -2004,3 +1975,26 @@ pip
 pip install butterfly
 butterfly
 butterfly.servber.py
+echo $DISPLAY 
+exit
+echo $DISPLAY 
+butterfly.server.py
+pip install butterfly.server
+pip install butterfly
+butterfly.server.py
+butterfly
+b
+pip3 install butterfly
+pip3 search butterfly
+pip3 upgrade pip3
+python3 -m pip upgrade pip
+python3 -mpip upgrade pip
+python3 -mpip install pip
+python3 -mpip install pip3
+python3 -mpip search butterfly
+pip install pypisearch
+python -m pypisearch  butterfly
+cd /opt/logicmoo_workspace/packs_web/butterfly/
+pip install .
+butterfly.server.py 
+pip3 install .

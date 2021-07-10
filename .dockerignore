@@ -101,8 +101,8 @@
 ./packs_usr/.pdtproperties
 ./packs_usr/.project
 ./packs_web/
+!./packs_web/butterfly/
 ./packs_web/.gitignore
-./packs_web/butterfly/
 ./packs_web/ClioPatria/
 ./packs_web/logicmoo_webui/
 ./packs_web/swish/
