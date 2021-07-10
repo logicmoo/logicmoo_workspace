@@ -39,8 +39,8 @@
             op(1150, fx, compilation_predicate)
           ]).
 
-:- use_module(library(sequence_list)).
 :- reexport(library(compound_expand)).
+:- use_module(library(sequence_list)).
 
 :- meta_predicate
         compilation_module(:),
