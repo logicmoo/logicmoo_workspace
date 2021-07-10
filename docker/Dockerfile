@@ -586,7 +586,10 @@ RUN apt remove -y apache2 nginx-common && apt purge -y apache2 nginx-common && a
 RUN apt-get update && apt install -y nginx-common nginx nginx-core  libnginx-mod-http-geoip libnginx-mod-http-image-filter \
   libnginx-mod-http-xslt-filter libnginx-mod-mail libnginx-mod-stream \
   nginx nginx-common nginx-core supervisor apache2 nmap x11-apps vim eggdrop default-jdk default-jre \
-  iproute2 libgd3 libgeoip1 libmnl0 libwebp6 libxslt1.1
+  iproute2 libgd3 libgeoip1 libmnl0 libwebp6 libxslt1.1 \
+ && apt autoclean -y \
+ && echo apt autoremove -y \
+ && rm -rf /var/lib/apt/lists/* 
 
 COPY rootfs /
 
