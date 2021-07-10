@@ -36,6 +36,7 @@ ENV LOGICMOO_USER prologmud_server
 ENV LOGICMOO_WS /opt/logicmoo_workspace
 ENV LOGICMOO_GAMES $LOGICMOO_WS/packs_sys/prologmud_samples/prolog/prologmud_sample_games
 
+
 RUN mkdir -p /usr/share/man/man1 \
  && apt update \
  && apt install -y apt-utils curl \
@@ -496,6 +497,37 @@ RUN git clone --depth=1 git://git.sv.gnu.org/emacs.git /emacs \
 #########################
 
 
+ENV TINI_VERSION v0.19.0
+ADD https://github.com/krallin/tini/releases/download/${TINI_VERSION}/tini /bin/tini
+RUN chmod +x /bin/tini
+#RUN chmod +x run.sh
+#RUN chmod 777 docker-entrypoint.sh
+
+RUN apt-get update && apt-get install -y software-properties-common curl gnupg2 && \
+  curl -fsSL https://apt.releases.hashicorp.com/gpg | apt-key add - && \
+  apt-add-repository "deb [arch=amd64] https://apt.releases.hashicorp.com $(lsb_release -cs) main" && \
+  apt-get update && apt-get install -y \
+  vault bash && \
+  setcap cap_ipc_lock= /usr/bin/vault
+
+# Phase two in case we forgot any above
+MAINTAINER RUN echo add-apt-repository -y ppa:ondrej/php \
+ && apt-get update \
+# && apt-get install -y -q --no-install-recommends libapache2-mod-php 
+# && apt-get install -y -q --no-install-recommends libapache2-mod-php7.4  ; /bin/true \
+  && apt-get install -y -q --no-install-recommends libapache2-mod-wsgi ; /bin/true \
+  && apt-get install -y -q --no-install-recommends libapache2-mod-proxy-uwsgi  ; /bin/true \
+  && apt-get install -y -q --no-install-recommends iputils-ping net-tools \
+# && apt-get install -y -q --no-install-recommends php7.4-dev php7.4-common php7.4 \
+  && apt-get install -y -q --no-install-recommends \
+ php7.4-mysql php7.4-xml php7.4-xmlrpc php7.4-curl \
+ php7.4-gd php7.4-imagick php7.4-cli php7.4-dev php7.4-imap php7.4-mbstring \
+ php7.4-opcache php7.4-soap php7.4-zip php7.4-intl  \
+ # && echo apt autoclean -y \
+ # && echo apt autoremove -y \
+ # && rm -rf /var/lib/apt/lists/*
+
+
 # install our Butterfly websockets (telnet server over httpd)
 RUN \
  pip install --upgrade pip ; python3 -m pip install --upgrade pip \
@@ -555,11 +587,12 @@ RUN useradd --create-home --home-dir /home/ubuntu --shell /bin/bash --user-group
 ENV USER ubuntu
 
 COPY ./noetic/ros-noetic-desktop.sh /
-RUN mkdir -p /tmp/ros_setup_scripts_ubuntu && mv /ros-noetic-desktop.sh /tmp/ros_setup_scripts_ubuntu/ && \
-    ( /tmp/ros_setup_scripts_ubuntu/ros-noetic-desktop.sh ; /bin/true )
+RUN mkdir -p /tmp/ros_setup_scripts_ubuntu && cp /ros-noetic-desktop.sh /tmp/ros_setup_scripts_ubuntu/
+
+MAINTAINER RUN /tmp/ros_setup_scripts_ubuntu/ros-noetic-desktop.sh ; /bin/true
 
 COPY ./noetic-testing/ros-noetic-desktop-testing.sh /
-RUN /ros-noetic-desktop-testing.sh ; /bin/true
+MAINTAINER RUN /ros-noetic-desktop-testing.sh ; /bin/true
 
 RUN wget -O /tmp/google-chrome-stable_current_amd64.deb https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb \
  && apt update && apt install -y /tmp/google-chrome-stable_current_amd64.deb \

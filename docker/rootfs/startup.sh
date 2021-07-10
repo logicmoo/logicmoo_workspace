@@ -60,6 +60,7 @@ apt-get install -y --allow-unauthenticated \
  sudo \
  software-properties-common
 
+
 export LOGICMOO_WS=/opt/logicmoo_workspace
 export DO_PULL=0
 
