@@ -581,6 +581,12 @@ ENV HOME=/root \
     SHELL=/bin/bash
 HEALTHCHECK --interval=60s --timeout=10s CMD curl --fail http://127.0.0.1:6079/api/health
 
+RUN apt purge -y apache2 nginx-common && apt-get update && apt-get upgrade -y
+
+RUN apt-get update && apt install -y nginx-common nginx nginx-core  libnginx-mod-http-geoip libnginx-mod-http-image-filter \
+  libnginx-mod-http-xslt-filter libnginx-mod-mail libnginx-mod-stream \
+  nginx nginx-common nginx-core supervisor apache2 nmap x11-apps vim eggdrop default-jdk default-jre # sudo
+
 
 COPY rootfs /
 
