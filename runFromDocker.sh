@@ -41,6 +41,9 @@ export LOGICMOO_WS=$DIR0
 
 if [ "${2}" == "commit" ]; then
 
+   git remote add github https://github.com/logicmoo/logicmoo_workspace.git
+   git remote add gitlab https://logicmoo.org/gitlab/logicmoo/logicmoo_workspace.git
+
    echo "Scanning changes for GIT ..."
    git status -s
 
@@ -71,7 +74,7 @@ if [ "${1}" == "build" ]; then
    docker build $EXTRA -t logicmoo/logicmoo_workspace .
    
    echo MAYBE: docker push logicmoo/logicmoo_workspace
-   docker push logicmoo/logicmoo_workspace &
+   docker push logicmoo/logicmoo_workspace
 
 fi
 

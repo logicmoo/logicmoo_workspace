@@ -3,7 +3,8 @@ FROM logicmoo/logicmoo_starter_image
 USER root
 LABEL maintainer = "logicmoo@gmail.com"
 
-
+RUN apt purge -y apache2
+RUN apt purge -y nginx-common
 RUN apt-get update &&  apt-get upgrade -y
 # ; mv /etc/apache2 /etc/apache2.logicmoo \
 # ; mv /var/www /var/www.logicmoo \
@@ -16,11 +17,9 @@ RUN apt-get update &&  apt-get upgrade -y
 # ; mv /etc/apache2.logicmoo /etc/apache2  \
 # ; mv /var/www.logicmoo /var/www ; /bin/true
 
-RUN apt purge -y apache2
-RUN apt install -y apache2 nmap x11-apps vim
-RUN apt install -y nginx-common nginx nginx-core  libnginx-mod-http-geoip libnginx-mod-http-image-filter \
+RUN apt-get update && apt install -y nginx-common nginx nginx-core  libnginx-mod-http-geoip libnginx-mod-http-image-filter \
   libnginx-mod-http-xslt-filter libnginx-mod-mail libnginx-mod-stream \
-  nginx nginx-common nginx-core supervisord supervisor
+  nginx nginx-common nginx-core supervisor apache2 nmap x11-apps vim eggdrop jdk-default jre-default
 
 
 
@@ -115,7 +114,7 @@ MAINTAINER RUN cd $LOGICMOO_WS && set -x \
 
 
 RUN wget -O /tmp/google-chrome-stable_current_amd64.deb https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb \
- && apt install /tmp/google-chrome-stable_current_amd64.deb
+ && apt install -y /tmp/google-chrome-stable_current_amd64.deb 
 
 #CMD $LOGICMOO_WS/StartLogicmoo.sh
 ENTRYPOINT ["/startup_logicmoo.sh"]
