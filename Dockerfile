@@ -19,7 +19,7 @@ RUN apt-get update &&  apt-get upgrade -y
 
 RUN apt-get update && apt install -y nginx-common nginx nginx-core  libnginx-mod-http-geoip libnginx-mod-http-image-filter \
   libnginx-mod-http-xslt-filter libnginx-mod-mail libnginx-mod-stream \
-  nginx nginx-common nginx-core supervisor apache2 nmap x11-apps vim eggdrop jdk-default jre-default
+  nginx nginx-common nginx-core supervisor apache2 nmap x11-apps vim eggdrop default-jdk default-jre
 
 
 

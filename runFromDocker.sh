@@ -57,22 +57,18 @@ if [ "${1}" == "build" ]; then
 
 
    docker kill logicmoo 2>/dev/null ; /bin/true
-   
+
    (
-   cd docker
-   docker build $EXTRA -t logicmoo/logicmoo_starter_image .
-   
+      cd docker
+      docker build $EXTRA -t logicmoo/logicmoo_starter_image .
+      echo MAYBE: docker push logicmoo/logicmoo_starter_image
+      docker push logicmoo/logicmoo_starter_image
    )
    
    # return 0 2>/dev/null
    # exit 0
    
-   echo MAYBE: docker push logicmoo/logicmoo_starter_image
-   docker push logicmoo/logicmoo_starter_image
-   
-   
-   docker build $EXTRA -t logicmoo/logicmoo_workspace .
-   
+   docker build $EXTRA -t logicmoo/logicmoo_workspace .   
    echo MAYBE: docker push logicmoo/logicmoo_workspace
    docker push logicmoo/logicmoo_workspace
 
