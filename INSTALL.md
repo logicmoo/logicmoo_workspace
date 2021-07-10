@@ -8,7 +8,7 @@ function RUN {
  $*
 }
 
-set +e
+# set +e
 
 if [[ $EUID -ne 0 ]]; then
    echo "#* "
@@ -91,40 +91,40 @@ else
  git pull
 fi
 
+cat "10.0.0.194 logicmoo.org" >> /etc/hosts
+
 git config --local http.sslVerify false
+# git config --global http.sslVerify false
 echo "git submodule update --init"
 git submodule update --init
 echo "git pull --recurse-submodules"
 git pull --recurse-submodules
 #git lfs checkout
-git submodule foreach 'git lfs fetch'
-git submodule foreach 'git lfs pull'
-git submodule foreach 'git lfs checkout .'
-git submodule foreach 'git lfs checkout'
+
 
 if [ ! -d /opt/logicmoo_workspace ]; then
-mv /usr/local/lib/python3.6/ /usr/local/lib/python-DEAD-3.6
+mv /usr/local/lib/python3.8/ /usr/local/lib/python-DEAD-3.6
 apt update 
-apt install -y python3.7 python3.7-venv
+apt install -y python3.8 python3.8-venv
 echo ". /opt/logicmoo_workspace/packs_web/butterfly/bin/activate"
 #. /opt/logicmoo_workspace/packs_web/butterfly/bin/activate
 python3 -m pip install --upgrade pip
 python3 -m pip install setuptools tornado
-mv /usr/local/lib/python-DEAD-3.6/ /usr/local/lib/python3.6/ 
+mv /usr/local/lib/python-DEAD-3.6/ /usr/local/lib/python3.8/ 
 python3 -m pip install --upgrade pip
 python3 -m pip install setuptools tornado
 cd /opt/logicmoo_workspace/packs_web/butterfly
 python3 -m pip install .
 fi
 
-rm -rf /usr/local/lib/python3.6/dist-packages/butterfly/templates
-rm -rf /usr/local/lib/python3.6/dist-packages/butterfly/static
+rm -rf /usr/local/lib/python3.8/dist-packages/butterfly/templates
+rm -rf /usr/local/lib/python3.8/dist-packages/butterfly/static
 
-ln -s /opt/logicmoo_workspace/packs_web/butterfly/butterfly/static/ /usr/local/lib/python3.6/dist-packages/butterfly/static
-ln -s /opt/logicmoo_workspace/packs_web/butterfly/butterfly/templates/ /usr/local/lib/python3.6/dist-packages/butterfly/templates
+ln -s /opt/logicmoo_workspace/packs_web/butterfly/butterfly/static/ /usr/local/lib/python3.8/dist-packages/butterfly/static
+ln -s /opt/logicmoo_workspace/packs_web/butterfly/butterfly/templates/ /usr/local/lib/python3.8/dist-packages/butterfly/templates
 
-#\cp /opt/logicmoo_workspace/packs_web/butterfly/butterfly/static/* /usr/local/lib/python3.6/dist-packages/butterfly/static/
-#\cp /opt/logicmoo_workspace/packs_web/butterfly/butterfly/templates/* /usr/local/lib/python3.6/dist-packages/butterfly/templates/
+#\cp /opt/logicmoo_workspace/packs_web/butterfly/butterfly/static/* /usr/local/lib/python3.8/dist-packages/butterfly/static/
+#\cp /opt/logicmoo_workspace/packs_web/butterfly/butterfly/templates/* /usr/local/lib/python3.8/dist-packages/butterfly/templates/
 
 mkdir -p /opt/ros/eloquent/
 touch /opt/ros/eloquent/setup.bash
@@ -198,5 +198,5 @@ find -name "*.qlf" -exec touch '{}' +
 
 )
 
-echo "${BASH_SOURCE[0]} Exiting."
+echo "${BASH_SOURCE[0]} Completed."
 

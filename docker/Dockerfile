@@ -15,6 +15,52 @@ LABEL maintainer="Tiryoh<tiryoh@gmail.com>"
 #FROM aicampbell/vnc-ubuntu18-xfce
 EXPOSE 80
 
+
+USER root
+LABEL maintainer = "logicmoo@gmail.com"
+
+ARG DEBIAN_FRONTEND=noninteractive
+ENV DEBIAN_FRONTEND noninteractive
+
+FROM ubuntu:18.04 AS ccls
+RUN apt-get update \
+	# && apt-get upgrade -y \
+	&& apt-get install -y build-essential cmake clang libclang-dev zlib1g-dev git wget \
+	&& git clone --depth=1 --recursive https://github.com/MaskRay/ccls \
+	&& cd ccls \
+	&& wget -c http://releases.llvm.org/8.0.0/clang+llvm-8.0.0-x86_64-linux-gnu-ubuntu-18.04.tar.xz \
+	&& tar xf clang+llvm-8.0.0-x86_64-linux-gnu-ubuntu-18.04.tar.xz \
+	&& cmake -H. -BRelease -DCMAKE_BUILD_TYPE=Release -DCMAKE_PREFIX_PATH=$PWD/clang+llvm-8.0.0-x86_64-linux-gnu-ubuntu-18.04 \
+	&& cmake --build Release \
+	 && echo apt autoclean -y \
+	 && echo apt autoremove -y \
+	 && rm -rf /var/lib/apt/lists/* 
+
+FROM ubuntu:18.04 AS go
+RUN apt-get update -y \
+	&& apt-get install -y wget \
+	&& export LATEST_VERSION=`wget -qO- https://golang.org/dl | grep -oE go[0-9]+\.[0-9]+\.[0-9]+\.linux-amd64\.tar\.gz | head -n 1` \
+	&& wget -c https://dl.google.com/go/$LATEST_VERSION \
+	&& tar -xzf $LATEST_VERSION
+
+# C-Family
+COPY --from=ccls /ccls /ccls
+RUN ln -s /ccls/Release/ccls /usr/bin/ccls \
+	&& ln -s /ccls/clang+llvm-8.0.0-x86_64-linux-gnu-ubuntu-18.04/bin/clangd /usr/bin/clangd
+
+# Go
+MAINTAINER COPY --from=go /go /go
+MAINTAINER ENV PATH "${PATH}:/go/bin:/root/go/bin"
+MAINTAINER RUN /go/bin/go get -u golang.org/x/tools/gopls
+
+
+# Python
+FROM tiryoh/ros-desktop-vnc:noetic as noetic
+RUN apt-get update && apt-get install -y python3-pip \
+	&& pip3 install 'python-language-server[all]' \
+	 && echo apt autoclean -y \
+	 && echo apt autoremove -y \
+	 && rm -rf /var/lib/apt/lists/* 
 #
 # from root@debian10:/opt/logicmoo_workspace
 # we run..
@@ -426,44 +472,7 @@ ENV HOME=/root
 ###########################
 
 
-FROM ubuntu:18.04 AS ccls
-RUN apt-get update \
-	# && apt-get upgrade -y \
-	&& apt-get install -y build-essential cmake clang libclang-dev zlib1g-dev git wget \
-	&& git clone --depth=1 --recursive https://github.com/MaskRay/ccls \
-	&& cd ccls \
-	&& wget -c http://releases.llvm.org/8.0.0/clang+llvm-8.0.0-x86_64-linux-gnu-ubuntu-18.04.tar.xz \
-	&& tar xf clang+llvm-8.0.0-x86_64-linux-gnu-ubuntu-18.04.tar.xz \
-	&& cmake -H. -BRelease -DCMAKE_BUILD_TYPE=Release -DCMAKE_PREFIX_PATH=$PWD/clang+llvm-8.0.0-x86_64-linux-gnu-ubuntu-18.04 \
-	&& cmake --build Release \
-	 && echo apt autoclean -y \
-	 && echo apt autoremove -y \
-	 && rm -rf /var/lib/apt/lists/* 
 
-FROM ubuntu:18.04 AS go
-RUN apt-get update -y \
-	&& apt-get install -y wget \
-	&& export LATEST_VERSION=`wget -qO- https://golang.org/dl | grep -oE go[0-9]+\.[0-9]+\.[0-9]+\.linux-amd64\.tar\.gz | head -n 1` \
-	&& wget -c https://dl.google.com/go/$LATEST_VERSION \
-	&& tar -xzf $LATEST_VERSION
-
-# C-Family
-COPY --from=ccls /ccls /ccls
-RUN ln -s /ccls/Release/ccls /usr/bin/ccls \
-	&& ln -s /ccls/clang+llvm-8.0.0-x86_64-linux-gnu-ubuntu-18.04/bin/clangd /usr/bin/clangd
-
-# Go
-MAINTAINER COPY --from=go /go /go
-MAINTAINER ENV PATH "${PATH}:/go/bin:/root/go/bin"
-MAINTAINER RUN /go/bin/go get -u golang.org/x/tools/gopls
-
-
-# Python
-RUN apt-get install -y python3-pip \
-	&& pip3 install 'python-language-server[all]' \
-	 && echo apt autoclean -y \
-	 && echo apt autoremove -y \
-	 && rm -rf /var/lib/apt/lists/* 
 
 
 # required for apt upgrade (which is requested in EMACS LSP DOCKER)
@@ -580,9 +589,9 @@ HEALTHCHECK --interval=60s --timeout=10s CMD curl --fail http://127.0.0.1:6079/a
 COPY rootfs /
 
 RUN echo "Set disable_coredump false" >> /etc/sudo.conf
-RUN useradd --create-home --home-dir /home/ubuntu --shell /bin/bash --user-group --groups adm,sudo ubuntu && \
-    echo ubuntu:ubuntu | chpasswd && \
-    echo "ubuntu ALL=(ALL) NOPASSWD:ALL" >> /etc/sudoers
+# RUN useradd --create-home --home-dir /home/ubuntu --shell /bin/bash --user-group --groups adm,sudo ubuntu && \
+RUN echo ubuntu:ubuntu | chpasswd 
+RUN echo "ubuntu ALL=(ALL) NOPASSWD:ALL" >> /etc/sudoers
 
 ENV USER ubuntu
 

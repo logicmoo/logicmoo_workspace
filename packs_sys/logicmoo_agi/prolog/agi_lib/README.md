@@ -30,6 +30,54 @@ In LOGICMOO, we imagine for the moment there is world that contains the exact le
 By this I mean our AGI system works from that world, for that moment.
 It is able to compare that imagined world (which is built top down) with the real world which seems built from the bottom up.
 
+The example we will use is tic-tac-toe being played in PrologMUD:
+
+In order to play the game the robotic agent has must move colored stones on and off a table with 3 x 3 regions
+The robot has 5 blue stones in its inventory
+The human has 5 red stones in its inventory
+The way the game is played is each player takes turns placing stones on one of the nine regions on the table
+Neighter player may remove stones one placed on the table
+Whomever is the first player to have 3 stones in any combination of up/down left/right or diagonally in any dirrection wins
+The robots goal is to be the winner
+There can only be one winner
+the robot knows the rules
+the robot already knows how to put it's stones on the table
+the player gets to go first
+
+We have purposely made this easy as possible except for:
+
+the robot sees the world thru a noisey precepton based protocal
+there are other objects in the room that may move arround and the human may try to distract the robot by doing things like talking
+the human may try to cheat and not folow the rules
+the robot must wait for the other player to place a stone before it does
+the robot may place its stones anywhere but the player has to wait for the robot's stone to be placed on the table
+the robot must be in the same room that the table is in to place stones on the table
+
+
+More Features of the Test / Implementation:
+
+the robot may take advice about where to place the stone
+the robot knows the rules
+The robot knows the that winning and losing are different
+it has to recognise that it and the human are players in the game
+The robot has to hypothesize about what the other player will do during their turn and knows if the other player has the chance to win the robot will not lose the robot must model this in some mental structures
+For instance it must imagine spatially the concepts of diagonal, horizontal and vertical and how that will change over time
+The robot must keep a model in its mind of the the tic-tac-toe game and relate it to the table it is looking at
+
+There are many ways to code this:
+
+We could have code this in several ways but first we wanted to see what would be done 
+ if the robot already instinctually was able to play the game
+ vs the robot had to learn the game:
+     by listening to the player
+     by watching others
+ What if things changed and the robot goal was to be the loser?
+
+
+
+
+
+
 
 
 

@@ -2,7 +2,7 @@
 
 if [[ -f /startup.sh ]]
 then
- ./startup.sh
+ /startup.sh
 else
  supervisord  -c /etc/supervisor/supervisord.conf
  $LOGICMOO_WS/StartLogicmoo.sh

@@ -56,7 +56,8 @@ if [ -n "$SSH_CLIENT" ] || [ -n "$SSH_TTY" ]; then
 fi
 
 
-#if [ -f /usr/bin/nmap ]; then
+if command -v nmap &> /dev/null
+then
    # Declare an array of string with type
    declare -a StringArray=("10.0.0.78" "172.17.0.1" "127.0.0.1"  )   
    for val in ${StringArray[@]}; do
@@ -72,7 +73,7 @@ fi
       echo OR Maybe: export DISPLAY=:1
       # Iterate the string array using for loop
    fi
-#fi
+fi
 
 echo "#* DISPLAY=$DISPLAY"
 

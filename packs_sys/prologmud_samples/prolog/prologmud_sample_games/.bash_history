@@ -1,14 +1,3 @@
-export SCREEN_CMD="sudo -u prologmud_server -- screen"
-#echo PTTY:TTY:PTS=$PTTY:$TTY:$PTS
-#whoami
-STUFF="^Mprolog.
-bfly. call((bfly_set(butterfly),bfly_set(command_args,\"${*}\"),bfly_set(ptty,\"${PTTY}:${TTY}:${PTY}:${PTS}\"))). bfly_start_link(\"${LOCATION}\").
-end_of_file.^M"
-echo STUFF=$STUFF
-(    $SCREEN_CMD -S LogicmooServer -p0 -X stuff "${STUFF}"; )
-echo $( 
-$SCREEN_CMD -rx LogicmooServer
-)
 return 0 2>/dev/null
 #!/bin/bash
 set -e
@@ -2009,3 +1998,9 @@ apt update
 apt install sudo
 sundo
 sudo
+ls /usr/local/lib/
+ls /usr/local/lib/python3.8/dist-packages/
+pip 
+pip install butterfly
+butterfly
+butterfly.servber.py

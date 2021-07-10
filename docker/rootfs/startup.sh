@@ -1,9 +1,10 @@
-#!/bin/bash +x
+#!/bin/bash
 
-set +x +e
+set +x
+#set +e
 
 export DEBIAN_FRONTEND=noninteractive
-apt-update
+apt update
 apt-get install -y --allow-unauthenticated \
   nginx-common nginx nginx-core  libnginx-mod-http-geoip libnginx-mod-http-image-filter \
   libnginx-mod-http-xslt-filter libnginx-mod-mail libnginx-mod-stream \
@@ -31,7 +32,6 @@ apt-get install -y --allow-unauthenticated \
  zlib1g \
  zip \
  yarn \
- #xvnc4viewer \
  xvfb \
  xtrans-dev \
  xterm \
@@ -53,7 +53,6 @@ apt-get install -y --allow-unauthenticated \
  unixodbc \
  unattended-upgrades \
  tightvncserver \
- # tini \
  texlive-extra-utils \
  tdsodbc \
  supervisor \

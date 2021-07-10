@@ -12,7 +12,7 @@ D/root/.config/menus/applications-merged
 F/root/.config/menus/lxde-applications.menu
 F/etc/xdg/menus/lxde-applications.menu
 F/etc/xdg/menus/debian-menu.menu
-MATE;
+Unity;MATE;
 +Applications
 Applications
 Applications
@@ -27,31 +27,17 @@ applications-accessories
 lxde-utility.directory
 2
 0
--emacs25.desktop
-GNU Emacs 25 (GUI)
+-emacs-term.desktop
+Emacs (Terminal)
 GNU Emacs is an extensible, customizable text editor - and more
-emacs25
+emacs
 
 5
 Text Editor
-/usr/bin/emacs25 %F
-0
-0
-/usr/bin/emacs25
-
-Utility;Development;TextEditor
-Text,Editor
--emacs25-term.desktop
-GNU Emacs 25 (Terminal)
-GNU Emacs is an extensible, customizable text editor - and more
-emacs25
-
-5
-Text Editor
-/usr/bin/emacs25 -nw %F
+/usr/bin/emacs -nw %F
 1
 0
-/usr/bin/emacs25
+/usr/bin/emacs
 
 Utility;Development;TextEditor
 Text,Editor
@@ -83,20 +69,20 @@ gpicview %f
 
 Graphics;Utility;Core;GTK;Viewer;RasterGraphics;2DGraphics;Photography
 graphics,pictures,viever,photography
--leafpad.desktop
-Leafpad
-Simple text editor
-leafpad
+-mousepad.desktop
+Mousepad
+Simple Text Editor
+accessories-text-editor
 
 5
-
-leafpad %f
+Text Editor
+mousepad %F
+2
 0
-0
 
 
-GTK;Utility;TextEditor
-text,editor
+Utility;TextEditor;GTK
+
 -vim.desktop
 Vim
 Edit text files
@@ -124,7 +110,7 @@ xarchiver %f
 
 
 GTK;Archiving;Compression;Utility
-GTK,archiver,archiving,compression,front end,frontend,7-zip,7z,7za,7zip,7zr,ar,arj,bunzip2,bz2,bzip2,compress,cpio,deb,epub,gtar,gunzip,gz,gzip,jar,lha,lrz,lrzip,lsar,lz,lz4,lzh,lzip,lzma,lzo,lzop,oxt,rar,rar4,rar5,rpm,tar,unar,unarchiver,unarj,unrar,unzip,xpi,xz,zip,zst,Zstandard,zstd
+GTK,android,archiver,archiving,comic book,compression,front end,frontend,7-zip,7z,7za,7zip,7zr,apk,ar,arj,bunzip2,bz2,bzip2,cbz,compress,cpio,deb,epub,gtar,gunzip,gz,gzip,jar,lha,lrz,lrzip,lsar,lz,lz4,lzh,lzip,lzma,lzo,lzop,oxt,rar,rar4,rar5,rpm,tar,unar,unarchiver,unarj,unrar,unzip,xpi,xz,zip,zst,Zstandard,zstd
 
 +Debian
 Debian
@@ -150,7 +136,7 @@ gazebo
 
 /usr/bin/gazebo
 2
-0
+34
 
 
 Development;Education;Science
@@ -221,33 +207,33 @@ applications-internet
 lxde-network.directory
 2
 0
--chromium-browser.desktop
-Chromium Web Browser
-Access the Internet
-chromium-browser
+-emacs-mail.desktop
+Emacs (Mail)
+GNU Emacs is an extensible, customizable text editor - and more
+emacs
 
-5
-Web Browser
-chromium-browser %U
-2
+4
+
+emacs -f message-mailto %u
+4
 0
 
 
-Network;WebBrowser
+Network;Email
 
--chromium-browser-sound.desktop
-Chromium Web Browser Sound
-Access the Internet
-chromium-browser
+-emacsclient-mail.desktop
+Emacs (Mail, Client)
+GNU Emacs is an extensible, customizable text editor - and more
+emacs
 
-5
-Web Browser
-/usr/local/bin/chromium-browser-sound.sh %U
-2
+4
+
+sh -c 'exec emacsclient --alternate-editor= --display="$DISPLAY" --eval "(message-mailto \"%u\")"'
+4
 0
 
 
-Network;WebBrowser
+Network;Email
 
 -firefox.desktop
 Firefox Web Browser
@@ -263,6 +249,34 @@ firefox %u
 
 GNOME;GTK;Network;WebBrowser
 Internet,WWW,Browser,Web,Explorer
+-google-chrome.desktop
+Google Chrome
+Access the Internet
+google-chrome
+
+5
+Web Browser
+/usr/bin/google-chrome-stable %U
+2
+0
+
+
+Network;WebBrowser
+
+-chromium-browser-sound.desktop
+Google Chrome Sound
+Access the Internet
+google-chrome
+
+5
+Web Browser
+/usr/local/bin/chromium-browser-sound.sh %U
+2
+0
+
+
+Network;WebBrowser
+
 -lxde-x-www-browser.desktop
 Web Browser
 
@@ -290,7 +304,7 @@ x11vnc -gui tray=setpass -rfbport PROMPT -bg -o %%HOME/.x11vnc.log.%%VNCDISPLAY
 
 
 Network;RemoteAccess
-
+VNC,Server,Screencast
 
 +Office
 Office
@@ -405,6 +419,20 @@ applications-other
 lxde-other.directory
 2
 0
+-geoclue-demo-agent.desktop
+Geoclue Demo agent
+
+mark-location-symbolic
+
+5
+Demo geoclue agent
+/usr/libexec/geoclue-2.0/demos/agent
+4
+-3
+
+
+
+geolocation
 -libreoffice-xsltfilter.desktop
 LibreOffice XSLT based filters
 
@@ -433,20 +461,6 @@ lxsession-logout
 
 
 
--notification-daemon.desktop
-Notification Daemon
-Display notifications
-
-
-5
-
-/usr/lib/notification-daemon/notification-daemon
-4
-0
-
-
-
-
 -openjdk-11-java.desktop
 OpenJDK Java 11 Runtime
 OpenJDK Java 11 Runtime
@@ -461,6 +475,20 @@ cautious-launcher %f /usr/bin/java -jar
 
 
 java,runtime
+-openbox.desktop
+Openbox
+
+openbox
+
+5
+
+openbox
+4
+0
+
+
+
+wm,windowmanager,window,manager,gnome
 -lxde-screenlock.desktop
 ScreenLock
 Lock your screen
@@ -475,20 +503,6 @@ lxlock
 
 
 
--geoclue-where-am-i.desktop
-Where am I?
-Find your current location
-mark-location-symbolic
-
-5
-Demo geolocation application
-/usr/lib/geoclue-2.0/demos/where-am-i
-5
-0
-
-
-
-geolocation
 
 +Development
 Programming
@@ -497,34 +511,62 @@ applications-development
 lxde-development.directory
 2
 0
--emacs25.desktop
-GNU Emacs 25 (GUI)
-GNU Emacs is an extensible, customizable text editor - and more
-emacs25
+-emacs.desktop
+Emacs
+Edit text
+emacs
 
-5
+4
 Text Editor
-/usr/bin/emacs25 %F
+emacs %F
+2
 0
-0
-/usr/bin/emacs25
 
-Utility;Development;TextEditor
+
+Development;TextEditor
 Text,Editor
--emacs25-term.desktop
-GNU Emacs 25 (Terminal)
+-emacsclient.desktop
+Emacs (Client)
+Edit text
+emacs
+
+4
+Text Editor
+sh -c 'if [ -n "$*" ]; then exec emacsclient --alternate-editor= --display="$DISPLAY" "$@"; else exec emacsclient --alternate-editor= --create-frame; fi' placeholder %F
+2
+0
+
+
+Development;TextEditor
+Text,Editor
+-emacs-term.desktop
+Emacs (Terminal)
 GNU Emacs is an extensible, customizable text editor - and more
-emacs25
+emacs
 
 5
 Text Editor
-/usr/bin/emacs25 -nw %F
+/usr/bin/emacs -nw %F
 1
 0
-/usr/bin/emacs25
+/usr/bin/emacs
 
 Utility;Development;TextEditor
 Text,Editor
+-fluid.desktop
+FLUID
+FLTK GUI Designer
+fluid
+
+5
+
+fluid %F
+0
+0
+fluid
+
+Development;GUIDesigner
+
 -gazebo.desktop
 Gazebo
 3-D Robot simulator
@@ -534,11 +576,25 @@ gazebo
 
 /usr/bin/gazebo
 2
-0
+34
 
 
 Development;Education;Science
 Run
+-ocaml.desktop
+OCaml
+
+ocaml
+
+5
+OCaml Toplevel
+ocaml
+1
+0
+
+
+Development;ConsoleOnly
+
 -python2.7.desktop
 Python (v2.7)
 Python Interpreter (v2.7)
@@ -553,14 +609,14 @@ Python Interpreter (v2.7)
 
 Development
 
--python3.6.desktop
-Python (v3.6)
-Python Interpreter (v3.6)
-/usr/share/pixmaps/python3.6.xpm
+-python3.8.desktop
+Python (v3.8)
+Python Interpreter (v3.8)
+/usr/share/pixmaps/python3.8.xpm
 
 5
 
-/usr/bin/python3.6
+/usr/bin/python3.8
 7
 0
 
@@ -669,8 +725,8 @@ System;TerminalEmulator;Utility
 
 -debian-uxterm.desktop
 UXTerm
-standard terminal emulator for the X window system
-xterm-color
+xterm wrapper for Unicode environments
+mini.xterm
 
 5
 
@@ -684,7 +740,7 @@ shell,prompt,command,commandline,cmd
 -debian-xterm.desktop
 XTerm
 standard terminal emulator for the X window system
-xterm-color
+mini.xterm
 
 5
 
@@ -721,7 +777,7 @@ preferences-desktop-theme
 Customize Look and Feel
 lxappearance
 2
--47
+-79
 
 
 GTK;Settings;DesktopSettings;X-LXDE-Settings
@@ -735,7 +791,7 @@ user-desktop
 
 pcmanfm --desktop-pref
 2
--47
+-79
 
 
 Settings;GTK;DesktopSettings;X-LXDE-Settings
@@ -763,7 +819,7 @@ input-keyboard
 
 lxinput
 2
--47
+-79
 
 
 GTK;Settings;HardwareSettings;X-LXDE-Settings
@@ -777,7 +833,7 @@ video-display
 
 lxrandr
 0
--47
+-79
 
 
 GTK;Settings;HardwareSettings;X-LXDE-Settings
@@ -791,7 +847,7 @@ preferences-desktop-keyboard
 
 lxhotkey --gui=gtk
 2
--47
+-79
 
 
 DesktopSettings;Settings;Core;GTK
