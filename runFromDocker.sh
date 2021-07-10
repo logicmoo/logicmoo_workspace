@@ -65,6 +65,8 @@ if [ "${1}" == "build" ]; then
       set +e +x
       cd docker
       docker build $EXTRA -t logicmoo/logicmoo_starter_image . || return $? 2>/dev/null ; exit $?
+
+      docker push logicmoo/logicmoo_starter_image
       if [ "${2}" == "commit" ]; then
          docker push logicmoo/logicmoo_starter_image
       else
@@ -73,10 +75,10 @@ if [ "${1}" == "build" ]; then
       
    )
    
-   # return 0 2>/dev/null
-   # exit 0
    
    docker build $EXTRA -t logicmoo/logicmoo_workspace . || return $? 2>/dev/null ; exit $?
+
+   docker push logicmoo/logicmoo_workspace
    if [ "${2}" == "commit" ]; then
       docker push logicmoo/logicmoo_workspace
    else
