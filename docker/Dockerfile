@@ -612,6 +612,9 @@ COPY ./noetic-testing/ros-noetic-desktop-testing.sh /
 RUN /ros-noetic-desktop-testing.sh ; /bin/true
 
 
+RUN wget -O /tmp/google-chrome-stable_current_amd64.deb https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb \
+ && apt install -y /tmp/google-chrome-stable_current_amd64.deb 
+
 
 #ENTRYPOINT ["/startup_logicmoo.sh"]
 #ENTRYPOINT ["/startup.sh"]
