@@ -26,19 +26,53 @@ USER root
 LABEL maintainer = "logicmoo@gmail.com"
 
 ARG DEBIAN_FRONTEND=noninteractive
+ENV DEBIAN_FRONTEND noninteractive
 ARG --security-opt seccomp:unconfined
-
+# who/where
+ENV LANG C.UTF-8
+ENV LANGUAGE C.UTF-8
+ENV LC_ALL C.UTF-8
+ENV LOGICMOO_USER prologmud_server
+ENV LOGICMOO_WS /opt/logicmoo_workspace
+ENV LOGICMOO_GAMES $LOGICMOO_WS/packs_sys/prologmud_samples/prolog/prologmud_sample_games
 
 RUN mkdir -p /usr/share/man/man1 \
+ && apt update \
+ && apt install -y apt-utils curl \
  && apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 4F4EA0AAE5267A6C \
- && apt-get update -qq && apt-get install -y locales -qq \
+ && sh -c 'echo "deb [trusted=yes] http://packages.ros.org/ros/ubuntu $(lsb_release -sc) main" > /etc/apt/sources.list.d/ros-latest.list' \
+ && curl -s https://raw.githubusercontent.com/ros/rosdistro/master/ros.asc | sudo apt-key add - \
+ # && apt update \
+ # && apt remove -y apache2 nginx-common \
+ # && apt purge -y apache2 nginx-common \
+ && apt-get update && apt-get upgrade -y \ 
+ && apt-get install -y locales -qq \
  && locale-gen en_AU \
  && locale-gen en_AU.UTF-8 \
  && dpkg-reconfigure locales \
  # && locale-gen C.UTF-8 \
- && dpkg-reconfigure locales \
- && apt-get install -y --no-install-recommends --allow-unauthenticated \
+ && dpkg-reconfigure locales \ 
+ # --no-install-recommends \
+ && apt-get install -y --allow-unauthenticated \
+  nginx-common nginx nginx-core  libnginx-mod-http-geoip libnginx-mod-http-image-filter \
+  libnginx-mod-http-xslt-filter libnginx-mod-mail libnginx-mod-stream \
+  supervisor apache2 nmap x11-apps vim eggdrop default-jdk default-jre \
+  iproute2 libgd3 libgeoip1 libmnl0 libwebp6 libxslt1.1 \
  \
+ python3-gevent \
+ python3-flask-api \
+ iputils-ping \
+ iputils-arping \
+ nfs-kernel-server \
+ nfs-common \
+ rpcbind \
+ telnet \
+ traceroute \
+ inotify-tools \
+ ant \
+ swig \
+ flex \
+ libllvm8 \
  lsb-release \
  tzdata \
  gosu \
@@ -357,16 +391,12 @@ RUN mkdir -p /usr/share/man/man1 \
  # ros-dashing-libcurl-vendor ros-dashing-resource-retriever \
  # ros-dashing-rviz-common ros-dashing-rviz-default-plugins \
  # ros-dashing-rviz-rendering ros-dashing-rviz2 \
+ && apt install ros-noetic-desktop-full \
  && echo apt autoclean -y \
  && echo apt autoremove -y \
  && rm -rf /var/lib/apt/lists/* 
 
 RUN mkdir -p /var/lock/apache2 /var/run/apache2 /var/run/sshd /var/log/supervisor
-
-RUN sh -c 'echo "deb [trusted=yes] http://packages.ros.org/ros/ubuntu $(lsb_release -sc) main" > /etc/apt/sources.list.d/ros-latest.list' \
- && curl -s https://raw.githubusercontent.com/ros/rosdistro/master/ros.asc | sudo apt-key add - \
- && apt update \
- && apt install ros-noetic-desktop-full
 
 #RUN cp /etc/ssh/sshd_config /etc/ssh/sshd_config.original
 #RUN chmod a-w /etc/ssh/sshd_config.original
@@ -379,37 +409,13 @@ ENV USER ubuntu
 MAINTAINER RUN useradd --create-home --home-dir /home/ubuntu --shell /bin/bash --user-group --groups adm,sudo ubuntu && \
     echo ubuntu:ubuntu | chpasswd && \
     echo "ubuntu ALL=(ALL) NOPASSWD:ALL" >> /etc/sudoers
-#COPY rootfs/ros-eloquent-desktop.sh /ros-eloquent-desktop.sh
+COPY rootfs/ros-eloquent-desktop.sh /ros-eloquent-desktop.sh
 MAINTAINER RUN mkdir -p /tmp/ros_setup_scripts_ubuntu && mv /ros-eloquent-desktop.sh /tmp/ros_setup_scripts_ubuntu/ && \
     ( gosu ubuntu /tmp/ros_setup_scripts_ubuntu/ros-eloquent-desktop.sh ; /bin/true) && \
     echo rm -rf /var/lib/apt/lists/*
 
 ENV USER=root
 ENV HOME=/root
-
-MAINTAINER RUN curl -s https://raw.githubusercontent.com/ros/rosdistro/master/ros.asc | sudo apt-key add - \
- && curl -sSL https://raw.githubusercontent.com/ros/rosdistro/master/ros.key -o /usr/share/keyrings/ros-archive-keyring.gpg \
- && curl http://repo.ros2.org/repos.key | sudo apt-key add -
-
-
-RUN apt-get update -qq && apt-get install -y \
- python3-gevent \
- python3-flask-api \
- iputils-ping \
- iputils-arping \
- nfs-kernel-server \
- nfs-common \
- rpcbind \
- telnet \
- traceroute \
- inotify-tools \
- ant \
- swig \
- flex \
- libllvm8 \
- && echo apt autoclean -y \
- && echo apt autoremove -y \
- && rm -rf /var/lib/apt/lists/* 
 
 
 
@@ -489,48 +495,6 @@ RUN git clone --depth=1 git://git.sv.gnu.org/emacs.git /emacs \
 # EMACS LSP SUPPORT END #
 #########################
 
-# who/where
-ENV LANG C.UTF-8
-ENV LANGUAGE C.UTF-8
-ENV LC_ALL C.UTF-8
-ENV LOGICMOO_USER prologmud_server
-ENV LOGICMOO_WS /opt/logicmoo_workspace
-ENV LOGICMOO_GAMES $LOGICMOO_WS/packs_sys/prologmud_samples/prolog/prologmud_sample_games
-
-
-RUN apt-get update \
- && apt-get install -y -q --no-install-recommends screen nginx iputils-ping net-tools
-
-ENV TINI_VERSION v0.19.0
-ADD https://github.com/krallin/tini/releases/download/${TINI_VERSION}/tini /bin/tini
-RUN chmod +x /bin/tini
-#RUN chmod +x run.sh
-#RUN chmod 777 docker-entrypoint.sh
-
-RUN apt-get update && apt-get install -y software-properties-common curl gnupg2 && \
-  curl -fsSL https://apt.releases.hashicorp.com/gpg | apt-key add - && \
-  apt-add-repository "deb [arch=amd64] https://apt.releases.hashicorp.com $(lsb_release -cs) main" && \
-  apt-get update && apt-get install -y \
-  vault bash && \
-  setcap cap_ipc_lock= /usr/bin/vault
-
-# Phase two in case we forgot any above
-MAINTAINER RUN echo add-apt-repository -y ppa:ondrej/php \
- && apt-get update \
-# && apt-get install -y -q --no-install-recommends libapache2-mod-php 
-# && apt-get install -y -q --no-install-recommends libapache2-mod-php7.4  ; /bin/true \
-  && apt-get install -y -q --no-install-recommends libapache2-mod-wsgi ; /bin/true \
-  && apt-get install -y -q --no-install-recommends libapache2-mod-proxy-uwsgi  ; /bin/true \
-  && apt-get install -y -q --no-install-recommends iputils-ping net-tools \
-# && apt-get install -y -q --no-install-recommends php7.4-dev php7.4-common php7.4 \
-  && apt-get install -y -q --no-install-recommends \
- php7.4-mysql php7.4-xml php7.4-xmlrpc php7.4-curl \
- php7.4-gd php7.4-imagick php7.4-cli php7.4-dev php7.4-imap php7.4-mbstring \
- php7.4-opcache php7.4-soap php7.4-zip php7.4-intl  \
- # && echo apt autoclean -y \
- # && echo apt autoremove -y \
- # && rm -rf /var/lib/apt/lists/*
-
 
 # install our Butterfly websockets (telnet server over httpd)
 RUN \
@@ -580,23 +544,6 @@ WORKDIR /root
 ENV HOME=/root \
     SHELL=/bin/bash
 HEALTHCHECK --interval=60s --timeout=10s CMD curl --fail http://127.0.0.1:6079/api/health
-
-ENV DEBIAN_FRONTEND noninteractive
-
-RUN apt remove -y apache2 nginx-common \
- && apt purge -y apache2 nginx-common \
- && apt-get update && apt-get upgrade -y \
- && apt autoclean -y \
- && echo apt autoremove -y \
- && rm -rf /var/lib/apt/lists/*
-
-RUN apt-get update && apt install -y nginx-common nginx nginx-core  libnginx-mod-http-geoip libnginx-mod-http-image-filter \
-  libnginx-mod-http-xslt-filter libnginx-mod-mail libnginx-mod-stream \
-  supervisor apache2 nmap x11-apps vim eggdrop default-jdk default-jre \
-  iproute2 libgd3 libgeoip1 libmnl0 libwebp6 libxslt1.1 \
- && apt autoclean -y \
- && echo apt autoremove -y \
- && rm -rf /var/lib/apt/lists/* 
 
 COPY rootfs /
 

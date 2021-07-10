@@ -53,6 +53,9 @@ if [ "${2}" == "commit" ]; then
 
 fi
 
+docker kill logicmoo 2>/dev/null ; /bin/true
+docker container rm logicmoo
+
 if [ "${1}" == "build" ]; then
 
 

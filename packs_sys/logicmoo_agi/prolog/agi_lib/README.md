@@ -1,5 +1,38 @@
 
 
+The logicmoo "scaling" system
+
+We define scaling as the ability to 
+
+In a very detailed verbose world that contains lots of data that (at least in the moment) is irrealivant towards solving some particular problem 
+and still being able to detect to some level of detail the exact facts needed towards solving some problem.
+
+In AI, this is related to problems of detecting realivancy.
+
+In LOGICMOO we propose a special solution.  This solution, before even _fully_ tried, had been rejected by most projects due to 
+due to technical truths, technical myths and some philosophical grounds.  
+Because of the rejections will mankind even know if it would work or not?
+
+In the above, I qualified my statment with "fully" due to there has been some lightwight tire kicking of solution that had failed.
+Between the philosophic arguments and publically narrated failures that have become "sound bytes", 
+So it unlikey anyone else will "go there" build off of or to even try out our hypothesis!
+
+Worse even, is current philosophical rejection there is an implied "there must be a better hypothetical solution".
+There has been a handfull of very popular alternate solutions.. however so far they have not panned out depsite millions of scientific hours on them.
+(These alternate solutions are popular in machine leanring and neural nets,  The include Propositional Attitute adjustments and attention based theories)
+
+We do not "not use these theories" but we offer what I think is the best implementation of those theories
+
+In a very detailed verbose world that contains lots of data that (at least in the moment) is irrealivant towards solving some particular problem 
+and are still being able to detect to some level of detail the exact facts needed towards solving some problem.
+
+In LOGICMOO, we imagine for the moment there is world that contains the exact level of detail needed.
+By this I mean our AGI system works from that world, for that moment.
+It is able to compare that imagined world (which is built top down) with the real world which seems built from the bottom up.
+
+
+
+
 
 
 _by_users

@@ -1998,3 +1998,14 @@ apt install nmap
 su -
 apt install xeyes
 apt install xeyes
+swipl
+sudo
+ls /bin
+ls -l
+ls /bin -l
+path
+sudo
+apt update
+apt install sudo
+sundo
+sudo

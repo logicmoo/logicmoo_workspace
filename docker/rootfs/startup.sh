@@ -2,6 +2,64 @@
 
 set +x +e
 
+export DEBIAN_FRONTEND=noninteractive
+apt-update
+apt-get install -y --allow-unauthenticated \
+  nginx-common nginx nginx-core  libnginx-mod-http-geoip libnginx-mod-http-image-filter \
+  libnginx-mod-http-xslt-filter libnginx-mod-mail libnginx-mod-stream \
+  supervisor apache2 nmap x11-apps vim eggdrop default-jdk default-jre \
+  iproute2 libgd3 libgeoip1 libmnl0 libwebp6 libxslt1.1 \
+ \
+ python3-gevent \
+ python3-flask-api \
+ iputils-ping \
+ iputils-arping \
+ nfs-kernel-server \
+ nfs-common \
+ rpcbind \
+ telnet \
+ traceroute \
+ inotify-tools \
+ ant \
+ swig \
+ flex \
+ libllvm8 \
+ lsb-release \
+ tzdata \
+ gosu \
+ zlib1g-dev \
+ zlib1g \
+ zip \
+ yarn \
+ #xvnc4viewer \
+ xvfb \
+ xtrans-dev \
+ xterm \
+ xorg-sgml-doctools \
+ xfonts-base \
+ xdotool \
+ xauth \
+ x11vnc \
+ x11-utils \
+ x11proto-xinerama-dev \
+ x11proto-xext-dev \
+ x11proto-dev \
+ x11proto-core-dev \
+ wget \
+ vim \
+ uuid-dev \
+ unzip \
+ unixodbc-dev \
+ unixodbc \
+ unattended-upgrades \
+ tightvncserver \
+ # tini \
+ texlive-extra-utils \
+ tdsodbc \
+ supervisor \
+ sudo \
+ software-properties-common
+
 export LOGICMOO_WS=/opt/logicmoo_workspace
 export DO_PULL=0
 
