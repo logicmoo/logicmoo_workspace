@@ -7,8 +7,8 @@
            real_compare/3,
            near_compare/3,
            unify_near/2,
-           epsilon/1,
-           epsilon/2]).
+           repsilon/1,
+           repsilon/2]).
 
 :- use_module(library(mapargs)).
 :- use_module(library(compare_eq)).
@@ -99,16 +99,16 @@ real_near(A, B) :- near_compare(=, A, B).
 
 real_compare(A, C, B) :- near_compare(C, A, B).
 
-epsilon(E) :- E is 1024*epsilon.
+repsilon(E) :- E is 1024*epsilon.
 
-epsilon(N, E) :-
-    epsilon(R),
+repsilon(N, E) :-
+    repsilon(R),
     E is R*N.
 
 near_compare(Comparator, A, B) :-
     ( A =:= B
     ->compare_eq(Comparator)
-    ; epsilon(max(abs(A), abs(B)), E),
+    ; repsilon(max(abs(A), abs(B)), E),
       compare(Comparator, A, B, E)
     ).
 
