@@ -3,23 +3,11 @@ FROM logicmoo/logicmoo_starter_image
 USER root
 LABEL maintainer = "logicmoo@gmail.com"
 
-RUN apt purge -y apache2
-RUN apt purge -y nginx-common
-RUN apt-get update &&  apt-get upgrade -y
-# ; mv /etc/apache2 /etc/apache2.logicmoo \
-# ; mv /var/www /var/www.logicmoo \
-#  && apt purge -y nginx-common
-#  && apt install -y apache2 # gitweb
-
-
-# ; mv /etc/apache2 /etc/apache2.dead \
-# ; mv /var/www /var/www.logicmoo.dead \
-# ; mv /etc/apache2.logicmoo /etc/apache2  \
-# ; mv /var/www.logicmoo /var/www ; /bin/true
+RUN apt purge -y apache2 nginx-common && apt-get update && apt-get upgrade -y
 
 RUN apt-get update && apt install -y nginx-common nginx nginx-core  libnginx-mod-http-geoip libnginx-mod-http-image-filter \
   libnginx-mod-http-xslt-filter libnginx-mod-mail libnginx-mod-stream \
-  nginx nginx-common nginx-core supervisor apache2 nmap x11-apps vim eggdrop default-jdk default-jre
+  nginx nginx-common nginx-core supervisor apache2 nmap x11-apps vim eggdrop default-jdk default-jre sudo
 
 
 
@@ -68,9 +56,6 @@ ENV HOME /root
 
 COPY docker/rootfs /
 
-RUN cat /etc/supervisor/supervisord.conf
-RUN ls -l /etc/supervisor/conf.d/supervisord*
-
 RUN echo enable some apache mods \
  && a2dismod mpm_event \
  && a2enmod macro access_compat alias auth_basic authn_core authn_file authz_core authz_host authz_user autoindex deflate dir env \
@@ -109,7 +94,6 @@ MAINTAINER RUN cd $LOGICMOO_WS && set -x \
  && git add logicmoo_pldata \
  && git commit -am "logicmoo_pldata-$(date)" \
  && rm -rf $LOGICMOO_WS/packs_xtra/logicmoo_pldata/*/
-
 #CMD $LOGICMOO_WS/StartLogicmoo.sh
 
 

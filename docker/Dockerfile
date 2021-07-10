@@ -605,3 +605,6 @@ RUN /ros-noetic-desktop-testing.sh ; /bin/true
 #ENTRYPOINT ["/startup_logicmoo.sh"]
 #ENTRYPOINT ["/startup.sh"]
 ENTRYPOINT ["/bin/sh", "-ec", "while :; do echo '.'; sleep 600 ; done"]
+
+
+
