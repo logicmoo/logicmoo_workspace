@@ -585,7 +585,10 @@ ENV DEBIAN_FRONTEND noninteractive
 
 RUN apt remove -y apache2 nginx-common \
  && apt purge -y apache2 nginx-common \
- && apt-get update && apt-get upgrade -y
+ && apt-get update && apt-get upgrade -y \
+ && apt autoclean -y \
+ && echo apt autoremove -y \
+ && rm -rf /var/lib/apt/lists/*
 
 RUN apt-get update && apt install -y nginx-common nginx nginx-core  libnginx-mod-http-geoip libnginx-mod-http-image-filter \
   libnginx-mod-http-xslt-filter libnginx-mod-mail libnginx-mod-stream \
