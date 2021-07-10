@@ -39,7 +39,7 @@
 
 
 :- use_module(library(thread)).
-% :- use_module(library(concurrent_forall)).
+% :- use_module(library(conc_forall)).
 
 :- meta_predicate
         cond_forall(+,0,0 ),
