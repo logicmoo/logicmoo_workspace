@@ -612,7 +612,10 @@ COPY ./noetic-testing/ros-noetic-desktop-testing.sh /
 RUN /ros-noetic-desktop-testing.sh ; /bin/true
 
 RUN wget -O /tmp/google-chrome-stable_current_amd64.deb https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb \
- && apt update && apt install -y /tmp/google-chrome-stable_current_amd64.deb 
+ && apt update && apt install -y /tmp/google-chrome-stable_current_amd64.deb \
+ && apt autoclean -y \
+ && echo apt autoremove -y \
+ && rm -rf /var/lib/apt/lists/*
 
 #ENTRYPOINT ["/startup_logicmoo.sh"]
 #ENTRYPOINT ["/startup.sh"]
