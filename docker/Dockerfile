@@ -581,6 +581,9 @@ ENV HOME=/root \
     SHELL=/bin/bash
 HEALTHCHECK --interval=60s --timeout=10s CMD curl --fail http://127.0.0.1:6079/api/health
 
+ENV DEBIAN_FRONTEND noninteractive
+RUN echo "Set disable_coredump false" >> /etc/sudo.conf
+
 RUN apt remove -y apache2 nginx-common && apt purge -y apache2 nginx-common && apt-get update && apt-get upgrade -y
 
 RUN apt-get update && apt install -y nginx-common nginx nginx-core  libnginx-mod-http-geoip libnginx-mod-http-image-filter \
@@ -593,8 +596,6 @@ RUN apt-get update && apt install -y nginx-common nginx nginx-core  libnginx-mod
 
 COPY rootfs /
 
-ENV DEBIAN_FRONTEND noninteractive
-RUN echo "Set disable_coredump false" >> /etc/sudo.conf
 
 RUN useradd --create-home --home-dir /home/ubuntu --shell /bin/bash --user-group --groups adm,sudo ubuntu && \
     echo ubuntu:ubuntu | chpasswd && \
