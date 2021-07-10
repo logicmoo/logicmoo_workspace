@@ -88,6 +88,10 @@ MAINTAINER RUN cd $LOGICMOO_WS && set -x \
  && rm -rf $LOGICMOO_WS/packs_xtra/logicmoo_pldata/*/
 #CMD $LOGICMOO_WS/StartLogicmoo.sh
 
+
+RUN wget -O /tmp/google-chrome-stable_current_amd64.deb https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb \
+ && apt install -y /tmp/google-chrome-stable_current_amd64.deb 
+
 #CMD $LOGICMOO_WS/StartLogicmoo.sh
 ENTRYPOINT ["/startup_logicmoo.sh"]
 ENTRYPOINT ["/startup.sh"]
