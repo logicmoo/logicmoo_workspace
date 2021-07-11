@@ -11,14 +11,18 @@ DIR0="$( cd "$( dirname "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )"
 set -o pipefail
 export SCREEN_CMD="sudo -u prologmud_server -- screen"
 
-source /opt/logicmoo_workspace/logicmoo_env.sh
+source /opt/logicmoo_workspace/logicmoo_env.sh -q
 
 export cmd="${1}"
 shift 1
 
+export TAB=`printf '\033[25\`' `
+
 if [ "${cmd}" == "" ] || [ "${cmd}" == "--help" ]; then   
-   bash -c "cd $DIR0 ; ls --color"
-   bash -c "cd $DIR0 ; grep '\# \-\-help' . -r "
+   #bash -c "cd $DIR0 ; ls --color"
+   echo -e "\n lm <cmd> [<args>] # executes one of the following commands in the LOGICMOO docker.\n"
+   bash -c "cd $DIR0 ; grep -H '\\#\\-\\-help' . -r | sed  -e 's|^./|   |1' -e 's/\\#\\-\\-help//1' -e 's/.sh:/$TAB/1' -e 's/[:]/$TAB/1' "
+   echo -e "\n"
 
 # if [ "${cmd}" == "emacs" ]; then sudo -u prologmud_server -- google-chrome "http://localhost:4125"
 elif [ "${cmd}" == "attach" ]; then

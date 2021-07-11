@@ -1,4 +1,5 @@
 #!/bin/bash
+#--help # Clear the SCREEN
 for i in {1..4}
 do
     echo -e "\n"

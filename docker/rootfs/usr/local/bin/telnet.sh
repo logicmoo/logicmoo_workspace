@@ -1,6 +1,8 @@
 #!/bin/bash
 set -o pipefail
 
+#--help # Connect via Telnet
+
 if [[ $EUID -eq 0 ]]; then
    sudo -u prologmud_server -- ${BASH_SOURCE[0]} $@
    return 0 2>/dev/null

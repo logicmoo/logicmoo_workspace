@@ -1,5 +1,17 @@
 #!/bin/bash
 
+function MAINTAINER {
+   /bin/true
+}
+
+ECHO=MAINTAINER
+
+if [[ "${1}" == "-q" ]] ;then
+   ECHO=MAINTAINER
+elif [[ "${1}" == "-v" ]] ;then
+   ECHO=echo
+fi
+
 PROMPT_COMMAND="${PROMPT_COMMAND:+$PROMPT_COMMAND$'\n'}history -a; history -c; history -r"
 
 munge () {
@@ -33,20 +45,20 @@ if [[ -z "${LOGICMOO_WS}" ]]; then
   export LOGICMOO_WS=/opt/logicmoo_workspace
  fi
 
- echo "#* Set logicmoo workspace"
- echo "#* LOGICMOO_WS=$LOGICMOO_WS"
+ $ECHO "#* Set logicmoo workspace"
+ $ECHO "#* LOGICMOO_WS=$LOGICMOO_WS"
 
 fi
 
 if [[ ":$PATH:" == *"$LOGICMOO_WS/bin:"* ]]; then
-   echo "#* "
+   $ECHO "#* "
    if [[ -z "$1" ]]; then
-      echo "#* GOOD: Logicmoo [$LOGICMOO_WS/bin] found in your PATH"
+      $ECHO "#* GOOD: Logicmoo [$LOGICMOO_WS/bin] found in your PATH"
    fi
 else
  # PATH="/root/.cpm/bin:/opt/logicmoo_workspace/packs_xtra/logicmoo_packages/prolog/pakcs/bin:$PATH"
  export PATH="$LOGICMOO_WS/bin:$PATH"
- echo "#* PATH=$PATH"
+ $ECHO "#* PATH=$PATH"
 fi
 
 pathmunge $LOGICMOO_WS/packs_lib/sparqlprog/bin after
@@ -63,22 +75,22 @@ then
    for val in ${StringArray[@]}; do
      if [ -n "$DISPLAY" ] || [ -z "$DISPLAY" ]; then
       NMAP=$(nmap -p 6000  $val)
-      if echo "$NMAP" | grep "Host is up"  && echo "$NMAP" | grep "open"; then       
+      if (echo "$NMAP" | grep "Host is up"  && echo "$NMAP" | grep "open") > /dev/null; then       
         export DISPLAY=$val:0.0
       fi
     fi
    done   
    if [ -n "$DISPLAY" ] || [ -z "$DISPLAY" ]; then
-      echo Maybe: export DISPLAY=10.0.0.78:0.0
-      echo OR Maybe: export DISPLAY=:1
+      $ECHO Maybe: export DISPLAY=10.0.0.78:0.0
+      $ECHO OR Maybe: export DISPLAY=:1
       # Iterate the string array using for loop
    fi
 fi
 
-echo "#* DISPLAY=$DISPLAY"
+$ECHO "#* DISPLAY=$DISPLAY"
 
 if [[ -z "${LIBJVM}" ]]; then  
-   echo "Finding/Setting LIBJVM..."
+   $ECHO "Finding/Setting LIBJVM..."
    if ! [[ -z "${JAVA_HOME}" ]]; then
     export LIBJVM=$(find $JAVA_HOME -name libjvm.so -printf "%h\n" | head -n 1)
    elif [ -d /usr/lib/jvm ]; then     
@@ -86,10 +98,10 @@ if [[ -z "${LIBJVM}" ]]; then
    fi
 fi
 
-echo "#* LIBJVM=$LIBJVM"
+$ECHO "#* LIBJVM=$LIBJVM"
 if ! [[ -z "${LIBJVM}" ]]; then 
    if ! [ ":$LD_LIBRARY_PATH:" == ":$LIBJVM"* ]; then
-      echo "Finding/Setting LD_LIBRARY_PATH..."
+      $ECHO "Finding/Setting LD_LIBRARY_PATH..."
        if [[ -z "${LD_LIBRARY_PATH}" ]]; then
           export LD_LIBRARY_PATH=$LIBJVM:/usr/local/lib
        else
@@ -102,7 +114,7 @@ if ! [[ -z "${LIBJVM}" ]]; then
    fi
 fi
 
-echo "#* LD_LIBRARY_PATH=$LD_LIBRARY_PATH"
+$ECHO "#* LD_LIBRARY_PATH=$LD_LIBRARY_PATH"
 
 if [[ ! -v SSH_TTY ]]; then
 /bin/true
@@ -111,7 +123,7 @@ elif [[ -z "$SSH_TTY" ]]; then
 elif [[ -w "$SSH_TTY" ]]; then
 /bin/true
 else 
- echo "#* MAYBE: need to chmod  o+rw $SSH_TTY"
+ $ECHO "#* MAYBE: need to chmod  o+rw $SSH_TTY"
  chmod o+rw $SSH_TTY
 fi
 

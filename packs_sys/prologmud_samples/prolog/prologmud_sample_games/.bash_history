@@ -1,5 +1,3 @@
-export SCREEN_CMD="sudo -u prologmud_server -- screen"
-#echo PTTY:TTY:PTS=$PTTY:$TTY:$PTS
 #whoami
 STUFF="^Mprolog.
 bfly. call((bfly_set(butterfly),bfly_set(command_args,\"${*}\"),bfly_set(ptty,\"${PTTY}:${TTY}:${PTY}:${PTS}\"))). bfly_start_link(\"${LOCATION}\").
@@ -1998,3 +1996,5 @@ git status
 www.sh
 exit
 exit
+google-chrome
+google-chrome  --no-sandbox
