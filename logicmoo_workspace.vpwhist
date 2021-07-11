@@ -54,6 +54,8 @@ packs_sys\logicmoo_nlu\ext\chat80_lm\chat80.vpj=Release
               + WEB-INF
   + .vscode
   - docker
+    + noetic
+    + noetic-testing
     - rootfs
       - etc
         - apache2
@@ -65,11 +67,11 @@ packs_sys\logicmoo_nlu\ext\chat80_lm\chat80.vpj=Release
             + logicmoo.org
         + nginx
           + sites-enabled
-        + profile.d
+        - profile.d
         - supervisor
           - conf.d
       - root
-      - usr
+      + usr
         - local
           - bin
             + old-scripts
@@ -179,6 +181,13 @@ packs_sys\logicmoo_nlu\ext\chat80_lm\chat80.vpj=Release
             - man
               - man1
             - pkgconfig
+  + docker-ros-desktop-vnc
+    + kinetic
+    + melodic
+    + melodic-arm64
+    + noetic
+    + noetic-testing
+  + dockerz
   + docs
     + _build
       + doctrees
@@ -327,14 +336,14 @@ packs_sys\logicmoo_nlu\ext\chat80_lm\chat80.vpj=Release
           + t
     + Downloads
       + JanWielemaker-rserve_client-1965cf2
-    + eggdrop
-      + conf
+    - eggdrop
+      - conf
       - prolog
       + t
     - instant_prolog_docs
       + prolog
       + t
-    - logicmoo_agi
+    + logicmoo_agi
       + ImportantDocs
         + jmc
       + pldox
@@ -1107,6 +1116,10 @@ packs_sys\logicmoo_nlu\ext\chat80_lm\chat80.vpj=Release
             + war
               + WEB-INF
           + webclient
+        + AceRules-GIT
+          + docker
+            + plain
+            + with-smodels
         + ape
           + examples
           + java
@@ -1450,7 +1463,7 @@ packs_sys\logicmoo_nlu\ext\chat80_lm\chat80.vpj=Release
           - e2c
       + test
         + logicmoo_nlu
-    - logicmoo_utils
+    + logicmoo_utils
       - prolog
         + body_reordering
         + cpviz
@@ -1538,16 +1551,63 @@ packs_sys\logicmoo_nlu\ext\chat80_lm\chat80.vpj=Release
             + model
             + mudconsole
       + t
-    - prologmud_samples
+    + prologmud_samples
       - prolog
+        + prologmud_sample_games\.cache
+          + google-cloud-tools-java
+            + managed-cloud-sdk
+              + LATEST
+                + google-cloud-sdk\.install\.backup
+                  + platform
+                    + ext-runtime
+                      + go
+                        + data
+                      + nodejs
+                        + data
+                + google-cloud-sdk
+                  + platform
+                    + ext-runtime
+                      + go
+                        + data
+                      + nodejs
+                        + data
+                    + google_appengine
+                      + lib
+                        + docker
+                          + docker
+                            + tests
         + prologmud_sample_games\.config
           + butterfly
+        + prologmud_sample_games\.p2
+          + pool
+            + plugins
+              + org.eclipse.linuxtools.docker.editor.ls_1.0.0.202006092019
+                + language-server
+                  + node_modules
+                    + dockerfile-language-server-nodejs
+                    + dockerfile-language-service
+                      + node_modules
+                        + dockerfile-utils
+                    + dockerfile-utils
+              + org.eclipse.linuxtools.docker.editor.ls_1.0.0.202103091924
+                + language-server
+                  + node_modules
+                    + dockerfile-language-server-nodejs
+                    + dockerfile-utils
+              + org.eclipse.wildwebdeveloper_0.5.14.202102181620
+                + node_modules
+                  + yaml-language-server
         - prologmud_sample_games
           + attic
           + btepisode
           + circlemuddata
           + config-enabled-swish
             + gitty
+          + lsp-docker
+            + demo-projects
+              + Dockerfile
+            + lsp-docker-full
+            + lsp-docker-langservers
           + src_game_nani
             + web
               + css
@@ -1572,8 +1632,8 @@ packs_sys\logicmoo_nlu\ext\chat80_lm\chat80.vpj=Release
               + prolog
               + snd
           + src_game_wumpus
-    + slack_prolog
-      + prolog
+    - slack_prolog
+      - prolog
       + t
     + swicli
       + cmake
@@ -2067,7 +2127,15 @@ packs_sys\logicmoo_nlu\ext\chat80_lm\chat80.vpj=Release
               + js
             + icons
               + small
-    + swish
+    + muddev
+      + evennia
+    + node_modules
+      + ace
+        + build
+          + demo
+            + kitchen-sink
+              + docs
+    - swish
       + applications
       + client
       + config-available
@@ -2226,6 +2294,9 @@ packs_sys\logicmoo_nlu\ext\chat80_lm\chat80.vpj=Release
               + gf__TestAttempto
               + test
             + logs
+      + AceWikiBAD
+        + docker
+          + plain
       + bllip-parser
         + dockerfiles
           + centos6
@@ -2641,219 +2712,315 @@ packs_sys\logicmoo_nlu\ext\chat80_lm\chat80.vpj=Release
 + other_files.vpj
 scroll:0
 [State]
-SCREEN: 1920 1080 2133 1388 1440 818 0 0 M 0 0 0 0 1605 633
+SCREEN: 1920 1200 26 26 1440 757 0 0 N 0 0 0 0 1109 255
 CWD: C:\Program Files (x86)\SlickEdit\win
 BUFFER: BN="other_files.vpj"
-BI: MA=1 74 1  TABS=1 5  WWS=1 IWT=1 ST=0 IN=2 BW=0 US=32000 RO=0 SE=1 SN=0 BIN=0 MN=VPJ	HM=0 MF=8 TL=0 MLL=0 ASE=0 LNL=6 LCF=0 CAPS=0 E=70 ESBU2=-1
-VIEW: LN=.0 CL=1 LE=0 CX=0 CY=0 WI=5 BI=33 HT=0 HN=0 HF=0 HC=4
-BUFFER: BN="packs_web\swish\web\js\svgavatar.js"
-BI: MA=1 74 1  TABS=1 5  WWS=1 IWT=1 ST=0 IN=2 BW=0 US=32000 RO=0 SE=1 SN=0 BIN=0 MN=JavaScript	HM=0 MF=8 TL=0 MLL=0 ASE=0 LNL=6 LCF=0 CAPS=0 E=0 ESBU2=-1
-VIEW: LN=.0 CL=1 LE=0 CX=0 CY=0 WI=5 BI=31 HT=0 HN=0 HF=0 HC=4
-BUFFER: BN="packs_web\swish\web\js\storage.js"
-BI: MA=1 74 1  TABS=1 5  WWS=1 IWT=1 ST=0 IN=2 BW=0 US=32000 RO=0 SE=1 SN=0 BIN=0 MN=JavaScript	HM=0 MF=8 TL=0 MLL=0 ASE=0 LNL=6 LCF=0 CAPS=0 E=0 ESBU2=-1
-VIEW: LN=.0 CL=1 LE=0 CX=0 CY=0 WI=5 BI=34 HT=0 HN=0 HF=0 HC=4
+BI: MA=1 74 1  TABS=1 5  WWS=1 IWT=1 ST=0 IN=2 BW=0 US=32000 RO=0 SE=1 SN=0 BIN=0 MN=VPJ	HM=0 MF=0 TL=0 MLL=0 ASE=0 LNL=6 LCF=0 CAPS=0 E=70 ESBU2=-1
+VIEW: LN=.0 CL=1 LE=0 CX=0 CY=0 WI=5 BI=64 HT=0 HN=0 HF=0 HC=4
+BUFFER: BN="docker\rootfs\usr\local\bin\copy_modified.sh"
+BI: MA=1 74 1  TABS=1 4  WWS=1 IWT=0 ST=0 IN=2 BW=0 US=32000 RO=0 SE=1 SN=0 BIN=0 MN=Slick-C	HM=0 MF=0 TL=0 MLL=0 ASE=0 LNL=6 LCF=0 CAPS=0 E=0 ESBU2=-1
+VIEW: LN=.182 CL=1 LE=0 CX=0 CY=4 WI=5 BI=27 HT=0 HN=0 HF=0 HC=4
+BUFFER: BN="docker\rootfs\usr\local\bin\connect_www.sh"
+BI: MA=1 74 1  TABS=1 4  WWS=1 IWT=0 ST=0 IN=2 BW=0 US=32000 RO=0 SE=1 SN=0 BIN=0 MN=Slick-C	HM=0 MF=0 TL=0 MLL=0 ASE=0 LNL=6 LCF=0 CAPS=0 E=0 ESBU2=-1
+VIEW: LN=.212 CL=28 LE=0 CX=27 CY=4 WI=5 BI=26 HT=0 HN=0 HF=0 HC=4
 BUFFER: BN="runFromDocker.sh"
-BI: MA=1 74 1  TABS=1 4  WWS=1 IWT=0 ST=0 IN=2 BW=0 US=32000 RO=0 SE=1 SN=0 BIN=0 MN=Slick-C	HM=0 MF=8 TL=0 MLL=0 ASE=0 LNL=6 LCF=0 CAPS=0 E=0 ESBU2=-1
-VIEW: LN=.1305 CL=29 LE=0 CX=28 CY=15 WI=5 BI=32 HT=0 HN=0 HF=0 HC=4
-BUFFER: BN="StartLogicmoo.sh"
 BI: MA=1 74 1  TABS=1 4  WWS=1 IWT=0 ST=0 IN=2 BW=0 US=32000 RO=0 SE=1 SN=0 BIN=0 MN=Slick-C	HM=0 MF=0 TL=0 MLL=0 ASE=0 LNL=6 LCF=0 CAPS=0 E=0 ESBU2=-1
-VIEW: LN=.478 CL=7 LE=0 CX=6 CY=22 WI=5 BI=43 HT=0 HN=0 HF=0 HC=4
-BUFFER: BN="web_install.sh"
+VIEW: LN=.1715 CL=56 LE=0 CX=55 CY=4 WI=5 BI=55 HT=0 HN=0 HF=0 HC=4
+BUFFER: BN="docker\rootfs\usr\local\bin\connect_vnc.sh"
 BI: MA=1 74 1  TABS=1 4  WWS=1 IWT=0 ST=0 IN=2 BW=0 US=32000 RO=0 SE=1 SN=0 BIN=0 MN=Slick-C	HM=0 MF=0 TL=0 MLL=0 ASE=0 LNL=6 LCF=0 CAPS=0 E=0 ESBU2=-1
-VIEW: LN=.715 CL=23 LE=0 CX=22 CY=14 WI=5 BI=44 HT=0 HN=0 HF=0 HC=4
-BUFFER: BN="docker\Dockerfile"
-BI: MA=1 74 1  TABS=1 9  WWS=1 IWT=1 ST=0 IN=1 BW=0 US=32000 RO=0 SE=1 SN=0 BIN=0 MN=Fundamental	HM=0 MF=8 TL=0 MLL=0 ASE=0 LNL=6 LCF=0 CAPS=0 E=0 ESBU2=-1
-VIEW: LN=.8313 CL=2 LE=0 CX=1 CY=6 WI=5 BI=28 HT=0 HN=0 HF=0 HC=4
-BUFFER: BN="docker\rootfs\startup.sh"
-BI: MA=1 74 1  TABS=1 4  WWS=1 IWT=0 ST=0 IN=2 BW=0 US=32000 RO=0 SE=1 SN=0 BIN=0 MN=Slick-C	HM=0 MF=8 TL=0 MLL=0 ASE=0 LNL=6 LCF=0 CAPS=0 E=0 ESBU2=-1
-VIEW: LN=.437 CL=10 LE=0 CX=9 CY=14 WI=5 BI=40 HT=0 HN=0 HF=0 HC=4
-BUFFER: BN="docker\rootfs\usr\local\bin\websocket_redir.sh"
-BI: MA=1 74 1  TABS=1 4  WWS=1 IWT=0 ST=0 IN=2 BW=0 US=32000 RO=0 SE=1 SN=0 BIN=0 MN=Slick-C	HM=0 MF=0 TL=0 MLL=0 ASE=0 LNL=6 LCF=0 CAPS=0 E=0 ESBU2=-1
-VIEW: LN=.0 CL=1 LE=0 CX=0 CY=0 WI=5 BI=55 HT=0 HN=0 HF=0 HC=4
-BUFFER: BN="docker\rootfs\usr\local\bin\eclipse"
-BI: MA=1 74 1  TABS=1 9  WWS=1 IWT=1 ST=0 IN=2 BW=0 US=32000 RO=0 SE=1 SN=0 BIN=0 MN=Bourne Shell	HM=0 MF=0 TL=0 MLL=0 ASE=0 LNL=6 LCF=0 CAPS=0 E=0 ESBU2=-1
-VIEW: LN=.0 CL=1 LE=0 CX=0 CY=0 WI=5 BI=56 HT=0 HN=0 HF=0 HC=4
-BUFFER: BN="docker\rootfs\usr\local\bin\cls"
-BI: MA=1 74 1  TABS=1 9  WWS=1 IWT=1 ST=0 IN=2 BW=0 US=32000 RO=0 SE=1 SN=0 BIN=0 MN=Bourne Shell	HM=0 MF=0 TL=0 MLL=0 ASE=0 LNL=6 LCF=0 CAPS=0 E=0 ESBU2=-1
-VIEW: LN=.0 CL=1 LE=0 CX=0 CY=0 WI=5 BI=57 HT=0 HN=0 HF=0 HC=4
-BUFFER: BN="docker\rootfs\usr\local\bin\connect_butterfly.sh"
-BI: MA=1 74 1  TABS=1 4  WWS=1 IWT=0 ST=0 IN=2 BW=0 US=32000 RO=0 SE=1 SN=0 BIN=0 MN=Slick-C	HM=0 MF=0 TL=0 MLL=0 ASE=0 LNL=6 LCF=0 CAPS=0 E=0 ESBU2=-1
-VIEW: LN=.117 CL=1 LE=0 CX=0 CY=5 WI=5 BI=58 HT=0 HN=0 HF=0 HC=4
-BUFFER: BN="docker\rootfs\usr\local\bin\connect_telnet.sh"
-BI: MA=1 74 1  TABS=1 4  WWS=1 IWT=0 ST=0 IN=2 BW=0 US=32000 RO=0 SE=1 SN=0 BIN=0 MN=Slick-C	HM=0 MF=0 TL=0 MLL=0 ASE=0 LNL=6 LCF=0 CAPS=0 E=0 ESBU2=-1
-VIEW: LN=.0 CL=1 LE=0 CX=0 CY=0 WI=5 BI=59 HT=0 HN=0 HF=0 HC=4
-BUFFER: BN="docker\rootfs\startup_logicmoo.sh"
-BI: MA=1 74 1  TABS=1 4  WWS=1 IWT=0 ST=0 IN=2 BW=0 US=32000 RO=0 SE=1 SN=0 BIN=0 MN=Slick-C	HM=0 MF=8 TL=0 MLL=0 ASE=0 LNL=6 LCF=0 CAPS=0 E=0 ESBU2=-1
-VIEW: LN=.45 CL=2 LE=0 CX=1 CY=4 WI=5 BI=54 HT=0 HN=0 HF=0 HC=4
-BUFFER: BN="Dockerfile"
-BI: MA=1 74 1  TABS=1 9  WWS=1 IWT=1 ST=0 IN=1 BW=0 US=32000 RO=0 SE=1 SN=0 BIN=0 MN=Fundamental	HM=0 MF=8 TL=0 MLL=0 ASE=0 LNL=6 LCF=0 CAPS=0 E=0 ESBU2=-1
-VIEW: LN=.2821 CL=3 LE=0 CX=2 CY=15 WI=5 BI=27 HT=0 HN=0 HF=0 HC=4
+VIEW: LN=.291 CL=7 LE=0 CX=6 CY=4 WI=5 BI=24 HT=0 HN=0 HF=0 HC=4
 BUFFER: BN="docker\rootfs\etc\apache2\conf-available\cliopatria_swish.conf"
 BI: MA=1 74 1  TABS=1 5  WWS=1 IWT=0 ST=0 IN=2 BW=0 US=32000 RO=0 SE=1 SN=0 BIN=0 MN=Config	HM=0 MF=0 TL=0 MLL=0 ASE=0 LNL=6 LCF=0 CAPS=0 E=0 ESBU2=-1
-VIEW: LN=.5082 CL=1 LE=0 CX=0 CY=14 WI=5 BI=45 HT=0 HN=0 HF=0 HC=4
-BUFFER: BN="docker\rootfs\etc\apache2\conf-available\doc_root.conf"
+VIEW: LN=.5082 CL=1 LE=0 CX=0 CY=4 WI=5 BI=48 HT=0 HN=0 HF=0 HC=4
+BUFFER: BN="logicmoo_env.sh"
+BI: MA=1 74 1  TABS=1 4  WWS=1 IWT=0 ST=0 IN=2 BW=0 US=32000 RO=0 SE=1 SN=0 BIN=0 MN=Slick-C	HM=0 MF=0 TL=0 MLL=0 ASE=0 LNL=6 LCF=0 CAPS=0 E=0 ESBU2=-1
+VIEW: LN=.1612 CL=1 LE=0 CX=0 CY=4 WI=5 BI=53 HT=0 HN=0 HF=0 HC=4
+BUFFER: BN="docker\Dockerfile"
+BI: MA=1 74 1  TABS=1 9  WWS=1 IWT=1 ST=0 IN=1 BW=0 US=32000 RO=0 SE=1 SN=0 BIN=0 MN=Fundamental	HM=0 MF=0 TL=0 MLL=0 ASE=0 LNL=6 LCF=0 CAPS=0 E=0 ESBU2=-1
+VIEW: LN=.15385 CL=11 LE=0 CX=10 CY=4 WI=5 BI=40 HT=0 HN=0 HF=0 HC=4
+BUFFER: BN="packs_sys\eggdrop\prolog\eggdrop.pl"
+BI: MA=1 174 1  TABS=1 3  WWS=1 IWT=0 ST=0 IN=2 BW=0 US=32000 RO=0 SE=1 SN=0 BIN=0 MN=Prolog	HM=0 MF=0 TL=0 MLL=0 ASE=0 LNL=6 LCF=0 CAPS=0 E=0 ESBU2=-1
+VIEW: LN=.1264 CL=20 LE=0 CX=19 CY=4 WI=5 BI=49 HT=0 HN=0 HF=0 HC=4
+BUFFER: BN="docker\rootfs\etc\supervisor\conf.d\supervisord_logicmoo.conf"
+BI: MA=1 74 1  TABS=1 5  WWS=1 IWT=0 ST=0 IN=2 BW=0 US=32000 RO=0 SE=1 SN=0 BIN=0 MN=Config	HM=0 MF=0 TL=0 MLL=0 ASE=0 LNL=6 LCF=0 CAPS=0 E=0 ESBU2=-1
+VIEW: LN=.885 CL=19 LE=0 CX=18 CY=4 WI=5 BI=41 HT=0 HN=0 HF=0 HC=4
+BUFFER: BN="packs_sys\eggdrop\conf\eggdrop.conf"
+BI: MA=1 74 1  TABS=1 5  WWS=1 IWT=0 ST=0 IN=2 BW=0 US=32000 RO=0 SE=1 SN=0 BIN=0 MN=Config	HM=0 MF=0 TL=0 MLL=0 ASE=0 LNL=6 LCF=0 CAPS=0 E=0 ESBU2=-1
+VIEW: LN=.32098 CL=65 LE=0 CX=64 CY=4 WI=5 BI=50 HT=0 HN=0 HF=0 HC=4
+BUFFER: BN="docker\rootfs\etc\apache2\conf-available\doc_root_ssl.conf"
 BI: MA=1 74 1  TABS=1 5  WWS=1 IWT=0 ST=0 IN=2 BW=0 US=32000 RO=0 SE=1 SN=0 BIN=0 MN=Config	HM=0 MF=0 TL=0 MLL=0 ASE=0 LNL=6 LCF=0 CAPS=0 E=0 ESBU2=-1
 VIEW: LN=.0 CL=1 LE=0 CX=0 CY=0 WI=5 BI=46 HT=0 HN=0 HF=0 HC=4
-BUFFER: BN="docker\rootfs\etc\apache2\conf-available\doc_root_ssl.conf"
+BUFFER: BN="docker\rootfs\usr\local\bin\lm"
+BI: MA=1 74 1  TABS=1 9  WWS=1 IWT=1 ST=0 IN=2 BW=0 US=32000 RO=0 SE=1 SN=0 BIN=0 MN=Bourne Shell	HM=0 MF=0 TL=0 MLL=0 ASE=0 LNL=6 LCF=0 CAPS=0 E=0 ESBU2=-1
+VIEW: LN=.751 CL=1 LE=0 CX=0 CY=4 WI=5 BI=30 HT=0 HN=0 HF=0 HC=4
+BUFFER: BN="docker\rootfs\usr\local\bin\connect_butterfly.sh"
+BI: MA=1 74 1  TABS=1 4  WWS=1 IWT=0 ST=0 IN=2 BW=0 US=32000 RO=0 SE=1 SN=0 BIN=0 MN=Slick-C	HM=0 MF=0 TL=0 MLL=0 ASE=0 LNL=6 LCF=0 CAPS=0 E=0 ESBU2=-1
+VIEW: LN=.255 CL=1 LE=0 CX=0 CY=4 WI=5 BI=23 HT=0 HN=0 HF=0 HC=4
+BUFFER: BN="docker\rootfs\usr\local\bin\connect_emacs.sh"
+BI: MA=1 74 1  TABS=1 4  WWS=1 IWT=0 ST=0 IN=2 BW=0 US=32000 RO=0 SE=1 SN=0 BIN=0 MN=Slick-C	HM=0 MF=0 TL=0 MLL=0 ASE=0 LNL=6 LCF=0 CAPS=0 E=0 ESBU2=-1
+VIEW: LN=.0 CL=1 LE=0 CX=0 CY=0 WI=5 BI=25 HT=0 HN=0 HF=0 HC=4
+BUFFER: BN="docker\rootfs\etc\profile.d\logicmoo_etc_profile_d.sh"
+BI: MA=1 74 1  TABS=1 4  WWS=1 IWT=0 ST=0 IN=2 BW=0 US=32000 RO=0 SE=1 SN=0 BIN=0 MN=Slick-C	HM=0 MF=0 TL=0 MLL=0 ASE=0 LNL=6 LCF=0 CAPS=0 E=0 ESBU2=-1
+VIEW: LN=.0 CL=1 LE=0 CX=0 CY=0 WI=5 BI=39 HT=0 HN=0 HF=0 HC=4
+BUFFER: BN="docker\rootfs\etc\supervisor\supervisord.conf"
+BI: MA=1 74 1  TABS=1 5  WWS=1 IWT=0 ST=0 IN=2 BW=0 US=32000 RO=0 SE=1 SN=0 BIN=0 MN=Config	HM=0 MF=0 TL=0 MLL=0 ASE=0 LNL=6 LCF=0 CAPS=0 E=0 ESBU2=-1
+VIEW: LN=.0 CL=1 LE=0 CX=0 CY=0 WI=5 BI=38 HT=0 HN=0 HF=0 HC=4
+BUFFER: BN="docker\rootfs\etc\supervisor\conf.d\supervisord.conf.j2"
+BI: MA=1 74 1  TABS=1 9  WWS=1 IWT=1 ST=0 IN=1 BW=0 US=32000 RO=0 SE=1 SN=0 BIN=0 MN=Fundamental	HM=0 MF=0 TL=0 MLL=0 ASE=0 LNL=6 LCF=0 CAPS=0 E=0 ESBU2=-1
+VIEW: LN=.0 CL=1 LE=0 CX=0 CY=0 WI=5 BI=29 HT=0 HN=0 HF=0 HC=4
+BUFFER: BN="docker\rootfs\etc\supervisor\conf.d\supervisord.conf"
+BI: MA=1 74 1  TABS=1 5  WWS=1 IWT=0 ST=0 IN=2 BW=0 US=32000 RO=0 SE=1 SN=0 BIN=0 MN=Config	HM=0 MF=0 TL=0 MLL=0 ASE=0 LNL=6 LCF=0 CAPS=0 E=0 ESBU2=-1
+VIEW: LN=.0 CL=1 LE=0 CX=0 CY=0 WI=5 BI=28 HT=0 HN=0 HF=0 HC=4
+BUFFER: BN="StartLogicmoo.sh"
+BI: MA=1 74 1  TABS=1 4  WWS=1 IWT=0 ST=0 IN=2 BW=0 US=32000 RO=0 SE=1 SN=0 BIN=0 MN=Slick-C	HM=0 MF=0 TL=0 MLL=0 ASE=0 LNL=6 LCF=0 CAPS=0 E=0 ESBU2=-1
+VIEW: LN=.371 CL=4 LE=0 CX=3 CY=4 WI=5 BI=31 HT=0 HN=0 HF=0 HC=4
+BUFFER: BN=".dockerignore"
+BI: MA=1 74 1  TABS=1 9  WWS=1 IWT=1 ST=0 IN=1 BW=0 US=32000 RO=0 SE=1 SN=0 BIN=0 MN=Fundamental	HM=0 MF=0 TL=0 MLL=0 ASE=0 LNL=6 LCF=0 CAPS=0 E=0 ESBU2=-1
+VIEW: LN=.2115 CL=14 LE=0 CX=13 CY=4 WI=5 BI=52 HT=0 HN=0 HF=0 HC=4
+BUFFER: BN="Dockerfile"
+BI: MA=1 74 1  TABS=1 9  WWS=1 IWT=1 ST=0 IN=1 BW=0 US=32000 RO=0 SE=1 SN=0 BIN=0 MN=Fundamental	HM=0 MF=0 TL=0 MLL=0 ASE=0 LNL=6 LCF=0 CAPS=0 E=0 ESBU2=-1
+VIEW: LN=.1264 CL=6 LE=0 CX=5 CY=4 WI=5 BI=51 HT=0 HN=0 HF=0 HC=4
+BUFFER: BN="web_install.sh"
+BI: MA=1 74 1  TABS=1 4  WWS=1 IWT=0 ST=0 IN=2 BW=0 US=32000 RO=0 SE=1 SN=0 BIN=0 MN=Slick-C	HM=0 MF=0 TL=0 MLL=0 ASE=0 LNL=6 LCF=0 CAPS=0 E=0 ESBU2=-1
+VIEW: LN=.715 CL=23 LE=0 CX=22 CY=4 WI=5 BI=54 HT=0 HN=0 HF=0 HC=4
+BUFFER: BN="docker\rootfs\usr\local\bin\connect_telnet.sh"
+BI: MA=1 74 1  TABS=1 4  WWS=1 IWT=0 ST=0 IN=2 BW=0 US=32000 RO=0 SE=1 SN=0 BIN=0 MN=Slick-C	HM=0 MF=0 TL=0 MLL=0 ASE=0 LNL=6 LCF=0 CAPS=0 E=0 ESBU2=-1
+VIEW: LN=.401 CL=21 LE=0 CX=20 CY=4 WI=5 BI=67 HT=0 HN=0 HF=0 HC=4
+BUFFER: BN="docker\rootfs\usr\local\bin\startMUDServer.sh"
+BI: MA=1 74 1  TABS=1 4  WWS=1 IWT=0 ST=0 IN=2 BW=0 US=32000 RO=0 SE=1 SN=0 BIN=0 MN=Slick-C	HM=0 MF=0 TL=0 MLL=0 ASE=0 LNL=6 LCF=0 CAPS=0 E=0 ESBU2=-1
+VIEW: LN=.608 CL=1 LE=0 CX=0 CY=4 WI=5 BI=69 HT=0 HN=0 HF=0 HC=4
+BUFFER: BN="packs_sys\prologmud_samples\prolog\prologmud_sample_games\on_boot.sh"
+BI: MA=1 74 1  TABS=1 4  WWS=1 IWT=0 ST=0 IN=2 BW=0 US=32000 RO=0 SE=1 SN=0 BIN=0 MN=Slick-C	HM=0 MF=0 TL=0 MLL=0 ASE=0 LNL=6 LCF=0 CAPS=0 E=0 ESBU2=-1
+VIEW: LN=.0 CL=1 LE=0 CX=0 CY=0 WI=5 BI=72 HT=0 HN=0 HF=0 HC=4
+BUFFER: BN="packs_sys\prologmud_samples\prolog\prologmud_sample_games\StartMUD.sh"
+BI: MA=1 74 1  TABS=1 4  WWS=1 IWT=0 ST=0 IN=2 BW=0 US=32000 RO=0 SE=1 SN=0 BIN=0 MN=Slick-C	HM=0 MF=0 TL=0 MLL=0 ASE=0 LNL=6 LCF=0 CAPS=0 E=0 ESBU2=-1
+VIEW: LN=.0 CL=1 LE=0 CX=0 CY=0 WI=5 BI=71 HT=0 HN=0 HF=0 HC=4
+BUFFER: BN="docker\rootfs\usr\local\bin\StartMUDServer.bat"
+BI: MA=1 74 1  TABS=1 5  WWS=1 IWT=1 ST=0 IN=2 BW=0 US=32000 RO=0 SE=1 SN=0 BIN=0 MN=Batch	HM=0 MF=0 TL=0 MLL=0 ASE=0 LNL=6 LCF=0 CAPS=0 E=0 ESBU2=-1
+VIEW: LN=.0 CL=1 LE=0 CX=0 CY=0 WI=5 BI=70 HT=0 HN=0 HF=0 HC=4
+BUFFER: BN="INSTALL.md"
+BI: MA=1 74 1  TABS=1 9  WWS=1 IWT=1 ST=0 IN=2 BW=0 US=32000 RO=0 SE=1 SN=0 BIN=0 MN=Bourne Shell	HM=0 MF=0 TL=0 MLL=0 ASE=0 LNL=6 LCF=0 CAPS=0 E=0 ESBU2=-1
+VIEW: LN=.2476 CL=20 LE=0 CX=19 CY=4 WI=5 BI=68 HT=0 HN=0 HF=0 HC=4
+BUFFER: BN="README.md"
+BI: MA=1 74 1  TABS=1 9  WWS=1 IWT=1 ST=0 IN=1 BW=0 US=32000 RO=0 SE=1 SN=0 BIN=0 MN=Fundamental	HM=0 MF=0 TL=0 MLL=0 ASE=0 LNL=6 LCF=0 CAPS=0 E=0 ESBU2=-1
+VIEW: LN=.1040 CL=24 LE=0 CX=23 CY=4 WI=5 BI=66 HT=0 HN=0 HF=0 HC=4
+BUFFER: BN="packs_web\swish\web\js\svgavatar.js"
+BI: MA=1 74 1  TABS=1 5  WWS=1 IWT=1 ST=0 IN=2 BW=0 US=32000 RO=0 SE=1 SN=0 BIN=0 MN=JavaScript	HM=0 MF=0 TL=0 MLL=0 ASE=0 LNL=6 LCF=0 CAPS=0 E=0 ESBU2=-1
+VIEW: LN=.0 CL=1 LE=0 CX=0 CY=0 WI=5 BI=63 HT=0 HN=0 HF=0 HC=4
+BUFFER: BN="packs_web\swish\web\js\storage.js"
+BI: MA=1 74 1  TABS=1 5  WWS=1 IWT=1 ST=0 IN=2 BW=0 US=32000 RO=0 SE=1 SN=0 BIN=0 MN=JavaScript	HM=0 MF=0 TL=0 MLL=0 ASE=0 LNL=6 LCF=0 CAPS=0 E=0 ESBU2=-1
+VIEW: LN=.0 CL=1 LE=0 CX=0 CY=0 WI=5 BI=62 HT=0 HN=0 HF=0 HC=4
+BUFFER: BN="packs_sys\logicmoo_agi\prolog\episodic_memory\adv_main.pl"
+BI: MA=1 174 1  TABS=1 3  WWS=1 IWT=0 ST=0 IN=2 BW=0 US=32000 RO=0 SE=1 SN=0 BIN=0 MN=Prolog	HM=0 MF=0 TL=0 MLL=0 ASE=0 LNL=6 LCF=0 CAPS=0 E=0 ESBU2=-1
+VIEW: LN=.2962 CL=8 LE=0 CX=7 CY=4 WI=5 BI=61 HT=0 HN=0 HF=0 HC=4
+BUFFER: BN="packs_sys\logicmoo_agi\prolog\episodic_memory\adv_percept.pl"
+BI: MA=1 174 1  TABS=1 3  WWS=1 IWT=0 ST=0 IN=2 BW=0 US=32000 RO=0 SE=1 SN=0 BIN=0 MN=Prolog	HM=0 MF=0 TL=0 MLL=0 ASE=0 LNL=6 LCF=0 CAPS=0 E=0 ESBU2=-1
+VIEW: LN=.3712 CL=25 LE=0 CX=24 CY=4 WI=5 BI=60 HT=0 HN=0 HF=0 HC=4
+BUFFER: BN="packs_sys\logicmoo_agi\prolog\agi_lib\doc_print.pl"
+BI: MA=1 174 1  TABS=1 3  WWS=1 IWT=0 ST=0 IN=2 BW=0 US=32000 RO=0 SE=1 SN=0 BIN=0 MN=Prolog	HM=0 MF=0 TL=0 MLL=0 ASE=0 LNL=6 LCF=0 CAPS=0 E=0 ESBU2=-1
+VIEW: LN=.4130 CL=3 LE=0 CX=2 CY=4 WI=5 BI=59 HT=0 HN=0 HF=0 HC=4
+BUFFER: BN="packs_sys\logicmoo_agi\prolog\agi_lib\README.md"
+BI: MA=1 74 1  TABS=1 9  WWS=1 IWT=1 ST=0 IN=1 BW=0 US=32000 RO=0 SE=1 SN=0 BIN=0 MN=Fundamental	HM=0 MF=0 TL=0 MLL=0 ASE=0 LNL=6 LCF=0 CAPS=0 E=0 ESBU2=-1
+VIEW: LN=.0 CL=1 LE=0 CX=0 CY=0 WI=5 BI=58 HT=0 HN=0 HF=0 HC=4
+BUFFER: BN="INSTALL-SWI.md"
+BI: MA=1 74 1  TABS=1 9  WWS=1 IWT=1 ST=0 IN=2 BW=0 US=32000 RO=0 SE=1 SN=0 BIN=0 MN=Bourne Shell	HM=0 MF=0 TL=0 MLL=0 ASE=0 LNL=6 LCF=0 CAPS=0 E=0 ESBU2=-1
+VIEW: LN=.0 CL=1 LE=0 CX=0 CY=0 WI=5 BI=57 HT=0 HN=0 HF=0 HC=4
+BUFFER: BN="INSTALL-DEPS.md"
+BI: MA=1 74 1  TABS=1 9  WWS=1 IWT=1 ST=0 IN=2 BW=0 US=32000 RO=0 SE=1 SN=0 BIN=0 MN=Bourne Shell	HM=0 MF=0 TL=0 MLL=0 ASE=0 LNL=6 LCF=0 CAPS=0 E=0 ESBU2=-1
+VIEW: LN=.0 CL=1 LE=0 CX=0 CY=0 WI=5 BI=56 HT=0 HN=0 HF=0 HC=4
+BUFFER: BN="docker\rootfs\etc\apache2\conf-available\doc_root.conf"
 BI: MA=1 74 1  TABS=1 5  WWS=1 IWT=0 ST=0 IN=2 BW=0 US=32000 RO=0 SE=1 SN=0 BIN=0 MN=Config	HM=0 MF=0 TL=0 MLL=0 ASE=0 LNL=6 LCF=0 CAPS=0 E=0 ESBU2=-1
 VIEW: LN=.0 CL=1 LE=0 CX=0 CY=0 WI=5 BI=47 HT=0 HN=0 HF=0 HC=4
 BUFFER: BN="docker\rootfs\etc\apache2\conf-available\no_open_proxy.conf"
 BI: MA=1 74 1  TABS=1 5  WWS=1 IWT=0 ST=0 IN=2 BW=0 US=32000 RO=0 SE=1 SN=0 BIN=0 MN=Config	HM=0 MF=0 TL=0 MLL=0 ASE=0 LNL=6 LCF=0 CAPS=0 E=0 ESBU2=-1
-VIEW: LN=.0 CL=1 LE=0 CX=0 CY=0 WI=5 BI=48 HT=0 HN=0 HF=0 HC=4
+VIEW: LN=.0 CL=1 LE=0 CX=0 CY=0 WI=5 BI=45 HT=0 HN=0 HF=0 HC=4
 BUFFER: BN="docker\rootfs\etc\apache2\sites-enabled\000-default-le-ssl.conf"
 BI: MA=1 74 1  TABS=1 5  WWS=1 IWT=0 ST=0 IN=2 BW=0 US=32000 RO=0 SE=1 SN=0 BIN=0 MN=Config	HM=0 MF=0 TL=0 MLL=0 ASE=0 LNL=6 LCF=0 CAPS=0 E=0 ESBU2=-1
-VIEW: LN=.288 CL=33 LE=0 CX=32 CY=10 WI=5 BI=49 HT=0 HN=0 HF=0 HC=4
+VIEW: LN=.288 CL=33 LE=0 CX=32 CY=4 WI=5 BI=44 HT=0 HN=0 HF=0 HC=4
 BUFFER: BN="docker\rootfs\etc\apache2\sites-enabled\000-default.conf"
 BI: MA=1 74 1  TABS=1 5  WWS=1 IWT=0 ST=0 IN=2 BW=0 US=32000 RO=0 SE=1 SN=0 BIN=0 MN=Config	HM=0 MF=0 TL=0 MLL=0 ASE=0 LNL=6 LCF=0 CAPS=0 E=0 ESBU2=-1
-VIEW: LN=.0 CL=1 LE=0 CX=0 CY=0 WI=5 BI=50 HT=0 HN=0 HF=0 HC=4
+VIEW: LN=.0 CL=1 LE=0 CX=0 CY=0 WI=5 BI=43 HT=0 HN=0 HF=0 HC=4
 BUFFER: BN="docker\rootfs\etc\apache2\sites-enabled\000-logicmoo.conf"
 BI: MA=1 74 1  TABS=1 5  WWS=1 IWT=0 ST=0 IN=2 BW=0 US=32000 RO=0 SE=1 SN=0 BIN=0 MN=Config	HM=0 MF=0 TL=0 MLL=0 ASE=0 LNL=6 LCF=0 CAPS=0 E=0 ESBU2=-1
-VIEW: LN=.2182 CL=35 LE=0 CX=34 CY=14 WI=5 BI=51 HT=0 HN=0 HF=0 HC=4
-BUFFER: BN="INSTALL.md"
-BI: MA=1 74 1  TABS=1 9  WWS=1 IWT=1 ST=0 IN=2 BW=0 US=32000 RO=0 SE=1 SN=0 BIN=0 MN=Bourne Shell	HM=0 MF=0 TL=0 MLL=0 ASE=0 LNL=6 LCF=0 CAPS=0 E=0 ESBU2=-1
-VIEW: LN=.2548 CL=24 LE=0 CX=23 CY=14 WI=5 BI=41 HT=0 HN=0 HF=0 HC=4
-BUFFER: BN="INSTALL-DEPS.md"
-BI: MA=1 74 1  TABS=1 9  WWS=1 IWT=1 ST=0 IN=2 BW=0 US=32000 RO=0 SE=1 SN=0 BIN=0 MN=Bourne Shell	HM=0 MF=0 TL=0 MLL=0 ASE=0 LNL=6 LCF=0 CAPS=0 E=0 ESBU2=-1
-VIEW: LN=.0 CL=1 LE=0 CX=0 CY=0 WI=5 BI=42 HT=0 HN=0 HF=0 HC=4
-BUFFER: BN="logicmoo_env.sh"
-BI: MA=1 74 1  TABS=1 4  WWS=1 IWT=0 ST=0 IN=2 BW=0 US=32000 RO=0 SE=1 SN=0 BIN=0 MN=Slick-C	HM=0 MF=8 TL=0 MLL=0 ASE=0 LNL=6 LCF=0 CAPS=0 E=0 ESBU2=-1
-VIEW: LN=.1612 CL=37 LE=0 CX=36 CY=14 WI=5 BI=30 HT=0 HN=0 HF=0 HC=4
-BUFFER: BN="packs_sys\logicmoo_agi\prolog\episodic_memory\adv_main.pl"
-BI: MA=1 174 1  TABS=1 3  WWS=1 IWT=0 ST=0 IN=2 BW=0 US=32000 RO=0 SE=1 SN=0 BIN=0 MN=Prolog	HM=0 MF=8 TL=0 MLL=0 ASE=0 LNL=6 LCF=0 CAPS=0 E=0 ESBU2=-1
-VIEW: LN=.2962 CL=8 LE=0 CX=7 CY=14 WI=5 BI=35 HT=0 HN=0 HF=0 HC=4
-BUFFER: BN="packs_sys\logicmoo_agi\prolog\episodic_memory\adv_percept.pl"
-BI: MA=1 174 1  TABS=1 3  WWS=1 IWT=0 ST=0 IN=2 BW=0 US=32000 RO=0 SE=1 SN=0 BIN=0 MN=Prolog	HM=0 MF=8 TL=0 MLL=0 ASE=0 LNL=6 LCF=0 CAPS=0 E=0 ESBU2=-1
-VIEW: LN=.3712 CL=25 LE=0 CX=24 CY=14 WI=5 BI=36 HT=0 HN=0 HF=0 HC=4
-BUFFER: BN="packs_sys\logicmoo_agi\prolog\agi_lib\doc_print.pl"
-BI: MA=1 174 1  TABS=1 3  WWS=1 IWT=0 ST=0 IN=2 BW=0 US=32000 RO=0 SE=1 SN=0 BIN=0 MN=Prolog	HM=0 MF=8 TL=0 MLL=0 ASE=0 LNL=6 LCF=0 CAPS=0 E=0 ESBU2=-1
-VIEW: LN=.4130 CL=3 LE=0 CX=2 CY=14 WI=5 BI=37 HT=0 HN=0 HF=0 HC=4
-BUFFER: BN="packs_sys\logicmoo_agi\prolog\agi_lib\README.md"
-BI: MA=1 74 1  TABS=1 9  WWS=1 IWT=1 ST=0 IN=1 BW=0 US=32000 RO=0 SE=1 SN=0 BIN=0 MN=Fundamental	HM=0 MF=8 TL=0 MLL=0 ASE=0 LNL=6 LCF=0 CAPS=0 E=0 ESBU2=-1
-VIEW: LN=.0 CL=1 LE=0 CX=0 CY=0 WI=5 BI=38 HT=0 HN=0 HF=0 HC=4
-BUFFER: BN="INSTALL-SWI.md"
-BI: MA=1 74 1  TABS=1 9  WWS=1 IWT=1 ST=0 IN=2 BW=0 US=32000 RO=0 SE=1 SN=0 BIN=0 MN=Bourne Shell	HM=0 MF=8 TL=0 MLL=0 ASE=0 LNL=6 LCF=0 CAPS=0 E=0 ESBU2=-1
-VIEW: LN=.0 CL=1 LE=0 CX=0 CY=0 WI=5 BI=39 HT=0 HN=0 HF=0 HC=4
-BUFFER: BN="docker\rootfs\etc\supervisor\conf.d\supervisord_logicmoo.conf"
-BI: MA=1 74 1  TABS=1 5  WWS=1 IWT=0 ST=0 IN=2 BW=0 US=32000 RO=0 SE=1 SN=0 BIN=0 MN=Config	HM=0 MF=8 TL=0 MLL=0 ASE=0 LNL=6 LCF=0 CAPS=0 E=0 ESBU2=-1
-VIEW: LN=.2213 CL=14 LE=0 CX=13 CY=10 WI=5 BI=29 HT=0 HN=0 HF=0 HC=4
-BUFFER: BN="docker\rootfs\etc\supervisor\supervisord.conf"
-BI: MA=1 74 1  TABS=1 5  WWS=1 IWT=0 ST=0 IN=2 BW=0 US=32000 RO=0 SE=1 SN=0 BIN=0 MN=Config	HM=0 MF=0 TL=0 MLL=0 ASE=0 LNL=6 LCF=0 CAPS=0 E=0 ESBU2=-1
-VIEW: LN=.0 CL=1 LE=0 CX=0 CY=0 WI=5 BI=52 HT=0 HN=0 HF=0 HC=4
-BUFFER: BN="docker\rootfs\ros-eloquent-desktop.sh"
-BI: MA=1 74 1  TABS=1 4  WWS=1 IWT=0 ST=0 IN=2 BW=0 US=32000 RO=0 SE=1 SN=0 BIN=0 MN=Slick-C	HM=0 MF=8 TL=0 MLL=0 ASE=0 LNL=6 LCF=0 CAPS=0 E=0 ESBU2=-1
-VIEW: LN=.20 CL=9 LE=0 CX=8 CY=1 WI=5 BI=53 HT=0 HN=0 HF=0 HC=4
-BUFFER: BN="README.md"
-BI: MA=1 74 1  TABS=1 9  WWS=1 IWT=1 ST=0 IN=1 BW=0 US=32000 RO=0 SE=1 SN=0 BIN=0 MN=Fundamental	HM=0 MF=8 TL=0 MLL=0 ASE=0 LNL=6 LCF=0 CAPS=0 E=0 ESBU2=-1
-VIEW: LN=.1040 CL=24 LE=0 CX=23 CY=10 WI=5 BI=24 HT=0 HN=0 HF=0 HC=4
-WINDOW: 130 130 1397 425 -1 -1 N  WF=0 WT=34 "Default Fixed Font,14,0,1"
-BUFFER: BN="docker\rootfs\usr\local\bin\connect_butterfly.sh"
-VIEW: LN=.117 CL=1 LE=0 CX=0 CY=5 WI=266 BI=58 HT=0 HN=0 HF=0 HC=4
-WINDOW: 104 104 1397 425 -1 -1 N  WF=0 WT=33 "Default Fixed Font,14,0,1"
-BUFFER: BN="docker\rootfs\usr\local\bin\cls"
-VIEW: LN=.0 CL=1 LE=0 CX=0 CY=0 WI=264 BI=57 HT=0 HN=0 HF=0 HC=4
-WINDOW: 78 78 1397 425 -1 -1 N  WF=0 WT=32 "Default Fixed Font,14,0,1"
-BUFFER: BN="docker\rootfs\usr\local\bin\eclipse"
-VIEW: LN=.0 CL=1 LE=0 CX=0 CY=0 WI=262 BI=56 HT=0 HN=0 HF=0 HC=4
-WINDOW: 52 52 1397 425 -1 -1 N  WF=0 WT=31 "Default Fixed Font,14,0,1"
-BUFFER: BN="docker\rootfs\usr\local\bin\websocket_redir.sh"
-VIEW: LN=.0 CL=1 LE=0 CX=0 CY=0 WI=260 BI=55 HT=0 HN=0 HF=0 HC=4
-WINDOW: 104 104 1397 425 -1 -1 N  WF=0 WT=15 "Default Fixed Font,14,0,1"
-BUFFER: BN="docker\rootfs\startup.sh"
-VIEW: LN=.437 CL=10 LE=0 CX=9 CY=14 WI=228 BI=40 HT=0 HN=0 HF=0 HC=4
-WINDOW: 0 0 1397 425 -1 -1 N  WF=0 WT=29 "Default Fixed Font,14,0,1"
-BUFFER: BN="docker\rootfs\ros-eloquent-desktop.sh"
-VIEW: LN=.20 CL=9 LE=0 CX=8 CY=1 WI=256 BI=53 HT=0 HN=0 HF=0 HC=4
-WINDOW: 26 26 1397 425 -1 -1 N  WF=0 WT=30 "Default Fixed Font,14,0,1"
+VIEW: LN=.2182 CL=35 LE=0 CX=34 CY=4 WI=5 BI=42 HT=0 HN=0 HF=0 HC=4
 BUFFER: BN="docker\rootfs\startup_logicmoo.sh"
-VIEW: LN=.45 CL=2 LE=0 CX=1 CY=4 WI=258 BI=54 HT=0 HN=0 HF=0 HC=4
-WINDOW: 208 208 1397 425 -1 -1 N  WF=0 WT=28 "Default Fixed Font,14,0,1"
-BUFFER: BN="docker\rootfs\etc\supervisor\supervisord.conf"
-VIEW: LN=.0 CL=1 LE=0 CX=0 CY=0 WI=254 BI=52 HT=0 HN=0 HF=0 HC=4
-WINDOW: 104 104 1397 425 -1 -1 N  WF=0 WT=6 "Default Fixed Font,14,0,1"
-BUFFER: BN="docker\rootfs\etc\supervisor\conf.d\supervisord_logicmoo.conf"
-VIEW: LN=.2213 CL=14 LE=0 CX=13 CY=10 WI=208 BI=29 HT=0 HN=0 HF=0 HC=4
-WINDOW: 182 182 1397 425 -1 -1 N  WF=0 WT=27 "Default Fixed Font,14,0,1"
+BI: MA=1 74 1  TABS=1 4  WWS=1 IWT=0 ST=0 IN=2 BW=0 US=32000 RO=0 SE=1 SN=0 BIN=0 MN=Slick-C	HM=0 MF=0 TL=0 MLL=0 ASE=0 LNL=6 LCF=0 CAPS=0 E=0 ESBU2=-1
+VIEW: LN=.45 CL=2 LE=0 CX=1 CY=4 WI=5 BI=37 HT=0 HN=0 HF=0 HC=4
+BUFFER: BN="docker\rootfs\ros-eloquent-desktop.sh"
+BI: MA=1 74 1  TABS=1 4  WWS=1 IWT=0 ST=0 IN=2 BW=0 US=32000 RO=0 SE=1 SN=0 BIN=0 MN=Slick-C	HM=0 MF=0 TL=0 MLL=0 ASE=0 LNL=6 LCF=0 CAPS=0 E=0 ESBU2=-1
+VIEW: LN=.20 CL=9 LE=0 CX=8 CY=1 WI=5 BI=36 HT=0 HN=0 HF=0 HC=4
+BUFFER: BN="docker\rootfs\startup.sh"
+BI: MA=1 74 1  TABS=1 4  WWS=1 IWT=0 ST=0 IN=2 BW=0 US=32000 RO=0 SE=1 SN=0 BIN=0 MN=Slick-C	HM=0 MF=0 TL=0 MLL=0 ASE=0 LNL=6 LCF=0 CAPS=0 E=0 ESBU2=-1
+VIEW: LN=.437 CL=10 LE=0 CX=9 CY=4 WI=5 BI=35 HT=0 HN=0 HF=0 HC=4
+BUFFER: BN="docker\rootfs\usr\local\bin\websocket_redir.sh"
+BI: MA=1 74 1  TABS=1 4  WWS=1 IWT=0 ST=0 IN=2 BW=0 US=32000 RO=0 SE=1 SN=0 BIN=0 MN=Slick-C	HM=0 MF=0 TL=0 MLL=0 ASE=0 LNL=6 LCF=0 CAPS=0 E=0 ESBU2=-1
+VIEW: LN=.0 CL=1 LE=0 CX=0 CY=0 WI=5 BI=34 HT=0 HN=0 HF=0 HC=4
+BUFFER: BN="docker\rootfs\usr\local\bin\eclipse"
+BI: MA=1 74 1  TABS=1 9  WWS=1 IWT=1 ST=0 IN=2 BW=0 US=32000 RO=0 SE=1 SN=0 BIN=0 MN=Bourne Shell	HM=0 MF=0 TL=0 MLL=0 ASE=0 LNL=6 LCF=0 CAPS=0 E=0 ESBU2=-1
+VIEW: LN=.0 CL=1 LE=0 CX=0 CY=0 WI=5 BI=33 HT=0 HN=0 HF=0 HC=4
+BUFFER: BN="docker\rootfs\usr\local\bin\cls"
+BI: MA=1 74 1  TABS=1 9  WWS=1 IWT=1 ST=0 IN=2 BW=0 US=32000 RO=0 SE=1 SN=0 BIN=0 MN=Bourne Shell	HM=0 MF=0 TL=0 MLL=0 ASE=0 LNL=6 LCF=0 CAPS=0 E=0 ESBU2=-1
+VIEW: LN=.0 CL=1 LE=0 CX=0 CY=0 WI=5 BI=32 HT=0 HN=0 HF=0 HC=4
+BUFFER: BN="packs_web\swish\lib\page.pl"
+BI: MA=1 174 1  TABS=1 3  WWS=1 IWT=0 ST=0 IN=2 BW=0 US=32000 RO=0 SE=1 SN=0 BIN=0 MN=Prolog	HM=0 MF=32 TL=0 MLL=0 ASE=0 LNL=6 LCF=0 CAPS=0 E=0 ESBU2=-1
+VIEW: LN=.0 CL=1 LE=0 CX=0 CY=0 WI=5 BI=65 HT=0 HN=0 HF=0 HC=4
+WINDOW: 0 0 1031 177 -1 -1 N  WF=0 WT=35 "Default Fixed Font,14,0,1"
+BUFFER: BN="docker\rootfs\usr\local\bin\cls"
+VIEW: LN=.0 CL=1 LE=0 CX=0 CY=0 WI=248 BI=32 HT=0 HN=0 HF=0 HC=4
+WINDOW: 78 78 1031 177 -1 -1 N  WF=0 WT=33 "Default Fixed Font,14,0,1"
+BUFFER: BN="docker\rootfs\usr\local\bin\eclipse"
+VIEW: LN=.0 CL=1 LE=0 CX=0 CY=0 WI=247 BI=33 HT=0 HN=0 HF=0 HC=4
+WINDOW: 52 52 1031 177 -1 -1 N  WF=0 WT=32 "Default Fixed Font,14,0,1"
+BUFFER: BN="docker\rootfs\usr\local\bin\websocket_redir.sh"
+VIEW: LN=.0 CL=1 LE=0 CX=0 CY=0 WI=246 BI=34 HT=0 HN=0 HF=0 HC=4
+WINDOW: 26 26 1031 177 -1 -1 N  WF=0 WT=31 "Default Fixed Font,14,0,1"
+BUFFER: BN="docker\rootfs\startup.sh"
+VIEW: LN=.437 CL=10 LE=0 CX=9 CY=4 WI=245 BI=35 HT=0 HN=0 HF=0 HC=4
+WINDOW: 0 0 1031 177 -1 -1 N  WF=0 WT=29 "Default Fixed Font,14,0,1"
+BUFFER: BN="docker\rootfs\ros-eloquent-desktop.sh"
+VIEW: LN=.20 CL=9 LE=0 CX=8 CY=1 WI=244 BI=36 HT=0 HN=0 HF=0 HC=4
+WINDOW: 78 78 1031 177 -1 -1 N  WF=0 WT=15 "Default Fixed Font,14,0,1"
+BUFFER: BN="docker\rootfs\startup_logicmoo.sh"
+VIEW: LN=.45 CL=2 LE=0 CX=1 CY=4 WI=243 BI=37 HT=0 HN=0 HF=0 HC=4
+WINDOW: 52 52 1031 177 -1 -1 N  WF=0 WT=30 "Default Fixed Font,14,0,1"
 BUFFER: BN="docker\rootfs\etc\apache2\sites-enabled\000-logicmoo.conf"
-VIEW: LN=.2182 CL=35 LE=0 CX=34 CY=14 WI=252 BI=51 HT=0 HN=0 HF=0 HC=4
-WINDOW: 156 156 1397 425 -1 -1 N  WF=0 WT=26 "Default Fixed Font,14,0,1"
+VIEW: LN=.2182 CL=35 LE=0 CX=34 CY=4 WI=242 BI=42 HT=0 HN=0 HF=0 HC=4
+WINDOW: 26 26 1031 177 -1 -1 N  WF=0 WT=27 "Default Fixed Font,14,0,1"
 BUFFER: BN="docker\rootfs\etc\apache2\sites-enabled\000-default.conf"
-VIEW: LN=.0 CL=1 LE=0 CX=0 CY=0 WI=250 BI=50 HT=0 HN=0 HF=0 HC=4
-WINDOW: 130 130 1397 425 -1 -1 N  WF=0 WT=25 "Default Fixed Font,14,0,1"
+VIEW: LN=.0 CL=1 LE=0 CX=0 CY=0 WI=241 BI=43 HT=0 HN=0 HF=0 HC=4
+WINDOW: 0 0 1031 177 -1 -1 N  WF=0 WT=26 "Default Fixed Font,14,0,1"
 BUFFER: BN="docker\rootfs\etc\apache2\sites-enabled\000-default-le-ssl.conf"
-VIEW: LN=.288 CL=33 LE=0 CX=32 CY=10 WI=248 BI=49 HT=0 HN=0 HF=0 HC=4
-WINDOW: 104 104 1397 425 -1 -1 N  WF=0 WT=24 "Default Fixed Font,14,0,1"
+VIEW: LN=.288 CL=33 LE=0 CX=32 CY=4 WI=240 BI=44 HT=0 HN=0 HF=0 HC=4
+WINDOW: 78 78 1031 177 -1 -1 N  WF=0 WT=25 "Default Fixed Font,14,0,1"
 BUFFER: BN="docker\rootfs\etc\apache2\conf-available\no_open_proxy.conf"
-VIEW: LN=.0 CL=1 LE=0 CX=0 CY=0 WI=246 BI=48 HT=0 HN=0 HF=0 HC=4
-WINDOW: 78 78 1397 425 -1 -1 N  WF=0 WT=23 "Default Fixed Font,14,0,1"
-BUFFER: BN="docker\rootfs\etc\apache2\conf-available\doc_root_ssl.conf"
-VIEW: LN=.0 CL=1 LE=0 CX=0 CY=0 WI=244 BI=47 HT=0 HN=0 HF=0 HC=4
-WINDOW: 52 52 1397 425 -1 -1 N  WF=0 WT=22 "Default Fixed Font,14,0,1"
+VIEW: LN=.0 CL=1 LE=0 CX=0 CY=0 WI=239 BI=45 HT=0 HN=0 HF=0 HC=4
+WINDOW: 52 52 1031 177 -1 -1 N  WF=0 WT=24 "Default Fixed Font,14,0,1"
 BUFFER: BN="docker\rootfs\etc\apache2\conf-available\doc_root.conf"
-VIEW: LN=.0 CL=1 LE=0 CX=0 CY=0 WI=242 BI=46 HT=0 HN=0 HF=0 HC=4
-WINDOW: 26 26 1397 425 -1 -1 N  WF=0 WT=21 "Default Fixed Font,14,0,1"
-BUFFER: BN="docker\rootfs\etc\apache2\conf-available\cliopatria_swish.conf"
-VIEW: LN=.5082 CL=1 LE=0 CX=0 CY=14 WI=240 BI=45 HT=0 HN=0 HF=0 HC=4
-WINDOW: 0 0 1397 425 -1 -1 N  WF=0 WT=2 "Default Fixed Font,14,0,1"
-BUFFER: BN="Dockerfile"
-VIEW: LN=.2821 CL=3 LE=0 CX=2 CY=15 WI=160 BI=27 HT=0 HN=0 HF=0 HC=4
-WINDOW: 78 78 1397 425 -1 -1 N  WF=0 WT=5 "Default Fixed Font,14,0,1"
-BUFFER: BN="logicmoo_env.sh"
-VIEW: LN=.1612 CL=37 LE=0 CX=36 CY=14 WI=170 BI=30 HT=0 HN=0 HF=0 HC=4
-WINDOW: 0 0 1397 425 -1 -1 N  WF=0 WT=20 "Default Fixed Font,14,0,1"
-BUFFER: BN="web_install.sh"
-VIEW: LN=.715 CL=23 LE=0 CX=22 CY=14 WI=238 BI=44 HT=0 HN=0 HF=0 HC=4
-WINDOW: 208 208 1397 425 -1 -1 N  WF=0 WT=19 "Default Fixed Font,14,0,1"
-BUFFER: BN="StartLogicmoo.sh"
-VIEW: LN=.478 CL=7 LE=0 CX=6 CY=22 WI=236 BI=43 HT=0 HN=0 HF=0 HC=4
-WINDOW: 130 130 1397 425 -1 -1 N  WF=0 WT=7 "Default Fixed Font,14,0,1"
-BUFFER: BN="runFromDocker.sh"
-VIEW: LN=.1305 CL=29 LE=0 CX=28 CY=15 WI=210 BI=32 HT=0 HN=0 HF=0 HC=4
-WINDOW: 182 182 1397 425 -1 -1 N  WF=0 WT=18 "Default Fixed Font,14,0,1"
+VIEW: LN=.0 CL=1 LE=0 CX=0 CY=0 WI=238 BI=47 HT=0 HN=0 HF=0 HC=4
+WINDOW: 26 26 1031 177 -1 -1 N  WF=0 WT=22 "Default Fixed Font,14,0,1"
 BUFFER: BN="INSTALL-DEPS.md"
-VIEW: LN=.0 CL=1 LE=0 CX=0 CY=0 WI=234 BI=42 HT=0 HN=0 HF=0 HC=4
-WINDOW: 130 130 1397 425 -1 -1 N  WF=0 WT=16 "Default Fixed Font,14,0,1"
-BUFFER: BN="INSTALL.md"
-VIEW: LN=.2548 CL=24 LE=0 CX=23 CY=14 WI=230 BI=41 HT=0 HN=0 HF=0 HC=4
-WINDOW: 26 26 1397 425 -1 -1 N  WF=0 WT=3 "Default Fixed Font,14,0,1"
-BUFFER: BN="docker\Dockerfile"
-VIEW: LN=.8313 CL=2 LE=0 CX=1 CY=6 WI=166 BI=28 HT=0 HN=0 HF=0 HC=4
-WINDOW: 156 156 1397 425 -1 -1 N  WF=0 WT=17 "Default Fixed Font,14,0,1"
+VIEW: LN=.0 CL=1 LE=0 CX=0 CY=0 WI=237 BI=56 HT=0 HN=0 HF=0 HC=4
+WINDOW: 0 0 1031 177 -1 -1 N  WF=0 WT=18 "Default Fixed Font,14,0,1"
 BUFFER: BN="INSTALL-SWI.md"
-VIEW: LN=.0 CL=1 LE=0 CX=0 CY=0 WI=232 BI=39 HT=0 HN=0 HF=0 HC=4
-WINDOW: 78 78 1397 425 -1 -1 N  WF=0 WT=14 "Default Fixed Font,14,0,1"
+VIEW: LN=.0 CL=1 LE=0 CX=0 CY=0 WI=236 BI=57 HT=0 HN=0 HF=0 HC=4
+WINDOW: 78 78 1031 177 -1 -1 N  WF=0 WT=17 "Default Fixed Font,14,0,1"
 BUFFER: BN="packs_sys\logicmoo_agi\prolog\agi_lib\README.md"
-VIEW: LN=.0 CL=1 LE=0 CX=0 CY=0 WI=226 BI=38 HT=0 HN=0 HF=0 HC=4
-WINDOW: 52 52 1397 425 -1 -1 N  WF=0 WT=13 "Default Fixed Font,14,0,1"
+VIEW: LN=.0 CL=1 LE=0 CX=0 CY=0 WI=235 BI=58 HT=0 HN=0 HF=0 HC=4
+WINDOW: 52 52 1031 177 -1 -1 N  WF=0 WT=13 "Default Fixed Font,14,0,1"
 BUFFER: BN="packs_sys\logicmoo_agi\prolog\agi_lib\doc_print.pl"
-VIEW: LN=.4130 CL=3 LE=0 CX=2 CY=14 WI=224 BI=37 HT=0 HN=0 HF=0 HC=4
-WINDOW: 26 26 1397 425 -1 -1 N  WF=0 WT=12 "Default Fixed Font,14,0,1"
+VIEW: LN=.4130 CL=3 LE=0 CX=2 CY=4 WI=234 BI=59 HT=0 HN=0 HF=0 HC=4
+WINDOW: 26 26 1031 177 -1 -1 N  WF=0 WT=12 "Default Fixed Font,14,0,1"
 BUFFER: BN="packs_sys\logicmoo_agi\prolog\episodic_memory\adv_percept.pl"
-VIEW: LN=.3712 CL=25 LE=0 CX=24 CY=14 WI=222 BI=36 HT=0 HN=0 HF=0 HC=4
-WINDOW: 0 0 1397 425 -1 -1 N  WF=0 WT=11 "Default Fixed Font,14,0,1"
+VIEW: LN=.3712 CL=25 LE=0 CX=24 CY=4 WI=233 BI=60 HT=0 HN=0 HF=0 HC=4
+WINDOW: 0 0 1031 177 -1 -1 N  WF=0 WT=14 "Default Fixed Font,14,0,1"
 BUFFER: BN="packs_sys\logicmoo_agi\prolog\episodic_memory\adv_main.pl"
-VIEW: LN=.2962 CL=8 LE=0 CX=7 CY=14 WI=220 BI=35 HT=0 HN=0 HF=0 HC=4
-WINDOW: 208 208 1397 425 -1 -1 N  WF=0 WT=10 "Default Fixed Font,14,0,1"
+VIEW: LN=.2962 CL=8 LE=0 CX=7 CY=4 WI=232 BI=61 HT=0 HN=0 HF=0 HC=4
+WINDOW: 78 78 1031 177 -1 -1 N  WF=0 WT=11 "Default Fixed Font,14,0,1"
 BUFFER: BN="packs_web\swish\web\js\storage.js"
-VIEW: LN=.0 CL=1 LE=0 CX=0 CY=0 WI=218 BI=34 HT=0 HN=0 HF=0 HC=4
-WINDOW: 182 182 1397 425 -1 -1 N  WF=0 WT=9 "Default Fixed Font,14,0,1"
+VIEW: LN=.0 CL=1 LE=0 CX=0 CY=0 WI=231 BI=62 HT=0 HN=0 HF=0 HC=4
+WINDOW: 52 52 1031 177 -1 -1 N  WF=0 WT=10 "Default Fixed Font,14,0,1"
 BUFFER: BN="packs_web\swish\web\js\svgavatar.js"
-VIEW: LN=.0 CL=1 LE=0 CX=0 CY=0 WI=216 BI=31 HT=0 HN=0 HF=0 HC=4
-WINDOW: 156 156 1397 425 -1 -1 N  WF=0 WT=8 "Default Unicode Font,10,0,1"
-BUFFER: BN="other_files.vpj"
-VIEW: LN=.0 CL=1 LE=0 CX=0 CY=0 WI=212 BI=33 HT=0 HN=0 HF=0 HC=4
-WINDOW: 52 52 1397 425 -1 -1 N  WF=0 WT=4 "Default Fixed Font,14,0,1"
+VIEW: LN=.0 CL=1 LE=0 CX=0 CY=0 WI=230 BI=63 HT=0 HN=0 HF=0 HC=4
+WINDOW: 26 26 1031 177 -1 -1 N  WF=0 WT=4 "Default Fixed Font,14,0,1"
 BUFFER: BN="README.md"
-VIEW: LN=.1040 CL=24 LE=0 CX=23 CY=10 WI=168 BI=24 HT=0 HN=0 HF=0 HC=4
-WINDOW: 156 156 1397 425 -1 -1 M  WF=0 WT=1 "Default Fixed Font,14,0,1"
+VIEW: LN=.1040 CL=24 LE=0 CX=23 CY=4 WI=229 BI=66 HT=0 HN=0 HF=0 HC=4
+WINDOW: 0 0 1031 177 -1 -1 N  WF=0 WT=9 "Default Fixed Font,14,0,1"
+BUFFER: BN="INSTALL.md"
+VIEW: LN=.2476 CL=20 LE=0 CX=19 CY=4 WI=228 BI=68 HT=0 HN=0 HF=0 HC=4
+WINDOW: 78 78 1031 177 -1 -1 N  WF=0 WT=16 "Default Fixed Font,14,0,1"
+BUFFER: BN="docker\rootfs\usr\local\bin\StartMUDServer.bat"
+VIEW: LN=.0 CL=1 LE=0 CX=0 CY=0 WI=227 BI=70 HT=0 HN=0 HF=0 HC=4
+WINDOW: 52 52 1031 177 -1 -1 N  WF=0 WT=37 "Default Fixed Font,14,0,1"
+BUFFER: BN="packs_sys\prologmud_samples\prolog\prologmud_sample_games\StartMUD.sh"
+VIEW: LN=.0 CL=1 LE=0 CX=0 CY=0 WI=226 BI=71 HT=0 HN=0 HF=0 HC=4
+WINDOW: 26 26 1031 177 -1 -1 N  WF=0 WT=38 "Default Fixed Font,14,0,1"
+BUFFER: BN="packs_sys\prologmud_samples\prolog\prologmud_sample_games\on_boot.sh"
+VIEW: LN=.0 CL=1 LE=0 CX=0 CY=0 WI=225 BI=72 HT=0 HN=0 HF=0 HC=4
+WINDOW: 0 0 1031 177 -1 -1 N  WF=0 WT=39 "Default Fixed Font,14,0,1"
+BUFFER: BN="docker\rootfs\usr\local\bin\startMUDServer.sh"
+VIEW: LN=.608 CL=1 LE=0 CX=0 CY=4 WI=224 BI=69 HT=0 HN=0 HF=0 HC=4
+WINDOW: 78 78 1031 177 -1 -1 N  WF=0 WT=1 "Default Fixed Font,14,0,1"
 BUFFER: BN="docker\rootfs\usr\local\bin\connect_telnet.sh"
-VIEW: LN=.0 CL=1 LE=0 CX=0 CY=0 WI=268 BI=59 HT=0 HN=0 HF=0 HC=4
+VIEW: LN=.401 CL=21 LE=0 CX=20 CY=4 WI=223 BI=67 HT=0 HN=0 HF=0 HC=4
+WINDOW: 52 52 1031 177 -1 -1 N  WF=0 WT=36 "Default Fixed Font,14,0,1"
+BUFFER: BN="web_install.sh"
+VIEW: LN=.715 CL=23 LE=0 CX=22 CY=4 WI=222 BI=54 HT=0 HN=0 HF=0 HC=4
+WINDOW: 26 26 1031 177 -1 -1 N  WF=0 WT=20 "Default Fixed Font,14,0,1"
+BUFFER: BN="Dockerfile"
+VIEW: LN=.1264 CL=6 LE=0 CX=5 CY=4 WI=221 BI=51 HT=0 HN=0 HF=0 HC=4
+WINDOW: 0 0 1031 177 -1 -1 N  WF=0 WT=2 "Default Fixed Font,14,0,1"
+BUFFER: BN=".dockerignore"
+VIEW: LN=.2115 CL=14 LE=0 CX=13 CY=4 WI=220 BI=52 HT=0 HN=0 HF=0 HC=4
+WINDOW: 78 78 1031 177 -1 -1 N  WF=0 WT=19 "Default Fixed Font,14,0,1"
+BUFFER: BN="StartLogicmoo.sh"
+VIEW: LN=.371 CL=4 LE=0 CX=3 CY=4 WI=219 BI=31 HT=0 HN=0 HF=0 HC=4
+WINDOW: 52 52 1031 177 -1 -1 N  WF=0 WT=44 "Default Fixed Font,14,0,1"
+BUFFER: BN="docker\rootfs\etc\supervisor\conf.d\supervisord.conf"
+VIEW: LN=.0 CL=1 LE=0 CX=0 CY=0 WI=218 BI=28 HT=0 HN=0 HF=0 HC=4
+WINDOW: 26 26 1031 177 -1 -1 N  WF=0 WT=45 "Default Fixed Font,14,0,1"
+BUFFER: BN="docker\rootfs\etc\supervisor\conf.d\supervisord.conf.j2"
+VIEW: LN=.0 CL=1 LE=0 CX=0 CY=0 WI=217 BI=29 HT=0 HN=0 HF=0 HC=4
+WINDOW: 0 0 1031 177 -1 -1 N  WF=0 WT=28 "Default Fixed Font,14,0,1"
+BUFFER: BN="docker\rootfs\etc\supervisor\supervisord.conf"
+VIEW: LN=.0 CL=1 LE=0 CX=0 CY=0 WI=216 BI=38 HT=0 HN=0 HF=0 HC=4
+WINDOW: 78 78 1031 177 -1 -1 N  WF=0 WT=46 "Default Fixed Font,14,0,1"
+BUFFER: BN="docker\rootfs\etc\profile.d\logicmoo_etc_profile_d.sh"
+VIEW: LN=.0 CL=1 LE=0 CX=0 CY=0 WI=215 BI=39 HT=0 HN=0 HF=0 HC=4
+WINDOW: 52 52 1031 177 -1 -1 N  WF=0 WT=47 "Default Fixed Font,14,0,1"
+BUFFER: BN="docker\rootfs\usr\local\bin\connect_emacs.sh"
+VIEW: LN=.0 CL=1 LE=0 CX=0 CY=0 WI=214 BI=25 HT=0 HN=0 HF=0 HC=4
+WINDOW: 26 26 1031 177 -1 -1 N  WF=0 WT=34 "Default Fixed Font,14,0,1"
+BUFFER: BN="docker\rootfs\usr\local\bin\connect_butterfly.sh"
+VIEW: LN=.255 CL=1 LE=0 CX=0 CY=4 WI=213 BI=23 HT=0 HN=0 HF=0 HC=4
+WINDOW: 0 0 1031 177 -1 -1 N  WF=0 WT=40 "Default Fixed Font,14,0,1"
+BUFFER: BN="docker\rootfs\usr\local\bin\lm"
+VIEW: LN=.751 CL=1 LE=0 CX=0 CY=4 WI=212 BI=30 HT=0 HN=0 HF=0 HC=4
+WINDOW: 78 78 1031 177 -1 -1 N  WF=0 WT=42 "Default Fixed Font,14,0,1"
+BUFFER: BN="docker\rootfs\etc\apache2\conf-available\doc_root_ssl.conf"
+VIEW: LN=.0 CL=1 LE=0 CX=0 CY=0 WI=211 BI=46 HT=0 HN=0 HF=0 HC=4
+WINDOW: 52 52 1031 177 -1 -1 N  WF=0 WT=23 "Default Fixed Font,14,0,1"
+BUFFER: BN="packs_sys\eggdrop\conf\eggdrop.conf"
+VIEW: LN=.32098 CL=65 LE=0 CX=64 CY=4 WI=210 BI=50 HT=0 HN=0 HF=0 HC=4
+WINDOW: 26 26 1031 177 -1 -1 N  WF=0 WT=6 "Default Fixed Font,14,0,1"
+BUFFER: BN="docker\rootfs\etc\supervisor\conf.d\supervisord_logicmoo.conf"
+VIEW: LN=.885 CL=19 LE=0 CX=18 CY=4 WI=209 BI=41 HT=0 HN=0 HF=0 HC=4
+WINDOW: 0 0 1031 177 -1 -1 N  WF=0 WT=48 "Default Fixed Font,14,0,1"
+BUFFER: BN="packs_sys\eggdrop\prolog\eggdrop.pl"
+VIEW: LN=.1264 CL=20 LE=0 CX=19 CY=4 WI=208 BI=49 HT=0 HN=0 HF=0 HC=4
+WINDOW: 78 78 1031 177 -1 -1 N  WF=0 WT=3 "Default Fixed Font,14,0,1"
+BUFFER: BN="docker\Dockerfile"
+VIEW: LN=.15385 CL=11 LE=0 CX=10 CY=4 WI=207 BI=40 HT=0 HN=0 HF=0 HC=4
+WINDOW: 52 52 1031 177 -1 -1 N  WF=0 WT=49 "Default Fixed Font,14,0,1"
+BUFFER: BN="logicmoo_env.sh"
+VIEW: LN=.1612 CL=1 LE=0 CX=0 CY=4 WI=206 BI=53 HT=0 HN=0 HF=0 HC=4
+WINDOW: 26 26 1031 177 -1 -1 N  WF=0 WT=5 "Default Fixed Font,14,0,1"
+BUFFER: BN="docker\rootfs\etc\apache2\conf-available\cliopatria_swish.conf"
+VIEW: LN=.5082 CL=1 LE=0 CX=0 CY=4 WI=205 BI=48 HT=0 HN=0 HF=0 HC=4
+WINDOW: 0 0 1031 177 -1 -1 N  WF=0 WT=21 "Default Fixed Font,14,0,1"
+BUFFER: BN="docker\rootfs\usr\local\bin\connect_vnc.sh"
+VIEW: LN=.291 CL=7 LE=0 CX=6 CY=4 WI=204 BI=24 HT=0 HN=0 HF=0 HC=4
+WINDOW: 78 78 1031 177 -1 -1 N  WF=0 WT=43 "Default Fixed Font,14,0,1"
+BUFFER: BN="runFromDocker.sh"
+VIEW: LN=.1715 CL=56 LE=0 CX=55 CY=4 WI=203 BI=55 HT=0 HN=0 HF=0 HC=4
+WINDOW: 52 52 1031 177 -1 -1 N  WF=0 WT=7 "Default Fixed Font,14,0,1"
+BUFFER: BN="docker\rootfs\usr\local\bin\connect_www.sh"
+VIEW: LN=.212 CL=28 LE=0 CX=27 CY=4 WI=202 BI=26 HT=0 HN=0 HF=0 HC=4
+WINDOW: 26 26 1031 177 -1 -1 N  WF=0 WT=41 "Default Fixed Font,14,0,1"
+BUFFER: BN="docker\rootfs\usr\local\bin\copy_modified.sh"
+VIEW: LN=.182 CL=1 LE=0 CX=0 CY=4 WI=201 BI=27 HT=0 HN=0 HF=0 HC=4
+WINDOW: 0 0 1031 177 -1 -1 N  WF=0 WT=50 "Default Unicode Font,10,0,1"
+BUFFER: BN="other_files.vpj"
+VIEW: LN=.0 CL=1 LE=0 CX=0 CY=0 WI=200 BI=64 HT=0 HN=0 HF=0 HC=4
+WINDOW: 26 26 1031 177 -1 -1 N  WF=0 WT=51 "Default Fixed Font,14,0,1"
+BUFFER: BN="packs_web\swish\lib\page.pl"
+VIEW: LN=.6278 CL=18 LE=0 CX=17 CY=4 WI=249 BI=65 HT=0 HN=0 HF=0 HC=4
 FILEHIST: 9
-docker\rootfs\etc\supervisor\supervisord.conf
-docker\rootfs\startup_logicmoo.sh
-docker\rootfs\ros-eloquent-desktop.sh
-docker\rootfs\startup.sh
-docker\rootfs\usr\local\bin\websocket_redir.sh
-docker\rootfs\usr\local\bin\eclipse
-docker\rootfs\usr\local\bin\cls
-docker\rootfs\usr\local\bin\connect_butterfly.sh
-docker\rootfs\usr\local\bin\connect_telnet.sh
+docker\rootfs\etc\apache2\conf-available\cliopatria_swish.conf
+packs_sys\eggdrop\prolog\eggdrop.pl
+packs_sys\eggdrop\conf\eggdrop.conf
+docker\rootfs\etc\supervisor\conf.d\supervisord_logicmoo.conf
+logicmoo_env.sh
+docker\rootfs\usr\local\bin\connect_vnc.sh
+docker\rootfs\usr\local\bin\connect_www.sh
+docker\rootfs\usr\local\bin\copy_modified.sh
+packs_web\swish\lib\page.pl

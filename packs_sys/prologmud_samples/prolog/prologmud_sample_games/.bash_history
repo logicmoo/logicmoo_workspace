@@ -1,33 +1,3 @@
-#whoami
-STUFF="^Mprolog.
-bfly. call((bfly_set(butterfly),bfly_set(command_args,\"${*}\"),bfly_set(ptty,\"${PTTY}:${TTY}:${PTY}:${PTS}\"))). bfly_start_link(\"${LOCATION}\").
-end_of_file.^M"
-echo STUFF=$STUFF
-(    $SCREEN_CMD -S LogicmooServer -p0 -X stuff "${STUFF}"; )
-echo $( 
-$SCREEN_CMD -rx LogicmooServer
-)
-return 0 2>/dev/null
-#!/bin/bash
-set -e
-export SCREEN_CMD="sudo -u prologmud_server -- screen"
-#echo PTTY:TTY:PTS=$PTTY:$TTY:$PTS
-#whoami
-STUFF="^Mprolog.
-bfly. call((bfly_set(butterfly),bfly_set(command_args,\"${*}\"),bfly_set(ptty,\"${PTTY}:${TTY}:${PTY}:${PTS}\"))). bfly_start_link(\"${LOCATION}\").
-end_of_file.^M"
-echo STUFF=$STUFF
-(    $SCREEN_CMD -S LogicmooServer -p0 -X stuff "${STUFF}"; )
-echo $( 
-$SCREEN_CMD -rx LogicmooServer
-)
-return 0 2>/dev/null
-#!/bin/bash
-set -e
-export SCREEN_CMD="sudo -u prologmud_server -- screen"
-#echo PTTY:TTY:PTS=$PTTY:$TTY:$PTS
-#whoami
-STUFF="^Mprolog.
 bfly. call((bfly_set(butterfly),bfly_set(command_args,\"${*}\"),bfly_set(ptty,\"${PTTY}:${TTY}:${PTY}:${PTS}\"))). bfly_start_link(\"${LOCATION}\").
 end_of_file.^M"
 echo STUFF=$STUFF
@@ -1998,3 +1968,33 @@ echo $(
 $SCREEN_CMD -rx LogicmooServer
 )
 return 0 2>/dev/null
+ps axf
+ls /
+cd /opt/logicmoo_workspace/
+ls docker/rootfs/
+find find $LOGICMOO_WS/docker/rootfs/
+find $LOGICMOO_WS/docker/rootfs -type f -exec bash -c "echo ln -svf {} {} " \;
+find $LOGICMOO_WS/docker/rootfs -type f -printf "hi there" | | xargs -I{} bash -c "echo {}"
+find $LOGICMOO_WS/docker/rootfs -type f -printf "hi there" | xargs -I{} bash -c "echo {}"
+find $LOGICMOO_WS/docker/rootfs -type f -printf "hi there\n" | xargs -I{} bash -c "echo {}"
+find $LOGICMOO_WS/docker/rootfs -type f -printf "echo %f %p\n" | xargs -I{} bash -c "echo {}"
+find $LOGICMOO_WS/docker/rootfs -type f -printf "echo %f %p\n" | xargs -I{} bash -c "{}"
+find $LOGICMOO_WS/docker/rootfs -type f -printf "echo %h %p\n" | xargs -I{} bash -c "{}"
+find $LOGICMOO_WS/docker/rootfs -type f -printf "echo %H %p\n" | xargs -I{} bash -c "{}"
+find -h
+find --help
+man find
+man find
+find $LOGICMOO_WS/docker/rootfs -type f -printf "echo %P %p\n" | xargs -I{} bash -c "{}"
+find $LOGICMOO_WS/docker/rootfs/ -type f -printf "echo %P %p\n" | xargs -I{} bash -c "{}"
+find $LOGICMOO_WS/docker/rootfs/ -type f -printf "echo %p /%P\n" | xargs -I{} bash -c "{}"
+echo $LOGICMOO_WS
+find $LOGICMOO_WS/docker/rootfs/ -type f -printf "ln -svf %p /%P\n" | xargs -I{} bash -c "{}"
+ls /
+find $LOGICMOO_WS/docker/rootfs/ -type f -printf "ln -sf %p /%P\n" | xargs -I{} bash -c "{}"
+find $LOGICMOO_WS/docker/rootfs/ -type f -printf "ln -s %p /%P\n" | xargs -I{} bash -c "{}"
+find $LOGICMOO_WS/docker/rootfs/ -type f -printf "ln -sf %p /%P\n 2> /dev/null" | xargs -I{} bash -c "{}"
+find $LOGICMOO_WS/docker/rootfs/ -type f -printf "ln -svf %p /%P 2>/dev/null \n" | xargs -I{} bash -c "{}"
+find $LOGICMOO_WS/docker/rootfs/ -type f -printf "ln -sf %p /%P 2>/dev/null \n" | xargs -I{} bash -c "{}"
+find $LOGICMOO_WS/docker/rootfs/ -type f -printf "ln -sf '%p' '/%P' 2>/dev/null \n" | xargs -I{} bash -c "{}"
+/startup.sh 

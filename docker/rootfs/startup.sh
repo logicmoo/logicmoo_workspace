@@ -4,8 +4,11 @@ set +x
 #set +e
 
 export DEBIAN_FRONTEND=noninteractive
-apt update
-apt-get install -y --allow-unauthenticated \
+
+if false; then
+
+echo apt update
+echo apt-get install -y --allow-unauthenticated \
   nginx-common nginx nginx-core  libnginx-mod-http-geoip libnginx-mod-http-image-filter \
   libnginx-mod-http-xslt-filter libnginx-mod-mail libnginx-mod-stream \
   supervisor apache2 nmap x11-apps vim eggdrop default-jdk default-jre \
@@ -59,6 +62,7 @@ apt-get install -y --allow-unauthenticated \
  sudo \
  software-properties-common
 
+fi
 
 export LOGICMOO_WS=/opt/logicmoo_workspace
 export DO_PULL=0
@@ -135,6 +139,8 @@ chown -R prologmud_server:www-data /root
 mv /usr/local/lib/swipl /usr/local/lib/swipl.dist
 ln -s $LOGICMOO_WS/docker/rootfs/usr/local/lib/swipl /usr/local/lib/swipl
 
+rm -rf /opt/logicmoo_workspace/docker/rootfs/usr/local/lib/python3.6
+find $LOGICMOO_WS/docker/rootfs/ -type f -printf "ln -sf '%p' '/%P' 2>/dev/null \n" | xargs -I{} bash -c "{}"
 find $LOGICMOO_WS/docker/rootfs/usr/local/bin -type f -exec bash -c " ln -svf {} /usr/local/bin/ " \;
 
 

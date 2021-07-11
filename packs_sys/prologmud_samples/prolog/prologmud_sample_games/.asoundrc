@@ -1,4 +1,1 @@
-pcm.loop {
-    type plug
-    slave.pcm "hw:Loopback,2,0"
-}
+/opt/logicmoo_workspace/docker/rootfs/root/.asoundrc
