@@ -1,0 +1,49 @@
+2015-12-01  Artur Malabarba  <bruce.connor.am@gmail.com>
+
+	Merge commit '85b3fbe091aba2d9dc581894a02f60acd46f4413'
+
+2015-10-14  Artur Malabarba  <bruce.connor.am@gmail.com>
+
+	Merge commit 'd16c20ffc2197234d4dd631fd66768c3a4b305c9'
+
+2015-07-23  Artur Malabarba  <bruce.connor.am@gmail.com>
+
+	Merge commit 'e2737d0adb7f8d8f79c2ca0fee5b13b6f8ae164b'
+
+2015-06-18  Artur Malabarba  <bruce.connor.am@gmail.com>
+
+	Merge commit 'b1da26d96cbe8308d0988f6b92737819f98f20fd'
+
+2015-04-26  Stefan Monnier  <monnier@iro.umontreal.ca>
+
+	* names/names.el: Use lexical-binding.	Silence compiler warnings.
+
+2015-01-14  Artur Malabarba  <bruce.connor.am@gmail.com>
+
+	Merge commit '8b9dd3e5803fd02b03a7f2a8bb6cb51df7f2f7bf'
+
+2015-01-13  Artur Malabarba  <bruce.connor.am@gmail.com>
+
+	Merge commit '68cc63682a66513c0968352f15e9b37fd245e636'
+
+2015-01-12  Artur Malabarba  <bruce.connor.am@gmail.com>
+
+	Merge commit 'dea0ba6347f2eb5be310826e7917effb73e1e600'
+
+2014-12-13  Artur Malabarba  <bruce.connor.am@gmail.com>
+
+	Merge commit 'a11ba779f588af28f93fd4b7a716849695d5d9f3'
+
+2014-11-18  Artur Malabarba  <bruce.connor.am@gmail.com>
+
+	Merge commit 'ed44aa9bcebcc055551a2d018db9080ee0e9866f'
+
+2014-11-15  Artur Malabarba  <bruce.connor.am@gmail.com>
+
+	Add 'packages/names/' from commit
+	'b7bb062fc3c5de0c5bdb6dcf60da260d2a169783'
+
+	git-subtree-dir: packages/names git-subtree-mainline:
+	4c7d97da50790da208f87ddc6ed8112abe130ea9 git-subtree-split:
+	b7bb062fc3c5de0c5bdb6dcf60da260d2a169783
+

@@ -1,0 +1,2698 @@
+2017-01-25  Stefan Monnier  <monnier@iro.umontreal.ca>
+
+	* psgml: Fix up check_copyright on aux files
+
+	testcase/testsuit.el: Use cl-lib.
+
+2017-01-25  Stefan Monnier  <monnier@iro.umontreal.ca>
+
+	* psgml.el: Update maintainer's email
+
+2017-01-24  Stefan Monnier  <monnier@iro.umontreal.ca>
+
+	* psgml.el: Publish as version 1.3.4.
+
+2017-01-24  Stefan Monnier  <monnier@iro.umontreal.ca>
+
+	* psgml-charent.el: Remove, for lack of copyright paperwork
+
+	* psgml.el (sgml-charent-to-display-char, sgml-display-char-to-charent): 
+	Don't autoload from psgml-charent.
+	(sgml-main-menu): Comment out the corresponding menu entries.
+
+2017-01-24  Stefan Monnier  <monnier@iro.umontreal.ca>
+
+	* psgml-ids.el: Remove, for lack of copyright paperwork
+
+	Most of it was not really used; for the rest, reimplement it
+	differently.
+
+	* psgml-parse.el (psgml-ids-seen): New var.
+	(sgml-parse-attribute-specification-list): Use it instead of
+	sgml-add-id.
+
+	* psgml-edit.el: Don't require psgml-ids any more.
+	(psgml-edit--read-ids): New function, using completing-read-multiple.
+	(sgml-read-attribute-value): Use it along with psgml-ids-seen.
+	(sgml-idrefs-completer): Remove function.
+
+2016-10-19  Stefan Monnier  <monnier@iro.umontreal.ca>
+
+	General update, cl-lib, lexical-binding, copyright headers
+
+	Fix up copyright headers and GPL version. Use lexical-binding
+	everywhere.  Use cl-lib. Move `provide' calls to the end of files. Use
+	(declare (debug ..)) rather than def-edebug-spec. Move
+	`make-local-variable' into the corresponding `set'. Use (declare
+	(gv-setter ..)) rather than defsetf.
+
+	* ChangeLog.old: Move from ChangeLog.
+	* TODO: Add new entries.
+	* ECAT: Move to auxfiles/ECAT.
+
+	* psgml-dtd.el (sgml-declare-element): Don't use return value of `incf'.
+
+	* psgml-edit.el (sgml-fold-region, sgml-operate-on-tags): Use
+	with-silent-modifications.
+	(sgml-edit-attrib-mode-map): Move initialization into declaration.
+	(sgml-attr-default-keymap): Use `remap'.
+	(sgml-edit-attrib-mode): Use define-derived-mode.
+	(sgml-edit-external-entity): Use pcase.
+
+	* psgml-fs.el (fs-element): Use pcase.
+
+	* psgml-lucid.el (sgml-mode-map): Move binding to psgml.el.
+
+	* psgml-maint.el (psgml-common-files): Remove psgml-sysdep.el.
+
+	* psgml-other.el (sgml-mode-map): Move bindings to psgml.el.
+	(sgml-with-modification-state): Remove.
+	(sgml-current-tree): Declare var.
+	(sgml-element-appdata): Declare function.
+	(sgml-set-face-for): Use with-silent-modifications and check 
+	inhibit-modification-hooks rather than sgml-parse-in-loop.
+	(buffer-substring-no-properties): Drop compatibility with Emacs<19.29.
+
+	* psgml-sysdep.el: Remove.
+
+	* psgml-parse.el: Inline psgml-sysdep.
+	(sgml-scratch-buffer): Make permanent-local.
+	(sgml-parser-syntax): Cleanup declaration and initialization.
+	(xml-parser-syntax): Replace mapconcat -> mapc.
+	(sgml-with-parser-syntax, sgml-with-parser-syntax-ro): Use
+	with-syntax-table.
+	(sgml-general-insert-case): Use pcase.
+	(sgml-in-file-eval): Use with-current-buffer.
+	(sgml-alias-fields): Use mapcar and defalias.
+	(sgml-note-change-at): Use char-before.
+	(sgml-display-log, sgml-reset-log): Use with-current-buffer.
+	(sgml-parse-in-loop): Remove.  Use inhibit-modification-hooks instead.
+	(sgml-parser-loop): Use with-silent-modifications.
+
+	* psgml.el: Don't provide `psgml-mode'.
+	(psgml-version): Remove.
+	(psgml-maintainer-address): Set to emacs-devel.
+	(sgml-mode-abbrev-table): Merge defvar into define-abbrev-table.
+	(sgml-mode-map): Merge intialization and declaration.
+	(sgml-variable-description): Use replace-regexp-in-string.
+	(run-hook-with-args): Remove compatibility definition.
+	(sgml-main-menu): Use :filter.
+	(sgml-compute-insert-dtd-items, sgml-compute-custom-markup-items): Add
+	dummy arg, for use as filter.  Return dummy entry when empty. Use
+	mapcar.
+	(sgml-command-post): Use with-demoted-errors.
+	(sgml-mode): Use define-derived-mode.
+	(sgml-mode-markup-syntax-table): Move initialization into declaration.
+	(sgml-restore-buffer-modified-p): Remove.
+
+2016-10-18  Stefan Monnier  <monnier@iro.umontreal.ca>
+
+	Move files to fit ELPA format
+
+2016-10-18  Stefan Monnier  <monnier@iro.umontreal.ca>
+
+	Silence some byte-compiler warnings and other minor cleanups
+
+	* .gitignore: Add auto-generated ELPA files.
+
+	* psgml-api.el (sgml-parse-data): Don't use dyn-bound vars as args.
+
+	* psgml-debug.el (sgml-auto-dump, test-sgml): Use with-current-buffer.
+
+	* psgml-dtd.el (sgml-reduce-\,): Escape the comma in the name.
+	(sgml-write-dtd): Don't set obsolete `file-type'.
+
+	* psgml-edit.el (sgml-completion-table): Remove unused arg
+	`avoid-tags-in-cdata'.
+	(sgml-attribute-buffer): Use with-current-buffer.
+	(sgml-make-character-reference): Use match-string and string-to-number.
+	(sgml-edit-external-entity): Remove unused var `buffer'. Use
+	with-current-buffer.  Silence spurious warning.
+	(sgml-append-to-help-bufferm, sgml-print-attlist, sgml-show-structure): 
+	Use with-current-buffer.
+	(sgml-print-position-in-model): Remove unused arg `element-type'.
+
+	* psgml-fs.el (fs-add-output, fs-setup-buffer, fs-wrapper): Use
+	with-current-buffer.
+	(fs-do-style): Don't use dyn-bound vars as args.  Use
+	with-current-buffer.
+
+	* psgml-info.el (sgml-eltype-refrenced-elements): Avoid add-to-list.
+
+	* psgml-lucid.el: Explicitly require `cl'.
+
+	* psgml-maint.el (psgml-elisp-source): Use (featurep 'xemacs).
+	(psgml-compile-files): Avoid `interactive-p'.
+	(psgml-install-elc): Remove unused var `destdir'.
+
+	* psgml-other.el: Require` psgml-parse'.
+
+	* psgml-parse.el (sgml-set-buffer-multibyte): Remove obsolete code.
+	(sgml-load-dtd, sgml-bdtd-load): Don't bother binding find-file-type.
+	(sgml-delimiters): Use `defvar' since it's sometimes modified.
+	(sgml-try-merge-special-case): Remove unused arg `pubid'.
+	(sgml-set-initial-state): Don't call obsolete make-local-hook.
+	(sgml-parse-until-end-of, sgml-parse-to, sgml-parse-continue): Don't use
+	dyn-bound vars as args.
+
+	* psgml-xpr.el (sgml-delimiters): Avoid `list*'.
+
+	* psgml.el: Add dummy `Version:'.
+	(sgml-running-lucid): Remove.  Use (featurep 'xemacs) instead.
+	(sgml-parse-colon-path): Don't use dyn-bound vars as args.
+	(sgml-mode): Don't call obsolete make-local-hook.
+
+2009-04-24  Lennart Staflin  <lstaflin@gmail.com>
+
+	Converted sgml-content-indent-function, sgml-attribute-indent-function 
+	to use defcustom.
+
+2009-03-11  Lennart Staflin  <lstaflin@gmail.com>
+
+	CVS->Git and initial cleanup
+
+2008-12-16  Lennart Staflin  <lenst@lysator.liu.se>
+
+	(sgml-parse-character-reference): string-to-int -> string-to-number
+
+2008-06-21  Lennart Staflin  <lenst@lysator.liu.se>
+
+	* psgml-lucid.el (sgml-make-options-menu): change old style backquote
+
+	* psgml-parse.el (sgml-with-parser-syntax)
+	(sgml-with-parser-syntax-ro, sgml-make-move, sgml-move-token)
+	(sgml-move-dest, sgml-moves-lookup, sgml-normal-state-p)
+	(sgml-state-opts, sgml-state-reqs, sgml-and-node-next)
+	(sgml-and-node-dfas, sgml-eltype-flags, sgml-eltype-appdata)
+	(sgml-char-int, sgml-is-delim, sgml-following-char)
+	(sgml-parse-char, sgml-parse-chars, sgml-startnm-char)
+	(sgml-parse-name, sgml-parse-rni, sgml-alias-fields)
+	(sgml-deref-shortmap, sgml-state-final-p, sgml-prop-fields)
+	(sgml-parse-delim, sgml-check-delim, sgml-skip-upto)
+	(sgml-element-stag-optional): change old style backquote
+
+	* psgml-dtd.el (sgml-for-all-final-states, sgml-code-sequence): change
+	old style backquote
+
+	* psgml.el (sgml-markup)
+	(sgml-compute-insert-dtd-items)
+	(sgml-compute-custom-markup-items): change old style backquote
+
+2007-04-14  Lennart Staflin  <lenst@lysator.liu.se>
+
+	Added clean target
+
+2006-12-20  Lennart Staflin  <lenst@lysator.liu.se>
+
+	more custom
+
+2006-11-06  Lennart Staflin  <lenst@lysator.liu.se>
+
+	Change defvar's to defcustom.
+
+2005-08-28  Lennart Staflin  <lenst@lysator.liu.se>
+
+	*** empty log message ***
+
+2005-05-19  Lennart Staflin  <lenst@lysator.liu.se>
+
+	*** empty log message ***
+
+2005-05-19  Lennart Staflin  <lenst@lysator.liu.se>
+
+	Speed patch from Dave Love
+
+2005-05-19  Lennart Staflin  <lenst@lysator.liu.se>
+
+	Patches from debian package
+
+2005-05-19  Lennart Staflin  <lenst@lysator.liu.se>
+
+	(sgml-edit-external-entity): conditional use of obsolete function 
+	process-kill-without-query
+
+2005-05-19  Lennart Staflin  <lenst@lysator.liu.se>
+
+	(sgml-live-element-indicator): obsolete var.
+	(sgml-main-menu): reduce menu depth, move insert dtd and insert custom
+	markup to top-level.
+	(sgml-mode): add the which-func-mode support
+
+2005-05-19  Lennart Staflin  <lenst@lysator.liu.se>
+
+	*** empty log message ***
+
+2005-05-19  Lennart Staflin  <lenst@lysator.liu.se>
+
+	(sgml-update-display): oops. remove unbound var quite, using t instead
+
+2005-05-19  Lennart Staflin  <lenst@lysator.liu.se>
+
+	(sgml-update-display): support which-fun-mode with current element name
+	as function name.
+	(sgml-set-active-dtd-indicator): removed
+	(sgml-current-element-name): new func for use in which-function-mode
+
+2005-05-19  Lennart Staflin  <lenst@lysator.liu.se>
+
+	(sgml-display-table): use with-output-to-temp-buffer and dolist
+	(sgml-print-eltypes): new button for #PCDATA pseudo token.
+
+2005-05-19  Lennart Staflin  <lenst@lysator.liu.se>
+
+	(sgml-right-stag-menu): Change "Misc" to "Action"
+	(sgml-attribute-buffer): use dolist instead of loop, as it is standard
+	in latest emacs, and factor out inserting comment with the attribute
+	type.
+	(sgml-insert-attdecl-comment): new func. Inserts comment describing the
+	attribute type with clickable parts.
+	(sgml-insert-selected-token): new func
+	(sgml-insert-selected-default): new func
+	(sgml-insert-token-group): new func.
+
+2005-03-12  Lennart Staflin  <lenst@lysator.liu.se>
+
+	*** empty log message ***
+
+2005-03-12  Lennart Staflin  <lenst@lysator.liu.se>
+
+	(sgml-display-table): add buttons
+	(sgml-list-elements, sgml-list-attributes)
+	(sgml-list-content-elements, sgml-list-occur-in-elements): supply button
+	info
+	(sgml-eltype): new button type
+	(sgml-print-eltypes): new func
+	(sgml-describe-element-type): use sgml-print-eltypes where appropriate
+	(sgml-describe-dtd): add button for element types
+
+2005-03-12  Lennart Staflin  <lenst@lysator.liu.se>
+
+	(sgml-main-menu): adjust menu for new/renamed commands 
+	sgml-load-doctype, sgml-describe-dtd
+
+2005-03-11  Lennart Staflin  <lenst@lysator.liu.se>
+
+	*** empty log message ***
+
+2005-03-11  Lennart Staflin  <lenst@lysator.liu.se>
+
+	add dircategory Emacs (from Karl Eichwalder)
+
+2005-03-08  Lennart Staflin  <lenst@lysator.liu.se>
+
+	version 1.3.3 begun SYSTEM and OVERRID in catalog
+
+2005-03-08  Lennart Staflin  <lenst@lysator.liu.se>
+
+	(psgml-version): bump version
+
+2005-03-08  Lennart Staflin  <lenst@lysator.liu.se>
+
+	(sgml-parse-catalog-buffer): handle system and override
+	(sgml-catalog-lookup): new parameters, handle system and override in
+	catalogs.
+	(sgml-lookup-sysid-as-file): remove
+	(sgml-external-file): simplified and use new sgml-catalog-lookup 
+	interface.
+
+2005-03-08  Lennart Staflin  <lenst@lysator.liu.se>
+
+	new test case
+
+2005-03-08  Lennart Staflin  <lenst@lysator.liu.se>
+
+	*** empty log message ***
+
+2005-03-08  Lennart Staflin  <lenst@lysator.liu.se>
+
+	Added tc22
+
+2005-03-05  Lennart Staflin  <lenst@lysator.liu.se>
+
+	*** empty log message ***
+
+2005-03-02  Lennart Staflin  <lenst@lysator.liu.se>
+
+	bug fix
+
+2005-03-02  Lennart Staflin  <lenst@lysator.liu.se>
+
+	(sgml-mode-map): bind C-c C-s to new comman sgml-show-structure. Update
+	autoloads.
+
+2005-03-02  Lennart Staflin  <lenst@lysator.liu.se>
+
+	*** empty log message ***
+
+2005-03-02  Lennart Staflin  <lenst@lysator.liu.se>
+
+	(sgml-show-structure): new command
+	(sgml-show-structure-insert, sgml-show-struct-element-p)
+	(sgml-structure-elements): new functions
+
+2005-02-27  Lennart Staflin  <lenst@lysator.liu.se>
+
+	*** empty log message ***
+
+2005-02-27  Lennart Staflin  <lenst@lysator.liu.se>
+
+	(sgml-content-indent-function): moved
+	(sgml-attribute-indent-function): moved
+
+	(sgml-mode-map): bind C-c C-t to sgml-show-current-element-type
+
+	(sgml-show-context-function): new option
+
+	(sgml-mode-map): change C-c C-p to sgml-load-doctype
+
+2005-02-27  Lennart Staflin  <lenst@lysator.liu.se>
+
+	(sgml-set-face-for): added face setting for content
+
+2005-02-27  Lennart Staflin  <lenst@lysator.liu.se>
+
+	(sgml-load-doctype): make interactive, this is a more useful command 
+	than sgml-parse-prolog.
+
+	(sgml--pi-element-handler): use sgml-parse-s not sgml-skip-ps.
+
+2005-02-27  Lennart Staflin  <lenst@lysator.liu.se>
+
+	(sgml-describe-dtd): rename sgml-general-dtd-info to sgml-describe-dtd.
+	Keep old name as alias.
+
+2005-02-27  Lennart Staflin  <lenst@lysator.liu.se>
+
+	(sgml-show-context): use new option sgml-show-context-function.
+
+	(sgml-show-context-standard, sgml-show-context-backslash): new functions
+	for sgml-show-context-function
+
+	(sgml-right-menu): new command for use on a mouse button
+
+	(sgml-show-current-element-type): new command
+
+2005-02-27  Lennart Staflin  <lenst@lysator.liu.se>
+
+	*** empty log message ***
+
+2005-02-27  Lennart Staflin  <lenst@lysator.liu.se>
+
+	(sgml--pi-element-handler): use sgml-parse-s not sgml-skip-ps.
+
+2005-02-24  Lennart Staflin  <lenst@lysator.liu.se>
+
+	*** empty log message ***
+
+2005-02-24  Lennart Staflin  <lenst@lysator.liu.se>
+
+	(sgml-do-processing-instruction): call sgml--pi-psgml-handler with end 
+	point of PI.
+
+	(sgml--pi-psgml-handler): Take end point, and narrow buffer before 
+	parsing.
+
+2005-02-24  Lennart Staflin  <lenst@lysator.liu.se>
+
+	Documenting <?PSGML> processing instruction.
+
+2005-02-17  Lennart Staflin  <lenst@lysator.liu.se>
+
+	*** empty log message ***
+
+2005-02-17  Lennart Staflin  <lenst@lysator.liu.se>
+
+	(sgml-parse-prolog): apply sgml-general-case to 
+	sgml-default-doctype-name.
+
+2005-02-12  Lennart Staflin  <lenst@lysator.liu.se>
+
+	add xml-declaration
+
+2005-02-09  Lennart Staflin  <lenst@lysator.liu.se>
+
+	*** empty log message ***
+
+2005-02-09  Lennart Staflin  <lenst@lysator.liu.se>
+
+	Adjust to that the log buffer is no longer used
+
+2005-02-09  Lennart Staflin  <lenst@lysator.liu.se>
+
+	Removing most of the *SGML LOG* buffer use
+
+2005-02-09  Lennart Staflin  <lenst@lysator.liu.se>
+
+	Removing most of the *SGML LOG* buffer use
+	(sgml-compile-dtd, sgml-check-entities)
+	(sgml-log-warning, sgml-error): remove sgml-log-message
+	(sgml-entity-stack): new func
+
+2005-02-09  Lennart Staflin  <lenst@lysator.liu.se>
+
+	ID/IDREF patch (From: Jean-Daniel.Fekete)
+
+2004-11-05  Lennart Staflin  <lenst@lysator.liu.se>
+
+	*** empty log message ***
+
+2004-10-08  Lennart Staflin  <lenst@lysator.liu.se>
+
+	*** empty log message ***
+
+2003-06-09  Lennart Staflin  <lenst@lysator.liu.se>
+
+	*** empty log message ***
+
+2003-06-09  Lennart Staflin  <lenst@lysator.liu.se>
+
+	(sgml-modify-dtd): added some error checking for the has-seen-elements.
+
+2003-03-29  Lennart Staflin  <lenst@lysator.liu.se>
+
+	*** empty log message ***
+
+2003-03-29  Lennart Staflin  <lenst@lysator.liu.se>
+
+	(sgml-do-processing-instruction): new handling of <?PSGML> processing 
+	instruction.
+	(sgml--pi-psgml-handler): new func
+	(sgml--pi-element-handler): new func. handles <?PSGML ELEMENT ..>
+	(sgml-psgml-pi-enable-outside-dtd): new variable. controls when
+	<?PSGML> is evaluated.
+
+2003-03-29  Lennart Staflin  <lenst@lysator.liu.se>
+
+	Moved some experimental code from psgml-debug to psgml-xpr
+
+2003-03-27  Lennart Staflin  <lenst@lysator.liu.se>
+
+	*** empty log message ***
+
+2003-03-27  Lennart Staflin  <lenst@lysator.liu.se>
+
+	fix wrong file name in error trace
+
+2003-03-27  Lennart Staflin  <lenst@lysator.liu.se>
+
+	*** empty log message ***
+
+2003-03-25  Lennart Staflin  <lenst@lysator.liu.se>
+
+	(sgml-parse-parameter-literal): Modified to use
+	unibyte-char-to-multibyte if enable-multibyte-characters. I hope this is
+	correct.
+
+2003-03-04  Lennart Staflin  <lenst@lysator.liu.se>
+
+	*** empty log message ***
+
+2003-02-12  Lennart Staflin  <lenst@lysator.liu.se>
+
+	*** empty log message ***
+
+2003-02-12  Lennart Staflin  <lenst@lysator.liu.se>
+
+	(sgml-setup-doctype): add Predefined Entities for XML.
+
+2003-01-24  Lennart Staflin  <lenst@lysator.liu.se>
+
+	(sgml-do-move): undo wrong optimization, fix problem with non working 
+	exclusions.
+
+2003-01-24  Lennart Staflin  <lenst@lysator.liu.se>
+
+	*** empty log message ***
+
+2003-01-23  Lennart Staflin  <lenst@lysator.liu.se>
+
+	*** empty log message ***
+
+2002-12-13  Lennart Staflin  <lenst@lysator.liu.se>
+
+	*** empty log message ***
+
+2002-12-13  Lennart Staflin  <lenst@lysator.liu.se>
+
+	*** empty log message ***
+
+2002-12-13  Lennart Staflin  <lenst@lysator.liu.se>
+
+	*** empty log message ***
+
+2002-11-08  Lennart Staflin  <lenst@lysator.liu.se>
+
+	*** empty log message ***
+
+2002-08-13  Lennart Staflin  <lenst@lysator.liu.se>
+
+	Add abort command to edit attributes window
+
+2002-08-13  Lennart Staflin  <lenst@lysator.liu.se>
+
+	fix NET bug
+
+2002-08-13  Lennart Staflin  <lenst@lysator.liu.se>
+
+	*** empty log message ***
+
+2002-08-13  Lennart Staflin  <lenst@lysator.liu.se>
+
+	fix bug with change element name not copying attributes
+
+2002-08-13  Lennart Staflin  <lenst@lysator.liu.se>
+
+	fix attribute edit bug
+
+2002-07-14  Lennart Staflin  <lenst@lysator.liu.se>
+
+	*** empty log message ***
+
+2002-07-14  Lennart Staflin  <lenst@lysator.liu.se>
+
+	*** empty log message ***
+
+2002-06-17  Lennart Staflin  <lenst@lysator.liu.se>
+
+	NET related bug discovered
+
+2002-05-08  Lennart Staflin  <lenst@lysator.liu.se>
+
+	v 1.3.0 updates
+
+2002-05-07  Lennart Staflin  <lenst@lysator.liu.se>
+
+	V 1.3.0
+
+2002-05-07  Lennart Staflin  <lenst@lysator.liu.se>
+
+	*** empty log message ***
+
+2002-04-25  Lennart Staflin  <lenst@lysator.liu.se>
+
+	*** empty log message ***
+
+2002-04-25  Lennart Staflin  <lenst@lysator.liu.se>
+
+	* psgml.el (sgml-mode): make adding to text-property-default-nonsticky
+	conditional on sgml-default-nonsticky to work with Emacs < 21.
+
+2002-04-25  Lennart Staflin  <lenst@lysator.liu.se>
+
+	Merging Dave Loves patch from 1.2.4 branch. Fixing conflicts and obvious
+	problems.
+
+2002-04-19  Lennart Staflin  <lenst@lysator.liu.se>
+
+	Rel 1.2.5
+
+2002-04-19  Lennart Staflin  <lenst@lysator.liu.se>
+
+	Version 1.2.5 released
+
+2002-04-19  Lennart Staflin  <lenst@lysator.liu.se>
+
+	*** empty log message ***
+
+2002-04-19  Lennart Staflin  <lenst@lysator.liu.se>
+
+	Fix doc of sgml-balanced-tag-edit
+
+2002-04-06  Lennart Staflin  <lenst@lysator.liu.se>
+
+	*** empty log message ***
+
+2002-04-06  Lennart Staflin  <lenst@lysator.liu.se>
+
+	(sgml-map-content): don't try to map empty elements, no point and the 
+	code doesn't work for that case.
+
+2002-02-26  Lennart Staflin  <lenst@lysator.liu.se>
+
+	*** empty log message ***
+
+2002-02-15  Lennart Staflin  <lenst@lysator.liu.se>
+
+	*** empty log message ***
+
+2002-02-15  Lennart Staflin  <lenst@lysator.liu.se>
+
+	(sgml-auto-insert-required-elements): doc fix.
+	(sgml-balanced-tag-edit): doc fix.
+
+2002-02-15  Lennart Staflin  <lenst@lysator.liu.se>
+
+	(sgml-insert-tag): doc fix.
+	(sgml-edit-attrib-default): don't make text read-only
+
+2002-02-15  Lennart Staflin  <lenst@lysator.liu.se>
+
+	patch from Edgar Hoch, supports the xml docbook entities
+
+2002-02-09  Lennart Staflin  <lenst@lysator.liu.se>
+
+	*** empty log message ***
+
+2002-02-09  Lennart Staflin  <lenst@lysator.liu.se>
+
+	Explicitly setup prefix keys
+	(sgml-prefix-f-map): new var
+	(sgml-prefix-u-map): new var
+
+2002-02-08  Lennart Staflin  <lenst@lysator.liu.se>
+
+	*** empty log message ***
+
+2002-02-08  Lennart Staflin  <lenst@lysator.liu.se>
+
+	(sgml-set-buffer-multibyte): support setting to default
+	(sgml-compile-dtd): removed sgml-set-buffer-multibyte, this is done by
+	sgml-write-dtd
+	(sgml-push-to-entity): reset buffer to default multibyte support
+
+2002-02-08  Lennart Staflin  <lenst@lysator.liu.se>
+
+	(sgml-write-dtd): fixes for multibyte handling
+
+2002-02-01  Lennart Staflin  <lenst@lysator.liu.se>
+
+	*** empty log message ***
+
+2001-12-20  Lennart Staflin  <lenst@lysator.liu.se>
+
+	*** empty log message ***
+
+2001-12-20  Lennart Staflin  <lenst@lysator.liu.se>
+
+	* psgml.el (sgml-xml-validate-command): new option. Default for 
+	sgml-validate-command in XML mode.
+	(xml-mode): use sgml-xml-validate-command.
+	(xml-mode): remove conditional. Always set sgml-declaration to 
+	sgml-xml-declaration.
+
+2001-12-19  Lennart Staflin  <lenst@lysator.liu.se>
+
+	added dependency
+
+2001-12-18  Lennart Staflin  <lenst@lysator.liu.se>
+
+	*** empty log message ***
+
+2001-12-18  Lennart Staflin  <lenst@lysator.liu.se>
+
+	Fix attribute edit to TAB better, and not to write protect #DEFAULT, 
+	thereby allowing normal C-k to be used.
+
+2001-12-16  Lennart Staflin  <lenst@lysator.liu.se>
+
+	*** empty log message ***
+
+2001-12-16  Lennart Staflin  <lenst@lysator.liu.se>
+
+	release 1.2.4
+
+2001-12-16  Lennart Staflin  <lenst@lysator.liu.se>
+
+	*** empty log message ***
+
+2001-12-16  Lennart Staflin  <lenst@lysator.liu.se>
+
+	*** empty log message ***
+
+2001-12-16  Lennart Staflin  <lenst@lysator.liu.se>
+
+	new version
+
+2001-12-16  Lennart Staflin  <lenst@lysator.liu.se>
+
+	*** empty log message ***
+
+2001-12-16  Lennart Staflin  <lenst@lysator.liu.se>
+
+	typo
+
+2001-12-16  Lennart Staflin  <lenst@lysator.liu.se>
+
+	* psgml-info.el (sgml-eltype-refrenced-elements): use built-in function
+	copy-sequence
+
+2001-12-16  Lennart Staflin  <lenst@lysator.liu.se>
+
+	*** empty log message ***
+
+2001-12-14  Lennart Staflin  <lenst@lysator.liu.se>
+
+	fix sgml-warn-about-undefined-entities behviour.
+
+2001-12-14  Lennart Staflin  <lenst@lysator.liu.se>
+
+	documented sgml-add-element-to-element
+
+2001-12-14  Lennart Staflin  <lenst@lysator.liu.se>
+
+	*** empty log message ***
+
+2001-12-14  Lennart Staflin  <lenst@lysator.liu.se>
+
+	update version
+
+2001-12-14  Lennart Staflin  <lenst@lysator.liu.se>
+
+	* psgml-parse.el (sgml-set-buffer-multibyte): Mule/multibyte patch from
+	XX.
+	(sgml-compile-dtd): dito.
+	(sgml-bdtd-merge): dito.
+	(sgml-push-to-entity): dito.
+	* psgml-parse.el (sgml-update-display): take max-pos of top-tree not
+	current-tree as that is not always defined at that point.
+
+2001-12-14  Lennart Staflin  <lenst@lysator.liu.se>
+
+	*** empty log message ***
+
+2001-12-05  Lennart Staflin  <lenst@lysator.liu.se>
+
+	*** empty log message ***
+
+2001-12-05  Lennart Staflin  <lenst@lysator.liu.se>
+
+	Experimental hook in parser
+
+2001-11-09  Lennart Staflin  <lenst@lysator.liu.se>
+
+	version 1.2.3
+
+2001-11-08  Lennart Staflin  <lenst@lysator.liu.se>
+
+	version 1.2.3
+
+2001-11-08  Lennart Staflin  <lenst@lysator.liu.se>
+
+	rollback
+
+2001-11-08  Lennart Staflin  <lenst@lysator.liu.se>
+
+	*** empty log message ***
+
+2001-11-04  Lennart Staflin  <lenst@lysator.liu.se>
+
+	*** empty log message ***
+
+2001-11-04  Lennart Staflin  <lenst@lysator.liu.se>
+
+	Fix the obsolete variable `before-change-function' and
+	`after-change-function', which are no longer used by Emacs.
+
+2001-04-02  Lennart Staflin  <lenst@lysator.liu.se>
+
+	fix typos
+
+2001-04-02  Lennart Staflin  <lenst@lysator.liu.se>
+
+	fix typos
+
+2001-04-02  Lennart Staflin  <lenst@lysator.liu.se>
+
+	*** empty log message ***
+
+2001-04-02  Lennart Staflin  <lenst@lysator.liu.se>
+
+	some whitespace fixup
+
+2001-02-28  Lennart Staflin  <lenst@lysator.liu.se>
+
+	*** empty log message ***
+
+2001-02-28  Lennart Staflin  <lenst@lysator.liu.se>
+
+	* psgml-other.el (sgml-split-long-menus): new
+	(sgml-popup-menu): use above
+	(sgml-popup-multi-menu): use above
+
+2001-02-28  Lennart Staflin  <lenst@lysator.liu.se>
+
+	Require psgml-other/-lucid when compiling.
+
+2001-02-27  Lennart Staflin  <lenst@lysator.liu.se>
+
+	* psgml-fs.el (fs-split-tokens): new helper function for use in style
+	sheets.
+
+2001-02-27  Lennart Staflin  <lenst@lysator.liu.se>
+
+	*** empty log message ***
+
+2001-02-22  Lennart Staflin  <lenst@lysator.liu.se>
+
+	New menu experiment
+
+2001-02-21  Lennart Staflin  <lenst@lysator.liu.se>
+
+	* psgml-parse.el (sgml-parse-to): remove debug code
+
+2001-02-21  Lennart Staflin  <lenst@lysator.liu.se>
+
+	* psgml-edit.el (sgml-fold-region): use sgml-without-change-hooks
+	(sgml-normalize): use sgml-without-before-change-hooks
+
+2001-02-21  Lennart Staflin  <lenst@lysator.liu.se>
+
+	* psgml-other.el (sgml-without-before-change-hooks): new
+	* psgml-lucid.el (sgml-without-before-change-hooks): dito
+
+2001-02-21  Lennart Staflin  <lenst@lysator.liu.se>
+
+	*** empty log message ***
+
+2001-02-20  Lennart Staflin  <lenst@lysator.liu.se>
+
+	*** empty log message ***
+
+2001-02-20  Lennart Staflin  <lenst@lysator.liu.se>
+
+	* psgml-dtd.el (sgml-check-content): check case of declared content
+	name.
+	(sgml-parse-exception): fix misspelled function name
+	(sgml-declare-entity): Fix wrong case on symbols
+	(sgml-parse-entity-type): for consistency, don't downcase entity type
+	name
+	(sgml-parse-entity-type): Remove case check and intern for notation
+	name. Notation name will be stored as a string.
+
+2001-02-20  Lennart Staflin  <lenst@lysator.liu.se>
+
+	*** empty log message ***
+
+2001-02-20  Lennart Staflin  <lenst@lysator.liu.se>
+
+	* psgml-other.el (sgml-without-change-hooks): new macro
+	(sgml-set-face-for): use new macro
+
+2001-02-20  Lennart Staflin  <lenst@lysator.liu.se>
+
+	* psgml-parse.el (sgml-push-to-entity): remove debugging code
+	(sgml-set-initial-state): Change to use change hooks
+
+2001-02-12  Lennart Staflin  <lenst@lysator.liu.se>
+
+	*** empty log message ***
+
+2001-02-10  Lennart Staflin  <lenst@lysator.liu.se>
+
+	*** empty log message ***
+
+2001-02-09  Lennart Staflin  <lenst@lysator.liu.se>
+
+	*** empty log message ***
+
+2001-02-09  Lennart Staflin  <lenst@lysator.liu.se>
+
+	* psgml.el (sgml-mode-map): Bind (meta control h) instead of ESC C-h,
+	avoids redefining M-BS
+
+2001-02-08  Lennart Staflin  <lenst@lysator.liu.se>
+
+	* psgml-info.el: Add provide psgml-info
+
+2000-10-22  Lennart Staflin  <lenst@lysator.liu.se>
+
+	*** empty log message ***
+
+2000-10-22  Lennart Staflin  <lenst@lysator.liu.se>
+
+	Patch from Marc-Antoine Parent
+
+	 * psgml-edit.el (sgml-read-attribute-value): include the element name,
+	thus:
+	Value for {attribute name} in {element name} ({type} {Default}):
+
+2000-10-11  Lennart Staflin  <lenst@lysator.liu.se>
+
+	*** empty log message ***
+
+2000-10-11  Lennart Staflin  <lenst@lysator.liu.se>
+
+	* psgml-edit.el (sgml-indent-line): new strategy for identifying 
+	elements
+
+2000-09-06  Lennart Staflin  <lenst@lysator.liu.se>
+
+	*** empty log message ***
+
+2000-09-06  Lennart Staflin  <lenst@lysator.liu.se>
+
+	* psgml-api.el (sgml-map-content): Use sgml-with-parser-syntax-ro
+
+2000-09-06  Lennart Staflin  <lenst@lysator.liu.se>
+
+	* psgml-parse.el (sgml-find-start-point): renamed to 
+	sgml-goto-start-point, to indicate that this actually changes the point
+	and buffer. And should always be called inside sgml-with-parser-syntax.
+	(sgml-with-parser-syntax-ro): As sgml-with-parser-syntax also handle
+	restoring buffer modification state.
+	(sgml-last-buffer): New state variable
+	(sgml-with-parser-syntax): set sgml-last-buffer
+	(sgml-mainbuf-point): new function
+	(sgml-max-pos-in-tree): new function
+	(sgml-update-display): don't call sgml-find-start-point, use 
+	sgml-max-pos-in-tree to figure out if there is much to parse.
+	(sgml-parse-to): calls sgml-parser-loop directly no sgml-parse-continue.
+	(sgml-parse-continue): use sgml-with-parser-syntax-ro and set-buffer to
+	sgml-last-buffer.
+
+2000-09-06  Lennart Staflin  <lenst@lysator.liu.se>
+
+	*** empty log message ***
+
+2000-09-06  Lennart Staflin  <lenst@lysator.liu.se>
+
+	* psgml.el (sgml-insert-defaulted-attributes): new option
+
+2000-09-06  Lennart Staflin  <lenst@lysator.liu.se>
+
+	* psgml-edit.el (sgml-insert-attributes): check new option
+
+2000-08-24  Lennart Staflin  <lenst@lysator.liu.se>
+
+	*** empty log message ***
+
+2000-08-24  Lennart Staflin  <lenst@lysator.liu.se>
+
+	Bugfix
+
+2000-08-24  Lennart Staflin  <lenst@lysator.liu.se>
+
+	Added support for title
+
+2000-08-24  Lennart Staflin  <lenst@lysator.liu.se>
+
+	Factor out sgml-print-attlist
+
+2000-08-24  Lennart Staflin  <lenst@lysator.liu.se>
+
+	*** empty log message ***
+
+2000-08-24  Lennart Staflin  <lenst@lysator.liu.se>
+
+	Fixed comment.
+
+2000-08-03  Lennart Staflin  <lenst@lysator.liu.se>
+
+	*** empty log message ***
+
+2000-08-03  Lennart Staflin  <lenst@lysator.liu.se>
+
+	Fix missing space for unspecified required attributes.
+
+2000-08-03  Lennart Staflin  <lenst@lysator.liu.se>
+
+	bugfix
+
+2000-06-19  Lennart Staflin  <lenst@lysator.liu.se>
+
+	*** empty log message ***
+
+2000-06-09  Lennart Staflin  <lenst@lysator.liu.se>
+
+	Some debugging code.
+
+2000-06-09  Lennart Staflin  <lenst@lysator.liu.se>
+
+	Change timing for eval of hang-from characteristics.
+
+2000-06-09  Lennart Staflin  <lenst@lysator.liu.se>
+
+	Bug fixing indenting. Also prepare for new feature, pluggable 
+	indentation algorithm.
+
+2000-06-09  Lennart Staflin  <lenst@lysator.liu.se>
+
+	*** empty log message ***
+
+2000-06-09  Lennart Staflin  <lenst@lysator.liu.se>
+
+	*** empty log message ***
+
+2000-06-09  Lennart Staflin  <lenst@lysator.liu.se>
+
+	(sgml-parse-parameter-literal): use buffer-substring-no-properties .
+
+2000-06-09  Lennart Staflin  <lenst@lysator.liu.se>
+
+	(sgml-parse-data): Don't call sgml-parse-loop directly, use 
+	sgml-parse-continue.
+
+2000-06-07  Lennart Staflin  <lenst@lysator.liu.se>
+
+	Show-current element, and new PI handling code
+
+2000-05-26  Lennart Staflin  <lenst@lysator.liu.se>
+
+	*** empty log message ***
+
+2000-05-26  Lennart Staflin  <lenst@lysator.liu.se>
+
+	* psgml-edit.el (sgml-attr-clean-and-insert): new command. Used to 
+	automatically remove #DEFAULT when a character is typed.
+	(sgml-attr-default-keymap): keymap used as only for #DEFAULT in 
+	attribute editing.
+
+2000-04-27  Lennart Staflin  <lenst@lysator.liu.se>
+
+	Added test case 15
+
+2000-04-24  Lennart Staflin  <lenst@lysator.liu.se>
+
+	* psgml-edit.el (sgml-complete): Transform case on inserted names using
+	sgml-general-insert-case or sgml-entity-insert-case.
+
+2000-04-24  Lennart Staflin  <lenst@lysator.liu.se>
+
+	*** empty log message ***
+
+2000-04-17  Lennart Staflin  <lenst@lysator.liu.se>
+
+	(sgml-describe-element-type): Use sgml-princ-names for occurs in 
+	section.
+
+2000-04-17  Lennart Staflin  <lenst@lysator.liu.se>
+
+	(sgml-indent-line): compute indentation from context, not element under
+	point. Did this change once before but had to back it out. This time
+	take care of omitted end-tags by choosing parent element as context, if
+	point is at the very end of the element. Don't do special attribute
+	indenting for elements that occur in data context.
+
+	(sgml-fill-region): Fix giving up to early.
+
+	(sgml-do-fill): indent tags of subelements in element context
+
+2000-04-17  Lennart Staflin  <lenst@lysator.liu.se>
+
+	Added code for new sgml-show-element-....
+
+2000-04-17  Lennart Staflin  <lenst@lysator.liu.se>
+
+	*** empty log message ***
+
+2000-04-12  Lennart Staflin  <lenst@lysator.liu.se>
+
+	*** empty log message ***
+
+2000-03-27  Lennart Staflin  <lenst@lysator.liu.se>
+
+	*** empty log message ***
+
+2000-03-27  Lennart Staflin  <lenst@lysator.liu.se>
+
+	(sgml-change-element-name): Add end-tag event if original element is 
+	empty. (hmm this isn't quite right). Also use sgml-find-context-of to 
+	find element, because -element-of gives the element of the following 
+	char.
+
+2000-01-04  Lennart Staflin  <lenst@lysator.liu.se>
+
+	*** empty log message ***
+
+2000-01-04  Lennart Staflin  <lenst@lysator.liu.se>
+
+	*** empty log message ***
+
+1999-12-21  Lennart Staflin  <lenst@lysator.liu.se>
+
+	Added coding marker
+
+1999-12-21  Lennart Staflin  <lenst@lysator.liu.se>
+
+	*** empty log message ***
+
+1999-12-16  Lennart Staflin  <lenst@lysator.liu.se>
+
+	*** empty log message ***
+
+1999-12-16  Lennart Staflin  <lenst@lysator.liu.se>
+
+	*** empty log message ***
+
+1999-12-03  Lennart Staflin  <lenst@lysator.liu.se>
+
+	*** empty log message ***
+
+1999-11-12  Lennart Staflin  <lenst@lysator.liu.se>
+
+	psgml-parse.el (sgml-parse-to): Let sgml-with-parser-syntax wrap
+	a bigger chunk of the code to make sure the syntax table is set up
+	before any buffer changes.
+
+1999-11-12  Lennart Staflin  <lenst@lysator.liu.se>
+
+	*** empty log message ***
+
+1999-11-09  Lennart Staflin  <lenst@lysator.liu.se>
+
+	Remove install dirs
+
+1999-11-09  Lennart Staflin  <lenst@lysator.liu.se>
+
+	New test case
+
+1999-11-09  Lennart Staflin  <lenst@lysator.liu.se>
+
+	Put back erase-buffer in push-to-entity
+
+1999-11-09  Lennart Staflin  <lenst@lysator.liu.se>
+
+	*** empty log message ***
+
+1999-11-09  Lennart Staflin  <lenst@lysator.liu.se>
+
+	Removed junk
+
+1999-11-09  Lennart Staflin  <lenst@lysator.liu.se>
+
+	(sgml-modify-dtd): use sgml-general-case on names
+	from modifier.
+	(sgml-note-change-at): If in XML mode and
+		previous char is /, back up one char. This allows for the />
+		delimiter to be recognized even if the start tag has been
+		previously parsed as an improperly ended tag.
+
+1999-11-09  Lennart Staflin  <lenst@lysator.liu.se>
+
+	*** empty log message ***
+
+1999-11-09  Lennart Staflin  <lenst@lysator.liu.se>
+
+	Some more info for element types
+
+1999-11-09  Lennart Staflin  <lenst@lysator.liu.se>
+
+	Don't use remembred tree pos in XML mode
+
+1999-10-21  Lennart Staflin  <lenst@lysator.liu.se>
+
+	*** empty log message ***
+
+1999-10-20  Lennart Staflin  <lenst@lysator.liu.se>
+
+	*** empty log message ***
+
+1999-10-20  Lennart Staflin  <lenst@lysator.liu.se>
+
+	*** empty log message ***
+
+1999-10-20  Lennart Staflin  <lenst@lysator.liu.se>
+
+	*** empty log message ***
+
+1999-10-19  Lennart Staflin  <lenst@lysator.liu.se>
+
+	*** empty log message ***
+
+1999-10-12  Lennart Staflin  <lenst@lysator.liu.se>
+
+	*** empty log message ***
+
+1999-10-10  Lennart Staflin  <lenst@lysator.liu.se>
+
+	*** empty log message ***
+
+1999-10-10  Lennart Staflin  <lenst@lysator.liu.se>
+
+	New version number
+
+1999-10-10  Lennart Staflin  <lenst@lysator.liu.se>
+
+	*** empty log message ***
+
+1999-10-06  Lennart Staflin  <lenst@lysator.liu.se>
+
+	*** empty log message ***
+
+1999-10-06  Lennart Staflin  <lenst@lysator.liu.se>
+
+	Always start element on new line when splitting.
+
+1999-10-06  Lennart Staflin  <lenst@lysator.liu.se>
+
+	Make sgml-declaration local variable
+
+1999-10-06  Lennart Staflin  <lenst@lysator.liu.se>
+
+	*** empty log message ***
+
+1999-10-06  Lennart Staflin  <lenst@lysator.liu.se>
+
+	*** empty log message ***
+
+1999-10-06  Lennart Staflin  <lenst@lysator.liu.se>
+
+	Carry XML-ness to parsed text entities.
+
+1999-10-05  Lennart Staflin  <lenst@lysator.liu.se>
+
+	*** empty log message ***
+
+1999-10-05  Lennart Staflin  <lenst@lysator.liu.se>
+
+	*** empty log message ***
+
+1999-10-05  Lennart Staflin  <lenst@lysator.liu.se>
+
+	Moved to directory doc
+
+1999-10-05  Lennart Staflin  <lenst@lysator.liu.se>
+
+	New default for sgml-display-char-list-filename.
+
+1999-09-22  Lennart Staflin  <lenst@lysator.liu.se>
+
+	Apply sgml-general-case to attribute name for interactive 
+	sgml-insert-attribute. Don't test for non empty asl in sgml-edit-attrib. 
+	A lot of changes in handling text attributes when in attribute edit 
+	mode.
+
+1999-08-25  Lennart Staflin  <lenst@lysator.liu.se>
+
+	Added child move to fs-element
+
+1999-08-22  Lennart Staflin  <lenst@lysator.liu.se>
+
+	Added check for empty attribute list in sgml-edit-attributes.
+
+1999-08-22  Lennart Staflin  <lenst@lysator.liu.se>
+
+	*** empty log message ***
+
+1999-08-14  Lennart Staflin  <lenst@lysator.liu.se>
+
+	(sgml-tag-regexp): Recognize XMLs empty tags.
+
+1999-08-12  Lennart Staflin  <lenst@lysator.liu.se>
+
+	Rewrite sgml-do-move for speed in common case
+
+1999-08-12  Lennart Staflin  <lenst@lysator.liu.se>
+
+	New profiling setup
+
+1999-08-02  Lennart Staflin  <lenst@lysator.liu.se>
+
+	Added sub-style
+
+1999-06-16  Lennart Staflin  <lenst@lysator.liu.se>
+
+	Minor fixes
+
+1999-06-16  Lennart Staflin  <lenst@lysator.liu.se>
+
+	Avoid moving overlays without psgml-type attribute.
+
+1999-01-25  Lennart Staflin  <lenst@lysator.liu.se>
+
+	*** empty log message ***
+
+1999-01-25  Lennart Staflin  <lenst@lysator.liu.se>
+
+	*** empty log message ***
+
+1999-01-08  Lennart Staflin  <lenst@lysator.liu.se>
+
+	*** empty log message ***
+
+1999-01-07  Lennart Staflin  <lenst@lysator.liu.se>
+
+	Added defsetf for fs-char.
+
+1998-12-06  Lennart Staflin  <lenst@lysator.liu.se>
+
+	*** empty log message ***
+
+1998-12-06  Lennart Staflin  <lenst@lysator.liu.se>
+
+	Fix spelling
+
+1998-11-17  Lennart Staflin  <lenst@lysator.liu.se>
+
+	Bug fixes: insert "mode: xml" for xml-mode and "mode: sgml" otherwise 
+	add end-tag to empty xml-elements before inserting an element
+
+	And a little improvment of psgml-info.
+
+1998-11-15  Lennart Staflin  <lenst@lysator.liu.se>
+
+	*** empty log message ***
+
+1998-11-15  Lennart Staflin  <lenst@lysator.liu.se>
+
+	XEmacs prompted fixes.
+
+1998-11-15  Lennart Staflin  <lenst@lysator.liu.se>
+
+	XEmacs fixes
+
+1998-11-15  Lennart Staflin  <lenst@lysator.liu.se>
+
+	Some XEmacs fixes.
+
+1998-11-15  Lennart Staflin  <lenst@lysator.liu.se>
+
+	moved sgml-option-value-indicator from psgml-edit to psgml
+
+1998-11-14  Lennart Staflin  <lenst@lysator.liu.se>
+
+	*** empty log message ***
+
+1998-11-14  Lennart Staflin  <lenst@lysator.liu.se>
+
+	*** empty log message ***
+
+1998-11-14  Lennart Staflin  <lenst@lysator.liu.se>
+
+	*** empty log message ***
+
+1998-11-14  Lennart Staflin  <lenst@lysator.liu.se>
+
+	Test cases
+
+1998-11-14  Lennart Staflin  <lenst@lysator.liu.se>
+
+	*** empty log message ***
+
+1998-11-14  Lennart Staflin  <lenst@lysator.liu.se>
+
+	*** empty log message ***
+
+1998-10-31  Lennart Staflin  <lenst@lysator.liu.se>
+
+	*** empty log message ***
+
+1998-10-31  Lennart Staflin  <lenst@lysator.liu.se>
+
+	*** empty log message ***
+
+1998-10-31  Lennart Staflin  <lenst@lysator.liu.se>
+
+	*** empty log message ***
+
+1998-10-31  Lennart Staflin  <lenst@lysator.liu.se>
+
+	*** empty log message ***
+
+1998-10-24  Lennart Staflin  <lenst@lysator.liu.se>
+
+	*** empty log message ***
+
+1998-10-20  Lennart Staflin  <lenst@lysator.liu.se>
+
+	*** empty log message ***
+
+1998-09-30  Lennart Staflin  <lenst@lysator.liu.se>
+
+	*** empty log message ***
+
+1998-09-30  Lennart Staflin  <lenst@lysator.liu.se>
+
+	Changed version number on CDTD
+
+1998-08-29  Lennart Staflin  <lenst@lysator.liu.se>
+
+	*** empty log message ***
+
+1998-08-24  Lennart Staflin  <lenst@lysator.liu.se>
+
+	*** empty log message ***
+
+1998-07-17  Lennart Staflin  <lenst@lysator.liu.se>
+
+	*** empty log message ***
+
+1998-07-03  Lennart Staflin  <lenst@lysator.liu.se>
+
+	*** empty log message ***
+
+1998-07-03  Lennart Staflin  <lenst@lysator.liu.se>
+
+	*** empty log message ***
+
+1998-07-03  Lennart Staflin  <lenst@lysator.liu.se>
+
+	*** empty log message ***
+
+1998-06-30  Lennart Staflin  <lenst@lysator.liu.se>
+
+	*** empty log message ***
+
+1998-06-24  Lennart Staflin  <lenst@lysator.liu.se>
+
+	Added experimental sgml-add-element-to-element command.
+
+1998-06-22  Lennart Staflin  <lenst@lysator.liu.se>
+
+	Final 1.1.2 fixes..
+
+1998-06-22  Lennart Staflin  <lenst@lysator.liu.se>
+
+	Installed patch from Matthias Clasen
+	<clasen@pong.mathematik.uni-freiburg.de>.
+
+1998-06-22  Lennart Staflin  <lenst@lysator.liu.se>
+
+	*** empty log message ***
+
+1998-06-10  Lennart Staflin  <lenst@lysator.liu.se>
+
+	Fixed search order for CATALOG entries in catalogs.
+
+1998-06-10  Lennart Staflin  <lenst@lysator.liu.se>
+
+	*** empty log message ***
+
+1998-05-14  Lennart Staflin  <lenst@lysator.liu.se>
+
+	V 1.1.1 Checkin
+
+1998-05-14  Lennart Staflin  <lenst@lysator.liu.se>
+
+	*** empty log message ***
+
+1998-05-14  Lennart Staflin  <lenst@lysator.liu.se>
+
+	*** empty log message ***
+
+1998-05-14  Lennart Staflin  <lenst@lysator.liu.se>
+
+	*** empty log message ***
+
+1998-05-14  Lennart Staflin  <lenst@lysator.liu.se>
+
+	Change case of keywords.
+
+1998-03-15  Lennart Staflin  <lenst@lysator.liu.se>
+
+	*** empty log message ***
+
+1998-03-15  Lennart Staflin  <lenst@lysator.liu.se>
+
+	*** empty log message ***
+
+1998-03-14  Lennart Staflin  <lenst@lysator.liu.se>
+
+	Added recognition of PSGML NOFILL to (sgml-do-processing-instruction). 
+	Implemented CATALOG entries in catalogs.
+
+1998-03-12  Lennart Staflin  <lenst@lysator.liu.se>
+
+	Better support for XML.
+
+1998-02-21  Lennart Staflin  <lenst@lysator.liu.se>
+
+	Stepped version number. Support for xml-mode in command-post.
+
+1997-12-29  Lennart Staflin  <lenst@lysator.liu.se>
+
+	Incorporated psgmlxml-19971208.zip from David.
+
+1997-12-23  Lennart Staflin  <lenst@lysator.liu.se>
+
+	Better fill handling.
+
+1997-12-23  Lennart Staflin  <lenst@lysator.liu.se>
+
+	Copyright updated
+
+1997-12-23  Lennart Staflin  <lenst@lysator.liu.se>
+
+	Better error recovery for sgml-parse-attribute-specification-list. 
+	sgml-cache-catalog: remove file-truename.
+
+1997-07-24  Lennart Staflin  <lenst@lysator.liu.se>
+
+	*** empty log message ***
+
+1996-11-20  Lennart Staflin  <lenst@lysator.liu.se>
+
+	Fixed bug in sgml-modify-dtd.
+
+1996-11-20  Lennart Staflin  <lenst@lysator.liu.se>
+
+	Changed version.
+
+1996-11-14  Lennart Staflin  <lenst@lysator.liu.se>
+
+	Initial revision
+
+1996-11-11  Lennart Staflin  <lenst@lysator.liu.se>
+
+	Updated for 1.0
+
+1996-11-11  Lennart Staflin  <lenst@lysator.liu.se>
+
+	Kludge problem with 16bit character references.
+
+1996-11-11  Lennart Staflin  <lenst@lysator.liu.se>
+
+	Move special pop-up menu to S-mouse-3. Add new variables
+	after-change-functions before-change-functions.
+
+1996-11-11  Lennart Staflin  <lenst@lysator.liu.se>
+
+	Change place of sgml-final.. Fix handling of
+	sgml-system-identifiers-are-preferred.
+
+1996-09-01  Lennart Staflin  <lenst@lysator.liu.se>
+
+	New version. Use nsgmls as default validator. Changed error regexps.
+
+1996-09-01  Lennart Staflin  <lenst@lysator.liu.se>
+
+	New debug functions.
+
+1996-06-13  Lennart Staflin  <lenst@lysator.liu.se>
+
+	(sgml-get-and-move): use sgml-final not sgml-state-final-p. In this case
+	the substate can be a AND-state.
+
+1996-05-20  Lennart Staflin  <lenst@lysator.liu.se>
+
+	(sgml-push-to-entity): remove binding before/after change functions.
+	This probably made them nil in the main buffer.
+
+1996-05-20  Lennart Staflin  <lenst@lysator.liu.se>
+
+	Work-around for easymenu redefines button 3 on XEmacs.
+
+1996-03-31  Lennart Staflin  <lenst@lysator.liu.se>
+
+	Moved menu bar stuff here.
+
+1996-03-31  Lennart Staflin  <lenst@lysator.liu.se>
+
+	Changed names with &. Fixed various bugs. Changed sgml-update-display.
+
+1996-03-31  Lennart Staflin  <lenst@lysator.liu.se>
+
+	Menu bar stuff moved to psgml.el
+
+1996-03-31  Lennart Staflin  <lenst@lysator.liu.se>
+
+	Uses easy-menu. Menu bar stuff moved to psgml.el.
+
+1996-03-31  Lennart Staflin  <lenst@lysator.liu.se>
+
+	Take exceptions into consideration when computing allowed content 
+	tokens. Better display of "occur-in" elements.
+
+1996-03-31  Lennart Staflin  <lenst@lysator.liu.se>
+
+	Various fixes.
+
+1996-03-31  Lennart Staflin  <lenst@lysator.liu.se>
+
+	Changed names with &.
+
+1996-03-31  Lennart Staflin  <lenst@lysator.liu.se>
+
+	*** empty log message ***
+
+1996-03-19  Lennart Staflin  <lenst@lysator.liu.se>
+
+	sgml-map-content: use max from main buffer when setting parser goal.
+	(fix bug 75).
+
+1996-01-27  Lennart Staflin  <lenst@lysator.liu.se>
+
+	Added options: sgml-insert-missing-element-comment, 
+	sgml-insert-end-tag-on-new-line. Added nsgmls error message regexp to
+	sgml-validate
+
+1996-01-27  Lennart Staflin  <lenst@lysator.liu.se>
+
+	Added support for sgml-map-content to map entity references. Changed
+	sgml-update-display. Using buffer-substring-no-properties where
+	appropriate.
+
+1996-01-27  Lennart Staflin  <lenst@lysator.liu.se>
+
+	Added new entry to modify menu.
+
+1996-01-27  Lennart Staflin  <lenst@lysator.liu.se>
+
+	Provide buffer-substring-no-properties as an alias.
+
+1996-01-27  Lennart Staflin  <lenst@lysator.liu.se>
+
+	New options for formatting inserted elements. New function:
+	sgml-trim-and-leave-element. Fixed bugs in sgml-last-element handling.
+
+1996-01-27  Lennart Staflin  <lenst@lysator.liu.se>
+
+	Fixed order of attributes.
+
+1996-01-27  Lennart Staflin  <lenst@lysator.liu.se>
+
+	sgml-map-content can now take function to map data entity references.
+
+1995-08-26  Lennart Staflin  <lenst@lysator.liu.se>
+
+	Fix incompatibility in sgml-ductom-dtd (bug 57).
+
+1995-08-26  Lennart Staflin  <lenst@lysator.liu.se>
+
+	Fix bug in sgml-map-content.
+
+1995-08-26  Lennart Staflin  <lenst@lysator.liu.se>
+
+	Initial revision
+
+1995-08-23  Lennart Staflin  <lenst@lysator.liu.se>
+
+	Follow up variable name change.
+
+1995-08-23  Lennart Staflin  <lenst@lysator.liu.se>
+
+	fix typo.
+
+1995-08-23  Lennart Staflin  <lenst@lysator.liu.se>
+
+	Fix bug with short ref.
+
+1995-08-23  Lennart Staflin  <lenst@lysator.liu.se>
+
+	Fix custom-markup menu.
+
+1995-08-23  Lennart Staflin  <lenst@lysator.liu.se>
+
+	DTD-menu fixed.
+
+1995-08-23  Lennart Staflin  <lenst@lysator.liu.se>
+
+	Bug fixes.
+
+1995-08-22  Lennart Staflin  <lenst@lysator.liu.se>
+
+	New variable sgml-doctype and changed function of sgml-parent-document. 
+	New possibilities with sgml-validate-command.
+
+1995-08-22  Lennart Staflin  <lenst@lysator.liu.se>
+
+	New attribute of extid is current directory where defined.
+
+1995-08-14  Lennart Staflin  <lenst@lysator.liu.se>
+
+	sgml-general-info reworked.
+
+1995-08-14  Lennart Staflin  <lenst@lysator.liu.se>
+
+	Complete transition to easymenu.
+
+1995-08-10  Lennart Staflin  <lenst@lysator.liu.se>
+
+	New CATALOG parsing.
+
+1995-08-07  Lennart Staflin  <lenst@lysator.liu.se>
+
+	Hook to construct attribute specification lists for new tags.
+
+1995-07-23  Lennart Staflin  <lenst@lysator.liu.se>
+
+	(sgml-do-data): move start after data consumed
+
+1995-05-01  Lennart Staflin  <lenst@lysator.liu.se>
+
+	Fix shortref bug 48.
+
+1995-04-10  Lennart Staflin  <lenst@lysator.liu.se>
+
+	Fix bug in sgml-list-implications if both start and end-tags where 
+	implied. (I don't think valid SGML can have empty elements with implied
+	tags).
+
+1995-04-10  Lennart Staflin  <lenst@lysator.liu.se>
+
+	Set file-type in sgml-write-dtd (for oemacs).
+
+1995-03-28  Lennart Staflin  <lenst@lysator.liu.se>
+
+	Autoloads updated.
+
+1995-03-28  Lennart Staflin  <lenst@lysator.liu.se>
+
+	(sgml-try-merge-compiled-dtd): entd should be ents. need erase-buffer in
+	sgml-push-to-entity.
+
+1995-03-27  Lennart Staflin  <lenst@lysator.liu.se>
+
+	Fix bug handling empty elements in sgml-list-implications.
+
+1995-03-27  Lennart Staflin  <lenst@lysator.liu.se>
+
+	*** empty log message ***
+
+1995-03-27  Lennart Staflin  <lenst@lysator.liu.se>
+
+	Various.
+
+1995-03-27  Lennart Staflin  <lenst@lysator.liu.se>
+
+	Patch installed. From: Joachim Schrod
+	<schrod@iti.informatik.th-darmstadt.de>
+	   Did not search DTD file via sgml-system-path, as advertised. 
+	Actually, the search was done, but then the relative path was pushed as
+	the current entity.
+
+	Plus
+	(sgml-bdtd-load): var. renamed.
+	(sgml-eltypes-in-state): fix som inconsitencies with
+	token/eltype/symbol.
+
+1995-03-26  Lennart Staflin  <lenst@lysator.liu.se>
+
+	Id 34: CATALOG searching priorities, fixed.
+	(sgml-catalog-lookup): Giv PUBLIC entries priority over ENTITY and
+	DOCTYPE
+
+1995-03-26  Lennart Staflin  <lenst@lysator.liu.se>
+
+	Id 35: Entity manager handling of system id, fixed.
+
+1995-03-26  Lennart Staflin  <lenst@lysator.liu.se>
+
+	Finish error recovery changes.
+
+1995-03-26  Lennart Staflin  <lenst@lysator.liu.se>
+
+	* Id 41: selecting from a popup menu should not be an error Installing
+	patch from Tim Bradshaw <tfb@edinburgh.ac.uk>, Also fixing consequences. 
+	Also making new menu function sgml-popup-multi-menu, which uses
+	call-back style. Nicer attributes menu.
+
+1995-03-26  Lennart Staflin  <lenst@lysator.liu.se>
+
+	Fix problems with sgml-indent-line
+
+1995-03-25  Lennart Staflin  <lenst@lysator.liu.se>
+
+	Loading CDTDs in binary on MS-DOG. Don't use new argument to
+	insert-file-contents. Don't insert tab in indent-line in prolog. Better
+	error handling in sgml-indent-line. Better error recovery for out of
+	context start-tag.
+
+1995-03-02  Lennart Staflin  <lenst@lysator.liu.se>
+
+	Bug Id 38: auto-fill breaks pubid, fixed
+	(sgml-do-auto-fill): new function, won't auto-fill outside document
+	element
+	(sgml-need-dtd): set auto-fill-function.
+
+1995-02-22  Lennart Staflin  <lenst@lysator.liu.se>
+
+	* Id 37: sgml-kill-element with cursor inside tag fixed.
+
+	(sgml-kill-element): signal error if point is inside markup
+
+1995-02-22  Lennart Staflin  <lenst@lysator.liu.se>
+
+	This should have been checked in long ago.
+
+1995-01-28  Lennart Staflin  <lenst@lysator.liu.se>
+
+	(sgml-insert-element): Leave point at the end of the element.
+
+1995-01-28  Lennart Staflin  <lenst@lysator.liu.se>
+
+	(struct sgml-tree): new field asl, constuctor changed.
+	(sgml-open-element): pass asl to sgml-make-tree
+	(sgml-element-attribute-specification-list): use sgml-tree-asl.
+
+1995-01-28  Lennart Staflin  <lenst@lysator.liu.se>
+
+	(sgml-tag-regexp): make it handle unclosed tags and net tags.
+
+1995-01-23  Lennart Staflin  <lenst@lysator.liu.se>
+
+	Installed patch to mark element functions.
+
+1995-01-23  Lennart Staflin  <lenst@lysator.liu.se>
+
+	Make recompiling outdated compiled DTD optional
+	(sgml-ignore-out-of-date-cdtd).
+
+	Make the face overlay for end-tag before the element is closed.
+
+1995-01-14  Lennart Staflin  <lenst@lysator.liu.se>
+
+	*** empty log message ***
+
+1995-01-14  Lennart Staflin  <lenst@lysator.liu.se>
+
+	*** empty log message ***
+
+1995-01-14  Lennart Staflin  <lenst@lysator.liu.se>
+
+	*** empty log message ***
+
+1994-12-09  Lennart Staflin  <lenst@lysator.liu.se>
+
+	Fix bug 29.
+
+1994-12-09  Lennart Staflin  <lenst@lysator.liu.se>
+
+	Add ranges to multipart menus.
+
+1994-12-06  Lennart Staflin  <lenst@lysator.liu.se>
+
+	Remove use of easy-menu-change.
+
+1994-12-04  Lennart Staflin  <lenst@lysator.liu.se>
+
+	*** empty log message ***
+
+1994-12-04  Lennart Staflin  <lenst@lysator.liu.se>
+
+	*** empty log message ***
+
+1994-12-04  Lennart Staflin  <lenst@lysator.liu.se>
+
+	*** empty log message ***
+
+1994-12-04  Lennart Staflin  <lenst@lysator.liu.se>
+
+	*** empty log message ***
+
+1994-11-28  Lennart Staflin  <lenst@lysator.liu.se>
+
+	*** empty log message ***
+
+1994-11-25  Lennart Staflin  <lenst@lysator.liu.se>
+
+	Initial revision
+
+1994-11-12  Lennart Staflin  <lenst@lysator.liu.se>
+
+	Fixed bug that made undefined but used elements not appear in the 
+	initial list of elements in the saved DTD.
+
+1994-10-31  Lennart Staflin  <lenst@lysator.liu.se>
+
+	(sgml-try-merge-compiled-dtd): Immediately exit entity check loop if 
+	discrepancy found.
+
+1994-10-31  Lennart Staflin  <lenst@lysator.liu.se>
+
+	*** empty log message ***
+
+1994-10-31  Lennart Staflin  <lenst@lysator.liu.se>
+
+	Make sure run-hook-with-args is defined.
+
+1994-10-31  Lennart Staflin  <lenst@lysator.liu.se>
+
+	Remove some now unneeded code.
+
+1994-10-31  Lennart Staflin  <lenst@lysator.liu.se>
+
+	*** empty log message ***
+
+1994-10-30  Lennart Staflin  <lenst@lysator.liu.se>
+
+	Don't show current shortmap in list-valid-tags.
+
+1994-10-30  Lennart Staflin  <lenst@lysator.liu.se>
+
+	(sgml-before-eltype-modification): use sgml-merge-eltypes instead of 
+	sgml-copy-eltypes.
+
+	(sgml-do-usemap-element): call sgml-before-eltype-modification.
+
+1994-10-30  Lennart Staflin  <lenst@lysator.liu.se>
+
+	(sgml-merge-eltypes): don't overwrite values in old eltypes.
+
+1994-10-29  Lennart Staflin  <lenst@lysator.liu.se>
+
+	Change sgml-next-trouble-spot to use new option of 
+	sgml-parse-until-end-of.
+
+1994-10-29  Lennart Staflin  <lenst@lysator.liu.se>
+
+	*** empty log message ***
+
+1994-10-29  Lennart Staflin  <lenst@lysator.liu.se>
+
+	Completed support for compiled DTDs.
+
+1994-10-24  Lennart Staflin  <lenst@lysator.liu.se>
+
+	Rewriting the catalogue support, same caching for ECAT and CATALOG.
+
+1994-10-22  Lennart Staflin  <lenst@lysator.liu.se>
+
+	Catalogue for compiled dtds implemented and working.
+
+1994-10-22  Lennart Staflin  <lenst@lysator.liu.se>
+
+	First go at new compiled DTD support.
+
+1994-10-13  Lennart Staflin  <lenst@lysator.liu.se>
+
+	Bug 27 fixed.
+
+1994-09-28  Lennart Staflin  <lenst@lysator.liu.se>
+
+	*** empty log message ***
+
+1994-09-28  Lennart Staflin  <lenst@lysator.liu.se>
+
+	*** empty log message ***
+
+1994-09-28  Lennart Staflin  <lenst@lysator.liu.se>
+
+	Hooks and stuff to support mapping.
+
+1994-09-25  Lennart Staflin  <lenst@lysator.liu.se>
+
+	Move sgml-set-markup-type.
+
+1994-09-25  Lennart Staflin  <lenst@lysator.liu.se>
+
+	*** empty log message ***
+
+1994-09-25  Lennart Staflin  <lenst@lysator.liu.se>
+
+	*** empty log message ***
+
+1994-09-25  Lennart Staflin  <lenst@lysator.liu.se>
+
+	*** empty log message ***
+
+1994-09-23  Lennart Staflin  <lenst@lysator.liu.se>
+
+	Tunings and new optimization for */+.
+
+1994-09-23  Lennart Staflin  <lenst@lysator.liu.se>
+
+	Additional tuning and a bug fix. Check for end tag before skipping
+	cdata.
+
+1994-09-22  Lennart Staflin  <lenst@lysator.liu.se>
+
+	Fix bugs parsing shortrefs. Add code to clean up after failure in
+	entity.
+
+1994-09-18  Lennart Staflin  <lenst@lysator.liu.se>
+
+	Fix bug with %Y subst. Make it possible to have relative files in
+	sgml-catalog-files.
+
+1994-09-15  Lennart Staflin  <lenst@lysator.liu.se>
+
+	A lot of tuning.
+
+1994-09-11  Lennart Staflin  <lenst@lysator.liu.se>
+
+	Use format on sgml-validate-command
+
+1994-09-10  Lennart Staflin  <lenst@lysator.liu.se>
+
+	*** empty log message ***
+
+1994-09-10  Lennart Staflin  <lenst@lysator.liu.se>
+
+	Support expanding shortrefs. Avoid consing to record entity manager info
+	from buffer local variables.
+
+1994-09-10  Lennart Staflin  <lenst@lysator.liu.se>
+
+	Don't add menus before "Help".
+
+1994-09-10  Lennart Staflin  <lenst@lysator.liu.se>
+
+	Better overlay handling.
+
+1994-09-10  Lennart Staflin  <lenst@lysator.liu.se>
+
+	Fix bugs in ranked group parsing, shortref creation before entities 
+	defined, ANY not marked as mixed..
+
+1994-09-10  Lennart Staflin  <lenst@lysator.liu.se>
+
+	Shortref expansion. Custom menus via kbd -- from David Megginson.
+
+1994-09-03  Lennart Staflin  <lenst@lysator.liu.se>
+
+	Allow text items in menus.
+
+1994-09-02  Lennart Staflin  <lenst@lysator.liu.se>
+
+	*** empty log message ***
+
+1994-08-29  Lennart Staflin  <lenst@lysator.liu.se>
+
+	sgml-shortref-index must be defined at compile time. sgml-update-display
+	instead of sgml-set-live-indicator.
+
+1994-08-28  Lennart Staflin  <lenst@lysator.liu.se>
+
+	SHORTREF support implemented.
+
+1994-08-25  Lennart Staflin  <lenst@lysator.liu.se>
+
+	*** empty log message ***
+
+1994-08-25  Lennart Staflin  <lenst@lysator.liu.se>
+
+	*** empty log message ***
+
+1994-08-24  Lennart Staflin  <lenst@lysator.liu.se>
+
+	Fixing face setting code.
+
+1994-08-24  Lennart Staflin  <lenst@lysator.liu.se>
+
+	*** empty log message ***
+
+1994-08-20  Lennart Staflin  <lenst@lysator.liu.se>
+
+	First entry for version 1
+
+1994-08-20  Lennart Staflin  <lenst@lysator.liu.se>
+
+	First entry for version 1
+
+1994-08-20  Lennart Staflin  <lenst@lysator.liu.se>
+
+	*** empty log message ***
+
+1994-08-20  Lennart Staflin  <lenst@lysator.liu.se>
+
+	Fixing public map substitutions.
+
+1994-08-20  Lennart Staflin  <lenst@lysator.liu.se>
+
+	Initial revision
+
+1994-07-07  Lennart Staflin  <lenst@lysator.liu.se>
+
+	Fix bug in sgml-next-data-field.  And fix some docstrings.
+
+1994-07-03  Lennart Staflin  <lenst@lysator.liu.se>
+
+	sgml-show-context: Don't trust sgml-markup-type if explicit element is
+	given as argument.
+
+1994-07-03  Lennart Staflin  <lenst@lysator.liu.se>
+
+	Let sgml-load-dtd use sgml-system-path to find saved DTD. Add some
+	docstrings.
+
+1994-07-03  Lennart Staflin  <lenst@lysator.liu.se>
+
+	Bump version.
+
+1994-06-08  Lennart Staflin  <lenst@lysator.liu.se>
+
+	New var sgml-validate-error-regexps. Bind C-c + to
+	sgml-insert-attribute.
+
+1994-06-08  Lennart Staflin  <lenst@lysator.liu.se>
+
+	(sgml-need-dtd): Do all that is needed to set up a dtd, don't call
+	parse.	Break loop if a sgml-parent-document points to the current file.
+	(sgml-parse-to): call sgml-need-dtd
+	(sgml-last-element): set markup-type to nil, unless actually parsing.
+	(sgml-find-context-of): set sgml-markup-type to nil if pos not in the
+	markup.	 Don't set sgml-current-state to markup type.
+	(sgml-show-context): Display markup type also
+	(sgml-non-fixed-attributes): new func.
+	(sgml-insert-attribute): use new func.
+	(sgml-attrib-menu): use new func.
+	(sgml-attrib-menu): Include #IMPLIED in menus for token types
+	(sgml-insert-attribute): accept nil as value
+	(sgml-fold-region): set inhibit-read-only to t.
+	(sgml-make-character-reference): fix typo.
+	(sgml-insert-attribute): save-execursion around sgml-change-star-tag.
+	(sgml-hide-region): undo intangible setting, confuses the parser.
+	(sgml-operate-on-tags): remove intangible property
+	(sgml-hide-region): make hidden text intangible
+	(sgml-load-dtd): error if file does not exist
+	(sgml-insert-tag): use sgml-element-data-p
+	(sgml-skip-tag): new function.
+	(sgml-kill-markup): use sgml-skip-tag
+	(sgml-last-element): new function
+	(sgml-normalize-content): use only integers
+	(sgml-find-attribute-element): use element after cursor if not after
+	start-tag.
+	(sgml-menu-ask): Capitalize title
+
+1994-06-08  Lennart Staflin  <lenst@lysator.liu.se>
+
+	Remove short cuts from menus.
+
+1994-06-08  Lennart Staflin  <lenst@lysator.liu.se>
+
+	Fix bug with some pre 19.10 emacs having emacs-major-version bound.
+
+1994-05-10  Lennart Staflin  <lenst@lysator.liu.se>
+
+	New option handling.  New keys and autoloads.
+
+1994-05-10  Lennart Staflin  <lenst@lysator.liu.se>
+
+	New menu entry "Insert attribute".
+
+1994-05-10  Lennart Staflin  <lenst@lysator.liu.se>
+
+	Update to track psgml-other. Fix face for #DEFAULT.
+
+1994-05-08  Lennart Staflin  <lenst@lysator.liu.se>
+
+	Change name of the data structure for element declarations from element
+	to sgml-eltype.
+
+1994-05-08  Lennart Staflin  <lenst@lysator.liu.se>
+
+	New commands: sgml-split-element (C-c RET): Split the current element at
+	point.	If repeated, the containing element will be split before the
+	beginning of then current element (and then the element containing the
+	containing element).
+
+	sgml-make-character-reference (C-c #): Convert a character to a 
+	character reference.  Convert a character reference to a character with
+	C-u C-c #.
+
+	Attribute editing
+
+	If the point is immediately after a start-tag, sgml-edit-attrib will 
+	edit the attributes of that tag, otherwise the current elements 
+	attributes will be editied.  The reason for this change is to make it 
+	easier to edit the attributes of an inserted empty element.
+
+	There is now a command sgml-insert-attribute that asks for a attribute 
+	name and value and inserts/changes this attribute.  The element affected
+	is the same as for sgml-edit-attrib.
+
+	Attributes can also be inserted from a menu.  The menu is available from
+	the menu bar in "Markup".  Alternatively you can put the point inside
+	the start-tag and use S-mouse-1 (for lucid it is mouse-3).
+
+	This menu will have one pane for every attribute that has a token list
+	(or notation list) as declared valued, and one pane for all the other 
+	attributes.
+
+	(sgml-normalize-start-tag): use sgml-change-start-tag
+	(sgml-make-character-reference): new command
+	(sgml-split-element): New command
+	(sgml-options-menu): uses sgml-user-options in a general way.
+	(sgml-insert-start-tag): new function
+	(sgml-change-start-tag): new function
+	(sgml-find-attribute-element): new function
+	(sgml-attrib-menu): new function
+	(sgml-tags-menu): pop up a attribute menu if called when point is
+	 inside a start-tag.
+	(sgml-element-attval): new function.
+	(sgml-set-live-element-indicator): bind deactivate-mark.
+	(sgml-find-context-of): don't change point.
+	(sgml-set-parse-state): fix bug that that set markup type of start tag
+	 for empty element to end-tag.
+	(sgml-parse-minimum-literal): New function
+	(sgml-parse-external): use parse-minimum-literal for public
+	 identifier.
+	(sgml-formal-pubid-regexp): simplify, now that parse-minimum-literal
+	 does the right thing.
+	(sgml-pubid-parts): %% => %
+	(sgml-find-previous-element): takes optional argument: IN-ELEMENT, the
+	 enclosing element.
+	(sgml-backward-element): use sgml-last-element
+	(sgml-find-element-after): take IN-ELEMENT argument
+	(sgml-backward-element): use sgml-last-element
+	(sgml-beginning-of-element): use sgml-last-element
+	(sgml-end-of-element): use sgml-last-element
+	(sgml-down-element): use sgml-last-element
+	(sgml-users-of-last-element): add new commancds
+
+1994-05-07  Lennart Staflin  <lenst@lysator.liu.se>
+
+	Moved sgml-parse-minimum-literal and sgml-parse-external from 
+	psgml-parse.
+
+	(sgml-parse-cro): new function
+	(sgml-parse-character-reference): new
+	(sgml-parse-parameter-literal): recognize character references
+
+1994-04-24  Lennart Staflin  <lenst@lysator.liu.se>
+
+	New variables: sgml-markup-faces sgml-buggy-subst-char-in-region 
+	sgml-set-face sgml-live-element-indicator
+
+	(sgml-mode-map): C-M-h sgml-mark-current-element
+	(sgml-set-local-variable): Also set buffer local variable.
+
+1994-04-24  Lennart Staflin  <lenst@lysator.liu.se>
+
+	Generalize fold element to markup declaration outside the document 
+	element.  Fix bug in setting markup type.
+
+	Create class of commands that record the resulting postiton in the 
+	element structure.  Includes sgml-up-element and 
+	sgml-backward-up-element.  Sets variable sgml-last-element.
+
+	Move face setting codes to Emacs type specific files.
+
+	Change how active DTD indicator and element name indicator works.
+
+1994-04-24  Lennart Staflin  <lenst@lysator.liu.se>
+
+	Special face setting code. Fix use of new sgml-doctype-insert.
+
+1994-04-24  Lennart Staflin  <lenst@lysator.liu.se>
+
+	Install Bill P. patch. Special Lucid face setting code. Fix use of new
+	sgml-doctype-insert.
+
+1994-04-23  Lennart Staflin  <lenst@lysator.liu.se>
+
+	Change to use overlays for setting face on markup.
+
+1994-04-22  Lennart Staflin  <lenst@lysator.liu.se>
+
+	(sgml-parse-parameter-literal): fix bug: should not recognize delimiter
+	inside parameter reference.
+
+1994-04-22  Lennart Staflin  <lenst@lysator.liu.se>
+
+	Added code to set face property of markup.  Uses text properties.
+
+1994-04-21  Lennart Staflin  <lenst@lysator.liu.se>
+
+	More informative display from sgml-list-valid-tags. Fix white-space for
+	tag insertion. Generalize sgml-doctype-insert. Fixing bugs in
+	sgml-note-change-at, sgml-find-start-point, sgml-open-element,
+	sgml-find-element-after. Make sgml-kill-element and sgml-mark-element
+	more like lisp-mode.  New command sgml-mark-current-element (as old mark
+	element). New tag/attribute hiding commands. Code to show current
+	element in mode-line
+	(sgml-set-live-element-indicator).
+
+1994-04-11  Lennart Staflin  <lenst@lysator.liu.se>
+
+	Fix bugs attribute handling.
+	(sgml-edit-attrib-specification-list): fix
+	skipping to next attribute
+	(sgml-quote-attribute-value): Anchor regexp at buffer limits
+	instead of line. Fix bug in normalizing. Fix handling of NET when
+	parsing CDATA.
+
+1994-04-09  Lennart Staflin  <lenst@lysator.liu.se>
+
+	Fix bugs in parsing data tag groups.
+
+1994-04-09  Lennart Staflin  <lenst@lysator.liu.se>
+
+	Fix exeption bugs.  Handle PCDATA correct by modifying the model on the
+	fly.
+
+1994-03-28  Lennart Staflin  <lenst@lysator.liu.se>
+
+	Track psgml-other.
+
+1994-03-28  Lennart Staflin  <lenst@lysator.liu.se>
+
+	New change-element-name that translates the attribute specification 
+	list. Delete markup and untag element commands.
+
+1994-03-28  Lennart Staflin  <lenst@lysator.liu.se>
+
+	Add validate.
+
+1994-03-28  Lennart Staflin  <lenst@lysator.liu.se>
+
+	Add C-c - as sgml-untag-element and C-c C-k as sgml-kill-markup. Fix
+	some documentation strings.
+
+1994-03-28  Lennart Staflin  <lenst@lysator.liu.se>
+
+	Changing some -parse- names to -check- names for better naming 
+	consistency.
+
+1994-03-28  Lennart Staflin  <lenst@lysator.liu.se>
+
+	Now recognises shortref and usemap. Cleaning up how declarations are
+	handled. Changing some names.
+
+1994-03-28  Lennart Staflin  <lenst@lysator.liu.se>
+
+	Make some variables buffer local. New option: sgml-shortag. Conservative
+	defaults. Variable sgml-active-dtd-indicator used in mode line. 
+	sgml-mode sets mode-line-format. Update autoloads.
+
+1994-03-28  Lennart Staflin  <lenst@lysator.liu.se>
+
+	Fixing handling of NET. New public id part %P, whole pubid.
+	(sgml-list-valid-tags): Be more informative.
+	(sgml-normalize-content): Factor out tag normalizing.
+	(sgml-normalize-start-tag): New function. Insert new attspec.
+	(sgml-normalize-end-tag): New function.
+	(sgml-load-dtd): don't save expanded file name in sgml-default-dtd-file.
+	(sgml-setup-dtd): Don't check if default-dtd-file exists.  Let load-dtd
+	give error if it don't.
+	(sgml-set-doctype): set sgml-activce-dtd-indicator Normalize attribute
+	specification list.
+
+1994-03-27  Lennart Staflin  <lenst@lysator.liu.se>
+
+	Adding support for data tag group in DTD parser.
+
+1994-03-27  Lennart Staflin  <lenst@lysator.liu.se>
+
+	New types for attributes: declaration and specification. DTD parser now
+	accepts ranked element type.
+
+1994-03-27  Lennart Staflin  <lenst@lysator.liu.se>
+
+	New types for attributes: declaration and specification. Fixing
+	attribute handling; respect shorttag and omittag. New inserting commands
+	and menus. Parser now respects sgml-omittag and sgml-shorttag variables.
+
+1994-03-15  Lennart Staflin  <lenst@lysator.liu.se>
+
+	Bumping version to 0.3b.
+
+1994-03-13  Lennart Staflin  <lenst@lysator.liu.se>
+
+	Bump version and add sgml-submit-bug-report.
+
+1994-03-13  Lennart Staflin  <lenst@lysator.liu.se>
+
+	Fixing text properties and edit attributes for Lucid.
+
+1994-03-13  Lennart Staflin  <lenst@lysator.liu.se>
+
+	Fixing some bugs. Adding send bug report menu entry.
+
+1994-03-13  Lennart Staflin  <lenst@lysator.liu.se>
+
+	Adding submit bug report menu entry.
+
+1994-03-12  Lennart Staflin  <lenst@lysator.liu.se>
+
+	(sgml-attribute-buffer): make category rear-nonsticky
+
+1994-03-12  Lennart Staflin  <lenst@lysator.liu.se>
+
+	Fix syntax error in some interactive declarations.
+
+1994-03-12  Lennart Staflin  <lenst@lysator.liu.se>
+
+	Lots of changes.
+
+1994-03-12  Lennart Staflin  <lenst@lysator.liu.se>
+
+	Bump version number.
+
+1994-03-11  Lennart Staflin  <lenst@lysator.liu.se>
+
+	Offer to save buffers before running validator.
+
+1994-03-10  Lennart Staflin  <lenst@lysator.liu.se>
+
+	Fix loading of menu file.
+
+1994-03-10  Lennart Staflin  <lenst@lysator.liu.se>
+
+	Fix handling of empty start-tag when omittag is nil.
+
+1994-03-08  Lennart Staflin  <lenst@lysator.liu.se>
+
+	Comment out add-text-properties.
+
+1994-03-08  Lennart Staflin  <lenst@lysator.liu.se>
+
+	Stepping version. Adding autoload to silence compiler.
+
+1994-03-08  Lennart Staflin  <lenst@lysator.liu.se>
+
+	Adding some end-open t text-attributes in edit-attributes, this is from
+	wperry for Lucid, no help for 19.8 thoug.
+
+1994-03-07  Lennart Staflin  <lenst@lysator.liu.se>
+
+	Make sgml-fill-element give up if it can't break a line.
+
+1994-03-06  Lennart Staflin  <lenst@lysator.liu.se>
+
+	Use case-fold-search when modifying local variables. Better lucid
+	support.
+
+1994-03-06  Lennart Staflin  <lenst@lysator.liu.se>
+
+	Fixing menus.
+
+1994-03-06  Lennart Staflin  <lenst@lysator.liu.se>
+
+	Move sgml-doctype-insert here. Some changes to edit-attributes to better
+	support Lucid, does not work any how.
+
+1994-02-26  Lennart Staflin  <lenst@lysator.liu.se>
+
+	Fix bug in sgml-parse-attribute-specification-list. Add eval-and-compile
+	around autoload.
+
+1994-02-24  Lennart Staflin  <lenst@lysator.liu.se>
+
+	Handle unclosed end tag in parse-end-tag and in normalize. Fix
+	sgml-do-fill.
+
+1994-02-24  Lennart Staflin  <lenst@lysator.liu.se>
+
+	*** empty log message ***
+
+1994-02-22  Lennart Staflin  <lenst@lysator.liu.se>
+
+	Installing William Perry's changes for lucid compatibility.
+
+1994-02-22  Lennart Staflin  <lenst@lysator.liu.se>
+
+	Initial revision
+
+1994-02-22  Lennart Staflin  <lenst@lysator.liu.se>
+
+	Initial revision
+
+1994-02-18  Lennart Staflin  <lenst@lysator.liu.se>
+
+	Remve excessive )
+
+1994-02-18  Lennart Staflin  <lenst@lysator.liu.se>
+
+	Implement sgml-parent-document.
+
+1994-02-16  Lennart Staflin  <lenst@lysator.liu.se>
+
+	Moved sgml-indent-or-tab to psgml from psgml-parse.
+
+1994-02-11  Lennart Staflin  <lenst@lysator.liu.se>
+
+	Fix bug in sgml-load-dtd. Fix bug in sgml-find-previous-element.
+
+1994-02-11  Lennart Staflin  <lenst@lysator.liu.se>
+
+	Support reuse of loaded or parsed DTD from other buffer if possible.
+
+1994-02-11  Lennart Staflin  <lenst@lysator.liu.se>
+
+	Reuse loaded or parsed DTD from other buffer if possible.
+
+	Normalize empty start-tag.
+
+1994-02-10  Lennart Staflin  <lenst@lysator.liu.se>
+
+	New tab command. New user option to tag regions when region is active
+	even if transient marks mode is off.
+
+1994-02-10  Lennart Staflin  <lenst@lysator.liu.se>
+
+	Fix misspelled variable name.
+
+1994-02-10  Lennart Staflin  <lenst@lysator.liu.se>
+
+		* psgml-dtd.el (sgml-parse-nametoken-group): don't assume
+	sgml-check-nametoken skips leading PS.
+	(sgml-parse-entity-text): fix marked section type.
+
+1994-02-10  Lennart Staflin  <lenst@lysator.liu.se>
+
+		* psgml-parse.el (sgml-parse-nametoken-string): new function.
+	(sgml-gname-symbol): new function.
+	(sgml-check-nametoken): use above functions.
+	(sgml-parse-attribute-specification-list): use
+	sgml-parse-nametoken-string.
+	(sgml-parse-attribute-value-specification): dito.
+	(sgml-find-name-for-value): take and return string.
+	(sgml-quote-attribute-value): new function.
+	(sgml-extract-attribute-value): take TYPE argument; don't do
+	quoting.
+	(sgml-edit-attrib-finish): use sgml-gname-symbol insted of intern
+	and use sgml-quote-attribute-value when inserting value.
+
+1994-02-09  Lennart Staflin  <lenst@lysator.liu.se>
+
+	(sgml-note-change-at): don't set end of element to nil if the element is
+	empty.
+
+1994-02-09  Lennart Staflin  <lenst@lysator.liu.se>
+
+	FIx bug in notice change. Support empty start tag, for OMITTAG YES at
+	least.
+
+1994-02-07  Lennart Staflin  <lenst@lysator.liu.se>
+
+	Fixing som docstrings.	Change menu Sgml to SGML. Step version variable
+	to 0.3a2.
+
+1994-02-07  Lennart Staflin  <lenst@lysator.liu.se>
+
+	Fix a spelling error.
+
+1994-02-06  Lennart Staflin  <lenst@lysator.liu.se>
+
+	Use text attributes in Edit attribute buffer.
+
+1994-02-06  Lennart Staflin  <lenst@lysator.liu.se>
+
+	Fix small bug in sgml-mode. Put props for face properties.
+
+1994-02-05  Lennart Staflin  <lenst@lysator.liu.se>
+
+	Fixing autoloads.
+
+1994-02-05  Lennart Staflin  <lenst@lysator.liu.se>
+
+	Better sgml-insert-eleme.
+
+1994-02-05  Lennart Staflin  <lenst@lysator.liu.se>
+
+	New options. Changed command-start-skip. New keys.
+
+1994-02-04  Lennart Staflin  <lenst@lysator.liu.se>
+
+	Fix bug in indent-line.
+
+1994-02-04  Lennart Staflin  <lenst@lysator.liu.se>
+
+	Changing menus.
+
+1994-02-04  Lennart Staflin  <lenst@lysator.liu.se>
+
+	Lota changes
+	sgml-element view of parse tree
+
+1994-02-03  Lennart Staflin  <lenst@lysator.liu.se>
+
+	Fix sgml-buffer-entities buffer local. Introduce sgml-element-empty.
+
+1994-02-03  Lennart Staflin  <lenst@lysator.liu.se>
+
+	Add version variable.
+
+1994-02-03  Lennart Staflin  <lenst@lysator.liu.se>
+
+	fix missspelling
+
+1994-02-02  Lennart Staflin  <lenst@lysator.liu.se>
+
+	(sgml-read-number): remove variale binding.
+
+1994-02-02  Lennart Staflin  <lenst@lysator.liu.se>
+
+	Handel version 2 of saved DTD format.
+
+1994-01-31  Lennart Staflin  <lenst@lysator.liu.se>
+
+	(sgml-read-number): change to defsubst.
+
+1994-01-31  Lennart Staflin  <lenst@lysator.liu.se>
+
+	(sgml-default-dtd-file): handle (buffer-file-name) is nil.
+
+1994-01-27  Lennart Staflin  <lenst@lysator.liu.se>
+
+	New saved-dtd format (v 2).  With support for more than 256 elements.
+
+	(sgml-code-number): new function.
+
+	Fixing bug in sgml-make-alt.
+
+1994-01-27  Lennart Staflin  <lenst@lysator.liu.se>
+
+	New saved-dtd format (v 2).  With support for more than 256 elements.
+
+	(sgml-read-number): new function.
+
+1994-01-26  Lennart Staflin  <lenst@lysator.liu.se>
+
+	New key definitions.
+
+1994-01-26  Lennart Staflin  <lenst@lysator.liu.se>
+
+	Reintroducing pre-command-hook. Fix some misspellings. Fold element
+	ignores trailing space. No "debug" in options menu.
+
+1994-01-15  Lennart Staflin  <lenst@lysator.liu.se>
+
+	Correcting spelling.
+
+1994-01-14  Lennart Staflin  <lenst@lysator.liu.se>
+
+	Fix menu building.
+
+1994-01-14  Lennart Staflin  <lenst@lysator.liu.se>
+
+	Fix typo in error message.
+
+1994-01-13  Lennart Staflin  <lenst@lysator.liu.se>
+
+	(sgml-push-to-param): record file name for external parameters. Warn
+	about undefined parameters.
+
+1994-01-13  Lennart Staflin  <lenst@lysator.liu.se>
+
+	Move setting of before-change-hook from sgml-parse-to to 
+	sgml-set-doctype.
+
+1994-01-12  Lennart Staflin  <lenst@lysator.liu.se>
+
+	(sgml-find-element-of): signal error if pos is end of buffer.
+	(sgml-pubid-parts): allow \t and \n as SPACE after text class.
+	(sgml-options-menu): add new option.
+	(sgml-find-element-after): rewritten.
+
+1994-01-12  Lennart Staflin  <lenst@lysator.liu.se>
+
+	Fixing adding customization to DTD menu. New option
+	sgml-always-quote-attributes.
+
+1994-01-11  Lennart Staflin  <lenst@lysator.liu.se>
+
+	Supporting new menus.  List of entities.
+
+1994-01-11  Lennart Staflin  <lenst@lysator.liu.se>
+
+	Supporting new menus.
+
+1994-01-11  Lennart Staflin  <lenst@lysator.liu.se>
+
+	Moving sgml-check-nametoken to psgml-parse.el.
+
+1994-01-11  Lennart Staflin  <lenst@lysator.liu.se>
+
+	Parsing and commands using parsing moved to psgml-parse.el.
+
+1994-01-11  Lennart Staflin  <lenst@lysator.liu.se>
+
+	Initial revision
+
+1994-01-09  Lennart Staflin  <lenst@lysator.liu.se>
+
+	Initial revision
+

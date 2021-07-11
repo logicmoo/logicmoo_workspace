@@ -1,0 +1,14 @@
+<?xml version='1.0' encoding='ISO-8859-1' ?>
+<!DOCTYPE foo
+[
+<!ELEMENT foo (bar, fex*)>
+<!ELEMENT bar EMPTY>
+<!ELEMENT fex (#PCDATA)>
+<!ELEMENT ix (#PCDATA)>
+]>
+
+<foo>
+  <bar/>
+  <fex>bar bar i</fex>
+  <fex>heh</fex>
+</foo>

@@ -1,0 +1,873 @@
+2020-11-04  Eric Abrahamsen  <eric@ericabrahamsen.net>
+
+	[gnorb] Finish refactoring for nnselect, bump to 1.6.9
+
+	With the advent of nnselect, our nngnorb library is effectively 
+	deprecated, thank god. nngnorb.el is now only loaded via autoloads, and
+	only after we've confirmed nnselect is not available.
+
+	* packages/gnorb/nngnorb.el: Move all the Gnus summary minor mode stuff
+	out of here. Move all code that references nnir *into* here.
+	* packages/gnorb/gnorb.el: Do not load nngnorb by default.
+	* packages/gnorb/gnorb-gnus.el: Split out any code that references nnir.
+	Adopt all Gnus summary minor mode code. The main gnorb-run-search
+	function also lives here now.
+
+2020-11-04  Eric Abrahamsen  <eric@ericabrahamsen.net>
+
+	[gnorb] Random unimportant pokings-about
+
+	Cosmetic things, remove unnecessary :group statements on customization 
+	options, etc.
+
+2020-09-13  Eric Abrahamsen  <eric@ericabrahamsen.net>
+
+	[gnorb] Add code path for users with nnselect available
+
+	Not flushing new version just yet.
+
+	* packages/gnorb/gnorb-gnus.el (gnorb-gnus-nnselect-search): New 
+	function for searching using nnselect instead of nnir.
+	(gnorb-gnus-search-messages): Pick a code path.
+	* packages/gnorb/nngnorb.el (gnorb-run-search): Pull most of search 
+	functionality into a separate function that nnselect can call directly.
+	(nnir-run-gnorb): For the nnir case, munge the query slightly then pass
+	it on to the above function.
+	* packages/gnorb/gnorb.org:
+	* packages/gnorb/gnorb.texi:
+	* packages/gnorb/gnorb.info: Document all this.
+
+2020-09-03  Eric Abrahamsen  <eric@ericabrahamsen.net>
+
+	[gnorb] Bump version to 1.6.8
+
+2020-09-03  Eric Abrahamsen  <eric@ericabrahamsen.net>
+
+	[gnorb] Don't allow creation of new headings for incoming trigger
+
+	* packages/gnorb/gnorb-gnus.el (gnorb-gnus-incoming-do-todo): This 
+	function should only be used to continue existing tracking associations;
+	org-capture should be used to create new ones.
+
+2020-09-03  Eric Abrahamsen  <eric@ericabrahamsen.net>
+
+	[gnorb] Check for live Gnus before searching messages
+
+	* packages/gnorb/gnorb-gnus.el (gnorb-gnus-search-messages): I thought 
+	the existing check in nnir-run-gnorb was in the right place to catch all
+	this, but apparently not.
+
+2020-09-03  Eric Abrahamsen  <eric@ericabrahamsen.net>
+
+	[gnorb] Improvements to gnorb-org-setup-message
+
+	* packages/gnorb/gnorb-org.el (gnorb-org-setup-message): Accept an 
+	optional NOPROMPT argument that will attach all files unconditionally. 
+	Do a better job of adding extra headers correctly, without snarfing 
+	newlines. Don't add a newline before inserting text (why was I doing 
+	that?).
+
+2020-06-12  Eric Abrahamsen  <eric@ericabrahamsen.net>
+
+	[gnorb] Improve customization type for gnorb-gnus-sent-groups
+
+	* packages/gnorb/gnorb-gnus.el (gnorb-gnus-sent-groups): This wasn't 
+	very helpful.
+
+2020-05-01  Eric Abrahamsen  <eric@ericabrahamsen.net>
+
+	[gnorb] We're not supposed to be useing gnorb-org-msg-id-key anymore
+
+	* packages/gnorb/gnorb-gnus.el (gnorb-gnus-outgoing-make-todo-1): That's
+	obsolete and read only, don't set it.
+
+2020-04-30  Eric Abrahamsen  <eric@ericabrahamsen.net>
+
+	[gnorb] Further avoid creating registry entries, bump to 1.6.7
+
+	I fixed half of this problem in 3be2700, Bob Newell pointed out there 
+	were more similar problems.
+
+	* packages/gnorb/gnorb-registry.el (gnorb-registry-get-id-key): New 
+	function, equivalent to gnus-registry-get-id-key, but doesn't 
+	unilaterally create a new entry (I don't think the gnus one should, 
+	either).
+	(gnorb-find-visit-candidates):
+	* packages/gnorb/gnorb-gnus.el (gnorb-gnus-hint-relevant-message, 
+	gnorb-gnus-insert-format-letter-maybe, gnorb-gnus-insert-format-tags): 
+	Use new function.
+
+2020-04-05  Eric Abrahamsen  <eric@ericabrahamsen.net>
+
+	[gnorb] Fixes to link scanning, bump to 1.6.6
+
+	* packages/gnorb/gnorb-utils.el (gnorb-scan-links): split-string splits
+	on *all* occurances of the separator -- we only wanted to split on the
+	first occurance.
+
+2020-02-07  Eric Abrahamsen  <eric@ericabrahamsen.net>
+
+	[gnorb] Update to use org-link-any-re, bump to 1.6.5
+
+	* packages/gnorb/gnorb-org.el (gnorb-org-popup-bbdb): At some point 
+	org-bracket-link-analytic-regexp was made an alias for 
+	org-link-bracket-re, but of course the match groups weren't the same so
+	it was just broken. Switch directly to using org-link-any-re.
+	* packages/gnorb/gnorb-utils.el (gnorb-scan-links): Ditto.
+
+2020-01-01  Eric Abrahamsen  <eric@ericabrahamsen.net>
+
+	[gnorb] Update copyright years
+
+2019-10-25  Eric Abrahamsen  <eric@ericabrahamsen.net>
+
+	[gnorb] Fix dumb typo in 07214d9e4
+
+	* packages/gnorb/gnorb-gnus.el (gnorb-gnus-hint-relevant-message): 
+	That's not how you spell the function name.
+
+2019-10-21  Eric Abrahamsen  <eric@ericabrahamsen.net>
+
+	[gnorb] Use characterp, not numberp, for testing register key
+
+	* packages/gnorb/gnorb-gnus.el (gnorb-gnus-incoming-do-todo): It will 
+	only be valid as a register key if it's a character.
+
+2019-10-21  Eric Abrahamsen  <eric@ericabrahamsen.net>
+
+	[gnorb] Use substitute-command-keys
+
+	* packages/gnorb/gnorb-gnus.el (gnorb-gnus-hint-relevant-message): 
+	Instead of fudging it myself with `where-is-internal' and
+	`key-description'.
+
+2019-10-08  Eric Abrahamsen  <eric@ericabrahamsen.net>
+
+	[gnorb] Add a gnus-shutdown to clean up gnorb hooks, bump to 1.6.4
+
+	* packages/gnorb/gnorb-gnus.el (gnorb-gnus-hint-relevant-message): Also
+	check that the gnus-registry-db exists here. At some point in the 
+	future, these checks should be changed to gnus-registry-enabled, but not
+	yet.
+	* packages/gnorb/gnorb-gnus.el (gnorb-gnus-startup): Move main add-hooks
+	into this function, run it on gnus-started-hook.
+	(gnorb-gnus-shutdown): Add this new function to gnus-shutdown-alist,
+	removing the hooks.
+
+2019-09-20  Eric Abrahamsen  <eric@ericabrahamsen.net>
+
+	[gnorb] Fix to previous commit, bump to 1.6.3
+
+	* packages/gnorb/gnorb-gnus.el (gnorb-gnus-insert-format-letter-maybe,
+	 gnorb-gnus-insert-format-tags): Registry is an object, not a hash
+	 table.
+	* packages/gnorb/gnorb.el: Bump to 1.6.3.
+
+2019-09-19  Eric Abrahamsen  <eric@ericabrahamsen.net>
+
+	[gnorb] Only output summary-line info if registry exists, bump
+
+	See Emacs bug #36903
+
+	* packages/gnorb/gnorb-gnus.el (gnorb-gnus-insert-format-letter-maybe):
+	 (gnorb-gnus-insert-format-tags): Don't access the registry if it's
+	 not been initialized. See bug report for corner case.
+	* packages/gnorb/gnorb.el: Bump to 1.6.2.
+
+2019-05-21  Eric Abrahamsen  <eric@ericabrahamsen.net>
+
+	[gnorb] Replace gnus-buffer-exists-p with gnus-buffer-live-p
+
+	* packages/gnorb/gnorb-utils.el (gnorb-follow-gnus-link): At some
+	 point, the former will go away.
+
+2018-12-20  Eric Abrahamsen  <eric@ericabrahamsen.net>
+
+	[gnorb] Compiler-complaint fixes
+
+	* packages/gnorb/gnorb-bbdb.el:
+	* packages/gnorb/gnorb-org.el:
+	* packages/gnorb/gnorb-utils.el: Mostly defvars.
+
+2018-12-19  Eric Abrahamsen  <eric@ericabrahamsen.net>
+
+	[gnorb] Add nnselect method of getting an article's "real" group
+
+	* packages/gnorb/gnorb-utils.el (gnorb-get-real-group-name): I swear
+	 nnselect will land before too long.
+
+2018-11-27  Eric Abrahamsen  <eric@ericabrahamsen.net>
+
+	[gnorb] Move location of gnorb-gnus-summary-mode-hook, bump to 1.6.1
+
+	* packages/gnorb/gnorb-gnus.el: Since I messed with Gnus modes, the
+	 `gnus-summary-mode-hook' no longer has access to the current
+	 newsgroup name. Move the hook to `gnus-summary-prepared-hook', which
+	 does.
+	* packages/gnorb/gnorb.el: Bump and flush.
+
+2018-11-13  Eric Abrahamsen  <eric@ericabrahamsen.net>
+
+	[gnorb] New option gnorb-gnus-refile-use-outline-path, bump to 1.6.0
+
+	* packages/gnorb/gnorb-gnus.el (gnorb-gnus-refile-use-outline-path):
+	 New option equivalent to `org-refile-use-outline-path'. Also, remove
+	 defvar for `org-refile-targets'; we require 'org at top-level, and
+	 shouldn't need it.
+	* packages/gnorb/gnorb-gnus.el (gnorb-gnus-attach-part):
+	 (gnorb-gnus-incoming-do-todo):
+	 (gnorb-gnus-outgoing-do-todo): Use new option.
+	* packages/gnorb/gnorb.org: Document.
+
+2018-10-08  Stefan Monnier  <monnier@iro.umontreal.ca>
+
+	* gnorb/gnorb-registry.el: Fix compilation warnings
+
+	Require subr-x for hash-table-keys.
+	(gnorb-registry-capture): Declare org-capture vars and funs.
+	(gnorb-flush-dead-associations): Fix incf => cl-incf.
+	(gnorb-refresh-usage-status): Simplification via CSE.
+	(gnorb-registry-transition-from-props): Make sure gnorb-org is loaded.
+
+2018-10-02  Eric Abrahamsen  <eric@ericabrahamsen.net>
+
+	gnorb: More guards for visiting an original Org capture buffer
+
+	* packages/gnorb/gnorb-registry.el (gnorb-registry-capture): Chances
+	 are good the buffer is no longer live.
+
+2018-09-29  Eric Abrahamsen  <eric@ericabrahamsen.net>
+
+	gnorb: Remove weird group-name guard, bump to 1.5.7
+
+	* packages/gnorb/gnorb-utils.el (gnorb-msg-id-request-head): I don't
+	 know why that check was in there, and it causes problems for no
+	 obvious gain.
+	* packages/gnorb/gnorb.el: Bump and flush.
+
+2018-09-29  Eric Abrahamsen  <eric@ericabrahamsen.net>
+
+	gnorb: Fix link following, bump to 1.5.6
+
+	* packages/gnorb/gnorb-utils.el (gnorb-open-gnus-link): Remove
+	 leftover article number caching: you're explicitly not supposed to
+	 do this with the registry (article numbers are subject to change)
+	 and it was causing problems.
+	* packages/gnorb/gnorb.el: Bump and flush.
+
+2018-09-20  Eric Abrahamsen  <eric@ericabrahamsen.net>
+
+	gnorb: Fix bug in post-message-send action triggering
+
+	* packages/gnorb/gnorb-gnus.el (gnorb-gnus-outgoing-do-todo):
+	 rel-headings is a list of a list. Also, use `derived-mode-p'.
+
+2018-06-05  Eric Abrahamsen  <eric@ericabrahamsen.net>
+
+	[gnorb] Missing quote in nested `eval-after-load', bump to 1.5.5
+
+	* packages/gnorb/gnorb-utils.el (gnorb-install-defaults): Needed to
+	 protect inner form from evaluation.
+	* packages/gnorb/gnorb.el: Bump to 1.5.5.
+
+2018-05-24  Eric Abrahamsen  <eric@ericabrahamsen.net>
+
+	[gnorb] Use unwind-protect around the trigger process, bump to 1.5.4
+
+	* packages/gnorb/gnorb-gnus.el (gnorb-gnus-incoming-do-todo): Was
+	 using condition-case, but unwind-protect makes more sense.
+	 We *always* want to clear out gnorb-gnus-mesage-info and
+	 gnorb-gnus-capture-attachments, no matter what happens in the
+	 trigger process.
+
+2018-05-24  Eric Abrahamsen  <eric@ericabrahamsen.net>
+
+	[gnorb] Small gnorb-org bugs
+
+	* packages/gnorb/gnorb-org.el (gnorb-org-handle-mail): That was
+	 supposed to be `bbdb-mail-address'.
+	 (gnorb-org-munge-agenda-query-string): Remove unused variable.
+
+2018-05-13  Eric Abrahamsen  <eric@ericabrahamsen.net>
+
+	[gnorb] Require gnorb-org within gnorb-trigger-todo-action
+
+	* packages/gnorb/gnorb-utils.el (gnorb-trigger-todo-action): This is
+	 another entry point where the user might not have hit anything to
+	 load gnorb-org yet.
+
+2018-05-04  Eric Abrahamsen  <eric@ericabrahamsen.net>
+
+	[gnorb] Bump version to 1.5.3
+
+2018-05-04  Eric Abrahamsen  <eric@ericabrahamsen.net>
+
+	[gnorb] Fix handling of region-bounds return value
+
+	* packages/gnorb/gnorb-org.el (gnorb-org-handle-mail): It returns a
+	 list of cons cells. Did it always do that? Why?
+
+2018-05-04  Eric Abrahamsen  <eric@ericabrahamsen.net>
+
+	[gnorb] Check message-alternative-emails in helm registry search
+
+	* packages/gnorb/gnorb-helm.el (gnorb-helm-gnus-registry-candidates):
+	 In addition to gnus-ignored-from-addresses.
+
+2018-05-04  Eric Abrahamsen  <eric@ericabrahamsen.net>
+
+	[gnorb] Don't use make-temp-name for registry searches
+
+	* packages/gnorb/gnorb-gnus.el (gnorb-gnus-search-registry): This was
+	 a red herring left over from earlier confusion.
+
+2018-05-04  Eric Abrahamsen  <eric@ericabrahamsen.net>
+
+	[gnorb] Don't use string-trim with optional args
+
+	* packages/gnorb/gnorb-gnus.el (gnorb-gnus-search-registry):
+	 Apparently these args aren't accepted in Emacs 25.
+
+2018-05-03  Eric Abrahamsen  <eric@ericabrahamsen.net>
+
+	[gnorb] More little tweaks to registry searching, bump to 1.5.2
+
+	* packages/gnorb/gnorb-gnus.el (gnorb-gnus-search-registry): Use
+	 case-fold-search, better parsing regexp, and be more careful about
+	 returning valid results.
+	* packages/gnorb/gnorb-helm.el (gnorb-helm-gnus-registry-candidates):
+	 Be more careful about checking gnus-ignored-from-addresses.
+	* packages/gnorb/gnorb.el: Bump to 1.5.2
+
+2018-05-03  Eric Abrahamsen  <eric@ericabrahamsen.net>
+
+	[gnorb] Fix immediate and inexplicable typos, bump to 1.5.1
+
+	* packages/gnorb/gnorb-gnus.el (gnorb-gnus-search-registry): Cat
+	 walked on keyboard?
+	* packages/gnorb/gnorb-helm.el (gnorb-helm-gnus-registry-candidates):
+	 Stupid.
+	* packages/gnorb/gnorb.el: Bump to 1.5.1
+
+2018-05-03  Eric Abrahamsen  <eric@ericabrahamsen.net>
+
+	Update copyright notices, bump to version 1.5
+
+	* packages/gnorb/gnorb.el: Version 1.5
+
+2018-05-03  Eric Abrahamsen  <eric@ericabrahamsen.net>
+
+	New gnorb-helm file
+
+	* packages/gnorb/gnorb-helm.el: New library, so far only one command.
+	 (gnorb-helm-search-registry): Command for searching the Gnus
+	 registry.
+	 (gnorb-helm-gnus-registry-candidates): Extract values from the
+	 registry.
+	* packages/gnorb/gnorb.org: Document.
+
+2018-05-03  Eric Abrahamsen  <eric@ericabrahamsen.net>
+
+	New function gnorb-gnus-search-registry
+
+	* packages/gnorb/gnorb-gnus.el (gnorb-gnus-search-registry): For
+	 searching the registry and displaying messages.
+	 (gnorb-registry-search-history): History var.
+	* packages/gnorb/gnorb.org: Document.
+
+2018-05-03  Eric Abrahamsen  <eric@ericabrahamsen.net>
+
+	Missing a require for seq package
+
+	* packages/gnorb/gnorb-utils.el
+
+2018-05-02  Eric Abrahamsen  <eric@ericabrahamsen.net>
+
+	Factor out function for finding nngnorb server
+
+	* packages/gnorb/gnorb-gnus.el (gnorb-gnus-find-gnorb-server): New
+	 function, so this can be called from elsewhere.
+	 (gnorb-gnus-search-messages): Use this new function.
+
+2018-05-02  Eric Abrahamsen  <eric@ericabrahamsen.net>
+
+	Allow short-circuiting the nnir search
+
+	* packages/gnorb/nngnorb.el (nnir-run-gnorb): If an 'articles key is
+	 already present in the query, assume the work has already been done,
+	 and simply return the articles.
+
+2018-05-02  Eric Abrahamsen  <eric@ericabrahamsen.net>
+
+	Allow gnorb-msg-id-request-head to accept a "group" argument
+
+	* packages/gnorb/gnorb-utils.el (gnorb-msg-id-request-head): Sometimes
+	 we already know the group.
+
+2017-12-28  Eric Abrahamsen  <eric@ericabrahamsen.net>
+
+	Prefer defalias to fset
+
+	* packages/gnorb/gnorb-bbdb.el:
+	* packages/gnorb/gnorb-gnus.el: Use defalias to construct ad-hoc
+	 function symbols.
+
+2017-12-28  Eric Abrahamsen  <eric@ericabrahamsen.net>
+
+	Gnorb: The proper link type is "mailto", not "mail"
+
+	* packages/gnorb/gnorb-org.el (gnorb-org-extract-links,
+	 gnorb-org-handle-mail): Fix link type.
+
+2017-12-11  Eric Abrahamsen  <eric@ericabrahamsen.net>
+
+	Gnorb: Fix and bump to 1.4.2
+
+	* packages/gnorb/gnorb-utils.el (gnorb-tracking-initialize): Someday
+	 I'll learn to use the compiler.
+
+2017-12-11  Eric Abrahamsen  <eric@ericabrahamsen.net>
+
+	Gnorb: New command for inserting tracked messages; bump to 1.4.1
+
+	* packages/gnorb/gnorb-gnus.el (gnorb-gnus-insert-tracked-messages):
+	 New command for inserting all tracked messages into the buffer.
+	* packages/gnorb/gnorb.el: Bump.
+	* packages/gnorb/gnorb-registry.el (gnorb-refresh-usage-status):
+	 Update this function to also show number of tagged messages, and
+	 tags.
+	* packages/gnorb/README.org: TODO is done.
+	* packages/gnorb/gnorb.info: Document tracked message insertion.
+
+2017-12-09  Eric Abrahamsen  <eric@ericabrahamsen.net>
+
+	Provide Org tagging for Gnus messages
+
+	* packages/gnorb/gnorb-gnus.el (gnorb-gnus-tag-message): New command
+	 for tagging messages.
+	 (gnorb-gnus-insert-tagged-messages): New command for inserting
+	 tagged messages into the Summary buffer.
+	 (gnorb-gnus-insert-format-tags): New function for displaying tags as
+	 part of a group format.
+	 (gnorb-gnus-summary-tags-format-letter): Option allowing the user to
+	 specify the format spec for tags.
+	 (gnorb-gnus-auto-tag-messages): Option governing the auto-tagging of
+	 messages.
+	 (gnorb-gnus-incoming-do-todo, gnorb-gnus-quick-reply): Possibly
+	 auto-tag messages.
+	* packages/gnorb/gnorb-org.el (gnorb-org-munge-agenda-query-string):
+	 New function, with query string munging pulled out.
+	* packages/gnorb/gnorb-registry.el
+	 (gnorb-registry-org-tag-search,gnorb-registry-tagged-messages,
+	 gnorb-registry-tracked-tags): New functions for retrieving tags and
+	 messages.
+	* packages/gnorb/gnorb-utils.el (gnorb-install-defaults): Provide
+	 default keybindings for `gnorb-gnus-tag-message' and
+	 `gnorb-gnus-insert-tagged-messages'.
+	* packages/gnorb/gnorb.org: Document.
+
+2017-12-08  Eric Abrahamsen  <eric@ericabrahamsen.net>
+
+	Gnorb: Typo
+
+	* packages/gnorb/gnorb-gnus.el (gnorb-gnus-search-messages): Just an
+	 incredibly stupid typo.
+
+2017-12-08  Eric Abrahamsen  <eric@ericabrahamsen.net>
+
+	Gnorb: Re-work the capture hook functions.
+
+	* packages/gnorb/gnorb-gnus.el: Rename
+	 gnorb-gnus-after-capture-function to gnorb-org-capture-function, and
+	 move it to the gnorb-org file, where it belongs. Rename and move
+	 gnorb-gnus-capture-abort-cleanup to gnorb-org-capture-abort-cleanup.
+	* packages/gnorb/gnorb-org.el (gnorb-org-capture-function): New
+	 function. Delete gnorb-org-capture-collect-link, and make it part of
+	 this function.
+
+2017-12-08  Eric Abrahamsen  <eric@ericabrahamsen.net>
+
+	Gnorb: Only add one registry-related hook to the Org capture process
+
+	* packages/gnorb/gnorb-utils.el (gnorb-tracking-initialize): Delete
+	 `gnorb-registry-capture-abort-cleanup'. Instead of creating the
+	 association when the capture process begins, and then deleting the
+	 association if the capture is aborted, simply don't create the
+	 association unless we know that the capture process isn't aborted.
+
+2017-12-06  Eric Abrahamsen  <eric@ericabrahamsen.net>
+
+	Fix to after capture function, bump to 1.3.4
+
+	* packages/gnorb/gnorb-gnus.el (gnorb-gnus-after-capture-function):
+	 The order was incorrect, the attachment stuff needs to happen in the
+	 capture buffer, the rest of it in the Gnus buffer.
+	* packages/gnorb/gnorb.el: Flush changes.
+
+2017-12-06  Eric Abrahamsen  <eric@ericabrahamsen.net>
+
+	Gnorb: Bump version to 1.3.3, tiny manual fix
+
+	* packages/gnorb/gnorb.el: Mostly just to flush recent changes.
+	* packages/gnorb/gnorb.org: Tiny fix.
+
+2017-12-04  Eric Abrahamsen  <eric@ericabrahamsen.net>
+
+	Gnorb: Try harder to find the nngnorb server
+
+	* packages/gnorb/gnorb-gnus.el (gnorb-gnus-search-messages): Check
+	 gnus-secondary-select-methods, gnus-server-alist, and
+	 gnus-server-method-cache.
+
+2017-12-04  Eric Abrahamsen  <eric@ericabrahamsen.net>
+
+	Gnorb: Tweaks to gnorb-org-extract-mail-tracking
+
+	* packages/gnorb/gnorb-org.el (gnorb-org-extract-mail-tracking): Fix
+	 gratuitious logicking. Pretend I was going to update the docstring,
+	 anyway.
+
+2017-12-04  Eric Abrahamsen  <eric@ericabrahamsen.net>
+
+	Gnorb: Tweak manual a bit
+
+	* packages/gnorb/gnorb.org: Move the "Likely Workflow" section higher,
+	 people probably want to read that first.
+	* packages/gnorb/README.org: Mention the manual in the README.
+
+2017-12-04  Eric Abrahamsen  <eric@ericabrahamsen.net>
+
+	Gnorb: Consolidate all after-capture functions into one
+
+	* packages/gnorb/gnorb-gnus.el (gnorb-gnus-after-capture-function):
+	 This new function replaces gnorb-gnus-capture-attach, and
+	 gnorb-gnus-capture-save-text. New: it also ticks the message as
+	 needed, and updates the summary line.
+
+2017-12-04  Eric Abrahamsen  <eric@ericabrahamsen.net>
+
+	Gnorb: New option gnorb-gnus-tick-all-tracked-messages
+
+	Fixes #34
+
+	* packages/gnorb/gnorb-gnus.el (gnorb-gnus-tick-all-tracked-messages):
+	 New option, does what it says.
+	* packages/gnorb/gnorb-gnus.el (gnorb-gnus-incoming-do-todo): Maybe
+	 tick messages here.
+	 (gnorb-gnus-quick-reply): And here.
+	* packages/gnorb/gnorb.info: Document.
+
+2017-12-02  Eric Abrahamsen  <eric@ericabrahamsen.net>
+
+	New option gnorb-org-log-add-link
+
+	* packages/gnorb/gnorb-org.el (gnorb-org-log-add-link): When non-nil,
+	 a message link will be added to any log note that is taken as part
+	 of the trigger process.
+	* packages/gnorb/gnorb-utils.el (gnorb-trigger-todo-action): Maybe add
+	 link to log note.
+	 (gnorb-msg-id-to-link): Adjust calling signature to allow passing
+	 the group in.
+	* packages/gnorb/gnorb.org: Document.
+
+2017-11-29  Eric Abrahamsen  <eric@ericabrahamsen.net>
+
+	When responding, let a blank sender pass
+
+	* packages/gnorb/gnorb-org.el (gnorb-org-extract-mail-tracking): For
+	 some reason, the 'sender key sometimes doesn't get set when making
+	 registry entries. We're only trying to filter out sent messages, so
+	 it's better to let a blank sender pass by default.
+
+2017-11-29  Eric Abrahamsen  <eric@ericabrahamsen.net>
+
+	Tweak text search in gnorb-org-view
+
+	* packages/gnorb/nngnorb.el (nnir-run-gnorb): God knows why, but the
+	 original location of this clause once or twice gave me an "args out
+	 of range", possibly due to funky narrowing. Moving it to this spot
+	 seems bound to avoid an error, and should give the same result.
+
+2017-11-27  Eric Abrahamsen  <eric@ericabrahamsen.net>
+
+	Fix replying to most recent tracked message; bump to 1.3.2
+
+	* packages/gnorb/gnorb-org.el (gnorb-org-extract-mail-tracking): This
+	 error was introduced when the format of link extraction changed, and
+	 broke replying to the most recent tracked message.
+
+2017-11-27  Eric Abrahamsen  <eric@ericabrahamsen.net>
+
+	Fix gnorb-version command
+
+	* packages/gnorb/gnorb-utils.el (gnorb-version): If that used to
+	 work, it doesn't now. Use the package-* approach.
+
+2017-10-27  Eric Abrahamsen  <eric@ericabrahamsen.net>
+
+	Odd bug in gnorb-org-handle-mail, bump to 1.3.1
+
+	* packages/gnorb/gnorb-org.el (gnorb-org-handle-mail): Odd in that I
+	 don't know how I did that.
+	* packages/gnorb/gnorb.el: Bump version.
+
+2017-10-18  Eric Abrahamsen  <eric@ericabrahamsen.net>
+
+	Sneakily add basic EBDB support to Gnorb, bump to 1.3.0
+
+	* packages/gnorb/gnorb-utils.el (gnorb-scan-links): Generalize this
+	 function so it can find links of any type. Use an alist instead of a
+	 plist, as alist-get is setf-able.
+	* packages/gnorb/gnorb-org.el (gnorb-org-handle-mail): Search for ebdb
+	 links as well as bbdb links, and handle them.
+	* packages/gnorb/gnorb-registry.el
+	(gnorb-registry-transition-from-props):
+	 Adjust.
+	* packages/gnorb/nngnorb.el (nnir-run-gnorb): Adjust.
+	* packages/gnorb/gnorb.el: Bump version.
+
+2017-09-11  Eric Abrahamsen  <eric@ericabrahamsen.net>
+
+	gnorb-utils needs macros from nnheader
+
+	* packages/gnorb/gnorb-utils.el: Pull nnheader in at compile time.
+	* packages/gnorb/gnorb.el: Bump version.
+
+2017-08-19  Eric Abrahamsen  <eric@ericabrahamsen.net>
+
+	New copy-message-text behavior
+
+	Do not bump version number, leave this quiet for now.
+
+	* packages/gnorb/gnorb-gnus.el (gnorb-gnus-copy-message-text): New
+	 user option saying whether to copy the text of messages when
+	 capturing or triggering from them.
+	 (gnorb-gnus-capture-save-text): New function, used as element of
+	 `org-capture-mode-hook'.
+	 (gnorb-gnus-incoming-do-todo): Do the same thing when triggering.
+
+2017-04-07  Eric Abrahamsen  <eric@ericabrahamsen.net>
+
+	Don't mark the 'artno key as precious
+
+	* packages/gnorb/gnorb-utils.el (gnorb-tracking-initialize): This was
+	 supposed to have been fixed several commits ago!
+	* packages/gnorb/gnorb.el: Bump version to 1.2.3
+
+2017-03-31  Eric Abrahamsen  <eric@ericabrahamsen.net>
+
+	Don't let the Gnus summary format group create registry entries
+
+	* packages/gnorb/gnorb-gnus.el (gnorb-gnus-insert-format-letter-maybe):
+	 This function was unilaterally creating entries because of its use
+	 of `gnus-regsitry-get-id-key'. Because it does not respect ignored
+	 registry groups, we should use lower-level functions that don't
+	 create an entry where there wasn't one.
+
+2017-03-30  Eric Abrahamsen  <eric@ericabrahamsen.net>
+
+	Bug fix in mail tracking extraction
+
+	* packages/gnorb/gnorb-org.el (gnorb-org-extract-mail-tracking): Had
+	 the logic exactly backwards.
+	* packages/gnorb/gnorb.el: Bump version.
+
+2017-03-22  Eric Abrahamsen  <eric@ericabrahamsen.net>
+
+	Fix inevitable screwup in previous commit, bump version
+
+	* packages/gnorb/nngnorb.el (nnir-run-gnorb): The earlier
+	 "streamlining" streamlined a little too much.
+	* packages/gnorb/gnorb.el: Flush new version.
+
+2017-03-21  Eric Abrahamsen  <eric@ericabrahamsen.net>
+
+	Bump Gnorb version to 1.2
+
+2017-03-21  Eric Abrahamsen  <eric@ericabrahamsen.net>
+
+	Rename msg-id-to-group to msg-id-request-head, refactor
+
+	* packages/gnorb/gnorb-utils.el (gnorb-msg-id-request-head): Renaming
+	 because it now always calls gnus-request-head, and always returns
+	 the full return value of that call (as well as setting the registry
+	 group key). Callers that don't want to use Gnus to verify
+	 group/article can just access the group key. Also now calls
+	 gnus-activate-group in an attempt to get it to quit querying about
+	 number of articles to get from group.
+	 (gnorb-msg-id-to-link): Change call. This is one of the functions
+	 that might just use the group key instead of doing the full lookup.
+	* packages/gnorb/nngnorb.el (nnir-run-gnorb): Refactor and simplify.
+	 Now we aren't calling gnus-request-head twice for each message.
+
+2017-03-21  Eric Abrahamsen  <eric@ericabrahamsen.net>
+
+	Update Gnus summary article line after trigger process
+
+	* packages/gnorb/gnorb-gnus.el (gnorb-gnus-incoming-do-todo): Do the
+	 updating immediately.
+
+2017-03-21  Eric Abrahamsen  <eric@ericabrahamsen.net>
+
+	Remove unnecessary with-no-warnings
+
+	* packages/gnorb/gnorb-bbdb.el (gnorb-bbdb-display-messages): Should
+	 have caught this when updating for new BBDB version.
+
+2017-03-21  Eric Abrahamsen  <eric@ericabrahamsen.net>
+
+	Fix nnir search routine
+
+	* packages/gnorb/gnorb-gnus.el (gnorb-gnus-search-messages): I had
+	 been blanking out these variables because of voodoo. This is not
+	 necessary, and in fact breaks the use of the nnir groups (if
+	 nnir-artlist is nil you can't see any of the articles).
+
+2017-03-21  Eric Abrahamsen  <eric@ericabrahamsen.net>
+
+	Update documentation
+
+	* packages/gnorb/README.org: Mention current installation situation.
+	* packages/gnorb/gnorb.el: Remove URL package header.
+	* packages/gnorb/gnorb.org: Try to do a better job of documenting
+	 email tracking, people are still very confused by this. Also mention
+	 the `gnorb-install-defaults' command.
+	* packages/gnorb/NEWS: Mention new install-defaults command.
+	* packages/gnorb/gnorb.texi: Export.
+	* packages/gnorb/gnorb.info: Export.
+
+2017-03-19  Eric Abrahamsen  <eric@ericabrahamsen.net>
+
+	Add gnorb-version command
+
+	* packages/gnorb/gnorb-utils.el (gnorb-version): Uses pkg-info-
+	 function, so only works for Gnorb installed via package manager. But
+	 that's the only place you can get this version, so...
+
+2017-03-14  Eric Abrahamsen  <eric@ericabrahamsen.net>
+
+	Fix creation of nngnorb/nnir groups
+
+	* packages/gnorb/gnorb-gnus.el (gnorb-gnus-search-messages): We were
+	 locating the nngnorb server incorrectly, and also feeding it to nnir
+	 incorrectly. This was preventing persistent groups from working
+	 correctly.
+	* packages/gnorb/nngnorb.el (nnir-run-gnorb): Streamline the searching
+	 process. This should eliminate some redundancy, hopefully going a
+	 bit faster.
+	* packages/gnorb/gnorb-utils.el (gnorb-msg-id-to-group): Do not cache
+	 article numbers in the registry -- numbers are not consistent across
+	 Gnus installations. This may slow down searches somewhat,
+	 unfortunately, but nnir's own caching mechanisms should help.
+
+2017-03-14  Eric Abrahamsen  <eric@ericabrahamsen.net>
+
+	Remove useless use of progn, update usage status function
+
+	* packages/gnorb/gnorb-registry.el (gnorb-report-tracking-usage): Not
+	 necessary. Also `gnorb-refresh-usage-status' needs to accept
+	 optional arguments.
+
+2017-03-14  Eric Abrahamsen  <eric@ericabrahamsen.net>
+
+	Fix autoloads for BBDB functions
+
+	* packages/gnorb/gnorb-bbdb.el: We're no longer requiring anything
+	 directly, only autoloading. This will allow users to install Gnorb
+	 without having BBDB installed at all -- though they can still
+	 trigger errors by using autoloaded Gnorb functions that depend on
+	 BBDB. I suppose I could be very tidy and catch those errors.
+	* packages/gnorb/gnorb-org.el: Fix existing autoloads -- pointing at
+	 wrong file.
+
+2017-03-13  Eric Abrahamsen  <eric@ericabrahamsen.net>
+
+	New function gnorb-install-defaults
+
+	* packages/gnorb/gnorb-utils.el (gnorb-install-defaults): A function
+	 for setting up basic default variable settings and keybindings for
+	 Gnorb.
+
+2017-03-12  Eric Abrahamsen  <eric@ericabrahamsen.net>
+
+	Fix email subtree command
+
+	* packages/gnorb/gnorb-org.el (gnorb-org-handle-mail): File was just
+	 getting tossed off into the ether -- how did this ever work?
+	 (gnorb-org-email-subtree): Need to special-case ODT file export, it
+	 does too much clever stuff for us to invoke it at a low level.
+	* packages/gnorb/gnorb.el: Bump version.
+
+2017-03-12  Eric Abrahamsen  <eric@ericabrahamsen.net>
+
+	Merge commit '96b73f42807bc34c11e9bb99f25b856b249014b5'
+
+	Merge further fixes to last update
+
+2017-03-12  Eric Abrahamsen  <eric@ericabrahamsen.net>
+
+	Merge commit 'ae75eeb6f3a0fa8598d06c3b14ead8606918a446'
+
+2016-07-11  Paul Eggert	 <eggert@cs.ucla.edu>
+
+	Fix some quoting problems in doc strings
+
+	Most of these are minor issues involving, e.g., quoting `like this' 
+	instead of 'like this'.	 A few involve escaping ` and ' with a preceding
+	\= when the characters should not be turned into curved single quotes.
+
+2016-01-05  Eric Abrahamsen  <eric@ericabrahamsen.net>
+
+	Merge commit '899a1f2bad8795a29c0df09c1bd28b3a3b7e48f8'
+
+2016-01-05  Eric Abrahamsen  <eric@ericabrahamsen.net>
+
+	Merge commit '37c46180280f10fa5120a017acd04f7022d124e4'
+
+2015-05-05  Eric Abrahamsen  <eric@ericabrahamsen.net>
+
+	Merge commit 'faf966b6b5921074da6b99477e1f0bea29b45f6f'
+
+2015-04-23  Eric Abrahamsen  <eric@ericabrahamsen.net>
+
+	Merge commit '0d69d15d20b69f439c1a1ed451e06f77b1252b3e' from gnorb
+
+2015-04-23  Eric Abrahamsen  <eric@ericabrahamsen.net>
+
+	Merge commit '3e5c11a13981a1ff613cb4442ad644285c44e481' from gnorb
+
+2014-11-26  Stefan Monnier  <monnier@iro.umontreal.ca>
+
+	* packages/gnorb: Don't require cl.  Fix up compilation errors.
+
+	* packages/gnorb/gnorb-bbdb.el: Don't require cl unnecessarily. Don't
+	fail compilation just because bbdb is not available yet.
+	(gnorb-bbdb-tag-agenda): Fix typo.
+	* packages/gnorb/gnorb-gnus.el: Don't require cl unnecessarily.
+	(gnorb-gnus-view): Fix var binding.
+	* packages/gnorb/gnorb-org.el: Don't require cl unnecessarily.
+	* packages/gnorb/gnorb-utils.el: Don't require cl unnecessarily. But do
+	require mailcap.
+	(gnorb-msg-id-to-group): Remove dead code.
+
+2014-10-25  Eric Abrahamsen  <eric@ericabrahamsen.net>
+
+	Merging Gnorb commits up to 1.0.1
+
+2014-10-10  Stefan Monnier  <monnier@iro.umontreal.ca>
+
+	* packages/gnorb/gnorb.el: Mention dependency on cl-lib. Require `bbdb'
+	here, and not during compilation.
+	* packages/gnorb/gnorb-utils.el: Don't require `cl'. Don't require
+	`bbdb', in case it's not installed.
+	* packages/gnorb/gnorb-registry.el: Require cl-lib.  Use cl-lib names.
+	* packages/gnorb/gnorb-org.el: Require cl-lib.	Use cl-lib names.
+	* packages/gnorb: Fix up copyright and compilation.
+	* packages/gnorb/gnorb-bbdb.el: Require `cl-lib'.  Use cl-lib names.
+	(bbdb-separator-alist, bbdb-xfield-label-list): Check before use.
+
+2014-10-09  Eric Abrahamsen  <eric@ericabrahamsen.net>
+
+	Merge commit '0b9eb2b647a49ffa3dc4e3e61cb8bd94c7fe3634' as
+	'packages/gnorb'
+

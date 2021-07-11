@@ -1,0 +1,2465 @@
+2021-07-09  Eduardo Ochs  <eduardoochs@gmail.com>
+
+	* eev-tlinks.el (find-newbrowser-links): new function.
+	(find-git-links): added "-" to the list of characters that are
+	deleted to form the "{c}" argument to `code-c-d'.
+
+2021-06-18  Eduardo Ochs  <eduardoochs@gmail.com>
+
+	* eev-tla.el (find-pdf-txt, find-pdf-txt-links)
+	(ee-fnamepdf-to-fnametxt, find-pdf-text-insert): new functions.
+
+	* eev-audiovideo.el (ee-find-mpv-audio): use "--start=mm:ss"
+	instead of "--start mm:ss" (thanks to Erich Ruff for the bug fix!)
+
+2021-06-08  Eduardo Ochs  <eduardoochs@gmail.com>
+
+	* eev-pdflike.el (ee-find-xpdf-colon): new variable.
+	(ee-find-xpdf-colon): new function.
+	(ee-find-xpdf-page): use `ee-find-xpdf-colon'.
+	(find-mupdf-page, ee-find-mupdf-page): new functions.
+	(ee-find-mupdf-page-options): new variable.
+
+	* eev-blinks.el (ee-struct-class, ee-struct-slot-names)
+	(ee-struct-slot-names+, ee-struct-index-table)
+	(ee-struct-to-string, find-estruct): new functions.
+
+2021-06-07  Eduardo Ochs  <eduardoochs@gmail.com>
+
+	* eev-compose-hash.el: new file.
+
+	* eev-blinks.el (ee-hashtable-to-string, find-ehashtable): new
+	functions.
+
+2021-05-28  Eduardo Ochs  <eduardoochs@gmail.com>
+
+	* eev-pdflike.el (find-pdf-page): make it an alias to
+	`find-xpdf-page'. Also, the comments in "eev-pdflike.el" now say
+	that the recommened a way to change the default viewer is with a
+	`defalias'; before this change the recommended way was with a
+	`code-pdfbackend', that was much harder to understand.
+
+	* eev-rcirc.el (ee-libera-server, ee-libera-ichannels)
+	(ee-libera-achannels): new variables.
+	(find-libera, find-libera-2a, find-libera-3a, eepitch-libera): new
+	functions.
+
+	* eev-intro.el (find-rcirc-intro): use LiberaChat insted of
+	Freenode.
+
+	* eev-tla.el: new file.
+
+2021-05-16  Eduardo Ochs  <eduardoochs@gmail.com>
+
+	* eev-blinks.el (ee-insert): use `characterp' instead of
+	`char-valid-p'.
+
+2021-05-13  Eduardo Ochs  <eduardoochs@gmail.com>
+
+	* eev-blinks.el (ee-goto-position, ee-goto-rest): added a comment
+	about curved single quotes.
+
+2021-05-12  Eduardo Ochs  <eduardoochs@gmail.com>
+
+	* eev-audiovideo.el (find-eevvlinksvideo): new function.
+	(find-eevtestblocksvideo): renamed to `find-eevtestblsvideo'.
+
+	* eev-intro.el (find-refining-intro, find-here-links-intro): added
+	several "[Video links:]" blocks.
+
+	* eev-hydras.el: new file.
+
+2021-05-09  Eduardo Ochs  <eduardoochs@gmail.com>
+
+	* eev-tlinks.el (ee-psnevideo-download-if-needed): renamed to
+	`ee-psne-if-needed'.
+	(ee-psnevideo-download): renamed to `ee-psne-download'.
+	(ee-psnevideo-download0): renamed to `ee-psne-download0'.
+	(ee-psnevideo-links): rewritten.
+
+	* eev-template0.el (ee-template00): added a `save-match-data'.
+
+2021-05-06  Eduardo Ochs  <eduardoochs@gmail.com>
+
+	* eev-beginner.el: rewrote the comments.
+
+	* eev-intro.el (find-pdf-like-intro): rewrote the section 12 and
+	renamed it to "12. Other ways to generate `code-pdf'-pairs".
+
+2021-05-05  Eduardo Ochs  <eduardoochs@gmail.com>
+
+	* eev-intro.el (find-brxxx-intro, find-eev-quick-intro)
+	(find-pdf-like-intro, find-eev-quick-intro): added several "[Video
+	links:]" blocks.
+
+	* eev-audiovideo.el (find-eev2019video, find-eev2020video)
+	(find-eevnavvideo, find-eevtemplvideo, find-eevfherelvideo)
+	(find-eevtestblocksvideo): make them interactive.
+
+2021-05-04  Eduardo Ochs  <eduardoochs@gmail.com>
+
+	* eev-intro.el (find-eev-install-intro): new section: "5.1. Using
+	the tarball". The old section "5.1. Using the git repository" is
+	now 5.2, and the old section "5.2. Installation quirks" is now
+	5.3.
+	(find-eev-quick-intro): rewrote the section "1. Installing eev".
+
+2021-04-23  Eduardo Ochs  <eduardoochs@gmail.com>
+
+	* eev-intro.el (find-videos-intro): rewrote the sections "2. Short
+	links to eev video tutorials" and "3. Some `find-eevvideo-links'".
+	(find-eev-quick-intro): added some "[Video links:]" blocks.
+
+2021-04-22  Eduardo Ochs  <eduardoochs@gmail.com>
+
+	* eev-audiovideo.el (find-eev2019video, find-eev2020video)
+	(find-eevnavvideo, find-eevtemplvideo, find-eevfherelvideo)
+	(find-eevtestblocksvideo): new functions.
+
+2021-04-21  Eduardo Ochs  <eduardoochs@gmail.com>
+
+	* eev-intro.el (find-videos-intro): renamed some .mp4 files.
+
+2021-04-19  Eduardo Ochs  <eduardoochs@gmail.com>
+
+	* eev-testblocks.el (ee-insert-test-python-mode): use `exec'
+	instead of `execfile', as `execfile' doesn't exist in Python 3.
+
+2021-02-27  Eduardo Ochs  <eduardoochs@gmail.com>
+
+	* eev-tlinks.el (find-find-links-links): make it not interactive.
+
+2021-02-26  Eduardo Ochs  <eduardoochs@gmail.com>
+
+	* eev-elinks.el (ee-find-grep-links1): new function.
+	(ee-find-grep-links): use `ee-find-grep-links1'.
+
+2021-02-23  Eduardo Ochs  <eduardoochs@gmail.com>
+
+	* eev-pdflike.el (ee-find-pdftotext-text): added a comment
+	explaining how to use UTF-8 instead of Latin-1.
+
+2021-02-08  Eduardo Ochs  <eduardoochs@gmail.com>
+
+	* eev-blinks.el (find-eww): new function.
+
+	* eev-brxxx.el (ee-code-brurl-:remote, ee-code-brurl-:local)
+	(ee-code-brfile-:local): commented out the `(setq
+	browse-url-browser-function ...)'s in the generated code - they
+	are not needed in eev anymore and people who use `browse-url' find
+	them annoying.
+	(ee-code-brurl, ee-code-brfile): added help links to the generated
+	code.
+	(brew, brewl, brewd, breww, brewwl, brewwd): new functions.
+
+	* eev-intro.el (find-eev-intro): promoted `(find-videos-intro)' to
+	the list of basic intros.
+	(find-eev-quick-intro): fixed a typo in the section "1. Installing
+	eev": the "eev-" in `M-x eev-beginner' was missing.
+	(find-eev-install-intro): added the line `(autoload 'eev-beginner
+	"eev-beginner")' to some installation instructions.
+
+2021-02-03  Eduardo Ochs  <eduardoochs@gmail.com>
+
+	* eev-template0.el (ee-template00-re): new variable.
+	(ee-template00): use `ee-template00-re'.
+
+2021-01-24  Eduardo Ochs  <eduardoochs@gmail.com>
+
+	* eev-intro.el (find-refining-intro): rewrote the section "5.
+	Pointing to anchors".
+
+2021-01-23  Eduardo Ochs  <eduardoochs@gmail.com>
+
+	* eev-intro.el (find-eepitch-intro): new section: "3.2. Test
+	blocks as documentation".
+
+2021-01-13  Eduardo Ochs  <eduardoochs@gmail.com>
+
+	* eev-intro.el (find-audiovideo-intro): rewrote the section "4.
+	Short hyperlinks to audio and video files".
+
+2021-01-11  Eduardo Ochs  <eduardoochs@gmail.com>
+
+	* eev-testblocks.el (ee-insert-test-scheme-mode): new function.
+
+2021-01-02  Eduardo Ochs  <eduardoochs@gmail.com>
+
+	* eev.el: bumped the version. Changed the "Package-Requires" to
+	Emacs 24.4 because of the new `advice-add' used by `find-man'.
+
+	* eev-pkg.el: same.
+
+	* eev-intro.el (find-audiovideo-intro): new section: "7.2.
+	`find-eevvideo-links'".
+
+	* eev-elinks.el (ee-find-efunction-links): added a line like this:
+	`(find-epp (assoc FILENAME load-history))'.
+
+	* eev-tlinks.el (ee-code-psnevideo): added an `interactive'.
+	(ee-code-eevvideo): added an `interactive'.
+
+	* eev-intro.el (find-videos-intro): rewrote the beginning.
+
+2021-01-01  Eduardo Ochs  <eduardoochs@gmail.com>
+
+	* eev-tlinks.el (ee-psnevideo-links): cosmetic changes.
+
+2020-12-31  Eduardo Ochs  <eduardoochs@gmail.com>
+
+	* eev-hlinks.el (ee-epackage-re-27): new variable.
+	(ee-epackage-bufferp): use `ee-epackage-re-27'.
+
+2020-12-29  Eduardo Ochs  <eduardoochs@gmail.com>
+
+	* eev-blinks.el (Man-translate-references): add autoload.
+	(Man-notify-when-ready): removed the defadvice.
+	(ee-find-man-buffer): new variable.
+	(ee-find-man-goto-pos-spec): new function.
+	(Man-bgproc-sentinel): new advice-add.
+	(find-man): rewrote completely.
+
+2020-12-28  Eduardo Ochs  <eduardoochs@gmail.com>
+
+	* eev-code.el (ee-code-c-d-:gz): commented out the
+	`(ee-use-{c}-tags)'.
+
+	* eev-intro.el (find-anchors-intro): rewrote completely.
+
+2020-12-22  Eduardo Ochs  <eduardoochs@gmail.com>
+
+	* eev-hlinks.el (ee-find-dired-links): new function.
+	(ee-find-here-links): added a line that runs
+	`(ee-find-dired-links)' when `(ee-dired-bufferp)' is true - but
+	that line is currently commented out.
+
+	* eev-intro.el (find-eev-intro): added a new section: "4. The
+	prefix `find-'".
+
+2020-12-21  Eduardo Ochs  <eduardoochs@gmail.com>
+
+	* eev-intro.el (find-audiovideo-intro): rewrote the section 4.1
+	completely. It is now titled "4.1. `find-extra-file-links'".
+
+	* eev-tlinks.el (find-extra-file-links): fixed the link to
+	`(find-audiovideo-intro)'.
+
+2020-12-20  Eduardo Ochs  <eduardoochs@gmail.com>
+
+	* eev-code.el (ee-code-c-d-:w3m): new function.
+	(ee-code-c-d-:tags): new function.
+	(ee-code-c-d-base): moved the `defun find-{c}w3m', the `defun
+	find-{c}tags', and their support functions to `ee-code-c-d-:w3m'
+	and `ee-code-c-d-:tags'.
+
+2020-12-17  Eduardo Ochs  <eduardoochs@gmail.com>
+
+	* README.org: new file.
+
+	* README-old.md: renamed "README.md" to "README-old.md".
+
+	* eev-intro.el (find-little-languages-intro): new function.
+
+2020-12-16  Eduardo Ochs  <eduardoochs@gmail.com>
+
+	* eev-elinks.el (find-esetkey-links): new function.
+	(ee-read-command): new function.
+	(ee-command-at-point): new function.
+
+	* eev-testblocks.el (ee-insert-test-org-mode): new function.
+
+2020-12-06  Eduardo Ochs  <eduardoochs@gmail.com>
+
+	* eev-wrap.el (ee-ppp0): new function.
+
+	* eev-blinks.el (find-eppp): new function.
+
+	* eev-elinks.el (ee-find-efunction-links): added a line with
+	`(find-eppp (mapcar 'car load-history))'.
+
+2020-12-03  Eduardo Ochs  <eduardoochs@gmail.com>
+
+	* eev-pdflike.el (ee-pdftools-revert-all): new function.
+
+2020-11-30  Eduardo Ochs  <eduardoochs@gmail.com>
+
+	* eev-eval.el (ee-eval-last-sexp-7): new function.
+	(ee-eval-last-sexp): added support for `ee-eval-last-sexp-7'.
+
+2020-11-29  Eduardo Ochs  <eduardoochs@gmail.com>
+
+	* eepitch.el (eepitch-line): new variable.
+	(eepitch-line): when the value in the variable `eepitch-line' is
+	non-nil then run `(funcall eepitch-line line)' instead of the
+	default behavior.
+	(eepitch): setq eepitch-line to nil.
+	(eepitch-vterm): new function.
+	(eepitch-line-vterm): new function.
+
+2020-11-26  Eduardo Ochs  <eduardoochs@gmail.com>
+
+	* eev-code.el (ee-code-c-d-base): added a link to
+	`find-eev-quick-intro'.
+
+2020-11-16  Eduardo Ochs  <eduardoochs@gmail.com>
+
+	* eepitch.el (eepitch-python2): new function.
+	(eepitch-python): make it use python3.
+
+2020-11-01  Eduardo Ochs  <eduardoochs@gmail.com>
+
+	* eev-elinks.el (find-grep-links): rewrote using
+	`find-find-links-links-new' and added documentation.
+
+2020-10-30  Eduardo Ochs  <eduardoochs@gmail.com>
+
+	* eev-tlinks.el (find-youtubedl-links): rewrote using
+	`find-find-links-links-new'. Deleted the sexps with `find-video'
+	and `code-video' that would point to a partially downloaded video.
+	(ee-youtubedl-dirs): new variable.
+	(ee-youtubedl-dir-links): new function.
+	(ee-youtubedl-dir2, ee-youtubedl-dir3, ee-youtubedl-dir4):
+	deleted.
+
+	* eev-elinks.el (find-eface-links, find-color-links): rewrote
+	using `find-find-links-links-new'.
+
+2020-10-27  Eduardo Ochs  <eduardoochs@gmail.com>
+
+	* eev-audiovideo.el (ee-find-mpv-video): use "--start=1:23"
+	instead of "--start 1:23".
+
+	* eev-pdflike.el (ee-code-pdfbackend, ee-code-pdftextbackend): add
+	the missing backslashes.
+
+2020-10-24  Eduardo Ochs  <eduardoochs@gmail.com>
+
+	* eev-blinks.el (find-man): document an open bug.
+
+2020-10-18  Eduardo Ochs  <eduardoochs@gmail.com>
+
+	* eev-tlinks.el (find-eevvideo-links, code-eevvideo)
+	(find-code-eevvideo, ee-code-eevvideo): new functions.
+
+	* eev-intro.el (find-audiovideo-intro): added two new sections:
+	"7. `code-psnevideo'" and "7.1. `code-eevvideo'".
+
+2020-10-17  Eduardo Ochs  <eduardoochs@gmail.com>
+
+	* eev-tlinks.el (find-psnevideo-links, ee-psnevideo-links)
+	(ee-psnevideo-download-if-needed, ee-psnevideo-download)
+	(ee-psnevideo-download0): new functions.
+
+	* eev-audiovideo.el (ee-time-to-youtube-time): new function.
+
+2020-10-16  Eduardo Ochs  <eduardoochs@gmail.com>
+
+	* eev-pdflike.el: Rewrote most of the file to use the cleaner
+	`code-*backend*' functions instead of the older
+	`code-xxxpdf*-family' functions, that were much harder to
+	understand. Also rewrote lots of comments.
+
+	* eev-pdflike.el (ee-fname-page-to-url): new function.
+	(ee-find-googlechrome-page): new function.
+
+2020-10-15  Eduardo Ochs  <eduardoochs@gmail.com>
+
+	* eev-pdflike.el (code-pdfbackend, find-code-pdfbackend)
+	(ee-code-pdfbackend, code-pdftextbackend)
+	(find-code-pdftextbackend, ee-code-pdftextbackend): new functions.
+
+2020-10-13  Eduardo Ochs  <eduardoochs@gmail.com>
+
+	* eev-intro.el (find-git-intro): new function.
+
+	* eev-tlinks.el (find-texlive-links): new function.
+	(find-pdflikedef-links): deleted.
+	(find-find-links-links): marked (informally) as obsolete.
+	(find-find-links-links-old): new alias.
+	(find-psne-links): use "wget -nc" by default.
+
+	* eev-brxxx.el: rewrote the comments in the beginning of the file.
+
+2020-10-12  Eduardo Ochs  <eduardoochs@gmail.com>
+
+	* eev-elinks.el (find-pdflike-page-links): rewrote using
+	`find-find-links-links-new'.
+
+2020-10-10  Eduardo Ochs  <eduardoochs@gmail.com>
+
+	* eev-testblocks.el (ee-insert-test-tuareg-mode): new function.
+	(ee-insert-test-idris-mode): deleted.
+
+	* eev-elinks.el (ee-package-dir): new function.
+	(ee-package-desc): new function.
+	(ee-package-findelpafiles): new function.
+	(ee-find-epackage-links0): total rewrite.
+	(find-epackage-links): total rewrite.
+
+2020-10-09  Eduardo Ochs  <eduardoochs@gmail.com>
+
+	* eev-tlinks.el (find-eeit-links): new function.
+
+	* eev-intro.el (find-eepitch-intro): new section: "3.1.
+	`find-eeit-links'".
+
+2020-10-06  Eduardo Ochs  <eduardoochs@gmail.com>
+
+	* eev-intro.el (find-windows-beginner-intro): added instructions
+	to run `M-x package-initialize'.
+	(find-templates-intro): added more references to
+	`find-find-links-links-new'.
+	(find-links-intro): marked as obsolete.
+	(find-eval-intro): moved the section on byte-compiled functions to
+	`(find-elisp-intro)'.
+	(find-elisp-intro): new sections: "11. Byte-compiled functions",
+	"11.1. Why eev avoids byte-compilation", and "11.2. How
+	`find-efunction' works". They were taken from `(find-eval-intro)'
+	and slightly rewritten.
+
+	* eev-tlinks.el (find-emacs-tangents-links): new function.
+	(find-intro-links): rewrote using `find-find-links-links-new'.
+
+	* eejump.el (eejump-50): new function - now `M-5 M-0 M-j' opens
+	`(find-eev-intro)'.
+
+2020-10-04  Eduardo Ochs  <eduardoochs@gmail.com>
+
+	* eev-intro.el (find-eev-quick-intro): added pointers to a new
+	video to the installation instructions and deleted the pointers to
+	very old videos.
+
+2020-10-02  Eduardo Ochs  <eduardoochs@gmail.com>
+
+	* eev-intro.el (find-psne-intro): added two new sections, one on
+	`ee-flip-psne-ness' and another one on the origin of the name
+	"psne".
+
+	* eev-mode.el (eev-mode-map-set): Commented out the binding of
+	`M-s' to `ee-flip-psne-ness'.
+
+	* eev-blinks.el (ee-find-eejumps-header): added a link to the
+	header.
+
+2020-09-29  Eduardo Ochs  <eduardoochs@gmail.com>
+
+	* eev-intro.el (find-eev-quick-intro): added an item about the
+	menu bar to the section "4.2. `find-ekey-links' and friends".
+
+2020-09-28  Eduardo Ochs  <eduardoochs@gmail.com>
+
+	* eev-intro.el (find-elisp-intro): new function.
+	(find-creating-links-intro): deleted.
+	(find-what-sexps-can-do-intro): deleted.
+	(find-eev-intro): small adjustments.
+
+2020-08-31  Eduardo Ochs  <eduardoochs@gmail.com>
+
+	* eev-intro.el (find-eepitch-intro): added links to
+	<http://angg.twu.net/emacsconf2019.html> and to its video.
+
+2020-08-07  Eduardo Ochs  <eduardoochs@gmail.com>
+
+	* eev-testblocks.el (ee-insert-test-julia-mode): new function.
+
+2020-08-05  Eduardo Ochs  <eduardoochs@gmail.com>
+
+	* eev-testblocks.el (ee-insert-test): rewritten.
+	(ee-insert-test-lua): deleted.
+	(ee-insert-test-lua-mode): new function.
+	(ee-insert-test-python): deleted.
+	(ee-insert-test-python-mode): new function.
+	(ee-insert-test-ruby): deleted.
+	(ee-insert-test-ruby-mode): new function.
+	(ee-insert-test-sh): deleted.
+	(ee-insert-test-sh-mode): new function.
+	(ee-insert-test-tcl): deleted.
+	(ee-insert-test-tcl-mode): new function.
+	(ee-insert-test-idris): deleted.
+	(ee-insert-test-idris-mode): new function.
+	(ee-insert-test-haskell): deleted.
+	(ee-insert-test-haskell-mode): new function.
+
+	* eev-intro.el (find-eepitch-intro): added documentation for the
+	new `M-x ee-insert-test'.
+
+2020-07-22  Eduardo Ochs  <eduardoochs@gmail.com>
+
+	* eev-elinks.el (ee-find-epackage-links0): added a link to
+	`find-epackage-links'.
+
+2020-04-27  Eduardo Ochs  <eduardoochs@gmail.com>
+
+	* eev-testblocks.el (ee-insert-test): add ee-insert-test-haskell.
+	(ee-insert-test-haskell): new function.
+
+2020-02-24  Eduardo Ochs  <eduardoochs@gmail.com>
+
+	* eev.el: updated the "Version:" (for ELPA).
+
+2020-02-20  Eduardo Ochs  <eduardoochs@gmail.com>
+
+	* eev-intro.el (find-windows-beginner-intro): new function.
+	(find-eev-intro): added `(find-windows-beginner-intro)' to the
+	list of intros.
+	(find-emacs-keys-intro): stress that `M-j' is one of the most
+	basic keys.
+
+	* eejump.el (eejump-3): new function - make `M-3 M-j' jump to
+	`(find-windows-beginner-intro)'.
+
+	* eev-elinks.el (find-code-audiovideo-links): small changes.
+
+	* eev-tlinks.el (find-extra-file-links): new function.
+	(find-intro-links): added a "Skel:".
+
+	* eev-mode.el (eev-mode-map-set): bind `M-h M-e' to
+	`find-extra-file-links'.
+
+2020-02-16  Eduardo Ochs  <eduardoochs@gmail.com>
+
+	* eev-tlinks.el (find-windows-eepitch-lua-links): new function.
+
+2020-01-08  Eduardo Ochs  <eduardoochs@gmail.com>
+
+	* eev-hlinks.el: new file.
+	(ee-buffer-re, ee-buffer-eq, ee-buffer-help0)
+	(ee-buffer-help-re0, ee-buffer-help, ee-grep-bufferp)
+	(ee-man-bufferp, ee-rcirc-bufferp, ee-info-bufferp)
+	(ee-dired-bufferp, ee-wdired-bufferp, ee-w3m-bufferp)
+	(ee-custom-bufferp, ee-epackages-bufferp, ee-intro-bufferp)
+	(ee-freenode-bufferp, ee-ecolors-bufferp, ee-efaces-bufferp)
+	(ee-pdftext-bufferp, ee-efunctiondescr-bufferp)
+	(ee-find-efunctiondescr-links, ee-evardescr-bufferp)
+	(ee-find-evardescr-links, ee-efunctiondescr-re, ee-evardescr-re)
+	(ee-efacedescr-re, ee-efacedescr-bufferp)
+	(ee-find-efacedescr-links, ee-epackage-re, ee-epackage-bufferp)
+	(ee-find-epackage-links, ee-man-re, ee-find-man-links)
+	(ee-custom-re, ee-find-custom-links, ee-file-bufferp)
+	(ee-find-efaces-links, ee-find-ecolors-links)
+	(ee-find-epackages-links, ee-find-pdftext-links)
+	(ee-find-here-links, find-here-links-test, ee-find-here-links0)
+	(find-here-links, find-here-links-beginner)
+	(ee-window-configuration-before-M-h-M-3, find-here-links-3)
+	(find-here-links-1): all these functions and variables were moved
+	from eev-elinks.el to eev-hlinks.el.
+
+	* eev-intro.el (find-links-conv-intro): mention eev-hlinks.el in
+	the classification in the section "3. Classification".
+
+	* eev-tlinks.el (find-find-links-links-new): new function.
+	(find-fossil-links, ee-fossil-url-stem): new functions.
+
+	* eev-code.el: added a `(code-c-d "cl" ...)', for the Common Lisp
+	extensions.
+
+2020-01-07  Eduardo Ochs  <eduardoochs@gmail.com>
+
+	* eev-tlinks.el (ee-ffll-optional, ee-ffll-setqs, ee-ffll-lets)
+	(ee-ffll-comma-args, ee-ffll-defun-without-lets)
+	(ee-ffll-defun-with-lets, ee-ffll-defun): new functions.
+
+2020-01-05  Eduardo Ochs  <eduardoochs@gmail.com>
+
+	* eev-code.el: added `(code-c-d "elpa" "~/.emacs.d/elpa/")' -
+	`find-epackage-links' depends on this.
+
+2020-01-04  Eduardo Ochs  <eduardoochs@gmail.com>
+
+	* eev-intro.el (find-templates-intro): rewrote the whole intro.
+	(find-refining-intro): new section: "5. Pointing to anchors".
+
+2020-01-03  Eduardo Ochs  <eduardoochs@gmail.com>
+
+	* eev-testblocks.el (ee-insert-test-idris): new function.
+
+	* eev-audiovideo.el: rewrote many comments.
+
+	* eev-intro.el (find-audiovideo-intro): new section: "4.4. The
+	default audio/video file".
+
+	* eev-blinks.el (ee-find-man-pos-spec-list): `defvar'ed. Was
+	undeclared before.
+
+2020-01-02  Eduardo Ochs  <eduardoochs@gmail.com>
+
+	* eev-tlinks.el (find-git-links): use "export PAGER=cat".
+
+2019-11-13  Eduardo Ochs  <eduardoochs@gmail.com>
+
+	* eev-intro.el (find-eev-quick-intro): rewrote the section 7.2 to
+	explain how beginners should use `M-j' without a prefix argument.
+
+2019-11-11  Eduardo Ochs  <eduardoochs@gmail.com>
+
+	* eev-intro.el (find-org-intro): use \":results output\" (thx Ken
+	Mankoff)
+
+2019-11-04  Eduardo Ochs  <eduardoochs@gmail.com>
+
+	* eev-intro.el (find-org-intro): rewrote everything.
+	(find-eev-intro): added `find-org-intro' to the index.
+
+2019-10-31  Eduardo Ochs  <eduardoochs@gmail.com>
+
+	* eev-mode.el (eev-mode-help): small changes.
+
+2019-10-27  Eduardo Ochs  <eduardoochs@gmail.com>
+
+	* eev-brxxx.el (brwget): new function.
+
+2019-10-16  Eduardo Ochs  <eduardoochs@gmail.com>
+
+	* eev-blinks.el (find-esubstitutecommandkeys): new function.
+	(ee-find-eejumps-header): small changes.
+
+	* eev-mode.el (eev-mode-help): small changes.
+
+2019-10-15  Eduardo Ochs  <eduardoochs@gmail.com>
+
+	* eev-intro.el (find-audiovideo-intro): new section: "4.3. A
+	demo".
+
+2019-10-04  Eduardo Ochs  <eduardoochs@gmail.com>
+
+	* eev-elinks.el (ee-find-efunction-links): added two links that
+	refer to `load-history'.
+
+	* eev-intro.el (find-brxxx-intro): small changes.
+
+2019-10-03  Eduardo Ochs  <eduardoochs@gmail.com>
+
+	* eev-intro.el (find-brxxx-intro): added several new sections.
+
+	* eev-pdflike.el (brpdfl, brpdfd): new functions.
+
+2019-10-02  Eduardo Ochs  <eduardoochs@gmail.com>
+
+	* eev-intro.el (find-psne-intro): small changes.
+
+2019-10-01  Eduardo Ochs  <eduardoochs@gmail.com>
+
+	* eepitch.el (eepitch-nodejs): new function (thx @Lunks).
+
+2019-09-30  Eduardo Ochs  <eduardoochs@gmail.com>
+
+	* eev-intro.el (find-multiwindow-intro): small changes.
+	(find-eev-intro): rearranged the order or the list.
+
+2019-09-29  Eduardo Ochs  <eduardoochs@gmail.com>
+
+	* eev-intro.el (find-eepitch-intro): rewrote some sections, added
+	a section about "test blocks".
+	(find-eev-intro): small changes.
+	(find-eev-install-intro): rewrote almost everything.
+
+	* eev-testblocks.el: new file.
+	(eeit, ee-insert-test, ee-insert-test-lua)
+	(ee-insert-test-python, ee-insert-test-ruby, ee-insert-test-sh)
+	(ee-insert-test-tcl): moved all these functions from eev-wrap.el
+	to eev-testblocks.el.
+
+	* eev-load.el: load eev-testblocks.el.
+
+2019-09-28  Eduardo Ochs  <eduardoochs@gmail.com>
+
+	* eev-intro.el (find-eev-install-intro): small changes.
+
+2019-09-27  Eduardo Ochs  <eduardoochs@gmail.com>
+
+	* eev-elinks.el (ee-file-name-nondirectory-slash): new function.
+	(ee-file-expand-wildcards-slash): new function.
+	(ee-find-epackage-links0): new function.
+	(find-epackage-links): new function.
+	(ee-find-epackage-links): use `ee-find-epackage-links0'.
+
+	* eev-edit.el (ee-tag-re-utf-8): new variable.
+	(ee-tag-re): use `ee-tag-re-utf-8'.
+
+2019-09-26  Eduardo Ochs  <eduardoochs@gmail.com>
+
+	* eev-intro.el (find-eev-quick-intro): small changes.
+
+	* eepitch.el: rewrote lots of comments.
+
+2019-09-25  Eduardo Ochs  <eduardoochs@gmail.com>
+
+	* eev-intro.el (find-emacs-keys-intro): added links about the mode
+	line.
+
+2019-09-24  Eduardo Ochs  <eduardoochs@gmail.com>
+
+	* eev-blinks.el (ee-find-eejumps-header): small changes in the
+	header.
+
+	* eev-intro.el (find-eepitch-intro): rewrote most of the text.
+
+2019-09-23  Eduardo Ochs  <eduardoochs@gmail.com>
+
+	* eev-tlinks.el (find-debpkg-links): added links to Sid.
+
+2019-08-29  Eduardo Ochs  <eduardoochs@gmail.com>
+
+	* eev-edit.el (ee-copy-this-line-to-kill-ring): use
+	`ee-copy-preceding-tag-to-kill-ring' when called with an argument.
+	(ee-tag-re, ee-copy-preceding-tag-to-kill-ring): new functions.
+
+2019-08-20  Eduardo Ochs  <eduardoochs@gmail.com>
+
+	* eev-intro.el (find-what-sexps-can-do-intro): new intro (script
+	for a video).
+
+2019-08-18  Eduardo Ochs  <eduardoochs@gmail.com>
+
+	* eev-elinks.el (find-code-audiovideo-links): added calls to
+	`eev-avadj-mode'.
+
+2019-08-17  Eduardo Ochs  <eduardoochs@gmail.com>
+
+	* eev-tlinks.el (find-debpkg-links): small changes.
+
+2019-08-15  Eduardo Ochs  <eduardoochs@gmail.com>
+
+	* eev-audiovideo.el (find-video, code-video, find-code-video)
+	(find-audio, code-audio, find-code-audio): these aliases now point
+	to the corresponding mpv-video and mpv-audio functions.
+
+	* eev-intro.el (find-audiovideo-intro): rewrote many sections.
+
+	* eev-mode.el (eev-mode-map-set): new binding: `M-h M-a' ->
+	`find-code-audiovideo-links'.
+
+	* eev-elinks.el (find-code-audiovideo-links): new function.
+
+2019-08-12  Eduardo Ochs  <eduardoochs@gmail.com>
+
+	* eev-audiovideo.el (find-mpv-video, ee-find-mpv-video)
+	(code-mpv-video, find-code-mpv-video, ee-code-mpv-video)
+	(ee-find-mpv-audio, find-mpv-audio, code-mpv-audio)
+	(find-code-mpv-audio, ee-code-mpv-audio): new functions.
+	(ee-mpv-video-options, ee-mpv-term-options)
+	(ee-mpv-audio-options): new variables.
+
+2019-08-11  Eduardo Ochs  <eduardoochs@gmail.com>
+
+	* eev-audiovideo.el (ee-mpv-video-options): new variable.
+	(ee-mpv-video-options, ee-find-mpv-video): new functions.
+
+	* eev-tlinks.el (find-apt-get-source-links): new function.
+
+	* eepitch.el (eepitch-lua52, eepitch-lua53, eepitch-shell3): new
+	functions.
+
+2019-08-10  Eduardo Ochs  <eduardoochs@gmail.com>
+
+	* eev-explain.el: new file.
+
+	* eev-intro.el (find-three-main-keys-intro): new function.
+	(find-creating-links-intro): new function.
+
+2019-08-09  Eduardo Ochs  <eduardoochs@gmail.com>
+
+	* eev-intro.el (find-here-links-intro): new section: "1.1. Reading
+	and writing".
+
+2019-08-08  Eduardo Ochs  <eduardoochs@gmail.com>
+
+	* eev-tlinks.el (find-git-links): small changes.
+
+2019-08-06  Eduardo Ochs  <eduardoochs@gmail.com>
+
+	* eev-elinks.el (ee-efunctiondescr-re): added support for special
+	forms (e.g., condition-case).
+	(ee-shorten-file-name): new function.
+	(find-code-pdf-links): use `ee-shorten-file-name'.
+
+2019-08-05  Eduardo Ochs  <eduardoochs@gmail.com>
+
+	* eev-eval.el (ee-backward-sexp, ee-forward-sexp): changed the
+	docstrings.
+
+2019-07-15  Eduardo Ochs  <eduardoochs@gmail.com>
+
+	* eev-blinks.el (ee-goto-position): added support for `:end'.
+
+2019-07-14  Eduardo Ochs  <eduardoochs@gmail.com>
+
+	* eev-intro.el (find-eev-quick-intro): many changes.
+
+2019-07-12  Eduardo Ochs  <eduardoochs@gmail.com>
+
+	* eev-intro.el (find-here-links-intro): small changes.
+	(find-eev-quick-intro): rewrote the section that teaches how to
+	use Info mode and the sections about hyperlinks to PDF files.
+
+	* eev-elinks.el (find-code-pdf-links, find-pdflike-page-links):
+	point to sections of `(find-pdf-like-intro)'.
+
+	* eev-intro.el (find-pdf-like-intro): rewrote completely.
+
+2019-07-11  Eduardo Ochs  <eduardoochs@gmail.com>
+
+	* eev-pdflike.el (ee-find-xpdf-page): added "&rest rest".
+	(ee-find-pdf-text): added "&rest rest".
+	(ee-find-pdftotext-text): added "&rest rest".
+
+2019-07-10  Eduardo Ochs  <eduardoochs@gmail.com>
+
+	* eev-intro.el (find-eev-quick-intro): rewrote the section "9.3.
+	Hyperlinks to PDF files" and split it in two; the new section is:
+	"9.4. Hyperlinks to pages of PDF files". The old section 9.4,
+	"9.4. Shorter hyperlinks to PDF files", was renumbered to 9.5 and
+	split into "9.5. Shorter hyperlinks to PDF files" and "9.6. A
+	convention on page numbers".
+
+2019-07-09  Eduardo Ochs  <eduardoochs@gmail.com>
+
+	* eev-tlinks.el (find-git-links): small changes.
+
+2019-07-04  Eduardo Ochs  <eduardoochs@gmail.com>
+
+	* eev-elinks.el (find-code-pdf-links): show shorter variants of
+	the first sexp when possible.
+
+2019-06-29  Eduardo Ochs  <eduardoochs@gmail.com>
+
+	* eev-wrap.el (eeit, ee-insert-test, ee-insert-test-lua)
+	(ee-insert-test-python, ee-insert-test-ruby, ee-insert-test-sh)
+	(ee-insert-test-tcl): new functions.
+
+2019-06-25  Eduardo Ochs  <eduardoochs@gmail.com>
+
+	* eev-blinks.el (find-sh-man-fontify): new function.
+
+2019-06-24  Eduardo Ochs  <eduardoochs@gmail.com>
+
+	* eev-plinks.el (find-urlretrieve00, ee-urlretrieve-3)
+	(find-urlretrieve0, find-urlretrieve): new functions.
+
+	* eev-elinks.el (find-here-links-3): ask if the user wants to
+	overwrite `ee-window-configuration-before-M-h-M-3'.
+
+	* eev-intro.el (find-here-links-intro): added some figures.
+
+	* eev-pdflike.el (ee-find-pdf-text, ee-find-pdftotext-text)
+	(ee-find-texworkspdf-page): added the missing ","s.
+
+2019-06-23  Eduardo Ochs  <eduardoochs@gmail.com>
+
+	* eev-elinks.el (ee-find-eboundkey-links): reordered the links.
+	(ee-find-efunction-links): reordered the links.
+	(find-efunction-links): reordered the links.
+	(find-elongkey-links): reordered the links.
+	(find-ekey-links): reordered the links.
+
+	* eev-intro.el (find-eev-quick-intro): new section: "4.2.
+	`find-ekey-links' and friends".
+
+	* eev-beginner.el (eev-beginner): do not bind `M-h M-h' to
+	`find-here-links-beginner'.
+
+2019-06-22  Eduardo Ochs  <eduardoochs@gmail.com>
+
+	* eev-pdflike.el: make `find-pdf-page' use texworks on M$ Windows.
+	(ee-pdftotext-program, ee-texworks-program): new variables.
+
+2019-06-21  Eduardo Ochs  <eduardoochs@gmail.com>
+
+	* eev-intro.el (find-here-links-intro): new function.
+	(find-emacs-keys-intro): added references to `M-h M-3', `M-h M-w',
+	and `M-h M-1'.
+
+	* eev-elinks.el (find-here-links-3): new function.
+	(find-here-links-1): new function.
+	(ee-window-configuration-before-M-h-M-3): new variable.
+	(ee-find-here-links0): added a reference to `find-here-links-3'.
+
+	* eev-mode.el (eev-mode-map-set): added bindings to `M-h M-1' and
+	`M-h M-3' (`find-here-links-1' and `find-here-links-3').
+
+2019-06-17  Eduardo Ochs  <eduardoochs@gmail.com>
+
+	* eev-beginner.el (eev-beginner): bind `M-h M-h' to
+	`find-here-links-beginner'.
+
+	* eev-blinks.el (ee-find-eejumps-header): added examples.
+
+2019-06-16  Eduardo Ochs  <eduardoochs@gmail.com>
+
+	* eev-intro.el (find-emacs-keys-intro): list `M-h M-k', `M-h M-f',
+	and `M-h M-p' among the basic keys of eev.
+	(find-links-intro): Rewrote the section "The first line
+	regenerates the buffer".
+
+	* eev-eval.el (ee-eval-sexp-eol): changes in the docstring.
+
+2019-06-12  Eduardo Ochs  <eduardoochs@gmail.com>
+
+	* eev-tlinks.el (find-latex-links): added more links to the
+	tutorial.
+
+	* eev-elinks.el (find-code-pdf-links): made it generate a code-c-d
+	besides the code-pdf pair; added another link to the tutorial.
+
+2019-06-10  Eduardo Ochs  <eduardoochs@gmail.com>
+
+	* eev-elinks.el (find-code-pdf-links): new function.
+	(find-pdf-links): new function.
+	(ee-pdflike-page-links): use `code-pdf-page' instead of
+	`code-pdf'.
+
+	* eev-mode.el (eev-mode-map-set): now `M-h M-p' is bound to
+	`find-pdf-links'.
+
+	* .dir-locals.el: new file.
+
+2019-05-24  Eduardo Ochs  <eduardoochs@gmail.com>
+
+	* eev-elinks.el (find-efunction-links): added an `eek' link.
+	(find-evariable-links): added an ``eek' link.
+
+2019-05-17  Eduardo Ochs  <eduardoochs@gmail.com>
+
+	* eev-elinks.el (find-here-links-3): new function.
+	(find-here-links-beginner): small changes.
+
+	* eev-intro.el: small changes.
+
+2019-05-16  Eduardo Ochs  <eduardoochs@gmail.com>
+
+	* eev-tlinks.el (find-dhmake-links): deleted.
+	(find-newhost-links): deleted.
+
+2019-05-15  Eduardo Ochs  <eduardoochs@gmail.com>
+
+	* eev-elinks.el (find-ekey-links): added some spaces in the
+	output.
+
+2019-05-11  Eduardo Ochs  <eduardoochs@gmail.com>
+
+	* eev-rcirc.el (find-freenode-links): added some text.
+
+2019-04-25  Eduardo Ochs  <eduardoochs@gmail.com>
+
+	* eev-intro.el (find-emacs-keys-intro): point to
+	(find-refining-intro).
+
+	* eev-elinks.el (find-here-links-beginner): new function.
+
+2019-04-24  Eduardo Ochs  <eduardoochs@gmail.com>
+
+	* eev-mode.el (eev-mode-map-set): new keybinding: `M-h M-w' for
+	`ee-copy-this-line-to-kill-ring'.
+
+	* eev-edit.el (ee-copy-this-line-to-kill-ring): new function.
+
+	* eev-intro.el (find-refining-intro): new function.
+
+2019-04-15  Eduardo Ochs  <eduardoochs@gmail.com>
+
+	* eev-rcirc.el (eepitch-freenode): new function.
+
+2019-04-14  Eduardo Ochs  <eduardoochs@gmail.com>
+
+	* eev-intro.el (find-eev-install-intro): small changes.
+
+	* eev.el: small changes.
+
+	* eev-intro.el (find-rcirc-intro): rewrote completely.
+	(find-escripts-intro): small changes.
+
+	* eev-rcirc.el: rewrote all comments and some docstrings.
+	(ee-irc-channel-around-point): commented out.
+	(ee-buffer-freenode-channel-name): commented out.
+	(find-freenode-links): small changes.
+
+2019-04-13  Eduardo Ochs  <eduardoochs@gmail.com>
+
+	* eev-intro.el (find-eval-intro): new sections: "10.1.
+	Byte-compiled functions", "10.2. How `find-efunction' works", and
+	"10.3. Why eev avoids byte-compilation".
+
+	* eev-blinks.el (find-eloadhistory0, find-eloadhistory): new
+	functions.
+
+2019-04-09  Eduardo Ochs  <eduardoochs@gmail.com>
+
+	* eejump.el, eev-anchors.el, eev-audiovideo.el, eev-beginner.el,
+	eev-blinks.el, eev-brxxx.el, eev-channels.el, eev-code.el,
+	eev-codings.el, eev-edit.el, eev-elinks.el, eev-env.el,
+	eev-eval.el, eev-flash.el, eev-intro.el, eev-load.el, eev-mode.el,
+	eev-multiwindow.el, eev-pdflike.el, eev-plinks.el,
+	eev-prepared.el, eev-rcirc.el, eev-readme.el, eev-template0.el,
+	eev-tlinks.el, eev.el, eev2-all.el: fixed the copyright years to a
+	single range and rewrote the "(not yet?) part of GNU eev" to "part
+	of GNU eev".
+
+2019-04-08  Eduardo Ochs  <eduardoochs@gmail.com>
+
+	* eev.el: new file.
+
+	* .gitignore: new file.
+
+	* eev-anchors.el (ee-anchor-format): autoload its status as as
+	safe local variable.
+
+2019-04-06  Eduardo Ochs  <eduardoochs@gmail.com>
+
+	* eev-intro.el (find-eev-install-intro): added an explanation of
+	why eev is not in ELPA yet.
+
+	* eev-load.el: added an explanation of why we have so few
+	autoloads.
+
+2019-04-01  Eduardo Ochs  <eduardoochs@gmail.com>
+
+	* eev-pdflike-old.el: deleted this file.
+
+	* README: added a section "eev without eev-mode".
+
+	* eev-intro.el (find-eev-intro): small changes.
+	(find-eev-install-intro): small changes.
+
+	* eev-code.el (ee-code-c-d-pairs): fixed the comments.
+
+	* eev-elinks.el: Cleaned up the comments about
+	`ee-code-c-d-filter-2' and related functions.
+
+2019-03-29  Eduardo Ochs  <eduardoochs@gmail.com>
+
+	* eev-template0.el: new file.
+
+	* eev-load.el: added a "(require 'eev-template0)".
+
+	* eev-wrap.el (ee-template00, ee-template0): deleted - moved to
+	the file eev-template0.el.
+
+	* eev-brxxx.el: made this file compatible with lexical binding.
+	Made the argument `f' explicit in many functions and moved the
+	functionality of `ee-tail-call' into the functions
+	`ee-code-brurl-rest' and ee-code-brfile-rest'.
+
+	* eev-code.el (ee-code-c-d-rest): moved the functionality of
+	`ee-tail-call' into the function `ee-code-c-d-rest'.
+	(ee-tail-call2): commented out.
+
+	* eev-beginner.el (load-path): uncommented the "(add-to-list
+	'load-path default-directory)"
+
+2019-03-17  Eduardo Ochs  <eduardoochs@gmail.com>
+
+	* eev-code.el: made this file compatible with lexical binding.
+	(code-c-d): made the arguments `c' and `d' explicit.
+	(ee-code-c-d): made the arguments `c' and `d' explicit.
+	(ee-tail-call): made the arguments `c' and `d' explicit.
+	(ee-code-c-d-rest): made the arguments `c' and `d' explicit.
+	(find-code-c-d-rest): made the arguments `c' and `d' explicit.
+	(ee-code-c-d-:info): made the arguments `c' and `d' explicit.
+	(ee-code-c-d-:linfo): made the arguments `c' and `d' explicit.
+	(ee-code-c-d-:gz): made the arguments `c' and `d' explicit.
+	(ee-code-c-d-:anchor): made the arguments `c' and `d' explicit.
+	(ee-code-c-d-:wget): made the arguments `c' and `d' explicit.
+	(ee-code-c-d-:grep): made the arguments `c' and `d' explicit.
+
+2019-03-15  Eduardo Ochs  <eduardoochs@gmail.com>
+
+	* eepitch.el: added pointers to the discussion in the eev mailing
+	list that generated the first version of eepitch.
+
+2019-03-14  Eduardo Ochs  <eduardoochs@gmail.com>
+
+	* README: new file - a README for the ELPA package.
+
+	* eev-pkg.el ("eev"): added several fields.
+
+2019-03-13  Eduardo Ochs  <eduardoochs@gmail.com>
+
+	* eev-rcirc.el: updated the comments.
+
+	* eev-beginner.el: don't change the load-path. Added comments.
+	(eev-beginner): new function.
+
+	* eev-intro.el (find-channels-intro): added some sections.
+
+	* eev-channels.el: converted to UTF-8 and added comments.
+
+2019-03-10  Eduardo Ochs  <eduardoochs@gmail.com>
+
+	* eev-intro.el (find-channels-intro): added sections with setup
+	and tests.
+
+	* eev-channels.el (eexterm-args-ne): made some arguments optional.
+	(eexterm-create-ne): made some arguments optional.
+	(eexterm-ne): made some arguments optional.
+
+	* eev-intro.el (find-eev-quick-intro): small changes.
+
+2019-03-08  Eduardo Ochs  <eduardoochs@gmail.com>
+
+	* eev-pdflike.el (ee-find-texworkspdf-page): new function.
+	(find-texworkspdf-page, code-texworkspdf-page): new functions.
+	(find-pdftools-page): new function.
+
+2019-03-05  Eduardo Ochs  <eduardoochs@gmail.com>
+
+	* eev-load.el: "eev-prepared.el", "eev-bounded.el" and
+	"eev-channels.el" are no longer loaded by default.
+
+	* eev-elinks.el (ee-efunctiondescr-re): treat Lisp macros as
+	functions.
+
+	* eev-beginner.el: new file.
+
+	* eev-intro.el (find-eev-quick-intro): the installation script now
+	loads "eev-beginner.el" instead of "eev-readme.el".
+
+	* eev-tlinks.el: added a "(require 'eev-wrap)".
+	(find-tkdiff): moved to eev-plinks.el.
+	(ee-upload-links, ee-download-links, find-upload-links)
+	(find-download-links, ut, dt): commented out.
+	(find-eev-install-links): use "rm -fv" instead of "rm -v".
+	(find-eev-install-links): load "eev-beginner.el" instead of
+	"eev-readme.el".
+	(find-eev-install-links): changed "eev2-all.el" to "eev-load.el"
+	everywhere.
+
+	* eev-intro.el (find-eev-quick-intro): added material in the
+	sections about links to PDFs.
+
+2019-03-04  Eduardo Ochs  <eduardoochs@gmail.com>
+
+	* eev-pdflike.el (ee-pdftotext-replace-bad-ffs): new function.
+	(find-sh-page): use `find-callprocess00' and
+	`ee-pdftotext-replace-bad-ffs'.
+	(ee-find-pdf-text): return a list instead of a string.
+	(ee-find-pdftotext-text): return a list instead of a string.
+
+2019-03-03  Eduardo Ochs  <eduardoochs@gmail.com>
+
+	* eejump.el: rewrote most comments, deleted some `eejump-<nnn>'s, and made
+	`eejump-6': point to (find-escripts-intro).
+
+	* eev-elinks.el (ee-find-intro-links): set the correct default
+	value for `stem'.
+
+2019-03-02  Eduardo Ochs  <eduardoochs@gmail.com>
+
+	* eev-anchors.el: converted to utf-8.
+
+	* eev-audiovideo.el: converted to utf-8.
+
+	* eev-blinks.el: converted to utf-8.
+
+	* eev-brxxx.el: converted to utf-8.
+
+	* eev-code.el: converted to utf-8.
+
+	* eev-edit.el: converted to utf-8.
+
+	* eev-elinks.el: converted to utf-8.
+
+	* eev-env.el: converted to utf-8.
+
+	* eev-eval.el: converted to utf-8.
+
+	* eev-intro.el: converted to utf-8.
+
+	* eev-mode.el: converted to utf-8.
+
+	* eev-pdflike.el: converted to utf-8.
+
+	* eev-plinks.el: converted to utf-8.
+
+	* eev-prepared.el: converted to utf-8.
+
+	* eev-tlinks.el: converted to utf-8.
+
+	* eev-wrap.el: converted to utf-8.
+
+	* eev-edit.el: moved all keybindings to eev-mode.el.
+
+	* eev-tlinks.el (find-eev-update-links): marked as obsolete.
+
+	* eev-intro.el (find-intro-dual-define): new function.
+
+2019-02-28  Eduardo Ochs  <eduardoochs@gmail.com>
+
+	* eepitch.el (at-nth-window): commented out.
+	(ee-with-pager-cat): renamed `with-pager-cat' to
+	`ee-with-pager-cat'.
+
+2019-02-27  Eduardo Ochs  <eduardoochs@gmail.com>
+
+	* eev-intro.el (find-escripts-intro): added several new sections.
+
+	* eev-code.el: better comments.
+
+	* eev-elinks.el: better comments.
+
+2019-02-26  Eduardo Ochs  <eduardoochs@gmail.com>
+
+	* eev-intro.el (find-eev-quick-intro, find-eev-intro)
+	(find-prepared-intro, find-escripts-intro, find-rcirc-intro):
+	small changes.
+
+2019-02-25  Eduardo Ochs  <eduardoochs@gmail.com>
+
+	* eev-intro.el (find-eev-install-intro): small changes.
+	(find-eev-quick-intro): small changes.
+
+	* eev-elinks.el (ee-info-fullnode+): new function.
+	(ee-info-shortlink): new function.
+	(find-einfo-links): rewritten.
+	(ee-intro-stem): added comments, and deleted the copy of the
+	`(defun ee-intro-stem ...)' that was in eev-tlinks.el.
+	(find-eintro-links): new function.
+	(find-eintro-or-einfo-links): new function.
+	(ee-find-here-links0): small changes.
+
+	* eev-mode.el (eev-mode-map-set): changed the binding of `M-h M-i'
+	to `find-eintro-or-einfo-links'.
+	(eev-mode-help): small changes.
+
+	* eev-tlinks.el (find-intro-links): small changes.
+
+2019-02-24  Eduardo Ochs  <eduardoochs@gmail.com>
+
+	* eev-codings.el (ee-tolatin1-re): new function.
+
+2019-02-23  Eduardo Ochs  <eduardoochs@gmail.com>
+
+	* eev-intro.el (find-links-intro): rewrote some sections.
+	(find-links-conv-intro): new function.
+
+	* eev-wrap.el: added comments about `ee-template0' and
+	`ee-template00'.
+
+	* eev-blinks.el (ee-unicode-data-file): new variable.
+	(find-eunicode): new function.
+	(find-eunicodeucs): new function.
+
+	* eev-mode.el (eev-mode-map-set): new binding: `M-h M-n'
+	(`find-eunicodeucs').
+
+2019-02-22  Eduardo Ochs  <eduardoochs@gmail.com>
+
+	* eev-intro.el (find-escripts-intro): added some text.
+	(find-links-intro): rewrote several sections.
+
+	* eev-tlinks.el (find-latex-links): small changes.
+
+2019-02-16  Eduardo Ochs  <eduardoochs@gmail.com>
+
+	* eepitch.el (eepitch-sh): new function.
+
+2019-02-13  Eduardo Ochs  <eduardoochs@gmail.com>
+
+	* eev-blinks.el (ee-find-eejumps-header): show a link to
+	`(find-emacs-keys-intro "1. Basic keys (eev)")'.
+
+	* eev-intro.el (find-eev-quick-intro): renamed "7.1. eejump" to
+	"7.1. `eejump'".
+
+	* eepitch.el (ee-at0): rewritten.
+	(ee-eepitch-comint): made this an alias for `eepitch-comint-at'.
+
+	* eev-plinks.el (find-callprocessregion-ne): new function.
+	(find-callprocessregion): call `find-callprocessregion-ne'.
+	(find-comintprocess-ne): deleted - has a copy in eepitch.el.
+	(find-comintprocess): deleted - has a copy in eepitch.el.
+
+2019-02-10  Eduardo Ochs  <eduardoochs@gmail.com>
+
+	* eev-intro.el (find-eev-quick-intro): small changes.
+
+2019-02-09  Eduardo Ochs  <eduardoochs@gmail.com>
+
+	* eev-wrap.el: commented out all the `define-key's - they are now
+	all in eev-mode.el (but `M-Z' and `M-#' are inactive by default).
+
+	* eev-mode.el (eev-mode-map-set): commented out the binding for `M-Z'.
+	(eev-mode-map-set): added the binding for `M-B' (`eewrap-escript-block').
+	(eev-mode-map-set): added the binding for `M-V' (`eewrap-audiovideo').
+
+	* eev-tlinks.el: deleted the key binding for `find-intro-links'.
+
+2019-02-08  Eduardo Ochs  <eduardoochs@gmail.com>
+
+	* eev-tlinks.el (ee-copy-rest): added (lots of) comments.
+	(ee-untabify-string): new function.
+	(ee-ss-strings): new variable.
+	(ee-ss-width): new variable.
+	(ee-ss-mode-line): new variable.
+	(ee-ss-echo-area): new variable.
+	(ee-ss-linefmt): new variable.
+	(ee-ss-string-pad): new function.
+	(ee-ss-screenshot0): new function.
+	(ee-ss-screenshot): new function.
+	(find-escreenshot0-links): new function.
+	(find-escreenshot-links): new function.
+
+2019-02-07  Eduardo Ochs  <eduardoochs@gmail.com>
+
+	* eev-elinks.el: added lots of comments, and moved all
+	`define-key's to eev-mode.el.
+	(find-ekey-links): small changes.
+	(ee-code-c-d-filter-1): new function.
+	(ee-code-c-d-filter-2): new function.
+	(find-code-c-d-filter-1): new function.
+	(find-code-c-d-filter-2): new function.
+
+2019-02-06  Eduardo Ochs  <eduardoochs@gmail.com>
+
+	* eev-intro.el (find-emacs-keys-intro): small changes.
+	(find-eev-quick-intro): small changes.
+	(find-eval-intro): small changes.
+
+2019-02-05  Eduardo Ochs  <eduardoochs@gmail.com>
+
+	* eev-intro.el: added (require 'info).
+
+2019-02-03  Eduardo Ochs  <eduardoochs@gmail.com>
+
+	* eev-intro.el: changed all intros to make them use `find-eintro'
+	instead of `find-estring'.
+	(find-eintro): new function.
+	(find-eintro-latin1): new function.
+	(ee-intro-face): new function.
+	(ee-intro-fontify): new function.
+	(ee-intro-fontify-maybe): new function.
+	(find-wrap-intro): use `ee-tolatin1'.
+	(find-anchors-intro): use `ee-tolatin1'.
+
+	* eejump.el: changes in the comments.
+
+	* eev-blinks.el: changes in the comments.
+	(find-eface): new function.
+
+2019-02-01  Eduardo Ochs  <eduardoochs@gmail.com>
+
+	* eev-intro.el (find-intro-dual): new function - a new hack that
+	replaces `find-intro-here'.
+	(find-intro-here): deleted together with its dependencies.
+	(find-eev-quick-intro): small changes.
+	(find-eval-intro): small changes.
+	(find-links-intro): small changes.
+	(find-eepitch-intro): small changes.
+	(find-eejump-intro): small changes.
+	(find-code-c-d-intro): small changes.
+
+	* eev-multiwindow.el (find-wset-c): new function.
+
+2019-01-30  Eduardo Ochs  <eduardoochs@gmail.com>
+
+	* eev-tlinks.el (find-eev-install-links): small changes.
+
+	* eev-intro.el (find-videos-intro): small changes.
+	(find-eev-intro): small changes.
+	(find-eev-quick-intro): small changes.
+
+2019-01-29  Eduardo Ochs  <eduardoochs@gmail.com>
+
+	* eev-wrap.el (ee-wrap-pdflike): use `code-pdf-page' instead of
+	`code-xpdf'.
+
+	* eev-brxxx.el: added comments.
+
+	* eev-load.el: new file.
+
+	* eev-intro.el (find-eev-quick-intro): Added two new sections:
+	"9.3. Hyperlinks to PDF files" and "9.4. Shorter hyperlinks to PDF
+	files".
+
+	* eev-pdflike.el: TOTAL REWRITE. The old version was renamed to
+	eev-pdflike-old.el and will be deleted at some point in the
+	future.
+	(code-xxxpdf-family): new function.
+	(code-xxxpdftext-family): new function.
+	(code-xxxpdf-alias): new function.
+
+	* eev-pdflike-old.el: new file - see above.
+
+	* eev-rcirc.el (find-freenode-2a): new function.
+	(find-freenode-links): rewrote completely.
+
+2019-01-28  Eduardo Ochs  <eduardoochs@gmail.com>
+
+	* eev-rcirc.el (ee-buffer-freenode-channel-name): new function.
+
+2019-01-24  Eduardo Ochs  <eduardoochs@gmail.com>
+
+	* eev-pdflike.el (ee-find-pdf-text): new function - an alias to
+	`ee-find-pdftotext-text'.
+	(ee-find-pdf-page): new function - an alias to
+	`ee-find-xpdf-page'.
+
+2019-01-23  Eduardo Ochs  <eduardoochs@gmail.com>
+
+	* eev-intro.el (find-eev-quick-intro): added sections "3.1.
+	Non-elisp hyperlinks", "7.2. The list of eejump targets", "7.3.
+	Defining eejump targets"; small changes in other sections.
+	(find-multiwindow-intro): small changes.
+	(find-anchors-intro): small changes.
+	(find-eval-intro): small changes.
+	(find-brxxx-intro): small changes.
+	(find-emacs-keys-intro): small changes.
+	(find-links-intro): small changes.
+
+	* eev-eval.el: added comments.
+	(ee-eval-last-sexp): rewrote to make it use
+	`ee-eval-last-sexp-0', `ee-eval-last-sexp-1', etc.
+
+	* eejump.el: moved the binding for `M-j' to eev-mode.el.
+
+	* eev-elinks.el: moved the binding for `M-h M-h' to eev-mode.el.
+
+	* eev-mode.el (eev-mode-map-set): rewrote some comments.
+	(eev-mode-map-set): removed the binding for `find-git-links-1'.
+	(eev-mode-map-set): added the binding for `M-j' (`eejump').
+	(eev-mode-map-set): added the binding for `M-h M-h' (`find-here-links').
+
+2019-01-05  Eduardo Ochs  <eduardoochs@gmail.com>
+
+	* eev-code.el (find-code-c-d-rest): new function.
+	(ee-eev-source-directory): new variable.
+
+	* eev-intro.el (find-eev-quick-intro): added a section about
+	"shorter hyperlinks".
+	(find-intro-here): added documentation in comments to the
+	`find-intro-here' and `fh' hacks.
+
+2019-01-04  Eduardo Ochs  <eduardoochs@gmail.com>
+
+	* eev-code.el (ee-code-c-d-base): use `find-sh-at-dir' instead of
+	`ee-find-xxxsh'.
+
+	* eev-blinks.el (find-sh-at-dir): new function.
+
+2018-11-06  Eduardo Ochs  <eduardoochs@gmail.com>
+
+	* eev-tlinks.el (find-debpkg-links): added "apt-file search".
+
+2018-06-05  Eduardo Ochs  <eduardoochs@gmail.com>
+
+	* eev-intro.el (find-eev-install-intro): added instructions for
+	using the git repository.
+
+	* eev-plinks.el (find-gitk): New function.
+
+2018-05-30  Eduardo Ochs  <eduardoochs@gmail.com>
+
+	* eepitch.el (eepitch-window-show): use a hack with `find-2a' from
+	eev-multiwindow.el; added a "(require 'eev-multiwindow)" to the
+	beginning of the file.
+
+	* eev-tlinks.el (find-intro-links): small changes in the template.
+
+	* eev-intro.el (find-eev-install-intro): new function.
+
+	* eev-tlinks.el (find-eev-install-links): new function.
+
+2018-05-28  Eduardo Ochs  <eduardoochs@gmail.com>
+
+	* eev-rcirc.el (find-rcirc-buffer): make the argument ACHANNELS
+	optional.
+	(find-rcirc-buffer-2a, find-rcirc-buffer-3a): new functions.
+
+2018-05-24  Eduardo Ochs  <eduardoochs@gmail.com>
+
+	* eev-intro.el: added a link to `(find-eev-quick-intro)' to the
+	header of each intro.
+
+	* eev-intro.el (ee-sexp-at, ee-intro-sexp-end-re)
+	(ee-intro-sexp-here, find-intro-here, fh): a (new) hack to help me
+	edit the text of the `find-xxx-intro's.
+
+2018-05-19  Eduardo Ochs  <eduardoochs@gmail.com>
+
+	* eev-intro.el (find-escripts-intro): new function.
+	(find-emacs-keys-intro): new function.
+
+2018-05-16  Eduardo Ochs  <eduardoochs@gmail.com>
+
+	* eev-codings.el (ee-to-coding,ee-tolatin1): new file, with these
+	two functions plus comments.
+
+	* eev-anchors.el (ee-to-coding,ee-tolatin1): moved to
+	eev-codings.el.
+
+	* eev2-all.el: load eev-codings.el.
+
+2018-01-05  Eduardo Ochs  <eduardoochs@gmail.com>
+
+	* eev-blinks.el (ee-eejump-symbols): add a test for `fboundp'.
+
+2017-07-31  Eduardo Ochs  <eduardoochs@gmail.com>
+
+	* eev-wrap.el (eewrap-escript-block): new function.
+	(ee-wrap-escript-block): new function.
+
+2017-07-29  Eduardo Ochs  <eduardoochs@gmail.com>
+
+	* eev-anchors.el (ee-goto-anchor): fixed the docstring.
+	(ee-to-coding): New function.
+	(ee-tolatin1): New function.
+	(ee-format-as-anchor): Use `ee-tolatin1'.
+
+	* eev-wrap.el (ee-wrap-anchor0): Use `ee-tolatin1'.
+
+2017-07-28  Eduardo Ochs  <eduardoochs@gmail.com>
+
+	* eev-pdflike.el (ee-find-djvu-cleanup): new function.
+	(find-djvu-page): call `ee-find-djvu-cleanup'.
+
+2017-04-29  Eduardo Ochs  <eduardoochs@gmail.com>
+
+	* eev-intro.el (find-eev-quick-intro): several changes.
+
+	* eev-tlinks.el (find-eev-update-links): add a script that creates
+	a file "~/e".
+
+2016-04-20  Eduardo Ochs  <eduardoochs@gmail.com>
+
+	* eejump.el (eejump): use `find-eejumps'.
+
+	* eev-blinks.el (ee-find-eejumps-header, ee-find-eejumps-body):
+	new functions.
+	(eejump-symbols): renamed to `ee-eejump-symbols'.
+
+2015-06-30  Eduardo Ochs  <eduardoochs@gmail.com>
+
+	* eev-intro.el (find-eev-quick-intro): new sandboxed tutorial.
+
+2015-02-17  Eduardo Ochs  <eduardoochs@gmail.com>
+
+	* eev-plinks.el (find-comintprocess-ne, find-comintprocess): make
+	the second argument - program-and-args - optional.
+
+	* eepitch.el (find-comintprocess-ne, find-comintprocess)
+	(eepitch-comint, eepitch-comint-de, eepitch-comint-at): make
+	program-and-args optional.
+
+2012-10-13  Eduardo Ochs  <eduardoochs@gmail.com>
+
+	* eepitch.el (eepitch-delete-and-extract-line): renamed to
+	`ee-this-line-extract'.
+
+2012-09-09  Eduardo Ochs  <eduardoochs@gmail.com>
+
+	* eev-all.el: added a "(require 'eev-intro)"; note that changes to
+	eev-intro.el are not being included in this changelog yet. Also,
+	do not fiddle with Info-additional-directory-list anymore - the
+	texinfo docs are obsolete.
+
+2012-08-18  Eduardo Ochs  <eduardoochs@gmail.com>
+
+	* eev.el (ee-areplace): new function.
+
+2012-03-26  Eduardo Ochs  <eduardoochs@gmail.com>
+
+	* eev-all.el: add requires for "eepitch" and "eev-template".
+	WARNING: eepitch.el and eev-template.el are new files, that I
+	haven't started mentioning in this changelog yet!...
+
+2012-03-05  Eduardo Ochs  <eduardoochs@gmail.com>
+
+	* eev.el (find-sh0): changed "\n$" to "\n\\'".
+	(ee-find-xxxsh00): new function.
+	(ee-code-c-d-base): added `find-xxxsh00'.
+
+2012-02-27  Eduardo Ochs  <eduardoochs@gmail.com>
+
+	* eev-browse-url.el (brpdftxtl, brpdftxtd): new functions.
+
+2012-01-23  Eduardo Ochs  <eduardoochs@gmail.com>
+
+	* eev.el (find-eCfunction): declared obsolete (in the docstring).
+	(find-eCvariable): declared obsolete (in the docstring).
+
+2011-05-11  Eduardo Ochs  <eduardoochs@gmail.com>
+
+	* eev.el (find-callprocessregion-ne): new function.
+	(find-callprocessregion): new function.
+
+2011-02-24  Eduardo Ochs  <eduardoochs@gmail.com>
+
+	* eev-insert.el (ee-template): convert each symbol in the `pairs'
+	argument into a pair.
+	(ee-gformat): new function.
+	(ee-gmapconcat-split): new function.
+	(find-find-links-links): use `ee-gmapconcat-split'.
+
+2010-11-12  Eduardo Ochs  <eduardoochs@gmail.com>
+
+	* eev-insert.el (find-debpkg-links): add some apt-cache links.
+
+2010-09-10  Eduardo Ochs  <eduardoochs@gmail.com>
+
+	* eev-steps.el (eepitch-this-line): use `ee-next-line'.
+	(eechannel-do-this-line): use `ee-next-line'.
+
+	* eev-insert.el (ee-delete-and-extract-line): do not try to go
+	past point-max when we are on the last line of a buffer.
+	(ee-wrap-code-c-d-links): interpret `str' as a `d' plus a
+	`directory' instead of as just as a directory.
+
+	* eev.el (find-callprocess-ne): new function.
+	(find-callprocess): new function.
+
+	* eev-mini.el (find-callprocess-ne): new function.
+	(find-callprocess): new function.
+
+2010-07-30  Eduardo Ochs  <eduardoochs@gmail.com>
+
+	* eev.el (find-epp): use `find-estring-elisp'.
+
+2010-07-12  Eduardo Ochs  <eduardoochs@gmail.com>
+
+	* Makefile (htmlize.el): download the patched version of
+	htmlize.el.
+
+2010-07-11  Eduardo Ochs  <eduardoochs@gmail.com>
+
+	* eev.el (find-djvutotext): new function.
+	(ee-code-djvutotext): new function.
+	(code-djvutotext): new function.
+	(find-code-djvutotext): new function.
+
+2010-07-10  Eduardo Ochs  <eduardoochs@gmail.com>
+
+	* eev.el (ee-kill-this-buffer): new function.
+	(eev-mode-map): use `ee-kill-this-buffer' in `M-k'.
+
+	* eev-mini-steps.el (eepitch-kill): use `ee-kill-this-buffer'.
+	(eegud-kill-this-buffer): use `ee-kill-this-buffer'.
+
+2009-08-12  Eduardo Ochs  <eduardoochs@gmail.com>
+
+	* eev.el (eev-mode-lighter): new variable.
+	(eev-mode): use eev-mode-lighter.
+
+2008-10-19  Eduardo Ochs  <eduardoochs@gmail.com>
+
+	* eev-mini-steps.el (ee-next-line): new function.
+	(eepitch-this-line): use `ee-next-line'.
+	(eechannel-this-line): use `ee-next-line'.
+
+2008-10-15  Eduardo Ochs  <eduardoochs@gmail.com>
+
+	* eev-all.el: add a directory to Info-additional-directory-list.
+	* doc/eev.info: new file.
+	* doc/eev.texi: new file.
+
+2008-09-13  Eduardo Ochs  <eduardoochs@gmail.com>
+
+	* eev-browse-url.el (brdjvul, brdjvud): new functions.
+
+2008-08-17  Eduardo Ochs  <eduardoochs@gmail.com>
+
+	* eev-mini-steps.el (eepitch-mf): new function.
+
+	* eev-insert.el (find-ecolor-links): added an "#RRGGBB" line.
+
+2008-08-14  Eduardo Ochs  <eduardoochs@gmail.com>
+
+	* eev.el (ee-djvupage, find-djvupage, ee-code-djvu, code-djvu)
+	(find-code-djvu): new functions.
+
+2008-07-07  Eduardo Ochs  <eduardoochs@gmail.com>
+
+	* eev.el (find-eev-mode-links): new function.
+	(eev-mode-map): bind `M-h M-e' to `find-eev-mode-links'.
+	(eev-mode): several docstring changes.
+
+	* eev-insert.el (ee-wrap-eepitch): added a docstring.
+
+	* eev-mini-steps.el (eepitch): added an example to the docstring.
+	(eepitch-this-line): small docstring changes.
+	(eepitch-kill): added a docstring.
+	(eepitch-shell): added a docstring.
+	(eepitch-comint): added a docstring.
+	(ee-eepitch-comint): added a docstring.
+
+	* eev-compose.el (eev-compose-two-keys, eev-composes-update):
+	small docstring changes.
+
+2008-07-05  Eduardo Ochs  <eduardoochs@gmail.com>
+
+	* eev-mini-steps.el (ee-gud-escript-window, ee-gud-gud-window)
+	(ee-gud-source-window): new variables.
+	(eepitch-gud-window-setup): new function.
+	(eepitch-gdb): changed to use `eepitch-gud-window-setup'.
+
+2008-07-03  Eduardo Ochs  <eduardoochs@gmail.com>
+
+	* eev-langs.el, eeg4: corrected the e-mail address.
+	* eev-math-glyphs.el (ee-map-split, ee-map-nth, ee-chop1)
+	(ee-chop2, ee-chop3): new functions.
+	* eev-glyphs.el: added comments about cons glyphs.
+	* eev-compose.el: added comments and docstrings.
+	* eev.el (ee-split): added a "\n" to the whitespace regexp.
+	(ee-insert, find-einsert): new functions.
+
+2008-06-23  Eduardo Ochs  <eduardoochs@gmail.com>
+
+	* eev.el (ee-find-comintprocess-ne): use `with-temp-buffer' and
+	`cd' instead of "(let ((default-directory ...)) ...)".
+	(ee-find-comintprocess): expand the argument `dir'.
+
+2008-05-09  Eduardo Ochs  <eduardoochs@gmail.com>
+
+	* eev-mini-steps.el (eepitch-latex, eepitch-tex): new functions.
+
+2008-04-20  Eduardo Ochs  <eduardoochs@gmail.com>
+
+	* eev.el (find-code-ps, find-code-dvi, find-code-xpdf)
+	(find-code-pdftotext, find-code-pstotext, find-code-zpstotext):
+	use `find-estring-elisp' instead of `find-estring'.
+
+2008-04-15  Eduardo Ochs  <eduardoochs@gmail.com>
+
+	* eev.el (ee-emacs-leim-directory): new variable, for the (new)
+	"eleim" and "equail" `code-c-d's.
+
+	* eev-math-glyphs.el (eev-math-glyphs-name-to-char): added
+	"ulcorn" and "urcorn".
+
+2008-04-06  Eduardo Ochs  <eduardoochs@gmail.com>
+
+	* eev-steps.el: changed the comments at the top to explain that
+	this file is mostly obsolete, that usually eev-mini-steps.el is
+	loaded after it (by eev-all.el) and overrides most of its
+	definitions, and that the two will be merged soon.
+
+	* eev-mini-steps.el: changed the top comments to explain that this
+	file is not experimental anymore; added diagrams to explain
+	eepitch, eechannel, and eexterm.
+	(eexterm-args-ne): added a docstring.
+	(eexterm-create-ne): added a docstring.
+	(eechannel-xterm): make it an alias to `eexterm'.
+
+2008-03-25  Eduardo Ochs  <eduardoochs@gmail.com>
+
+	* eev-math-glyphs.el (eev-math-glyphs-edrx): fixed "-o"; reused
+	the character used for "dotli" - now it is "sqcup".
+	(eev-math-glyphs-name-to-char): added "lolli" and "sqcup".
+
+2008-03-03  Eduardo Ochs  <eduardoochs@gmail.com>
+
+	* eev-insert.el (find-elinks-elisp): new function.
+
+2008-03-01  Eduardo Ochs  <eduardoochs@gmail.com>
+
+	* eev-compose.el (eev-composes-otheriso): added the negation
+	symbol.
+
+2008-02-27  Eduardo Ochs  <eduardoochs@gmail.com>
+
+	* eev-glyphs.el (ee-glyph-shift): use less magic to calculate the
+	shift: if `make-glyph-code' is defined, calculate `ee-glyph-shift'
+	by inverting the result of `make-glyph-code'.
+
+2008-02-23  Eduardo Ochs  <eduardoochs@gmail.com>
+
+	* eev-glyphs.el (ee-glyph-shift): new variable.
+	(ee-glyph-char-mask): new function.
+	(ee-glyph): changed the code and the docstring to use
+	`ee-glyph-shift' and `ee-glyph-char-mask'.
+	(eev-set-glyph): removed the temporary hack mentioned below.
+
+2008-02-22  Eduardo Ochs  <eduardoochs@gmail.com>
+
+	* eev-glyphs.el (eev-set-glyph): redefine if we are in unicode-2
+	emacs (TEMPORARY HACK).
+
+	* eev-math-glyphs.el (eev-math-glyphs-name-to-char): use other
+	char values if we are in unicode-2 emacs (TEMPORARY HACK).
+
+2008-02-11  Eduardo Ochs  <eduardoochs@gmail.com>
+
+	* eev-insert.el (ee-template): new function.
+	(find-find-links-links): new function.
+
+2008-01-18  Eduardo Ochs  <eduardoochs@gmail.com>
+
+	* eev-browse-url.el (ee-psne-wget-lines): wrapped the url in ''s
+	in the call to wget.
+
+2008-01-14  Eduardo Ochs  <eduardoochs@gmail.com>
+
+	* eev.el (eev-mode-map): new binding: M-T -> ee-wrap-eepitch.
+
+	* eev-insert.el (ee-wrap-code-c-d-links, ee-wrap-eepitch): new
+	functions.
+
+2008-01-10  Eduardo Ochs  <eduardoochs@gmail.com>
+
+	* eev-insert.el (find-eev-update-links): added an "(eepitch-kill)"
+	before "(eepitch-shell)"; added some links about eev-rctool;
+	general reoganization.
+
+	* eev-rctool (prepare_backup): added a variable
+	CP (experimentally) to use "cp -p" instead of "cp -a".
+	(wrap_block): added a link to (find-eev-update-links).
+
+	* eev-mini-steps.el (ee-eepitch-comint): new function.
+
+2008-01-08  Eduardo Ochs  <eduardoochs@gmail.com>
+
+	* eev.el (eev-mode): fixes in the docstring: added the `ee-wrap'
+	commands, removed `eewalk-...'.
+
+2008-01-04  Eduardo Ochs  <eduardoochs@gmail.com>
+
+	* eev-browse-url.el (ee-cp): use `ee-expand'.
+
+2008-01-02  Eduardo Ochs  <eduardoochs@gmail.com>
+
+	* eev.el (code-c-d-keywords-new): new keyword: :wget.
+	(ee-code-c-d-:wget): new function.
+	(eev-mode-map): bind M-C (meta-uppercase-c) to ee-wrap-code-c-d.
+	(ee-find-comintprocess-ne, ee-find-comintprocess): new functions.
+
+	* eev-insert.el (ee-wrap-code-c-d-links, ee-wrap-code-c-d): new
+	functions.
+
+2007-12-21  Eduardo Ochs  <eduardoochs@gmail.com>
+
+	* eev.el (eev-mode-map): added bindings for M-D, M-F, M-M, M-S;
+	removed the binding for M-G (was `eegud-show-gud-buffer', but this
+	function is obsolete now that we have `eepitch-gdb').
+	(ee-setenv): set the environment variable "$S" if it's not set.
+
+	* eev-rctool (new_block_no_wrappers_emacs): changed the eev block
+	for .emacs to make it just load "eev-all.el" and turn eev-mode on.
+
+	* eev-insert.el (ee-delete-extract-wrap, ee-wrap-file-links)
+	(ee-wrap-man-links, ee-wrap-sh-links, ee-wrap-sh0-links)
+	(ee-wrap-debian-links, ee-wrap-file, ee-wrap-man, ee-wrap-sh)
+	(ee-wrap-sh0, ee-wrap-debian): new functions.
+
+	* eev-browse-url.el (find-wget00, find-wget, brwget, ee-cp)
+	(ee-psne-wget-lines, find-psne-links, brep): new functions.
+
+2007-12-20  Eduardo Ochs  <eduardoochs@gmail.com>
+
+	* eev-insert.el (ee-delete-and-extract-line): new optional
+	argument: "adjust".
+
+2007-12-14  Eduardo Ochs  <eduardoochs@gmail.com>
+
+	* eev-mini-steps.el (eegud-kill-this-buffer, eepitch-gdb)
+	(eepitch-gdb-kill): new functions.
+
+	* eev-rctool (notes): new function.
+
+2007-12-13  Eduardo Ochs  <eduardoochs@gmail.com>
+
+	* eev-browse-url.el (eeurl-u-to-f): allow "https://".
+
+2007-11-27  Eduardo Ochs  <eduardoochs@gmail.com>
+
+	* eev.el (ee-code-c-d-:info): added a "(setq ee-info-file %S)" and
+	a "(setq ee-info-file %S)", to make `M-h M-i' (`find-einfo-links')
+	happier.
+	(code-c-d, find-code-c-d): make the aliases point to
+	`code-c-d-new' and `find-code-c-d-new' instead of to
+	`code-c-d-old' and `find-code-c-d-old'. If you have calls to
+	`code-c-d' that need features that are not in `code-c-d-new', make
+	those specific calls use `code-c-d-old' instead.
+
+2007-11-18  Eduardo Ochs  <eduardoochs@gmail.com>
+
+	* eev.el (find-dvipagenow, find-pspagenow, find-dvipage)
+	(find-pspage, eebg-xdvi, eebg-gv): commented out.
+	(code-ps, code-dvi): commented out.
+	(ee-dvipage, ee-pspage, ee-xpdfpage): new functions.
+	(find-dvipage, find-pspage, find-xpdfpage, find-pdftotext)
+	(find-pstotext, find-zpstotext): new functions - but note that
+	there were another `find-dvipage' and another `find-pspage'
+	before, and we are replacing their code.
+	(ee-code-ps, ee-code-dvi, ee-code-xpdf, ee-code-pdftotext)
+	(ee-code-pstotext, ee-code-zpstotext): new functions.
+	(find-code-ps, find-code-dvi, find-code-xpdf)
+	(find-code-pdftotext, find-code-pstotext, find-code-zpstotext):
+	new functions.
+	(code-ps, code-dvi, code-xpdf, code-pdftotext, code-pstotext)
+	(code-zpstotext): new functions - but note that there were another
+	`code-ps' and another `code-dvi' before, and we are replacing
+	their code.
+	(code-c-d-old, ee-code-c-d-old, find-code-c-d-old): new names;
+	these functions were called `code-c-d', `ee-code-c-d', and
+	`find-code-c-d' before. Now `code-c-d', `ee-code-c-d', and
+	`find-code-c-d' are aliases pointing to the `...-old' functions.
+	(code-c-d-gdb, code-c-d-linux): call `code-c-d-old' instead of
+	`code-c-d'.
+	(ee-find-grep): new function (a copy of ee-find-grep-at-dir).
+	(find-echarsetchars, find-eccldump): use `find-eoutput-reuse'
+	instead of `find-eoutput'.
+
+2007-11-11  Eduardo Ochs  <eduardoochs@gmail.com>
+
+	* eev.el (ee-find-node): new function.
+	(ee-code-c-d-:linfo): fixed the argument list to `format'.
+
+2007-09-29  Eduardo Ochs  <eduardoochs@gmail.com>
+
+	* eev-mini-steps.el (eepitch-comint, eepitch-shell)
+	(eepitch-shell2, eepitch-eshell, eepitch-lua51, eepitch-python)
+	(eepitch-ruby, eepitch-gnuplot, eepitch-wish, eepitch-tcl)
+	(eepitch-tclsh, eepitch-expect, eepitch-gforth): new functions.
+
+	* eev.el (ee-split, ee-unsplit, ee-split-and-expand)
+	(ee-no-trailing-nl, find-bgprocess-ne, find-callprocess00-ne)
+	(find-callprocess0-ne, find-comintprocess-ne, find-bgprocess)
+	(find-callprocess00, find-callprocess0, find-comintprocess): new
+	functions (copied from eev-mini.el).
+
+	* eev-insert.el (find-ecolor-links): new function.
+
+	* eev-langs.el (ee-choosecolor): new function.
+
+2007-09-28  Eduardo Ochs  <eduardoochs@gmail.com>
+
+	* eev-insert.el (find-eev-update-links): new function.
+
+2007-09-27  Eduardo Ochs  <eduardoochs@gmail.com>
+
+	* eev.el (ee-concat, ee-read): new functions.
+	(code-c-d-new, find-code-c-d-new, find-code-c-d-rest)
+	(ee-code-c-d-new, ee-code-c-d-rest, ee-code-c-d-base)
+	(ee-code-c-d-:info, ee-code-c-d-:linfo, ee-code-c-d-:anchor)
+	(ee-code-c-d-:grep): new functions.
+	(code-c-d-keywords-new): new variable.
+
+2007-09-05  Eduardo Ochs  <eduardoochs@gmail.com>
+
+	* eev-all.el: new file.
+
+2007-09-01  Eduardo Ochs  <eduardoochs@gmail.com>
+
+	* eev-mini-steps.el (eexterm): rewritten in terms of `eexterm-ne'.
+	(eexterm-args-ne): use $SHELL as the default for prog-and-args.
+	(eechannel-kill): inverted the order or the arguments.
+	(eexterm-kill): new function.
+
+2007-07-27  Eduardo Ochs  <eduardoochs@gmail.com>
+
+	* eev-rctool (new_block_emacs): load "eev-mini-steps.el" instead
+	of "eev-steps.el".
+
+2007-07-08  Eduardo Ochs  <eduardoochs@gmail.com>
+
+	* eev.el (find-eoutput-rerun, find-eoutput-reuse)
+	(find-estring-elisp): new functions.
+	(find-estring): rewritten; the new version is based on
+	`find-eoutput-rerun'.
+
+2007-06-14  Eduardo Ochs  <eduardoochs@gmail.com>
+
+	* eev-insert.el (ee-sexp-value): new function.
+	(ee-rcirc-channel-sexp, ee-rcirc-server-sexp)
+	(ee-rcirc-channel-sexps, ee-rcirc-server-sexps)
+	(find-rcirc-channel-sexps): new functions.
+
+2007-04-23  Eduardo Ochs  <eduardoochs@gmail.com>
+
+	* eev-math-glyphs.el: added "pi".
+
+2006-12-11  Eduardo Ochs  <eduardoochs@gmail.com>
+
+	* eev.el (find-sh00): new function (?!?!? - I just uncommented the
+	definition...).
+
+2006-11-12  Eduardo Ochs  <eduardoochs@gmail.com>
+
+	* eev-rctool (new_block_emacs): changes to the "eev block" that
+	eev-rctools puts at .emacs: add code to require "eev-bounded.el"
+	and "eev-steps.el"; remove the code to require "eev-walk.el"; use
+	`eev-set-aliases' instead of `ee-invade-global-namespace'.
+
+	* eev.el: require "eev-bounded.el" instead of
+	"eev-bounded-old.el".
+
+	* eev-bounded.el (eeb-default): renamed - when this file was in
+	test this function was called `eeb-default-new', and `eeb-default'
+	was the version in "eev-bounded-old.el".
+
+2006-10-27  Eduardo Ochs  <edrx@mat.puc-rio.br>
+
+	* eev-sshot.el: new file.
+
+2006-10-15  Eduardo Ochs  <edrx@mat.puc-rio.br>
+
+	* eev-insert.el (ee-debian-pooldir): new function.
+	(find-debpkg-links): use `ee-debian-pooldir'; add a link to
+	backports.
+
+2006-10-04  Eduardo Ochs  <edrx@mat.puc-rio.br>
+
+	* eev.el (ee-find-xxxsh): small fix: added the missing `apply'.
+
+2006-09-18  Eduardo Ochs  <edrx@mat.puc-rio.br>
+
+	* eev-bounded.el: new file, containing a rewrite of `eeflash',
+	`eeb-define', and of lots of related variables and functions. It
+	is not even loaded by default at this moment, but in a few days
+	the corresponding functions in eev.el should be moved to
+	eev-bounded-old.el and eev-bounded.el will start to be `require'd
+	by default.
+
+2006-09-11  Eduardo Ochs  <edrx@mat.puc-rio.br>
+
+	* eev.el: more docstrings.
+
+2006-08-30  Eduardo Ochs  <edrx@mat.puc-rio.br>
+
+	* eev-glyphs.el (ee-glyph): new function.
+	(eev-set-glyph): changed to use `ee-glyph'.
+
+2006-08-29  Eduardo Ochs  <edrx@mat.puc-rio.br>
+
+	* eev.el: more docstrings, and a few insignificant cleanings in
+	the code.
+
+2006-08-25  Eduardo Ochs  <edrx@mat.puc-rio.br>
+
+	* eev.el (ee-message): new function.
+	(ee-message-maybe): new function, replaces `ee-maybe-showing-it'.
+
+2006-08-24  Eduardo Ochs  <edrx@mat.puc-rio.br>
+
+	* eev-browse-url.el (brcdl): new function.
+	* eev.el (eecd): added a call to `file-name-directory'.
+
+2006-08-23  Eduardo Ochs  <edrx@mat.puc-rio.br>
+
+	* eev.el: renamed several functions.
+	(ee-find-xxxnode): new name for `ee-find-codenode'.
+	(ee-find-xxxsh): new name for `ee-find-cd-sh'.
+	(ee-find-xxxsh0): new name for `ee-find-cd-sh0'.
+
+2006-08-22  Eduardo Ochs  <edrx@mat.puc-rio.br>
+
+	* eev.el: added lots of docstrings.
+	* eev.el (find-escratchbuffer): rewritten; the old definition was
+	a prototype that didn't do what its name implied.
+
+2006-08-21  Eduardo Ochs  <edrx@mat.puc-rio.br>
+
+	* eev.el: added lots of docstrings.
+
+2006-08-17  Eduardo Ochs  <edrx@mat.puc-rio.br>
+
+	* eev.el (ee-delimiter-hash, ee-delimiter-percent)
+	(ee-anchor-format, ee-hyperlink-prefix, ee-comment-prefix): added
+	`safe-local-variable' properties.
+	(ee-hyperlink-prefix, ee-comment-prefix): added a defvar.
+	(find-estring, find-epp, find-epp0, find-efunctionpp): added
+	docstrings.
+	* eev-browse-url.el: new file.
+	* eev-insert.el: major rewrite.
+	* eev-insert-old.el: new file, backup of the old eev-insert.el.
+	* htmlize-eev.el (htmlize-eev-files): added the new files, marked
+	some files as obsolete.
+
+2006-02-01  Eduardo Ochs  <edrx@mat.puc-rio.br>
+
+	* eev.el (eepitch-code, eepitch-target-buffer): new variables.
+	(eepitch-prepare, eepitch, eepitch-this-line): new functions.
+	(eev-mode-map): changed the binding of <f8> from
+	`eewalk-do-walk-or-set' (that I think that no one used) to
+	`eepitch-this-line'.
+
+2006-01-23  Eduardo Ochs  <edrx@mat.puc-rio.br>
+
+	* eev.el (find-callprocess00, find-callprocess0, find-eeffect):
+	new functions.
+
+2005-12-20  Eduardo Ochs  <edrx@mat.puc-rio.br>
+
+	* eev.el (ee-code-c-d, find-code-c-d): new functions.
+	(code-c-d): docstring changes.
+	* eev-insert.el (ee-link-to-string, ee-links-to-string)
+	(find-elinks-new): new functions.
+
+2005-12-11  Eduardo Ochs  <edrx@mat.puc-rio.br>
+
+	* eev.el (ee-yank-one-line, eestore, eestore-bounded): new
+	functions.
+	(eev-mode-map): new binding: `M-P' -> `ee-yank-one-line'.
+	(eev-mode): mention `ee-yank-one-line' in the docstring.
+
+	* eev-rctool (create_help): minor changes in the HELP file.
+
+2005-11-16  Eduardo Ochs  <edrx@mat.puc-rio.br>
+
+	* eev.el (ee-minor-mode-keymap): new function.
+
+2005-10-12  Eduardo Ochs  <edrx@mat.puc-rio.br>
+
+	* eev.el (code-c-d-keywords): removed the first argument (`once')
+	from the definition of the `eeb-xxxgdb-start' functions in the
+	`:gdb' block.
+	(code-ps, code-dvi): now the `find-xxxpage' functions are
+	interactive.
+
+	* eev-langs.el (ee-gdb-start): add "--annotate=3" to the arguments
+	to gdb when we're running on (GNU) Emacs 22.
+
+2005-08-26  Eduardo Ochs  <edrx@mat.puc-rio.br>
+
+	* eeg (COPYRIGHT): new function; wrapped the copyright statement
+	inside a function that prints it - but there's no standard way to
+	invoke that function yet.
+
+	* eev-rctool (COPYRIGHT): same.
+
+2005-08-23  Eduardo Ochs  <edrx@mat.puc-rio.br>
+
+	* eev.el (code-c-d-base): fixed a bug in the definition of the
+	`find-xxxsh0' functions: replaced `apply' by `funcall'.
+
+2005-08-15  Eduardo Ochs  <edrx@mat.puc-rio.br>
+
+	* eev-rctool (create_tmpdir_file_maybe, create_help)
+	(create_psnesh, create_help): new functions. From the user
+	perspective what changes is that now running "eev-rctool prepare"
+	creates one more file in the tmpdir: ~/.eev/HELP, used by
+	`M-?' (eev-help-page).
+	(prepare_tmpdir): changed to use the new functions.
+
+2005-08-02  Eduardo Ochs  <edrx@mat.puc-rio.br>
+
+	* eev.el (eev-help-page): new function, bound to `M-?'.
+	(eev-help-page-file-name, eev-help-previous-buffer): new
+	variables.
+
+	* eev-insert.el (ee-hyperlink-prefix): new function.
+	(ee-set-hyperlink-prefix): obsoleted, commented out.
+
+2005-07-24  Eduardo Ochs  <edrx@mat.puc-rio.br>
+
+	* eev-walk.el: new file; all the eewalk-* functions are now
+	here (they used to be at eev.el).
+
+	* eev-rctool (new_block_no_wrappers_emacs): added the line
+	`(load-library "eev-walk.el")'.
+
+2005-07-22  Eduardo Ochs  <edrx@mat.puc-rio.br>
+
+	* eev.el (eesteps-do-step): added "&optional arg" and a special
+	behavior when arg is 0.
+
+2005-07-20  Eduardo Ochs  <edrx@mat.puc-rio.br>
+
+	* eev.el (find-eccldump, find-ekeymapdescr): new functions.
+	(eewalk-*): many small changes.
+	(eev-mode-map): added [f8] -> eewalk-do-walk-or-set.
+	(eev-mode): replaced the docstring. The previous one was one-line
+	long.
+
+2005-07-18  Eduardo Ochs  <edrx@mat.puc-rio.br>
+
+	* eev.el (eewalk-marker): New variable.
+	(eewalk-on-marker, eewalk-skip-whitespace, eewalk-read)
+	(eewalk-this-window, eewalk-this-buffer, eewalk-do-walk)
+	(eewalk-other-frame, eewo-bounded): New functions - `eewalk' is an
+	experimental feature (a "visual version" of `eesteps'), and I'm
+	not sure about its design yet... I'm discussing it with friends
+	via IRC, and I haven't even announced it on the mailing list. Note
+	that there's code suggesting that `eewalk-do-walk' will be bounded
+	to [f8], but that code is commented out. THIS CHANGELOG ENTRY MAY
+	BE CHANGED SOON.
+	(eev-mode-global-settings-restore): bug fix (cdr->cadr).
+
+2005-07-09  Eduardo Ochs  <edrx@mat.puc-rio.br>
+
+	* eev.el: added `(provide 'eev)'.
+	(eev-mode-global-settings, eev-mode-global-settings-backup): new
+	variables.
+	(eev-mode-global-settings-set, eev-mode-global-settings-restore):
+	new functions.
+	(eek-no-debug): new macro.
+	(eek-eval): new function.
+	(eek-eval-last-sexp): make it set explicitly the debug flags -
+	usually turning debugging on error off - before invoking eval.
+	(eev-mode): changed the mode's `:init-value' to nil. Now loading
+	eev.el doesn't turn on eev-mode, and so doesn't activate the
+	eev-mode keymap. Also added a docstring.
+	(eev-newbie): added `(eev-mode 1)'.
+	(find-eoutput): new function.
+	(find-echarsetchars): new function; also added autoloads for it.
+
+	* eev-rctool: added `(eev-mode 1)' to the "eev block" of .emacs.
+
+2005-06-20  Eduardo Ochs  <edrx@mat.puc-rio.br>
+
+	* eev-langs.el (eehtml-bounded, eephp-bounded, eephp+-bounded)
+	(eelua-bounded, eelua0-bounded, eetcl-bounded, eemp-bounded)
+	(eemp-now-bounded, eepsrun-bounded, eeicon-bounded)
+	(eeicon-ow-bounded, eelily-bounded, eefvwm-bounded)
+	(eefvwm0-bounded): new functions. Now each `eexxx' that has a
+	bounded version with a name like `eeb-xxx' also has an equivalent
+	bounded version with a name like `eexxx-bounded'.
+
+	* examples/ruby.e: new file.
+
+	* examples/qemu.e: wasn't being included in the eev package, oops!
+
+2005-06-13  Eduardo Ochs  <edrx@mat.puc-rio.br>
+
+	* eev-rctool (new_block_no_wrappers_bashrc,
+	new_block_no_wrappers_zsh): make the two functions the same, added
+	a comment about source'ing psne.sh.
+
+2005-06-12  Eduardo Ochs  <edrx@mat.puc-rio.br>
+
+	* eev-rctool (create_psnesh): new function. Now `eev-rctool
+	prepare_tmpdir' creates a new file in $EEVTMPDIR, psne.sh.
+	(wrap_block): fixed the functions used in the hyperlinks that
+	point to eev-rctool, from `find-eev2rc' to `find-eev'. Note that
+	this implies that eev-rctool is in the same directory as the ".el"
+	files; this will probably be changed again when eev gets included
+	in Emacs.
+
+	* eev.el (eebg-gv): changed how eebg-gv calls gv: we used to
+	use (list "-page" (format "%d" page)) to produce a list of
+	arguments like ("-page" "99"); that was changed to (format
+	"--page=%d" page), which produces a single argument like
+	"--page=99".
+	(find-dvipagenow, find-pspagenow): new aliases.
+
+2005-06-08  Eduardo Ochs  <edrx@mat.puc-rio.br>
+
+	* eev.el (eevnow-at, eevnow-at-file): make these functions behave
+	as hyperlinks when called with a non-nil value of ee-arg - for
+	example, when they are executed with M-2 M-2 M-e instead of with
+	F9.
+
+2005-06-07  Eduardo Ochs  <edrx@mat.puc-rio.br>
+
+	* eev.el (code-c-d-keywords): added two new keywords to the list:
+	:xdvi and :gv.
+	(ee-goto-position): added a wrapper around the code that processes
+	the first string in a pos-spec. Now when the string is not found
+	ee-goto-position issues an error, as it did before the change, but
+	it no longer moves point to the beginning of the buffer.
+	(ee-at-file, eevnow-at-file): new functions.
+
+	* examples/tex.e: added several new examples.
+
+2005-06-03  Eduardo Ochs  <edrx@mat.puc-rio.br>
+
+	* article/: new directory; it contains an article about eev (a
+	work in progress) that wasn't yet part of eev's package.
+
+2005-05-29  Eduardo Ochs  <edrx@mat.puc-rio.br>
+
+	* eev-math-glyphs.el: new file.
+
+2005-05-28  Eduardo Ochs  <edrx@mat.puc-rio.br>
+
+	* eev.el (eek): `interactive' was coming before the docstring;
+	fixed the order.
+
+2005-05-20  Eduardo Ochs  <edrx@mat.puc-rio.br>
+
+	* eev-ttp.el: new file.
+
+2005-05-19  Eduardo Ochs  <edrx@mat.puc-rio.br>
+
+	* eev-insert.el (eemakelinks-evariable): added a `(find-eCvariable
+	...)' link.
+
+2005-05-16  Eduardo Ochs  <edrx@mat.puc-rio.br>
+
+	* eev-compose.el (eev-compose): added "(provide 'eev-compose)".
+
+	* eev-glyphs.el (eev-glyphs): added "(provide 'eev-glyphs)".
+
+2005-04-12  Eduardo Ochs  <edrx@mat.puc-rio.br>
+
+	* eev.el: added missing parens at "ee-setenv EEVDIR ...". Thanks
+	to David Hansen for noticing this and sending the fix.
+
+2005-04-09  Eduardo Ochs  <edrx@mat.puc-rio.br>
+
+	* eev.el: added a block of comments explaining the data structures
+	used by eeflash, eeflash+, ee-sedelims+-to-se+,
+	ee-sedelims++-to-sedelims+, eeb-default and other functions.
+
+2005-04-08  Eduardo Ochs  <edrx@mat.puc-rio.br>
+
+	* eev.el (ee-at, eevnow, eevnow-at): new functions.
+	(ee-eval-read-format): fixed a bug that was affecting code-c-d.
+
+2005-04-07  Eduardo Ochs  <edrx@mat.puc-rio.br>
+
+	* eev.el (code-c-d-keywords): new variable.
+	(code-c-d-base, code-c-d-rest): new functions.
+	(code-c-d): rewritten to use code-c-d-base and code-c-d-rest.
+	(code-c-d-anchor, code-c-d-gdb, code-c-d-linux): rewritten as
+	calls to code-c-d using :anchor, :gdb, :linux.
+	(ee-goto-rest): added support for new kinds of pos-spec-items:
+	numbers and lists.
+
+	* htmlize-all.el: new file. Now it should be possible to generate
+	the htmls at any machine with GNU Emacs 22.0.50: just run "make
+	htmls"; it will download Hrvoje Niksic's htmlize.el if needed and
+	then run htmlize-all.el on a bare ("-Q") Emacs.
+
+	* htmlize-eev.el: small changes to make it independent of my
+	.emacs.
+
+2005-03-22  Eduardo Ochs  <edrx@mat.puc-rio.br>
+
+	* eev-rctool: new file (the new script for patching rcfiles).
+	WARNING: the new way of patching rcfiles adds less things to them
+	than the old way used to; more precisely, the new patched .bashrc
+	and .zshrc will not load the "psne" functions (see rcfiles/*-psne)
+	and the new patched .emacs will not set up jka-compr,
+	auto-compression-mode or auto-image-file-mode.
+
+	* rcfiles/change, rcfiles/change.awk: deprecated, will be removed
+	soon. These scripts were part of the old way of changing rcfiles.
+
+	* rcfiles/.bashrc, rcfiles/.zshrc: same: deprecated and will be
+	removed soon.
+
+	* eev.el: changed the default fallback values for the environment
+	variables EEVTMPDIR and EEVDIR: now it's ~/.eev for EEVTMPDIR and
+	either the directory where eev.el is found or ~/eev-current for
+	EEVDIR.
+
+2005-03-07  Eduardo Ochs  <edrx@mat.puc-rio.br>
+
+	* eev-compose.el, compose.el: Renamed compose.el to
+	eev-compose.el. Renamed all variables and functions to make them
+	start with "eev-compose". Removed the calls to `global-set-key' -
+	moved the bindings for M-, and C-, to `eev-mode-map'. The obsolete
+	file compose.el will be removed soon.
+
+	* eev-glyphs.el, glyphs.el: Renamed glyphs.el to eev-glyphs.el.
+	Major rewrite, simplifying the code a lot. Removed all the support
+	for string glyphs and the functions for inspecting glyphs. All the
+	function names and face name were changed and the new names all
+	start with "eev-glyph". The old glyphs.el will be removed soon.
+
+	* eev.el, eev-dev.el: Renamed eev-dev.el to eev.el. The old
+	eev-dev.el will be removed soon.
+
+	* eev.el (ee-invade-global-keymap, ee-invade-global-menu-bar):
+	Commented out (they were no-ops for compatibility).
+	(eev-mode-map): Now M-, and C-, are bound to
+	`ee-compose-two-keys'.
+
+2005-02-14  Eduardo Ochs  <edrx@mat.puc-rio.br>
+
+	* eev-langs.el (ee-gdb-start): Added "--annotate=3".
+	(eeb-gdb-start): Dropped the parameter `once'.
+
+	* eeg4 (HOME, EEVDIR, EEVTMPDIR, EGG): Removed the "return".
+
+	* eev-dev.el (ee-aref, ee-adel, ee-aset): New functions.
+	(eeb-once): Fixed a typo.
+
+2005-02-10  Eduardo Ochs  <edrx@mat.puc-rio.br>
+
+	* eev-dev.el (eev-demos): Deal with a numeric argument.
+	(eekr, eekvr): moved from examples/demos.e to eev-dev.el.
+
+	* examples/demos.e: Numbered the demos; now `M-<number> M-x
+	eev-demos' goes to number-th demo. Some other small changes.
+
+2005-02-07  Eduardo Ochs  <edrx@mat.puc-rio.br>
+
+	* eegchannel: added "--" to the call to `send'.
+
+2005-01-25  Eduardo Ochs  <edrx@mat.puc-rio.br>
+
+	* eev-dev.el (eev-mode-map): `M-h M-c'->`describe-char': new
+	binding. `M-h M-s'->`find-efacedescr': new binding (changed;
+	`find-efacedescr' was at `M-h M-a', but `... M-a' reminds me more
+	of "apropos" than of "face").
+
+2005-01-23  Eduardo Ochs  <edrx@mat.puc-rio.br>
+
+	* examples/demos.e: New file.
+
+	* eev-dev.el (eekl, eekv, eev-newbie, eev-demos): New functions.
+
+2005-01-20  Eduardo Ochs  <edrx@mat.puc-rio.br>
+
+	* eev-insert.el (eemklinks-duplicate-this-line): use
+	`insert-before-markers' instead of `insert'.
+
+2005-01-15  Eduardo Ochs  <edrx@mat.puc-rio.br>
+
+	* eev-dev.el (eeb-gdb-start and friends): moved, see below.
+	(ee-read-file, ee-no-trailing-nl, ee-pid-running-p)
+	(eechannel-pid, eechannel-running-p, eechannel-xterm)
+	(eechannel-kill): New functions.
+
+	* eev-langs.el (eeb-gdb-start and friends): moved all the
+	functions that implement hyperlinks to gdb/gud/perldb/etc from
+	eev-dev.el to this file.
+
+2005-01-13  Eduardo Ochs  <edrx@mat.puc-rio.br>
+
+	* eev-dev.el (find-wottb-call): Changed; now we force using the
+	same window by setting temporarily `same-window-buffer-names'
+	instead of `pop-up-windows'.
+
+	* eev-dev.el (find-ebufferandpos): New function.
+	(find-efunction, find-evariable): Changed to use
+	`find-ebufferandpos'.
+	(find-eCfunction, find-eCvariable): New functions.
+
+2005-01-12  Eduardo Ochs  <edrx@mat.puc-rio.br>
+
+	* eev-dev.el (find-wottb-call): New function.
+	(find-eapropos, find-efunctiondescr, find-evariabledescr)
+	(find-evardescr, find-ekeydescr, find-efacedescr, find-efaces)
+	(find-ecolors, find-efunctiond): Make them use `find-wottb-call'
+	instead of `ee-same-window' and `ee-same-window-contagious'.
+	(ee-same-window, ee-same-window-contagious): Declared obsolete,
+	moved to the end of the file, commented out.
+
+	* eev-insert.el (ee-hyperlink-prefix): New variable.
+	(ee-set-hyperlink-prefix, ee-pph): New functions.
+	Modified many functions (most of them with names like
+	`eemakelinks-xxx' and `find-xxx-links') to make them use
+	hyperlink prefixes.
+
+2005-01-11  Eduardo Ochs  <edrx@mat.puc-rio.br>
+
+	* eegchannel, eeg4, eeg: Added code to handle terminal resizings
+	correctly (by trapping SIGWINCHes and retransmitting them down to
+	the spawned processes).
+
+2005-01-10  Eduardo Ochs  <edrx@mat.puc-rio.br>
+
+	* eev-dev.el (eecd): INCOMPATIBLE CHANGE: changed the parameter
+	list from (&optional command) to (&optional dir command).
+	(ee-find-cd-sh, ee-find-cd-sh0): New functions.
+	(code-c-d): Added creation of `find-xxxsh' and `find-xxxs0'
+	hyperlinks.
+
+	* ChangeLog: created. Changes done between the release of
+	eev-0.94.1 and today were not logged. Note that during this time
+	the code had been almost totally rewritten.
+
+
+
+  ;; (find-efile "ChangeLog")
+  ;; (find-efile "add-log.el")
+  ;; (find-efile "")
+  ;; (find-eev "eev.el")
+  ;; (find-enode "Change Log")
+  ;; (setq add-log-full-name "Eduardo Ochs")
+  ;; (setq add-log-mailing-address "eduardoochs@gmail.com")
+
+    Copyright 2005, 2006, 2007 Free Software Foundation, Inc.
+  Copying and distribution of this file, with or without modification, are
+  permitted provided the copyright notice and this notice are preserved.

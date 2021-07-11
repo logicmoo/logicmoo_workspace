@@ -1,0 +1,174 @@
+GNU Emacs Excorporate NEWS -- history of user-visible changes.
+
+* New in Excorporate 1.0.0
+
+Released 2021-05-20
+
+** Declare API stability
+
+* New in Excorporate 0.9.6
+
+Released 2021-04-26
+
+** Fix Emacs < 24.4 incompatibility in time zone support
+
+** Require cl-lib package explicitly
+
+* New in Excorporate 0.9.5
+
+Released 2021-04-07
+
+** Set time zone when creating calendar items
+
+** Add excorporate-disconnect function
+
+** Document how to disconnect and how to handle a stuck connection
+
+** Use new exco-select-connection-identifier function in API Usage examples
+
+* New in Excorporate 0.9.3
+
+Released 2021-01-28
+
+** Enable diary integration by default
+
+** Introduce defcustom, excorporate-update-diary, to control this behaviour
+
+* New in Excorporate 0.9.2
+
+Released 2021-01-23
+
+** Do not hard-code directory for diary files
+
+Use locate-user-emacs-file instead.
+
+* Excorporate 0.9.1
+
+Released 2020-10-05
+
+** Change default behaviour of decline, accept and tenatitvely-accept functions
+
+Always prompt for a response message in
+exco-org-decline-meeting-request, exco-org-accept-meeting-request, and
+exco-org-tentatively-accept-meeting-request, unless a prefix argument
+is specified.
+
+** Allow force-deleting calendar items
+
+Take a prefix argument to exco-org-delete-appointment to force-delete
+the calendar item at point in the *Excorporate* Org buffer.
+
+* Excorporate 0.9.0
+
+Released 2020-09-30
+
+** Add interactive exco-org meeting and appointment cancellation functions
+
+** Add interactive exco-org meeting reply functions
+
+** Add meeting and appointment creation functions
+
+** Add meeting organizer to Org entries
+
+** Add API Usage section to the manual, with several examples
+
+* Excorporate 0.8.3
+
+Released 2019-06-18
+
+** Fix appt percent-encoded URL printing
+
+** Update HTTP debugging steps in Info manual
+
+* Excorporate 0.8.2
+
+Released 2019-06-14
+
+** Enable multiple connections
+
+The excorporate-configuration variable can now be a list representing
+multiple servers.  The excorporate function will create one connection
+per server configured.  Connections to additional servers can be
+dynamically created by passing a prefix argument to the excorporate
+function.
+
+* Excorporate 0.8.1
+
+Released 2018-09-15
+
+** Depend on nadvice 0.3
+
+This fixes excorporate-diary-enable on Emacs 24.1, 24.2, and 24.3.
+
+* Excorporate 0.8.0
+
+Released 2018-09-13
+
+** Add functions for retrieving meeting details
+
+** Add diary support
+
+M-x excorporate
+M-x excorporate-diary-enable
+M-x calendar
+Press `d'
+
+** Add appt support
+
+After you've retrieved today's meetings, several minutes before the
+start of the next meeting a reminder window will pop up.
+
+If Emacs is left running overnight, it will display tomorrow's
+meetings at 12:01 AM.
+
+* Excorporate 0.7.7
+
+Released 2018-09-04
+
+** Enable calfw support
+
+* Excorporate 0.7.6
+
+Released 2016-10-05
+
+** Require some NTLM compatibility fixes via updated dependencies
+
+* Excorporate 0.7.5
+
+Released 2016-06-16
+
+** Interoperate with `save-some-buffers'
+
+* Excorporate 0.7.4
+
+Released 2016-06-15
+
+** Interoperate with `org-startup-with-latex-preview'
+
+* Excorporate 0.7.3
+
+Released 2016-04-01
+
+** Bind q to quit-window in Org mode backend
+
+* Excorporate 0.7.2
+
+Released 2016-03-16
+
+** Support Office 365 and Exchange 2010_SP1
+
+* Excorporate 0.7.1
+
+Released 2016-02-26
+
+** Add Info manual
+
+* Excorporate 0.7.0
+
+Released 2016-02-21
+
+** First release in GNU ELPA
+
+Local variables:
+mode: outline
+end:

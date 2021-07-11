@@ -1,0 +1,16 @@
+<!DOCTYPE foo
+[
+<!ELEMENT foo (ref)>
+
+<!ENTITY % notation.class	"tex">
+
+<!ELEMENT ref - O EMPTY>
+
+<!ATTLIST ref
+          notation NOTATION (%notation.class;)      #IMPLIED
+>
+
+]>
+<foo>
+  <ref>
+</foo>

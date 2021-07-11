@@ -79,12 +79,7 @@ then
         export DISPLAY=$val:0.0
       fi
     fi
-   done   
-   if [ -n "$DISPLAY" ] || [ -z "$DISPLAY" ]; then
-      $ECHO Maybe: export DISPLAY=10.0.0.78:0.0
-      $ECHO OR Maybe: export DISPLAY=:1
-      # Iterate the string array using for loop
-   fi
+   done
 fi
 
 $ECHO "#* DISPLAY=$DISPLAY"

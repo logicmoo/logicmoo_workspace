@@ -1,0 +1,2 @@
+;; Generated package description from rudel.el  -*- no-byte-compile: t -*-
+(define-package "rudel" "0.3.2" "A collaborative editing framework for Emacs" '((emacs "24") (cl-lib "0.5") (cl-generic "0.3") (cl-print "1.0")) :keywords '("rudel" "collaboration") :authors '(("Jan Moringen" . "scymtym@users.sourceforge.net")) :maintainer '("Jan Moringen" . "scymtym@users.sourceforge.net") :url "http://rudel.sourceforge.net/")

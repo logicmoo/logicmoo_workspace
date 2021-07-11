@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+<channel>
+<title>Example feed</title>
+<description>Example description</description>
+<generator>Emacs webfeeder.el</generator>
+<link>https://example.org/</link>
+<atom:link href="https://example.org/libxml-post0-no-html.rss" rel="self" type="application/rss+xml"/>
+<lastBuildDate>Thu, 01 Jan 1970 01:00:00 +0100</lastBuildDate>
+<item>
+  <author>john@doe.org (John Doe)</author>
+  <title>First post</title>
+  <description><![CDATA[<div id="content">
+
+
+ <p>
+Aliquam erat volutpat.  Nunc eleifend leo vitae magna.  In id erat non orci
+commodo lobortis.  Proin neque massa, cursus ut, gravida ut, lobortis eget,
+lacus.  Sed diam.  Praesent fermentum tempor tellus.  Nullam tempus.  Mauris ac
+felis vel velit tristique imperdiet.  Donec at pede.  Etiam vel neque nec dui
+dignissim bibendum.  Vivamus id enim.  Phasellus neque orci, porta a, aliquet
+quis, semper a, massa.  Phasellus purus.  Pellentesque tristique imperdiet
+tortor.  Nam euismod tellus id erat.
+</p>
+
+ <div id="outline-container-org58597bd" class="outline-2">
+ <h2 id="org58597bd"> <span class="section-number-2">1</span> Contacts</h2>
+ <div class="outline-text-2" id="text-1">
+ <ul class="org-ul"> <li>Email:  <a href="mailto:mail@ambrevar.xyz">mail@ambrevar.xyz</a></li>
+</ul></div>
+</div>
+</div>]]></description>
+  <link>https://example.org/post0.html</link>
+  <guid isPermaLink="false">https://example.org/post0.html</guid>
+  <pubDate>Sun, 27 Jan 2019 01:00:00 +0100</pubDate>
+</item>
+</channel>
+</rss>

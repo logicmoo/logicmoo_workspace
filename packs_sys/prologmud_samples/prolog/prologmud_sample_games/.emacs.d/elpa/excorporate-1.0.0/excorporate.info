@@ -1,0 +1,794 @@
+This is excorporate.info, produced by makeinfo version 6.7 from
+excorporate.texi.
+
+Copyright (C) 2016 Free Software Foundation, Inc.
+
+     Permission is granted to copy, distribute and/or modify this
+     document under the terms of the GNU Free Documentation License,
+     Version 1.2 or any later version published by the Free Software
+     Foundation; with no Invariant Sections, with the Front-Cover, or
+     Back-Cover Texts.  A copy of the license is included in the section
+     entitled "GNU Free Documentation License" in the Emacs manual.
+
+     This document is part of a collection distributed under the GNU
+     Free Documentation License.  If you want to distribute this
+     document separately from the collection, you can do so by adding a
+     copy of the license to the document, as described in section 6 of
+     the license.
+
+     All Emacs Lisp code contained in this document may be used,
+     distributed, and modified without restriction.
+INFO-DIR-SECTION Emacs
+START-INFO-DIR-ENTRY
+* Excorporate: (excorporate).  Exchange Web Services integration for Emacs.
+END-INFO-DIR-ENTRY
+
+
+File: excorporate.info,  Node: Top,  Next: Reporting Bugs,  Up: (dir)
+
+Excorporate Manual
+******************
+
+Excorporate provides Exchange Web Services (EWS) support for Emacs.
+
+   If the Exchange server you access is configured to provide EWS
+support, then there's an 86% chance that Excorporate will enable you to
+retrieve your calendar entries from the comfort of Emacs.
+
+   The 14% failure rate is because authenticating against an Exchange
+server can be challenging.
+
+   Accessing an Exchange server through an HTTPS proxy is possible now
+that <https://debbugs.gnu.org/cgi/bugreport.cgi?bug=10> and
+<https://debbugs.gnu.org/cgi/bugreport.cgi?bug=35969> are fixed.
+
+   Kerberos/GSSAPI authentication needs more experimentation.
+
+   Reports of success or failure of different connection types are
+welcome, as are patches to enable more of these access scenarios.  See
+*note Reporting Bugs::.
+
+* Menu:
+
+* Reporting Bugs::              How to report bugs in Excorporate
+* Installation::                Getting and installing 'excorporate'.
+* Configuration::               Configuring 'excorporate'.
+* Usage::                       Using 'excorporate'.
+* Troubleshooting::             Debugging why a connection failed
+* API Usage::                   Using the API provided by 'excorporate'.
+* Index::
+
+
+File: excorporate.info,  Node: Reporting Bugs,  Next: Installation,  Prev: Top,  Up: Top
+
+1 Reporting Bugs
+****************
+
+To report a bug, send an email to 'bug-gnu-emacs@gnu.org' using your
+favourite email program.  Put "Excorporate" somewhere in the subject
+line, for example: "Excorporate: Failed to authenticate".
+
+
+File: excorporate.info,  Node: Installation,  Next: Configuration,  Prev: Reporting Bugs,  Up: Top
+
+2 Installation
+**************
+
+Excorporate works on Emacs versions >= 24.1.
+
+Install 'excorporate' from the GNU ELPA repository:
+
+   'M-x package-install RET excorporate'
+
+
+File: excorporate.info,  Node: Configuration,  Next: Usage,  Prev: Installation,  Up: Top
+
+3 Configuration
+***************
+
+Ideally you won't need to configure Excorporate beyond providing your
+account email address.  On friendly Exchange setups, Excorporate can
+discover the EWS URL automatically.
+
+Run:
+
+   'M-x excorporate'
+
+which will prompt you for the Exchange account configuration.  Follow
+the prompts and if all goes well, you'll see a message in the minibuffer
+or in *Messages* saying that the connection is ready.  Using the
+prompts, you can first try with autodiscovery.  If autodiscovery runs
+out of URLs to try, re-run 'excorporate', saying 'n' to the
+autodiscovery attempt, at which point you will be asked for the EWS URL.
+
+To save a working configuration, customize 'excorporate-configuration':
+
+   'M-x customize-variable RET excorporate-configuration'
+
+After saving the configuration, try 'M-x excorporate' again.
+
+If neither autodiscovery nor specifying the EWS URL work, *note
+Troubleshooting::.
+
+   To disconnect:
+
+   'M-x excorporate-disconnect'
+
+
+File: excorporate.info,  Node: Usage,  Next: Troubleshooting,  Prev: Configuration,  Up: Top
+
+4 Usage
+*******
+
+Excorporate can put entries it retrieves into the Emacs Diary, and use
+'appt' to remind you a few minutes before a meeting starts.  To enable
+this support, do:
+
+   'M-x excorporate-diary-enable'
+
+   Excorporate's diary front-end will retrieve today's meetings.
+Subsequently 'appt' will pop up a reminder window several minutes prior
+to each meeting.
+
+   If you leave Emacs running overnight, at 12:01 AM 'appt' (via
+Excorporate) will retrieve your meetings and display your diary so that
+you see the day's events first thing in the morning.
+
+Open the calendar with:
+
+   'M-x calendar'
+
+move the cursor to the date you want to see meetings for, and press 'd'.
+Some time later, asynchronously, a window will pop up containing events
+retrieved from the Exchange server in addition to locally-entered diary
+events.  The events are all sorted by time.
+
+   Excorporate also binds 'e' in '*Calendar*' buffers to
+'excorporate-calendar-show-day-function' to allow a different view of
+retrieved events.  By default, 'excorporate-calendar-show-day-function'
+is set to 'exco-org-show-day' which displays meetings in a temporary
+read-only Org Mode buffer named '*Excorporate*'.
+
+   In the Org Mode '*Excorporate*' buffer, you can run 'M-x
+exco-org-decline-meeting-request' to decline a meeting request.  To
+accept, use ('exco-org-accept-meeting-request') or, to tentatively
+accept, invoke ('exco-org-tentatively-accept-meeting-request').  Pass a
+prefix argument to these functions to omit a reply message.
+
+   A meeting is a calendar event to which at least one other person is
+invited.  To cancel a meeting (or an occurence of a recurring meeting)
+that you organized, use 'M-x exco-org-cancel-meeting'.
+
+   An appointment is a calendar item that has no invitees.  To delete an
+appointment that you created, type 'M-x exco-org-delete-appointment'.
+With a prefix argument, 'M-x exco-org-delete-appointment' can be used to
+force-delete calendar items, whether they be meetings or appointments.
+One example where this is necessary is when "cancelling" a meeting with
+a single invitee, you, the organizer.  The server will reject an attempt
+to cancel such a meeting because it refuses to send the organizer a
+cancellation message.
+
+   If you prefer, you can install the 'calfw' package, and set
+'excorporate-calendar-show-day-function' to 'exco-calfw-show-day'.
+
+
+File: excorporate.info,  Node: Troubleshooting,  Next: API Usage,  Prev: Usage,  Up: Top
+
+5 Troubleshooting
+*****************
+
+First, you'll want to double-check that the Exchange server you're
+trying to access provides EWS support.  If it doesn't, Excorporate can't
+do anything for you.  Before asking your Exchange administrator, check
+intranet wikis and so forth; other users of non-standard clients may
+have already found the EWS URL. This is called the "EWS endpoint".  It
+can be as simple as, e.g.:
+
+   'https://mail.gnu.org/EWS/Exchange.asmx'
+
+First you need to make sure you can access the endpoint.
+
+For Exchange Web Services (EWS) which Excorporate uses, you'll have to
+determine the EWS endpoint for your Exchange account, call it 'ews-url'.
+It is usually something like:
+
+   https://<mail host name>/EWS/Exchange.asmx
+
+Excorporate calculates the WSDL URL, call it 'wsdl-url', by replacing
+the endpoint's last path element with "Services.wsdl":
+
+   https://<mail host name>/EWS/Services.wsdl
+
+Before even attempting Excorporate, you have to make these succeed:
+
+     (with-current-buffer
+      (url-retrieve-synchronously ews-url)
+      (buffer-string))
+
+When this works, you'll see web page text in *Messages*, containing a
+message about having created a service.
+
+     (with-current-buffer
+      (url-retrieve-synchronously wsdl-url)
+      (buffer-string))
+
+When this works, it will show a bunch of WSDL (XML) in *Messages*.
+
+Debug the above URL retrievals with 'M-:' in an 'emacs -Q' run:
+
+     (progn
+       (setq url-debug 1)
+       (url-retrieve-synchronously URL-STRING)
+       (dolist (p (seq-filter
+                   (lambda (b) (string-match " *http*" (buffer-name b)))
+                   (buffer-list)))
+         (message "HTTP result buffer: \"%s\"\n%s"
+                  (buffer-name p)
+                  (with-current-buffer p (buffer-string))))
+       "check *Messages*")
+
+Beware that HTTP responses can be out-of-order, and that if you set
+'url-debug' to a number or 't', Emacs may hang for a while if it
+attempts to print a very large data structure.
+
+Once you're sure the above steps are working, try 'M-x excorporate'.
+
+The buffer '*fsm-debug*' shows 'excorporate' state transitions and
+should provide details of where things went wrong.
+
+Also check '*Messages*' for anything obvious.
+
+If you suspect something wrong with accessing the EWS URL, try setting
+'url-debug' to t and retry 'M-x excorporate', then check the
+'*URL-DEBUG*' buffer for output.
+
+If you suspect NTLM authentication is failing, as a long shot, you might
+try setting 'ntlm-compatibility-level' to 0 and retrying 'M-x
+excorporate'.
+
+Excorporate's dependencies implement the tricky elements of asynchronous
+Exchange access: a state machine ('fsm'), TLS negotiation ('gnutls'),
+NTLM authentication ('ntlm' and 'url-http-ntlm') and SOAP communication
+('soap-client').
+
+On some servers, an active, otherwise-working connection may get stuck.
+The symptom is the attempted operation will not complete (but Emacs will
+not be blocked, because Excorporate is asynchronous).  For example
+pressing 'e' in the 'Calendar' produce a new '*Excorporate*' buffer that
+stays empty for longer than one minute.  I haven't been able to
+determine the root cause of this behaviour.  But you can work around the
+issue like this:
+
+   'M-x list-processes'
+
+   Find a line that shows the server connection.  There may be multiple
+such lines.  They will look something like this:
+
+   'mail.gnu.org -- open -- -- Main (network connection to
+mail.gnu.org:443'
+
+   Put the cursor on that line, and type 'd' to delete the process.  The
+attempted operation will now complete, usually without needing to retry
+it.
+
+
+File: excorporate.info,  Node: API Usage,  Next: Index,  Prev: Troubleshooting,  Up: Top
+
+6 API Usage
+***********
+
+As of version 1.0.0, the Excorporate API is declared stable.  The
+function 'exco-api-version' will return 0, meaning API version 0.  In
+the unlikely event that compatibility needs to be broken, the API
+version will be incremented.
+
+Here are some examples of using the API (application programming
+interface) provided by Excorporate.
+
+Not all of Excorporate's functionality is exposed as interactive
+functions.  Here is an example of creating a meeting to which
+hacker2@gnu.org is invited, using a non-interactive function provided by
+Excorporate:
+
+     (exco-calendar-item-meeting-create
+      (exco-select-connection-identifier)
+      "Test meeting 1"
+      "Hi,\n\nThis is a test meeting 1.\n\nRegards.\n"
+      (encode-time 0 15 14 23 09 2020)
+      (encode-time 0 0  15 23 09 2020)
+      "Online only"
+      '("hacker2@gnu.org")
+      nil
+      (lambda (identifier response)
+        (message "%S: %S" identifier response)))
+     =>
+     ;; Printed in *Messages*:
+     ("hacker1@gnu.org" . "https://mail.gnu.org/EWS/Exchange.asmx"):
+     (((ResponseMessages
+        (CreateItemResponseMessage
+         (ResponseClass . "Success")
+         (ResponseCode . "NoError")
+         (Items
+          (CalendarItem
+           (ItemId
+            (Id . "A[...]A==")
+            (ChangeKey . "D[...]M"))))))))
+
+The callback is run asychronously after the server responds, so as not
+to block Emacs, and the result is what is printed in the '*Messages*'
+buffer.  This example assumes the user has already run 'M-x excorporate'
+to create a connection.  'exco-select-connection-identifier' will
+automatically use the sole connection if only one exists.  Excorporate
+fully supports connecting to multiple different servers though (see
+'exco-connection-iterate') so reusable code that calls Excorporate APIs
+should not assume just one connection.  You can find examples of
+iterating through multiple connections in 'excorporate-diary.el' and
+'excorporate-org.el'.
+
+There is lots of server-side functionality that Excorporate does not
+provide high-level non-interactive functions for.  Using that
+functionality is still possible with the low-level 'exco-operate' and
+'exco-operate-synchronously' functions.
+
+For example, evaluating this form produces lots of details about the
+meeting represented by the ItemId form, including tidbits like the list
+of invitees and how they've responded (accepted, declined, tentatively
+accepted, unknown).  You can find ItemId forms to experiment with in the
+PROPERTIES drawer of calendar entries in the interactive Org buffer.
+
+     (exco-operate-synchronously
+      (exco-select-connection-identifier)
+      "GetItem"
+      '(((ItemShape
+          (BaseShape . "AllProperties"))
+         (ItemIds
+          (ItemId
+           (Id . "A[...]A==")
+           (ChangeKey . "D[...]d"))))
+        nil nil nil nil nil nil))
+     =>
+     (((ResponseMessages
+        (GetItemResponseMessage
+         (ResponseClass . "Success")
+         (ResponseCode . "NoError")
+         (Items
+          (CalendarItem
+           (ItemId (Id . "A[...]A==") (ChangeKey . "D[...]M"))
+           (ParentFolderId (Id . "A[...]A") (ChangeKey . "A[...]A=="))
+           (ItemClass . "IPM.Appointment")
+           (Subject . "Excorporate discussion")
+           (Sensitivity . "Normal")
+           (Body (BodyType . "Text") . "Hi Hacker Two,
+
+     Let's discuss Excorporate.
+
+     Hacker One")
+           (DateTimeReceived . "2020-09-24T20:07:26Z")
+           (Size . 13709)
+           (Importance . "Normal")
+           (IsSubmitted)
+           (IsDraft)
+           (IsFromMe)
+           (IsResend)
+           (IsUnmodified)
+           (DateTimeSent . "2020-09-24T20:07:26Z")
+           (DateTimeCreated . "2020-09-24T20:07:26Z")
+           (ResponseObjects
+            (ForwardItem)
+            (CancelCalendarItem))
+           (ReminderDueBy . "2020-09-25T14:30:00Z")
+           (ReminderIsSet . t)
+           (ReminderMinutesBeforeStart . 15)
+           (DisplayCc)
+           (DisplayTo . "Hacker Two")
+           (HasAttachments)
+           (Culture . "en-US")
+           (Start . "2020-09-25T14:30:00Z")
+           (End . "2020-09-25T15:30:00Z")
+           (IsAllDayEvent)
+           (LegacyFreeBusyStatus . "Busy")
+           (Location . "Online")
+           (IsMeeting . t)
+           (IsCancelled)
+           (IsRecurring)
+           (MeetingRequestWasSent . t)
+           (IsResponseRequested . t)
+           (CalendarItemType . "Single")
+           (MyResponseType . "Organizer")
+           (Organizer
+            (Mailbox
+             (Name . "Hacker One")
+             (EmailAddress . "hacker1@gnu.org")
+             (RoutingType . "SMTP")))
+           (RequiredAttendees
+            (Attendee
+             (Mailbox
+              (Name . "Hacker Two")
+              (EmailAddress . "hacker2@gnu.org")
+              (RoutingType . "SMTP")
+              (MailboxType . "Mailbox"))
+             (ResponseType . "Accept")
+             (LastResponseTime . "2020-09-24T21:08:54Z")))
+           (Duration . "PT1H")
+           (TimeZone . "(UTC+00:00) Monrovia, Reykjavik")
+           (AppointmentSequenceNumber . 0)
+           (AppointmentState . 1)
+           (IsOnlineMeeting)))))))
+
+Note that this function queries the server synchronously.  In other
+words, it waits for, and evaluates to, the server's reply.  This is nice
+when experimenting with the API, but published code should mostly use
+the asynchronous calls to avoid blocking Emacs during server operations.
+
+Here is a more complicated example that asynchronously queries the
+server for availability overlap for hacker1@gnu.org and hacker2@gnu.org,
+in the America/Toronto time zone.  Call 'exco-time-zone' to calculate,
+from Emacs's internal time zone (see 'current-time-zone'), the
+equivalent server time zone string.
+
+     (exco-operate
+      (exco-select-connection-identifier)
+      "GetUserAvailability"
+      '(((TimeZone
+          (Bias . 300)
+          (StandardTime
+           (Bias . 0)
+           (Time . "02:00:00")
+           (DayOrder . 1)
+           (Month . 11)
+           (DayOfWeek . "Sunday"))
+          (DaylightTime
+           (Bias . -60)
+           (Time . "02:00:00")
+           (DayOrder . 2)
+           (Month . 3)
+           (DayOfWeek . "Sunday")))
+         (MailboxDataArray
+          (MailboxData
+           (Email
+            (Address . "hacker1@gnu.org"))
+           (AttendeeType . "Required")
+           (ExcludeConflicts . nil))
+          (MailboxData
+           (Email
+            (Address . "hacker2@gnu.org"))
+           (AttendeeType . "Required")
+           (ExcludeConflicts . nil)))
+         (FreeBusyViewOptions
+          (TimeWindow
+           (StartTimeZone (Id . "Eastern Standard Time"))
+           (StartTime . "2020-09-25T00:00:00Z")
+           (EndTime . "2020-09-25T23:59:00Z"))
+          (MergedFreeBusyIntervalInMinutes . 60)
+          (RequestedView "DetailedMerged")))
+        nil nil nil)
+      (lambda (identifier response)
+        (message "%S: %S" identifier response)))
+     =>
+     ;; Printed in *Messages*:
+     ("hacker1@gnu.org" . "https://mail.gnu.org/EWS/Exchange.asmx"):
+     (((FreeBusyResponseArray
+        (FreeBusyResponse
+         (ResponseMessage
+          (ResponseClass . "Success")
+          (ResponseCode . "NoError"))
+         (FreeBusyView
+          (FreeBusyViewType "FreeBusyMerged")
+          (MergedFreeBusy . "000000000000000000000200")
+          (CalendarEventArray
+           (CalendarEvent
+            (StartTime . "2020-09-25T12:00:00")
+            (EndTime . "2020-09-25T12:30:00")
+            (BusyType . "Busy")))
+          (WorkingHours
+           (TimeZone
+            (Bias . 480)
+            (StandardTime
+             (Bias . 0)
+             (Time . "02:00:00")
+             (DayOrder . 1)
+             (Month . 11)
+             (DayOfWeek . "Sunday"))
+            (DaylightTime
+             (Bias . -60)
+             (Time . "02:00:00")
+             (DayOrder . 2)
+             (Month . 3)
+             (DayOfWeek . "Sunday")))
+           (WorkingPeriodArray
+            (WorkingPeriod
+             (DayOfWeek "Monday" "Tuesday" "Wednesday" "Thursday" "Friday")
+             (StartTimeInMinutes . 540)
+             (EndTimeInMinutes . 1080))))))
+        (FreeBusyResponse
+         (ResponseMessage
+          (ResponseClass . "Success")
+          (ResponseCode . "NoError"))
+         (FreeBusyView
+          (FreeBusyViewType "DetailedMerged")
+          (MergedFreeBusy . "000000000000002200000200")
+          (CalendarEventArray
+           (CalendarEvent
+            (StartTime . "2020-09-25T05:30:00")
+            (EndTime . "2020-09-25T06:30:00")
+            (BusyType . "Busy")
+            (CalendarEventDetails
+             (ID . "0[...]0")
+             (Subject . "Excorporate discussion")
+             (Location . "Online")
+             (IsMeeting . t)
+             (IsRecurring)
+             (IsException)
+             (IsReminderSet . t)
+             (IsPrivate)))
+           (CalendarEvent
+            (StartTime . "2020-09-25T12:00:00")
+            (EndTime . "2020-09-25T12:30:00")
+            (BusyType . "Busy")
+            (CalendarEventDetails
+             (ID . "0[...]0")
+             (Subject . "An occurence of a recurring meeting")
+             (Location)
+             (IsMeeting . t)
+             (IsRecurring . t)
+             (IsException)
+             (IsReminderSet . t)
+             (IsPrivate))))
+          (WorkingHours
+           (TimeZone
+            (Bias . 480)
+            (StandardTime
+             (Bias . 0)
+             (Time . "02:00:00")
+             (DayOrder . 1)
+             (Month . 11)
+             (DayOfWeek . "Sunday"))
+            (DaylightTime
+             (Bias . -60)
+             (Time . "02:00:00")
+             (DayOrder . 2)
+             (Month . 3)
+             (DayOfWeek . "Sunday")))
+           (WorkingPeriodArray
+            (WorkingPeriod
+             (DayOfWeek "Monday" "Tuesday" "Wednesday" "Thursday" "Friday")
+             (StartTimeInMinutes . 480)
+             (EndTimeInMinutes . 1020)))))))))
+
+This example shows how to create a recurrence in the "Eastern Standard
+Time" time zone.  The 'exco-operation-arity-nils' call returns a list of
+nils with a length matching the number of arguments that the
+'CreateItem' operation takes.  Arguments other than the first
+("request") argument may be needed in the future to use more complicated
+server functionality, but for now they can all be left 'nil'.
+
+     (exco-operate
+      (exco-select-connection-identifier)
+      "CreateItem"
+      `(((SendMeetingInvitations . "SendToAllAndSaveCopy")
+         (Items
+          (CalendarItem
+           (Subject . "Test recurrence 1")
+           (Body (BodyType . "Text") "Testing recurrence creation.")
+           (Start . "2020-09-25T17:00:00-04:00")
+           (End . "2020-09-25T18:00:00-04:00")
+           (StartTimeZone (Id . "Eastern Standard Time"))
+           (EndTimeZone (Id . "Eastern Standard Time"))
+           (Location . "Online")
+           (RequiredAttendees
+            (Attendee (Mailbox (EmailAddress . "hacker1@gnu.org"))))
+           (Recurrence
+            (WeeklyRecurrence
+             (Interval . 1)
+             (DaysOfWeek "Friday"))
+            (NumberedRecurrence
+             (StartDate . "2020-09-25-04:00")
+             (NumberOfOccurrences . 4))))))
+        ;; Empty arguments.
+        ,@(cdr (exco-operation-arity-nils identifier "CreateItem")))
+      (lambda (identifier response)
+        (message "%S: %S" identifier response)))
+     =>
+     ;; Printed in *Messages*:
+     ("hacker1@gnu.org" . "https://mail.gnu.org/EWS/Exchange.asmx"):
+     (((ResponseMessages
+        (CreateItemResponseMessage
+         (ResponseClass . "Success")
+         (ResponseCode . "NoError")
+         (Items
+          (CalendarItem
+           (ItemId
+            (Id . "A[...]A==")
+            (ChangeKey . "D[...]k"))))))))
+
+Now we can retrieve the item's properties to see the recurrence and time
+zone details:
+
+     (exco-operate
+      (exco-select-connection-identifier)
+      "GetItem"
+      '(((ItemShape
+          (BaseShape . "AllProperties"))
+         (ItemIds
+          (ItemId
+           (Id . "A[...]A==")
+           (ChangeKey . "D[...]d"))))
+        nil nil nil nil nil nil)
+      (lambda (identifier response)
+        (message "%S: %S" identifier response)))
+     =>
+     ;; Printed in *Messages*:
+     ("hacker1@gnu.org" . "https://mail.gnu.org/EWS/Exchange.asmx"):
+     (((ResponseMessages
+        (GetItemResponseMessage
+         (ResponseClass . "Success")
+         (ResponseCode . "NoError")
+         (Items
+          (CalendarItem
+           (ItemId
+            (Id . "A[...]A==")
+            (ChangeKey . "D[...]h"))
+           (ParentFolderId
+            (Id . "A[...]A")
+            (ChangeKey . "A[...]A=="))
+           (ItemClass . "IPM.Appointment")
+           (Subject . "Test recurrence 1")
+           (Sensitivity . "Normal")
+           (Body
+            (BodyType . "Text") . "Testing recurrence creation.")
+           (DateTimeReceived . "2020-09-26T00:23:59Z")
+           (Size . 13636)
+           (Importance . "Normal")
+           (IsSubmitted)
+           (IsDraft)
+           (IsFromMe)
+           (IsResend)
+           (IsUnmodified)
+           (DateTimeSent . "2020-09-26T00:23:59Z")
+           (DateTimeCreated . "2020-09-26T00:23:59Z")
+           (ResponseObjects
+            (ForwardItem)
+            (CancelCalendarItem))
+           (ReminderDueBy . "2020-10-02T21:00:00Z")
+           (ReminderIsSet . t)
+           (ReminderMinutesBeforeStart . 15)
+           (DisplayCc)
+           (DisplayTo . "Hacker One")
+           (HasAttachments)
+           (Culture . "en-US")
+           (Start . "2020-09-25T21:00:00Z")
+           (End . "2020-09-25T22:00:00Z")
+           (IsAllDayEvent)
+           (LegacyFreeBusyStatus . "Busy")
+           (Location . "Online")
+           (IsMeeting . t)
+           (IsCancelled)
+           (IsRecurring)
+           (MeetingRequestWasSent)
+           (IsResponseRequested . t)
+           (CalendarItemType . "RecurringMaster")
+           (MyResponseType . "Organizer")
+           (Organizer
+            (Mailbox
+             (Name . "Hacker One")
+             (EmailAddress . "hacker1@gnu.org")
+             (RoutingType . "SMTP")))
+           (RequiredAttendees
+            (Attendee
+             (Mailbox
+              (Name . "Hacker One")
+              (EmailAddress . "hacker1@gnu.org")
+              (RoutingType . "SMTP")
+              (MailboxType . "Mailbox"))
+             (ResponseType . "Unknown")))
+           (Duration . "PT1H")
+           (TimeZone . "
+     (UTC-05:00) Eastern Time
+     (US & Canada)")
+           (AppointmentSequenceNumber . 0)
+           (AppointmentState . 1)
+           (Recurrence
+            (WeeklyRecurrence
+             (Interval . 1)
+             (DaysOfWeek "Friday"))
+            (NumberedRecurrence
+             (StartDate . "2020-09-25-04:00")
+             (NumberOfOccurrences . 4)))
+           (FirstOccurrence
+            (ItemId
+             (Id . "A[...]A==")
+             (ChangeKey . "D[...]h"))
+            (Start . "2020-09-25T21:00:00Z")
+            (End . "2020-09-25T22:00:00Z")
+            (OriginalStart . "2020-09-25T21:00:00Z"))
+           (LastOccurrence
+            (ItemId
+             (Id . "A[...]A==")
+             (ChangeKey . "D[...]h"))
+            (Start . "2020-10-16T21:00:00Z")
+            (End . "2020-10-16T22:00:00Z")
+            (OriginalStart . "2020-10-16T21:00:00Z"))
+           (MeetingTimeZone
+            (TimeZoneName . "Eastern Standard Time")
+            (BaseOffset . 0)
+            (Daylight
+             (TimeZoneName . "Daylight")
+             (Offset . 0)
+             (RelativeYearlyRecurrence
+              (DaysOfWeek . "Sunday")
+              (DayOfWeekIndex . "Second")
+              (Month . "March"))
+             (Time . "02:00:00"))
+            (Standard
+             (TimeZoneName . "Standard")
+             (Offset . 0)
+             (RelativeYearlyRecurrence
+              (DaysOfWeek . "Sunday")
+              (DayOfWeekIndex . "First")
+              (Month . "November"))
+             (Time . "02:00:00")))
+           (IsOnlineMeeting)))))))
+
+Finally, this is how to delete all the occurrences in the series.
+ItemId here is the top-level recurrence item identifier which is
+returned as '(CalendarItem (ItemId ...) ...)' by the above 'GetItem'
+operation, whose 'CalendarType' element is "RecurringMaster".
+
+     (exco-operate
+      (exco-select-connection-identifier)
+      "DeleteItem"
+      '(((DeleteType . "MoveToDeletedItems")
+         (SendMeetingCancellations . "SendToNone")
+         (ItemIds
+          (ItemId
+           (Id . "A[...]A==")
+           (ChangeKey . "D[...]h"))))
+        nil nil nil)
+      (lambda (identifier response)
+        (message "%S: %S" identifier response)))
+     =>
+     ;; Printed in *Messages*:
+     ("hacker1@gnu.org" . "https://mail.gnu.org/EWS/Exchange.asmx"):
+     (((ResponseMessages
+        (DeleteItemResponseMessage
+         (ResponseClass . "Success")
+         (ResponseCode . "NoError")))))
+
+Feel free to contribute new functions that you think others would find
+useful; file a bug with a patch against
+'https://git.savannah.gnu.org/git/emacs/elpa.git'.  Functions in
+'excorporate.el' must always keep the same interface so that they stay
+backward compatible.  If an existing function has an insufficient
+interface, make a new one.  Excorporate functions are written to work
+with older Emacs versions, back to Emacs 24.1.
+
+
+File: excorporate.info,  Node: Index,  Prev: API Usage,  Up: Top
+
+Index
+*****
+
+ [index ]
+* Menu:
+
+* hung connection:                       Troubleshooting.      (line 80)
+* stuck connection:                      Troubleshooting.      (line 80)
+
+
+
+Tag Table:
+Node: Top1103
+Node: Reporting Bugs2409
+Node: Installation2733
+Node: Configuration3007
+Node: Usage4079
+Node: Troubleshooting6538
+Node: API Usage10221
+Node: Index27815
+
+End Tag Table
+
+
+Local Variables:
+coding: utf-8
+End:

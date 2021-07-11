@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE Foo
+[
+<!ELEMENT Foo (En·annan) >
+<!ELEMENT En·annan (#PCDATA) >
+<!ATTLIST En·annan xmlns CDATA #IMPLIED >
+<!ENTITY Yæ "Lennart">
+<!ENTITY _001 "First">
+]>
+
+<Foo>
+  <En·annan>&_001;Nisse och &Yæ;</En·annan>
+</Foo>

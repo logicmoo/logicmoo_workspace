@@ -1,0 +1,50 @@
+<?xml version='1.0' encoding='ISO-8859-1' ?>
+
+<!DOCTYPE book PUBLIC "-//OASIS//DTD DocBook XML V4.1.2//EN" "docbookx.dtd"
+[]>
+
+<book>
+  <title>Figgure 1</title>
+  <toc>
+  </toc>
+  <part>
+    <title>Part 1</title>
+    <article>
+      <title>My article</title>
+      <para>My para är en stor å fin öra. </para>
+    </article>
+    <refentry>
+      <refnamediv>
+        <refname>FOO</refname>
+        <refpurpose>Figg opo olle</refpurpose>
+      </refnamediv>
+      <refsect1>
+        <title>Synopsis</title>
+        <synopsis><command>foo</command> <option>-a</option>
+        <varname>file1</varname></synopsis>
+      </refsect1>
+      <refsect1>
+        <title>Description</title>
+        <para>Yo!</para>
+      </refsect1>
+    </refentry>
+  </part>
+</book>
+
+<!-- Keep this comment at the end of the file
+Local variables:
+mode: xml
+sgml-omittag:nil
+sgml-shorttag:nil
+sgml-namecase-general:nil
+sgml-general-insert-case:lower
+sgml-minimize-attributes:nil
+sgml-always-quote-attributes:t
+sgml-indent-step:2
+sgml-indent-data:nil
+sgml-parent-document:nil
+sgml-exposed-tags:("command" "option")
+sgml-local-catalogs:("~/sgml/docbkx412/docbook.cat")
+sgml-local-ecat-files:nil
+End:
+-->

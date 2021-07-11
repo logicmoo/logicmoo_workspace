@@ -1,0 +1,49 @@
+2020-03-30  Stefan Monnier  <monnier@iro.umontreal.ca>
+
+	Merge commit '33afdb46e1cd61251736816d965495525b36c9cd'
+
+2016-08-04  Stefan Monnier  <monnier@iro.umontreal.ca>
+
+	* web-server/examples: Don't load `htmlize' during byte-compilation
+
+	* web-server/examples/015-auto-mode-server.el: Use lexical-binding 
+	rather than lexical-let.
+
+2016-07-11  Paul Eggert	 <eggert@cs.ucla.edu>
+
+	Fix some quoting problems in doc strings
+
+	Most of these are minor issues involving, e.g., quoting `like this' 
+	instead of 'like this'.	 A few involve escaping ` and ' with a preceding
+	\= when the characters should not be turned into curved single quotes.
+
+2014-11-02  Stefan Monnier  <monnier@iro.umontreal.ca>
+
+	* web-server: Don't use CL.
+
+2014-09-05  Eric Schulte  <schulte.eric@gmail.com>
+
+	Merge commit '469cd3bc117bfb8da0c03a2a2fb185e80c81d068'
+
+	  Merged in the latest version of web-server to account for the actual
+	 dependency on 24.3 (not 24.4).
+
+2014-05-06  Eric Schulte  <schulte.eric@gmail.com>
+
+	Merge commit 'aecfbcbc10cf03ec94062ac3e590f8118e5a0434'
+
+	  Bumping version of the web-server to 0.1.1.
+
+2014-03-10  Stefan Monnier  <monnier@iro.umontreal.ca>
+
+	Fix up copyright headers.
+
+2014-03-10  Eric Schulte  <schulte.eric@gmail.com>
+
+	Add 'packages/web-server/' from commit
+	'd0b6ae9df6014db2195da0081dc97cc8246f1fda'
+
+	git-subtree-dir: packages/web-server git-subtree-mainline:
+	f64a8011734dc6bfdbc45b26fd4ff4310790e69f git-subtree-split:
+	d0b6ae9df6014db2195da0081dc97cc8246f1fda
+

@@ -1,0 +1,119 @@
+<?xml version=1.0?>
+
+<!ELEMENT slmeta ((publishing-project)*) >
+
+
+<!ELEMENT publishing-project (title,
+                annotation-type*,
+                meta-class*,
+                system-meta*,
+                (object-type|reuse-object-type)*,
+                groups) >
+
+<!ATTLIST publishing-project
+    name CDATA #REQUIRED
+    ppid CDATA #IMPLIED >
+
+
+<!ELEMENT meta-class (title, table, meta*) >
+<!ATTLIST meta-class
+    id ID #REQUIRED
+    system NMTOKEN "0" >
+
+
+<!ELEMENT object-type
+   (title, description, object-type-flags,
+     notationtype, template, mimetype, file-extension,
+     dtd-allowed*) >
+<!ATTLIST object-type
+    id ID #IMPLIED
+    class IDREFS #REQUIRED >
+
+
+<!ELEMENT object-type-flags EMPTY>
+<!ATTLIST object-type-flags
+    full-text-index   (0|1)  "0"
+    container         (0|1)  "0"
+    container-virtual (0|1)  "0"
+    factbase          (0|1)  "0" >
+
+
+<!ELEMENT reused-object-type EMPTY >
+<!ATTLIST reused-object-type
+    reuse IDREF #REQUIRED
+    class IDREFS #REQUIRED >
+
+
+<!ELEMENT dtd-allowed (dtd-fpi, top-element) >
+
+
+<!ELEMENT title (#PCDATA) >
+<!ELEMENT table (#PCDATA) >
+<!ELEMENT notationtype (#PCDATA) >
+<!ELEMENT dtd-fpi (#PCDATA)>
+<!ELEMENT top-element (#PCDATA)>
+<!ELEMENT template (#PCDATA)>
+<!ELEMENT mimetype (#PCDATA)>
+<!ELEMENT description (#PCDATA)>
+<!ELEMENT file-extension (#PCDATA)>
+
+
+<!ELEMENT meta (title,type,legal-values?,multival?,import-from?) >
+<!ATTLIST meta
+    name CDATA #REQUIRED
+>
+
+<!ELEMENT type EMPTY>
+<!ATTLIST type
+    type (varchar|integer|float|date) #REQUIRED
+    colsize NMTOKEN #IMPLIED
+    sql-type CDATA #IMPLIED
+    default CDATA #IMPLIED
+>
+
+<!ELEMENT legal-values (value+)>
+<!ELEMENT value (#PCDATA)>
+
+<!ELEMENT multival EMPTY>
+<!ATTLIST multival
+    table CDATA #REQUIRED
+    column CDATA "sl_value"
+    separator CDATA "," >
+
+<!ELEMENT import-from (#PCDATA)>
+<!ATTLIST import-from
+    table CDATA #REQUIRED >
+
+
+<!ELEMENT groups (group*)>
+<!ELEMENT group (title, access-object*,access-meta*,access-annotation*)>
+<!ELEMENT system-meta (title)>
+<!ATTLIST system-meta
+    name CDATA #REQUIRED >
+
+<!ELEMENT access-object EMPTY>
+<!ATTLIST access-object
+    wfstate CDATA #REQUIRED
+    view (0|1) "1"
+    edit (0|1) "1"
+    rename (0|1) "1"
+    delete (0|1) "1"
+    split (0|1) "1" >
+
+<!ELEMENT access-meta EMPTY>
+<!ATTLIST access-meta
+    wfstate CDATA #REQUIRED
+    name CDATA #IMPLIED
+    view (0|1) "1"
+    edit (0|1) "1" >
+
+<!ELEMENT access-annotation EMPTY>
+<!ATTLIST access-annotation
+    annotation-type IDREF #REQUIRED
+    view (0|1) "1"
+    edit (0|1) "1"
+    delete (0|1) "1" >
+
+<!ELEMENT annotation-type (title)>
+<!ATTLIST annotation-type
+    id ID #REQUIRED >

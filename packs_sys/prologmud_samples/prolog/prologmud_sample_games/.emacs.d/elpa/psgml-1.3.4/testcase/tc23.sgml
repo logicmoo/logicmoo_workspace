@@ -1,0 +1,22 @@
+<!DOCTYPE Foo
+[
+<!-- a1: pubid overridden use sysid -->
+<!ENTITY % a1 PUBLIC "-//tc23//TEXT foo//EN" "tc23a.ent">
+<!-- a2: sysid mapped -->
+<!ENTITY % a2 SYSTEM "tc23c.ent">
+<!-- b1: pubid found mapped to b -->
+<!ENTITY % b1 PUBLIC "-//tc23//TEXT bar//EN" "tc23a.ent">
+<!-- b2: no sysid  -->
+<!ENTITY % b2 PUBLIC "-//tc23//TEXT foo//EN">
+<!-- b3: pubid not found -->
+<!ENTITY % b3 PUBLIC "-//tc23//TEXT bar-no-here//EN" "tc23b.ent">
+
+<!ENTITY w "%a1;%a2;%b1;%b2;%b3;">
+<!ELEMENT Foo - - (a,a,b,b,b)>
+
+<!element a - - EMPTY>
+<!element b - - EMPTY>
+]>
+<foo>
+  &w;
+</foo>

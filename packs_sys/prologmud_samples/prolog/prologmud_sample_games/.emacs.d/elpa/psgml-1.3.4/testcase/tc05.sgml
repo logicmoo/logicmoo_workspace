@@ -1,0 +1,14 @@
+<!DOCTYPE foo
+[
+<!ELEMENT foo (ref)>
+
+<!element ref - o empty>
+<!attlist (foo|ref)
+   aThing NAME #CURRENT
+   someThing CDATA "Hello"
+>
+
+]>
+<foo athing="bar" something="Hello">
+  <ref athing="a" something="jisses">
+</foo>

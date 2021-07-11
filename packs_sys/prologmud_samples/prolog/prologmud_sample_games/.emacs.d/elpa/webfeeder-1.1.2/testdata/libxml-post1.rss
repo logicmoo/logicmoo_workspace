@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+<channel>
+<title>Example feed</title>
+<description>Example description</description>
+<generator>Emacs webfeeder.el</generator>
+<link>https://example.org/</link>
+<atom:link href="https://example.org/libxml-post1.rss" rel="self" type="application/rss+xml"/>
+<lastBuildDate>Thu, 01 Jan 1970 01:00:00 +0100</lastBuildDate>
+<item>
+  <title>Second post</title>
+  <description><![CDATA[<div id="content">
+ <p>
+Nullam eu ante vel est convallis dignissim.  Fusce suscipit, wisi nec facilisis
+facilisis, est dui fermentum leo, quis tempor ligula erat quis odio.  Nunc porta
+vulputate tellus.  Nunc rutrum turpis sed pede.  Sed bibendum.  Aliquam posuere.
+Nunc aliquet, augue nec adipiscing interdum, lacus tellus malesuada massa, quis
+varius mi purus non odio.  Pellentesque condimentum, magna ut suscipit
+hendrerit, ipsum augue ornare nulla, non luctus diam neque sit amet urna.
+Curabitur vulputate vestibulum lorem.  Fusce sagittis, libero non molestie
+mollis, magna orci ultrices dolor, at vulputate neque nulla lacinia eros.  Sed
+id ligula quis est convallis tempor.  Curabitur lacinia pulvinar nibh.  Nam a
+sapien.
+</p>
+
+ <div id="outline-container-org11c278d" class="outline-2">
+ <h2 id="org11c278d"> <span class="section-number-2">1</span> Section 1</h2>
+ <div class="outline-text-2" id="text-1">
+ <p>
+Lorem ipsum dolor sit amet, consectetuer adipiscing elit.  Donec hendrerit
+tempor tellus.  Donec pretium posuere tellus.  Proin quam nisl, tincidunt et,
+mattis eget, convallis nec, purus.  Cum sociis natoque penatibus et magnis dis
+parturient montes, nascetur ridiculus mus.  Nulla posuere.  Donec vitae dolor.
+Nullam tristique diam non turpis.  Cras placerat accumsan nulla.  Nullam rutrum.
+Nam vestibulum accumsan nisl.
+</p>
+</div>
+</div>
+
+ <div id="outline-container-orgd65c0d7" class="outline-2">
+ <h2 id="orgd65c0d7"> <span class="section-number-2">2</span> Section 2</h2>
+ <div class="outline-text-2" id="text-2">
+ <p>
+Pellentesque dapibus suscipit ligula.  Donec posuere augue in quam.  Etiam vel
+tortor sodales tellus ultricies commodo.  Suspendisse potenti.  Aenean in sem ac
+leo mollis blandit.  Donec neque quam, dignissim in, mollis nec, sagittis eu,
+wisi.  Phasellus lacus.  Etiam laoreet quam sed arcu.  Phasellus at dui in
+ligula mollis ultricies.  Integer placerat tristique nisl.  Praesent augue.
+Fusce commodo.  Vestibulum convallis, lorem a tempus semper, dui dui euismod
+elit, vitae placerat urna tortor vitae lacus.  Nullam libero mauris, consequat
+quis, varius et, dictum id, arcu.  Mauris mollis tincidunt felis.  Aliquam
+feugiat tellus ut neque.  Nulla facilisis, risus a rhoncus fermentum, tellus
+tellus lacinia purus, et dictum nunc justo sit amet elit.
+</p>
+</div>
+</div>
+</div>]]></description>
+  <link>https://example.org/post1-html5-fancy.html</link>
+  <guid isPermaLink="false">https://example.org/post1-html5-fancy.html</guid>
+  <pubDate>Tue, 26 Mar 2019 01:00:00 +0100</pubDate>
+</item>
+</channel>
+</rss>

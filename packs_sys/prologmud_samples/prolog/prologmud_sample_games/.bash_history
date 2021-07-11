@@ -1,25 +1,3 @@
-#whoami
-STUFF="^Mprolog.
-bfly. call((bfly_set(butterfly),bfly_set(command_args,\"${*}\"),bfly_set(ptty,\"${PTTY}:${TTY}:${PTY}:${PTS}\"))). bfly_start_link(\"${LOCATION}\").
-end_of_file.^M"
-echo STUFF=$STUFF
-(    $SCREEN_CMD -S LogicmooServer -p0 -X stuff "${STUFF}"; )
-echo $( 
-$SCREEN_CMD -rx LogicmooServer
-)
-return 0 2>/dev/null
-#!/bin/bash
-set -e
-export SCREEN_CMD="sudo -u prologmud_server -- screen"
-#echo PTTY:TTY:PTS=$PTTY:$TTY:$PTS
-#whoami
-STUFF="^Mprolog.
-bfly. call((bfly_set(butterfly),bfly_set(command_args,\"${*}\"),bfly_set(ptty,\"${PTTY}:${TTY}:${PTY}:${PTS}\"))). bfly_start_link(\"${LOCATION}\").
-end_of_file.^M"
-echo STUFF=$STUFF
-(    $SCREEN_CMD -S LogicmooServer -p0 -X stuff "${STUFF}"; )
-echo $( 
-$SCREEN_CMD -rx LogicmooServer
 )
 return 0 2>/dev/null
 #!/bin/bash
@@ -1998,3 +1976,25 @@ exit
 exit
 google-chrome
 google-chrome  --no-sandbox
+cp .emacs .emacs-saved
+vi .emacs
+cd ~
+ls ~/.emacs.d/
+ls ~/.emacs.d/
+cat ~/.emacs.d/prolog-lsp 
+mv ~/.emacs.d/prolog-ls.el  ~/.emacs.d/prolog-lsp.el
+vi .emacs
+apt install sh
+apt install update
+apt update
+apt install sh
+apt update -y
+apt install gz
+apt install gzip
+apt install ksh
+apt install sh
+apt install shell
+apt install ash
+apt install tsh
+apt install zsh
+sh

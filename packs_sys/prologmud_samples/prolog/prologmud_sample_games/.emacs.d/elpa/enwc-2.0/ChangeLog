@@ -1,0 +1,61 @@
+2017-04-15  Ian Dunn  <dunni@gnu.org>
+
+	Merge commit '9893d7f17a2ee7f83587c305c256bd1300995125'
+
+2017-03-04  Ian Dunn  <dunni@gnu.org>
+
+	Merge commit 'dd9b14d7f5c0eb43c5279255a990e6c1388fb0be'
+
+2017-03-04  Ian Dunn  <dunni@gnu.org>
+
+	Merge commit '8a0f951c02d0fe73dd247b983747951d39c7e76a'
+
+2017-02-24  Ian Dunn  <dunni@gnu.org>
+
+	Merge commit '8e63abd47ea0cfa00b44b3c2ab81a933dbd9ce93'
+
+2017-02-23  Ian Dunn  <dunni@gnu.org>
+
+	Add 'packages/enwc/' from commit
+	'a3c59cce3482babc7c0518e7ff9da246158b9420'
+
+	git-subtree-dir: packages/enwc git-subtree-mainline:
+	710001fa8b17192533e5e3c6a008a9fc2d1315ac git-subtree-split:
+	a3c59cce3482babc7c0518e7ff9da246158b9420
+
+2017-02-23  Ian Dunn  <dunni@gnu.org>
+
+	Removed packages/enwc in preparation for subtree pull.
+
+2016-07-11  Stefan Monnier  <monnier@iro.umontreal.ca>
+
+	* enwc.el: Add email address of author
+
+2016-07-11  Paul Eggert	 <eggert@cs.ucla.edu>
+
+	Fix some quoting problems in doc strings
+
+	Most of these are minor issues involving, e.g., quoting `like this' 
+	instead of 'like this'.	 A few involve escaping ` and ' with a preceding
+	\= when the characters should not be turned into curved single quotes.
+
+2013-08-21  Stefan Monnier  <monnier@iro.umontreal.ca>
+
+	Sync with enwc/master
+
+2013-04-06  Stefan Monnier  <monnier@iro.umontreal.ca>
+
+	* packages/enwc/enwc-pkg.el: Add missing file.
+
+2013-04-06  Stefan Monnier  <monnier@iro.umontreal.ca>
+
+	Fix up copyright names in ENWC; tweak packages/README.
+
+2013-04-05  Stefan Monnier  <monnier@iro.umontreal.ca>
+
+	Add ENWC from bzr://bzr.savannah.nongnu.org/enwc/trunk
+
+	git-subtree-dir: packages/enwc git-subtree-mainline:
+	8973bd8b49ff3f383645921dfaa7ce71abc9a91f git-subtree-split:
+	853350e2594af2ff5d86042612f8c8c3e5214300
+

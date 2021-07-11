@@ -1,0 +1,325 @@
+<!DOCTYPE HTML  PUBLIC "-//W3C//DTD HTML 4.0//EN"  [
+<!ENTITY last.ed  'Time-stamp: "2005-03-08 15:50:46 lenst"'>
+<!ENTITY rcs.id "$Id: about_psgml.sgml,v 1.19 2005/03/08 18:39:15 lenst Exp $">
+
+<!ENTITY % HTML.Deprecated "IGNORE">
+
+<!ENTITY mail.url "mailto:">
+<!ENTITY my.email CDATA "lenst@lysator.liu.se">
+<!ENTITY mme.url "&mail.url;&my.email">
+
+<!ENTITY % TEST  "IGNORE">
+<![ %TEST [ <!ENTITY base.url "."> ]]>
+
+<!ENTITY base.url
+   "http://www.lysator.liu.se/~lenst/about_psgml">
+
+<!ENTITY logo.url "&base.url;/newpsgml2.gif">
+
+<!ENTITY ftp.url "ftp://ftp.lysator.liu.se/">
+<!ENTITY psgml.dir "&ftp.url;pub/sgml/">
+<!ENTITY alpha.dir "&psgml.dir;ALPHA/">
+<!ENTITY psgml1.0.3 "&psgml.dir;psgml-1.0.3.tar.gz">
+<!ENTITY psgml1.2.0 "psgml-1.2.0.tar.gz">
+<!ENTITY psgml1.2.1 "psgml-1.2.1.tar.gz">
+<!ENTITY psgml1.2.2 "psgml-1.2.2.tar.gz">
+<!ENTITY psgml1.2.3 "psgml-1.2.3.tar.gz">
+<!ENTITY psgml1.2.4 "psgml-1.2.4.tar.gz">
+<!ENTITY psgml1.2.5 "psgml-1.2.5.tar.gz">
+<!ENTITY psgml1.3.1 "psgml-1.3.1.tar.gz">
+<!ENTITY psgml1.3.2 "psgml-1.3.2.tar.gz">
+<!ENTITY ftp-dir    "&psgml.dir;">
+
+<!ENTITY newdoc.url "&base.url;/psgml.html">
+<!ENTITY source "&base.url;/about_psgml.sgml" >
+
+<!ENTITY nl     "<br>" >
+<!ENTITY SGML   "<acronym>SGML</acronym>" >
+<!ENTITY XML    "<acronym>XML</acronym>" >
+
+<?PSGML NOFILL body div pre >
+]>
+
+<HTML>
+ <head>
+  <title>A GNU Emacs mode for SGML files</title>
+  <link href="&mme.url" rev="made">
+  <meta name="template-type" content="software">
+  <meta name="category" content="Emacs mode">
+  <meta name="author-name" content="Lennart Staflin">
+  <meta name="version" content="1.2.5">
+  <meta name="description"
+    content="PSGML is a GNU Emacs Major Mode for editing SGML coded documents.">
+  <meta name="keywords" content="sgml, emacs, syntax directed editing">
+  <meta name="distribution" content="global">
+
+  <STYLE TYPE="text/css"><!--
+DIV.abstract P { margin-left: 10%; margin-right: 10% }
+ADDRESS { text-align: right; color: gray; }
+H1 { align: center }
+LI { margin-top: -10px; }
+HR.divider { width: 50%; align: center; }
+--></STYLE>
+
+ </head>
+ <body>
+  <address>
+   Lennart Staflin <a href="&mme.url">&lt;&my.email;&gt;</a>&nl;
+   &last.ed;
+  </address>
+  <hr>
+  <DIV> <h1>Information about PSGML</h1>
+   <p>
+    PSGML is a GNU Emacs Major Mode for editing &SGML; and &XML; coded
+    documents.
+   </p>
+   <ul class="content">
+    <li><p><a href="#UPDATE">Update</a></p> </li>
+    <li><p><a href="#VERSIONS">Versions and how to get them</a></p></li>
+    <li><p><a href="#COMPAT">Compatibility</a></p> </li>
+<![IGNORE[ <li><p><a href="#NEW12">New in version 1.2</a></p> </li>]]>
+    <li><p><a href="&newdoc.url;">Latest manual</a></p></li>
+   </ul>
+
+   <div class="abstract">
+    <hr class="divider">
+    <p>
+     Emacs is an advanced and extensible editor. A <DFN>Major
+      Mode</dfn> customizes Emacs for editing text of a particular
+     sort.  PSGML is a major mode for &SGML; documents.
+    </p>
+    <p>
+     PSGML has several functions for editing &SGML; documents.
+     Indentation according to element nesting depth and identification
+     of structural errors (but it is not a validating &SGML; parser).
+     Menus and commands for inserting tags with only the contextually
+     valid tags.  Attribute values can be edited in a separate window
+     with information about types and defaults. Structure based
+     editing includes movement and killing; and also several commands
+     for folding editing.
+    </p>
+    <hr class="divider">
+   </DIV>
+
+   <DIV> <h2><A NAME="UPDATE">Update</A></h2>
+    <DL>
+     <dt>2005-03-05</dt>
+     <dd><p>Alpha version 1.3.2. Some user interface changes. This
+       version should work with latest Emacs in multi-byte mode (only
+       tested with the CVS-version of Emacs). Compatibility with
+       earlier versions of Emacs (19.34,20.x) and with XEmacs is
+       unclear. <a href="&alpha.dir;&psgml1.3.2;">Download (ftp)</a>
+       <a href="&base.url;/&psgml1.3.2;">or http.</a></p></dd>
+
+     <dt>2002-12-14</dt>
+     <dd><p>Alpha version 1.3.1. This version should work with latest
+       Emacs in multi-byte mode. Compatibility with earlier versions of
+       Emacs (19.34,20.x) and with XEmacs is unclear. <a
+        href="&alpha.dir;&psgml1.3.1;">Download (ftp).</a></p></dd>
+
+     <dt>2002-04-19</dt>
+     <dd><p>Bugfix release 1.2.5. <a
+        href="&base.url;/&psgml1.2.5;">Download.</a></p></dd>
+
+     <dt>2001-12-16</dt>
+     <dd><p>Bugfix release 1.2.4. <a
+        href="&base.url;/&psgml1.2.4;">Download.</a></p></dd>
+
+     <dt>2001-11-09</dt>
+     <dd><p>Release 1.2.3 fixes compatibility with Emacs 21.1 and is available
+       from <a href="&psgml.dir">lystor ftp</a>, <a
+        href="&base.url;/&psgml1.2.3;">http</a> or from <a
+        href="http://www.sourceforge.net/projects/psgml">source
+        forge</a></p></dd>
+
+     <dt>2001-02-10</dt>
+     <dd><p>Bugfix release 1.2.2 available from <a
+        href="&psgml.dir">lystor ftp</a>, <a
+        href="&base.url;/&psgml1.2.2;">http</a> or from <a
+        href="http://www.sourceforge.net/projects/psgml">source
+        forge</a></p></dd>
+
+     <dt>2000-10-27</dt> <dd><p>The future of PSGML: It is currently
+       not in active development. I plan to put out one or two bug fix
+       releases and the move the sources to <a
+        href="http://www.sourceforge.net/projects/psgml">source
+        forge</a> (possibly after restructuring the code a bit and
+       merging in various patches and additions that has been send to
+       me.) I will then invite others to take an active part in the
+       future development of PSGML. To start this I have created two
+       mailing lists on source forge. A <code>psgml-user</code> for
+       general discussion and questions about PSGML and
+       <code>psgml-devel</code> for discussion about the future
+       development of PSGML. Visit the <a
+        href="http://sourceforge.net/mail/?group_id=9156">SourceForge:
+        Mailing Lists for PSGML</a> page to for subscription
+       info.</p></dd>
+
+     <dt>1999-10-20</dt>
+     <dd><p>Version 1.2.1 of PSGML with som bugfixes from <a
+ href="&psgml.dir">lystor ftp</a> or <a href="&base.url;/&psgml1.2.1;">http</a></p>
+     </dd>
+
+     <dt>1999-10-10</dt>
+     <dd><p>Version 1.2.0 of PSGML with <acronym>XML</acronym> support is
+      now released. Get <a href="&psgml1.2.0;">psgml-1.2.0.tar.gz</a>
+      from <a href="&psgml.dir">lystor ftp.</a></p>
+     </dd>
+
+     <DT>1998-06-03</DT>
+     <DD>
+      <P><acronym>XML</acronym> support is in an
+       ALPHA stage.</P>
+     </DD>
+
+     <dt>1996-11-20</dt>
+     <dd>
+      <p>Version 1.0.3 of psgml. A bug fix release.</p>
+     </dd>
+
+     <dt>1996-11-11</dt>
+     <dd>
+      <p>Version 1.0 of psgml is ready.</p>
+     </dd>
+
+     <dt>1995-03-12</dt>
+     <dd>
+      <p>Release of psgml 0.4 beta 3. Fixes compatibility with oemacs.
+       Fixes small bug in indentation code.</p>
+     </dd>
+    </DL>
+   </DIV>
+
+   <div> <h2><A NAME="VERSIONS">Versions</A></h2>
+
+    <p>
+     You can fetch PSGML with anonymous ftp from <a
+       href="&psgml.dir"><samp>ftp.lysator.liu.se</samp></a> in
+       directory <samp>pub/sgml</samp> or from <a
+       href="http://www.sourceforge.net/projects/psgml">source
+       forge</a> (only from 1.2.2).
+    </p>
+
+    <table border="1" cellpadding="4">
+     <tbody>
+      <tr>
+       <th rowspan="2">Version</th>
+       <th rowspan="2">Status</th>
+       <th rowspan="2">Comment</th>
+       <th colspan="2">Download</th>
+      </tr>
+      <tr>
+       <th>http</th>
+       <th>ftp</th>
+      </tr>
+      <tr>
+       <!-- one of (TD TH) -->
+       <td>1.3.2</td>
+       <td>alpha</td>
+       <td>fixes and some ui changes</td>
+       <td><a href="&base.url;/&psgml1.3.2;">http</a></td>
+       <td><a href="&alpha.dir;&psgml1.3.2;">ftp</a></td>
+      </tr>
+      <tr>
+       <td>1.3.1</td>
+       <td>alpha</td>
+       <td>multi-byte compatibility</td>
+       <td><a href="&base.url;/&psgml1.3.1;">http</a></td>
+       <td><a href="&alpha.dir;&psgml1.3.1;">ftp</a></td>
+      </tr>
+      <tr>
+       <td>1.2.5</td>
+       <td>stable</td>
+       <td>bugfixes</td>
+       <td><a href="&base.url;/&psgml1.2.5;">http</a></td>
+       <td><a href="&psgml.dir;&psgml1.2.5;">ftp</a></td>
+      </tr>
+      <tr>
+       <td>1.2.4</td>
+       <td>stable</td>
+       <td>bugfixes</td>
+       <td><a href="&base.url;/&psgml1.2.4;">http</a></td>
+       <td><a href="&psgml.dir;&psgml1.2.4;">ftp</a></td>
+      </tr>
+      <tr>
+       <td>1.2.3</td>
+       <td>stable</td>
+       <td>Emacs 21.1 compatibility</td>
+       <td><a href="&base.url;/&psgml1.2.3;">http</a></td>
+       <td><a href="&psgml.dir;&psgml1.2.3;">ftp</a></td>
+      </tr>
+      <tr>
+       <td>1.2.2</td>
+       <td>stable</td>
+       <td>bugfixes</td>
+       <td><a href="&base.url;/&psgml1.2.2;">http</a></td>
+       <td><a href="&psgml.dir;&psgml1.2.2;">ftp</a></td>
+      </tr>
+      <tr>
+       <td>1.2.1</td>
+       <td>beta</td>
+       <td>&nbsp;</td>
+       <td><a href="&base.url;/&psgml1.2.1;">http</a></td>
+       <td><a href="&psgml.dir;&psgml1.2.1;">ftp</a></td>
+      </tr>
+      <tr>
+       <td>1.2.0</td>
+       <td>beta</td>
+       <td>XML support</td>
+       <td><a href="&base.url;/&psgml1.2.0;">http</a></td>
+       <td><a href="&psgml.dir;&psgml1.2.0;">ftp</a></td>
+      </tr>
+      <tr>
+       <td>1.0.3</td>
+       <td>stable</td>
+       <td>&nbsp;</td>
+       <td>-</td>
+       <td><a href="&psgml1.0.3;">ftp</a></td>
+      </tr>
+     </tbody>
+    </table>
+   </div>
+
+   <div> <h2><a name="COMPAT">Compatibility</a></h2>
+    <p><strong>Version 1.2.3</strong> of PSGML works as follows:
+    </p>
+    <dl>
+     <dt>Emacs 19.34</dt>
+     <dd>Works well. Don't use an earlier version of Emacs.</dd>
+
+     <dt>Emacs 20.7</dt>
+     <dd>Works in unibyte mode. Multibyte might create problem with
+      saved (binary coded) DTDs.</dd>
+
+     <dt>Emacs 21.1</dt>
+     <dd>Works in unibyte mode. Multibyte might create problem with
+      saved (binary coded) DTDs. Earlier versions of PSGML does not
+      work.</dd>
+
+     <dt>XEmacs</dt>
+     <dd>Not tested</dd>
+    </dl>
+
+</div>
+
+<![IGNORE[
+   <div> <h2><a name="NEW12">News in version 1.2</a></h2>
+    <p>Support for &XML;.</p>
+    <p>More info forthcoming.</p>
+   </div>]]>
+  </DIV>
+ </body>
+</HTML>
+
+<!--
+Local variables:
+mode: sgml
+indent-tabs-mode:nil
+sgml-omittag:t
+sgml-shorttag:nil
+sgml-minimize-attributes:nil
+sgml-always-quote-attributes:t
+sgml-indent-step:1
+sgml-indent-data:t
+End:
+-->

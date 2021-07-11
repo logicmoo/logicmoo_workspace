@@ -1,0 +1,56 @@
+<!DOCTYPE Book  PUBLIC "-//Davenport//DTD DocBook V3.0//EN" [
+<!ENTITY foo "<acronym>HEPP</acronym>">
+<!ENTITY dr "<acronym>DR</acronym>" >
+<!ENTITY far "<acronym>FAR</acronym>" >
+<!ENTITY mttd "<acronym>MTTD</acronym>" >
+
+<![IGNORE[Group: me
+From: Marco Ladermann <ladermann@dpa.de>
+Subject: sgml-fill-element on entity with markup-data 
+To: lenst@lysator.liu.se
+Date: Thu, 18 Nov 1999 12:53:25 +0100
+
+Hello,
+
+I encountered a problem with the function sgml-fill-element (C-c C-q). If the
+element contains an entity which itself contains markup-data the fill-process
+gets confused.
+
+Regards
+Marco
+]]>
+<!-- cant reproduce -->
+]>
+
+<Book>
+  <article>
+    <artheader changed>
+      <title>So What</title>
+    </artheader>
+    <sect1>
+      <title>An then &DotDot;</title>
+      <para>
+        Yea! adn lsf alsdkf laksjf lkaslksdjf lskdfj &foo; lkasdjf
+        alskdfj alsj</para>
+<!-- &far; starting a line is indented wrong -->
+      <para>
+        Mean Time To Detect. &dr; is het aantal geconstateerde
+        incidenten gedeeld door het werkelijke aantal incidenten.
+          &far; is het aantal valse meldingen gedeeld door het aantal
+        incident-vrije intervallen. &mttd; is de gemiddelde tijd die
+        het kost voordat een waarschuwing wordt gegeven nadat een
+        ongeluk is gebeurd. Een probleem is dat &dr; en &far;
+        gecorreleerd zijn, detectie van meer incidenten betekent meer
+        valse alarms en
+      </para>
+    </sect1>
+
+  </article>
+</Book>
+<!-- Keep this comment at the end of the file
+Local variables:
+sgml-general-insert-case:lower
+sgml-indent-step:2
+sgml-indent-data:t
+End:
+-->

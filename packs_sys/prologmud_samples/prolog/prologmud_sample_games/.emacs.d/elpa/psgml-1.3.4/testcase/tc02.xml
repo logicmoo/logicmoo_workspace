@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE Tc2 [
+
+<!ELEMENT Tc2 (_129-1, Läska)>
+<!ELEMENT _129-1 (#PCDATA)>
+<!ELEMENT Läska (#PCDATA)>
+<!ATTLIST Läska
+  foo:bar CDATA #REQUIRED
+  _fie    NMTOKEN "fim"
+ >
+
+]>
+
+<Tc2>
+  <_129-1>Hello</_129-1>
+  <Läska foo:bar="33" _fie="fimpa">försök med edit-attr</Läska>
+</Tc2>

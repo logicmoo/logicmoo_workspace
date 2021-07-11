@@ -1,0 +1,324 @@
+2020-05-12  Stephen Leake  <stephen_leake@stephe-leake.org>
+
+	In uniquify-files.el uniq-file-completion-table, fix compatibility with
+	25.3
+
+2019-12-29  Stephen Leake  <stephen_leake@stephe-leake.org>
+
+	In uniquify-files.el, improve integration with project.el, bump version
+
+2019-08-17  Stephen Leake  <stephen_leake@stephe-leake.org>
+
+	In ada-mode and wisi, release ada-mode 6.2.1, wisi 2.2.1; fix packaging
+	bugs
+
+2019-07-17  Stephen Leake  <stephen_leake@stephe-leake.org>
+
+	Release path-iterator.el, uniquify-files.el
+
+	* packages/path-iterator/path-iterator.el: Bump version for release.
+
+	* packages/uniquify-files/uniquify-files.el: Bump version for release. 
+	Handle emacs < 27 in project integration.
+
+2019-07-12  Stephen Leake  <stephen_leake@stephe-leake.org>
+
+	In packages/uniquify-files/uniquify-files.el: fix typo
+
+2019-07-11  Stephen Leake  <stephen_leake@stephe-leake.org>
+
+	In uniquify-files, rewrite to use an alist, clean up tests to match
+
+	* packages/uniquify-files/file-complete-root-relative-test.el: Delete.
+	* packages/uniquify-files/file-complete-root-relative.el: Delete.
+	* packages/uniquify-files/file-complete.el: Delete.
+
+	* packages/uniquify-files/uniquify-files-resources/ 
+	wisitoken-generate-packrat-test.text: New file.
+
+	* packages/uniquify-files/uniquify-files-resources/ 
+	wisitoken-syntax_trees-test.text: New file.
+
+	* packages/uniquify-files/uniquify-files-resources/ 
+	wisitoken-text_io_trace.text: New file.
+
+	* packages/uniquify-files/uniquify-files-test.el (uft-path): Delete 
+	dependence on path-iterator. Simplify tests to work with rewritten 
+	uniquify-files.
+
+	* packages/uniquify-files/uniquify-files.el: Rewrite to use alist of abs
+	. uniquified.
+	(uniq-file-read): New for Emacs 27 project.el.
+
+2019-03-25  Stephen Leake  <stephen_leake@stephe-leake.org>
+
+	In uniquify-files, factor out file-complete.el
+
+	* packages/path-iterator/path-iterator-resources/alice-1/bar-file1.text: 
+	New file.
+
+	* packages/path-iterator/path-iterator-test.el: Add trailing "/" where 
+	needed; anything that is known to be a directory ends in "/".
+
+	* packages/uniquify-files/file-complete-root-relative-test.el:
+	(test-fc-root-rel-test-completion-1): Update to use
+	completion-current-style.
+
+	* packages/uniquify-files/file-complete.el: New file, factored out from 
+	uniquify-file.el, file-complete-root-relative.el.
+
+	* packages/path-iterator/path-iterator.el: Add trailing "/" where
+	needed; anything that is known to be a directory ends in "/".
+	(path-iter--to-truename): Handle users passing a single string.
+
+	* packages/uniquify-files/file-complete-root-relative.el: Use 
+	file-complete functions. Use completion-current-style.
+	(fc-root-rel-completion-table-iter): Call
+	file-complete-completion-table.
+	(fc-root-rel--pcm-regex-list): Rename from
+	fc-root-rel--pcm-pattern-list.
+	(fc-root-rel-completion-table-list): Implement test-completion. Use 
+	test-completion, try-completion.
+
+	* packages/uniquify-files/uniquify-files-test.el (uft-iter): Add Alice, 
+	Bob directories.
+	(test-uniq-file-completion-table): Delete; tested in 
+	file-complete-test.el.
+	(test-uniq-file-all-completions-noface-1): Add a test.
+	(test-uniq-file-try-completion-1): Update tests.
+
+	* packages/uniquify-files/uniquify-files.el: Use file-complete.
+	(uniq-file--pcm-pat): New, factored out of uniq-file--pcm-merged-pat.
+	(uniq-file--pcm-pattern): Delete; use file-complete-pcm-regex.
+	(uniq-file-completion-table): Use file-complete-completion-table.
+
+2019-03-22  Stephen Leake  <stephen_leake@stephe-leake.org>
+
+	In uniquify-files, improve completion table to work with other styles
+
+	* packages/uniquify-files/uniquify-files.el (uniq-file--pcm-pattern):
+	Use completion-current-style to control dir-regex result.
+	(uniq-file--set-style): Delete; no longer used.
+	(uniq-file-all-completions): No longer set text property on result 
+	strings.
+	(uniq-file-completion-table): Implement try-completion. If current 
+	completion style is not uniquify-file, allow non-directory part of
+	string to match a directory (as other styles require).
+	(locate-file-iter): New; demonstrates using completion table with
+	default file completion styles.
+
+	* packages/uniquify-files/uniquify-files-test.el: Update all tests, add 
+	non-uniquify-file style tests.
+
+2019-03-21  Stephen Leake  <stephen_leake@stephe-leake.org>
+
+	Improve uniquify-files
+
+	* packages/uniquify-files/file-complete-root-relative.el:
+	(fc-root-rel-all-completions): Fix paren bug.
+
+	* packages/uniquify-files/uniquify-files.el:
+	(completion-current-style):New.
+	(uniq-file-try-completion, uniq-file-all-completions): Set it.
+	(uniq-file-all-completions): Fix bug.
+	(completion-get-data-string, completion-to-table-input): Use 
+	completion-current-style.
+	(uniq-file-completing-read-default-advice): Let-bind 
+	completion-current-style.
+	(locate-uniquified-file): Use completion table style metadata.
+
+2019-02-16  Stephen Leake  <stephen_leake@stephe-leake.org>
+
+	In uniquify-files/file-complete-root-relative.el, delete extra paren
+
+2019-02-15  Stephen Leake  <stephen_leake@stephe-leake.org>
+
+	In uniquify-files, use text property to pass completion style
+
+	* packages/uniquify-files/uniquify-files.el:
+	(uniq-file--regexp, uniq-file--conflicts, uniq-file--hilit): Rename from 
+	uniq-files-*.
+	(uniq-file--set-style): New.
+	(uniq-file-all-completions): Use it.
+	(completion-get-data-string, completion-to-table-input): Use
+	'completion-style text property.
+
+	* packages/uniquify-files/uniquify-files-test.el: Match code changes.
+
+	* packages/uniquify-files/file-complete-root-relative.el:
+	(fc-root-rel-all-completions): Set 'completion-style text property.
+
+	* packages/uniquify-files/file-complete-root-relative-test.el:
+	(test-fc-root-rel-test-completion-1): Match code changes.
+
+2019-02-06  Stephen Leake  <stephen_leake@stephe-leake.org>
+
+	Fix bugs in uniquify-files
+
+	* packages/uniquify-files/file-complete-root-relative.el:
+	(fc-root-rel-completion-table-list): Enforce directory-file-name for 
+	root.
+
+	* packages/uniquify-files/uniquify-files.el:
+	(locate-uniquified-file-iter-2): Set completion-category-overrides.
+
+2019-02-05  Stephen Leake  <stephen_leake@stephe-leake.org>
+
+	Improve uniquify-files in corner case
+
+	* packages/uniquify-files/uniquify-files.el (uniq-file--dir-match): 
+	Include trailing directories.
+	(locate-uniquified-file-iter, -2): Set completion-category-overrides.
+
+	* packages/uniquify-files/uniquify-files-test.el:
+	(test-uniq-file-all-completions-noface-1): Add test of corner case.
+
+2019-02-03  Stephen Leake  <stephen_leake@stephe-leake.org>
+
+	Improve uniquify-files
+
+	* packages/uniquify-files/file-complete-root-relative.el
+	(fc-root-rel-to-table-input): Match completion table arg list.
+	(fc-root-rel-completion-table-iter): add 'styles to metadata
+	(fc-root-rel-completion-table-list): add 'styles to metadata
+	(completion-styles-alist): Add file-root-rel.
+
+	* packages/uniquify-files/file-complete-root-relative-test.el
+	(test-fc-root-rel-completion-table-iter): Match code change.
+	(test-fc-root-rel-completion-table-list): Match code change.
+
+	* packages/uniquify-files/uniquify-files-resources/foo-file-3.texts2: 
+	Match content to file name.
+
+	* packages/uniquify-files/uniquify-files.el:
+	(completion-get-data-string, completion-to-table-input): Use 'styles 
+	metadata.
+	(top level): Don't modify completion-category-defaults; use 
+	completion-category-overrides in project-find-files.
+	(uniq-file-completion-table): Add styles metadata.
+
+	* packages/uniquify-files/uniquify-files-test.el:
+	(test-uniq-file-completion-table): Match code change.
+
+2019-02-01  Stephen Leake  <stephen_leake@stephe-leake.org>
+
+	In uniquify-files, add another file completion style
+
+	* packages/uniquify-files/file-complete-root-relative.el: New file.
+	* packages/uniquify-files/file-complete-root-relative-test.el: New file.
+
+2019-02-01  Stephen Leake  <stephen_leake@stephe-leake.org>
+
+	Improve uniquify-files-test.el, improve uniquify-files to handle new
+	tests
+
+	* packages/uniquify-files/uniquify-files-resources/*.text: Adjust
+	content to match location.
+
+	* packages/uniquify-files/uniquify-files-resources/Alice/alice-3/: New 
+	directory.
+
+	* packages/uniquify-files/uniquify-files-resources/Bob/alice-3/: New 
+	directory.
+
+	* packages/uniquify-files/uniquify-files-test.el (uft-Alice-alice3)
+	(uft-Bob-alice3): New.
+	(uft-iter): Add Alice/alice-3, Bob/alice-3.
+	(test-uniq-file-completion-table): Renamed from 
+	test-uniq-file-path-completion-table. Add new test files to results.
+	(test-uniq-file-all-completions-noface-1): Renamed from 
+	test-uniquify-file-all-completions-noface-1.
+	(test-uniq-file-all-completions-noface-1): Add new test files to
+	results. Add completion-ignore-case t to cases where it matters. Add
+	test using Alice/alice-3, Bob/alice-3.
+	(test-uniq-file-all-completions-noface-func): Renamed from 
+	test-uniquify-file-all-completions-noface-func. Add 
+	completion-ignore-case nil.
+	(test-uniq-file-all-completions-noface-list): Renamed from 
+	test-uniquify-file-all-completions-noface-list. Add 
+	completion-ignore-case nil.
+	(test-uniq-file-all-completions-face): Add completion-ignore-case nil. 
+	Add new test files to results.
+	(test-uniq-file-try-completion-1): Add completion-ignore-case t to cases 
+	where it matters. Replace case-fold-search with completion-ignore-case.
+
+	* packages/uniquify-files/uniquify-files.el (uniq-files--conflicts): 
+	Improve to handle new test.
+	(uniq-file--uniquify): Set case-fold-search.
+	(uniq-file--pcm-merged-pat): Delete extra-delim arg; no longer shared 
+	with other style. Set case-fold-search.
+	(uniq-file--pcm-merged-pat): Allow uniquifying directories.
+
+2019-01-28  Stephen Leake  <stephen_leake@stephe-leake.org>
+
+	Fix bugs, add tests in uniquify-files
+
+	* packages/uniquify-files/uniquify-files.el: Fix bugs.
+
+	* packages/uniquify-files/uniquify-files-test.el:
+	(test-uniquify-file-all-completions-noface-func): Rename from 
+	test-uniquify-file-all-completions-noface, take table input.
+	(test-uniquify-file-all-completions-noface-func)
+	(test-uniquify-file-all-completions-noface-list): New; test function and 
+	list tables.
+	(test-uniq-file-try-completion-1): Rename from 
+	test-uniq-file-try-completion, take table input, add tests on 
+	case-fold-search nil and t.
+	(test-uniq-file-try-completion-func,
+	test-uniq-file-try-completion-list): New; test function and list tables.
+
+2019-01-28  Stephen Leake  <stephen_leake@stephe-leake.org>
+
+	In uniquify-files, handle list tables, refactor code, update tests
+
+	* packages/uniquify-files/uniquify-files-test.el: Match code changes.
+	(test-uniq-file-test-completion-1): Test function and list completion
+	tables.
+
+	* packages/uniquify-files/uniquify-files.el: Improve header comments; 
+	table can be a function or a list. Rename internal functions with '--'.
+	(uniq-file-to-table-input): Rename from uniq-file-normalize.
+	(uniq-file--valid-regexp, uniq-file--pcm-pattern, 
+	uniq-file--pcm-merged-pat): New, factored out.
+	(uniq-file-try-completion): Renamed from 
+	completion-uniquify-file-try-completion, use factored out functions, 
+	handle list table.
+	(uniq-files--hilit): Rename with '--', use factored out functions.
+	(uniq-file--match-list): New, factored out.
+	(uniq-file-all-completions): Renamed from 
+	completion-uniquify-file-all-completions. Handle list table.
+	(uniq-file-get-data-string): Renamed from 
+	completion-uniquify-file-get-data-string. Handle list table.
+	(completion-get-data-string): Improve to handle other styles.
+	(completion-to-table-input): Rename from 
+	uniq-file-test-completion-advice. Use additional completion-styles-alist 
+	fields.
+	(uniq-file-completion-table): Improve comments. Handle test-completion, 
+	use factored out functions.
+	(locate-uniquified-file-iter-2): New; example of list table usage.
+
+2019-01-22  Stephen Leake  <stephen_leake@stephe-leake.org>
+
+	Improve uniquify-files; add tests. Add path-iterator tests
+
+	* packages/uniquify-files/uniquify-files-resources/: New directory.
+
+	* packages/uniquify-files/uniquify-files-test.el: New file.
+
+	* packages/uniquify-files/uniquify-files.el: Delete
+	uniquify-files-style; not useful.
+
+	* packages/path-iterator/path-iterator-resources/: New directory.
+
+	* packages/path-iterator/path-iterator-test.el: New file.
+
+2019-01-17  Andreas Schwab  <schwab@linux-m68k.org>
+
+	Fix unparsable file header
+
+	* packages/uniquify-files/uniquify-files.el: Fix comment style.
+
+2019-01-16  Stephen Leake  <stephen_leake@stephe-leake.org>
+
+	Add package uniquify-files
+

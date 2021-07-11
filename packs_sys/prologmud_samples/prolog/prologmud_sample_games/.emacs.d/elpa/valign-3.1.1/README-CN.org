@@ -1,0 +1,49 @@
+#+TITLE: Valign.el
+
+这个包能对齐 Org Mode、Markdown和table.el 的表格。它能对齐包含不等宽字体、中日韩字符、图片的表格。valign 不会影响 Org Mode（或 Markdown mode）基于等宽字符的对齐。
+
+想要用 valign.el 的话，先加载 valign.el，然后把 ~valign-mode~ 加到 ~org-mode-hook~ 或 ~markdown-mode-hook~ 里即可。
+#+begin_src emacs-lisp
+(add-hook 'org-mode-hook #'valign-mode)
+#+end_src
+
+[[./default.png]]
+
+[[./table.el.png]]
+
+*已知问题:*
+
+- Markdown Mode 里的隐藏链接依然会占用整个链接的宽度，因为隐藏链接用了 valign 还不支持的 character composition。
+- 渲染大型表格（≥100行）速度较慢。
+
+*注意:*
+
+如果想要 valign 对齐 table.el 表格，表格里每个单元格的左侧不能有空格，右侧至少要有一个空格。可以用 [[https://github.com/casouri/ftable][ftable.el]] 自动布局表格成这样。
+
+* 安装
+
+键入如下内容，从 GNU ELPA 获取 valign.el:
+#+begin_src 
+M-x package-install RET valign RET
+#+end_src
+
+* 自定义
+
+设置 ~valign-fancy-bar~ 为 ~non-nil~ 的效果如下:
+
+[[./fancy-bar.png]]
+
+仅影响 Org Mode和Markdown 的表格。
+
+默认情况下，valign 不会在普通编辑命令之后对齐表格，例如 ~self-insert-command~ 和 ~backward-kill-word~​。如果你不想在某些命令后对齐表格，可以把命令加入 ~valign-not-align-after-list~ 中。
+
+因为 valign 性能一般，所以我们不会对齐大于四千个字的表格。你可以修改 ~valign-max-table-size~ 改变这个限制。valign 会把 ~valign-table-fallback~ face 置于这些没有对齐的表格上。
+
+其他自定义选项：
+- ~valign-signal-parse-error~: 设为 non-nil，valign 遇到语法分析错误（parse error）时会报错提示。
+- ~valign-lighter~: mode-line 里显示的标识。
+- ~valign-box-charset-alist~: 用来定义 table.el 表格，比如 Unicode/ASCII 表格.
+
+* 如果函数 advice 让你浑身发痒
+
+~valign-mode~ 会加一些 advice，即使你关闭了 ~valign-mode~​，这些 advice 也不会消失 ，因为函数advice是全局起效，而 ~valign-mode~ 是局部起效。 如果你想删掉这些 advice，请用 ~valign-remove-advice~ 。 这时候如果有 buffer 里还开着 ~valign-mode~​，这些 buffer 里的 valign 将无法正常工作。

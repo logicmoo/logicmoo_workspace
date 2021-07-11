@@ -1,0 +1,2 @@
+;; Generated package description from excorporate.el  -*- no-byte-compile: t -*-
+(define-package "excorporate" "1.0.0" "Exchange Web Services (EWS) integration" '((emacs "24.1") (cl-lib "0.6.1") (fsm "0.2.1") (soap-client "3.2.0") (url-http-ntlm "2.0.4") (nadvice "0.3")) :keywords '("calendar") :authors '(("Thomas Fitzsimmons" . "fitzsim@fitzsim.org")) :maintainer '("Thomas Fitzsimmons" . "fitzsim@fitzsim.org") :url "https://www.fitzsim.org/blog/")

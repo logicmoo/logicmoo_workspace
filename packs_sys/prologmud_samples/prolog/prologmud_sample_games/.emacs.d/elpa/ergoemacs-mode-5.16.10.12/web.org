@@ -1,0 +1,2371 @@
+#+TITLE: ergoemacs-mode
+#-DESCRIPTION: An ergonomic keybinding for emacs
+#+DATE: 2013-02-08 19:33:26
+
+#+STARTUP: logdone
+#+LANGUAGE:  en
+#+TEMPLATE_DIR: ./o-blog-template
+#+URL: http://ergoemacs.github.com/ergoemacs-mode/
+#+DEFAULT_CATEGORY: Tips
+#+DISQUS: ergoemacsmode
+#+FILENAME_SANITIZER: ob-sanitize-string
+#+POST_SORTER: ob-sort-posts-by-title
+
+#+POST_BUILD_SHELL: cmd 1
+#+POST_BUILD_SHELL: cmd 2
+#+POST_BUILD_SHELL: cmd 3
+#+POST_BUILD_SHELL: cmd 4
+
+* ergoemacs-mode Quick start Guide
+  :PROPERTIES:
+  :PAGE:     index.html
+  :TEMPLATE: blog_static_no_title.html
+  :END:
+
+#+begin_o_blog_row 8
+
+#+begin_o_blog_hero_unit
+#+HTML: <h1>ergoemacs-mode</h1>
+
+A minor-mode that aims to:
+- Use/Create ergonomic keybindings in emacs that will reduce RSI
+- Use the commonly bound keys familiar to most people today. Ctrl+C
+  for copy, Ctrl+z for undo, etc.
+
+#+end_o_blog_hero_unit
+
+#+HTML: <h1 style="font-size: 500%;"><kbd class="dark">Q</kbd>uick start guide</h1>
+
+#+o_blog_row_column 4
+
+
+#+HTML: <div class="hero-unit" style="font-size: 200%;">
+
+[[file:{lisp}(ob:path-to-root){/lisp}/features.html][/icon-cog icon-white/ Features]]
+
+[[https://groups.google.com/forum/#!forum/ergoemacs][/icon-group icon-white/ Google Group]]
+
+[[https://github.com/ergoemacs/ergoemacs-mode][/icon-github-sign icon-white/ Github]]
+
+[[file:{lisp}(ob:path-to-root){/lisp}/testimonials.html][/icon-comments-alt icon-white/ Testimonials]]
+
+[[file:{lisp}(ob:path-to-root){/lisp}/changelog.html][/icon-pencil icon-white/ Changelog]]
+
+[[file:{lisp}(ob:path-to-root){/lisp}/bug-report.html][/icon-fire icon-white/ Bug report]]
+
+[[http://ergoemacs.org/emacs/emacs_keys_index.html][/icon-keyboard-wireless icon-white/ Keyboard Articles]]
+
+[[http://ergoemacs.org/emacs/emacs_modernization.html][Emacs Modernization]]
+
+[[http://ergoemacs.org/emacs/blog.html][/icon-blog icon-white/ Emacs Blog]]
+
+
+
+
+#+HTML: </div>
+
+#+end_o_blog_row
+
+
+** Setup
+
+First you need to install [[http://www.gnu.org/s/emacs][Emacs]]. Then you have 2 ways to install
+[[https://github.com/ergoemacs/ergoemacs-mode][ergoemacs-mode]].
+
+#+begin_o_blog_row 5
+
+#+HTML: <h4>Using elpa</h4>
+
+If you are using emacs 24 it should be very easy to install. 
+type:
+
+#+HTML: <kbd class="dark">Alt</kbd>+<kbd class="dark">x</kbd> <code>list-packages</code>
+
+
+#+HTML: After, find the package <code>ergoemacs-mode</code> and install it with <kbd class="dark">i</kbd><kbd class="dark">x</kbd>
+
+Then add the following to your =~/.emacs= or =~/.emacs.d/init.el=
+file:
+
+#+begin_src emacs-lisp
+  (package-initialize)
+  (require 'ergoemacs-mode)
+  
+#+end_src
+
+#+o_blog_row_column  6
+
+#+HTML: <h4>Manual setup</h4>
+
+Start by cloning the main branch /git/ repository from [[http://github.com][Github]]
+
+#+begin_src bash
+cd ~/.emacs.d
+git clone -b master --single-branch https://github.com/ergoemacs/ergoemacs-mode.git
+#+end_src
+
+And add following to your =~/.emacs= or =~/.emacs.d/init.el= file:
+
+#+begin_src emacs-lisp
+  (add-to-list 'load-path "~/.emacs.d/ergoemacs-mode")
+  (require 'ergoemacs-mode)
+  
+#+end_src
+
+#+end_o_blog_row
+
+
+** Enabling ergoemacs-mode
+To enable emacs, add the following to your =~/.emacs= or =~/.emacs.d/init.el= file:
+
+#+BEGIN_SRC emacs-lisp
+  (setq ergoemacs-theme nil) ;; Uses Standard Ergoemacs keyboard theme
+  (setq ergoemacs-keyboard-layout "us") ;; Assumes QWERTY keyboard layout
+  (ergoemacs-mode 1)
+  
+#+END_SRC
+
+For other key themes and keyboard layouts the initilization code
+[[file:key-setup.html][should be different]].  However, for QWERTY, the key bindings are:
+
+file:ergoemacs-extras/ergo-layouts/ergoemacs-layout-us.png
+
+* Blog details
+** Copyright
+  :PROPERTIES:
+  :SNIPPET:  t
+  :END:
+
+Documentation Copyright © 2007-2016 Matthew Fidler, Xah Lee and David
+Capello. Published under the therm of the [[http://creativecommons.org/licenses/by-nc-sa/2.0/fr/][Creative Commons
+Attribution-Noncommercial-Share Alike 2.0 France License]].  Code
+published under [[http://www.gnu.org/licenses/gpl-3.0.html][GPL v3]].
+
+** About
+  :PROPERTIES:
+  :SNIPPET:  t
+  :END:
+
+This page explains how ergoemacs-mode works.  It was written in emacs
+org-mode and exported to HTML using [[https://github.com/renard/o-blog][o-blog]].
+
+** Navigation
+  :PROPERTIES:
+  :SNIPPET:  t
+  :END:
+
+- [[file:{lisp}(ob:path-to-root){/lisp}/features.html][/icon-cog icon-white/ Features]]
+
+- [[file:#][/icon-book icon-white/ Documentation]]
+  - [[file:{lisp}(ob:path-to-root){/lisp}/key-setup.html][Included Key Themes and Keyboard Layouts]]
+  - [[file:{lisp}(ob:path-to-root){/lisp}/cua-conflict.html][Preserving Emacs Commands while maintaining familiar shortcuts]]
+  - 
+  - [[file:{lisp}(ob:path-to-root){/lisp}/key-themes.html][Key Themes]]
+  - [[file:{lisp}(ob:path-to-root){/lisp}/keyboard-layouts.html][Keyboard Layouts]] 
+  - [[file:{lisp}(ob:path-to-root){/lisp}/minor-modes.html][Changes to Modes]]
+  - 
+  - [[file:design-basis.html][Design Basis]]
+  - 
+  - [[file:{lisp}(ob:path-to-root){/lisp}/faq.html][FAQ]]
+  - 
+  - [[file:{lisp}(ob:path-to-root){/lisp}/bug-report.html][Bug report]]
+
+- [[file:#][/icon-file icon-white/ Tips]]
+  - [[file:{lisp}(ob:path-to-root){/lisp}/gradual-adoption.html][Gradual Adoption]]
+  - [[file:{lisp}(ob:path-to-root){/lisp}/system-wide.html][System Wide Keys]]
+  - [[file:{lisp}(ob:path-to-root){/lisp}/customize-keys.html][Customizing your keys]]
+  - 
+  - [[file:{lisp}(ob:path-to-root){/lisp}/aliases.html][Making Commands Easier to Type]]
+  - [[file:{lisp}(ob:path-to-root){/lisp}/smart-commands.html][Smart Commands]]
+
+- [[file:{lisp}(ob:path-to-root){/lisp}/testimonials.html][/icon-comments-alt icon-white/ Testimonials]]
+
+- [[file:{lisp}(ob:path-to-root){/lisp}/changelog.html][/icon-pencil icon-white/ Changelog]]
+
+- [[file:{lisp}(ob:path-to-root){/lisp}/roadmap.html][/icon-tasks icon-white/ Roadmap]]
+
+
+** Navigation Footer
+  :PROPERTIES:
+  :SNIPPET:  t
+  :END:
+
+  - [[file:{lisp}(ob:path-to-root){/lisp}/index.html][/icon-home icon-white/ {lisp}(ob:gettext :home){/lisp}]]
+
+
+  - [[file:{lisp}(ob:path-to-root){/lisp}/testimonials.html][/icon-comments-alt icon-white/ Testimonials]]
+
+  - [[file:{lisp}(ob:path-to-root){/lisp}/changelog.html][/icon-pencil icon-white/ Changelog]]
+
+  - [[file:{lisp}(ob:path-to-root){/lisp}/roadmap.html][/icon-tasks icon-white/ Roadmap]]
+
+* Changelog
+  :PROPERTIES:
+  :PAGE:     changelog.html
+  :TEMPLATE: blog_static_no_title.html
+  :END:
+
+The current changelog is [[https://github.com/ergoemacs/ergoemacs-mode/commits/master][here]].
+
+The historic changelog is below:
+
+** Version 5.8.0.1 2013-07-5
+There are many changes that were missed, but will be added to this
+changelong in future releases.  The biggest change for this release is
+movind to o-blog to generate HTML and changing `variants' to `themes'.
+I believe that theme is easier to understand.
+** version 5.7.5, 2013-01-29
+
+some minor fix to prevent byte compile errors.
+
+** version 5.7.4, 2013-01-26 much more fixes and features by Matthew Fidler
+
+to be documented later.
+
+also, the commands “ergoemacs-forward-block” and
+“ergoemacs-backward-block” improved. Now they skip empty lines with
+whitespace in them properly.
+
+** version 5.7.3, 2012-12-14 major rewrite by Matthew Fidler
+
+A rewrite of the mode, with the following user-visible changes and
+features:
+
+*** Generate layout diagrams in SVG format
+
+Call “ergoemacs-extras” to generate diagrams in SVG format for all
+supported layouts.
+
+The files are generated at the `user-emacs-directory' e.g.
+〔~/.emacs.d/ergoemacs-extras/〕.
+
+SVG files can be viewed in InkScape or modern browser (Firefox, Google
+Chrome, IE9, …).
+
+*** Generate AutoHotkey source code
+for System-wide ErgoEmacs keybinding on Microsoft Windows.
+
+Call “ergoemacs-extras” to generate AutoHotkey source code.
+
+*** Generate Bash 〔.inputrc〕
+for ErgoEmacs keybinding for unix terminal.
+
+Call “ergoemacs-extras” to generate.
+
+To install, follow the instructions in the generated file.
+
+*** Generate Mac OS X 〔DefaultKeyBinding.dict〕 
+for system-wide ErgoEmacs keybinding or Mac.
+Call “ergoemacs-extras” to generate.
+
+To install, follow the instructions in the generated file.
+
+*** Customizable by “customize-group”
+You can customize keys by calling emacs's “customize-group” then give it “ergoemacs-mode”.
+
+Here's some technical description:
+
+- Added the customizable variable `ergoemacs-variable-layout' which
+  defines keys based on the QWERTY layout.  You can customize this
+  variable to suit your needs.  Also you can save your customization
+  so that You do not have to learn new keys every time a new ergoemacs
+  mode is introduced.
+
+- Added the customizable variable `ergoemacs-fixed-layout' which
+  defines keys that are the same regardless of the layout.  This
+  includes standard keys such as 【Ctrl+s】 for saving. For this
+  layout I added 【Ctrl+z】 for undo, 【Ctrl+Shift+z】 for redo,
+  【Ctrl+y】 for redo
+
+- Added the customizable variable `ergoemacs-minor-mode-layout'.  From
+  this variable all of the minor mode and major mode hooks are created
+  and setup. When using `minor-mode-overriding-map-alist' as the
+  keybinding to modify, an additional keybinding variable is created
+  per mode.
+
+If you wish to freeze your keybindings, but keep current with the
+ergoemacs trunk, you can save all of the customizable variables and
+your layout will be saved between upgrades.
+
+*** For developers: a better mechanism for key/command map
+The internal working of the mode for mapping commands to keys has
+completely changed.
+
+Now, each layout are defined using visual diagram similar to
+ASCII-art. This allows developers to easily add new layouts or change
+keys.
+
+See 〔_README.txt〕 file that describes the tech detail of how layout
+format to be read by ErgoEmacs emacs lisp code.
+
+** version 5.6.0, 2012-11-21
+
+The command for cancel “keyboard-quit” is changed from QWERTY 【Alt+n】
+to 【Esc】. Reason: I think it's overall slightly better, because: ①
+it's more familiar. ② involves a single key. The disadvantage is that
+on terminal, Meta can no longer be pressed by 【Esc】 (but can still
+be done by 【Ctrl+[】). I think Esc for Meta is really bad, from the
+1980s. I think it's rare to find a terminal app today that do not
+support Alt as Meta.
+
+** version 5.5.7, 2012-09-28
+
+Added functions:
+“cut-line-or-region”
+“copy-line-or-region”
+
+Replacing previous “defadvice” functions:
+“kill-region-key”
+“kill-ring-save-key”
+
+because these “defadvice” functions causes emacs to spit this warning
+“ad-Orig-kill-region called with 3 arguments, but accepts only 2”,
+since about emacs 24.  Haven't looked into why it's doing that.
+
+** version 5.5.6, 2012-08-14
+
+removed a bad code:
+(eval-when-compile (log-edit-mode))
+there's no function “log-edit-mode”.
+
+** version 5.5.5, 2012-07-10
+
+Added commands “unfill-paragraph”, “unfill-region”. These are useful
+when doing keyboard macros. (in addition to “compact-uncompact-block”)
+
+** version 5.5.4, 2012-07-10
+
+Modified forward/backward bracket functions
+(e.g. “backward-open-bracket”) so that they don't print a error when
+reaching end.
+
+** version 5.5.3, 2012-06-05
+
+• Added a French layout support.
+• Added 【Alt+6】 for “select-current-block”. Experimental.
+• Added 【Alt+7】 for “select-current-line”. Experimental.
+
+** version 5.5.2, 2012-05-25
+
+• 【Alt+Shift+u】 was “beginning-of-defun”, is now “backward-block”
+• 【Alt+Shift+o】 was “end-of-defun”, is now “forward-block”
+
+Rational: after tried the beginning/end of defun, i didn't find it as usable in comparison to backward/forward block. Because, in many modes such as python, HTML, plain text (email, irc, text document), the defun one is useless. However, the move by block is applicable to vast majority of modes.
+
+I think the navigation of defun and sexp has one nice key group. e.g. Ctrl+Alt+arrow move by sexp, and Ctrl+Alt+home/end does defun. So, that's a nice set there.
+
+** version 5.5.1, 2012-05-25
+
+*** Changed behavior of 【Alt+‹arrow keys›】
+
+Before, 【Alt+‹left/right›】 move cursor backward/forward to left bracket positions, and, 【Alt+‹up/down›】 does the same to right bracket positions.
+
+Now, 【Alt+←】 does “backward-open-bracket”, and 【Alt+→】 does “forward-closing-bracket”.
+Now, 【Alt+↑】 and 【Alt+↓】 does backward/forward block.
+
+A “block” is text between empty new lines. (similar to emacs's “paragraph”)
+
+Rational: Several advantages with the new way.
+
+① reduces the number of keys needed for navigating to all possible left/right bracket points. Before, it needs 4 keys, now 2. 
+
+② the new way is more intuitive with emacs. The forward key moves to end of things, and backward to beginning of things.
+
+③ advantage of backward/forward block: GNU Emacs has {【Ctrl+↑】, 【Ctrl+↓】} for backward/forward paragraph. The problem is that “paragraph” is dependent on major mode's syntax table, so the behavior is unpredictable, and “paragraph” isn't well defined in computer language modes. e.g. in “html-mode”, it seems to move in funny way. The new behavior is predicable and useful. It's useful because vast majority of text uses empty lines to separate blocks of text.
+
+** version 5.5.0, 2012-05-24
+
+Major change.
+
+• 【Alt+Shift+j】 was “beginning-of-buffer”, is now “backward-open-bracket”
+• 【Alt+Shift+l】 was “end-of-buffer”, is now “forward-close-bracket”
+
+• 【Alt+Shift+u】 was “backward-paragraph”, is now “beginning-of-defun”
+• 【Alt+Shift+o】 was “forward-paragraph”, is now “end-of-defun”
+
+Rational: the beginning/end of buffer command is not frequently used. Their replacement, the backward/forward bracket is much more useful in any programing language with brackets: (){}[].
+
+Similarly, the movement by defun is probably more useful than movement by paragraph, because most emacs users are programers. The concept of “paragraph” isn't well defined in programing languages. But the defun movement also work with C-like syntax languages as well as lisp.
+
+Thanks a lot to David Capello for suggestion and discussion. See: http://dacap.com.ar/programming/keyboard-layout/
+
+〈Comandos de programación básicos de Emacs (forward-sexp, beginning-of-defun)〉 @ http://youtu.be/BuxJesmNc64
+
+Also, implementation of {forward-open-bracket, backward-open-bracket, forward-close-bracket, backward-close-bracket} is reverted to not dependent on syntax table. Because, for example, in cperl mode, the curly bracket {} doesn't have bracket syntax.
+
+** version 5.4.9, 2012-05-22
+*** improved implementation of forward-open-bracket, backward-open-bracket, forward-close-bracket, backward-close-bracket
+They now include the straight double quote char (Unicode U+22)
+Part of the new implementation are now based on syntax table.
+Not sure this is a improvement, because depending on syntax table makes the command unpredictable.
+
+This is experimental change.
+
+** version 5.4.8, 2012-05-20
+*** added 【Alt+Del】 to delete word to the right.
+
+** version 5.4.7, 2012-05-17
+*** added 【F4】 for paste previous “yank-pop”
+** version 5.4.6, 2012-05-15
+
+*** added commands to traverse brackets.
+“forward-open-bracket” 【Alt+→】
+“backward-open-bracket” 【Alt+←】
+“forward-close-bracket” 【Alt+↓】
+“backward-close-bracket” 【Alt+↑】
+
+Note: other minor modes may over-ride these keys. e.g. “org-mode”.
+
+*** added “forward-block”, “backward-block”
+These commands currently don't have a key. You may bind the keys for “forward-paragraph” and “backward-paragraph”. Call “describe-function” on “forward-block” for detail.
+
+*** added commands to select line, block text, string
+Added:
+“select-current-line”
+“select-current-block”
+
+Modified 
+“select-text-in-quote”
+to also work on single quotes. e.g. 'some thing'
+
+** version 5.4.5, 2012-05-14
+*** on Windows, now the 【Menu】 key does emacs's “execute-extended-command”,
+just like emacs on linux's default behavior. Rational: This is better than the 【Alt+a】. Because 【a】 is pinky, and it involves 2 keys. Now it's single key. Also, this makes it compatible with emacs on linux .
+*** interactive search (“isearch-forward”) is now QWERTY 【y】
+, instead of 【;】.
+Rational: this is a highly frequently used command. 【;】 is on home-row, but by pinky. 【y】 is far, but by strong finger. Reaching for y may be a fraction of second slower, but more comfortable and healthy than using pinky.
+*** 【Ctrl+f】 is now interactive search (“isearch-forward”).
+(was “search-forward”)
+Feature incomplete. Need to add repeated 【Ctrl+f】 to invoke next match.
+*** added more than 10 additional keys starting with function keys.
+【F1 1】 describe-function
+【F1 2】 describe-variable
+【F1 3】 describe-key
+【F1 4】 describe-char
+
+【F1 6】 lookup-all-dictionaries
+【F1 7】 lookup-google
+【F1 8】 lookup-wikipedia
+【F1 9】 lookup-word-definition
+【F1 0】 lookup-answers.com
+【F1 [】 lookup-word-dict-org
+【F1 ]】 lookup-wiktionary
+【F1 `】 elisp-index-search
+
+【F2】      ,cut
+【F3】      ,copy;   【Ctrl+F3】 ,copy-all
+【F4】     ,paste
+
+【F5】      ,undo;    【Ctrl+F5】 ,redo
+
+【F8】      ,ctl-x-map. Emacs's C-x prefix key.
+
+Rational: these are single key or single key sequence additional keys. The copy, cut, paste, undo, ones are frequently used. Single key is good. The F8 is a additional key for emacs combo key C-x. The F1 key sequences adds many convenient or helpful commands.
+
+** version 5.4.4, 2012-05-12
+*** added  【F1+m】 for “describe-major-mode” and 【F1+o】 for “where-is-old-binding”. Rationale: keep in sync with the 【F1】 = 【Ctrl+h】 equivalence.
+** version 5.4.3, 2012-04-29
+*** Removed 【Ctrl+Shift+w】 for “delete-frame” (close current window).
+rationale: Close Current Window should really follow OS's key convention. Or, in ErgoEmacs, 【Alt+F4】 does it.  This way, it's more standard. Less keys.
+
+On the Mac, current behavior is ok too.
+
+The reason for a 【Ctrl+Shift+w】 for closing window doesn't seem strong.
+*** If inside minibuffer, “close-current-buffer” now do do nothing.
+Fixed bug #92 http://code.google.com/p/ergoemacs/issues/detail?id=92
+Previously, it prompt if user want to save, etc.
+Thanks to dek1999@live.com
+** version 5.4.2, 2012-04-11
+Fixed “open-in-external-app”. Before, on linux, emacs freezes until external app is closed. Thanks to Thanks to Ozan Erdem.
+** version 5.4.1, 2012-04-09
+trivial changes.
+*** fixed a leaked variable “item” in 〔ergoemacs-unbind.el〕.
+*** updated 〔_INSTALL.txt〕.
+*** updated a few files that points to the dead 〔http://tecladobrasileiro.com.br/〕 to 〔http://xahlee.org/kbd/pt-nativo_keyboard_layout.html〕
+
+** version 5.4.0, 2012-03-03
+*** 2012-03-03 Added a command “open-in-external-app”. The key 【Ctrl+Shift+o】 is now bound to it, instead of “open-in-desktop”.
+
+*** 2011-11-22 GNU emacs's 【C-x d】 for “dired” is no longer unbound (it's available now).
+ Originally, it's unbound because the thought was that 【Ctrl+o】 for “find-file” with a dir input is a good clean substitute. But now, i think in some situations, calling dired directly is necessary. For example, calling dired then give “~/emacs/*.html” to list all HTML files. If using “find-file”, it'll try to open all files.
+
+Now, since it's necessary to call “dired” directly sometimes, it's convenient to have a key. Since GNU Emacs already has 【C-x d】 for it, and this key doesn't conflict with ErgoEmacs, so we use it.
+
+Thanks to Joseph Buchignani
+〔 http://www.cyborganize.org/clarity/software/emacs-org-mode-installation-configuration-and-tutorial/installing-and-using-ergoemacs-for-intermediate-emacs-users/ 〕 and Jon Snader 〔 http://irreal.org/blog/?p=365 〕. 
+*** 2011-11-18 minor improvement on “toggle-letter-case”. Now better guess at initial state.
+** version 5.3.9, 2011-04-17
+*** 2011-04-17 Fixed shift key selection with cua-mode
+r647
+Fixed a bug
+http://code.google.com/p/ergoemacs/issues/detail?id=91
+with a default GNU Emacs, when cua-mode is NOT turned on, load ergoemacs-mode and turn it on, then keys with Shift will also highlight text. This is because ergoemacs-fix-cua--pre-command-handler-1 tries to set symbols from cua-mode but they are not there.
+
+thanks to (zyangm...@gmail.com) for bug report.
+
+fixed by temp turning on cua-mode.
+*** 2011-03-22 Added a compatibility fix for auto-complete-mode
+Added a ergoemacs-auto-complete-mode-hook.
+http://code.google.com/p/ergoemacs/source/detail?r=638
+
+Thanks to Renier (renierm@gmail.com) for code. http://groups.google.com/group/ergoemacs/msg/f5f9337e34b4eab3?hl=en
+*** 2010-11-18 added a hotkey 【Ctrl+Shift+t】 for open-last-closed
+r556
+This key follows browser convention. But won't work in Terminal.
+*** 2010-12-10 copy/cut with no text selection will include the line ending.
+r578. 
+Thanks to Max Arnold for bug report.
+** version 5.3.7, 2010-11-15
+*** Added open-in-desktop command with key 【Ctrl+Shift+o】.
+*** Added open-last-closed command.
+*** More international layouts
+Added Danish layout. Thanks to Michael Budde
+Added ergoemacs-layout-pt-nativo.el. Thanks to Xavier Pinho
+
+You can see all supported layouts and their contributors in the directory 〔ergoemacs-keybindings〕.
+
+See also: 〈Dvorak, Maltron, Colemak, NEO, Bépo, Turkish-F, Keyboard Layouts Fight!〉 @ http://xahlee.org/kbd/dvorak_and_all_keyboard_layouts.html
+*** minor fixes
+**** 【Ctrl+Backspace】 for backward-kill-word
+This is a standard key together with 【Ctrl+Arrow】 and 【Ctrl+Del】.
+
+r477 Technically, removed the unbinding of 「<C-backspace>」
+**** Added ergoemacs-keyboard-quit-key to ergoemacs-layout-gb.el
+A bug fix. Thanks to Jorge Dias.
+** version 5.3.4, 2010-08-16
+*** Added a Swedish layout
+Contributed by Kristian Hellquist.
+*** remapped split window keys for all layouts.
+
+OLD             COMMAND                       NEW
+【Alt+1】        delete-other-windows         【Alt+3】
+【Alt+!】        delete-window                【Alt+0】
+【Alt+2】        split-window-vertically      【Alt+4】
+【Alt+@】        split-window-horizontally    【Alt+$】
+
+Reason: the 1 and 2 keys are two of the most difficult to press keys on the top row.
+3 and 4 are the best for left hand.
+8 and 9 are the best for right hand.
+(this can be verified by looking at the original Dvorak layout for number keys)
+
+For emacs commands, according to command frequency statistics, the order are roughly this, from most used to least:
+
+delete-other-windows
+split-window-vertically
+delete-window
+split-window-horizontally
+
+therefore this change. For Xah Lee's personal experience in this, see:
+ http://xahlee.org/emacs/vi_esc_syndrome.html
+
+Note that 【Alt+0】 for delete-window was in the original ErgoEmacs keybinding design for about a year, but got changed to 【Alt+Shift+1】 (【Alt+!】). The thinking was for some logical consistency with 【Alt+1】. My experience since is that logical consistency is bad for ergonomics advantage. Logical consistency is good at beginning for learning, but once muscle memory is developed, ergonomic efficiency is far more important, and will be used for years.
+** version 5.3.3, 2010-05-24
+*** 【Ctrl+p】 now asks for confirmation before printing
+【Ctrl+p】 will now ask user confirmation before printing the current buffer.
+This is to prevent unintentional printing.
+Old Emacs users tends to press 【Ctrl+p】 a lot because that used to be moving cursor up.
+See: http://code.google.com/p/ergoemacs/issues/detail?id=60
+** version 5.3.2, 2010-05-22
+*** Added United Kingdom layout (gb).
+Thanks to Jorge Dias (aka theturingmachine)
+http://code.google.com/p/ergoemacs/source/detail?r=371
+http://groups.google.com/group/ergoemacs/browse_frm/thread/3e1b9326b6cc2cc4
+*** Added United Kingdom Dvorak layout (gb-dv).
+Thanks to Phillip Wood
+http://code.google.com/p/ergoemacs/issues/detail?id=73
+*** fixed keybinding conflict problem. You can now change bindings
+by David Capello. (and thanks to maddin)
+
+Added ergoemacs-hook-list variable, ergoemacs-add-hook function, and ergoemacs-global/local-set/unset-key functions
+
+and added “defadvice” for local/global-set/unset-key functions. http://code.google.com/p/ergoemacs/source/detail?r=369
+http://code.google.com/p/ergoemacs/issues/detail?id=67#c3
+*** Copy and Cut to copy/cut current line
+
+Added a feature so that copy/cut will get the current line if there's no text selection.
+** version 5.x.x
+Italian layout has been created, by By David Capello, with help by Francesco Biccari
+
+A Colemak layout is added or sometimes before. The bulk of key mapping was helped by Ivan Haralamov (aka postivan), and vockets?
+** version 5, 2009-09-15
+*** Changed into a minor mode, with support for many keyboard layouts
+By David Capello.
+This version is now a full featured minor mode. It supports 3 different keyboard layout: US QWERTY, US Dvorak, and “Spanish (Spain)” (aka “Spanish (International sort)”). Also supports a new command where-is-old-binding (with shortcut 【Ctrl+h o】).
+** version 4.3.13, 2009-08-28
+*** improved shrink-whitespaces. Now, when called twice, it removes the remaining single space. Thanks to David Capello for the code.
+** version 4.3.12.2, 2009-08-15
+*** Fixed a bug where delete-selection-mode might be turned off. Changed “(delete-selection-mode t)” to “(delete-selection-mode 1)”.
+** version 4.3.12.1, 2009-08-14
+*** A minor implementation improvement. In one place, changed the use of functionp to fboundp for checking the existing of a emacs 23 feature recenter-top-bottom. Was using functionp because i forgot about fboundp.
+** version 4.3.12, 2009-08-13
+*** 【Alt+p】 is now “recenter-top-bottom” for emacs 23 users. In emacs 22, it is “recenter”.
+** version 4.3.11, 2009-08-05
+*** Added a hook to fix message-mode.
+** version 4.3.10, 2009-06-14
+*** fixed a previous/next reversal for f11/f12 keys in rcirc-mode-hook.
+*** diff-mode uses some bindings in “M-‹key›” space. Fixed by adding a diff-mode-hook. (thanks to lwarxx)
+** version 4.3.9, 2009-06-14
+*** unbind 「C-x 3」 (use 【Alt+@】 for split-window-horizontally)
+*** unbind 「C-M-%」 (use 【Alt+%】 for query-replace-regexp). 
+*** unbind 「C-@」 (use 【Alt+Space】 for set-mark-command). 
+*** unbind 「M-{」 (use 【Alt+u】 for backward-paragraph). 
+*** unbind 「M-}」 (use 【Alt+o】 for forward-paragraph). Thanks to marciomazza
+** version 4.3.8, 2009-06-14
+*** added 【Alt+7】 to select-text-in-quote.
+** version 4.3.7, 2009-05-27
+*** ibuffer's 「M-s」 changed in emacs 23, such that 「M-s」 is now a prefix. For Dvorak users, 「M-s」 should be isearch. This is reclaimed to be isearch. For qwerty users, 「M-s」 should be other-window. Fixed.
+** version 4.3.6, 2009-05-26
+*** dired's 「M-s」 changed in emacs 23, such that 「M-s」 is now a prefix. For Dvorak users, 「M-s」 should be isearch. This is reclaimed to be isearch. For qwerty users, 「M-s」 should be other-windox. Fixed.
+** version 4.3.5, 2009-05-10
+*** experimental modification to shrink-whitespaces.
+** version 4.3.4, 2009-04-19
+*** Added 【Alt+Shift+PageDown】 for forward-page (move cursor to the next ASCII formfeed char (often displayed as ^L)). Same for PageDown key.
+** version 4.3.3, 2009-03-16
+*** Added 【Ctrl+Shift+n】 for opening a new window (make-frame-command). Removed 「C-x 5 2」. Added 【Ctrl+Shift+w】 for closing window (delete-frame), removed 「C-x 5 0」.
+** version 4.3.2, 2009-03-11
+*** Removed 「C-x o」 for other-window. (use 【Alt+s】 and 【Alt+Shift+s】 instead.)
+** version 4.3.1, 2009-03-04
+*** A better implementation for making 「M-t」 call 「M-TAB」. So that, describe-key on M-t will show better documentation.
+** version 4.3.0, 2009-03-02
+*** Added 【Alt+Shift+x】 for cut-all and 【Alt+Shift+c】 for copy-all.
+** version 4.2.4, 2009-03-01
+*** Removed 【Ctrl+x Ctrl+w】 for write-file. Use 【Ctrl+Shift+s】.
+*** Fixed 【Ctrl+o】 for ibuffer to run find-file instead of ibuffer-visit-buffer-other-window-noselect.
+** version 4.2.3, 2009-03-01
+*** fixed a dired binding so that 【Ctrl+o】 runs find-file instead of dired-display-file
+** version 4.2.2, 2009-03-01
+*** Removed the default keybinding for split-window-vertically 【Ctrl+x 2】. Use 【Alt+2】 instead.
+*** The key 【Ctrl+x Ctrl+b】 is now ibuffer, instead of list-buffers.
+*** 【Ctrl+h m】 now calls describe-major-mode.
+** version 4.2.1, 2009-02-28
+Changed the keybinding for previous-user-buffer from 【Ctrl+←】 to
+【Ctrl+PageUp】. And previous-emacs-buffer from 【Ctrl+Shift+←】 to
+【Ctrl+Shift+PageUp】. Similar for the “next” versions. Rationale: The
+【Ctrl+Arrow】 are standard editing shortcuts command in Windows, Mac,
+Linux.
+** version 4.2.0, 2009-02-27
+Added 【Alt+t】 for keyword completion. Rationale: The default 「M-TAB」 is used by Windows, Mac, Linux, to switch apps.
+** version 4.1.8, 2009-02-15
+Corrected the keybinding for Save As (write-file)
+** version 4.1.7, 2008-12-10
+Made compact-uncompact-block to work on text selection if there's one.
+** version 4.1.6, 2008-12-09
+*** Added select-text-in-quote
+** version 4.1.5, 2008-10-21
+*** Added extend-selection by Nikolaj Schumacher.
+** version 4.1.4, 2008-10-20
+*** Fixed close-current-buffer
+Sometimes when closing a buffer not associated with a file, it'll prompt whether to kill instead of whether to save.
+** version 4.1.3, 2008-10-18
+*** Fixed minor bug in toggle-letter-case.
+It now works non-english letters such as éÉ and single letter word “a teapot” or words starting with a number “1st timer”. Thanks to Andreas Politz and Nikolaj Schumacher.
+*** next-frame-command is renamed to switch-to-next-frame. Similar for previous-frame-command.
+** version 4.1.2, 2008-10-16
+*** Removed 【Ctrl+x h】  for mark-whole-buffer. (use 【Ctrl+a】 instead)
+*** Improved compact-uncompact-block and shrink-whitespaces.
+** version 4.1.1, 2008-10-07
+*** Removed unfill-paragraph and unfill-region
+Because they are defined in ourcomments-util.el bundled with emacs 22, also because they are not used in this file now (compact-uncompact-block replaced most of their functionality).
+** version 4.1, 2008-10-06
+*** Added keys for about 9 commands
+previous-user-buffer, next-user-buffer, next-frame-command, previous-frame-command, query-replace and query-replace-regexp, move-cursor-to-next-pane, move-cursor-to-previous-pane, split-window-horizontally, toggle-letter-case. Combined delete-blank-lines and just-one-space to shrink-whitespaces.
+*** Moved delete-window to be with delete-other-window.
+** version 4.0.1, 2008-09-23
+*** Fixed 「C-o」 in dired mode.
+** version 4, 2008-09-21
+*** Unbind almost all 【Meta+‹key›】 and 【Ctrl+‹key›】 space bindings.
+*** Added about 11 commands, such as next-user-buffer, close-current-buffer etc.
+** version 3.6, 2008-09-18
+*** Reclaimed keybindings in text-mode.
+** version 3.5, 2008-09-16
+*** Reclaimed keybindings in ibuffer.
+** version 3.4, 2008-09-06
+*** Fixed key bindings in the Meta-‹key› space in about 10 modes.
+** version 3.3, 2008-09-05
+*** Fixed cua-mode-hook by setting symbol property 'CUA to nil, so that a bunch of no-select-* functions kludge is no longer needed. Thanks to Lennart Borgman.
+** version 3.2, 2008-09-02
+*** Moved cua fix functions to modern_operations.el. The functions are: no-select-cua-scroll-down, no-select-cua-scroll-up, no-select-backward-paragraph, no-select-forward-paragraph, no-select-beginning-of-buffer, no-select-end-of-buffer, no-select-move-end-of-line.
+** version 3.1, 2008-09-02
+*** Added just-one-space, delete-blank-lines.
+*** Added fill-paragraph, unfill-paragraph.
+*** Added comment-dwim.
+** version 3, 2008-08-31
+*** Added isearch.
+*** Added redo, kill-line-backward, shell-command.
+*** Added bug fix for cua-mode. Now, commands with Shift keys won't go into a selection mode.
+** version 2, 2008-08-29
+*** Somewhat major change. Positions for undo, cut, copy, paste, paste previous, has been moved.
+*** Added delete-char, delete-backward-char, kill-word, backward-kill-word.
+*** Removed the now redundant binding of kill-word and backward-kill-word using the backspace key.
+*** Removed the other-frame binding.
+** version 1.1, 2007-12-18
+*** changed keycode to consistently use kbd syntax.
+*** Fixed a scroll-up and scroll-down mix-up.
+** version 1.0, 2007-08-01
+*** first version, by Xah Lee
+
+
+
+* Documentation
+** Features
+  :PROPERTIES:
+  :PAGE:     features.html
+  :TEMPLATE: blog_static_no_title.html
+  :END:e
+
+*** Features 
+Currently ergoemacs-mode:
+- Changes the default emacs keybindings in two ways:
+  - To be more ergonomic by binding frequently used commands to easy
+    to reach keys
+  - Implement [[file:standard-shortcuts.html][standard keyboard shortcuts]] in emacs.
+- Allows keyboard themes for:
+  - [[file:gradual-adoption.html][Gradual ergoemacs-adoption]]
+  - Backward Compatability
+  - Ergonomic personalization
+
+
+** Design Basis
+  :PROPERTIES:
+  :PAGE:     design-basis.html
+  :TEMPLATE: blog_static_no_title.html
+  :END:
+
+Here's the outline of how this design is arrived.
+
+Statistics of emacs commands are compiled from emacs users, and are
+listed by frequency of use. The top about 30 ones, are given a
+keyboard shortcut.
+
+To assign the key position, the following rules are used. The rules
+are listed roughly in order of priority:
+1. Home row keys are the best.
+2. 2nd and 3rd fingers (pointing finger and index finger) are better
+   than 4th (ring finger) and 5th finger (pinky).
+3. The row above home row is considered better than the row below home
+   row for 2nd and 3rd fingers. (for 5th finger the row below is
+   considered better.)
+4. Right hand's keys are considered better than left hand's keys. (because most people are right handed)
+5. @@html:<kbd class="dark">@@Alt@@html:</kbd>@@ is considered better
+   than @@html:<kbd class="dark">@@Ctrl@@html:</kbd>@@. (@@html:<kbd
+   class="dark">@@Alt@@html:</kbd>@@ 
+   is a natural thumb curl, @@html:<kbd class="dark">@@Ctrl@@html:</kbd>@@ is
+   stretched pinky. Thumb is most powerful finger, pinkie the weakest)
+6. In general, cursor moving commands are placed all for the right
+   hand, while text changing commands are all placed for the left
+   hand. (grouping advantage)
+7. Similar commands should be grouped together to avoid
+   scattering. For example, cursor moving by single char is together
+   (@@html:<kbd class="dark">@@I@@html:</kbd>@@ @@html:<kbd class="dark">@@J@@html:</kbd>@@ @@html:<kbd class="dark">@@K@@html:</kbd>@@ @@html:<kbd class="dark">@@L@@html:</kbd>@@). Undo, Cut, Copy, Paste are together (@@html:<kbd class="dark">@@Z@@html:</kbd>@@ @@html:<kbd class="dark">@@X@@html:</kbd>@@ @@html:<kbd class="dark">@@C@@html:</kbd>@@ @@html:<kbd class="dark">@@V@@html:</kbd>@@). Delete
+   char/word left/right are together (@@html:<kbd class="dark">@@E@@html:</kbd>@@ @@html:<kbd class="dark">@@R@@html:</kbd>@@ @@html:<kbd class="dark">@@D@@html:</kbd>@@ @@html:<kbd class="dark">@@F@@html:</kbd>@@).
+8. Commands with logical reversal or extension are done with @@html:<kbd class="dark">@@⇧ Shift@@html:</kbd>@@
+   key, after other priorities are considered. Examples: Undo/Redo,
+   move cursor to previous/next pane, find replace by string/regex,
+   isearch forward/backward, move cursor by beginning/ending of
+   line. Delete line to the right/left.
+
+The design is based on finger positions, not on first letter of
+command names. The shortcut set is the same for QWERTY and Dvorak. The
+ease of remembering what commands are on what keys are based on
+grouping and positioning. For example, cursor movings are all right
+hand, text changing are all left hand, moving or deleting to the
+left/right have keys that are place left and right together, and
+similar for up/down (by screen or to beginning/end of file). Undo,
+Cut, Copy, Paste are the familiar row @@html:<kbd class="dark">@@Z@@html:</kbd>@@ @@html:<kbd class="dark">@@X@@html:</kbd>@@ @@html:<kbd class="dark">@@C@@html:</kbd>@@ @@html:<kbd class="dark">@@V@@html:</kbd>@@.
+
+In this design, only the @@html:<kbd class="dark">@@Alt@@html:</kbd>@@+@@html:<kbd class="dark">@@‹key›@@html:</kbd>@@ space is used. Some @@html:<kbd class="dark">@@Alt@@html:</kbd>@@+@@html:<kbd class="dark">@@⇧ Shift@@html:</kbd>@@
+is used too. @@html:<kbd class="dark">@@Ctrl@@html:</kbd>@@+@@html:<kbd class="dark">@@‹key›@@html:</kbd>@@ space is not used except 7 standard
+keybindings (Open, Close, Save, Save As, Print, Select All). The
+operation and consistency of emacs is not affected.
+** Standard Shortcuts 
+  :PROPERTIES:
+  :PAGE:     standard-shortcuts.html
+  :TEMPLATE: blog_static_no_title.html
+  :END:
+
+
+This shows the standard shortcuts implemented in ergoemacs:
+
+|---------------+--------------------------+------------------+---------------------|
+| Standard Name | Ergoemacs-key            | Emacs Key        | Emacs Command Name  |
+|---------------+--------------------------+------------------+---------------------|
+| Copy          | Ctrl+c                   | Alt+w            | =kill-ring-save=    |
+| Cut           | Ctrl+x                   | Ctl+w            | =kill-region=       |
+| Paste         | Ctrl+v                   | Ctrl+y           | =yank=              |
+| Undo          | Ctrl+z                   | Ctrl+_ or Ctrl+/ | =undo=              |
+| Redo          | Ctrl+⇧ Shift+z or Ctrl+y | NA               | =redo=              |
+| Open New File | Ctrl+n                   | NA               | Not builtin         |
+| Open          | Ctrl+o                   | Ctrl+x Ctrl+f    | =find-file=         |
+| Print         | Ctrl+p                   | NA               |                     |
+| Select All    | Ctrl+a                   |                  | =mark-whole-buffer= |
+| Find          | Ctrl+f                   | Ctrl+s           | =search-forward=    |
+|---------------+--------------------------+------------------+---------------------|
+
+
+Standard shortcuts for cursor navigation are also supported. For example:
+
+- Ctrl+← ⇒ move cursor to to previous word.
+- @@html:<kbd class="dark">@@Home@@html:</kbd>@@ ⇒ move cursor to beginning of
+- Shift+↓ select text downward.
+
+
+** Preserving Emacs Commands while maintaining familiar shortcuts
+  :PROPERTIES:
+  :PAGE:     cua-conflict.html
+  :TEMPLATE: blog_static_no_title.html
+  :END:
+
+*** Conflict for Emacs command keys and familiar shortcuts
+There is a conflict between standard shortcuts and emacs shortcuts.
+In most applications Ctrl+c is copy and Ctrl+x is cut.  In emacs
+Ctrl+x generally refer to global commands, while Ctrl+c refers to
+language specific commands. 
+
+Ergoemacs provides a few options to work with the Ctl+c and Ctl+x keys.
+
+**** Binding Ctrl+c and Ctrl+x to both copy and cut and emacs keys
+Like =cua-mode=, =ergoemacs-mode= allows Ctrl+c and Ctrl+x to be
+bound to both copy/cut, and the emacs key sequences.
+
+The default method will copy text when selected with Ctrl+c and cut
+text when selected with Ctrl+x.  This is fine, but if you wish to
+perform an emacs command on selected region, this could be problematic
+as discussed in Xah's [[http://ergoemacs.org/misc/emacs_keybinding_and_cua-mode_keys.html][blog]].  (For example python shift indent is bound
+to 【Ctrl+c <】) 
+
+When you wish to do issue emacs commands on a region you can:
+- Add a shift to the first Ctrl+c and Ctrl+x.
+  - For example press 【Ctrl+⇧ Shift+c <】 for python's shift indent
+    command
+  - This will not work in a terminal (most terminals cannot tell the
+    difference between 【Ctrl+⇧ Shift+c】 and 【Ctrl+c】)
+- Press the next key within 0.2 seconds.
+  - This can be tuned by setting =ergoemacs-ctl-c-or-ctl-x-delay=
+  - If you tune this to a higher setting, it takes longer to copy and
+    cut and other problems may be introduced.
+
+If you wanted the time required to press the next key be 1 second,
+you could use the following in your emacs startup file:
+
+#+BEGIN_SRC emacs-lisp
+  (setq ergoemacs-ctl-c-or-ctl-x-delay 1)
+#+END_SRC
+**** Binding Ctrl+c and Ctrl+x to emacs commands only
+Another option is to ditch copy and paste with Ctrl+c and Ctrl+x, even
+though they are standard keys.  Instead you can use Alt+c and Alt+x to
+do copy and paste.
+
+This can be done in ergoemacs by the following variable:
+
+#+BEGIN_SRC emacs-lisp
+  (setq ergoemacs-handle-ctl-c-or-ctl-x 'only-C-c-and-C-x)
+#+END_SRC
+
+The disadvantage to this approach is that you use different keys in
+different applications. 
+
+
+**** Binding Ctrl+c and Ctrl+x to only copy and cut
+If you wanted Ctrl+c and Ctrl+x to only be copy and cut, you add
+the ability to copy/cut the current line when nothing is selected.
+This can be done by:
+#+BEGIN_SRC emacs-lisp
+  (setq ergoemacs-handle-ctl-c-or-ctl-x 'only-copy-cut)
+#+END_SRC
+
+The possible disadvantage to this is you would have to use another key
+to access the defined emacs commands.  Currently ergoemacs-mode allows
+you to use QWERTY 【▤ Menu d】 or 【Ctrl+⇧ Shift+x】 to access emacs
+Ctrl+x commands and QWERTY 【▤ Menu f】 or 【Ctrl+⇧ Shift+c】 to
+access Ctrl+c commands.
+
+The 【▤ Menu】 keybindings are slightly different than plan Ctrl+x or
+Ctrl+c:
+- For Ctrl+x, the Alt and Ctrl keys are swapped.  Hence for the
+  equivalent of 【Ctrl+x Ctrl+b】, you would press 【▤ Menu s Alt+b】
+- For Ctrl+c, control keys are mapped to plain keys. Plain keys
+  are mapped to Alt keys. Alt keys are mapped to Ctl keys.  Hence:
+  - 【Ctrl+c Ctrl+c】 would be 【▤ Menu f c】
+  - 【Ctrl+c c】 would be 【▤ Menu f Alt+c】
+  - 【Ctrl+c Alt+c】 would be 【▤ Menu f Ctl+c】
+  - This is called unchorded mapping
+- You can swap between Normal, Alt<->Ctl and unchorded keyboard
+  translations in ergoemacs by pressing 【▤ Menu】
+
+
+** Included Key Themes and Layouts
+  :PROPERTIES:
+  :PAGE:     key-setup.html
+  :TEMPLATE: blog_static_no_title.html
+  :END:
+
+*** Supported Key Themes and Keyboard Layouts
+To use key theme and layout, use the following in your =.emacs= or
+=.emacs.d/init.el=.
+
+#+ATTR_HTML :id dot_emacs
+#+BEGIN_SRC emacs-lisp
+  (setq ergoemacs-theme nil)
+  (setq ergoemacs-keyboard-layout "us")
+  (ergoemacs-mode 1)
+#+END_SRC
+
+#+BEGIN_HTML
+{lisp}(ergoemacs-o-blog-html){/lisp}
+#+END_HTML
+
+** Setting your own keys
+  :PROPERTIES:
+  :PAGE:     own-keys.html
+  :TEMPLATE: blog_static_no_title.html
+  :END:
+
+Emacs has its own methods to set keys globally.  Ergoemacs-mode
+attempts to honor this.  
+
+** Key Themes
+  :PROPERTIES:
+  :PAGE:     key-themes.html
+  :TEMPLATE: blog_static_no_title.html
+  :END:
+
+*** Why key themes?
+Key themes are a big part of the new ergoemacs-mode.  These allow
+more than one keyboard binding to be packaged but still use the
+ergoemacs-mode engine.  This allows:
+- [[file:gradual-adoption.html][Gradual ergoemacs-adoption]]
+- Backward Compatability 
+- Sharing of your personalized ergoemacs-theme
+- Keeping ergoemacs compatibility fixes such as:
+  - Using the arrow keys in the terminal when Alt+O or Alt+o is bound
+  - Providing fixes for known minor and major modes so they respect
+    the ergonomic keyset.
+- Keeping some additional ergoemacs features like:
+  - Applying your personalied ergoemacs-theme [[file:system-wide.html][everywhere]]
+
+*** Creating your own ergoemacs theme
+
+You can manually code your own ergoemacs theme.  I am currently
+working on a simlper method to theme keys.
+
+** Keyboard Layouts
+  :PROPERTIES:
+  :PAGE:     keyboard-layouts.html
+  :TEMPLATE: blog_static_no_title.html
+  :END:
+
+All the layouts in ergoemacs are easy to generate.  To add your own
+personal layout you just need to match the keybindings for your in a
+layout variable from =ergoemacs-layout-XXX=.  For the US and UK
+layouts, the defining variable adds the layout:
+
+#+BEGIN_SRC emacs-lisp
+  (defvar ergoemacs-layout-us
+    '("" "`" "1" "2" "3" "4" "5" "6" "7" "8" "9" "0" "-" "=" ""
+      "" ""  "q" "w" "e" "r" "t" "y" "u" "i" "o" "p" "[" "]" "\\"
+      "" ""  "a" "s" "d" "f" "g" "h" "j" "k" "l" ";" "'" "" ""
+      "" ""  "z" "x" "c" "v" "b" "n" "m" "," "." "/" "" "" ""
+      ;; Shifted
+      "" "~" "!" "@" "#" "$" "%" "^" "&" "*" "(" ")" "_" "+" ""
+      "" ""  "Q" "W" "E" "R" "T" "Y" "U" "I" "O" "P" "{" "}" "|"
+      "" ""  "A" "S" "D" "F" "G" "H" "J" "K" "L" ":" "\"" "" ""
+      "" ""  "Z" "X" "C" "V" "B" "N" "M" "<" ">" "?" "" "" "")
+    "US Engilsh QWERTY Keyboard")
+  
+  (defvar ergoemacs-layout-gb
+    '("" "`" "1" "2" "3" "4" "5" "6" "7" "8" "9" "0" "-" "=" ""
+      "" ""  "q" "w" "e" "r" "t" "y" "u" "i" "o" "p" "[" "]" ""
+      "" ""  "a" "s" "d" "f" "g" "h" "j" "k" "l" ";" "'" "#" ""
+      "" "\\"  "z" "x" "c" "v" "b" "n" "m" "," "." "/" "" "" ""
+      ;; Shifted
+      "" "¬" "!" "@" "#" "$" "%" "^" "&" "*" "(" ")" "_" "+" ""
+      "" ""  "Q" "W" "E" "R" "T" "Y" "U" "I" "O" "P" "{" "}" ""
+      "" ""  "A" "S" "D" "F" "G" "H" "J" "K" "L" ":" "@" "~" ""
+      "" "|"  "Z" "X" "C" "V" "B" "N" "M" "<" ">" "?" "" "" "")
+    "UK QWERTY")
+#+END_SRC
+
+This lists the keyboard positions from left to right for the unshifted
+and shifted states of he keyboard.  After listing the keyboard
+descriptions it provides a description of the layout which is used for
+the customization variable `ergoemacs-keyboard-layout'.  By simply
+defining your layout before ergoemacs-mode is loaded, you add it to
+the ergoemacs-keyboard-layout variable with its description.
+
+If you have generated a keyboard layout that ergoemacs-mode does not yet
+support please [[https://github.com/ergoemacs/ergoemacs-mode/issues/new][drop me a line]].
+** Changes to Modes
+  :PROPERTIES:
+  :PAGE:     minor-modes.html
+  :TEMPLATE: blog_static_no_title.html
+  :END:
+
+Most major and minor modes are setup to respect =ergoemacs-mode=
+keybindings.  There are additional changes described below
+*** Org mode
+Ergoemacs-mode in general respects org-mode's Ctrl+Enter and Alt+arrow
+keys.  The following exceptions are of note:
+**** Ctrl+Enter in tables
+In org-mode tables Ctrl+enter activates cua rectangle mode.  The
+paste knows what was copied, and will use cua-mode, or org-mode's
+default pasting mechanism depending on if a rectangle was copied last.
+**** Alt+arrow keys
+The alt+arrow keys are respected based on context for org-mode.  When
+in text, you can use the ergoemacs-mode defined key, or the org-mode
+defined key by changing the value of a few variables
+
+|-----------+--------------------------------------------------------+--------------------|
+| Key       | Variable to Enable ergoemacs function in org-mode text | Enabled by default |
+|-----------+--------------------------------------------------------+--------------------|
+| <M-left>  | ergoemacs-use-ergoemacs-metaleft                       | yes                |
+| <M-right> | ergoemacs-use-ergoemacs-metaright                      | yes                |
+| <M-up>    | ergoemacs-use-ergoemacs-metaup                         | no                 |
+| <M-down>  | ergoemacs-use-ergoemacs-metadown                       | no                 |
+|-----------+--------------------------------------------------------+--------------------|
+
+The values of these variables could be changed by:
+
+#+BEGIN_SRC emacs-lisp
+  (setq ergoemacs-use-ergoemacs-metaleft nil)
+#+END_SRC
+
+
+*** Cua-mode
+Cua mode is not enabled by default, but ergoemacs-mode can use some of
+its features. To enable CUA rectangles, use:
+
+#+BEGIN_SRC emacs-lisp
+  (cua-selection-mode t)
+#+END_SRC
+
+If =cua-mode= is enabled before =ergoemacs-mode= is loaded,
+=ergoemacs-mode= changes to =cua-selection-mode=. If you attempt to
+enable =cua-mode=, only =cua-selection-mode= will be enabled.
+
+CUA rectangle support is enabled by changing the Alt+
+keys to Win+ keys.
+
+If you do not know what CUA rectangles are, the following describes
+CUA rectangles and gives the keys used for ergoemacs-mode.
+
+**** Rectangle support
+Cua-mode's rectangle select region has bound it
+Emacs's normal rectangle support is based on interpreting the region
+between the mark and point as a "virtual rectangle", and using a
+completely separate set of "rectangle commands" [C-x r ...] on the
+region to copy, kill, fill a.s.o. the virtual rectangle.
+
+cua-mode's superior rectangle support uses a true visual
+representation of the selected rectangle, i.e. it highlights the
+actual part of the buffer that is currently selected as part of the
+rectangle.  Unlike emacs' traditional rectangle commands, the
+selected rectangle always as straight left and right edges, even
+when those are in the middle of a TAB character or beyond the end
+of the current line.  And it does this without actually modifying
+the buffer contents (it uses display overlays to visualize the
+virtual dimensions of the rectangle).
+
+This means that cua-mode's rectangles are not limited to the actual
+contents of the buffer, so if the cursor is currently at the end of a
+short line, you can still extend the rectangle to include more columns
+of longer lines in the same rectangle.  And you can also have the
+left edge of a rectangle start in the middle of a TAB character.
+Sounds strange? Try it!
+
+To start a rectangle, use [C-return] and extend it using the normal
+movement keys (up, down, left, right, home, end, C-home,
+C-end). Once the rectangle has the desired size, you can cut or
+copy it using C-x and C-c (or C-w and M-w), and you can
+subsequently insert it - as a rectangle - using C-v (or C-y).  So
+the only new command you need to know to work with cua-mode
+rectangles is C-return!
+
+Normally, when you paste a rectangle using C-v (C-y), each line of
+the rectangle is inserted into the existing lines in the buffer.
+If overwrite-mode is active when you paste a rectangle, it is
+inserted as normal (multi-line) text.
+
+If you prefer the traditional rectangle marking (i.e. don't want
+straight edges), [M-p] toggles this for the current rectangle,
+or you can customize cua-virtual-rectangle-edges.
+
+And there's more: If you want to extend or reduce the size of the
+rectangle in one of the other corners of the rectangle, just use
+[return] to move the cursor to the "next" corner.  Or you can use
+the [M-up], [M-down], [M-left], and [M-right] keys to move the
+entire rectangle overlay (but not the contents) in the given
+direction.
+
+[C-return] cancels the rectangle
+[C-space] activates the region bounded by the rectangle
+
+If you type a normal (self-inserting) character when the rectangle is
+active, the character is inserted on the "current side" of every line
+of the rectangle.  The "current side" is the side on which the cursor
+is currently located. If the rectangle is only 1 column wide,
+insertion will be performed to the left when the cursor is at the
+bottom of the rectangle.  So, for example, to comment out an entire
+paragraph like this one, just place the cursor on the first character
+of the first line, and enter the following:
+C-return M-} ; ; <space>  C-return
+
+cua-mode's rectangle support also includes all the normal rectangle
+functions with easy access:
+
+[Win+a] aligns all words at the left edge of the rectangle
+[Win+b] fills the rectangle with blanks (tabs and spaces)
+[Win+c] closes the rectangle by removing all blanks at the left edge
+of the rectangle
+[Win+f] fills the rectangle with a single character (prompt)
+[Win+i] increases the first number found on each line of the rectangle
+by the amount given by the numeric prefix argument (default 1)
+It recognizes 0x... as hexadecimal numbers
+[Win+k] kills the rectangle as normal multi-line text (for paste)
+[Win+l] downcases the rectangle
+[Win+m] copies the rectangle as normal multi-line text (for paste)
+[Win+n] fills each line of the rectangle with increasing numbers using
+a supplied format string (prompt)
+[Win+o] opens the rectangle by moving the highlighted text to the
+right of the rectangle and filling the rectangle with blanks.
+[Win+p] toggles virtual straight rectangle edges
+[Win+P] inserts tabs and spaces (padding) to make real straight edges
+[Win+q] performs text filling on the rectangle
+[Win+r] replaces REGEXP (prompt) by STRING (prompt) in rectangle
+[Win+R] reverse the lines in the rectangle
+[Win+s] fills each line of the rectangle with the same STRING (prompt)
+[Win+t] performs text fill of the rectangle with TEXT (prompt)
+[Win+u] upcases the rectangle
+[Win+|] runs shell command on rectangle
+[Win+'] restricts rectangle to lines with CHAR (prompt) at left column
+[Win+/] restricts rectangle to lines matching REGEXP (prompt)
+[C-?] Shows a brief list of the above commands.
+
+[M-C-up] and [M-C-down] scrolls the lines INSIDE the rectangle up
+and down; lines scrolled outside the top or bottom of the rectangle
+are lost, but can be recovered using [C-z].
+
+*** Dired-mode
+In dired-mode, [Ctrl+c] [Ctrl+c] or [Apps] [m] will toggle to
+writable dired mode (wdired-mode).  Then [Ctrl+c] [Ctrl+c] or [Apps]
+[m] will commit the changes. 
+*** Helm-mode
+Helm mode's actions are in general executed with the Return key. The
+persistent actions can be executed with Alt+Return.  The prefix-based
+persistent actions can be execute with Alt+Shift+Return.  
+
+The exception to this is when finding files.  Return will expand the
+directory within helm (equivalent to helm's execute persistent action
+for a directory). And Alt+Return will open dired.  This is equivalent
+to ido-mode.  In my opinion it is more likely that you want to do
+than to open in ido-mode. Therefore an unchorded key is more
+ergonomic than a key combination like Alt+Return.  However, you can
+turn off this behavior by changing the following setting:
+
+#+BEGIN_SRC emacs-lisp
+  (setq ergoemacs-helm-ido-style-return nil)
+#+END_SRC
+
+*** Visual Regexp
+When [[https://github.com/benma/visual-regexp.el][visual regexp]] is installed, ergoemacs-mode changes
+=query-replace-regexp= to =vr/query-replace=
+*** Browse-kill-ring and pasting
+The package =browse-kill-ring= can be integrated into the way that
+ergoemacs-mode pastes.  For information see
+[[file:smart-commands.html][smart commands]].
+*** Highlight Symbol and searching
+
+** Icicles with ergoemacs-mode
+:PROPERTIES:
+  :PAGE:     icy-mode.html
+  :TEMPLATE: blog_static_no_title.html
+  :END:
+
+*Authors:* Nikolay Kudryavtsev and Matthew L Fidler
+
+Icicles is a complicated library with many different
+keybindings. Ergoemacs also has quite few keybindings of it's
+own. Since both packages were originally developed separately it is
+understandable that there can be a conflict between them. This
+documentation lists the known cases of conflict.
+
+*** Things that work differently with ergoemacs
+
+**** Icicle history element cycling is moved to F11 and F12
+Icicles uses M-p and M-n for `icicle-previous-history-element` and
+`icicle-next-history-element`. Since those are perfect examples of
+non-ergonomic keys, ergoemacs changes them to F11 and F12. This is
+consistent with changes to other packages.
+**** Icicles insert history element with M-F11 or M-F12
+
+In icicles you can [[http://www.emacswiki.org/emacs/Icicles_-_History_Enhancements#toc4][insert an element from your minibuffer history]],
+thus limiting your candidates only to the ones in your minibuffer
+history.  In `ergoemacs-mode` This can be done by M-F11 or M-F12.
+
+**** Icicles candiate cycling is moved to QWERTY M-i and M-k
+In the vanila icicles `icicle-previous-candidate-per-mode` and
+`icicles-next-candidate-per-mode` are cycled using C-p and C-n. This
+is not ergonomic, so in ergoemacs it was moved to M-i and M-k. 
+
+Whenever icicles binds a standard key like C-p or C-n, or C-s,
+ergoemacs-mode looks up the change and runs the mode-based changed
+key.  
+**** Key Completion
+In icicles you can [[http://www.emacswiki.org/emacs/Icicles_-_Key_Completion][easily see all available keys using key
+completion]]. The default key for this is S-TAB for buffers and M-S-TAB
+for the minibuffer. Due to M-TAB being used by default by some window
+managers including Windows, ESC-S-TAB is also available by
+default. Since ESC works like C-g in ergoemacs, ESC-S-TAB binding
+would not work with it. 
+
+When icicles and ergoemacs-mode is enabled, pressing f1 in the key
+sequence will start the key completion.
+
+*** Things that do not work with ergoemacs out of box
+Things here conflict with some ergoemacs keybindings, but can be
+easily fixed by the user.
+**** How to redifine keys from icicles
+The most basic ergoemacs theme component for icicles looks like
+this. Since most of the icicles keybindings are connected to
+minibufer, you should put your keybindings within "when
+`icicle-minibuffer-setup-hook`" form.
+#+BEGIN_SRC emacs-lisp
+  (ergoemacs-component ergoemacs-icicles-user ()
+    "Ergoemacs-mode theme component for icicles"
+    (when icicle-minibuffer-setup-hook
+      (define-key minibuffer-local-map (kbd "M-p") 'icicle-insert-history-element)))
+  (ergoemacs-require 'ergoemacs-icicles-user)
+#+END_SRC
+
+**** C-M-j - icicle-insert-list-join-string
+Icicles [[http://www.emacswiki.org/emacs/Icicles_-_Multi-Completions#toc2][allows you to match only those candidates that have particular
+text within them]]. A rather complex example is available [[http://www.emacswiki.org/emacs/Icicles_-_Nutshell_View#toc6][here]].
+***** How to fix
+C-M-h is a good candidate, since it's close enough to the original
+key, but does not conflict with ergoemacs:
+#+BEGIN_SRC emacs-lisp
+(define-key minibuffer-local-map (kbd "C-M-h") 'icicle-insert-list-join-string)
+#+END_SRC
+** Bug report
+  :PROPERTIES:
+  :PAGE:     bug-report.html
+  :TEMPLATE: blog_static_no_title.html
+  :END:
+
+Before reporting a bug, please check if it is already known about.
+Indeed, it may already have been fixed in a later release of
+=ergoemacs-mode=, or in the development version.  Here is the issues
+list: https://github.com/ergoemacs/ergoemacs-mode/issues
+
+If you are able to, try the latest =ergoemacs-mode= to see if the
+problem has already been fixed.
+
+To report a bug please be sure your issue is =ergoemacs-mode= related.
+An easy way to do that is to get a clean environment to see if you can
+reproduce the error.  If you can load ergoemacs, then this can be
+accomplished by Alt+a =ergoemacs-clean=.
+
+Otherwise, this can be accomplished by
+
+#+BEGIN_SRC sh
+  emacs -Q
+#+END_SRC
+
+Then in the =*scratch*= buffer adding
+
+#+BEGIN_SRC emacs-lisp
+  (setq debug-on-error t) ; Activate debugging
+  (add-to-list 'load-path "/path/to/ergoemacs/")
+  (require 'ergoemacs-mode)
+  (setq ergoemacs-debug t)
+  (setq ergoemacs-keyboard-layout "us") ; Layout you use.
+  (setq ergoemacs-theme nil) ; For standard theme.
+  (ergoemacs-mode 1)
+#+END_SRC
+
+Then type Alt+x =eval-buffer=.
+
+See if you can reproduce the bug from this empty environment.  If you
+can reproduce the bug this way, that rules out bugs in your personal
+customizations.  Then your bug report should begin by stating that you
+started Emacs with =emacs -Q=, followed by the exact sequence of steps
+for reproducing the bug.  If possible, inform us of the exact contents
+of any file that is needed to reproduce the bug.
+
+When you hit an error, a =*Backtrace*= buffer will appear on the
+screen.  Save this buffer to a file and attach it to your bug report.
+
+Please report documentation bug too.
+** Testimonials
+  :PROPERTIES:
+  :PAGE:     testimonials.html
+  :TEMPLATE: blog_static_no_title.html
+  :END:
+
+This page collects testimonial for ergoemacs-mode. Thank you. I
+appreciate them very much. Your nice words keep me going. -- Xah Lee
+
+*** Paul Michael Reilly -- 2013-06-07
+[[https://groups.google.com/forum/#!topic/ergoemacs/ileUMQ0M3Lc][Posted Here]]
+#+begin_quote
+After some 30 years of using Emacs constantly, I recently switched
+from using Microsoft keyboards (of various sorts) to using Apple
+keyboards.  Needless to say, Emacs Pinky arose and I found myself
+consuming most all of what Xah Lee has written in the area of using
+Emacs ergonomically with Apple keyboards.  Most impressive material.
+
+Being a bleeding edge Emacs User (and occasional developer, although
+it embarrasses me to think about how long it has been since I made any
+substantial contributions), I use the development nightly builds as a
+matter of course.  So when I bit the bullet and installed ErgoEmacs,
+my instance blew up (in that nothing worked as expected) and I decided
+to back off a bit from going whole hog.  [Mea culpa, but I did not
+have the time to debug the problems.  At least not yet.]
+
+To make a long story shorter, I embraced the notion of remapping keys
+to use the recommended ErgoEmacs layout, but tried to shortcut the
+process by turning "caps lock" into a "menu" key and creating key
+sequences that were productive for me; remapping the "control" key to
+"command", the "option" keys to "control" and the "command" keys to
+"option".  But I did not take the pains of programmatically changing
+the key bindings for other packages (like org-mode) so I quickly ran
+into hassles.
+
+To resolve the issue of other package interference with the ErgoEmacs
+keybindings I used (on Meta), I switched back to using the Mac default
+modifier keys and mapped the ErgoEmacs bindings to the "command" keys
+via Super.
+
+One of Xah's best suggestions for me was the notion of "curled thumbs"
+to symmetrically type the Super keys.  That has been a huge win, both
+in eliminating Emacs Pinky and improving my typing productivity.  Who
+knew? :-)
+
+I am still a bit anxious that OS X will intervene on some of my
+rebindings with the "command" key in particular but so far so good.
+
+In all of this work that I've done, the major factor has been
+significantly reducing the need to use C-<key> and M-<key> chords and
+instead using "menu" key sequences and s-<key> chords.
+
+Another factor has been standardizing on the short Apple keyboard (the
+one found on recent Apple laptops) which I once hated because of the
+lack of "control" key symmetry.  I found that once I started using
+curled thumbs for chords, the short keyboard actually worked quite
+well for me.  Especially since I use some half dozen MacBook Air/Pro
+laptops and Mac Mini systems on a regular basis.
+
+There are probably a few other steps taken that I have forgotten but I
+think this captures most of a positive experience in embracing
+ErgoEmacs keyboarding.
+
+fwiw,
+
+-pmr
+#+end_quote
+*** fleontrotsky -- 2012-10-12
+
+#+begin_quote
+Thanks to @xah_lee for ergo-emacs. If #emacs could become my prime
+editor for windows, I would be exuberant!
+#+end_quote
+- [[https://twitter.com/fleontrotsky][fleontrotsky]]
+*** Hacker News Mentions -- 2012-10-12
+- [[https://news.ycombinator.com/item?id=3386023][Emacs for the rest of us]] (Posted by macco)
+- [[https://news.ycombinator.com/item?id=1510146][ErgoEmacs]]
+- [[https://news.ycombinator.com/item?id=695893][Ergoemacs Keybindings]] (2009-07-09 By Xichekolas)
+
+*** Delicious bookmark and comments
+[[https://previous.delicious.com/url/aa40f8106085d7e6dd0e218d0350f5c8][Delicious.com bookmark site comments]]
+
+*** Jeffrey E Pace -- 2011-12-30
+#+begin_quote
+I just spent three days trying out Xah Lee's ErgoEmacs – ergonomic
+Emacs keybindings – and I've been impressed.
+#+end_quote
+
+[[http://jpace.wordpress.com/tag/ergoemacs/][ErgoEmacs keybinding review]]
+*** Joseph Buchignani -- 2011-11-21
+#+begin_quote
+Xah Lee's Ergoemacs is five different kinds of awesome.
+#+end_quote
+
+[[http://www.cyborganize.org/clarity/software/emacs-org-mode-installation-configuration-and-tutorial/installing-and-using-ergoemacs-for-intermediate-emacs-users/][Installing and using Ergoemacs]] 
+
+*** Don Womick -- 2010-08-17
+#+begin_quote
+From: Don Womick
+Subject: [Orgmode] ErgoEmacs
+Date: Sat, 14 Aug 2010 09:07:58 -0400
+I've just found ErgoEmacs (http://ergoemacs.org), another Emacs distribution for Windows that tries to make Emacs easy to use for ordinary users… and it does so: I was able to use it immediately, with all the standard Windows shortcuts--the only things that tripped me up briefly were the file commands (C-xf moved to C-o and C-xw moved to C-w), and that they moved M-x to M-a (M-x now cuts the entire line). This looks like a distro that might ease the learning curve enough to drive more widespread adoption of Emacs (and org-mode!): it really does seem to be as easy to use as Notepad right out of the box, yet doesn't take away any of the power of Emacs (as far as I can tell, except that I did have to load an org-mode file before capture would work, but that may be a setup problem on my part). If you're on Windows, take a look and see what you think… and for org newbies on win32, I think this is the version I would recommend.
+
+--Don
+
+lists.gnu.org emacs-orgmode
+#+end_quote
+- [[http://www.womick.com/Home.html][Don's website]]
+- [[http://lists.gnu.org/archive/html/emacs-orgmode/2010-08/msg00566.html][Original Message]]
+
+*** Kristian Hellquist -- 2010-07-19
+#+begin_quote
+I started using ergoemacs last week, and it looks promising. It lacked
+a swedish keyboard layout though
+
+Thanks for your great blog, work and opinions about emacs.
+
+/Kristian Hellquist
+#+end_quote
+
+Thanks to [[https://twitter.com/meeiw][Kristian Hellquist]] for contributing a Swedish layout. It's
+in ErgoEmacs Keybinding v5.3.4.
+
+*** jeangjs.blogspot.com -- 2010-06-09
+#+begin_quote
+2009年11月4日星期三
+
+ErgoEmacs 初探
+
+一直以來，我都是從 Xah's Emacs Tutorial 獲得一些 Emacs 使用上的小技巧。前幾天突然發現 Xah Lee 弄了一個專案 --- ErgoEmacs。一個很有趣的專案，同時也是破壞 Emacs 傳統的專案。
+
+Emacs 專屬的 keybindings 可以說是一項足以自豪的傳統。對於那些不使用滑鼠的高手來說，keybindings 一定背的滾瓜瀾熟。但非人使用 Emacs 超過十年了，熟悉的 keybindings 不會多過 10 個。並不是非人不想背下來，而是太複雜了，今天背了明天就忘了。再加上非人非常地依賴滑鼠，所以總是記不了幾個 keybindings。而 ErgoEmacs 這個專案主要就是在改變 keybindings，讓 Emacs 更能符合現代使用電腦的習慣。這個套件可以從這裡下載。
+
+jeangjs.blogspot.com 非人的筆記本
+#+end_quote
+[[http://jeangjs.blogspot.com/2009/11/ergoemacs.html][Source]]
+*** Chow at Stack Overflow -- 2010-06-04
+#+begin_quote
+I totally agree with the remap caps-lock solution, that helps quite a
+bit. To go even further, I tried and liked the Ergoemacs
+keybindings. The project is being actively developed, and supported
+quite well. I personally don't use it because it's not integrated with
+Mac OS X (some EMACS Keys are integrated in Cocoa), though it seems
+someone has posted an inputrc file with Ergoemacs keybindings. Another
+trick I've been playing with is enabling StickyKeys. It's supported on
+many platforms and alleviates some of the problems specific to
+chording (as opposed to just overuse): it is apparently recommended on
+the emacswiki: http://www.emacswiki.org/emacs/StickyModifiers
+#+end_quote
+
+[[http://stackoverflow.com/questions/52492/what-is-the-best-way-to-avoid-getting-emacs-pinky/2976688#2976688][Source]]
+*** jroes -- 2010-05-24
+
+#+begin_quote 
+I used to do the same thing, but I missed out on a lot
+of good emacs shortcuts. Today I use the dvorak version of Xah Lee's
+layout. You get vim-like navigation by holding Meta.
+#+end_quote
+
+— [[https://news.ycombinator.com/item?id=1374916][jroes Source news.ycombinator.com]]
+
+*** laurus -- 2009-08-19
+#+begin_quote
+(9:06:35 AM) laurus: Hello! I just wanted to let you know that I
+recently installed your Ergoemacs and I'm enjoying it very much.
+#+end_quote
+*** fadec -- 2009-08-05
+#+begin_quote 
+fadec: I had customized my keybindings but someone
+suggested I try Ergoemacs a few weeks ago. Forget vim - ergoemacs is
+how it's done.
+#+end_quote
+
+[[http://www.reddit.com/r/programming/comments/957rp/vimacs_vim_emulating_emacs/][reddit.com]]
+
+*** Ghoul -- 2009-01-26
+freenode irc chat:
+
+#+begin_quote
+Ghoul``: xah_lee: i appreciate the ergonomic emacs shortcuts
+especially M-x being M-a right now ☺ however only one thing is
+weird.. the M-; for searching (M-s in dvorak) but if i want to go to
+the next entry i press C-s and not M-; again; that's like the only
+tiny thing; otherwise i really like and use all the other shortcuts;
+really good stuff!
+#+end_quote
+*** ginstre --2009-01-25
+freenode irc chat:
+
+#+begin_quote
+ginstre: i'm an avid user of your ergonomic keybindings. one small
+suggestion: the isearch-mode-map bindings should be copied to the
+minibuffer-local-isearch-map. otherwise one can't resume an isearch
+that has been modified (⁖ by M-n, M-p or isearch-edit-string).
+#+end_quote
+
+*** w k -- 2008-12-27
+From w k
+
+#+begin_quote
+你好，偶然访问李杀网，从你的网站发现非常有价值的emacs教程。尤其关于人体工程力学的键位设置及键盘推荐，更是出类拔萃，对于像我这样的emacs新手具有非常大的帮助，我已经完全按照你的建议来做。
+
+教程需然全部都是英文书写，但是语法简单、文笔流畅，像我这样纯粹的中国人都可以轻松阅读。
+#+end_quote
+
+*** Will Parsons -- 2008-09-03
+#+begin_quote
+From: Will Parsons
+Date: 3 Sep 2008 00:21:16 GMT
+Subject: Re: ergonomic keybinding. Need qwerty testers.
+
+Some comments:
+
+I've been giving your keyboard mapping a try and generally like it. In
+particular, I like the cut/paste series (M-x, M-c, M-v) and the
+window-splitting series (M-0, M-1, M-2). I do regret, however, that
+the M-c binding does conflict with the default capitalize-word
+binding, as I use the capitalization functions bound by default to
+M-c, M-u, and M-l pretty frequently. At the moment, I've configured a
+"windows" key to be Hyper and bound the capitalization functions to
+H-c, H-u, and H-l, so I'll see how that works out.
+
+(I've noticed a slight anomaly - since M-x is bound to kill-region,
+M-a is used for execute-extended-command, but when one hits M-a, one
+is still presented with a prompt "M-x ".)
+
+As far as the cursor movement bindings, the single character movement
+bindings seem natural enough, but I suspect I'll prefer to continue to
+use arrow keys. I'll have to give the other movement bindings more of
+trial before making a final judgement, though the combinations
+involving M+S (Alt+Shift) seem a little awkward to me.
+
+I've bound M-g to goto-line for some time now, and am happy with the
+standard C-k for kill-line, so prefer not to rebind M-g.
+
+Similarly, I've bound M-p to ps-print-buffer, and since I don't use
+the recenter function too often, am happy to stick with C-l for it.
+
+I found the binding of M-d to delete-backward-char somewhat
+disconcerting, because even though I've bound C-delete to kill-word,
+I'm still acustomed to having M-d perform the same function in other
+contexts (⁖, in Bash).
+#+end_quote
+
+From [[https://groups.google.com/forum/#!topic/gnu.emacs.help/E2mxoz1EPeg][gnu.emacs.help]] newsgroup.
+
+*** Jerome Alet -- 2008-08-29
+
+#+begin_quote
+Hello,
+
+I've just read your rant about Emacs key bindings and other historical "features".
+
+I simply wanted to thank you for this : now I know I'm not alone thinking about this sort of things. Although I didn't had your historical knowledge about Emacs, these key bindings and features are what has always turned me away from Emacs, and why I coded my own text editor 14 years ago (Jered, available from http://www.librelogiciel.com/ )
+
+So, again : THANKS A LOT !
+
+bye
+
+Jerome Alet
+#+end_quote
+
+*** Markus Grunwald -- 2008-07-28
+#+begin_quote
+a few weeks ago I saw your page with ergonomic keybindings for
+emacs. Since I did not like the original bindings very much and was on
+the way to an "emacs pinky" I tried your keybindings - they are great
+☺
+
+Pain decays slowly and the new bindings are going into muscle memory
+quickly. Of cource, I made a few changes according to my special
+needs.
+
+Thank you VERY much!
+
+Markus Grunwald
+#+end_quote
+
+*** boskom --2008-05-02
+#+begin_quote 
+
+I have used your ergonomic_keybinding_querty.el a bit. It is
+interesting, it looks like it is the right way to go. Solution is
+elegant and does not interfere with or disable common shortcuts. There
+are two small issues I encountered: The first is that if CUA is
+enabled in emacs 22 moving around with page up/down (M-Shift-i and M-
+Shift-k) sets mark and starts selecting a region. The other issue is
+that on Windows pressing righ-alt + right-shift sometimes changes
+Windows keyboard layout.
+
+The main issue for me still remains position of Control keys, but this
+needs to be addressed by a keyboard manufacturer.
+
+Thanks,
+
+boskom
+#+end_quote
+
+[[https://groups.google.com/forum/#!topic/gnu.emacs.help/E2mxoz1EPeg][gnu.emacs.help]] newsgroup, 2008-04-30. 
+
+*** 2008-05-02
+#+begin_quote
+Pretty impressive.
+
+Do you have the frequency of the C-x prefix ? I use it pretty often,
+just wondering what's his rating. I definitively want to try your
+layout. Two remarks though. C-h = delete-backward-char is mandatory
+for me.
+
+Too many applications use it that way. And the h key is a perfect spot
+on the Dvorak keyboard.
+
+Also, C-t, M-t and M-c on a Dvorak keyboard definitely deserve better
+shortcuts than the default ones.
+
+I am currently using C-t as the C-x prefix and M-t as M-x.
+
+#+end_quote
+
+*** Sergio -- 2007-09-12
+#+begin_quote
+Sergio // Sep 12, 2007 at 12:06 pm
+
+That's nice, but the best thing about that website is the ‘ergonomic
+keybord layout’ that uses completely new bindings that are way more
+comfortable.
+
+I know that for long-time emacs users a new layout is perhaps not
+something attractive, but for me, being new to emacs, a more modern
+and ergonomic layout is just what I needed to get up to speed.
+
+They even have a Dvorak version. Great resource, thanks, I had been
+looking for this kind of info about how to make it easier to use emacs
+for a while.
+#+end_quote
+
+[[http://emacsblog.org/2007/08/27/newbie-tip-visual-emacs-keybinding-cheatsheet/#comments][emacsblog.org]]
+
+#+BEGIN_HTML
+  <div id="disqus_thread"></div>
+  <script type="text/javascript">
+    /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+    var disqus_shortname = 'ergoemacsmode'; // required: replace example with your forum shortname
+  
+    /* * * DON'T EDIT BELOW THIS LINE * * */
+    (function() {
+    var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+    dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+  </script>
+  <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+  <a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+#+END_HTML
+
+** Roadmap
+  :PROPERTIES:
+  :PAGE:     roadmap.html
+  :TEMPLATE: blog_static_no_title.html
+  :END:
+
+Here are some ideas for future versions:
+
+- Use Apps/Menu key to have unchorded keys to reduce probability of
+  RSI.  See [[file:banish-key-chords.html][Banish Key Chords]].
+- Allow ergoemacs-mode keyboard themes to be customized based on user
+  frequency.  
+
+If you have any ideas please [[https://github.com/ergoemacs/ergoemacs-mode/issues/new][drop me a line]].
+
+This section is experimental ergoemacs keybindings that are being
+incorporated into ergoemacs.  These are likely to change and are a
+work in progress.
+
+** Banish Key Chords
+  :PROPERTIES:
+  :PAGE:     banish-key-chords.html
+  :TEMPLATE: blog_static_no_title.html
+  :END:
+
+This is an experimental ergoemacs feature to banish key chord and
+replace ergoemacs keys.  The background is given in the following pages
+- Why it would be good to [[http://xahlee.info/kbd/banish_key_chords.html][banish key chords]].
+- Xah's quest to [[http://ergoemacs.org/emacs/emacs_keybinding_redesign_2.html][totally redesign the keys]].
+
+*** Changing Ctrl+x and Ctrl+c
+For emacs, the most common key sequences start with C-x or C-c. This
+usually requires the use of the control key, and leads to the dreaded
+[[http://ergoemacs.org/emacs/emacs_pinky.html][emacs pinky]].  It also conflicts with the standard Cut and Copy
+commands (see [[file:standard-shortcuts.html][standard shortcuts]]).
+
+I've thought about how to take out the use of the
+control key and reduce the key chord reduction. This is how
+I came up with the Ctrl+c and Ctrl+x replacements:
+
+- Ctrl-x commands can be accessed by QWERTY 
+  @@html:<kbd class="dark">@@Menu@@html:</kbd>@@  @@html:<kbd class="dark">@@d@@html:</kbd>@@
+  - This is *not* the same as the traditional Ctrl+x. Heres how its
+    different:
+    - By default all @@html:<kbd class="dark">@@Ctrl@@html:</kbd>@@ commands are translated to @@html:<kbd class="dark">@@Alt@@html:</kbd>@@ commands.
+      - Ctrl+x Ctrl+b could be accessed by @@html:<kbd class="dark">@@Menu@@html:</kbd>@@ @@html:<kbd class="dark">@@d@@html:</kbd>@@ @@html:<kbd class="dark">@@Alt@@html:</kbd>@@+@@html:<kbd class="dark">@@b@@html:</kbd>@@ (list-buffers)
+      - C-x b could be accessed by @@html:<kbd class="dark">@@Menu@@html:</kbd>@@ @@html:<kbd class="dark">@@d@@html:</kbd>@@ @@html:<kbd class="dark">@@b@@html:</kbd>@@ (switch-to-buffer)
+    - Pressing @@html:<kbd class="dark">@@Menu@@html:</kbd>@@ will
+      change the type of key translation used.  The default for Ctrl+x is
+      translate/swap the Alt and Ctl keys.  Pressing Menu again will:
+      - Make the keyboard translation for C-x "unchorded"
+      - The pressing Menu would remove the keyboard translation for Ctrl+x.
+      - Finally pressing Menu again would result the translation/swap
+        of Ctrl and Alt (as at the beginning).
+
+For your information, an "unchorded" filter/translation would translate:
+- Ctrl key combinations to standard keys.  For example Ctrl+b would be
+  just b.
+- Standard keys like b would be translated to Alt+b.
+- Alt key combinations would be translated to Ctrl key combinations.
+  Therefore Alt+b would be translated to Ctrl+b.
+
+- C-c commands can be accessed by QWERTY 
+  @@html:<kbd class="dark">@@Menu@@html:</kbd>@@  @@html:<kbd class="dark">@@f@@html:</kbd>@@
+  - This is *not* the same as the traditional Ctrl+c. Heres how its
+    different:
+    - By default the "unchorded" filter is on.  This is because by [[http://www.gnu.org/software/emacs/manual/html_node/elisp/Key-Binding-Conventions.html][convention]],
+      major modes bind control keys like Ctrl+c Ctrl+r and leave keys like
+      Ctrl+c r to be bound by the user.  This means that you would put
+      less strain on your hand to have these key combinations to be
+      unchorded by default.
+    - @@html:<kbd class="dark">@@Ctrl@@html:</kbd>@@ commands are translated to @@html:<kbd class="dark">@@Alt@@html:</kbd>@@ commands.
+  - Like C-x, pressing Menu changes the filter
+    - First Menu press changes the unchorded filter to the ctl <->
+      alt filter
+    - Second Menu press removes the filter
+    - Press Menu again to go back to the unchorded keyboard filter.*
+** Ergoemacs Key Chord Reduction
+**** Movement without key-chords
+***** Method #1 -- <menu> Movement mode
+One can enable movement without key-chords as follows:
+- On QWERTY, press [Menu] [k] and then the movement key.  This key is
+  repeatable.  Therefore [Menu] [k] [k] [k] would move the cursor down
+  two lines.  If this is followed by [i] this would have the cursor
+  move up a line.  To exit the repeatable movement/delete keys press
+  [Menu].  This is similar to VIM's edit mode, with a toggle of the
+  [Menu] key.
+  - Shifted keys still are allowed.  For example, page up can be
+    accomplished in QWERTY by [Shift+i].
+  - Any command that enters the minibuffer also exits the repeatable
+    movement/deletion.
+  - Any undefined key in the keymap (like 1) would exit the mode and
+    insert the character
+- To reduce the shifted key-chords, on QWERTY you can also press
+  [Menu] [i].  Therefore [Menu] [i] [i] is equivalent to one page
+  up. Followed by a [k] will be the page-down equivalent
+  - Again, [Menu] stops the movement mode and anything that enters
+    the minibuffer removes the movement mode.
+  - Any undefined key in the keymap (like 1) would exit the mode and
+    insert the character
+  - Shift and the key is the unshifted command.  Therefore [Menu] [i]
+    [i] [Shift+k] would be Page Up followed by down one character.
+
+***** Method #2 -- Modal Ergoemacs-mode
+You can press [F6] to get all the [Alt+] commands bound letters
+themselves.  For example [Alt+k] is bound to [k].  [Alt+Shift+] keys
+are bound to [Shift+] or [Alt+] keys.  Hence, [Shift+Alt+m] is bound
+to both [Shift+m] and  [Alt+m].  To exit ergoemacs modal mode, you
+can press [Return] or [F6].  
+** FAQ
+  :PROPERTIES:
+  :PAGE:     faq.html
+  :TEMPLATE: blog_static_no_title.html
+  :END:
+
+*** Whats the difference between ergoemacs and ergoemacs-mode?
+[[http://ergoemacs.org/][Ergoemacs]] is a set of customizations that make emacs easier to use.
+It also includes [[file:index.html][ergoemacs-mode]].  The minor mode, [[file:index.html][ergoemacs-mode]],
+implements the keybindings (and some other features) via a minor-mode
+that can be toggled to get back to standard emacs.
+*** How do you select text when using ergoemacs-mode and ergoemacs-arrow keys
+You can hold the left @@html:<kbd class="dark">@@Alt@@html:</kbd>@@,
+then right hand press space to mark, then right hand using any of
+QWERTY 
+@@html:<kbd class="dark">@@i@@html:</kbd>@@ 
+@@html:<kbd class="dark">@@j@@html:</kbd>@@ 
+@@html:<kbd class="dark">@@k@@html:</kbd>@@ 
+@@html:<kbd class="dark">@@l@@html:</kbd>@@ to move by char, line, or 
+@@html:<kbd class="dark">@@u@@html:</kbd>@@ 
+@@html:<kbd class="dark">@@o@@html:</kbd>@@  to move
+by word. ⇧ Shift+U and ⇧ Shift+O to move by paragraph/block.
+
+Of course, you can also use the [[file:standard-shortcuts.html][standard shortcuts]].  For example, 
+to select all, you can press Ctrl+a.  To move up, you can press ⇧
+Shift+↓ to select text downward.
+
+Another option is to use the ergoemacs reduction key theme.  Then the
+shift-movement keys work. 
+
+*** Some of my backspace keys have been muted by ergoemacs-mode
+Ergoemacs-mode allows key sequences to be changed with a backspace
+key.  This masks some of the delete key sequences like C-x Backspace which
+runs backward-kill-sentence.  You can turn this off by the following
+
+#+BEGIN_SRC emacs-lisp
+(define-key ergoemacs-normal-translation-local-map (kbd "DEL") nil)
+
+#+END_SRC
+
+If you wish to remove it from the other specialized translations you can do that as well:
+
+#+BEGIN_SRC emacs-lisp
+(define-key ergoemacs-ctl-to-alt-translation-local-map (kbd "DEL") nil)
+(define-key ergoemacs-unchordedl-translation-local-map (kbd "DEL") nil)
+#+END_SRC
+
+You can also allow ergoemacs-mode to translate the Delete key to
+backspace, so Ctl+x backspace can be typed as Ctrl+x Delete key
+
+*** How do you get a 【▤ Menu】 key in Mac OS X
+Some of ergoemacs keys make use of the 【▤ Menu】 key.
+One way to set this up in a mac is to replace the Caps Lock key with
+F13 or above, and tell emacs that F13 is actually the menu key.  This
+is done by:
+
+1. Downloading and installing [[https://pqrs.org/macosx/keyremap4macbook/pckeyboardhack.html][PCKeyboardHack]]
+2. Going to the system prefences and PCKeyboardHack
+3. Change the caps lock mapping to F13
+4. Adding the translation to emacs startup script (like ~/.emacs or
+   ~/.emacs.d/init.el) as follows:
+
+#+BEGIN_SRC emacs-lisp
+(define-key key-translation-map (kbd "<f13>") (kbd "<menu>"))
+#+END_SRC
+
+*** Why don't you use the standard emacs key notation?
+The [[http://www.emacswiki.org/emacs/EmacsKeyNotation][emacs key notation]] is common across emacs, but not common for new
+users.  One of the goals of ergoemacs-mode is to allow new emacs users
+to not have to learn anything about the keys to start using emacs.
+Therefore, all keys are defined in Ctrl+s notation instead of =C-s=
+notation.
+
+*** I was expecting C-j to be mapped to copy but instead it's C-c on my dvorak 
+You have some options to get to copy and paste:
+- You can Alt + the normal key positions for undo cut copy paste
+- If you want, you can easily do it with:
+
+#+BEGIN_SRC emacs-lisp
+(global-set-key (kbd "<C-j>") 'ergoemacs-cut-line-or-region)
+#+END_SRC
+
+- If you want you can keep /all/ standard shortcuts in the normal
+  QWERTY positions by:
+
+#+BEGIN_SRC emacs-lisp
+(setq ergoemacs-theme nil)
+(setq ergoemacs-change-fixed-layout-to-variable-layout t)
+(setq ergoemacs-keyboard-layout "dv")
+(require 'ergoemacs-mode)
+(ergoemacs-mode 1)
+#+END_SRC
+
+
+*** I want to modify my modifiers to work differently on a mac
+Ergoemacs-mode uses the option as an alt key because you can press it
+with a thumb.  If you want a different option, set:
+
+#+BEGIN_SRC emacs-lisp
+(setq ergoemacs-use-mac-command-as-meta nil)
+#+END_SRC
+
+* Tips
+** Gradual Adoption
+  :PROPERTIES:
+  :PAGE:     gradual-adoption.html
+  :TEMPLATE: blog_static_no_title.html
+  :END:
+
+
+If you are a long time emacs user, you may find it painful to adopt
+this setup.
+
+This difficulty is nothing special. It's the same difficulty when you
+switching to dvorak after years of qwerty. Basically, it's about
+changing muscle memory.
+
+Here are some key-themes that may help you adopt
+ergoemacs-mode:
+
+**** Level 1
+If you find it too painful to switch, don't use the whole
+package. Instead, start off with just the arrow key movements.
+#+BEGIN_SRC emacs-lisp
+  (setq ergoemacs-theme "lvl1")
+  (ergoemacs-mode 1)
+#+END_SRC
+Either put the above in your emacs init file (usually at =~/.emacs= or
+=~/.emacs.d/init.el=), or customize ergoemacs-mode to set the theme to
+lvl1.
+
+With only the above change, you will increase your emacs productivity,
+especially if you are a touch typist. These single char cursor moving
+commands are the top 4 most frequently used emacs commands by
+statistics, roughly accounting for 43% of commands that have a
+shortcut.
+
+Once you used the above for a couple of weeks, you may add more keys
+to adopt.
+
+file:ergoemacs-extras/lvl1/ergoemacs-layout-us.png
+
+**** Level 2
+Adding keys for moving around words and deleting words.
+
+#+BEGIN_SRC emacs-lisp
+  (setq ergoemacs-theme "lvl2")
+  (ergoemacs-mode 1)
+#+END_SRC
+
+file:ergoemacs-extras/lvl2/ergoemacs-layout-us.png
+
+**** Level 3
+Full ergoemacs keyset without the <apps>/<menu> unchorded keys.
+#+BEGIN_SRC emacs-lisp
+  (setq ergoemacs-theme nil)
+  (ergoemacs-theme-option-off '(apps apps-apps apps-punctuation apps-swap))
+  (ergoemacs-mode 1)
+#+END_SRC
+
+file:ergoemacs-extras/lvl3/ergoemacs-layout-us.png
+**** Full Ergoemacs Keys
+Try to use the full ergoemacs mode.
+#+BEGIN_SRC emacs-lisp
+  (setq ergoemacs-theme nil)
+  (ergoemacs-mode 1)
+#+END_SRC
+
+file:ergoemacs-extras/ergo-layouts/ergoemacs-layout-us.png
+**** Guru
+The guru theme takes away the arrow keys and page up/page down keys.
+
+#+BEGIN_SRC emacs-lisp
+  (setq ergoemacs-theme nil)
+  (ergoemacs-theme-option-on '(guru))
+  (ergoemacs-mode 1)
+#+END_SRC
+**** Hardcore
+The hardcore theme takes away the backspace key as well as the arrow
+and page up/down keys. 
+
+#+BEGIN_SRC emacs-lisp
+  (setq ergoemacs-theme nil)
+  (ergoemacs-theme-option-on '(guru no-backspace))
+  (ergoemacs-mode 1)
+#+END_SRC
+
+** System Wide Keys
+  :PROPERTIES:
+  :PAGE:     system-wide.html
+  :TEMPLATE: blog_static_no_title.html
+  :END:
+
+*** Bash
+You can [[http://www.gnu.org/software/bash/manual/html_node/Readline-Init-File-Syntax.html][make bash understand]] ergoemacs-mode keys by creating an
+appropriate =.inputrc= and placing it in your home-directory.
+
+When ergoemacs-mode is enabled, this can be done easily by typing
+
+Alt+a =ergoemacs-bash=
+
+This should also be available in the ergoemacs menu.
+
+*** Windows
+In windows some of the ergoemacs keys are implemented system wide by
+assuming apps follow the CUA-style keys like CTRL-f for find, CTRL-h
+for replace.  This also optionally implements:
+- CapsLock as Menu in emacs
+*** Mac OS X
+** Customizing your keys
+  :PROPERTIES:
+  :PAGE:     customize-keys.html
+  :TEMPLATE: blog_static_no_title.html
+  :END:
+
+You may want to customize your ergoemacs-mode bindings to fit your
+particular workflow.  This can be accomplished in many ways,
+*** Ergoemacs defined keys
+These keys are defined in the =ergoemacs-keymap=.  When the layout
+changes by changing options, these keys are lost.  However, you may
+create your own theme to allow these keys to be saved.
+**** Adding a ergonomic key
+Ergonomic keys can be added by:
+#+BEGIN_SRC emacs-lisp
+  (ergoemacs-key "M-a" 'execute-extended-command "Execute")
+#+END_SRC
+
+This adds the Alt-a command to all keyboards based on the QWERTY
+layout.  This only applies to the currently selected keyboard theme.
+
+Note the last parameter is optional and allows Ergoemacs to document
+that this is an "Execute" command when generating keyboard layout diagrams.
+**** Adding a fixed key
+Fixed keys can be added by:
+#+BEGIN_SRC emacs-lisp
+  (ergoemacs-fixed-key "C-o" 'ido-find-file "Open File")
+#+END_SRC
+
+This adds the fixed key to the currently selected emacs theme
+
+Note the last parameter is optional and allows Ergoemacs to document
+that this is an "Open" command when generating keyboard layout diagrams.
+
+**** Adding an ergonomic key map with fixed mappings
+When you want to add an ergonomic keymap with fixed mappings such as
+the ergoprog theme you can add them as follows:
+
+#+BEGIN_SRC emacs-lisp
+  (ergoemacs-key "M-m s" 'save-buffer "" t)
+#+END_SRC
+
+This converts the QWERTY M-m keybinding and the fixed keybinding s to
+save buffer
+*** Using standard emacs functions
+**** Defining keys globally
+Ergoemacs respects emacs globally defined keys.  To define a global
+key, you can use:
+
+#+BEGIN_SRC emacs-lisp
+  (global-set-key (kbd "M-a") 'backward-char)
+  (global-set-key (kbd "C-a") 'backward-char)
+#+END_SRC
+
+This uses [[http://www.emacswiki.org/emacs/EmacsKeyNotation][emacs key notation]].  In short =M-a= represents Alt+a, =C-a=
+represents Ctl+a.  For these two examples the key is bound to emacs function
+=backward-char=.
+
+When you define a global key that conflicts with ergoemacs-mode
+keybindings (after loading ergoemacs-mode) the binding will no longer
+active in ergoemacs-mode. Therefore, the binding should be active in
+most places in emacs.
+
+There is still a possibility that another major or minor mode will
+bind the key. If that occurs, you can locally override the bindings.
+Assuming this occurs in =silly-mode=, you can usually override the
+settings by setting the keys locally in the major-mode:
+
+#+BEGIN_SRC emacs-lisp
+  (add-hook 'silly-mode-hook
+            (lambda()
+              (local-set-key (kbd "C-a") 'backward-char)))
+#+END_SRC
+
+Also note that the order that you define the global-keys matter when
+using =ergoemacs-mode=.  For example, if you decide to change the
+global binding before =ergoemacs-mode= loads, the key definition is
+typically ignored when =ergoemacs-mode= is enabled.  For example:
+
+#+BEGIN_SRC emacs-lisp
+  (global-set-key (kbd "M-a") 'backward-char)
+  (require 'ergoemacs-mode)
+  (ergoemacs-mode 1)
+  
+#+END_SRC
+
+The keyboard definition for =backward-char= is ignored when
+=ergoemacs-mode= is enabled. However, if you use:
+
+#+BEGIN_SRC emacs-lisp
+  (require 'ergoemacs-mode)
+  (global-set-key (kbd "M-a") 'backward-char)
+  (ergoemacs-mode 1)
+  
+#+END_SRC
+
+then ergoemacs-mode will respect the Alt+a backward character
+assignment.  
+
+This behavior allows ergoemacs keybindings to override the keys in an
+emacs configuration like prelude, emacs-live, etc.  If you do not like
+this behavior, you can turn it off by:
+
+#+BEGIN_SRC emacs-lisp
+  (global-set-key (kbd "M-a") 'backward-char)
+  (setq ergoemacs-ignore-prev-global nil) ; Will not ignore any globally
+                                          ; defined keybinding
+  (require 'ergoemacs-mode)
+  (ergoemacs-mode 1)
+  
+#+END_SRC
+
+In this example Alt+a will be bound to =backward-char= for
+ergoemacs-mode as well as globally.
+
+If you are loading =ergoemacs-mode= before loading one of these emacs
+settings and you want to /ignore/ the keybindings of the settings,
+you can also ignore them by using the following code
+
+#+BEGIN_SRC emacs-lisp
+  (global-set-key (kbd "M-a") 'backward-char)
+  (require 'ergoemacs-mode)
+  (ergoemacs-mode 1)
+  
+  ;; Load starter kit here
+  ;; Ignore starter-kit keys in ergoemacs-mode
+  (ergoemacs-ignore-prev-global) ; Globally defined keys defined
+                                 ; before this point are ignored
+#+END_SRC
+
+One of the disadvantages of using globally defined keys it they will
+be bound globally even if =ergoemacs-mode= is not active.
+Additionally, they are not Layout independent.  For example, defining
+Alt+j on QWERTY will not change to Alt+n for colemak.  
+
+** Making Keys Easier to type
+  :PROPERTIES:
+  :PAGE:     aliases.html
+  :TEMPLATE: blog_static_no_title.html
+  :END:
+
+Emacs commands are very long and descriptive.  It may be a good idea
+to shorten commands you use frequently.  This can be done by defining
+[[http://ergoemacs.org/emacs/emacs_alias.html][aliases]]. 
+
+Ergoemacs-mode already adds support for a few commonly used commands
+like allowing =eb= be the same as =eval-buffer=.  These are defined
+in the variable =ergoemacs-aliaeses= which may be customized.  This
+can also be turned off by setting =ergoemacs-use-aliases= to nil:
+
+#+BEGIN_SRC emacs-lisp
+  (setq ergoemacs-use-aliases nil)
+#+END_SRC
+
+** Smart Commands
+  :PROPERTIES:
+  :PAGE:     smart-commands.html
+  :TEMPLATE: blog_static_no_title.html
+  :END:
+
+*** Beginning of Line
+
+Often you wish to move to the beginning of some part of a line.  For
+example:
+
+#+BEGIN_SRC emacs-lisp
+  (progn
+    (ergoemacs-mode 1)) ; This turns ergoemacs-mode on.|
+#+END_SRC
+
+With the cursor =|= at the end of the line, you might want to go to
+the beginning of the comment:
+
+#+BEGIN_SRC emacs-lisp
+  (progn
+    (ergoemacs-mode 1)) ; |This turns ergoemacs-mode on.
+#+END_SRC
+
+That way you can delete and change the commment (With QWERTY 【Alt+g】).
+
+You may even want to go to  the end of the code line:
+
+#+BEGIN_SRC emacs-lisp
+  (progn
+      (ergoemacs-mode 1))| ; This turns ergoemacs-mode on.
+#+END_SRC
+
+That way you can delete the comment entirely (With QWERTY 【Alt+g】).
+
+Often you may want to go back to the first non-whitespace character
+of the line like:
+
+#+BEGIN_SRC emacs-lisp
+  (progn
+     |(ergoemacs-mode 1)) ; This turns ergoemacs-mode on.
+#+END_SRC
+
+Or even the fist actual first character of the line:
+
+#+BEGIN_SRC emacs-lisp
+  (progn
+  |  (ergoemacs-mode 1)) ; This turns ergoemacs-mode on.
+#+END_SRC
+
+Once there it is not too useful to go to the beginning of the line
+again.  So, you may wish to:
+- Goto the last text block (separated by 2 new lines; default, [[http://ergoemacs.org/emacs/emacs_key_combo.html][why?]])
+- Issue a page-up command
+- Goto the beginning of the buffer
+
+All of these can be accomplished by the smart ergoemacs-mode
+=beginning-of-line= function, which is  bound to 【Alt+h】.
+
+If you don't want ergoemacs-mode to ignore comments when going to the
+beginning or end of the line you can change this behavior by:
+
+#+BEGIN_SRC emacs-lisp
+  (setq ergoemacs-end-of-comment-line nil)
+#+END_SRC
+
+You may want to only go to the beginning of line, instead of the
+beginning of the indentation (the first non whitespace character).
+This can be changed by
+
+#+BEGIN_SRC emacs-lisp
+  (setq ergoemacs-back-to-indentation nil)
+#+END_SRC
+
+You can change the command that is issued at the beginning of the
+line by using one of the following commands.
+
+#+BEGIN_SRC emacs-lisp
+  (setq ergoemacs-beginning-or-end-of-line-and-what 'block) ; Beginning
+                                          ; of text block
+  (setq ergoemacs-beginning-or-end-of-line-and-what 'page) ; Page Up
+  (setq ergoemacs-beginning-or-end-of-line-and-what 'buffer) ; Beginning
+                                          ; of Buffer
+#+END_SRC
+
+You may worry about smart mode-specific commands such as org-mode's
+beginning or end of line.  Don't worry ergoemacs-mode will respect
+it, and do the right thing.  This is because ergoemacs-mode actually
+replaces the =move-beginning-line= with whatever the mode defines
+=move-beginning-line= to be.
+
+For example set:
+#+BEGIN_SRC emacs-lisp
+(setq org-special-ctrl-a/e t)
+#+END_SRC
+
+And then go to an =org-mode= headline:
+
+#+BEGIN_SRC org
+  ,* TODO Install ergoemacs-mode  |
+#+END_SRC
+
+By pressing the beginning of line command, you would go to:
+
+
+#+BEGIN_SRC org
+  ,* TODO |Install ergoemacs-mode  
+#+END_SRC
+
+As hoped/expected.
+
+*** End of line
+
+The end of line command for ergoemacs is just as smart as beginning
+of line.  For example if your cursor is =|=, and you are at:
+
+#+BEGIN_SRC emacs-lisp
+  (progn
+  |  (ergoemacs-mode 1)) ; This turns ergoemacs-mode on.
+#+END_SRC
+
+ may wish to go to the end of the code block:
+
+#+BEGIN_SRC emacs-lisp
+  (progn
+    (ergoemacs-mode 1))| ; This turns ergoemacs-mode on.
+#+END_SRC
+
+or the end of the line:
+
+#+BEGIN_SRC emacs-lisp
+  (progn
+    (ergoemacs-mode 1)) ; This turns ergoemacs-mode on.|
+#+END_SRC
+
+The after that you can:
+- Goto the next text-block (default, [[http://ergoemacs.org/emacs/emacs_key_combo.html][why?]])
+- Issue a PageDown command
+- Goto the end of the buffer.
+
+Currently this command is bound to 【Alt+Shift+h】
+
+You can ignore the comment feature by the following initialization code:
+
+You can change the command that is issued at the end of the
+line by using one of the following commands.
+
+#+BEGIN_SRC emacs-lisp
+  (setq ergoemacs-beginning-or-end-of-line-and-what 'block) ; End
+                                          ; of text block
+  (setq ergoemacs-beginning-or-end-of-line-and-what 'page) ; Page Down
+  (setq ergoemacs-beginning-or-end-of-line-and-what 'buffer) ; End
+                                          ; of Buffer
+#+END_SRC
+
+Note that this command also respects mode specific changes to
+end-of-line commands (like in =org-mode=).
+
+*** Beginning or end of buffer
+This smart will:
+ 1. Goto the beginning of the buffer
+ 2. If at the beginning of the buffer it will go to the end of the buffer.
+
+If you want to go to the beginning of the buffer only, you can turn it
+of by setting =ergoemacs-repeatable-beginning-or-end-of-buffer= to
+nil:
+
+#+BEGIN_SRC emacs-lisp
+  (setq ergoemacs-repeatable-beginning-or-end-of-buffer nil)
+#+END_SRC
+
+*** Paste
+Ergoemacs can allow a paste command to cycle through the previous
+items that were copied.  
+
+In this case Ctrl+v:
+- Pastes the first item
+- Upon repeating, Ctrl+v cycles through previous items pasted.
+
+Note that if you move/type then this pattern repeats itself, you will
+paste and then cycle through the items pasted.
+
+If you wish to paste an item twice, you can use Ctrl+Shift+v.
+
+When this is disabled, the Ctrl+v only pastes and
+Ctrl+Shift+v cycles through the previous items pasted.  This can be
+disabled by
+
+#+BEGIN_SRC emacs-lisp
+  (setq ergoemacs-smart-paste nil)
+#+END_SRC
+
+
+This is enabled by default because it reduces pinky usage.
+
+When installed, ergoemacs' smart paste can also use browse-kill-ring
+
+When calling Ctrl+Shift+v if the last command was not a paste, it
+starts browsing the kill ring.  The standard ergoemacs-mode keys
+apply.  Pressing Ctrl+v or Alt+v will cycle forward through the kill
+ring.  Pressing Ctrl+Shift+v or Ctrl+Alt+v will cycle backward
+through the kill ring.  To accept the text, press enter.
+
+If you want the second paste to call =browse-kill-ring=, you can
+enable this by:
+
+#+BEGIN_SRC emacs-lisp
+  (setq ergoemacs-smart-paste 'browse-kill-ring)
+#+END_SRC
+
+
+*** Smart punctuation
+*** Smart Capitalization
+This command is an extension of the [[http://ergoemacs.org/emacs/modernization_upcase-word.html][smart Letter-Case command]]. It
+also toggles camelCase words when it detects you are in a variable.
+When you are outside of a word, it corrects the last mis-spelled
+word. 
+
+The camel-case is determined by the major-mode's mode's settings in
+=ergoemacs-toggle-camel-case-chars=.  In emacs-lisp it is more common
+to separate variables with =-= rather than =_=.  The default setting
+for =emacs-lisp-mode= allows toggling between the various variables.
+For exampleVariable emacs-lisp toggles between the following:
+
+- exampleVariable
+- ExampleVariable
+- example-variable
+- example_variable
+
+In =R= it is likely that you separate variables by =.= or =_=  so
+exampleVariable would be toggled between
+
+- exampleVariable
+- ExampleVariable
+- example.variable
+- example_variable
+
+In some modes, like =org-mode= only the toggle letter case is
+active.  
+
+Any of these can be customized by customizing the variable
+=ergoemacs-toggle-camel-case-chars=. 
+
+
+
+
+#  LocalWords:  ido dired

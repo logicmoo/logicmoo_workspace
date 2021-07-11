@@ -1,9 +1,8 @@
 #!/bin/bash
-
+# if [ "${cmd}" == "emacs" ]; then sudo -u prologmud_server -- google-chrome "http://localhost:4125"
 if [ ! -f /.dockerenv ]; then
    docker exec -it logicmoo bin/$(basename "${BASH_SOURCE[0]}") $*
-   return 0 2>/dev/null
-   exit 0
+   return 0 2>/dev/null ; exit 0
 fi
 
 DIR0="$( cd "$( dirname "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )"
@@ -11,21 +10,23 @@ DIR0="$( cd "$( dirname "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )"
 set -o pipefail
 export SCREEN_CMD="sudo -u prologmud_server -- screen"
 
-source /opt/logicmoo_workspace/logicmoo_env.sh -q
-
-export cmd="${1}"
+cmd="${1}"
 shift 1
 
-export TAB=`printf '\033[25\`' `
-
-if [ "${cmd}" == "" ] || [ "${cmd}" == "--help" ]; then   
+if [ -z "${cmd}" ] || [[ "${cmd}" == "--help" ]]; then   
+   . /opt/logicmoo_workspace/logicmoo_env.sh -v
    #bash -c "cd $DIR0 ; ls --color"
+   export TAB=`printf '\033[25\`' `
    echo -e "\n lm <cmd> [<args>] # executes one of the following commands in the LOGICMOO docker.\n"
    bash -c "cd $DIR0 ; grep -H '\\#\\-\\-help' . -r | sed  -e 's|^./|   |1' -e 's/\\#\\-\\-help//1' -e 's/.sh:/$TAB/1' -e 's/[:]/$TAB/1' "
    echo -e "\n"
+   return 0 2>/dev/null ; exit 0
+fi
 
-# if [ "${cmd}" == "emacs" ]; then sudo -u prologmud_server -- google-chrome "http://localhost:4125"
-elif [ "${cmd}" == "attach" ]; then
+
+. /opt/logicmoo_workspace/logicmoo_env.sh -q
+
+if [ "${cmd}" == "attach" ]; then
 
 STUFF="^Mprolog.
 call((bfly_set(butterfly),bfly_set(command_args,\"${*}\"),bfly_set(ptty,\"${PTTY}:${TTY}:${PTY}:${PTS}\"))). bfly_start_link(\"${LOCATION}\").

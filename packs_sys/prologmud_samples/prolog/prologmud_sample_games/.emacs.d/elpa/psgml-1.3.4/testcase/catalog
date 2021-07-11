@@ -1,0 +1,8 @@
+-- Testing catalog parsing for SGML/XML --
+PUBLIC "-//lenst//DTD Testcase 03 dtd//EN" tc03.dtd
+-- tc23 --
+SYSTEM tc23c.ent tc23a.ent
+OVERRIDE YES
+PUBLIC "-//tc23//TEXT bar//EN" "tc23b.ent"
+OVERRIDE NO
+PUBLIC "-//tc23//TEXT foo//EN" "tc23b.ent"

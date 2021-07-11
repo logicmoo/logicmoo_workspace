@@ -1,0 +1,37 @@
+<!--
+[ #515351 ] fold element folds to much <foo />
+-->
+<foo>
+<xsd:element name="LowerDiameterLimit">
+<xsd:annotation>
+<xsd:documentation>aaa bbb ccc</xsd:documentation>
+</xsd:annotation>
+<xsd:simpleType>
+<xsd:list itemType="xsd:integer" />
+</xsd:simpleType>
+</xsd:element>
+<xsd:element name="LowerLengthLimit">
+
+
+<!-- 
+folding <xsd:simpleType>
+folds to
+
+<xsd:element name="LowerDiameterLimit">
+<xsd:annotation>
+<xsd:documentation>aaa bbb ccc</xsd:documentation>
+</xsd:annotation>
+<xsd:simpleType>...
+<xsd:element name="LowerLengthLimit">
+
+Using psgml-1.2.4 on windows 2000
+and Emacs 20.3.1 (i386-*-windows955.0)
+
+folding elements with separate endtags works corectly.
+
+
+ -->
+
+<!--
+Resolution: The reporter did not use xml-mode, but used sgml-mode.
+-->

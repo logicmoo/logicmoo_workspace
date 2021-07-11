@@ -1,0 +1,104 @@
+#+TITLE: Emacs Webfeeder
+
+Webfeeder is an Emacs library to generate [[https://en.wikipedia.org/wiki/RSS][RSS]] and [[https://en.wikipedia.org/wiki/Atom_(Web_standard)][Atom]] feeds from HTML files.
+
+Other webfeed generators have been written for Emacs, but either they are tied
+to other projects like blog generators, or they only work on Org files like
+=ox-rss=.  Since Webfeeder generates webfeeds from HTML files, it is more
+general.
+
+The various elements of the HTML input are parsed with customizable functions.
+For instance, Webfeeder offers two functions to parse the title:
+~webfeeder-title-libxml~ (using libxml if your Emacs is linked against it)
+and the less reliable ~webfeeder-title-default~.
+Feel free to write you own function and bind ~webfeeder-title-function~
+before generating the feeds.
+
+The generated feeds should be valid on https://validator.w3.org/feed/.  If not,
+it's a bug, please report.
+
+The full list of customizable functions is documented in
+~webfeeder-html-files-to-items~.
+
+* Installation
+
+Get the package, either from [[https://guix.info][Guix]] or ELPA:
+
+: M-x package-install RET webfeeder RET
+
+Or clone / download this repository and modify your ~load-path~.
+
+: (add-to-list 'load-path (expand-file-name "/path/to/this-package/" user-emacs-directory))
+
+Load the package with
+
+: (require 'webfeeder)
+
+It's recommended to have an Emacs built against libxml, although basic support
+without libxml is also provided.
+
+* Usage
+
+- Build an Atom feed:
+
+#+begin_src elisp
+(webfeeder-build
+ "atom.xml"
+ "./public"
+ "https://example.org/"
+ '("post1.html" "post2.html" "post3.html")
+ :title "My homepage"
+ :description "A collection of articles in Atom")
+#+end_src
+
+- To build an RSS feed, use the RSS builder:
+
+#+begin_src elisp
+(webfeeder-build
+ "rss.xml"
+ "./public"
+ "https://example.org/"
+ '("post1.html" "post2.html" "post3.html")
+ :title "My homepage"
+ :description "A collection of articles in RSS"
+ :builder 'webfeeder-make-rss)
+#+end_src
+
+- Use a custom title query function:
+
+#+begin_src elisp
+(defun my-title-query (html-file)
+  "Return the title from the \"title\" class in the HTML file."
+  (with-temp-buffer
+    (insert-file-contents html-file)
+    (let* ((dom (libxml-parse-html-region (point-min) (point-max)))
+           (title (dom-text (car (dom-by-class dom "title")))))
+      (if (string= "" title)
+          nil
+        title))))
+
+(let ((webfeeder-title-function 'my-title-query))
+  (webfeeder-build
+   ; ...))
+#+end_src
+
+- Limit the feed to 20 articles:
+
+#+begin_src elisp
+(webfeeder-build
+ ; ...
+ :max-entries 20)
+#+end_src
+
+- Filter some entries with a predicate
+
+#+begin_src elisp
+(defun item-author-is-Alice-p (item)
+  (string= (webfeeder-item-author item) "Alice")
+
+(webfeeder-build
+ ; ...
+ :predicate 'item-author-is-Alice-p)
+#+end_src
+
+See the documentation of ~webfeeder-build~ for more options.

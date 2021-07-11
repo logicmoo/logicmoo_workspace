@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding='UTF-8' ?>
+<!DOCTYPE VTD PUBLIC "-//ATT/DTD VTD 1.1/EN" "tc09.dtd">
+
+<VTD>
+
+  <REGEXPR NAME="Separator" EXPR="[ ,]*" />	
+  <REGEXPR NAME="EventName" EXPR="[a-zA-Z]*" />	
+  <REGEXPR NAME="EventList" EXPR="EventName (Separator EventName)*" />

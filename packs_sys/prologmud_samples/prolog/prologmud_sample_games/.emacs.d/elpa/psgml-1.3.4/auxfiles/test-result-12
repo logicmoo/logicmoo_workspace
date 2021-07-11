@@ -1,0 +1,514 @@
+*** File test001 ***
+(error Illegal markup declaration BAD; at:  markup decl)
+Undefined entity entity
+/u2/src/sgmls-1.1/test/test001.sgm line 16 col 32 
+Illegal markup declaration BAD; at:  markup decl
+
+
+*** File test002 ***
+(error Delimiter LITA (') expected; at: )
+/u2/src/sgmls-1.1/test/test002.sgm line 21 col 31 
+Undefined parameter entity dummy
+- line 1 col 25 entity e8
+/u2/src/sgmls-1.1/test/test002.sgm line 29 col 20 
+Delimiter LITA (') expected; at: 
+
+
+*** File test003 ***
+MIN1 is not in any name group for element TAG4
+DCN2 is not in any name group for element TAG7
+MIN1 is not in any name group for element TAG8
+MIN2 is not in any name group for element TAG8
+
+
+*** File test004 ***
+(error Name expected; at: <![RCDATA[
+m)
+/u2/src/sgmls-1.1/test/test004.sgm line 13 col 0 
+Name expected; at: <![RCDATA[
+m
+
+
+*** File test005 ***
+Start-tag of undefined element FRONT; assume O O ANY
+Start-tag of undefined element T2; assume O O ANY
+Start-tag of undefined element T3; assume O O ANY
+BODY element can't end here, need one of (T4); BODY end-tag out of context
+Start-tag of undefined element REAR; assume O O ANY
+Out of context GDOC start-tag
+Start-tag of undefined element FRONT; assume O O ANY
+Start-tag of undefined element APPENDIX; assume O O ANY
+Out of context GDOC start-tag
+Out of context REAR start-tag
+Start-tag of undefined element REAR; assume O O ANY
+GDOC element can't end here, need one of (BODY APPENDIX); GDOC end-tag out of context
+Out of context GDOC start-tag
+Start-tag of undefined element T4; assume O O ANY
+Start-tag of undefined element REAR; assume O O ANY
+Start-tag of undefined element REAR; assume O O ANY
+
+
+*** File test006 ***
+(error Delimiter MDC (>) expected; at: 99 ptag -- b)
+/u2/src/sgmls-1.1/test/test006.sgm line 11 col 46 
+Delimiter MDC (>) expected; at: 99 ptag -- b
+
+
+*** File test007 ***
+GDOC start-tag implied by BODY start-tag; not minimizable
+H1 start-tag implied by data character; not minimizable
+H1 end-tag implied by Null end-tag; not minimizable
+Out of context data character
+GDOC element can't end here, need one of (T1); GDOC end-tag out of context
+Out of context GDOC start-tag
+BODY start-tag implied by H1 start-tag; not minimizable
+Out of context data character
+BODY end-tag implied by buffer end; not minimizable
+GDOC end-tag implied by buffer end; not minimizable
+
+
+*** File test008 ***
+Start-tag of undefined element X; assume O O ANY
+Out of context B start-tag
+Start-tag of undefined element X; assume O O ANY
+
+
+*** File test009 ***
+
+
+*** File test010 ***
+(error Name expected; at: <?BE3>)
+- line 0 col 0 entity be3
+/u2/src/sgmls-1.1/test/test010.sgm line 7 col 21 
+Name expected; at: <?BE3>
+
+
+*** File test011 ***
+End-tag QT does not end any open element; ignored
+End-tag X does not end any open element; ignored
+
+
+*** File test012 ***
+
+
+*** File test013 ***
+
+
+*** File test014 ***
+
+
+*** File test015 ***
+
+
+*** File test016 ***
+
+
+*** File test017 ***
+
+
+*** File test018 ***
+
+
+*** File test019 ***
+
+
+*** File test020 ***
+(error Delimiter DSC (]) expected; at: )
+/u2/src/sgmls-1.1/test/test020.sgm line 3 col 0 
+Delimiter DSC (]) expected; at: 
+
+
+*** File test021 ***
+(error Name expected; at: )
+/u2/src/sgmls-1.1/test/test021.sgm line 2 col 0 
+Name expected; at: 
+
+
+*** File test022 ***
+(error Illegal character ']' in doctype declaration; at: ]>)
+- line 0 col 0 entity confuse
+/u2/src/sgmls-1.1/test/test022.sgm line 4 col 9 
+Illegal character ']' in doctype declaration; at: ]>
+
+
+*** File test023 ***
+(error Delimiter MDC (>) expected; at: 123>
+<!usema)
+/u2/src/sgmls-1.1/test/test023.sgm line 8 col 13 
+Delimiter MDC (>) expected; at: 123>
+<!usema
+
+
+*** File test024 ***
+Start-tag of undefined element BAD; assume O O ANY
+
+
+*** File test025 ***
+
+
+*** File test026 ***
+
+
+*** File test027 ***
+(error Unknown reserved name: CDATA)
+/u2/src/sgmls-1.1/test/test027.sgm line 3 col 35 
+Unknown reserved name: CDATA
+
+
+*** File test028 ***
+(error Delimiter DSC (]) expected; at: >
+<!element )
+/u2/src/sgmls-1.1/test/test028.sgm line 5 col 52 
+Delimiter DSC (]) expected; at: >
+<!element 
+
+
+*** File test029 ***
+
+
+*** File test030 ***
+
+
+*** File test031 ***
+(error Delimiter DSC (]) expected; at: )
+/u2/src/sgmls-1.1/test/test031.sgm line 4 col 0 
+Delimiter DSC (]) expected; at: 
+
+
+*** File test032 ***
+
+
+*** File test033 ***
+
+
+*** File test034 ***
+(error No document type defined by prolog)
+
+
+*** File test035 ***
+(error No document type defined by prolog)
+
+
+*** File test036 ***
+
+
+*** File test037 ***
+Undefined entity num
+
+
+*** File test038 ***
+
+
+*** File test039 ***
+
+
+*** File test040 ***
+
+
+*** File test041 ***
+
+
+*** File test042 ***
+
+
+*** File test043 ***
+
+
+*** File test044 ***
+
+
+*** File test045 ***
+
+
+*** File test046 ***
+
+
+*** File test047 ***
+
+
+*** File test048 ***
+
+
+*** File test049 ***
+
+
+*** File test050 ***
+DOC element can't end here, need one of (B); DOC end-tag out of context
+
+
+*** File test051 ***
+
+
+*** File test052 ***
+A start-tag implied by data character; not minimizable
+Out of context A start-tag
+
+
+*** File test053 ***
+
+
+*** File test054 ***
+DOC element can't end here, need one of (B); DOC end-tag out of context
+
+
+*** File test055 ***
+
+
+*** File test056 ***
+
+
+*** File test057 ***
+
+
+*** File test058 ***
+
+
+*** File test059 ***
+
+
+*** File test060 ***
+
+
+*** File test061 ***
+
+
+*** File test062 ***
+
+
+*** File test063 ***
+
+
+*** File test064 ***
+
+
+*** File test065 ***
+(error Name expected; at: ) - - any>
+])
+/u2/src/sgmls-1.1/test/test065.sgm line 2 col 13 
+Undefined parameter entity e
+/u2/src/sgmls-1.1/test/test065.sgm line 2 col 13 
+Name expected; at: ) - - any>
+]
+
+
+*** File test066 ***
+
+
+*** File test067 ***
+
+
+*** File test068 ***
+
+
+*** File test069 ***
+
+
+*** File test070 ***
+
+
+*** File test071 ***
+
+
+*** File test072 ***
+
+
+*** File test073 ***
+
+
+*** File test074 ***
+(error Marked section unterminated)
+- line 1 col 12 entity e
+/u2/src/sgmls-1.1/test/test074.sgm line 4 col 3 
+Marked section unterminated
+
+
+*** File test075 ***
+
+
+*** File test076 ***
+
+
+*** File test077 ***
+
+
+*** File test078 ***
+
+
+*** File test079 ***
+
+
+*** File test080 ***
+
+
+*** File test081 ***
+
+
+*** File test082 ***
+
+
+*** File test083 ***
+
+
+*** File test084 ***
+
+
+*** File test085 ***
+
+
+*** File test086 ***
+DOC start-tag implied by data character; not minimizable
+
+
+*** File test087 ***
+
+
+*** File test088 ***
+
+
+*** File test089 ***
+
+
+*** File test090 ***
+
+
+*** File test091 ***
+
+
+*** File test092 ***
+
+
+*** File test093 ***
+/u2/src/sgmls-1.1/test/test093.sgm line 4 col 15 
+Undefined parameter entity x
+
+
+*** File test094 ***
+
+
+*** File test095 ***
+
+
+*** File test096 ***
+
+
+*** File test097 ***
+
+
+*** File test098 ***
+
+
+*** File test099 ***
+
+
+*** File test100 ***
+
+
+*** File test101 ***
+
+
+*** File test102 ***
+
+
+*** File test103 ***
+
+
+*** File test104 ***
+
+
+*** File test105 ***
+
+
+*** File test106 ***
+
+
+*** File test107 ***
+
+
+*** File test108 ***
+
+
+*** File test109 ***
+
+
+*** File test110 ***
+
+
+*** File test111 ***
+
+
+*** File test112 ***
+
+
+*** File test113 ***
+
+
+*** File test114 ***
+
+
+*** File test115 ***
+External entity a not found
+  System identifier 
+
+
+*** File test116 ***
+Illegal short reference delimiter 'ZZ'
+
+
+*** File test117 ***
+
+
+*** File test118 ***
+
+
+*** File test119 ***
+
+
+*** File test120 ***
+
+
+*** File test121 ***
+
+
+*** File test122 ***
+
+
+*** File test123 ***
+
+
+*** File test124 ***
+
+
+*** File test125 ***
+
+
+*** File test126 ***
+
+
+*** File test127 ***
+
+
+*** File test128 ***
+
+
+*** File test129 ***
+
+
+*** File test130 ***
+
+
+*** File test131 ***
+
+
+*** File test132 ***
+
+
+*** File test133 ***
+
+
+*** File test134 ***
+
+
+*** File test135 ***
+
+
+*** File test136 ***

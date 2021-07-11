@@ -1,0 +1,11 @@
+<?xml version='1.0' encoding='ISO-8859-1' ?><!--*- coding: iso-2022-int-1; -*-->
+<!DOCTYPE foo
+[
+<!ELEMENT foo (-L@caaZXY*)>
+<!ELEMENT @caaZXY (#PCDATA)>
+]>
+
+<foo>
+  <@caaZXY>Hej</@caaZXY>
+  <@caaZXY>Njet</@caaZXY>
+</foo>

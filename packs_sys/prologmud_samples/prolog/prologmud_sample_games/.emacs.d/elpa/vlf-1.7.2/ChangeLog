@@ -1,0 +1,605 @@
+2020-08-19  Lars Ingebrigtsen  <larsi@gnus.org>
+
+	Bump vlf version after previous fix
+
+2020-08-19  Phil Sainty	 <psainty@orcon.net.nz>
+
+	Make vlf handle nil large-file-warning-threshold value
+
+	* packages/vlf/vlf-tune.el (vlf-tune-max): Handle a nil value of
+	'large-file-warning-threshold' (bug#42930).
+
+2018-03-16  Stefan Monnier  <monnier@iro.umontreal.ca>
+
+	* vlf.el: Use GPL version 3
+
+2017-12-30  Andrey Kotlarski  <m00naticus@gmail.com>
+
+	packages/vlf: Update copyright dates and bump version.
+
+2017-12-30  Andrey Kotlarski  <m00naticus@gmail.com>
+
+	packages/vlf: Explicitly set coding-system-for-read to the current 
+	coding when not inserting from the beginning.
+
+2017-12-30  Andrey Kotlarski  <m00naticus@gmail.com>
+
+	packages/vlf: Fix issue where tramp-verbose is bound to nil.
+
+2017-12-30  Dan Harms  <dan.harms@xrtrading.com>
+
+	packages/vlf: [tyny change] Make vlf-batch-size configurable in the 
+	remote case, make mode-line batch indicators more accurate.
+
+2017-12-30  Nil Geisweiller  <ngeiswei@gmail.com>
+
+	packages/vlf: [tyny fix] Fix cursor position after search
+
+	After searching forward (resp. backward) the cursor should be at the end
+	(resp. the beginning) of the match. That way one can jump to the next
+	match by running again the command.
+
+2015-01-01  Andrey Kotlarski  <m00naticus@gmail.com>
+
+		* packages/vlf: Version 1.7
+
+		* vlf.el (hexl-bits): Declare.
+	(vlf-query-replace): New autoload.
+	(vlf-mode-map): Add key for `vlf-query-replace`.
+	(vlf-mode): Show VLF info in mode-line instead in buffer name.
+	Fix hexl-mode switch within read-only buffer.
+	(vlf-next-batch, vlf-prev-batch, vlf-set-batch-size)
+	(vlf-beginning-of-file, vlf-end-of-file, vlf-jump-to-chunk):
+	Adjust hexl-mode tune.
+	(vlf-hexl-mode-exit): New advice.
+	(vlf-move-to-batch): Don't pass `minimal` flag.
+
+		* vlf-write.el (vlf-save-in-place): New user option.
+	(vlf-write): Improve speed of remote file save.
+	(vlf-file-shift-back, vlf-shift-batch, vlf-file-shift-forward)
+	(vlf-shift-batches): Add optional file parameter.
+
+		* vlf-tune.el (vlf-tune-max): Fix default value in case RAM is
+	improperly calculated.
+	(vlf-tune-step): Refine.
+	(vlf-tune-write-bps, vlf-tune-hexl-bps, vlf-tune-dehexlify-bps):
+	Use global variables.
+	(vlf-start-pos, hexl-bits, hexl-max-address, hexl-line-displen)
+	(dehexlify-buffer): Declare.
+	(vlf-tune-copy-profile, vlf-hexl-adjust-addresses): New
+	functions.
+	(vlf-tune-initialize-measurement): Use global vlf-tune-max and
+	vlf-tune-step values.
+	(vlf-tune-insert-file-contents-literally, vlf-tune-write): Add
+	optional file parameter.
+	(vlf-tune-hexlify): Set hexl-max-address.  Adjust line addresses
+	according to global position in file.
+	(vlf-tune-dehexlify): Use `dehexlify-buffer`.
+	(vlf-tune-get-value, vlf-tune-score): Fix fallback constants.
+	(vlf-tune-linear): Search only known measures.
+	(vlf-tune-batch): Add optional file parameter.	Tune
+	conservatively for remote files.
+	(vlf-tune-optimal-load): Fix possibly incorrect value for minimum
+	boundary.
+
+		* vlf-setup.el: Rename vlf-integrate.el.
+
+		* vlf-search.el (hexl-bits): Declare.
+	(vlf-re-search): Add optional `highlight` parameter.  Improve
+	precision where next chunk should start.
+	(vlf-goto-match): Simplify.
+	(vlf-re-search-forward, vlf-re-search-backward): Adjust
+	`vlf-re-search` calls.	Restore batch size on interrupt.
+	(vlf-goto-line): Disable using literary insert because doesn't
+	work for all encodings.
+	(vlf-goto-line-hexl): New specialization.
+	(vlf-query-replace): New command.
+
+		* vlf-occur.el (hexl-bits): Declare.
+	(vlf-occur-visit): Enable multi-line matches.  Copy profiling info
+	when opening new buffer.
+	(vlf-occur-other-buffer): Use `vlf-tune-copy-profile` to move vlf
+	profiling info around.
+	(vlf-occur): Use another buffer when undo information is present.
+	(vlf-build-occur): Enable multi-line matches.  Count lines
+	separately.  Be more precise on boundary line matches.	Fix
+	last batch overlap.
+	(vlf-occur-save, vlf-occur-load): Support multi-line matches.
+
+		* vlf-ediff.el (tramp-verbose): Declare.
+	(vlf-next-chunk, vlf-prev-chunk): Don't pass minimal flag on
+	insert.
+	(vlf-ediff-next): Lower tramp verbosity.  Don't update buffer name.
+
+		* vlf-base.el
+	(vlf-before-chunk-update, vlf-after-chunk-update): Rename.
+	(hexl-bits): Declare.
+	(vlf-verify-size): Add optional file parameter.
+	(vlf-update-buffer-name): Remove.
+	(vlf-move-to-chunk): Remove `minimal` parameter.  Force modulo of
+	hexl-bits chunk boundaries when hexl-mode is active.
+	(vlf-move-to-chunk-1): Use `vlf-move-to-chunk-2` in more cases.
+	(vlf-move-to-chunk-2): Skip boundary adjustments when possible.
+	Use literary insert when hexl-mode is active.
+	(vlf-insert-file-contents): Minor adjustment.
+	(vlf-adjust-start): Don't profile micro inserts.
+	(vlf-byte-position): New function.
+
+2014-10-15  Stefan Monnier  <monnier@iro.umontreal.ca>
+
+	* packages/vlf/vlf-occur.el, vlf-search.el, vlf-write.el
+	(tramp-verbose): Declare.
+
+2014-09-20  Andrey Kotlarski  <m00naticus@gmail.com>
+
+	[vlf] bump version
+
+2014-09-20  Andrey Kotlarski  <m00naticus@gmail.com>
+
+		* packages/vlf: Version 1.6.  Automatically tune batch size to
+	improve user experience and performance for batch operations.
+
+		* vlf-tune.el: New profile and tune module.
+
+		* vlf.el (vlf-next-batch, vlf-prev-batch, vlf-set-batch-size)
+	(vlf-beginning-of-file, vlf-end-of-file, vlf-jump-to-chunk): Auto
+	tune batch size.
+
+		* vlf-write.el (vlf-write): Profile, tune batch size and time
+	save when adjusting file content.
+	(vlf-file-shift-back, vlf-shift-batch, vlf-file-shift-forward)
+	(vlf-shift-batches): Profile and tune batch size.
+
+		* vlf-search.el (vlf-re-search): Auto tune batch size and
+	use outside progress reporter if provided.
+	(vlf-goto-match): Time search.
+	(vlf-re-search-forward, vlf-re-search-backward): Minimize search
+	overlap and restore batch size if search failed.
+	(vlf-goto-line): Profile operations, tune batch size and time
+	whole search.
+
+		* vlf-occur.el (vlf-occur-visit): Profile hexl operations.
+	(vlf-occur-other-buffer): New function.
+	(vlf-occur): Auto tune batch size.
+	(vlf-build-occur): Auto tune batch size and time whole occur.
+
+		* vlf-base.el (vlf-move-to-chunk-1, vlf-move-to-chunk-2)
+	(vlf-insert-file-contents-1, vlf-delete-region): Profile primitive
+	operations.
+	(vlf-shift-undo-list): Ignore null undo list.
+
+2014-09-20  Andrey Kotlarski  <m00naticus@gmail.com>
+
+		* packages/vlf: Perform search, occur and ediff operations over
+	hexl content instead over raw data when hexl-mode is active.
+	Allow vlf-occur results be saved to file and later reused.
+
+		* vlf.el (vlf): Use minimal batch size on remote files or if
+	manually specified.
+	Remove hooks used to disable/enable hexl-mode.
+
+		* vlf-integrate.el (abort-if-file-too-large): Don't use vlf-mode
+	if file size is less than default batch size.
+
+		* vlf-base.el (vlf-batch-size): Increase default batch size.
+	(vlf-move-to-chunk-1, vlf-move-to-chunk-2): Restore hexl-mode if
+	has been active on start.
+
+		* vlf-write.el (vlf-write): Restore hexl-mode if active on start
+	and don't ask spurious questions.
+
+		* vlf-search.el (vlf-re-search): Search over hexl content in
+	case
+	hexl-mode is active on start.
+	(vlf-goto-line): Don't optimize search in case hexl-mode is
+	active.
+
+		* vlf-ediff.el (vlf-ediff-files): Use minimal batch size before
+	applying specified.
+	(vlf-ediff-next): Ediff over hexl-mode content when active instead
+	over raw data.
+
+		* vlf-occur.el (vlf-occur-vlf-file, vlf-occur-vlf-buffer)
+	(vlf-occur-regexp, vlf-occur-hexl, vlf-occur-lines): New
+	variables.
+	(vlf-occur-mode-map): Add save binding.
+	(vlf-occur-mode): Hook custom save function.
+	(vlf-occur-next-match, vlf-occur-prev-match): Use
+	get-text-property instead of get-char-property.
+	(vlf-occur-visit): Activate hexl-mode if it has been used during
+	occur.
+	(vlf-occur, vlf-build-occur): Perform occur over hexl content if
+	hexl-mode is active on start.
+	(vlf-occur-save, vlf-occur-load): New commands.
+
+2014-02-23  Andrey Kotlarski  <m00naticus@gmail.com>
+
+	packages/vlf/vlf.el: use derived-mode-p to check major mode.
+
+2014-02-23  Andrey Kotlarski  <m00naticus@gmail.com>
+
+		* packages/vlf: Version 1.5.  Add hexl-mode integration and hook
+	extensibility.
+
+		* vlf.el: (vlf-before-batch-functions,
+	vlf-after-batch-functions):
+	New hooks.
+	(vlf-mode): Play well with hexl-mode.  Don't disable mode in case
+	user has declined to reload whole file.
+	(vlf-keep-alive, vlf-hexl-before, vlf-hexl-after): New functions.
+	Use them in hooks.
+	(vlf-hexl-save, vlf-hexl-scroll-up, vlf-hexl-scroll-down): New
+	advices.
+
+		* vlf-write.el (vlf-write): Run batch hooks.  Check if tramp is
+	loaded.
+
+		* vlf-search.el (vlf-re-search, vlf-goto-line): Run batch hooks.
+	Check if tramp is loaded.
+
+		* vlf-occur.el (vlf-occur): Run batch hooks.
+	(vlf-build-occur): Check if tramp is loaded.
+
+		* vlf-integrate.el: Minor whitespace adjustment.
+
+		* vlf-ediff.el: Enable lexical scoping.
+	(vlf-ediff-next): Run batch hooks.  Check if tramp is loaded.
+
+		* vlf-base.el (vlf-before-chunk-update, vlf-after-chunk-update):
+	New hooks.
+	(vlf-move-to-chunk-1, vlf-move-to-chunk-2): Run them.
+	(vlf-move-to-chunk-2): Delete undo info only in case it's not
+	disabled.
+	(vlf-insert-file-contents-1): Use insert-file-contents instead of
+	manual decoding and remove position parameter.
+	(vlf-insert-file-contents, vlf-adjust-start): Adjust calls.
+
+2014-02-01  Andrey Kotlarski  <m00naticus@gmail.com>
+
+		* packages/vlf: Version 1.4.  Add Ediff integration.
+
+		* vlf-ediff.el: New file.
+
+		* vlf.el: Fix autoload declarations.
+	(vlf-ediff-buffers): Add autoload declaration.
+	(vlf-mode-map): Add binding for `vlf-ediff-buffers'.
+	(vlf): Update docstring.
+	(vlf-set-batch-size): New command.
+	(vlf-change-batch-size): Use it.
+	(vlf-end-of-file): Update file size information.
+
+		* vlf-write.el (vlf-write): Temporarily lower tramp verbosity
+	and turn off font lock.
+
+		* vlf-search.el (vlf-re-search): Temporarily lower tramp
+	verbosity
+	and turn off font lock.
+
+		* vlf-occur.el (vlf-occur): Restore undo information.
+	(vlf-build-occur): Temporarily lower tramp verbosity.
+
+		* vlf-base.el (vlf-move-to-chunk): Handle cases where chunk
+	outside file size is requested.
+	(vlf-delete-region): New function.
+	(vlf-move-to-chunk-1): Use it.	Optimize jumps to next/previous
+	chunk.
+	(vlf-insert-file-contents-safe): Rename to `vlf-insert-file-contents-1'.
+	(vlf-adjust-start): Simplify.
+	(vlf-adjust-end): Remove.
+
+2014-02-01  Andrey Kotlarski  <m00naticus@gmail.com>
+
+		* packages/vlf: Version 1.3.
+
+		* vlf.el: Update comment section.  Decouple integration code
+	from
+	the rest.
+	(vlf-stop-follow): Add autoload definition.
+	(vlf-mode): Simplify code.
+	(vlf): Return newly created buffer.
+	(vlf-next-batch, vlf-prev-batch): Move functions before first
+	usage.
+	(vlf-beginning-of-file, vlf-end-of-file): Use
+	`vlf-move-to-batch'.
+	(vlf-revert): Remove needless modtime update.
+
+		* vlf-base.el (vlf-min-chunk-size): Rename to `vlf-sample-size'.
+	(vlf-move-to-chunk-1): Widen before measuring chunk length.
+	Detect change of file.	Remove ignoring of small chunk moves.
+	Update modification time.
+	(vlf-move-to-chunk-2): Update file size besides modtime.
+	(vlf-insert-file-contents, vlf-adjust-start, vlf-adjust-end): Add
+	buffer bytes to beginning/end of requested chunk when adjusting.
+	(vlf-insert-file-contents-safe): Insert content literally and then
+	decode.
+
+		* vlf-write.el (vlf-write): Widen before writing.  No need to
+	verify size.
+	(vlf-file-shift-back, vlf-shift-batch, vlf-shift-batches): Update
+	modtime.
+
+		* vlf-integrate.el (vlf-disable-for-function): New macro.  Use
+	it
+	to disable VLF activation for some TAGS functions.
+
+		* vlf-follow.el (vlf-follow-timer): Declare buffer local.
+	(vlf-stop-follow): Check if `vlf-follow-timer' is set.
+
+2014-02-01  Andrey Kotlarski  <m00naticus@gmail.com>
+
+		* packages/vlf: Break into components.
+
+		* packages/vlf/vlf.el: Update copyright dates.
+	(vlf-write, vlf-re-search-forward, vlf-re-search-backward)
+	(vlf-goto-line, vlf-occur, vlf-toggle-follow): Add autoload
+	declarations.
+	(vlf-mode-map): Add binding for `vlf-toggle-follow'.
+
+		* packages/vlf/vlf-write.el: New file.
+	* packages/vlf/vlf-search.el: New file.
+	* packages/vlf/vlf-occur.el: New file.
+	* packages/vlf/vlf-integrate.el: New file.
+	* packages/vlf/vlf-follow.el: New file.
+	* packages/vlf/vlf-base.el: New file.
+
+2014-02-01  Andrey Kotlarski  <m00naticus@gmail.com>
+
+		* packages/vlf/vlf.el: Add recenter around chunk functionality.
+
+		(vlf-follow-timer): New variable.
+	(vlf-partial-decode-shown, vlf-min-chunk-size): New constants.
+	(vlf-with-undo-disabled): Restore previous undo list.
+	(vlf-shift-undo-list): New function.
+	(vlf-mode): Stop follow timer if active.
+	("etags"): Don't apply automatically VLF over TAGS files.
+	(vlf-move-to-chunk, vlf-move-to-chunk-1, vlf-move-to-chunk-2):
+	Return number of bytes added to beginning and end for proper
+	decoding.
+	(vlf-move-to-chunk-1): Adjust undo list when chunk start has
+	changed.  Ignore moving by just a few bytes.
+	(vlf-adjust-start, vlf-adjust-end, vlf-insert-content-safe): New
+	functions.
+	(vlf-adjust-chunk): Use them.  Rename to `vlf-insert-file-contents'.
+	(vlf-recenter): New function.
+	(vlf-stop-following, vlf-start-following): New commands.
+
+2013-12-17  Andrey Kotlarski  <m00naticus@gmail.com>
+
+	Add comments for autoloaded elements.
+
+2013-12-14  Andrey Kotlarski  <m00naticus@gmail.com>
+
+		* packages/vlf/vlf.el: Version: 1.2
+	Add ability to customize when VLF is offered and activated.
+	(vlf-application, vlf-forbidden-modes-list): New customizations.
+	(vlf-mode-map): Change bindings.
+	(vlf-prefix-map): New map.
+	(vlf-with-undo-disabled): Move it before its first use to fix
+	package installation.
+	(vlf-mode): Initialize vlf-start-pos and vlf-end-pos.
+	(vlf-determine-major-mode): New function.
+	(abort-if-file-too-large): Add support for VLF application
+	customization and fix it for GNU Emacs 23.
+	(vlf-get-file-size): Return 0 in case file size is missing.
+	(vlf-verify-size): Fix file size determination for symlinks by
+	using buffer-file-truename.
+	(vlf-revert): Turn into command.  Stop spurious questions.
+	(vlf-next-batch-from-point): Fix in case end of file is near.
+	(vlf-move-to-chunk-1): Fix behaviour for unsaved new files and
+	point jumps.
+	(vlf-refresh): Remove.
+	(vlf-write): Fix behaviour for first save of new file.
+
+2013-12-14  Andrey Kotlarski  <m00naticus@gmail.com>
+
+		* packages/vlf/vlf.el: Version 1.1
+	Stabilize decoding and saving.	Optimize moving between
+	overlapping chunks.
+	(vlf-mode): Forbid automatic final new line.  Improve reloading of
+	all content.
+	(vlf-move-to-chunk): Always use vlf-move-to-chunk-1.
+	(vlf-move-to-chunk-1): Use vlf-with-undo-disabled.  Fix length
+	calculation when deleting from buffer.
+	(vlf-partial-decode-shown-p): New function.
+	(vlf-adjust-chunk): Use it.  Fix end adjustment for earlier GNU
+	Emacs releases.
+	(vlf-refresh): Use vlf-move-to-chunk-2.
+
+2013-12-14  Andrey Kotlarski  <m00naticus@gmail.com>
+
+		* packages/vlf/vlf.el: Version 1.0
+	Turn VLF into minor mode and abstract chunk insertion.
+	(vlf-encode-size, vlf-format-buffer-name, vlf-edit-mode-map)
+	(vlf-edit-mode): Remove.
+	(vlf-mode-map): Turn into prefix map, add new bindings.
+	(vlf-mode): Turn into minor mode.
+	(vlf): Call vlf-mode.
+	(scroll-up): Scroll when point-max is visible.
+	(scroll-down): Scroll when point-min is visible.
+	(vlf-update-buffer-name): Hide total file size.
+	(vlf-insert-file): Refactor.
+	(vlf-revert): Use vlf-move-to-chunk-2.
+	(vlf-with-undo-disabled): New macro.
+	(vlf-file-shift-back, vlf-file-shift-forward): Use it.
+	(vlf-no-modifications): New function.
+	(vlf-re-search-forward, vlf-re-search-backward, vlf-goto-line):
+	Use it.
+	(vlf-next-batch, vlf-prev-batch, vlf-move-to-batch): Simplify with
+	vlf-move-to-chunk.
+	(vlf-next-batch-from-point, vlf-occur-visit-new-buffer): New
+	commands.
+	(vlf-move-to-chunk-1, vlf-move-to-chunk-2): New functions.
+	(vlf-move-to-chunk): Use them.
+	(vlf-adjust-chunk): Specify region and adjust end too.
+	(vlf-re-search): Ignore case and remove assert.
+	(vlf-goto-match): Guarantee highlight removal.
+	(vlf-occur-visit): Reuse existing VLF buffer if possible and add
+	ability to explicitly open in new VLF buffer.
+	(vlf-occur): Use temporary VLF buffer to index if current is
+	modified.
+	(vlf-build-occur): Ignore case and get buffer to be indexed as
+	argument.
+	(vlf-discard-edit): Rename to vlf-refresh.
+	(vlf-write): Use vlf-end-pos and vlf-start-pos to calculate size
+	change.
+
+2013-08-15  Andrey Kotlarski  <m00naticus@gmail.com>
+
+		* packages/vlf/vlf.el: Fix URL.
+
+2013-08-14  Andrey Kotlarski  <m00naticus@gmail.com>
+
+		* packages/vlf/vlf.el:: Version 0.9.1.
+	Add development repository URL.
+	(vlf-encode-size): New variable.
+	(vlf-adjust-chunk): Allow fluctuation when searching for proper
+	decoding.  Save encoded size to `vlf-encode-size'.
+	(vlf-write): Use `vlf-encode-size' for expected encoding size.
+	(vlf-batch-size, vlf-start-pos, vlf-end-pos, vlf-file-size)
+	(vlf-encode-size): Move permanent declarations to top level.
+	(vlf-mode): Fix locality of `write-file-functions' hook.
+	(vlf): Use `set-visited-file-name'.
+	(abort-if-file-too-large): Make `vlf-if-file-too-large' around
+	advice.
+	(scroll-up, scroll-down): Use `derived-mode-p'.
+	(vlf-change-batch-size): Remove superfluous check.
+	(vlf-verify-size): New function.
+	(vlf-next-batch, vlf-move-to-batch, vlf-move-to-chunk)
+	(vlf-file-shift-back, vlf-shift-batch, vlf-shift-batches): Use
+	it.
+	(vlf-revert): Fix boolean condition and ignored variable naming.
+	(vlf-prev-batch): Style fix.
+
+2013-07-22  Stefan Monnier  <monnier@iro.umontreal.ca>
+
+	* packages/vlf/vlf.el: Set "Maintainer:".
+
+2013-07-22  Andrey Kotlarski  <m00naticus@gmail.com>
+
+	* packages/vlf/vlf.el: Version 0.9.
+	(vlf-end-pos): Default to 0.
+	(vlf): Set the major mode earlier.
+	(vlf-get-file-size): Make it into a function.
+	(vlf-re-search): Add `batch-step' argument.
+	(vlf-re-search-forward, vlf-re-search-backward): Use it.
+	(vlf-goto-line): Make it handle a negative arg.
+	(vlf-occur-show): New command.
+	(vlf-occur-mode-map): Bind it to `o'.
+	(vlf-occur-visit): Don't switch-to-buffer.
+	(vlf-occur): Protect against non-local exits.
+	(vlf-build-occur): Fix details.
+	(vlf-edit-mode-map): Bind standard map to C-v.
+	(vlf-discard-edit): Mark buffer as unmodified.
+
+2013-07-22  Andrey Kotlarski  <m00naticus@gmail.com>
+
+	* packages/vlf/vlf.el: Version 0.8, Add occur-like functionality.
+	(vlf-occur-mode-map): New var.
+	(vlf-occur-mode): New major mode.
+	(vlf-occur-next-match, vlf-occur-prev-match, vlf-occur-visit,
+	vlf-occur): New commands.
+	(vlf-build-occur): New function.
+	(vlf-mode-map): Add `o' binding for vlf-occur.
+
+2013-07-22  Andrey Kotlarski  <m00naticus@gmail.com>
+
+	* packages/vlf/vlf.el: Version 0.7
+	(vlf-goto-line): New command.
+	(vlf-mode-map): Bind it to `l'.
+	(vlf-mode): Don't affect the global value of revert-buffer-function.
+	(vlf, dired-vlf): Remove `from-end' argument.
+	(scroll-up, scroll-down): Add advice to auto-jump to the next batch 
+	during scrolling.
+	(vlf-get-file-size): New macro.
+	(vlf-revert): Try and pay attention to the actual arguments.
+	(vlf-next-batch, vlf-prev-batch, vlf-move-to-batch, vlf-move-to-chunk)
+	(vlf-re-search, vlf-goto-match): Use position-bytes to try and match
+	bytes and chars.
+	(vlf-adjust-chunk): New function.
+	(vlf-file-shift-back): Disable undo.  Don't mess with 
+	buffer-file-coding-system, use coding-system-for-write instead.
+	(vlf-shift-batch): Check modtime.
+	(vlf-file-shift-forward): Simplify.
+	(vlf-shift-batches): Don't use an auxiliary buffer.
+
+2013-07-22  Andrey Kotlarski  <m00naticus@gmail.com>
+
+	* packages/vlf/vlf.el: Version 0.6
+	(vlf-mode): Setup revert and file write.
+	(vlf-format-buffer-name): Change format to indicate the chunk numbers.
+	(vlf-insert-file): Remove unused arg `file'.
+	(vlf-beginning-of-file, vlf-end-of-file, vlf-jump-to-chunk): New
+	commands.
+	(vlf-mode-map): Use them.  Add a `j' binding.
+	(vlf-revert): New function.
+	(vlf-next-batch, vlf-prev-batch, vlf-move-to-batch, vlf-move-to-chunk): 
+	Set modtime.  Better preserve point.
+	(vlf-file-shift-back, vlf-shift-batch, vlf-file-shift-forward)
+	(vlf-shift-batches): New functions.
+	(vlf-write): Use them when size of saved chunks has changed. Pay
+	attention to modtimes.
+
+2013-07-22  Andrey Kotlarski  <m00naticus@gmail.com>
+
+	* packages/vlf/vlf.el: Version 0.5 Add editing mode.  Search
+	refinements.
+	(vlf-mode-map): Change keys for batch size and EOF/BOF jumps.
+	(vlf-mode): Move buffer-disable-undo here.
+	(vlf-move-to-chunk): New function.
+	(vlf-change-batch-size): Use it to immediately update content.
+	(vlf-if-file-too-large): Adjust call (missed in last change).
+	(vlf-re-search, vlf-goto-match): New functions.
+	(vlf-re-search-forward, vlf-re-search-backward): Use them.
+	(vlf-end-search): Remove function.
+	(vlf-edit-mode-map): New var.
+	(vlf-edit-mode): New major mode.
+	(vlf-write, vlf-discard-edit): New commands.
+
+2013-07-22  Andrey Kotlarski  <m00naticus@gmail.com>
+
+	* packages/vlf/vlf.el: Version 0.4.
+	(vlf-mode-map): Add bindings to search and jump to BOF/EOF.
+	(vlf-format-buffer-name): Change position into a percentage.
+	(vlf-next-batch, vlf-prev-batch): Keep stable cursor position when
+	moving through chunks.
+	(vlf-move-to-chunk, vlf-insert-file): New functions.
+	(vlf): Use them.  Disable undo information.  Change arg order.
+	(dired-vlf): Adjust call.
+	(vlf-re-search-forward, vlf-re-search-backward, vlf-end-search): New
+	functions.
+
+2013-07-22  Andrey Kotlarski  <m00naticus@gmail.com>
+
+	* packages/vlf/vlf.el: Use lexical-binding.  Bump version to 0.3. Add
+	ability to view newly added content if the file has grown meanwhile. 
+	Provide a V binding in dired.
+	(vlf-mode-map): Change C-+ to M-+.  Add M-- binding.
+	(vlf-next-batch, vlf-prev-batch): Add ability to jump/insert given
+	number of batches at once.
+	(vlf): Add autoload cookie.  Add option to start viewing from the end of
+	file.
+	(dired-vlf): New function.
+	(vlf-if-file-too-large): New function.
+	(abort-if-file-too-large): Use it to provide vlf as an option when
+	opening large files.
+
+2012-11-29  Sam Steingold  <sds@gnu.org>
+
+	hook into dired
+
+2012-06-17  Chong Yidong  <cyd@gnu.org>
+
+	vlf.el: Improve commentary.
+
+2012-06-15  Sam Steingold  <sds@gnu.org>
+
+	fix vlf-change-batch-size binding
+
+2012-06-14  Sam Steingold  <sds@gnu.org>
+
+	complete rewrite by Sam Steingold
+
+2012-06-14  Sam Steingold  <sds@gnu.org>
+
+	View Large Files from Mathias Dahl
+

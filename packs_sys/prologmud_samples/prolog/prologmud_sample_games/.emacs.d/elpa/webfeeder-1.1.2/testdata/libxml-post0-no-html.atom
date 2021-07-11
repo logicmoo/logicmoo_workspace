@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom"><title>Example feed</title>
+<generator>Emacs webfeeder.el</generator>
+<link href="https://example.org/"/>
+<link href="https://example.org/libxml-post0-no-html.atom" rel="self"/>
+<id>https://example.org/libxml-post0-no-html.atom</id>
+<updated>1970-01-01T01:00:00+01:00</updated>
+<entry>
+  <title>First post</title>
+  <author><name>John Doe</name><email>john@doe.org</email></author>
+  <summary>First post&apos;s subtitle</summary>
+  <content type="html"><![CDATA[<div id="content">
+
+
+ <p>
+Aliquam erat volutpat.  Nunc eleifend leo vitae magna.  In id erat non orci
+commodo lobortis.  Proin neque massa, cursus ut, gravida ut, lobortis eget,
+lacus.  Sed diam.  Praesent fermentum tempor tellus.  Nullam tempus.  Mauris ac
+felis vel velit tristique imperdiet.  Donec at pede.  Etiam vel neque nec dui
+dignissim bibendum.  Vivamus id enim.  Phasellus neque orci, porta a, aliquet
+quis, semper a, massa.  Phasellus purus.  Pellentesque tristique imperdiet
+tortor.  Nam euismod tellus id erat.
+</p>
+
+ <div id="outline-container-org58597bd" class="outline-2">
+ <h2 id="org58597bd"> <span class="section-number-2">1</span> Contacts</h2>
+ <div class="outline-text-2" id="text-1">
+ <ul class="org-ul"> <li>Email:  <a href="mailto:mail@ambrevar.xyz">mail@ambrevar.xyz</a></li>
+</ul></div>
+</div>
+</div>]]></content>
+  <link href="https://example.org/post0.html"/>
+  <id>https://example.org/post0.html</id>
+  <updated>2019-01-27T01:00:00+01:00</updated>
+</entry>
+</feed>

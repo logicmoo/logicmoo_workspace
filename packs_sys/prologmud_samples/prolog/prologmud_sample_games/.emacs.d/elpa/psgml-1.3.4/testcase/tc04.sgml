@@ -1,0 +1,14 @@
+<!DOCTYPE foo
+[
+<!ELEMENT foo (ref)>
+
+<!element ref - o empty>
+<!attlist ref
+          id cdata #required
+          name cdata "&refname">
+
+]>
+
+<foo>
+  <ref id="h" name="here">
+</foo>

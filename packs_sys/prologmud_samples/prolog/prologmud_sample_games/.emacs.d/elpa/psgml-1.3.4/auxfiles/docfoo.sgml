@@ -1,0 +1,38 @@
+<!DOCTYPE Book PUBLIC "-//OASIS//DTD DocBook V4.1//EN"  []>
+<book>
+  <title>Fii</title>
+  <titleabbrev>Foo</titleabbrev>
+  <bookinfo>
+    <author remap="person" xreflabel="fibba" condition="on demand">
+      <honorific>Mr</honorific>
+      <firstname>Lennart</firstname>
+      <surname>Staflin</surname>
+      <affiliation>
+        <orgname>Unlimited</orgname>
+      </affiliation>
+    </author>
+  </bookinfo>
+  <chapter>
+    <title></title>
+    <para>My para är en stor å fin öra. </para>
+
+  </chapter>
+</book>
+
+<!-- Keep this comment at the end of the file
+Local variables:
+mode: sgml
+sgml-omittag:t
+sgml-shorttag:t
+sgml-namecase-general:t
+sgml-general-insert-case:lower
+sgml-minimize-attributes:nil
+sgml-always-quote-attributes:t
+sgml-indent-step:2
+sgml-indent-data:nil
+sgml-parent-document:nil
+sgml-exposed-tags:nil
+sgml-local-catalogs:("/home/lenst/sgml/dockbk41/docbook.cat")
+sgml-local-ecat-files:nil
+End:
+-->

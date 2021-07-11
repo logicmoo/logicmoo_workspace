@@ -1,0 +1,2847 @@
+2020-10-24  Thien-Thi Nguyen  <ttn@gnu.org>
+
+	[gnugo] Release: 3.1.1
+
+	* packages/gnugo/gnugo.el [Version]: Bump to "3.1.1".
+	(gnugo-version): Bump to "3.1.1".
+
+2020-10-24  Thien-Thi Nguyen  <ttn@gnu.org>
+
+	[gnugo maint] Update years in copyright notice; nfc.
+
+2020-10-24  Thien-Thi Nguyen  <ttn@gnu.org>
+
+	[gnugo] Move two funcs internal.
+
+	* packages/gnugo/gnugo.el (gnugo-put): Update docstring.
+	(gnugo--propertize-board-buffer): Rename from
+	‘gnugo-propertize-board-buffer’.
+	(gnugo--merge-showboard-results): Rename from
+	‘gnugo-merge-showboard-results’.
+
+2020-10-24  Thien-Thi Nguyen  <ttn@gnu.org>
+
+	[gnugo] Add some docstrings to some vars/funcs.
+
+	* packages/gnugo/gnugo.el (gnugo-option-history): Add docstring.
+	(gnugo-other, gnugo-lsquery, gnugo-yang, gnugo-yy): Likewise.
+
+2017-03-14  Thien-Thi Nguyen  <ttn@gnu.org>
+
+	[gnugo int] Gate ‘cursor-intangible-mode’ call precisely
+
+	* packages/gnugo/gnugo.el (gnugo-board-mode): ...here, via ‘fboundp’.
+
+2017-03-14  Thien-Thi Nguyen  <ttn@gnu.org>
+
+	[gnugo imgen] New fit func to ignore bottom grid line
+
+	* packages/gnugo/gnugo-imgen.el (gnugo-imgen--fit): New func.
+	(gnugo-imgen-fit-window-height): Use ‘gnugo-imge--fit’.
+	(gnugo-imgen-fit-window-height/no-grid-bottom): New func.
+
+2017-02-17  Thien-Thi Nguyen  <ttn@gnu.org>
+
+	[gnugo] Release: 3.1.0
+
+	* packages/gnugo/gnugo.el [Version]: Bump to "3.1.0".
+	(gnugo-version): Bump to "3.1.0".
+
+2017-02-16  Thien-Thi Nguyen  <ttn@gnu.org>
+
+	[gnugo] Document new ‘C-u F’ behavior.
+
+	This corrects an omission from 2017-02-14,
+	"Make ‘C-u F’ store additional SGF properties".
+
+	* packages/gnugo/gnugo.el (gnugo-display-final-score): Update docstring.
+
+2017-02-16  Thien-Thi Nguyen  <ttn@gnu.org>
+
+	[gnugo int] Comment munging; nfc.
+
+2017-02-14  Thien-Thi Nguyen  <ttn@gnu.org>
+
+	[gnugo] Make ‘C-u F’ store additional SGF properties.
+
+	* packages/gnugo/gnugo.el (gnugo-display-final-score): When invoked w/
+	prefix arg, store also in last node, the SGF properties ‘TB’, ‘TW’, ‘MA’
+	and ‘DD’ with respective values, each a list of points, for black
+	territory, white territory, seki stones, and dead stones.  However, if a
+	particular list is empty, delete that property from the node.
+
+2017-02-14  Thien-Thi Nguyen  <ttn@gnu.org>
+
+	[gnugo] Indicate seki groups on the board.
+
+	* packages/gnugo/gnugo.el (gnugo-refresh) [pall of death]: Extract
+	‘seki’ from game-over data; factor ‘dead’ handling into new local func
+	‘P’; use ‘P’ on ‘seki’, specifying ‘font-lock-type-face’ and a func that
+	selects the proper "point on stone" image, depending on whether or not
+	Gnugo Image Display mode is enabled.
+
+2017-02-14  Thien-Thi Nguyen  <ttn@gnu.org>
+
+	[gnugo] Include seki groups in game-over data.
+
+	* packages/gnugo/gnugo.el (gnug-put): Update :game-over doc blurb.
+	(gnugo-close-game): For resignation case, add empty ‘seki’ to game-over
+	data.  For non-resignation case, use GTP command
+	"final_status_list seki" to obtain a list of seki stones; collect a
+	group under alist key ‘seki’ if it appears in this list.
+
+2017-02-14  Thien-Thi Nguyen  <ttn@gnu.org>
+
+	[gnugo] Formalize game-over "group"; use symbolic color.
+
+	* packages/gnugo/gnugo.el (gnugo--prop-blackp): New defsubst.
+	(gnugo-close-game): Rewrite :game-over computation.
+	(gnugo-refresh) [pall of death]: Use ‘gnugo--prop-blackp’.
+	(gnugo-display-final-score): Likewise.
+
+2017-02-14  Thien-Thi Nguyen  <ttn@gnu.org>
+
+	[gnugo int] Lift redundant pall of death computation.
+
+	* packages/gnugo/gnugo.el (gnugo-refresh) [pall of death]: Check
+	:display-using-images exactly once; compute as much of the overlay
+	‘display’ object as possible prior to looping.
+
+2017-02-12  Thien-Thi Nguyen  <ttn@gnu.org>
+
+	[gnugo int] Add abstraction: gnugo--zonk-ovs
+
+	* packages/gnugo/gnugo.el (gnugo--zonk-ovs): New defsubst.
+	(gnugo-refresh, gnugo-animate-group): Use ‘gnugo--zonk-ovs’.
+
+2017-02-11  Thien-Thi Nguyen  <ttn@gnu.org>
+
+	[gnugo] Fix bug: Don't clobber dead-group indication on refresh.
+
+	Previously, when in game-over and w/ Gnugo Image Display mode enabled,
+	‘C-u C-l’ would clobber the overlays used to indicate stones in a dead
+	group, and the only way revive the indication would be to toggle Gnugo
+	Image Display mode.  With this change, dead-group indication persists
+	‘C-u C-l’.
+
+	* packages/gnugo/gnugo.el (gnugo-image-display-mode): Call
+	‘gnugo-refresh’ w/ arg NOCACHE ‘t’; move dead-group overlays deletion
+	from here...
+	(gnugo-refresh): ...to here; conditionalize on NOCACHE.
+
+2017-02-11  Thien-Thi Nguyen  <ttn@gnu.org>
+
+	[gnugo] When sorry, say "Sorry" first.
+
+	* packages/gnugo/gnugo.el (gnugo-image-display-mode): In the case where
+	display does not support images, move "sorry" from end of error message
+	to beginning.
+
+2017-02-11  Thien-Thi Nguyen  <ttn@gnu.org>
+
+	[gnugo int] Incorporate ‘gnugo-toggle-image-display’ into unique caller.
+
+	* packages/gnugo/gnugo.el (gnugo-put): Update docstring to
+	‘s/gnugo-toggle-image-display/gnugo-image-display-mode/g’.
+	(gnugo-toggle-image-display): Delete func, moving body from here...
+	(gnugo-image-display-mode): ...to here; do ‘s/new/bool/g’; move ‘act’
+	let-binding to the smallest useful scope; move dead-group overlays
+	deletion kludge later, immediately prior to the ‘gnugo-refresh’ call.
+
+2017-02-09  Thien-Thi Nguyen  <ttn@gnu.org>
+
+	[gnugo] Drop trailing fullstop in animation message.
+
+	* packages/gnugo/gnugo.el (gnugo-animate-group): ...here, in "Computing
+	TYPE stones ... N in group" message.
+
+2017-02-09  Thien-Thi Nguyen  <ttn@gnu.org>
+
+	[gnugo int] Reduce ‘setq’ usage.
+
+	* packages/gnugo/gnugo.el (gnugo-refresh) [pall of death]:
+	...here, via ‘cl-destructuring-bind’, ‘cl-loop’; also, don't bother
+	checking ‘live’ overlays before deleting them.
+
+2017-02-09  Thien-Thi Nguyen  <ttn@gnu.org>
+
+	[gnugo] Add abstraction: gnugo-aqr
+
+	* packages/gnugo/gnugo.el (gnugo-aqr): New defsubst.
+	(gnugo--root-prop, gnugo-yang, gnugo-toggle-image-display)
+	(gnugo-refresh, gnugo-display-final-score, gnugo-comment)
+	(gnugo/sgf-create, gnugo/sgf-write-file): Use ‘gnugo-aqr’.
+	* packages/gnugo/gnugo-frolic.el (gnugo-frolic-in-the-leaves)
+	(gnugo--awake, gnugo--awakened): Likewise.
+
+2017-02-09  Thien-Thi Nguyen  <ttn@gnu.org>
+
+	[gnugo int] Decruft: Don't bother w/ ‘group’ text property.
+
+	* packages/gnugo/gnugo.el (gnugo-refresh) [pall of death]: ...here.
+
+2017-02-09  Thien-Thi Nguyen  <ttn@gnu.org>
+
+	[gnugo] Make ‘gnugo-goto-pos’ return buffer position.
+
+	* packages/gnugo/gnugo.el (gnugo-goto-pos): Return final buffer
+	position, i.e., point.
+	(gnugo-refresh): Coalesce ‘gnugo-goto-pos’ call followed by
+	‘point’ call into a ‘gnugo-goto-pos’ call at the original
+	‘point’ caller position.
+	(gnugo-animate-group): Likewise.
+
+2017-02-09  Thien-Thi Nguyen  <ttn@gnu.org>
+
+	[gnugo] Make ‘C-c C-p’ output more spacious.
+
+	* packages/gnugo/gnugo.el (gnugo-describe-internal-properties): Don't
+	display the properties as one form; instead, display both property name
+	and value starting in column zero, and add a blank line between
+	properties.
+
+2017-02-08  Thien-Thi Nguyen  <ttn@gnu.org>
+
+	[gnugo] Drop trailing fullstop for "... done" messages.
+
+	* packages/gnugo/gnugo.el (gnugo-display-group-data, gnugo-command):
+	...here.
+
+2017-02-08  Thien-Thi Nguyen  <ttn@gnu.org>
+
+	[gnugo int] Whitespace munging; nfc.
+
+2017-02-08  Thien-Thi Nguyen  <ttn@gnu.org>
+
+	[gnugo int] Decruft: Don't declare hook and keymap vars.
+
+	We can count on ‘define-derived-mode’ these days for that.
+
+	* packages/gnugo/gnugo.el (gnugo-board-mode-map): Delete defvar; move
+	init to top-level, prior to ‘provide’ form; conditionalize init on
+	expected ‘?’ binding.
+	(gnugo-board-mode-hook): Delete defvar.
+	(gnugo-mode): Mention ‘gnugo-board-mode-map’ in docstring.
+
+2017-02-06  Thien-Thi Nguyen  <ttn@gnu.org>
+
+	[gnugo] Make ‘gnugo-comment’ fall back to root node.
+
+	* packages/gnugo/gnugo.el (gnugo-comment): Interactively, no longer
+	signal ‘user-error’ if there is no played stone at point; instead, take
+	NODE to be the root node.
+
+2017-02-06  Thien-Thi Nguyen  <ttn@gnu.org>
+
+	[gnugo int] Comment munging; nfc.
+
+2017-02-06  Thien-Thi Nguyen  <ttn@gnu.org>
+
+	[gnugo int] Simplify SGF-write subroutine.
+
+	* packages/gnugo/gnugo.el (gnugo/sgf-write-file esc): Drop 2nd arg FMT;
+	rename remaining 2nd arg from ARG to VAL; don't bother w/
+	‘list-to-string’; if ARG is already a string, use it directly; otherwise
+	‘format "%s"’ as before.
+	(gnugo/sgf-write-file >>one): Update call to ‘esc’.
+	(gnugo/sgf-write-file >>two): Likewise.
+
+2017-02-06  Thien-Thi Nguyen  <ttn@gnu.org>
+
+	[gnugo int] Shirk syntax, abbrev tables in Gnugo Board mode.
+
+	* packages/gnugo/gnugo.el (gnugo-board-mode): ...here, by specifying
+	‘:syntax-table nil’ and ‘:abbrev-table nil’ as the first forms in the
+	‘define-derived-mode’ BODY.
+
+2017-02-06  Thien-Thi Nguyen  <ttn@gnu.org>
+
+	[gnugo maint] Add people from ttn-pers-elisp THANKS file; nfc.
+
+2017-02-06  Thien-Thi Nguyen  <ttn@gnu.org>
+
+	[gnugo int] Add Juanma Barranquero to THANKS; nfc.
+
+2017-02-05  Thien-Thi Nguyen  <ttn@gnu.org>
+
+	[gnugo] Release: 3.0.2
+
+	* packages/gnugo/gnugo.el [Version]: Bump to "3.0.2".
+	(gnugo-version): Bump to "3.0.2".
+
+2017-02-05  Thien-Thi Nguyen  <ttn@gnu.org>
+
+	[gnugo slog] Prefer Cursor Intangible mode, if available.
+
+	GNU Emacs 25.1 looks askance at the ‘intangible’ text preoperty and
+	provides Cursor Intangible mode.  Suggested by Stefan Monnier,
+	<http://lists.gnu.org/archive/html/emacs-devel/2017-01/msg00265.html>.
+
+	* packages/gnugo/gnugo.el (gnugo--intangible): New defconst.
+	(gnugo-propertize-board-buffer, gnugo-merge-showboard-results): Don't
+	use ‘intangible’ directly; instead, use ‘gnugo--intangible’.
+	(gnugo-board-mode): If available, turn on Cursor Intangible mode; 
+	otherwise, clear ‘inhibit-point-motion-hooks’ locally, as before.
+
+2017-02-04  Thien-Thi Nguyen  <ttn@gnu.org>
+
+	Add some THANKS files; nfc.
+
+2017-02-03  Thien-Thi Nguyen  <ttn@gnu.org>
+
+	[gnugo int] Revert bogus OoE avoidance fix, w/ better comment.
+
+	Looks like 2017-01-31, "Avoid latent order-of-evaluation error" is just
+	so much mollycoddling.	Elegance wins after all.  :-D
+
+	* packages/gnugo/packages/gnugo/gnugo.el (gnugo--decorate): Revert to
+	use
+	‘cons’ w/ sibling ‘pop’ calls as args.  Reported by Stefan Monnier,
+	<http://lists.gnu.org/archive/html/emacs-devel/2017-01/msg00779.html>.
+
+2017-02-02  Thien-Thi Nguyen  <ttn@gnu.org>
+
+	[gnugo int] Fix verse meter; nfc.
+
+2017-01-31  Thien-Thi Nguyen  <ttn@gnu.org>
+
+	[gnugo int] Avoid latent order-of-evaluation error.
+
+	* packages/gnugo/gnugo.el (gnugo--decorate): Replace sibling ‘pop’ calls
+	as args to ‘cons’ w/ explicit sequencing and local vars.
+
+2017-01-24  Stefan Monnier  <monnier@iro.umontreal.ca>
+
+	* gnugo/gnugo.el (gnugo-refresh): Fix unknown function `pushnew`
+
+2017-01-16  Thien-Thi Nguyen  <ttn@gnu.org>
+
+	[gnugo int] Use ‘line-end-position’.
+
+	* packages/gnugo/gnugo.el (gnugo-propertize-board-buffer):
+	...here, to replace several instances of ‘end-of-line’ plus ‘point’.
+
+2017-01-16  Thien-Thi Nguyen  <ttn@gnu.org>
+
+	[gnugo int] Use ‘replace-regexp-in-string’.
+
+	* packages/gnugo/gnugo.el (gnugo-refresh): ...here, for mode-line
+	elaboration. Also, protect against mischievous "%".  Suggested by Stefan
+	Monnier,
+	<http://lists.gnu.org/archive/html/emacs-devel/2017-01/msg00265.html>.
+
+2017-01-16  Thien-Thi Nguyen  <ttn@gnu.org>
+
+	[gnugo] Release: 3.0.1
+
+	* packages/gnugo/gnugo.el [Version]: Bump to "3.0.1".
+	(gnugo-version): Bump to "3.0.1".
+
+2017-01-15  Thien-Thi Nguyen  <ttn@gnu.org>
+
+	[gnugo maint] Update years in copyright notice; nfc.
+
+2017-01-15  Thien-Thi Nguyen  <ttn@gnu.org>
+
+	[gnugo slog] Clear ‘inhibit-point-motion-hooks’.
+
+	* packages/gnugo/gnugo.el (gnugo-board-map): ...here, buffer-locally.
+
+2017-01-15  Thien-Thi Nguyen  <ttn@gnu.org>
+
+	[gnugo maint] Add copyright policy to HACKING; nfc.
+
+2017-01-15  Thien-Thi Nguyen  <ttn@gnu.org>
+
+	[gnugo int] Use ‘setq-local’.
+
+	* packages/gnugo/gnugo.el (gnugo-board-mode): ...here.
+
+2016-07-11  Paul Eggert	 <eggert@cs.ucla.edu>
+
+	Fix some quoting problems in doc strings
+
+	Most of these are minor issues involving, e.g., quoting `like this' 
+	instead of 'like this'.	 A few involve escaping ` and ' with a preceding
+	\= when the characters should not be turned into curved single quotes.
+
+2014-07-22  Thien-Thi Nguyen  <ttn@gnu.org>
+
+	[gnugo] Release: 3.0.0
+
+	* packages/gnugo/gnugo.el [Version]: Bump to "3.0.0".
+	(gnugo-version): Bump to "3.0.0".
+
+2014-07-22  Thien-Thi Nguyen  <ttn@gnu.org>
+
+	[gnugo maint] Add ‘URL’ header; trim Hacking URL; drop Tip Jar URL.
+
+2014-07-21  Thien-Thi Nguyen  <ttn@gnu.org>
+
+	[gnugo maint] Update HACKING; nfc.
+
+2014-07-21  Thien-Thi Nguyen  <ttn@gnu.org>
+
+	[gnugo int] Use idiomatic ‘re-search-forward’ BOUND.
+
+	* packages/gnugo/gnugo.el (gnugo-describe-internal-properties)
+	(:gnugo-gtp-command-spec help): Specify ‘nil’ for for re-search-forward
+	2nd arg instead of ‘(point-max)’.
+
+2014-06-16  Thien-Thi Nguyen  <ttn@gnu.org>
+
+	[gnugo int] Use "%F" and "%T".
+
+	* packages/gnugo/gnugo.el
+	(gnugo-display-final-score, gnugo) ...here, in ‘format-time-string’
+	calls, instead of the more verbose "%Y-%m-%d" and "%H:%M:%S",
+	respectively.
+
+2014-06-11  Thien-Thi Nguyen  <ttn@gnu.org>
+
+	[gnugo int] Expose function to byte-compiler.
+
+	* packages/gnugo/gnugo.el (gnugo-toggle-image-display):
+	...here, as part of :highlight-last-move-spec toggling.
+
+2014-05-28  Thien-Thi Nguyen  <ttn@gnu.org>
+
+	[gnugo int] Bump required ‘xpm’ version to "1.0.1".
+
+	Version 1.0.0 works from repo, but not w/ the package system.
+
+	* packages/gnugo/gnugo.el [Package-Requires]: ...here.
+
+2014-05-27  Thien-Thi Nguyen  <ttn@gnu.org>
+
+	[gnugo] Only set AP for modified gametrees in the collection.
+
+	* packages/gnugo/gnugo.el (gnugo-write-sgf-file): Set root node property
+	:AP here, but only if buffer-modified.
+	(gnugo, gnugo/sgf-write-file): Don't set root node property :AP.
+
+2014-05-27  Thien-Thi Nguyen  <ttn@gnu.org>
+
+	[gnugo int] Whitespace, comment munging; nfc.
+
+2014-05-26  Stefan Monnier  <monnier@iro.umontreal.ca>
+
+	* packages/gnugo: Add `cl-lib' as dependency; require it and use its
+	names. Don't bother with lexical-let since we use lexical-binding.
+	* packages/gnugo/gnugo.el (gnugo-board-mode-map):
+	* packages/gnugo/gnugo-frolic.el (gnugo-frolic-mode-map): Move
+	initialization into declaration.
+
+2014-05-23  Thien-Thi Nguyen  <ttn@gnu.org>
+
+	[gnugo int] Fix up gnugo-frolic.el ‘require’ forms.
+
+	* packages/gnugo/gnugo.el: Move ‘(require 'ascii-art-to-unicode)’ from
+	here...
+	* packages/gnugo/gnugo-frolic.el: ...to here. Also, require ‘gnugo’.
+
+2014-05-22  Thien-Thi Nguyen  <ttn@gnu.org>
+
+	[gnugo maint] Add some headers to gnugo-frolic.el; nfc.
+
+2014-05-22  Thien-Thi Nguyen  <ttn@gnu.org>
+
+	[gnugo imgen] Add autoload cookie.
+
+	* packages/gnugo/gnugo-imgen.el (gnugo-imgen-create-xpms): ...for this
+	func.
+
+2014-05-21  Thien-Thi Nguyen  <ttn@gnu.org>
+
+	[gnugo] Declare package keywords.
+
+	* packages/gnugo/gnugo.el [Keywords]: New header.
+
+2014-05-21  Thien-Thi Nguyen  <ttn@gnu.org>
+
+	[gnugo frolic] Promote frolic mode/funcs to feature.
+
+	* packages/gnugo/gnugo.el (gnugo-frolic-mode-map)
+	(gnugo-frolic-parent-buffer, gnugo-frolic-origin)
+	(gnugo-frolic-mode, gnugo-frolic-return-to-origin)
+	(gnugo-frolic-in-the-leaves, gnugo--awake, gnugo--awakened)
+	(gnugo--move-to-bcol, gnugo--swiz, gnugo-frolic-exchange-left)
+	(gnugo-frolic-rotate-left, gnugo-frolic-exchange-right)
+	(gnugo-frolic-rotate-right, gnugo-frolic-set-as-main-line)
+	(gnugo-frolic-prune-branch, gnugo--sideways)
+	(gnugo-frolic-backward-branch, gnugo-frolic-forward-branch)
+	(gnugo--vertical, gnugo-frolic-previous-move, gnugo-frolic-next-move)
+	(gnugo-frolic-tip-move, gnugo-frolic-mode-map): Move from here...
+	* packages/gnugo/gnugo-frolic.el: ...to new file; add ‘provide’ form; 
+	add autoload cookie for ‘gnugo-frolic-in-the-leaves’.
+
+2014-05-21  Thien-Thi Nguyen  <ttn@gnu.org>
+
+	fixup! [gnugo imgen] New feature: gnugo-imgen
+
+2014-05-21  Thien-Thi Nguyen  <ttn@gnu.org>
+
+	[gnugo imgen] New feature: gnugo-imgen
+
+	* packages/gnugo/gnugo-imgen.el: New file.
+	* packages/gnugo/gnugo.el [Package-Requires]: Mention ‘xpm’.
+
+2014-05-18  Thien-Thi Nguyen  <ttn@gnu.org>
+
+	[gnugo int] Accomodate XPM w/ :color-symbols property.
+
+	* packages/gnugo/gnugo.el (gnugo-venerate):
+	...here, propagating the foreground :color-symbols and value, if
+	available, to the new XPM.
+
+2014-05-12  Thien-Thi Nguyen  <ttn@gnu.org>
+
+	[gnugo maint] Add ‘Maintainer’ header per top-level README; nfc.
+
+2014-05-09  Thien-Thi Nguyen  <ttn@gnu.org>
+
+	[gnugo int] Add section "Tip Jar" in Commentary; nfc.
+
+2014-05-09  Thien-Thi Nguyen  <ttn@gnu.org>
+
+	[gnugo int] Replace COND expression w/ IF.
+
+	Incidentally, this reduces the byte code from 19 to 14 insn.
+
+	* packages/gnugo/gnugo.el (gnugo-fancy-undo):
+	...here, replacing last two clauses w/ ‘car-safe’ expression.
+
+2014-05-03  Thien-Thi Nguyen  <ttn@gnu.org>
+
+	[gnugo int] Use private obarray for :all-yy elems, display props.
+
+	* packages/gnugo/gnugo.el (gnugo-put): Update :all-yy blurb.
+	(gnugo-f): Rewrite.
+	(gnugo-cleanup): Don't bother w/ symbol cleanup.
+	(gnugo-board-mode): Init :obarray.
+
+2014-05-03  Thien-Thi Nguyen  <ttn@gnu.org>
+
+	[gnugo] Fix bug: For GTP "help COMMAND", leave point in right place.
+
+	* packages/gnugo/gnugo.el (:gnugo-gtp-command-spec help): When COMMANd
+	is specified and found, use a marker to hold its position, and after
+	moving point there, make it point nowhere.
+
+2014-05-03  Thien-Thi Nguyen  <ttn@gnu.org>
+
+	[gnugo int] Simplify COND expression.
+
+	* packages/gnugo/gnugo.el (gnugo-yy): Check ‘symbolp’ first; avoid
+	‘consp’ and ‘and’ altogether.
+
+2014-05-03  Thien-Thi Nguyen  <ttn@gnu.org>
+
+	[gnugo int] Use ‘loop ... collect’ more.
+
+	* packages/gnugo/gnugo.el (gnugo-describe-internal-properties): ...here.
+
+2014-05-03  Thien-Thi Nguyen  <ttn@gnu.org>
+
+	[gnugo frolic] Add command to navigate to end of branch.
+
+	* packages/gnugo/gnugo.el (gnugo-frolic-tip-move): New command.
+	(gnugo-frolic-mode-map): Add binding for ‘t’.
+
+2014-05-02  Thien-Thi Nguyen  <ttn@gnu.org>
+
+	[gnugo] Replace ‘gnugo-toggle-grid’ w/ ‘gnugo-grid-mode’.
+
+	* packages/gnugo/gnugo.el (gnugo-grid-mode): New command.
+	(gnugo-toggle-grid): Delete command.
+	(gnugo-board-mode-map): Update binding for ‘g’.
+
+2014-05-02  Thien-Thi Nguyen  <ttn@gnu.org>
+
+	[gnugo] Replace ‘gnugo-toggle-image-display-command’ w/
+	‘gnugo-image-display-mode’.
+
+	* packages/gnugo/gnugo.el (gnugo-image-display-mode): New command.
+	(gnugo-toggle-image-display-command): Delete command.
+	(gnugo-board-mode-map): Update binding for ‘i’.
+
+2014-05-02  Thien-Thi Nguyen  <ttn@gnu.org>
+
+	[gnugo int] Mention ‘gnugo-frolic-mode-map’ in Commentary; nfc.
+
+2014-05-02  Thien-Thi Nguyen  <ttn@gnu.org>
+
+	[gnugo int] Commentary munging; nfc.
+
+2014-05-02  Thien-Thi Nguyen  <ttn@gnu.org>
+
+	[gnugo int] Decruft: Drop :local-xpms support.
+
+	* packages/gnugo/gnugo.el (gnugo-describe-internal-properties): ...here.
+	(gnugo-toggle-image-display): Don't consult :local-xpms.
+
+2014-05-02  Thien-Thi Nguyen  <ttn@gnu.org>
+
+	[gnugo] Handle function for ‘gnugo-xpms’ value.
+
+	* packages/gnugo/gnugo.el (gnugo-xpms): Update docstring.
+	(gnugo-toggle-image-display): If ‘gnugo-xpms’ is a function, call it
+	with the board size and take its rv as the set of XPM images to use.
+
+2014-05-02  Thien-Thi Nguyen  <ttn@gnu.org>
+
+	[gnugo] Make ‘gnugo-xpms’ a normal var; drop it as feature.
+
+	* packages/gnugo/gnugo.el (gnugo-xpms): Move earlier in file, to
+	"uninquisitive programmer" section; remove ‘eval-when-compile’ wrap; add
+	docstring.
+	(gnugo-toggle-image-display): Don't ‘(require 'gnugo-xmps)’; don't gate
+	‘gnugo-xpms’ access w/ ‘boundp’.
+
+2014-05-02  Thien-Thi Nguyen  <ttn@gnu.org>
+
+	[gnugo] Publicize ‘gnugo-undo-reaction’.
+
+	Omission from 2014-05-01, "Make climb-to-root
+	"GNU Go to play" reaction customizable".
+
+	* packages/gnugo/gnugo.el [Commentary]: ...here.
+
+2014-05-02  Thien-Thi Nguyen  <ttn@gnu.org>
+
+	[gnugo int] Decruft: Presume ‘display-images-p’.
+
+	* packages/gnugo/gnugo.el (gnugo-toggle-image-display): Don't gate
+	‘display-images-p’ call w/ ‘fboundp’.
+
+2014-05-02  Thien-Thi Nguyen  <ttn@gnu.org>
+
+	[gnugo maint] Update HACKING; nfc.
+
+2014-05-02  Thien-Thi Nguyen  <ttn@gnu.org>
+
+	[gnugo] Make SGF I/O commands change ‘default-directory’.
+
+	* packages/gnugo/gnugo.el (gnugo--ok-file): New func.
+	(gnugo-write-sgf-file, gnugo-read-sgf-file): Don't clear buffer-modified
+	state; instead, call ‘gnugo--ok-file’.
+
+2014-05-01  Thien-Thi Nguyen  <ttn@gnu.org>
+
+	[gnugo] Make climb-to-root "GNU Go to play" reaction customizable.
+
+	* packages/gnugo/gnugo.el (gnugo-undo-reaction): New defvar.
+	(gnugo--user-play): Inhibit karmic error for one-shot.
+	(gnugo--climb-towards-root): Don't take 2nd arg NOALT; instead, take 2nd
+	arg REACTION; drop "POS not occupied by COLOR" check and error; rewrite
+	handling for "GNU Go to play" case.
+	(gnugo-undo-one-move): Call ‘gnugo--climb-towards-root’ w/
+	‘gnugo-undo-reaction’ value clamped to ‘zombie’/‘one-shot’.
+
+2014-04-30  Thien-Thi Nguyen  <ttn@gnu.org>
+
+	[gnugo int] Move karma state normalization down-chain.
+
+	* packages/gnugo/gnugo.el (gnugo--karma): Always return boolean.
+	(gnugo--assist-state, gnugo--struggle): Don't normalize here.
+
+2014-04-30  Thien-Thi Nguyen  <ttn@gnu.org>
+
+	[gnugo int] Add abstraction: gnugo--assist-state
+
+	* packages/gnugo/gnugo.el (gnugo--assist-state): New func.
+	(gnugo--climb-towards-root, gnugo-assist-mode): Use it.
+
+2014-04-30  Thien-Thi Nguyen  <ttn@gnu.org>
+
+	[gnugo] Refuse to climb towards root when in Assist mode.
+
+	* packages/gnugo/gnugo.el (gnugo--climb-towards-root): Signal
+	‘user-error’ if Assist mode is enabled.
+
+2014-04-30  Thien-Thi Nguyen  <ttn@gnu.org>
+
+	[gnugo] Fix bug: On role switch, flip karma after roles.
+
+	Omission from 2014-04-29, "Replace abdication w/ Assist and Zombie minor
+	modes".
+
+	* packages/gnugo/gnugo.el (gnugo-undo-one-move): Call
+	‘gnugo--who-is-who’ after switching :gnugo-color, :user-color.
+
+2014-04-30  Thien-Thi Nguyen  <ttn@gnu.org>
+
+	[gnugo int] Move some ‘gnugo-gate’ calls down-chain.
+
+	* packages/gnugo/gnugo.el (gnugo-animate-group)
+	(gnugo-display-group-data): ...to here...
+	(gnugo-worm-stones, gnugo-worm-data)
+	(gnugo-dragon-stones, gnugo-dragon-data): ...from here.
+
+2014-04-30  Thien-Thi Nguyen  <ttn@gnu.org>
+
+	[gnugo int] Drop redundant ‘gnugo-gate’ calls.
+
+	* packages/gnugo/gnugo.el (gnugo-undo-two-moves, gnugo-oops): ...here.
+
+2014-04-29  Thien-Thi Nguyen  <ttn@gnu.org>
+
+	[gnugo int] Comment munging; nfc.
+
+2014-04-29  Thien-Thi Nguyen  <ttn@gnu.org>
+
+	[gnugo] Replace abdication w/ Assist and Zombie minor modes.
+
+	* packages/gnugo/gnugo.el (gnugo--instant-karma): Delete func.
+	(gnugo--turn-the-wheel): New func.
+	(gnugo--finish-move): Take optional arg NOW; call
+	‘gnugo--turn-the-wheel’ with it at end.
+	(gnugo-get-move-insertion-filter): Don't do :abd update.
+	(gnugo--karma): New func.
+	(gnugo--:karma): New defsubst.
+	(gnugo--user-play): Signal ‘user-error’ if current player karmic; don't
+	call ‘gnugo-get-move’; call ‘gnugo--finish-move’ w/ NOW ‘t’.
+	(gnugo--dance-dance): New func.
+	(gnugo--who-is-who): On switch, also flip karma.
+	(gnugo--climb-towards-root): Don't call ‘gnugo-get-move’; instead,
+	temporarily make :gnugo-color unkarmic around call to
+	‘gnugo--turn-the-wheel’.
+	(gnugo-toggle-abdication): Delete command.
+	(gnugo--struggle): New func.
+	(gnugo-assist-mode, gnugo-zombie-mode): New commands.
+	(gnugo): Init :wheel; don't call ‘gnugo-get-move’; instead, call
+	‘gnugo--turn-the-wheel’.
+	(gnugo-board-mode-map): Bind ‘C-c C-a’ to ‘gnugo-assist-mode’; add
+	binding for ‘C-c C-z’.
+
+2014-04-29  Thien-Thi Nguyen  <ttn@gnu.org>
+
+	[gnugo int] Maintain current buffer in ‘gnugo--finish-move’.
+
+	* packages/gnugo/gnugo.el (gnugo--finish-move): Don't take arg BUF;
+	instead, note and restore the current buffer around the call to
+	‘run-hooks’.
+	(gnugo-get-move-insertion-filter)
+	(gnugo-user-play): Update accordingly.
+
+2014-04-29  Thien-Thi Nguyen  <ttn@gnu.org>
+
+	[gnugo int] Avoid superfluous ‘gnugo-other’ call.
+
+	* packages/gnugo/gnugo.el (gnugo-toggle-abdication): ...here.
+
+2014-04-27  Thien-Thi Nguyen  <ttn@gnu.org>
+
+	[gnugo int] Drop abstractions: gnugo--{ERR-wait,gate-game-over}
+
+	* packages/gnugo/gnugo.el (gnugo--gate-game-over)
+	(gnugo--ERR-wait): Delete, incorporating them into...
+	(gnugo-gate): ...here.
+
+2014-04-27  Thien-Thi Nguyen  <ttn@gnu.org>
+
+	[gnugo int] Fix bug: Use correct color for "Not your turn yet".
+
+	Regression introduced 2014-04-22, "Use ‘destructuring-bind’ more", in
+	the player-agnostic side-effect.  :-/
+
+	* packages/gnugo/gnugo.el (gnugo-gate): For "Not your turn yet", use
+	‘(gnugo-other color)’.
+
+2014-04-27  Thien-Thi Nguyen  <ttn@gnu.org>
+
+	[gnugo int] Compute "Abd" in mode-line at time of change.
+
+	* packages/gnugo/gnugo.el (gnugo-btw): New var.
+	(gnugo--instant-karma): New func.
+	(gnugo-refresh): Don't compute "Abd" here.
+	(gnugo-toggle-abdication): Use ‘gnugo--instant-karma’.
+	(gnugo-board-mode): Init ‘gnugo-btw’ as buffer-local var; include it in
+	‘minor-mode-alist’.
+
+2014-04-25  Thien-Thi Nguyen  <ttn@gnu.org>
+
+	[gnugo] Conditionalize xform warping on abdication disable.
+
+	* packages/gnugo/gnugo.el (gnugo-toggle-abdication): For xform, don't
+	specify ‘nowarp’ unconditionally; instead, if user appears to be
+	"following along", specify ‘t’; move xform path completely inside
+	disable path.
+
+2014-04-25  Thien-Thi Nguyen  <ttn@gnu.org>
+
+	[gnugo] Don't display "Abdication {en,dis}abled".
+
+	That tends to persist in the echo area, which is both annoying and
+	misleading should the game end.
+
+	* packages/gnugo/gnugo.el (gnugo--display-suggestion): New func.
+	(gnugo-get-move-insertion-filter): Use it.
+	(gnugo-toggle-abdication): Use ‘force-mode-line-update’; don't ‘message’
+	state; however, retain "suggestion forthcoming" message via
+	‘gnugo--display-suggestion’.
+
+2014-04-25  Thien-Thi Nguyen  <ttn@gnu.org>
+
+	fixup! [gnugo int] Decorate w/ plist instead of alist.
+
+2014-04-25  Thien-Thi Nguyen  <ttn@gnu.org>
+
+	[gnugo int] Decorate w/ plist instead of alist.
+
+	* packages/gnugo/gnugo.el (gnugo--decorate): Rewrite; convert from
+	defsubst to defun.
+	(gnugo-display-final-score, gnugo-comment)
+	(gnugo r!): Update accordingly.
+
+2014-04-24  Thien-Thi Nguyen  <ttn@gnu.org>
+
+	[gnugo int] Snoop ‘--handicap N’ for empty new board.
+
+	Regression introduced from 2014-04-19, "Fix bug: Ensure gametree sync
+	for -l/--infile".
+
+	* packages/gnugo/gnugo.el (gnugo): ...here.
+
+2014-04-24  Thien-Thi Nguyen  <ttn@gnu.org>
+
+	[gnugo] Make undo commands silently handle overkill.
+
+	It's impolite to reflect impoliteness.	:-D
+
+	* packages/gnugo/gnugo.el (gnugo--climb-towards-root): Don't use
+	‘gnugo--q/ue’ for GTP "undo"; instead, use ‘gnugo--q’, detect overkill,
+	and stop looping.
+
+2014-04-24  Thien-Thi Nguyen  <ttn@gnu.org>
+
+	[gnugo int] Add abstraction: gnugo--no-worries
+
+	* packages/gnugo/gnugo.el (gnugo--no-worries): New defsubst.
+	(gnugo--q/ue): Use ‘gnugo--no-worries’.
+
+2014-04-24  Thien-Thi Nguyen  <ttn@gnu.org>
+
+	[gnugo int] Add abstraction: gnugo--resignp
+
+	* packages/gnugo/gnugo.el (gnugo--resignp): New defsubst.
+	(gnugo-move-history, gnugo-push-move, gnugo-refresh)
+	(gnugo-display-final-score): Use ‘gnugo--resignp’.
+
+2014-04-24  Thien-Thi Nguyen  <ttn@gnu.org>
+
+	[gnugo int] Drop abstraction: pretty
+
+	* packages/gnugo/gnugo.el (gnugo-move-history pretty): Delete internal
+	func.
+	(gnugo-move-history next): Revert to pre-‘pretty’ code.
+	(gnugo-move-history): For ‘bpos’ RSEL, convert search condition from two
+	negated string comparisons to one
+	"normal CC" position detection, and delay ‘as-pos’ call to rv
+	computation.
+
+2014-04-23  Thien-Thi Nguyen  <ttn@gnu.org>
+
+	[gnugo int] Move ‘gnugo--passp’ earlier in file.
+
+	* packages/gnugo/gnugo.el (gnugo--passp):
+	...so that it precedes its first use.
+
+2014-04-23  Thien-Thi Nguyen  <ttn@gnu.org>
+
+	[gnugo maint] Update HACKING; nfc.
+
+2014-04-22  Thien-Thi Nguyen  <ttn@gnu.org>
+
+	[gnugo int] Use ‘gnugo-current-player’ more.
+
+	* packages/gnugo/gnugo.el (gnugo-refresh):
+	...here, obsoleting two local vars, as well.
+
+2014-04-22  Thien-Thi Nguyen  <ttn@gnu.org>
+
+	[gnugo] Fix bug: Use ‘gnugo-gate’ for abdication enable.
+
+	Gating only on game-over is not enough.
+
+	* packages/gnugo/gnugo.el (gnugo-toggle-abdication): ...here.
+
+2014-04-22  Thien-Thi Nguyen  <ttn@gnu.org>
+
+	[gnugo] On disable, transform in-flight user-move into suggestion.
+
+	* packages/gnugo/gnugo.el (gnugo-toggle-abdication): Don't signal "too
+	soon" error; instead, transform scheduled user-move into a suggestion,
+	include extra info in the status message and sleep for 2 sec after
+	message display; update condition for ‘(gnugo-get-move gcolor)’
+	accordingly.
+
+2014-04-22  Thien-Thi Nguyen  <ttn@gnu.org>
+
+	[gnugo] Allow user to request suggestion for GNU Go.
+
+	* packages/gnugo/gnugo.el (gnugo-get-move-insertion-filter): Include
+	color in suggestion message.
+	(gnugo-request-suggestion): Use ‘gnugo-current-player’.
+
+2014-04-22  Thien-Thi Nguyen  <ttn@gnu.org>
+
+	[gnugo] Fix bug: DTRT for suggestion ‘nowarp’ check.
+
+	From inception 2014-04-15, "New command: ‘S’
+	(gnugo-request-suggestion)".
+
+	* packages/gnugo/gnugo.el (gnugo-get-move-insertion-filter): Don't feed
+	‘cons’ rv to ‘destructuring-bind’; instead, drop var ‘pos-or-pass’,
+	repurpose var ‘full’ -- surely succumbing to Bad Style :-/, and access
+	:waiting directly.
+
+2014-04-22  Thien-Thi Nguyen  <ttn@gnu.org>
+
+	[gnugo int] Use ‘destructuring-bind’ more.
+
+	* packages/gnugo/gnugo.el (gnugo-gate): ...here, for :waiting check, in
+	the process making it player-agnostic.
+
+2014-04-22  Thien-Thi Nguyen  <ttn@gnu.org>
+
+	[gnugo] Allow user to move for GNU Go.
+
+	* packages/gnugo/gnugo.el (gnugo--user-play): Don't hardcode WHO to
+	‘gnugo-push-move’; instead, compute it from :last-mover.
+
+2014-04-21  Thien-Thi Nguyen  <ttn@gnu.org>
+
+	[gnugo int] Move ‘gnugo-position’ call down-chain.
+
+	* packages/gnugo/gnugo.el (gnugo--climb-towards-root):
+	...into here if SPEC is neither number nor string.
+	(gnugo-oops, gnugo-fancy-undo): Update accordingly.
+
+2014-04-21  Thien-Thi Nguyen  <ttn@gnu.org>
+
+	[gnugo int] Centralize some "No stone at POS" errors.
+
+	* packages/gnugo/gnugo.el (gnugo--mem-with-played-stone): Take optional
+	arg NOERROR; if clear, when no ‘color’ found, signal "No stone at POS"
+	error.
+	(gnugo--climb-towards-root): Drop "POS already clear" error handling;
+	use ‘gnugo--mem-with-played-stone’ rv directly.
+	(gnugo--node-with-played-stone): Take optional arg NOERROR; pass it to
+	‘gnugo--mem-with-played-stone’.
+	(gnugo-describe-position): Specify NOERROR to
+	‘gnugo--node-with-played-stone’.
+	(gnugo-comment): Drop "No stone at POS" error handling; use
+	‘gnugo--node-with-played-stone’ rv directly.
+
+2014-04-21  Thien-Thi Nguyen  <ttn@gnu.org>
+
+	[gnugo int] Simplify towards-root loop termination check.
+
+	* packages/gnugo/gnugo.el (gnugo--climb-towards-root): Don't construct
+	local func ‘done’; instead, pre-compute final MEM and loop until it's
+	reached, as per ‘eq’.
+
+2014-04-21  Thien-Thi Nguyen  <ttn@gnu.org>
+
+	[gnugo] Internalize ‘gnugo-magic-undo’.
+
+	* packages/gnugo/gnugo.el (gnugo--climb-towards-root): Rename from
+	‘gnugo-magic-undo’; delete docstring.
+	(gnugo-undo-one-move, gnugo-undo-two-moves, gnugo-oops)
+	(gnugo-fancy-undo): Use ‘gnugo--climb-towards-root’.
+	(:gnugo-gtp-command-spec undo)
+	(:gnugo-gtp-command-spec gg-undo): Likewise.
+
+2014-04-21  Thien-Thi Nguyen  <ttn@gnu.org>
+
+	[gnugo] Validate position arg of GTP commands ‘undo’, ‘gg-undo’.
+
+	* packages/gnugo/gnugo.el
+	(:gnugo-gtp-command-spec validpos): New internal func.
+	(:gnugo-gtp-command-spec undo)
+	(:gnugo-gtp-command-spec gg-undo): Use ‘validpos’.
+
+2014-04-21  Thien-Thi Nguyen  <ttn@gnu.org>
+
+	[gnugo int] Add abstraction: gnugo--mem-with-played-stone
+
+	* packages/gnugo/gnugo.el (gnugo--mem-with-played-stone): New func.
+	(gnugo--node-with-played-stone): Use it; convert to defsubst.
+
+2014-04-21  Thien-Thi Nguyen  <ttn@gnu.org>
+
+	[gnugo int] Add abstraction: gnugo--q/ue
+
+	* packages/gnugo/gnugo.el (gnugo--q/ue): New func.
+	(gnugo-push-move, gnugo-read-sgf-file, gnugo-magic-undo): Use it.
+
+2014-04-21  Thien-Thi Nguyen  <ttn@gnu.org>
+
+	[gnugo] Reduce modifier key bouncing for "quick peek" frolics.
+
+	* packages/gnugo/gnugo.el
+	(gnugo-frolic-mode-map): Bind ‘C-q’ to ‘gnugo-frolic-quit’.
+	(gnugo-board-mode-map): Bind ‘C-c C-l’ to ‘gnugo-frolic-in-the-leaves’.
+
+2014-04-21  Thien-Thi Nguyen  <ttn@gnu.org>
+
+	[gnugo] Fix bug: DTRT for :last-user-bpos in undo-one-move ME-NEXT.
+
+	Omission from 2014-03-11, "Make ‘C-u M-u’ switch roles".
+
+	* packages/gnugo/gnugo.el (gnugo-undo-one-move): Swizzle colors before
+	calling ‘gnugo-magic-undo’.
+
+2014-04-20  Thien-Thi Nguyen  <ttn@gnu.org>
+
+	[gnugo int] Fix bug: On -l/--infile, inhibit first move if game over.
+
+	Omission from 2014-04-19, "Fix bug: Ensure gametree sync for
+	-l/--infile".
+
+	* packages/gnugo/gnugo.el (gnugo): ...here.
+
+2014-04-20  Thien-Thi Nguyen  <ttn@gnu.org>
+
+	[gnugo int] Fix bug: On -l/--infile, don't set :last-mover.
+
+	Omission from 2014-04-19, "Fix bug: Ensure gametree sync for
+	-l/--infile".
+
+	* packages/gnugo/gnugo.el (gnugo): ...here.
+
+2014-04-20  Thien-Thi Nguyen  <ttn@gnu.org>
+
+	[gnugo] On SGF load, leave cursor at last user board position.
+
+	* packages/gnugo/gnugo.el (gnugo-move-history): Take optional second arg
+	COLOR.
+	(gnugo-move-history remem): New internal func.
+	(gnugo-move-history pretty): New internal func.
+	(gnugo-move-history next): Use ‘remem’, ‘pretty’.
+	(gnugo-move-history): If RSEL is ‘bpos’, return the position of the last
+	stone placed by COLOR.
+	(gnugo-read-sgf-file): Set :last-user-bpos.
+	(gnugo): After refresh, prefer :last-user-bpos to :center-position for
+	cursor position.
+
+2014-04-20  Thien-Thi Nguyen  <ttn@gnu.org>
+
+	[gnugo int] Add abstraction: gnugo--prop<-color
+
+	* packages/gnugo/gnugo.el (gnugo--prop<-color): New defsubst.
+	(gnugo-push-move, gnugo-okay): Use ‘gnugo--prop<-color’.
+
+2014-04-19  Thien-Thi Nguyen  <ttn@gnu.org>
+
+	[gnugo int] Declare ‘lexical-binding: t’.
+
+	* packages/gnugo/gnugo.el: ...here, in first-line comment.
+
+2014-04-19  Thien-Thi Nguyen  <ttn@gnu.org>
+
+	[gnugo] Fix bug: Ensure gametree sync for -l/--infile.
+
+	Previously, specifying ‘--infile FILENAME’ (or ‘-l FILENAME’) would
+	result in a degenerate (root-node only) :sgf-gametree. Incidentally, the
+	"don't snoop" part of this change removes the last remaining barrier to
+	clean ‘lexical-binding: t’.
+
+	* packages/gnugo/gnugo.el (gnugo): Rewrite docstring; parse
+	user-specified command-line arguments; don't snoop "--boardsize",
+	"--handicap", "--komi"; instead, defer until subprocess available and
+	then query; rewrite kick args to segregate/prioritize "--infile", "-l"; 
+	save filename; when filename specified, expand it and pass to
+	‘gnugo-read-sgf-file’ instead of constructing the degenerate gametree;
+	combine ‘gnugo--SZ!’ call with aforementioned ‘board-size’, ‘handicap’,
+	‘komi’ mining and do only for degenerate gametree construction.
+
+2014-04-19  Thien-Thi Nguyen  <ttn@gnu.org>
+
+	[gnugo int] Couple :center-position and :SZ jamming.
+
+	* packages/gnugo/gnugo.el (gnugo--SZ!): Convert to ‘defun’; also
+	compute/assign :center-position.
+	(gnugo): Don't compute :center-position explicitly, but do move point to
+	it, after the refresh.
+
+2014-04-19  Thien-Thi Nguyen  <ttn@gnu.org>
+
+	[gnugo int] Decruft: Don't set provisional :last-user-bpos.
+
+	* packages/gnugo/gnugo.el (gnugo):
+	...here, as it does not make sense.
+
+2014-04-19  Thien-Thi Nguyen  <ttn@gnu.org>
+
+	[gnugo int] Add abstraction: gnugo--nquery
+
+	* packages/gnugo/gnugo.el (gnugo--nquery): New func.
+	(gnugo): Use ‘gnugo--nquery’.
+	(:gnugo-gtp-command-spec): Likewise.
+
+2014-04-19  Thien-Thi Nguyen  <ttn@gnu.org>
+
+	[gnugo int] Move some prop jamming to ‘gnugo-board-mode’.
+
+	* packages/gnugo/gnugo.el (gnugo-board-mode): Move to here the setting
+	of properties
+	:default-highlight-last-move-spec,
+	:highlight-last-move-spec, :paren-ov, :mul...
+	(gnugo): ...from here.
+
+2014-04-19  Thien-Thi Nguyen  <ttn@gnu.org>
+
+	[gnugo int] Use functional style more.
+
+	* packages/gnugo/gnugo.el (gnugo): Pass ‘gnugo--plant-and-climb’ rv to
+	‘gnugo--root-node’.
+
+2014-04-19  Thien-Thi Nguyen  <ttn@gnu.org>
+
+	[gnugo int] Decruft: Don't stash :proc-args.
+
+	* packages/gnugo/gnugo.el (gnugo): ...here.
+
+2014-04-17  Thien-Thi Nguyen  <ttn@gnu.org>
+
+	[gnugo] Decruft: Use ‘gnugo-program’ directly as executable.
+
+	* packages/gnugo/gnugo.el (gnugo-program): Rewrite docstring.
+	(gnugo): Add ‘gnugo-program’ sanity check prior to buffer switch; drop
+	support for "PROGRAM OPTIONS..." value.
+
+2014-04-17  Thien-Thi Nguyen  <ttn@gnu.org>
+
+	[gnugo int] Decruft: Drop unused local var.
+
+	From inception 2014-04-15, "New command:
+	‘C-c C-a’ (gnugo-toggle-abdication)".
+
+	* packages/gnugo/gnugo.el (gnugo-toggle-abdication): Drop unused local
+	var ‘ucolor’; also, don't bother destructuring :waiting; instead, just
+	check its truth value.
+
+2014-04-17  Thien-Thi Nguyen  <ttn@gnu.org>
+
+	[gnugo] Keep GNUGO Board buffer read-only.
+
+	* packages/gnugo/gnugo.el (gnugo-merge-showboard-results)
+	(gnugo-refresh): Dynamically set ‘inhibit-read-only’.
+	(gnugo-board-mode): Don't clear ‘buffer-read-only’.
+
+2014-04-17  Thien-Thi Nguyen  <ttn@gnu.org>
+
+	[gnugo int] Don't make ‘font-lock-defaults’ buffer-local.
+
+	* packages/gnugo/gnugo.el (gnugo-board-mode):
+	...here, as it automatically becomes buffer-local when set.
+
+2014-04-17  Thien-Thi Nguyen  <ttn@gnu.org>
+
+	[gnugo] Use ‘define-derived-mode’ for GNUGO Board mode.
+
+	This exposes ‘gnugo-board-mode-hook’ to the vagaries of Special mode (in
+	particular ‘special-mode-hook’).
+
+	* packages/gnugo/gnugo.el (gnugo-board-mode):
+	...here, removing now-redundant stuff accordingly, as well as ‘(put
+	'gnugo-board-mode 'mode-class 'special)’; also, clear
+	‘buffer-read-only’.
+
+2014-04-17  Thien-Thi Nguyen  <ttn@gnu.org>
+
+	[gnugo int] Decruft: Streamline game-over handling on SGF load.
+
+	* packages/gnugo/gnugo.el (gnugo-read-sgf-file): Don't bother w/
+	:game-over here; leave it to ‘gnugo-close-game’.
+
+2014-04-17  Thien-Thi Nguyen  <ttn@gnu.org>
+
+	[gnugo int] Consolidate display scaling factors access.
+
+	* packages/gnugo/gnugo.el (gnugo-toggle-image-display): Save image
+	factors in :imul instead of in :w-imul, :h-imul; conditionally assign
+	them directly to :mul instead of :wmul,
+	:hmul, or otherwise reset to ‘(1 . 1)’.
+	(gnugo-refresh): Update accordingly.
+	(gnugo): Init :mul to ‘(1 . 1)’.
+
+2014-04-17  Thien-Thi Nguyen  <ttn@gnu.org>
+
+	[gnugo int] Consolidate paren overlays access.
+
+	* packages/gnugo/gnugo.el (gnugo-put): Update docstring.
+	(gnugo-refresh): Use ‘destructuring-bind’ for paren overlays.
+	(gnugo): Don't ‘gnugo-put’ overlays in :lparen-ov and
+	:rparen-ov; instead, cons them and stash the pair in :paren-ov.
+
+2014-04-17  Thien-Thi Nguyen  <ttn@gnu.org>
+
+	[gnugo int] Shave one ‘gnugo-other’ call.
+
+	* packages/gnugo/gnugo.el (gnugo): ...here, in the root-node init, by
+	checking for "user plays black" directly, and inverting the resulting
+	:PB, :PW values.
+
+2014-04-16  Thien-Thi Nguyen  <ttn@gnu.org>
+
+	[gnugo] Move most of ‘gnugo-board-mode’ to ‘gnugo’.
+
+	Although the buffer-local hash ‘gnugo-state’ is available in
+	‘gnugo-board-mode’, it is empty.	This impacts mostly funcs on
+	‘gnugo-board-mode-hook’ that use gnugo-{get,put}.
+
+	* packages/gnugo/gnugo.el (gnugo-board-mode): Move buffer switching,
+	options querying, process kicking, a raft of ‘gnugo-put’ calls, and
+	buffer refreshing from here...
+	(gnugo): ...to here; also, don't bother to ‘gnugo--forget’.
+
+2014-04-16  Thien-Thi Nguyen  <ttn@gnu.org>
+
+	[gnugo int] Remove from ‘gnugo-state’ instead of setting to nil.
+
+	* packages/gnugo/gnugo.el (gnugo--forget): New func.
+	(gnugo-sentinel, gnugo-toggle-image-display, gnugo--unclose-game)
+	(gnugo-get-move-insertion-filter, gnugo-toggle-abdication)
+	(gnugo-board-mode): Use it.
+	(:gnugo-gtp-command-spec boardsize :post-thunk)
+	(:gnugo-gtp-command-spec clear_board :post-thunk)
+	(:gnugo-gtp-command-spec fixed_handicap :post-thunk): Likewise.
+
+2014-04-16  Thien-Thi Nguyen  <ttn@gnu.org>
+
+	[gnugo] Add hook: gnugo-start-game-hook
+
+	* packages/gnugo/gnugo.el (gnugo-start-game-hook): New var.
+	(gnugo): Run ‘gnugo-start-game-hook’.
+
+2014-04-16  Thien-Thi Nguyen  <ttn@gnu.org>
+
+	[gnugo] Add abstraction: gnugo-current-player
+
+	* packages/gnugo/gnugo.el (gnugo-current-player): New func.
+	(gnugo-refresh, gnugo-magic-undo, gnugo): Use it.
+
+2014-04-16  Thien-Thi Nguyen  <ttn@gnu.org>
+
+	[gnugo] Drop support for ‘(gnugo-move-history 'count)’.
+
+	* packages/gnugo/gnugo.el (gnugo-move-history): ...here.
+	(gnugo-refresh): For ‘~m’, access :sgf-gametree, :monkey directly.
+
+2014-04-16  Thien-Thi Nguyen  <ttn@gnu.org>
+
+	[gnugo int] Add abstraction: gnugo--plant-and-climb
+
+	* packages/gnugo/gnugo.el (gnugo--plant-and-climb): New func.
+	(gnugo-read-sgf-file, gnugo-board-mode): Use it.
+
+2014-04-16  Thien-Thi Nguyen  <ttn@gnu.org>
+
+	[gnugo] Increase S/N for ‘C-u F’ comment.
+
+	* packages/gnugo/gnugo.el (gnugo-display-final-score): Omit "The game is
+	over.  " and lines w/ start/end time.
+
+2014-04-16  Thien-Thi Nguyen  <ttn@gnu.org>
+
+	[gnugo frolic] Type ‘Q’ to quit.
+
+	* packages/gnugo/gnugo.el (gnugo-frolic-mode-map): Add binding for ‘Q’.
+
+2014-04-15  Thien-Thi Nguyen  <ttn@gnu.org>
+
+	[gnugo int] Commentary munging; nfc.
+
+2014-04-15  Thien-Thi Nguyen  <ttn@gnu.org>
+
+	[gnugo int] Use ‘following-char’ more.
+
+	* packages/gnugo/gnugo.el (gnugo-mouse-move):
+	...here w/ ‘memq’, instead of ‘looking-at’.
+
+2014-04-15  Thien-Thi Nguyen  <ttn@gnu.org>
+
+	[gnugo int] Add abstraction: gnugo--user-play
+
+	* packages/gnugo/gnugo.el (gnugo--user-play): New func.
+	(gnugo-move, gnugo-pass): Use ‘gnugo--user-play’.
+
+2014-04-15  Thien-Thi Nguyen  <ttn@gnu.org>
+
+	[gnugo] Mention ‘gnugo-frolic-mode-hook’.
+
+	Omission from 2014-04-08, "Define "GNUGO Frolic" mode".
+
+	* packages/gnugo/gnugo.el [Commentary]: ...here.
+
+2014-04-15  Thien-Thi Nguyen  <ttn@gnu.org>
+
+	[gnugo int] Add abstraction: gnugo--gate-game-over
+
+	* packages/gnugo/gnugo.el (gnugo--gate-game-over): New defsubst.
+	(gnugo-gate, gnugo-toggle-abdication): Use it.
+
+2014-04-15  Thien-Thi Nguyen  <ttn@gnu.org>
+
+	[gnugo int] Add abstraction: gnugo--ERR-wait
+
+	* packages/gnugo/gnugo.el (gnugo--ERR-wait): New defun.
+	(gnugo-gate, gnugo-toggle-abdication): Use it.
+
+2014-04-15  Thien-Thi Nguyen  <ttn@gnu.org>
+
+	[gnugo] New command: ‘C-c C-a’ (gnugo-toggle-abdication)
+
+	* packages/gnugo/gnugo.el (gnugo-refresh): Include "Abd" in mode line if
+	abdication enabled.
+	(gnugo-get-move-insertion-filter): If abdication enabled, create and
+	save a timer object to call ‘gnugo-get-move’ w/ the opposite of the
+	current ‘color’.
+	(gnugo-toggle-abdication): New command.
+	(gnugo-board-mode-map): Add binding for ‘C-c C-a’.
+
+2014-04-15  Thien-Thi Nguyen  <ttn@gnu.org>
+
+	[gnugo int] Centralize some constant strings.
+
+	* packages/gnugo/gnugo.el (gnugo--rename-buffer-portion): Rewrite.
+	(gnugo-get-move-insertion-filter): Update call.
+	(gnugo-request-suggestion): Likewise.
+
+2014-04-15  Thien-Thi Nguyen  <ttn@gnu.org>
+
+	[gnugo int] Accept color for ‘gnugo-push-move’ 1st arg.
+
+	* packages/gnugo/gnugo.el (gnugo-push-move): Rename first arg to WHO; if
+	it is not a boolean, take it as ‘color’ directly; update "effective
+	userp" ref likewise.
+	(gnugo-get-move-insertion-filter): Pass ‘color’ directly to
+	‘gnugo-push-move’.
+
+2014-04-15  Thien-Thi Nguyen  <ttn@gnu.org>
+
+	[gnugo] New command: ‘S’ (gnugo-request-suggestion)
+
+	* packages/gnugo/gnugo.el (gnugo-gate): If waiting for a suggestion, say
+	"Still thinking" instead of "Not your turn yet" in error message.
+	(gnugo--q): If waiting for a suggestion, say
+	"receive a suggestion" instead of "play" in error message.
+	(gnugo--rename-buffer-portion): New func.
+	(gnugo-get-move-insertion-filter): On received suggestion, rename buffer
+	w/ "to play", warp the cursor unless nonsensical or inhibited, and
+	display the suggestion in the echo area.
+	(gnugo-get-move): Take optional arg SUGGESTION; save it as well as color
+	in :waiting.
+	(gnugo-request-suggestion): New command.
+	(gnugo-board-mode-map): Add binding for ‘S’.
+
+2014-04-15  Thien-Thi Nguyen  <ttn@gnu.org>
+
+	[gnugo int] Add abstraction: gnugo--finish-move
+
+	* packages/gnugo/gnugo.el (gnugo--finish-move): New func.
+	(gnugo-get-move-insertion-filter, gnugo-move, gnugo-pass): Use it.
+
+2014-04-15  Thien-Thi Nguyen  <ttn@gnu.org>
+
+	[gnugo] Drop var: gnugo-inhibit-refresh
+
+	* packages/gnugo/gnugo.el (gnugo-inhibit-refresh): Delete.
+	(gnugo-post-move-hook): Update docstring.
+	(gnugo-get-move-insertion-filter)
+	(gnugo-move, gnugo-pass): Update.
+
+2014-04-14  Thien-Thi Nguyen  <ttn@gnu.org>
+
+	[gnugo maint] Update HACKING; nfc.
+
+2014-04-14  Thien-Thi Nguyen  <ttn@gnu.org>
+
+	[gnugo frolic] Display "!" for comment; add as ‘help-echo’.
+
+	* packages/gnugo/gnugo.el (gnugo-frolic-in-the-leaves): ...here.
+
+2014-04-14  Thien-Thi Nguyen  <ttn@gnu.org>
+
+	[gnugo] Make ‘C-u F’ add the blurb as a comment to the last node.
+
+	* packages/gnugo/gnugo.el (gnugo-display-final-score):
+	...here, if new prefix arg COMMENT is set, with "territory",
+	"captures", "komi" squashed to "T", "C", "K", respectively.
+
+2014-04-14  Thien-Thi Nguyen  <ttn@gnu.org>
+
+	[gnugo] New command: ‘C’ (gnugo-comment)
+
+	* packages/gnugo/gnugo.el (gnugo-comment): New command.
+	(gnugo-board-mode-map): Add binding for ‘C’.
+
+2014-04-14  Thien-Thi Nguyen  <ttn@gnu.org>
+
+	[gnugo int] Add abstraction: gnugo--node-with-played-stone
+
+	* packages/gnugo/gnugo.el (gnugo--node-with-played-stone): New func.
+	(gnugo-describe-position): Use ‘gnugo--node-with-played-stone’.
+
+2014-04-14  Thien-Thi Nguyen  <ttn@gnu.org>
+
+	[gnugo int] Incorporate *-play-stone into ‘gnugo-push-move’.
+
+	U (X) ≡ "Don't call X".
+	* packages/gnugo/gnugo.el (gnugo--play-stone): Delete func.
+	(gnugo--user-play-stone): Delete defsubst.
+	(gnugo-push-move): Do GTP "play COLOR MOVE" here.
+	(gnugo-get-move-insertion-filter): U (gnugo--play-stone); make USERP arg
+	to ‘gnugo-push-move’ depend on :waiting color.
+	(gnugo-move, gnugo-pass): U (gnugo--user-play-stone).
+	(gnugo-okay): U (gnugo--play-stone); decruft local vars.
+	(gnugo-display-final-score): U (gnugo--play-stone).
+
+2014-04-14  Thien-Thi Nguyen  <ttn@gnu.org>
+
+	[gnugo] Fix bug: Keep subproc informed of forced PASS.
+
+	* packages/gnugo/gnugo.el (gnugo-display-final-score): For forced PASS
+	moves, call ‘gnugo--play-stone’, too.
+
+2014-04-14  Thien-Thi Nguyen  <ttn@gnu.org>
+
+	[gnugo int] Use GTP ‘reg_genmove’ instead of ‘genmove’.
+
+	* packages/gnugo/gnugo.el (gnugo-get-move): ...here.
+	(gnugo-get-move-insertion-filter): Extract COLOR from :waiting; call
+	‘gnugo--play-stone’ with it.
+
+2014-04-14  Thien-Thi Nguyen  <ttn@gnu.org>
+
+	[gnugo int] Rename :waitingp to :waiting; save color there.
+
+	* packages/gnugo/gnugo.el (gnugo-board-buffer-p)
+	(gnugo-get-move-insertion-filter, gnugo-display-final-score)
+	(gnugo-gate, gnugo--q, gnugo-refresh, gnugo-board-mode): Update.
+	(gnugo-get-move): Save COLOR in :waiting.
+
+2014-04-14  Thien-Thi Nguyen  <ttn@gnu.org>
+
+	[gnugo] Dropped command: ‘t’ (gnugo-toggle-dead-group)
+
+	This was incomplete and not very useful.
+
+	* packages/gnugo/gnugo.el (gnugo-toggle-dead-group): Delete command.
+	(gnugo-board-mode-map): Don't bind ‘t’.
+
+2014-04-13  Thien-Thi Nguyen  <ttn@gnu.org>
+
+	[gnugo int] Incorporate ‘gnugo-note’ into unique caller.
+
+	* packages/gnugo/gnugo.el
+	(gnugo-note): Move...
+	(gnugo-push-move): ...into here.
+
+2014-04-13  Thien-Thi Nguyen  <ttn@gnu.org>
+
+	[gnugo int] Use ‘gnugo--decorate’ more.
+
+	* packages/gnugo/gnugo.el (gnugo-board-mode): ...here.
+
+2014-04-13  Thien-Thi Nguyen  <ttn@gnu.org>
+
+	[gnugo int] Add abstraction: gnugo--decorate
+
+	* packages/gnugo/gnugo.el (gnugo--decorate): New defsubst.
+	(gnugo-note): Use ‘gnugo--decorate’.
+
+2014-04-13  Thien-Thi Nguyen  <ttn@gnu.org>
+
+	[gnugo] Include root node in :sgf-gametree description.
+
+	* packages/gnugo/gnugo.el (gnugo--root-node): Move earlier in file.
+	(gnugo-describe-internal-properties): ...here.
+
+2014-04-13  Thien-Thi Nguyen  <ttn@gnu.org>
+
+	[gnugo int] Add abstraction: gnugo--count-query
+
+	* packages/gnugo/gnugo.el (gnugo--count-query): New defsubst.
+	(gnugo-estimate-score, gnugo-display-final-score): Use it.
+
+2014-04-13  Thien-Thi Nguyen  <ttn@gnu.org>
+
+	[gnugo int] Add abstractions: gnugo--{user-}play-stone
+
+	* packages/gnugo/gnugo.el (gnugo--play-stone): New func.
+	(gnugo--user-play-stone): New defsubst.
+	(gnugo-move, gnugo-pass): Use ‘gnugo--user-play-stone’.
+	(gnugo-toggle-dead-group, gnugo-okay): Use ‘gnugo--play-stone’.
+
+2014-04-13  Thien-Thi Nguyen  <ttn@gnu.org>
+
+	[gnugo int] Make ‘gnugo-gate’ slightly faster.
+
+	* packages/gnugo/gnugo.el (gnugo-gate): Check IN-PROGRESS-P before
+	:game-over.
+
+2014-04-12  Thien-Thi Nguyen  <ttn@gnu.org>
+
+	[gnugo] New command: ‘O’ (gnugo-okay)
+
+	* packages/gnugo/gnugo.el (gnugo-okay): New command.
+	(gnugo-board-mode-map): Add binding for ‘O’.
+
+2014-04-12  Thien-Thi Nguyen  <ttn@gnu.org>
+
+	fixup! [gnugo frolic] Add previous/next move navigation commands.
+
+2014-04-12  Thien-Thi Nguyen  <ttn@gnu.org>
+
+	[gnugo frolic] Add previous/next move navigation commands.
+
+	* packages/gnugo/gnugo.el (gnugo-frolic-in-the-leaves fsi): Take first
+	arg PROPERTIES, pushing other args later; use them to ‘propertize’ the
+	formatted string.
+	(gnugo-frolic-in-the-leaves): Propertize "move" lines w/ property ‘n’,
+	column text additionally w/ property ‘bx’.
+	(gnugo--vertical): New func.
+	(gnugo-frolic-previous-move): New command.
+	(gnugo-frolic-next-move): Likewise.
+	(gnugo-frolic-mode-map): Add bindings for ‘C-p’, ‘C-n’.
+
+2014-04-12  Thien-Thi Nguyen  <ttn@gnu.org>
+
+	[gnugo int] Move :SZ access into ‘gnugo--as-pos-func’.
+
+	* packages/gnugo/gnugo.el (gnugo--as-pos-func): Don't take arg ‘size’;
+	instead, do ‘(gnugo-get :SZ)’ internally.
+	(gnugo-move-history): Update call to ‘gnugo--as-pos-func’.
+	(gnugo-frolic-in-the-leaves): Likewise.
+
+2014-04-12  Thien-Thi Nguyen  <ttn@gnu.org>
+
+	[gnugo] Make ‘=’ also display move number.
+
+	* packages/gnugo/gnugo.el (gnugo-describe-position): If there a stone at
+	that position, also display its move number.
+
+2014-04-12  Thien-Thi Nguyen  <ttn@gnu.org>
+
+	[gnugo int] Add abstraction: gnugo--as-cc-func
+
+	* packages/gnugo/gnugo.el (gnugo--as-cc-func): New func.
+	(gnugo-note): Use ‘gnugo--as-cc-func’.
+
+2014-04-12  Thien-Thi Nguyen  <ttn@gnu.org>
+
+	[gnugo maint] Update HACKING; nfc.
+
+	The debugging aids functionality is now part of gnugo.el.
+
+	The various ideas / wishlist items are now realized, except for
+	"dribble the SGF tree", which is bunk, and "SGF tree traversal", which
+	awaits a nicer (user-level) node-ref facility.
+
+2014-04-12  Thien-Thi Nguyen  <ttn@gnu.org>
+
+	[gnugo int] Use ‘ignore’ to avoid byte-compiler warnings.
+
+	* packages/gnugo/gnugo.el (gnugo-frolic-prune-branch)
+	(:gnugo-gtp-command-spec final_score): ...here.
+
+2014-04-12  Thien-Thi Nguyen  <ttn@gnu.org>
+
+	[gnugo frolic int] Add var selection to awakening parameterization.
+
+	This eliminates unused local vars for the affected funcs.
+
+	* packages/gnugo/gnugo.el (gnugo--awake): Check HOW for ‘(omit NAME
+	...)’ and arrange to omit NAME... from the return value; return a simple
+	list, w/o ‘values’.
+	(gnugo--awakened): Use ‘destructuring-bind’ instead of
+	‘multiple-value-bind’; construct its ARGS parameter based on ‘(omit NAME
+	...)’ in HOW.
+	(gnugo--swiz): Omit ‘tree’.
+	(gnugo--sideways): Omit ‘tree’, ‘ends’, ‘monkey’, ‘bidx’, ‘line’.
+
+2014-04-12  Thien-Thi Nguyen  <ttn@gnu.org>
+
+	[gnugo frolic int] Add abstraction: gnugo--sideways
+
+	* packages/gnugo/gnugo.el (gnugo--sideways): New func.
+	(gnugo-frolic-backward-branch, gnugo-frolic-forward-branch): Use it.
+
+2014-04-12  Thien-Thi Nguyen  <ttn@gnu.org>
+
+	[gnugo int] Decruft: Delete unused local vars.
+
+	U (V, ...) ≡ "Delete local var V, ...".
+	* packages/gnugo/gnugo.el
+	(gnugo-move-history): U (col).
+	(gnugo-frolic-in-the-leaves): U (node, count).
+
+2014-04-12  Thien-Thi Nguyen  <ttn@gnu.org>
+
+	[gnugo int] Fix syntax error in ‘loop’ destructuring.
+
+	The destructuring is similar to but not identical to the facility
+	provided by ‘defmacro’ (info "(cl) For Clauses"). This was caught, btw,
+	while trying to byte-compile w/
+	‘-*- lexical-binding: t -*-’ on the first line.
+
+	* packages/gnugo/gnugo.el (gnugo-board-mode): Omit ‘&optional’ from
+	‘for’ clause variable destructuring form.
+
+2014-04-11  Thien-Thi Nguyen  <ttn@gnu.org>
+
+	[gnugo int] Decruft: Drop gametree IR element: KIDS
+
+	* packages/gnugo/gnugo.el (gnugo-describe-internal-properties): Update.
+	(gnugo/sgf-create TREE): Don't take 3rd arg KIDS; don't do multiple-kids
+	detection / stashing.
+	(gnugo/sgf-create): Omit KIDS from rv.
+
+2014-04-11  Thien-Thi Nguyen  <ttn@gnu.org>
+
+	[gnugo int] Reorder gametree IR: ENDS, MNUM, ROOT, KIDS.
+
+	* packages/gnugo/gnugo.el (gnugo--tree-mnum)
+	(gnugo--tree-ends, gnugo--set-tree-ends)
+	(gnugo-describe-internal-properties, gnugo--root-node)
+	(gnugo/sgf-create): ...here.
+
+2014-04-11  Thien-Thi Nguyen  <ttn@gnu.org>
+
+	[gnugo sgf int] Internalize ‘gnugo/sgf-hang-from-root’.
+
+	* packages/gnugo/gnugo.el (gnugo/sgf-write-file):
+	...into here, and remove ‘gnugo/sgf-hang-from-root’.
+
+2014-04-11  Thien-Thi Nguyen  <ttn@gnu.org>
+
+	[gnugo sgf int] Consolidate loops.
+
+	* packages/gnugo/gnugo.el (gnugo/sgf-write-file):
+	...here, for "taking responsibility" and "write it out".
+
+2014-04-10  Thien-Thi Nguyen  <ttn@gnu.org>
+
+	[gnugo sgf] Fix bug: Add ‘\’-escapes on write.
+
+	* packages/gnugo/gnugo.el (gnugo/sgf-write-file esc): New internal func.
+	(gnugo/sgf-write-file >>one)
+	(gnugo/sgf-write-file >>two): Use ‘esc’.
+
+2014-04-10  Thien-Thi Nguyen  <ttn@gnu.org>
+
+	[gnugo sgf] Fix bug: Preserve whitespace for ‘text’ values.
+
+	* packages/gnugo/gnugo.el (gnugo/sgf-create x): Take arg
+	PRESERVE-WHITESPACE; when set, don't squeeze whitespace.
+	(gnugo/sgf-create one): Specify PRESERVE-WHITESPACE to ‘x’ when ‘type’
+	is ‘text’.
+
+2014-04-10  Thien-Thi Nguyen  <ttn@gnu.org>
+
+	[gnugo int] Whitespace munging; nfc.
+
+2014-04-10  Thien-Thi Nguyen  <ttn@gnu.org>
+
+	[gnugo int] Fix bug: Update local var ‘ends’ when branching.
+
+	Omission from 2014-04-05, "Expand gametree IR: MNUM, KIDS, ROOT". Note
+	the unheeded hint: "hmm, probably unnecessary" -- d'oh!
+
+	* packages/gnugo/gnugo.el (gnugo--set-tree-ends): Return the new ends.
+	(gnugo-note): Update local var ‘ends’ w/ ‘gnugo--set-tree-ends’ rv.
+
+2014-04-10  Thien-Thi Nguyen  <ttn@gnu.org>
+
+	[gnugo int] Move vectorization into ‘gnugo--set-tree-ends’.
+
+	* packages/gnugo/gnugo.el (gnugo--set-tree-ends): Rename 2nd arg to LS;
+	apply ‘vector’ to it to obtain ENDS.
+	(gnugo-frolic-prune-branch, gnugo-note): Update accordingly.
+
+2014-04-10  Thien-Thi Nguyen  <ttn@gnu.org>
+
+	[gnugo frolic int] Don't bother to awake w/ ‘col’.
+
+	* packages/gnugo/gnugo.el (gnugo--awake): Don't return ‘col’.
+	(gnugo--awakened): Don't consume/bind ‘col’.
+
+2014-04-10  Thien-Thi Nguyen  <ttn@gnu.org>
+
+	[gnugo frolic int] Parameterize, centralize awakening.
+
+	* packages/gnugo/gnugo.el (gnugo--awake): Take arg HOW, a list of forms;
+	vary ‘line’ extraction using HOW; likewise, conditionally throw "No
+	branch here" user-error.
+	(gnugo--awakened): Add ‘declare’ form for indentation; take first arg
+	HOW; pass it quoted to ‘gnugo--awake’.
+	(gnugo--swiz, gnugo-frolic-prune-branch)
+	(gnugo-frolic-backward-branch, gnugo-frolic-forward-branch): Update
+	‘gnugo--awakened’ call; drop centralized code.
+
+2014-04-10  Thien-Thi Nguyen  <ttn@gnu.org>
+
+	[gnugo frolic] Doc fix.
+
+	* packages/gnugo/gnugo.el (gnugo-frolic-mode): Don't limit to "viewing";
+	don't mention View minor mode.
+
+2014-04-09  Thien-Thi Nguyen  <ttn@gnu.org>
+
+	[gnugo frolic] Set ‘truncate-lines’.
+
+	* packages/gnugo/gnugo.el (gnugo-frolic-mode): ...here.
+
+2014-04-09  Thien-Thi Nguyen  <ttn@gnu.org>
+
+	[gnugo frolic] Sync column headers w/ buffer text; handle offsets.
+
+	* packages/gnugo/gnugo.el (gnugo-frolic-in-the-leaves): For
+	‘header-line-format’, replace constant string with ‘(:eval ...)’ form
+	that handles left scroll bar, left fringe, and horizontal scrolling
+	margin, if any.
+
+2014-04-09  Thien-Thi Nguyen  <ttn@gnu.org>
+
+	[gnugo frolic int] Regularize keymap decl + init.
+
+	* packages/gnugo/gnugo.el (gnugo-frolic-mode-map): New defvar.
+	<top-level>: Conditionalize ‘gnugo-frolic-mode-map’ init; use same idiom
+	as for ‘gnugo-board-mode-map’.
+
+2014-04-09  Thien-Thi Nguyen  <ttn@gnu.org>
+
+	[gnugo int] Fix syntax error.
+
+	Wishful Scheme thinking, not enough caffeine drinking...
+
+	* packages/gnugo/gnugo.el (gnugo--move-to-bcol): ...here.
+
+2014-04-09  Thien-Thi Nguyen  <ttn@gnu.org>
+
+	[gnugo int] Add abstraction: gnugo--move-to-bcol
+
+	* packages/gnugo/gnugo.el (gnugo--move-to-bcol): New defsubst.
+	(gnugo--swiz, gnugo-frolic-prune-branch)
+	(gnugo-frolic-backward-branch)
+	(gnugo-frolic-forward-branch): Use it.
+
+2014-04-09  Thien-Thi Nguyen  <ttn@gnu.org>
+
+	[gnugo int] Fix bug: Unbreak SGF file output.
+
+	Omission from / regression introduced 2014-04-05,
+	"Expand gametree IR: MNUM, KIDS, ROOT", sigh.
+
+	* packages/gnugo/gnugo.el (gnugo/sgf-hang-from-root): Use
+	‘gnugo--tree-ends’.
+
+2014-04-09  Thien-Thi Nguyen  <ttn@gnu.org>
+
+	[gnugo frolic int] Don't go through ‘gnugo-frolic-quit’ for refresh.
+
+	* packages/gnugo/gnugo.el (gnugo-frolic-in-the-leaves): If
+	‘gnugo-frolic-parent-buffer’ is already set, don't clobber it.
+	(gnugo--swiz): Don't call ‘gnugo-frolic-quit’.
+	(gnugo-frolic-prune-branch): Likewise.
+
+2014-04-09  Thien-Thi Nguyen  <ttn@gnu.org>
+
+	[gnugo frolic int] Use ‘move-to-column’ more.
+
+	* packages/gnugo/gnugo.el (gnugo-frolic-prune-branch): ...here.
+
+2014-04-09  Thien-Thi Nguyen  <ttn@gnu.org>
+
+	[gnugo frolic int] Assign ‘pop’ rv to avoid byte-compiler warning.
+
+	* packages/gnugo/gnugo.el (gnugo-frolic-prune-branch):
+	...here; also, let ‘pop’ handle ‘(zerop a)’ case internally.
+
+2014-04-09  Thien-Thi Nguyen  <ttn@gnu.org>
+
+	[gnugo frolic] Handle invalid branch more consistently.
+
+	* packages/gnugo/gnugo.el (gnugo--awake): If ‘col’ is too big or too
+	small, return nil for ‘a’.
+	(gnugo--swiz, gnugo-frolic-prune-branch): Throw error on invalid branch.
+	(gnugo-frolic-backward-branch): Take invalid branch as ‘width’.
+	(gnugo-frolic-forward-branch): Take invalid branch as -1.
+
+2014-04-08  Thien-Thi Nguyen  <ttn@gnu.org>
+
+	[gnugo frolic] Add command to prune a branch.
+
+	* packages/gnugo/gnugo.el (gnugo-frolic-prune-branch): New command.
+	(gnugo-frolic-mode-map): Bind ‘C-M-p’ to it.
+
+2014-04-08  Thien-Thi Nguyen  <ttn@gnu.org>
+
+	[gnugo frolic] Add command to set the main line.
+
+	* packages/gnugo/gnugo.el (gnugo--swiz): Rename arg SHIFT to BLUNT; if
+	BLUNT is a number, validate and take it as ‘b’ directly.
+	(gnugo-frolic-set-as-main-line): New command.
+	(gnugo-frolic-mode-map): Bind ‘C-m’ to it.
+
+2014-04-08  Thien-Thi Nguyen  <ttn@gnu.org>
+
+	[gnugo frolic] Add backward/forward branch navigation commands.
+
+	* packages/gnugo/gnugo.el (gnugo-frolic-backward-branch)
+	(gnugo-frolic-forward-branch): New commands.
+	(gnugo-frolic-mode-map): Add bindings for ‘C-b’, ‘C-f’.
+
+2014-04-08  Thien-Thi Nguyen  <ttn@gnu.org>
+
+	[gnugo frolic] Add some branch swizzling commands.
+
+	* packages/gnugo/gnugo.el (gnugo-frolic-in-the-leaves): Set buffer-local
+	‘gnugo-state’ to that of the parent buffer.
+	(gnugo--awake): New func.
+	(gnugo--awakened): New macro.
+	(gnguo--swiz): New func.
+	(gnugo-frolic-exchange-left, gnugo-frolic-rotate-left)
+	(gnugo-frolic-exchange-right, gnugo-frolic-rotate-right): New commands.
+	(gnugo-frolic-mode-map): Add bindings for ‘j’, ‘J’, ‘k’, ‘K’.
+
+2014-04-08  Thien-Thi Nguyen  <ttn@gnu.org>
+
+	[gnugo int] Make ‘gnugo-board-buffer-p’ precise.
+
+	* packages/gnugo/gnugo.el (gnugo-board-buffer-p): Check ‘major-mode’
+	directly; use ‘buffer-local-value’.
+
+2014-04-08  Thien-Thi Nguyen  <ttn@gnu.org>
+
+	[gnugo] Add some navigation commands for GNUGO Frolic mode.
+
+	* packages/gnugo/gnugo.el (gnugo-frolic-parent-buffer)
+	(gnugo-frolic-origin): New defvars.
+	(gnugo-frolic-mode): Don't invoke ‘view-mode’.
+	(gnugo-frolic-quit, gnugo-frolic-return-to-origin): New commands.
+	(gnugo-frolic-in-the-leaves): Set as local vars
+	‘gnugo-frolic-in-the-leaves’, ‘gnugo-frolic-origin’; use
+	‘gnugo-frolic-return-to-origin’.
+	(gnugo-frolic-mode-map): Add bindings for ‘q’, ‘C’, ‘o’.
+
+2014-04-08  Thien-Thi Nguyen  <ttn@gnu.org>
+
+	[gnugo] Define "GNUGO Frolic" mode.
+
+	* packages/gnugo/gnugo.el (gnugo-frolic-mode): New command, via
+	‘define-derived-mode’.
+	(gnugo-frolic-in-the-leaves): Use it.
+
+2014-04-07  Thien-Thi Nguyen  <ttn@gnu.org>
+
+	[gnugo int] Insert frolic xrep starting w/ the leaves.
+
+	* packages/gnugo/gnugo.el (gnugo-frolic-in-the-leaves ...)
+	(... tip-p): New internal func.
+	[breathe in]: Don't construct root-forward lists to display; instead,
+	note fork if on tip of orig and side branches.
+	[breathe out]: Start displaying from ‘max-move-num’ down; move to
+	‘point-min’ at initially, before each line; pop from copy of ‘ends’
+	directly; use ‘point-marker’ for ‘finish’.
+
+2014-04-07  Thien-Thi Nguyen  <ttn@gnu.org>
+
+	[gnugo int] Move precise fanout computation to "breathe in".
+
+	* packages/gnugo/gnugo.el (gnugo-frolic-in-the-leaves link): Use
+	‘pushnew’; push the node's branch number directly.
+	(gnugo-frolic-in-the-leaves): Check for continuation node prior to
+	appending ‘acc’; link it only on non-empty ‘acc’; in "breathe out",
+	accumulate into ‘forks’ directly.
+
+2014-04-07  Thien-Thi Nguyen  <ttn@gnu.org>
+
+	[gnugo int] Decruft: Consolidate "breathe in" loops.
+
+	* packages/gnugo/gnugo.el (gnugo-frolic-in-the-leaves):
+	...here, as :monkey no longer confers a priori move-number info.
+
+2014-04-07  Thien-Thi Nguyen  <ttn@gnu.org>
+
+	[gnugo int] Comment munging; nfc.
+
+2014-04-07  Thien-Thi Nguyen  <ttn@gnu.org>
+
+	[gnugo int] Avoid lower move-num candidates in déjà-vu search.
+
+	* packages/gnugo/gnugo.el (gnugo-note): Truncate branch search on
+	encoutering node w/ insufficient move number.
+
+2014-04-06  Thien-Thi Nguyen  <ttn@gnu.org>
+
+	[gnugo int] Drop :monkey COUNT; use node's tree MNUM directly.
+
+	* packages/gnugo/gnugo.el (gnugo-put): Update :monkey description.
+	(gnugo-describe-internal-properties): Use ‘gnugo--tree-mnum’; don't
+	bother w/ :monkey COUNT.
+	(gnugo-move-history): Use first node's tree MNUM directly.
+	(gnugo-frolic-in-the-leaves): Compute ‘max-move-num’ from ‘ends’ nodes'
+	tree MNUM directly; drop hash table ‘order’.
+	(gnugo-note, gnugo-magic-undo): Don't update :monkey COUNT.
+	(gnugo-read-sgf-file, gnugo-board-mode): Don't init :monkey COUNT.
+
+2014-04-06  Thien-Thi Nguyen  <ttn@gnu.org>
+
+	[gnugo int] Maintain tree MNUM.
+
+	* packages/gnugo/gnugo.el (gnugo--tree-mnum): New defsubst.
+	(gnugo-note): Record new node's move number in the tree MNUM.
+	(gnugo/sgf-create): Change tree MNUM weakness to ‘key’.
+
+2014-04-06  Thien-Thi Nguyen  <ttn@gnu.org>
+
+	[gnugo int] Add abstraction: gnugo--mkht
+
+	* packages/gnugo/gnugo.el (gnugo--mkht): New defsubst.
+	(gnugo-frolic-in-the-leaves, gnugo-board-mode)
+	(gnugo/sgf-create, gnugo/sgf-hang-from-root): Use it.
+
+2014-04-06  Thien-Thi Nguyen  <ttn@gnu.org>
+
+	[gnugo int] Fix bug: Detect case for KIDS addition correctly.
+
+	Introduced 2014-04-05, "Expand gametree IR: MNUM, KIDS, ROOT".
+
+	* packages/gnugo/gnugo.el (gnugo/sgf-create): For multiple-kids
+	detection, phase 2, invert gate predicate.
+
+2014-04-05  Thien-Thi Nguyen  <ttn@gnu.org>
+
+	[gnugo int] Expand gametree IR: MNUM, KIDS, ROOT.
+
+	* packages/gnugo/gnugo.el (gnugo--tree-ends): Rewrite.
+	(gnugo--set-tree-ends): Likewise, as a defsubst.
+	(gnugo-describe-internal-properties): Frob :sgf-gametree, too.
+	(gnugo--root-node): Rewrite.
+	(gnugo--set-tree-ends-actually): Delete func.
+	(gnugo/sgf-root-node): Delete func.
+	(gnugo/sgf-create TREE): Take also MNUM, KIDS; compute and record move
+	number of ‘node’; record multiple-kids case in two phases; update
+	recursive call.
+	(gnugo/sgf-create): Update call to ‘TREE’; return [MNUM KIDS ENDS ROOT].
+
+2014-04-05  Thien-Thi Nguyen  <ttn@gnu.org>
+
+	[gnugo int] Invert ‘if’ CONDITION and THEN/ELSE clauses.
+
+	* packages/gnugo/gnugo.el (gnugo/sgf-create):
+	...here, to place the "multiple" case as the ELSE.
+
+2014-04-05  Thien-Thi Nguyen  <ttn@gnu.org>
+
+	[gnugo int] Use ‘gnugo--tree-ends’ more.
+
+	Omission from 2014-04-05,
+	"Add abstractions: gnugo--{,set-}tree-ends".
+
+	* packages/gnugo/gnugo.el (gnugo-note, gnugo-magic-undo): ...here.
+
+2014-04-05  Thien-Thi Nguyen  <ttn@gnu.org>
+
+	[gnugo] Declare dependency on ‘ascii-art-to-unicode’.
+
+	Omission from 2014-04-03, "Add command
+	‘gnugo-frolic-in-the-leaves’ and keybinding".
+
+	* packages/gnugo/gnugo.el [Package-Requires]: New header.
+
+2014-04-05  Thien-Thi Nguyen  <ttn@gnu.org>
+
+	[gnugo int] Make ‘gnugo--no-regrets’ take ENDS directly.
+
+	* packages/gnugo/gnugo.el (gnugo--no-regrets): ...here.
+	(gnugo-note, gnugo-magic-undo): Update calls.
+
+2014-04-05  Thien-Thi Nguyen  <ttn@gnu.org>
+
+	[gnugo int] Add abstractions: gnugo--{,set-}tree-ends
+
+	* packages/gnugo/gnugo.el
+	(gnugo--tree-ends): New defsubst.
+	(gnugo--set-tree-ends-actually): New func.
+	(gnugo--set-tree-ends): New macro.
+	(gnugo-frolic-in-the-leaves, gnugo--no-regrets)
+	(gnugo-read-sgf-file, gnugo-board-mode, gnugo/sgf-root-node): Use
+	‘gnugo--tree-ends’.
+	(gnugo-note): Likewise, and also ‘gnugo--set-tree-ends’.
+
+2014-04-05  Thien-Thi Nguyen  <ttn@gnu.org>
+
+	[gnugo int] Use ‘gnugo/sgf-create’ more.
+
+	* packages/gnugo/gnugo.el (gnugo-board-mode): ...here, for uninitialized
+	board setup, instead of manual consing.
+
+2014-04-05  Thien-Thi Nguyen  <ttn@gnu.org>
+
+	[gnugo] Support SGF[4] parsing from string data.
+
+	* packages/gnugo/gnugo.el
+	(gnugo-read-sgf-file): Use ‘gnugo/sgf-create’.
+	(gnugo/sgf-create): Rename from ‘gnugo/sgf-read-file’; rename 1st arg to
+	FILE-OR-DATA; take optional 2nd arg DATA-P; if DATA-P set, arrange to
+	parse FILE-OR-DATA directly.
+
+2014-04-05  Thien-Thi Nguyen  <ttn@gnu.org>
+
+	[gnugo int] Avoid double list-reverse.
+
+	* packages/gnugo/gnugo.el (gnugo-describe-internal-properties): Use ‘do
+	(push ...)’ instead of ‘collect’ in ‘loop’; don't ‘reverse’ the result
+	later.
+
+2014-04-05  Thien-Thi Nguyen  <ttn@gnu.org>
+
+	[gnugo int] Specify STREAM to ‘pp’ directly.
+
+	* packages/gnugo/gnugo.el (gnugo-describe-internal-properties):
+	...here, instead of ‘let’-binding ‘standard-output’.
+
+2014-04-04  Thien-Thi Nguyen  <ttn@gnu.org>
+
+	[gnugo int] Remove abstraction: continue-on
+
+	* packages/gnugo/gnugo.el (gnugo-note): ...here, inlining it.
+
+2014-04-04  Thien-Thi Nguyen  <ttn@gnu.org>
+
+	[gnugo int] Support growth also off of main line.
+
+	* packages/gnugo/gnugo.el (gnugo-note): For déjà-vu check, don't start
+	w/ ‘bidx’ if no regrets; also, copy the old branch immediately to its
+	right, instead of placing it at the end of the ends vector.
+
+2014-04-03  Thien-Thi Nguyen  <ttn@gnu.org>
+
+	[gnugo int] Use ‘cl-labels’ less.
+
+	* packages/gnugo/gnugo.el (gnugo-move-history): Use ‘cl-flet*’.
+	(gnugo-note, gnugo-close-game, gnugo-toggle-dead-group)
+	(gnugo-display-final-score, gnugo/sgf-read-file): Use ‘cl-flet’.
+	(:gnugo-gtp-command-spec): Use ‘cl-flet*’, ‘cl-flet’.
+
+2014-04-03  Thien-Thi Nguyen  <ttn@gnu.org>
+
+	[gnugo int] Use ‘gnugo--as-pos-func’ more.
+
+	* packages/gnugo/gnugo.el (gnugo-move-history): ...here.
+
+2014-04-03  Thien-Thi Nguyen  <ttn@gnu.org>
+
+	[gnugo] Add command ‘gnugo-frolic-in-the-leaves’ and keybinding.
+
+	* packages/gnugo/gnugo.el: Require ‘ascii-art-to-unicode’.
+	(gnugo--as-pos-func): New func.
+	(gnugo-frolic-in-the-leaves): New command.
+	(gnugo-board-mode-map): Bind ‘L’ to ‘gnugo-frolic-in-the-leaves’.
+
+2014-04-03  Thien-Thi Nguyen  <ttn@gnu.org>
+
+	[gnugo maint] Add some debugging aids to HACKING; nfc.
+
+2014-03-29  Thien-Thi Nguyen  <ttn@gnu.org>
+
+	[gnugo int] Add abstraction: gnugo--move-prop
+
+	* packages/gnugo/gnugo.el (gnugo--move-prop): New defsubst.
+	(gnugo-move-history, gnugo-read-sgf-file): Use it.
+
+2014-03-28  Thien-Thi Nguyen  <ttn@gnu.org>
+
+	[gnugo] Add command ‘gnugo-oops’ and keybinding.
+
+	* packages/gnugo/gnugo.el (gnugo--no-regrets): New defsubst.
+	(gnugo-note): Detect déjà-vu; handle non-tip growth.
+	(gnugo-magic-undo): Take optional 3rd arg KEEP; inhibit truncation if
+	non-nil or if already "remorseful".
+	(gnugo-oops): New command.
+	(gnugo-board-mode-map): Bind ‘o’ to ‘gnugo-oops’.
+
+2014-03-28  Thien-Thi Nguyen  <ttn@gnu.org>
+
+	[gnugo] Move "1 or 2" calculation into ‘gnugo-magic-undo’.
+
+	* packages/gnugo/gnugo.el (gnugo-magic-undo): ...here.
+	(gnugo-undo-two-moves): Update call to ‘gnugo-magic-undo’.
+
+2014-03-26  Thien-Thi Nguyen  <ttn@gnu.org>
+
+	[gnugo maint] Move hi-lock hint from NEWS to HACKING; nfc.
+
+2014-03-24  Thien-Thi Nguyen  <ttn@gnu.org>
+
+	[gnugo int] Invert gametree IR to hang by the leaves.
+
+	* packages/gnugo/gnugo.el (gnugo-put): Update :monkey doc.
+	(gnugo-describe-internal-properties): Update :monkey transform.
+	(gnugo-move-history): Use :monkey MEM directly.
+	(gnugo-move-history finish): Don't use ‘next’ rv as continuation
+	condition; instead, use non-nil ‘mem’.
+	(gnugo-note): Use :monkey MEM directly; rework link wrangling.
+	(gnugo-read-sgf-file): Update :monkey init.
+	(gnugo-magic-undo): Rework link wrangling.
+	(gnugo-board-mode): Update :sgf-gametree and :monkey init.
+	(gnugo/sgf-root-node): Rewrite.
+	(gnugo/sgf-read-file morep): New internal func.
+	(gnugo/sgf-read-file seek): Use ‘morep’.
+	(gnugo/sgf-read-file TREE): Rewrite to hang by the leaves.
+	(gnugo/sgf-read-file): Iterate at collection level.
+	(gnugo/sgf-hang-from-root): New func.
+	(gnugo/sgf-write-file): Use ‘gnugo/sgf-hang-from-root’.
+
+2014-03-24  Thien-Thi Nguyen  <ttn@gnu.org>
+
+	[gnugo int] Embrace (NODE[...] [SUBTREE...]) IR, for now.
+
+	It's not so bad, after all.  OTOH, hanging by the leaves is better.
+
+	* packages/gnugo/gnugo.el (gnugo/sgf-read-file TREE): Use ‘nconc’.
+	(gnugo/sgf-write-file >>tree): Use ‘dolist’.
+
+2014-03-24  Thien-Thi Nguyen  <ttn@gnu.org>
+
+	[gnugo int] Use ‘pop’ more.
+
+	* packages/gnugo/gnugo.el (gnugo-move-history next): ...here.
+
+2014-03-23  Thien-Thi Nguyen  <ttn@gnu.org>
+
+	[gnugo int] Remove redundant game-over condition check.
+
+	* packages/gnugo/gnugo.el (gnugo-read-sgf-file): ...here.
+
+2014-03-21  Thien-Thi Nguyen  <ttn@gnu.org>
+
+	[gnugo sgf] Normalize PASS internal rep on read, as "".
+
+	* packages/gnugo/gnugo.el
+	(gnugo-move-history as-pos): Expect "" for PASS.
+	(gnugo-note mog): Produce "" for PASS.
+	(gnugo-read-sgf-file): Don't normalize PASS to "tt".
+	(gnugo/sgf-read-file): Keep track of SZ property.
+	(gnugo/sgf-read-file one): For ‘stone’, ‘point’ and ‘move’ types,
+	substitute "tt" with "" if we know ‘SZ’ and it's <= 19.
+	(gnugo/sgf-read-file NODE): Save SZ property value if found.
+
+2014-03-20  Thien-Thi Nguyen  <ttn@gnu.org>
+
+	[gnugo int] Add abstraction: gnugo--nodep
+
+	* packages/gnugo/gnugo.el (gnugo--nodep): New defsubst.
+	(gnugo-read-sgf-file, gnugo/sgf-write-file): Use it.
+
+2014-03-20  Thien-Thi Nguyen  <ttn@gnu.org>
+
+	[gnugo] Fix bug: On load, follow mainline through subtrees.
+
+	* packages/gnugo/gnugo.el (gnugo-read-sgf-file): For move count loop,
+	don't stop at first subtree; instead, recognize its non-nodeness and
+	recurse into it.
+
+2014-03-19  Thien-Thi Nguyen  <ttn@gnu.org>
+
+	[gnugo maint] NEWS futzing; nfc.
+
+2014-03-19  Thien-Thi Nguyen  <ttn@gnu.org>
+
+	[gnugo] Fix bug: Don't misuse SGF prop ‘:EV’ for "resign" state.
+
+	* packages/gnugo/gnugo.el (gnugo-push-move): ...here.
+	(gnugo-display-final-score): Detect resignation via
+	‘gnugo-move-history’; use ‘:last-mover’ directly.
+
+2014-03-19  Thien-Thi Nguyen  <ttn@gnu.org>
+
+	[gnugo] Fix bug: Don't bother translating move "resign".
+
+	* packages/gnugo/gnugo.el
+	(gnugo-move-history as-pos-maybe): New internal func.
+	(gnugo-move-history next): Use ‘as-pos-maybe’.
+
+2014-03-19  Thien-Thi Nguyen  <ttn@gnu.org>
+
+	[gnugo int] Add abstraction: gnugo--passp
+
+	* packages/gnugo/gnugo.el (gnugo--passp): New defsubst.
+	(gnugo-note, gnugo-push-move, gnugo-magic-undo): Use it.
+
+2014-03-19  Thien-Thi Nguyen  <ttn@gnu.org>
+
+	[gnugo int] Use ‘loop’ instead of ‘mapc’ + ‘apply’.
+
+	* packages/gnugo/gnugo.el (gnugo-board-mode): ...here.
+
+2014-03-19  Thien-Thi Nguyen  <ttn@gnu.org>
+
+	[gnugo int] Add abstraction: gnugo--blackp
+
+	* packages/gnugo/gnugo.el (gnugo--blackp): New defsubst.
+	(gnugo-other, gnugo-push-move, gnugo-refresh)
+	(gnugo-magic-undo, gnugo-display-final-score, gnugo): Use it.
+
+2014-03-19  Thien-Thi Nguyen  <ttn@gnu.org>
+
+	[gnugo int] Decruft: Infer MOVEP from PROPERTY.
+
+	* packages/gnugo/gnugo.el (gnugo-note): Don't take optional arg MOVEP;
+	instead, infer that the operation is a move if PROPERTY is ‘:B’ or ‘:W’.
+	(gnugo-push-move): Update call to ‘gnugo-note’.
+
+2014-03-18  Thien-Thi Nguyen  <ttn@gnu.org>
+
+	[gnugo int] Use ‘setq’ less.
+
+	* packages/gnugo/gnugo.el (gnugo-move-history): ...here.
+
+2014-03-18  Thien-Thi Nguyen  <ttn@gnu.org>
+
+	[gnugo int] Use ‘incf’ more.
+
+	* packages/gnugo/gnugo.el (gnugo-note, gnugo-refresh): ...here.
+
+2014-03-18  Thien-Thi Nguyen  <ttn@gnu.org>
+
+	[gnugo int] Add abstractions: gnugo{--root-node,/sgf-root-node}
+
+	* packages/gnugo/gnugo.el (gnugo--root-node): New func.
+	(gnugo--root-prop): Rename from ‘gnugo-treeroot’; take optional arg
+	TREE; default to :sgf-gametree if not specified.
+	(gnugo--set-root-prop, gnugo--unclose-game): Use ‘gnugo--root-node’.
+	(gnugo-read-sgf-file): Use ‘gnugo--root-prop’, specifying TREE.
+	(gnugo-display-final-score, gnugo): Use ‘gnugo--root-prop’.
+	(gnugo/sgf-root-node): New func.
+
+2014-03-18  Thien-Thi Nguyen  <ttn@gnu.org>
+
+	[gnugo int] Use ‘gnugo-treeroot’ more.
+
+	* packages/gnugo/gnugo.el (gnugo-read-sgf-file): ...here.
+
+2014-03-18  Thien-Thi Nguyen  <ttn@gnu.org>
+
+	[gnugo] Handle ‘(gnugo-move-history 'two)’.
+
+	* packages/gnugo/gnugo.el (gnugo-move-history): If RSEL is ‘two’, return
+	the last two moves as a list.
+	(gnugo-read-sgf-file): Use ‘gnugo-move-history’.
+
+2014-03-18  Thien-Thi Nguyen  <ttn@gnu.org>
+
+	[gnugo int] Add abstraction: nn
+
+	* packages/gnugo/gnugo.el (gnugo-move-history nn): New internal func.
+
+2014-03-18  Thien-Thi Nguyen  <ttn@gnu.org>
+
+	[gnugo int] Use ‘loop’ instead of ‘dolist’ + ‘destructuring-bind’.
+
+	See:
+	<http://lists.gnu.org/archive/html/help-gnu-emacs/2014-03/msg00312.html>.
+
+	* packages/gnugo/gnugo.el (gnugo-board-mode): ...here.
+
+2014-03-18  Thien-Thi Nguyen  <ttn@gnu.org>
+
+	[gnugo int] Use ‘setq’ less.
+
+	* packages/gnugo/gnugo.el (gnugo-board-mode): ...here.
+
+2014-03-18  Thien-Thi Nguyen  <ttn@gnu.org>
+
+	[gnugo int] Add abstraction: gnugo--set-root-prop
+
+	* packages/gnugo/gnugo.el (gnugo--set-root-prop): New func.
+	(gnugo-display-final-score, gnugo/sgf-write-file): Use it.
+
+2014-03-18  Thien-Thi Nguyen  <ttn@gnu.org>
+
+	[gnugo int] Cache gametree prop ‘:SZ’ as gnugo prop ‘:SZ’.
+
+	* packages/gnugo/gnugo.el (gnugo-goto-pos)
+	(gnugo-propertize-board-buffer, gnugo-move-history)
+	(gnugo-note, gnugo-refresh, gnugo): Get board size via ‘gnugo-get’
+	instead of ‘gnugo-treeroot’.
+	(gnugo--SZ!): New defsubst.
+	(gnugo-read-sgf-file, gnugo-board-mode)
+	(:gnugo-gtp-command-spec boardsize): Use ‘gnugo--SZ!’.
+
+2014-03-14  Thien-Thi Nguyen  <ttn@gnu.org>
+
+	[gnugo int] Use ‘following-char’ instead of ‘char-after’.
+
+	* packages/gnugo/gnugo.el (gnugo-animate-group
+	(gnugo-magic-undo, gnugo/sgf-read-file): ...here.
+
+2014-03-14  Thien-Thi Nguyen  <ttn@gnu.org>
+
+	[gnugo sgf] Fix bug: Output subtrees correctly.
+
+	Long-standing -- from inception -- omission.
+
+	* packages/gnugo/gnugo.el (gnugo/sgf-write-file >>tree): Don't assume
+	all elements of a tree are nodes; instead, handle nodes as before, and
+	recurse on trailing subtree elems.
+
+2014-03-14  Thien-Thi Nguyen  <ttn@gnu.org>
+
+	[gnugo sgf int] Add abstractions: seek, seek-into
+
+	* packages/gnugo/gnugo.el (gnugo/sgf-read-file):
+	...here, as internal funcs via ‘cl-labels’.
+	(gnugo/sgf-read-file NODE): Rewrite.
+	(gnugo/sgf-read-file TREE): Likewise, w/ arg LEV.
+	(gnugo/sgf-read-file): Call ‘TREE’ once, w/ LEV 0.
+
+2014-03-14  Thien-Thi Nguyen  <ttn@gnu.org>
+
+	fixup! [gnugo sgf] Move gratuitous newline from after to before
+	(sub)trees.
+
+2014-03-14  Thien-Thi Nguyen  <ttn@gnu.org>
+
+	[gnugo sgf] Move gratuitous newline from after to before (sub)trees.
+
+	* packages/gnugo/gnugo.el (gnugo/sgf-write-file >>tree): At the start,
+	insert a newline if not at bol; at the end, don't insert a newline.
+	(gnugo/sgf-write-file): Insert a newline at EOF.
+
+2014-03-14  Thien-Thi Nguyen  <ttn@gnu.org>
+
+	[gnugo sgf int] Add abstractions: >>prop, >>node, >>tree
+
+	* packages/gnugo/gnugo.el (gnugo/sgf-write-file):
+	...here, as internal funcs via ‘cl-labels’.
+
+2014-03-13  Thien-Thi Nguyen  <ttn@gnu.org>
+
+	[gnugo] Fix bug: Handle property value type ‘none’ normally.
+
+	* packages/gnugo/gnugo.el (gnugo/sgf-read-file one): No longer special
+	case property value type ‘none’; instead, read the supplied value and
+	discard it, saving instead a hardcoded empty string, i.e., "".
+
+2014-03-13  Thien-Thi Nguyen  <ttn@gnu.org>
+
+	[gnugo int] Rename arg from SWITCH to ME-NEXT.
+
+	* packages/gnugo/gnugo.el (gnugo-undo-one-move): ...here.
+
+2014-03-11  Thien-Thi Nguyen  <ttn@gnu.org>
+
+	[gnugo] Make ‘C-u M-u’ switch roles.
+
+	* packages/gnugo/gnugo.el (gnugo-undo-one-move): Add optional arg
+	SWITCH; if specified, arrange for user to play the color of the next
+	move (and GNU Go the opposite).
+
+2014-03-11  Thien-Thi Nguyen  <ttn@gnu.org>
+
+	[gnugo int] Add abstraction: gnugo--who-is-who
+
+	* packages/gnugo/gnugo.el (gnugo--who-is-who): New func.
+	(gnugo-read-sgf-file): Use it.
+
+2014-03-10  Thien-Thi Nguyen  <ttn@gnu.org>
+
+	[gnugo] Bind ‘M-u’ to ‘gnugo-undo-one-move’.
+
+	* packages/gnugo/gnugo.el (gnugo-board-mode-map): ...here.
+
+2014-03-10  Thien-Thi Nguyen  <ttn@gnu.org>
+
+	[gnugo maint] Update NEWS; nfc.
+
+2014-03-10  Thien-Thi Nguyen  <ttn@gnu.org>
+
+	[gnugo int] Use ‘incf’ more.
+
+	* packages/gnugo/gnugo.el
+	(gnugo-merge-showboard-results)
+	(gnugo-display-final-score): ...here.
+
+2014-03-10  Thien-Thi Nguyen  <ttn@gnu.org>
+
+	[gnugo int] Add abstraction: gnugo--compare-strings
+
+	* packages/gnugo/gungo.el (gnugo--compare-strings): New defsubst.
+	(gnugo--q, gnugo-merge-showboard-results): Use it.
+
+2014-03-10  Thien-Thi Nguyen  <ttn@gnu.org>
+
+	[gnugo int] Use ‘loop’, functional style more.
+
+	* packages/gnugo/gnugo.el (gnugo-describe-internal-properties):
+	...here, for collecting/massaging ‘gnugo-state’, instead of ‘maphash’,
+	"manual" destructuring, mutation.
+
+2014-03-09  Thien-Thi Nguyen  <ttn@gnu.org>
+
+	[gnugo int] Associate process w/ buffer immediately.
+
+	* packages/gnugo/gnugo.el (gnugo-board-mode):
+	...here, via ‘start-process’ 2nd arg BUFFER.
+
+2014-03-09  Thien-Thi Nguyen  <ttn@gnu.org>
+
+	[gnugo int] Avoid redundant calls to ‘gnugo-get’.
+
+	* packages/gnugo/gnugo.el (gnugo-move-history):
+	(gnugo-read-sgf-file, gnugo-magic-undo, gnugo-display-final-score)
+	(gnugo-board-mode): Add local vars to save ‘gnugo-get’ values.
+
+2014-03-09  Thien-Thi Nguyen  <ttn@gnu.org>
+
+	[gnugo int] Add abstraction: gnugo--begin-exchange
+
+	* gnugo.el (gnugo-send-line): Delete func.
+	(gnugo--begin-exchange): New func.
+	(gnugo--q, gnugo-get-move): Use it.
+
+2014-03-08  Thien-Thi Nguyen  <ttn@gnu.org>
+
+	[gnugo int] Elide single-use local var.
+
+	Omission from 2014-03-06, "Streamline subproc (de-)marshalling".
+
+	* gnugo.el (gnugo--q): ...here, for var ‘so-far’.
+
+2014-03-08  Thien-Thi Nguyen  <ttn@gnu.org>
+
+	[gnugo int] Use ‘pcase’ more.
+
+	* gnugo.el (gnugo-move-history):
+	...here, instead of ‘if’ + ‘case’.
+
+2014-03-06  Thien-Thi Nguyen  <ttn@gnu.org>
+
+	[gnugo maint] Reindent; nfc.
+
+2014-03-06  Thien-Thi Nguyen  <ttn@gnu.org>
+
+	[gnugo int] Use ‘eq’ less.
+
+	* gnugo.el (gnugo-sentinel): Use ‘memq’.
+	(gnugo-move-history finish): New func.
+	(gnugo-move-history): Use ‘if’, ‘case’, ‘finish’.
+	(:gnugo-gtp-command-spec help): Use ‘if’, ‘case’.
+
+2014-03-06  Thien-Thi Nguyen  <ttn@gnu.org>
+
+	[gnugo int] Streamline subproc (de-)marshalling.
+
+	* packages/gnugo/gnugo.el (gnugo--q): Rename from
+	‘gnugo-synchronous-send/return’; change args from MESSAGE to FMT and
+	ARGS; apply ‘format’ if non-null ARGS; use ‘compare-strings’ instead of
+	‘string-match’; use separate state to signal finish instead of type
+	change; don't bother with ‘current-time’; return string.
+	(gnugo-query): Update call, docstring.
+	(gnugo-propertize-board-buffer, gnugo-merge-showboard-results)
+	(gnugo-move, gnugo-pass, gnugo-display-group-data)
+	(gnugo-read-sgf-file, gnugo-magic-undo, gnugo-command): Update calls.
+
+2014-03-04  Thien-Thi Nguyen  <ttn@gnu.org>
+
+	[gnugo int] Use ‘dolist’, ‘destructuring-bind’ more.
+
+	* packages/gnugo/gnugo.el (gnugo-board-mode): ...here, instead of ‘mapc’
+	+ ‘apply’, for post-‘-l’ fixup.
+
+2014-02-27  Thien-Thi Nguyen  <ttn@gnu.org>
+
+	[gnugo] Release: 2.3.1
+
+	* packages/gnugo/gnugo.el [Version]: Bump to "2.3.1".
+	(gnugo-version): Bump to "2.3.1".
+
+2014-02-27  Thien-Thi Nguyen  <ttn@gnu.org>
+
+	[gnugo slog] Fix bug: Avoid ‘cl-lib’ funcs; use only macros.
+
+	This silences byte-compiler warnings under Emacs 24.4. Regression
+	introduced 2014-01-30, "Use ‘cl-labels’ instead of ‘flet’". Reported by
+	Juanma Barranquero:
+	<http://lists.gnu.org/archive/html/gnu-emacs-sources/2014-02/msg00016.html>.
+
+	* gnugo.el: Don't require ‘cl-lib’; instead, require ‘cl’, and wrap with
+	‘eval-when-compile’.
+	(gnugo-animate-group): Use ‘loop’, ‘zerop’, ‘logand’.
+	(gnugo-describe-position): Use ‘loop’.
+
+2014-02-27  Juanma Barranquero	<lekktu@gmail.com>
+
+	[gnugo slog] Specify second arg to ‘unintern’.
+
+	* packages/gnugo/gnugo.el (gnugo-cleanup): ...here.
+
+2014-02-24  Thien-Thi Nguyen  <ttn@gnu.org>
+
+	[gnugo] Release: 2.3.0
+
+	* packages/gnugo/gnugo.el [Version]: Bump to "2.3.0".
+	(gnugo-version): Bump to "2.3.0".
+
+2014-02-24  Thien-Thi Nguyen  <ttn@gnu.org>
+
+	[gnugo maint] Update NEWS, HACKING; nfc.
+
+2014-02-24  Thien-Thi Nguyen  <ttn@gnu.org>
+
+	[gnugo] Rename var to ‘gnugo-inhibit-refresh’.
+
+	* packages/gnugo/gnugo.el (gnugo-inhibit-refresh): New defvar.
+	(gnugo-post-move-hook): Update docstring.
+	(gnugo-get-move-insertion-filter, gnugo-move)
+	(gnugo-pass): Update refs.
+
+2014-02-24  Thien-Thi Nguyen  <ttn@gnu.org>
+
+	[gnugo] Fix bug: Compute grid spacing using offset math.
+
+	OBOE introduced 2006-04-09 (release 2.2.13).
+
+	* packages/gnugo/gnugo.el (gnugo-refresh): Don't use ‘wmul’ directly to
+	compute ‘gspc’; instead, use one plus the re-derived image pixel-width.
+
+2014-02-24  Thien-Thi Nguyen  <ttn@gnu.org>
+
+	[gnugo maint] Update NEWS; nfc.
+
+2014-02-24  Thien-Thi Nguyen  <ttn@gnu.org>
+
+	[gnugo] New command: ‘_’ and ‘M-_’ (gnugo-boss-is-near)
+
+	* packages/gnugo/gnugo.el (gnugo-boss-is-near): New command.
+	(gnugo-board-mode-map): Bind ‘_’ and ‘M-_’ to it.
+
+2014-02-24  Thien-Thi Nguyen  <ttn@gnu.org>
+
+	[gnugo] New command: ‘A’ (gnugo-switch-to-another)
+
+	* packages/gnugo/gnugo.el
+	(gnugo-switch-to-another): New command.
+	(gnugo-board-mode-map): Bind ‘A’ to it.
+
+2014-02-24  Thien-Thi Nguyen  <ttn@gnu.org>
+
+	[gnugo] Bind ‘DEL’ to ‘gnugo-undo-two-moves’.
+
+	* packages/gnugo/gnugo.el (gnugo-board-mode-map): ...here.
+
+2014-02-24  Thien-Thi Nguyen  <ttn@gnu.org>
+
+	[gnugo maint] Update HACKING; nfc.
+
+2014-02-24  Thien-Thi Nguyen  <ttn@gnu.org>
+
+	[gnugo int] Use internal macros more.
+
+	* packages/gnugo/gnugo.el
+	(:gnugo-gtp-command-spec deffull): New macro.
+	(:gnugo-gtp-command-spec): Use it for ‘:full’ specs.
+
+2014-02-24  Thien-Thi Nguyen  <ttn@gnu.org>
+
+	[gnugo] Make proc-status change mode-line elem more informative.
+
+	* packages/gnugo/gnugo.el (gnugo-sentinel): ...here, by including the
+	passed-in STRING, w/ ‘font-lock-warning-face’.
+
+2014-02-24  Thien-Thi Nguyen  <ttn@gnu.org>
+
+	[gnugo] Use special constructs for keybindings in docstrings.
+
+	* packages/gnugo/gnugo.el (gnugo-board-mode, gnugo): Rewrite docstring.
+
+2014-02-24  Thien-Thi Nguyen  <ttn@gnu.org>
+
+	[gnugo] Don't show underscore in group-animation message.
+
+	* packages/gnugo/gnugo.el (gnugo-animate-group): Don't take COMMAND;
+	instead, take W/D, a symbol; construct command w/ it; rework messages
+	accordingly.
+	(gnugo-worm-stones): Update call to ‘gnugo-animate-group’.
+	(gnugo-dragon-stones): Likewise.
+
+2014-02-24  Thien-Thi Nguyen  <ttn@gnu.org>
+
+	[gnugo] Fix bug: Relax sync regexp.
+
+	* packages/gnugo/gnugo.el (gnugo-merge-showboard-results): ...here, to
+	handle certain increases in captured stones count.
+
+2014-02-24  Thien-Thi Nguyen  <ttn@gnu.org>
+
+	[gnugo maint] Update "next" in HACKING; nfc.
+
+2014-02-24  Thien-Thi Nguyen  <ttn@gnu.org>
+
+	[gnugo int] Revamp gnugo-{put,get} doc / indentation decl.
+
+	* packages/gnugo/gnugo.el (gnugo-put): Move shared docstring here; 
+	specialize it; replace top-level direct symbol-plist assignment w/ an
+	internal ‘declare’ form for indentation.
+	(gnugo-get): Add docstring.
+
+2014-02-24  Thien-Thi Nguyen  <ttn@gnu.org>
+
+	[gnugo int] Use ‘dolist’ and ‘destructuring-bind’.
+
+	* packages/gnugo/gnugo.el (gnugo-board-mode): ...here, instead of ‘mapc’
+	and ‘apply (lambda () ...)’.
+
+2014-02-24  Thien-Thi Nguyen  <ttn@gnu.org>
+
+	[gnugo int] Use ‘set-process-query-on-exit-flag’.
+
+	* packages/gnugo/gnugo.el (gnugo-board-mode): ...here, instead of
+	avoiding ‘process-kill-buffer-query-function’.
+
+2014-02-24  Thien-Thi Nguyen  <ttn@gnu.org>
+
+	[gnugo int] Zonk unused local var.
+
+	* packages/gnugo/gnugo.el (gnugo-command): ...here, named
+	‘last-message’.
+
+2014-02-24  Thien-Thi Nguyen  <ttn@gnu.org>
+
+	[gnugo] Use ‘user-error’.
+
+	* packages/gnugo/gnugo.el (gnugo-gate)
+	(gnugo-synchronous-send/return, gnugo-toggle-image-display)
+	(gnugo-position, gnugo-pass, gnugo-animate-group)
+	(gnugo-toggle-dead-group, gnugo-write-sgf-file)
+	(gnugo-read-sgf-file, gnugo-magic-undo)
+	(gnugo-display-final-score, gnugo-board-mode): ...here.
+
+2014-02-24  Thien-Thi Nguyen  <ttn@gnu.org>
+
+	[gnugo int] Add abstraction: gnugo--unclose-game
+
+	* packages/gnugo/gnugo.el (gnugo--unclose-game): New func.
+	(gnugo-magic-undo): Use it.
+	(boardsize, clear_board, fixed_handicap): Likewise, in the value of the
+	‘:post-thunk’ property.
+
+2014-02-24  Thien-Thi Nguyen  <ttn@gnu.org>
+
+	[gnugo maint] Update NEWS file; nfc.
+
+2014-02-24  Thien-Thi Nguyen  <ttn@gnu.org>
+
+	[gnugo] Indicate buffer not modified after load.
+
+	* packages/gnugo/gnugo.el (gnugo-read-sgf-file): Clear buffer-modified
+	state at end.
+
+2014-02-24  Thien-Thi Nguyen  <ttn@gnu.org>
+
+	[gnugo int] Drop leading "*" in docstrings.
+
+	* packages/gnugo/gnugo.el (gnugo-program, gnugo-board-mode-hook)
+	(gnugo-post-move-hook, gnugo-animation-string, gnugo-mode-line)
+	(gnugo-X-face, gnugo-O-face, gnugo-grid-face): ...here.
+
+2014-02-24  Thien-Thi Nguyen  <ttn@gnu.org>
+
+	[gnugo int] Hang the sync-return-stash on the process object.
+
+	* packages/gnugo/gnugo.el (gnugo-synchronous-send/return): Don't use
+	‘gnugo-put’, ‘gnugo-get’; instead, use
+	‘process-put’, ‘process-get’ with property ‘:srs’.
+
+2014-02-24  Thien-Thi Nguyen  <ttn@gnu.org>
+
+	[gnugo] Give names and docstrings to ‘lambda’ commands.
+
+	* packages/gnugo/gnugo.el (gnugo-quit, gnugo-leave-me-alone)
+	(gnugo-fancy-undo, gnugo-toggle-image-display-command)
+	(gnugo-describe-position): New commands.
+	(gnugo-board-mode-map): Bind ‘q’, ‘Q’, ‘U’, ‘i’, ‘=’ to them.
+
+2014-02-24  Thien-Thi Nguyen  <ttn@gnu.org>
+
+	[gnugo int] Use cl-{plus,minus}p more.
+
+	* packages/gnugo/gnugo.el (gnugo-merge-showboard-results)
+	(gnugo-venerate, gnugo-refresh, gnugo-magic-undo)
+	(gnugo-board-mode, gnugo, GTP undo, GTP gg-undo): Use ‘cl-plusp’ and
+	‘cl-minusp’ instead of comparison against 0.
+
+2014-02-24  Thien-Thi Nguyen  <ttn@gnu.org>
+
+	[gnugo int] Use ‘number-sequence’ more.
+
+	* packages/gnugo/gnugo.el (gnugo-animate-group): For image display
+	‘spec’ handling, don't map over an exploded string, ignoring the
+	individual characters, and manually toggling the state; instead, map
+	over an integer, using the number's divisibility by two to select.
+
+2014-02-24  Thien-Thi Nguyen  <ttn@gnu.org>
+
+	[gnugo int] Drop unused local var.
+
+	* packages/gnugo/gnugo.el (gnugo-venerate): ...here, named ‘lb’.
+
+2014-02-24  Thien-Thi Nguyen  <ttn@gnu.org>
+
+	[gnugo maint] Add .dir-locals.el file, link in HACKING; nfc.
+
+	* .dir-locals.el: New file.
+
+2014-02-24  Thien-Thi Nguyen  <ttn@gnu.org>
+
+	[gnugo gtp int] Use :post-thunk instead of :post-hook.
+
+	* packages/gnugo/gnugo.el (gnugo-command): Consult :post-thunk, if set,
+	‘funcall’ the value.
+	(:gnugo-gtp-command-spec add): Delete.
+	(:gnugo-gtp-command-spec defgtp): Use ‘jam’ unconditionally.
+	(:gnugo-gtp-command-spec): Do ‘s/:post-hook/:post-thunk/g’.
+
+2014-02-24  Thien-Thi Nguyen  <ttn@gnu.org>
+
+	[gnugo int] Avoid variable FORMAT for ‘message’.
+
+	We don't want weirdness should the variable value include ‘?%’.
+
+	* packages/gnugo/gnugo.el (gnugo-command): Don't use var as
+	‘message’ first arg; instead say ‘(message "%s" ...)’.
+
+2014-02-24  Thien-Thi Nguyen  <ttn@gnu.org>
+
+	[gnugo maint] Revamp "ChangeLog discipline" in HACKING; nfc.
+
+2014-02-24  Thien-Thi Nguyen  <ttn@gnu.org>
+
+	[gnugo maint] Update a musing item in HACKING; nfc.
+
+	Although it would be nice to avoid a "merge commit" through constant 
+	rebase (such that the final merge can be a fast-forward operation), that
+	makes it painful / difficult for others to follow.
+
+2014-02-24  Thien-Thi Nguyen  <ttn@gnu.org>
+
+	[gnugo] Indicate buffer not modified after save.
+
+	* packages/gnugo/gnugo.el (gnugo-animate-group): Use current value of
+	‘buffer-modified-p’ in loop instead of ‘t’.
+	(gnugo-write-sgf-file): Clear buffer-modified state.
+
+2014-02-24  Thien-Thi Nguyen  <ttn@gnu.org>
+
+	[gnugo maint] Update "next" in HACKING; nfc.
+
+2014-02-24  Thien-Thi Nguyen  <ttn@gnu.org>
+
+	[gnugo int] Use ‘(split-string STR SEP t)’.
+
+	* packages/gnugo/gnugo.el (gnugo-animate-group): ...here, instead of
+	manually deleting the empty strings returned from a two-arg call to
+	‘split-string’.
+
+2014-02-24  Thien-Thi Nguyen  <ttn@gnu.org>
+
+	[gnugo int] Use ‘display’ property more.
+
+	* packages/gnugo/gnugo.el (gnugo-toggle-image-display): ...here, with
+	‘(space :width 0)’, instead of ‘invisible’.
+
+2014-02-24  Thien-Thi Nguyen  <ttn@gnu.org>
+
+	[gnugo int] Use ‘redisplay’ more.
+
+	* packages/gnugo/gnugo.el (gnugo-magic-undo):
+	...here, instead of ‘(sit-for 0)’.
+
+2014-02-24  Thien-Thi Nguyen  <ttn@gnu.org>
+
+	[gnugo doc] Document version-number scheme.
+
+	* packages/gnugo/gnugo.el (gnugo-version): Rewrite docstring.
+
+2014-02-24  Thien-Thi Nguyen  <ttn@gnu.org>
+
+	[gnugo maint] Add HACKING; prune Commentary; nfc.
+
+2014-02-24  Thien-Thi Nguyen  <ttn@gnu.org>
+
+	[gnugo] Don't use ‘process-kill-buffer-query-function’.
+
+	* packages/gnugo/gnugo.el (gnugo-board-mode): Make
+	‘kill-buffer-query-functions’ buffer-local and then remove
+	‘process-kill-buffer-query-function’ from it.
+
+2014-02-24  Thien-Thi Nguyen  <ttn@gnu.org>
+
+	[gnugo] Wait at most 30sec for subproc output chunk.
+
+	* packages/gnugo/gnugo.el (gnugo-synchronous-send/return): Specify
+	TIMEOUT of 30 seconds to ‘accept-process-output’.
+
+2014-02-24  Thien-Thi Nguyen  <ttn@gnu.org>
+
+	[gnugo int] Use ‘zerop’.
+
+	* packages/gnugo/gnugo.el (gnugo-cleanup)
+	(gnugo-magic-undo, gnugo-board-mode): ...here.
+
+2014-02-24  Thien-Thi Nguyen  <ttn@gnu.org>
+
+	[gnugo] Presume "modern" GNU Emacs.
+
+	* packages/gnugo/gnugo.el (delete-dups, window-edges): Delete these
+	conditionally-‘defun’ed funcs.
+
+2014-02-24  Thien-Thi Nguyen  <ttn@gnu.org>
+
+	[gnugo] Presume working time-date.el.
+
+	* packages/gnugo/gnugo.el: Require ‘time-date’ w/o ignoring errors.
+	(time-subtract): Delete conditionally-‘defun’ed func.
+
+2014-02-24  Thien-Thi Nguyen  <ttn@gnu.org>
+
+	[gnugo] Use ‘cl-labels’ instead of ‘flet’.
+
+	* packages/gnugo/gnugo.el: Don't require ‘cl’; instead, require
+	‘cl-lib’; do ‘s/flet/cl-labels/g’.
+	(gnugo-note): Use #'mog instead of 'mog as ‘mapcar’ 1st arg.
+	(gnugo-toggle-dead-group): Use #'populate.
+	(:gnugo-gtp-command-spec defgtp): Use #'jam, #'add.
+	(gnugo/sgf-write-file): Use #'one, #'two.
+
+2014-02-24  Thien-Thi Nguyen  <ttn@gnu.org>
+
+	[gnugo maint] Add NEWS file; prune Commentary; nfc.
+
+2014-02-24  Thien-Thi Nguyen  <ttn@gnu.org>
+
+	[gnugo] Adapt copyright notice to FSF, headers to ELPA.
+
+	* packages/gnugo/gnugo.el: ...here.
+
+2014-02-24  Thien-Thi Nguyen  <ttn@gnu.org>
+
+	Import gnugo.el from ttn-pers-elisp 1.59.
+
+	* packages/gnugo/gnugo.el: New file.
+	(gnugo-version): Bump to "2.2.14".
+
+2014-02-24  Thien-Thi Nguyen  <ttn@gnu.org>
+
+	Start building eventual package ‘gnugo’.
+	   
+	* packages/gnugo/: New directory.
+	* packages/gnugo/README: New file.
+
