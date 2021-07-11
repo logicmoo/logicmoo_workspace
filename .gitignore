@@ -33,7 +33,7 @@ pldox/
 packs_web/logicmoo_webui/serv*/
 #packs_usr/
 packs_sys/eggdrop/conf/PrologMUD-freenode.*
-packs_sys/prologmud_samples/prolog/prologmud_sample_games/.cache/mozilla/
+packs_sys/prologmud_samples/prolog/prologmud_sample_games/.cache
 packs_sys/prologmud_samples/prolog/prologmud_sample_games/.config/mozilla/
 packs_sys/prologmud_samples/prolog/prologmud_sample_games/.cache/google-chrome/
 packs_sys/prologmud_samples/prolog/prologmud_sample_games/.config/google-chrome/
