@@ -1,30 +1,82 @@
 #!/bin/bash
 # if [ "${cmd}" == "emacs" ]; then sudo -u prologmud_server -- google-chrome "http://localhost:4125"
 if [ ! -f /.dockerenv ]; then
-   docker exec -it logicmoo bin/$(basename "${BASH_SOURCE[0]}") $*
+   #docker exec -it logicmoo bin/$(basename "${BASH_SOURCE[0]}") $*
+   docker exec -it logicmoo "${BASH_SOURCE[0]}" $*
    return 0 2>/dev/null ; exit 0
 fi
 
-DIR0="$( cd "$( dirname "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )"
+ROOT_DIRECTORY="$( cd "$( dirname "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )"
 
 set -o pipefail
 export SCREEN_CMD="sudo -u prologmud_server -- screen"
 
+export DISPLAY
+LMENV=1
+LMENV_ARG=-q
+NOX=0
+
+function show_lm_help {
+   . /opt/logicmoo_workspace/logicmoo_env.sh -v
+   #bash -c "cd $ROOT_DIRECTORY ; ls --color"
+   export TAB=`printf '\033[25\`' `
+   echo -e "\n Executes one of the following commands in the LOGICMOO docker."
+   echo -e "\n   lm [--no-x] [--no-env] [-v|-q] [--wd <path>] [--] <cmd> [<args>]\n"
+   bash -c "cd $ROOT_DIRECTORY ; grep -H '\\#\\-\\-help' . -r | sed  -e 's|^./|   |1' -e 's/\\#\\-\\-help//1' -e 's/.sh:/$TAB/1' -e 's/[:]/$TAB/1' "
+   echo -e "\n"
+}
+
+for arg in "$@"
+do
+    case $arg in
+        --help|-h)
+        show_lm_help
+	return 0 2>/dev/null ; exit 0
+        ;;
+        --no-x)
+        NOX=1
+        shift
+        ;;
+        --no-env)
+        LMENV=0
+        shift
+        ;;
+        -v|-q)
+        LMENV_ARG="$1"
+        shift
+        ;;
+        -d|--wd)
+        ROOT_DIRECTORY="$2"
+        shift # Remove argument name from processing
+        shift # Remove argument value from processing
+        ;;
+	--) shift
+	break;;
+	*)
+	break;;
+    esac
+done
+
+
+if [ $LMENV -eq 1 ]; then 
+  /opt/logicmoo_workspace/logicmoo_env.sh $LMENV_ARG
+fi
+
+if [ $NOX -eq 1 ]; then
+ #echo "unset DISPLAY"
+ unset DISPLAY
+ 
+fi
+
 cmd="${1}"
 shift 1
 
-if [ -z "${cmd}" ] || [[ "${cmd}" == "--help" ]]; then   
-   . /opt/logicmoo_workspace/logicmoo_env.sh -v
-   #bash -c "cd $DIR0 ; ls --color"
-   export TAB=`printf '\033[25\`' `
-   echo -e "\n lm <cmd> [<args>] # executes one of the following commands in the LOGICMOO docker.\n"
-   bash -c "cd $DIR0 ; grep -H '\\#\\-\\-help' . -r | sed  -e 's|^./|   |1' -e 's/\\#\\-\\-help//1' -e 's/.sh:/$TAB/1' -e 's/[:]/$TAB/1' "
-   echo -e "\n"
+if [ -z "${cmd}" ] || [[ "${cmd}" == "--help" ]]; then
+   show_lm_help
    return 0 2>/dev/null ; exit 0
 fi
 
 
-. /opt/logicmoo_workspace/logicmoo_env.sh -q
 
 if [ "${cmd}" == "attach" ]; then
 
@@ -38,15 +90,14 @@ echo STUFF=$STUFF
   $SCREEN_CMD -S LogicmooServer -p0 -X stuff "${STUFF}"
   $SCREEN_CMD -rx LogicmooServer
 )
-elif [ -f "$DIR0/${cmd}.sh" ]; then
+elif [ -f "$ROOT_DIRECTORY/${cmd}.sh" ]; then
 
-  bash -c "$DIR0/${cmd}.sh $*" 
-
+  bash -c "$ROOT_DIRECTORY/${cmd}.sh $*" 
 else
 
-    export WHICH=`which ${cmd}.sh`
+    export WHICH=`cd $ROOT_DIRECTORY ; which ${cmd}.sh`
     if ! [[ -z "${WHICH}" ]]; then 
-      bash -c "cd $DIR0 && $WHICH $*" 
+      bash -c "cd $ROOT_DIRECTORY && $WHICH $*" 
     else
       bash -c "cd ~ && $cmd $*"
     fi

@@ -1,0 +1,40 @@
+HTTP/1.1 200 OK
+Server: nginx
+Date: Sun, 11 Jul 2021 18:48:34 GMT
+Content-Type: image/svg+xml
+Last-Modified: Thu, 01 Apr 2021 18:21:59 GMT
+Transfer-Encoding: chunked
+Connection: keep-alive
+Vary: Accept-Encoding
+ETag: W/"60660f47-e37"
+Strict-Transport-Security: max-age=31536000
+Permissions-Policy: interest-cohort=()
+Content-Security-Policy: default-src 'none' ; connect-src  https://duckduckgo.com https://*.duckduckgo.com https://3g2upl4pq6kufc4m.onion/ https://duckduckgogg42xjoc72x3sjasowoarfbgcmvfimaftt6twagswzczad.onion/ https://duck.co ; manifest-src  https://duckduckgo.com https://*.duckduckgo.com https://3g2upl4pq6kufc4m.onion/ https://duckduckgogg42xjoc72x3sjasowoarfbgcmvfimaftt6twagswzczad.onion/ ; media-src  https://duckduckgo.com https://*.duckduckgo.com https://3g2upl4pq6kufc4m.onion/ https://duckduckgogg42xjoc72x3sjasowoarfbgcmvfimaftt6twagswzczad.onion/ ; script-src blob:  https://duckduckgo.com https://*.duckduckgo.com https://3g2upl4pq6kufc4m.onion/ https://duckduckgogg42xjoc72x3sjasowoarfbgcmvfimaftt6twagswzczad.onion/ 'unsafe-inline' 'unsafe-eval' ; font-src data:  https://duckduckgo.com https://*.duckduckgo.com https://3g2upl4pq6kufc4m.onion/ https://duckduckgogg42xjoc72x3sjasowoarfbgcmvfimaftt6twagswzczad.onion/ ; img-src data:  https://duckduckgo.com https://*.duckduckgo.com https://3g2upl4pq6kufc4m.onion/ https://duckduckgogg42xjoc72x3sjasowoarfbgcmvfimaftt6twagswzczad.onion/ ; style-src  https://duckduckgo.com https://*.duckduckgo.com https://3g2upl4pq6kufc4m.onion/ https://duckduckgogg42xjoc72x3sjasowoarfbgcmvfimaftt6twagswzczad.onion/ 'unsafe-inline' ; object-src 'none' ; worker-src blob: ; child-src blob:  https://duckduckgo.com https://*.duckduckgo.com https://3g2upl4pq6kufc4m.onion/ https://duckduckgogg42xjoc72x3sjasowoarfbgcmvfimaftt6twagswzczad.onion/ ; frame-src blob:  https://duckduckgo.com https://*.duckduckgo.com https://3g2upl4pq6kufc4m.onion/ https://duckduckgogg42xjoc72x3sjasowoarfbgcmvfimaftt6twagswzczad.onion/ ; form-action  https://duckduckgo.com https://*.duckduckgo.com https://3g2upl4pq6kufc4m.onion/ https://duckduckgogg42xjoc72x3sjasowoarfbgcmvfimaftt6twagswzczad.onion/ https://duck.co ; frame-ancestors 'self' ; base-uri 'self' ; block-all-mixed-content ;
+X-Frame-Options: SAMEORIGIN
+X-XSS-Protection: 1;mode=block
+X-Content-Type-Options: nosniff
+Referrer-Policy: origin
+Expect-CT: max-age=0
+Expires: Mon, 11 Jul 2022 18:48:34 GMT
+Cache-Control: max-age=31536000
+Cache-Control: public
+
+<svg width="100" height="100" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+<path fill-rule="evenodd" clip-rule="evenodd" d="M40 24C40 21.791 38.209 20 36 20H10C7.791 20 6 21.791 6 24V26.019H40V24Z" fill="#AAAAAA" fill-opacity="0.6"/>
+<path fill-rule="evenodd" clip-rule="evenodd" d="M6 26.019V42C6 44.209 7.791 46 10 46H36C38.209 46 40 44.209 40 42V26.019H6Z" fill="#AAAAAA" fill-opacity="0.3"/>
+<path fill-rule="evenodd" clip-rule="evenodd" d="M18.5 75.5V36C18.5 35.173 19.173 34.5 20 34.5H76C76.827 34.5 77.5 35.173 77.5 36V75.5H18.5Z" fill="white"/>
+<path fill-rule="evenodd" clip-rule="evenodd" d="M76 32H20C17.791 32 16 33.791 16 36V78H80V36C80 33.791 78.209 32 76 32ZM21 73H75V37H21V73Z" fill="#357DB6"/>
+<path fill-rule="evenodd" clip-rule="evenodd" d="M10 76H86V70H10V76Z" fill="#4495D4"/>
+<path fill-rule="evenodd" clip-rule="evenodd" d="M80.3428 80H15.6568C14.5958 80 13.5778 79.579 12.8278 78.829L9.99979 76H85.9998L83.1718 78.829C82.4218 79.579 81.4048 80 80.3428 80Z" fill="#357DB6"/>
+<path fill-rule="evenodd" clip-rule="evenodd" d="M36 63.8022C31.114 61.5172 28 56.6592 28 51.2102V47.6382C29.702 47.0342 31.054 45.6832 31.657 43.9812H40.343C40.946 45.6832 42.298 47.0342 44 47.6382V51.2102C44 56.6592 40.886 61.5172 36 63.8022Z" fill="#6ACCF2"/>
+<path fill-rule="evenodd" clip-rule="evenodd" d="M42 41.981H36H30C30 44.19 28.209 45.981 26 45.981V51.21C26 57.715 29.96 63.565 36 65.981C42.04 63.565 46 57.715 46 51.21V45.981C43.791 45.981 42 44.19 42 41.981ZM39.073 45.981C39.776 47.193 40.788 48.205 42 48.907V51.21C42 55.552 39.691 59.455 36 61.552C32.309 59.455 30 55.552 30 51.21V48.907C31.212 48.205 32.224 47.193 32.927 45.981H36H39.073Z" fill="#40ABD4"/>
+<path fill-rule="evenodd" clip-rule="evenodd" d="M73 45.981H51C50.447 45.981 50 45.533 50 44.981V42.981C50 42.429 50.447 41.981 51 41.981H73C73.553 41.981 74 42.429 74 42.981V44.981C74 45.533 73.553 45.981 73 45.981Z" fill="#C0C0C0"/>
+<path fill-rule="evenodd" clip-rule="evenodd" d="M73 53.981H51C50.447 53.981 50 53.533 50 52.981V50.981C50 50.429 50.447 49.981 51 49.981H73C73.553 49.981 74 50.429 74 50.981V52.981C74 53.533 73.553 53.981 73 53.981Z" fill="#C0C0C0"/>
+<path fill-rule="evenodd" clip-rule="evenodd" d="M61 61.981H51C50.447 61.981 50 61.533 50 60.981V58.981C50 58.429 50.447 57.981 51 57.981H61C61.553 57.981 62 58.429 62 58.981V60.981C62 61.533 61.553 61.981 61 61.981Z" fill="#C0C0C0"/>
+<path fill-rule="evenodd" clip-rule="evenodd" d="M90 61.981H72C69.791 61.981 68 60.19 68 57.981V29.981C68 27.772 69.791 26 72 26H90C92.209 26 94 27.772 94 29.981V57.981C94 60.19 92.209 61.981 90 61.981Z" fill="#357DB6"/>
+<path fill-rule="evenodd" clip-rule="evenodd" d="M72 55.981C70.896 55.981 70 55.084 70 53.981V26C70 24.897 70.896 24 72 24H90C91.104 24 92 24.897 92 26V53.981C92 55.084 91.104 55.981 90 55.981H72Z" fill="white"/>
+<path fill-rule="evenodd" clip-rule="evenodd" d="M74 24V26L74.895 27.789C75.572 29.144 76.957 30 78.472 30H83.528C85.043 30 86.428 29.144 87.105 27.789L88 26V24H74Z" fill="#357DB6"/>
+<path fill-rule="evenodd" clip-rule="evenodd" d="M90 22H72C69.791 22 68 23.791 68 26V53.981C68 56.19 69.791 57.981 72 57.981H90C92.209 57.981 94 56.19 94 53.981V26C94 23.791 92.209 22 90 22ZM72 54H90V26H72V54Z" fill="#4495D4"/>
+<path fill-rule="evenodd" clip-rule="evenodd" d="M85 38H77C76.447 38 76 37.552 76 37V35C76 34.448 76.447 34 77 34H85C85.553 34 86 34.448 86 35V37C86 37.552 85.553 38 85 38Z" fill="#C0C0C0"/>
+<path fill-rule="evenodd" clip-rule="evenodd" d="M85 46H77C76.447 46 76 45.552 76 45V43C76 42.448 76.447 42 77 42H85C85.553 42 86 42.448 86 43V45C86 45.552 85.553 46 85 46Z" fill="#C0C0C0"/>
+</svg>

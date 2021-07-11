@@ -1,0 +1,5 @@
+syntax: glob
+
+# Ignore compiled Emacs lisp files
+*.elc
+hook-helpers-autoloads.el

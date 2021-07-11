@@ -1,0 +1,22 @@
+HTTP/1.1 200 OK
+Server: nginx
+Date: Sun, 11 Jul 2021 18:48:34 GMT
+Content-Type: image/svg+xml
+Last-Modified: Tue, 06 Oct 2020 10:31:39 GMT
+Transfer-Encoding: chunked
+Connection: keep-alive
+Vary: Accept-Encoding
+ETag: W/"5f7c478b-747"
+Strict-Transport-Security: max-age=31536000
+Permissions-Policy: interest-cohort=()
+Content-Security-Policy: default-src 'none' ; connect-src  https://duckduckgo.com https://*.duckduckgo.com https://3g2upl4pq6kufc4m.onion/ https://duckduckgogg42xjoc72x3sjasowoarfbgcmvfimaftt6twagswzczad.onion/ https://duck.co ; manifest-src  https://duckduckgo.com https://*.duckduckgo.com https://3g2upl4pq6kufc4m.onion/ https://duckduckgogg42xjoc72x3sjasowoarfbgcmvfimaftt6twagswzczad.onion/ ; media-src  https://duckduckgo.com https://*.duckduckgo.com https://3g2upl4pq6kufc4m.onion/ https://duckduckgogg42xjoc72x3sjasowoarfbgcmvfimaftt6twagswzczad.onion/ ; script-src blob:  https://duckduckgo.com https://*.duckduckgo.com https://3g2upl4pq6kufc4m.onion/ https://duckduckgogg42xjoc72x3sjasowoarfbgcmvfimaftt6twagswzczad.onion/ 'unsafe-inline' 'unsafe-eval' ; font-src data:  https://duckduckgo.com https://*.duckduckgo.com https://3g2upl4pq6kufc4m.onion/ https://duckduckgogg42xjoc72x3sjasowoarfbgcmvfimaftt6twagswzczad.onion/ ; img-src data:  https://duckduckgo.com https://*.duckduckgo.com https://3g2upl4pq6kufc4m.onion/ https://duckduckgogg42xjoc72x3sjasowoarfbgcmvfimaftt6twagswzczad.onion/ ; style-src  https://duckduckgo.com https://*.duckduckgo.com https://3g2upl4pq6kufc4m.onion/ https://duckduckgogg42xjoc72x3sjasowoarfbgcmvfimaftt6twagswzczad.onion/ 'unsafe-inline' ; object-src 'none' ; worker-src blob: ; child-src blob:  https://duckduckgo.com https://*.duckduckgo.com https://3g2upl4pq6kufc4m.onion/ https://duckduckgogg42xjoc72x3sjasowoarfbgcmvfimaftt6twagswzczad.onion/ ; frame-src blob:  https://duckduckgo.com https://*.duckduckgo.com https://3g2upl4pq6kufc4m.onion/ https://duckduckgogg42xjoc72x3sjasowoarfbgcmvfimaftt6twagswzczad.onion/ ; form-action  https://duckduckgo.com https://*.duckduckgo.com https://3g2upl4pq6kufc4m.onion/ https://duckduckgogg42xjoc72x3sjasowoarfbgcmvfimaftt6twagswzczad.onion/ https://duck.co ; frame-ancestors 'self' ; base-uri 'self' ; block-all-mixed-content ;
+X-Frame-Options: SAMEORIGIN
+X-XSS-Protection: 1;mode=block
+X-Content-Type-Options: nosniff
+Referrer-Policy: origin
+Expect-CT: max-age=0
+Expires: Mon, 11 Jul 2022 18:48:34 GMT
+Cache-Control: max-age=31536000
+Cache-Control: public
+
+<svg width="100" height="100" xmlns="http://www.w3.org/2000/svg"><g fill="none" fill-rule="evenodd"><path d="M75.394 73.45c.847-3.321 1.552-7.001 1.904-10.45h3.331c.798 7.71 3.41 16.575 5.37 20H14c1.96-3.425 4.511-12.29 5.298-20h3.331c.359 3.464 1.083 7.161 1.95 10.494C29.782 64.808 39.218 59 50 59c10.764 0 20.187 5.788 25.394 14.45z" fill-opacity=".3" fill="#AAA"/><path d="M53 67h-6c-.999 6.095-5.735 13.733-10 16h26c-4.265-2.267-9.001-9.905-10-16M75.138 56.723c-.162-1.499-.204-3.21-.003-5.078.194-1.798.58-3.22 1.046-4.646.871-2.65 2.035-4.822 2.82-6 .783 1.178 1.946 3.35 2.817 6 .468 1.425.853 2.848 1.046 4.646.201 1.868.16 3.579-.003 5.078L86 63H72l3.138-6.277zM17.138 56.723c-.162-1.499-.204-3.21-.003-5.078.194-1.798.58-3.22 1.046-4.646.871-2.65 2.035-4.822 2.82-6 .783 1.178 1.946 3.35 2.817 6 .468 1.425.853 2.848 1.046 4.646.201 1.868.16 3.579-.003 5.078L28 63H14l3.138-6.277z" fill-opacity=".6" fill="#AAA"/><path d="M50 59c5.037 0 9.771 1.28 13.927 3.517C62.87 54.863 57.051 49 50 49c-7.051 0-12.87 5.863-13.927 13.517A29.282 29.282 0 0 1 50 59" fill="#9C452D"/><path d="M59.662 39a41.48 41.48 0 0 0-2.617-10c-2.177-5.477-5.084-9.565-7.045-12-1.96 2.435-4.868 6.523-7.045 12a41.48 41.48 0 0 0-2.617 10c-.897 6.888.137 12.743 1.376 16.926C42.284 57.85 44.308 59.6 46 61h8c1.691-1.4 3.716-3.15 4.286-5.074 1.24-4.183 2.272-10.038 1.376-16.926" fill="#DE5833"/><path d="M51 37a3 3 0 1 0-6 0 3 3 0 0 0 6 0" fill="#FFF"/><path d="M55.661 59.554a29.425 29.425 0 0 1 8.266 2.963c-.537-3.891-2.309-7.313-4.844-9.743A40.565 40.565 0 0 0 59.663 39a41.492 41.492 0 0 0-2.618-10c-2.177-5.476-5.084-9.565-7.045-12a48.96 48.96 0 0 0-2.315 3.13c1.58 2.32 3.376 5.292 4.798 8.87 1.171 2.946 2.202 6.285 2.686 10 .896 6.888-.137 12.743-1.376 16.926-.57 1.924-1.764 3.674-3.455 5.074H46l-2 2v4h12v-4l-2-2c.54-.447 1.111-.933 1.661-1.446" fill="#9C452D"/></g></svg>

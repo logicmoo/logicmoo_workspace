@@ -12,7 +12,7 @@ D/root/.config/menus/applications-merged
 F/root/.config/menus/lxde-applications.menu
 F/etc/xdg/menus/lxde-applications.menu
 F/etc/xdg/menus/debian-menu.menu
-MATE;Cinnamon;Unity;
+Unity;MATE;
 +Applications
 Applications
 Applications
@@ -136,7 +136,7 @@ gazebo
 
 /usr/bin/gazebo
 2
-130
+34
 
 
 Development;Education;Science
@@ -576,7 +576,7 @@ gazebo
 
 /usr/bin/gazebo
 2
-130
+34
 
 
 Development;Education;Science
@@ -695,20 +695,6 @@ pcmanfm %U
 
 System;FileTools;FileManager;Utility;Core;GTK
 
--ksh.desktop
-Korn Shell (ksh2020)
-Korn Shell
-terminal
-
-5
-Korn Shell (ksh2020)
-ksh2020
-1
-239
-
-
-ConsoleOnly;System;Shell
-system,shell,ksh,scripts
 -lxterminal.desktop
 LXTerminal
 Use the command line
@@ -791,7 +777,7 @@ preferences-desktop-theme
 Customize Look and Feel
 lxappearance
 2
--47
+-79
 
 
 GTK;Settings;DesktopSettings;X-LXDE-Settings
@@ -805,7 +791,7 @@ user-desktop
 
 pcmanfm --desktop-pref
 2
--47
+-79
 
 
 Settings;GTK;DesktopSettings;X-LXDE-Settings
@@ -833,7 +819,7 @@ input-keyboard
 
 lxinput
 2
--47
+-79
 
 
 GTK;Settings;HardwareSettings;X-LXDE-Settings
@@ -847,7 +833,7 @@ video-display
 
 lxrandr
 0
--47
+-79
 
 
 GTK;Settings;HardwareSettings;X-LXDE-Settings
@@ -861,7 +847,7 @@ preferences-desktop-keyboard
 
 lxhotkey --gui=gtk
 2
--47
+-79
 
 
 DesktopSettings;Settings;Core;GTK

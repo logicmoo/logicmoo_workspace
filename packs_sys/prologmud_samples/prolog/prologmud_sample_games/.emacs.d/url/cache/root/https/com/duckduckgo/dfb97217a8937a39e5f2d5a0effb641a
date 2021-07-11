@@ -1,0 +1,22 @@
+HTTP/1.1 200 OK
+Server: nginx
+Date: Sun, 11 Jul 2021 18:48:34 GMT
+Content-Type: image/svg+xml
+Last-Modified: Tue, 06 Oct 2020 10:31:39 GMT
+Transfer-Encoding: chunked
+Connection: keep-alive
+Vary: Accept-Encoding
+ETag: W/"5f7c478b-3c8"
+Strict-Transport-Security: max-age=31536000
+Permissions-Policy: interest-cohort=()
+Content-Security-Policy: default-src 'none' ; connect-src  https://duckduckgo.com https://*.duckduckgo.com https://3g2upl4pq6kufc4m.onion/ https://duckduckgogg42xjoc72x3sjasowoarfbgcmvfimaftt6twagswzczad.onion/ https://duck.co ; manifest-src  https://duckduckgo.com https://*.duckduckgo.com https://3g2upl4pq6kufc4m.onion/ https://duckduckgogg42xjoc72x3sjasowoarfbgcmvfimaftt6twagswzczad.onion/ ; media-src  https://duckduckgo.com https://*.duckduckgo.com https://3g2upl4pq6kufc4m.onion/ https://duckduckgogg42xjoc72x3sjasowoarfbgcmvfimaftt6twagswzczad.onion/ ; script-src blob:  https://duckduckgo.com https://*.duckduckgo.com https://3g2upl4pq6kufc4m.onion/ https://duckduckgogg42xjoc72x3sjasowoarfbgcmvfimaftt6twagswzczad.onion/ 'unsafe-inline' 'unsafe-eval' ; font-src data:  https://duckduckgo.com https://*.duckduckgo.com https://3g2upl4pq6kufc4m.onion/ https://duckduckgogg42xjoc72x3sjasowoarfbgcmvfimaftt6twagswzczad.onion/ ; img-src data:  https://duckduckgo.com https://*.duckduckgo.com https://3g2upl4pq6kufc4m.onion/ https://duckduckgogg42xjoc72x3sjasowoarfbgcmvfimaftt6twagswzczad.onion/ ; style-src  https://duckduckgo.com https://*.duckduckgo.com https://3g2upl4pq6kufc4m.onion/ https://duckduckgogg42xjoc72x3sjasowoarfbgcmvfimaftt6twagswzczad.onion/ 'unsafe-inline' ; object-src 'none' ; worker-src blob: ; child-src blob:  https://duckduckgo.com https://*.duckduckgo.com https://3g2upl4pq6kufc4m.onion/ https://duckduckgogg42xjoc72x3sjasowoarfbgcmvfimaftt6twagswzczad.onion/ ; frame-src blob:  https://duckduckgo.com https://*.duckduckgo.com https://3g2upl4pq6kufc4m.onion/ https://duckduckgogg42xjoc72x3sjasowoarfbgcmvfimaftt6twagswzczad.onion/ ; form-action  https://duckduckgo.com https://*.duckduckgo.com https://3g2upl4pq6kufc4m.onion/ https://duckduckgogg42xjoc72x3sjasowoarfbgcmvfimaftt6twagswzczad.onion/ https://duck.co ; frame-ancestors 'self' ; base-uri 'self' ; block-all-mixed-content ;
+X-Frame-Options: SAMEORIGIN
+X-XSS-Protection: 1;mode=block
+X-Content-Type-Options: nosniff
+Referrer-Policy: origin
+Expect-CT: max-age=0
+Expires: Mon, 11 Jul 2022 18:48:34 GMT
+Cache-Control: max-age=31536000
+Cache-Control: public
+
+<svg width="100" height="100" xmlns="http://www.w3.org/2000/svg"><g fill="none" fill-rule="evenodd"><path d="M52 48.294a6.658 6.658 0 0 0-4 .019V25h4v23.294z" fill="#5A9C4B"/><path d="M48 22.09v14.84a1 1 0 0 0 .52.88c8 4.18 16-4.27 24.07-1a1 1 0 0 0 1.41-.9V21.07a1 1 0 0 0-.52-.88c-8-4.18-16.05 4.27-24.07 1a1 1 0 0 0-1.41.9z" fill="#9BD96F"/><path d="M22.28 60.25L3.14 80h44.59L28.59 60.25a4.36 4.36 0 0 0-6.31 0zM71.41 60.25L52.27 80h44.59L77.72 60.25a4.36 4.36 0 0 0-6.31 0z" fill-opacity=".3" fill="#AAA"/><path fill="#9BD96F" d="M63.63 59.15l-6.82-2.34L50 61.5l-6.81-4.69-6.82 2.34L15.92 80h68.16z"/><path d="M58.85 54.21l-4-4.15a6.66 6.66 0 0 0-9.64 0l-4 4.15-4.78 4.94 6.81-2.34L50 61.5l6.82-4.69 6.81 2.34-4.78-4.94zM19.78 43H5a13.59 13.59 0 0 1 11.5-6 13.588 13.588 0 0 1 7.986 2.432c1.055-.296 2.202-.432 3.404-.432 3.47 0 6.49 1.13 8.11 4H19.78zM80.89 44a10.22 10.22 0 0 1 8.89 5.33H72A10.22 10.22 0 0 1 80.89 44z" fill-opacity=".3" fill="#AAA"/></g></svg>

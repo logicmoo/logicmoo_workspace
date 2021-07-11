@@ -1,0 +1,22 @@
+HTTP/1.1 200 OK
+Server: nginx
+Date: Sun, 11 Jul 2021 18:48:34 GMT
+Content-Type: image/svg+xml
+Last-Modified: Thu, 01 Apr 2021 18:21:59 GMT
+Transfer-Encoding: chunked
+Connection: keep-alive
+Vary: Accept-Encoding
+ETag: W/"60660f47-64a"
+Strict-Transport-Security: max-age=31536000
+Permissions-Policy: interest-cohort=()
+Content-Security-Policy: default-src 'none' ; connect-src  https://duckduckgo.com https://*.duckduckgo.com https://3g2upl4pq6kufc4m.onion/ https://duckduckgogg42xjoc72x3sjasowoarfbgcmvfimaftt6twagswzczad.onion/ https://duck.co ; manifest-src  https://duckduckgo.com https://*.duckduckgo.com https://3g2upl4pq6kufc4m.onion/ https://duckduckgogg42xjoc72x3sjasowoarfbgcmvfimaftt6twagswzczad.onion/ ; media-src  https://duckduckgo.com https://*.duckduckgo.com https://3g2upl4pq6kufc4m.onion/ https://duckduckgogg42xjoc72x3sjasowoarfbgcmvfimaftt6twagswzczad.onion/ ; script-src blob:  https://duckduckgo.com https://*.duckduckgo.com https://3g2upl4pq6kufc4m.onion/ https://duckduckgogg42xjoc72x3sjasowoarfbgcmvfimaftt6twagswzczad.onion/ 'unsafe-inline' 'unsafe-eval' ; font-src data:  https://duckduckgo.com https://*.duckduckgo.com https://3g2upl4pq6kufc4m.onion/ https://duckduckgogg42xjoc72x3sjasowoarfbgcmvfimaftt6twagswzczad.onion/ ; img-src data:  https://duckduckgo.com https://*.duckduckgo.com https://3g2upl4pq6kufc4m.onion/ https://duckduckgogg42xjoc72x3sjasowoarfbgcmvfimaftt6twagswzczad.onion/ ; style-src  https://duckduckgo.com https://*.duckduckgo.com https://3g2upl4pq6kufc4m.onion/ https://duckduckgogg42xjoc72x3sjasowoarfbgcmvfimaftt6twagswzczad.onion/ 'unsafe-inline' ; object-src 'none' ; worker-src blob: ; child-src blob:  https://duckduckgo.com https://*.duckduckgo.com https://3g2upl4pq6kufc4m.onion/ https://duckduckgogg42xjoc72x3sjasowoarfbgcmvfimaftt6twagswzczad.onion/ ; frame-src blob:  https://duckduckgo.com https://*.duckduckgo.com https://3g2upl4pq6kufc4m.onion/ https://duckduckgogg42xjoc72x3sjasowoarfbgcmvfimaftt6twagswzczad.onion/ ; form-action  https://duckduckgo.com https://*.duckduckgo.com https://3g2upl4pq6kufc4m.onion/ https://duckduckgogg42xjoc72x3sjasowoarfbgcmvfimaftt6twagswzczad.onion/ https://duck.co ; frame-ancestors 'self' ; base-uri 'self' ; block-all-mixed-content ; report-uri https://duckduckgo.com/csp_report_ed.js
+X-Frame-Options: SAMEORIGIN
+X-XSS-Protection: 1;mode=block
+X-Content-Type-Options: nosniff
+Referrer-Policy: origin
+Expect-CT: max-age=0
+Expires: Mon, 11 Jul 2022 18:48:34 GMT
+Cache-Control: max-age=31536000
+Cache-Control: public
+
+<svg width="100" height="100" fill="none" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" clip-rule="evenodd" d="m78.514 21-7.004 7.003v6L78.514 27v-6z" fill="silver"/><path fill-rule="evenodd" clip-rule="evenodd" d="m78.505 27.003-6.995 6.958h6l6.995-6.958h-6z" fill="silver"/><path fill-rule="evenodd" clip-rule="evenodd" d="m66.339 42.003-2.829-2.829 13.174-13.173 2.828 2.83-13.173 13.172z" fill="silver"/><path fill-rule="evenodd" clip-rule="evenodd" d="M64.755 32.117c-5.986-.726-11.355 2.083-14.25 6.561-2.895-4.478-8.264-7.287-14.25-6.56-6.54.791-11.811 5.935-12.636 12.3-.042.33-.073.657-.093.982-.233 3.885 1.453 7.65 4.273 10.407l22.706 22.196 22.706-22.196c2.82-2.758 4.506-6.522 4.273-10.407-.02-.325-.051-.653-.093-.982-.825-6.365-6.096-11.509-12.636-12.3z" fill="#DE5833"/><path fill-rule="evenodd" clip-rule="evenodd" d="M77.39 44.418c-.824-6.365-6.095-11.508-12.635-12.301a15.074 15.074 0 0 0-6.374.576c5.283 1.667 9.3 6.238 10.012 11.725.043.33.074.657.094.982.232 3.885-1.452 7.649-4.274 10.407L46.006 73.605l4.499 4.398L73.21 55.807c2.82-2.758 4.506-6.522 4.273-10.407-.02-.325-.051-.652-.093-.982z" fill="#9C452D"/><path fill-rule="evenodd" clip-rule="evenodd" d="m31.51 66.003-4 12 12-4-8-8z" fill="silver"/><path fill-rule="evenodd" clip-rule="evenodd" d="M33.51 74.003a2 2 0 0 1-1.414-3.414l12-12a2 2 0 1 1 2.828 2.828l-12 12a1.99 1.99 0 0 1-1.414.586z" fill="silver"/><path d="m86.492 44 4.013-3M88.505 52.5h6.005M14.518 44l-4.013-3M12.505 52.5H6.5M86.492 61.5l4.013 3M14.518 61.5l-4.013 3" stroke="#AAA" stroke-opacity=".6" stroke-width="3" stroke-linecap="round"/></svg>

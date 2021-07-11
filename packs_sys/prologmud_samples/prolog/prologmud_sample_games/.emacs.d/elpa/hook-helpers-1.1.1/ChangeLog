@@ -1,0 +1,21 @@
+2018-02-11  Ian Dunn  <dunni@gnu.org>
+
+	Merge commit '7c6c2bf1b6eab973e61ff3cacfac47183279a898'
+
+2017-04-27  Stefan Monnier  <monnier@iro.umontreal.ca>
+
+	Fix up copyright
+
+2017-04-26  Ian Dunn  <dunni@gnu.org>
+
+	Merge commit 'aeac0786a092fadf872deea40ffbda2f06197305'
+
+2017-04-23  Ian Dunn  <dunni@gnu.org>
+
+	Add 'packages/hook-helpers/' from commit
+	'ff95f4944f3d6d1a43aca141cb7fa36a9043704d'
+
+	git-subtree-dir: packages/hook-helpers git-subtree-mainline:
+	8e045bc69e918519d716f272a9f3b8e5e4fadf77 git-subtree-split:
+	ff95f4944f3d6d1a43aca141cb7fa36a9043704d
+

@@ -1,0 +1,188 @@
+#+TITLE: Hook Helpers
+#+AUTHOR: Ian Dunn
+#+EMAIL: dunni@gnu.org
+#+DATE: {{{modification-time}}}
+
+#+STARTUP: overview
+#+STARTUP: indent
+#+TODO: FIXME | FIXED
+#+OPTIONS: toc:2 num:nil timestamp:nil \n:nil |:t ':t email:t
+#+OPTIONS: *:t <:t d:nil todo:nil pri:nil tags:not-in-toc -:nil
+
+#+TEXINFO_DIR_CATEGORY: Emacs
+#+TEXINFO_DIR_TITLE: Hook Helpers: (hook-helpers)
+#+TEXINFO_DIR_DESC: Anonymous, modifiable hook functions
+
+* Copying
+Copyright (C) 2016-2018 Free Software Foundation, Inc.
+
+#+BEGIN_QUOTE
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program.  If not, see <http://www.gnu.org/licenses/>.
+#+END_QUOTE
+* Introduction
+
+[[https://savannah.nongnu.org/projects/hook-helpers-el/][Savannah Project]]
+
+Often times, I see people define a function to be used once in a hook.  If
+they don’t do this, then it will be an anonymous function.  If the anonymous
+function is modified, then the function can’t be removed.  With a function
+outside of the ~add-hook~ call, it looks messy.
+
+Hook Helpers are a solution to this.  A "hook helper" is an anonymous,
+modifiable function created for the sole purpose of being attached to a hook.
+This combines the two commonly used methods mentioned above.  The functions
+don't exist, so they don't get in the way of ~C-h f~, but they can be removed or
+modified as needed.
+
+* Installation
+
+Hook Helpers requires Emacs 25.1 or later.
+
+The easiest way to install hook helpers is using GNU ELPA:
+
+#+begin_example
+M-x package-install RET hook-helpers RET
+#+end_example
+
+No more setup is required to start using hook helpers.
+
+You can also clone from the git repo:
+
+#+BEGIN_SRC shell
+git clone https://git.savannah.gnu.org/git/hook-helpers-el hook-helpers
+make -C hook-helpers compile autoloads
+#+END_SRC
+
+Then you'll need to add the following to your .emacs file (or equivalent):
+
+#+BEGIN_SRC emacs-lisp
+(add-to-list 'load-path "/path/to/hook-helpers")
+(load "/path/to/hook-helpers/hook-helpers-autoloads.el")
+#+END_SRC
+
+* Examples
+Let's look at some examples.
+
+Without using a hook helper, one must do the following:
+
+#+BEGIN_SRC emacs-lisp
+(defun my/after-init-hook ()
+  (set-scroll-bar-mode nil))
+(add-hook 'after-init-hook 'my/after-init-hook)
+#+END_SRC
+
+If you forget the ~add-hook~ call, then this doesn't do any good.  Alternatively,
+you can use a lambda function:
+
+#+BEGIN_SRC emacs-lisp
+(add-hook 'after-init-hook (lambda () (set-scroll-bar-mode nil)))
+#+END_SRC
+
+But then if you want to modify the function, it's permanently stuck on the
+after-init-hook variable, and you have to deal with it.  It's not a problem for
+after-init-hook, which is used once, but would be a problem for a mode hook,
+like text-mode-hook.
+
+With a hook helper, this is reduced to the following:
+
+#+BEGIN_SRC emacs-lisp
+(define-hook-helper after-init ()
+  (set-scroll-bar-mode nil))
+#+END_SRC
+
+Which handles everything for you.
+
+* In-Depth Usage
+There are two macros in hook helpers: ~define-hook-helper~ and ~create-hook-helper~.
+
+The former is a basic case; it creates and adds a helper for a single hook.
+Most hooks have the "-hook" suffix, so we take advantage of that here for a little
+less typing.  In order to add a helper to a non-standard hook, use the ~:suffix~
+argument:
+
+#+BEGIN_SRC emacs-lisp
+(define-hook-helper my ()
+  :suffix function
+  :append t
+  (message "Hello!"))
+#+END_SRC
+
+We also introduce the ~:append~ keyword above, which does exactly what it sounds
+like.
+
+There's one more keyword for ~define-hook-helper~: ~:name~.  This specifies an
+additional name for the new helper.  Without this, its helper ID is just the
+name of the hook; with a ~:name~, its ID is HOOK-NAME/NAME.
+
+The work horse of hook helpers is ~create-hook-helper~.  This is the generic case,
+capable of adding itself to any number of hooks:
+
+#+BEGIN_SRC emacs-lisp
+(create-hook-helper new-helper ()
+  :hooks (hook-1-hook
+          (hook-2-hook . t)
+          hook-3-function)
+  (message "Look at all that we can do!"))
+#+END_SRC
+
+This creates a new hook helper called "new-helper", and adds it to ~hook-1-hook~,
+~hook-2-hook~, and ~hook-3-function~, appending to the latter.
+
+The ~:hooks~ keyword can have the following form:
+
+- A single hook
+- A cons cell (HOOK . APPEND)
+- A list containing a mixture of the above two forms
+
+This is called a "hook spec".
+
+** Adding and Removing Helpers
+To add or remove helpers, the functions add-hook-helper and remove-hook-helper
+are provided.
+
+#+BEGIN_SRC emacs-lisp
+(add-hook-helper 'test-helper '(hook-the-first hook-the-second))
+(remove-hook-helper 'test-helper 'hook-the-second)
+#+END_SRC
+
+As you can see, each of them takes the same arguments: a symbol denoting the
+helper to add or remove, and a quoted hook spec.
+
+Any hook helper created using ~define-hook-helper~ can be removed as well:
+
+#+begin_src emacs-lisp
+(define-hook-helper my ()
+  :name ours
+  (message "Hello!"))
+
+(remove-hook-helper 'my-hook/ours 'my-hook)
+#+end_src
+
+** Seeing all the Available Helpers
+
+Seeing lambda functions in your hooks can be confusing.  While we don't have a
+solution for that, we do have ~describe-hook-helpers~, an interactive function
+that creates a pretty buffer containing all the defined hook helpers, grouped by
+the hooks to which they are attached.
+
+* Changelog
+** 1.1.1
+- Fixed some usage warnings
+- Added more examples of removing hook helpers
+- Added documentation about installing from GNU ELPA
+- Added changelog section to the documentation
+** 1.1
+- Updated to new design
+** 1.0
+- Initial release

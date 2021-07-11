@@ -1,0 +1,164 @@
+# -*- outline -*-
+
+# 
+# Copyright © 2019 Free Software Foundation, Inc.
+# All rights reserved.
+# 
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+# 
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+# 
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+# 
+
+* Version 0.16β
+** Copyright assignment to the FSF.
+
+* Version 0.15β
+** Killing the archive buffer now also kills all subordinates.
+** More work on meeting ELPA conventions.
+*** cpio.el is now cpio-mode.el
+*** removed cpio-mode-pkg.el
+
+
+* Version 0.14β
+** Since this is beta code, the archive file is backed up.
+The backup file has a timestamp.
+Since this is really only for beta code,
+the backup is not intelligent in any way.
+
+* Version 0.13̱β
+** Clean up for publication to elpa.
+
+* Version 0.12β
+** Initial beta release.
+
+* Version 0.11
+** Fixed a destructive-looking bug in cpio-affiliated-buffers.el.
+** Post-development cleaning up.
+
+* Version 0.10
+** Finds an appropriate major mode for an entry's contents.
+   It does this with (set-auto-mode).
+   So only entries for which (set-auto-mode) finds a mode get
+   a non-trivial mode.
+** New dired-like commands:
+    + cpio-entry-contents-revert-buffer (no key mapping)
+    + cpio-dired-do-touch ("T")
+** You can now edit and save an entry's contents.
+
+* Version 0.09
+** There's now a find-file-hook
+   and documentation on how to use/invoke cpio-mode.
+** Changing owner or group no longer removes marks
+   on the entries on which the change is being performed.
+** cpio-affiliated-buffers.el has had some fixes.
+   There were lots of issues around the kill-buffer-hook.
+   It seems correct now.
+   (Of course, bug reports are welcome.)
+   Affiliated buffer tests have been fleshed out some.
+** Byte compilation is cleaner.
+   Not entirely clean, but cleaner.
+** Some tests have had minor fixes.
+
+* Version 0.08
+** Binary format support.
+   As with the ODC format, hpbin = bin if the archive contains no devices,
+   and cpio-mode doesn't handle devices yet.
+
+* Version 0.07
+** Fontification (from dired).
+** Dired-like commands:
+   + cpio-dired-flag-backup-entries ("~")
+
+* Version 0.06
+** Support for the ODC archive format.
+   Note that hpodc = odc if the archive contains no devices,
+   and cpio-mode doesn't handle devices yet.
+   (And it may never.)
+
+* Version 0.05
+** Support for the CRC archive format.
+
+* Version 0.04
+** Some post-development clean-up.
+
+* Version 0.03
+** More dired-like commands:
+   + cpio-dired-flag-garbage-entries ("%&")
+   + cpio-dired-goto-entry ("j")
+   + cpio-dired-mark-executables ("**")
+   + cpio-dired-mark-subdir-entries ("*s")
+   + cpio-dired-mark-symlinks ("*@")
+** Fixes to saving an archive.
+** Fixes to cpio-dired-do-chgrp/own/mod.
+** Automated test updates:
+*** Automated tests now also check the catalog.
+*** Automated tests that modify the catalog
+    now confirm that the archive can be unpacked by cpio(1)
+    after saving.
+*** Automated tests all pass.
+
+* Version 0.02
+** You can now save an archive.
+** More dired-like commands:
+   + cpio-dired-add-entry ("I")
+   + cpio-dired-display-entry ("f")
+   + cpio-dired-do-chgrp ("G")
+   + cpio-dired-do-chown ("O")
+   + cpio-dired-do-copy ("C")
+   + cpio-dired-do-delete ("D")
+   + cpio-dired-do-flagged-delete ("x")
+   + cpio-dired-do-query-replace-regexp ("Q")
+   + cpio-dired-do-rename ("R")
+   + cpio-dired-do-search ("A")
+   + cpio-dired-find-entry-other-window ("o")
+   + cpio-dired-flag-auto-save-entries ("#")
+   + cpio-dired-flag-entry-deletion ("d")
+   + cpio-dired-hide-details-mode  ("(")
+   + cpio-dired-kill ("C-x k")
+   + cpio-dired-mark-entries-regexp ("%m", "*%")
+   + cpio-dired-quit-window ("q")
+   + cpio-dired-save-archive ("C-x C-s")
+   + cpio-dired-summary ("?")
+   + cpio-dired-unmark ("u", "*u")
+   + cpio-dired-unmark-all-entries (M-xDEL "*?")
+   + cpio-dired-unmark-all-marks ("*!", "U")
+   + cpio-revert-buffer ("r")
+** Other interactive commands:
+   + cpio-dired-extract-all ("Xa")
+   + cpio-dired-extract-entries ("Xm")
+   + cpio-dired-view-archive ("C-cC-c")
+   + cpio-view-dired-style-buffer  ("C-cC-c" -- from archive buffer).
+** You can now edit and save entry contents.
+** Some automated testing of the dired-like interface.
+
+* Version 0.01
+** Basic function of cpio-mode, cpio-dired-mode, and
+   cpio-contents-entry-mode are in place.
+** You can extract selected entries (M-x cpio-dired-extract-entries),
+   or extract all entries (M-x cpio-dired-extract-all).
+** You can view an entry's contents and even edit the contents' buffer.
+   However, you cannot save it yet.
+** cpio-dired-mode has the following implemented commands:
+   + cpio-dired-display-entry ("C-o")
+   + cpio-dired-extract-all ("X a")
+   + cpio-dired-extract-entries ("X m")
+   + cpio-dired-find-entry ("f", "e", "C-j")
+   + cpio-dired-mark ("m", "* m")
+   + cpio-dired-mark-entries-regexp ("* %", "% m")
+   + cpio-dired-next-dirline (">")
+   + cpio-dired-next-line (SPC, "n", "C-n")
+   + cpio-dired-prev-dirline ("<")
+   + cpio-dired-previous-line ("p", "C-p")
+   + cpio-dired-summary ("?") -- Don't trust this yet.
+   + cpio-dired-unmark ("u", "* u")
+   + cpio-dired-unmark-all-marks ("U", "* !")
+   + cpio-dired-view-archive ("C-cC-c")

@@ -1,33 +1,3 @@
-)
-return 0 2>/dev/null
-#!/bin/bash
-set -e
-export SCREEN_CMD="sudo -u prologmud_server -- screen"
-#echo PTTY:TTY:PTS=$PTTY:$TTY:$PTS
-#whoami
-STUFF="^Mprolog.
-bfly. call((bfly_set(butterfly),bfly_set(command_args,\"${*}\"),bfly_set(ptty,\"${PTTY}:${TTY}:${PTY}:${PTS}\"))). bfly_start_link(\"${LOCATION}\").
-end_of_file.^M"
-echo STUFF=$STUFF
-(    $SCREEN_CMD -S LogicmooServer -p0 -X stuff "${STUFF}"; )
-echo $( 
-$SCREEN_CMD -rx LogicmooServer
-)
-return 0 2>/dev/null
-/opt/logicmoo_workspace/StartLogicmoo.sh
-/opt/logicmoo_workspace/StartLogicmoo.sh
-/opt/logicmoo_workspace/StartLogicmoo.sh
-/opt/logicmoo_workspace/StartLogicmoo.sh
-a
-a
-a
-/opt/logicmoo_workspace/StartLogicmoo.sh
-kill -9 %1
-kill -9 %1
-/opt/logicmoo_workspace/StartLogicmoo.sh
-/opt/logicmoo_workspace/StartLogicmoo.sh
-/opt/logicmoo_workspace/StartLogicmoo.sh
-/opt/logicmoo_workspace/StartLogicmoo.sh
 /opt/logicmoo_workspace/StartLogicmoo.sh
 /opt/logicmoo_workspace/StartLogicmoo.sh
 swipl
@@ -1998,3 +1968,33 @@ apt install ash
 apt install tsh
 apt install zsh
 sh
+whoami
+xterm &
+lm
+lm
+lm
+lm
+lm -q
+lm -q
+lm --help
+lm --help
+lm --help
+lm --help
+lm --help
+lm cls
+lm cls
+lm cls
+lm --help
+lm --help
+lm --no-x --help
+lm --no-x echo $DISPLAY
+lm --no-x echo $DISPLAY
+lm --no-x -v echo $DISPLAY
+lm --no-x -v echo $DISPLAY
+lm --no-x -v echo $DISPLAY
+lm --no-env -v echo $DISPLAY
+lm --no-env -v echo $DISPLAY
+lm -v echo $DISPLAY
+lm -v echo $DISPLAY
+lm -v echo $DI
+ls
