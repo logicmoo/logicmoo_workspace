@@ -79,20 +79,10 @@ Finding/Setting LD_LIBRARY_PATH...
 
 
 
+# Ignore the reset of this
+(This exists for historical reasons)
 
-
-
-
-
-
-
-
-
-
-
-
-# Douglas' pastebin 
-Ignore the reset of this
+Douglas' pastebin 
 ```bash
 docker kill logicmoo
 docker exec -it $(docker ps -n 1 -q) bash
