@@ -1,63 +1,3 @@
-#!/bin/bash
-set -e
-export SCREEN_CMD="sudo -u prologmud_server -- screen"
-#echo PTTY:TTY:PTS=$PTTY:$TTY:$PTS
-#whoami
-STUFF="^Mprolog.
-bfly. call((bfly_set(butterfly),bfly_set(command_args,\"${*}\"),bfly_set(ptty,\"${PTTY}:${TTY}:${PTY}:${PTS}\"))). bfly_start_link(\"${LOCATION}\").
-end_of_file.^M"
-echo STUFF=$STUFF
-(    $SCREEN_CMD -S LogicmooServer -p0 -X stuff "${STUFF}"; )
-echo $( 
-$SCREEN_CMD -rx LogicmooServer
-)
-return 0 2>/dev/null
-#!/bin/bash
-set -e
-export SCREEN_CMD="sudo -u prologmud_server -- screen"
-#echo PTTY:TTY:PTS=$PTTY:$TTY:$PTS
-#whoami
-STUFF="^Mprolog.
-bfly. call((bfly_set(butterfly),bfly_set(command_args,\"${*}\"),bfly_set(ptty,\"${PTTY}:${TTY}:${PTY}:${PTS}\"))). bfly_start_link(\"${LOCATION}\").
-end_of_file.^M"
-echo STUFF=$STUFF
-(    $SCREEN_CMD -S LogicmooServer -p0 -X stuff "${STUFF}"; )
-echo $( 
-$SCREEN_CMD -rx LogicmooServer
-)
-return 0 2>/dev/null
-#!/bin/bash
-set -e
-export SCREEN_CMD="sudo -u prologmud_server -- screen"
-#echo PTTY:TTY:PTS=$PTTY:$TTY:$PTS
-#whoami
-STUFF="^Mprolog.
-bfly. call((bfly_set(butterfly),bfly_set(command_args,\"${*}\"),bfly_set(ptty,\"${PTTY}:${TTY}:${PTY}:${PTS}\"))). bfly_start_link(\"${LOCATION}\").
-end_of_file.^M"
-echo STUFF=$STUFF
-(    $SCREEN_CMD -S LogicmooServer -p0 -X stuff "${STUFF}"; )
-echo $( 
-$SCREEN_CMD -rx LogicmooServer
-)
-return 0 2>/dev/null
-#!/bin/bash
-set -e
-export SCREEN_CMD="sudo -u prologmud_server -- screen"
-#echo PTTY:TTY:PTS=$PTTY:$TTY:$PTS
-#whoami
-STUFF="^Mprolog.
-bfly. call((bfly_set(butterfly),bfly_set(command_args,\"${*}\"),bfly_set(ptty,\"${PTTY}:${TTY}:${PTY}:${PTS}\"))). bfly_start_link(\"${LOCATION}\").
-end_of_file.^M"
-echo STUFF=$STUFF
-(    $SCREEN_CMD -S LogicmooServer -p0 -X stuff "${STUFF}"; )
-echo $( 
-$SCREEN_CMD -rx LogicmooServer
-)
-return 0 2>/dev/null
-#!/bin/bash
-set -e
-export SCREEN_CMD="sudo -u prologmud_server -- screen"
-#echo PTTY:TTY:PTS=$PTTY:$TTY:$PTS
 #whoami
 STUFF="^Mprolog.
 bfly. call((bfly_set(butterfly),bfly_set(command_args,\"${*}\"),bfly_set(ptty,\"${PTTY}:${TTY}:${PTY}:${PTS}\"))). bfly_start_link(\"${LOCATION}\").
@@ -2015,3 +1955,46 @@ connect_emacs.sh
 emacs
 emacs -nw
 connect_emacs.sh 
+ps axf
+connect_www.sh 
+connect_vnc.sh 
+connect_vnc.sh 
+google-chrome "http://localhost:6081/vnc.html"
+sudo -u prologmud_server -- google-chrome "http://localhost:6081/vnc.html"
+sudo prologmud_server -- google-chrome "http://localhost:6081/vnc.html"
+sudo -u prologmud_server -- google-chrome "http://localhost:6081/vnc.html"
+source /opt/logicmoo_workspace/logicmoo_env.sh
+sudo -u prologmud_server -- google-chrome "http://localhost:6081/vnc.html"
+bg
+ps axf
+killall -9 swipl
+ps axf
+ls
+cd ~prologmud_server/
+ls
+ls
+ls
+pwd
+cd /home/
+ls
+/ros-noetic-desktop.sh 
+su - prologmud_server 
+/ros-noetic-desktop
+/ros-noetic-desktop.sh 
+ls
+pwd
+#!/bin/bash
+if [ ! -f /.dockerenv ]; then    docker exec -it logicmoo bin/$(basename "${BASH_SOURCE[0]}") $*;    return 0 2>/dev/null;    exit 0; fi
+set -e
+export SCREEN_CMD="sudo -u prologmud_server -- screen"
+#echo PTTY:TTY:PTS=$PTTY:$TTY:$PTS
+#whoami
+STUFF="^Mprolog.
+bfly. call((bfly_set(butterfly),bfly_set(command_args,\"${*}\"),bfly_set(ptty,\"${PTTY}:${TTY}:${PTY}:${PTS}\"))). bfly_start_link(\"${LOCATION}\").
+end_of_file.^M"
+echo STUFF=$STUFF
+(    $SCREEN_CMD -S LogicmooServer -p0 -X stuff "${STUFF}"; )
+echo $( 
+$SCREEN_CMD -rx LogicmooServer
+)
+return 0 2>/dev/null

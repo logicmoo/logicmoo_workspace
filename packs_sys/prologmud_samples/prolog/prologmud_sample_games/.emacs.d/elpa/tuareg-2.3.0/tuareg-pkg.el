@@ -1,0 +1,2 @@
+;; Generated package description from tuareg.el  -*- no-byte-compile: t -*-
+(define-package "tuareg" "2.3.0" "OCaml mode for Emacs." '((caml "3.12.0.1") (emacs "24.4")) :keywords '("ocaml" "languages") :authors '(("Albert Cohen" . "Albert.Cohen@inria.fr") ("Sam Steingold" . "sds@gnu.org") ("Christophe Troestler" . "Christophe.Troestler@umons.ac.be") ("Till Varoquaux" . "till@pps.jussieu.fr") ("Sean McLaughlin" . "seanmcl@gmail.com") ("Stefan Monnier" . "monnier@iro.umontreal.ca")) :maintainer '("Albert Cohen" . "Albert.Cohen@inria.fr") :url "https://github.com/ocaml/tuareg")

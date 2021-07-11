@@ -107,3 +107,7 @@ alias cp='cp -i '
 alias mv='mv -i '
 
 source /opt/ros/eloquent/setup.bash
+source /opt/ros/noetic/setup.bash
+source /usr/lib/python3/dist-packages/catkin_tools/verbs/catkin_shell_verbs.bash
+export ROS_IP=127.0.0.1
+export ROS_MASTER_URI=http://$ROS_IP:11311

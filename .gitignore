@@ -17,6 +17,7 @@ is_dir
 /~html~/
 ./logicmoo_workspace.vtg~
 packs_sys/prologmud_samples/prolog/prologmud_sample_games/.ssh/
+packs_sys/logicmoo_nlu/ext/stanford/stanford-corenlp-4.2.0-models*
 packs_usr/OSCAR-web-page/
 packs_usr/aop/
 packs_usr/cTI/
@@ -31,4 +32,5 @@ modified_sys/
 pldox/
 packs_web/logicmoo_webui/serv*/
 #packs_usr/
+packs_sys/eggdrop/conf/PrologMUD-freenode.*
 
