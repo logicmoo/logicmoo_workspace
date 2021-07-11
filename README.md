@@ -64,6 +64,11 @@ Finding/Setting LD_LIBRARY_PATH...
 
 ```
 
+##
+
+##
+
+##
 
 
 
@@ -76,10 +81,7 @@ Finding/Setting LD_LIBRARY_PATH...
 
 
 
-
-
-
-# Ignore the reset of this
+# Ignore the rest of this
 (This exists for historical reasons)
 
 Douglas' pastebin 
