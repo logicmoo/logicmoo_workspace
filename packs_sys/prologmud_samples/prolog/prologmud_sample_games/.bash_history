@@ -1,55 +1,3 @@
-bfly. call((bfly_set(butterfly),bfly_set(command_args,\"${*}\"),bfly_set(ptty,\"${PTTY}:${TTY}:${PTY}:${PTS}\"))). bfly_start_link(\"${LOCATION}\").
-end_of_file.^M"
-echo STUFF=$STUFF
-(    $SCREEN_CMD -S LogicmooServer -p0 -X stuff "${STUFF}"; )
-echo $( 
-$SCREEN_CMD -rx LogicmooServer
-)
-return 0 2>/dev/null
-#!/bin/bash
-set -e
-export SCREEN_CMD="sudo -u prologmud_server -- screen"
-#echo PTTY:TTY:PTS=$PTTY:$TTY:$PTS
-#whoami
-STUFF="^Mprolog.
-bfly. call((bfly_set(butterfly),bfly_set(command_args,\"${*}\"),bfly_set(ptty,\"${PTTY}:${TTY}:${PTY}:${PTS}\"))). bfly_start_link(\"${LOCATION}\").
-end_of_file.^M"
-echo STUFF=$STUFF
-(    $SCREEN_CMD -S LogicmooServer -p0 -X stuff "${STUFF}"; )
-echo $( 
-$SCREEN_CMD -rx LogicmooServer
-)
-return 0 2>/dev/null
-#!/bin/bash
-set -e
-export SCREEN_CMD="sudo -u prologmud_server -- screen"
-#echo PTTY:TTY:PTS=$PTTY:$TTY:$PTS
-#whoami
-STUFF="^Mprolog.
-bfly. call((bfly_set(butterfly),bfly_set(command_args,\"${*}\"),bfly_set(ptty,\"${PTTY}:${TTY}:${PTY}:${PTS}\"))). bfly_start_link(\"${LOCATION}\").
-end_of_file.^M"
-echo STUFF=$STUFF
-(    $SCREEN_CMD -S LogicmooServer -p0 -X stuff "${STUFF}"; )
-echo $( 
-$SCREEN_CMD -rx LogicmooServer
-)
-return 0 2>/dev/null
-#!/bin/bash
-set -e
-export SCREEN_CMD="sudo -u prologmud_server -- screen"
-#echo PTTY:TTY:PTS=$PTTY:$TTY:$PTS
-#whoami
-STUFF="^Mprolog.
-bfly. call((bfly_set(butterfly),bfly_set(command_args,\"${*}\"),bfly_set(ptty,\"${PTTY}:${TTY}:${PTY}:${PTS}\"))). bfly_start_link(\"${LOCATION}\").
-end_of_file.^M"
-echo STUFF=$STUFF
-(    $SCREEN_CMD -S LogicmooServer -p0 -X stuff "${STUFF}"; )
-echo $( 
-$SCREEN_CMD -rx LogicmooServer
-)
-return 0 2>/dev/null
-#!/bin/bash
-set -e
 export SCREEN_CMD="sudo -u prologmud_server -- screen"
 #echo PTTY:TTY:PTS=$PTTY:$TTY:$PTS
 #whoami
@@ -1998,3 +1946,55 @@ find $LOGICMOO_WS/docker/rootfs/ -type f -printf "ln -svf %p /%P 2>/dev/null \n"
 find $LOGICMOO_WS/docker/rootfs/ -type f -printf "ln -sf %p /%P 2>/dev/null \n" | xargs -I{} bash -c "{}"
 find $LOGICMOO_WS/docker/rootfs/ -type f -printf "ln -sf '%p' '/%P' 2>/dev/null \n" | xargs -I{} bash -c "{}"
 /startup.sh 
+lm
+lm emacs
+lm --help
+make.
+lm ls
+lm pwd
+lm attach
+connect_www.sh 
+lm www
+lm vnc
+lm www
+lm vnc
+lm emacs
+lm www
+lm 
+lm cls
+ls
+lm cls
+lm bash
+ls
+ls
+git mv connect_emacs.sh emacs.sh
+git mv connect_prolog.sh ansi.sh
+git mv connect_www.sh www.sh
+git mv connect_butterfly.sh bfly.sh
+ls
+git mv connect_vnc.sh vns.sh
+git mv vns.sh vnc.sh
+ls
+lm
+ls
+lm
+lm
+lm
+which 
+lm which
+lm which sudo
+lm which sudo
+lm which sudo
+lm which sudo
+lm which sudo
+lm which sudo
+lm which sudo
+lm which ls
+lm ls
+lm 
+lm which swipl
+lm
+git status
+www.sh
+exit
+exit

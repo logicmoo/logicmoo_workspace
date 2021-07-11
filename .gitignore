@@ -1,7 +1,7 @@
 swipl-devel/
 packs_xtra/programk/
 #packs_xtra/logicmoo_packages/prolog/*/
-#packs_sys/prologmud_samples/prolog/prologmud_sample_games/.dbus/
+packs_sys/prologmud_samples/prolog/prologmud_sample_games/.dbus/
 packs_sys/prologmud_samples/prolog/prologmud_sample_games/nohup.out
 ./packs_web/butterfly/results.txt
 .gitignore
@@ -33,4 +33,5 @@ pldox/
 packs_web/logicmoo_webui/serv*/
 #packs_usr/
 packs_sys/eggdrop/conf/PrologMUD-freenode.*
-
+packs_sys/prologmud_samples/prolog/prologmud_sample_games/.cache/google-chrome/
+packs_sys/prologmud_samples/prolog/prologmud_sample_games/.config/google-chrome/

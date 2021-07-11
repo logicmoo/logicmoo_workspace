@@ -254,6 +254,7 @@
 							<F N="docker/rootfs/usr/local/bin/git-patch-submodules.sh"/>
 							<F N="docker/rootfs/usr/local/bin/git-submodules.sh"/>
 							<F N="docker/rootfs/usr/local/bin/killchilds.sh"/>
+							<F N="docker/rootfs/usr/local/bin/lm"/>
 							<F N="docker/rootfs/usr/local/bin/maybe.gitmodules"/>
 							<F N="docker/rootfs/usr/local/bin/mkcert"/>
 							<F N="docker/rootfs/usr/local/bin/mkcert-v1.4.3-linux-amd64"/>

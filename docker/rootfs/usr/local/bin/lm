@@ -6,6 +6,7 @@ if [ ! -f /.dockerenv ]; then
    exit 0
 fi
 
+DIR0="$( cd "$( dirname "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )"
 
 set -o pipefail
 export SCREEN_CMD="sudo -u prologmud_server -- screen"
@@ -13,9 +14,14 @@ export SCREEN_CMD="sudo -u prologmud_server -- screen"
 source /opt/logicmoo_workspace/logicmoo_env.sh
 
 export cmd="${1}"
+shift 1
 
-if ["${cmd}" = "emacs" ]; then sudo -u prologmud_server -- google-chrome "http://localhost:4125"
-else if ["${cmd}" = "attach" ]; then
+if [ "${cmd}" == "" ] || [ "${cmd}" == "--help" ]; then   
+   bash -c "cd $DIR0 ; ls --color"
+   bash -c "cd $DIR0 ; grep '\# \-\-help' . -r "
+
+# if [ "${cmd}" == "emacs" ]; then sudo -u prologmud_server -- google-chrome "http://localhost:4125"
+elif [ "${cmd}" == "attach" ]; then
 
 STUFF="^Mprolog.
 call((bfly_set(butterfly),bfly_set(command_args,\"${*}\"),bfly_set(ptty,\"${PTTY}:${TTY}:${PTY}:${PTS}\"))). bfly_start_link(\"${LOCATION}\").
@@ -27,6 +33,19 @@ echo STUFF=$STUFF
   $SCREEN_CMD -S LogicmooServer -p0 -X stuff "${STUFF}"
   $SCREEN_CMD -rx LogicmooServer
 )
+elif [ -f "$DIR0/${cmd}.sh" ]; then
+
+  bash -c "$DIR0/${cmd}.sh $*" 
+
+else
+
+    export WHICH=`which ${cmd}.sh`
+    if ! [[ -z "${WHICH}" ]]; then 
+      bash -c "cd $DIR0 && $WHICH $*" 
+    else
+      bash -c "cd ~ && $cmd $*"
+    fi
+
 fi
 
 return 0 2>/dev/null
