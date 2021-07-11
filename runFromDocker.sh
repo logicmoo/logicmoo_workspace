@@ -65,7 +65,6 @@ if [ "${1}" == "build" ]; then
       set +e +x
       cd docker
       docker build $EXTRA -t logicmoo/logicmoo_starter_image . 
-      #|| return $? 2>/dev/null ; exit $?
 
       if [ "${2}" == "commit" ]; then
          docker push logicmoo/logicmoo_starter_image
@@ -76,8 +75,7 @@ if [ "${1}" == "build" ]; then
    )
    
    
-   docker build $EXTRA -t logicmoo/logicmoo_workspace . 
-   #|| return $? 2>/dev/null ; exit $?
+   docker build $EXTRA -t logicmoo/logicmoo_workspace .
 
    if [ "${2}" == "commit" ]; then
       docker push logicmoo/logicmoo_workspace
@@ -90,7 +88,7 @@ fi
 docker kill logicmoo 2>/dev/null ; /bin/true
 docker ps
 
-export DOCKER_RUN="--name logicmoo --privileged=true -v /opt/logicmoo_workspace:/opt/logicmoo_workspace --rm -it -p 4000-4440:4000-4440 -p 4443:443 -p 3020:3020 $EXTRA logicmoo/logicmoo_workspace:latest"
+export DOCKER_RUN="--name logicmoo --privileged=true --no-healthcheck -v /opt/logicmoo_workspace:/opt/logicmoo_workspace --rm -it -p 4000-4440:4000-4440 -p 4443:443 -p 3020:3020 $EXTRA logicmoo/logicmoo_workspace:latest"
 
 echo "docker run $DOCKER_RUN"
 docker run $DOCKER_RUN
