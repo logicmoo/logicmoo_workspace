@@ -1,0 +1,34 @@
+#!/bin/bash
+
+if [ ! -f /.dockerenv ]; then
+   docker exec -it logicmoo bin/$(basename "${BASH_SOURCE[0]}") $*
+   return 0 2>/dev/null
+   exit 0
+fi
+
+
+set -o pipefail
+export SCREEN_CMD="sudo -u prologmud_server -- screen"
+
+source /opt/logicmoo_workspace/logicmoo_env.sh
+
+export cmd="${1}"
+
+if ["${cmd}" = "emacs" ]; then sudo -u prologmud_server -- google-chrome "http://localhost:4125"
+else if ["${cmd}" = "attach" ]; then
+
+STUFF="^Mprolog.
+call((bfly_set(butterfly),bfly_set(command_args,\"${*}\"),bfly_set(ptty,\"${PTTY}:${TTY}:${PTY}:${PTS}\"))). bfly_start_link(\"${LOCATION}\").
+ansi. 
+end_of_file.^M"
+
+echo STUFF=$STUFF
+( 
+  $SCREEN_CMD -S LogicmooServer -p0 -X stuff "${STUFF}"
+  $SCREEN_CMD -rx LogicmooServer
+)
+fi
+
+return 0 2>/dev/null
+exit 0
+

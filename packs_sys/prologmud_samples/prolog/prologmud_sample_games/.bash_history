@@ -1998,3 +1998,20 @@ cd /opt/logicmoo_workspace/packs_web/butterfly/
 pip install .
 butterfly.server.py 
 pip3 install .
+sudo
+which emacs
+emacs
+ls
+connect_emacs.sh 
+connect_emacs.sh 
+sudo prologmud_server -- google-chrome "http://localhost:4125"
+sudo -u prologmud_server -- google-chrome "http://localhost:4125"
+source /opt/logicmoo_workspace/logicmoo_env.sh
+sudo -u prologmud_server -- google-chrome "http://localhost:4125"
+sudo -u prologmud_server -- firefox "http://localhost:4125"
+emacs --help
+emacs --no-x-resource
+connect_emacs.sh 
+emacs
+emacs -nw
+connect_emacs.sh 

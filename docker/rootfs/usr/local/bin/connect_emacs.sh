@@ -11,7 +11,8 @@ set -o pipefail
 
 source /opt/logicmoo_workspace/logicmoo_env.sh
 
-sudo prologmud_server -- google-chrome "http://localhost:4125"
+
+sudo -u prologmud_server -- google-chrome "http://localhost:4125"
 
 return 0 2>/dev/null
 exit 0
