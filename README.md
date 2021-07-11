@@ -35,19 +35,40 @@ git pull --recurse-submodule
 
 # Running
 
-When `./StartLogicmoo.sh` is ran a few minutes later you will see 
-```
+## When `./StartLogicmoo.sh` is ran a few minutes later you will see 
+```bash
 MAYBE (IN OTHER TERMINAL):  docker exec -it logicmoo sudo -u prologmud_server -- screen -rx LogicmooServer
 OR (Bash IN OTHER TERMINAL):  docker exec -it logicmoo bash
 ```  (in green every few minutes)
 
-Open a terminal and run
-```
+## Open a terminal new terminal and run
+```bash
+root@gitlab:/opt/logicmoo_workspace# lm
+#*
+#* DISPLAY=10.0.0.78:0.0
+Finding/Setting LIBJVM...
+#* LIBJVM=/usr/lib/jvm/java-11-openjdk-amd64/lib/server
+Finding/Setting LD_LIBRARY_PATH...
+#* LD_LIBRARY_PATH=/usr/lib/jvm/java-11-openjdk-amd64/lib/server:/usr/local/lib
+
+ Executes one of the following commands in the LOGICMOO docker.
+
+   lm [--no-x] [--no-env] [-v|-q] [--wd <path>] [--] <cmd> [<args>]
+
+   ansi                  # Opens LOGICMOO Main Termninal
+   emacs                 # Opens IDE in a web browser
+   bfly                  # Opens LOGICMOO Main Termninal in web brower
+   telnet                # Connect via Telnet
+   www                   # Display LOGICMOO WWW in a web browser
+   cls                   # Clear the SCREEN
 
 ```
 
-# Douglas' pastebin
-```
+
+
+# Douglas' pastebin 
+Ignore the reset of this
+```bash
 docker kill logicmoo
 docker exec -it $(docker ps -n 1 -q) bash
 docker network create -d macvlan --subnet=10.0.0.0/24 --gateway=10.0.0.1 -o parent=eth0 pub_net

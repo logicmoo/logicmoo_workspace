@@ -1,6 +1,6 @@
 #!/bin/bash
 
-#--help # Display VNC in a web browser
+#- -help # Display VNC in a web browser (not working)
 
 set -o pipefail
 

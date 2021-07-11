@@ -1,4 +1,5 @@
 #!/bin/bash
+#--help # Opens LOGICMOO Main Termninal in web brower
 
 if [ ! -f /.dockerenv ]; then
    docker exec -it logicmoo bin/$(basename "${BASH_SOURCE[0]}") $*
