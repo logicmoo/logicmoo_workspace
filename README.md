@@ -35,7 +35,7 @@ git pull --recurse-submodule
 
 # Running
 
-# When `./StartLogicmoo.sh` is ran a few minutes later you will see (in green every few minutes)
+When `./StartLogicmoo.sh` is ran a few minutes later you will see (in green every few minutes)
 ```bash
 MAYBE (IN OTHER TERMINAL):  docker exec -it logicmoo sudo -u prologmud_server -- screen -rx LogicmooServer
 OR (Bash IN OTHER TERMINAL):  docker exec -it logicmoo bash
@@ -63,6 +63,31 @@ Finding/Setting LD_LIBRARY_PATH...
    cls                   # Clear the SCREEN
 
 ```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
