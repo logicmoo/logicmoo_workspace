@@ -1,36 +1,4 @@
 /opt/logicmoo_workspace/StartLogicmoo.sh
-/opt/logicmoo_workspace/StartLogicmoo.sh
-swipl
-/opt/logicmoo_workspace/StartLogicmoo.sh
-/opt/logicmoo_workspace/StartLogicmoo.sh
-/opt/logicmoo_workspace/StartLogicmoo.sh
-cls
-cls
-/opt/logicmoo_workspace/StartLogicmoo.sh
-/opt/logicmoo_workspace/StartLogicmoo.sh
-/opt/logicmoo_workspace/StartLogicmoo.sh
-cls
-/opt/logicmoo_workspace/StartLogicmoo.sh
-git status
-git diff packs_sys/logicmoo_utils/prolog/debuggery/dmsg.pl
-cp packs_sys/logicmoo_utils/prolog/debuggery/dmsg.pl packs_sys/logicmoo_utils/prolog/debuggery/dmsg.new
-git checkout  packs_sys/logicmoo_utils/prolog/debuggery/dmsg.pl
-git diff packs_sys/logicmoo_utils/prolog/debuggery/dmsg.pl
-/opt/logicmoo_workspace/StartLogicmoo.sh
-git checkout master~1 packs_sys/logicmoo_utils/prolog/debuggery/dmsg.pl
-/opt/logicmoo_workspace/StartLogicmoo.sh
-git checkout master~2 packs_sys/logicmoo_utils/prolog/debuggery/dmsg.pl
-/opt/logicmoo_workspace/StartLogicmoo.sh
-git checkout master~5 packs_sys/logicmoo_utils/prolog/debuggery/dmsg.pl
-/opt/logicmoo_workspace/StartLogicmoo.sh
-git checkout master~15 packs_sys/logicmoo_utils/prolog/debuggery/dmsg.pl
-/opt/logicmoo_workspace/StartLogicmoo.sh
-git checkout master~10 packs_sys/logicmoo_utils/prolog/debuggery/dmsg.pl
-/opt/logicmoo_workspace/StartLogicmoo.sh
-git checkout master~13 packs_sys/logicmoo_utils/prolog/debuggery/dmsg.pl
-/opt/logicmoo_workspace/StartLogicmoo.sh
-git checkout master~14 packs_sys/logicmoo_utils/prolog/debuggery/dmsg.pl
-/opt/logicmoo_workspace/StartLogicmoo.sh
 git checkout master~15 packs_sys/logicmoo_utils/prolog/debuggery/dmsg.pl
 /opt/logicmoo_workspace/StartLogicmoo.sh
 cp packs_sys/logicmoo_utils/prolog/debuggery/dmsg.new packs_sys/logicmoo_utils/prolog/debuggery/dmsg.pl
@@ -1998,3 +1966,35 @@ lm -v echo $DISPLAY
 lm -v echo $DISPLAY
 lm -v echo $DI
 ls
+lm -v echo $DISPLAY
+xterm &
+killall -9 swipl
+ps axf
+ps axf
+ps axf
+ps axf
+ps axf
+ps axf
+ps axf
+ps axf
+threads.
+xterm &
+/opt/logicmoo_workspace/logicmoo_env.sh 
+su -
+ls
+ps axf
+find / -write
+find / -writeable
+find / -writable
+find / -writable >2/dev/null
+find / -writable 2>/dev/null
+find / -xdev -writable 2>/dev/null
+q!
+rm -rf /tmp/butterfly/
+find / -xdev -writable 2>/dev/null
+find / -xdev -type f -writable 2>/dev/null 
+find / -x -type f -writable 2>/dev/null 
+find / -type f -writable 2>/dev/null 
+find /opt/ -type f -writable 2>/dev/null 
+find / -type f -writable 2>/dev/null 
+find /opt/logicmoo_workspace/ / -xdev -type f -writable 2>/dev/null 

@@ -12,7 +12,13 @@ set -o pipefail
 
 source /opt/logicmoo_workspace/logicmoo_env.sh
 
-sudo -u prologmud_server -- google-chrome "http://localhost"
+URL="http://localhost"
+if [$# -neq 0];  then 
+URL=$*
+fi
+
+# sudo -u prologmud_server -- google-chrome $URL
+sudo -u prologmud_server -- firefox $URL
 
 return 0 2>/dev/null
 exit 0
