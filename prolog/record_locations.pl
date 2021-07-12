@@ -153,7 +153,7 @@ assert_declaration_one(reexport(U), M, PI, Pos) -->
     assert_reexport_declaration_2(PI, U, Pos, M).
 assert_declaration_one(module_2, M, H, Pos) -->
     !,
-    [(:- discontiguous '$exported_op'/3)], % kludge to avoid discontiguous warnings
+    % [(:- discontiguous '$exported_op'/3)], % Not a good idea: commented out because it causes problems in apps that use this library
     assert_declaration_one(H, M, module_2, Pos).
 assert_declaration_one(Declaration, _, M:PI,
                        term_position(_, _, _, _, [_, Pos])) -->
