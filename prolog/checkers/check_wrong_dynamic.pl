@@ -83,6 +83,7 @@ hide_var_dynamic_hook(unrtcheck2(_, _), rtchecks).
 hide_var_dynamic_hook(do_ac_head_prop_idx(_, _, _, _, _), assrt_comment).
 hide_var_dynamic_hook(bind_interface(_, _), interface).
 hide_var_dynamic_hook(unfold_goal(_, _), ref_scenarios).
+hide_var_dynamic_hook(is_pure_clause(_, _), pure).
 
 :- dynamic
     wrong_dynamic_db/4,
