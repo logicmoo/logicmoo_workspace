@@ -58,6 +58,7 @@ subrelation(child, at).
 subrelation(in, child).
 subrelation(on, child).
 subrelation(worn_by, child).
+subrelation(fn(attached,_), worn_by).
 subrelation(held_by, child).
 subrelation(Sub, child_not_in):- dif(Sub, in), subrelation(Sub, child).
 %subrelation(under, in).
@@ -73,6 +74,7 @@ same_rel(Rel, Prep):- subrelation(Rel, Prep).
 prep_to_rel(Target, Prep, Rel, S0):- has_rel(Rel, Target, S0), same_rel(Rel, Prep), !.
 prep_to_rel(Target, Prep, Rel, S0):- in_model(h(_Spatial, Rel, Target, _), S0), same_rel(Rel, Prep), !.
 prep_to_rel(Target, Prep, Rel, S0):- atom(Prep), prep_to_rel(Target, fn(exit, Prep), Rel, S0), !.
+prep_to_rel(Target, Prep, Rel, S0):- atom(Prep), prep_to_rel(Target, fn(region, Prep), Rel, S0), !.
 prep_to_rel(Target, _Prep, Rel, S0):- default_rel(Rel, Target, S0).
 
 :- defn_state_getter(has_rel(domrel, inst)).

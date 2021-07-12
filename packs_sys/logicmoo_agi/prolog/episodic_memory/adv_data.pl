@@ -621,7 +621,6 @@ exit(west, kitchen, dining_room), exit(east, dining_room, kitchen),
 exit(west, dining_room, living_room), exit(east, living_room, dining_room), 
 
 
-
 in(shelf, pantry), % the shelf is in the pantry
 in(locker, pantry), % the locker is in the  pantry
 in(rock, garden),  % xformed:  in(rock_X1, garden).
@@ -645,6 +644,51 @@ in(brklamp, garden)
 
 ]).
 
+fn_pred(attached,nw,"north west").
+fn_pred(attached,nn,"north").
+fn_pred(attached,ne,"north east").
+fn_pred(attached,ww,"west").
+fn_pred(attached,cc,"center").
+fn_pred(attached,ee,"east").
+fn_pred(attached,sw,"south west").
+fn_pred(attached,ss,"south").
+fn_pred(attached,se,"south east").
+
+add_compass_attachments(TTT_table):- 
+ forall(fn_pred(Attached,SE,Southeast),
+  ( atom_concat(SE,'_subregion',Se_subregion),
+  push_to_state([
+    t(Attached,SE,Se_subregion,TTT_table),
+    type_props(Se_subregion, [desc=Southeast,subregion])]))).
+
+:- push_to_state([
+    % subregions are physical surfaces that are attached to something
+    type_props(subregion, [inherit(physical),inherit(surface),has_rel(attached)]),  
+    % Blue pebbles are pebbles that are the color blue
+    type_props(blue_pebble, [pebble,color(blue)]),
+    % A red pebble is type of pebble that is the color red
+    type_props(red_pebble, [pebble,color(red)]),
+    % Pebbles are takeable rocks
+    type_props(pebble, [can(take),rock])]).
+
+% TTT world
+ttt_world(TTT_table,Where,Red,Blue):-
+  push_to_state([
+   % TTT_table is a class of table describable as Tic-Tac-Toe Table
+     type_props(TTT_table, [desc="Tic-Tac-Toe Table",table])]),
+   % There is a TTT table in Where
+   in(TTT_table, Where),
+  % There are 5 blue pebbles held by the Blue player
+  forall(between(1,5,N),push_to_state(held_by( x(blue_pebble, N), Blue))),
+  % There are 5 red pebbles held by the Red player
+  forall(between(1,5,N),push_to_state(held_by( x(red_pebble, N), Red))),
+    % shall we support this syntax?
+    % forall(between(1,5,N),push_to_state(held_by( x([pebble,color(pink)], N), Red))),
+  % add subregion attachments to TTT_table
+  add_compass_attachments(TTT_table),!.
+
+
+:- ttt_world(ttt_table,kitchen,player,floyd).
 
 :- multifile(extra_decl/2).
 :- dynamic(extra_decl/2).

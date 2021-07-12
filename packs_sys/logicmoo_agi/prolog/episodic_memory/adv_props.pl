@@ -166,6 +166,7 @@ collector_prop(traits).
 collector_prop(nominals).
 collector_prop(adjs).
 collector_prop(desc).
+collector_prop(color).
 
 single_valued_prop(name).
 single_valued_prop(desc).
@@ -179,7 +180,9 @@ is_spatial_rel(in).
 is_spatial_rel(worn_by).
 is_spatial_rel(held_by).
 is_spatial_rel(on).
-is_spatial_rel(exit).
+is_spatial_rel(R):- is_spatial_rel_fn(R).
+is_spatial_rel_fn(exit).
+is_spatial_rel_fn(attached).
 
 
 
@@ -262,7 +265,8 @@ push_2_state(type_props(Obj, Conj0)):-
   (adv_subst(equivalent, $class, Obj, Conj0, Conj)-> Conj0\==Conj), !, push_2_state(type_props(Obj, Conj)).
 push_2_state(type_props(Obj, Conj)):-
   (props_to_list(Conj, List) -> Conj\== List), !, push_2_state(type_props(Obj, List)).
-
+push_2_state(call(StateInfo)):- !, call(StateInfo),!.
+push_2_state(THOLDS):- compound_name_arguments(THOLDS,'t',[T|HOLDS]),append_termlist(T,HOLDS,StateInfo),!,push_2_state(StateInfo).
 push_2_state(StateInfo):- StateInfo=..[F, Obj, E1, E2|More], functor_arity_state(F, 2), !,
   StateInfoNew=..[F, Obj, [E1, E2|More]], !, push_2_state(StateInfoNew).
 push_2_state(StateInfo):- props_to_list(StateInfo, StateInfo2)->StateInfo2\=[StateInfo], !, push_2_state(StateInfo2).
