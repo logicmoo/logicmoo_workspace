@@ -1,0 +1,2 @@
+;;; Generated package description from lxd-tramp.el  -*- no-byte-compile: t -*-
+(define-package "lxd-tramp" "20181023.7" "TRAMP integration for LXD containers" '((emacs "24.4") (cl-lib "0.6")) :commit "f335c76245f62b02cf67a9376eca6f3863c8a75a" :authors '(("Yc.S" . "onixie@gmail.com")) :maintainer '("Yc.S" . "onixie@gmail.com") :keywords '("lxd" "lxc" "convenience") :url "https://github.com/onixie/lxd-tramp.git")

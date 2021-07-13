@@ -55,6 +55,7 @@ noText ---> consume_spans_hack.
 
 nomoreText(S1,S1,G,G):- is_list(S1), \+ (member(W2,S1), compound(W2),W2=w(_,_)).
 
+consume_spans_hack ---> [Var],{var(Var),!,fail}.
 consume_spans_hack ---> [span(NV)],{nonvar(NV),!,parser_e2c:add_prev_span(span(NV))},consume_spans_hack.
 consume_spans_hack ---> [].
 

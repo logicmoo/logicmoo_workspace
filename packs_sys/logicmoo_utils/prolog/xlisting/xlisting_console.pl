@@ -232,8 +232,10 @@
 :- use_module(library(prolog_codewalk)).
 :- use_module(library(prolog_source)).
 :- use_module(library(date)).
+:- autoload(library(listing),[portray_clause/3,listing/1]).
+
 %:- use_module(library(editline)).
-:- use_module(library(listing)).
+%:- prolog_listing:use_module(library(listing)).
 
 
 % % % OFF :- system:use_module(library(hook_database)).

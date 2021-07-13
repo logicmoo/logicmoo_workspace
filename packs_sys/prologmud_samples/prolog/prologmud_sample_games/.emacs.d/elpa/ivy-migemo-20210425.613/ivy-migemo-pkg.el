@@ -1,0 +1,2 @@
+;;; Generated package description from ivy-migemo.el  -*- no-byte-compile: t -*-
+(define-package "ivy-migemo" "20210425.613" "Use migemo on ivy" '((emacs "24.3") (ivy "0.13.0") (migemo "1.9.2") (nadvice "0.3")) :commit "a2ce15abe6a30fae63ed457ab25a80455704f28e" :authors '(("ROCKTAKEY" . "rocktakey@gmail.com")) :maintainer '("ROCKTAKEY" . "rocktakey@gmail.com") :keywords '("matching") :url "https://github.com/ROCKTAKEY/ivy-migemo")

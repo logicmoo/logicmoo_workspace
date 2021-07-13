@@ -1,0 +1,10 @@
+2013-04-03  Stefan Monnier  <monnier@iro.umontreal.ca>
+
+	* packages/lex/lex-parse-re.el: New file, extracted from lex.el.
+	* packages/lex/lex.el: Use it instead of the self-load hack.
+	(lex--nfa, lex-compile): Use case-table-get-table.
+
+2013-01-09  Stefan Monnier  <monnier@iro.umontreal.ca>
+
+	New package lex.el.
+

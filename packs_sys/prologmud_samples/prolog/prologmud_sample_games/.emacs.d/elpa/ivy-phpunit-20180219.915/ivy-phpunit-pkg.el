@@ -1,0 +1,2 @@
+;;; Generated package description from ivy-phpunit.el  -*- no-byte-compile: t -*-
+(define-package "ivy-phpunit" "20180219.915" "Ivy integration for phpunit.el" '((ivy "0.10.0") (phpunit "0.7.0") (emacs "25")) :commit "ffedb0138d36564e8e36a28fd9bc71ea8944681f" :authors '(("12pt")) :maintainer '("12pt") :keywords '("convenience" "tools" "ivy" "phpunit" "php") :url "https://github.com/12pt/ivy-phpunit")

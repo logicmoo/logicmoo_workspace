@@ -44,6 +44,15 @@ print_english(Doer, Logic):- logic2english(Doer, Logic, Text), write(Text). % pp
 
 same_agent(A, B):- A=@=B.
 
+
+logic2english(Logic, Text):-
+  logic2english(_Doer, Logic, Text).
+
+l2e(Logic):-
+ logic2english(Logic, Text), wdmsg(Text).
+
+:- fixup_exports.
+
 % A percept or event:
 % - is a logical description of what happened
 % - includes English or other translations

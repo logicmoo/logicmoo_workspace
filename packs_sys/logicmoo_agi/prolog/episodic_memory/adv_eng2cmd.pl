@@ -251,7 +251,7 @@ user:parse_chat80(Text, Q):-
    try_maybe_p(parser_chat80:qplan, C, Q))).
 */
 eng2cmd4(_Self, Logic, Logic, _M):- \+ is_list(Logic), !.
-eng2cmd4(_Self, [Verb|Args], Logic, _M) :- atom(Verb), verbatum_anon_one_or_zero_arg(Verb), !,
+eng2cmd4(_Self, [Verb|Args], Logic, _M) :- atom(Verb), verbatum_anon_one_or_zero_arg(Verb), 
   (Args =[_, _|_] ->
      Logic =.. [Verb, Args];
      Logic =.. [Verb |Args]).
@@ -266,7 +266,6 @@ eng2cmd4(Self, Words, frame(Cmd), Mem):-
   length(Words, L), L > 3, eng2logic_frame( Self, Words, Cmd, Mem), !.
 
 
-eng2cmd4(Self, [Alias|Args], Logic, Mem):- cmdalias(Alias, Cmd), !, eng2cmd4(Self, [Cmd|Args], Logic, Mem).
 eng2cmd4(Doer, Words, Action, M) :- parse_imperative_movement(Doer, Words, Action, M), !.
 
 % %%%%%%%%%%%%%%
@@ -288,19 +287,19 @@ eng2cmd4(Doer, Words, Action, M) :- fail,
  reframed_call(eng2cmd4, Doer, NewWords, Action, M).
 
 
-
 eng2cmd4(Doer, [TheVerb|Args], Action, M) :-
  (F==intransitive;F==transitive),
  (TheVerb = Verb ; Verb = _),
  quietly_talk_db([F, Verb, THE|Forms]),
  member(TheVerb, [Verb, THE|Forms]),
-
  eng2cmd4(Doer, [Verb|Args], Action, M).
 
 eng2cmd4( Self, Words, Logic, Mem):-  fail,
     \+ member(Self, Words),
    (get_agent_prompt(Self, Prompt)->true;Prompt = [does]),
    append([Self|Prompt], Words, Decl), eng2state( Self, Decl, Logic, Mem), !.
+
+eng2cmd4(Self, [Alias|Args], Logic, Mem):- cmdalias(Alias, Cmd), !, eng2cmd4(Self, [Cmd|Args], Logic, Mem).
 
 eng2cmd4(Doer, [TheVerb|Args], Action, M) :-
  munl_call(clex_verb(TheVerb, Verb, _, _)),

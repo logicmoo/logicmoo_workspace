@@ -356,7 +356,8 @@ do_fdmsg1(G):-
 %
 % Simplify Module.
 %
-simplify_m(G,M):-atom(G),sub_atom(G,_,6,0,M),!.
+
+% simplify_m(G,M):-atom(G),sub_atom(G,_,6,0,M),!.
 simplify_m(G,G).
 
 %= 	 	 

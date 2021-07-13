@@ -1,0 +1,2 @@
+;;; Generated package description from ivy-file-preview.el  -*- no-byte-compile: t -*-
+(define-package "ivy-file-preview" "20210124.1639" "Preview the current ivy file selection" '((emacs "25.1") (ivy "0.8.0") (s "1.12.0") (f "0.20.0")) :commit "b237ee8e9fd2fd1b52254ef84cd06a0bb6c10a24" :authors '(("Shen, Jen-Chieh" . "jcs090218@gmail.com")) :maintainer '("Shen, Jen-Chieh" . "jcs090218@gmail.com") :url "https://github.com/jcs-elpa/ivy-file-preview")

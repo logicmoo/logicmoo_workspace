@@ -21,6 +21,7 @@ W:\opt\logicmoo_workspace\packs_sys\logicmoo_utils\prolog;W:\opt\logicmoo_worksp
 
 
 */
+
 %:- set_prolog_flag(xpce, false).
 
 %:- reconsult('/opt/logicmoo_workspace/lib/swipl/xpce/prolog/lib/pce.pl').
@@ -28,6 +29,13 @@ W:\opt\logicmoo_workspace\packs_sys\logicmoo_utils\prolog;W:\opt\logicmoo_worksp
 % :- dynamic(pce_principal:send/2).
 %:- lock_predicate(pce_principal:send/2).
 % :- use_module(library(jpl)).
+
+
+%:- pack_list_installed.
+%:- make.
+%:- listing(autoload_all).
+%:- autoload_all.
+
 
 :- thread_local(t_l:squelch_message/0).
 
@@ -78,13 +86,12 @@ print_message_guarded(Level, Term) :-
 :- multifile '$messages':print_message/2.
 :- dynamic '$messages':print_message/2.
 :- asserta(('$messages':print_message(A,B):- notrace((squeltch:squelch_message('$messages':print_message(A,B)))),!)).
-:- dynamic message_hook/3.
-:- multifile message_hook/3.
-:- asserta((message_hook(A, B, C):- notrace((squeltch:squelch_message(message_hook(A, B, C)))),!)).
-:- dynamic message_hook/1.
-:- multifile message_hook/1.
-:- asserta((message_hook(A):- notrace((squeltch:squelch_message(message_hook(A)))),!)).
-
+:- dynamic user:message_hook/3.
+:- multifile user:message_hook/3.
+:- asserta((user:message_hook(A, B, C):- notrace((squeltch:squelch_message(message_hook(A, B, C)))),!)).
+:- dynamic user:message_hook/1.
+:- multifile user:message_hook/1.
+:- asserta((user:message_hook(A):- notrace((squeltch:squelch_message(message_hook(A)))),!)).
 
 pre_run_mud_server:-
  
@@ -132,6 +139,7 @@ never_catch:-
 :- initialization(pre_run_mud_server, now).
 :- initialization(pre_run_mud_server, restore_state).
 
+:- set_prolog_flag(message_ide,false).
 
 never_notrace:- 
    abolish_notrace,
@@ -555,7 +563,7 @@ call_safely(G):- ignore(must_or_rtrace(G)),
 
 only_runtime(G):- (current_prolog_flag(logicmoo_compiling,true);compiling)-> true; call(G).
 
-start_lsp_server:-
+start_lsp_server:- \+ thread_self(main),!,
  lsp_server:
    (set_prolog_flag(toplevel_prompt, ''),
     debug(server),
@@ -571,6 +579,9 @@ start_lsp_server:-
     current_output(Out),
     set_stream(Out, encoding(utf8)),
     stdio_handler(A-A, In)).
+start_lsp_server:- thread_property(_,alias(lsp_server)),!.
+start_lsp_server:- thread_create(start_lsp_server,_,[detached(true),alias(lsp_server)]).
+
 
 start_network:- only_runtime(keep_user_module(start_network_now)).
 start_network_now:-  
@@ -580,7 +591,7 @@ start_network_now:-
    user:use_module(library(eggdrop)),
    egg_go,   
    webui_start_swish_and_clio,
-   thread_create(start_lsp_server,_,[detached(true),alias(lsp_server)]),
+   start_lsp_server,
    threads,statistics]),
    !.
 
@@ -802,6 +813,9 @@ swi_ide:- use_module(library(swi_ide)),
 :- add_history(search4term).
 :- add_history(edit1term).
 %:- add_history(never_catch).
+
+:- make:make_no_trace, make.
+
 
 :- meta_predicate(system:mycatch(0,?,0)).
 system:mycatch(G,_E,_C):- call(G),!.

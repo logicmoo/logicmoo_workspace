@@ -1,0 +1,109 @@
+#+TITLE: liberime [开发中]
+
+* 简介
+
+liberime 是一个 Emacs 动态模块，提供了 librime 库绑定。目前只实现了几
+个方法，理想情况是暴露所有 librime 的 API 到 emacs-lisp.
+
+* 依赖
+** 依赖说明
+1. Emacs 需要启用动态模块支持，一般是在编译的时候使用 --with-modules
+   选项。
+2. librime 版本 > 1.3.2
+
+** Windows 系统下使用 msys2 安装依赖
+   #+BEGIN_SRC shell
+   pacman -Sy --overwrite "*" --needed base-devel zip \
+          ${MINGW_PACKAGE_PREFIX}-gcc                 \
+          ${MINGW_PACKAGE_PREFIX}-librime             \
+          ${MINGW_PACKAGE_PREFIX}-librime-data        \
+          ${MINGW_PACKAGE_PREFIX}-rime-wubi           \
+          ${PACKAGE_PREFIX}-rime-emoji                \
+          ${MINGW_PACKAGE_PREFIX}-rime-double-pinyin
+   #+END_SRC
+
+   将 opencc 包自带的文件链接到 rime-data/opencc 目录下，解决无法输入
+   简体中文的问题。
+
+   #+BEGIN_SRC shell
+   ln -s ${MINGW_PREFIX}/share/opencc/* ${MINGW_PREFIX}/share/rime-data/opencc
+   #+END_SRC
+* 编译
+** Linux 系统下编译 liberime:
+
+   #+BEGIN_SRC shell
+   export EMACS_MAJOR_VERSION = 26  # 按实际情况更改
+   make
+   #+END_SRC
+
+** Mac (Darwin) 系统下编译 liberime:
+1. Mac 下编译 librime, 需要安装 Xcode (good luck), 可以参考：
+   [[https://github.com/rime/librime/blob/master/README-mac.md]] 
+2. 环境变量 RIME_PATH 的取值设置为 librime 所在的目录，比如：
+   #+begin_src shell
+   export RIME_PATH=~/Develop/others/librime
+   #+end_src
+3. 编译 liberime:
+
+   #+BEGIN_SRC shell
+   export EMACS_MAJOR_VERSION = 26  # 按实际情况更改
+   make
+   #+END_SRC
+
+** Windows 系统下使用 msys2 编译 liberime
+1. 打开 MSYS2 MinGW 终端
+2. 切换到 liberime 所在的目录
+3. 运行下面的命令
+
+   #+BEGIN_SRC shell
+   export EMACS_MAJOR_VERSION = 26  # 按实际情况更改
+   make
+   #+END_SRC
+
+* 使用
+** Emacs 配置
+#+BEGIN_SRC emacs-lisp
+(require 'pyim)
+(require 'liberime nil t)
+(setq default-input-method "pyim")
+(with-eval-after-load "liberime"
+  (liberime-try-select-schema "luna_pinyin_simp")
+  (setq pyim-default-scheme 'rime-quanpin))
+#+END_SRC
+
+用户也可以通过 Rime 配置文件 (默认为：~/.emacs.d/rime/default.custom.yaml) 
+来设置默认 schema，设置方式可以参考：
+https://gist.github.com/merrickluo/553f39c131d0eb717cd59f72c9d4b60d
+
+注意事项：
+1. 一般情况下，liberime 和 [[https://github.com/tumashu/pyim][pyim]] 配合使用
+2. 默认情况下，liberime 会自动搜索 rime 共享数据目录（shared_data_dir）和
+   rime 用户数据目录（user_data_dir）, 用户也可以使用下面两个变量强制设置：
+   1. liberime-shared-data-dir
+   2. liberime-user-data-dir
+3. Window 用户不要将 shared_data_dir 设置为小狼毫的 data 目录，因为小
+   狼毫自带的 OpenCC 文件无法用于 msys2 编译的 liberime, 会出现无法输
+   入简体中文的问题。
+
+*** 加载时自动编译
+#+BEGIN_SRC emacs-lisp
+(let ((liberime-auto-build t))
+  (require 'liberime nil t))
+#+END_SRC
+
+** 部署 Rime
+
+手动修改 librime 配置后，可以调用 ~(liberime-deploy)~ 重新部署。
+
+** 同步 Rime 词库
+使用 liberime 存在词库跟系统输入法不一致的问题，可以使用 rime 词库同步
+功能来变相的解决。
+
+1. 设置 sync_dir 目录 (默认修改 $HOME/.emacs.d/rime/installation.yaml 文件)
+2. 运行 liberime-sync 函数，比如：将其加入 ~after-init-hook~ 中。
+   #+begin_src emacs-lisp
+   (add-hook 'after-init-hook #'liberime-sync)
+   #+end_src
+
+Rime 同步功能的其它信息可以参考：[[https://github.com/rime/home/wiki/UserGuide#%E5%90%8C%E6%AD%A5%E7%94%A8%E6%88%B6%E8%B3%87%E6%96%99][Rime 同步用户资料]]。
+

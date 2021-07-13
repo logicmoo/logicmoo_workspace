@@ -312,6 +312,7 @@ hide_non_user_console:-current_input(In),stream_property(In, close_on_exec(true)
 
 :- set_module(class(library)).
 
+%:- prolog_listing:use_module(library(listing)).
 
 :- use_module(library(occurs)).
 :- use_module(library(gensym)).
@@ -341,12 +342,13 @@ hide_non_user_console:-current_input(In),stream_property(In, close_on_exec(true)
 :- use_module(library(prolog_source)).
 :- use_module(library(date)).
 %:- use_module(library(editline)).
-:- unload_file(library(listing)).
+%:- system:use_module(library(listing)).
+%:- unload_file(library(listing)).
 :- multifile(prolog_listing:or_layout/1).
 :- dynamic(prolog_listing:or_layout/1).
 :- multifile(prolog_listing:clause_term/4).
 :- dynamic(prolog_listing:clause_term/4).
-:- use_module(library(listing)).
+
 
 
 /** <module> logicmoo_util_catch - catch-like bocks

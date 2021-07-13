@@ -490,7 +490,7 @@ uses_default_doer(Action):- \+ compound(Action).
 action_doer(Action, Agent):- uses_default_doer(Action), !, must_mw1(mu_current_agent(Agent)), !.
 action_doer(Action, Agent):- arg(_, Action, Agent), nonvar(Agent), is_x_instance(Agent), !.
 
-action_doer(Action, Agent):- action_verb_agent_args(Action, _Verb, Agent, _Thing),!.
+action_doer(Action, Agent):- action_verb_agent_args4(Action, _Verb, Agent, _Thing),!.
 
 action_doer(Action, Agent):- mu_current_agent(Agent), !, must_mw1(Action == Agent).
 action_doer(Action, Agent):- trace, throw(missing(action_doer(Action, Agent))).
@@ -504,29 +504,36 @@ action_verb_agent_thing(Action, Verb, Agent, Thing):-
   action_verb_agent_args(Action, Verb, Agent, Args),
   (Args=[[Thing]]->true;Args=[Thing]->true;Thing=_), !.
 
-action_verb_agent_args(Atom, Verb, Agent, _):- atom(Atom),!,Atom = Verb, mu_current_agent(Agent),!.
-action_verb_agent_args(event3(Verb, [Agent|Args], _), Verb, Agent, Args):-!.
-action_verb_agent_args(act3(Verb, Agent, Args), Verb, Agent, Args):-!.
-
-action_verb_agent_args(MetaAction, Verb, Agent, Args):- 
-  arg(_, MetaAction, Action), is_funct3(Action), !, 
-  action_verb_agent_args(Action, Verb, Agent, Args).
-
-action_verb_agent_args(MetaAction, Verb, Agent, Args):- 
-  arg(_, MetaAction, Action), is_funct3(Action),
-    action_verb_agent_args(Action, Verb, Agent, Args), !.
-
 action_verb_agent_args(Action, Verb, Agent, Args):-
+ action_verb_agent_args4(Action, Verb, Agent, Args),
+ true. % \+ is_list(Agent),!.
+
+action_verb_agent_args4(Atom, Verb, Agent, _):- atom(Atom),!,Atom = Verb, mu_current_agent(Agent),!.
+action_verb_agent_args4(event3(Verb, [Agent|Args], _), Verb, Agent, Args):-!.
+action_verb_agent_args4(act3(Verb, Agent, Args), Verb, Agent, Args):-!.
+
+action_verb_agent_args4(MetaAction, Verb, Agent, Args):- 
+  arg(_, MetaAction, Action), is_funct3(Action), !, 
+  action_verb_agent_args4(Action, Verb, Agent, Args).
+
+action_verb_agent_args4(MetaAction, Verb, Agent, Args):- 
+  arg(_, MetaAction, Action), is_funct3(Action),
+    action_verb_agent_args4(Action, Verb, Agent, Args), !.
+
+action_verb_agent_args4(Action, Verb, Agent, Args):-
+  action_verb_agent_args5(Action, Verb, Agent, Args), !.
+
+action_verb_agent_args5(Action, Verb, Agent, Args):-
   univ_safe(Action, [Verb, Agent|Args]),
   act_change_state(Verb, _, _), !.
 
-action_verb_agent_args(Action, Verb, Agent, Args):-
+action_verb_agent_args5(Action, Verb, Agent, Args):-
   get_functor_types(action, Action, Types),
   univ_safe(Action, [Verb|Rest]), !,
   ((Types = [agent|_]) -> Rest = [Agent|Args] ; Args=Rest).
-%action_verb_agent_args(Action, Verb, Agent, Args):-
+%action_verb_agent_args4(Action, Verb, Agent, Args):-
 % notrace((compound(Action), Action=..[Verb, Agent|Args], \+ verbatum_anon(Verb))), !.
-action_verb_agent_args(Action, Verb, Agent, Args):-
+action_verb_agent_args5(Action, Verb, Agent, Args):-
   univ_safe(Action, [Verb, Agent|Args]),
   \+ verbatum_anon(Verb),
   Args\==[].

@@ -174,7 +174,7 @@ dmsg000/1,
 :- autoload(library(lists),[append/3]).
 %:- autoload(library(lists),[selectchk/3]).
 
-:- autoload(library(listing),[portray_clause/3]).
+:- autoload(library(listing),[portray_clause/3,listing/1]).
 
 :- thread_local(bfly_tl:bfly_setting/2).
 

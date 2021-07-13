@@ -2806,6 +2806,23 @@
 				</Folder>
 				<F N="packs_lib/lambda/pack.pl"/>
 			</Folder>
+			<Folder Name="lsp_server">
+				<Folder Name="prolog">
+					<F N="packs_lib/lsp_server/prolog/lsp_changes.pl"/>
+					<F N="packs_lib/lsp_server/prolog/lsp_checking.pl"/>
+					<F N="packs_lib/lsp_server/prolog/lsp_colours.pl"/>
+					<F N="packs_lib/lsp_server/prolog/lsp_completion.pl"/>
+					<F N="packs_lib/lsp_server/prolog/lsp_parser.pl"/>
+					<F N="packs_lib/lsp_server/prolog/lsp_server.pl"/>
+					<F N="packs_lib/lsp_server/prolog/lsp_utils.pl"/>
+				</Folder>
+				<Folder Name="test">
+					<F N="packs_lib/lsp_server/test/server.plt"/>
+				</Folder>
+				<F N="packs_lib/lsp_server/LICENSE"/>
+				<F N="packs_lib/lsp_server/pack.pl"/>
+				<F N="packs_lib/lsp_server/README.org"/>
+			</Folder>
 			<Folder Name="matrix">
 				<Folder Name="prolog">
 					<Folder Name="examples">

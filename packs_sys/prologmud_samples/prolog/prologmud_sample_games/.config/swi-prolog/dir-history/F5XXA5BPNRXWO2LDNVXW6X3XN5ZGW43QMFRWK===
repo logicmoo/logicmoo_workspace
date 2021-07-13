@@ -39,3 +39,9 @@ my_setup_call_cleanup(X=1,member(A,[a,b,c]),writeln(a=X)).
 my_setup_call_cleanup(X=1,member(A,[a,b,c]),writeln(a=A)).
 setup_call_cleanup(X=1,member(A,[a,b,c]),writeln(x=X)),!.
 my_setup_call_cleanup(X=1,member(A,[a,b,c]),writeln(x=X)),!.
+listing(message_hook).
+listing(print_message).
+autoload_all.
+make.
+autoload_all.
+make.

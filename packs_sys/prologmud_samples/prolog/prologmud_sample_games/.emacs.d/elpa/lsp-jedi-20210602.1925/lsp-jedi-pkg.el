@@ -1,0 +1,2 @@
+;;; Generated package description from lsp-jedi.el  -*- no-byte-compile: t -*-
+(define-package "lsp-jedi" "20210602.1925" "Lsp client plugin for Python Jedi Language Server" '((emacs "25.1") (lsp-mode "6.0")) :commit "ab265f7fb26f4fa0385158a9f9d3649b606d2e23" :authors '(("Fred Campos" . "fred.tecnologia@gmail.com")) :maintainer '("Fred Campos") :keywords '("language-server" "tools" "python" "jedi" "ide") :url "http://github.com/fredcamps/lsp-jedi")

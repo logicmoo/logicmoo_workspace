@@ -1,0 +1,49 @@
+shift delete cuts highlighted text (to the clipboard) and shift insert
+inserts the clipboard
+
+https://unix.stackexchange.com/questions/252995/how-can-mouse-support-be-enabled-in-terminal-emacs
+
+i think VI and Emacs are the only two text places i've ever been that
+this doesnt work.. it works in Chrome, Notepad, Kate, KEdit etc
+
+yeah it should be able to work if you tweak the terminal, which term
+emulator do you use?
+
+my box is always headless sometimes i'll start xterm though and have
+it send to me windows X server emulator
+
+and i can exit Emacs with "Alt-FunctionKey4" or"Alt f x" .. rather
+than Ctrl-Z .. kill -9 %1 ?
+
+btw, just fill me in on any other keybindings, I'll try to implement
+them all.  Also, I will try to find a list of keybindings for vscode
+and do them.
+
+yeah I'll put Ctrl-Z to undo
+
+"alt f x" usually means "(f)ile->e(x)it" but jsut ALt-F4 is good
+enough
+
+btw, I found someone who had bound C-c v to vscode-mode, but couldn't
+find the mode they were referencing there.  So I created a new issue.
+asking for access.
+
+I want this to be as cozy a mode as possible
+
+there are also extant vscode Emacs themes, that I can set up for you ,
+like dark-mode so we'll play around to get it all correct
+
+https://code.visualstudio.com/shortcuts/keyboard-shortcuts-windows.pdf
+
+I'll install vscode too, and we'll do lsp stuff
+
+hehe i only use light themes in vscode if i change the theme at
+all.. i puicked vscode since it has all teh universal keys from 1984
+wordprocessors
+
+strange that emacs is lacking it, and I apologize in advance if some
+of them are simply impossible to fix
+
+all text editors and programs in Gnome, KDE and Windows 3.1-windows 10
+all use this same keybinding set from 1985 that was used in
+WordPerfect

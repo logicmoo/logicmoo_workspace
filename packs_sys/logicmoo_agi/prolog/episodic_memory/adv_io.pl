@@ -548,7 +548,8 @@ agent_to_output0( Agent, Stream):- mu_global:console_io_player(InStream, _, Agen
 agent_to_output0(_Agent, Stream):- current_output(Stream), \+ using_stream(Stream, _Other), !.
 agent_to_output0(_Agent, Stream):- stream_property(Stream, file_no(1)), \+ using_stream(Stream, _Other), !.
 agent_to_output0( Agent, Stream):- fail, agent_to_input(Agent, In), stream_property(In, file_no(F)), F > 2, stream_property(Stream, file_no(F)), stream_property(Stream, write), !.
-agent_to_output0( Agent, Stream):- break, dmsg(throw(agent_io(Agent, agent_to_output(Agent, Stream)))), stream_property(Stream, file_no(2)), !.
+agent_to_output0( Agent, Stream):- % break, 
+   dmsg(throw(agent_io(Agent, agent_to_output(Agent, Stream)))), stream_property(Stream, file_no(2)), !.
 %agent_to_output(Agent, Stream):- mu_global:console_host_io_history_unused(_Id, _Alias, _In, Stream, _Host, _Peer, Agent), !.
 
 % agent_to_input(Agent, In):- mu_global:already_consumed_input(Agent, _SoFar), In=Agent,

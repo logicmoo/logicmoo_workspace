@@ -1,0 +1,2 @@
+;;; Generated package description from lsp-rescript.el  -*- no-byte-compile: t -*-
+(define-package "lsp-rescript" "20210519.1101" "LSP client configuration for lsp-mode and rescript-vscode" '((lsp-mode "7.0.1") (emacs "25.1") (rescript-mode "0.1")) :commit "aac9673855314a1f34037eb785bccbd3f66d7695" :authors '(("John Lee")) :maintainer '("John Lee") :keywords '("languages") :url "https://github.com/jjlee/lsp-rescript")

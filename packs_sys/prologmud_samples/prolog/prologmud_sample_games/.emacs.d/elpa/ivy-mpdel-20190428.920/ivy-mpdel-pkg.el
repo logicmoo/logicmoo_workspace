@@ -1,0 +1,2 @@
+;;; Generated package description from ivy-mpdel.el  -*- no-byte-compile: t -*-
+(define-package "ivy-mpdel" "20190428.920" "Ivy interface to navigate MPD" '((emacs "25.1") (ivy "0.10.0") (libmpdel "1.0.0") (mpdel "1.0.0")) :commit "a42dcc943914c71975c115195d38c739f25e475c" :authors '(("Damien Cassou" . "damien@cassou.me")) :maintainer '("Damien Cassou" . "damien@cassou.me") :keywords '("multimedia") :url "https://gitlab.petton.fr/mpdel/ivy-mpdel")

@@ -675,9 +675,9 @@ add_compass_attachments(TTT_table):-
 ttt_world(TTT_table,Where,Red,Blue):-
   push_to_state([
    % TTT_table is a class of table describable as Tic-Tac-Toe Table
-     type_props(TTT_table, [desc="Tic-Tac-Toe Table",table])]),
+     type_props(TTT_table, [desc="Tic-Tac-Toe Table",table]),
    % There is a TTT table in Where
-   in(TTT_table, Where),
+   in(TTT_table, Where)]),
   % There are 5 blue pebbles held by the Blue player
   forall(between(1,5,N),push_to_state(held_by( x(blue_pebble, N), Blue))),
   % There are 5 red pebbles held by the Red player

@@ -1,4 +1,4 @@
-#!/usr/bin/env swipl
+q#!/usr/bin/env swipl
 /* * module  MUD server startup script in SWI-Prolog
 
 ?- 
