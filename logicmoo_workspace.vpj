@@ -16830,7 +16830,6 @@
 			<F N="prologmud_server/completion_4004"/>
 			<F N="prologmud_server/completion_4023"/>
 			<F N="prologmud_server/completion_4025"/>
-			<F N="prologmud_server/core"/>
 			<F N="prologmud_server/gdbinit"/>
 			<F N="prologmud_server/history_4000"/>
 			<F N="prologmud_server/history_4001"/>
@@ -16844,7 +16843,6 @@
 			<F N="prologmud_server/on_boot.sh"/>
 			<F N="prologmud_server/PreStartMUD.sh"/>
 			<F N="prologmud_server/Project.ede"/>
-			<F N="prologmud_server/requirments3.txt"/>
 			<F N="prologmud_server/run-clio.pl"/>
 			<F N="prologmud_server/run_mud_server.pl"/>
 			<F N="prologmud_server/run_mud_server.pl - Shortcut.lnk"/>
