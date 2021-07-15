@@ -1,0 +1,55 @@
+;; -*- mode: emacs-lisp; lexical-binding:t; coding: utf-8-emacs; -*-
+;; --------------------------------------------------------------------------
+;; Desktop File for Emacs
+;; --------------------------------------------------------------------------
+;; Created Thu Jul 15 07:06:24 2021
+;; Desktop file format version 208
+;; Emacs version 28.0.50
+
+;; Global section:
+(setq desktop-saved-frameset [frameset 1 (24815 56944 221295 648000) (desktop . "208") "root@d3669f636b7d" nil nil ((((minibuffer . t) (undecorated) (override-redirect) (font . "-PfEd-DejaVu Sans Mono-normal-normal-normal-*-11-*-*-*-m-0-iso10646-1") (font-parameter . "Monospace 11") (border-width . 0) (internal-border-width . 0) (child-frame-border-width) (right-divider-width . 0) (bottom-divider-width . 0) (vertical-scroll-bars . right) (horizontal-scroll-bars) (foreground-color . "black") (background-color . "white") (mouse-color . "black") (border-color . "black") (screen-gamma) (line-spacing) (left-fringe . 8) (right-fringe . 8) (no-special-glyphs) (scroll-bar-foreground . "white") (scroll-bar-background) (menu-bar-lines . 1) (tab-bar-lines . 0) (tool-bar-lines . 1) (title) (wait-for-wm . t) (tool-bar-position . top) (inhibit-double-buffering) (icon-type . t) (auto-raise) (auto-lower) (cursor-type . box) (scroll-bar-width . 16) (scroll-bar-height . 16) (alpha) (no-focus-on-map) (no-accept-focus) (fullscreen) (visibility . t) (skip-taskbar) (z-group) (display-type . mono) (background-mode . dark) (cursor-color . "white") (environment) (last-focus-update . t) (frameset--id . "DF8C-96D3-8FAB-7B5E") (frameset--mini t . t) (modeline . t) (unsplittable) (display . "10.0.0.78:0.0") (icon-name) (explicit-name) (height . 52) (width . 173) (left . 2450) (top . 1372)) ((min-height . 4) (min-width . 20) (min-height-ignore . 2) (min-width-ignore . 17) (min-height-safe . 1) (min-width-safe . 4) (min-pixel-height . 56) (min-pixel-width . 140) (min-pixel-height-ignore . 28) (min-pixel-width-ignore . 119) (min-pixel-height-safe . 14) (min-pixel-width-safe . 28)) hc (pixel-width . 1243) (pixel-height . 714) (total-width . 178) (total-height . 51) (normal-height . 1.0) (normal-width . 1.0) (combination-limit) (leaf (pixel-width . 623) (pixel-height . 714) (total-width . 89) (total-height . 51) (normal-height . 1.0) (normal-width . 0.5026729567233311) (buffer "*scratch*" (selected . t) (hscroll . 0) (fringes 8 8 nil nil) (margins 1) (scroll-bars nil 3 t nil 0 t nil) (vscroll . 0) (dedicated) (point . 149) (start . 1)) (prev-buffers ("*Buffer List*" 1 193) ("*Warnings*" 1 209) ("*eww*" 1 1))) (leaf (last . t) (pixel-width . 620) (pixel-height . 714) (total-width . 89) (total-height . 51) (normal-height . 1.0) (normal-width . 0.4973270432766689) (buffer ".saves-*" (selected) (hscroll . 0) (fringes 8 8 nil nil) (margins 2) (scroll-bars nil 3 t nil 0 t nil) (vscroll . 0) (dedicated) (point . 271) (start . 1)) (prev-buffers ("*eww*" 1 1)))))])
+(setq desktop-missing-file-warning nil)
+(setq tags-file-name nil)
+(setq tags-table-list nil)
+(setq search-ring '(#("GRam" 0 4 (isearch-case-fold-search nil isearch-regexp-function nil)) #("Gram." 0 5 (isearch-case-fold-search nil isearch-regexp-function nil))))
+(setq regexp-search-ring nil)
+(setq register-alist nil)
+(setq file-name-history '("/root"))
+
+;; Buffer section -- buffers listed in same order as in buffer list:
+(desktop-create-buffer 208
+  nil
+  ".saves-*"
+  'dired-mode
+  '(linum-mode projectile-mode helm-mode vscode-minor-mode company-mode)
+  271
+  '(nil nil)
+  t
+  '("/root/.emacs.d/auto-save-list/.saves-*")
+  '((buffer-display-time 24815 56518 118296 438000))
+  '((mark-ring nil)))
+
+(desktop-create-buffer 208
+  nil
+  "*eww*"
+  'eww-mode
+  '(linum-mode projectile-mode helm-mode vscode-minor-mode company-mode)
+  1
+  '(1 nil)
+  t
+  '(:history ((:title "DuckDuckGo Traffic" :url "https://duckduckgo.com/traffic") (:title "About DuckDuckGo" :url "https://duckduckgo.com/about" :point 604) (:title "DuckDuckGo" :url "https://html.duckduckgo.com/html/?q=" :point 15)))
+  '((buffer-display-time 24815 56478 461205 245000) (buffer-file-coding-system . utf-8-unix) (truncate-lines . t) (eww-history-position . 0))
+  '((mark-ring (1 1))))
+
+(desktop-create-buffer 208
+  nil
+  "*info*"
+  'Info-mode
+  '(linum-mode projectile-mode helm-mode vscode-minor-mode company-mode)
+  55556
+  '(nil nil)
+  t
+  '("/usr/local/share/info/emacs" "Distrib" nil)
+  '((tab-width . 8) (buffer-display-time 24815 56428 732573 297000) (buffer-file-coding-system . utf-8-unix) (case-fold-search . t))
+  '((mark-ring nil)))
+

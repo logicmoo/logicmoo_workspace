@@ -186,13 +186,15 @@ dbug1_2(Tree):-
   atom_occurs(SS,'\n',N),
   (N =< 2 -> bugout4("", '~N~@~n', [mu:print_tree_at_depth(Tree,0)], always);
              bugout4("", '~N~@~n', [mu:print_tree_at_depth(Tree,2)], always)).
+  
 
 dbug1_1(Tree):-
   wots(SSS,in_bfly(f,print_tree_at_depth(Tree,0))),
   prepend_trim(SSS,SS), 
   atom_occurs(SS,'\n',N),
   (N =< 1 -> bugout4("", '~N/* ~@ */~n', [mu:print_tree_at_depth(Tree,0)], always);
-             bugout4("", '~N/* ~@ */~n', [mu:print_tree_at_depth(Tree,1)], always)).
+             bugout4("", '~N/* ~@ */~n', [mu:print_tree_at_depth(Tree,1)], always)),
+  overwrote_prompt.
 
 
 dbug1(_):- notrace(current_prolog_flag(dmsg_level, never)), !.
@@ -201,7 +203,9 @@ dbug1(Fmt) :-
  quietly(( \+ \+
    ((mu:simplify_dbug(Fmt, FmtSS),     
      portray_vars:pretty_numbervars(FmtSS, FmtS),
-     locally_tl(no_english,maybe_bfly_html(dbug1_1(FmtS))))))).
+     locally_tl(no_english,maybe_bfly_html(dbug1_1(FmtS))),
+     ttyflush,flush_output)))).
+ 
 
 
 dbug(DebugDest, Fmt) :-

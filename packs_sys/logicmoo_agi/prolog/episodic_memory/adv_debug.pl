@@ -79,7 +79,7 @@ mwmsg(G):- notrace(mwmsg_3(G)).
 mwmsg_3(G):- compound(G), compound_name_arity(G, _, 1), G=..[F, GG], !, mwmsg_3(F:-GG).
 mwmsg_3(G):- simplify_dbug(G, G0),portray_vars:pretty_numbervars(G0, GG),mwmsg_4(GG).
 
-mwmsg_4(G):- !, dbug1_1(G).
+mwmsg_4(G):- !, dbug1_1(G),ttyflush,flush_output.
 % mwmsg_4(G):- format('~N'),maybe_bfly_html(weto((nop(write('<pre>')),in_bfly(f,dmsg(G)),nop(write('</pre>\n'))))).
 
 %:- system:import(simplify_dbug/2).
