@@ -952,7 +952,8 @@ add_context_menu:-!.
 % logicmoo_html_needs_debug.
 
 
-
+write_script(X):-
+  format(X).
 
 %% add_form_script is det.
 %
@@ -960,7 +961,7 @@ add_context_menu:-!.
 %
 % add_form_script:-!.
 add_form_script:- 
-  must_run_html(write(" <script>
+  must_run_html((write_script("\n<script>
 function add_form_script() {
 
 if(!(window.added_form_script)) {
@@ -982,7 +983,9 @@ $('form').submit(function() {
 
 }
 
-var handled = false;
+var handled = false;"),
+
+write("
 
 function callback(e) {
     var e = window.e || e;
@@ -1012,15 +1015,15 @@ if (document.addEventListener)
 else
     document.attachEvent('onclick', callback);
 
-}
-
 if (document.addEventListener)
     document.addEventListener('load', add_form_script, false);
 else
     document.attachEvent('load', add_form_script);
 
+}
 
-</script>")).
+</script>
+"))).
 
 
 
@@ -1952,11 +1955,10 @@ show_search_form(Obj):- toplevel_pp(bfly), !, show_search_form(Obj,lm_xref).
 show_search_form(Obj):- show_search_form(Obj,lm_xref).
 
 show_search_form(Obj,Where):- 
-  inline_html_format(['<form action="/swish/lm_xref/" target="',q(Where),'">',     
+  inline_html_format(['<form action="/swish/lm_xref/" target="',q(Where),'">', %call(add_form_script),     
      'Find: <input id="fa" type="text" name="fa" value="',q(Obj),'">&nbsp;',
      'Apply: ', action_menu_applied('action_below','Checked or Clicked',"&nbsp;below&nbsp;"),'&nbsp;\n',
-    show_search_filters('&nbsp;&nbsp;'),     
-    call(add_form_script),
+    show_search_filters('&nbsp;&nbsp;'),         
     '</form>']).
 
 do_search:- \+ get_webproc(edit1term), !.

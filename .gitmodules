@@ -8,3 +8,6 @@
 [submodule "wiki"]
 	path = wiki
 	url = https://logicmoo.org/gitlab/logicmoo/logicmoo_wiki.git
+[submodule "prologmud_server/vscode-mode"]
+	path = prologmud_server/vscode-mode
+	url = https://github.com/PlanLogic/vscode-mode

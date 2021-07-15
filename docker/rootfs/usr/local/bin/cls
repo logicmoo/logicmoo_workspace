@@ -1,22 +1,23 @@
 #!/bin/bash
 #--help # Clear the SCREEN
-for i in {1..4}
-do
-    echo -e "\n"
-done
-
-clear
-reset -w
-tput reset
-perl -e 'print "\n"x512;'
 
 echo -e -n '\033\143'
 printf '\e[H \e2J' 
 echo -e -n '\033]50;ClearScrollback\a'
 echo -e -n "\ec\e[3J"
 echo -ne '\033c'
+
 printf '\033[2J\033[H\033[3J'
 echo -e -n '\eP\033]50;ClearScrollback\a\e\P\e\\\\'
+
+clear
+reset -w
+tput reset
+tput rmam
+return 0 2>/dev/null
+exit 0
+
+
 
 
 #0

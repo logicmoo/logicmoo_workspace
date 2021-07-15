@@ -136,6 +136,10 @@ mv /root /root.dist
 ln -s $LOGICMOO_WS/packs_sys/prologmud_samples/prolog/prologmud_sample_games/ /root
 chown -R prologmud_server:www-data /root
 
+mv /usr/share/emacs/26.3 /usr/share/emacs/26.3.dead
+ln -s  /usr/local/share/emacs/28.0.50/ /usr/share/emacs/26.1
+ln -s  /usr/local/share/emacs/28.0.50/ /usr/share/emacs/26.3
+
 mv /usr/local/lib/swipl /usr/local/lib/swipl.dist
 ln -s $LOGICMOO_WS/docker/rootfs/usr/local/lib/swipl /usr/local/lib/swipl
 

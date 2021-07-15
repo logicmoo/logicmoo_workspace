@@ -191,14 +191,14 @@ bfly_decl_1_style(TID,Num,Style):-
   retractall(bfly_dyn:bfly_style_asked(_)),!.
 
 
-print_html_term_tree(Term):- current_print_write_options(Options), print_html_term_tree(Term, Options).
-print_html_term_tree(Term, Options):- in_pp_html(print_tree(Term,Options)).
+print_tree_html(Term):- current_print_write_options(Options), print_tree_html(Term, Options).
+print_tree_html(Term, Options):- in_pp_html(print_tree(Term,Options)).
 
 
 print_html_term(Term):- current_print_write_options(Options), print_html_term(Term, Options).
 print_html_term(Term, Options):- 
  must_or_rtrace(phrase(bfly_term(Term,Options),Tokens)),!,
- must_or_rtrace(print_html(Tokens)),!.
+ must_or_rtrace(send_tokens(Tokens)),!.
 
 bfly_portray(X):- 
   \+ tracing, ground(X),
@@ -206,7 +206,7 @@ bfly_portray(X):-
   bfly_get(butterfly,t),
   max_html_width(W120),
   display_length(X,L), L>W120,
-  print_html_term_tree(X).
+  print_tree_html(X).
 
 :- meta_predicate(in_bfly(+,0)).
 in_bfly(TF,Goal):- 
@@ -262,9 +262,10 @@ bfly_html_goal(Goal):-
   set_bfly_style('html_esc',f)), 
   bfly_write_h(S),!,PF==t.
 
-bfly_write_h(HTMLString):- in_pp(swish), pengines:pengine_output(HTMLString),!.
+%bfly_write_h(HTMLString):- setup_call_cleanup(bfly_in, write(HTMLString),(bfly_out,flush_output)),!.
+%bfly_write_h(HTMLString):- in_pp(swish), pengines:pengine_output(HTMLString),!.
 bfly_write_h(S0):- prepend_trim_for_html(S0,SM), prepend_trim(SM,S), ignore((\+ empty_str(S), 
- setup_call_cleanup(bfly_in, write(S),(bfly_out,flush_output)))).
+ setup_call_cleanup(bfly_in, write(S),(nl,bfly_out,flush_output)))),ttyflush,flush_output.
 
 %prepend_trim_for_html(S,S):-!.
 %prepend_trim_for_html(S,SS):- correct_html_len(S,SS).
@@ -273,34 +274,69 @@ prepend_trim_for_html(S,SS):- prepend_trim(S,SM),correct_html_len(SM,SS).
 %correct_html_len(S,S):- atom_contains(S,'<pre>'),!.
 correct_html_len(S,O):- atomic_list_concat(L,'\n',S),maplist(correct_html_len1,L,LL),!,atomic_list_concat(LL,'\n',O).
 
-max_html_width(100).
+max_html_width(120).
 
-% correct_html_len1(S,S):- atom_contains(S,'<pre>'),!.
-correct_html_len1(S,S):- atom_length(S,L),max_html_width(W120),L < W120, !.
-%correct_html_len1(S,S):- atom_contains(S,'<pre>'),!.
-correct_html_len1(S,O):- %fail, 
+find_place_to_split1(S,Before):- 
+  max_html_width(W120),
+  member(Split,['="','=\'']),
+  sub_atom(S,Before,_,_,Split),
+  Before > 50,  Before < W120,!.
+
+find_place_to_split1(S,Before):- 
+  max_html_width(W120),
+  member(Split,['> ']),
+  sub_atom(S,Before0,_,_,Split),
+  %atom_length(Split,LS),
+  Before is Before0+1,
+  Before > 50,  Before < W120,!.
+
+find_place_to_split1(S,Before):- 
+  max_html_width(W120),
+  member(Split,['/>']),
+  sub_atom(S,Before0,_,_,Split),
+  atom_length(Split,LS),
+  Before is Before0+LS,
+  Before > 50,  Before < W120,!.
+
+
+find_place_to_split1(S,Before):- 
   max_html_width(W120), W150 is W120 + 30,
-  member(Split,['/>','>','</','<',')','="','  ',' ']), sub_atom(S,Before,_,_,Split), Before> W120,  Before < W150, !,
+  member(Split,['</','<','/>','>',')','  ','/*',' ']),
+  sub_atom(S,Before,_,_,Split),
+  Before > 50,  Before < W150,
+  sub_atom(S,0,Before,_,Left), 
+  \+ atom_contains(Left,'<pre'),!.
+
+
+correct_html_len1(S,S):- atom_length(S,L),max_html_width(W120),L < W120, !.
+correct_html_len1(S,O):- find_place_to_split1(S,Before),!,
   sub_atom(S,0,Before,_,Left),
   sub_atom(S,Before,_,0,Right),
   correct_html_len1(Right,Mid),!,
   atomic_list_concat([Left,'\n ',Mid],'',O),!.
-% correct_html_len1(S,O):- atomic_list_concat(L,'<',S),atomic_list_concat(L,'\n<',O),!.
 correct_html_len1(S,S).
 
 
 :- meta_predicate(bfly_out_in(0)).
 bfly_out_in(Goal):- inside_bfly_html_esc -> setup_call_cleanup(bfly_out, wotso(Goal), bfly_in) ; call(Goal).
 
+bflyw(F):- bflyz(F).
+bflyw:-!.
+bflyz:- bflyw(264).
+
+ccls:- cls,bfly_write(ansi,escape_from_screen([call(cls)])).
+
+
+
 bfly_in:- inside_bfly_html_esc,!,flag('$inside_bfly_html_esc_level',X,X+1).
-bfly_in:- set_bfly_style('html_esc',t),bfly_write(_,escape_from_screen([esc(80),';HTML|'])).
+bfly_in:- bflyw,set_bfly_style('html_esc',t),!,bfly_write(_,escape_from_screen([esc(80),';HTML|'])).
+%bfly_in:- set_bfly_style('html_esc',t),bfly_write(_,[escape_from_screen('$start'),esc(80),';HTML|']).
 %bfly_in:- set_bfly_style('html_esc',t),!,bfly_write(_,[escape_from_screen(7),';HTML|']).
-bfly_in1:- set_bfly_style('html_esc',t),bfly_write(_,[escape_from_screen('$start'),esc(80),';HTML|']).
 %bfly_in:- set_bfly_style('html_esc',t),bfly_write(_,[escape_from_screen('$start'),7,';HTML|']).
 
 bfly_out:- \+ inside_bfly_html_esc,!,flag('$inside_bfly_html_esc_level',X,X-1).
-bfly_out:- bfly_write(_,escape_from_screen(esc(80))), set_bfly_style('html_esc',f).
-bfly_out1:- bfly_write(_,[7,escape_from_screen('$end')]), set_bfly_style('html_esc',f).
+bfly_out:- bfly_write(_,escape_from_screen(esc(80))),!, set_bfly_style('html_esc',f).
+%bfly_out:- bfly_write(_,[esc(80),when_in_screen(esc(92))]), set_bfly_style('html_esc',f).
 
 %bfly_out:- set_bfly_style('html_esc',f),bfly_write(_,escape_from_screen(7)).
 %bfly_out:- bfly_write(_,[esc(80),escape_from_screen('$end')]), set_bfly_style('html_esc',f).
@@ -354,6 +390,7 @@ bfly_write_plain(Stuff):- bfly_out_in(bfly_write(ansi,Stuff)).
 bfly_write_html(Stuff):- bfly_html_goal(bfly_write(http,Stuff)).
 bfly_write_pre(Stuff):- bfly_write_html(pre(Stuff)).
 
+escape_from_screen(G):- bfly_write(current,escape_from_screen(call(G))).
 
 only_bfly(Goal):- ignore((toplevel_pp(bfly), Goal)).
 
@@ -441,7 +478,8 @@ bfly_get(Style,Was):- nonvar(Was),!,bfly_get(Style,Waz),!,Was=@=Waz.
 bfly_get(Name,Value):- bfly_tl:bfly_setting(Name,Value),!.
 bfly_get(_,f).
 
-bfly_start_link(String):- make, bfly_set(location,String),parse_url(String,Attribs),
+bfly_start_link(String):- % make, 
+   bfly_set(location,String),parse_url(String,Attribs),
    bfly_set(Attribs), ignore((sub_string(String,_,1,After,'?'),sub_string(String,_,After,0,Value),bfly_set(command,Value),
    www_form_encode(Cmd,Value),atom_to_term(Cmd,Prolog,_),dmsg(cmd=Prolog),on_xf_ignore(Prolog))).
 

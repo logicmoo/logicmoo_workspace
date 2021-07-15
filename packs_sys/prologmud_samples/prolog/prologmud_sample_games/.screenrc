@@ -1,5 +1,0 @@
-
-termcapinfo xterm* ti@:te@
-# escape ^Bb
-vbell off
-

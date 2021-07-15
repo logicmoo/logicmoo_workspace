@@ -956,7 +956,7 @@ prefix_spaces1(Tab):- \+ integer(Tab), recalc_tab(Tab,   NewTab),!, prefix_space
 prefix_spaces1(Tab):- Floor is floor(Tab/2)+1, prefix_spaces0(Floor).
 
 ansi:- bfly_set(butterfly,f).
-bfly:- bfly_set(butterfly,t).
+bfly:- bfly_set(butterfly,t),bflyw.
 
 pl_span_c(Class):- pformat(html('<span class="pl-~w">',Class)).
 pl_span_e:- pformat(html('</span>')).
