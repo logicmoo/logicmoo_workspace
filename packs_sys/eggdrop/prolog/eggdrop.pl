@@ -412,7 +412,7 @@ consultation_thread(CtrlNick,Port):-
          once(quietly(consultation_codes(CtrlNick,Port,Text))),
          fail.
 
-join_chans:- maplist(join,['##prolog','#ai','##narrative-ai','##logic','#logicmoo']).
+join_chans:- maplist(join,['##prolog','#ai','##narrative-ai','#logicmoo']).
 
 :- dynamic(tmp:last_say_owner/1).
 say_owner(Info):- get_time(Date), ignore(if_catch_fail(say_owner(Info,Date))).

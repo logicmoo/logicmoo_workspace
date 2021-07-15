@@ -204,7 +204,8 @@ bfly_portray(X):-
   \+ tracing, ground(X),
   \+ ( nb_current('$inprint_message', Messages), Messages\==[] ),
   bfly_get(butterfly,t),
-  display_length(X,L), L>120,
+  max_html_width(W120),
+  display_length(X,L), L>W120,
   print_html_term_tree(X).
 
 :- meta_predicate(in_bfly(+,0)).
@@ -261,27 +262,30 @@ bfly_html_goal(Goal):-
   set_bfly_style('html_esc',f)), 
   bfly_write_h(S),!,PF==t.
 
+bfly_write_h(HTMLString):- in_pp(swish), pengines:pengine_output(HTMLString),!.
 bfly_write_h(S0):- prepend_trim_for_html(S0,SM), prepend_trim(SM,S), ignore((\+ empty_str(S), 
  setup_call_cleanup(bfly_in, write(S),(bfly_out,flush_output)))).
 
 %prepend_trim_for_html(S,S):-!.
-prepend_trim_for_html(S,SS):- correct_html_len(S,SS).
-%prepend_trim_for_html(S,SS):- prepend_trim(S,SM),correct_html_len(SM,SS).
+%prepend_trim_for_html(S,SS):- correct_html_len(S,SS).
+prepend_trim_for_html(S,SS):- prepend_trim(S,SM),correct_html_len(SM,SS).
 
-correct_html_len(S,S):- atom_contains(S,'<pre>'),!.
+%correct_html_len(S,S):- atom_contains(S,'<pre>'),!.
 correct_html_len(S,O):- atomic_list_concat(L,'\n',S),maplist(correct_html_len1,L,LL),!,atomic_list_concat(LL,'\n',O).
 
-% correct_html_len1(S,S):- atom_contains(S,'<pre>'),!.
-correct_html_len1(S,S):- atom_length(S,L),L < 120, !.
-correct_html_len1(S,S):- atom_contains(S,'<pre>'),!.
-correct_html_len1(S,O):- %fail, 
-  member(Split,['/>','>','</','<',')','  ']), sub_atom(S,Before,_,_,Split), Before>120,Before < 150, !,
-  sub_atom(S,0,Before,_,Left), % BeforeP1 is Before + 1,
-  sub_atom(S,Before,_,0,Right),
-  correct_html_len(Right,Mid),!,
-  atomic_list_concat([Left,'\n ',Mid],'',O),!.
+max_html_width(100).
 
-correct_html_len1(S,O):- atomic_list_concat(L,'<',S),atomic_list_concat(L,'\n<',O),!.
+% correct_html_len1(S,S):- atom_contains(S,'<pre>'),!.
+correct_html_len1(S,S):- atom_length(S,L),max_html_width(W120),L < W120, !.
+%correct_html_len1(S,S):- atom_contains(S,'<pre>'),!.
+correct_html_len1(S,O):- %fail, 
+  max_html_width(W120), W150 is W120 + 30,
+  member(Split,['/>','>','</','<',')','="','  ',' ']), sub_atom(S,Before,_,_,Split), Before> W120,  Before < W150, !,
+  sub_atom(S,0,Before,_,Left),
+  sub_atom(S,Before,_,0,Right),
+  correct_html_len1(Right,Mid),!,
+  atomic_list_concat([Left,'\n ',Mid],'',O),!.
+% correct_html_len1(S,O):- atomic_list_concat(L,'<',S),atomic_list_concat(L,'\n<',O),!.
 correct_html_len1(S,S).
 
 
@@ -356,13 +360,11 @@ only_bfly(Goal):- ignore((toplevel_pp(bfly), Goal)).
 guess_is_pp(Guess):- in_pp(Guess).
 % guess_is_pp(Guess):- toplevel_pp(Guess).
 
-bfly_write(Style,S):- var(S),!, write(var_in_style(Style,S)),!.
-
+bfly_write(current,S):- guess_is_pp(What),!,with_pp(What,bfly_write(What,S)).
+bfly_write(Style,S):- var(S),!, bfly_write(var_in_style(Style,S)),!.
+bfly_write(_Styl, call(X)):-!, call(X).
 bfly_write(_,  '$html'):- !, only_bfly(bfly_in).
 bfly_write(_,'$nohtml'):- !, only_bfly(bfly_out).
-
-
-
 bfly_write(_,esc(Char)):- !, only_bfly(( put(27),!, put_code(Char))).
 
 bfly_write(Style,IsList):- is_list(IsList), !, bfly_at_once(must_maplist_det(bfly_write(Style),IsList)),!.
@@ -372,15 +374,12 @@ bfly_write(Style,escape_from_screen('$end')):- !, only_bfly(bfly_write(Style,[wh
 bfly_write(Style,escape_from_screen(X)):-!, bfly_write(Style,[when_in_screen(esc(80)),X,when_in_screen(esc(92))]).
 bfly_write(Style,when_in_screen(X)):- !, only_bfly(ignore((getenv('TERM',screen),bfly_write(Style,X)))).
 
-bfly_write(current,S):- guess_is_pp(What),!,bfly_write(What,S).
 bfly_write(Style,S):- (string(S);is_codelist(S);is_charlist(S)), format(atom(T),'~s',[S]), !, bfly_write(Style,T).
 bfly_write(_Styl,S):- atom(S),(atom_contains(S,'<'),atom_contains(S,'>')),!,write_direct(S).
 bfly_write(_Styl,ansi(X)):-!, bfly_write_plain(X).
 
-
-bfly_write(_Styl,call(X)):-!, call(X).
 bfly_write(ansi,pre(X)):- !,bfly_write(ansi,X).
-bfly_write(_Styl,pre(X)):- !, bfly_write_html([html(' <pre>'),X,html('</pre>')]),!.
+bfly_write(_Styl,pre(X)):- !, bfly_write_html([html('<pre>'),X,html('</pre>')]),!.
 bfly_write(_Styl,html(X)):- !, bfly_write_html(X),!.
 bfly_write(ansi,term(X)):- !, bfly_out_in(print_tree(X)).
 bfly_write(_Styl,term(X)):- !, bfly_html_goal(print_html_term(X)).

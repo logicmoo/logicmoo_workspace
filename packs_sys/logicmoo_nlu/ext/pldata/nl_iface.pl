@@ -16,15 +16,29 @@ qcompile_external(File) :-
         process_create(path(swipl), ['-g', A, '-t', halt], [cwd(LPWD)]).
 
 
+absolute_file_name_stem(FileName,FileStem):-
+ absolute_file_name(FileName,AFileName,[extensions(['','qlf','qlf']),file_errors(fail)]),
+ file_name_extension(FileStem,_,AFileName),!.
+
+
+
 :- export(rexport_qlf/2).
-rexport_qlf(Module, FileName):-
+
+rexport_qlf(Module, Name):-
+ absolute_file_name_stem(Name,FileName),
   setup_call_cleanup((
    atom_concat(FileName, '.qlf', QLF),
    atom_concat(FileName, '.pl', PLF)),
    rexport_qlf(Module, FileName, PLF, QLF),
    format(user_error, '~N% Done with ~w. ~n', [FileName])).
 
-module_reexport(Module,File):- Module:ensure_loaded(File).
+module_reexport(Module,File):-
+ setup_call_cleanup(
+  open(File,read,In),
+  load_files([],[derived_from('/dev/null'),stream(In),modified(0),
+   if(true),must_be_module(false),module(Module),redefine_module(false),register(false)]),
+  close(In)),!.
+module_reexport(Module,File):-  Module:ensure_loaded(File).
 %module_reexport(Module,File):- Module:reexport(File).
 
 rexport_qlf(Module, _Name, _PLF, QLF):-  exists_source(QLF),
@@ -53,12 +67,12 @@ rexport_qlf(Module, Name, _PLF, _QLF):- exists_source(Name), !,
 
 :- set_prolog_flag(encoding, iso_latin_1).
 
-:- system:reexport(tt0_iface).
-:- system:reexport(ac_xnl_iface).
 :- system:reexport(clex_iface).
 :- system:reexport(talk_db).
 :- system:reexport(verbnet_iface).
 :- system:reexport(framenet).
+:- system:reexport(tt0_iface).
+:- system:reexport(ac_xnl_iface).
 :- system:reexport(nldata_cycl_pos0).
 
 % :- system:reexport(nldata_BRN_WSJ_LEXICON, [text_bpos/2]).

@@ -26,4 +26,4 @@ Optionally, also add this to the following to get it to run on startup:
 (add-to-list 'emacs-startup-hook 'global-vscode-mode-on)
 ```
 
-Then enable global-vscode-mode with C-c v
+Or enable global-vscode-mode with C-c v v

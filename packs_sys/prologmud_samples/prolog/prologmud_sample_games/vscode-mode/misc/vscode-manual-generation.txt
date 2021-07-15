@@ -1,0 +1,109 @@
+(vscode-mode-command/closeReferenceSearch
+  (("S-ESC"
+    ((key . "S-ESC")
+     (command vscode-mode-command/closeReferenceSearch)
+     (when-orig . "inReferenceSearchEditor && !config.editor.stablePeek")
+     (when and
+	   (vscode-mode-cond/inReferenceSearchEditor)
+	   (not
+	    (vscode-mode-cond/config\.editor\.stablePeek)))
+     (args)))
+   ("ESC"
+    ((key . "ESC")
+     (command vscode-mode-command/closeReferenceSearch)
+     (when-orig . "inReferenceSearchEditor && !config.editor.stablePeek")
+     (when and
+	   (vscode-mode-cond/inReferenceSearchEditor)
+	   (not
+	    (vscode-mode-cond/config\.editor\.stablePeek)))
+     (args)))
+   ("S-ESC"
+    ((key . "S-ESC")
+     (command vscode-mode-command/closeReferenceSearch)
+     (when-orig . "referenceSearchVisible && !config.editor.stablePeek")
+     (when and
+	   (vscode-mode-cond/referenceSearchVisible)
+	   (not
+	    (vscode-mode-cond/config\.editor\.stablePeek)))
+     (args)))
+   ("ESC"
+    ((key . "ESC")
+     (command vscode-mode-command/closeReferenceSearch)
+     (when-orig . "referenceSearchVisible && !config.editor.stablePeek")
+     (when and
+	   (vscode-mode-cond/referenceSearchVisible)
+	   (not
+	    (vscode-mode-cond/config\.editor\.stablePeek)))
+     (args))))
+  (("C-g"
+    ((key . "C-g")
+     (command vscode-mode-command/closeReferenceSearch)
+     (when-orig . "referenceSearchVisible && !config.editor.stablePeek")
+     (when and
+	   (vscode-mode-cond/referenceSearchVisible)
+	   (not
+	    (vscode-mode-cond/config\.editor\.stablePeek)))
+     (args)))))
+
+(defun vscode-code-forward-processor (emacs-style-vscode-key-sequence)
+ (if (string= emacs-style-vscode-key-sequence "S-ESC")
+  (if (and
+       (vscode-mode-cond/inReferenceSearchEditor)
+       (not
+	(vscode-mode-cond/config\.editor\.stablePeek)))
+   (vscode-mode-reverse-processor "C-g"))))
+
+(defun vscode-mode-reverse-processor (emacs-style-emacs-key-sequence)
+ (if (string= emacs-style-emacs-key-sequence "C-g")
+  (if (and
+       (vscode-mode-cond/referenceSearchVisible)
+       (not
+	(vscode-mode-cond/config\.editor\.stablePeek)))
+   (vscode-mode-find-emacs-command-for-emacs-key "C-g"))))
+
+(defun vscode-mode-find-emacs-command-for-emacs-key (emacs-key-sequence)
+ (or
+  (lookup-key vscode-minor-mode-map emacs-key-sequence)
+  (key-binding emacs-key-sequence)))
+
+
+
+   )
+  ((key . "S-ESC")
+   (command vscode-mode-command/closeReferenceSearch)
+   (when-orig . "inReferenceSearchEditor && !config.editor.stablePeek")
+   (when )
+   (args)))
+ ("ESC"
+  ((key . "ESC")
+   (command vscode-mode-command/closeReferenceSearch)
+   (when-orig . "inReferenceSearchEditor && !config.editor.stablePeek")
+   (when and
+    (vscode-mode-cond/inReferenceSearchEditor)
+    (not
+     (vscode-mode-cond/config\.editor\.stablePeek)))
+   (args)))
+ ("S-ESC"
+  ((key . "S-ESC")
+   (command vscode-mode-command/closeReferenceSearch)
+   (when-orig . "referenceSearchVisible && !config.editor.stablePeek")
+   (when and
+    (vscode-mode-cond/referenceSearchVisible)
+    (not
+     (vscode-mode-cond/config\.editor\.stablePeek)))
+   (args)))
+ ("ESC"
+  ((key . "ESC")
+   (command vscode-mode-command/closeReferenceSearch)
+   (when-orig . "referenceSearchVisible && !config.editor.stablePeek")
+   (when and
+    (vscode-mode-cond/referenceSearchVisible)
+    (not
+     (vscode-mode-cond/config\.editor\.stablePeek)))
+   (args))))
+  (("C-g"
+    ((key . "C-g")
+     (command vscode-mode-command/closeReferenceSearch)
+     (when-orig . "referenceSearchVisible && !config.editor.stablePeek")
+     (when )
+     (args)))))

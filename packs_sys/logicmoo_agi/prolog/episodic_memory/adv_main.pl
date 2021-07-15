@@ -243,7 +243,7 @@ telnet_decide_action(Agent, Mem, Mem) :-
 
 :- use_module(library(instant_prolog_docs),[autodoc_file/1]).
 %:- if(\+ prolog_load_context(reloading, t)).
-:- autodoc_file(library(episodic_memory/'*.pl')).
+%:- autodoc_file(library(episodic_memory/'*.pl')).
 %:- endif.
 
 /*main_loop(State) :-
