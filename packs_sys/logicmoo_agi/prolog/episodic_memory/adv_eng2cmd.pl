@@ -403,17 +403,18 @@ parse_cmd(Doer, recall(Doer, Who, Target)) --> [Who], {word_next_arg_type(Who, T
 
 any_text(Text, Text, []).
 
-eng2assert_text(Text, Action):- eng2logic(Text, Action), !.
-eng2assert_text(Text, txt(Text)).
-eng2assert_text(Action, S, []):- eng2assert_text(S, Action).
+eng2assert_text2(Text, Action):- eng2logic(Text, Action), !.
+eng2assert_text2(Text, txt(Text)).
+eng2assert_text(Action, S, []):- nonvar(S), eng2assert_text2(S, Action).
 
 oneOf(List, S, E):-member(I, List), (is_list(I)->phrase(I, S, E);phrase([I], S, E)).
 % %%%%%%%%%%%%%%
 % Communication
 % %%%%%%%%%%%%%%
-parse_cmd(Doer, (act3('emote', Doer, [ say, Dest, Emoted]))) --> dcg_from_right(parse_for_kind(agent, Dest), [', ']), eng2assert_text(Emoted).
+parse_cmd(Doer, (act3('emote', Doer, [ say, Dest, Emoted]))) --> dcg_from_right(parse_for_kind(agent, Dest), [',']), eng2assert_text(Emoted).
 parse_cmd(Doer, (act3('emote', Doer, [ Say, Dest, Emoted]))) --> [Ask], {ask_to_say(Ask, Say)},
-  oneOf([to, from, :, (', '), []]), ignore(parse_for_kind(agent, Dest);parse2object(Dest)), oneOf([to, :, []]), eng2assert_text(Emoted).
+  oneOf([to, from, :, (', '), []]), ignore(parse_for_kind(agent, Dest);parse2object(Dest)), oneOf([to, :, []]), 
+  eng2assert_text(Emoted).
 %parse_cmd(Doer, (act3('emote', Doer, [ Emoted]))) --> [emote], eng2assert_text(Emoted), !.
 %parse_cmd(Doer, say(Doer, Emoted)) --> [say], eng2assert_text(Emoted).
 

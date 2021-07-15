@@ -197,7 +197,8 @@ $(window).keydown(function(evt) {
   }
 });
 
-$(document).ready(function() {
+function init_butterfly_term() {
+
 
 
    function setSelected(isButtonUp) {
@@ -369,4 +370,12 @@ $(document).ready(function() {
     actElem.removeChild(pasteTarget);
     return paste;
   };
+
+  console.info("init_butterfly_term");
+}
+
+$(document).ready(function() {
+	init_butterfly_term(); 
 });
+
+
