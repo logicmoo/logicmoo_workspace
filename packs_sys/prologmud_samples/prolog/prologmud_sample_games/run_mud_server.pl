@@ -487,8 +487,8 @@ baseKB:':-'(ConsqIn):- throw(':-'(ConsqIn)).
 
 */
 
-:- multifile(html_write:html_meta/1).
-:- dynamic(html_write:html_meta/1).
+:- multifile(html_write:(html_meta)/1).
+:- dynamic(html_write:(html_meta)/1).
 
 :-  use_module(library(prolog_autoload)).
 :-  use_module(library(qsave)).
@@ -502,6 +502,7 @@ keep_user_module(Goal):-
     
 load_before_compile:- keep_user_module(load_before_compile_now).
 load_before_compile_now:- 
+ call_safely([
    set_prolog_flag(ec_loader,false),
    skip_sandboxing,
    %set_prolog_flag(verbose_file_search,true), 
@@ -532,10 +533,11 @@ load_before_compile_now:-
     use_module(library(xlisting/xlisting_web)),
     use_module(library(lsp_server)),
     baseKB:ensure_loaded(library(logicmoo_nlu)),!,
-    load_before_compile_now2.
+    load_before_compile_now2]).
 
 
 load_before_compile_now2:- 
+ call_safely([
     baseKB:ensure_loaded(library(logicmoo_mud)),
     baseKB:ensure_loaded(library(logicmoo_clif)),        
     %register_logicmoo_browser,
@@ -549,7 +551,7 @@ load_before_compile_now2:-
     %ensure_loaded(pldata(kb_0988)),        
     baseKB:ensure_loaded(library(narsese)),   
     use_module(library(instant_prolog_docs)),
-    add_hist(start_network). 
+    add_hist(start_network)]). 
 
 
 %start_network:- 
@@ -579,6 +581,7 @@ start_lsp_server:- \+ thread_self(main),!,
     current_output(Out),
     set_stream(Out, encoding(utf8)),
     stdio_handler(A-A, In)).
+
 start_lsp_server:- thread_property(_,alias(lsp_server)),!.
 start_lsp_server:- thread_create(start_lsp_server,_,[detached(true),alias(lsp_server)]).
 
@@ -598,8 +601,7 @@ start_network_now:-
 load_rest:- keep_user_module(load_rest_now).
 load_rest_now:- 
   call_safely(
-  [
-   nodebug,   
+  [nodebug,   
    add_history((mmake, autodoc_test)),
    load_rest2]),
    !.

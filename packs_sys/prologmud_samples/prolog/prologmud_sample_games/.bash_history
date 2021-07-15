@@ -1,33 +1,3 @@
-/opt/logicmoo_workspace/StartLogicmoo.sh
-git checkout master~15 packs_sys/logicmoo_utils/prolog/debuggery/dmsg.pl
-/opt/logicmoo_workspace/StartLogicmoo.sh
-cp packs_sys/logicmoo_utils/prolog/debuggery/dmsg.new packs_sys/logicmoo_utils/prolog/debuggery/dmsg.pl
-/opt/logicmoo_workspace/StartLogicmoo.sh
-git diff /opt/logicmoo_workspace/packs_sys/wam_common_lisp/prolog/
-git checkout packs_sys/wam_common_lisp/prolog/wam_cl/
-/opt/logicmoo_workspace/StartLogicmoo.sh
-git diff /opt/logicmoo_workspace/packs_sys/wam_common_lisp/prolog/
-git diff packs_sys/logicmoo_utils/prolog/debuggery/dmsg.pl
-git diff packs_sys/logicmoo_utils/prolog/debuggery/dmsg.pl
-/opt/logicmoo_workspace/StartLogicmoo.sh
-git diff packs_sys/logicmoo_utils/prolog/debuggery/dmsg.pl
-/opt/logicmoo_workspace/StartLogicmoo.sh
-/opt/logicmoo_workspace/StartLogicmoo.sh
-/opt/logicmoo_workspace/StartLogicmoo.sh
-/opt/logicmoo_workspace/StartLogicmoo.sh
-/opt/logicmoo_workspace/StartLogicmoo.sh
-/opt/logicmoo_workspace/StartLogicmoo.sh
-/opt/logicmoo_workspace/StartLogicmoo.sh
-cls
-/opt/logicmoo_workspace/StartLogicmoo.sh
-cls
-/opt/logicmoo_workspace/StartLogicmoo.sh
-b "<input type=text>
-"
-b html "<input type=text>"
-b2 html "<input type=text>"
-/opt/logicmoo_workspace/StartLogicmoo.sh
-/opt/logicmoo_workspace/StartLogicmoo.sh
 kill -9 %1
 kill -9 %2
 kill -9 %2
@@ -1998,3 +1968,33 @@ find / -type f -writable 2>/dev/null
 find /opt/ -type f -writable 2>/dev/null 
 find / -type f -writable 2>/dev/null 
 find /opt/logicmoo_workspace/ / -xdev -type f -writable 2>/dev/null 
+emacs run_mud_server.pl
+cls
+emacs run_mud_server.pl
+vi .emacs
+git status
+git clone https://github.com/PlanLogic/vscode-mode
+vi .emacs
+git add vscode-mode/*/
+git add vscode-mode/?*.*
+git status
+git add vscode-mode/LICENSE 
+git add .emacs.d/ -U
+git add .emacs.d/ -u -A
+git add .emacs.d/ -u
+git add .emacs.d/ -u -A
+git add .emacs.d/ -A
+git status
+cd .emacs.d/
+git checkout master~1 .
+git status
+git add .
+git add . -A
+git add . -u
+git status
+git commit "Incude the repo contents but locally we keep our .git to the real repo in oder so we can update"
+git commit -am "Incude the repo contents but locally we keep our .git to the real repo in oder so we can update"
+git push ; git push github 
+screen -r
+screen -x
+su - prologmud_server 

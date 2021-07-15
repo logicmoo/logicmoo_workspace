@@ -960,7 +960,7 @@ add_context_menu:-!.
 %
 % add_form_script:-!.
 add_form_script:- 
-must_run_html(write(" <script>
+  must_run_html(write(" <script>
 function add_form_script() {
 
 if(!(window.added_form_script)) {
@@ -2016,7 +2016,7 @@ send_tokens_1([nl(1)|Tokens]):-!,remove_if_last(Tokens,[nl(1)],TokensLeft),send_
 send_tokens_1(Tokens):- with_output_to(string(HTMLString), html_write:print_html(Tokens)),write_html(HTMLString).
 
 %write_html(HTMLString):- ((pengines:pengine_self(_) -> pengines:pengine_output(HTMLString) ;write(HTMLString))),!.
-write_html(HTMLString):- (nb_current('$in_swish',t) -> pengines:pengine_output(HTMLString) ; format(HTMLString)).
+write_html(HTMLString):- bfly_html_goal(format(HTMLString)).
 
 %write_html(HTML):- phrase(html(HTML), Tokens), html_write:print_html(Out, Tokens))).
 % output_html(html([div([id('cp-menu'), class(menu)], cp_skin: cp_logo_and_menu)]))
@@ -2069,58 +2069,19 @@ do_post_edit_term(_Term,_Vs):- !.
 %
 % Edit One term.
 %
-
-
-% edit1term:- get_param_req(xref,'Overlap'),!.
-%edit1term:- make_here, fail.
-edit1term:- toplevel_pp(bfly),!, format('~N'),get_session_term(Term,Vs), url_encode_term(Term,Vs,O),
-  sformat(FullURL,'https://logicmoo.org/swish/lm_xref/?lean=1&webproc=edit1term&fa=&term=~w',[O]),
-  must_run_html(embed_test(FullURL,'100%','300')),!.
-
 edit1term:-  get_session_term(Term,Vs), !, show_edit_term(Term,Vs), do_post_edit_term(Term,Vs).
+
 edit1term(String):- url_decode_term(String,Term,Vs), show_edit_term(Term,Vs).
+
 %% show_edit_term(  ?Term, ?Vs) is det.
 %
 % Show Edit Term.
 %
-/*
-show_edit_term(Term,Vs):- fail, toplevel_pp(bfly),!,  
- must_run_html(( must_run(reset_assertion_display),
-   slow_frame('35%',show_edit_term_c(Term,Vs)))),!.
-
-show_edit_term(Term,Vs):-  fail,  
- inline_html_format([ 
-'<form action="/swish/lm_xref/?webproc=edit1term"><table width="90%" cellspacing="0" cellpadding="0" height="121" id="table4">',
-'<tr><td align="left" valign="top" width="36"><img src="/swish/lm_xref/pixmapx/sigmaSymbol-gray.gif"></td>',
-'<td></td><td align="left" valign="top" width="711" rowspan="2">', 
-'<img src="/swish/lm_xref/pixmapx/logoText-gray.gif">&nbsp;&nbsp;Prover:&nbsp;', show_select2(prover, xlisting_web:prover_name,[]),
-'<table cellspacing="0" cellpadding="0" id="table5" width="658" height="97">',
-'<tr><td align="right" colspan="2"><b>Fml:</b></td><td align="left" valign="top" colspan="200">',
-'<textarea style="white-space: pre; overflow: auto; font-size: 7pt; font-weight: bold; font-family: Verdana, Arial, Helvetica, ',
-'sans-serif;border: 1px solid black; min-width: 923px;" wrap="off" rows="20" cols="200" name="term">',print_pretty_string(Term,Vs),'</textarea>',
-'</td><td align="left" valign="top" height="68">', action_menu_applied('action_above',"Item",""),
-'<br/><b>Microthory</b><br>',show_select2('context',is_context,[]),
-'<br/><input type="submit" value="ASK" name="ASK"><input type="submit" value="TELL" name="TELL"><input type="submit" value="RETRACT" name="RETRACT"> ',
-'<br/><b>Input Language</b><br>',show_select2(flang,logic_lang_name,[]),'</td></tr>',
-'<tr><td></td><td></td><td></td><td height="3"></td></tr>',
-'<tr><td align="left" valign="top" width="144">','&nbsp;</td><td align="left" valign="top" height="26" width="139">','</td></tr>',
-'</table></td>',
-'<td valign="bottom" width="9" rowspan="2"></td>',
-'<td height="121" rowspan="2" width="163">',
-'<span class="navlinks"><b>[&nbsp;<a href="../">Home</a>&nbsp;|&nbsp;',
-'<a href="?Graph=true">Grap2h</a>]</b></span><p>',
-'<b>Response&nbsp;Language&nbsp;<br></b>',show_select2(olang,logic_lang_name,[]),
-'<p>',show_select1('humanLang',human_language),'<br/>',
-   session_checkbox(webDebug,'Debugging','&nbsp;'),session_checkbox(sExprs,'S-Exprs','&nbsp;'),
-   '</td><td height="121" rowspan="2" width="188"></td></tr><tr><td width="4">&nbsp;</td></tr></table></form>']).
-*/
-show_edit_term(Term,Vs):- toplevel_pp(bfly),!, format('~N'),
- must_run_html(( must_run(reset_assertion_display),
-   slow_iframe('300',show_edit_term_c(Term,Vs)))),!.
 show_edit_term(Term,Vs):- show_edit_term_c(Term,Vs).
 show_edit_term_c(Term,Vs):-
  inline_html_format([ 
-'<form action="/swish/lm_xref/?webproc=edit1term"> <table width="90%" cellspacing="0" cellpadding="0" height="121" id="table4"><tbody><tr><td align="left" valign="top" width="36"><img src="/swish/lm_xref/pixmapx/sigmaSymbol-gray.gif"></td><td></td><td align="left" valign="top" width="711" rowspan="2"><img src="/swish/lm_xref/pixmapx/logoText-gray.gif">&nbsp;&nbsp;Prover:&nbsp;',
+'<form action="/swish/lm_xref/?webproc=edit1term"> <table width="90%" cellspacing="0" cellpadding="0" height="121" id="table4">',
+'<tbody><tr><td align="left" valign="top" width="36"><img src="/swish/lm_xref/pixmapx/sigmaSymbol-gray.gif"></td><td></td><td align="left" valign="top" width="711" rowspan="2"><img src="/swish/lm_xref/pixmapx/logoText-gray.gif">&nbsp;&nbsp;Prover:&nbsp;',
  show_select2(prover, xlisting_web:prover_name,[]),
 '<table cellspacing="0" cellpadding="0" id="table5" width="658" height="97"><tbody><tr><td align="right"><b>Fml:</b></td><td align="left" valign="top" colspan="2">',
 '<textarea style="white-space: pre; overflow: auto; font-size: 7pt; font-weight: bold; font-family: Verdana, Arial, Helvetica, sans-serif; border: 1px solid black; margin: 0px; width: 1020px; height: 259px;" wrap="off" rows="20" cols="70" name="term">',print_pretty_string(Term,Vs),'</textarea></td><td align="left" valign="top" height="68"><label>',
@@ -2171,7 +2132,7 @@ slow_iframe(Height,Goal):- url_encode(Goal,GoalE),
 handler_logicmoo_slowcode(Request):- 
  must_or_rtrace(save_request_in_session(Request)),!,
   format('Content-type: text/html~n~n'),
-  handler_logicmoo_slowcode_m(Request).
+  must_run_html(handler_logicmoo_slowcode_m(Request)).
 
 handler_logicmoo_slowcode_m(Request):-
   locally_tl(print_mode(html),
@@ -2184,20 +2145,18 @@ handler_logicmoo_slowcode_call(Request):-
   select(search(List),Request,Request0), nonvar(List),
   select(into=Where,List,List0),!,
   must_run((
-  must_run_html((
   format('<html><head>'),
   format('<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script></head><body><pre>'),
   locally_tl(where_to(Where),handler_logicmoo_slowcode_call([search(List0)|Request0])),  
   goal_attach_to(Where,write('<hr/>Complete!')),  
-  format('</pre></body></html>'))))).
+  format('</pre></body></html>'))).
 
 
 handler_logicmoo_slowcode_call(Request):- 
   member(search(List),Request),
   member(goal=String,List), 
-  url_decode_term(String,Goal),!,
-    must_run((
-  must_run_html(((weto(call(Goal))))))),!.
+  url_decode_term(String,Goal),!,    
+  must_run_html(((weto(call(Goal))))),!.
 
 handler_logicmoo_slowcode_call(Request):- 
  must_run((

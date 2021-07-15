@@ -146,7 +146,7 @@
             mpred_type_constraints_file/0)).
 
 :- if(exists_source(library(multivar))).
-%:- use_module(library(multivar)).
+:- use_module(library(multivar)).
 :- endif.
 
 %:- rtrace.

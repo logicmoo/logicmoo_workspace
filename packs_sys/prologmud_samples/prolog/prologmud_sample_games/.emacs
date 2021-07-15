@@ -38,3 +38,4 @@
 
 (add-to-list 'emacs-startup-hook 'global-vscode-mode-on)
 
+(vscode-mode-install-required-packages)

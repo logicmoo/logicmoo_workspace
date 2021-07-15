@@ -75,8 +75,20 @@
    ("down" . "<down>")
    ("left" . "<left>")
    ("right" . "<right>")
+   ("f1" . "<f1>")
+   ("f2" . "<f2>")
+   ("f3" . "<f3>")
+   ("f4" . "<f4>")
+   ("f5" . "<f5>")
+   ("f6" . "<f6>")
+   ("f7" . "<f7>")
+   ("f8" . "<f8>")
+   ("f9" . "<f9>")
+   ("f10" . "<f10>")
+   ("f11" . "<f11>")
+   ("f12" . "<f12>")
    ;; ("end" . "<end>")
-   ))   
+   ))
 
 (defun vscode-mode-reverse-key-sequence (item)
  ""
@@ -252,16 +264,72 @@
    ;; reverse-commands
    )))
 
+(defvar all-keymap nil "")
+
+
 (defun vscode-mode-regenerate-matchmaking (&optional arg)
  ""
  (interactive "P")
  (if arg (vscode-mode-reset-commands))
  (vscode-mode-compute-vscode-style-keybindings)
- ;; all-matches
+
+ ;; (see all-matches)
  ;; forward-matches
  ;; reverse-matches
+
+ ;; lookup-key((reverse^-1)*(forward(translate-to-emacs-style(vscode-style-key-sequence)))).
+
+ (progn
+  (setq all-keymap nil)
+  (setq all-potentially-unknown-keys nil)
+  (setq all-unknown-keys nil)
+  (mapcar
+   (lambda (grouping)
+    (let ((list-1
+	   (mapcar
+	    (lambda (item)
+	     (cdr item))
+	    (nth 1 grouping)))
+	  (list-2
+	   (mapcar
+	    (lambda (item)
+	     (cdr item))
+	    (nth 2 grouping))))
+     (dolist (item1 list-1)
+      (dolist (item2 list-2)
+       (if (string=
+	    (cdr (assoc 'when-orig (car item1)))
+	    (cdr (assoc 'when-orig (car item2))))
+	(add-to-list 'all-keymap (cons (cdr (assoc 'key (car item1))) (vscode-mode-emacs-command-for-key (cdr (assoc 'key (car item2))))))
+	(if (= (length list-2) 1)
+	 (add-to-list 'all-keymap (cons (cdr (assoc 'key (car item1))) (vscode-mode-emacs-command-for-key (cdr (assoc 'key (car item2))))))
+	 (if (not (see (assoc (see (key-binding (see (cdr (assoc 'key (car item1))) 0.01)) 0.01) all-keymap) 0.01))
+	  (add-to-list 'all-potentially-unknown-keys (cdr (assoc 'key (car item1))))))
+	)))))
+   all-matches)
+  )
+ (mapcar (lambda (key) (if (not (rassoc (see (key-binding (kbd key)) 0.01) all-keymap)) (add-to-list 'all-unknown-keys key))) all-potentially-unknown-keys)
+ ;; (kbd (vscode-mode-parse-vscode-style-key "shift+alt+f8"))
+
+ ;; (setq vscode-mode-dir "/var/lib/myfrdcsa/collaborative/git/vscode-mode")
+ ;; (eval-buffer (get-buffer "vscode-keybindings-parser.el"))
+
+ ;; all-matches
+ ;; all-keymap
+ ;; all-potentially-unknown-keys
+ ;; all-unknown-keys
+ ;; (list 'define-key 'vscode-minor-mode-map key (vscode-mode-emacs-command-for-key key))
  )
 
 ;; (vscode-mode-regenerate-matchmaking)
 
+(defun vscode-mode-emacs-command-for-key (emacs-style-vscode-key-sequence)
+ ""
+ (see (key-binding (kbd emacs-style-vscode-key-sequence)) 0.01)
+ 
+ ;; (key-binding "\C-cvv")
+ ;; (lookup-key vscode-minor-mode-map "\C-cvr")
+ )
+
 (provide 'vscode-keybindings-parser)
+

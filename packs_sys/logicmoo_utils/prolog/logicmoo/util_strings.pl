@@ -333,7 +333,7 @@ any_to_string1(Atom,String):- var(Atom),show_call((term_string(Atom,String))),!.
 any_to_string1(Atom,String):- var(Atom),!,=(Atom,String).
 any_to_string1(Atom,String):- string(Atom),!,Atom=String.
 any_to_string1(Atom,String):- is_s_string(Atom),!,convert_to_string(Atom,String).
-any_to_string1(_,_):- stack_depth(X),X>2000,!,sanity(fail),fail.
+%any_to_string1(_,_):- stack_depth(X),X>2000,!,sanity(fail),fail.
 any_to_string1(s(Atom),String):- !, any_to_string1(Atom,String). 
 % any_to_string1(Atom,String):- is_string(Atom),!,text_to_string(String).
 
@@ -1108,13 +1108,14 @@ any_to_charlist(A,C):- any_to_string(A,S),atom_chars(S,C).
 % If Is A Codelist.
 %
 is_codelist([A]):-  !, is_codelist_code(A).
-is_codelist([A|L]):- is_codelist_code(A),is_codelist(L). 
+is_codelist([A|L]):- is_codelist_code(A)->is_codelist(L). 
 
-is_codelist_code(H):- integer(H), swish_render_codes_charset_code(ascii,H),!.
+is_codelist_code(H):- integer(H), swish_render_codes_charset_code(_,H),!.
 
 swish_render_codes_charset_code(_,9).
 swish_render_codes_charset_code(_,10).
 swish_render_codes_charset_code(_,13).
+swish_render_codes_charset_code(_,27).
 swish_render_codes_charset_code(ascii, C) :- 
     between(32, 126, C).
 swish_render_codes_charset_code(iso_latin_1, C) :-
