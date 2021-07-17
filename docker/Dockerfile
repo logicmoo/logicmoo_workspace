@@ -13,7 +13,7 @@ FROM tiryoh/ros-desktop-vnc:noetic
 MAINTAINER FROM dorowu/ubuntu-desktop-lxde-vnc:bionic
 LABEL maintainer="Tiryoh<tiryoh@gmail.com>"
 #FROM aicampbell/vnc-ubuntu18-xfce
-EXPOSE 80
+#EXPOSE 80
 
 
 USER root
@@ -461,7 +461,7 @@ RUN mkdir -p /var/lock/apache2 /var/run/apache2 /var/run/sshd /var/log/superviso
 RUN echo 'root:ubuntu' | chpasswd
 RUN sed -i 's/PermitRootLogin without-password/PermitRootLogin yes/' /etc/ssh/sshd_config
 #COPY supervisord.conf /etc/supervisor/conf.d/supervisord.conf
-EXPOSE 22 80
+#EXPOSE 22 80
 #CMD [“/usr/bin/supervisord”]
 ENV USER ubuntu
 MAINTAINER RUN useradd --create-home --home-dir /home/ubuntu --shell /bin/bash --user-group --groups adm,sudo ubuntu && \
@@ -565,8 +565,9 @@ RUN \
 EXPOSE 22
 #LSP (right?)
 EXPOSE 8123 5007 6001 5555 8543
-EXPOSE 80 4080
-EXPOSE 443 4443
+EXPOSE 4080
+#EXPOSE 443 
+EXPOSE 4443
 EXPOSE 3020 4020
 EXPOSE 111 2049
 #EXPOSE 139 445
@@ -584,7 +585,7 @@ LABEL maintainer = "logicmoo@gmail.com"
 ################################################################################
 #FROM system
 LABEL maintainer="fcwu.tw@gmail.com"
-EXPOSE 80
+#EXPOSE 80
 EXPOSE 4180
 EXPOSE 4022
 WORKDIR /root
