@@ -695,13 +695,14 @@ is_already_an_arg(Atom):- atom_chars(Atom, [_|Chars]), member(C, Chars),
 flee_run_escape(flee).
 flee_run_escape(run).
 flee_run_escape(escape).
+flee_run_escape(walk).
 
 % get [out, in, ..] Object
 parse_imperative_movement(Doer, [ get, Prep, Object], (act3('go__prep_obj', Doer, [ walk, Prep, Object])), _Mem) :- domain_prep( spatial, Prep).
 % n/s/e/w/u/d
 parse_imperative_movement(Doer, [Dir], Logic, M):- maybe_compass_direction(Dir, Actual), !, must_mw1(txt2goto(Doer, walk, [Actual], Logic, M)).
-% escape/flee/run ..
-parse_imperative_movement(Doer, [Escape|Info], Logic, M):- flee_run_escape(Escape), !, must_mw1(txt2goto(Doer, run, Info, Logic, M)).
+% escape/flee/run/walk ..
+parse_imperative_movement(Doer, [Escape|Info], Logic, M):- flee_run_escape(Escape), !, must_mw1(txt2goto(Doer, Escape, Info, Logic, M)).
 % out/into
 parse_imperative_movement(Doer, [Prep], Logic, M) :- domain_prep(spatial, Prep), !, must_mw1(txt2goto(Doer, walk, [Prep], Logic, M)).
 % go ..

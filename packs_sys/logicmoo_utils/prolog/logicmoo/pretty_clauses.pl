@@ -36,7 +36,7 @@
 
 user:test_pp:- 
   make,
-  bfly_tests,
+  %bfly_tests,
   %retractall(bfly_tl:bfly_setting(_,_)),
   % abolish(bfly_tl:bfly_setting,2),
   thread_local(bfly_tl:bfly_setting/2),
@@ -62,6 +62,9 @@ on_xf_ignore(G):- must_or_rtrace(G),!.
 test_pp(PP,Goal):- 
   write('%====================================================\n'),
   format('% ?- ~p. ~n',[test_pp(PP,Goal)]),
+  format('% ?- ~@. ~n',[print_tree_no_nl(test_pp(PP,Goal))]),
+  format('% ?- ~@. ~n',[print_tree(test_pp(PP,Goal))]),
+  format('% ?- ~@ ~n', [print_tree_with_final(test_pp(PP,Goal),'.')]),
   write('%==================START====================\n==>\n'),
   with_pp(PP,\+ \+ Goal),
   write('<==\n%==================END========================\n'),
@@ -108,6 +111,95 @@ test_print_tree1(4):- forall(sample_pp_term(X), (nl,print_tree(X),nl)).
 %test_print_tree1(b):- forall(sample_pp_term(X), print_tree_cmt('hi',red,X)).
 
 
+sample_pp_term((asserted(
+   q( exists,
+      Exists8,
+      q( exists,
+         Walked18,
+         q( exists,
+            Exists7,
+            q( exists,
+               Exists,
+               ( info(
+                    'XVAR_NP_John_1_1',
+                    [ loc(1),
+                      pos('NP'),
+                      equals('XVAR_NP_John_1_1'),
+                      seg(1,1),
+                      phrase('NP'),
+                      size(1),
+                      lnks(2),
+                      #(r('NP',seg(1,1))),
+                      txt(["john"]),
+                      childs(0),
+                      link(1,'S',r('S',seg(1,5))),
+                      link(2,'CORENLP',r('CORENLP',seg(1,5)))]) &
+                 info(
+                    'XVAR_NP_The_Fountain_4_5',
+                    [ loc(4),
+                      pos('NP'),
+                      equals('XVAR_NP_The_Fountain_4_5'),
+                      seg(4,5),
+                      phrase('NP'),
+                      size(2),
+                      lnks(4),
+                      #(r('NP',seg(4,5))),
+                      txt(["the","fountain"]),
+                      childs(0),
+                      link(1,'PP',r('PP',seg(3,5))),
+                      link(2,'VP',r('VP',seg(2,5))),
+                      link(3,'S',r('S',seg(1,5))),
+                      link(4,'CORENLP',r('CORENLP',seg(1,5)))]) &
+                 span([
+                    seg(1,5),
+                    phrase('S'),
+                    size(5),
+                    lnks(1),
+                    #(r('S',seg(1,5))),
+                    txt(["john","walked","to","the","fountain"]),
+                    childs(2),
+                    child(1,'NP',r('NP',seg(1,1))),
+                    child(2,'VP',r('VP',seg(2,5))),
+                    link(1,'CORENLP',r('CORENLP',seg(1,5)))]) &
+                 span([
+                    seg(1,5),
+                    phrase('CORENLP'),
+                    size(5),
+                    lnks(0),
+                    #(r('CORENLP',seg(1,5))),
+                    txt(["john","walked","to","the","fountain"]),
+                    childs(1),
+                    child(1,'S',r('S',seg(1,5)))]) &
+                 span([
+                    seg(2,5),
+                    phrase('VP'),
+                    size(4),
+                    lnks(2),
+                    #(r('VP',seg(2,5))),
+                    txt(["walked","to","the","fountain"]),
+                    childs(1),
+                    child(1,'PP',r('PP',seg(3,5))),
+                    link(1,'S',r('S',seg(1,5))),
+                    link(2,'CORENLP',r('CORENLP',seg(1,5)))]) &
+                 span([
+                    seg(3,5),
+                    phrase('PP'),
+                    size(3),
+                    lnks(3),
+                    #(r('PP',seg(3,5))),
+                    txt(["to","the","fountain"]),
+                    childs(1),
+                    child(1,'NP',r('NP',seg(4,5))),
+                    link(1,'VP',r('VP',seg(2,5))),
+                    link(2,'S',r('S',seg(1,5))),
+                    link(3,'CORENLP',r('CORENLP',seg(1,5)))]) &
+                 p(c(walk,to),C,P) &
+                 iza(Walked18,actWalking) &
+                 doer(Walked18,Doer_Walked182) &
+                 objectWalked(Walked18,ObjectWalked_Walked183) &
+                 iza(Walked18,timeFn(vPast)) &
+                 equalsVar(XVAR_NP_The_Fountain_4_5,'XVAR_NP_The_Fountain_4_5') &
+                 equalsVar(XVAR_NP_John_1_1,'XVAR_NP_John_1_1'))))))))).
 
 sample_pp_term(( e2c_lexical_segs =   [  w(is,[pos(aux),loc(1),lnks(1),txt("is"),link(1,'S',r('S',seg(1,10)))]),      w(there,[pos(ex),loc(2),lnks(2),txt("there"),link(1,'NP',r('NP',seg(2,2))),link(2,'S',r('S',seg(1,10)))]),      w(a,         [  pos(dt),            loc(3),            lnks(3),            txt("a"),            link(1,'NP',r('NP',seg(3,4))),            link(2,'NP',r('NP',seg(3,9))),            link(3,'S',r('S',seg(1,10)))  ]),      w(the,         [  pos(dt),            loc(7),            lnks(6),            txt("the"),            link(1,'NP',r('NP',seg(7,9))),            link(2,'VP',r('VP',seg(6,9))),            link(3,'S',r('S',seg(6,9))),            link(4,'SBAR',r('SBAR',seg(5,9))),            link(5,'NP',r('NP',seg(3,9))),            link(6,'S',r('S',seg(1,10)))  ]),      w(greatest,         [  pos(jjs),            loc(8),            lnks(6),            txt("greatest"),            link(1,'NP',r('NP',seg(7,9))),            link(2,'VP',r('VP',seg(6,9))),            link(3,'S',r('S',seg(6,9))),            link(4,'SBAR',r('SBAR',seg(5,9))),            link(5,'NP',r('NP',seg(3,9))),            link(6,'S',r('S',seg(1,10)))  ]),      span( [  seg(6,9),               phrase('VP'),               size(4),               lnks(4),               #(r('VP',seg(6,9))),               txt(["becomes","the","greatest","tenor"]),               childs(1),               child(1,'NP',r('NP',seg(7,9))),               link(1,'S',r('S',seg(6,9))),               link(2,'SBAR',r('SBAR',seg(5,9))),               link(3,'NP',r('NP',seg(3,9))),               link(4,'S',r('S',seg(1,10)))  ]),      span( [  seg(1,10),               phrase('S'),               size(10),               lnks(0),               #(r('S',seg(1,10))),               txt(["is","there","a","man","who","becomes","the","greatest","tenor","?"]),               childs(2),               child(1,'NP',r('NP',seg(2,2))),               child(2,'NP',r('NP',seg(3,9)))  ])  ] )).
 
@@ -553,7 +645,9 @@ with_current_line_position(Goal):-
      reset_line_pos(L)).
 
 reset_line_pos(L):- current_output_line_position(New),reset_line_pos(New,L).
-reset_line_pos(New,Old):- ignore((New>=Old, prefix_spaces(Old))).
+reset_line_pos(New,Old):- New=Old,!.
+reset_line_pos(New,Old):- New>Old, !, nl, prefix_spaces(Old).
+reset_line_pos(New,Old):- New<Old, !, Extra is Old-New, prefix_spaces(Extra).
 
 current_output_line_position(L):- nb_current('$ec_output_stream',Outs),is_stream(Outs),on_x_fail(line_position(Outs,L)), !.
 current_output_line_position(L):- line_position(current_output,L).
@@ -1024,20 +1118,19 @@ pformat_functor(F):- pl_span_goal('functor',pformat(F)).
 pformat_ellipsis(E):- fold_this_round, !, pl_span_goal('ellipsis',ellipsis_html(E)),!.
 pformat_ellipsis(E):- pl_span_goal('ellipsis, fold',ellipsis_html(E)),!.
 
-ellipsis_html(E):- pformat_html(pre(call(write_ellipsis(E)))).
+ellipsis_html(E):- ignore(pformat_html(pre(call(write_ellipsis(E))))).
 
 write_ellipsis(T):- \+ compound(T),!,write_ellipsis_0(T).
 write_ellipsis([T]):- !,write_ellipsis(T).
-write_ellipsis(T):- 
- wots(S,
-  (forall( (sub_term(A,T),(atom(A);string(A))),(write(A),write('.'))),
-   forall( (sub_term(A,T),number(A)),(write(A),write('.'))),
-   forall( (sub_term(A,T),compound(A),\+ is_list(A)),(compound_name_arity(A,F,_),write(F),write('.'))))),
- write_ellipsis_0(S),!.
+write_ellipsis(T):- findall(E,
+  ((sub_term(E,T), (atom(E);string(E)));
+   (sub_term(E,T), \+compound(E));
+   (sub_term(C,T), compound(C), \+ is_list(C), compound_name_arity(C,E,_))),L),list_to_set(L,Set),
+ wots(S, forall(member(A,Set),(write(A),write('.')))), write_ellipsis_0(S),!.
 write_ellipsis(T):- write_ellipsis_0(T).
 
 write_ellipsis_0([T]):- nonvar(T),!,write_ellipsis_0(T).
-write_ellipsis_0(T):- wots(S, (write('..'),write_term(T,[max_depth(4)]),write('...'))),trim_to_len(S,20,SO),write('/*'),write(SO),write('*/').
+write_ellipsis_0(T):- wots(S, (write('.'),write_term(T,[max_depth(4)]),write('...'))),trim_to_len(S,30,SO),write('/*'),write(SO),write('*/').
 
 trim_to_len(A,L,S):- sub_atom(A, 1, L , _, S).
 trim_to_len(S,_,S).
@@ -1084,6 +1177,7 @@ recalc_tab1(TabC,  Tab):- Tab is TabC.
 
 max_output(Tab,A160,T):- display_length(T,L), LL is Tab+L, on_x_ignore(LL<A160),!.
 
+print_atomf(F):- with_folding(f,print_tree_no_nl(F)).
 print_functor(F):- with_folding(f,print_tree(F)).
 
 pt_list_juncts(Tab,_OP,[T]):- print_tab_term(Tab,T).
@@ -1093,7 +1187,7 @@ pt_list_juncts(Tab,OP,[T|List]):-
     pt_list_juncts(Tab,OP,List).
 
 print_tree_width( RM ):- current_print_write_options(Options), memberchk(right_margin(RM), Options),!.
-print_tree_width(W160):- W160=120.
+print_tree_width(W120):- W120=120.
 
 pt1(FS,TpN,Term):- recalc_tab(TpN, New), TpN\==New, !, pt1(FS,New,Term).
 
@@ -1135,8 +1229,8 @@ pt1(FS,Tab,(NPV)) :- NPV=..[OP,N,V], is_colon_mark(OP),
     write(S).
 
 pt1(_FS,Tab,T) :- fail,
-   print_tree_width(W160),
-   max_output(Tab,W160,T),!,
+   print_tree_width(W120),
+   max_output(Tab,W120,T),!,
    prefix_spaces(Tab), print(T).
    %system_portray(Tab,T),!.
 
@@ -1148,14 +1242,14 @@ pt1(FS,Tab,{Prolog}) :-
 pt1(FS,Tab,Term) :- 
    is_dict(Term),
    dict_pairs(Term, Tag, Pairs), maplist(pair_to_colon,Pairs,Colons),
-   prefix_spaces(Tab), pl_span_goal('functor',( print_tree(Tag), pformat('{ '))),
+   prefix_spaces(Tab), pl_span_goal('functor',( print_tree_no_nl(Tag), pformat('{ '))),
    pt_args_arglist([dict|FS],Tab+2,'','@','}',Colons),!.
 
 pt1(FS,Tab,List) :- List=[_|_], !,
   prefix_spaces(Tab),pformat_functor('[ '),
   pt_args_arglist([lf|FS],Tab+2,'',' | ',']',List),!.
 
-% pt1(FS,Tab,q(E,V,G)):- atom(E), !, T=..[E,V,G],!, print_tab_term(Tab,FS,T).
+pt1(FS,Tab,q(E,V,G)):- atom(E), !, T=..[E,V,G],!, pt1(FS,Tab,T).
 
 % xf/yf
 pt1(_FS,Tab,T1) :-
@@ -1174,14 +1268,14 @@ pt1(_FS,Tab,T1) :-
   compound_name_arguments(T1,OP, [T]),  
   (current_op(Pri,fy,OP);current_op(Pri,fx,OP)),
   Pri >= 400,
-  prefix_spaces(Tab), pformat('( '), print_functor(OP), pformat_functor(' ( '),
+  prefix_spaces(Tab), pformat('( '), print_atomf(OP), pformat_functor(' ( '),
   pformat_e_args(T,
    system_portray(Tab+3,T,[right_margin(40)])),
   pformat(') )'), !.
 
 pt1(_FS,Tab,T) :- % fail,
-   print_tree_width(W160), \+ using_folding_depth,
-   max_output(Tab,W160,T),!,
+   print_tree_width(W120), \+ using_folding_depth,
+   max_output(Tab,W120,T),!,
    system_portray(Tab,T),!.
 
 % xfy/yfx/xfx
@@ -1198,28 +1292,29 @@ pt1(_FS,Tab,T) :-
 pt1(FS,Tab,Term) :- 
    compound_name_arguments(Term,F,[Arg]), nonvar(Arg), Arg = [A|Args],
    is_arity_lt1(A), !,
-   prefix_spaces(Tab), print_functor(F), pformat_functor('([ '),
+   prefix_spaces(Tab), print_atomf(F), pformat_functor('([ '),
    pt_args_arglist([F|FS],Tab+3,'','|','])',[A|Args]), !.
 
 pt1(FS,Tab,Term) :- 
    compound_name_arguments(Term,F,[Arg]), nonvar(Arg), Arg = [A|Args],
    is_arity_lt1(A),
-   prefix_spaces(Tab), print_functor(F), pformat_functor(format('([ ~p, ',[A])),
+   prefix_spaces(Tab), print_atomf(F), pformat_functor(format('([ ~p, ',[A])),
    pt_args_arglist([F|FS],Tab+3,'','|','])',Args), !.
 
 pt1(FS,Tab,Term) :- 
    compound_name_arguments(Term,F,[Args]), nonvar(Args), Args = [_|_],
-   prefix_spaces(Tab), print_functor(F), pformat_functor('([ '),
+   prefix_spaces(Tab), print_atomf(F), pformat_functor('([ '),
    pt_args_arglist([F|FS],Tab+3,'','|','])',Args), !.
 
 pt1(FS,Tab,Term) :- 
    compound_name_arguments(Term,F,Args),
-   prefix_spaces(Tab), print_functor(F), pformat_functor('( '),
+   prefix_spaces(Tab), print_atomf(F), pformat_functor('( '),
    pt_args_arglist([F|FS],Tab+3,'','@',')',Args), !.
 
 
 
 is_colon_mark('=').
+is_colon_mark('-').
 is_colon_mark(':').
 is_colon_mark(':-').
 is_colon_mark('-->').
@@ -1241,7 +1336,7 @@ pt_args_arglist( _, _, S,_,E,[]):- pt_s_e(S, (pl_span_goal('ellipsis, fold',true
 pt_args_arglist(FS,Tab,S,M,E,[H|T]):-
  pt_s_e(S,  
   pformat_e_args([H|T], 
-    (prefix_spaces(Tab), print_tree(H), pt_cont_args(Tab,', ', M, FS,T))),E).
+    (prefix_spaces(Tab), print_tree_no_nl(H), pt_cont_args(Tab,', ', M, FS,T))),E).
 
 
 pt_cont_args(_Ab,_Sep,_Mid,_In, Nil) :- Nil==[], !.

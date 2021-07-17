@@ -33,7 +33,6 @@ pldox/
 packs_web/logicmoo_webui/serv*/
 #packs_usr/
 packs_sys/eggdrop/conf/PrologMUD-freenode.*
-packs_sys/prologmud_samples/prolog/prologmud_sample_games/.cache
 packs_sys/prologmud_samples/prolog/prologmud_sample_games/.config/mozilla/
 packs_sys/prologmud_samples/prolog/prologmud_sample_games/.cache/google-chrome/
 packs_sys/prologmud_samples/prolog/prologmud_sample_games/.config/google-chrome/
@@ -44,4 +43,13 @@ packs_sys/prologmud_samples/prolog/prologmud_sample_games/.config/swi-prolog/dir
 packs_sys/prologmud_samples/prolog/prologmud_sample_games/.emacs-saved
 packs_sys/prologmud_samples/prolog/prologmud_sample_games/.mozilla/firefox/
 packs_sys/prologmud_samples/prolog/prologmud_sample_games/.viminfo
+prologmud_server/.cache/
+prologmud_server/.config/
+prologmud_server/.mozilla/
+prologmud_server/.config/lxpanel/
+prologmud_server/.config/pcmanfm/
+prologmud_server/.config/swi-prolog/xpce/
+prologmud_server/config-enabled-swish/Geometry.cnf
+prologmud_server/core
+prologmud_server/nohup.out
 

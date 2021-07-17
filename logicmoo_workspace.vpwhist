@@ -11,10 +11,8 @@ packs_sys\logicmoo_nlu\ext\chat80_lm\chat80.vpj=Release
 [TreeExpansion2]
 - logicmoo_workspace.vpj
   + wiki\.circleci
-  + .config
-    + configstore
-    + swi-prolog
-      + dir-history
+  + prologmud_server\.pki
+    + nssdb
   + eclipse-workspace\.metadata\.plugins
     + org.eclipse.core.resources\.projects
       + BW4Thuman
@@ -52,6 +50,10 @@ packs_sys\logicmoo_nlu\ext\chat80_lm\chat80.vpj=Release
           + JSFKickStartWithoutLibs
             + WebContent
               + WEB-INF
+  + prologmud_server\.ros
+    + rosdep
+      + meta.cache
+      + sources.cache
   + .vscode
   + docker
     + noetic
@@ -339,9 +341,9 @@ packs_sys\logicmoo_nlu\ext\chat80_lm\chat80.vpj=Release
       - prolog
       + t
     - instant_prolog_docs
-      + prolog
+      - prolog
       + t
-    - logicmoo_agi
+    + logicmoo_agi
       + ImportantDocs
         + jmc
       + pldox
@@ -1120,7 +1122,7 @@ packs_sys\logicmoo_nlu\ext\chat80_lm\chat80.vpj=Release
         + cpviz
         - debuggery
         + lm_utils
-        - logicmoo
+        + logicmoo
         + multivar
           + t
         - xlisting
@@ -1182,7 +1184,7 @@ packs_sys\logicmoo_nlu\ext\chat80_lm\chat80.vpj=Release
             + model
             + mudconsole
       + t
-    - prologmud_samples
+    + prologmud_samples
       - prolog
         + prologmud_sample_games\.config
           + butterfly
@@ -1216,7 +1218,8 @@ packs_sys\logicmoo_nlu\ext\chat80_lm\chat80.vpj=Release
               + prolog
               + snd
           + src_game_wumpus
-    - slack_prolog
+          + vscode-mode
+    + slack_prolog
       - prolog
       + t
     + swicli
@@ -1467,10 +1470,41 @@ packs_sys\logicmoo_nlu\ext\chat80_lm\chat80.vpj=Release
       + ace
         + build
           + demo
+            + bookmarklet
+              + images
             + kitchen-sink
               + docs
+          + src
+            + snippets
+          + src-min
+            + snippets
+          + src-min-noconflict
+            + snippets
+          + src-noconflict
+            + snippets
+          + textarea
+            + images
       + codemirror
         + component-tools
+      + xterm
+        + css
+        + lib
+        + src
+          + browser
+            + input
+            + public
+            + renderer
+              + atlas
+              + dom
+            + selection
+            + services
+          + common
+            + buffer
+            + data
+            + input
+            + parser
+            + services
+        + typings
     - swish
       + applications
       + client
@@ -1630,6 +1664,41 @@ packs_sys\logicmoo_nlu\ext\chat80_lm\chat80.vpj=Release
             + swipl
               + boot
               + library
+  - prologmud_server
+    + attic
+    + btepisode
+    + circlemuddata
+    + config-enabled-swish
+      + gitty
+    + src_game_nani
+      + web
+        + css
+        + icons
+        + js
+        + prolog
+        + snd
+    + src_game_sims
+      + web
+        + css
+        + icons
+        + js
+        + prolog
+        + snd
+    + src_game_startrek
+      + holodeck
+      + mobs
+      + web
+        + css
+        + icons
+        + js
+        + prolog
+        + snd
+    + src_game_wumpus
+    + vscode-mode
+      + data
+      + external
+        + code
+      + misc
   + wiki
     + docs
       + _static
@@ -1640,473 +1709,203 @@ packs_sys\logicmoo_nlu\ext\chat80_lm\chat80.vpj=Release
   + wikis
     - logicmoo_workspace.wiki
 + other_files.vpj
-scroll:80
+scroll:0
 [State]
-SCREEN: 1920 1200 26 26 1440 757 0 0 M 0 0 0 0 1605 642
-CWD: packs_sys\logicmoo_nlu\ext\chat80
-BUFFER: BN="docker\rootfs\usr\local\bin\cls"
-BI: MA=1 74 1  TABS=1 9  WWS=1 IWT=1 ST=0 IN=2 BW=0 US=32000 RO=0 SE=1 SN=0 BIN=0 MN=Bourne Shell	HM=0 MF=8 TL=0 MLL=0 ASE=0 LNL=6 LCF=0 CAPS=0 E=0 ESBU2=-1
-VIEW: LN=.0 CL=1 LE=0 CX=0 CY=0 WI=5 BI=71 HT=0 HN=0 HF=0 HC=4
-BUFFER: BN="docker\rootfs\usr\local\bin\eclipse"
-BI: MA=1 74 1  TABS=1 9  WWS=1 IWT=1 ST=0 IN=2 BW=0 US=32000 RO=0 SE=1 SN=0 BIN=0 MN=Bourne Shell	HM=0 MF=8 TL=0 MLL=0 ASE=0 LNL=6 LCF=0 CAPS=0 E=0 ESBU2=-1
-VIEW: LN=.0 CL=1 LE=0 CX=0 CY=0 WI=5 BI=70 HT=0 HN=0 HF=0 HC=4
-BUFFER: BN="docker\rootfs\usr\local\bin\websocket_redir.sh"
-BI: MA=1 74 1  TABS=1 4  WWS=1 IWT=0 ST=0 IN=2 BW=0 US=32000 RO=0 SE=1 SN=0 BIN=0 MN=Slick-C	HM=0 MF=8 TL=0 MLL=0 ASE=0 LNL=6 LCF=0 CAPS=0 E=0 ESBU2=-1
-VIEW: LN=.0 CL=1 LE=0 CX=0 CY=0 WI=5 BI=69 HT=0 HN=0 HF=0 HC=4
-BUFFER: BN="docker\rootfs\startup.sh"
-BI: MA=1 74 1  TABS=1 4  WWS=1 IWT=0 ST=0 IN=2 BW=0 US=32000 RO=0 SE=1 SN=0 BIN=0 MN=Slick-C	HM=0 MF=8 TL=0 MLL=0 ASE=0 LNL=6 LCF=0 CAPS=0 E=0 ESBU2=-1
-VIEW: LN=.385 CL=10 LE=0 CX=9 CY=4 WI=5 BI=68 HT=0 HN=0 HF=0 HC=4
-BUFFER: BN="docker\rootfs\ros-eloquent-desktop.sh"
-BI: MA=1 74 1  TABS=1 4  WWS=1 IWT=0 ST=0 IN=2 BW=0 US=32000 RO=0 SE=1 SN=0 BIN=0 MN=Slick-C	HM=0 MF=8 TL=0 MLL=0 ASE=0 LNL=6 LCF=0 CAPS=0 E=0 ESBU2=-1
-VIEW: LN=.20 CL=9 LE=0 CX=8 CY=1 WI=5 BI=67 HT=0 HN=0 HF=0 HC=4
-BUFFER: BN="docker\rootfs\startup_logicmoo.sh"
-BI: MA=1 74 1  TABS=1 4  WWS=1 IWT=0 ST=0 IN=2 BW=0 US=32000 RO=0 SE=1 SN=0 BIN=0 MN=Slick-C	HM=0 MF=8 TL=0 MLL=0 ASE=0 LNL=6 LCF=0 CAPS=0 E=0 ESBU2=-1
-VIEW: LN=.45 CL=2 LE=0 CX=1 CY=4 WI=5 BI=66 HT=0 HN=0 HF=0 HC=4
-BUFFER: BN="docker\rootfs\etc\apache2\sites-enabled\000-logicmoo.conf"
-BI: MA=1 74 1  TABS=1 5  WWS=1 IWT=0 ST=0 IN=2 BW=0 US=32000 RO=0 SE=1 SN=0 BIN=0 MN=Config	HM=0 MF=8 TL=0 MLL=0 ASE=0 LNL=6 LCF=0 CAPS=0 E=0 ESBU2=-1
-VIEW: LN=.2182 CL=35 LE=0 CX=34 CY=4 WI=5 BI=65 HT=0 HN=0 HF=0 HC=4
-BUFFER: BN="docker\rootfs\etc\apache2\sites-enabled\000-default.conf"
-BI: MA=1 74 1  TABS=1 5  WWS=1 IWT=0 ST=0 IN=2 BW=0 US=32000 RO=0 SE=1 SN=0 BIN=0 MN=Config	HM=0 MF=8 TL=0 MLL=0 ASE=0 LNL=6 LCF=0 CAPS=0 E=0 ESBU2=-1
-VIEW: LN=.0 CL=1 LE=0 CX=0 CY=0 WI=5 BI=64 HT=0 HN=0 HF=0 HC=4
-BUFFER: BN="docker\rootfs\etc\apache2\sites-enabled\000-default-le-ssl.conf"
-BI: MA=1 74 1  TABS=1 5  WWS=1 IWT=0 ST=0 IN=2 BW=0 US=32000 RO=0 SE=1 SN=0 BIN=0 MN=Config	HM=0 MF=8 TL=0 MLL=0 ASE=0 LNL=6 LCF=0 CAPS=0 E=0 ESBU2=-1
-VIEW: LN=.288 CL=33 LE=0 CX=32 CY=4 WI=5 BI=63 HT=0 HN=0 HF=0 HC=4
-BUFFER: BN="docker\rootfs\etc\apache2\conf-available\no_open_proxy.conf"
-BI: MA=1 74 1  TABS=1 5  WWS=1 IWT=0 ST=0 IN=2 BW=0 US=32000 RO=0 SE=1 SN=0 BIN=0 MN=Config	HM=0 MF=8 TL=0 MLL=0 ASE=0 LNL=6 LCF=0 CAPS=0 E=0 ESBU2=-1
-VIEW: LN=.0 CL=1 LE=0 CX=0 CY=0 WI=5 BI=62 HT=0 HN=0 HF=0 HC=4
-BUFFER: BN="docker\rootfs\etc\apache2\conf-available\doc_root.conf"
-BI: MA=1 74 1  TABS=1 5  WWS=1 IWT=0 ST=0 IN=2 BW=0 US=32000 RO=0 SE=1 SN=0 BIN=0 MN=Config	HM=0 MF=8 TL=0 MLL=0 ASE=0 LNL=6 LCF=0 CAPS=0 E=0 ESBU2=-1
-VIEW: LN=.0 CL=1 LE=0 CX=0 CY=0 WI=5 BI=61 HT=0 HN=0 HF=0 HC=4
-BUFFER: BN="INSTALL-DEPS.md"
-BI: MA=1 74 1  TABS=1 9  WWS=1 IWT=1 ST=0 IN=2 BW=0 US=32000 RO=0 SE=1 SN=0 BIN=0 MN=Bourne Shell	HM=0 MF=8 TL=0 MLL=0 ASE=0 LNL=6 LCF=0 CAPS=0 E=0 ESBU2=-1
-VIEW: LN=.0 CL=1 LE=0 CX=0 CY=0 WI=5 BI=60 HT=0 HN=0 HF=0 HC=4
-BUFFER: BN="INSTALL-SWI.md"
-BI: MA=1 74 1  TABS=1 9  WWS=1 IWT=1 ST=0 IN=2 BW=0 US=32000 RO=0 SE=1 SN=0 BIN=0 MN=Bourne Shell	HM=0 MF=8 TL=0 MLL=0 ASE=0 LNL=6 LCF=0 CAPS=0 E=0 ESBU2=-1
-VIEW: LN=.0 CL=1 LE=0 CX=0 CY=0 WI=5 BI=59 HT=0 HN=0 HF=0 HC=4
-BUFFER: BN="packs_sys\logicmoo_agi\prolog\agi_lib\README.md"
-BI: MA=1 74 1  TABS=1 9  WWS=1 IWT=1 ST=0 IN=1 BW=0 US=32000 RO=0 SE=1 SN=0 BIN=0 MN=Fundamental	HM=0 MF=8 TL=0 MLL=0 ASE=0 LNL=6 LCF=0 CAPS=0 E=0 ESBU2=-1
-VIEW: LN=.0 CL=1 LE=0 CX=0 CY=0 WI=5 BI=58 HT=0 HN=0 HF=0 HC=4
-BUFFER: BN="packs_sys\logicmoo_agi\prolog\agi_lib\doc_print.pl"
-BI: MA=1 174 1  TABS=1 3  WWS=1 IWT=0 ST=0 IN=2 BW=0 US=32000 RO=0 SE=1 SN=0 BIN=0 MN=Prolog	HM=0 MF=8 TL=0 MLL=0 ASE=0 LNL=6 LCF=0 CAPS=0 E=0 ESBU2=-1
-VIEW: LN=.4130 CL=3 LE=0 CX=2 CY=4 WI=5 BI=57 HT=0 HN=0 HF=0 HC=4
-BUFFER: BN="packs_sys\logicmoo_agi\prolog\episodic_memory\adv_percept.pl"
-BI: MA=1 174 1  TABS=1 3  WWS=1 IWT=0 ST=0 IN=2 BW=0 US=32000 RO=0 SE=1 SN=0 BIN=0 MN=Prolog	HM=0 MF=8 TL=0 MLL=0 ASE=0 LNL=6 LCF=0 CAPS=0 E=0 ESBU2=-1
-VIEW: LN=.3712 CL=25 LE=0 CX=24 CY=4 WI=5 BI=56 HT=0 HN=0 HF=0 HC=4
-BUFFER: BN="packs_sys\logicmoo_agi\prolog\episodic_memory\adv_main.pl"
-BI: MA=1 174 1  TABS=1 3  WWS=1 IWT=0 ST=0 IN=2 BW=0 US=32000 RO=0 SE=1 SN=0 BIN=0 MN=Prolog	HM=0 MF=8 TL=0 MLL=0 ASE=0 LNL=6 LCF=0 CAPS=0 E=0 ESBU2=-1
-VIEW: LN=.2962 CL=8 LE=0 CX=7 CY=4 WI=5 BI=55 HT=0 HN=0 HF=0 HC=4
-BUFFER: BN="packs_sys\logicmoo_agi\prolog\episodic_memory\adv_eng2cmd.pl"
-BI: MA=1 174 1  TABS=1 3  WWS=1 IWT=0 ST=0 IN=2 BW=0 US=32000 RO=0 SE=1 SN=0 BIN=0 MN=Prolog	HM=0 MF=8 TL=0 MLL=0 ASE=0 LNL=6 LCF=0 CAPS=0 E=0 ESBU2=-1
-VIEW: LN=.20078 CL=17 LE=0 CX=16 CY=14 WI=5 BI=88 HT=0 HN=0 HF=0 HC=4
-BUFFER: BN="packs_sys\logicmoo_agi\prolog\episodic_memory\adv_axiom.pl"
-BI: MA=1 174 1  TABS=1 3  WWS=1 IWT=0 ST=0 IN=2 BW=0 US=32000 RO=0 SE=1 SN=0 BIN=0 MN=Prolog	HM=0 MF=8 TL=0 MLL=0 ASE=0 LNL=6 LCF=0 CAPS=0 E=0 ESBU2=-1
-VIEW: LN=.2760 CL=9 LE=0 CX=8 CY=14 WI=5 BI=90 HT=0 HN=0 HF=0 HC=4
-BUFFER: BN="packs_sys\logicmoo_agi\prolog\episodic_memory\adv_edit.pl"
-BI: MA=1 174 1  TABS=1 3  WWS=1 IWT=0 ST=0 IN=2 BW=0 US=32000 RO=0 SE=1 SN=0 BIN=0 MN=Prolog	HM=0 MF=8 TL=0 MLL=0 ASE=0 LNL=6 LCF=0 CAPS=0 E=0 ESBU2=-1
-VIEW: LN=.7954 CL=25 LE=0 CX=24 CY=12 WI=5 BI=89 HT=0 HN=0 HF=0 HC=4
-BUFFER: BN="packs_sys\logicmoo_agi\prolog\episodic_memory\adv_agent.pl"
-BI: MA=1 174 1  TABS=1 3  WWS=1 IWT=0 ST=0 IN=2 BW=0 US=32000 RO=0 SE=1 SN=0 BIN=0 MN=Prolog	HM=0 MF=8 TL=0 MLL=0 ASE=0 LNL=6 LCF=0 CAPS=0 E=0 ESBU2=-1
-VIEW: LN=.9162 CL=33 LE=0 CX=32 CY=14 WI=5 BI=91 HT=0 HN=0 HF=0 HC=4
-BUFFER: BN="packs_sys\logicmoo_agi\prolog\episodic_memory\adv_action.pl"
-BI: MA=1 174 1  TABS=1 3  WWS=1 IWT=0 ST=0 IN=2 BW=0 US=32000 RO=0 SE=1 SN=0 BIN=0 MN=Prolog	HM=0 MF=8 TL=0 MLL=0 ASE=0 LNL=6 LCF=0 CAPS=0 E=0 ESBU2=-1
-VIEW: LN=.19830 CL=56 LE=0 CX=55 CY=17 WI=5 BI=93 HT=0 HN=0 HF=0 HC=4
-BUFFER: BN="packs_sys\logicmoo_nlu\ext\chat80\original\chat80.pl"
-BI: MA=1 174 1  TABS=1 3  WWS=1 IWT=0 ST=0 IN=2 BW=0 US=32000 RO=0 SE=1 SN=0 BIN=0 MN=Prolog	HM=0 MF=8 TL=0 MLL=0 ASE=0 LNL=6 LCF=0 CAPS=0 E=0 ESBU2=-1
-VIEW: LN=.0 CL=1 LE=0 CX=0 CY=0 WI=5 BI=95 HT=0 HN=0 HF=0 HC=4
-BUFFER: BN="packs_sys\logicmoo_nlu\prolog\logicmoo_nlu\parser_lexical.pl"
-BI: MA=1 174 1  TABS=1 3  WWS=1 IWT=0 ST=0 IN=2 BW=0 US=32000 RO=0 SE=1 SN=0 BIN=0 MN=Prolog	HM=0 MF=8 TL=0 MLL=0 ASE=0 LNL=6 LCF=0 CAPS=0 E=0 ESBU2=-1
-VIEW: LN=.0 CL=1 LE=0 CX=0 CY=0 WI=5 BI=94 HT=0 HN=0 HF=0 HC=4
-BUFFER: BN="packs_sys\logicmoo_nlu\prolog\logicmoo_nlu\parser_lexical_gen.pl"
-BI: MA=1 174 1  TABS=1 3  WWS=1 IWT=0 ST=0 IN=2 BW=0 US=32000 RO=0 SE=1 SN=0 BIN=0 MN=Prolog	HM=0 MF=8 TL=0 MLL=0 ASE=0 LNL=6 LCF=0 CAPS=0 E=0 ESBU2=-1
-VIEW: LN=.0 CL=1 LE=0 CX=0 CY=0 WI=5 BI=96 HT=0 HN=0 HF=0 HC=4
+SCREEN: 1920 1200 128 407 1440 757 0 0 M 0 0 0 0 1605 586
+CWD: C:\Program Files (x86)\SlickEdit\win
+BUFFER: BN="packs_sys\logicmoo_nlu\prolog\logicmoo_nlu\e2c\e2c_commands.pl"
+BI: MA=1 174 1  TABS=1 3  WWS=1 IWT=0 ST=0 IN=2 BW=0 US=32000 RO=0 SE=1 SN=0 BIN=0 MN=Prolog	HM=0 MF=0 TL=0 MLL=0 ASE=0 LNL=6 LCF=0 CAPS=0 E=0 ESBU2=-1
+VIEW: LN=.769 CL=1 LE=0 CX=0 CY=12 WI=5 BI=27 HT=0 HN=0 HF=0 HC=4
+BUFFER: BN="packs_sys\logicmoo_nlu\prolog\logicmoo_nlu\parser_pipeline.pl"
+BI: MA=1 174 1  TABS=1 3  WWS=1 IWT=0 ST=0 IN=2 BW=0 US=32000 RO=0 SE=1 SN=0 BIN=0 MN=Prolog	HM=0 MF=0 TL=0 MLL=0 ASE=0 LNL=6 LCF=0 CAPS=0 E=0 ESBU2=-1
+VIEW: LN=.17832 CL=1 LE=0 CX=0 CY=12 WI=5 BI=30 HT=0 HN=0 HF=0 HC=4
+BUFFER: BN="packs_web\swish\web\css\term.css"
+BI: MA=1 74 1  TABS=1 9  WWS=1 IWT=1 ST=0 IN=1 BW=0 US=32000 RO=0 SE=1 SN=0 BIN=0 MN=Fundamental	HM=0 MF=0 TL=0 MLL=0 ASE=0 LNL=6 LCF=0 CAPS=0 E=0 ESBU2=-1
+VIEW: LN=.1059 CL=3 LE=0 CX=2 CY=12 WI=5 BI=32 HT=0 HN=0 HF=0 HC=4
+BUFFER: BN="packs_web\swish\web\js\term.js"
+BI: MA=1 74 1  TABS=1 5  WWS=1 IWT=1 ST=0 IN=2 BW=0 US=32000 RO=0 SE=1 SN=0 BIN=0 MN=JavaScript	HM=0 MF=0 TL=0 MLL=0 ASE=0 LNL=6 LCF=0 CAPS=0 E=0 ESBU2=-1
+VIEW: LN=.9464 CL=20 LE=0 CX=19 CY=12 WI=5 BI=31 HT=0 HN=0 HF=0 HC=4
+BUFFER: BN="packs_web\swish\web\css\butterfly_term.css"
+BI: MA=1 74 1  TABS=1 9  WWS=1 IWT=1 ST=0 IN=1 BW=0 US=32000 RO=0 SE=1 SN=0 BIN=0 MN=Fundamental	HM=0 MF=0 TL=0 MLL=0 ASE=0 LNL=6 LCF=0 CAPS=0 E=0 ESBU2=-1
+VIEW: LN=.257 CL=1 LE=0 CX=0 CY=5 WI=5 BI=33 HT=0 HN=0 HF=0 HC=4
+BUFFER: BN="packs_sys\logicmoo_utils\prolog\debuggery\dmsg.pl"
+BI: MA=1 174 1  TABS=1 3  WWS=1 IWT=0 ST=0 IN=2 BW=0 US=32000 RO=0 SE=1 SN=0 BIN=0 MN=Prolog	HM=0 MF=0 TL=0 MLL=0 ASE=0 LNL=6 LCF=0 CAPS=0 E=0 ESBU2=-1
+VIEW: LN=.35661 CL=49 LE=0 CX=48 CY=12 WI=5 BI=36 HT=0 HN=0 HF=0 HC=4
 BUFFER: BN="packs_sys\logicmoo_nlu\prolog\logicmoo_nlu\parser_penn_trees.pl"
-BI: MA=1 174 1  TABS=1 3  WWS=1 IWT=0 ST=0 IN=2 BW=0 US=32000 RO=0 SE=1 SN=0 BIN=0 MN=Prolog	HM=0 MF=8 TL=0 MLL=0 ASE=0 LNL=6 LCF=0 CAPS=0 E=0 ESBU2=-1
-VIEW: LN=.839 CL=22 LE=0 CX=21 CY=21 WI=5 BI=97 HT=0 HN=0 HF=0 HC=4
-BUFFER: BN="packs_sys\logicmoo_nlu\ext\chat80\original\lex.xg"
-BI: MA=1 174 1  TABS=1 3  WWS=1 IWT=0 ST=0 IN=2 BW=0 US=32000 RO=0 SE=1 SN=0 BIN=0 MN=Prolog	HM=0 MF=8 TL=0 MLL=0 ASE=0 LNL=6 LCF=0 CAPS=0 E=0 ESBU2=-1
-VIEW: LN=.2179 CL=49 LE=0 CX=48 CY=14 WI=5 BI=99 HT=0 HN=0 HF=0 HC=4
+BI: MA=1 174 1  TABS=1 3  WWS=1 IWT=0 ST=0 IN=2 BW=0 US=32000 RO=0 SE=1 SN=0 BIN=0 MN=Prolog	HM=0 MF=0 TL=0 MLL=0 ASE=0 LNL=6 LCF=0 CAPS=0 E=0 ESBU2=-1
+VIEW: LN=.17540 CL=9 LE=0 CX=8 CY=12 WI=5 BI=35 HT=0 HN=0 HF=0 HC=4
+BUFFER: BN="packs_sys\logicmoo_nlu\prolog\logicmoo_nlu\e2c\e2c_sentence.pl"
+BI: MA=1 174 1  TABS=1 3  WWS=1 IWT=0 ST=0 IN=2 BW=0 US=32000 RO=0 SE=1 SN=0 BIN=0 MN=Prolog	HM=0 MF=0 TL=0 MLL=0 ASE=0 LNL=6 LCF=0 CAPS=0 E=0 ESBU2=-1
+VIEW: LN=.2665 CL=9 LE=0 CX=8 CY=12 WI=5 BI=34 HT=0 HN=0 HF=0 HC=4
+BUFFER: BN="packs_sys\logicmoo_agi\prolog\episodic_memory\adv_portray.pl"
+BI: MA=1 174 1  TABS=1 3  WWS=1 IWT=0 ST=0 IN=2 BW=0 US=32000 RO=0 SE=1 SN=0 BIN=0 MN=Prolog	HM=0 MF=0 TL=0 MLL=0 ASE=0 LNL=6 LCF=0 CAPS=0 E=0 ESBU2=-1
+VIEW: LN=.5245 CL=3 LE=0 CX=2 CY=12 WI=5 BI=29 HT=0 HN=0 HF=0 HC=4
+BUFFER: BN="packs_sys\logicmoo_agi\prolog\episodic_memory\adv_eng2cmd_frame.pl"
+BI: MA=1 174 1  TABS=1 3  WWS=1 IWT=0 ST=0 IN=2 BW=0 US=32000 RO=0 SE=1 SN=0 BIN=0 MN=Prolog	HM=0 MF=0 TL=0 MLL=0 ASE=0 LNL=6 LCF=0 CAPS=0 E=0 ESBU2=-1
+VIEW: LN=.3943 CL=22 LE=0 CX=21 CY=12 WI=5 BI=38 HT=0 HN=0 HF=0 HC=4
 BUFFER: BN="packs_sys\logicmoo_agi\prolog\episodic_memory\adv_io.pl"
-BI: MA=1 174 1  TABS=1 3  WWS=1 IWT=0 ST=0 IN=2 BW=0 US=32000 RO=0 SE=1 SN=0 BIN=0 MN=Prolog	HM=0 MF=8 TL=0 MLL=0 ASE=0 LNL=6 LCF=0 CAPS=0 E=0 ESBU2=-1
-VIEW: LN=.22445 CL=53 LE=0 CX=52 CY=26 WI=5 BI=92 HT=0 HN=0 HF=0 HC=4
-BUFFER: BN="packs_web\swish\web\js\storage.js"
-BI: MA=1 74 1  TABS=1 5  WWS=1 IWT=1 ST=0 IN=2 BW=0 US=32000 RO=0 SE=1 SN=0 BIN=0 MN=JavaScript	HM=0 MF=8 TL=0 MLL=0 ASE=0 LNL=6 LCF=0 CAPS=0 E=0 ESBU2=-1
-VIEW: LN=.0 CL=1 LE=0 CX=0 CY=0 WI=5 BI=54 HT=0 HN=0 HF=0 HC=4
-BUFFER: BN="packs_web\swish\web\js\svgavatar.js"
-BI: MA=1 74 1  TABS=1 5  WWS=1 IWT=1 ST=0 IN=2 BW=0 US=32000 RO=0 SE=1 SN=0 BIN=0 MN=JavaScript	HM=0 MF=8 TL=0 MLL=0 ASE=0 LNL=6 LCF=0 CAPS=0 E=0 ESBU2=-1
-VIEW: LN=.0 CL=1 LE=0 CX=0 CY=0 WI=5 BI=53 HT=0 HN=0 HF=0 HC=4
-BUFFER: BN="README.md"
-BI: MA=1 74 1  TABS=1 9  WWS=1 IWT=1 ST=0 IN=1 BW=0 US=32000 RO=0 SE=1 SN=0 BIN=0 MN=Fundamental	HM=0 MF=8 TL=0 MLL=0 ASE=0 LNL=6 LCF=0 CAPS=0 E=0 ESBU2=-1
-VIEW: LN=.1037 CL=24 LE=0 CX=23 CY=4 WI=5 BI=52 HT=0 HN=0 HF=0 HC=4
-BUFFER: BN="INSTALL.md"
-BI: MA=1 74 1  TABS=1 9  WWS=1 IWT=1 ST=0 IN=2 BW=0 US=32000 RO=0 SE=1 SN=0 BIN=0 MN=Bourne Shell	HM=0 MF=8 TL=0 MLL=0 ASE=0 LNL=6 LCF=0 CAPS=0 E=0 ESBU2=-1
-VIEW: LN=.2476 CL=20 LE=0 CX=19 CY=4 WI=5 BI=51 HT=0 HN=0 HF=0 HC=4
-BUFFER: BN="docker\rootfs\usr\local\bin\StartMUDServer.bat"
-BI: MA=1 74 1  TABS=1 5  WWS=1 IWT=1 ST=0 IN=2 BW=0 US=32000 RO=0 SE=1 SN=0 BIN=0 MN=Batch	HM=0 MF=8 TL=0 MLL=0 ASE=0 LNL=6 LCF=0 CAPS=0 E=0 ESBU2=-1
-VIEW: LN=.0 CL=1 LE=0 CX=0 CY=0 WI=5 BI=50 HT=0 HN=0 HF=0 HC=4
-BUFFER: BN="packs_sys\prologmud_samples\prolog\prologmud_sample_games\StartMUD.sh"
-BI: MA=1 74 1  TABS=1 4  WWS=1 IWT=0 ST=0 IN=2 BW=0 US=32000 RO=0 SE=1 SN=0 BIN=0 MN=Slick-C	HM=0 MF=8 TL=0 MLL=0 ASE=0 LNL=6 LCF=0 CAPS=0 E=0 ESBU2=-1
-VIEW: LN=.0 CL=1 LE=0 CX=0 CY=0 WI=5 BI=49 HT=0 HN=0 HF=0 HC=4
-BUFFER: BN="packs_sys\prologmud_samples\prolog\prologmud_sample_games\on_boot.sh"
-BI: MA=1 74 1  TABS=1 4  WWS=1 IWT=0 ST=0 IN=2 BW=0 US=32000 RO=0 SE=1 SN=0 BIN=0 MN=Slick-C	HM=0 MF=8 TL=0 MLL=0 ASE=0 LNL=6 LCF=0 CAPS=0 E=0 ESBU2=-1
-VIEW: LN=.0 CL=1 LE=0 CX=0 CY=0 WI=5 BI=48 HT=0 HN=0 HF=0 HC=4
-BUFFER: BN="docker\rootfs\usr\local\bin\startMUDServer.sh"
-BI: MA=1 74 1  TABS=1 4  WWS=1 IWT=0 ST=0 IN=2 BW=0 US=32000 RO=0 SE=1 SN=0 BIN=0 MN=Slick-C	HM=0 MF=8 TL=0 MLL=0 ASE=0 LNL=6 LCF=0 CAPS=0 E=0 ESBU2=-1
-VIEW: LN=.608 CL=1 LE=0 CX=0 CY=4 WI=5 BI=47 HT=0 HN=0 HF=0 HC=4
-BUFFER: BN="web_install.sh"
-BI: MA=1 74 1  TABS=1 4  WWS=1 IWT=0 ST=0 IN=2 BW=0 US=32000 RO=0 SE=1 SN=0 BIN=0 MN=Slick-C	HM=0 MF=8 TL=0 MLL=0 ASE=0 LNL=6 LCF=0 CAPS=0 E=0 ESBU2=-1
-VIEW: LN=.715 CL=23 LE=0 CX=22 CY=4 WI=5 BI=45 HT=0 HN=0 HF=0 HC=4
-BUFFER: BN="Dockerfile"
-BI: MA=1 74 1  TABS=1 9  WWS=1 IWT=1 ST=0 IN=1 BW=0 US=32000 RO=0 SE=1 SN=0 BIN=0 MN=Fundamental	HM=0 MF=8 TL=0 MLL=0 ASE=0 LNL=6 LCF=0 CAPS=0 E=0 ESBU2=-1
-VIEW: LN=.1264 CL=6 LE=0 CX=5 CY=4 WI=5 BI=44 HT=0 HN=0 HF=0 HC=4
-BUFFER: BN=".dockerignore"
-BI: MA=1 74 1  TABS=1 9  WWS=1 IWT=1 ST=0 IN=1 BW=0 US=32000 RO=0 SE=1 SN=0 BIN=0 MN=Fundamental	HM=0 MF=8 TL=0 MLL=0 ASE=0 LNL=6 LCF=0 CAPS=0 E=0 ESBU2=-1
-VIEW: LN=.2115 CL=14 LE=0 CX=13 CY=4 WI=5 BI=43 HT=0 HN=0 HF=0 HC=4
-BUFFER: BN="StartLogicmoo.sh"
-BI: MA=1 74 1  TABS=1 4  WWS=1 IWT=0 ST=0 IN=2 BW=0 US=32000 RO=0 SE=1 SN=0 BIN=0 MN=Slick-C	HM=0 MF=8 TL=0 MLL=0 ASE=0 LNL=6 LCF=0 CAPS=0 E=0 ESBU2=-1
-VIEW: LN=.371 CL=4 LE=0 CX=3 CY=4 WI=5 BI=42 HT=0 HN=0 HF=0 HC=4
-BUFFER: BN="docker\rootfs\etc\supervisor\conf.d\supervisord.conf"
-BI: MA=1 74 1  TABS=1 5  WWS=1 IWT=0 ST=0 IN=2 BW=0 US=32000 RO=0 SE=1 SN=0 BIN=0 MN=Config	HM=0 MF=8 TL=0 MLL=0 ASE=0 LNL=6 LCF=0 CAPS=0 E=0 ESBU2=-1
+BI: MA=1 174 1  TABS=1 3  WWS=1 IWT=0 ST=0 IN=2 BW=0 US=32000 RO=0 SE=1 SN=0 BIN=0 MN=Prolog	HM=0 MF=0 TL=0 MLL=0 ASE=0 LNL=6 LCF=0 CAPS=0 E=0 ESBU2=-1
+VIEW: LN=.7422 CL=14 LE=0 CX=13 CY=14 WI=5 BI=37 HT=0 HN=0 HF=0 HC=4
+BUFFER: BN="packs_sys\logicmoo_utils\prolog\logicmoo\butterfly_console.pl"
+BI: MA=1 174 1  TABS=1 3  WWS=1 IWT=0 ST=0 IN=2 BW=0 US=32000 RO=0 SE=1 SN=0 BIN=0 MN=Prolog	HM=0 MF=0 TL=0 MLL=0 ASE=0 LNL=6 LCF=0 CAPS=0 E=0 ESBU2=-1
+VIEW: LN=.11315 CL=24 LE=0 CX=23 CY=4 WI=5 BI=26 HT=0 HN=0 HF=0 HC=4
+BUFFER: BN="packs_sys\logicmoo_nlu\prolog\logicmoo_nlu\parser_e2c.pl"
+BI: MA=1 174 1  TABS=1 3  WWS=1 IWT=0 ST=0 IN=2 BW=0 US=32000 RO=0 SE=1 SN=0 BIN=0 MN=Prolog	HM=0 MF=0 TL=0 MLL=0 ASE=0 LNL=6 LCF=0 CAPS=0 E=0 ESBU2=-1
+VIEW: LN=.14520 CL=10 LE=0 CX=9 CY=10 WI=5 BI=39 HT=0 HN=0 HF=0 HC=4
+BUFFER: BN="prologmud_server\requirments3.txt"
+BI: MA=1 74 1  TABS=1 9  WWS=1 IWT=1 ST=0 IN=1 BW=0 US=32000 RO=0 SE=1 SN=0 BIN=0 MN=Fundamental	HM=0 MF=0 TL=0 MLL=0 ASE=0 LNL=6 LCF=0 CAPS=0 E=0 ESBU2=-1
+VIEW: LN=.0 CL=1 LE=0 CX=0 CY=0 WI=5 BI=43 HT=0 HN=0 HF=0 HC=4
+BUFFER: BN="packs_sys\logicmoo_agi\prolog\episodic_memory\adv_eng2cmd.pl"
+BI: MA=1 174 1  TABS=1 3  WWS=1 IWT=0 ST=0 IN=2 BW=0 US=32000 RO=0 SE=1 SN=0 BIN=0 MN=Prolog	HM=0 MF=0 TL=0 MLL=0 ASE=0 LNL=6 LCF=0 CAPS=0 E=0 ESBU2=-1
+VIEW: LN=.28502 CL=11 LE=0 CX=10 CY=12 WI=5 BI=51 HT=0 HN=0 HF=0 HC=4
+BUFFER: BN="packs_sys\logicmoo_agi\prolog\episodic_memory\adv_axiom.pl"
+BI: MA=1 174 1  TABS=1 3  WWS=1 IWT=0 ST=0 IN=2 BW=0 US=32000 RO=0 SE=1 SN=0 BIN=0 MN=Prolog	HM=0 MF=0 TL=0 MLL=0 ASE=0 LNL=6 LCF=0 CAPS=0 E=0 ESBU2=-1
+VIEW: LN=.5095 CL=45 LE=0 CX=44 CY=12 WI=5 BI=50 HT=0 HN=0 HF=0 HC=4
+BUFFER: BN="packs_sys\logicmoo_agi\prolog\episodic_memory\adv_plan.pl"
+BI: MA=1 174 1  TABS=1 3  WWS=1 IWT=0 ST=0 IN=2 BW=0 US=32000 RO=0 SE=1 SN=0 BIN=0 MN=Prolog	HM=0 MF=0 TL=0 MLL=0 ASE=0 LNL=6 LCF=0 CAPS=0 E=0 ESBU2=-1
+VIEW: LN=.5203 CL=10 LE=0 CX=9 CY=12 WI=5 BI=49 HT=0 HN=0 HF=0 HC=4
+BUFFER: BN="packs_sys\logicmoo_agi\prolog\episodic_memory\adv_action.pl"
+BI: MA=1 174 1  TABS=1 3  WWS=1 IWT=0 ST=0 IN=2 BW=0 US=32000 RO=0 SE=1 SN=0 BIN=0 MN=Prolog	HM=0 MF=0 TL=0 MLL=0 ASE=0 LNL=6 LCF=0 CAPS=0 E=0 ESBU2=-1
+VIEW: LN=.10951 CL=1 LE=0 CX=0 CY=12 WI=5 BI=48 HT=0 HN=0 HF=0 HC=4
+BUFFER: BN="packs_sys\logicmoo_agi\prolog\episodic_memory\adv_implies.pl"
+BI: MA=1 174 1  TABS=1 3  WWS=1 IWT=0 ST=0 IN=2 BW=0 US=32000 RO=0 SE=1 SN=0 BIN=0 MN=Prolog	HM=0 MF=0 TL=0 MLL=0 ASE=0 LNL=6 LCF=0 CAPS=0 E=0 ESBU2=-1
+VIEW: LN=.9665 CL=1 LE=0 CX=0 CY=12 WI=5 BI=52 HT=0 HN=0 HF=0 HC=4
+BUFFER: BN="packs_sys\logicmoo_agi\prolog\episodic_memory\adv_log2eng.pl"
+BI: MA=1 174 1  TABS=1 3  WWS=1 IWT=0 ST=0 IN=2 BW=0 US=32000 RO=0 SE=1 SN=0 BIN=0 MN=Prolog	HM=0 MF=0 TL=0 MLL=0 ASE=0 LNL=6 LCF=0 CAPS=0 E=0 ESBU2=-1
+VIEW: LN=.11869 CL=25 LE=0 CX=24 CY=12 WI=5 BI=47 HT=0 HN=0 HF=0 HC=4
+BUFFER: BN="packs_sys\logicmoo_agi\prolog\episodic_memory\adv_edit.pl"
+BI: MA=1 174 1  TABS=1 3  WWS=1 IWT=0 ST=0 IN=2 BW=0 US=32000 RO=0 SE=1 SN=0 BIN=0 MN=Prolog	HM=0 MF=0 TL=0 MLL=0 ASE=0 LNL=6 LCF=0 CAPS=0 E=0 ESBU2=-1
+VIEW: LN=.7954 CL=25 LE=0 CX=24 CY=12 WI=5 BI=46 HT=0 HN=0 HF=0 HC=4
+BUFFER: BN="packs_sys\logicmoo_agi\prolog\episodic_memory\adv_debug.pl"
+BI: MA=1 174 1  TABS=1 3  WWS=1 IWT=0 ST=0 IN=2 BW=0 US=32000 RO=0 SE=1 SN=0 BIN=0 MN=Prolog	HM=0 MF=0 TL=0 MLL=0 ASE=0 LNL=6 LCF=0 CAPS=0 E=0 ESBU2=-1
+VIEW: LN=.2963 CL=24 LE=0 CX=23 CY=14 WI=5 BI=45 HT=0 HN=0 HF=0 HC=4
+BUFFER: BN="packs_web\swish\web\js\butterfly_term.js"
+BI: MA=1 74 1  TABS=1 5  WWS=1 IWT=1 ST=0 IN=2 BW=0 US=32000 RO=0 SE=1 SN=0 BIN=0 MN=JavaScript	HM=0 MF=0 TL=0 MLL=0 ASE=0 LNL=6 LCF=0 CAPS=0 E=0 ESBU2=-1
+VIEW: LN=.1342 CL=23 LE=0 CX=22 CY=8 WI=5 BI=25 HT=0 HN=0 HF=0 HC=4
+BUFFER: BN="prologmud_server\run_mud_server.pl"
+BI: MA=1 174 1  TABS=1 3  WWS=1 IWT=0 ST=0 IN=2 BW=0 US=32000 RO=0 SE=1 SN=0 BIN=0 MN=Prolog	HM=0 MF=0 TL=0 MLL=0 ASE=0 LNL=6 LCF=0 CAPS=0 E=0 ESBU2=-1
+VIEW: LN=.6205 CL=34 LE=0 CX=33 CY=12 WI=5 BI=23 HT=0 HN=0 HF=0 HC=4
+BUFFER: BN="packs_sys\logicmoo_agi\prolog\episodic_memory\adv_percept.pl"
+BI: MA=1 174 1  TABS=1 3  WWS=1 IWT=0 ST=0 IN=2 BW=0 US=32000 RO=0 SE=1 SN=0 BIN=0 MN=Prolog	HM=0 MF=0 TL=0 MLL=0 ASE=0 LNL=6 LCF=0 CAPS=0 E=0 ESBU2=-1
+VIEW: LN=.9544 CL=38 LE=0 CX=37 CY=12 WI=5 BI=24 HT=0 HN=0 HF=0 HC=4
+BUFFER: BN="prologmud_server\run_mud_server.pl - Shortcut.lnk"
+BI: MA=1 74 1  TABS=1 9  WWS=1 IWT=1 ST=0 IN=1 BW=0 US=32000 RO=0 SE=1 SN=0 BIN=0 MN=Fundamental	HM=0 MF=0 TL=0 MLL=0 ASE=0 LNL=6 LCF=0 CAPS=0 E=0 ESBU2=-1
+VIEW: LN=.0 CL=1 LE=0 CX=0 CY=0 WI=5 BI=44 HT=0 HN=0 HF=0 HC=4
+BUFFER: BN="prologmud_server\Project.ede"
+BI: MA=1 74 1  TABS=1 9  WWS=1 IWT=1 ST=0 IN=1 BW=0 US=32000 RO=0 SE=1 SN=0 BIN=0 MN=Fundamental	HM=0 MF=0 TL=0 MLL=0 ASE=0 LNL=6 LCF=0 CAPS=0 E=0 ESBU2=-1
+VIEW: LN=.0 CL=1 LE=0 CX=0 CY=0 WI=5 BI=42 HT=0 HN=0 HF=0 HC=4
+BUFFER: BN="prologmud_server\core"
+BI: MA=1 74 1  TABS=1 9  WWS=1 IWT=1 ST=0 IN=1 BW=0 US=32000 RO=0 SE=1 SN=0 BIN=0 MN=Fundamental	HM=0 MF=0 TL=0 MLL=0 ASE=0 LNL=6 LCF=0 CAPS=0 E=0 ESBU2=-1
 VIEW: LN=.0 CL=1 LE=0 CX=0 CY=0 WI=5 BI=41 HT=0 HN=0 HF=0 HC=4
-BUFFER: BN="docker\rootfs\etc\supervisor\conf.d\supervisord.conf.j2"
-BI: MA=1 74 1  TABS=1 9  WWS=1 IWT=1 ST=0 IN=1 BW=0 US=32000 RO=0 SE=1 SN=0 BIN=0 MN=Fundamental	HM=0 MF=8 TL=0 MLL=0 ASE=0 LNL=6 LCF=0 CAPS=0 E=0 ESBU2=-1
+BUFFER: BN="prologmud_server\gdbinit"
+BI: MA=1 74 1  TABS=1 9  WWS=1 IWT=1 ST=0 IN=1 BW=0 US=32000 RO=0 SE=1 SN=0 BIN=0 MN=Fundamental	HM=0 MF=0 TL=0 MLL=0 ASE=0 LNL=6 LCF=0 CAPS=0 E=0 ESBU2=-1
 VIEW: LN=.0 CL=1 LE=0 CX=0 CY=0 WI=5 BI=40 HT=0 HN=0 HF=0 HC=4
-BUFFER: BN="docker\rootfs\etc\supervisor\supervisord.conf"
-BI: MA=1 74 1  TABS=1 5  WWS=1 IWT=0 ST=0 IN=2 BW=0 US=32000 RO=0 SE=1 SN=0 BIN=0 MN=Config	HM=0 MF=8 TL=0 MLL=0 ASE=0 LNL=6 LCF=0 CAPS=0 E=0 ESBU2=-1
-VIEW: LN=.0 CL=1 LE=0 CX=0 CY=0 WI=5 BI=39 HT=0 HN=0 HF=0 HC=4
-BUFFER: BN="packs_sys\logicmoo_agi\prolog\episodic_memory\adv_data.pl"
+BUFFER: BN="packs_sys\instant_prolog_docs\prolog\prolog_refactor.pl"
+BI: MA=1 174 1  TABS=1 3  WWS=1 IWT=0 ST=0 IN=2 BW=0 US=32000 RO=0 SE=1 SN=0 BIN=0 MN=Prolog	HM=0 MF=0 TL=0 MLL=0 ASE=0 LNL=6 LCF=0 CAPS=0 E=0 ESBU2=-1
+VIEW: LN=.0 CL=1 LE=0 CX=0 CY=0 WI=5 BI=5 HT=0 HN=0 HF=0 HC=4
+BUFFER: BN="packs_sys\logicmoo_utils\prolog\logicmoo\pretty_clauses.pl"
 BI: MA=1 174 1  TABS=1 3  WWS=1 IWT=0 ST=0 IN=2 BW=0 US=32000 RO=0 SE=1 SN=0 BIN=0 MN=Prolog	HM=0 MF=8 TL=0 MLL=0 ASE=0 LNL=6 LCF=0 CAPS=0 E=0 ESBU2=-1
-VIEW: LN=.3751 CL=6 LE=0 CX=5 CY=14 WI=5 BI=72 HT=0 HN=0 HF=0 HC=4
-BUFFER: BN="packs_sys\logicmoo_agi\prolog\episodic_memory\adv_log2eng.pl"
-BI: MA=1 174 1  TABS=1 3  WWS=1 IWT=0 ST=0 IN=2 BW=0 US=32000 RO=0 SE=1 SN=0 BIN=0 MN=Prolog	HM=0 MF=8 TL=0 MLL=0 ASE=0 LNL=6 LCF=0 CAPS=0 E=0 ESBU2=-1
-VIEW: LN=.21351 CL=1 LE=0 CX=0 CY=16 WI=5 BI=25 HT=0 HN=0 HF=0 HC=4
-BUFFER: BN="packs_sys\prologmud_samples\prolog\prologmud_sample_games\run_mud_server.pl"
-BI: MA=1 174 1  TABS=1 3  WWS=1 IWT=0 ST=0 IN=2 BW=0 US=32000 RO=0 SE=1 SN=0 BIN=0 MN=Prolog	HM=0 MF=8 TL=0 MLL=0 ASE=0 LNL=6 LCF=0 CAPS=0 E=0 ESBU2=-1
-VIEW: LN=.3650 CL=40 LE=0 CX=39 CY=21 WI=5 BI=77 HT=0 HN=0 HF=0 HC=4
-BUFFER: BN="packs_sys\logicmoo_utils\prolog\debuggery\dumpst.pl"
-BI: MA=1 174 1  TABS=1 3  WWS=1 IWT=0 ST=0 IN=2 BW=0 US=32000 RO=0 SE=1 SN=0 BIN=0 MN=Prolog	HM=0 MF=8 TL=0 MLL=0 ASE=0 LNL=6 LCF=0 CAPS=0 E=0 ESBU2=-1
-VIEW: LN=.4702 CL=42 LE=0 CX=41 CY=14 WI=5 BI=75 HT=0 HN=0 HF=0 HC=4
-BUFFER: BN="packs_sys\logicmoo_nlu\ext\pldata\tt0_iface.pl"
-BI: MA=1 174 1  TABS=1 3  WWS=1 IWT=0 ST=0 IN=2 BW=0 US=32000 RO=0 SE=1 SN=0 BIN=0 MN=Prolog	HM=0 MF=8 TL=0 MLL=0 ASE=0 LNL=6 LCF=0 CAPS=0 E=0 ESBU2=-1
-VIEW: LN=.280 CL=1 LE=0 CX=0 CY=6 WI=5 BI=27 HT=0 HN=0 HF=0 HC=4
-BUFFER: BN="packs_lib\lsp_server\prolog\lsp_server.pl"
-BI: MA=1 174 1  TABS=1 3  WWS=1 IWT=0 ST=0 IN=2 BW=0 US=32000 RO=0 SE=1 SN=0 BIN=0 MN=Prolog	HM=0 MF=8 TL=0 MLL=0 ASE=0 LNL=6 LCF=0 CAPS=0 E=0 ESBU2=-1
-VIEW: LN=.0 CL=1 LE=0 CX=0 CY=0 WI=5 BI=83 HT=0 HN=0 HF=0 HC=4
-BUFFER: BN="packs_lib\lsp_server\prolog\lsp_utils.pl"
-BI: MA=1 174 1  TABS=1 3  WWS=1 IWT=0 ST=0 IN=2 BW=0 US=32000 RO=0 SE=1 SN=0 BIN=0 MN=Prolog	HM=0 MF=8 TL=0 MLL=0 ASE=0 LNL=6 LCF=0 CAPS=0 E=0 ESBU2=-1
-VIEW: LN=.535 CL=3 LE=0 CX=2 CY=16 WI=5 BI=80 HT=0 HN=0 HF=0 HC=4
-BUFFER: BN="packs_lib\lsp_server\prolog\lsp_completion.pl"
-BI: MA=1 174 1  TABS=1 3  WWS=1 IWT=0 ST=0 IN=2 BW=0 US=32000 RO=0 SE=1 SN=0 BIN=0 MN=Prolog	HM=0 MF=8 TL=0 MLL=0 ASE=0 LNL=6 LCF=0 CAPS=0 E=0 ESBU2=-1
-VIEW: LN=.0 CL=1 LE=0 CX=0 CY=0 WI=5 BI=84 HT=0 HN=0 HF=0 HC=4
-BUFFER: BN="packs_lib\lsp_server\prolog\lsp_parser.pl"
-BI: MA=1 174 1  TABS=1 3  WWS=1 IWT=0 ST=0 IN=2 BW=0 US=32000 RO=0 SE=1 SN=0 BIN=0 MN=Prolog	HM=0 MF=8 TL=0 MLL=0 ASE=0 LNL=6 LCF=0 CAPS=0 E=0 ESBU2=-1
-VIEW: LN=.0 CL=1 LE=0 CX=0 CY=0 WI=5 BI=82 HT=0 HN=0 HF=0 HC=4
-BUFFER: BN="packs_lib\lsp_server\prolog\lsp_checking.pl"
-BI: MA=1 174 1  TABS=1 3  WWS=1 IWT=0 ST=0 IN=2 BW=0 US=32000 RO=0 SE=1 SN=0 BIN=0 MN=Prolog	HM=0 MF=8 TL=0 MLL=0 ASE=0 LNL=6 LCF=0 CAPS=0 E=0 ESBU2=-1
-VIEW: LN=.0 CL=1 LE=0 CX=0 CY=0 WI=5 BI=85 HT=0 HN=0 HF=0 HC=4
-BUFFER: BN="packs_lib\lsp_server\prolog\lsp_colours.pl"
-BI: MA=1 174 1  TABS=1 3  WWS=1 IWT=0 ST=0 IN=2 BW=0 US=32000 RO=0 SE=1 SN=0 BIN=0 MN=Prolog	HM=0 MF=8 TL=0 MLL=0 ASE=0 LNL=6 LCF=0 CAPS=0 E=0 ESBU2=-1
-VIEW: LN=.0 CL=1 LE=0 CX=0 CY=0 WI=5 BI=87 HT=0 HN=0 HF=0 HC=4
-BUFFER: BN="packs_lib\lsp_server\prolog\lsp_changes.pl"
-BI: MA=1 174 1  TABS=1 3  WWS=1 IWT=0 ST=0 IN=2 BW=0 US=32000 RO=0 SE=1 SN=0 BIN=0 MN=Prolog	HM=0 MF=8 TL=0 MLL=0 ASE=0 LNL=6 LCF=0 CAPS=0 E=0 ESBU2=-1
-VIEW: LN=.0 CL=1 LE=0 CX=0 CY=0 WI=5 BI=86 HT=0 HN=0 HF=0 HC=4
-BUFFER: BN="packs_sys\logicmoo_nlu\ext\pldata\nl_iface.pl"
-BI: MA=1 174 1  TABS=1 3  WWS=1 IWT=0 ST=0 IN=2 BW=0 US=32000 RO=0 SE=1 SN=0 BIN=0 MN=Prolog	HM=0 MF=8 TL=0 MLL=0 ASE=0 LNL=6 LCF=0 CAPS=0 E=0 ESBU2=-1
-VIEW: LN=.1261 CL=29 LE=0 CX=28 CY=12 WI=5 BI=74 HT=0 HN=0 HF=0 HC=4
-BUFFER: BN="packs_sys\prologmud_samples\prolog\prologmud_sample_games\PreStartMUD.sh"
-BI: MA=1 74 1  TABS=1 4  WWS=1 IWT=0 ST=0 IN=2 BW=0 US=32000 RO=0 SE=1 SN=0 BIN=0 MN=Slick-C	HM=0 MF=8 TL=0 MLL=0 ASE=0 LNL=6 LCF=0 CAPS=0 E=0 ESBU2=-1
-VIEW: LN=.0 CL=1 LE=0 CX=0 CY=0 WI=5 BI=81 HT=0 HN=0 HF=0 HC=4
-BUFFER: BN="packs_sys\logicmoo_agi\prolog\episodic_memory\adv_state.pl"
-BI: MA=1 174 1  TABS=1 3  WWS=1 IWT=0 ST=0 IN=2 BW=0 US=32000 RO=0 SE=1 SN=0 BIN=0 MN=Prolog	HM=0 MF=8 TL=0 MLL=0 ASE=0 LNL=6 LCF=0 CAPS=0 E=0 ESBU2=-1
-VIEW: LN=.22862 CL=1 LE=0 CX=0 CY=14 WI=5 BI=37 HT=0 HN=0 HF=0 HC=4
-BUFFER: BN="packs_sys\logicmoo_agi\prolog\episodic_memory\adv_inst.pl"
-BI: MA=1 174 1  TABS=1 3  WWS=1 IWT=0 ST=0 IN=2 BW=0 US=32000 RO=0 SE=1 SN=0 BIN=0 MN=Prolog	HM=0 MF=8 TL=0 MLL=0 ASE=0 LNL=6 LCF=0 CAPS=0 E=0 ESBU2=-1
-VIEW: LN=.862 CL=26 LE=0 CX=25 CY=20 WI=5 BI=5 HT=0 HN=0 HF=0 HC=4
-BUFFER: BN="packs_sys\logicmoo_utils\prolog\xlisting\xlisting_console.pl"
-BI: MA=1 174 1  TABS=1 3  WWS=1 IWT=0 ST=0 IN=2 BW=0 US=32000 RO=0 SE=1 SN=0 BIN=0 MN=Prolog	HM=0 MF=8 TL=0 MLL=0 ASE=0 LNL=6 LCF=0 CAPS=0 E=0 ESBU2=-1
-VIEW: LN=.49502 CL=16 LE=0 CX=15 CY=14 WI=5 BI=78 HT=0 HN=0 HF=0 HC=4
-BUFFER: BN="packs_sys\logicmoo_utils\prolog\xlisting.pl"
-BI: MA=1 174 1  TABS=1 3  WWS=1 IWT=0 ST=0 IN=2 BW=0 US=32000 RO=0 SE=1 SN=0 BIN=0 MN=Prolog	HM=0 MF=8 TL=0 MLL=0 ASE=0 LNL=6 LCF=0 CAPS=0 E=0 ESBU2=-1
-VIEW: LN=.0 CL=1 LE=0 CX=0 CY=0 WI=5 BI=79 HT=0 HN=0 HF=0 HC=4
-BUFFER: BN="packs_sys\logicmoo_utils\prolog\debuggery\ucatch.pl"
-BI: MA=1 174 1  TABS=1 3  WWS=1 IWT=0 ST=0 IN=2 BW=0 US=32000 RO=0 SE=1 SN=0 BIN=0 MN=Prolog	HM=0 MF=8 TL=0 MLL=0 ASE=0 LNL=6 LCF=0 CAPS=0 E=0 ESBU2=-1
-VIEW: LN=.8940 CL=2 LE=0 CX=1 CY=14 WI=5 BI=76 HT=0 HN=0 HF=0 HC=4
-BUFFER: BN="packs_sys\logicmoo_utils\prolog\debuggery\dmsg.pl"
-BI: MA=1 174 1  TABS=1 3  WWS=1 IWT=0 ST=0 IN=2 BW=0 US=32000 RO=0 SE=1 SN=0 BIN=0 MN=Prolog	HM=0 MF=8 TL=0 MLL=0 ASE=0 LNL=6 LCF=0 CAPS=0 E=0 ESBU2=-1
-VIEW: LN=.4872 CL=1 LE=0 CX=0 CY=15 WI=5 BI=73 HT=0 HN=0 HF=0 HC=4
-BUFFER: BN="packs_sys\logicmoo_agi\prolog\episodic_memory\adv_props.pl"
-BI: MA=1 174 1  TABS=1 3  WWS=1 IWT=0 ST=0 IN=2 BW=0 US=32000 RO=0 SE=1 SN=0 BIN=0 MN=Prolog	HM=0 MF=8 TL=0 MLL=0 ASE=0 LNL=6 LCF=0 CAPS=0 E=0 ESBU2=-1
-VIEW: LN=.9950 CL=46 LE=0 CX=45 CY=10 WI=5 BI=36 HT=0 HN=0 HF=0 HC=4
-BUFFER: BN="docker\rootfs\etc\profile.d\logicmoo_etc_profile_d.sh"
-BI: MA=1 74 1  TABS=1 4  WWS=1 IWT=0 ST=0 IN=2 BW=0 US=32000 RO=0 SE=1 SN=0 BIN=0 MN=Slick-C	HM=0 MF=8 TL=0 MLL=0 ASE=0 LNL=6 LCF=0 CAPS=0 E=0 ESBU2=-1
-VIEW: LN=.0 CL=1 LE=0 CX=0 CY=0 WI=5 BI=38 HT=0 HN=0 HF=0 HC=4
-BUFFER: BN="docker\rootfs\usr\local\bin\lm"
-BI: MA=1 74 1  TABS=1 9  WWS=1 IWT=1 ST=0 IN=2 BW=0 US=32000 RO=0 SE=1 SN=0 BIN=0 MN=Bourne Shell	HM=0 MF=8 TL=0 MLL=0 ASE=0 LNL=6 LCF=0 CAPS=0 E=0 ESBU2=-1
-VIEW: LN=.728 CL=1 LE=0 CX=0 CY=4 WI=5 BI=35 HT=0 HN=0 HF=0 HC=4
-BUFFER: BN="docker\rootfs\etc\apache2\conf-available\doc_root_ssl.conf"
-BI: MA=1 74 1  TABS=1 5  WWS=1 IWT=0 ST=0 IN=2 BW=0 US=32000 RO=0 SE=1 SN=0 BIN=0 MN=Config	HM=0 MF=8 TL=0 MLL=0 ASE=0 LNL=6 LCF=0 CAPS=0 E=0 ESBU2=-1
-VIEW: LN=.0 CL=1 LE=0 CX=0 CY=0 WI=5 BI=34 HT=0 HN=0 HF=0 HC=4
-BUFFER: BN="packs_sys\eggdrop\conf\eggdrop.conf"
-BI: MA=1 74 1  TABS=1 5  WWS=1 IWT=0 ST=0 IN=2 BW=0 US=32000 RO=0 SE=1 SN=0 BIN=0 MN=Config	HM=0 MF=8 TL=0 MLL=0 ASE=0 LNL=6 LCF=0 CAPS=0 E=0 ESBU2=-1
-VIEW: LN=.32098 CL=65 LE=0 CX=64 CY=4 WI=5 BI=33 HT=0 HN=0 HF=0 HC=4
-BUFFER: BN="docker\rootfs\etc\supervisor\conf.d\supervisord_logicmoo.conf"
-BI: MA=1 74 1  TABS=1 5  WWS=1 IWT=0 ST=0 IN=2 BW=0 US=32000 RO=0 SE=1 SN=0 BIN=0 MN=Config	HM=0 MF=8 TL=0 MLL=0 ASE=0 LNL=6 LCF=0 CAPS=0 E=0 ESBU2=-1
-VIEW: LN=.872 CL=19 LE=0 CX=18 CY=4 WI=5 BI=32 HT=0 HN=0 HF=0 HC=4
-BUFFER: BN="docker\Dockerfile"
-BI: MA=1 74 1  TABS=1 9  WWS=1 IWT=1 ST=0 IN=1 BW=0 US=32000 RO=0 SE=1 SN=0 BIN=0 MN=Fundamental	HM=0 MF=8 TL=0 MLL=0 ASE=0 LNL=6 LCF=0 CAPS=0 E=0 ESBU2=-1
-VIEW: LN=.15385 CL=11 LE=0 CX=10 CY=4 WI=5 BI=30 HT=0 HN=0 HF=0 HC=4
-BUFFER: BN="logicmoo_env.sh"
-BI: MA=1 74 1  TABS=1 4  WWS=1 IWT=0 ST=0 IN=2 BW=0 US=32000 RO=0 SE=1 SN=0 BIN=0 MN=Slick-C	HM=0 MF=8 TL=0 MLL=0 ASE=0 LNL=6 LCF=0 CAPS=0 E=0 ESBU2=-1
-VIEW: LN=.1578 CL=1 LE=0 CX=0 CY=4 WI=5 BI=29 HT=0 HN=0 HF=0 HC=4
-BUFFER: BN="docker\rootfs\etc\apache2\conf-available\cliopatria_swish.conf"
-BI: MA=1 74 1  TABS=1 5  WWS=1 IWT=0 ST=0 IN=2 BW=0 US=32000 RO=0 SE=1 SN=0 BIN=0 MN=Config	HM=0 MF=8 TL=0 MLL=0 ASE=0 LNL=6 LCF=0 CAPS=0 E=0 ESBU2=-1
-VIEW: LN=.5082 CL=1 LE=0 CX=0 CY=4 WI=5 BI=28 HT=0 HN=0 HF=0 HC=4
-BUFFER: BN="runFromDocker.sh"
-BI: MA=1 74 1  TABS=1 4  WWS=1 IWT=0 ST=0 IN=2 BW=0 US=32000 RO=0 SE=1 SN=0 BIN=0 MN=Slick-C	HM=0 MF=8 TL=0 MLL=0 ASE=0 LNL=6 LCF=0 CAPS=0 E=0 ESBU2=-1
-VIEW: LN=.1715 CL=56 LE=0 CX=55 CY=4 WI=5 BI=26 HT=0 HN=0 HF=0 HC=4
-BUFFER: BN="docker\rootfs\usr\local\bin\copy_modified.sh"
-BI: MA=1 74 1  TABS=1 4  WWS=1 IWT=0 ST=0 IN=2 BW=0 US=32000 RO=0 SE=1 SN=0 BIN=0 MN=Slick-C	HM=0 MF=8 TL=0 MLL=0 ASE=0 LNL=6 LCF=0 CAPS=0 E=0 ESBU2=-1
-VIEW: LN=.182 CL=1 LE=0 CX=0 CY=4 WI=5 BI=24 HT=0 HN=0 HF=0 HC=4
-BUFFER: BN="other_files.vpj"
-BI: MA=1 74 1  TABS=1 5  WWS=1 IWT=1 ST=0 IN=2 BW=0 US=32000 RO=0 SE=1 SN=0 BIN=0 MN=VPJ	HM=0 MF=8 TL=0 MLL=0 ASE=0 LNL=6 LCF=0 CAPS=0 E=70 ESBU2=-1
-VIEW: LN=.0 CL=1 LE=0 CX=0 CY=0 WI=5 BI=23 HT=0 HN=0 HF=0 HC=4
-BUFFER: BN="packs_sys\eggdrop\prolog\eggdrop.pl"
-BI: MA=1 174 1  TABS=1 3  WWS=1 IWT=0 ST=0 IN=2 BW=0 US=32000 RO=0 SE=1 SN=0 BIN=0 MN=Prolog	HM=0 MF=8 TL=0 MLL=0 ASE=0 LNL=6 LCF=0 CAPS=0 E=0 ESBU2=-1
-VIEW: LN=.1264 CL=20 LE=0 CX=19 CY=4 WI=5 BI=31 HT=0 HN=0 HF=0 HC=4
-WINDOW: 26 26 1397 434 -1 -1 N  WF=0 WT=51 "Default Fixed Font,14,0,1"
-BUFFER: BN="packs_sys\logicmoo_nlu\ext\pldata\tt0_iface.pl"
-VIEW: LN=.280 CL=1 LE=0 CX=0 CY=6 WI=255 BI=27 HT=0 HN=0 HF=0 HC=4
-WINDOW: 52 52 1397 434 -1 -1 N  WF=0 WT=52 "Default Fixed Font,14,0,1"
-BUFFER: BN="packs_sys\logicmoo_nlu\ext\pldata\nl_iface.pl"
-VIEW: LN=.0 CL=19 LE=0 CX=18 CY=0 WI=263 BI=74 HT=0 HN=0 HF=0 HC=4
-WINDOW: 208 208 1397 434 -1 -1 N  WF=0 WT=76 "Default Fixed Font,14,0,1"
-BUFFER: BN="packs_sys\logicmoo_nlu\prolog\logicmoo_nlu\parser_penn_trees.pl"
-VIEW: LN=.839 CL=22 LE=0 CX=21 CY=21 WI=431 BI=97 HT=0 HN=0 HF=0 HC=4
-WINDOW: 182 182 1397 434 -1 -1 N  WF=0 WT=75 "Default Fixed Font,14,0,1"
-BUFFER: BN="packs_sys\logicmoo_nlu\prolog\logicmoo_nlu\parser_lexical_gen.pl"
-VIEW: LN=.0 CL=1 LE=0 CX=0 CY=0 WI=430 BI=96 HT=0 HN=0 HF=0 HC=4
-WINDOW: 156 156 1397 434 -1 -1 N  WF=0 WT=74 "Default Fixed Font,14,0,1"
-BUFFER: BN="packs_sys\logicmoo_nlu\prolog\logicmoo_nlu\parser_lexical.pl"
-VIEW: LN=.0 CL=1 LE=0 CX=0 CY=0 WI=429 BI=94 HT=0 HN=0 HF=0 HC=4
-WINDOW: 130 130 1397 434 -1 -1 N  WF=0 WT=73 "Default Fixed Font,14,0,1"
-BUFFER: BN="packs_sys\logicmoo_nlu\ext\chat80\original\chat80.pl"
-VIEW: LN=.0 CL=1 LE=0 CX=0 CY=0 WI=428 BI=95 HT=0 HN=0 HF=0 HC=4
-WINDOW: 78 78 1397 434 -1 -1 N  WF=0 WT=71 "Default Fixed Font,14,0,1"
-BUFFER: BN="packs_sys\logicmoo_agi\prolog\episodic_memory\adv_action.pl"
-VIEW: LN=.19830 CL=56 LE=0 CX=55 CY=17 WI=426 BI=93 HT=0 HN=0 HF=0 HC=4
-WINDOW: 104 104 1397 434 -1 -1 N  WF=0 WT=72 "Default Fixed Font,14,0,1"
-BUFFER: BN="packs_sys\logicmoo_agi\prolog\episodic_memory\adv_io.pl"
-VIEW: LN=.21269 CL=54 LE=0 CX=53 CY=14 WI=427 BI=92 HT=0 HN=0 HF=0 HC=4
-WINDOW: 26 26 1397 434 -1 -1 N  WF=0 WT=69 "Default Fixed Font,14,0,1"
-BUFFER: BN="packs_sys\logicmoo_agi\prolog\episodic_memory\adv_edit.pl"
-VIEW: LN=.7954 CL=25 LE=0 CX=24 CY=12 WI=424 BI=89 HT=0 HN=0 HF=0 HC=4
-WINDOW: 52 52 1397 434 -1 -1 N  WF=0 WT=70 "Default Fixed Font,14,0,1"
-BUFFER: BN="packs_sys\logicmoo_agi\prolog\episodic_memory\adv_agent.pl"
-VIEW: LN=.9162 CL=33 LE=0 CX=32 CY=14 WI=425 BI=91 HT=0 HN=0 HF=0 HC=4
-WINDOW: 208 208 1397 434 -1 -1 N  WF=0 WT=67 "Default Fixed Font,14,0,1"
-BUFFER: BN="packs_sys\logicmoo_agi\prolog\episodic_memory\adv_eng2cmd.pl"
-VIEW: LN=.20246 CL=32 LE=0 CX=31 CY=20 WI=422 BI=88 HT=0 HN=0 HF=0 HC=4
-WINDOW: 0 0 1397 434 -1 -1 N  WF=0 WT=68 "Default Fixed Font,14,0,1"
-BUFFER: BN="packs_sys\logicmoo_agi\prolog\episodic_memory\adv_axiom.pl"
-VIEW: LN=.2760 CL=9 LE=0 CX=8 CY=14 WI=423 BI=90 HT=0 HN=0 HF=0 HC=4
-WINDOW: 0 0 1031 177 -1 -1 N  WF=0 WT=14 "Default Fixed Font,14,0,1"
-BUFFER: BN="packs_sys\logicmoo_agi\prolog\episodic_memory\adv_main.pl"
-VIEW: LN=.2962 CL=8 LE=0 CX=7 CY=4 WI=216 BI=55 HT=0 HN=0 HF=0 HC=4
-WINDOW: 130 130 1397 434 -1 -1 N  WF=0 WT=7 "Default Fixed Font,14,0,1"
-BUFFER: BN="packs_sys\logicmoo_agi\prolog\episodic_memory\adv_data.pl"
-VIEW: LN=.3751 CL=6 LE=0 CX=5 CY=14 WI=252 BI=72 HT=0 HN=0 HF=0 HC=4
-WINDOW: 182 182 1397 434 -1 -1 N  WF=0 WT=21 "Default Fixed Font,14,0,1"
-BUFFER: BN="packs_sys\logicmoo_agi\prolog\episodic_memory\adv_inst.pl"
-VIEW: LN=.743 CL=1 LE=0 CX=0 CY=18 WI=289 BI=5 HT=0 HN=0 HF=0 HC=4
-WINDOW: 208 208 1397 434 -1 -1 N  WF=0 WT=34 "Default Fixed Font,14,0,1"
-BUFFER: BN="packs_sys\logicmoo_agi\prolog\episodic_memory\adv_props.pl"
-VIEW: LN=.9950 CL=46 LE=0 CX=45 CY=10 WI=291 BI=36 HT=0 HN=0 HF=0 HC=4
-WINDOW: 182 182 1397 434 -1 -1 N  WF=0 WT=66 "Default Fixed Font,14,0,1"
-BUFFER: BN="packs_lib\lsp_server\prolog\lsp_parser.pl"
-VIEW: LN=.0 CL=1 LE=0 CX=0 CY=0 WI=421 BI=82 HT=0 HN=0 HF=0 HC=4
-WINDOW: 130 130 1397 434 -1 -1 N  WF=0 WT=55 "Default Fixed Font,14,0,1"
-BUFFER: BN="packs_sys\prologmud_samples\prolog\prologmud_sample_games\run_mud_server.pl"
-VIEW: LN=.26023 CL=1 LE=0 CX=0 CY=26 WI=303 BI=77 HT=0 HN=0 HF=0 HC=4
-WINDOW: 0 0 1397 434 -1 -1 N  WF=0 WT=47 "Default Fixed Font,14,0,1"
-BUFFER: BN="packs_sys\logicmoo_agi\prolog\episodic_memory\adv_log2eng.pl"
-VIEW: LN=.21351 CL=1 LE=0 CX=0 CY=16 WI=293 BI=25 HT=0 HN=0 HF=0 HC=4
-WINDOW: 52 52 1397 434 -1 -1 N  WF=0 WT=61 "Default Fixed Font,14,0,1"
-BUFFER: BN="packs_lib\lsp_server\prolog\lsp_utils.pl"
-VIEW: LN=.535 CL=3 LE=0 CX=2 CY=16 WI=412 BI=80 HT=0 HN=0 HF=0 HC=4
-WINDOW: 26 26 1397 434 -1 -1 N  WF=0 WT=60 "Default Fixed Font,14,0,1"
-BUFFER: BN="packs_lib\lsp_server\prolog\lsp_server.pl"
-VIEW: LN=.0 CL=1 LE=0 CX=0 CY=0 WI=410 BI=83 HT=0 HN=0 HF=0 HC=4
-WINDOW: 78 78 1397 434 -1 -1 N  WF=0 WT=62 "Default Fixed Font,14,0,1"
-BUFFER: BN="packs_lib\lsp_server\prolog\lsp_completion.pl"
-VIEW: LN=.0 CL=1 LE=0 CX=0 CY=0 WI=414 BI=84 HT=0 HN=0 HF=0 HC=4
-WINDOW: 156 156 1397 434 -1 -1 N  WF=0 WT=65 "Default Fixed Font,14,0,1"
-BUFFER: BN="packs_lib\lsp_server\prolog\lsp_colours.pl"
-VIEW: LN=.0 CL=1 LE=0 CX=0 CY=0 WI=420 BI=87 HT=0 HN=0 HF=0 HC=4
-WINDOW: 104 104 1397 434 -1 -1 N  WF=0 WT=63 "Default Fixed Font,14,0,1"
-BUFFER: BN="packs_lib\lsp_server\prolog\lsp_checking.pl"
-VIEW: LN=.0 CL=1 LE=0 CX=0 CY=0 WI=416 BI=85 HT=0 HN=0 HF=0 HC=4
-WINDOW: 130 130 1397 434 -1 -1 N  WF=0 WT=64 "Default Fixed Font,14,0,1"
-BUFFER: BN="packs_lib\lsp_server\prolog\lsp_changes.pl"
-VIEW: LN=.0 CL=1 LE=0 CX=0 CY=0 WI=418 BI=86 HT=0 HN=0 HF=0 HC=4
-WINDOW: 0 0 1397 434 -1 -1 N  WF=0 WT=59 "Default Fixed Font,14,0,1"
-BUFFER: BN="packs_sys\prologmud_samples\prolog\prologmud_sample_games\PreStartMUD.sh"
-VIEW: LN=.0 CL=1 LE=0 CX=0 CY=0 WI=311 BI=81 HT=0 HN=0 HF=0 HC=4
-WINDOW: 208 208 1397 434 -1 -1 N  WF=0 WT=58 "Default Fixed Font,14,0,1"
-BUFFER: BN="packs_sys\logicmoo_utils\prolog\xlisting.pl"
-VIEW: LN=.365 CL=27 LE=0 CX=26 CY=10 WI=309 BI=79 HT=0 HN=0 HF=0 HC=4
-WINDOW: 182 182 1397 434 -1 -1 N  WF=0 WT=57 "Default Fixed Font,14,0,1"
-BUFFER: BN="packs_sys\logicmoo_utils\prolog\xlisting\xlisting_console.pl"
-VIEW: LN=.7055 CL=1 LE=0 CX=0 CY=14 WI=307 BI=78 HT=0 HN=0 HF=0 HC=4
-WINDOW: 78 78 1397 434 -1 -1 N  WF=0 WT=53 "Default Fixed Font,14,0,1"
-BUFFER: BN="packs_sys\logicmoo_utils\prolog\debuggery\dmsg.pl"
-VIEW: LN=.4872 CL=1 LE=0 CX=0 CY=15 WI=296 BI=73 HT=0 HN=0 HF=0 HC=4
-WINDOW: 156 156 1397 434 -1 -1 N  WF=0 WT=56 "Default Fixed Font,14,0,1"
-BUFFER: BN="packs_sys\logicmoo_utils\prolog\debuggery\ucatch.pl"
-VIEW: LN=.8940 CL=2 LE=0 CX=1 CY=14 WI=305 BI=76 HT=0 HN=0 HF=0 HC=4
-WINDOW: 104 104 1397 434 -1 -1 N  WF=0 WT=54 "Default Fixed Font,14,0,1"
-BUFFER: BN="packs_sys\logicmoo_utils\prolog\debuggery\dumpst.pl"
-VIEW: LN=.10320 CL=8 LE=0 CX=7 CY=17 WI=301 BI=75 HT=0 HN=0 HF=0 HC=4
-WINDOW: 156 156 1397 434 -1 -1 N  WF=0 WT=8 "Default Fixed Font,14,0,1"
-BUFFER: BN="packs_sys\logicmoo_agi\prolog\episodic_memory\adv_state.pl"
-VIEW: LN=.22862 CL=1 LE=0 CX=0 CY=14 WI=287 BI=37 HT=0 HN=0 HF=0 HC=4
-WINDOW: 0 0 1031 177 -1 -1 N  WF=0 WT=28 "Default Fixed Font,14,0,1"
-BUFFER: BN="docker\rootfs\etc\supervisor\supervisord.conf"
-VIEW: LN=.0 CL=1 LE=0 CX=0 CY=0 WI=232 BI=39 HT=0 HN=0 HF=0 HC=4
-WINDOW: 0 0 1031 177 -1 -1 N  WF=0 WT=48 "Default Fixed Font,14,0,1"
-BUFFER: BN="packs_sys\eggdrop\prolog\eggdrop.pl"
-VIEW: LN=.1788 CL=58 LE=0 CX=57 CY=15 WI=240 BI=31 HT=0 HN=0 HF=0 HC=4
-WINDOW: 0 0 1031 177 -1 -1 N  WF=0 WT=50 "Default Unicode Font,10,0,1"
-BUFFER: BN="other_files.vpj"
-VIEW: LN=.0 CL=1 LE=0 CX=0 CY=0 WI=248 BI=23 HT=0 HN=0 HF=0 HC=4
-WINDOW: 26 26 1031 177 -1 -1 N  WF=0 WT=41 "Default Fixed Font,14,0,1"
-BUFFER: BN="docker\rootfs\usr\local\bin\copy_modified.sh"
-VIEW: LN=.182 CL=1 LE=0 CX=0 CY=4 WI=247 BI=24 HT=0 HN=0 HF=0 HC=4
-WINDOW: 78 78 1031 177 -1 -1 N  WF=0 WT=43 "Default Fixed Font,14,0,1"
-BUFFER: BN="runFromDocker.sh"
-VIEW: LN=.1715 CL=56 LE=0 CX=55 CY=4 WI=245 BI=26 HT=0 HN=0 HF=0 HC=4
-WINDOW: 26 26 1031 177 -1 -1 N  WF=0 WT=5 "Default Fixed Font,14,0,1"
-BUFFER: BN="docker\rootfs\etc\apache2\conf-available\cliopatria_swish.conf"
-VIEW: LN=.5082 CL=1 LE=0 CX=0 CY=4 WI=243 BI=28 HT=0 HN=0 HF=0 HC=4
-WINDOW: 52 52 1031 177 -1 -1 N  WF=0 WT=49 "Default Fixed Font,14,0,1"
-BUFFER: BN="logicmoo_env.sh"
-VIEW: LN=.1578 CL=1 LE=0 CX=0 CY=4 WI=242 BI=29 HT=0 HN=0 HF=0 HC=4
-WINDOW: 78 78 1031 177 -1 -1 N  WF=0 WT=3 "Default Fixed Font,14,0,1"
-BUFFER: BN="docker\Dockerfile"
-VIEW: LN=.15385 CL=11 LE=0 CX=10 CY=4 WI=241 BI=30 HT=0 HN=0 HF=0 HC=4
-WINDOW: 26 26 1031 177 -1 -1 N  WF=0 WT=6 "Default Fixed Font,14,0,1"
-BUFFER: BN="docker\rootfs\etc\supervisor\conf.d\supervisord_logicmoo.conf"
-VIEW: LN=.872 CL=19 LE=0 CX=18 CY=4 WI=239 BI=32 HT=0 HN=0 HF=0 HC=4
-WINDOW: 52 52 1031 177 -1 -1 N  WF=0 WT=23 "Default Fixed Font,14,0,1"
-BUFFER: BN="packs_sys\eggdrop\conf\eggdrop.conf"
-VIEW: LN=.32098 CL=65 LE=0 CX=64 CY=4 WI=238 BI=33 HT=0 HN=0 HF=0 HC=4
-WINDOW: 78 78 1031 177 -1 -1 N  WF=0 WT=42 "Default Fixed Font,14,0,1"
-BUFFER: BN="docker\rootfs\etc\apache2\conf-available\doc_root_ssl.conf"
-VIEW: LN=.0 CL=1 LE=0 CX=0 CY=0 WI=237 BI=34 HT=0 HN=0 HF=0 HC=4
-WINDOW: 0 0 1031 177 -1 -1 N  WF=0 WT=40 "Default Fixed Font,14,0,1"
-BUFFER: BN="docker\rootfs\usr\local\bin\lm"
-VIEW: LN=.728 CL=1 LE=0 CX=0 CY=4 WI=236 BI=35 HT=0 HN=0 HF=0 HC=4
-WINDOW: 78 78 1031 177 -1 -1 N  WF=0 WT=46 "Default Fixed Font,14,0,1"
-BUFFER: BN="docker\rootfs\etc\profile.d\logicmoo_etc_profile_d.sh"
-VIEW: LN=.0 CL=1 LE=0 CX=0 CY=0 WI=233 BI=38 HT=0 HN=0 HF=0 HC=4
-WINDOW: 26 26 1031 177 -1 -1 N  WF=0 WT=45 "Default Fixed Font,14,0,1"
-BUFFER: BN="docker\rootfs\etc\supervisor\conf.d\supervisord.conf.j2"
-VIEW: LN=.0 CL=1 LE=0 CX=0 CY=0 WI=231 BI=40 HT=0 HN=0 HF=0 HC=4
-WINDOW: 52 52 1031 177 -1 -1 N  WF=0 WT=44 "Default Fixed Font,14,0,1"
-BUFFER: BN="docker\rootfs\etc\supervisor\conf.d\supervisord.conf"
-VIEW: LN=.0 CL=1 LE=0 CX=0 CY=0 WI=230 BI=41 HT=0 HN=0 HF=0 HC=4
-WINDOW: 78 78 1031 177 -1 -1 N  WF=0 WT=19 "Default Fixed Font,14,0,1"
-BUFFER: BN="StartLogicmoo.sh"
-VIEW: LN=.371 CL=4 LE=0 CX=3 CY=4 WI=229 BI=42 HT=0 HN=0 HF=0 HC=4
-WINDOW: 0 0 1031 177 -1 -1 N  WF=0 WT=2 "Default Fixed Font,14,0,1"
-BUFFER: BN=".dockerignore"
-VIEW: LN=.2115 CL=14 LE=0 CX=13 CY=4 WI=228 BI=43 HT=0 HN=0 HF=0 HC=4
-WINDOW: 26 26 1031 177 -1 -1 N  WF=0 WT=20 "Default Fixed Font,14,0,1"
-BUFFER: BN="Dockerfile"
-VIEW: LN=.1264 CL=6 LE=0 CX=5 CY=4 WI=227 BI=44 HT=0 HN=0 HF=0 HC=4
-WINDOW: 52 52 1031 177 -1 -1 N  WF=0 WT=36 "Default Fixed Font,14,0,1"
-BUFFER: BN="web_install.sh"
-VIEW: LN=.715 CL=23 LE=0 CX=22 CY=4 WI=226 BI=45 HT=0 HN=0 HF=0 HC=4
-WINDOW: 0 0 1031 177 -1 -1 N  WF=0 WT=39 "Default Fixed Font,14,0,1"
-BUFFER: BN="docker\rootfs\usr\local\bin\startMUDServer.sh"
-VIEW: LN=.608 CL=1 LE=0 CX=0 CY=4 WI=224 BI=47 HT=0 HN=0 HF=0 HC=4
-WINDOW: 26 26 1031 177 -1 -1 N  WF=0 WT=38 "Default Fixed Font,14,0,1"
-BUFFER: BN="packs_sys\prologmud_samples\prolog\prologmud_sample_games\on_boot.sh"
-VIEW: LN=.0 CL=1 LE=0 CX=0 CY=0 WI=223 BI=48 HT=0 HN=0 HF=0 HC=4
-WINDOW: 52 52 1031 177 -1 -1 N  WF=0 WT=37 "Default Fixed Font,14,0,1"
-BUFFER: BN="packs_sys\prologmud_samples\prolog\prologmud_sample_games\StartMUD.sh"
-VIEW: LN=.0 CL=1 LE=0 CX=0 CY=0 WI=222 BI=49 HT=0 HN=0 HF=0 HC=4
-WINDOW: 78 78 1031 177 -1 -1 N  WF=0 WT=16 "Default Fixed Font,14,0,1"
-BUFFER: BN="docker\rootfs\usr\local\bin\StartMUDServer.bat"
-VIEW: LN=.0 CL=1 LE=0 CX=0 CY=0 WI=221 BI=50 HT=0 HN=0 HF=0 HC=4
-WINDOW: 0 0 1031 177 -1 -1 N  WF=0 WT=9 "Default Fixed Font,14,0,1"
-BUFFER: BN="INSTALL.md"
-VIEW: LN=.2476 CL=20 LE=0 CX=19 CY=4 WI=220 BI=51 HT=0 HN=0 HF=0 HC=4
-WINDOW: 26 26 1031 177 -1 -1 N  WF=0 WT=4 "Default Fixed Font,14,0,1"
-BUFFER: BN="README.md"
-VIEW: LN=.1037 CL=24 LE=0 CX=23 CY=4 WI=219 BI=52 HT=0 HN=0 HF=0 HC=4
-WINDOW: 52 52 1031 177 -1 -1 N  WF=0 WT=10 "Default Fixed Font,14,0,1"
-BUFFER: BN="packs_web\swish\web\js\svgavatar.js"
-VIEW: LN=.0 CL=1 LE=0 CX=0 CY=0 WI=218 BI=53 HT=0 HN=0 HF=0 HC=4
-WINDOW: 78 78 1031 177 -1 -1 N  WF=0 WT=11 "Default Fixed Font,14,0,1"
-BUFFER: BN="packs_web\swish\web\js\storage.js"
-VIEW: LN=.0 CL=1 LE=0 CX=0 CY=0 WI=217 BI=54 HT=0 HN=0 HF=0 HC=4
-WINDOW: 26 26 1031 177 -1 -1 N  WF=0 WT=12 "Default Fixed Font,14,0,1"
+VIEW: LN=.-1 CL=1 LE=0 CX=0 CY=7 WI=5 BI=28 HT=0 HN=0 HF=0 HC=4
+WINDOW: 52 62 1449 400 -1 -1 N  WF=0 WT=32 "Default Fixed Font,14,0,1"
+BUFFER: BN="packs_sys\instant_prolog_docs\prolog\prolog_refactor.pl"
+VIEW: LN=.0 CL=1 LE=0 CX=0 CY=0 WI=212 BI=5 HT=0 HN=0 HF=0 HC=4
+WINDOW: 280 182 1325 409 -1 -1 N  WF=0 WT=6 "Default Fixed Font,14,0,1"
+BUFFER: BN="prologmud_server\gdbinit"
+VIEW: LN=.0 CL=1 LE=0 CX=0 CY=0 WI=208 BI=40 HT=0 HN=0 HF=0 HC=4
+WINDOW: 0 0 1325 409 -1 -1 N  WF=0 WT=7 "Default Fixed Font,14,0,1"
+BUFFER: BN="prologmud_server\core"
+VIEW: LN=.0 CL=1 LE=0 CX=0 CY=0 WI=207 BI=41 HT=0 HN=0 HF=0 HC=4
+WINDOW: 40 26 1325 409 -1 -1 N  WF=0 WT=8 "Default Fixed Font,14,0,1"
+BUFFER: BN="prologmud_server\Project.ede"
+VIEW: LN=.0 CL=1 LE=0 CX=0 CY=0 WI=206 BI=42 HT=0 HN=0 HF=0 HC=4
+WINDOW: 120 78 1325 409 -1 -1 N  WF=0 WT=10 "Default Fixed Font,14,0,1"
+BUFFER: BN="prologmud_server\run_mud_server.pl - Shortcut.lnk"
+VIEW: LN=.0 CL=1 LE=0 CX=0 CY=0 WI=205 BI=44 HT=0 HN=0 HF=0 HC=4
+WINDOW: 200 130 1325 409 -1 -1 N  WF=0 WT=12 "Default Fixed Font,14,0,1"
 BUFFER: BN="packs_sys\logicmoo_agi\prolog\episodic_memory\adv_percept.pl"
-VIEW: LN=.3712 CL=25 LE=0 CX=24 CY=4 WI=215 BI=56 HT=0 HN=0 HF=0 HC=4
-WINDOW: 52 52 1031 177 -1 -1 N  WF=0 WT=13 "Default Fixed Font,14,0,1"
-BUFFER: BN="packs_sys\logicmoo_agi\prolog\agi_lib\doc_print.pl"
-VIEW: LN=.4130 CL=3 LE=0 CX=2 CY=4 WI=214 BI=57 HT=0 HN=0 HF=0 HC=4
-WINDOW: 78 78 1031 177 -1 -1 N  WF=0 WT=17 "Default Fixed Font,14,0,1"
-BUFFER: BN="packs_sys\logicmoo_agi\prolog\agi_lib\README.md"
-VIEW: LN=.0 CL=1 LE=0 CX=0 CY=0 WI=213 BI=58 HT=0 HN=0 HF=0 HC=4
-WINDOW: 0 0 1031 177 -1 -1 N  WF=0 WT=18 "Default Fixed Font,14,0,1"
-BUFFER: BN="INSTALL-SWI.md"
-VIEW: LN=.0 CL=1 LE=0 CX=0 CY=0 WI=212 BI=59 HT=0 HN=0 HF=0 HC=4
-WINDOW: 26 26 1031 177 -1 -1 N  WF=0 WT=22 "Default Fixed Font,14,0,1"
-BUFFER: BN="INSTALL-DEPS.md"
-VIEW: LN=.0 CL=1 LE=0 CX=0 CY=0 WI=211 BI=60 HT=0 HN=0 HF=0 HC=4
-WINDOW: 52 52 1031 177 -1 -1 N  WF=0 WT=24 "Default Fixed Font,14,0,1"
-BUFFER: BN="docker\rootfs\etc\apache2\conf-available\doc_root.conf"
-VIEW: LN=.0 CL=1 LE=0 CX=0 CY=0 WI=210 BI=61 HT=0 HN=0 HF=0 HC=4
-WINDOW: 78 78 1031 177 -1 -1 N  WF=0 WT=25 "Default Fixed Font,14,0,1"
-BUFFER: BN="docker\rootfs\etc\apache2\conf-available\no_open_proxy.conf"
-VIEW: LN=.0 CL=1 LE=0 CX=0 CY=0 WI=209 BI=62 HT=0 HN=0 HF=0 HC=4
-WINDOW: 0 0 1031 177 -1 -1 N  WF=0 WT=26 "Default Fixed Font,14,0,1"
-BUFFER: BN="docker\rootfs\etc\apache2\sites-enabled\000-default-le-ssl.conf"
-VIEW: LN=.288 CL=33 LE=0 CX=32 CY=4 WI=208 BI=63 HT=0 HN=0 HF=0 HC=4
-WINDOW: 26 26 1031 177 -1 -1 N  WF=0 WT=27 "Default Fixed Font,14,0,1"
-BUFFER: BN="docker\rootfs\etc\apache2\sites-enabled\000-default.conf"
-VIEW: LN=.0 CL=1 LE=0 CX=0 CY=0 WI=207 BI=64 HT=0 HN=0 HF=0 HC=4
-WINDOW: 52 52 1031 177 -1 -1 N  WF=0 WT=30 "Default Fixed Font,14,0,1"
-BUFFER: BN="docker\rootfs\etc\apache2\sites-enabled\000-logicmoo.conf"
-VIEW: LN=.2182 CL=35 LE=0 CX=34 CY=4 WI=206 BI=65 HT=0 HN=0 HF=0 HC=4
-WINDOW: 78 78 1031 177 -1 -1 N  WF=0 WT=15 "Default Fixed Font,14,0,1"
-BUFFER: BN="docker\rootfs\startup_logicmoo.sh"
-VIEW: LN=.45 CL=2 LE=0 CX=1 CY=4 WI=205 BI=66 HT=0 HN=0 HF=0 HC=4
-WINDOW: 0 0 1031 177 -1 -1 N  WF=0 WT=29 "Default Fixed Font,14,0,1"
-BUFFER: BN="docker\rootfs\ros-eloquent-desktop.sh"
-VIEW: LN=.20 CL=9 LE=0 CX=8 CY=1 WI=204 BI=67 HT=0 HN=0 HF=0 HC=4
-WINDOW: 26 26 1031 177 -1 -1 N  WF=0 WT=31 "Default Fixed Font,14,0,1"
-BUFFER: BN="docker\rootfs\startup.sh"
-VIEW: LN=.385 CL=10 LE=0 CX=9 CY=4 WI=203 BI=68 HT=0 HN=0 HF=0 HC=4
-WINDOW: 52 52 1031 177 -1 -1 N  WF=0 WT=32 "Default Fixed Font,14,0,1"
-BUFFER: BN="docker\rootfs\usr\local\bin\websocket_redir.sh"
-VIEW: LN=.0 CL=1 LE=0 CX=0 CY=0 WI=202 BI=69 HT=0 HN=0 HF=0 HC=4
-WINDOW: 78 78 1031 177 -1 -1 N  WF=0 WT=33 "Default Fixed Font,14,0,1"
-BUFFER: BN="docker\rootfs\usr\local\bin\eclipse"
-VIEW: LN=.0 CL=1 LE=0 CX=0 CY=0 WI=201 BI=70 HT=0 HN=0 HF=0 HC=4
-WINDOW: 0 0 1031 177 -1 -1 N  WF=0 WT=35 "Default Fixed Font,14,0,1"
-BUFFER: BN="docker\rootfs\usr\local\bin\cls"
-VIEW: LN=.0 CL=1 LE=0 CX=0 CY=0 WI=200 BI=71 HT=0 HN=0 HF=0 HC=4
-WINDOW: 0 0 1397 434 -1 -1 M  WF=0 WT=77 "Default Fixed Font,14,0,1"
-BUFFER: BN="packs_sys\logicmoo_nlu\ext\chat80\original\lex.xg"
-VIEW: LN=.2179 CL=49 LE=0 CX=48 CY=14 WI=432 BI=99 HT=0 HN=0 HF=0 HC=4
+VIEW: LN=.9544 CL=38 LE=0 CX=37 CY=12 WI=204 BI=24 HT=0 HN=0 HF=0 HC=4
+WINDOW: 120 78 1285 445 -1 -1 N  WF=0 WT=2 "Default Fixed Font,14,0,1"
+BUFFER: BN="prologmud_server\run_mud_server.pl"
+VIEW: LN=.6205 CL=34 LE=0 CX=33 CY=12 WI=203 BI=23 HT=0 HN=0 HF=0 HC=4
+WINDOW: 160 104 1325 409 -1 -1 N  WF=0 WT=11 "Default Fixed Font,14,0,1"
+BUFFER: BN="packs_web\swish\web\js\butterfly_term.js"
+VIEW: LN=.1342 CL=23 LE=0 CX=22 CY=8 WI=202 BI=25 HT=0 HN=0 HF=0 HC=4
+WINDOW: 200 130 1285 445 -1 -1 N  WF=0 WT=4 "Default Fixed Font,14,0,1"
+BUFFER: BN="packs_sys\logicmoo_agi\prolog\episodic_memory\adv_debug.pl"
+VIEW: LN=.2963 CL=24 LE=0 CX=23 CY=14 WI=201 BI=45 HT=0 HN=0 HF=0 HC=4
+WINDOW: 280 182 1325 409 -1 -1 N  WF=0 WT=14 "Default Fixed Font,14,0,1"
+BUFFER: BN="packs_sys\logicmoo_agi\prolog\episodic_memory\adv_edit.pl"
+VIEW: LN=.7954 CL=25 LE=0 CX=24 CY=12 WI=200 BI=46 HT=0 HN=0 HF=0 HC=4
+WINDOW: 40 26 1325 409 -1 -1 N  WF=0 WT=16 "Default Fixed Font,14,0,1"
+BUFFER: BN="packs_sys\logicmoo_agi\prolog\episodic_memory\adv_log2eng.pl"
+VIEW: LN=.11869 CL=25 LE=0 CX=24 CY=12 WI=199 BI=47 HT=0 HN=0 HF=0 HC=4
+WINDOW: 160 104 1325 409 -1 -1 N  WF=0 WT=19 "Default Fixed Font,14,0,1"
+BUFFER: BN="packs_sys\logicmoo_agi\prolog\episodic_memory\adv_implies.pl"
+VIEW: LN=.9665 CL=1 LE=0 CX=0 CY=12 WI=198 BI=52 HT=0 HN=0 HF=0 HC=4
+WINDOW: 0 0 1325 409 -1 -1 N  WF=0 WT=15 "Default Fixed Font,14,0,1"
+BUFFER: BN="packs_sys\logicmoo_agi\prolog\episodic_memory\adv_action.pl"
+VIEW: LN=.10951 CL=1 LE=0 CX=0 CY=12 WI=197 BI=48 HT=0 HN=0 HF=0 HC=4
+WINDOW: 120 78 1325 409 -1 -1 N  WF=0 WT=18 "Default Fixed Font,14,0,1"
+BUFFER: BN="packs_sys\logicmoo_agi\prolog\episodic_memory\adv_plan.pl"
+VIEW: LN=.5203 CL=10 LE=0 CX=9 CY=12 WI=196 BI=49 HT=0 HN=0 HF=0 HC=4
+WINDOW: 80 52 1325 409 -1 -1 N  WF=0 WT=17 "Default Fixed Font,14,0,1"
+BUFFER: BN="packs_sys\logicmoo_agi\prolog\episodic_memory\adv_axiom.pl"
+VIEW: LN=.5095 CL=45 LE=0 CX=44 CY=12 WI=195 BI=50 HT=0 HN=0 HF=0 HC=4
+WINDOW: 240 156 1325 409 -1 -1 N  WF=0 WT=13 "Default Fixed Font,14,0,1"
+BUFFER: BN="packs_sys\logicmoo_agi\prolog\episodic_memory\adv_eng2cmd.pl"
+VIEW: LN=.28502 CL=11 LE=0 CX=10 CY=12 WI=194 BI=51 HT=0 HN=0 HF=0 HC=4
+WINDOW: 80 52 1325 409 -1 -1 N  WF=0 WT=9 "Default Fixed Font,14,0,1"
+BUFFER: BN="prologmud_server\requirments3.txt"
+VIEW: LN=.0 CL=1 LE=0 CX=0 CY=0 WI=193 BI=43 HT=0 HN=0 HF=0 HC=4
+WINDOW: 240 156 1325 409 -1 -1 N  WF=0 WT=21 "Default Fixed Font,14,0,1"
+BUFFER: BN="packs_sys\logicmoo_nlu\prolog\logicmoo_nlu\parser_e2c.pl"
+VIEW: LN=.14520 CL=10 LE=0 CX=9 CY=10 WI=192 BI=39 HT=0 HN=0 HF=0 HC=4
+WINDOW: 240 156 1285 445 -1 -1 N  WF=0 WT=5 "Default Fixed Font,14,0,1"
+BUFFER: BN="packs_sys\logicmoo_utils\prolog\logicmoo\butterfly_console.pl"
+VIEW: LN=.11315 CL=24 LE=0 CX=23 CY=4 WI=191 BI=26 HT=0 HN=0 HF=0 HC=4
+WINDOW: 160 104 1285 445 -1 -1 N  WF=0 WT=3 "Default Fixed Font,14,0,1"
+BUFFER: BN="packs_sys\logicmoo_agi\prolog\episodic_memory\adv_io.pl"
+VIEW: LN=.7422 CL=14 LE=0 CX=13 CY=14 WI=190 BI=37 HT=0 HN=0 HF=0 HC=4
+WINDOW: 280 182 1325 409 -1 -1 N  WF=0 WT=22 "Default Fixed Font,14,0,1"
+BUFFER: BN="packs_sys\logicmoo_agi\prolog\episodic_memory\adv_eng2cmd_frame.pl"
+VIEW: LN=.3943 CL=22 LE=0 CX=21 CY=12 WI=189 BI=38 HT=0 HN=0 HF=0 HC=4
+WINDOW: 80 52 1325 409 -1 -1 N  WF=0 WT=25 "Default Fixed Font,14,0,1"
+BUFFER: BN="packs_sys\logicmoo_agi\prolog\episodic_memory\adv_portray.pl"
+VIEW: LN=.5245 CL=3 LE=0 CX=2 CY=12 WI=188 BI=29 HT=0 HN=0 HF=0 HC=4
+WINDOW: 200 130 1325 409 -1 -1 N  WF=0 WT=28 "Default Fixed Font,14,0,1"
+BUFFER: BN="packs_sys\logicmoo_nlu\prolog\logicmoo_nlu\e2c\e2c_sentence.pl"
+VIEW: LN=.2665 CL=9 LE=0 CX=8 CY=12 WI=187 BI=34 HT=0 HN=0 HF=0 HC=4
+WINDOW: 160 104 1325 409 -1 -1 N  WF=0 WT=27 "Default Fixed Font,14,0,1"
+BUFFER: BN="packs_sys\logicmoo_nlu\prolog\logicmoo_nlu\parser_penn_trees.pl"
+VIEW: LN=.17540 CL=9 LE=0 CX=8 CY=12 WI=186 BI=35 HT=0 HN=0 HF=0 HC=4
+WINDOW: 40 26 1325 409 -1 -1 N  WF=0 WT=24 "Default Fixed Font,14,0,1"
+BUFFER: BN="packs_sys\logicmoo_utils\prolog\debuggery\dmsg.pl"
+VIEW: LN=.35661 CL=49 LE=0 CX=48 CY=12 WI=185 BI=36 HT=0 HN=0 HF=0 HC=4
+WINDOW: 240 156 1325 409 -1 -1 N  WF=0 WT=29 "Default Fixed Font,14,0,1"
+BUFFER: BN="packs_web\swish\web\css\butterfly_term.css"
+VIEW: LN=.257 CL=1 LE=0 CX=0 CY=5 WI=184 BI=33 HT=0 HN=0 HF=0 HC=4
+WINDOW: 280 182 1325 409 -1 -1 N  WF=0 WT=30 "Default Fixed Font,14,0,1"
+BUFFER: BN="packs_web\swish\web\js\term.js"
+VIEW: LN=.9464 CL=20 LE=0 CX=19 CY=12 WI=183 BI=31 HT=0 HN=0 HF=0 HC=4
+WINDOW: 0 0 1325 409 -1 -1 N  WF=0 WT=31 "Default Fixed Font,14,0,1"
+BUFFER: BN="packs_web\swish\web\css\term.css"
+VIEW: LN=.1059 CL=3 LE=0 CX=2 CY=12 WI=182 BI=32 HT=0 HN=0 HF=0 HC=4
+WINDOW: 120 78 1325 409 -1 -1 N  WF=0 WT=26 "Default Fixed Font,14,0,1"
+BUFFER: BN="packs_sys\logicmoo_nlu\prolog\logicmoo_nlu\parser_pipeline.pl"
+VIEW: LN=.17832 CL=1 LE=0 CX=0 CY=12 WI=181 BI=30 HT=0 HN=0 HF=0 HC=4
+WINDOW: 0 0 1325 409 -1 -1 N  WF=0 WT=23 "Default Fixed Font,14,0,1"
+BUFFER: BN="packs_sys\logicmoo_nlu\prolog\logicmoo_nlu\e2c\e2c_commands.pl"
+VIEW: LN=.769 CL=1 LE=0 CX=0 CY=12 WI=180 BI=27 HT=0 HN=0 HF=0 HC=4
+WINDOW: 200 130 1325 409 -1 -1 M  WF=0 WT=20 "Default Fixed Font,14,0,1"
+BUFFER: BN="packs_sys\logicmoo_utils\prolog\logicmoo\pretty_clauses.pl"
+VIEW: LN=.61393 CL=1 LE=0 CX=0 CY=23 WI=209 BI=28 HT=0 HN=0 HF=0 HC=4
 FILEHIST: 9
-packs_sys\logicmoo_agi\prolog\episodic_memory\adv_io.pl
-packs_sys\logicmoo_agi\prolog\episodic_memory\adv_action.pl
-packs_sys\logicmoo_nlu\ext\chat80\original\chat80.pl
-packs_sys\logicmoo_nlu\prolog\logicmoo_nlu\parser_lexical.pl
-packs_sys\logicmoo_nlu\prolog\logicmoo_nlu\parser_lexical_gen.pl
+packs_sys\logicmoo_nlu\prolog\logicmoo_nlu\parser_pipeline.pl
 packs_sys\logicmoo_nlu\prolog\logicmoo_nlu\parser_penn_trees.pl
-packs_sys\logicmoo_nlu\ext\pldata\nl_iface.pl
-packs_sys\logicmoo_nlu\ext\pldata\tt0_iface.pl
-packs_sys\logicmoo_nlu\ext\chat80\original\lex.xg
+packs_sys\logicmoo_nlu\prolog\logicmoo_nlu\e2c\e2c_sentence.pl
+packs_sys\logicmoo_utils\prolog\debuggery\dmsg.pl
+packs_web\swish\web\css\butterfly_term.css
+packs_web\swish\web\js\term.js
+packs_web\swish\web\css\term.css
+packs_sys\instant_prolog_docs\prolog\prolog_refactor.pl
+packs_sys\logicmoo_utils\prolog\logicmoo\pretty_clauses.pl

@@ -1074,6 +1074,7 @@ indent_to_spaces(N,Out):- N2 is N div 2, indent_to_spaces(N2,Spaces),atom_concat
 %
 mesg_color(_,[reset]):-tlbugger:no_slow_io,!.
 mesg_color(T,C):-var(T),!,C=[blink(slow),fg(red),hbg(black)],!.
+mesg_color(T,[fg(C)]):- atomic(T), into_color_name(T,C),!.
 mesg_color(T,C):- if_defined(is_sgr_on_code(T)),!,C=T.
 mesg_color(T,C):-cyclic_term(T),!,C=[reset,blink(slow),bold].
 mesg_color("",C):- !,C=[blink(slow),fg(red),hbg(black)],!.
@@ -1181,7 +1182,7 @@ color_line(C,N):-
 % (debug)message.
 %
 dmsg(C):- dzotrace((tlbugger:no_slow_io,!,stream_property(X,file_no(2)),writeln(X,dmsg(C)))).
-dmsg(V):- quietly((locally(set_prolog_flag(retry_undefined,none), if_defined_local(dmsg0(V),logicmoo_util_catch:ddmsg(V))))),!.
+dmsg(V):- likely_folded(quietly((locally(set_prolog_flag(retry_undefined,none), if_defined_local(dmsg0(V),logicmoo_util_catch:ddmsg(V)))))),!.
 %dmsg(F,A):- dzotrace((tlbugger:no_slow_io,on_x_fail(smart_format(atom(S),F,A))->writeln(dmsg(S));writeln(dmsg_fail(F,A)))),!.
 
 :- system:import(dmsg/1).
@@ -1232,7 +1233,10 @@ same_streams(TErr,Err):- stream_property(TErr,file_no(A)),stream_property(Err,fi
 % Wdmsg.
 %
 wdmsg(_):- current_prolog_flag(debug_level,0),current_prolog_flag(dmsg_level,never),!.
-wdmsg(X):- wdmsg_goal(fmt(X),dmsg(X)).
+wdmsg(X):- likely_folded(wdmsg_goal(fmt(X),dmsg(X))).
+
+likely_folded(X):- dis_pp(bfly)->pretty_clauses:with_folding_depth(1,X);call(X).
+
 
 wdmsg_goal(G,G2):-  
   quietly((ignore((with_all_dmsg(G2),  
@@ -1555,10 +1559,13 @@ ansicall(Ctrl,Goal):- ansicall(current_output,Ctrl,Goal),!.
 ansi_control_conv(Ctrl,CtrlO):-tlbugger:no_slow_io,!,flatten([Ctrl],CtrlO),!.
 ansi_control_conv(Ctrl,CtrlO):- ansi_control_conv0(Ctrl,CtrlOO),!,CtrlO=CtrlOO.
 ansi_control_conv0([],[]):-!.
+ansi_control_conv0(MC,Ctrl):- strip_module(MC,_,C),MC\==C,!,ansi_control_conv0(C,Ctrl).
 ansi_control_conv0(warn,Ctrl):- !, ansi_control_conv(warning,Ctrl),!.
-ansi_control_conv0(Level,Ctrl):- \+ ground(Level), !, flatten([Level],Ctrl),!.
-%ansi_control_conv0(Level,Ctrl):- ansi_term:level_attrs(Level,Ansi),Level\=Ansi,!,ansi_control_conv(Ansi,Ctrl).
-ansi_control_conv0(Color,Ctrl):- ansi_term:ansi_color(Color,_),!,ansi_control_conv(fg(Color),Ctrl).
+ansi_control_conv0(Level,Ctrl):- \+ ground(Level), !, flatten([Level],Ctrl),!.%ansi_control_conv0(Level,Ctrl):- ansi_term:level_attrs(Level,Ansi),Level\=Ansi,!,ansi_control_conv(Ansi,Ctrl).
+
+ansi_control_conv0(Color,Ctrl):- ansi_term:sgr_code(Color,_),!,Ctrl=Color.
+ansi_control_conv0(Color,Ctrl):- ansi_term:off_code(Color,_),!,Ctrl=Color.
+ansi_control_conv0(Color,Ctrl):- ansi_term:ansi_color(Color,_),!,ansi_control_conv0(fg(Color),Ctrl).
 ansi_control_conv0([H|T],HT):- ansi_control_conv(H,HH),!,ansi_control_conv(T,TT),!,flatten([HH,TT],HT),!.
 ansi_control_conv0(Ctrl,CtrlO):-flatten([Ctrl],CtrlO),!.
 
@@ -1644,11 +1651,8 @@ ansicall_6(Out,Ctrl,Goal):- quietly((must(using_style(Out,Ctrl,Goal,How)),!, cal
 
 :- export(color_format/3).
 color_format(MC,F,A):- 
-((notrace(((strip_module(MC,_,C),
-    (is_list(C)->CC=C;
-      (\+ compound(C)->CC=[fg(C)];
-        CC=[C]))))),
-   color_format2(MC,F,A))),!.
+ notrace(((ansi_control_conv(MC,CC2),
+   color_format2(CC2,F,A)))),!.
 
 :- b_setval('$lm_output_steam',[]).
 :- nb_setval('$lm_output_steam',[]).
@@ -1696,8 +1700,8 @@ terminal_ansi_goal(Stream, Class, Goal):-
 % keep_line_pos_w_w(_, G):-!,G.
 :- thread_local(bfly_tl:bfly_setting/2).
 
-%keep_line_pos_w_w(_, G) :- use_html_styles, !, call(G).
-%keep_line_pos_w_w(_, G) :- !, call(G).
+keep_line_pos_w_w(_, G) :- use_html_styles, !, call(G).
+keep_line_pos_w_w(_, G) :- !, call(G).
 keep_line_pos_w_w(S, G) :-
       line_pos(S,LPos) ->
          call_cleanup(G, set_stream_line_position_safe(S, LPos)) ; call(G).

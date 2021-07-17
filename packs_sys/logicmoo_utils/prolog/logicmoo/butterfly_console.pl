@@ -265,7 +265,7 @@ bfly_html_goal(Goal):-
 %bfly_write_h(HTMLString):- setup_call_cleanup(bfly_in, write(HTMLString),(bfly_out,flush_output)),!.
 %bfly_write_h(HTMLString):- in_pp(swish), pengines:pengine_output(HTMLString),!.
 bfly_write_h(S0):- prepend_trim_for_html(S0,SM), prepend_trim(SM,S), ignore((\+ empty_str(S), 
- setup_call_cleanup(bfly_in, write(S),(nl,bfly_out,flush_output)))),ttyflush,flush_output.
+ setup_call_cleanup(bfly_in, write(S),(bfly_out,flush_output)))),ttyflush,flush_output.
 
 %prepend_trim_for_html(S,S):-!.
 %prepend_trim_for_html(S,SS):- correct_html_len(S,SS).
@@ -276,26 +276,23 @@ correct_html_len(S,O):- atomic_list_concat(L,'\n',S),maplist(correct_html_len1,L
 
 max_html_width(120).
 
-find_place_to_split1(S,Before):- 
-  max_html_width(W120),
-  member(Split,['="','=\'']),
-  sub_atom(S,Before,_,_,Split),
-  Before > 50,  Before < W120,!.
+find_and_ofset('<a h',2).
+find_and_ofset('">',1).
+find_and_ofset('/>',0).
+
+find_and_ofset('<span',1).
+find_and_ofset('="',1).
+find_and_ofset("='",1).
+
+find_and_ofset('> ',0).
+
 
 find_place_to_split1(S,Before):- 
   max_html_width(W120),
-  member(Split,['> ']),
+  find_and_ofset(Split,Offset0),
+  (Offset0 == len, atom_length(Split,Offset) ; Offset = Offset0),
   sub_atom(S,Before0,_,_,Split),
-  %atom_length(Split,LS),
-  Before is Before0+1,
-  Before > 50,  Before < W120,!.
-
-find_place_to_split1(S,Before):- 
-  max_html_width(W120),
-  member(Split,['/>']),
-  sub_atom(S,Before0,_,_,Split),
-  atom_length(Split,LS),
-  Before is Before0+LS,
+  Before is Before0+Offset,
   Before > 50,  Before < W120,!.
 
 

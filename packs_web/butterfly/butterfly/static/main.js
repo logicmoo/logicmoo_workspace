@@ -719,9 +719,9 @@
       results = [];
       for (x = k = 0, ref = this.cols; 0 <= ref ? k <= ref : k >= ref; x = 0 <= ref ? ++k : --k) {
         if (x !== this.cols) {
-		  var v = this.charToDom(line.chars[x], line.chars[x - 1], x === cursorX);
-		  	  if((""+v).indexOf("undefinedundefined")>-1) {
-		  debugger;
+		   var v = this.charToDom(line.chars[x], line.chars[x - 1], x === cursorX);
+		  	  if((""+v).indexOf("undefined")>-1) {
+		         debugger;
 			  }
           results.push(v);
         } else {
@@ -735,7 +735,7 @@
           if (line.extra) {
             results.push(eol += "<span class=\"extra\">" + line.extra + "</span>");
           } else {
-            results.push(void 0);
+            // results.push(void 0);
           }
         }
       }
@@ -1402,6 +1402,8 @@
                     case "HTML":
                       safe = content;
 					  lastWasHTML = true;
+					  ty = false; //this.y;
+					  tx = false; //this.x;
 					  /*
 					  safe = html_sanitize(content, function(l) {
                         return l;
@@ -1409,25 +1411,18 @@
 					  */
 					  var wasValidHTML = isValidHTML(safe);
 					  if (wasValidHTML != true) {
-						  // safe = "<pre>"+safe+"</pre>";
-						  console.log("!wasValidHTML=" + safe);
-						  // debugger;
-						 // buffer= bfly_in+safe;
-						 // return;
+						  console.log("!wasValidHTML=" + safe);						  
 					  }
 					  if (wasValidHTML != true || safe.charAt(safe.length-1) != ">") {
 						  // safe = "<pre class=\"inline-html\">" + safe + "</pre>";
 					  }
 					  attr = this.cloneAttr(this.curAttr);
-					  //var wasHtml = attr.html;
-					  //debugger;
 					  attr.html = safe;
-                      //var attr2 = this.cloneAttr(this.curAttr);
-					  //attr2.append(attr);
-					  //attr = attr2;
-                      this.screen[this.y + this.shift].chars[this.x] = attr;
+                      this.screen[this.y + this.shift].chars[this.x] = attr;					  
                       this.resetLine(this.screen[this.y + this.shift]);
-                      this.nextLine();
+                      this.nextLine();	  
+				     // ty = this.y;
+					  //tx = this.x;
                       break;
                     case "IMAGE":
                       content = encodeURI(content);
@@ -1537,7 +1532,14 @@
 		} else {
 			this.write1(data);
 		}
-		return this.dirtyRefresh();
+		var dr = this.dirtyRefresh();
+		if(lastWasHTML) {
+		   if(tx) this.x = tx ;
+		   if(ty) this.y = ty ;
+	       //ty = false; //this.y;
+		   //tx = false; //this.x;
+		}
+		return dr;
 	};
 
     Terminal.prototype.writeln = function(data) {
@@ -1550,6 +1552,8 @@
     };
 
 	var buffer = "";
+	var tx = false;
+	var ty = false;
 	var htmlBuffer = "";
 	var bfly_in = "\x07;HTML|";
 	var bfly_out = "\x07";

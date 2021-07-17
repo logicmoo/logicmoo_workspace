@@ -820,3 +820,116 @@
     ),
   ),
 ) 
+[Thu, 15 Jul 2021 23:16:56 +0300] MKDIR: array (
+  'added' => 
+  array (
+    0 => 
+    array (
+      'isowner' => false,
+      'ts' => 1626380216,
+      'mime' => 'directory',
+      'read' => 1,
+      'write' => 1,
+      'size' => 0,
+      'hash' => 'l1_TmV3Rm9sZGVy',
+      'name' => 'NewFolder',
+      'phash' => 'l1_Lw',
+      'volumeid' => 'l1_',
+    ),
+  ),
+  'changed' => 
+  array (
+    0 => 
+    array (
+      'isowner' => false,
+      'ts' => 1626380216,
+      'mime' => 'directory',
+      'read' => 1,
+      'write' => 1,
+      'size' => 0,
+      'hash' => 'l1_Lw',
+      'name' => 'files',
+      'rootRev' => '',
+      'options' => 
+      array (
+        'path' => '',
+        'url' => '/ef/php/../files/',
+        'tmbUrl' => 'self',
+        'disabled' => 
+        array (
+          0 => 'chmod',
+        ),
+        'separator' => '/',
+        'copyOverwrite' => 1,
+        'uploadOverwrite' => 1,
+        'uploadMaxSize' => 9223372036854775807,
+        'uploadMaxConn' => 3,
+        'uploadMime' => 
+        array (
+          'firstOrder' => 'deny',
+          'allow' => 
+          array (
+            0 => 'image',
+            1 => 'text/plain',
+          ),
+          'deny' => 
+          array (
+            0 => 'all',
+          ),
+        ),
+        'dispInlineRegex' => '^(?:(?:image|video|audio)|(?:text/plain|application/pdf)$)',
+        'jpgQuality' => 100,
+        'archivers' => 
+        array (
+          'create' => 
+          array (
+            0 => 'application/x-tar',
+            1 => 'application/x-gzip',
+            2 => 'application/x-bzip2',
+            3 => 'application/x-xz',
+            4 => 'application/zip',
+          ),
+          'extract' => 
+          array (
+            0 => 'application/x-tar',
+            1 => 'application/x-gzip',
+            2 => 'application/x-bzip2',
+            3 => 'application/x-xz',
+            4 => 'application/zip',
+          ),
+          'createext' => 
+          array (
+            'application/x-tar' => 'tar',
+            'application/x-gzip' => 'tgz',
+            'application/x-bzip2' => 'tbz',
+            'application/x-xz' => 'xz',
+            'application/zip' => 'zip',
+          ),
+        ),
+        'uiCmdMap' => 
+        array (
+        ),
+        'syncChkAsTs' => 1,
+        'syncMinMs' => 10000,
+        'i18nFolderName' => 0,
+        'tmbCrop' => 0,
+        'trashHash' => 't1_Lw',
+        'csscls' => 'elfinder-navbar-root-local',
+      ),
+      'volumeid' => 'l1_',
+      'locked' => 1,
+      'dirs' => 1,
+      'isroot' => 1,
+      'phash' => '',
+    ),
+  ),
+) 
+[Thu, 15 Jul 2021 23:17:18 +0300] MKDIR: array (
+  'error' => 
+  array (
+    0 => 'errMkdir',
+    1 => '',
+    2 => 'errTrgFolderNotFound',
+    3 => '#t1_Lw',
+  ),
+) 
