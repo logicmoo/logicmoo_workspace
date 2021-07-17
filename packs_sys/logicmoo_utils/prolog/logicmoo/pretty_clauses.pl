@@ -1488,6 +1488,7 @@ as_is(A) :- is_list(A),length(A,L),L>4,!,fail.
 as_is(A) :- is_list(A), maplist(is_arity_lt1,A),!.
 as_is([A]) :- is_list(A),length(A,L),on_x_ignore(L<2),!.
 as_is(A) :- functor(A,F,2), simple_fs(F),arg(2,A,One),atomic(One),!.
+as_is(A):- \+ is_list(A), compound_name_arguments(A,_,L),as_is(L),!.
 as_is('_'(_)) :- !.
 as_is(Q) :- is_quoted_pt(Q).
 
