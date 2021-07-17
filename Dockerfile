@@ -54,7 +54,7 @@ COPY docker/rootfs /
 COPY packs_web/butterfly /tmp/butterfly/
 RUN cd /tmp/butterfly/ && pip3 install .
 
-RUN apt-get update && apt-get install -y --allow-unauthenticated \
+MAINTAINER RUN apt-get update && apt-get install -y --allow-unauthenticated \
   nginx-common nginx nginx-core  libnginx-mod-http-geoip libnginx-mod-http-image-filter \
   libnginx-mod-http-xslt-filter libnginx-mod-mail libnginx-mod-stream \
   supervisor apache2 nmap x11-apps vim eggdrop default-jdk default-jre \
@@ -111,8 +111,9 @@ RUN apt-get update && apt-get install -y --allow-unauthenticated \
  software-properties-common \
  screen \
  rsync \
- rlwrap \
- && a2dismod mpm_event \
+ rlwrap
+
+RUN a2dismod mpm_event \
  && a2enmod macro access_compat alias auth_basic authn_core authn_file authz_core authz_host authz_user autoindex deflate dir env \
  filter headers http2 mime mpm_prefork negotiation  php7.4 proxy proxy_ajp proxy_balancer proxy_connect proxy_express \
  proxy_fcgi proxy_fdpass proxy_ftp proxy_hcheck proxy_html proxy_http proxy_http2 proxy_scgi proxy_uwsgi proxy_wstunnel reqtimeout \
