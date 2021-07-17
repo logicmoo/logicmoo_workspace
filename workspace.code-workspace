@@ -53,12 +53,9 @@
 			"*.rmd": "markdown",
 			"*.pl": "prolog"
 		},
-		"workbench.editorAssociations": [
-			{
-				"viewType": "jupyter-notebook",
-				"filenamePattern": "*.ipynb"
-			}
-		],
+		"workbench.editorAssociations": {
+			"*.ipynb": "jupyter-notebook"
+		},
 		"workbench.colorTheme": "Visual Studio Light Theme (2017)",
 		"cmake.configureOnOpen": true,
 		"sync.gist": "d02b9ddba7a3ef786610f66d4b9ccd05",

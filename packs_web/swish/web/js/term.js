@@ -403,13 +403,23 @@ $(document).on('click', '.pl-functor, .pl-infix', function() {
 			$(e).toggleClass('fold');
 		}
 	}
-})
+});
 
 $(document).on('click', '.pl-ellipsis', function() {
-	$(this).next('span').toggleClass('fold')
+	debugger;
+	$(this).prev('span').click();	
+
+	if(true) return;
+
+	$(this).next('span').toggleClass('fold') 
 	//$(this).remove()
 	$(this).toggleClass('fold')
-})
+});
+
+$(document).on('click', '.clickprev', function() {
+	debugger;
+	$(this).prev('span').click();
+});
 
 $.getScript( "/swish/js/butterfly_term.js" )
   .done(function( script, textStatus ) {
