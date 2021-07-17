@@ -55,7 +55,7 @@ cd $DIR0
 # who/where
 export LOGICMOO_USER=prologmud_server
 export LOGICMOO_WS=$DIR0
-export LOGICMOO_GAMES=$LOGICMOO_WS/packs_sys/prologmud_samples/prolog/prologmud_sample_games
+export LOGICMOO_GAMES=$LOGICMOO_WS/prologmud_server
 . $DIR0/logicmoo_env.sh
 (
 cd $DIR0
@@ -65,6 +65,7 @@ echo PATH=$PATH
 echo LOGICMOO_GAMES=$LOGICMOO_GAMES
 echo LOGICMOO_WS=$LOGICMOO_WS
 echo "127.0.0.1 eggdrop"  >> /etc/hosts
+#echo "10.0.0.194 logicmoo.org" >> /etc/hosts
 
 if [ ! -z "$LOGICMOO_EXTRAS" ];
  then
@@ -91,7 +92,6 @@ else
  git pull
 fi
 
-cat "10.0.0.194 logicmoo.org" >> /etc/hosts
 
 git config --local http.sslVerify false
 # git config --global http.sslVerify false
@@ -103,18 +103,18 @@ git pull --recurse-submodules
 
 
 if [ ! -d /opt/logicmoo_workspace ]; then
-mv /usr/local/lib/python3.8/ /usr/local/lib/python-DEAD-3.6
-apt update 
-apt install -y python3.8 python3.8-venv
-echo ". /opt/logicmoo_workspace/packs_web/butterfly/bin/activate"
-#. /opt/logicmoo_workspace/packs_web/butterfly/bin/activate
-python3 -m pip install --upgrade pip
-python3 -m pip install setuptools tornado
-mv /usr/local/lib/python-DEAD-3.6/ /usr/local/lib/python3.8/ 
-python3 -m pip install --upgrade pip
-python3 -m pip install setuptools tornado
-cd /opt/logicmoo_workspace/packs_web/butterfly
-python3 -m pip install .
+    mv /usr/local/lib/python3.8/ /usr/local/lib/python-DEAD-3.6
+    apt update 
+    apt install -y python3.8 python3.8-venv
+    echo ". /opt/logicmoo_workspace/packs_web/butterfly/bin/activate"
+    #. /opt/logicmoo_workspace/packs_web/butterfly/bin/activate
+    python3 -m pip install --upgrade pip
+    python3 -m pip install setuptools tornado
+    mv /usr/local/lib/python-DEAD-3.6/ /usr/local/lib/python3.8/ 
+    python3 -m pip install --upgrade pip
+    python3 -m pip install setuptools tornado
+    cd /opt/logicmoo_workspace/packs_web/butterfly
+    python3 -m pip install .
 fi
 
 rm -rf /usr/local/lib/python3.8/dist-packages/butterfly/templates
@@ -172,13 +172,15 @@ cd $LOGICMOO_WS \
  && touch $LOGICMOO_GAMES/completion_4003 \
  && touch $LOGICMOO_GAMES/history_4004 \
  && touch $LOGICMOO_GAMES/completion_4004 \
+ && touch $LOGICMOO_GAMES/history_4023 \
+ && touch $LOGICMOO_GAMES/completion_4023 \
  && touch $LOGICMOO_GAMES/history_4025 \
  && touch $LOGICMOO_GAMES/completion_4025 \
  && touch $LOGICMOO_GAMES/nohup.out \
  && chmod 777 $LOGICMOO_GAMES/completion_* \
  && chmod 777 $LOGICMOO_GAMES/history_* \
  && chmod 777 $LOGICMOO_GAMES/nohup* \
- && chown $LOGICMOO_USER $LOGICMOO_GAMES/*0* \
+ && chown $LOGICMOO_USER $LOGICMOO_GAMES/?*0* \
  && chmod 777 /opt/logicmoo_workspace/packs_sys/*/ \
  && chmod 777 /opt/logicmoo_workspace/packs_sys/*/*/ \
  && chmod 777 /opt/logicmoo_workspace/packs_sys/*/*/*/ \

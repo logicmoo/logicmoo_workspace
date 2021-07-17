@@ -79,7 +79,7 @@ ENV LANGUAGE C.UTF-8
 ENV LC_ALL C.UTF-8
 ENV LOGICMOO_USER prologmud_server
 ENV LOGICMOO_WS /opt/logicmoo_workspace
-ENV LOGICMOO_GAMES $LOGICMOO_WS/packs_sys/prologmud_samples/prolog/prologmud_sample_games
+ENV LOGICMOO_GAMES $LOGICMOO_WS/prologmud_server
 
 
 RUN mkdir -p /usr/share/man/man1 \

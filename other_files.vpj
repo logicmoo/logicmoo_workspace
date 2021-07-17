@@ -4023,80 +4023,80 @@
 				<Folder Name="prolog">
 					<Folder Name="prologmud_sample_games">
 						<Folder Name="attic">
-							<F N="packs_sys/prologmud_samples/prolog/prologmud_sample_games/attic/daemon.pl"/>
-							<F N="packs_sys/prologmud_samples/prolog/prologmud_sample_games/attic/remote_swish.pl"/>
-							<F N="packs_sys/prologmud_samples/prolog/prologmud_sample_games/attic/server.pl"/>
-							<F N="packs_sys/prologmud_samples/prolog/prologmud_sample_games/attic/test_release.pl"/>
+							<F N="prologmud_server/attic/daemon.pl"/>
+							<F N="prologmud_server/attic/remote_swish.pl"/>
+							<F N="prologmud_server/attic/server.pl"/>
+							<F N="prologmud_server/attic/test_release.pl"/>
 						</Folder>
 						<Folder Name="btepisode">
-							<F N="packs_sys/prologmud_samples/prolog/prologmud_sample_games/btepisode/npc.pl"/>
+							<F N="prologmud_server/btepisode/npc.pl"/>
 						</Folder>
 						<Folder Name="config-enabled-swish">
-							<F N="packs_sys/prologmud_samples/prolog/prologmud_sample_games/config-enabled-swish/auth_google.pl"/>
-							<F N="packs_sys/prologmud_samples/prolog/prologmud_sample_games/config-enabled-swish/auth_http.pl"/>
-							<F N="packs_sys/prologmud_samples/prolog/prologmud_sample_games/config-enabled-swish/auth_stackoverflow.pl"/>
-							<F N="packs_sys/prologmud_samples/prolog/prologmud_sample_games/config-enabled-swish/auth_unity.pl"/>
-							<F N="packs_sys/prologmud_samples/prolog/prologmud_sample_games/config-enabled-swish/data.pl"/>
-							<F N="packs_sys/prologmud_samples/prolog/prologmud_sample_games/config-enabled-swish/debug.pl"/>
-							<F N="packs_sys/prologmud_samples/prolog/prologmud_sample_games/config-enabled-swish/email.pl"/>
-							<F N="packs_sys/prologmud_samples/prolog/prologmud_sample_games/config-enabled-swish/hdt.pl"/>
-							<F N="packs_sys/prologmud_samples/prolog/prologmud_sample_games/config-enabled-swish/logging.pl"/>
-							<F N="packs_sys/prologmud_samples/prolog/prologmud_sample_games/config-enabled-swish/notifications.pl"/>
-							<F N="packs_sys/prologmud_samples/prolog/prologmud_sample_games/config-enabled-swish/r_serve.pl"/>
-							<F N="packs_sys/prologmud_samples/prolog/prologmud_sample_games/config-enabled-swish/rlimit.pl"/>
-							<F N="packs_sys/prologmud_samples/prolog/prologmud_sample_games/config-enabled-swish/rpc.pl"/>
-							<F N="packs_sys/prologmud_samples/prolog/prologmud_sample_games/config-enabled-swish/user_profile.pl"/>
+							<F N="prologmud_server/config-enabled-swish/auth_google.pl"/>
+							<F N="prologmud_server/config-enabled-swish/auth_http.pl"/>
+							<F N="prologmud_server/config-enabled-swish/auth_stackoverflow.pl"/>
+							<F N="prologmud_server/config-enabled-swish/auth_unity.pl"/>
+							<F N="prologmud_server/config-enabled-swish/data.pl"/>
+							<F N="prologmud_server/config-enabled-swish/debug.pl"/>
+							<F N="prologmud_server/config-enabled-swish/email.pl"/>
+							<F N="prologmud_server/config-enabled-swish/hdt.pl"/>
+							<F N="prologmud_server/config-enabled-swish/logging.pl"/>
+							<F N="prologmud_server/config-enabled-swish/notifications.pl"/>
+							<F N="prologmud_server/config-enabled-swish/r_serve.pl"/>
+							<F N="prologmud_server/config-enabled-swish/rlimit.pl"/>
+							<F N="prologmud_server/config-enabled-swish/rpc.pl"/>
+							<F N="prologmud_server/config-enabled-swish/user_profile.pl"/>
 						</Folder>
 						<Folder Name="src_game_nani">
 							<Folder Name="web">
 								<Folder Name="prolog">
-									<F N="packs_sys/prologmud_samples/prolog/prologmud_sample_games/src_game_nani/web/prolog/mud_specific.pl"/>
+									<F N="prologmud_server/src_game_nani/web/prolog/mud_specific.pl"/>
 								</Folder>
 							</Folder>
-							<F N="packs_sys/prologmud_samples/prolog/prologmud_sample_games/src_game_nani/a_nani_household.pfc.pl"/>
-							<F N="packs_sys/prologmud_samples/prolog/prologmud_sample_games/src_game_nani/andrew_ke.pfc.pl"/>
-							<F N="packs_sys/prologmud_samples/prolog/prologmud_sample_games/src_game_nani/annie_ke.pfc.pl"/>
-							<F N="packs_sys/prologmud_samples/prolog/prologmud_sample_games/src_game_nani/dmiles_ke.pfc.pl"/>
-							<F N="packs_sys/prologmud_samples/prolog/prologmud_sample_games/src_game_nani/jess_ke.pfc.pl"/>
-							<F N="packs_sys/prologmud_samples/prolog/prologmud_sample_games/src_game_nani/justin_ke.pfc.pl"/>
-							<F N="packs_sys/prologmud_samples/prolog/prologmud_sample_games/src_game_nani/meredith_ke.pfc.pl"/>
-							<F N="packs_sys/prologmud_samples/prolog/prologmud_sample_games/src_game_nani/objs_misc_household.pfc.pl"/>
+							<F N="prologmud_server/src_game_nani/a_nani_household.pfc.pl"/>
+							<F N="prologmud_server/src_game_nani/andrew_ke.pfc.pl"/>
+							<F N="prologmud_server/src_game_nani/annie_ke.pfc.pl"/>
+							<F N="prologmud_server/src_game_nani/dmiles_ke.pfc.pl"/>
+							<F N="prologmud_server/src_game_nani/jess_ke.pfc.pl"/>
+							<F N="prologmud_server/src_game_nani/justin_ke.pfc.pl"/>
+							<F N="prologmud_server/src_game_nani/meredith_ke.pfc.pl"/>
+							<F N="prologmud_server/src_game_nani/objs_misc_household.pfc.pl"/>
 						</Folder>
 						<Folder Name="src_game_sims">
 							<Folder Name="web">
 								<Folder Name="prolog">
-									<F N="packs_sys/prologmud_samples/prolog/prologmud_sample_games/src_game_sims/web/prolog/mud_specific.pl"/>
+									<F N="prologmud_server/src_game_sims/web/prolog/mud_specific.pl"/>
 								</Folder>
 							</Folder>
-							<F N="packs_sys/prologmud_samples/prolog/prologmud_sample_games/src_game_sims/objs_misc_household.pfc.pl"/>
+							<F N="prologmud_server/src_game_sims/objs_misc_household.pfc.pl"/>
 						</Folder>
 						<Folder Name="src_game_startrek">
 							<Folder Name="holodeck">
-								<F N="packs_sys/prologmud_samples/prolog/prologmud_sample_games/src_game_startrek/holodeck/maze.map.pfc.pl"/>
-								<F N="packs_sys/prologmud_samples/prolog/prologmud_sample_games/src_game_startrek/holodeck/objs_misc_household.pfc.pl"/>
-								<F N="packs_sys/prologmud_samples/prolog/prologmud_sample_games/src_game_startrek/holodeck/objs_misc_monster.pfc.pl"/>
-								<F N="packs_sys/prologmud_samples/prolog/prologmud_sample_games/src_game_startrek/holodeck/predator.map.pfc.pl"/>
-								<F N="packs_sys/prologmud_samples/prolog/prologmud_sample_games/src_game_startrek/holodeck/rooms_conf.pl"/>
-								<F N="packs_sys/prologmud_samples/prolog/prologmud_sample_games/src_game_startrek/holodeck/vacuum.map.pfc.pl"/>
+								<F N="prologmud_server/src_game_startrek/holodeck/maze.map.pfc.pl"/>
+								<F N="prologmud_server/src_game_startrek/holodeck/objs_misc_household.pfc.pl"/>
+								<F N="prologmud_server/src_game_startrek/holodeck/objs_misc_monster.pfc.pl"/>
+								<F N="prologmud_server/src_game_startrek/holodeck/predator.map.pfc.pl"/>
+								<F N="prologmud_server/src_game_startrek/holodeck/rooms_conf.pl"/>
+								<F N="prologmud_server/src_game_startrek/holodeck/vacuum.map.pfc.pl"/>
 							</Folder>
 							<Folder Name="mobs">
-								<F N="packs_sys/prologmud_samples/prolog/prologmud_sample_games/src_game_startrek/mobs/federation.pl"/>
+								<F N="prologmud_server/src_game_startrek/mobs/federation.pl"/>
 							</Folder>
 							<Folder Name="web">
 								<Folder Name="prolog">
-									<F N="packs_sys/prologmud_samples/prolog/prologmud_sample_games/src_game_startrek/web/prolog/mud_specific.pl"/>
+									<F N="prologmud_server/src_game_startrek/web/prolog/mud_specific.pl"/>
 								</Folder>
 							</Folder>
-							<F N="packs_sys/prologmud_samples/prolog/prologmud_sample_games/src_game_startrek/startrek.all.pfc.pl"/>
+							<F N="prologmud_server/src_game_startrek/startrek.all.pfc.pl"/>
 						</Folder>
 						<Folder Name="src_game_wumpus">
-							<F N="packs_sys/prologmud_samples/prolog/prologmud_sample_games/src_game_wumpus/maze.map.pfc.pl"/>
-							<F N="packs_sys/prologmud_samples/prolog/prologmud_sample_games/src_game_wumpus/objs_misc_monster.pfc.pl"/>
+							<F N="prologmud_server/src_game_wumpus/maze.map.pfc.pl"/>
+							<F N="prologmud_server/src_game_wumpus/objs_misc_monster.pfc.pl"/>
 						</Folder>
-						<F N="packs_sys/prologmud_samples/prolog/prologmud_sample_games/compile_mud_server.pl"/>
-						<F N="packs_sys/prologmud_samples/prolog/prologmud_sample_games/init_mud_server.pl"/>
-						<F N="packs_sys/prologmud_samples/prolog/prologmud_sample_games/run-clio.pl"/>
-						<F N="packs_sys/prologmud_samples/prolog/prologmud_sample_games/run_mud_server.pl"/>
+						<F N="prologmud_server/compile_mud_server.pl"/>
+						<F N="prologmud_server/init_mud_server.pl"/>
+						<F N="prologmud_server/run-clio.pl"/>
+						<F N="prologmud_server/run_mud_server.pl"/>
 					</Folder>
 					<F N="packs_sys/prologmud_samples/prolog/prologmud_samples.pl"/>
 				</Folder>
