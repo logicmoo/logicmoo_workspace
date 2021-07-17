@@ -81,7 +81,7 @@ adv_prolog_portray(Term):- is_codelist(Term), !, portray_string(codes, Term).
 adv_prolog_portray(Term):- is_list(Term), !, fail, prolog_pprint(Term, [ portray_goal(mu:adv_pretty_print_goal)]).
 %adv_prolog_portray(Term):- safe_functor(Term, i7_term, 2), !, display(Term), !.
 adv_prolog_portray(Term):- safe_functor(Term, i7_term, 2), !, writeq(Term), !.
-adv_prolog_portray( A=B):- (var(A);var(B)), !, fail.
+adv_prolog_portray(A=B):- (var(A);var(B)), !, fail.
 
 adv_prolog_portray(Term):- ground(Term), \+ sub_term('$VAR'(_), Term), !, adv_prolog_portray_now(Term).
 
@@ -110,11 +110,14 @@ portray_string(Type, Term):- current_prolog_flag(double_quotes, Type), format('"
 
 :- thread_local(t_l:no_english/0).
 
-adv_prolog_portray_hook(Term) :- \+ ( nb_current('$inprint_message', Messages), Messages\==[] ), \+ tracing, \+ t_l:no_english, adv_prolog_portray(Term), !.
-adv_prolog_portray_hook(Term) :- tracing, is_list(Term), member(E, Term), compound(E),
+adv_prolog_portray_hook(Term) :- var(Term),!,fail.
+adv_prolog_portray_hook(Term) :- \+ ( nb_current('$inprint_message', Messages), Messages\==[] ), \+ tracing, \+ t_l:no_english, 
+ !, adv_prolog_portray(Term), !.
+adv_prolog_portray_hook(Term) :-  tracing, is_list(Term), 
+ member(E, Term), compound(E),
   ((E = inst(Some), format('[~w|...]', [inst(Some)]));(E = structure_label(Some), format('[~w|...]', [Some]))), !.
 
-user:portray(Term):- notrace(adv_prolog_portray_hook(Term)), !.
+%user:portray(Term):- notrace(adv_prolog_portray_hook(Term)), !.
 
 no_memlists(Term):- fail, simplify_dbug(Term,Term1), map_tree_pred(simplify_memlists,Term1,Term2),!, Term\=@=Term2, writeq(Term2),!.
 
@@ -122,7 +125,7 @@ map_tree_pred(Pred,Arg1,Arg2):- call(Pred,Arg1,Arg2),!.
 map_tree_pred(_ ,Arg1,Arg2):- \+ compound(Arg1), !, Arg2=Arg1.
 map_tree_pred(Pred,Arg1,Arg2):- 
   compound_name_arguments(Arg1,F1,ArgS1),
-  must_maplist(map_tree_pred(Pred),ArgS1,ArgS2),
+  maplist(map_tree_pred(Pred),ArgS1,ArgS2),
   compound_name_arguments(Arg2,F1,ArgS2).
 
 user:portray(Term):- notrace(no_memlists(Term)), !.

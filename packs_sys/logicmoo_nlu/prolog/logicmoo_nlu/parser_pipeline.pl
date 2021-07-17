@@ -398,18 +398,28 @@ must_print_kv(e2c_lexical_segs).
 %must_print_kv(PNF):- atom_concat('merged_',_,PNF).
 
 show_kvs(Set):- is_list(Set), pretty_numbervars(Set,List), factorize_for_print(List,ListO),sort_term_size(ListO,SetO), !, must_maplist(show_kvs, SetO).
-show_kvs(O):- nl,show_kv(O),!.
+show_kvs(O):- show_kv(O),!.
 
 show_kv(V):- \+ compound(V),!, writeq(V),!.
 show_kv(K=V):- !, (must_print_kv(K)-> show_term_tree(K=V) ; show_kv1(K=V)).
 show_kv(Term):- show_kv1(Term),!.
 
 show_kv1(Term):- is_webui, !, show_term_tree(Term).
-show_kv1(Term):- term_size(Term,Size),
-  (Size > 50 -> write_term(Term,[max_depth(5)]) ; show_term_tree(Term)).
+show_kv1(Term):- show_term_v(Term).
 
+
+calc_good_depth(V,D):- calc_good_depth(V,1,D),!.
+calc_good_depth(_,0).
+
+calc_good_depth(V,_,_):- \+ compound(V),!,fail.
+calc_good_depth([V],D,O):- !,D1 is D+1,!,calc_good_depth(V,D1,O).
+calc_good_depth(V,D,O):- is_list(V),!,((length(V,L),L>2)->D=O; (D1 is D+1,member(E,V),calc_good_depth(E,D1,O))).
+calc_good_depth(V,D,O):- compound_name_arguments(V,_,L),!,calc_good_depth(L,D,O).
 % show_term_tree(V):- print_html_term_tree(V,[fullstop(true)]),!.
-show_term_tree(V):- print_tree_with_final(V,'.').
+
+show_term_v(Term):- term_size(Term,Size),Size<50,!,show_term_tree(Term).
+show_term_v(Term):- calc_good_depth(Term,D),print_tree(Term,[max_depth(5),html_depth(D)]).
+show_term_tree(V):- calc_good_depth(V,D),print_tree(V,[html_depth(D)]).
 
 
 :- export(sort_term_size/2).

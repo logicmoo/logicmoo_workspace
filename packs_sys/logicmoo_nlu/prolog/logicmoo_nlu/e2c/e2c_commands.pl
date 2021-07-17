@@ -23,7 +23,8 @@ call_print_reply(LF, Goal):-
 
 print_reply(Other) :- quietly((portray_vars:pretty_numbervars(Other, O), print_tree(O),format('~N',[]))), !.
 
-print_reply(C, O):- notrace(((is_list(C)->CC=C;CC=[fg(C)]), color_format(CC, '~@', [print_reply(O)]))), !.
+
+print_reply(C, O):-  notrace(((ansicall(C,print_reply(O))))), !.
 
 % =================================================================
 % %%%%%%%%%%%%%%%%%%%%%%% IRC-REPLY %%%%%%%%%%%%%%%%%%%%%%%

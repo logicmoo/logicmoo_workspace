@@ -28,8 +28,8 @@
 :- discontiguous aXiom//1.
 :- discontiguous eVent//2.
 
-:- dynamic (aXiom_p1//1, aXiom_p2//2).
-:- multifile (aXiom_p1//1, aXiom_p2//2).
+:- dynamic (aXiom_p1//1, aXiom_p2//1).
+:- multifile (aXiom_p1//1, aXiom_p2//1).
 :- discontiguous aXiom_p1//1.
 :- discontiguous aXiom_p2//1.
 
@@ -280,6 +280,7 @@ axiom_Recalc_e( attempts(Agent, act3('throw_prep_obj',Agent,[ Thing, Prep, Targe
 axiom_Recalc_e( attempts(Agent, act3('throw',Agent,[ Thing, Prep, Target])), RECALC) ==>>
  (prep_to_rel(Target, Prep, Rel);Prep=Rel),
  RECALC = ( attempts(Agent, act3('put',Agent,['throw', Thing, Rel, Target]))).
+
 
 % is throwing the ball...
 aXiom_p1( attempts(Agent, act3('throw',Agent,[ Thing, At, Target]))) ==>>
