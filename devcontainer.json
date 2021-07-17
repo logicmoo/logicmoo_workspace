@@ -5,10 +5,13 @@
 	"extensions": ["dbaeumer.vscode-eslint"],
 	"forwardPorts": ["4000-4440:4000-4440","4443:443","3020:3020"]
         "mounts": [
+	    "source=projectname-bashhistory,target=/commandhistory,type=volume"
 	 //"source=/opt/logicmoo_workspace,target=/opt/logicmoo_workspace,type=bind,consistency=cached"
 	  // "source=${localEnv:HOME}${localEnv:USERPROFILE}/logicmoo_workspace,target=/opt/logicmoo_workspace,type=bind,consistency=cached"
 	  "source=t:/opt/logicmoo_workspace,target=/opt/logicmoo_workspace,type=bind,consistency=cached"          
 	]
+        "workspaceMount": "source=${localWorkspaceFolder}/sub-folder,target=/opt/logicmoo_workspace,type=bind,consistency=delegated",
+        "workspaceFolder": "/logicmoo_workspace"
 
 	"folders": [
 		{

@@ -616,6 +616,10 @@ RUN wget -O /tmp/google-chrome-stable_current_amd64.deb https://dl.google.com/li
  && echo apt autoremove -y \
  && rm -rf /var/lib/apt/lists/*
 
+MAINTAINER RUN apt-get update \
+    && export DEBIAN_FRONTEND=noninteractive \
+    && apt-get -y install --no-install-recommends apt-utils dialog 2>&1
+
 #ENTRYPOINT ["/startup_logicmoo.sh"]
 #ENTRYPOINT ["/startup.sh"]
 ENTRYPOINT ["/bin/sh", "-ec", "while :; do echo '.'; sleep 600 ; done"]
