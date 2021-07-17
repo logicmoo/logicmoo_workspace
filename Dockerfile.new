@@ -21,7 +21,7 @@ ENV SHELL /bin/bash
 # who/where
 ENV LOGICMOO_USER prologmud_server
 ENV LOGICMOO_WS /opt/logicmoo_workspace
-ENV LOGICMOO_GAMES $LOGICMOO_WS/packs_sys/prologmud_samples/prolog/prologmud_sample_games
+ENV LOGICMOO_GAMES $LOGICMOO_WS/prologmud_server
 
 RUN mkdir -p $LOGICMOO_WS
 

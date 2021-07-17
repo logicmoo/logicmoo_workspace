@@ -11,7 +11,7 @@
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  '(ede-project-directories
-   '("/opt/logicmoo_workspace/packs_sys/prologmud_samples/prolog/prologmud_sample_games"))
+   '("/opt/logicmoo_workspace/prologmud_server"))
  '(package-selected-packages '(tuareg))
  '(warning-suppress-types '((emacs))))
 (custom-set-faces

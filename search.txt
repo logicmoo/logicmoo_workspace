@@ -305,22 +305,22 @@ T:/opt/logicmoo_workspace/packs_sys/wam_common_lisp/prolog/wam_cl/compat/utils_w
 T:/opt/logicmoo_workspace/packs_sys/wam_common_lisp/prolog/wam_cl/ci.pro ::struct_opv(claz_event_info,has_slot,slot(claz_t,"action")).
 T:/opt/logicmoo_workspace/packs_sys/swicli/prolog/swicli.pl ::%    m(40,'ForEach'('System.Action'('String')))
 T:/opt/logicmoo_workspace/packs_sys/standalone/t/sanity_tests.pl ::% dmsg :: stream_property(<stream>(0x232b8a0),eof_action(eof_code)).
-T:/opt/logicmoo_workspace/packs_sys/prologmud_samples/prolog/prologmud_sample_games/src_game_wumpus/objs_misc_monster.pfc.pl ::% # act_energy(Action,N) where N is any positive or negative integer (not 0)
-T:/opt/logicmoo_workspace/packs_sys/prologmud_samples/prolog/prologmud_sample_games/src_game_startrek/mobs/federation.pl ::% Possible tAgent actions.
-T:/opt/logicmoo_workspace/packs_sys/prologmud_samples/prolog/prologmud_sample_games/src_game_startrek/holodeck/objs_misc_monster.pfc.pl ::% # act_energy(Action,N) where N is any positive or negative integer (not 0)
-T:/opt/logicmoo_workspace/packs_sys/prologmud_samples/prolog/prologmud_sample_games/run_mud_server.pl ::   '--planner', % Load any planners
-T:/opt/logicmoo_workspace/packs_sys/prologmud_samples/prolog/prologmud_sample_games/run_mud_server.pl ::   %listing(db ::actions/1),
-T:/opt/logicmoo_workspace/packs_sys/prologmud_samples/prolog/prologmud_sample_games/init_mud_server.pl ::   '--planner', % Load any planners
-T:/opt/logicmoo_workspace/packs_sys/prologmud_samples/prolog/prologmud_sample_games/init_mud_server.pl ::   %listing(db ::actions/1),
-T:/opt/logicmoo_workspace/packs_sys/prologmud_samples/prolog/prologmud_sample_games/compile_mud_server.pl ::   '--planner', % Load any planners
-T:/opt/logicmoo_workspace/packs_sys/prologmud_samples/prolog/prologmud_sample_games/compile_mud_server.pl ::   %listing(db ::actions/1),
-T:/opt/logicmoo_workspace/packs_sys/prologmud_samples/prolog/prologmud_sample_games/circlemuddata/doall.py ::            actionBitVectorArg, affectBitVectorArg, alignmentArg, typeArg = content[lineNum].split()
-T:/opt/logicmoo_workspace/packs_sys/prologmud_samples/prolog/prologmud_sample_games/circlemuddata/convert_obj_files.py ::            actionDescArg = content[lineNum+4][ ::-1]
-T:/opt/logicmoo_workspace/packs_sys/prologmud_samples/prolog/prologmud_sample_games/circlemuddata/convert_mob_files.py ::            actionBitVectorArg, affectBitVectorArg, alignmentArg, typeArg = content[lineNum].split()
-T:/opt/logicmoo_workspace/packs_sys/prologmud_samples/prolog/prologmud_sample_games/btepisode/npc.pl ::     [[   % actions in parallel
-T:/opt/logicmoo_workspace/packs_sys/prologmud_samples/prolog/prologmud_sample_games/attic/test_release.pl ::%  ::- user ::test_for_release(library(logicmoo_planner)).
-T:/opt/logicmoo_workspace/packs_sys/prologmud_samples/prolog/prologmud_sample_games/attic/test_release.pl :: ::- enqueue_agent_action("rez crackers").
-T:/opt/logicmoo_workspace/packs_sys/prologmud_samples/prolog/prologmud_sample_games/.local/lib/python3.8/site-packages/butterfly/bin/cat.py ::parser.add_argument('-o', action="store_true",
+T:/opt/logicmoo_workspace/prologmud_server/src_game_wumpus/objs_misc_monster.pfc.pl ::% # act_energy(Action,N) where N is any positive or negative integer (not 0)
+T:/opt/logicmoo_workspace/prologmud_server/src_game_startrek/mobs/federation.pl ::% Possible tAgent actions.
+T:/opt/logicmoo_workspace/prologmud_server/src_game_startrek/holodeck/objs_misc_monster.pfc.pl ::% # act_energy(Action,N) where N is any positive or negative integer (not 0)
+T:/opt/logicmoo_workspace/prologmud_server/run_mud_server.pl ::   '--planner', % Load any planners
+T:/opt/logicmoo_workspace/prologmud_server/run_mud_server.pl ::   %listing(db ::actions/1),
+T:/opt/logicmoo_workspace/prologmud_server/init_mud_server.pl ::   '--planner', % Load any planners
+T:/opt/logicmoo_workspace/prologmud_server/init_mud_server.pl ::   %listing(db ::actions/1),
+T:/opt/logicmoo_workspace/prologmud_server/compile_mud_server.pl ::   '--planner', % Load any planners
+T:/opt/logicmoo_workspace/prologmud_server/compile_mud_server.pl ::   %listing(db ::actions/1),
+T:/opt/logicmoo_workspace/prologmud_server/circlemuddata/doall.py ::            actionBitVectorArg, affectBitVectorArg, alignmentArg, typeArg = content[lineNum].split()
+T:/opt/logicmoo_workspace/prologmud_server/circlemuddata/convert_obj_files.py ::            actionDescArg = content[lineNum+4][ ::-1]
+T:/opt/logicmoo_workspace/prologmud_server/circlemuddata/convert_mob_files.py ::            actionBitVectorArg, affectBitVectorArg, alignmentArg, typeArg = content[lineNum].split()
+T:/opt/logicmoo_workspace/prologmud_server/btepisode/npc.pl ::     [[   % actions in parallel
+T:/opt/logicmoo_workspace/prologmud_server/attic/test_release.pl ::%  ::- user ::test_for_release(library(logicmoo_planner)).
+T:/opt/logicmoo_workspace/prologmud_server/attic/test_release.pl :: ::- enqueue_agent_action("rez crackers").
+T:/opt/logicmoo_workspace/prologmud_server/.local/lib/python3.8/site-packages/butterfly/bin/cat.py ::parser.add_argument('-o', action="store_true",
 T:/opt/logicmoo_workspace/packs_sys/prologmud/prolog/prologmud_web/src_webui/mudconsole/mudconsole.pl ::		   [ form([id(Id), action(HREF)], [])
 T:/opt/logicmoo_workspace/packs_sys/prologmud/prolog/prologmud/vworld/world_text.pfc.pl ::% Writer NPC_Interface  for supporting inforation based actions
 T:/opt/logicmoo_workspace/packs_sys/prologmud/prolog/prologmud/vworld/world_npc.pfc.pl ::do_agent_call_plan_command(A,C) ::- t_l ::agent_current_action(A,CC),dmsg(too_busy(CC,agent_call_plan_command(A,C))),!.

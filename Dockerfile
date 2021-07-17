@@ -125,7 +125,7 @@ RUN a2dismod mpm_event \
 # who/where
 ENV LOGICMOO_WS /opt/logicmoo_workspace
 ENV LOGICMOO_USER prologmud_server
-ENV LOGICMOO_GAMES $LOGICMOO_WS/packs_sys/prologmud_samples/prolog/prologmud_sample_games
+ENV LOGICMOO_GAMES $LOGICMOO_WS/prologmud_server
 
 ENV PATH "${LOGICMOO_WS}/bin:${PATH}"
 ENV WNDB $LOGICMOO_WS/packs_sys/logicmoo_nlu/data/WNprolog-3.0/prolog

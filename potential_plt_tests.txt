@@ -294,10 +294,10 @@ packs_sys/swicli/prolog/jpl_for_ikvm.pl:%   not used outside jni_junk and jpl_te
 packs_sys/swicli/doc/winapi_dll.pl::- cffi_tests.
 packs_sys/multimodal_dcg/prolog/multimodal_dcg.pl:         do_dcg_util_tests/0,
 packs_sys/multimodal_dcg/t/sanity_tests.pl:all_tests:- forall(test(_),true).
-packs_sys/prologmud_samples/prolog/prologmud_sample_games/config-enabled-swish/email.pl:          [ email_test/1                % +To
-packs_sys/prologmud_samples/prolog/prologmud_sample_games/attic/test_release.pl:% sanity_test:- rescan_pfc.
-packs_sys/prologmud_samples/prolog/prologmud_sample_games/attic/remote_swish.pl:   reexport_from(system,trill:init_test/2),
-packs_sys/prologmud_samples/prolog/prologmud_sample_games/init_mud_server.pl:%:- cg_reader_tests.
+prologmud_server/config-enabled-swish/email.pl:          [ email_test/1                % +To
+prologmud_server/attic/test_release.pl:% sanity_test:- rescan_pfc.
+prologmud_server/attic/remote_swish.pl:   reexport_from(system,trill:init_test/2),
+prologmud_server/init_mud_server.pl:%:- cg_reader_tests.
 packs_sys/lps_corner/examples/slamodel.pl:   time_to_test, 
 packs_sys/lps_corner/examples/CLOUT_workshop/burning.pl:  /example/bankTransfer.pl, /example/bubbleSort.pl, /example/life.pl, /example/d_test.pl 
 packs_sys/lps_corner/examples/CLOUT_workshop/RockPaperScissorsEthereum.pl:grab_test_accounts(2,0.02,[Player1,Player2]),

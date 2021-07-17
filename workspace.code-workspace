@@ -89,7 +89,7 @@
 				"command": "@command:prolog.load.document",
 				"id": "666",
 				"args": [
-					"packs_sys/prologmud_samples/prolog/prologmud_sample_games/run_mud_server.pl"
+					"prologmud_server/run_mud_server.pl"
 				],
 			}
 		],
@@ -128,7 +128,7 @@
 					"Debug Prolog Files",
 					{
 						"folder": "logicmoo_workspace",
-						"file": "packs_sys/prologmud_samples/prolog/prologmud_sample_games/run_mud_server.pl",
+						"file": "prologmud_server/run_mud_server.pl",
 					},
 				]
 			}

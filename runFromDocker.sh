@@ -29,6 +29,8 @@ else
   # exit 0
 fi
 
+DOCKER_COMPOSE=1
+
 (
 cd $DIR0
 
@@ -40,7 +42,7 @@ export LOGICMOO_WS=$DIR0
 #chmod a+w -R $LOGICMOO_WS/?*/
 
 if [ "${2}" == "commit" ]; then
-
+   DOCKER_COMPOSE=0
    git remote add --track master github https://github.com/logicmoo/logicmoo_workspace.git 2>/dev/null ; /bin/true
    git remote add --track master gitlab https://logicmoo.org/gitlab/logicmoo/logicmoo_workspace.git 2>/dev/null ; /bin/true
 
@@ -58,7 +60,7 @@ docker kill logicmoo 2>/dev/null ; /bin/true
 docker container rm logicmoo
 
 if [ "${1}" == "build" ]; then
-
+   DOCKER_COMPOSE=0
 
    docker kill logicmoo 2>/dev/null ; /bin/true
 
@@ -90,8 +92,11 @@ docker kill logicmoo 2>/dev/null ; /bin/true
 docker ps
 
 export DOCKER_RUN="--name logicmoo --privileged=true --no-healthcheck -v /opt/logicmoo_workspace:/opt/logicmoo_workspace --rm -it -p 4000-4440:4000-4440 -p 4443:443 -p 3020:3020 $EXTRA logicmoo/logicmoo_workspace:latest"
+export DOCKER_UP=""
 
-echo "docker run $DOCKER_RUN"
-docker run $DOCKER_RUN
+echo "docker-compose up $DOCKER_UP"
+if [ "$DOCKER_COMPOSE" == "1" ]; then
+   docker-compose up $DOCKER_UP
+fi
 
 )
