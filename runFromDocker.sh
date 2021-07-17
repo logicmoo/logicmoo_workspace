@@ -91,12 +91,15 @@ fi
 docker kill logicmoo 2>/dev/null ; /bin/true
 docker ps
 
-export DOCKER_RUN="--name logicmoo --privileged=true --no-healthcheck -v /opt/logicmoo_workspace:/opt/logicmoo_workspace --rm -it -p 4000-4440:4000-4440 -p 4443:443 -p 3020:3020 $EXTRA logicmoo/logicmoo_workspace:latest"
+export PORTS="4000-4199:4000-4199 -p 4243:443 -p 4280:80 -p 3020:3020 -p 4222:22 -p 4220:3020 -p 4200:5900 -p 4201:9001 -p 4290:4090 -p 6079-6081:6079-6081"
+export DOCKER_RUN="--name logicmoo --privileged=true --no-healthcheck -v /opt/logicmoo_workspace:/opt/logicmoo_workspace --rm -it -p $PORTS $EXTRA logicmoo/logicmoo_workspace:latest"
 export DOCKER_UP=""
 
 echo "docker-compose up $DOCKER_UP"
+echo "docker run $DOCKER_RUN"
 if [ "$DOCKER_COMPOSE" == "1" ]; then
-   docker-compose up $DOCKER_UP
+#   docker-compose up $DOCKER_UP
+  docker run $DOCKER_RUN
 fi
 
 )
