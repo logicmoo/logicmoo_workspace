@@ -569,7 +569,7 @@ EXPOSE 80 4080
 EXPOSE 443 4443
 EXPOSE 3020 4020
 EXPOSE 111 2049
-EXPOSE 139 445
+#EXPOSE 139 445
 
 # Phase three in case we forgot any above
  #python3-gevent-websocket \
