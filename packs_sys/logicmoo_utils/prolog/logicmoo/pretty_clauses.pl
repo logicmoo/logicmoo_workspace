@@ -922,7 +922,7 @@ print_tree_loop(Term, Options):-
   with_current_line_position(simple_write_term(Term, Options)).
 
 print_tab_term(Tab, Term):- without_ec_portray_hook(print_tab_term(Tab,[], Term)),!.
-print_tab_term(Tab,FS,Term) :- pt1(FS,Tab,Term).
+print_tab_term(Tab,FS,Term) :- prefix_spaces(Tab),pt1(FS,Tab,Term).
 
 use_new.
 
@@ -1093,7 +1093,9 @@ prefix_spaces(Tab):- !,prefix_spaces_exact(Tab).
 prefix_spaces(Tab):- notrace(prefix_spaces1(Tab)).
 % prefix_spaces0(_Tab).
 
-prefix_spaces0(Tab):- \+ integer(Tab), recalc_tab(Tab,   NewTab),!, prefix_spaces0(NewTab).
+prefix_spaces0(Tab):- float(Tab),!.
+prefix_spaces0(Tab):- \+ number(Tab), !, ignore(( recalc_tab(Tab,   NewTab),!, NewTab\==Tab, prefix_spaces0(NewTab))).
+prefix_spaces0(Tab):- Tab < 1, !.
 prefix_spaces0(Tab):- current_output_line_position(Now), Now > Tab, !, pformat_newline ,  print_spaces(Tab).
 prefix_spaces0(Tab):- current_output_line_position(Now), Need is Tab - Now,!, print_spaces(Need).
 
@@ -1128,6 +1130,12 @@ using_folding_depth:- \+ in_pp(ansi), nb_current('$use_folding',t).
 
 fold_this_round:- using_folding_depth, flag('$fold_this_round',N,N), N=1.
 
+%do_fold_this_round(Goal):- flag('$fold_this_round',N,N),N<0,!,call(Goal). 
+do_fold_this_round(Goal):- !, call(Goal).
+do_fold_this_round(Goal):-
+  setup_call_cleanup(flag('$fold_this_round',N,2),
+  with_folding(t,Goal),
+  flag('$fold_this_round',_,N)).
 
 with_nb_var(Var,TF,Goal):- 
     (nb_current(Var,WAS);WAS=f),
@@ -1240,6 +1248,11 @@ pt_list_juncts(Tab,OP,[T|List]):-
 print_tree_width( RM ):- current_print_write_options(Options), memberchk(right_margin(RM), Options),!.
 print_tree_width(W120):- W120=120.
 
+maybe_prefix_spaces(V,Tab):- ignore(( \+ as_is(V),prefix_spaces(Tab) )).
+maybe_print_tab_term(Tab,V):- maybe_prefix_spaces(V,Tab), print_tree_no_nl( V ).
+
+
+is_infix_op(OP):- current_op(_,XFY,OP), (yfx==XFY ; xfx==XFY ; xfy==XFY ).
 
 print_lc_tab_term(LC,Tab,T):- write(LC),print_tab_term(Tab,T).
 
@@ -1260,6 +1273,27 @@ pt1(_, Tab,Term) :-
 pt1(_, Tab,Term) :- 
    as_is(Term), !,
    system_portray(Tab,Term).
+   
+% H:-B
+pt1(_FS,Tab, H:- T) :- 
+  OP = (','),
+  compound_name_arity(T,OP, 2),      
+  pred_juncts_to_list(OP,T,List),!,
+  prefix_spaces(Tab), print_tree_no_nl(H),  
+  pl_span_goal('functor', (pformat(' :- '))),
+  pformat_e_args(List, pt_list_juncts(Tab+2,OP,List)).
+      
+% xfy/yfx/xfx
+pt1(_FS,Tab,T) :- 
+  compound_name_arity(T,OP, 2),  
+  (current_op(Pri,_,OP),is_infix_op(OP)),
+  Pri >= 400,
+  pred_juncts_to_list(OP,T,List), List=[H,R,E|ST], REST = [R,E|ST],!,
+  prefix_spaces(Tab),pl_span_goal('functor', (
+    pformat('( '), pformat('  '),print_tree_no_nl(H),pformat('  '), pformat(OP))),
+    pformat_e_args(REST, (
+       pt_list_juncts(Tab+2,OP,REST))), 
+   pformat(')'),!.   
     
 pt1(FS,Tab,(NPV)) :- NPV=..[OP,N,V], is_colon_mark(OP), atomic(N),
   print_tab_term(Tab,[OP|FS], N), pformat(OP), print_tree(V),!.
