@@ -9,9 +9,9 @@ ARG --security-opt seccomp:unconfined
 # SSHD
 EXPOSE 22    
 # Apache HTTP 
-EXPOSE 80    
+#EXPOSE 80    
 # Apache SSL 
-EXPOSE 443 4443
+#EXPOSE 443 4443
 # Ngynx
 EXPOSE 4801   
 # Butterfly Logins
@@ -150,6 +150,9 @@ MAINTAINER RUN cd $LOGICMOO_WS && set -x \
  && git add logicmoo_pldata \
  && git commit -am "logicmoo_pldata-$(date)" \
  && rm -rf $LOGICMOO_WS/packs_xtra/logicmoo_pldata/*/
+
+RUN SNIPPET="export PROMPT_COMMAND='history -a' && export HISTFILE=/commandhistory/.bash_history" \
+    && echo $SNIPPET >> "/root/.bashrc"
 
 #CMD $LOGICMOO_WS/StartLogicmoo.sh
 ENTRYPOINT ["/startup_logicmoo.sh"]
