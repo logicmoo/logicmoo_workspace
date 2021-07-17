@@ -720,7 +720,7 @@
       for (x = k = 0, ref = this.cols; 0 <= ref ? k <= ref : k >= ref; x = 0 <= ref ? ++k : --k) {
         if (x !== this.cols) {
 		   var v = this.charToDom(line.chars[x], line.chars[x - 1], x === cursorX);
-		  	  if((""+v).indexOf("undefined")>-1) {
+		  	  if((""+v).indexOf("dundefined")>-1) {
 		         debugger;
 			  }
           results.push(v);

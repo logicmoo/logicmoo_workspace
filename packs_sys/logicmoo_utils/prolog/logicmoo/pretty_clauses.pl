@@ -490,10 +490,10 @@ ec_portray_hook(Term):-
   flag('$ec_portray',_, N)).
 
 ec_portray(_,Term):- notrace(is_list(Term)),!,Term\==[], fail, notrace(catch(text_to_string(Term,Str),_,fail)),!,format('"~s"',[Str]).
-ec_portray(N,Term):- N =0, \+ in_pp(ansi), print_tree(Term), !.
 ec_portray(_,Term):- (\+ compound(Term);Term='$VAR'(_)),!, ec_portray_now(Term).
 ec_portray(_,Term):- compound(Term), compound_name_arity(Term,F,A), uses_op(F,A), !, fail.
 %ec_portray(_,Term):- compound(Term),compound_name_arity(Term, F, 0), !,color_format([bold,hfg(red)],'~q()',[F]),!.
+ec_portray(N,Term):- N =0, \+ in_pp(ansi), print_tree_no_nl(Term), !.
 ec_portray(N,Term):- N > -1, N < 3, \+ is_dict(Term), ec_portray_now(Term).
 
 ec_portray_now(Var):- var(Var), !, get_var_name(Var,Name), color_format(fg(green),'~w',[Name]),!.
@@ -1174,8 +1174,8 @@ pformat_e_args(E, Goal):- pformat_ellipsis(E), !, pl_span_goal('args',Goal),!.
 pformat_functor(F):- pl_span_goal('functor',pformat(F)).
 %pformat_functor(F,_):- \+ is_webui, !, pformat_functor(F).
 
-pformat_ellipsis(E):- fold_this_round, !, pl_span_goal('ellipsis',ellipsis_html(E)),!.
-pformat_ellipsis(E):- pl_span_goal('ellipsis, fold',ellipsis_html(E)),!.
+pformat_ellipsis(E):- fold_this_round, !, pl_span_goal('ellipsis clickprev',ellipsis_html(E)),!.
+pformat_ellipsis(E):- pl_span_goal('ellipsis, clickprev, fold',ellipsis_html(E)),!.
 
 ellipsis_html(E):- ignore(pformat_html(pre(call(write_ellipsis(E))))).
 
@@ -1274,6 +1274,24 @@ pt1(_, Tab,Term) :-
    as_is(Term), !,
    system_portray(Tab,Term).
    
+pt1(FS,Tab,Term) :- 
+   is_dict(Term),
+   dict_pairs(Term, Tag, Pairs), maplist(pair_to_colon,Pairs,Colons),
+   prefix_spaces(Tab), pl_span_goal('functor',( print_tree_no_nl(Tag), pformat('{ '))),
+   pt_args_arglist([dict|FS],Tab+2,'','@','}',Colons),!.
+
+
+
+
+pt1(FS,Tab,[H|List]) :- nonvar(List), List=[_|_], fail, !,
+  prefix_spaces(Tab),pformat_functor('[ '), 
+  wots(SS,print_tree_no_nl(H)),
+  pt_args_arglist([lf|FS],Tab+2,SS,' | ',']',List),!.
+
+pt1(FS,Tab,List) :- List=[_|_], !,
+  prefix_spaces(Tab),pformat_functor('[ '),
+  pt_args_arglist_ne([lf|FS],Tab+2,'',' | ',']',List),!.
+  
 % H:-B
 pt1(_FS,Tab, H:- T) :- 
   OP = (','),
@@ -1283,20 +1301,8 @@ pt1(_FS,Tab, H:- T) :-
   pl_span_goal('functor', (pformat(' :- '))),
   pformat_e_args(List, pt_list_juncts(Tab+2,OP,List)).
       
-% xfy/yfx/xfx
-pt1(_FS,Tab,T) :- 
-  compound_name_arity(T,OP, 2),  
-  (current_op(Pri,_,OP),is_infix_op(OP)),
-  Pri >= 400,
-  pred_juncts_to_list(OP,T,List), List=[H,R,E|ST], REST = [R,E|ST],!,
-  prefix_spaces(Tab),pl_span_goal('functor', (
-    pformat('( '), pformat('  '),print_tree_no_nl(H),pformat('  '), pformat(OP))),
-    pformat_e_args(REST, (
-       pt_list_juncts(Tab+2,OP,REST))), 
-   pformat(')'),!.   
-    
 pt1(FS,Tab,(NPV)) :- NPV=..[OP,N,V], is_colon_mark(OP), atomic(N),
-  print_tab_term(Tab,[OP|FS], N), pformat(OP), print_tree(V),!.
+  print_tab_term(Tab,[OP|FS], N), pformat(OP), print_tree(V),!. 
 
 
 pt1(FS,Tab,(NPV)) :- NPV=..[OP,N,V], is_colon_mark(OP), current_op(_,yfx,OP),
@@ -1309,37 +1315,47 @@ pt1(FS,Tab,(NPV)) :- NPV=..[OP,N,V], is_colon_mark(OP),
   pl_span_goal('functor', (
     pformat(' '), pformat(OP), pformat('  '))),
     pformat_ellipsis(V),prefix_spaces(Tab+5),
-  wots(S, (
-    
+  wots(S, (    
     pl_span_goal('args', (prefix_spaces(Tab+2), print_tree( V ))))),!,
     write(S).
 
-pt1(_FS,Tab,T) :- fail,
+
+pt1(_FS,Tab,T) :- in_pp(ansi),
    print_tree_width(W120),
    max_output(Tab,W120,T),!,
-   prefix_spaces(Tab), print(T).
+   prefix_spaces(Tab), write_simple(T).
    %system_portray(Tab,T),!.
+
+
+
+
+ % include arg1
+pt1(FS,Tab,(NPV)) :- NPV=..[OP,N|Args], as_is(N), % \+ compound_gt(N,0),  
+  Args=[List], is_list(List),
+  prefix_spaces(Tab), print_atomf(OP), 
+  pl_span_goal('functor', ( pformat('( '), print_tree_no_nl(N), pformat(', [   '))),  
+  pt_args_arglist([lf|FS],Tab+2,'',' | ',']',List),!.
+
+
+pt1(FS,Tab,(NPV)) :- NPV=..[OP,N,V], FS\==[], is_infix_op(OP), as_is(N), as_is(V), !,
+  print_tab_term(Tab,[OP|FS], N), format(' '), pformat(OP), format(' '), print_tree_no_nl(V),
+  !.
+
+pt1(FS,Tab,(NPV)) :- NPV=..[OP,N,V], FS\==[], is_colon_mark(OP), atomic(N),
+  print_tab_term(Tab,[OP|FS], N), format(' '), pformat(OP), format(' '), print_tree_no_nl(V),
+  !.
+
 
 pt1(FS,Tab,{Prolog}) :- 
   pred_juncts_to_list(',',Prolog,LProlog),!,
   prefix_spaces(Tab),pformat_functor('{ '),
    pt_args_arglist(['{}'|FS],Tab+2,'',' | ',' }',LProlog),!.
 
-pt1(FS,Tab,Term) :- 
-   is_dict(Term),
-   dict_pairs(Term, Tag, Pairs), maplist(pair_to_colon,Pairs,Colons),
-   prefix_spaces(Tab), pl_span_goal('functor',( print_tree_no_nl(Tag), pformat('{ '))),
-   pt_args_arglist([dict|FS],Tab+2,'','@','}',Colons),!.
-
-pt1(FS,Tab,List) :- List=[_|_], !,
-  prefix_spaces(Tab),pformat_functor('[ '),
-  pt_args_arglist([lf|FS],Tab+2,'',' | ',']',List),!.
 
 pt1(FS,Tab,q(E,V,G)):- atom(E), !, T=..[E,V,G],!, pt1(FS,Tab,T).
 
 pt1(_FS,Tab,(NPV)) :- use_new, NPV=..[OP,N],
     prefix_spaces(Tab), pformat(OP), pformat('( '), print_tree_no_nl(N), pformat(')'),!.
-
 
 % xf/yf
 pt1(_FS,Tab,T1) :-
@@ -1374,7 +1390,7 @@ pt1(_FS,Tab,T) :-
   (current_op(Pri,xfy,OP);current_op(Pri,yfx,OP);current_op(Pri,xfx,OP)),
   Pri >= 400,
   pred_juncts_to_list(OP,T,List),!,
-  prefix_spaces(Tab), pformat_functor('( '),  
+  prefix_spaces(Tab), pformat_functor('(  '),
     pformat_e_args(T, 
        pt_list_juncts(Tab+2,OP,List)), 
    pformat(')'),!.
@@ -1401,14 +1417,24 @@ pt1(_FS,Tab,(NPV)) :- NPV=..[OP,N|Args], Args=[Arg], as_is(N), compound(Arg), co
    pformat('( '), print_tree_no_nl(N), pformat(', '),  
     prefix_spaces(Tab+2),print_tree_no_nl(Arg),pformat(')').
 
+
  % include arg1
-pt1(FS,Tab,(NPV)) :- NPV=..[OP,N|Args], Args=[_Arg], as_is(N), % \+ compound_gt(N,0),  
+pt1(FS,Tab,(NPV)) :- NPV=..[OP,N|Args], as_is(N), % \+ compound_gt(N,0),  
+  Args=[Arg], is_list(Arg),
+  prefix_spaces(Tab), print_atomf(OP), 
+  pformat('( '), print_tree_no_nl(N), pformat_functor(', ['),  
+ %do_fold_this_round
+ (( pt_args_arglist([OP|FS],Tab+2,'','@',')',Args))),!.
+
+ % include arg1
+pt1(FS,Tab,(NPV)) :- NPV=..[OP,N|Args], as_is(N), % \+ compound_gt(N,0),  
+  Args=[_Arg],
   prefix_spaces(Tab), print_atomf(OP),
   pl_span_goal('functor', ( pformat('( '), print_tree_no_nl(N), pformat(', '))),  
  %do_fold_this_round
  (( pt_args_arglist([OP|FS],Tab+2,'','@',')',Args))),!.
 
-% include arg1
+ % include arg1
 pt1(FS,Tab,(NPV)) :- NPV=..[OP,N|Args], as_is(N), % \+ compound_gt(N,0),  
   prefix_spaces(Tab), print_atomf(OP),
   pl_span_goal('functor', ( pformat('( '), print_tree_no_nl(N), pformat(', '))),  
@@ -1417,7 +1443,7 @@ pt1(FS,Tab,(NPV)) :- NPV=..[OP,N|Args], as_is(N), % \+ compound_gt(N,0),
 
 pt1(FS,Tab,Term) :- 
    compound_name_arguments(Term,F,Args),
-   prefix_spaces(Tab), print_atomf(F), pformat_functor('( '),
+   prefix_spaces(Tab), print_atomf(F), pformat_functor('(  '),
    pt_args_arglist([F|FS],Tab+3,'','@',')',Args), !.
 
 
@@ -1441,8 +1467,15 @@ splice_off([A0,A|As],[A0|Left],[R|Rest]):-
 
 
 
-pt_args_arglist( _, _, S,_,E,[]):- pt_s_e(S, (pl_span_goal('ellipsis, fold',true),pl_span_goal('args',true)),E).
+pt_args_arglist( _, _, S,_,E,[]):- pt_s_e(S, (pl_span_goal('ellipsis, clickprev, fold',true),pl_span_goal('args',true)),E).
 pt_args_arglist(FS,Tab,S,M,E,[H|T]):-
+ pt_s_e(S,  
+  pformat_e_args([H|T],      
+    ( prefix_spaces(Tab),
+     print_tree_no_nl(H), pt_cont_args(Tab,', ', M, FS,T))),E).
+
+pt_args_arglist_ne( _, _, S,_,E,[]):- pt_s_e(S, (pl_span_goal('ellipsis, clickprev, fold',true),pl_span_goal('args',true)),E).
+pt_args_arglist_ne(FS,Tab,S,M,E,[H|T]):-
  pt_s_e(S,  
   pformat_e_args([H|T],      
     ( prefix_spaces(Tab),
