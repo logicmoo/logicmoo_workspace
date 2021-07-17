@@ -833,24 +833,77 @@ current_print_write_options(Options):-
   get_portrayal_vars(Vs), 
   my_merge_options(OptionsDefault,[quoted(true), portray(true), variable_names(Vs)],Options),!.
   
+trim_ending_ws(S,O):- is_html_white_r(W),string_concat(L,W,S),!,trim_ending_ws(L,O).
+trim_ending_ws(S,O):- last_tag(S,Tag),!,string_concat(L,Tag,S),trim_ending_ws(L,M),string_concat(M,Tag,O).
+trim_ending_ws(S,S).
+ending_tag('</span>').
+last_tag(S,Tag):- ending_tag(Tag),string_concat(_,Tag,S).
 
 print_as_tree(Term):- print_tree(Term).
-print_tree(Term) :- \+ \+ ( pretty_numbervars(Term,Term2), current_print_write_options(Options), print_tree(Term2, Options)),!.
+print_tree(Term):-
+ current_output_line_position(Pos),
+ ensure_pp((   
+  wots_pos(Pos, print_tree_with_final(Term, '', 
+  [ partial(true), numbervars(true), character_escapes(true),fullstop(false)])))).
+
+print_tree_no_nl(Term):-
+ current_output_line_position(Pos),
+ ensure_pp(( 
+  wots_pos(Pos, print_tree_with_final(Term, '', 
+  [ partial(true), numbervars(true), character_escapes(true),nl(false),fullstop(false)])))).
+
+wots_pos(Pos,Goal):-
+ wots(S,Goal),
+ trim_ending_ws(S,SS),
+ with_output_to(string(White),print_spaces(Pos)),
+ atomics_to_string(L,'\n',SS),
+ print_each_prepended(White,L).
+
+print_each_prepended(_White,[L]):- !, write(L).
+print_each_prepended(White,[L|More]):- write(L),!,nl,write(White),
+  print_each_prepended(White,More).
+
+
+print_tree_with_final(Term, Final):-
+   print_tree_with_final(Term, Final, [fullstop(false)]).
+
+
 print_tree(Term, Options) :- select(fullstop(true),Options,OptionsNew), !, print_tree_with_final(Term, '.', [fullstop(false)|OptionsNew]).
 print_tree(Term, Options) :- print_tree_with_final(Term, '', Options).
-print_tree_with_final(Term, Final):- current_print_write_options(Options),
-   print_tree_with_final(Term, Final, Options).
 
 print_tree_with_final(Term, Final, Options):- 
-  \+ \+ (member(numbervars(true),Options),pretty_numbervars(Term,Term2), print_tree_with_final_real(Term2, Final, Options)),!.  
-print_tree_with_final(Term, Final, Options):-print_tree_with_final_real(Term, Final, Options).
+  select(variable_names(Vs),Options,NewOptions),!,
+  nb_current('$variable_names',Was),
+  setup_call_cleanup(
+    b_setval('$variable_names',Vs),
+    print_tree_with_final(Term, Final, NewOptions),
+    nb_setval('$variable_names',Was)).
+
+print_tree_with_final(Term, Final, Options):- select(max_depth(N),Options,OptionsNew), in_pp(bfly), !,
+ with_folding_depth(N, print_tree_with_final(Term, Final, OptionsNew)).
+
+print_tree_with_final(Term, Final, Options):- select(html_depth(N),Options,OptionsNew),!,
+ with_folding_depth(N, print_tree_with_final(Term, Final, OptionsNew)).
+
+print_tree_with_final(Term, Final, Options):- 
+  \+ \+ (member(numbervars(true),Options),
+  pretty_numbervars(Term,Term2), 
+  print_tree_with_final_real(Term2, Final, Options)),!.
+
+print_tree_with_final(Term, Final, Options):-
+  print_tree_with_final_real(Term, Final, Options).
 
 
-print_tree_with_final_real(Term, Final, Options):- select(html_depth(N),Options,OptionsNew),!,
- with_folding_depth(N, print_tree_with_final_real(Term, Final, OptionsNew)).
 
 print_tree_with_final_real(Term, Final, Options):-  
   current_output_line_position(Tab),
+  print_tree_with_final_real(Tab, Term, Final, Options).
+
+print_tree_with_final_real(Tab, Term, Final, Options):- fail,
+  member(left_margin(N),Options), N > Tab, !, 
+  print_tree_with_final_real(N, Term, Final, Options).
+
+print_tree_with_final_real(Tab, Term, Final, Options):- 
   notrace(my_merge_options([fullstop(false)],Options,NewOptions)),!,
   current_prolog_flag(print_write_options, OldOptions),
   setup_call_cleanup(set_prolog_flag(print_write_options,NewOptions),
@@ -871,6 +924,7 @@ print_tree_loop(Term, Options):-
 print_tab_term(Tab, Term):- without_ec_portray_hook(print_tab_term(Tab,[], Term)),!.
 print_tab_term(Tab,FS,Term) :- pt1(FS,Tab,Term).
 
+use_new.
 
 
 
@@ -972,10 +1026,7 @@ toplevel_pp(ansi).
 display_length(X,L):- wots(S,display(X)),atom_length(S,L),!.
 
 
-print_tree_no_nl(Term):- 
-  print_tree(Term, [ partial(true),
-     %spacing(next_argument),
-     character_escapes(true),fullstop(false),nl(false)]).
+
 
 
 
@@ -1189,9 +1240,10 @@ pt_list_juncts(Tab,OP,[T|List]):-
 print_tree_width( RM ):- current_print_write_options(Options), memberchk(right_margin(RM), Options),!.
 print_tree_width(W120):- W120=120.
 
-pt1(FS,TpN,Term):- recalc_tab(TpN, New), TpN\==New, !, pt1(FS,New,Term).
 
-%pt1(FS,Tab,Term):- Tab > 0,!, prefix_spaces(Tab),!, pt1(FS,Tab,Term,0).
+print_lc_tab_term(LC,Tab,T):- write(LC),print_tab_term(Tab,T).
+
+pt1(FS,TpN,Term):- recalc_tab(TpN, New), TpN\==New, !, pt1(FS,New,Term).
 
 pt1(_, Tab,Term) :- 
   with_no_hrefs(t,(if_defined(rok_linkable(Term),fail), 
@@ -1250,6 +1302,10 @@ pt1(FS,Tab,List) :- List=[_|_], !,
   pt_args_arglist([lf|FS],Tab+2,'',' | ',']',List),!.
 
 pt1(FS,Tab,q(E,V,G)):- atom(E), !, T=..[E,V,G],!, pt1(FS,Tab,T).
+
+pt1(_FS,Tab,(NPV)) :- use_new, NPV=..[OP,N],
+    prefix_spaces(Tab), pformat(OP), pformat('( '), print_tree_no_nl(N), pformat(')'),!.
+
 
 % xf/yf
 pt1(_FS,Tab,T1) :-
@@ -1335,8 +1391,9 @@ splice_off([A0,A|As],[A0|Left],[R|Rest]):-
 pt_args_arglist( _, _, S,_,E,[]):- pt_s_e(S, (pl_span_goal('ellipsis, fold',true),pl_span_goal('args',true)),E).
 pt_args_arglist(FS,Tab,S,M,E,[H|T]):-
  pt_s_e(S,  
-  pformat_e_args([H|T], 
-    (prefix_spaces(Tab), print_tree_no_nl(H), pt_cont_args(Tab,', ', M, FS,T))),E).
+  pformat_e_args([H|T],      
+    ( prefix_spaces(Tab),
+     print_tree_no_nl(H), pt_cont_args(Tab,', ', M, FS,T))),E).
 
 
 pt_cont_args(_Ab,_Sep,_Mid,_In, Nil) :- Nil==[], !.
@@ -1371,8 +1428,9 @@ on_x_ignore(G):- catch(G,E,(dumpST,writeq(E=on_x_ignore(G)))).
 as_is(V):- var(V).
 as_is(V) :- is_dict(V), !, fail.
 as_is(A) :- is_arity_lt1(A), !.
-as_is(A) :- functor(A,F,_), simple_f(F).
-as_is(A):- is_list(A), maplist(is_arity_lt1,A).
+as_is(A) :- functor(A,F,_), simple_f(F), !.
+as_is(A) :- is_list(A),length(A,L),L>4,!,fail.
+as_is(A) :- is_list(A), maplist(is_arity_lt1,A),!.
 as_is([A]) :- is_list(A),length(A,L),on_x_ignore(L<2),!.
 as_is(A) :- functor(A,F,2), simple_fs(F),arg(2,A,One),atomic(One),!.
 as_is('_'(_)) :- !.
