@@ -1,33 +1,3 @@
-#echo PTTY:TTY:PTS=$PTTY:$TTY:$PTS
-#whoami
-STUFF="^Mprolog.
-bfly. call((bfly_set(butterfly),bfly_set(command_args,\"${*}\"),bfly_set(ptty,\"${PTTY}:${TTY}:${PTY}:${PTS}\"))). bfly_start_link(\"${LOCATION}\").
-end_of_file.^M"
-echo STUFF=$STUFF
-(    $SCREEN_CMD -S LogicmooServer -p0 -X stuff "${STUFF}"; )
-echo $( 
-$SCREEN_CMD -rx LogicmooServer
-)
-return 0 2>/dev/null
-#!/bin/bash
-set -e
-export SCREEN_CMD="sudo -u prologmud_server -- screen"
-#echo PTTY:TTY:PTS=$PTTY:$TTY:$PTS
-#whoami
-STUFF="^Mprolog.
-bfly. call((bfly_set(butterfly),bfly_set(command_args,\"${*}\"),bfly_set(ptty,\"${PTTY}:${TTY}:${PTY}:${PTS}\"))). bfly_start_link(\"${LOCATION}\").
-end_of_file.^M"
-echo STUFF=$STUFF
-(    $SCREEN_CMD -S LogicmooServer -p0 -X stuff "${STUFF}"; )
-echo $( 
-$SCREEN_CMD -rx LogicmooServer
-)
-return 0 2>/dev/null
-#!/bin/bash
-set -e
-export SCREEN_CMD="sudo -u prologmud_server -- screen"
-#echo PTTY:TTY:PTS=$PTTY:$TTY:$PTS
-#whoami
 STUFF="^Mprolog.
 bfly. call((bfly_set(butterfly),bfly_set(command_args,\"${*}\"),bfly_set(ptty,\"${PTTY}:${TTY}:${PTY}:${PTS}\"))). bfly_start_link(\"${LOCATION}\").
 end_of_file.^M"
@@ -1998,3 +1968,33 @@ echo $(
 $SCREEN_CMD -rx LogicmooServer
 )
 return 0 2>/dev/null
+ifconfig 
+ifconfig 
+ifconfig 
+ifconfig 
+ifconfig 
+ping www.google.com
+ifconfig 
+ls
+git stauts
+git status
+ls
+pwd
+su - prologmud_server 
+cd ~prologmud_server/
+ls
+swipl
+ls
+df
+ps axf
+nmap 57a10eaed7e3 
+nmap 57a10eaed7e3 --help 
+nmap 57a10eaed7e3 -v -iR 10000
+nmap 57a10eaed7e3 -A
+nmap 57a10eaed7e3 -p 0-5000
+nmap 57a10eaed7e3 -p 0-15000
+nmap 57a10eaed7e3 -p 0-15000
+ps axf
+netstat -a 
+netstat -a  | grep 40
+netstat -a  | grep 60
