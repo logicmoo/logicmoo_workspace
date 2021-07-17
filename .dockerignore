@@ -102,6 +102,7 @@
 ./packs_usr/.project
 ./packs_web/
 !./packs_web/butterfly/
+./prologmud_server
 ./packs_web/.gitignore
 ./packs_web/ClioPatria/
 ./packs_web/logicmoo_webui/
