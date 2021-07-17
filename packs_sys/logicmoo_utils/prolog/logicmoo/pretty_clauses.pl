@@ -1452,13 +1452,15 @@ pt_args_arglist(FS,Tab,S,M,E,[H|T]):-
 pt_cont_args(_Ab,_Sep,_Mid,_In, Nil) :- Nil==[], !.
 pt_cont_args(Tab, Sep,_Mid, FS,[A|R]) :- R==[], pformat(Sep), print_tab_term(Tab,FS,A), !.
 pt_cont_args(Tab,_Sep, Mid, FS, A) :- A \= [_|_], !, pformat(Mid), print_tab_term(Tab,FS,A), !.
-
-pt_cont_args(Tab, Sep,_Mid,_FS,List) :- ground(List),is_list(List),length(List,Len),Len>1, Len<6, maplist(is_arity_lt1,List), !,
-   pformat(Sep), notrace(prefix_spaces(Tab)),pformat(' '), List=[A|R], write_simple(A), write_simple_each(Sep,R),!.
-
-pt_cont_args(Tab,Sep, Mid, FS, RL) :- append(List,Right,RL), ground(List),is_list(List),length(List,Len),Len>1, Len<6, maplist(is_arity_lt1,List), !,
+pt_cont_args(Tab,Sep, Mid, FS, RL) :- append(List,Right,RL),
+   % ground(List),
+   is_list(List),length(List,Len),Len>1, Len<6, maplist(is_arity_lt1,List), !,
    pformat(Sep), notrace(prefix_spaces(Tab)),pformat(' '), List=[A|R], write_simple(A), write_simple_each(Sep,R),
    pt_cont_args(Tab,Sep, Mid, FS, Right),!.
+
+pt_cont_args(Tab, Sep,_Mid,_FS,List) :- % ground(List),
+   is_list(List),length(List,Len),Len>1, Len<6, maplist(is_arity_lt1,List), !,
+   pformat(Sep), notrace(prefix_spaces(Tab)),pformat(' '), List=[A|R], write_simple(A), write_simple_each(Sep,R),!.
 
 pt_cont_args(Tab,Sep, Mid, FS,[A|As]) :- !,  
    pformat(Sep),
