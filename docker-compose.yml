@@ -39,11 +39,10 @@ services:
           - .:/opt/logicmoo_workspace
         networks:
            default:
-        #networks:
-        #    pub_net:
-        #       ipv4_address: 10.0.0.99
-        #    app_net:
-        #        ipv4_address: 172.17.0.2
+           pub_net:
+              ipv4_address: 10.0.0.99
+           #app_net:
+           #   ipv4_address: 172.17.0.2
 networks:
   pub_net:
     driver: macvlan
@@ -55,7 +54,7 @@ networks:
         - subnet: 10.0.0.0/24
           gateway: 10.0.0.194
   app_net:
-    driver: bridge
+    driver: host
     enable_ipv6: false
     ipam:
       driver: default
