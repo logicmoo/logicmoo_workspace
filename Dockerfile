@@ -155,7 +155,7 @@ RUN SNIPPET="export PROMPT_COMMAND='history -a' && export HISTFILE=/commandhisto
     && echo $SNIPPET >> "/root/.bashrc"
 
 #CMD $LOGICMOO_WS/StartLogicmoo.sh
-ENTRYPOINT ["/startup_logicmoo.sh"]
+#ENTRYPOINT ["/startup_logicmoo.sh"]
 ENTRYPOINT ["/startup.sh"]
 
 
