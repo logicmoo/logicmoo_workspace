@@ -105,6 +105,7 @@ then
  echo git $GIT_CLONE
  git $GIT_CLONE
  find $LOGICMOO_WS/ -type d -exec chmod 777 {} +
+ DO_PULL=0
 fi
 
 cd $LOGICMOO_WS
