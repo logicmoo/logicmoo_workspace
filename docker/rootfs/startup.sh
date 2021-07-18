@@ -104,7 +104,6 @@ then
  git config --global http.sslVerify false
  git clone --recurse-submodules --depth 1 https://github.com/logicmoo/logicmoo_workspace
  find $LOGICMOO_WS/ -type d -exec chmod 777 {} +
- chmod a+w -R $LOGICMOO_WS/
 fi
 
 cd $LOGICMOO_WS
