@@ -100,9 +100,10 @@ fi
 if [[ ! -d $LOGICMOO_WS/.git ]]
 then
  cd /opt
- echo "clone --depth 1 https://github.com/logicmoo/logicmoo_workspace"
  git config --global http.sslVerify false
- git clone --recurse-submodules --depth 1 https://github.com/logicmoo/logicmoo_workspace
+ GIT_CLONE="clone --recurse-submodules https://github.com/logicmoo/logicmoo_workspace"
+ echo git $GIT_CLONE
+ git $GIT_CLONE
  find $LOGICMOO_WS/ -type d -exec chmod 777 {} +
 fi
 
