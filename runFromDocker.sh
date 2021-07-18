@@ -92,11 +92,19 @@ docker kill logicmoo 2>/dev/null ; /bin/true
 docker ps
 
 export PORTS="4000-4199:4000-4199 -p 4243:443 -p 4280:80 -p 3020:3020 -p 4222:22 -p 4220:3020 -p 4200:5900 -p 4201:9001 -p 4290:4090 -p 6079-6081:6079-6081"
+
 export LM_VOLUMES="-v /opt/logicmoo_workspace:/opt/logicmoo_workspace"
 export DOCKER_RUN="--name logicmoo --privileged=true --no-healthcheck $LM_VOLUMES --rm -it -p $PORTS $EXTRA logicmoo/logicmoo_workspace:latest"
 export DOCKER_UP=""
 
-docker run --name logicmoo --privileged=true --no-healthcheck --add-host "logicmoo.org:10.0.0.194" --rm -it -p 4000-4199:4000-4199 -p 4243:443 -p 4280:80 -p 3020:3020 -p 4222:22 -p 4220:3020 -p 4200:5900 -p 4201:9001 -p 4290:4090 -p 6079-6081:6079-6081  logicmoo/logicmoo_workspace:latest
+if [ "$(hostname -d)" == "logicmoo.org" ]; then
+   DOCKER_RUN="$DOCKER_RUN --add-host logicmoo.org:10.0.0.194"
+   echo "locally testing on logicmoo.org"
+   docker run --name logicmoo --privileged=true --no-healthcheck --add-host logicmoo.org:10.0.0.194 --rm -it -p 4000-4199:4000-4199 -p 4243:443 -p 4280:80 -p 3020:3020 -p 4222:22 -p 4220:3020 -p 4200:5900 -p 4201:9001 -p 4290:4090 -p 6079-6081:6079-6081  logicmoo/logicmoo_workspace:latest
+   return 0 2>/dev/null
+   exit 0
+fi
+
 
 echo "docker-compose up $DOCKER_UP"
 echo "docker run $DOCKER_RUN"
