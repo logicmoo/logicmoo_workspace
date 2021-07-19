@@ -32,9 +32,9 @@
     POSSIBILITY OF SUCH DAMAGE.
 */
 
-:- module(concurrent_forall,
-          [ concurrent_forall/2,
-            concurrent_forall/3
+:- module(conc_forall,
+          [ conc_forall/2,
+            conc_forall/3
           ]).
 
 :- use_module(countsols).
@@ -45,28 +45,31 @@
 
 :- meta_predicate
         handle_result(+, 0 ),
-        concurrent_forall(0, 0 ),
-        concurrent_forall(0, 0, 0 ).
+        conc_forall(0, 0 ),
+        conc_forall(0, 0, 0 ).
 
-%!  concurrent_forall(:Cond, :Action) is semidet.
+%!  conc_forall(:Cond, :Action)  is semidet.
 %
-%   Concurrent  version   of  forall/2.   This  predicate  will   prove  several
-%   alternatives  of Cond  with  Action, using  multiple  threads.  The  maximum
-%   number of threads  defined is the amount of cores  available.  If the number
-%   of pending jobs is greater than the  number of workers, then the system will
-%   wait until a job is finished before to process the next alternative, this is
-%   done to avoid that the alternatives of Cond could overflow the memory.
+%  Concurrent  version   of  forall/2.    This  predicate  will   prove  several
+%  alternatives of Cond with Action, using multiple threads.  The maximum number
+%  of  threads defined  is the  amount  of cores  available.  If  the number  of
+%  pending jobs is greater than the number of workers, then the system will wait
+%  until a job is finished before to  process the next alternative, this is done
+%  to avoid that the alternatives of  Cond could overflow the memory.  Note that
+%  this is different from concurrent_forall/3 in SWI-Prolog, since conc_forall/3
+%  always execute the  tasks concurrently, which is needed in  some places where
+%  the tasks needs to be isolated from each other.
 
-concurrent_forall(Cond, Action) :-
-    concurrent_forall(Cond, Action, true).
+conc_forall(Cond, Action) :-
+    conc_forall(Cond, Action, true).
 
-%!  concurrent_forall(:Cond, :Action, :Join) is semidet.
+%!  conc_forall(:Cond, :Action, :Join) is semidet.
 %
 %   Join is called after the execution of Action in the main thread. Sometimes
 %   we still need to execute a part of the code serialized.  Is equivalent to
 %   forall(Cond, (Action, ignore(Join))).
 
-concurrent_forall(Cond, Action, Join) :-
+conc_forall(Cond, Action, Join) :-
     current_prolog_flag(cpu_count, CPUCount),
     message_queue_create(Done),
     message_queue_create(Queue),
