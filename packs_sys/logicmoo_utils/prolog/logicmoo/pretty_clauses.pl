@@ -110,7 +110,7 @@ test_print_tree1(4):- forall(sample_pp_term(X), (nl,print_tree(X),nl)).
 
 %test_print_tree1(b):- forall(sample_pp_term(X), print_tree_cmt('hi',red,X)).
 
-
+:- op(700,'yfx','&').
 sample_pp_term((asserted(
    q( exists,
       Exists8,
@@ -1096,8 +1096,10 @@ prefix_spaces(Tab):- notrace(prefix_spaces1(Tab)).
 prefix_spaces0(Tab):- float(Tab),!.
 prefix_spaces0(Tab):- \+ number(Tab), !, ignore(( recalc_tab(Tab,   NewTab),!, NewTab\==Tab, prefix_spaces0(NewTab))).
 prefix_spaces0(Tab):- Tab < 1, !.
-prefix_spaces0(Tab):- current_output_line_position(Now), Now > Tab, !, pformat_newline ,  print_spaces(Tab).
-prefix_spaces0(Tab):- current_output_line_position(Now), Need is Tab - Now,!, print_spaces(Need).
+prefix_spaces0(Tab):- Tab2 is Tab+20,  print_tree_width(W120),  Tab2 > W120,!, Floor is floor(Tab/2)+1, prefix_spaces0(Floor).
+prefix_spaces0(Tab):- current_output_line_position(Now), prefix_spaces0(Now,Tab),!.
+prefix_spaces0(Now,Tab):- Now > Tab, !, pformat_newline ,  print_spaces(Tab).
+prefix_spaces0(Now,Tab):- Need is Tab - Now,!, print_spaces(Need).
 
 prefix_spaces1(Tab):- \+ integer(Tab), recalc_tab(Tab,   NewTab),!, prefix_spaces1(NewTab).
 prefix_spaces1(Tab):- Floor is floor(Tab/2)+1, prefix_spaces0(Floor).
