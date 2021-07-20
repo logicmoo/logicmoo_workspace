@@ -1,0 +1,16 @@
+
+dir: ~/NOTES
+# the root of the document tree
+
+int_form: %Y%m
+# strftime(3) format for intermediate directories
+# Only a subset of strftime is supported:
+#	%Y  four-digit year
+#	%y  two digit year w/leading zeros
+#	%m  two digit numeric month w/leading zeros
+#	%d  two digit day w/leading zeros
+
+# XXX: Currently, file_form cannot be changed.
+# file_form: %y%m%d
+# strftime(3) format for notes files directories
+

@@ -1,0 +1,2 @@
+;;; Generated package description from org-rich-yank.el  -*- no-byte-compile: t -*-
+(define-package "org-rich-yank" "0.2.1" "paste with org-mode markup and link to source" '((emacs "24.4")) :commit "d2f350c5296cf05d6c84b02762ba44f09a02b4e3" :authors '(("Kevin Brubeck Unhammer" . "unhammer@fsfe.org")) :maintainer '("Kevin Brubeck Unhammer" . "unhammer@fsfe.org") :keywords '("convenience" "hypermedia" "org") :url "https://github.com/unhammer/org-rich-yank")

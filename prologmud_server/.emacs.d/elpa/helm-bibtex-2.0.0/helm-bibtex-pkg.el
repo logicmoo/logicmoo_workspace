@@ -1,0 +1,2 @@
+;;; Generated package description from helm-bibtex.el  -*- no-byte-compile: t -*-
+(define-package "helm-bibtex" "2.0.0" "A BibTeX bibliography manager based on Helm" '((helm "1.5.5") (parsebib "1.0") (s "1.9.0") (dash "2.6.0") (f "0.16.2") (cl-lib "0.5") (biblio "0.2")) :commit "d6a98ac6f28d2a6a05e203115211c98333d40aca" :authors '(("Titus von der Malsburg" . "malsburg@posteo.de")) :maintainer '("Titus von der Malsburg" . "malsburg@posteo.de"))

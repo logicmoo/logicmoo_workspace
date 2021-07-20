@@ -1,0 +1,2 @@
+;;; Generated package description from org-projectile.el  -*- no-byte-compile: t -*-
+(define-package "org-projectile" "1.1.0" "Repository todo management for org-mode" '((projectile "0.11.0") (dash "2.10.0") (emacs "24") (s "1.9.0") (org-category-capture "0.0.0")) :commit "48f621b595e748c5e03431f237facf258ffc9443" :authors '(("Ivan Malison" . "IvanMalison@gmail.com")) :maintainer '("Ivan Malison" . "IvanMalison@gmail.com") :keywords '("org-mode" "projectile" "todo" "tools" "outlines") :url "https://github.com/IvanMalison/org-projectile")

@@ -1,0 +1,2 @@
+;;; Generated package description from windwow.el  -*- no-byte-compile: t -*-
+(define-package "windwow" "20170816.148" "simple workspace management" '((dash "2.11.0") (cl-lib "0.6.1") (emacs "24")) :commit "77bad26f651744b68d31b389389147014d250f23" :authors '(("Viju Mathew" . "viju.jm@gmail.com")) :maintainer '("Viju Mathew" . "viju.jm@gmail.com") :keywords '("frames") :url "github.com/vijumathew/windwow")

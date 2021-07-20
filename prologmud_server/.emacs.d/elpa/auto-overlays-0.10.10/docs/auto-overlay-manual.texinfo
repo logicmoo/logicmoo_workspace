@@ -1,0 +1,1838 @@
+
+\input texinfo @c -*-texinfo-*-
+
+@comment Documentation for the Emacs auto-overlays package
+
+@c %**start of header
+@setfilename auto-overlay-manual.info
+@settitle Emacs Auto-Overlays Manual
+@c %**end of header
+
+
+@dircategory Emacs
+@direntry
+* auto-overlays: (auto-overlay-manual).  Automatic regexp-delimited overlays
+@end direntry
+
+
+@copying
+This manual describes the Emacs Auto-Overlays package, version 0.10.9
+@c --version--
+
+Copyright @copyright{} 2007-2015 Free Software Foundation, Inc
+
+@quotation
+Permission is granted to copy, distribute and/or modify this document
+under the terms of the GNU Free Documentation License, Version 1.2 or
+any later version published by the Free Software Foundation; with no
+Invariant Sections, no Front-Cover Texts, and no Back-Cover Texts. A
+copy of the license is included in the section entitled "GNU Free
+Documentation License".
+@end quotation
+@end copying
+
+
+@titlepage
+@title Emacs Auto-Overlays Manual
+@subtitle Version 0.10.9
+@c --version--
+@author Toby Cubitt
+
+@c Start copyright page
+@page
+@vskip 0pt plus 1filll
+@insertcopying
+@end titlepage
+
+
+@ifnottex
+@node Top
+@top Emacs Auto-Overlays Manual
+
+@insertcopying
+
+An Emacs overlay demarcates a region of text in a buffer, often giving
+it a different face or changing other properties for that region. There
+are many circumstance in which it might be useful to create, update, and
+delete overlays automatically when text matches some criterion,
+specified for example by regular expressions. This is what the
+auto-overlays package addresses. It is intended as an Elisp library,
+providing functions to be used by other Elisp packages, so does not
+itself define any new interactive commands or minor modes.
+
+
+@menu
+* Overview::
+* Auto-Overlay Functions::
+* Worked Example::
+* Extending the Auto-Overlays Package::
+* To-Do::
+* Function Index::
+* Variable Index::
+* Concept Index::
+* Copying this Manual::
+
+@detailmenu
+ --- The Detailed Node Listing ---
+
+Emacs Auto-Overlays Manual
+
+* Overview::
+* Auto-Overlay Functions::
+* Worked Example::
+* Extending the Auto-Overlays Package::
+* To-Do::
+
+Auto-Overlay Functions
+
+* Defining Regexps::
+* Starting and Stopping Auto-Overlays::
+* Searching for Overlays::
+
+Extending the Auto-Overlays Package
+
+* Auto-Overlays in Depth::
+* Integrating New Overlay Classes::
+* Functions for Writing New Overlay Classes::
+* Auto-Overlay Hooks::
+* Auto-Overlay Modification Pseudo-Hooks::
+
+Functions for Writing New Overlay Classes
+
+* Functions for Modifying Overlays::
+* Functions for Querying Overlays::
+
+Copying this Manual
+
+* GNU Free Documentation License::
+
+@end detailmenu
+@end menu
+
+@end ifnottex
+
+
+@contents
+
+
+
+
+
+
+
+@node Overview
+@chapter Overview
+@cindex Overview
+The auto-overlays package automatically creates, updates and destroys
+overlays based on regular expression matches in the buffer text. The
+overlay is created when text is typed that matches an auto-overlay
+regexp, and is destroyed if and when the matching text is changed so
+that it no longer matches.
+
+@cindex regexp sets
+@cindex sets of regexps
+The regexps are grouped into sets, and any number of different sets of
+regexps can be active in the same buffer simultaneously. Regexps in
+different sets are completely independent, and each set can be activated
+and deactivated independently (@pxref{Defining Regexps}). This allows
+different Emacs modes to simultaneously make use of auto-overlays in the
+same buffer.
+
+@cindex overlay classes
+@cindex classes of overlay
+There are different ``classes'' of auto-overlay, used to define
+different kinds of overlay behaviour. Some classes only require a single
+regexp, others require separate regexps to define the start and end of
+the overlay (@pxref{Defining Regexps}). Any additional regexps, beyond
+the minimum requirements, act as alternatives; if more than one of the
+regexps matches overlapping regions of text, the one that appears
+earlier in the list will take precedence. The predefined regexp classes
+are: @code{word}, @code{line}, @code{self}, @code{nested} and
+@code{flat}, but the auto-overlays package can easily be extended with
+new classes.
+
+@table @code
+@item word
+@cindex word overlay class
+@cindex overlay class, word
+@cindex class, word
+These are used to define overlays that cover the text matched by the
+regexp itself, so require a single regexp. An example use would be to
+create overlays covering single words.
+
+@item line
+@cindex line overlay class
+@cindex overlay class, line
+@cindex class, line
+These are used to define overlays that stretch from the text matching
+the regexp to the end of the line, and require a single regexp to define
+the start of the overlay. An example use would be to create overlays
+covering single-line comments in programming languages such as c.
+
+@item self
+@cindex self overlay class
+@cindex overlay class, self
+@cindex class, self
+These are used to define overlays that stretch from one regexp match to
+the next match for the same regexp, so naturally require a single
+regexp. An example use would be to create overlays covering strings
+delimited by @samp{""}.
+
+Note that for efficiency reasons, @code{self} overlays are @emph{not}
+fully updated when a new match is found. Instead, when a modification is
+subsequently made at any position in the buffer after the new match, the
+overlays are updated @emph{up to} that position. The update occurs just
+@emph{before} the modification is made. Therefore, the overlays at a
+given buffer position will not necessarily be correct until a
+modification is made at or after that position (@pxref{To-Do}).
+
+@item nested
+@cindex nested overlay class
+@cindex overlay class, nested
+@cindex class, nested
+These are used to define overlays that start and end at different regexp
+matches, and that can be nested one inside another. This class requires
+separate start and end regexps. An example use would be to create
+overlays between matching braces @samp{@{@}}.
+
+@item flat
+@cindex flat overlay class
+@cindex overlay class, flat
+@cindex class, flat
+These are used to define overlays that start and end at different regexp
+matches, but that can not be nested. Extra start matches within one of
+these overlays are ignored. This class requires separate start and end
+regexps. An example use would be to create overlays covering multi-line
+comments in code, e.g. c++ block comments delimited by @samp{/*} and
+@samp{*/}.
+@end table
+
+@cindex delimeter
+@cindex regexp groups
+@cindex grouping in regexps
+By default, the entire text matching a regexp acts as the
+``delimeter''. For example, a @code{word} overlay will cover all the
+text matching its regexp, and a @code{nested} overlay will start at the
+end of the text matching its start regexp. Sometimes it is useful to be
+able to have only part of the regexp match act as the delimeter. This
+can be done by grouping that part of the regexp (@pxref{Defining
+Regexps}). Overlays will then start and end at the text matching the
+group, instead of the text matching the entire regexp.
+
+
+Of course, automatically creating overlays isn't much use without some
+way of setting their properties too. Overlay properties can be defined
+along with the regexp, and are applied to any overlays created by a
+match to that regexp. Certain properties have implications for
+auto-overlay behaviour:
+
+@table @code
+@item priority
+@cindex priority property
+@cindex overlay property, priority
+This is a standard Emacs overlay property (@pxref{Overlay
+Properties,,,elisp, GNU Emacs Lisp Reference Manual}), but it is also
+used to determine which regexp takes precedence when two or more regexps
+in the same auto-overlay definition match overlapping regions of
+text. It is also used to determine which regexp's properties take
+precedence for overlays that are defined by separate start and end
+matches.
+
+@item exclusive
+@cindex exclusive property
+@cindex overlay property, exclusive
+Normally, different auto-overlay regexps coexist, and act completely
+independently of one-another. However, if an auto-overlay has non-nil
+@code{exclusive} and @code{priority} properties, regexp matches within
+the overlay are ignored if they have lower priority. An example use is
+ignoring other regexp matches within comments in code.
+@end table
+@cindex overlay properties
+
+
+
+@node Auto-Overlay Functions
+@chapter Auto-Overlay Functions
+@cindex functions
+@cindex package, loading
+@cindex loading the package
+@cindex require
+@cindex using auto-overlays
+
+To use auto-overlays in an Elisp package, you must load the
+package by including a line of the form
+
+@lisp
+(require 'auto-overlays)
+@end lisp
+
+@noindent near the beginning of your package.
+
+This section describes the functions that are needed in order to make
+use of auto-overlays in an Elisp package. Functions related to extending
+the auto-overlays package are explained in a later section.
+@xref{Extending the Auto-Overlays Package}.
+
+@menu
+* Defining Regexps::
+* Starting and Stopping Auto-Overlays::
+* Searching for Overlays::
+@end menu
+
+
+
+@node Defining Regexps
+@section Defining Regexps
+@cindex defining regexps
+@cindex regexps, defining
+@cindex regexps, loading and unloading
+@cindex functions, defining regexps
+@cindex functions, loading and unloading regexps
+
+An auto-overlay definition is a list of the form:
+
+@lisp
+(@var{class} &optional :id @var{entry-id} @var{regexp1} @var{regexp2} ...)
+@end lisp
+
+@var{class} is one of the regexp classes described in the previous
+section (@pxref{Overview}).
+
+The optional @code{:id} property should be a symbol that can be used to
+uniquely identify the auto-overlay definition.
+
+Each @var{regexp} defines one of the regexps that make up the
+auto-overlay definition. It should be a list of the form
+
+@lisp
+(@var{rgxp} &optional :id @var{subentry-id} :edge @var{edge} :exclusitve @var{exclusive} @@rest @var{property1} @var{property2} ...)
+@end lisp
+
+The optional @code{:id} property should be a symbol that can be used to
+uniquely identify the regexp.
+
+The @code{:edge} property should be one of the symbols @code{'start} or
+@code{'end}, and determines which edge of the auto-overlay this regexp
+corresponds to. If @code{:edge} is not specified, it is assumed to be
+@code{'start}. Auto-overlay classes that do not require separate
+@code{start} and @code{end} regexps ignore this property.
+
+The optional @code{exclusive} property specifies that this regexp
+matches exclusively; no lower-priority regexp is allowed to match the
+same text. (Contrast with the @code{exclusive} overlay property, which
+prevents any auto-overlay matches @emph{within} the auto-overlay itself.
+@pxref{Overview})
+
+Any further elements in the list are cons cells of the form
+@code{(property . value)}, where @var{property} is an overlay property
+name (a symbol) and @var{value} its value.
+
+In its simplest form, @var{rgxp} is a single regular expression. If only
+part of the regexp should act as the delimeter (@pxref{Overview}),
+@var{rgxp} should instead be a cons cell:
+
+@lisp
+(@var{rx} . @var{group})
+@end lisp
+
+@noindent
+where @var{rx} is a regexp that contains at least one group
+(@pxref{Regular Expressions,,,elisp, GNU Emacs Lisp Reference Manual}),
+and @var{group} is an integer identifying which group should act as the
+delimeter.
+
+If the overlay class requires additional groups to be specified,
+@var{rgxp} should instead be a list:
+
+@lisp
+(@var{rx} @var{group0} @var{group1} ...)
+@end lisp
+
+@noindent
+where @var{rx} is a regexp. The first @var{group0} still specifies the
+part that acts as the delimeter, as before. If the entire regexp should
+act as the delimeter, @var{group0} must still be supplied but should be
+set to 0 (meaning the entire regexp). None of the standard classes make
+use of any additional groups, but extensions to the auto-overlays
+package that define new classes may. @xref{Extending the Auto-Overlays
+Package}.
+
+
+The following functions are used to load and unload regexp definitions:
+@cindex defining regexps
+@cindex regexps, defining
+@cindex regexps, loading and unloading
+@cindex functions, defining regexps
+@cindex functions, loading and unloading regexps
+
+@table @code
+@item (auto-overlay-load-set @var{definitions})
+@findex auto-overlay-load-set
+@cindex auto-overlay definitions
+@cindex auto-overlays, defining
+@cindex auto-overlays, loading
+@cindex loading auto-overlay definitions
+@cindex defining auto-overlays
+Load a new set of auto-overlay @var{definitions} into the set identified by
+the symbol @var{set-id}. @var{definitions} should be a list of
+definitions, each element being a definition of the form described above.
+
+@item (auto-overlay-load-definition @var{set-id} @var{definition} &optional @var{pos})
+@findex auto-overlay-load-definition
+@cindex auto-overlay definitions
+@cindex auto-overlays, defining
+@cindex auto-overlays, loading
+@cindex loading auto-overlay definitions
+@cindex defining auto-overlays
+Load a new auto-overlay @var{definition}, which should be a list of the
+form described above, into the set identified by the symbol
+@var{set-id}. The optional parameter @var{pos} determines where in the
+set's regexp list the new regexp is inserted. If it is @code{nil}, the
+regexp is added at the end. If it is @code{t}, the regexp is added at
+the beginning. If it is an integer, the regexp is added at that position
+in the list. Whilst the position in the list has no effect on overlay
+behaviour, it does determine the order in which regexps are checked, so
+can affect efficiency.
+
+@item (auto-overlay-load-regexp @var{set-id} @var{entry-id} @var{regexp} &optional @var{pos})
+@findex auto-overlay-load-regexp
+@cindex defining regexps
+@cindex loading regexps
+@cindex regexps, defining
+@cindex regexps, loading
+Load a new @var{regexp}, which should be a list of the form described
+above, into the auto-overlay definition identified by the symbol
+@var{entry-id}, in the set identified by the symbol
+@var{set-id}. @var{regexp} should be a list of the form described above.
+The optional @var{pos} determines the position of the regexp in the list
+of regexps defining the auto-overlay, which can be significant for
+overlay behaviour since it determines which regexp takes precedence when
+two match the same text.
+
+
+@item (auto-overlay-unload-set @var{set-id})
+@findex auto-overlay-unload-set
+@cindex unloading regexp sets
+@cindex regexp sets, unloading
+@cindex auto-overlay definitions, unloading
+Unload the entire regexp set identified by the symbol @var{set-id}.
+
+
+@item (auto-overlay-unload-definition @var{set-id} @var{entry-id})
+@findex auto-overlay-unload-definition
+@cindex unloading regexp definitions
+@cindex regexp definitions, unloading
+Unload the auto-overlay definition identified by the symbol
+@var{entry-id} from the set identified by the symbol @var{set-id}.
+
+
+@item (auto-overlay-unload-regexp @var{set-id} @var{entry-id} @var{subentry-id})
+@findex auto-overlay-unload-regexp
+@cindex unloading regexps
+@cindex regexps, unloading
+Unload the auto-overlay regexp identified by the symbol
+@var{subentry-id} from the auto-overlay definition identified by the
+symbol @var{entry-id} in the set identified by the symbol @var{set-id}.
+
+
+@item (auto-overlay-share-regexp-set @var{set-id} @var{from-buffer} @@optional @var{to-buffer})
+@findex auto-overlay-share-regexp-set
+@cindex sharing regexp sets
+@cindex regexp sets, sharing between buffers
+@cindex buffers, sharing regexp sets between
+Share the set of regexp definitions identified by the symbol
+@var{set-id} in buffer @code{from-buffer} with the buffer
+@var{to-buffer}, or the current buffer if @var{to-buffer} is null. The
+regexp set becomes common to both buffers, and any changes made to it in
+one buffer, such as loading and unloading regexp definitions, are also
+reflected in the other buffer. However, the regexp set can still be
+enabled and disabled independently in both buffers. The same regexp set
+can be shared between any number of buffers. To remove a shared regexp
+set from one of the buffers, simply unload the entire set from that
+buffer using @command{auto-overlay-unload-regexp}. The regexp set will
+remain defined in all the other buffers it was shared with.
+@end table
+
+
+
+@node Starting and Stopping Auto-Overlays
+@section Starting and Stopping Auto-Overlays
+@cindex starting and stopping auto-overlays
+@cindex regexp sets, starting and stopping
+@cindex saving overlays
+@cindex loading overlays
+@cindex overlays, starting and stopping
+@cindex overlays, saving and loading
+@cindex functions, starting and stopping overlays
+@cindex functions, loading and saving overlays
+A set of regexps is not active until it has been ``started'', and can be
+deactivated by ``stopping'' it. When a regexp set is activated, the
+entire buffer is scanned for regexp matches, and the corresponding
+overlays created. Similarly, when a set is deactivated, all the overlays
+are deleted. Note that regexp definitions can be loaded and unloaded
+whether the regexp set is active or inactive, and that deactivating a
+regexp set does @emph{not} delete its regexp definitions.
+
+Since scanning the whole buffer for regexp matches can take some time,
+especially for large buffers, auto-overlay data can be saved to an
+auxiliary file so that the overlays can be restored more quickly if the
+same regexp set is subsequently re-activated. Of course, if either the
+text in the buffer or the overlay definitions are modified whilst the
+regexp set is disabled, then the saved data will be out of date.
+Auto-overlays automatically checks whether the text or overlay
+definitions have been modified since the data was saved. If so, it
+ignores the saved data and re-scans the buffer.
+
+The usual time to save and restore overlay data is when a regexp set is
+deactivated or activated. The auxilliary file name is then constructed
+automatically from the buffer name and the set-id. However,
+auto-overlays can also be saved and restored manually.
+
+
+@table @code
+@item (auto-overlay-start @var{set-id} @@optional @var{buffer} @var{save-file} @var{no-regexp-check})
+@findex auto-overlay-start
+Activate the auto-overlay regexp set identified by the symbol
+@var{set-id} in @var{buffer}, or the current buffer if the latter is
+@code{nil}. If there is a file called
+@file{auto-overlay-}@var{buffer-name}@file{-}@var{set-id} containing
+up-to-date overlay data, it will be used to restore the auto-overlays
+(@var{buffer-name} is the name of the file visited by the buffer, or the
+buffer name itself if there is none). Otherwise, the entire buffer will
+be scanned for regexp matches.
+
+The string @var{save-file} specifies the where to look for the file of
+saved overlay data. If it is nil, it defaults to the current
+directory. If it is a string specifying a relative path, then it is
+relative to the current directory, whereas an absolute path specifies
+exactly where to look. If it is a string specifying a file name (with or
+without a full path, relative or absolute), then it overrides the
+default file name and/or location. Any other value of @var{save-file}
+will cause the file of overlay data to be ignored, even if it exists.
+
+If the overlays are being loaded from a file, but optional argument
+no-regexp-check is non-nil, the file of saved overlays will be used, but
+no check will be made to ensure regexp refinitions are the same as when
+the overlays were saved.
+
+
+@item (auto-overlay-stop @var{set-id} @@optional @var{buffer} @var{save-file} @var{leave-overlays})
+@findex auto-overlay-stop
+Deactivate the auto-overlay regexp set identified by the symbol
+@var{set-id} in @var{buffer}, or the current buffer if the latter is
+@code{nil}. All corresponding overlays will be deleted (unless the
+@var{leave-overlays} option is non-nil, which should only be used if the
+buffer is about to be killed), but the regexp definitions are preserved
+and can be reactivated later.
+
+If @var{save-file} is non-nil, overlay data will be saved in an
+auxilliary file called
+@file{auto-overlay-}@var{buffer-name}@file{-}@var{set-id} in the current
+directory, to speed up subsequent reactivation of the regexp set in the
+same buffer (@var{buffer-name} is the name of the file visited by the
+buffer, or the buffer name itself if there is none). If @var{save-file}
+is a string, it overrides the default save location, overriding either
+the directory if it only specifies a path (relative paths are relative
+to the current directory), or the file name if it only specifies a
+filename, or both if it specifies a full path.
+
+
+@item (auto-overlay-save-overlays @var{set-id} @@optional @var{buffer} @var{file})
+@findex auto-overlay-save-overlays
+Save auto-overlay data for the regexp set identified by the symbol
+@var{set-id} in @var{buffer}, or the current buffer if @code{nil}, to an
+auxilliary file called @var{file}. If @var{file} is nil, the overlay
+data are saved to a file called
+@file{auto-overlay-}@var{buffer-name}@file{-}@var{set-id} in the current
+directory (@var{buffer-name} is the name of the file visited by the
+buffer, or the buffer name itself if it's not visiting a file). If
+@file{file} is a directory name (either an absolute path or relative to
+the current directory), the overlay data are saved to the default file
+name under that directory.
+
+
+@item (auto-overlay-load-overlays @var{set-id} @@optional @var{buffer} @var{file} @var{no-regexp-check})
+@findex auto-overlay-load-overlays
+Load auto-overlay data for the regexp set identified by the symbol
+@var{set-id} into @var{buffer}, or the current buffer if @code{nil},
+from an auxilliary file called @var{file}. If @var{file} is nil, it
+attempts to load the overlay data from a file called
+@file{auto-overlay-}@var{buffer-name}@file{-}@var{set-id} in the current
+directory (@var{buffer-name} is the name of the file visited by the
+buffer, or the buffer name itself if it's not visiting a file). If
+@file{file} is a directory name (either an absolute path or relative to
+the current directory), it attempts to load the overlay data from the
+default file name under that directory. If @var{no-regexp-check} is
+no-nil, the saved overlays will be loaded even if different regexp
+definitions were active when the overlays were saved. Returns @code{t}
+if the overlays were successfully loaded, @code{nil} otherwise.
+@end table
+
+
+
+@node Searching for Overlays
+@section Searching for Overlays
+@cindex searching for overlays
+@cindex finding overlays
+@cindex functions, searching for overlays
+@cindex overlays, finding
+@cindex overlay properties
+Auto-overlays are just normal Emacs overlays, so any of the standard
+Emacs functions can be used to search for overlays and retrieve overlay
+properties. The auto-overlays package provides some additional
+functions.
+
+@table @code
+@item (auto-overlays-at-point @@optional @var{point} @@key @var{inactive} @var{all-overlays} @@rest @var{prop-tests})
+@findex auto-overlays-at-point
+Return a list of auto-overlays overlapping @var{point}, or the point if
+@var{point} is null. The list can be filtered to only return
+overlays with properties matching criteria specified by
+@var{prop-tests}. This should be a list defining a property test, with
+one of the following forms (or a list of such lists, if more than one
+property test is required):
+
+@lisp
+(@var{function} @var{property})
+(@var{function} @var{property} @var{value})
+(@var{function} (@var{property1} @var{property2} ...) (@var{value1} @var{value2} ...))
+@end lisp
+
+@noindent
+where @var{function} is a function, @var{property} is an overlay
+property name (a symbol), and @var{value} can be any value or lisp
+expression. For each overlay, first the values corresponding to the
+@var{property} names are retrieved from the overlay and any @var{value}s
+that are lisp expressions are evaluated. Then @var{function} is called
+with the property values followed by the other values as its arguments.
+The test is satisfied if the result is non-nil, otherwise it fails.
+Tests are evaluated in order, but only up to the first failure. Only
+overlays that satisfy all property tests are returned.
+
+For efficiency reasons, the auto-overlays package sometimes leaves
+overlays hanging around in the buffer even when they should have been
+deleted. These are marked with a non-nil @code{inactive} property. By
+default, @command{auto-overlays-at-point} ignores these. A non-nil
+@var{inactive} keyword argument will override this, causing inactive
+overlays to be included in the returned list (assuming they pass all
+property tests).
+
+By default, @command{auto-overlays-at-point} only returns overlays
+created by the auto-overlays package. If you want to include @emph{all}
+overlays, pass a non-nil @var{all-overlays} keyword argument.
+
+@item (auto-overlays-in @var{start} @var{end} @@key @var{within} @var{inactive} @var{all-overlays} @@rest @var{prop-tests})
+@findex auto-overlays-in
+Return a list of overlays overlapping the region between @var{start} and
+@var{end}. A non-nil @var{within} keyword argument, restricts the
+results to overlays that are entirely within the region from @var{start}
+to @var{end}, not overlays that extend outside that region. The
+remaining arguments are as for @command{auto-overlays-at-point}, above.
+
+@item (auto-overlay-highest-priority-at-point @@optional @var{point} @@key @var{inactive} @var{all-overlays} @@rest @var{prop-tests})
+@findex auto-overlay-highest-priority-at-point
+@cindex overlays, priority
+@cindex highest priority overlay
+Return the highest priority overlay at @var{point} (or the point, if
+@var{point} is null). An overlay's priority is determined by the value
+of its @code{priority} property (@pxref{Overlay Properties,,,elisp, GNU
+Emacs Lisp Reference Manual}). If two overlays have the same priority,
+the innermost one takes precedence (i.e. the one that begins later in
+the buffer, or if they begin at the same point the one that ends
+earlier; if two overlays have the same priority and extend over the same
+region, there is no way to predict which will be returned).
+The remaining arguments are as for @command{auto-overlays-at-point}.
+
+
+@item (auto-overlay-local-binding @var{symbol} @@optional @var{point})
+@findex auto-overlay-local-binding
+@cindex overlays, local-binding
+@cindex overlay-local binding
+@cindex local-binding
+Return the ``overlay-local'' binding of @var{symbol} at @var{point} (or
+the point if @var{point} is null), or the current local binding if there
+is no overlay binding. An ``overlay-local'' binding for @var{symbol} is
+the value of the overlay property called @var{symbol}. If more than one
+overlay at @var{point} has a non-nil @var{symbol} property, the value
+from the highest priority overlay is returned (see
+@command{auto-overlay-highest-priority-at-point}, above, for an
+explanation of ``highest priority'').
+@end table
+
+
+
+
+@node Worked Example
+@chapter Worked Example
+@cindex worked example
+@cindex example
+@cindex LaTeX
+The interaction of all the different regexp definitions, overlay
+properties and auto-overlay classes provided by the auto-overlays package
+can be a little daunting. This section will go through an example of how
+the auto-overlay regexps could be defined to create overlays for a
+subset of @LaTeX{}, which is complex enough to demonstrate most of the
+features.
+
+@LaTeX{} is a markup language, so a @LaTeX{} document combines markup
+commands with normal text. Commands start with @samp{\}, and end at the
+first non-word-constituent character. We want to highlight all @LaTeX{}
+commands in blue. Two commands that will particularly interest us are
+@samp{\begin} and @samp{\end}, which begin and end a @LaTeX{}
+environment. The environment name is enclosed in braces:
+@samp{\begin@{@var{environment-name}@}}, and we want it to be
+highlighted in pink. @LaTeX{} provides many environments, used to create
+lists, tables, titles, etc. We will take the example of an
+@samp{equation} environment, used to typeset mathematical
+equations. Thus equations are enclosed by @samp{\begin@{equation@}} and
+@samp{\end@{equation@}}, and we would like to highlight these equations
+in yellow. Another example we will use is the @samp{$} delimiter. Pairs
+of @samp{$}s delimit mathematical expressions that appear in the middle
+of a paragraph of normal text (whereas @samp{equation} environments
+appear on their own, slightly separated from surrounding text). Again,
+we want to highlight these mathematical expressions, this time in
+green. The final piece of @LaTeX{} markup we will need to consider is
+the @samp{%} character, which creates a comment that lasts till the end
+of the line (i.e. text after the @samp{%} is ignored by the @LaTeX{}
+processor up to the end of the line).
+
+
+@cindex word overlay class example
+@cindex example, word class
+@cindex overlay class, word example
+@cindex class, word example
+@LaTeX{} commands are a good example of when to use @code{word} regular
+expressions (@pxref{Overview}). The appropriate regexp definition is
+loaded by
+
+@lisp
+(auto-overlay-load-definition
+ 'latex
+ '(word ("\\\\[[:alpha:]]*?\\([^[:alpha:]]\\|$\\)"
+         (face . (background-color . "blue")))))
+@end lisp
+
+@noindent
+We have called the regexp set @code{latex}. The @code{face} property is
+a standard Emacs overlay property that sets font properties within the
+overlay. @xref{Overlay Properties,,,elisp, GNU Emacs Lisp Reference
+Manual}. @code{"\\\\"} is the string defining the regexp that matches a
+@emph{single} @samp{\}. (Note that the @samp{\} character has a special
+meaning in regular expressions, so to include a literal one it must be
+escaped: @samp{\\}. However, @samp{\} also has a special meaning in lisp
+strings, so both @samp{\} characters must be escaped there too, giving
+@code{\\\\}.) @code{[[:alpha:]]*?} matches a sequence of zero or more
+letter characters. The @code{?} ensures that it matches the
+@emph{shortest} sequence of letters consistent with matching the regexp,
+since we want the region to end at the first non-letter character,
+matched by @code{[^[:alpha:]]}. The @code{\|} defines an alternative, to
+allow the @LaTeX{} command to be terminated either by a non-letter
+character or by the end of the line (@code{$}). @xref{Regular
+Expressions,,,elisp, GNU Emacs Lisp Reference Manual}, for more details
+on Emacs regular expressions.
+
+However, there's a small problem. We only want the blue background to
+cover the characters making up a @LaTeX{} command. But as we've defined
+things so far, it will cover all the text matched by the regexp, which
+includes the leading @samp{\} and the trailing non-letter character. To
+rectify this, we need to group the part of the regexp that matches the
+command (i.e. by surround it with @samp{\(} and @samp{\)}), and put the
+regexp inside a cons cell containing the regexp in its @code{car} and a
+number indicating which subgroup to use in its @code{cdr}:
+
+@lisp
+(auto-overlay-load-definition
+ 'latex
+ '(word (("\\\\[[:alpha:]]*?\\([^[:alpha:]]\\|$\\)" . 1)
+         (face . (background-color . "blue")))))
+@end lisp
+
+
+@cindex self overlay class example
+@cindex overlay class, self example
+@cindex example, self class
+@cindex class, self example
+The @samp{$} delimiter is an obvious example of when to use a
+@code{self} regexp (@pxref{Overview}). We can update our example to
+include this (note that @samp{$} also has a special meaning in regular
+expressions, so it must be escaped with @samp{\} which itself must be
+escaped in lisp strings):
+
+@lisp
+(auto-overlay-load-definition
+ 'latex
+ '(word (("\\\\[[:alpha:]]*?\\([^[:alpha:]]\\|$\\)" . 1)
+         (face . (background-color . "blue")))))
+
+(auto-overlay-load-definition
+ 'latex
+ '(self ("\\$" (face . (background-color . "green")))))
+@end lisp
+
+@noindent
+This won't quite work though. @LaTeX{} maths commands also start with a
+@samp{\} character, which will match the @code{word} regexp. For the
+sake of example we want the entire equation highlighted in green,
+without highlighting any @LaTeX{} maths commands it contains in
+blue. Since the @code{word} overlay will be within the @code{self}
+overlay, the blue highlighting will take precedence. We can change this
+by giving the @code{self} overlay a higher priority (any priority is
+higher than a non-existent one; we use 3 here for later
+convenience). For efficiency reasons, it's a good idea to put higher
+priority regexp definitions before lower priority ones, so we get:
+
+@lisp
+(auto-overlay-load-definition
+ 'latex
+ '(self ("\\$" (priority . 3) (face . (background-color . "green")))))
+
+(auto-overlay-load-definition
+ 'latex
+ '(word (("\\\\[[:alpha:]]*?\\([^[:alpha:]]\\|$\\)" . 1)
+         (face . (background-color . "blue")))))
+@end lisp
+
+
+@cindex nested overlay class example
+@cindex overlay class, nested example
+@cindex example, nested class
+@cindex class, nested example
+The @samp{\begin@{equation@}} and @samp{\end@{equation@}} commands also
+enclose maths regions, which we would like to highlight in yellow. Since
+the opening and closing delimiters are different in this case, we must
+use @code{nested} overlays (@pxref{Overview}). Our example now looks like:
+
+@lisp
+(auto-overlay-load-definition
+ 'latex
+ '(self ("\\$" (priority . 3) (face . (background-color . "green")))))
+
+(auto-overlay-load-definition
+ 'latex
+ '(nested
+   ("\\begin@{equation@}"
+    :edge start
+    (priority . 1)
+    (face . (background-color . "yellow")))
+   ("\\end@{equation@}"
+    :edge end
+    (priority . 1)
+    (face . (background-color . "yellow")))))
+
+(auto-overlay-load-definition
+ 'latex
+ '(word (("\\\\[[:alpha:]]*?\\([^[:alpha:]]\\|$\\)" . 1)
+         (face . (background-color . "blue")))))
+@end lisp
+
+@noindent
+Notice how we've used separate @code{start} and @code{end} regexps to
+define the auto-overlay. Once again, we have had to escape the @samp{\}
+characters, and increase the priority of the new regexp definition to
+avoid any @LaTeX{} commands within the maths region being highlighted in
+blue.
+
+
+@cindex line overlay class example
+@cindex overlay class, line example
+@cindex example, line class
+@cindex class, line example
+@LaTeX{} comments start with @samp{%} and last till the end of the line:
+a perfect demonstration of a @code{line} regexp. Here's a first attempt:
+
+@lisp
+(auto-overlay-load-definition
+ 'latex
+ '(self ("\\$" (priority . 3) (face . (background-color . "green")))))
+
+(auto-overlay-load-definition
+ 'latex
+ '(nested
+   ("\\begin@{equation@}"
+    :edge start
+    (priority . 1)
+    (face . (background-color . "yellow")))
+   ("\\end@{equation@}"
+    :edge end
+    (priority . 1)
+    (face . (background-color . "yellow")))))
+
+(auto-overlay-load-definition
+ 'latex
+ '(word (("\\\\[[:alpha:]]*?\\([^[:alpha:]]\\|$\\)" . 1)
+         (face . (background-color . "blue")))))
+
+(auto-overlay-load-definition
+ 'latex
+ `(line ("%" (face . (background-color
+                      . ,(face-attribute 'default :background))))))
+@end lisp
+
+@noindent
+We use the standard Emacs @command{face-attribute} function to retrieve
+the default background colour, which is evaluated before the regexp
+definition is loaded. (This will of course go wrong if the default
+background colour is subsequently changed, but it's sufficient for this
+example). Let's think about this a bit. We probably don't want anything
+within a comment to be highlighted at all, even if it matches one of the
+other regexps. In fact, creating overlays for @samp{\begin} and
+@samp{\end} commands which are within a comment could cause havoc! If
+they don't occur in pairs within the commented region, they will
+erroneously pair up with ones outside the comment. We need comments to
+take precedence over everything else, and we need them to block other
+regexp matches, so we boost the overlay's priority and set the exclusive
+property:
+
+@lisp
+(auto-overlay-load-definition
+ 'latex
+ `(line ("%" (priority . 4) (exclusive . t)
+             (face . (background-color
+                      . ,(face-attribute 'default :background))))))
+
+(auto-overlay-load-definition
+ 'latex
+ '(self ("\\$" (priority . 3) (face . (background-color . "green")))))
+
+(auto-overlay-load-definition
+ 'latex
+ '(nested
+   ("\\begin@{equation@}"
+    :edge start
+    (priority . 1)
+    (face . (background-color . "yellow")))
+   ("\\end@{equation@}"
+    :edge end
+    (priority . 1)
+    (face . (background-color . "yellow")))))
+
+(auto-overlay-load-definition
+ 'latex
+ '(word (("\\\\[[:alpha:]]*?\\([^[:alpha:]]\\|$\\)" . 1)
+         (face . (background-color . "blue")))))
+@end lisp
+
+
+@cindex nested overlay class example
+@cindex overlay class, nested example
+@cindex example, nested class
+@cindex class, nested example
+We're well on our way to creating a useful setup, at least for the
+@LaTeX{} commands we're considering in this example. There is one last
+type of overlay to create, but it is the most complicated. We want
+environment names to be highlighted in pink, i.e. the region between
+@samp{\begin@{} and @samp{@}}. A first attempt at this might result in:
+
+@lisp
+(auto-overlay-load-definition
+ 'latex
+ `(line ("%" (priority . 4) (exclusive . t)
+             (face . (background-color
+                      . ,(face-attribute 'default :background))))))
+
+(auto-overlay-load-definition
+ 'latex
+ '(self ("\\$" (priority . 3) (face . (background-color . "green")))))
+
+(auto-overlay-load-definition
+ 'latex
+ '(nested
+   ("\\begin@{"
+    :edge start
+    (priority . 2)
+    (face . (background-color . "pink")))
+   ("@}"
+    :edge end
+    (priority . 2)
+    (face . (background-color . "pink")))))
+
+(auto-overlay-load-definition
+ 'latex
+ '(nested
+   ("\\begin@{equation@}"
+    :edge start
+    (priority . 1)
+    (face . (background-color . "yellow")))
+   ("\\end@{equation@}"
+    :edge end
+    (priority . 1)
+    (face . (background-color . "yellow")))))
+
+(auto-overlay-load-definition
+ 'latex
+ '(word (("\\\\[[:alpha:]]*?\\([^[:alpha:]]\\|$\\)" . 1)
+         (face . (background-color . "blue")))))
+@end lisp
+
+@noindent
+However, we'll hit a problem with this. The @samp{@}} character also
+closes the @samp{\end@{} command. Since we haven't told auto-overlays
+about @samp{\end@{}, every @samp{@}} that should close an @samp{\end@{}
+command will instead be interpreted as the end of a @samp{\start@{}
+command, probably resulting in lots of unmatched @samp{@}} characters,
+creating pink splodges everywhere! Clearly, since we also want
+environment names between @samp{\end@{} and @samp{@}} to be pink, we
+need something more along the lines of:
+
+@lisp
+(auto-overlay-load-definition
+ 'latex
+ `(line ("%" (priority . 4) (exclusive . t)
+             (face . (background-color
+                      . ,(face-attribute 'default :background))))))
+
+(auto-overlay-load-definition
+ 'latex
+ '(self ("\\$" (priority . 3) (face . (background-color . "green")))))
+
+(auto-overlay-load-definition
+ 'latex
+ '(nested
+   ("\\begin@{"
+    :edge start
+    (priority . 2)
+    (face . (background-color . "pink")))
+   ("\\end@{"
+    :edge start
+    (priority . 2)
+    (face . (background-color . "pink")))
+   ("@}"
+    :edge end
+    (priority . 2)
+    (face . (background-color . "pink")))))
+
+(auto-overlay-load-definition
+ 'latex
+ '(nested
+   ("\\begin@{equation@}"
+    :edge start
+    (priority . 1)
+    (face . (background-color . "yellow")))
+   ("\\end@{equation@}"
+    :edge end
+    (priority . 1)
+    (face . (background-color . "yellow")))))
+
+(auto-overlay-load-definition
+ 'latex
+ '(word (("\\\\[[:alpha:]]*?\\([^[:alpha:]]\\|$\\)" . 1)
+         (face . (background-color . "blue")))))
+@end lisp
+
+@noindent
+We still haven't solved the problem though. The @samp{@}} character
+doesn't only close @samp{\begin@{} and @samp{\end@{} commands in
+@LaTeX{}. @emph{All} arguments to @LaTeX{} commands are surrounded by
+@samp{@{} and @samp{@}}. We could add all the commands that take
+arguments, but we don't really want to bother about any other commands
+(at least in this example). All we want to do is prevent predictive mode
+incorrectly pairing the @samp{@}} characters used for other
+commands. Instead, we can just add @samp{@{} to the list:
+
+@lisp
+(auto-overlay-load-definition
+ 'latex
+ `(line ("%" (priority . 4) (exclusive . t)
+             (face . (background-color
+                      . ,(face-attribute 'default :background))))))
+
+(auto-overlay-load-definition
+ 'latex
+ '(self ("\\$" (priority . 3) (face . (background-color . "green")))))
+
+(auto-overlay-load-definition
+ 'latex
+ '(nested
+   ("@{"
+    :edge start
+    (priority . 2))
+   ("\\begin@{"
+    :edge start
+    (priority . 2)
+    (face . (background-color . "pink")))
+   ("\\end@{"
+    :edge start
+    (priority . 2)
+    (face . (background-color . "pink")))
+   ("@}"
+    :edge end
+    (priority . 2))))
+
+(auto-overlay-load-definition
+ 'latex
+ '(nested
+   ("\\begin@{equation@}"
+    :edge start
+    (priority . 1)
+    (face . (background-color . "yellow")))
+   ("\\end@{equation@}"
+    :edge end
+    (priority . 1)
+    (face . (background-color . "yellow")))))
+
+(auto-overlay-load-definition
+ 'latex
+ '(word (("\\\\[[:alpha:]]*?\\([^[:alpha:]]\\|$\\)" . 1)
+         (face . (background-color . "blue")))))
+@end lisp
+
+@noindent
+Notice how the @code{@{} and @code{@}} regexps do not define a
+background colour (or indeed any other properties), so that any overlays
+they create will have no effect other than making sure all @samp{@{} and
+@samp{@}} characters are correctly paired.
+
+We've made one mistake though: by putting the @code{@{} regexp at the
+beginning of the list, it will take priority over any other regexp in
+the list that could match the same text. And since @code{@{} will match
+whenever @code{\begin@{} or @code{\end@{} matches, environments will
+never be highlighted! The @code{@{} regexp must come @emph{after} the
+@code{\begin@{} and @code{\end@{} regexps, to ensure it is only used if
+neither of them match (it doesn't matter whether it appears before or
+after the @code{@{} regexp, since the latter will never match the same
+text):
+
+@lisp
+(auto-overlay-load-definition
+ 'latex
+ `(line ("%" (priority . 4) (exclusive . t)
+             (face . (background-color
+                      . ,(face-attribute 'default :background))))))
+
+(auto-overlay-load-definition
+ 'latex
+ '(self ("\\$" (priority . 3) (face . (background-color . "green")))))
+
+(auto-overlay-load-definition
+ 'latex
+ '(nested
+   ("\\begin@{"
+    :edge start
+    (priority . 2)
+    (face . (background-color . "pink")))
+   ("\\end@{"
+    :edge start
+    (priority . 2)
+    (face . (background-color . "pink")))
+   ("@{"
+    :edge start
+    (priority . 2))
+   ("@}"
+    :edge end
+    (priority . 2))))
+
+(auto-overlay-load-definition
+ 'latex
+ '(nested
+   ("\\begin@{equation@}"
+    :edge start
+    (priority . 1)
+    (face . (background-color . "yellow")))
+   ("\\end@{equation@}"
+    :edge end
+    (priority . 1)
+    (face . (background-color . "yellow")))))
+
+(auto-overlay-load-definition
+ 'latex
+ '(word (("\\\\[[:alpha:]]*?\\([^[:alpha:]]\\|$\\)" . 1)
+         (face . (background-color . "blue")))))
+@end lisp
+
+There is one last issue. A literal @samp{@{} or @samp{@}} character can
+be included in a @LaTeX{} document by escaping it with @samp{\}:
+@samp{\@{} and @samp{\@}}. In this situation, the characters do not
+match anything and should not be treated as delimiters. We can modify
+the @code{@{} and @code{@}} regexps to exclude these cases:
+
+@lisp
+(auto-overlay-load-definition
+ 'latex
+ `(line ("%" (priority . 4) (exclusive . t)
+             (face . (background-color
+                      . ,(face-attribute 'default :background))))))
+
+(auto-overlay-load-definition
+ 'latex
+ '(self ("\\$" (priority . 3) (face . (background-color . "green")))))
+
+(auto-overlay-load-definition
+ 'latex
+ '(nested
+   ("\\begin@{"
+    :edge start
+    (priority . 2)
+    (face . (background-color . "pink")))
+   ("\\end@{"
+    :edge start
+    (priority . 2)
+    (face . (background-color . "pink")))
+   ("\\([^\\]\\|^\\)@{"
+    :edge start
+    (priority . 2))
+   ("\\([^\\]\\|^\\)@}"
+    :edge end
+    (priority . 2))))
+
+(auto-overlay-load-definition
+ 'latex
+ '(nested
+   ("\\begin@{equation@}"
+    :edge start
+    (priority . 1)
+    (face . (background-color . "yellow")))
+   ("\\end@{equation@}"
+    :edge end
+    (priority . 1)
+    (face . (background-color . "yellow")))))
+
+(auto-overlay-load-definition
+ 'latex
+ '(word (("\\\\[[:alpha:]]*?\\([^[:alpha:]]\\|$\\)" . 1)
+         (face . (background-color . "blue")))))
+@end lisp
+
+@noindent
+The new, complicated-looking regexps will only match @samp{@{} and
+@samp{@}} characters if they are @emph{not} preceded by a @samp{\}
+character (@pxref{Regular Expressions,,,elisp,GNU Emacs Lisp Reference
+Manual}). Note that the character alternative @code{[^\]\|^} can match
+any character that isn't a @samp{\} @emph{or} the start of a line. This
+is required because matches to auto-overlay regexps are not allowed to
+span more than one line. If @samp{@{} or @samp{@}} appear at the
+beginning of a line, there will be no character in front (the newline
+character doesn't count, since it isn't on the same line), so the
+@code{[^\]} will not match.
+
+However, when it does match, the @code{@}} regexp will now match an
+additional character before the @code{@}}, causing the overlay to end
+one character early. (The @code{@{} regexp will also match one
+additional character before the @code{@{}, but since the beginning of
+the overlay starts from the @emph{end} of the @code{start} delimiter,
+this poses less of a problem.) We need to group the part of the regexp
+that should define the delimiter, i.e. the @code{@}}, by surrounding it
+with @code{\(} and @code{\)}, and put the regexp in the @code{car} of a
+cons cell whose @code{cdr} specifies the new subgroup (i.e. the 2nd
+subgroup, since the regexp already included a group for other reasons;
+we could alternatively replace the original group by a shy-group, since
+we don't actually need to capture match data for that group). Our final
+version looks like this:
+
+@lisp
+(auto-overlay-load-definition
+ 'latex
+ `(line ("%" (priority . 4) (exclusive . t)
+             (face . (background-color
+                      . ,(face-attribute 'default :background))))))
+
+(auto-overlay-load-definition
+ 'latex
+ '(self ("\\$" (priority . 3) (face . (background-color . "green")))))
+
+(auto-overlay-load-definition
+ 'latex
+ '(nested
+   ("\\begin@{"
+    :edge start
+    (priority . 2)
+    (face . (background-color . "pink")))
+   ("\\end@{"
+    :edge start
+    (priority . 2)
+    (face . (background-color . "pink")))
+   ("\\([^\\]\\|^\\)@{"
+    :edge start
+    (priority . 2))
+   (("\\([^\\]\\|^\\)\\(@}\\)" . 2)
+    :edge end
+    (priority . 2))))
+
+(auto-overlay-load-definition
+ 'latex
+ '(nested
+   ("\\begin@{equation@}"
+    :edge start
+    (priority . 1)
+    (face . (background-color . "yellow")))
+   ("\\end@{equation@}"
+    :edge end
+    (priority . 1)
+    (face . (background-color . "yellow")))))
+
+(auto-overlay-load-definition
+ 'latex
+ '(word (("\\\\[[:alpha:]]*?\\([^[:alpha:]]\\|$\\)" . 1)
+         (face . (background-color . "blue")))))
+@end lisp
+
+With these regexp definitions, @LaTeX{} commands will automatically be
+highlighted in blue, equation environments in yellow, inline maths
+commands in green, and environment names in pink. @LaTeX{} markup within
+comments will be ignored. And @samp{@{} and @samp{@}} characters from
+other commands will be correctly taken into account. All this is done in
+``real-time''; it doesn't wait until Emacs is idle to update the
+overlays. Not bad for a bundle of regexps!
+
+Of course, this could all be done more easily using Emacs' built-in
+syntax highlighting features, but the highlighting was only an example
+to show the location of the overlays. The main point is that the
+overlays are automatically created and kept up to date, and can be given
+any properties you like and used for whatever purpose is required by
+your Elisp package.
+
+
+
+
+@node Extending the Auto-Overlays Package
+@chapter Extending the Auto-Overlays Package
+@cindex extending the auto-overlays package
+@cindex adding new overlay classes
+@cindex package, extending
+@cindex classes, adding new
+The auto-overlays package can easily be extended by adding new overlay
+classes@footnote{Or rather, it is easy to integrate new overlay classes
+into the package. Whether writing a new overlay class is easy or not
+depends on what you're trying to do, and how good your coding skills are
+;-)}. The next sections document the functions and interfaces provided
+by the auto-overlays package for this purpose.
+
+Often, a new class is a minor modification of one of the standard
+classes. For example, it may work exactly like one of the standard
+classes, but in addition call some function whenever an overlay is
+created or destroyed. In this case, it is far better to build the new
+class on top of the existing class, using functions from the
+class-specific Elisp files, rather than starting from
+scratch. @xref{Standard Parse and Suicide Functions}.
+
+
+@menu
+* Auto-Overlays in Depth::
+* Integrating New Overlay Classes::
+* Functions for Writing New Overlay Classes::
+* Auto-Overlay Hooks::
+* Auto-Overlay Modification Pseudo-Hooks::
+@end menu
+
+@node Auto-Overlays in Depth
+@section Auto-Overlays in Depth
+@cindex auto-overlays in depth
+@cindex package, in depth
+In order to write new classes, a deeper understanding is required of how
+the auto-overlays package works. In fact, two kinds of overlays are
+automatically created, updated and destroyed when auto-overlays are
+active: the auto-overlays themselves, and ``match'' overlays, used to
+mark text that matches an auto-overlay regexp.
+
+For overlay classes that only require one regexp to fully define an
+overlay (the @code{word} and @code{line} classes are the only standard
+classes like this@footnote{Although the @code{self} class only requires
+one regexp definition, the auto-overlays themselves require two matches
+to that same regexp to set the start and end of the overlay.}), the
+auto-overlays are always matched with the corresponding match
+overlay. For classes that require two regexp matches to define the start
+and end of an overlay (all other standard classes), each edge of an
+auto-overlay can be matched with a match overlay. The match overlays
+define where the edge of the auto-overlay is located. There will always
+be at least one matched edge, since an auto-overlay is only created when
+a regexp match is found, but it is possible for the second edge to not
+yet be matched (for many classes, the unmatched edge will be located at
+the beginning or end of the buffer).
+
+If a match overlay delimits the start of an auto-overlay, the match
+overlay is stored in the auto-overlay's @code{start} property. The match
+overlay is also stored in the @code{start} property for auto-overlays
+that only require a single match. If a match overlay delimits the end of
+an auto-overlay, the match overlay is stored in the auto-overlay's
+@code{end} property. Conversely, a ``link'' to the auto-overlay is
+always stored in the match overlay's @code{parent} property@footnote{The
+``parent'' terminology is admittedly very poor, and is a relic of a
+previous incarnation of the auto-overlays package, when it made more
+sense.}.
+
+Whenever a buffer is modified, the lines containing the modifications
+are scanned for new regexp matches. If one is found, a new match overlay
+is created covering the matching text, and then passed as an argument to
+the appropriate ``parse'' function@footnote{More bad terminology.} for
+its class. This deals with creating or updating the auto-overlays, as
+appropriate. If the text within a match overlay is modified, the match
+overlay checks whether the text it covers still matches the regexp. If
+it no longer matches, the match overlay is passed as an argument to the
+appropriate ``suicide'' function for its class, which deals with
+updating or deleting its parent auto-overlay (and possibly more
+besides).
+
+To summarise, the core of the auto-overlays package deals with searching
+for regexp matches, and creating or deleting the corresponding match
+overlays. It then hands over the task of creating, updating or deleting
+the auto-overlays themselves to class-specific functions, which
+implement the correct behaviour for that class.
+
+
+
+@node Integrating New Overlay Classes
+@section Integrating New Overlay Classes
+@cindex integrating new overlay classes
+@cindex overlay classes, integrating new
+@cindex classes, integrating new
+@cindex extending, integrating new overlay classes
+To add a new overlay class, all that is required is to write new
+``parse'' and ``suicide'' functions, and inform the auto-overlays
+package of their existence. A ``match'' function can also optionally be
+defined. It is called whenever a match overlay in the class becomes
+matched with the edge of an auto-overlay (@pxref{Functions for Modifying
+Overlays}). The parse, suicide and match functions are conventionally
+called @code{auto-o-parse-}@var{class}@code{-match},
+@code{auto-o-}@var{class}@code{-suicide} and
+@code{auto-o-match-}@var{class}, where @var{class} is the name of the
+class, though the convention is not enforced in any way.
+
+@table @asis
+@item parse function
+@cindex parse function
+@cindex overlay classes, parse function
+@cindex functions, parse function
+@cindex integrating new classes, parse function
+@findex auto-o-parse-@{class@}-match
+A parse function is passed a single argument containing a match
+overlay. It should return a list containing any new auto-overlays it
+creates, or @code{nil} if none were created.
+
+@lisp
+@var{o-list} = (auto-o-parse-@var{class}-match @var{o-match})
+@end lisp
+
+@noindent
+Note that the parse function itself is responsible for calling the
+@command{auto-o-update-exclusive} function if a new exclusive overlay is
+created. @xref{Functions for Modifying Overlays}.
+
+@item suicide function
+@cindex suicide function
+@cindex overlay classes, suicide function
+@cindex functions, suicide function
+@cindex integrating new classes, suicide function
+@findex auto-o-@{class@}-suicide
+A suicide function is passed a single argument containing a match
+overlay. Its return value is ignored.
+
+@lisp
+(auto-o-@var{class}-suicide @var{o-match})
+@end lisp
+
+The text covered by the match overlay should be considered to no longer
+match its regexp, although in certain cases matches are ignored for
+other reasons and this may not really be the case (for example if a new,
+higher-priority, exclusive overlay overlaps the match,
+@pxref{Overview}).
+
+@item match function
+@cindex match function
+@cindex overlay classes, match function
+@cindex functions, match function
+@cindex integrating new classes, match function
+@findex auto-o-match-@{class@}
+A match function is passed a single argument containing a match overlay
+that has just been matched with an edge of an auto-overlay
+(@pxref{Functions for Modifying Overlays}). Its return value is ignored.
+
+@lisp
+(auto-o-match-@var{class} @var{o-match})
+@end lisp
+
+@noindent
+The auto-overlay it is matched with is stored in the match overlay's
+@code{parent} property.
+@end table
+
+To integrate the new class into the auto-overlays package, the parse and
+suicide functions must be added to the property list of the symbol used
+to refer to the new class, denoted here by @var{class}:
+
+@lisp
+(put '@var{class} 'auto-overlay-parse-function
+     'auto-o-parse-@var{class}-match)
+(put '@var{class} 'auto-overlay-suicide-function
+     'auto-o-@var{class}-suicide)
+@end lisp
+
+@noindent
+If the optional match function is defined, it should similarly be added
+to the symbol's property list:
+
+@lisp
+(put '@var{class} 'auto-overlay-match-function
+     'auto-o-match-@var{class})
+@end lisp
+
+
+
+@node Functions for Writing New Overlay Classes
+@section Functions for Writing New Overlay Classes
+@cindex functions, writing new overlay classes
+@cindex overlay classes, functions for writing new
+@cindex extending, functions
+Some functions are provided by the auto-overlays package for use in new
+parse and suicide functions. The functions that modify overlays carry
+out tasks that require interaction with the core of the auto-overlays
+package, and provide the only reliable way of carrying out those
+tasks. The other functions are used to query various things about
+auto-overlays and match overlays. Again, they are the only reliable
+interface for this, since the internal implementation may change between
+releases of the auto-overlays package.
+
+@menu
+* Standard Parse and Suicide Functions::
+* Functions for Modifying Overlays::
+* Functions for Querying Overlays::
+@end menu
+
+
+@node Standard Parse and Suicide Functions
+@subsection Standard Parse and Suicide Functions
+@cindex standard parse and suicide functions
+@cindex overlay classes, standard parse functions
+@cindex overlay classes, standard suicide functions
+@cindex class, standard parse functions
+@cindex class, standard suicide functions
+@cindex extending, standard parse functions
+@cindex extending, standard suicide functions
+All the standard overlay classes define their own parse and suicide
+functions (none of them require a match function), which can be used to
+create new ``derived'' classes based on the standard ones. This is the
+easiest and most common way to create a new class. For example, the new
+class may behave exactly like one of the standard classes, but perform
+some additional processing whenever an overlay is created, destroyed, or
+matched. The parse and suicide functions for the new class should
+perform whatever additional processing is required, and call the
+standard class functions to deal with creating and destroying the
+overlay.
+
+All the standard parse and suicide functions follow the same naming
+convention (@pxref{Integrating New Overlay Classes}), where @var{class}
+is the name of the overlay class (one of @code{word}, @code{line},
+@code{self}, @code{nested} or @code{flat}, @pxref{Overview}):
+
+@table @code
+@item (auto-o-parse-@var{class}-match @var{o-match})
+@findex auto-o-parse-@{class@}-match
+Parse a new match overlay @var{o-match} whose class is @var{class}. This
+will create or update auto-overlays, as appropriate for the class.
+
+
+@item (auto-o-@var{class}-suicide @var{o-match})
+@findex auto-o-@{class@}-suicide
+Delete or update auto-overlays as appropriate for overlay class
+@var{class}, due to the match overlay @var{o-match} no longer matching.
+@end table
+
+
+
+@node Functions for Modifying Overlays
+@subsection Functions for Modifying Overlays
+@cindex functions, modifying overlays
+@cindex overlays, functions for modifying
+@cindex extending, functions for modifying overlays
+These functions modify auto-overlays and match overlays as necessary to
+perform a particular update. They should @emph{always} be used to carry
+out their corresponding tasks, rather than doing it separately, since
+these tasks require interaction with the core of the auto-overlays
+package.
+
+@table @code
+@item (auto-o-update-exclusive @var{set-id} @var{beg} @var{end} @var{old-priority} @var{new-priority})
+@findex auto-o-update-exclusive
+@cindex overlay property, exclusive
+@cindex exclusive property
+@cindex extending, updating exclusive
+@cindex updating exclusive regions
+Update the region between @var{beg} and @var{end} in the current buffer
+as necessary due to the priority of an exclusive overlay overlapping the
+region changing from @var{old-priority} to @var{new-priority}. If the
+exclusive overlay did not previously overlap the region,
+@var{old-priority} should be null. If it no longer overlaps the region,
+@var{new-priority} should be null. (If both are null, nothing will
+happen!) The return value is meaningless.
+
+
+@item (auto-o-match-overlay @var{overlay} @var{start} @@optional @var{end} @var{no-props} @var{no-parse} @var{protect-match})
+@findex auto-o-match-overlays
+@cindex overlays, matching
+@cindex matching overlays
+@cindex extending, matching overlays
+Match or unmatch the start and end of the auto-overlay @var{overlay},
+update all appropriate properties (such as @code{parent}, @code{start}
+and @code{end} properties, and any properties specified in regexp
+definitions), and update other auto-overlays in the region covered by
+@var{overlay} as necessary (usually because the @code{exclusive} or
+@code{priority} properties of @var{overlay} have changed).
+
+If @var{start} or @var{end} are match overlays, match the corresponding
+edge of @var{overlay}. The edge is moved to the location defined by the
+match overlay, and the @code{parent} property of the match overlay and
+the @code{start} and @code{end} properties of @var{overlay} are updated
+accordingly. The @var{start} argument should be a match overlay
+corresponding either to the unique regexp if only one is needed for that
+overlay class, or to a start regexp if the overlay class uses separate
+start and end regexps. The @var{end} argument should then be a match
+overlay corresponding to an end regexp in the same class
+(@pxref{Overview}). You're responsible for enforcing this; no check is
+made.
+
+If @var{start} or @var{end} are numbers or markers, move the
+corresponding edge of @var{overlay} to that location and set it as
+unmatched. The @code{start} or @code{end} property of @var{overlay} and
+the @code{parent} property of any corresponding match overlay are set to
+@code{nil}. If @var{start} or @var{end} are non-nil but neither of the
+above, leave the corresponding edge of @var{overlay} where it is, but
+set it unmatched (as described above). If @var{start} or @var{end} are
+null, don't change the corresponding edge. However, for convenience, if
+@var{end} is null but @var{start} is a match overlay corresponding to a
+match for an end-regexp, match the end of @var{overlay} rather than the
+start.
+
+The remaining arguments disable some of the tasks normally carried out
+by @command{auto-o-match-overlay}. If @var{no-props} is non-nil, overlay
+properties specified in regexp definitions are ignored and not
+updated. If @var{no-parse} is non-nil, auto-overlays in the region
+covered by @var{overlay} are not updated, even if the @code{exclusive}
+or @code{priority} properties of @var{overlay} have changed. If
+@var{protect-match} is non-nil, the @code{parent} properties of the
+@var{start} and @var{end} match overlays are left alone.
+
+
+@item (auto-o-delete-overlay @var{overlay} @@optional @var{no-parse} @var{protect-match})
+@findex auto-o-delete-overlay
+@cindex overlays, deleting
+@cindex deleting overlays
+@cindex extending, deleting overlays
+Delete auto-overlay @var{overlay} from the buffer, and update overlays
+and overlay properties as necessary. The optional arguments disable
+parts of the updating process, as for @command{auto-o-match-overlay},
+above.
+@end table
+
+
+
+@node Functions for Querying Overlays
+@subsection Functions for Querying Overlays
+@cindex functions, querying overlays
+@cindex overlays, functions for querying
+@cindex extending, functions for querying overlays
+These functions query certain things about auto-overlays or match
+overlays, or retrieve certain values associated with them. A few are
+merely convenience functions, but most depend on the internal
+implementation details of the auto-overlays package, and provide the
+only reliable interface for whatever they return.
+
+@table @code
+@item (auto-o-class @var{o-match})
+@findex auto-o-class
+Return the class of match overlay @var{o-match}.
+
+
+@item (auto-o-regexp @var{o-match})
+@findex auto-o-regexp
+Return the regular expression matched by the text covered by match
+overlay @var{o-match}.
+
+
+@item (auto-o-regexp-group @var{o-match})
+@findex auto-o-regexp-group
+Return the regexp group defined in the regexp definition corresponding
+to match overlay @var{o-match} (@pxref{Defining Regexps}).
+
+
+@c @item @c (auto-o-regexp-group-nth n @var{o-match})
+@c @findex auto-o-regexp-group-nth
+@c Return match overlay @var{o-match}'s Nth regexp group entry, or 0
+@c if there is no Nth entry.
+
+
+@item (auto-o-props @var{o-match})
+@findex auto-o-props
+Return the list of overlay properties defined in the regexp definition
+corresponding to match overlay @var{o-match} (@pxref{Defining Regexps}).
+
+
+@item (auto-o-edge @var{o-match})
+@findex auto-o-edge
+Return edge (the symbol @code{start} or @code{end}) of match overlay
+@var{o-match}.
+
+
+@item (auto-o-parse-function @var{o-match})
+@findex auto-o-parse-function
+Return appropriate parse function for match overlay @var{o-match}.
+
+
+@item (auto-o-suicide-function @var{o-match})
+@findex auto-o-suicide-function
+Return appropriate suicide function for match overlay @var{o-match}.
+
+
+@item (auto-o-match-function @var{o-match})
+@findex auto-o-match-function
+Return match function for match overlay @var{o-match}, if any.
+
+
+@item (auto-o-edge-matched-p @var{overlay} @var{edge})
+@findex auto-o-edge-matched-p
+Return non-nil if @var{edge} (the symbol @code{start} or @code{end}) of
+auto-overlay @code{overlay} is matched.
+
+
+@item (auto-o-start-matched-p @var{overlay})
+@findex auto-o-start-matched-p
+Return non-nil if auto-overlay @var{overlay} is start-matched.
+
+
+@item (auto-o-end-matched-p @var{overlay})
+@findex auto-o-end-matched-p
+Return non-nil if auto-overlay @var{overlay} is end-matched.
+@end table
+
+
+
+@node Auto-Overlay Hooks
+@section Auto-Overlay Hooks
+@cindex hooks
+@cindex package, hooks
+@cindex hooks, loading and unloading
+The auto-overlays package defines two hooks, that are called when
+auto-overlays are enabled and disabled in a buffer. These are intended
+to be used by overlay classes to set up any extra buffer-local variables
+and settings they require, and clean them up afterwards. (There is no
+point leaving auto-overlay variables and settings hanging around in a
+buffer when auto-overlays are not in use.)
+
+@vtable @env
+@item auto-overlay-load-hook
+This hook is run when the first auto-overlay regexp set in a buffer is
+started, using the @command{auto-overlay-start} function. @xref{Starting
+and Stopping Auto-Overlays}.
+
+
+@item auto-overlay-unload-hook
+This hook is run when the last auto-overlay regexp set in a buffer is
+stopped, using the @command{auto-overlay-stop} function. @xref{Starting
+and Stopping Auto-Overlays}.
+@end vtable
+
+
+
+
+@node Auto-Overlay Modification Pseudo-Hooks
+@section Auto-Overlay Modification Pseudo-Hooks
+@cindex modification pseudo-hooks
+@cindex hooks, modification
+@cindex scheduling functions after modification
+@cindex functions, scheduling
+The auto-overlays package adds functions to buffer and overlay
+modification hooks in order to update the overlays as the buffer text is
+modified (@pxref{Modification Hooks,,,elisp,GNU Emacs Lisp Reference
+Manual}). The order in which all these modification hooks are called is
+undefined in Emacs@footnote{Or at least undocumented, and therefore
+unreliable.}. Therefore, the auto-overlays package provides a mechanism
+to schedule functions to run at particular points during the overlay
+update process.
+
+There are two stages to the overlay update process: first, any match
+overlay suicide functions are called, then modified buffer lines are
+scanned for new regexp matches. Three pseudo-hooks are defined that are
+called before, after and in between these stages. Their values are lists
+containing elements of the form:
+
+@lisp
+(@var{function} @var{arg1} @var{arg2} ...)
+@end lisp
+
+@noindent
+where @var{function} is the function to be called by the hook, and the
+@var{arg}'s are the arguments to be passed to that function. The list
+elements are evaluated in order. The pseudo-hooks are cleared each time
+after they have been called.
+
+@vtable @env
+@item auto-o-pending-pre-suicide
+Pseudo-hook called before any suicide functions.
+
+
+@item auto-o-pending-post-suicide
+Pseudo-hook called after any suicide functions but before scanning for
+regexp matches.
+
+
+@item auto-o-pending-post-update
+Pseudo-hook called after scanning for regexp matches.
+@end vtable
+
+These pseudo-hooks can be used to ensure that a function that would
+normally be added to a modification hook will be called at a particular
+point in the auto-overlay update process. To achieve this, a helper
+function must be added to the modification hook instead. The helper
+function should add the function itself to the appropriate pseudo-hook
+by adding a list element with the form described above. The
+@command{push} and @command{add-to-list} Elisp functions are the most
+useful ways to add elements to the list.
+
+
+
+@node To-Do
+@chapter To-Do
+@cindex to-do
+Things that still need to be implemented (in no particular order):
+
+@enumerate
+@item
+There needs to be an @code{eager-self} overlay class, similar to the
+existing @code{self} class but updated immediately, rather than waiting
+for buffer modifications. This will be significantly less efficient, but
+is necessary for applications that require overlays to be up to date all
+the time, not just when the buffer is being modified.
+
+
+@item
+Currently, it's difficult to deal with @code{nested} class regexps for
+which the @code{end} regexps match some @code{start} regexps of interest
+but also others that are irrelevant. E.g. @samp{@{} and @samp{@}} in
+@LaTeX{} when you're only interested in @samp{\somecommand@{}
+@code{start} regexps. Or matching parens in LISP, when you're only
+interested in function bodies, say. The only solution is to include all
+@code{start} regexps, but not set any of their properties. This can end
+up creating a lot of overlays! A variant of the @code{nested} class that
+avoids this problem is needed.
+@end enumerate
+
+
+
+
+
+@node Function Index
+@appendix Function Index
+@printindex fn
+
+@node Variable Index
+@appendix Variable Index
+@printindex vr
+
+@node Concept Index
+@appendix Concept Index
+@printindex cp
+
+
+@node Copying this Manual
+@appendix Copying this Manual
+
+@menu
+* GNU Free Documentation License::
+@end menu
+
+@include fdl.texi
+
+
+@bye
+
+
+@c  Local Variables:
+@c  mode: texinfo
+@c  End:

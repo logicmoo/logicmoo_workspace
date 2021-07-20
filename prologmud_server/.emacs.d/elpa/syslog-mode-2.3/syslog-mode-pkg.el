@@ -1,0 +1,2 @@
+;;; Generated package description from syslog-mode.el  -*- no-byte-compile: t -*-
+(define-package "syslog-mode" "2.3" "Major-mode for viewing log files" '((hide-lines "20130623") (ov "20150311")) :commit "18f441bf57dd70cdd48a71f1f4566ab35facdb35" :authors '(("Harley Gorrell" . "harley@panix.com")) :maintainer '("Joe Bloggs" . "vapniks@yahoo.com") :keywords '("unix") :url "https://github.com/vapniks/syslog-mode")

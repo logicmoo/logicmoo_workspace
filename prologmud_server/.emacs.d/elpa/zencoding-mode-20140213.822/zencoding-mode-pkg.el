@@ -1,0 +1,2 @@
+;;; Generated package description from zencoding-mode.el  -*- no-byte-compile: t -*-
+(define-package "zencoding-mode" "20140213.822" "Unfold CSS-selector-like expressions to markup" 'nil :commit "58e42af182c98cb9941d27cd042d227fbf4e146c" :authors '(("Chris Done" . "chrisdone@gmail.com")) :maintainer '("Chris Done" . "chrisdone@gmail.com") :keywords '("convenience") :url "https://github.com/rooney/zencoding")

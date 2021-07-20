@@ -1,0 +1,2 @@
+;;; Generated package description from xmind-org.el  -*- no-byte-compile: t -*-
+(define-package "xmind-org" "20201202.1605" "Import XMind mindmaps into Org" '((emacs "27.1") (org-ml "5.3") (dash "2.12")) :commit "ee09e382b3fefb67ccf3cd4db96a8dd2acc34045" :authors '(("Akira Komamura" . "akira.komamura@gmail.com")) :maintainer '("Akira Komamura" . "akira.komamura@gmail.com") :keywords '("outlines" "wp" "files") :url "https://github.com/akirak/xmind-org-el")

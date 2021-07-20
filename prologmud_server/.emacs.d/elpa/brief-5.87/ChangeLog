@@ -1,0 +1,149 @@
+2018-10-23  Luke Lee  <luke.yx.lee@gmail.com>
+
+	* brief/README.org: Correct wording to be consistent with EmacsWiki
+	page.
+
+2018-10-22  Luke Lee  <luke.yx.lee@gmail.com>
+
+	* brief/README.org: Change some wording.
+
+2018-10-22  Luke Lee  <luke.yx.lee@gmail.com>
+
+	Brief mode v5.87 release Fix quick launcher script 'b' to be more
+	reliable.
+
+	* brief/b: Remove version dependency according to Stefan's suggestion.
+	* brief/brief.el: Add missing autoload declaration, also bump version
+	 to update ELPA package.
+	* brief/README.org: Adjust document accordingly.
+
+2018-10-21  Luke Lee  <luke.yx.lee@gmail.com>
+
+	Brief mode: Fix for enabling infrequent keys.
+
+	* brief/b: Use `brief-easy-start' instead of a long progn list.
+	* brief/README.org: Add Emacs default setting change info.
+	* brief/brief.el (brief-easy-start): New function for an easy quick
+	start, used by 'b' script.
+
+	(brief-enable-less-frequent-keys): New function to enable infrequent
+	keys.
+
+	(brief-override-line-number-at-pos): Remove duplicated defadvice for
+	Emacs versions below 25.
+
+	(all defcustom vars): Remove redundant :group declaration.
+
+2018-10-20  Luke Lee  <luke.yx.lee@gmail.com>
+
+	Brief: change to multi-file package.
+
+2018-10-19  Luke Lee  <luke.yx.lee@gmail.com>
+
+	Brief mode v5.86: Fix codes in response to Stefan's review suggestions.
+
+	* brief/brief.el (brief-search-replace-using-regexp)
+	(brief-latest-killed-buffer-info, brief-meta-l-key)
+	(brief-open-new-line-next): Fix comments.
+
+	(brief-fake-region-face): Change to defface.
+
+	(brief--search-overlay): Change name to indicate it's internal.
+
+	(brief-beginning-of-file, brief-end-of-file, brief-end-of-visual-line)
+	(brief-save-kbd-macro): Change to alias or refine codes.
+
+2018-10-18  Stefan Monnier  <monnier@iro.umontreal.ca>
+
+	* brief/b.el: Remove unused file
+
+2018-10-18  Luke Lee  <luke.yx.lee@gmail.com>
+
+	* packages/brief/README.org: Fix some formats and typo.
+
+2018-10-18  Luke Lee  <luke.yx.lee@gmail.com>
+
+	Brief Mode v5.86 release. Add README.org file with full key commands
+	table & post on EmacsWiki. Completed key commands supported by the
+	legacy msdos Brief(tm) v3.1.
+
+	* packages/brief/README.org: A categorized full key commands list table.
+	* packages/brief/b: Bash launcher script to new users.
+	* packages/brief/b.el: A launcher elisp script.
+	* packages/brief/brief.el (brief-search-replace-using-regexp)
+	(brief-enable-less-frequent-keys, brief-toggle-search-replace-regexp): 
+	New custom variables and toggle function.
+
+	(brief-meta-l-key, brief-mark-line-up/down-with-<*>): Macro to generate
+	M-L prefixed keys functions, and the generated functions.
+
+	(brief-search-.*-pattern, brief-query-replace-.*-pattern)
+	(brief-query-replace-rectangle): Rename from .*-regexp to .*-pattern and
+	referenced to variable
+	`brief-search-replace-using-regexp' selecting between regexp or string,
+	also change all functions that referenced them.
+
+	(brief-gui-set-selection): Prevent Xselection change during search &
+	replace operation.
+
+	(brief--kbd-macro-seq, brief-define-macro, brief-call-last-kbd-macro)
+	(brief-toggle-pause-kbd-macro, brief-call-last-kbd-macro)
+	(brief-reset-for-keyboard-quit): Toggle keyboard macro recording.
+
+	(brief-scroll-up-one-line, brief-scroll-down-one-line)
+	(brief-toggle-auto-backup, brief-beginning-of-file, brief-end-of-file)
+	(brief-end-of-window, brief-open-new-line-next)
+	(brief-end-of-visual-line): New key commands to complete less frequently
+	used Brief keys.
+
+2018-09-08  Luke Lee  <luke.yx.lee@gmail.com>
+
+	Brief mode: add [C-p] for viewing compilation buffer and error messages
+
+	* packages/brief/brief.el: fix comments, add C-p and a customized flag 
+	to turn off scroll-bar-mode for emulating Brief editor's "thin borders".
+
+	(brief-turn-off-scroll-bar-mode): new custom flag.
+	(brief-view-compilation-output): for C-p, jump to compilation buffer/ 
+	frame/window if there is one. After enters compilation buffer C-p finds 
+	previous compilation error message (while C-n finds next).
+	(brief-buffer-read-only-toggle): consistent behavior among all Emacs 
+	versions for showing message.
+	(brief-bookmark-jump-set): correct doc string.
+
+2018-08-23  Luke Lee  <luke.yx.lee@gmail.com>
+
+	Brief mode: merge Stefan's patch and revised some legacy code.
+
+	* packages/brief/brief.el: coding style fix, revise legacy code and 
+	variables, and backward compatibility fix for Emacs v23 and v24.
+
+2018-08-21  Luke Lee  <luke.yx.lee@gmail.com>
+
+	Brief mode: major improvement for external Xselection helper
+
+	* packages/brief/brief.el: speedup sending by >32 times, and now able to
+	show receiving progress in bytes.  Rename internal var/func to follow
+	naming convention.
+
+2018-08-18  Luke Lee  <luke.yx.lee@gmail.com>
+
+	Brief mode: backward compatibility fix for Emacs v23 and v24.
+
+2018-08-16  Luke Lee  <luke.yx.lee@gmail.com>
+
+	Brief mode: merge some of Stefan's patch and rework some codes.
+
+	* Fix legacy variables and function arguments.
+	* Optimize some save-mark-and-excursion to save-excursion for speed.
+	* Backward compatibility for Emacs v23.
+	* Remove old XEmacs specific codes.
+
+2018-08-13  Luke Lee  <luke.yx.lee@gmail.com>
+
+	* packages/brief.el: fix some typo mess.
+
+2018-08-13  Luke Lee  <luke.yx.lee@gmail.com>
+
+	Add brief.el v5.80, Brief editor mode, an emulator of Brief editor.
+

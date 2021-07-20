@@ -1,0 +1,2 @@
+;;; Generated package description from sxiv.el  -*- no-byte-compile: t -*-
+(define-package "sxiv" "0.4.1" "Run the sxiv image viewer" '((dash "2.16.0") (emacs "25.1")) :commit "a531a7596e307a218beb8ff77893eeae61284f6e" :authors '(("contrapunctus" . "xmpp:contrapunctus@jabber.fr")) :maintainer '("contrapunctus" . "xmpp:contrapunctus@jabber.fr") :keywords '("multimedia") :url "https://gitlab.com/contrapunctus/sxiv.el")

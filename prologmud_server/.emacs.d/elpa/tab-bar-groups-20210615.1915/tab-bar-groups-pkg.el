@@ -1,0 +1,2 @@
+;;; Generated package description from tab-bar-groups.el  -*- no-byte-compile: t -*-
+(define-package "tab-bar-groups" "20210615.1915" "Tab groups for the tab bar" '((emacs "27.1") (s "1.12.0")) :commit "a2e456097322d0b1cfdb7aa37c32a628bcca3bf0" :authors '(("Fritz Grabo" . "me@fritzgrabo.com")) :maintainer '("Fritz Grabo" . "me@fritzgrabo.com") :keywords '("convenience") :url "https://github.com/fritzgrabo/tab-bar-groups")

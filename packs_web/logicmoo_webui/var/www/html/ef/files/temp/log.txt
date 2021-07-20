@@ -933,3 +933,21 @@
     3 => '#t1_Lw',
   ),
 ) 
+[Tue, 20 Jul 2021 09:35:12 +0300] MKFILE: array (
+  'error' => 
+  array (
+    0 => 'errMkfile',
+    1 => 'as.php5',
+    2 => 'errUploadMime',
+    3 => 'as.php5',
+  ),
+) 
+[Tue, 20 Jul 2021 09:35:46 +0300] MKFILE: array (
+  'error' => 
+  array (
+    0 => 'errMkfile',
+    1 => 'as.php5',
+    2 => 'errUploadMime',
+    3 => 'as.php5',
+  ),
+) 

@@ -1,0 +1,2 @@
+;;; Generated package description from origami-predef.el  -*- no-byte-compile: t -*-
+(define-package "origami-predef" "1.0" "Apply folding when finding (opening) files" '((emacs "24.3") (origami "1.0")) :commit "edcba971ba52a14f69a436ad47888827d7927982" :authors '(("Álvaro González Sotillo" . "alvarogonzalezsotillo@gmail.com")) :maintainer '("Álvaro González Sotillo" . "alvarogonzalezsotillo@gmail.com") :keywords '("convenience" "folding") :url "https://github.com/alvarogonzalezsotillo/origami-predef")

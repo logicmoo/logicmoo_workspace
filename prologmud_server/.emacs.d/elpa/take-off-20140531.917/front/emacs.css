@@ -1,0 +1,43 @@
+.cursor {
+    background-color: #aaa;
+    color: #000;
+}
+
+.fragment {
+
+    display: inline-block;
+    white-space: nowrap;
+    overflow: hidden;
+
+}
+
+.not-connected, .connected {
+    font-family: FreeMono, monospace;
+    color: #aaa;
+    background-color: #000;
+    font-size: 12px;
+    line-height: 14px;
+}
+
+
+
+.modal button.close {
+    opacity: 0.6;
+}
+
+.modal-content {
+    padding: 10px;
+}
+
+#buttonCode, #buttonName {
+    font-family: FreeMono, monospace;
+}
+
+#newButtonDialog button.button-set {
+    float: left;
+}
+
+div.buttons * {
+    margin: 10px
+}
+

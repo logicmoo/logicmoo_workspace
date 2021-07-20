@@ -1,0 +1,2 @@
+;;; Generated package description from org-context.el  -*- no-byte-compile: t -*-
+(define-package "org-context" "20210216.1526" "Contextual capture and agenda commands for Org-mode" 'nil :commit "a08f1f607f819791b9b95ad4f91c5eaa9fdbb091" :authors '(("Sylvain Rousseau <thisirs at gmail dot com>")) :maintainer '("Sylvain Rousseau <thisirs at gmail dot com>") :keywords '("org" "capture" "agenda" "convenience") :url "https://github.com/thisirs/org-context")

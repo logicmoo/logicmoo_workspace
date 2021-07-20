@@ -1,0 +1,26 @@
+
+
+before_script:
+  - emacs --version
+
+
+emacs24:
+  image: silex/emacs:24.3-dev
+  script:
+    - make compile
+    - make test
+
+emacs25:
+  image: silex/emacs:25.3-dev
+  script:
+    - make compile
+    - make test
+
+emacs26:
+  image: silex/emacs:26.1-dev
+  script:
+    - make compile
+    - make test
+
+    
+

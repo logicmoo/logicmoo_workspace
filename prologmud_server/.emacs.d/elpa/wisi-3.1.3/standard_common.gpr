@@ -1,0 +1,152 @@
+--  Abstract :
+--
+--  Standard settings for all of Stephe's Ada projects.
+--
+--  Copyright (C) 2018 - 2020 Free Software Foundation, Inc.
+--
+--  This program is free software; you can redistribute it and/or
+--  modify it under terms of the GNU General Public License as
+--  published by the Free Software Foundation; either version 3, or (at
+--  your option) any later version. This program is distributed in the
+--  hope that it will be useful, but WITHOUT ANY WARRANTY; without even
+--  the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
+--  PURPOSE. See the GNU General Public License for more details. You
+--  should have received a copy of the GNU General Public License
+--  distributed with this program; see file COPYING. If not, write to
+--  the Free Software Foundation, 51 Franklin Street, Suite 500, Boston,
+--  MA 02110-1335, USA.
+
+project Standard_Common is
+   for Source_Dirs use ();
+
+   type Build_Type is ("Debug", "Normal");
+   Build : Build_Type := External ("Standard_Common_Build", "Normal");
+
+   type Profile_Type is ("On", "Off");
+   Profile : Profile_Type := External ("Standard_Common_Profile", "Off");
+
+   type Mem_Check_Type is ("On", "Off");
+   Mem_Check : Profile_Type := External ("Standard_Common_Mem_Check", "Off");
+   --  Note that Mem_Check requires Build_Type = Debug to be useful
+
+   -- In main project file, add:
+   -- case Standard_Common.Mem_Check is
+   -- when "On" =>
+   --    for Runtime ("Ada") use "adalib_debug";
+   -- when "Off" =>
+   --    null;
+   -- end case;
+
+   package Compiler is
+      -- Switches for gcc
+
+      Base_Style_Checks := "-gnaty3abcefhiklnOprtx";
+      Line_Length := "-gnatyM120";
+
+      Style_Checks := (Base_Style_Checks, Line_Length);
+
+      Common_Switches :=
+        (
+         "-fstack-check",
+         "-g",
+         "-gnat2012",
+         "-gnatfqQ", -- f = all error messages, qQ = process semantics, generate .ali if syntax errors
+         "-gnatw.d", -- warnings about tags
+         "-gnatwaBCeJL", -- wa = most warnings, wB = no warn on bad fixed values, wC = no warn on conditionals
+                         -- we = error on warning, wJ = no warn on obsolescent, wL = no warn on elaboration
+         "-gnatyO" -- warn on overriding
+        );
+
+      --  -gnatVa causes some inline procedures to be non-inlineable;
+      --  suppress that warning with -gnatwP.
+      Debug_Switches := Common_Switches &
+        (
+         "-O0", --  we don't use -Og because that causes gdb to report incorrect results in some cases in Ada.
+         "-gnata",  -- assertions, pre/post-conditions
+         "-gnatVa", -- validity checks
+         "-gnateE", -- extra info in exceptions
+         "-gnatwaP" -- no warn on Inline
+        );
+
+      --  -O3 is measurably faster than -O2 for wisitoken generate
+      --  LR1. We include -fstack-check because it catches
+      --  hard-to-find bugs, and the processors are so fast.
+      --  -fno-var-tracking-assignments speeds compiling of large
+      --  files; var tracking is only useful for debugging.
+      Base_Release_Switches := Common_Switches &
+        (
+         "-O3",
+         "-fno-var-tracking-assignments",
+         "-gnatyO"
+        );
+
+      Inlining := ("-gnatn");
+
+      Release_Switches := Base_Release_Switches & Inlining;
+
+      -- No -ansi; GNAT 7.1 compiler C header files are mingw 64, which don't support -ansi
+      Debug_Switches_C := ("-Wall", "-Wstrict-prototypes", "-pedantic", "-Werror", "-g", "-O0", "-funwind-tables");
+      Debug_Switches_C_Non_Pedantic := ("-Wall", "-Wstrict-prototypes", "-Werror", "-g", "-O0", "-funwind-tables");
+      Release_Switches_C := ("-Wall", "-Wstrict-prototypes", "-pedantic", "-Werror", "-g", "-O2", "-funwind-tables");
+      Release_Switches_C_Non_Pedantic := ("-Wall", "-Wstrict-prototypes", "-Werror", "-g", "-O2", "-funwind-tables");
+
+   end Compiler;
+
+   --  In project files, normally use this:
+   --  package Compiler is
+   --  for Default_Switches ("Ada") use
+   --     Standard_Common.Compiler.Release_Switches &
+   --     Standard_Common.Compiler.Style_Checks;
+   --  end Compiler;
+
+   package Builder is
+      --  Switches for gnatmake
+      for Default_Switches ("Ada") use ("-C");
+
+      case Profile is
+      when "On" =>
+         for Global_Compilation_Switches ("Ada") use ("-pg");
+      when "Off" =>
+         null;
+      end case;
+   end Builder;
+
+   --  In project files, normally use this:
+   --  package Builder is
+   --     for Default_Switches ("Ada") use Standard_Common.Builder'Default_Switches ("Ada");
+   --  end Builder;
+
+   package Binder is
+      --  Switches for gnatbind
+      for Default_Switches ("Ada") use ("-E");
+
+      Debug_Configuration_Pragmas := "Normalize_Scalars";
+   end Binder;
+
+   --  In project files, normally use this:
+   --  package Binder is
+   --     for Default_Switches ("Ada") use Standard_Common.Binder'Default_Switches ("Ada");
+   --  end Binder;
+
+   package Linker is
+      case Profile is
+      when "On" =>
+         case Mem_Check is
+         when "On" =>
+            for Linker_Options use ("-pg", "-lgmem");
+         when "Off" =>
+            for Linker_Options use ("-pg");
+         end case;
+
+      when "Off" =>
+         case Mem_Check is
+         when "On" =>
+            for Linker_Options use ("-lgmem");
+         when "Off" =>
+            null;
+         end case;
+      end case;
+   end Linker;
+
+   --  In project files, no linker package is needed.
+end Standard_Common;

@@ -407,7 +407,7 @@
 		      ("Jackson Ray Hamilton" . "jackson@jacksonrayhamilton.com"))
 		     (:keywords "convenience" "faces" "tools"))])
  (corfu .
-	[(0 9)
+	[(0 10)
 	 ((emacs
 	   (27 1)))
 	 "Completion Overlay Region FUnction" tar
@@ -1492,7 +1492,7 @@
 			  ("Protesilaos Stavrou" . "info@protesilaos.com"))
 			 (:keywords "faces" "theme" "accessibility"))])
  (modus-themes .
-	       [(1 4 0)
+	       [(1 5 0)
 		((emacs
 		  (26 1)))
 		"Highly accessible themes (WCAG AAA)" tar
@@ -1845,7 +1845,7 @@
 	       ("Scott Andrew Borton" . "scott@pp.htv.fi"))
 	      (:maintainer "John Darrington" . "john@darrington.wattle.id.au"))])
  (pyim .
-       [(3 9 2)
+       [(3 9 3)
 	((emacs
 	  (24 4))
 	 (async

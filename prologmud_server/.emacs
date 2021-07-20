@@ -1,18 +1,14 @@
-(Require 'package)
+(require 'package)
 (add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/") t)
-;; Comment/uncomment this line to enable MELPA Stable if desired.  See `package-archive-priorities`
-;; and `package-pinned-packages`. Most users will not need or want to do this.
-;;(add-to-list 'package-archives '("melpa-stable" . "https://stable.melpa.org/packages/") t)
 ;;(package-initialize)
-
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(ede-project-directories
-   '("/opt/logicmoo_workspace/prologmud_server"))
- '(package-selected-packages '(tuareg))
+ '(ede-project-directories '("/opt/logicmoo_workspace/prologmud_server"))
+ '(package-selected-packages
+   '(tree-mode keytar ac-helm lsp-dart lsp-grammarly lsp-ltex lsp-mode lsp-ui lyrics m-buffer nexus ng2-mode nginx-mode niceify-info nix-buffer nix-env-install nix-haskell-mode nix-mode nix-modeline nix-sandbox nix-update nixos-options omnibox omnisharp on-screen open-in-msvs orca org-alert org-autolist org-babel-eval-in-repl org-brain org-capture-pop-frame org-chef org-clock-split org-context org-cua-dwim org-dashboard org-dotemacs org-download org-preview-html org-projectile org-projectile-helm org-protocol-jekyll org-radiobutton org-sync org-sync-snippets org-table-comment org-table-sticky-header svg-clock svg-mode-line-themes svg-tag-mode svnwrapper swagger-to-org swap-buffers swap-regions swoop sws-mode sx sxiv symbol-overlay symbolist symbolword-mode symex symon symon-lingr sysctl syslog-mode system-specific-settings systemd systemtap-mode terminal-focus-reporting terminal-here terminal-toggle tern tern-auto-complete tern-context-coloring toc-mode toc-org todoist usage-memo use-package use-package-chords use-package-el-get use-package-ensure-system-package use-package-hydra use-proxy use-ttf utimeclock utop uuid uuidgen v-mode v2ex-mode vs-light-theme vscdark-theme vscode-dark-plus-theme vscode-icon vterm vterm-toggle vtm vue-html-mode web web-beautify web-completion-data web-mode web-mode-edit-element web-narrow-mode web-search webkit-color-picker weblio weblogger widgetjs wiki-nav wiki-summary wikinfo wikinforg wilt win-switch windata window-end-visible window-jump window-layout window-number window-numbering windower windresize winds windsize windswap windwow winnow winpoint winring winum wisitoken-grammar-mode wisp-mode wispjs-mode with-emacs with-namespace with-proxy with-shell-interpreter with-simulated-input with-venv wn-mode wolfram xmind-org xml+ xml-format yaml yaml-imenu yaml-mode yaml-tomato yandex-weather yang-mode yankpad yapfify zen-and-art-theme zen-mode zenburn-theme zencoding-mode zenity-color-picker zeno-theme zenscript-mode zephir-mode zimports zombie zoom zoom-window zop-to-char xelb language-detection s tuareg))
  '(warning-suppress-types '((emacs))))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
@@ -93,7 +89,6 @@
 
 (setq vscode-mode-dir "~/vscode-mode")
 (add-to-list 'load-path vscode-mode-dir)
-'(require 'vscode-init)
 
 (add-to-list 'emacs-startup-hook 'global-vscode-mode-on)
 
@@ -120,6 +115,55 @@
 
 (provide 'vscode-init)
 
-(vscode-mode)
+'(vscode-mode)
 (prolog-mode)
+
+
+(package-install 's) (require 's)
+(package-install 'language-detection) (require 'language-detection)
+
+(defun check-if-prolog ()
+  (if (string-equal (format "%s" (language-detection-buffer)) "prolog")
+      (prolog-mode)))
+
+(add-hook 'perl-mode-hook 'check-if-prolog)
+
+
+(require 'lsp-mode)
+
+(require 'lsp-ui)
+
+(prolog-mode)
+(require 'vscode-init)
+
+(use-package lsp-mode
+    :hook
+    ((prolog-mode) . lsp)
+    :bind
+    (:map lsp-mode-map
+          ("C-c r" . lsp-rename))
+    :config
+
+    ;; LSP UI tools
+    (use-package lsp-ui
+      :preface
+      (defun ladicle/toggle-lsp-ui-doc ()
+        (interactive)
+        (if lsp-ui-doc-mode
+            (progn
+              (lsp-ui-doc-mode -1)
+              (lsp-ui-doc--hide-frame))
+          (lsp-ui-doc-mode 1)))
+      :bind
+      (:map lsp-mode-map
+            ("C-c C-r" . lsp-ui-peek-find-references)
+            ("C-c C-j" . lsp-ui-peek-find-definitions)
+            ("C-c i" . lsp-ui-peek-find-implementation)
+            ("C-c m" . lsp-ui-imenu)
+            ("C-c s" . lsp-ui-sideline-mode)
+            ("C-c d" . ladicle/toggle-lsp-ui-doc))
+      :hook
+      (lsp-mode . lsp-ui-mode)))
+
+
 

@@ -1,0 +1,2 @@
+;;; Generated package description from symbolist.el  -*- no-byte-compile: t -*-
+(define-package "symbolist" "20210503.1220" "List and interactively unbind Emacs Lisp symbols" '((emacs "24.5")) :commit "f600e07fe06c19b67f917a8839bbcd6c78f1fbd4" :authors '(("Lassi Kortela" . "lassi@lassi.io")) :maintainer '("Lassi Kortela" . "lassi@lassi.io") :keywords '("lisp" "maint") :url "https://github.com/lassik/emacs-symbolist")

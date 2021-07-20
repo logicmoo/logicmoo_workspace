@@ -1,0 +1,5 @@
+/* highlight editable secitons on mouseover */
+.edit_button{ display:none; position:absolute; right:0; }
+
+/* hide Org-mode text from display */
+.raw-org{ display:none; }

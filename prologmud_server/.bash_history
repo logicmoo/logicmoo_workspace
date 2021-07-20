@@ -1,97 +1,3 @@
-STUFF="^Mprolog.
-bfly. call((bfly_set(butterfly),bfly_set(command_args,\"${*}\"),bfly_set(ptty,\"${PTTY}:${TTY}:${PTY}:${PTS}\"))). bfly_start_link(\"${LOCATION}\").
-end_of_file.^M"
-echo STUFF=$STUFF
-(    $SCREEN_CMD -S LogicmooServer -p0 -X stuff "${STUFF}"; )
-echo $( 
-$SCREEN_CMD -rx LogicmooServer
-)
-return 0 2>/dev/null
-#!/bin/bash
-set -e
-export SCREEN_CMD="sudo -u prologmud_server -- screen"
-#echo PTTY:TTY:PTS=$PTTY:$TTY:$PTS
-#whoami
-STUFF="^Mprolog.
-bfly. call((bfly_set(butterfly),bfly_set(command_args,\"${*}\"),bfly_set(ptty,\"${PTTY}:${TTY}:${PTY}:${PTS}\"))). bfly_start_link(\"${LOCATION}\").
-end_of_file.^M"
-echo STUFF=$STUFF
-(    $SCREEN_CMD -S LogicmooServer -p0 -X stuff "${STUFF}"; )
-echo $( 
-$SCREEN_CMD -rx LogicmooServer
-)
-return 0 2>/dev/null
-#!/bin/bash
-set -e
-export SCREEN_CMD="sudo -u prologmud_server -- screen"
-#echo PTTY:TTY:PTS=$PTTY:$TTY:$PTS
-#whoami
-STUFF="^Mprolog.
-bfly. call((bfly_set(butterfly),bfly_set(command_args,\"${*}\"),bfly_set(ptty,\"${PTTY}:${TTY}:${PTY}:${PTS}\"))). bfly_start_link(\"${LOCATION}\").
-end_of_file.^M"
-echo STUFF=$STUFF
-(    $SCREEN_CMD -S LogicmooServer -p0 -X stuff "${STUFF}"; )
-echo $( 
-$SCREEN_CMD -rx LogicmooServer
-)
-return 0 2>/dev/null
-#!/bin/bash
-set -e
-export SCREEN_CMD="sudo -u prologmud_server -- screen"
-#echo PTTY:TTY:PTS=$PTTY:$TTY:$PTS
-#whoami
-STUFF="^Mprolog.
-bfly. call((bfly_set(butterfly),bfly_set(command_args,\"${*}\"),bfly_set(ptty,\"${PTTY}:${TTY}:${PTY}:${PTS}\"))). bfly_start_link(\"${LOCATION}\").
-end_of_file.^M"
-echo STUFF=$STUFF
-(    $SCREEN_CMD -S LogicmooServer -p0 -X stuff "${STUFF}"; )
-echo $( 
-$SCREEN_CMD -rx LogicmooServer
-)
-return 0 2>/dev/null
-#!/bin/bash
-set -e
-export SCREEN_CMD="sudo -u prologmud_server -- screen"
-#echo PTTY:TTY:PTS=$PTTY:$TTY:$PTS
-#whoami
-STUFF="^Mprolog.
-bfly. call((bfly_set(butterfly),bfly_set(command_args,\"${*}\"),bfly_set(ptty,\"${PTTY}:${TTY}:${PTY}:${PTS}\"))). bfly_start_link(\"${LOCATION}\").
-end_of_file.^M"
-echo STUFF=$STUFF
-(    $SCREEN_CMD -S LogicmooServer -p0 -X stuff "${STUFF}"; )
-echo $( 
-$SCREEN_CMD -rx LogicmooServer
-)
-return 0 2>/dev/null
-#!/bin/bash
-set -e
-export SCREEN_CMD="sudo -u prologmud_server -- screen"
-#echo PTTY:TTY:PTS=$PTTY:$TTY:$PTS
-#whoami
-STUFF="^Mprolog.
-bfly. call((bfly_set(butterfly),bfly_set(command_args,\"${*}\"),bfly_set(ptty,\"${PTTY}:${TTY}:${PTY}:${PTS}\"))). bfly_start_link(\"${LOCATION}\").
-end_of_file.^M"
-echo STUFF=$STUFF
-(    $SCREEN_CMD -S LogicmooServer -p0 -X stuff "${STUFF}"; )
-echo $( 
-$SCREEN_CMD -rx LogicmooServer
-)
-return 0 2>/dev/null
-#!/bin/bash
-set -e
-export SCREEN_CMD="sudo -u prologmud_server -- screen"
-#echo PTTY:TTY:PTS=$PTTY:$TTY:$PTS
-#whoami
-STUFF="^Mprolog.
-bfly. call((bfly_set(butterfly),bfly_set(command_args,\"${*}\"),bfly_set(ptty,\"${PTTY}:${TTY}:${PTY}:${PTS}\"))). bfly_start_link(\"${LOCATION}\").
-end_of_file.^M"
-echo STUFF=$STUFF
-(    $SCREEN_CMD -S LogicmooServer -p0 -X stuff "${STUFF}"; )
-echo $( 
-$SCREEN_CMD -rx LogicmooServer
-)
-return 0 2>/dev/null
-#!/bin/bash
 set -e
 export SCREEN_CMD="sudo -u prologmud_server -- screen"
 #echo PTTY:TTY:PTS=$PTTY:$TTY:$PTS
@@ -1998,3 +1904,128 @@ firefox
 . ./logicmoo_env.sh -v
 firefox 
 su - prologmud_server 
+ls
+su - 
+emacs
+exit
+emacs
+fg
+exit
+emacs
+ls
+vi ~/.emacs
+vi ~/.emacs
+git checkout .emacs
+su 
+cd ~prologmud_server/
+emacs
+swipl
+which swipl
+which swipl -a
+. ./logicmoo_env.sh -v
+. ../logicmoo_env.sh -v
+emacs -nw
+emacs hdt.pl
+ls ~/lsp-prolog/
+emacs hdt.pl
+export DISPLAY=10.0.0.78:0.0
+emacs hdt.pl
+emacs
+find  ~/lsp-prolog/prolog-lsp.el
+find  ~/lsp-prolog/
+find  ~/lsp-prolog/prolog-ls.el
+vi .emacs
+emacs
+cat .emacs
+ls
+ls lsp-prolog/
+cat lsp-prolog/README.org 
+ swipl -g use_module(library(lsp_server)). -g lsp_server:main -t halt -- stdio
+ swipl -g "use_module(library(lsp_server))." -g lsp_server:main -t halt -- stdio
+emacs
+emacs hdt.pl
+emacs-28.0.50 
+vi .emacs
+emacs-28.0.50 
+emacs hdt.pl
+emacs-28.0.50 run_mud_server.pl
+echo $DISPLAY 
+emacs --help
+emacs --xrm XRESOURCES   
+ls
+xterm
+export DISPLAY=10.0.0.78:0.0
+xterm
+xeyes &
+w
+emacs 
+git status
+git checkout .emacs.d
+emacs 
+git checkout .emacs
+emacs run_mud_server.pl
+emacs run_mud_server.pl
+emacs run_mud_server.pl
+git status
+git checkout .local/
+git checkout .local
+git checkout   ../docker/rootfs/usr/local/lib/swipl/lib/amd64
+git add  ../docker/rootfs/usr/local/lib/swipl/
+git status
+git add .emacs.d/elpa/
+git status
+cls
+git status
+git status
+git add  ../docker/rootfs/usr/local/share/man/man1/
+git add  ../docker/rootfs/usr/local
+git status
+rm hdt.pl
+rm -rf core ../foo
+ls .local/
+ls .local/share/swi-prolog/
+cat  .emacs.desktop.lock
+rm  .emacs.desktop.lock
+rm hdt.pl~ 
+rm hdt.pl
+git status
+cat NOTES/
+emacs run_mud_server.pl
+unset DISPLAY 
+emacs run_mud_server.pl
+emacs run_mud_server.pl
+ls
+emac
+emacs
+emacs --debug-init
+emacs
+emacs
+emacs
+emacs
+emacs --debug-init
+emacs --debug-init
+emacs --debug-init
+emacs --debug-init run_mud_server.pl
+emacs --debug-init run_mud_server.pl
+emacs -nw --debug-init run_mud_server.pl
+cls
+git status
+git checkout .emacs.d/elpa/
+rm -rf lsp-prolog/
+rm -rf DEAD/
+git status
+rm ../packs_sys/logicmoo_utils/prolog/logicmoo/pretty_clauses.new
+rm ../packs_sys/logicmoo_utils/prolog/logicmoo/pretty_clauses.ne*
+git status
+ls .local/share/swi-prolog/
+git add . 
+git status
+rm ../core
+cd /opt/logicmoo_workspace/
+git status
+git checkout  prologmud_server/run_mud_server.pl 
+git status
+git diff  prologmud_server/run_mud_server.pl
+cls
+git status
+emacs -new

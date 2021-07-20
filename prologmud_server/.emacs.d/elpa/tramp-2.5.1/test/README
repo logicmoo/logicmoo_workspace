@@ -1,0 +1,45 @@
+This directory contains files for running Tramp related tests.
+
+tramp-tests.el
+        This file is a test suite.  Interactively, you can run the
+        test suite by "M-x tramp-test-all".  The environment variable
+        $REMOTE_TEMPORARY_FILE_DIRECTORY can be set in order to run
+        the tests on another remote host, see
+        `tramp-test-temporary-file-directory' for the default value.
+
+The Makefile in this directory supports the following targets:
+
+* make all  -or-  make check
+  Run all tests declared in tramp-tests.el.  If
+  $REMOTE_TEMPORARY_FILE_DIRECTORY is set, only tramp-tests.el is
+  used.
+
+* make <filename>
+  Run all tests declared in <filename>.el.  <filename> is tramp-tests.
+
+ERT offers selectors, which make it possible to filter out which test
+cases shall run.  The make variable $(SELECTOR) gives you a simple
+mean to use your own selectors.  The ERT manual describes how
+selectors are constructed, see (info "(ert)Test Selectors") or
+<https://www.gnu.org/software/emacs/manual/html_node/ert/Test-Selectors.html>.
+
+If your test file contains the tests "test-foo", "test2-foo" and
+"test-foo-remote", and you want to run only the former two tests, you
+could use a selector regexp.
+
+    make <filename> SELECTOR='"foo$$"'
+
+If you want to run just the non-expensive tests, you might apply
+
+    make check SELECTOR='(not (tag :expensive-test))'
+
+The tag `:unstable' marks tests which do not run as expected, and are
+still under test by the developers.  In order to exclude those tests
+from run, you might call
+
+    make check SELECTOR='(not (tag :unstable))'
+
+The environment variable ${TRAMP_TEST_ARGS} allows to add further
+arguments to the Emacs test run.
+
+    make check TRAMP_TEST_ARGS="--eval 'some lisp code'"

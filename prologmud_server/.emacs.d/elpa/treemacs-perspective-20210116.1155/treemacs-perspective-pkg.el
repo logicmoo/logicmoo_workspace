@@ -1,0 +1,2 @@
+;;; Generated package description from treemacs-perspective.el  -*- no-byte-compile: t -*-
+(define-package "treemacs-perspective" "20210116.1155" "Perspective integration for treemacs" '((emacs "26.1") (treemacs "0.0") (perspective "2.8") (dash "2.11.0")) :commit "a6f9e9f1cea3502b3ead082fd208c4011a55add0" :authors '(("Alexander Miller" . "alexanderm@web.de") ("Jason Dufair" . "jase@dufair.org")) :maintainer '("Alexander Miller" . "alexanderm@web.de") :url "https://github.com/Alexander-Miller/treemacs")

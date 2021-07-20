@@ -1,0 +1,2 @@
+;;; Generated package description from wisp-mode.el  -*- no-byte-compile: t -*-
+(define-package "wisp-mode" "20210405.1410" "Tools for wisp: the Whitespace-to-Lisp preprocessor" '((emacs "24.4")) :commit "c67784cc0c44dc7c590f1f1f5a979a36b1e8c11d" :authors '(("Arne Babenhauserheide" . "arne_bab@web.de")) :maintainer '("Arne Babenhauserheide" . "arne_bab@web.de") :keywords '("languages" "lisp" "scheme") :url "http://www.draketo.de/english/wisp")

@@ -1,0 +1,2 @@
+;;; Generated package description from window-end-visible.el  -*- no-byte-compile: t -*-
+(define-package "window-end-visible" "0.1.0" "Find the last visible point in a window" 'nil :commit "bdc3d182e5f76e75f1b8cc49357194b36e48b67c" :authors '(("Roland Walker" . "walker@pobox.com")) :maintainer '("Roland Walker" . "walker@pobox.com") :keywords '("extensions") :url "http://github.com/rolandwalker/window-end-visible")

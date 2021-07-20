@@ -1,0 +1,238 @@
+2020-06-05  Stephen Leake  <stephen_leake@stephe-leake.org>
+
+	Forgot some new files in wisi
+
+	* packages/wisi/wisi.el: Bump version to 3.1.3 for packaging fix.
+
+	* packages/wisi/sal-gen_unconstrained_array_image.adb: New file.
+	* packages/wisi/sal-gen_unconstrained_array_image.ads: New file.
+	* packages/wisi/sal-gen_unconstrained_array_image_aux.adb: New file.
+	* packages/wisi/sal-gen_unconstrained_array_image_aux.ads: New file.
+
+2020-06-04  Stephen Leake  <stephen_leake@stephe-leake.org>
+
+	In wisi, missed a few files in 3.1.2 release
+
+2020-06-04  Stephen Leake  <stephen_leake@stephe-leake.org>
+
+	In ada-mode, release 7.1.3; in wisi, release 3.1.2
+
+2020-05-14  Stephen Leake  <stephen_leake@stephe-leake.org>
+
+	In wisi sal-gen_unbounded_definite_red_black_trees.adb, correct
+	WORKAROUND
+
+	* packages/wisi/wisi.el: Bump version.
+
+2020-05-12  Stephen Leake  <stephen_leake@stephe-leake.org>
+
+	Release ada-mode 7.1.0, wisi 3.1.0
+
+	* packages/ada-mode/*
+	* packages/wisi/*
+
+2020-01-30  Stephen Leake  <stephen_leake@stephe-leake.org>
+
+	Release ada-mode 7.0.1, wisi 3.0.1
+
+2019-08-17  Stephen Leake  <stephen_leake@stephe-leake.org>
+
+	In ada-mode and wisi, release ada-mode 6.2.1, wisi 2.2.1; fix packaging
+	bugs
+
+2019-08-13  Stephen Leake  <stephen_leake@stephe-leake.org>
+
+	In ada-mode, wisi: release Ada mode 6.2.0, wisi 1.2.0.
+
+2019-07-11  Stephen Leake  <stephen_leake@stephe-leake.org>
+
+	In ada-mode, wisi; release ada-mode 6.1.1, wisi 2.1.1
+
+2019-03-22  Stephen Leake  <stephen_leake@stephe-leake.org>
+
+	Release ada-mode 6.1.0, wisi 2.1.0
+
+2018-12-08  Stefan Monnier  <monnier@iro.umontreal.ca>
+
+	* ada-mode, wisi: Fix file access rights
+
+2018-12-08  Stephen Leake  <stephen_leake@stephe-leake.org>
+
+	Release ada-mode 6.0.1, wisi 2.0.1; fix copyright, packaging bugs
+
+2018-12-02  Stephen Leake  <stephen_leake@stephe-leake.org>
+
+	Release ada-mode version 6.0. Release wisi version 2.0
+
+2017-10-03  Stephen Leake  <stephen_leake@stephe-leake.org>
+
+	Release Ada mode 5.3.1, wisi 1.1.6
+
+	* packages/ada-mode/*: Release Ada mode 5.3.1.
+
+	* packages/ada-mode/ada_mode_gps_indent.gpr: Rename to 
+	ada_mode_gps_indent.gpr.gp; generate .gpr via gnatprep.
+
+	* packages/ada-mode/build.sh: New file.
+
+	* packages/wisi/parse_table-mode.el: New file.
+
+	* packages/wisi/wisi.el: Release wisi 1.1.6.
+
+2017-07-09  Stephen Leake  <stephen_leake@stephe-leake.org>
+
+	Update ada-mode to version 5.2.2, wisi to version 1.1.5
+
+2016-10-31  Stephen Leake  <stephen_leake@stephe-leake.org>
+
+	Release wisi 1.1.4, ada-mode 5.2.1
+
+2016-07-26  Stephen Leake  <stephen_leake@stephe-leake.org>
+
+	Release: ada-mode: version 5.2.0. wisi: version 1.1.3
+
+2016-07-11  Paul Eggert	 <eggert@cs.ucla.edu>
+
+	Fix some quoting problems in doc strings
+
+	Most of these are minor issues involving, e.g., quoting `like this' 
+	instead of 'like this'.	 A few involve escaping ` and ' with a preceding
+	\= when the characters should not be turned into curved single quotes.
+
+2016-01-21  Stefan Monnier  <monnier@iro.umontreal.ca>
+
+	* packages/gnome-c-style/gnome-c-tests.el: Add copyright blurb
+
+2016-01-18  Stephen Leake  <stephen_leake@stephe-leake.org>
+
+	Update ada-mode, wisi
+
+	* packages/ada-mode: Version 5.1.9.
+	* packages/wisi: Version 1.1.2.
+
+2015-06-18  Stefan Monnier  <monnier@iro.umontreal.ca>
+
+	* packages/wisi: Use lexical binding.  Fix dos EOL.  Fix EOB markers
+
+	* packages/wisi/wisi-compat-24.2.el: Use lexical-binding.  Fix EOB
+	convention.
+	* packages/wisi/wisi-compile.el: Use lexical-binding.  Fix EOB
+	convention.
+	(wisi-compile-grammar): Declare dyn-bound variables.
+	* packages/wisi/wisi.el: Use lexical-binding.  Fix EOB convention.
+	(wisi-number-p): Remove unused var `end'.
+
+2015-04-12  Stephen Leake  <stephen_leake@stephe-leake.org>
+
+	update ada-mode, wisi
+
+	* packages/ada-mode/*: version 5.1.8
+
+	* packages/wisi/*: version 1.1.1
+
+2014-11-21  Stephen Leake  <stephen_leake@stephe-leake.org>
+
+	release ada-mode 5.1.7, wisi 1.1.0; minor format changes in ada-ref-man
+	(take 2)
+
+2014-09-28  Stephen Leake  <stephen_leake@stephe-leake.org>
+
+	publish ada-mode 5.1.6, wisi 1.0.6, new package ada-ref-man
+
+	* admin/archive-contents.el (archive--metadata): include 'dir' in files,
+	for doc-only packages
+	 (archive--metadata): fix typo in error message
+
+	* packages/ada-mode/ada-ref-man.el: New file.
+	* packages/ada-mode/*: version 5.1.6
+
+	* packages/ada-ref-man/: New directory.
+
+	* packages/wisi/*: version 1.0.6
+	* packages/wisi/README: New file.
+
+2014-07-12  Stephen Leake  <stephen_leake@stephe-leake.org>
+
+	* packages/ada-mode/* : version 5.1.5
+
+	* packages/ada-mode/ada-mode.texi: New file.
+
+	* packages/ada-mode/gpr-mode.texi: New file.
+
+	* packages/wisi/* : version 1.0.5
+
+2014-04-19  Stephen Leake  <stephen_leake@stephe-leake.org>
+
+	ada-mode 5.1.3, wisi 1.0.4
+
+2014-03-16  Stephen Leake  <stephen_leake@stephe-leake.org>
+
+	ada-mode, wisi: bump versions again; forgot to add some files to git
+
+	* packages/ada-mode/README:
+	* packages/ada-mode/ada-mode.el: version 5.1.2
+
+	* packages/wisi/wisi.el: version 1.0.3
+
+	* packages/ada-mode/NEWS: New file.
+
+	* packages/ada-mode/ada-mode-compat-24.2.el: New file.
+
+	* packages/ada-mode/dir: New file.
+
+	* packages/wisi/NEWS: New file.
+
+	* packages/wisi/wisi-compat-24.2.el: New file.
+
+2014-03-14  Stephen Leake  <stephen_leake@stephe-leake.org>
+
+	* packages/ada-mode: version 5.1.1: fix wisi packaging bug, add -a in
+	gnat-find
+
+	* packages/wisi/wisi.el: bump version to reflect change.
+
+2014-03-13  Stephen Leake  <stephen_leake@stephe-leake.org>
+
+	release ada-mode 5.1.0, wisi 1.0.1
+
+	* packages/ada-mode/*: ada-mode 5.1.0
+
+	* packages/wisi/wisi-parse.el: wisi 1.0.1
+	* packages/wisi/wisi.el: "
+
+2014-02-02  Stephen Leake  <stephen_leake@stephe-leake.org>
+
+	update to Ada mode version 5.0.1
+
+	new Ada mode keybinding: C-c ; comment-dwim
+
+	new Ada mode menu entries: comment-dwim, ada-reset-parser
+
+	misc bug fixes
+
+	ada-indent-opentoken is now a minor mode
+
+	new gpr mode keybinding: C-c C-o ff-find-other-file
+
+	packages/ada-mode/README: New file.
+
+2013-12-27  Stefan Monnier  <monnier@iro.umontreal.ca>
+
+	* wisi: Fix warnings and a few 80-columns overruns
+
+2013-12-26  Stefan Monnier  <monnier@iro.umontreal.ca>
+
+	* wisi: Fix up dependency and sectioning style.
+
+2013-12-24  Stefan Monnier  <monnier@iro.umontreal.ca>
+
+	Fix up copyright notices.
+
+2013-12-24  U-takver\stephe  <stephe@takver.(none)>
+
+	Add ada-mode, wisi packages
+
+	* packages/ada-mode/: New directory.
+
+	* packages/wisi/: New directory.
+

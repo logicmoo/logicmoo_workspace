@@ -1,0 +1,232 @@
+2020-10-30  Ken Manheimer  <ken.manheimer@gmail.com>
+
+	* multishell/multishell.el: Require cl-lib when compiling for cl-letf
+	macro.
+
+2020-10-29  Ken Manheimer  <ken.manheimer@gmail.com>
+
+	* packages/multishell: Fix dumb errors in version statements.
+
+	It's actually 1.1.8. The important Version: header was left at 1.1.7 and
+	my Change Log had it at 1.1.9 (sowing confusion). Anyway, the prior
+	1.1.7 commit that had my misguided requires arrangement, wasn't
+	displaced by the commit that rectified it. It now will be by correcting
+	the Version: header.
+
+2020-10-28  Ken Manheimer  <ken.manheimer@gmail.com>
+
+	* packages/multishell: require multishell from multishell-list,
+
+	Remove now unnecessary autoload cookies.  Update version number so these 
+	are the revisions that are released.
+
+2020-10-28  Ken Manheimer  <ken.manheimer@gmail.com>
+
+	* packages/multishell: require multishell-list from multishell,
+
+	Add some autoloads for inter-dependencies and update version number.
+
+	* multishell.el: Update copyright dates, include version log entries. 
+	Include autoloads for functions needed by multishell-list.
+	(multishell-pop-to-shell): Refine docstring.
+	(multishell-start-shell-in-buffer): Change argument name, settling
+	FIXME. Handle absence of target remote directory gracefully.
+
+	* multishell-list.el: Update copyright dates.
+
+2018-02-27  Stefan Monnier  <monnier@iro.umontreal.ca>
+
+	* multishell/multishell.el: Minor comment/doc tweaks
+
+2018-02-27  Stefan Monnier  <monnier@iro.umontreal.ca>
+
+	* packages/multishell: Break cyclic require; use lexical and cl-lib
+
+	* multishell.el: Don't require 'multishell-list'.
+	(multishell-implement-command-key-choice): Rewrite so the compiler 
+	understands that multishell-activate-command-key is only used if it's
+	bound.
+	(multishell-track-dirchange): Remove unused var 'name'.
+
+	* multishell-list.el: Require 'multishell' in the normal way.
+	(multishell-list-delete): Don't pass unused 'arg'.
+	(multishell-list--collate-row-strings-as-numbers): Rename from 
+	multishell-collate-row-strings-as-numbers.
+	(multishell-list-cull-dups): 'mapcar' => 'dolist'.
+	(multishell-list): 'progv' => 'cl-progv'.
+
+2016-07-11  Paul Eggert	 <eggert@cs.ucla.edu>
+
+	Fix some quoting problems in doc strings
+
+	Most of these are minor issues involving, e.g., quoting `like this' 
+	instead of 'like this'.	 A few involve escaping ` and ' with a preceding
+	\= when the characters should not be turned into curved single quotes.
+
+2016-02-12  Ken Manheimer  <ken.manheimer@gmail.com>
+
+	multishell - merge 1.1.5 from multishell repo.
+
+2016-02-12  Ken Manheimer  <ken.manheimer@gmail.com>
+
+	Merge commit 'f2458211bc25749f07e0d70addde7c7745dcc79d'
+
+2016-02-09  Ken Manheimer  <ken.manheimer@gmail.com>
+
+	Merge multishell 1.1.3
+
+2016-02-01  Ken Manheimer  <ken.manheimer@gmail.com>
+
+	multishell - a bit more for 1.1.2, including missed change log entries.
+
+2016-02-01  Ken Manheimer  <ken.manheimer@gmail.com>
+
+	Merge multishell 1.1.2.
+
+2016-01-30  Ken Manheimer  <ken.manheimer@gmail.com>
+
+	multishell - merge 1.1.1
+
+2016-01-30  Ken Manheimer  <ken.manheimer@gmail.com>
+
+	Merge multishell 1.0.9
+
+2016-01-29  Ken Manheimer  <ken.manheimer@gmail.com>
+
+	multishell - merge latest updates
+
+	Still at 1.0.8.
+
+2016-01-26  Ken Manheimer  <ken.manheimer@gmail.com>
+
+	multishell - merge code tidying, still on 1.0.8.
+
+	Accumulating for eventual inclusion in 1.0.9.
+
+2016-01-24  Ken Manheimer  <ken.manheimer@gmail.com>
+
+	multishell - merge 1.0.8.
+
+2016-01-23  Ken Manheimer  <ken.manheimer@gmail.com>
+
+	multishell - merge 1.0.7
+
+2016-01-23  Ken Manheimer  <ken.manheimer@gmail.com>
+
+	multishell - still 1.0.6, clarify conditions for tramp homedir bug
+
+2016-01-22  Ken Manheimer  <ken.manheimer@gmail.com>
+
+	multishell - merge 1.0.6 changes.
+
+2016-01-22  Ken Manheimer  <ken.manheimer@gmail.com>
+
+	multishell - Merge commit '8d70b90b6f5b326749fbd1b8597ecf5cfc9b47d0'
+
+2016-01-21  Ken Manheimer  <ken.manheimer@gmail.com>
+
+	multishell - Merge edge-case but significant fixes
+
+	including one case that can apply kill-buffer to the wrong buffer, sigh.
+
+2016-01-20  Ken Manheimer  <ken.manheimer@gmail.com>
+
+	Merge '0c8e5e554199814c25258bc93b64dc008a9ab840', register assoc early.
+
+2016-01-19  Ken Manheimer  <ken.manheimer@gmail.com>
+
+	Merge commit recent multshell changes.
+
+2016-01-19  Ken Manheimer  <ken.manheimer@gmail.com>
+
+	Merge commit '2c5d608ddfeb2dc1acc15d645d94cac087f001d4'
+
+2016-01-19  Ken Manheimer  <ken.manheimer@gmail.com>
+
+	Merge commit '9d4a005a34458419025162224c9daf8d674142c8'
+
+2016-01-19  Ken Manheimer  <ken.manheimer@gmail.com>
+
+	Add 'packages/multishell/' from commit
+	'156e0ff035d20efa63ef71019c6fa96ae638c5b8'
+
+	git-subtree-dir: packages/multishell git-subtree-mainline:
+	8b5364eaf08d0c27c5c7ca4341ad7894e6070d03 git-subtree-split:
+	156e0ff035d20efa63ef71019c6fa96ae638c5b8
+
+2016-01-19  Ken Manheimer  <ken.manheimer@gmail.com>
+
+	multishell - remove plain file copy to replace it with a subtree clone
+
+2016-01-04  Ken Manheimer  <ken.manheimer@gmail.com>
+
+	multishell - remove custom var
+	multishell-non-interactive-process-buffers
+
+	Multishell should only be concerned with shell-mode and shell-mode 
+	derived buffers. Clarify that, and remove obsoleted 
+	multishell-non-interactive-process-buffers. That var wasn't being 
+	properly used, anyway - the residual var non-interactive-process-buffers 
+	was mistakenly being used, it's now removed, too.
+
+2016-01-04  Ken Manheimer  <ken.manheimer@gmail.com>
+
+	multishell - refactor for name-then-path, and use a valid release
+	number.
+
+	Hopefully this update is out there before anyone gets used to the old 
+	path-then-name format. (I haven't seen it in list-packages, but someone 
+	indicated that it might be out.)
+
+2016-01-04  Ken Manheimer  <ken.manheimer@gmail.com>
+
+	multishell - V. 0. Change "multishell:" to "multishell-", use
+	everywhere.
+
+	For ELPA conformance.
+
+	I'm also changing the version number to 0 to defer initial release. I 
+	discovered a big, user-exposed change I want to make, and need to iron 
+	it out before anyone gets used to the previous format.
+
+2016-01-03  Ken Manheimer  <ken.manheimer@gmail.com>
+
+	multishell.el - Remove (redundant) maintainer line, fix remote cd
+	ordering.
+
+	Also, remove redundant requires.
+
+2016-01-03  Ken Manheimer  <ken.manheimer@gmail.com>
+
+	multishell - Use actual email address, rather than obscured, in
+	packaging.
+
+2016-01-02  Ken Manheimer  <ken.manheimer@gmail.com>
+
+	multishell - new package
+
+	Author: Ken Manheimer <ken dot manheimer at gmail...> Version: 1.0.0 
+	Maintainer: Ken Manheimer <ken dot manheimer at gmail...> Created: 1999
+	-- first public availability Keywords: processes URL:
+	https://github.com/kenmanheimer/EmacsUtils
+
+	Commentary:
+
+	Easily use and manage multiple shell buffers, including remote shells. 
+	Fundamentally, multishell is the function `multishell:pop-to-shell -
+	like pop-to-buffer - plus a keybinding. Together, they enable you to:
+
+	* Get to the input point from wherever you are in a shell buffer,
+	* ... or to a shell buffer if you're not currently in one.
+	* Use universal arguments to launch and choose among alternate shell
+	buffers,
+	* ... and select which is default.
+	* Prepend a path to a new shell name to launch a shell in that
+	directory,
+	* ... and use a path with Emacs tramp syntax to launch a remote shell.
+
+	Customize-group `multishell` to select and activate a keybinding and set 
+	various behaviors.
+
+	See the pop-to-shell docstring for details.
+

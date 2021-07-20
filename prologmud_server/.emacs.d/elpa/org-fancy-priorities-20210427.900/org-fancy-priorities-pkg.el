@@ -1,0 +1,2 @@
+;;; Generated package description from org-fancy-priorities.el  -*- no-byte-compile: t -*-
+(define-package "org-fancy-priorities" "20210427.900" "Display org priorities as custom strings" 'nil :commit "44532ab8c25eb2c0028eecca7acd9e8ea8e2ff30" :authors '(("Harry Bournis" . "harrybournis@gmail.com")) :maintainer '("Harry Bournis" . "harrybournis@gmail.com") :keywords '("convenience" "faces" "outlines") :url "https://github.com/harrybournis/org-fancy-priorities")

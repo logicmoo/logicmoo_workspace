@@ -1,0 +1,2 @@
+;;; Generated package description from org-gamedb.el  -*- no-byte-compile: t -*-
+(define-package "org-gamedb" "20210525.2338" "Track video games in org-mode with giantbomb.com's API" '((emacs "25.1")) :commit "f283b6f6a7e8ad090405be57202caa3d3c424447" :authors '(("repelliuss <https://github.com/repelliuss>")) :maintainer '("repelliuss" . "repelliuss@gmail.com") :keywords '("outlines" "org" "games" "convenience" "api") :url "https://github.com/repelliuss/org-gamedb")

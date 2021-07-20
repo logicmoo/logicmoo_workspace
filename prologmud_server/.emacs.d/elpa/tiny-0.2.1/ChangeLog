@@ -1,0 +1,37 @@
+2017-09-03  Oleh Krehel	 <ohwoeowho@gmail.com>
+
+	Merge commit '012b2e7a67b9f067bbfa0292479861ffbaa201fa' from tiny
+
+2017-09-03  Stefan Monnier  <monnier@iro.umontreal.ca>
+
+	tiny.el: tiny-mapconcat returns sexp, not string
+
+	* tiny-test.el: Update tests.
+
+	* Makefile: Set `LC_ALL'.
+
+2017-08-30  Oleh Krehel	 <ohwoeowho@gmail.com>
+
+	Merge commit '3ae24d6b02b3b13a5468174599183102e1cb3c11' from tiny
+
+2016-07-11  Paul Eggert	 <eggert@cs.ucla.edu>
+
+	Fix some quoting problems in doc strings
+
+	Most of these are minor issues involving, e.g., quoting `like this' 
+	instead of 'like this'.	 A few involve escaping ` and ' with a preceding
+	\= when the characters should not be turned into curved single quotes.
+
+2015-12-08  Oleh Krehel	 <ohwoeowho@gmail.com>
+
+	Merge commit '366689f15373ffacfe4d28b36e6325d193a4e752' from tiny
+
+2015-03-22  Oleh Krehel	 <ohwoeowho@gmail.com>
+
+	Add 'packages/tiny/' from commit
+	'159c3f74e75970808b83fe4b732f180cb76872a3'
+
+	git-subtree-dir: packages/tiny git-subtree-mainline:
+	302a16a15bbaf3842246293a27c77ba2fd9a56e1 git-subtree-split:
+	159c3f74e75970808b83fe4b732f180cb76872a3
+

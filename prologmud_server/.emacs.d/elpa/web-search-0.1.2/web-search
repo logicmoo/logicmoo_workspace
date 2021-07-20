@@ -1,0 +1,46 @@
+#!/usr/bin/env bash
+#
+# web-search - Bash wrapper of web-search.el
+#
+# Usage: Type 'web-search --help' to learn
+
+EMACS=${EMACS:-emacs}
+
+# https://stackoverflow.com/questions/7665/how-to-resolve-symbolic-links-in-a-shell-script
+_realpath () {
+    if command -v realpath &>/dev/null; then
+        realpath "$0"
+    elif command -v grealpath &>/dev/null; then
+        grealpath "$0"
+    else
+        if [[ "$OSTYPE" == darwin* ]]; then
+            /usr/bin/readlink "$0"
+        else
+            readlink -f "$0"
+        fi
+    fi
+}
+
+if [[ -L "$0" ]]; then
+    real="$(_realpath "$0")"
+    web_search_program_root="${real%/*}/"
+else
+    web_search_program_root="${0%/*}/"
+fi
+
+if [[ "$1" == "--completion" ]]; then
+    cat "${web_search_program_root}/web-search-completion.bash"
+    exit
+fi
+
+if [[ -f "$HOME/.config/web-search-config.el" ]]; then
+    web_search_configuration="$HOME/.config/web-search-config.el"
+elif [[ -f "$HOME/.web-search-config.el" ]]; then
+    web_search_configuration="$HOME/.web-search-config.el"
+fi
+
+if [[ -z "$web_search_configuration" ]]; then
+    WEB_SEARCH_PROGRAM_NAME="${0##*/}" "$EMACS" -Q --batch -l "${web_search_program_root}/web-search.el" -f web-search-batch -- "$@"
+else
+    WEB_SEARCH_PROGRAM_NAME="${0##*/}" "$EMACS" -Q --batch -l "${web_search_program_root}/web-search.el" -l "$web_search_configuration" -f web-search-batch -- "$@"
+fi

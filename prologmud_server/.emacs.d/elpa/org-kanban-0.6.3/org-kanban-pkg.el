@@ -1,0 +1,2 @@
+;;; Generated package description from org-kanban.el  -*- no-byte-compile: t -*-
+(define-package "org-kanban" "0.6.3" "kanban dynamic block for org-mode." '((s "0") (dash "2.17.0") (emacs "24.4") (org "9.1")) :commit "198ffa2066aadcdd9530dcc9b82cb5626c49e257" :authors '(("Christian Köstlin" . "christian.koestlin@gmail.com")) :maintainer '("Christian Köstlin" . "christian.koestlin@gmail.com") :keywords '("org-mode" "org" "kanban" "tools") :url "http://github.com/gizmomogwai/org-kanban")

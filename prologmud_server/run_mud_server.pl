@@ -9,15 +9,15 @@
 %  sudo -u prologmud_server gdb -x gdbinit -return-child-result -ex "set pagination off" -ex run -ex quit --args swipl -l run_mud_server.pl --all --nonet --noworld
 
 
-C:\Users\logicmoo>rem C:\Windows\System32\runas.exe /savecred /user:remote-user 
- "\"C:\Program Files\swipl\bin\swipl.exe\" -f \"C:\Users\remote-user\AppData\Local\swi-prolog\pack\prologmud_samples\prolog\prologmud_sample_games\run_mud_server.pl\""
+C:\Users\logicmoo>rem C:\Windows\System32\runas.exe /savecred /user:remote-user :\Program Files\swipl\bin\swipl.exe\" -f \"C:\Users\remote-user\AppData\Local\swi-prolog\pack\prologmud_samples\prolog\prologmud_sample_games\run_mud_server.pl\""
 
 
 ?- cd(library(prologmud_sample_games)).
 ?- [run_mud_server].
 
 
-W:\opt\logicmoo_workspace\packs_sys\logicmoo_utils\prolog;W:\opt\logicmoo_workspace\packs_sys\logicmoo_base\prolog;W:\opt\logicmoo_workspace\packs_sys\pfc\prolog;W:\opt\logicmoo_workspace\packs_sys\logicmoo_nlu\prolog\logicmoo_nlu;W:\opt\logicmoo_workspace\packs_sys\prologmud\prolog;W:\opt\logicmoo_workspace\packs_sys\logicmoo_nlu\prolog\episodic_memory;W:\opt\logicmoo_workspace\packs_sys\logicmoo_nlu\ext\chat80;W:\opt\logicmoo_workspace\packs_sys\logicmoo_nlu\ext\ape
+W:\opt\logicmoo_workspace\packs_sys\logicmoo_utils\prolog;W:\opt\logicmoo_workspace\packs_sys\logicmoo_base\prolog;W:\opt\logicmoo_workspace\packs_sys\pfc\prolog;W:\opt\logicmoo_workspace\packs_sys\logicmoo_nlu\pro
+log\logicmoo_nlu;W:\opt\logicmoo_workspace\packs_sys\prologmud\prolog;W:\opt\logicmoo_workspace\packs_sys\logicmoo_nlu\prolog\episodic_memory;W:\opt\logicmoo_workspace\packs_sys\logicmoo_nlu\ext\chat80;W:\opt\logicmoo_workspace\packs_sys\logicmoo_nlu\ext\ape
 
 
 */
@@ -55,14 +55,10 @@ push_msg(Term) :-
 push_msg(Term) :-
     b_setval('$inprint_message', [Term]).
 
-pop_msg :- t_l:squelch_message, !.
-pop_msg :-
-    (   nb_current('$inprint_message', [_|Messages]),
-        Messages\==[]
-    ->  b_setval('$inprint_message', Messages)
-    ;   nb_delete('$inprint_message'),
-        b_setval('$inprint_message', [])
-    ).
+pop_msg :- t_l:squelch_message, !.  pop_msg :- (
+nb_current('$inprint_message', [_|Messages]), Messages\==[] ->
+b_setval('$inprint_message', Messages) ;
+nb_delete('$inprint_message'), b_setval('$inprint_message', []) ).
 
 print_message_guarded(_,_) :- t_l:squelch_message, !.
 print_message_guarded(Level, Term) :-
@@ -97,7 +93,7 @@ pre_run_mud_server:-
  
  % volatile(http_log:log_stream/1),
  volatile(http_log:log_stream/2),
- volatile(prolog_listing:opened_source/3),
+ volatile(prolog_listing:opened_Source/3),
   %(current_prolog_flag(xpce, true) -> (noguitracer,tnodebug) ; true),
   discontiguous(rdf11:'$exported_op'/3),
   discontiguous(phil:'$exported_op'/3),
@@ -127,7 +123,7 @@ pre_run_mud_server:-
 
 never_catch:- 
    current_prolog_flag(access_level,Was),
-   set_prolog_flag(access_level,system),
+qqqqqqqq   set_prolog_flag(access_level,system),
    redefine_system_predicate(system:catch/3),
    abolish(system:catch,3),
    meta_predicate(system:catch(0,?,0)),
@@ -136,7 +132,7 @@ never_catch:-
    system:asserta((catch(G,E,C):- !, mycatch(G,E,C))),   
    set_prolog_flag(access_level,Was).
 
-
+q
 
 :- initialization(pre_run_mud_server, now).
 :- initialization(pre_run_mud_server, restore_state).
@@ -212,7 +208,7 @@ set_startup_flags:-
   current_prolog_flag('argv',Is),writeq(current_prolog_flag('argv',Is)),!,nl,
   !.
 
-:- initialization(set_startup_flags, now).
+:- iniqtialization(set_startup_flags, now).
 :- initialization(set_startup_flags, restore_state).
 
 
@@ -261,7 +257,7 @@ check_startup_flags:-
    ], NewArgV),
    set_prolog_flag('argv',NewArgV))),
    current_prolog_flag(argv,Is),
-   asserta(lmconf:saved_app_argv(Is)),
+ q  asserta(lmconf:saved_app_argv(Is)),
    writeq(set_prolog_flag('argv',Is)),!,nl.
 
 :- initialization(check_startup_flags, now).

@@ -5,7 +5,7 @@
 |1,4
 
 # Value of 'encoding' when this file was written
-*encoding=utf-8
+*encoding=latin1
 
 
 # hlsearch on (H) or off (h):
@@ -14,10 +14,12 @@
 ~MSle0~/requi
 
 # Command Line History (newest to oldest):
-:q!
-|2,0,1626334371,,"q!"
 :wq!
-|2,0,1626332809,,"wq!"
+|2,0,1626770973,,"wq!"
+:q!
+|2,0,1626769464,,"q!"
+:wq!~
+|2,0,1626764798,,"wq!~"
 
 # Search String History (newest to oldest):
 ?/requi
@@ -36,262 +38,331 @@
 # Debug Line History (newest to oldest):
 
 # Registers:
-""1	LINE	0
-	   printf "\033c" #or 
-|3,1,1,1,1,0,1626334031,"   printf \"\\033c\" #or "
+"1	LINE	0
+	                                auto-mode-alist))
+|3,0,1,1,1,0,1626769086,"                                auto-mode-alist))"
 "2	LINE	0
-	   printf "\ec" #. This can also be 
-|3,0,2,1,1,0,1626334031,"   printf \"\\ec\" #. This can also be "
+	                                  ("\\.m$" . mercury-mode))
+|3,0,2,1,1,0,1626769086,"                                  (\"\\\\.m$\" . mercury-mode))"
 "3	LINE	0
-	   echo -en "\ec\e[3J"
-|3,0,3,1,1,0,1626334031,"   echo -en \"\\ec\\e[3J\""
+	  (setq auto-mode-alist (append '(("\\.pl$" . prolog-mode)
+|3,0,3,1,1,0,1626769086,"  (setq auto-mode-alist (append '((\"\\\\.pl$\" . prolog-mode)"
 "4	LINE	0
-	   echo -en '\033]50;ClearScrollback\a'
-|3,0,4,1,1,0,1626334031,"   echo -en '\\033]50;ClearScrollback\\a'"
+	  (setq prolog-system 'swi)
+|3,0,4,1,1,0,1626769086,"  (setq prolog-system 'swi)"
 "5	LINE	0
-	   reset
-|3,0,5,1,1,0,1626334030,"   reset"
+	  (autoload 'mercury-mode "prolog" "Major mode for editing Mercury programs." t)
+|3,0,5,1,1,0,1626769086,"  (autoload 'mercury-mode \"prolog\" \"Major mode for editing Mercury programs.\" t)"
 "6	LINE	0
-	 	clear
-|3,0,6,1,1,0,1626334030," 	clear"
+	  (autoload 'prolog-mode "prolog" "Major mode for editing Prolog programs." t)
+|3,0,6,1,1,0,1626769086,"  (autoload 'prolog-mode \"prolog\" \"Major mode for editing Prolog programs.\" t)"
 "7	LINE	0
-	cls_putty() {
-|3,0,7,1,1,0,1626334030,"cls_putty() {"
+	(autoload 'run-prolog "prolog" "Start a Prolog sub-process." t)
+|3,0,7,1,1,0,1626769085,"(autoload 'run-prolog \"prolog\" \"Start a Prolog sub-process.\" t)"
 "8	LINE	0
-	
-|3,0,8,1,1,0,1626334030,""
+	i spend more time in vim repairing emacs(edited)
+|3,0,8,1,1,0,1626768927,"i spend more time in vim repairing emacs(edited)"
 "9	LINE	0
-	fi
-|3,0,9,1,1,0,1626334029,"fi"
-"-	CHAR	0
-	/
-|3,0,36,0,1,0,1626187063,"/"
+	@dmiles
+|3,0,9,1,1,0,1626768926,"@dmiles"
+""-	CHAR	0
+	p
+|3,1,36,0,1,0,1626770650,"p"
 
 # File marks:
-'0  69  8  ~/StartMUD.sh
-|4,48,69,8,1626334371,"~/StartMUD.sh"
-'1  78  0  ~/.emacs
-|4,49,78,0,1626332809,"~/.emacs"
-'2  123  6  ~/.emacs
-|4,50,123,6,1626332506,"~/.emacs"
-'3  123  6  ~/.emacs
-|4,51,123,6,1626332506,"~/.emacs"
-'4  77  0  ~/.emacs
-|4,52,77,0,1626331316,"~/.emacs"
-'5  77  0  ~/.emacs
-|4,53,77,0,1626331316,"~/.emacs"
-'6  77  0  ~/.emacs
-|4,54,77,0,1626331316,"~/.emacs"
-'7  77  0  ~/.emacs
-|4,55,77,0,1626331316,"~/.emacs"
-'8  121  0  ~/.emacs
-|4,56,121,0,1626330851,"~/.emacs"
-'9  65  0  ~/.emacs
-|4,57,65,0,1626330851,"~/.emacs"
+'0  69  0  ~/.emacs
+|4,48,69,0,1626770973,"~/.emacs"
+'1  34  29  ~/.emacs
+|4,49,34,29,1626770656,"~/.emacs"
+'2  34  29  ~/.emacs
+|4,50,34,29,1626770656,"~/.emacs"
+'3  48  1  ~/.emacs
+|4,51,48,1,1626769464,"~/.emacs"
+'4  48  1  ~/.emacs
+|4,52,48,1,1626769464,"~/.emacs"
+'5  48  1  ~/.emacs
+|4,53,48,1,1626769464,"~/.emacs"
+'6  48  1  ~/.emacs
+|4,54,48,1,1626769464,"~/.emacs"
+'7  88  0  ~/.emacs
+|4,55,88,0,1626769105,"~/.emacs"
+'8  88  0  ~/.emacs
+|4,56,88,0,1626769105,"~/.emacs"
+'9  88  0  ~/.emacs
+|4,57,88,0,1626769105,"~/.emacs"
 
 # Jumplist (newest first):
--'  69  8  ~/StartMUD.sh
-|4,39,69,8,1626334371,"~/StartMUD.sh"
--'  70  5  ~/StartMUD.sh
-|4,39,70,5,1626334036,"~/StartMUD.sh"
--'  71  1  ~/StartMUD.sh
-|4,39,71,1,1626334036,"~/StartMUD.sh"
--'  72  3  ~/StartMUD.sh
-|4,39,72,3,1626334036,"~/StartMUD.sh"
--'  73  4  ~/StartMUD.sh
-|4,39,73,4,1626334035,"~/StartMUD.sh"
--'  74  0  ~/StartMUD.sh
-|4,39,74,0,1626334035,"~/StartMUD.sh"
--'  75  0  ~/StartMUD.sh
-|4,39,75,0,1626334035,"~/StartMUD.sh"
--'  76  0  ~/StartMUD.sh
-|4,39,76,0,1626334035,"~/StartMUD.sh"
--'  77  2  ~/StartMUD.sh
-|4,39,77,2,1626334035,"~/StartMUD.sh"
--'  78  3  ~/StartMUD.sh
-|4,39,78,3,1626334034,"~/StartMUD.sh"
--'  79  3  ~/StartMUD.sh
-|4,39,79,3,1626334034,"~/StartMUD.sh"
--'  80  3  ~/StartMUD.sh
-|4,39,80,3,1626334034,"~/StartMUD.sh"
--'  81  3  ~/StartMUD.sh
-|4,39,81,3,1626334034,"~/StartMUD.sh"
--'  82  3  ~/StartMUD.sh
-|4,39,82,3,1626334034,"~/StartMUD.sh"
--'  83  3  ~/StartMUD.sh
-|4,39,83,3,1626334033,"~/StartMUD.sh"
--'  1  0  ~/StartMUD.sh
-|4,39,1,0,1626333980,"~/StartMUD.sh"
--'  78  0  ~/.emacs
-|4,39,78,0,1626332809,"~/.emacs"
--'  78  0  ~/.emacs
-|4,39,78,0,1626332809,"~/.emacs"
--'  24  1  ~/.emacs
-|4,39,24,1,1626332573,"~/.emacs"
--'  24  1  ~/.emacs
-|4,39,24,1,1626332573,"~/.emacs"
--'  1  1  ~/.emacs
-|4,39,1,1,1626332569,"~/.emacs"
--'  1  1  ~/.emacs
-|4,39,1,1,1626332569,"~/.emacs"
--'  2  0  ~/.emacs
-|4,39,2,0,1626332567,"~/.emacs"
--'  2  0  ~/.emacs
-|4,39,2,0,1626332567,"~/.emacs"
--'  123  6  ~/.emacs
-|4,39,123,6,1626332506,"~/.emacs"
--'  123  6  ~/.emacs
-|4,39,123,6,1626332506,"~/.emacs"
--'  123  6  ~/.emacs
-|4,39,123,6,1626332506,"~/.emacs"
--'  123  6  ~/.emacs
-|4,39,123,6,1626332506,"~/.emacs"
+-'  69  0  ~/.emacs
+|4,39,69,0,1626770973,"~/.emacs"
 -'  1  0  ~/.emacs
-|4,39,1,0,1626332469,"~/.emacs"
+|4,39,1,0,1626770958,"~/.emacs"
+-'  34  29  ~/.emacs
+|4,39,34,29,1626770656,"~/.emacs"
+-'  34  29  ~/.emacs
+|4,39,34,29,1626770656,"~/.emacs"
 -'  1  0  ~/.emacs
-|4,39,1,0,1626332469,"~/.emacs"
--'  77  0  ~/.emacs
-|4,39,77,0,1626331316,"~/.emacs"
--'  77  0  ~/.emacs
-|4,39,77,0,1626331316,"~/.emacs"
--'  77  0  ~/.emacs
-|4,39,77,0,1626331316,"~/.emacs"
--'  77  0  ~/.emacs
-|4,39,77,0,1626331316,"~/.emacs"
--'  77  0  ~/.emacs
-|4,39,77,0,1626331316,"~/.emacs"
--'  77  0  ~/.emacs
-|4,39,77,0,1626331316,"~/.emacs"
--'  82  0  ~/.emacs
-|4,39,82,0,1626331027,"~/.emacs"
--'  82  0  ~/.emacs
-|4,39,82,0,1626331027,"~/.emacs"
--'  82  0  ~/.emacs
-|4,39,82,0,1626331027,"~/.emacs"
--'  82  0  ~/.emacs
-|4,39,82,0,1626331027,"~/.emacs"
--'  82  0  ~/.emacs
-|4,39,82,0,1626331027,"~/.emacs"
--'  82  0  ~/.emacs
-|4,39,82,0,1626331027,"~/.emacs"
+|4,39,1,0,1626770639,"~/.emacs"
+-'  48  1  ~/.emacs
+|4,39,48,1,1626769464,"~/.emacs"
+-'  48  1  ~/.emacs
+|4,39,48,1,1626769464,"~/.emacs"
+-'  48  1  ~/.emacs
+|4,39,48,1,1626769464,"~/.emacs"
 -'  1  0  ~/.emacs
-|4,39,1,0,1626330978,"~/.emacs"
+|4,39,1,0,1626769332,"~/.emacs"
+-'  88  0  ~/.emacs
+|4,39,88,0,1626769105,"~/.emacs"
+-'  88  0  ~/.emacs
+|4,39,88,0,1626769105,"~/.emacs"
+-'  88  0  ~/.emacs
+|4,39,88,0,1626769105,"~/.emacs"
+-'  88  0  ~/.emacs
+|4,39,88,0,1626769105,"~/.emacs"
 -'  1  0  ~/.emacs
-|4,39,1,0,1626330978,"~/.emacs"
--'  121  0  ~/.emacs
-|4,39,121,0,1626330851,"~/.emacs"
--'  65  0  ~/.emacs
-|4,39,65,0,1626330851,"~/.emacs"
--'  121  0  ~/.emacs
-|4,39,121,0,1626330851,"~/.emacs"
--'  65  0  ~/.emacs
-|4,39,65,0,1626330851,"~/.emacs"
--'  121  0  ~/.emacs
-|4,39,121,0,1626330851,"~/.emacs"
--'  65  0  ~/.emacs
-|4,39,65,0,1626330851,"~/.emacs"
--'  121  0  ~/.emacs
-|4,39,121,0,1626330851,"~/.emacs"
--'  65  0  ~/.emacs
-|4,39,65,0,1626330851,"~/.emacs"
--'  121  0  ~/.emacs
-|4,39,121,0,1626330851,"~/.emacs"
--'  65  0  ~/.emacs
-|4,39,65,0,1626330851,"~/.emacs"
--'  121  0  ~/.emacs
-|4,39,121,0,1626330851,"~/.emacs"
--'  65  0  ~/.emacs
-|4,39,65,0,1626330851,"~/.emacs"
+|4,39,1,0,1626769081,"~/.emacs"
+-'  10  0  ~/.emacs
+|4,39,10,0,1626768932,"~/.emacs"
+-'  17  0  ~/.emacs
+|4,39,17,0,1626768932,"~/.emacs"
+-'  10  0  ~/.emacs
+|4,39,10,0,1626768932,"~/.emacs"
+-'  17  0  ~/.emacs
+|4,39,17,0,1626768932,"~/.emacs"
+-'  10  0  ~/.emacs
+|4,39,10,0,1626768932,"~/.emacs"
+-'  17  0  ~/.emacs
+|4,39,17,0,1626768932,"~/.emacs"
+-'  10  0  ~/.emacs
+|4,39,10,0,1626768932,"~/.emacs"
+-'  17  0  ~/.emacs
+|4,39,17,0,1626768932,"~/.emacs"
 -'  1  0  ~/.emacs
-|4,39,1,0,1626330826,"~/.emacs"
+|4,39,1,0,1626768917,"~/.emacs"
+-'  2  1  ~/.emacs
+|4,39,2,1,1626768881,"~/.emacs"
+-'  9  1  ~/.emacs
+|4,39,9,1,1626768881,"~/.emacs"
+-'  2  1  ~/.emacs
+|4,39,2,1,1626768881,"~/.emacs"
+-'  9  1  ~/.emacs
+|4,39,9,1,1626768881,"~/.emacs"
+-'  2  1  ~/.emacs
+|4,39,2,1,1626768881,"~/.emacs"
+-'  9  1  ~/.emacs
+|4,39,9,1,1626768881,"~/.emacs"
+-'  2  1  ~/.emacs
+|4,39,2,1,1626768881,"~/.emacs"
+-'  9  1  ~/.emacs
+|4,39,9,1,1626768881,"~/.emacs"
+-'  9  1  ~/.emacs
+|4,39,9,1,1626768881,"~/.emacs"
 -'  1  0  ~/.emacs
-|4,39,1,0,1626330826,"~/.emacs"
--'  113  0  ~/.emacs
-|4,39,113,0,1626330786,"~/.emacs"
--'  57  0  ~/.emacs
-|4,39,57,0,1626330786,"~/.emacs"
--'  113  0  ~/.emacs
-|4,39,113,0,1626330786,"~/.emacs"
--'  57  0  ~/.emacs
-|4,39,57,0,1626330786,"~/.emacs"
--'  113  0  ~/.emacs
-|4,39,113,0,1626330786,"~/.emacs"
--'  57  0  ~/.emacs
-|4,39,57,0,1626330786,"~/.emacs"
--'  57  0  ~/.emacs
-|4,39,57,0,1626330786,"~/.emacs"
--'  113  0  ~/.emacs
-|4,39,113,0,1626330786,"~/.emacs"
--'  57  0  ~/.emacs
-|4,39,57,0,1626330786,"~/.emacs"
--'  113  0  ~/.emacs
-|4,39,113,0,1626330786,"~/.emacs"
--'  57  0  ~/.emacs
-|4,39,57,0,1626330786,"~/.emacs"
--'  113  0  ~/.emacs
-|4,39,113,0,1626330786,"~/.emacs"
--'  57  0  ~/.emacs
-|4,39,57,0,1626330786,"~/.emacs"
--'  57  0  ~/.emacs
-|4,39,57,0,1626330786,"~/.emacs"
+|4,39,1,0,1626768869,"~/.emacs"
+-'  39  0  ~/.emacs
+|4,39,39,0,1626768781,"~/.emacs"
+-'  31  0  ~/.emacs
+|4,39,31,0,1626768781,"~/.emacs"
+-'  30  0  ~/.emacs
+|4,39,30,0,1626768781,"~/.emacs"
+-'  22  0  ~/.emacs
+|4,39,22,0,1626768781,"~/.emacs"
+-'  46  0  ~/.emacs
+|4,39,46,0,1626768781,"~/.emacs"
+-'  38  0  ~/.emacs
+|4,39,38,0,1626768781,"~/.emacs"
+-'  37  0  ~/.emacs
+|4,39,37,0,1626768781,"~/.emacs"
+-'  29  0  ~/.emacs
+|4,39,29,0,1626768781,"~/.emacs"
+-'  39  0  ~/.emacs
+|4,39,39,0,1626768781,"~/.emacs"
+-'  31  0  ~/.emacs
+|4,39,31,0,1626768781,"~/.emacs"
+-'  30  0  ~/.emacs
+|4,39,30,0,1626768781,"~/.emacs"
+-'  22  0  ~/.emacs
+|4,39,22,0,1626768781,"~/.emacs"
+-'  46  0  ~/.emacs
+|4,39,46,0,1626768781,"~/.emacs"
+-'  38  0  ~/.emacs
+|4,39,38,0,1626768781,"~/.emacs"
+-'  37  0  ~/.emacs
+|4,39,37,0,1626768781,"~/.emacs"
+-'  29  0  ~/.emacs
+|4,39,29,0,1626768781,"~/.emacs"
+-'  39  0  ~/.emacs
+|4,39,39,0,1626768781,"~/.emacs"
+-'  31  0  ~/.emacs
+|4,39,31,0,1626768781,"~/.emacs"
+-'  30  0  ~/.emacs
+|4,39,30,0,1626768781,"~/.emacs"
+-'  22  0  ~/.emacs
+|4,39,22,0,1626768781,"~/.emacs"
+-'  46  0  ~/.emacs
+|4,39,46,0,1626768781,"~/.emacs"
+-'  38  0  ~/.emacs
+|4,39,38,0,1626768781,"~/.emacs"
+-'  37  0  ~/.emacs
+|4,39,37,0,1626768781,"~/.emacs"
+-'  29  0  ~/.emacs
+|4,39,29,0,1626768781,"~/.emacs"
+-'  39  0  ~/.emacs
+|4,39,39,0,1626768781,"~/.emacs"
+-'  31  0  ~/.emacs
+|4,39,31,0,1626768781,"~/.emacs"
+-'  30  0  ~/.emacs
+|4,39,30,0,1626768781,"~/.emacs"
+-'  22  0  ~/.emacs
+|4,39,22,0,1626768781,"~/.emacs"
+-'  46  0  ~/.emacs
+|4,39,46,0,1626768781,"~/.emacs"
+-'  38  0  ~/.emacs
+|4,39,38,0,1626768781,"~/.emacs"
+-'  37  0  ~/.emacs
+|4,39,37,0,1626768781,"~/.emacs"
+-'  29  0  ~/.emacs
+|4,39,29,0,1626768781,"~/.emacs"
 -'  1  0  ~/.emacs
-|4,39,1,0,1626330739,"~/.emacs"
+|4,39,1,0,1626768758,"~/.emacs"
+-'  35  0  ~/.emacs
+|4,39,35,0,1626768726,"~/.emacs"
+-'  27  0  ~/.emacs
+|4,39,27,0,1626768726,"~/.emacs"
+-'  26  0  ~/.emacs
+|4,39,26,0,1626768726,"~/.emacs"
+-'  18  0  ~/.emacs
+|4,39,18,0,1626768726,"~/.emacs"
+-'  42  0  ~/.emacs
+|4,39,42,0,1626768726,"~/.emacs"
+-'  33  0  ~/.emacs
+|4,39,33,0,1626768726,"~/.emacs"
+-'  25  0  ~/.emacs
+|4,39,25,0,1626768726,"~/.emacs"
+-'  35  0  ~/.emacs
+|4,39,35,0,1626768726,"~/.emacs"
+-'  27  0  ~/.emacs
+|4,39,27,0,1626768726,"~/.emacs"
+-'  26  0  ~/.emacs
+|4,39,26,0,1626768726,"~/.emacs"
+-'  18  0  ~/.emacs
+|4,39,18,0,1626768726,"~/.emacs"
+-'  42  0  ~/.emacs
+|4,39,42,0,1626768726,"~/.emacs"
+-'  33  0  ~/.emacs
+|4,39,33,0,1626768726,"~/.emacs"
+-'  25  0  ~/.emacs
+|4,39,25,0,1626768726,"~/.emacs"
+-'  35  0  ~/.emacs
+|4,39,35,0,1626768726,"~/.emacs"
+-'  27  0  ~/.emacs
+|4,39,27,0,1626768726,"~/.emacs"
+-'  26  0  ~/.emacs
+|4,39,26,0,1626768726,"~/.emacs"
+-'  18  0  ~/.emacs
+|4,39,18,0,1626768726,"~/.emacs"
+-'  42  0  ~/.emacs
+|4,39,42,0,1626768726,"~/.emacs"
+-'  34  0  ~/.emacs
+|4,39,34,0,1626768726,"~/.emacs"
+-'  33  0  ~/.emacs
+|4,39,33,0,1626768726,"~/.emacs"
+-'  25  0  ~/.emacs
+|4,39,25,0,1626768726,"~/.emacs"
+-'  35  0  ~/.emacs
+|4,39,35,0,1626768726,"~/.emacs"
+-'  27  0  ~/.emacs
+|4,39,27,0,1626768726,"~/.emacs"
+-'  26  0  ~/.emacs
+|4,39,26,0,1626768726,"~/.emacs"
+-'  18  0  ~/.emacs
+|4,39,18,0,1626768726,"~/.emacs"
+-'  42  0  ~/.emacs
+|4,39,42,0,1626768726,"~/.emacs"
+-'  34  0  ~/.emacs
+|4,39,34,0,1626768726,"~/.emacs"
+-'  33  0  ~/.emacs
+|4,39,33,0,1626768726,"~/.emacs"
+-'  25  0  ~/.emacs
+|4,39,25,0,1626768726,"~/.emacs"
+-'  25  0  ~/.emacs
+|4,39,25,0,1626768726,"~/.emacs"
 -'  1  0  ~/.emacs
-|4,39,1,0,1626330739,"~/.emacs"
--'  17  5  ~/vscode-mode/vscode-init.el
-|4,39,17,5,1626330709,"~/vscode-mode/vscode-init.el"
--'  17  5  ~/vscode-mode/vscode-init.el
-|4,39,17,5,1626330709,"~/vscode-mode/vscode-init.el"
--'  17  5  ~/vscode-mode/vscode-init.el
-|4,39,17,5,1626330709,"~/vscode-mode/vscode-init.el"
--'  17  5  ~/vscode-mode/vscode-init.el
-|4,39,17,5,1626330709,"~/vscode-mode/vscode-init.el"
--'  17  5  ~/vscode-mode/vscode-init.el
-|4,39,17,5,1626330709,"~/vscode-mode/vscode-init.el"
--'  17  5  ~/vscode-mode/vscode-init.el
-|4,39,17,5,1626330709,"~/vscode-mode/vscode-init.el"
--'  17  5  ~/vscode-mode/vscode-init.el
-|4,39,17,5,1626330709,"~/vscode-mode/vscode-init.el"
--'  17  5  ~/vscode-mode/vscode-init.el
-|4,39,17,5,1626330709,"~/vscode-mode/vscode-init.el"
--'  17  5  ~/vscode-mode/vscode-init.el
-|4,39,17,5,1626330709,"~/vscode-mode/vscode-init.el"
--'  17  5  ~/vscode-mode/vscode-init.el
-|4,39,17,5,1626330709,"~/vscode-mode/vscode-init.el"
--'  17  5  ~/vscode-mode/vscode-init.el
-|4,39,17,5,1626330709,"~/vscode-mode/vscode-init.el"
--'  17  5  ~/vscode-mode/vscode-init.el
-|4,39,17,5,1626330709,"~/vscode-mode/vscode-init.el"
--'  17  5  ~/vscode-mode/vscode-init.el
-|4,39,17,5,1626330709,"~/vscode-mode/vscode-init.el"
--'  17  5  ~/vscode-mode/vscode-init.el
-|4,39,17,5,1626330709,"~/vscode-mode/vscode-init.el"
--'  17  5  ~/vscode-mode/vscode-init.el
-|4,39,17,5,1626330709,"~/vscode-mode/vscode-init.el"
--'  17  5  ~/vscode-mode/vscode-init.el
-|4,39,17,5,1626330709,"~/vscode-mode/vscode-init.el"
--'  17  5  ~/vscode-mode/vscode-init.el
-|4,39,17,5,1626330709,"~/vscode-mode/vscode-init.el"
--'  17  5  ~/vscode-mode/vscode-init.el
-|4,39,17,5,1626330709,"~/vscode-mode/vscode-init.el"
--'  17  5  ~/vscode-mode/vscode-init.el
-|4,39,17,5,1626330709,"~/vscode-mode/vscode-init.el"
--'  17  5  ~/vscode-mode/vscode-init.el
-|4,39,17,5,1626330709,"~/vscode-mode/vscode-init.el"
--'  17  5  ~/vscode-mode/vscode-init.el
-|4,39,17,5,1626330709,"~/vscode-mode/vscode-init.el"
--'  17  5  ~/vscode-mode/vscode-init.el
-|4,39,17,5,1626330709,"~/vscode-mode/vscode-init.el"
--'  17  5  ~/vscode-mode/vscode-init.el
-|4,39,17,5,1626330709,"~/vscode-mode/vscode-init.el"
--'  17  5  ~/vscode-mode/vscode-init.el
-|4,39,17,5,1626330709,"~/vscode-mode/vscode-init.el"
--'  17  5  ~/vscode-mode/vscode-init.el
-|4,39,17,5,1626330709,"~/vscode-mode/vscode-init.el"
--'  17  5  ~/vscode-mode/vscode-init.el
-|4,39,17,5,1626330709,"~/vscode-mode/vscode-init.el"
+|4,39,1,0,1626768712,"~/.emacs"
+-'  86  2  ~/.emacs
+|4,39,86,2,1626768620,"~/.emacs"
+-'  84  2  ~/.emacs
+|4,39,84,2,1626768620,"~/.emacs"
 
 # History of marks within files (newest to oldest):
+
+> ~/.emacs
+	*	1626770972	0
+	"	69	0
+	^	69	0
+	.	38	0
+	+	1	18
+	+	16	20
+	+	15	1
+	+	33	1
+	+	31	19
+	+	45	13
+	+	59	0
+	+	45	24
+	+	59	56
+	+	59	0
+	+	59	22
+	+	59	0
+	+	59	4
+	+	59	13
+	+	45	49
+	+	45	48
+	+	45	0
+	+	45	21
+	+	45	4
+	+	45	50
+	+	45	0
+	+	1	1
+	+	42	4
+	+	59	6
+	+	16	1
+	+	45	0
+	+	42	31
+	+	45	0
+	+	59	0
+	+	55	42
+	+	56	0
+	+	44	0
+	+	43	0
+	+	42	0
+	+	59	19
+	+	59	0
+	+	85	32
+	+	86	12
+	+	59	0
+	+	57	0
+	+	36	0
+	+	44	1
+	+	42	20
+	+	44	0
+	+	42	0
+	+	55	2
+	+	46	0
+	+	86	2
+	+	34	73
+	+	36	0
+	+	38	17
+	+	1	63
+	+	1	49
+	+	2	33
+	+	10	0
+	+	1	0
+	+	87	0
+	+	34	29
+	+	38	0
+
+> ~/emacs
+	*	1626764884	0
+	"	1	0
 
 > ~/StartMUD.sh
 	*	1626334370	0
@@ -300,40 +371,6 @@
 	+	56	0
 	+	83	0
 	+	69	0
-
-> ~/.emacs
-	*	1626332808	0
-	"	78	0
-	^	78	0
-	.	78	0
-	+	1	18
-	+	6	20
-	+	5	1
-	+	23	1
-	+	21	19
-	+	89	13
-	+	93	0
-	+	91	24
-	+	95	56
-	+	120	0
-	+	118	22
-	+	120	0
-	+	93	0
-	+	111	4
-	+	120	13
-	+	88	49
-	+	87	48
-	+	88	0
-	+	81	21
-	+	76	4
-	+	44	50
-	+	67	0
-	+	73	0
-	+	1	1
-	+	28	4
-	+	123	6
-	+	6	1
-	+	78	0
 
 > ~/vscode-mode/vscode-init.el
 	*	1626330707	0

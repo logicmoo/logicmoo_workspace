@@ -1,0 +1,2 @@
+;;; Generated package description from org-preview-html.el  -*- no-byte-compile: t -*-
+(define-package "org-preview-html" "20210623.1523" "automatically use eww to preview the current org file on save" '((org "8.0") (emacs "24.4")) :commit "3fe7dd85b8a7dc4ead7495095a3abaad28e2f809" :authors '(("DarkSun" . "lujun9972@gmail.com")) :maintainer '("DarkSun" . "lujun9972@gmail.com") :keywords '("convenience" "eww" "org") :url "https://github.com/lujun9972/org-preview-html")

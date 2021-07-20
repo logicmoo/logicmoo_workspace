@@ -1,0 +1,2 @@
+;;; Generated package description from org-starter-swiper.el  -*- no-byte-compile: t -*-
+(define-package "org-starter-swiper" "0.2.9" "Swiper for org-starter" '((emacs "25.1") (swiper "0.11") (org-starter "0.2.4")) :commit "49237ef8d174a15a594d984438cebe23ffcf54df" :authors '(("Akira Komamura" . "akira.komamura@gmail.com")) :maintainer '("Akira Komamura" . "akira.komamura@gmail.com") :url "https://github.com/akirak/org-starter")

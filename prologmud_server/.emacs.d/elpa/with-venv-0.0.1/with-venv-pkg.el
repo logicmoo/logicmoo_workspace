@@ -1,0 +1,2 @@
+;;; Generated package description from with-venv.el  -*- no-byte-compile: t -*-
+(define-package "with-venv" "0.0.1" "Execute with Python virtual environment activated" '((cl-lib "0.5") (emacs "24.4")) :commit "d12341b93420f4acd7a277ed0cd4a54767bc5bd6" :authors '(("10sr <8.slashes [at] gmail [dot] com>")) :maintainer '("10sr <8.slashes [at] gmail [dot] com>") :keywords '("processes" "python" "venv") :url "https://github.com/10sr/with-venv-el")

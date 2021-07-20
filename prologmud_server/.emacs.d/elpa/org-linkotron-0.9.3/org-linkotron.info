@@ -1,0 +1,120 @@
+This is README.info, produced by makeinfo version 6.5 from README.texi.
+
+INFO-DIR-SECTION Emacs
+START-INFO-DIR-ENTRY
+* Org Linkotron: (org-linkotron). Activate multiple org-links at once.
+END-INFO-DIR-ENTRY
+
+
+File: README.info,  Node: Top,  Next: Commentary,  Up: (dir)
+
+org-linkotron
+*************
+
+* Menu:
+
+* Commentary:: Commentary.
+* Installation:: Installation.
+* Usage:: Usage.
+* Credits:: Credits.
+* License:: License.
+
+
+File: README.info,  Node: Commentary,  Next: Installation,  Prev: Top,  Up: Top
+
+1 Commentary:
+*************
+
+The purpose of this package is to provide a way to open a group of
+org-links at once.  A group is defined as all org-links under a
+heading/sub heading, no need to use any special layout or formatting.
+
+   The motivation is that I usually have at least a couple of sites I
+need to visit for any specific task, so opening them all at once saves
+me time.
+
+   Links are opened via the standard org funktion ‘org-open-at-point’.
+
+
+File: README.info,  Node: Installation,  Next: Usage,  Prev: Commentary,  Up: Top
+
+2 Installation:
+***************
+
+Evaluate the elisp source file in some manner.  If you like quelpa, this
+line would also work in your init.el:
+
+     (when (not (require 'org-linkotron nil 'noerror))
+       (quelpa '(org-linkotron :repo "perweij/org-linkotron" :fetcher gitlab)))
+     (require 'org-linkotron)
+
+
+File: README.info,  Node: Usage,  Next: Credits,  Prev: Installation,  Up: Top
+
+3 Usage:
+********
+
+In an org-file, create a heading with some links in the text below, for
+example:
+
+     ** Some links about something
+     Here is a text with two links, here: [[https://www.fsf.org/][fsf]] and
+     here: [[https://fsfe.org/][fsfe]].
+     A final one: [[https://www.gnu.org/][gnu]].
+     ** Another interesting link collection
+      - [[https://en.wikipedia.org/wiki/Amiga_500][Amiga 500]]
+      - [[https://en.wikipedia.org/wiki/Commodore_64][Commodore 64]]
+
+   Now, just place the cursor on the relevant header or its text, and
+invoke
+     org-linkotron-open-group
+
+
+File: README.info,  Node: Credits,  Next: License,  Prev: Usage,  Up: Top
+
+4 Credits:
+**********
+
+   • Thanks to alphapapa (https://github.com/alphapapa) for supplying an
+     elegant implementation and great feedback.  I also borrowed much of
+     the project structure of his org-super-agenda project, as well as
+     the test script makem.sh (https://github.com/alphapapa/makem.sh).
+
+
+File: README.info,  Node: License,  Prev: Credits,  Up: Top
+
+5 License:
+**********
+
+Copyright (C) 2020, Per Weijnitz, all rights reserved.
+
+   This program is free software; you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by the
+Free Software Foundation, either version 3 of the License, or (at your
+option) any later version.
+
+   This program is distributed in the hope that it will be useful, but
+WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+General Public License for more details.
+
+   You should have received a copy of the GNU General Public License
+along with this program.  If not, see
+<https://www.gnu.org/licenses/gpl-3.0.txt>
+
+
+
+Tag Table:
+Node: Top208
+Node: Commentary428
+Node: Installation969
+Node: Usage1365
+Node: Credits2033
+Node: License2424
+
+End Tag Table
+
+
+Local Variables:
+coding: utf-8
+End:

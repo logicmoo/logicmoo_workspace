@@ -1,0 +1,2 @@
+;;; Generated package description from org-present-remote.el  -*- no-byte-compile: t -*-
+(define-package "org-present-remote" "20191206.533" "A web-based remote control for org-present" '((org-present "9") (elnode "0.9") (emacs "25")) :commit "dc3be74c544efc4723f5f64f54b4c74b523f0bbd" :authors '(("Duncan Bayne" . "duncan@bayne.id.au")) :maintainer '("Duncan Bayne" . "duncan@bayne.id.au") :keywords '("comm" "docs") :url "https://gitlab.com/duncan-bayne/org-present-remote")

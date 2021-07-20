@@ -1,0 +1,2 @@
+;;; Generated package description from org-noter.el  -*- no-byte-compile: t -*-
+(define-package "org-noter" "1.4.1" "A synchronized, Org-mode, document annotator" '((emacs "24.4") (cl-lib "0.6") (org "9.0")) :commit "32900872c82195e757ec6249a329490a0ca2199e" :authors '((nil . "Gonçalo Santos (aka. weirdNox@GitHub)")) :maintainer '(nil . "Gonçalo Santos (aka. weirdNox@GitHub)") :keywords '("lisp" "pdf" "interleave" "annotate" "external" "sync" "notes" "documents" "org-mode") :url "https://github.com/weirdNox/org-noter")

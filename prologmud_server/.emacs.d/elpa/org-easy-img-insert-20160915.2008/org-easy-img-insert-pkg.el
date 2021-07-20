@@ -1,0 +1,2 @@
+;;; Generated package description from org-easy-img-insert.el  -*- no-byte-compile: t -*-
+(define-package "org-easy-img-insert" "20160915.2008" "An easier way to add images from the web in org mode" '((emacs "24.4")) :commit "9f8aaa7f68ff1f0d8d7b1e9b618abb15002f971e" :authors '(("Tashrif Sanil" . "tashrifsanil@kloke-source.com")) :maintainer '("Tashrif Sanil" . "tashrifsanil@kloke-source.com") :keywords '("convenience" "hypermedia" "files") :url "https://github.com/tashrifsanil/org-easy-img-insert")
