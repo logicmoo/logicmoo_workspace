@@ -2003,3 +2003,18 @@ git fetch --recurse-submodules
 git fetch --recurse-submodules 
 git lfs checkout
 git lfs checkout
+./runFromDocker.sh build commit
+cat ./INSTALL.md 
+git config --local http.sslVerify false
+# git config --global http.sslVerify false
+echo "git submodule update --init"
+git submodule update --init
+echo "git pull --recurse-submodules"
+find -name "*.lock" -delete
+git submodule foreach --recursive bash -c "git fetch --unshallow ; /bin/true"
+git submodule foreach --recursive bash -c "git lfs pull ; /bin/true"
+git pull --recurse-submodules
+#git lfs checkout
+find -name "*.lock" -delete
+git submodule foreach --recursive bash -c "git fetch --unshallow ; /bin/true"
+git submodule foreach --recursive bash -c "git lfs pull ; /bin/true"
