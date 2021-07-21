@@ -2028,3 +2028,5 @@ git push
 git status
 cd ..
 git add logicmoo_pldata/
+git commit -am "some are differnt"
+cd ..
