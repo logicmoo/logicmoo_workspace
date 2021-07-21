@@ -208,7 +208,7 @@ set_startup_flags:-
   current_prolog_flag('argv',Is),writeq(current_prolog_flag('argv',Is)),!,nl,
   !.
 
-:- iniqtialization(set_startup_flags, now).
+:- initialization(set_startup_flags, now).
 :- initialization(set_startup_flags, restore_state).
 
 
@@ -257,7 +257,7 @@ check_startup_flags:-
    ], NewArgV),
    set_prolog_flag('argv',NewArgV))),
    current_prolog_flag(argv,Is),
- q  asserta(lmconf:saved_app_argv(Is)),
+   asserta(lmconf:saved_app_argv(Is)),
    writeq(set_prolog_flag('argv',Is)),!,nl.
 
 :- initialization(check_startup_flags, now).

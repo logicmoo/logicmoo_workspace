@@ -60,7 +60,7 @@ extra :- true. % Fuller, but questionable if needed yet.
 
 :- ensure_loaded(adv_behaviour_tree).
 
-:- ensure_loaded(adv_axiom).
+%:- ensure_loaded(adv_axiom).
 :- ensure_loaded(adv_implies).
 
 %:- ensure_loaded(adv_abdemo).
