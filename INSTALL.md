@@ -92,6 +92,7 @@ else
  git pull
 fi
 
+apt install git-lfs
 
 git config --local http.sslVerify false
 # git config --global http.sslVerify false
