@@ -83,8 +83,8 @@ if [[ ! -d /opt/logicmoo_workspace ]]; then
  mkdir -p /opt
  cd /opt 
  git config --global http.sslVerify false \
- echo "git clone --depth 1 https://github.com/logicmoo/logicmoo_workspace"
- git clone --depth 1 https://github.com/logicmoo/logicmoo_workspace 
+ echo "git clone https://github.com/logicmoo/logicmoo_workspace"
+ git clone https://github.com/logicmoo/logicmoo_workspace 
  cd /opt/logicmoo_workspace
 else
  cd /opt/logicmoo_workspace
@@ -98,6 +98,9 @@ git config --local http.sslVerify false
 echo "git submodule update --init"
 git submodule update --init
 echo "git pull --recurse-submodules"
+find -name "*.lock" -delete
+git submodule foreach --recursive bash -c "git fetch --unshallow ; /bin/true"
+git submodule foreach --recursive bash -c "git lfs pull ; /bin/true"
 git pull --recurse-submodules
 #git lfs checkout
 
