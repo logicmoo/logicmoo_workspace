@@ -1998,3 +1998,8 @@ git fetch
 git lfs checkout
 git fetch 
 git fetch --recurse-submodules 
+git checkout prologmud_server/.bash_history ; git pull
+git fetch --recurse-submodules 
+git fetch --recurse-submodules 
+git lfs checkout
+git lfs checkout
