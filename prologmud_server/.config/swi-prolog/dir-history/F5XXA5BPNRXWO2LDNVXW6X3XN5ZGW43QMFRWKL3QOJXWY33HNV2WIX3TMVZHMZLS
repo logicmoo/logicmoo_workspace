@@ -44,3 +44,4 @@ threads.
 shell.
 ls.
 make.
+pack_install(lsp_server).

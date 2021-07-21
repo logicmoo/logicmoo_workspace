@@ -1,7 +1,7 @@
 #!/usr/bin/env swipl
 /* * module  MUD server startup script in SWI-Prolog
 
-?- 
+?tyyyyyyyyyyyy- 
  ignore(( \+ exists_source(library(prologmud_sample_games/run_mud_server)), 
      attach_packs('/opt/logicmoo_workspace/packs_sys'))),
  consult(library(prologmud_sample_games/run_mud_server)).

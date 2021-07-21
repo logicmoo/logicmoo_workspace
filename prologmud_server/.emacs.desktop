@@ -2,16 +2,16 @@
 ;; --------------------------------------------------------------------------
 ;; Desktop File for Emacs
 ;; --------------------------------------------------------------------------
-;; Created Tue Jul 20 10:24:21 2021
+;; Created Wed Jul 21 14:53:52 2021
 ;; Desktop file format version 208
 ;; Emacs version 28.0.50
 
 ;; Global section:
-(setq desktop-saved-frameset [frameset 1 (24822 42069 395148 907000) (desktop . "208") "prologmud_server@57d1822be850" nil nil ((((minibuffer . t) (tty-type . "xterm-256color") (tty . "/dev/tty") (display-type . color) (background-mode . light) (scroll-bar-foreground . "black") (cursor-color . "black") (frameset--id . "CA12-F6FA-733B-9180") (frameset--mini t) (foreground-color . "unspecified-fg") (background-color . "unspecified-bg") (font . "tty") (height . 155) (width . 249) (modeline . t) (unsplittable) (menu-bar-lines . 1) (tab-bar-lines . 0)) ((min-height . 4) (min-width . 10) (min-height-ignore . 2) (min-width-ignore . 5) (min-height-safe . 1) (min-width-safe . 2) (min-pixel-height . 4) (min-pixel-width . 10) (min-pixel-height-ignore . 2) (min-pixel-width-ignore . 5) (min-pixel-height-safe . 1) (min-pixel-width-safe . 2)) leaf (pixel-width . 249) (pixel-height . 154) (total-width . 249) (total-height . 154) (normal-height . 1.0) (normal-width . 1.0) (buffer "run_mud_server.pl" (selected) (hscroll . 0) (fringes 0 0 nil nil) (margins 3) (scroll-bars nil 0 t nil 0 t nil) (vscroll . 0) (dedicated) (point . 77) (start . 1))))])
+(setq desktop-saved-frameset [frameset 1 (24824 13568 789197 306000) (desktop . "208") "root@0050cd272b70" nil nil ((((minibuffer . t) (undecorated) (override-redirect) (font . "-PfEd-DejaVu Sans Mono-normal-normal-normal-*-11-*-*-*-m-0-iso10646-1") (font-parameter . "Monospace 11") (border-width . 0) (internal-border-width . 0) (child-frame-border-width) (right-divider-width . 0) (bottom-divider-width . 0) (vertical-scroll-bars . right) (horizontal-scroll-bars) (foreground-color . "black") (background-color . "white") (mouse-color . "black") (border-color . "black") (screen-gamma) (line-spacing) (left-fringe . 8) (right-fringe . 8) (no-special-glyphs) (scroll-bar-foreground . "black") (scroll-bar-background) (menu-bar-lines . 1) (tab-bar-lines . 0) (tool-bar-lines . 1) (title) (wait-for-wm . t) (tool-bar-position . top) (inhibit-double-buffering) (icon-type . t) (auto-raise) (auto-lower) (cursor-type . box) (scroll-bar-width . 16) (scroll-bar-height . 16) (alpha) (no-focus-on-map) (no-accept-focus) (fullscreen) (visibility . t) (skip-taskbar) (z-group) (display-type . color) (background-mode . light) (cursor-color . "black") (environment) (frameset--id . "CA12-F6FA-733B-9180") (frameset--mini t . t) (modeline . t) (unsplittable) (display . "10.0.0.78:0.0") (height . 72) (width . 249) (left . 2125) (top . 1111) (icon-name) (explicit-name)) ((min-height . 4) (min-width . 10) (min-height-ignore . 2) (min-width-ignore . 8) (min-height-safe . 1) (min-width-safe . 2) (min-pixel-height . 56) (min-pixel-width . 70) (min-pixel-height-ignore . 28) (min-pixel-width-ignore . 56) (min-pixel-height-safe . 14) (min-pixel-width-safe . 14)) leaf (pixel-width . 1775) (pixel-height . 994) (total-width . 253) (total-height . 71) (normal-height . 1.0) (normal-width . 1.0) (buffer "run_mud_server.pl" (selected . t) (hscroll . 0) (fringes 0 0 nil nil) (margins 3) (scroll-bars nil 3 t nil 0 t nil) (vscroll . 0) (dedicated) (point . 90) (start . 1))))])
 (setq desktop-missing-file-warning nil)
 (setq tags-file-name nil)
 (setq tags-table-list nil)
-(setq search-ring '(#("tree-sit" 0 8 (isearch-regexp-function nil isearch-case-fold-search t)) #("tree-sd" 0 7 (isearch-case-fold-search t isearch-regexp-function nil)) #("tree-sitt" 0 9 (isearch-case-fold-search t isearch-regexp-function nil)) #("keytari" 0 7 (isearch-case-fold-search t isearch-regexp-function nil)) #("keytar" 0 6 (isearch-case-fold-search t isearch-regexp-function nil)) #("dnskeys" 0 3 (isearch-regexp-function nil isearch-case-fold-search t) 3 7 (isearch-case-fold-search t isearch-regexp-function nil)) #("dnd" 0 3 (isearch-regexp-function nil isearch-case-fold-search t)) #("dns" 0 3 (isearch-case-fold-search t isearch-regexp-function nil)) #("outlo" 0 5 (isearch-regexp-function nil isearch-case-fold-search t)) #("xel" 0 3 (isearch-regexp-function nil isearch-case-fold-search t)) #("GRam" 0 4 (isearch-case-fold-search nil isearch-regexp-function nil)) #("Gram." 0 5 (isearch-case-fold-search nil isearch-regexp-function nil))))
+(setq search-ring '(#("tree-sit" 0 8 (isearch-case-fold-search t isearch-regexp-function nil)) #("tree-sd" 0 7 (isearch-regexp-function nil isearch-case-fold-search t)) #("tree-sitt" 0 9 (isearch-regexp-function nil isearch-case-fold-search t)) #("keytari" 0 7 (isearch-regexp-function nil isearch-case-fold-search t)) #("keytar" 0 6 (isearch-regexp-function nil isearch-case-fold-search t)) #("dnskeys" 0 3 (isearch-case-fold-search t isearch-regexp-function nil) 3 7 (isearch-regexp-function nil isearch-case-fold-search t)) #("dnd" 0 3 (isearch-case-fold-search t isearch-regexp-function nil)) #("dns" 0 3 (isearch-regexp-function nil isearch-case-fold-search t)) #("outlo" 0 5 (isearch-case-fold-search t isearch-regexp-function nil)) #("xel" 0 3 (isearch-case-fold-search t isearch-regexp-function nil)) #("GRam" 0 4 (isearch-regexp-function nil isearch-case-fold-search nil)) #("Gram." 0 5 (isearch-regexp-function nil isearch-case-fold-search nil))))
 (setq regexp-search-ring '(#("tar" 0 3 (isearch-case-fold-search t))))
 (setq register-alist nil)
 (setq file-name-history '("/root"))
@@ -22,11 +22,11 @@
   "run_mud_server.pl"
   'prolog-mode
   '(lsp-mode dap-mode linum-mode projectile-mode helm-mode vscode-minor-mode flycheck-mode override-global-mode company-mode lsp-modeline-workspace-status-mode)
-  77
+  90
   '(nil nil)
   nil
   nil
-  '((buffer-display-time 24822 42039 358271 839000) (buffer-file-coding-system . undecided-unix))
+  '((buffer-display-time 24824 13560 900476 365000) (buffer-file-coding-system . undecided-unix))
   '((mark-ring nil)))
 
 (desktop-create-buffer 208
@@ -37,7 +37,7 @@
   1
   '(1 nil)
   t
-  '(:history ((:title "DuckDuckGo Traffic" :url "https://duckduckgo.com/traffic") (:title "About DuckDuckGo" :url "https://duckduckgo.com/about" :point 604) (:title "DuckDuckGo" :url "https://html.duckduckgo.com/html/?q=" :point 15)))
-  '((buffer-display-time 24822 41953 886819 886000) (buffer-file-coding-system . utf-8-unix) (truncate-lines . t) (eww-history-position . 0))
+  '(:history ((:url "https://duckduckgo.com/traffic" :title "DuckDuckGo Traffic") (:point 604 :url "https://duckduckgo.com/about" :title "About DuckDuckGo") (:point 15 :url "https://html.duckduckgo.com/html/?q=" :title "DuckDuckGo")))
+  '((buffer-display-time 24824 13426 890023 925000) (buffer-file-coding-system . utf-8-unix) (truncate-lines . t) (eww-history-position . 0))
   '((mark-ring (1))))
 

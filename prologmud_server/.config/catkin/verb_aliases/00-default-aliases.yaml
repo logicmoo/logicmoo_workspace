@@ -1,0 +1,14 @@
+### DO NOT EDIT, generated automatically and updated automatically by catkin_tools
+
+### If you want to add your own verb aliases, add additional files to this directory
+### If you want to override an alias in this file, put the same alias in a new file
+### If you want to disable an alias in this file, set the alias to null in a new file
+### Files in this folder which end with `.yaml` are evaluated in sorted order
+
+b: build
+bt: b --this
+ls: list
+install: config --install
+p: create pkg
+test: build --verbose --make-args test --
+run_tests: build --verbose --catkin-make-args run_tests --
