@@ -1,0 +1,73 @@
+==============================================================================
+==============================================================================
+Known Bugs of the InfraEngine System
+==============================================================================
+==============================================================================
+
+==============================================================================
+Fri Oct 12 14:31:35 2007
+SWI-Prolog version 5.6.40, Mac OS-X
+
+The presence of symbolic links from and into directories and files in the
+document root directory might lead to failure of verifying that a file is
+indeed in the document root directory. Maybe a bug or weird feature
+in SWI-Prolog.
+
+- absolute_file_name/3 in some cases seems confused if symbolic links TO
+elements in the path are present.
+
+I want to apply absolute_file_name to verify that a file is indeed below a
+certain directory (as in the HTTP Server security example).
+
+ 0 --- in SWI: ---
+ 1
+ 2  ?- absolute_file_name('/Users/ch/infra/lib/documents/doc/manual.html', X). 
+ 3  X = '/Users/ch/infra/lib/documents/doc/manual.html'
+ 4 
+ 5 --- in a bash shell: ---
+ 6
+ 7 $ cd ~/infra
+ 8 $ ln -s lib/documents/doc doc
+ 9
+10 --- restart SWI: ---
+11 
+12 ?- absolute_file_name('/Users/ch/infra/lib/documents/doc/manual.html', X). 
+13 X = '/Users/ch/infra/doc/manual.html'
+
+Line 3 is as expected.  Now in line 8 I create a symbolic link.  Query 12 is
+the same as 2.  The result 13 is unexpected.
+
+- After creating the link, before restarting SWI (line 10), the result of
+  absolute_file_name was in some cases as in line 3 and sometimes as in 
+  line 13.
+
+- In some other experiments with paths that inlude a directory which is a
+  symbolic link, absolute_file_name expands the link in some cases
+  and does not expand it in other cases.
+
+==============================================================================
+Fri Oct 12 14:32:56 2007
+SWI-Prolog version 5.6.43, Mac OS-X
+Fine in Debian Etch Linux
+
+        Unfortunately version 5.6.43 seems to require a 
+        newer version of libXft.2.dylib
+	than that provided by Apple. With 
+        <a href="http://darwinports.com/">Darwinports</a> it
+        can be installed by
+        <pre>$ sudo port install xft2</pre>
+
+==============================================================================
+Fri Oct 12 14:34:37 2007
+SWI-Prolog version 5.6.43, Mac OS-X
+
+If the thread_httpd server (instead of xpce_httpd) is used, the Graph views do
+not work.
+
+To switch to thread_httpd comment/uncomment these lines 
+in src/httpserver.pl appropriately:
+
+% :- use_module(library('http/thread_httpd')).
+:- use_module(library('http/xpce_httpd')).
+
+==============================================================================

@@ -171,6 +171,7 @@ fi
 
 USER=${USER:-root}
 HOME=/root
+
 if [ "$USER" != "root" ]; then
     echo "* enable custom user: $USER"
     useradd --create-home --shell /bin/bash --user-group --groups adm,sudo $USER
@@ -189,6 +190,8 @@ sed -i -e "s|%USER%|$USER|" -e "s|%HOME%|$HOME|" /etc/supervisor/conf.d/supervis
 mkdir -p $HOME/.config/pcmanfm/LXDE/
 ln -sf /usr/local/share/doro-lxde-wallpapers/desktop-items-0.conf $HOME/.config/pcmanfm/LXDE/
 # chown -R $USER:$USER $HOME
+
+mv /home/ubuntu /home/ubuntu.wrong ; ln -s /root /home/ubuntu
 
 # nginx workers
 sed -i 's|worker_processes .*|worker_processes 1;|' /etc/nginx/nginx.conf

@@ -1,0 +1,667 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+
+<html>
+<head>
+<title>STOMP -- a SWI-Prolog STOMP client</title>
+<style type="text/css">
+
+/* Style sheet for SWI-Prolog latex2html
+*/
+
+dd.defbody
+{ margin-bottom: 1em;
+}
+
+dt.pubdef, dt.multidef
+{ color: #fff;
+padding: 2px 10px 0px 10px;
+margin-bottom: 5px;
+font-size: 18px;
+vertical-align: middle;
+overflow: hidden;
+}
+
+dt.pubdef { background-color: #0c3d6e; }
+dt.multidef { background-color: #ef9439; }
+
+.bib dd
+{ margin-bottom: 1em;
+}
+
+.bib dt
+{ float: left;
+margin-right: 1.3ex;
+}
+
+pre.code
+{ margin-left: 1.5em;
+margin-right: 1.5em;
+border: 1px dotted;
+padding-top: 5px;
+padding-left: 5px;
+padding-bottom: 5px;
+background-color: #f8f8f8;
+}
+
+div.navigate
+{ text-align: center;
+background-color: #f0f0f0;
+border: 1px dotted;
+padding: 5px;
+}
+
+div.title
+{ text-align: center;
+padding-bottom: 1em;
+font-size: 200%;
+font-weight: bold;
+}
+
+div.author
+{ text-align: center;
+font-style: italic;
+}
+
+div.abstract
+{ margin-top: 2em;
+background-color: #f0f0f0;
+border: 1px dotted;
+padding: 5px;
+margin-left: 10%; margin-right:10%;
+}
+
+div.abstract-title
+{ text-align: center;
+padding: 5px;
+font-size: 120%;
+font-weight: bold;
+}
+
+div.toc-h1
+{ font-size: 200%;
+font-weight: bold;
+}
+
+div.toc-h2
+{ font-size: 120%;
+font-weight: bold;
+margin-left: 2em;
+}
+
+div.toc-h3
+{ font-size: 100%;
+font-weight: bold;
+margin-left: 4em;
+}
+
+div.toc-h4
+{ font-size: 100%;
+margin-left: 6em;
+}
+
+span.sec-nr
+{
+}
+
+span.sec-title
+{
+}
+
+span.pred-ext
+{ font-weight: bold;
+}
+
+span.pred-tag
+{ float: right;
+padding-top: 0.2em;
+font-size: 80%;
+font-style: italic;
+color: #fff;
+}
+
+div.caption
+{ width: 80%;
+margin: auto;
+text-align:center;
+}
+
+/* Footnotes */
+.fn {
+color: red;
+font-size: 70%;
+}
+
+.fn-text, .fnp {
+position: absolute;
+top: auto;
+left: 10%;
+border: 1px solid #000;
+box-shadow: 5px 5px 5px #888;
+display: none;
+background: #fff;
+color: #000;
+margin-top: 25px;
+padding: 8px 12px;
+font-size: larger;
+}
+
+sup:hover span.fn-text
+{ display: block;
+}
+
+/* Lists */
+
+dl.latex
+{ margin-top: 1ex;
+margin-bottom: 0.5ex;
+}
+
+dl.latex dl.latex dd.defbody
+{ margin-bottom: 0.5ex;
+}
+
+/* PlDoc Tags */
+
+dl.tags
+{ font-size: 90%;
+margin-left: 5ex;
+margin-top: 1ex;
+margin-bottom: 0.5ex;
+}
+
+dl.tags dt
+{ margin-left: 0pt;
+font-weight: bold;
+}
+
+dl.tags dd
+{ margin-left: 3ex;
+}
+
+td.param
+{ font-style: italic;
+font-weight: bold;
+}
+
+/* Index */
+
+dt.index-sep
+{ font-weight: bold;
+font-size: +1;
+margin-top: 1ex;
+}
+
+/* Tables */
+
+table.center
+{ margin: auto;
+}
+
+table.latex
+{ border-collapse:collapse;
+}
+
+table.latex tr
+{ vertical-align: text-top;
+}
+
+table.latex td,th
+{ padding: 2px 1em;
+}
+
+table.latex tr.hline td,th
+{ border-top: 1px solid black;
+}
+
+table.frame-box
+{ border: 2px solid black;
+}
+
+</style>
+</head>
+<body style="background:white"> 
+<div class="title">STOMP -- a SWI-Prolog STOMP client</div>
+<div class="author">Hongxin Liang and Jan Wielemaker <br>
+SWI-Prolog Solutions b.v. <br>
+The Netherlands <br>
+E-mail: <a class="url" href="mailto:jan@swi-prolog.org">jan@swi-prolog.org</a></div>
+<div class="abstract">
+<div class="abstract-title">Abstract</div> This package provide a client 
+to STOMP, The <i>Simple Text Oriented Messaging Protocol</i>. See the <a class="url" href="http://stomp.github.io/">STOMP 
+specification</a> for details. We used STOMP to connect to the
+<a class="url" href="https://www.rabbitmq.com/">RabbitMQ</a> message 
+broker.
+</div>
+
+<h1><a id="document-contents">Table of Contents</a></h1>
+
+<div class="toc">
+<div class="toc-h2"><a class="sec" href="#sec:1"><span class="sec-nr">1</span> <span class="sec-title">library(stomp): 
+STOMP client.</span></a></div>
+<div class="toc-h3"><a class="sec" href="#sec:1.1"><span class="sec-nr">1.1</span> <span class="sec-title">Threading</span></a></div>
+<div class="toc-h3"><a class="sec" href="#sec:1.2"><span class="sec-nr">1.2</span> <span class="sec-title">Reconnecting</span></a></div>
+</div>
+
+<p><h2 id="sec:stomp"><a id="sec:1"><span class="sec-nr">1</span> <span class="sec-title">library(stomp): 
+STOMP client.</span></a></h2>
+
+<p><a id="sec:stomp"></a>
+
+<dl class="tags">
+<dt class="tag">author</dt>
+<dd>
+Hongxin Liang and Jan Wielemaker</dd>
+<dt class="mtag">See also</dt>
+<dd>
+- <a class="url" href="http://stomp.github.io/index.html">http://stomp.github.io/index.html</a> <br>
+- <a class="url" href="https://github.com/jasonrbriggs/stomp.py">https://github.com/jasonrbriggs/stomp.py</a>
+</dd>
+<dt class="tag">license</dt>
+<dd>
+BSD-2
+</dd>
+<dt class="tag">To be done</dt>
+<dd>
+TSL support
+</dd>
+</dl>
+
+<p>This module provides a STOMP (Simple (or Streaming) Text Orientated 
+Messaging Protocol) client. This client is based on work by Hongxin 
+Liang. The current version is a major rewrite, both changing the API and 
+the low-level STOMP frame (de)serialization.
+
+<p>The predicate <a class="pred" href="#stomp_connection/5">stomp_connection/5</a> 
+is used to register a connection. The connection is established by <a class="pred" href="#stomp_connect/1">stomp_connect/1</a>, 
+which is lazily called from any of the predicates that send a STOMP 
+frame. After establishing the connection two threads are created. One 
+receives STOMP frames and the other manages and watches the <i>heart 
+beat</i>.
+
+<p><h3 id="sec:stomp-threading"><a id="sec:1.1"><span class="sec-nr">1.1</span> <span class="sec-title">Threading</span></a></h3>
+
+<p><a id="sec:stomp-threading"></a>
+
+<p>Upon receiving a frame the callback registered with <a class="pred" href="#stomp_connection/5">stomp_connection/5</a> 
+is called in the context of the receiving thread. More demanding 
+applications may decide to send incomming frames to a SWI-Prolog message 
+queue and have one or more <i>worker threads</i> processing the input. 
+Alternatively, frames may be inspected by the receiving thread and 
+either processed immediately or be dispatched to either new or running 
+threads. The best scenario depends on the message rate, processing time 
+and concurrency of the Prolog application.
+
+<p>All message sending predicates of this library are <i>thread safe</i>. 
+If two threads send a frame to the same connection the library ensures 
+that both frames are properly serialized.
+
+<p><h3 id="sec:stomp-reconnecting"><a id="sec:1.2"><span class="sec-nr">1.2</span> <span class="sec-title">Reconnecting</span></a></h3>
+
+<p><a id="sec:stomp-reconnecting"></a>
+
+<p>By default this library tries to establish the connection and the 
+user gets notified by means of a <code>disconnected</code> pseudo frame 
+that the connection is lost. Using the Options argument of <a class="pred" href="#stomp_connection/6">stomp_connection/6</a> 
+the system can be configured to try and keep connecting if the server is 
+not available and reconnect if the connection is lost. See the <code>pong.pl</code> 
+example.
+
+<dl class="latex">
+<dt class="pubdef"><span class="pred-tag">[det]</span><a id="stomp_connection/5"><strong>stomp_connection</strong>(<var>+Address, 
++Host, +Headers, :Callback, -Connection</var>)</a></dt>
+<dt class="pubdef"><span class="pred-tag">[det]</span><a id="stomp_connection/6"><strong>stomp_connection</strong>(<var>+Address, 
++Host, +Headers, :Callback, -Connection, +Options</var>)</a></dt>
+<dd class="defbody">
+Create a connection reference. The connection is not set up yet by this 
+predicate. <var>Callback</var> is called on any received frame except 
+for
+<i>heart beat</i> frames as below.
+
+<pre class="code">
+call(Callback, Command, Connection, Header, Body)
+</pre>
+
+<p>Where command is one of the commands below. <var>Header</var> is a 
+dict holding the STOMP frame header, where all values are strings except 
+for the <code>'content-length'</code> key value which is passed as an 
+integer.
+
+<p>Body is a string or, if the data is of the type
+<code>application/json</code>, a dict.
+
+<dl class="latex">
+<dt><strong>connected</strong></dt>
+<dd class="defbody">
+A connection was established. <var>Connection</var> and Header are 
+valid.
+</dd>
+<dt><strong>disconnected</strong></dt>
+<dd class="defbody">
+The connection was lost. Only <var>Connection</var> is valid.
+</dd>
+<dt><strong>message</strong></dt>
+<dd class="defbody">
+A message arrived. All three arguments are valid. Body is a dict if the <code>content-type</code> 
+of the message is
+<code>application/json</code> and a string otherwise.
+</dd>
+<dt><strong>heartbeat</strong></dt>
+<dd class="defbody">
+A heartbeat was received. Only <var>Connection</var> is valid. This 
+callback is also called for each newline that follows a frame. These 
+newlines can be a heartbeat, but can also be additional newlines that 
+follow a frame.
+</dd>
+<dt><strong>heartbeat_timeout</strong></dt>
+<dd class="defbody">
+No heartbeat was received. Only <var>Connection</var> is valid.
+</dd>
+<dt><strong>error</strong></dt>
+<dd class="defbody">
+An error happened. All three arguments are valid and handled as <code>message</code>.
+</dd>
+</dl>
+
+<p>Note that <a class="pred" href="#stomp_teardown/1">stomp_teardown/1</a> 
+causes the receiving and heartbeat thread to be signalled with <span class="pred-ext">abort/0</span>.
+
+<p><var>Options</var> processed:
+
+<dl class="latex">
+<dt><strong>reconnect</strong>(<var>+Bool</var>)</dt>
+<dd class="defbody">
+Try to reestablish the connection to the server if the connection is 
+lost. Default is <code>false</code>
+</dd>
+<dt><strong>connect_timeout</strong>(<var>+Seconds</var>)</dt>
+<dd class="defbody">
+Maximum time to try and reestablish a connection. The default is <code>600</code> 
+(10 minutes).
+</dd>
+<dt><strong>json_options</strong>(<var>+Options</var>)</dt>
+<dd class="defbody">
+<var>Options</var> passed to <span class="pred-ext">json_read_dict/3</span> 
+to translate
+<code>application/json</code> content to Prolog. Default is <code>[]</code>.
+</dd>
+</dl>
+
+<table class="arglist">
+<tr><td><var>Address</var> </td><td>is a valid address for <span class="pred-ext">tcp_connect/3</span>. 
+Normally a term
+<var>Host</var>:Port, e.g., <code>localhost:32772</code>. </td></tr>
+<tr><td><var>Host</var> </td><td>is a path denoting the STOMP host. 
+Often just <code>/</code>. </td></tr>
+<tr><td><var>Headers</var> </td><td>is a dict with STOMP headers used 
+for the <code>CONNECT</code> request. </td></tr>
+<tr><td><var>Connection</var> </td><td>is an opaque ground term that 
+identifies the connection. </td></tr>
+</table>
+</dd>
+<dt class="pubdef"><span class="pred-tag">[nondet]</span><a id="stomp_connection_property/2"><strong>stomp_connection_property</strong>(<var>?Connection, 
+?Property</var>)</a></dt>
+<dd class="defbody">
+True when <var>Property</var>, is a property of <var>Connection</var>. 
+Defined properties are:
+
+<dl class="latex">
+<dt><strong>address</strong>(<var>Address</var>)</dt>
+<dt><strong>callback</strong>(<var>Callback</var>)</dt>
+<dt><strong>host</strong>(<var>Host</var>)</dt>
+<dt><strong>headers</strong>(<var>Headers</var>)</dt>
+<dt><strong>reconnect</strong>(<var>Bool</var>)</dt>
+<dt><strong>connect_timeout</strong>(<var>Seconds</var>)</dt>
+<dd class="defbody">
+All the above properties result from the <a class="pred" href="#stomp_connection/6">stomp_connection/6</a> 
+registration.
+</dd>
+<dt><strong>receiver_thread_id</strong>(<var>Thread</var>)</dt>
+<dt><strong>stream</strong>(<var>Stream</var>)</dt>
+<dt><strong>heartbeat_thread_id</strong>(<var>Thread</var>)</dt>
+<dt><strong>received_heartbeat</strong>(<var>TimeStamp</var>)</dt>
+<dd class="defbody">
+These describe an active STOMP connection.
+</dd>
+</dl>
+
+</dd>
+<dt class="pubdef"><a id="stomp_destroy_connection/1"><strong>stomp_destroy_connection</strong>(<var>+Connection</var>)</a></dt>
+<dd class="defbody">
+Destroy a connection. If it is active, first use <a class="pred" href="#stomp_teardown/1">stomp_teardown/1</a> 
+to disconnect.</dd>
+<dt class="pubdef"><span class="pred-tag">[det]</span><a id="stomp_setup/2"><strong>stomp_setup</strong>(<var>+Connection, 
++Options</var>)</a></dt>
+<dd class="defbody">
+Set up the actual socket connection and start receiving thread. This is 
+a no-op if the connection has already been created. The <var>Options</var> 
+processed are below. Other options are passed to <span class="pred-ext">tcp_connect/3</span>.
+
+<dl class="latex">
+<dt><strong>timeout</strong>(<var>+Seconds</var>)</dt>
+<dd class="defbody">
+If <span class="pred-ext">tcp_connect/3</span> fails, retry until the 
+timeout is reached. If <var>Seconds</var> is <code>inf</code> or <code>infinite</code>, 
+keep retrying forever.
+</dd>
+</dl>
+
+</dd>
+<dt class="pubdef"><span class="pred-tag">[semidet]</span><a id="stomp_teardown/1"><strong>stomp_teardown</strong>(<var>+Connection</var>)</a></dt>
+<dd class="defbody">
+Tear down the socket connection, stop receiving thread and heartbeat 
+thread (if applicable). The registration of the connection as created by <a class="pred" href="#stomp_connection/5">stomp_connection/5</a> 
+is preserved and the connection may be reconnected using <a class="pred" href="#stomp_connect/1">stomp_connect/1</a>.</dd>
+<dt class="pubdef"><span class="pred-tag">[det]</span><a id="stomp_reconnect/1"><strong>stomp_reconnect</strong>(<var>+Connection</var>)</a></dt>
+<dd class="defbody">
+Teardown the connection and try to reconnect.</dd>
+<dt class="pubdef"><span class="pred-tag">[det]</span><a id="stomp_connect/1"><strong>stomp_connect</strong>(<var>+Connection</var>)</a></dt>
+<dt class="pubdef"><span class="pred-tag">[det]</span><a id="stomp_connect/2"><strong>stomp_connect</strong>(<var>+Connection, 
++Options</var>)</a></dt>
+<dd class="defbody">
+Setup the connection. First ensures a socket connection and if this is 
+new send a <code>CONNECT</code> frame. Protocol version and heartbeat 
+negotiation will be handled. <code>STOMP</code> frame is not used for 
+backward compatibility.
+
+<p>This predicate waits for the connection handshake to have completed. 
+Currently it waits for a maximum of 10 seconds after establishing the 
+socket for the server reply.
+
+<p>Calling this on an established connection has no effect.
+
+<dl class="tags">
+<dt class="tag">Errors</dt>
+<dd>
+<code>stomp_error(connect, Connection, Detail)</code> if no connection 
+could be established.
+</dd>
+<dt class="tag">See also</dt>
+<dd>
+<a class="url" href="http://stomp.github.io/stomp-specification-1.2.html#CONNECT_or_STOMP_Frame).">http://stomp.github.io/stomp-specification-1.2.html#CONNECT_or_STOMP_Frame).</a>
+</dd>
+</dl>
+
+</dd>
+<dt class="pubdef"><span class="pred-tag">[det]</span><a id="stomp_send/4"><strong>stomp_send</strong>(<var>+Connection, 
++Destination, +Headers, +Body</var>)</a></dt>
+<dd class="defbody">
+Send a <code>SEND</code> frame. If <code>content-type</code> is not 
+provided,
+<code>text/plain</code> will be used. <code>content-length</code> will 
+be filled in automatically.
+
+<dl class="tags">
+<dt class="tag">See also</dt>
+<dd>
+<a class="url" href="http://stomp.github.io/stomp-specification-1.2.html#SEND">http://stomp.github.io/stomp-specification-1.2.html#SEND</a>
+</dd>
+</dl>
+
+</dd>
+<dt class="pubdef"><span class="pred-tag">[det]</span><a id="stomp_send_json/4"><strong>stomp_send_json</strong>(<var>+Connection, 
++Destination, +Headers, +JSON</var>)</a></dt>
+<dd class="defbody">
+Send a <code>SEND</code> frame. <code>JSON</code> can be either a <var>JSON</var> 
+term or a dict.
+<code>content-type</code> is filled in automatically as <code>application/json</code> 
+and <code>content-length</code> will be filled in automatically as well.
+
+<dl class="tags">
+<dt class="tag">See also</dt>
+<dd>
+<a class="url" href="http://stomp.github.io/stomp-specification-1.2.html#SEND">http://stomp.github.io/stomp-specification-1.2.html#SEND</a>
+</dd>
+</dl>
+
+</dd>
+<dt class="pubdef"><span class="pred-tag">[det]</span><a id="stomp_subscribe/4"><strong>stomp_subscribe</strong>(<var>+Connection, 
++Destination, +Id, +Headers</var>)</a></dt>
+<dd class="defbody">
+Send a <code>SUBSCRIBE</code> frame.
+
+<dl class="tags">
+<dt class="tag">See also</dt>
+<dd>
+<a class="url" href="http://stomp.github.io/stomp-specification-1.2.html#SUBSCRIBE">http://stomp.github.io/stomp-specification-1.2.html#SUBSCRIBE</a>
+</dd>
+</dl>
+
+</dd>
+<dt class="pubdef"><span class="pred-tag">[det]</span><a id="stomp_unsubscribe/2"><strong>stomp_unsubscribe</strong>(<var>+Connection, 
++Id</var>)</a></dt>
+<dd class="defbody">
+Send an <code>UNSUBSCRIBE</code> frame.
+
+<dl class="tags">
+<dt class="tag">See also</dt>
+<dd>
+<a class="url" href="http://stomp.github.io/stomp-specification-1.2.html#UNSUBSCRIBE">http://stomp.github.io/stomp-specification-1.2.html#UNSUBSCRIBE</a>
+</dd>
+</dl>
+
+</dd>
+<dt class="pubdef"><span class="pred-tag">[det]</span><a id="stomp_ack/3"><strong>stomp_ack</strong>(<var>+Connection, 
++MessageId, +Headers</var>)</a></dt>
+<dd class="defbody">
+Send an <code>ACK</code> frame. See <a class="pred" href="#stomp_ack/2">stomp_ack/2</a> 
+for simply passing the header received with the message we acknowledge.
+
+<dl class="tags">
+<dt class="tag">See also</dt>
+<dd>
+<a class="url" href="http://stomp.github.io/stomp-specification-1.2.html#ACK">http://stomp.github.io/stomp-specification-1.2.html#ACK</a>
+</dd>
+</dl>
+
+</dd>
+<dt class="pubdef"><span class="pred-tag">[det]</span><a id="stomp_nack/3"><strong>stomp_nack</strong>(<var>+Connection, 
++MessageId, +Headers</var>)</a></dt>
+<dd class="defbody">
+Send a <code>NACK</code> frame. See <a class="pred" href="#stomp_nack/2">stomp_nack/2</a> 
+for simply passing the header received with the message we acknowledge.
+
+<dl class="tags">
+<dt class="tag">See also</dt>
+<dd>
+<a class="url" href="http://stomp.github.io/stomp-specification-1.2.html#NACK">http://stomp.github.io/stomp-specification-1.2.html#NACK</a>
+</dd>
+</dl>
+
+</dd>
+<dt class="pubdef"><span class="pred-tag">[det]</span><a id="stomp_ack/2"><strong>stomp_ack</strong>(<var>+Connection, 
++MsgHeader</var>)</a></dt>
+<dt class="pubdef"><span class="pred-tag">[det]</span><a id="stomp_nack/2"><strong>stomp_nack</strong>(<var>+Connection, 
++MsgHeader</var>)</a></dt>
+<dd class="defbody">
+Reply with an ACK or NACK based on the received message header. On a 
+STOMP 1.1 request we get an <code>ack</code> field in the header and 
+reply with an <code>id</code>. For STOMP 1.2 we reply with the <code>message-id</code> 
+and
+<code>subscription</code> that we received with the message.</dd>
+<dt class="pubdef"><span class="pred-tag">[det]</span><a id="stomp_begin/2"><strong>stomp_begin</strong>(<var>+Connection, 
++Transaction</var>)</a></dt>
+<dd class="defbody">
+Send a <code>BEGIN</code> frame. @see <a class="url" href="http://stomp.github.io/stomp-specification-1.2.html#BEGIN">http://stomp.github.io/stomp-specification-1.2.html#BEGIN</a></dd>
+<dt class="pubdef"><span class="pred-tag">[det]</span><a id="stomp_commit/2"><strong>stomp_commit</strong>(<var>+Connection, 
++Transaction</var>)</a></dt>
+<dd class="defbody">
+Send a <code>COMMIT</code> frame.
+
+<dl class="tags">
+<dt class="tag">See also</dt>
+<dd>
+<a class="url" href="http://stomp.github.io/stomp-specification-1.2.html#COMMIT">http://stomp.github.io/stomp-specification-1.2.html#COMMIT</a>
+</dd>
+</dl>
+
+</dd>
+<dt class="pubdef"><span class="pred-tag">[det]</span><a id="stomp_abort/2"><strong>stomp_abort</strong>(<var>+Connection, 
++Transaction</var>)</a></dt>
+<dd class="defbody">
+Send a <code>ABORT</code> frame.
+
+<dl class="tags">
+<dt class="tag">See also</dt>
+<dd>
+<a class="url" href="http://stomp.github.io/stomp-specification-1.2.html#ABORT">http://stomp.github.io/stomp-specification-1.2.html#ABORT</a>
+</dd>
+</dl>
+
+</dd>
+<dt class="pubdef"><span class="pred-tag">[semidet]</span><a id="stomp_transaction/2"><strong>stomp_transaction</strong>(<var>+Connection, 
+:Goal</var>)</a></dt>
+<dd class="defbody">
+Run <var>Goal</var> as <span class="pred-ext">once/1</span>, tagging all <code>SEND</code> 
+messages inside the transaction with the transaction id. If <var>Goal</var> 
+fails or raises an exception the transaction is aborted. Failure or 
+exceptions cause the transaction to be aborted using <a class="pred" href="#stomp_abort/2">stomp_abort/2</a>, 
+after which the result is forwarded.</dd>
+<dt class="pubdef"><span class="pred-tag">[det]</span><a id="stomp_disconnect/2"><strong>stomp_disconnect</strong>(<var>+Connection, 
++Headers</var>)</a></dt>
+<dd class="defbody">
+Send a <code>DISCONNECT</code> frame. If the connection has the <code>reconnect</code> 
+property set to <code>true</code>, this will be reset to <code>disconnected</code> 
+to avoid reconnecting. A subsequent <a class="pred" href="#stomp_connect/2">stomp_connect/2</a> 
+resets the reconnect status.
+
+<dl class="tags">
+<dt class="tag">See also</dt>
+<dd>
+<a class="url" href="http://stomp.github.io/stomp-specification-1.2.html#DISCONNECT">http://stomp.github.io/stomp-specification-1.2.html#DISCONNECT</a>
+</dd>
+</dl>
+
+</dd>
+</dl>
+
+<h1><a id="document-index">Index</a></h1>
+
+<dl>
+<dt class="index-sep">?</dt>
+<dt><a class="idx" href="#stomp_abort/2">stomp_abort/2</a></dt>
+<dt><a class="idx" href="#stomp_ack/2">stomp_ack/2</a></dt>
+<dt><a class="idx" href="#stomp_ack/3">stomp_ack/3</a></dt>
+<dt><a class="idx" href="#stomp_begin/2">stomp_begin/2</a></dt>
+<dt><a class="idx" href="#stomp_commit/2">stomp_commit/2</a></dt>
+<dt><a class="idx" href="#stomp_connect/1">stomp_connect/1</a></dt>
+<dt><a class="idx" href="#stomp_connect/2">stomp_connect/2</a></dt>
+<dt><a class="idx" href="#stomp_connection/5">stomp_connection/5</a></dt>
+<dt><a class="idx" href="#stomp_connection/6">stomp_connection/6</a></dt>
+<dt><a class="idx" href="#stomp_connection_property/2">stomp_connection_property/2</a></dt>
+<dt><a class="idx" href="#stomp_destroy_connection/1">stomp_destroy_connection/1</a></dt>
+<dt><a class="idx" href="#stomp_disconnect/2">stomp_disconnect/2</a></dt>
+<dt><a class="idx" href="#stomp_nack/2">stomp_nack/2</a></dt>
+<dt><a class="idx" href="#stomp_nack/3">stomp_nack/3</a></dt>
+<dt><a class="idx" href="#stomp_reconnect/1">stomp_reconnect/1</a></dt>
+<dt><a class="idx" href="#stomp_send/4">stomp_send/4</a></dt>
+<dt><a class="idx" href="#stomp_send_json/4">stomp_send_json/4</a></dt>
+<dt><a class="idx" href="#stomp_setup/2">stomp_setup/2</a></dt>
+<dt><a class="idx" href="#stomp_subscribe/4">stomp_subscribe/4</a></dt>
+<dt><a class="idx" href="#stomp_teardown/1">stomp_teardown/1</a></dt>
+<dt><a class="idx" href="#stomp_transaction/2">stomp_transaction/2</a></dt>
+<dt><a class="idx" href="#stomp_unsubscribe/2">stomp_unsubscribe/2</a></dt>
+<dd>
+</dd>
+</dl>
+
+</body></html>

@@ -1,0 +1,19 @@
+/* A transparent theme with an image background */
+
+$fg: #f4ead5
+$bg: #000
+
+$scroll-bg: #000
+$scroll-fg: rgba($fg, .3)
+$scroll-fg-hover: rgba($fg, .5)
+$scroll-width: 1em
+
+@import variables
+@import styles
+
+html, body
+  background-color: rgba(0, 0, 0, .6)
+  background-blend-mode: color
+  background-image: url("image/abstract_bg.jpg")
+  background-size: 100%
+  background-attachment: fixed

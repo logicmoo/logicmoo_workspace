@@ -1,0 +1,27 @@
+Metadata-Version: 2.1
+Name: wdb
+Version: 3.3.0
+Summary: An improbable web debugger through WebSockets (client only)
+Home-page: http://github.com/Kozea/wdb
+Author: Florian Mounier @ kozea
+Author-email: florian.mounier@kozea.fr
+License: GPLv3
+Platform: Any
+Classifier: Development Status :: 4 - Beta
+Classifier: Intended Audience :: Developers
+Classifier: License :: OSI Approved :: GNU General Public License v3 (GPLv3)
+Classifier: Operating System :: OS Independent
+Classifier: Programming Language :: Python :: 2
+Classifier: Programming Language :: Python :: 3
+Classifier: Programming Language :: Python :: Implementation :: CPython
+Classifier: Programming Language :: Python :: Implementation :: PyPy
+Classifier: Topic :: Software Development :: Debuggers
+Requires-Dist: log-colorizer (>=1.8.3)
+Requires-Dist: jedi (>=0.9.0)
+Requires-Dist: uncompyle6
+Requires-Dist: python-magic (>=0.4.15)
+Requires-Dist: importmagic3
+
+See http://github.com/Kozea/wdb
+
+

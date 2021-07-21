@@ -1,0 +1,33 @@
+/* Commodore 64 theme */
+
+$fg: #8e8be1
+$bg: #332ab6
+$font-size: 1.25em
+$shadow: 15px
+$shadow-alpha: .2
+
+$colors: rgb(0, 0, 0), rgb(104, 55, 43), rgb(88, 141, 67), rgb(184, 199, 111), rgb(53, 40, 121), rgb(111, 61, 134), rgb(112, 164, 178), rgb(149, 149, 149), rgb(68, 68, 68), rgb(154, 103, 89), rgb(154, 210, 132), rgb(184, 199, 111), rgb(108, 94, 181), rgb(111, 61, 134), rgb(112, 164, 178), rgb(255, 255, 255)
+
+@import variables
+@import font
+@import light_fx
+@import text_fx
+@import colors
+@import 16_colors
+@import 256_colors
+@import layout
+@import cursor
+@import term_styles
+
+html
+  border: 100px solid $fg
+
+  &:after
+    position: fixed
+    display: block
+    width: 100%
+    content: ''
+    height: 100px
+    top: 0
+    left: 0
+    background-color: $fg

@@ -1,0 +1,714 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+
+<html>
+<head>
+<title>SWI-Prolog binding to libarchive</title>
+<style type="text/css">
+
+/* Style sheet for SWI-Prolog latex2html
+*/
+
+dd.defbody
+{ margin-bottom: 1em;
+}
+
+dt.pubdef, dt.multidef
+{ color: #fff;
+padding: 2px 10px 0px 10px;
+margin-bottom: 5px;
+font-size: 18px;
+vertical-align: middle;
+overflow: hidden;
+}
+
+dt.pubdef { background-color: #0c3d6e; }
+dt.multidef { background-color: #ef9439; }
+
+.bib dd
+{ margin-bottom: 1em;
+}
+
+.bib dt
+{ float: left;
+margin-right: 1.3ex;
+}
+
+pre.code
+{ margin-left: 1.5em;
+margin-right: 1.5em;
+border: 1px dotted;
+padding-top: 5px;
+padding-left: 5px;
+padding-bottom: 5px;
+background-color: #f8f8f8;
+}
+
+div.navigate
+{ text-align: center;
+background-color: #f0f0f0;
+border: 1px dotted;
+padding: 5px;
+}
+
+div.title
+{ text-align: center;
+padding-bottom: 1em;
+font-size: 200%;
+font-weight: bold;
+}
+
+div.author
+{ text-align: center;
+font-style: italic;
+}
+
+div.abstract
+{ margin-top: 2em;
+background-color: #f0f0f0;
+border: 1px dotted;
+padding: 5px;
+margin-left: 10%; margin-right:10%;
+}
+
+div.abstract-title
+{ text-align: center;
+padding: 5px;
+font-size: 120%;
+font-weight: bold;
+}
+
+div.toc-h1
+{ font-size: 200%;
+font-weight: bold;
+}
+
+div.toc-h2
+{ font-size: 120%;
+font-weight: bold;
+margin-left: 2em;
+}
+
+div.toc-h3
+{ font-size: 100%;
+font-weight: bold;
+margin-left: 4em;
+}
+
+div.toc-h4
+{ font-size: 100%;
+margin-left: 6em;
+}
+
+span.sec-nr
+{
+}
+
+span.sec-title
+{
+}
+
+span.pred-ext
+{ font-weight: bold;
+}
+
+span.pred-tag
+{ float: right;
+padding-top: 0.2em;
+font-size: 80%;
+font-style: italic;
+color: #fff;
+}
+
+div.caption
+{ width: 80%;
+margin: auto;
+text-align:center;
+}
+
+/* Footnotes */
+.fn {
+color: red;
+font-size: 70%;
+}
+
+.fn-text, .fnp {
+position: absolute;
+top: auto;
+left: 10%;
+border: 1px solid #000;
+box-shadow: 5px 5px 5px #888;
+display: none;
+background: #fff;
+color: #000;
+margin-top: 25px;
+padding: 8px 12px;
+font-size: larger;
+}
+
+sup:hover span.fn-text
+{ display: block;
+}
+
+/* Lists */
+
+dl.latex
+{ margin-top: 1ex;
+margin-bottom: 0.5ex;
+}
+
+dl.latex dl.latex dd.defbody
+{ margin-bottom: 0.5ex;
+}
+
+/* PlDoc Tags */
+
+dl.tags
+{ font-size: 90%;
+margin-left: 5ex;
+margin-top: 1ex;
+margin-bottom: 0.5ex;
+}
+
+dl.tags dt
+{ margin-left: 0pt;
+font-weight: bold;
+}
+
+dl.tags dd
+{ margin-left: 3ex;
+}
+
+td.param
+{ font-style: italic;
+font-weight: bold;
+}
+
+/* Index */
+
+dt.index-sep
+{ font-weight: bold;
+font-size: +1;
+margin-top: 1ex;
+}
+
+/* Tables */
+
+table.center
+{ margin: auto;
+}
+
+table.latex
+{ border-collapse:collapse;
+}
+
+table.latex tr
+{ vertical-align: text-top;
+}
+
+table.latex td,th
+{ padding: 2px 1em;
+}
+
+table.latex tr.hline td,th
+{ border-top: 1px solid black;
+}
+
+table.frame-box
+{ border: 2px solid black;
+}
+
+</style>
+</head>
+<body style="background:white"> 
+<div class="title">SWI-Prolog binding to libarchive</div>
+<div class="author">Jan Wielemaker <br>
+VU University Amsterdam <br>
+The Netherlands <br>
+E-mail: <a class="url" href="mailto:J.Wielemaker@vu.nl">J.Wielemaker@vu.nl</a></div>
+<div class="abstract">
+<div class="abstract-title">Abstract</div> The library <a class="url" href="https://github.com/libarchive/libarchive">libarchive</a> 
+provides a portable way to access archive files as well as encoded 
+(typically compressed) data. This package is a Prolog wrapper around 
+this library. The motivation to introduce this library is twofold. In 
+the first place, it provides a minimal platform independent API to 
+access archives. In the second place, it allows accessing archives 
+through Prolog streams, which often eliminates the need for temporary 
+files and all related consequences for performance, security and 
+platform dependency.
+</div>
+
+<h1><a id="document-contents">Table of Contents</a></h1>
+
+<div class="toc">
+<div class="toc-h2"><a class="sec" href="#sec:1"><span class="sec-nr">1</span> <span class="sec-title">Motivation</span></a></div>
+<div class="toc-h2"><a class="sec" href="#sec:2"><span class="sec-nr">2</span> <span class="sec-title">library(archive): 
+Access several archive formats</span></a></div>
+<div class="toc-h2"><a class="sec" href="#sec:3"><span class="sec-nr">3</span> <span class="sec-title">Status</span></a></div>
+</div>
+
+<p><h2 id="sec:archive-motivation"><a id="sec:1"><span class="sec-nr">1</span> <span class="sec-title">Motivation</span></a></h2>
+
+<a id="sec:archive-motivation"></a>
+
+<p>Archives play two roles: they combine multiple documents into a 
+single one and they typically provide compression and sometimes 
+encryption or other services. Bundling multiple resources into a single 
+archive may greatly simplify distribution and guarantee that the 
+individual resources are consistent. SWI-Prolog provides archiving using 
+its (rather arcane) saved-state format. See <a id="idx:resource3:1"></a><span class="pred-ext">resource/3</span> 
+and <a id="idx:openresource3:2"></a><span class="pred-ext">open_resource/3</span>. 
+It also provides compression by means of library(zlib).
+
+<p>External archives may be accessed through the process interface 
+provided by <a id="idx:processcreate3:3"></a><span class="pred-ext">process_create/3</span>, 
+but this has disadvantages. The one that motivated this library was that 
+using external processes provide no decent platform independent access 
+to archives. Most likely zip files come closest to platform independent 
+access, but there are many different programs for accessing zip files 
+that provide slightly different sets of options and the existence of any 
+of these programs cannot be guaranteed without distributing our own 
+bundled version. Similar arguments hold for Unix tar archives, where 
+just about any Unix-derives system has a tar program but except for very 
+basic commands, the command line options are not compatible and tar is 
+not part of Windows. The only format granted on Windows is .cab, but a 
+program to create them is not part of Windows and the .cab format is 
+rare outside the Windows context.
+
+<p>Discarding availability of archive programs, each archive program 
+comes with its own set of command line options and its own features and 
+limitations. Fortunately,
+<a class="url" href="https://github.com/libarchive/libarchive">libarchive</a> 
+provides a consistent interface to a wealth of compression and archiving 
+formats. The library <code>library(archive)</code> wraps this library, 
+providing access to archives using Prolog streams both for the archive 
+as a whole and the archive entries. E.g., archives may be read from 
+Prolog streams and each member in turn may be processed using Prolog 
+streams without materialising data using temporary files.
+
+<p><h2 id="sec:archive"><a id="sec:2"><span class="sec-nr">2</span> <span class="sec-title">library(archive): 
+Access several archive formats</span></a></h2>
+
+<p><a id="sec:archive"></a>
+
+<dl class="tags">
+<dt class="tag">See also</dt>
+<dd>
+<a class="url" href="https://github.com/libarchive/libarchive/">https://github.com/libarchive/libarchive/</a>
+</dd>
+</dl>
+
+<p>This library uses <i>libarchive</i> to access a variety of archive 
+formats. The following example lists the entries in an archive:
+
+<pre class="code">
+list_archive(File) :-
+      archive_open(File, Archive, []),
+      repeat,
+         (   archive_next_header(Archive, Path)
+         -&gt;  format('~w~n', [Path]),
+             fail
+         ;   !,
+             archive_close(Archive)
+         ).
+</pre>
+
+<p>Here is another example which counts the files in the archive and 
+prints file type information. It uses <a class="pred" href="#archive_foldl/4">archive_foldl/4</a>, 
+a higher level predicate:
+
+<pre class="code">
+print_entry(Path, Handle, Cnt0, Cnt1) :-
+    archive_header_property(Handle, filetype(Type)),
+    format('File ~w is of type ~w~n', [Path, Type]),
+    Cnt1 is Cnt0 + 1.
+
+list_archive(File) :-
+    archive_foldl(print_entry, File, 0, FileCount),
+    format('We have ~w files', [FileCount]).
+</pre>
+
+<dl class="latex">
+<dt class="pubdef"><span class="pred-tag">[det]</span><a id="archive_open/3"><strong>archive_open</strong>(<var>+Data, 
+-Archive, +Options</var>)</a></dt>
+<dd class="defbody">
+Wrapper around <a class="pred" href="#archive_open/4">archive_open/4</a> 
+that opens the archive in read mode.</dd>
+<dt class="pubdef"><span class="pred-tag">[det]</span><a id="archive_open/4"><strong>archive_open</strong>(<var>+Data, 
++Mode, -Archive, +Options</var>)</a></dt>
+<dd class="defbody">
+Open the archive in <var>Data</var> and unify <var>Archive</var> with a 
+handle to the opened archive. <var>Data</var> is either a file or a 
+stream that contains a valid archive. Details are controlled by <var>Options</var>. 
+Typically, the option <code>close_parent(true)</code> is used to close 
+stream if the archive is closed using <a class="pred" href="#archive_close/1">archive_close/1</a>. 
+For other options, the defaults are typically fine. The option <code>format(raw)</code> 
+must be used to process compressed streams that do not contain explicit 
+entries (e.g., gzip'ed data) unambibuously. The <code>raw</code> format 
+creates a <i>pseudo archive</i> holding a single member named <code>data</code>.
+
+<dl class="latex">
+<dt><strong>close_parent</strong>(<var>+Boolean</var>)</dt>
+<dd class="defbody">
+If this option is <code>true</code> (default <code>false</code>), Stream 
+is closed if <a class="pred" href="#archive_close/1">archive_close/1</a> 
+is called on <var>Archive</var>.
+</dd>
+<dt><strong>compression</strong>(<var>+Compression</var>)</dt>
+<dd class="defbody">
+Synomym for <code>filter(Compression)</code>. Deprecated.
+</dd>
+<dt><strong>filter</strong>(<var>+Filter</var>)</dt>
+<dd class="defbody">
+Support the indicated filter. This option may be used multiple times to 
+support multiple filters. In read mode, If no filter options are 
+provided, <code>all</code> is assumed. In write mode, none is assumed. 
+Supported values are <code>all</code>, <code>bzip2</code>, <code>compress</code>, <code>gzip</code>,
+<code>grzip</code>, <code>lrzip</code>, <code>lzip</code>, <code>lzma</code>, <code>lzop</code>, <code>none</code>, <code>rpm</code>, <code>uu</code> 
+and <code>xz</code>. The value <code>all</code> is default for read, <code>none</code> 
+for write.
+</dd>
+<dt><strong>format</strong>(<var>+Format</var>)</dt>
+<dd class="defbody">
+Support the indicated format. This option may be used multiple times to 
+support multiple formats in read mode. In write mode, you must supply a 
+single format. If no format options are provided, <code>all</code> is 
+assumed for read mode. Note that
+<code>all</code> does <b>not</b> include <code>raw</code> and <code>mtree</code>. 
+To open both archive and non-archive files, <i>both</i> <code>format(all)</code> 
+and
+<code>format(raw)</code> and/or <code>format(mtree)</code> must be 
+specified. Supported values are: <code>all</code>, <code>7zip</code>, <code>ar</code>, <code>cab</code>, <code>cpio</code>, <code>empty</code>, <code>gnutar</code>,
+<code>iso9660</code>, <code>lha</code>, <code>mtree</code>, <code>rar</code>, <code>raw</code>, <code>tar</code>, <code>xar</code> 
+and <code>zip</code>. The value <code>all</code> is default for read.
+</dd>
+</dl>
+
+<p>Note that the actually supported compression types and formats may 
+vary depending on the version and installation options of the underlying 
+libarchive library. This predicate raises a domain error if the 
+(explicitly) requested format is not supported.
+
+<dl class="tags">
+<dt class="mtag">Errors</dt>
+<dd>
+- <code>domain_error(filter, Filter)</code> if the requested filter is 
+not supported. <br>
+- <code>domain_error(format, Format)</code> if the requested format type 
+is not supported.
+</dd>
+</dl>
+
+</dd>
+<dt class="pubdef"><span class="pred-tag">[det]</span><a id="archive_close/1"><strong>archive_close</strong>(<var>+Archive</var>)</a></dt>
+<dd class="defbody">
+Close the archive. If <code>close_parent(true)</code> is specified, the 
+underlying stream is closed too. If there is an entry opened with <a class="pred" href="#archive_open_entry/2">archive_open_entry/2</a>, 
+actually closing the archive is delayed until the stream associated with 
+the entry is closed. This can be used to open a stream to an archive 
+entry without having to worry about closing the archive:
+
+<pre class="code">
+archive_open_named(ArchiveFile, EntryName, Stream) :-
+    archive_open(ArchiveFile, Handle, []),
+    archive_next_header(Handle, Name),
+    archive_open_entry(Handle, Stream),
+    archive_close(Archive).
+</pre>
+
+</dd>
+<dt class="pubdef"><span class="pred-tag">[nondet]</span><a id="archive_property/2"><strong>archive_property</strong>(<var>+Handle, 
+?Property</var>)</a></dt>
+<dd class="defbody">
+True when <var>Property</var> is a property of the archive <var>Handle</var>. 
+Defined properties are:
+
+<dl class="latex">
+<dt><strong>filters</strong>(<var>List</var>)</dt>
+<dd class="defbody">
+True when the indicated filters are applied before reaching the archive 
+format.
+</dd>
+</dl>
+
+</dd>
+<dt class="pubdef"><span class="pred-tag">[semidet]</span><a id="archive_next_header/2"><strong>archive_next_header</strong>(<var>+Handle, 
+-Name</var>)</a></dt>
+<dd class="defbody">
+Forward to the next entry of the archive for which <var>Name</var> 
+unifies with the pathname of the entry. Fails silently if the name of 
+the archive is reached before success. <var>Name</var> is typically 
+specified if a single entry must be accessed and unbound otherwise. The 
+following example opens a Prolog stream to a given archive entry. Note 
+that <i>Stream</i> must be closed using
+<span class="pred-ext">close/1</span> and the archive must be closed 
+using <a class="pred" href="#archive_close/1">archive_close/1</a> after 
+the data has been used. See also <span class="pred-ext">setup_call_cleanup/3</span>.
+
+<pre class="code">
+open_archive_entry(ArchiveFile, Entry, Stream) :-
+    open(ArchiveFile, read, In, [type(binary)]),
+    archive_open(In, Archive, [close_parent(true)]),
+    archive_next_header(Archive, Entry),
+    archive_open_entry(Archive, Stream).
+</pre>
+
+<dl class="tags">
+<dt class="tag">Errors</dt>
+<dd>
+<code>permission_error(next_header, archive, Handle)</code> if a 
+previously opened entry is not closed.
+</dd>
+</dl>
+
+</dd>
+<dt class="pubdef"><span class="pred-tag">[det]</span><a id="archive_open_entry/2"><strong>archive_open_entry</strong>(<var>+Archive, 
+-Stream</var>)</a></dt>
+<dd class="defbody">
+Open the current entry as a stream. <var>Stream</var> must be closed. If 
+the stream is not closed before the next call to
+<a class="pred" href="#archive_next_header/2">archive_next_header/2</a>, 
+a permission error is raised.</dd>
+<dt class="pubdef"><a id="archive_set_header_property/2"><strong>archive_set_header_property</strong>(<var>+Archive, 
++Property</var>)</a></dt>
+<dd class="defbody">
+Set <var>Property</var> of the current header. Write-mode only. Defined 
+properties are:
+
+<dl class="latex">
+<dt><strong>filetype</strong>(<var>-Type</var>)</dt>
+<dd class="defbody">
+<var>Type</var> is one of <code>file</code>, <code>link</code>, <code>socket</code>, <code>character_device</code>,
+<code>block_device</code>, <code>directory</code> or <code>fifo</code>. 
+It appears that this library can also return other values. These are 
+returned as an integer.
+</dd>
+<dt><strong>mtime</strong>(<var>-Time</var>)</dt>
+<dd class="defbody">
+True when entry was last modified at time.
+</dd>
+<dt><strong>size</strong>(<var>-Bytes</var>)</dt>
+<dd class="defbody">
+True when entry is <var>Bytes</var> long.
+</dd>
+<dt><strong>link_target</strong>(<var>-Target</var>)</dt>
+<dd class="defbody">
+<var>Target</var> for a link. Currently only supported for symbolic 
+links.
+</dd>
+</dl>
+
+</dd>
+<dt class="pubdef"><a id="archive_header_property/2"><strong>archive_header_property</strong>(<var>+Archive, 
+?Property</var>)</a></dt>
+<dd class="defbody">
+True when <var>Property</var> is a property of the current header. 
+Defined properties are:
+
+<dl class="latex">
+<dt><strong>filetype</strong>(<var>-Type</var>)</dt>
+<dd class="defbody">
+<var>Type</var> is one of <code>file</code>, <code>link</code>, <code>socket</code>, <code>character_device</code>,
+<code>block_device</code>, <code>directory</code> or <code>fifo</code>. 
+It appears that this library can also return other values. These are 
+returned as an integer.
+</dd>
+<dt><strong>mtime</strong>(<var>-Time</var>)</dt>
+<dd class="defbody">
+True when entry was last modified at time.
+</dd>
+<dt><strong>size</strong>(<var>-Bytes</var>)</dt>
+<dd class="defbody">
+True when entry is <var>Bytes</var> long.
+</dd>
+<dt><strong>link_target</strong>(<var>-Target</var>)</dt>
+<dd class="defbody">
+<var>Target</var> for a link. Currently only supported for symbolic 
+links.
+</dd>
+<dt><strong>format</strong>(<var>-Format</var>)</dt>
+<dd class="defbody">
+Provides the name of the archive format applicable to the current entry. 
+The returned value is the lowercase version of the output of <code>archive_format_name()</code>.
+</dd>
+<dt><strong>permissions</strong>(<var>-Integer</var>)</dt>
+<dd class="defbody">
+True when entry has the indicated permission mask.
+</dd>
+</dl>
+
+</dd>
+<dt class="pubdef"><a id="archive_extract/3"><strong>archive_extract</strong>(<var>+ArchiveFile, 
++Dir, +Options</var>)</a></dt>
+<dd class="defbody">
+Extract files from the given archive into <var>Dir</var>. Supported 
+options:
+
+<dl class="latex">
+<dt><strong>remove_prefix</strong>(<var>+Prefix</var>)</dt>
+<dd class="defbody">
+Strip <var>Prefix</var> from all entries before extracting. If <var>Prefix</var> 
+is a list, then each prefix is tried in order, succeding at the first 
+one that matches. If no prefixes match, an error is reported. If <var>Prefix</var> 
+is an atom, then that prefix is removed.
+</dd>
+<dt><strong>exclude</strong>(<var>+ListOfPatterns</var>)</dt>
+<dd class="defbody">
+Ignore members that match one of the given patterns. Patterns are handed 
+to <span class="pred-ext">wildcard_match/2</span>.
+</dd>
+<dt><strong>include</strong>(<var>+ListOfPatterns</var>)</dt>
+<dd class="defbody">
+Include members that match one of the given patterns. Patterns are 
+handed to <span class="pred-ext">wildcard_match/2</span>. The <code>exclude</code> 
+options takes preference if a member matches both the <code>include</code> 
+and the <code>exclude</code> option.
+</dd>
+</dl>
+
+<dl class="tags">
+<dt class="mtag">Errors</dt>
+<dd>
+- <code>existence_error(directory, Dir)</code> if <var>Dir</var> does 
+not exist or is not a directory. <br>
+- <code>domain_error(path_prefix(Prefix), Path)</code> if a path in the 
+archive does not start with Prefix
+</dd>
+<dt class="tag">To be done</dt>
+<dd>
+Add options
+</dd>
+</dl>
+
+</dd>
+<dt class="pubdef"><span class="pred-tag">[det]</span><a id="archive_entries/2"><strong>archive_entries</strong>(<var>+Archive, 
+-Paths</var>)</a></dt>
+<dd class="defbody">
+True when <var>Paths</var> is a list of pathnames appearing in <var>Archive</var>.</dd>
+<dt class="pubdef"><span class="pred-tag">[nondet]</span><a id="archive_data_stream/3"><strong>archive_data_stream</strong>(<var>+Archive, 
+-DataStream, +Options</var>)</a></dt>
+<dd class="defbody">
+True when <var>DataStream</var> is a stream to a data object inside
+<var>Archive</var>. This predicate transparently unpacks data inside
+<i>possibly nested</i> archives, e.g., a <i>tar</i> file inside a <i>zip</i> 
+file. It applies the appropriate decompression filters and thus ensures 
+that Prolog reads the plain data from <var>DataStream</var>.
+<var>DataStream</var> must be closed after the content has been 
+processed. Backtracking opens the next member of the (nested) archive. 
+This predicate processes the following options:
+
+<dl class="latex">
+<dt><strong>meta_data</strong>(<var>-Data:list(dict)</var>)</dt>
+<dd class="defbody">
+If provided, <var>Data</var> is unified with a list of filters applied 
+to the (nested) archive to open the current <var>DataStream</var>. The 
+first element describes the outermost archive. Each <var>Data</var> dict 
+contains the header properties (<a class="pred" href="#archive_header_property/2">archive_header_property/2</a>) 
+as well as the keys:
+
+<dl class="latex">
+<dt><strong>filters</strong>(<var>Filters:list(atom)</var>)</dt>
+<dd class="defbody">
+Filter list as obtained from <a class="pred" href="#archive_property/2">archive_property/2</a>
+</dd>
+<dt><strong>name</strong>(<var>Atom</var>)</dt>
+<dd class="defbody">
+Name of the entry.
+</dd>
+</dl>
+
+</dd>
+</dl>
+
+<p>Non-archive files are handled as pseudo-archives that hold a single 
+stream. This is implemented by using <a class="pred" href="#archive_open/3">archive_open/3</a> 
+with the options <code>[format(all),format(raw)]</code>.</dd>
+<dt class="pubdef"><span class="pred-tag">[det]</span><a id="archive_create/3"><strong>archive_create</strong>(<var>+OutputFile, 
++InputFiles, +Options</var>)</a></dt>
+<dd class="defbody">
+Convenience predicate to create an archive in <var>OutputFile</var> with 
+data from a list of <var>InputFiles</var> and the given <var>Options</var>.
+
+<p>Besides options supported by <a class="pred" href="#archive_open/4">archive_open/4</a>, 
+the following options are supported:
+
+<dl class="latex">
+<dt><strong>directory</strong>(<var>+Directory</var>)</dt>
+<dd class="defbody">
+Changes the directory before adding input files. If this is specified, 
+paths of input files must be relative to
+<var>Directory</var> and archived files will not have <var>Directory</var> 
+as leading path. This is to simulate <code>-C</code> option of the <code>tar</code> 
+program.
+</dd>
+<dt><strong>format</strong>(<var>+Format</var>)</dt>
+<dd class="defbody">
+Write mode supports the following formats:&lsquo;7zip<code>, </code>cpio<code>, </code>gnutar<code>, </code>iso9660<code>, </code>xar<code> and </code>zip`. 
+Note that a particular installation may support only a subset of these, 
+depending on the configuration of <code>libarchive</code>.
+</dd>
+</dl>
+
+</dd>
+<dt class="pubdef"><a id="archive_foldl/4"><strong>archive_foldl</strong>(<var>:Goal, 
++Archive, +State0, -State</var>)</a></dt>
+<dd class="defbody">
+Operates like <span class="pred-ext">foldl/4</span> but for the entries 
+in the archive. For each member of the archive, <var>Goal</var> called 
+as&lsquo;call(:<var>Goal</var>, +Path, +Handle, +S0, -S1). Here, <var>S0</var> 
+is current state of the <i>accumulator</i> (starting with <var>State0</var>) 
+and <var>S1</var> is the next state of the accumulator, producing <var>State</var> 
+after the last member of the archive.
+<table class="arglist">
+<tr><td><var>Archive</var> </td><td>File name or stream to be given to 
+archive_open/[3,4]. </td></tr>
+</table>
+
+<dl class="tags">
+<dt class="tag">See also</dt>
+<dd>
+<a class="pred" href="#archive_header_property/2">archive_header_property/2</a>, <a class="pred" href="#archive_open/4">archive_open/4</a>.
+</dd>
+</dl>
+
+</dd>
+</dl>
+
+<p><h2 id="sec:archive-status"><a id="sec:3"><span class="sec-nr">3</span> <span class="sec-title">Status</span></a></h2>
+
+<a id="sec:archive-status"></a>
+
+<p>The current version is merely a proof-of-concept. It lacks writing 
+archives and does not support many of the options of the underlying 
+library. The main motivation for starting this library was to achieve 
+portability of the upcomming SWI-Prolog package distribution system. 
+Other functionality will be added on&lsquo;as needed' basis.
+
+<h1><a id="document-index">Index</a></h1>
+
+<dl>
+<dt class="index-sep">?</dt>
+<dt><a class="idx" href="#archive_close/1">archive_close/1</a></dt>
+<dt><a class="idx" href="#archive_create/3">archive_create/3</a></dt>
+<dt><a class="idx" href="#archive_data_stream/3">archive_data_stream/3</a></dt>
+<dt><a class="idx" href="#archive_entries/2">archive_entries/2</a></dt>
+<dt><a class="idx" href="#archive_extract/3">archive_extract/3</a></dt>
+<dt><a class="idx" href="#archive_foldl/4">archive_foldl/4</a></dt>
+<dt><a class="idx" href="#archive_header_property/2">archive_header_property/2</a></dt>
+<dt><a class="idx" href="#archive_next_header/2">archive_next_header/2</a></dt>
+<dt><a class="idx" href="#archive_open/3">archive_open/3</a></dt>
+<dt><a class="idx" href="#archive_open/4">archive_open/4</a></dt>
+<dt><a class="idx" href="#archive_open_entry/2">archive_open_entry/2</a></dt>
+<dt><a class="idx" href="#archive_property/2">archive_property/2</a></dt>
+<dt><a class="idx" href="#archive_set_header_property/2">archive_set_header_property/2</a></dt>
+<dt>open_resource/3</dt>
+<dd>
+<a class="idx" href="#idx:openresource3:2">1</a></dd>
+<dt>process_create/3</dt>
+<dd>
+<a class="idx" href="#idx:processcreate3:3">1</a></dd>
+<dt>resource/3</dt>
+<dd>
+<a class="idx" href="#idx:resource3:1">1</a></dd>
+</dl>
+
+</body></html>

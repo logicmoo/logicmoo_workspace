@@ -1,0 +1,3995 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+
+<html>
+<head>
+<title>SWI-Prolog C-library</title>
+<style type="text/css">
+
+/* Style sheet for SWI-Prolog latex2html
+*/
+
+dd.defbody
+{ margin-bottom: 1em;
+}
+
+dt.pubdef, dt.multidef
+{ color: #fff;
+padding: 2px 10px 0px 10px;
+margin-bottom: 5px;
+font-size: 18px;
+vertical-align: middle;
+overflow: hidden;
+}
+
+dt.pubdef { background-color: #0c3d6e; }
+dt.multidef { background-color: #ef9439; }
+
+.bib dd
+{ margin-bottom: 1em;
+}
+
+.bib dt
+{ float: left;
+margin-right: 1.3ex;
+}
+
+pre.code
+{ margin-left: 1.5em;
+margin-right: 1.5em;
+border: 1px dotted;
+padding-top: 5px;
+padding-left: 5px;
+padding-bottom: 5px;
+background-color: #f8f8f8;
+}
+
+div.navigate
+{ text-align: center;
+background-color: #f0f0f0;
+border: 1px dotted;
+padding: 5px;
+}
+
+div.title
+{ text-align: center;
+padding-bottom: 1em;
+font-size: 200%;
+font-weight: bold;
+}
+
+div.author
+{ text-align: center;
+font-style: italic;
+}
+
+div.abstract
+{ margin-top: 2em;
+background-color: #f0f0f0;
+border: 1px dotted;
+padding: 5px;
+margin-left: 10%; margin-right:10%;
+}
+
+div.abstract-title
+{ text-align: center;
+padding: 5px;
+font-size: 120%;
+font-weight: bold;
+}
+
+div.toc-h1
+{ font-size: 200%;
+font-weight: bold;
+}
+
+div.toc-h2
+{ font-size: 120%;
+font-weight: bold;
+margin-left: 2em;
+}
+
+div.toc-h3
+{ font-size: 100%;
+font-weight: bold;
+margin-left: 4em;
+}
+
+div.toc-h4
+{ font-size: 100%;
+margin-left: 6em;
+}
+
+span.sec-nr
+{
+}
+
+span.sec-title
+{
+}
+
+span.pred-ext
+{ font-weight: bold;
+}
+
+span.pred-tag
+{ float: right;
+padding-top: 0.2em;
+font-size: 80%;
+font-style: italic;
+color: #fff;
+}
+
+div.caption
+{ width: 80%;
+margin: auto;
+text-align:center;
+}
+
+/* Footnotes */
+.fn {
+color: red;
+font-size: 70%;
+}
+
+.fn-text, .fnp {
+position: absolute;
+top: auto;
+left: 10%;
+border: 1px solid #000;
+box-shadow: 5px 5px 5px #888;
+display: none;
+background: #fff;
+color: #000;
+margin-top: 25px;
+padding: 8px 12px;
+font-size: larger;
+}
+
+sup:hover span.fn-text
+{ display: block;
+}
+
+/* Lists */
+
+dl.latex
+{ margin-top: 1ex;
+margin-bottom: 0.5ex;
+}
+
+dl.latex dl.latex dd.defbody
+{ margin-bottom: 0.5ex;
+}
+
+/* PlDoc Tags */
+
+dl.tags
+{ font-size: 90%;
+margin-left: 5ex;
+margin-top: 1ex;
+margin-bottom: 0.5ex;
+}
+
+dl.tags dt
+{ margin-left: 0pt;
+font-weight: bold;
+}
+
+dl.tags dd
+{ margin-left: 3ex;
+}
+
+td.param
+{ font-style: italic;
+font-weight: bold;
+}
+
+/* Index */
+
+dt.index-sep
+{ font-weight: bold;
+font-size: +1;
+margin-top: 1ex;
+}
+
+/* Tables */
+
+table.center
+{ margin: auto;
+}
+
+table.latex
+{ border-collapse:collapse;
+}
+
+table.latex tr
+{ vertical-align: text-top;
+}
+
+table.latex td,th
+{ padding: 2px 1em;
+}
+
+table.latex tr.hline td,th
+{ border-top: 1px solid black;
+}
+
+table.frame-box
+{ border: 2px solid black;
+}
+
+</style>
+</head>
+<body style="background:white"> 
+<div class="title">SWI-Prolog C-library</div>
+<div class="author">Jan Wielemaker <br>
+VU University of Amsterdam <br>
+The Netherlands <br>
+E-mail: <a class="url" href="mailto:J.Wielemaker@vu.nl">J.Wielemaker@vu.nl</a></div>
+<div class="abstract">
+<div class="abstract-title">Abstract</div> This document describes 
+commonly used foreign language extensions to
+<a class="url" href="http://www.swi-prolog.org">SWI-Prolog</a> 
+distributed as a package known under the name <em>clib</em>. The package 
+defines a number of Prolog libraries with accompagnying foreign 
+libraries.
+
+<p>On Windows systems, the <code>library(unix)</code> library can only 
+be used if the whole SWI-Prolog suite is compiled using
+<a class="url" href="http://www.cygwin.com">Cygwin</a>. The other 
+libraries have been ported to native Windows.
+</div>
+
+<h1><a id="document-contents">Table of Contents</a></h1>
+
+<div class="toc">
+<div class="toc-h2"><a class="sec" href="#sec:1"><span class="sec-nr">1</span> <span class="sec-title">Introduction</span></a></div>
+<div class="toc-h2"><a class="sec" href="#sec:2"><span class="sec-nr">2</span> <span class="sec-title">library(process): 
+Create processes and redirect I/O</span></a></div>
+<div class="toc-h2"><a class="sec" href="#sec:3"><span class="sec-nr">3</span> <span class="sec-title">library(filesex): 
+Extended operations on files</span></a></div>
+<div class="toc-h2"><a class="sec" href="#sec:4"><span class="sec-nr">4</span> <span class="sec-title">library(uid): 
+User and group management on Unix systems</span></a></div>
+<div class="toc-h2"><a class="sec" href="#sec:5"><span class="sec-nr">5</span> <span class="sec-title">library(syslog): 
+Unix syslog interface</span></a></div>
+<div class="toc-h2"><a class="sec" href="#sec:6"><span class="sec-nr">6</span> <span class="sec-title">library(socket): 
+Network socket (TCP and UDP) library</span></a></div>
+<div class="toc-h3"><a class="sec" href="#sec:6.1"><span class="sec-nr">6.1</span> <span class="sec-title">Client 
+applications</span></a></div>
+<div class="toc-h3"><a class="sec" href="#sec:6.2"><span class="sec-nr">6.2</span> <span class="sec-title">Server 
+applications</span></a></div>
+<div class="toc-h3"><a class="sec" href="#sec:6.3"><span class="sec-nr">6.3</span> <span class="sec-title">Socket 
+exceptions</span></a></div>
+<div class="toc-h3"><a class="sec" href="#sec:6.4"><span class="sec-nr">6.4</span> <span class="sec-title">TCP 
+socket predicates</span></a></div>
+<div class="toc-h3"><a class="sec" href="#sec:6.5"><span class="sec-nr">6.5</span> <span class="sec-title">Unix 
+domain sockets</span></a></div>
+<div class="toc-h3"><a class="sec" href="#sec:6.6"><span class="sec-nr">6.6</span> <span class="sec-title">UDP 
+protocol support</span></a></div>
+<div class="toc-h2"><a class="sec" href="#sec:7"><span class="sec-nr">7</span> <span class="sec-title">The 
+stream_pool library</span></a></div>
+<div class="toc-h2"><a class="sec" href="#sec:8"><span class="sec-nr">8</span> <span class="sec-title">library(uri): 
+Process URIs</span></a></div>
+<div class="toc-h2"><a class="sec" href="#sec:9"><span class="sec-nr">9</span> <span class="sec-title">CGI 
+Support library</span></a></div>
+<div class="toc-h3"><a class="sec" href="#sec:9.1"><span class="sec-nr">9.1</span> <span class="sec-title">Some 
+considerations</span></a></div>
+<div class="toc-h2"><a class="sec" href="#sec:10"><span class="sec-nr">10</span> <span class="sec-title">Password 
+encryption library</span></a></div>
+<div class="toc-h2"><a class="sec" href="#sec:11"><span class="sec-nr">11</span> <span class="sec-title">library(uuid): 
+Universally Unique Identifier (UUID) Library</span></a></div>
+<div class="toc-h2"><a class="sec" href="#sec:12"><span class="sec-nr">12</span> <span class="sec-title">SHA* 
+Secure Hash Algorithms</span></a></div>
+<div class="toc-h3"><a class="sec" href="#sec:12.1"><span class="sec-nr">12.1</span> <span class="sec-title">License 
+terms</span></a></div>
+<div class="toc-h2"><a class="sec" href="#sec:13"><span class="sec-nr">13</span> <span class="sec-title">library(md5): 
+MD5 hashes</span></a></div>
+<div class="toc-h2"><a class="sec" href="#sec:14"><span class="sec-nr">14</span> <span class="sec-title">library(hash_stream): 
+Maintain a hash on a stream</span></a></div>
+<div class="toc-h2"><a class="sec" href="#sec:15"><span class="sec-nr">15</span> <span class="sec-title">Memory 
+files</span></a></div>
+<div class="toc-h2"><a class="sec" href="#sec:16"><span class="sec-nr">16</span> <span class="sec-title">Time 
+and alarm library</span></a></div>
+<div class="toc-h2"><a class="sec" href="#sec:17"><span class="sec-nr">17</span> <span class="sec-title">library(unix): 
+Unix specific operations</span></a></div>
+<div class="toc-h2"><a class="sec" href="#sec:18"><span class="sec-nr">18</span> <span class="sec-title">Limiting 
+process resources</span></a></div>
+<div class="toc-h2"><a class="sec" href="#sec:19"><span class="sec-nr">19</span> <span class="sec-title">library(udp_broadcast): 
+A UDP broadcast proxy</span></a></div>
+<div class="toc-h3"><a class="sec" href="#sec:19.1"><span class="sec-nr">19.1</span> <span class="sec-title">Caveats</span></a></div>
+<div class="toc-h2"><a class="sec" href="#sec:20"><span class="sec-nr">20</span> <span class="sec-title">library(prolog_stream): 
+A stream with Prolog callbacks</span></a></div>
+</div>
+
+<p><h2 id="sec:clib-intro"><a id="sec:1"><span class="sec-nr">1</span> <span class="sec-title">Introduction</span></a></h2>
+
+<a id="sec:clib-intro"></a>
+
+<p>Many useful facilities offered by one or more of the operating 
+systems supported by SWI-Prolog are not supported by the SWI-Prolog 
+kernel distribution. Including these would enlarge the <em>footprint</em> 
+and complicate portability matters while supporting only a limited part 
+of the user-community.
+
+<p>This document describes <code>library(unix)</code> to deal with the 
+Unix process API,
+<code>library(socket)</code> to deal with inet-domain TCP and UDP 
+sockets, <code>library(cgi)</code> to deal with getting CGI form-data if 
+SWI-Prolog is used as a CGI scripting language, <code>library(crypt)</code> 
+to provide password encryption and verification, <code>library(sha)</code> 
+providing cryptographic hash functions and
+<code>library(memfile)</code> providing in-memorty pseudo files.
+
+<p><h2 id="sec:process"><a id="sec:2"><span class="sec-nr">2</span> <span class="sec-title">library(process): 
+Create processes and redirect I/O</span></a></h2>
+
+<p><a id="sec:process"></a>
+
+<dl class="tags">
+<dt class="tag">Compatibility</dt>
+<dd>
+SICStus 4
+</dd>
+<dt class="tag">To be done</dt>
+<dd>
+Implement detached option in <a class="pred" href="#process_create/3">process_create/3</a>
+</dd>
+</dl>
+
+<p>The module <code>library(process)</code> implements interaction with 
+child processes and unifies older interfaces such as shell/[1,2], <code>open(pipe(command), ...)</code> 
+etc. This library is modelled after SICStus 4.
+
+<p>The main interface is formed by <a class="pred" href="#process_create/3">process_create/3</a>. 
+If the process id is requested the process must be waited for using <a class="pred" href="#process_wait/2">process_wait/2</a>. 
+Otherwise the process resources are reclaimed automatically.
+
+<p>In addition to the predicates, this module defines a file search path 
+(see <span class="pred-ext">user:file_search_path/2</span> and <span class="pred-ext">absolute_file_name/3</span>) 
+named <code>path</code> that locates files on the system's search path 
+for executables. E.g. the following finds the executable for <code>ls</code>:
+
+<pre class="code">
+?- absolute_file_name(path(ls), Path, [access(execute)]).
+</pre>
+
+<p><b>Incompatibilities and current limitations</b>
+
+<p>
+<ul class="latex">
+<li>Where SICStus distinguishes between an internal process id and the 
+OS process id, this implementation does not make this distinction. This 
+implies that <a class="pred" href="#is_process/1">is_process/1</a> is 
+incomplete and unreliable.
+<li>It is unclear what the <code>detached(true)</code> option is 
+supposed to do. Disable signals in the child? Use <code>setsid()</code> 
+to detach from the session? The current implementation uses <code>setsid()</code> 
+on Unix systems.
+<li>An extra option <code>env([Name=Value, ...])</code> is added to
+<a class="pred" href="#process_create/3">process_create/3</a>. As of 
+version 4.1 SICStus added
+<code>environment(List)</code> which <i>modifies</i> the environment. A 
+compatible option was added to SWI-Prolog 7.7.23.
+</ul>
+
+<dl class="latex">
+<dt class="pubdef"><span class="pred-tag">[det]</span><a id="process_create/3"><strong>process_create</strong>(<var>+Exe, 
++Args:list, +Options</var>)</a></dt>
+<dd class="defbody">
+Create a new process running the file <var>Exe</var> and using arguments 
+from the given list. <var>Exe</var> is a file specification as handed to
+<span class="pred-ext">absolute_file_name/3</span>. Typically one use 
+the <code>path</code> file alias to specify an executable file on the 
+current PATH. <var>Args</var> is a list of arguments that are handed to 
+the new process. On Unix systems, each element in the list becomes a 
+separate argument in the new process. In Windows, the arguments are 
+simply concatenated to form the commandline. Each argument itself is 
+either a primitive or a list of primitives. A primitive is either atomic 
+or a term <code>file(Spec)</code>. Using <code>file(Spec)</code>, the 
+system inserts a filename using the OS filename conventions which is 
+properly quoted if needed.
+
+<p><var>Options</var>:
+
+<dl class="latex">
+<dt><strong>stdin</strong>(<var>Spec</var>)</dt>
+<dt><strong>stdout</strong>(<var>Spec</var>)</dt>
+<dt><strong>stderr</strong>(<var>Spec</var>)</dt>
+<dd class="defbody">
+Bind the standard streams of the new process. <var>Spec</var> is one of 
+the terms below. If <code>pipe(Pipe)</code> is used, the Prolog stream 
+is a stream in text-mode using the encoding of the default locale. The 
+encoding can be changed using <span class="pred-ext">set_stream/2</span>, 
+or by using the two-argument form of <code>pipe</code>, which accepts an
+<code>encoding(Encoding)</code> option. The options <code>stdout</code> 
+and <code>stderr</code> may use the same stream, in which case both 
+output streams are connected to the same Prolog stream.
+
+<dl class="latex">
+<dt><strong>std</strong></dt>
+<dd class="defbody">
+Just share with the Prolog I/O streams. On Unix, if the <code>user_input</code>, 
+etc. are bound to a file handle but not to 0,1,2 the process I/O is 
+bound to the file handles of these streams.
+</dd>
+<dt><strong>null</strong></dt>
+<dd class="defbody">
+Bind to a <i>null</i> stream. Reading from such a stream returns 
+end-of-file, writing produces no output
+</dd>
+<dt><strong>pipe</strong>(<var>-Stream</var>)</dt>
+<dt><strong>pipe</strong>(<var>-Stream, +StreamOptions</var>)</dt>
+<dd class="defbody">
+Attach input and/or output to a Prolog stream. The optional <var>StreamOptions</var> 
+argument is a list of options that affect the stream. Currently only the 
+options
+<code>type(+Type)</code> and <code>encoding(+Encoding)</code> are 
+supported, which have the same meaning as the stream properties of the 
+same name (see <span class="pred-ext">stream_property/2</span>).
+<var>StreamOptions</var> is provided mainly for SICStus compatibility - 
+the SWI-Prolog predicate <span class="pred-ext">set_stream/2</span> can 
+be used for the same purpose.
+</dd>
+<dt><strong>stream</strong>(<var>+Stream</var>)</dt>
+<dd class="defbody">
+Attach input or output to an existing Prolog stream. This stream must be 
+associated with an OS file handle (see <span class="pred-ext">stream_property/2</span>, 
+property <code>file_no</code>). This option is <b>not</b> provided by 
+the SICStus implementation.
+</dd>
+</dl>
+
+</dd>
+<dt><strong>cwd</strong>(<var>+Directory</var>)</dt>
+<dd class="defbody">
+Run the new process in <var>Directory</var>. <var>Directory</var> can be 
+a compound specification, which is converted using
+<span class="pred-ext">absolute_file_name/3</span>. See also <a class="pred" href="#process_set_method/1">process_set_method/1</a>.
+</dd>
+<dt><strong>env</strong>(<var>+List</var>)</dt>
+<dd class="defbody">
+As <code>environment(List)</code>, but <i>only</i> the specified 
+variables are passed, i.e., no variables are <i>inherited</i>.
+</dd>
+<dt><strong>environment</strong>(<var>+List</var>)</dt>
+<dd class="defbody">
+Specify <i>additional</i> environment variables for the new process.
+<var>List</var> is a list of <code>Name=Value</code> terms, where <var>Value</var> 
+is expanded the same way as the <var>Args</var> argument. If neither <code>env</code> 
+nor
+<code>environment</code> is passed the environment is inherited from the 
+Prolog process.
+</dd>
+<dt><strong>process</strong>(<var>-PID</var>)</dt>
+<dd class="defbody">
+Unify <var>PID</var> with the process id of the created process.
+</dd>
+<dt><strong>detached</strong>(<var>+Bool</var>)</dt>
+<dd class="defbody">
+In Unix: If <code>true</code>, detach the process from the terminal 
+Currently mapped to <code>setsid()</code>; Also creates a new process 
+group for the child In Windows: If <code>true</code>, detach the process 
+from the current job via the CREATE_BREAKAWAY_FROM_JOB flag. In Vista 
+and beyond, processes launched from the shell directly have the&rsquo;compatibility 
+assistant' attached to them automatically unless they have a UAC 
+manifest embedded in them. This means that you will get a permission 
+denied error if you try and assign the newly-created PID to a job you 
+create yourself.
+</dd>
+<dt><strong>window</strong>(<var>+Bool</var>)</dt>
+<dd class="defbody">
+If <code>true</code>, create a window for the process (Windows only)
+</dd>
+<dt><strong>priority</strong>(<var>+Priority</var>)</dt>
+<dd class="defbody">
+In Unix: specifies the process priority for the newly created process. <var>Priority</var> 
+must be an integer between -20 and 19. Positive values are nicer to 
+others, and negative values are less so. The default is zero. Users are 
+free to lower their own priority. Only the super-user may <i>raise</i> 
+it to less-than zero.
+</dd>
+</dl>
+
+<p>If the user specifies the <code>process(-PID)</code> option, he <b>must</b> 
+call
+<a class="pred" href="#process_wait/2">process_wait/2</a> to reclaim the 
+process. Without this option, the system will wait for completion of the 
+process after the last pipe stream is closed.
+
+<p>If the process is not waited for, it must succeed with status 0. If 
+not, an process_error is raised.
+
+<p><b>Windows notes</b>
+
+<p>On Windows this call is an interface to the CreateProcess() API. The 
+commandline consists of the basename of <var>Exe</var> and the arguments 
+formed from <var>Args</var>. Arguments are separated by a single space. 
+If all characters satisfy <code>iswalnum()</code> it is unquoted. If the 
+argument contains a double-quote it is quoted using single quotes. If 
+both single and double quotes appear a domain_error is raised, otherwise 
+double-quote are used.
+
+<p>The CreateProcess() API has many options. Currently only the
+<code>CREATE_NO_WINDOW</code> options is supported through the
+<code>window(+Bool)</code> option. If omitted, the default is to use 
+this option if the application has no console. Future versions are 
+likely to support more window specific options and replace
+<span class="pred-ext">win_exec/2</span>.
+
+<p><b>Examples</b>
+
+<p>First, a very simple example that behaves the same as
+<code>shell('ls -l')</code>, except for error handling:
+
+<pre class="code">
+?- process_create(path(ls), ['-l'], []).
+</pre>
+
+<p>The following example uses grep to find all matching lines in a file.
+
+<pre class="code">
+grep(File, Pattern, Lines) :-
+        setup_call_cleanup(
+            process_create(path(grep), [ Pattern, file(File) ],
+                           [ stdout(pipe(Out))
+                           ]),
+            read_lines(Out, Lines),
+            close(Out)).
+
+read_lines(Out, Lines) :-
+        read_line_to_codes(Out, Line1),
+        read_lines(Line1, Out, Lines).
+
+read_lines(end_of_file, _, []) :- !.
+read_lines(Codes, Out, [Line|Lines]) :-
+        atom_codes(Line, Codes),
+        read_line_to_codes(Out, Line2),
+        read_lines(Line2, Out, Lines).
+</pre>
+
+<dl class="tags">
+<dt class="tag">Errors</dt>
+<dd>
+<code>process_error(Exe, Status)</code> where Status is one of
+<code>exit(Code)</code> or <code>killed(Signal)</code>. Raised if the 
+process is waited for (i.e., <var>Options</var> does not include
+<code>process(-PID)</code>), and does not exit with status 0.
+</dd>
+<dt class="tag">bug</dt>
+<dd>
+On Windows, <code>environment(List)</code> is handled as <code>env(List)</code>, 
+i.e., the environment is not inherited.
+</dd>
+</dl>
+
+</dd>
+<dt class="pubdef"><span class="pred-tag">[det]</span><a id="process_id/1"><strong>process_id</strong>(<var>-PID</var>)</a></dt>
+<dd class="defbody">
+True if <var>PID</var> is the process id of the running Prolog process.
+
+<dl class="tags">
+<dt class="tag">deprecated</dt>
+<dd>
+Use <code>current_prolog_flag(pid, PID)</code>
+</dd>
+</dl>
+
+</dd>
+<dt class="pubdef"><span class="pred-tag">[det]</span><a id="process_id/2"><strong>process_id</strong>(<var>+Process, 
+-PID</var>)</a></dt>
+<dd class="defbody">
+<var>PID</var> is the process id of <var>Process</var>. Given that they 
+are united in SWI-Prolog, this is a simple unify.</dd>
+<dt class="pubdef"><span class="pred-tag">[semidet]</span><a id="is_process/1"><strong>is_process</strong>(<var>+PID</var>)</a></dt>
+<dd class="defbody">
+True if <var>PID</var> might be a process. Succeeds for any positive 
+integer.</dd>
+<dt class="pubdef"><a id="process_release/1"><strong>process_release</strong>(<var>+PID</var>)</a></dt>
+<dd class="defbody">
+Release process handle. In this implementation this is the same as <code>process_wait(PID, _)</code>.</dd>
+<dt class="pubdef"><span class="pred-tag">[det]</span><a id="process_wait/2"><strong>process_wait</strong>(<var>+PID, 
+-Status</var>)</a></dt>
+<dt class="pubdef"><span class="pred-tag">[det]</span><a id="process_wait/3"><strong>process_wait</strong>(<var>+PID, 
+-Status, +Options</var>)</a></dt>
+<dd class="defbody">
+True if <var>PID</var> completed with <var>Status</var>. This call 
+normally blocks until the process is finished. <var>Options</var>:
+
+<dl class="latex">
+<dt><strong>timeout</strong>(<var>+Timeout</var>)</dt>
+<dd class="defbody">
+Default: <code>infinite</code>. If this option is a number, the waits 
+for a maximum of <var>Timeout</var> seconds and unifies <var>Status</var> 
+with <code>timeout</code> if the process does not terminate within
+<var>Timeout</var>. In this case <var>PID</var> is <i>not</i> 
+invalidated. On Unix systems only timeout 0 and <code>infinite</code> 
+are supported. A 0-value can be used to poll the status of the process.
+</dd>
+<dt><strong>release</strong>(<var>+Bool</var>)</dt>
+<dd class="defbody">
+Do/do not release the process. We do not support this flag and a 
+domain_error is raised if <code>release(false)</code> is provided.
+</dd>
+</dl>
+
+<table class="arglist">
+<tr><td><var>Status</var> </td><td>is one of <code>exit(Code)</code> or <code>killed(Signal)</code>, 
+where Code and Signal are integers. If the <code>timeout</code> option 
+is used <var>Status</var> is unified with <code>timeout</code> after the 
+wait timed out. </td></tr>
+</table>
+</dd>
+<dt class="pubdef"><span class="pred-tag">[det]</span><a id="process_kill/1"><strong>process_kill</strong>(<var>+PID</var>)</a></dt>
+<dt class="pubdef"><span class="pred-tag">[det]</span><a id="process_kill/2"><strong>process_kill</strong>(<var>+PID, 
++Signal</var>)</a></dt>
+<dd class="defbody">
+Send signal to process <var>PID</var>. Default is <code>term</code>. <var>Signal</var> 
+is an integer, Unix signal name (e.g. <code>SIGSTOP</code>) or the more 
+Prolog friendly variation one gets after removing <code>SIG</code> and 
+downcase the result: <code>stop</code>. On Windows systems, <var>Signal</var> 
+is ignored and the process is terminated using the TerminateProcess() 
+API. On Windows systems <var>PID</var> must be obtained from <a class="pred" href="#process_create/3">process_create/3</a>, 
+while any <var>PID</var> is allowed on Unix systems.
+
+<dl class="tags">
+<dt class="tag">Compatibility</dt>
+<dd>
+SICStus does not accept the prolog friendly version. We choose to do so 
+for compatibility with <span class="pred-ext">on_signal/3</span>.
+</dd>
+</dl>
+
+</dd>
+<dt class="pubdef"><span class="pred-tag">[det]</span><a id="process_group_kill/1"><strong>process_group_kill</strong>(<var>+PID</var>)</a></dt>
+<dt class="pubdef"><span class="pred-tag">[det]</span><a id="process_group_kill/2"><strong>process_group_kill</strong>(<var>+PID, 
++Signal</var>)</a></dt>
+<dd class="defbody">
+Send signal to the group containing process <var>PID</var>. Default is
+<code>term</code>. See <span class="pred-ext">process_wait/1</span> for 
+a description of signal handling. In Windows, the same restriction on <var>PID</var> 
+applies: it must have been created from <a class="pred" href="#process_create/3">process_create/3</a>, 
+and the the group is terminated via the TerminateJobObject API.</dd>
+<dt class="pubdef"><span class="pred-tag">[det]</span><a id="process_set_method/1"><strong>process_set_method</strong>(<var>+Method</var>)</a></dt>
+<dd class="defbody">
+Determine how the process is created on Unix systems. <var>Method</var> 
+is one of <code>spawn</code> (default), <code>fork</code> or <code>vfork</code>. 
+If the method is <code>spawn</code> but this cannot be used because it 
+is either not supported by the OS or the <code>cwd(Dir)</code> option is 
+given <code>fork</code> is used.
+
+<p>The problem is to be understood as follows. The official portable and 
+safe method to create a process is using the <code>fork()</code> system 
+call. This call however copies the process page tables and get seriously 
+slow as the (Prolog) process is multiple giga bytes large. 
+Alternatively, we may use <code>vfork()</code> which avoids copying the 
+process space. But, the safe usage as guaranteed by the POSIX standard 
+of
+<code>vfork()</code> is insufficient for our purposes. On practical 
+systems your mileage may vary. Modern posix systems also provide <code>posix_spawn()</code>, 
+which provides a safe and portable alternative for the <code>fork()</code> 
+and
+<code>exec()</code> sequence that may be implemented using <code>fork()</code> 
+or may use a fast but safe alternative. Unfortunately <code>posix_spawn()</code> 
+doesn't support the option to specify the working directory for the 
+child and we cannot use <span class="pred-ext">working_directory/2</span> 
+as the working directory is shared between threads.
+
+<p>Summarizing, the default is safe and tries to be as fast as possible. 
+On some scenarios and on some OSes it is possible to do better. It is 
+generally a good idea to avoid using the <code>cwd(Dir)</code> option of <a class="pred" href="#process_create/3">process_create/3</a> 
+as without we can use <code>posix_spawn()</code>.
+</dd>
+</dl>
+
+<p><h2 id="sec:filesex"><a id="sec:3"><span class="sec-nr">3</span> <span class="sec-title">library(filesex): 
+Extended operations on files</span></a></h2>
+
+<p><a id="sec:filesex"></a>
+
+<p>This module provides additional operations on files. This covers both 
+more obscure and possible non-portable low-level operations and 
+high-level utilities.
+
+<p>Using these Prolog primitives is typically to be preferred over using 
+operating system primitives through <span class="pred-ext">shell/1</span> 
+or <a class="pred" href="#process_create/3">process_create/3</a> because 
+(1) there are no potential file name quoting issues, (2) there is no 
+dependency on operating system commands and (3) using the 
+implementations from this library is usually faster.
+
+<dl class="latex">
+<dt class="pubdef"><span class="pred-tag">[det]</span><a id="set_time_file/3"><strong>set_time_file</strong>(<var>+File, 
+-OldTimes, +NewTimes</var>)</a></dt>
+<dd class="defbody">
+Query and set POSIX time attributes of a file. Both <var>OldTimes</var> 
+and
+<var>NewTimes</var> are lists of option-terms. Times are represented in 
+SWI-Prolog's standard floating point numbers. New times may be specified 
+as <code>now</code> to indicate the current time. Defined options are:
+
+<dl class="latex">
+<dt><strong>access</strong>(<var>Time</var>)</dt>
+<dd class="defbody">
+Describes the time of last access of the file. This value can be read 
+and written.
+</dd>
+<dt><strong>modified</strong>(<var>Time</var>)</dt>
+<dd class="defbody">
+Describes the time the contents of the file was last modified. This 
+value can be read and written.
+</dd>
+<dt><strong>changed</strong>(<var>Time</var>)</dt>
+<dd class="defbody">
+Describes the time the file-structure itself was changed by adding (<code>link()</code>) 
+or removing (<code>unlink()</code>) names.
+</dd>
+</dl>
+
+<p>Below are some example queries. The first retrieves the access-time, 
+while the second sets the last-modified time to the current time.
+
+<pre class="code">
+?- set_time_file(foo, [access(Access)], []).
+?- set_time_file(foo, [], [modified(now)]).
+</pre>
+
+</dd>
+<dt class="pubdef"><span class="pred-tag">[det]</span><a id="link_file/3"><strong>link_file</strong>(<var>+OldPath, 
++NewPath, +Type</var>)</a></dt>
+<dd class="defbody">
+Create a link in the filesystem from <var>NewPath</var> to <var>OldPath</var>. <var>Type</var> 
+defines the type of link and is one of <code>hard</code> or <code>symbolic</code>.
+
+<p>With some limitations, these functions also work on Windows. First of 
+all, the underlying filesystem must support links. This requires NTFS. 
+Second, symbolic links are only supported in Vista and later.
+
+<dl class="tags">
+<dt class="tag">Errors</dt>
+<dd>
+<code>domain_error(link_type, Type)</code> if the requested link-type is 
+unknown or not supported on the target OS.
+</dd>
+</dl>
+
+</dd>
+<dt class="pubdef"><span class="pred-tag">[det]</span><a id="relative_file_name/3"><strong>relative_file_name</strong>(<var>+Path:atom, 
++RelToFile:atom, -RelPath:atom</var>)</a></dt>
+<dt class="pubdef"><span class="pred-tag">[det]</span><a id="relative_file_name/3"><strong>relative_file_name</strong>(<var>-Path:atom, 
++RelToFile:atom, +RelPath:atom</var>)</a></dt>
+<dd class="defbody">
+True when <var>RelPath</var> is <var>Path</var>, relative to the <i>file</i> <var>RelToFile</var>. <var>Path</var> 
+and RelTo are first handed to <span class="pred-ext">absolute_file_name/2</span>, 
+which makes the absolute <b>and</b> canonical. Below are two examples:
+
+<pre class="code">
+?- relative_file_name('/home/janw/nice',
+                      '/home/janw/deep/dir/file', Path).
+Path = '../../nice'.
+
+?- relative_file_name(Path, '/home/janw/deep/dir/file', '../../nice').
+Path = '/home/janw/nice'.
+</pre>
+
+<p>Add a terminating <code>/</code> to get a path relative to a <i>directory</i>, 
+e.g.
+
+<pre class="code">
+?- relative_file_name('/home/janw/deep/dir/file', './', Path).
+Path = 'deep/dir/file'.
+</pre>
+
+<table class="arglist">
+<tr><td><var>All</var> </td><td>paths must be in canonical POSIX 
+notation, i.e., using / to separate segments in the path. See
+<span class="pred-ext">prolog_to_os_filename/2</span>. </td></tr>
+</table>
+
+<dl class="tags">
+<dt class="tag">bug</dt>
+<dd>
+It would probably have been cleaner to use a directory as second 
+argument. We can not do such dynamically as this predicate is defined as 
+a <i>syntactical</i> operation, which implies it may be used for 
+non-existing paths and URLs.
+</dd>
+</dl>
+
+</dd>
+<dt class="pubdef"><span class="pred-tag">[det]</span><a id="directory_file_path/3"><strong>directory_file_path</strong>(<var>+Directory, 
++File, -Path</var>)</a></dt>
+<dt class="pubdef"><span class="pred-tag">[det]</span><a id="directory_file_path/3"><strong>directory_file_path</strong>(<var>?Directory, 
+?File, +Path</var>)</a></dt>
+<dd class="defbody">
+True when <var>Path</var> is the full path-name for <var>File</var> in 
+Dir. This is comparable to <code>atom_concat(Directory, File, Path)</code>, 
+but it ensures there is exactly one / between the two parts. Notes:
+
+<p>
+<ul class="latex">
+<li>In mode (+,+,-), if <var>File</var> is given and absolute, <var>Path</var> 
+is unified to <var>File</var>.
+<li>Mode (-,-,+) uses <span class="pred-ext">file_directory_name/2</span> 
+and <span class="pred-ext">file_base_name/2</span>
+</ul>
+</dd>
+<dt class="pubdef"><span class="pred-tag">[nondet]</span><a id="directory_member/3"><strong>directory_member</strong>(<var>+Directory, 
+-Member, +Options</var>)</a></dt>
+<dd class="defbody">
+True when <var>Member</var> is a path inside <var>Directory</var>. <var>Options</var> 
+defined are:
+
+<dl class="latex">
+<dt><strong>recursive</strong>(<var>+Boolean</var>)</dt>
+<dd class="defbody">
+If <code>true</code> (default <code>false</code>), recurse into 
+subdirectories
+</dd>
+<dt><strong>follow_links</strong>(<var>+Boolean</var>)</dt>
+<dd class="defbody">
+If <code>true</code> (default), follow symbolic links.
+</dd>
+<dt><strong>file_type</strong>(<var>+Type</var>)</dt>
+<dd class="defbody">
+See <span class="pred-ext">absolute_file_name/3</span>.
+</dd>
+<dt><strong>extensions</strong>(<var>+List</var>)</dt>
+<dd class="defbody">
+Only return entries whose extension appears in <var>List</var>.
+</dd>
+<dt><strong>file_errors</strong>(<var>+Errors</var>)</dt>
+<dd class="defbody">
+How to handle errors. One of <code>fail</code>, <code>warning</code> or <code>error</code>. 
+Default is <code>warning</code>. <var>Errors</var> notably happen if a 
+directory is unreadable or a link points nowhere.
+</dd>
+<dt><strong>access</strong>(<var>+Access</var>)</dt>
+<dd class="defbody">
+Only return entries with <var>Access</var>
+</dd>
+<dt><strong>matches</strong>(<var>+GlobPattern</var>)</dt>
+<dd class="defbody">
+Only return files that match <var>GlobPattern</var>.
+</dd>
+<dt><strong>exclude</strong>(<var>+GlobPattern</var>)</dt>
+<dd class="defbody">
+Exclude files matching <var>GlobPattern</var>.
+</dd>
+<dt><strong>exclude_directory</strong>(<var>+GlobPattern</var>)</dt>
+<dd class="defbody">
+Do not recurse into directories matching <var>GlobPattern</var>.
+</dd>
+<dt><strong>hidden</strong>(<var>+Boolean</var>)</dt>
+<dd class="defbody">
+If <code>true</code> (default), also return <i>hidden</i> files.
+</dd>
+</dl>
+
+<p>This predicate is safe against cycles introduced by symbolic links to 
+directories.
+
+<p>The idea for a non-deterministic file search predicate comes from 
+Nicos Angelopoulos.</dd>
+<dt class="pubdef"><span class="pred-tag">[det]</span><a id="copy_file/2"><strong>copy_file</strong>(<var>+From, 
++To</var>)</a></dt>
+<dd class="defbody">
+Copy a file into a new file or directory. The data is copied as binary 
+data.</dd>
+<dt class="pubdef"><span class="pred-tag">[det]</span><a id="make_directory_path/1"><strong>make_directory_path</strong>(<var>+Dir</var>)</a></dt>
+<dd class="defbody">
+Create <var>Dir</var> and all required components (like mkdir -p). Can 
+raise various file-specific exceptions.</dd>
+<dt class="pubdef"><span class="pred-tag">[det]</span><a id="copy_directory/2"><strong>copy_directory</strong>(<var>+From, 
++To</var>)</a></dt>
+<dd class="defbody">
+Copy the contents of the directory <var>From</var> to <var>To</var> 
+(recursively). If
+<var>To</var> is the name of an existing directory, the <i>contents</i> 
+of <var>From</var> are copied into <var>To</var>. I.e., no subdirectory 
+using the basename of
+<var>From</var> is created.</dd>
+<dt class="pubdef"><span class="pred-tag">[det]</span><a id="delete_directory_and_contents/1"><strong>delete_directory_and_contents</strong>(<var>+Dir</var>)</a></dt>
+<dd class="defbody">
+Recursively remove the directory <var>Dir</var> and its contents. If <var>Dir</var> 
+is a symbolic link or symbolic links inside <var>Dir</var> are 
+encountered, the links are removed rather than their content. Use with 
+care!</dd>
+<dt class="pubdef"><span class="pred-tag">[det]</span><a id="delete_directory_contents/1"><strong>delete_directory_contents</strong>(<var>+Dir</var>)</a></dt>
+<dd class="defbody">
+Remove all content from directory <var>Dir</var>, without removing <var>Dir</var> 
+itself. Similar to <span class="pred-ext">delete_directory_and_contents/2</span>, 
+if symbolic links are encountered in <var>Dir</var>, the links are 
+removed rather than their content.</dd>
+<dt class="pubdef"><span class="pred-tag">[det]</span><a id="chmod/2"><strong>chmod</strong>(<var>+File, 
++Spec</var>)</a></dt>
+<dd class="defbody">
+Set the mode of the target file. <var>Spec</var> is one of <code>+Mode</code>, <code>-Mode</code> 
+or a plain <var>Mode</var>, which adds new permissions, revokes 
+permissions or sets the exact permissions. <var>Mode</var> itself is an 
+integer, a POSIX mode name or a list of POSIX mode names. Defines names 
+are <code>suid</code>,
+<code>sgid</code>, <code>svtx</code> and all names defined by the 
+regular expression
+<code>[ugo]*[rwx]*</code>. Specifying none of "ugo" is the same as 
+specifying all of them. For example, to make a file executable for the 
+owner (user) and group, we can use:
+
+<pre class="code">
+?- chmod(myfile, +ugx).
+</pre>
+
+<p></dd>
+</dl>
+
+<p><h2 id="sec:uid"><a id="sec:4"><span class="sec-nr">4</span> <span class="sec-title">library(uid): 
+User and group management on Unix systems</span></a></h2>
+
+<p><a id="sec:uid"></a>
+
+<dl class="tags">
+<dt class="tag">See also</dt>
+<dd>
+Please check the documentation of your OS for details on the semantics 
+of this predicates.
+</dd>
+</dl>
+
+<p>This module provides and interface to user and group information on 
+Posix systems. In addition, it allows for changing user and group ids. 
+When changing user and group settings for the calling process, bear in 
+mind that:
+
+<p>
+<ul class="latex">
+<li>Changing user and groups of the calling process requires permission.
+<li>The functions <code>setgroups()</code> and <code>initgroups()</code> 
+are not part of the POSIX standard and therefore the derived predicates 
+may not be present.
+</ul>
+
+<dl class="latex">
+<dt class="pubdef"><span class="pred-tag">[det]</span><a id="getuid/1"><strong>getuid</strong>(<var>-UID</var>)</a></dt>
+<dd class="defbody">
+<var>UID</var> is the real user ID of the calling process.</dd>
+<dt class="pubdef"><span class="pred-tag">[det]</span><a id="getgid/1"><strong>getgid</strong>(<var>-GID</var>)</a></dt>
+<dd class="defbody">
+<var>GID</var> is the real group ID of the calling process.</dd>
+<dt class="pubdef"><span class="pred-tag">[det]</span><a id="geteuid/1"><strong>geteuid</strong>(<var>-UID</var>)</a></dt>
+<dd class="defbody">
+<var>UID</var> is the effective user ID of the calling process.</dd>
+<dt class="pubdef"><span class="pred-tag">[det]</span><a id="getegid/1"><strong>getegid</strong>(<var>-GID</var>)</a></dt>
+<dd class="defbody">
+<var>GID</var> is the effective group ID of the calling process.</dd>
+<dt class="pubdef"><span class="pred-tag">[det]</span><a id="getgroups/1"><strong>getgroups</strong>(<var>-GroupsIDs:list(integer)</var>)</a></dt>
+<dd class="defbody">
+<var>GroupsIDs</var> is the set of supplementary group IDs of the 
+calling process. Note that these are numeric identifiers. Use
+<a class="pred" href="#group_info/2">group_info/2</a> to obtain details 
+on the returned group identifiers.</dd>
+<dt class="pubdef"><span class="pred-tag">[det]</span><a id="user_info/2"><strong>user_info</strong>(<var>+User, 
+-UserData</var>)</a></dt>
+<dd class="defbody">
+<var>UserData</var> represent the passwd information for <var>User</var>. <var>User</var> 
+is either a numeric UID or a user name. The predicate <a class="pred" href="#user_data/3">user_data/3</a> 
+can be used to extract information from <var>UserData</var>.</dd>
+<dt class="pubdef"><a id="user_data/3"><strong>user_data</strong>(<var>?Field, 
+?UserData, ?Value</var>)</a></dt>
+<dd class="defbody">
+<var>Value</var> is the value for <var>Field</var> in <var>UserData</var>. 
+Defined fields are:
+
+<dl class="latex">
+<dt><strong>name</strong></dt>
+<dd class="defbody">
+Name of the user
+</dd>
+<dt><strong>password</strong></dt>
+<dd class="defbody">
+Password hash of the user (or <code>x</code> if this is not accessible)
+</dd>
+<dt><strong>uid</strong></dt>
+<dd class="defbody">
+Numeric user id of the user
+</dd>
+<dt><strong>gid</strong></dt>
+<dd class="defbody">
+Numeric primary group id of the user
+</dd>
+<dt><strong>comment</strong></dt>
+<dd class="defbody">
+The <i>gecos</i> field
+</dd>
+<dt><strong>home</strong></dt>
+<dd class="defbody">
+Home directory of the user
+</dd>
+<dt><strong>shell</strong></dt>
+<dd class="defbody">
+Default (login) shell of the user.
+</dd>
+</dl>
+
+</dd>
+<dt class="pubdef"><span class="pred-tag">[det]</span><a id="group_info/2"><strong>group_info</strong>(<var>+Group, 
+-GroupData</var>)</a></dt>
+<dd class="defbody">
+<var>GroupData</var> represent the group information for <var>Group</var>. <var>Group</var> 
+is either a numeric GID or a group name. The predicate <a class="pred" href="#group_data/3">group_data/3</a> 
+can be used to extract information from <var>GroupData</var>.</dd>
+<dt class="pubdef"><a id="group_data/3"><strong>group_data</strong>(<var>?Field, 
+?GroupData, ?Value</var>)</a></dt>
+<dd class="defbody">
+<var>Value</var> is the value for <var>Field</var> <var>GroupData</var>. 
+Defined fields are:
+
+<dl class="latex">
+<dt><strong>name</strong></dt>
+<dd class="defbody">
+Name of the user
+</dd>
+<dt><strong>password</strong></dt>
+<dd class="defbody">
+Password hash of the user (or <code>x</code> if this is not accessible)
+</dd>
+<dt><strong>gid</strong></dt>
+<dd class="defbody">
+Numeric group id of the group
+</dd>
+<dt><strong>members</strong></dt>
+<dd class="defbody">
+List of user-names that are member of this group.
+</dd>
+</dl>
+
+</dd>
+<dt class="pubdef"><a id="setuid/1"><strong>setuid</strong>(<var>+UID</var>)</a></dt>
+<dd class="defbody">
+Set the user id of the calling process.</dd>
+<dt class="pubdef"><a id="seteuid/1"><strong>seteuid</strong>(<var>+UID</var>)</a></dt>
+<dd class="defbody">
+Set the effective user id of the calling process.</dd>
+<dt class="pubdef"><a id="setgid/1"><strong>setgid</strong>(<var>+GID</var>)</a></dt>
+<dd class="defbody">
+Set the group id of the calling process.</dd>
+<dt class="pubdef"><a id="setegid/1"><strong>setegid</strong>(<var>+GID</var>)</a></dt>
+<dd class="defbody">
+Set the effective group id of the calling process.</dd>
+<dt class="pubdef"><span class="pred-tag">[det]</span><a id="initgroups/2"><strong>initgroups</strong>(<var>+User, 
++Group</var>)</a></dt>
+<dd class="defbody">
+Initialise the group access list of the calling process to the 
+registered groups for <var>User</var> and the group <var>Group</var>. 
+This predicate is only available if the underlying OS provides it.</dd>
+<dt class="pubdef"><span class="pred-tag">[det]</span><a id="setgroups/1"><strong>setgroups</strong>(<var>+Groups:list(integer)</var>)</a></dt>
+<dd class="defbody">
+Set the group access list of the caling process to the indicated groups. 
+This predicate is only available if the underlying OS provides it.</dd>
+<dt class="pubdef"><span class="pred-tag">[det]</span><a id="set_user_and_group/1"><strong>set_user_and_group</strong>(<var>+User</var>)</a></dt>
+<dt class="pubdef"><span class="pred-tag">[det]</span><a id="set_user_and_group/2"><strong>set_user_and_group</strong>(<var>+User, 
++Group</var>)</a></dt>
+<dd class="defbody">
+Set the UID and GID to the <var>User</var>. <var>User</var> is either a 
+UID or a user name. If <var>Group</var> is not specified, the primary 
+group of <var>User</var> is used. If <a class="pred" href="#initgroups/2">initgroups/2</a> 
+is available, the resulting group access list of the calling process 
+consists of the registered groups for <var>User</var> and the specified <var>Group</var>.
+</dd>
+</dl>
+
+<p><h2 id="sec:syslog"><a id="sec:5"><span class="sec-nr">5</span> <span class="sec-title">library(syslog): 
+Unix syslog interface</span></a></h2>
+
+<p><a id="sec:syslog"></a>
+
+<dl class="tags">
+<dt class="mtag">See also</dt>
+<dd>
+- <a class="pred" href="#detach_IO/1">detach_IO/1</a> to detach normal 
+I/O of the process and remove it from the process group. <br>
+- <a class="pred" href="#fork/1">fork/1</a> to create a daemon process. <br>
+- <code>library(uid)</code> to manage user identifiers (e.g., drop root 
+privileges).
+</dd>
+</dl>
+
+<p>This library provides an interface to the Unix <code>syslog()</code> 
+facility. The interface is an almost direct translation of the POSIX 
+syslog API, with two additions:
+
+<p>
+<ul class="latex">
+<li><a class="pred" href="#syslog/3">syslog/3</a> exploits <span class="pred-ext">format/3</span> 
+to format syslog messages
+<li>The library integrates into <code>library(debug)</code> using
+<a class="pred" href="#prolog:debug_print_hook/3">prolog:debug_print_hook/3</a>, 
+where debug <i>topics</i> are mapped to syslog <i>priorities</i> and 
+remaining debug <i>topics</i> are mapped to the syslog <i>priority</i> <code>debug</code>.
+</ul>
+
+<p>Note that this interface makes no attempt to abstract over logging 
+facilities of operating systems. We expect that such abstractions will 
+be implemented at the Prolog level using multiple integrations into
+<code>library(debug)</code>.
+
+<dl class="latex">
+<dt class="pubdef"><span class="pred-tag">[det]</span><a id="openlog/3"><strong>openlog</strong>(<var>+Ident:atom, 
++Options:list(atom), +Facility:atom</var>)</a></dt>
+<dd class="defbody">
+Open system log. This predicate provides a direct interface into the <code>openlog()</code> 
+library call. If the library call is successful, it runs <code>at_halt(closelog)</code> 
+to ensure closing the system log on clean exit.
+<table class="arglist">
+<tr><td><var>Ident</var> </td><td>prepended to every message, and is 
+typically set to the program name. </td></tr>
+<tr><td><var>Options</var> </td><td>is a list of options. Values are 
+corresponding C options, after removing =LOG_= and translation to lower 
+case: <code>cons</code>, <code>ndelay</code>, <code>nowait</code>, <code>odelay</code>,
+<code>perror</code>, <code>pid</code>. </td></tr>
+<tr><td><var>Facility</var> </td><td>is one of <code>auth</code>, <code>authpriv</code>, <code>cron</code>, <code>daemon</code>,
+<code>ftp</code>, <code>kern</code>, <code>local0</code> ... <code>local7</code>, <code>lpr</code>, <code>mail</code>,
+<code>news</code>, <code>syslog</code>, <code>user</code> or <code>uucp</code>. </td></tr>
+</table>
+</dd>
+<dt class="pubdef"><span class="pred-tag">[det]</span><a id="syslog/2"><strong>syslog</strong>(<var>+Priority, 
++Message</var>)</a></dt>
+<dd class="defbody">
+Send a message to the system log. Note that <a class="pred" href="#syslog/2">syslog/2</a> 
+implicitly opens a connection to the system log if such a connection has 
+not been opened explicitly using <a class="pred" href="#openlog/3">openlog/3</a>.
+<table class="arglist">
+<tr><td><var>Priority</var> </td><td>is one of <code>emerg</code>, <code>alert</code>, <code>crit</code>, <code>err</code>,
+<code>warning</code>, <code>notice</code>, <code>info</code> or <code>debug</code>. </td></tr>
+</table>
+</dd>
+<dt class="pubdef"><span class="pred-tag">[det]</span><a id="syslog/3"><strong>syslog</strong>(<var>+Priority, 
++Format, +Args</var>)</a></dt>
+<dd class="defbody">
+Send a formatted message to the system log if system logging is opened 
+using <a class="pred" href="#openlog/3">openlog/3</a>. This predicate 
+combined <span class="pred-ext">format/3</span> with
+<a class="pred" href="#syslog/2">syslog/2</a>. If there is no open 
+syslog connection, <a class="pred" href="#syslog/3">syslog/3</a> calls
+<span class="pred-ext">print_message/2</span>.</dd>
+<dt class="pubdef"><span class="pred-tag">[det]</span><a id="closelog/0"><strong>closelog</strong></a></dt>
+<dd class="defbody">
+Close the system log.</dd>
+<dt class="multidef"><span class="pred-tag">[semidet,multifile]</span><a id="prolog:debug_print_hook/3"><span class="module">prolog</span>:<strong>debug_print_hook</strong>(<var>+Topic, 
++Format, +Args</var>)</a></dt>
+<dd class="defbody">
+Integration of <span class="pred-ext">debug/3</span> with the syslog 
+facility. If syslog is enabled, <span class="pred-ext">debug/3</span> is 
+re-routed to use the syslog facilities. If the <i>topic</i> of the debug 
+message matches one of the sylog
+<i>priority</i> values (see <a class="pred" href="#syslog/2">syslog/2</a>), 
+the message is sent with the corresponding syslog priority. Otherwise it 
+it sent with the
+<code>debug</code> priority.
+</dd>
+</dl>
+
+<p><h2 id="sec:socket"><a id="sec:6"><span class="sec-nr">6</span> <span class="sec-title">library(socket): 
+Network socket (TCP and UDP) library</span></a></h2>
+
+<p><a id="sec:socket"></a>
+
+<p>The <code>library(socket)</code> provides TCP and UDP inet-domain 
+sockets from SWI-Prolog, both client and server-side communication. The 
+interface of this library is very close to the Unix socket interface, 
+also supported by the MS-Windows <i>winsock</i> API. SWI-Prolog 
+applications that wish to communicate with multiple sources have three 
+options:
+
+<p>
+<ul class="latex">
+<li>Use I/O multiplexing based on <span class="pred-ext">wait_for_input/3</span>. 
+On Windows systems this can only be used for sockets, not for general 
+(device-) file handles.
+<li>Use multiple threads, handling either a single blocking socket or a 
+pool using I/O multiplexing as above.
+<li>Using XPCE's class <code>socket</code> which synchronises socket 
+events in the GUI event-loop.
+</ul>
+
+<p><h3 id="sec:socket-server"><a id="sec:6.1"><span class="sec-nr">6.1</span> <span class="sec-title">Client 
+applications</span></a></h3>
+
+<p><a id="sec:socket-server"></a>
+
+<p>Using this library to establish a TCP connection to a server is as 
+simple as opening a file. See also <span class="pred-ext">http_open/3</span>.
+
+<pre class="code">
+dump_swi_homepage :-
+    setup_call_cleanup(
+        tcp_connect(www.swi-prolog.org:http, Stream, []),
+        ( format(Stream,
+                 'GET / HTTP/1.1~n\c
+                  Host: www.swi-prolog.org~n\c
+                  Connection: close~n~n', []),
+          flush_output(Stream),
+          copy_stream_data(Stream, current_output)
+        ),
+        close(S)).
+</pre>
+
+<p>To deal with timeouts and multiple connections, threads,
+<span class="pred-ext">wait_for_input/3</span> and/or non-blocking 
+streams (see <a class="pred" href="#tcp_fcntl/3">tcp_fcntl/3</a>) can be 
+used.
+
+<p><h3 id="sec:socket-client"><a id="sec:6.2"><span class="sec-nr">6.2</span> <span class="sec-title">Server 
+applications</span></a></h3>
+
+<p><a id="sec:socket-client"></a>
+
+<p>The typical sequence for generating a server application is given 
+below. To close the server, use <span class="pred-ext">close/1</span> on <var>AcceptFd</var>.
+
+<pre class="code">
+create_server(Port) :-
+      tcp_socket(Socket),
+      tcp_bind(Socket, Port),
+      tcp_listen(Socket, 5),
+      tcp_open_socket(Socket, AcceptFd, _),
+      &lt;dispatch&gt;
+</pre>
+
+<p>There are various options for <var>&lt;</var>dispatch<var>&gt;</var>. 
+The most commonly used option is to start a Prolog thread to handle the 
+connection. Alternatively, input from multiple clients can be handled in 
+a single thread by listening to these clients using <span class="pred-ext">wait_for_input/3</span>. 
+Finally, on Unix systems, we can use <a class="pred" href="#fork/1">fork/1</a> 
+to handle the connection in a new process. Note that <a class="pred" href="#fork/1">fork/1</a> 
+and threads do not cooperate well. Combinations can be realised but 
+require good understanding of POSIX thread and fork-semantics.
+
+<p>Below is the typical example using a thread. Note the use of
+<span class="pred-ext">setup_call_cleanup/3</span> to guarantee that all 
+resources are reclaimed, also in case of failure or exceptions.
+
+<pre class="code">
+dispatch(AcceptFd) :-
+        tcp_accept(AcceptFd, Socket, Peer),
+        thread_create(process_client(Socket, Peer), _,
+                      [ detached(true)
+                      ]),
+        dispatch(AcceptFd).
+
+process_client(Socket, Peer) :-
+        setup_call_cleanup(
+            tcp_open_socket(Socket, StreamPair),
+            handle_service(StreamPair),
+            close(StreamPair)).
+
+handle_service(StreamPair) :-
+        ...
+</pre>
+
+<p><h3 id="sec:socket-exceptions"><a id="sec:6.3"><span class="sec-nr">6.3</span> <span class="sec-title">Socket 
+exceptions</span></a></h3>
+
+<p><a id="sec:socket-exceptions"></a>
+
+<p>Errors that are trapped by the low-level library are mapped to an 
+exception of the shape below. In this term, <var>Code</var> is a lower 
+case atom that corresponds to the C macro name, e.g., <code>epipe</code> 
+for a broken pipe.
+<var>Message</var> is the human readable string for the error code 
+returned by the OS or the same as <var>Code</var> if the OS does not 
+provide this functionality. Note that <var>Code</var> is derived from a 
+static set of macros that may or may not be defines for the target OS. 
+If the macro name is not known, <var>Code</var> is <code>ERROR_nnn</code>, 
+where <i>nnn</i> is an integer.
+
+<pre class="code">
+error(socket_error(Code, Message), _)
+</pre>
+
+<p>Note that on Windows <var>Code</var> is a <code>wsa*</code> code 
+which makes it hard to write portable code that handles specific socket 
+errors. Even on POSIX systems the exact set of errors produced by the 
+network stack is not defined.
+
+<p><h3 id="sec:socket-predicates"><a id="sec:6.4"><span class="sec-nr">6.4</span> <span class="sec-title">TCP 
+socket predicates</span></a></h3>
+
+<p><a id="sec:socket-predicates"></a>
+
+<dl class="latex">
+<dt class="pubdef"><span class="pred-tag">[det]</span><a id="tcp_socket/1"><strong>tcp_socket</strong>(<var>-SocketId</var>)</a></dt>
+<dd class="defbody">
+Creates an INET-domain stream-socket and unifies an identifier to it 
+with <var>SocketId</var>. On MS-Windows, if the socket library is not 
+yet initialised, this will also initialise the library.</dd>
+<dt class="pubdef"><span class="pred-tag">[det]</span><a id="tcp_close_socket/1"><strong>tcp_close_socket</strong>(<var>+SocketId</var>)</a></dt>
+<dd class="defbody">
+Closes the indicated socket, making <var>SocketId</var> invalid. 
+Normally, sockets are closed by closing both stream handles returned by
+<span class="pred-ext">open_socket/3</span>. There are two cases where <a class="pred" href="#tcp_close_socket/1">tcp_close_socket/1</a> 
+is used because there are no stream-handles:
+
+<p>
+<ul class="latex">
+<li>If, after <a class="pred" href="#tcp_accept/3">tcp_accept/3</a>, the 
+server uses <a class="pred" href="#fork/1">fork/1</a> to handle the 
+client in a sub-process. In this case the accepted socket is not longer 
+needed from the main server and must be discarded using <a class="pred" href="#tcp_close_socket/1">tcp_close_socket/1</a>.
+<li>If, after discovering the connecting client with
+<a class="pred" href="#tcp_accept/3">tcp_accept/3</a>, the server does 
+not want to accept the connection, it should discard the accepted socket 
+immediately using <a class="pred" href="#tcp_close_socket/1">tcp_close_socket/1</a>.
+</ul>
+</dd>
+<dt class="pubdef"><span class="pred-tag">[det]</span><a id="tcp_open_socket/2"><strong>tcp_open_socket</strong>(<var>+SocketId, 
+-StreamPair</var>)</a></dt>
+<dd class="defbody">
+Create streams to communicate to <var>SocketId</var>. If <var>SocketId</var> 
+is a master socket (see <a class="pred" href="#tcp_bind/2">tcp_bind/2</a>), <var>StreamPair</var> 
+should be used for
+<a class="pred" href="#tcp_accept/3">tcp_accept/3</a>. If <var>SocketId</var> 
+is a connected (see <a class="pred" href="#tcp_connect/2">tcp_connect/2</a>) 
+or accepted socket (see <a class="pred" href="#tcp_accept/3">tcp_accept/3</a>), <var>StreamPair</var> 
+is unified to a stream pair (see <span class="pred-ext">stream_pair/3</span>) 
+that can be used for reading and writing. The stream or pair must be 
+closed with <span class="pred-ext">close/1</span>, which also closes <var>SocketId</var>.</dd>
+<dt class="pubdef"><span class="pred-tag">[det]</span><a id="tcp_open_socket/3"><strong>tcp_open_socket</strong>(<var>+SocketId, 
+-InStream, -OutStream</var>)</a></dt>
+<dd class="defbody">
+Similar to <a class="pred" href="#tcp_open_socket/2">tcp_open_socket/2</a>, 
+but creates two separate sockets where <a class="pred" href="#tcp_open_socket/2">tcp_open_socket/2</a> 
+would have created a stream pair.
+
+<dl class="tags">
+<dt class="tag">deprecated</dt>
+<dd>
+New code should use <a class="pred" href="#tcp_open_socket/2">tcp_open_socket/2</a> 
+because closing a stream pair is much easier to perform safely.
+</dd>
+</dl>
+
+</dd>
+<dt class="pubdef"><span class="pred-tag">[det]</span><a id="tcp_bind/2"><strong>tcp_bind</strong>(<var>SocketId, 
+?Address</var>)</a></dt>
+<dd class="defbody">
+Bind the socket to <var>Address</var> on the current machine. This 
+operation, together with <a class="pred" href="#tcp_listen/2">tcp_listen/2</a> 
+and <a class="pred" href="#tcp_accept/3">tcp_accept/3</a> implement the <i>server-side</i> 
+of the socket interface. <var>Address</var> is either an plain <var>Port</var> 
+or a term HostPort. The first form binds the socket to the given port on 
+all interfaces, while the second only binds to the matching interface. A 
+typical example is below, causing the socket to listen only on port 8080 
+on the local machine's network.
+
+<pre class="code">
+  tcp_bind(Socket, localhost:8080)
+</pre>
+
+<p>If <var>Port</var> is unbound, the system picks an arbitrary free 
+port and unifies <var>Port</var> with the selected port number. <var>Port</var> 
+is either an integer or the name of a registered service. See also
+<a class="pred" href="#tcp_connect/4">tcp_connect/4</a>.</dd>
+<dt class="pubdef"><span class="pred-tag">[det]</span><a id="tcp_listen/2"><strong>tcp_listen</strong>(<var>+SocketId, 
++BackLog</var>)</a></dt>
+<dd class="defbody">
+Tells, after <a class="pred" href="#tcp_bind/2">tcp_bind/2</a>, the 
+socket to listen for incoming requests for connections. Backlog 
+indicates how many pending connection requests are allowed. Pending 
+requests are requests that are not yet acknowledged using <a class="pred" href="#tcp_accept/3">tcp_accept/3</a>. 
+If the indicated number is exceeded, the requesting client will be 
+signalled that the service is currently not available. A commonly used 
+default value for Backlog is 5.</dd>
+<dt class="pubdef"><span class="pred-tag">[det]</span><a id="tcp_accept/3"><strong>tcp_accept</strong>(<var>+Socket, 
+-Slave, -Peer</var>)</a></dt>
+<dd class="defbody">
+This predicate waits on a server socket for a connection request by a 
+client. On success, it creates a new socket for the client and binds the 
+identifier to <var>Slave</var>. <var>Peer</var> is bound to the 
+IP-address of the client or the atom <code>af_unix</code> if <var>Socket</var> 
+is an AF_UNIX socket (see
+<a class="pred" href="#unix_domain_socket/1">unix_domain_socket/1</a>).</dd>
+<dt class="pubdef"><span class="pred-tag">[det]</span><a id="tcp_connect/2"><strong>tcp_connect</strong>(<var>+SocketId, 
++Address</var>)</a></dt>
+<dd class="defbody">
+Connect <var>SocketId</var>. After successful completion, <a class="pred" href="#tcp_open_socket/3">tcp_open_socket/3</a> 
+can be used to create I/O-Streams to the remote socket. This predicate 
+is part of the low level client API. A connection to a particular host 
+and port is realised using these steps:
+
+<pre class="code">
+    tcp_socket(Socket),
+    tcp_connect(Socket, Host:Port),
+    tcp_open_socket(Socket, StreamPair)
+</pre>
+
+<p>Typical client applications should use the high level interface 
+provided by <a class="pred" href="#tcp_connect/3">tcp_connect/3</a> 
+which avoids resource leaking if a step in the process fails, and can be 
+hooked to support proxies. For example:
+
+<pre class="code">
+    setup_call_cleanup(
+        tcp_connect(Host:Port, StreamPair, []),
+        talk(StreamPair),
+        close(StreamPair))
+</pre>
+
+<p>If <var>SocketId</var> is an AF_UNIX socket (see <a class="pred" href="#unix_domain_socket/1">unix_domain_socket/1</a>), <var>Address</var> 
+is an atom or string denoting a file name.</dd>
+<dt class="pubdef"><span class="pred-tag">[det]</span><a id="tcp_connect/4"><strong>tcp_connect</strong>(<var>+Socket, 
++Address, -Read, -Write</var>)</a></dt>
+<dd class="defbody">
+Connect a (client) socket to <var>Address</var> and return a 
+bi-directional connection through the stream-handles <var>Read</var> and <var>Write</var>. 
+This predicate may be hooked by defining <span class="pred-ext">socket:tcp_connect_hook/4</span> 
+with the same signature. Hooking can be used to deal with proxy 
+connections. E.g.,
+
+<pre class="code">
+:- multifile socket:tcp_connect_hook/4.
+
+socket:tcp_connect_hook(Socket, Address, Read, Write) :-
+    proxy(ProxyAdress),
+    tcp_connect(Socket, ProxyAdress),
+    tcp_open_socket(Socket, Read, Write),
+    proxy_connect(Address, Read, Write).
+</pre>
+
+<dl class="tags">
+<dt class="tag">deprecated</dt>
+<dd>
+New code should use <a class="pred" href="#tcp_connect/3">tcp_connect/3</a> 
+called as
+<code>tcp_connect(+Address, -StreamPair, +Options)</code>.
+</dd>
+</dl>
+
+</dd>
+<dt class="pubdef"><span class="pred-tag">[det]</span><a id="tcp_connect/3"><strong>tcp_connect</strong>(<var>+Address, 
+-StreamPair, +Options</var>)</a></dt>
+<dt class="pubdef"><span class="pred-tag">[det]</span><a id="tcp_connect/3"><strong>tcp_connect</strong>(<var>+Socket, 
++Address, -StreamPair</var>)</a></dt>
+<dd class="defbody">
+Establish a TCP communication as a client. The +,-,+ mode is the 
+preferred way for a client to establish a connection. This predicate can 
+be hooked to support network proxies. To use a proxy, the hook
+<a class="pred" href="#proxy_for_url/3">proxy_for_url/3</a> must be 
+defined. Permitted options are:
+
+<dl class="latex">
+<dt><strong>bypass_proxy</strong>(<var>+Boolean</var>)</dt>
+<dd class="defbody">
+Defaults to <code>false</code>. If <code>true</code>, do not attempt to 
+use any proxies to obtain the connection
+</dd>
+<dt><strong>nodelay</strong>(<var>+Boolean</var>)</dt>
+<dd class="defbody">
+Defaults to <code>false</code>. If <code>true</code>, set nodelay on the 
+resulting socket using <code>tcp_setopt(Socket, nodelay)</code>
+</dd>
+</dl>
+
+<p>The +,+,- mode is deprecated and does not support proxies. It behaves 
+like <a class="pred" href="#tcp_connect/4">tcp_connect/4</a>, but 
+creates a stream pair (see
+<span class="pred-ext">stream_pair/3</span>).
+<table class="arglist">
+<tr><td><var>Address</var> </td><td>is either a Host:Port term or a file 
+name (atom or string). The latter connects to an AF_UNIX socket and 
+requires
+<a class="pred" href="#unix_domain_socket/1">unix_domain_socket/1</a>. </td></tr>
+</table>
+
+<dl class="tags">
+<dt class="tag">Errors</dt>
+<dd>
+<code>proxy_error(tried(ResultList))</code> is raised by mode (+,-,+) if 
+proxies are defines by <a class="pred" href="#proxy_for_url/3">proxy_for_url/3</a> 
+but no proxy can establsh the connection. <var>ResultList</var> contains 
+one or more terms of the form
+<code>false(Proxy)</code> for a hook that simply failed or <code>error(Proxy, ErrorTerm)</code> 
+for a hook that raised an exception.
+</dd>
+<dt class="tag">See also</dt>
+<dd>
+<code>library(http/http_proxy)</code> defines a hook that allows to 
+connect through HTTP proxies that support the <code>CONNECT</code> 
+method.
+</dd>
+</dl>
+
+</dd>
+<dt class="pubdef"><a id="tcp_select/3"><strong>tcp_select</strong>(<var>+ListOfStreams, 
+-ReadyList, +TimeOut</var>)</a></dt>
+<dd class="defbody">
+Same as the built-in <span class="pred-ext">wait_for_input/3</span>. 
+Used to allow for interrupts and timeouts on Windows. A redesign of the 
+Windows socket interface makes it impossible to do better than Windows <code>select()</code> 
+call underlying <span class="pred-ext">wait_for_input/3</span>. As input 
+multiplexing typically happens in a background thread anyway we accept 
+the loss of timeouts and interrupts.
+
+<dl class="tags">
+<dt class="tag">deprecated</dt>
+<dd>
+Use <span class="pred-ext">wait_for_input/3</span>
+</dd>
+</dl>
+
+</dd>
+<dt class="multidef"><span class="pred-tag">[semidet,multifile]</span><a id="try_proxy/4"><strong>try_proxy</strong>(<var>+Proxy, 
++TargetAddress, -Socket, -StreamPair</var>)</a></dt>
+<dd class="defbody">
+Attempt a socket-level connection via the given proxy to
+<var>TargetAddress</var>. The <var>Proxy</var> argument must match the 
+output argument of <a class="pred" href="#proxy_for_url/3">proxy_for_url/3</a>. 
+The predicate <a class="pred" href="#tcp_connect/3">tcp_connect/3</a> 
+(and <span class="pred-ext">http_open/3</span> from the <code>library(http/http_open)</code>) 
+collect the results of failed proxies and raise an exception no proxy is 
+capable of realizing the connection.
+
+<p>The default implementation recognises the values for <var>Proxy</var> 
+described below. The <code>library(http/http_proxy)</code> adds
+<code>proxy(Host,Port)</code> which allows for HTTP proxies using the
+<code>CONNECT</code> method.
+
+<dl class="latex">
+<dt><strong>direct</strong></dt>
+<dd class="defbody">
+Do not use any proxy
+</dd>
+<dt><strong>socks</strong>(<var>Host, Port</var>)</dt>
+<dd class="defbody">
+Use a SOCKS5 proxy
+</dd>
+</dl>
+
+</dd>
+<dt class="multidef"><span class="pred-tag">[nondet,multifile]</span><a id="proxy_for_url/3"><strong>proxy_for_url</strong>(<var>+URL, 
++Hostname, -Proxy</var>)</a></dt>
+<dd class="defbody">
+This hook can be implemented to return a proxy to try when connecting to <var>URL</var>. 
+Returned proxies are tried in the order in which they are returned by 
+the multifile hook <a class="pred" href="#try_proxy/4">try_proxy/4</a>. 
+Pre-defined proxy methods are:
+
+<dl class="latex">
+<dt><strong>direct</strong></dt>
+<dd class="defbody">
+connect directly to the resource
+</dd>
+<dt><strong>proxy</strong>(<var>Host, Port</var>)</dt>
+<dd class="defbody">
+Connect to the resource using an HTTP proxy. If the resource is not an 
+HTTP <var>URL</var>, then try to connect using the CONNECT verb, 
+otherwise, use the GET verb.
+</dd>
+<dt><strong>socks</strong>(<var>Host, Port</var>)</dt>
+<dd class="defbody">
+Connect to the resource via a SOCKS5 proxy
+</dd>
+</dl>
+
+<p>These correspond to the proxy methods defined by PAC <a class="url" href="http://en.wikipedia.org/wiki/Proxy_auto-config"><var>Proxy</var> 
+auto-config</a>. Additional methods can be returned if suitable clauses 
+for
+<span class="pred-ext">http:http_connection_over_proxy/6</span> or <a class="pred" href="#try_proxy/4">try_proxy/4</a> 
+are defined.</dd>
+<dt class="pubdef"><span class="pred-tag">[det]</span><a id="tcp_setopt/2"><strong>tcp_setopt</strong>(<var>+SocketId, 
++Option</var>)</a></dt>
+<dd class="defbody">
+Set options on the socket. Defined options are:
+
+<dl class="latex">
+<dt><strong>reuseaddr</strong></dt>
+<dd class="defbody">
+Allow servers to reuse a port without the system being completely sure 
+the port is no longer in use.
+</dd>
+<dt><strong>bindtodevice</strong>(<var>+Device</var>)</dt>
+<dd class="defbody">
+Bind the socket to <var>Device</var> (an atom). For example, the code 
+below binds the socket to the <i>loopback</i> device that is typically 
+used to realise the <i>localhost</i>. See the manual pages for <code>setsockopt()</code> 
+and the socket interface (e.g.,
+<code>socket(7)</code> on Linux) for details.
+
+<pre class="code">
+tcp_socket(Socket),
+tcp_setopt(Socket, bindtodevice(lo))
+</pre>
+
+</dd>
+<dt><strong>nodelay</strong></dt>
+<dt><strong>nodelay</strong>(<var>true</var>)</dt>
+<dd class="defbody">
+If <code>true</code>, disable the Nagle optimization on this socket, 
+which is enabled by default on almost all modern TCP/IP stacks. The 
+Nagle optimization joins small packages, which is generally desirable, 
+but sometimes not. Please note that the underlying TCP_NODELAY setting 
+to <code>setsockopt()</code> is not available on all platforms and 
+systems may require additional privileges to change this option. If the 
+option is not supported, <a class="pred" href="#tcp_setopt/2">tcp_setopt/2</a> 
+raises a domain_error exception. See
+<a class="url" href="http://en.wikipedia.org/wiki/Nagle's_algorithm">Wikipedia</a> 
+for details.
+</dd>
+<dt><strong>broadcast</strong></dt>
+<dd class="defbody">
+UDP sockets only: broadcast the package to all addresses matching the 
+address. The address is normally the address of the local subnet (i.e. 
+192.168.1.255). See <a class="pred" href="#udp_send/4">udp_send/4</a>.
+</dd>
+<dt><strong>ip_add_membership</strong>(<var>+MultiCastGroup</var>)</dt>
+<dt><strong>ip_add_membership</strong>(<var>+MultiCastGroup, 
++LocalInterface</var>)</dt>
+<dt><strong>ip_add_membership</strong>(<var>+MultiCastGroup, 
++LocalInterface, +InterfaceIndex</var>)</dt>
+<dt><strong>ip_drop_membership</strong>(<var>+MultiCastGroup</var>)</dt>
+<dt><strong>ip_drop_membership</strong>(<var>+MultiCastGroup, 
++LocalInterface</var>)</dt>
+<dt><strong>ip_drop_membership</strong>(<var>+MultiCastGroup, 
++LocalInterface, +InterfaceIndex</var>)</dt>
+<dd class="defbody">
+Join/leave a multicast group. Calls <code>setsockopt()</code> with the 
+corresponding arguments.
+</dd>
+<dt><strong>dispatch</strong>(<var>+Boolean</var>)</dt>
+<dd class="defbody">
+In GUI environments (using XPCE or the Windows <code>swipl-win.exe</code> 
+executable) this flags defines whether or not any events are dispatched 
+on behalf of the user interface. Default is
+<code>true</code>. Only very specific situations require setting this to <code>false</code>.
+</dd>
+<dt><strong>sndbuf</strong>(<var>+Integer</var>)</dt>
+<dd class="defbody">
+Sets the send buffer size to <var>Integer</var> (bytes). On Windows this 
+defaults (now) to 64kb. Higher latency links may benefit from increasing 
+this further since the maximum theoretical throughput on a link is given 
+by buffer-size / latency. See <a class="url" href="https://support.microsoft.com/en-gb/help/823764/slow-performance-occurs-when-you-copy-data-to-a-tcp-server-by-using-a">https://support.microsoft.com/en-gb/help/823764/slow-performance-occurs-when-you-copy-data-to-a-tcp-server-by-using-a</a> 
+for Microsoft's discussion
+</dd>
+</dl>
+
+</dd>
+<dt class="pubdef"><span class="pred-tag">[det]</span><a id="tcp_fcntl/3"><strong>tcp_fcntl</strong>(<var>+Stream, 
++Action, ?Argument</var>)</a></dt>
+<dd class="defbody">
+Interface to the <code>fcntl()</code> call. Currently only suitable to 
+deal switch stream to non-blocking mode using:
+
+<pre class="code">
+  tcp_fcntl(Stream, setfl, nonblock),
+</pre>
+
+<p>An attempt to read from a non-blocking stream while there is no data 
+available returns -1 (or <code>end_of_file</code> for <span class="pred-ext">read/1</span>), 
+but
+<span class="pred-ext">at_end_of_stream/1</span> fails. On actual 
+end-of-input,
+<span class="pred-ext">at_end_of_stream/1</span> succeeds.</dd>
+<dt class="pubdef"><span class="pred-tag">[semidet]</span><a id="tcp_getopt/2"><strong>tcp_getopt</strong>(<var>+Socket, 
+?Option</var>)</a></dt>
+<dd class="defbody">
+Get information about <var>Socket</var>. Defined properties are below. 
+Requesting an unknown option results in a <code>domain_error</code> 
+exception.
+
+<dl class="latex">
+<dt><strong>file_no</strong>(<var>-File</var>)</dt>
+<dd class="defbody">
+Get the OS file handle as an integer. This may be used for debugging and 
+integration.
+</dd>
+</dl>
+
+</dd>
+<dt class="pubdef"><span class="pred-tag">[det]</span><a id="tcp_host_to_address/2"><strong>tcp_host_to_address</strong>(<var>?HostName, 
+?Address</var>)</a></dt>
+<dd class="defbody">
+Translate between a machines host-name and it's (IP-)address. If
+<var>HostName</var> is an atom, it is resolved using <code>getaddrinfo()</code> 
+and the IP-number is unified to <var>Address</var> using a term of the 
+format
+<code>ip(Byte1,Byte2,Byte3,Byte4)</code>. Otherwise, if <var>Address</var> 
+is bound to an <code>ip(Byte1,Byte2,Byte3,Byte4)</code> term, it is 
+resolved by
+<code>gethostbyaddr()</code> and the canonical hostname is unified with
+<var>HostName</var>.
+
+<dl class="tags">
+<dt class="tag">To be done</dt>
+<dd>
+This function should support more functionality provided by 
+gethostbyaddr, probably by adding an option-list.
+</dd>
+</dl>
+
+</dd>
+<dt class="pubdef"><span class="pred-tag">[det]</span><a id="gethostname/1"><strong>gethostname</strong>(<var>-Hostname</var>)</a></dt>
+<dd class="defbody">
+Return the canonical fully qualified name of this host. This is achieved 
+by calling <code>gethostname()</code> and return the canonical name 
+returned by <code>getaddrinfo()</code>.</dd>
+<dt class="pubdef"><span class="pred-tag">[det]</span><a id="negotiate_socks_connection/2"><strong>negotiate_socks_connection</strong>(<var>+DesiredEndpoint, 
++StreamPair</var>)</a></dt>
+<dd class="defbody">
+Negotiate a connection to <var>DesiredEndpoint</var> over <var>StreamPair</var>.
+<var>DesiredEndpoint</var> should be in the form of either:
+
+<p>
+<ul class="compact">
+<li>hostname : port
+<li><code>ip(A,B,C,D)</code> : port
+</ul>
+
+<dl class="tags">
+<dt class="tag">Errors</dt>
+<dd>
+<code>socks_error(Details)</code> if the SOCKS negotiation failed.
+</dd>
+</dl>
+
+</dd>
+</dl>
+
+<p><h3 id="sec:af-unix-sockets"><a id="sec:6.5"><span class="sec-nr">6.5</span> <span class="sec-title">Unix 
+domain sockets</span></a></h3>
+
+<a id="sec:af-unix-sockets"></a>
+
+<p>Unix domain sockets (sockets with address family AF_UNIX) are 
+represented as a (socket) file in the file system. They can only be used 
+to connect processes on the same host. The main advantage of AF_UNIX 
+sockets is that name conflicts are much easier to manage than port 
+conflicts and that access is determined by the file system permission 
+rules.
+
+<dl class="latex">
+<dt class="pubdef"><a id="unix_domain_socket/1"><strong>unix_domain_socket</strong>(<var>-Socket</var>)</a></dt>
+<dd class="defbody">
+Creates an AF_UNIX-domain stream-socket and unifies an identifier to it 
+with <var>Socket</var>. This predicate does not exist if the OS does not 
+support the AF_UNIX address family (e.g. MS-Windows).
+
+<p>Unix domain socket affect <a id="idx:tcpconnect2:1"></a><a class="pred" href="#tcp_connect/2">tcp_connect/2</a> 
+(for clients) and <a id="idx:tcpbind2:2"></a><a class="pred" href="#tcp_bind/2">tcp_bind/2</a> 
+and
+<a id="idx:tcpaccept3:3"></a><a class="pred" href="#tcp_accept/3">tcp_accept/3</a> 
+(for servers). The address is an atom or string that is handled as a 
+file name. On most systems the length of this file name is limited to 
+128 bytes (including null terminator), but according to the Linux 
+documentation (unix(7)), portable applications must keep the address 
+below 92 bytes. Note that these lengths are in <em>bytes</em>. Non-ascii 
+characters may be represented as multiple bytes. If the length limit is 
+exceeded a <code>representation_error(af_unix_name)</code> exception is 
+raised.
+</dd>
+</dl>
+
+<p><h3 id="sec:udp-sockets"><a id="sec:6.6"><span class="sec-nr">6.6</span> <span class="sec-title">UDP 
+protocol support</span></a></h3>
+
+<a id="sec:udp-sockets"></a>
+
+<p>The socket library provides support for UDP sockets. The UDP protocol 
+is a <em>connection-less</em> and <em>unreliable</em> datagram based 
+protocol. That means that messages sent may or may not arrive at the 
+client side, may arrive in a different order then they were sent or even 
+may arrive multiple times. UDP messages are often used for data 
+replication, streaming media, or service discovery.
+
+<p>The library <code>library(udp_broadcast)</code> provides a high-level 
+interface that builds on top of the <code>library(broadcast)</code> 
+facilitating an unreliable
+<em>publish-subscribe</em> pattern based communication channel. The
+<code>library(udp_broadcast)</code> library supports multiple network 
+architectures, e.g., classical LAN broadcasting, <em>multicast</em> and
+<em>unicast</em>.
+
+<dl class="latex">
+<dt class="pubdef"><a id="udp_socket/1"><strong>udp_socket</strong>(<var>-Socket</var>)</a></dt>
+<dd class="defbody">
+Similar to <a id="idx:tcpsocket1:4"></a><a class="pred" href="#tcp_socket/1">tcp_socket/1</a>, 
+but create a socket using the <code>SOCK_DGRAM</code> protocol, ready 
+for UDP connections.</dd>
+<dt class="pubdef"><a id="udp_receive/4"><strong>udp_receive</strong>(<var>+Socket, 
+-Data, -From, +Options</var>)</a></dt>
+<dd class="defbody">
+Wait for and return the next datagram. The data is returned as a Prolog 
+string object (see <a id="idx:stringtolist2:5"></a><span class="pred-ext">string_to_list/2</span>). <var>From</var> 
+is a term of the format ip(<var>A</var>,<var>B</var>,<var>C</var>,<var>D</var>):<var>Port</var> 
+indicating the sender of the message. <var>Socket</var> can be waited 
+for using <a id="idx:waitforinput3:6"></a><span class="pred-ext">wait_for_input/3</span>. 
+Defined <var>Options</var>:
+
+<dl class="latex">
+<dt><strong>as</strong>(<var>+Type</var>)</dt>
+<dd class="defbody">
+Defines the returned term-type. <var>Type</var> is one of
+<code>atom</code>, <code>codes</code> or <code>string</code> (default).</dd>
+<dt><strong>max_message_size</strong>(<var>+Size</var>)</dt>
+<dd class="defbody">
+Specify the maximum number of bytes to read from a UDP datagram. Size 
+must be within the range 0-65535. If unspecified, a maximum of 4096 
+bytes will be read.
+</dd>
+</dl>
+
+<p>The typical sequence to receive UDP data is:
+
+<pre class="code">
+receive(Port) :-
+        udp_socket(S),
+        tcp_bind(S, Port),
+        repeat,
+            udp_receive(Socket, Data, From, [as(atom)]),
+            format('Got ~q from ~q~n', [Data, From]),
+            fail.
+</pre>
+
+</dd>
+<dt class="pubdef"><a id="udp_send/4"><strong>udp_send</strong>(<var>+Socket, 
++Data, +To, +Options</var>)</a></dt>
+<dd class="defbody">
+Send a UDP message. Data is a string, atom or code-list providing the 
+data. <var>To</var> is an address of the form <var>Host</var>:<var>Port</var> 
+where Host is either the hostname or a term <a id="idx:ip4:7"></a><span class="pred-ext">ip/4</span>. <var>Options</var> 
+is currently unused.
+
+<p>A simple example to send UDP data is:
+
+<pre class="code">
+send(Host, Port, Message) :-
+        udp_socket(S),
+        udp_send(S, Message, Host:Port, []),
+        tcp_close_socket(S).
+</pre>
+
+<p>A broadcast is achieved by using <code>tcp_setopt(Socket, broadcast)</code> 
+prior to sending the datagram and using the local network broadcast 
+address as a <a id="idx:ip4:8"></a><span class="pred-ext">ip/4</span> 
+term.
+</dd>
+</dl>
+
+<p>The normal mechanism to discover a service on the local network is 
+for the client to send a broadcast message to an agreed port. The server 
+receives this message and replies to the client with a message 
+indicating further details to establish the communication.
+
+<p><h2 id="sec:stream-pools"><a id="sec:7"><span class="sec-nr">7</span> <span class="sec-title">The 
+stream_pool library</span></a></h2>
+
+<a id="sec:stream-pools"></a>
+
+<p>The <code>library(streampool)</code> library dispatches input from 
+multiple streams based on <a id="idx:waitforinput3:9"></a><span class="pred-ext">wait_for_input/3</span>. 
+It is part of the clib package as it is used most of the time together 
+with the <code>library(socket)</code> library. On non-Unix systems it 
+often can only be used with socket streams.
+
+<p>With SWI-Prolog 5.1.x, multi-threading often provides a good 
+alternative to using this library. In this schema one thread watches the 
+listening socket waiting for connections and either creates a thread per 
+connection or processes the accepted connections with a pool of
+<em>worker threads</em>. The library <code>library(http/thread_httpd)</code> 
+provides an example realising a mult-threaded HTTP server.
+
+<dl class="latex">
+<dt class="pubdef"><a id="add_stream_to_pool/2"><strong>add_stream_to_pool</strong>(<var>+Stream, 
+:Goal</var>)</a></dt>
+<dd class="defbody">
+Add <var>Stream</var>, which must be an input stream and ---on non-unix 
+systems--- connected to a socket to the pool. If input is available on <var>Stream</var>, <var>Goal</var> 
+is called.</dd>
+<dt class="pubdef"><a id="delete_stream_from_pool/1"><strong>delete_stream_from_pool</strong>(<var>+Stream</var>)</a></dt>
+<dd class="defbody">
+Delete the given stream from the pool. Succeeds, even if <var>Stream</var> 
+is no member of the pool. If <var>Stream</var> is unbound the entire 
+pool is emtied but unlike <a id="idx:closestreampool0:10"></a><a class="pred" href="#close_stream_pool/0">close_stream_pool/0</a> 
+the streams are not closed.</dd>
+<dt class="pubdef"><a id="close_stream_pool/0"><strong>close_stream_pool</strong></a></dt>
+<dd class="defbody">
+Empty the pool, closing all streams that are part of it.</dd>
+<dt class="pubdef"><a id="dispatch_stream_pool/1"><strong>dispatch_stream_pool</strong>(<var>+TimeOut</var>)</a></dt>
+<dd class="defbody">
+Wait for maximum of <var>TimeOut</var> for input on any of the streams 
+in the pool. If there is input, call the <var>Goal</var> associated with
+<a id="idx:addstreamtopool2:11"></a><a class="pred" href="#add_stream_to_pool/2">add_stream_to_pool/2</a>. 
+If <var>Goal</var> fails or raises an exception a message is printed. <var>TimeOut</var> 
+is described with <a id="idx:waitforinput3:12"></a><span class="pred-ext">wait_for_input/3</span>.
+
+<p>If <var>Goal</var> is called, there is <em>some</em> input on the 
+associated stream. <var>Goal</var> must be careful not to block as this 
+will block the entire pool.<sup class="fn">1<span class="fn-text">This 
+is hard to achieve at the moment as none of the Prolog read-commands 
+provide for a timeout.</span></sup></dd>
+<dt class="pubdef"><a id="stream_pool_main_loop/0"><strong>stream_pool_main_loop</strong></a></dt>
+<dd class="defbody">
+Calls <a id="idx:dispatchstreampool1:13"></a><a class="pred" href="#dispatch_stream_pool/1">dispatch_stream_pool/1</a> 
+in a loop until the pool is empty.
+</dd>
+</dl>
+
+<p>Below is a very simple example that reads the first line of input and 
+echos it back.
+
+<pre class="code">
+:- use_module(library(streampool)).
+
+server(Port) :-
+        tcp_socket(Socket),
+        tcp_bind(Socket, Port),
+        tcp_listen(Socket, 5),
+        tcp_open_socket(Socket, In, _Out),
+        add_stream_to_pool(In, accept(Socket)),
+        stream_pool_main_loop.
+
+accept(Socket) :-
+        tcp_accept(Socket, Slave, Peer),
+        tcp_open_socket(Slave, In, Out),
+        add_stream_to_pool(In, client(In, Out, Peer)).
+
+client(In, Out, _Peer) :-
+        read_line_to_codes(In, Command),
+        close(In),
+        format(Out, 'Please to meet you: ~s~n', [Command]),
+        close(Out),
+        delete_stream_from_pool(In).
+</pre>
+
+<p><h2 id="sec:uri"><a id="sec:8"><span class="sec-nr">8</span> <span class="sec-title">library(uri): 
+Process URIs</span></a></h2>
+
+<p><a id="sec:uri"></a>
+
+<p>This library provides high-performance C-based primitives for 
+manipulating URIs. We decided for a C-based implementation for the much 
+better performance on raw character manipulation. Notably, URI handling 
+primitives are used in time-critical parts of RDF processing. This 
+implementation is based on RFC-3986:
+
+<pre class="code">
+http://labs.apache.org/webarch/uri/rfc/rfc3986.html
+</pre>
+
+<p>The URI processing in this library is rather liberal. That is, we 
+break URIs according to the rules, but we do not validate that the 
+components are valid. Also, percent-decoding for IRIs is liberal. It 
+first tries UTF-8; then ISO-Latin-1 and finally accepts %-characters 
+verbatim.
+
+<p>Earlier experience has shown that strict enforcement of the URI 
+syntax results in many errors that are accepted by many other 
+web-document processing tools.
+
+<dl class="latex">
+<dt class="pubdef"><span class="pred-tag">[det]</span><a id="uri_components/2"><strong>uri_components</strong>(<var>+URI, 
+-Components</var>)</a></dt>
+<dt class="pubdef"><span class="pred-tag">[det]</span><a id="uri_components/2"><strong>uri_components</strong>(<var>-URI, 
++Components</var>)</a></dt>
+<dd class="defbody">
+Break a <var>URI</var> into its 5 basic components according to the 
+RFC-3986 regular expression:
+
+<pre class="code">
+^(([^:/?#]+):)?(//([^/?#]*))?([^?#]*)(\?([^#]*))?(#(.*))?
+ 12            3  4          5       6  7        8 9
+</pre>
+
+<table class="arglist">
+<tr><td><var>Components</var> </td><td>is a term <code>uri_components(Scheme, Authority, Path, Search, Fragment)</code>. 
+If a <var>URI</var> is <b>parsed</b>, i.e., using mode (+,-), components 
+that are not found are left <i>uninstantiated</i> (variable). See <a class="pred" href="#uri_data/3">uri_data/3</a> 
+for accessing this structure. </td></tr>
+</table>
+</dd>
+<dt class="pubdef"><span class="pred-tag">[semidet]</span><a id="uri_data/3"><strong>uri_data</strong>(<var>?Field, 
++Components, ?Data</var>)</a></dt>
+<dd class="defbody">
+Provide access the uri_component structure. Defined field-names are: <code>scheme</code>, <code>authority</code>, <code>path</code>, <code>search</code> 
+and <code>fragment</code></dd>
+<dt class="pubdef"><span class="pred-tag">[semidet]</span><a id="uri_data/4"><strong>uri_data</strong>(<var>+Field, 
++Components, +Data, -NewComponents</var>)</a></dt>
+<dd class="defbody">
+<var>NewComponents</var> is the same as <var>Components</var> with <var>Field</var> 
+set to <var>Data</var>.</dd>
+<dt class="pubdef"><span class="pred-tag">[det]</span><a id="uri_normalized/2"><strong>uri_normalized</strong>(<var>+URI, 
+-NormalizedURI</var>)</a></dt>
+<dd class="defbody">
+<var>NormalizedURI</var> is the normalized form of <var>URI</var>. 
+Normalization is syntactic and involves the following steps:
+
+<p>
+<ul class="compact">
+<li>6.2.2.1. Case Normalization
+<li>6.2.2.2. Percent-Encoding Normalization
+<li>6.2.2.3. Path Segment Normalization
+</ul>
+</dd>
+<dt class="pubdef"><span class="pred-tag">[det]</span><a id="iri_normalized/2"><strong>iri_normalized</strong>(<var>+IRI, 
+-NormalizedIRI</var>)</a></dt>
+<dd class="defbody">
+<var>NormalizedIRI</var> is the normalized form of <var>IRI</var>. 
+Normalization is syntactic and involves the following steps:
+
+<p>
+<ul class="compact">
+<li>6.2.2.1. Case Normalization
+<li>6.2.2.3. Path Segment Normalization
+</ul>
+
+<dl class="tags">
+<dt class="tag">See also</dt>
+<dd>
+This is similar to <a class="pred" href="#uri_normalized/2">uri_normalized/2</a>, 
+but does not do normalization of %-escapes.
+</dd>
+</dl>
+
+</dd>
+<dt class="pubdef"><span class="pred-tag">[det]</span><a id="uri_normalized_iri/2"><strong>uri_normalized_iri</strong>(<var>+URI, 
+-NormalizedIRI</var>)</a></dt>
+<dd class="defbody">
+As <a class="pred" href="#uri_normalized/2">uri_normalized/2</a>, but 
+percent-encoding is translated into IRI Unicode characters. The 
+translation is liberal: valid UTF-8 sequences of %-encoded bytes are 
+mapped to the Unicode character. Other %XX-sequences are mapped to the 
+corresponding ISO-Latin-1 character and sole % characters are left 
+untouched.
+
+<dl class="tags">
+<dt class="tag">See also</dt>
+<dd>
+<a class="pred" href="#uri_iri/2">uri_iri/2</a>.
+</dd>
+</dl>
+
+</dd>
+<dt class="pubdef"><span class="pred-tag">[semidet]</span><a id="uri_is_global/1"><strong>uri_is_global</strong>(<var>+URI</var>)</a></dt>
+<dd class="defbody">
+True if <var>URI</var> has a scheme. The semantics is the same as the 
+code below, but the implementation is more efficient as it does not need 
+to parse the other components, nor needs to bind the scheme. The 
+condition to demand a scheme of more than one character is added to 
+avoid confusion with DOS path names.
+
+<pre class="code">
+uri_is_global(URI) :-
+        uri_components(URI, Components),
+        uri_data(scheme, Components, Scheme),
+        nonvar(Scheme),
+        atom_length(Scheme, Len),
+        Len &gt; 1.
+</pre>
+
+</dd>
+<dt class="pubdef"><span class="pred-tag">[det]</span><a id="uri_resolve/3"><strong>uri_resolve</strong>(<var>+URI, 
++Base, -GlobalURI</var>)</a></dt>
+<dd class="defbody">
+Resolve a possibly local <var>URI</var> relative to <var>Base</var>. 
+This implements
+<a class="url" href="http://labs.apache.org/webarch/uri/rfc/rfc3986.html#relative-transform">http://labs.apache.org/webarch/uri/rfc/rfc3986.html#relative-transform</a></dd>
+<dt class="pubdef"><span class="pred-tag">[det]</span><a id="uri_normalized/3"><strong>uri_normalized</strong>(<var>+URI, 
++Base, -NormalizedGlobalURI</var>)</a></dt>
+<dd class="defbody">
+<var>NormalizedGlobalURI</var> is the normalized global version of <var>URI</var>. 
+Behaves as if defined by:
+
+<pre class="code">
+uri_normalized(URI, Base, NormalizedGlobalURI) :-
+        uri_resolve(URI, Base, GlobalURI),
+        uri_normalized(GlobalURI, NormalizedGlobalURI).
+</pre>
+
+</dd>
+<dt class="pubdef"><span class="pred-tag">[det]</span><a id="iri_normalized/3"><strong>iri_normalized</strong>(<var>+IRI, 
++Base, -NormalizedGlobalIRI</var>)</a></dt>
+<dd class="defbody">
+<var>NormalizedGlobalIRI</var> is the normalized global version of <var>IRI</var>. 
+This is similar to <a class="pred" href="#uri_normalized/3">uri_normalized/3</a>, 
+but does not do %-escape normalization.</dd>
+<dt class="pubdef"><span class="pred-tag">[det]</span><a id="uri_normalized_iri/3"><strong>uri_normalized_iri</strong>(<var>+URI, 
++Base, -NormalizedGlobalIRI</var>)</a></dt>
+<dd class="defbody">
+<var>NormalizedGlobalIRI</var> is the normalized global IRI of <var>URI</var>. 
+Behaves as if defined by:
+
+<pre class="code">
+uri_normalized(URI, Base, NormalizedGlobalIRI) :-
+        uri_resolve(URI, Base, GlobalURI),
+        uri_normalized_iri(GlobalURI, NormalizedGlobalIRI).
+</pre>
+
+</dd>
+<dt class="pubdef"><span class="pred-tag">[det]</span><a id="uri_query_components/2"><strong>uri_query_components</strong>(<var>+String, 
+-Query</var>)</a></dt>
+<dt class="pubdef"><span class="pred-tag">[det]</span><a id="uri_query_components/2"><strong>uri_query_components</strong>(<var>-String, 
++Query</var>)</a></dt>
+<dd class="defbody">
+Perform encoding and decoding of an URI query string. <var>Query</var> 
+is a list of fully decoded (Unicode) Name=Value pairs. In mode (-,+), 
+query elements of the forms Name(Value) and Name-Value are also accepted 
+to enhance interoperability with the option and pairs libraries. E.g.
+
+<pre class="code">
+?- uri_query_components(QS, [a=b, c('d+w'), n-'VU Amsterdam']).
+QS = 'a=b&amp;c=d%2Bw&amp;n=VU%20Amsterdam'.
+
+?- uri_query_components('a=b&amp;c=d%2Bw&amp;n=VU%20Amsterdam', Q).
+Q = [a=b, c='d+w', n='VU Amsterdam'].
+</pre>
+
+</dd>
+<dt class="pubdef"><span class="pred-tag">[det]</span><a id="uri_authority_components/2"><strong>uri_authority_components</strong>(<var>+Authority, 
+-Components</var>)</a></dt>
+<dt class="pubdef"><span class="pred-tag">[det]</span><a id="uri_authority_components/2"><strong>uri_authority_components</strong>(<var>-Authority, 
++Components</var>)</a></dt>
+<dd class="defbody">
+Break-down the authority component of a URI. The fields of the structure <var>Components</var> 
+can be accessed using <a class="pred" href="#uri_authority_data/3">uri_authority_data/3</a>.</dd>
+<dt class="pubdef"><span class="pred-tag">[semidet]</span><a id="uri_authority_data/3"><strong>uri_authority_data</strong>(<var>+Field, 
+?Components, ?Data</var>)</a></dt>
+<dd class="defbody">
+Provide access the uri_authority structure. Defined field-names are: <code>user</code>, <code>password</code>, <code>host</code> 
+and <code>port</code></dd>
+<dt class="pubdef"><span class="pred-tag">[det]</span><a id="uri_encoded/3"><strong>uri_encoded</strong>(<var>+Component, 
++Value, -Encoded</var>)</a></dt>
+<dt class="pubdef"><span class="pred-tag">[det]</span><a id="uri_encoded/3"><strong>uri_encoded</strong>(<var>+Component, 
+-Value, +Encoded</var>)</a></dt>
+<dd class="defbody">
+<var>Encoded</var> is the URI encoding for <var>Value</var>. When 
+encoding (<var>Value</var><code>-&gt;</code><var>Encoded</var>), <var>Component</var> 
+specifies the URI component where the value is used. It is one of <code>query_value</code>, <code>fragment</code>, <code>path</code> 
+or
+<code>segment</code>. Besides alphanumerical characters, the following 
+characters are passed verbatim (the set is split in logical groups 
+according to RFC3986).
+
+<dl class="latex">
+<dt><b>query_value, fragment</b></dt>
+<dd>
+"-._<code>~</code>" <code>|</code> "!$&rsquo;()*,;" <code>|</code> "@" <code>|</code> 
+"/?"
+</dd>
+<dt><b>path</b></dt>
+<dd>
+"-._<code>~</code>" <code>|</code> "!$&amp;&rsquo;()*,;=" <code>|</code> 
+"@" <code>|</code> "/"
+</dd>
+<dt><b>segment</b></dt>
+<dd>
+"-._<code>~</code>" <code>|</code> "!$&amp;&rsquo;()*,;=" <code>|</code> 
+"@"
+</dd>
+</dl>
+
+</dd>
+<dt class="pubdef"><span class="pred-tag">[det]</span><a id="uri_iri/2"><strong>uri_iri</strong>(<var>+URI, 
+-IRI</var>)</a></dt>
+<dt class="pubdef"><span class="pred-tag">[det]</span><a id="uri_iri/2"><strong>uri_iri</strong>(<var>-URI, 
++IRI</var>)</a></dt>
+<dd class="defbody">
+Convert between a <var>URI</var>, encoded in US-ASCII and an <var>IRI</var>. 
+An <var>IRI</var> is a fully expanded Unicode string. Unicode strings 
+are first encoded into UTF-8, after which %-encoding takes place.
+
+<dl class="tags">
+<dt class="tag">Errors</dt>
+<dd>
+<code>syntax_error(Culprit)</code> in mode (+,-) if <var>URI</var> is 
+not a legally percent-encoded UTF-8 string.
+</dd>
+</dl>
+
+</dd>
+<dt class="pubdef"><span class="pred-tag">[semidet]</span><a id="uri_file_name/2"><strong>uri_file_name</strong>(<var>+URI, 
+-FileName</var>)</a></dt>
+<dt class="pubdef"><span class="pred-tag">[det]</span><a id="uri_file_name/2"><strong>uri_file_name</strong>(<var>-URI, 
++FileName</var>)</a></dt>
+<dd class="defbody">
+Convert between a <var>URI</var> and a local file_name. This protocol is 
+covered by RFC 1738. Please note that file-URIs use <i>absolute</i> 
+paths. The mode (-, +) translates a possible relative path into an 
+absolute one.
+</dd>
+</dl>
+
+<p><h2 id="sec:cgi"><a id="sec:9"><span class="sec-nr">9</span> <span class="sec-title">CGI 
+Support library</span></a></h2>
+
+<a id="sec:cgi"></a>
+
+<p>This is currently a very simple library, providing support for 
+obtaining the form-data for a CGI script:
+
+<dl class="latex">
+<dt class="pubdef"><a id="cgi_get_form/1"><strong>cgi_get_form</strong>(<var>-Form</var>)</a></dt>
+<dd class="defbody">
+Decodes standard input and the environment variables to obtain a list of 
+arguments passed to the CGI script. This predicate both deals with the 
+CGI <b>GET</b> method as well as the <b>POST</b> method. If the data 
+cannot be obtained, an <code>existence_error</code> exception is raised.
+</dd>
+</dl>
+
+<p>Below is a very simple CGI script that prints the passed parameters. 
+To test it, compile this program using the command below, copy it to 
+your cgi-bin directory (or make it otherwise known as a CGI-script) and 
+make the query <code>http://myhost.mydomain/cgi-bin/cgidemo?hello=world</code>
+
+<pre class="code">
+% pl -o cgidemo --goal=main --toplevel=halt -c cgidemo.pl
+</pre>
+
+<pre class="code">
+:- use_module(library(cgi)).
+
+main :-
+        set_stream(current_output, encoding(utf8)),
+        cgi_get_form(Arguments),
+        format('Content-type: text/html; charset=UTF-8~n~n', []),
+        format('&lt;html&gt;~n', []),
+        format('&lt;head&gt;~n', []),
+        format('&lt;title&gt;Simple SWI-Prolog CGI script&lt;/title&gt;~n', []),
+        format('&lt;/head&gt;~n~n', []),
+        format('&lt;body&gt;~n', []),
+        format('&lt;p&gt;', []),
+        print_args(Arguments),
+        format('&lt;/body&gt;~n&lt;/html&gt;~n', []).
+
+print_args([]).
+print_args([A0|T]) :-
+        A0 =.. [Name, Value],
+        format('&lt;b&gt;~w&lt;/b&gt;=&lt;em&gt;~w&lt;/em&gt;&lt;br&gt;~n', [Name, Value]),
+        print_args(T).
+</pre>
+
+<p><h3 id="sec:cgi-considerations"><a id="sec:9.1"><span class="sec-nr">9.1</span> <span class="sec-title">Some 
+considerations</span></a></h3>
+
+<a id="sec:cgi-considerations"></a>
+
+<p>Printing an HTML document using <a id="idx:format2:14"></a><span class="pred-ext">format/2</span> 
+is not a neat way of producing HTML because it is vulnerable to required 
+escape sequences. A high-level alternative is provided by <code>library(http/html_write)</code> 
+from the HTTP library.
+
+<p>The startup-time of Prolog is relatively long, in particular if the 
+program is large. In many cases it is much better to use the SWI-Prolog 
+HTTP server library and make the main web-server relay requests to the 
+SWI-Prolog webserver. See the SWI-Prolog
+<a class="url" href="http://www.swi-prolog.org/pldoc/package/http.html">HTTP 
+package</a> for details.
+
+<p>The CGI standard is unclear about handling Unicode data. The above 
+two declarations ensure the CGI script will send all data in UTF-8 and 
+thus provide full support of Unicode. It is assumed that browsers 
+generally send form-data using the same encoding as the page in which 
+the form appears, UTF-8 or ISO Latin-1. The current version of <a id="idx:cgigetform1:15"></a><a class="pred" href="#cgi_get_form/1">cgi_get_form/1</a> 
+assumes the CGI data is in UTF-8.
+
+<p><h2 id="sec:crypt"><a id="sec:10"><span class="sec-nr">10</span> <span class="sec-title">Password 
+encryption library</span></a></h2>
+
+<a id="sec:crypt"></a>
+
+<p>The <code>library(crypt)</code> library defines <a id="idx:crypt2:16"></a><a class="pred" href="#crypt/2">crypt/2</a> 
+for encrypting and testing passwords. The clib package also provides 
+crytographic hashes as described in <a class="sec" href="#sec:12">section 
+12</a>
+
+<dl class="latex">
+<dt class="pubdef"><a id="crypt/2"><strong>crypt</strong>(<var>+Plain, 
+?Encrypted</var>)</a></dt>
+<dd class="defbody">
+This predicate can be used in three modes. To test whether a password 
+matches an encrypted version thereof, simply run with both arguments 
+fully instantiated. To generate a default encrypted version of
+<var>Plain</var>, run with unbound <var>Encrypted</var> and this 
+argument is unified to a list of character codes holding an encrypted 
+version.
+
+<p>The library supports two encryption formats: traditional Unix 
+DES-hashes<sup class="fn">2<span class="fn-text">On non-Unix systems, 
+crypt() is provided by the NetBSD library. The license header is added 
+at the end of this document.</span></sup> and FreeBSD compatible MD5 
+hashes (all platforms). MD5 hashes start with the magic sequence <code>$1$</code>, 
+followed by an up to 8 character <em>salt</em>. DES hashes start with a 
+2 character
+<em>salt</em>. Note that a DES hash considers only the first 8 
+characters. The MD5 considers the whole string.
+
+<p>Salt and algorithm can be forced by instantiating the start of
+<var>Encrypted</var> with it. This is typically used to force MD5 
+hashes:
+
+<pre class="code">
+?- phrase("$1$", E, _),
+   crypt("My password", E),
+   format('~s~n', [E]).
+
+$1$qdaDeDZn$ZUxSQEESEHIDCHPNc3fxZ1
+</pre>
+
+<p><var>Encrypted</var> is always a list of ASCII character codes. <var>Plain</var> 
+only supports ISO-Latin-1 passwords in the current implementation.
+
+<p><var>Plain</var> is either an atom, SWI-Prolog string, list of 
+characters or list of character-codes. It is not advised to use atoms, 
+as this implies the password will be available from the Prolog heap as a 
+defined atom.
+
+<p><b>NOTE</b>: <a id="idx:crypt2:17"></a><a class="pred" href="#crypt/2">crypt/2</a> 
+provides an interface to the Unix password hashing API. Above we already 
+introduced support for classical DES and MD5 hashes, both hashes that 
+are considered <em>insecure</em> by today's standards.<sup class="fn">3<span class="fn-text"><em>Insecure</em> 
+means that the password can realistically be derived from the password 
+hash using a brute-force attack. This implies that leaking the password 
+database is an immediate security risk.</span></sup> The crypt() API of 
+modern Unix systems typically support more secure hashes. Using <a id="idx:crypt2:18"></a><a class="pred" href="#crypt/2">crypt/2</a> 
+is suitable if compatibility with OS passwords is required. If strong 
+hashes and platform independence are important to you, use <a id="idx:cryptopasswordhash2:19"></a><span class="pred-ext">crypto_password_hash/2</span> 
+provided by library
+<code>library(crypto)</code> from the
+<a class="url" href="http://www.swi-prolog.org/pldoc/package/ssl.html">ssl&nbsp;package</a>.
+</dd>
+</dl>
+
+<p><h2 id="sec:uuid"><a id="sec:11"><span class="sec-nr">11</span> <span class="sec-title">library(uuid): 
+Universally Unique Identifier (UUID) Library</span></a></h2>
+
+<p><a id="sec:uuid"></a>
+
+<dl class="tags">
+<dt class="tag">See also</dt>
+<dd>
+<a class="url" href="http://www.ossp.org/pkg/lib/uuid/">http://www.ossp.org/pkg/lib/uuid/</a>
+</dd>
+<dt class="tag">To be done</dt>
+<dd>
+Compare UUIDs, extract time and version from UUIDs
+</dd>
+</dl>
+
+<p>The library provides operations on UUIDs. Please consult other 
+sources for understanding UUIDs and the implications of the different 
+UUID versions. Some typical calls are given below:
+
+<pre class="code">
+?- uuid(X).
+X = 'ea6589fa-19dd-11e2-8a49-001d92e1879d'.
+
+?- uuid(X, [url('http://www.swi-prolog.org')]).
+X = '73a07870-6a90-3f2e-ae2b-ffa538dc7c2c'.
+</pre>
+
+<dl class="latex">
+<dt class="pubdef"><span class="pred-tag">[det]</span><a id="uuid/1"><strong>uuid</strong>(<var>-UUID</var>)</a></dt>
+<dd class="defbody">
+<var>UUID</var> is an atom representing a new <var>UUID</var>. This is 
+the same as calling <code>uuid(UUID, [])</code>. See <a class="pred" href="#uuid/2">uuid/2</a> 
+for options.</dd>
+<dt class="pubdef"><span class="pred-tag">[det]</span><a id="uuid/2"><strong>uuid</strong>(<var>-UUID, 
++Options</var>)</a></dt>
+<dd class="defbody">
+Create a new <var>UUID</var> according to <var>Options</var>. The 
+following options are defined:
+
+<dl class="latex">
+<dt><strong>version</strong>(<var>+Versions</var>)</dt>
+<dd class="defbody">
+Integer in the range 1..5, which specifies the <var>UUID</var> version 
+that is created. Default is 1.
+</dd>
+<dt><strong>dns</strong>(<var>DNS</var>)</dt>
+<dt><strong>url</strong>(<var>URL</var>)</dt>
+<dt><strong>oid</strong>(<var>OID</var>)</dt>
+<dt><strong>x500</strong>(<var>X500</var>)</dt>
+<dd class="defbody">
+Provide additional context information for UUIDs using version 3 or 5. 
+If there is no explicit version option, <var>UUID</var> version 3 is 
+used.
+</dd>
+<dt><strong>format</strong>(<var>+Format</var>)</dt>
+<dd class="defbody">
+Representation of the <var>UUID</var>. Default is <code>atom</code>, 
+yielding atoms such as <code>8304efdd-bd6e-5b7c-a27f-83f3f05c64e0</code>. 
+The alternative is <code>integer</code>, returning a large integer that 
+represents the 128 bits of the <var>UUID</var>.
+</dd>
+</dl>
+
+</dd>
+</dl>
+
+<p><h2 id="sec:sha"><a id="sec:12"><span class="sec-nr">12</span> <span class="sec-title">SHA* 
+Secure Hash Algorithms</span></a></h2>
+
+<a id="sec:sha"></a>
+
+<p>The library <code>library(sha)</code> provides <em>Secure Hash 
+Algorihms</em> approved by FIPS (<em>Federal Information Processing 
+Standard</em>). Quoting
+<a class="url" href="http://en.wikipedia.org/wiki/SHA-1">Wikipedia</a>: <i> &ldquo;The 
+SHA (Secure Hash Algorithm) hash functions refer to five FIPS-approved 
+algorithms for computing a condensed digital representation (known as a 
+message digest) that is, to a high degree of probability, unique for a 
+given input data sequence (the message). These algorithms are called&lsquo;secure' 
+because (in the words of the standard), &ldquo;for a given algorithm, it 
+is computationally infeasible 1) to find a message that corresponds to a 
+given message digest, or 2) to find two different messages that produce 
+the same message digest. Any change to a message will, with a very high 
+probability, result in a different message digest.''</i>
+
+<p>The current library supports all 5 approved algorithms, both 
+computing the hash-key from data and the <em>hash Message Authentication 
+Code</em> (HMAC).
+
+<p>A general secure hash interface is provided by <code>library(crypto)</code>, 
+part of the <a class="url" href="http://www.swi-prolog.org/pldoc/package/ssl.html">ssl&nbsp;package</a>.
+
+<p>Input is text, represented as an atom, packed string object or 
+code-list. Note that these functions operate on byte-sequences and 
+therefore are not meaningful on Unicode text. The result is returned as 
+a list of byte-values. This is the most general format that is 
+comfortable supported by standard Prolog and can easily be transformed 
+in other formats. Commonly used text formats are ASCII created by 
+encoding each byte as two hexadecimal digits and ASCII created using
+<em>base64</em> encoding. Representation as a large integer can be 
+desirable for computational processing.
+
+<dl class="latex">
+<dt class="pubdef"><a id="sha_hash/3"><strong>sha_hash</strong>(<var>+Data, 
+-Hash, +Options</var>)</a></dt>
+<dd class="defbody">
+Hash is the SHA hash of Data. <var>Data</var> is either an atom, packed 
+string or list of character codes. <var>Hash</var> is unified with a 
+list of bytes (integers in the range 0..255) representing the hash. See
+<a id="idx:hashatom2:20"></a><a class="pred" href="#hash_atom/2">hash_atom/2</a> 
+to convert this into the more commonly seen hexadecimal representation. 
+The conversion is controlled by Options:
+
+<dl class="latex">
+<dt><strong>algorithm</strong>(<var>+Algorithm</var>)</dt>
+<dd class="defbody">
+One of <code>sha1</code> (default), <code>sha224</code>, <code>sha256</code>,
+<code>sha384</code> or <code>sha512</code>
+</dd>
+<dt><strong>encoding</strong>(<var>+Encoding</var>)</dt>
+<dd class="defbody">
+This option defines the mapping from Prolog (Unicode) text to bytes on 
+which the SHA algorithm is performed. It has two values. The defualt is <code>utf8</code>, 
+which implies that Unicode text is encoded as UTF-8 bytes. This option 
+can deal with any atom. The alternative is
+<code>octet</code>, which implies that the text is considered as a 
+sequence of bytes. This is suitable for e.g., atoms that represent 
+binary data. An error is raised if the text contains code-points outside 
+the range 0..255.
+</dd>
+</dl>
+
+</dd>
+<dt class="pubdef"><a id="hmac_sha/4"><strong>hmac_sha</strong>(<var>+Key, 
++Data, -HMAC, +Options</var>)</a></dt>
+<dd class="defbody">
+Quoting <a class="url" href="http://en.wikipedia.org/wiki/HMAC">Wikipedia</a>:
+<i> &ldquo;A keyed-hash message authentication code, or HMAC, is a type 
+of message authentication code (MAC) calculated using a cryptographic 
+hash function in combination with a secret key. As with any MAC, it may 
+be used to simultaneously verify both the data integrity and the 
+authenticity of a message. Any iterative cryptographic hash function, 
+such as MD5 or SHA-1, may be used in the calculation of an HMAC; the 
+resulting MAC algorithm is termed HMAC-MD5 or HMAC-SHA-1 accordingly. 
+The cryptographic strength of the HMAC depends upon the cryptographic 
+strength of the underlying hash function, on the size and quality of the 
+key and the size of the hash output length in bits.''</i>
+
+<p><var>Key</var> and <var>Data</var> are either an atom, packed string 
+or list of character codes. <var>HMAC</var> is unified with a list of 
+integers representing the authentication code. <var>Options</var> is the 
+same as for
+<a id="idx:shahash3:21"></a><a class="pred" href="#sha_hash/3">sha_hash/3</a>, 
+but currently only <code>sha1</code> and <code>sha256</code> are 
+supported.</dd>
+<dt class="pubdef"><a id="hash_atom/2"><strong>hash_atom</strong>(<var>+Hash, 
+-HexAtom</var>)</a></dt>
+<dd class="defbody">
+True when <var>HexAtom</var> is the commonly used hexadecimal encoding 
+of the hash code. E.g.,
+
+<pre class="code">
+?- sha_hash('SWI-Prolog', Hash, []),
+   hash_atom(Hash, Hex).
+Hash = [61, 128, 252, 38, 121, 69, 229, 85, 199|...],
+Hex = '3d80fc267945e555c730403bd0ab0716e2a68c68'.
+</pre>
+
+<p></dd>
+</dl>
+
+<p><h3 id="sec:sha-license"><a id="sec:12.1"><span class="sec-nr">12.1</span> <span class="sec-title">License 
+terms</span></a></h3>
+
+<a id="sec:sha-license"></a>
+
+<p>The underlying SHA-2 library is an unmodified copy created by Dr 
+Brian Gladman, Worcester, UK. It is distributed under the license 
+conditions below.
+
+<p>The free distribution and use of this software in both source and 
+binary form is allowed (with or without changes) provided that:
+
+<p>
+<ol class="latex">
+<li>distributions of this source code include the above copyright 
+notice, this list of conditions and the following disclaimer;
+
+<p>
+<li>distributions in binary form include the above copyright notice, 
+this list of conditions and the following disclaimer in the 
+documentation and/or other associated materials;
+
+<p>
+<li>the copyright holder's name is not used to endorse products built 
+using this software without specific written permission.
+</ol>
+
+<p>ALTERNATIVELY, provided that this notice is retained in full, this 
+product may be distributed under the terms of the GNU General Public 
+License (GPL), in which case the provisions of the GPL apply INSTEAD OF 
+those given above.
+
+<p><h2 id="sec:md5"><a id="sec:13"><span class="sec-nr">13</span> <span class="sec-title">library(md5): 
+MD5 hashes</span></a></h2>
+
+<p><a id="sec:md5"></a>
+
+<dl class="tags">
+<dt class="tag">See also</dt>
+<dd>
+<code>library(sha)</code>, <code>library(hash_stream)</code> and <code>library(crypto)</code>.
+</dd>
+</dl>
+
+<p>Compute MD5 hashes from a Prolog string. This library provides a 
+lightweight alternative to the general secure hash interface provided by
+<code>library(crypto)</code> from the <code>ssl</code> package.
+
+<dl class="latex">
+<dt class="pubdef"><span class="pred-tag">[det]</span><a id="md5_hash/3"><strong>md5_hash</strong>(<var>+Data, 
+-Hash, +Options</var>)</a></dt>
+<dd class="defbody">
+<var>Hash</var> is the MD5 hash of <var>Data</var>, The conversion is 
+controlled by
+<var>Options</var>:
+
+<dl class="latex">
+<dt><strong>encoding</strong>(<var>+Encoding</var>)</dt>
+<dd class="defbody">
+If <var>Data</var> is a sequence of character <i>codes</i>, this must be 
+translated into a sequence of <i>bytes</i>, because that is what the 
+hashing requires. The default encoding is <code>utf8</code>. The other 
+meaningful value is <code>octet</code>, claiming that <var>Data</var> 
+contains raw bytes.
+</dd>
+</dl>
+
+<table class="arglist">
+<tr><td><var>Data</var> </td><td>is either an atom, string, code-list or 
+char-list. </td></tr>
+<tr><td><var>Hash</var> </td><td>is an atom holding 32 characters, 
+representing the hash in hexadecimal notation </td></tr>
+</table>
+</dd>
+</dl>
+
+<p><h2 id="sec:hashstream"><a id="sec:14"><span class="sec-nr">14</span> <span class="sec-title">library(hash_stream): 
+Maintain a hash on a stream</span></a></h2>
+
+<p><a id="sec:hashstream"></a>
+
+<dl class="tags">
+<dt class="tag">See also</dt>
+<dd>
+In addition to this hash library, SWI-Prolog provides
+<code>library(md5)</code>, <code>library(sha)</code> and hash functions 
+through
+<code>library(crypto)</code>, part of the <code>ssl</code> package.
+</dd>
+</dl>
+
+<p>This library defines a filter stream that maintains a hash of the 
+data that passes through the stream. It can be used to compute the hash 
+of input data while it is being processed. This is notably interesting 
+if data is processed from a socket as it avoids the need for collecting 
+the data first in a temporary file.
+
+<p>A typical processing sequence is illustrated below, where <span class="pred-ext">process/2</span> 
+somehow processed the data and <span class="pred-ext">save_result/3</span> 
+records the result as obtained from <var>URL</var> with content digest <var>SHA256</var> 
+its <var>Result</var>.
+
+<pre class="code">
+    ...,
+    http_open(URL, In0, []),
+    open_hash_stream(In0, In, [algorithm(sha256)]),
+    process(In, Result),
+    stream_hash(In, SHA256),
+    close(In),
+    save_result(URL, SHA256, Result)
+</pre>
+
+<p>This library can also be used to compute the hash for the content of 
+a file. The advantage is that this code doesn't rely on external tools. 
+It is considerably faster for short files, but considerably slower on 
+large files because Prolog I/O is based on character streams rather than 
+blocks.
+
+<pre class="code">
+file_hash(Algorithm, File, Hash) :-
+    setup_call_cleanup(
+        open(File, read, In0, [type(binary)]),
+        setup_call_cleanup(
+            open_hash_stream(In0, In,
+                             [ algorithm(Algorithm),
+                               close_parent(false)
+                             ]),
+            ( setup_call_cleanup(
+                  open_null_stream(Null),
+                  copy_stream_data(In, Null),
+                  close(Null)),
+              stream_hash(In, Hash)
+            ),
+            close(In)),
+        close(In0)).
+</pre>
+
+<dl class="latex">
+<dt class="pubdef"><span class="pred-tag">[det]</span><a id="open_hash_stream/3"><strong>open_hash_stream</strong>(<var>+OrgStream, 
+-HashStream, +Options</var>)</a></dt>
+<dd class="defbody">
+Open a filter stream on <var>OrgStream</var> that maintains a hash. The 
+hash can be retrieved at any time using <a class="pred" href="#stream_hash/2">stream_hash/2</a>. 
+Provided options:
+
+<dl class="latex">
+<dt><strong>algorithm</strong>(<var>+Algorithm</var>)</dt>
+<dd class="defbody">
+One of <code>md5</code>, <code>sha1</code>, <code>sha224</code>, <code>sha256</code>, <code>sha384</code> 
+or
+<code>sha512</code>. Default is <code>sha1</code>.
+</dd>
+<dt><strong>close_parent</strong>(<var>+Bool</var>)</dt>
+<dd class="defbody">
+If <code>true</code> (default), closing the filter stream also closes 
+the original (parent) stream.
+</dd>
+</dl>
+
+</dd>
+<dt class="pubdef"><span class="pred-tag">[det]</span><a id="stream_hash/2"><strong>stream_hash</strong>(<var>+HashStream, 
+-Digest:atom</var>)</a></dt>
+<dd class="defbody">
+Unify <var>Digest</var> with a hash for the bytes send to or read from
+<var>HashStream</var>. Note that the hash is computed on the stream 
+buffers. If the stream is an output stream, it is first flushed and the <var>Digest</var> 
+represents the hash at the current location. If the stream is an input 
+stream the <var>Digest</var> represents the hash of the processed input 
+including the already buffered data.
+</dd>
+</dl>
+
+<p><h2 id="sec:memory-files"><a id="sec:15"><span class="sec-nr">15</span> <span class="sec-title">Memory 
+files</span></a></h2>
+
+<a id="sec:memory-files"></a>
+
+<p>The <code>library(memfile)</code> provides an alternative to 
+temporary files, intended for temporary buffering of data. Memory files 
+in general are faster than temporary files and do not suffer from 
+security risks or naming conflicts associated with temporary-file 
+management.
+
+<p>There is no limit to the number of memory streams, nor the size of 
+them. However, a single memory file cannot have multiple streams at the 
+same time, i.e., a memory file cannot be opened multiple times, not even 
+for reading. Memory files are thread-safe and subject to (atom) garbage 
+collection.
+
+<p>These predicates are first of all intended for building higher-level 
+primitives such as <a id="idx:opencodesstream3:22"></a><span class="pred-ext">open_codes_stream/3</span>. 
+See also <a id="idx:format3:23"></a><span class="pred-ext">format/3</span>,
+<a id="idx:atomtoterm3:24"></a><span class="pred-ext">atom_to_term/3</span>, <a id="idx:termtoatom2:25"></a><span class="pred-ext">term_to_atom/2</span>, <a id="idx:termstring2:26"></a><span class="pred-ext">term_string/2</span>, 
+etc.
+
+<dl class="latex">
+<dt class="pubdef"><a id="new_memory_file/1"><strong>new_memory_file</strong>(<var>-Handle</var>)</a></dt>
+<dd class="defbody">
+Create a new memory file and return a unique opaque handle to it.</dd>
+<dt class="pubdef"><a id="free_memory_file/1"><strong>free_memory_file</strong>(<var>+Handle</var>)</a></dt>
+<dd class="defbody">
+Discard the memory file and its contents. If the file is open it is 
+first closed.</dd>
+<dt class="pubdef"><a id="open_memory_file/3"><strong>open_memory_file</strong>(<var>+Handle, 
++Mode, -Stream</var>)</a></dt>
+<dd class="defbody">
+Open the memory-file. <var>Mode</var> is one of <code>read</code>, <code>write</code>,
+<code>append</code>, <code>update</code> or <code>insert</code>. The 
+resulting
+<var>Stream</var> must be closed using <a id="idx:close1:27"></a><span class="pred-ext">close/1</span>. 
+When opened for
+<code>update</code> or <code>insert</code>, the current location is 
+initialized at the start of the data and can be modified using <a id="idx:seek2:28"></a><span class="pred-ext">seek/2</span> 
+or
+<a id="idx:setstreamposition2:29"></a><span class="pred-ext">set_stream_position/2</span>. 
+In <code>update</code> mode, existing content is replaced, while the 
+size is enlarged after hitting the end of the data. In <code>insert</code> 
+mode, the new data is inserted at the current point.</dd>
+<dt class="pubdef"><a id="open_memory_file/4"><strong>open_memory_file</strong>(<var>+Handle, 
++Mode, -Stream, +Options</var>)</a></dt>
+<dd class="defbody">
+Open a memory-file as <a id="idx:openmemoryfile3:30"></a><a class="pred" href="#open_memory_file/3">open_memory_file/3</a>. 
+Options:
+
+<dl class="latex">
+<dt><strong>encoding</strong>(<var>+Encoding</var>)</dt>
+<dd class="defbody">
+Set the encoding for a memory file and the created stream. Encoding 
+names are the same as used with <a id="idx:open4:31"></a><span class="pred-ext">open/4</span>. 
+By default, memoryfiles represent UTF-8 streams, making them capable of 
+storing arbitrary Unicode text. In practice the only alternative is <code>octet</code>, 
+turning the memoryfile into binary mode. Please study SWI-Prolog Unicode 
+and encoding issues before using this option.
+</dd>
+<dt><strong>free_on_close</strong>(<var>+Bool</var>)</dt>
+<dd class="defbody">
+If <code>true</code> (default <code>false</code> and the memory file is 
+opened for reading, discard the file (see <a id="idx:freememoryfile1:32"></a><a class="pred" href="#free_memory_file/1">free_memory_file/1</a>) 
+if the input is closed. This is used to realise <a id="idx:opencharsstream2:33"></a><span class="pred-ext">open_chars_stream/2</span> 
+in library(charsio).
+</dd>
+</dl>
+
+</dd>
+<dt class="pubdef"><a id="size_memory_file/2"><strong>size_memory_file</strong>(<var>+Handle, 
+-Size</var>)</a></dt>
+<dd class="defbody">
+Return the content-length of the memory-file in characters in the 
+current encoding of the memory file. The file should be closed and 
+contain data.</dd>
+<dt class="pubdef"><a id="size_memory_file/3"><strong>size_memory_file</strong>(<var>+Handle, 
+-Size, +Encoding</var>)</a></dt>
+<dd class="defbody">
+Return the content-length of the memory-file in characters in the given
+<var>Encoding</var>. The file should be closed and contain data.</dd>
+<dt class="pubdef"><a id="atom_to_memory_file/2"><strong>atom_to_memory_file</strong>(<var>+Atom, 
+-Handle</var>)</a></dt>
+<dd class="defbody">
+Turn an atom into a read-only memory-file containing the (shared) 
+characters of the atom. Opening this memory-file in mode <code>write</code> 
+yields a permission error.</dd>
+<dt class="pubdef"><a id="insert_memory_file/3"><strong>insert_memory_file</strong>(<var>+Handle, 
++Offset, +Data</var>)</a></dt>
+<dd class="defbody">
+Insert <var>Data</var> into the memory file at location <var>Offset</var>. 
+The offset is specified in characters. <var>Data</var> can be an atom, 
+string, code or character list. Other terms are first serialized using <a id="idx:writeq1:34"></a><span class="pred-ext">writeq/1</span>. 
+This predicate raises a domain_error exception if <var>Offset</var> is 
+out of range and a permission_error if the memory file is read-only or 
+opened.</dd>
+<dt class="pubdef"><a id="delete_memory_file/3"><strong>delete_memory_file</strong>(<var>+Handle, 
++Offset, +Length</var>)</a></dt>
+<dd class="defbody">
+Delete a <var>Length</var> characters from the memory file, starting at
+<var>Offset</var>. This predicate raises a domain_error exception if
+<var>Offset</var> or <var>Offset+Length</var> is out of range and a 
+permission_error if the memory file is read-only or opened.</dd>
+<dt class="pubdef"><a id="memory_file_to_atom/2"><strong>memory_file_to_atom</strong>(<var>+Handle, 
+-Atom</var>)</a></dt>
+<dd class="defbody">
+Return the content of the memory-file in <var>Atom</var>.</dd>
+<dt class="pubdef"><a id="memory_file_to_atom/3"><strong>memory_file_to_atom</strong>(<var>+Handle, 
+-Atom, +Encoding</var>)</a></dt>
+<dd class="defbody">
+Return the content of the memory-file in <var>Atom</var>, pretending the 
+data is in the given <var>Encoding</var>. This can be used to convert 
+from one encoding into another, typically from/to bytes. For example, if 
+we must convert a set of bytes that contain text in UTF-8, open the 
+memory file as octet stream, fill it, and get the result using <var>Encoding</var> 
+is <code>utf8</code>.</dd>
+<dt class="pubdef"><a id="memory_file_to_codes/2"><strong>memory_file_to_codes</strong>(<var>+Handle, 
+-Codes</var>)</a></dt>
+<dd class="defbody">
+Return the content of the memory-file as a list of character-codes in <var>Codes</var>.</dd>
+<dt class="pubdef"><a id="memory_file_to_codes/3"><strong>memory_file_to_codes</strong>(<var>+Handle, 
+-Codes, +Encoding</var>)</a></dt>
+<dd class="defbody">
+Return the content of the memory-file as a list of character-codes in <var>Codes</var>, 
+pretending the data is in the given <var>Encoding</var>.</dd>
+<dt class="pubdef"><a id="memory_file_to_string/2"><strong>memory_file_to_string</strong>(<var>+Handle, 
+-String</var>)</a></dt>
+<dd class="defbody">
+Return the content of the memory-file as a string in <var>-String</var>.</dd>
+<dt class="pubdef"><a id="memory_file_to_string/3"><strong>memory_file_to_string</strong>(<var>+Handle, 
+-String, +Encoding</var>)</a></dt>
+<dd class="defbody">
+Return the content of the memory-file as a string in <var>String</var>, 
+pretending the data is in the given <var>Encoding</var>.</dd>
+<dt class="pubdef"><a id="memory_file_substring/5"><strong>memory_file_substring</strong>(<var>+Handle, 
+?Before, ?Length, ?After, -SubString</var>)</a></dt>
+<dd class="defbody">
+<var>SubString</var> is a substring of the memory file. There are
+<var>Before</var> characters in the memory file before <var>SubString</var>,
+<var>SubString</var> contains <var>Length</var> character and is 
+followed by
+<var>After</var> characters in the memory file. The signature is the 
+same as
+<a id="idx:substring5:35"></a><span class="pred-ext">sub_string/5</span> 
+and <a id="idx:subatom5:36"></a><span class="pred-ext">sub_atom/5</span>, 
+but currently at least two of the 3 position arguments must be 
+specified. Future versions might implement the full functionality of <a id="idx:substring5:37"></a><span class="pred-ext">sub_string/5</span>.</dd>
+<dt class="pubdef"><a id="memory_file_line_position/4"><strong>memory_file_line_position</strong>(<var>+MF, 
+?Line, ?LinePos, ?Offset</var>)</a></dt>
+<dd class="defbody">
+True if the character offset <var>Offset</var> corresponds with the
+<var>LinePos</var> character on line <var>Line</var>. Lines are counted 
+from one (1). Note that <var>LinePos</var> is <em>not</em> the <em>column</em> 
+as each character counts for one, including backspace and tab.
+</dd>
+</dl>
+
+<p><h2 id="sec:time-and-alarm"><a id="sec:16"><span class="sec-nr">16</span> <span class="sec-title">Time 
+and alarm library</span></a></h2>
+
+<a id="sec:time-and-alarm"></a>
+
+<p>This library is not available if SWI-Prolog is compiled without 
+support for multiple threads.
+
+<p>The <code>library(time)</code> provides timing and alarm functions. 
+Alarms are thread-specific, i.e., creating an alarm causes the alarm 
+goal to be called in the thread that created it. The predicate <a id="idx:currentalarm4:38"></a><a class="pred" href="#current_alarm/4">current_alarm/4</a> 
+only reports alarms that are related to the calling thread. If a thread 
+terminates, all remaining alarms are silently removed. Most applications 
+use <a id="idx:callwithtimelimit2:39"></a><a class="pred" href="#call_with_time_limit/2">call_with_time_limit/2</a>.
+
+<dl class="latex">
+<dt class="pubdef"><a id="alarm/4"><strong>alarm</strong>(<var>+Time, 
+:Callable, -Id, +Options</var>)</a></dt>
+<dd class="defbody">
+Schedule <var>Callable</var> to be called <var>Time</var> seconds from 
+now.
+<var>Time</var> is a number (integer or float). <var>Callable</var> is 
+called on the next pass through a call- or redo-port of the Prolog 
+engine, or a call to the <b>PL_handle_signals()</b> routine from 
+SWI-Prolog. <var>Id</var> is unified with a reference to the timer.
+
+<p>The resolution of the alarm depends on the underlying implementation, 
+which is based on pthread_cond_timedwait() (on Windows on the pthread 
+emulation thereof). Long-running foreign predicates that do not call
+<b>PL_handle_signals()</b> may further delay the alarm. The relation to 
+blocking system calls (sleep, reading from slow devices, etc.) is 
+undefined and varies between implementations.
+
+<p><var>Options</var> is a list of <code><var>Name</var>(Value)</code> 
+terms. Defined options are:
+
+<dl class="latex">
+<dt><strong>remove</strong>(<var>Bool</var>)</dt>
+<dd class="defbody">
+If <code>true</code> (default <code>false</code>), the timer is removed 
+automatically after fireing. Otherwise it must be destroyed explicitly 
+using <a id="idx:removealarm1:40"></a><a class="pred" href="#remove_alarm/1">remove_alarm/1</a>.
+</dd>
+<dt><strong>install</strong>(<var>Bool</var>)</dt>
+<dd class="defbody">
+If <code>false</code> (default <code>true</code>), the timer is 
+allocated but not scheduled for execution. It must be started later 
+using <a id="idx:installalarm1:41"></a><a class="pred" href="#install_alarm/1">install_alarm/1</a>.
+</dd>
+</dl>
+
+</dd>
+<dt class="pubdef"><a id="alarm/3"><strong>alarm</strong>(<var>+Time, 
+:Callable, -Id</var>)</a></dt>
+<dd class="defbody">
+Same as <code>alarm(Time, Callable, Id,[])</code>.</dd>
+<dt class="pubdef"><a id="alarm_at/4"><strong>alarm_at</strong>(<var>+Time, 
+:Callable, -Id, +Options</var>)</a></dt>
+<dd class="defbody">
+as <a id="idx:alarm3:42"></a><a class="pred" href="#alarm/3">alarm/3</a>, 
+but <var>Time</var> is the specification of an absolute point in time. 
+Absolute times are specified in seconds after the Jan 1, 1970 epoch. See 
+also <a id="idx:datetimestamp2:43"></a><span class="pred-ext">date_time_stamp/2</span>.</dd>
+<dt class="pubdef"><a id="install_alarm/1"><strong>install_alarm</strong>(<var>+Id</var>)</a></dt>
+<dd class="defbody">
+Activate an alarm allocated using <a id="idx:alarm4:44"></a><a class="pred" href="#alarm/4">alarm/4</a> 
+with the option
+<code>install(false)</code> or stopped using <a id="idx:uninstallalarm1:45"></a><a class="pred" href="#uninstall_alarm/1">uninstall_alarm/1</a>.</dd>
+<dt class="pubdef"><a id="install_alarm/2"><strong>install_alarm</strong>(<var>+Id, 
++Time</var>)</a></dt>
+<dd class="defbody">
+As <a id="idx:installalarm1:46"></a><a class="pred" href="#install_alarm/1">install_alarm/1</a>, 
+but specifies a new (relative) timeout value.</dd>
+<dt class="pubdef"><a id="uninstall_alarm/1"><strong>uninstall_alarm</strong>(<var>+Id</var>)</a></dt>
+<dd class="defbody">
+Deactivate a running alarm, but do not invalidate the alarm identifier. 
+Later, the alarm can be reactivated using either <a id="idx:installalarm1:47"></a><a class="pred" href="#install_alarm/1">install_alarm/1</a> 
+or
+<a id="idx:installalarm2:48"></a><a class="pred" href="#install_alarm/2">install_alarm/2</a>. 
+Reinstalled using <a id="idx:installalarm1:49"></a><a class="pred" href="#install_alarm/1">install_alarm/1</a>, 
+it will fire at the originally scheduled time. Reinstalled using <a id="idx:installalarm2:50"></a><a class="pred" href="#install_alarm/2">install_alarm/2</a> 
+causes the alarm to fire at the specified time from now.</dd>
+<dt class="pubdef"><a id="remove_alarm/1"><strong>remove_alarm</strong>(<var>+Id</var>)</a></dt>
+<dd class="defbody">
+Remove an alarm. If it is not yet fired, it will not be fired any more.</dd>
+<dt class="pubdef"><a id="current_alarm/4"><strong>current_alarm</strong>(<var>?At, 
+?:Callable, ?Id, ?Status</var>)</a></dt>
+<dd class="defbody">
+Enumerate the not-yet-removed alarms. <var>Status</var> is one of
+<code>done</code> if the alarm has been called, <code>next</code> if it 
+is the next to be fired and <var>scheduled</var> otherwise.</dd>
+<dt class="pubdef"><a id="call_with_time_limit/2"><strong>call_with_time_limit</strong>(<var>+Time, 
+:Goal</var>)</a></dt>
+<dd class="defbody">
+True if <var>Goal</var> completes within <var>Time</var> seconds. <var>Goal</var> 
+is executed as in <a id="idx:once1:51"></a><span class="pred-ext">once/1</span>. 
+If <var>Goal</var> doesn't complete within <var>Time</var> seconds (wall 
+time), exit using the exception
+<code>time_limit_exceeded</code>. See <a id="idx:catch3:52"></a><span class="pred-ext">catch/3</span>.
+
+<p>Please note that this predicate uses <a id="idx:alarm4:53"></a><a class="pred" href="#alarm/4">alarm/4</a> 
+and therefore its effect on long-running foreign code and system calls 
+is undefined. Blocking I/O can be handled using the timeout option of <a id="idx:setstream2:54"></a><span class="pred-ext">set_stream/2</span> 
+or waiting for input using <a id="idx:waitforinput3:55"></a><span class="pred-ext">wait_for_input/3</span>.
+</dd>
+</dl>
+
+<p><h2 id="sec:unix"><a id="sec:17"><span class="sec-nr">17</span> <span class="sec-title">library(unix): 
+Unix specific operations</span></a></h2>
+
+<p><a id="sec:unix"></a>
+
+<dl class="tags">
+<dt class="tag">See also</dt>
+<dd>
+<code>library(process)</code> provides a portable high level interface 
+to create and manage processes.
+</dd>
+</dl>
+
+<p>The <code>library(unix)</code> library provides the commonly used 
+Unix primitives to deal with process management. These primitives are 
+useful for many tasks, including server management, parallel 
+computation, exploiting and controlling other processes, etc.
+
+<p>The predicates in this library are modelled closely after their 
+native Unix counterparts.
+
+<dl class="latex">
+<dt class="pubdef"><span class="pred-tag">[det]</span><a id="fork/1"><strong>fork</strong>(<var>-Pid</var>)</a></dt>
+<dd class="defbody">
+Clone the current process into two branches. In the child, <var>Pid</var> 
+is unified to child. In the original process, <var>Pid</var> is unified 
+to the process identifier of the created child. Both parent and child 
+are fully functional Prolog processes running the same program. The 
+processes share open I/O streams that refer to Unix native streams, such 
+as files, sockets and pipes. Data is not shared, though on most Unix 
+systems data is initially shared and duplicated only if one of the 
+programs attempts to modify the data.
+
+<p>Unix <code>fork()</code> is the only way to create new processes and <a class="pred" href="#fork/1">fork/1</a> 
+is a simple direct interface to it.
+
+<dl class="tags">
+<dt class="tag">Errors</dt>
+<dd>
+<code>permission_error(fork, process, main)</code> is raised if the 
+calling thread is not the only thread in the process. Forking a Prolog 
+process with threads will typically deadlock because only the calling 
+thread is cloned in the fork, while all thread synchronization are 
+cloned.
+</dd>
+</dl>
+
+</dd>
+<dt class="pubdef"><span class="pred-tag">[det]</span><a id="fork_exec/1"><strong>fork_exec</strong>(<var>+Command</var>)</a></dt>
+<dd class="defbody">
+Fork (as <a class="pred" href="#fork/1">fork/1</a>) and exec (using <a class="pred" href="#exec/1">exec/1</a>) 
+the child immediately. This behaves as the code below, but bypasses the 
+check for the existence of other threads because this is a safe 
+scenario.
+
+<pre class="code">
+fork_exec(Command) :-
+      (   fork(child)
+      -&gt;  exec(Command)
+      ;   true
+      ).
+</pre>
+
+</dd>
+<dt class="pubdef"><a id="exec/1"><strong>exec</strong>(<var>+Command</var>)</a></dt>
+<dd class="defbody">
+Replace the running program by starting <var>Command</var>. <var>Command</var> 
+is a callable term. The functor is the command and the arguments provide 
+the command-line arguments for the command. Each command-line argument 
+must be atomic and is converted to a string before passed to the Unix 
+call <code>execvp()</code>. Here are some examples:
+
+<p>
+<ul class="compact">
+<li><code>exec(ls('-l'))</code>
+<li><code>exec('/bin/ls'('-l', '/home/jan'))</code>
+</ul>
+
+<p>Unix <code>exec()</code> is the only way to start an executable file 
+executing. It is commonly used together with <a class="pred" href="#fork/1">fork/1</a>. 
+For example to start netscape on an URL in the background, do:
+
+<pre class="code">
+run_netscape(URL) :-
+        (    fork(child),
+             exec(netscape(URL))
+        ;    true
+        ).
+</pre>
+
+<p>Using this code, netscape remains part of the process-group of the 
+invoking Prolog process and Prolog does not wait for netscape to 
+terminate. The predicate <a class="pred" href="#wait/2">wait/2</a> 
+allows waiting for a child, while <a class="pred" href="#detach_IO/0">detach_IO/0</a> 
+disconnects the child as a deamon process.</dd>
+<dt class="pubdef"><span class="pred-tag">[det]</span><a id="wait/2"><strong>wait</strong>(<var>?Pid, 
+-Status</var>)</a></dt>
+<dd class="defbody">
+Wait for a child to change status. Then report the child that changed 
+status as well as the reason. If <var>Pid</var> is bound on entry then 
+the status of the specified child is reported. If not, then the status 
+of any child is reported. <var>Status</var> is unified with
+<code>exited(ExitCode)</code> if the child with pid <var>Pid</var> was 
+terminated by calling <code>exit()</code> (Prolog <span class="pred-ext">halt/1</span>). 
+ExitCode is the return status.
+<var>Status</var> is unified with <code>signaled(Signal)</code> if the 
+child died due to a software interrupt (see <a class="pred" href="#kill/2">kill/2</a>). 
+Signal contains the signal number. Finally, if the process suspended 
+execution due to a signal, <var>Status</var> is unified with <code>stopped(Signal)</code>.</dd>
+<dt class="pubdef"><span class="pred-tag">[det]</span><a id="kill/2"><strong>kill</strong>(<var>+Pid, 
++Signal</var>)</a></dt>
+<dd class="defbody">
+Deliver a software interrupt to the process with identifier <var>Pid</var> 
+using software-interrupt number <var>Signal</var>. See also <span class="pred-ext">on_signal/2</span>. 
+Signals can be specified as an integer or signal name, where signal 
+names are derived from the C constant by dropping the
+<code>SIG</code> prefix and mapping to lowercase. E.g. <code>int</code> 
+is the same as
+<code>SIGINT</code> in C. The meaning of the signal numbers can be found 
+in the Unix manual.</dd>
+<dt class="pubdef"><span class="pred-tag">[det]</span><a id="pipe/2"><strong>pipe</strong>(<var>-InSream, 
+-OutStream</var>)</a></dt>
+<dd class="defbody">
+Create a communication-pipe. This is normally used to make a child 
+communicate to its parent. After <a class="pred" href="#pipe/2">pipe/2</a>, 
+the process is cloned and, depending on the desired direction, both 
+processes close the end of the pipe they do not use. Then they use the 
+remaining stream to communicate. Here is a simple example:
+
+<pre class="code">
+:- use_module(library(unix)).
+
+fork_demo(Result) :-
+        pipe(Read, Write),
+        fork(Pid),
+        (   Pid == child
+        -&gt;  close(Read),
+            format(Write, '~q.~n',
+                   [hello(world)]),
+            flush_output(Write),
+            halt
+        ;   close(Write),
+            read(Read, Result),
+            close(Read)
+        ).
+</pre>
+
+</dd>
+<dt class="pubdef"><span class="pred-tag">[det]</span><a id="dup/2"><strong>dup</strong>(<var>+FromStream, 
++ToStream</var>)</a></dt>
+<dd class="defbody">
+Interface to Unix <code>dup2()</code>, copying the underlying 
+filedescriptor and thus making both streams point to the same underlying 
+object. This is normally used together with <a class="pred" href="#fork/1">fork/1</a> 
+and <a class="pred" href="#pipe/2">pipe/2</a> to talk to an external 
+program that is designed to communicate using standard I/O.
+
+<p>Both <var>FromStream</var> and <var>ToStream</var> either refer to a 
+Prolog stream or an integer descriptor number to refer directly to OS 
+descriptors. See also <code>demo/pipe.pl</code> in the 
+source-distribution of this package.</dd>
+<dt class="pubdef"><span class="pred-tag">[det]</span><a id="detach_IO/1"><strong>detach_IO</strong>(<var>+Stream</var>)</a></dt>
+<dd class="defbody">
+This predicate is intended to create Unix <i>deamon</i> processes. It 
+performs two actions.
+
+<p>
+<ol class="latex">
+<li>The I/O streams <code>user_input</code>, <code>user_output</code> 
+and
+<code>user_error</code> are closed if they are connected to a terminal 
+(see <code>tty</code> property in <span class="pred-ext">stream_property/2</span>). 
+Input streams are rebound to a dummy stream that returns EOF. Output 
+streams are reboud to forward their output to <var>Stream</var>.
+<li>The process is detached from the current process-group and its 
+controlling terminal. This is achieved using <code>setsid()</code> if 
+provided or using <code>ioctl()</code> <code>TIOCNOTTY</code> on <code>/dev/tty</code>.
+</ol>
+
+<p>To ignore all output, it may be rebound to a null stream. For 
+example:
+
+<pre class="code">
+      ...,
+      open_null_stream(Out),
+      detach_IO(Out).
+</pre>
+
+<p>The <a class="pred" href="#detach_IO/1">detach_IO/1</a> should be 
+called only once per process. Subsequent calls silently succeed without 
+any side effects.
+
+<dl class="tags">
+<dt class="tag">See also</dt>
+<dd>
+<a class="pred" href="#detach_IO/0">detach_IO/0</a> and <code>library(syslog)</code>.
+</dd>
+</dl>
+
+</dd>
+<dt class="pubdef"><span class="pred-tag">[det]</span><a id="detach_IO/0"><strong>detach_IO</strong></a></dt>
+<dd class="defbody">
+Detach I/O similar to <a class="pred" href="#detach_IO/1">detach_IO/1</a>. 
+The output streams are bound to a file <code>/tmp/pl-out.&lt;pid&gt;</code>. 
+Output is line buffered (see
+<span class="pred-ext">set_stream/2</span>).
+
+<dl class="tags">
+<dt class="tag">See also</dt>
+<dd>
+<code>library(syslog)</code> allows for sending output to the Unix 
+logging service.
+</dd>
+<dt class="tag">Compatibility</dt>
+<dd>
+Older versions of this predicate only created this file if there was 
+output.
+</dd>
+</dl>
+
+</dd>
+<dt class="pubdef"><span class="pred-tag">[det]</span><a id="prctl/1"><strong>prctl</strong>(<var>+Option</var>)</a></dt>
+<dd class="defbody">
+Access to Linux process control operations. Defines values for
+<var>Option</var> are:
+
+<dl class="latex">
+<dt><strong>set_dumpable</strong>(<var>+Boolean</var>)</dt>
+<dd class="defbody">
+Control whether the process is allowed to dump core. This right is 
+dropped under several uid and gid conditions.
+</dd>
+<dt><strong>get_dumpable</strong>(<var>-Boolean</var>)</dt>
+<dd class="defbody">
+Get the value of the dumpable flag.
+</dd>
+</dl>
+
+</dd>
+<dt class="pubdef"><span class="pred-tag">[semidet]</span><a id="sysconf/1"><strong>sysconf</strong>(<var>+Conf</var>)</a></dt>
+<dd class="defbody">
+Access system configuration. See <code>sysconf(1)</code> for details. <var>Conf</var> 
+is a term Config(Value), where Value is always an integer. Config is the <code>sysconf()</code> 
+name after removing =_SC_= and conversion to lowercase. Currently 
+support the following configuration info:
+<code>arg_max</code>, <code>child_max</code>, <code>clk_tck</code>, <code>open_max</code>, <code>pagesize</code>,
+<code>phys_pages</code>, <code>avphys_pages</code>, <code>nprocessors_conf</code> 
+and
+<code>nprocessors_onln</code>. Note that not all values may be supported 
+on all operating systems.
+</dd>
+</dl>
+
+<p><h2 id="sec:limit-process-resources"><a id="sec:18"><span class="sec-nr">18</span> <span class="sec-title">Limiting 
+process resources</span></a></h2>
+
+<a id="sec:limit-process-resources"></a>
+
+<p>The <code>library(rlimit)</code> library provides an interface to the 
+POSIX getrlimit()/setrlimit() API that control the maximum 
+resource-usage of a process or group of processes. This call is 
+especially useful for servers such as CGI scripts and inetd-controlled 
+servers to avoid an uncontrolled script claiming too much resources.
+
+<dl class="latex">
+<dt class="pubdef"><a id="rlimit/3"><strong>rlimit</strong>(<var>+Resource, 
+-Old, +New</var>)</a></dt>
+<dd class="defbody">
+Query and/or set the limit for <var>Resource</var>. Time-values are in 
+seconds and size-values are counted in bytes. The following values are 
+supported by this library. Please note that not all resources may be 
+available and accessible on all platforms. This predicate can throw a 
+variety of exceptions. In portable code this should be guarded with <a id="idx:catch3:56"></a><span class="pred-ext">catch/3</span>. 
+The defined resources are:
+<blockquote>
+<table class="latex frame-void">
+<tr><td><code>as</code> </td><td>Max address space </td></tr>
+<tr><td><code>cpu</code> </td><td>CPU time in seconds </td></tr>
+<tr><td><code>fsize</code> </td><td>Maximum filesize </td></tr>
+<tr><td><code>data</code> </td><td>max data size </td></tr>
+<tr><td><code>stack</code> </td><td>max stack size </td></tr>
+<tr><td><code>core</code> </td><td>max core file size </td></tr>
+<tr><td><code>rss</code> </td><td>max resident set size </td></tr>
+<tr><td><code>nproc</code> </td><td>max number of processes </td></tr>
+<tr><td><code>nofile</code> </td><td>max number of open files </td></tr>
+<tr><td><code>memlock</code> </td><td>max locked-in-memory address </td></tr>
+</table>
+</blockquote>
+
+<p>When the process hits a limit POSIX systems normally send the process 
+a signal that terminates it. These signals may be caught using 
+SWI-Prolog's <a id="idx:onsignal3:57"></a><span class="pred-ext">on_signal/3</span> 
+primitive. The code below illustrates this behaviour. Please note that 
+asynchronous signal handling is dangerous, especially when using 
+threads. 100% fail-safe operation cannot be guaranteed, but this 
+procedure will inform the user properly&lsquo;most of the time'.
+
+<pre class="code">
+rlimit_demo :-
+        rlimit(cpu, _, 2),
+        on_signal(xcpu, _, cpu_exceeded),
+        ( repeat, fail ).
+
+cpu_exceeded(_Sig) :-
+        format(user_error, 'CPU time exceeded~n', []),
+        halt(1).
+</pre>
+
+<p></dd>
+</dl>
+
+<p><h2 id="sec:udpbroadcast"><a id="sec:19"><span class="sec-nr">19</span> <span class="sec-title">library(udp_broadcast): 
+A UDP broadcast proxy</span></a></h2>
+
+<p><a id="sec:udpbroadcast"></a>
+
+<dl class="tags">
+<dt class="tag">author</dt>
+<dd>
+Jeffrey Rosenwald (JeffRose@acm.org), Jan Wielemaker
+</dd>
+<dt class="tag">See also</dt>
+<dd>
+<code>tipc.pl</code>
+</dd>
+<dt class="tag">license</dt>
+<dd>
+BSD-2
+</dd>
+</dl>
+
+<p>SWI-Prolog's broadcast library provides a means that may be used to 
+facilitate publish and subscribe communication regimes between anonymous 
+members of a community of interest. The members of the community are 
+however, necessarily limited to a single instance of Prolog. The UDP 
+broadcast library removes that restriction. With this library loaded, 
+any member on your local IP subnetwork that also has this library loaded 
+may hear and respond to your broadcasts.
+
+<p>This library support three styles of networking as described below. 
+Each of these networks have their own advantages and disadvantages. 
+Please study the literature to understand the consequences.
+
+<dl class="latex">
+<dt><b>broadcast</b></dt>
+<dd>
+Broadcast messages are sent to the LAN subnet. The broadcast 
+implementation uses two UDP ports: a public to address the whole group 
+and a private one to address a specific node. Broadcasting is generally 
+a good choice if the subnet is small and traffic is low.
+</dd>
+<dt><b>unicast</b></dt>
+<dd>
+Unicast sends copies of packages to known peers. Unicast networks can 
+easily be routed. The unicast version uses a single UDP port per node. 
+Unicast is generally a good choice for a small party, in particular if 
+the peers are in different networks.
+</dd>
+<dt><b>multicast</b></dt>
+<dd>
+Multicast is like broadcast, but it can be configured to work accross 
+networks and may work more efficiently on VLAN networks. Like the 
+broadcast setup, two UDP ports are used. Multicasting can in general 
+deliver the most efficient LAN and WAN networks, but requires properly 
+configured routing between the peers.
+</dd>
+</dl>
+
+<p>After initialization and, in the case of a <i>unicast</i> network 
+managing the set of peers, communication happens through <span class="pred-ext">broadcast/1</span>,
+<span class="pred-ext">broadcast_request/1</span> and <span class="pred-ext">listen/1</span>,2,3.
+
+<p>A <span class="pred-ext">broadcast/1</span> or <span class="pred-ext">broadcast_request/1</span> 
+of the shape <code>udp(Scope, Term)</code> or
+<code>udp(Scope, Term, TimeOut)</code> is forwarded over the UDP network 
+to all peers that joined the same <var>Scope</var>. To prevent the 
+potential for feedback loops, only the plain <var>Term</var> is 
+broadcasted locally. The timeout is optional. It specifies the amount to 
+time to wait for replies to arrive in response to a <span class="pred-ext">broadcast_request/1</span>. 
+The default period is 0.250 seconds. The timeout is ignored for 
+broadcasts.
+
+<p>An example of three separate processes cooperating in the same <i>scope</i> 
+called <code>peers</code>:
+
+<pre class="code">
+Process A:
+
+   ?- listen(number(X), between(1, 5, X)).
+   true.
+
+   ?-
+
+Process B:
+
+   ?- listen(number(X), between(7, 9, X)).
+   true.
+
+   ?-
+
+Process C:
+
+   ?- findall(X, broadcast_request(udp(peers, number(X))), Xs).
+   Xs = [1, 2, 3, 4, 5, 7, 8, 9].
+
+   ?-
+</pre>
+
+<p>It is also possible to carry on a private dialog with a single 
+responder. To do this, you supply a compound of the form, Term:PortId, 
+to a UDP scoped <span class="pred-ext">broadcast/1</span> or <span class="pred-ext">broadcast_request/1</span>, 
+where PortId is the ip-address and port-id of the intended listener. If 
+you supply an unbound variable, PortId, to broadcast_request, it will be 
+unified with the address of the listener that responds to Term. You may 
+send a directed broadcast to a specific member by simply providing this 
+address in a similarly structured compound to a UDP scoped <span class="pred-ext">broadcast/1</span>. 
+The message is sent via unicast to that member only by way of the 
+member's broadcast listener. It is received by the listener just as any 
+other broadcast would be. The listener does not know the difference.
+
+<p>For example, in order to discover who responded with a particular 
+value:
+
+<pre class="code">
+Host B Process 1:
+
+   ?- listen(number(X), between(1, 5, X)).
+   true.
+
+   ?-
+
+Host A Process 1:
+
+
+   ?- listen(number(X), between(7, 9, X)).
+   true.
+
+   ?-
+
+Host A Process 2:
+
+   ?- listen(number(X), between(1, 5, X)).
+   true.
+
+   ?- bagof(X, broadcast_request(udp(peers,number(X):From,1)), Xs).
+   From = ip(192, 168, 1, 103):34855,
+   Xs = [7, 8, 9] ;
+   From = ip(192, 168, 1, 103):56331,
+   Xs = [1, 2, 3, 4, 5] ;
+   From = ip(192, 168, 1, 104):3217,
+   Xs = [1, 2, 3, 4, 5].
+</pre>
+
+<p>All incomming trafic is handled by a single thread with the alias
+<code>udp_inbound_proxy</code>. This thread also performs the internal 
+dispatching using <span class="pred-ext">broadcast/1</span> and <span class="pred-ext">broadcast_request/1</span>. 
+Future versions may provide for handling these requests in separate 
+threads.
+
+<p><h3 id="sec:udp-broadcase-caveats"><a id="sec:19.1"><span class="sec-nr">19.1</span> <span class="sec-title">Caveats</span></a></h3>
+
+<p><a id="sec:udp-broadcase-caveats"></a>
+
+<p>While the implementation is mostly transparent, there are some 
+important and subtle differences that must be taken into consideration:
+
+<p>
+<ul class="latex">
+<li>UDP broadcast requires an initialization step in order to launch the 
+broadcast listener proxy. See
+<a class="pred" href="#udp_broadcast_initialize/2">udp_broadcast_initialize/2</a>.
+<li>Prolog's <span class="pred-ext">broadcast_request/1</span> is 
+nondet. It sends the request, then evaluates the replies synchronously, 
+backtracking as needed until a satisfactory reply is received. The 
+remaining potential replies are not evaluated. With UDP, all peers will 
+send all answers to the query. The receiver may however stop listening.
+<li>A UDP <span class="pred-ext">broadcast/1</span> is completely 
+asynchronous.
+<li>A UDP <span class="pred-ext">broadcast_request/1</span> is partially 
+synchronous. A
+<span class="pred-ext">broadcast_request/1</span> is sent, then the 
+sender balks for a period of time (default: 250 ms) while the replies 
+are collected. Any reply that is received after this period is silently 
+discarded. A optional second argument is provided so that a sender may 
+specify more (or less) time for replies.
+<li>Replies are presented to the user as a choice point on arrival, 
+until the broadcast request timer finally expires. This allows traffic 
+to propagate through the system faster and provides the requestor with 
+the opportunity to terminate a broadcast request early if desired, by 
+simply cutting choice points.
+<li>Please beware that broadcast request transactions remain active and 
+resources consumed until broadcast_request finally fails on 
+backtracking, an uncaught exception occurs, or until choice points are 
+cut. Failure to properly manage this will likely result in chronic 
+exhaustion of UDP sockets.
+<li>If a listener is connected to a generator that always succeeds (e.g. 
+a random number generator), then the broadcast request will never 
+terminate and trouble is bound to ensue.
+<li><span class="pred-ext">broadcast_request/1</span> with <code>udp_subnet</code> 
+scope is <i>not</i> reentrant. If a listener performs a <span class="pred-ext">broadcast_request/1</span> 
+with UDP scope recursively, then disaster looms certain. This caveat 
+does not apply to a UDP scoped <span class="pred-ext">broadcast/1</span>, 
+which can safely be performed from a listener context.
+<li>UDP broadcast's capacity is not infinite. While it can tolerate 
+substantial bursts of activity, it is designed for short bursts of small 
+messages. Unlike TIPC, UDP is unreliable and has no QOS protections. 
+Congestion is likely to cause trouble in the form of non-Byzantine 
+failure. That is, late, lost (e.g. infinitely late), or duplicate 
+datagrams. Caveat emptor.
+<li>A UDP <span class="pred-ext">broadcast_request/1</span> term that is 
+grounded is considered to be a broadcast only. No replies are collected 
+unless the there is at least one unbound variable to unify.
+<li>A UDP <span class="pred-ext">broadcast/1</span> always succeeds, 
+even if there are no listeners.
+<li>A UDP <span class="pred-ext">broadcast_request/1</span> that 
+receives no replies will fail.
+<li>Replies may be coming from many different places in the network (or 
+none at all). No ordering of replies is implied.
+<li>Prolog terms are sent to others after first converting them to atoms 
+using <span class="pred-ext">term_string/3</span>. Serialization does 
+not deal with cycles, attributes or sharing. The hook <a class="pred" href="#udp_term_string_hook/3">udp_term_string_hook/3</a> 
+may be defined to change the message serialization and support different 
+message formats and/or encryption.
+<li>The broadcast model is based on anonymity and a presumption of 
+trust--a perfect recipe for compromise. UDP is an Internet protocol. A 
+UDP broadcast listener exposes a public port, which is static and shared 
+by all listeners, and a private port, which is semi-static and unique to 
+the listener instance. Both can be seen from off-cluster nodes and 
+networks. Usage of this module exposes the node and consequently, the 
+cluster to significant security risks. So have a care when designing 
+your application. You must talk only to those who share and contribute 
+to your concerns using a carefully prescribed protocol.
+<li>UDP broadcast categorically and silently ignores all message traffic 
+originating from or terminating on nodes that are not members of the 
+local subnet. This security measure only keeps honest people honest!
+</ul>
+
+<dl class="latex">
+<dt class="pubdef"><a id="udp_broadcast_close/1"><strong>udp_broadcast_close</strong>(<var>+Scope</var>)</a></dt>
+<dd class="defbody">
+Close a UDP broadcast scope.</dd>
+<dt class="pubdef"><span class="pred-tag">[semidet]</span><a id="udp_broadcast_initialize/2"><strong>udp_broadcast_initialize</strong>(<var>+IPAddress, 
++Options</var>)</a></dt>
+<dd class="defbody">
+Initialized UDP broadcast bridge. <var>IPAddress</var> is the IP address 
+on the network we want to broadcast on. IP addresses are terms <code>ip(A,B,C,D)</code> 
+or an atom or string of the format <code>A.B.C.D</code>. <var>Options</var> 
+processed:
+
+<dl class="latex">
+<dt><strong>scope</strong>(<var>+ScopeName</var>)</dt>
+<dd class="defbody">
+Name of the scope. Default is <code>subnet</code>.
+</dd>
+<dt><strong>subnet_mask</strong>(<var>+SubNet</var>)</dt>
+<dd class="defbody">
+Subnet to broadcast on. This uses the same syntax as <var>IPAddress</var>. 
+Default classifies the network as class A, B or C depending on the the 
+first octet and applies the default mask.
+</dd>
+<dt><strong>port</strong>(<var>+Port</var>)</dt>
+<dd class="defbody">
+Public port to use. Default is 20005.
+</dd>
+<dt><strong>method</strong>(<var>+Method</var>)</dt>
+<dd class="defbody">
+<var>Method</var> to send a message to multiple peers. One of
+
+<dl class="latex">
+<dt><strong>broadcast</strong></dt>
+<dd class="defbody">
+Use UDP broadcast messages to the LAN. This is the default
+</dd>
+<dt><strong>multicast</strong></dt>
+<dd class="defbody">
+Use UDP multicast messages. This can be used on WAN networks, provided 
+the intermediate routers understand multicast.
+</dd>
+<dt><strong>unicast</strong></dt>
+<dd class="defbody">
+Send the messages individually to all registered peers.
+</dd>
+</dl>
+
+</dd>
+</dl>
+
+<p>For compatibility reasons <var>Options</var> may be the subnet mask.</dd>
+<dt class="pubdef"><span class="pred-tag">[det]</span><a id="udp_peer_add/2"><strong>udp_peer_add</strong>(<var>+Scope, 
++Address</var>)</a></dt>
+<dt class="pubdef"><span class="pred-tag">[det]</span><a id="udp_peer_del/2"><strong>udp_peer_del</strong>(<var>+Scope, 
+?Address</var>)</a></dt>
+<dt class="pubdef"><span class="pred-tag">[nondet]</span><a id="udp_peer/2"><strong>udp_peer</strong>(<var>?Scope, 
+?Address</var>)</a></dt>
+<dd class="defbody">
+Manage and query the set of known peers for a unicast network.
+<var>Address</var> is either a term IP:Port or a plain IP address. In 
+the latter case the default port registered with the scope is used.
+<table class="arglist">
+<tr><td><var>Address</var> </td><td>has canonical form <code>ip(A,B,C,D)</code>:Port. </td></tr>
+</table>
+</dd>
+<dt class="multidef"><span class="pred-tag">[det,multifile]</span><a id="udp_term_string_hook/3"><strong>udp_term_string_hook</strong>(<var>+Scope, 
++Term, -String</var>)</a></dt>
+<dt class="multidef"><span class="pred-tag">[semidet,multifile]</span><a id="udp_term_string_hook/3"><strong>udp_term_string_hook</strong>(<var>+Scope, 
+-Term, +String</var>)</a></dt>
+<dd class="defbody">
+Hook for serializing the message <var>Term</var>. The default writes
+<code>%prolog\n</code>, followed by the Prolog term in quoted notation 
+while ignoring operators. This hook may use alternative serialization 
+such as <span class="pred-ext">fast_term_serialized/2</span>, use <code>library(ssl)</code> 
+to realise encrypted messages, etc.
+<table class="arglist">
+<tr><td><var>Scope</var> </td><td>is the scope for which the message is 
+broadcasted. This can be used to use different serialization for 
+different scopes. </td></tr>
+<tr><td><var>Term</var> </td><td>encapsulates the term broadcasted by 
+the application as follows:
+
+<dl class="latex">
+<dt><strong>send</strong>(<var>ApplTerm</var>)</dt>
+<dd class="defbody">
+Is sent by <code>broadcast(udp(Scope, ApplTerm))</code>
+</dd>
+<dt><strong>request</strong>(<var>Id, ApplTerm</var>)</dt>
+<dd class="defbody">
+Is sent by <span class="pred-ext">broadcast_request/1</span>, where <var>Id</var> 
+is a unique large (64 bit) integer.
+</dd>
+<dt><strong>reply</strong>(<var>Id, ApplTerm</var>)</dt>
+<dd class="defbody">
+Is sent to reply on a <span class="pred-ext">broadcast_request/1</span> 
+request that has been received. Arguments are the same as above.
+</dd>
+</dl>
+
+<p></td></tr>
+</table>
+
+<dl class="tags">
+<dt class="tag">throws</dt>
+<dd>
+The hook may throw <code>udp(invalid_message)</code> to stop processing 
+the message.
+</dd>
+</dl>
+
+</dd>
+<dt class="multidef"><span class="pred-tag">[semidet,multifile]</span><a id="udp_unicast_join_hook/3"><strong>udp_unicast_join_hook</strong>(<var>+Scope, 
++From, +Data</var>)</a></dt>
+<dd class="defbody">
+This multifile hook is called if an UDP package is received on the port 
+of the unicast network identified by <var>Scope</var>. <var>From</var> 
+is the origin IP and port and <var>Data</var> is the message data that 
+is deserialized as defined for the scope (see <span class="pred-ext">udp_term_string/3</span>).
+
+<p>This hook is intended to initiate a new node joining the network of 
+peers. We could in theory also omit the in-scope test and use a normal 
+broadcast to join. Using a different channal however provides a basic 
+level of security. A possibe implementation is below. The first fragment 
+is a hook added to the server, the second is a predicate added to a 
+client and the last initiates the request in the client. The excanged 
+term (<code>join(X)</code>) can be used to exchange a welcome handshake.
+
+<pre class="code">
+:- multifile udp_broadcast:udp_unicast_join_hook/3.
+udp_broadcast:udp_unicast_join_hook(Scope, From, join(welcome)) :-
+    udp_peer_add(Scope, From),
+</pre>
+
+<pre class="code">
+join_request(Scope, Address, Reply) :-
+    udp_peer_add(Scope, Address),
+    broadcast_request(udp(Scope, join(X))).
+</pre>
+
+<pre class="code">
+?- join_request(myscope, "1.2.3.4":10001, Reply).
+Reply = welcome.
+</pre>
+
+<p></dd>
+</dl>
+
+<p><h2 id="sec:prologstream"><a id="sec:20"><span class="sec-nr">20</span> <span class="sec-title">library(prolog_stream): 
+A stream with Prolog callbacks</span></a></h2>
+
+<p><a id="sec:prologstream"></a>
+
+<p>This library defines a Prolog stream that realises its low-level I/O 
+with callbacks to Prolog. The library was developed to bind normal 
+Prolog I/O to Pengines I/O. This type of I/O redirection is probably the 
+primary use case.
+
+<dl class="latex">
+<dt class="pubdef"><a id="open_prolog_stream/4"><strong>open_prolog_stream</strong>(<var>+Module, 
++Mode, -Stream, +Options</var>)</a></dt>
+<dd class="defbody">
+Create a new stream that implements its I/O by calling predicates in <var>Module</var>. 
+The called predicates are:
+
+<dl class="latex">
+<dt><var><var>Module</var></var><strong><code>:</code></strong><var><code>stream_write(+Stream, 
++String)</code></var></dt>
+<dd class="defbody">
+Called for a <code>Mode = write</code> stream if data is available.
+<var>String</var> contains the (textual) data that is written to <var>Stream</var>. 
+The callback is called if the buffer of
+<var>Stream</var> overflows, the user calls <code>flush_output(Stream)</code> 
+or <var>Stream</var> is closed and there is buffered data.
+</dd>
+<dt><var><var>Module</var></var><strong><code>:</code></strong><var><code>stream_read(+Stream, 
+-Term)</code></var></dt>
+<dd class="defbody">
+Called for a <code>Mode == read</code> stream to get new data. On 
+success the stream extracts text from the provided <var>Term</var>.
+<var>Term</var> is typically a string, atom, code or character list. If 
+term is not one of the above, it is handed to <span class="pred-ext">writeq/1</span>. 
+To signal end-of-file, unify stream with an empty text, e.g., <code>stream_read(Stream, "")</code>.
+</dd>
+<dt><var><var>Module</var></var><strong><code>:</code></strong><var><code>stream_close(+Stream)</code></var></dt>
+<dd class="defbody">
+Called when the stream is closed. This predicate must succeed. The 
+callback can be used to cleanup associated resources.
+</dd>
+</dl>
+
+<p>The current implementation only deals with text streams. The stream 
+uses the <code>wchar_t</code> encoding. The buffer size must be a 
+multiple of <code>wchar_t</code>, i.e., a multiple of four for 
+portability. The <i>newline</i> mode of the stream is <code>posix</code> 
+on all platforms, disabling the translation <code>"\n" --&gt; "\r\n"</code>.
+<table class="arglist">
+<tr><td><var>Options</var> </td><td>is currently ignored. </td></tr>
+</table>
+
+<dl class="tags">
+<dt class="tag">bug</dt>
+<dd>
+Futher versions might require additional callbacks. As we demand all 
+callbacks to be defined, existing code needs to implement the new 
+callbacks.
+</dd>
+</dl>
+
+</dd>
+</dl>
+
+<h2>NetBSD Crypt license</h2>
+
+<pre class="code">
+ * Copyright (c) 1989, 1993
+ *      The Regents of the University of California.  All rights reserved.
+ *
+ * This code is derived from software contributed to Berkeley by
+ * Tom Truscott.
+ *
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions
+ * are met:
+ * 1. Redistributions of source code must retain the above copyright
+ *    notice, this list of conditions and the following disclaimer.
+ * 2. Redistributions in binary form must reproduce the above copyright
+ *    notice, this list of conditions and the following disclaimer in the
+ *    documentation and/or other materials provided with the distribution.
+ * 3. Neither the name of the University nor the names of its contributors
+ *    may be used to endorse or promote products derived from this software
+ *    without specific prior written permission.
+ *
+ * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND
+ * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+ * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+ * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE
+ * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+ * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS
+ * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
+ * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT
+ * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY
+ * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
+ * SUCH DAMAGE.
+</pre>
+
+<h1><a id="document-index">Index</a></h1>
+
+<dl>
+<dt class="index-sep">?</dt>
+<dt><a class="idx" href="#add_stream_to_pool/2">add_stream_to_pool/2</a></dt>
+<dd>
+<a class="idx" href="#idx:addstreamtopool2:11">7</a></dd>
+<dt><a class="idx" href="#alarm/3">alarm/3</a></dt>
+<dd>
+<a class="idx" href="#idx:alarm3:42">16</a></dd>
+<dt><a class="idx" href="#alarm/4">alarm/4</a></dt>
+<dd>
+<a class="idx" href="#idx:alarm4:44">16</a> <a class="idx" href="#idx:alarm4:53">16</a></dd>
+<dt><a class="idx" href="#alarm_at/4">alarm_at/4</a></dt>
+<dt><a class="idx" href="#atom_to_memory_file/2">atom_to_memory_file/2</a></dt>
+<dt>atom_to_term/3</dt>
+<dd>
+<a class="idx" href="#idx:atomtoterm3:24">15</a></dd>
+<dt><a class="idx" href="#call_with_time_limit/2">call_with_time_limit/2</a></dt>
+<dd>
+<a class="idx" href="#idx:callwithtimelimit2:39">16</a></dd>
+<dt>catch/3</dt>
+<dd>
+<a class="idx" href="#idx:catch3:52">16</a> <a class="idx" href="#idx:catch3:56">18</a></dd>
+<dt><a class="idx" href="#cgi_get_form/1">cgi_get_form/1</a></dt>
+<dd>
+<a class="idx" href="#idx:cgigetform1:15">9.1</a></dd>
+<dt><a class="idx" href="#chmod/2">chmod/2</a></dt>
+<dt>close/1</dt>
+<dd>
+<a class="idx" href="#idx:close1:27">15</a></dd>
+<dt><a class="idx" href="#close_stream_pool/0">close_stream_pool/0</a></dt>
+<dd>
+<a class="idx" href="#idx:closestreampool0:10">7</a></dd>
+<dt><a class="idx" href="#closelog/0">closelog/0</a></dt>
+<dt><a class="idx" href="#copy_directory/2">copy_directory/2</a></dt>
+<dt><a class="idx" href="#copy_file/2">copy_file/2</a></dt>
+<dt><a class="idx" href="#crypt/2">crypt/2</a></dt>
+<dd>
+<a class="idx" href="#idx:crypt2:16">10</a> <a class="idx" href="#idx:crypt2:17">10</a> <a class="idx" href="#idx:crypt2:18">10</a></dd>
+<dt>crypto_password_hash/2</dt>
+<dd>
+<a class="idx" href="#idx:cryptopasswordhash2:19">10</a></dd>
+<dt><a class="idx" href="#current_alarm/4">current_alarm/4</a></dt>
+<dd>
+<a class="idx" href="#idx:currentalarm4:38">16</a></dd>
+<dt>date_time_stamp/2</dt>
+<dd>
+<a class="idx" href="#idx:datetimestamp2:43">16</a></dd>
+<dt><a class="idx" href="#delete_directory_and_contents/1">delete_directory_and_contents/1</a></dt>
+<dt><a class="idx" href="#delete_directory_contents/1">delete_directory_contents/1</a></dt>
+<dt><a class="idx" href="#delete_memory_file/3">delete_memory_file/3</a></dt>
+<dt><a class="idx" href="#delete_stream_from_pool/1">delete_stream_from_pool/1</a></dt>
+<dt><a class="idx" href="#directory_file_path/3">directory_file_path/3</a></dt>
+<dt><a class="idx" href="#directory_member/3">directory_member/3</a></dt>
+<dt><a class="idx" href="#dispatch_stream_pool/1">dispatch_stream_pool/1</a></dt>
+<dd>
+<a class="idx" href="#idx:dispatchstreampool1:13">7</a></dd>
+<dt><a class="idx" href="#dup/2">dup/2</a></dt>
+<dt><a class="idx" href="#exec/1">exec/1</a></dt>
+<dt><a class="idx" href="#fork/1">fork/1</a></dt>
+<dt><a class="idx" href="#fork_exec/1">fork_exec/1</a></dt>
+<dt>format/2</dt>
+<dd>
+<a class="idx" href="#idx:format2:14">9.1</a></dd>
+<dt>format/3</dt>
+<dd>
+<a class="idx" href="#idx:format3:23">15</a></dd>
+<dt><a class="idx" href="#free_memory_file/1">free_memory_file/1</a></dt>
+<dd>
+<a class="idx" href="#idx:freememoryfile1:32">15</a></dd>
+<dt><a class="idx" href="#getegid/1">getegid/1</a></dt>
+<dt><a class="idx" href="#geteuid/1">geteuid/1</a></dt>
+<dt><a class="idx" href="#getgid/1">getgid/1</a></dt>
+<dt><a class="idx" href="#getgroups/1">getgroups/1</a></dt>
+<dt><a class="idx" href="#gethostname/1">gethostname/1</a></dt>
+<dt><a class="idx" href="#getuid/1">getuid/1</a></dt>
+<dt><a class="idx" href="#group_data/3">group_data/3</a></dt>
+<dt><a class="idx" href="#group_info/2">group_info/2</a></dt>
+<dt><a class="idx" href="#hash_atom/2">hash_atom/2</a></dt>
+<dd>
+<a class="idx" href="#idx:hashatom2:20">12</a></dd>
+<dt><a class="idx" href="#hmac_sha/4">hmac_sha/4</a></dt>
+<dt><a class="idx" href="#initgroups/2">initgroups/2</a></dt>
+<dt><a class="idx" href="#insert_memory_file/3">insert_memory_file/3</a></dt>
+<dt><a class="idx" href="#install_alarm/1">install_alarm/1</a></dt>
+<dd>
+<a class="idx" href="#idx:installalarm1:41">16</a> <a class="idx" href="#idx:installalarm1:46">16</a> <a class="idx" href="#idx:installalarm1:47">16</a> <a class="idx" href="#idx:installalarm1:49">16</a></dd>
+<dt><a class="idx" href="#install_alarm/2">install_alarm/2</a></dt>
+<dd>
+<a class="idx" href="#idx:installalarm2:48">16</a> <a class="idx" href="#idx:installalarm2:50">16</a></dd>
+<dt>ip/4</dt>
+<dd>
+<a class="idx" href="#idx:ip4:7">6.6</a> <a class="idx" href="#idx:ip4:8">6.6</a></dd>
+<dt><a class="idx" href="#iri_normalized/2">iri_normalized/2</a></dt>
+<dt><a class="idx" href="#iri_normalized/3">iri_normalized/3</a></dt>
+<dt><a class="idx" href="#is_process/1">is_process/1</a></dt>
+<dt><a class="idx" href="#kill/2">kill/2</a></dt>
+<dt><a class="idx" href="#link_file/3">link_file/3</a></dt>
+<dt><a class="idx" href="#make_directory_path/1">make_directory_path/1</a></dt>
+<dt><a class="idx" href="#md5_hash/3">md5_hash/3</a></dt>
+<dt><a class="idx" href="#memory_file_line_position/4">memory_file_line_position/4</a></dt>
+<dt><a class="idx" href="#memory_file_substring/5">memory_file_substring/5</a></dt>
+<dt><a class="idx" href="#memory_file_to_atom/2">memory_file_to_atom/2</a></dt>
+<dt><a class="idx" href="#memory_file_to_atom/3">memory_file_to_atom/3</a></dt>
+<dt><a class="idx" href="#memory_file_to_codes/2">memory_file_to_codes/2</a></dt>
+<dt><a class="idx" href="#memory_file_to_codes/3">memory_file_to_codes/3</a></dt>
+<dt><a class="idx" href="#memory_file_to_string/2">memory_file_to_string/2</a></dt>
+<dt><a class="idx" href="#memory_file_to_string/3">memory_file_to_string/3</a></dt>
+<dt><a class="idx" href="#negotiate_socks_connection/2">negotiate_socks_connection/2</a></dt>
+<dt><a class="idx" href="#new_memory_file/1">new_memory_file/1</a></dt>
+<dt>on_signal/3</dt>
+<dd>
+<a class="idx" href="#idx:onsignal3:57">18</a></dd>
+<dt>once/1</dt>
+<dd>
+<a class="idx" href="#idx:once1:51">16</a></dd>
+<dt>open/4</dt>
+<dd>
+<a class="idx" href="#idx:open4:31">15</a></dd>
+<dt>open_chars_stream/2</dt>
+<dd>
+<a class="idx" href="#idx:opencharsstream2:33">15</a></dd>
+<dt>open_codes_stream/3</dt>
+<dd>
+<a class="idx" href="#idx:opencodesstream3:22">15</a></dd>
+<dt><a class="idx" href="#open_hash_stream/3">open_hash_stream/3</a></dt>
+<dt><a class="idx" href="#open_memory_file/3">open_memory_file/3</a></dt>
+<dd>
+<a class="idx" href="#idx:openmemoryfile3:30">15</a></dd>
+<dt><a class="idx" href="#open_memory_file/4">open_memory_file/4</a></dt>
+<dt><a class="idx" href="#open_prolog_stream/4">open_prolog_stream/4</a></dt>
+<dt><a class="idx" href="#openlog/3">openlog/3</a></dt>
+<dt><a class="idx" href="#pipe/2">pipe/2</a></dt>
+<dt><a class="idx" href="#prctl/1">prctl/1</a></dt>
+<dt><a class="idx" href="#process_create/3">process_create/3</a></dt>
+<dt><a class="idx" href="#process_group_kill/1">process_group_kill/1</a></dt>
+<dt><a class="idx" href="#process_group_kill/2">process_group_kill/2</a></dt>
+<dt><a class="idx" href="#process_id/1">process_id/1</a></dt>
+<dt><a class="idx" href="#process_id/2">process_id/2</a></dt>
+<dt><a class="idx" href="#process_kill/1">process_kill/1</a></dt>
+<dt><a class="idx" href="#process_kill/2">process_kill/2</a></dt>
+<dt><a class="idx" href="#process_release/1">process_release/1</a></dt>
+<dt><a class="idx" href="#process_set_method/1">process_set_method/1</a></dt>
+<dt><a class="idx" href="#process_wait/2">process_wait/2</a></dt>
+<dt><a class="idx" href="#process_wait/3">process_wait/3</a></dt>
+<dt><a class="idx" href="#prolog:debug_print_hook/3">prolog:debug_print_hook/3</a></dt>
+<dt><a class="idx" href="#proxy_for_url/3">proxy_for_url/3</a></dt>
+<dt><a class="idx" href="#relative_file_name/3">relative_file_name/3</a></dt>
+<dt><a class="idx" href="#remove_alarm/1">remove_alarm/1</a></dt>
+<dd>
+<a class="idx" href="#idx:removealarm1:40">16</a></dd>
+<dt><a class="idx" href="#rlimit/3">rlimit/3</a></dt>
+<dt>seek/2</dt>
+<dd>
+<a class="idx" href="#idx:seek2:28">15</a></dd>
+<dt>set_stream/2</dt>
+<dd>
+<a class="idx" href="#idx:setstream2:54">16</a></dd>
+<dt>set_stream_position/2</dt>
+<dd>
+<a class="idx" href="#idx:setstreamposition2:29">15</a></dd>
+<dt><a class="idx" href="#set_time_file/3">set_time_file/3</a></dt>
+<dt><a class="idx" href="#set_user_and_group/1">set_user_and_group/1</a></dt>
+<dt><a class="idx" href="#set_user_and_group/2">set_user_and_group/2</a></dt>
+<dt><a class="idx" href="#setegid/1">setegid/1</a></dt>
+<dt><a class="idx" href="#seteuid/1">seteuid/1</a></dt>
+<dt><a class="idx" href="#setgid/1">setgid/1</a></dt>
+<dt><a class="idx" href="#setgroups/1">setgroups/1</a></dt>
+<dt><a class="idx" href="#setuid/1">setuid/1</a></dt>
+<dt><a class="idx" href="#sha_hash/3">sha_hash/3</a></dt>
+<dd>
+<a class="idx" href="#idx:shahash3:21">12</a></dd>
+<dt><a class="idx" href="#size_memory_file/2">size_memory_file/2</a></dt>
+<dt><a class="idx" href="#size_memory_file/3">size_memory_file/3</a></dt>
+<dt><a class="idx" href="#stream_hash/2">stream_hash/2</a></dt>
+<dt><a class="idx" href="#stream_pool_main_loop/0">stream_pool_main_loop/0</a></dt>
+<dt>string_to_list/2</dt>
+<dd>
+<a class="idx" href="#idx:stringtolist2:5">6.6</a></dd>
+<dt>sub_atom/5</dt>
+<dd>
+<a class="idx" href="#idx:subatom5:36">15</a></dd>
+<dt>sub_string/5</dt>
+<dd>
+<a class="idx" href="#idx:substring5:35">15</a> <a class="idx" href="#idx:substring5:37">15</a></dd>
+<dt><a class="idx" href="#sysconf/1">sysconf/1</a></dt>
+<dt><a class="idx" href="#syslog/2">syslog/2</a></dt>
+<dt><a class="idx" href="#syslog/3">syslog/3</a></dt>
+<dt><a class="idx" href="#tcp_accept/3">tcp_accept/3</a></dt>
+<dd>
+<a class="idx" href="#idx:tcpaccept3:3">6.5</a></dd>
+<dt><a class="idx" href="#tcp_bind/2">tcp_bind/2</a></dt>
+<dd>
+<a class="idx" href="#idx:tcpbind2:2">6.5</a></dd>
+<dt><a class="idx" href="#tcp_close_socket/1">tcp_close_socket/1</a></dt>
+<dt><a class="idx" href="#tcp_connect/2">tcp_connect/2</a></dt>
+<dd>
+<a class="idx" href="#idx:tcpconnect2:1">6.5</a></dd>
+<dt><a class="idx" href="#tcp_connect/3">tcp_connect/3</a></dt>
+<dt><a class="idx" href="#tcp_connect/4">tcp_connect/4</a></dt>
+<dt><a class="idx" href="#tcp_fcntl/3">tcp_fcntl/3</a></dt>
+<dt><a class="idx" href="#tcp_getopt/2">tcp_getopt/2</a></dt>
+<dt><a class="idx" href="#tcp_host_to_address/2">tcp_host_to_address/2</a></dt>
+<dt><a class="idx" href="#tcp_listen/2">tcp_listen/2</a></dt>
+<dt><a class="idx" href="#tcp_open_socket/2">tcp_open_socket/2</a></dt>
+<dt><a class="idx" href="#tcp_open_socket/3">tcp_open_socket/3</a></dt>
+<dt><a class="idx" href="#tcp_select/3">tcp_select/3</a></dt>
+<dt><a class="idx" href="#tcp_setopt/2">tcp_setopt/2</a></dt>
+<dt><a class="idx" href="#tcp_socket/1">tcp_socket/1</a></dt>
+<dd>
+<a class="idx" href="#idx:tcpsocket1:4">6.6</a></dd>
+<dt>term_string/2</dt>
+<dd>
+<a class="idx" href="#idx:termstring2:26">15</a></dd>
+<dt>term_to_atom/2</dt>
+<dd>
+<a class="idx" href="#idx:termtoatom2:25">15</a></dd>
+<dt><a class="idx" href="#try_proxy/4">try_proxy/4</a></dt>
+<dt><a class="idx" href="#udp_broadcast_close/1">udp_broadcast_close/1</a></dt>
+<dt><a class="idx" href="#udp_broadcast_initialize/2">udp_broadcast_initialize/2</a></dt>
+<dt><a class="idx" href="#udp_peer/2">udp_peer/2</a></dt>
+<dt><a class="idx" href="#udp_peer_add/2">udp_peer_add/2</a></dt>
+<dt><a class="idx" href="#udp_peer_del/2">udp_peer_del/2</a></dt>
+<dt><a class="idx" href="#udp_receive/4">udp_receive/4</a></dt>
+<dt><a class="idx" href="#udp_send/4">udp_send/4</a></dt>
+<dt><a class="idx" href="#udp_socket/1">udp_socket/1</a></dt>
+<dt><a class="idx" href="#udp_term_string_hook/3">udp_term_string_hook/3</a></dt>
+<dt><a class="idx" href="#udp_unicast_join_hook/3">udp_unicast_join_hook/3</a></dt>
+<dt><a class="idx" href="#uninstall_alarm/1">uninstall_alarm/1</a></dt>
+<dd>
+<a class="idx" href="#idx:uninstallalarm1:45">16</a></dd>
+<dt><a class="idx" href="#unix_domain_socket/1">unix_domain_socket/1</a></dt>
+<dt><a class="idx" href="#uri_authority_components/2">uri_authority_components/2</a></dt>
+<dt><a class="idx" href="#uri_authority_data/3">uri_authority_data/3</a></dt>
+<dt><a class="idx" href="#uri_components/2">uri_components/2</a></dt>
+<dt><a class="idx" href="#uri_data/3">uri_data/3</a></dt>
+<dt><a class="idx" href="#uri_data/4">uri_data/4</a></dt>
+<dt><a class="idx" href="#uri_encoded/3">uri_encoded/3</a></dt>
+<dt><a class="idx" href="#uri_file_name/2">uri_file_name/2</a></dt>
+<dt><a class="idx" href="#uri_iri/2">uri_iri/2</a></dt>
+<dt><a class="idx" href="#uri_is_global/1">uri_is_global/1</a></dt>
+<dt><a class="idx" href="#uri_normalized/2">uri_normalized/2</a></dt>
+<dt><a class="idx" href="#uri_normalized/3">uri_normalized/3</a></dt>
+<dt><a class="idx" href="#uri_normalized_iri/2">uri_normalized_iri/2</a></dt>
+<dt><a class="idx" href="#uri_normalized_iri/3">uri_normalized_iri/3</a></dt>
+<dt><a class="idx" href="#uri_query_components/2">uri_query_components/2</a></dt>
+<dt><a class="idx" href="#uri_resolve/3">uri_resolve/3</a></dt>
+<dt><a class="idx" href="#user_data/3">user_data/3</a></dt>
+<dt><a class="idx" href="#user_info/2">user_info/2</a></dt>
+<dt><a class="idx" href="#uuid/1">uuid/1</a></dt>
+<dt><a class="idx" href="#uuid/2">uuid/2</a></dt>
+<dt><a class="idx" href="#wait/2">wait/2</a></dt>
+<dt>wait_for_input/3</dt>
+<dd>
+<a class="idx" href="#idx:waitforinput3:6">6.6</a> <a class="idx" href="#idx:waitforinput3:9">7</a> <a class="idx" href="#idx:waitforinput3:12">7</a> <a class="idx" href="#idx:waitforinput3:55">16</a></dd>
+<dt>writeq/1</dt>
+<dd>
+<a class="idx" href="#idx:writeq1:34">15</a></dd>
+<dt><a class="idx" href="#detach_IO/0">detach_IO/0</a></dt>
+<dt><a class="idx" href="#detach_IO/1">detach_IO/1</a></dt>
+<dd>
+</dd>
+</dl>
+
+</body></html>

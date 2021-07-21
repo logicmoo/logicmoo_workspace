@@ -1,0 +1,581 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+
+<html>
+<head>
+<title>Paxos -- a SWI-Prolog replicating key-value store</title>
+<style type="text/css">
+
+/* Style sheet for SWI-Prolog latex2html
+*/
+
+dd.defbody
+{ margin-bottom: 1em;
+}
+
+dt.pubdef, dt.multidef
+{ color: #fff;
+padding: 2px 10px 0px 10px;
+margin-bottom: 5px;
+font-size: 18px;
+vertical-align: middle;
+overflow: hidden;
+}
+
+dt.pubdef { background-color: #0c3d6e; }
+dt.multidef { background-color: #ef9439; }
+
+.bib dd
+{ margin-bottom: 1em;
+}
+
+.bib dt
+{ float: left;
+margin-right: 1.3ex;
+}
+
+pre.code
+{ margin-left: 1.5em;
+margin-right: 1.5em;
+border: 1px dotted;
+padding-top: 5px;
+padding-left: 5px;
+padding-bottom: 5px;
+background-color: #f8f8f8;
+}
+
+div.navigate
+{ text-align: center;
+background-color: #f0f0f0;
+border: 1px dotted;
+padding: 5px;
+}
+
+div.title
+{ text-align: center;
+padding-bottom: 1em;
+font-size: 200%;
+font-weight: bold;
+}
+
+div.author
+{ text-align: center;
+font-style: italic;
+}
+
+div.abstract
+{ margin-top: 2em;
+background-color: #f0f0f0;
+border: 1px dotted;
+padding: 5px;
+margin-left: 10%; margin-right:10%;
+}
+
+div.abstract-title
+{ text-align: center;
+padding: 5px;
+font-size: 120%;
+font-weight: bold;
+}
+
+div.toc-h1
+{ font-size: 200%;
+font-weight: bold;
+}
+
+div.toc-h2
+{ font-size: 120%;
+font-weight: bold;
+margin-left: 2em;
+}
+
+div.toc-h3
+{ font-size: 100%;
+font-weight: bold;
+margin-left: 4em;
+}
+
+div.toc-h4
+{ font-size: 100%;
+margin-left: 6em;
+}
+
+span.sec-nr
+{
+}
+
+span.sec-title
+{
+}
+
+span.pred-ext
+{ font-weight: bold;
+}
+
+span.pred-tag
+{ float: right;
+padding-top: 0.2em;
+font-size: 80%;
+font-style: italic;
+color: #fff;
+}
+
+div.caption
+{ width: 80%;
+margin: auto;
+text-align:center;
+}
+
+/* Footnotes */
+.fn {
+color: red;
+font-size: 70%;
+}
+
+.fn-text, .fnp {
+position: absolute;
+top: auto;
+left: 10%;
+border: 1px solid #000;
+box-shadow: 5px 5px 5px #888;
+display: none;
+background: #fff;
+color: #000;
+margin-top: 25px;
+padding: 8px 12px;
+font-size: larger;
+}
+
+sup:hover span.fn-text
+{ display: block;
+}
+
+/* Lists */
+
+dl.latex
+{ margin-top: 1ex;
+margin-bottom: 0.5ex;
+}
+
+dl.latex dl.latex dd.defbody
+{ margin-bottom: 0.5ex;
+}
+
+/* PlDoc Tags */
+
+dl.tags
+{ font-size: 90%;
+margin-left: 5ex;
+margin-top: 1ex;
+margin-bottom: 0.5ex;
+}
+
+dl.tags dt
+{ margin-left: 0pt;
+font-weight: bold;
+}
+
+dl.tags dd
+{ margin-left: 3ex;
+}
+
+td.param
+{ font-style: italic;
+font-weight: bold;
+}
+
+/* Index */
+
+dt.index-sep
+{ font-weight: bold;
+font-size: +1;
+margin-top: 1ex;
+}
+
+/* Tables */
+
+table.center
+{ margin: auto;
+}
+
+table.latex
+{ border-collapse:collapse;
+}
+
+table.latex tr
+{ vertical-align: text-top;
+}
+
+table.latex td,th
+{ padding: 2px 1em;
+}
+
+table.latex tr.hline td,th
+{ border-top: 1px solid black;
+}
+
+table.frame-box
+{ border: 2px solid black;
+}
+
+</style>
+</head>
+<body style="background:white"> 
+<div class="title">Paxos -- a SWI-Prolog replicating key-value store</div>
+<div class="author">Jeffrey Rosenwald and Jan Wielemaker <br>
+CWI, Amsterdam <br>
+The Netherlands <br>
+E-mail: <a class="url" href="mailto:J.Wielemaker@cwi.nl">J.Wielemaker@cwi.nl</a></div>
+<div class="abstract">
+<div class="abstract-title">Abstract</div> This package provides the 
+library <code>paxos.pl</code> that implements a replicating key-value 
+store of Prolog terms on top of SWI-Prolog
+<code>library(broadcast)</code> libraries and its TIPC or UDP based 
+extension that allow broadcasting outside the process using networking.
+</div>
+
+<h1><a id="document-contents">Table of Contents</a></h1>
+
+<div class="toc">
+<div class="toc-h2"><a class="sec" href="#sec:1"><span class="sec-nr">1</span> <span class="sec-title">library(paxos): 
+A Replicated Data Store</span></a></div>
+</div>
+
+<p><h2 id="sec:paxos"><a id="sec:1"><span class="sec-nr">1</span> <span class="sec-title">library(paxos): 
+A Replicated Data Store</span></a></h2>
+
+<p><a id="sec:paxos"></a>
+
+<dl class="tags">
+<dt class="tag">author</dt>
+<dd>
+Jeffrey Rosenwald (JeffRose@acm.org)
+</dd>
+<dt class="tag">See also</dt>
+<dd>
+<code>tipc_broadcast.pl</code>, <code>udp_broadcast.pl</code>
+</dd>
+<dt class="tag">license</dt>
+<dd>
+BSD-2
+</dd>
+</dl>
+
+<p>This module provides a replicated data store that is coordinated 
+using a variation on Lamport's Paxos concensus protocol. The original 
+method is described in his paper entitled, "The Part-time Parliament", 
+which was published in 1998. The algorithm is tolerant of non-Byzantine 
+failure. That is late or lost delivery or reply, but not senseless 
+delivery or reply. The present algorithm takes advantage of the 
+convenience offered by multicast to the quorum's membership, who can 
+remain anonymous and who can come and go as they please without 
+effecting Liveness or Safety properties.
+
+<p>Paxos' quorum is a set of one or more attentive members, whose 
+processes respond to queries within some known time limit (<var>&lt;</var> 
+20ms), which includes roundtrip delivery delay. This property is easy to 
+satisfy given that every coordinator is necessarily a member of the 
+quorum as well, and a quorum of one is permitted. An inattentive member 
+(e.g. one whose actions are late or lost) is deemed to be "not-present" 
+for the purposes of the present transaction and consistency cannot be 
+assured for that member. As long as there is at least one attentive 
+member of the quorum, then persistence of the database is assured.
+
+<p>Each member maintains a ledger of terms along with information about 
+when they were originally recorded. The member's ledger is 
+deterministic. That is to say that there can only be one entry per 
+functor/arity combination. No member will accept a new term proposal 
+that has a line number that is equal-to or lower-than the one that is 
+already recorded in the ledger.
+
+<p>Paxos is a three-phase protocol:
+
+<p>1: A coordinator first prepares the quorum for a new proposal by 
+broadcasting a proposed term. The quorum responds by returning the last 
+known line number for that functor/arity combination that is recorded in 
+their respective ledgers.
+
+<p>2: The coordinator selects the highest line number it receives, 
+increments it by one, and then asks the quorum to finally accept the new 
+term with the new line number. The quorum checks their respective 
+ledgers once again and if there is still no other ledger entry for that 
+functor/arity combination that is equal-to or higher than the specified 
+line, then each member records the term in the ledger at the specified 
+line. The member indicates consent by returning the specified line 
+number back to the coordinator. If consent is withheld by a member, then 
+the member returns a <code>nack</code> instead. The coordinator requires 
+unanimous consent. If it isn't achieved then the proposal fails and the 
+coordinator must start over from the beginning.
+
+<p>3: Finally, the coordinator concludes the successful negotiation by 
+broadcasting the agreement to the quorum in the form of a
+<code>paxos_changed(Key,Value)</code> event. This is the only event that 
+should be of interest to user programs.
+
+<p>For practical reasons, we rely on the partially synchronous behavior 
+(e.g. limited upper time bound for replies) of <span class="pred-ext">broadcast_request/1</span> 
+over TIPC to ensure Progress. Perhaps more importantly, we rely on the 
+fact that the TIPC broadcast listener state machine guarantees the 
+atomicity of <span class="pred-ext">broadcast_request/1</span> at the 
+process level, thus obviating the need for external mutual exclusion 
+mechanisms.
+
+<p><i>Note that this algorithm does not guarantee the rightness of the 
+value proposed. It only guarantees that if successful, the value 
+proposed is identical for all attentive members of the quorum.</i>
+
+<dl class="latex">
+<dt class="pubdef"><span class="pred-tag">[det]</span><a id="paxos_initialize/1"><strong>paxos_initialize</strong>(<var>+Options</var>)</a></dt>
+<dd class="defbody">
+Initialize this Prolog process as a paxos node. The initialization 
+requires an initialized and configured TIPC, UDP or other broadcast 
+protocol. Calling this initialization may be omitted, in which case the 
+equivant of <code>paxos_initialize([])</code> is executed lazily as part 
+of the first paxos operation. Defined options:
+
+<dl class="latex">
+<dt><strong>node</strong>(<var>?NodeID</var>)</dt>
+<dd class="defbody">
+When instantiated, this node rejoins the network with the given node id. 
+A fixed node idea should be used if the node is configured for 
+persistency and causes the new node to receive updates for keys that 
+have been created or modified since the node left the network. If <var>NodeID</var> 
+is a variable it is unified with the discovered <var>NodeID</var>.
+
+<p><var>NodeID</var> must be a small non-negative integer as these 
+identifiers are used in bitmaps.
+</dd>
+</dl>
+
+</dd>
+<dt class="pubdef"><a id="paxos_property/1"><strong>paxos_property</strong>(<var>?Property</var>)</a></dt>
+<dd class="defbody">
+True if <var>Property</var> is a current property for the paxos network. 
+Defined properties are:
+
+<p>
+<ul class="compact">
+<li>node(?NodeID)
+<li>quorum(?NodeBitmap)
+<li>failed(?NodeBitmap)
+</ul>
+</dd>
+<dt class="pubdef"><span class="pred-tag">[semidet]</span><a id="paxos_set/1"><strong>paxos_set</strong>(<var>+Term</var>)</a></dt>
+<dd class="defbody">
+Equivalent to <code>paxos_key(Term,Key)</code>, <code>pasox_set(Key,Term)</code>. 
+I.e., <var>Term</var> is a ground compound term and its key is the 
+name/arity pair. This version provides compatibility with older versions 
+of this library.</dd>
+<dt class="pubdef"><span class="pred-tag">[semidet]</span><a id="paxos_set/2"><strong>paxos_set</strong>(<var>+Key, 
++Value</var>)</a></dt>
+<dt class="pubdef"><span class="pred-tag">[semidet]</span><a id="paxos_set/3"><strong>paxos_set</strong>(<var>+Key, 
++Value, +Options</var>)</a></dt>
+<dd class="defbody">
+negotiates to have <var>Key</var>-<var>Value</var> recorded in the 
+ledger for each of the quorum's members. This predicate succeeds if the 
+quorum unanimously accepts the proposed term. If no such entry exists in 
+the Paxon's ledger, then one is silently created. <a class="pred" href="#paxos_set/1">paxos_set/1</a> 
+will retry the transaction several times (default: 20) before failing. 
+Failure is rare and is usually the result of a collision of two or more 
+writers writing to the same term at precisely the same time. On failure, 
+it may be useful to wait some random period of time, and then retry the 
+transaction. By specifying a retry count of zero, <a class="pred" href="#paxos_set/2">paxos_set/2</a> 
+will succeed iff the first ballot succeeds.
+
+<p>On success, <a class="pred" href="#paxos_set/1">paxos_set/1</a> will 
+also broadcast the term
+<code>paxos_changed(Key,Value)</code>, to the quorum.
+
+<p><var>Options</var> processed:
+
+<dl class="latex">
+<dt><strong>retry</strong>(<var>Retries</var>)</dt>
+<dd class="defbody">
+is a non-negative integer specifying the number of retries that will be 
+performed before a set is abandoned. Defaults to the
+<i>setting</i> <code>max_sets</code> (20).
+</dd>
+<dt><strong>timeout</strong>(<var>+Seconds</var>)</dt>
+<dd class="defbody">
+Max time to wait for the forum to reply. Defaults to the
+<i>setting</i> <code>response_timeout</code> (0.020, 20ms).
+</dd>
+</dl>
+
+<table class="arglist">
+<tr><td><var>Term</var> </td><td>is a compound that may have unbound 
+variables. </td></tr>
+</table>
+
+<dl class="tags">
+<dt class="tag">To be done</dt>
+<dd>
+If the <var>Value</var> is already current, should we simply do nothing?
+</dd>
+</dl>
+
+</dd>
+<dt class="pubdef"><a id="paxos_quorum_ask/4"><strong>paxos_quorum_ask</strong>(<var>?Template, 
++Message, -Result, +Options</var>)</a></dt>
+<dd class="defbody">
+Ask the paxos forum for their opinion. This predicate is not really part 
+of the paxos protocol, but reuses notably the quorum maintenance 
+mechanism of this library for asking questions to the quorum (cluster). <var>Message</var> 
+is the message to be asked. <var>Result</var> is a list of copies of <var>Template</var> 
+from the quorum. <var>Options</var>:
+
+<dl class="latex">
+<dt><strong>timeout</strong>(<var>+Seconds</var>)</dt>
+<dd class="defbody">
+Max time to wait for a reply. Default is the setting
+<code>response_timeout</code>.
+</dd>
+<dt><strong>node</strong>(<var>?Node</var>)</dt>
+<dd class="defbody">
+Can be used to include the replying node into <var>Template</var>.
+</dd>
+<dt><strong>quorum</strong>(<var>?Quorum</var>)</dt>
+<dd class="defbody">
+Set/query the interviewed quorum as a bitmask
+</dd>
+</dl>
+
+</dd>
+<dt class="pubdef"><span class="pred-tag">[semidet]</span><a id="paxos_get/1"><strong>paxos_get</strong>(<var>?Term</var>)</a></dt>
+<dd class="defbody">
+Equivalent to <code>paxos_key(Term,Key)</code>, <code>pasox_get(Key,Term)</code>. 
+I.e., <var>Term</var> is a compound term and its key is the name/arity 
+pair. This version provides compatibility with older versions of this 
+library.</dd>
+<dt class="pubdef"><span class="pred-tag">[semidet]</span><a id="paxos_get/2"><strong>paxos_get</strong>(<var>+Key, 
++Value</var>)</a></dt>
+<dt class="pubdef"><span class="pred-tag">[semidet]</span><a id="paxos_get/3"><strong>paxos_get</strong>(<var>+Key, 
++Value, +Options</var>)</a></dt>
+<dd class="defbody">
+unifies Term with the entry retrieved from the Paxon's ledger. If no 
+such entry exists in the member's local cache, then the quorum is asked 
+to provide a value, which is verified for consistency. An implied <a class="pred" href="#paxos_set/1">paxos_set/1</a> 
+follows. This predicate succeeds if a term with the same functor and 
+arity exists in the Paxon's ledger, and fails otherwise.
+
+<p><var>Options</var> processed:
+
+<dl class="latex">
+<dt><strong>retry</strong>(<var>Retries</var>)</dt>
+<dd class="defbody">
+is a non-negative integer specifying the number of retries that will be 
+performed before a set is abandoned. Defaults to the
+<i>setting</i> <code>max_gets</code> (5).
+</dd>
+<dt><strong>timeout</strong>(<var>+Seconds</var>)</dt>
+<dd class="defbody">
+Max time to wait for the forum to reply. Defaults to the
+<i>setting</i> <code>response_timeout</code> (0.020, 20ms).
+</dd>
+</dl>
+
+<table class="arglist">
+<tr><td><var>Term</var> </td><td>is a compound. Any unbound variables 
+are unified with those provided in the ledger entry. </td></tr>
+</table>
+</dd>
+<dt class="pubdef"><span class="pred-tag">[det]</span><a id="paxos_replicate_key/3"><strong>paxos_replicate_key</strong>(<var>+Nodes:bitmap, 
+?Key, +Options</var>)</a></dt>
+<dd class="defbody">
+Replicate a <var>Key</var> to <var>Nodes</var>. If <var>Key</var> is 
+unbound, a random key is selected.
+
+<dl class="latex">
+<dt><strong>timeout</strong>(<var>+Seconds</var>)</dt>
+<dd class="defbody">
+Max time to wait for the forum to reply. Defaults to the
+<i>setting</i> <code>response_timeout</code> (0.020, 20ms).
+</dd>
+</dl>
+
+</dd>
+<dt class="pubdef"><span class="pred-tag">[det]</span><a id="paxos_on_change/2"><strong>paxos_on_change</strong>(<var>?Term, 
+:Goal</var>)</a></dt>
+<dt class="pubdef"><span class="pred-tag">[det]</span><a id="paxos_on_change/3"><strong>paxos_on_change</strong>(<var>?Key, 
+?Value, :Goal</var>)</a></dt>
+<dd class="defbody">
+Executes the specified <var>Goal</var> when <var>Key</var> changes. <a class="pred" href="#paxos_on_change/2">paxos_on_change/2</a> 
+listens for <code>paxos_changed(Key,Value)</code> notifications for <var>Key</var>, 
+which are emitted as the result of successful <a class="pred" href="#paxos_set/3">paxos_set/3</a> 
+transactions. When one is received for <var>Key</var>, then <var>Goal</var> 
+is executed in a separate thread of execution.
+<table class="arglist">
+<tr><td><var>Term</var> </td><td>is a compound, identical to that used 
+for
+<a class="pred" href="#paxos_get/1">paxos_get/1</a>. </td></tr>
+<tr><td><var>Goal</var> </td><td>is one of:
+
+<p>
+<ul class="latex">
+<li>a callable atom or term, or
+<li>the atom <code>ignore</code>, which causes monitoring for <var>Term</var> 
+to be discontinued.
+</ul>
+
+<p></td></tr>
+</table>
+</dd>
+<dt class="multidef"><span class="pred-tag">[multifile]</span><a id="paxos_ledger_hook/5"><strong>paxos_ledger_hook</strong>(<var>+Action, 
+?Key, ?Gen, ?Value, ?Holders</var>)</a></dt>
+<dd class="defbody">
+Hook called for all operations on the ledger. Defined actions are:
+
+<dl class="latex">
+<dt><strong>current</strong></dt>
+<dd class="defbody">
+Enumerate our ledger content.
+</dd>
+<dt><strong>get</strong></dt>
+<dd class="defbody">
+Get a single value from our ledger.
+</dd>
+<dt><strong>create</strong></dt>
+<dd class="defbody">
+Create a new key in our ledger.
+</dd>
+<dt><strong>accept</strong></dt>
+<dd class="defbody">
+Accept a new newly proposed value for a key. Failure causes the library 
+to send a <i>NACK</i> message.
+</dd>
+<dt><strong>set</strong></dt>
+<dd class="defbody">
+Final acceptance of Ken@<var>Gen</var>, providing the holders that 
+accepted the new value.
+</dd>
+<dt><strong>learn</strong></dt>
+<dd class="defbody">
+Accept new keys in a new node or node that has been offline for some 
+time.
+</dd>
+</dl>
+
+</dd>
+</dl>
+
+<h1><a id="document-index">Index</a></h1>
+
+<dl>
+<dt class="index-sep">?</dt>
+<dt><a class="idx" href="#paxos_get/1">paxos_get/1</a></dt>
+<dt><a class="idx" href="#paxos_get/2">paxos_get/2</a></dt>
+<dt><a class="idx" href="#paxos_get/3">paxos_get/3</a></dt>
+<dt><a class="idx" href="#paxos_initialize/1">paxos_initialize/1</a></dt>
+<dt><a class="idx" href="#paxos_ledger_hook/5">paxos_ledger_hook/5</a></dt>
+<dt><a class="idx" href="#paxos_on_change/2">paxos_on_change/2</a></dt>
+<dt><a class="idx" href="#paxos_on_change/3">paxos_on_change/3</a></dt>
+<dt><a class="idx" href="#paxos_property/1">paxos_property/1</a></dt>
+<dt><a class="idx" href="#paxos_quorum_ask/4">paxos_quorum_ask/4</a></dt>
+<dt><a class="idx" href="#paxos_replicate_key/3">paxos_replicate_key/3</a></dt>
+<dt><a class="idx" href="#paxos_set/1">paxos_set/1</a></dt>
+<dt><a class="idx" href="#paxos_set/2">paxos_set/2</a></dt>
+<dt><a class="idx" href="#paxos_set/3">paxos_set/3</a></dt>
+<dd>
+</dd>
+</dl>
+
+</body></html>

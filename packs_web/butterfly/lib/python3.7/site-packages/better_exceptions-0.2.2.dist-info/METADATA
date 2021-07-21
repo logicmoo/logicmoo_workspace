@@ -1,0 +1,16 @@
+Metadata-Version: 2.1
+Name: better-exceptions
+Version: 0.2.2
+Summary: Pretty and helpful exceptions, automatically
+Home-page: https://github.com/qix-/better-exceptions
+Author: Josh Junon
+Author-email: josh@junon.me
+License: UNKNOWN
+Download-URL: https://github.com/qix-/better-exceptions/archive/0.2.2.tar.gz
+Keywords: pretty,better,exceptions,exception,error,local,debug,debugging,locals
+Platform: UNKNOWN
+Requires-Dist: colorama ; sys_platform=="win32"
+
+UNKNOWN
+
+

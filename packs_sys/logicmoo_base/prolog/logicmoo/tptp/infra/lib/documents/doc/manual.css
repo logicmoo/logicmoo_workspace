@@ -1,0 +1,15 @@
+body { 
+	color:#000000;
+	background-color:#F0F0F0;
+	font-family:Arial,Helvetica,sans-serif
+     }
+
+
+.styclass { color:#FFFFFF; background-color:#880000 }
+.styproperty { color:#FFFFFF; background-color:#000088 }
+.styobject { color:#FFFFFF; background-color:#008800 }
+.stykb { color:#FFFFFF; background-color:#880088 }
+.stycommand { color:#FFFFFF; background-color:#888888 }
+.stynamespace { color:#FFFFFF; background-color:#008888 }
+.stymain { color:#FFFFFF; background-color:#444444 }
+.styquery { color:#FFFFFF; background-color:#AA4444 }

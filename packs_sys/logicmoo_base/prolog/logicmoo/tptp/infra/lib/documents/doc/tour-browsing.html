@@ -1,0 +1,458 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+   <link rel=stylesheet type="text/css" href="manual.css">
+    <title>Guided Tour: RDF Schema Browsing with InfraEngine</title>
+</head>
+<body>
+
+<h1>Guided Tour: RDF Schema Browsing with InfraEngine</h1>
+
+We illustrate the use of the <a
+      href="http://www.infraengine.com">InfraEngine</a> system as an RDF
+Schema browser with the <i>vehicles</i> example from the W3C's <a
+href="http://www.w3.org/TR/REC-rdf-syntax/">RDF Primer</a>.  
+Relevant key features of the system are
+<ul>
+<li>Semantic Web processing is <a href="#par-integ">integrated with
+&ldquo;normal&rdquo; browsing.</a> 
+<li>RDF objects can be displayed in
+different views: <a href="#sec-views-generic">tabular, as graph, and as RDF
+expression</a>. 
+<li>User interface functionality is realized by additional
+<a href="#par-views-special">specialized views</a> for
+RDF objects of certain types,
+such as classes and properties.
+<li>Schema
+inferences corresponding to the model theoretic semantics of RDF are <a
+href="#par-infs">transparently performed</a>.  
+<li>Knowledge is organized into
+multiple <a href="#sec-kb">knowledgebases</a>, each of which is
+related to a set of RDF documents.
+</ul>
+
+<h2>Related Documents</h2>
+
+<ul>
+<li> <a href="manual.html">InfraEngine User Manual (Draft)</a>
+<li> <a href="tour-planning.html">Guided Tour: 
+Planning with InfraEngine</a>
+<li> <a href="examples/examples.html">InfraEngine Example RDF Documents</a>
+</ul>
+
+<h2>Contents</h2>
+
+<ul>
+<li><a href="#sec-loading">1. Loading a Knowledgebase</a>
+<li><a href="#sec-classes">2. Classes, Properties and Namespaces in a
+Knowledgebase</a>
+<li><a href="#sec-class">3. Inspecting a Class, Schema Inferences, Specialized
+Views</a>
+<li><a href="#sec-views-generic">4. Generic Object Views</a>
+<ul>
+<li><a href="#object">3.1 <i>Object</i> View</a>
+<li><a href="#rdf">3.2 <i>RDF</i> View</a>
+<li><a href="#plrdf">3.3 <i>PLRDF</i> View</a>
+<li><a href="#graph">3.4 <i>Graph</i> View</a>
+</ul>
+<li><a href="#sec-inst">5. Inspecting an Object</a>
+<li><a href="#sec-kb">6. Knowledgebases</a>
+<ul>
+<li><a href="#kb">6.1 <i>Knowledgebase</i> View</a>
+<li><a href="#rdfcontent">6.2 <i>RDF Content</i> View</a>
+<li><a href="#dtd">6.3 <i>RDF DTD</i> View</a>
+<li><a href="#kb-switching">6.4 Switching the Current Knowledgebase</a>
+</ul>
+<li><a href="#vehicles-rdf">Appendix: The Vehicles RDF Document</a>
+</ul>
+
+<h2><a name="sec-loading">1. Loading a Knowledgebase</a></h2>
+
+In your browser, log into the InfraEngine server. The start page is a <a
+href="manual.html#main"><i>Main</i></a> page.  The current knowledgebase
+(indicated in parentheses at the <i>Knowledgebase</i> menu) is
+<i>sys:catalog</i>, the catalog meta-information knowledgebase of the system.
+
+<p style="text-align:center">
+<a name="main">
+<img src="images/vehicles-main.png" alt="[Screenshot]" border=2>
+</a>
+</p>
+
+<a name="par-integ"><b>Integration of Semantic Web Processing with 
+&ldquo;Normal&rdquo; Browsing.</b></a>
+The next step is feeding the server with knowledge.  InfraEngine provides a
+way to do this, which is integrated with &ldquo;normal&rdquo; Web browsing
+(although in the current implementation only in a rudimentary way).
+Proceed by clicking the <a href="manual.html#cmd-browse"><i>Browse the
+Web</i></a> command.
+
+<p style="text-align:center">
+<img src="images/vehicles-browse.png" alt="[Screenshot]" border=2>
+</p>
+
+You can enter a URI to open, or select from a list of known or previously
+entered URIs. To proceed with the tour, choose the
+<code>.../examples.html</code> document and submit the <i>Browse
+the Web</i> button.
+<p>
+The opened Web page is now displayed decorated with an additional menu at the
+top that lists URLs of RDF pages referenced from the page along with facilities
+to load them into an InfraEngine knowledgebase.  Pages opened by following
+hyperlinks also will be displayed with such a header.
+
+<p style="text-align:center">
+<img src="images/vehicles-adddoc.png" alt="[Screenshot]" border=2>
+</p>
+
+One or more RDF documents can be chosen from the <i>Select</i> field.
+The knowledgebase into which the documents are loaded can be chosen
+with the <i>Knowledgebase</i> menu. A special entry <i>Newly Generated</i>
+effects that a newly constructed knowledgebase is used.
+<p>
+To continue with the tour, choose <code>.../vehicles.rdf</code> from the
+<i>Select</i> field.  The contents of this file are shown in Section <a
+href="#vehicles-rdf">Appendix: The Vehicles RDF Document</a>. Choose <i>Newly
+Generated</i> from the <i>Knowledgebase</i> menu and submit the <i>Add
+Documents</i> button.
+<p>
+A result page that confirms that the document has successfully been loaded
+is opened. The current knowledgebase is now the newly
+generated knowledgebase <i>sys:gen1</i>. Unless another knowledgebase
+is chosen as current, the other menus such as <i>Classes</i>,
+      <i>Properties</i>, etc. refer to this knowledgebase.
+<p style="text-align:center">
+<img src="images/vehicles-adddoc-result.png" alt="[Screenshot]" border=2>
+</p>
+
+<h2><a name="sec-classes">2. Classes, Properties and Namespaces in a
+Knowledgebase</a></h2>
+
+Choose the <i>Classes</i> menu to enter a <a
+href="manual.html#classes"><i>Classes</i></a> page that displays the tree
+of all classes in the current knowledgebase.
+
+<p style="text-align:center">
+<a name="classes">
+<img src="images/vehicles-classes.png" alt="[Screenshot]" border=2>
+</a>
+</p>
+
+<p>The subclass relationship is indicated by indentation.
+If the classes have values for the <i>rdfs:comment</i> property, these
+are also displayed in abbreviated form.
+
+<p>
+Choose the <i>Properties</i> menu to enter a <a
+href="manual.html#properties"><i>Properties</i></a> page that displays
+the tree of all properties in the current knowledgebase, similar to
+the <i>Classes</i> page.
+
+<p style="text-align:center">
+<a name="properties">
+<img src="images/vehicles-properties.png" alt="[Screenshot]" border=2>
+</a>
+</p>
+
+<p>
+Choose the <i>Namespaces</i> menu to enter a <a
+href="manual.html#namespaces"><i>Namespaces</i></a> page that displays
+information of the namespace abbreviations used to display items from the
+current knowledgebase. The <i>Namespaces</i> page also provides the <i>Add
+Namespace...</i> command that allows the user to define further namespace
+abbreviations.  Displayed namespace abbreviations in item identifiers, for
+example <i>ex</i> in <i>ex:PassengerVehicle</i>, link to the corresponding
+entry in a <i>Namespaces</i> page.
+
+<p style="text-align:center">
+<a name="namespaces">
+<img src="images/vehicles-namespaces.png" alt="[Screenshot]" border=2>
+</a>
+</p>
+
+
+<h2><a name="sec-class">3. Inspecting a Class, Schema Inferences, Specialized
+Views</a></h2>
+
+We do not pursue namespace abbreviations further on the tour, and return back
+to the <i>Classes</i> page.
+
+<p style="text-align:center">
+<img src="images/vehicles-classes-enter.png" alt="[Screenshot]" border=2>
+</p>
+
+The class <i>ex:PassengerVehicle</i> links to a
+corresponding <a href="manual.html#class"><i>Class</i></a> page.
+
+<p style="text-align:center">
+<a name="class">
+<img src="images/vehicles-pv-class.png" alt="[Screenshot]" border=2>
+</a>
+</p>
+
+<p>
+The direct super- and subclasses (those with no other proper super- or
+subclass, respectively, in between) are shown.  Further, all properties of
+which the class is a domain or range are shown.  Since inheritance is
+considered there, these are called <i>effective</i>.  In addition, the direct
+instances of the class &ndash; i.e. those which are not an instance of a proper
+subclass &ndash; are listed.
+
+<p><a name="par-infs"><b>Transparently Performed Schema Inferences.</b></a>
+The displayed facts incorporate the results of inferences in accordance
+with the <a href="http://www.w3.org/TR/rdf-mt/">RDF Semantics</a>, which are
+transparently performed by InfraEngine.  From the facts read in from RDF
+documents and built-in entailment rules, as <a
+href="http://www.w3.org/TR/rdf-mt/#rules">specified in the RDF Semantics</a>,
+a deductive closure is automatically computed.  (The rules actually used by
+the InfraEngine implementation can be found in the source file
+<i>knowledgebase.pl</i>.  They are processed by a generic rule
+interpreter and thus easy to modify.)
+
+<p><a name="par-views-special"><b>Specialized Views for Objects of Certain
+Types.</b></a> A class in RDF is an object of type <i>rdfs:Class</i>.  A <a
+href="manual.html#class"><i>Class</i></a> page provides a specialized
+view on such objects, which displays features pertaining specifically to
+classes. Other types of RDF objects for which specialized views are provided
+by InfraEngine include properties &ndash; objects of type <i>rdf:Property</i>
+&ndash; with <a href="manual.html#property"><i>Property</i></a> pages and
+knowledgebases (objects of type <i>sys:Knowledgebase</i>) with <a
+href="manual.html#kb"><i>Knowledgebase</i></a> pages.
+
+<h2><a name="sec-views-generic">4. Generic Object Views</a></h2>
+
+<p>Several views are available for all RDF objects, including objects which
+also have specialized views. The different views can be opened by the
+respective links in the <i>Other Views</i> field. For the class object
+<i>ex:PassengerVehicle</i>, they look as follows.
+
+<h3><a name="object">3.1 <i>Object</i> View</a></h3>
+A table of properties and values of the objects.
+
+<p style="text-align:center">
+<img src="images/vehicles-pv-object.png" alt="[Screenshot]" border=2>
+</p>
+
+<h3><a name="rdf">3.2 <i>RDF</i> View</a></h3>
+An RDF description of the object.
+
+<p style="text-align:center">
+<img src="images/vehicles-pv-rdf.png" alt="[Screenshot]" border=2>
+</p>
+
+<h3><a name="plrdf">3.3 <i>PLRDF</i> View</a></h3>
+Like the <i>RDF</i> view, but in a Prolog readable
+syntax for RDF (experimental).
+
+<p style="text-align:center">
+<img src="images/vehicles-pv-plrdf.png" alt="[Screenshot]" border=2>
+</p>
+
+<h3><a name="graph">3.4 <i>Graph</i> View</a></h3>
+An image of a fragment of the RDF graph.  RDF objects
+are displayed as nodes and relationships corresponding to RDF properties as
+edges. 
+The graph fragments includes the object and its direct neighbor nodes.
+
+<p>The nodes in the image are clickable, leading to a graph view of the
+represented object. This allows graphical navigation through RDF structures.
+
+<p style="text-align:center">
+<img src="images/vehicles-pv-graph.png" alt="[Screenshot]" border=2>
+</p>
+
+<h2><a name="sec-inst">5. Inspecting an Object</a></h2>
+
+<p>
+On our tour, we now again return back to the <i>Classes</i> page.  
+
+<p style="text-align:center">
+<img src="images/vehicles-pv-class-to-instance.png" alt="[Screenshot]" border=2></p>
+
+The last field of the <a href="manual.html#class"><i>Class</i></a> page
+lists the direct instances of the class, in our example just
+<i>ex:johnSmithsCar</i>.  Following the link of this instance leads to an <a
+href="manual.html#object"><i>Object</i></a> view of the instance, showing its
+properties and values in tabular form.  The value of the <i>Reference</i>
+field is a link with the URI of the object as URL. (The URI of the example,
+href<i>http://www.example.org/schemas/vehicles#johnSmithsCar</i>, does not
+reference a useful Web document.)
+
+<p style="text-align:center">
+<img src="images/vehicles-instance.png" alt="[Screenshot]" border=2>
+</p>
+
+<h2><a name="sec-kb">6. Knowledgebases</a></h2>
+
+<h3><a name="kb">6.1 <i>Knowledgebase</i> View</a></h3>
+A knowledgebase is in the InfraEngine server represented by an RDF object.
+Following the menu link <i>Knowledgebase (sys:gen1)</i> leads to a <a
+href="manual.html#kbs"><i>Knowledgebase</i></a> view, displaying
+information about the current knowledgebase <i>sys:gen1</i>.
+
+<p style="text-align:center">
+<img src="images/vehicles-kb.png" alt="[Screenshot]" border=2>
+</p>
+
+The <i>Knowledgebase</i> view shows statistic about the knowledgebase and
+gives references to the documents that have been loaded into it.
+The <i>Commands</i> field provides access to operations on the particular
+knowledgebase and on knowledgebases in general.
+The operation <i>Reload Documents</i> effects that
+all reloading of all loaded documents, which is useful
+for developing RDF documents.
+The <i>Other Views</i> field provides access to other views of the
+knowledgebase object, as shown for class objects in Section <a
+href="#sec-views-generic">Generic Object Views</a>.
+In addition, specific views for knowledgebases
+are supported, two of which we describe in the following section.
+
+<h3><a name="rdfcontent">6.2 <i>RDF Content</i> View</a></h3>
+<p style="text-align:center">
+<img src="images/vehicles-kb-rdfcontent.png" alt="[Screenshot]" border=2>
+</p>
+
+The content of the knowledgebase is dumped as an RDF document.  In contrast,
+the <i>RDF</i> view expresses the knowledgebase object itself as RDF object,
+and not its content.
+
+<h3><a name="dtd">6.3 <i>RDF DTD</i> View</a></h3>
+<p style="text-align:center">
+<img src="images/vehicles-kb-dtd.png" alt="[Screenshot]" border=2>
+</p>
+
+The schema of the knowledgebase is dumped as a DTD. These DTDs can for example
+be used to drive an XML editor, such as the <i>psgml</i> Emacs mode.
+
+<h3><a name="kb-switching">6.4 Switching the Current Knowledgebase</a></h3>
+
+The <i>Knowledgebases</i> command in the <i>Knowledgebase</i> view
+leads to a <a href="manual.html#kbs"><i>Knowledgebases</i></a>
+page.
+
+<p style="text-align:center">
+<a name="kbs">
+<img src="images/vehicles-kbs.png" alt="[Screenshot]" border=2>
+</a>
+</p>
+
+All knowledgebases maintained by the server are listed. This includes
+knowledgebases created by user activity (such as <i>sys:gen1</i>) as well as
+knowledgebases for internal system use, such as <i>sys:catalog</i>,
+<i>sys:library</i> and <i>sys:meta</i>.
+<p>
+The knowledgebase identifiers in the list link to the respective
+<i>Knowledgebase</i> pages, making the referenced knowledgebase the current
+one.
+
+<h2><a name="vehicles-rdf">Appendix: The Vehicles RDF Document</a></h2>
+
+<p>
+This is the <i>vehicles</i> example from the W3C's <a
+href="http://www.w3.org/TR/2004/REC-rdf-primer-20040210/">RDF Primer</a>, with
+slight changes as noted in the comment on the top of the document.
+
+<p>
+<pre>
+&lt;?xml version="1.0"?&gt;
+&lt;!DOCTYPE rdf:RDF [&lt;!ENTITY xsd "http://www.w3.org/2001/XMLSchema#"&gt;]&gt;
+&lt;rdf:RDF   
+  xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"  
+  xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#"
+  xml:base="http://example.org/schemas/vehicles"
+  xmlns:ex="http://example.org/schemas/vehicles#"&gt;
+
+&lt;!-- 
+-- 
+-- This is a combination of "Example 28: The Full Vehicle Schema"
+-- and "Example 29: An Instance of ex:PassengerVehicle" in the
+-- W3C RDF Primer, http://www.w3.org/TR/2004/REC-rdf-primer-20040210/.
+--
+-- The following changes have been made:
+--
+--     added a rdfs:range to driver
+--         - I see no reason why it should not have a range declaration
+--
+--     added rdfs:comment attributes
+--         - to demonstrate how comments are displayed in the InfraEngine
+--           schema browser
+--
+--     added xmlns:ex="http://example.org/schemas/vehicles#" to the header
+--         - the namespace is then automatically used as abbreviation
+--           in the InfraEngine schema browser
+--
+--&gt;
+
+&lt;rdfs:Class rdf:ID="MotorVehicle"&gt;
+  &lt;rdfs:comment&gt;Motorized vehicle.&lt;/rdfs:comment&gt;
+&lt;/rdfs:Class&gt;
+
+&lt;rdfs:Class rdf:ID="PassengerVehicle"&gt;
+  &lt;rdfs:subClassOf rdf:resource="#MotorVehicle"/&gt;
+  &lt;rdfs:comment&gt;Passenger vehicle.&lt;/rdfs:comment&gt;
+&lt;/rdfs:Class&gt;
+
+&lt;rdfs:Class rdf:ID="Truck"&gt;
+  &lt;rdfs:subClassOf rdf:resource="#MotorVehicle"/&gt;
+  &lt;rdfs:comment&gt;Large vehicle usually used for transporting bulk goods 
+                or other materials.&lt;/rdfs:comment&gt;
+&lt;/rdfs:Class&gt;
+
+&lt;rdfs:Class rdf:ID="Van"&gt;
+  &lt;rdfs:subClassOf rdf:resource="#MotorVehicle"/&gt;
+  &lt;rdfs:comment&gt;Vehicle used for transporting goods or groups of 
+                people.&lt;/rdfs:comment&gt;
+&lt;/rdfs:Class&gt;
+
+&lt;rdfs:Class rdf:ID="MiniVan"&gt;
+  &lt;rdfs:subClassOf rdf:resource="#Van"/&gt;
+  &lt;rdfs:subClassOf rdf:resource="#PassengerVehicle"/&gt;
+  &lt;rdfs:comment&gt;Small van, designed for personal use.&lt;/rdfs:comment&gt;
+&lt;/rdfs:Class&gt;
+
+&lt;rdfs:Class rdf:ID="Person"&gt;
+  &lt;rdfs:comment&gt;Person.&lt;/rdfs:comment&gt;
+&lt;/rdfs:Class&gt;
+
+&lt;rdfs:Datatype rdf:about="&amp;xsd;integer"/&gt;
+
+&lt;rdf:Property rdf:ID="registeredTo"&gt;
+  &lt;rdfs:domain rdf:resource="#MotorVehicle"/&gt;
+  &lt;rdfs:range rdf:resource="#Person"/&gt;
+  &lt;rdfs:comment&gt;Registered owner.&lt;/rdfs:comment&gt;
+&lt;/rdf:Property&gt;
+
+&lt;rdf:Property rdf:ID="rearSeatLegRoom"&gt;
+  &lt;rdfs:domain rdf:resource="#PassengerVehicle"/&gt; 
+  &lt;rdfs:range rdf:resource="&amp;xsd;integer"/&gt;
+  &lt;rdfs:comment&gt;Rear seat leg room in centimeters.&lt;/rdfs:comment&gt;
+&lt;/rdf:Property&gt;
+
+&lt;rdf:Property rdf:ID="driver"&gt;
+  &lt;rdfs:domain rdf:resource="#MotorVehicle"/&gt;
+  &lt;rdfs:range rdf:resource="#Person"/&gt;
+  &lt;rdfs:comment&gt;Driver.&lt;/rdfs:comment&gt;
+&lt;/rdf:Property&gt;
+
+&lt;rdf:Property rdf:ID="primaryDriver"&gt;
+  &lt;rdfs:subPropertyOf rdf:resource="#driver"/&gt;
+  &lt;rdfs:comment&gt;Primary driver.&lt;/rdfs:comment&gt;
+&lt;/rdf:Property&gt;
+
+&lt;PassengerVehicle rdf:ID="johnSmithsCar"&gt;
+  &lt;registeredTo rdf:resource="http://www.example.org/staffid/85740"/&gt;
+  &lt;rearSeatLegRoom rdf:datatype="&amp;xsd;integer"&gt;127&lt;/rearSeatLegRoom&gt;
+  &lt;primaryDriver rdf:resource="http://www.example.org/staffid/85740"/&gt;
+&lt;/PassengerVehicle&gt;
+
+&lt;/rdf:RDF&gt;
+</pre>
+
+<p>
+<hr>
+
+Christoph Wernhard 
+(<a href="mailto:info@cs.christophwernhard.com">info@cs.christophwernhard.com</a>)
+
+</body>
+</html>

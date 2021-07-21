@@ -1,0 +1,21 @@
+/* A sketchy quasi monochrome theme */
+
+@import url(https://fonts.googleapis.com/css?family=Nova+Mono)
+
+$fg: #000
+$bg: #fff
+$font-family: "Nova Mono"
+$font-size: 1.2em
+$font-line-height: 1.4
+
+$darken: 25%
+
+$colors: darken(#eee8d5, $darken), darken(#dc322f, $darken), darken(#859900, $darken), darken(#b58900, $darken), darken(#268bd2, $darken), darken(#d33682, $darken), darken(#2aa198, $darken), darken(#073642, $darken), darken(#fdf6e3, $darken), darken(#cb4b16, $darken), darken(#586e75, $darken), darken(#657b83, $darken), darken(#839496, $darken), darken(#6c71c4, $darken), darken(#93a1a1, $darken), darken(#002b36, $darken)
+
+@import variables
+@import styles
+
+body
+  -webkit-filter: grayscale(100%)
+  filter: grayscale(100%)
+  line-height: 1.4

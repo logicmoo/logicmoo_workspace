@@ -1,0 +1,1548 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+
+<html>
+<head>
+<title>SWI-Prolog ODBC Interface</title>
+<style type="text/css">
+
+/* Style sheet for SWI-Prolog latex2html
+*/
+
+dd.defbody
+{ margin-bottom: 1em;
+}
+
+dt.pubdef, dt.multidef
+{ color: #fff;
+padding: 2px 10px 0px 10px;
+margin-bottom: 5px;
+font-size: 18px;
+vertical-align: middle;
+overflow: hidden;
+}
+
+dt.pubdef { background-color: #0c3d6e; }
+dt.multidef { background-color: #ef9439; }
+
+.bib dd
+{ margin-bottom: 1em;
+}
+
+.bib dt
+{ float: left;
+margin-right: 1.3ex;
+}
+
+pre.code
+{ margin-left: 1.5em;
+margin-right: 1.5em;
+border: 1px dotted;
+padding-top: 5px;
+padding-left: 5px;
+padding-bottom: 5px;
+background-color: #f8f8f8;
+}
+
+div.navigate
+{ text-align: center;
+background-color: #f0f0f0;
+border: 1px dotted;
+padding: 5px;
+}
+
+div.title
+{ text-align: center;
+padding-bottom: 1em;
+font-size: 200%;
+font-weight: bold;
+}
+
+div.author
+{ text-align: center;
+font-style: italic;
+}
+
+div.abstract
+{ margin-top: 2em;
+background-color: #f0f0f0;
+border: 1px dotted;
+padding: 5px;
+margin-left: 10%; margin-right:10%;
+}
+
+div.abstract-title
+{ text-align: center;
+padding: 5px;
+font-size: 120%;
+font-weight: bold;
+}
+
+div.toc-h1
+{ font-size: 200%;
+font-weight: bold;
+}
+
+div.toc-h2
+{ font-size: 120%;
+font-weight: bold;
+margin-left: 2em;
+}
+
+div.toc-h3
+{ font-size: 100%;
+font-weight: bold;
+margin-left: 4em;
+}
+
+div.toc-h4
+{ font-size: 100%;
+margin-left: 6em;
+}
+
+span.sec-nr
+{
+}
+
+span.sec-title
+{
+}
+
+span.pred-ext
+{ font-weight: bold;
+}
+
+span.pred-tag
+{ float: right;
+padding-top: 0.2em;
+font-size: 80%;
+font-style: italic;
+color: #fff;
+}
+
+div.caption
+{ width: 80%;
+margin: auto;
+text-align:center;
+}
+
+/* Footnotes */
+.fn {
+color: red;
+font-size: 70%;
+}
+
+.fn-text, .fnp {
+position: absolute;
+top: auto;
+left: 10%;
+border: 1px solid #000;
+box-shadow: 5px 5px 5px #888;
+display: none;
+background: #fff;
+color: #000;
+margin-top: 25px;
+padding: 8px 12px;
+font-size: larger;
+}
+
+sup:hover span.fn-text
+{ display: block;
+}
+
+/* Lists */
+
+dl.latex
+{ margin-top: 1ex;
+margin-bottom: 0.5ex;
+}
+
+dl.latex dl.latex dd.defbody
+{ margin-bottom: 0.5ex;
+}
+
+/* PlDoc Tags */
+
+dl.tags
+{ font-size: 90%;
+margin-left: 5ex;
+margin-top: 1ex;
+margin-bottom: 0.5ex;
+}
+
+dl.tags dt
+{ margin-left: 0pt;
+font-weight: bold;
+}
+
+dl.tags dd
+{ margin-left: 3ex;
+}
+
+td.param
+{ font-style: italic;
+font-weight: bold;
+}
+
+/* Index */
+
+dt.index-sep
+{ font-weight: bold;
+font-size: +1;
+margin-top: 1ex;
+}
+
+/* Tables */
+
+table.center
+{ margin: auto;
+}
+
+table.latex
+{ border-collapse:collapse;
+}
+
+table.latex tr
+{ vertical-align: text-top;
+}
+
+table.latex td,th
+{ padding: 2px 1em;
+}
+
+table.latex tr.hline td,th
+{ border-top: 1px solid black;
+}
+
+table.frame-box
+{ border: 2px solid black;
+}
+
+</style>
+</head>
+<body style="background:white"> 
+<div class="title">SWI-Prolog ODBC Interface</div>
+<div class="author">Jan Wielemaker <br>
+SWI, <br>
+University of Amsterdam <br>
+The Netherlands <br>
+E-mail: <a class="url" href="mailto:jan@swi-prolog.org">jan@swi-prolog.org</a></div>
+<div class="abstract">
+<div class="abstract-title">Abstract</div> This document describes the 
+SWI-Prolog interface to ODBC, the Microsoft standard for <em>Open 
+DataBase Connectivity</em>. These days there are ODBC managers from 
+multiple vendors for many platforms as well as drivers for most 
+databases, making it an attractive target for a Prolog database 
+connection.
+
+<p>The database interface is envisioned to consist of two layers. The 
+first layer is an encapsulation of the core functionality of ODBC. This 
+layer makes it possible to run SQL queries. The second layer exploits 
+the relation between Prolog predicates and database tables, providing 
+---a somewhat limited--- natural Prolog view on the data. The current 
+interface only covers the first layer.
+</div>
+
+<h1><a id="document-contents">Table of Contents</a></h1>
+
+<div class="toc">
+<div class="toc-h2"><a class="sec" href="#sec:1"><span class="sec-nr">1</span> <span class="sec-title">Introduction</span></a></div>
+<div class="toc-h2"><a class="sec" href="#sec:2"><span class="sec-nr">2</span> <span class="sec-title">The 
+ODBC layer</span></a></div>
+<div class="toc-h3"><a class="sec" href="#sec:2.1"><span class="sec-nr">2.1</span> <span class="sec-title">Global 
+configuration</span></a></div>
+<div class="toc-h3"><a class="sec" href="#sec:2.2"><span class="sec-nr">2.2</span> <span class="sec-title">Connection 
+management</span></a></div>
+<div class="toc-h3"><a class="sec" href="#sec:2.3"><span class="sec-nr">2.3</span> <span class="sec-title">Running 
+SQL queries</span></a></div>
+<div class="toc-h4"><a class="sec" href="#sec:2.3.1"><span class="sec-nr">2.3.1</span> <span class="sec-title">One-time 
+invocation</span></a></div>
+<div class="toc-h4"><a class="sec" href="#sec:2.3.2"><span class="sec-nr">2.3.2</span> <span class="sec-title">Parameterised 
+queries</span></a></div>
+<div class="toc-h4"><a class="sec" href="#sec:2.3.3"><span class="sec-nr">2.3.3</span> <span class="sec-title">Fetching 
+rows explicitely</span></a></div>
+<div class="toc-h4"><a class="sec" href="#sec:2.3.4"><span class="sec-nr">2.3.4</span> <span class="sec-title">Fetching 
+data from multiple result sets</span></a></div>
+<div class="toc-h3"><a class="sec" href="#sec:2.4"><span class="sec-nr">2.4</span> <span class="sec-title">Transaction 
+management</span></a></div>
+<div class="toc-h3"><a class="sec" href="#sec:2.5"><span class="sec-nr">2.5</span> <span class="sec-title">Accessing 
+the database dictionary</span></a></div>
+<div class="toc-h3"><a class="sec" href="#sec:2.6"><span class="sec-nr">2.6</span> <span class="sec-title">Getting 
+more information</span></a></div>
+<div class="toc-h3"><a class="sec" href="#sec:2.7"><span class="sec-nr">2.7</span> <span class="sec-title">Representing 
+SQL data in Prolog</span></a></div>
+<div class="toc-h3"><a class="sec" href="#sec:2.8"><span class="sec-nr">2.8</span> <span class="sec-title">Errors 
+and warnings</span></a></div>
+<div class="toc-h4"><a class="sec" href="#sec:2.8.1"><span class="sec-nr">2.8.1</span> <span class="sec-title">ODBC 
+messages:&lsquo;Success with info'</span></a></div>
+<div class="toc-h4"><a class="sec" href="#sec:2.8.2"><span class="sec-nr">2.8.2</span> <span class="sec-title">ODBC 
+errors</span></a></div>
+<div class="toc-h3"><a class="sec" href="#sec:2.9"><span class="sec-nr">2.9</span> <span class="sec-title">ODBC 
+implementations</span></a></div>
+<div class="toc-h4"><a class="sec" href="#sec:2.9.1"><span class="sec-nr">2.9.1</span> <span class="sec-title">Using 
+unixODBC</span></a></div>
+<div class="toc-h4"><a class="sec" href="#sec:2.9.2"><span class="sec-nr">2.9.2</span> <span class="sec-title">Using 
+Microsoft ODBC</span></a></div>
+<div class="toc-h3"><a class="sec" href="#sec:2.10"><span class="sec-nr">2.10</span> <span class="sec-title">Remaining 
+issues</span></a></div>
+<div class="toc-h2"><a class="sec" href="#sec:3"><span class="sec-nr">3</span> <span class="sec-title">Acknowledgments</span></a></div>
+</div>
+<h2 id="sec:odbc-intro"><a id="sec:1"><span class="sec-nr">1</span> <span class="sec-title">Introduction</span></a></h2>
+
+<a id="sec:odbc-intro"></a>
+
+<p>The value of RDMS for Prolog is often over-estimated, as Prolog 
+itself can manage substantial amounts of data. Nevertheless a 
+Prolog/RDMS interface provides advantages if data is already provided in 
+an RDMS, data must be shared with other applications, there are strong 
+persistency requirements or there is too much data to fit in memory.
+
+<p>The popularity of ODBC makes it possible to design a single 
+foreign-language module that provides RDMS access for a wide variety of 
+databases on a wide variety of platforms. The SWI-Prolog RDMS interface 
+is closely modeled after the ODBC API. This API is rather low-level, but 
+defaults and dynamic typing provided by Prolog give the user quite 
+simple access to RDMS, while the interface provides the best possible 
+performance given the RDMS independency constraint.
+
+<p>The Prolog community knows about various high-level connections 
+between RDMS and Prolog. We envision these layered on top of the ODBC 
+connection described here.
+
+<p><h2 id="sec:odbc"><a id="sec:2"><span class="sec-nr">2</span> <span class="sec-title">The 
+ODBC layer</span></a></h2>
+
+<a id="sec:odbc"></a>
+
+<p><h3 id="sec:odbc-global-config"><a id="sec:2.1"><span class="sec-nr">2.1</span> <span class="sec-title">Global 
+configuration</span></a></h3>
+
+<a id="sec:odbc-global-config"></a>
+
+<dl class="latex">
+<dt class="pubdef"><a id="odbc_set_option/1"><strong>odbc_set_option</strong>(<var>+Property</var>)</a></dt>
+<dd class="defbody">
+Set global properties for the environment. This must be called before 
+calling any other ODBC predicates. Permitted properties currently 
+include
+
+<dl class="latex">
+<dt><strong>connection_pooling</strong>(<var>+bool</var>)</dt>
+<dd class="defbody">
+If true, then enable connection pooling for the entire process. Note 
+that due to limitations of ODBC itself, it is not possible to turn 
+pooling off once enabled.
+</dd>
+</dl>
+
+</dd>
+</dl>
+
+<p><h3 id="sec:odbc-connections"><a id="sec:2.2"><span class="sec-nr">2.2</span> <span class="sec-title">Connection 
+management</span></a></h3>
+
+<a id="sec:odbc-connections"></a>
+
+<p>The ODBC interface deals with a single ODBC environment with multiple 
+simultaneous connections. The predicates in this section deal with 
+connection management.
+
+<dl class="latex">
+<dt class="pubdef"><a id="odbc_connect/3"><strong>odbc_connect</strong>(<var>+DSN, 
+-Connection, +Options</var>)</a></dt>
+<dd class="defbody">
+Create a new ODBC connection to data-source <var>DSN</var> and return a 
+handle to this connection in <var>Connection</var>. The connection 
+handle is either an opaque structure or an atom of the <code>alias</code> 
+option is used. In addition to the options below, options applicable to
+<a id="idx:odbcsetconnection2:1"></a><a class="pred" href="#odbc_set_connection/2">odbc_set_connection/2</a> 
+may be provided.
+
+<dl class="latex">
+<dt><strong>user</strong>(<var>User</var>)</dt>
+<dd class="defbody">
+Define the user-name for the connection. This option must be present if 
+the database uses authorization.</dd>
+<dt><strong>password</strong>(<var>Password</var>)</dt>
+<dd class="defbody">
+Provide a password for the connection. Normally used in combination with <code>user(User)</code>.</dd>
+<dt><strong>alias</strong>(<var>AliasName</var>)</dt>
+<dd class="defbody">
+Use <var>AliasName</var> as <var>Connection</var> identifier, making the 
+connection available as a global resource. A good choice is to use the <var>DSN</var> 
+as alias.</dd>
+<dt><strong>open</strong>(<var>OpenMode</var>)</dt>
+<dd class="defbody">
+If <var>OpenMode</var> is <code>once</code> (default if an <code>alias</code> 
+is provided), a second call to open the same <var>DSN</var> simply 
+returns the existing connection. If <code>multiple</code> (default if 
+there is no alias name), a second connection to the same data-source is 
+opened.</dd>
+<dt><strong>mars</strong>(<var>+Bool</var>)</dt>
+<dd class="defbody">
+If <code>true</code>, use Microsoft SQL server 2005 <em>mars</em> mode. 
+This is support for multiple concurrent statements on a connection 
+without requiring the dynamic cursor (which incurs an astounding 20-50x 
+slowdown of query execution!!). MARS is a new feature in SQL2k5 
+apparently, and only works if you use the native driver. For the 
+non-native driver, specifying that it is enabled will have absolutely no 
+effect.</dd>
+<dt><strong>connection_pool_mode</strong>(<var>+Bool</var>)</dt>
+<dd class="defbody">
+Determines how a connection is chosen from a connection pool if 
+connection pooling is on. See <a id="idx:odbcsetoption1:2"></a><a class="pred" href="#odbc_set_option/1">odbc_set_option/1</a> 
+for enabling pooling. Permitted values are&rsquo;strict' (Only 
+connections that exactly match the connection options in the call and 
+the connection attributes set by the application are reused. This is the 
+default) and&rsquo;relaxed' (Connections with matching connection string 
+keywords can be used. Keywords must match, but not all connection 
+attributes must match.)</dd>
+<dt><strong>odbc_version</strong>(<var>+Atom</var>)</dt>
+<dd class="defbody">
+Select the version of the ODBC connection. Default is <code>'3.0'</code>. 
+The other supported value is <code>'2.0'</code>.
+</dd>
+</dl>
+
+<p>The following example connects to the WordNet<sup class="fn">1<span class="fn-text">An 
+SQL version of WordNet is available from <a class="url" href="http://wordnet2sql.infocity.cjb.net/">http://wordnet2sql.infocity.cjb.net/</a></span></sup>
+<cite><a class="cite" href="#miller1990">[1]</a></cite> database, using 
+the connection alias <code>wordnet</code> and opening the connection 
+only once:
+
+<pre class="code">
+open_wordnet :-
+        odbc_connect('WordNet', _,
+                     [ user(jan),
+                       password(xxx),
+                       alias(wordnet),
+                       open(once)
+                     ]).
+</pre>
+
+</dd>
+<dt class="pubdef"><a id="odbc_driver_connect/3"><strong>odbc_driver_connect</strong>(<var>+DriverString, 
+-Connection, +Options</var>)</a></dt>
+<dd class="defbody">
+Connects to a database using SQLDriverConnect(). This API allows for 
+driver-specific additional options. DriverString is passed without 
+checking. Options should <em>not</em> include <code>user</code> and
+<code>password</code>.
+
+<p>Whenever possible, applications should use <a id="idx:odbcconnect3:3"></a><a class="pred" href="#odbc_connect/3">odbc_connect/3</a>. 
+If you need this predicate, please check the documentation for 
+SQLDriverConnect() and the documentation of your driver.<sup class="fn">bug<span class="fn-text">Facilities 
+to deal with prompted completion of the driver options are not yet 
+implemented.</span></sup></dd>
+<dt class="pubdef"><a id="odbc_disconnect/1"><strong>odbc_disconnect</strong>(<var>+Connection</var>)</a></dt>
+<dd class="defbody">
+Close the given <var>Connection</var>. This destroys the connection 
+alias or, if there is no alias, makes further use of the <var>Connection</var> 
+handle illegal.</dd>
+<dt class="pubdef"><a id="odbc_current_connection/2"><strong>odbc_current_connection</strong>(<var>?Connection, 
+?DSN</var>)</a></dt>
+<dd class="defbody">
+Enumerate the existing ODBC connections.</dd>
+<dt class="pubdef"><a id="odbc_set_connection/2"><strong>odbc_set_connection</strong>(<var>+Connection, 
++Option</var>)</a></dt>
+<dd class="defbody">
+Set options on an existing connection. All options defined here may also 
+be specified with <a id="idx:odbcconnect2:4"></a><span class="pred-ext">odbc_connect/2</span> 
+in the option-list. Defined options are:
+
+<dl class="latex">
+<dt><strong>access_mode</strong>(<var>Mode</var>)</dt>
+<dd class="defbody">
+If <code>read</code>, tell the driver we only access the database in 
+read mode. If <code>update</code> (default), tell the driver we may 
+execute update commands.</dd>
+<dt><strong>auto_commit</strong>(<var>bool</var>)</dt>
+<dd class="defbody">
+If <code>true</code> (default), each update statement is committed 
+immediately. If <code>false</code>, an update statement starts a 
+transaction that can be committed or rolled-back. See <a class="sec" href="#sec:2.4">section 
+2.4</a> for details on transaction management.</dd>
+<dt><strong>cursor_type</strong>(<var>CursorType</var>)</dt>
+<dd class="defbody">
+I haven't found a good description of what this does, but setting it to <code>dynamic</code> 
+makes it possible to have multiple active statements on the same 
+connection with Microsoft SQL server. Other values are <code>static</code>, <code>forwards_only</code> 
+and <code>keyset_driven</code>.</dd>
+<dt><strong>encoding</strong>(<var>+Encoding</var>)</dt>
+<dd class="defbody">
+Define the encoding used to communicate to the driver. Defined values 
+are given below. The default on MS-Windows is <code>unicode</code> while 
+on other platforms it is <code>utf8</code>. Below, the *A() functions 
+refer to the&lsquo;ansi' ODBC functions that exchange bytes and the *W() 
+functions refer to the&lsquo;unicode' ODBC functions that exchange UCS-2 
+characters.
+
+<dl class="latex">
+<dt><strong>iso_latin_1</strong></dt>
+<dd class="defbody">
+Communicate using the *A() functions and pass bytes untranslated.
+</dd>
+<dt><strong>locale</strong></dt>
+<dd class="defbody">
+Communicate using the *A() functions and translated between Prolog 
+Unicode characters and their (possibly) multibyte representation in the 
+current locale.
+</dd>
+<dt><strong>utf8</strong></dt>
+<dd class="defbody">
+Communicate using the *A() functions and translated between Prolog 
+Unicode characters and their UTF-8 encoding.
+</dd>
+<dt><strong>unicode</strong></dt>
+<dd class="defbody">
+Communicate using the *W() functions.
+</dd>
+</dl>
+
+</dd>
+<dt><strong>silent</strong>(<var>Bool</var>)</dt>
+<dd class="defbody">
+If <code>true</code> (default <code>false</code>), statements returning
+<code>SQL_SUCCESS_WITH_INFO</code> succeed without printing the info. 
+See also <a class="sec" href="#sec:2.8.1">section 2.8.1</a>.</dd>
+<dt><strong>null</strong>(<var>NullSpecifier</var>)</dt>
+<dd class="defbody">
+Defines how the SQL constant NULL is represented. Without specification, 
+the default is the atom <code>$null$</code>. <var>NullSpecifier</var> is 
+an arbitrary Prolog term, though the implementation is optimised for 
+using an unbound variable, atom and functor with one unbound variable. 
+The representation <code>null(_)</code> is a commonly used alternative.
+
+<p>The specified default holds for all statements executed on this 
+connection. Changing the connection default does not affect already 
+prepared or running statements. The null-value can also be specified at 
+the statement level. See the option list of <a id="idx:odbcquery4:5"></a><a class="pred" href="#odbc_query/4">odbc_query/4</a>.</dd>
+<dt><strong>wide_column_threshold</strong>(<var>+Length</var>)</dt>
+<dd class="defbody">
+If the width of a column exceeds <var>Length</var>, use the API 
+SQLGetData() to get the value incrementally rather than using a (large) 
+buffer allocated with the statement. The default is to use this 
+alternate interface for columns larger than 1024 bytes. There are two 
+cases for using this option. In time critical applications with wide 
+columns it may provide better performance at the cost of a higher memory 
+usage and to work around bugs in SQLGetData(). The latter applies to 
+Microsoft SQL Server fetching the definition of a view.
+</dd>
+</dl>
+
+</dd>
+<dt class="pubdef"><a id="odbc_get_connection/2"><strong>odbc_get_connection</strong>(<var>+Connection, 
+?Property</var>)</a></dt>
+<dd class="defbody">
+Query for properties of the connection. <var>Property</var> is a term of 
+the format <code><var>Name</var>(<var>Value</var>)</code>. If <var>Property</var> 
+is unbound all defined properties are enumerated on backtracking. 
+Currently the following properties are defined.
+
+<dl class="latex">
+<dt><strong>database_name</strong>(<var>Atom</var>)</dt>
+<dd class="defbody">
+Name of the database associated to the connection.
+</dd>
+<dt><strong>dbms_name</strong>(<var>Name</var>)</dt>
+<dd class="defbody">
+Name of the database engine. This constant can be used to identify the 
+engine.
+</dd>
+<dt><strong>dbms_version</strong>(<var>Atom</var>)</dt>
+<dd class="defbody">
+Version identifier from the database engine.
+</dd>
+<dt><strong>driver_name</strong>(<var>Name</var>)</dt>
+<dd class="defbody">
+ODBC Dynamic Link Library providing the interface between ODBC and the 
+database.
+</dd>
+<dt><strong>driver_odbc_version</strong>(<var>Atom</var>)</dt>
+<dd class="defbody">
+ODBC version supported by the driver.
+</dd>
+<dt><strong>driver_version</strong>(<var>Atom</var>)</dt>
+<dd class="defbody">
+The drivers version identifier.
+</dd>
+<dt><strong>active_statements</strong>(<var>Integer</var>)</dt>
+<dd class="defbody">
+Maximum number of statements that can be active at the same time on this 
+connection. Returns 0 (zero) if this is unlimited.<sup class="fn">2<span class="fn-text">Microsoft 
+SQL server can have multiple active statements after setting the option <code>cursor_type</code> 
+to <code>dynamic</code>. See <a id="idx:odbcsetconnection2:6"></a><a class="pred" href="#odbc_set_connection/2">odbc_set_connection/2</a>.</span></sup>
+</dd>
+</dl>
+
+</dd>
+<dt class="pubdef"><a id="odbc_data_source/2"><strong>odbc_data_source</strong>(<var>?DSN, 
+?Description</var>)</a></dt>
+<dd class="defbody">
+Query the defined data sources. It is not required to have any open 
+connections before calling this predicate. <var>DSN</var> is the name of 
+the data source as required by <a id="idx:odbcconnect3:7"></a><a class="pred" href="#odbc_connect/3">odbc_connect/3</a>. <var>Description</var> 
+is the name of the driver. The driver name may be used to tailor the SQL 
+statements used on the database. Unfortunately this name depends on the 
+local installing details and is therefore not universally useful.
+</dd>
+</dl>
+
+<p><h3 id="sec:odbc-query"><a id="sec:2.3"><span class="sec-nr">2.3</span> <span class="sec-title">Running 
+SQL queries</span></a></h3>
+
+<a id="sec:odbc-query"></a>
+
+<p>ODBC distinguishes between direct execution of literal SQL strings 
+and parameterized execution of SQL strings. The first is a simple 
+practical solution for infrequent calls (such as creating a table), 
+while parameterized execution allows the driver and database to 
+precompile the query and store the optimized code, making it suitable 
+for time-critical operations. In addition, it allows for passing 
+parameters without going through SQL-syntax and thus avoiding the need 
+for quoting.
+
+<p><h4 id="sec:odbc-one-time-query"><a id="sec:2.3.1"><span class="sec-nr">2.3.1</span> <span class="sec-title">One-time 
+invocation</span></a></h4>
+
+<a id="sec:odbc-one-time-query"></a>
+
+<dl class="latex">
+<dt class="pubdef"><a id="odbc_query/3"><strong>odbc_query</strong>(<var>+Connection, 
++SQL, -RowOrAffected</var>)</a></dt>
+<dd class="defbody">
+Same as <a id="idx:odbcquery4:8"></a><a class="pred" href="#odbc_query/4">odbc_query/4</a> 
+using <code><code>[]</code></code> for <var>Options</var>.</dd>
+<dt class="pubdef"><a id="odbc_query/4"><strong>odbc_query</strong>(<var>+Connection, 
++SQL, -RowOrAffected, +Options</var>)</a></dt>
+<dd class="defbody">
+Fire an SQL query on the database represented by <var>Connection</var>.
+<var>SQL</var> is any valid SQL statement. SQL statements can be 
+specified as a plain atom, string or a term of the format
+<var>Format</var>-<var>Arguments</var>, which is converted using <a id="idx:format2:9"></a><span class="pred-ext">format/2</span>.
+
+<p>If the statement is a <code>SELECT</code> statement the result-set is 
+returned in <var>RowOrAffected</var>. By default rows are returned 
+one-by-one on backtracking as terms of the functor <code>row/<var>Arity</var></code>, 
+where <var>Arity</var> denotes the number of columns in the result-set. 
+The library pre-fetches the next value to be able to close the statement 
+and return deterministic success when returning the last row of the 
+result-set. Using the option <code>findall/2</code> (see below) the 
+result-set is returned as a list of user-specified terms. For other 
+statements this argument returns <code>affected(Rows)</code>, where <var>Rows</var> 
+represents the number of rows affected by the statement. If you are not 
+interested in the number of affected rows <a id="idx:odbcquery2:10"></a><a class="pred" href="#odbc_query/2">odbc_query/2</a> 
+provides a simple interface for sending SQL-statements.
+
+<p>Below is a small example using the connection created from
+<a id="idx:odbcconnect3:11"></a><a class="pred" href="#odbc_connect/3">odbc_connect/3</a>. 
+Please note that the SQL-statement does not end in the&lsquo;<code><code>;</code></code>&rsquo;character.
+
+<pre class="code">
+lemma(Lemma) :-
+        odbc_query(wordnet,
+                   'SELECT (lemma) FROM word',
+                   row(Lemma)).
+</pre>
+
+<p>The following example adds a name to a table with parent-relations, 
+returning the number of rows affected by the statement. Note that the 
+SQL quote character is the <em>ASCII single quote</em> and, as this SQL 
+quote is embedded in a single quoted Prolog atom, it must be written as <code>\'</code> 
+or <code>''</code> (<em>two</em> single quotes). We use the first 
+alternative for better visibility.
+
+<pre class="code">
+insert_child(Child, Mother, Father, Affected) :-
+        odbc_query(parents,
+                   'INSERT INTO parents (name,mother,father) \
+                      VALUES (\'mary\', \'christine\', \'bob\')',
+                   affected(Affected)).
+</pre>
+
+<p><var>Options</var> defines the following options.
+
+<dl class="latex">
+<dt><strong>types</strong>(<var>ListOfTypes</var>)</dt>
+<dd class="defbody">
+Determine the Prolog type used to report the column-values. When 
+omitted, default conversion as described in <a class="sec" href="#sec:2.7">section 
+2.7</a> is implied. A column may specify <code>default</code> to use 
+default conversion for that column. The length of the type-list must 
+match the number of columns in the result-set.
+
+<p>For example, in the table <code>word</code> the first column is 
+defined with the SQL type <code>DECIMAL(6)</code>. Using this SQL-type, &ldquo;001'' 
+is distinct from &ldquo;1'', but using Prolog integers is a valid 
+representation for Wordnet <code>wordno</code> identifiers. The 
+following query extracts rows using Prolog integers:
+
+<pre class="code">
+?- odbc_query(wordnet,
+              'select * from word', X,
+              [ types([integer,default])
+              ]).
+
+X = row(1, entity) ;
+X = row(2, thing) ;
+...
+</pre>
+
+<p>See also <a class="sec" href="#sec:2.7">section 2.7</a> for notes on 
+type-conversion.</dd>
+<dt><strong>null</strong>(<var>NullSpecifier</var>)</dt>
+<dd class="defbody">
+Specify SQL NULL representation. See <a id="idx:odbcsetconnection2:12"></a><a class="pred" href="#odbc_set_connection/2">odbc_set_connection/2</a> 
+for details.</dd>
+<dt><strong>source</strong>(<var>Bool</var>)</dt>
+<dd class="defbody">
+If <code>true</code> (default <code>false</code>), include the 
+source-column with each result-value. With this option, each result in 
+the
+<code>row/<var>N</var></code>-term is of the format below. <var>TableName</var> 
+or
+<var>ColumnName</var> may be the empty atom if the information is not 
+available.<sup class="fn">3<span class="fn-text">This is one possible 
+interface to this information. In many cases it is more efficient and 
+convenient to provide this information separately as it is the same for 
+each result-row.</span></sup>
+<blockquote>
+<code>column(TableName, ColumnName, Value)</code>
+</blockquote>
+</dd>
+<dt><strong>findall</strong>(<var>Template, row(Column, ... )</var>)</dt>
+<dd class="defbody">
+Instead of returning rows on backtracking this option makes <a id="idx:odbcquery3:13"></a><a class="pred" href="#odbc_query/3">odbc_query/3</a> 
+return all rows in a list and close the statement. The option is named 
+after the Prolog <a id="idx:findall3:14"></a><span class="pred-ext">findall/3</span> 
+predicate, as the it makes <a id="idx:odbcquery3:15"></a><a class="pred" href="#odbc_query/3">odbc_query/3</a> 
+behave as the commonly used <a id="idx:findall3:16"></a><span class="pred-ext">findall/3</span> 
+construct below.
+
+<pre class="code">
+lemmas(Lemmas) :-
+        findall(Lemma,
+                odbc_query(wordnet,
+                           'select (lemma) from word',
+                           row(Lemma)),
+                Lemmas).
+</pre>
+
+<p>Using the <code>findall/2</code> option the above can be implemented 
+as below. The number of argument of the <code>row</code> term must match 
+the number of columns in the result-set.
+
+<pre class="code">
+lemmas(Lemmas) :-
+        odbc_query(wordnet,
+                   'select (lemma) from word',
+                   Lemmas,
+                   [ findall(Lemma, row(Lemma))
+                   ]).
+</pre>
+
+<blockquote><i>The current implementation is incomplete. It does not 
+allow arguments of
+<code>row(...)</code> to be instantiated. Plain instantiation can always 
+be avoided using a proper SELECT statement. Potentially useful however 
+would be the translation of compound terms, especially to translate 
+date/time/timestamp structures to a format for use by the application.
+</i></blockquote>
+</dd>
+<dt><strong>wide_column_threshold</strong>(<var>+Length</var>)</dt>
+<dd class="defbody">
+Specify threshold column width for using SQLGetData(). See <a id="idx:odbcsetconnection2:17"></a><a class="pred" href="#odbc_set_connection/2">odbc_set_connection/2</a> 
+for details.
+</dd>
+</dl>
+
+</dd>
+<dt class="pubdef"><a id="odbc_query/2"><strong>odbc_query</strong>(<var>+Connection, 
++SQL</var>)</a></dt>
+<dd class="defbody">
+As <a id="idx:odbcquery3:18"></a><a class="pred" href="#odbc_query/3">odbc_query/3</a>, 
+but used for SQL-statements that should not return result-rows (i.e. all 
+statements except for <code>SELECT</code>). The predicate prints a 
+diagnostic message if the query returns a result.
+</dd>
+</dl>
+
+<p><h4 id="sec:odbc-param-query"><a id="sec:2.3.2"><span class="sec-nr">2.3.2</span> <span class="sec-title">Parameterised 
+queries</span></a></h4>
+
+<a id="sec:odbc-param-query"></a>
+
+<p>ODBC provides for&lsquo;parameterized queries'. These are SQL queries 
+with a <code><code>?</code></code>-sign at places where parameters 
+appear. The ODBC interface and database driver may use this to 
+precompile the SQL-statement, giving better performance on repeated 
+queries. This is exactly what we want if we associate Prolog predicates 
+to database tables. This interface is defined by the following 
+predicates:
+
+<dl class="latex">
+<dt class="pubdef"><a id="odbc_prepare/4"><strong>odbc_prepare</strong>(<var>+Connection, 
++SQL, +Parameters, -Statement</var>)</a></dt>
+<dd class="defbody">
+As <a id="idx:odbcprepare5:19"></a><a class="pred" href="#odbc_prepare/5">odbc_prepare/5</a> 
+using <code><code>[]</code></code> for <var>Options</var>.</dd>
+<dt class="pubdef"><a id="odbc_prepare/5"><strong>odbc_prepare</strong>(<var>+Connection, 
++SQL, +Parameters, -Statement, +Options</var>)</a></dt>
+<dd class="defbody">
+Create a statement from the given <var>SQL</var> (which may be a format 
+specification as described with <a id="idx:odbcquery3:20"></a><a class="pred" href="#odbc_query/3">odbc_query/3</a>) 
+statement that normally has one or more parameter-indicators (<code><code>?</code></code>) 
+and unify <var>Statement</var> with a handle to the created statement. <var>Parameters</var> 
+is a list of descriptions, one for each parameter. Each parameter 
+description is one of the following:
+
+<dl class="latex">
+<dt><strong>default</strong></dt>
+<dd class="defbody">
+Uses the ODBC function SQLDescribeParam() to obtain information about 
+the parameter and apply default rules. See <a class="sec" href="#sec:2.7">section 
+2.7</a> for details. If the interface fails to return a type or the type 
+is unknown to the ODBC interface a message is printed and the interface 
+handles the type as text, which implies the user must supply an atom. 
+The message can be suppressed using the <code>silent(true)</code> option 
+of <a id="idx:odbcsetconnection2:21"></a><a class="pred" href="#odbc_set_connection/2">odbc_set_connection/2</a>. 
+An alternative mapping can be selected using the <var>&gt;</var> option 
+of this predicate described below.</dd>
+<dt><strong><var>SqlType</var></strong>(<var>Specifier, ...</var>)</dt>
+<dd class="defbody">
+Declare the parameter to be of type <var>SqlType</var> with the given 
+specifiers. Specifiers are required for <code>char</code>, <code>varchar</code>, 
+etc. to specify the field-width. When calling odbc_execute/[2-3], the 
+user must supply the parameter values in the default Prolog type for 
+this SQL type. See <a class="sec" href="#sec:2.7">section 2.7</a> for 
+details.</dd>
+<dt><b><var>PrologType</var> <var>&gt;</var> <var>SqlType</var></b></dt>
+<dd class="defbody">
+As above, but supply values of the given <var>PrologType</var>, using 
+the type-transformation defined by the database driver. For example, if 
+the parameter is specified as
+
+<pre class="code">
+atom &gt; date
+</pre>
+
+<p>The use must supply an atom of the format <code>YYYY-MM-DD</code> 
+rather than a term <code>date(Year,Month,Day)</code>. This construct 
+enhances flexibility and allows for passing values that have no proper 
+representation in Prolog.
+</dd>
+</dl>
+
+<p><var>Options</var> defines a list of options for executing the 
+statement. See
+<a id="idx:odbcquery4:22"></a><a class="pred" href="#odbc_query/4">odbc_query/4</a> 
+for details. In addition, the following option is provided:
+
+<dl class="latex">
+<dt><strong>fetch</strong>(<var>FetchType</var>)</dt>
+<dd class="defbody">
+Determine the <var>FetchType</var>, which is one of <code>auto</code> 
+(default) to extract the result-set on backtracking or <code>fetch</code> 
+to prepare the result-set to be fetched using <a id="idx:odbcfetch3:23"></a><a class="pred" href="#odbc_fetch/3">odbc_fetch/3</a>.
+</dd>
+</dl>
+
+</dd>
+<dt class="pubdef"><a id="odbc_execute/3"><strong>odbc_execute</strong>(<var>+Statement, 
++ParameterValues, -RowOrAffected</var>)</a></dt>
+<dd class="defbody">
+Execute a statement prepared with <a id="idx:odbcprepare4:24"></a><a class="pred" href="#odbc_prepare/4">odbc_prepare/4</a> 
+with the given
+<var>ParameterValues</var> and return the rows or number of affected 
+rows as <a id="idx:odbcquery4:25"></a><a class="pred" href="#odbc_query/4">odbc_query/4</a>. 
+This predicate may return type_error exceptions if the provided 
+parameter values cannot be converted to the declared types.
+
+<p>ODBC doesn't appear to allow for multiple cursors on the same 
+result-set.<sup class="fn">4<span class="fn-text">Is this right?</span></sup> 
+This would imply there can only be one active <a id="idx:odbcexecute3:26"></a><a class="pred" href="#odbc_execute/3">odbc_execute/3</a> 
+(i.e. with a choice-point) on a prepared statement. Suppose we have a 
+table <code>age (name char(25), age integer)</code> bound to the 
+predicate <span class="pred-ext">age/2</span> we cannot write the code 
+below without special precautions. The ODBC interface therefore creates 
+a clone of a statement if it discovers the statement is being executed, 
+which is discarded after the statement is finished.<sup class="fn">5<span class="fn-text">The 
+code is prepared to maintain a cache of statements. Practice should tell 
+us whether it is worthwhile activating this.</span></sup>
+
+<pre class="code">
+same_age(X, Y) :-
+        age(X, AgeX),
+        age(Y, AgeY),
+        AgeX = AgeY.
+</pre>
+
+</dd>
+<dt class="pubdef"><a id="odbc_execute/2"><strong>odbc_execute</strong>(<var>+Statement, 
++ParameterValues</var>)</a></dt>
+<dd class="defbody">
+Like <a id="idx:odbcquery2:27"></a><a class="pred" href="#odbc_query/2">odbc_query/2</a>, 
+this predicate is meant to execute simple SQL statements without 
+interest in the result.</dd>
+<dt class="pubdef"><a id="odbc_cancel_thread/1"><strong>odbc_cancel_thread</strong>(<var>+ThreadId</var>)</a></dt>
+<dd class="defbody">
+If the thread <var>ThreadId</var> is currently blocked inside <a id="idx:odbcexecute3:28"></a><a class="pred" href="#odbc_execute/3">odbc_execute/3</a> 
+then interrupt it. If <var>ThreadId</var> is not currently executing
+<a id="idx:odbcexecute4:29"></a><span class="pred-ext">odbc_execute/4</span> 
+then <a id="idx:odbccancelthread1:30"></a><a class="pred" href="#odbc_cancel_thread/1">odbc_cancel_thread/1</a> 
+succeeds but does nothing. If
+<var>ThreadId</var> is not a valid thread ID or alias, an exception is 
+raised.</dd>
+<dt class="pubdef"><a id="odbc_free_statement/1"><strong>odbc_free_statement</strong>(<var>+Statement</var>)</a></dt>
+<dd class="defbody">
+Destroy a statement prepared with <a id="idx:odbcprepare4:31"></a><a class="pred" href="#odbc_prepare/4">odbc_prepare/4</a>. 
+If the statement is currently executing (i.e. <a id="idx:odbcexecute3:32"></a><a class="pred" href="#odbc_execute/3">odbc_execute/3</a> 
+left a choice-point), the destruction is delayed until the execution 
+terminates.
+</dd>
+</dl>
+
+<p><h4 id="sec:sqlfetch"><a id="sec:2.3.3"><span class="sec-nr">2.3.3</span> <span class="sec-title">Fetching 
+rows explicitely</span></a></h4>
+
+<a id="sec:sqlfetch"></a>
+
+<p>Normally SQL queries return a result-set that is enumerated on 
+backtracking. Using this approach a result-set is similar to a predicate 
+holding facts. There are some cases where fetching the rows one-by-one, 
+much like <a id="idx:read1:33"></a><span class="pred-ext">read/1</span> 
+reads terms from a file is more appropriate and there are cases where 
+only part of the result-set is to be fetched. These cases can be dealt 
+with using <a id="idx:odbcfetch3:34"></a><a class="pred" href="#odbc_fetch/3">odbc_fetch/3</a>, 
+which provides an interface to SQLFetchScroll().
+
+<p>As a general rule of thumb, stay away from these functions if you do 
+not really need them. Experiment before deciding on the strategy and 
+often you'll discover the simply backtracking approach is much easier to 
+deal with and about as fast.
+
+<dl class="latex">
+<dt class="pubdef"><a id="odbc_fetch/3"><strong>odbc_fetch</strong>(<var>+Statement, 
+-Row, +Option</var>)</a></dt>
+<dd class="defbody">
+Fetch a row from the result-set of <var>Statement</var>. <var>Statement</var> 
+must be created with <a id="idx:odbcprepare5:35"></a><a class="pred" href="#odbc_prepare/5">odbc_prepare/5</a> 
+using the option <code>fetch(fetch)</code> and be executed using <a id="idx:odbcexecute2:36"></a><a class="pred" href="#odbc_execute/2">odbc_execute/2</a>. <var>Row</var> 
+is unified to the fetched row or the atom <code>end_of_file</code><sup class="fn">6<span class="fn-text">This 
+atom was selected to emphasise the similarity to read.</span></sup> 
+after the end of the data is reached. Calling <a id="idx:odbcfetch2:37"></a><span class="pred-ext">odbc_fetch/2</span> 
+after all data is retrieved causes a permission-error exception. <var>Option</var> 
+is one of:
+
+<dl class="latex">
+<dt><strong>next</strong></dt>
+<dd class="defbody">
+Fetch the next row.
+</dd>
+<dt><strong>prior</strong></dt>
+<dd class="defbody">
+Fetch the result-set going backwards.
+</dd>
+<dt><strong>first</strong></dt>
+<dd class="defbody">
+Fetch the first row.
+</dd>
+<dt><strong>last</strong></dt>
+<dd class="defbody">
+Fetch the last row.
+</dd>
+<dt><strong>absolute</strong>(<var>Offset</var>)</dt>
+<dd class="defbody">
+Fetch absolute numbered row. Rows count from one.
+</dd>
+<dt><strong>relative</strong>(<var>Offset</var>)</dt>
+<dd class="defbody">
+Fetch relative to the current row. <code>relative(1)</code> is the same 
+as <code>next</code>, except that the first row extracted is row 2.
+</dd>
+<dt><strong>bookmark</strong>(<var>Offset</var>)</dt>
+<dd class="defbody">
+Reserved. Bookmarks are not yet supported in this interface.
+</dd>
+</dl>
+
+<p>In many cases, depending on the driver and RDBMS, the cursor-type 
+must be changed using <a id="idx:odbcsetconnection2:38"></a><a class="pred" href="#odbc_set_connection/2">odbc_set_connection/2</a> 
+for anything different from <code>next</code> to work.
+
+<p>Here is example code each time skipping a row from a table&lsquo;test' 
+holding a single column of integers that represent the row-number. This 
+test was executed using unixODBC and MySQL on SuSE Linux.
+
+<pre class="code">
+fetch(Options) :-
+        odbc_set_connection(test, cursor_type(static)),
+        odbc_prepare(test,
+                     'select (testval) from test',
+                     [],
+                     Statement,
+                     [ fetch(fetch)
+                     ]),
+        odbc_execute(Statement, []),
+        fetch(Statement, Options).
+
+fetch(Statement, Options) :-
+        odbc_fetch(Statement, Row, Options),
+        (   Row == end_of_file
+        -&gt;  true
+        ;   writeln(Row),
+            fetch(Statement, Options)
+        ).
+</pre>
+
+</dd>
+<dt class="pubdef"><a id="odbc_close_statement/1"><strong>odbc_close_statement</strong>(<var>+Statement</var>)</a></dt>
+<dd class="defbody">
+Closes the given statement (without freeing it). This must be used if 
+not the whole result-set is retrieved using <a id="idx:odbcfetch3:39"></a><a class="pred" href="#odbc_fetch/3">odbc_fetch/3</a>.
+</dd>
+</dl>
+
+<p><h4 id="sec:sqlresultsets"><a id="sec:2.3.4"><span class="sec-nr">2.3.4</span> <span class="sec-title">Fetching 
+data from multiple result sets</span></a></h4>
+
+<a id="sec:sqlresultsets"></a>
+
+<p>Most SQL queries return only a single result set - a list of rows. 
+However, some queries can return more than one result set. For example,&rsquo;SELECT 
+1; SELECT 2' is a batch query that returns a single row (1) and then a 
+single row(2). Queries involving stored procedures can easily generate 
+such results.
+
+<p>To retrieve data from a subsequent result set, <a id="idx:odbcnextresultset1:40"></a><a class="pred" href="#odbc_next_result_set/1">odbc_next_result_set/1</a> 
+can be used, but only for prepared queries which were prepared with 
+fetch(fetch) as the fetch style in the option list.
+
+<dl class="latex">
+<dt class="pubdef"><a id="odbc_next_result_set/1"><strong>odbc_next_result_set</strong>(<var>+Statement</var>)</a></dt>
+<dd class="defbody">
+Succeeds if there is another result set, and positions the cursor at the 
+first row of the new result set. If there are no more result sets, the 
+predicate fails.
+
+<pre class="code">
+fetch(Options) :-
+        odbc_prepare(test,
+                     'select (testval) from test; select (anotherval)
+                     from some_other_table',
+                     [],
+                     Statement,
+                     [ fetch(fetch)
+                     ]),
+        odbc_execute(Statement, []),
+        fetch(Statement, Options).
+
+fetch(Statement, Options) :-
+        odbc_fetch(Statement, Row, Options),
+        (   Row == end_of_file
+        -&gt;  (   odbc_next_result_set(Statement)
+            -&gt;  writeln(next_result_set),
+                fetch(Statement, Options)
+            ;   true
+            )
+        ;   writeln(Row),
+            fetch(Statement, Options)
+        ).
+</pre>
+
+<p></dd>
+</dl>
+
+<p><h3 id="sec:sqltrans"><a id="sec:2.4"><span class="sec-nr">2.4</span> <span class="sec-title">Transaction 
+management</span></a></h3>
+
+<a id="sec:sqltrans"></a>
+
+<p>ODBC can run in two modi. By default, all update actions are 
+immediately committed on the server. Using <a id="idx:odbcsetconnection2:41"></a><a class="pred" href="#odbc_set_connection/2">odbc_set_connection/2</a> 
+this behaviour can be switched off, after which each SQL statement that 
+can be inside a transaction implicitly starts a new transaction. This 
+transaction can be ended using <a id="idx:odbcendtransaction2:42"></a><a class="pred" href="#odbc_end_transaction/2">odbc_end_transaction/2</a>.
+
+<dl class="latex">
+<dt class="pubdef"><a id="odbc_end_transaction/2"><strong>odbc_end_transaction</strong>(<var>+Connection, 
++Action</var>)</a></dt>
+<dd class="defbody">
+End the currently open transaction if there is one. Using <var>Action</var>
+<code>commit</code> pending updates are made permanent, using
+<code>rollback</code> they are discarded.
+</dd>
+</dl>
+
+<p>The ODBC documentation has many comments on transaction management 
+and its interaction with database cursors.
+
+<p><h3 id="sec:odbc-db-dictionary"><a id="sec:2.5"><span class="sec-nr">2.5</span> <span class="sec-title">Accessing 
+the database dictionary</span></a></h3>
+
+<a id="sec:odbc-db-dictionary"></a>
+
+<p>With this interface we do not envision the use of Prolog as a 
+database manager. Nevertheless, elementary access to the structure of a 
+database is required, for example to validate a database satisfies the 
+assumptions made by the application.
+
+<dl class="latex">
+<dt class="pubdef"><a id="odbc_current_table/2"><strong>odbc_current_table</strong>(<var>+Connection, 
+-Table</var>)</a></dt>
+<dd class="defbody">
+Return on backtracking the names of all tables in the database 
+identified by the connection.</dd>
+<dt class="pubdef"><a id="odbc_current_table/3"><strong>odbc_current_table</strong>(<var>+Connection, 
+?Table, ?Facet</var>)</a></dt>
+<dd class="defbody">
+Enumerate properties of the tables. Defines facets are:
+
+<dl class="latex">
+<dt><strong>qualifier</strong>(<var>Qualifier</var>)</dt>
+<dt><strong>owner</strong>(<var>Owner</var>)</dt>
+<dt><strong>comment</strong>(<var>Comment</var>)</dt>
+<dd class="defbody">
+These facets are defined by SQLTables()
+</dd>
+<dt><strong>arity</strong>(<var>Arity</var>)</dt>
+<dd class="defbody">
+This facet returns the number of columns in a table.
+</dd>
+</dl>
+
+</dd>
+<dt class="pubdef"><a id="odbc_table_column/3"><strong>odbc_table_column</strong>(<var>+Connection, 
+?Table, ?Column</var>)</a></dt>
+<dd class="defbody">
+On backtracking, enumerate all columns in all tables.</dd>
+<dt class="pubdef"><a id="odbc_table_column/4"><strong>odbc_table_column</strong>(<var>+Connection, 
+?Table, ?Column, ?Facet</var>)</a></dt>
+<dd class="defbody">
+Provides access to the properties of the table as defined by the ODBC 
+call SQLColumns(). Defined facets are:
+
+<dl class="latex">
+<dt><strong>table_qualifier</strong>(<var>Qualifier</var>)</dt>
+<dt><strong>table_owner</strong>(<var>Owner</var>)</dt>
+<dt><strong>table_name</strong>(<var>Table</var>)</dt>
+<dd class="defbody">
+See <a id="idx:odbccurrenttable3:43"></a><a class="pred" href="#odbc_current_table/3">odbc_current_table/3</a>.
+</dd>
+<dt><strong>data_type</strong>(<var>DataType</var>)</dt>
+<dt><strong>type_name</strong>(<var>TypeName</var>)</dt>
+<dt><strong>precision</strong>(<var>Precision</var>)</dt>
+<dt><strong>length</strong>(<var>Length</var>)</dt>
+<dt><strong>scale</strong>(<var>Scale</var>)</dt>
+<dt><strong>radix</strong>(<var>Radix</var>)</dt>
+<dt><strong>nullable</strong>(<var>Nullable</var>)</dt>
+<dt><strong>remarks</strong>(<var>Remarks</var>)</dt>
+<dd class="defbody">
+These facets are defined by SQLColumns()
+</dd>
+<dt><strong>type</strong>(<var>Type</var>)</dt>
+<dd class="defbody">
+More prolog-friendly representation of the type properties. See
+<a class="sec" href="#sec:2.7">section 2.7</a>.
+</dd>
+</dl>
+
+</dd>
+<dt class="pubdef"><a id="odbc_type/3"><strong>odbc_type</strong>(<var>+Connection, 
+?TypeSpec, ?Facet</var>)</a></dt>
+<dd class="defbody">
+Query the types supported by the data source. <var>TypeSpec</var> is 
+either an integer type-id, the name of an ODBC SQL type or the constant
+<code>all_types</code> to enumerate all known types. This predicate 
+calls SQLGetTypeInfo() and its facet names are derived from the 
+specification of this ODBC function:
+
+<dl class="latex">
+<dt><strong>name</strong>(<var>Name</var>)</dt>
+<dd class="defbody">
+Name used by the data-source. Use this in CREATE statements
+</dd>
+<dt><strong>data_type</strong>(<var>DataType</var>)</dt>
+<dd class="defbody">
+Numeric identifier of the type
+</dd>
+<dt><strong>precision</strong>(<var>Precision</var>)</dt>
+<dd class="defbody">
+When available, maximum precision of the type.
+</dd>
+<dt><strong>literal_prefix</strong>(<var>Prefix</var>)</dt>
+<dd class="defbody">
+When available, prefix for literal representation.
+</dd>
+<dt><strong>literal_suffix</strong>(<var>Suffix</var>)</dt>
+<dd class="defbody">
+When available, suffix for literal representation.
+</dd>
+<dt><strong>create_params</strong>(<var>CreateParams</var>)</dt>
+<dd class="defbody">
+When available, arguments needed to create the type.
+</dd>
+<dt><strong>nullable</strong>(<var>Bool</var>)</dt>
+<dd class="defbody">
+Whether the type can be <code>NULL</code>. May be <code>unknown</code>
+</dd>
+<dt><strong>case_sensitive</strong>(<var>Bool</var>)</dt>
+<dd class="defbody">
+Whether values for this type are case-sensitive.
+</dd>
+<dt><strong>searchable</strong>(<var>Searchable</var>)</dt>
+<dd class="defbody">
+Whether the type can be searched. Values are <code>false</code>,
+<code>true</code>, <code>like_only</code> or <code>all_except_like</code>.
+</dd>
+<dt><strong>unsigned</strong>(<var>Bool</var>)</dt>
+<dd class="defbody">
+When available, whether the value is signed. Please note that SWI-Prolog 
+does not provide unsigned integral values.
+</dd>
+<dt><strong>money</strong>(<var>Bool</var>)</dt>
+<dd class="defbody">
+Whether the type represents money.
+</dd>
+<dt><strong>auto_increment</strong>(<var>Bool</var>)</dt>
+<dd class="defbody">
+When available, whether the type can be auto-incremented.
+</dd>
+<dt><strong>local_name</strong>(<var>LocalName</var>)</dt>
+<dd class="defbody">
+Name of the type in local language.
+</dd>
+<dt><strong>minimum_scale</strong>(<var>MinScale</var>)</dt>
+<dd class="defbody">
+Minimum scale of the type.
+</dd>
+<dt><strong>maximum_scale</strong>(<var>MaxScale</var>)</dt>
+<dd class="defbody">
+Maximum scale of the type.
+</dd>
+</dl>
+
+</dd>
+<dt class="pubdef"><a id="odbc_table_primary_key/3"><strong>odbc_table_primary_key</strong>(<var>+Connection, 
++Table, ?Column</var>)</a></dt>
+<dd class="defbody">
+True when <var>Column</var> is a primary key in <var>Table</var>.</dd>
+<dt class="pubdef"><a id="odbc_table_foreign_key/5"><strong>odbc_table_foreign_key</strong>(<var>+Connection, 
+?PkTable, ?PkCol, ?FkTable, ?FkCol</var>)</a></dt>
+<dd class="defbody">
+True when <var>PkTable</var>/<var>PkCol</var> <var>FkTable</var>/<var>FkCol</var> 
+is a foreign keys column.
+</dd>
+</dl>
+
+<p><h3 id="sec:odbcinfo"><a id="sec:2.6"><span class="sec-nr">2.6</span> <span class="sec-title">Getting 
+more information</span></a></h3>
+
+<a id="sec:odbcinfo"></a>
+
+<dl class="latex">
+<dt class="pubdef"><a id="odbc_statistics/1"><strong>odbc_statistics</strong>(<var>?Key</var>)</a></dt>
+<dd class="defbody">
+Get statistical data on the ODBC interface. Currently defined keys are:
+
+<dl class="latex">
+<dt><strong>statements</strong>(<var>Created, Freed</var>)</dt>
+<dd class="defbody">
+Number of SQL statements that have been <var>Created</var> and <var>Freed</var> 
+over all connections. Statements executed with odbc_query/[2-3] 
+increment <var>Created</var> as the query is created and <var>Freed</var> 
+if the query is terminated due to deterministic success, failure, cut or 
+exception. Statements created with odbc_prepare/[4-5] are freed by <a id="idx:odbcfreestatement1:44"></a><a class="pred" href="#odbc_free_statement/1">odbc_free_statement/1</a> 
+or due to a fatal error with the statement.
+</dd>
+</dl>
+
+</dd>
+<dt class="pubdef"><a id="odbc_debug/1"><strong>odbc_debug</strong>(<var>+Level</var>)</a></dt>
+<dd class="defbody">
+Set the verbosity-level to <var>Level</var>. Default is 0. Higher levels 
+make the system print debugging messages.
+</dd>
+</dl>
+
+<p><h3 id="sec:sqltypes"><a id="sec:2.7"><span class="sec-nr">2.7</span> <span class="sec-title">Representing 
+SQL data in Prolog</span></a></h3>
+
+<a id="sec:sqltypes"></a>
+
+<p>Databases have a poorly standardized but rich set of datatypes. Some 
+have natural Prolog counterparts, some not. A complete mapping requires 
+us to define Prolog data-types for SQL types that have no standardized 
+Prolog counterpart (such as timestamp), the definition of a default 
+mapping and the possibility to define an alternative mapping for a 
+specific column. For example, many variations of the SQL <code>DECIMAL</code> 
+type cannot be mapped to a Prolog integer. Nevertheless, mapping to an 
+integer may be the proper choice for a specific application.
+
+<p>The Prolog/ODBC interface defines the following Prolog result types 
+with the indicated default transformation. Different result-types can be 
+requested using the <code>types(TypeList)</code> option for the
+<a id="idx:odbcquery4:45"></a><a class="pred" href="#odbc_query/4">odbc_query/4</a> 
+and <a id="idx:odbcprepare5:46"></a><a class="pred" href="#odbc_prepare/5">odbc_prepare/5</a> 
+interfaces.
+
+<dl class="latex">
+<dt><strong>atom</strong></dt>
+<dd class="defbody">
+Used as default for the SQL types <code>char</code>, <code>varchar</code>,
+<code>longvarchar</code>, <code>binary</code>, <code>varbinary</code>,
+<code>longvarbinary</code>, <code>decimal</code> and <code>numeric</code>. 
+Can be used for all types.</dd>
+<dt><strong>string</strong></dt>
+<dd class="defbody">
+SWI-Prolog extended type string. Use the type for special cases where 
+garbage atoms must be avoided. Can be used for all types.</dd>
+<dt><strong>codes</strong></dt>
+<dd class="defbody">
+List of character codes. Use this type if the argument must be analysed 
+or compatibility with Prolog systems that cannot handle infinite-length 
+atoms is desired. Can be used for all types.</dd>
+<dt><strong>integer</strong></dt>
+<dd class="defbody">
+Used as default for the SQL types <code>bit</code>, <code>tinyint</code>,
+<code>smallint</code> and <code>integer</code>. Please note that 
+SWI-Prolog integers are signed 32-bit values, where SQL allows for 
+unsigned values as well. Can be used for the integral, and <code>decimal</code> 
+types as well as the types <code>date</code> and <code>timestamp</code>, 
+which are represented as POSIX time-stamps (seconds after Jan 1, 1970).</dd>
+<dt><strong>float</strong></dt>
+<dd class="defbody">
+Used as default for the SQL types <code>real</code>, <code>float</code> 
+and
+<code>double</code>. Can be used for the integral and <code>decimal</code> 
+types as well as the types <code>date</code> and <code>timestamp</code>, 
+which are represented as POSIX time-stamps (seconds after Jan 1, 1970). 
+Representing time this way is compatible to SWI-Prologs time-stamp 
+handling.</dd>
+<dt><strong>date</strong></dt>
+<dd class="defbody">
+A Prolog term of the form <code>date(Year,Month,Day)</code> used as 
+default for the SQL type <code>date</code>.</dd>
+<dt><strong>time</strong></dt>
+<dd class="defbody">
+A Prolog term of the form <code>time(Hour,Minute,Second)</code> used as 
+default for the SQL type <code>time</code>.</dd>
+<dt><strong>timestamp</strong></dt>
+<dd class="defbody">
+A Prolog term of the form
+<code>timestamp(Year,Month,Day,Hour,Minute,Second,Fraction)</code> used 
+as default for the SQL type <code>timestamp</code>.
+</dd>
+</dl>
+
+<p><h3 id="sec:odbc-reports"><a id="sec:2.8"><span class="sec-nr">2.8</span> <span class="sec-title">Errors 
+and warnings</span></a></h3>
+
+<a id="sec:odbc-reports"></a>
+
+<p>ODBC operations return success, error or&lsquo;success with info'. 
+This section explains how results from the ODBC layer are reported to 
+Prolog.
+
+<p><h4 id="sec:successwithinfo"><a id="sec:2.8.1"><span class="sec-nr">2.8.1</span> <span class="sec-title">ODBC 
+messages:&lsquo;Success with info'</span></a></h4>
+
+<a id="sec:successwithinfo"></a>
+
+<p>If an ODBC operation returns&lsquo;with info', the info is extracted 
+from the interface and handled to the Prolog message dispatcher <a id="idx:printmessage2:47"></a><span class="pred-ext">print_message/2</span>. 
+The level of the message is <code>informational</code> and the term is 
+of the form:
+
+<dl class="latex">
+<dt><strong>odbc</strong>(<var>State, Native, Message</var>)</dt>
+<dd class="defbody">
+Here, <var>State</var> is the SQL-state as defined in the ODBC API,
+<var>Native</var> is the (integer) error code of the underlying data 
+source and <var>Message</var> is a human readable explanation of the 
+message.
+</dd>
+</dl>
+
+<p><h4 id="sec:sqlerror"><a id="sec:2.8.2"><span class="sec-nr">2.8.2</span> <span class="sec-title">ODBC 
+errors</span></a></h4>
+
+<a id="sec:sqlerror"></a>
+<a id="sec:odbc-errors"></a>
+
+<p>If an ODBC operation signals an error, it throws the exception
+<code>error(<code>odbc(State, Native, Message)</code>, _)</code>. The 
+arguments of the <code>odbc/3</code> term are explained in <a class="sec" href="#sec:2.8.1">section 
+2.8.1</a>.
+
+<p>In addition, the Prolog layer performs the normal tests for proper 
+arguments and state, signaling the conventional instantiation, type, 
+domain and resource exceptions.
+
+<p><h3 id="sec:odbc-implementations"><a id="sec:2.9"><span class="sec-nr">2.9</span> <span class="sec-title">ODBC 
+implementations</span></a></h3>
+
+<a id="sec:odbc-implementations"></a>
+
+<p>There is a wealth on ODBC implementations that are completely or 
+almost compatible to this interface. In addition, a number of databases 
+are delivered with an ODBC compatible interface. This implies you get 
+the portability benefits of ODBC without paying the configuration and 
+performance price. Currently this interface is, according to the
+<a class="url" href="http://www.php.net">PHP</a> documentation on this 
+subject, provided by Adabas D, IBM DB2, Solid, and Sybase SQL Anywhere.
+
+<p><h4 id="sec:odbc-unix"><a id="sec:2.9.1"><span class="sec-nr">2.9.1</span> <span class="sec-title">Using 
+unixODBC</span></a></h4>
+
+<a id="sec:odbc-unix"></a>
+
+<p>The SWI-Prolog ODBC interface was developed using
+<a class="url" href="http://www.unixodbc.org">unixODBC</a> and <a class="url" href="http://www.mysql.com">MySQL</a> 
+on
+<a class="url" href="http://www.suse.com">SuSE Linux</a>.
+
+<p><h4 id="sec:odbc-microsoft"><a id="sec:2.9.2"><span class="sec-nr">2.9.2</span> <span class="sec-title">Using 
+Microsoft ODBC</span></a></h4>
+
+<a id="sec:odbc-microsoft"></a>
+
+<p>On MS-Windows, the ODBC interface is a standard package, linked 
+against
+<code>odbc32.lib</code>.
+
+<p><h3 id="sec:odbc-issues"><a id="sec:2.10"><span class="sec-nr">2.10</span> <span class="sec-title">Remaining 
+issues</span></a></h3>
+
+<a id="sec:odbc-issues"></a>
+
+<p>The following issues are identified and waiting for concrete problems 
+and suggestions.
+
+<dl class="latex">
+<dt><b>Transaction management</b></dt>
+<dd>
+This certainly requires a high-level interface. Possibly in combination 
+with <a id="idx:callcleanup3:48"></a><span class="pred-ext">call_cleanup/3</span>, 
+providing automatic rollback on failure or exception and commit on 
+success.</dd>
+<dt><b>High-level interface</b></dt>
+<dd>
+Attaching tables to predicates, partial <em>DataLog</em> implementation, 
+etc.
+</dd>
+</dl>
+
+<p><h2 id="sec:odbc-acknowledgments"><a id="sec:3"><span class="sec-nr">3</span> <span class="sec-title">Acknowledgments</span></a></h2>
+
+<a id="sec:odbc-acknowledgments"></a>.
+
+<p>The SWI-Prolog ODBC interface started from a partial interface by 
+Stefano De Giorgi. Mike Elston suggested programmable 
+null-representation with many other suggestions while doing the first 
+field-tests with this package.
+
+<h2>Bibliography</h2>
+
+<dl class="bib">
+<dt class="bib"><a id="miller1990"><strong>[1]</strong></a></dt>
+<dd class="bib">
+George Miller. Wordnet: An on-line lexical database.
+<em>International Journal of Lexicography</em>, 3(4), 1990. (Special 
+Issue).
+
+<p></dd>
+</dl>
+
+<h1><a id="document-index">Index</a></h1>
+
+<dl>
+<dt class="index-sep">?</dt>
+<dt>call_cleanup/3</dt>
+<dd>
+<a class="idx" href="#idx:callcleanup3:48">2.10</a></dd>
+<dt>findall/3</dt>
+<dd>
+<a class="idx" href="#idx:findall3:14">2.3.1</a> <a class="idx" href="#idx:findall3:16">2.3.1</a></dd>
+<dt>format/2</dt>
+<dd>
+<a class="idx" href="#idx:format2:9">2.3.1</a></dd>
+<dt><a class="idx" href="#odbc_cancel_thread/1">odbc_cancel_thread/1</a></dt>
+<dd>
+<a class="idx" href="#idx:odbccancelthread1:30">2.3.2</a></dd>
+<dt><a class="idx" href="#odbc_close_statement/1">odbc_close_statement/1</a></dt>
+<dt>odbc_connect/2</dt>
+<dd>
+<a class="idx" href="#idx:odbcconnect2:4">2.2</a></dd>
+<dt><a class="idx" href="#odbc_connect/3">odbc_connect/3</a></dt>
+<dd>
+<a class="idx" href="#idx:odbcconnect3:3">2.2</a> <a class="idx" href="#idx:odbcconnect3:7">2.2</a> <a class="idx" href="#idx:odbcconnect3:11">2.3.1</a></dd>
+<dt><a class="idx" href="#odbc_current_connection/2">odbc_current_connection/2</a></dt>
+<dt><a class="idx" href="#odbc_current_table/2">odbc_current_table/2</a></dt>
+<dt><a class="idx" href="#odbc_current_table/3">odbc_current_table/3</a></dt>
+<dd>
+<a class="idx" href="#idx:odbccurrenttable3:43">2.5</a></dd>
+<dt><a class="idx" href="#odbc_data_source/2">odbc_data_source/2</a></dt>
+<dt><a class="idx" href="#odbc_debug/1">odbc_debug/1</a></dt>
+<dt><a class="idx" href="#odbc_disconnect/1">odbc_disconnect/1</a></dt>
+<dt><a class="idx" href="#odbc_driver_connect/3">odbc_driver_connect/3</a></dt>
+<dt><a class="idx" href="#odbc_end_transaction/2">odbc_end_transaction/2</a></dt>
+<dd>
+<a class="idx" href="#idx:odbcendtransaction2:42">2.4</a></dd>
+<dt><a class="idx" href="#odbc_execute/2">odbc_execute/2</a></dt>
+<dd>
+<a class="idx" href="#idx:odbcexecute2:36">2.3.3</a></dd>
+<dt><a class="idx" href="#odbc_execute/3">odbc_execute/3</a></dt>
+<dd>
+<a class="idx" href="#idx:odbcexecute3:26">2.3.2</a> <a class="idx" href="#idx:odbcexecute3:28">2.3.2</a> <a class="idx" href="#idx:odbcexecute3:32">2.3.2</a></dd>
+<dt>odbc_execute/4</dt>
+<dd>
+<a class="idx" href="#idx:odbcexecute4:29">2.3.2</a></dd>
+<dt>odbc_fetch/2</dt>
+<dd>
+<a class="idx" href="#idx:odbcfetch2:37">2.3.3</a></dd>
+<dt><a class="idx" href="#odbc_fetch/3">odbc_fetch/3</a></dt>
+<dd>
+<a class="idx" href="#idx:odbcfetch3:23">2.3.2</a> <a class="idx" href="#idx:odbcfetch3:34">2.3.3</a> <a class="idx" href="#idx:odbcfetch3:39">2.3.3</a></dd>
+<dt><a class="idx" href="#odbc_free_statement/1">odbc_free_statement/1</a></dt>
+<dd>
+<a class="idx" href="#idx:odbcfreestatement1:44">2.6</a></dd>
+<dt><a class="idx" href="#odbc_get_connection/2">odbc_get_connection/2</a></dt>
+<dt><a class="idx" href="#odbc_next_result_set/1">odbc_next_result_set/1</a></dt>
+<dd>
+<a class="idx" href="#idx:odbcnextresultset1:40">2.3.4</a></dd>
+<dt><a class="idx" href="#odbc_prepare/4">odbc_prepare/4</a></dt>
+<dd>
+<a class="idx" href="#idx:odbcprepare4:24">2.3.2</a> <a class="idx" href="#idx:odbcprepare4:31">2.3.2</a></dd>
+<dt><a class="idx" href="#odbc_prepare/5">odbc_prepare/5</a></dt>
+<dd>
+<a class="idx" href="#idx:odbcprepare5:19">2.3.2</a> <a class="idx" href="#idx:odbcprepare5:35">2.3.3</a> <a class="idx" href="#idx:odbcprepare5:46">2.7</a></dd>
+<dt><a class="idx" href="#odbc_query/2">odbc_query/2</a></dt>
+<dd>
+<a class="idx" href="#idx:odbcquery2:10">2.3.1</a> <a class="idx" href="#idx:odbcquery2:27">2.3.2</a></dd>
+<dt><a class="idx" href="#odbc_query/3">odbc_query/3</a></dt>
+<dd>
+<a class="idx" href="#idx:odbcquery3:13">2.3.1</a> <a class="idx" href="#idx:odbcquery3:15">2.3.1</a> <a class="idx" href="#idx:odbcquery3:18">2.3.1</a> <a class="idx" href="#idx:odbcquery3:20">2.3.2</a></dd>
+<dt><a class="idx" href="#odbc_query/4">odbc_query/4</a></dt>
+<dd>
+<a class="idx" href="#idx:odbcquery4:5">2.2</a> <a class="idx" href="#idx:odbcquery4:8">2.3.1</a> <a class="idx" href="#idx:odbcquery4:22">2.3.2</a> <a class="idx" href="#idx:odbcquery4:25">2.3.2</a> <a class="idx" href="#idx:odbcquery4:45">2.7</a></dd>
+<dt><a class="idx" href="#odbc_set_connection/2">odbc_set_connection/2</a></dt>
+<dd>
+<a class="idx" href="#idx:odbcsetconnection2:1">2.2</a> <a class="idx" href="#idx:odbcsetconnection2:6">2.2</a> <a class="idx" href="#idx:odbcsetconnection2:12">2.3.1</a> <a class="idx" href="#idx:odbcsetconnection2:17">2.3.1</a> <a class="idx" href="#idx:odbcsetconnection2:21">2.3.2</a> <a class="idx" href="#idx:odbcsetconnection2:38">2.3.3</a> <a class="idx" href="#idx:odbcsetconnection2:41">2.4</a></dd>
+<dt><a class="idx" href="#odbc_set_option/1">odbc_set_option/1</a></dt>
+<dd>
+<a class="idx" href="#idx:odbcsetoption1:2">2.2</a></dd>
+<dt><a class="idx" href="#odbc_statistics/1">odbc_statistics/1</a></dt>
+<dt><a class="idx" href="#odbc_table_column/3">odbc_table_column/3</a></dt>
+<dt><a class="idx" href="#odbc_table_column/4">odbc_table_column/4</a></dt>
+<dt><a class="idx" href="#odbc_table_foreign_key/5">odbc_table_foreign_key/5</a></dt>
+<dt><a class="idx" href="#odbc_table_primary_key/3">odbc_table_primary_key/3</a></dt>
+<dt><a class="idx" href="#odbc_type/3">odbc_type/3</a></dt>
+<dt>print_message/2</dt>
+<dd>
+<a class="idx" href="#idx:printmessage2:47">2.8.1</a></dd>
+<dt>read/1</dt>
+<dd>
+<a class="idx" href="#idx:read1:33">2.3.3</a></dd>
+</dl>
+
+</body></html>

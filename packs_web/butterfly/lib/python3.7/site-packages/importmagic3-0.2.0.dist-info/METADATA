@@ -1,0 +1,15 @@
+Metadata-Version: 2.1
+Name: importmagic3
+Version: 0.2.0
+Summary: Fork of Python Import Magic - automagically add, remove and manage imports.
+Home-page: https://github.com/paradoxxxzero/importmagic
+Author: Alec Thomas
+Author-email: alec@swapoff.org
+License: BSD
+Download-URL: http://pypi.python.org/pypi/importmagic3
+Platform: any
+Requires-Dist: setuptools (>=0.6b1)
+
+See http://github.com/alecthomas/importmagic for details.
+
+

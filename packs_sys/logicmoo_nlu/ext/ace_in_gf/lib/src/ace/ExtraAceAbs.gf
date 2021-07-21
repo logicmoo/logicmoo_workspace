@@ -1,0 +1,3 @@
+abstract ExtraAceAbs = ExtraEngAbs ** {
+
+}

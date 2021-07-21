@@ -1,0 +1,553 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+
+<html>
+<head>
+<title>SWI-Prolog 8.3.27 Reference Manual: Section 5.6</title><link rel="home" href="index.html">
+<link rel="contents" href="Contents.html">
+<link rel="index" href="DocIndex.html">
+<link rel="summary" href="summary.html">
+<link rel="previous" href="ext-integration.html">
+<link rel="next" href="ext-issues.html">
+
+<style type="text/css">
+
+/* Style sheet for SWI-Prolog latex2html
+*/
+
+dd.defbody
+{ margin-bottom: 1em;
+}
+
+dt.pubdef, dt.multidef
+{ color: #fff;
+padding: 2px 10px 0px 10px;
+margin-bottom: 5px;
+font-size: 18px;
+vertical-align: middle;
+overflow: hidden;
+}
+
+dt.pubdef { background-color: #0c3d6e; }
+dt.multidef { background-color: #ef9439; }
+
+.bib dd
+{ margin-bottom: 1em;
+}
+
+.bib dt
+{ float: left;
+margin-right: 1.3ex;
+}
+
+pre.code
+{ margin-left: 1.5em;
+margin-right: 1.5em;
+border: 1px dotted;
+padding-top: 5px;
+padding-left: 5px;
+padding-bottom: 5px;
+background-color: #f8f8f8;
+}
+
+div.navigate
+{ text-align: center;
+background-color: #f0f0f0;
+border: 1px dotted;
+padding: 5px;
+}
+
+div.title
+{ text-align: center;
+padding-bottom: 1em;
+font-size: 200%;
+font-weight: bold;
+}
+
+div.author
+{ text-align: center;
+font-style: italic;
+}
+
+div.abstract
+{ margin-top: 2em;
+background-color: #f0f0f0;
+border: 1px dotted;
+padding: 5px;
+margin-left: 10%; margin-right:10%;
+}
+
+div.abstract-title
+{ text-align: center;
+padding: 5px;
+font-size: 120%;
+font-weight: bold;
+}
+
+div.toc-h1
+{ font-size: 200%;
+font-weight: bold;
+}
+
+div.toc-h2
+{ font-size: 120%;
+font-weight: bold;
+margin-left: 2em;
+}
+
+div.toc-h3
+{ font-size: 100%;
+font-weight: bold;
+margin-left: 4em;
+}
+
+div.toc-h4
+{ font-size: 100%;
+margin-left: 6em;
+}
+
+span.sec-nr
+{
+}
+
+span.sec-title
+{
+}
+
+span.pred-ext
+{ font-weight: bold;
+}
+
+span.pred-tag
+{ float: right;
+padding-top: 0.2em;
+font-size: 80%;
+font-style: italic;
+color: #fff;
+}
+
+div.caption
+{ width: 80%;
+margin: auto;
+text-align:center;
+}
+
+/* Footnotes */
+.fn {
+color: red;
+font-size: 70%;
+}
+
+.fn-text, .fnp {
+position: absolute;
+top: auto;
+left: 10%;
+border: 1px solid #000;
+box-shadow: 5px 5px 5px #888;
+display: none;
+background: #fff;
+color: #000;
+margin-top: 25px;
+padding: 8px 12px;
+font-size: larger;
+}
+
+sup:hover span.fn-text
+{ display: block;
+}
+
+/* Lists */
+
+dl.latex
+{ margin-top: 1ex;
+margin-bottom: 0.5ex;
+}
+
+dl.latex dl.latex dd.defbody
+{ margin-bottom: 0.5ex;
+}
+
+/* PlDoc Tags */
+
+dl.tags
+{ font-size: 90%;
+margin-left: 5ex;
+margin-top: 1ex;
+margin-bottom: 0.5ex;
+}
+
+dl.tags dt
+{ margin-left: 0pt;
+font-weight: bold;
+}
+
+dl.tags dd
+{ margin-left: 3ex;
+}
+
+td.param
+{ font-style: italic;
+font-weight: bold;
+}
+
+/* Index */
+
+dt.index-sep
+{ font-weight: bold;
+font-size: +1;
+margin-top: 1ex;
+}
+
+/* Tables */
+
+table.center
+{ margin: auto;
+}
+
+table.latex
+{ border-collapse:collapse;
+}
+
+table.latex tr
+{ vertical-align: text-top;
+}
+
+table.latex td,th
+{ padding: 2px 1em;
+}
+
+table.latex tr.hline td,th
+{ border-top: 1px solid black;
+}
+
+table.frame-box
+{ border: 2px solid black;
+}
+
+</style>
+</head>
+<body style="background:white">
+<div class="navigate"><a class="nav" href="index.html"><img src="home.gif" alt="Home"></a>
+<a class="nav" href="Contents.html"><img src="index.gif" alt="Contents"></a>
+<a class="nav" href="DocIndex.html"><img src="yellow_pages.gif" alt="Index"></a>
+<a class="nav" href="summary.html"><img src="info.gif" alt="Summary"></a>
+<a class="nav" href="ext-integration.html"><img src="prev.gif" alt="Previous"></a>
+<a class="nav" href="ext-issues.html"><img src="next.gif" alt="Next"></a>
+</div>
+<h2 id="sec:ssu"><a id="sec:5.6"><span class="sec-nr">5.6</span> <span class="sec-title">Single 
+Sided Unification rules</span></a></h2>
+
+<a id="sec:ssu"></a>
+
+<p><a id="idx:singlesidedunification:1893"></a><a id="idx:SSU:1894"></a><a id="idx:termsubsumption:1895"></a>For 
+the execution of a normal Prolog clause, the goal term is unified with 
+the head of the clause. This allows us to write facts such as below and 
+use this relation in all four possible <em>modes</em>. This is the basis 
+of SLD resolution that turns Prolog into a logic programming language.
+
+<pre class="code">
+parent('Bob', 'Susan').
+</pre>
+
+<p>In practice though, Prolog is both a logic programming language and a 
+language for expressing computations in a near <em>procedural</em> 
+style. The first is used to solve (notably) combinatorial problems while 
+the latter is used for I/O, data transformation and the many non-logical 
+operations that are involved in many applications.
+
+<p>Many Prolog programmers experience writing procedural style Prolog as 
+fighting non-determinism and dealing with hard to debug silent failures 
+because no clause matches some goal. Below are two typical queries on 
+library predicates that have a procedural nature, i.e., are
+<em>single moded</em>.
+
+<pre class="code">
+?- sum_list(a, X).
+false.
+
+?- sum_list([1|T], X).
+T = [],
+X = 1 ;
+ERROR: Arguments are not sufficiently instantiated
+</pre>
+
+<p>The definition of <a id="idx:sumlist2:1896"></a><a class="pred" href="lists.html#sum_list/2">sum_list/2</a> 
+is it appears in library(lists) is below. This implementation can be 
+considered elegant. Note that <a id="idx:sumlist2:1897"></a><a class="pred" href="lists.html#sum_list/2">sum_list/2</a> 
+has only one meaningful mode: (+,-). A general (logical) implementation 
+would allow for a partial list or a list holding one or more variables, 
+With a proper list that holds a single variable we can still make a 
+sound logical implementation. In all other cases the number of solutions 
+is infinite and even <em>uncountable</em> for a partial list, making the 
+predicate useless as a <em>generator</em> of solutions.
+
+<pre class="code">
+sum_list(Xs, Sum) :-
+    sum_list(Xs, 0, Sum).
+
+sum_list([], Sum, Sum).
+sum_list([X|Xs], Sum0, Sum) :-
+    Sum1 is Sum0 + X,
+    sum_list(Xs, Sum1, Sum).
+</pre>
+
+<p>If we want to avoid the above dubious behaviour we have two options. 
+First, we can verify that the first argument is a list before entering 
+the recursion, changing the first clause as below. The disadvantage is 
+that we process the list twice.
+
+<pre class="code">
+sum_list(Xs, Sum) :-
+    must_be(list, Xs),
+    sum_list(Xs, 0, Sum).
+</pre>
+
+<p>Alternatively, we can rewrite the second clause to verify the list on 
+the fly. That leads to the code below. Most likely the overhead of this 
+alternative compared to the above is even worse in many Prolog 
+implementations. Most people would also consider this code rather 
+inelegant.
+
+<pre class="code">
+sum_list(Var, _, _) :-
+    var(Var),
+    instantiation_error(Var).
+sum_list([], Sum, Sum) :-
+    !.
+sum_list([X|Xs], Sum0, Sum) :-
+    !,
+    Sum1 is Sum0 + X,
+    sum_list(Xs, Sum1, Sum).
+sum_list(NoList, _, _) :-
+    type_error(list, NoList).
+</pre>
+
+<p>Another example is a relation max/3 , expressing the maximum of two 
+numbers. A classical textbook definition could be as below. This code 
+has two drawbacks. First it leaves an open choice points in most Prolog 
+implementations if <var>X</var> is the largest and second it compares 
+the two numbers twice. Some Prolog systems detect this particular case, 
+but in general it needs two know that one test is the strict negation of 
+the other.
+
+<pre class="code">
+max(X,Y,X) :- X &gt;= Y.
+max(X,Y,Y) :- Y &gt; X.
+</pre>
+
+<p>As a result people use a cut and might come up with the <b>wrong</b> 
+solution below. Consider the query <code>?- max(5,2,2).</code> to see 
+why this code is broken.
+
+<pre class="code">
+max(X,Y,X) :- X &gt;= Y, !.
+max(_,Y,Y).
+</pre>
+
+<p>A correct solution is below, <em>delaying</em> binding the output 
+until after the cut.
+
+<pre class="code">
+max(X,Y,M) :- X &gt;= Y, !, M = X.
+max(_,Y,Y).
+</pre>
+
+<p>Some people may prefer using if-then-else as below. This is arguable 
+the cleanest efficient solution in standard Prolog.
+
+<pre class="code">
+max(X,Y,M) :- ( X &gt;= Y -&gt; M = X ; M = Y ).
+</pre>
+
+<p>As we have seen from these examples, writing procedural code in 
+Prolog requires us to follow the two basic principles below. Both 
+principles have been properly described in <i>The Craft of Prolog</i>
+<cite><a class="cite" href="Bibliography.html#Keefe:90">O'Keefe, 1990</a></cite>.
+
+<p>
+<ul class="latex">
+<li>Structure every clause as <code>Head :- Guard, !, Body</code>. Every 
+clause has the cut as early as possible. <var>Guard</var> can be empty. 
+The last clause often does not need a cut.
+
+<p>
+<li>Avoid that the head unification binds values in the goal term. We 
+see this may lead to undesirable results such as sum_list(L,S) binding
+<var>L</var> to&lsquo;[]` and <var>S</var> to&lsquo;0` as well as loss 
+of <em>steadfastness</em>, causing max(5,2,2) to succeed. The first 
+requires additional <a id="idx:var1:1898"></a><a class="pred" href="typetest.html#var/1">var/1</a> 
+or <a id="idx:nonvar1:1899"></a><a class="pred" href="typetest.html#nonvar/1">nonvar/1</a> 
+tests. The second requires delaying unification until after the cut.
+</ul>
+
+<p><a class="url" href="http://picat-lang.org/">Picat</a> provides the <b>=&gt;/2</b> 
+alternative for the Prolog <em>neck</em> (<b>:-/2</b>) to force the 
+above practices. A Picat rule has the following shape:
+
+<pre class="code">
+Head, Guard =&gt; Body.
+</pre>
+
+<p>This is semantically equivalent to the Prolog clause below. The
+<a id="idx:subsumesterm2:1900"></a><a class="pred" href="compare.html#subsumes_term/2">subsumes_term/2</a> 
+guarantees the clause head is more <em>generic</em> than the goal term 
+and thus unifying the two does not affect any of the arguments of the 
+goal. This implies all output unification _must_ be done after the head 
+unification.
+
+<pre class="code">
+p(V1,V2,...,Vn) :-
+    Pattern = p(A1,A2,...,An),
+    Args = p(V1,V2,...,Vn),
+    subsumes_term(Pattern, Args),
+    Pattern = Args,
+    Guard,
+    !,
+    Body.
+</pre>
+
+<p>SWI-Prolog as of version 8.3.19 support <b>=&gt;/2</b> as an 
+alternative to normal Prolog clauses. The construct comes with the 
+following properties.
+
+<p>
+<ul class="latex">
+<li>A predicate either uses <b>:-/2</b> for all its clauses or
+<b>=&gt;/2</b>. Mixing is <b>not</b> allowed and raises a permission 
+error for a clause that does not use the same
+<em>neck</em> as the first clause.
+<li>Unlike Picat, it is an error if no clause matches.
+</ul>
+
+<p>Given <b>=&gt;/2</b> rules, we can rewrite <a id="idx:sumlist2:1901"></a><a class="pred" href="lists.html#sum_list/2">sum_list/2</a> 
+as below. The first clause can be written using <b>:-/2</b> or <b>=&gt;/2</b>. 
+As the head is the most general head and there is only one clause these 
+are fully equivalent. The sum_list/3 helper needs a small modification: 
+we need to delay the unification against <var>Sum</var> to the body. The 
+last clause is equivalent.
+
+<pre class="code">
+sum_list(Xs, Sum) =&gt;
+    sum_list(Xs, 0, Sum).
+
+sum_list([], Sum0, Sum) =&gt;
+    Sum = Sum0.
+sum_list([X|Xs], Sum0, Sum) =&gt;
+    Sum1 is Sum0 + X,
+    sum_list(Xs, Sum1, Sum).
+</pre>
+
+<p>Given this definition, <code>sum_list(L,S)</code> no longer matches a 
+rule and neither does e.g., <code>sum_list(a,S)</code>. Both raise an 
+error. Currently the error is defined as below.
+
+<pre class="code">
+existence_error(matching_rule, Head)
+</pre>
+
+<p>Should silent failure be desired if no rule matches, this is easily 
+encoding by adding a rule at the end using the most general head and
+<a id="idx:fail0:1902"></a><a class="pred" href="control.html#fail/0">fail/0</a> 
+as body:
+
+<pre class="code">
+sum_list(_,_,_) =&gt; fail.
+</pre>
+
+<p><h3 id="sec:ssu-guard"><a id="sec:5.6.1"><span class="sec-nr">5.6.1</span> <span class="sec-title">Single 
+Sided Unification Guards</span></a></h3>
+
+<a id="sec:ssu-guard"></a>
+
+<p>Using the construction <code>Head, Guard =&gt; Body</code>, the <var>Guard</var> 
+is executed <em>after</em> the single sided head unification. If the
+<var>Guard</var> succeeds the clause executes a cut (<a class="pred" href="control.html#!/0">!/0</a>) 
+and proceeds normally. There are no restrictions on the guard code. A 
+well behaved guard is a <em>test</em>. Notably:
+
+<p>
+<ul class="latex">
+<li>Though not enforced<sup class="fn">165<span class="fn-text">We do 
+not know about an efficient way to enforce unification against head 
+arguments</span></sup>, guard code shall not instantiate variables in 
+the <var>Head</var> because this breaks the promise of SSU and may make 
+the node non-steadfast.
+<li>It is bad style (but again, not enforced) to have any type of side 
+effects (output, database change, etc.)
+<li>Typically, guard calls are <code>semidet</code>. Non-deterministic 
+calls are allowed. If the guard succeeds with choicepoints these are 
+pruned before the body is entered.
+</ul>
+
+<p>As a special exception, explicit unification against a variable in 
+the head is moved into the head. See <a class="sec" href="jitindex.html#sec:2.18.3">section 
+2.18.3</a>. In the example below, the <code>X = f(I)</code> is moved 
+into the head and (thus) is executed using single sided unification.
+
+<pre class="code">
+p(X), X = f(I), integer(I) =&gt; q(X).
+</pre>
+
+<blockquote>
+<b>Warning</b> Moving the guard unification into the head changes the 
+semantics of the unification. This may be defended by the rules above 
+that claim one should not unify against the head arguments in the guard. 
+Future versions may use a dedicated operator to indicate that the 
+unification may be moved into the head.
+</blockquote>
+
+<p><h3 id="sec:ssu-consequences"><a id="sec:5.6.2"><span class="sec-nr">5.6.2</span> <span class="sec-title">Consequenses 
+of <code>=&gt;</code> single sided unification rules</span></a></h3>
+
+<a id="sec:ssu-consequences"></a>
+
+<p>The <b>=&gt;/2</b> construct is handled by the low-level compiler if 
+no
+<em>guard</em> is present. If a guard is present it is currently 
+compiled into the construct below. The Picat <b>?=&gt;/2</b> <em>neck</em> 
+operator is like
+<b>=&gt;/2</b>, but does not <em>commit</em> to this rule. We are not 
+yet sure whether or not SWI-Prolog will remain supporting
+<b>?=&gt;/2</b>.<sup class="fn">166<span class="fn-text"><b>?=&gt;/2</b> 
+is currently implemented but not defined as an operator.</span></sup>
+
+<pre class="code">
+Head ?=&gt; Guard, !, Body.
+</pre>
+
+<p>The main consequence is that <a id="idx:clause2:1903"></a><a class="pred" href="examineprog.html#clause/2">clause/2</a> 
+cannot distinguish between a normal clause and a <b>=&gt;/2</b> clause. 
+In the current implementation it operates on both without distinguishing 
+the two. This implies e.g.,
+<em>cross referencing</em> still works. Meta interpretation however does 
+not work. In future versions <a id="idx:clause2:1904"></a><a class="pred" href="examineprog.html#clause/2">clause/2</a> 
+may fail on these rules. As an alternative we provide <a id="idx:rule2:1905"></a><a class="pred" href="ssu.html#rule/2">rule/2</a>,3.
+
+<dl class="latex">
+<dt class="pubdef"><a id="rule/2"><strong>rule</strong>(<var>:Head, 
+-Rule</var>)</a></dt>
+<dt class="pubdef"><a id="rule/3"><strong>rule</strong>(<var>:Head, 
+-Rule, -Ref</var>)</a></dt>
+<dd class="defbody">
+True when <var>Rule</var> is a rule/clause that implements <var>Head</var>.
+<var>Rule</var> is a complete rule term. For a normal clause this is a 
+term <code>Head :- Body</code> and for a single sided unification rule 
+it is a term <code>Head <code>=&gt;</code> Body</code>.
+</dd>
+</dl>
+
+<p><h3 id="sec:ssu-future"><a id="sec:5.6.3"><span class="sec-nr">5.6.3</span> <span class="sec-title">SSU: 
+Future considerations</span></a></h3>
+
+<a id="sec:ssu-future"></a>
+
+<p>The current implementation is a rather simple. Single sided 
+unification is achieved doing normal head unification and backtrack if 
+this unification bound variables in the goal term. Future versions are 
+likely to backtrack as soon as we find a variable in the goal that needs 
+to be unified.
+
+<p>It is likely that in due time significant parts of the libraries will 
+be migrated to use SSU rules, turning many silent failures on type 
+errors into errors.
+
+<p></body></html>

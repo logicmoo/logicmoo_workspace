@@ -1,0 +1,86 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%% 
+%%%% Internal Interface to Constraint Handling Methods (Draft)
+%%%% 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+- The interface consists of three predicates:
+  reduce_cs/2, compile_merge_cs/4, make_true_cs/1, project_cs/3
+
+- These predicates may be called at compiletime and runtime.
+
+- See src/planner_cs_simple.pl and src/planner_cs_linear.pl for example
+  implementations.
+
+- Written before proper constraint handling was added to SWI-Prolog.
+
+
+reduce_cs(+Cs, -Cs1)
+
+        Attempts to reduce contraint term Cs. Can bind variables in Cs.
+        Cs1 is the result of reduction. Cs1 is identical to Cs if
+	     reduction is not possible.
+
+        Fails if Cs is proven inconsistent.
+          
+        Can be nondeterministic, e.g. by enumerating variable bindings
+	     in Cs. [not tested]
+       
+compile_merge_cs(+Cs, +Cs1, +Cs2, -Calls) :-
+	     Calls is a list of calls that are performed at runtime.
+	     
+	     Cs is a statically given constrain term in input syntax.
+             Cs1 is the second constraint to be merged.
+	     Cs2 is the result of the merge. 
+
+	     might fail
+	     might be nondeterministic
+
+             See also the draft documentation of the two obsolete predicates
+	     merge_cs and compile_cs.
+	     
+merge_cs(+Cs, +Cs1, -Cs2) [OBSOLETE]
+
+        Constraint terms Cs and Cs1 are merged and the result is
+        returned as Cs2.
+
+
+        Can be nondeterministic, e.g. by enumerating variable bindings
+	     in Cs and Cs1. [not tested]
+
+	     Note1: Calling reduce_cs on Cs2 directly should be unneccessary.
+        So consistency checking can interleaved with the merge operation.
+
+	     Note2: The Cs argument is the constraint term of the entered
+	     clause, it is known at compile time. Cs1 is the constraint term
+	     so far accumulated in the reasoning process.
+
+compile_cs(+ExternalCs, -Cs1) [OBSOLETE]
+
+       Compile an input constraint term to its internal representation.
+       Called at compile time for the *** first argument of merge (supplied
+       with the cs option). Called on input constraints of a query at
+       runtime.
+
+       Fails if the constraints are proven inconsistent. 
+        
+       Can be nondeterministic. [not tested]
+
+make_true_cs(-Cs)
+
+       Return a true constraint term in the internal representation.
+
+project_cs(+Cs, +Vars, -Cs1)
+     - Intent is to project output Cs, which are in compiled form
+       to Cs over vars in Vars. In easily understandable form.
+     - Sometimes auxiliary variables from Cs have to be explicitely used
+       for result. 
+     - So the only semantic condition is: Cs1 suitable as input
+     - It is allowed to bind variables in Cs not appearing in Vars to
+       terms.
+     - has to be called by hand on the output (compare pool)
+
+     - Input constraints may include variables from goal and start.
+     - Variables in rules are standardized apart (also from variables in
+       goals, start and input constraints) automatically.
+

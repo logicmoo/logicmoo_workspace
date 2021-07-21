@@ -1,0 +1,3 @@
+[console_scripts]
+devcore = devcore.__main__:main
+

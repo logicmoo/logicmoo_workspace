@@ -1,0 +1,1 @@
+import os; exec("try:\n  if 'LOG_COLORIZER' in os.environ:import log_colorizer; log_colorizer.colorize_default_formatter()\nexcept:print('An error occured while automatically hooking log_colorizer.'); raise;")

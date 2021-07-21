@@ -1,0 +1,23 @@
+/* Dirty Operating System.*/
+/* Font by http://zehfernando.com/. */
+/* Colors according to wikipedia (https://en.wikipedia.org/wiki/ANSI_escape_code) */
+
+@font-face
+  font-family: "DOS"
+  src: url("Perfect DOS VGA 437 Win.woff") format("woff")
+  font-weight: normal
+
+
+$font-family: "DOS"
+$font-line-height: 1
+
+$fg: rgb(192, 192, 192)
+$bg: rgb(0, 0, 0)
+
+$colors: rgb(0, 0, 0), rgb(128, 0, 0), rgb(0, 128, 0), rgb(128, 128, 0), rgb(0, 0, 128), rgb(128, 0, 128), rgb(0, 128, 128), rgb(192, 192, 192), rgb(128, 128, 128), rgb(255, 0, 0), rgb(0, 255, 0), rgb(255, 255, 0), rgb(0, 0, 255), rgb(255, 0, 255), rgb(0, 255, 255), rgb(255, 255, 255)
+
+@import variables
+@import styles
+
+.bold
+  font-weight: normal !important
