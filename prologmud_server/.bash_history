@@ -2018,3 +2018,13 @@ git pull --recurse-submodules
 find -name "*.lock" -delete
 git submodule foreach --recursive bash -c "git fetch --unshallow ; /bin/true"
 git submodule foreach --recursive bash -c "git lfs pull ; /bin/true"
+./runFromDocker.sh build commit
+cd packs_xtra/logicmoo_pldata/
+git pull
+git lfs status
+git pull
+git commit -am "some are differnt"
+git push
+git status
+cd ..
+git add logicmoo_pldata/
