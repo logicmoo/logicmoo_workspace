@@ -1998,3 +1998,10 @@ cd ..
 git add logicmoo_pldata/
 git commit -am "some are differnt"
 cd ..
+git checkout prologmud_server/.bash_history ;  git pull github master
+git status
+git add packs_sys/logicmoo_agi/prolog/talespin-annie/*.*
+git status
+rm -rf packs_sys/logicmoo_agi/prolog/talespin-annie/.git
+git add packs_sys/logicmoo_agi/prolog/talespin-annie
+git status
