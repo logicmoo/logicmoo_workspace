@@ -46,7 +46,8 @@ if [ "${2}" == "commit" ]; then
    git config --local http.sslVerify false
    git config credential.helper 'cache --timeout=300000'
    git update-index --assume-unchanged prologmud_server/.bash_history
-   git update-index --assume-unchanged packs_sys/eggdrop/conf/PrologMUD-freenode.*
+   git update-index --assume-unchanged packs_sys/eggdrop/conf/PrologMUD-freenode.chan
+   git update-index --assume-unchanged packs_sys/eggdrop/conf/PrologMUD-freenode.user
    git remote add --track master github https://github.com/logicmoo/logicmoo_workspace.git 2>/dev/null ; /bin/true
    git remote add --track master gitlab https://logicmoo.org/gitlab/logicmoo/logicmoo_workspace.git 2>/dev/null ; /bin/true
 
