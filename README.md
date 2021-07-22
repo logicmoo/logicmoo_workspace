@@ -33,6 +33,7 @@ git pull --recurse-submodule
 ./StartLogicmoo.sh
 ```
 
+
 # Running
 
 When `./StartLogicmoo.sh` is ran a few minutes later you will see (in green every few minutes)
@@ -63,6 +64,14 @@ Finding/Setting LD_LIBRARY_PATH...
    cls                   # Clear the SCREEN
 
 ```
+
+# Docker RUN
+(output fron ./runFromDocker assuming `/opt/logicmoo_workspace/` )
+```bash
+docker run --name logicmoo --privileged=true --no-healthcheck -v /opt/logicmoo_workspace:/opt/logicmoo_workspace --rm -it -p 4000-4199:4000-4199 -p 4243:443 -p 4280:80 -p 3020:3020 -p 4222:22 -p 4220:3020 -p 4200:5900 -p 4201:9001 -p 4290:4090 -p 6079-6081:6079-6081  logicmoo/logicmoo_workspace:latest
+```
+
+
 
 ##
 
