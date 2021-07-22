@@ -1,8 +1,8 @@
 [Global]
 CurrentProject=logicmoo_workspace.vpj
 [ProjectDates]
-logicmoo_workspace.vpj=20210721024153233
-other_files.vpj=20210716235244671
+logicmoo_workspace.vpj=20210722003719915
+other_files.vpj=20210721110215493
 [ActiveConfig]
 logicmoo_workspace.vpj=Release
 packs_usr\wam_common_lisp\wamcl.vpj=,Release
@@ -59,7 +59,7 @@ packs_sys\logicmoo_nlu\ext\chat80_lm\chat80.vpj=Release
   + .vscode
   + bin
     + old-scripts
-  - docker
+  + docker
     + noetic
     + noetic-testing
     - rootfs
@@ -86,15 +86,11 @@ packs_sys\logicmoo_nlu\ext\chat80_lm\chat80.vpj=Release
                   + python
                     + test
               + TRAIN
-            + GENIA+PubMed
-              + parser
             + python
               + bllipparser
               + examples
               + tests
             + sample-text
-            + SANCL2012-Uniform
-              + parser
             + second-stage
               + notes
               + programs
@@ -108,8 +104,6 @@ packs_sys\logicmoo_nlu\ext\chat80_lm\chat80.vpj=Release
                       + test
                 + prepare-data
                 + wlle
-            + WSJ+Gigaword-v2
-              + parser
       - etc
         - apache2
           - conf-available
@@ -297,15 +291,11 @@ packs_sys\logicmoo_nlu\ext\chat80_lm\chat80.vpj=Release
                                   + python
                                     + test
                               + TRAIN
-                            + GENIA+PubMed
-                              + parser
                             + python
                               + bllipparser
                               + examples
                               + tests
                             + sample-text
-                            + SANCL2012-Uniform
-                              + parser
                             + second-stage
                               + notes
                               + programs
@@ -319,8 +309,6 @@ packs_sys\logicmoo_nlu\ext\chat80_lm\chat80.vpj=Release
                                       + test
                                 + prepare-data
                                 + wlle
-                            + WSJ+Gigaword-v2
-                              + parser
                       + etc
                         + apache2
                           + conf-available
@@ -480,15 +468,11 @@ packs_sys\logicmoo_nlu\ext\chat80_lm\chat80.vpj=Release
                                                   + python
                                                     + test
                                               + TRAIN
-                                            + GENIA+PubMed
-                                              + parser
                                             + python
                                               + bllipparser
                                               + examples
                                               + tests
                                             + sample-text
-                                            + SANCL2012-Uniform
-                                              + parser
                                             + second-stage
                                               + notes
                                               + programs
@@ -502,8 +486,6 @@ packs_sys\logicmoo_nlu\ext\chat80_lm\chat80.vpj=Release
                                                       + test
                                                 + prepare-data
                                                 + wlle
-                                            + WSJ+Gigaword-v2
-                                              + parser
                                       + etc
                                         + apache2
                                           + conf-available
@@ -632,7 +614,33 @@ packs_sys\logicmoo_nlu\ext\chat80_lm\chat80.vpj=Release
                                             + ef
                                               + css
                                               + files
+                                                + logicmoo_workspace\.vscode
                                                 + logicmoo_workspace
+                                                  + bin
+                                                    + old-scripts
+                                                  + docker
+                                                    + noetic
+                                                    + noetic-testing
+                                                    + rootfs
+                                                      + root\.local
+                                                        + share
+                                                          + bllipparser
+                                                            + dockerfiles
+                                                              + centos6
+                                                              + python
+                                                      + etc
+                                                        + apache2
+                                                          + conf-available
+                                                          + sites-enabled
+                                                        + butterfly
+                                                        + letsencrypt
+                                                          + live
+                                                        + nginx
+                                                          + sites-enabled
+                                                        + profile.d
+                                                        + supervisor
+                                                          + conf.d
+                                                      + root
   + docs
     + _build
       + doctrees
@@ -647,9 +655,9 @@ packs_sys\logicmoo_nlu\ext\chat80_lm\chat80.vpj=Release
       + org.eclipse.ui.ide
       + org.eclipse.ui.workbench
     + BW4Thuman
-    + DEIRA
-      + run
-        + vs
+    - DEIRA
+      - run
+        - vs
     + External Prolog Files
     + FAtiMA_impl
       + data
@@ -974,10 +982,10 @@ packs_sys\logicmoo_nlu\ext\chat80_lm\chat80.vpj=Release
       - conf
       - prolog
       + t
-    - instant_prolog_docs
+    + instant_prolog_docs
       - prolog
       + t
-    - logicmoo_agi
+    + logicmoo_agi
       + ImportantDocs
         + jmc
       + pldox
@@ -1766,8 +1774,8 @@ packs_sys\logicmoo_nlu\ext\chat80_lm\chat80.vpj=Release
           - e2c
       + test
         + logicmoo_nlu
-    - logicmoo_utils
-      - prolog
+    + logicmoo_utils
+      + prolog
         + body_reordering
         + cpviz
         - debuggery
@@ -2054,7 +2062,7 @@ packs_sys\logicmoo_nlu\ext\chat80_lm\chat80.vpj=Release
         + yasr
           + dist
       + Windows
-    - logicmoo_webui
+    + logicmoo_webui
       - prolog
       - var
         - www
@@ -2206,7 +2214,7 @@ packs_sys\logicmoo_nlu\ext\chat80_lm\chat80.vpj=Release
           + render
           + tutorials
         + patches
-  + packs_xtra
+  - packs_xtra
     + logicmoo_packages
       + prolog
         + BN-search
@@ -2270,7 +2278,183 @@ packs_sys\logicmoo_nlu\ext\chat80_lm\chat80.vpj=Release
                   + semgrex
                   + tokensregex
         + twitie-tagger
-      - ext
+      - eclipse-workspace
+        + FAtiMA_impl\.metadata\.plugins
+          + org.eclipse.core.resources\.projects
+            + FAtiMA
+            + WorldTest
+          + org.eclipse.debug.ui
+          + org.eclipse.jdt.debug.ui
+          + org.eclipse.jdt.launching
+          + org.eclipse.jdt.ui
+          + org.eclipse.ui.ide
+          + org.eclipse.ui.workbench
+        + Servers\.settings
+        + FAtiMA_impl
+          + data
+            + characters
+              + minds
+                + language
+                  + agent
+                    + de
+                      + language-set-1
+                    + en
+                      + language-set-1
+                  + user
+                    + de
+                      + language-set-1
+                    + en
+                      + language-set-1
+                + roles
+                  + Bully
+                  + BullyAssistant
+                  + ByStander
+                  + Defender
+                  + Elder
+                  + RedHood
+                  + Slave
+                  + Victim
+                  + Wolf
+          + data_fearnot
+            + characters
+              + minds
+                + language
+                  + agent
+                    + de
+                      + language-set-1
+                    + en
+                      + language-set-1
+                  + user
+                    + de
+                      + language-set-1
+                    + en
+                      + language-set-1
+                + roles
+                  + Bully
+                  + BullyAssistant
+                  + ByStander
+                  + Defender
+                  + Elder
+                  + Slave
+                  + Victim
+          + data_redhood
+            + characters
+              + minds
+                + language
+                  + agent
+                    + en
+                      + language-set-1
+                  + user
+                + roles
+                  + RedHood
+                  + Wolf
+          + FAtiMA
+            + bin
+              + FAtiMA
+                + reactiveLayer
+            + src
+              + FAtiMA
+                + reactiveLayer
+          + LanguageServer
+          + Leila
+          + lixo
+          + WorldTest
+        + Servers
+          + Tomcat v7.0 Server at localhost-config
+        + VirtualStoryteller
+          - knowledge
+            + prolog\.xpce
+            - domain
+              - cinderella
+                + ontology
+                + schemas
+              + lollipop
+                + ontology
+                + schemas
+                + setting
+                + suggestions
+                + threads
+              + lollipop_dialogue
+                + narration
+                + ontology
+                + schemas
+                + setting
+                + suggestions
+                + threads
+              + make_love_not_war
+                + ontology
+                + schemas
+                + setting
+                + suggestions
+                + threads
+              + pirates
+                + episodes
+                + ontology
+                + schemas
+                + setting
+                + suggestions
+                + threads
+              + pirates_ivo
+                + episodes
+                + ontology
+                + schemas
+                + setting
+                + suggestions
+                + threads
+              + pirates_ivo2
+                + narration
+                + ontology
+                + schemas
+                  + experiment_1
+                + setting
+                + suggestions
+              + pirates_jasper
+                + episodes
+                + ontology
+                + schemas
+                + setting
+                + suggestions
+              + pirates_jasper2
+                + ontology
+                + schemas
+                + setting
+                + suggestions
+                + threads
+              + pirates_pjotter
+                + ontology
+                + schemas
+                + setting
+                + suggestions
+                + threads
+              + red
+                + narration
+                + ontology
+                + schemas
+                + setting
+                + suggestions
+                + threads
+              + swordfight
+                + episodes
+                + ontology
+                + schemas
+                + setting
+                + suggestions
+                + threads
+              + test
+                + schemas
+            + ontology
+              + New
+              + Old
+            + prolog
+              + CharacterAgent
+              + operators
+              + PlotAgent
+              + schemas
+              + test
+              + Uijlings actions
+              + WorldAgent
+        + WumpusAgents
+      + ext
         - plkb0988
       - prolog
   + Patch
@@ -2281,7 +2465,7 @@ packs_sys\logicmoo_nlu\ext\chat80_lm\chat80.vpj=Release
             + swipl
               + boot
               + library
-  - prologmud_server
+  + prologmud_server
     + attic
     + btepisode
     + circlemuddata

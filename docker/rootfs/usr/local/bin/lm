@@ -1,5 +1,6 @@
 #!/bin/bash
 # if [ "${cmd}" == "emacs" ]; then sudo -u prologmud_server -- google-chrome "http://localhost:4125"
+
 if [ ! -f /.dockerenv ]; then
    #docker exec -it logicmoo bin/$(basename "${BASH_SOURCE[0]}") $*
    docker exec -it logicmoo "${BASH_SOURCE[0]}" $*
@@ -13,7 +14,7 @@ export SCREEN_CMD="sudo -u prologmud_server -- screen"
 
 export DISPLAY
 LMENV=1
-LMENV_ARG=-q
+LMENV_ARG=
 NOX=0
 
 function show_lm_help {
@@ -41,8 +42,8 @@ do
         LMENV=0
         shift
         ;;
-        -v|-q)
-        LMENV_ARG="$1"
+        -v|-q|-x|-e)
+        LMENV_ARG="${LMENV_ARG} $1"
         shift
         ;;
         -d|--wd)
@@ -59,7 +60,7 @@ done
 
 
 if [ $LMENV -eq 1 ]; then 
-  /opt/logicmoo_workspace/logicmoo_env.sh $LMENV_ARG
+. /opt/logicmoo_workspace/logicmoo_env.sh $LMENV_ARG
 fi
 
 if [ $NOX -eq 1 ]; then

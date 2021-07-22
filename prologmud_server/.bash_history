@@ -1,35 +1,3 @@
-ls
-ls
-cd ..
-ls
-cd /opt/logicmoo_workspace
-ls
-ls packs_xtra/logicmoo_pldata/
-ls packs_xtra/logicmoo_pldata/
-git pull
-git pull https://github.com/logicmoo/logicmoo_workspace.git
-git commit -am README.md 
-git pull https://github.com/logicmoo/logicmoo_workspace.git
-git pull https://github.com/logicmoo/logicmoo_workspace.git
-git checkout .
-git pull https://github.com/logicmoo/logicmoo_workspace.git
-git checkout master .
-git pull https://github.com/logicmoo/logicmoo_workspace.git
-git checkout master .
-git reset master .
-git reset master
-git checkout master .
-git status
-git pull https://github.com/logicmoo/logicmoo_workspace.git
-rm -rf  packs_sys/eggdrop/conf/  docker/noetic*
-git pull https://github.com/logicmoo/logicmoo_workspace.git
-git pull https://github.com/logicmoo/logicmoo_workspace.git
-rm -rf README.
-rm -rf README.md 
-git pull https://github.com/logicmoo/logicmoo_workspace.git
-git checkout .
-git checkout . -f
-git checkout .
 git add README.md 
 git checkout . -f
 cp /opt/optZ/logicmoo_workspace/README.md /opt/logicmoo_workspace/

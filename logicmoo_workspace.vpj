@@ -17522,6 +17522,856 @@
 						<F N="packs_xtra/logicmoo_pldata/deps/twitie-tagger/show-result.sh"/>
 					</Folder>
 				</Folder>
+				<Folder Name="eclipse-workspace">
+					<Folder Name="FAtiMA_impl/.metadata/.plugins">
+						<Folder Name="org.eclipse.core.resources/.projects">
+							<Folder Name="FAtiMA">
+								<F N="packs_xtra/logicmoo_pldata/eclipse-workspace/FAtiMA_impl/.metadata/.plugins/org.eclipse.core.resources/.projects/FAtiMA/.markers"/>
+							</Folder>
+							<Folder Name="WorldTest">
+								<F N="packs_xtra/logicmoo_pldata/eclipse-workspace/FAtiMA_impl/.metadata/.plugins/org.eclipse.core.resources/.projects/WorldTest/.location"/>
+								<F N="packs_xtra/logicmoo_pldata/eclipse-workspace/FAtiMA_impl/.metadata/.plugins/org.eclipse.core.resources/.projects/WorldTest/.markers"/>
+							</Folder>
+						</Folder>
+						<Folder Name="org.eclipse.debug.ui">
+							<F N="packs_xtra/logicmoo_pldata/eclipse-workspace/FAtiMA_impl/.metadata/.plugins/org.eclipse.debug.ui/dialog_settings.xml"/>
+							<F N="packs_xtra/logicmoo_pldata/eclipse-workspace/FAtiMA_impl/.metadata/.plugins/org.eclipse.debug.ui/launchConfigurationHistory.xml"/>
+						</Folder>
+						<Folder Name="org.eclipse.jdt.debug.ui">
+							<F N="packs_xtra/logicmoo_pldata/eclipse-workspace/FAtiMA_impl/.metadata/.plugins/org.eclipse.jdt.debug.ui/dialog_settings.xml"/>
+						</Folder>
+						<Folder Name="org.eclipse.jdt.launching">
+							<F N="packs_xtra/logicmoo_pldata/eclipse-workspace/FAtiMA_impl/.metadata/.plugins/org.eclipse.jdt.launching/libraryInfos.xml"/>
+						</Folder>
+						<Folder Name="org.eclipse.jdt.ui">
+							<F N="packs_xtra/logicmoo_pldata/eclipse-workspace/FAtiMA_impl/.metadata/.plugins/org.eclipse.jdt.ui/dialog_settings.xml"/>
+							<F N="packs_xtra/logicmoo_pldata/eclipse-workspace/FAtiMA_impl/.metadata/.plugins/org.eclipse.jdt.ui/OpenTypeHistory.xml"/>
+							<F N="packs_xtra/logicmoo_pldata/eclipse-workspace/FAtiMA_impl/.metadata/.plugins/org.eclipse.jdt.ui/QualifiedTypeNameHistory.xml"/>
+						</Folder>
+						<Folder Name="org.eclipse.ui.ide">
+							<F N="packs_xtra/logicmoo_pldata/eclipse-workspace/FAtiMA_impl/.metadata/.plugins/org.eclipse.ui.ide/dialog_settings.xml"/>
+						</Folder>
+						<Folder Name="org.eclipse.ui.workbench">
+							<F N="packs_xtra/logicmoo_pldata/eclipse-workspace/FAtiMA_impl/.metadata/.plugins/org.eclipse.ui.workbench/dialog_settings.xml"/>
+							<F N="packs_xtra/logicmoo_pldata/eclipse-workspace/FAtiMA_impl/.metadata/.plugins/org.eclipse.ui.workbench/workbench.xml"/>
+							<F N="packs_xtra/logicmoo_pldata/eclipse-workspace/FAtiMA_impl/.metadata/.plugins/org.eclipse.ui.workbench/workingsets.xml"/>
+						</Folder>
+					</Folder>
+					<Folder Name="Servers/.settings">
+						<F N="packs_xtra/logicmoo_pldata/eclipse-workspace/Servers/.settings/org.eclipse.wst.server.core.prefs"/>
+					</Folder>
+					<Folder Name="FAtiMA_impl">
+						<Folder Name="data">
+							<Folder Name="characters">
+								<Folder Name="minds">
+									<Folder Name="language">
+										<Folder Name="agent">
+											<Folder Name="de">
+												<Folder Name="language-set-1">
+													<F N="packs_xtra/logicmoo_pldata/eclipse-workspace/FAtiMA_impl/data/characters/minds/language/agent/de/language-set-1/types.xml"/>
+												</Folder>
+											</Folder>
+											<Folder Name="en">
+												<Folder Name="language-set-1">
+													<F N="packs_xtra/logicmoo_pldata/eclipse-workspace/FAtiMA_impl/data/characters/minds/language/agent/en/language-set-1/templates.tdl.bak"/>
+													<F N="packs_xtra/logicmoo_pldata/eclipse-workspace/FAtiMA_impl/data/characters/minds/language/agent/en/language-set-1/types.xml"/>
+												</Folder>
+											</Folder>
+										</Folder>
+										<Folder Name="user">
+											<Folder Name="de">
+												<Folder Name="language-set-1">
+													<F N="packs_xtra/logicmoo_pldata/eclipse-workspace/FAtiMA_impl/data/characters/minds/language/user/de/language-set-1/types.xml"/>
+												</Folder>
+											</Folder>
+											<Folder Name="en">
+												<Folder Name="language-set-1">
+													<F N="packs_xtra/logicmoo_pldata/eclipse-workspace/FAtiMA_impl/data/characters/minds/language/user/en/language-set-1/types.xml"/>
+												</Folder>
+											</Folder>
+											<F N="packs_xtra/logicmoo_pldata/eclipse-workspace/FAtiMA_impl/data/characters/minds/language/user/types.xml"/>
+										</Folder>
+									</Folder>
+									<Folder Name="roles">
+										<Folder Name="Bully">
+											<F N="packs_xtra/logicmoo_pldata/eclipse-workspace/FAtiMA_impl/data/characters/minds/roles/Bully/Bully.xml"/>
+										</Folder>
+										<Folder Name="BullyAssistant">
+											<F N="packs_xtra/logicmoo_pldata/eclipse-workspace/FAtiMA_impl/data/characters/minds/roles/BullyAssistant/BullyAssistant.xml"/>
+										</Folder>
+										<Folder Name="ByStander">
+											<F N="packs_xtra/logicmoo_pldata/eclipse-workspace/FAtiMA_impl/data/characters/minds/roles/ByStander/ByStander.xml"/>
+										</Folder>
+										<Folder Name="Defender">
+											<F N="packs_xtra/logicmoo_pldata/eclipse-workspace/FAtiMA_impl/data/characters/minds/roles/Defender/Defender.xml"/>
+										</Folder>
+										<Folder Name="Elder">
+											<F N="packs_xtra/logicmoo_pldata/eclipse-workspace/FAtiMA_impl/data/characters/minds/roles/Elder/Elder.xml"/>
+										</Folder>
+										<Folder Name="RedHood">
+											<F N="packs_xtra/logicmoo_pldata/eclipse-workspace/FAtiMA_impl/data/characters/minds/roles/RedHood/RedHood.xml"/>
+										</Folder>
+										<Folder Name="Slave">
+											<F N="packs_xtra/logicmoo_pldata/eclipse-workspace/FAtiMA_impl/data/characters/minds/roles/Slave/Slave.xml"/>
+										</Folder>
+										<Folder Name="Victim">
+											<F N="packs_xtra/logicmoo_pldata/eclipse-workspace/FAtiMA_impl/data/characters/minds/roles/Victim/Victim.xml"/>
+										</Folder>
+										<Folder Name="Wolf">
+											<F N="packs_xtra/logicmoo_pldata/eclipse-workspace/FAtiMA_impl/data/characters/minds/roles/Wolf/Wolf.xml"/>
+										</Folder>
+									</Folder>
+									<F N="packs_xtra/logicmoo_pldata/eclipse-workspace/FAtiMA_impl/data/characters/minds/Actions-backup.xml"/>
+									<F N="packs_xtra/logicmoo_pldata/eclipse-workspace/FAtiMA_impl/data/characters/minds/Actions.xml"/>
+									<F N="packs_xtra/logicmoo_pldata/eclipse-workspace/FAtiMA_impl/data/characters/minds/Actions.xml.bak"/>
+									<F N="packs_xtra/logicmoo_pldata/eclipse-workspace/FAtiMA_impl/data/characters/minds/GoalLibrary-backup.xml"/>
+									<F N="packs_xtra/logicmoo_pldata/eclipse-workspace/FAtiMA_impl/data/characters/minds/GoalLibrary.xml"/>
+									<F N="packs_xtra/logicmoo_pldata/eclipse-workspace/FAtiMA_impl/data/characters/minds/GoalLibrary.xml.bak"/>
+								</Folder>
+							</Folder>
+						</Folder>
+						<Folder Name="data_fearnot">
+							<Folder Name="characters">
+								<Folder Name="minds">
+									<Folder Name="language">
+										<Folder Name="agent">
+											<Folder Name="de">
+												<Folder Name="language-set-1">
+													<F N="packs_xtra/logicmoo_pldata/eclipse-workspace/FAtiMA_impl/data_fearnot/characters/minds/language/agent/de/language-set-1/types.xml"/>
+												</Folder>
+											</Folder>
+											<Folder Name="en">
+												<Folder Name="language-set-1">
+													<F N="packs_xtra/logicmoo_pldata/eclipse-workspace/FAtiMA_impl/data_fearnot/characters/minds/language/agent/en/language-set-1/templates.tdl.bak"/>
+													<F N="packs_xtra/logicmoo_pldata/eclipse-workspace/FAtiMA_impl/data_fearnot/characters/minds/language/agent/en/language-set-1/types.xml"/>
+												</Folder>
+											</Folder>
+										</Folder>
+										<Folder Name="user">
+											<Folder Name="de">
+												<Folder Name="language-set-1">
+													<F N="packs_xtra/logicmoo_pldata/eclipse-workspace/FAtiMA_impl/data_fearnot/characters/minds/language/user/de/language-set-1/types.xml"/>
+												</Folder>
+											</Folder>
+											<Folder Name="en">
+												<Folder Name="language-set-1">
+													<F N="packs_xtra/logicmoo_pldata/eclipse-workspace/FAtiMA_impl/data_fearnot/characters/minds/language/user/en/language-set-1/types.xml"/>
+												</Folder>
+											</Folder>
+										</Folder>
+									</Folder>
+									<Folder Name="roles">
+										<Folder Name="Bully">
+											<F N="packs_xtra/logicmoo_pldata/eclipse-workspace/FAtiMA_impl/data_fearnot/characters/minds/roles/Bully/Bully.xml"/>
+										</Folder>
+										<Folder Name="BullyAssistant">
+											<F N="packs_xtra/logicmoo_pldata/eclipse-workspace/FAtiMA_impl/data_fearnot/characters/minds/roles/BullyAssistant/BullyAssistant.xml"/>
+										</Folder>
+										<Folder Name="ByStander">
+											<F N="packs_xtra/logicmoo_pldata/eclipse-workspace/FAtiMA_impl/data_fearnot/characters/minds/roles/ByStander/ByStander.xml"/>
+										</Folder>
+										<Folder Name="Defender">
+											<F N="packs_xtra/logicmoo_pldata/eclipse-workspace/FAtiMA_impl/data_fearnot/characters/minds/roles/Defender/Defender.xml"/>
+										</Folder>
+										<Folder Name="Elder">
+											<F N="packs_xtra/logicmoo_pldata/eclipse-workspace/FAtiMA_impl/data_fearnot/characters/minds/roles/Elder/Elder.xml"/>
+										</Folder>
+										<Folder Name="Slave">
+											<F N="packs_xtra/logicmoo_pldata/eclipse-workspace/FAtiMA_impl/data_fearnot/characters/minds/roles/Slave/Slave.xml"/>
+										</Folder>
+										<Folder Name="Victim">
+											<F N="packs_xtra/logicmoo_pldata/eclipse-workspace/FAtiMA_impl/data_fearnot/characters/minds/roles/Victim/Victim.xml"/>
+										</Folder>
+									</Folder>
+									<F N="packs_xtra/logicmoo_pldata/eclipse-workspace/FAtiMA_impl/data_fearnot/characters/minds/Actions-backup.xml"/>
+									<F N="packs_xtra/logicmoo_pldata/eclipse-workspace/FAtiMA_impl/data_fearnot/characters/minds/Actions.xml"/>
+									<F N="packs_xtra/logicmoo_pldata/eclipse-workspace/FAtiMA_impl/data_fearnot/characters/minds/GoalLibrary-backup.xml"/>
+									<F N="packs_xtra/logicmoo_pldata/eclipse-workspace/FAtiMA_impl/data_fearnot/characters/minds/GoalLibrary.xml"/>
+								</Folder>
+							</Folder>
+						</Folder>
+						<Folder Name="data_redhood">
+							<Folder Name="characters">
+								<Folder Name="minds">
+									<Folder Name="language">
+										<Folder Name="agent">
+											<Folder Name="en">
+												<Folder Name="language-set-1">
+													<F N="packs_xtra/logicmoo_pldata/eclipse-workspace/FAtiMA_impl/data_redhood/characters/minds/language/agent/en/language-set-1/types.xml"/>
+												</Folder>
+											</Folder>
+										</Folder>
+										<Folder Name="user">
+											<F N="packs_xtra/logicmoo_pldata/eclipse-workspace/FAtiMA_impl/data_redhood/characters/minds/language/user/types.xml"/>
+										</Folder>
+									</Folder>
+									<Folder Name="roles">
+										<Folder Name="RedHood">
+											<F N="packs_xtra/logicmoo_pldata/eclipse-workspace/FAtiMA_impl/data_redhood/characters/minds/roles/RedHood/RedHood.xml"/>
+										</Folder>
+										<Folder Name="Wolf">
+											<F N="packs_xtra/logicmoo_pldata/eclipse-workspace/FAtiMA_impl/data_redhood/characters/minds/roles/Wolf/Wolf.xml"/>
+										</Folder>
+									</Folder>
+									<F N="packs_xtra/logicmoo_pldata/eclipse-workspace/FAtiMA_impl/data_redhood/characters/minds/Actions.xml"/>
+									<F N="packs_xtra/logicmoo_pldata/eclipse-workspace/FAtiMA_impl/data_redhood/characters/minds/GoalLibrary.xml"/>
+								</Folder>
+							</Folder>
+						</Folder>
+						<Folder Name="FAtiMA">
+							<Folder Name="bin">
+								<Folder Name="FAtiMA">
+									<Folder Name="reactiveLayer">
+										<F N="packs_xtra/logicmoo_pldata/eclipse-workspace/FAtiMA_impl/FAtiMA/bin/FAtiMA/reactiveLayer/.#ReactiveProcess.java.1.8"/>
+									</Folder>
+								</Folder>
+							</Folder>
+							<Folder Name="src">
+								<Folder Name="FAtiMA">
+									<Folder Name="reactiveLayer">
+										<F N="packs_xtra/logicmoo_pldata/eclipse-workspace/FAtiMA_impl/FAtiMA/src/FAtiMA/reactiveLayer/.#ReactiveProcess.java.1.8"/>
+									</Folder>
+								</Folder>
+							</Folder>
+							<F N="packs_xtra/logicmoo_pldata/eclipse-workspace/FAtiMA_impl/FAtiMA/.classpath"/>
+							<F N="packs_xtra/logicmoo_pldata/eclipse-workspace/FAtiMA_impl/FAtiMA/.project"/>
+						</Folder>
+						<Folder Name="LanguageServer">
+							<F N="packs_xtra/logicmoo_pldata/eclipse-workspace/FAtiMA_impl/LanguageServer/.classpath"/>
+							<F N="packs_xtra/logicmoo_pldata/eclipse-workspace/FAtiMA_impl/LanguageServer/.project"/>
+						</Folder>
+						<Folder Name="Leila">
+							<F N="packs_xtra/logicmoo_pldata/eclipse-workspace/FAtiMA_impl/Leila/.classpath"/>
+							<F N="packs_xtra/logicmoo_pldata/eclipse-workspace/FAtiMA_impl/Leila/.project"/>
+						</Folder>
+						<Folder Name="lixo">
+							<F N="packs_xtra/logicmoo_pldata/eclipse-workspace/FAtiMA_impl/lixo/deft.clp"/>
+							<F N="packs_xtra/logicmoo_pldata/eclipse-workspace/FAtiMA_impl/lixo/initpersprules.clp"/>
+							<F N="packs_xtra/logicmoo_pldata/eclipse-workspace/FAtiMA_impl/lixo/rolestemplates.clp"/>
+							<F N="packs_xtra/logicmoo_pldata/eclipse-workspace/FAtiMA_impl/lixo/rules-with-intensity.clp"/>
+							<F N="packs_xtra/logicmoo_pldata/eclipse-workspace/FAtiMA_impl/lixo/rules.clp"/>
+						</Folder>
+						<Folder Name="WorldTest">
+							<F N="packs_xtra/logicmoo_pldata/eclipse-workspace/FAtiMA_impl/WorldTest/.classpath"/>
+							<F N="packs_xtra/logicmoo_pldata/eclipse-workspace/FAtiMA_impl/WorldTest/.project"/>
+							<F N="packs_xtra/logicmoo_pldata/eclipse-workspace/FAtiMA_impl/WorldTest/Actions.xml"/>
+						</Folder>
+						<F N="packs_xtra/logicmoo_pldata/eclipse-workspace/FAtiMA_impl/John.bat"/>
+						<F N="packs_xtra/logicmoo_pldata/eclipse-workspace/FAtiMA_impl/Luke.bat"/>
+						<F N="packs_xtra/logicmoo_pldata/eclipse-workspace/FAtiMA_impl/Lupo.bat"/>
+						<F N="packs_xtra/logicmoo_pldata/eclipse-workspace/FAtiMA_impl/Maia.bat"/>
+						<F N="packs_xtra/logicmoo_pldata/eclipse-workspace/FAtiMA_impl/ReadME.txt"/>
+						<F N="packs_xtra/logicmoo_pldata/eclipse-workspace/FAtiMA_impl/setpaths.bat"/>
+						<F N="packs_xtra/logicmoo_pldata/eclipse-workspace/FAtiMA_impl/WorldTest (FearNot).bat"/>
+						<F N="packs_xtra/logicmoo_pldata/eclipse-workspace/FAtiMA_impl/WorldTest (RedHood).bat"/>
+					</Folder>
+					<Folder Name="Servers">
+						<Folder Name="Tomcat v7.0 Server at localhost-config">
+							<F N="packs_xtra/logicmoo_pldata/eclipse-workspace/Servers/Tomcat v7.0 Server at localhost-config/catalina.policy"/>
+							<F N="packs_xtra/logicmoo_pldata/eclipse-workspace/Servers/Tomcat v7.0 Server at localhost-config/catalina.properties"/>
+							<F N="packs_xtra/logicmoo_pldata/eclipse-workspace/Servers/Tomcat v7.0 Server at localhost-config/context.xml"/>
+							<F N="packs_xtra/logicmoo_pldata/eclipse-workspace/Servers/Tomcat v7.0 Server at localhost-config/server.xml"/>
+							<F N="packs_xtra/logicmoo_pldata/eclipse-workspace/Servers/Tomcat v7.0 Server at localhost-config/tomcat-users.xml"/>
+							<F N="packs_xtra/logicmoo_pldata/eclipse-workspace/Servers/Tomcat v7.0 Server at localhost-config/web.xml"/>
+						</Folder>
+						<F N="packs_xtra/logicmoo_pldata/eclipse-workspace/Servers/.project"/>
+					</Folder>
+					<Folder Name="VirtualStoryteller">
+						<Folder Name="knowledge">
+							<Folder Name="prolog/.xpce">
+								<F N="packs_xtra/logicmoo_pldata/eclipse-workspace/VirtualStoryteller/knowledge/prolog/.xpce/geometry.cnf"/>
+							</Folder>
+							<Folder Name="domain">
+								<Folder Name="cinderella">
+									<Folder Name="ontology">
+										<F N="packs_xtra/logicmoo_pldata/eclipse-workspace/VirtualStoryteller/knowledge/domain/cinderella/ontology/cinderellaSetting.owl"/>
+										<F N="packs_xtra/logicmoo_pldata/eclipse-workspace/VirtualStoryteller/knowledge/domain/cinderella/ontology/cinderellaSetting2.owl"/>
+										<F N="packs_xtra/logicmoo_pldata/eclipse-workspace/VirtualStoryteller/knowledge/domain/cinderella/ontology/cinderellaSetting2.pprj"/>
+										<F N="packs_xtra/logicmoo_pldata/eclipse-workspace/VirtualStoryteller/knowledge/domain/cinderella/ontology/cinderellaSetting2.repository"/>
+										<F N="packs_xtra/logicmoo_pldata/eclipse-workspace/VirtualStoryteller/knowledge/domain/cinderella/ontology/StoryWorldCore.owl"/>
+										<F N="packs_xtra/logicmoo_pldata/eclipse-workspace/VirtualStoryteller/knowledge/domain/cinderella/ontology/StoryWorldCore.pprj"/>
+									</Folder>
+									<Folder Name="schemas">
+										<F N="packs_xtra/logicmoo_pldata/eclipse-workspace/VirtualStoryteller/knowledge/domain/cinderella/schemas/action.pl"/>
+										<F N="packs_xtra/logicmoo_pldata/eclipse-workspace/VirtualStoryteller/knowledge/domain/cinderella/schemas/event.pl"/>
+										<F N="packs_xtra/logicmoo_pldata/eclipse-workspace/VirtualStoryteller/knowledge/domain/cinderella/schemas/goal.pl"/>
+										<F N="packs_xtra/logicmoo_pldata/eclipse-workspace/VirtualStoryteller/knowledge/domain/cinderella/schemas/improvisation.pl"/>
+										<F N="packs_xtra/logicmoo_pldata/eclipse-workspace/VirtualStoryteller/knowledge/domain/cinderella/schemas/manipulate.pl"/>
+										<F N="packs_xtra/logicmoo_pldata/eclipse-workspace/VirtualStoryteller/knowledge/domain/cinderella/schemas/schema.pl"/>
+										<F N="packs_xtra/logicmoo_pldata/eclipse-workspace/VirtualStoryteller/knowledge/domain/cinderella/schemas/schema.pl.bak"/>
+										<F N="packs_xtra/logicmoo_pldata/eclipse-workspace/VirtualStoryteller/knowledge/domain/cinderella/schemas/transfer.pl"/>
+										<F N="packs_xtra/logicmoo_pldata/eclipse-workspace/VirtualStoryteller/knowledge/domain/cinderella/schemas/transitMove.pl"/>
+									</Folder>
+									<F N="packs_xtra/logicmoo_pldata/eclipse-workspace/VirtualStoryteller/knowledge/domain/cinderella/loadDomain.pl"/>
+									<F N="packs_xtra/logicmoo_pldata/eclipse-workspace/VirtualStoryteller/knowledge/domain/cinderella/loadDomain.pl.bak"/>
+								</Folder>
+								<Folder Name="lollipop">
+									<Folder Name="ontology">
+										<F N="packs_xtra/logicmoo_pldata/eclipse-workspace/VirtualStoryteller/knowledge/domain/lollipop/ontology/Lollipop.owl"/>
+										<F N="packs_xtra/logicmoo_pldata/eclipse-workspace/VirtualStoryteller/knowledge/domain/lollipop/ontology/Lollipop.pprj"/>
+										<F N="packs_xtra/logicmoo_pldata/eclipse-workspace/VirtualStoryteller/knowledge/domain/lollipop/ontology/Lollipop.repository"/>
+									</Folder>
+									<Folder Name="schemas">
+										<F N="packs_xtra/logicmoo_pldata/eclipse-workspace/VirtualStoryteller/knowledge/domain/lollipop/schemas/action.pl"/>
+										<F N="packs_xtra/logicmoo_pldata/eclipse-workspace/VirtualStoryteller/knowledge/domain/lollipop/schemas/action.pl.bak"/>
+										<F N="packs_xtra/logicmoo_pldata/eclipse-workspace/VirtualStoryteller/knowledge/domain/lollipop/schemas/belief.pl"/>
+										<F N="packs_xtra/logicmoo_pldata/eclipse-workspace/VirtualStoryteller/knowledge/domain/lollipop/schemas/event.pl"/>
+										<F N="packs_xtra/logicmoo_pldata/eclipse-workspace/VirtualStoryteller/knowledge/domain/lollipop/schemas/event.pl.bak"/>
+										<F N="packs_xtra/logicmoo_pldata/eclipse-workspace/VirtualStoryteller/knowledge/domain/lollipop/schemas/goal.pl"/>
+										<F N="packs_xtra/logicmoo_pldata/eclipse-workspace/VirtualStoryteller/knowledge/domain/lollipop/schemas/goal.pl.bak"/>
+										<F N="packs_xtra/logicmoo_pldata/eclipse-workspace/VirtualStoryteller/knowledge/domain/lollipop/schemas/improvisation.pl"/>
+										<F N="packs_xtra/logicmoo_pldata/eclipse-workspace/VirtualStoryteller/knowledge/domain/lollipop/schemas/improvisation.pl.bak"/>
+										<F N="packs_xtra/logicmoo_pldata/eclipse-workspace/VirtualStoryteller/knowledge/domain/lollipop/schemas/manipulate.pl"/>
+										<F N="packs_xtra/logicmoo_pldata/eclipse-workspace/VirtualStoryteller/knowledge/domain/lollipop/schemas/schema.pl"/>
+										<F N="packs_xtra/logicmoo_pldata/eclipse-workspace/VirtualStoryteller/knowledge/domain/lollipop/schemas/schema.pl.bak"/>
+										<F N="packs_xtra/logicmoo_pldata/eclipse-workspace/VirtualStoryteller/knowledge/domain/lollipop/schemas/transfer.pl"/>
+										<F N="packs_xtra/logicmoo_pldata/eclipse-workspace/VirtualStoryteller/knowledge/domain/lollipop/schemas/transitMove.pl"/>
+									</Folder>
+									<Folder Name="setting">
+										<F N="packs_xtra/logicmoo_pldata/eclipse-workspace/VirtualStoryteller/knowledge/domain/lollipop/setting/park.ttl"/>
+									</Folder>
+									<Folder Name="suggestions">
+										<F N="packs_xtra/logicmoo_pldata/eclipse-workspace/VirtualStoryteller/knowledge/domain/lollipop/suggestions/suggestion.pl"/>
+									</Folder>
+									<Folder Name="threads">
+										<F N="packs_xtra/logicmoo_pldata/eclipse-workspace/VirtualStoryteller/knowledge/domain/lollipop/threads/buying_ice.pl"/>
+										<F N="packs_xtra/logicmoo_pldata/eclipse-workspace/VirtualStoryteller/knowledge/domain/lollipop/threads/schema.pl_"/>
+										<F N="packs_xtra/logicmoo_pldata/eclipse-workspace/VirtualStoryteller/knowledge/domain/lollipop/threads/threads.pl"/>
+									</Folder>
+									<F N="packs_xtra/logicmoo_pldata/eclipse-workspace/VirtualStoryteller/knowledge/domain/lollipop/loadDomain.pl"/>
+									<F N="packs_xtra/logicmoo_pldata/eclipse-workspace/VirtualStoryteller/knowledge/domain/lollipop/loadDomain.pl.bak"/>
+								</Folder>
+								<Folder Name="lollipop_dialogue">
+									<Folder Name="narration">
+										<F N="packs_xtra/logicmoo_pldata/eclipse-workspace/VirtualStoryteller/knowledge/domain/lollipop_dialogue/narration/narration.pl"/>
+									</Folder>
+									<Folder Name="ontology">
+										<F N="packs_xtra/logicmoo_pldata/eclipse-workspace/VirtualStoryteller/knowledge/domain/lollipop_dialogue/ontology/Lollipop.owl"/>
+										<F N="packs_xtra/logicmoo_pldata/eclipse-workspace/VirtualStoryteller/knowledge/domain/lollipop_dialogue/ontology/Lollipop.pprj"/>
+										<F N="packs_xtra/logicmoo_pldata/eclipse-workspace/VirtualStoryteller/knowledge/domain/lollipop_dialogue/ontology/Lollipop.repository"/>
+									</Folder>
+									<Folder Name="schemas">
+										<F N="packs_xtra/logicmoo_pldata/eclipse-workspace/VirtualStoryteller/knowledge/domain/lollipop_dialogue/schemas/action.pl"/>
+										<F N="packs_xtra/logicmoo_pldata/eclipse-workspace/VirtualStoryteller/knowledge/domain/lollipop_dialogue/schemas/action.pl.bak"/>
+										<F N="packs_xtra/logicmoo_pldata/eclipse-workspace/VirtualStoryteller/knowledge/domain/lollipop_dialogue/schemas/belief.pl"/>
+										<F N="packs_xtra/logicmoo_pldata/eclipse-workspace/VirtualStoryteller/knowledge/domain/lollipop_dialogue/schemas/event.pl"/>
+										<F N="packs_xtra/logicmoo_pldata/eclipse-workspace/VirtualStoryteller/knowledge/domain/lollipop_dialogue/schemas/event.pl.bak"/>
+										<F N="packs_xtra/logicmoo_pldata/eclipse-workspace/VirtualStoryteller/knowledge/domain/lollipop_dialogue/schemas/expectation.pl"/>
+										<F N="packs_xtra/logicmoo_pldata/eclipse-workspace/VirtualStoryteller/knowledge/domain/lollipop_dialogue/schemas/goal.pl"/>
+										<F N="packs_xtra/logicmoo_pldata/eclipse-workspace/VirtualStoryteller/knowledge/domain/lollipop_dialogue/schemas/goal.pl.bak"/>
+										<F N="packs_xtra/logicmoo_pldata/eclipse-workspace/VirtualStoryteller/knowledge/domain/lollipop_dialogue/schemas/improvisation.pl"/>
+										<F N="packs_xtra/logicmoo_pldata/eclipse-workspace/VirtualStoryteller/knowledge/domain/lollipop_dialogue/schemas/improvisation.pl.bak"/>
+										<F N="packs_xtra/logicmoo_pldata/eclipse-workspace/VirtualStoryteller/knowledge/domain/lollipop_dialogue/schemas/schema.pl"/>
+										<F N="packs_xtra/logicmoo_pldata/eclipse-workspace/VirtualStoryteller/knowledge/domain/lollipop_dialogue/schemas/schema.pl.bak"/>
+									</Folder>
+									<Folder Name="setting">
+										<F N="packs_xtra/logicmoo_pldata/eclipse-workspace/VirtualStoryteller/knowledge/domain/lollipop_dialogue/setting/park.ttl"/>
+									</Folder>
+									<Folder Name="suggestions">
+										<F N="packs_xtra/logicmoo_pldata/eclipse-workspace/VirtualStoryteller/knowledge/domain/lollipop_dialogue/suggestions/suggestion.pl"/>
+									</Folder>
+									<Folder Name="threads">
+										<F N="packs_xtra/logicmoo_pldata/eclipse-workspace/VirtualStoryteller/knowledge/domain/lollipop_dialogue/threads/buying_ice.pl"/>
+										<F N="packs_xtra/logicmoo_pldata/eclipse-workspace/VirtualStoryteller/knowledge/domain/lollipop_dialogue/threads/threads.pl"/>
+									</Folder>
+									<F N="packs_xtra/logicmoo_pldata/eclipse-workspace/VirtualStoryteller/knowledge/domain/lollipop_dialogue/loadDomain.pl"/>
+									<F N="packs_xtra/logicmoo_pldata/eclipse-workspace/VirtualStoryteller/knowledge/domain/lollipop_dialogue/loadDomain.pl.bak"/>
+								</Folder>
+								<Folder Name="make_love_not_war">
+									<Folder Name="ontology">
+										<F N="packs_xtra/logicmoo_pldata/eclipse-workspace/VirtualStoryteller/knowledge/domain/make_love_not_war/ontology/MakeLoveNotWar.owl"/>
+										<F N="packs_xtra/logicmoo_pldata/eclipse-workspace/VirtualStoryteller/knowledge/domain/make_love_not_war/ontology/MakeLoveNotWar.pprj"/>
+										<F N="packs_xtra/logicmoo_pldata/eclipse-workspace/VirtualStoryteller/knowledge/domain/make_love_not_war/ontology/MakeLoveNotWar.repository"/>
+									</Folder>
+									<Folder Name="schemas">
+										<F N="packs_xtra/logicmoo_pldata/eclipse-workspace/VirtualStoryteller/knowledge/domain/make_love_not_war/schemas/action.pl"/>
+										<F N="packs_xtra/logicmoo_pldata/eclipse-workspace/VirtualStoryteller/knowledge/domain/make_love_not_war/schemas/action.pl.bak"/>
+										<F N="packs_xtra/logicmoo_pldata/eclipse-workspace/VirtualStoryteller/knowledge/domain/make_love_not_war/schemas/belief.pl"/>
+										<F N="packs_xtra/logicmoo_pldata/eclipse-workspace/VirtualStoryteller/knowledge/domain/make_love_not_war/schemas/event.pl"/>
+										<F N="packs_xtra/logicmoo_pldata/eclipse-workspace/VirtualStoryteller/knowledge/domain/make_love_not_war/schemas/event.pl.bak"/>
+										<F N="packs_xtra/logicmoo_pldata/eclipse-workspace/VirtualStoryteller/knowledge/domain/make_love_not_war/schemas/framing.pl"/>
+										<F N="packs_xtra/logicmoo_pldata/eclipse-workspace/VirtualStoryteller/knowledge/domain/make_love_not_war/schemas/goal.pl"/>
+										<F N="packs_xtra/logicmoo_pldata/eclipse-workspace/VirtualStoryteller/knowledge/domain/make_love_not_war/schemas/goal.pl.bak"/>
+										<F N="packs_xtra/logicmoo_pldata/eclipse-workspace/VirtualStoryteller/knowledge/domain/make_love_not_war/schemas/improvisation.pl.bak"/>
+										<F N="packs_xtra/logicmoo_pldata/eclipse-workspace/VirtualStoryteller/knowledge/domain/make_love_not_war/schemas/manipulate.pl"/>
+										<F N="packs_xtra/logicmoo_pldata/eclipse-workspace/VirtualStoryteller/knowledge/domain/make_love_not_war/schemas/schema.pl"/>
+										<F N="packs_xtra/logicmoo_pldata/eclipse-workspace/VirtualStoryteller/knowledge/domain/make_love_not_war/schemas/schema.pl.bak"/>
+										<F N="packs_xtra/logicmoo_pldata/eclipse-workspace/VirtualStoryteller/knowledge/domain/make_love_not_war/schemas/transfer.pl"/>
+										<F N="packs_xtra/logicmoo_pldata/eclipse-workspace/VirtualStoryteller/knowledge/domain/make_love_not_war/schemas/transitMove.pl"/>
+									</Folder>
+									<Folder Name="setting">
+										<F N="packs_xtra/logicmoo_pldata/eclipse-workspace/VirtualStoryteller/knowledge/domain/make_love_not_war/setting/park.ttl"/>
+									</Folder>
+									<Folder Name="suggestions">
+										<F N="packs_xtra/logicmoo_pldata/eclipse-workspace/VirtualStoryteller/knowledge/domain/make_love_not_war/suggestions/suggestion.pl"/>
+									</Folder>
+									<Folder Name="threads">
+										<F N="packs_xtra/logicmoo_pldata/eclipse-workspace/VirtualStoryteller/knowledge/domain/make_love_not_war/threads/love_gathering.pl"/>
+										<F N="packs_xtra/logicmoo_pldata/eclipse-workspace/VirtualStoryteller/knowledge/domain/make_love_not_war/threads/threads.pl"/>
+									</Folder>
+									<F N="packs_xtra/logicmoo_pldata/eclipse-workspace/VirtualStoryteller/knowledge/domain/make_love_not_war/loadDomain.pl"/>
+									<F N="packs_xtra/logicmoo_pldata/eclipse-workspace/VirtualStoryteller/knowledge/domain/make_love_not_war/loadDomain.pl.bak"/>
+								</Folder>
+								<Folder Name="pirates">
+									<Folder Name="episodes">
+										<F N="packs_xtra/logicmoo_pldata/eclipse-workspace/VirtualStoryteller/knowledge/domain/pirates/episodes/episodes.pl.bak"/>
+										<F N="packs_xtra/logicmoo_pldata/eclipse-workspace/VirtualStoryteller/knowledge/domain/pirates/episodes/on_ship.pl.bak"/>
+									</Folder>
+									<Folder Name="ontology">
+										<F N="packs_xtra/logicmoo_pldata/eclipse-workspace/VirtualStoryteller/knowledge/domain/pirates/ontology/PiratesSetting.owl"/>
+										<F N="packs_xtra/logicmoo_pldata/eclipse-workspace/VirtualStoryteller/knowledge/domain/pirates/ontology/PiratesSetting.pprj"/>
+										<F N="packs_xtra/logicmoo_pldata/eclipse-workspace/VirtualStoryteller/knowledge/domain/pirates/ontology/PiratesSetting.repository"/>
+										<F N="packs_xtra/logicmoo_pldata/eclipse-workspace/VirtualStoryteller/knowledge/domain/pirates/ontology/StoryWorldCore.owl"/>
+										<F N="packs_xtra/logicmoo_pldata/eclipse-workspace/VirtualStoryteller/knowledge/domain/pirates/ontology/StoryWorldCore.pprj"/>
+									</Folder>
+									<Folder Name="schemas">
+										<F N="packs_xtra/logicmoo_pldata/eclipse-workspace/VirtualStoryteller/knowledge/domain/pirates/schemas/action.pl"/>
+										<F N="packs_xtra/logicmoo_pldata/eclipse-workspace/VirtualStoryteller/knowledge/domain/pirates/schemas/action.pl.bak"/>
+										<F N="packs_xtra/logicmoo_pldata/eclipse-workspace/VirtualStoryteller/knowledge/domain/pirates/schemas/belief.pl"/>
+										<F N="packs_xtra/logicmoo_pldata/eclipse-workspace/VirtualStoryteller/knowledge/domain/pirates/schemas/event.pl"/>
+										<F N="packs_xtra/logicmoo_pldata/eclipse-workspace/VirtualStoryteller/knowledge/domain/pirates/schemas/event.pl.bak"/>
+										<F N="packs_xtra/logicmoo_pldata/eclipse-workspace/VirtualStoryteller/knowledge/domain/pirates/schemas/goal.pl"/>
+										<F N="packs_xtra/logicmoo_pldata/eclipse-workspace/VirtualStoryteller/knowledge/domain/pirates/schemas/goal.pl.bak"/>
+										<F N="packs_xtra/logicmoo_pldata/eclipse-workspace/VirtualStoryteller/knowledge/domain/pirates/schemas/improvisation.pl"/>
+										<F N="packs_xtra/logicmoo_pldata/eclipse-workspace/VirtualStoryteller/knowledge/domain/pirates/schemas/improvisation.pl.bak"/>
+										<F N="packs_xtra/logicmoo_pldata/eclipse-workspace/VirtualStoryteller/knowledge/domain/pirates/schemas/manipulate.pl"/>
+										<F N="packs_xtra/logicmoo_pldata/eclipse-workspace/VirtualStoryteller/knowledge/domain/pirates/schemas/schema.pl"/>
+										<F N="packs_xtra/logicmoo_pldata/eclipse-workspace/VirtualStoryteller/knowledge/domain/pirates/schemas/schema.pl.bak"/>
+										<F N="packs_xtra/logicmoo_pldata/eclipse-workspace/VirtualStoryteller/knowledge/domain/pirates/schemas/transfer.pl"/>
+										<F N="packs_xtra/logicmoo_pldata/eclipse-workspace/VirtualStoryteller/knowledge/domain/pirates/schemas/transitMove.pl"/>
+									</Folder>
+									<Folder Name="setting">
+										<F N="packs_xtra/logicmoo_pldata/eclipse-workspace/VirtualStoryteller/knowledge/domain/pirates/setting/bar.ttl"/>
+										<F N="packs_xtra/logicmoo_pldata/eclipse-workspace/VirtualStoryteller/knowledge/domain/pirates/setting/Guybrush.ttl"/>
+										<F N="packs_xtra/logicmoo_pldata/eclipse-workspace/VirtualStoryteller/knowledge/domain/pirates/setting/island.ttl"/>
+										<F N="packs_xtra/logicmoo_pldata/eclipse-workspace/VirtualStoryteller/knowledge/domain/pirates/setting/leChuck.ttl"/>
+										<F N="packs_xtra/logicmoo_pldata/eclipse-workspace/VirtualStoryteller/knowledge/domain/pirates/setting/leChuck.ttl.bak"/>
+										<F N="packs_xtra/logicmoo_pldata/eclipse-workspace/VirtualStoryteller/knowledge/domain/pirates/setting/ship.ttl"/>
+										<F N="packs_xtra/logicmoo_pldata/eclipse-workspace/VirtualStoryteller/knowledge/domain/pirates/setting/ship.ttl.bak"/>
+									</Folder>
+									<Folder Name="suggestions">
+										<F N="packs_xtra/logicmoo_pldata/eclipse-workspace/VirtualStoryteller/knowledge/domain/pirates/suggestions/suggestion.pl"/>
+									</Folder>
+									<Folder Name="threads">
+										<F N="packs_xtra/logicmoo_pldata/eclipse-workspace/VirtualStoryteller/knowledge/domain/pirates/threads/on_ship.pl"/>
+										<F N="packs_xtra/logicmoo_pldata/eclipse-workspace/VirtualStoryteller/knowledge/domain/pirates/threads/threads.pl"/>
+									</Folder>
+									<F N="packs_xtra/logicmoo_pldata/eclipse-workspace/VirtualStoryteller/knowledge/domain/pirates/loadDomain.pl"/>
+									<F N="packs_xtra/logicmoo_pldata/eclipse-workspace/VirtualStoryteller/knowledge/domain/pirates/loadDomain.pl.bak"/>
+								</Folder>
+								<Folder Name="pirates_ivo">
+									<Folder Name="episodes">
+										<F N="packs_xtra/logicmoo_pldata/eclipse-workspace/VirtualStoryteller/knowledge/domain/pirates_ivo/episodes/episodes.pl.bak"/>
+										<F N="packs_xtra/logicmoo_pldata/eclipse-workspace/VirtualStoryteller/knowledge/domain/pirates_ivo/episodes/on_ship.pl.bak"/>
+									</Folder>
+									<Folder Name="ontology">
+										<F N="packs_xtra/logicmoo_pldata/eclipse-workspace/VirtualStoryteller/knowledge/domain/pirates_ivo/ontology/PiratesSetting.owl"/>
+										<F N="packs_xtra/logicmoo_pldata/eclipse-workspace/VirtualStoryteller/knowledge/domain/pirates_ivo/ontology/PiratesSetting.pprj"/>
+										<F N="packs_xtra/logicmoo_pldata/eclipse-workspace/VirtualStoryteller/knowledge/domain/pirates_ivo/ontology/PiratesSetting.repository"/>
+										<F N="packs_xtra/logicmoo_pldata/eclipse-workspace/VirtualStoryteller/knowledge/domain/pirates_ivo/ontology/StoryWorldCore.owl"/>
+										<F N="packs_xtra/logicmoo_pldata/eclipse-workspace/VirtualStoryteller/knowledge/domain/pirates_ivo/ontology/StoryWorldCore.pprj"/>
+									</Folder>
+									<Folder Name="schemas">
+										<F N="packs_xtra/logicmoo_pldata/eclipse-workspace/VirtualStoryteller/knowledge/domain/pirates_ivo/schemas/action.pl"/>
+										<F N="packs_xtra/logicmoo_pldata/eclipse-workspace/VirtualStoryteller/knowledge/domain/pirates_ivo/schemas/action.pl.bak"/>
+										<F N="packs_xtra/logicmoo_pldata/eclipse-workspace/VirtualStoryteller/knowledge/domain/pirates_ivo/schemas/belief.pl"/>
+										<F N="packs_xtra/logicmoo_pldata/eclipse-workspace/VirtualStoryteller/knowledge/domain/pirates_ivo/schemas/event.pl"/>
+										<F N="packs_xtra/logicmoo_pldata/eclipse-workspace/VirtualStoryteller/knowledge/domain/pirates_ivo/schemas/event.pl.bak"/>
+										<F N="packs_xtra/logicmoo_pldata/eclipse-workspace/VirtualStoryteller/knowledge/domain/pirates_ivo/schemas/framing.pl"/>
+										<F N="packs_xtra/logicmoo_pldata/eclipse-workspace/VirtualStoryteller/knowledge/domain/pirates_ivo/schemas/goal.pl"/>
+										<F N="packs_xtra/logicmoo_pldata/eclipse-workspace/VirtualStoryteller/knowledge/domain/pirates_ivo/schemas/goal.pl.bak"/>
+										<F N="packs_xtra/logicmoo_pldata/eclipse-workspace/VirtualStoryteller/knowledge/domain/pirates_ivo/schemas/improvisation.pl.bak"/>
+										<F N="packs_xtra/logicmoo_pldata/eclipse-workspace/VirtualStoryteller/knowledge/domain/pirates_ivo/schemas/manipulate.pl"/>
+										<F N="packs_xtra/logicmoo_pldata/eclipse-workspace/VirtualStoryteller/knowledge/domain/pirates_ivo/schemas/schema.pl"/>
+										<F N="packs_xtra/logicmoo_pldata/eclipse-workspace/VirtualStoryteller/knowledge/domain/pirates_ivo/schemas/schema.pl.bak"/>
+										<F N="packs_xtra/logicmoo_pldata/eclipse-workspace/VirtualStoryteller/knowledge/domain/pirates_ivo/schemas/transfer.pl"/>
+										<F N="packs_xtra/logicmoo_pldata/eclipse-workspace/VirtualStoryteller/knowledge/domain/pirates_ivo/schemas/transitMove.pl"/>
+									</Folder>
+									<Folder Name="setting">
+										<F N="packs_xtra/logicmoo_pldata/eclipse-workspace/VirtualStoryteller/knowledge/domain/pirates_ivo/setting/bar.ttl"/>
+										<F N="packs_xtra/logicmoo_pldata/eclipse-workspace/VirtualStoryteller/knowledge/domain/pirates_ivo/setting/Guybrush.ttl"/>
+										<F N="packs_xtra/logicmoo_pldata/eclipse-workspace/VirtualStoryteller/knowledge/domain/pirates_ivo/setting/island.ttl"/>
+										<F N="packs_xtra/logicmoo_pldata/eclipse-workspace/VirtualStoryteller/knowledge/domain/pirates_ivo/setting/leChuck.ttl"/>
+										<F N="packs_xtra/logicmoo_pldata/eclipse-workspace/VirtualStoryteller/knowledge/domain/pirates_ivo/setting/leChuck.ttl.bak"/>
+										<F N="packs_xtra/logicmoo_pldata/eclipse-workspace/VirtualStoryteller/knowledge/domain/pirates_ivo/setting/ship.ttl"/>
+										<F N="packs_xtra/logicmoo_pldata/eclipse-workspace/VirtualStoryteller/knowledge/domain/pirates_ivo/setting/ship.ttl.bak"/>
+									</Folder>
+									<Folder Name="suggestions">
+										<F N="packs_xtra/logicmoo_pldata/eclipse-workspace/VirtualStoryteller/knowledge/domain/pirates_ivo/suggestions/suggestion.pl"/>
+									</Folder>
+									<Folder Name="threads">
+										<F N="packs_xtra/logicmoo_pldata/eclipse-workspace/VirtualStoryteller/knowledge/domain/pirates_ivo/threads/on_ship.pl"/>
+										<F N="packs_xtra/logicmoo_pldata/eclipse-workspace/VirtualStoryteller/knowledge/domain/pirates_ivo/threads/threads.pl"/>
+									</Folder>
+									<F N="packs_xtra/logicmoo_pldata/eclipse-workspace/VirtualStoryteller/knowledge/domain/pirates_ivo/loadDomain.pl"/>
+									<F N="packs_xtra/logicmoo_pldata/eclipse-workspace/VirtualStoryteller/knowledge/domain/pirates_ivo/loadDomain.pl.bak"/>
+								</Folder>
+								<Folder Name="pirates_ivo2">
+									<Folder Name="narration">
+										<F N="packs_xtra/logicmoo_pldata/eclipse-workspace/VirtualStoryteller/knowledge/domain/pirates_ivo2/narration/narration.pl"/>
+									</Folder>
+									<Folder Name="ontology">
+										<F N="packs_xtra/logicmoo_pldata/eclipse-workspace/VirtualStoryteller/knowledge/domain/pirates_ivo2/ontology/PiratesSetting.owl"/>
+										<F N="packs_xtra/logicmoo_pldata/eclipse-workspace/VirtualStoryteller/knowledge/domain/pirates_ivo2/ontology/PiratesSetting.pprj"/>
+										<F N="packs_xtra/logicmoo_pldata/eclipse-workspace/VirtualStoryteller/knowledge/domain/pirates_ivo2/ontology/PiratesSetting.repository"/>
+										<F N="packs_xtra/logicmoo_pldata/eclipse-workspace/VirtualStoryteller/knowledge/domain/pirates_ivo2/ontology/StoryWorldCore.owl"/>
+										<F N="packs_xtra/logicmoo_pldata/eclipse-workspace/VirtualStoryteller/knowledge/domain/pirates_ivo2/ontology/StoryWorldCore.pprj"/>
+									</Folder>
+									<Folder Name="schemas">
+										<Folder Name="experiment_1">
+											<F N="packs_xtra/logicmoo_pldata/eclipse-workspace/VirtualStoryteller/knowledge/domain/pirates_ivo2/schemas/experiment_1/framing_operators_from_setting.pl"/>
+										</Folder>
+										<F N="packs_xtra/logicmoo_pldata/eclipse-workspace/VirtualStoryteller/knowledge/domain/pirates_ivo2/schemas/action_selection_rules.pl"/>
+										<F N="packs_xtra/logicmoo_pldata/eclipse-workspace/VirtualStoryteller/knowledge/domain/pirates_ivo2/schemas/actions.pl"/>
+										<F N="packs_xtra/logicmoo_pldata/eclipse-workspace/VirtualStoryteller/knowledge/domain/pirates_ivo2/schemas/actions_manipulate.pl"/>
+										<F N="packs_xtra/logicmoo_pldata/eclipse-workspace/VirtualStoryteller/knowledge/domain/pirates_ivo2/schemas/actions_transfer.pl"/>
+										<F N="packs_xtra/logicmoo_pldata/eclipse-workspace/VirtualStoryteller/knowledge/domain/pirates_ivo2/schemas/actions_transitMove.pl"/>
+										<F N="packs_xtra/logicmoo_pldata/eclipse-workspace/VirtualStoryteller/knowledge/domain/pirates_ivo2/schemas/events.pl"/>
+										<F N="packs_xtra/logicmoo_pldata/eclipse-workspace/VirtualStoryteller/knowledge/domain/pirates_ivo2/schemas/expectations.pl"/>
+										<F N="packs_xtra/logicmoo_pldata/eclipse-workspace/VirtualStoryteller/knowledge/domain/pirates_ivo2/schemas/framing_operators.pl"/>
+										<F N="packs_xtra/logicmoo_pldata/eclipse-workspace/VirtualStoryteller/knowledge/domain/pirates_ivo2/schemas/goals.pl"/>
+										<F N="packs_xtra/logicmoo_pldata/eclipse-workspace/VirtualStoryteller/knowledge/domain/pirates_ivo2/schemas/schemas.pl"/>
+										<F N="packs_xtra/logicmoo_pldata/eclipse-workspace/VirtualStoryteller/knowledge/domain/pirates_ivo2/schemas/threads.pl"/>
+									</Folder>
+									<Folder Name="setting">
+										<F N="packs_xtra/logicmoo_pldata/eclipse-workspace/VirtualStoryteller/knowledge/domain/pirates_ivo2/setting/anneBonney.ttl"/>
+										<F N="packs_xtra/logicmoo_pldata/eclipse-workspace/VirtualStoryteller/knowledge/domain/pirates_ivo2/setting/bar.ttl"/>
+										<F N="packs_xtra/logicmoo_pldata/eclipse-workspace/VirtualStoryteller/knowledge/domain/pirates_ivo2/setting/billyBones.ttl"/>
+										<F N="packs_xtra/logicmoo_pldata/eclipse-workspace/VirtualStoryteller/knowledge/domain/pirates_ivo2/setting/island.ttl"/>
+										<F N="packs_xtra/logicmoo_pldata/eclipse-workspace/VirtualStoryteller/knowledge/domain/pirates_ivo2/setting/leChuck.ttl.bak"/>
+										<F N="packs_xtra/logicmoo_pldata/eclipse-workspace/VirtualStoryteller/knowledge/domain/pirates_ivo2/setting/ship.ttl"/>
+										<F N="packs_xtra/logicmoo_pldata/eclipse-workspace/VirtualStoryteller/knowledge/domain/pirates_ivo2/setting/ship.ttl.bak"/>
+									</Folder>
+									<Folder Name="suggestions">
+										<F N="packs_xtra/logicmoo_pldata/eclipse-workspace/VirtualStoryteller/knowledge/domain/pirates_ivo2/suggestions/suggestion.pl"/>
+									</Folder>
+									<F N="packs_xtra/logicmoo_pldata/eclipse-workspace/VirtualStoryteller/knowledge/domain/pirates_ivo2/loadDomain.pl"/>
+									<F N="packs_xtra/logicmoo_pldata/eclipse-workspace/VirtualStoryteller/knowledge/domain/pirates_ivo2/loadDomain.pl.bak"/>
+								</Folder>
+								<Folder Name="pirates_jasper">
+									<Folder Name="episodes">
+										<F N="packs_xtra/logicmoo_pldata/eclipse-workspace/VirtualStoryteller/knowledge/domain/pirates_jasper/episodes/episodes.pl"/>
+										<F N="packs_xtra/logicmoo_pldata/eclipse-workspace/VirtualStoryteller/knowledge/domain/pirates_jasper/episodes/firing_canon.pl"/>
+									</Folder>
+									<Folder Name="ontology">
+										<F N="packs_xtra/logicmoo_pldata/eclipse-workspace/VirtualStoryteller/knowledge/domain/pirates_jasper/ontology/Pirates_Jasper.owl"/>
+										<F N="packs_xtra/logicmoo_pldata/eclipse-workspace/VirtualStoryteller/knowledge/domain/pirates_jasper/ontology/Pirates_Jasper.pprj"/>
+										<F N="packs_xtra/logicmoo_pldata/eclipse-workspace/VirtualStoryteller/knowledge/domain/pirates_jasper/ontology/Pirates_Jasper.repository"/>
+										<F N="packs_xtra/logicmoo_pldata/eclipse-workspace/VirtualStoryteller/knowledge/domain/pirates_jasper/ontology/StoryWorldCore.owl"/>
+										<F N="packs_xtra/logicmoo_pldata/eclipse-workspace/VirtualStoryteller/knowledge/domain/pirates_jasper/ontology/StoryWorldCore.pprj"/>
+									</Folder>
+									<Folder Name="schemas">
+										<F N="packs_xtra/logicmoo_pldata/eclipse-workspace/VirtualStoryteller/knowledge/domain/pirates_jasper/schemas/action.pl"/>
+										<F N="packs_xtra/logicmoo_pldata/eclipse-workspace/VirtualStoryteller/knowledge/domain/pirates_jasper/schemas/goal.pl"/>
+										<F N="packs_xtra/logicmoo_pldata/eclipse-workspace/VirtualStoryteller/knowledge/domain/pirates_jasper/schemas/manipulate.pl"/>
+										<F N="packs_xtra/logicmoo_pldata/eclipse-workspace/VirtualStoryteller/knowledge/domain/pirates_jasper/schemas/schema.pl"/>
+										<F N="packs_xtra/logicmoo_pldata/eclipse-workspace/VirtualStoryteller/knowledge/domain/pirates_jasper/schemas/transfer.pl"/>
+										<F N="packs_xtra/logicmoo_pldata/eclipse-workspace/VirtualStoryteller/knowledge/domain/pirates_jasper/schemas/transitMove.pl"/>
+									</Folder>
+									<Folder Name="setting">
+										<F N="packs_xtra/logicmoo_pldata/eclipse-workspace/VirtualStoryteller/knowledge/domain/pirates_jasper/setting/Jean-Baptiste.ttl"/>
+										<F N="packs_xtra/logicmoo_pldata/eclipse-workspace/VirtualStoryteller/knowledge/domain/pirates_jasper/setting/RedBeard.ttl"/>
+										<F N="packs_xtra/logicmoo_pldata/eclipse-workspace/VirtualStoryteller/knowledge/domain/pirates_jasper/setting/ship.ttl"/>
+									</Folder>
+									<Folder Name="suggestions">
+										<F N="packs_xtra/logicmoo_pldata/eclipse-workspace/VirtualStoryteller/knowledge/domain/pirates_jasper/suggestions/suggestion.pl"/>
+									</Folder>
+									<F N="packs_xtra/logicmoo_pldata/eclipse-workspace/VirtualStoryteller/knowledge/domain/pirates_jasper/loadDomain.pl"/>
+								</Folder>
+								<Folder Name="pirates_jasper2">
+									<Folder Name="ontology">
+										<F N="packs_xtra/logicmoo_pldata/eclipse-workspace/VirtualStoryteller/knowledge/domain/pirates_jasper2/ontology/Pirates_Jasper2.owl"/>
+										<F N="packs_xtra/logicmoo_pldata/eclipse-workspace/VirtualStoryteller/knowledge/domain/pirates_jasper2/ontology/Pirates_Jasper2.pprj"/>
+										<F N="packs_xtra/logicmoo_pldata/eclipse-workspace/VirtualStoryteller/knowledge/domain/pirates_jasper2/ontology/Pirates_Jasper2.repository"/>
+									</Folder>
+									<Folder Name="schemas">
+										<F N="packs_xtra/logicmoo_pldata/eclipse-workspace/VirtualStoryteller/knowledge/domain/pirates_jasper2/schemas/action.pl"/>
+										<F N="packs_xtra/logicmoo_pldata/eclipse-workspace/VirtualStoryteller/knowledge/domain/pirates_jasper2/schemas/belief.pl"/>
+										<F N="packs_xtra/logicmoo_pldata/eclipse-workspace/VirtualStoryteller/knowledge/domain/pirates_jasper2/schemas/event.pl"/>
+										<F N="packs_xtra/logicmoo_pldata/eclipse-workspace/VirtualStoryteller/knowledge/domain/pirates_jasper2/schemas/expectation.pl"/>
+										<F N="packs_xtra/logicmoo_pldata/eclipse-workspace/VirtualStoryteller/knowledge/domain/pirates_jasper2/schemas/goal.pl"/>
+										<F N="packs_xtra/logicmoo_pldata/eclipse-workspace/VirtualStoryteller/knowledge/domain/pirates_jasper2/schemas/improvisation.pl"/>
+										<F N="packs_xtra/logicmoo_pldata/eclipse-workspace/VirtualStoryteller/knowledge/domain/pirates_jasper2/schemas/schema.pl"/>
+									</Folder>
+									<Folder Name="setting">
+										<F N="packs_xtra/logicmoo_pldata/eclipse-workspace/VirtualStoryteller/knowledge/domain/pirates_jasper2/setting/Jean-Baptiste.ttl"/>
+										<F N="packs_xtra/logicmoo_pldata/eclipse-workspace/VirtualStoryteller/knowledge/domain/pirates_jasper2/setting/ship.ttl"/>
+									</Folder>
+									<Folder Name="suggestions">
+										<F N="packs_xtra/logicmoo_pldata/eclipse-workspace/VirtualStoryteller/knowledge/domain/pirates_jasper2/suggestions/suggestion.pl"/>
+									</Folder>
+									<Folder Name="threads">
+										<F N="packs_xtra/logicmoo_pldata/eclipse-workspace/VirtualStoryteller/knowledge/domain/pirates_jasper2/threads/on_ship.pl"/>
+										<F N="packs_xtra/logicmoo_pldata/eclipse-workspace/VirtualStoryteller/knowledge/domain/pirates_jasper2/threads/threads.pl"/>
+									</Folder>
+									<F N="packs_xtra/logicmoo_pldata/eclipse-workspace/VirtualStoryteller/knowledge/domain/pirates_jasper2/loadDomain.pl"/>
+								</Folder>
+								<Folder Name="pirates_pjotter">
+									<Folder Name="ontology">
+										<F N="packs_xtra/logicmoo_pldata/eclipse-workspace/VirtualStoryteller/knowledge/domain/pirates_pjotter/ontology/PiratesSetting.owl"/>
+										<F N="packs_xtra/logicmoo_pldata/eclipse-workspace/VirtualStoryteller/knowledge/domain/pirates_pjotter/ontology/PiratesSetting.pprj"/>
+										<F N="packs_xtra/logicmoo_pldata/eclipse-workspace/VirtualStoryteller/knowledge/domain/pirates_pjotter/ontology/PiratesSetting.repository"/>
+										<F N="packs_xtra/logicmoo_pldata/eclipse-workspace/VirtualStoryteller/knowledge/domain/pirates_pjotter/ontology/StoryWorldCore.owl"/>
+										<F N="packs_xtra/logicmoo_pldata/eclipse-workspace/VirtualStoryteller/knowledge/domain/pirates_pjotter/ontology/StoryWorldCore.pprj"/>
+									</Folder>
+									<Folder Name="schemas">
+										<F N="packs_xtra/logicmoo_pldata/eclipse-workspace/VirtualStoryteller/knowledge/domain/pirates_pjotter/schemas/action.pl"/>
+										<F N="packs_xtra/logicmoo_pldata/eclipse-workspace/VirtualStoryteller/knowledge/domain/pirates_pjotter/schemas/belief.pl"/>
+										<F N="packs_xtra/logicmoo_pldata/eclipse-workspace/VirtualStoryteller/knowledge/domain/pirates_pjotter/schemas/event.pl"/>
+										<F N="packs_xtra/logicmoo_pldata/eclipse-workspace/VirtualStoryteller/knowledge/domain/pirates_pjotter/schemas/expectations.pl"/>
+										<F N="packs_xtra/logicmoo_pldata/eclipse-workspace/VirtualStoryteller/knowledge/domain/pirates_pjotter/schemas/framing.pl"/>
+										<F N="packs_xtra/logicmoo_pldata/eclipse-workspace/VirtualStoryteller/knowledge/domain/pirates_pjotter/schemas/goal.pl"/>
+										<F N="packs_xtra/logicmoo_pldata/eclipse-workspace/VirtualStoryteller/knowledge/domain/pirates_pjotter/schemas/inference.pl"/>
+										<F N="packs_xtra/logicmoo_pldata/eclipse-workspace/VirtualStoryteller/knowledge/domain/pirates_pjotter/schemas/manipulate.pl"/>
+										<F N="packs_xtra/logicmoo_pldata/eclipse-workspace/VirtualStoryteller/knowledge/domain/pirates_pjotter/schemas/object_framing.pl"/>
+										<F N="packs_xtra/logicmoo_pldata/eclipse-workspace/VirtualStoryteller/knowledge/domain/pirates_pjotter/schemas/schema.pl"/>
+										<F N="packs_xtra/logicmoo_pldata/eclipse-workspace/VirtualStoryteller/knowledge/domain/pirates_pjotter/schemas/ship_actions.pl"/>
+										<F N="packs_xtra/logicmoo_pldata/eclipse-workspace/VirtualStoryteller/knowledge/domain/pirates_pjotter/schemas/ship_combat.pl"/>
+										<F N="packs_xtra/logicmoo_pldata/eclipse-workspace/VirtualStoryteller/knowledge/domain/pirates_pjotter/schemas/ship_movement.pl"/>
+										<F N="packs_xtra/logicmoo_pldata/eclipse-workspace/VirtualStoryteller/knowledge/domain/pirates_pjotter/schemas/transfer.pl"/>
+										<F N="packs_xtra/logicmoo_pldata/eclipse-workspace/VirtualStoryteller/knowledge/domain/pirates_pjotter/schemas/transitMove.pl"/>
+									</Folder>
+									<Folder Name="setting">
+										<F N="packs_xtra/logicmoo_pldata/eclipse-workspace/VirtualStoryteller/knowledge/domain/pirates_pjotter/setting/bar.ttl"/>
+										<F N="packs_xtra/logicmoo_pldata/eclipse-workspace/VirtualStoryteller/knowledge/domain/pirates_pjotter/setting/dinkey.ttl"/>
+										<F N="packs_xtra/logicmoo_pldata/eclipse-workspace/VirtualStoryteller/knowledge/domain/pirates_pjotter/setting/Guybrush.ttl"/>
+										<F N="packs_xtra/logicmoo_pldata/eclipse-workspace/VirtualStoryteller/knowledge/domain/pirates_pjotter/setting/island.ttl"/>
+										<F N="packs_xtra/logicmoo_pldata/eclipse-workspace/VirtualStoryteller/knowledge/domain/pirates_pjotter/setting/leChuck.ttl"/>
+										<F N="packs_xtra/logicmoo_pldata/eclipse-workspace/VirtualStoryteller/knowledge/domain/pirates_pjotter/setting/ship.ttl"/>
+									</Folder>
+									<Folder Name="suggestions">
+										<F N="packs_xtra/logicmoo_pldata/eclipse-workspace/VirtualStoryteller/knowledge/domain/pirates_pjotter/suggestions/suggestion.pl"/>
+									</Folder>
+									<Folder Name="threads">
+										<F N="packs_xtra/logicmoo_pldata/eclipse-workspace/VirtualStoryteller/knowledge/domain/pirates_pjotter/threads/on_ship.pl"/>
+										<F N="packs_xtra/logicmoo_pldata/eclipse-workspace/VirtualStoryteller/knowledge/domain/pirates_pjotter/threads/threads.pl"/>
+									</Folder>
+									<F N="packs_xtra/logicmoo_pldata/eclipse-workspace/VirtualStoryteller/knowledge/domain/pirates_pjotter/loadDomain.pl"/>
+								</Folder>
+								<Folder Name="red">
+									<Folder Name="narration">
+										<F N="packs_xtra/logicmoo_pldata/eclipse-workspace/VirtualStoryteller/knowledge/domain/red/narration/narration.pl"/>
+									</Folder>
+									<Folder Name="ontology">
+										<F N="packs_xtra/logicmoo_pldata/eclipse-workspace/VirtualStoryteller/knowledge/domain/red/ontology/Red.owl"/>
+										<F N="packs_xtra/logicmoo_pldata/eclipse-workspace/VirtualStoryteller/knowledge/domain/red/ontology/Red.pprj"/>
+										<F N="packs_xtra/logicmoo_pldata/eclipse-workspace/VirtualStoryteller/knowledge/domain/red/ontology/Red.repository"/>
+									</Folder>
+									<Folder Name="schemas">
+										<F N="packs_xtra/logicmoo_pldata/eclipse-workspace/VirtualStoryteller/knowledge/domain/red/schemas/action.pl"/>
+										<F N="packs_xtra/logicmoo_pldata/eclipse-workspace/VirtualStoryteller/knowledge/domain/red/schemas/action.pl.bak"/>
+										<F N="packs_xtra/logicmoo_pldata/eclipse-workspace/VirtualStoryteller/knowledge/domain/red/schemas/action_selection_rules.pl"/>
+										<F N="packs_xtra/logicmoo_pldata/eclipse-workspace/VirtualStoryteller/knowledge/domain/red/schemas/belief.pl"/>
+										<F N="packs_xtra/logicmoo_pldata/eclipse-workspace/VirtualStoryteller/knowledge/domain/red/schemas/event.pl"/>
+										<F N="packs_xtra/logicmoo_pldata/eclipse-workspace/VirtualStoryteller/knowledge/domain/red/schemas/event.pl.bak"/>
+										<F N="packs_xtra/logicmoo_pldata/eclipse-workspace/VirtualStoryteller/knowledge/domain/red/schemas/expectation.pl"/>
+										<F N="packs_xtra/logicmoo_pldata/eclipse-workspace/VirtualStoryteller/knowledge/domain/red/schemas/goal.pl"/>
+										<F N="packs_xtra/logicmoo_pldata/eclipse-workspace/VirtualStoryteller/knowledge/domain/red/schemas/goal.pl.bak"/>
+										<F N="packs_xtra/logicmoo_pldata/eclipse-workspace/VirtualStoryteller/knowledge/domain/red/schemas/improvisation.pl"/>
+										<F N="packs_xtra/logicmoo_pldata/eclipse-workspace/VirtualStoryteller/knowledge/domain/red/schemas/improvisation.pl.bak"/>
+										<F N="packs_xtra/logicmoo_pldata/eclipse-workspace/VirtualStoryteller/knowledge/domain/red/schemas/schema.pl"/>
+										<F N="packs_xtra/logicmoo_pldata/eclipse-workspace/VirtualStoryteller/knowledge/domain/red/schemas/schema.pl.bak"/>
+									</Folder>
+									<Folder Name="setting">
+										<F N="packs_xtra/logicmoo_pldata/eclipse-workspace/VirtualStoryteller/knowledge/domain/red/setting/setting.ttl"/>
+										<F N="packs_xtra/logicmoo_pldata/eclipse-workspace/VirtualStoryteller/knowledge/domain/red/setting/setting_from_grandma_plot.ttl"/>
+									</Folder>
+									<Folder Name="suggestions">
+										<F N="packs_xtra/logicmoo_pldata/eclipse-workspace/VirtualStoryteller/knowledge/domain/red/suggestions/suggestion.pl"/>
+									</Folder>
+									<Folder Name="threads">
+										<F N="packs_xtra/logicmoo_pldata/eclipse-workspace/VirtualStoryteller/knowledge/domain/red/threads/threads.pl"/>
+									</Folder>
+									<F N="packs_xtra/logicmoo_pldata/eclipse-workspace/VirtualStoryteller/knowledge/domain/red/loadDomain.pl"/>
+									<F N="packs_xtra/logicmoo_pldata/eclipse-workspace/VirtualStoryteller/knowledge/domain/red/loadDomain.pl.bak"/>
+								</Folder>
+								<Folder Name="swordfight">
+									<Folder Name="episodes">
+										<F N="packs_xtra/logicmoo_pldata/eclipse-workspace/VirtualStoryteller/knowledge/domain/swordfight/episodes/episodes.pl"/>
+										<F N="packs_xtra/logicmoo_pldata/eclipse-workspace/VirtualStoryteller/knowledge/domain/swordfight/episodes/episodes.pl.bak"/>
+										<F N="packs_xtra/logicmoo_pldata/eclipse-workspace/VirtualStoryteller/knowledge/domain/swordfight/episodes/on_ship.pl"/>
+										<F N="packs_xtra/logicmoo_pldata/eclipse-workspace/VirtualStoryteller/knowledge/domain/swordfight/episodes/on_ship.pl.bak"/>
+									</Folder>
+									<Folder Name="ontology">
+										<F N="packs_xtra/logicmoo_pldata/eclipse-workspace/VirtualStoryteller/knowledge/domain/swordfight/ontology/PiratesSetting.owl"/>
+										<F N="packs_xtra/logicmoo_pldata/eclipse-workspace/VirtualStoryteller/knowledge/domain/swordfight/ontology/PiratesSetting.pprj"/>
+										<F N="packs_xtra/logicmoo_pldata/eclipse-workspace/VirtualStoryteller/knowledge/domain/swordfight/ontology/PiratesSetting.repository"/>
+										<F N="packs_xtra/logicmoo_pldata/eclipse-workspace/VirtualStoryteller/knowledge/domain/swordfight/ontology/StoryWorldCore.owl"/>
+										<F N="packs_xtra/logicmoo_pldata/eclipse-workspace/VirtualStoryteller/knowledge/domain/swordfight/ontology/StoryWorldCore.pprj"/>
+									</Folder>
+									<Folder Name="schemas">
+										<F N="packs_xtra/logicmoo_pldata/eclipse-workspace/VirtualStoryteller/knowledge/domain/swordfight/schemas/action.pl"/>
+										<F N="packs_xtra/logicmoo_pldata/eclipse-workspace/VirtualStoryteller/knowledge/domain/swordfight/schemas/action.pl.bak"/>
+										<F N="packs_xtra/logicmoo_pldata/eclipse-workspace/VirtualStoryteller/knowledge/domain/swordfight/schemas/belief.pl"/>
+										<F N="packs_xtra/logicmoo_pldata/eclipse-workspace/VirtualStoryteller/knowledge/domain/swordfight/schemas/event.pl"/>
+										<F N="packs_xtra/logicmoo_pldata/eclipse-workspace/VirtualStoryteller/knowledge/domain/swordfight/schemas/event.pl.bak"/>
+										<F N="packs_xtra/logicmoo_pldata/eclipse-workspace/VirtualStoryteller/knowledge/domain/swordfight/schemas/goal.pl"/>
+										<F N="packs_xtra/logicmoo_pldata/eclipse-workspace/VirtualStoryteller/knowledge/domain/swordfight/schemas/goal.pl.bak"/>
+										<F N="packs_xtra/logicmoo_pldata/eclipse-workspace/VirtualStoryteller/knowledge/domain/swordfight/schemas/improvisation.pl"/>
+										<F N="packs_xtra/logicmoo_pldata/eclipse-workspace/VirtualStoryteller/knowledge/domain/swordfight/schemas/improvisation.pl.bak"/>
+										<F N="packs_xtra/logicmoo_pldata/eclipse-workspace/VirtualStoryteller/knowledge/domain/swordfight/schemas/manipulate.pl"/>
+										<F N="packs_xtra/logicmoo_pldata/eclipse-workspace/VirtualStoryteller/knowledge/domain/swordfight/schemas/schema.pl"/>
+										<F N="packs_xtra/logicmoo_pldata/eclipse-workspace/VirtualStoryteller/knowledge/domain/swordfight/schemas/schema.pl.bak"/>
+										<F N="packs_xtra/logicmoo_pldata/eclipse-workspace/VirtualStoryteller/knowledge/domain/swordfight/schemas/transfer.pl"/>
+										<F N="packs_xtra/logicmoo_pldata/eclipse-workspace/VirtualStoryteller/knowledge/domain/swordfight/schemas/transitMove.pl"/>
+									</Folder>
+									<Folder Name="setting">
+										<F N="packs_xtra/logicmoo_pldata/eclipse-workspace/VirtualStoryteller/knowledge/domain/swordfight/setting/anneBonney.ttl"/>
+										<F N="packs_xtra/logicmoo_pldata/eclipse-workspace/VirtualStoryteller/knowledge/domain/swordfight/setting/rapierRoy.ttl"/>
+										<F N="packs_xtra/logicmoo_pldata/eclipse-workspace/VirtualStoryteller/knowledge/domain/swordfight/setting/ship.ttl"/>
+									</Folder>
+									<Folder Name="suggestions">
+										<F N="packs_xtra/logicmoo_pldata/eclipse-workspace/VirtualStoryteller/knowledge/domain/swordfight/suggestions/suggestion.pl"/>
+									</Folder>
+									<Folder Name="threads">
+										<F N="packs_xtra/logicmoo_pldata/eclipse-workspace/VirtualStoryteller/knowledge/domain/swordfight/threads/on_ship.pl"/>
+										<F N="packs_xtra/logicmoo_pldata/eclipse-workspace/VirtualStoryteller/knowledge/domain/swordfight/threads/threads.pl"/>
+									</Folder>
+									<F N="packs_xtra/logicmoo_pldata/eclipse-workspace/VirtualStoryteller/knowledge/domain/swordfight/loadDomain.pl"/>
+									<F N="packs_xtra/logicmoo_pldata/eclipse-workspace/VirtualStoryteller/knowledge/domain/swordfight/loadDomain.pl.bak"/>
+								</Folder>
+								<Folder Name="test">
+									<Folder Name="schemas">
+										<F N="packs_xtra/logicmoo_pldata/eclipse-workspace/VirtualStoryteller/knowledge/domain/test/schemas/schema.pl"/>
+									</Folder>
+								</Folder>
+							</Folder>
+							<Folder Name="ontology">
+								<Folder Name="New">
+									<F N="packs_xtra/logicmoo_pldata/eclipse-workspace/VirtualStoryteller/knowledge/ontology/New/StoryWorldCore.owl"/>
+									<F N="packs_xtra/logicmoo_pldata/eclipse-workspace/VirtualStoryteller/knowledge/ontology/New/StoryWorldCore.png"/>
+									<F N="packs_xtra/logicmoo_pldata/eclipse-workspace/VirtualStoryteller/knowledge/ontology/New/StoryWorldCore.pprj"/>
+									<F N="packs_xtra/logicmoo_pldata/eclipse-workspace/VirtualStoryteller/knowledge/ontology/New/StoryWorldCore.repository"/>
+								</Folder>
+								<Folder Name="Old">
+									<F N="packs_xtra/logicmoo_pldata/eclipse-workspace/VirtualStoryteller/knowledge/ontology/Old/cinderellaSetting.owl"/>
+									<F N="packs_xtra/logicmoo_pldata/eclipse-workspace/VirtualStoryteller/knowledge/ontology/Old/cinderellaSetting2.owl"/>
+									<F N="packs_xtra/logicmoo_pldata/eclipse-workspace/VirtualStoryteller/knowledge/ontology/Old/cinderellaSetting2.pprj"/>
+									<F N="packs_xtra/logicmoo_pldata/eclipse-workspace/VirtualStoryteller/knowledge/ontology/Old/cinderellaSetting2.repository"/>
+									<F N="packs_xtra/logicmoo_pldata/eclipse-workspace/VirtualStoryteller/knowledge/ontology/Old/PlopWorld.owl"/>
+									<F N="packs_xtra/logicmoo_pldata/eclipse-workspace/VirtualStoryteller/knowledge/ontology/Old/StoryWorldCore.owl"/>
+									<F N="packs_xtra/logicmoo_pldata/eclipse-workspace/VirtualStoryteller/knowledge/ontology/Old/StoryWorldCore.owl.bak"/>
+									<F N="packs_xtra/logicmoo_pldata/eclipse-workspace/VirtualStoryteller/knowledge/ontology/Old/StoryWorldCore.pprj"/>
+									<F N="packs_xtra/logicmoo_pldata/eclipse-workspace/VirtualStoryteller/knowledge/ontology/Old/StoryWorldCore.repository"/>
+								</Folder>
+								<F N="packs_xtra/logicmoo_pldata/eclipse-workspace/VirtualStoryteller/knowledge/ontology/FabulaKnowledge-stripped.owl"/>
+								<F N="packs_xtra/logicmoo_pldata/eclipse-workspace/VirtualStoryteller/knowledge/ontology/FabulaKnowledge-swoop.owl"/>
+								<F N="packs_xtra/logicmoo_pldata/eclipse-workspace/VirtualStoryteller/knowledge/ontology/FabulaKnowledge-unstripped.owl"/>
+								<F N="packs_xtra/logicmoo_pldata/eclipse-workspace/VirtualStoryteller/knowledge/ontology/FabulaKnowledge.owl"/>
+								<F N="packs_xtra/logicmoo_pldata/eclipse-workspace/VirtualStoryteller/knowledge/ontology/FabulaKnowledge.owl.bak"/>
+								<F N="packs_xtra/logicmoo_pldata/eclipse-workspace/VirtualStoryteller/knowledge/ontology/FabulaKnowledge.pprj"/>
+								<F N="packs_xtra/logicmoo_pldata/eclipse-workspace/VirtualStoryteller/knowledge/ontology/StoryWorldCore.owl"/>
+								<F N="packs_xtra/logicmoo_pldata/eclipse-workspace/VirtualStoryteller/knowledge/ontology/StoryWorldCore.pprj"/>
+								<F N="packs_xtra/logicmoo_pldata/eclipse-workspace/VirtualStoryteller/knowledge/ontology/VSTontology.pins"/>
+								<F N="packs_xtra/logicmoo_pldata/eclipse-workspace/VirtualStoryteller/knowledge/ontology/VSTontology.pont"/>
+								<F N="packs_xtra/logicmoo_pldata/eclipse-workspace/VirtualStoryteller/knowledge/ontology/VSTontology.pprj"/>
+							</Folder>
+							<Folder Name="prolog">
+								<Folder Name="CharacterAgent">
+									<F N="packs_xtra/logicmoo_pldata/eclipse-workspace/VirtualStoryteller/knowledge/prolog/CharacterAgent/BasicCharacterAgent.pl"/>
+									<F N="packs_xtra/logicmoo_pldata/eclipse-workspace/VirtualStoryteller/knowledge/prolog/CharacterAgent/BasicCharacterAgent.pl.bak"/>
+									<F N="packs_xtra/logicmoo_pldata/eclipse-workspace/VirtualStoryteller/knowledge/prolog/CharacterAgent/BasicCharacterAgent.plt"/>
+									<F N="packs_xtra/logicmoo_pldata/eclipse-workspace/VirtualStoryteller/knowledge/prolog/CharacterAgent/continuous.pl.bak"/>
+									<F N="packs_xtra/logicmoo_pldata/eclipse-workspace/VirtualStoryteller/knowledge/prolog/CharacterAgent/goal_manager.pl"/>
+									<F N="packs_xtra/logicmoo_pldata/eclipse-workspace/VirtualStoryteller/knowledge/prolog/CharacterAgent/iPop test.pl"/>
+									<F N="packs_xtra/logicmoo_pldata/eclipse-workspace/VirtualStoryteller/knowledge/prolog/CharacterAgent/iPop test.pl.bak"/>
+									<F N="packs_xtra/logicmoo_pldata/eclipse-workspace/VirtualStoryteller/knowledge/prolog/CharacterAgent/iPop.pl.bak"/>
+									<F N="packs_xtra/logicmoo_pldata/eclipse-workspace/VirtualStoryteller/knowledge/prolog/CharacterAgent/iPop.plt.bak"/>
+									<F N="packs_xtra/logicmoo_pldata/eclipse-workspace/VirtualStoryteller/knowledge/prolog/CharacterAgent/pop new.pl"/>
+									<F N="packs_xtra/logicmoo_pldata/eclipse-workspace/VirtualStoryteller/knowledge/prolog/CharacterAgent/pop new.pl.bak"/>
+									<F N="packs_xtra/logicmoo_pldata/eclipse-workspace/VirtualStoryteller/knowledge/prolog/CharacterAgent/pop.pl.bak"/>
+									<F N="packs_xtra/logicmoo_pldata/eclipse-workspace/VirtualStoryteller/knowledge/prolog/CharacterAgent/reactive_layer.pl"/>
+								</Folder>
+								<Folder Name="operators">
+									<F N="packs_xtra/logicmoo_pldata/eclipse-workspace/VirtualStoryteller/knowledge/prolog/operators/actions.pl"/>
+									<F N="packs_xtra/logicmoo_pldata/eclipse-workspace/VirtualStoryteller/knowledge/prolog/operators/events.pl"/>
+									<F N="packs_xtra/logicmoo_pldata/eclipse-workspace/VirtualStoryteller/knowledge/prolog/operators/improvisations.pl"/>
+									<F N="packs_xtra/logicmoo_pldata/eclipse-workspace/VirtualStoryteller/knowledge/prolog/operators/operators.pl"/>
+									<F N="packs_xtra/logicmoo_pldata/eclipse-workspace/VirtualStoryteller/knowledge/prolog/operators/transfer.pl"/>
+									<F N="packs_xtra/logicmoo_pldata/eclipse-workspace/VirtualStoryteller/knowledge/prolog/operators/transitMove.pl"/>
+								</Folder>
+								<Folder Name="PlotAgent">
+									<F N="packs_xtra/logicmoo_pldata/eclipse-workspace/VirtualStoryteller/knowledge/prolog/PlotAgent/BasicPlotAgent.pl"/>
+									<F N="packs_xtra/logicmoo_pldata/eclipse-workspace/VirtualStoryteller/knowledge/prolog/PlotAgent/BasicPlotAgent.pl.bak"/>
+									<F N="packs_xtra/logicmoo_pldata/eclipse-workspace/VirtualStoryteller/knowledge/prolog/PlotAgent/episodeManagerModule.pl.bak"/>
+									<F N="packs_xtra/logicmoo_pldata/eclipse-workspace/VirtualStoryteller/knowledge/prolog/PlotAgent/inspirationRules.pl.bak"/>
+									<F N="packs_xtra/logicmoo_pldata/eclipse-workspace/VirtualStoryteller/knowledge/prolog/PlotAgent/narrativeInspirationModule.pl.bak"/>
+									<F N="packs_xtra/logicmoo_pldata/eclipse-workspace/VirtualStoryteller/knowledge/prolog/PlotAgent/narrativeInspirationModuleTest.pl"/>
+									<F N="packs_xtra/logicmoo_pldata/eclipse-workspace/VirtualStoryteller/knowledge/prolog/PlotAgent/narrativeInspirationModuleTest.pl.bak"/>
+									<F N="packs_xtra/logicmoo_pldata/eclipse-workspace/VirtualStoryteller/knowledge/prolog/PlotAgent/suggestions-plopcase.pl"/>
+									<F N="packs_xtra/logicmoo_pldata/eclipse-workspace/VirtualStoryteller/knowledge/prolog/PlotAgent/suggestions-plopcase.pl.bak"/>
+									<F N="packs_xtra/logicmoo_pldata/eclipse-workspace/VirtualStoryteller/knowledge/prolog/PlotAgent/suggestions-test1.pl.bak"/>
+									<F N="packs_xtra/logicmoo_pldata/eclipse-workspace/VirtualStoryteller/knowledge/prolog/PlotAgent/TestData_for_inspiration_rules.txt.bak"/>
+									<F N="packs_xtra/logicmoo_pldata/eclipse-workspace/VirtualStoryteller/knowledge/prolog/PlotAgent/testRules.pl.bak"/>
+									<F N="packs_xtra/logicmoo_pldata/eclipse-workspace/VirtualStoryteller/knowledge/prolog/PlotAgent/testSuggestions.pl.bak"/>
+								</Folder>
+								<Folder Name="schemas">
+									<F N="packs_xtra/logicmoo_pldata/eclipse-workspace/VirtualStoryteller/knowledge/prolog/schemas/action.pl.bak"/>
+									<F N="packs_xtra/logicmoo_pldata/eclipse-workspace/VirtualStoryteller/knowledge/prolog/schemas/action.pl_"/>
+									<F N="packs_xtra/logicmoo_pldata/eclipse-workspace/VirtualStoryteller/knowledge/prolog/schemas/event.pl.bak"/>
+									<F N="packs_xtra/logicmoo_pldata/eclipse-workspace/VirtualStoryteller/knowledge/prolog/schemas/event.pl_"/>
+									<F N="packs_xtra/logicmoo_pldata/eclipse-workspace/VirtualStoryteller/knowledge/prolog/schemas/goal.pl.bak"/>
+									<F N="packs_xtra/logicmoo_pldata/eclipse-workspace/VirtualStoryteller/knowledge/prolog/schemas/goal.pl_"/>
+									<F N="packs_xtra/logicmoo_pldata/eclipse-workspace/VirtualStoryteller/knowledge/prolog/schemas/improvisation.pl.bak"/>
+									<F N="packs_xtra/logicmoo_pldata/eclipse-workspace/VirtualStoryteller/knowledge/prolog/schemas/improvisation.pl_"/>
+									<F N="packs_xtra/logicmoo_pldata/eclipse-workspace/VirtualStoryteller/knowledge/prolog/schemas/manipulate.pl.bak"/>
+									<F N="packs_xtra/logicmoo_pldata/eclipse-workspace/VirtualStoryteller/knowledge/prolog/schemas/manipulate.pl_"/>
+									<F N="packs_xtra/logicmoo_pldata/eclipse-workspace/VirtualStoryteller/knowledge/prolog/schemas/schema.pl.bak"/>
+									<F N="packs_xtra/logicmoo_pldata/eclipse-workspace/VirtualStoryteller/knowledge/prolog/schemas/transfer.pl_"/>
+									<F N="packs_xtra/logicmoo_pldata/eclipse-workspace/VirtualStoryteller/knowledge/prolog/schemas/transitMove.pl.bak"/>
+									<F N="packs_xtra/logicmoo_pldata/eclipse-workspace/VirtualStoryteller/knowledge/prolog/schemas/transitMove.pl_"/>
+								</Folder>
+								<Folder Name="test">
+									<F N="packs_xtra/logicmoo_pldata/eclipse-workspace/VirtualStoryteller/knowledge/prolog/test/test_rules.plt.bak"/>
+								</Folder>
+								<Folder Name="Uijlings actions">
+									<F N="packs_xtra/logicmoo_pldata/eclipse-workspace/VirtualStoryteller/knowledge/prolog/Uijlings actions/action.pl"/>
+									<F N="packs_xtra/logicmoo_pldata/eclipse-workspace/VirtualStoryteller/knowledge/prolog/Uijlings actions/action_db.pl"/>
+									<F N="packs_xtra/logicmoo_pldata/eclipse-workspace/VirtualStoryteller/knowledge/prolog/Uijlings actions/attaching.pl"/>
+									<F N="packs_xtra/logicmoo_pldata/eclipse-workspace/VirtualStoryteller/knowledge/prolog/Uijlings actions/consume.pl"/>
+									<F N="packs_xtra/logicmoo_pldata/eclipse-workspace/VirtualStoryteller/knowledge/prolog/Uijlings actions/controlAct.pl"/>
+									<F N="packs_xtra/logicmoo_pldata/eclipse-workspace/VirtualStoryteller/knowledge/prolog/Uijlings actions/corpuscularObjectMove.pl"/>
+									<F N="packs_xtra/logicmoo_pldata/eclipse-workspace/VirtualStoryteller/knowledge/prolog/Uijlings actions/creation.pl"/>
+									<F N="packs_xtra/logicmoo_pldata/eclipse-workspace/VirtualStoryteller/knowledge/prolog/Uijlings actions/manipulate.pl"/>
+									<F N="packs_xtra/logicmoo_pldata/eclipse-workspace/VirtualStoryteller/knowledge/prolog/Uijlings actions/owlRules.pl"/>
+									<F N="packs_xtra/logicmoo_pldata/eclipse-workspace/VirtualStoryteller/knowledge/prolog/Uijlings actions/swcRules.pl"/>
+									<F N="packs_xtra/logicmoo_pldata/eclipse-workspace/VirtualStoryteller/knowledge/prolog/Uijlings actions/transfer.pl"/>
+									<F N="packs_xtra/logicmoo_pldata/eclipse-workspace/VirtualStoryteller/knowledge/prolog/Uijlings actions/transitMove.pl"/>
+								</Folder>
+								<Folder Name="WorldAgent">
+									<F N="packs_xtra/logicmoo_pldata/eclipse-workspace/VirtualStoryteller/knowledge/prolog/WorldAgent/BasicWorldAgent.pl"/>
+								</Folder>
+								<F N="packs_xtra/logicmoo_pldata/eclipse-workspace/VirtualStoryteller/knowledge/prolog/continuous.pl"/>
+								<F N="packs_xtra/logicmoo_pldata/eclipse-workspace/VirtualStoryteller/knowledge/prolog/global_operators.pl"/>
+								<F N="packs_xtra/logicmoo_pldata/eclipse-workspace/VirtualStoryteller/knowledge/prolog/knowledgebase.pl"/>
+								<F N="packs_xtra/logicmoo_pldata/eclipse-workspace/VirtualStoryteller/knowledge/prolog/knowledgebase.plt"/>
+								<F N="packs_xtra/logicmoo_pldata/eclipse-workspace/VirtualStoryteller/knowledge/prolog/load.pl"/>
+								<F N="packs_xtra/logicmoo_pldata/eclipse-workspace/VirtualStoryteller/knowledge/prolog/load_character.pl"/>
+								<F N="packs_xtra/logicmoo_pldata/eclipse-workspace/VirtualStoryteller/knowledge/prolog/load_plot.pl"/>
+								<F N="packs_xtra/logicmoo_pldata/eclipse-workspace/VirtualStoryteller/knowledge/prolog/load_world.pl"/>
+								<F N="packs_xtra/logicmoo_pldata/eclipse-workspace/VirtualStoryteller/knowledge/prolog/narrative_inspiration.pl"/>
+								<F N="packs_xtra/logicmoo_pldata/eclipse-workspace/VirtualStoryteller/knowledge/prolog/narrator.pl"/>
+								<F N="packs_xtra/logicmoo_pldata/eclipse-workspace/VirtualStoryteller/knowledge/prolog/owl.pl"/>
+								<F N="packs_xtra/logicmoo_pldata/eclipse-workspace/VirtualStoryteller/knowledge/prolog/owl_rules.pl"/>
+								<F N="packs_xtra/logicmoo_pldata/eclipse-workspace/VirtualStoryteller/knowledge/prolog/planner.pl"/>
+								<F N="packs_xtra/logicmoo_pldata/eclipse-workspace/VirtualStoryteller/knowledge/prolog/pop.pl"/>
+								<F N="packs_xtra/logicmoo_pldata/eclipse-workspace/VirtualStoryteller/knowledge/prolog/pop_explicit_bindings.pl"/>
+								<F N="packs_xtra/logicmoo_pldata/eclipse-workspace/VirtualStoryteller/knowledge/prolog/rdf_base.pl"/>
+								<F N="packs_xtra/logicmoo_pldata/eclipse-workspace/VirtualStoryteller/knowledge/prolog/schema_management.pl"/>
+								<F N="packs_xtra/logicmoo_pldata/eclipse-workspace/VirtualStoryteller/knowledge/prolog/schema_management.plt"/>
+								<F N="packs_xtra/logicmoo_pldata/eclipse-workspace/VirtualStoryteller/knowledge/prolog/swc_rules.pl"/>
+								<F N="packs_xtra/logicmoo_pldata/eclipse-workspace/VirtualStoryteller/knowledge/prolog/thread_management.pl"/>
+							</Folder>
+						</Folder>
+					</Folder>
+					<Folder Name="WumpusAgents">
+						<F N="packs_xtra/logicmoo_pldata/eclipse-workspace/WumpusAgents/.project"/>
+						<F N="packs_xtra/logicmoo_pldata/eclipse-workspace/WumpusAgents/facts.pl"/>
+						<F N="packs_xtra/logicmoo_pldata/eclipse-workspace/WumpusAgents/initBeliefs.pl"/>
+						<F N="packs_xtra/logicmoo_pldata/eclipse-workspace/WumpusAgents/initGoals.pl"/>
+						<F N="packs_xtra/logicmoo_pldata/eclipse-workspace/WumpusAgents/prodt_test.pl"/>
+					</Folder>
+				</Folder>
 				<Folder Name="ext">
 					<Folder Name="plkb0988">
 						<F N="packs_xtra/logicmoo_pldata/ext/plkb0988/plkb0988_iface.pl"/>
@@ -17966,15 +18816,51 @@
 			Recurse="1"
 			Excludes="*.pl_;*.pld*;*.pldata;*.Plo;*.sav*/;*.sav/;*.sav?/;*.sav??/;*~/;~*/;.bin/;.cache/;.deps/;.git/;.github/;.metadata/;.svn/;.tmp/;CVS/;Mirrors/;node_modules/;pldata/;*.0*;*.1*;*.2*;*.3*;*.4*;*.5*;*.6*;*.7*;*.8*;*.9*;*.a;*.abap;*.abc;*.abs;*.abw;*.act2g;*.add;*.ahk;*.ai;*.ail;*.ailog;*.aim;*.aiml;*.aimmspack;*.alda;*.am;*.ann;*.Apache;*.apex;*.aql;*.arff;*.ari;*.arq;*.arrange;*.as;*.attr;*.auto;*.autopos;*.autopron;*.aux;*.avg;*.awk;*.b;*.b?*;*.backup;*.bak;*.bbl;*.bib;*.bin;*.bis;*.bis1;*.bis2;*.bis3;*.bis4;*.blif;*.bm;*.bro;*.BSD;*.bst;*.bz2;*.bzl;*.c9search_results;*.cabal;*.cache;*.carine;*.cd;*.cfe;*.cfgm;*.cfs;*.CGE;*.cgi;*.cgx;*.chan;*.chan~bak;*.check_cache;*.chk;*.cirru;*.clang-format;*.class;*.classpath;*.cls;*.co;*.code;*.com%2Ffeed%2F;*.compile;*.component;*.conf;*.configuration;*.container;*.copyright;*.correct;*.cp;*.cpackignore;*.cr;*.crt;*.csd;*.csl;*.csr;*.csv;*.cty;*.cvsignore;*.d;*.dart;*.dat;*.data;*.db;*.dcl;*.dddmp;*.dead;*.deb;*.dedam;*.default;*.del;*.deps;*.dia;*.diff;*.dimacs;*.dirstamp;*.dist;*.dll;*.dmp;*.do;*.doc;*.dockerignore;*.doctest;*.dox;*.drace;*.DS_Store;*.dsc;*.dsl;*.dsw;*.dtxt;*.dur;*.dvi;*.dzn;*.edi;*.eex;*.egg;*.egg-link;*.ejs;*.emacs_poole;*.english;*.ent;*.eot;*.epp;*.eprime;*.eps;*.eqp;*.erb;*.err;*.eslintignore;*.ex;*.exe;*.exp;*.expand;*.explode0;*.explode1;*.explode2;*.explode3;*.exsd;*.extra;*.f;*.f90;*.fdb_latexmk;*.fdt;*.fdx;*.feature;*.fgrep;*.fileheader;*.filtered;*.filters;*.finder;*.fit;*.fla;*.fls;*.fn;*.fnm;*.form;*.format;*.frink;*.frq;*.frt;*.fsi;*.fsl;*.ftl;*.full;*.gbg;*.gbs;*.gcode;*.gen;*.generate;*.geo;*.gfcm;*.gfx;*.gif;*.gmr;*.goldpos;*.GPL;*.gr;*.grammar;*.groups;*.grtext;*.gsl;*.guess;*.gyp;*.gz;*.haml;*.hbs;*.hdt;*.hhc;*.hhk;*.hide;*.hjson;*.hlp;*.home;*.hostsp;*.hrc;*.htm;*.html;*.hx;*.icn;*.icns;*.ico;*.ico*;*.ics;*.idx;*.ignore-on-commit;*.ilf;*.ilg;*.in;*.inc;*.includecache;*.ind;*.index;*.info;*.internal;*.inv;*.inx;*.io;*.isabelle;*.ist;*.jar;*.java_;*.jjt;*.jl;*.jpeg;*.jpg;*.jpt;*.jq;*.js;*.jscsrc;*.jsdoc;*.jsdtscope;*.jsfdia;*.jshintrc;*.jsmooth;*.jssm;*.jsx;*.key;*.kt;*.ky;*.la;*.lai;*.layout;*.lck;*.less;*.LESSER;*.leveldb;*.lex;*.lgpl;*.lib;*.liquid;*.list;*.listing;*.lm;*.lnk;*.lo;*.lock;*.Log;*.ls;*.lst;*.ltv;*.lucene;*.lyx;*.m;*.m4;*.macosx;*.macosxu;*.magic;*.make-senitel;*.map;*.mark;*.markdown;*.markers;*.marks;*.mask;*.mat;*.max1;*.max2;*.mc;*.mel;*.metitarski;*.mgtp;*.missing;*.mixal;*.mixt;*.mm;*.mo;*.mod;*.mod2g;*.more;*.mtl;*.mysql;*.mz;*.mzn;*.n;*.name;*.ner;*.net;*.new;*.next;*.nginx;*.nim;*.nix;*.nld*;*.nldata;*.nojekyll;*.noquotes;*.nospan0;*.nospan1;*.nospan2;*.nospan3;*.not;*.npmignore;*.nrm;*.nsi;*.nsmap;*.nt;*.nunjucks;*.nuspec;*.o;*.obj;*.obp;*.ocl;*.ocl_need_dom;*.odt;*.okay;*.old;*.old1;*.old2;*.oldone;*.omdoc;*.opensdf;*.opts;*.orc;*.ord;*.org;*.orig;*.original;*.otf;*.out2;*.p1;*.p12;*.p6;*.package_visibility;*.pages;*.param;*.parses;*.pb;*.pc;*.pdb;*.pdf;*.pdn;*.pem;*.perl;*.persistence;*.pg;*.pgsql;*.pig;*.pins;*.pipe;*.pl-old;*.pl-staffan;*.plp;*.pl~;*.pm;*.png;*.po;*.pom;*.pont;*.pos;*.ppdb;*.pprj;*.ppt;*.pptx;*.praat;*.prc;*.prefix;*.preprocessing;*.pri;*.prisma;*.prl;*.probs;*.profile;*.PrologMUD-freenode;*.prop;*.proto;*.prx;*.ps;*.ps*;*.ps1;*.psd;*.PSF;*.psi;*.pth;*.ptr;*.pug;*.pwd;*.pwp;*.pyc;*.pyi;*.qi;*.qlf;*.qm;*.qml;*.qrc;*.rar;*.rc;*.Rd;*.read;*.readylog;*.red;*.reform;*.registry;*.regression;*.regression0;*.regression1;*.regression2;*.regression3;*.repository;*.Rhtml;*.rtf;*.rty;*.ru;*.run;*.running;*.s;*.sample;*.sass;*.sav;*.saved;*.scad;*.sco;*.scott;*.scss;*.sem;*.ser;*.service;*.sex;*.shorten;*.si;*.sipl;*.sitemap;*.size;*.sjs;*.skel;*.sketch;*.sl;*.slim;*.slot_definitions;*.smarty;*.smj;*.smt1;*.snap;*.snark;*.snippets;*.snk;*.so;*.soc;*.socket;*.solaris;*.sources;*.soy;*.space;*.sprfn;*.sqlserver;*.srec;*.srj;*.srx;*.Start;*.status;*.std;*.stlx;*.stp;*.sty;*.styl;*.style;*.stylelintrc;*.stylesheet;*.sub;*.sunos;*.svn-base;*.swf;*.swift;*.swp;*.syntax;*.system;*.tag;*.tar;*.targets;*.tb;*.tbz2;*.temp;*.test;*.testdddmp;*.tf;*.tgz;*.tif;*.tii;*.tis;*.tmp;*.tmpl;*.tmSnippet;*.tok;*.tp;*.tps;*.tr;*.tr1;*.tr2;*.trans;*.travis;*.tree;*.trp;*.ts;*.tsv;*.tsx;*.ttf;*.uber;*.ui;*.uninstalled;*.unix;*.unstable;*.unused;*.url;*.user;*.user~bak;*.v;*.vala;*.variables;*.verb;*.version;*.vfp;*.vhd;*.vlw;*.vm;*.vpj;*.vpj~;*.vpw;*.vpwhist;*.vr;*.vtg;*.vtg~;*.waldmeister;*.wav;*.whl;*.win;*.win32;*.wld;*.wlk;*.woff;*.woff2;*.wppl;*.wrong;*.xb*;*.xbm;*.xcf;*.xdb;*.xdy;*.xinet;*.xl*;*.xls;*.xmi;*.xp*;*.xpdl;*.xpm;*.xq;*.xsd;*.y;*.yesterday;*.zeek;*.zinc;*.zip"/>
 		<F
+			N="*.clif"
+			Recurse="1"
+			Refilter="0"
+			Excludes="*~/;~*/;~*;*~;.metadata/;.svn/;.git/;CVS/;node_modules/;*.sav?/;*.sav??/;*.sav/;pldata/;*.pldata;*.nldata;.cache/;.deps/;.github/;.bin/;.tm
+p/"/>
+		<F
+			N="*.clp"
+			Recurse="1"
+			Refilter="0"
+			Excludes="*~/;~*/;~*;*~;.metadata/;.svn/;.git/;CVS/;node_modules/;*.sav?/;*.sav??/;*.sav/;pldata/;*.pldata;*.nldata;.cache/;.deps/;.github/;.bin/;.tm
+p/"/>
+		<F
 			N="*.conf"
 			Recurse="1"
 			Refilter="0"
 			Excludes="*~/;~*/;~*;*~;.metadata/;.svn/;.git/;CVS/;node_modules/;*.sav?/;*.sav??/;*.sav/;pldata/;*.pldata;*.nldata;.cache/;.deps/;.github/;.bin/;.tmp/"/>
 		<F
+			N="*.e"
+			Recurse="1"
+			Refilter="0"
+			Excludes="*~/;~*/;~*;*~;.metadata/;.svn/;.git/;CVS/;node_modules/;*.sav?/;*.sav??/;*.sav/;pldata/;*.pldata;*.nldata;.cache/;.deps/;.github/;.bin/;.tm
+p/"/>
+		<F
+			N="*.jess"
+			Recurse="1"
+			Refilter="0"
+			Excludes="*~/;~*/;~*;*~;.metadata/;.svn/;.git/;CVS/;node_modules/;*.sav?/;*.sav??/;*.sav/;pldata/;*.pldata;*.nldata;.cache/;.deps/;.github/;.bin/;.tm
+p/"/>
+		<F
+			N="*.kif"
+			Recurse="1"
+			Refilter="0"
+			Excludes="*~/;~*/;~*;*~;.metadata/;.svn/;.git/;CVS/;node_modules/;*.sav?/;*.sav??/;*.sav/;pldata/;*.pldata;*.nldata;.cache/;.deps/;.github/;.bin/;.tm
+p/"/>
+		<F
 			N="*.md"
 			Recurse="1"
 			Refilter="0"
 			Excludes="*~/;~*/;~*;*~;.metadata/;.svn/;.git/;CVS/;node_modules/;*.sav?/;*.sav??/;*.sav/;pldata/;*.pldata;*.nldata;.cache/;.deps/;.github/;.bin/;.tmp/"/>
+		<F
+			N="*.owl"
+			Recurse="1"
+			Refilter="0"
+			Excludes="*~/;~*/;~*;*~;.metadata/;.svn/;.git/;CVS/;node_modules/;*.sav?/;*.sav??/;*.sav/;pldata/;*.pldata;*.nldata;.cache/;.deps/;.github/;.bin/;.tm
+p/"/>
 		<F
 			N="*.P"
 			Recurse="1"
@@ -17991,6 +18877,12 @@
 			Refilter="0"
 			Excludes=""/>
 		<F
+			N="*.pprj"
+			Recurse="1"
+			Refilter="0"
+			Excludes="*~/;~*/;~*;*~;.metadata/;.svn/;.git/;CVS/;node_modules/;*.sav?/;*.sav??/;*.sav/;pldata/;*.pldata;*.nldata;.cache/;.deps/;.github/;.bin/;.tm
+p/"/>
+		<F
 			N="*.pro"
 			Recurse="1"
 			Refilter="0"
@@ -18005,62 +18897,23 @@
 			Recurse="1"
 			Refilter="0"
 			Excludes="*~/;~*/;~*;*~;.metadata/;.svn/;.git/;CVS/;node_modules/;*.sav?/;*.sav??/;*.sav/;pldata/;*.pldata;*.nldata;.cache/;.deps/;.github/;.bin/;.tmp/"/>
-                <F
-                        N="*.ttl"
-                        Recurse="1"
-                        Refilter="0"
-                        Excludes="*~/;~*/;~*;*~;.metadata/;.svn/;.git/;CVS/;node_modules/;*.sav?/;*.sav??/;*.sav/;pldata/;*.pldata;*.nldata;.cache/;.deps/;.github/;.bin/;.tm
-p/"/>
-                <F
-                        N="*.trig"
-                        Recurse="1"
-                        Refilter="0"
-                        Excludes="*~/;~*/;~*;*~;.metadata/;.svn/;.git/;CVS/;node_modules/;*.sav?/;*.sav??/;*.sav/;pldata/;*.pldata;*.nldata;.cache/;.deps/;.github/;.bin/;.tm
-p/"/>
-                <F
-                        N="*.owl"
-                        Recurse="1"
-                        Refilter="0"
-                        Excludes="*~/;~*/;~*;*~;.metadata/;.svn/;.git/;CVS/;node_modules/;*.sav?/;*.sav??/;*.sav/;pldata/;*.pldata;*.nldata;.cache/;.deps/;.github/;.bin/;.tm
-p/"/>
-                <F
-                        N="*.kif"
-                        Recurse="1"
-                        Refilter="0"
-                        Excludes="*~/;~*/;~*;*~;.metadata/;.svn/;.git/;CVS/;node_modules/;*.sav?/;*.sav??/;*.sav/;pldata/;*.pldata;*.nldata;.cache/;.deps/;.github/;.bin/;.tm
-p/"/>
-                <F
-                        N="*.clif"
-                        Recurse="1"
-                        Refilter="0"
-                        Excludes="*~/;~*/;~*;*~;.metadata/;.svn/;.git/;CVS/;node_modules/;*.sav?/;*.sav??/;*.sav/;pldata/;*.pldata;*.nldata;.cache/;.deps/;.github/;.bin/;.tm
-p/"/>                <F
-                        N="*.pprj"
-                        Recurse="1"
-                        Refilter="0"
-                        Excludes="*~/;~*/;~*;*~;.metadata/;.svn/;.git/;CVS/;node_modules/;*.sav?/;*.sav??/;*.sav/;pldata/;*.pldata;*.nldata;.cache/;.deps/;.github/;.bin/;.tm
-p/"/>                <F
-                        N="*.clp"
-                        Recurse="1"
-                        Refilter="0"
-                        Excludes="*~/;~*/;~*;*~;.metadata/;.svn/;.git/;CVS/;node_modules/;*.sav?/;*.sav??/;*.sav/;pldata/;*.pldata;*.nldata;.cache/;.deps/;.github/;.bin/;.tm
-p/"/>                <F
-                        N="*.e"
-                        Recurse="1"
-                        Refilter="0"
-                        Excludes="*~/;~*/;~*;*~;.metadata/;.svn/;.git/;CVS/;node_modules/;*.sav?/;*.sav??/;*.sav/;pldata/;*.pldata;*.nldata;.cache/;.deps/;.github/;.bin/;.tm
-p/"/>
-                <F
-                        N="*.jess"
-                        Recurse="1"
-                        Refilter="0"
-                        Excludes="*~/;~*/;~*;*~;.metadata/;.svn/;.git/;CVS/;node_modules/;*.sav?/;*.sav??/;*.sav/;pldata/;*.pldata;*.nldata;.cache/;.deps/;.github/;.bin/;.tm
-p/"/>
 		<F
 			N="*.subl"
 			Recurse="1"
 			Refilter="0"
 			Excludes="*~/;~*/;~*;*~;.metadata/;.svn/;.git/;CVS/;node_modules/;*.sav?/;*.sav??/;*.sav/;pldata/;*.pldata;*.nldata;.cache/;.deps/;.github/;.bin/;.tmp/"/>
+		<F
+			N="*.trig"
+			Recurse="1"
+			Refilter="0"
+			Excludes="*~/;~*/;~*;*~;.metadata/;.svn/;.git/;CVS/;node_modules/;*.sav?/;*.sav??/;*.sav/;pldata/;*.pldata;*.nldata;.cache/;.deps/;.github/;.bin/;.tm
+p/"/>
+		<F
+			N="*.ttl"
+			Recurse="1"
+			Refilter="0"
+			Excludes="*~/;~*/;~*;*~;.metadata/;.svn/;.git/;CVS/;node_modules/;*.sav?/;*.sav??/;*.sav/;pldata/;*.pldata;*.nldata;.cache/;.deps/;.github/;.bin/;.tm
+p/"/>
 		<F
 			N=".*ignore*"
 			Recurse="1"
