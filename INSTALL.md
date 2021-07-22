@@ -96,30 +96,20 @@ apt install git-lfs
 
 git config --local http.sslVerify false
 # git config --global http.sslVerify false
+find -name "*.lock" -delete
+git config credential.helper 'cache --timeout=300000'
+git update-index --assume-unchanged prologmud_server/.bash_history
+git update-index --assume-unchanged packs_sys/eggdrop/conf/PrologMUD-freenode.*
+git remote add --track master github https://github.com/logicmoo/logicmoo_workspace.git 2>/dev/null ; /bin/true
+git remote add --track master gitlab https://logicmoo.org/gitlab/logicmoo/logicmoo_workspace.git 2>/dev/null ; /bin/true
+
 echo "git submodule update --init"
 git submodule update --init
-echo "git pull --recurse-submodules"
-find -name "*.lock" -delete
 git submodule foreach --recursive bash -c "git fetch --unshallow ; /bin/true"
 git submodule foreach --recursive bash -c "git lfs pull ; /bin/true"
 git pull --recurse-submodules
-#git lfs checkout
 
 
-if [ ! -d /opt/logicmoo_workspace ]; then
-    mv /usr/local/lib/python3.8/ /usr/local/lib/python-DEAD-3.6
-    apt update 
-    apt install -y python3.8 python3.8-venv
-    echo ". /opt/logicmoo_workspace/packs_web/butterfly/bin/activate"
-    #. /opt/logicmoo_workspace/packs_web/butterfly/bin/activate
-    python3 -m pip install --upgrade pip
-    python3 -m pip install setuptools tornado
-    mv /usr/local/lib/python-DEAD-3.6/ /usr/local/lib/python3.8/ 
-    python3 -m pip install --upgrade pip
-    python3 -m pip install setuptools tornado
-    cd /opt/logicmoo_workspace/packs_web/butterfly
-    python3 -m pip install .
-fi
 
 rm -rf /usr/local/lib/python3.8/dist-packages/butterfly/templates
 rm -rf /usr/local/lib/python3.8/dist-packages/butterfly/static
