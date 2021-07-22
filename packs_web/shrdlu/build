@@ -1,0 +1,3 @@
+
+tsc --watch src/ai/*.ts src/ai/nlp/*.ts src/ai/actions/*.ts src/ai/inferences/*.ts src/a4engine3/*.ts src/a4engine3/objects/*.ts src/auxiliar/*.ts src/lib/*.ts src/shrdlu/*.ts src/shrdlu/ai/*.ts src/shrdlu/ai/actions/*.ts src/shrdlu/ai/inferences/*.ts
+
