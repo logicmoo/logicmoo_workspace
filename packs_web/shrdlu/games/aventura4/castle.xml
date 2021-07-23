@@ -1,0 +1,657 @@
+<map version="1.0" orientation="orthogonal" width="17" height="16" tilewidth="32" tileheight="32">
+ <properties>
+  <property name="name" value="the Abblegard Castle"/>
+ </properties>
+ <tileset firstgid="1" name="graphics" tilewidth="32" tileheight="32">
+  <image source="graphics.png" width="320" height="1184"/>
+ </tileset>
+ <layer name="Tile Layer 1" width="17" height="16">
+  <data>
+   <tile gid="57"/>
+   <tile gid="57"/>
+   <tile gid="57"/>
+   <tile gid="57"/>
+   <tile gid="57"/>
+   <tile gid="1"/>
+   <tile gid="1"/>
+   <tile gid="1"/>
+   <tile gid="1"/>
+   <tile gid="1"/>
+   <tile gid="1"/>
+   <tile gid="1"/>
+   <tile gid="57"/>
+   <tile gid="57"/>
+   <tile gid="57"/>
+   <tile gid="57"/>
+   <tile gid="57"/>
+   <tile gid="57"/>
+   <tile gid="57"/>
+   <tile gid="57"/>
+   <tile gid="57"/>
+   <tile gid="57"/>
+   <tile gid="1"/>
+   <tile gid="1"/>
+   <tile gid="1"/>
+   <tile gid="1"/>
+   <tile gid="1"/>
+   <tile gid="1"/>
+   <tile gid="1"/>
+   <tile gid="57"/>
+   <tile gid="57"/>
+   <tile gid="57"/>
+   <tile gid="57"/>
+   <tile gid="57"/>
+   <tile gid="57"/>
+   <tile gid="57"/>
+   <tile gid="57"/>
+   <tile gid="57"/>
+   <tile gid="57"/>
+   <tile gid="1"/>
+   <tile gid="1"/>
+   <tile gid="1"/>
+   <tile gid="1"/>
+   <tile gid="1"/>
+   <tile gid="1"/>
+   <tile gid="1"/>
+   <tile gid="57"/>
+   <tile gid="57"/>
+   <tile gid="57"/>
+   <tile gid="57"/>
+   <tile gid="57"/>
+   <tile gid="57"/>
+   <tile gid="57"/>
+   <tile gid="57"/>
+   <tile gid="57"/>
+   <tile gid="57"/>
+   <tile gid="1"/>
+   <tile gid="1"/>
+   <tile gid="1"/>
+   <tile gid="1"/>
+   <tile gid="1"/>
+   <tile gid="1"/>
+   <tile gid="1"/>
+   <tile gid="57"/>
+   <tile gid="57"/>
+   <tile gid="57"/>
+   <tile gid="57"/>
+   <tile gid="57"/>
+   <tile gid="57"/>
+   <tile gid="31"/>
+   <tile gid="31"/>
+   <tile gid="31"/>
+   <tile gid="31"/>
+   <tile gid="1"/>
+   <tile gid="1"/>
+   <tile gid="1"/>
+   <tile gid="1"/>
+   <tile gid="1"/>
+   <tile gid="1"/>
+   <tile gid="1"/>
+   <tile gid="31"/>
+   <tile gid="31"/>
+   <tile gid="31"/>
+   <tile gid="31"/>
+   <tile gid="31"/>
+   <tile gid="57"/>
+   <tile gid="31"/>
+   <tile gid="31"/>
+   <tile gid="31"/>
+   <tile gid="31"/>
+   <tile gid="1"/>
+   <tile gid="1"/>
+   <tile gid="1"/>
+   <tile gid="1"/>
+   <tile gid="1"/>
+   <tile gid="1"/>
+   <tile gid="1"/>
+   <tile gid="31"/>
+   <tile gid="31"/>
+   <tile gid="31"/>
+   <tile gid="31"/>
+   <tile gid="31"/>
+   <tile gid="57"/>
+   <tile gid="31"/>
+   <tile gid="31"/>
+   <tile gid="31"/>
+   <tile gid="31"/>
+   <tile gid="1"/>
+   <tile gid="1"/>
+   <tile gid="1"/>
+   <tile gid="1"/>
+   <tile gid="1"/>
+   <tile gid="1"/>
+   <tile gid="1"/>
+   <tile gid="31"/>
+   <tile gid="31"/>
+   <tile gid="31"/>
+   <tile gid="31"/>
+   <tile gid="31"/>
+   <tile gid="57"/>
+   <tile gid="31"/>
+   <tile gid="32"/>
+   <tile gid="31"/>
+   <tile gid="31"/>
+   <tile gid="1"/>
+   <tile gid="1"/>
+   <tile gid="1"/>
+   <tile gid="1"/>
+   <tile gid="1"/>
+   <tile gid="1"/>
+   <tile gid="1"/>
+   <tile gid="31"/>
+   <tile gid="31"/>
+   <tile gid="32"/>
+   <tile gid="31"/>
+   <tile gid="31"/>
+   <tile gid="57"/>
+   <tile gid="39"/>
+   <tile gid="21"/>
+   <tile gid="33"/>
+   <tile gid="31"/>
+   <tile gid="31"/>
+   <tile gid="31"/>
+   <tile gid="31"/>
+   <tile gid="31"/>
+   <tile gid="31"/>
+   <tile gid="31"/>
+   <tile gid="31"/>
+   <tile gid="31"/>
+   <tile gid="39"/>
+   <tile gid="21"/>
+   <tile gid="33"/>
+   <tile gid="31"/>
+   <tile gid="57"/>
+   <tile gid="39"/>
+   <tile gid="21"/>
+   <tile gid="33"/>
+   <tile gid="31"/>
+   <tile gid="31"/>
+   <tile gid="31"/>
+   <tile gid="31"/>
+   <tile gid="31"/>
+   <tile gid="31"/>
+   <tile gid="31"/>
+   <tile gid="31"/>
+   <tile gid="31"/>
+   <tile gid="39"/>
+   <tile gid="21"/>
+   <tile gid="33"/>
+   <tile gid="31"/>
+   <tile gid="57"/>
+   <tile gid="39"/>
+   <tile gid="21"/>
+   <tile gid="33"/>
+   <tile gid="31"/>
+   <tile gid="31"/>
+   <tile gid="31"/>
+   <tile gid="31"/>
+   <tile gid="31"/>
+   <tile gid="31"/>
+   <tile gid="31"/>
+   <tile gid="31"/>
+   <tile gid="31"/>
+   <tile gid="39"/>
+   <tile gid="21"/>
+   <tile gid="33"/>
+   <tile gid="31"/>
+   <tile gid="57"/>
+   <tile gid="31"/>
+   <tile gid="38"/>
+   <tile gid="31"/>
+   <tile gid="31"/>
+   <tile gid="31"/>
+   <tile gid="31"/>
+   <tile gid="31"/>
+   <tile gid="31"/>
+   <tile gid="31"/>
+   <tile gid="31"/>
+   <tile gid="31"/>
+   <tile gid="31"/>
+   <tile gid="31"/>
+   <tile gid="38"/>
+   <tile gid="31"/>
+   <tile gid="31"/>
+   <tile gid="57"/>
+   <tile gid="57"/>
+   <tile gid="57"/>
+   <tile gid="57"/>
+   <tile gid="57"/>
+   <tile gid="57"/>
+   <tile gid="31"/>
+   <tile gid="31"/>
+   <tile gid="31"/>
+   <tile gid="31"/>
+   <tile gid="31"/>
+   <tile gid="57"/>
+   <tile gid="57"/>
+   <tile gid="57"/>
+   <tile gid="57"/>
+   <tile gid="57"/>
+   <tile gid="57"/>
+   <tile gid="57"/>
+   <tile gid="57"/>
+   <tile gid="57"/>
+   <tile gid="57"/>
+   <tile gid="57"/>
+   <tile gid="57"/>
+   <tile gid="31"/>
+   <tile gid="31"/>
+   <tile gid="31"/>
+   <tile gid="31"/>
+   <tile gid="31"/>
+   <tile gid="57"/>
+   <tile gid="57"/>
+   <tile gid="57"/>
+   <tile gid="57"/>
+   <tile gid="57"/>
+   <tile gid="57"/>
+   <tile gid="57"/>
+   <tile gid="57"/>
+   <tile gid="57"/>
+   <tile gid="57"/>
+   <tile gid="57"/>
+   <tile gid="57"/>
+   <tile gid="31"/>
+   <tile gid="31"/>
+   <tile gid="31"/>
+   <tile gid="31"/>
+   <tile gid="31"/>
+   <tile gid="57"/>
+   <tile gid="57"/>
+   <tile gid="57"/>
+   <tile gid="57"/>
+   <tile gid="57"/>
+   <tile gid="57"/>
+   <tile gid="57"/>
+   <tile gid="57"/>
+   <tile gid="57"/>
+   <tile gid="57"/>
+   <tile gid="57"/>
+   <tile gid="57"/>
+   <tile gid="57"/>
+   <tile gid="31"/>
+   <tile gid="31"/>
+   <tile gid="31"/>
+   <tile gid="57"/>
+   <tile gid="57"/>
+   <tile gid="57"/>
+   <tile gid="57"/>
+   <tile gid="57"/>
+   <tile gid="57"/>
+   <tile gid="57"/>
+  </data>
+ </layer>
+ <layer name="Tile Layer 2" width="17" height="16">
+  <data>
+   <tile gid="261"/>
+   <tile gid="331"/>
+   <tile gid="331"/>
+   <tile gid="331"/>
+   <tile gid="291"/>
+   <tile gid="12"/>
+   <tile gid="12"/>
+   <tile gid="12"/>
+   <tile gid="12"/>
+   <tile gid="12"/>
+   <tile gid="12"/>
+   <tile gid="12"/>
+   <tile gid="251"/>
+   <tile gid="331"/>
+   <tile gid="331"/>
+   <tile gid="331"/>
+   <tile gid="301"/>
+   <tile gid="241"/>
+   <tile gid="0"/>
+   <tile gid="0"/>
+   <tile gid="0"/>
+   <tile gid="0"/>
+   <tile gid="0"/>
+   <tile gid="0"/>
+   <tile gid="0"/>
+   <tile gid="59"/>
+   <tile gid="0"/>
+   <tile gid="0"/>
+   <tile gid="0"/>
+   <tile gid="0"/>
+   <tile gid="0"/>
+   <tile gid="0"/>
+   <tile gid="0"/>
+   <tile gid="241"/>
+   <tile gid="241"/>
+   <tile gid="0"/>
+   <tile gid="0"/>
+   <tile gid="0"/>
+   <tile gid="0"/>
+   <tile gid="12"/>
+   <tile gid="0"/>
+   <tile gid="0"/>
+   <tile gid="58"/>
+   <tile gid="0"/>
+   <tile gid="0"/>
+   <tile gid="12"/>
+   <tile gid="0"/>
+   <tile gid="0"/>
+   <tile gid="0"/>
+   <tile gid="0"/>
+   <tile gid="241"/>
+   <tile gid="241"/>
+   <tile gid="0"/>
+   <tile gid="251"/>
+   <tile gid="331"/>
+   <tile gid="291"/>
+   <tile gid="12"/>
+   <tile gid="0"/>
+   <tile gid="0"/>
+   <tile gid="58"/>
+   <tile gid="0"/>
+   <tile gid="0"/>
+   <tile gid="12"/>
+   <tile gid="251"/>
+   <tile gid="331"/>
+   <tile gid="291"/>
+   <tile gid="0"/>
+   <tile gid="241"/>
+   <tile gid="241"/>
+   <tile gid="0"/>
+   <tile gid="0"/>
+   <tile gid="0"/>
+   <tile gid="0"/>
+   <tile gid="12"/>
+   <tile gid="0"/>
+   <tile gid="0"/>
+   <tile gid="68"/>
+   <tile gid="0"/>
+   <tile gid="0"/>
+   <tile gid="12"/>
+   <tile gid="0"/>
+   <tile gid="0"/>
+   <tile gid="0"/>
+   <tile gid="0"/>
+   <tile gid="241"/>
+   <tile gid="241"/>
+   <tile gid="0"/>
+   <tile gid="0"/>
+   <tile gid="0"/>
+   <tile gid="0"/>
+   <tile gid="12"/>
+   <tile gid="0"/>
+   <tile gid="0"/>
+   <tile gid="0"/>
+   <tile gid="0"/>
+   <tile gid="0"/>
+   <tile gid="12"/>
+   <tile gid="0"/>
+   <tile gid="0"/>
+   <tile gid="0"/>
+   <tile gid="0"/>
+   <tile gid="241"/>
+   <tile gid="241"/>
+   <tile gid="0"/>
+   <tile gid="0"/>
+   <tile gid="0"/>
+   <tile gid="0"/>
+   <tile gid="0"/>
+   <tile gid="0"/>
+   <tile gid="0"/>
+   <tile gid="0"/>
+   <tile gid="0"/>
+   <tile gid="0"/>
+   <tile gid="0"/>
+   <tile gid="0"/>
+   <tile gid="0"/>
+   <tile gid="0"/>
+   <tile gid="0"/>
+   <tile gid="241"/>
+   <tile gid="241"/>
+   <tile gid="0"/>
+   <tile gid="0"/>
+   <tile gid="0"/>
+   <tile gid="0"/>
+   <tile gid="136"/>
+   <tile gid="0"/>
+   <tile gid="136"/>
+   <tile gid="0"/>
+   <tile gid="136"/>
+   <tile gid="0"/>
+   <tile gid="136"/>
+   <tile gid="0"/>
+   <tile gid="0"/>
+   <tile gid="0"/>
+   <tile gid="0"/>
+   <tile gid="241"/>
+   <tile gid="241"/>
+   <tile gid="0"/>
+   <tile gid="0"/>
+   <tile gid="0"/>
+   <tile gid="0"/>
+   <tile gid="0"/>
+   <tile gid="0"/>
+   <tile gid="0"/>
+   <tile gid="0"/>
+   <tile gid="0"/>
+   <tile gid="0"/>
+   <tile gid="0"/>
+   <tile gid="0"/>
+   <tile gid="0"/>
+   <tile gid="0"/>
+   <tile gid="0"/>
+   <tile gid="241"/>
+   <tile gid="241"/>
+   <tile gid="0"/>
+   <tile gid="0"/>
+   <tile gid="0"/>
+   <tile gid="0"/>
+   <tile gid="0"/>
+   <tile gid="0"/>
+   <tile gid="0"/>
+   <tile gid="0"/>
+   <tile gid="0"/>
+   <tile gid="0"/>
+   <tile gid="0"/>
+   <tile gid="0"/>
+   <tile gid="0"/>
+   <tile gid="0"/>
+   <tile gid="0"/>
+   <tile gid="241"/>
+   <tile gid="241"/>
+   <tile gid="0"/>
+   <tile gid="0"/>
+   <tile gid="0"/>
+   <tile gid="0"/>
+   <tile gid="0"/>
+   <tile gid="0"/>
+   <tile gid="0"/>
+   <tile gid="0"/>
+   <tile gid="0"/>
+   <tile gid="0"/>
+   <tile gid="0"/>
+   <tile gid="0"/>
+   <tile gid="0"/>
+   <tile gid="0"/>
+   <tile gid="0"/>
+   <tile gid="241"/>
+   <tile gid="241"/>
+   <tile gid="0"/>
+   <tile gid="0"/>
+   <tile gid="0"/>
+   <tile gid="0"/>
+   <tile gid="0"/>
+   <tile gid="0"/>
+   <tile gid="0"/>
+   <tile gid="0"/>
+   <tile gid="0"/>
+   <tile gid="0"/>
+   <tile gid="0"/>
+   <tile gid="0"/>
+   <tile gid="0"/>
+   <tile gid="0"/>
+   <tile gid="0"/>
+   <tile gid="241"/>
+   <tile gid="281"/>
+   <tile gid="331"/>
+   <tile gid="331"/>
+   <tile gid="331"/>
+   <tile gid="331"/>
+   <tile gid="291"/>
+   <tile gid="0"/>
+   <tile gid="0"/>
+   <tile gid="0"/>
+   <tile gid="0"/>
+   <tile gid="0"/>
+   <tile gid="251"/>
+   <tile gid="331"/>
+   <tile gid="331"/>
+   <tile gid="331"/>
+   <tile gid="331"/>
+   <tile gid="321"/>
+   <tile gid="241"/>
+   <tile gid="0"/>
+   <tile gid="0"/>
+   <tile gid="0"/>
+   <tile gid="0"/>
+   <tile gid="0"/>
+   <tile gid="0"/>
+   <tile gid="0"/>
+   <tile gid="0"/>
+   <tile gid="0"/>
+   <tile gid="0"/>
+   <tile gid="0"/>
+   <tile gid="0"/>
+   <tile gid="0"/>
+   <tile gid="0"/>
+   <tile gid="0"/>
+   <tile gid="241"/>
+   <tile gid="241"/>
+   <tile gid="0"/>
+   <tile gid="0"/>
+   <tile gid="0"/>
+   <tile gid="0"/>
+   <tile gid="221"/>
+   <tile gid="0"/>
+   <tile gid="0"/>
+   <tile gid="0"/>
+   <tile gid="0"/>
+   <tile gid="0"/>
+   <tile gid="221"/>
+   <tile gid="0"/>
+   <tile gid="0"/>
+   <tile gid="0"/>
+   <tile gid="0"/>
+   <tile gid="241"/>
+   <tile gid="271"/>
+   <tile gid="331"/>
+   <tile gid="331"/>
+   <tile gid="331"/>
+   <tile gid="331"/>
+   <tile gid="351"/>
+   <tile gid="291"/>
+   <tile gid="0"/>
+   <tile gid="0"/>
+   <tile gid="0"/>
+   <tile gid="251"/>
+   <tile gid="351"/>
+   <tile gid="331"/>
+   <tile gid="331"/>
+   <tile gid="331"/>
+   <tile gid="331"/>
+   <tile gid="311"/>
+  </data>
+ </layer>
+ <objectgroup name="bridges" width="17" height="16">
+  <object name="abblegardcastle" class="Bridge" x="224" y="480" width="96" height="32"/>
+  <object name="abblegardcastle" class="BridgeDestination" x="224" y="448" width="96" height="32"/>
+    <object class="Door" x="32" y="96" width="32" height="32">
+      <animation name="closed" dx="1" dy="1" period="1" looping="false" file="graphics.png">39</animation>
+      <attribute name="name" value="door"/>
+      <attribute name="doorID" value="L1"/>
+      <attribute name="closed" value="true"/>
+    </object>
+    <object class="Door" x="480" y="96" width="32" height="32">
+      <animation name="closed" dx="1" dy="1" period="1" looping="false" file="graphics.png">39</animation>
+      <attribute name="name" value="door"/>
+      <attribute name="doorID" value="L2"/>
+      <attribute name="closed" value="true"/>
+    </object>
+    <object class="Door" x="160" y="32" width="32" height="32">
+      <animation name="closed" dx="1" dy="1" period="1" looping="false" file="graphics.png">49</animation>
+      <attribute name="name" value="door"/>
+      <attribute name="doorID" value="L3"/>
+      <attribute name="closed" value="true"/>
+    </object>
+    <object class="Door" x="352" y="32" width="32" height="32">
+      <animation name="closed" dx="1" dy="1" period="1" looping="false" file="graphics.png">49</animation>
+      <attribute name="name" value="door"/>
+      <attribute name="doorID" value="L4"/>
+      <attribute name="closed" value="true"/>
+    </object>
+    <object class="Lever" x="128" y="64" width="32" height="32">
+      <animation name="open" dx="1" dy="1" period="1" looping="false" file="graphics.png">65</animation>
+      <animation name="closed" dx="1" dy="1" period="1" looping="false" file="graphics.png">55</animation>
+      <attribute name="name" value="lever"/>
+      <attribute name="leverID" value="L3"/>
+      <attribute name="leverState" value="true"/>
+    </object>
+    <object class="Lever" x="32" y="448" width="32" height="32">
+      <animation name="open" dx="1" dy="1" period="1" looping="false" file="graphics.png">65</animation>
+      <animation name="closed" dx="1" dy="1" period="1" looping="false" file="graphics.png">55</animation>
+      <attribute name="name" value="lever"/>
+      <attribute name="leverID" value="L1"/>
+      <attribute name="leverState" value="true"/>
+    </object>
+    <object class="Lever" x="480" y="448" width="32" height="32">
+      <animation name="open" dx="1" dy="1" period="1" looping="false" file="graphics.png">65</animation>
+      <animation name="closed" dx="1" dy="1" period="1" looping="false" file="graphics.png">55</animation>
+      <attribute name="ID" value="29"/>
+      <attribute name="name" value="lever"/>
+      <attribute name="leverID" value="L2"/>
+      <attribute name="leverState" value="true"/>
+    </object>
+    <object class="Lever" x="384" y="64" width="32" height="32">
+      <animation name="open" dx="1" dy="1" period="1" looping="false" file="graphics.png">65</animation>
+      <animation name="closed" dx="1" dy="1" period="1" looping="false" file="graphics.png">55</animation>
+      <attribute name="ID" value="30"/>
+      <attribute name="name" value="lever"/>
+      <attribute name="leverID" value="L4"/>
+      <attribute name="leverState" value="true"/>
+    </object>
+ </objectgroup>
+ <objectgroup name="npcs" width="17" height="16">
+  <object class="Soldier" x="192" y="160" width="32" height="32"/>
+  <object class="Soldier" x="192" y="96" width="32" height="32"/>
+  <object class="Soldier" x="320" y="160" width="32" height="32"/>
+  <object class="Soldier" x="320" y="96" width="32" height="32"/>
+  <object class="Soldier" x="192" y="416" width="32" height="32"/>
+  <object class="Soldier" x="320" y="416" width="32" height="32"/>
+  <object class="Soldier" x="32" y="128" width="32" height="32"/>
+  <object class="Soldier" x="480" y="128" width="32" height="32"/>
+  <object class="Soldier" x="192" y="32" width="32" height="32"/>
+  <object class="Soldier" x="320" y="32" width="32" height="32"/>
+  <object class="King" x="256" y="64" width="32" height="32"/>
+ </objectgroup>
+ <objectgroup name="items" width="17" height="16">
+    <object class="Chest" x="480" y="32" width="32" height="32">
+      <animation name="idle" dx="1" dy="1" period="1" looping="false" file="graphics.png">29</animation>
+      <attribute name="name" value="Small chest"/>
+      <items>
+        <object class="Scroll">
+          <animation name="idle" dx="1" dy="1" period="1" looping="false" file="graphics.png">144</animation>
+          <attribute name="name" value="Old Scroll"/>
+          <attribute name="gold" value="25"/>
+          <attribute name="spell" value="6"/>
+        </object>
+      </items>
+    </object>
+    <object class="Chest" x="32" y="32" width="32" height="32">
+      <animation name="idle" dx="1" dy="1" period="1" looping="false" file="graphics.png">29</animation>
+      <attribute name="name" value="Small chest"/>
+      <items>
+        <object class="XPPotion">
+          <animation name="idle" dx="1" dy="1" period="1" looping="false" file="graphics.png">13</animation>
+          <attribute name="name" value="XP Potion+25"/>
+          <attribute name="gold" value="110"/>
+          <attribute name="xp" value="25"/>
+        </object>
+      </items>
+    </object>
+ </objectgroup>
+</map>

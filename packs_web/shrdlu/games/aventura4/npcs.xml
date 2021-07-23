@@ -1,0 +1,1233 @@
+<Characters>
+	<CharacterClass class="Soldier" super="Human,AbblegardCitizen" name="a Soldier">
+		<animation name="idle-left" dx="1" dy="1" period="4" looping="false" file="graphics.png">142</animation>
+		<animation name="idle-up" dx="1" dy="1" period="4" looping="false" file="graphics.png">142</animation>
+		<animation name="idle-right" dx="1" dy="1" period="4" looping="false" file="graphics.png">140</animation>
+		<animation name="idle-down" dx="1" dy="1" period="4" looping="false" file="graphics.png">140</animation>
+		<animation name="moving-left" dx="1" dy="1" period="4" looping="true" file="graphics.png">142,143</animation>
+		<animation name="moving-up" dx="1" dy="1" period="4" looping="true" file="graphics.png">142,143</animation>
+		<animation name="moving-right" dx="1" dy="1" period="4" looping="true" file="graphics.png">140,141</animation>
+		<animation name="moving-down" dx="1" dy="1" period="4" looping="true" file="graphics.png">140,141</animation>
+
+		<attribute name="gives_experience" value="20"/>
+		<attribute name="gold" value="10"/>
+		<attribute name="hp" value="30"/>
+		<attribute name="mp" value="0"/>
+		<attribute name="attack" value="10"/>
+		<attribute name="defense" value="5"/>
+		<attribute name="canSwim" value="false"/>
+		<attribute name="walk_speed" value="16"/>
+		<attribute name="sightRadius" value="7"/>
+		<attribute name="respawn" value="0.0"/>
+
+		<eventRule event="action_attack" hit="true"><playSound sound="sfx/hit.wav"/></eventRule>
+		<eventRule event="action_attack" hit="false"><playSound sound="sfx/miss.wav"/></eventRule>		
+
+	    <items>
+	        <object class="Food" probability="0.5">
+	          <animation name="idle" dx="1" dy="1" period="1" looping="false" file="graphics.png">18</animation>
+	          <attribute name="name" value="Chicken Leg"/>
+	          <attribute name="gold" value="5"/>
+	        </object>
+	    </items>
+		<conversationGraph name="polite-conversationgraph.xml"/>
+		<conversationGraphTransition from="in-conversation" performative="ask" topic="yourself">
+			<talk text="I'm a soldier. I maintain the peace in Abblegard." performative="inform"/>
+		</conversationGraphTransition>
+		<conversationGraphTransition from="in-conversation" performative="ask" topic="abblegard">
+			<talk text="Abblegard is built around the King's castle." performative="inform"/>
+			<talk text="You'll find many shops and interesting stuff here!" performative="inform"/>
+		</conversationGraphTransition>
+		<conversationGraphTransition from="in-conversation" performative="ask" topic="the king">
+			<talk text="King Cabolo is very generous, we are very proud to serve him." performative="inform"/>
+		</conversationGraphTransition> 
+		<conversationGraphTransition from="in-conversation" performative="ask" topic="blozard">
+			<talk text="Blozard was a black dragon that hated Abblegard for some reason. Not sure why..." performative="inform"/>
+		</conversationGraphTransition> 
+		<conversationGraphTransition from="in-conversation" performative="ask" topic="Granner">
+			<talk text="Granner was a fanatic of the cult. He rebuilt the whole cult even after Blozard was slain." performative="inform"  wait="true"/>
+			<addTopic topic="the cult" text="What can you tell me about the cult?"/>
+			<addTopic topic="blozard" text="What can you tell me about Blozard?"/>
+		</conversationGraphTransition>
+		<conversationGraphTransition from="in-conversation" performative="ask" topic="the cult">
+			<talk text="The cult is a religious organization that venerates Blozard as their God. Their headquarters were in a tower called the black rock." performative="inform" wait="true"/>
+			<addTopic topic="blozard" text="What can you tell me about Blozard?"/>
+			<addTopic topic="the black rock" text="What can you tell me about the black rock?"/>
+		</conversationGraphTransition>
+		<conversationGraphTransition from="in-conversation" performative="ask" topic="the black rock">
+			<talk text="You can find the black rock in the north-west of Abblegard." performative="inform"/>
+		</conversationGraphTransition>
+		<conversationGraphTransition from="in-conversation" performative="ask" topic="Granner's tomb">
+			<talk text="Now, that's a weird question... but it should be in the graveyard south of sthe village." performative="inform"/>
+		</conversationGraphTransition>
+		<conversationGraphTransition from="in-conversation" performative="ask" topic="Monks">
+			<talk text="We knew something was going on! The King must be informed at once!" performative="inform"/>
+		</conversationGraphTransition>
+		<conversationGraphTransition from="in-conversation" performative="ask" topic="rumors">
+			<talk text="I've heart that Granners's remains have been stolen from his grave!" performative="inform" wait="true"/>
+			<addTopic topic="Granner" text="what can you tell me about Granner?"/>
+			<addTopic topic="Granner's tomb" text="Where is Granner's tomb?"/>
+		</conversationGraphTransition>
+
+		<eventRule event="story_state" scope="game" variable="Granner" value="alive" once="true">
+			<updateConversationGraphTransition from="in-conversation" performative="ask" topic="rumors">
+				<talk text="I've heart that Granners's alive!"/>
+			</updateConversationGraphTransition>
+		</eventRule>
+		<eventRule event="story_state" scope="game" variable="Granner" value="dead" once="true">
+			<updateConversationGraphTransition from="in-conversation" performative="ask" topic="rumors">
+				<talk text="They say corpses have been washing ashore, it had never happened before!" performative="inform"/>
+			</updateConversationGraphTransition>
+		</eventRule>
+		<eventRule event="story_state" scope="game" variable="Blozard" value="dead" once="true">
+			<updateConversationGraphTransition from="in-conversation" performative="ask" topic="rumors">
+				<talk text="I heard the King is looking for a husband for his daughter." performative="inform"/>
+			</updateConversationGraphTransition>
+		</eventRule>
+		<eventRule event="story_state" scope="game" variable="King" value="dead" once="true">
+			<updateConversationGraphTransition from="in-conversation" performative="ask" topic="the king">
+				<talk text="King Cabolo was very generous, I don't know what is going to happen now with him dead!" performative="inform"/>
+			</updateConversationGraphTransition>
+			<updateConversationGraphTransition from="in-conversation" performative="ask" topic="rumors">
+				<talk text="I heard the princess will take a husband, I hope it's me!" performative="inform"/>
+			</updateConversationGraphTransition>
+		</eventRule>
+
+		<inferenceRule premise="attack(?1,?2),is_a(?2,?3),friendly(?3),is_a(?1,?4)" conclusion="unfriendly(?4)" frequency="0.25" activation="3000" cooldown="50"/>
+
+		<onStart>
+			<addWME wme="friendly(AbblegardCitizen)" activation="3000"/>
+			<addWME wme="unfriendly(CultMember)" activation="3000"/>	
+			<addWME wme="unfriendly(Animal)" activation="3000"/>	
+			<addWME wme="unfriendly(Undead)" activation="3000"/>	
+			<addCurrentPositionWME name="home" activation="3000"/>
+			<familiarWithMap map="Abblegard"/>
+			<familiarWithMap map="the inn"/>
+			<familiarWithMap map="the forest"/>
+			<familiarWithMap map="the Abblegard Castle"/>
+			<familiarWithMap map="a house"/>
+			<familiarWithMap map="another house"/>
+			<addBehavior priority="50"><BAttackUnfriendly/></addBehavior>
+			<addBehavior priority="0" id="duty"><BGoto location="home" radius="0"/></addBehavior>
+			<addBehavior priority="25"><BFollowFromWME radius="96"/></addBehavior>
+		</onStart>		
+	</CharacterClass>
+
+
+	<CharacterClass class="King" super="Human,AbblegardCitizen" name="King Cabolo">
+		<animation name="idle-left" dx="1" dy="1" period="4" looping="false" file="graphics.png">78</animation>
+		<animation name="idle-up" dx="1" dy="1" period="4" looping="false" file="graphics.png">78</animation>
+		<animation name="idle-right" dx="1" dy="1" period="4" looping="false" file="graphics.png">76</animation>
+		<animation name="idle-down" dx="1" dy="1" period="4" looping="false" file="graphics.png">76</animation>
+		<animation name="moving-left" dx="1" dy="1" period="4" looping="true" file="graphics.png">78,79</animation>
+		<animation name="moving-up" dx="1" dy="1" period="4" looping="true" file="graphics.png">78,79</animation>
+		<animation name="moving-right" dx="1" dy="1" period="4" looping="true" file="graphics.png">76,77</animation>
+		<animation name="moving-down" dx="1" dy="1" period="4" looping="true" file="graphics.png">76,77</animation>
+
+		<attribute name="gives_experience" value="100"/>
+		<attribute name="gold" value="10000"/>
+		<attribute name="hp" value="100"/>
+		<attribute name="mp" value="0"/>
+		<attribute name="attack" value="20"/>
+		<attribute name="defense" value="10"/>
+		<attribute name="canSwim" value="false"/>
+		<attribute name="walk_speed" value="16"/>
+		<attribute name="sightRadius" value="6"/>
+		<attribute name="respawn" value="0.0"/>
+
+		<eventRule event="action_attack" hit="true"><playSound sound="sfx/hit.wav"/></eventRule>
+		<eventRule event="action_attack" hit="false"><playSound sound="sfx/miss.wav"/></eventRule>		
+
+	    <items>
+	        <object class="EquipableItem">
+	          <animation name="idle" dx="1" dy="1" period="1" looping="false" file="graphics.png">138</animation>
+	          <attribute name="name" value="King's Sword"/>
+	          <attribute name="gold" value="5000"/>
+	          <attribute name="usable" value="false"/>
+	          <attribute name="equipableSlot" value="0"/>
+	          <attribute name="attack" value="10"/>
+	          <attribute name="defense" value="5"/>
+	          <attribute name="magic" value="1"/>
+	          <attribute name="canChop" value="false"/>
+	        </object>
+	        <object class="Key">
+	          <animation name="idle" dx="1" dy="1" period="1" looping="false" file="graphics.png">28</animation>
+	          <attribute name="name" value="Ocean key"/>
+	          <attribute name="keyID" value="DOCKS"/>
+	        </object>
+	    </items>
+
+		<conversationGraph name="king-conversationgraph.xml"/>
+		<conversationGraphTransition from="in-conversation" performative="ask" topic="yourself">
+			<talk text="I'm the proud King of Abblegard."/>
+		</conversationGraphTransition>
+		<conversationGraphTransition from="in-conversation" performative="ask" topic="abblegard">
+			<talk text="Abblegard is a vibrant village, full of brave people!"/>
+		</conversationGraphTransition>
+		<conversationGraphTransition from="in-conversation" performative="ask" topic="the king">
+			<talk text="I'm the proud King of Abblegard."/>
+		</conversationGraphTransition> 
+		<conversationGraphTransition from="in-conversation" performative="ask" topic="blozard">
+			<talk text="Blozard was a black dragon that attacked our village many years ago."/>
+		</conversationGraphTransition> 
+		<conversationGraphTransition from="in-conversation" performative="ask" topic="Granner">
+			<talk text="Granner was a priest in the cult of the dragon. I thought he was dead. But now I have doubts." wait="true"/>
+			<addTopic topic="the cult" text="What can you tell me about the cult?"/>
+		</conversationGraphTransition>
+		<conversationGraphTransition from="in-conversation" performative="ask" topic="the cult">
+			<talk text="The cult is a religious organization that venerates Blozard as their God." wait="true"/>
+			<addTopic topic="blozard" text="What can you tell me about Blozard?"/>
+		</conversationGraphTransition>
+		<conversationGraphTransition from="in-conversation" performative="ask" topic="the black rock">
+			<talk text="You can find the black rock in the north-west of Abblegard."/>
+		</conversationGraphTransition>,
+		<conversationGraphTransition from="in-conversation" performative="ask" topic="Granner's tomb">
+			<talk text="It's in the graveyard south of the village."/>
+		</conversationGraphTransition>
+		<conversationGraphTransition from="in-conversation" performative="ask" topic="Monks">
+			<talk text="That is terrible! Guards! Follow this man to the Blackrock and cleanse it of evil!" wait="true"/>
+			<addWMEToOthers characterClass="Soldier" select="all" params="PlayerCharacter" activation="3000" wme="follow(PlayerCharacter)"/>
+			<updateConversationGraphTransition from="in-conversation" performative="ask" topic="Monks">
+				<talk text="I hope they are taken care of now."/>
+			</updateConversationGraphTransition>
+		</conversationGraphTransition>
+		<conversationGraphTransition from="in-conversation" performative="ask" topic="Cyril">
+			<talk text="Cyril was a creaure of legend, a being of evil!" wait="true"/>
+			<talk text="I never thought she actually existed... If she has something to do with this we are in deep trouble..."/>
+		</conversationGraphTransition>
+		<conversationGraphTransition from="in-conversation" performative="ask" topic="stone tablet">
+			<talk text="There are old Abble-runes. Someone in town might be able to help you translate them."/>
+		</conversationGraphTransition>
+		<conversationGraphTransition from="in-conversation" performative="ask" topic="rumors">
+			<talk text="I am the King, I don't pay attention to gossips."/>
+		</conversationGraphTransition>
+
+		<eventRule event="story_state" scope="game" variable="Granner" value="alive" once="true">
+			<updateConversationGraphTransition from="in-conversation" performative="ask" topic="Granner">
+				<talk text="Granner being alive is always bad news. We must stop him!"/>
+			</updateConversationGraphTransition>
+		</eventRule>
+		<eventRule event="story_state" scope="game" variable="Granner" value="dead" once="true">
+			<updateConversationGraphTransition from="in-conversation" performative="ask" topic="Granner">
+				<talk text="I'm happy he's been dealt with. We are grateful to you."/>
+			</updateConversationGraphTransition>
+			<updateConversationGraphTransition from="in-conversation" performative="ask" topic="blozard">
+				<talk text="Hmm, so Blozard has a hideout... the only way out of here is by sea. Please find him... Take this key! It will grant you access to the piers" wait="true"/>
+				<give inventory="Ocean key"/>
+				<updateConversationGraphTransition from="in-conversation" performative="ask" topic="blozard">
+					<talk text="Please find Blozard, our future is in your hands!"/>
+				</updateConversationGraphTransition>
+			</updateConversationGraphTransition>
+		</eventRule>
+		<eventRule event="story_state" scope="game" variable="Blozard" value="dead" once="true">
+			<updateConversationGraphTransition from="in-conversation" performative="ask" topic="blozard">
+				<talk text="Thank you for you help killing Blozard. You will not be forgotten in Abblegard!"/>
+			</updateConversationGraphTransition>
+			<updateConversationGraphTransition from="in-conversation" performative="ask" topic="rumors">
+				<talk text="Well... I heard my daughter set her eyes on you... I need to marry her, you know?"/>
+			</updateConversationGraphTransition>
+		</eventRule>
+
+		<inferenceRule premise="attack(?1,?2),is_a(?2,?3),friendly(?3),is_a(?1,?4)" conclusion="unfriendly(?4)" frequency="0.25" activation="3000" cooldown="50"/>
+
+		<onStart>
+			<addWME wme="friendly(AbblegardCitizen)" activation="3000"/>
+			<addWME wme="unfriendly(CultMember)" activation="3000"/>	
+			<addWME wme="unfriendly(Animal)" activation="3000"/>	
+			<addWME wme="unfriendly(Undead)" activation="3000"/>	
+			<pendingTalk character="PlayerCharacter" text="Good lord! It was about time! We were expecting you!"/>
+			<pendingTalk character="PlayerCharacter" text="Something misterious has happened..."/>
+			<pendingTalk character="PlayerCharacter" text="A few days ago, a peasant reported that the tomb of Granner had been profaned!" wait="true">
+				<addTopic topic="Granner" text="what can you tell me about Granner?"/>
+				<addTopic topic="Granner's tomb" text="Where is Granner's tomb?"/>
+			</pendingTalk>
+			<pendingTalk character="PlayerCharacter" text="Additionally, I've heard that the forest has been infested with beasts lately."/>
+			<pendingTalk character="PlayerCharacter" text="Too many coincidences. We fear the worst... I hope it's not the Cult of the dragon again..."/>
+			<pendingTalk character="PlayerCharacter" text="Please investigate! We shall be waiting news from you."/>
+			<addCurrentPositionWME name="home" activation="3000"/>
+			<familiarWithMap map="Abblegard"/>
+			<familiarWithMap map="the inn"/>
+			<familiarWithMap map="the forest"/>
+			<familiarWithMap map="the Abblegard Castle"/>
+			<familiarWithMap map="a house"/>
+			<familiarWithMap map="another house"/>
+			<addBehavior priority="50"><BAttackUnfriendly/></addBehavior>
+			<addBehavior priority="0"><BGoto location="home" radius="0"/></addBehavior>
+		</onStart>
+		<onEnd>
+			<storyState scope="game" variable="King" value="dead"/>
+		</onEnd>		
+	</CharacterClass>
+
+
+	<CharacterClass class="Termes" super="Human,AbblegardCitizen" name="Termes">
+		<animation name="idle-left" dx="1" dy="1" period="4" looping="false" file="graphics.png">238</animation>
+		<animation name="idle-up" dx="1" dy="1" period="4" looping="false" file="graphics.png">238</animation>
+		<animation name="idle-right" dx="1" dy="1" period="4" looping="false" file="graphics.png">236</animation>
+		<animation name="idle-down" dx="1" dy="1" period="4" looping="false" file="graphics.png">236</animation>
+		<animation name="moving-left" dx="1" dy="1" period="4" looping="true" file="graphics.png">238,239</animation>
+		<animation name="moving-up" dx="1" dy="1" period="4" looping="true" file="graphics.png">238,239</animation>
+		<animation name="moving-right" dx="1" dy="1" period="4" looping="true" file="graphics.png">236,237</animation>
+		<animation name="moving-down" dx="1" dy="1" period="4" looping="true" file="graphics.png">236,237</animation>
+
+		<attribute name="gives_experience" value="50"/>
+		<attribute name="gold" value="1000"/>
+		<attribute name="hp" value="50"/>
+		<attribute name="mp" value="0"/>
+		<attribute name="attack" value="30"/>
+		<attribute name="defense" value="10"/>
+		<attribute name="canSwim" value="false"/>
+		<attribute name="walk_speed" value="16"/>
+		<attribute name="sightRadius" value="5"/>
+		<attribute name="respawn" value="0.0"/>
+
+		<eventRule event="action_attack" hit="true"><playSound sound="sfx/hit.wav"/></eventRule>
+		<eventRule event="action_attack" hit="false"><playSound sound="sfx/miss.wav"/></eventRule>		
+
+      <items>
+        <object class="HPPotion">
+          <animation name="idle" dx="1" dy="1" period="1" looping="false" file="graphics.png">1</animation>
+          <attribute name="name" value="HP Potion+5"/>
+          <attribute name="gold" value="15"/>
+          <attribute name="hp" value="5"/>
+        </object>
+        <object class="MPPotion">
+          <animation name="idle" dx="1" dy="1" period="1" looping="false" file="graphics.png">5</animation>
+          <attribute name="name" value="MP Potion+5"/>
+          <attribute name="gold" value="15"/>
+          <attribute name="mp" value="5"/>
+        </object>
+        <object class="HPPotion">
+          <animation name="idle" dx="1" dy="1" period="1" looping="false" file="graphics.png">1</animation>
+          <attribute name="name" value="HP Potion+25"/>
+          <attribute name="gold" value="55"/>
+          <attribute name="hp" value="25"/>
+        </object>
+        <object class="HPPotion">
+          <animation name="idle" dx="1" dy="1" period="1" looping="false" file="graphics.png">1</animation>
+          <attribute name="name" value="HP Potion+50"/>
+          <attribute name="gold" value="105"/>
+          <attribute name="hp" value="50"/>
+        </object>
+        <object class="MPPotion">
+          <animation name="idle" dx="1" dy="1" period="1" looping="false" file="graphics.png">5</animation>
+          <attribute name="name" value="MP Potion+25"/>
+          <attribute name="gold" value="55"/>
+          <attribute name="mp" value="25"/>
+        </object>
+        <object class="XPPotion">
+          <animation name="idle" dx="1" dy="1" period="1" looping="false" file="graphics.png">13</animation>
+          <attribute name="name" value="XP Potion+25"/>
+          <attribute name="gold" value="110"/>
+          <attribute name="xp" value="25"/>
+        </object>
+        <object class="Spade">
+          <animation name="idle" dx="1" dy="1" period="1" looping="false" file="graphics.png">27</animation>
+          <attribute name="name" value="Spade"/>
+          <attribute name="gold" value="10"/>
+          <attribute name="takeable" value="true"/>
+          <attribute name="usable" value="true"/>
+          <attribute name="equipable" value="false"/>
+        </object>
+        <object class="EquipableItem">
+          <animation name="idle" dx="1" dy="1" period="1" looping="false" file="graphics.png">7</animation>
+          <attribute name="name" value="Axe"/>
+          <attribute name="gold" value="50"/>
+          <attribute name="takeable" value="true"/>
+          <attribute name="usable" value="false"/>
+          <attribute name="equipableSlot" value="0"/>
+          <attribute name="attack" value="2"/>
+          <attribute name="defense" value="0"/>
+          <attribute name="magic" value="1"/>
+          <attribute name="canChop" value="true"/>
+        </object>
+      </items>
+
+		<conversationGraph name="shopkeeper-conversationgraph.xml"/>
+		<conversationGraphTransition from="in-conversation" performative="ask" topic="yourself">
+			<talk text="My name is Termes and I sell potions and utensils, enough to make a living."/>
+		</conversationGraphTransition>
+		<conversationGraphTransition from="in-conversation" performative="ask" topic="abblegard">
+			<talk text="I wish Abblegard was larger, so I would have more costumers!"/>
+		</conversationGraphTransition>
+		<conversationGraphTransition from="in-conversation" performative="ask" topic="the king">
+			<talk text="King Cabolo is our good King. We all respect him."/>
+		</conversationGraphTransition> 
+		<conversationGraphTransition from="in-conversation" performative="ask" topic="blozard">
+			<talk text="Oh blozard... They say it is dead, but who knows!"/>
+		</conversationGraphTransition> 
+		<conversationGraphTransition from="in-conversation" performative="ask" topic="Granner">
+			<talk text="Granner? He was already weird as a kid, then his parents died and joined the cult. You know the rest..." wait="true">
+				<addTopic topic="the cult" text="What can you tell me about the cult?"/>
+			</talk>
+		</conversationGraphTransition>
+		<conversationGraphTransition from="in-conversation" performative="ask" topic="the cult">
+			<talk text="The cult is a religious organization that venerates Blozard as their God." wait="true"/>
+			<addTopic topic="blozard" text="What can you tell me about Blozard?"/>
+		</conversationGraphTransition>
+		<conversationGraphTransition from="in-conversation" performative="ask" topic="the black rock">
+			<talk text="That's where the cult used to hide, but I don't know where is it exactly."/>
+		</conversationGraphTransition>,
+		<conversationGraphTransition from="in-conversation" performative="ask" topic="rumors">
+			<talk text="I heard there is a hidden treasure in the forest! One day I'll find time to search for it!" wait="true"/>
+			<addTopic topic="hidden treasure" text="Do you know where is the hidden treasure?"/>
+		</conversationGraphTransition>
+		<conversationGraphTransition from="in-conversation" performative="ask" topic="hidden treasure">
+			<talk text="I don't know where it is, I just heard about it at the inn..."/>
+		</conversationGraphTransition>
+		<conversationGraphTransition from="in-conversation" performative="ask" topic="Granner's tomb">
+			<talk text="Everyone knows it's in the graveyard south of the village."/>
+			<talk text="I don't know why did we even bother burying that guy!"/>
+		</conversationGraphTransition>
+		<conversationGraphTransition from="in-conversation" performative="ask" topic="Cyril">
+			<talk text="I don't know where it is, I just heard about it at the inn..."/>
+		</conversationGraphTransition>
+		<conversationGraphTransition from="in-conversation" performative="ask" topic="stone tablet">
+			<talk text="Hmmm... Abble-runes indeed. It's some sort of passcode, but can't decypher it. Sorry."/>
+		</conversationGraphTransition>
+		<conversationGraphTransition from="in-conversation" performative="ask" topic="Monks">
+			<talk text="Why do you tell me this? Go tell the guards!"/>
+		</conversationGraphTransition>
+
+		<eventRule event="story_state" scope="game" variable="Granner" value="alive" once="true">
+			<updateConversationGraphTransition from="in-conversation" performative="ask" topic="rumors">
+				<talk text="I've heart that Granners's alive!"/>
+			</updateConversationGraphTransition>
+			<updateConversationGraphTransition from="in-conversation" performative="ask" topic="blozard">
+				<talk text="Oh blozard... They say it is dead, but Granner being alive, who knows!"/>
+			</updateConversationGraphTransition>
+		</eventRule>
+		<eventRule event="story_state" scope="game" variable="Granner" value="dead" once="true">
+			<updateConversationGraphTransition from="in-conversation" performative="ask" topic="rumors">
+				<talk text="They say corpses have been washing ashore, it had never happened before!"/>
+			</updateConversationGraphTransition>
+			<updateConversationGraphTransition from="in-conversation" performative="ask" topic="blozard">
+				<talk text="He's alive again. This can only be bad!"/>
+			</updateConversationGraphTransition>
+		</eventRule>
+		<eventRule event="story_state" scope="game" variable="Blozard" value="dead" once="true">
+			<updateConversationGraphTransition from="in-conversation" performative="ask" topic="rumors">
+				<talk text="Nothing muhch these days..."/>
+			</updateConversationGraphTransition>
+			<updateConversationGraphTransition from="in-conversation" performative="ask" topic="blozard">
+				<talk text="Oh blozard... They say it is dead again, I hope this time is for good!"/>
+			</updateConversationGraphTransition>
+		</eventRule>
+		<eventRule event="story_state" scope="game" variable="King" value="dead" once="true">
+			<updateConversationGraphTransition from="in-conversation" performative="ask" topic="the king">
+				<talk text="I respected the King, his death saddens me deeply..."/>
+			</updateConversationGraphTransition>
+		</eventRule>
+
+		<inferenceRule premise="attack(?1,?2),is_a(?2,?3),friendly(?3),is_a(?1,?4)" conclusion="unfriendly(?4)" frequency="0.25" activation="3000" cooldown="50"/>
+		<inferenceRule premise="take(?1,?2),is_a(?2,?3),owns(?3),is_a(?1,?4)" conclusion="unfriendly(?4)" frequency="0.25" activation="3000" cooldown="100">
+			<talk text="Hey that's mine!!!" performative="inform" angry="true"/>
+		</inferenceRule>
+
+		<onStart>
+			<addWME wme="friendly(AbblegardCitizen)" activation="3000"/>
+			<addWME wme="unfriendly(CultMember)" activation="3000"/>	
+			<addWME wme="unfriendly(Animal)" activation="3000"/>	
+			<addWME wme="unfriendly(Undead)" activation="3000"/>	
+			<addWME wme="owns(TermesChest)" activation="3000"/>
+			<addCurrentPositionWME name="home" activation="3000"/>
+			<familiarWithMap map="Abblegard"/>
+			<familiarWithMap map="the inn"/>
+			<familiarWithMap map="the forest"/>
+			<familiarWithMap map="the Abblegard Castle"/>
+			<familiarWithMap map="a house"/>
+			<familiarWithMap map="another house"/>
+			<addBehavior priority="50"><BAttackUnfriendly/></addBehavior>
+			<addBehavior priority="0"><BGoto location="home" radius="0"/></addBehavior>
+		</onStart>
+	</CharacterClass>
+
+
+	<CharacterClass class="Rudolph" super="Human,AbblegardCitizen" name="Rudolph">
+		<animation name="idle-left" dx="1" dy="1" period="4" looping="false" file="graphics.png">258</animation>
+		<animation name="idle-up" dx="1" dy="1" period="4" looping="false" file="graphics.png">258</animation>
+		<animation name="idle-right" dx="1" dy="1" period="4" looping="false" file="graphics.png">256</animation>
+		<animation name="idle-down" dx="1" dy="1" period="4" looping="false" file="graphics.png">256</animation>
+		<animation name="moving-left" dx="1" dy="1" period="4" looping="true" file="graphics.png">258,259</animation>
+		<animation name="moving-up" dx="1" dy="1" period="4" looping="true" file="graphics.png">258,259</animation>
+		<animation name="moving-right" dx="1" dy="1" period="4" looping="true" file="graphics.png">256,257</animation>
+		<animation name="moving-down" dx="1" dy="1" period="4" looping="true" file="graphics.png">256,257</animation>
+
+		<attribute name="gives_experience" value="150"/>
+		<attribute name="gold" value="5000"/>
+		<attribute name="hp" value="100"/>
+		<attribute name="mp" value="0"/>
+		<attribute name="attack" value="50"/>
+		<attribute name="defense" value="20"/>
+		<attribute name="canSwim" value="false"/>
+		<attribute name="walk_speed" value="16"/>
+		<attribute name="sightRadius" value="5"/>
+		<attribute name="respawn" value="0.0"/>
+
+		<eventRule event="action_attack" hit="true"><playSound sound="sfx/hit.wav"/></eventRule>
+		<eventRule event="action_attack" hit="false"><playSound sound="sfx/miss.wav"/></eventRule>		
+
+	  <items>
+        <object class="EquipableItem">
+          <animation name="idle" dx="1" dy="1" period="1" looping="false" file="graphics.png">6</animation>
+          <attribute name="name" value="Sword"/>
+          <attribute name="gold" value="50"/>
+          <attribute name="takeable" value="true"/>
+          <attribute name="usable" value="false"/>
+          <attribute name="equipableSlot" value="0"/>
+          <attribute name="attack" value="2"/>
+          <attribute name="defense" value="0"/>
+          <attribute name="magic" value="1"/>
+          <attribute name="canChop" value="false"/>
+        </object>
+        <object class="EquipableItem">
+          <animation name="idle" dx="1" dy="1" period="1" looping="false" file="graphics.png">16</animation>
+          <attribute name="name" value="Buckler"/>
+          <attribute name="gold" value="50"/>
+          <attribute name="takeable" value="true"/>
+          <attribute name="usable" value="false"/>
+          <attribute name="equipableSlot" value="1"/>
+          <attribute name="attack" value="0"/>
+          <attribute name="defense" value="2"/>
+          <attribute name="magic" value="1"/>
+          <attribute name="canChop" value="false"/>
+        </object>
+        <object class="EquipableItem">
+          <animation name="idle" dx="1" dy="1" period="1" looping="false" file="graphics.png">7</animation>
+          <attribute name="name" value="Axe"/>
+          <attribute name="gold" value="50"/>
+          <attribute name="takeable" value="true"/>
+          <attribute name="usable" value="false"/>
+          <attribute name="equipableSlot" value="0"/>
+          <attribute name="attack" value="2"/>
+          <attribute name="defense" value="0"/>
+          <attribute name="magic" value="1"/>
+          <attribute name="canChop" value="true"/>
+        </object>
+        <object class="EquipableItem">
+          <animation name="idle" dx="1" dy="1" period="1" looping="false" file="graphics.png">17</animation>
+          <attribute name="name" value="Knight Shield"/>
+          <attribute name="gold" value="150"/>
+          <attribute name="takeable" value="true"/>
+          <attribute name="usable" value="false"/>
+          <attribute name="equipableSlot" value="1"/>
+          <attribute name="attack" value="0"/>
+          <attribute name="defense" value="5"/>
+          <attribute name="magic" value="1"/>
+          <attribute name="canChop" value="false"/>
+        </object>
+        <object class="EquipableItem">
+          <animation name="idle" dx="1" dy="1" period="1" looping="false" file="graphics.png">6</animation>
+          <attribute name="name" value="Fine Sword"/>
+          <attribute name="gold" value="150"/>
+          <attribute name="takeable" value="true"/>
+          <attribute name="usable" value="false"/>
+          <attribute name="equipableSlot" value="0"/>
+          <attribute name="attack" value="5"/>
+          <attribute name="defense" value="0"/>
+          <attribute name="magic" value="1"/>
+          <attribute name="canChop" value="false"/>
+        </object>
+        <object class="EquipableItem">
+          <animation name="idle" dx="1" dy="1" period="1" looping="false" file="graphics.png">26</animation>
+          <attribute name="name" value="Rage Ring"/>
+          <attribute name="gold" value="200"/>
+          <attribute name="takeable" value="true"/>
+          <attribute name="usable" value="false"/>
+          <attribute name="equipableSlot" value="2"/>
+          <attribute name="attack" value="4"/>
+          <attribute name="defense" value="0"/>
+          <attribute name="magic" value="1"/>
+          <attribute name="canChop" value="false"/>
+        </object>
+        <object class="EquipableItem">
+          <animation name="idle" dx="1" dy="1" period="1" looping="false" file="graphics.png">26</animation>
+          <attribute name="name" value="Defense Ring"/>
+          <attribute name="gold" value="300"/>
+          <attribute name="takeable" value="true"/>
+          <attribute name="usable" value="false"/>
+          <attribute name="equipableSlot" value="2"/>
+          <attribute name="attack" value="0"/>
+          <attribute name="defense" value="5"/>
+          <attribute name="magic" value="1"/>
+          <attribute name="canChop" value="false"/>
+        </object>
+        <object class="EquipableItem">
+          <animation name="idle" dx="1" dy="1" period="1" looping="false" file="graphics.png">26</animation>
+          <attribute name="name" value="Uber Ring"/>
+          <attribute name="gold" value="800"/>
+          <attribute name="takeable" value="true"/>
+          <attribute name="usable" value="false"/>
+          <attribute name="equipableSlot" value="2"/>
+          <attribute name="attack" value="5"/>
+          <attribute name="defense" value="5"/>
+          <attribute name="magic" value="1"/>
+          <attribute name="canChop" value="false"/>
+        </object>
+      </items>
+
+		<conversationGraph name="shopkeeper-conversationgraph.xml"/>
+		<conversationGraphTransition from="in-conversation" performative="ask" topic="yourself">
+			<talk text="My name is Rudolph and I sell weapons and armor."/>
+		</conversationGraphTransition>
+		<conversationGraphTransition from="in-conversation" performative="ask" topic="abblegard">
+			<talk text="I wish there were more people with gus in Abblegard! More business for me!"/>
+		</conversationGraphTransition>
+		<conversationGraphTransition from="in-conversation" performative="ask" topic="the king">
+			<talk text="King Cabolo is our good King. We all respect him."/>
+		</conversationGraphTransition> 
+		<conversationGraphTransition from="in-conversation" performative="ask" topic="blozard">
+			<talk text="I thought they killed blozard years ago. But there are rumors..."/>
+		</conversationGraphTransition> 
+		<conversationGraphTransition from="in-conversation" performative="ask" topic="Granner">
+			<talk text="Granner? He was a weird one. When his parents died and joined the cult and started worshiping Blozard." wait="true"/>
+			<addTopic topic="the cult" text="What can you tell me about the cult?"/>
+		</conversationGraphTransition>
+		<conversationGraphTransition from="in-conversation" performative="ask" topic="the cult">
+			<talk text="The cult is a religious organization that venerates Blozard as their God." wait="true"/>
+			<addTopic topic="blozard" text="What can you tell me about Blozard?"/>
+		</conversationGraphTransition>
+		<conversationGraphTransition from="in-conversation" performative="ask" topic="the black rock">
+			<talk text="That's the cults hideout, it's somewhere in the forest."/>
+		</conversationGraphTransition>,
+		<conversationGraphTransition from="in-conversation" performative="ask" topic="rumors">
+			<talk text="They say Blozard is alive again. I hope it's all rumors!"  wait="true"/>
+			<addTopic topic="blozard" text="What can you tell me about Blozard?"/>
+		</conversationGraphTransition>
+		<conversationGraphTransition from="in-conversation" performative="ask" topic="hidden treasure">
+			<talk text="I don't know where it is, I just heard about it at the inn..."/>
+		</conversationGraphTransition>
+		<conversationGraphTransition from="in-conversation" performative="ask" topic="Granner's tomb">
+			<talk text="Everyone knows it's in the graveyard south of the village."/>
+		</conversationGraphTransition>
+		<conversationGraphTransition from="in-conversation" performative="ask" topic="stone tablet">
+			<talk text="Hmmm... some old runes. Not my specialty."/>
+		</conversationGraphTransition>
+		<conversationGraphTransition from="in-conversation" performative="ask" topic="Monks">
+			<talk text="Why do you tell me this? Go tell the guards!"/>
+		</conversationGraphTransition>
+
+		<eventRule event="story_state" scope="game" variable="Granner" value="alive" once="true">
+			<updateConversationGraphTransition from="in-conversation" performative="ask" topic="rumors">
+				<talk text="I've heart that Granners's alive!"/>
+			</updateConversationGraphTransition>
+			<updateConversationGraphTransition from="in-conversation" performative="ask" topic="blozard">
+				<talk text="The big black dragon... and they say he's alive again!"/>
+			</updateConversationGraphTransition>
+		</eventRule>
+		<eventRule event="story_state" scope="game" variable="Granner" value="dead" once="true">
+			<updateConversationGraphTransition from="in-conversation" performative="ask" topic="rumors">
+				<talk text="They say corpses have been washing ashore, it had never happened before!"/>
+			</updateConversationGraphTransition>
+			<updateConversationGraphTransition from="in-conversation" performative="ask" topic="blozard">
+				<talk text="The big black dragon... and they say he's alive again!"/>
+			</updateConversationGraphTransition>
+		</eventRule>
+		<eventRule event="story_state" scope="game" variable="Blozard" value="dead" once="true">
+			<updateConversationGraphTransition from="in-conversation" performative="ask" topic="rumors">
+				<talk text="I heard the pricess has an eye on one of you!"/>
+			</updateConversationGraphTransition>
+			<updateConversationGraphTransition from="in-conversation" performative="ask" topic="blozard">
+				<talk text="He's dead. We can now breathe for a while!"/>
+			</updateConversationGraphTransition>
+		</eventRule>
+		<eventRule event="story_state" scope="game" variable="King" value="dead" once="true">
+			<updateConversationGraphTransition from="in-conversation" performative="ask" topic="the king">
+				<talk text="I respected the King, his death saddens me deeply..."/>
+			</updateConversationGraphTransition>
+		</eventRule>
+
+		<inferenceRule premise="attack(?1,?2),is_a(?2,?3),friendly(?3),is_a(?1,?4)" conclusion="unfriendly(?4)" frequency="0.25" activation="3000" cooldown="50"/>
+		<inferenceRule premise="take(?1,?2),is_a(?2,?3),owns(?3),is_a(?1,?4)" conclusion="unfriendly(?4)" frequency="0.25" activation="3000" cooldown="100">
+			<talk text="Thief!!!" performative="inform" angry="true"/>
+		</inferenceRule>
+
+		<onStart>
+			<addWME wme="friendly(AbblegardCitizen)" activation="3000"/>
+			<addWME wme="unfriendly(CultMember)" activation="3000"/>	
+			<addWME wme="unfriendly(Animal)" activation="3000"/>	
+			<addWME wme="unfriendly(Undead)" activation="3000"/>	
+			<addWME wme="owns(RudolphChest)" activation="3000"/>
+			<addCurrentPositionWME name="home" activation="3000"/>
+			<familiarWithMap map="Abblegard"/>
+			<familiarWithMap map="the inn"/>
+			<familiarWithMap map="the forest"/>
+			<familiarWithMap map="the Abblegard Castle"/>
+			<familiarWithMap map="a house"/>
+			<familiarWithMap map="another house"/>
+			<addBehavior priority="50"><BAttackUnfriendly/></addBehavior>
+			<addBehavior priority="0"><BGoto location="home" radius="0"/></addBehavior>
+		</onStart>
+	</CharacterClass>
+
+
+	<CharacterClass class="Ji" super="Human,AbblegardCitizen" name="Ji">
+		<animation name="idle-left" dx="1" dy="1" period="4" looping="false" file="graphics.png">98</animation>
+		<animation name="idle-up" dx="1" dy="1" period="4" looping="false" file="graphics.png">98</animation>
+		<animation name="idle-right" dx="1" dy="1" period="4" looping="false" file="graphics.png">96</animation>
+		<animation name="idle-down" dx="1" dy="1" period="4" looping="false" file="graphics.png">96</animation>
+		<animation name="moving-left" dx="1" dy="1" period="4" looping="true" file="graphics.png">98,99</animation>
+		<animation name="moving-up" dx="1" dy="1" period="4" looping="true" file="graphics.png">98,99</animation>
+		<animation name="moving-right" dx="1" dy="1" period="4" looping="true" file="graphics.png">96,97</animation>
+		<animation name="moving-down" dx="1" dy="1" period="4" looping="true" file="graphics.png">96,97</animation>
+
+		<attribute name="gives_experience" value="100"/>
+		<attribute name="gold" value="5000"/>
+		<attribute name="hp" value="75"/>
+		<attribute name="mp" value="0"/>
+		<attribute name="attack" value="40"/>
+		<attribute name="defense" value="15"/>
+		<attribute name="canSwim" value="false"/>
+		<attribute name="walk_speed" value="24"/>
+		<attribute name="sightRadius" value="7"/>
+		<attribute name="respawn" value="0.0"/>
+
+		<eventRule event="action_attack" hit="true"><playSound sound="sfx/hit.wav"/></eventRule>
+		<eventRule event="action_attack" hit="false"><playSound sound="sfx/miss.wav"/></eventRule>		
+
+      <items>
+        <object class="HPPotion">
+          <animation name="idle" dx="1" dy="1" period="1" looping="false" file="graphics.png">1</animation>
+          <attribute name="name" value="HP Potion+5"/>
+          <attribute name="gold" value="15"/>
+          <attribute name="hp" value="5"/>
+        </object>
+        <object class="MPPotion">
+          <animation name="idle" dx="1" dy="1" period="1" looping="false" file="graphics.png">5</animation>
+          <attribute name="name" value="MP Potion+5"/>
+          <attribute name="gold" value="15"/>
+          <attribute name="mp" value="5"/>
+        </object>
+        <object class="XPPotion">
+          <animation name="idle" dx="1" dy="1" period="1" looping="false" file="graphics.png">13</animation>
+          <attribute name="name" value="XP Potion+5"/>
+          <attribute name="gold" value="30"/>
+          <attribute name="xp" value="5"/>
+        </object>
+        <object class="Food">
+          <animation name="idle" dx="1" dy="1" period="1" looping="false" file="graphics.png">18</animation>
+          <attribute name="name" value="Chicken Leg"/>
+          <attribute name="gold" value="5"/>
+        </object>
+        <object class="Food">
+          <animation name="idle" dx="1" dy="1" period="1" looping="false" file="graphics.png">19</animation>
+          <attribute name="name" value="Beef Stew"/>
+          <attribute name="gold" value="5"/>
+        </object>
+        <object class="Food">
+          <animation name="idle" dx="1" dy="1" period="1" looping="false" file="graphics.png">85</animation>
+          <attribute name="name" value="Wine"/>
+          <attribute name="gold" value="5"/>
+        </object>
+        <object class="Scroll">
+          <animation name="idle" dx="1" dy="1" period="1" looping="false" file="graphics.png">144</animation>
+          <attribute name="name" value="Shield Scroll"/>
+          <attribute name="gold" value="100"/>
+          <attribute name="spell" value="2"/>
+        </object>
+      </items>
+
+		<conversationGraph name="ji-conversationgraph.xml"/>
+		<conversationGraphTransition from="in-conversation" performative="ask" topic="yourself">
+			<talk text="I'm Ji, owner of this place. Now let me work!"/>
+		</conversationGraphTransition>
+		<conversationGraphTransition from="in-conversation" performative="ask" topic="abblegard">
+			<talk text="Go ask someonelese, I'm busy!"/>
+		</conversationGraphTransition>
+		<conversationGraphTransition from="in-conversation" performative="ask" topic="the king">
+			<talk text="We don't like him."/>
+		</conversationGraphTransition> 
+		<conversationGraphTransition from="in-conversation" performative="ask" topic="blozard">
+			<talk text="A black dragon, ask someone else about him!"/>
+		</conversationGraphTransition> 
+		<conversationGraphTransition from="in-conversation" performative="ask" topic="Granner">
+			<talk text="Everyone knows, ask someone else!"/>
+		</conversationGraphTransition>
+		<conversationGraphTransition from="in-conversation" performative="ask" topic="the cult">
+			<talk text="What about it?"/>
+		</conversationGraphTransition>
+		<conversationGraphTransition from="in-conversation" performative="ask" topic="rumors">
+			<talk text="There's rumors of a hidden treasure, but I'm too busy to go look for it!" wait="true"/>
+			<addTopic topic="hidden treasure" text="Do you know where is the hidden treasure?"/>
+		</conversationGraphTransition>
+		<conversationGraphTransition from="in-conversation" performative="ask" topic="hidden treasure">
+			<talk text="From what I've been gathering, it's buried in the forest. If you undig it, I want my part for telling you!"/>
+		</conversationGraphTransition>
+		<conversationGraphTransition from="in-conversation" performative="ask" topic="Granner's tomb">
+			<talk text="It's in the graveyard. Now leave me alone!"/>
+		</conversationGraphTransition>
+		<conversationGraphTransition from="in-conversation" performative="ask" topic="Cyril">
+			<talk text="Cyril? That's just a legend to scare kids at night!"/>
+		</conversationGraphTransition>
+		<conversationGraphTransition from="in-conversation" performative="ask" topic="stone tablet">
+			<if>
+				<condition>
+					<steal name="Stone Tablet"/>
+				</condition>
+				<then>
+					<talk text="Even a child can read this. Take this, and don't bother me again." wait="true"/>
+					<loseItem inventory="Stone Tablet"/>
+					<give>
+						<object class="TranslatedStoneTablet"/>
+					</give>
+					<updateConversationGraphTransition from="in-conversation" performative="ask" topic="stone tablet">
+						<talk text="I already translated that for you!"/>
+					</updateConversationGraphTransition>
+				</then>
+				<else>
+					<talk text="Bring it to me first!"/>
+				</else>
+			</if>
+		</conversationGraphTransition>
+		<conversationGraphTransition from="in-conversation" performative="ask" topic="Monks">
+			<talk text="Look, I have enough with my inn. Look for someone else to help you!"/>
+		</conversationGraphTransition>
+
+		<eventRule event="receive" item="Stone Tablet" once="true">
+			<talk text="Even a child can read this. Take this, and don't bother me again."/>
+			<loseItem inventory="Stone Tablet"/>
+			<give>
+				<object class="TranslatedStoneTablet"/>
+			</give>
+			<updateConversationGraphTransition from="in-conversation" performative="ask" topic="stone tablet">
+				<talk text="I already translated this for you!"/>
+			</updateConversationGraphTransition>
+		</eventRule>
+
+		<eventRule event="story_state" scope="game" variable="Granner" value="alive" once="true">
+			<updateConversationGraphTransition from="in-conversation" performative="ask" topic="rumors">
+				<talk text="Granner is a live. That's everything everyone talks about!"/>
+			</updateConversationGraphTransition>
+		</eventRule>
+		<eventRule event="story_state" scope="game" variable="Granner" value="dead" once="true">
+			<updateConversationGraphTransition from="in-conversation" performative="ask" topic="rumors">
+				<talk text="Something about corpses on the sea, ask around."/>
+			</updateConversationGraphTransition>
+		</eventRule>
+		<eventRule event="story_state" scope="game" variable="Blozard" value="dead" once="true">
+			<updateConversationGraphTransition from="in-conversation" performative="ask" topic="rumors">
+				<talk text="The king is looking to marry the princess."/>
+			</updateConversationGraphTransition>
+		</eventRule>
+		<eventRule event="story_state" scope="game" variable="King" value="dead" once="true">
+			<updateConversationGraphTransition from="in-conversation" performative="ask" topic="the king">
+				<talk text="He's dead, Who cares..."/>
+			</updateConversationGraphTransition>
+			<updateConversationGraphTransition from="in-conversation" performative="ask" topic="rumors">
+				<talk text="The princess is looking for a husband."/>
+			</updateConversationGraphTransition>
+		</eventRule>
+
+		<inferenceRule premise="attack(?1,?2),is_a(?2,?3),friendly(?3),is_a(?1,?4)" conclusion="unfriendly(?4)" frequency="0.25" activation="3000" cooldown="50"/>
+
+		<onStart>
+			<addWME wme="friendly(AbblegardCitizen)" activation="3000"/>
+			<addWME wme="unfriendly(CultMember)" activation="3000"/>	
+			<addWME wme="unfriendly(Animal)" activation="3000"/>	
+			<addWME wme="unfriendly(Undead)" activation="3000"/>	
+			<addCurrentPositionWME name="home" activation="3000"/>
+			<familiarWithMap map="Abblegard"/>
+			<familiarWithMap map="the inn"/>
+			<familiarWithMap map="the forest"/>
+			<familiarWithMap map="the Abblegard Castle"/>
+			<familiarWithMap map="a house"/>
+			<familiarWithMap map="another house"/>
+			<addBehavior priority="50"><BAttackUnfriendly/></addBehavior>
+			<addAgenda agenda="yelling" duration="2000" loop="true">
+				<entry time="0">
+					<talk text="So much work to do!" angry="true"/>
+				</entry>
+				<entry time="500">
+					<talk text="This is not a charity house, any more drinks?" angry="true"/>
+				</entry>
+				<entry time="1000">
+					<talk text="Please don't spit in the floor!" angry="true"/>
+				</entry>
+				<entry time="1500">
+					<talk text="Keep my tables clean!" angry="true"/>
+				</entry>
+			</addAgenda>
+			<addBehavior priority="0"><BWander forwardFactor="4" pStop="0.25" stopTime="200"/></addBehavior>
+			<addBehavior priority="5"><BGoto location="home" radius="192"/></addBehavior>
+		</onStart>		
+	</CharacterClass>
+
+
+	<CharacterClass class="Peasant" super="Human,AbblegardCitizen" name="Male Peasant">
+		<animation name="idle-left" dx="1" dy="1" period="4" looping="false" file="graphics.png">102</animation>
+		<animation name="idle-up" dx="1" dy="1" period="4" looping="false" file="graphics.png">102</animation>
+		<animation name="idle-right" dx="1" dy="1" period="4" looping="false" file="graphics.png">100</animation>
+		<animation name="idle-down" dx="1" dy="1" period="4" looping="false" file="graphics.png">100</animation>
+		<animation name="moving-left" dx="1" dy="1" period="4" looping="true" file="graphics.png">102,103</animation>
+		<animation name="moving-up" dx="1" dy="1" period="4" looping="true" file="graphics.png">102,103</animation>
+		<animation name="moving-right" dx="1" dy="1" period="4" looping="true" file="graphics.png">100,101</animation>
+		<animation name="moving-down" dx="1" dy="1" period="4" looping="true" file="graphics.png">100,101</animation>
+
+		<attribute name="gives_experience" value="3"/>
+		<attribute name="gold" value="10"/>
+		<attribute name="hp" value="5"/>
+		<attribute name="mp" value="0"/>
+		<attribute name="attack" value="4"/>
+		<attribute name="defense" value="2"/>
+		<attribute name="canSwim" value="false"/>
+		<attribute name="walk_speed" value="16"/>
+		<attribute name="sightRadius" value="5"/>
+		<attribute name="respawn" value="0.0"/>
+
+		<eventRule event="action_attack" hit="true"><playSound sound="sfx/hit.wav"/></eventRule>
+		<eventRule event="action_attack" hit="false"><playSound sound="sfx/miss.wav"/></eventRule>		
+
+		<conversationGraph name="polite-conversationgraph.xml"/>
+		<conversationGraphTransition from="in-conversation" performative="ask" topic="yourself">
+			<talk text="I live in Abblegard."/>
+		</conversationGraphTransition>
+		<conversationGraphTransition from="in-conversation" performative="ask" topic="abblegard">
+			<talk text="It's a nice town, I've never been anywhere else!"/>
+		</conversationGraphTransition>
+		<conversationGraphTransition from="in-conversation" performative="ask" topic="the king">
+			<talk text="King Cabolo is our good King. We all respect him."/>
+		</conversationGraphTransition> 
+		<conversationGraphTransition from="in-conversation" performative="ask" topic="blozard">
+			<talk text="Blozard? he was a dragon, right?"/>
+		</conversationGraphTransition> 
+		<conversationGraphTransition from="in-conversation" performative="ask" topic="Granner">
+			<talk text="Granner? there used to be a kid named granner in Abblegard, he went crazy and now he's dead."/>
+		</conversationGraphTransition>
+		<conversationGraphTransition from="in-conversation" performative="ask" topic="the cult">
+			<talk text="The cult is group of crazy people, they are always causing us trouble."/>
+		</conversationGraphTransition>
+		<conversationGraphTransition from="in-conversation" performative="ask" topic="Granner's tomb">
+			<talk text="It was in the graveyard I think. But don't go around asking about that!"/>
+		</conversationGraphTransition>
+		<conversationGraphTransition from="in-conversation" performative="ask" topic="rumors">
+			<talk text="You'd better talk to Ji, she knows all the rumors!"/>
+		</conversationGraphTransition>
+		<conversationGraphTransition from="in-conversation" performative="ask" topic="Monks">
+			<talk text="Why do you tell me this? Go tell the guards!"/>
+		</conversationGraphTransition>
+
+		<eventRule event="story_state" scope="game" variable="Granner" value="alive" once="true">
+			<updateConversationGraphTransition from="in-conversation" performative="ask" topic="rumors">
+				<talk text="I've heart that Granners's alive!"/>
+			</updateConversationGraphTransition>
+			<updateConversationGraphTransition from="in-conversation" performative="ask" topic="blozard">
+				<talk text="He was the black dragon, and he might be alive!"/>
+			</updateConversationGraphTransition>
+		</eventRule>
+		<eventRule event="story_state" scope="game" variable="Granner" value="dead" once="true">
+			<updateConversationGraphTransition from="in-conversation" performative="ask" topic="rumors">
+				<talk text="They say corpses have been washing ashore, it had never happened before!"/>
+			</updateConversationGraphTransition>
+			<updateConversationGraphTransition from="in-conversation" performative="ask" topic="blozard">
+				<talk text="He was the black dragon, and he is alive!"/>
+			</updateConversationGraphTransition>
+		</eventRule>
+		<eventRule event="story_state" scope="game" variable="Blozard" value="dead" once="true">
+			<updateConversationGraphTransition from="in-conversation" performative="ask" topic="rumors">
+				<talk text="I heard the pricess has an eye on one of you!"/>
+			</updateConversationGraphTransition>
+			<updateConversationGraphTransition from="in-conversation" performative="ask" topic="blozard">
+				<talk text="He's dead. We can now breathe for a while!"/>
+			</updateConversationGraphTransition>
+		</eventRule>
+		<eventRule event="story_state" scope="game" variable="King" value="dead" once="true">
+			<updateConversationGraphTransition from="in-conversation" performative="ask" topic="rumors">
+				<talk text="I heard the pricess has an eye on one of you! With the kind dead, you might be king!"/>
+			</updateConversationGraphTransition>
+			<updateConversationGraphTransition from="in-conversation" performative="ask" topic="the king">
+				<talk text="He's dead... what is going to be of us now!"/>
+			</updateConversationGraphTransition>
+		</eventRule>
+
+		<inferenceRule premise="attack(?1,?2),is_a(?2,?3),friendly(?3),is_a(?1,?4)" conclusion="unfriendly(?4)" frequency="0.25" activation="3000" cooldown="50"/>
+
+		<onStart>
+			<addWME wme="friendly(AbblegardCitizen)" activation="3000"/>
+			<addWME wme="unfriendly(CultMember)" activation="3000"/>	
+			<addWME wme="unfriendly(Snake)" activation="3000"/>	
+			<addWME wme="unfriendly(Undead)" activation="3000"/>	
+			<addCurrentPositionWME name="home" activation="3000"/>
+			<familiarWithMap map="Abblegard"/>
+			<familiarWithMap map="the inn"/>
+			<familiarWithMap map="the forest"/>
+			<familiarWithMap map="the Abblegard Castle"/>
+			<familiarWithMap map="a house"/>
+			<familiarWithMap map="another house"/>
+			<addBehavior priority="50"><BAttackUnfriendly/></addBehavior>
+			<addBehavior priority="0"><BGoto location="home" radius="0"/></addBehavior>
+		</onStart>			
+	</CharacterClass>
+
+
+	<CharacterClass class="FemalePeasant" super="Human,AbblegardCitizen" name="Female Peasant">
+		<animation name="idle-left" dx="1" dy="1" period="4" looping="false" file="graphics.png">218</animation>
+		<animation name="idle-up" dx="1" dy="1" period="4" looping="false" file="graphics.png">218</animation>
+		<animation name="idle-right" dx="1" dy="1" period="4" looping="false" file="graphics.png">216</animation>
+		<animation name="idle-down" dx="1" dy="1" period="4" looping="false" file="graphics.png">216</animation>
+		<animation name="moving-left" dx="1" dy="1" period="4" looping="true" file="graphics.png">218,219</animation>
+		<animation name="moving-up" dx="1" dy="1" period="4" looping="true" file="graphics.png">218,219</animation>
+		<animation name="moving-right" dx="1" dy="1" period="4" looping="true" file="graphics.png">216,217</animation>
+		<animation name="moving-down" dx="1" dy="1" period="4" looping="true" file="graphics.png">216,217</animation>
+
+		<attribute name="gives_experience" value="2"/>
+		<attribute name="gold" value="10"/>
+		<attribute name="hp" value="4"/>
+		<attribute name="mp" value="0"/>
+		<attribute name="attack" value="3"/>
+		<attribute name="defense" value="2"/>
+		<attribute name="canSwim" value="false"/>
+		<attribute name="walk_speed" value="16"/>
+		<attribute name="sightRadius" value="5"/>
+		<attribute name="respawn" value="0.0"/>
+
+		<eventRule event="action_attack" hit="true"><playSound sound="sfx/hit.wav"/></eventRule>
+		<eventRule event="action_attack" hit="false"><playSound sound="sfx/miss.wav"/></eventRule>		
+
+		<conversationGraph name="polite-conversationgraph.xml"/>
+		<conversationGraphTransition from="in-conversation" performative="ask" topic="yourself">
+			<talk text="I live in Abblegard."/>
+		</conversationGraphTransition>
+		<conversationGraphTransition from="in-conversation" performative="ask" topic="abblegard">
+			<talk text="It's a nice town, I've never been anywhere else!"/>
+		</conversationGraphTransition>
+		<conversationGraphTransition from="in-conversation" performative="ask" topic="the king">
+			<talk text="King Cabolo is our good King. We all respect him."/>
+		</conversationGraphTransition> 
+		<conversationGraphTransition from="in-conversation" performative="ask" topic="blozard">
+			<talk text="Blozard? he was a dragon, right?"/>
+		</conversationGraphTransition> 
+		<conversationGraphTransition from="in-conversation" performative="ask" topic="Granner">
+			<talk text="Granner? there used to be a kid named granner in Abblegard, he went crazy and now he's dead."/>
+		</conversationGraphTransition>
+		<conversationGraphTransition from="in-conversation" performative="ask" topic="the cult">
+			<talk text="The cult is group of crazy people, they are always causing us trouble."/>
+		</conversationGraphTransition>
+		<conversationGraphTransition from="in-conversation" performative="ask" topic="Granner's tomb">
+			<talk text="It was in the graveyard I think. But don't go around asking about that!"/>
+		</conversationGraphTransition>
+		<conversationGraphTransition from="in-conversation" performative="ask" topic="rumors">
+			<talk text="You'd better talk to Ji, she knows all the rumors!"/>
+		</conversationGraphTransition>
+		<conversationGraphTransition from="in-conversation" performative="ask" topic="Monks">
+			<talk text="Why do you tell me this? Go tell the guards!"/>
+		</conversationGraphTransition>
+
+		<eventRule event="story_state" scope="game" variable="Granner" value="alive" once="true">
+			<updateConversationGraphTransition from="in-conversation" performative="ask" topic="rumors">
+				<talk text="I've heart that Granners's alive!"/>
+			</updateConversationGraphTransition>
+			<updateConversationGraphTransition from="in-conversation" performative="ask" topic="blozard">
+				<talk text="He was the black dragon, and he might be alive!"/>
+			</updateConversationGraphTransition>
+		</eventRule>
+		<eventRule event="story_state" scope="game" variable="Granner" value="dead" once="true">
+			<updateConversationGraphTransition from="in-conversation" performative="ask" topic="rumors">
+				<talk text="They say corpses have been washing ashore, it had never happened before!"/>
+			</updateConversationGraphTransition>
+			<updateConversationGraphTransition from="in-conversation" performative="ask" topic="blozard">
+				<talk text="He was the black dragon, and he is alive!"/>
+			</updateConversationGraphTransition>
+		</eventRule>
+		<eventRule event="story_state" scope="game" variable="Blozard" value="dead" once="true">
+			<updateConversationGraphTransition from="in-conversation" performative="ask" topic="rumors">
+				<talk text="I heard the pricess has an eye on one of you!"/>
+			</updateConversationGraphTransition>
+			<updateConversationGraphTransition from="in-conversation" performative="ask" topic="blozard">
+				<talk text="He's dead. We can now breathe for a while!"/>
+			</updateConversationGraphTransition>
+		</eventRule>
+		<eventRule event="story_state" scope="game" variable="King" value="dead" once="true">
+			<updateConversationGraphTransition from="in-conversation" performative="ask" topic="rumors">
+				<talk text="I heard the pricess has an eye on one of you! With the kind dead, you might be king!"/>
+			</updateConversationGraphTransition>
+			<updateConversationGraphTransition from="in-conversation" performative="ask" topic="the king">
+				<talk text="He's dead... what is going to be of us now!"/>
+			</updateConversationGraphTransition>
+		</eventRule>
+
+		<inferenceRule premise="attack(?1,?2),is_a(?2,?3),friendly(?3),is_a(?1,?4)" conclusion="unfriendly(?4)" frequency="0.25" activation="3000" cooldown="50"/>
+
+		<onStart>
+			<addWME wme="friendly(AbblegardCitizen)" activation="3000"/>
+			<addWME wme="unfriendly(CultMember)" activation="3000"/>	
+			<addWME wme="unfriendly(Snake)" activation="3000"/>	
+			<addWME wme="unfriendly(Undead)" activation="3000"/>	
+			<addCurrentPositionWME name="home" activation="3000"/>
+			<familiarWithMap map="Abblegard"/>
+			<familiarWithMap map="the inn"/>
+			<familiarWithMap map="the forest"/>
+			<familiarWithMap map="the Abblegard Castle"/>
+			<familiarWithMap map="a house"/>
+			<familiarWithMap map="another house"/>
+			<addBehavior priority="50"><BAttackUnfriendly/></addBehavior>
+			<addBehavior priority="0"><BGoto location="home" radius="0"/></addBehavior>
+		</onStart>			
+	</CharacterClass>
+
+	<CharacterClass class="ElderPeasant" super="Human,AbblegardCitizen" name="Elder Peasant">
+		<animation name="idle-left" dx="1" dy="1" period="4" looping="false" file="graphics.png">248</animation>
+		<animation name="idle-up" dx="1" dy="1" period="4" looping="false" file="graphics.png">248</animation>
+		<animation name="idle-right" dx="1" dy="1" period="4" looping="false" file="graphics.png">246</animation>
+		<animation name="idle-down" dx="1" dy="1" period="4" looping="false" file="graphics.png">246</animation>
+		<animation name="moving-left" dx="1" dy="1" period="4" looping="true" file="graphics.png">248,249</animation>
+		<animation name="moving-up" dx="1" dy="1" period="4" looping="true" file="graphics.png">248,249</animation>
+		<animation name="moving-right" dx="1" dy="1" period="4" looping="true" file="graphics.png">246,247</animation>
+		<animation name="moving-down" dx="1" dy="1" period="4" looping="true" file="graphics.png">246,247</animation>
+
+		<attribute name="gives_experience" value="2"/>
+		<attribute name="gold" value="10"/>
+		<attribute name="hp" value="4"/>
+		<attribute name="mp" value="0"/>
+		<attribute name="attack" value="3"/>
+		<attribute name="defense" value="2"/>
+		<attribute name="canSwim" value="false"/>
+		<attribute name="walk_speed" value="24"/>
+		<attribute name="sightRadius" value="5"/>
+		<attribute name="respawn" value="0.0"/>
+
+		<eventRule event="action_attack" hit="true"><playSound sound="sfx/hit.wav"/></eventRule>
+		<eventRule event="action_attack" hit="false"><playSound sound="sfx/miss.wav"/></eventRule>		
+
+		<conversationGraph name="polite-conversationgraph.xml"/>
+		<conversationGraphTransition from="in-conversation" performative="ask" topic="yourself">
+			<talk text="I have lived all my live in Abblegard as a peasant."/>
+		</conversationGraphTransition>
+		<conversationGraphTransition from="in-conversation" performative="ask" topic="abblegard">
+			<talk text="I've seen it grow over the years. Abblegard was a Thriving town, and I hope it will be after I'm gone."/>
+		</conversationGraphTransition>
+		<conversationGraphTransition from="in-conversation" performative="ask" topic="the king">
+			<talk text="Prince Cabolo is now our King, the son of King Holamaco."/>
+		</conversationGraphTransition> 
+		<conversationGraphTransition from="in-conversation" performative="ask" topic="blozard">
+			<talk text="Ah Blozard... a knightmare from the past..."/>
+		</conversationGraphTransition> 
+		<conversationGraphTransition from="in-conversation" performative="ask" topic="Granner">
+			<talk text="I remember Granner. He was a good kid, but one day he went crazy with his dark ideas."/>
+		</conversationGraphTransition>
+		<conversationGraphTransition from="in-conversation" performative="ask" topic="the cult">
+			<talk text="The cult is group of crazy people, they are always causing us trouble."/>
+		</conversationGraphTransition>
+		<conversationGraphTransition from="in-conversation" performative="ask" topic="Granner's tomb">
+			<talk text="In the graveyard, resing among many of our beloved ancestors."/>
+		</conversationGraphTransition>
+		<conversationGraphTransition from="in-conversation" performative="ask" topic="rumors">
+			<talk text="I'm too old for rumors."/>
+		</conversationGraphTransition>
+		<conversationGraphTransition from="in-conversation" performative="ask" topic="Monks">
+			<talk text="Then hurry! Go tell the guards!"/>
+		</conversationGraphTransition>
+
+		<eventRule event="story_state" scope="game" variable="Granner" value="alive" once="true">
+			<updateConversationGraphTransition from="in-conversation" performative="ask" topic="rumors">
+				<talk text="Granner is alive they say..."/>
+			</updateConversationGraphTransition>
+			<updateConversationGraphTransition from="in-conversation" performative="ask" topic="blozard">
+				<talk text="He was the black dragon, he terrorized the village in the past."/>
+			</updateConversationGraphTransition>
+		</eventRule>
+		<eventRule event="story_state" scope="game" variable="Granner" value="dead" once="true">
+			<updateConversationGraphTransition from="in-conversation" performative="ask" topic="rumors">
+				<talk text="I've seen corpses washing ashore on the east! We are doomed!"/>
+			</updateConversationGraphTransition>
+			<updateConversationGraphTransition from="in-conversation" performative="ask" topic="blozard">
+				<talk text="He was the black dragon, and he is back!"/>
+			</updateConversationGraphTransition>
+		</eventRule>
+		<eventRule event="story_state" scope="game" variable="Blozard" value="dead" once="true">
+			<updateConversationGraphTransition from="in-conversation" performative="ask" topic="blozard">
+				<talk text="He's dead once again. Thanks for your service."/>
+			</updateConversationGraphTransition>
+		</eventRule>
+		<eventRule event="story_state" scope="game" variable="King" value="dead" once="true">
+			<updateConversationGraphTransition from="in-conversation" performative="ask" topic="the king">
+				<talk text="Dead... in all my years we have never been without a king!"/>
+			</updateConversationGraphTransition>
+		</eventRule>
+
+		<inferenceRule premise="attack(?1,?2),is_a(?2,?3),friendly(?3),is_a(?1,?4)" conclusion="unfriendly(?4)" frequency="0.25" activation="3000" cooldown="50"/>
+
+		<onStart>
+			<addWME wme="friendly(AbblegardCitizen)" activation="3000"/>
+			<addWME wme="unfriendly(CultMember)" activation="3000"/>	
+			<addWME wme="unfriendly(Undead)" activation="3000"/>	
+			<addCurrentPositionWME name="home" activation="3000"/>
+			<familiarWithMap map="Abblegard"/>
+			<familiarWithMap map="the inn"/>
+			<familiarWithMap map="the forest"/>
+			<familiarWithMap map="the Abblegard Castle"/>
+			<familiarWithMap map="a house"/>
+			<familiarWithMap map="another house"/>
+			<addBehavior priority="50"><BAttackUnfriendly/></addBehavior>
+			<addBehavior priority="0"><BGoto location="home" radius="0"/></addBehavior>
+		</onStart>			
+	</CharacterClass>
+
+
+	<CharacterClass class="ChildPeasant" super="Human,AbblegardCitizen" name="Child Peasant">
+		<animation name="idle-left" dx="1" dy="1" period="4" looping="false" file="graphics.png">202</animation>
+		<animation name="idle-up" dx="1" dy="1" period="4" looping="false" file="graphics.png">202</animation>
+		<animation name="idle-right" dx="1" dy="1" period="4" looping="false" file="graphics.png">200</animation>
+		<animation name="idle-down" dx="1" dy="1" period="4" looping="false" file="graphics.png">200</animation>
+		<animation name="moving-left" dx="1" dy="1" period="4" looping="true" file="graphics.png">202,203</animation>
+		<animation name="moving-up" dx="1" dy="1" period="4" looping="true" file="graphics.png">202,203</animation>
+		<animation name="moving-right" dx="1" dy="1" period="4" looping="true" file="graphics.png">200,201</animation>
+		<animation name="moving-down" dx="1" dy="1" period="4" looping="true" file="graphics.png">200,201</animation>
+
+		<attribute name="gives_experience" value="2"/>
+		<attribute name="gold" value="10"/>
+		<attribute name="hp" value="4"/>
+		<attribute name="mp" value="0"/>
+		<attribute name="attack" value="3"/>
+		<attribute name="defense" value="2"/>
+		<attribute name="canSwim" value="false"/>
+		<attribute name="walk_speed" value="12"/>
+		<attribute name="sightRadius" value="5"/>
+		<attribute name="respawn" value="0.0"/>
+
+		<eventRule event="action_attack" hit="true"><playSound sound="sfx/hit.wav"/></eventRule>
+		<eventRule event="action_attack" hit="false"><playSound sound="sfx/miss.wav"/></eventRule>		
+
+		<conversationGraph name="polite-conversationgraph.xml"/>
+		<conversationGraphTransition from="in-conversation" performative="ask" topic="yourself">
+			<talk text="Me? I like playing!"/>
+		</conversationGraphTransition>
+		<conversationGraphTransition from="in-conversation" performative="ask" topic="abblegard">
+			<talk text="I like Abblegard, all my friends live here!"/>
+		</conversationGraphTransition>
+		<conversationGraphTransition from="in-conversation" performative="ask" topic="the king">
+			<talk text="My parents say he is a good king."/>
+		</conversationGraphTransition> 
+		<conversationGraphTransition from="in-conversation" performative="ask" topic="rumors">
+			<talk text="What is a rumor, sir?"/>
+		</conversationGraphTransition>
+		<conversationGraphTransition from="in-conversation" performative="ask" topic="Monks">
+			<talk text="You have to tell the adults!"/>
+		</conversationGraphTransition>
+
+		<eventRule event="story_state" scope="game" variable="King" value="dead" once="true">
+			<updateConversationGraphTransition from="in-conversation" performative="ask" topic="the king">
+				<talk text="My parents told me he was a good king!"/>
+			</updateConversationGraphTransition>
+		</eventRule>
+
+		<inferenceRule premise="attack(?1,?2),is_a(?2,?3),friendly(?3),is_a(?1,?4)" conclusion="unfriendly(?4)" frequency="0.25" activation="3000" cooldown="50"/>
+
+		<onStart>
+			<addWME wme="friendly(AbblegardCitizen)" activation="3000"/>
+			<addWME wme="unfriendly(CultMember)" activation="3000"/>	
+			<addWME wme="unfriendly(Undead)" activation="3000"/>	
+			<addCurrentPositionWME name="home" activation="3000"/>
+			<familiarWithMap map="Abblegard"/>
+			<familiarWithMap map="the inn"/>
+			<familiarWithMap map="the forest"/>
+			<familiarWithMap map="the Abblegard Castle"/>
+			<familiarWithMap map="a house"/>
+			<familiarWithMap map="another house"/>
+			<addBehavior priority="50"><BAttackUnfriendly/></addBehavior>
+			<addBehavior priority="0"><BWander forwardFactor="4" pStop="0.25" stopTime="100"/></addBehavior>
+			<addBehavior priority="5"><BGoto location="home" radius="128"/></addBehavior>
+		</onStart>			
+	</CharacterClass>
+
+
+</Characters>

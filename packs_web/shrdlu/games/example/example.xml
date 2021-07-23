@@ -1,0 +1,204 @@
+<A4Game name="MapGen2">
+	<story>
+		<line>You have no idea how you got here, find the exit!</line>
+	</story>
+	<ending>
+		<line>  Contratulations, you found the exit!</line>
+	</ending>
+
+	<tiles sourcewidth="64" sourceheight="64" targetwidth="32" targetheight="32">
+		<types file="graphics2x-basic.png">
+			0,0,1,0,1,0,0,0,0,0,
+			1,1,1,0,0,0,0,0,0,0,
+			4,0,1,1,1,0,0,0,0,0,
+			0,0,0,0,0,0,0,0,0,0,
+			0,1,1,1,2,3,1,1,1,0,
+			0,1,1,1,1,0,0,0,1,0,
+			0,0,0,1,0,0,1,0,1,0,
+			0,0,0,0,0,0,0,0,0,0,
+			0,0,0,0,0,0,1,1,1,1,
+			0,0,0,0,0,1,0,0,0,0,
+			0,0,0,0,0,1,0,0,0,0,
+			0,0,0,0,0,1,0,0,0,0,
+			0,0,0,0,0,1,0,0,0,0,
+			0,0,0,0,0,1,0,0,0,0,
+			0,0,0,0,0,0,0,1,0,0,
+			0,0,0,0,1,0,0,0,0,0,
+			0,0,0,0,0,0,0,0,0,0,
+			0,0,0,0,0,0,0,0,0,0,
+			0,0,0,0,0,0,0,0,0,0,
+			0,0,0,0,0,0,0,0,0,0,
+			0,0,0,0,0,0,0,0,0,0,				  
+		</types>
+		<seeThrough file="graphics2x-basic.png">
+			0,0,0,0,0,0,0,0,0,0,
+			1,1,0,0,0,0,0,0,0,0,
+			0,0,0,0,0,0,0,0,0,0,
+			0,0,0,0,0,0,0,0,0,1,
+			0,0,0,0,0,0,0,0,0,1,
+			0,0,0,0,0,0,0,0,0,0,
+			0,0,0,0,0,0,1,0,1,0,
+			0,0,0,0,0,0,0,0,0,0,
+			0,0,0,0,0,0,0,0,0,0,
+			0,0,0,0,0,0,0,0,0,0,
+			0,0,0,0,0,0,0,0,0,0,
+			0,0,0,0,0,1,0,0,0,0,
+			0,0,0,0,0,0,0,0,0,0,
+			0,0,0,0,0,0,0,0,0,0,
+			0,0,0,0,0,0,0,0,0,0,
+			0,0,0,0,0,0,0,0,0,0,
+			0,0,0,0,0,0,0,0,0,0,
+			0,0,0,0,0,0,0,0,0,0,
+			0,0,0,0,0,0,0,0,0,0,
+			0,0,0,0,0,0,0,0,0,0,
+			0,0,0,0,0,0,0,0,0,0,				  
+		</seeThrough>
+		<canDig file="graphics2x-basic.png">
+			0,0,0,0,0,0,0,0,0,0,
+			0,0,0,0,0,0,0,0,0,0,
+			0,0,0,0,0,0,0,0,0,0,
+			1,1,1,1,1,1,1,1,1,0,
+			1,0,0,0,0,0,0,0,0,0,
+			0,0,0,0,0,0,0,0,0,0,
+			0,0,0,0,0,0,0,0,0,0,
+			0,0,0,0,0,0,0,0,0,0,
+			0,0,0,0,0,0,0,0,0,0,
+			0,0,0,0,0,0,0,0,0,0,
+			0,0,0,0,0,0,0,0,0,0,
+			0,0,0,0,0,0,0,0,0,0,
+			0,0,0,0,0,0,0,0,0,0,
+			0,0,0,0,0,0,0,0,0,0,
+			0,0,0,0,0,0,0,0,0,0,
+			0,0,0,0,0,0,0,0,0,0,
+			0,0,0,0,0,0,0,0,0,0,					  
+			0,0,0,0,0,0,0,0,0,0,					  
+			0,0,0,0,0,0,0,0,0,0,					  
+			0,0,0,0,0,0,0,0,0,0,					  
+			0,0,0,0,0,0,0,0,0,0,					  
+  		</canDig>
+		<types file="graphics2x-characters.png">
+			0,0,0,0,0,0,0,0,0,0,
+			0,0,0,0,0,0,0,0,0,0,
+			0,0,0,0,0,0,0,0,0,0,
+			0,0,0,0,0,0,0,0,0,0,
+			0,0,0,0,0,0,0,0,0,0,
+			0,0,0,0,0,0,0,0,0,0,				  
+			0,0,0,0,0,0,0,0,0,0,
+			0,0,0,0,0,0,0,0,0,0,
+			0,0,0,0,0,0,0,0,0,0,
+			0,0,0,0,0,0,0,0,0,0,
+			0,0,0,0,0,0,0,0,0,0,
+			0,0,0,0,0,0,0,0,0,0,				  
+			0,0,0,0,0,0,0,0,0,0,
+			0,0,0,0,0,0,0,0,0,0,				  
+		</types>
+		<seeThrough file="graphics2x-characters.png">
+			0,0,0,0,0,0,0,0,0,0,
+			0,0,0,0,0,0,0,0,0,0,
+			0,0,0,0,0,0,0,0,0,0,
+			0,0,0,0,0,0,0,0,0,0,
+			0,0,0,0,0,0,0,0,0,0,
+			0,0,0,0,0,0,0,0,0,0,				  
+			0,0,0,0,0,0,0,0,0,0,
+			0,0,0,0,0,0,0,0,0,0,
+			0,0,0,0,0,0,0,0,0,0,
+			0,0,0,0,0,0,0,0,0,0,
+			0,0,0,0,0,0,0,0,0,0,
+			0,0,0,0,0,0,0,0,0,0,				  
+			0,0,0,0,0,0,0,0,0,0,
+			0,0,0,0,0,0,0,0,0,0,				  				  
+		</seeThrough>
+		<canDig file="graphics2x-characters.png">
+			0,0,0,0,0,0,0,0,0,0,
+			0,0,0,0,0,0,0,0,0,0,
+			0,0,0,0,0,0,0,0,0,0,
+			0,0,0,0,0,0,0,0,0,0,
+			0,0,0,0,0,0,0,0,0,0,
+			0,0,0,0,0,0,0,0,0,0,				  
+			0,0,0,0,0,0,0,0,0,0,
+			0,0,0,0,0,0,0,0,0,0,
+			0,0,0,0,0,0,0,0,0,0,
+			0,0,0,0,0,0,0,0,0,0,
+			0,0,0,0,0,0,0,0,0,0,
+			0,0,0,0,0,0,0,0,0,0,				  
+			0,0,0,0,0,0,0,0,0,0,
+			0,0,0,0,0,0,0,0,0,0,				  				  
+  		</canDig> 
+		<types file="graphics2x-walls.png">
+			1,1,
+			1,1,
+			1,1,
+			1,1,
+			1,1,
+			1,1,
+			1,1,
+			1,1,
+			1,1,
+			1,1,
+			1,1,
+			1,1,
+			1,1,
+			1,1,
+			1,1,
+			1,1,
+		</types>
+		<seeThrough file="graphics2x-walls.png">
+			1,1,
+			1,1,
+			1,1,
+			1,1,
+			1,1,
+			1,1,
+			1,1,
+			1,1,
+			1,1,
+			1,1,
+			1,1,
+			1,1,
+			1,1,
+			1,1,
+			1,1,
+			1,1,
+		</seeThrough>
+		<canDig file="graphics2x-walls.png">
+			0,0,
+			0,0,
+			0,0,
+			0,0,
+			0,0,
+			0,0,
+			0,0,
+			0,0,
+			0,0,
+			0,0,
+			0,0,
+			0,0,
+			0,0,
+			0,0,
+			0,0,
+			0,0,
+  		</canDig>   		 		
+  		<!-- default animations: -->
+		<animation name="coinpurse" dx="1" dy="1" period="4" looping="false" file="graphics2x-basic.png">9</animation>
+		<animation name="curious" dx="1" dy="1" period="4" looping="true" file="graphics2x-basic.png">74,-1</animation>
+		<animation name="scared" dx="1" dy="1" period="4" looping="true" file="graphics2x-basic.png">84,-1</animation>
+		<animation name="angry" dx="1" dy="1" period="4" looping="true" file="graphics2x-basic.png">94,-1</animation>
+		<animation name="tired" dx="1" dy="1" period="4" looping="true" file="graphics2x-basic.png">104,-1</animation>
+		<animation name="happy" dx="1" dy="1" period="4" looping="true" file="graphics2x-basic.png">75,-1</animation>
+		<animation name="magic missile" dx="1" dy="1" period="8" looping="false" file="graphics2x.png">114</animation>		
+		<animation name="fireball" dx="1" dy="1" period="8" looping="false" file="graphics2x.png">124</animation>		
+		<animation name="incinerate" dx="1" dy="1" period="8" looping="false" file="graphics2x.png">134</animation>		
+	</tiles>	
+
+	<characterDefinition file="players.xml"/>
+	<objectDefinition file="objects.xml"/>
+
+	<map file="map.tmx"/>
+
+	<player class="Warrior" x="8" y="7" map="0"/>	
+
+	<onStart>
+		<addTopic topic="yourself" text="tell me about yourself"/>
+		<addTopic topic="rumors" text="Have you heard any rumors lately?"/>
+	</onStart>
+</A4Game>

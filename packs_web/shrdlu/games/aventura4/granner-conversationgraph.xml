@@ -1,0 +1,64 @@
+<!--
+The performatives that this graph contemplates are:
+	- hi
+	- bye
+	- inform
+	- ask
+	- trade / endtrade
+	- timeout
+-->
+
+<conversationGraph>
+
+	<state name="none">
+		<transition actor="self" performative="hi" state="in-conversation"/>
+		<transition actor="other" performative="hi" state="in-conversation">
+			<talk text="Hello!" performative="hi"/>
+		</transition>
+		<transition actor="other" performative="bye" state="none">
+			<talk text="Farewell!" performative="bye"/>
+		</transition>
+		<transition actor="other" consume="false" state="in-conversation">
+		</transition>
+	</state>
+
+	<state name="sent-hi">
+		<transition actor="other" performative="hi" state="in-conversation"/>
+		<transition actor="other" performative="bye" state="none"/>
+		<transition actor="other" performative="inform" consume="false" state="in-conversation"/>
+		<transition actor="other" performative="ask" consume="false" state="in-conversation"/>
+		<transition actor="other" performative="trade" consume="false" state="in-conversation"/>
+		<transition actor="other" performative="timeout" state="none">
+			<talk text="I'll be waiting for you!" performative="inform"/>
+		</transition>
+	</state>
+
+	<state name="in-conversation">
+		<transition actor="self" performative="bye" state="sent-bye"/>
+		<transition actor="self" performative="inform"/>
+		<transition actor="other" performative="hi" state="in-conversation">
+			<talk text="Hello?" performative="inform" angry="true"/>
+		</transition>
+		<transition actor="other" performative="bye" state="none">
+			<talk text="Farewell!" performative="bye"/>
+		</transition>
+		<transition actor="other" performative="inform" state="in-conversation"/>
+		<transition actor="other" performative="ask" state="in-conversation">
+			<talk text="I am sorry, I do not know anything about that." performative="inform"/>
+		</transition>
+		<transition actor="other" performative="trade">
+			<talk text="You have nothing I want!" performative="inform"/>
+		</transition>
+		<transition actor="other" performative="timeout" state="none">
+			<talk text="I'll be waiting for you!" performative="inform"/>
+		</transition>
+	</state>
+
+	<state name="sent-bye">
+		<transition actor="other" consume="false" state="in-conversation">
+			<talk text="I though I had dismissed you already..." performative="inform" angry="true"/>
+		</transition>
+		<transition actor="other" performative="bye" state="none"/>
+	</state>	
+
+</conversationGraph>

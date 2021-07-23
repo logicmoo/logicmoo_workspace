@@ -1,0 +1,61 @@
+<Objects>
+    <ObjectClass class="Chest" super="Container" name="a chest">
+        <animation name="idle" dx="1" dy="1" period="16" looping="true" file="graphics.png">29</animation>
+    </ObjectClass>
+
+    <ObjectClass class="StoneTablet" super="Item" name="Stone Tablet">
+		<attribute name="takeable" value="true"/>
+		<attribute name="useable" value="true"/>
+		<attribute name="value" value="0"/>
+		<animation name="idle" dx="1" dy="1" period="4" looping="false" file="graphics.png">155</animation>
+
+		<eventRule event="use">
+			<message text="There is something written in it, some kind of runes..."/>
+		</eventRule>		
+
+		<eventRule event="pickup">
+			<addTopic topic="stone tablet" text="Do you know what this is?"/>
+		</eventRule>
+	</ObjectClass>
+
+	<ObjectClass class="TranslatedStoneTablet" super="Item" name="Translated T.">
+		<attribute name="takeable" value="true"/>
+		<attribute name="useable" value="true"/>
+		<attribute name="value" value="0"/>
+		<animation name="idle" dx="1" dy="1" period="4" looping="false" file="graphics.png">155</animation>
+
+		<eventRule event="use">
+			<message text="Let me read the inscription..."/>
+			<message text="... When I read it, the tablet transformed into a key!!!"/>
+			<loseItem inventory="Translated T."/>
+			<gainItem>
+		        <object class="Key">
+		          <animation name="idle" dx="1" dy="1" period="1" looping="false" file="graphics.png">28</animation>
+		          <attribute name="name" value="Clay key"/>
+		          <attribute name="keyID" value="TABLET"/>
+		        </object>
+			</gainItem>
+		</eventRule>		
+	</ObjectClass>
+
+	<ObjectClass class="Boat" super="Vehicle" name="Boat">
+		<animation name="idle-left" dx="1" dy="1" period="16" looping="true" file="graphics.png">158,159</animation>
+		<animation name="idle-up" dx="1" dy="1" period="16" looping="true" file="graphics.png">158,159</animation>
+		<animation name="idle-right" dx="1" dy="1" period="16" looping="true" file="graphics.png">156,157</animation>
+		<animation name="idle-down" dx="1" dy="1" period="16" looping="true" file="graphics.png">156,157</animation>
+		<animation name="moving-left" dx="1" dy="1" period="16" looping="true" file="graphics.png">158,159</animation>
+		<animation name="moving-up" dx="1" dy="1" period="16" looping="true" file="graphics.png">158,159</animation>
+		<animation name="moving-right" dx="1" dy="1" period="16" looping="true" file="graphics.png">156,157</animation>
+		<animation name="moving-down" dx="1" dy="1" period="16" looping="true" file="graphics.png">156,157</animation>
+
+		<attribute name="walk_speed" value="16"/>
+		<attribute name="canSwim" value="true"/>
+		<attribute name="hp" value="100"/>
+	</ObjectClass>
+
+	<ObjectClass class="TermesChest" super="Chest" name="Termes Chest">
+	</ObjectClass>
+
+	<ObjectClass class="RudolphChest" super="Chest" name="Rudolph Chest">
+	</ObjectClass>
+</Objects>

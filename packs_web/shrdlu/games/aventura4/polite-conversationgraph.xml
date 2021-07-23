@@ -1,0 +1,93 @@
+<!--
+The performatives that this graph contemplates are:
+	- hi
+	- bye
+	- inform
+	- ask
+	- trade / endtrade
+	- timeout
+-->
+
+<conversationGraph>
+
+	<state name="none">
+		<transition actor="self" performative="hi" state="sent-hi"/>
+		<transition actor="other" performative="hi" state="in-conversation-only-hi">
+			<talk text="Good day!" performative="hi"/>
+		</transition>
+		<transition actor="other" performative="bye" state="none">
+			<talk text="Farewell!" performative="bye"/>
+		</transition>
+		<transition actor="other" performative="inform" consume="false" state="in-conversation">
+			<talk text="That's no way to start a conversation!" performative="inform" angry="true"/>
+		</transition>
+		<transition actor="other" performative="ask" consume="false" state="in-conversation">
+			<talk text="That's no way to start a conversation!" performative="inform" angry="true"/>
+		</transition>
+		<transition actor="other" performative="trade" consume="false" state="in-conversation">
+			<talk text="That's no way to start a conversation!" performative="inform" angry="true"/>
+		</transition>
+	</state>
+
+	<state name="sent-hi">
+		<transition actor="other" performative="hi" state="in-conversation-only-hi"/>
+		<transition actor="other" performative="bye" state="none"/>
+		<transition actor="other" performative="inform" consume="false" state="in-conversation">
+			<talk text="That's no way to start a conversation!" performative="inform" angry="true"/>
+		</transition>
+		<transition actor="other" performative="ask" consume="false" state="in-conversation">
+			<talk text="That's no way to start a conversation!" performative="inform" angry="true"/>
+		</transition>
+		<transition actor="other" performative="trade" consume="false" state="in-conversation">
+			<talk text="That's no way to start a conversation!" performative="inform" angry="true"/>
+		</transition>
+		<transition actor="other" performative="timeout" state="none">
+			<talk text="So unpolite... we were talking!" performative="inform" angry="true"/>
+		</transition>
+	</state>
+
+	<state name="in-conversation-only-hi">
+		<transition actor="other" performative="hi" state="in-conversation-only-hi">
+			<talk text="Yes, good day to you too, we already went through that..." performative="inform" angry="true"/>
+		</transition>
+		<transition actor="other" consume="false" state="in-conversation"/>
+		<transition actor="self" performative="inform" consume="false" state="in-conversation"/>
+		<transition actor="self" performative="ask" consume="false" state="in-conversation"/>
+		<transition actor="self" performative="bye" consume="false" state="in-conversation"/>
+		<transition actor="self" performative="trade" consume="false" state="in-conversation"/>
+		<transition actor="other" performative="timeout" state="none"/>
+	</state>
+
+	<state name="in-conversation">
+		<transition actor="self" performative="bye" state="sent-bye"/>
+		<transition actor="self" performative="inform"/>
+		<transition actor="other" performative="hi" state="in-conversation">
+			<talk text="Yes, good day to you too, we already went through that..." performative="inform" angry="true"/>
+		</transition>
+		<transition actor="other" performative="bye" state="none">
+			<talk text="Farewell!" performative="bye"/>
+		</transition>
+		<transition actor="other" performative="inform" state="in-conversation"/>
+		<transition actor="other" performative="ask" state="in-conversation">
+			<talk text="I am sorry, I do not know anything about that." performative="inform"/>
+		</transition>		
+		<transition actor="other" performative="trade" state="in-trade">
+			<startTrading/>
+		</transition>
+		<transition actor="other" performative="timeout" state="none">
+			<talk text="So unpolite... we were talking!" performative="inform" angry="true"/>
+		</transition>
+	</state>
+
+	<state name="in-trade">
+		<transition actor="other" performative="endtrade" state="in-conversation"/>
+	</state>
+
+	<state name="sent-bye">
+		<transition actor="other" consume="false" state="in-conversation">
+			<talk text="I thought we were done talking..." performative="inform" angry="true"/>
+		</transition>
+		<transition actor="other" performative="bye" state="none"/>
+	</state>	
+
+</conversationGraph>

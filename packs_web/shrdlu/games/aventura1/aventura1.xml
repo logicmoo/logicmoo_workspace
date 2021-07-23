@@ -1,0 +1,171 @@
+<A4Game name="aventura1" title="Aventura"
+		allowSaveGames="true"
+		allowTalking="false"
+		allowMagic="false"
+		allowInventory="false"
+		allowStats="false">
+
+	<!-- Intro screen configuration -->
+	<story>
+		<line>  The fabled labyrinth. It is said that despite many</line>
+		<line>attempts, no hero has ever been able to find the way</line>
+		<line>out...</line>
+		<line>  It is your turn now. Would you proof you are the</line>
+		<line>chosen one, who would find the exit and find the</line>
+		<line>hidden treasure?</line>
+	</story>
+	<ending id="1">
+		<line>You did it! Behind a secret wall you found a hidden</line>
+		<lint>staircase that led to a treasure room!</lint>
+		<line>Songs will be written about this day!</line>
+	</ending>
+
+	<!-- Tiles: -->
+	<tiles sourcewidth="32" sourceheight="32" targetwidth="32" targetheight="32">
+		<!-- 
+			 0 - walkable
+			 1 - wall
+			 2 - tree, but not choppeable
+			 3 - choppeable tree
+			 4 - water			
+		-->
+		<types file="graphics.png">
+			0,0,0,0,1,0,0,0,0,0,
+			1,1,0,0,0,1,0,0,0,0,
+			4,0,0,0,0,0,0,0,0,0,
+			0,0,0,0,0,0,0,0,0,1,
+			0,1,1,1,2,3,1,1,1,1,
+			0,1,1,1,1,0,0,0,1,0,
+			0,0,0,1,0,0,1,0,1,0,
+			0,0,0,0,0,0,0,0,0,0,
+			0,0,0,0,0,0,1,1,1,1,
+			0,0,0,0,0,1,0,0,0,0,
+			0,0,0,0,0,1,0,0,0,0,
+			0,0,0,0,0,1,0,0,0,0,
+			0,0,0,0,0,1,0,0,0,0,
+			0,0,0,0,0,1,0,0,0,0,
+			0,0,0,0,0,0,0,1,0,0,
+			0,0,0,0,1,0,0,0,0,0,
+			0,0,0,0,0,0,0,0,0,0,
+			0,0,0,0,0,0,0,0,0,0,
+			0,0,0,0,0,0,0,0,0,0,
+			0,0,0,0,0,0,0,0,0,0,
+			0,0,0,0,1,0,0,0,0,0,
+			1,1,1,1,0,0,0,0,0,0,
+			1,1,1,1,0,1,0,0,0,0,
+			1,1,1,1,1,1,0,0,0,0,
+			1,1,1,1,1,1,0,0,0,0,
+			1,1,1,1,1,0,0,0,0,0,
+			1,1,1,1,1,0,0,0,0,0,
+			1,1,1,1,0,0,0,0,0,0,
+			1,1,1,1,0,0,0,0,0,0,
+			1,1,1,1,0,0,0,0,0,0,
+			1,1,1,1,0,0,0,0,0,0,
+			1,1,1,1,0,0,0,0,0,0,
+			1,1,1,1,0,0,0,0,0,0,
+			1,1,1,1,0,0,0,0,0,0,
+			1,1,1,1,0,0,0,0,0,0,
+			1,1,1,1,0,0,0,0,0,0,
+			1,1,1,1,0,0,0,0,0,0,
+		</types>
+		<seeThrough file="graphics.png">
+			0,0,0,0,0,0,0,0,0,0,
+			1,1,0,0,0,0,0,0,0,0,
+			0,0,0,0,0,0,0,0,0,0,
+			0,0,0,0,0,0,0,0,0,1,
+			0,0,0,0,0,0,0,0,0,1,
+			0,0,0,0,0,0,0,0,0,0,
+			0,0,0,0,0,0,1,0,1,0,
+			0,0,0,0,0,0,0,0,0,0,
+			0,0,0,0,0,0,0,0,0,0,
+			0,0,0,0,0,0,0,0,0,0,
+			0,0,0,0,0,0,0,0,0,0,
+			0,0,0,0,0,1,0,0,0,0,
+			0,0,0,0,0,0,0,0,0,0,
+			0,0,0,0,0,0,0,0,0,0,
+			0,0,0,0,0,0,0,0,0,0,
+			0,0,0,0,0,0,0,0,0,0,
+			0,0,0,0,0,0,0,0,0,0,
+			0,0,0,0,0,0,0,0,0,0,
+			0,0,0,0,0,0,0,0,0,0,
+			0,0,0,0,0,0,0,0,0,0,
+			0,0,0,0,1,0,0,0,0,0,
+			1,1,0,1,0,0,0,0,0,0,
+			1,1,0,1,0,0,0,0,0,0,
+			1,1,0,1,0,0,0,0,0,0,
+			1,1,0,1,0,0,0,0,0,0,
+			1,1,0,1,0,0,0,0,0,0,
+			1,1,0,1,0,0,0,0,0,0,
+			1,1,0,1,0,0,0,0,0,0,
+			1,1,0,1,0,0,0,0,0,0,
+			1,1,0,1,0,0,0,0,0,0,
+			1,1,0,1,0,0,0,0,0,0,
+			1,1,0,1,0,0,0,0,0,0,
+			1,1,0,1,0,0,0,0,0,0,
+			1,1,0,1,0,0,0,0,0,0,
+			1,1,0,1,0,0,0,0,0,0,
+			1,1,0,1,0,0,0,0,0,0,
+			1,1,0,1,0,0,0,0,0,0,
+		</seeThrough>
+		<canDig file="graphics.png">
+			0,0,0,0,0,0,0,0,0,0,
+			0,0,0,0,0,0,0,0,0,0,
+			0,0,0,0,0,0,0,0,0,0,
+			1,1,1,1,1,1,1,1,1,0,
+			1,0,0,0,0,0,0,0,0,0,
+			0,0,0,0,0,0,0,0,0,0,
+			0,0,0,0,0,0,0,0,0,0,
+			0,0,0,0,0,0,0,0,0,0,
+			0,0,0,0,0,0,0,0,0,0,
+			0,0,0,0,0,0,0,0,0,0,
+			0,0,0,0,0,0,0,0,0,0,
+			0,0,0,0,0,0,0,0,0,0,
+			0,0,0,0,0,0,0,0,0,0,
+			0,0,0,0,0,0,0,0,0,0,
+			0,0,0,0,0,0,0,0,0,0,
+			0,0,0,0,0,0,0,0,0,0,
+			0,0,0,0,0,0,0,0,0,0,
+			0,0,0,0,0,0,0,0,0,0,
+			0,0,0,0,0,0,0,0,0,0,
+			0,0,0,0,0,0,0,0,0,0,
+			0,0,0,0,0,0,0,0,0,0,
+			0,0,0,0,0,0,0,0,0,0,
+			0,0,0,0,0,0,0,0,0,0,
+			0,0,0,0,0,0,0,0,0,0,
+			0,0,0,0,0,0,0,0,0,0,
+			0,0,0,0,0,0,0,0,0,0,
+			0,0,0,0,0,0,0,0,0,0,
+			0,0,0,0,0,0,0,0,0,0,
+			0,0,0,0,0,0,0,0,0,0,
+			0,0,0,0,0,0,0,0,0,0,
+			0,0,0,0,0,0,0,0,0,0,
+			0,0,0,0,0,0,0,0,0,0,
+			0,0,0,0,0,0,0,0,0,0,
+			0,0,0,0,0,0,0,0,0,0,
+			0,0,0,0,0,0,0,0,0,0,
+			0,0,0,0,0,0,0,0,0,0,
+			0,0,0,0,0,0,0,0,0,0,				  
+  		</canDig>
+
+  		<!-- default animations: -->
+		<animation name="coinpurse" dx="1" dy="1" period="4" looping="false" file="graphics.png">9</animation>
+		<animation name="curious" dx="1" dy="1" period="8" looping="true" file="graphics.png">74,-1</animation>
+		<animation name="scared" dx="1" dy="1" period="8" looping="true" file="graphics.png">84,-1</animation>
+		<animation name="angry" dx="1" dy="1" period="8" looping="true" file="graphics.png">94,-1</animation>
+		<animation name="tired" dx="1" dy="1" period="8" looping="true" file="graphics.png">104,-1</animation>
+		<animation name="happy" dx="1" dy="1" period="8" looping="true" file="graphics.png">75,-1</animation>
+		<animation name="magic missile" dx="1" dy="1" period="8" looping="false" file="graphics.png">114</animation>		
+		<animation name="fireball" dx="1" dy="1" period="8" looping="false" file="graphics.png">124</animation>		
+		<animation name="incinerate" dx="1" dy="1" period="8" looping="false" file="graphics.png">134</animation>		
+	</tiles>	
+
+	<!-- Game Definition -->
+
+	<characterDefinition file="baseclasses.xml"/>
+	<characterDefinition file="players.xml"/>
+
+	<!--map file="map1.xml"/-->
+	<map file="map.xml"/>
+
+	<player class="Warrior" x="32" y="32" map="0"/>
+</A4Game>

@@ -1,0 +1,583 @@
+<Characters>
+	<CharacterClass class="Frog" super="AICharacter" name="a Frog">
+		<animation name="idle-left" dx="1" dy="1" period="16" looping="false" file="graphics2x.png">112</animation>
+		<animation name="idle-up" dx="1" dy="1" period="16" looping="false" file="graphics2x.png">112</animation>
+		<animation name="idle-right" dx="1" dy="1" period="16" looping="false" file="graphics2x.png">110</animation>
+		<animation name="idle-down" dx="1" dy="1" period="16" looping="false" file="graphics2x.png">110</animation>
+		<animation name="moving-left" dx="1" dy="1" period="16" looping="true" file="graphics2x.png">112,113</animation>
+		<animation name="moving-up" dx="1" dy="1" period="16" looping="true" file="graphics2x.png">112,113</animation>
+		<animation name="moving-right" dx="1" dy="1" period="16" looping="true" file="graphics2x.png">110,111</animation>
+		<animation name="moving-down" dx="1" dy="1" period="16" looping="true" file="graphics2x.png">110,111</animation>
+
+		<attribute name="gives_experience" value="1"/>
+		<attribute name="gold" value="0,2"/>
+		<attribute name="hp" value="4"/>
+		<attribute name="mp" value="0"/>
+		<attribute name="attack" value="1"/>
+		<attribute name="defense" value="0"/>
+		<attribute name="canSwim" value="false"/>
+		<attribute name="walk_speed" value="32"/>
+		<attribute name="sightRadius" value="5"/>
+		<attribute name="respawn" value="1.0"/>
+
+		<item probability="0.15">new ItemHPotion(5,Animation.fromTile(1,"graphics2x.png"))</item>
+
+		<onStart>
+			<addLongTermWME type="friendly" params="Frog"/>	
+			<addLongTermWME type="unfriendly" params="Snake"/>	
+			<addBehavior priority="0">BRLeftRight()</addBehavior>
+			<addBehavior priority="0">BRUnfriendlyIfAttackingFriendly()</addBehavior>
+			<addBehavior priority="50">BRFleeUnfriendly()</addBehavior>
+			<addBehavior priority="10">BRCurious()</addBehavior>
+			<addBehavior priority="25">BRTired(400,200)</addBehavior>
+		</onStart>
+	</CharacterClass>
+
+
+	<CharacterClass class="Snake" super="AICharacter" name="a Snake">
+		<animation name="idle-left" dx="1" dy="1" period="12" looping="false" file="graphics2x.png">122</animation>
+		<animation name="idle-up" dx="1" dy="1" period="12" looping="false" file="graphics2x.png">122</animation>
+		<animation name="idle-right" dx="1" dy="1" period="12" looping="false" file="graphics2x.png">120</animation>
+		<animation name="idle-down" dx="1" dy="1" period="12" looping="false" file="graphics2x.png">120</animation>
+		<animation name="moving-left" dx="1" dy="1" period="12" looping="true" file="graphics2x.png">122,123</animation>
+		<animation name="moving-up" dx="1" dy="1" period="12" looping="true" file="graphics2x.png">122,123</animation>
+		<animation name="moving-right" dx="1" dy="1" period="12" looping="true" file="graphics2x.png">120,121</animation>
+		<animation name="moving-down" dx="1" dy="1" period="12" looping="true" file="graphics2x.png">120,121</animation>
+
+		<attribute name="gives_experience" value="2"/>
+		<attribute name="gold" value="0"/>
+		<attribute name="hp" value="8"/>
+		<attribute name="mp" value="0"/>
+		<attribute name="attack" value="3"/>
+		<attribute name="defense" value="1"/>
+		<attribute name="canSwim" value="false"/>
+		<attribute name="walk_speed" value="24"/>
+		<attribute name="sightRadius" value="5"/>
+		<attribute name="respawn" value="1.0"/>
+
+		<onStart>
+			<addLongTermWME type="unfriendly" params="Soldier"/>	
+			<addLongTermWME type="unfriendly" params="Peasant"/>	
+			<addLongTermWME type="unfriendly" params="Ji"/>	
+			<addLongTermWME type="unfriendly" params="King"/>	
+			<addLongTermWME type="unfriendly" params="PlayerCharacter"/>	
+			<addLongTermWME type="unfriendly" params="Frog"/>	
+			<addBehavior priority="0">BRWander(2,false)</addBehavior>
+			<addBehavior priority="50">BRAttackUnfriendly()</addBehavior>
+		</onStart>
+	</CharacterClass>
+
+
+	<CharacterClass class="Crab" super="AICharacter" name="a Giant Crab">
+		<animation name="idle-left" dx="1" dy="1" period="6" looping="false" file="graphics2x.png">132</animation>
+		<animation name="idle-up" dx="1" dy="1" period="6" looping="false" file="graphics2x.png">132</animation>
+		<animation name="idle-right" dx="1" dy="1" period="6" looping="false" file="graphics2x.png">130</animation>
+		<animation name="idle-down" dx="1" dy="1" period="6" looping="false" file="graphics2x.png">130</animation>
+		<animation name="moving-left" dx="1" dy="1" period="6" looping="true" file="graphics2x.png">132,133</animation>
+		<animation name="moving-up" dx="1" dy="1" period="6" looping="true" file="graphics2x.png">132,133</animation>
+		<animation name="moving-right" dx="1" dy="1" period="6" looping="true" file="graphics2x.png">130,131</animation>
+		<animation name="moving-down" dx="1" dy="1" period="6" looping="true" file="graphics2x.png">130,131</animation>
+
+		<attribute name="gives_experience" value="4"/>
+		<attribute name="gold" value="0,1-10"/>
+		<attribute name="hp" value="15"/>
+		<attribute name="mp" value="0"/>
+		<attribute name="attack" value="4"/>
+		<attribute name="defense" value="2"/>
+		<attribute name="canSwim" value="false"/>
+		<attribute name="walk_speed" value="24"/>
+		<attribute name="sightRadius" value="5"/>
+		<attribute name="respawn" value="1.0"/>
+
+		<item probability="0.15">new ItemHPotion(5,Animation.fromTile(1,"graphics2x.png"))</item>
+
+		<onStart>
+			<addLongTermWME type="friendly" params="Crab"/>	
+			<addBehavior priority="0">BRWander(2,false)</addBehavior>
+			<addBehavior priority="0">BRUnfriendlyIfAttackingFriendly()</addBehavior>
+			<addBehavior priority="50">BRAttackUnfriendly()</addBehavior>
+			<addBehavior priority="25">BRCurious()</addBehavior>
+		</onStart>
+	</CharacterClass>
+
+
+	<CharacterClass class="Monk" super="AICharacter" name="a Monk">
+		<animation name="idle-left" dx="1" dy="1" period="4" looping="false" file="graphics2x.png">108</animation>
+		<animation name="idle-up" dx="1" dy="1" period="4" looping="false" file="graphics2x.png">108</animation>
+		<animation name="idle-right" dx="1" dy="1" period="4" looping="false" file="graphics2x.png">106</animation>
+		<animation name="idle-down" dx="1" dy="1" period="4" looping="false" file="graphics2x.png">106</animation>
+		<animation name="moving-left" dx="1" dy="1" period="4" looping="true" file="graphics2x.png">108,109</animation>
+		<animation name="moving-up" dx="1" dy="1" period="4" looping="true" file="graphics2x.png">108,109</animation>
+		<animation name="moving-right" dx="1" dy="1" period="4" looping="true" file="graphics2x.png">106,107</animation>
+		<animation name="moving-down" dx="1" dy="1" period="4" looping="true" file="graphics2x.png">106,107</animation>
+
+		<attribute name="gives_experience" value="8"/>
+		<attribute name="gold" value="10"/>
+		<attribute name="hp" value="20"/>
+		<attribute name="mp" value="0"/>
+		<attribute name="attack" value="6"/>
+		<attribute name="defense" value="4"/>
+		<attribute name="canSwim" value="false"/>
+		<attribute name="walk_speed" value="24"/>
+		<attribute name="respawn" value="0.5"/>
+		<attribute name="sightRadius" value="5"/>
+
+		<item probability="0.25">new Key("Small key", "BLACKROCK", Animation.fromTile(28,"graphics2x.png"))</item>
+
+		<onStart>
+			<addLongTermWME type="friendly" params="Monk"/>	
+			<addLongTermWME type="friendly" params="Priest"/>	
+			<addLongTermWME type="unfriendly" params="Soldier"/>	
+			<addLongTermWME type="unfriendly" params="Peasant"/>	
+			<addLongTermWME type="unfriendly" params="Ji"/>	
+			<addLongTermWME type="unfriendly" params="King"/>	
+			<addLongTermWME type="unfriendly" params="PlayerCharacter"/>	
+			<addBehavior priority="0">BRWanderStopping(1,1,200)</addBehavior>
+			<addBehavior priority="75">BRYellToUnfriendly("Intruders!")</addBehavior>
+			<addBehavior priority="50">BRAttackUnfriendly()</addBehavior>
+			<addBehavior priority="25">BRGoToAngryFriendly()</addBehavior>
+		</onStart>
+	</CharacterClass>
+
+
+	<CharacterClass class="Priest" super="AICharacter" name="a Priest">
+		<animation name="idle-left" dx="1" dy="1" period="4" looping="false" file="graphics2x.png">118</animation>
+		<animation name="idle-up" dx="1" dy="1" period="4" looping="false" file="graphics2x.png">118</animation>
+		<animation name="idle-right" dx="1" dy="1" period="4" looping="false" file="graphics2x.png">116</animation>
+		<animation name="idle-down" dx="1" dy="1" period="4" looping="false" file="graphics2x.png">116</animation>
+		<animation name="moving-left" dx="1" dy="1" period="4" looping="true" file="graphics2x.png">118,119</animation>
+		<animation name="moving-up" dx="1" dy="1" period="4" looping="true" file="graphics2x.png">118,119</animation>
+		<animation name="moving-right" dx="1" dy="1" period="4" looping="true" file="graphics2x.png">116,117</animation>
+		<animation name="moving-down" dx="1" dy="1" period="4" looping="true" file="graphics2x.png">116,117</animation>
+
+		<attribute name="gives_experience" value="12"/>
+		<attribute name="gold" value="25"/>
+		<attribute name="hp" value="30"/>
+		<attribute name="mp" value="10"/>
+		<attribute name="attack" value="7"/>
+		<attribute name="defense" value="6"/>
+		<attribute name="canSwim" value="false"/>
+		<attribute name="walk_speed" value="24"/>
+		<attribute name="respawn" value="0.75"/>
+		<attribute name="sightRadius" value="5"/>
+
+		<item probability="0.5">new EquipableItem("Dagger", Animation.fromTile(148,"graphics2x.png"), ITEM_WEAPON, 3, 0, 1.0, false, 75)</item>
+		<item probability="0.2">new Scroll("Dwindling Scroll",SPELL_DECREASE,100, Animation.fromTile(144,"graphics2x.png"))</item>
+		<item probability="0.2">new Scroll("Growing Scroll",SPELL_INCREASE,200, Animation.fromTile(144,"graphics2x.png"))</item>
+
+		<spell>magic missile</spell>
+
+		<onStart>
+			<addLongTermWME type="friendly" params="Monk"/>	
+			<addLongTermWME type="friendly" params="Priest"/>	
+			<addLongTermWME type="unfriendly" params="Soldier"/>	
+			<addLongTermWME type="unfriendly" params="Peasant"/>	
+			<addLongTermWME type="unfriendly" params="Ji"/>	
+			<addLongTermWME type="unfriendly" params="King"/>	
+			<addLongTermWME type="unfriendly" params="PlayerCharacter"/>	
+			<addBehavior priority="0">BRWanderStopping(1,1,200)</addBehavior>
+			<addBehavior priority="75">BRYellToUnfriendly("Intruders!")</addBehavior>
+			<addBehavior priority="50">BRAttackUnfriendly()</addBehavior>
+			<addBehavior priority="25">BRGoToAngryFriendly()</addBehavior>
+		</onStart>
+	</CharacterClass>
+
+
+	<CharacterClass class="Salvatore" super="AICharacter" name="Salvatore">
+		<animation name="idle-left" dx="1" dy="1" period="4" looping="false" file="graphics2x.png">118</animation>
+		<animation name="idle-up" dx="1" dy="1" period="4" looping="false" file="graphics2x.png">118</animation>
+		<animation name="idle-right" dx="1" dy="1" period="4" looping="false" file="graphics2x.png">116</animation>
+		<animation name="idle-down" dx="1" dy="1" period="4" looping="false" file="graphics2x.png">116</animation>
+		<animation name="moving-left" dx="1" dy="1" period="4" looping="true" file="graphics2x.png">118,119</animation>
+		<animation name="moving-up" dx="1" dy="1" period="4" looping="true" file="graphics2x.png">118,119</animation>
+		<animation name="moving-right" dx="1" dy="1" period="4" looping="true" file="graphics2x.png">116,117</animation>
+		<animation name="moving-down" dx="1" dy="1" period="4" looping="true" file="graphics2x.png">116,117</animation>
+
+		<attribute name="gives_experience" value="15"/>
+		<attribute name="gold" value="25"/>
+		<attribute name="hp" value="40"/>
+		<attribute name="mp" value="10"/>
+		<attribute name="attack" value="8"/>
+		<attribute name="defense" value="8"/>
+		<attribute name="canSwim" value="false"/>
+		<attribute name="walk_speed" value="40"/>
+		<attribute name="respawn" value="0.0"/>
+		<attribute name="sightRadius" value="5"/>
+
+		<item probability="0.5">new EquipableItem("Dagger", Animation.fromTile(148,"graphics2x.png"), ITEM_WEAPON, 3, 0, 1.0, false, 75)</item>
+		<item probability="0.2">new Scroll("Dwindling Scroll",SPELL_DECREASE,100, Animation.fromTile(144,"graphics2x.png"))</item>
+		<item probability="0.2">new Scroll("Growing Scroll",SPELL_INCREASE,200, Animation.fromTile(144,"graphics2x.png"))</item>
+
+		<spell>magic missile</spell>		
+
+		<onStart>
+			<addLongTermWME type="friendly" params="Monk"/>	
+			<addLongTermWME type="friendly" params="Priest"/>	
+			<addLongTermWME type="unfriendly" params="Soldier"/>	
+			<addLongTermWME type="unfriendly" params="Peasant"/>	
+			<addLongTermWME type="unfriendly" params="Ji"/>	
+			<addLongTermWME type="unfriendly" params="King"/>	
+			<addLongTermWME type="unfriendly" params="PlayerCharacter"/>	
+			<addBehavior priority="0">BRWanderStopping(1,1,200)</addBehavior>
+			<addBehavior priority="75">BRYellToUnfriendly("Salvatore... will... defeat you!")</addBehavior>
+			<addBehavior priority="50">BRAttackUnfriendly()</addBehavior>
+			<addBehavior priority="25">BRGoToAngryFriendly()</addBehavior>
+		</onStart>
+	</CharacterClass>
+
+
+	<CharacterClass class="Granner" super="AICharacter" name="Granner">
+		<animation name="idle-left" dx="1" dy="1" period="4" looping="false" file="graphics2x.png">162</animation>
+		<animation name="idle-up" dx="1" dy="1" period="4" looping="false" file="graphics2x.png">162</animation>
+		<animation name="idle-right" dx="1" dy="1" period="4" looping="false" file="graphics2x.png">160</animation>
+		<animation name="idle-down" dx="1" dy="1" period="4" looping="false" file="graphics2x.png">160</animation>
+		<animation name="moving-left" dx="1" dy="1" period="4" looping="true" file="graphics2x.png">162,163</animation>
+		<animation name="moving-up" dx="1" dy="1" period="4" looping="true" file="graphics2x.png">162,163</animation>
+		<animation name="moving-right" dx="1" dy="1" period="4" looping="true" file="graphics2x.png">160,161</animation>
+		<animation name="moving-down" dx="1" dy="1" period="4" looping="true" file="graphics2x.png">160,161</animation>
+
+		<attribute name="gives_experience" value="50"/>
+		<attribute name="gold" value="25"/>
+		<attribute name="hp" value="70"/>
+		<attribute name="mp" value="25"/>
+		<attribute name="attack" value="10"/>
+		<attribute name="defense" value="10"/>
+		<attribute name="canSwim" value="false"/>
+		<attribute name="walk_speed" value="24"/>
+		<attribute name="respawn" value="0.0"/>
+		<attribute name="sightRadius" value="8"/>
+
+		<item>new EquipableItem("Granner Wand", Animation.fromTile(8,"graphics2x.png"), ITEM_WEAPON, 10, 2, 2.0, false, 2000)</item>
+		<item probability="0.5">new Scroll("Burning Scroll",SPELL_FIREBALL,100, Animation.fromTile(144,"graphics2x.png"))</item>
+
+		<spell>magic missile</spell>	
+		<spell>decrease</spell>
+
+		<onStart>
+			<addLongTermWME type="friendly" params="Monk"/>	
+			<addLongTermWME type="friendly" params="Priest"/>	
+			<pendingTalk character="PlayerCharacter" text="So, you have finally come!"/>
+			<pendingTalk character="PlayerCharacter" text="Do you recognize me?"/>
+			<pendingTalk character="PlayerCharacter" text="Hahaha! Yes! I am Granner! I'm alive!"/>
+			<pendingTalk character="PlayerCharacter" text="As you see, you are late!"/>
+			<pendingTalk character="PlayerCharacter" text="We were faster than you and now... we are back to life!"/>
+			<pendingTalk character="PlayerCharacter" text="Yes, I said 'we', Blozard is alive too! hahaha"/>
+			<pendingTalk character="PlayerCharacter" text="And he is much stronger than he ever was!"/>
+			<pendingTalk character="PlayerCharacter" text="But before any one finds out it'll be too late, you will never find his hideout!"/>
+			<pendingTalk character="PlayerCharacter" text="Do you want to know how this happened?"/>
+			<pendingTalk character="PlayerCharacter" text="Well, you want to know too much! But bring this name to your grave..."/>
+			<pendingTalk character="PlayerCharacter" text="Cyril!!!">
+				<goTo x="3" y="2"/>
+				<activateLever x="3" y="2"/>
+				<addLongTermWME type="unfriendly" params="Soldier"/>	
+				<addLongTermWME type="unfriendly" params="Peasant"/>	
+				<addLongTermWME type="unfriendly" params="Ji"/>	
+				<addLongTermWME type="unfriendly" params="King"/>	
+				<addLongTermWME type="unfriendly" params="PlayerCharacter"/>	
+			</pendingTalk>
+			<addBehavior priority="0">BRWanderStopping(1,1,200)</addBehavior>
+			<addBehavior priority="25">BRPendingTalkWithoutConversation()</addBehavior>
+			<addBehavior priority="50">BRAttackUnfriendly()</addBehavior>
+		</onStart>
+	</CharacterClass>
+
+
+	<CharacterClass class="Spider" super="AICharacter" name="a Spider">
+		<animation name="idle-left" dx="1" dy="1" period="12" looping="false" file="graphics2x.png">152</animation>
+		<animation name="idle-up" dx="1" dy="1" period="12" looping="false" file="graphics2x.png">152</animation>
+		<animation name="idle-right" dx="1" dy="1" period="12" looping="false" file="graphics2x.png">150</animation>
+		<animation name="idle-down" dx="1" dy="1" period="12" looping="false" file="graphics2x.png">150</animation>
+		<animation name="moving-left" dx="1" dy="1" period="12" looping="true" file="graphics2x.png">152,153</animation>
+		<animation name="moving-up" dx="1" dy="1" period="12" looping="true" file="graphics2x.png">152,153</animation>
+		<animation name="moving-right" dx="1" dy="1" period="12" looping="true" file="graphics2x.png">150,151</animation>
+		<animation name="moving-down" dx="1" dy="1" period="12" looping="true" file="graphics2x.png">150,151</animation>
+
+		<attribute name="gives_experience" value="10"/>
+		<attribute name="gold" value="0"/>
+		<attribute name="hp" value="25"/>
+		<attribute name="mp" value="0"/>
+		<attribute name="attack" value="8"/>
+		<attribute name="defense" value="2"/>
+		<attribute name="canSwim" value="false"/>
+		<attribute name="walk_speed" value="24"/>
+		<attribute name="sightRadius" value="5"/>
+		<attribute name="respawn" value="1.0"/>
+
+		<onStart>
+			<addLongTermWME type="unfriendly" params="Soldier"/>	
+			<addLongTermWME type="unfriendly" params="Peasant"/>	
+			<addLongTermWME type="unfriendly" params="Ji"/>	
+			<addLongTermWME type="unfriendly" params="King"/>	
+			<addLongTermWME type="unfriendly" params="PlayerCharacter"/>	
+			<addBehavior priority="0">BRWander(2,false)</addBehavior>
+			<addBehavior priority="50">BRAttackUnfriendly()</addBehavior>		
+		</onStart>
+	</CharacterClass>
+
+
+	<CharacterClass class="Shark" super="AICharacter" name="a Shark">
+		<animation name="idle-left" dx="1" dy="1" period="12" looping="false" file="graphics2x.png">168</animation>
+		<animation name="idle-up" dx="1" dy="1" period="12" looping="false" file="graphics2x.png">168</animation>
+		<animation name="idle-right" dx="1" dy="1" period="12" looping="false" file="graphics2x.png">166</animation>
+		<animation name="idle-down" dx="1" dy="1" period="12" looping="false" file="graphics2x.png">166</animation>
+		<animation name="moving-left" dx="1" dy="1" period="12" looping="true" file="graphics2x.png">168,169</animation>
+		<animation name="moving-up" dx="1" dy="1" period="12" looping="true" file="graphics2x.png">168,169</animation>
+		<animation name="moving-right" dx="1" dy="1" period="12" looping="true" file="graphics2x.png">166,167</animation>
+		<animation name="moving-down" dx="1" dy="1" period="12" looping="true" file="graphics2x.png">166,167</animation>
+
+		<attribute name="gives_experience" value="15"/>
+		<attribute name="gold" value="0"/>
+		<attribute name="hp" value="20"/>
+		<attribute name="mp" value="0"/>
+		<attribute name="attack" value="9"/>
+		<attribute name="defense" value="9"/>
+		<attribute name="canSwim" value="true"/>
+		<attribute name="walk_speed" value="24"/>
+		<attribute name="sightRadius" value="5"/>
+		<attribute name="respawn" value="1.0"/>
+
+		<onStart>
+			<addLongTermWME type="unfriendly" params="Soldier"/>	
+			<addLongTermWME type="unfriendly" params="Peasant"/>	
+			<addLongTermWME type="unfriendly" params="Ji"/>	
+			<addLongTermWME type="unfriendly" params="King"/>	
+			<addLongTermWME type="unfriendly" params="PlayerCharacter"/>	
+			<addBehavior priority="0">BRWanderInCircles</addBehavior>
+			<addBehavior priority="50">BRAttackUnfriendly()</addBehavior>				
+		</onStart>
+	</CharacterClass>	
+
+
+	<CharacterClass class="Skeleton" super="AICharacter" name="a Skeleton">
+		<animation name="idle-left" dx="1" dy="1" period="4" looping="false" file="graphics2x.png">172</animation>
+		<animation name="idle-up" dx="1" dy="1" period="4" looping="false" file="graphics2x.png">172</animation>
+		<animation name="idle-right" dx="1" dy="1" period="4" looping="false" file="graphics2x.png">170</animation>
+		<animation name="idle-down" dx="1" dy="1" period="4" looping="false" file="graphics2x.png">170</animation>
+		<animation name="moving-left" dx="1" dy="1" period="4" looping="true" file="graphics2x.png">172,173</animation>
+		<animation name="moving-up" dx="1" dy="1" period="4" looping="true" file="graphics2x.png">172,173</animation>
+		<animation name="moving-right" dx="1" dy="1" period="4" looping="true" file="graphics2x.png">170,171</animation>
+		<animation name="moving-down" dx="1" dy="1" period="4" looping="true" file="graphics2x.png">170,171</animation>
+
+		<attribute name="gives_experience" value="20"/>
+		<attribute name="gold" value="0"/>
+		<attribute name="hp" value="40"/>
+		<attribute name="mp" value="1"/>
+		<attribute name="attack" value="8"/>
+		<attribute name="defense" value="6"/>
+		<attribute name="canSwim" value="false"/>
+		<attribute name="walk_speed" value="24"/>
+		<attribute name="respawn" value="0.75"/>
+		<attribute name="sightRadius" value="5"/>
+
+		<item probability="0.2">new Key("Iron key", "BT1BARRACKS", Animation.fromTile(28,"graphics2x.png"))</item>
+
+		<spell>decrease</spell>
+
+		<onStart>
+			<addLongTermWME type="friendly" params="Skeleton"/>	
+			<addLongTermWME type="friendly" params="SkeletonLord"/>	
+			<addLongTermWME type="friendly" params="SkeletonLord2"/>	
+			<addLongTermWME type="unfriendly" params="Soldier"/>	
+			<addLongTermWME type="unfriendly" params="Peasant"/>	
+			<addLongTermWME type="unfriendly" params="Ji"/>	
+			<addLongTermWME type="unfriendly" params="King"/>	
+			<addLongTermWME type="unfriendly" params="PlayerCharacter"/>	
+			<addBehavior priority="0">BRWanderStopping(1,1,200)</addBehavior>
+			<addBehavior priority="75">BRYellToUnfriendly("Kill them!")</addBehavior>
+			<addBehavior priority="50">BRAttackUnfriendly()</addBehavior>
+			<addBehavior priority="25">BRGoToAngryFriendly()</addBehavior>
+		</onStart>
+	</CharacterClass>	
+
+
+	<CharacterClass class="SkeletonLord" super="AICharacter" name="a Skeleton Lord">
+		<animation name="idle-left" dx="1" dy="1" period="4" looping="false" file="graphics2x.png">182</animation>
+		<animation name="idle-up" dx="1" dy="1" period="4" looping="false" file="graphics2x.png">182</animation>
+		<animation name="idle-right" dx="1" dy="1" period="4" looping="false" file="graphics2x.png">180</animation>
+		<animation name="idle-down" dx="1" dy="1" period="4" looping="false" file="graphics2x.png">180</animation>
+		<animation name="moving-left" dx="1" dy="1" period="4" looping="true" file="graphics2x.png">182,183</animation>
+		<animation name="moving-up" dx="1" dy="1" period="4" looping="true" file="graphics2x.png">182,183</animation>
+		<animation name="moving-right" dx="1" dy="1" period="4" looping="true" file="graphics2x.png">180,181</animation>
+		<animation name="moving-down" dx="1" dy="1" period="4" looping="true" file="graphics2x.png">180,181</animation>
+
+		<attribute name="gives_experience" value="40"/>
+		<attribute name="gold" value="0"/>
+		<attribute name="hp" value="60"/>
+		<attribute name="mp" value="4"/>
+		<attribute name="attack" value="10"/>
+		<attribute name="defense" value="8"/>
+		<attribute name="canSwim" value="false"/>
+		<attribute name="walk_speed" value="16"/>
+		<attribute name="respawn" value="0.0"/>
+		<attribute name="sightRadius" value="5"/>
+
+		<item>new Key("Golden key", "SLORDKEY", Animation.fromTile(28,"graphics2x.png"))</item>
+
+		<spell>magic missile</spell>	
+		<spell>decrease</spell>
+
+		<onStart>
+			<addLongTermWME type="friendly" params="Skeleton"/>	
+			<addLongTermWME type="friendly" params="SkeletonLord"/>	
+			<addLongTermWME type="friendly" params="SkeletonLord2"/>	
+			<addLongTermWME type="unfriendly" params="Soldier"/>	
+			<addLongTermWME type="unfriendly" params="Peasant"/>	
+			<addLongTermWME type="unfriendly" params="Ji"/>	
+			<addLongTermWME type="unfriendly" params="King"/>	
+			<addLongTermWME type="unfriendly" params="PlayerCharacter"/>	
+			<addBehavior priority="0">BRWanderStopping(1,1,200)</addBehavior>
+			<addBehavior priority="75">BRYellToUnfriendly("Kill them!")</addBehavior>
+			<addBehavior priority="50">BRAttackUnfriendly()</addBehavior>
+			<addBehavior priority="25">BRGoToAngryFriendly()</addBehavior>
+		</onStart>
+	</CharacterClass>	
+
+
+	<CharacterClass class="SkeletonLord2" super="AICharacter" name="a Skeleton Lord">
+		<animation name="idle-left" dx="1" dy="1" period="4" looping="false" file="graphics2x.png">182</animation>
+		<animation name="idle-up" dx="1" dy="1" period="4" looping="false" file="graphics2x.png">182</animation>
+		<animation name="idle-right" dx="1" dy="1" period="4" looping="false" file="graphics2x.png">180</animation>
+		<animation name="idle-down" dx="1" dy="1" period="4" looping="false" file="graphics2x.png">180</animation>
+		<animation name="moving-left" dx="1" dy="1" period="4" looping="true" file="graphics2x.png">182,183</animation>
+		<animation name="moving-up" dx="1" dy="1" period="4" looping="true" file="graphics2x.png">182,183</animation>
+		<animation name="moving-right" dx="1" dy="1" period="4" looping="true" file="graphics2x.png">180,181</animation>
+		<animation name="moving-down" dx="1" dy="1" period="4" looping="true" file="graphics2x.png">180,181</animation>
+
+		<attribute name="gives_experience" value="45"/>
+		<attribute name="gold" value="0"/>
+		<attribute name="hp" value="70"/>
+		<attribute name="mp" value="5"/>
+		<attribute name="attack" value="10"/>
+		<attribute name="defense" value="8"/>
+		<attribute name="canSwim" value="false"/>
+		<attribute name="walk_speed" value="16"/>
+		<attribute name="respawn" value="0.0"/>
+		<attribute name="sightRadius" value="5"/>
+
+		<item>new Key("Pure gold key", "SLORDKEY2", Animation.fromTile(28,"graphics2x.png"))</item>
+
+		<spell>magic missile</spell>	
+		<spell>decrease</spell>
+
+		<onStart>
+			<addLongTermWME type="friendly" params="Skeleton"/>	
+			<addLongTermWME type="friendly" params="SkeletonLord"/>	
+			<addLongTermWME type="friendly" params="SkeletonLord2"/>	
+			<addLongTermWME type="unfriendly" params="Soldier"/>	
+			<addLongTermWME type="unfriendly" params="Peasant"/>	
+			<addLongTermWME type="unfriendly" params="Ji"/>	
+			<addLongTermWME type="unfriendly" params="King"/>	
+			<addLongTermWME type="unfriendly" params="PlayerCharacter"/>	
+			<addBehavior priority="0">BRWanderStopping(1,1,200)</addBehavior>
+			<addBehavior priority="75">BRYellToUnfriendly("Kill them!")</addBehavior>
+			<addBehavior priority="50">BRAttackUnfriendly()</addBehavior>
+			<addBehavior priority="25">BRGoToAngryFriendly()</addBehavior>		
+		</onStart>
+	</CharacterClass>	
+
+
+	<CharacterClass class="Cyril" super="AICharacter" name="Cyril">
+		<animation name="idle-left" dx="1" dy="1" period="8" looping="false" file="graphics2x.png">192</animation>
+		<animation name="idle-up" dx="1" dy="1" period="8" looping="false" file="graphics2x.png">192</animation>
+		<animation name="idle-right" dx="1" dy="1" period="8" looping="false" file="graphics2x.png">190</animation>
+		<animation name="idle-down" dx="1" dy="1" period="8" looping="false" file="graphics2x.png">190</animation>
+		<animation name="moving-left" dx="1" dy="1" period="8" looping="true" file="graphics2x.png">192,193</animation>
+		<animation name="moving-up" dx="1" dy="1" period="8" looping="true" file="graphics2x.png">192,193</animation>
+		<animation name="moving-right" dx="1" dy="1" period="8" looping="true" file="graphics2x.png">190,191</animation>
+		<animation name="moving-down" dx="1" dy="1" period="8" looping="true" file="graphics2x.png">190,191</animation>
+
+		<attribute name="gives_experience" value="1000"/>
+		<attribute name="gold" value="0"/>
+		<attribute name="hp" value="1000"/>
+		<attribute name="mp" value="1000"/>
+		<attribute name="attack" value="1000"/>
+		<attribute name="defense" value="1000"/>
+		<attribute name="canSwim" value="false"/>
+		<attribute name="walk_speed" value="48"/>
+		<attribute name="respawn" value="0.0"/>
+		<attribute name="sightRadius" value="10"/>
+		<attribute name="magicImmune" value="true"/>
+
+		<item>new StoneTablet()</item>
+
+		<storyStateRule scope="game" variable="Blozard" value="dead" once="true">
+			<removeBehavior id="BYELL"/>
+			<pendingTalk character="PlayerCharacter" text="Noooooooooo!!!"/>
+			<pendingTalk character="PlayerCharacter" text="How could you?! How dare you?! Who are you!"/>
+			<pendingTalk character="PlayerCharacter" text="But this is not the end..."/>
+			<pendingTalk character="PlayerCharacter" text="I am immortal!"/>
+			<pendingTalk character="PlayerCharacter" text="I will be back!!!"/>
+			<pendingTalk character="PlayerCharacter" text="I'll find a way!!!">
+				<die/>
+			</pendingTalk>
+		</storyStateRule>	
+
+		<onStart>
+			<pendingTalk character="PlayerCharacter" text="So... We finally meet..."/>
+			<pendingTalk character="PlayerCharacter" text="Do not try to attack me, for I do not have a body..."/>
+			<pendingTalk character="PlayerCharacter" text="You might have heard of me..."/>
+			<pendingTalk character="PlayerCharacter" text="I am Cyril! Cyril the vanished! Previously known as the devastator..."/>
+			<pendingTalk character="PlayerCharacter" text="But that was before your time. So, I'm not going to bore you with history."/>
+			<pendingTalk character="PlayerCharacter" text="I guess you were looking for Blozard, where you?"/>
+			<pendingTalk character="PlayerCharacter" text="Well..."/>
+			<pendingTalk character="PlayerCharacter" text="I'm not completely done with him, you know?"/>
+			<pendingTalk character="PlayerCharacter" text="Blozard is much more powerful than Granner, and brinhing him back to full force takes time..."/>
+			<pendingTalk character="PlayerCharacter" text="But it doesn't matter to you. This is as far as you get."/>
+			<pendingTalk character="PlayerCharacter" text="For, these doors can only be open by me..."/>
+			<pendingTalk character="PlayerCharacter" text="By the time that they open, Blozard will be far too strong for you!"/>
+			<pendingTalk character="PlayerCharacter" text="ha ha ha ha ha"/>
+			<pendingTalk character="PlayerCharacter" text="...">
+				<drop inventory="Stone Tablet"/>
+				<teleport x="3" y="3" map="18"/>
+				<addBehavior priority="25" id="BYELL">BRTalkAloud(["Kill them!","Show them your might!","Blozard is invincible!","I'll have my revenge!"],200,true)</addBehavior>
+			</pendingTalk>
+			<addBehavior priority="0">BRWanderStopping(1,1,200)</addBehavior>
+			<addBehavior priority="50">BRPendingTalkWithoutConversation()</addBehavior>
+		</onStart>
+		<onEnd>
+			<storyState scope="game" variable="Cyril" value="dead"/>
+		</onEnd>
+
+	</CharacterClass>	
+
+
+	<CharacterClass class="Blozard" super="AICharacter" name="Blozard">
+		<animation name="idle-left"    dx="2" dy="2" period="8" looping="false" file="graphics2x.png">178</animation>
+		<animation name="idle-up"      dx="2" dy="2" period="8" looping="false" file="graphics2x.png">178</animation>
+		<animation name="idle-right"   dx="2" dy="2" period="8" looping="false" file="graphics2x.png">176</animation>
+		<animation name="idle-down"    dx="2" dy="2" period="8" looping="false" file="graphics2x.png">176</animation>
+		<animation name="moving-left"  dx="2" dy="2" period="8" looping="true"  file="graphics2x.png">178,198</animation>
+		<animation name="moving-up"    dx="2" dy="2" period="8" looping="true"  file="graphics2x.png">178,198</animation>
+		<animation name="moving-right" dx="2" dy="2" period="8" looping="true"  file="graphics2x.png">176,196</animation>
+		<animation name="moving-down"  dx="2" dy="2" period="8" looping="true"  file="graphics2x.png">176,196</animation>
+
+		<attribute name="gives_experience" value="100"/>
+		<attribute name="gold" value="0"/>
+		<attribute name="hp" value="200"/>
+		<attribute name="mp" value="50"/>
+		<attribute name="attack" value="20"/>
+		<attribute name="defense" value="10"/>
+		<attribute name="canSwim" value="false"/>
+		<attribute name="walk_speed" value="48"/>
+		<attribute name="respawn" value="0.0"/>
+		<attribute name="sightRadius" value="10"/>
+
+		<spell>fireball</spell>	
+		<spell>decrease</spell>
+
+		<onStart>
+			<addLongTermWME type="friendly" params="Cyril"/>	
+			<addLongTermWME type="unfriendly" params="Soldier"/>	
+			<addLongTermWME type="unfriendly" params="Peasant"/>	
+			<addLongTermWME type="unfriendly" params="Ji"/>	
+			<addLongTermWME type="unfriendly" params="King"/>	
+			<addLongTermWME type="unfriendly" params="PlayerCharacter"/>	
+			<addBehavior priority="0">BRWanderStopping(1,1,200)</addBehavior>
+			<addBehavior priority="75">BRYellToUnfriendly("Roarrrrr!")</addBehavior>
+			<addBehavior priority="50">BRAttackUnfriendly()</addBehavior>
+		</onStart>
+		<onEnd>
+			<storyState scope="game" variable="Blozard" value="dead"/>
+		</onEnd>
+	</CharacterClass>	
+</Characters>

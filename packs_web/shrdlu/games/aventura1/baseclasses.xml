@@ -1,0 +1,4 @@
+<Characters>
+	<CharacterClass class="Human" super="Character" name="Human"/>
+	<CharacterClass class="PlayerCharacter" super="Character" name="Player Character"/>
+</Characters>

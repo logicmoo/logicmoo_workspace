@@ -1,0 +1,24 @@
+<Characters>
+	<CharacterClass class="Warrior" super="Character" name="Warrior">
+		<animation name="idle-left" dx="1" dy="1" period="4" looping="false" file="graphics.png">72</animation>
+		<animation name="idle-up" dx="1" dy="1" period="4" looping="false" file="graphics.png">72</animation>
+		<animation name="idle-right" dx="1" dy="1" period="4" looping="false" file="graphics.png">70</animation>
+		<animation name="idle-down" dx="1" dy="1" period="4" looping="false" file="graphics.png">70</animation>
+		<animation name="moving-left" dx="1" dy="1" period="4" looping="true" file="graphics.png">72,73</animation>
+		<animation name="moving-up" dx="1" dy="1" period="4" looping="true" file="graphics.png">72,73</animation>
+		<animation name="moving-right" dx="1" dy="1" period="4" looping="true" file="graphics.png">70,71</animation>
+		<animation name="moving-down" dx="1" dy="1" period="4" looping="true" file="graphics.png">70,71</animation>
+		<animation name="death" dx="1" dy="1" period="50" looping="false" file="graphics.png">-1</animation>
+
+	    <attribute name="experienceToLevelUp" value="10" levelupmultiply="1.5"/>
+		<attribute name="gold" value="100"/>
+		<attribute name="hp" value="20" levelupadd="5"/>
+		<attribute name="mp" value="0"/>
+		<attribute name="attack" value="4" levelupadd="1"/>
+		<attribute name="defense" value="0" levelupadd="1"/>
+		<attribute name="attack_modifier" value="1.0"/>
+		<attribute name="defense_modifier" value="1.0"/>
+		<attribute name="canSwim" value="false"/>
+		<attribute name="walk_speed" value="16"/>
+	</CharacterClass>
+</Characters>

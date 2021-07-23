@@ -1,0 +1,159 @@
+<map version="A4" orientation="orthogonal" width="7" height="7" tilewidth="32" tileheight="32">
+  <properties>
+    <property name="name" value="an armory"/>
+  </properties>
+  <tileset firstgid="1" name="graphics" tilewidth="32" tileheight="32">
+    <image source="graphics.png" width="320" height="1184"/>
+  </tileset>
+  <layer name="Tile Layer 1" width="7" height="7">
+    <data>
+      <tile gid="60"/>
+      <tile gid="60"/>
+      <tile gid="60"/>
+      <tile gid="60"/>
+      <tile gid="60"/>
+      <tile gid="60"/>
+      <tile gid="60"/>
+      <tile gid="60"/>
+      <tile gid="60"/>
+      <tile gid="60"/>
+      <tile gid="60"/>
+      <tile gid="60"/>
+      <tile gid="60"/>
+      <tile gid="60"/>
+      <tile gid="60"/>
+      <tile gid="60"/>
+      <tile gid="60"/>
+      <tile gid="60"/>
+      <tile gid="60"/>
+      <tile gid="60"/>
+      <tile gid="60"/>
+      <tile gid="60"/>
+      <tile gid="60"/>
+      <tile gid="60"/>
+      <tile gid="60"/>
+      <tile gid="60"/>
+      <tile gid="60"/>
+      <tile gid="60"/>
+      <tile gid="60"/>
+      <tile gid="60"/>
+      <tile gid="60"/>
+      <tile gid="60"/>
+      <tile gid="60"/>
+      <tile gid="60"/>
+      <tile gid="60"/>
+      <tile gid="60"/>
+      <tile gid="60"/>
+      <tile gid="60"/>
+      <tile gid="60"/>
+      <tile gid="60"/>
+      <tile gid="60"/>
+      <tile gid="60"/>
+      <tile gid="60"/>
+      <tile gid="60"/>
+      <tile gid="60"/>
+      <tile gid="60"/>
+      <tile gid="60"/>
+      <tile gid="60"/>
+      <tile gid="60"/>
+    </data>
+  </layer>
+  <layer name="Tile Layer 2" width="7" height="7">
+    <data>
+      <tile gid="264"/>
+      <tile gid="334"/>
+      <tile gid="334"/>
+      <tile gid="334"/>
+      <tile gid="334"/>
+      <tile gid="334"/>
+      <tile gid="304"/>
+      <tile gid="244"/>
+      <tile gid="69"/>
+      <tile gid="226"/>
+      <tile gid="69"/>
+      <tile gid="69"/>
+      <tile gid="69"/>
+      <tile gid="244"/>
+      <tile gid="244"/>
+      <tile gid="0"/>
+      <tile gid="0"/>
+      <tile gid="0"/>
+      <tile gid="0"/>
+      <tile gid="0"/>
+      <tile gid="244"/>
+      <tile gid="244"/>
+      <tile gid="0"/>
+      <tile gid="88"/>
+      <tile gid="89"/>
+      <tile gid="90"/>
+      <tile gid="0"/>
+      <tile gid="244"/>
+      <tile gid="244"/>
+      <tile gid="0"/>
+      <tile gid="0"/>
+      <tile gid="0"/>
+      <tile gid="0"/>
+      <tile gid="0"/>
+      <tile gid="244"/>
+      <tile gid="244"/>
+      <tile gid="0"/>
+      <tile gid="0"/>
+      <tile gid="0"/>
+      <tile gid="0"/>
+      <tile gid="0"/>
+      <tile gid="244"/>
+      <tile gid="274"/>
+      <tile gid="334"/>
+      <tile gid="294"/>
+      <tile gid="0"/>
+      <tile gid="254"/>
+      <tile gid="334"/>
+      <tile gid="314"/>
+    </data>
+  </layer>
+  <objectgroup name="bridges" width="7" height="7">
+    <object name="shop2" class="Bridge" x="96" y="192" width="32" height="32" />
+    <object name="shop2" class="BridgeDestination" x="96" y="160" width="32" height="32" />
+  </objectgroup>
+  <objectgroup name="npcs" width="7" height="7">
+    <object class="Rudolph" x="96" y="64" width="32" height="32" />
+  </objectgroup>
+  <objectgroup name="items" width="7" height="7">
+    <object class="RudolphChest" x="160" y="64" width="32" height="32">
+          <animation name="idle" dx="1" dy="1" period="16" looping="true" file="graphics.png">29</animation>
+          <attribute name="name" value="Rudolph Chest" />
+          <items>
+            <object class="CoinPurse">
+              <animation name="idle" dx="1" dy="1" period="4" looping="false" file="graphics.png">9</animation>
+              <attribute name="name" value="CoinPurse" />
+              <attribute name="gold" value="500" />
+              <attribute name="takeable" value="true" />
+              <attribute name="usable" value="true" />
+              <attribute name="equipable" value="false" />
+              <attribute name="useUponTake" value="false" />
+              <attribute name="attackBonus" value="0" />
+              <attribute name="defenseBonus" value="0" />
+              <attribute name="magicMultiplier" value="1" />
+            </object>
+          </items>
+        </object>
+    <object class="RudolphChest" x="32" y="64" width="32" height="32">
+          <animation name="idle" dx="1" dy="1" period="16" looping="true" file="graphics.png">29</animation>
+          <attribute name="name" value="Rudolph Chest" />
+          <items>
+            <object class="EquipableItem">
+              <animation name="idle" dx="1" dy="1" period="1" looping="false" file="graphics.png">6</animation>
+              <attribute name="name" value="Rudolph Sword" />
+              <attribute name="gold" value="1000" />
+              <attribute name="takeable" value="true" />
+              <attribute name="usable" value="false" />
+              <attribute name="equipableSlot" value="0" />
+              <attribute name="attack" value="25" />
+              <attribute name="defense" value="0" />
+              <attribute name="magic" value="1" />
+              <attribute name="canChop" value="false" />
+            </object>
+          </items>
+        </object>
+  </objectgroup>
+</map>

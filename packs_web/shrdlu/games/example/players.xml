@@ -1,0 +1,26 @@
+<Characters>
+	<CharacterClass class="Warrior" super="PlayerCharacter" name="Warrior" >
+		<animation name="idle-left" dx="1" dy="1" period="4" looping="false" file="graphics2x-characters.png">2</animation>
+		<animation name="idle-up" dx="1" dy="1" period="4" looping="false" file="graphics2x-characters.png">2</animation>
+		<animation name="idle-right" dx="1" dy="1" period="4" looping="false" file="graphics2x-characters.png">0</animation>
+		<animation name="idle-down" dx="1" dy="1" period="4" looping="false" file="graphics2x-characters.png">0</animation>
+		<animation name="moving-left" dx="1" dy="1" period="4" looping="true" file="graphics2x-characters.png">2,3</animation>
+		<animation name="moving-up" dx="1" dy="1" period="4" looping="true" file="graphics2x-characters.png">2,3</animation>
+		<animation name="moving-right" dx="1" dy="1" period="4" looping="true" file="graphics2x-characters.png">0,1</animation>
+		<animation name="moving-down" dx="1" dy="1" period="4" looping="true" file="graphics2x-characters.png">0,1</animation>
+		<animation name="death" dx="1" dy="1" period="50" looping="false" file="graphics2x-characters.png">-1</animation>
+
+		<attribute name="gold" value="100"/>
+		<attribute name="hp" value="20"/>
+		<attribute name="mp" value="0"/>
+		<attribute name="attack" value="4"/>
+		<attribute name="defense" value="0"/>
+		<attribute name="attack_modifier" value="1.0"/>
+		<attribute name="defense_modifier" value="1.0"/>
+		<attribute name="canSwim" value="false"/>
+		<attribute name="walk_speed" value="16"/>
+
+		<onStart>
+		</onStart>		
+	</CharacterClass>
+</Characters>

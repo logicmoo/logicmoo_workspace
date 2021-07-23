@@ -1,0 +1,9 @@
+<Characters>
+	<CharacterClass class="Human" super="Character" name="Human"/>
+	<CharacterClass class="Animal" super="Character" name="Animal"/>
+	<CharacterClass class="Dragon" super="Animal" name="Dragon"/>
+	<CharacterClass class="Undead" super="Character" name="Undead"/>
+	<CharacterClass class="AbblegardCitizen" super="Character" name="Citizen of Abblegard"/>
+	<CharacterClass class="CultMember" super="Character" name="Member of the Cult of the Dragon"/>
+	<CharacterClass class="PlayerCharacter" super="Character" name="Player Character"/>
+</Characters>

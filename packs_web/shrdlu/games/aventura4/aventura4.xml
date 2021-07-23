@@ -1,0 +1,223 @@
+<A4Game name="Aventura4" title="Aventura 4"
+		allowSaveGames="true">
+
+	<!-- Intro screen configuration -->
+	<titleImage>title.png</titleImage>
+	<story>
+		<line>  Upon arriving to Abbledigit, and talking with the</line>
+		<line>local townspeople, you learned about the recent past</line>
+		<line>of the village.</line>
+		<line>  The village of Abbledigit was now a peaceful place.</line>
+		<line>In the past, Granner, the head of \"The Cult of the</line>
+		<line>dragon\" was finally defeated.</line>
+		<line>  The Cult of the Dragon was an organization that</line>
+		<line>worshipped a dragon called Blozard. Many years ago</line>
+		<line>Blozard was slain, and Granner took revenge upon</line>
+		<line>Abbledigit by building \"The Black Rock\", a black</line>
+		<line>tower where villagers were kidnapped and tortured...</line>
+		<line>  All that was in the past. But once day, a nervous</line>
+		<line>guard delivered you a message. Something was wrong</line>
+		<line>and the King was in need of your assistance.</line>
+		<line>  And this is how a new adventure begins...</line>
+	</story>
+	<ending id="1">
+		<line>  Contratulations, you completed Aventura 4!</line>
+		<line> </line>
+		<line>Blozard has been defeated once again. And peace will</line>
+		<line>return to Abbledigit. However, even if this should</line>
+		<line>be a moment of joy and relief. You cannot avoid</line>
+		<line>thinking about Cyril's last words...</line>
+		<line> </line>
+		<line>You hope they are empty words, but if he appeared</line>
+		<line>once what is going to stop him from appearing</line>
+		<line>again?</line>
+		<line>However, that is another story...</line>
+		<line> </line>
+		<line>Thanks for playing Aventura 4! Do not hesitate to</line>
+		<line>send any feedback or suggestion you might have.</line>
+	</ending>
+
+	<!-- Tiles: -->
+	<tiles sourcewidth="32" sourceheight="32" targetwidth="32" targetheight="32">
+		<!-- 
+			 0 - walkable
+			 1 - wall
+			 2 - tree, but not choppeable
+			 3 - choppeable tree
+			 4 - water			
+		-->
+		<types file="graphics.png">
+			0,0,0,0,1,0,0,0,0,0,
+			1,1,0,0,0,1,0,0,0,0,
+			4,0,0,0,0,0,0,0,0,0,
+			0,0,0,0,0,0,0,0,0,1,
+			0,1,1,1,2,3,1,1,1,1,
+			0,1,1,1,1,0,0,0,1,0,
+			0,0,0,1,0,0,1,0,1,0,
+			0,0,0,0,0,0,0,0,0,0,
+			0,0,0,0,0,0,1,1,1,1,
+			0,0,0,0,0,1,0,0,0,0,
+			0,0,0,0,0,1,0,0,0,0,
+			0,0,0,0,0,1,0,0,0,0,
+			0,0,0,0,0,1,0,0,0,0,
+			0,0,0,0,0,1,0,0,0,0,
+			0,0,0,0,0,0,0,1,0,0,
+			0,0,0,0,1,0,0,0,0,0,
+			0,0,0,0,0,0,0,0,0,0,
+			0,0,0,0,0,0,0,0,0,0,
+			0,0,0,0,0,0,0,0,0,0,
+			0,0,0,0,0,0,0,0,0,0,
+			0,0,0,0,1,0,0,0,0,0,
+			1,1,1,1,0,0,0,0,0,0,
+			1,1,1,1,0,1,0,0,0,0,
+			1,1,1,1,1,1,0,0,0,0,
+			1,1,1,1,1,1,0,0,0,0,
+			1,1,1,1,1,0,0,0,0,0,
+			1,1,1,1,1,0,0,0,0,0,
+			1,1,1,1,0,0,0,0,0,0,
+			1,1,1,1,0,0,0,0,0,0,
+			1,1,1,1,0,0,0,0,0,0,
+			1,1,1,1,0,0,0,0,0,0,
+			1,1,1,1,0,0,0,0,0,0,
+			1,1,1,1,0,0,0,0,0,0,
+			1,1,1,1,0,0,0,0,0,0,
+			1,1,1,1,0,0,0,0,0,0,
+			1,1,1,1,0,0,0,0,0,0,
+			1,1,1,1,0,0,0,0,0,0,
+		</types>
+		<seeThrough file="graphics.png">
+			0,0,0,0,0,0,0,0,0,0,
+			1,1,0,0,0,0,0,0,0,0,
+			0,0,0,0,0,0,0,0,0,0,
+			0,0,0,0,0,0,0,0,0,1,
+			0,0,0,0,0,0,0,0,0,1,
+			0,0,0,0,0,0,0,0,0,0,
+			0,0,0,0,0,0,1,0,1,0,
+			0,0,0,0,0,0,0,0,0,0,
+			0,0,0,0,0,0,0,0,0,0,
+			0,0,0,0,0,0,0,0,0,0,
+			0,0,0,0,0,0,0,0,0,0,
+			0,0,0,0,0,1,0,0,0,0,
+			0,0,0,0,0,0,0,0,0,0,
+			0,0,0,0,0,0,0,0,0,0,
+			0,0,0,0,0,0,0,0,0,0,
+			0,0,0,0,0,0,0,0,0,0,
+			0,0,0,0,0,0,0,0,0,0,
+			0,0,0,0,0,0,0,0,0,0,
+			0,0,0,0,0,0,0,0,0,0,
+			0,0,0,0,0,0,0,0,0,0,
+			0,0,0,0,1,0,0,0,0,0,
+			1,1,0,1,0,0,0,0,0,0,
+			1,1,0,1,0,0,0,0,0,0,
+			1,1,0,1,0,0,0,0,0,0,
+			1,1,0,1,0,0,0,0,0,0,
+			1,1,0,1,0,0,0,0,0,0,
+			1,1,0,1,0,0,0,0,0,0,
+			1,1,0,1,0,0,0,0,0,0,
+			1,1,0,1,0,0,0,0,0,0,
+			1,1,0,1,0,0,0,0,0,0,
+			1,1,0,1,0,0,0,0,0,0,
+			1,1,0,1,0,0,0,0,0,0,
+			1,1,0,1,0,0,0,0,0,0,
+			1,1,0,1,0,0,0,0,0,0,
+			1,1,0,1,0,0,0,0,0,0,
+			1,1,0,1,0,0,0,0,0,0,
+			1,1,0,1,0,0,0,0,0,0,
+		</seeThrough>
+		<canDig file="graphics.png">
+			0,0,0,0,0,0,0,0,0,0,
+			0,0,0,0,0,0,0,0,0,0,
+			0,0,0,0,0,0,0,0,0,0,
+			1,1,1,1,1,1,1,1,1,0,
+			1,0,0,0,0,0,0,0,0,0,
+			0,0,0,0,0,0,0,0,0,0,
+			0,0,0,0,0,0,0,0,0,0,
+			0,0,0,0,0,0,0,0,0,0,
+			0,0,0,0,0,0,0,0,0,0,
+			0,0,0,0,0,0,0,0,0,0,
+			0,0,0,0,0,0,0,0,0,0,
+			0,0,0,0,0,0,0,0,0,0,
+			0,0,0,0,0,0,0,0,0,0,
+			0,0,0,0,0,0,0,0,0,0,
+			0,0,0,0,0,0,0,0,0,0,
+			0,0,0,0,0,0,0,0,0,0,
+			0,0,0,0,0,0,0,0,0,0,
+			0,0,0,0,0,0,0,0,0,0,
+			0,0,0,0,0,0,0,0,0,0,
+			0,0,0,0,0,0,0,0,0,0,
+			0,0,0,0,0,0,0,0,0,0,
+			0,0,0,0,0,0,0,0,0,0,
+			0,0,0,0,0,0,0,0,0,0,
+			0,0,0,0,0,0,0,0,0,0,
+			0,0,0,0,0,0,0,0,0,0,
+			0,0,0,0,0,0,0,0,0,0,
+			0,0,0,0,0,0,0,0,0,0,
+			0,0,0,0,0,0,0,0,0,0,
+			0,0,0,0,0,0,0,0,0,0,
+			0,0,0,0,0,0,0,0,0,0,
+			0,0,0,0,0,0,0,0,0,0,
+			0,0,0,0,0,0,0,0,0,0,
+			0,0,0,0,0,0,0,0,0,0,
+			0,0,0,0,0,0,0,0,0,0,
+			0,0,0,0,0,0,0,0,0,0,
+			0,0,0,0,0,0,0,0,0,0,
+			0,0,0,0,0,0,0,0,0,0,				  
+  		</canDig>
+
+  		<!-- default animations: -->
+		<animation name="coinpurse" dx="1" dy="1" period="4" looping="false" file="graphics.png">9</animation>
+		<animation name="curious" dx="1" dy="1" period="8" looping="true" file="graphics.png">74,-1</animation>
+		<animation name="scared" dx="1" dy="1" period="8" looping="true" file="graphics.png">84,-1</animation>
+		<animation name="angry" dx="1" dy="1" period="8" looping="true" file="graphics.png">94,-1</animation>
+		<animation name="tired" dx="1" dy="1" period="8" looping="true" file="graphics.png">104,-1</animation>
+		<animation name="happy" dx="1" dy="1" period="8" looping="true" file="graphics.png">75,-1</animation>
+		<animation name="magic missile" dx="1" dy="1" period="8" looping="false" file="graphics.png">114</animation>		
+		<animation name="fireball" dx="1" dy="1" period="8" looping="false" file="graphics.png">124</animation>		
+		<animation name="incinerate" dx="1" dy="1" period="8" looping="false" file="graphics.png">134</animation>		
+	</tiles>	
+
+	<!-- Game Definition -->
+
+	<characterDefinition file="baseclasses.xml"/>
+	<characterDefinition file="npcs.xml"/>
+	<characterDefinition file="enemies.xml"/>
+	<characterDefinition file="players.xml"/>
+
+	<objectDefinition file="objects.xml"/>
+
+	<map file="abblegard.xml"/>
+	<map file="castle.xml"/>
+	<map file="shop1.xml"/>
+	<map file="shop2.xml"/>
+	<map file="house1.xml"/>
+	<map file="house2.xml"/>
+	<map file="inn.xml"/>
+	<map file="forest.xml"/>
+	<map file="blackrockentrance.xml"/>
+	<map file="blackrock.xml"/>
+	<map file="blackrockbasement.xml"/>
+	<map file="library.xml"/>
+	<map file="blackrocktower.xml"/>
+	<map file="blackrockgranner.xml"/>
+	<map file="sea.xml"/>
+	<map file="northsea.xml"/>
+	<map file="blozardtower1.xml"/>
+	<map file="blozardtower2.xml"/>
+	<map file="blozardtower3.xml"/>
+	<map file="blozardtower4.xml"/>
+	<map file="blozardtower5.xml"/>
+
+	<player class="Warrior" x="512" y="512" map="0"/>
+	<player class="Wizard" x="544" y="512" map="0"/>
+
+	<onStart>
+		<addTopic topic="yourself" text="tell me about yourself"/>
+		<addTopic topic="abblegard" text="what can you tell me about Abblegard?"/>
+		<addTopic topic="the king" text="what can you tell me about the King?"/>
+		<addTopic topic="rumors" text="Have you heard any rumors lately?"/>
+	</onStart>
+
+	<eventRule event="story_state" scope="game" variable="Cyril" value="dead" once="true">
+		<gameComplete/>
+	</eventRule>	
+</A4Game>

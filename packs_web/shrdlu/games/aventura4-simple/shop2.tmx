@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.0" orientation="orthogonal" width="7" height="7" tilewidth="64" tileheight="64">
+ <properties>
+  <property name="name" value="an armory"/>
+ </properties>
+ <tileset firstgid="1" name="graphics" tilewidth="64" tileheight="64">
+  <image source="graphics2x.png" width="640" height="2368"/>
+ </tileset>
+ <layer name="Tile Layer 1" width="7" height="7">
+  <data>
+   <tile gid="60"/>
+   <tile gid="60"/>
+   <tile gid="60"/>
+   <tile gid="60"/>
+   <tile gid="60"/>
+   <tile gid="60"/>
+   <tile gid="60"/>
+   <tile gid="60"/>
+   <tile gid="60"/>
+   <tile gid="60"/>
+   <tile gid="60"/>
+   <tile gid="60"/>
+   <tile gid="60"/>
+   <tile gid="60"/>
+   <tile gid="60"/>
+   <tile gid="60"/>
+   <tile gid="60"/>
+   <tile gid="60"/>
+   <tile gid="60"/>
+   <tile gid="60"/>
+   <tile gid="60"/>
+   <tile gid="60"/>
+   <tile gid="60"/>
+   <tile gid="60"/>
+   <tile gid="60"/>
+   <tile gid="60"/>
+   <tile gid="60"/>
+   <tile gid="60"/>
+   <tile gid="60"/>
+   <tile gid="60"/>
+   <tile gid="60"/>
+   <tile gid="60"/>
+   <tile gid="60"/>
+   <tile gid="60"/>
+   <tile gid="60"/>
+   <tile gid="60"/>
+   <tile gid="60"/>
+   <tile gid="60"/>
+   <tile gid="60"/>
+   <tile gid="60"/>
+   <tile gid="60"/>
+   <tile gid="60"/>
+   <tile gid="60"/>
+   <tile gid="60"/>
+   <tile gid="60"/>
+   <tile gid="60"/>
+   <tile gid="60"/>
+   <tile gid="60"/>
+   <tile gid="60"/>
+  </data>
+ </layer>
+ <layer name="Tile Layer 2" width="7" height="7">
+  <data>
+   <tile gid="11"/>
+   <tile gid="11"/>
+   <tile gid="11"/>
+   <tile gid="11"/>
+   <tile gid="11"/>
+   <tile gid="11"/>
+   <tile gid="11"/>
+   <tile gid="11"/>
+   <tile gid="69"/>
+   <tile gid="69"/>
+   <tile gid="69"/>
+   <tile gid="69"/>
+   <tile gid="69"/>
+   <tile gid="11"/>
+   <tile gid="11"/>
+   <tile gid="0"/>
+   <tile gid="0"/>
+   <tile gid="0"/>
+   <tile gid="0"/>
+   <tile gid="0"/>
+   <tile gid="11"/>
+   <tile gid="11"/>
+   <tile gid="0"/>
+   <tile gid="88"/>
+   <tile gid="89"/>
+   <tile gid="90"/>
+   <tile gid="0"/>
+   <tile gid="11"/>
+   <tile gid="11"/>
+   <tile gid="0"/>
+   <tile gid="0"/>
+   <tile gid="0"/>
+   <tile gid="0"/>
+   <tile gid="0"/>
+   <tile gid="11"/>
+   <tile gid="11"/>
+   <tile gid="0"/>
+   <tile gid="0"/>
+   <tile gid="0"/>
+   <tile gid="0"/>
+   <tile gid="0"/>
+   <tile gid="11"/>
+   <tile gid="11"/>
+   <tile gid="11"/>
+   <tile gid="11"/>
+   <tile gid="0"/>
+   <tile gid="11"/>
+   <tile gid="11"/>
+   <tile gid="11"/>
+  </data>
+ </layer>
+ <objectgroup name="bridges" width="7" height="7">
+  <object name="shop2" type="bridge" x="192" y="384" width="64" height="64"/>
+  <object name="shop2" type="bridgedestination" x="192" y="320" width="64" height="64"/>
+ </objectgroup>
+ <objectgroup name="npcs" width="7" height="7">
+  <object name="new Rudolph()" type="npc" x="192" y="128" width="64" height="64"/>
+ </objectgroup>
+ <objectgroup name="items" width="7" height="7">
+  <object name="new Chest(&quot;Chest&quot;, new ItemCoinPurse(500, Animation.fromTile(9,&quot;graphics2x.png&quot;)), Animation.fromTile(29,&quot;graphics2x.png&quot;))" type="item" x="320" y="128" width="64" height="64"/>
+  <object name="new Chest(&quot;Small chest&quot;,new EquipableItem(&quot;Rudolph Sword&quot;, Animation.fromTile(6,&quot;graphics2x.png&quot;), ITEM_WEAPON, 25, 0, 1.0, false, 1000), Animation.fromTile(29,&quot;graphics2x.png&quot;))" type="item" x="64" y="128" width="64" height="64"/>
+ </objectgroup>
+</map>

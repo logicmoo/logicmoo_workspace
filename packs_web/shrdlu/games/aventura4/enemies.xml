@@ -1,0 +1,803 @@
+<Characters>
+	<CharacterClass class="Frog" super="Animal" name="a Frog">
+		<animation name="idle-left" dx="1" dy="1" period="16" looping="false" file="graphics.png">112</animation>
+		<animation name="idle-up" dx="1" dy="1" period="16" looping="false" file="graphics.png">112</animation>
+		<animation name="idle-right" dx="1" dy="1" period="16" looping="false" file="graphics.png">110</animation>
+		<animation name="idle-down" dx="1" dy="1" period="16" looping="false" file="graphics.png">110</animation>
+		<animation name="moving-left" dx="1" dy="1" period="16" looping="true" file="graphics.png">112,113</animation>
+		<animation name="moving-up" dx="1" dy="1" period="16" looping="true" file="graphics.png">112,113</animation>
+		<animation name="moving-right" dx="1" dy="1" period="16" looping="true" file="graphics.png">110,111</animation>
+		<animation name="moving-down" dx="1" dy="1" period="16" looping="true" file="graphics.png">110,111</animation>
+
+		<attribute name="gives_experience" value="1"/>
+		<attribute name="gold" value="0,2"/>
+		<attribute name="hp" value="4"/>
+		<attribute name="mp" value="0"/>
+		<attribute name="attack" value="1"/>
+		<attribute name="defense" value="0"/>
+		<attribute name="canSwim" value="false"/>
+		<attribute name="walk_speed" value="32"/>
+		<attribute name="sightRadius" value="5"/>
+		<attribute name="respawn" value="1.0"/>
+
+		<eventRule event="action_attack" hit="true"><playSound sound="sfx/hit.wav"/></eventRule>
+		<eventRule event="action_attack" hit="false"><playSound sound="sfx/miss.wav"/></eventRule>		
+
+        <items>
+	        <object class="HPPotion" probability="0.15">
+	          <animation name="idle" dx="1" dy="1" period="1" looping="false" file="graphics.png">1</animation>
+	          <attribute name="name" value="HP Potion+5"/>
+	          <attribute name="gold" value="15"/>
+	          <attribute name="takeable" value="true"/>
+	          <attribute name="usable" value="true"/>
+	          <attribute name="hp" value="5"/>
+	        </object>
+        </items>
+
+		<inferenceRule premise="attack(?1,?2),is_a(?2,?3),friendly(?3),is_a(?1,?4)" conclusion="unfriendly(?4)" frequency="0.25" activation="500" cooldown="50"/>
+
+		<onStart>
+			<addWME wme="friendly(Frog)" activation="3000"/>	
+			<addWME wme="unfriendly(Snake)" activation="3000"/>	
+			<addBehavior priority="0"><BLeftRight/></addBehavior>
+			<addBehavior priority="10"><BCurious pickup="true" sort="Object" time="200"/></addBehavior>
+			<addBehavior priority="25"><BTired timeWalking="400" restTime="200"/></addBehavior>
+			<addBehavior priority="50"><BFleeUnfriendly/></addBehavior>
+		</onStart>
+	</CharacterClass>
+
+
+	<CharacterClass class="Snake" super="Animal" name="a Snake">
+		<animation name="idle-left" dx="1" dy="1" period="12" looping="false" file="graphics.png">122</animation>
+		<animation name="idle-up" dx="1" dy="1" period="12" looping="false" file="graphics.png">122</animation>
+		<animation name="idle-right" dx="1" dy="1" period="12" looping="false" file="graphics.png">120</animation>
+		<animation name="idle-down" dx="1" dy="1" period="12" looping="false" file="graphics.png">120</animation>
+		<animation name="moving-left" dx="1" dy="1" period="12" looping="true" file="graphics.png">122,123</animation>
+		<animation name="moving-up" dx="1" dy="1" period="12" looping="true" file="graphics.png">122,123</animation>
+		<animation name="moving-right" dx="1" dy="1" period="12" looping="true" file="graphics.png">120,121</animation>
+		<animation name="moving-down" dx="1" dy="1" period="12" looping="true" file="graphics.png">120,121</animation>
+
+		<attribute name="gives_experience" value="2"/>
+		<attribute name="gold" value="0"/>
+		<attribute name="hp" value="6"/>
+		<attribute name="mp" value="0"/>
+		<attribute name="attack" value="3"/>
+		<attribute name="defense" value="1"/>
+		<attribute name="canSwim" value="false"/>
+		<attribute name="walk_speed" value="24"/>
+		<attribute name="sightRadius" value="4"/>
+		<attribute name="respawn" value="1.0"/>
+
+		<eventRule event="action_attack" hit="true"><playSound sound="sfx/hit.wav"/></eventRule>
+		<eventRule event="action_attack" hit="false"><playSound sound="sfx/miss.wav"/></eventRule>		
+
+		<onStart>
+			<addWME wme="unfriendly(Human)" activation="3000"/>	
+			<addWME wme="unfriendly(Frog)" activation="3000"/>	
+			<addBehavior priority="50"><BAttackUnfriendly/></addBehavior>
+			<addBehavior priority="0"><BWander forwardFactor="2" pStop="0" stopTime="50"/></addBehavior>
+		</onStart>
+	</CharacterClass>
+
+
+	<CharacterClass class="Crab" super="Animal" name="a Giant Crab">
+		<animation name="idle-left" dx="1" dy="1" period="6" looping="false" file="graphics.png">132</animation>
+		<animation name="idle-up" dx="1" dy="1" period="6" looping="false" file="graphics.png">132</animation>
+		<animation name="idle-right" dx="1" dy="1" period="6" looping="false" file="graphics.png">130</animation>
+		<animation name="idle-down" dx="1" dy="1" period="6" looping="false" file="graphics.png">130</animation>
+		<animation name="moving-left" dx="1" dy="1" period="6" looping="true" file="graphics.png">132,133</animation>
+		<animation name="moving-up" dx="1" dy="1" period="6" looping="true" file="graphics.png">132,133</animation>
+		<animation name="moving-right" dx="1" dy="1" period="6" looping="true" file="graphics.png">130,131</animation>
+		<animation name="moving-down" dx="1" dy="1" period="6" looping="true" file="graphics.png">130,131</animation>
+
+		<attribute name="gives_experience" value="5"/>
+		<attribute name="gold" value="0,1-10"/>
+		<attribute name="hp" value="15"/>
+		<attribute name="mp" value="0"/>
+		<attribute name="attack" value="4"/>
+		<attribute name="defense" value="2"/>
+		<attribute name="canSwim" value="false"/>
+		<attribute name="walk_speed" value="24"/>
+		<attribute name="sightRadius" value="4"/>
+		<attribute name="respawn" value="1.0"/>
+
+		<eventRule event="action_attack" hit="true"><playSound sound="sfx/hit.wav"/></eventRule>
+		<eventRule event="action_attack" hit="false"><playSound sound="sfx/miss.wav"/></eventRule>		
+
+        <items>
+	        <object class="HPPotion" probability="0.15">
+	          <animation name="idle" dx="1" dy="1" period="1" looping="false" file="graphics.png">1</animation>
+	          <attribute name="name" value="HP Potion+5"/>
+	          <attribute name="gold" value="15"/>
+	          <attribute name="takeable" value="true"/>
+	          <attribute name="usable" value="true"/>
+	          <attribute name="hp" value="5"/>
+	        </object>
+        </items>
+
+		<inferenceRule premise="attack(?1,?2),is_a(?2,?3),friendly(?3),is_a(?1,?4)" conclusion="unfriendly(?4)" frequency="0.25" activation="500" cooldown="50"/>
+
+		<onStart>
+			<addWME wme="friendly(Crab)" activation="3000"/>	
+			<addBehavior priority="50"><BAttackUnfriendly/></addBehavior>
+			<addBehavior priority="25"><BCurious pickup="true" sort="Object" time="200"/></addBehavior>
+			<addBehavior priority="0"><BWander forwardFactor="2" pStop="0" stopTime="50"/></addBehavior>
+		</onStart>
+	</CharacterClass>
+
+
+	<CharacterClass class="Monk" super="Human,CultMember" name="a Monk">
+		<animation name="idle-left" dx="1" dy="1" period="4" looping="false" file="graphics.png">108</animation>
+		<animation name="idle-up" dx="1" dy="1" period="4" looping="false" file="graphics.png">108</animation>
+		<animation name="idle-right" dx="1" dy="1" period="4" looping="false" file="graphics.png">106</animation>
+		<animation name="idle-down" dx="1" dy="1" period="4" looping="false" file="graphics.png">106</animation>
+		<animation name="moving-left" dx="1" dy="1" period="4" looping="true" file="graphics.png">108,109</animation>
+		<animation name="moving-up" dx="1" dy="1" period="4" looping="true" file="graphics.png">108,109</animation>
+		<animation name="moving-right" dx="1" dy="1" period="4" looping="true" file="graphics.png">106,107</animation>
+		<animation name="moving-down" dx="1" dy="1" period="4" looping="true" file="graphics.png">106,107</animation>
+
+		<attribute name="gives_experience" value="8"/>
+		<attribute name="gold" value="10"/>
+		<attribute name="hp" value="20"/>
+		<attribute name="mp" value="0"/>
+		<attribute name="attack" value="6"/>
+		<attribute name="defense" value="4"/>
+		<attribute name="canSwim" value="false"/>
+		<attribute name="walk_speed" value="24"/>
+		<attribute name="respawn" value="0.33"/>
+		<attribute name="sightRadius" value="5"/>
+
+		<eventRule event="action_attack" hit="true"><playSound sound="sfx/hit.wav"/></eventRule>
+		<eventRule event="action_attack" hit="false"><playSound sound="sfx/miss.wav"/></eventRule>		
+
+        <items>
+	        <object class="Key" probability="0.25">
+	          <animation name="idle" dx="1" dy="1" period="1" looping="false" file="graphics.png">28</animation>
+	          <attribute name="name" value="Small key"/>
+	          <attribute name="takeable" value="true"/>
+	          <attribute name="usable" value="false"/>
+	          <attribute name="keyID" value="BLACKROCK"/>
+	        </object>
+	        <object class="HPPotion" probability="0.25">
+	          <animation name="idle" dx="1" dy="1" period="1" looping="false" file="graphics.png">1</animation>
+	          <attribute name="name" value="HP Potion+10"/>
+	          <attribute name="gold" value="25"/>
+	          <attribute name="takeable" value="true"/>
+	          <attribute name="usable" value="true"/>
+	          <attribute name="hp" value="10"/>
+	        </object>
+        </items>
+
+		<inferenceRule premise="attack(?1,?2),is_a(?2,?3),friendly(?3),is_a(?1,?4)" conclusion="unfriendly(?4)" frequency="0.25" activation="3000" cooldown="50"/>
+
+		<onStart>
+			<addWME wme="friendly(CultMember)" activation="3000"/>	
+			<addWME wme="unfriendly(AbblegardCitizen)" activation="3000"/>	
+			<addWME wme="unfriendly(PlayerCharacter)" activation="3000"/>	
+			<addCurrentPositionWME name="home" activation="3000"/>
+			<addBehavior priority="75"><BYellToUnfriendly message="Intruders!"/></addBehavior>
+			<addBehavior priority="50"><BAttackUnfriendly/></addBehavior>
+			<addBehavior priority="0"><BWander forwardFactor="1" pStop="0.5" stopTime="200"/></addBehavior>
+			<addBehavior priority="25"><BFollowAngryFriendly radius="64"/></addBehavior>
+		</onStart>
+	</CharacterClass>
+
+
+	<CharacterClass class="Priest" super="Human,CultMember" name="a Priest">
+		<animation name="idle-left" dx="1" dy="1" period="4" looping="false" file="graphics.png">118</animation>
+		<animation name="idle-up" dx="1" dy="1" period="4" looping="false" file="graphics.png">118</animation>
+		<animation name="idle-right" dx="1" dy="1" period="4" looping="false" file="graphics.png">116</animation>
+		<animation name="idle-down" dx="1" dy="1" period="4" looping="false" file="graphics.png">116</animation>
+		<animation name="moving-left" dx="1" dy="1" period="4" looping="true" file="graphics.png">118,119</animation>
+		<animation name="moving-up" dx="1" dy="1" period="4" looping="true" file="graphics.png">118,119</animation>
+		<animation name="moving-right" dx="1" dy="1" period="4" looping="true" file="graphics.png">116,117</animation>
+		<animation name="moving-down" dx="1" dy="1" period="4" looping="true" file="graphics.png">116,117</animation>
+
+		<attribute name="gives_experience" value="12"/>
+		<attribute name="gold" value="25"/>
+		<attribute name="hp" value="30"/>
+		<attribute name="mp" value="10"/>
+		<attribute name="attack" value="7"/>
+		<attribute name="defense" value="6"/>
+		<attribute name="canSwim" value="false"/>
+		<attribute name="walk_speed" value="24"/>
+		<attribute name="respawn" value="0.5"/>
+		<attribute name="sightRadius" value="6"/>
+
+		<eventRule event="action_attack" hit="true"><playSound sound="sfx/hit.wav"/></eventRule>
+		<eventRule event="action_attack" hit="false"><playSound sound="sfx/miss.wav"/></eventRule>		
+		<eventRule event="action_spell" spell="magic missile"><playSound sound="sfx/spell-1.wav"/></eventRule>
+
+	    <items>
+	        <object class="EquipableItem" probability="0.5">
+	          <animation name="idle" dx="1" dy="1" period="1" looping="false" file="graphics.png">148</animation>
+	          <attribute name="name" value="Dagger"/>
+	          <attribute name="gold" value="75"/>
+	          <attribute name="takeable" value="true"/>
+	          <attribute name="usable" value="false"/>
+	          <attribute name="equipableSlot" value="0"/>
+	          <attribute name="attack" value="3"/>
+	          <attribute name="defense" value="0"/>
+	          <attribute name="magic" value="1"/>
+	          <attribute name="canChop" value="false"/>
+	        </object>
+   	        <object class="Scroll" probability="0.2">
+	          <animation name="idle" dx="1" dy="1" period="1" looping="false" file="graphics.png">144</animation>
+	          <attribute name="name" value="Dwindling Scroll"/>
+	          <attribute name="gold" value="100"/>
+	          <attribute name="spell" value="4"/>
+	        </object>	    	
+	        <object class="Scroll" probability="0.2">
+	          <animation name="idle" dx="1" dy="1" period="1" looping="false" file="graphics.png">144</animation>
+	          <attribute name="name" value="Growing Scroll"/>
+	          <attribute name="gold" value="200"/>
+	          <attribute name="spell" value="3"/>
+	        </object>
+      	    <object class="HPPotion" probability="0.25">
+	          <animation name="idle" dx="1" dy="1" period="1" looping="false" file="graphics.png">1</animation>
+	          <attribute name="name" value="HP Potion+10"/>
+	          <attribute name="gold" value="25"/>
+	          <attribute name="hp" value="10"/>
+	        </object>
+	        <object class="MPPotion">
+	          <animation name="idle" dx="1" dy="1" period="1" looping="false" file="graphics.png">5</animation>
+	          <attribute name="name" value="MP Potion+10"/>
+	          <attribute name="gold" value="25"/>
+	          <attribute name="mp" value="10"/>
+	        </object>
+        </items>
+
+		<spell>magic missile</spell>
+
+		<inferenceRule premise="attack(?1,?2),is_a(?2,?3),friendly(?3),is_a(?1,?4)" conclusion="unfriendly(?4)" frequency="0.25" activation="3000" cooldown="50"/>
+
+		<onStart>
+			<addWME wme="friendly(CultMember)" activation="3000"/>	
+			<addWME wme="unfriendly(AbblegardCitizen)" activation="3000"/>	
+			<addWME wme="unfriendly(PlayerCharacter)" activation="3000"/>	
+			<addCurrentPositionWME name="home" activation="3000"/>
+			<addBehavior priority="75"><BYellToUnfriendly message="Intruders!"/></addBehavior>
+			<addBehavior priority="50"><BAttackUnfriendly/></addBehavior>
+			<addBehavior priority="0"><BWander forwardFactor="1" pStop="0.5" stopTime="200"/></addBehavior>
+			<addBehavior priority="25"><BFollowAngryFriendly radius="64"/></addBehavior>
+		</onStart>
+	</CharacterClass>
+
+
+	<CharacterClass class="Salvatore" super="Priest" name="Salvatore">
+		<animation name="idle-left" dx="1" dy="1" period="4" looping="false" file="graphics.png">118</animation>
+		<animation name="idle-up" dx="1" dy="1" period="4" looping="false" file="graphics.png">118</animation>
+		<animation name="idle-right" dx="1" dy="1" period="4" looping="false" file="graphics.png">116</animation>
+		<animation name="idle-down" dx="1" dy="1" period="4" looping="false" file="graphics.png">116</animation>
+		<animation name="moving-left" dx="1" dy="1" period="4" looping="true" file="graphics.png">118,119</animation>
+		<animation name="moving-up" dx="1" dy="1" period="4" looping="true" file="graphics.png">118,119</animation>
+		<animation name="moving-right" dx="1" dy="1" period="4" looping="true" file="graphics.png">116,117</animation>
+		<animation name="moving-down" dx="1" dy="1" period="4" looping="true" file="graphics.png">116,117</animation>
+
+		<attribute name="gives_experience" value="15"/>
+		<attribute name="gold" value="25"/>
+		<attribute name="hp" value="40"/>
+		<attribute name="mp" value="10"/>
+		<attribute name="attack" value="8"/>
+		<attribute name="defense" value="8"/>
+		<attribute name="canSwim" value="false"/>
+		<attribute name="walk_speed" value="40"/>
+		<attribute name="respawn" value="0.0"/>
+		<attribute name="sightRadius" value="6"/>
+
+		<eventRule event="action_attack" hit="true"><playSound sound="sfx/hit.wav"/></eventRule>
+		<eventRule event="action_attack" hit="false"><playSound sound="sfx/miss.wav"/></eventRule>		
+		<eventRule event="action_spell" spell="magic missile"><playSound sound="sfx/spell-1.wav"/></eventRule>
+
+		<items>
+	        <object class="EquipableItem" probability="0.5">
+	          <animation name="idle" dx="1" dy="1" period="1" looping="false" file="graphics.png">148</animation>
+	          <attribute name="name" value="Dagger"/>
+	          <attribute name="gold" value="75"/>
+	          <attribute name="takeable" value="true"/>
+	          <attribute name="usable" value="false"/>
+	          <attribute name="equipableSlot" value="0"/>
+	          <attribute name="attack" value="3"/>
+	          <attribute name="defense" value="0"/>
+	          <attribute name="magic" value="1"/>
+	          <attribute name="canChop" value="false"/>
+	        </object>
+   	        <object class="Scroll" probability="0.2">
+	          <animation name="idle" dx="1" dy="1" period="1" looping="false" file="graphics.png">144</animation>
+	          <attribute name="name" value="Dwindling Scroll"/>
+	          <attribute name="gold" value="100"/>
+	          <attribute name="spell" value="4"/>
+	        </object>	    	
+	        <object class="Scroll" probability="0.2">
+	          <animation name="idle" dx="1" dy="1" period="1" looping="false" file="graphics.png">144</animation>
+	          <attribute name="name" value="Growing Scroll"/>
+	          <attribute name="gold" value="200"/>
+	          <attribute name="spell" value="3"/>
+	        </object>
+	        <object class="Key">
+	          <animation name="idle" dx="1" dy="1" period="1" looping="false" file="graphics.png">28</animation>
+	          <attribute name="name" value="polished key"/>
+	          <attribute name="keyID" value="CENTERKEY"/>
+	        </object>
+        </items>
+
+		<spell>magic missile</spell>		
+
+		<inferenceRule premise="attack(?1,?2),is_a(?2,?3),friendly(?3),is_a(?1,?4)" conclusion="unfriendly(?4)" frequency="0.25" activation="3000" cooldown="50"/>
+
+		<onStart>
+			<addWME wme="friendly(CultMember)" activation="3000"/>	
+			<addWME wme="unfriendly(AbblegardCitizen)" activation="3000"/>	
+			<addWME wme="unfriendly(PlayerCharacter)" activation="3000"/>	
+			<addCurrentPositionWME name="home" activation="3000"/>
+			<addBehavior priority="75"><BYellToUnfriendly message="Salvatore... will... defeat you!"/></addBehavior>
+			<addBehavior priority="50"><BAttackUnfriendly/></addBehavior>
+			<addBehavior priority="0"><BWander forwardFactor="1" pStop="0.5" stopTime="200"/></addBehavior>
+			<addBehavior priority="25"><BFollowAngryFriendly radius="64"/></addBehavior>
+		</onStart>
+	</CharacterClass>
+
+
+	<CharacterClass class="Granner" super="*Skeleton,CultMember" name="Granner">
+		<animation name="idle-left" dx="1" dy="1" period="4" looping="false" file="graphics.png">162</animation>
+		<animation name="idle-up" dx="1" dy="1" period="4" looping="false" file="graphics.png">162</animation>
+		<animation name="idle-right" dx="1" dy="1" period="4" looping="false" file="graphics.png">160</animation>
+		<animation name="idle-down" dx="1" dy="1" period="4" looping="false" file="graphics.png">160</animation>
+		<animation name="moving-left" dx="1" dy="1" period="4" looping="true" file="graphics.png">162,163</animation>
+		<animation name="moving-up" dx="1" dy="1" period="4" looping="true" file="graphics.png">162,163</animation>
+		<animation name="moving-right" dx="1" dy="1" period="4" looping="true" file="graphics.png">160,161</animation>
+		<animation name="moving-down" dx="1" dy="1" period="4" looping="true" file="graphics.png">160,161</animation>
+
+		<attribute name="gives_experience" value="50"/>
+		<attribute name="gold" value="25"/>
+		<attribute name="hp" value="100"/>
+		<attribute name="mp" value="25"/>
+		<attribute name="attack" value="10"/>
+		<attribute name="defense" value="10"/>
+		<attribute name="canSwim" value="false"/>
+		<attribute name="walk_speed" value="24"/>
+		<attribute name="respawn" value="0.0"/>
+		<attribute name="sightRadius" value="8"/>
+
+		<eventRule event="action_attack" hit="true"><playSound sound="sfx/hit.wav"/></eventRule>
+		<eventRule event="action_attack" hit="false"><playSound sound="sfx/miss.wav"/></eventRule>		
+		<eventRule event="action_spell" spell="magic missile"><playSound sound="sfx/spell-1.wav"/></eventRule>
+		<eventRule event="action_spell" spell="decrease"><playSound sound="sfx/spell-2.wav"/></eventRule>
+
+	    <items>
+	        <object class="EquipableItem">
+	          <animation name="idle" dx="1" dy="1" period="1" looping="false" file="graphics.png">8</animation>
+	          <attribute name="name" value="Granner Wand"/>
+	          <attribute name="gold" value="2000"/>
+	          <attribute name="takeable" value="true"/>
+	          <attribute name="usable" value="false"/>
+	          <attribute name="equipableSlot" value="0"/>
+	          <attribute name="attack" value="10"/>
+	          <attribute name="defense" value="2"/>
+	          <attribute name="magic" value="2"/>
+	          <attribute name="canChop" value="false"/>
+	        </object>
+	        <object class="Scroll" probability="0.5">
+	          <animation name="idle" dx="1" dy="1" period="1" looping="false" file="graphics.png">144</animation>
+	          <attribute name="name" value="Burning Scroll"/>
+	          <attribute name="gold" value="100"/>
+	          <attribute name="spell" value="5"/>
+	        </object>
+	        <object class="Wand" probability="0.5">
+	          <animation name="idle" dx="1" dy="1" period="1" looping="false" file="graphics.png">224</animation>
+	          <attribute name="name" value="Fire wand"/>
+	          <attribute name="gold" value="500"/>
+	          <attribute name="spell" value="5"/>
+	          <attribute name="charges" value="10"/>
+	        </object>
+	    </items>		
+
+		<spell>magic missile</spell>	
+		<spell>decrease</spell>
+
+		<conversationGraph name="granner-conversationgraph.xml"/>
+
+		<inferenceRule premise="attack(?1,?2),is_a(?2,?3),friendly(?3),is_a(?1,?4)" conclusion="unfriendly(?4)" frequency="0.25" activation="3000" cooldown="50"/>
+
+		<onStart>
+			<addWME wme="friendly(CultMember)" activation="3000"/>	
+			<pendingTalk character="PlayerCharacter" text="So, you have finally come!"/>
+			<pendingTalk character="PlayerCharacter" text="Do you recognize me?"/>
+			<pendingTalk character="PlayerCharacter" text="Hahaha! Yes! I am Granner! I'm alive!">
+				<storyState scope="game" variable="Granner" value="alive"/>
+				<addTopic topic="Granner" text="what can you tell me about Granner?"/>
+			</pendingTalk>
+			<pendingTalk character="PlayerCharacter" text="As you see, you are late!"/>
+			<pendingTalk character="PlayerCharacter" text="We were faster than you and now... we are back to life!"/>
+			<pendingTalk character="PlayerCharacter" text="Yes, I said 'we', Blozard is alive too! hahaha">
+				<addTopic topic="blozard" text="What can you tell me about Blozard?"/>
+			</pendingTalk>
+			<pendingTalk character="PlayerCharacter" text="And he is much stronger than he ever was!"/>
+			<pendingTalk character="PlayerCharacter" text="But before any one finds out it'll be too late, you will never find his hideout!"/>
+			<pendingTalk character="PlayerCharacter" text="Do you want to know how this happened?"/>
+			<pendingTalk character="PlayerCharacter" text="Well, you want to know too much! But bring this name to your grave..."/>
+			<pendingTalk character="PlayerCharacter" text="Cyril!!!">
+				<goto x="96" y="64"/>
+				<use x="96" y="64"/>
+				<addWME wme="unfriendly(AbblegardCitizen)" activation="3000"/>	
+				<addWME wme="unfriendly(PlayerCharacter)" activation="3000"/>	
+			</pendingTalk>
+			<addCurrentPositionWME name="home" activation="3000"/>
+			<addBehavior priority="50"><BAttackUnfriendly/></addBehavior>
+			<addBehavior priority="0"><BWander forwardFactor="1" pStop="0.5" stopTime="200"/></addBehavior>
+		</onStart>
+		<onEnd>
+			<storyState scope="game" variable="Granner" value="dead"/>
+		</onEnd>
+	</CharacterClass>
+
+
+	<CharacterClass class="Spider" super="Animal" name="a Spider">
+		<animation name="idle-left" dx="1" dy="1" period="12" looping="false" file="graphics.png">152</animation>
+		<animation name="idle-up" dx="1" dy="1" period="12" looping="false" file="graphics.png">152</animation>
+		<animation name="idle-right" dx="1" dy="1" period="12" looping="false" file="graphics.png">150</animation>
+		<animation name="idle-down" dx="1" dy="1" period="12" looping="false" file="graphics.png">150</animation>
+		<animation name="moving-left" dx="1" dy="1" period="12" looping="true" file="graphics.png">152,153</animation>
+		<animation name="moving-up" dx="1" dy="1" period="12" looping="true" file="graphics.png">152,153</animation>
+		<animation name="moving-right" dx="1" dy="1" period="12" looping="true" file="graphics.png">150,151</animation>
+		<animation name="moving-down" dx="1" dy="1" period="12" looping="true" file="graphics.png">150,151</animation>
+
+		<attribute name="gives_experience" value="10"/>
+		<attribute name="gold" value="0"/>
+		<attribute name="hp" value="25"/>
+		<attribute name="mp" value="0"/>
+		<attribute name="attack" value="8"/>
+		<attribute name="defense" value="2"/>
+		<attribute name="canSwim" value="false"/>
+		<attribute name="walk_speed" value="24"/>
+		<attribute name="sightRadius" value="4"/>
+		<attribute name="respawn" value="1.0"/>
+
+		<eventRule event="action_attack" hit="true"><playSound sound="sfx/hit.wav"/></eventRule>
+		<eventRule event="action_attack" hit="false"><playSound sound="sfx/miss.wav"/></eventRule>		
+
+		<onStart>
+			<addWME wme="unfriendly(AbblegardCitizen)" activation="3000"/>	
+			<addWME wme="unfriendly(PlayerCharacter)" activation="3000"/>	
+			<addBehavior priority="50"><BAttackUnfriendly/></addBehavior>
+			<addBehavior priority="0"><BWander forwardFactor="2" pStop="0" stopTime="50"/></addBehavior>
+		</onStart>
+	</CharacterClass>
+
+
+	<CharacterClass class="Shark" super="Animal" name="a Shark">
+		<animation name="idle-left" dx="1" dy="1" period="12" looping="false" file="graphics.png">168</animation>
+		<animation name="idle-up" dx="1" dy="1" period="12" looping="false" file="graphics.png">168</animation>
+		<animation name="idle-right" dx="1" dy="1" period="12" looping="false" file="graphics.png">166</animation>
+		<animation name="idle-down" dx="1" dy="1" period="12" looping="false" file="graphics.png">166</animation>
+		<animation name="moving-left" dx="1" dy="1" period="12" looping="true" file="graphics.png">168,169</animation>
+		<animation name="moving-up" dx="1" dy="1" period="12" looping="true" file="graphics.png">168,169</animation>
+		<animation name="moving-right" dx="1" dy="1" period="12" looping="true" file="graphics.png">166,167</animation>
+		<animation name="moving-down" dx="1" dy="1" period="12" looping="true" file="graphics.png">166,167</animation>
+
+		<attribute name="gives_experience" value="15"/>
+		<attribute name="gold" value="0"/>
+		<attribute name="hp" value="20"/>
+		<attribute name="mp" value="0"/>
+		<attribute name="attack" value="9"/>
+		<attribute name="defense" value="9"/>
+		<attribute name="canSwim" value="true"/>
+		<attribute name="walk_speed" value="24"/>
+		<attribute name="sightRadius" value="4"/>
+		<attribute name="respawn" value="1.0"/>
+
+		<eventRule event="action_attack" hit="true"><playSound sound="sfx/hit.wav"/></eventRule>
+		<eventRule event="action_attack" hit="false"><playSound sound="sfx/miss.wav"/></eventRule>		
+
+		<onStart>
+			<addWME wme="unfriendly(Human)" activation="3000"/>	
+			<addBehavior priority="50"><BAttackUnfriendly/></addBehavior>
+			<addBehavior priority="0"><BWanderInCircles diameter="2"/></addBehavior>
+		</onStart>
+	</CharacterClass>	
+
+
+	<CharacterClass class="Skeleton" super="Human,Undead" name="a Skeleton">
+		<animation name="idle-left" dx="1" dy="1" period="4" looping="false" file="graphics.png">172</animation>
+		<animation name="idle-up" dx="1" dy="1" period="4" looping="false" file="graphics.png">172</animation>
+		<animation name="idle-right" dx="1" dy="1" period="4" looping="false" file="graphics.png">170</animation>
+		<animation name="idle-down" dx="1" dy="1" period="4" looping="false" file="graphics.png">170</animation>
+		<animation name="moving-left" dx="1" dy="1" period="4" looping="true" file="graphics.png">172,173</animation>
+		<animation name="moving-up" dx="1" dy="1" period="4" looping="true" file="graphics.png">172,173</animation>
+		<animation name="moving-right" dx="1" dy="1" period="4" looping="true" file="graphics.png">170,171</animation>
+		<animation name="moving-down" dx="1" dy="1" period="4" looping="true" file="graphics.png">170,171</animation>
+
+		<attribute name="gives_experience" value="20"/>
+		<attribute name="gold" value="10"/>
+		<attribute name="hp" value="40"/>
+		<attribute name="mp" value="1"/>
+		<attribute name="attack" value="8"/>
+		<attribute name="defense" value="6"/>
+		<attribute name="canSwim" value="false"/>
+		<attribute name="walk_speed" value="24"/>
+		<attribute name="respawn" value="0.5"/>
+		<attribute name="sightRadius" value="5"/>
+
+		<eventRule event="action_attack" hit="true"><playSound sound="sfx/hit.wav"/></eventRule>
+		<eventRule event="action_attack" hit="false"><playSound sound="sfx/miss.wav"/></eventRule>		
+		<eventRule event="action_spell" spell="decrease"><playSound sound="sfx/spell-2.wav"/></eventRule>
+
+		<items>
+			<object class="Key">
+	          <animation name="idle" dx="1" dy="1" period="1" looping="false" file="graphics.png">28</animation>
+	          <attribute name="name" value="Iron key"/>
+	          <attribute name="keyID" value="BT1BARRACKS"/>
+	        </object>
+		</items>
+
+		<spell>decrease</spell>
+
+		<onStart>
+			<addWME wme="friendly(Undead)" activation="3000"/>	
+			<addWME wme="unfriendly(AbblegardCitizen)" activation="3000"/>	
+			<addWME wme="unfriendly(PlayerCharacter)" activation="3000"/>	
+			<addCurrentPositionWME name="home" activation="3000"/>
+			<addBehavior priority="75"><BYellToUnfriendly message="Kill them!"/></addBehavior>
+			<addBehavior priority="50"><BAttackUnfriendly/></addBehavior>
+			<addBehavior priority="0"><BWander forwardFactor="1" pStop="0.5" stopTime="200"/></addBehavior>
+			<addBehavior priority="25"><BFollowAngryFriendly radius="64"/></addBehavior>
+		</onStart>
+	</CharacterClass>	
+
+
+	<CharacterClass class="SkeletonLord" super="*Skeleton" name="a Skeleton Lord">
+		<animation name="idle-left" dx="1" dy="1" period="4" looping="false" file="graphics.png">182</animation>
+		<animation name="idle-up" dx="1" dy="1" period="4" looping="false" file="graphics.png">182</animation>
+		<animation name="idle-right" dx="1" dy="1" period="4" looping="false" file="graphics.png">180</animation>
+		<animation name="idle-down" dx="1" dy="1" period="4" looping="false" file="graphics.png">180</animation>
+		<animation name="moving-left" dx="1" dy="1" period="4" looping="true" file="graphics.png">182,183</animation>
+		<animation name="moving-up" dx="1" dy="1" period="4" looping="true" file="graphics.png">182,183</animation>
+		<animation name="moving-right" dx="1" dy="1" period="4" looping="true" file="graphics.png">180,181</animation>
+		<animation name="moving-down" dx="1" dy="1" period="4" looping="true" file="graphics.png">180,181</animation>
+
+		<attribute name="gives_experience" value="40"/>
+		<attribute name="gold" value="50"/>
+		<attribute name="hp" value="60"/>
+		<attribute name="mp" value="4"/>
+		<attribute name="attack" value="10"/>
+		<attribute name="defense" value="8"/>
+		<attribute name="canSwim" value="false"/>
+		<attribute name="walk_speed" value="16"/>
+		<attribute name="respawn" value="0.0"/>
+		<attribute name="sightRadius" value="6"/>
+
+		<eventRule event="action_attack" hit="true"><playSound sound="sfx/hit.wav"/></eventRule>
+		<eventRule event="action_attack" hit="false"><playSound sound="sfx/miss.wav"/></eventRule>		
+		<eventRule event="action_spell" spell="magic missile"><playSound sound="sfx/spell-1.wav"/></eventRule>
+		<eventRule event="action_spell" spell="decrease"><playSound sound="sfx/spell-2.wav"/></eventRule>
+
+	    <items>
+	        <object class="Key">
+	          <animation name="idle" dx="1" dy="1" period="1" looping="false" file="graphics.png">28</animation>
+	          <attribute name="name" value="Golden key"/>
+	          <attribute name="keyID" value="SLORDKEY"/>
+	        </object>
+	        <object class="HPPotion" probability="0.5">
+	          <animation name="idle" dx="1" dy="1" period="1" looping="false" file="graphics.png">1</animation>
+	          <attribute name="name" value="HP Potion+20"/>
+	          <attribute name="gold" value="45"/>
+	          <attribute name="hp" value="20"/>
+	        </object>
+	        <object class="MPPotion" probability="0.5">
+	          <animation name="idle" dx="1" dy="1" period="1" looping="false" file="graphics.png">5</animation>
+	          <attribute name="name" value="MP Potion+10"/>
+	          <attribute name="gold" value="25"/>
+	          <attribute name="mp" value="10"/>
+	        </object>
+	    </items>
+
+		<spell>magic missile</spell>	
+		<spell>decrease</spell>
+
+		<onStart>
+			<addWME wme="friendly(Undead)" activation="3000"/>	
+			<addWME wme="unfriendly(AbblegardCitizen)" activation="3000"/>	
+			<addWME wme="unfriendly(PlayerCharacter)" activation="3000"/>	
+			<addCurrentPositionWME name="home" activation="3000"/>
+			<addBehavior priority="75"><BYellToUnfriendly message="Kill them!"/></addBehavior>
+			<addBehavior priority="50"><BAttackUnfriendly/></addBehavior>
+			<addBehavior priority="0"><BWander forwardFactor="1" pStop="0.5" stopTime="200"/></addBehavior>
+			<addBehavior priority="25"><BFollowAngryFriendly radius="64"/></addBehavior>
+		</onStart>
+	</CharacterClass>	
+
+
+	<CharacterClass class="SkeletonLord2" super="*Skeleton" name="a Skeleton Lord">
+		<animation name="idle-left" dx="1" dy="1" period="4" looping="false" file="graphics.png">182</animation>
+		<animation name="idle-up" dx="1" dy="1" period="4" looping="false" file="graphics.png">182</animation>
+		<animation name="idle-right" dx="1" dy="1" period="4" looping="false" file="graphics.png">180</animation>
+		<animation name="idle-down" dx="1" dy="1" period="4" looping="false" file="graphics.png">180</animation>
+		<animation name="moving-left" dx="1" dy="1" period="4" looping="true" file="graphics.png">182,183</animation>
+		<animation name="moving-up" dx="1" dy="1" period="4" looping="true" file="graphics.png">182,183</animation>
+		<animation name="moving-right" dx="1" dy="1" period="4" looping="true" file="graphics.png">180,181</animation>
+		<animation name="moving-down" dx="1" dy="1" period="4" looping="true" file="graphics.png">180,181</animation>
+
+		<attribute name="gives_experience" value="45"/>
+		<attribute name="gold" value="100"/>
+		<attribute name="hp" value="70"/>
+		<attribute name="mp" value="5"/>
+		<attribute name="attack" value="10"/>
+		<attribute name="defense" value="8"/>
+		<attribute name="canSwim" value="false"/>
+		<attribute name="walk_speed" value="16"/>
+		<attribute name="respawn" value="0.0"/>
+		<attribute name="sightRadius" value="6"/>
+
+		<eventRule event="action_attack" hit="true"><playSound sound="sfx/hit.wav"/></eventRule>
+		<eventRule event="action_attack" hit="false"><playSound sound="sfx/miss.wav"/></eventRule>		
+		<eventRule event="action_spell" spell="magic missile"><playSound sound="sfx/spell-1.wav"/></eventRule>
+		<eventRule event="action_spell" spell="decrease"><playSound sound="sfx/spell-2.wav"/></eventRule>
+
+	    <items>
+	        <object class="Key">
+	          <animation name="idle" dx="1" dy="1" period="1" looping="false" file="graphics.png">28</animation>
+	          <attribute name="name" value="Pure gold key"/>
+	          <attribute name="keyID" value="SLORDKEY2"/>
+	        </object>
+	        <object class="HPPotion" probability="0.5">
+	          <animation name="idle" dx="1" dy="1" period="1" looping="false" file="graphics.png">1</animation>
+	          <attribute name="name" value="HP Potion+20"/>
+	          <attribute name="gold" value="45"/>
+	          <attribute name="hp" value="20"/>
+	        </object>
+	        <object class="MPPotion" probability="0.5">
+	          <animation name="idle" dx="1" dy="1" period="1" looping="false" file="graphics.png">5</animation>
+	          <attribute name="name" value="MP Potion+10"/>
+	          <attribute name="gold" value="25"/>
+	          <attribute name="mp" value="10"/>
+	        </object>
+	        <object class="ConstitutionPotion" probability="0.25">
+	          <animation name="idle" dx="1" dy="1" period="1" looping="false" file="graphics.png">23</animation>
+	          <attribute name="name" value="Def Pot+2"/>
+	          <attribute name="constitution" value="2"/>
+	        </object>
+	    </items>
+
+		<spell>magic missile</spell>	
+		<spell>decrease</spell>
+
+		<onStart>
+			<addWME wme="friendly(Undead)" activation="3000"/>	
+			<addWME wme="unfriendly(AbblegardCitizen)" activation="3000"/>	
+			<addWME wme="unfriendly(PlayerCharacter)" activation="3000"/>	
+			<addCurrentPositionWME name="home" activation="3000"/>
+			<addBehavior priority="75"><BYellToUnfriendly message="Kill them!"/></addBehavior>
+			<addBehavior priority="50"><BAttackUnfriendly/></addBehavior>
+			<addBehavior priority="0"><BWander forwardFactor="1" pStop="0.5" stopTime="200"/></addBehavior>
+			<addBehavior priority="25"><BFollowAngryFriendly radius="64"/></addBehavior>
+		</onStart>
+	</CharacterClass>	
+
+
+	<CharacterClass class="Cyril" super="Undead" name="Cyril">
+		<animation name="idle-left" dx="1" dy="1" period="8" looping="false" file="graphics.png">192</animation>
+		<animation name="idle-up" dx="1" dy="1" period="8" looping="false" file="graphics.png">192</animation>
+		<animation name="idle-right" dx="1" dy="1" period="8" looping="false" file="graphics.png">190</animation>
+		<animation name="idle-down" dx="1" dy="1" period="8" looping="false" file="graphics.png">190</animation>
+		<animation name="moving-left" dx="1" dy="1" period="8" looping="true" file="graphics.png">192,193</animation>
+		<animation name="moving-up" dx="1" dy="1" period="8" looping="true" file="graphics.png">192,193</animation>
+		<animation name="moving-right" dx="1" dy="1" period="8" looping="true" file="graphics.png">190,191</animation>
+		<animation name="moving-down" dx="1" dy="1" period="8" looping="true" file="graphics.png">190,191</animation>
+
+		<attribute name="gives_experience" value="1000"/>
+		<attribute name="gold" value="0"/>
+		<attribute name="hp" value="1000"/>
+		<attribute name="mp" value="1000"/>
+		<attribute name="attack" value="1000"/>
+		<attribute name="defense" value="1000"/>
+		<attribute name="canSwim" value="false"/>
+		<attribute name="walk_speed" value="48"/>
+		<attribute name="respawn" value="0.0"/>
+		<attribute name="sightRadius" value="10"/>
+		<attribute name="magicImmune" value="true"/>
+
+		<eventRule event="action_attack" hit="true"><playSound sound="sfx/hit.wav"/></eventRule>
+		<eventRule event="action_attack" hit="false"><playSound sound="sfx/miss.wav"/></eventRule>		
+
+	    <items>
+          <object class="StoneTablet"/>
+		</items>
+
+		<conversationGraph name="cyril-conversationgraph.xml"/>
+
+		<eventRule event="story_state" scope="game" variable="Blozard" value="dead" once="true">
+			<pendingTalk character="PlayerCharacter" text="Noooooooooo!!!"/>
+			<pendingTalk character="PlayerCharacter" text="How could you?! How dare you?! Who are you!"/>
+			<pendingTalk character="PlayerCharacter" text="But this is not the end..."/>
+			<pendingTalk character="PlayerCharacter" text="I am immortal!"/>
+			<pendingTalk character="PlayerCharacter" text="I will be back!!!"/>
+			<pendingTalk character="PlayerCharacter" text="I'll find a way!!!">
+				<die/>
+			</pendingTalk>
+		</eventRule>	
+
+		<onStart>
+			<pendingTalk character="PlayerCharacter" text="So... We finally meet..."/>
+			<pendingTalk character="PlayerCharacter" text="Do not try to attack me, for I do not have a body..."/>
+			<pendingTalk character="PlayerCharacter" text="You might have heard of me..."/>
+			<pendingTalk character="PlayerCharacter" text="I am Cyril! Cyril the vanished! Previously known as the devastator..."/>
+			<pendingTalk character="PlayerCharacter" text="But that was before your time. So, I'm not going to bore you with history."/>
+			<pendingTalk character="PlayerCharacter" text="I guess you were looking for Blozard, where you?"/>
+			<pendingTalk character="PlayerCharacter" text="Well..."/>
+			<pendingTalk character="PlayerCharacter" text="I'm not completely done with him, you know?"/>
+			<pendingTalk character="PlayerCharacter" text="Blozard is much more powerful than Granner, and brinhing him back to full force takes time..."/>
+			<pendingTalk character="PlayerCharacter" text="But it doesn't matter to you. This is as far as you get."/>
+			<pendingTalk character="PlayerCharacter" text="For, these doors can only be open by me..."/>
+			<pendingTalk character="PlayerCharacter" text="By the time that they open, Blozard will be far too strong for you!"/>
+			<pendingTalk character="PlayerCharacter" text="ha ha ha ha ha"/>
+			<pendingTalk character="PlayerCharacter" text="...">
+				<drop inventory="Stone Tablet"/>
+				<teleport x="96" y="96" map="Blozard Chamber"/>
+				<addAgenda agenda="yelling" duration="1200" loop="true">
+					<entry time="0">
+						<talk text="Kill them!" angry="true"/>
+					</entry>
+					<entry time="300">
+						<talk text="Show them your might!" angry="true"/>
+					</entry>
+					<entry time="600">
+						<talk text="Blozard is invincible!" angry="true"/>
+					</entry>
+					<entry time="900">
+						<talk text="I'll have my revenge!" angry="true"/>
+					</entry>
+				</addAgenda>
+			</pendingTalk>
+			<addCurrentPositionWME name="home" activation="3000"/>
+			<addBehavior priority="0"><BWander forwardFactor="1" pStop="0.5" stopTime="200"/></addBehavior>
+		</onStart>
+		<onEnd>
+			<storyState scope="game" variable="Cyril" value="dead"/>
+		</onEnd>
+
+	</CharacterClass>	
+
+
+	<CharacterClass class="Blozard" super="Dragon,*Skeleton,Undead" name="Blozard">
+		<animation name="idle-left"    dx="2" dy="2" period="8" looping="false" file="graphics.png">178</animation>
+		<animation name="idle-up"      dx="2" dy="2" period="8" looping="false" file="graphics.png">178</animation>
+		<animation name="idle-right"   dx="2" dy="2" period="8" looping="false" file="graphics.png">176</animation>
+		<animation name="idle-down"    dx="2" dy="2" period="8" looping="false" file="graphics.png">176</animation>
+		<animation name="moving-left"  dx="2" dy="2" period="8" looping="true"  file="graphics.png">178,198</animation>
+		<animation name="moving-up"    dx="2" dy="2" period="8" looping="true"  file="graphics.png">178,198</animation>
+		<animation name="moving-right" dx="2" dy="2" period="8" looping="true"  file="graphics.png">176,196</animation>
+		<animation name="moving-down"  dx="2" dy="2" period="8" looping="true"  file="graphics.png">176,196</animation>
+
+		<attribute name="gives_experience" value="100"/>
+		<attribute name="gold" value="0"/>
+		<attribute name="hp" value="200"/>
+		<attribute name="mp" value="50"/>
+		<attribute name="attack" value="20"/>
+		<attribute name="defense" value="10"/>
+		<attribute name="canSwim" value="false"/>
+		<attribute name="walk_speed" value="48"/>
+		<attribute name="respawn" value="0.0"/>
+		<attribute name="sightRadius" value="10"/>
+
+		<eventRule event="action_attack" hit="true"><playSound sound="sfx/hit.wav"/></eventRule>
+		<eventRule event="action_attack" hit="false"><playSound sound="sfx/miss.wav"/></eventRule>		
+		<eventRule event="action_spell" spell="fireball"><playSound sound="sfx/spell-1.wav"/></eventRule>
+		<eventRule event="action_spell" spell="decrease"><playSound sound="sfx/spell-2.wav"/></eventRule>
+
+		<spell>fireball</spell>	
+		<spell>decrease</spell>
+
+		<onStart>
+			<addWME wme="friendly(Undead)" activation="3000"/>	
+			<addWME wme="unfriendly(AbblegardCitizen)" activation="3000"/>	
+			<addWME wme="unfriendly(PlayerCharacter)" activation="3000"/>	
+			<addCurrentPositionWME name="home" activation="3000"/>
+			<addBehavior priority="75"><BYellToUnfriendly message="Roarrrrr!"/></addBehavior>
+			<addBehavior priority="0"><BWander forwardFactor="1" pStop="0.5" stopTime="200"/></addBehavior>
+			<addBehavior priority="50"><BAttackUnfriendly/></addBehavior>
+		</onStart>
+		<onEnd>
+			<storyState scope="game" variable="Blozard" value="dead"/>
+		</onEnd>
+	</CharacterClass>	
+</Characters>

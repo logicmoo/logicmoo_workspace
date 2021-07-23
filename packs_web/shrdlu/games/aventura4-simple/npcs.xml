@@ -1,0 +1,737 @@
+<Characters>
+	<CharacterClass class="Soldier" super="AICharacter" name="a Soldier">
+		<animation name="idle-left" dx="1" dy="1" period="4" looping="false" file="graphics2x.png">142</animation>
+		<animation name="idle-up" dx="1" dy="1" period="4" looping="false" file="graphics2x.png">142</animation>
+		<animation name="idle-right" dx="1" dy="1" period="4" looping="false" file="graphics2x.png">140</animation>
+		<animation name="idle-down" dx="1" dy="1" period="4" looping="false" file="graphics2x.png">140</animation>
+		<animation name="moving-left" dx="1" dy="1" period="4" looping="true" file="graphics2x.png">142,143</animation>
+		<animation name="moving-up" dx="1" dy="1" period="4" looping="true" file="graphics2x.png">142,143</animation>
+		<animation name="moving-right" dx="1" dy="1" period="4" looping="true" file="graphics2x.png">140,141</animation>
+		<animation name="moving-down" dx="1" dy="1" period="4" looping="true" file="graphics2x.png">140,141</animation>
+
+		<attribute name="gives_experience" value="20"/>
+		<attribute name="gold" value="10"/>
+		<attribute name="hp" value="30"/>
+		<attribute name="mp" value="0"/>
+		<attribute name="attack" value="10"/>
+		<attribute name="defense" value="5"/>
+		<attribute name="canSwim" value="false"/>
+		<attribute name="walk_speed" value="16"/>
+		<attribute name="sightRadius" value="8"/>
+		<attribute name="picky" value="false"/>
+		<attribute name="respawn" value="0.0"/>
+
+		<item probability="0.5">new Food("Chicken Leg",Animation.fromTile(18,"graphics2x.png"), 5)</item>
+
+		<conversationRule topic="yourself">
+			<talk text="I'm a soldier. I maintain the peace in Abblegard."/>
+		</conversationRule>
+		<conversationRule topic="abblegard">
+			<talk text="Abblegard is built around the King's castle."/>
+			<talk text="You'll find many shops and interesting stuff here!"/>
+		</conversationRule>
+		<conversationRule topic="the king">
+			<talk text="King Cabolo is very generous, we are very proud to serve him."/>
+		</conversationRule> 
+		<conversationRule topic="blozard">
+			<talk text="Blozard was a black dragon that hated Abblegard for some reason. Not sure why..."/>
+		</conversationRule> 
+		<conversationRule topic="Granner">
+			<talk text="Granner was a fanatic of the cult. He rebuilt the whole cult even after Blozard was slain.">
+				<addTopic topic="the cult" text="What can you tell me about the cult?"/>
+				<addTopic topic="blozard" text="What can you tell me about Blozard?"/>
+			</talk>
+		</conversationRule>
+		<conversationRule topic="the cult">
+			<talk text="The cult is a religious organization that venerates Blozard as their God. Their headquarters were in a tower called the black rock.">
+				<addTopic topic="blozard" text="What can you tell me about Blozard?"/>
+				<addTopic topic="the black rock" text="What can you tell me about the black rock?"/>
+			</talk>
+		</conversationRule>
+		<conversationRule topic="the black rock">
+			<talk text="You can find the black rock in the north-west of Abblegard."/>
+		</conversationRule>
+		<conversationRule topic="Granner's tomb">
+			<talk text="Now, that's a weird question... but it should be in the graveyard south of the village."/>
+		</conversationRule>
+		<conversationRule topic="Monks">
+			<talk text="We knew something was going on! The King must be informed at once!"/>
+		</conversationRule>
+		<conversationRule topic="rumors">
+			<talk text="I've heart that Granners's remains have been stolen from his grave!"/>
+		</conversationRule>
+
+		<storyStateRule scope="game" variable="Granner" value="alive" once="true">
+			<updateConversationRule topic="rumors">
+				<talk text="I've heart that Granners's alive!"/>
+			</updateConversationRule>
+		</storyStateRule>
+		<storyStateRule scope="game" variable="Granner" value="dead" once="true">
+			<updateConversationRule topic="rumors">
+				<talk text="They say corpses have been washing ashore, it had never happened before!"/>
+			</updateConversationRule>
+		</storyStateRule>
+		<storyStateRule scope="game" variable="Blozard" value="dead" once="true">
+			<updateConversationRule topic="rumors">
+				<talk text="I heard the King is looking for a husband for his daughter."/>
+			</updateConversationRule>
+		</storyStateRule>
+		<storyStateRule scope="game" variable="King" value="dead" once="true">
+			<updateConversationRule topic="the king">
+				<talk text="King Cabolo was very generous, I don't know what is going to happen now with him dead!"/>
+			</updateConversationRule>
+			<updateConversationRule topic="rumors">
+				<talk text="I heard the princess will take a husband, I hope it's me!"/>
+			</updateConversationRule>
+		</storyStateRule>
+
+		<onStart>
+			<addLongTermWME type="friendly" params="Soldier"/>
+			<addLongTermWME type="friendly" params="King"/>
+			<addLongTermWME type="friendly" params="Termes"/>
+			<addLongTermWME type="friendly" params="Rudolph"/>
+			<addLongTermWME type="friendly" params="Ji"/>
+			<addLongTermWME type="friendly" params="Peasant"/>
+			<addLongTermWME type="unfriendly" params="Frog"/>	
+			<addLongTermWME type="unfriendly" params="Snake"/>	
+			<addLongTermWME type="unfriendly" params="Crab"/>	
+			<addLongTermWME type="unfriendly" params="Shark"/>	
+			<addLongTermWME type="unfriendly" params="Skeleton"/>	
+			<addLongTermWME type="unfriendly" params="SkeletonLord"/>	
+			<addLongTermWME type="unfriendly" params="Blozard"/>	
+			<addBehavior priority="0">BRReturnHome()</addBehavior>
+			<addBehavior priority="0">BRUnfriendlyIfAttackingFriendly()</addBehavior>
+			<addBehavior priority="50">BRAttackUnfriendly()</addBehavior>
+			<addBehavior priority="25">BRFollow()</addBehavior>
+		</onStart>		
+	</CharacterClass>
+
+
+	<CharacterClass class="King" super="AICharacter" name="King Cabolo">
+		<animation name="idle-left" dx="1" dy="1" period="4" looping="false" file="graphics2x.png">78</animation>
+		<animation name="idle-up" dx="1" dy="1" period="4" looping="false" file="graphics2x.png">78</animation>
+		<animation name="idle-right" dx="1" dy="1" period="4" looping="false" file="graphics2x.png">76</animation>
+		<animation name="idle-down" dx="1" dy="1" period="4" looping="false" file="graphics2x.png">76</animation>
+		<animation name="moving-left" dx="1" dy="1" period="4" looping="true" file="graphics2x.png">78,79</animation>
+		<animation name="moving-up" dx="1" dy="1" period="4" looping="true" file="graphics2x.png">78,79</animation>
+		<animation name="moving-right" dx="1" dy="1" period="4" looping="true" file="graphics2x.png">76,77</animation>
+		<animation name="moving-down" dx="1" dy="1" period="4" looping="true" file="graphics2x.png">76,77</animation>
+
+		<attribute name="gives_experience" value="100"/>
+		<attribute name="gold" value="10000"/>
+		<attribute name="hp" value="100"/>
+		<attribute name="mp" value="0"/>
+		<attribute name="attack" value="20"/>
+		<attribute name="defense" value="10"/>
+		<attribute name="canSwim" value="false"/>
+		<attribute name="walk_speed" value="16"/>
+		<attribute name="sightRadius" value="8"/>
+		<attribute name="respawn" value="0.0"/>
+
+		<item>new EquipableItem("King's Sword", Animation.fromTile(138,"graphics2x.png"), ITEM_WEAPON, 10, 5, 1.0, false, 5000)</item>
+		<item>new Key("Ocean key", "DOCKS", Animation.fromTile(28,"graphics2x.png"))</item>
+
+		<conversationRule topic="yourself">
+			<talk text="I'm the proud King of Abblegard."/>
+		</conversationRule>
+		<conversationRule topic="abblegard">
+			<talk text="Abblegard is a vibrant village, full of brave people!"/>
+		</conversationRule>
+		<conversationRule topic="the king">
+			<talk text="I'm the proud King of Abblegard."/>
+		</conversationRule> 
+		<conversationRule topic="blozard">
+			<talk text="Blozard was a black dragon that attacked our village many years ago."/>
+		</conversationRule> 
+		<conversationRule topic="Granner">
+			<talk text="Granner was a priest in the cult of the dragon. I thought he was dead. But now I have doubts.">
+				<addTopic topic="the cult" text="What can you tell me about the cult?"/>
+			</talk>
+		</conversationRule>
+		<conversationRule topic="the cult">
+			<talk text="The cult is a religious organization that venerates Blozard as their God.">
+				<addTopic topic="blozard" text="What can you tell me about Blozard?"/>
+			</talk>
+		</conversationRule>
+		<conversationRule topic="the black rock">
+			<talk text="You can find the black rock in the north-west of Abblegard."/>
+		</conversationRule>,
+		<conversationRule topic="Granner's tomb">
+			<talk text="It's in the graveyard south of the village."/>
+		</conversationRule>
+		<conversationRule topic="Monks">
+			<talk text="That is terrible! Guards! Follow this man to the Blackrock and cleanse it of evil!"/>
+			<addLongTermWMEToOthers class="Soldier" select="all" type="follow" params="PlayerCharacter"/>
+			<updateConversationRule topic="Monks">
+				<talk text="I hope they are taken care of now."/>
+			</updateConversationRule>
+		</conversationRule>
+		<conversationRule topic="Cyril">
+			<talk text="Cyril was a creaure of legend, a being of evil!"/>
+			<talk text="I never thought she actually existed... If she has something to do with this we are in deep trouble..."/>
+		</conversationRule>
+		<conversationRule topic="stone tablet">
+			<talk text="There are old Abble-runes. Someone in town might be able to help you translate them."/>
+		</conversationRule>
+		<conversationRule topic="rumors">
+			<talk text="I am the King, I don't pay attention to gossips."/>
+		</conversationRule>
+
+		<storyStateRule scope="game" variable="Granner" value="alive" once="true">
+			<updateConversationRule topic="Granner">
+				<talk text="Granner being alive is always bad news. We must stop him!"/>
+			</updateConversationRule>
+		</storyStateRule>
+		<storyStateRule scope="game" variable="Granner" value="dead" once="true">
+			<updateConversationRule topic="Granner">
+				<talk text="I'm happy he's been dealt with. We are grateful to you."/>
+			</updateConversationRule>
+			<updateConversationRule topic="blozard">
+				<talk text="Hmm, so Blozard has a hideout... the only way out of here is by sea. Please find him... Take this key! It will grant you access to the piers"/>
+				<give inventory="Ocean key"/>
+				<updateConversationRule topic="blozard">
+					<talk text="Please find Blozard, our future is in your hands!"/>
+				</updateConversationRule>
+			</updateConversationRule>
+		</storyStateRule>
+		<storyStateRule scope="game" variable="Blozard" value="dead" once="true">
+			<updateConversationRule topic="blozard">
+				<talk text="Thank you for you help killing Blozard. You will not be forgotten in Abblegard!"/>
+			</updateConversationRule>
+			<updateConversationRule topic="rumors">
+				<talk text="Well... I heard my daughter set her eyes on you... I need to marry her, you know?"/>
+			</updateConversationRule>
+		</storyStateRule>
+
+		<onStart>
+			<addLongTermWME type="friendly" params="Soldier"/>
+			<addLongTermWME type="friendly" params="King"/>
+			<addLongTermWME type="friendly" params="Termes"/>
+			<addLongTermWME type="friendly" params="Rudolph"/>
+			<addLongTermWME type="friendly" params="Ji"/>
+			<addLongTermWME type="friendly" params="Peasant"/>
+			<addLongTermWME type="unfriendly" params="Frog"/>	
+			<addLongTermWME type="unfriendly" params="Snake"/>	
+			<addLongTermWME type="unfriendly" params="Crab"/>	
+			<addLongTermWME type="unfriendly" params="Shark"/>	
+			<addLongTermWME type="unfriendly" params="Skeleton"/>	
+			<addLongTermWME type="unfriendly" params="SkeletonLord"/>	
+			<addLongTermWME type="unfriendly" params="Blozard"/>	
+			<pendingTalk character="PlayerCharacter" text="Good lord! It was about time! We were expecting you!"/>
+			<pendingTalk character="PlayerCharacter" text="Something misterious has happened..."/>
+			<pendingTalk character="PlayerCharacter" text="A few days ago, a peasant reported that the tomb of Granner had been profaned!">
+				<addTopic topic="Granner" text="what can you tell me about Granner?"/>
+				<addTopic topic="Granner's tomb" text="Where is Granner's tomb?"/>
+			</pendingTalk>
+			<pendingTalk character="PlayerCharacter" text="Additionally, I've heard that the forest has been infested with beasts lately."/>
+			<pendingTalk character="PlayerCharacter" text="Too many coincidences. We fear the worst... I hope it's not the Cult of the dragon again..."/>
+			<pendingTalk character="PlayerCharacter" text="Please investigate! We shall be waiting news from you."/>
+			<addBehavior priority="0">BRReturnHome()</addBehavior>
+			<addBehavior priority="0">BRUnfriendlyIfAttackingFriendly()</addBehavior>
+			<addBehavior priority="50">BRAttackUnfriendly()</addBehavior>
+			<addBehavior priority="25">BRFollow()</addBehavior>
+			<addBehavior priority="30">BRPendingTalk()</addBehavior>
+		</onStart>
+		<onEnd>
+			<storyState scope="game" variable="King" value="dead"/>
+		</onEnd>		
+	</CharacterClass>
+
+
+	<CharacterClass class="Termes" super="AICharacter" name="Termes">
+		<animation name="idle-left" dx="1" dy="1" period="4" looping="false" file="graphics2x.png">92</animation>
+		<animation name="idle-up" dx="1" dy="1" period="4" looping="false" file="graphics2x.png">92</animation>
+		<animation name="idle-right" dx="1" dy="1" period="4" looping="false" file="graphics2x.png">90</animation>
+		<animation name="idle-down" dx="1" dy="1" period="4" looping="false" file="graphics2x.png">90</animation>
+		<animation name="moving-left" dx="1" dy="1" period="4" looping="true" file="graphics2x.png">92,93</animation>
+		<animation name="moving-up" dx="1" dy="1" period="4" looping="true" file="graphics2x.png">92,93</animation>
+		<animation name="moving-right" dx="1" dy="1" period="4" looping="true" file="graphics2x.png">90,91</animation>
+		<animation name="moving-down" dx="1" dy="1" period="4" looping="true" file="graphics2x.png">90,91</animation>
+
+		<attribute name="gives_experience" value="50"/>
+		<attribute name="gold" value="1000"/>
+		<attribute name="hp" value="50"/>
+		<attribute name="mp" value="0"/>
+		<attribute name="attack" value="30"/>
+		<attribute name="defense" value="10"/>
+		<attribute name="canSwim" value="false"/>
+		<attribute name="walk_speed" value="16"/>
+		<attribute name="sightRadius" value="5"/>
+		<attribute name="respawn" value="0.0"/>
+
+		<item>new ItemHPotion(5,Animation.fromTile(1,"graphics2x.png"))</item>
+		<item>new ItemMPotion(5,Animation.fromTile(5,"graphics2x.png"))</item>
+		<item>new ItemHPotion(25,Animation.fromTile(1,"graphics2x.png"))</item>
+		<item>new ItemHPotion(50,Animation.fromTile(1,"graphics2x.png"))</item>
+		<item>new ItemMPotion(25,Animation.fromTile(5,"graphics2x.png"))</item>
+		<item>new ItemXPPotion(25, Animation.fromTile(13,"graphics2x.png"))</item>
+		<item>new Spade(Animation.fromTile(27,"graphics2x.png"), 10)</item>
+		<item>new EquipableItem("Axe", Animation.fromTile(7,"graphics2x.png"), ITEM_WEAPON, 2, 0, 1.0, true, 50)</item>
+
+		<conversationRule topic="yourself">
+			<talk text="My name is Termes and I sell potions and utensils, enough to make a living."/>
+		</conversationRule>
+		<conversationRule topic="abblegard">
+			<talk text="I wish Abblegard was larger, so I would have more costumers!"/>
+		</conversationRule>
+		<conversationRule topic="the king">
+			<talk text="King Cabolo is our good King. We all respect him."/>
+		</conversationRule> 
+		<conversationRule topic="blozard">
+			<talk text="Oh blozard... They say it is dead, but who knows!"/>
+		</conversationRule> 
+		<conversationRule topic="Granner">
+			<talk text="Granner? He was already weird as a kid, then his parents died and joined the cult. You know the rest...">
+				<addTopic topic="the cult" text="What can you tell me about the cult?"/>
+			</talk>
+		</conversationRule>
+		<conversationRule topic="the cult">
+			<talk text="The cult is a religious organization that venerates Blozard as their God.">
+				<addTopic topic="blozard" text="What can you tell me about Blozard?"/>
+			</talk>
+		</conversationRule>
+		<conversationRule topic="the black rock">
+			<talk text="That's where the cult used to hide, but I don't know where is it exactly."/>
+		</conversationRule>,
+		<conversationRule topic="rumors">
+			<talk text="I heard there is a hidden treasure in the forest! One day I'll find time to search for it!">
+				<addTopic topic="hidden treasure" text="Do you know where is the hidden treasure?"/>
+			</talk>
+		</conversationRule>
+		<conversationRule topic="hidden treasure">
+			<talk text="I don't know where it is, I just heard about it at the inn..."/>
+		</conversationRule>
+		<conversationRule topic="Granner's tomb">
+			<talk text="Everyone knows it's in the graveyard south of the village."/>
+			<talk text="I don't know why did we even bother burying that guy!"/>
+		</conversationRule>
+		<conversationRule topic="Cyril">
+			<talk text="I don't know where it is, I just heard about it at the inn..."/>
+		</conversationRule>
+		<conversationRule topic="stone tablet">
+			<talk text="Hmmm... Abble-runes indeed. It's some sort of passcode, but can't decypher it. Sorry."/>
+		</conversationRule>
+		<conversationRule topic="Monks">
+			<talk text="Why do you tell me this? Go tell the guards!"/>
+		</conversationRule>
+
+		<storyStateRule scope="game" variable="Granner" value="alive" once="true">
+			<updateConversationRule topic="rumors">
+				<talk text="I've heart that Granners's alive!"/>
+			</updateConversationRule>
+			<updateConversationRule topic="blozard">
+				<talk text="Oh blozard... They say it is dead, but Granner being alive, who knows!"/>
+			</updateConversationRule>
+		</storyStateRule>
+		<storyStateRule scope="game" variable="Granner" value="dead" once="true">
+			<updateConversationRule topic="rumors">
+				<talk text="They say corpses have been washing ashore, it had never happened before!"/>
+			</updateConversationRule>
+			<updateConversationRule topic="blozard">
+				<talk text="He's alive again. This can only be bad!"/>
+			</updateConversationRule>
+		</storyStateRule>
+		<storyStateRule scope="game" variable="Blozard" value="dead" once="true">
+			<updateConversationRule topic="rumors">
+				<talk text="Nothing muhch these days..."/>
+			</updateConversationRule>
+			<updateConversationRule topic="blozard">
+				<talk text="Oh blozard... They say it is dead again, I hope this time is for good!"/>
+			</updateConversationRule>
+		</storyStateRule>
+		<storyStateRule scope="game" variable="King" value="dead" once="true">
+			<updateConversationRule topic="the king">
+				<talk text="I respected the King, his death saddens me deeply..."/>
+			</updateConversationRule>
+		</storyStateRule>
+
+		<onStart>
+			<addLongTermWME type="friendly" params="Soldier"/>
+			<addLongTermWME type="friendly" params="King"/>
+			<addLongTermWME type="friendly" params="Termes"/>
+			<addLongTermWME type="friendly" params="Rudolph"/>
+			<addLongTermWME type="friendly" params="Ji"/>
+			<addLongTermWME type="friendly" params="Peasant"/>
+			<addLongTermWME type="unfriendly" params="Frog"/>	
+			<addLongTermWME type="unfriendly" params="Snake"/>	
+			<addLongTermWME type="unfriendly" params="Crab"/>	
+			<addLongTermWME type="unfriendly" params="Shark"/>	
+			<addLongTermWME type="unfriendly" params="Skeleton"/>	
+			<addLongTermWME type="unfriendly" params="SkeletonLord"/>	
+			<addLongTermWME type="unfriendly" params="Blozard"/>	
+			<addBehavior priority="0">BRReturnHome()</addBehavior>
+			<addBehavior priority="0">BRUnfriendlyIfAttackingFriendly()</addBehavior>
+			<addBehavior priority="50">BRAttackUnfriendly()</addBehavior>
+			<addBehavior priority="25">BRHailNotUnfriendly()</addBehavior>
+			<addBehavior priority="50">BRProtectPossessions()</addBehavior>
+		</onStart>
+	</CharacterClass>
+
+
+	<CharacterClass class="Rudolph" super="AICharacter" name="Rudolph">
+		<animation name="idle-left" dx="1" dy="1" period="4" looping="false" file="graphics2x.png">92</animation>
+		<animation name="idle-up" dx="1" dy="1" period="4" looping="false" file="graphics2x.png">92</animation>
+		<animation name="idle-right" dx="1" dy="1" period="4" looping="false" file="graphics2x.png">90</animation>
+		<animation name="idle-down" dx="1" dy="1" period="4" looping="false" file="graphics2x.png">90</animation>
+		<animation name="moving-left" dx="1" dy="1" period="4" looping="true" file="graphics2x.png">92,93</animation>
+		<animation name="moving-up" dx="1" dy="1" period="4" looping="true" file="graphics2x.png">92,93</animation>
+		<animation name="moving-right" dx="1" dy="1" period="4" looping="true" file="graphics2x.png">90,91</animation>
+		<animation name="moving-down" dx="1" dy="1" period="4" looping="true" file="graphics2x.png">90,91</animation>
+
+		<attribute name="gives_experience" value="150"/>
+		<attribute name="gold" value="5000"/>
+		<attribute name="hp" value="100"/>
+		<attribute name="mp" value="0"/>
+		<attribute name="attack" value="50"/>
+		<attribute name="defense" value="20"/>
+		<attribute name="canSwim" value="false"/>
+		<attribute name="walk_speed" value="16"/>
+		<attribute name="sightRadius" value="5"/>
+		<attribute name="respawn" value="0.0"/>
+
+		<item>new EquipableItem("Sword", Animation.fromTile(6,"graphics2x.png"), ITEM_WEAPON, 2, 0, 1.0, false, 50)</item>
+		<item>new EquipableItem("Buckler", Animation.fromTile(16,"graphics2x.png"), ITEM_OFF_HAND, 0, 2, 1.0, false, 50)</item>
+		<item>new EquipableItem("Axe", Animation.fromTile(7,"graphics2x.png"), ITEM_WEAPON, 2, 0, 1.0, true, 50)</item>
+		<item>new EquipableItem("Knight Shield", Animation.fromTile(17,"graphics2x.png"), ITEM_OFF_HAND, 0, 5, 1.0, false, 150)</item>
+		<item>new EquipableItem("Fine Sword", Animation.fromTile(6,"graphics2x.png"), ITEM_WEAPON, 5, 0, 1.0, false, 150)</item>
+		<item>new EquipableItem("Rage Ring", Animation.fromTile(26,"graphics2x.png"), ITEM_RING, 4, 0, 1.0, false, 200)</item>
+		<item>new EquipableItem("Defense Ring", Animation.fromTile(26,"graphics2x.png"), ITEM_RING, 0, 5, 1.0, false, 300)</item>
+		<item>new EquipableItem("Uber Ring", Animation.fromTile(26,"graphics2x.png"), ITEM_RING, 5, 5, 1.0, false, 800)</item>
+
+		<conversationRule topic="yourself">
+			<talk text="My name is Rudolph and I sell weapons and armor."/>
+		</conversationRule>
+		<conversationRule topic="abblegard">
+			<talk text="I wish there were more people with gus in Abblegard! More business for me!"/>
+		</conversationRule>
+		<conversationRule topic="the king">
+			<talk text="King Cabolo is our good King. We all respect him."/>
+		</conversationRule> 
+		<conversationRule topic="blozard">
+			<talk text="I thought they killed blozard years ago. But there are rumors..."/>
+		</conversationRule> 
+		<conversationRule topic="Granner">
+			<talk text="Granner? He was a weird one. When his parents died and joined the cult and started worshiping Blozard.">
+				<addTopic topic="the cult" text="What can you tell me about the cult?"/>
+			</talk>
+		</conversationRule>
+		<conversationRule topic="the cult">
+			<talk text="The cult is a religious organization that venerates Blozard as their God.">
+				<addTopic topic="blozard" text="What can you tell me about Blozard?"/>
+			</talk>
+		</conversationRule>
+		<conversationRule topic="the black rock">
+			<talk text="That's the cults hideout, it's somewhere in the forest."/>
+		</conversationRule>,
+		<conversationRule topic="rumors">
+			<talk text="They say Blozard is alive again. I hope it's all rumors!">
+				<addTopic topic="blozard" text="What can you tell me about Blozard?"/>
+			</talk>
+		</conversationRule>
+		<conversationRule topic="hidden treasure">
+			<talk text="I don't know where it is, I just heard about it at the inn..."/>
+		</conversationRule>
+		<conversationRule topic="Granner's tomb">
+			<talk text="Everyone knows it's in the graveyard south of the village."/>
+		</conversationRule>
+		<conversationRule topic="stone tablet">
+			<talk text="Hmmm... some old runes. Not my specialty."/>
+		</conversationRule>
+		<conversationRule topic="Monks">
+			<talk text="Why do you tell me this? Go tell the guards!"/>
+		</conversationRule>
+
+		<storyStateRule scope="game" variable="Granner" value="alive" once="true">
+			<updateConversationRule topic="rumors">
+				<talk text="I've heart that Granners's alive!"/>
+			</updateConversationRule>
+			<updateConversationRule topic="blozard">
+				<talk text="The big black dragon... and they say he's alive again!"/>
+			</updateConversationRule>
+		</storyStateRule>
+		<storyStateRule scope="game" variable="Granner" value="dead" once="true">
+			<updateConversationRule topic="rumors">
+				<talk text="They say corpses have been washing ashore, it had never happened before!"/>
+			</updateConversationRule>
+			<updateConversationRule topic="blozard">
+				<talk text="The big black dragon... and they say he's alive again!"/>
+			</updateConversationRule>
+		</storyStateRule>
+		<storyStateRule scope="game" variable="Blozard" value="dead" once="true">
+			<updateConversationRule topic="rumors">
+				<talk text="I heard the pricess has an eye on one of you!"/>
+			</updateConversationRule>
+			<updateConversationRule topic="blozard">
+				<talk text="He's dead. We can now breathe for a while!"/>
+			</updateConversationRule>
+		</storyStateRule>
+		<storyStateRule scope="game" variable="King" value="dead" once="true">
+			<updateConversationRule topic="the king">
+				<talk text="I respected the King, his death saddens me deeply..."/>
+			</updateConversationRule>
+		</storyStateRule>
+
+		<onStart>
+			<addLongTermWME type="friendly" params="Soldier"/>
+			<addLongTermWME type="friendly" params="King"/>
+			<addLongTermWME type="friendly" params="Termes"/>
+			<addLongTermWME type="friendly" params="Rudolph"/>
+			<addLongTermWME type="friendly" params="Ji"/>
+			<addLongTermWME type="friendly" params="Peasant"/>
+			<addLongTermWME type="unfriendly" params="Frog"/>	
+			<addLongTermWME type="unfriendly" params="Snake"/>	
+			<addLongTermWME type="unfriendly" params="Crab"/>	
+			<addLongTermWME type="unfriendly" params="Shark"/>	
+			<addLongTermWME type="unfriendly" params="Skeleton"/>	
+			<addLongTermWME type="unfriendly" params="SkeletonLord"/>	
+			<addLongTermWME type="unfriendly" params="Blozard"/>	
+			<addBehavior priority="0">BRReturnHome()</addBehavior>
+			<addBehavior priority="0">BRUnfriendlyIfAttackingFriendly()</addBehavior>
+			<addBehavior priority="50">BRAttackUnfriendly()</addBehavior>
+			<addBehavior priority="25">BRHailNotUnfriendly()</addBehavior>
+			<addBehavior priority="50">BRProtectPossessions()</addBehavior>
+		</onStart>
+	</CharacterClass>
+
+
+	<CharacterClass class="Ji" super="AICharacter" name="Ji">
+		<animation name="idle-left" dx="1" dy="1" period="4" looping="false" file="graphics2x.png">98</animation>
+		<animation name="idle-up" dx="1" dy="1" period="4" looping="false" file="graphics2x.png">98</animation>
+		<animation name="idle-right" dx="1" dy="1" period="4" looping="false" file="graphics2x.png">96</animation>
+		<animation name="idle-down" dx="1" dy="1" period="4" looping="false" file="graphics2x.png">96</animation>
+		<animation name="moving-left" dx="1" dy="1" period="4" looping="true" file="graphics2x.png">98,99</animation>
+		<animation name="moving-up" dx="1" dy="1" period="4" looping="true" file="graphics2x.png">98,99</animation>
+		<animation name="moving-right" dx="1" dy="1" period="4" looping="true" file="graphics2x.png">96,97</animation>
+		<animation name="moving-down" dx="1" dy="1" period="4" looping="true" file="graphics2x.png">96,97</animation>
+
+		<attribute name="gives_experience" value="100"/>
+		<attribute name="gold" value="5000"/>
+		<attribute name="hp" value="75"/>
+		<attribute name="mp" value="0"/>
+		<attribute name="attack" value="40"/>
+		<attribute name="defense" value="15"/>
+		<attribute name="canSwim" value="false"/>
+		<attribute name="walk_speed" value="24"/>
+		<attribute name="sightRadius" value="7"/>
+		<attribute name="respawn" value="0.0"/>
+
+		<item>new ItemHPotion(5,Animation.fromTile(1,"graphics2x.png"))</item>
+		<item>new ItemMPotion(5,Animation.fromTile(5,"graphics2x.png"))</item>
+		<item>new ItemXPPotion(5,Animation.fromTile(13,"graphics2x.png"))</item>
+		<item>new Food("Chicken Leg",Animation.fromTile(18,"graphics2x.png"), 5)</item>
+		<item>new Food("Beef Stew",Animation.fromTile(19,"graphics2x.png"), 5)</item>
+		<item>new Food("Wine",Animation.fromTile(85,"graphics2x.png"), 5)</item>
+		<item>new Scroll("Shield Scroll",SPELL_SHIELD,100, Animation.fromTile(144,"graphics2x.png"))</item>
+
+		<conversationRule topic="yourself">
+			<talk text="I'm Ji, owner of this place. Now let me work!"/>
+		</conversationRule>
+		<conversationRule topic="abblegard">
+			<talk text="Go ask someonelese, I'm busy!"/>
+		</conversationRule>
+		<conversationRule topic="the king">
+			<talk text="We don't like him."/>
+		</conversationRule> 
+		<conversationRule topic="blozard">
+			<talk text="A black dragon, ask someone else about him!"/>
+		</conversationRule> 
+		<conversationRule topic="Granner">
+			<talk text="Everyone knows, ask someone else!"/>
+		</conversationRule>
+		<conversationRule topic="the cult">
+			<talk text="What about it?"/>
+		</conversationRule>
+		<conversationRule topic="rumors">
+			<talk text="There's rumors of a hidden treasure, but I'm too busy to go look for it!">
+				<addTopic topic="hidden treasure" text="Do you know where is the hidden treasure?"/>
+			</talk>
+		</conversationRule>
+		<conversationRule topic="hidden treasure">
+			<talk text="From what I've been gathering, it's buried in the forest. If you undig it, I want my part for telling you!"/>
+		</conversationRule>
+		<conversationRule topic="Granner's tomb">
+			<talk text="It's in the graveyard. Now leave me alone!"/>
+		</conversationRule>
+		<conversationRule topic="Cyril">
+			<talk text="Cyril? That's just a legend to scare kids at night!"/>
+		</conversationRule>
+		<conversationRule topic="stone tablet">
+			<if>
+				<condition>
+					<steal name="Stone Tablet"/>
+				</condition>
+				<then>
+					<talk text="Even a child can read this. Take this, and don't bother me again."/>
+					<loseItem inventory="Stone Tablet"/>
+					<give new="new TranslatedStoneTablet()"/>
+					<updateConversationRule topic="stone tablet">
+						<talk text="I already translated this for you!"/>
+					</updateConversationRule>
+				</then>
+				<else>
+					<talk text="Bring it to me first!"/>
+				</else>
+			</if>
+		</conversationRule>
+		<conversationRule topic="Monks">
+			<talk text="Look, I have enough with my inn. Look for someone else to help you!"/>
+		</conversationRule>
+
+		<tradeRule event="receive" item="Stone Tablet">
+			<talk text="Even a child can read this. Take this, and don't bother me again."/>
+			<loseItem inventory="Stone Tablet"/>
+			<give new="new TranslatedStoneTablet()"/>
+			<updateConversationRule topic="stone tablet">
+				<talk text="I already translated this for you!"/>
+			</updateConversationRule>
+		</tradeRule>
+
+		<storyStateRule scope="game" variable="Granner" value="alive" once="true">
+			<updateConversationRule topic="rumors">
+				<talk text="Granner is a live. That's everything everyone talks about!"/>
+			</updateConversationRule>
+		</storyStateRule>
+		<storyStateRule scope="game" variable="Granner" value="dead" once="true">
+			<updateConversationRule topic="rumors">
+				<talk text="Something about corpses on the sea, ask around."/>
+			</updateConversationRule>
+		</storyStateRule>
+		<storyStateRule scope="game" variable="Blozard" value="dead" once="true">
+			<updateConversationRule topic="rumors">
+				<talk text="The king is looking to marry the princess."/>
+			</updateConversationRule>
+		</storyStateRule>
+		<storyStateRule scope="game" variable="King" value="dead" once="true">
+			<updateConversationRule topic="the king">
+				<talk text="He's dead, Who cares..."/>
+			</updateConversationRule>
+			<updateConversationRule topic="rumors">
+				<talk text="The princess is looking for a husband."/>
+			</updateConversationRule>
+		</storyStateRule>
+
+		<onStart>
+			<addLongTermWME type="friendly" params="Soldier"/>
+			<addLongTermWME type="friendly" params="King"/>
+			<addLongTermWME type="friendly" params="Termes"/>
+			<addLongTermWME type="friendly" params="Rudolph"/>
+			<addLongTermWME type="friendly" params="Ji"/>
+			<addLongTermWME type="friendly" params="Peasant"/>
+			<addLongTermWME type="unfriendly" params="Frog"/>	
+			<addLongTermWME type="unfriendly" params="Snake"/>	
+			<addLongTermWME type="unfriendly" params="Crab"/>	
+			<addLongTermWME type="unfriendly" params="Shark"/>	
+			<addLongTermWME type="unfriendly" params="Skeleton"/>	
+			<addLongTermWME type="unfriendly" params="SkeletonLord"/>	
+			<addLongTermWME type="unfriendly" params="Blozard"/>	
+			<addBehavior priority="0">BRUnfriendlyIfAttackingFriendly()</addBehavior>
+			<addBehavior priority="50">BRAttackUnfriendly()</addBehavior>
+			<addBehavior priority="0">BRWanderStopping(3,2,50)</addBehavior>
+			<addBehavior priority="25">BRTalkAloud(["So much work to do!","This is not a charity house, any more drinks?","Please don't spit in the floor!","Keep my tables clean!"],200,true)</addBehavior>
+		</onStart>		
+	</CharacterClass>
+
+
+	<CharacterClass class="Peasant" super="AICharacter" name="Peasant">
+		<animation name="idle-left" dx="1" dy="1" period="4" looping="false" file="graphics2x.png">102</animation>
+		<animation name="idle-up" dx="1" dy="1" period="4" looping="false" file="graphics2x.png">102</animation>
+		<animation name="idle-right" dx="1" dy="1" period="4" looping="false" file="graphics2x.png">100</animation>
+		<animation name="idle-down" dx="1" dy="1" period="4" looping="false" file="graphics2x.png">100</animation>
+		<animation name="moving-left" dx="1" dy="1" period="4" looping="true" file="graphics2x.png">102,103</animation>
+		<animation name="moving-up" dx="1" dy="1" period="4" looping="true" file="graphics2x.png">102,103</animation>
+		<animation name="moving-right" dx="1" dy="1" period="4" looping="true" file="graphics2x.png">100,101</animation>
+		<animation name="moving-down" dx="1" dy="1" period="4" looping="true" file="graphics2x.png">100,101</animation>
+
+		<attribute name="gives_experience" value="3"/>
+		<attribute name="gold" value="10"/>
+		<attribute name="hp" value="5"/>
+		<attribute name="mp" value="0"/>
+		<attribute name="attack" value="4"/>
+		<attribute name="defense" value="2"/>
+		<attribute name="canSwim" value="false"/>
+		<attribute name="walk_speed" value="16"/>
+		<attribute name="sightRadius" value="5"/>
+		<attribute name="respawn" value="0.0"/>
+
+		<conversationRule topic="yourself">
+			<talk text="I live in Abblegard."/>
+		</conversationRule>
+		<conversationRule topic="abblegard">
+			<talk text="It's a nice town, I've never been anywhere else!"/>
+		</conversationRule>
+		<conversationRule topic="the king">
+			<talk text="King Cabolo is our good King. We all respect him."/>
+		</conversationRule> 
+		<conversationRule topic="blozard">
+			<talk text="Blozard? he was a dragon, right?"/>
+		</conversationRule> 
+		<conversationRule topic="Granner">
+			<talk text="Granner? there used to be a kid named granner in Abblegard, he went crazy and now he's dead."/>
+		</conversationRule>
+		<conversationRule topic="the cult">
+			<talk text="The cult is group of crazy people, they are always causing us trouble."/>
+		</conversationRule>
+		<conversationRule topic="Granner's tomb">
+			<talk text="It was in the graveyard I think. But don't go around asking about that!"/>
+		</conversationRule>
+		<conversationRule topic="rumors">
+			<talk text="You'd better talk to Ji, she knows all the rumors!"/>
+		</conversationRule>
+		<conversationRule topic="Monks">
+			<talk text="Why do you tell me this? Go tell the guards!"/>
+		</conversationRule>
+
+		<storyStateRule scope="game" variable="Granner" value="alive" once="true">
+			<updateConversationRule topic="rumors">
+				<talk text="I've heart that Granners's alive!"/>
+			</updateConversationRule>
+			<updateConversationRule topic="blozard">
+				<talk text="He was the black dragon, and he might be alive!"/>
+			</updateConversationRule>
+		</storyStateRule>
+		<storyStateRule scope="game" variable="Granner" value="dead" once="true">
+			<updateConversationRule topic="rumors">
+				<talk text="They say corpses have been washing ashore, it had never happened before!"/>
+			</updateConversationRule>
+			<updateConversationRule topic="blozard">
+				<talk text="He was the black dragon, and he is alive!"/>
+			</updateConversationRule>
+		</storyStateRule>
+		<storyStateRule scope="game" variable="Blozard" value="dead" once="true">
+			<updateConversationRule topic="rumors">
+				<talk text="I heard the pricess has an eye on one of you!"/>
+			</updateConversationRule>
+			<updateConversationRule topic="blozard">
+				<talk text="He's dead. We can now breathe for a while!"/>
+			</updateConversationRule>
+		</storyStateRule>
+		<storyStateRule scope="game" variable="King" value="dead" once="true">
+			<updateConversationRule topic="rumors">
+				<talk text="I heard the pricess has an eye on one of you! With the kind dead, you might be king!"/>
+			</updateConversationRule>
+			<updateConversationRule topic="the king">
+				<talk text="He's dead... what is going to be of us now!"/>
+			</updateConversationRule>
+		</storyStateRule>
+
+		<onStart>
+			<addLongTermWME type="friendly" params="Soldier"/>
+			<addLongTermWME type="friendly" params="King"/>
+			<addLongTermWME type="friendly" params="Termes"/>
+			<addLongTermWME type="friendly" params="Rudolph"/>
+			<addLongTermWME type="friendly" params="Ji"/>
+			<addLongTermWME type="friendly" params="Peasant"/>
+			<addLongTermWME type="unfriendly" params="Frog"/>	
+			<addLongTermWME type="unfriendly" params="Snake"/>	
+			<addLongTermWME type="unfriendly" params="Crab"/>	
+			<addLongTermWME type="unfriendly" params="Shark"/>	
+			<addLongTermWME type="unfriendly" params="Skeleton"/>	
+			<addLongTermWME type="unfriendly" params="SkeletonLord"/>	
+			<addLongTermWME type="unfriendly" params="Blozard"/>	
+			<addBehavior priority="0">BRReturnHome()</addBehavior>
+			<addBehavior priority="0">BRUnfriendlyIfAttackingFriendly()</addBehavior>
+			<addBehavior priority="50">BRAttackUnfriendly()</addBehavior>
+			<addBehavior priority="25">BRFollow()</addBehavior>
+		</onStart>			
+	</CharacterClass>
+</Characters>

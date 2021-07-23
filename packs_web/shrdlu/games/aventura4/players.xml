@@ -1,0 +1,111 @@
+<Characters>
+	<CharacterClass class="Warrior" super="Human,PlayerCharacter" name="Warrior">
+		<animation name="idle-left" dx="1" dy="1" period="4" looping="false" file="graphics.png">72</animation>
+		<animation name="idle-up" dx="1" dy="1" period="4" looping="false" file="graphics.png">72</animation>
+		<animation name="idle-right" dx="1" dy="1" period="4" looping="false" file="graphics.png">70</animation>
+		<animation name="idle-down" dx="1" dy="1" period="4" looping="false" file="graphics.png">70</animation>
+		<animation name="moving-left" dx="1" dy="1" period="4" looping="true" file="graphics.png">72,73</animation>
+		<animation name="moving-up" dx="1" dy="1" period="4" looping="true" file="graphics.png">72,73</animation>
+		<animation name="moving-right" dx="1" dy="1" period="4" looping="true" file="graphics.png">70,71</animation>
+		<animation name="moving-down" dx="1" dy="1" period="4" looping="true" file="graphics.png">70,71</animation>
+		<animation name="death" dx="1" dy="1" period="50" looping="false" file="graphics.png">-1</animation>
+
+	    <attribute name="experienceToLevelUp" value="10" levelupmultiply="1.5"/>
+		<attribute name="gold" value="100"/>
+		<attribute name="hp" value="20" levelupadd="5"/>
+		<attribute name="mp" value="0"/>
+		<attribute name="attack" value="4" levelupadd="1"/>
+		<attribute name="defense" value="0" levelupadd="1"/>
+		<attribute name="attack_modifier" value="1.0"/>
+		<attribute name="defense_modifier" value="1.0"/>
+		<attribute name="canSwim" value="false"/>
+		<attribute name="walk_speed" value="16"/>
+
+		<eventRule event="action_attack" hit="true"><playSound sound="sfx/hit.wav"/></eventRule>
+		<eventRule event="action_attack" hit="false"><playSound sound="sfx/miss.wav"/></eventRule>		
+		<eventRule event="action_chop"><playSound sound="sfx/hit.wav"/></eventRule>
+		<eventRule event="action_give"><playSound sound="sfx/sell-give.wav"/></eventRule>		
+		<eventRule event="action_sell"><playSound sound="sfx/sell-give.wav"/></eventRule>		
+		<eventRule event="action_buy"><playSound sound="sfx/sell-give.wav"/></eventRule>		
+		<eventRule event="action_use" item="Lever"><playSound sound="sfx/lever.wav"/></eventRule>
+		<eventRule event="action_interact" item="Lever"><playSound sound="sfx/lever.wav"/></eventRule>
+		<eventRule event="action_interact" item="Door"><playSound sound="sfx/door.wav"/></eventRule>
+
+	    <items>
+	      <object class="HPPotion">
+	        <animation name="idle" dx="1" dy="1" period="1" looping="false" file="graphics.png">1</animation>
+	        <attribute name="name" value="HP Potion+10"/>
+	        <attribute name="gold" value="25"/>
+	        <attribute name="takeable" value="true"/>
+	        <attribute name="usable" value="true"/>
+	        <attribute name="hp" value="10"/>
+	      </object>
+	    </items>
+		
+	</CharacterClass>
+
+	<CharacterClass class="Wizard" super="Human,PlayerCharacter" name="Wizard">
+		<animation name="idle-left" dx="1" dy="1" period="4" looping="false" file="graphics.png">82</animation>
+		<animation name="idle-up" dx="1" dy="1" period="4" looping="false" file="graphics.png">82</animation>
+		<animation name="idle-right" dx="1" dy="1" period="4" looping="false" file="graphics.png">80</animation>
+		<animation name="idle-down" dx="1" dy="1" period="4" looping="false" file="graphics.png">80</animation>
+		<animation name="moving-left" dx="1" dy="1" period="4" looping="true" file="graphics.png">82,83</animation>
+		<animation name="moving-up" dx="1" dy="1" period="4" looping="true" file="graphics.png">82,83</animation>
+		<animation name="moving-right" dx="1" dy="1" period="4" looping="true" file="graphics.png">80,81</animation>
+		<animation name="moving-down" dx="1" dy="1" period="4" looping="true" file="graphics.png">80,81</animation>
+		<animation name="death" dx="1" dy="1" period="50" looping="false" file="graphics.png">-1</animation>
+
+	    <attribute name="experienceToLevelUp" value="10" levelupmultiply="1.5"/>
+		<attribute name="gold" value="100"/>
+		<attribute name="hp" value="15" levelupadd="3"/>
+		<attribute name="mp" value="10" levelupadd="2"/>
+		<attribute name="attack" value="4" levelupadd="1"/>
+		<attribute name="defense" value="0" levelupadd="1"/>
+		<attribute name="attack_modifier" value="0.75"/>
+		<attribute name="defense_modifier" value="0.75"/>
+		<attribute name="canSwim" value="false"/>
+		<attribute name="walk_speed" value="16"/>
+
+		<eventRule event="action_spell" spell="magic missile"><playSound sound="sfx/spell-1.wav"/></eventRule>
+		<eventRule event="action_spell" spell="heal"><playSound sound="sfx/spell-2.wav"/></eventRule>
+		<eventRule event="action_spell" spell="shield"><playSound sound="sfx/spell-2.wav"/></eventRule>
+		<eventRule event="action_spell" spell="increase"><playSound sound="sfx/spell-2.wav"/></eventRule>
+		<eventRule event="action_spell" spell="decrease"><playSound sound="sfx/spell-2.wav"/></eventRule>
+		<eventRule event="action_spell" spell="fireball"><playSound sound="sfx/spell-1.wav"/></eventRule>
+		<eventRule event="action_spell" spell="magic eye"><playSound sound="sfx/spell-2.wav"/></eventRule>
+		<eventRule event="action_spell" spell="regenerate"><playSound sound="sfx/spell-2.wav"/></eventRule>
+		<eventRule event="action_spell" spell="incinerate"><playSound sound="sfx/spell-1.wav"/></eventRule>
+		<eventRule event="action_attack" hit="true"><playSound sound="sfx/hit.wav"/></eventRule>
+		<eventRule event="action_attack" hit="false"><playSound sound="sfx/miss.wav"/></eventRule>		
+		<eventRule event="action_chop"><playSound sound="sfx/hit.wav"/></eventRule>
+		<eventRule event="action_give"><playSound sound="sfx/sell-give.wav"/></eventRule>		
+		<eventRule event="action_sell"><playSound sound="sfx/sell-give.wav"/></eventRule>		
+		<eventRule event="action_buy"><playSound sound="sfx/sell-give.wav"/></eventRule>		
+		<eventRule event="action_use" item="Lever"><playSound sound="sfx/lever.wav"/></eventRule>
+		<eventRule event="action_interact" item="Lever"><playSound sound="sfx/lever.wav"/></eventRule>
+		<eventRule event="action_interact" item="Door"><playSound sound="sfx/door.wav"/></eventRule>
+
+		<spell>magic missile</spell>
+		<spell>heal</spell>
+
+	    <items>
+	      <object class="HPPotion">
+	        <animation name="idle" dx="1" dy="1" period="1" looping="false" file="graphics.png">1</animation>
+	        <attribute name="name" value="HP Potion+10"/>
+	        <attribute name="gold" value="25"/>
+	        <attribute name="takeable" value="true"/>
+	        <attribute name="usable" value="true"/>
+	        <attribute name="hp" value="10"/>
+	      </object>
+	      <object class="MPPotion">
+	        <animation name="idle" dx="1" dy="1" period="1" looping="false" file="graphics.png">5</animation>
+	        <attribute name="name" value="MP Potion+10"/>
+	        <attribute name="gold" value="25"/>
+	        <attribute name="takeable" value="true"/>
+	        <attribute name="usable" value="true"/>
+	        <attribute name="mp" value="10"/>
+	      </object>
+	    </items>
+    </CharacterClass>
+
+</Characters>

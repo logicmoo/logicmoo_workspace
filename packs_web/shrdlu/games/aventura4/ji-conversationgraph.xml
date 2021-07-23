@@ -1,0 +1,77 @@
+<!--
+The performatives that this graph contemplates are:
+	- hi
+	- bye
+	- inform
+	- ask
+	- trade / endtrade
+	- timeout
+-->
+
+<conversationGraph>
+
+	<state name="none">
+		<transition actor="self" performative="hi" state="sent-hi"/>
+		<transition actor="other" performative="hi" state="in-conversation">
+			<talk text="what do you want?" performative="hi"/>
+		</transition>
+		<transition actor="other" performative="bye" state="none">
+			<talk text="Yes, I'm too busy, just leave!" performative="bye"/>
+		</transition>
+		<transition actor="other" performative="inform" consume="false" state="in-conversation">
+			<talk text="what was that?" performative="inform" angry="true"/>
+		</transition>
+		<transition actor="other" performative="ask" consume="false" state="in-conversation">
+			<talk text="you talking to me?" performative="inform" angry="true"/>
+		</transition>
+		<transition actor="other" performative="trade" consume="false" state="in-conversation">
+			<talk text="Ok, be quick!" performative="inform" angry="true"/>
+		</transition>
+	</state>
+
+	<state name="sent-hi">
+		<transition actor="other" performative="hi" state="in-conversation"/>
+		<transition actor="other" performative="bye" state="none"/>
+		<transition actor="other" performative="inform" consume="false" state="in-conversation"/>
+		<transition actor="other" performative="ask" consume="false" state="in-conversation"/>
+		<transition actor="other" performative="trade" consume="false" state="in-conversation">
+			<talk text="be quick!" performative="inform" angry="true"/>
+		</transition>
+		<transition actor="other" performative="timeout" state="none">
+			<talk text="costumers are more disrespectful every day!" performative="inform" angry="true"/>
+		</transition>
+	</state>
+
+	<state name="in-conversation">
+		<transition actor="self" performative="bye" state="sent-bye"/>
+		<transition actor="self" performative="inform"/>
+		<transition actor="other" performative="hi" state="none">
+			<talk text="you are wasting my time... good bye" performative="inform" angry="true"/>
+		</transition>
+		<transition actor="other" performative="bye" state="none">
+			<talk text="later" performative="bye"/>
+		</transition>
+		<transition actor="other" performative="inform" state="in-conversation"/>
+		<transition actor="other" performative="ask" state="in-conversation">
+			<talk text="I know nothing of that." performative="inform"/>
+		</transition>		
+		<transition actor="other" performative="trade" state="in-trade">
+			<startTrading/>
+		</transition>
+		<transition actor="other" performative="timeout" state="none">
+			<talk text="costumers are more disrespectful every day!" performative="inform" angry="true"/>
+		</transition>
+	</state>
+
+	<state name="in-trade">
+		<transition actor="other" performative="endtrade" state="in-conversation"/>
+	</state>
+
+	<state name="sent-bye">
+		<transition actor="other" consume="false" state="in-conversation">
+			<talk text="I though we were done!" performative="inform" angry="true"/>
+		</transition>
+		<transition actor="other" performative="bye" state="none"/>
+	</state>	
+
+</conversationGraph>

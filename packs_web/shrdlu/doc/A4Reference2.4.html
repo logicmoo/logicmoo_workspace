@@ -1,0 +1,662 @@
+<html>  
+  <head>  
+    <title>A4 Engine Reference</title>  
+  <style>  
+  body {  
+    margin:20px;  
+    padding:0px;  
+    text-align:center;  
+  }  
+  </style>  
+  </head>  
+  <body>  
+    <h1>A4 Engine v2.4 Reference</h1>
+    <a id="top"/>
+    <div align="left">
+      The A4 Engine is a small engine for 2D action RPG games created by Santiago Onta&ntilde;&oacute;n (2014). Versions up to 1.2.2 were created in JavaScript. The current version, 2.4 has been created in C++, but a JavaScript version still exists (cross compiled to JavaScript via Emscripten). The A4 Engine was created specifically to test procedural content generation techniques, and thus, games are completely defined as xml files that are loaded by the game engine for execution. This page is NOT supposed to be a tutorial, but just a reference of the syntax used in the game definition files.<br>
+      <br>
+      To create a game, the following set of files are needed:<br>
+      <ul>
+        <li><a href="#game">Game definition file</a></li>
+        <li><a href="#character">Character definition files</a></li>
+        <li><a href="#map">Map definition files</a></li>
+        <li><a href="#items">Object definition files</a></li>
+      </ul>
+      The engine ships with an example game (Aventura 4), that contains all of these files. The main file, the game definition file, is called aventura4.xml and includes references to all the other files.<br>
+      <br>
+      Outline of the remainder of this page:
+      <ul>
+        <li><a href="#game">Game definition file</a></li>
+        <li><a href="#character">Character definition files</a></li>
+        <li><a href="#items">Object definition files</a></li>
+        <li><a href="#map">Map definition files</a></li>
+        <li><a href="#AI">AI</a></li>
+        <li><a href="#script">Scripts</a></li>
+        <li><a href="#eventrules">Event Rules</a></li>
+        <li><a href="#conversationgraph">Conversation Graphs</a></li>
+        <li><a href="#inferencerules">Inference Rules</a></li>
+        <li><a href="#behaviors">Behaviors</a></li>
+        <li><a href="#spells">Spells</a></li>
+      </ul>
+
+    </div>
+    <hr>
+
+
+    <a id="game"/>
+    <h2>Game Definition File</h2>
+    <div align="left">
+      The Game definition file has the following structure:<br>
+      <pre><code>
+&lt;A4Game name="My Game Name" title="My Game Title" subtitle="My Game Subtitle"
+        allowSaveGames="true/false"
+        allowTalking="true/false"
+        allowInventory="true/false"
+        allowMagic="true/false"
+        allowStats="true/false"&gt;
+  &lt;titleImage&gt;title.png&lt;/titleImage&gt;
+  &lt;story&gt;
+    &lt;line&gt; ... &lt;/line&gt;
+    ...
+    &lt;line&gt; ... &lt;/line&gt;
+  &lt;/story&gt;
+  &lt;ending id="ENDING_ID"&gt;
+    &lt;line&gt; ... &lt;/line&gt;
+    ...
+    &lt;line&gt; ... &lt;/line&gt;
+  &lt;/ending&gt;
+  &lt;tiles sourcewidth="32" sourceheight="32" targetwidth="32" targetheight="32"&gt;
+    &lt;types file="graphics.png"&gt;
+    ...
+    &lt;/types&gt;
+    &lt;seeThrough file="graphics.png"&gt;
+    ...
+    &lt;/seeThrough&gt;
+    &lt;canDig file="graphics.png"&gt;
+    ...
+    &lt;/canDig&gt;
+    &lt;animation name="coinpurse" dx="1" dy="1" period="4" looping="false" file="graphics2x.png"&gt;9&lt;/animation&gt;
+    &lt;animation name="curious" dx="1" dy="1" period="8" looping="true" file="graphics2x.png"&gt;74,-1&lt;/animation&gt;
+    &lt;animation name="scared" dx="1" dy="1" period="8" looping="true" file="graphics2x.png"&gt;84,-1&lt;/animation&gt;
+    &lt;animation name="angry" dx="1" dy="1" period="8" looping="true" file="graphics2x.png"&gt;94,-1&lt;/animation&gt;
+    &lt;animation name="tired" dx="1" dy="1" period="8" looping="true" file="graphics2x.png"&gt;104,-1&lt;/animation&gt;
+    &lt;animation name="happy" dx="1" dy="1" period="8" looping="true" file="graphics2x.png"&gt;75,-1&lt;/animation&gt;
+    &lt;animation name="magic missile" dx="1" dy="1" period="8" looping="false" file="graphics2x.png"&gt;114&lt;/animation&gt;
+    &lt;animation name="fireball" dx="1" dy="1" period="8" looping="false" file="graphics2x.png"&gt;124&lt;/animation&gt;
+    &lt;animation name="incinerate" dx="1" dy="1" period="8" looping="false" file="graphics2x.png"&gt;134&lt;/animation&gt;  
+
+  &lt;/tiles&gt;
+
+  &lt;characterDefinition file="characters1.xml"/&gt;
+  ...
+  &lt;characterDefinition file="charactersn.xml"/&gt;
+
+  &lt;objectDefinition file="objects1.xml"/&gt;
+  ...
+  &lt;objectDefinition file="objectsn.xml"/&gt;
+
+  &lt;map file="map1.xml"/&gt;
+  ...
+  &lt;map file="map1.xml"/&gt;
+
+  &lt;player class="PLayerClass1" x="12" y="14" map="0"/&gt;
+  ...
+  &lt;player class="PLayerClassn" x="12" y="14" map="0"/&gt;
+
+  &lt;onStart&gt;
+  ... [script] ... 
+  &lt;onStart/&gt;
+
+  ... [story state and event rules] ...
+
+&lt;/A4Game&gt;
+      </code></pre>
+      The tags have the following meaning:
+      <ul>
+        <li><b>A4Game</b>: this is the main tag, it has one parameter "name", which contains the name of the game (this is an identifier, such as "mygamev1"), "title" is the actual title of the game, such as "The Quest of Something", and "subtitle" is an optional parameter, in case your game title has a subtitle.</li>
+        <li><b>allowSaveGames</b>: determines whether the engine will let the player save and resume games. If this is set to "false", the engine will take the usual rogue-like behavior, with permadeath. If set to "true", the engine will show up to four save-game slots, and the player will be able to freely save and resume games.</li>
+        <li><b>allowTalking/allowInventory/allowMagic/allowStats</b>: activate or deactivate features of the engine (by default they are all active). This disallows the player from using these features. However, characters can still cast spells via scripts, or take and use objects, etc. via scripts even if these features are activated. Basically, this just disables the user form being able to issue those commands, and also removes the corresponding elements from the GUI.</li>
+        <li><b>titleImage</b>: with which you specify the image to be displayed in the background of the main menu.</li>
+        <li><b>story</b>: here you can add a set of lines that contain the back story of your game</li>
+        <li><b>ending</b>: the text to be displayed when a player finishes the game. You can specify several endings, each of them with a different ID (when you execute the "gameComplete" command, you must specify which is the ID of the ending that was triggered).</li>
+        <li><b>tiles</b>: here you define the graphics file that your game will use. You need to specify 4 parameters:<br>
+          <ul>
+            <li>sourcewidth: the width of each tile in your graphics file.</li>
+            <li>sourceheight: the height of each tile in your graphics file.</li>
+            <li>targetwidth: the width of each tile when rendered in the game.</li>
+            <li>targetheight: the height of each tile when rendered in the game.</li>
+          </ul>
+          For the graphics file, you need to specify three matrices: types, seeThrough, canDig. Each matrix (with one element per tile in the graphics file) specifies whether characters can walk or not over tiles (types): 0 is walkable, 1 is wall, 2 is tree, 3 is choppable tree, 4 is water;  whether they can see through them (0) or not (1) (seeThrough) or whether tey can dig (1) on them or not (0) (canDig).<br>
+          Also, you need to specify some default animations ("coinPurse", etc.), for some graphics that the engine needs to display such as spells, coin purses, and emoticons.
+        </li>
+        <li><b>characterDefinition</b>: specifies the character definition files.</li>
+        <li><b>objectDefinition</b>: specifies the object definition files.</li>
+        <li><b>map</b>: specifies the map definition files.</li>
+        <li><b>player</b>: specifies the class of the character the player will play, and the coordinates and map where it will start. More than one character can be specified, if the player is to control a group.</li>
+        <li><b>onStart</b>: a <a href="#script">script</a> that will be executed as soon as the game starts.</li>
+      </ul>
+      Additional <a href="#eventrules">event rules</a> can be added, which will be checked at each frame of the game during gameplay.
+    </div>
+    <br>
+    <a href="#top">back to top</a>
+    <hr>
+
+
+    <a id="character"/>
+    <h2>Character Definition Files</h2>
+    <div align="left">
+      Character definition files are used to define player characters, NPCs and enemies. Each file has the following structure:<br>
+      <pre><code>
+&lt;Characters&gt;
+  ...
+  &lt;CharacterClass class="MyCharacterClass" super="SuperClasses" name="My Character Name"&gt;
+    &lt;animation name="animation-name" dx="1" dy="1" period="4" looping="false" file="graphics.png"&gt;animation sequence&lt;/animation&gt;
+    ...
+    &lt;animation name="animation-name" dx="1" dy="1" period="4" looping="false" file="graphics.png"&gt;animation sequence&lt;/animation&gt;
+
+    &lt;attribute name="attribute name" value="attribute value"/&gt;
+    ...
+    &lt;attribute name="attribute name" value="attribute value"/&gt;
+
+    &lt;items&gt;
+    ... [objects in the inventory] ...
+    &lt;/items&gt;
+
+    ... [story state, event, conversation and inference rules] ...
+
+    &lt;onStart&gt;
+    ... [script] ... 
+    &lt;onStart/&gt;
+    &lt;onEnd&gt;
+    ... [script] ... 
+    &lt;onEnd/&gt;
+  &lt;/CharacterClass&gt;
+        </code></pre>
+      The tags have the following meaning:
+      <ul>
+        <li><b>CharacterClass</b>: this is the main tag to define a character, it contains the class name (e.g., "Snake", "Skeleton", "Warrior", etc.)</li>
+        <li><b>SuperClasses</b>: a comma separated list of the super classes. All the definitions in the super classes will be added to the character class. All class hierarchies for characters/objects must end in some base class, that can currently be "Item", "Container", "Character" or "Vehicle". It is possible to add an asterisk to a superclass name, e.g. super="*Skeleton", in this case, "Skeleton" will be a superclass, but its definition is not used to fill in the features of this class.</li>
+        <li><b>animation</b>: this defines how the characters will look when rendered in the screen. The following animations can be defined:
+          <ul>
+            <li>idle-left/idle-up/idle-right/idle-down: when characters stand still</li>
+            <li>moving-***: when characters walk</li>
+            <li>attacking-***: when cahracters attack</li>
+            <li>interacting-***: when characters use objects</li>
+            <li>casting-***: when characters cast spells</li>
+            <li>talking-***: when characters talk</li>
+            <li>death: when characters die (this animation should NOT be looping, the character will disappear when the animation ends, there is no death animation specified, characters will disappear immediately)</li>
+          </ul>
+          The idle animations must be specified. All the others are optional (their defaults are the idle animations for each direction). For each animation, the following needs to be specified:
+          <ul>
+            <li>dx,dy: the width and height in tiles of the character</li>
+            <li>period: how many frames to hold each frame</li>
+            <li>looping: play once or loop</li>
+            <li>file: the graphics file from where to get the graphics (must have been specified in the main game definition file first)</li>
+            <li>the actual animation sequence: sequence of tile IDs (tiles start counting from 0 in the top-left of a graphics file)</li>
+          </ul>
+        </li>
+        <li><b>attribute</b>: the attributes (like hitpoints, move speed, attack, defense, etc.) a character will have. All characters need to specify at least the following attributes: gold, hp, mp, attack, defense, canSwim, walk_speed. Additionally, player characters need to specify: "attack_modifier" and "defense_modifier" (multipliers to the attack bonus of weapons and armor). NPCs and Enemies must specify "gives_experience" (experience when players kill them), "sightRadius" (how far can they see) and picky (whether they are picky or not when talking to them). "respawn" (the probability of this character respawning after death; characters respawn after 2000 cycles of being dead, and only if there is no player character around to prevent the player from seeing an enemy pop out of thin air). "canWalk" (by default it is the opposite of "canSwim", but both can be set to true). All attributes can specify a value, e.g. "4", a range, e.g. "10-20", or an alternative, e.g. "0,2".<br>
+        If the character should be allowed to level up (right now, this is only allowed for player characters), the attribute "experienceToLevelUp" must be defined. Additionally, for all of those attributes that will be modified when leveling up, you need to specify either a "levelupadd" or a "levelupmultiply" value. For example, if we define an attribute like this: &lt;attribute name="attack" value="1" levelupadd="1-2"/&gt;, then the attribute will start with value "1", and every time the character levels up, 1-2 points will be added. "hp" and "mp" are special attributes, and when they increase, "max_hp" and "max_sp" (implicit attributes that not need be defined) are also increased. Moreover, notice that you also should increase the "experienceToLevelUp" attribute. For example, defining it like this: &lt;attribute name="experienceToLevelUp" value="10" levelupmultiply="1.5"/&gt;
+        </li>
+        <li><b>items</b>: lets you specify items in the inventory of a character. The syntax for defining items, along with a list of predefined items is explained <a href="#items">here</a></li>
+        <li><b>onStart</b>: a <a href="#script">script</a> that will be executed as soon as the character spawns.</li>
+        <li><b>onEnd</b>: a <a href="#script">script</a> that will be executed as soon as the character dies.</li>
+      </ul>
+    Additional <a href="#eventrules">event rules</a>, <a href="#conversationgraph">conversation graph</a> and <a href="#inferencerules">inference rules</a> can be added, which will be checked at each frame of the game during gameplay. These define how the characters behave in front of story events, or when other characters talk to them. All of these rules have access to a common "memory" of the things the character knows. This is further described in the <a href="#AI">AI</a> section.
+    </div>
+    <br>
+    <a href="#top">back to top</a>
+    <hr>
+
+
+    <a id="items"/>
+    <h2>Object Definition Files</h2>
+    <div align="left">
+    When defining maps and characters, you might want to add items to the inventory of characters, or objects to the maps, etc. A4 allows you to define items/objects using XML syntax, for example:<br>
+    <pre><code>
+      &lt;object class="HPPotion" completeRedefinition="true"&gt;
+        &lt;animation name="idle" dx="1" dy="1" period="1" looping="false" file="graphics.png"&gt;1&lt;/animation&gt;
+        &lt;attribute name="ID" value="657"/&gt;
+        &lt;attribute name="name" value="HP Potion+10"/&gt;
+        &lt;attribute name="gold" value="25"/&gt;
+        &lt;attribute name="takeable" value="true"/&gt;
+        &lt;attribute name="usable" value="true"/&gt;
+        &lt;attribute name="hp" value="10"/&gt;
+      &lt;/object&gt;
+    </code>></pre>
+    Where the class of item/object is defined in the "class" attribute, "completeRedefinition" should be set to "true" if we want to redefine completely an object (i.e., if we want the A4 Engine to ignore the object definition file for this type of object). 
+
+    The subtags are equivalent to those required to define object types in the object definition file. The object definition files have the following structure:<br>
+    <pre><code>
+&lt;Objects&gt;
+  &lt;ObjectClass class="MyObjectClass" super="SuperClasses" name="MyObjectName"&gt;
+    &lt;animation name="animation-name" dx="1" dy="1" period="4" looping="false" file="graphics.png"&gt;animation sequence&lt;/animation&gt;
+    ...
+    &lt;animation name="animation-name" dx="1" dy="1" period="4" looping="false" file="graphics.png"&gt;animation sequence&lt;/animation&gt;
+
+    &lt;attribute name="attribute name" value="attribute value"/&gt;
+    ...
+    &lt;attribute name="attribute name" value="attribute value"/&gt;
+
+    &lt;items&gt;
+    ... [objects in the inventory] ...
+    &lt;/items&gt;
+
+    ... [story state and event rules] ...
+  &lt;/ObjectClass&gt;
+  ...
+&lt;/Objects&gt;  
+    </code></pre>
+      The tags have the following meaning:
+      <ul>
+        <li><b>ObjectClass</b>: this is the main tag to define anew object/item type.</li>
+        <li><b>SuperClasses</b>: a comma separated list of the super classes. All the definitions in the super classes will be added to the object. All class hierarchies for characters/objects must end in some base class, that can currently be "Item", "Container", "Character" or "Vehicle".</li>        
+        <li><b>animation</b>: this defines how the objects will look when rendered in the screeen. See the <a href="#character">character definition</a> section for more info on this. The default animation for items is called "idle", which you should define for any item. For doors, you should specify the "open" and "closed" animations, for how the door loks when it's open or closed, etc.
+        <li><b>attribute</b>: the attributes the object will have. You need to specify the following attributes: takeable, useable, equipable, value and tile. For vehicles, you also need to specify canSwim and canWalk. Also, items can have the "burrowed" attribute (true/false) to determine whether they are burrowed in the ground (and thus need to be dug out using a spade) or not.</li>
+        <li><b>items</b>: used to specify the items for objects that can contain other items (for Containers such as chests, or bags). Each item entry can include an attribute "probability", which defines the probability with which the character will have this item. For example probability="0.5" means that only 50% of the times a character of this type is spawned, it will have the given item.</li>
+      </ul>
+      Additional <a href="#eventrules">event rules</a> can be added, which will be checked at each frame of the game during gameplay. 
+      Vehicles allow characters that have "canSwim" set to false to move through water (if the vehicle has canSwim=true) and characters that have "canWalk" set to false more through land (if the vehicle has "canWalk=true"). <br>
+      Vehicles have hit points, when a character is attacked while in a vehicle, the vehicle takes the damage. When the vehicle loses all of its hit points, it is destroyed, and drops the character. If a character that cannot swim is dropped in the water, it dies (analogously for a character that cannot walk, dropped on land).
+    <br>
+
+    A4 includes a set of default item and object classes that can be used in any game. Specifically, A4 incorporates the following default item/object classes:
+    <ul>
+      <li>Food (require attributes name, and gold): for food items, you can specify the name, and how expensive it is ("gold")</li>
+      <li>Spade (require attribute value): this item can be equipped and used to dig and uncover burrowed items. You can specify the value in gold.</li>
+      <li>Key (requires attributes name and ID): keys have no value in gold, but you can specify their name and "ID" (ID must match with the ID of a door, which is the one that the key opens)</li>
+      <li>Chest (require attribute name): contains items (specified by the "items" subtag, recursively)</li>
+      <li>HPPotion (requires the "hp" attribute): regenerate hit points when used. Their value in gold is automatically calculated as "5 + hp*2"</li>
+      <li>MPPotion (requires the "mp" attribute): regenerate magic points when used. Their value is automatically calculated as "5 + mp*2"</li>
+      <li>XPPotion (requires the "xp" attribute): gives experience. Their value is automatically calculated as "10 + xp*4"</li>
+      <li>A4StrengthPotion (requires the "strength" attribute): permanently increases attack. Their value is automatically calculated as "100 + strength*100"</li>
+      <li>A4ConstitutionPotion (requires the "constitution" attribute): permanently increases defense. Their value is automatically calculated as "50 + constitution*50"</li>
+      <li>A4LifePotion (requires the "life" attribute): permanently increases max hp. Their value is automatically calculated as "50 + life*25"</li>
+      <li>CoinPurse (requires the "gold" attribute): gives gold to the player when taken.</li>
+      <li>Scroll (requires the "name", "spell", and "gold" attributes): contains a spell, specified in "spell". The spell is a number, representing one of the spells that A4 engine supports are: 0 is "magic missile", 1 is "heal", 2 is "shield", 3 is "increase", 4 is "decrease", 5 is "fireball", 6 is "magic eye", 7 is "Regenerate" and 8 is "incinerate". See <a href="#spells">spells</a> for a description of what each spell does.</li>
+      <li>Wand (requires the "name", "spell", "charges" and "gold" attributes): contains a spell, specified in "spell". The spell is a number, representing one of the spells that A4 engine supports are: 0 is "magic missile", 1 is "heal", 2 is "shield", 3 is "increase", 4 is "decrease", 5 is "fireball", 6 is "magic eye", 7 is "Regenerate" and 8 is "incinerate". See <a href="#spells">spells</a> for a description of what each spell does. It also accepts an optional parameter "disappearWhenEmpty" (true/false) that makes the wand disappear when the number of charges reaches 0.</li>
+      <li>EquipableItem (name, equipableSlot, attack, defense, magic, canChop, and gold attribues): for all the weapons, armor and rings: equipableSlot is 0 for weapons, 1 for shields/armor, and 2 for rings. "attack" and "defense" are the modifiers for attack and defense of this item, "magic" is the multiplier for the effects of spells (damage, amount healed), "canChop" is a boolean that determines whether this item can chop trees.</li>
+      <li>Lever (need the name, leverID, leverState attributes): levers can open and close doors, "leverID" has to match with the "doorID" of a door in the same map. Levers have two states (true/false), which will be rendered as the open and closed animations.</li>
+      <li>Door (need the name and closed attributes): "closed" is "true" when the door is closed, and "false", when it's open. Animations for the open and closed states can be provided. An optional attribute "consumeKey" (true/false) determines whether the key is consumed when used to open/close the key (default is true).<br>
+      Moreover, you can optionally specify a "doorgroup" for any door. When a door is open or closed, all the other doors that share the same doorgroup will also open or close. This is very useful, for example, for when you have the inside and outside of a building and the building door is shown in both maps. Obviously if the player opens one, you want the other one to open too. 
+      </li>
+      <li>PushableWall: a wall that can be pushed.</li>
+      <li>PressurePlate: a button that gets pressed when stepped on. This requires the attribute "pressureRequired", which takes value "1" if the pressure plate is to be activated just by placing any object on top of it, "2" if you need to place a "heavy object" (a pushable wall or a character), and "3" if it's only activated by a player. The two animations used for when it's pressed or unpressed, are "closed" and "open", respectively (like doors).</li>
+    </ul>
+    </div>
+
+    <a href="#top">back to top</a>
+    <hr>
+
+
+    <a id="map"/>
+    <h2>Map Definition Files</h2>
+    <div align="left">
+    A4 expects the maps to be in an XML format that extends that of the <a href="http://www.mapeditor.org">TILED</a> map editor (TMX). When creating a map, make sure to add a property called "name" that takes the name of the map as a value. If you open any A4Engine map in <a href="http://www.mapeditor.org">TILED</a>, it might be able to load and display the tile layers. However, if you save the map, it will lose all the scripts, and additional information required by the A4Engine. So, this is not recommended.<br>
+    <br>
+    Maps are organized in "layers". It is recommended that you define two layers in a map (but you can define more if you want). The first layer will be used for the background tiles and objects (e.g. floor, grass, water, etc.), and the second layer for the foreground objects (walls, trees, etc.).<br>
+    Each layer is defined as:<br>
+    <pre><code>
+    &lt;layer name="Tile Layer 1" width="WIDTH" height="HEIGHT">
+    &lt;data&gt;
+      &lt;tile gid="TILEID"/&gt;
+      ...
+      &lt;tile gid="TILEID"/&gt;
+    &lt;/data&gt;
+    &lt;/layer&gt;
+    </code></pre>
+    Where each "tile" line corresponds to one of the WIDTH*HEIGHT tiles in the map (starting from the top-left corner, and proceeding line by line). The TILEID is the number of the tile in the graphics file (Starting from the top left). Everything that does not have any behavior (floor, walls, trees, rivers, etc.) is defined in the tile layers. Everything that has a behavior (enemies, items that can be picked-up, doors that can be open, etc.) does in the object layers. After you define the tile layers, you need to add the object layers. An object layer is defined as:<br>
+    <pre><code>
+    &lt;objectgroup name="LAYER NAME" width="WIDTH" height="HEIGHT"&gt;
+      ...
+      &lt;object class="OBJECT CLASS" x="X" y="Y" width="W" height="H"/&gt;
+      ...
+    &lt;/objectgroup&gt;
+    </code></pre>    
+    Notice that the x, y, width, and height of objects is defined in pixels. Object definition follows the exact same format as when defining items in the inventory of characters, as described above.
+    In addition to the object classes that come predefined with A4Engine, and those that you define in the object and character definition files, in maps, you can specify objects of three additional classes:
+    <ul>
+      <li><b>Bridge</b>: links this map to another map. It must specify an additional attribute "name", which must match with the name of a "bridgedestination" in some other map.</li>
+      <li><b>BridgeDestination</b>: its name must match with the name of a "bridge" in some other map. You can specify the properties "appearWalking" (true/false) and "appearDirection" (0/1/2/3) if you want to forge characters to appear at the destination walking (appearWalking="true") or just teleport them there withou walking (appearWalking="false"), and if you want them to appear walking, you can force a direction with "appearDirection", or just let them appear walking from the direction from which they came from.</li>
+      <li><b>Trigger</b>: a script that will be triggered when a player walks onto it. It has a parameter called "repeat", that specifies wether this trigger is run once (repeat="false") or run every time (repeat="true"). This can be used, for example, to make messages appear when the player walks into certain areas. The script is specified inside of a &lt;script&gt; xml tag, like this:
+    <pre><code>
+    &lt;object class="Trigger" repeat="true" x="352" y="128" width="32" height="32"&gt;
+      &lt;script&gt;
+        &lt;gameComplete id="2"/&gt;
+      &lt;/script&gt;
+    &lt;/object&gt;
+    </code></pre>    
+      </li>
+    </ul>
+    For each object defined in any object layers, additional event/story/inference rules, scripts, items, etc. can be added in the same way as in the object and character definition files.<br>
+    <br>
+    Maps defined in TILED can have a set of "properties". It is very important that you define a property giving a name to your map, like this:
+<pre><code>&lt;properties&gt;
+  &lt;property name="name" value="[MY MAP NAME]"/&gt;
+&lt;/properties&gt;
+</code></pre>
+    Each map must have a different name, since the name is the internal ID that the A4Engine uses to differentiate maps.<br>
+    <br>
+    Finally, notice that TILED can only be used to author the tile layers. Object layers and other properties of the maps cannot be added in TILED, since it does not support the extended XML format used by the A4 Engine. So, after the map has been saved from TILED, in addition to objects, you can add additional <a href="#eventrules">event rules</a>, and an onStart tag like in the <a href="#game">Game definition file</a>.
+    </div>
+    <br>
+    <a href="#top">back to top</a>
+    <hr>
+
+
+    <a id="AI"/>
+    <h2>AI</h2>
+    <div align="left">
+    A4 provides some basic functionality to define the AI of Enemies and NPCs in the game. Specifically, the AI of a character is defined based on the following elements:<br>
+    <ul>
+    <li><b>Memory</b>: characters can perceive things around them (variable "sightRadius" controls how far can they see). The memory is made of a list of <i>Working Memory Elements</i> (WMEs). A WME is a simple Prolog-like term of the form "f(p1,...,pn)", where "f" is the functor, and "pi" are the parameters, which can be integers, strings, sorts (character or item classes), or a wildcard "?". When a character perceives something, a WME is created in its short term memory with some activation value. This activation value is decreased in 1 at each game time. When the activation reached 0, the WME is forgotten. When a WME has been in the short term memory for a certain amount of time continuously (3000 game cycles, equivalent to 5 minutes of gameplay), it is moved to the long term memory, where it will stay there forever. Moreover, if a character observes evidence against a WME in the long term memory, such WME can eventually be eliminated (each negative piece of evidence subtracts 50 activation points, and when 3000 of those are subtracted, the WME is removed). For example, if a character observes an item at a certain location, it will perceive a WME like "object(13,200,"The forest")", meaning that object with ID 13, was observed at position 200 in the "The forest" map (position starts at 0 in the top left corner, and increases left-to-right, and then to the next row). If such item is observed for very long, the character will "freeze" such WME in the long term memory, and always believe such item will be in that position, even when the character goes away. If someone takes the item away, when the character goes back to those coordinates and observes the contradiction, the WME will start losing activation and eventually, the character will come to terms with the fact that the item is not there, and delete the WME. You can define any type of WME you want, but a list of the WMEs used internally by the engine is described below.</li>
+    <li><b>Behaviors</b>: NPCs and Enemies can have multiple "behaviors" attached to them. Behaviors are executed each time a character can execute an action (i.e. they will not be executed while a character is moving or attacking until the move or attack is done), see more <a href="#behaviors">here</a>.</li>
+    <li><b>Rules</b>: many different types of rules can be specified, in addition to behaviors: <a href="#eventrules">event rules</a>, <a href="#conversationgraph">conversation graph</a> and <a href="#inferencerules">inference rules</a>.</li>
+    </ul>
+    The predefined types of WMEs that the A4 engine uses internally are (these WMEs can be used by any of the behaviors or rules to store information, and act as a "blackboard"):
+    <ul>
+    <li>object(ID,x0,y0,y1,y1,map): created when a character sees an item or character (ID) at a certain position in a given map. When the character observes that another character (ID) has just left the current map to go to another one, then it just observes "object(ID,?,map)", since it knows the ID is in the other map, but doesn't yet know the exact position.</li>
+    <li>inventory(ID): created when a character has an item (ID) in her inventory.</li>
+    <li>bridge(map2,x0,y0,y1,y1,map): created when a character sees the connection to reach map2.</li>
+    <li>is_a(ID,sort): created when a character observes that a certain item or character (ID) is of sort "sort". For example, when a character sees a frog, the following two WMEs will be added: object(21,100,"the forest"), is_a(21,Frog).</li>
+    <li>friendly(sort): to store the classes of characters that are considered friendly.</li>
+    <li>unfriendly(sort): to store the classes of characters that are considered unfriendly. For example, enemies start with the sort of the player as "unfriendly", and NPCs start with the sort of the player as "friendly".</li>
+    <li>location(name,x0,y0,y1,y1,map): can be used to store locations to be used by behaviors, such as "goto".</li>
+    <li>WMEs for observed actions: each time an action is observed, a corresponding WME is stored. The following actions are recorded as WMEs: take(ID,ID2), drop(ID,ID2), die(ID), attack(ID,ID2), cast(ID,spell-sort), case(ID,spell-sort,ID2), interact(ID,ID2), embark(ID,ID2), disembark(OD,ID2), talk::[PERF](ID,topic,ID2), give(ID,ID2,ID3). Where "talk::[PERF]" can be talk::hi, talk::bye, talk::trade, talk::ask, talk::inform, depending on the speech act used.</li>
+    </ul>
+    Perception WMEs are created with the minimum activation (they are only active while the object is being perceived), action perception WMEs are created with an activation of 100 (i.e., the character remembers the action for 2 seconds).
+    </div>
+    <br>
+    <a href="#top">back to top</a>
+    <hr>
+
+
+    <a id="script"/>
+    <h2>Scripts</h2>
+    <div align="left">
+    A4 allows the specification of scripts for many tasks. A script in A4 is a sequence of actions, where each action is defined in the following way:
+    <pre><code>
+&lt;actionName ...action attributes...&gt;
+  ... sub-actions ...
+&lt;/actionName&gt;  
+    </code></pre>
+    The list of actions that A4 supports is the following:
+    <ul>
+      <li><i>Game Logic Actions:</i>
+        <ul>
+        <!-- Game Logic scripts -->
+        <li><b>gameComplete:</b> triggers the game complete screen, for when the player completes the game. Requires the parameter "id", that refers to the ID of the ending that will be triggered. If no "id" is specified, the first of the endings will be triggered.</li>
+        <li><b>message:</b> prints a message via the game console. Requires the attribute "text"</li>
+        <li><b>delay:</b> inserts a delay in the script for a certain number of cycles, specified in the "cycles" parameter.</li>
+        <li><b>playSound:</b> plays a sound file (parameter "sound").</li>
+        <li><b>if:</b> An if-then-else statement. Defined in the following way:
+        <pre><code>
+&lt;if&gt;
+  &lt;condition&gt;
+    ... sub-actions ...
+  &lt;/condition&gt;
+  &lt;then&gt;
+    ... sub-actions ...
+  &lt;/then&gt;
+  &lt;else&gt;
+    ... sub-actions ...
+  &lt;/else&gt;
+&lt;/if&gt;
+      </code></pre>
+        If the last action of the script in the condition part ends successfully, the "then" script will be executed, otherwise the "else" script will be executed.
+        </li>
+        </ul>
+      </li>
+      
+      <li><i>Character Actions</i> (note, all these actions are executed with priority 10, if there are other behaviors asking for control of the character with higher priority, these scripts will be delayed):
+        <ul>
+        <!-- Character action scripts -->
+        <li><b>teleport:</b> automatically transports a character to the desired position. Requires the following attributes:
+          <ul>
+            <li>x: destination x coordinate (pixel coordinates).</li>
+            <li>y: destination y coordinate (pixel coordinates).</li>
+            <li>map (optional): destination map (the map name).</li>
+          </ul>
+        </li>
+        <li><b>goto:</b> makes a character walk towards a desired position. Requires the same attributes as "teleport".</li>
+        <li><b>use:</b> It can be used in three different ways: 1) with no parameters the character will try to use an object in the current position, 2) with "X", "y" (and optionally "map"), makes a character walk towards a desired position and use an object in that position (e.g., a lever), and 3) with "inventory" it uses the item "inventory" from the inventory.</li>
+        <li><b>take:</b> makes a character walk towards a desired position and take an item in that position. Requires the same attributes as "teleport", but "x" and "y" are also optional (if not provided, the character will just try to pick up an item in the current position)</li>
+
+        <li><b>interact:</b> makes a character walk towards a desired position and tries to interact with an object there (for example, for opening a door if it has the necessary key). Requires the same attributes as "teleport", but "x" and "y" are also optional (if not provided, the character will just try to embark the transport in the current position)</li>
+        <li><b>chop:</b> makes a character walk towards a desired position and tries to chop a tree there. Requires the same attributes as "teleport".</li>
+
+        <li><b>embark:</b> makes a character walk towards a desired position and embark the transport in that position. Requires the same attributes as "teleport", but "x" and "y" are also optional (if not provided, the character will just try to embark the transport in the current position)</li>
+        <li><b>disembark:</b> makes a character moves towards a desired position and disembarks the current transport. Requires the same attributes as "teleport", but "x" and "y" are also optional (if not provided, the character will just try to disembark the transport in the current position)</li>
+
+        <li><b>attack:</b> it requires the parameter "target". It moves toward the character with name "target" and attacks. If the optional parameter "untilDead" is set to "true", it attacks until the target is dead, otherwise, it just attacks once.</li>
+        <li><b>spell:</b> the character casts the spell specified by "spell", if the spell requires a direction, then this can be specified in the "direction" parameter with (north/east/south/west/right/left/up/down/self).
+
+        <li><b>talk:</b> makes a character say something with a text bubble. It requires the attribute "text" (containing the text that will appear in the text bubble), and it can optionally specify the "performative" ("hi", "bye", "ask", "inform", "trade", "timeout") and "topic" of the talk. If a parameter "angry='true'" is specified, then the character will yell, instead of talk. Finally, a parameter "wait" can be set to true or false, if true, this script will wait until the talk is complete in order to return success.</li>
+        <li><b>talkOther:</b> Same as "talk", but it will be the "other" character that will talk, this can only be used in contexts where the "other" character is defined (e.g., when in a conversation).</li>
+        <li><b>steal:</b> the character will steal an item from the inventory of the other-character (the one which with it is currently engaged in conversation). It requires one parameter "itemName".</li>
+        <li><b>give:</b> the character will give an item to the other-character (the one which with it is currently engaged in conversation). You can specify an item name in the attribute "inventory" (the character will take this item from its own inventory and give it), or as a child xml tag (a new item will be created with this definition and given to the other-character). If the inventory of the other character is full, the item will be dropped in the same coordinate as the other character.</li>
+        <li><b>sell:</b> the character will sell an item to the other-character (the one which with it is currently engaged in conversation). You can specify an item name in the attribute "inventory" (the character will take this item from its own inventory and give it), or as a child xml tag (a new item will be created with this definition and sold to the other-character). If the inventory of the other character is full, the action will fail.</li>
+        <li><b>buy:</b> requires two parameters "seller" (the name of the character who will sell the object), and "object", the name of the object to buy.
+        <li><b>drop:</b> like "give", but the item will be dropped in the coordinates currently being occupied by the character.</li>
+        <li><b>dropGold:</b> a certain amount of gold will be dropped in the coordinates currently being occupied by the character, if the character has enough gold to drop. The amount is specified in the parameter "gold".</li>
+        </ul>
+      </li>
+
+      <li><i>Miscellanea Actions:</i>
+        <ul>
+        <!-- Miscelania -->
+        <li><b>die:</b> makes the hitpoints of a character 0.</li>
+        <li><b>addBehavior:</b> adds a behavior to a character (see the <a href="#behaviors">behaviors</a> section). Requires the following attributes:
+          <ul>
+            <li>priority: an integer. 0 is minimum priority, and higher numbers are higher priority.</li>
+            <li>id (optional): an id for this behavior, to be able to refer to it in case you want to remove it later on.</li>
+            <li>the XML code that will create a behavior is specified as child XML tags for example &lt;addBehavior priority="0"&gt;&lt;BGoto target="home" radius="0"/&gt;&lt;/addBehavior&gt;</li>
+          </ul>
+        </li>
+        <li><b>removeBehavior:</b> to remove a behavior, requires the attribute "id".</li>
+        <li><b>pendingTalk:</b> tells a character to say something as soon as she sees a particular other-character. It requires the attributes "character" (the class of the other-character that we are waiting for) and "text" (the text to say). As soon as the other-character appears, the character will start a conversation and say this text as soon as possible. It can specify subscripts that will be executed as soon as the text bubble disappears.</li>
+        <li><b>addTopic:</b> adds a topic to the list of topics the players can ask about. It requires two attributes: "topic" and "text".</li>
+        <li><b>eventRule:</b> adds/updates an event rule, it is defined exactly in the same way as described above.
+        <li><b>updateConversationGraphTransition:</b> it updates the reaction of the character when asked about a particular topic. It accepts the same parameters as the "conversationGraphTransition" definition for characters (but the "from" parameter is mandatory), and desired reaction is also specified as subactions, as for "onversationGraphTransition".</li>
+        <li><b>storyState:</b> it updates the variables in the story state. The story state of A4 is stored at 3 different scopes ("game", "map" and "object"/"character", ("object" and "character" are equivalent)). So, you have to specify an attribute "scope" (one of the previous tree), a variable name ("variable") and the "value" you want it to take.</li>
+        <li><b>addWME:</b> adds a WME to the memory of a character. You have to specify two attributes, "wme" (e.g. "friendlg(Frog)", or "myWME(24,"hello",?)") and "activation", that determine the WME and its initial activation. "activation" has the activation value of th WME. When defining a WME, "?" means a wildcard (that will match with anything), you can give names to wildcards, like "?1" or "?15" (names are integers).</li>
+        <li><b>addWMEToOthers:</b> adds a WME to the memory of other characters. You have to specify four attributes: "wme", that determine the type of the WME and its parameters; and "characterClass" and "select" (possible values are "all" and "first") that determine the character class that will be affected, and whether "all" the characters on sight or only the "first" will be affected. "activation" has the activation value of th WME.</li>
+        <li><b>addCurrentPositionWME:</b> adds a WME of the type location(NAME, LOCATION, MAP) to the memory of the character. NAME is specified with the parameter "name". You also need to specify the activation value with the parameter "activation".</li>
+        <li><b>familiarWithMap:</b> requires a "map" parameter with the name of a map. The result is that the character gets WMEs added to her long term memory with all the bridges in that map (this is useful if you want characters to be able to navigate certain maps easily):
+        <li><b>loseItem:</b> an item will be removed from the character's inventory. It requires one attribute "inventory" with the name of the item.</li>
+        <li><b>gainItem:</b> an item will be added to the character's inventory, the item specification is included as a child xml tag.</li>
+        <li><b>experienceGain:</b> the character will gain experience. It requires one parameter "xp" (an integer).</li>
+        <li><b>gainGold:</b> the character gain a certain amount of gold specified in the parameter "gold".</li>
+        <li><b>gainGoldOther:</b> makes the other character gain a certain amount of gold specified in the parameter "gold".</li>
+        <li><b>startTrading:</b> opens the trading dialog between the player and the other character.</li>
+        <li><b>openDoors:</b> will open or close all the doors in the current map with ID "door". Requires the "door" attribute with the ID of the door this will open or close</li>
+        <li><b>addAgenda:</b> adds a new agenda with name as specified in the parameter "agenda". Other parameters are "duration" (length in frames of the agenda), "loop" (true/false), and "absoluteTime" (true/false). This last parameter determines if the time of the agenda is absolute (i.e., in sync with the game time), or relative (i.e., time only advances when the object is updated (objects in maps where there is no player nearby are not updated)). An example agenda is specified as a collection of "entry"s, each of them with a given time. Each entry contains a sequence of scripts that will be executed at the given time:
+        <pre><code>
+  &lt;addAgenda agenda="myagenda" duration="800" loop="false" absoluteTime="false"&gt;
+    &lt;entry time="0"&gt;
+      ... sub-actions ...
+    &lt;/entry&gt;
+    ...
+    &lt;entry time="650"&gt;
+      ... sub-actions ...
+    &lt;/entry&gt;
+  &lt;/addAgenda&gt;
+        </code></pre>
+        </li>
+        <li><b>removeAgenda:</b> removes an agenda from the object/character. Requires the parameter "agenda", specifying the name of the agenda to remove.</li>
+        </ul>
+    </ul>
+    All of these actions return "true" or "false" if they could or not be executed successfully, and thus, all can be used as part of the condition of an if-then-else. An if-then-else returns the value of the last action executed internally.
+    </div>
+    <br>
+    <a href="#top">back to top</a>
+    <hr>
+
+
+    <a id="eventrules"/>
+    <h2>Event Rules</h2>
+    <div align="left">
+    Event rules are rules that are checked at each execution cycle, triggered by certain events. An event rule is defined as follows:<br>
+      <pre><code>
+&lt;eventRule event="EVENT" once="true/false"&gt;
+    ... sub-actions ...
+&lt;/eventRule&gt;
+      </code></pre>
+    When the event "event" is triggered, this rule will be executed. Currently, the engine supports the following events:  
+    <ul>
+    <li>"use": when an item or a lever or a pressure plate is used</li>
+    <li>"pickup": when an item is picked up</li>
+    <li>"activate": when a lever or pressure plate is moved to the "on" position</li>
+    <li>"deactivate": when a lever or pressure plate is moved to the "off" position</li>
+    <li>"drop": when an item is dropped (event is triggered in the item that is dropped)</li>
+    <li>"equip": when an item is equipped (event is triggered in the item that is equipped)</li>
+    <li>"unequip": when an item is unequipped (event is triggered in the item that is unequipped)</li>
+    <li>"open": when a door or container is open</li>
+    <li>"close": when a door is closed</li>
+    <li>"push": when a movable wall is pushed</li>
+    <li>"timer": to specify that something has to be executed after a certain amount of time. It has two additional parameters, "time" and "period". When the game cycle is equal to "time", this rule will fire. Additionally, if a "period" parameter is specified, this rule will fire when the game cycle module "period" is equal to time (this can be used for things that have to be executed periodically)</li>
+    <li>"receive": when a character receives an item from another character. It accepts an optional additional parameter "item", specifying the name/class of the item.
+    <li>"interact": when an object is interacted with (triggered in the object).
+    <li>"start": when the game starts (for game and map scripts) or when an object is first instantiated (for objects).</li>
+    <li>"end": triggered in just before an object disappears (e.g., enemy killed, or item used and consumed).</li>
+    <li>Events triggered on characters by their actions:</li>
+      <ul>
+        <li>"action_take": triggered on a character when she takes an item. It accepts an optional additional parameter "item", specifying the name/class of the item.</li>
+        <li>"action_drop": triggered on a character when she drops an item. It accepts an optional additional parameter "item", specifying the name/class of the item.</li>
+        <li>"action_drop_gold": triggered on a character when she drops gold.</li>
+        <li>"action_use": triggered on a character when she uses an item. It accepts an optional additional parameter "item", specifying the name/class of the item.</li>
+        <li>"action_equip": triggered on a character when she equips an item. It accepts an optional additional parameter "item", specifying the name/class of the item.</li>
+        <li>"action_unequip": triggered on a character when she unequips an item. It accepts an optional additional parameter "item", specifying the name/class of the item.</li>
+        <li>"action_interact": triggered on a character when she interacts with an item. It accepts an optional additional parameter "item", specifying the name/class of the item.</li>
+        <li>"action_talk": triggered on a character when she talks. It accepts an optional additional parameter "performative", specifying the performative ("hi", "bye", "ask", "inform", "trade", "timeout"). It also accepts an optional parameter "angry" (true/false) to specify whether to trigger only when talking angry or not.</li>
+        <li>"action_attack": triggered on a character when she attacks another character. It accepts an optional additional parameter "character", specifying the name/class of the character being attacked. It also accepts an optional parameter "hit" (true/false), that determines whether the event is triggered when the attack successfully hits, or when it is a missed attack.</li>
+        <li>"action_spell": triggered on a character when she casts a spell. It accepts an optional additional parameter "spell", specifying the name of the spell.</li>
+        <li>"action_give": triggered on a character when she gives an item. It accepts an optional additional parameter "item", specifying the name/class of the item; and an additional parameter "character", specifying the name/type of the character that receives the item.</li>
+        <li>"action_sell": triggered on a character when she sells an item. It accepts an optional additional parameter "item", specifying the name/class of the item; and an additional parameter "character", specifying the name/type of the character that receives the item.</li>
+        <li>"action_buy": triggered on a character when she buys an item. It accepts an optional additional parameter "item", specifying the name/class of the item; and an additional parameter "character", specifying the name/type of the character from whom the item is bought.</li>
+        <li>"action_chop": triggered on a character when she chops a tree. It accepts an optional additional parameter "item", specifying the name/class of the item used to chop.</li>
+      </ul>
+    </ul>
+    You can specify whether this rule has to be executed only once, or each time this value is observed with the attribute "once" (default is "false").
+    </div>
+    <br>
+    <a href="#top">back to top</a>
+    <hr>
+
+
+    <a id="conversationgraph"/>
+    <h2>Conversation Graph</h2>
+    <div align="left">
+    Each character (e.g., NPC or enemy) can have a <i>conversation graph</i> that controls how does the character react while talking with other characters. You can create conversation graphs in two different ways: via a conversation graph file, or via adding individual conversation graph transitions. The first allows you to define a complete conversation graph in a separate XML file. The second allows you to specify a conversation graph transition by transition directly in the character definition. The recommended way to define conversation graphs is as follows: define one or more generic conversation graphs on separate files, and then when defining a new character, you load one conversation graph, and then complete it by defining additional conversation graph transitions.<br>
+    <br>
+    A conversation graph file in an XML file defined as a set of states where each state has a name and a set of transitions. It is defined in XML as follows:
+      <pre><code>
+&lt;conversarionGraph&gt;
+  &lt;state name="STATE 1 NAME"&gt;
+    &lt;transition actor="ACTOR" performative="PERFORMATIVE" state="TARGET STATE" consume="CONSUME" topic="TOPIC"&gt;
+      ... scripts ...
+    &lt;/transition&gt;
+
+  &lt;/state&gt;
+  ...
+  &lt;state name="STATE n NAME"&gt;
+    ...
+  &lt;/state&gt;
+&lt;/conversarionGraph&gt;
+      </code></pre>
+    Each state requires specifying a <b>name</b>, and a set of transitions. Each transition can specify:
+    <ul>
+      <li>An <b>actor</b> ("self" or "other"): who is the actor that must talk for this transition to be triggered.</li>
+      <li>A <b>performative</b> ("hi", "bye", "ask", "inform", "trade", "timeout"): the performative that the message spoken must have for the transition to be triggered.</li>
+      <li>A <b>topic</b>: the specific topic that has to be talked about for the transition to be triggered.</li>
+      <li>A target <b>state</b>: the state that this transition connects with.</li>
+      <li>Whether the transition <b>consumes</b> the message or not ("true" or "false"): if the transition does not consume the message, then as soon as it is triggered, the same message can trigger another transition (i.e., this is whether the message that triggered the transition is removed or not from the input queue of messages to a character)</li>
+      <li><b>Scripts</b>: scripts that will be executed if the transition is fired (this can be used to make the character talk, for example)</li>
+    </ul>
+    Most of the parameters above are optional. If no actor, performative or topic are specified, that means that any actor, performative or topic can trigger this transition. If no target state is specified, then it is assumed that the transition does not change the state. Consumes by default is "true".<br>  
+    <br>
+    When specifying a character, the following statement can be added to load a conversation graph:
+    <pre><code>
+    &lt;conversationGraph name="XML FILE NAME"/&gt;
+    </code></pre>
+    Additionally, character-specific transitions can be added to the loaded conversation graph as follows:
+      <pre><code>
+    &lt;conversationGraphTransition from="SOURCE STATE"  actor="ACTOR" performative="PERFORMATIVE" state="TARGET STATE" consume="CONSUME" topic="TOPIC"&gt;
+      ... scripts ...
+    &lt;/conversationGraphTransition&gt;
+      </code></pre>
+    Basically, it is the same format as the transitions in the conversation graph files, except that a "from" parameter has to be specified (the name of the origin state).
+    </div>
+    <br>
+    <a href="#top">back to top</a>
+    <hr>
+
+
+    <a id="inferencerules"/>
+    <h2>Inference Rules</h2>
+    <div align="left">
+    Inference rules determine additional inferences that characters (e.g. NPCs) can make, based on the content of their memory. An inference rule is defined as:
+      <pre><code>&lt;inferenceRule premise="WME1, ..., WMEn" conclusion="WME" frequency="FREQUENCY" activation="ACTIVATION" once="true/false" cooldown="COOLDOWN"/&gt;</code></pre>
+    At each AI update cycle, the character will have probability "FREQUENCY" of checking this rule (this is to avoid checking rules at each cycle, and also this can control the "intelligence" of different characters). If all the WMEs in the premise are satisfied in the memory of the character, then the conclusion WME will be added to the memory with activation value "ACTIVATION".<br>
+    For example, if premise = "attack(?1,?2),friendly(?2)" and conclusion="unfriendly(?1)", then when the character sees someone attacking a friendly character, it will be believe that the attacker is unfriendly.<br>
+    Additionally, parameters "once" (to set if a rule should only be executed once), and "cooldown" (number of game cycles that must pass before the rule can be triggered again) can be specified.<br>
+    Finally, you can specify scripts (as nested XML statements in the rule) that will be executed when the rule is fired.<br>
+    <b>note</b>: the subsumption relation used to check the premises is not relative.
+    </div>
+    <br>
+    <a href="#top">back to top</a>
+    <hr>    
+
+
+    <a id="behaviors"/>
+    <h2>Behaviors</h2>
+    <div align="left">
+    NPCs and Enemies can have multiple "behaviors" attached to them. Behaviors are executed each time a character can execute an action (i.e. they will not be executed while a character is moving or attacking until the move or attack is done). Each behavior can return a desired action. If multiple behaviors return actions, ties are resolved by the priority of each behavior. If a behavior with high priority generates an action in a given cycle, it can be the case that behaviors with low priority are not executed at all during that cycle.<br>
+    <br>
+    Most of these behaviors make use of the "working memory" that NPCs and Enemies have. The working memory is divided into two parts: short-term and long-term. Each of them is a list of "WMEs" (Working Memory Elements). A WME is a sctructure of the form "type(parameter1, ..., parametern)". WMEs in the short-term memory disappear after a while, WMEs in the long-term memory stay there forever. If a WME stays in the short-term memory for a very long time, it will be moved to the long-term memory.<br>
+    <br>
+    A4 comes built-in with the following behaviors:<br>
+    <ul>
+      <li><b>BLeftRight</b>: makes the character move left until an obstacle is encountered, then right until an obstacle is encountered, and then loop the behavior.</li>
+      <li><b>BUpDown</b>: makes the character move up until an obstacle is encountered, then down until an obstacle is encountered, and then loop the behavior.</li>
+      <li><b>BWander</b> ( requires the forwardFactor, pStop and stopTime attributes): makes the character move around at random. After each time the character moves a whole tile, it has probability "pStop" to stop for "stopTime" cycles. For each movement the character chooses a direction at random from the set of available directions. The direction in which the character moved before has a probability "forwardFactor" times higher than the other directions.</li>
+      <li><b>BWanderInCircles</b> (requires the diameter attribute): the character moves around in clockwise circles, of diameter "diameter"</li>
+
+      <li><b>BCurious</b> (requires the pickup, sort, and time attributes): the character will walk toward each object/character of sort "sort" not previously seen before. If it is an item and "pickup = true", it will pick it up. For example if "sort = Item", the character will walk and pick up any new items that appear around, if "sort = Object", the character will do that, but also go toward each new character that appears. The effect will wear off "time" cycles after the object is first seen. </li>
+      <li><b>BTired</b> ( requires the timeWalking, and restTime attributes): each time the character walks "timeWalking" game frames, it will get tired, and will have to rest for "restTime" game frames.</li>
+
+      <li><b>BFleeUnfriendly</b>: flees from any unfriendly character (i.e. WME unfriendly(C) exists, where C is the class of the character, or a superclass).</li>
+      <li><b>BRAttackUnfriendly</b>: attacks any character that is known to be "unfriendly" (i.e. WME unfriendly(C) exists, where C is the class or a superclass of the character).</li>
+      <li><b>BYellToUnfriendly</b> (requires the message attribute): if an unfriendly other-character is seen, the character will get angry, and yell the message "message".</li>
+      <li><b>BGoto</b> (requires the location and radius attributes): makes the character walk to the location called "location" if it is further away than radius pixels away.</li>
+      <li><b>BFollow</b> (requires the target and radius attributes): makes the character walk to the object called "target" if it is further away than radius pixels away.</li>
+      <li><b>BFollowFromWME</b> (requires the radius attribute): follows any character that is flagged as to follow (i.e. WME follow(C) exists, where C is the class or identifier of the character).</li>
+      <li><b>BFollowAngryFriendly</b> (requires the radius attribute): if a friendly character gets angry, the character will go towards it to investigate.</li>
+    </ul>
+    </div>
+    <br>
+    <a href="#top">back to top</a>
+    <hr>
+
+    <a id="spells"/>
+    <h2>Spells</h2>
+    <div align="left">
+    Characters that have magic points can cast spells (if they know them). The engine has the following spells implemented (the value in parenthesis is the number of magic points required to cast):
+    <ul>
+      <li><b>Magic Missile</b> (1mp): casts a magic missile that travels for 6 tiles and deals 4 points of damage. Its "walk speed" is 8.</li>
+      <li><b>Heal</b> (1mp): heals 5 hit points. It can be cast on self, or on an adjacent character.</li>
+      <li><b>Shield</b> (2mp): adds 5 to the defense, during 1500 game cycles. It can be cast on self, or on an adjacent character.</li>
+      <li><b>Increas</b> (2mp): adds 2 defense and 4 attack during 1500 game cycles. It can be cast on self, or on an adjacent character.</li>
+      <li><b>Decrease</b> (2mp): subtracts 2 defense and 4 attack during 1500 game cycles. It can be cast on self (be careful!), or on an adjacent character.</li>
+      <li><b>Fireball</b> (4mp): casts a magic missile that travels for 10 tiles and deals 12 points of damage to any character within a radius of 1.5 tiles. Its "walk speed" is 8.</li>
+      <li><b>Magic Eye</b> (4mp): lets the character see the complete map (this lasts for only 1500 cycles).</li>
+      <li><b>Regenerate</b> (8mp): heals 50 hit points. It can be cast on self, or on an adjacent character.</li>
+      <li><b>Incinerate</b> (8mp): casts a magic missile that travels for 24 tiles and deals 32 points of damage. Its "walk speed" is 8.</li>
+    </ul>
+    All these effects are multiplied by the magic bonus that some items give. For example, if you have a magic bonus of x1.5, then incinerate will deal 48 damage instead of 32. Spell durations and travel distance are not affected by magic multipliers. For shield, increase and decrease, the bonus multiplier that matters is that of the receiver, not of the caster (i.e., magic has more effect on people with magic multipliers).
+    </div>    
+    <br>
+    <a href="#top">back to top</a>
+    <hr>
+  </body>  
+</html>  
