@@ -9,6 +9,12 @@
 
 <html lang="en">
 <head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="LOGICMOO-SHRDLURNer - websocket and tornado">
+<meta name="author" content="Douglas Miles">
+<title>LOGICMOO-SHRDLURNer</title>
 
 <script src="src/ai/Sort.js"></script>
 <script src="src/ai/Ontology.js"></script>
@@ -166,15 +172,45 @@
 <script src="src/tests/inference-test2.js"></script>
 <script src="src/tests/nlg-test2.js"></script>
 -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js" crossorigin="anonymous"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script> <!-- necessary for the "draggable" ui  -->
+<script src="/swish/lm_xref/pixmapx/popupmenu/scripts/Popup-plugin.js"></script>
+<script src="/swish/lm_xref/pixmapx/popupmenu/scripts/Example.js"></script>
 
+<link rel="shortcut icon" href="/static/images/favicon.png?">
+<link rel="stylesheet" type="text/css" href="/swish/css/menu.css">
+<link rel="stylesheet" type="text/css" href="/swish/css/cliopatria.css">
+<script type="text/javascript" src="/swish/js/cliopatria.js"></script>
+<link type="text/css" rel="stylesheet" href="/swish/css/term.css">
+<link type="text/css" rel="stylesheet" href="/swish/css/butterfly_term.css">
+
+<link rel="stylesheet" type="text/css" href="/www/yui/2.7.0/build/autocomplete/assets/skins/sam/autocomplete.css">
+<script type="text/javascript" src="/www/yui/2.7.0/build/utilities/utilities.js"></script>
+<script type="text/javascript" src="/www/yui/2.7.0/build/datasource/datasource.js"></script>
+<script type="text/javascript" src="/www/yui/2.7.0/build/autocomplete/autocomplete.js"></script>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.qrcode/1.0/jquery.qrcode.min.js"></script>
+<script src="/swish/lm_xref/pixmapx/selected/js/social.selection.js"></script>
+<link rel="stylesheet" type="text/css" href="/swish/lm_xref/pixmapx/selected/css/social.selection.css">
+<link rel="stylesheet" type="text/css" href="/swish/lm_xref/pixmapx/selected/css/example.css">
+
+<link rel="stylesheet" type="text/css" href="/swish/lm_xref/pixmapx/popupmenu/styles/Popup-plugin.css">
+<link rel="stylesheet" type="text/css" href="/swish/lm_xref/pixmapx/popupmenu/styles/Example.css">
+<!--Use either font-awesome icons or Google icons with these links. Other icons could also be used if preferred-->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+
+<script data-main="/swish/js/swish" src="/node_modules/requirejs/require.js"></script>  
 </head>
+<body spellcheck="false">
 
-<body>
 <p align="center">
 	<canvas id="cnvs" width="1024" height="768" gamepath="data/" gamefile="shrdlu.xml"></canvas>
 </p>
 
 <p id="log"></p>
+
+
 </body>
 
 </html>

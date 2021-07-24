@@ -177,6 +177,7 @@ sandbox:safe_meta_predicate(system:notrace/1).
 :- endif.
 
 :- use_module(library(logicmoo_web_long_message)).
+:- use_module(library(logicmoo_shrdlu)).
 
 inoxf(Goal):- ignore(notrace(on_x_fail(Goal))).
 
@@ -197,7 +198,7 @@ webui_start_swish_and_clio:-
    maplist(inoxf,[
    webui_load_swish_and_clio,
    broadcast:broadcast(http(pre_server_start)),
-   cp_server:cp_server([]),
+   cp_server:cp_server([]),   
    set_long_message_server('https://logicmoo.org'),
    broadcast:broadcast(http(post_server_start)),
    swish:start_swish_stat_collector]),!.
