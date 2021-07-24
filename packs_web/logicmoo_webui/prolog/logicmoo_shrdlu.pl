@@ -116,8 +116,14 @@ echo_eval(WebSocket) :-
 
 setup_web_eval(WebSocket, Message):- asserta(web_eval(WebSocket)),asserta(web_eval(WebSocket,Message)).
 dead_eval(WebSocket):- retractall(web_eval(WebSocket)).
-do_web_eval(WebSocket,JavaScript,Result):- atom_concat('+',JavaScript,JavaScriptOut), web_eval(WebSocket), ws_send(WebSocket, text(JavaScriptOut)), ws_receive(WebSocket,Result). 
-do_web_eval(JavaScript,Result):- web_eval(WebSocket),do_web_eval(WebSocket,JavaScript, Result).
+do_web_eval(Js,Result):- web_eval(WebSocket),do_web_eval(WebSocket,Js, Result).
+
+do_web_eval(WebSocket,Js,Result):- is_list(Js),!,maplist(do_web_eval(WebSocket),Js,Result).
+do_web_eval(WebSocket,Js,Result):- atomic(Js),!, atom_concat('+',Js,S), now_web_eval(WebSocket,text(S),Result).
+do_web_eval(WebSocket,Js,Result):- is_dict(Js),!,now_web_eval(WebSocket,Js,Result).
+do_web_eval(WebSocket,text(Js),Result):- !,now_web_eval(WebSocket,text(Js),Result).
+do_web_eval(WebSocket,Js,Result):- sformat(S,'~w',[Js]),now_do_web_eval(WebSocket,text(S),Result).
+now_web_eval(WebSocket,Dict,Result):- web_eval(WebSocket), ws_send(WebSocket, Dict), ws_receive(WebSocket,Result). 
 
 :- fixup_exports.
 
