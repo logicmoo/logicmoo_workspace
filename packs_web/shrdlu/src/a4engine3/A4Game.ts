@@ -121,7 +121,7 @@ class WarpRequest {
 class A4Game {
     constructor(xml:Element, game_path:string, ontology_path:string, GLTM:GLTManager, SFXM:SFXManager, a4of:A4ObjectFactory, a_sfx_volume:number)
     {
-		window.theA4Game = this;
+		(window as any)['theA4Game'] = this;
         this.objectFactory = a4of;
         this.loadContentFromXML(xml, game_path, ontology_path, GLTM, SFXM);
         this.sfx_volume = a_sfx_volume;

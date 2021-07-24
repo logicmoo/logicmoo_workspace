@@ -38,7 +38,9 @@
 	    eval_broadcast/2,		% +Message, +Channel
 	    eval_to_profile/2,		% +ProfileID, :HTML
 	    eval_about/2,		% +DocID, +Message
-
+      js_eval/2,
+      js_eval/3,
+      js_eval_ws/3,
 	    notifications//1,		% +Options
 	    broadcast_bell//1		% +Options
 	  ]).
@@ -110,20 +112,38 @@ echo_eval(WebSocket) :-
     with_output_to(user_error,fmt(ws_receive(WebSocket, Message))),
     (   Message.opcode == close
     ->  dead_eval(WebSocket)
-    ;   setup_web_eval(WebSocket, Message),
-        sleep(100000000000000.0) %echo_eval(WebSocket)
+    ;   setup_js_eval(WebSocket, Message),
+        (repeat,sleep(10.0),fail) %echo_eval(WebSocket)
     ).
 
-setup_web_eval(WebSocket, Message):- asserta(web_eval(WebSocket)),asserta(web_eval(WebSocket,Message)).
-dead_eval(WebSocket):- retractall(web_eval(WebSocket)).
-do_web_eval(Js,Result):- web_eval(WebSocket),do_web_eval(WebSocket,Js, Result).
+:- dynamic(js_eval_wsinfo/1).
+:- volatile(js_eval_wsinfo/1).
+:- dynamic(js_eval_wsinfo/2).
+:- volatile(js_eval_wsinfo/2).
 
-do_web_eval(WebSocket,Js,Result):- is_list(Js),!,maplist(do_web_eval(WebSocket),Js,Result).
-do_web_eval(WebSocket,Js,Result):- atomic(Js),!, atom_concat('+',Js,S), now_web_eval(WebSocket,text(S),Result).
-do_web_eval(WebSocket,Js,Result):- is_dict(Js),!,now_web_eval(WebSocket,Js,Result).
-do_web_eval(WebSocket,text(Js),Result):- !,now_web_eval(WebSocket,text(Js),Result).
-do_web_eval(WebSocket,Js,Result):- sformat(S,'~w',[Js]),now_do_web_eval(WebSocket,text(S),Result).
-now_web_eval(WebSocket,Dict,Result):- web_eval(WebSocket), ws_send(WebSocket, Dict), ws_receive(WebSocket,Result). 
+setup_js_eval(WebSocket, Message):- asserta(js_eval_wsinfo(WebSocket)),asserta(js_eval_wsinfo(WebSocket,Message)).
+
+dead_eval(WebSocket):- retractall(js_eval_wsinfo(WebSocket)).
+
+coerce_js_result(WebSocket,Message,throw(WebSocket,Message)):-  Message.opcode == close,!,dead_eval(WebSocket).
+coerce_js_result(_,Message,Ret):- Message.opcode == text, !, Ret = Message.data .
+coerce_js_result(_,Ret,Ret).
+
+js_eval_ws(WebSocket,Dict,Ret):-  
+  js_eval_wsinfo(WebSocket), 
+  ws_send(WebSocket, Dict),
+  ws_receive(WebSocket,Result),
+  ignore(coerce_js_result(WebSocket,Result,Ret)). 
+
+js_eval(Js,Result):- js_eval_wsinfo(WebSocket),js_eval(WebSocket,Js, Result),!.
+
+js_eval(WebSocket,Js,Result):- is_list(Js),!,maplist(js_eval(WebSocket),Js,Result).
+js_eval(WebSocket,Js,Result):- atomic(Js),!, atom_concat('+',Js,S), js_eval_ws(WebSocket,text(S),Result).
+js_eval(WebSocket,Js,Result):- is_dict(Js),!,js_eval_ws(WebSocket,Js,Result).
+js_eval(WebSocket,text(Js),Result):- !,js_eval_ws(WebSocket,text(Js),Result).
+js_eval(WebSocket,Js,Result):- sformat(S,'~w',[Js]),js_eval_ws(WebSocket,text(S),Result).
+
+
 
 :- fixup_exports.
 

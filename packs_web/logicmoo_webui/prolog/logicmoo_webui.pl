@@ -177,7 +177,7 @@ sandbox:safe_meta_predicate(system:notrace/1).
 :- endif.
 
 :- use_module(library(logicmoo_web_long_message)).
-:- use_module(library(logicmoo_shrdlu)).
+:- use_module(library('../../shrdlu/prolog/logicmoo_shrdlu')).
 
 inoxf(Goal):- ignore(notrace(on_x_fail(Goal))).
 
