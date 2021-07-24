@@ -22,7 +22,7 @@ class ShrdluGameScript {
 
 	update() 
 	{
-		if (this.act == "intro") {
+	    if (this.act == "intro") {
 			// this.skip_to_act_end_of_intro();
 		    //this.skip_to_act_1();
 			// this.skip_to_end_of_act_1();
@@ -30,7 +30,7 @@ class ShrdluGameScript {
 			// this.skip_to_act_2_shrdluback();
 		    // this.skip_to_act_2_shrdluback_repair_outside();
 			// this.skip_to_act_2_crash_site();
-			this.skip_to_act_2_after_crash_site();
+			// this.skip_to_act_2_after_crash_site();
 			// this.skip_to_end_of_act_2();
 			// this.skip_to_tardis8();
 			 // this.skip_to_tardis8_computer_room();
@@ -156,14 +156,14 @@ class ShrdluGameScript {
 		// garage
 		this.game.currentPlayer.x = 864;
 		this.game.currentPlayer.y = 40;
-		this.game.qwertyAI.robot.x = 832;
-		this.game.qwertyAI.robot.y = 40;
+		//this.game.qwertyAI.robot.x = 832;
+		//this.game.qwertyAI.robot.y = 40;
 		// infirmary
 		//this.game.currentPlayer.x = 12*8;
 		//this.game.currentPlayer.y = 28*8;
 		this.game.setStoryStateVariable("rover", "working");
-		this.game.currentPlayer.inventory.push(this.game.objectFactory.createObject("luminiscent-dust", this.game, false, false));
-		this.game.setStoryStateVariable("luminiscent-fungi", "taken");
+		//this.game.currentPlayer.inventory.push(this.game.objectFactory.createObject("luminiscent-dust", this.game, false, false));
+		//this.game.setStoryStateVariable("luminiscent-fungi", "taken");
 	}
 
 	skip_to_act_2()
@@ -350,13 +350,10 @@ class ShrdluGameScript {
 		let dust1:A4Object = this.game.objectFactory.createObject("luminiscent-dust", this.game, false, false);
 		this.game.currentPlayer.inventory.push(dust1);
 	}
-	*
-
+	
 	
 	update_act_intro() 
 	{
-	  
-   
 		let previous_state:number = this.act_intro_state;
 
 		if (this.act_intro_state >= 1 && this.contextQwerty == null) this.contextQwerty = this.game.qwertyAI.contextForSpeaker(this.playerID);

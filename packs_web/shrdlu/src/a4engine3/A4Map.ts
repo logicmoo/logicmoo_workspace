@@ -70,7 +70,7 @@ class A4Map {
                 objectsToRevisit_xml:Element[], 
                 objectsToRevisit_object:A4Object[])
     {
-        this.xml = xml;
+		this.xml = xml;
         this.width = Number(xml.getAttribute("width"));
         this.height = Number(xml.getAttribute("height"));
 

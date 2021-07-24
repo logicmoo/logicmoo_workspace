@@ -921,6 +921,8 @@ function Map(fileName, game) {
 	initAIRules(this);
 
 	if (fileName!=undefined) {
+		var DEBUG = true;
+
 		console.log("Loading map: '" + fileName + "' ...");
 	  	var xmlhttp = new XMLHttpRequest();
 	  	xmlhttp.overrideMimeType("text/xml");
@@ -999,16 +1001,24 @@ function Map(fileName, game) {
 
 		var objectlayers = mapElement.getElementsByTagName("objectgroup");
 	//	console.log(TILE_WIDTH_ORIGINAL);
-	//	console.log(objectlayers.length + " object layers...");
+	if(DEBUG) console.log(objectlayers.length + " object layers...");
 		for(var i = 0;i<objectlayers.length;i++) {
 			var layerElement = objectlayers[i];
 			var objects = layerElement.getElementsByTagName("object");
-	//		console.log("Processing layer: " + layerElement.attributes.getNamedItem("name").nodeValue + " with " + objects.length + " objects");
+	if(DEBUG) 		console.log("Processing layer: " + layerElement.attributes.getNamedItem("name").nodeValue + " with " + objects.length + " objects");
 			for(var j = 0;j<objects.length;j++) {
 				var objectElement = objects[j];
-	//			console.log("parsing object with type: " + objectElement.attributes.getNamedItem("type").nodeValue);
+	if(DEBUG) 			console.log("parsing object with type: " + objectElement.attributes.getNamedItem("type").nodeValue);
 
-				if (objectElement.attributes.getNamedItem("type").nodeValue=="bridge") {
+				var typeN = objectElement.attributes.getNamedItem("type");
+				var classN = objectElement.attributes.getNamedItem("class");
+				if(typeN==null) { typeN = classN; }
+				var nameN = objectElement.attributes.getNamedItem("name");
+				if(typeN==null) { typeN = nameN; }
+				if(nameN == null) { nameN = classN; }
+				var type = typeN.nodeValue;
+
+				if (type=="bridge") {
 					var x = parseInt(objectElement.attributes.getNamedItem("x").nodeValue);
 					var y = parseInt(objectElement.attributes.getNamedItem("y").nodeValue);
 					var width = parseInt(objectElement.attributes.getNamedItem("width").nodeValue);
@@ -1017,7 +1027,7 @@ function Map(fileName, game) {
 					this.bridges.push({x:Math.floor(x/TILE_WIDTH_ORIGINAL), y:Math.floor(y/TILE_HEIGHT_ORIGINAL), 
 									   width:Math.floor(width/TILE_WIDTH_ORIGINAL), height:Math.floor(height/TILE_HEIGHT_ORIGINAL), id:name});
 				}
-				if (objectElement.attributes.getNamedItem("type").nodeValue=="bridgedestination") {
+				if (type=="bridgedestination") {
 					var x = parseInt(objectElement.attributes.getNamedItem("x").nodeValue);
 					var y = parseInt(objectElement.attributes.getNamedItem("y").nodeValue);
 					var width = parseInt(objectElement.attributes.getNamedItem("width").nodeValue);
@@ -1036,7 +1046,7 @@ function Map(fileName, game) {
 									   			  appearWalking:appearWalking, appearDirection:appearDirection});					
 	//				console.log("destination...");
 				}
-				if (objectElement.attributes.getNamedItem("type").nodeValue=="burroweditem") {
+				if (type=="burroweditem") {
 					var x = parseInt(objectElement.attributes.getNamedItem("x").nodeValue);
 					var y = parseInt(objectElement.attributes.getNamedItem("y").nodeValue);
 					var name = objectElement.attributes.getNamedItem("name").nodeValue;
@@ -1048,11 +1058,15 @@ function Map(fileName, game) {
 					parseAIRules(item, objectElement);
 					this.addObject(item,1);
 				}
-				if (objectElement.attributes.getNamedItem("type").nodeValue=="item") {
+				if (type=="item") {
 					var x = parseInt(objectElement.attributes.getNamedItem("x").nodeValue);
 					var y = parseInt(objectElement.attributes.getNamedItem("y").nodeValue);
-					var name = objectElement.attributes.getNamedItem("name").nodeValue;
-					var item = eval(name);
+					var name = nameN.nodeValue;
+					var cname = name;
+					if(name.indexOf(" ")>-1 && name.indexOf("new")!=0 && classN!=null)  {
+						cname = classN.nodeValue;
+					}
+					var item = eval(cname);
 					item.x = Math.floor(x/TILE_WIDTH_ORIGINAL);
 					item.y = Math.floor(y/TILE_HEIGHT_ORIGINAL);
 //					console.log("new item: " + name);
@@ -1060,9 +1074,9 @@ function Map(fileName, game) {
 					parseAIRules(item,objectElement);
 					this.addObject(item,1);
 				}
-				if (objectElement.attributes.getNamedItem("type").nodeValue=="character" ||
-					objectElement.attributes.getNamedItem("type").nodeValue=="enemy" ||
-					objectElement.attributes.getNamedItem("type").nodeValue=="npc") {
+				if (type=="character" ||
+					type=="enemy" ||
+					type=="npc") {
 					var x = parseInt(objectElement.attributes.getNamedItem("x").nodeValue);
 					var y = parseInt(objectElement.attributes.getNamedItem("y").nodeValue);
 					var name = objectElement.attributes.getNamedItem("name").nodeValue;
@@ -1095,7 +1109,7 @@ function Map(fileName, game) {
 					item.decodeCharacterFromXML(false);
 					this.addObject(item,2);
 				}
-				if (objectElement.attributes.getNamedItem("type").nodeValue=="message") {
+				if (type=="message") {
 					var x = parseInt(objectElement.attributes.getNamedItem("x").nodeValue);
 					var y = parseInt(objectElement.attributes.getNamedItem("y").nodeValue);
 					var width = parseInt(objectElement.attributes.getNamedItem("width").nodeValue);
@@ -1120,7 +1134,7 @@ function Map(fileName, game) {
 					parseAIRules(tmp,objectElement);
 					this.messages.push(tmp);
 				}
-				if (objectElement.attributes.getNamedItem("type").nodeValue=="bubble") {
+				if (type=="bubble") {
 					var x = parseInt(objectElement.attributes.getNamedItem("x").nodeValue);
 					var y = parseInt(objectElement.attributes.getNamedItem("y").nodeValue);
 					var width = parseInt(objectElement.attributes.getNamedItem("width").nodeValue);
@@ -1146,7 +1160,7 @@ function Map(fileName, game) {
 					this.messages.push(tmp);
 	//				console.log(name + " -> " + width + "," + height);
 				}
-				if (objectElement.attributes.getNamedItem("type").nodeValue=="script") {
+				if (type=="script") {
 					var x = parseInt(objectElement.attributes.getNamedItem("x").nodeValue);
 					var y = parseInt(objectElement.attributes.getNamedItem("y").nodeValue);
 					var width = parseInt(objectElement.attributes.getNamedItem("width").nodeValue);

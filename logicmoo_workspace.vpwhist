@@ -1,7 +1,7 @@
 [Global]
 CurrentProject=logicmoo_workspace.vpj
 [ProjectDates]
-logicmoo_workspace.vpj=20210722230636492
+logicmoo_workspace.vpj=20210723123905314
 other_files.vpj=20210716235244671
 [ActiveConfig]
 logicmoo_workspace.vpj=Release
@@ -11,105 +11,193 @@ packs_sys\logicmoo_nlu\ext\chat80_lm\chat80.vpj=Release
 [TreeExpansion2]
 - logicmoo_workspace.vpj
   + wiki\.circleci
-  + prologmud_server\.config
-    + butterfly
+  + prologmud_server\.emacs.d
+    + elpa
+      + eglot-1.7\.github
+        + ISSUE_TEMPLATE
+      + leaf-4.5.2\.github
+      + which-key-3.5.1\.github
+      + async-1.9.5
+      + auctex-13.0.12
+        + latex
+      + avy-0.5.0
+      + brief-5.87
+      + caml-4.7.1
+      + company-0.9.13
+      + company-statistics-0.2.3
+      + context-coloring-8.1.0
+      + corfu-0.9
+      + cpio-mode-0.17
+      + dired-du-0.5.2
+      + easy-kill-0.9.4
+      + ebdb-0.6.24
+      + eev-20210710
+      + eglot-1.7
+      + elnode-20190608.1623
+        + nodejs-tools
+      + emacsql-3.0.0
+      + emms-7.5
+      + ergoemacs-mode-5.16.10.12
+      + ess-18.10.2
+        + etc
+          + icons
+      + excorporate-1.0.0
+      + expand-region-0.11.0
+      + ggtags-0.9.0
+      + gited-0.6.0
+      + gnorb-1.6.9
+      + gnugo-3.1.1
+      + helm-20210709.558
+      + isearch-mb-0.3
+      + ivy-0.13.4
+      + ivy-erlang-complete-20191112.1137
+        + bin
+      + ivy-posframe-0.6.1
+      + js2-mode-20201220
+      + leaf-4.5.2
+      + liberime-20200915.542
+      + libgit-20210620.2017
+        + libgit2
+          + script
+      + lsp-julia-0.5.0
+        + languageserver
+          + CSTParser
+            + docs
+              + src
+          + DocumentFormat
+            + docs
+              + src
+          + FilePathsBase
+            + docs
+              + src
+          + JSON
+            + data
+              + jsonchecker
+          + JSONRPC
+          + LanguageServer
+            + contrib
+            + docs
+              + src
+          + StaticLint
+            + docs
+              + src
+          + SymbolServer
+            + docs
+              + src
+            + test
+              + testenv
+                + dev
+                  + TableTraits
+          + Tokenize
+          + URIParser
+      + lsp-julia-20210530.2152
+        + languageserver
+          + CSTParser
+            + docs
+              + src
+          + DocumentFormat
+            + docs
+              + src
+          + FilePathsBase
+            + docs
+              + src
+          + JSON
+            + data
+              + jsonchecker
+          + JSONRPC
+          + LanguageServer
+            + contrib
+            + docs
+              + src
+          + StaticLint
+            + docs
+              + src
+          + SymbolServer
+            + docs
+              + src
+            + test
+              + testenv
+                + dev
+                  + TableTraits
+          + Tokenize
+          + URIParser
+      + magit-3.1.1
+      + mmm-mode-0.5.8
+      + multishell-1.1.9
+      + names-20151201.0
+      + notes-mode-1.30
+      + org-9.4.6
+        + etc
+          + styles
+      + org-contrib-0.1
+      + org-page-0.41
+        + themes
+          + gray
+      + org-ref-1.1.1
+        + citeproc
+      + org2blog-1.1.11
+      + pdf-tools-0.90
+        + build
+          + server
+      + phps-mode-0.4.3
+        + docs
+      + posframe-1.0.4
+      + psgml-1.3.4
+      + pyim-3.9.1
+      + rudel-0.3.2
+      + setup-0.2.1
+      + shen-mode-0.1
+      + slime-volleyball-1.2.0
+      + sly-1.0.43
+      + spinner-1.7.4
+      + system-packages-1.0.11
+      + tiny-0.2.1
+      + tramp-2.5.1
+        + test
+      + transient-0.3.6
+      + treemacs-20210705.1937
+        + icons
+          + default
+            + svgrepo
+            + vsc
+      + treemacs-20210713.2032
+        + icons
+          + default
+            + svgrepo
+            + vsc
+      + tuareg-2.3.0
+      + valign-3.1.1
+      + vc-hgcmd-1.14
+      + vterm-20210618.1922
+        + etc
+      + webfeeder-1.1.2
+      + websocket-1.13.1
+      + which-key-3.5.1
+      + wisi-3.1.3
+      + wisitoken-grammar-mode-1.2.0
+      + xelb-0.18
+      + xr-1.21
+      + yasnippet-0.14.0
+      + ztree-1.0.6
+  + .github
+    + ISSUE_TEMPLATE
+  + wiki\.github
+    + ISSUE_TEMPLATE
   + prologmud_server\.pki
     + nssdb
-  + eclipse-workspace\.metadata\.plugins
-    + org.eclipse.core.resources\.projects
-      + BW4Thuman
-      + External Prolog Files
-      + ProDTTest
-      + RemoteSystemsTempFiles
-      + WumpusAgents
-    + org.jboss.tools.common.projecttemplates
-      + templates
-        + jsf-1.1
-          + JSFBlankWithLibs
-          + JSFKickStartWithLibs
-          + JSFKickStartWithoutLibs
-        + jsf-1.2
-          + JSFBlankWithoutLibs
-          + JSFKickStartWithoutLibs
-        + jsf-1.2-facelets
-          + FaceletsBlankWithoutLibs
-          + FaceletsKickStartWithoutLibs
-          + FaceletsKickStartWithRILibs
-        + jsf-2.0
-          + JSFBlankWithLibs
-          + JSFBlankWithoutLibs
-          + JSFKickStartWithoutLibs
-            + WebContent
-              + WEB-INF
-        + jsf-2.1
-          + JSFBlankWithLibs
-          + JSFBlankWithoutLibs
-          + JSFKickStartWithoutLibs
-            + WebContent
-              + WEB-INF
-        + jsf-2.2
-          + JSFBlankWithoutLibs
-          + JSFKickStartWithoutLibs
-            + WebContent
-              + WEB-INF
   + prologmud_server\.ros
     + rosdep
       + meta.cache
       + sources.cache
-  + .vscode
-  + bin
-    + old-scripts
   + docker
     + noetic
     + noetic-testing
     - rootfs
-      + root\.local
-        + share
-          + bllipparser
-            + dockerfiles
-              + centos6
-              + python
-                + userfiles\.config
-                  + lxterminal
-                + userfiles\.vnc
-                + userfiles
-            + first-stage
-              + DATA
-                + CH
-                + EN
-                + LM
-              + PARSE
-                + swig
-                  + java
-                    + include
-                    + test
-                  + python
-                    + test
-              + TRAIN
-            + python
-              + bllipparser
-              + examples
-              + tests
-            + sample-text
-            + second-stage
-              + notes
-              + programs
-                + eval-beam
-                + eval-weights
-                + features
-                  + swig
-                    + java
-                      + test
-                    + python
-                      + test
-                + prepare-data
-                + wlle
       - etc
         - apache2
           - conf-available
           - sites-enabled
           + ssl
-        + butterfly
         + letsencrypt
           + live
             + logicmoo.org
@@ -144,17 +232,8 @@ packs_sys\logicmoo_nlu\ext\chat80_lm\chat80.vpj=Release
                     + inclpr
                     + jpl
                       + java
-                        + db
-                        + factorial
-                        + family
-                        + semWeb
-                        + system
-                        + test
-                        + testGC
                         + thread
-                        + time
                         + zahed
-                      + prolog
                     + pengines
                       + web
                     + pldoc
@@ -199,18 +278,11 @@ packs_sys\logicmoo_nlu\ext\chat80_lm\chat80.vpj=Release
                 + http
                   - web
                     + css
-                    + icons
                     - js
                 + iri_scheme
                 + latex2html
-                  + icons
                 + lynx
                 + pldoc
-                + protobufs
-                  + protoc_gen_prolog_pb
-                    + google
-                      + protobuf
-                        + compiler
                 + semweb
                 + theme
                 + tipc
@@ -256,593 +328,72 @@ packs_sys\logicmoo_nlu\ext\chat80_lm\chat80.vpj=Release
         + www
           + html
             + doc2
-            + docs
             + ef
-              + css
-              + files
-                + logicmoo_workspace\.vscode
-                + logicmoo_workspace
-                  + bin
-                    + old-scripts
-                  + docker
-                    + noetic
-                    + noetic-testing
-                    + rootfs
-                      + root\.local
-                        + share
-                          + bllipparser
-                            + dockerfiles
-                              + centos6
-                              + python
-                                + userfiles\.config
-                                  + lxterminal
-                                + userfiles\.vnc
-                                + userfiles
-                            + first-stage
-                              + DATA
-                                + CH
-                                + EN
-                                + LM
-                              + PARSE
-                                + swig
-                                  + java
-                                    + include
-                                    + test
-                                  + python
-                                    + test
-                              + TRAIN
-                            + python
-                              + bllipparser
-                              + examples
-                              + tests
-                            + sample-text
-                            + second-stage
-                              + notes
-                              + programs
-                                + eval-beam
-                                + eval-weights
-                                + features
-                                  + swig
-                                    + java
-                                      + test
-                                    + python
-                                      + test
-                                + prepare-data
-                                + wlle
-                      + etc
-                        + apache2
-                          + conf-available
-                          + sites-enabled
-                        + butterfly
-                        + letsencrypt
-                          + live
-                        + nginx
-                          + sites-enabled
-                        + profile.d
-                        + supervisor
-                          + conf.d
-                      + root
-                      + usr
-                        + local
-                          + bin
-                            + old-scripts
-                          + lib
-                            + cmake
-                              + swipl
-                            + swipl
-                              + bin
-                                + x86_64-linux
-                              + boot
-                              + customize
-                              + demo
-                              + doc
-                                + packages
-                                  + examples
-                                    + chr
-                                    + cpp
-                                    + cql
-                                    + http
-                                      + pwp
-                                    + inclpr
-                                    + jpl
-                                      + java
-                                        + db
-                                        + factorial
-                                        + family
-                                        + semWeb
-                                        + system
-                                        + test
-                                        + testGC
-                                        + thread
-                                        + time
-                                        + zahed
-                                      + prolog
-                                    + pengines
-                                      + web
-                                    + pldoc
-                                    + plunit
-                                    + protobufs
-                                      + bootstrap
-                                      + demo
-                                      + interop
-                                    + redis
-                                    + ssl
-                                      + etc
-                                        + demoCA
-                                    + stomp
-                              + include
-                                + sicstus
-                                + Yap
-                              + library
-                                + chr
-                                + clp
-                                  + clpq
-                                  + clpqr
-                                  + clpr
-                                  + inclpr
-                                + cql
-                                + dcg
-                                + dialect
-                                  + eclipse
-                                  + hprolog
-                                  + iso
-                                  + sicstus
-                                  + sicstus4
-                                  + swi
-                                  + xsb
-                                  + yap
-                                + DTD
-                                + http
-                                  + web
-                                    + css
-                                + iri_scheme
-                                + latex2html
-                                + lynx
-                                + pldoc
-                                + protobufs
-                                  + protoc_gen_prolog_pb
-                                    + google
-                                      + protobuf
-                                        + compiler
-                                + semweb
-                                + theme
-                                + tipc
-                                + unicode
-                              + xpce
-                                + bitmaps
-                                + prolog
-                                  + boot
-                                  + contrib
-                                    + rubik
-                                  + demo
-                                  + lib
-                                    + compatibility
-                                    + dialog
-                                    + doc
-                                    + draw
-                                    + emacs
-                                    + english
-                                    + http
-                                    + man
-                                    + math
-                                    + plot
-                                    + swi
-                                    + trace
-                                    + xref
-                      + var
-                        + www
-                          + html
-                            + doc2
-                            + docs
-                            + ef
-                              + css
-                              + files
-                                + logicmoo_workspace\.vscode
-                                + logicmoo_workspace
-                                  + bin
-                                    + old-scripts
-                                  + docker
-                                    + noetic
-                                    + noetic-testing
-                                    + rootfs
-                                      + root\.local
-                                        + share
-                                          + bllipparser
-                                            + dockerfiles
-                                              + centos6
-                                              + python
-                                                + userfiles\.config
-                                                  + lxterminal
-                                                + userfiles\.vnc
-                                                + userfiles
-                                            + first-stage
-                                              + DATA
-                                                + CH
-                                                + EN
-                                                + LM
-                                              + PARSE
-                                                + swig
-                                                  + java
-                                                    + include
-                                                    + test
-                                                  + python
-                                                    + test
-                                              + TRAIN
-                                            + python
-                                              + bllipparser
-                                              + examples
-                                              + tests
-                                            + sample-text
-                                            + second-stage
-                                              + notes
-                                              + programs
-                                                + eval-beam
-                                                + eval-weights
-                                                + features
-                                                  + swig
-                                                    + java
-                                                      + test
-                                                    + python
-                                                      + test
-                                                + prepare-data
-                                                + wlle
-                                      + etc
-                                        + apache2
-                                          + conf-available
-                                          + sites-enabled
-                                        + butterfly
-                                        + letsencrypt
-                                          + live
-                                        + nginx
-                                          + sites-enabled
-                                        + profile.d
-                                        + supervisor
-                                          + conf.d
-                                      + root
-                                      + usr
-                                        + local
-                                          + bin
-                                            + old-scripts
-                                          + lib
-                                            + cmake
-                                              + swipl
-                                            + swipl
-                                              + bin
-                                                + x86_64-linux
-                                              + boot
-                                              + customize
-                                              + demo
-                                              + doc
-                                                + packages
-                                                  + examples
-                                                    + chr
-                                                    + cpp
-                                                    + cql
-                                                    + http
-                                                      + pwp
-                                                    + inclpr
-                                                    + jpl
-                                                      + java
-                                                        + db
-                                                        + factorial
-                                                        + family
-                                                        + semWeb
-                                                        + system
-                                                        + test
-                                                        + testGC
-                                                        + thread
-                                                        + time
-                                                        + zahed
-                                                      + prolog
-                                                    + pengines
-                                                      + web
-                                                    + pldoc
-                                                    + plunit
-                                                    + protobufs
-                                                      + bootstrap
-                                                      + demo
-                                                      + interop
-                                                    + redis
-                                                    + ssl
-                                                      + etc
-                                                        + demoCA
-                                                    + stomp
-                                              + include
-                                                + sicstus
-                                                + Yap
-                                              + library
-                                                + chr
-                                                + clp
-                                                  + clpq
-                                                  + clpqr
-                                                  + clpr
-                                                  + inclpr
-                                                + cql
-                                                + dcg
-                                                + dialect
-                                                  + eclipse
-                                                  + hprolog
-                                                  + iso
-                                                  + sicstus
-                                                  + sicstus4
-                                                  + swi
-                                                  + xsb
-                                                  + yap
-                                                + DTD
-                                                + http
-                                                  + web
-                                                    + css
-                                                + iri_scheme
-                                                + latex2html
-                                                + lynx
-                                                + pldoc
-                                                + protobufs
-                                                  + protoc_gen_prolog_pb
-                                                    + google
-                                                      + protobuf
-                                                        + compiler
-                                                + semweb
-                                                + theme
-                                                + tipc
-                                                + unicode
-                                              + xpce
-                                                + bitmaps
-                                                + prolog
-                                                  + boot
-                                                  + contrib
-                                                    + rubik
-                                                  + demo
-                                                  + lib
-                                                    + compatibility
-                                                    + dialog
-                                                    + doc
-                                                    + draw
-                                                    + emacs
-                                                    + english
-                                                    + http
-                                                    + man
-                                                    + math
-                                                    + plot
-                                                    + swi
-                                                    + trace
-                                                    + xref
-                                      + var
-                                        + www
-                                          + html
-                                            + doc2
-                                            + docs
-                                            + ef
-                                              + css
-                                              + files
-                                                + logicmoo_workspace\.vscode
-                                                + logicmoo_workspace
-                                                  + bin
-                                                    + old-scripts
-                                                  + docker
-                                                    + noetic
-                                                    + noetic-testing
-                                                    + rootfs
-                                                      + root\.local
-                                                        + share
-                                                          + bllipparser
-                                                            + dockerfiles
-                                                              + centos6
-                                                              + python
-                                                      + etc
-                                                        + apache2
-                                                          + conf-available
-                                                          + sites-enabled
-                                                        + butterfly
-                                                        + letsencrypt
-                                                          + live
-                                                        + nginx
-                                                          + sites-enabled
-                                                        + profile.d
-                                                        + supervisor
-                                                          + conf.d
-                                                      + root
+              + php
+                + vendor
+                  + barryvdh
+                    + elfinder-flysystem-driver
+                  + firebase
+                    + php-jwt
+                  + guzzlehttp
+                    + guzzle
+                    + promises
+                    + psr7
+                  + kunalvarma05
+                    + dropbox-php-sdk
+                  + league
+                    + flysystem
+                      + docs
+                        + adapter
+                    + flysystem-cached-adapter
+                  + monolog
+                    + monolog
+                      + doc
+                  + nao-pon
+                    + elfinder-flysystem-driver-ext
+                    + flysystem-google-drive
+                  + phpseclib
+                    + phpseclib
+                  + psr
+                    + cache
+                    + http-message
+                    + log
+                  + tightenco
+                    + collect
+                  + vendor
+                    + firebase
+                      + php-jwt
+                    + google
+                      + apiclient
+                        + src
+                          + Google
+                            + Service
+                      + apiclient-services
+                      + auth
+                    + guzzlehttp
+                      + guzzle
+                      + promises
+                      + psr7
+                    + kunalvarma05
+                      + dropbox-php-sdk
+                    + monolog
+                      + monolog
+                        + doc
+                    + phpseclib
+                      + phpseclib
+                    + psr
+                      + cache
+                      + http-message
+                      + log
+                    + tightenco
+                      + collect
+            + icons
   + docs
     + _build
       + doctrees
       + html
         + _sources
-  + eclipse-workspace
-    + FAtiMA_impl\.metadata\.plugins
-      + org.eclipse.debug.ui
-      + org.eclipse.jdt.debug.ui
-      + org.eclipse.jdt.launching
-      + org.eclipse.jdt.ui
-      + org.eclipse.ui.ide
-      + org.eclipse.ui.workbench
-    + BW4Thuman
-    - DEIRA
-      - run
-        - vs
-    + External Prolog Files
-    + FAtiMA_impl
-      + data
-        + characters
-          + minds
-            + language
-              + agent
-                + de
-                  + language-set-1
-                + en
-                  + language-set-1
-              + user
-                + de
-                  + language-set-1
-                + en
-                  + language-set-1
-            + roles
-              + Bully
-              + BullyAssistant
-              + ByStander
-              + Defender
-              + Elder
-              + RedHood
-              + Slave
-              + Victim
-              + Wolf
-      + data_fearnot
-        + characters
-          + minds
-            + language
-              + agent
-                + de
-                  + language-set-1
-                + en
-                  + language-set-1
-              + user
-                + de
-                  + language-set-1
-                + en
-                  + language-set-1
-            + roles
-              + Bully
-              + BullyAssistant
-              + ByStander
-              + Defender
-              + Elder
-              + Slave
-              + Victim
-      + data_redhood
-        + characters
-          + minds
-            + language
-              + agent
-                + en
-                  + language-set-1
-              + user
-            + roles
-              + RedHood
-              + Wolf
-      + FAtiMA
-        + src
-          + FAtiMA
-            + autobiographicalMemory
-            + conditions
-            + deliberativeLayer
-              + goals
-              + plan
-            + Display
-            + emotionalState
-            + exceptions
-            + knowledgeBase
-            + reactiveLayer
-            + sensorEffector
-            + socialRelations
-            + util
-              + enumerables
-              + parsers
-            + wellFormedNames
-      + LanguageServer
-      + Leila
-        + Leila
-        + parsing
-      + lixo
-      + WorldTest
-        + src
-    + logicmoo_pfc_example
-    + ProDTTest
-      + src
-    + RemoteSystemsTempFiles
-    + sdfasd
-    + VirtualStoryteller
-      + knowledge
-        + prolog\.xpce
-        + domain
-          + cinderella
-            + ontology
-            + schemas
-          + lollipop
-            + ontology
-            + schemas
-            + setting
-            + suggestions
-            + threads
-          + lollipop_dialogue
-            + narration
-            + ontology
-            + schemas
-            + setting
-            + suggestions
-            + threads
-          + make_love_not_war
-            + ontology
-            + schemas
-            + setting
-            + suggestions
-            + threads
-          + pirates
-            + episodes
-            + ontology
-            + schemas
-            + setting
-            + suggestions
-            + threads
-          + pirates_ivo
-            + episodes
-            + ontology
-            + schemas
-            + setting
-            + suggestions
-            + threads
-          + pirates_ivo2
-            + narration
-            + ontology
-            + schemas
-              + experiment_1
-            + setting
-            + suggestions
-          + pirates_jasper
-            + episodes
-            + ontology
-            + schemas
-            + setting
-            + suggestions
-          + pirates_jasper2
-            + ontology
-            + schemas
-            + setting
-            + suggestions
-            + threads
-          + pirates_pjotter
-            + ontology
-            + schemas
-            + setting
-            + suggestions
-            + threads
-          + red
-            + narration
-            + ontology
-            + schemas
-            + setting
-            + suggestions
-            + threads
-          + swordfight
-            + episodes
-            + ontology
-            + schemas
-            + setting
-            + suggestions
-            + threads
-          + test
-            + schemas
-        + ontology
-          + New
-          + Old
-        + prolog
-          + CharacterAgent
-          + operators
-          + PlotAgent
-          + schemas
-          + test
-          + Uijlings actions
-          + WorldAgent
-    + WumpusAgents
-      + WumpusWorlds
-  - packs_lib
+  + packs_lib
     + aleph
       + prolog
         + aleph_test
@@ -881,15 +432,12 @@ packs_sys\logicmoo_nlu\ext\chat80_lm\chat80.vpj=Release
         + data
     + lambda
       + prolog
-    - lsp_server
-      - prolog
-      - test
     + matrix
       + prolog
         + examples
     + mpi
-      + prolog
-        + examples
+      - prolog
+        - examples
     + phil
       + docs
       + prolog
@@ -970,7 +518,9 @@ packs_sys\logicmoo_nlu\ext\chat80_lm\chat80.vpj=Release
       + prolog
         + checkers
       + tests
-  - packs_sys
+  + packs_sys
+    + logicmoo_ec\.github
+      + ISSUE_TEMPLATE
     + dictoo
       - prolog
       + t
@@ -988,23 +538,7 @@ packs_sys\logicmoo_nlu\ext\chat80_lm\chat80.vpj=Release
     + logicmoo_agi
       + ImportantDocs
         + jmc
-      + pldox
-        + episodic_memory
       - prolog
-        + talespin-annie\.git
-          + hooks
-          + info
-          + logs
-            + refs
-              + heads
-              + remotes
-                + origin
-          + objects
-            + pack
-          + refs
-            + heads
-            + remotes
-              + origin
         + abduction
         - agi_lib
         - episodic_memory
@@ -1429,7 +963,6 @@ packs_sys\logicmoo_nlu\ext\chat80_lm\chat80.vpj=Release
                           + page
                             + error
                             + ref
-                        + resource
                         + style
             + war
               + WEB-INF
@@ -1788,9 +1321,13 @@ packs_sys\logicmoo_nlu\ext\chat80_lm\chat80.vpj=Release
             - popupmenu
               - scripts
               + styles
+            + selected
           - swish_lib
             - render
       + t
+    + lsp_server
+      + prolog
+      + test
     + pfc
       + doc
         + swish
@@ -1842,7 +1379,7 @@ packs_sys\logicmoo_nlu\ext\chat80_lm\chat80.vpj=Release
             + model
             + mudconsole
       + t
-    + prologmud_samples
+    - prologmud_samples
       - prolog
     + slack_prolog
       - prolog
@@ -1889,7 +1426,6 @@ packs_sys\logicmoo_nlu\ext\chat80_lm\chat80.vpj=Release
         + sass
         - static
           + fonts
-          + images
         - templates
         + themes
           + abstract-image
@@ -2064,39 +1600,21 @@ packs_sys\logicmoo_nlu\ext\chat80_lm\chat80.vpj=Release
       + Windows
     + logicmoo_webui
       - prolog
-      - var
-        - www
-          - html
-            + doc2
-            + docs
-            + ef
-              + files\.tmb
-              + css
-              + files
-                + temp
-              + img
-                + src
-              + jquery
-                + images
-              + js
-                + commands
-                + extras
-                + i18n
-                  + help
-                + proxy
-                + ui
-                + worker
-              + sounds
-            + efCloserMine
-              + js
-            + icons
-              + small
+    + MMORPG
+      + public
+        + fonts
+        + js
+        + sounds
+        + sprites
+        + style
     + node_modules
+      + c3\.github
+      + printthis\.github
+        + ISSUE_TEMPLATE
       + ace
         + build
           + demo
             + bookmarklet
-              + images
             + kitchen-sink
               + docs
           + src
@@ -2109,8 +1627,66 @@ packs_sys\logicmoo_nlu\ext\chat80_lm\chat80.vpj=Release
             + snippets
           + textarea
             + images
+      + bootstrap
+        + js
+          + tests
+      + c3
+        + node_modules
+          + d3
       + codemirror
         + component-tools
+      + commander
+      + d3
+      + d3-array
+      + d3-axis
+      + d3-brush
+      + d3-chord
+      + d3-collection
+      + d3-color
+      + d3-contour
+      + d3-dispatch
+      + d3-drag
+      + d3-dsv
+      + d3-ease
+      + d3-fetch
+      + d3-force
+      + d3-format
+      + d3-geo
+      + d3-hierarchy
+      + d3-interpolate
+      + d3-path
+      + d3-polygon
+      + d3-quadtree
+      + d3-random
+      + d3-scale
+      + d3-scale-chromatic
+      + d3-selection
+      + d3-shape
+      + d3-time
+      + d3-time-format
+      + d3-timer
+      + d3-transition
+      + d3-voronoi
+      + d3-zoom
+      + iconv-lite
+      + jquery
+      + jquery.splitter
+      + js-sha1
+      + laconic
+      + monaco-editor
+      + opencollective-postinstall
+      + printthis
+      + requirejs
+      + rw
+      + safer-buffer
+      + sparkline
+      + svg-pan-zoom
+      + tagmanager
+        + node_modules
+          + jquery
+      + typeahead.js
+        + doc
+          + migration
       + xterm
         + css
         + lib
@@ -2130,6 +1706,45 @@ packs_sys\logicmoo_nlu\ext\chat80_lm\chat80.vpj=Release
             + parser
             + services
         + typings
+    - shrdlu
+      - A4
+      + data
+        + sfx
+      + doc
+      + fonts
+      + games
+        + aventura1
+          + sfx
+        + aventura4
+          + sfx
+        + aventura4-simple
+        + example
+        + example-game
+      + icon
+      + mapEditor
+        + lib
+        + src
+          + mapeditor
+            + editortabs
+            + maps
+          + util
+      - misc
+      + server
+      + src
+        + a4engine3
+          + objects
+        + ai
+          + actions
+          + inferences
+          + nlp
+        + auxiliar
+        + blocksworld
+        + lib
+        + shrdlu
+          + ai
+            + actions
+            + inferences
+        + tests
     + swish
       + applications
       + client
@@ -2200,9 +1815,6 @@ packs_sys\logicmoo_nlu\ext\chat80_lm\chat80.vpj=Release
         - css
         + help
         + icons
-          + noble
-            + components
-          + tiles
         - js
           + codemirror
             + addon
@@ -2269,6 +1881,15 @@ packs_sys\logicmoo_nlu\ext\chat80_lm\chat80.vpj=Release
             + userfiles\.config
               + lxterminal
             + userfiles
+        + first-stage
+          + TRAIN
+        + second-stage
+          + programs
+            + eval-beam
+            + eval-weights
+            + features
+            + prepare-data
+            + wlle
       + deps
         + edu
           + stanford
@@ -2278,6 +1899,8 @@ packs_sys\logicmoo_nlu\ext\chat80_lm\chat80.vpj=Release
                   + semgrex
                   + tokensregex
         + twitie-tagger
+      + eclipse
+        + readme
       - eclipse-workspace
         + FAtiMA_impl\.metadata\.plugins
           + org.eclipse.core.resources\.projects
@@ -2290,6 +1913,27 @@ packs_sys\logicmoo_nlu\ext\chat80_lm\chat80.vpj=Release
           + org.eclipse.ui.ide
           + org.eclipse.ui.workbench
         + Servers\.settings
+        + DearLeader
+          + Assets
+            + Characters
+            + Other
+            + Plots
+            + Story generator
+            + Unity
+          + ProjectSettings
+        + DEIRA
+          + etc
+            + HaptekLink
+              + Data
+            + VisageLink
+            + VisageLinkStub
+          + run
+            + hapteklink
+              + body_male
+              + leno
+              + torso_female
+            + hrss
+            + vs
         + FAtiMA_impl
           + data
             + characters
@@ -2359,8 +2003,83 @@ packs_sys\logicmoo_nlu\ext\chat80_lm\chat80.vpj=Release
           + Leila
           + lixo
           + WorldTest
+        + MKULTRA
+          + Assets
+            + Characters
+            + Concerns
+            + Conversation
+            + Editor
+            + Floor Materials
+            + Fonts
+            + NL
+            + Norms
+            + Ontology
+            + Photos
+            + Prefabs
+            + Problem solver
+            + Script
+            + Scripting
+            + Sims
+            + Sprites
+              + Kavi
+              + Steampunk
+            + TileCore
+              + Editor
+            + Utilities
+            + Wall Materials
+          + ProjectSettings
         + Servers
           + Tomcat v7.0 Server at localhost-config
+        + SWI-Prolog-JPL
+          + pl
+            + customize
+            + demo
+            + doc
+              + packages
+                + examples
+                  + cpp
+                  + http
+                  + jpl
+                    + java
+                      + Exceptions
+                      + Exceptions2
+                      + FamilyMT
+                      + family
+                      + semWeb
+                      + Test2
+                      + test
+                      + thread
+                      + time
+                      + Versions
+                      + zahed
+                    + prolog
+                  + pldoc
+                  + redis
+                  + ssl
+                    + etc
+            + library
+              + chr
+              + clp
+                + clpqr
+              + dialect
+                + sicstus
+                + xsb
+                + yap
+              + http
+              + pldoc
+              + semweb
+            + xpce
+              + bitmaps
+              + prolog
+                + contrib
+                  + rubik
+                + lib
+                  + dialog
+                  + doc
+                  + draw
+                  + http
+                  + plot
+                  + trace
         + VirtualStoryteller
           - knowledge
             + prolog\.xpce
@@ -2510,67 +2229,11 @@ packs_sys\logicmoo_nlu\ext\chat80_lm\chat80.vpj=Release
   + wikis
     - logicmoo_workspace.wiki
 + other_files.vpj
-scroll:0
+scroll:12
 [State]
-SCREEN: 1920 1200 119 146 1918 1017 0 0 M 0 0 0 0 1605 611
-CWD: C:\Program Files (x86)\SlickEdit\win
-BUFFER: BN="C:\logicmoo\FAtiMA_impl\Maia.bat"
-BI: MA=1 74 1  TABS=1 5  WWS=1 IWT=1 ST=0 IN=2 BW=0 US=32000 RO=0 SE=1 SN=0 BIN=0 MN=Batch	HM=0 MF=0 TL=0 MLL=0 ASE=0 LNL=6 LCF=0 CAPS=0 E=0 ESBU2=-1
-VIEW: LN=.21 CL=33 LE=0 CX=32 CY=2 WI=5 BI=28 HT=0 HN=0 HF=0 HC=4
-BUFFER: BN="C:\logicmoo\FAtiMA_impl\Lupo.bat"
-BI: MA=1 74 1  TABS=1 5  WWS=1 IWT=1 ST=0 IN=2 BW=0 US=32000 RO=0 SE=1 SN=0 BIN=0 MN=Batch	HM=0 MF=0 TL=0 MLL=0 ASE=0 LNL=6 LCF=0 CAPS=0 E=0 ESBU2=-1
-VIEW: LN=.336 CL=7 LE=0 CX=6 CY=5 WI=5 BI=31 HT=0 HN=0 HF=0 HC=4
-BUFFER: BN="C:\logicmoo\FAtiMA_impl\WorldTest (FearNot).bat"
-BI: MA=1 74 1  TABS=1 5  WWS=1 IWT=1 ST=0 IN=2 BW=0 US=32000 RO=0 SE=1 SN=0 BIN=0 MN=Batch	HM=0 MF=0 TL=0 MLL=0 ASE=0 LNL=6 LCF=0 CAPS=0 E=0 ESBU2=-1
-VIEW: LN=.21 CL=49 LE=0 CX=48 CY=2 WI=5 BI=29 HT=0 HN=0 HF=0 HC=4
-BUFFER: BN="C:\logicmoo\FAtiMA_impl\Luke.bat"
-BI: MA=1 74 1  TABS=1 5  WWS=1 IWT=1 ST=0 IN=2 BW=0 US=32000 RO=0 SE=1 SN=0 BIN=0 MN=Batch	HM=0 MF=0 TL=0 MLL=0 ASE=0 LNL=6 LCF=0 CAPS=0 E=0 ESBU2=-1
-VIEW: LN=.21 CL=33 LE=0 CX=32 CY=2 WI=5 BI=24 HT=0 HN=0 HF=0 HC=4
-BUFFER: BN="C:\logicmoo\FAtiMA_impl\John.bat"
-BI: MA=1 74 1  TABS=1 5  WWS=1 IWT=1 ST=0 IN=2 BW=0 US=32000 RO=0 SE=1 SN=0 BIN=0 MN=Batch	HM=0 MF=0 TL=0 MLL=0 ASE=0 LNL=6 LCF=0 CAPS=0 E=0 ESBU2=-1
-VIEW: LN=.21 CL=34 LE=0 CX=33 CY=2 WI=5 BI=25 HT=0 HN=0 HF=0 HC=4
-BUFFER: BN="C:\logicmoo\FAtiMA_impl\setpaths.bat"
-BI: MA=1 74 1  TABS=1 5  WWS=1 IWT=1 ST=0 IN=2 BW=0 US=32000 RO=0 SE=1 SN=0 BIN=0 MN=Batch	HM=0 MF=0 TL=0 MLL=0 ASE=0 LNL=6 LCF=0 CAPS=0 E=0 ESBU2=-1
-VIEW: LN=.109 CL=16 LE=0 CX=15 CY=0 WI=5 BI=23 HT=0 HN=0 HF=0 HC=4
-BUFFER: BN="C:\logicmoo\FAtiMA_impl\FAtiMA\src\FAtiMA\Agent.java"
-BI: MA=1 74 1  TABS=1 9  WWS=1 IWT=1 ST=0 IN=2 BW=0 US=32000 RO=0 SE=1 SN=0 BIN=0 MN=Java	HM=0 MF=0 TL=0 MLL=0 ASE=0 LNL=6 LCF=0 CAPS=0 E=0 ESBU2=-1
-VIEW: LN=.1021 CL=3 LE=0 CX=2 CY=12 WI=5 BI=26 HT=0 HN=0 HF=0 HC=4
-BUFFER: BN="C:\logicmoo\FAtiMA_impl\WorldTest (RedHood).bat"
-BI: MA=1 74 1  TABS=1 5  WWS=1 IWT=1 ST=0 IN=2 BW=0 US=32000 RO=0 SE=1 SN=0 BIN=0 MN=Batch	HM=0 MF=0 TL=0 MLL=0 ASE=0 LNL=6 LCF=0 CAPS=0 E=0 ESBU2=-1
-VIEW: LN=.194 CL=1 LE=0 CX=0 CY=4 WI=5 BI=30 HT=0 HN=0 HF=0 HC=4
-BUFFER: BN="C:\logicmoo\FAtiMA_impl\lixo\rules-with-intensity.clp"
-BI: MA=1 74 1  TABS=1 9  WWS=1 IWT=1 ST=0 IN=1 BW=0 US=32000 RO=0 SE=1 SN=0 BIN=0 MN=Fundamental	HM=0 MF=512 TL=0 MLL=0 ASE=0 LNL=6 LCF=0 CAPS=0 E=0 ESBU2=-1
-VIEW: LN=.0 CL=1 LE=0 CX=0 CY=0 WI=5 BI=27 HT=0 HN=0 HF=0 HC=4
-WINDOW: 26 26 1431 348 -1 -1 N  WF=0 WT=7 "Default Fixed Font,14,0,1"
-BUFFER: BN="C:\logicmoo\FAtiMA_impl\WorldTest (RedHood).bat"
-VIEW: LN=.194 CL=1 LE=0 CX=0 CY=4 WI=166 BI=30 HT=0 HN=0 HF=0 HC=4
-WINDOW: 78 78 1431 348 -1 -1 N  WF=0 WT=9 "Default Fixed Font,14,0,1"
-BUFFER: BN="C:\logicmoo\FAtiMA_impl\FAtiMA\src\FAtiMA\Agent.java"
-VIEW: LN=.1021 CL=3 LE=0 CX=2 CY=12 WI=165 BI=26 HT=0 HN=0 HF=0 HC=4
-WINDOW: 78 78 1431 348 -1 -1 N  WF=0 WT=2 "Default Fixed Font,14,0,1"
-BUFFER: BN="C:\logicmoo\FAtiMA_impl\setpaths.bat"
-VIEW: LN=.109 CL=16 LE=0 CX=15 CY=0 WI=164 BI=23 HT=0 HN=0 HF=0 HC=4
-WINDOW: 52 52 1431 348 -1 -1 N  WF=0 WT=8 "Default Fixed Font,14,0,1"
-BUFFER: BN="C:\logicmoo\FAtiMA_impl\John.bat"
-VIEW: LN=.21 CL=34 LE=0 CX=33 CY=2 WI=163 BI=25 HT=0 HN=0 HF=0 HC=4
-WINDOW: 104 104 1431 348 -1 -1 N  WF=0 WT=3 "Default Fixed Font,14,0,1"
-BUFFER: BN="C:\logicmoo\FAtiMA_impl\Luke.bat"
-VIEW: LN=.21 CL=33 LE=0 CX=32 CY=2 WI=162 BI=24 HT=0 HN=0 HF=0 HC=4
-WINDOW: 0 0 1431 348 -1 -1 N  WF=0 WT=6 "Default Fixed Font,14,0,1"
-BUFFER: BN="C:\logicmoo\FAtiMA_impl\WorldTest (FearNot).bat"
-VIEW: LN=.21 CL=49 LE=0 CX=48 CY=2 WI=161 BI=29 HT=0 HN=0 HF=0 HC=4
-WINDOW: 130 130 1431 348 -1 -1 N  WF=0 WT=4 "Default Fixed Font,14,0,1"
-BUFFER: BN="C:\logicmoo\FAtiMA_impl\Lupo.bat"
-VIEW: LN=.336 CL=7 LE=0 CX=6 CY=5 WI=160 BI=31 HT=0 HN=0 HF=0 HC=4
-WINDOW: 156 156 1431 348 -1 -1 N  WF=0 WT=5 "Default Fixed Font,14,0,1"
-BUFFER: BN="C:\logicmoo\FAtiMA_impl\Maia.bat"
-VIEW: LN=.21 CL=33 LE=0 CX=32 CY=2 WI=159 BI=28 HT=0 HN=0 HF=0 HC=4
-WINDOW: 104 104 1431 348 -1 -1 M  WF=0 WT=10 "Default Fixed Font,14,0,1"
-BUFFER: BN="C:\logicmoo\FAtiMA_impl\lixo\rules-with-intensity.clp"
-VIEW: LN=.823 CL=26 LE=0 CX=25 CY=12 WI=167 BI=27 HT=0 HN=0 HF=0 HC=4
+SCREEN: 1920 1200 119 146 1918 1017 0 0 M 0 0 0 0 1560 611
+CWD: ..\logicmoo_workspace
 FILEHIST: 9
-C:\logicmoo\FAtiMA_impl\WorldTest (RedHood).bat
-C:\logicmoo\FAtiMA_impl\FAtiMA\src\FAtiMA\Agent.java
 C:\logicmoo\FAtiMA_impl\lixo\rules-with-intensity.clp
 C:\logicmoo\FAtiMA_impl\John.bat
 C:\logicmoo\FAtiMA_impl\setpaths.bat
@@ -2578,3 +2241,5 @@ C:\logicmoo\FAtiMA_impl\Luke.bat
 C:\logicmoo\FAtiMA_impl\WorldTest (FearNot).bat
 C:\logicmoo\FAtiMA_impl\Lupo.bat
 C:\logicmoo\FAtiMA_impl\Maia.bat
+packs_lib\mpi\prolog\examples\bcast.pl
+packs_sys\prologmud_samples\prolog\prologmud_samples.pl

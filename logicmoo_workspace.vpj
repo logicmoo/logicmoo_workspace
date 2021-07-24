@@ -15012,188 +15012,102 @@
 				<Folder Name="src">
 					<Folder Name="a4engine3">
 						<Folder Name="objects">
-							<F N="packs_web/shrdlu/src/a4engine3/objects/A4AICharacter.js"/>
 							<F N="packs_web/shrdlu/src/a4engine3/objects/A4AICharacter.ts"/>
-							<F N="packs_web/shrdlu/src/a4engine3/objects/A4Character.js"/>
 							<F N="packs_web/shrdlu/src/a4engine3/objects/A4Character.ts"/>
-							<F N="packs_web/shrdlu/src/a4engine3/objects/A4Container.js"/>
 							<F N="packs_web/shrdlu/src/a4engine3/objects/A4Container.ts"/>
-							<F N="packs_web/shrdlu/src/a4engine3/objects/A4Door.js"/>
 							<F N="packs_web/shrdlu/src/a4engine3/objects/A4Door.ts"/>
-							<F N="packs_web/shrdlu/src/a4engine3/objects/A4Food.js"/>
 							<F N="packs_web/shrdlu/src/a4engine3/objects/A4Food.ts"/>
-							<F N="packs_web/shrdlu/src/a4engine3/objects/A4Item.js"/>
 							<F N="packs_web/shrdlu/src/a4engine3/objects/A4Item.ts"/>
-							<F N="packs_web/shrdlu/src/a4engine3/objects/A4Key.js"/>
 							<F N="packs_web/shrdlu/src/a4engine3/objects/A4Key.ts"/>
-							<F N="packs_web/shrdlu/src/a4engine3/objects/A4Lever.js"/>
 							<F N="packs_web/shrdlu/src/a4engine3/objects/A4Lever.ts"/>
-							<F N="packs_web/shrdlu/src/a4engine3/objects/A4MapBridge.js"/>
 							<F N="packs_web/shrdlu/src/a4engine3/objects/A4MapBridge.ts"/>
-							<F N="packs_web/shrdlu/src/a4engine3/objects/A4Obstacle.js"/>
 							<F N="packs_web/shrdlu/src/a4engine3/objects/A4Obstacle.ts"/>
-							<F N="packs_web/shrdlu/src/a4engine3/objects/A4ObstacleContainer.js"/>
 							<F N="packs_web/shrdlu/src/a4engine3/objects/A4ObstacleContainer.ts"/>
-							<F N="packs_web/shrdlu/src/a4engine3/objects/A4PlayerCharacter.js"/>
 							<F N="packs_web/shrdlu/src/a4engine3/objects/A4PlayerCharacter.ts"/>
-							<F N="packs_web/shrdlu/src/a4engine3/objects/A4PressurePlate.js"/>
 							<F N="packs_web/shrdlu/src/a4engine3/objects/A4PressurePlate.ts"/>
-							<F N="packs_web/shrdlu/src/a4engine3/objects/A4PushableWall.js"/>
 							<F N="packs_web/shrdlu/src/a4engine3/objects/A4PushableWall.ts"/>
-							<F N="packs_web/shrdlu/src/a4engine3/objects/A4Spade.js"/>
 							<F N="packs_web/shrdlu/src/a4engine3/objects/A4Spade.ts"/>
-							<F N="packs_web/shrdlu/src/a4engine3/objects/A4Trigger.js"/>
 							<F N="packs_web/shrdlu/src/a4engine3/objects/A4Trigger.ts"/>
-							<F N="packs_web/shrdlu/src/a4engine3/objects/A4Vehicle.js"/>
 							<F N="packs_web/shrdlu/src/a4engine3/objects/A4Vehicle.ts"/>
-							<F N="packs_web/shrdlu/src/a4engine3/objects/A4WalkingObject.js"/>
 							<F N="packs_web/shrdlu/src/a4engine3/objects/A4WalkingObject.ts"/>
 						</Folder>
-						<F N="packs_web/shrdlu/src/a4engine3/A4Agenda.js"/>
 						<F N="packs_web/shrdlu/src/a4engine3/A4Agenda.ts"/>
-						<F N="packs_web/shrdlu/src/a4engine3/A4Animation.js"/>
 						<F N="packs_web/shrdlu/src/a4engine3/A4Animation.ts"/>
-						<F N="packs_web/shrdlu/src/a4engine3/A4EventRule.js"/>
 						<F N="packs_web/shrdlu/src/a4engine3/A4EventRule.ts"/>
-						<F N="packs_web/shrdlu/src/a4engine3/A4Game.js"/>
 						<F N="packs_web/shrdlu/src/a4engine3/A4Game.ts"/>
-						<F N="packs_web/shrdlu/src/a4engine3/A4GraphicFile.js"/>
 						<F N="packs_web/shrdlu/src/a4engine3/A4GraphicFile.ts"/>
-						<F N="packs_web/shrdlu/src/a4engine3/A4Map.js"/>
 						<F N="packs_web/shrdlu/src/a4engine3/A4Map.ts"/>
-						<F N="packs_web/shrdlu/src/a4engine3/A4MapLayer.js"/>
 						<F N="packs_web/shrdlu/src/a4engine3/A4MapLayer.ts"/>
-						<F N="packs_web/shrdlu/src/a4engine3/A4MapTile.js"/>
 						<F N="packs_web/shrdlu/src/a4engine3/A4MapTile.ts"/>
-						<F N="packs_web/shrdlu/src/a4engine3/A4Object.js"/>
 						<F N="packs_web/shrdlu/src/a4engine3/A4Object.ts"/>
-						<F N="packs_web/shrdlu/src/a4engine3/A4ObjectFactory.js"/>
 						<F N="packs_web/shrdlu/src/a4engine3/A4ObjectFactory.ts"/>
-						<F N="packs_web/shrdlu/src/a4engine3/A4PathFinding.js"/>
 						<F N="packs_web/shrdlu/src/a4engine3/A4PathFinding.ts"/>
-						<F N="packs_web/shrdlu/src/a4engine3/A4Script.js"/>
 						<F N="packs_web/shrdlu/src/a4engine3/A4Script.ts"/>
-						<F N="packs_web/shrdlu/src/a4engine3/A4TextBubble.js"/>
 						<F N="packs_web/shrdlu/src/a4engine3/A4TextBubble.ts"/>
 					</Folder>
 					<Folder Name="ai">
 						<Folder Name="actions">
-							<F N="packs_web/shrdlu/src/ai/actions/AnswerDefine.js"/>
 							<F N="packs_web/shrdlu/src/ai/actions/AnswerDefine.ts"/>
-							<F N="packs_web/shrdlu/src/ai/actions/AnswerDistance.js"/>
 							<F N="packs_web/shrdlu/src/ai/actions/AnswerDistance.ts"/>
-							<F N="packs_web/shrdlu/src/ai/actions/AnswerHearSee.js"/>
 							<F N="packs_web/shrdlu/src/ai/actions/AnswerHearSee.ts"/>
-							<F N="packs_web/shrdlu/src/ai/actions/AnswerHow.js"/>
 							<F N="packs_web/shrdlu/src/ai/actions/AnswerHow.ts"/>
-							<F N="packs_web/shrdlu/src/ai/actions/AnswerHowMany.js"/>
 							<F N="packs_web/shrdlu/src/ai/actions/AnswerHowMany.ts"/>
-							<F N="packs_web/shrdlu/src/ai/actions/AnswerPredicate.js"/>
 							<F N="packs_web/shrdlu/src/ai/actions/AnswerPredicate.ts"/>
-							<F N="packs_web/shrdlu/src/ai/actions/AnswerQuery.js"/>
 							<F N="packs_web/shrdlu/src/ai/actions/AnswerQuery.ts"/>
-							<F N="packs_web/shrdlu/src/ai/actions/AnswerWhatIs.js"/>
 							<F N="packs_web/shrdlu/src/ai/actions/AnswerWhatIs.ts"/>
-							<F N="packs_web/shrdlu/src/ai/actions/AnswerWhen.js"/>
 							<F N="packs_web/shrdlu/src/ai/actions/AnswerWhen.ts"/>
-							<F N="packs_web/shrdlu/src/ai/actions/AnswerWhoIs.js"/>
 							<F N="packs_web/shrdlu/src/ai/actions/AnswerWhoIs.ts"/>
-							<F N="packs_web/shrdlu/src/ai/actions/AnswerWhy.js"/>
 							<F N="packs_web/shrdlu/src/ai/actions/AnswerWhy.ts"/>
-							<F N="packs_web/shrdlu/src/ai/actions/Call.js"/>
 							<F N="packs_web/shrdlu/src/ai/actions/Call.ts"/>
-							<F N="packs_web/shrdlu/src/ai/actions/IntentionActionFactory.js"/>
 							<F N="packs_web/shrdlu/src/ai/actions/IntentionActionFactory.ts"/>
-							<F N="packs_web/shrdlu/src/ai/actions/Memorize.js"/>
 							<F N="packs_web/shrdlu/src/ai/actions/Memorize.ts"/>
 						</Folder>
 						<Folder Name="inferences">
-							<F N="packs_web/shrdlu/src/ai/inferences/InferenceAnswerHow.js"/>
 							<F N="packs_web/shrdlu/src/ai/inferences/InferenceAnswerHow.ts"/>
-							<F N="packs_web/shrdlu/src/ai/inferences/InferenceAnswerHowMany.js"/>
 							<F N="packs_web/shrdlu/src/ai/inferences/InferenceAnswerHowMany.ts"/>
-							<F N="packs_web/shrdlu/src/ai/inferences/InferenceAnswerPredicate.js"/>
 							<F N="packs_web/shrdlu/src/ai/inferences/InferenceAnswerPredicate.ts"/>
-							<F N="packs_web/shrdlu/src/ai/inferences/InferenceAnswerQuery.js"/>
 							<F N="packs_web/shrdlu/src/ai/inferences/InferenceAnswerQuery.ts"/>
-							<F N="packs_web/shrdlu/src/ai/inferences/InferenceAnswerWhatIs.js"/>
 							<F N="packs_web/shrdlu/src/ai/inferences/InferenceAnswerWhatIs.ts"/>
-							<F N="packs_web/shrdlu/src/ai/inferences/InferenceAnswerWho.js"/>
 							<F N="packs_web/shrdlu/src/ai/inferences/InferenceAnswerWho.ts"/>
-							<F N="packs_web/shrdlu/src/ai/inferences/InferenceAnswerWhy.js"/>
 							<F N="packs_web/shrdlu/src/ai/inferences/InferenceAnswerWhy.ts"/>
-							<F N="packs_web/shrdlu/src/ai/inferences/InferenceEffectFactory.js"/>
 							<F N="packs_web/shrdlu/src/ai/inferences/InferenceEffectFactory.ts"/>
-							<F N="packs_web/shrdlu/src/ai/inferences/InferenceExecuteAction.js"/>
 							<F N="packs_web/shrdlu/src/ai/inferences/InferenceExecuteAction.ts"/>
-							<F N="packs_web/shrdlu/src/ai/inferences/InferenceHandleRephrasing.js"/>
 							<F N="packs_web/shrdlu/src/ai/inferences/InferenceHandleRephrasing.ts"/>
-							<F N="packs_web/shrdlu/src/ai/inferences/InferenceMemorize.js"/>
 							<F N="packs_web/shrdlu/src/ai/inferences/InferenceMemorize.ts"/>
-							<F N="packs_web/shrdlu/src/ai/inferences/InferenceStopAction.js"/>
 							<F N="packs_web/shrdlu/src/ai/inferences/InferenceStopAction.ts"/>
 						</Folder>
 						<Folder Name="nlp">
-							<F N="packs_web/shrdlu/src/ai/nlp/CompiledNLPatternRules.js"/>
 							<F N="packs_web/shrdlu/src/ai/nlp/CompiledNLPatternRules.ts"/>
-							<F N="packs_web/shrdlu/src/ai/nlp/NLContext.js"/>
 							<F N="packs_web/shrdlu/src/ai/nlp/NLContext.ts"/>
-							<F N="packs_web/shrdlu/src/ai/nlp/nlg.js"/>
 							<F N="packs_web/shrdlu/src/ai/nlp/nlg.ts"/>
-							<F N="packs_web/shrdlu/src/ai/nlp/NLParser.js"/>
 							<F N="packs_web/shrdlu/src/ai/nlp/NLParser.ts"/>
-							<F N="packs_web/shrdlu/src/ai/nlp/NLPattern.js"/>
 							<F N="packs_web/shrdlu/src/ai/nlp/NLPattern.ts"/>
-							<F N="packs_web/shrdlu/src/ai/nlp/NLPatternRule.js"/>
 							<F N="packs_web/shrdlu/src/ai/nlp/NLPatternRule.ts"/>
-							<F N="packs_web/shrdlu/src/ai/nlp/NLPos.js"/>
 							<F N="packs_web/shrdlu/src/ai/nlp/NLPos.ts"/>
 						</Folder>
-						<F N="packs_web/shrdlu/src/ai/AIDates.js"/>
 						<F N="packs_web/shrdlu/src/ai/AIDates.ts"/>
-						<F N="packs_web/shrdlu/src/ai/Inference.js"/>
 						<F N="packs_web/shrdlu/src/ai/Inference.ts"/>
-						<F N="packs_web/shrdlu/src/ai/Ontology.js"/>
 						<F N="packs_web/shrdlu/src/ai/Ontology.ts"/>
-						<F N="packs_web/shrdlu/src/ai/RuleBasedAI.js"/>
 						<F N="packs_web/shrdlu/src/ai/RuleBasedAI.ts"/>
-						<F N="packs_web/shrdlu/src/ai/Sentence.js"/>
 						<F N="packs_web/shrdlu/src/ai/Sentence.ts"/>
-						<F N="packs_web/shrdlu/src/ai/SentenceContainer.js"/>
 						<F N="packs_web/shrdlu/src/ai/SentenceContainer.ts"/>
-						<F N="packs_web/shrdlu/src/ai/Sort.js"/>
 						<F N="packs_web/shrdlu/src/ai/Sort.ts"/>
-						<F N="packs_web/shrdlu/src/ai/Term.js"/>
 						<F N="packs_web/shrdlu/src/ai/Term.ts"/>
-						<F N="packs_web/shrdlu/src/ai/TermContainer.js"/>
 						<F N="packs_web/shrdlu/src/ai/TermContainer.ts"/>
-						<F N="packs_web/shrdlu/src/ai/TimeInference.js"/>
 						<F N="packs_web/shrdlu/src/ai/TimeInference.ts"/>
 					</Folder>
 					<Folder Name="auxiliar">
-						<F N="packs_web/shrdlu/src/auxiliar/auxiliar-gfx.js"/>
 						<F N="packs_web/shrdlu/src/auxiliar/auxiliar-gfx.ts"/>
-						<F N="packs_web/shrdlu/src/auxiliar/auxiliar.js"/>
 						<F N="packs_web/shrdlu/src/auxiliar/auxiliar.ts"/>
-						<F N="packs_web/shrdlu/src/auxiliar/BButton.js"/>
 						<F N="packs_web/shrdlu/src/auxiliar/BButton.ts"/>
-						<F N="packs_web/shrdlu/src/auxiliar/BFrame.js"/>
 						<F N="packs_web/shrdlu/src/auxiliar/BFrame.ts"/>
-						<F N="packs_web/shrdlu/src/auxiliar/BInterface.js"/>
 						<F N="packs_web/shrdlu/src/auxiliar/BInterface.ts"/>
-						<F N="packs_web/shrdlu/src/auxiliar/BInterfaceElement.js"/>
 						<F N="packs_web/shrdlu/src/auxiliar/BInterfaceElement.ts"/>
-						<F N="packs_web/shrdlu/src/auxiliar/BTextInputFrame.js"/>
 						<F N="packs_web/shrdlu/src/auxiliar/BTextInputFrame.ts"/>
-						<F N="packs_web/shrdlu/src/auxiliar/Expression.js"/>
 						<F N="packs_web/shrdlu/src/auxiliar/Expression.ts"/>
-						<F N="packs_web/shrdlu/src/auxiliar/GLTile.js"/>
 						<F N="packs_web/shrdlu/src/auxiliar/GLTile.ts"/>
-						<F N="packs_web/shrdlu/src/auxiliar/GLTManager.js"/>
 						<F N="packs_web/shrdlu/src/auxiliar/GLTManager.ts"/>
-						<F N="packs_web/shrdlu/src/auxiliar/KeyboardState.js"/>
 						<F N="packs_web/shrdlu/src/auxiliar/KeyboardState.ts"/>
-						<F N="packs_web/shrdlu/src/auxiliar/SFXManager.js"/>
 						<F N="packs_web/shrdlu/src/auxiliar/SFXManager.ts"/>
 					</Folder>
 					<Folder Name="blocksworld">
@@ -15215,115 +15129,64 @@
 						<F N="packs_web/shrdlu/src/blocksworld/planning.ts"/>
 					</Folder>
 					<Folder Name="lib">
-						<F N="packs_web/shrdlu/src/lib/lz-string.js"/>
 						<F N="packs_web/shrdlu/src/lib/lz-string.ts"/>
 					</Folder>
 					<Folder Name="shrdlu">
 						<Folder Name="ai">
 							<Folder Name="actions">
-								<F N="packs_web/shrdlu/src/shrdlu/ai/actions/A4AnswerHow.js"/>
 								<F N="packs_web/shrdlu/src/shrdlu/ai/actions/A4AnswerHow.ts"/>
-								<F N="packs_web/shrdlu/src/shrdlu/ai/actions/A4IntentionActionFactory.js"/>
 								<F N="packs_web/shrdlu/src/shrdlu/ai/actions/A4IntentionActionFactory.ts"/>
-								<F N="packs_web/shrdlu/src/shrdlu/ai/actions/A4Locate.js"/>
 								<F N="packs_web/shrdlu/src/shrdlu/ai/actions/A4Locate.ts"/>
-								<F N="packs_web/shrdlu/src/shrdlu/ai/actions/AnswerWhere.js"/>
 								<F N="packs_web/shrdlu/src/shrdlu/ai/actions/AnswerWhere.ts"/>
-								<F N="packs_web/shrdlu/src/shrdlu/ai/actions/Etaoin3DPrint.js"/>
 								<F N="packs_web/shrdlu/src/shrdlu/ai/actions/Etaoin3DPrint.ts"/>
-								<F N="packs_web/shrdlu/src/shrdlu/ai/actions/EtaoinClose.js"/>
 								<F N="packs_web/shrdlu/src/shrdlu/ai/actions/EtaoinClose.ts"/>
-								<F N="packs_web/shrdlu/src/shrdlu/ai/actions/EtaoinConnectTo.js"/>
 								<F N="packs_web/shrdlu/src/shrdlu/ai/actions/EtaoinConnectTo.ts"/>
-								<F N="packs_web/shrdlu/src/shrdlu/ai/actions/EtaoinHelp.js"/>
 								<F N="packs_web/shrdlu/src/shrdlu/ai/actions/EtaoinHelp.ts"/>
-								<F N="packs_web/shrdlu/src/shrdlu/ai/actions/EtaoinOpen.js"/>
 								<F N="packs_web/shrdlu/src/shrdlu/ai/actions/EtaoinOpen.ts"/>
-								<F N="packs_web/shrdlu/src/shrdlu/ai/actions/EtaoinRead.js"/>
 								<F N="packs_web/shrdlu/src/shrdlu/ai/actions/EtaoinRead.ts"/>
-								<F N="packs_web/shrdlu/src/shrdlu/ai/actions/EtaoinReboot.js"/>
 								<F N="packs_web/shrdlu/src/shrdlu/ai/actions/EtaoinReboot.ts"/>
-								<F N="packs_web/shrdlu/src/shrdlu/ai/actions/EtaoinSwitchOff.js"/>
 								<F N="packs_web/shrdlu/src/shrdlu/ai/actions/EtaoinSwitchOff.ts"/>
-								<F N="packs_web/shrdlu/src/shrdlu/ai/actions/EtaoinSwitchOn.js"/>
 								<F N="packs_web/shrdlu/src/shrdlu/ai/actions/EtaoinSwitchOn.ts"/>
-								<F N="packs_web/shrdlu/src/shrdlu/ai/actions/EtaoinTalk.js"/>
 								<F N="packs_web/shrdlu/src/shrdlu/ai/actions/EtaoinTalk.ts"/>
-								<F N="packs_web/shrdlu/src/shrdlu/ai/actions/RobotDrop.js"/>
 								<F N="packs_web/shrdlu/src/shrdlu/ai/actions/RobotDrop.ts"/>
-								<F N="packs_web/shrdlu/src/shrdlu/ai/actions/RobotEnter.js"/>
 								<F N="packs_web/shrdlu/src/shrdlu/ai/actions/RobotEnter.ts"/>
-								<F N="packs_web/shrdlu/src/shrdlu/ai/actions/RobotExit.js"/>
 								<F N="packs_web/shrdlu/src/shrdlu/ai/actions/RobotExit.ts"/>
-								<F N="packs_web/shrdlu/src/shrdlu/ai/actions/RobotFollow.js"/>
 								<F N="packs_web/shrdlu/src/shrdlu/ai/actions/RobotFollow.ts"/>
-								<F N="packs_web/shrdlu/src/shrdlu/ai/actions/RobotGive.js"/>
 								<F N="packs_web/shrdlu/src/shrdlu/ai/actions/RobotGive.ts"/>
-								<F N="packs_web/shrdlu/src/shrdlu/ai/actions/RobotGo.js"/>
 								<F N="packs_web/shrdlu/src/shrdlu/ai/actions/RobotGo.ts"/>
-								<F N="packs_web/shrdlu/src/shrdlu/ai/actions/RobotHelp.js"/>
 								<F N="packs_web/shrdlu/src/shrdlu/ai/actions/RobotHelp.ts"/>
-								<F N="packs_web/shrdlu/src/shrdlu/ai/actions/RobotOpenClose.js"/>
 								<F N="packs_web/shrdlu/src/shrdlu/ai/actions/RobotOpenClose.ts"/>
-								<F N="packs_web/shrdlu/src/shrdlu/ai/actions/RobotPushPull.js"/>
 								<F N="packs_web/shrdlu/src/shrdlu/ai/actions/RobotPushPull.ts"/>
-								<F N="packs_web/shrdlu/src/shrdlu/ai/actions/RobotPutIn.js"/>
 								<F N="packs_web/shrdlu/src/shrdlu/ai/actions/RobotPutIn.ts"/>
-								<F N="packs_web/shrdlu/src/shrdlu/ai/actions/RobotReboot.js"/>
 								<F N="packs_web/shrdlu/src/shrdlu/ai/actions/RobotReboot.ts"/>
-								<F N="packs_web/shrdlu/src/shrdlu/ai/actions/RobotStay.js"/>
 								<F N="packs_web/shrdlu/src/shrdlu/ai/actions/RobotStay.ts"/>
-								<F N="packs_web/shrdlu/src/shrdlu/ai/actions/RobotStop.js"/>
 								<F N="packs_web/shrdlu/src/shrdlu/ai/actions/RobotStop.ts"/>
-								<F N="packs_web/shrdlu/src/shrdlu/ai/actions/RobotTake.js"/>
 								<F N="packs_web/shrdlu/src/shrdlu/ai/actions/RobotTake.ts"/>
-								<F N="packs_web/shrdlu/src/shrdlu/ai/actions/RobotTakeTo.js"/>
 								<F N="packs_web/shrdlu/src/shrdlu/ai/actions/RobotTakeTo.ts"/>
-								<F N="packs_web/shrdlu/src/shrdlu/ai/actions/RobotTalk.js"/>
 								<F N="packs_web/shrdlu/src/shrdlu/ai/actions/RobotTalk.ts"/>
-								<F N="packs_web/shrdlu/src/shrdlu/ai/actions/RobotTurn.js"/>
 								<F N="packs_web/shrdlu/src/shrdlu/ai/actions/RobotTurn.ts"/>
 							</Folder>
 							<Folder Name="inferences">
-								<F N="packs_web/shrdlu/src/shrdlu/ai/inferences/A4InferenceAnswerHowGoto.js"/>
 								<F N="packs_web/shrdlu/src/shrdlu/ai/inferences/A4InferenceAnswerHowGoto.ts"/>
-								<F N="packs_web/shrdlu/src/shrdlu/ai/inferences/A4InferenceAnswerWhere.js"/>
 								<F N="packs_web/shrdlu/src/shrdlu/ai/inferences/A4InferenceAnswerWhere.ts"/>
-								<F N="packs_web/shrdlu/src/shrdlu/ai/inferences/A4InferenceEffectFactory.js"/>
 								<F N="packs_web/shrdlu/src/shrdlu/ai/inferences/A4InferenceEffectFactory.ts"/>
 							</Folder>
-							<F N="packs_web/shrdlu/src/shrdlu/ai/A4RuleBasedAI.js"/>
 							<F N="packs_web/shrdlu/src/shrdlu/ai/A4RuleBasedAI.ts"/>
-							<F N="packs_web/shrdlu/src/shrdlu/ai/AILocation.js"/>
 							<F N="packs_web/shrdlu/src/shrdlu/ai/AILocation.ts"/>
-							<F N="packs_web/shrdlu/src/shrdlu/ai/EtaoinAI.js"/>
 							<F N="packs_web/shrdlu/src/shrdlu/ai/EtaoinAI.ts"/>
-							<F N="packs_web/shrdlu/src/shrdlu/ai/QwertyAI.js"/>
 							<F N="packs_web/shrdlu/src/shrdlu/ai/QwertyAI.ts"/>
-							<F N="packs_web/shrdlu/src/shrdlu/ai/RobotAI.js"/>
 							<F N="packs_web/shrdlu/src/shrdlu/ai/RobotAI.ts"/>
-							<F N="packs_web/shrdlu/src/shrdlu/ai/RuleBasedAIDebugger.js"/>
 							<F N="packs_web/shrdlu/src/shrdlu/ai/RuleBasedAIDebugger.ts"/>
-							<F N="packs_web/shrdlu/src/shrdlu/ai/ShrdluAI.js"/>
 							<F N="packs_web/shrdlu/src/shrdlu/ai/ShrdluAI.ts"/>
 						</Folder>
-						<F N="packs_web/shrdlu/src/shrdlu/loggingToServer.js"/>
 						<F N="packs_web/shrdlu/src/shrdlu/loggingToServer.ts"/>
-						<F N="packs_web/shrdlu/src/shrdlu/main.js"/>
 						<F N="packs_web/shrdlu/src/shrdlu/main.ts"/>
-						<F N="packs_web/shrdlu/src/shrdlu/ShrdluA4Game.js"/>
 						<F N="packs_web/shrdlu/src/shrdlu/ShrdluA4Game.ts"/>
-						<F N="packs_web/shrdlu/src/shrdlu/ShrdluA4ObjectFactory.js"/>
 						<F N="packs_web/shrdlu/src/shrdlu/ShrdluA4ObjectFactory.ts"/>
-						<F N="packs_web/shrdlu/src/shrdlu/ShrdluAirlockDoor.js"/>
 						<F N="packs_web/shrdlu/src/shrdlu/ShrdluAirlockDoor.ts"/>
-						<F N="packs_web/shrdlu/src/shrdlu/ShrdluApp.js"/>
 						<F N="packs_web/shrdlu/src/shrdlu/ShrdluApp.ts"/>
-						<F N="packs_web/shrdlu/src/shrdlu/ShrdluCutScenes.js"/>
 						<F N="packs_web/shrdlu/src/shrdlu/ShrdluCutScenes.ts"/>
-						<F N="packs_web/shrdlu/src/shrdlu/ShrdluGameScript.js"/>
 						<F N="packs_web/shrdlu/src/shrdlu/ShrdluGameScript.ts"/>
-						<F N="packs_web/shrdlu/src/shrdlu/ShrdluInterface.js"/>
 						<F N="packs_web/shrdlu/src/shrdlu/ShrdluInterface.ts"/>
 					</Folder>
 					<Folder Name="tests">
@@ -18933,110 +18796,96 @@
 		<F
 			N="*.*"
 			Recurse="1"
-			Excludes="*.pl_;*.pld*;*.pldata;*.Plo;*.sav*/;*.sav/;*.sav?/;*.sav??/;*~/;~*/;.bin/;.cache/;.deps/;.git/;.github/;.metadata/;.svn/;.tmp/;CVS/;Mirrors/;node_modules/;pldata/;*.0*;*.1*;*.2*;*.3*;*.4*;*.5*;*.6*;*.7*;*.8*;*.9*;*.a;*.abap;*.abc;*.abs;*.abw;*.act2g;*.add;*.ahk;*.ai;*.ail;*.ailog;*.aim;*.aiml;*.aimmspack;*.alda;*.am;*.ann;*.Apache;*.apex;*.aql;*.arff;*.ari;*.arq;*.arrange;*.as;*.attr;*.auto;*.autopos;*.autopron;*.aux;*.avg;*.awk;*.b;*.b?*;*.backup;*.bak;*.bbl;*.bib;*.bin;*.bis;*.bis1;*.bis2;*.bis3;*.bis4;*.blif;*.bm;*.bro;*.BSD;*.bst;*.bz2;*.bzl;*.c9search_results;*.cabal;*.cache;*.carine;*.cd;*.cfe;*.cfgm;*.cfs;*.CGE;*.cgi;*.cgx;*.chan;*.chan~bak;*.check_cache;*.chk;*.cirru;*.clang-format;*.class;*.classpath;*.cls;*.co;*.code;*.com%2Ffeed%2F;*.compile;*.component;*.conf;*.configuration;*.container;*.copyright;*.correct;*.cp;*.cpackignore;*.cr;*.crt;*.csd;*.csl;*.csr;*.csv;*.cty;*.cvsignore;*.d;*.dart;*.dat;*.data;*.db;*.dcl;*.dddmp;*.dead;*.deb;*.dedam;*.default;*.del;*.deps;*.dia;*.diff;*.dimacs;*.dirstamp;*.dist;*.dll;*.dmp;*.do;*.doc;*.dockerignore;*.doctest;*.dox;*.drace;*.DS_Store;*.dsc;*.dsl;*.dsw;*.dtxt;*.dur;*.dvi;*.dzn;*.edi;*.eex;*.egg;*.egg-link;*.ejs;*.emacs_poole;*.english;*.ent;*.eot;*.epp;*.eprime;*.eps;*.eqp;*.erb;*.err;*.eslintignore;*.ex;*.exe;*.exp;*.expand;*.explode0;*.explode1;*.explode2;*.explode3;*.exsd;*.extra;*.f;*.f90;*.fdb_latexmk;*.fdt;*.fdx;*.feature;*.fgrep;*.fileheader;*.filtered;*.filters;*.finder;*.fit;*.fla;*.fls;*.fn;*.fnm;*.form;*.format;*.frink;*.frq;*.frt;*.fsi;*.fsl;*.ftl;*.full;*.gbg;*.gbs;*.gcode;*.gen;*.generate;*.geo;*.gfcm;*.gfx;*.gif;*.gmr;*.goldpos;*.GPL;*.gr;*.grammar;*.groups;*.grtext;*.gsl;*.guess;*.gyp;*.gz;*.haml;*.hbs;*.hdt;*.hhc;*.hhk;*.hide;*.hjson;*.hlp;*.home;*.hostsp;*.hrc;*.htm;*.html;*.hx;*.icn;*.icns;*.ico;*.ico*;*.ics;*.idx;*.ignore-on-commit;*.ilf;*.ilg;*.in;*.inc;*.includecache;*.ind;*.index;*.info;*.internal;*.inv;*.inx;*.io;*.isabelle;*.ist;*.jar;*.java_;*.jjt;*.jl;*.jpeg;*.jpg;*.jpt;*.jq;*.js;*.jscsrc;*.jsdoc;*.jsdtscope;*.jsfdia;*.jshintrc;*.jsmooth;*.jssm;*.jsx;*.key;*.kt;*.ky;*.la;*.lai;*.layout;*.lck;*.less;*.LESSER;*.leveldb;*.lex;*.lgpl;*.lib;*.liquid;*.list;*.listing;*.lm;*.lnk;*.lo;*.lock;*.Log;*.ls;*.lst;*.ltv;*.lucene;*.lyx;*.m;*.m4;*.macosx;*.macosxu;*.magic;*.make-senitel;*.map;*.mark;*.markdown;*.markers;*.marks;*.mask;*.mat;*.max1;*.max2;*.mc;*.mel;*.metitarski;*.mgtp;*.missing;*.mixal;*.mixt;*.mm;*.mo;*.mod;*.mod2g;*.more;*.mtl;*.mysql;*.mz;*.mzn;*.n;*.name;*.ner;*.net;*.new;*.next;*.nginx;*.nim;*.nix;*.nld*;*.nldata;*.nojekyll;*.noquotes;*.nospan0;*.nospan1;*.nospan2;*.nospan3;*.not;*.npmignore;*.nrm;*.nsi;*.nsmap;*.nt;*.nunjucks;*.nuspec;*.o;*.obj;*.obp;*.ocl;*.ocl_need_dom;*.odt;*.okay;*.old;*.old1;*.old2;*.oldone;*.omdoc;*.opensdf;*.opts;*.orc;*.ord;*.org;*.orig;*.original;*.otf;*.out2;*.p1;*.p12;*.p6;*.package_visibility;*.pages;*.param;*.parses;*.pb;*.pc;*.pdb;*.pdf;*.pdn;*.pem;*.perl;*.persistence;*.pg;*.pgsql;*.pig;*.pins;*.pipe;*.pl-old;*.pl-staffan;*.plp;*.pl~;*.pm;*.png;*.po;*.pom;*.pont;*.pos;*.ppdb;*.pprj;*.ppt;*.pptx;*.praat;*.prc;*.prefix;*.preprocessing;*.pri;*.prisma;*.prl;*.probs;*.profile;*.PrologMUD-freenode;*.prop;*.proto;*.prx;*.ps;*.ps*;*.ps1;*.psd;*.PSF;*.psi;*.pth;*.ptr;*.pug;*.pwd;*.pwp;*.pyc;*.pyi;*.qi;*.qlf;*.qm;*.qml;*.qrc;*.rar;*.rc;*.Rd;*.read;*.readylog;*.red;*.reform;*.registry;*.regression;*.regression0;*.regression1;*.regression2;*.regression3;*.repository;*.Rhtml;*.rtf;*.rty;*.ru;*.run;*.running;*.s;*.sample;*.sass;*.sav;*.saved;*.scad;*.sco;*.scott;*.scss;*.sem;*.ser;*.service;*.sex;*.shorten;*.si;*.sipl;*.sitemap;*.size;*.sjs;*.skel;*.sketch;*.sl;*.slim;*.slot_definitions;*.smarty;*.smj;*.smt1;*.snap;*.snark;*.snippets;*.snk;*.so;*.soc;*.socket;*.solaris;*.sources;*.soy;*.space;*.sprfn;*.sqlserver;*.srec;*.srj;*.srx;*.Start;*.status;*.std;*.stlx;*.stp;*.sty;*.styl;*.style;*.stylelintrc;*.stylesheet;*.sub;*.sunos;*.svn-base;*.swf;*.swift;*.swp;*.syntax;*.system;*.tag;*.tar;*.targets;*.tb;*.tbz2;*.temp;*.test;*.testdddmp;*.tf;*.tgz;*.tif;*.tii;*.tis;*.tmp;*.tmpl;*.tmSnippet;*.tok;*.tp;*.tps;*.tr;*.tr1;*.tr2;*.trans;*.travis;*.tree;*.trp;*.ts;*.tsv;*.tsx;*.ttf;*.uber;*.ui;*.uninstalled;*.unix;*.unstable;*.unused;*.url;*.user;*.user~bak;*.v;*.vala;*.variables;*.verb;*.version;*.vfp;*.vhd;*.vlw;*.vm;*.vpj;*.vpj~;*.vpw;*.vpwhist;*.vr;*.vtg;*.vtg~;*.waldmeister;*.wav;*.whl;*.win;*.win32;*.wld;*.wlk;*.woff;*.woff2;*.wppl;*.wrong;*.xb*;*.xbm;*.xcf;*.xdb;*.xdy;*.xinet;*.xl*;*.xls;*.xmi;*.xp*;*.xpdl;*.xpm;*.xq;*.xsd;*.y;*.yesterday;*.zeek;*.zinc;*.zip"/>
+			Excludes="logicmoo_workspace/;usr/;docker/;logicmoo_pldata/;*~/;~*/;~*;*~;.metadata/;.svn/;.git/;CVS/;node_modules/;*.sav?/;*.sav??/;*.sav/;pldata/;*.pldata;*.nldata;.cache/;.deps/;.github/;.bin/;.tmp/;*.pl_;*.pld*;*.pldata;*.Plo;*.sav*/;*.sav/;*.sav?/;*.sav??/;*~/;~*/;.bin/;.cache/;.deps/;.git/;.github/;.metadata/;.svn/;.tmp/;CVS/;Mirrors/;node_modules/;pldata/;*.0*;*.1*;*.2*;*.3*;*.4*;*.5*;*.6*;*.7*;*.8*;*.9*;*.a;*.abap;*.abc;*.abs;*.abw;*.act2g;*.add;*.ahk;*.ai;*.ail;*.ailog;*.aim;*.aiml;*.aimmspack;*.alda;*.am;*.ann;*.Apache;*.apex;*.aql;*.arff;*.ari;*.arq;*.arrange;*.as;*.attr;*.auto;*.autopos;*.autopron;*.aux;*.avg;*.awk;*.b;*.b?*;*.backup;*.bak;*.bbl;*.bib;*.bin;*.bis;*.bis1;*.bis2;*.bis3;*.bis4;*.blif;*.bm;*.bro;*.BSD;*.bst;*.bz2;*.bzl;*.c9search_results;*.cabal;*.cache;*.carine;*.cd;*.cfe;*.cfgm;*.cfs;*.CGE;*.cgi;*.cgx;*.chan;*.chan~bak;*.check_cache;*.chk;*.cirru;*.clang-format;*.class;*.classpath;*.cls;*.co;*.code;*.com%2Ffeed%2F;*.compile;*.component;*.conf;*.configuration;*.container;*.copyright;*.correct;*.cp;*.cpackignore;*.cr;*.crt;*.csd;*.csl;*.csr;*.csv;*.cty;*.cvsignore;*.d;*.dart;*.dat;*.data;*.db;*.dcl;*.dddmp;*.dead;*.deb;*.dedam;*.default;*.del;*.deps;*.dia;*.diff;*.dimacs;*.dirstamp;*.dist;*.dll;*.dmp;*.do;*.doc;*.dockerignore;*.doctest;*.dox;*.drace;*.DS_Store;*.dsc;*.dsl;*.dsw;*.dtxt;*.dur;*.dvi;*.dzn;*.edi;*.eex;*.egg;*.egg-link;*.ejs;*.emacs_poole;*.english;*.ent;*.eot;*.epp;*.eprime;*.eps;*.eqp;*.erb;*.err;*.eslintignore;*.ex;*.exe;*.exp;*.expand;*.explode0;*.explode1;*.explode2;*.explode3;*.exsd;*.extra;*.f;*.f90;*.fdb_latexmk;*.fdt;*.fdx;*.feature;*.fgrep;*.fileheader;*.filtered;*.filters;*.finder;*.fit;*.fla;*.fls;*.fn;*.fnm;*.form;*.format;*.frink;*.frq;*.frt;*.fsi;*.fsl;*.ftl;*.full;*.gbg;*.gbs;*.gcode;*.gen;*.generate;*.geo;*.gfcm;*.gfx;*.gif;*.gmr;*.goldpos;*.GPL;*.gr;*.grammar;*.groups;*.grtext;*.gsl;*.guess;*.gyp;*.gz;*.haml;*.hbs;*.hdt;*.hhc;*.hhk;*.hide;*.hjson;*.hlp;*.home;*.hostsp;*.hrc;*.htm;*.html;*.hx;*.icn;*.icns;*.ico;*.ico*;*.ics;*.idx;*.ignore-on-commit;*.ilf;*.ilg;*.in;*.inc;*.includecache;*.ind;*.index;*.info;*.internal;*.inv;*.inx;*.io;*.isabelle;*.ist;*.jar;*.java_;*.jjt;*.jl;*.jpeg;*.jpg;*.jpt;*.jq;*.js;*.jscsrc;*.jsdoc;*.jsdtscope;*.jsfdia;*.jshintrc;*.jsmooth;*.jssm;*.jsx;*.key;*.kt;*.ky;*.la;*.lai;*.layout;*.lck;*.less;*.LESSER;*.leveldb;*.lex;*.lgpl;*.lib;*.liquid;*.list;*.listing;*.lm;*.lnk;*.lo;*.lock;*.Log;*.ls;*.lst;*.ltv;*.lucene;*.lyx;*.m;*.m4;*.macosx;*.macosxu;*.magic;*.make-senitel;*.map;*.mark;*.markdown;*.markers;*.marks;*.mask;*.mat;*.max1;*.max2;*.mc;*.mel;*.metitarski;*.mgtp;*.missing;*.mixal;*.mixt;*.mm;*.mo;*.mod;*.mod2g;*.more;*.mtl;*.mysql;*.mz;*.mzn;*.n;*.name;*.ner;*.net;*.new;*.next;*.nginx;*.nim;*.nix;*.nld*;*.nldata;*.nojekyll;*.noquotes;*.nospan0;*.nospan1;*.nospan2;*.nospan3;*.not;*.npmignore;*.nrm;*.nsi;*.nsmap;*.nt;*.nunjucks;*.nuspec;*.o;*.obj;*.obp;*.ocl;*.ocl_need_dom;*.odt;*.okay;*.old;*.old1;*.old2;*.oldone;*.omdoc;*.opensdf;*.opts;*.orc;*.ord;*.org;*.orig;*.original;*.otf;*.out2;*.p1;*.p12;*.p6;*.package_visibility;*.pages;*.param;*.parses;*.pb;*.pc;*.pdb;*.pdf;*.pdn;*.pem;*.perl;*.persistence;*.pg;*.pgsql;*.pig;*.pins;*.pipe;*.pl-old;*.pl-staffan;*.plp;*.pl~;*.pm;*.png;*.po;*.pom;*.pont;*.pos;*.ppdb;*.pprj;*.ppt;*.pptx;*.praat;*.prc;*.prefix;*.preprocessing;*.pri;*.prisma;*.prl;*.probs;*.profile;*.PrologMUD-freenode;*.prop;*.proto;*.prx;*.ps;*.ps*;*.ps1;*.psd;*.PSF;*.psi;*.pth;*.ptr;*.pug;*.pwd;*.pwp;*.pyc;*.pyi;*.qi;*.qlf;*.qm;*.qml;*.qrc;*.rar;*.rc;*.Rd;*.read;*.readylog;*.red;*.reform;*.registry;*.regression;*.regression0;*.regression1;*.regression2;*.regression3;*.repository;*.Rhtml;*.rtf;*.rty;*.ru;*.run;*.running;*.s;*.sample;*.sass;*.sav;*.saved;*.scad;*.sco;*.scott;*.scss;*.sem;*.ser;*.service;*.sex;*.shorten;*.si;*.sipl;*.sitemap;*.size;*.sjs;*.skel;*.sketch;*.sl;*.slim;*.slot_definitions;*.smarty;*.smj;*.smt1;*.snap;*.snark;*.snippets;*.snk;*.so;*.soc;*.socket;*.solaris;*.sources;*.soy;*.space;*.sprfn;*.sqlserver;*.srec;*.srj;*.srx;*.Start;*.status;*.std;*.stlx;*.stp;*.sty;*.styl;*.style;*.stylelintrc;*.stylesheet;*.sub;*.sunos;*.svn-base;*.swf;*.swift;*.swp;*.syntax;*.system;*.tag;*.tar;*.targets;*.tb;*.tbz2;*.temp;*.test;*.testdddmp;*.tf;*.tgz;*.tif;*.tii;*.tis;*.tmp;*.tmpl;*.tmSnippet;*.tok;*.tp;*.tps;*.tr;*.tr1;*.tr2;*.trans;*.travis;*.tree;*.trp;*.ts;*.tsv;*.tsx;*.ttf;*.uber;*.ui;*.uninstalled;*.unix;*.unstable;*.unused;*.url;*.user;*.user~bak;*.v;*.vala;*.variables;*.verb;*.version;*.vfp;*.vhd;*.vlw;*.vm;*.vpj;*.vpj~;*.vpw;*.vpwhist;*.vr;*.vtg;*.vtg~;*.waldmeister;*.wav;*.whl;*.win;*.win32;*.wld;*.wlk;*.woff;*.woff2;*.wppl;*.wrong;*.xb*;*.xbm;*.xcf;*.xdb;*.xdy;*.xinet;*.xl*;*.xls;*.xmi;*.xp*;*.xpdl;*.xpm;*.xq;*.xsd;*.y;*.yesterday;*.zeek;*.zinc;*.zip"/>
 		<F
 			N="*.clif"
 			Recurse="1"
 			Refilter="0"
-			Excludes="*~/;~*/;~*;*~;.metadata/;.svn/;.git/;CVS/;node_modules/;*.sav?/;*.sav??/;*.sav/;pldata/;*.pldata;*.nldata;.cache/;.deps/;.github/;.bin/;.tm
-p/"/>
+			Excludes="logicmoo_workspace/;usr/;docker/;logicmoo_pldata/;*~/;~*/;~*;*~;.metadata/;.svn/;.git/;CVS/;node_modules/;*.sav?/;*.sav??/;*.sav/;pldata/;*.pldata;*.nldata;.cache/;.deps/;.github/;.bin/;.tmp/"/>
 		<F
 			N="*.clp"
 			Recurse="1"
 			Refilter="0"
-			Excludes="*~/;~*/;~*;*~;.metadata/;.svn/;.git/;CVS/;node_modules/;*.sav?/;*.sav??/;*.sav/;pldata/;*.pldata;*.nldata;.cache/;.deps/;.github/;.bin/;.tm
-p/"/>
+			Excludes="logicmoo_workspace/;usr/;docker/;logicmoo_pldata/;*~/;~*/;~*;*~;.metadata/;.svn/;.git/;CVS/;node_modules/;*.sav?/;*.sav??/;*.sav/;pldata/;*.pldata;*.nldata;.cache/;.deps/;.github/;.bin/;.tmp/"/>
 		<F
 			N="*.conf"
 			Recurse="1"
 			Refilter="0"
-			Excludes="*~/;~*/;~*;*~;.metadata/;.svn/;.git/;CVS/;node_modules/;*.sav?/;*.sav??/;*.sav/;pldata/;*.pldata;*.nldata;.cache/;.deps/;.github/;.bin/;.tmp/"/>
+			Excludes="logicmoo_workspace/;usr/;docker/;logicmoo_pldata/;*~/;~*/;~*;*~;.metadata/;.svn/;.git/;CVS/;node_modules/;*.sav?/;*.sav??/;*.sav/;pldata/;*.pldata;*.nldata;.cache/;.deps/;.github/;.bin/;.tmp/"/>
 		<F
 			N="*.e"
 			Recurse="1"
 			Refilter="0"
-			Excludes="*~/;~*/;~*;*~;.metadata/;.svn/;.git/;CVS/;node_modules/;*.sav?/;*.sav??/;*.sav/;pldata/;*.pldata;*.nldata;.cache/;.deps/;.github/;.bin/;.tm
-p/"/>
+			Excludes="logicmoo_workspace/;usr/;docker/;logicmoo_pldata/;*~/;~*/;~*;*~;.metadata/;.svn/;.git/;CVS/;node_modules/;*.sav?/;*.sav??/;*.sav/;pldata/;*.pldata;*.nldata;.cache/;.deps/;.github/;.bin/;.tmp/"/>
 		<F
 			N="*.jess"
 			Recurse="1"
 			Refilter="0"
-			Excludes="*~/;~*/;~*;*~;.metadata/;.svn/;.git/;CVS/;node_modules/;*.sav?/;*.sav??/;*.sav/;pldata/;*.pldata;*.nldata;.cache/;.deps/;.github/;.bin/;.tm
-p/"/>
+			Excludes="logicmoo_workspace/;usr/;docker/;logicmoo_pldata/;*~/;~*/;~*;*~;.metadata/;.svn/;.git/;CVS/;node_modules/;*.sav?/;*.sav??/;*.sav/;pldata/;*.pldata;*.nldata;.cache/;.deps/;.github/;.bin/;.tmp/"/>
 		<F
 			N="*.kif"
 			Recurse="1"
 			Refilter="0"
-			Excludes="*~/;~*/;~*;*~;.metadata/;.svn/;.git/;CVS/;node_modules/;*.sav?/;*.sav??/;*.sav/;pldata/;*.pldata;*.nldata;.cache/;.deps/;.github/;.bin/;.tm
-p/"/>
+			Excludes="logicmoo_workspace/;usr/;docker/;logicmoo_pldata/;*~/;~*/;~*;*~;.metadata/;.svn/;.git/;CVS/;node_modules/;*.sav?/;*.sav??/;*.sav/;pldata/;*.pldata;*.nldata;.cache/;.deps/;.github/;.bin/;.tmp/"/>
 		<F
 			N="*.md"
 			Recurse="1"
 			Refilter="0"
-			Excludes="*~/;~*/;~*;*~;.metadata/;.svn/;.git/;CVS/;node_modules/;*.sav?/;*.sav??/;*.sav/;pldata/;*.pldata;*.nldata;.cache/;.deps/;.github/;.bin/;.tmp/"/>
+			Excludes="logicmoo_workspace/;usr/;docker/;logicmoo_pldata/;*~/;~*/;~*;*~;.metadata/;.svn/;.git/;CVS/;node_modules/;*.sav?/;*.sav??/;*.sav/;pldata/;*.pldata;*.nldata;.cache/;.deps/;.github/;.bin/;.tmp/"/>
 		<F
 			N="*.owl"
 			Recurse="1"
 			Refilter="0"
-			Excludes="*~/;~*/;~*;*~;.metadata/;.svn/;.git/;CVS/;node_modules/;*.sav?/;*.sav??/;*.sav/;pldata/;*.pldata;*.nldata;.cache/;.deps/;.github/;.bin/;.tm
-p/"/>
+			Excludes="logicmoo_workspace/;usr/;docker/;logicmoo_pldata/;*~/;~*/;~*;*~;.metadata/;.svn/;.git/;CVS/;node_modules/;*.sav?/;*.sav??/;*.sav/;pldata/;*.pldata;*.nldata;.cache/;.deps/;.github/;.bin/;.tmp/"/>
 		<F
 			N="*.P"
 			Recurse="1"
 			Refilter="0"
-			Excludes="*~/;~*/;~*;*~;.metadata/;.svn/;.git/;CVS/;node_modules/;*.sav?/;*.sav??/;*.sav/;pldata/;*.pldata;*.nldata;.cache/;.deps/;.github/;.bin/;.tmp/"/>
+			Excludes="logicmoo_workspace/;usr/;docker/;logicmoo_pldata/;*~/;~*/;~*;*~;.metadata/;.svn/;.git/;CVS/;node_modules/;*.sav?/;*.sav??/;*.sav/;pldata/;*.pldata;*.nldata;.cache/;.deps/;.github/;.bin/;.tmp/"/>
 		<F
 			N="*.pl"
 			Recurse="1"
 			Refilter="0"
-			Excludes=""/>
-		<F
-			N="*.pl"
-			Recurse="1"
-			Refilter="0"
-			Excludes="*~/;~*/;~*;*~;.metadata/;.svn/;.git/;CVS/;node_modules/;*.sav?/;*.sav??/;*.sav/;pldata/;*.pldata;*.nldata;.cache/;.deps/;.github/;.bin/;.tmp/"/>
+			Excludes="logicmoo_workspace/;usr/;docker/;logicmoo_pldata/;*~/;~*/;~*;*~;.metadata/;.svn/;.git/;CVS/;node_modules/;*.sav?/;*.sav??/;*.sav/;pldata/;*.pldata;*.nldata;.cache/;.deps/;.github/;.bin/;.tmp/"/>
 		<F
 			N="*.pprj"
 			Recurse="1"
 			Refilter="0"
-			Excludes="*~/;~*/;~*;*~;.metadata/;.svn/;.git/;CVS/;node_modules/;*.sav?/;*.sav??/;*.sav/;pldata/;*.pldata;*.nldata;.cache/;.deps/;.github/;.bin/;.tm
-p/"/>
+			Excludes="logicmoo_workspace/;usr/;docker/;logicmoo_pldata/;*~/;~*/;~*;*~;.metadata/;.svn/;.git/;CVS/;node_modules/;*.sav?/;*.sav??/;*.sav/;pldata/;*.pldata;*.nldata;.cache/;.deps/;.github/;.bin/;.tmp/"/>
 		<F
 			N="*.pro"
 			Recurse="1"
 			Refilter="0"
-			Excludes="*~/;~*/;~*;*~;.metadata/;.svn/;.git/;CVS/;node_modules/;*.sav?/;*.sav??/;*.sav/;pldata/;*.pldata;*.nldata;.cache/;.deps/;.github/;.bin/;.tmp/"/>
+			Excludes="logicmoo_workspace/;usr/;docker/;logicmoo_pldata/;*~/;~*/;~*;*~;.metadata/;.svn/;.git/;CVS/;node_modules/;*.sav?/;*.sav??/;*.sav/;pldata/;*.pldata;*.nldata;.cache/;.deps/;.github/;.bin/;.tmp/"/>
 		<F
 			N="*.prolog"
 			Recurse="1"
 			Refilter="0"
-			Excludes="*~/;~*/;~*;*~;.metadata/;.svn/;.git/;CVS/;node_modules/;*.sav?/;*.sav??/;*.sav/;pldata/;*.pldata;*.nldata;.cache/;.deps/;.github/;.bin/;.tmp/"/>
+			Excludes="logicmoo_workspace/;usr/;docker/;logicmoo_pldata/;*~/;~*/;~*;*~;.metadata/;.svn/;.git/;CVS/;node_modules/;*.sav?/;*.sav??/;*.sav/;pldata/;*.pldata;*.nldata;.cache/;.deps/;.github/;.bin/;.tmp/"/>
 		<F
 			N="*.sh"
 			Recurse="1"
 			Refilter="0"
-			Excludes="*~/;~*/;~*;*~;.metadata/;.svn/;.git/;CVS/;node_modules/;*.sav?/;*.sav??/;*.sav/;pldata/;*.pldata;*.nldata;.cache/;.deps/;.github/;.bin/;.tmp/"/>
+			Excludes="logicmoo_workspace/;usr/;docker/;logicmoo_pldata/;*~/;~*/;~*;*~;.metadata/;.svn/;.git/;CVS/;node_modules/;*.sav?/;*.sav??/;*.sav/;pldata/;*.pldata;*.nldata;.cache/;.deps/;.github/;.bin/;.tmp/"/>
 		<F
 			N="*.subl"
 			Recurse="1"
 			Refilter="0"
-			Excludes="*~/;~*/;~*;*~;.metadata/;.svn/;.git/;CVS/;node_modules/;*.sav?/;*.sav??/;*.sav/;pldata/;*.pldata;*.nldata;.cache/;.deps/;.github/;.bin/;.tmp/"/>
+			Excludes="logicmoo_workspace/;usr/;docker/;logicmoo_pldata/;*~/;~*/;~*;*~;.metadata/;.svn/;.git/;CVS/;node_modules/;*.sav?/;*.sav??/;*.sav/;pldata/;*.pldata;*.nldata;.cache/;.deps/;.github/;.bin/;.tmp/"/>
 		<F
 			N="*.trig"
 			Recurse="1"
 			Refilter="0"
-			Excludes="*~/;~*/;~*;*~;.metadata/;.svn/;.git/;CVS/;node_modules/;*.sav?/;*.sav??/;*.sav/;pldata/;*.pldata;*.nldata;.cache/;.deps/;.github/;.bin/;.tm
-p/"/>
+			Excludes="logicmoo_workspace/;usr/;docker/;logicmoo_pldata/;*~/;~*/;~*;*~;.metadata/;.svn/;.git/;CVS/;node_modules/;*.sav?/;*.sav??/;*.sav/;pldata/;*.pldata;*.nldata;.cache/;.deps/;.github/;.bin/;.tmp/"/>
 		<F
 			N="*.ttl"
 			Recurse="1"
 			Refilter="0"
-			Excludes="*~/;~*/;~*;*~;.metadata/;.svn/;.git/;CVS/;node_modules/;*.sav?/;*.sav??/;*.sav/;pldata/;*.pldata;*.nldata;.cache/;.deps/;.github/;.bin/;.tm
-p/"/>
+			Excludes="logicmoo_workspace/;usr/;docker/;logicmoo_pldata/;*~/;~*/;~*;*~;.metadata/;.svn/;.git/;CVS/;node_modules/;*.sav?/;*.sav??/;*.sav/;pldata/;*.pldata;*.nldata;.cache/;.deps/;.github/;.bin/;.tmp/"/>
 		<F
 			N=".*ignore*"
 			Recurse="1"
-			Excludes="*~/;~*/;~*;*~;.metadata/;.svn/;.git/;CVS/;node_modules/;*.sav?/;*.sav??/;*.sav/;pldata/;*.pldata;*.nldata;.cache/;.deps/;.github/;.bin/;.tmp/"/>
+			Excludes="logicmoo_workspace/;usr/;docker/;logicmoo_pldata/;*~/;~*/;~*;*~;.metadata/;.svn/;.git/;CVS/;node_modules/;*.sav?/;*.sav??/;*.sav/;pldata/;*.pldata;*.nldata;.cache/;.deps/;.github/;.bin/;.tmp/"/>
 		<F N=".dockerignore"/>
 		<F N=".gitattributes"/>
 		<F N=".gitignore"/>
@@ -19051,7 +18900,7 @@ p/"/>
 			N="config*"
 			Recurse="1"
 			Refilter="0"
-			Excludes="*~/;~*/;~*;*~;.metadata/;.svn/;.git/;CVS/;node_modules/;*.sav?/;*.sav??/;*.sav/;pldata/;*.pldata;*.nldata;.cache/;.deps/;.github/;.bin/;.tmp/"/>
+			Excludes="logicmoo_workspace/;usr/;docker/;logicmoo_pldata/;*~/;~*/;~*;*~;.metadata/;.svn/;.git/;CVS/;node_modules/;*.sav?/;*.sav??/;*.sav/;pldata/;*.pldata;*.nldata;.cache/;.deps/;.github/;.bin/;.tmp/"/>
 		<F N="cookies.txt"/>
 		<F N="docker-compose.yml"/>
 		<F N="Dockerfile"/>
@@ -19060,7 +18909,7 @@ p/"/>
 			N="INSTALL*"
 			Recurse="1"
 			Refilter="0"
-			Excludes="*~/;~*/;~*;*~;.metadata/;.svn/;.git/;CVS/;node_modules/;*.sav?/;*.sav??/;*.sav/;pldata/;*.pldata;*.nldata;.cache/;.deps/;.github/;.bin/;.tmp/"/>
+			Excludes="logicmoo_workspace/;usr/;docker/;logicmoo_pldata/;*~/;~*/;~*;*~;.metadata/;.svn/;.git/;CVS/;node_modules/;*.sav?/;*.sav??/;*.sav/;pldata/;*.pldata;*.nldata;.cache/;.deps/;.github/;.bin/;.tmp/"/>
 		<F N="INSTALL-DEPS.md"/>
 		<F N="INSTALL-EGGDROP.md"/>
 		<F N="INSTALL-GITSUBMODULES.md"/>
@@ -19075,7 +18924,7 @@ p/"/>
 			N="makefile*"
 			Recurse="1"
 			Refilter="0"
-			Excludes="*~/;~*/;~*;*~;.metadata/;.svn/;.git/;CVS/;node_modules/;*.sav?/;*.sav??/;*.sav/;pldata/;*.pldata;*.nldata;.cache/;.deps/;.github/;.bin/;.tmp/"/>
+			Excludes="logicmoo_workspace/;usr/;docker/;logicmoo_pldata/;*~/;~*/;~*;*~;.metadata/;.svn/;.git/;CVS/;node_modules/;*.sav?/;*.sav??/;*.sav/;pldata/;*.pldata;*.nldata;.cache/;.deps/;.github/;.bin/;.tmp/"/>
 		<F N="mkdocs.yml"/>
 		<F N="other_files.vpj"/>
 		<F N="potential_plt_tests.txt"/>
@@ -19084,7 +18933,7 @@ p/"/>
 			N="readme*"
 			Recurse="1"
 			Refilter="0"
-			Excludes="*~/;~*/;~*;*~;.metadata/;.svn/;.git/;CVS/;node_modules/;*.sav?/;*.sav??/;*.sav/;pldata/;*.pldata;*.nldata;.cache/;.deps/;.github/;.bin/;.tmp/"/>
+			Excludes="logicmoo_workspace/;usr/;docker/;logicmoo_pldata/;*~/;~*/;~*;*~;.metadata/;.svn/;.git/;CVS/;node_modules/;*.sav?/;*.sav??/;*.sav/;pldata/;*.pldata;*.nldata;.cache/;.deps/;.github/;.bin/;.tmp/"/>
 		<F N="README.md"/>
 		<F N="README.rst"/>
 		<F N="runFromDocker.sh"/>
