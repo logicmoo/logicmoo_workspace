@@ -105,15 +105,21 @@ shrdlurn_config:config(avatars, svg).		% or 'noble'
 
 
 :- http_handler(swish('jseval_ws'), http_upgrade_to_websocket(echo_eval, []), [spawn([])]).
-:- http_handler(swish('jseval_sws'), http_upgrade_to_websocket(echo_eval, []), [spawn([])]).
 echo_eval(WebSocket) :-
     ws_receive(WebSocket, Message),
+    with_output_to(user_error,fmt(ws_receive(WebSocket, Message))),
     (   Message.opcode == close
-    ->  true
-    ;   ws_send(WebSocket, Message),
-        echo_eval(WebSocket)
+    ->  dead_eval(WebSocket)
+    ;   setup_web_eval(WebSocket, Message),
+        sleep(100000000000000.0) %echo_eval(WebSocket)
     ).
 
+setup_web_eval(WebSocket, Message):- asserta(web_eval(WebSocket)),asserta(web_eval(WebSocket,Message)).
+dead_eval(WebSocket):- retractall(web_eval(WebSocket)).
+do_web_eval(WebSocket,JavaScript,Result):- atom_concat('+',JavaScript,JavaScriptOut), web_eval(WebSocket), ws_send(WebSocket, text(JavaScriptOut)), ws_receive(WebSocket,Result). 
+do_web_eval(JavaScript,Result):- web_eval(WebSocket),do_web_eval(WebSocket,JavaScript, Result).
+
+:- fixup_exports.
 
 :- meta_predicate must_succeed(0).
 

