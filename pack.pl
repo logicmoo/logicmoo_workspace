@@ -8,3 +8,4 @@ maintainer('Edison Mera Menendez', 'http://www.edisonm.com/').
 home('https://github.com/edisonm/rtchecks').
 download('https://github.com/edisonm/rtchecks.git').
 requires(assertions).
+requires(xlibrary).
