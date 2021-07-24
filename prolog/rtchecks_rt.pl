@@ -1,6 +1,6 @@
 /*  Part of Run-Time Checker for Assertions
 
-    Author:        Edison Mera Menendez
+    Author:        Edison Mera
     E-mail:        efmera@gmail.com
     WWW:           https://github.com/edisonm/refactor
     Copyright (C): 2017, Process Design Center, Breda, The Netherlands.
