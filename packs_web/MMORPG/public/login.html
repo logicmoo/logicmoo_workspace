@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+
+<html lang="de">
+<head>
+	<title> Login </title>
+	<meta charset="utf-8">
+
+	<link rel="shortcut icon" href="sprites/favicon.ico" type="image/x-icon" />
+	<link rel="stylesheet" href="style/game.css">
+</head>
+	
+<body>
+	<div id="slogan">
+		<div id="title">MMORPG</div>
+		<div id="subtitle">A new journey</div>
+	</div>
+	
+	<form id="login" action="javascript:login()">	
+		<div id="loginTitle">Login</div>
+		<input id="user" class="input_wide" autofocus autocomplete="off" placeholder="Username" required />
+		<input id="pass" class="input_wide" type="password" placeholder="Password" required />
+		<input class="confirm" type="submit" value="Login" />
+		<div id="error" class="hidden"></div>
+	</form>
+
+	<script src="js/jquery-1.8.3.min.js"></script>
+	<script src="js/login.js"></script>
+</body>
+</html>

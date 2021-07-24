@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+
+<html lang="de">
+<head>
+	<title> MMORPG </title>
+	<meta charset="utf-8"/>
+	<link rel="shortcut icon" href="sprites/favicon.ico" type="image/x-icon" />
+
+	<link rel="stylesheet" href="style/game.css"/>
+	<link rel="stylesheet" href="style/jquery.mCustomScrollbar.css"/>
+</head>
+	
+<body>
+	<!-- Game area -->
+	<div id="gameArea">
+		<div id="bgDiv">
+			<canvas id="bgCanvas"></canvas>
+		</div>
+		<canvas id="gameCanvas" width=640 height=640></canvas>
+	</div>
+	
+	<div id="conversation" class="hidden">
+		<div id="convText"></div>
+		<div id="convButton1">OK</div>
+	</div>
+	
+	<div id="confirmation" class="hidden">
+		<br>Accept Quest?
+		<div id="yes">Yes</div>
+		<div id="no">No</div>
+	</div>
+
+	<canvas id="mapCanvas" class="hidden"></canvas>
+
+	<div id="questMenu" class="hidden">
+		<div id="questMenuHeader">Quests</div>
+		<div id="quests"></div>
+	</div>
+	
+	<div id="inventoryContainer"></div>
+	<div id="details" class="hidden"></div>
+	
+	<div id="chatlog" style="height: 170px;"></div>
+	<form id="chatForm" action="javascript:sendMessage()">
+		<input id="chatInput" type="text" placeholder="Message" autocomplete="off"/>
+	</form>
+
+	<div id="bQuest" class="circleButton" onclick="toggleQuests();">Q</div>
+	<div id="bMap" class="circleButton" onclick="toggleMap();">M</div>
+	<div id="bLogout" class="circleButton" onclick="logout();">X</div>
+
+	<!-- Player stats -->
+	<div id="playerLevel">1</div>
+	<div id="playerName"></div>
+	
+	<div id="playerXPBox">
+		<div id="playerXP"></div>
+	</div>
+
+	<div id="playerHeart"> &#9829; </div>
+	<div id="playerCoins">$</div>
+	<div id="coins"></div>
+	
+	<div id="healthBox">
+		<div id="health"></div>
+	</div>
+
+	<!-- Enemy stats -->
+	<div id="enemyLevel" class="hidden"></div>
+	<div id="enemyName" class="hidden">Bat</div>
+	<div id="enemyHeart" class="hidden"> &#9829; </div>
+	<div id="enemyHealthBox" class="hidden">
+		<div id="enemyHealth"></div>
+	</div>
+	
+	<div id="fps"></div>
+
+	<script src="http://127.0.0.1:8000/socket.io/socket.io.js"></script>
+	<script src="js/requestAnimationFrame.js"></script>
+<!--
+	<script src="js/Class.js"></script>
+-->
+	<script src="js/SoundManager.js"></script>
+	<script src="js/Pathfinder.js"></script>
+	<script src="js/Player.js"></script>
+	<script src="js/game.js"></script>
+	<script src="js/jquery-1.8.3.min.js"></script>
+	<script src="js/simplescroll.js"></script>
+</body>
+</html>
