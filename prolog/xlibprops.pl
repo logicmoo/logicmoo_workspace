@@ -1,6 +1,6 @@
 /*  Part of Assertion Reader for SWI-Prolog
 
-    Author:        Edison Mera Menendez
+    Author:        Edison Mera
     E-mail:        efmera@gmail.com
     WWW:           https://github.com/edisonm/assertions
     Copyright (C): 2018, Process Design Center, Breda, The Netherlands.
