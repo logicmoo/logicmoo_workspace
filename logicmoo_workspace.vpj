@@ -15001,6 +15001,9 @@
 					<F N="packs_web/shrdlu/misc/SHRDLU-ss2.png"/>
 					<F N="packs_web/shrdlu/misc/SHRDLU.pdf"/>
 				</Folder>
+				<Folder Name="prolog">
+					<F N="packs_web/shrdlu/prolog/logicmoo_shrdlu.pl"/>
+				</Folder>
 				<Folder Name="server">
 					<F N="packs_web/shrdlu/server/app.js"/>
 					<F N="packs_web/shrdlu/server/package.json"/>
@@ -15202,7 +15205,10 @@
 				</Folder>
 				<F N="packs_web/shrdlu/.DS_Store"/>
 				<F N="packs_web/shrdlu/.gitignore"/>
+				<F N="packs_web/shrdlu/A4-Adventura1.html"/>
+				<F N="packs_web/shrdlu/A4-Aventura4-Simple.html"/>
 				<F N="packs_web/shrdlu/A4-Aventura4.html"/>
+				<F N="packs_web/shrdlu/A4-example-game.html"/>
 				<F N="packs_web/shrdlu/A4-example.html"/>
 				<F N="packs_web/shrdlu/A4config.xml"/>
 				<F N="packs_web/shrdlu/A4README.md"/>
@@ -15210,9 +15216,12 @@
 				<F N="packs_web/shrdlu/build"/>
 				<F N="packs_web/shrdlu/build-dev"/>
 				<F N="packs_web/shrdlu/build-old"/>
+				<F N="packs_web/shrdlu/eval_socket.js"/>
 				<F N="packs_web/shrdlu/LICENSE"/>
+				<F N="packs_web/shrdlu/LICENSE.bak"/>
 				<F N="packs_web/shrdlu/README.md"/>
 				<F N="packs_web/shrdlu/shrdlu.html"/>
+				<F N="packs_web/shrdlu/swish_config.json"/>
 				<F N="packs_web/shrdlu/tsconfig.json"/>
 			</Folder>
 			<Folder Name="swish">

@@ -1,0 +1,166 @@
+{
+  "http": {
+    "locations": {
+      "admin":"/admin",
+      "avatar":"/swish/avatar/",
+      "chat_messages":"/swish/chat/messages",
+      "chat_status":"/swish/chat/status",
+      "cm_highlight":"/swish/cm/",
+      "download":"/swish/download",
+      "example_serv_swish_slash":"/swish/filesystem",
+      "follow_file_options":"/swish/follow/options",
+      "help":"/swish/help",
+      "http_logout":"/swish/http_logout",
+      "login":"/swish/login",
+      "markdown":"/swish/markdown",
+      "on_mail_link":"/swish/mail/action/",
+      "pengines":"/pengine",
+      "pldoc_doc_for":"/swish/pldoc/doc_for",
+      "plugin":"/swish/plugin/",
+      "save_follow_file":"/swish/follow/save",
+      "source_list":"/swish/source_list",
+      "source_modified":"/swish/source_modified",
+      "sparql_query":"/sparql",
+      "sparql_query/":"/sparql/",
+      "sparql_query_form":"/user/query",
+      "sparql_update":"/sparql/update",
+      "swish":"/swish/",
+      "swish_chat":"/swish/chat",
+      "swish_examples":"/swish/list_examples",
+      "swish_examples_from_root":"/list_examples",
+      "swish_extended_examples":"/swish/list_extended_examples",
+      "swish_extended_help_index":"/swish/extended_help_index",
+      "swish_filesystems":"/swish/list_filesystems",
+      "swish_group_extended_examples":"/swish/list_extended_examples/",
+      "swish_help_index":"/swish/help_index",
+      "swish_search":"/swish/search",
+      "swish_typeahead":"/swish/typeahead",
+      "tutorial":"/tutorial/",
+      "user_info":"/swish/user_info",
+      "user_profile":"/swish/user_profile",
+      "web_storage":"/swish/p/",
+      "well_known_void":"/.well-known/void",
+      "wiki_help":"/help/",
+      "yasgui":"/yasgui/index.html"
+    }
+  },
+  "plugins": [],
+  "swish": {
+    "avatars":"svg",
+    "filesystem_files": {"html":"", "json": []},
+    "hangout":"Hangout.swinb",
+    "profiles": [
+      {
+	"label":"LogicMOO",
+	"title":"LogicMOO Skel",
+	"type": ["pl" ],
+	"value":"12-LogicMOO"
+      },
+      {
+	"label":"Empty",
+	"title":"Empty",
+	"type": ["pl", "swinb" ],
+	"value":"00-Empty"
+      },
+      {
+	"label":"PITA",
+	"title":"Empty with pita loaded",
+	"type": ["pl", "swinb" ],
+	"value":"10-PITA"
+      },
+      {
+	"label":"TRILL",
+	"title":"Empty with TRILL loaded",
+	"type": ["pl", "swinb" ],
+	"value":"10-TRILL"
+      },
+      {
+	"label":"PFC",
+	"title":"Prolog Forward Chaining",
+	"type": ["pl", "swinb" ],
+	"value":"11-PFC"
+      },
+      {
+	"label":"MUD",
+	"title":"PrologMUD",
+	"type": ["pl", "swinb" ],
+	"value":"13-MUD"
+      },
+      {
+	"label":"MCINTYRE",
+	"title":"Empty with mcintyre loaded",
+	"type": ["pl", "swinb" ],
+	"value":"20-MCINTYRE"
+      },
+      {
+	"label":"TRILLP",
+	"title":"Empty with TRILLP loaded",
+	"type": ["pl", "swinb" ],
+	"value":"20-TRILLP"
+      },
+      {
+	"label":"SLIPCOVER",
+	"title":"Empty with slipcover loaded",
+	"type": ["pl", "swinb" ],
+	"value":"30-SLIPCOVER"
+      },
+      {
+	"label":"TORNADO",
+	"title":"Empty with TORNADO loaded",
+	"type": ["pl", "swinb" ],
+	"value":"30-TORNADO"
+      },
+      {
+	"label":"PHIL",
+	"title":"Empty with phil loaded",
+	"type": ["pl", "swinb" ],
+	"value":"31-PHIL"
+      },
+      {
+	"label":"LEMUR",
+	"title":"Empty with slipcover loaded",
+	"type": ["pl", "swinb" ],
+	"value":"35-LEMUR"
+      },
+      {
+	"label":"ALEPH",
+	"title":"Empty with aleph loaded",
+	"type": ["pl", "swinb" ],
+	"value":"40-ALEPH"
+      },
+      {
+	"label":"LPS",
+	"title":"Logic Production Systems",
+	"type": ["pl", "swinb" ],
+	"value":"40-LPS"
+      },
+      {
+	"label":"OWLRDF",
+	"title":"TRILL loaded with OWL/RDF KB initialization",
+	"type": ["pl", "swinb" ],
+	"value":"40-OWLRDF"
+      },
+      {
+	"label":"Student",
+	"title":"Student exercise profile",
+	"type": ["pl", "swinb" ],
+	"value":"50-Student"
+      },
+      {
+	"label":"CLP",
+	"title":"Constraint Logic Programming",
+	"type": ["pl", "swinb" ],
+	"value":"60-CLP"
+      },
+      {
+	"label":"RDF11",
+	"title":"No title",
+	"type": ["swinb" ],
+	"value":"10-RDF11"
+      }
+    ],
+    "residuals_var":"_residuals",
+    "wfs_residual_program_var":"_wfs_residual_program"
+  }
+}
+
