@@ -1,6 +1,6 @@
 /*  Part of Refactoring Tools for SWI-Prolog
 
-    Author:        Edison Mera Menendez
+    Author:        Edison Mera
     E-mail:        efmera@gmail.com
     WWW:           https://github.com/edisonm/refactor
     Copyright (C): 2013, Process Design Center, Breda, The Netherlands.

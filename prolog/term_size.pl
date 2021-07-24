@@ -1,6 +1,6 @@
 /*  Part of Tools for SWI-Prolog
 
-    Author:        Edison Mera Menendez
+    Author:        Edison Mera
     E-mail:        efmera@gmail.com
     WWW:           https://github.com/edisonm/xlibrary
     Copyright (C): 2015, Process Design Center, Breda, The Netherlands.
