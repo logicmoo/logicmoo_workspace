@@ -247,7 +247,7 @@ process_preds(File, OFile) :-
     ; true
     ).
 
-option_file(M, File, OFile, Options) :-
+option_file(M, ML, File, OFile, Options) :-
     process_exclude_files(ExFileL, OFile, Options),
     process_exclude_fdirs(ExDirL,  OFile, Options),
     process_fdirs(File, OFile, Options),
@@ -341,7 +341,7 @@ option_collect(Name, Dict, Options1, Options) :-
                     files:Files,
                     file:AFile},
       findall(Elem,
-              ( option_file(M, File, OFile, Options),
+              ( option_file(M, ML, File, OFile, Options),
                 collect_elem(Name, M, File, Elem)
               ), ElemL),
       collect_dict(Name, ElemL, Dict)
