@@ -50,6 +50,13 @@ get_substitutions(atom, Term, Atomics) :-
 substitutable(term, Term) :- var(Term).
 substitutable(atom, Term) :- atomic(Term).
 
+%!  linearize(+SubTermType, +Term, -Linear, List, Tail) is det
+%
+%   If SubTermType is term, replace bounded variables in Term so that it becomes
+%   linear, and place it with Linear.  If SubTermType is atom, do such
+%   replacement with atomic values in the term.  List collects the performed
+%   substitutions in the form of Substitution=OriginalSubTerm.
+
 linearize(SubTermType, Term, Linear) -->
     {get_substitutions(SubTermType, Term, SubsL)},
     mklinear(Term, SubTermType, Linear, SubsL).
