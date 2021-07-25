@@ -37,18 +37,18 @@
 :- use_module(library(lists)).
 :- use_module(library(occurs)).
 
-get_substitutions(term, Term, SubsL) :-
+get_substitutions(vars, Term, SubsL) :-
     term_variables(Term, Vars),
     exclude(singleton(Term), Vars, SubsL).
-get_substitutions(atom, Term, Atomics) :-
+get_substitutions(atms, Term, Atomics) :-
     findall(Atomic,
             ( sub_term(Atomic, Term),
               atomic(Atomic),
               Atomic \= [] % Avoid [] since this will cause problems
             ), Atomics).
 
-substitutable(term, Term) :- var(Term).
-substitutable(atom, Term) :- atomic(Term).
+substitutable(vars, Term) :- var(Term).
+substitutable(atms, Term) :- atomic(Term).
 
 %!  linearize(+SubTermType, +Term, -Linear, List, Tail) is det
 %
