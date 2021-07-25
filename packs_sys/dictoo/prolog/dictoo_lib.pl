@@ -211,7 +211,7 @@ nb_put_kv(KV,_,V):- functor(KV,_,A),nb_setarg(A,KV,V).
 
 
 
-oo_put_dict5(M,Key,UDT,Value, NewUDT):- is_dict(UDT),!,M:m_put_dict(Key,UDT,Value, NewUDT).
+oo_put_dict5(M,Key,UDT,Value, NewUDT):- is_dict(UDT),!,M:put_dict(Key,UDT,Value, NewUDT).
 oo_put_dict5(M,Key,UDT,Value, NewUDT):- oo_copy_term(UDT,NewUDT),oo_put_dict(M,Key,NewUDT,Value).
 
 oo_copy_term(UDT,NewUDT):- copy_term(UDT,NewUDT).

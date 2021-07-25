@@ -257,14 +257,20 @@ var MAX_RECONNECT_DELAY = 300000;
 					var messageData = message.data;
 					if(messageData.startsWith("+")) {
 						messageData = messageData.substring(1);
-						var reply = eval(messageData);
+						var res = eval(messageData);
+						var reply = JSON.stringifyWithCircularRefs(res);
+						if (typeof res.outerHTML != 'undefined') {					
+							reply = "+" + res.outerHTML;
+						}
+						console.log(`[reply] Replying with: ${reply}`);
 						socket.send(reply);
 					}
 				} catch (e) {
 					socket.send(JSON.stringify({
-						"error": {
+						"error": {							
 							"message": e.message,
-							"trace": e.trace
+							"trace": e.trace,
+						    "original": message
 						}
 					}))
 				}
@@ -299,6 +305,69 @@ var MAX_RECONNECT_DELAY = 300000;
 		
 	}
 
+    JSON.stringifyWithCircularRefs = (function() {
+    const refs = new Map();
+    const parents = [];
+    const path = ["this"];
+
+    function clear() {
+      refs.clear();
+      parents.length = 0;
+      path.length = 1;
+    }
+
+    function updateParents(key, value) {
+      var idx = parents.length - 1;
+      var prev = parents[idx];
+      if (prev[key] === value || idx === 0) {
+        path.push(key);
+        parents.push(value);
+      } else {
+        while (idx-- >= 0) {
+          prev = parents[idx];
+          if (prev[key] === value) {
+            idx += 2;
+            parents.length = idx;
+            path.length = idx;
+            --idx;
+            parents[idx] = value;
+            path[idx] = key;
+            break;
+          }
+        }
+      }
+    }
+
+    function checkCircular(key, value) {
+      if (value != null) {
+        if (typeof value === "object") {
+          if (key) { updateParents(key, value); }
+
+          let other = refs.get(value);
+          if (other) {
+            return '[Circular Reference]' + other;
+          } else {
+            refs.set(value, path.join('.'));
+          }
+        }
+      }
+      return value;
+    }
+
+    return function stringifyWithCircularRefs(obj, space) {
+	  try {
+        parents.push(obj);
+        return JSON.stringify(obj);
+      } catch(e) {
+      }
+      try {
+        parents.push(obj);
+        return JSON.stringify(obj, checkCircular, space);
+      } finally {
+        clear();
+      }
+    }
+  })();
         // return this;
 
 

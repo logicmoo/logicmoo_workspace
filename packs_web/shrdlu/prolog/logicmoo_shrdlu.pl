@@ -126,17 +126,39 @@ setup_js_eval(WebSocket, Message):- asserta(js_eval_wsinfo(WebSocket)),asserta(j
 dead_eval(WebSocket):- retractall(js_eval_wsinfo(WebSocket)).
 
 coerce_js_result(WebSocket,Message,throw(WebSocket,Message)):-  Message.opcode == close,!,dead_eval(WebSocket).
-coerce_js_result(_,Message,Ret):- Message.opcode == text, !, Ret = Message.data .
+coerce_js_result(_,Message,Ret):- Message.opcode == text, !, Data = Message.data , coerce_js_result_data(Data,Ret).
 coerce_js_result(_,Ret,Ret).
 
-js_eval_ws(WebSocket,Dict,Ret):-  
+coerce_js_result_atom_data(Res,Ret):- atom_concat('+',Res0,Res), 
+ atom_to_memory_file(Res0, Handle), 
+ setup_call_cleanup(
+  open_memory_file(Handle,read,Stream,[free_on_close(true)]),
+  load_structure(stream(Stream), Ret, [space(remove),dialect(xml)]),
+  close(Stream)),!.
+coerce_js_result_atom_data(Res,Ret):-   
+ (on_x_fail(atom_json_dict(Res,Ret,[as(string)]));
+  on_x_fail(atom_json_term(Res,Ret,[as(string)]));
+  on_x_fail(atom_to_term(Res,Ret,_))),!.
+
+coerce_js_result_data(Res0,Ret):- atomic(Res0),any_to_atom(Res0,Res),on_x_fail(coerce_js_result_atom_data(Res,Ret)),!.
+coerce_js_result_data(Ret,Ret).
+
+js_eval_ws_raw(WebSocket,Dict,Result):-  
   js_eval_wsinfo(WebSocket), 
   ws_send(WebSocket, Dict),
   ws_receive(WebSocket,Result),
-  ignore(coerce_js_result(WebSocket,Result,Ret)). 
+   ((Result.opcode \== close) -> true ;
+   (dead_eval(WebSocket),throw(Result))).
+
+js_eval_ws(WebSocket,Dict,Ret):-  
+  js_eval_ws_raw(WebSocket,Dict,Result),
+  ignore(coerce_js_result(WebSocket,Result,Ret)).
 
 js_eval(Js,Result):- js_eval_wsinfo(WebSocket),js_eval(WebSocket,Js, Result),!.
 
+js_eval(WebSocket,Js,Result):- var(Js),!,throw(var_js_eval(WebSocket,Js,Result)).
+js_eval(WebSocket,res(Js),Result):- !,js_eval_ws(WebSocket,Js,Result).
+js_eval(WebSocket,raw(Js),Result):- !,js_eval_ws_raw(WebSocket,Js,Result).
 js_eval(WebSocket,Js,Result):- is_list(Js),!,maplist(js_eval(WebSocket),Js,Result).
 js_eval(WebSocket,Js,Result):- atomic(Js),!, atom_concat('+',Js,S), js_eval_ws(WebSocket,text(S),Result).
 js_eval(WebSocket,Js,Result):- is_dict(Js),!,js_eval_ws(WebSocket,Js,Result).
