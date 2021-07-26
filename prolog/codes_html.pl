@@ -58,7 +58,7 @@ code_html(0'>) --> "&gt;". % greater-than
 code_html(0' ) --> "&nbsp;". % non-breaking space
 code_html(0'¡) --> "&iexcl;". % inverted exclamation mark
 code_html(0'¢) --> "&cent;". % cent
-code_html(0'£) --> "&pound;". % pound
+code_html(0'£) --> "&pound;". % pound sterling
 code_html(0'¤) --> "&curren;". % currency
 code_html(0'¥) --> "&yen;". % yen
 code_html(0'¦) --> "&brvbar;". % broken vertical bar
