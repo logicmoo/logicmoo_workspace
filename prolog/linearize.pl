@@ -1,6 +1,6 @@
 /*  Part of Extended Libraries for SWI-Prolog
 
-    Author:        Edison Mera Menendez
+    Author:        Edison Mera
     E-mail:        efmera@gmail.com
     WWW:           https://github.com/edisonm/xlibrary
     Copyright (C): 2014, Process Design Center, Breda, The Netherlands.
@@ -37,18 +37,25 @@
 :- use_module(library(lists)).
 :- use_module(library(occurs)).
 
-get_substitutions(term, Term, SubsL) :-
+get_substitutions(vars, Term, SubsL) :-
     term_variables(Term, Vars),
     exclude(singleton(Term), Vars, SubsL).
-get_substitutions(atom, Term, Atomics) :-
+get_substitutions(atms, Term, Atomics) :-
     findall(Atomic,
             ( sub_term(Atomic, Term),
               atomic(Atomic),
               Atomic \= [] % Avoid [] since this will cause problems
             ), Atomics).
 
-substitutable(term, Term) :- var(Term).
-substitutable(atom, Term) :- atomic(Term).
+substitutable(vars, Term) :- var(Term).
+substitutable(atms, Term) :- atomic(Term).
+
+%!  linearize(+SubTermType, +Term, -Linear, List, Tail) is det
+%
+%   If SubTermType is term, replace bounded variables in Term so that it becomes
+%   linear, and place it with Linear.  If SubTermType is atom, do such
+%   replacement with atomic values in the term.  List collects the performed
+%   substitutions in the form of Substitution=OriginalSubTerm.
 
 linearize(SubTermType, Term, Linear) -->
     {get_substitutions(SubTermType, Term, SubsL)},

@@ -1,6 +1,6 @@
 /*  Part of Extended libraries for Prolog
 
-    Author:        Edison Mera Menendez
+    Author:        Edison Mera
     E-mail:        efmera@gmail.com
     WWW:           https://github.com/edisonm/xlibrary
     Copyright (C): 2014, Process Design Center, Breda, The Netherlands.
