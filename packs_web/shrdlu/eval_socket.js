@@ -220,155 +220,240 @@ var MAX_RECONNECT_DELAY = 300000;
         var elem = this;
         var defaultURL = window.location.protocol.replace("http", "ws") + // gets 'ws' or 'wss:'
             "//" + window.location.host + ":14302/swish/jseval_ws";
-        this.url = url || defaultURL;		
+        this.url = url || defaultURL;
         this.methods = methods;
     }
 
-	CntrlSocket.prototype.scheduleRetry = function() {
-				if(reconnectTries==0) {
-				   reconnectTries++;
+    CntrlSocket.prototype.scheduleRetry = function() {
+        if (reconnectsAvail > 0) {
+            reconnectsAvail--;
+            setTimeout(function() {
+                setTimeout(function() {
+                    console.warn("Reconnection to remote REPL on " + theCntrlSocket.url)
+                    theCntrlSocket.connectEval();
+                }, 1000);
+            }, 30000);
+        }
+    }
 
-				   setTimeout(function() {
-			 		    setTimeout(function() {
-							console.warn("Reconnection to remote REPL on " + theCntrlSocket.url)
-							theCntrlSocket.connectEval();
-						}, 1000);
-					}, 30000);
-				}
-	}
-
-	var reconnectTries = 0;
+    var reconnectsAvail = 10;
+    var objToName = new Map();
+    var nameToObj = new Map();
+    window.objToName = objToName;
+    window.nameToObj = nameToObj;
     CntrlSocket.prototype.connectEval = function() {
 
         try {
-			//this.url = "wss://echo.websocket.org";
-			//this.url = "wss://logicmoo.org:14302/swish/jseval_ws";
+            //this.url = "wss://echo.websocket.org";
+            //this.url = "wss://logicmoo.org:14302/swish/jseval_ws";
             var socket = new WebSocket(this.url);
             socket.onopen = function(e) {
-				reconnectTries ==0;
+                reconnectsAvail = 10;
                 console.log("[open] Connection established");
-                var sessionId =  /SESS\w*ID=([^;]+)/i.test(document.cookie) ? RegExp.$1 : false;
-                socket.send("sessionId="+sessionId);
+                var sessionId = /SESS\w*ID=([^;]+)/i.test(document.cookie) ? RegExp.$1 : false;
+                socket.send("sessionId=" + sessionId);
             };
-			socket.onmessage = function(message) {
-				console.log(`[message] Data received from server: ${message.data}`);
-				try {
-					//debugger;
-					var messageData = message.data;
-					if(messageData.startsWith("+")) {
-						messageData = messageData.substring(1);
-						var res = eval(messageData);
-						var reply = JSON.stringifyWithCircularRefs(res);
-						if (typeof res.outerHTML != 'undefined') {					
-							reply = "+" + res.outerHTML;
-						}
-						console.log(`[reply] Replying with: ${reply}`);
-						socket.send(reply);
-					}
-				} catch (e) {
-					socket.send(JSON.stringify({
-						"error": {							
-							"message": e.message,
-							"trace": e.trace,
-						    "original": message
-						}
-					}))
-				}
-			}
+            socket.onmessage = function(message) {
+                console.log(`[message] Data received from server: ${message.data}`);
+                try {
+                    //debugger;
+                    var messageData = message.data;
+                    var evalThis = true;
+                    if (messageData.startsWith("+")) {
+                        messageData = messageData.substring(1);
+                        evalThis = true;
+                    }
+                    if (evalThis) {
+                        var res = eval(messageData);
+
+                        var reply = null;
+
+                        var html = maybeHtml(value);
+                        if (isReturnable(html)) {
+                            reply = html;
+                        } else {
+							let isThis = (res==window.theA4Game);
+							// debugger;
+							reply = JSON.stringifyWithCircularRefs(isThis,res);                           
+                        }
+
+                        if (typeof reply === 'undefined') {} else {
+                            if (typeof reply.length != 'undefined' && reply.length < 3000) {
+                                console.log(`[reply] Replying with: ${reply}`);
+                            } else if (typeof reply.substring != 'undefined') {
+                                var some = reply.substring(0, 100);
+                                console.log(`[reply] Replying.length with: ${some}...${reply.length}`);
+                            } else {
+                                console.log(`[reply] Replying with: ${reply}`);
+                            }
+                        }
+
+                        socket.send(reply);
+                    }
+                } catch (e) {
+                    console.error(e);
+                    debugger;
+                    socket.send(JSON.stringify({
+                        "error": {
+                            "message": e.message,
+                            "trace": e.trace,
+                            "original": message
+                        }
+                    }))
+                }
+            }
 
             socket.onclose = function(event) {
-				console.warn(event);
+                console.warn(event);
                 if (event.wasClean) {
                     console.log(`[close] Connection closed cleanly, code=${event.code} reason=${event.reason}`);
-					reconnectTries = 0;
+                    reconnectsAvail = 10;
                 } else {
                     // e.g. server process killed or network down
                     // event.code is usually 1006 in this case
                     console.log(`[close] Connection died, code=${event.code} reason=${event.reason}`);
                 }
-				theCntrlSocket.scheduleRetry();
+                theCntrlSocket.scheduleRetry();
             };
 
-            socket.onerror = function(error) {    				
-				console.warn(error);
-                if(error !=null && error.message !=undefined) {
-					console.log(`[error] ${error.message}`);
-				}
-				theCntrlSocket.scheduleRetry();
+            socket.onerror = function(error) {
+                console.warn(error);
+                if (error != null && error.message != undefined) {
+                    console.log(`[error] ${error.message}`);
+                }
+                theCntrlSocket.scheduleRetry();
             };
 
             this.socket = socket;
 
         } catch (e) {
-			theCntrlSocket.scheduleRetry();
+            theCntrlSocket.scheduleRetry();
         }
-		
+
+    }
+
+	function isReturnable(value) {
+	   if(typeof value === "string") return true;
+	   if(typeof value === "undefined") return false;
+	   if(typeof value === "DefinedRef") return true;
+	   if(value == false) return false;
+	   if(typeof value.toJSON === "function") return true;	   
+	   return false;
 	}
 
+    function DefinedRef(refName) {
+       /*  var obj = {
+			data: refName,		
+			toJSON (key) {
+				if (key)
+					return `Now I am a nested object under key '${key}'`;
+				else
+					return this;
+			}
+		};
+      */
+	  this.refNamed = refName;
+	  this.toJSON = function() {
+		return "$window.theA4Game." + refNamed;
+	  };
+	}
+
+    function maybeHtml(value) {
+		if (typeof value === "DefinedRef") {
+            return value;
+        }
+        if (!(value != null)) {
+            return "null";
+        }
+        if (typeof value === "undefined") {
+            return "undefined";
+        }
+        if (typeof value.outerHTML != 'undefined') {
+            return "+" + value.outerHTML;
+        }
+        let knownName = objToName.get(value);
+        if (knownName) {
+            return DefinedRef(knownName);
+        }
+        return false;
+    }
+
+
     JSON.stringifyWithCircularRefs = (function() {
-    const refs = new Map();
-    const parents = [];
-    const path = ["this"];
+        const refs = new Map();
+        const parents = [];
+        const path = ["this"];
+		var isThis = false;
 
-    function clear() {
-      refs.clear();
-      parents.length = 0;
-      path.length = 1;
-    }
-
-    function updateParents(key, value) {
-      var idx = parents.length - 1;
-      var prev = parents[idx];
-      if (prev[key] === value || idx === 0) {
-        path.push(key);
-        parents.push(value);
-      } else {
-        while (idx-- >= 0) {
-          prev = parents[idx];
-          if (prev[key] === value) {
-            idx += 2;
-            parents.length = idx;
-            path.length = idx;
-            --idx;
-            parents[idx] = value;
-            path[idx] = key;
-            break;
-          }
+        function clear() {
+            refs.clear();
+            parents.length = 0;
+            path.length = 1;
         }
-      }
-    }
 
-    function checkCircular(key, value) {
-      if (value != null) {
-        if (typeof value === "object") {
-          if (key) { updateParents(key, value); }
-
-          let other = refs.get(value);
-          if (other) {
-            return '[Circular Reference]' + other;
-          } else {
-            refs.set(value, path.join('.'));
-          }
+        function updateParents(key, value) {
+            var idx = parents.length - 1;
+            var prev = parents[idx];
+            if (prev[key] === value || idx === 0) {
+                path.push(key);
+                parents.push(value);
+            } else {
+                while (idx-- >= 0) {
+                    prev = parents[idx];
+                    if (prev[key] === value) {
+                        idx += 2;
+                        parents.length = idx;
+                        path.length = idx;
+                        --idx;
+                        parents[idx] = value;
+                        path[idx] = key;
+                        break;
+                    }
+                }
+            }
         }
-      }
-      return value;
-    }
 
-    return function stringifyWithCircularRefs(obj, space) {
-	  try {
-        parents.push(obj);
-        return JSON.stringify(obj);
-      } catch(e) {
-      }
-      try {
-        parents.push(obj);
-        return JSON.stringify(obj, checkCircular, space);
-      } finally {
-        clear();
-      }
-    }
-  })();
-        // return this;
+        function checkCircular(key, value) {
+            if (value != null) {
+                if (typeof value === "object") {
+                    if (key) {
+                        updateParents(key, value);
+                    }
+					let other = refs.get(value);
+                    if (other) {
+						var html = maybeHtml(value);
+						if (isReturnable(html)) return html;
+                        return '$' + other;
+                    } else {
+                        var pathname = path.join('.');
+                        var obj = nameToObj.get(pathname);
+                        if (isThis && obj != value) {							
+                            nameToObj.set(pathname, value);
+                            objToName.set(value, pathname);
+                        }
+                        refs.set(value, pathname);
+                    }
+                }
+            }
+			var html = maybeHtml(value);
+			if (isReturnable(html)) return html;
+            return value;
+        }
+
+        return function stringifyWithCircularRefs(wasThis, obj, space) {
+            try {
+				var html = maybeHtml(value);
+				if (isReturnable(html)) return html;
+                parents.push(obj);
+				isThis = wasThis
+                return JSON.stringify(obj, checkCircular, space);
+            } finally {
+				isThis = false;
+                clear();
+            }
+        }
+    })();
+    // return this;
 
 
     window.CntrlSocket = CntrlSocket;
