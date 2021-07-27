@@ -34,6 +34,9 @@
 
 :- module(show_tree, [show_tree/1, show_trees/1]).
 
+:- use_module(library(apply)).
+:- use_module(library(lists)).
+
 show_trees(TreeL) :-
     maplist(show_tree, TreeL).
 
