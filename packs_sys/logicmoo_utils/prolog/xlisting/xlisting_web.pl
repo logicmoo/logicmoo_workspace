@@ -1181,7 +1181,7 @@ portable_display(Term) :-
 % Portable Print.
 %
 portable_print(Term) :-
-	write_out(Term, print, 1200, punct, _).
+   write_out(Term, print, 1200, punct, _).
 
 
 
@@ -1192,7 +1192,7 @@ portable_print(Term) :-
 % Portable Write.
 %
 portable_write(Term) :-
-	write_out(Term, write, 1200, punct, _).
+   write_out(Term, write, 1200, punct, _).
 
 
 
@@ -1278,6 +1278,7 @@ portray_or_print(Term):- catch(print(Term),_,fail),!.
 %   was of type Co.
 
 
+write_out(Term, Style, _Prio, _Ci, _Co):- !, call(Style,Term).
 write_out(Term, Style, Prio, Ci, Co):-
  write_oout(Term, Style, Prio, Ci, Co).
 

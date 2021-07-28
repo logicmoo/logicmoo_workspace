@@ -1307,8 +1307,8 @@ packs_sys\logicmoo_nlu\ext\chat80_lm\chat80.vpj=Release
           - e2c
       + test
         + logicmoo_nlu
-    + logicmoo_utils
-      + prolog
+    - logicmoo_utils
+      - prolog
         + body_reordering
         + cpviz
         - debuggery
@@ -2246,41 +2246,71 @@ packs_sys\logicmoo_nlu\ext\chat80_lm\chat80.vpj=Release
   + wikis
     - logicmoo_workspace.wiki
 + other_files.vpj
-scroll:198
+scroll:315
 [State]
 SCREEN: 1920 1200 346 116 1918 1017 0 0 M 0 0 0 0 1560 611
-CWD: C:\Program Files (x86)\SlickEdit\win
+CWD: packs_sys\logicmoo_utils\prolog\xlisting
+BUFFER: BN="packs_web\shrdlu\prolog\logicmoo_shrdlu.pl"
+BI: MA=1 174 1  TABS=1 3  WWS=1 IWT=0 ST=0 IN=2 BW=0 US=32000 RO=0 SE=1 SN=0 BIN=0 MN=Prolog	HM=0 MF=40 TL=0 MLL=0 ASE=0 LNL=6 LCF=0 CAPS=0 E=0 ESBU2=-1
+VIEW: LN=.10998 CL=1 LE=0 CX=0 CY=9 WI=5 BI=24 HT=0 HN=0 HF=0 HC=4
+BUFFER: BN="packs_web\shrdlu\world.save.pl"
+BI: MA=1 174 1  TABS=1 3  WWS=1 IWT=0 ST=0 IN=2 BW=0 US=32000 RO=0 SE=1 SN=0 BIN=0 MN=Prolog	HM=0 MF=0 TL=0 MLL=0 ASE=0 LNL=6 LCF=0 CAPS=0 E=0 ESBU2=-1
+VIEW: LN=.-1 CL=1 LE=0 CX=0 CY=-1 WI=5 BI=27 HT=0 HN=0 HF=0 HC=4
+BUFFER: BN="packs_sys\logicmoo_utils\prolog\logicmoo\pretty_clauses.pl"
+BI: MA=1 174 1  TABS=1 3  WWS=1 IWT=0 ST=0 IN=2 BW=0 US=32000 RO=0 SE=1 SN=0 BIN=0 MN=Prolog	HM=0 MF=40 TL=0 MLL=0 ASE=0 LNL=6 LCF=0 CAPS=0 E=0 ESBU2=-1
+VIEW: LN=.34489 CL=64 LE=0 CX=63 CY=13 WI=5 BI=32 HT=0 HN=0 HF=0 HC=4
+BUFFER: BN="packs_sys\logicmoo_utils\prolog\logicmoo\butterfly_console.pl"
+BI: MA=1 174 1  TABS=1 3  WWS=1 IWT=0 ST=0 IN=2 BW=0 US=32000 RO=0 SE=1 SN=0 BIN=0 MN=Prolog	HM=0 MF=8 TL=0 MLL=0 ASE=0 LNL=6 LCF=0 CAPS=0 E=0 ESBU2=-1
+VIEW: LN=.0 CL=1 LE=0 CX=0 CY=0 WI=5 BI=31 HT=0 HN=0 HF=0 HC=4
+BUFFER: BN="packs_sys\logicmoo_utils\prolog\xlisting\xlisting_web.new"
+BI: MA=1 74 1  TABS=1 9  WWS=1 IWT=1 ST=0 IN=1 BW=0 US=32000 RO=0 SE=1 SN=0 BIN=0 MN=Fundamental	HM=0 MF=8 TL=0 MLL=0 ASE=0 LNL=6 LCF=0 CAPS=0 E=0 ESBU2=-1
+VIEW: LN=.3000 CL=1 LE=0 CX=0 CY=13 WI=5 BI=33 HT=0 HN=0 HF=0 HC=4
+BUFFER: BN="packs_sys\logicmoo_utils\prolog\xlisting\xlisting_web.pl"
+BI: MA=1 174 1  TABS=1 3  WWS=1 IWT=0 ST=0 IN=2 BW=0 US=32000 RO=0 SE=1 SN=0 BIN=0 MN=Prolog	HM=0 MF=8 TL=0 MLL=0 ASE=0 LNL=6 LCF=0 CAPS=0 E=0 ESBU2=-1
+VIEW: LN=.37718 CL=25 LE=0 CX=24 CY=13 WI=5 BI=30 HT=0 HN=0 HF=0 HC=4
 BUFFER: BN="packs_web\shrdlu\eval_socket.js"
 BI: MA=1 74 1  TABS=1 5  WWS=1 IWT=1 ST=0 IN=2 BW=0 US=32000 RO=0 SE=1 SN=0 BIN=0 MN=JavaScript	HM=0 MF=8 TL=0 MLL=0 ASE=0 LNL=6 LCF=0 CAPS=0 E=0 ESBU2=-1
-VIEW: LN=.8470 CL=1 LE=0 CX=0 CY=14 WI=5 BI=26 HT=0 HN=0 HF=0 HC=4
-BUFFER: BN="packs_web\shrdlu\prolog\logicmoo_shrdlu.pl"
-BI: MA=1 174 1  TABS=1 3  WWS=1 IWT=0 ST=0 IN=2 BW=0 US=32000 RO=0 SE=1 SN=0 BIN=0 MN=Prolog	HM=0 MF=8 TL=0 MLL=0 ASE=0 LNL=6 LCF=0 CAPS=0 E=0 ESBU2=-1
-VIEW: LN=.11380 CL=23 LE=0 CX=22 CY=19 WI=5 BI=24 HT=0 HN=0 HF=0 HC=4
-BUFFER: BN="packs_web\shrdlu\world.pl"
-BI: MA=1 174 1  TABS=1 3  WWS=1 IWT=0 ST=0 IN=2 BW=0 US=32000 RO=0 SE=1 SN=0 BIN=0 MN=Prolog	HM=0 MF=8 TL=0 MLL=0 ASE=0 LNL=6 LCF=0 CAPS=0 E=0 ESBU2=-1
-VIEW: LN=.491 CL=28 LE=0 CX=27 CY=17 WI=5 BI=25 HT=0 HN=0 HF=0 HC=4
-BUFFER: BN="packs_web\shrdlu\world.save.pl"
-BI: MA=1 174 1  TABS=1 3  WWS=1 IWT=0 ST=0 IN=2 BW=0 US=32000 RO=0 SE=1 SN=0 BIN=0 MN=Prolog	HM=0 MF=8 TL=0 MLL=0 ASE=0 LNL=6 LCF=0 CAPS=0 E=0 ESBU2=-1
+VIEW: LN=.8717 CL=30 LE=0 CX=29 CY=15 WI=5 BI=23 HT=0 HN=0 HF=0 HC=4
+BUFFER: BN="docker\rootfs\etc\apache2\sites-enabled\000-logicmoo.conf"
+BI: MA=1 74 1  TABS=1 5  WWS=1 IWT=0 ST=0 IN=2 BW=0 US=32000 RO=0 SE=1 SN=0 BIN=0 MN=Config	HM=0 MF=8 TL=0 MLL=0 ASE=0 LNL=6 LCF=0 CAPS=0 E=0 ESBU2=-1
 VIEW: LN=.0 CL=1 LE=0 CX=0 CY=0 WI=5 BI=5 HT=0 HN=0 HF=0 HC=4
-WINDOW: 52 52 1378 429 -1 -1 N  WF=0 WT=3 "Default Fixed Font,14,0,1"
-BUFFER: BN="packs_web\shrdlu\world.pl"
-VIEW: LN=.491 CL=28 LE=0 CX=27 CY=17 WI=156 BI=25 HT=0 HN=0 HF=0 HC=4
 WINDOW: 78 78 1378 429 -1 -1 N  WF=0 WT=4 "Default Fixed Font,14,0,1"
 BUFFER: BN="packs_web\shrdlu\prolog\logicmoo_shrdlu.pl"
-VIEW: LN=.11380 CL=23 LE=0 CX=22 CY=19 WI=158 BI=24 HT=0 HN=0 HF=0 HC=4
+VIEW: LN=.10998 CL=1 LE=0 CX=0 CY=9 WI=155 BI=24 HT=0 HN=0 HF=0 HC=4
+WINDOW: 52 52 1378 429 -1 -1 N  WF=0 WT=11 "Default Fixed Font,14,0,1"
+BUFFER: BN="packs_sys\logicmoo_utils\prolog\xlisting\xlisting_web.pl"
+VIEW: LN=.37718 CL=25 LE=0 CX=24 CY=13 WI=216 BI=30 HT=0 HN=0 HF=0 HC=4
+WINDOW: 26 26 1378 429 -1 -1 N  WF=0 WT=10 "Default Fixed Font,14,0,1"
+BUFFER: BN="packs_sys\logicmoo_utils\prolog\xlisting\xlisting_web.new"
+VIEW: LN=.3000 CL=1 LE=0 CX=0 CY=13 WI=214 BI=33 HT=0 HN=0 HF=0 HC=4
+WINDOW: 0 0 1378 429 -1 -1 N  WF=0 WT=9 "Default Fixed Font,14,0,1"
+BUFFER: BN="packs_sys\logicmoo_utils\prolog\logicmoo\butterfly_console.pl"
+VIEW: LN=.0 CL=1 LE=0 CX=0 CY=0 WI=212 BI=31 HT=0 HN=0 HF=0 HC=4
+WINDOW: 182 182 1378 429 -1 -1 N  WF=0 WT=8 "Default Fixed Font,14,0,1"
+BUFFER: BN="packs_sys\logicmoo_utils\prolog\logicmoo\pretty_clauses.pl"
+VIEW: LN=.34489 CL=64 LE=0 CX=63 CY=13 WI=209 BI=32 HT=0 HN=0 HF=0 HC=4
 WINDOW: 130 130 1378 429 -1 -1 N  WF=0 WT=5 "Default Fixed Font,14,0,1"
 BUFFER: BN="packs_web\shrdlu\eval_socket.js"
-VIEW: LN=.8470 CL=1 LE=0 CX=0 CY=14 WI=165 BI=26 HT=0 HN=0 HF=0 HC=4
-WINDOW: 104 104 1378 429 -1 -1 M  WF=0 WT=2 "Default Fixed Font,14,0,1"
+VIEW: LN=.8717 CL=30 LE=0 CX=29 CY=15 WI=156 BI=23 HT=0 HN=0 HF=0 HC=4
+WINDOW: 156 156 1378 429 -1 -1 N  WF=0 WT=7 ",,,"
+BUFFER: BN="packs_web\shrdlu\eval_socket.js"
+VIEW: LN=.8717 CL=30 LE=0 CX=29 CY=15 WI=206 BI=23 HT=0 HN=0 HF=0 HC=4
+WINDOW: 104 104 1378 429 -1 -1 N  WF=0 WT=6 "Default Fixed Font,14,0,1"
+BUFFER: BN="docker\rootfs\etc\apache2\sites-enabled\000-logicmoo.conf"
+VIEW: LN=.0 CL=1 LE=0 CX=0 CY=0 WI=160 BI=5 HT=0 HN=0 HF=0 HC=4
+WINDOW: 52 52 1378 429 -1 -1 N  WF=0 WT=3 ",,,"
+BUFFER: BN="docker\rootfs\etc\apache2\sites-enabled\000-logicmoo.conf"
+VIEW: LN=.0 CL=1 LE=0 CX=0 CY=0 WI=154 BI=5 HT=0 HN=0 HF=0 HC=4
+WINDOW: 156 156 1378 429 -1 -1 M  WF=0 WT=1 "Default Fixed Font,14,0,1"
 BUFFER: BN="packs_web\shrdlu\world.save.pl"
-VIEW: LN=.0 CL=1 LE=0 CX=0 CY=0 WI=163 BI=5 HT=0 HN=0 HF=0 HC=4
+VIEW: LN=.0 CL=1 LE=0 CX=0 CY=0 WI=220 BI=27 HT=0 HN=0 HF=0 HC=4
 FILEHIST: 9
-docker\rootfs\var\www\html\ef\js\elFinder.options.netmount.js
-docker\rootfs\var\www\html\ef\js\elFinder.resources.js
-docker\rootfs\var\www\html\ef\js\elFinder.version.js
-docker\rootfs\var\www\html\ef\js\jquery.dialogelfinder.js
-docker\rootfs\var\www\html\ef\js\elFinder.js
 packs_web\shrdlu\world.pl
-packs_web\shrdlu\world.save.pl
-packs_web\shrdlu\prolog\logicmoo_shrdlu.pl
 packs_web\shrdlu\eval_socket.js
+docker\rootfs\etc\apache2\sites-enabled\000-logicmoo.conf
+packs_sys\logicmoo_utils\prolog\logicmoo\pretty_clauses.pl
+packs_sys\logicmoo_utils\prolog\logicmoo\butterfly_console.pl
+packs_sys\logicmoo_utils\prolog\xlisting\xlisting_web.new
+packs_sys\logicmoo_utils\prolog\xlisting\xlisting_web.pl
+packs_web\shrdlu\prolog\logicmoo_shrdlu.pl
+packs_web\shrdlu\world.save.pl

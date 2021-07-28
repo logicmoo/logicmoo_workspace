@@ -1383,7 +1383,7 @@ pt1(FS,Tab,(NPV)) :- NPV=..[OP,N|Args], as_is(N), % \+ compound_gt(N,0),
   Args=[List], is_list(List),
   prefix_spaces(Tab), print_atomf(OP), 
   pl_span_goal('functor', ( pformat('( '), print_tree_no_nl(N), pformat(', [   '))),  
-  pt_args_arglist([lf|FS],Tab+2,'',' | ',']',List),!.
+  pt_args_arglist([lf|FS],Tab+2,'',' | ','])',List),!.
 
 
 pt1(FS,Tab,(NPV)) :- NPV=..[OP,N,V], FS\==[], is_infix_op(OP), as_is(N), as_is(V), !,
@@ -1473,7 +1473,7 @@ pt1(FS,Tab,(NPV)) :- NPV=..[OP,N|Args], as_is(N), % \+ compound_gt(N,0),
   prefix_spaces(Tab), print_atomf(OP), 
   pformat('( '), print_tree_no_nl(N), pformat_functor(', ['),  
  %do_fold_this_round
- (( pt_args_arglist([OP|FS],Tab+2,'','@',')',Args))),!.
+ (( pt_args_arglist([OP|FS],Tab+2,'','@',')]',Args))),!.
 
  % include arg1
 pt1(FS,Tab,(NPV)) :- NPV=..[OP,N|Args], as_is(N), % \+ compound_gt(N,0),  
