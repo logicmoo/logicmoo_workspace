@@ -1,7 +1,7 @@
 [Global]
 CurrentProject=logicmoo_workspace.vpj
 [ProjectDates]
-logicmoo_workspace.vpj=20210724135824422
+logicmoo_workspace.vpj=20210727065533034
 other_files.vpj=20210716235244671
 [ActiveConfig]
 logicmoo_workspace.vpj=Release
@@ -189,7 +189,7 @@ packs_sys\logicmoo_nlu\ext\chat80_lm\chat80.vpj=Release
     + rosdep
       + meta.cache
       + sources.cache
-  + docker
+  - docker
     + noetic
     + noetic-testing
     - rootfs
@@ -324,13 +324,13 @@ packs_sys\logicmoo_nlu\ext\chat80_lm\chat80.vpj=Release
             - man
               - man1
             - pkgconfig
-      + var
-        + www
-          + html
+      - var
+        - www
+          - html
             + doc2
             + ef
-              + php
-                + vendor
+              - php
+                - vendor
                   + barryvdh
                     + elfinder-flysystem-driver
                   + firebase
@@ -518,7 +518,7 @@ packs_sys\logicmoo_nlu\ext\chat80_lm\chat80.vpj=Release
       + prolog
         + checkers
       + tests
-  + packs_sys
+  - packs_sys
     + logicmoo_ec\.github
       + ISSUE_TEMPLATE
     + dictoo
@@ -742,12 +742,12 @@ packs_sys\logicmoo_nlu\ext\chat80_lm\chat80.vpj=Release
         + synergy
           + cgifCharGer
     + logicmoo_ec
-      + docs
-      + ext
+      - docs
+      - ext
         + aiswi
           + project_template
           + sciff
-        + ec_sources
+        - ec_sources
           + ecnet
           + examples
             + AkmanEtAl2004
@@ -822,12 +822,12 @@ packs_sys\logicmoo_nlu\ext\chat80_lm\chat80.vpj=Release
             + iris
             + trains
           + pl
-      + prolog
+      - prolog
         + ccalc
         + code_icl
         + dialect
           + logicmoo
-        + ec_planner
+        - ec_planner
           + hist
           + iwfms
         + hyhtn_pddl
@@ -1598,7 +1598,23 @@ packs_sys\logicmoo_nlu\ext\chat80_lm\chat80.vpj=Release
         + yasr
           + dist
       + Windows
-    + logicmoo_webui
+    - logicmoo_webui
+      + etc
+        + apache2
+          + conf-available
+          + sites-enabled
+          + ssl
+        + butterfly
+        + letsencrypt
+          + live
+            + logicmoo.org
+            + logicmoo.org-0001
+            + logicmoo.org-0002
+        + nginx
+          + sites-enabled
+        + profile.d
+        + supervisor
+          + conf.d
       - prolog
     + MMORPG
       + public
@@ -1707,8 +1723,8 @@ packs_sys\logicmoo_nlu\ext\chat80_lm\chat80.vpj=Release
             + services
         + typings
     - shrdlu
-      - A4
-      + data
+      + A4
+      - data
         + sfx
       + doc
       + fonts
@@ -1729,8 +1745,9 @@ packs_sys\logicmoo_nlu\ext\chat80_lm\chat80.vpj=Release
             + maps
           + util
       - misc
+      - prolog
       + server
-      + src
+      - src
         + a4engine3
           + objects
         + ai
@@ -1760,7 +1777,7 @@ packs_sys\logicmoo_nlu\ext\chat80_lm\chat80.vpj=Release
         + phil
         - prologmud
         + trill
-      - lib
+      + lib
         + data
         + plugin
         + render
@@ -1811,7 +1828,7 @@ packs_sys\logicmoo_nlu\ext\chat80_lm\chat80.vpj=Release
       + tutorial
         + inference
         + learning
-      - web
+      + web
         - css
         + help
         + icons
@@ -1831,7 +1848,7 @@ packs_sys\logicmoo_nlu\ext\chat80_lm\chat80.vpj=Release
       + prolog
         + BN-search
         + pHa_code
-    - logicmoo_pldata
+    + logicmoo_pldata
       + AceWiki
         + data
           + anothertest
@@ -2229,17 +2246,41 @@ packs_sys\logicmoo_nlu\ext\chat80_lm\chat80.vpj=Release
   + wikis
     - logicmoo_workspace.wiki
 + other_files.vpj
-scroll:12
+scroll:198
 [State]
-SCREEN: 1920 1200 119 146 1918 1017 0 0 M 0 0 0 0 1560 611
-CWD: ..\logicmoo_workspace
+SCREEN: 1920 1200 346 116 1918 1017 0 0 M 0 0 0 0 1560 611
+CWD: C:\Program Files (x86)\SlickEdit\win
+BUFFER: BN="packs_web\shrdlu\eval_socket.js"
+BI: MA=1 74 1  TABS=1 5  WWS=1 IWT=1 ST=0 IN=2 BW=0 US=32000 RO=0 SE=1 SN=0 BIN=0 MN=JavaScript	HM=0 MF=8 TL=0 MLL=0 ASE=0 LNL=6 LCF=0 CAPS=0 E=0 ESBU2=-1
+VIEW: LN=.8470 CL=1 LE=0 CX=0 CY=14 WI=5 BI=26 HT=0 HN=0 HF=0 HC=4
+BUFFER: BN="packs_web\shrdlu\prolog\logicmoo_shrdlu.pl"
+BI: MA=1 174 1  TABS=1 3  WWS=1 IWT=0 ST=0 IN=2 BW=0 US=32000 RO=0 SE=1 SN=0 BIN=0 MN=Prolog	HM=0 MF=8 TL=0 MLL=0 ASE=0 LNL=6 LCF=0 CAPS=0 E=0 ESBU2=-1
+VIEW: LN=.11380 CL=23 LE=0 CX=22 CY=19 WI=5 BI=24 HT=0 HN=0 HF=0 HC=4
+BUFFER: BN="packs_web\shrdlu\world.pl"
+BI: MA=1 174 1  TABS=1 3  WWS=1 IWT=0 ST=0 IN=2 BW=0 US=32000 RO=0 SE=1 SN=0 BIN=0 MN=Prolog	HM=0 MF=8 TL=0 MLL=0 ASE=0 LNL=6 LCF=0 CAPS=0 E=0 ESBU2=-1
+VIEW: LN=.491 CL=28 LE=0 CX=27 CY=17 WI=5 BI=25 HT=0 HN=0 HF=0 HC=4
+BUFFER: BN="packs_web\shrdlu\world.save.pl"
+BI: MA=1 174 1  TABS=1 3  WWS=1 IWT=0 ST=0 IN=2 BW=0 US=32000 RO=0 SE=1 SN=0 BIN=0 MN=Prolog	HM=0 MF=8 TL=0 MLL=0 ASE=0 LNL=6 LCF=0 CAPS=0 E=0 ESBU2=-1
+VIEW: LN=.0 CL=1 LE=0 CX=0 CY=0 WI=5 BI=5 HT=0 HN=0 HF=0 HC=4
+WINDOW: 52 52 1378 429 -1 -1 N  WF=0 WT=3 "Default Fixed Font,14,0,1"
+BUFFER: BN="packs_web\shrdlu\world.pl"
+VIEW: LN=.491 CL=28 LE=0 CX=27 CY=17 WI=156 BI=25 HT=0 HN=0 HF=0 HC=4
+WINDOW: 78 78 1378 429 -1 -1 N  WF=0 WT=4 "Default Fixed Font,14,0,1"
+BUFFER: BN="packs_web\shrdlu\prolog\logicmoo_shrdlu.pl"
+VIEW: LN=.11380 CL=23 LE=0 CX=22 CY=19 WI=158 BI=24 HT=0 HN=0 HF=0 HC=4
+WINDOW: 130 130 1378 429 -1 -1 N  WF=0 WT=5 "Default Fixed Font,14,0,1"
+BUFFER: BN="packs_web\shrdlu\eval_socket.js"
+VIEW: LN=.8470 CL=1 LE=0 CX=0 CY=14 WI=165 BI=26 HT=0 HN=0 HF=0 HC=4
+WINDOW: 104 104 1378 429 -1 -1 M  WF=0 WT=2 "Default Fixed Font,14,0,1"
+BUFFER: BN="packs_web\shrdlu\world.save.pl"
+VIEW: LN=.0 CL=1 LE=0 CX=0 CY=0 WI=163 BI=5 HT=0 HN=0 HF=0 HC=4
 FILEHIST: 9
-C:\logicmoo\FAtiMA_impl\lixo\rules-with-intensity.clp
-C:\logicmoo\FAtiMA_impl\John.bat
-C:\logicmoo\FAtiMA_impl\setpaths.bat
-C:\logicmoo\FAtiMA_impl\Luke.bat
-C:\logicmoo\FAtiMA_impl\WorldTest (FearNot).bat
-C:\logicmoo\FAtiMA_impl\Lupo.bat
-C:\logicmoo\FAtiMA_impl\Maia.bat
-packs_lib\mpi\prolog\examples\bcast.pl
-packs_sys\prologmud_samples\prolog\prologmud_samples.pl
+docker\rootfs\var\www\html\ef\js\elFinder.options.netmount.js
+docker\rootfs\var\www\html\ef\js\elFinder.resources.js
+docker\rootfs\var\www\html\ef\js\elFinder.version.js
+docker\rootfs\var\www\html\ef\js\jquery.dialogelfinder.js
+docker\rootfs\var\www\html\ef\js\elFinder.js
+packs_web\shrdlu\world.pl
+packs_web\shrdlu\world.save.pl
+packs_web\shrdlu\prolog\logicmoo_shrdlu.pl
+packs_web\shrdlu\eval_socket.js

@@ -259,10 +259,12 @@ class ShrdluA4Game extends A4Game {
 
     }
 
+	getSaveGameXml()  : string {
+		return this.toSaveGameXml("saveName");
+	}
 
-    saveGame(saveName:string)
-    {
-      	super.saveGame(saveName);
+    toSaveGameXml(saveName:string) : string {
+	    super.saveGame(saveName);
         let complete_xmlString:string = "<SHRDLU_savegame>\n";
         let xmlString:string = this.saveToXML();
         console.log("A4Game.saveGame: game xmlString length " + xmlString.length);
@@ -273,7 +275,6 @@ class ShrdluA4Game extends A4Game {
             xmlString = this.maps[i].saveToXML(this);
             complete_xmlString += "\n\n\n" + xmlString;
             console.log("A4Game.saveGame: map "+i+" xmlString length " + xmlString.length);
-
         }
 
         xmlString = this.etaoinAI.saveToXML();
@@ -289,7 +290,12 @@ class ShrdluA4Game extends A4Game {
         console.log("A4Game.saveGame: shrdlu xmlString length " + xmlString.length);
 
         complete_xmlString += "</SHRDLU_savegame>";
+		return complete_xmlString;
+	 }
 
+    saveGame(saveName:string)
+    {
+        let complete_xmlString:string = this.toSaveGameXml(saveName);
         // save it:
         console.log("Size of sample is: " + complete_xmlString.length);
         let compressed = LZString.compressToUTF16(complete_xmlString);

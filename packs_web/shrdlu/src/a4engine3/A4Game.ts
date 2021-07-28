@@ -133,6 +133,7 @@ class A4Game {
     {
         this.ontology = new Ontology();
         Sort.clear();
+
         let xmlhttp:XMLHttpRequest = new XMLHttpRequest();
         xmlhttp.overrideMimeType("text/xml");
         xmlhttp.open("GET", ontology_path, false); 

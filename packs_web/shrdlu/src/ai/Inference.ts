@@ -775,7 +775,7 @@ class InterruptibleResolution
 	}
 
 
-	saveToXML() : string
+	outerHTML() : string { return this.saveToXML();}  saveToXML() : string
 	{
 		let str:string = "<InterruptibleResolution>\n";
 

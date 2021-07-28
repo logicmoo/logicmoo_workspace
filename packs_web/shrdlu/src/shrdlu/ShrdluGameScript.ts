@@ -3374,7 +3374,6 @@ class ShrdluGameScript {
 		}
 	}
 
-
     saveToXML() : string
     {
         let xmlString:string = "";

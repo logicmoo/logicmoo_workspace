@@ -87,4 +87,18 @@ class Ontology {
 
 
     sorts:Sort[][] = new Array(SORT_HASH_SIZE);
+
+ 	outerHTML() : string {
+		let xmlString:string = "";
+		 xmlString += "<ontology>\n";
+			for(let text of this.getAllSorts()) {
+				xmlString += text.outerHTML() + "\n";
+			}
+			xmlString += "</ontology>\n";
+		return xmlString;
+	}
+
+
+
+
 }

@@ -123,7 +123,7 @@ pre_run_mud_server:-
 
 never_catch:- 
    current_prolog_flag(access_level,Was),
-qqqqqqqq   set_prolog_flag(access_level,system),
+   set_prolog_flag(access_level,system),
    redefine_system_predicate(system:catch/3),
    abolish(system:catch,3),
    meta_predicate(system:catch(0,?,0)),
@@ -132,7 +132,7 @@ qqqqqqqq   set_prolog_flag(access_level,system),
    system:asserta((catch(G,E,C):- !, mycatch(G,E,C))),   
    set_prolog_flag(access_level,Was).
 
-q
+
 
 :- initialization(pre_run_mud_server, now).
 :- initialization(pre_run_mud_server, restore_state).
@@ -812,6 +812,7 @@ swi_ide:- use_module(library(swi_ide)),
 :- add_history(x123).
 :- add_history(search4term).
 :- add_history(edit1term).
+:- add_history(js_test2).
 %:- add_history(never_catch).
 
 %:- make:make_no_trace, make.

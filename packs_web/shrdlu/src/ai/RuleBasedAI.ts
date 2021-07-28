@@ -306,7 +306,8 @@ class CauseRecord {
 	}
 
 
-	saveToXML() : string
+		
+	outerHTML() : string { return this.saveToXML();}  saveToXML() : string
 	{
 		if (this.cause == null) {
 			let tmp:string = "<CauseRecord term=\""+this.term.toStringXML() +"\" " +
@@ -2603,7 +2604,7 @@ class RuleBasedAI {
 	}
 
 
-	saveToXML() : string
+	outerHTML() : string { return this.saveToXML();}  saveToXML() : string
 	{
 		let str:string = "<RuleBasedAI timeInSeconds=\""+this.timeStamp+"\" "+
 									  "questionPatienceTimmer=\""+this.questionPatienceTimmer+"\">\n";
@@ -2709,7 +2710,6 @@ class RuleBasedAI {
 		}
 		return str;
 	}
-
 
 	// this function is the one that will be extended by the subclasses to add additional info
 	savePropertiesToXML() : string

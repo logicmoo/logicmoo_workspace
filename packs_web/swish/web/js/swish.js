@@ -72,7 +72,10 @@ require.config({
     "cm/addon/hint/show-context-info": "codemirror/addon/hint/show-context-info",
 
 					/* Standard CodeMirror */
-    "cm": "../node_modules/codemirror"
+    "cm": "../node_modules/codemirror",
+
+    //"class-transformer": { "main": "index.js", "defaultExtension": "js" }
+		"class-transformer": "../node_modules/class-transformer"
   },
   shim: {
     bootstrap: {

@@ -70,6 +70,7 @@ define(["jquery",
   "d3",
   "c3",
   "svg-pan-zoom"
+  //"class-transformer"
 ], function($, config, preferences, history, modal) {
 
   preferences.setDefault("semantic-highlighting", true);

@@ -19,7 +19,7 @@ class A4ObjectFactory {
             if (s==null) s = o.newSort(sortName,[]);
             let superClasses:string[] = class_xml.getAttribute("super").split(',');
 
-//            console.log("added class " + s.name + " to A4ObjectFactory.objectTypes");
+            console.log("added class " + s.name + " to A4ObjectFactory.objectTypes");
 
             for(let className of superClasses) {
                 if (className.charAt(0) == '*') {

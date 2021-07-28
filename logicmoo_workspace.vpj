@@ -12394,6 +12394,66 @@
 				<F N="packs_web/ClioPatria/setup.pl"/>
 			</Folder>
 			<Folder Name="logicmoo_webui">
+				<Folder Name="etc">
+					<Folder Name="apache2">
+						<Folder Name="conf-available">
+							<F N="packs_web/logicmoo_webui/etc/apache2/conf-available/cliopatria_swish.conf"/>
+							<F N="packs_web/logicmoo_webui/etc/apache2/conf-available/doc_root.conf"/>
+							<F N="packs_web/logicmoo_webui/etc/apache2/conf-available/doc_root_ssl.conf"/>
+							<F N="packs_web/logicmoo_webui/etc/apache2/conf-available/no_open_proxy.conf"/>
+						</Folder>
+						<Folder Name="sites-enabled">
+							<F N="packs_web/logicmoo_webui/etc/apache2/sites-enabled/000-default-le-ssl.conf"/>
+							<F N="packs_web/logicmoo_webui/etc/apache2/sites-enabled/000-default.conf"/>
+							<F N="packs_web/logicmoo_webui/etc/apache2/sites-enabled/000-logicmoo.conf"/>
+						</Folder>
+						<Folder Name="ssl">
+							<F N="packs_web/logicmoo_webui/etc/apache2/ssl/localhost+2-key.pem"/>
+							<F N="packs_web/logicmoo_webui/etc/apache2/ssl/localhost+2.pem"/>
+							<F N="packs_web/logicmoo_webui/etc/apache2/ssl/prologmud-key.pem"/>
+							<F N="packs_web/logicmoo_webui/etc/apache2/ssl/prologmud.pem"/>
+						</Folder>
+					</Folder>
+					<Folder Name="butterfly">
+						<F N="packs_web/logicmoo_webui/etc/butterfly/butterfly.conf"/>
+					</Folder>
+					<Folder Name="letsencrypt">
+						<Folder Name="live">
+							<Folder Name="logicmoo.org">
+								<F N="packs_web/logicmoo_webui/etc/letsencrypt/live/logicmoo.org/fullchain.pem"/>
+								<F N="packs_web/logicmoo_webui/etc/letsencrypt/live/logicmoo.org/privkey.pem"/>
+							</Folder>
+							<Folder Name="logicmoo.org-0001">
+								<F N="packs_web/logicmoo_webui/etc/letsencrypt/live/logicmoo.org-0001/fullchain.pem"/>
+								<F N="packs_web/logicmoo_webui/etc/letsencrypt/live/logicmoo.org-0001/privkey.pem"/>
+							</Folder>
+							<Folder Name="logicmoo.org-0002">
+								<F N="packs_web/logicmoo_webui/etc/letsencrypt/live/logicmoo.org-0002/fullchain.pem"/>
+								<F N="packs_web/logicmoo_webui/etc/letsencrypt/live/logicmoo.org-0002/privkey.pem"/>
+							</Folder>
+							<F N="packs_web/logicmoo_webui/etc/letsencrypt/live/options-ssl-apache.conf"/>
+							<F N="packs_web/logicmoo_webui/etc/letsencrypt/live/README"/>
+						</Folder>
+						<F N="packs_web/logicmoo_webui/etc/letsencrypt/options-ssl-apache.conf"/>
+					</Folder>
+					<Folder Name="nginx">
+						<Folder Name="sites-enabled">
+							<F N="packs_web/logicmoo_webui/etc/nginx/sites-enabled/default"/>
+						</Folder>
+					</Folder>
+					<Folder Name="profile.d">
+						<F N="packs_web/logicmoo_webui/etc/profile.d/logicmoo_etc_profile_d.sh"/>
+					</Folder>
+					<Folder Name="supervisor">
+						<Folder Name="conf.d">
+							<F N="packs_web/logicmoo_webui/etc/supervisor/conf.d/supervisord.conf"/>
+							<F N="packs_web/logicmoo_webui/etc/supervisor/conf.d/supervisord.conf.j2"/>
+							<F N="packs_web/logicmoo_webui/etc/supervisor/conf.d/supervisord_logicmoo.conf"/>
+						</Folder>
+						<F N="packs_web/logicmoo_webui/etc/supervisor/supervisord.conf"/>
+					</Folder>
+					<F N="packs_web/logicmoo_webui/etc/profile"/>
+				</Folder>
 				<Folder Name="prolog">
 					<F N="packs_web/logicmoo_webui/prolog/logicmoo_cliop.pl"/>
 					<F N="packs_web/logicmoo_webui/prolog/logicmoo_pldoc.pl"/>
@@ -12466,7 +12526,6 @@
 				<F N="packs_web/MMORPG/Player.js"/>
 				<F N="packs_web/MMORPG/questlist.js"/>
 				<F N="packs_web/MMORPG/README.md"/>
-				<F N="packs_web/MMORPG/yarn.lock"/>
 			</Folder>
 			<Folder Name="node_modules">
 				<Folder Name="c3/.github">
@@ -14798,6 +14857,7 @@
 					<F N="packs_web/shrdlu/data/cutscene-sax-diary2-male.png"/>
 					<F N="packs_web/shrdlu/data/cutscene-sax-diary3.png"/>
 					<F N="packs_web/shrdlu/data/cutscene-travel1.png"/>
+					<F N="packs_web/shrdlu/data/dev-v2.0.json"/>
 					<F N="packs_web/shrdlu/data/etaoin-kb.xml"/>
 					<F N="packs_web/shrdlu/data/general-kb.xml"/>
 					<F N="packs_web/shrdlu/data/GUI.png"/>
@@ -14817,6 +14877,9 @@
 					<F N="packs_web/shrdlu/data/player-suit-helmet.png"/>
 					<F N="packs_web/shrdlu/data/player-suit.png"/>
 					<F N="packs_web/shrdlu/data/player.png"/>
+					<F N="packs_web/shrdlu/data/player_olive_skin_brown_hair.png"/>
+					<F N="packs_web/shrdlu/data/player_wg.png"/>
+					<F N="packs_web/shrdlu/data/playerman_w_tan.png"/>
 					<F N="packs_web/shrdlu/data/players.xml"/>
 					<F N="packs_web/shrdlu/data/qwerty-kb.xml"/>
 					<F N="packs_web/shrdlu/data/robots.png"/>
@@ -14829,6 +14892,9 @@
 					<F N="packs_web/shrdlu/data/shrdluontology.xml"/>
 					<F N="packs_web/shrdlu/data/theend.png"/>
 					<F N="packs_web/shrdlu/data/vehicles.png"/>
+					<F N="packs_web/shrdlu/data/woman.png"/>
+					<F N="packs_web/shrdlu/data/woman_1.png"/>
+					<F N="packs_web/shrdlu/data/woman_4.png"/>
 				</Folder>
 				<Folder Name="doc">
 					<F N="packs_web/shrdlu/doc/A4Reference2.4.html"/>
@@ -15038,8 +15104,10 @@
 						<F N="packs_web/shrdlu/src/a4engine3/A4Animation.ts"/>
 						<F N="packs_web/shrdlu/src/a4engine3/A4EventRule.ts"/>
 						<F N="packs_web/shrdlu/src/a4engine3/A4Game.ts"/>
+						<F N="packs_web/shrdlu/src/a4engine3/A4Game.ts.bak"/>
 						<F N="packs_web/shrdlu/src/a4engine3/A4GraphicFile.ts"/>
 						<F N="packs_web/shrdlu/src/a4engine3/A4Map.ts"/>
+						<F N="packs_web/shrdlu/src/a4engine3/A4Map.ts.bak"/>
 						<F N="packs_web/shrdlu/src/a4engine3/A4MapLayer.ts"/>
 						<F N="packs_web/shrdlu/src/a4engine3/A4MapTile.ts"/>
 						<F N="packs_web/shrdlu/src/a4engine3/A4Object.ts"/>
@@ -15188,8 +15256,10 @@
 						<F N="packs_web/shrdlu/src/shrdlu/ShrdluA4ObjectFactory.ts"/>
 						<F N="packs_web/shrdlu/src/shrdlu/ShrdluAirlockDoor.ts"/>
 						<F N="packs_web/shrdlu/src/shrdlu/ShrdluApp.ts"/>
+						<F N="packs_web/shrdlu/src/shrdlu/ShrdluApp.ts.bak"/>
 						<F N="packs_web/shrdlu/src/shrdlu/ShrdluCutScenes.ts"/>
 						<F N="packs_web/shrdlu/src/shrdlu/ShrdluGameScript.ts"/>
+						<F N="packs_web/shrdlu/src/shrdlu/ShrdluGameScript.ts.bak"/>
 						<F N="packs_web/shrdlu/src/shrdlu/ShrdluInterface.ts"/>
 					</Folder>
 					<Folder Name="tests">
@@ -15216,13 +15286,17 @@
 				<F N="packs_web/shrdlu/build"/>
 				<F N="packs_web/shrdlu/build-dev"/>
 				<F N="packs_web/shrdlu/build-old"/>
+				<F N="packs_web/shrdlu/debug_shrdlu.html"/>
 				<F N="packs_web/shrdlu/eval_socket.js"/>
+				<F N="packs_web/shrdlu/eval_socket.new"/>
 				<F N="packs_web/shrdlu/LICENSE"/>
 				<F N="packs_web/shrdlu/LICENSE.bak"/>
 				<F N="packs_web/shrdlu/README.md"/>
 				<F N="packs_web/shrdlu/shrdlu.html"/>
 				<F N="packs_web/shrdlu/swish_config.json"/>
 				<F N="packs_web/shrdlu/tsconfig.json"/>
+				<F N="packs_web/shrdlu/world.pl"/>
+				<F N="packs_web/shrdlu/world.save.pl"/>
 			</Folder>
 			<Folder Name="swish">
 				<Folder Name="applications">

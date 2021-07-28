@@ -147,6 +147,7 @@ var Game = {
 
 };
 
+window.theA4Game = Game;
 
 Game.loadCharacters = function(xmlFilePath) {
   var xmlhttp=new XMLHttpRequest();
@@ -200,6 +201,7 @@ Game.loadObjects = function(xmlFilePath) {
 
 
 Game.initialize = function(gamepath, gamefile) {
+  window.theA4Game = this;
   // read the game file:
   var gamefilePath = gamepath + gamefile;
   var xmlhttp=new XMLHttpRequest();

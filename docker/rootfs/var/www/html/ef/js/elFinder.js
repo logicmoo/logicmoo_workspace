@@ -10510,7 +10510,8 @@ elFinder.prototype = {
 				d['warning'] = true;
 			}
 			if (rd.mountErrors && (typeof rd.mountErrors === 'string' || (Array.isArray(rd.mountErrors) && rd.mountErrors.length))) {
-				this.debug('backend-error', rd.mountErrors);
+				//this.debug('backend-warning', rd.mountErrors);
+				console.warn('backend-error ' +  rd.mountErrors);	
 			}
 			if (rd.backendErrors && (typeof rd.backendErrors === 'string' || (Array.isArray(rd.backendErrors) && rd.backendErrors.length))) {
 				this.debug('backend-warning', rd.backendErrors);

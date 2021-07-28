@@ -11,7 +11,11 @@ class Sort {
     }
 
 
-    is_a(s:Sort):boolean
+	outerHTML() : string { return this.saveToXML();}  saveToXML() : string {
+		return '<sort name="'+ this.toString() + '" super="'+ this.parents.toString()+'"/>';
+	}		
+													  
+	is_a(s:Sort):boolean
     {
         if (Sort.s_precomputedIsA != null) {
             let offs:number = this.ID + s.ID*Sort.s_next_ID;

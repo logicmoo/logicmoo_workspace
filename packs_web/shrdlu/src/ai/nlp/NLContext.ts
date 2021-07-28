@@ -136,7 +136,7 @@ class NLContextEntity {
 	}
 
 
-	saveToXML() : string
+	outerHTML() : string { return this.saveToXML();}  saveToXML() : string
 	{
 		let str = "<NLContextEntity id=\""+this.objectID.value+"\" sort=\""+this.objectID.sort.name+"\"";
 		if (this.mentionTime != null) str += " mentionTime=\""+this.mentionTime+"\"";
@@ -243,7 +243,7 @@ class NLContextPerformative {
 	}
 
 
-	saveToXML() : string
+	outerHTML() : string { return this.saveToXML();}  saveToXML() : string
 	{
 		if (this.cause == null) {
 			let tmp:string = "<NLContextPerformative text=\""+this.text+"\" " +
@@ -1954,7 +1954,7 @@ class NLContext {
 	}
 
 
-	saveToXML() : string
+	outerHTML() : string { return this.saveToXML();}  saveToXML() : string
 	{
 		let str:string = "<context speaker=\""+this.speaker+"\">\n";
 
