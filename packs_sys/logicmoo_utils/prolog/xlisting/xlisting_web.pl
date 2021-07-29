@@ -1263,12 +1263,10 @@ maybe_space(_, _).
 write_variable(V) :- get_var_name(V,Name),!,write(Name).
 write_variable(V) :- writeq(V).
 
-
-
-portray_or_print(Term):- var(Term),!,write_variable(Term).
-portray_or_print(Term):- rok_linkable(Term),!,write_atom_link(Term).
+%portray_or_print(Term):- var(Term),!,write_variable(Term).
+portray_or_print(Term):- rok_linkable(Term),!,is_html_mode,write_atom_link(Term).
 %portray_or_print(Term):- catch(user:portray(Term),_,fail),!.
-portray_or_print(Term):- catch(print(Term),_,fail),!.
+%portray_or_print(Term):- catch(print(Term),_,fail),!.
 
 %%   write_out(Term, Style, Priority, Ci, Co)
 %   writes out a Term in a given Style (display,write,writeq,print)

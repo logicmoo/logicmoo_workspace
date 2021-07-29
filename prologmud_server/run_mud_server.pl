@@ -812,6 +812,7 @@ swi_ide:- use_module(library(swi_ide)),
 :- add_history(x123).
 :- add_history(search4term).
 :- add_history(edit1term).
+:- add_history(ensure_plkb0988_kb).
 :- add_history(js_test2).
 %:- add_history(never_catch).
 

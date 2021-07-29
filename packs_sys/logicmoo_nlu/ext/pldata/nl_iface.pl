@@ -105,7 +105,8 @@ set_rel_path_from_here:-
 % :- load_wordnet.
 
 %:- system:consult(pldata(kb_0988)).
-:- system:consult(pldata(plkb0988/plkb0988_kb)).
+ensure_plkb0988_kb:- system:consult(pldata(plkb0988/plkb0988_kb)).
+
 :- fixup_exports.
 
 end_of_file.
