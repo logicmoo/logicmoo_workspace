@@ -825,12 +825,12 @@ to_descriptive_name_xti(_For,X,X).
 %pretty_numbervars_here(Term,Term):- term_variables(Term,Vs),maplist(pretty_numbervars,Vs,Vs2),Vs=Vs2,!.
 pretty_numbervars_here(Term,PrettyVarTerm):- pretty_numbervars(Term,PrettyVarTerm),!.
 
-portray_pretty_numbervars(Term):- notrace((current_prolog_flag(no_pretty,true);ground(Term);nb_current('$inprint_message', Messages), Messages\==[])),!,fail.
-portray_pretty_numbervars(Term):- portray_pretty_numbervars0(Term),!.
-
-portray_pretty_numbervars0(Term):- get_var_name(Term,Name), !, write(Name).
-portray_pretty_numbervars0(Term):-
+%portray_pretty_numbervars0(Term):- get_var_name(Term,Name), !, write(Name).
+portray_pretty_numbervars(Term):-
   notrace(\+ tracing), % fail,
+  \+ (nb_current('$inprint_message', Messages), Messages\==[]),
+  \+ ground(Term),
+  \+ current_prolog_flag(no_pretty,true),  
   pretty_numbervars_here(Term,PrettyVarTerm),
   % Term \=@= PrettyVarTerm,
   setup_call_cleanup(

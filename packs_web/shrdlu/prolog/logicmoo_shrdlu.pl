@@ -275,6 +275,7 @@ js_test1:-
    js_eval('this.game.naturalLanguageParser.rules[0]',X),
   \+ \+ (wots(S,print_tree(X)),write(S),atom_to_term(S,_,_)),!.
 
+:- prolog_flag(stack_limit, X),( X<2_147_483_648 -> set_prolog_flag(stack_limit, 2_147_483_648) ; true).
 js_test2:- 
   mmake,
   js_eval('this.game',X),

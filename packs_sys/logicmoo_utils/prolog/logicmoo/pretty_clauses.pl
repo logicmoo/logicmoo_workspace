@@ -82,6 +82,7 @@ etc.
 
 user:test_pp:- 
   make,
+  print_tree(a(a{ a:b, = : -1 })),
   %bfly_tests,
   %retractall(bfly_tl:bfly_setting(_,_)),
   % abolish(bfly_tl:bfly_setting,2),
@@ -458,6 +459,21 @@ print_et_to_string(T,S,Options):-
    PrintOpts = [output(current_output)|Options],                                
   sformat(S, '~@', [(plpp(TT,WriteOpts,PrintOpts), ttyflush)]).
 
+% plpp(T):- !, print(T).
+plpp(T):- plpp(T,[]).
+plpp(T, Opts):- 
+ get_varname_list(Vs),
+  numbervars_using_vs(T,TT,Vs),
+   Old = [% numbervars(true),
+                  quoted(true), ignore_ops(false), no_lists(false), 
+                  %spacing(next_argument), %portray(false),
+                  portray_goal(print_tree_plpp)],
+   notrace(my_merge_options(Old,Options,WriteOpts1)),
+   notrace(my_merge_options(WriteOpts1,Opts,WriteOpts)),
+   PrintOpts = [output(current_output)|Options],                                
+  plpp(TT,WriteOpts,PrintOpts).
+%plpp(TT,WriteOpts,PrintOpts):- !,
+%   pprint_tree(TT, [write_options(WriteOpts)|PrintOpts]).
 plpp(TT,WriteOpts,PrintOpts):- 
    \+ \+ prolog_pretty_print:print_term(TT, 
              [   %left_margin(1),
@@ -468,6 +484,7 @@ plpp(TT,WriteOpts,PrintOpts):-
                  write_options(WriteOpts)|PrintOpts]).
 
    
+print_tree_plpp(Term,Opts):-print_tree_loop(Term,Opts).
 % print_tree_loop(Term):- current_print_write_options(Options), print_tree_loop(Term,Options).
  
 print_tree_loop(Term,Options):- \+ pretty_tl:in_pretty,!,
@@ -543,6 +560,7 @@ without_ec_portray_hook(Goal):- exact_ec_portray_hook(1000,Goal).
 %pc_portray(Term):- notrace(tracing),!,ec_portray_hook(Term).
 pc_portray(Term):- 
   \+ ( nb_current('$inprint_message', Messages), Messages\==[] ), 
+  % (tracing->dumpST;true),
   \+ tracing,!,
   % dont screw up SWISH or PLDoc
   \+ toplevel_pp(swish), \+ toplevel_pp(http), % is_pp_set(_),
@@ -555,10 +573,9 @@ ec_portray_hook(Term):-
 
 color_format_maybe(_,F,A):- format(F,A),!.
 
-ec_portray(_,List):- is_list(List),!,print_tree(List).
-ec_portray(_,Term):- notrace(is_list(Term)),!,Term\==[], fail, notrace(catch(text_to_string(Term,Str),_,fail)),!,format('"~s"',[Str]).
-ec_portray(N,Term):- N =0, \+ in_pp(ansi), print_tree(Term), !.
 ec_portray(_,Term):- (\+ compound(Term);Term='$VAR'(_)),!, ec_portray_now(Term).
+%ec_portray(_,List):- is_list(List),!,print_tree(List).
+%ec_portray(_,Term):- notrace(is_list(Term)),!,Term\==[], fail, notrace(catch(text_to_string(Term,Str),_,fail)),!,format('"~s"',[Str]).
 ec_portray(_,Term):- compound(Term), compound_name_arity(Term,F,A), uses_op(F,A), !, fail.
 %ec_portray(_,Term):- compound(Term),compound_name_arity(Term, F, 0), !,color_format([bold,hfg(red)],'~q()',[F]),!.
 ec_portray(N,Term):- N > -1, N < 3, \+ is_dict(Term), ec_portray_now(Term).
@@ -575,7 +592,8 @@ ec_portray_now(Term):- atom(Term),!,color_format_maybe(hfg(blue),'~q',[Term]).
 ec_portray_now(Term):- \+ compound(Term),!, color_format_maybe(hfg(cyan),'~q',[Term]).
 %ec_portray_now(Term):- is_list(Term)
 %ec_portray_now(Term):- catch(print_tree(Term),_,fail),!.
-ec_portray_now(Term):- catch(pprint_ec_no_newline(green, Term),_,fail),!.
+%ec_portray_now(Term):- N =0, \+ in_pp(ansi),!, print_tree(Term), !.
+%ec_portray_now(Term):- catch(pprint_ec_no_newline(green, Term),_,fail),!.
 
 will_need_space(_):- fail.
 
@@ -1320,6 +1338,7 @@ print_tree_width(W120):- W120=120.
 maybe_prefix_spaces(V,Tab):- ignore(( \+ as_is(V),prefix_spaces(Tab) )).
 maybe_print_tab_term(Tab,V):- maybe_prefix_spaces(V,Tab), print_tree_no_nl( V ).
 
+:- thread_local(t_l:printing_dict/0).
 
 is_infix_op(OP):- current_op(_,XFY,OP), (yfx==XFY ; xfx==XFY ; xfy==XFY ).
 
@@ -1331,6 +1350,7 @@ pt1(_, Tab,Term) :-
   with_no_hrefs(t,(if_defined(rok_linkable(Term),fail), !,
   prefix_spaces(Tab), write_atom_link(Term))),!.
 
+
 pt1(_FS,Tab,[H|T]) :- is_codelist([H|T]), !,
    sformat(S, '`~s`', [[H|T]]),
    pformat([ps(Tab),S]).
@@ -1339,16 +1359,21 @@ pt1(_, Tab,Term) :-
    (is_arity_lt1(Term); \+ compound_gt(Term, 0)), !, 
    system_portray(Tab,Term).
 
+%t_l:printing_dict
+pt1(_FS,_Tab,(NPV)) :- NPV=..[OP,N,V], OP==(:), atomic(N),
+  writeq(N), pformat(' '), pformat(OP),pformat(' '), print_tree(V),!.
+
+
 pt1(_, Tab,Term) :- 
    as_is(Term), !,
    system_portray(Tab,Term).
    
-
+% pt1(_FS,_Tab,Term) :- is_dict(Term), ansi_ansi,!,plpp(Term),!.
 pt1(FS,Tab,Term) :- 
    is_dict(Term),
    dict_pairs(Term, Tag, Pairs), maplist(pair_to_colon,Pairs,Colons),
    prefix_spaces(Tab), pl_span_goal('functor',( print_tree_no_nl(Tag), pformat('{ '))),
-   pt_args_arglist([dict|FS],Tab+2,'','@','}',Colons),!.
+   locally(t_l:printing_dict,pt_args_arglist([dict|FS],Tab+2,'','@','}',Colons)),!.
 
 pt1(FS,Tab,List) :- List=[_|_], !,
   prefix_spaces(Tab),pformat_functor('[ '),
@@ -1377,7 +1402,8 @@ pt1(_FS,Tab,T) :-
     pformat_e_args(REST, (
        pt_list_juncts(Tab+2,OP,REST))), 
    pformat(')'),!.   
-    
+
+%t_l:printing_dict
 pt1(_FS,_Tab,(NPV)) :- NPV=..[OP,N,V], is_colon_mark(OP), atomic(N),
   writeq(N), pformat(' '), pformat(OP),pformat(' '), print_tree(V),!.
 
@@ -1532,8 +1558,8 @@ pt_args_arglist(FS,Tab,S,M,E,[H|T]):-
 
 
 write_ar_simple(_Tab,Sep,[A|R]):- 
- pformat(Sep), pformat(' '), wots(S,writeq([A|R])),
- ((atom_concat('[',MR,S),atom_concat(M,']',MR), write(M))->true
+ pformat(Sep),
+ ( (wots(S,writeq([A|R])),atom_concat('[',MR,S),atom_concat(M,']',MR), write(M))->true
  ; (write_simple(A), write_simple_each(Sep,R))).
 
 %%	between_down(+Start, ?Count, +End) is nondet.
@@ -1557,10 +1583,10 @@ rev_append(L,R,LR):- append(LL,RR,LR), (var(RR);RR \= [_|_]), !, rev_append(L,R1
 slice_eq(A, RL , [],Right):- (var(RL);RL\=[_|_];(RL=[E|_],\+ call(A,E))),!,Right=RL.
 slice_eq(A,[E|R],[E|List],Right):- slice_eq(A,R,List,Right).
 
-first_n(N,A, RL , R,Right):- first_n(N,0,A, RL ,R,Right).
 
-first_n(N,I,A, RL , [],Right):- ( \+ call(N,I);var(RL);RL\=[_|_];(RL=[E|_],\+ call(A,E))),!,Right=RL.
-first_n(N,I,A,[E|R],[E|List],Right):- II is I+1, first_n(N,II,A,R,List,Right).
+first_n(_,RL,_,_):- (var(RL);RL\=[_|_]),!,fail.
+first_n(N,RL,[],RL):- N<1,!.
+first_n(N,[E|R],[E|List],Right):- NN is N-1, first_n(NN,R,List,Right).
 
 pt_cont_args(_Ab,_Sep,_Mid,_In, Nil) :- Nil==[], !.
 pt_cont_args(Tab,_Sep, Mid, FS, A) :- (var(A) ; A \= [_|_]), !,  pformat(Mid), print_tab_term(Tab,FS,A), !.
@@ -1570,11 +1596,10 @@ pt_cont_args(Tab,Sep, Mid, FS, RL) :- RL=[A|_], is_arity_lt1(A), slice_eq(==(A),
   write_ar_simple(Tab,Sep,List), 
   ignore(( Right\==[], prefix_spaces(Tab), pt_cont_args(Tab,Sep, Mid, FS, Right))).
 
-/*
-pt_cont_args(Tab,Sep, Mid, FS, RL) :- first_n('>'(6),is_arity_lt1,RL,List,Right),List\= [_],!,
+pt_cont_args(Tab,Sep, Mid, FS, RL) :- first_n(6, RL, List,Right),List\= [_],!,
    write_ar_simple(Tab,Sep,List), 
    ignore(( Right\==[], prefix_spaces(Tab), pt_cont_args(Tab,Sep, Mid, FS, Right))).
-*/
+
 
 pt_cont_args(Tab,Sep, Mid, FS, RL) :- fail, rev_append(List,Right,RL),
    % ground(List),
@@ -1691,7 +1716,7 @@ merge_canonical_defaults(O,[],O):-!.
 
 % user:portray(Term):- in_pp(swish), print_tree(Term).
 
-user:portray(Term):- pc_portray(Term),!.
+% user:portray(Term):- pc_portray(Term),!.
 
 
 
