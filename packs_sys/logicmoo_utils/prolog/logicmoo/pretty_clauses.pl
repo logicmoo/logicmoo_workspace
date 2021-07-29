@@ -124,7 +124,7 @@ test_pp(G):-
   ttyflush,
   %test_pp(http,G),
   ttyflush,
-  %test_pp(bfly,G),
+  test_pp(bfly,G),
   ttyflush,
   %test_pp(swish,G),
   ttyflush,
@@ -555,7 +555,7 @@ ec_portray_hook(Term):-
 
 color_format_maybe(_,F,A):- format(F,A),!.
 
-%ec_portray(_,List):- is_list(List),!,print_tree(List).
+ec_portray(_,List):- is_list(List),!,print_tree(List).
 ec_portray(_,Term):- notrace(is_list(Term)),!,Term\==[], fail, notrace(catch(text_to_string(Term,Str),_,fail)),!,format('"~s"',[Str]).
 ec_portray(N,Term):- N =0, \+ in_pp(ansi), print_tree(Term), !.
 ec_portray(_,Term):- (\+ compound(Term);Term='$VAR'(_)),!, ec_portray_now(Term).
@@ -985,6 +985,8 @@ print_tree_with_final_real(Tab, Term, Final, Options):-
      set_prolog_flag(print_write_options,OldOptions)),!.
 
 
+
+print_tab_term(Term):- print_tab_term(0, Term).
 print_tab_term(Tab, Term):- without_ec_portray_hook(print_tab_term(Tab,[], Term)),!.
 print_tab_term(Tab,FS,Term) :- prefix_spaces(Tab),pt1(FS,Tab,Term).
 
@@ -1391,10 +1393,8 @@ pt1(FS,Tab,(NPV)) :- NPV=..[OP,N,V], is_colon_mark(OP),
   pl_span_goal('functor', (
     pformat(' '), pformat(OP), pformat('  '))),
     pformat_ellipsis(V),prefix_spaces(Tab+5),
-  wots(S, (
+    pl_span_goal('args', (prefix_spaces(Tab+2), print_tree( V ))),!.
     
-    pl_span_goal('args', (prefix_spaces(Tab+2), print_tree( V ))))),!,
-    write(S).
 
 pt1(_FS,Tab,T) :- fail,
    print_tree_width(W120),
@@ -1570,9 +1570,13 @@ pt_cont_args(Tab,Sep, Mid, FS, RL) :- RL=[A|_], is_arity_lt1(A), slice_eq(==(A),
   write_ar_simple(Tab,Sep,List), 
   ignore(( Right\==[], prefix_spaces(Tab), pt_cont_args(Tab,Sep, Mid, FS, Right))).
 
+/*
+pt_cont_args(Tab,Sep, Mid, FS, RL) :- first_n('>'(6),is_arity_lt1,RL,List,Right),List\= [_],!,
+   write_ar_simple(Tab,Sep,List), 
+   ignore(( Right\==[], prefix_spaces(Tab), pt_cont_args(Tab,Sep, Mid, FS, Right))).
+*/
 
-
-pt_cont_args(Tab,Sep, Mid, FS, RL) :- rev_append(List,Right,RL),
+pt_cont_args(Tab,Sep, Mid, FS, RL) :- fail, rev_append(List,Right,RL),
    % ground(List),
    is_list(List),length(List,Len),Len>1, Len<6, maplist(is_arity_lt1,List), !,
    pformat(Sep), notrace(prefix_spaces(Tab)),pformat(' '), List=[A|R], write_simple(A), write_simple_each(Sep,R),
