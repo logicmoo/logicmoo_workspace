@@ -541,7 +541,7 @@ load_before_compile_now2:-
  call_safely([
     
     baseKB:ensure_loaded(library(logicmoo_mud)),
-    dumpST,prolog_load_context(file,N),upcase_atom(N,AB),print(AB),break,   
+    %dumpST,prolog_load_context(file,N),upcase_atom(N,AB),print(AB),break,   
     baseKB:ensure_loaded(library(logicmoo_clif)),        
     %register_logicmoo_browser,
   % never_notrace,
@@ -845,7 +845,7 @@ test(div0, [error(evaluation_error(zero_divisor))]) :-
 
 %:- make:make_no_trace, make.
 
-:- break.
+%:- break.
 
 %:- autoload_all.
 %:- tdebug.

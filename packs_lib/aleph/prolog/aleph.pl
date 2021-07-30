@@ -72,7 +72,7 @@
 		rmhyp_i/1,
 		random/2,
 		aleph_random/1,
-		mode/2,
+		(mode)/2,
 		modeh/2,
 		modeb/2,
 		good_clauses/1,
