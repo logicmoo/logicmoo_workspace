@@ -1,4 +1,4 @@
-% -*- mode: Prolog coding:utf-8 -*-
+% -*- mode: Prolog; coding:utf-8 -*-
 
 % Common stuff for test_read.pl, test_write.pl
 % (Originally this just had templates, but other common predicates
@@ -7,7 +7,7 @@
 :- module(test_templates, [scalars1_template/2,
                            repeated1a_template/2,
                            packed1a_template/2,
-                           string_values/4,
+                           string_values/8,
                            assertion_eq_dict/2,
                            message_file/2,
                            read_message_codes/2,
@@ -17,6 +17,12 @@
                            print_term_stderr/2]).
 
 :- encoding(utf8).
+
+:- autoload(library(pprint)).
+:- autoload(library(debug), [assertion/1]).
+:- autoload(library(readutil), [read_file_to_codes/3]).
+:- autoload(library(protobufs)).
+:- autoload(library(lists), [nth0/3]).
 
 %! protobufs:my_enum(?Key:atom, ?Value:atom) is semidet.
 % Define the my_enum callback.
@@ -92,38 +98,43 @@ print_term_stderr(Msg, Term) :-
     print_term(Term, [output(user_error)]),
     nl(user_error).
 
-%! string_values(-S1, -S2, -S3, -S4) is det.
+%! string_values(-S1, -S2, -S3, -S4, -C1, -C2, -C3, -C4) is det.
 % Get some test strings.
 % Note: Windows version of swipl doesn't support > 0xffff, and surrogate pairs are poorly supported.
-string_values(S1, S2, S3, S4) :-
-    string_codes(S1, [0xe9, 0x63, 0x72, 0x61, 0x6e, 0x20, 0x7db2, 0x76ee, 0x9326, 0x86c7]),  % "écran 網目錦蛇"
-    string_codes(S2, [0x7db2, 0x76ee, 0x9326, 0x86c7]),  % "網目錦蛇"
-    string_codes(S3, [0x5b, 0xe0, 0x6d, 0xed, 0x6d, 0xe9, 0x20, 0x6e, 0xed, 0x73, 0x68, 0xed, 0x6b, 0xed, 0x68, 0xe9, 0xa71c, 0x62, 0xec, 0x5d, 0x20, 0x72, 0x65, 0x74, 0x69, 0x63, 0x75, 0x6c, 0x61, 0x74, 0x65, 0x64, 0x20, 0x70, 0x79, 0x74, 0x68, 0x6f, 0x6e]), % [àmímé níshíkíhéꜜbì] reticulated python"
-    string_codes(S4, [0xe0, 0x6d, 0xed, 0x6d, 0xe9, 0x20, 0x6e, 0xed, 0x73, 0x68, 0xed, 0x6b, 0xed, 0x68, 0xe9, 0xa71c, 0x62, 0xec]). % àmímé níshíkíhéꜜbì"
+string_values(S1, S2, S3, S4, C1, C2, C3, C4) :-
+    C1 = [0xe9, 0x63, 0x72, 0x61, 0x6e, 0x20, 0x7db2, 0x76ee, 0x9326, 0x86c7], % "écran 網目錦蛇"
+    C2 = [0x7db2, 0x76ee, 0x9326, 0x86c7],  % "網目錦蛇"
+    C3 = [0x5b, 0xe0, 0x6d, 0xed, 0x6d, 0xe9, 0x20, 0x6e, 0xed, 0x73, 0x68, 0xed, 0x6b, 0xed, 0x68, 0xe9, 0xa71c, 0x62, 0xec, 0x5d, 0x20, 0x72, 0x65, 0x74, 0x69, 0x63, 0x75, 0x6c, 0x61, 0x74, 0x65, 0x64, 0x20, 0x70, 0x79, 0x74, 0x68, 0x6f, 0x6e], % [àmímé níshíkíhéꜜbì] reticulated python"
+    C4 = [0xe0, 0x6d, 0xed, 0x6d, 0xe9, 0x20, 0x6e, 0xed, 0x73, 0x68, 0xed, 0x6b, 0xed, 0x68, 0xe9, 0xa71c, 0x62, 0xec], % àmímé níshíkíhéꜜbì"
+    string_codes(S1, C1),
+    string_codes(S2, C2),
+    string_codes(S3, C3),
+    string_codes(S4, C4).
 
 %! scalars1_template(-Template, -Vars:list) is det.
 % A protobufs template and the variables in it.
 scalars1_template(Template, Vars) :-
     % See test.Scalars1
     Template = protobuf([
-                         double(      1, V_double),
-                         float(       2, V_float),
-                         signed64(  103, V_int32),  % not signed32, for wire-format compatibility
-                         signed64(  127, V_int64),
-                         unsigned(  128, V_uint32),
-                         unsigned(  666, V_uint64),
-                         integer(   777, V_sint32),
-                         integer(   888, V_sint64),
-                         integer32( 999, V_fixed32),
-                         integer64(1010, V_fixed64),
-                         integer32(1011, V_sfixed32),
-                         integer64(1012, V_sfixed64),
-                         boolean(  1013, V_bool),
-                         string(   1014, V_string),
-                         codes(    1015, V_bytes),
-                         enum(     1016, my_enum(V_enum)),
-                         embedded( 9999, protobuf([string(15,  V_key),
-                                                   string(128, V_value)]))
+                         double(       1, V_double),
+                         float(        2, V_float),
+                         signed32(   103, V_int32),
+                         signed64(   127, V_int64),
+                         unsigned(   128, V_uint32),
+                         unsigned(   666, V_uint64),
+                         integer(    777, V_sint32),
+                         integer(    888, V_sint64),
+                         integer32(  999, V_fixed32),
+                         integer64( 1010, V_fixed64),
+                         integer32( 1011, V_sfixed32),
+                         integer64( 1012, V_sfixed64),
+                         boolean(   1013, V_bool),
+                         string(    1014, V_string),
+                         codes(     1015, V_bytes),
+                         enum(      1016, my_enum(V_enum)),
+                         utf8_codes(1017, V_utf8_codes),
+                         embedded(  9999, protobuf([string(15,  V_key),
+                                                    string(128, V_value)]))
                         ]),
     Vars = [                             V_double,
                                          V_float,
@@ -141,6 +152,7 @@ scalars1_template(Template, Vars) :-
                                          V_string,
                                          V_bytes,
                                          V_enum,
+                                         V_utf8_codes,
                                          V_key,
                                          V_value
            ].
@@ -150,7 +162,7 @@ repeated1a_template(Template, Vars) :-
     Template = protobuf([
                          repeated(    1, double(V_double)),
                          repeated(   12, float(V_float)),
-                         repeated( 1103, signed64(V_int32)), % not signed32, for wire-format compatibility
+                         repeated( 1103, signed32(V_int32)),
                          repeated( 1127, signed64(V_int64)),
                          repeated( 1128, unsigned(V_uint32)),
                          repeated( 1666, unsigned(V_uint64)),
@@ -164,6 +176,7 @@ repeated1a_template(Template, Vars) :-
                          repeated(11014, string(V_string)),
                          repeated(11015, codes(V_bytes)),
                          repeated(11016, enum(my_enum(V_enum))),
+                         repeated(11017, utf8_codes(V_utf8_codes)),
                          repeated_embedded(99999,
                                            protobuf([string(15, _Key),
                                                      string(128, _Value)]),
@@ -186,28 +199,30 @@ repeated1a_template(Template, Vars) :-
                                          V_string,
                                          V_bytes,
                                          V_enum,
+                                         V_utf8_codes,
                                          V_key_values
            ].
 
 packed1a_template(Template, Vars) :-
     % repeated1a_template/2, using packed where possible
     Template = protobuf([
-                         packed(    1, double(V_double)),
-                         packed(   12, float(V_float)),
-                         packed( 1103, signed64(V_int32)), % not signed32, for wire-format compatibility
-                         packed( 1127, signed64(V_int64)),
-                         packed( 1128, unsigned(V_uint32)),
-                         packed( 1666, unsigned(V_uint64)),
-                         packed( 1777, integer(V_sint32)),
-                         packed( 1888, integer(V_sint64)),
-                         packed( 1999, unsigned32(V_fixed32)),
-                         packed(11010, unsigned64(V_fixed64)),
-                         packed(11011, integer32(V_sfixed32)),
-                         packed(11012, integer64(V_sfixed64)),
-                         packed(11013, boolean(V_bool)),
+                         packed(      1, double(V_double)),
+                         packed(     12, float(V_float)),
+                         packed(   1103, signed32(V_int32)),
+                         packed(   1127, signed64(V_int64)),
+                         packed(   1128, unsigned(V_uint32)),
+                         packed(   1666, unsigned(V_uint64)),
+                         packed(   1777, integer(V_sint32)),
+                         packed(   1888, integer(V_sint64)),
+                         packed(   1999, unsigned32(V_fixed32)),
+                         packed(  11010, unsigned64(V_fixed64)),
+                         packed(  11011, integer32(V_sfixed32)),
+                         packed(  11012, integer64(V_sfixed64)),
+                         packed(  11013, boolean(V_bool)),
                          repeated(11014, string(V_string)),
                          repeated(11015, codes(V_bytes)),
-                         packed(11016, enum(my_enum(V_enum))),
+                         packed(  11016, enum(my_enum(V_enum))),
+                         repeated(11017, utf8_codes(V_utf8_codes)),
                          repeated_embedded(99999,
                                            protobuf([string(15, _Key),
                                                      string(128, _Value)]),
@@ -230,6 +245,7 @@ packed1a_template(Template, Vars) :-
                                        V_string,
                                        V_bytes,
                                        V_enum,
+                                       V_utf8_codes,
                                        V_key_values
            ].
 

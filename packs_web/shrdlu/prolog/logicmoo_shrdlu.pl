@@ -144,8 +144,13 @@ destructive_js_cvt_dict(I, P, L, Jsv):-
   ( E\==Term-> nb_setarg(I, Jsv, Term) ; true),
   N is I + P, destructive_js_cvt_dict(N, P, L, Jsv).
 
-
+into_pair(NV,N-V):- must(NV=..[_,N,V]).
 cvt_js_result_structure(Jsv, Term):- string(Jsv), cvt_js_result_ref(Jsv, Term), !.
+cvt_js_result_structure(Jsv, Term):- atom(Jsv), cvt_js_result_ref(Jsv, Term), !.
+cvt_js_result_structure(Jsv, Term):- \+ compound(Jsv),!,Jsv=Term.
+cvt_js_result_structure('@'(Jsv), Term):- !, Term=Jsv.
+cvt_js_result_structure(json(List),Term):- 
+  must_or_rtrace((maplist(into_pair,List,Pairs),dict_pairs(Jsv, _Tag, Pairs),!,cvt_js_result_structure(Jsv,Term))),!.
 cvt_js_result_structure(Jsv, Term):- compound(Jsv), Term = Jsv, destructive_js_cvt(Term), !.
 /*
  cvt_js_result_structure(Jsv, Term):- is_dict(Jsv), dict_pairs(Jsv, Tag, Pairs), !,
@@ -169,8 +174,8 @@ cvt_js_result_atom_data('', _):- !, fail.
 cvt_js_result_atom_data(Jsv, Term):- cvt_js_result_atom_data_json(Jsv, Term),!.
 cvt_js_result_atom_data(Jsv, Term):- fail, on_x_fail(atom_to_term(Jsv, Term, VS)), maplist(call, VS), !.
 %cvt_js_result_atom_data(Jsv, Jsv).
-cvt_js_result_atom_data_json(Jsv, Term):- on_x_fail(json:atom_json_dict(Jsv, Term, [as(string)])), !.
-cvt_js_result_atom_data_json(Jsv, Term):- on_x_fail(json:atom_json_term(Jsv, Term, [as(string)])), !.
+%cvt_js_result_atom_data_json(Jsv, Term):- on_x_fail(json:atom_json_dict(Jsv, Term, [as(string)])), !.
+cvt_js_result_atom_data_json(Jsv, Term):- on_x_fail(json:atom_json_term(Jsv, Term, [value_string_as(string),end_of_file(@(eof))])), !.
 %cvt_js_result_atom_data_json(Jsv, Term):- json:atom_json_term(Jsv, Term, [as(string)]), !.
 
 cvt_js_result_ref(Jsv, Term):- atom_concat("<@ ", JsvRef1, Jsv),atom_concat(JsvRef, " @>", JsvRef1), !,
@@ -240,13 +245,24 @@ show_js_test(Code):- \+ atom_contains(Code,"'"), format("~N%?- js_test('~w').~n"
 show_js_test(Code):-  \+ atom_contains(Code,'"'), format('~N%?- js_test("~w").~n',[Code]).
 show_js_test(Code):- format('~N%?- js_test(`~w`).~N',[Code]).
 
+load_theA4_obj(Obj):- 
+  js_eval(Obj,X),
+  process_theA4Game_obj(Obj, X).
+
 js_test(Code):- \+ string(Code), on_x_fail(text_to_string(Code,Str)), !, js_test(Str).
 js_test(Code):- 
   nl,
   show_js_test(Code),!,
+  
   ttyflush,
-  js_eval(Code,Result),
-  print_tab_term(Result),
+  js_eval(Code,X),
+  %print_tab_term(X),
+   \+ \+ (wots(S,(display(X))),atom_to_term(S,_,_)),!,
+   \+ \+ (wots(S,(print(X))),write(S),atom_to_term(S,_,_)),
+   nl,ttyflush,
+   \+ \+ (wots(S,(print_tree(X))),write(S),atom_to_term(S,_,_)),!,
+   nl,ttyflush,
+  process_theA4Game_obj(Code, X),
   nl,ttyflush,!.
 
 js_test:- 
@@ -258,24 +274,22 @@ js_test:-
   js_test(`Term.fromString("property.problem('etaoin'[#id], erased('etaoin-memory'[#id]))", window.theA4Game.ontology)`),
   js_test(`Term.fromString("goal(D:'player'[#id], verb.find(X, 'shrdlu'[#id]))", window.theA4Game.ontology);`),
   js_test('this.game.naturalLanguageParser.rules[0].listenerVariable'),
-  js_test("window.location.reload()"),
+  % js_test("window.location.reload()"),
   js_test(`window.theA4Game.ontology;`),
   % js_test('window.reload()'),
   !.
 
 js_test0:-
    mmake,
-   % js_eval('this.game',X),
-   js_eval('this.game.naturalLanguageParser.rules[0]',X),
-   \+ \+ (wots(S,(display(X))),atom_to_term(S,_,_)),!,
-   \+ \+ (wots(S,(print(X))),atom_to_term(S,_,_)),!.
+   js_test('this.game.naturalLanguageParser.rules[0]'),!.
 
-js_test1:- 
+js_test1:-
    mmake,
-   js_eval('this.game.naturalLanguageParser.rules[0]',X),
-  \+ \+ (wots(S,print_tree(X)),write(S),atom_to_term(S,_,_)),!.
+   js_test('this.game.naturalLanguageParser.rules'),!.
 
-:- prolog_flag(stack_limit, X),( X<2_147_483_648 -> set_prolog_flag(stack_limit, 2_147_483_648) ; true).
+
+:- Limit = 4_294_967_296, 
+  prolog_flag(stack_limit, X),( (X<Limit) -> set_prolog_flag(stack_limit, Limit) ; true).
 js_test2:- 
   mmake,
   js_eval('this.game',X),
@@ -283,11 +297,62 @@ js_test2:-
   setup_call_cleanup(open(File,write,OS), 
     with_output_to(OS,(print_tree(theA4Game(X)),write('.'))), 
     close(OS)),
-  fmt(reconsult(File)).
+  consult(File),!.
+js_test3:- process_theA4Game.
+
+:- multifile(theA4Game/1).
+:- dynamic(theA4Game/1).
+:- multifile(theA4Game/2).
+:- dynamic(theA4Game/2).
+:- multifile(theA4Game/3).
+:- dynamic(theA4Game/3).
+
+process_theA4Game_keys(Prefix,Cell,K-V):- !, \+ \+ (K=Cell,process_theA4Game(Prefix,V)).
+process_theA4Game_keys(Prefix,Cell,K=V):- \+ \+ (K=Cell,process_theA4Game(Prefix,V)).
 
 
-  
 
+process_theA4Game:- js_eval('this.game',X),!,process_theA4Game(X).
+process_theA4Game:- consult('/opt/logicmoo_workspace/packs_web/shrdlu/world.save.pl'), theA4Game(X),process_theA4Game(X).
+
+process_theA4Game_obj(Obj0,A4):- text_to_string(Obj0,Obj1),any_to_atom(Obj1,Obj), retractall(theA4Game([Obj|_],_)),process_theA4Game([Obj],A4).
+
+
+process_theA4Game(Prefix,A4):- is_dict(A4),dict_pairs(A4, _Tag, Pairs),!, append(Prefix,[Cell],PrefixCell),
+ maplist(process_theA4Game_keys(PrefixCell,Cell),Pairs).
+process_theA4Game(Prefix,A4):- is_list(A4), member(A,A4), \+ atomic(A),!,  append(Prefix,[Cell],PrefixCell), !, process_theA4Game_list(PrefixCell,Cell,0,A4).
+process_theA4Game(Prefix,element(N,Props,Subs)):-!, append(Prefix,N,PrefixN), process_theA4Game_e(PrefixN,Props,Subs).
+process_theA4Game(Prefix,A4):- retractall(theA4Game(Prefix,_)), assert(theA4Game(Prefix,A4)),
+ ((writeq(theA4Game(Prefix)),print_tree(=(A4)))).
+
+process_theA4Game_list(_,_,_,[]):-!.
+process_theA4Game_list(Prefix,Cell,N,[A4|More]):- N1 is N+1,
+  \+ \+ (Cell=N1,process_theA4Game(Prefix,A4)),
+  process_theA4Game_list(Prefix,Cell,N1,More).
+
+
+% SubElements are the Value
+process_theA4Game_e(Prefix,P,List):- member(A,List), atomic(A), A \== [],!, 
+ append(Prefix,[props(P)],PrefixP), !,process_theA4Game(PrefixP,value(P)).
+% Value is Based on props
+process_theA4Game_e(Prefix,P,List):- member(A,List), \+ ( atomic(A), A \== []),!, 
+ append(Prefix,[props(P)],PrefixP), !, maplist(process_theA4Game(PrefixP),List).
+% Value is the props
+process_theA4Game_e_l(Prefix,P,_):- 
+ append(Prefix,[Cell],PrefixCell),
+ maplist(process_theA4Game_keys(PrefixCell,Cell),P).
+
+identity_prop(tiles).
+identity_prop(name).
+identity_prop(name).
+end_of_file.
+
+process_theA4Game_e(Prefix,P,[Sub|Subs]):-
+  process_theA4Game_e(Prefix,P,Sub),
+  process_theA4Game_e(Prefix,P,Subs).
+
+process_theA4Game_e_p(Prefix,[N=V|Props],Subs):- !, process_theA4Game(Prefix,N=V),
+  process_theA4Game_e(Prefix,Props,Subs).
 
 :- fixup_exports.
 

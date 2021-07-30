@@ -155,9 +155,9 @@ abolish_notrace:- redefine_system_predicate(system:notrace/0),abolish(system:not
 never_portray:- 
    current_prolog_flag(access_level,Was),
    set_prolog_flag(access_level,system),
-   abolish(prolog:portray,1),dynamic(prolog:portray/1),
+   %abolish(prolog:portray,1),dynamic(prolog:portray/1),
    abolish(user:portray,1),dynamic(user:portray/1),
-   retractall(prolog:portray(_)),
+   %retractall(prolog:portray(_)),
    retractall(user:portray(_)),
    set_prolog_flag(access_level,Was).
 
@@ -358,6 +358,7 @@ do_setup_history:-
 
 :- before_boot(do_setup_history).
 
+
 zebra00:- [(pack(logicmoo_base/t/examples/fol/'einstein_simpler_04.pfc'))].
 % :- kif_compile.
 %:- load_library_system(library(logicmoo_nlu)).
@@ -513,6 +514,7 @@ load_before_compile_now:-
     use_module(library(logicmoo_lps)),
     use_module(library(logicmoo/butterfly_console)),
     use_module(library(logicmoo/pretty_clauses)),
+    
    %use_module(library(logicmoo_lps)),
    %set_prolog_flag(verbose_file_search,false),
    
@@ -533,10 +535,13 @@ load_before_compile_now:-
     baseKB:ensure_loaded(library(logicmoo_nlu)),!,
     load_before_compile_now2]).
 
+:- use_module(library(logicmoo_cg)).
 
 load_before_compile_now2:- 
  call_safely([
+    
     baseKB:ensure_loaded(library(logicmoo_mud)),
+    dumpST,prolog_load_context(file,N),upcase_atom(N,AB),print(AB),break,   
     baseKB:ensure_loaded(library(logicmoo_clif)),        
     %register_logicmoo_browser,
   % never_notrace,
@@ -545,8 +550,8 @@ load_before_compile_now2:-
     baseKB:ensure_loaded(library(logicmoo_cg)),
     baseKB:ensure_loaded(library(logicmoo_ec)),        
     baseKB:ensure_loaded(library('logicmoo/common_logic/common_logic_sumo.pfc')),   
-    system:reexport(pldata(kb_0988)),
-    ensure_loaded(pldata(kb_0988)),        
+    %system:reexport(pldata(kb_0988)),
+    %ensure_loaded(pldata(kb_0988)),        
     baseKB:ensure_loaded(library(narsese)),   
     use_module(library(instant_prolog_docs)),
     add_hist(start_network)]). 
@@ -721,8 +726,6 @@ skip_sandboxing:-
 
 :- skip_sandboxing.
 
-%:- break.
-
 
 
 start_all :- keep_user_module((start_network, start_rest)).
@@ -762,7 +765,6 @@ un_used:- abolish(error:permission_error,3),
 :- initialization(start_network,now).
 :- endif.
 
-
 :- load_rest.
 :- initialization(start_rest,restore).
 :- if( \+ current_prolog_flag(logicmoo_compiling,false)).
@@ -799,6 +801,31 @@ swi_ide:- use_module(library(swi_ide)),
    -> prolog_ide(thread_monitor)
     ;true).
 
+
+:- begin_tests(example_tests).
+
+test(is_set) :-
+        \+ is_set([a,a]).
+
+test(is_set, [fail]) :-
+        is_set([a,a]).
+
+test(member) :-
+        findall(X, member(X, [a,b,c]), Xs),
+        Xs == [a,b,c].
+
+test(member, all(X == [a,b,c])) :-
+        member(X, [a,b,c]).
+
+test(div0) :-
+     catch(A is 1/0, error(E, _), true),
+     E =@= evaluation_error(zero_divisor).
+
+test(div0, [error(evaluation_error(zero_divisor))]) :-
+     A is 1/0.
+
+:- end_tests(example_tests).
+
 :- add_history(swi_ide).
 :- add_history([run_mud_server]).
 :- add_history(forall(chat80(XX),run_pipeline(XX))).
@@ -813,12 +840,12 @@ swi_ide:- use_module(library(swi_ide)),
 :- add_history(search4term).
 :- add_history(edit1term).
 :- add_history(ensure_plkb0988_kb).
-:- add_history(js_test2).
+:- add_history(shrdlurn_eval:js_test2).
 %:- add_history(never_catch).
 
 %:- make:make_no_trace, make.
 
-%:- break.
+:- break.
 
 %:- autoload_all.
 %:- tdebug.

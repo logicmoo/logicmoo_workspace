@@ -1,4 +1,4 @@
-% -*- mode: Prolog coding:utf-8 -*-
+% -*- mode: Prolog; coding:utf-8 -*-
 
 % The "addressbook" example, derived from
 % https://developers.google.com/protocol-buffers/docs/pythontutorial

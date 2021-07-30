@@ -269,8 +269,8 @@ and production systems</span></a></div>
 the test suite</span></a></div>
 <div class="toc-h2"><a class="sec" href="#sec:7"><span class="sec-nr">7</span> <span class="sec-title">Auto-generating 
 tests</span></a></div>
-<div class="toc-h2"><a class="sec" href="#sec:8"><span class="sec-nr">8</span> <span class="sec-title">Coverage 
-analysis</span></a></div>
+<div class="toc-h2"><a class="sec" href="#sec:8"><span class="sec-nr">8</span> <span class="sec-title">library(test_cover): 
+Clause coverage analysis</span></a></div>
 <div class="toc-h2"><a class="sec" href="#sec:9"><span class="sec-nr">9</span> <span class="sec-title">Portability 
 of the test-suite</span></a></div>
 <div class="toc-h3"><a class="sec" href="#sec:9.1"><span class="sec-nr">9.1</span> <span class="sec-title">PlUnit 
@@ -911,68 +911,98 @@ test(reverse, [true(A==[a])]) :-
 :- end_tests(lists).
 </pre>
 
-<p><h2 id="sec:cover"><a id="sec:8"><span class="sec-nr">8</span> <span class="sec-title">Coverage 
-analysis</span></a></h2>
+<p><h2 id="sec:testcover"><a id="sec:8"><span class="sec-nr">8</span> <span class="sec-title">library(test_cover): 
+Clause coverage analysis</span></a></h2>
 
-<a id="sec:cover"></a>
+<p><a id="sec:testcover"></a>
 
-<p>An important aspect of tests is to know which parts of program is 
-used (<em>covered</em>) by the tests. An experimental analysis is 
-provided by the library <code>library(test_cover)</code>.
-
-<dl class="latex">
-<dt class="pubdef"><a id="show_coverage/1"><strong>show_coverage</strong>(<var>:Goal</var>)</a></dt>
-<dd class="defbody">
-Run <var>Goal</var> and write a report on which percentage of the 
-clauses in each file are used by the program and which percentage of the 
-clauses always fail.</dd>
-<dt class="pubdef"><a id="show_coverage/2"><strong>show_coverage</strong>(<var>:Goal, 
-+Modules</var>)</a></dt>
-<dd class="defbody">
-As <a id="idx:showcoverage1:24"></a><a class="pred" href="#show_coverage/1">show_coverage/1</a>, 
-but only report on modules in the list
-<var>Modules</var>.
+<dl class="tags">
+<dt class="tag">bug</dt>
+<dd>
+Relies heavily on SWI-Prolog internals. We have considered using a 
+meta-interpreter for this purpose, but it is nearly impossible to do 100% 
+complete meta-interpretation of Prolog. Example problem areas include 
+handling cuts in control-structures and calls from non-interpreted 
+meta-predicates.
+</dd>
+<dt class="tag">To be done</dt>
+<dd>
+Provide detailed information organised by predicate. Possibly annotate 
+the source with coverage information.
 </dd>
 </dl>
 
-<p>We illustrate this here using CHAT, a natural language question and 
-answer application by David H.D. Warren and Fernando C.N. Pereira.
+<p>The purpose of this module is to find which part of the program has 
+been used by a certain goal. Usage is defined in terms of clauses that 
+have fired, separated in clauses that succeeded at least once and 
+clauses that failed on each occasion.
 
-<pre class="code">
-1 ?- show_coverage(test_chat).
-Chat Natural Language Question Answering Test
-...
+<p>This module relies on the SWI-Prolog tracer hooks. It modifies these 
+hooks and collects the results, after which it restores the debugging 
+environment. This has some limitations:
 
-==================================================================
-                         Coverage by File
-==================================================================
-File                                        Clauses    %Cov %Fail
-==================================================================
-/staff/jan/lib/prolog/chat/xgrun.pl                5   100.0   0.0
-/staff/jan/lib/prolog/chat/newg.pl               186    89.2  18.3
-/staff/jan/lib/prolog/chat/clotab.pl              28    89.3   0.0
-/staff/jan/lib/prolog/chat/newdic.pl             275    35.6   0.0
-/staff/jan/lib/prolog/chat/slots.pl              128    74.2   1.6
-/staff/jan/lib/prolog/chat/scopes.pl             132    70.5   3.0
-/staff/jan/lib/prolog/chat/templa.pl              67    55.2   1.5
-/staff/jan/lib/prolog/chat/qplan.pl              106    75.5   0.9
-/staff/jan/lib/prolog/chat/talkr.pl               60    20.0   1.7
-/staff/jan/lib/prolog/chat/ndtabl.pl              42    59.5   0.0
-/staff/jan/lib/prolog/chat/aggreg.pl              47    48.9   2.1
-/staff/jan/lib/prolog/chat/world0.pl             131    71.8   1.5
-/staff/jan/lib/prolog/chat/rivers.pl              41   100.0   0.0
-/staff/jan/lib/prolog/chat/cities.pl              76    43.4   0.0
-/staff/jan/lib/prolog/chat/countr.pl             156   100.0   0.0
-/staff/jan/lib/prolog/chat/contai.pl             334   100.0   0.0
-/staff/jan/lib/prolog/chat/border.pl             857    98.6   0.0
-/staff/jan/lib/prolog/chat/chattop.pl            139    43.9   0.7
-==================================================================
-</pre>
+<p>
+<ul class="latex">
+<li>The performance degrades significantly (about 10 times)
+<li>It is not possible to use the debugger during coverage analysis
+<li>The cover analysis tool is currently not thread-safe.
+</ul>
 
-<p>Using <code>?- show_coverage(run_tests).</code>, this library 
-currently only shows some rough quality measure for test-suite. Later 
-versions should provide a report to the developer identifying which 
-clauses are covered, not covered and always failed.
+<p>The result is represented as a list of clause-references. As the 
+references to clauses of dynamic predicates cannot be guaranteed, these 
+are omitted from the result.
+
+<dl class="latex">
+<dt class="pubdef"><span class="pred-tag">[semidet]</span><a id="show_coverage/1"><strong>show_coverage</strong>(<var>:Goal</var>)</a></dt>
+<dt class="pubdef"><span class="pred-tag">[semidet]</span><a id="show_coverage/2"><strong>show_coverage</strong>(<var>:Goal, 
++Options</var>)</a></dt>
+<dt class="pubdef"><span class="pred-tag">[semidet]</span><a id="show_coverage/2"><strong>show_coverage</strong>(<var>:Goal, 
++Modules:list(atom)</var>)</a></dt>
+<dd class="defbody">
+Report on coverage by <var>Goal</var>. <var>Goal</var> is executed as in <span class="pred-ext">once/1</span>. <var>Options</var> 
+processed:
+
+<dl class="latex">
+<dt><strong>modules</strong>(<var>+Modules</var>)</dt>
+<dd class="defbody">
+Provide a detailed report on <var>Modules</var>. For backwards 
+compatibility this is the same as providing a list of modules in the 
+second argument.
+</dd>
+<dt><strong>annotate</strong>(<var>+Bool</var>)</dt>
+<dd class="defbody">
+Create an annotated file for the detailed results. This is implied if 
+the <code>ext</code> or <code>dir</code> option are specified.
+</dd>
+<dt><strong>ext</strong>(<var>+Ext</var>)</dt>
+<dd class="defbody">
+Extension to use for the annotated file. Default is&lsquo;.cov`.
+</dd>
+<dt><strong>dir</strong>(<var>+Dir</var>)</dt>
+<dd class="defbody">
+Dump the annotations in the given directory. If not given, the annotated 
+files are created in the same directory as the source file. Each clause 
+that is related to a physical line in the file is annotated with one of:
+<blockquote>
+<table class="latex frame-box">
+<tr><td>### </td><td>Clause was never executed. </td></tr>
+<tr><td>++N</td><td>Clause was executed N times and always succeeded </td></tr>
+<tr><td>--N</td><td>Clause was executed N times and never succeeded </td></tr>
+<tr><td>+N-M</td><td>Clause was succeeded N times and failed M times </td></tr>
+</table>
+</blockquote>
+</dd>
+</dl>
+
+</dd>
+<dt class="pubdef"><span class="pred-tag">[det]</span><a id="assert_cover/2"><strong>assert_cover</strong>(<var>+Port, 
++Frame</var>)</a></dt>
+<dd class="defbody">
+Assert coverage of the current clause. We monitor two ports: the
+<i>unify</i> port to see which clauses we entered, and the <i>exit</i> 
+port to see which completed successfully.
+</dd>
+</dl>
 
 <p><h2 id="sec:porting"><a id="sec:9"><span class="sec-nr">9</span> <span class="sec-title">Portability 
 of the test-suite</span></a></h2>
@@ -986,7 +1016,7 @@ Luckily, the specification of the test-system proposed here can be
 ported quite easily to most Prolog systems sufficiently compatible to 
 SWI-Prolog to consider porting your application. Most important is to 
 have support for
-<a id="idx:termexpansion2:25"></a><span class="pred-ext">term_expansion/2</span>.
+<a id="idx:termexpansion2:24"></a><span class="pred-ext">term_expansion/2</span>.
 
 <p>In the current system, test units are compiled into sub-modules of 
 the module in which they appear. Few Prolog systems allow for 
@@ -1047,7 +1077,7 @@ of choices</span></a></h2>
 written using declarations dealing with setup, cleanup, running and 
 testing the result. In the other extreme a test is simply a Prolog goal 
 that is supposed to succeed. We have chosen to allow for any mixture of 
-these approaches. Written down as <a id="idx:test1:26"></a><span class="pred-ext">test/1</span> 
+these approaches. Written down as <a id="idx:test1:25"></a><span class="pred-ext">test/1</span> 
 we opt for the simple succeeding goal approach. Using options to the 
 test the user can choose for a more declarative specification. The user 
 can mix both approaches.
@@ -1055,14 +1085,15 @@ can mix both approaches.
 <p>The body of the test appears at the position of a clause-body. This 
 simplifies identification of the test body and ensures proper layout and 
 colouring support from the editor without the need for explicit support 
-of the unit test module. Only clauses of <a id="idx:test1:27"></a><span class="pred-ext">test/1</span> 
-and <a id="idx:test2:28"></a><span class="pred-ext">test/2</span> may be 
+of the unit test module. Only clauses of <a id="idx:test1:26"></a><span class="pred-ext">test/1</span> 
+and <a id="idx:test2:27"></a><span class="pred-ext">test/2</span> may be 
 marked as non-called in environments that perform cross-referencing.
 
 <h1><a id="document-index">Index</a></h1>
 
 <dl>
 <dt class="index-sep">?</dt>
+<dt><a class="idx" href="#assert_cover/2">assert_cover/2</a></dt>
 <dt>assertion/1</dt>
 <dd>
 <a class="idx" href="#idx:assertion1:14">2.2.5</a> <a class="idx" href="#idx:assertion1:15">2.2.5</a></dd>
@@ -1109,8 +1140,6 @@ marked as non-called in environments that perform cross-referencing.
 <dd>
 <a class="idx" href="#idx:setof3:12">2.2.3</a></dd>
 <dt><a class="idx" href="#show_coverage/1">show_coverage/1</a></dt>
-<dd>
-<a class="idx" href="#idx:showcoverage1:24">8</a></dd>
 <dt><a class="idx" href="#show_coverage/2">show_coverage/2</a></dt>
 <dt>sort/2</dt>
 <dd>
@@ -1120,13 +1149,13 @@ marked as non-called in environments that perform cross-referencing.
 <a class="idx" href="#idx:subsumesterm2:6">2</a></dd>
 <dt>term_expansion/2</dt>
 <dd>
-<a class="idx" href="#idx:termexpansion2:25">9</a></dd>
+<a class="idx" href="#idx:termexpansion2:24">9</a></dd>
 <dt>test/1</dt>
 <dd>
-<a class="idx" href="#idx:test1:26">10</a> <a class="idx" href="#idx:test1:27">10</a></dd>
+<a class="idx" href="#idx:test1:25">10</a> <a class="idx" href="#idx:test1:26">10</a></dd>
 <dt>test/2</dt>
 <dd>
-<a class="idx" href="#idx:test2:9">2.1</a> <a class="idx" href="#idx:test2:28">10</a></dd>
+<a class="idx" href="#idx:test2:9">2.1</a> <a class="idx" href="#idx:test2:27">10</a></dd>
 <dt><a class="idx" href="#test_report/1">test_report/1</a></dt>
 <dt>throw/1</dt>
 <dd>

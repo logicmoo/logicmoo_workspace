@@ -3265,8 +3265,8 @@ max_depth_goal(Max,Var,Goal):-
 :- fixup_exports.
 
 
-:- dynamic user:portray/1.
-:- multifile user:portray/1.
+:- multifile(user:portray/1).
+:- dynamic(user:portray/1).
 %user:portray(X):- notrace((X\==[], \+ toplevel_pp(bfly), get_print_mode(html), ground(X))), max_depth_goal(0,'$rok_portray',rok_portray(X)).
 
 

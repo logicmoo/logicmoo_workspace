@@ -170,3 +170,15 @@ tar:
 
 tkdiff:
 	$(MAKE) -C ../bootstrap tkdiff
+
+coverage:
+	$(SWIPL) -g "show_coverage(run_tests, [dir(cov), annotate(true), ext('.cov'), modules([protobufs])])" -t halt test_interop.pl ../test_protobufs.pl
+	@echo '****************************************************************'
+	@echo '*                                                              *'
+	@echo "* Be sure to comment out ':-use_module(library(apply_macros))' *"
+	@echo '*                                                              *'
+	@echo '****************************************************************'
+
+# coverage_:
+# 	cd .. && \
+# 	$(SWIPL) -g "show_coverage(run_tests, [dir(cov), annotate(true), ext('.cov'), modules([protobufs])])" -t halt interop/test_interop.pl test_protobufs.pl

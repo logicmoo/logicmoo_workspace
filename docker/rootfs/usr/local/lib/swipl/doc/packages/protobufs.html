@@ -389,7 +389,7 @@ corresponding to the field names in the <code>message</code> (the dict
 tag is treated as a comment). Repeated fields are represented as lists; 
 enums are looked up and converted to atoms; bools are represented by
 <code>false</code> and <code>true</code>; strings are represented by 
-Prolog strings (not atoms); bytes are represented by lists of codes.
+Prolog strings or atoms; bytes are represented by lists of codes.
 
 <p><code>TODO</code>: Add an option to omit default values (this is the <code>proto3</code> 
 behavior).
@@ -422,9 +422,59 @@ fields that aren't in the wire stream get their default value (typically
 the empty string or zero, depending on type). Embedded messages and 
 groups are omitted if not in the wire stream; you can test for their 
 presence using
-<span class="pred-ext">get_dict/3</span>. There is no mechanism for 
-determining whether a field was in the wire stream or not (that is, 
-there is no equivalent of the Python implementation's <code>HasField</code>).
+<span class="pred-ext">get_dict/3</span>. Enums are looked up and 
+converted to atoms; bools are represented by
+<code>false</code> and <code>true</code>; strings are represented by 
+Prolog strings (not atoms); bytes are represented by lists of codes.
+
+<p>There is no mechanism for determining whether a field was in the wire 
+stream or not (that is, there is no equivalent of the Python 
+implementation's <code>HasField</code>).
+
+<p>The "oneof" feature causes a slightly different behavior. Only the 
+field that's in the wire stream gets set; the other fields are omitted. 
+And if none of the fields in the "oneof" are set, then none of the 
+fields appears. You can check which field is set by using <span class="pred-ext">get_dict/3</span>.
+
+<p>Currently, there is no special support for the protobuf "map" 
+feature. It is treated as an ordinary message field. The convenience 
+predicates <span class="pred-ext">protobuf_field_is_map/3</span> and <a class="pred" href="#protobuf_map_pairs/3">protobuf_map_pairs/3</a> 
+can be used to convert between a "map" field and a key-value list, which 
+gives you the freedom to use any kind of association list for the map. 
+See also <a class="url" href="https://github.com/SWI-Prolog/contrib-protobufs/issues/12">Issue #12</a> 
+For example:
+
+<pre class="code">
+message MapMessage {
+  map&lt;string, sint64&gt; number_ints = 5;
+}
+</pre>
+
+<p>is treated as if it is
+
+<pre class="code">
+message MapMessage {
+  message KeyValue {
+    optional string  Key = 1;
+    optional sint64  Value = 2;
+  }
+  repeated KeyValue number_ints = 5;
+}
+</pre>
+
+<p>You can handle this on input by
+
+<pre class="code">
+protobuf_parse_from_codes(WireCodes, 'MapMessage', Term),
+protobuf_map_pairs(Term.number_ints, _, Pairs).
+</pre>
+
+<p>and on output by
+
+<pre class="code">
+protobuf_map_pairs(TermNnumberInts, _, Pairs),
+protobuf_serialize_to_codes(_{number_ints:TermNumberInts}, WireCodes).
+</pre>
 
 <p><h4 id="sec:protobufs-addressbook-example"><a id="sec:1.3.3"><span class="sec-nr">1.3.3</span> <span class="sec-title">addressbook 
 example</span></a></h4>
@@ -810,7 +860,10 @@ field to have at least one item.
 <p>Also note that the handling of missing fields is slightly different 
 in proto2 and proto3 -- proto2 allows specifying a default value but 
 proto3 uses 0 and =""= as defaults for numbers and strings and omits 
-encoding any field that has one of those default values.<b>Aggregation</b> <a id="sec:protobufs-aggregation"></a>
+encoding any field that has one of those default values.
+
+<p><code>TODO</code>: determine correct behvaior for <code>oneof</code> 
+with a default field value.<b>Aggregation</b> <a id="sec:protobufs-aggregation"></a>
 
 <p>It is possible to specify homogeneous vectors of things (e.g. lists 
 of numbers) using the <code>repeated</code> attribute. You specify a 
@@ -1461,7 +1514,7 @@ in the <code>protobufs</code> module:
 <li><code>proto_meta_normalize(Unnormalized, Normalized)</code>
 <li><code>proto_meta_package(Package, FileName, Options)</code>
 <li><code>proto_meta_message_type( Fqn, Package, Name)</code>
-<li><code>protobufs:proto_meta_message_type_map_entry(Fqn)</code>
+<li><code>proto_meta_message_type_map_entry( Fqn)</code>
 <li><code>proto_meta_field_name( Fqn, FieldNumber, FieldName, FqnName)</code>
 <li><code>proto_meta_field_json_name( FqnName, JsonName)</code>
 <li><code>proto_meta_field_label( FqnName, LabelRepeatOptional) % 'LABEL_OPTIONAL', 'LABEL_REQUIRED', 'LABEL_REPEATED'</code>
@@ -1520,7 +1573,8 @@ testing whether a value was specified in <code>WireCodes</code> or given
 its default value (that is, there is no equivalent of the Python 
 implementation's =HasField`). Optional embedded messages and groups do 
 not have any default value -- you must check their existence by using <span class="pred-ext">get_dict/3</span> 
-or similar.
+or similar. If a field is part of a "oneof" set, then none of the other 
+fields is set. You can determine which field had a value by using <span class="pred-ext">get_dict/3</span>.
 <table class="arglist">
 <tr><td><var>WireCodes</var> </td><td>Wire format of the message from 
 e.g., <span class="pred-ext">read_stream_to_codes/2</span>. (The stream 
@@ -1533,12 +1587,13 @@ to <span class="pred-ext">read_stream_to_codes/2</span>.) </td></tr>
 For example, if the <code>package</code> is <code>google.protobuf</code> 
 and the message is <code>FileDescriptorSet</code>, then you would use
 <code>'.google.protobuf.FileDescriptorSet'</code> or <code>'google.protobuf.FileDescriptorSet'</code>. 
-If there's no package name, you must have a leading "." (e.g., <code>'.MyMessage'</code>). 
-You can see the message names by looking at
+If there's no package name, use e.g.: <code>'MyMessage</code> or <code>'.MyMessage'</code>. 
+You can see the packages by looking at
+<code>protobufs:proto_meta_package(Pkg,File,_)</code> and the message 
+names and fields by
 <code>protobufs:proto_meta_field_name('.google.protobuf.FileDescriptorSet', FieldNumber, FieldName, FqnName)</code> 
 (the initial&rsquo;.' is not optional for these facts, only for the 
-top-level name given to <a class="pred" href="#protobuf_parse_from_codes/3">protobuf_parse_from_codes/3</a>). 
-The initial&rsquo;.' on the message type name is optional. </td></tr>
+top-level name given to <a class="pred" href="#protobuf_serialize_to_codes/3">protobuf_serialize_to_codes/3</a>). </td></tr>
 <tr><td><var>Term</var> </td><td>The generated term, as nested <a class="url" href="/pldoc/man?section=bidicts">dict</a>s. </td></tr>
 </table>
 
@@ -1555,8 +1610,7 @@ with a newer version of <code>protoc</code>.
 <dt class="mtag">bug</dt>
 <dd>
 - Ignores <code>.proto</code> <a class="url" href="https://developers.google.com/protocol-buffers/docs/proto#extensions">extensions</a>. <br>
-- <code>oneof</code> and <code>map</code> fields are not handled 
-correctly. <br>
+- <code>map</code> fields don't get special treatment (but see <a class="pred" href="#protobuf_map_pairs/3">protobuf_map_pairs/3</a>). <br>
 - Generates fields in a different order from the C++, Python, Java 
 implementations, which use the field number to determine field order 
 whereas currently this implementation uses field name. (This isn't 
@@ -1595,12 +1649,13 @@ name is incorrect (and therefore nothing in the meta-data matches it).
 For example, if the <code>package</code> is <code>google.protobuf</code> 
 and the message is <code>FileDescriptorSet</code>, then you would use
 <code>'.google.protobuf.FileDescriptorSet'</code> or <code>'google.protobuf.FileDescriptorSet'</code>. 
-If there's no package name, you must have a leading "." (e.g., <code>'.MyMessage'</code>). 
-You can see the message names by looking at
+If there's no package name, use e.g.: <code>'MyMessage</code> or <code>'.MyMessage'</code>. 
+You can see the packages by looking at
+<code>protobufs:proto_meta_package(Pkg,File,_)</code> and the message 
+names and fields by
 <code>protobufs:proto_meta_field_name('.google.protobuf.FileDescriptorSet', FieldNumber, FieldName, FqnName)</code> 
 (the initial&rsquo;.' is not optional for these facts, only for the 
-top-level name given to <a class="pred" href="#protobuf_serialize_to_codes/3">protobuf_serialize_to_codes/3</a>). 
-The initial&rsquo;.' on the message type name is optional. </td></tr>
+top-level name given to <a class="pred" href="#protobuf_serialize_to_codes/3">protobuf_serialize_to_codes/3</a>). </td></tr>
 <tr><td><var>WireCodes</var> </td><td>Wire format of the message, which 
 can be output using
 <code>format('~s', [WireCodes])</code>. </td></tr>
@@ -1616,12 +1671,11 @@ with a newer version of <code>protoc</code>. <br>
 <dt class="tag">See also</dt>
 <dd>
 <code>library(protobufs)</code>: Google's Protocol Buffers (<a class="sec" href="#sec:1.3.1">section 
-1.3.1</a>)
-</dd>
-<dt class="tag">bug</dt>
+1.3.1</a>)</dd>
+<dt class="mtag">bug</dt>
 <dd>
-<code>oneof</code> and <code>map</code> fields are not handled 
-correctly.
+- <code>map</code> fields don't get special treatment (but see <a class="pred" href="#protobuf_map_pairs/3">protobuf_map_pairs/3</a>). <br>
+- <code>oneof</code> is not checked for validity.
 </dd>
 </dl>
 
@@ -1661,12 +1715,34 @@ you can avoid this problem.o
 </dl>
 
 </dd>
+<dt class="pubdef"><span class="pred-tag">[semidet]</span><a id="protobuf_field_is_map/2"><strong>protobuf_field_is_map</strong>(<var>+MessageType, 
++FieldName</var>)</a></dt>
+<dd class="defbody">
+Succeeds if <code>MessageType</code>&rsquo;s <code>FieldName</code> is 
+defined as a map<var>&lt;</var>...<var>&gt;</var> in the .proto file.</dd>
+<dt class="pubdef"><span class="pred-tag">[det]</span><a id="protobuf_map_pairs/3"><strong>protobuf_map_pairs</strong>(<var>+ProtobufTermList:list, 
+?DictTag:atom, ?Pairs</var>)</a></dt>
+<dd class="defbody">
+Convert between a list of protobuf map entries (in the form
+<code>DictTag{key:Key, value:Value}</code> and a key-value list as 
+described in <code>library(pairs)</code>. At least one of <code>ProtobufTermList</code> 
+and <code>Pairs</code> must be instantiated; <code>DictTag</code> can be 
+uninstantiated. If
+<code>ProtobufTermList</code> is from a term created by
+<a class="pred" href="#protobuf_parse_from_codes/3">protobuf_parse_from_codes/3</a>, 
+the ordering of the items is undefined; you can order them by using <span class="pred-ext">keysort/2</span> 
+(or by a predicate such as
+<span class="pred-ext">dict_pairs/3</span>, <span class="pred-ext">list_to_assoc/2</span>, 
+or <span class="pred-ext">list_to_rbtree/2</span>.
+</dd>
 </dl>
 
 <h1><a id="document-index">Index</a></h1>
 
 <dl>
 <dt class="index-sep">?</dt>
+<dt><a class="idx" href="#protobuf_field_is_map/2">protobuf_field_is_map/2</a></dt>
+<dt><a class="idx" href="#protobuf_map_pairs/3">protobuf_map_pairs/3</a></dt>
 <dt><a class="idx" href="#protobuf_message/2">protobuf_message/2</a></dt>
 <dt><a class="idx" href="#protobuf_message/3">protobuf_message/3</a></dt>
 <dt><a class="idx" href="#protobuf_parse_from_codes/3">protobuf_parse_from_codes/3</a></dt>

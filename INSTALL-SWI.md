@@ -77,12 +77,19 @@ cd $LOGICMOO_WS
 
 INSTALL_BASE="$LOGICMOO_WS/lib/swipl"
 
+if [[ -z "${SWI_TAG}" ]]; then
+  SWI_TAG=origin/master
+#  SWI_TAG=tags/V8.3.22
+fi
 
 if ! [ -d "$LOGICMOO_WS/swipl-devel" ]; then
 ( cd $LOGICMOO_WS
   git clone https://github.com/SWI-Prolog/swipl-devel.git swipl-devel
   cd swipl-devel  
+  git checkout $SWI_TAG .
+  git checkout $SWI_TAG
   git submodule update --init
+  git checkout $SWI_TAG --recurse-submodules
   patch -p1 --merge < /opt/logicmoo_workspace/Patch/dmiles-attvar.patch
   patch -p1 --merge < /opt/logicmoo_workspace/Patch/dmiles-save-reference-error.patch
   patch -p1 --merge < /opt/logicmoo_workspace/Patch/dmiles-no-sandbox.patch
@@ -94,8 +101,8 @@ fi
 cd swipl-devel/
 #git reset --hard HEAD
 #git clean -f -x 
-#git checkout origin/master . -f
-git pull --recurse-submodules
+#git checkout . -f
+git pull $SWI_TAG --recurse-submodules
 git status -s 
 )
 

@@ -841,7 +841,6 @@ portray_pretty_numbervars(Term):-
 
 :- multifile(user:portray/1).
 :- dynamic(user:portray/1).
-:- discontiguous(user:portray/1).
 
 user:portray(Term):- \+ tracing,
   % \+ current_prolog_flag(debug, true),

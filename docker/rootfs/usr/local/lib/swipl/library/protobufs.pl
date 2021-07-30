@@ -36,7 +36,9 @@
           [ protobuf_message/2,   % ?Template ?Codes
             protobuf_message/3,   % ?Template ?Codes ?Rest
             protobuf_parse_from_codes/3, % +WireCodes, +MessageType, -Term
-            protobuf_serialize_to_codes/3  % +Term, +MessageType, -WireCodes
+            protobuf_serialize_to_codes/3,  % +Term, +MessageType, -WireCodes
+            protobuf_field_is_map/2, % +MessageType, +FieldName
+            protobuf_map_pairs/3 % ?ProtobufTermList, ?DictTag, ?Pairs
 
             % TODO: Restore the following to the public interface, if
             %       someone needs them.  For now, the tests directly specify
@@ -67,15 +69,17 @@
             % protobuf_var_int//1,
             % protobuf_tag_type//2
           ]).
-:- autoload(library(error), [must_be/2, domain_error/2, instantiation_error/2, existence_error/2]).
+
+:- use_module(library(apply_macros)).  % autoload(library(apply), [maplist/3, foldl/4]).
+:- autoload(library(error), [must_be/2, domain_error/2, existence_error/2]).
 :- autoload(library(lists), [append/3]).
 :- autoload(library(utf8), [utf8_codes//1]).
 :- autoload(library(dif), [dif/2]).
 :- autoload(library(dcg/high_order), [sequence//2]).
-:- autoload(library(apply), [maplist/3, foldl/4]).
 :- autoload(library(when), [when/2]).
+:- autoload(library(debug), [assertion/1]). % TODO: remove
 
-% TODO: :- set_prolog_flag(optimise, true). % For arithmetic using is/2.
+:- set_prolog_flag(optimise, true). % For arithmetic using is/2.
 
 /** <module> Google's Protocol Buffers ("protobufs")
 
@@ -113,7 +117,7 @@ definition in the =protobufs= module:
    * =|proto_meta_normalize(Unnormalized, Normalized)|=
    * =|proto_meta_package(Package, FileName, Options)|=
    * =|proto_meta_message_type(                    Fqn,     Package, Name)|=
-   * =|protobufs:proto_meta_message_type_map_entry(Fqn)|=
+   * =|proto_meta_message_type_map_entry(          Fqn)|=
    * =|proto_meta_field_name(                      Fqn,     FieldNumber, FieldName, FqnName)|=
    * =|proto_meta_field_json_name(                 FqnName, JsonName)|=
    * =|proto_meta_field_label(                     FqnName, LabelRepeatOptional) % 'LABEL_OPTIONAL', 'LABEL_REQUIRED', 'LABEL_REPEATED'|=
@@ -175,7 +179,9 @@ installed at
 % value (that is, there is no equivalent of the Python
 % implementation's =HasField`). Optional embedded messages and groups
 % do not have any default value -- you must check their existence by
-% using get_dict/3 or similar.
+% using get_dict/3 or similar. If a field is part of a "oneof" set,
+% then none of the other fields is set. You can determine which field
+% had a value by using get_dict/3.
 %
 % @tbd document the generated terms (see library(http/json) and json_read_dict/3)
 % @tbd add options such as =true= and =value_string_as= (similar to json_read_dict/3)
@@ -184,7 +190,7 @@ installed at
 %       (by field number rather than by field name).
 %
 % @bug Ignores =|.proto|= [extensions](https://developers.google.com/protocol-buffers/docs/proto#extensions).
-% @bug =oneof= and =map= fields are not handled correctly.
+% @bug =map= fields don't get special treatment (but see protobuf_map_pairs/3).
 % @bug Generates fields in a different order from the C++, Python,
 %      Java implementations, which use the field number to determine
 %      field order whereas currently this implementation uses field
@@ -199,12 +205,13 @@ installed at
 %        For example, if the =package= is =google.protobuf= and the
 %        message is =FileDescriptorSet=, then you would use
 %        =|'.google.protobuf.FileDescriptorSet'|= or =|'google.protobuf.FileDescriptorSet'|=.
-%        If there's no package name, you must have a leading "." (e.g., =|'.MyMessage'|=).
-%        You can see the message names by looking at
+%        If there's no package name, use e.g.: =|'MyMessage|= or =|'.MyMessage'|=.
+%        You can see the packages by looking at
+%        =|protobufs:proto_meta_package(Pkg,File,_)|=
+%        and the message names and fields by
 %        =|protobufs:proto_meta_field_name('.google.protobuf.FileDescriptorSet',
 %        FieldNumber, FieldName, FqnName)|= (the initial '.' is not optional for these facts,
-%        only for the top-level name given to protobuf_parse_from_codes/3).
-%        The initial '.' on the message type name is optional.
+%        only for the top-level name given to protobuf_serialize_to_codes/3).
 % @param Term The generated term, as nested [dict](</pldoc/man?section=bidicts>)s.
 % @see  [library(protobufs): Google's Protocol Buffers](#protobufs-serialize-to-codes)
 % @error version_error(Module-Version) you need to recompile the =Module=
@@ -212,7 +219,10 @@ installed at
 protobuf_parse_from_codes(WireCodes, MessageType0, Term) :-
     verify_version,
     must_be(ground, MessageType0),
-    proto_meta_normalize(MessageType0, MessageType),
+    (   proto_meta_normalize(MessageType0, MessageType)
+    ->  true
+    ;   existence_error(protobuf_package, MessageType0)
+    ),
     protobuf_segment_message(Segments, WireCodes),
     % protobuf_segment_message/2 can leave choicepoints, backtracking
     % through all the possibilities would have combinatoric explosion;
@@ -243,19 +253,21 @@ verify_version :-
 % meta-data from =protoc= hasn't been loaded, or if a field name is incorrect
 % (and therefore nothing in the meta-data matches it).
 %
-% @bug =oneof= and =map= fields are not handled correctly.
+% @bug =map= fields don't get special treatment (but see protobuf_map_pairs/3).
+% @bug =oneof= is not checked for validity.
 %
 % @param Term The Prolog form of the data, as nested [dict](</pldoc/man?section=bidicts>)s.
 % @param MessageType Fully qualified message name (from the =|.proto|= file's =package= and =message=).
 %        For example, if the =package= is =google.protobuf= and the
 %        message is =FileDescriptorSet=, then you would use
 %        =|'.google.protobuf.FileDescriptorSet'|= or =|'google.protobuf.FileDescriptorSet'|=.
-%        If there's no package name, you must have a leading "." (e.g., =|'.MyMessage'|=).
-%        You can see the message names by looking at
+%        If there's no package name, use e.g.: =|'MyMessage|= or =|'.MyMessage'|=.
+%        You can see the packages by looking at
+%        =|protobufs:proto_meta_package(Pkg,File,_)|=
+%        and the message names and fields by
 %        =|protobufs:proto_meta_field_name('.google.protobuf.FileDescriptorSet',
 %        FieldNumber, FieldName, FqnName)|= (the initial '.' is not optional for these facts,
 %        only for the top-level name given to protobuf_serialize_to_codes/3).
-%        The initial '.' on the message type name is optional.
 % @param WireCodes Wire format of the message, which can be output using
 %        =|format('~s', [WireCodes])|=.
 % @see [library(protobufs): Google's Protocol Buffers](#protobufs-serialize-to-codes)
@@ -265,7 +277,10 @@ verify_version :-
 protobuf_serialize_to_codes(Term, MessageType0, WireCodes) :-
     verify_version,
     must_be(ground, MessageType0),
-    proto_meta_normalize(MessageType0, MessageType),
+    (   proto_meta_normalize(MessageType0, MessageType)
+    ->  true
+    ;   existence_error(protobuf_package, MessageType0)
+    ),
     term_to_segments(Term, MessageType, Segments),
     !, % TODO: remove
     protobuf_segment_message(Segments, WireCodes),
@@ -379,7 +394,7 @@ prolog_type(Tag, integer32) -->  protobuf_tag_type(Tag, fixed32).
 prolog_type(Tag, unsigned32) --> protobuf_tag_type(Tag, fixed32).
 prolog_type(Tag, integer) -->    protobuf_tag_type(Tag, varint).
 prolog_type(Tag, unsigned) -->   protobuf_tag_type(Tag, varint).
-%                signed32  - omitted for wire-stream compabitility
+prolog_type(Tag, signed32) -->   protobuf_tag_type(Tag, varint).
 prolog_type(Tag, signed64) -->   protobuf_tag_type(Tag, varint).
 prolog_type(Tag, boolean) -->    protobuf_tag_type(Tag, varint).
 prolog_type(Tag, enum) -->       protobuf_tag_type(Tag, varint).
@@ -535,7 +550,16 @@ packed_payload(enum, EnumSeq) -->
     { EnumSeq =.. [EnumType, Values] }, % EnumSeq = EnumType(Values)
     packed_enum(EnumType, Values).
 packed_payload(PrologType, PayloadSeq) -->
-    sequence(payload(PrologType), PayloadSeq).
+    sequence_payload(PrologType, PayloadSeq).
+
+% sequence_payload//2 (because sequence//2 isn't compile-time expanded)
+sequence_payload(PrologType, PayloadSeq) -->
+    sequence_payload_(PayloadSeq, PrologType).
+
+sequence_payload_([], _PrologType) --> [ ].
+sequence_payload_([Payload|PayloadSeq], PrologType) -->
+        payload(PrologType, Payload),
+        sequence_payload_(PayloadSeq, PrologType).
 
 packed_enum(Enum, [ A | As ]) -->
     % TODO: replace =.. with a predicate that gives all the possibilities - see detag/6.
@@ -715,14 +739,20 @@ protobuf_segment_message(Segments, WireStream) :-
     phrase(segment_message(Segments), WireStream).
 
 segment_message(Segments) -->
-    sequence(segment, Segments).
+    sequence_segment(Segments).
+
+% sequence_segment//1 (because sequence//2 isn't compile-time expanded)
+sequence_segment([]) --> [ ].
+sequence_segment([Segment|Segments]) -->
+    segment(Segment),
+    sequence_segment(Segments).
 
 segment(Segment) -->
     { nonvar(Segment) },
     !,
     % repeated(List) can be created by field_segment_scalar_or_repeated/7
     (   { Segment = repeated(Segments) }
-    ->  sequence(segment, Segments)
+    ->  sequence_segment(Segments)
     ;   { segment_type_tag(Segment, Type, Tag) },
         protobuf_tag_type(Tag, Type),
         segment(Type, Tag, Segment)
@@ -777,7 +807,7 @@ length_delimited_segment(packed(Tag,Payload), Tag, Codes) :-
     % it's more compact (I don't know whether 32-bit or 64-bit is more
     % common for floating point).
     packed_option(Type, Items, Payload),
-    phrase(sequence(payload(Type), Items), Codes).
+    phrase(sequence_payload(Type, Items), Codes).
 length_delimited_segment(length_delimited(Tag,Codes), Tag, Codes).
 
 segment_group(Tag, Segments) -->
@@ -1153,9 +1183,15 @@ int32_float32_when(Int32, Float32) :-
 
 proto_meta_enum_value_when(ContextType, EnumValue, IntValue) :-
     when((nonvar(EnumValue) ; nonvar(IntValue)),
-         proto_meta_enum_value(ContextType, EnumValue, IntValue)).
+         proto_meta_enum_value_(ContextType, EnumValue, IntValue)).
 
-% :- det(segment_to_term/3).  % TODO - test scalars1a_parse left choicepoint
+proto_meta_enum_value_(ContextType, EnumValue, IntValue) :-
+    (   proto_meta_enum_value(ContextType, EnumValue, IntValue)
+    ->  true
+    ;   existence_error(ContextType, EnumValue-IntValue)
+    ).
+
+:- det(segment_to_term/3).
 %! segment_to_term(+ContextType:atom, +Segment, -FieldAndValue) is det.
 % ContextType is the type (name) of the containing message
 % Segment is a segment from protobuf_segment_message/2
@@ -1171,7 +1207,7 @@ segment_to_term(ContextType0, Segment, FieldAndValue) =>
     !, % TODO: get rid of this?
     FieldAndValue = field_and_value(FieldName,RepeatOptional,Value).
 
-% :- det(convert_segment_packed/5). % TODO
+% :- det(convert_segment_packed/5). % TODO: "succeeded with a choicepoint"
 %! convert_segment_packed(+Type:atom, +ContextType:atom, +Tag:atom, ?Segment, ?Values) is det.
 % Reversible on =Segment=, =Values=.
 %
@@ -1227,7 +1263,7 @@ convert_segment_packed('TYPE_SINT64', _ContextType, Tag, Segment0, Values) =>
 %                        tag=Tag,
 %                        values=Values)).
 
-% :- det(convert_segment/5).  % TODO: test scalars1a_parse: proto_meta_enum_value/3 left choicepoint
+:- det(convert_segment/5).
 %! convert_segment(+Type:atom, +ContextType:atom, Tag:atom, ?Segment, ?Value) is det.
 % Compute an appropriate =Value= from the combination of descriptor
 % "type" (in =Type=) and a =Segment=.
@@ -1342,9 +1378,15 @@ add_defaulted_fields(Value0, ContextType, Value) :-
     ),
     foldl(add_empty_field_if_missing, DefaultValues, Value0, Value).
 
+%! message_field_default(+ContextType:atom, Name:atom, -DefaultValue) is semidet.
 message_field_default(ContextType, Name, DefaultValue) :-
     proto_meta_field_name(ContextType, _FieldNumber, Name, Fqn),
-    proto_meta_field_default_value(Fqn, DefaultValue).
+    proto_meta_field_default_value(Fqn, DefaultValue),
+    % If the field is part of a "oneof" group, then there will be a
+    % proto_meta_oneof entry for it (using the oneof_index). All
+    % fields have a oneof_index, but our code doesn't depend on that.
+    \+ (proto_meta_field_oneof_index(Fqn, OneofIndex),
+        proto_meta_oneof(ContextType, OneofIndex, _)).
 
 add_empty_field_if_missing(FieldName-DefaultValue, Dict0, Dict) :-
     (   get_dict(FieldName, Dict0, _)
@@ -1401,25 +1443,26 @@ combine_fields_repeat([Field-repeat-Value|Fields], Field, Values, RestFields) =>
     combine_fields_repeat(Fields, Field, Values2, RestFields).
 combine_fields_repeat(Fields, _Field, Values, RestFields) => Values = [], RestFields = Fields.
 
-% :- det(field_and_type/7). % TODO
+:- det(field_and_type/7).
 %! field_and_type(+ContextType:atom, +Tag:int, -FieldName:atom, -FqnName:atom, -ContextType2:atom, -RepeatOptional:atom, -Type:atom) is det.
 % Lookup a =ContextType= and =Tag= to get the field name, type, etc.
-field_and_type(ContextType, Tag, FieldName, FqnName, ContextType2, RepeatOptional, Type) :-
+field_and_type(ContextType, Tag, FieldName, FqnName, ContextType2, RepeatOptional, Type) =>
     assertion(ground(ContextType)), % TODO: remove
     assertion(ground(Tag)), % TODO: remove
-    % TODO: Work-around JITI not being on 1+2:
-    %       See https://swi-prolog.discourse.group/t/first-and-second-argument-indexing-which-should-be-a-first-argument/2659/5
-    %       existence_error might not be the best choice ;)
-    ( proto_meta_field_name(ContextType, Tag, FieldName, FqnName) -> true ; existence_error(ContextType, Tag) ),
-    proto_meta_field_type_name(FqnName, ContextType2),
-    fqn_repeat_optional(FqnName, RepeatOptional),
-    proto_meta_field_type(FqnName, Type).
+    (   proto_meta_field_name(ContextType, Tag, FieldName, FqnName),
+        proto_meta_field_type_name(FqnName, ContextType2),
+        fqn_repeat_optional(FqnName, RepeatOptional),
+        proto_meta_field_type(FqnName, Type)
+    ->  true % Remove choicepoint, if JITI didn't do the right thing.
+    ;   existence_error(ContextType, Tag)
+    ).
 
 %! fqn_repeat_optional(+FqnName:atom, -RepeatOptional:atom) is det.
 % Lookup up proto_meta_field_label(FqnName, _), proto_meta_field_option_packed(FqnName)
 % and set RepeatOptional to one of
 % =norepeat=, =repeat=, =repeat_packed=.
 fqn_repeat_optional(FqnName, RepeatOptional) =>
+    % TODO: existence_error if \+ proto_meta_field_label
     proto_meta_field_label(FqnName, LabelRepeatOptional),
     (   LabelRepeatOptional = 'LABEL_REPEATED',
         proto_meta_field_option_packed(FqnName)
@@ -1446,50 +1489,53 @@ field_descriptor_label_repeated('LABEL_REPEATED').
 field_descriptor_label_single('LABEL_OPTIONAL').
 field_descriptor_label_single('LABEL_REQUIRED').
 
-% :- det(term_to_segments/3).  % TODO
+:- det(term_to_segments/3).
 %! term_to_segments(+Term:dict, +MessageType:atom, Segments) is det.
 % Recursively traverse a =Term=, generating message segments
 term_to_segments(Term, MessageType, Segments) :-
     dict_pairs(Term, _, FieldValues),
     maplist(field_segment(MessageType), FieldValues, Segments).
 
-% :- det(field_segment/3). % TODO: leaves a choicepoint
+:- det(field_segment/3).
 % MessageType is the FQN of the field type (e.g., '.test.Scalars1')
 % FieldName-Value is from the dict_pairs of the term.
 % TODO: Throw an error if proto_meta_field_name/4 fails (need to make
 %       sure of all the possible uses of field_segment/3 and that
 %       nothing depends on it being able to fail without an error).
 field_segment(MessageType, FieldName-Value, Segment) :-
-    proto_meta_field_name(MessageType, Tag, FieldName, FieldFqn),
-    proto_meta_field_type(FieldFqn, FieldType),
-    proto_meta_field_type_name(FieldFqn, FieldTypeName),
-    proto_meta_field_label(FieldFqn, Label),
+    (   proto_meta_field_name(MessageType, Tag, FieldName, FieldFqn),
+        proto_meta_field_type(FieldFqn, FieldType),
+        proto_meta_field_type_name(FieldFqn, FieldTypeName),
+        proto_meta_field_label(FieldFqn, Label)
+    ->  true  % Remove choicepoint, if JITI didn't do the right thing.
+    ;   existence_error(MessageType, FieldName-Value)
+    ),
     (   proto_meta_field_option_packed(FieldFqn)
     ->  Packed = packed
     ;   Packed = not_packed
     ),
-    !, % TODO: remove
     field_segment_scalar_or_repeated(Label, Packed, FieldType, Tag, FieldTypeName, Value, Segment),
     !. % TODO: remove
 
 :- det(field_segment_scalar_or_repeated/7).
 %! field_segment_scalar_or_repeated(+Label, +Packed, +FieldType, +Tag, +FieldTypeName, ?Value, Segment) is det.
 % =FieldType= is from the =|.proto|= meta information ('TYPE_SINT32', etc.)
-field_segment_scalar_or_repeated('LABEL_OPTIONAL', not_packed, FieldType, Tag, FieldTypeName, Value, Segment) :- !,
+field_segment_scalar_or_repeated('LABEL_OPTIONAL', not_packed, FieldType, Tag, FieldTypeName, Value, Segment) =>
     convert_segment(FieldType, FieldTypeName, Tag, Segment, Value).
-field_segment_scalar_or_repeated('LABEL_REQUIRED', not_packed, FieldType, Tag, FieldTypeName, Value, Segment) :- !,  % same as LABEL_OPTIONAL
+field_segment_scalar_or_repeated('LABEL_REQUIRED', not_packed, FieldType, Tag, FieldTypeName, Value, Segment) =>  % same as LABEL_OPTIONAL
     convert_segment(FieldType, FieldTypeName, Tag, Segment, Value).
-field_segment_scalar_or_repeated('LABEL_REPEATED', packed, FieldType, Tag, FieldTypeName, Values, packed(Tag,FieldValues)) :- !,
+field_segment_scalar_or_repeated('LABEL_REPEATED', packed, FieldType, Tag, FieldTypeName, Values, Segment) =>
+    Segment = packed(Tag,FieldValues),
     maplist(convert_segment_v_s(FieldType, FieldTypeName, Tag), Values, Segments0),
     packed_list(Segments0, FieldValues).
-
-field_segment_scalar_or_repeated('LABEL_REPEATED', not_packed, FieldType, Tag, FieldTypeName, Values, repeated(Segments)) :- !,
+field_segment_scalar_or_repeated('LABEL_REPEATED', not_packed, FieldType, Tag, FieldTypeName, Values, Segment) =>
+    Segment = repeated(Segments),
     maplist(convert_segment_v_s(FieldType, FieldTypeName, Tag), Values, Segments).
-field_segment_scalar_or_repeated(Label, Packed, FieldType, Tag, FieldTypeName, Value, Segment) :- % TODO: delete this clause
-    domain_error(type(field_type=FieldType,     % TODO: this is a bit funky
-                      label=Label,
-                      packed=Packed),
-                 value(tag=Tag, field_type_name=FieldTypeName, value=Value, segment=Segment)).
+% field_segment_scalar_or_repeated(Label, Packed, FieldType, Tag, FieldTypeName, Value, Segment) :- % TODO: delete this clause
+%     domain_error(type(field_type=FieldType,     % TODO: this is a bit funky
+%                       label=Label,
+%                       packed=Packed),
+%                  value(tag=Tag, field_type_name=FieldTypeName, value=Value, segment=Segment)).
 
 convert_segment_v_s(FieldType, FieldTypeName, Tag, Value, Segment) :-
     convert_segment(FieldType, FieldTypeName, Tag, Segment, Value).
@@ -1506,6 +1552,34 @@ packed_list_([], _, _, []).
 packed_list_([T1|Ts], Functor, Tag, [X1|Xs]) :-
     detag(T1, Functor, Tag, X1, _, _),
     packed_list_(Ts, Functor, Tag, Xs).
+
+%! protobuf_field_is_map(+MessageType, +FieldName) is semidet.
+% Succeeds if =MessageType='s =FieldName= is defined as a map<...> in
+% the .proto file.
+protobuf_field_is_map(MessageType0, FieldName) :-
+    proto_meta_normalize(MessageType0, MessageType),
+    proto_meta_field_name(MessageType, _, FieldName, FieldFqn),
+    proto_meta_field_type(FieldFqn, 'TYPE_MESSAGE'),
+    proto_meta_field_label(FieldFqn, 'LABEL_REPEATED'),
+    proto_meta_field_type_name(FieldFqn, FieldTypeName),
+    proto_meta_message_type_map_entry(FieldTypeName),
+    assertion(proto_meta_field_name(FieldTypeName, 1, key, _)),
+    assertion(proto_meta_field_name(FieldTypeName, 2, value, _)),
+    !.
+
+%! protobuf_map_pairs(+ProtobufTermList:list, ?DictTag:atom, ?Pairs) is det.
+% Convert between a list of protobuf map entries (in the form
+% =|DictTag{key:Key, value:Value}|= and a key-value list as described
+% in library(pairs). At least one of =ProtobufTermList= and =Pairs=
+% must be instantiated; =DictTag= can be uninstantiated. If
+% =ProtobufTermList= is from a term created by
+% protobuf_parse_from_codes/3, the ordering of the items is undefined;
+% you can order them by using keysort/2 (or by a predicate such as
+% dict_pairs/3, list_to_assoc/2, or list_to_rbtree/2.
+protobuf_map_pairs(ProtobufTermList, DictTag, Pairs) :-
+    maplist(protobuf_dict_map_pairs(DictTag), ProtobufTermList, Pairs).
+
+protobuf_dict_map_pairs(DictTag, DictTag{key:Key,value:Value}, Key-Value).
 
 
 end_of_file.

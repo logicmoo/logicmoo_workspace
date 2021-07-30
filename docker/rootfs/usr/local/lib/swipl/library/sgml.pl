@@ -283,21 +283,13 @@ load_dtd(DTD, DtdFile, Options) :-
             close(DtdIn)),
         close(DtdOut)).
 
-split_dtd_options([], [], []).
-split_dtd_options([H|T], [H|TD], S) :-
-    dtd_option(H),
-    !,
-    split_dtd_options(T, TD, S).
-split_dtd_options([H|T], TD, [H|S]) :-
-    split_dtd_options(T, TD, S).
-
-dtd_option(dialect(_)).
-
-
 %!  destroy_dtds
 %
 %   Destroy  DTDs  cached  by  this  thread   as  they  will  become
 %   unreachable anyway.
+
+:- public
+    destroy_dtds/0.                     % called through register_cleanup/0
 
 destroy_dtds :-
     (   current_dtd(_Type, DTD),

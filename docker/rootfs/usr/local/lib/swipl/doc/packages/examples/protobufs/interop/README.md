@@ -25,6 +25,27 @@ The tests require the Python protobuf support. One way of installing it is:
 python3 -m pip install protobuf
 ```
 
+To trun these tests under the top-level SWI-Prolog `ctest` (assuming your
+sources are in `$HOME/src` and you install a local version to
+`$HOME/.local`). Note `-DTEST_PROTOBUFS_PROTOC=ON`, which adds
+the tests in this directory (and also the tests in `../demo` and `../bootstrap`).
+```
+cd $HOME/src/swipl-devel
+rm -rf build
+mkdir -p build
+cd build
+# Ensure all the targets get rebuilt:
+rm -rf packages/protobufs \
+       home/library/protobufs \
+       home/doc/packages/examples/protobufs
+# Optional: -DCMAKE_BUILD_TYPE=PGO
+cmake -DCMAKE_INSTALL_PREFIX=$HOME/.local -DTEST_PROTOBUFS_PROTOC=ON -G Ninja ..
+ninja
+ctest -j4 -R protobufs  # or: ctest -V -R protobufs:interop
+# Optional:
+# ninja install
+```
+
 ## .proto Sources
 
 When the protobuf compiler is installed, the following additional

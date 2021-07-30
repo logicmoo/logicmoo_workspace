@@ -15,6 +15,7 @@ apt install -y git screen docker docker.io
 
 DIR0="$( cd "$( dirname "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )"
 DIR0=/opt/logicmoo_workspace
+ROOT_DIRECTORY=$DIR0
 
 if [ "${TERM}" == "screen" ]; then
    echo "#* "
@@ -24,24 +25,55 @@ else
    echo "#* "
    screen -list
    echo "#* "
-  # screen -m ${BASH_SOURCE[0]} $*
-  # return 0 2>/dev/null
-  # exit 0
+  screen -m ${BASH_SOURCE[0]} $*
+  return 0 2>/dev/null ; exit 0
 fi
 
-DOCKER_COMPOSE=1
+run=1
+
+for arg in "$@"
+do
+    case $arg in
+       # --help|-h)
+       # show_lm_help
+       # return 0 2>/dev/null ; exit 0
+       # ;;
+       # --no-x)
+       # NOX=1
+       # shift
+       # ;;
+        --no-env)
+        LMENV=0
+        shift
+        ;;
+        -v|-q|-x|-e)
+        LMENV_ARG="${LMENV_ARG} $1"
+        shift
+        ;;
+        -d|--wd)
+        ROOT_DIRECTORY="$2"
+        shift # Remove argument name from processing
+        shift # Remove argument value from processing
+        ;;
+        --) shift
+        break;;
+        *)
+        export run=0
+        export $1=1
+        shift;;
+    esac
+done
 
 (
 cd $DIR0
 
 export LOGICMOO_WS=$DIR0
 
+if [ "${LMENV}" == "1" ]; then
 ./logicmoo_env.sh
+fi
 
-#find $LOGICMOO_WS/?*/ -type d -exec chmod 777 "{}" + 
-#chmod a+w -R $LOGICMOO_WS/?*/
-
-if [ "${2}" == "commit" ]; then
+if [ "${commit}" == "1" ]; then
    DOCKER_COMPOSE=0
    git config --local http.sslVerify false
    git config credential.helper 'cache --timeout=300000'
@@ -62,39 +94,33 @@ fi
 
 
 
-if [ "${1}" == "build" ]; then
-   DOCKER_COMPOSE=0
-
+if [ "${build}" == "1" ]; then
    (
       set +e +x
       cd docker
       docker build $EXTRA -t logicmoo/logicmoo_starter_image . 
-
-      if [ "${2}" == "commit" ]; then
-         docker push logicmoo/logicmoo_starter_image
-      else
-         echo MAYBE: docker push logicmoo/logicmoo_starter_image
-      fi
-      
-   )
-   
-   
-   docker build $EXTRA -t logicmoo/logicmoo_workspace .
-
-   if [ "${2}" == "commit" ]; then
-      docker push logicmoo/logicmoo_workspace
-   else
-      echo MAYBE: docker push logicmoo/logicmoo_workspace
-   fi
-
+     echo MAYBE: docker push logicmoo/logicmoo_starter_image
+   )  
 fi
 
-docker kill logicmoo 2>/dev/null ; /bin/true
-docker container rm logicmoo 2>/dev/null ; /bin/true
-docker kill logicmoo 2>/dev/null ; /bin/true
-docker container rm logicmoo 2>/dev/null ; /bin/true
-docker kill logicmoo 2>/dev/null ; /bin/true
-docker ps
+
+if [ "${push}" == "1" ]; then
+   (
+      cd docker
+     docker push logicmoo/logicmoo_starter_image
+      
+   )  
+fi
+
+if [ "${build}" == "1" ]; then
+   docker build $EXTRA -t logicmoo/logicmoo_workspace .
+   echo MAYBE: docker push logicmoo/logicmoo_workspace
+fi
+
+if [ "${push}" == "1" ]; then
+   docker push logicmoo/logicmoo_workspace
+fi
+
 
 export PORTS="-p 4000-4019:4000-4019 -p 4021-4199:4021-4199 -p 4243:443 -p 4280:80 -p 4020:3020  -p 3020:3020 -p 4222:22 -p 4220:3020 -p 4200:5900 -p 4201:9001 -p 4290:4090 -p 6079-6081:6079-6081"
 
@@ -110,12 +136,21 @@ if [ "$(hostname -d)" == "logicmoo.org" ]; then
   # exit 0
 fi
 
-
-echo "docker-compose up $DOCKER_UP"
-echo "docker run $DOCKER_RUN"
-if [ "$DOCKER_COMPOSE" == "1" ]; then
-#   docker-compose up $DOCKER_UP
-  docker run $DOCKER_RUN
+if [ "$run" == "1" ]; then
+   docker kill logicmoo 2>/dev/null ; /bin/true
+   docker container rm logicmoo 2>/dev/null ; /bin/true
+   docker kill logicmoo 2>/dev/null ; /bin/true
+   docker container rm logicmoo 2>/dev/null ; /bin/true
+   docker kill logicmoo 2>/dev/null ; /bin/true
+   docker ps
+   
+   echo "docker-compose up $DOCKER_UP"
+   echo "docker run $DOCKER_RUN"
+   if [ "$compose" == "1" ]; then
+     docker-compose up $DOCKER_UP
+   else 
+     docker run $DOCKER_RUN
+    fi
 fi
 
 )

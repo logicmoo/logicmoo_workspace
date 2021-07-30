@@ -2,8 +2,8 @@
 
 ## Installing protobuf (on Ubuntu)
 
-You can use the Ubuntu package `protobuf-compiler`, but it's dated Jul
-31, 2018.  Instead, you can clone from
+You can use the Ubuntu package `protobuf-compiler`, but it's dated
+Jul 31, 2018.  Instead, you can clone from
 https://github.com/protocolbuffers/protobuf and build using the
 instructions in `protobuf/src/README.md`. For the `./configure`
 command you may wish to use `./configure --prefix=$HOME/.local` and
@@ -15,6 +15,20 @@ There are some additional notes on this in the `Makefile`.
 TODO: These notes reflect an older stage of the bootstrap process.
 Both the notes and the Makefile need to be cleaned up, to remove
 stuff that's no longer needed.
+
+## Overview of the original bootstrap process
+
+The original bootstrap was done by using `protoc --decode` to get the
+".wiredump" files (in `protoc_gen_prolog_pb/google/protobuf/**`).
+These were then parsed by a simple DCG in
+`parse_descriptor_proto_dump.pl` to produce the ".proto.parse"
+files. The term expansion logic is in `descriptor_proto_expand.pl`,
+which was then copied to `protoc-gen-swipl`.  At this point,
+`protoc_gen_prolog_pb/google/protobuf/descriptor_pb.pl` and
+`protoc_gen_prolog_pb/google/protobuf/compiler/plugin_pb.pl` could be
+generated, and the original bootstrap code no longer needed.
+
+The tests are fairly minimal. For proper testing, see directory `interop`.
 
 
 ## descriptor.proto and friends

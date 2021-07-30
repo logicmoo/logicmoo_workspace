@@ -105,7 +105,14 @@ are omitted from the result.
 %     - dir(+Dir)
 %       Dump the annotations in the given directory.  If not
 %       given, the annotated files are created in the same
-%       directory as the source file.
+%       directory as the source file.   Each clause that is
+%       related to a physical line in the file is annotated
+%       with one of:
+%
+%         | ### | Clause was never executed.                       |
+%         | ++N | Clause was executed N times and always succeeded |
+%         | --N | Clause was executed N times and never succeeded  |
+%         | +N-M | Clause was succeeded N times and failed M times |
 
 show_coverage(Goal) :-
     show_coverage(Goal, []).
@@ -332,7 +339,7 @@ file_coverage(File, Succeeded, Failed, Options) :-
     (   list_details(File, Options),
         clean_set(SucceededInFile, Succeeded_wo_system),
         ord_union(Failed_wo_system, Succeeded_wo_system, Covered)
-    ->  detailed_report(Uncovered_wo_system, Covered, SFile, Options)
+    ->  detailed_report(Uncovered_wo_system, Covered, File, Options)
     ;   true
     ).
 file_coverage(_,_,_,_).

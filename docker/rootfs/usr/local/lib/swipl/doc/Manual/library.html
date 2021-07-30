@@ -533,32 +533,94 @@ with a limited resource.</td></tr>
 iff Rectangles are not overlapping.</td></tr>
 <tr><td><a class="pred" href="clpfd.html#element/3">element/3</a></td><td>The 
 N-th element of the list of finite domain variables Vs is V.</td></tr>
+<tr><td><a class="pred" href="clpfd.html#empty_fdset/1">empty_fdset/1</a></td><td>Set 
+is the empty FD set.</td></tr>
+<tr><td><a class="pred" href="clpfd.html#empty_interval/2">empty_interval/2</a></td><td>Min..Max 
+is an empty interval.</td></tr>
+<tr><td><a class="pred" href="clpfd.html#fd_degree/2">fd_degree/2</a></td><td>Degree 
+is the number of constraints currently attached to Var.</td></tr>
 <tr><td><a class="pred" href="clpfd.html#fd_dom/2">fd_dom/2</a></td><td>Dom 
 is the current domain (see in/2) of Var.</td></tr>
 <tr><td><a class="pred" href="clpfd.html#fd_inf/2">fd_inf/2</a></td><td>Inf 
 is the infimum of the current domain of Var.</td></tr>
+<tr><td><a class="pred" href="clpfd.html#fd_set/2">fd_set/2</a></td><td>Set 
+is the FD set representation of the current domain of Var.</td></tr>
 <tr><td><a class="pred" href="clpfd.html#fd_size/2">fd_size/2</a></td><td>Reflect 
 the current size of a domain.</td></tr>
 <tr><td><a class="pred" href="clpfd.html#fd_sup/2">fd_sup/2</a></td><td>Sup 
 is the supremum of the current domain of Var.</td></tr>
 <tr><td><a class="pred" href="clpfd.html#fd_var/1">fd_var/1</a></td><td>True 
 iff Var is a CLP(FD) variable.</td></tr>
+<tr><td><a class="pred" href="clpfd.html#fdset_add_element/3">fdset_add_element/3</a></td><td>Set2 
+is the same FD set as Set1, but with the integer Elt added.</td></tr>
+<tr><td><a class="pred" href="clpfd.html#fdset_complement/2">fdset_complement/2</a></td><td>The 
+FD set Complement is the complement of the FD set Set.</td></tr>
+<tr><td><a class="pred" href="clpfd.html#fdset_del_element/3">fdset_del_element/3</a></td><td>Set2 
+is the same FD set as Set1, but with the integer Elt removed.</td></tr>
+<tr><td><a class="pred" href="clpfd.html#fdset_disjoint/2">fdset_disjoint/2</a></td><td>The 
+FD sets Set1 and Set2 have no elements in common.</td></tr>
+<tr><td><a class="pred" href="clpfd.html#fdset_eq/2">fdset_eq/2</a></td><td>True 
+if the FD sets Set1 and Set2 are equal, i.</td></tr>
+<tr><td><a class="pred" href="clpfd.html#fdset_intersect/2">fdset_intersect/2</a></td><td>The 
+FD sets Set1 and Set2 have at least one element in common.</td></tr>
+<tr><td><a class="pred" href="clpfd.html#fdset_intersection/3">fdset_intersection/3</a></td><td>Intersection 
+is an FD set (possibly empty) of all elements that the FD sets Set1 and 
+Set2 have in common.</td></tr>
+<tr><td><a class="pred" href="clpfd.html#fdset_interval/3">fdset_interval/3</a></td><td>Interval 
+is a non-empty FD set consisting of the single interval Min..Max.</td></tr>
+<tr><td><a class="pred" href="clpfd.html#fdset_max/2">fdset_max/2</a></td><td>Max 
+is the upper bound (supremum) of the non-empty FD set Set.</td></tr>
+<tr><td><a class="pred" href="clpfd.html#fdset_member/2">fdset_member/2</a></td><td>The 
+integer Elt is a member of the FD set Set.</td></tr>
+<tr><td><a class="pred" href="clpfd.html#fdset_min/2">fdset_min/2</a></td><td>Min 
+is the lower bound (infimum) of the non-empty FD set Set.</td></tr>
+<tr><td><a class="pred" href="clpfd.html#fdset_parts/4">fdset_parts/4</a></td><td>Set 
+is a non-empty FD set representing the domain Min..Max <code>\/</code> 
+Rest, where Min..Max is a non-empty interval (see fdset_interval/3) and 
+Rest is another FD set (possibly empty).</td></tr>
+<tr><td><a class="pred" href="clpfd.html#fdset_singleton/2">fdset_singleton/2</a></td><td>Set 
+is the FD set containing the single integer Elt.</td></tr>
+<tr><td><a class="pred" href="clpfd.html#fdset_size/2">fdset_size/2</a></td><td>Size 
+is the number of elements of the FD set Set, or the atom *sup* if Set is 
+infinite.</td></tr>
+<tr><td><a class="pred" href="clpfd.html#fdset_subset/2">fdset_subset/2</a></td><td>The 
+FD set Set1 is a (non-strict) subset of Set2, i.</td></tr>
+<tr><td><a class="pred" href="clpfd.html#fdset_subtract/3">fdset_subtract/3</a></td><td>The 
+FD set Difference is Set1 with all elements of Set2 removed, i.</td></tr>
+<tr><td><a class="pred" href="clpfd.html#fdset_to_list/2">fdset_to_list/2</a></td><td>List 
+is a list containing all elements of the finite FD set Set, in ascending 
+order.</td></tr>
+<tr><td><a class="pred" href="clpfd.html#fdset_to_range/2">fdset_to_range/2</a></td><td>Domain 
+is a domain equivalent to the FD set Set.</td></tr>
+<tr><td><a class="pred" href="clpfd.html#fdset_union/2">fdset_union/2</a></td><td>The 
+FD set Union is the n-ary union of all FD sets in the list Sets.</td></tr>
+<tr><td><a class="pred" href="clpfd.html#fdset_union/3">fdset_union/3</a></td><td>The 
+FD set Union is the union of FD sets Set1 and Set2.</td></tr>
 <tr><td><a class="pred" href="clpfd.html#global_cardinality/2">global_cardinality/2</a></td><td>Global 
 Cardinality constraint.</td></tr>
 <tr><td><a class="pred" href="clpfd.html#global_cardinality/3">global_cardinality/3</a></td><td>Global 
 Cardinality constraint.</td></tr>
 <tr><td><a class="pred" href="clpfd.html#in/2">in/2</a></td><td>Var is 
 an element of Domain.</td></tr>
+<tr><td><a class="pred" href="clpfd.html#in_set/2">in_set/2</a></td><td>Var 
+is an element of the FD set Set.</td></tr>
 <tr><td><a class="pred" href="clpfd.html#indomain/1">indomain/1</a></td><td>Bind 
 Var to all feasible values of its domain on backtracking.</td></tr>
 <tr><td><a class="pred" href="clpfd.html#ins/2">ins/2</a></td><td>The 
 variables in the list Vars are elements of Domain.</td></tr>
+<tr><td><a class="pred" href="clpfd.html#is_fdset/1">is_fdset/1</a></td><td>Set 
+is currently bound to a valid FD set.</td></tr>
 <tr><td><a class="pred" href="clpfd.html#label/1">label/1</a></td><td>Equivalent 
 to labeling([], Vars).</td></tr>
 <tr><td><a class="pred" href="clpfd.html#labeling/2">labeling/2</a></td><td>Assign 
 a value to each variable in Vars.</td></tr>
 <tr><td><a class="pred" href="clpfd.html#lex_chain/1">lex_chain/1</a></td><td>Lists 
 are lexicographically non-decreasing.</td></tr>
+<tr><td><a class="pred" href="clpfd.html#list_to_fdset/2">list_to_fdset/2</a></td><td>Set 
+is an FD set containing all elements of List, which must be a list of 
+integers.</td></tr>
+<tr><td><a class="pred" href="clpfd.html#range_to_fdset/2">range_to_fdset/2</a></td><td>Set 
+is an FD set equivalent to the domain Domain.</td></tr>
 <tr><td><a class="pred" href="clpfd.html#scalar_product/4">scalar_product/4</a></td><td>True 
 iff the scalar product of Cs and Vs is in relation Rel to Expr.</td></tr>
 <tr><td><a class="pred" href="clpfd.html#serialized/2">serialized/2</a></td><td>Describes 
@@ -734,6 +796,8 @@ for the dicts_to_same_keys/3&lsquo;OnEmpty` closure that fills new cells
 with a copy of ValueIn.</td></tr>
 <tr><td><a class="pred" href="dicts.html#dict_keys/2">dict_keys/2</a></td><td>True 
 when Keys is an ordered set of the keys appearing in Dict.</td></tr>
+<tr><td><a class="pred" href="dicts.html#dict_size/2">dict_size/2</a></td><td>True 
+when KeyCount is the number of keys in Dict.</td></tr>
 <tr><td><a class="pred" href="dicts.html#dicts_join/3">dicts_join/3</a></td><td>Join 
 dicts in Dicts that have the same value for Key, provided they do not 
 have conflicting values on other keys.</td></tr>

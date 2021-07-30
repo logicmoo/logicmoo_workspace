@@ -196,11 +196,6 @@ index((list_strings), 1, check, check).
 index((list_rationals), 0, check, check).
 index((list_rationals), 1, check, check).
 index((check_old_select), 0, checkselect, checkselect).
-index((chr_show_store), 1, chr, chr).
-index((find_chr_constraint), 1, chr, chr).
-index((chr_trace), 0, chr, chr).
-index((chr_notrace), 0, chr, chr).
-index((chr_leash), 1, chr, chr).
 index((format_to_codes), 3, codesio, codesio).
 index((format_to_codes), 4, codesio, codesio).
 index((write_to_codes), 2, codesio, codesio).
@@ -297,6 +292,7 @@ index((expects_dialect), 1, prolog_dialect, dialect).
 index((exists_source), 1, prolog_dialect, dialect).
 index((source_exports), 2, prolog_dialect, dialect).
 index((dicts_same_tag), 2, dicts, dicts).
+index((dict_size), 2, dicts, dicts).
 index((dict_keys), 2, dicts, dicts).
 index((dicts_same_keys), 2, dicts, dicts).
 index((dicts_to_same_keys), 3, dicts, dicts).
@@ -505,6 +501,9 @@ index((jpl_terms_to_array), 2, jpl, jpl).
 index((jpl_array_to_terms), 2, jpl, jpl).
 index((jpl_map_element), 2, jpl, jpl).
 index((jpl_set_element), 2, jpl, jpl).
+index((language_server), 0, language_server, language_server).
+index((language_server), 1, language_server, language_server).
+index((stop_language_server), 1, language_server, language_server).
 index((lazy_list), 2, lazy_lists, lazy_lists).
 index((lazy_list), 3, lazy_lists, lazy_lists).
 index((lazy_list_materialize), 1, lazy_lists, lazy_lists).
@@ -903,6 +902,8 @@ index((protobuf_message), 2, protobufs, protobufs).
 index((protobuf_message), 3, protobufs, protobufs).
 index((protobuf_parse_from_codes), 3, protobufs, protobufs).
 index((protobuf_serialize_to_codes), 3, protobufs, protobufs).
+index((protobuf_field_is_map), 2, protobufs, protobufs).
+index((protobuf_map_pairs), 3, protobufs, protobufs).
 index((phrase_from_file), 2, pure_input, pure_input).
 index((phrase_from_file), 3, pure_input, pure_input).
 index((phrase_from_stream), 2, pure_input, pure_input).

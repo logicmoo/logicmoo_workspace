@@ -21,6 +21,9 @@ var MAX_RECONNECT_DELAY = 30000;
 		window.JSCtrl = JSCtrl;
 		jsev = new JSCtrl();
 		game = window.theA4Game;
+		// object to flat
+		objToProxy = new Map();
+		objFromProxy = new Map();
 
 		function loadjsfile(filename, datamain) {
 			/*$(jQuery).getScript( filename )
@@ -42,7 +45,7 @@ var MAX_RECONNECT_DELAY = 30000;
 		//loadjsfile("/node_modules/requirejs/require.js","/swish/js/swish");
 		//loadjsfile("/swish/node_modules/reflect-metadata/Reflect.js");
 		// loadjsfile("/swish/node_modules/class-transformer/cjs/index.js");
-		loadjsfile("eval_socket_hydrate.js");
+		//loadjsfile("eval_socket_hydrate.js");
 
 
 
@@ -182,7 +185,33 @@ var MAX_RECONNECT_DELAY = 30000;
 			return xmlhttp.responseXML.documentElement;
 		}
 
+		JSCtrl.prototype.parseRefJSON = function(json) {
+			let objToPath = new Map();
+			let pathToObj = new Map();
+			let o = JSON.parse(json);
 
+			let traverse = (parent, field) => {
+				let obj = parent;
+				let path = '#REF:$';
+
+				if (field !== undefined) {
+					obj = parent[field];
+					path = objToPath.get(parent) + (Array.isArray(parent) ? `[${field}]` : `${field?'.'+field:''}`);
+				}
+
+				objToPath.set(obj, path);
+				pathToObj.set(path, obj);
+
+				let ref = pathToObj.get(obj);
+				if (ref) parent[field] = ref;
+
+				for (let f in obj)
+					if (obj === Object(obj)) traverse(obj, f);
+			}
+
+			traverse(o);
+			return o;
+		}
 		// inspect the return result of maybeHtml
 		JSCtrl.prototype.isHtmlish = function(value, depth) {
 			if (typeof value === "string") return true;
@@ -201,10 +230,16 @@ var MAX_RECONNECT_DELAY = 30000;
 			if (typeof value0 === "undefined") {
 				return false;
 			}
-			var value = jsev.typeIfy(value0);
+			var value = value0;
 
-			if (typeof value.outerHTML === 'function') {
+			try {
+
+				//if (typeof value.outerHTML === 'function') {
 				return "+" + value.outerHTML().trim();
+				//}
+			} catch ( e ) {
+				//debugger;
+				// ignored
 			}
 
 			if (simpleMode2) return false;
@@ -228,7 +263,7 @@ var MAX_RECONNECT_DELAY = 30000;
 		}
 
 		JSCtrl.prototype.stringfyAsJson = function(value) {
-			value = jsev.typeIfy(value);
+			// value = jsev.typeIfy(value);
 			return JSON.stringify(value, jsev.refReplacer(value));
 		}
 
@@ -265,21 +300,129 @@ var MAX_RECONNECT_DELAY = 30000;
 				return val;
 			}
 		}
+
+		JSCtrl.prototype.flatten = function(obj) {
+			if (obj === null) {
+				return null;
+			}
+			if (!(typeof obj === 'object')) {
+				return obj;
+			}
+			
+			try {
+
+				//if (typeof value.outerHTML === 'function') {
+					return "+" + obj.outerHTML().trim();
+				//}
+			} catch ( e ) {
+				//debugger;
+				// ignored
+			}
+			
+			try {
+
+				//if (typeof value.outerHTML === 'function') {
+					return "+" + obj.outerHTML.trim();
+				//}
+			} catch ( e ) {
+				//debugger;
+				// ignored
+			}
+
+			var proxyMode = !simpleMode2;
+
+			var proxy = objToProxy.get(obj);
+			if (proxy) return proxy
+			// was actually a proxy
+			if (objFromProxy.get(obj)) return obj;
+		 
+			var html = jsev.maybeHtml(obj, 0);
+
+			if (jsev.isHtmlish(html)) {
+				proxy = html;
+				objToProxy.set(obj, proxy);
+				objFromProxy.set(proxy, obj);
+				return proxy;
+			} else  if (Array.isArray(obj)) {
+				proxy = [];
+				if(!proxyMode) {
+					proxy = obj
+				}
+				objToProxy.set(obj, proxy);
+				objFromProxy.set(proxy, obj);
+				for (var i = 0; i < obj.length; i++) {
+					var p = jsev.flatten(obj[i]);
+					if(proxyMode) {
+						proxy.push(p);
+					}
+				}
+				return proxy;
+			} else {
+				var cn = jsev.getClassName(obj);
+				proxy =  {}; 
+				var p = Object.getPrototypeOf(obj);
+				try {
+					
+					if(!proxyMode) {
+						proxy = obj
+					} else {
+						proxy =  Object.create(p);
+					}
+					if(!(p==null || Object.getPrototypeOf({})==p)) {
+						proxy["_prototypeOf"] = p;
+					}
+				} catch ( e ) {
+					debugger;
+				}
+				if(!proxyMode) {
+					proxy = obj
+				}
+				proxy["_className"] = cn;
+				objToProxy.set(obj, proxy);
+				objFromProxy.set(proxy, obj);
+				var errors= [];
+				for (var key in obj) {
+					try {
+						    var r = obj[key];
+							if(typeof r === "function") {
+                        	//	proxy["_function_"+ key] = ""+r;
+                        	} else {						
+	                        	if (obj.hasOwnProperty(key)) {
+	                        	   proxy[key] = jsev.flatten(obj[key]);
+							    }
+							}
+					} catch ( e ) {
+						//debugger;
+						//proxy[key] = jsev.flatten(obj[key]);
+						errors.push(e);
+						objToProxy.delete(obj);
+						objFromProxy.delete(proxy);
+						if (simpleMode) return obj;
+					}
+				}
+				//proxy["AP_className"] = cn;
+				//proxy["AP_errors"] = errors.length;
+				if(errors.length>0) proxy["_errors"] = errors.length;
+				return proxy;
+			}
 	}
 
-	jsev.connect();
 	JSCtrl.prototype.typeIfy = function(value) {
+			if (value == null) return null;
+
+			value = jsev.flatten(value);
+
 		if (simpleMode) return value;
-		if (value == null) return null;
+
 		let isComplex = value === Object(value);
 
 		// if(!isComplex) return value;
 		try {
-			if (typeof value.getClassName != "undefined") {
+				if (typeof value.theClassName != "undefined") {
 				return value;
 			}
 			var cn = jsev.getClassName(value);
-			value["getClassName"] = cn;
+				value["theClassName"] = cn;
 			value.getClassName = cn;
 			//  var obj2 = { getClassName: cn };
 			//  value = {...value, ...obj2 };
@@ -292,33 +435,10 @@ var MAX_RECONNECT_DELAY = 30000;
 	}
 
 
-	JSCtrl.prototype.parseRefJSON = function(json) {
-		let objToPath = new Map();
-		let pathToObj = new Map();
-		let o = JSON.parse(json);
 
-		let traverse = (parent, field) => {
-			let obj = parent;
-			let path = '#REF:$';
-
-			if (field !== undefined) {
-				obj = parent[field];
-				path = objToPath.get(parent) + (Array.isArray(parent) ? `[${field}]` : `${field?'.'+field:''}`);
-			}
-
-			objToPath.set(obj, path);
-			pathToObj.set(path, obj);
-
-			let ref = pathToObj.get(obj);
-			if (ref) parent[field] = ref;
-
-			for (let f in obj)
-				if (obj === Object(obj)) traverse(obj, f);
 		}
 
-		traverse(o);
-		return o;
-	}
+	jsev.connect();
 
 
 })(window)

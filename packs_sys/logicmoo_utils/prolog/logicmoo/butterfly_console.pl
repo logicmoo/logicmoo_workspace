@@ -606,5 +606,7 @@ bfly_tests:- forall(clause(bfly_test(_Name),Body),
 
 :- fixup_exports.
 
+:- multifile(user:portray/1).
+:- dynamic(user:portray/1).
 % user:portray(X):- \+ current_prolog_flag(debug, true), \+ tracing, bfly_portray(X), !.
 
