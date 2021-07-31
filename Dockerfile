@@ -154,6 +154,10 @@ MAINTAINER RUN cd $LOGICMOO_WS && set -x \
 RUN SNIPPET="export PROMPT_COMMAND='history -a' && export HISTFILE=/commandhistory/.bash_history" \
     && echo $SNIPPET >> "/root/.bashrc"
 
+MAINTAINER RUN apt-get update && apt-get install -y --allow-unauthenticated \
+ npm \
+ && npm install -g typescript
+
 #CMD $LOGICMOO_WS/StartLogicmoo.sh
 #ENTRYPOINT ["/startup_logicmoo.sh"]
 ENTRYPOINT ["/startup.sh"]
