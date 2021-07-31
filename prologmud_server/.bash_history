@@ -2005,3 +2005,22 @@ git status
 rm -rf packs_sys/logicmoo_agi/prolog/talespin-annie/.git
 git add packs_sys/logicmoo_agi/prolog/talespin-annie
 git status
+git clone https://logicmoo.org/gitlab/logicmoo/logicmoo_workspace.git/
+cd logicmoo_workspace
+git pull --recurse-submodules 
+ls
+git submodule init 
+git submodule pull 
+git submodule init 
+git submodule summary 
+git submodule update 
+git submodule update --recursive --remote
+git pull --recurse-submodules
+git submodule update --recursive --remote
+cd prologmud_server/vscode-mode
+git status
+git checkout master
+git status
+git pull
+cd ..
+git add vscode-mode/
