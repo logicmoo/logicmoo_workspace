@@ -2040,3 +2040,9 @@ java -jar ../bfg-1.14.0.jar --delete-folders swish/web/node_modules
 java -jar ../bfg-1.14.0.jar --delete-folders swish/web/node_modules/
 mkdir swish/web/node_modules/
 git add swish/web/node_modules/
+git commit -am swish/web/node_modules
+java -jar ../bfg-1.14.0.jar --delete-folders swish/web/node_modules/
+java -jar ../bfg-1.14.0.jar --delete-folders swish/web/node_modules
+java -jar ../bfg-1.14.0.jar --delete-folders node_modules
+mkdir node_modules
+git add node_modules/
