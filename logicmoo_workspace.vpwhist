@@ -1,8 +1,8 @@
 [Global]
 CurrentProject=logicmoo_workspace.vpj
 [ProjectDates]
-logicmoo_workspace.vpj=20210727065533034
-other_files.vpj=20210716235244671
+logicmoo_workspace.vpj=20210731004953773
+other_files.vpj=20210731004953773
 [ActiveConfig]
 logicmoo_workspace.vpj=Release
 packs_usr\wam_common_lisp\wamcl.vpj=,Release
