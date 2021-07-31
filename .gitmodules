@@ -7,3 +7,6 @@
 [submodule "prologmud_server/vscode-mode"]
 	path = prologmud_server/vscode-mode
 	url = https://github.com/PlanLogic/vscode-mode
+[submodule "packs_xtra/logicmoo_pldata"]
+	path = packs_xtra/logicmoo_pldata
+	url = https://logicmoo.org/gitlab/logicmoo/logicmoo_pldata.git/
