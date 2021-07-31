@@ -1,10 +1,6 @@
 [submodule "wikis/logicmoo_workspace.wiki"]
 	path = wikis/logicmoo_workspace.wiki
 	url = https://github.com/logicmoo/logicmoo_workspace.wiki
-[submodule "packs_xtra/logicmoo_pldata"]
-	path = packs_xtra/logicmoo_pldata
-	url = https://logicmoo.org/gitlab/logicmoo/logicmoo_pldata.git
-	shallow = true
 [submodule "wiki"]
 	path = wiki
 	url = https://logicmoo.org/gitlab/logicmoo/logicmoo_wiki.git
