@@ -1,0 +1,7 @@
+{
+ "compilerOptions": {
+ "outDir": "buildtest",
+ "sourceMap": false,
+ "declaration": false
+ }
+}

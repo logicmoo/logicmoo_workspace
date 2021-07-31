@@ -40,3 +40,11 @@ SHRDLU is by no means the first game to use NLP techniques. Besides the classic 
 
 - I would like to thank all the people that helped me betatest the game so far (in chronological order): Jichen Zhu, Josep Valls-Vargas, Jordi Sureda, Sam Snodgrass, Javier Torres, Adam Summerville, Ahmed Khalifa, Sri Krishna, Bayan Mashat, Pavan Kantharaju, Chris Martens, Yaqirah Rice, Zuozhi Yang, Shannen Angell, Robert Gray and every one who played my demo at AIIDE 2018 and 2019! Thank you one more time! :D
 	
+
+# codemix-vanilla-typescript
+
+Template for project creation of Typescript inside CodeMix
+
+## Contents
+
+This template project is just an example Hello World that guide you through the use of typescript and nodejs to build a very simple console application that display a Hello World!!! Greeting
