@@ -307,7 +307,8 @@ class CauseRecord {
 
 
 		
-	outerHTML() : string { return this.saveToXML();}  saveToXML() : string
+	outerHTML() : string { return this.saveToXML();}  
+	saveToXML() : string
 	{
 		if (this.cause == null) {
 			let tmp:string = "<CauseRecord term=\""+this.term.toStringXML() +"\" " +

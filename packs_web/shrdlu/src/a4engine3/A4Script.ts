@@ -1731,7 +1731,8 @@ class A4Script {
     }
 
 
-    outerHTML() : string { return this.saveToXML();}  saveToXML() : string
+    outerHTML() : string { return this.saveToXML();}  
+	saveToXML() : string
     {
         let xmlString:string = "";
         let tagClosed:boolean = false;

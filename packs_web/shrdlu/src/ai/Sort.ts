@@ -11,7 +11,8 @@ class Sort {
     }
 
 
-	outerHTML() : string { return this.saveToXML();}  saveToXML() : string {
+	outerHTML() : string { return this.saveToXML();}  
+	saveToXML() : string {
 		return '<sort name="'+ this.toString() + '" super="'+ this.parents.toString()+'"/>';
 	}		
 													  

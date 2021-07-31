@@ -561,6 +561,7 @@ without_ec_portray_hook(Goal):- exact_ec_portray_hook(1000,Goal).
 
 %pc_portray(Term):- Term==[], !, color_format_maybe(hfg(blue),'~q',[[]]).
 %pc_portray(Term):- notrace(tracing),!,ec_portray_hook(Term).
+%pc_portray(X):- is_list(X),print_tree(X).
 pc_portray(Term):- 
   \+ ( nb_current('$inprint_message', Messages), Messages\==[] ), 
   % (tracing->dumpST;true),
@@ -576,8 +577,11 @@ ec_portray_hook(Term):-
 
 color_format_maybe(_,F,A):- format(F,A),!.
 
+ec_portray(_,X):- as_is_cmpd(X),!,writeq(X).
+ec_portray(_,X):- atom(X),ansi_ansi,!,writeq(X).
+ec_portray(N,_):- N > 3,!,fail.
 ec_portray(_,Term):- (\+ compound(Term);Term='$VAR'(_)),!, ec_portray_now(Term).
-%ec_portray(_,List):- is_list(List),!,print_tree(List).
+ec_portray(N,List):- N<2, is_list(List),!,print_tree(List).
 %ec_portray(_,Term):- notrace(is_list(Term)),!,Term\==[], fail, notrace(catch(text_to_string(Term,Str),_,fail)),!,format('"~s"',[Str]).
 ec_portray(_,Term):- compound(Term), compound_name_arity(Term,F,A), uses_op(F,A), !, fail.
 %ec_portray(_,Term):- compound(Term),compound_name_arity(Term, F, 0), !,color_format([bold,hfg(red)],'~q()',[F]),!.
@@ -2837,6 +2841,4 @@ primitive_class(Class, _, _, Class).
 %:- fixup_exports.
 :- multifile(user:portray/1).
 :- dynamic(user:portray/1).
-user:portray(X):- is_list(X),print_tree(X).
-user:portray(X):- as_is_cmpd(X),writeq(X).
-% user:portray(Term):- pc_portray(Term),!.
+user:portray(Term):- notrace(pc_portray(Term)),!.

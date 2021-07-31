@@ -195,7 +195,8 @@ class A4EventRule {
     }
     
 
-    outerHTML() : string { return this.saveToXML();}  saveToXML() : string
+    outerHTML() : string { return this.saveToXML();}  
+	saveToXML() : string
     {
         let xmlString:string = "";
         if (this.once && this.executed) return xmlString;   // it has already been executed, so, no need to save it!

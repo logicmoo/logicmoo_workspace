@@ -775,7 +775,8 @@ class InterruptibleResolution
 	}
 
 
-	outerHTML() : string { return this.saveToXML();}  saveToXML() : string
+	// the JSON stringify does better outerHTML() : string { return this.saveToXML();}  
+	saveToXML() : string
 	{
 		let str:string = "<InterruptibleResolution>\n";
 

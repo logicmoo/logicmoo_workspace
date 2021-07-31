@@ -22,7 +22,8 @@ class A4MapTile {
 	}
 
 
-    outerHTML() : string { return this.saveToXML();}  saveToXML() : string
+    outerHTML() : string { return this.saveToXML();}  
+	saveToXML() : string
     {
         let xmlString:string = "<tile ID=\"" + this.ID + "\" tiles=\"";
         let first:boolean = true;
