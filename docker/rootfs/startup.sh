@@ -134,7 +134,7 @@ ln -s $LOGICMOO_WS/docker/rootfs/etc/apache2/ssl /etc/apache2/ssl
 mv /etc/supervisor /etc/supervisor.dist
 ln -s $LOGICMOO_WS/docker/rootfs/etc/supervisor /etc/supervisor
 mv /root /root.dist
-ln -s $LOGICMOO_WS/packs_sys/prologmud_samples/prolog/prologmud_sample_games/ /root
+ln -s $LOGICMOO_WS/prologmud_server /root
 chown -R prologmud_server:www-data /root
 
 mv /usr/share/emacs/26.3 /usr/share/emacs/26.3.dead

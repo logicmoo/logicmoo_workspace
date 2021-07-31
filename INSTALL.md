@@ -83,8 +83,8 @@ if [[ ! -d /opt/logicmoo_workspace ]]; then
  mkdir -p /opt
  cd /opt 
  git config --global http.sslVerify false \
- echo "git clone https://github.com/logicmoo/logicmoo_workspace"
- git clone https://github.com/logicmoo/logicmoo_workspace 
+ echo "git clone --recurse-submodules https://github.com/logicmoo/logicmoo_workspace"
+ git clone --recurse-submodules https://github.com/logicmoo/logicmoo_workspace 
  cd /opt/logicmoo_workspace
 else
  cd /opt/logicmoo_workspace
@@ -92,7 +92,7 @@ else
  git pull
 fi
 
-apt install git-lfs
+#apt install git-lfs
 
 git config --local http.sslVerify false
 # git config --global http.sslVerify false
@@ -106,8 +106,8 @@ git remote add --track master gitlab https://logicmoo.org/gitlab/logicmoo/logicm
 
 echo "git submodule update --init"
 git submodule update --init
-git submodule foreach --recursive bash -c "git fetch --unshallow ; /bin/true"
-git submodule foreach --recursive bash -c "git lfs pull ; /bin/true"
+#git submodule foreach --recursive bash -c "git fetch --unshallow ; /bin/true"
+#git submodule foreach --recursive bash -c "git lfs pull ; /bin/true"
 git pull --recurse-submodules
 
 
