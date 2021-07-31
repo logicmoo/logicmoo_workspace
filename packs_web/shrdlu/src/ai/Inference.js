@@ -765,7 +765,7 @@ var InterruptibleResolution = /** @class */ (function () {
         }
         return lengths;
     };
-    InterruptibleResolution.prototype.outerHTML = function () { return this.saveToXML(); };
+    // the JSON stringify does better outerHTML() : string { return this.saveToXML();}  
     InterruptibleResolution.prototype.saveToXML = function () {
         var str = "<InterruptibleResolution>\n";
         // ...
