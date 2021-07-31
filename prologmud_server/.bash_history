@@ -2024,3 +2024,19 @@ git status
 git pull
 cd ..
 git add vscode-mode/
+git commit -am "vscode-mode updates"
+git push
+cd ..
+mv ../logicmoo_workspace~/bin/bfg-1.14.0.jar .
+java -jar bfg-1.14.0.jar --help
+java -jar bfg-1.14.0.jar --delete-folders packs_web/node_modules
+java -jar bfg-1.14.0.jar --delete-folder packs_web/node_modules
+java -jar bfg-1.14.0.jar --delete-folders packs_web/node_modules
+java -jar bfg-1.14.0.jar --delete-folders ./packs_web/node_modules
+cd packs_web/
+java -jar bfg-1.14.0.jar --delete-folders node_modules
+java -jar ../bfg-1.14.0.jar --delete-folders node_modules
+java -jar ../bfg-1.14.0.jar --delete-folders swish/web/node_modules
+java -jar ../bfg-1.14.0.jar --delete-folders swish/web/node_modules/
+mkdir swish/web/node_modules/
+git add swish/web/node_modules/
