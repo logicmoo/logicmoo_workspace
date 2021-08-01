@@ -441,7 +441,7 @@ simplify_goal_printed(call_term_expansion(_,A,_,B,_),O):- !, simplify_goal_print
 %simplify_goal_printed(A,'...'(SA)):- atom(A),concat_atom([_,SA1|SA2],'logicmoo_',A),!,(SA2==[]->SA=SA1;SA=SA2).
 simplify_goal_printed(GOAL=A,AS):- goal==GOAL,!,simplify_goal_printed(A,AS).
 simplify_goal_printed(Var,Var):- \+ compound(Var),!.
-simplify_goal_printed(P,O):- compound(P),compound_name_arguments(P,F,[I]),
+simplify_goal_printed(P,O):- compound(P), \+ is_dict(P),compound_name_arguments(P,F,[I]),
   atom_contains(F,must),!,simplify_goal_printed(I,O).
 simplify_goal_printed(term_position(_,_,_,_,_),'$..term_position/4..$').
 %simplify_goal_printed(user:G,GS):-!,simplify_goal_printed(G,GS).

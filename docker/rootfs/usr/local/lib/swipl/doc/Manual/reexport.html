@@ -241,12 +241,12 @@ modules from other modules</span></a></h2>
 <p>The predicates in this section are intended to create new modules 
 from the content of other modules. Below is an example to define a
 <em>composite</em> module. The example exports all public predicates of <code>module_1</code>, <code>module_2</code> 
-and <code>module_3</code>, <a id="idx:pred1:1983"></a><span class="pred-ext">pred/1</span> 
+and <code>module_3</code>, <a id="idx:pred1:1990"></a><span class="pred-ext">pred/1</span> 
 from <code>module_4</code>, all predicates from <code>module_5</code> 
 except
-<a id="idx:donotuse1:1984"></a><span class="pred-ext">do_not_use/1</span> 
+<a id="idx:donotuse1:1991"></a><span class="pred-ext">do_not_use/1</span> 
 and all predicates from <code>module_6</code> while renaming
-<a id="idx:pred1:1985"></a><span class="pred-ext">pred/1</span> into <a id="idx:mypred1:1986"></a><span class="pred-ext">mypred/1</span>.
+<a id="idx:pred1:1992"></a><span class="pred-ext">pred/1</span> into <a id="idx:mypred1:1993"></a><span class="pred-ext">mypred/1</span>.
 
 <pre class="code">
 :- module(my_composite, []).
@@ -262,13 +262,13 @@ and all predicates from <code>module_6</code> while renaming
 <dl class="latex">
 <dt class="pubdef"><a id="reexport/1"><strong>reexport</strong>(<var>+Files</var>)</a></dt>
 <dd class="defbody">
-Load and import predicates as <a id="idx:usemodule1:1987"></a><a class="pred" href="import.html#use_module/1">use_module/1</a> 
+Load and import predicates as <a id="idx:usemodule1:1994"></a><a class="pred" href="import.html#use_module/1">use_module/1</a> 
 and re-export all imported predicates. The reexport declarations must 
 immediately follow the module declaration.</dd>
 <dt class="pubdef"><a id="reexport/2"><strong>reexport</strong>(<var>+File, 
 +Import</var>)</a></dt>
 <dd class="defbody">
-Import from <var>File</var> as <a id="idx:usemodule2:1988"></a><a class="pred" href="import.html#use_module/2">use_module/2</a> 
+Import from <var>File</var> as <a id="idx:usemodule2:1995"></a><a class="pred" href="import.html#use_module/2">use_module/2</a> 
 and re-export the imported predicates. The reexport declarations must 
 immediately follow the module declaration.
 </dd>

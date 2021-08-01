@@ -23,6 +23,8 @@
 		<graphicFile file="vehicles.png"/>
 		<graphicFile file="player-suit.png"/>
 		<graphicFile file="player-suit-helmet.png"/>
+        <graphicFile file="woman.png"/>
+        <graphicFile file="woman_4.png"/>
 
 		<!-- Floors: -->
 		<tile ID="0" tiles="0"/>

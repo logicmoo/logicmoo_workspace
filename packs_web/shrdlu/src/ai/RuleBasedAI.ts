@@ -2605,7 +2605,8 @@ class RuleBasedAI {
 	}
 
 
-	outerHTML() : string { return this.saveToXML();}  saveToXML() : string
+	outerHTML() : string { return this.saveToXML();}  
+	saveToXML() : string
 	{
 		let str:string = "<RuleBasedAI timeInSeconds=\""+this.timeStamp+"\" "+
 									  "questionPatienceTimmer=\""+this.questionPatienceTimmer+"\">\n";

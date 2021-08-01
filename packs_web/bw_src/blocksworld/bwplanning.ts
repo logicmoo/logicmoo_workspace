@@ -308,7 +308,7 @@ class BWPlannerState {
 
 					let id:TermAttribute = predicate.attributes[1];
 					if (id instanceof VariableTermAttribute) {
-						return [[[id, new ConstantTermAttribute(this.bw.objects[this.objectInArm].ID, BWPlanner.s_id_sort)]]];
+						return [[[id, new ConstantTermAttribute(this.bw.objects[this.objectInArm].ID, BWPlanner4.s_id_sort)]]];
 					} else if (id instanceof ConstantTermAttribute) {
 						if ((<ConstantTermAttribute>id).value == this.bw.objects[this.objectInArm].ID) {
 							return [[]];
@@ -364,7 +364,7 @@ class BWPlannerState {
 						let bindings:[VariableTermAttribute,TermAttribute][][] = [];
 						for(let idx:number = 0; idx<this.x.length; idx++) {
 							if (this.bw.objects[idx].type == predicate.functor.name) {
-								bindings.push([[id, new ConstantTermAttribute(this.bw.objects[idx].ID, BWPlanner.s_id_sort)]]);
+								bindings.push([[id, new ConstantTermAttribute(this.bw.objects[idx].ID, BWPlanner4.s_id_sort)]]);
 							}
 						}
 						return bindings;
@@ -389,7 +389,7 @@ class BWPlannerState {
 						let bindings:[VariableTermAttribute,TermAttribute][][] = [];
 						for(let idx:number = 0; idx<this.x.length; idx++) {
 							if (this.bw.objects[idx].size == predicate.functor.name) {
-								bindings.push([[id, new ConstantTermAttribute(this.bw.objects[idx].ID, BWPlanner.s_id_sort)]]);
+								bindings.push([[id, new ConstantTermAttribute(this.bw.objects[idx].ID, BWPlanner4.s_id_sort)]]);
 							}
 						}
 						return bindings;
@@ -426,7 +426,7 @@ class BWPlannerState {
 						let bindings:[VariableTermAttribute,TermAttribute][][] = [];
 						for(let idx:number = 0; idx<this.x.length; idx++) {
 							if (this.bw.objects[idx].color == color) {
-								bindings.push([[a1, new ConstantTermAttribute(this.bw.objects[idx].ID, BWPlanner.s_id_sort)]]);
+								bindings.push([[a1, new ConstantTermAttribute(this.bw.objects[idx].ID, BWPlanner4.s_id_sort)]]);
 							}
 						}
 						return bindings;
@@ -442,7 +442,7 @@ class BWPlannerState {
 						let bindings:[VariableTermAttribute,TermAttribute][][] = [];
 						for(let idx:number = 0; idx<this.x.length; idx++) {
 							let color:string = this.bw.objects[idx].color;
-							bindings.push([[a1, new ConstantTermAttribute(this.bw.objects[idx].ID, BWPlanner.s_id_sort)],
+							bindings.push([[a1, new ConstantTermAttribute(this.bw.objects[idx].ID, BWPlanner4.s_id_sort)],
 										   [a2, new ConstantTermAttribute(color, o.getSort(color))]]);
 						}
 						return bindings;
@@ -471,7 +471,7 @@ class BWPlannerState {
 						let bindings:[VariableTermAttribute,TermAttribute][][] = [];
 						for(let idx:number = 0; idx<this.x.length; idx++) {
 							if (this.bw.objects[idx].shape == shape) {
-								bindings.push([[a1, new ConstantTermAttribute(this.bw.objects[idx].ID, BWPlanner.s_id_sort)]]);
+								bindings.push([[a1, new ConstantTermAttribute(this.bw.objects[idx].ID, BWPlanner4.s_id_sort)]]);
 							}
 						}
 						return bindings;
@@ -492,7 +492,7 @@ class BWPlannerState {
 						for(let idx:number = 0; idx<this.x.length; idx++) {
 							let shape:string = this.bw.objects[idx].shape;
 							if (shape != null) {
-								bindings.push([[a1, new ConstantTermAttribute(this.bw.objects[idx].ID, BWPlanner.s_id_sort)],
+								bindings.push([[a1, new ConstantTermAttribute(this.bw.objects[idx].ID, BWPlanner4.s_id_sort)],
 											   [a2, new ConstantTermAttribute(shape, o.getSort(shape))]]);
 							}
 						}
@@ -549,7 +549,7 @@ class BWPlannerState {
 			let bindings:[VariableTermAttribute,TermAttribute][][] = [];
 			for(let idx1:number = 0; idx1<this.x.length; idx1++) {
 				if (f(idx1, this.bw.idHash[id2], this)) {
-					bindings.push([[a1, new ConstantTermAttribute(this.bw.objects[idx1].ID, BWPlanner.s_id_sort)]]);
+					bindings.push([[a1, new ConstantTermAttribute(this.bw.objects[idx1].ID, BWPlanner4.s_id_sort)]]);
 				}
 			}
 			return bindings;
@@ -559,7 +559,7 @@ class BWPlannerState {
 			let bindings:[VariableTermAttribute,TermAttribute][][] = [];
 			for(let idx2:number = 0; idx2<this.x.length; idx2++) {
 				if (f(this.bw.idHash[id1], idx2, this)) {
-					bindings.push([[a2, new ConstantTermAttribute(this.bw.objects[idx2].ID, BWPlanner.s_id_sort)]]);
+					bindings.push([[a2, new ConstantTermAttribute(this.bw.objects[idx2].ID, BWPlanner4.s_id_sort)]]);
 				}
 			}
 			return bindings;
@@ -569,8 +569,8 @@ class BWPlannerState {
 			for(let idx1:number = 0; idx1<this.x.length; idx1++) {
 				for(let idx2:number = 0; idx2<this.x.length; idx2++) {
 					if (f(idx1, idx2, this)) {
-						bindings.push([[a1, new ConstantTermAttribute(this.bw.objects[idx1].ID, BWPlanner.s_id_sort)],
-									   [a2, new ConstantTermAttribute(this.bw.objects[idx2].ID, BWPlanner.s_id_sort)]]);
+						bindings.push([[a1, new ConstantTermAttribute(this.bw.objects[idx1].ID, BWPlanner4.s_id_sort)],
+									   [a2, new ConstantTermAttribute(this.bw.objects[idx2].ID, BWPlanner4.s_id_sort)]]);
 					}
 				}
 			}
@@ -745,7 +745,7 @@ class BWPlannerStackNode {
 }
 
 
-class BWPlanner {
+class BWPlanner4 {
 	constructor(bw:ShrdluBlocksWorld, o:Ontology, goal:PlanningCondition, maxDepth:number) {
 		this.bw = bw;
 		this.o = o;
@@ -759,8 +759,8 @@ class BWPlanner {
 			this.stack.push(new BWPlannerStackNode());
 		}
 		this.result = null;
-		if (BWPlanner.s_id_sort == null) {
-			BWPlanner.s_id_sort = o.getSort("#id");
+		if (BWPlanner4.s_id_sort == null) {
+			BWPlanner4.s_id_sort = o.getSort("#id");
 		}
 	}
 

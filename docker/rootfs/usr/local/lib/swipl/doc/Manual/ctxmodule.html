@@ -240,7 +240,7 @@ predicates: definition and context module</span></a></h2>
 
 <p><i>The&lsquo;module-transparent' mechanism is still underlying the 
 actual implementation. Direct usage by programmers is deprecated. Please 
-use <a id="idx:metapredicate1:2009"></a><a class="pred" href="metapred.html#meta_predicate/1">meta_predicate/1</a> 
+use <a id="idx:metapredicate1:2016"></a><a class="pred" href="metapred.html#meta_predicate/1">meta_predicate/1</a> 
 to deal with meta-predicates.</i>
 
 <p>The qualification of module-sensitive arguments described in <a class="sec" href="metapred.html#sec:6.5">section 
@@ -260,9 +260,9 @@ to it.
 default, the context module is the definition module of the predicate 
 running the goal. For transparent predicates, however, this is the 
 context module of the goal inherited from the parent goal. Below, we 
-implement <a id="idx:maplist3:2010"></a><a class="pred" href="apply.html#maplist/3">maplist/3</a> 
+implement <a id="idx:maplist3:2017"></a><a class="pred" href="apply.html#maplist/3">maplist/3</a> 
 using the transparent mechanism. The code of
-<a id="idx:maplist3:2011"></a><a class="pred" href="apply.html#maplist/3">maplist/3</a> 
+<a id="idx:maplist3:2018"></a><a class="pred" href="apply.html#maplist/3">maplist/3</a> 
 and maplist_/3 is the same as in
 <a class="sec" href="metapred.html#sec:6.5">section 6.5</a>, but now we 
 must declare both the main predicate and the helper as transparent to 
@@ -289,12 +289,12 @@ subject to the transparent mechanism, not just the terms passed to
 module-sensitive arguments. For example, the module below counts the 
 number of unique atoms returned as bindings for a variable. It works as 
 expected. If we use the directive
-<code>:- module_transparent <a id="idx:countatomresults3:2012"></a><span class="pred-ext">count_atom_results/3</span>.</code> 
+<code>:- module_transparent <a id="idx:countatomresults3:2019"></a><span class="pred-ext">count_atom_results/3</span>.</code> 
 instead,
-<a id="idx:atomresult2:2013"></a><span class="pred-ext">atom_result/2</span> 
+<a id="idx:atomresult2:2020"></a><span class="pred-ext">atom_result/2</span> 
 is called wrongly in the module <em>calling</em> count_atom_results/3 . 
 This can be solved using
-<a id="idx:stripmodule3:2014"></a><a class="pred" href="ctxmodule.html#strip_module/3">strip_module/3</a> 
+<a id="idx:stripmodule3:2021"></a><a class="pred" href="ctxmodule.html#strip_module/3">strip_module/3</a> 
 to create a qualified goal and a non-transparent helper predicate that 
 is defined in the same module.
 
@@ -320,13 +320,13 @@ atom_result(Var, Goal) :-
 <dt class="pubdef"><a id="module_transparent/1">:- <strong>module_transparent</strong>(<var>+Preds</var>)</a></dt>
 <dd class="defbody">
 <var>Preds</var> is a comma-separated list of name/arity pairs (like
-<a id="idx:dynamic1:2015"></a><a class="pred" href="dynamic.html#dynamic/1">dynamic/1</a>). 
+<a id="idx:dynamic1:2022"></a><a class="pred" href="dynamic.html#dynamic/1">dynamic/1</a>). 
 Each goal associated with a transparent-declared predicate will inherit 
 the <em>context module</em> from its parent goal.</dd>
 <dt class="pubdef"><a id="context_module/1"><strong>context_module</strong>(<var>-Module</var>)</a></dt>
 <dd class="defbody">
 Unify <var>Module</var> with the context module of the current goal.
-<a id="idx:contextmodule1:2016"></a><a class="pred" href="ctxmodule.html#context_module/1">context_module/1</a> 
+<a id="idx:contextmodule1:2023"></a><a class="pred" href="ctxmodule.html#context_module/1">context_module/1</a> 
 itself is, of course, transparent.</dd>
 <dt class="pubdef"><a id="strip_module/3"><strong>strip_module</strong>(<var>+Term, 
 -Module, -Plain</var>)</a></dt>

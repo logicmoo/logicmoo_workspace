@@ -59,6 +59,8 @@ mdwq_call(Q):- !, call(Q).
 mdwq_call(Q):- call(Q) *-> mdwq(success:Q); (mdwq(failed:Q),!,fail).
 :- export(mdwq_call/1).
 
+:- create_prolog_flag(attr_pre_unify_hook,true,[keep(true)]).
+
 :- if(current_prolog_flag(attr_pre_unify_hook,true)).
 
 :- module_transparent(user:attr_pre_unify_hook/3).
@@ -76,6 +78,7 @@ wakeup(_,_).
 
 :- import(user:attr_pre_unify_hook/3).
 :- module_transparent(user:attr_pre_unify_hook/3).
+% replaces call_all_attr_uhooks
 begin_call_all_attr_uhooks(att('$VAR$', IDVar, Attrs),Value, M) :- !,
     M:attr_pre_unify_hook(IDVar, Value, Attrs).
 
@@ -124,7 +127,6 @@ user:attr_pre_unify_hook(Var,Value,Rest):- strip_module(Rest,M,_), attr_pre_unif
 
 
 :- else.
-
 
 
 :- module_transparent(user:meta_unify/3).
@@ -228,7 +230,7 @@ test_case_4 :-  swiu_case_4.
 % multivar(Var):- put_attr(Var,'$VAR$',Var).
 
 xvarx(Var):- 
-   get_attr(Var,'$VAR$',MV)-> var(MV) ; 
+   get_attr(Var,'$VAR$',_MV)-> true ; 
    (get_attrs(Var,Attrs) -> put_attrs(Var,att('$VAR$',Var,Attrs)) ;
    (true -> put_attrs(Var,att('$VAR$',Var,[])))).
 
@@ -265,33 +267,35 @@ user:attvar_references(N,Var):- (N==Var -> true ;  mdwq_call( \+ \+ =(N,Var) )).
 % Sets values
 % ==========================================
 multivar(Var):- var(Var)->multivar1(Var);(term_variables(Var,Vars),maplist(multivar1,Vars)).
-multivar1(Var):- xvarx(Var),(get_attr(Var,'$value',lst(Var,_))->true; put_attr(Var,'$value',lst(Var,[]))).
-'$value':attr_unify_hook(lst(Was,Values),Becoming):- var(Was),attvar(Becoming),!,mv_add_values(Becoming,Values).
-'$value':attr_unify_hook(lst(Var,_Values),Value):- mv_add1(Var,Value).
+multivar1(Var):- xvarx(Var),(get_attr(Var,'$value',some(Var,_))->true; put_attr(Var,'$value',some(Var,[]))).
+'$value':attr_unify_hook(some(Was,Values),Becoming):- var(Was),attvar(Becoming),!,mv_add_values(Becoming,Values).
+'$value':attr_unify_hook(some(Var,_Values),Value):- mv_add1(Var,Value).
 
 %'$value':attribute_goals(_)-->!.
-'$value':attribute_goals(Var)--> {get_attr(Var,'$value',lst(Var,Values))},[mv_set_values(Var,Values)].
-mv_set_values(Var,Values):- put_attr(Var,'$value',lst(Var,Values)).
-mv_set1(Var,Value):- put_attr(Var,'$value',lst(Var,[Value])).
+'$value':attribute_goals(Var)--> {get_attr(Var,'$value',some(Var,Values))},[mv_set_values(Var,Values)].
+
+
+mv_set_values(Var,Values):- put_attr(Var,'$value',some(Var,Values)).
+mv_set1(Var,Value):- put_attr(Var,'$value',some(Var,[Value])).
 mv_add1(Var,NewValue):- Var==NewValue,!.
 mv_add1(Var,NewValue):- mv_prepend1(Var,'$value',NewValue).
 mv_add_values(Becoming,Values):- maplist(mv_add1(Becoming),Values).
 
 
-mv_prepend1(Var,Mod,Value):- get_attr(Var,Mod,lst(Var,Was))->(prepend_val(Value,Was,New)->put_attr(Var,Mod,lst(Var,New)));put_attr(Var,Mod,lst(Var,[Value])).
+mv_prepend1(Var,Mod,Value):- get_attr(Var,Mod,some(Var,Was))->(prepend_val(Value,Was,New)->put_attr(Var,Mod,some(Var,New)));put_attr(Var,Mod,some(Var,[Value])).
 mv_prepend_values(Becoming,Mod,Values):- maplist(mv_prepend1(Becoming,Mod),Values).
 
 prepend_val(Value,[],[Value]).
-prepend_val(Value,Was,[Value|NewList]):-delete_identical(Was,Value,NewList).
+prepend_val(Value,Was,[Value|NewList]):- pred_delete_first(call(==,Value),Was,NewList).
 
-delete_identical([],_,[]).
-delete_identical([Elem0|NewList],Elem1,NewList):-Elem1==Elem0,!.
-delete_identical([ElemKeep|List],Elem1,[ElemKeep|NewList]):-delete_identical(List,Elem1,NewList).
+pred_delete_first(_,[],[]).
+pred_delete_first(P,[Elem0|NewList],NewList):- call(P,Elem0),!.
+pred_delete_first(P,[ElemKeep|List],[ElemKeep|NewList]):-pred_delete_first(P,List,NewList).
 
 % faster than mv_prepend1 - might use?
-mv_prepend(Var,Mod,Value):- get_attr(Var,Mod,lst(Var,Was))->
-   put_attr(Var,Mod,lst(Var,[Value|Was]));
-   put_attr(Var,Mod,lst(Var,[Value])).
+mv_prepend(Var,Mod,Value):- get_attr(Var,Mod,some(Var,Was))->
+   put_attr(Var,Mod,some(Var,[Value|Was]));
+   put_attr(Var,Mod,some(Var,[Value])).
 
 % ==========================================
 % Peeks values
@@ -306,35 +310,44 @@ mv_peek_value1(Var,Value):- mv_peek_value(Var,Value),!.
 % Peeks any
 % ==========================================
 
-mv_members(Var,Mod,Value):- get_attr(Var,Mod,lst(_,Values)),!,member(Value,Values).
+mv_members(Var,Mod,Value):- get_attr(Var,Mod,some(_,Values)),!,member(Value,Values).
 % mv_get_attr1(Var,Mod,Value):- mv_members(Var,Mod,Value),!.
            
 
-guard_from_var(V):- nonvar(V),!.
-guard_from_var(V):- attvar(V),!.
-guard_from_var(V):- xvarx(V),!.
+bless_plvar(V):- nonvar(V),!.
+bless_plvar(V):- attvar(V),!.
+bless_plvar(V):- xvarx(V),!.
+
+project_lst_goals_as(Var,Attr,Pred,Res):- 
+  get_attr(Var,Attr,some(Var,List)),
+  (List==[] -> Res=[] ;   
+   List=[V] -> (Call=..[Pred,Var,V], Res=[Call]) ;
+   (Call=..[Pred,Var], Res=[maplist(Call,List)])).
 
 % ==========================================
 % Allow-only values
 % ==========================================
 
-check_allow(Var,Value):- get_attr(Var,'$allow',lst(Var,Disallow)), memberchk_variant_mv(Value,Disallow).
-mv_allow(Var,Allow):- guard_from_var(Allow),mv_prepend(Var,'$allow',Allow).
-'$allow':attr_unify_hook(lst(Var,Allow),Value):- \+ ((memberchk_variant_mv(Value,Allow)->true;get_attr(Var,ic_text,_))),!,fail.
-'$allow':attr_unify_hook(lst(Was,Values),Becoming):- 
+check_allow(Var,Value):- get_attr(Var,'$allow',some(Var,Allow)), memberchk_variant_mv(Value,Allow).
+mv_allow(Var,Allow):- bless_plvar(Allow),mv_prepend(Var,'$allow',Allow).
+'$allow':attr_unify_hook(some(Var,Allow),Value):- \+ ((memberchk_variant_mv(Value,Allow)->true;get_attr(Var,ic_text,_))),!,fail.
+'$allow':attr_unify_hook(some(Was,Values),Becoming):- 
   ignore((var(Was),attvar(Becoming),!,mv_prepend_values(Becoming,'$allow',Values))).
-'$allow':attribute_goals(Var)--> {get_attr(Var,'$allow',Allow)},[mv_allow(Var,Allow)].
+'$allow':attribute_goals(Var)--> {project_lst_goals_as(Var,'$allow',mv_allow,Res)},Res.
 
 % ==========================================
 % Disallow-only values
 % ==========================================
 
-check_disallow(Var,Value):- (get_attr(Var,'$disallow',lst(Var,Disallow)) -> \+ memberchk_variant_mv(Value,Disallow) ; true).
-mv_disallow(Var,Disallow):- guard_from_var(Disallow),mv_prepend(Var,'$disallow',Disallow).
-'$disallow':attr_unify_hook(lst(_Var,Disallow),Value):-  memberchk_variant_mv(Value,Disallow),!,fail.
-'$disallow':attr_unify_hook(lst(Was,Values),Becoming):- 
+check_disallow(Var,Value):- (get_attr(Var,'$disallow',some(Var,Disallow)) -> \+ memberchk_variant_mv(Value,Disallow) ; true).
+mv_disallow(Var,Disallow):- bless_plvar(Disallow),mv_prepend(Var,'$disallow',Disallow).
+'$disallow':attr_unify_hook(some(_Var,Disallow),Value):-  memberchk_variant_mv(Value,Disallow),!,fail.
+'$disallow':attr_unify_hook(some(Was,Values),Becoming):- 
    ignore((var(Was),attvar(Becoming),!,mv_prepend_values(Becoming,'$disallow',Values))).
-'$disallow':attribute_goals(Var)--> {get_attr(Var,'$disallow',Disallow)},[mv_disallow(Var,Disallow)].
+'$disallow':attribute_goals(Var)--> {project_lst_goals_as(Var,'$disallow',mv_disallow,Res)},Res.
+
+ 
+%'$disallow':attribute_goals(Var)--> {get_attr(Var,'$disallow',some(Var,Disallow))},[mv_disallow(Var,Disallow)].
 
 %% memberchk_variant_mv( ?X, :TermY0) is semidet.
 %
@@ -346,6 +359,36 @@ memberchk_variant0(X, [Y|Ys]) :-  X==Y  ; (nonvar(Ys),memberchk_variant0(X, Ys))
 memberchk_variant1(X, [Y|Ys]) :-  X =@= Y ; (nonvar(Ys),memberchk_variant1(X, Ys)).
 
 
+member_predchk_variant_mv(X, Ys) :- each_from(Ys, E), call(E,X).
+
+%each_from(List,E):- is_list(List), \+ atomic(List), C=..[v|List], !, arg(_, C, E).
+each_from(Ys, E) :- nonvar(Ys), Ys=[Y|Ys2], (E=Y ; each_from(Ys2, E)).
+% each_from(List,E):- member(E,List).
+
+
+% ==========================================
+% Allow_p-only values
+% ==========================================
+
+% ?- xvarx(X),mv_allow_p(X, writeln),X=1,X=2.
+
+check_allow_p(Var,Value):- get_attr(Var,'$allow_p',some(Var,Allow_p)), memberchk_variant_mv(Value,Allow_p).
+mv_allow_p(Var,Allow_p):- bless_plvar(Allow_p),mv_prepend(Var,'$allow_p',Allow_p).
+'$allow_p':attr_unify_hook(some(Var,Allow_p),Value):- \+ ((memberchk_variant_mv(Value,Allow_p)->true;get_attr(Var,ic_text,_))),!,fail.
+'$allow_p':attr_unify_hook(some(Was,Values),Becoming):- 
+  ignore((var(Was),attvar(Becoming),!,mv_prepend_values(Becoming,'$allow_p',Values))).
+'$allow_p':attribute_goals(Var)--> {project_lst_goals_as(Var,'$allow_p',mv_allow_p,Res)},Res.
+
+% ==========================================
+% Disallow_p-only values
+% ==========================================
+
+check_disallow_p(Var,Value):- (get_attr(Var,'$disallow_p',some(Var,Disallow_p)) -> \+ memberchk_variant_mv(Value,Disallow_p) ; true).
+mv_disallow_p(Var,Disallow_p):- bless_plvar(Disallow_p),mv_prepend(Var,'$disallow_p',Disallow_p).
+'$disallow_p':attr_unify_hook(some(_Var,Disallow_p),Value):-  memberchk_variant_mv(Value,Disallow_p),!,fail.
+'$disallow_p':attr_unify_hook(some(Was,Values),Becoming):- 
+   ignore((var(Was),attvar(Becoming),!,mv_prepend_values(Becoming,'$disallow_p',Values))).
+'$disallow_p':attribute_goals(Var)--> {project_lst_goals_as(Var,'$disallow_p',mv_disallow_p,Res)},Res.
 
 % ==========================================
 % Label values
@@ -377,15 +420,16 @@ un_mv1(Var):-del_attr(Var,'$VAR$')->ignore(mv_peek_value1(Var,Var));true.
 
 ?- multivar(X),mv_disallow(X,1),mv_disallow(X,3).
 multivar(X),
-mv_disallow(X, lst(X, [3, 1])).
+mv_disallow(X, some(X, [3, 1])).
 
 */
 % ==========================================
 % Prolog-Like vars
 % ==========================================
-plvar(Var):- multivar(Var), put_attr(Var,plvar,Var).
-plvar:attr_unify_hook(Var,Value):- mv_peek_value1(Var,Was)->Value=Was;mv_set1(Var,Value).
-'plvar':attribute_goals(Var)--> {get_attr(Var,'plvar',Var)},[plvar(Var)].
+plvar(Var):- xvarx(Var),put_attr(Var,plvar,Var),multivar(Var).
+%plvar(Var):- xvarx(Var), put_attr(Var,plvar,Var).
+'plvar':attr_unify_hook(Var,Value):- mv_peek_value1(Var,Was)-> Value=Was; mv_set1(Var,Value).
+'plvar':attribute_goals(Var)--> {get_attr(Var,'plvar',VarWas),Var==VarWas},[plvar(Var)].
 
 
 % Maybe Variables entering the clause database
@@ -397,12 +441,12 @@ multivar_call(Type,Goal):-term_variables(Goal,Vars),maplist(Type,Vars),call(Goal
 % Symbol-Like Global vars
 % ==========================================
 nb_var(Var):- gensym(nb_var_,Symbol),nb_var(Symbol, Var).
-nb_var(Symbol, Var):- multivar(Var), put_attr(Var,nb_var,lst(Var,Symbol)), nb_linkval(Symbol,Var).
+nb_var(Symbol, Var):- xvarx(Var), put_attr(Var,nb_var,some(Var,Symbol)), nb_linkval(Symbol,Var).
 
 % This should pretend to be be value1 slot instead
 % so that we extext mv_peek_value1/2 and mv_set1/2
-% to stroe things in GVAR in the case of a nb_var
-nb_var:attr_unify_hook(lst(_Var,Symbol),Value):-
+% to store things in GVAR in the case of a nb_var
+'nb_var':attr_unify_hook(some(_Var,Symbol),Value):-
        nb_getval(Symbol,Prev),
        ( % This is how we produce a binding for +multivar "iterator"
           (var(Value),nonvar(Prev)) ->  Value=Prev;
@@ -414,11 +458,20 @@ nb_var:attr_unify_hook(lst(_Var,Symbol),Value):-
 % ==========================================
 % Hashmap-Like vars
 % ==========================================
+edict(Var):- xvarx(Var),put_attr(Var,'edict',Var),multivar(Var).
+edict(Value,Var):- edict(Var),Var=Value.
 
+'edict':attr_unify_hook(Var,OValue):-
+ to_dict(OValue,Value),
+ (mv_peek_value(Var,Prev)
+   -> (merge_dicts(Prev,Value,Result)-> mv_set1(Var,Result))
+   ; mv_add1(Var,Value)).
 
-vdict(Var):- multivar(Var), put_attr(Var,vdict,Var).
+vdict(Var):- put_attr(Var,vdict,Var),multivar(Var).
 vdict(Value,Var):- vdict(Var),Var=Value.
-vdict:attr_unify_hook(Var,OValue):- to_dict(OValue,Value)-> mv_peek_value(Var,Prev), merge_dicts(Prev,Value,Result)-> mv_set1(Var,Result).
+'vdict':attr_unify_hook(Var,OValue):-
+ to_dict(OValue,Value)-> mv_peek_value(Var,Prev), 
+ merge_dicts(Prev,Value,Result)-> mv_set1(Var,Result).
 
 
 to_dict(Value,Value):- is_dict(Value),!.
@@ -432,17 +485,14 @@ merge_dicts(Prev,Value,Prev):- Value :< Prev.
 merge_dicts(Value,Prev,Prev):- Value :< Prev.
 merge_dicts(Dict1,Dict2,Combined):- dicts_to_same_keys([Dict1,Dict2],dict_fill(_),[Combined,Combined]).
 
-
-
 % ==========================================
 % Insensitively cased text
 % ==========================================
 
 ic_text(Var):- put_attr(Var,ic_text,Var),multivar(Var),!.
 
-ic_text:attr_unify_hook(Var,Value):- check_disallow(Var,Value),
+'ic_text':attr_unify_hook(Var,Value):- check_disallow(Var,Value),
  ((mv_members(Var,'$allow',One);mv_peek_value1(Var,One))*-> ic_unify(One,Value)).
-
 'ic_text':attribute_goals(Var)--> {get_attr(Var,'ic_text',Var)},[ic_text(Var)].
 /*
 */

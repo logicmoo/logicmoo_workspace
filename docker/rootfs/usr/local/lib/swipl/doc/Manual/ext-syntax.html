@@ -273,14 +273,14 @@ terms with zero arguments</span></a></h3>
 that have no arguments. This implies that e.g., <code>name()</code> is 
 valid syntax. This extension aims at functions on dicts (see <a class="sec" href="bidicts.html#sec:5.4">section 
 5.4</a>) as well as the implementation of domain specific languages 
-(DSLs). To minimise the consequences, the classic predicates <a id="idx:functor3:1864"></a><a class="pred" href="manipterm.html#functor/3">functor/3</a> 
+(DSLs). To minimise the consequences, the classic predicates <a id="idx:functor3:1871"></a><a class="pred" href="manipterm.html#functor/3">functor/3</a> 
 and <a class="pred" href="manipterm.html#=../2">=../2</a> have not been 
-modified. The predicates <a id="idx:compoundnamearity3:1865"></a><a class="pred" href="manipterm.html#compound_name_arity/3">compound_name_arity/3</a> 
+modified. The predicates <a id="idx:compoundnamearity3:1872"></a><a class="pred" href="manipterm.html#compound_name_arity/3">compound_name_arity/3</a> 
 and
-<a id="idx:compoundnamearguments3:1866"></a><a class="pred" href="manipterm.html#compound_name_arguments/3">compound_name_arguments/3</a> 
+<a id="idx:compoundnamearguments3:1873"></a><a class="pred" href="manipterm.html#compound_name_arguments/3">compound_name_arguments/3</a> 
 have been added. These predicates operate only on compound terms and 
 behave consistently for compounds with zero arguments. Code that <em>generalises</em> 
-a term using the sequence below should generally be changed to use <a id="idx:compoundnamearity3:1867"></a><a class="pred" href="manipterm.html#compound_name_arity/3">compound_name_arity/3</a>.
+a term using the sequence below should generally be changed to use <a id="idx:compoundnamearity3:1874"></a><a class="pred" href="manipterm.html#compound_name_arity/3">compound_name_arity/3</a>.
 
 <pre class="code">
     ...,
@@ -290,7 +290,7 @@ a term using the sequence below should generally be changed to use <a id="idx:co
 </pre>
 
 <p>Replacement of <a class="pred" href="manipterm.html#=../2">=../2</a> 
-by <a id="idx:compoundnamearguments3:1868"></a><a class="pred" href="manipterm.html#compound_name_arguments/3">compound_name_arguments/3</a> 
+by <a id="idx:compoundnamearguments3:1875"></a><a class="pred" href="manipterm.html#compound_name_arguments/3">compound_name_arguments/3</a> 
 is typically needed to deal with code that follow the skeleton below.
 
 <pre class="code">

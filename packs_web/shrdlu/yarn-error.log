@@ -1,0 +1,53 @@
+Arguments: 
+  /usr/bin/node /usr/local/bin/yarn add worker_threads
+
+PATH: 
+  /opt/logicmoo_workspace/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/root/.dotnet/tools:/opt/logicmoo_workspace/packs_lib/sparqlprog/bin
+
+Yarn version: 
+  1.22.10
+
+Node version: 
+  12.21.0
+
+Platform: 
+  linux x64
+
+Trace: 
+  Error: https://registry.yarnpkg.com/worker_threads: Not found
+      at Request.params.callback [as _callback] (/usr/local/lib/node_modules/yarn/lib/cli.js:66988:18)
+      at Request.self.callback (/usr/local/lib/node_modules/yarn/lib/cli.js:140662:22)
+      at Request.emit (events.js:314:20)
+      at Request.<anonymous> (/usr/local/lib/node_modules/yarn/lib/cli.js:141634:10)
+      at Request.emit (events.js:314:20)
+      at IncomingMessage.<anonymous> (/usr/local/lib/node_modules/yarn/lib/cli.js:141556:12)
+      at Object.onceWrapper (events.js:420:28)
+      at IncomingMessage.emit (events.js:326:22)
+      at endReadableNT (_stream_readable.js:1241:12)
+      at processTicksAndRejections (internal/process/task_queues.js:84:21)
+
+npm manifest: 
+  {
+    "name": "typescript-hello-world",
+    "version": "1.0.0",
+    "description": "Typescript Hello World",
+    "main": "src/index.js",
+    "scripts": {
+      "hello": "node_modules/.bin/ts-node src/index.ts"
+    },
+    "author": "",
+    "license": "ISC",
+    "dependencies": {
+      "ts-node": "^5.0.1",
+      "typescript": "^2.8.1"
+    },
+    "devDependencies": {
+      "@types/node": "^9.6.0"
+    }
+  }
+
+yarn manifest: 
+  No manifest
+
+Lockfile: 
+  No lockfile

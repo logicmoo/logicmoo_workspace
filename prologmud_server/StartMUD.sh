@@ -165,7 +165,8 @@ fi
 
 echo "LOGICMOO_BASE_PORT=${LOGICMOO_BASE_PORT}"
 
-while [[ RAN_ALREADY -ne 1 ]] && [[ $COMMAND_LAST -ne 666 ]] && [[ $COMMAND_LAST -ne 9 ]] && [[ $COMMAND_LAST -ne 4 ]] && [[ $COMMAND_LAST -ne 137 ]];
+# [[ $COMMAND_LAST -ne 0 ]] &&
+while [[ RAN_ALREADY -ne 1 ]] && [[ $COMMAND_LAST -ne 666 ]] && [[ $COMMAND_LAST -ne 9 ]] && [[ $COMMAND_LAST -ne 137 ]];
 do
          
    if [[ $COMMAND_LAST -ne 4 ]]; then

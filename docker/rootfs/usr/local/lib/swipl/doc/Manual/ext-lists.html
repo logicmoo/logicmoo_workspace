@@ -282,13 +282,13 @@ dedicated list functions. For convenience, the macros <code>ATOM_nil</code>
 and <code>ATOM_dot</code> are provided by
 <code>SWI-Prolog.h</code>.
 
-<p>Another place that is affected is <a id="idx:writecanonical1:1824"></a><a class="pred" href="termrw.html#write_canonical/1">write_canonical/1</a>. 
-Impact is minimized by using the list syntax for lists. The predicates <a id="idx:readterm2:1825"></a><a class="pred" href="termrw.html#read_term/2">read_term/2</a> 
+<p>Another place that is affected is <a id="idx:writecanonical1:1831"></a><a class="pred" href="termrw.html#write_canonical/1">write_canonical/1</a>. 
+Impact is minimized by using the list syntax for lists. The predicates <a id="idx:readterm2:1832"></a><a class="pred" href="termrw.html#read_term/2">read_term/2</a> 
 and
-<a id="idx:writeterm2:1826"></a><a class="pred" href="termrw.html#write_term/2">write_term/2</a> 
+<a id="idx:writeterm2:1833"></a><a class="pred" href="termrw.html#write_term/2">write_term/2</a> 
 support the option <code>dotlists(true)</code>, which causes
-<a id="idx:readterm2:1827"></a><a class="pred" href="termrw.html#read_term/2">read_term/2</a> 
-to read <code>.(a,[])</code> as <code>[a]</code> and <a id="idx:writeterm2:1828"></a><a class="pred" href="termrw.html#write_term/2">write_term/2</a> 
+<a id="idx:readterm2:1834"></a><a class="pred" href="termrw.html#read_term/2">read_term/2</a> 
+to read <code>.(a,[])</code> as <code>[a]</code> and <a id="idx:writeterm2:1835"></a><a class="pred" href="termrw.html#write_term/2">write_term/2</a> 
 to write <code>[a]</code> as <code>.(a,[])</code>.
 
 <p><h3 id="sec:ext-list-motivation"><a id="sec:5.1.1"><span class="sec-nr">5.1.1</span> <span class="sec-title">Motivating&lsquo;<code>[|]</code>&rsquo;and <code>[]</code> 

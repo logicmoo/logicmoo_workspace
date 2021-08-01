@@ -1276,14 +1276,14 @@ i(/(gtrace,0),"Utility defined as guitracer,trace.",swi_man_manual('guitracer.ht
 i(/(gdebug,0),"Utility defined as guitracer,debug.",swi_man_manual('guitracer.html'),manual,6756).
 i(/(gspy,1),"Utility defined as guitracer,spy(Predicate).",swi_man_manual('guitracer.html'),manual,6900).
 i(section(2,'4.33','sec:gvar'),"Global variables",swi_man_manual('gvar.html'),manual,3505).
-i(/(b_setval,2),"Associate the term Value with the atom Name or replace the currently associated value with Value.",swi_man_manual('gvar.html'),manual,6240).
-i(/(b_getval,2),"Get the value associated with the global variable Name and unify it with Value.",swi_man_manual('gvar.html'),manual,6699).
-i(/(nb_setval,2),"Associates a copy of Value created with duplicate_term/2 with the atom Name.",swi_man_manual('gvar.html'),manual,7420).
-i(/(nb_getval,2),"The nb_getval/2 predicate is a synonym for b_getval/2, introduced for compatibility and symmetry.",swi_man_manual('gvar.html'),manual,7871).
-i(/(nb_linkval,2),"Associates the term Value with the atom Name without copying it.",swi_man_manual('gvar.html'),manual,8865).
-i(/(nb_current,2),"Enumerate all defined variables with their value.",swi_man_manual('gvar.html'),manual,9873).
-i(/(nb_delete,1),"Delete the named global variable.",swi_man_manual('gvar.html'),manual,10413).
-i(section(3,'4.33.1','sec:gvars-compat'),"Compatibility of SWI-Prolog Global Variables",swi_man_manual('gvar.html'),manual,10630).
+i(/(b_setval,2),"Associate the term Value with the atom Name or replace the currently associated value with Value.",swi_man_manual('gvar.html'),manual,6347).
+i(/(b_getval,2),"Get the value associated with the global variable Name and unify it with Value.",swi_man_manual('gvar.html'),manual,6981).
+i(/(nb_setval,2),"Associates a copy of Value created with duplicate_term/2 with the atom Name.",swi_man_manual('gvar.html'),manual,7702).
+i(/(nb_getval,2),"The nb_getval/2 predicate is a synonym for b_getval/2, introduced for compatibility and symmetry.",swi_man_manual('gvar.html'),manual,8153).
+i(/(nb_linkval,2),"Associates the term Value with the atom Name without copying it.",swi_man_manual('gvar.html'),manual,9147).
+i(/(nb_current,2),"Enumerate all defined variables with their value.",swi_man_manual('gvar.html'),manual,10155).
+i(/(nb_delete,1),"Delete the named global variable.",swi_man_manual('gvar.html'),manual,11217).
+i(section(3,'4.33.1','sec:gvars-compat'),"Compatibility of SWI-Prolog Global Variables",swi_man_manual('gvar.html'),manual,11751).
 i(section(1,'B','sec:hack'),"Hackers corner",swi_man_manual('hack.html'),manual,3501).
 i(section(2,'A.13','sec:highorder'),"library(dcg/high_order): High order grammar operations",swi_man_manual('highorder.html'),manual,3509).
 i(//(sequence,2),"Match or generate a sequence of Element.",swi_man_manual('highorder.html'),manual,4193).

@@ -317,9 +317,9 @@ or
 <p>The Prolog kernel sources use the macro <b>DEBUG(Topic, Code)</b>. 
 These macros are disabled in the production version and must be enabled 
 by recompiling the system as described above. Specific topics can be 
-enabled and disabled using the predicates <a id="idx:prologdebug1:2481"></a><a class="pred" href="foreignnotes.html#prolog_debug/1">prolog_debug/1</a> 
+enabled and disabled using the predicates <a id="idx:prologdebug1:2488"></a><a class="pred" href="foreignnotes.html#prolog_debug/1">prolog_debug/1</a> 
 and
-<a id="idx:prolognodebug1:2482"></a><a class="pred" href="foreignnotes.html#prolog_nodebug/1">prolog_nodebug/1</a>. 
+<a id="idx:prolognodebug1:2489"></a><a class="pred" href="foreignnotes.html#prolog_nodebug/1">prolog_nodebug/1</a>. 
 In addition, they can be activated from the commandline using 
 commandline option <code>-d topics</code>, where
 <var>topics</var> is a comma-separated list of debug topics to enable. 
@@ -360,8 +360,8 @@ char *topic</var>)</a></dt>
 <dd class="defbody">
 (De)activate debug topics. The <var>topics</var> argument is a 
 comma-separated string of topics to enable or disable. Matching is 
-case-insensitive. See also <a id="idx:prologdebug1:2483"></a><a class="pred" href="foreignnotes.html#prolog_debug/1">prolog_debug/1</a> 
-and <a id="idx:prolognodebug1:2484"></a><a class="pred" href="foreignnotes.html#prolog_nodebug/1">prolog_nodebug/1</a>.
+case-insensitive. See also <a id="idx:prologdebug1:2490"></a><a class="pred" href="foreignnotes.html#prolog_debug/1">prolog_debug/1</a> 
+and <a id="idx:prolognodebug1:2491"></a><a class="pred" href="foreignnotes.html#prolog_nodebug/1">prolog_nodebug/1</a>.
 
 <p>These functions require the system to be compiled for debugging using
 <code>cmake -DCMAKE_BUILD_TYPE=Debug</code>.
@@ -425,7 +425,7 @@ extensions between different Prolog versions. Only the much less
 frequently used stream interface has been responsible for binary 
 incompatibilities.
 
-<p><a id="idx:PLVERSION:2485"></a>Source code that relies on new 
+<p><a id="idx:PLVERSION:2492"></a>Source code that relies on new 
 features of the foreign interface can use the macro <code>PLVERSION</code> 
 to find the version of
 <code>SWI-Prolog.h</code> and <a class="func" href="foreigninclude.html#PL_query()">PL_query()</a> 
@@ -517,7 +517,7 @@ and profiling foreign code (valgrind)</span></a></h3>
 
 <a id="sec:foreign-debug-and-profile"></a>
 
-<p><a id="idx:valgrind:2486"></a><a id="idx:profilingforeigncode:2487"></a>This 
+<p><a id="idx:valgrind:2493"></a><a id="idx:profilingforeigncode:2494"></a>This 
 section is only relevant for Unix users on platforms supported by
 <a class="url" href="http://valgrind.org/">valgrind</a>. Valgrind is an 
 excellent binary instrumentation platform. Unlike many other 

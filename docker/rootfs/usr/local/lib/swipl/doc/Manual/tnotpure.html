@@ -260,11 +260,11 @@ guarantees that the components are minimal because only actually reached
 code needs to be considered rather than maximally reachable code.
 
 <p>Minimal SCCs imply that goals are completed as early as possible. 
-This implies that tabled goals may be embedded in e.g., <a id="idx:findall3:2035"></a><a class="pred" href="allsolutions.html#findall/3">findall/3</a> 
+This implies that tabled goals may be embedded in e.g., <a id="idx:findall3:2042"></a><a class="pred" href="allsolutions.html#findall/3">findall/3</a> 
 or be used as a condition as long as there is no dependency (<em>loop</em>) 
-with goals outside the <a id="idx:findall3:2036"></a><a class="pred" href="allsolutions.html#findall/3">findall/3</a> 
+with goals outside the <a id="idx:findall3:2043"></a><a class="pred" href="allsolutions.html#findall/3">findall/3</a> 
 or condition. For example, the code below misbehaves when called as <code>p(X)</code> 
-because the argument of <a id="idx:findall3:2037"></a><a class="pred" href="allsolutions.html#findall/3">findall/3</a> 
+because the argument of <a id="idx:findall3:2044"></a><a class="pred" href="allsolutions.html#findall/3">findall/3</a> 
 calls a <em>variant</em> of the goal that initiated the findall goal. A 
 call <code>p(1)</code> however is ok as <code>p(1)</code> is not a 
 variant of

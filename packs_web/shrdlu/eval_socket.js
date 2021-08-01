@@ -20,10 +20,11 @@ var MAX_RECONNECT_DELAY = 30000;
 
 		window.JSCtrl = JSCtrl;
 		jsev = new JSCtrl();
-		game = window.theA4Game;
+
 		// object to flat
 		objToProxy = new Map();
 		objFromProxy = new Map();
+		pathValues = new Map();
 
 		function loadjsfile(filename, datamain) {
 			/*$(jQuery).getScript( filename )
@@ -36,7 +37,7 @@ var MAX_RECONNECT_DELAY = 30000;
 			var fileref = document.createElement('script')
 			fileref.setAttribute("type", "text/javascript")
 			fileref.setAttribute("src", filename)
-			fileref.setAttribute("data-main", datamain)
+			if (typeof datamain != "undefined") fileref.setAttribute("data-main", datamain)
 			if (typeof fileref != "undefined")
 				document.getElementsByTagName("head")[0].appendChild(fileref);
 		}
@@ -72,6 +73,27 @@ var MAX_RECONNECT_DELAY = 30000;
 			return (results && results.length > 1) ? results[1] : "";
 		};
 
+
+		var workerFn = function() {
+			console.log("I was run");
+			//debugger;
+		};
+		// create a Blob object with a worker code
+		var blob = (new Blob(["(" + workerFn.toString() + ")"], {
+			type: "text/javascript"
+		}));
+		// Obtain a blob URL reference to our worker 'file'.
+		var blobURL = window.URL.createObjectURL(blob);
+
+		// create a Worker
+		var worker = new Worker(blobURL);
+		worker.onmessage = function(e) {
+			console.log(e.data);
+		};
+		worker.postMessage("Send some Data");
+
+
+
 		JSCtrl.prototype.connect = function() {
 
 			try {
@@ -82,69 +104,77 @@ var MAX_RECONNECT_DELAY = 30000;
 
 				socket.onopen = function(e) {
 					reconnectsAvail = 10;
+					window.theA4Game;
+					window.game = window.theA4Game;
 					console.log("JSCtrl: " + "[open] Connection established");
 					var sessionId = /SESS\w*ID=([^;]+)/i.test(document.cookie) ? RegExp.$1 : false;
 					socket.send("sessionId=" + sessionId);
 				};
 
 				socket.onmessage = function(message) {
-					console.log("JSCtrl: " + `[message] Data received from server: ${message.data}`);
-					try {
-						//debugger;
-						var messageData = message.data;
-						var evalThis = true;
+					setTimeout(function() {
+						console.log("JSCtrl: " + `[message] Data received from server: ${message.data}`);
+						try {
+							//debugger;
+							var messageData = message.data;
+							var evalThis = true;
 
-						if (messageData.startsWith("+")) {
-							messageData = messageData.substring(1);
-							evalThis = true;
-						}
-						if (messageData.startsWith("-")) {
-							messageData = messageData.substring(1);
-							evalThis = false;
-						}
-						if (evalThis) {
-							var res = window.eval(messageData);
-
-							var reply = null;
-							res = jsev.typeIfy(res);
-							var html = jsev.maybeHtml(res, 0);
-							if (jsev.isHtmlish(html)) {
-								reply = html;
-							} else {
-								// reply = forestify_aka_decycle(res);
-								reply = jsev.stringfyAsJson(res);
+							if (messageData.startsWith("+")) {
+								messageData = messageData.substring(1);
+								evalThis = true;
 							}
+							if (messageData.startsWith("-")) {
+								messageData = messageData.substring(1);
+								evalThis = false;
+							}
+							if (evalThis) {
+								var res = window.eval(messageData);
 
-							if (DEBUGGING) { // for debugging
-								if (typeof reply === 'undefined') {} else {
-									if (typeof reply.length != 'undefined' && reply.length < 3000) {
-										console.log("JSCtrl: " + `[reply] Replying with: ${reply}`);
-									} else if (typeof reply.substring != 'undefined') {
-										var some = reply.substring(0, 100);
-										console.log("JSCtrl: " + `[reply] Replying.length with: ${some}...${reply.length}`);
-									} else {
-										console.log("JSCtrl: " + `[reply] Replying with: ${reply}`);
+								var t0 = performance.now()
+								var reply = null;
+								//res = jsev.typeIfy(res);
+								var html = jsev.maybeHtml(res, 0);
+								if (jsev.isHtmlish(html)) {
+									reply = html;
+								} else {
+									// reply = forestify_aka_decycle(res);
+									reply = jsev.stringfyAsJson(res);
+								}
+
+								if (DEBUGGING) { // for debugging
+									if (typeof reply === 'undefined') {} else {
+										if (typeof reply.length != 'undefined' && reply.length < 3000) {
+											console.log("JSCtrl: " + `[reply] Replying with: ${reply}`);
+										} else if (typeof reply.substring != 'undefined') {
+											var some = reply.substring(0, 100);
+											console.log("JSCtrl: " + `[reply] Replying.length with: ${some}...${reply.length}`);
+										} else {
+											console.log("JSCtrl: " + `[reply] Replying with: ${reply}`);
+										}
 									}
 								}
+
+								if (typeof reply === "string") {
+									socket.send(reply);
+								} else {
+									socket.send(JSON.stringify(reply));
+								}
+								var t1 = performance.now()
+								console.log("eval/reply took " + (t1 - t0) + " milliseconds for: " + messageData)
 							}
-							if (typeof reply === "string") {
-								socket.send(reply);
-							} else {
-								socket.send(JSON.stringify(reply));
-							}
+						} catch (e) {
+							DEBUGGING = true;
+							console.error(e);
+							//debugger;
+							socket.send(JSON.stringify({
+								"error": {
+									"message": e.message,
+									"trace": e.trace,
+									"original": message
+								}
+							}))
 						}
-					} catch (e) {
-						DEBUGGING = true;
-						console.error(e);
-						//debugger;
-						socket.send(JSON.stringify({
-							"error": {
-								"message": e.message,
-								"trace": e.trace,
-								"original": message
-							}
-						}))
-					}
+					}, 0);
 				}
 
 				socket.onclose = function(event) {
@@ -176,7 +206,31 @@ var MAX_RECONNECT_DELAY = 30000;
 
 		}
 
+		// run with node --experimental-worker index.js on Node.js 10.x
+		//const request = require(['request']);
+		//const fs1 = require(['fs']);
+		//var fs = Promise.promisifyAll(require(["fs"]), {suffix: "MySuffix"});
+		/*
+		const { Worker } = require(['worker_threads'])
+		function runService(workerData) {
+		  return new Promise((resolve, reject) => {
+		    const worker = new Worker('./service.js', { workerData });
+		    worker.on('message', resolve);
+		    worker.on('error', reject);
+		    worker.on('exit', (code) => {
+		      if (code !== 0)
+		        reject(new Error(`Worker stopped with exit code ${code}`));
+		    })
+		  })
+		}
 
+		async function run() {
+		  const result = await runService('world')
+		  console.log(result);
+		}
+
+		if(false)run().catch(err => console.error(err))
+		*/
 		JSCtrl.prototype.loadDocument = function(from) {
 			var xmlhttp = new XMLHttpRequest();
 			xmlhttp.overrideMimeType("text/xml");
@@ -237,7 +291,17 @@ var MAX_RECONNECT_DELAY = 30000;
 				//if (typeof value.outerHTML === 'function') {
 				return "+" + value.outerHTML().trim();
 				//}
-			} catch ( e ) {
+			} catch (e) {
+				//debugger;
+				// ignored
+			}
+
+			try {
+
+				//if (typeof value.outerHTML === 'function') {
+				return "+" + value.outerHTML.trim();
+				//}
+			} catch (e) {
 				//debugger;
 				// ignored
 			}
@@ -249,7 +313,7 @@ var MAX_RECONNECT_DELAY = 30000;
 			}
 
 			if (depth > 1 && typeof value.savePropertiesToXML === 'function') {
-			    return "+" + value.savePropertiesToXML(theA4Game).trim();
+				return "+" + value.savePropertiesToXML(theA4Game).trim();
 
 			}
 			if (simpleMode) return false;
@@ -267,176 +331,202 @@ var MAX_RECONNECT_DELAY = 30000;
 			return JSON.stringify(value, jsev.refReplacer(value));
 		}
 
-		JSCtrl.prototype.refReplacer = function() {
+		Object.prototype = {
+
+			toJSON2: function() {
+				var tmp = {};
+
+				for (var key in this) {
+					if (typeof this[key] !== 'function')
+						tmp[key] = this[key];
+				}
+
+				return tmp;
+			}
+		};
+
+		JSCtrl.prototype.refReplacer = function(root) {
 			let m = new Map(),
 				v = new Map(),
+				parents = [],
 				init = null;
 
-			return function(field, value) {
 
-				if (value == null) return null;
-				if (typeof value === "undefined") return value;
-				if (typeof value === "string") return value;
-				 
-				value = jsev.typeIfy(value);
+			return function(field, value) {
+				var rep = replace(field, value);
+				return rep;
+			}
+
+			function replace(field, value) {
+
+				var proxy = value;
+				try {
+					proxy = jsev.typeIfy(value);
+				} catch ( ee ) {
+					console.log(ee);
+					debugger;
+				}
+
+				var isProxy = (proxy != value);
 
 				let p = m.get(this) + (Array.isArray(this) ? `[${field}]` : '.' + field);
-				let isComplex = value === Object(value)
+				let isComplex = (value === Object(value));
 
 				if (isComplex) m.set(value, p);
 
+
+				//if(!isComplex) debugger;
+
 				let pp = v.get(value) || '';
 				let path = p.replace(/undefined\.\.?/, '');
-				let val = pp ? `#REF:${pp[0]=='[' ? '$':'$.'}${pp}` : value;
+				var refName = `#REF:${pp[0]=='[' ? '$':'$.'}${pp}`
+				let val = pp ? refName : value;
+
 
 				!init ? (init = value) : (val === init ? val = "#REF:$" : 0);
-				if (!pp && isComplex) v.set(value, path);
 
-				if (true) {
-					var html = jsev.maybeHtml(val, 0);
-					if (jsev.isHtmlish(html)) return html;
+				var isRef = val != value;
+
+				if(!isRef) {
+					console.log(refName) ;					
 				}
 
-				return val;
+				try {
+					if (!pp && isComplex) v.set(value, path);
+
+					pathValues.set(path, jsev.getClassName(value));
+					//console.log(path);
+
+					if ((value == null) || (typeof value === "undefined") ||
+						(typeof value === "string") ||
+						(typeof value !== "object")) {
+						return value;
+					}
+
+					if (isRef) return val;
+
+					var decendantLevel = parents.indexOf(value);
+
+					parents.push(value);
+
+					if(decendantLevel> -1) {
+						debugger;
+					}
+
+
+					if (true) {
+						var html = jsev.maybeHtml(val, 0);
+						if (jsev.isHtmlish(html)) {
+							if (isRef) return val;
+							return html;
+						}
+					}
+
+					if (isRef) return val;
+
+					if (isProxy) {
+						debugger;
+						return proxy;
+					} else {
+						return val;
+					}
+
+				} finally {
+					parents.pop();
+				}
+
 			}
 		}
 
-		JSCtrl.prototype.flatten = function(obj) {
+		JSCtrl.prototype.typeIfy = function(obj) {
 			if (obj === null) {
 				return null;
 			}
+
 			if (!(typeof obj === 'object')) {
 				return obj;
 			}
-			
-			try {
 
-				//if (typeof value.outerHTML === 'function') {
-					return "+" + obj.outerHTML().trim();
-				//}
-			} catch ( e ) {
-				//debugger;
-				// ignored
-			}
-			
-			try {
-
-				//if (typeof value.outerHTML === 'function') {
-					return "+" + obj.outerHTML.trim();
-				//}
-			} catch ( e ) {
-				//debugger;
-				// ignored
+			if ((typeof obj === 'function')) {
+				return obj;
 			}
 
-			var proxyMode = !simpleMode2;
+			if (Array.isArray(obj)) {
+				return obj;
+			}
+			
+			if (obj instanceof Map) {
+			    return obj;
+			}
+			if (obj instanceof Set) {
+			    return obj;
+			}
 
+			var ofp = objFromProxy.get(obj);
+
+			if (ofp) {
+				// was a proxy
+				return obj;
+			}
 			var proxy = objToProxy.get(obj);
-			if (proxy) return proxy
-			// was actually a proxy
-			if (objFromProxy.get(obj)) return obj;
-		 
-			var html = jsev.maybeHtml(obj, 0);
+			if (proxy == true) return obj;
+			if (proxy) return proxy;
 
-			if (jsev.isHtmlish(html)) {
-				proxy = html;
-				objToProxy.set(obj, proxy);
-				objFromProxy.set(proxy, obj);
-				return proxy;
-			} else  if (Array.isArray(obj)) {
-				proxy = [];
-				if(!proxyMode) {
-					proxy = obj
+			if (true) {
+				var html = jsev.maybeHtml(obj, 0);
+				if (jsev.isHtmlish(html)) {
+					return obj;
 				}
-				objToProxy.set(obj, proxy);
-				objFromProxy.set(proxy, obj);
-				for (var i = 0; i < obj.length; i++) {
-					var p = jsev.flatten(obj[i]);
-					if(proxyMode) {
-						proxy.push(p);
-					}
-				}
-				return proxy;
-			} else {
+			}
+
+			// proxy = Object.create(obj); //{};
+			proxy = {};
+			
+			objToProxy.set(obj, proxy);
+			objFromProxy.set(proxy, obj);
+			try {
 				var cn = jsev.getClassName(obj);
-				proxy =  {}; 
-				var p = Object.getPrototypeOf(obj);
-				try {
-					
-					if(!proxyMode) {
-						proxy = obj
-					} else {
-						proxy =  Object.create(p);
-					}
-					if(!(p==null || Object.getPrototypeOf({})==p)) {
-						proxy["_prototypeOf"] = p;
-					}
-				} catch ( e ) {
-					debugger;
-				}
-				if(!proxyMode) {
-					proxy = obj
-				}
 				proxy["_className"] = cn;
-				objToProxy.set(obj, proxy);
-				objFromProxy.set(proxy, obj);
-				var errors= [];
+			} catch (ee) {
+			    console.log("_className: " + obj);
+				console.log(ee);
+				debugger;
+			}
+			try {
 				for (var key in obj) {
 					try {
-						    var r = obj[key];
-							if(typeof r === "function") {
-                        	//	proxy["_function_"+ key] = ""+r;
-                        	} else {						
-	                        	if (obj.hasOwnProperty(key)) {
-	                        	   proxy[key] = jsev.flatten(obj[key]);
-							    }
+						var v = obj[key];
+						try {
+							//if(!(typeof obj[key] === 'function')) {							 
+							var r = jsev.typeIfy(v);
+							try {
+								proxy[key] = r;
+							} catch (ee3) {
+								console.log("setKey: " + key);
+								console.log(ee3);
+								debugger;
 							}
-					} catch ( e ) {
+							//}
+						} catch (ee2) {
+							console.log("typeIfy: " + key);
+							console.log(ee2);
+							debugger;
+						}
+						//}
+					} catch (ee) {
+						//console.log("getKey: " + key);
+						//console.log(ee);
 						//debugger;
-						//proxy[key] = jsev.flatten(obj[key]);
-						errors.push(e);
-						objToProxy.delete(obj);
-						objFromProxy.delete(proxy);
-						if (simpleMode) return obj;
 					}
 				}
-				//proxy["AP_className"] = cn;
-				//proxy["AP_errors"] = errors.length;
-				if(errors.length>0) proxy["_errors"] = errors.length;
-				return proxy;
+			} catch (e) {
+				console.log(e);
+				debugger;
 			}
-	}
-
-	JSCtrl.prototype.typeIfy = function(value) {
-			if (value == null) return null;
-
-			value = jsev.flatten(value);
-
-		if (simpleMode) return value;
-
-		let isComplex = value === Object(value);
-
-		// if(!isComplex) return value;
-		try {
-				if (typeof value.theClassName != "undefined") {
-				return value;
-			}
-			var cn = jsev.getClassName(value);
-				value["theClassName"] = cn;
-			value.getClassName = cn;
-			//  var obj2 = { getClassName: cn };
-			//  value = {...value, ...obj2 };
-			//  Object.assign(value,obj2);
-		} catch (e) {
-			console.error(e);
-			// ignored
+			return proxy;
 		}
-		return value;
+
 	}
-
-
-
-		}
 
 	jsev.connect();
 

@@ -13,7 +13,7 @@ class PlanningRecord {
 		this.requester = requester;
 		this.requestingPerformative = requestingPerformative;
 		this.timeStamp = timeStamp;
-		this.planner = new BWPlanner(ai.world, o, this.goal, this.maxDepth);		
+		this.planner = new BWPlanner4(ai.world, o, this.goal, this.maxDepth);		
 	}
 
 
@@ -37,7 +37,7 @@ class PlanningRecord {
 	requestingPerformative:NLContextPerformative = null;
 	timeStamp:number = null;
 
-	planner:BWPlanner;
+	planner:BWPlanner4;
 	goal:PlanningCondition;
 	o:Ontology;
 	plan:PlanningPlan = null;

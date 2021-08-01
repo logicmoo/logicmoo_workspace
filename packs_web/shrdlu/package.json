@@ -9,6 +9,9 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "database": "^0.0.2",
+    "fs": "^0.0.1-security",
+    "request": "^2.88.2",
     "ts-node": "^5.0.1",
     "typescript": "^2.8.1"
   },
@@ -16,4 +19,3 @@
     "@types/node": "^9.6.0"
   }
 }
-

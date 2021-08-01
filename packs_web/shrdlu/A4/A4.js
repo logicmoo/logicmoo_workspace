@@ -150,6 +150,7 @@ var Game = {
 window.theA4Game = Game;
 
 Game.loadCharacters = function(xmlFilePath) {
+  window.theA4Game = this;
   var xmlhttp=new XMLHttpRequest();
   xmlhttp.overrideMimeType("text/xml");
   xmlhttp.open("GET",xmlFilePath,false); 

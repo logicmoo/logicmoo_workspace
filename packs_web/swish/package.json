@@ -76,6 +76,7 @@
     "@unibeautify/beautifier-js-beautify": "^0.4.0",
     "eslint": "^7.4.0",
     "js-beautify": "^1.11.0",
-    "unibeautify": "^0.17.1"
+    "unibeautify": "^0.17.1",
+    "worker-loader": "^3.0.8"
   }
 }

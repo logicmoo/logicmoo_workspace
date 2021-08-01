@@ -1,7 +1,13 @@
 #!/bin/bash
 
-set +x +e
+if [ -f "/.dockerenv" ]; then
+   ./StartLogicmoo.sh
 
+   return 0 2>/dev/null
+   exit 0
+fi
+
+set +x +e
 
 if [[ $EUID -ne 0 ]]; then
    echo "#* "
@@ -10,6 +16,7 @@ if [[ $EUID -ne 0 ]]; then
    return 1 2>/dev/null
    exit 1
 fi
+
 
 apt install -y git screen docker docker.io
 
@@ -28,6 +35,7 @@ else
   screen -m ${BASH_SOURCE[0]} $*
   return 0 2>/dev/null ; exit 0
 fi
+
 
 run=1
 

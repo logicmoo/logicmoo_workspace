@@ -37,6 +37,8 @@ export LOGICMOO_WS=$DIR0
 #git status -v --show-stash
 #git pull -f && git pull -f --recurse-submodules
 
+if [ -f "/.dockerenv" ]; then
+
 DIR="$LOGICMOO_WS/lib/deps_installed"
 
 if [ -d "$DIR" ]; then
@@ -48,6 +50,9 @@ if [ -d "$DIR" ]; then
 else
 (source ./INSTALL-DEPS.md )
 fi
+
+fi
+
 
 stty sane
 
@@ -64,6 +69,9 @@ echo whoami=`whoami`
 echo PATH=$PATH
 echo LOGICMOO_GAMES=$LOGICMOO_GAMES
 echo LOGICMOO_WS=$LOGICMOO_WS
+
+if [ -f "/.dockerenv" ]; then
+
 echo "127.0.0.1 eggdrop"  >> /etc/hosts
 #echo "10.0.0.194 logicmoo.org" >> /etc/hosts
 
@@ -74,6 +82,8 @@ if [ ! -z "$LOGICMOO_EXTRAS" ];
   && ln -s /usr/eclipse/eclipse /usr/bin/eclipse \
   && rm -f eclipse-java-2020-06-R-linux-gtk-x86_64.tar.gz
  fi
+
+fi
 
 #apt-add-repository -y ppa:swi-prolog/devel && apt-get install -y swi-prolog elpa-ediprolog swi-prolog-java swi-prolog-odbc swi-prolog-bdb
 
@@ -92,11 +102,9 @@ else
  git pull
 fi
 
-#apt install git-lfs
-
 git config --local http.sslVerify false
 # git config --global http.sslVerify false
-find -name "*.lock" -delete
+# find -name "*.lock" -delete
 git config credential.helper 'cache --timeout=300000'
 git update-index --assume-unchanged prologmud_server/.bash_history
 git update-index --assume-unchanged packs_sys/eggdrop/conf/PrologMUD-freenode.chan
@@ -110,7 +118,7 @@ git submodule update --init
 #git submodule foreach --recursive bash -c "git lfs pull ; /bin/true"
 git pull --recurse-submodules
 
-
+if [ -f "/.dockerenv" ]; then
 
 rm -rf /usr/local/lib/python3.8/dist-packages/butterfly/templates
 rm -rf /usr/local/lib/python3.8/dist-packages/butterfly/static
@@ -188,6 +196,9 @@ cd $LOGICMOO_WS \
 #git update-index --assume-unchanged $LOGICMOO_WS/packs_sys/eggdrop/conf/P*
 #echo "${BASH_SOURCE[0]} Assesing GIT STATUS..."
 #git status -s
+
+fi
+
 )
 
 find -name "*.qlf" -exec touch '{}' +

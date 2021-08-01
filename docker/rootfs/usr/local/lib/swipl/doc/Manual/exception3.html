@@ -238,15 +238,15 @@ using the exception predicate</span></a></h2>
 
 <a id="sec:exception3"></a>
 
-<p>This section describes the predicate <a id="idx:exception3:2631"></a><a class="pred" href="exception3.html#exception/3">exception/3</a>, 
+<p>This section describes the predicate <a id="idx:exception3:2638"></a><a class="pred" href="exception3.html#exception/3">exception/3</a>, 
 which can be defined by the user in the module <code>user</code> as a 
 multifile predicate. Unlike the name suggests, this is actually a <em>hook</em> 
 predicate that has no relation to Prolog exceptions as defined by the 
 ISO predicates
-<a id="idx:catch3:2632"></a><a class="pred" href="exception.html#catch/3">catch/3</a> 
-and <a id="idx:throw1:2633"></a><a class="pred" href="exception.html#throw/1">throw/1</a>.
+<a id="idx:catch3:2639"></a><a class="pred" href="exception.html#catch/3">catch/3</a> 
+and <a id="idx:throw1:2640"></a><a class="pred" href="exception.html#throw/1">throw/1</a>.
 
-<p>The predicate <a id="idx:exception3:2634"></a><a class="pred" href="exception3.html#exception/3">exception/3</a> 
+<p>The predicate <a id="idx:exception3:2641"></a><a class="pred" href="exception3.html#exception/3">exception/3</a> 
 is called by the kernel on a couple of events, allowing the user to&lsquo;fix' 
 errors just-in-time. The mechanism allows for
 <em>lazy</em> creation of objects such as predicates.
@@ -257,8 +257,8 @@ errors just-in-time. The mechanism allows for
 <dd class="defbody">
 Dynamic predicate, normally not defined. Called by the Prolog system on 
 run-time exceptions that can be repaired&lsquo;just-in-time'. The values 
-for <var>Exception</var> are described below. See also <a id="idx:catch3:2635"></a><a class="pred" href="exception.html#catch/3">catch/3</a> 
-and <a id="idx:throw1:2636"></a><a class="pred" href="exception.html#throw/1">throw/1</a>.
+for <var>Exception</var> are described below. See also <a id="idx:catch3:2642"></a><a class="pred" href="exception.html#catch/3">catch/3</a> 
+and <a id="idx:throw1:2643"></a><a class="pred" href="exception.html#throw/1">throw/1</a>.
 
 <p>If this hook predicate succeeds it must instantiate the <var>Action</var> 
 argument to the atom <code>fail</code> to make the operation fail 
@@ -280,9 +280,9 @@ and <a class="sec" href="autoload.html#sec:2.14">section 2.14</a>.</dd>
 <dt><strong>undefined_global_variable</strong></dt>
 <dd class="defbody">
 <var>Context</var> is instantiated to the name of the missing global 
-variable. The hook must call <a id="idx:nbsetval2:2637"></a><a class="pred" href="gvar.html#nb_setval/2">nb_setval/2</a> 
-or <a id="idx:bsetval2:2638"></a><a class="pred" href="gvar.html#b_setval/2">b_setval/2</a> 
-before returning with the action <code>retry</code>.
+variable. The hook must call <a id="idx:nbsetval2:2644"></a><a class="pred" href="gvar.html#nb_setval/2">nb_setval/2</a> 
+or <a id="idx:bsetval2:2645"></a><a class="pred" href="gvar.html#b_setval/2">b_setval/2</a> 
+before returning with the action <code>retry</code>. See also <a id="idx:nbcurrent2:2646"></a><a class="pred" href="gvar.html#nb_current/2">nb_current/2</a>.
 </dd>
 </dl>
 
