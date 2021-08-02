@@ -162,7 +162,6 @@ var MAX_RECONNECT_DELAY = 30000;
 						if (evalThis) {
 							var t0 = performance.now()
 							var res = window.eval(messageData);
-							debugger;
 							var reply = null;
 							var html = jsev.maybeHtml(res, 0);
 							if (jsev.isHtmlish(html)) {
