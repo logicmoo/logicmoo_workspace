@@ -225,7 +225,7 @@ classification of tokens.
         cm.setOption("mode", opts);
       },
       error: function(jqXHR) {
-         debugger;
+         //debugger;
         if (jqXHR.status == 409) {
           delete state.uuid;
           /* And refresh?  problem is this might get us into

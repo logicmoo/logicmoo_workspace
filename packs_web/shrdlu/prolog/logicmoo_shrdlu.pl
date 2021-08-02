@@ -240,6 +240,8 @@ cvt_ws_result(_, Term, Term).
 
 js_eval(Js, Result):- call((js_eval_wsinfo(WebSocket)-> js_eval(WebSocket, Js, Result))), !.
 
+js_eval(Js):- js_eval(Js, R),print_tree(R).
+
 js_cvt_eval( Js, Result):- var(Js), !, throw(var_js_cvt_eval( Js, Result)).
 js_cvt_eval( Js, Js):- is_dict(Js), !.
 js_cvt_eval( text(Js), text(Js)):- !.
@@ -278,32 +280,36 @@ js_test(Code):-
    nl,ttyflush,
    \+ \+ (wots(S,(print_tree(X))),((write(S),atom_to_term(S,_,_)))),!,
    nl,ttyflush,
-  text_to_a4obj(Code,Obj),  
+  text_to_a4obj(Code,Obj),
+  abolish(the:a4Game/4),
+  dynamic(the:a4Game/4),
   process_a4_obj(Obj, X),
-  listing(the:a4Game([Obj|_],_,_,_)),
-  listing(the:a4Game(_,Obj,_,_)),
+  %listing(the:a4Game([Obj|_],_,_,_)),
+  %listing(the:a4Game(_,Obj,_,_)),
+  listing(the:a4Game/4),
   nl,ttyflush,!.
 
 js_test:- 
-  mmake,
+  mmake_hook,
   js_test('1+1'),
   js_test('null'),
-  js_test('this.game=window.the:a4Game; null'),
+  js_test('this.game=window.theA4Game; null'),
   js_test('Object.keys(this.game)'),  
-  js_test(`Term.fromString("property.problem('etaoin'[#id], erased('etaoin-memory'[#id]))", window.the:a4Game.ontology)`),
-  js_test(`Term.fromString("goal(D:'player'[#id], verb.find(X, 'shrdlu'[#id]))", window.the:a4Game.ontology);`),
-  js_test('this.game.naturalLanguageParser.rules[0].listenerVariable'),
-  % js_test("window.location.reload()"),
-  js_test('window.the:a4Game.ontology;'),
-  % js_test('window.reload()'),
+  js_test(`Term.fromString("property.problem('etaoin'[#id], erased('etaoin-memory'[#id]))", window.theA4Game.ontology)`),
+  js_test(`Term.fromString("goal(D:'player'[#id], verb.find(X, 'shrdlu'[#id]))", window.theA4Game.ontology);`),
+  js_test('this.game.naturalLanguageParser.rules[0].listenerVariable'),  
+  js_test('window.theA4Game.ontology;'),
+  js_test("window.location.reload()"),
   !.
 
+mmake_hook:- js_test('$(jQuery).getScript("eval_socket.js"); jsev.classOf(theA4Game)'),mmake.
+
 js_test0:-
-   mmake,
+   mmake_hook,
    js_test('this.game.naturalLanguageParser.rules[0]'),!.
 
 js_test1:-
-   mmake,
+   mmake_hook,
    js_test('this.game.naturalLanguageParser.rules'),!.
 
 
@@ -313,7 +319,7 @@ js_test1:-
 wotf(File,Goal):-  setup_call_cleanup(open(File,write,OS),with_output_to(OS, Goal), close(OS)).
 
 js_test2:- 
-  mmake,
+  mmake_hook,
   retractall(the:a4Game(_)),
 %  abolish(the:a4Game(_)),
   js_eval('this.game',X),
@@ -322,9 +328,10 @@ js_test2:-
   wotf(File,((writeq(the:a4Game(X)),write('.')))),!.
 
 js_test3:- 
-  mmake,
-  retractall(the:a4Game(_,_,_,_)),
-%  abolish(the:a4Game(_,_,_,_)),
+  mmake_hook,
+  % retractall(the:a4Game(_,_,_,_)),
+  abolish(the:a4Game/4),
+  dynamic(the:a4Game/4),
   process_a4,
   File = '/opt/logicmoo_workspace/packs_web/shrdlu/world.save2.pl',
   format('.~N'),
@@ -387,8 +394,8 @@ process_a4_1(Prefix,A4):- is_dict(A4),dict_pairs(A4, _Tag, Pairs),!, append(Pref
  process_a4_key_list(PrefixCell,Cell,Pairs).
 process_a4_1(Prefix,A4):- is_list(A4), contains_a4obj(A4), %  member(A,A4), \+ atomic(A),!, 
    append(Prefix,[Cell],PrefixCell), !, process_a4_list(PrefixCell,Cell,0,A4).
-
-process_a4_1(Prefix,  ele(element(N,Props,Subs))):- append(Prefix,[N],PrefixN), !, process_a4_e(PrefixN,Props,Subs).
+process_a4_1(Prefix,  [X]):- compound(X),!,process_a4(Prefix,X).
+process_a4_1(Prefix,  ele(X)):- !,process_a4(Prefix,  X).
 process_a4_1(Prefix,  element(N,Props,Subs)):- append(Prefix,[N],PrefixN), !, process_a4_e(PrefixN,Props,Subs).
 
 process_a4_1(Prefix,A4):- 

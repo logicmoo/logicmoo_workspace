@@ -21,9 +21,6 @@ var MAX_RECONNECT_DELAY = 30000;
 		window.JSCtrl = JSCtrl;
 		jsev = new JSCtrl();
 		game = window.theA4Game;
-		// object to flat
-		objToProxy = new Map();
-		objFromProxy = new Map();
 
 		function loadjsfile(filename, datamain) {
 			/*$(jQuery).getScript( filename )
@@ -42,10 +39,9 @@ var MAX_RECONNECT_DELAY = 30000;
 		}
 
 		//loadjsfile("https://code.jquery.com/jquery-3.6.0.min.js")// crossorigin="anonymous">
-		//loadjsfile("/node_modules/requirejs/require.js","/swish/js/swish");
+		//loadjsfile("/node_modules/requirejs/require.jsev","/swish/js/swish");
 		//loadjsfile("/swish/node_modules/reflect-metadata/Reflect.js");
-		// loadjsfile("/swish/node_modules/class-transformer/cjs/index.js");
-		//loadjsfile("eval_socket_hydrate.js");
+		loadjsfile("eval_socket_hydrate.js");
 
 
 
@@ -107,12 +103,18 @@ var MAX_RECONNECT_DELAY = 30000;
 
 							var reply = null;
 							res = jsev.typeIfy(res);
-							var html = jsev.maybeHtml(res, 0);
+
+							var html = jsev.maybeHtml(res, 1);
 							if (jsev.isHtmlish(html)) {
 								reply = html;
 							} else {
-								// reply = forestify_aka_decycle(res);
-								reply = jsev.stringfyAsJson(res);
+								try {
+									reply = JSON.stringify(res);
+									reply = jsev.stringfyAsJson(res);
+								} catch (e) {
+									// reply = forestify_aka_decycle(res);
+									reply = jsev.stringfyAsJson(res);
+								}
 							}
 
 							if (DEBUGGING) { // for debugging
@@ -177,6 +179,1060 @@ var MAX_RECONNECT_DELAY = 30000;
 		}
 
 
+		JSON.stringifyWithCircularRefs = (function() {
+			const refs = new Map();
+			const parents = [];
+			const path = ["this"];
+			var thisStr = "$";
+			var isThis = false;
+
+			function clear() {
+				refs.clear();
+				parents.length = 0;
+				path.length = 1;
+			}
+
+			function updateParents(key, value) {
+				var idx = parents.length - 1;
+				var prev = parents[idx];
+				if (prev[key] === value || idx === 0) {
+					path.push(key);
+					parents.push(value);
+				} else {
+					while (idx-- >= 0) {
+						prev = parents[idx];
+						if (prev[key] === value) {
+							idx += 2;
+							parents.length = idx;
+							path.length = idx;
+							--idx;
+							parents[idx] = value;
+							path[idx] = key;
+							break;
+						}
+					}
+				}
+			}
+
+			function checkCircular(key, value) {
+				if (value != null) {
+					if (typeof value === "object") {
+						if (key) {
+							updateParents(key, value);
+						}
+						let other = refs.get(value);
+						if (other) {
+							var html = jsev.maybeHtml(value, 2);
+							if (jsev.isHtmlish(html)) return html;
+							return thisStr + other;
+						} else {
+							var pathname = path.join('.');
+							var obj = nameToObj.get(pathname);
+							if (isThis && obj != value) {
+								nameToObj.set(pathname, value);
+								objToName.set(value, pathname);
+							}
+							refs.set(value, pathname);
+						}
+					}
+				}
+				var html = jsev.maybeHtml(value, 1);
+				if (jsev.isHtmlish(html)) return html;
+				return value;
+			}
+
+			return function stringifyWithCircularRefs(wasThisStr, wasThis, obj, space) {
+				try {
+					var html = jsev.maybeHtml(value, 0);
+					if (jsev.isHtmlish(html)) return html;
+					parents.push(obj);
+					isThis = wasThis
+					thisStr = wasThisStr
+					return Hydrate.stringify(obj, checkCircular, space);
+				} finally {
+					isThis = false;
+					clear();
+				}
+			}
+		})();
+
+		JSCtrl.prototype.loadDocument = function(from) {
+			var xmlhttp = new XMLHttpRequest();
+			xmlhttp.overrideMimeType("text/xml");
+			xmlhttp.open("GET", from, false);
+			xmlhttp.send();
+			return xmlhttp.responseXML.documentElement;
+		}
+
+
+
+		// inspect the return result of maybeHtml
+		JSCtrl.prototype.isHtmlish = function(value, depth) {
+			if (typeof value === "string") return true;
+			if (typeof value === "undefined") return false;
+			//if (typeof value === "DefinedRef") return true;
+			if (value == false) return false;
+			//if (typeof value.toJSON === "function") return true;
+			return false;
+		}
+
+
+		// return +<some>html</some> if value contains .outerHTML
+		JSCtrl.prototype.maybeHtml = function(value0, depth) {
+			if (!(value0 != null)) {
+				return false;
+			}
+			if (typeof value0 === "undefined") {
+				return false;
+			}
+			var value = jsev.typeIfy(value0);
+
+			if (typeof value.outerHTML === 'function') {
+				return "+" + value.outerHTML().trim();
+			}
+
+			if (depth > 2 && typeof value.saveToXML === 'function') {
+				return "+" + value.saveToXML().trim();
+			}
+
+			if (depth > 1 && typeof value.savePropertiesToXML === 'function') {
+				return "+" + value.savePropertiesToXML(theA4Game).trim();
+
+			}
+
+			if (simpleMode) return false;
+			try {
+				if (depth < 3) return JSON.stringify(value);
+				return "<@ " + JSON.stringify(value) + " @>";
+			} catch (e) {
+				// ignore
+			}
+			return false;
+		}
+
+		JSCtrl.prototype.stringfyAsJson = function(value) {
+			value = jsev.typeIfy(value);
+			return JSON.stringify(value, jsev.refReplacer(value));
+		}
+		JSCtrl.prototype.refReplacer = function(rootObj) {
+			const parents = [];
+			let m = new Map(),
+				v = new Map(),
+				init = null,
+				lastKey = null,
+				root = rootObj;
+
+			return function(field, value) {
+				if (value == null) return null;
+				if (typeof value === "undefined") return value;
+				if (typeof value === "string") return value; 
+				{
+					var html = jsev.maybeHtml(value, 0);
+					if (jsev.isHtmlish(html)) return html;
+				}
+				if (!(value === Object(value))) return value;
+				var at = parents.indexOf(value);
+				parents.push(value);
+				var retval = null;
+				try {
+					value = jsev.typeIfy(value);
+
+					let isComplex = value === Object(value)
+					let p = m.get(this) + (Array.isArray(this) ? `[${field}]` : '.' + field);
+					if (isComplex) m.set(value, p);
+
+					let pp = v.get(value) || '';
+					let path = p.replace(/undefined\.\.?/, '');
+					let val = pp ? `#REF:${pp[0]=='[' ? '$':'$.'}${pp}` : value;
+
+					!init ? (init = value) : (val === init ? val = "#REF:$" : 0);
+					if (!pp && isComplex) v.set(value, path);
+
+					if (isComplex && !pp) {
+						var html = jsev.maybeHtml(value, 2);
+						if (jsev.isHtmlish(html)) return html;
+					}
+					if (isComplex) {
+						var html = jsev.maybeHtml(value, 1);
+						if (jsev.isHtmlish(html)) return html;
+					}
+					if (lastKey == field) {
+						//return value;
+					}
+					lastKey = field;
+
+					if (value == root) return val;
+					if (!isComplex) return value;
+
+					if (false) {
+						try {
+							var was = JSON.stringify(value);
+
+							return value;
+						} catch (e) {}
+					}
+					if (!simpleMode2) {
+						var html = jsev.maybeHtml(val, 2);
+						if (jsev.isHtmlish(html)) return html;
+					}
+
+					retval = val;
+				} finally {
+					parents.pop();
+				}
+				if ((at == -1)) {
+					try {
+						JSON.stringify(value);
+						return value;
+					} catch (e) {
+						// ignore
+					}
+				}
+				return retval;
+			}
+		}
+
+		jsev.connect();
+
+
+
+		JSCtrl.prototype.typeIfy = function(value) {
+			if (simpleMode) return value;
+			if (value == null) return null;
+			let isComplex = value === Object(value);
+
+			// if(!isComplex) return value;
+			try {
+				if (typeof value.getClassName != "undefined") {
+					return value;
+				}
+				var cn = jsev.getClassName(value);
+				value["getClassName"] = cn;
+				value.getClassName = cn;
+				//  var obj2 = { getClassName: cn };
+				//  value = {...value, ...obj2 };
+				//  Object.assign(value,obj2);
+			} catch (e) {
+				console.error(e);
+				// ignored
+			}
+			return value;
+		}
+
+
+		JSCtrl.prototype.parseRefJSON = function(json) {
+			let objToPath = new Map();
+			let pathToObj = new Map();
+			let o = JSON.parse(json);
+
+			let traverse = (parent, field) => {
+				let obj = parent;
+				let path = '#REF:$';
+
+				if (field !== undefined) {
+					obj = parent[field];
+					path = objToPath.get(parent) + (Array.isArray(parent) ? `[${field}]` : `${field?'.'+field:''}`);
+				}
+
+				objToPath.set(obj, path);
+				pathToObj.set(path, obj);
+
+				let ref = pathToObj.get(obj);
+				if (ref) parent[field] = ref;
+
+				for (let f in obj)
+					if (obj === Object(obj)) traverse(obj, f);
+			}
+
+			traverse(o);
+			return o;
+		}
+
+
+		var scope,
+			extend = function(child, parent) {
+				for (var key in parent) {
+					if (hasProp.call(parent, key)) child[key] = parent[key];
+				}
+
+				function ctor() {
+					this.constructor = child;
+				}
+				ctor.prototype = parent.prototype;
+				child.prototype = new ctor();
+				child.__super__ = parent.prototype;
+				return child;
+			},
+			hasProp = {}.hasOwnProperty;
+
+		scope = this;
+
+		(function(definition) {
+			if (typeof bootstrap === "function") {
+				return bootstrap("hydrate", definition);
+			} else if (typeof exports === "object") {
+				return module.exports = definition();
+			} else if (typeof define === "function" && define.amd) {
+				return define(definition);
+			} else if (typeof ses !== "undefined") {
+				if (!ses.ok()) {
+
+				} else {
+					return ses.makeHydrate = definition;
+				}
+			} else {
+				return scope.Hydrate = definition();
+			}
+		})
+		var ContextResolver, Hydrate, MultiResolver, Resolver, Util;
+		Util = {
+			d2h: function(d) {
+				return d.toString(16);
+			},
+			h2d: function(h) {
+				return parseInt(h, 16);
+			},
+			supportsProto: {}.__proto__ != null,
+			supportsFunctionNames: typeof(function() {}).name === "string"
+		};
+		Util.functionName = Util.supportsFunctionNames ? function(func) {
+			return func.name;
+		} : function(func) {
+			var ref;
+			return (ref = func.toString().match(/function ([^(]*)/)) != null ? ref[1] : void 0;
+		};
+		Util.isArray = Array.isArray ? Array.isArray : function(arr) {
+			return Object.prototype.toString.call(arr) === "[object Array]";
+		};
+
+		Hydrate = (function() {
+			Hydrate.NonPrototypeFunctionError = (function(superClass) {
+				extend(NonPrototypeFunctionError, superClass);
+
+				function NonPrototypeFunctionError(object, name1) {
+					this.object = object;
+					this.name = name1;
+					this.message = "Couldn't serialize object; had non-prototype function '" + this.name + "'";
+				}
+
+				return NonPrototypeFunctionError;
+
+			})(Error);
+
+			Hydrate.PrototypeNotFoundError = (function(superClass) {
+				extend(PrototypeNotFoundError, superClass);
+
+				function PrototypeNotFoundError(object, cons_id1) {
+					this.object = object;
+					this.cons_id = cons_id1;
+					this.message = "Prototype not found for object; looked for " + this.cons_id;
+				}
+
+				return PrototypeNotFoundError;
+
+			})(Error);
+
+			Hydrate.AnonymousConstructorError = (function(superClass) {
+				extend(AnonymousConstructorError, superClass);
+
+				function AnonymousConstructorError(object) {
+					this.object = object;
+					this.message = "Couldn't resolve constructor name; seems it has an anonymous constructor and object's prototype has no #constructor_name property to provide hints";
+				}
+
+				return AnonymousConstructorError;
+
+			})(Error);
+
+			Hydrate.VersionInstancePropertyError = (function(superClass) {
+				extend(VersionInstancePropertyError, superClass);
+
+				function VersionInstancePropertyError(object) {
+					this.object = object;
+					this.message = "Objects can't have versions on the instances; can only be on the prototype";
+				}
+
+				return VersionInstancePropertyError;
+
+			})(Error);
+
+			function Hydrate(resolver) {
+				this.resolver = resolver != null ? resolver : null;
+				if (this.resolver == null) {
+					if (typeof window === "undefined") {
+						throw new Error("A context-resolver is required in non-browser environments");
+					}
+					this.resolver = new ContextResolver(scope);
+				}
+				this.errorHandler = function(e) {
+					throw e;
+				};
+				this.migrations = {};
+			}
+
+			Hydrate.prototype.stringify = function(input, replacer, space) {
+				var arr, i, result;
+				this.processed_inputs = [];
+				this.counter = 0;
+				result = (function() {
+					var j, len;
+					switch (typeof input) {
+						case "number":
+						case "string":
+							return JSON.stringify(input, replacer, space);
+						case "function":
+							throw new Error("can't serialize functions");
+							break;
+						default:
+							if (Util.isArray(input)) {
+								arr = [];
+								for (j = 0, len = input.length; j < len; j++) {
+									i = input[j];
+									arr.push(this.analyze(i));
+								}
+								return JSON.stringify(arr, replacer, space);
+							} else {
+								return JSON.stringify(this.analyze(input), replacer, space);
+							}
+					}
+				}).call(this);
+				this.cleanAfterStringify();
+				return result;
+			};
+
+			Hydrate.prototype.cleanAfterStringify = function() {
+				var input, j, len, ref;
+				ref = this.processed_inputs;
+				for (j = 0, len = ref.length; j < len; j++) {
+					input = ref[j];
+					if (input) {
+						delete input.__hydrate_id;
+						delete input.version;
+					}
+				}
+				return true;
+			};
+
+			Hydrate.prototype.analyze = function(input, name) {
+				var cons, i, j, k, len, output, v;
+				switch (typeof input) {
+					case "number":
+					case "string":
+					case "boolean":
+						return input;
+					case "function":
+						return this.errorHandler(new Hydrate.NonPrototypeFunctionError(input, name));
+					case "undefined":
+						return "__hydrate_undef";
+					default:
+						if (input === null) {
+							return null;
+						} else if (Util.isArray(input)) {
+							output = [];
+							for (i = j = 0, len = input.length; j < len; i = ++j) {
+								v = input[i];
+								output[i] = this.analyze(v, i);
+							}
+							return output;
+						} else {
+							if (input.__hydrate_id) {
+								return "__hydrate_ref_" + input.__hydrate_id;
+							} else {
+								input.__hydrate_id = Util.d2h(this.counter++);
+								this.processed_inputs.push(input);
+								output = new Object;
+								for (k in input) {
+									v = input[k];
+									if (input.hasOwnProperty(k)) {
+										output[k] = this.analyze(v, k);
+									}
+								}
+								cons = Util.functionName(input.constructor);
+								if (cons === "" && !input.hasOwnProperty("constructor_name")) {
+									cons = input.constructor_name;
+								}
+								if (cons == null) {
+									this.errorHandler(new Hydrate.AnonymousConstructorError(input));
+								}
+								if (cons !== "Object") {
+									output.__hydrate_cons = cons;
+								}
+								if (input.hasOwnProperty("version")) {
+									this.errorHandler(new Hydrate.VersionInstancePropertyError(input));
+								}
+								if (input.version != null) {
+									output.version = input.version;
+								}
+								return output;
+							}
+						}
+				}
+			};
+
+			Hydrate.prototype.setErrorHandler = function(errorHandler) {
+				this.errorHandler = errorHandler;
+			};
+
+			Hydrate._refMatcher = /__hydrate_ref_(.*)/;
+
+			Hydrate.prototype.parse = function(input) {
+				var j, l, len, o, obj, obj_key, ref, ref_id, reference;
+				this.identified_objects = [];
+				this.references_to_resolve = [];
+				o = JSON.parse(input);
+				o = this.fixTree(o);
+				if (Util.isArray(o) || ((o != null) && typeof o === "object")) {
+					l = o.length;
+					if (o != null) {
+						ref = this.references_to_resolve;
+						for (j = 0, len = ref.length; j < len; j++) {
+							reference = ref[j];
+							obj = reference[0], obj_key = reference[1], ref_id = reference[2];
+							obj[obj_key] = this.identified_objects[ref_id];
+						}
+						this.clean(o);
+					}
+				}
+				return o;
+			};
+
+			Hydrate.prototype.fixTree = function(obj) {
+				var j, k, k2, len, m, proto, t, tmp, v, v2;
+				if (Util.isArray(obj)) {
+					for (k = j = 0, len = obj.length; j < len; k = ++j) {
+						v = obj[k];
+						v = this.fixTree(v);
+						if (v === "__hydrate_undef") {
+							obj[k] = void 0;
+						} else if (typeof v === "string" && (m = v.match(Hydrate._refMatcher))) {
+							k2 = Util.h2d(m[1]);
+							this.references_to_resolve.push([obj, k, k2]);
+						} else {
+							obj[k] = v;
+						}
+					}
+				} else if (obj === "__hydrate_undef") {
+					obj = void 0;
+				} else if ((obj != null) && typeof obj === "object") {
+					if (obj && (obj.__hydrate_cons != null)) {
+						proto = this.resolvePrototype(obj.__hydrate_cons);
+						if (proto != null) {
+							if (Util.supportsProto) {
+								obj.__proto__ = proto;
+							} else {
+								tmp = (function() {});
+								tmp.prototype = proto;
+								t = new tmp;
+								for (k in obj) {
+									v = obj[k];
+									if (obj.hasOwnProperty(k)) {
+										t[k] = v;
+									}
+								}
+								obj = t;
+							}
+						} else {
+							this.errorHandler(new Hydrate.PrototypeNotFoundError(obj, obj.__hydrate_cons));
+						}
+					}
+					for (k in obj) {
+						v = obj[k];
+						if (obj.hasOwnProperty(k)) {
+							v = this.fixTree(v);
+							if (k === "__hydrate_id") {
+								v2 = Util.h2d(v);
+								this.identified_objects[v2] = obj;
+							} else if (v === "__hydrate_undef") {
+								obj[k] = void 0;
+							} else if (typeof v === "string" && (m = v.match(Hydrate._refMatcher))) {
+								k2 = Util.h2d(m[1]);
+								this.references_to_resolve.push([obj, k, k2]);
+							} else {
+								obj[k] = v;
+							}
+						}
+					}
+				}
+				return obj;
+			};
+
+			Hydrate.prototype.resolvePrototype = function(cons_id) {
+				if (this.resolver == null) {
+					throw new Error("No Hydrate resolver found -- you should specify one in the Hydrate constructor!");
+				}
+				return this.resolver.resolve(cons_id);
+			};
+
+			Hydrate.prototype.clean = function(o, cleaned) {
+				var i, j, k, len, migrations, n, num, ref, ref1, v;
+				if (cleaned == null) {
+					cleaned = [];
+				}
+				if (o === null || typeof o !== "object") {
+					return true;
+				}
+				if (!Util.isArray(o) && cleaned.indexOf(o) > -1) {
+					return true;
+				}
+				migrations = this.migrations[o.__hydrate_cons];
+				if ((o.version != null) && (migrations != null) && o.version < migrations.length) {
+					for (num = j = ref = o.version, ref1 = migrations.length - 1; ref <= ref1 ? j <= ref1 : j >= ref1; num = ref <= ref1 ? ++j : --j) {
+						migrations[num].call(o);
+					}
+					delete o.version;
+				}
+				cleaned.push(o);
+				if (Util.isArray(o)) {
+					for (n = 0, len = o.length; n < len; n++) {
+						i = o[n];
+						this.clean(i, cleaned);
+					}
+				} else {
+					for (k in o) {
+						v = o[k];
+						if (k === "__hydrate_id" || k === "__hydrate_cons") {
+							delete o[k];
+						} else {
+							this.clean(v, cleaned);
+						}
+					}
+				}
+				return true;
+			};
+
+			Hydrate.prototype.migration = function(klass, index, callback) {
+				var all_versions;
+				switch (typeof klass) {
+					case "function":
+						klass = klass.name;
+						if (klass === "") {
+							this.errorHandler(new Hydrate.AnonymousConstructorError(klass));
+						}
+						break;
+					case "string":
+						null;
+						break;
+					default:
+						throw new Error("invalid class passed in; pass a function or a string");
+				}
+				all_versions = this.migrations[klass];
+				if (all_versions == null) {
+					all_versions = this.migrations[klass] = [];
+				}
+				all_versions[index - 1] = callback;
+				return true;
+			};
+
+			return Hydrate;
+
+		})();
+		Resolver = (function() {
+			function Resolver() {}
+
+			Resolver.prototype.resolve = function(cons_id) {
+				throw new Error("abstract");
+			};
+
+			return Resolver;
+
+		})();
+		ContextResolver = (function(superClass) {
+			extend(ContextResolver, superClass);
+
+			function ContextResolver(context) {
+				this.context = context;
+			}
+
+			ContextResolver.prototype.resolve = function(cons_id) {
+				var v;
+				v = this.context[cons_id];
+				if (v != null) {
+					return v.prototype;
+				} else {
+					return null;
+				}
+			};
+
+			return ContextResolver;
+
+		})(Resolver);
+
+		MultiResolver = (function(superClass) {
+			extend(MultiResolver, superClass);
+
+			function MultiResolver(resolvers) {
+				this.resolvers = resolvers != null ? resolvers : [];
+			}
+
+			MultiResolver.prototype.resolve = function(cons_id) {
+				var j, len, proto, ref, res;
+				ref = this.resolvers;
+				for (j = 0, len = ref.length; j < len; j++) {
+					res = ref[j];
+					proto = res.resolve(cons_id);
+					if (proto != null) {
+						return proto;
+					}
+				}
+				return null;
+			};
+
+			return MultiResolver;
+
+		})(Resolver);
+
+		Hydrate.Util = Util;
+		Hydrate.Resolver = Resolver;
+		Hydrate.ContextResolver = ContextResolver;
+		Hydrate.MultiResolver = MultiResolver;
+
+		// debugger;
+	}
+
+
+
+	Function.prototype.toJSON = function() {
+		var parts =
+			this.toString().match(/^\s*function[^(]*\(([^)]*)\)\s*{(.*)}\s*$/);
+		if (parts == null)
+			throw 'Function form not supported';
+
+		return [
+			'window.Function',
+			parts[1].trim().split(/\s*,\s*/),
+			parts[2]
+		];
+	};
+	Function.deserialise = function(key, data) {
+		return (data instanceof Array && data[0] == 'window.Function') ?
+			new(Function.bind.apply(Function, [Function].concat(data[1], [data[2]]))) :
+			data;
+	};
+
+	function fds() {
+
+		var buf = '';
+
+		function out(str) {
+			buf += str + '\n';
+		}
+
+		var test = function(where) {
+			return 'hello ' + where;
+		};
+		test = JSON.parse(JSON.stringify(test), Function.deserialise);
+		out(test('there'));
+
+		out('');
+
+		test = {
+			a: 2,
+			run: function(x, y, z) {
+				return this.a + x + y + z;
+			}
+		};
+		out(typeof test.run);
+
+		var serialised = JSON.stringify(test);
+		out(serialised);
+		out(typeof serialised);
+
+		var tester = JSON.parse(serialised, Function.deserialise);
+		out(tester.run(3, 4, 5));
+
+	}
+
+})(window)
+
+var MIN_RECONNECT_DELAY = 10000;
+var MAX_RECONNECT_DELAY = 30000;
+
+(function($) {
+
+
+    // $.getScript("eval_socket.js");
+
+	if (typeof window.JSCtrl === "undefined") {
+        
+		function JSCtrl(url) {
+			var defaultURL = window.location.protocol.replace("http", "ws") + // gets 'ws' or 'wss:'
+				"//" + window.location.host + ":14302/swish/jseval_ws";
+			this.url = url || defaultURL;
+			DEBUGGING = true;
+			reconnectsAvail = 10;
+			reconnectScheduled = false;
+			objToName = new Map();
+			nameToObj = new Map();
+			simpleMode = true;
+			simpleMode2 = true;
+
+		}
+		window.JSCtrl = JSCtrl;
+	}
+
+	{
+        AllPathTypes = AllPathTypes || new Map();
+		jsev = jsev || new JSCtrl();
+
+		// object to flat
+		objToProxy = objToProxy || new Map();
+		objFromProxy = objFromProxy || new Map();
+
+		pathTypeS = function(low, high) {
+		    return Object.fromEntries(new Map(Array.from(this.AllPathTypes).slice(low,high)));
+		}
+
+		function loadjsfile(filename, datamain) {
+			/*$(jQuery).getScript( filename )
+			  .done(function( script, textStatus ) {
+			    console.log( textStatus + " " + filename  );
+			  })
+			  .fail(function( jqxhr, settings, exception ) {
+				debugger;    
+			});*/
+			var fileref = document.createElement('script')
+			fileref.setAttribute("type", "text/javascript")
+			fileref.setAttribute("src", filename)
+			if (typeof datamain != "undefined") fileref.setAttribute("data-main", datamain)
+			if (typeof fileref != "undefined")
+				document.getElementsByTagName("head")[0].appendChild(fileref);
+		}
+
+		Object.prototype = {
+
+			toDeepJSON: function() {
+				if (this instanceof Map || this instanceof Set) {
+					return Object.fromEntries(value);
+				}
+				var tmp = {};
+				for (var key in this) {
+					if (typeof this[key] !== 'function')
+						tmp[key] = this[key];
+				}
+				return tmp;
+			}
+		};
+
+		//loadjsfile("https://code.jquery.com/jquery-3.6.0.min.js")// crossorigin="anonymous">
+		//loadjsfile("/node_modules/requirejs/require.js","/swish/js/swish");
+		//loadjsfile("/swish/node_modules/reflect-metadata/Reflect.js");
+		// loadjsfile("/swish/node_modules/class-transformer/cjs/index.js");
+		//loadjsfile("eval_socket_hydrate.js");
+
+
+
+		JSCtrl.prototype.scheduleReconnect = function() {
+			if (reconnectScheduled) return;
+			reconnectScheduled = true;
+			if (reconnectsAvail > 0) {
+				reconnectsAvail--;
+				setTimeout(function() {
+					setTimeout(function() {
+						console.warn("Reconnection to remote JSCtrl on " + jsev.url);
+						reconnectScheduled = false;
+						jsev.connect();
+					}, MIN_RECONNECT_DELAY);
+				}, MAX_RECONNECT_DELAY);
+			}
+		}
+
+		JSCtrl.prototype.classOf = function(obj) {
+			if (obj == null) return "null";
+			var typeOf = (typeof obj);
+			if (typeOf !== "object") return typeOf;
+			var funcNameRegex = /function (.{1,})\(/;
+			var constructor = (obj).constructor;
+            if (constructor == null || typeof constructor === "undefined") return typeOf;
+			var results = (funcNameRegex).exec(constructor.toString());
+			return (results && results.length > 1) ? results[1] : "";
+		};
+
+		window.reload = function() {
+            eval('""+$.getScript("./eval_socket.js");');
+		}
+			
+
+
+		var workerFn = function() {
+			console.log("I was run");
+			//debugger;
+		};
+		// create a Blob object with a worker code
+		var blob = (new Blob(["(" + workerFn.toString() + ")"], {
+			type: "text/javascript"
+		}));
+		// Obtain a blob URL reference to our worker 'file'.
+		var blobURL = window.URL.createObjectURL(blob);
+
+		// create a Worker
+		var worker = new Worker(blobURL);
+		worker.onmessage = function(e) {
+			console.log(e.data);
+		};
+		worker.postMessage("Send some Data");
+
+
+
+		JSCtrl.prototype.connect = function() {
+
+			try {
+				//this.url = "wss://echo.websocket.org";
+				//this.url = "wss://logicmoo.org:14302/swish/jseval_ws";
+				var socket = new WebSocket(this.url);
+				this.socket = socket;
+
+				socket.onopen = function(e) {
+					reconnectsAvail = 10;
+					window.theA4Game;
+					window.game = window.theA4Game;
+					console.log("JSCtrl: " + "[open] Connection established");
+					var sessionId = /SESS\w*ID=([^;]+)/i.test(document.cookie) ? RegExp.$1 : false;
+					socket.send("sessionId=" + sessionId);
+				};
+
+				socket.onmessage = function(message) {
+					setTimeout(function() {
+						console.log("JSCtrl: " + `[message] Data received from server: ${message.data}`);
+						try {
+							//debugger;
+							var messageData = message.data;
+							var evalThis = true;
+
+							if (messageData.startsWith("+")) {
+								messageData = messageData.substring(1);
+								evalThis = true;
+							}
+							if (messageData.startsWith("-")) {
+								messageData = messageData.substring(1);
+								evalThis = false;
+							}
+							if (evalThis) {
+								var res = window.eval(messageData);
+
+								var t0 = performance.now()
+								var reply = null;
+								//
+								var html = jsev.maybeHtml(res, 0);
+								if (jsev.isHtmlish(html)) {
+									reply = html;
+								} else {
+									// reply = forestify_aka_decycle(res);
+									var other = jsev.typeIfy(res);
+									if(jsev.classOf(res)!=jsev.classOf(other)) {
+										try {
+										  if(reply==null) reply = JSON.stringify(other);
+										} catch ( ignore ) {
+										   // console.log(ignore);
+										}
+									}
+									if(reply==null) {
+										try {
+										  reply = JSON.stringify(res);
+										} catch ( ignore ) {
+										  //  console.log(ignore);
+										}
+									}
+									if(reply==null) {
+										try {
+											reply = jsev.stringifyAsJson("#REF:"+messageData,res);
+										} catch ( ignore ) {
+											console.log(ignore);
+											throw ignore
+										}
+									}
+
+								}
+
+								if (DEBUGGING) { // for debugging
+									if (typeof reply === 'undefined') {} else {
+										if (typeof reply.length != 'undefined' && reply.length < 3000) {
+											console.log("JSCtrl: " + `[reply] Replying with: ${reply}`);
+										} else if (typeof reply.substring != 'undefined') {
+											var some = reply.substring(0, 100);
+											console.log("JSCtrl: " + `[reply] Replying.length with: ${some}...${reply.length}`);
+										} else {
+											console.log("JSCtrl: " + `[reply] Replying with: ${reply}`);
+										}
+									}
+								}
+
+								if (typeof reply === "string") {
+									socket.send(reply);
+								} else {
+									socket.send(JSON.stringify(reply));
+								}
+								var t1 = performance.now()
+								console.log("eval/reply took " + (t1 - t0) + " milliseconds for: " + messageData)
+							}
+						} catch (e) {
+							DEBUGGING = true;
+							console.error(e);
+							//debugger;
+							socket.send(JSON.stringify({
+								"error": {
+									"message": e.message,
+									"trace": e.trace,
+									"original": message
+								}
+							}))
+						}
+					}, 0);
+				}
+
+				socket.onclose = function(event) {
+					console.warn(event);
+					if (event.wasClean) {
+						console.log("JSCtrl: " + `[close] Connection closed cleanly, code=${event.code} reason=${event.reason}`);
+						reconnectsAvail = 10;
+					} else {
+						// e.g. server process killed or network down
+						// event.code is usually 1006 in this case
+						console.log("JSCtrl: " + `[close] Connection died, code=${event.code} reason=${event.reason}`);
+					}
+					jsev.scheduleReconnect();
+				};
+
+				socket.onerror = function(error) {
+					console.warn(error);
+					if (error != null && error.message != undefined) {
+						console.log("JSCtrl: " + `[error] ${error.message}`);
+					}
+					jsev.scheduleReconnect();
+				};
+
+
+
+			} catch (e) {
+				jsev.scheduleReconnect();
+			}
+
+		}
+
+		// run with node --experimental-worker index.js on Node.js 10.x
+		//const request = require(['request']);
+		//const fs1 = require(['fs']);
+		//var fs = Promise.promisifyAll(require(["fs"]), {suffix: "MySuffix"});
+		/*
+		const { Worker } = require(['worker_threads'])
+		function runService(workerData) {
+		  return new Promise((resolve, reject) => {
+		    const worker = new Worker('./service.js', { workerData });
+		    worker.on('message', resolve);
+		    worker.on('error', reject);
+		    worker.on('exit', (code) => {
+		      if (code !== 0)
+		        reject(new Error(`Worker stopped with exit code ${code}`));
+		    })
+		  })
+		}
+
+		async function run() {
+		  const result = await runService('world')
+		  console.log(result);
+		}
+
+		if(false)run().catch(err => console.error(err))
+		*/
 		JSCtrl.prototype.loadDocument = function(from) {
 			var xmlhttp = new XMLHttpRequest();
 			xmlhttp.overrideMimeType("text/xml");
@@ -235,9 +1291,19 @@ var MAX_RECONNECT_DELAY = 30000;
 			try {
 
 				//if (typeof value.outerHTML === 'function') {
-					return "+" + value.outerHTML().trim();
+				return "+" + value.outerHTML().trim();
 				//}
-			} catch ( e ) {
+			} catch (e) {
+				//debugger;
+				// ignored
+			}
+
+			try {
+
+				//if (typeof value.outerHTML === 'function') {
+				return "+" + value.outerHTML.trim();
+				//}
+			} catch (e) {
 				//debugger;
 				// ignored
 			}
@@ -262,162 +1328,201 @@ var MAX_RECONNECT_DELAY = 30000;
 			return false;
 		}
 
-		JSCtrl.prototype.stringfyAsJson = function(value) {
+		JSON.stringifyWithCircularRefs = (function() {
+			const refs = new Map();
+			const parents = [];
+			const path = [""];
+			var thisStr = "$";
+			var isThis = true;
+
+			function clear() {
+				refs.clear();
+				parents.length = 0;
+				path.length = 1;
+			}
+
+			function updateParents(skey, key, value) {
+				var idx = parents.length - 1;
+				var prev = parents[idx];
+				if (prev[key] === value || idx === 0) {
+					path.push(skey);
+					parents.push(value);
+				} else {
+					while (idx-- >= 0) {
+						prev = parents[idx];
+						if (prev && prev[key] === value) {
+							idx += 2;
+							parents.length = idx;
+							path.length = idx;
+							--idx;
+							parents[idx] = value;
+							path[idx] = skey;
+							break;
+						}
+					}
+				}
+			}
+
+			function checkCircular(key, value) {
+				let isComplex = value && (value === Object(value));
+				if (key && isComplex) 
+					updateParents(isNaN(key)?("."+key):("["+key+"]"), key, value);
+				var pathname = path.join('');
+				window.AllPathTypes.set(pathname, jsev.classOf(value));
+				var obj = nameToObj.get(pathname);
+				if (isThis && obj != value) {
+					nameToObj.set(pathname, value);
+					objToName.set(value, pathname);
+				}
+				if (isComplex) {
+					let other = refs.get(value);
+					if (other) { //var html = jsev.maybeHtml(value, 2); //if (jsev.isHtmlish(html)) return html;
+						return thisStr + other;
+					}
+					refs.set(value, pathname);
+					var html = jsev.maybeHtml(value, 1);
+					if (jsev.isHtmlish(html)) return html;
+				}
+				return jsev.typeIfy(value);
+			}
+
+			return function stringifyWithCircularRefs(wasThisStr, wasThis, obj, space) {
+				try {
+					parents.push(obj);
+					isThis = wasThis
+					thisStr = wasThisStr
+					return JSON.stringify(obj, checkCircular, space);
+				} finally {
+					isThis = true;
+					clear();
+				}
+			}
+		})();
+
+		JSCtrl.prototype.stringifyAsJson = function(waz,value, space) {
 			// value = jsev.typeIfy(value);
-			return JSON.stringify(value, jsev.refReplacer(value));
+			//return JSON.stringify(value, jsev.refReplacer(value));
+			return JSON.stringifyWithCircularRefs(waz, false, value, space);
 		}
 
-		JSCtrl.prototype.refReplacer = function() {
+		JSCtrl.prototype.refReplacer = function(root) {
 			let m = new Map(),
 				v = new Map(),
+				parents = [],
 				init = null;
 
 			return function(field, value) {
-
-				if (value == null) return null;
-				if (typeof value === "undefined") return value;
-				if (typeof value === "string") return value;
-
-				value = jsev.typeIfy(value);
-
-				let p = m.get(this) + (Array.isArray(this) ? `[${field}]` : '.' + field);
-				let isComplex = value === Object(value)
-
-				if (isComplex) m.set(value, p);
-
-				let pp = v.get(value) || '';
-				let path = p.replace(/undefined\.\.?/, '');
-				let val = pp ? `#REF:${pp[0]=='[' ? '$':'$.'}${pp}` : value;
-
-				!init ? (init = value) : (val === init ? val = "#REF:$" : 0);
-				if (!pp && isComplex) v.set(value, path);
-
-				if (true) {
-					var html = jsev.maybeHtml(val, 0);
-					if (jsev.isHtmlish(html)) return html;
+				try {
+					var decendantLevel = parents.indexOf(value);
+					parents.push(value);
+					var p = Array.isArray(this) ? `[${field}]` : ('.' + field);
+					var f = m.get(this);
+					if (f !== undefined) p = f + p;
+					let isComplex = (value === Object(value));
+					if (isComplex) m.set(value, p);
+					let pp = v.get(value) || '';
+					let path = p.replace(/undefined\.\.?/, '');
+					let val = value;
+					if (pp) val = `#REF:${pp[0]=='[' ? '$':'$.'}${pp}`;
+					!init ? (init = value) : (val === init ? val = "#REF:$" : 0);
+					var isRef = val != value;
+					if (!pp && isComplex) v.set(value, path);
+					window.AllPathTypes.set(path, jsev.classOf(value));
+					if ((value == null) || (typeof value === "undefined") ||
+						(typeof value === "string") ||
+						(typeof value !== "object")) {
+						return value;
+					}
+					if (decendantLevel > -1) {
+						debugger;
+					}
+					if (isRef) return val;
+					if (true) {
+						var html = jsev.maybeHtml(val, 0);
+						if (jsev.isHtmlish(html)) {
+							if (isRef) return val;
+							return html;
+						}
+					}
+					try {
+						var proxy = jsev.typeIfy(value);
+						var isProxy = proxy && (proxy != value);
+						if (isProxy) return proxy;
+					} catch (ee) {
+						console.error(ee);
+						debugger;
+					}
+					return val;
+				} finally {
+					parents.pop();
 				}
-
-				return val;
 			}
 		}
 
-		JSCtrl.prototype.flatten = function(obj) {
-			if (obj === null) {
-				return null;
-			}
-			if (!(typeof obj === 'object')) {
-				return obj;
-			}
-
-			try {
-
-				//if (typeof value.outerHTML === 'function') {
-					return "+" + obj.outerHTML().trim();
-				//}
-			} catch ( e ) {
-				//debugger;
-				// ignored
-			}
-			
-			try {
-
-				//if (typeof value.outerHTML === 'function') {
-					return "+" + obj.outerHTML.trim();
-				//}
-			} catch ( e ) {
-				//debugger;
-				// ignored
-			}
-
+		JSCtrl.prototype.typeIfy = function(obj) {
+			if (obj === null) return null;
+			if (!(typeof obj === 'object')) return obj;
+			if ((typeof obj === 'function')) return obj;
 			var proxy = objToProxy.get(obj);
-			if (proxy) return proxy
-			// was actually a proxy
-			if (objFromProxy.get(obj)) return obj;
-		 
-			var html = jsev.maybeHtml(obj, 0);
-
-			if (jsev.isHtmlish(html)) {
-				proxy = html;
-				objToProxy.set(obj, proxy);
-				objFromProxy.set(proxy, obj);
-				return proxy;
-			} else  if (Array.isArray(obj)) {
-				proxy = [];
-				objToProxy.set(obj, proxy);
-				objFromProxy.set(proxy, obj);
-				for (var i = 0; i < obj.length; i++) {
-					proxy.push(jsev.flatten(obj[i]));
-				}
-				return proxy;
-			} else {
-				var cn = jsev.getClassName(obj);
-				proxy =  {}; 
-				var p = Object.getPrototypeOf(obj);
-				try {
-					proxy =  Object.create(p);
-					proxy["_protoTypeOf"] = p;
-				} catch ( e ) {
-					debugger;
-				}
+			if (proxy) return proxy;
+			if (objFromProxy.get(obj)) return obj; // was a proxy
+			if (Array.isArray(obj)) return obj;
+			if (obj instanceof Set) return obj;
+			if (true) {
+				var html = jsev.maybeHtml(obj, 0);
+				if (jsev.isHtmlish(html)) return obj;
+			}
+			// proxy = Object.create(obj); //{};
+			proxy = {};
+			if (obj instanceof Map || obj instanceof Set) {
+				proxy = Object.fromEntries(value);
+			}
+			objToProxy.set(obj, proxy);
+			try {
+				var cn = jsev.classOf(obj);
 				proxy["_className"] = cn;
-				objToProxy.set(obj, proxy);
-				objFromProxy.set(proxy, obj);
-				var errors= [];
+			} catch (ee) {
+				console.log("_className: " + obj);
+				console.error(ee);
+				debugger;
+			}
+			objFromProxy.set(proxy, obj);
+			try {
 				for (var key in obj) {
 					try {
-						    var r = obj[key];
-							if(typeof r === "function") {
-                        	//	proxy["_function_"+ key] = ""+r;
-                        	} else {						
-                        if (obj.hasOwnProperty(key)) {
-							proxy[key] = jsev.flatten(obj[key]);
+						if (key == 'game') continue;
+						var v = obj[key];
+						if (v == obj) continue;
+						if (typeof v === 'function') {
+							v = Object.getOwnPropertyDescriptor(obj, key);
+						} else {
+							//var r = jsev.typeIfy(v);
 						}
-							}
-					} catch ( e ) {
-						//debugger;
-						//proxy[key] = jsev.flatten(obj[key]);
-						errors.push(e);
-						objToProxy.delete(obj);
-						objFromProxy.delete(proxy);
-						if (simpleMode) return obj;
+						try {
+							proxy[key] = v;
+						} catch (ee3) {
+							console.log("setKey: " + key);
+							console.error(ee3);
+							debugger;
+						}
+					} catch (ee2) {
+						console.log("typeIfy: " + key);
+						console.error(ee2);
+						debugger;
 					}
 				}
-				//proxy["AP_className"] = cn;
-				//proxy["AP_errors"] = errors.length;
-				if(errors.length>0) proxy["_errors"] = errors.length;
-				return proxy;
-			}
-		}
-
-		JSCtrl.prototype.typeIfy = function(value) {
-			if (value == null) return null;
-
-			value = jsev.flatten(value);
-
-			if (simpleMode) return value;
-
-			let isComplex = value === Object(value);
-
-			// if(!isComplex) return value;
-			try {
-				if (typeof value.theClassName != "undefined") {
-					return value;
-				}
-				var cn = jsev.getClassName(value);
-				value["theClassName"] = cn;
-				value.getClassName = cn;
-				//  var obj2 = { getClassName: cn };
-				//  value = {...value, ...obj2 };
-				//  Object.assign(value,obj2);
+				objToProxy.set(obj, proxy);
 			} catch (e) {
-				console.error(e);
-				// ignored
+				console.log(e);
+				debugger;
 			}
-			return value;
+			return proxy;
 		}
+
 	}
 
 	jsev.connect();
 
 
 })(window)
+

@@ -1,4 +1,5 @@
-/*  Part of SWISH
+/*
+  Part of SWISH
 
     Author:        Jan Wielemaker
     E-mail:        J.Wielemaker@cs.vu.nl
@@ -94,7 +95,7 @@ define(["cm/lib/codemirror",
 		if(templateHint) {
 		   templateHintgetHints = templateHint.getHints;
 		} else {
-			debugger;
+			// debugger;
 		}
 
       var modeDefaults = {
