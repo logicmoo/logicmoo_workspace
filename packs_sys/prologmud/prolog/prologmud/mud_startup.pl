@@ -30,20 +30,27 @@ use_baseKB :- '$set_typein_module'(baseKB),'$set_source_module'(baseKB),module(b
 :- show_entry(gripe_time(40, doall(baseKB:regression_test))).
 :- endif.
 
+user:file_search_path(sample_games, Dir):- try_samples_game_dir(Dir).
+try_samples_game_dir('./'):- exists_source('./src_game_nani/objs_misc_household.pfc').
+try_samples_game_dir('~/'):- exists_source('~/src_game_nani/objs_misc_household.pfc').
+try_samples_game_dir('/opt/logicmoo_workspace/prologmud_server/'):- 
+  exists_source('/opt/logicmoo_workspace/prologmud_server/src_game_nani/objs_misc_household.pfc').
+try_samples_game_dir(library('prologmud_sample_games/')).
 
 % ==============================================
 % [Optional] Creates or suppliments a world
 % ==============================================
-set_default_sample_games:- user:file_search_path(sample_games,_Dir),!.
-set_default_sample_games:- 
-   catch(absolute_file_name(library('~/'),Dir,[file_type(directory), access(read)]),_,true),
+/*% 
+set_default_sample_games:- try_samples_game_dir(Try), 
+   catch(absolute_file_name(Try,Dir,[file_type(directory), access(read)]),_,true),
    ignore((nonvar(Dir),asserta(user:file_search_path(sample_games,Dir)))),!.
+set_default_sample_games:- user:file_search_path(sample_games,_Dir),!.
 set_default_sample_games:- 
    must((catch(absolute_file_name(library('prologmud_sample_games/'),Dir,[file_type(directory), access(read)]),_,true),
    ignore((nonvar(Dir),asserta(user:file_search_path(sample_games,Dir)))))).
-
 %:- if( \+ user:file_search_path(sample_games,_Dir)).
 :- set_default_sample_games.
+*/
 %:- sanity(user:file_search_path(sample_games,_Dir)).
 %:- endif.
 

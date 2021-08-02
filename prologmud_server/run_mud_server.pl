@@ -805,9 +805,9 @@ swi_ide:- use_module(library(swi_ide)),
 :- add_history([run_mud_server]).
 :- add_history(forall(chat80(XX),run_pipeline(XX))).
 :- add_history(run_pipeline("is there a man who becomes the greatest tenor?")).
-:- add_history(test_chat80).
 :- add_history(forall(((ape_test(_,X);fracas(X);e2c(X);chat80(X)),!),run_pipeline(X))).
 :- add_history(never_notrace).
+:- add_history(never_portray).
 :- add_history(bfly_set(butterfly,t)).
 :- add_history(bfly_tests).
 :- add_history(test_pp).
@@ -815,6 +815,8 @@ swi_ide:- use_module(library(swi_ide)),
 :- add_history(search4term).
 :- add_history(edit1term).
 :- add_history(ensure_plkb0988_kb).
+:- add_history(test_chat80).
+:- add_history(xlisting(contains("test"))).
 :- add_history(shrdlurn_eval:js_test2).
 %:- add_history(never_catch).
 
