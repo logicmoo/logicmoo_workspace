@@ -90,8 +90,8 @@ var MAX_RECONNECT_DELAY = 30000;
 		if (obj == null) return "null";
 		var typeOf = (typeof obj);
 		if (typeOf !== "object") return typeOf;
-		var cn = obj[classNameKey]; 
-		if (cn && cn.length>0) return cn;
+		//var cn = obj[classNameKey]; 
+		//if (cn && cn.length>0) return cn;
 		var funcNameRegex = /function (.{1,})\(/;
 		var constructor = (obj).constructor;
 		
@@ -372,7 +372,7 @@ var MAX_RECONNECT_DELAY = 30000;
 		}
 
 		if (depth > 1 && typeof value.savePropertiesToXML === 'function') {
-			return "+" + value.savePropertiesToXML(theA4Game).trim();
+			return "+" + value.savePropertiesToXML(window.theA4Game).trim();
 
 
 		}
@@ -428,7 +428,16 @@ var MAX_RECONNECT_DELAY = 30000;
 				updateParents(isNaN(key) ? ("." + key) : ("[" + key + "]"), key, value);
 
 			var pathname = path.join('');
-			window.game_props.set(pathname, jsev.classOf(value));
+
+			if(savePath) {
+				const regex = RegExp('\[[0-9]+\]','g');
+				var cpathname = pathname.replaceAll(regex, '[_]');
+				var oc = window.game_props.get(cpathname);
+				if (!(oc && oc != null && oc !== 'null')) {
+					var cn = jsev.classOf(value);
+					window.game_props.set(cpathname, cn);
+				}
+			}
 
 			var obj = pathToObj.get(pathname);
 			if (savePath && obj != value) {
@@ -461,7 +470,7 @@ var MAX_RECONNECT_DELAY = 30000;
 	})();
 
 	JSCtrl.prototype.stringifyAsJson = function(prefix, value, space) {
-		return JSON.stringifyWithCircularRefs(prefix, false, value, space);
+		return JSON.stringifyWithCircularRefs(prefix, value==window.theA4Game, value, space);
 	}
 
 	JSCtrl.prototype.typeIfy = function(obj) {
@@ -474,7 +483,7 @@ var MAX_RECONNECT_DELAY = 30000;
 			var html = jsev.maybeHtml(obj, 0);
 			if (jsev.isHtmlish(html)) return obj;
 		}
-		if (!obj.hasOwnProperty(classNameKey)) {
+		if (false && !obj.hasOwnProperty(classNameKey)) {
 			try {
 				var cn = jsev.classOf(obj);
 				if (cn) obj[classNameKey] = cn;
@@ -487,17 +496,17 @@ var MAX_RECONNECT_DELAY = 30000;
 		try {
 			if (obj instanceof Map) {
 				proxy = Object.fromEntries(obj);
-				proxy[classNameKey] = "Map";
+				if (false) proxy[classNameKey] = "Map";
 				return proxy;
 			}
 
 			if (Array.isArray(obj)) {
-				obj[classNameKey] = "Array";
+				if (false) obj[classNameKey] = "Array";
 				return obj;
 			}
 
 			if (obj instanceof Set) {
-				obj[classNameKey] = "Set";
+				if (false) obj[classNameKey] = "Set";
 				return obj;
 			}
 
