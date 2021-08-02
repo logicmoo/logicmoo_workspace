@@ -36,6 +36,9 @@ use_baseKB :- '$set_typein_module'(baseKB),'$set_source_module'(baseKB),module(b
 % ==============================================
 set_default_sample_games:- user:file_search_path(sample_games,_Dir),!.
 set_default_sample_games:- 
+   catch(absolute_file_name(library('~/'),Dir,[file_type(directory), access(read)]),_,true),
+   ignore((nonvar(Dir),asserta(user:file_search_path(sample_games,Dir)))),!.
+set_default_sample_games:- 
    must((catch(absolute_file_name(library('prologmud_sample_games/'),Dir,[file_type(directory), access(read)]),_,true),
    ignore((nonvar(Dir),asserta(user:file_search_path(sample_games,Dir)))))).
 

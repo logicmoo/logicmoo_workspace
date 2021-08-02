@@ -801,31 +801,6 @@ swi_ide:- use_module(library(swi_ide)),
    -> prolog_ide(thread_monitor)
     ;true).
 
-
-:- begin_tests(example_tests).
-
-test(is_set) :-
-        \+ is_set([a,a]).
-
-test(is_set, [fail]) :-
-        is_set([a,a]).
-
-test(member) :-
-        findall(X, member(X, [a,b,c]), Xs),
-        Xs == [a,b,c].
-
-test(member, all(X == [a,b,c])) :-
-        member(X, [a,b,c]).
-
-test(div0) :-
-     catch(A is 1/0, error(E, _), true),
-     E =@= evaluation_error(zero_divisor).
-
-test(div0, [error(evaluation_error(zero_divisor))]) :-
-     A is 1/0.
-
-:- end_tests(example_tests).
-
 :- add_history(swi_ide).
 :- add_history([run_mud_server]).
 :- add_history(forall(chat80(XX),run_pipeline(XX))).
