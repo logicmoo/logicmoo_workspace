@@ -459,7 +459,7 @@ var MAX_RECONNECT_DELAY = 30000;
 		return function stringifyWithCircularRefs(prefix, isThis, obj, space) {
 			try {
 				parents.push(obj);
-				savePath = isThis
+			    savePath = isThis
 				thisPrefix = prefix
 				return JSON.stringify(obj, checkCircular, space);
 			} finally {
@@ -470,7 +470,8 @@ var MAX_RECONNECT_DELAY = 30000;
 	})();
 
 	JSCtrl.prototype.stringifyAsJson = function(prefix, value, space) {
-		return JSON.stringifyWithCircularRefs(prefix, value==window.theA4Game, value, space);
+		//value==window.theA4Game;
+		return JSON.stringifyWithCircularRefs(prefix, true, value, space);
 	}
 
 	JSCtrl.prototype.typeIfy = function(obj) {

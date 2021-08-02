@@ -13104,24 +13104,6 @@
 						<F N="packs_web/shrdlu/src/auxiliar/KeyboardState.ts"/>
 						<F N="packs_web/shrdlu/src/auxiliar/SFXManager.ts"/>
 					</Folder>
-					<Folder Name="blocksworld">
-						<F N="packs_web/shrdlu/src/blocksworld/ActionShrdluTalk.ts"/>
-						<F N="packs_web/shrdlu/src/blocksworld/BlocksWorld.ts"/>
-						<F N="packs_web/shrdlu/src/blocksworld/BlocksWorldApp.ts"/>
-						<F N="packs_web/shrdlu/src/blocksworld/BlocksWorldRuleBasedAI.ts"/>
-						<F N="packs_web/shrdlu/src/blocksworld/BWAnswerWhere.ts"/>
-						<F N="packs_web/shrdlu/src/blocksworld/BWInferenceAnswerWhere.ts"/>
-						<F N="packs_web/shrdlu/src/blocksworld/BWInferenceEffectFactory.ts"/>
-						<F N="packs_web/shrdlu/src/blocksworld/BWLocateAction.ts"/>
-						<F N="packs_web/shrdlu/src/blocksworld/bwplanning.ts"/>
-						<F N="packs_web/shrdlu/src/blocksworld/BWPutInAction.ts"/>
-						<F N="packs_web/shrdlu/src/blocksworld/BWPutUnderAction.ts"/>
-						<F N="packs_web/shrdlu/src/blocksworld/BWStackAction.ts"/>
-						<F N="packs_web/shrdlu/src/blocksworld/BWTakeAction.ts"/>
-						<F N="packs_web/shrdlu/src/blocksworld/graphplan.ts"/>
-						<F N="packs_web/shrdlu/src/blocksworld/main.ts"/>
-						<F N="packs_web/shrdlu/src/blocksworld/planning.ts"/>
-					</Folder>
 					<Folder Name="lib">
 						<F N="packs_web/shrdlu/src/lib/lz-string.ts"/>
 					</Folder>
@@ -13191,9 +13173,9 @@
 						<F N="packs_web/shrdlu/src/tests/nlg-test2.ts"/>
 						<F N="packs_web/shrdlu/src/tests/nlp-test1.ts"/>
 						<F N="packs_web/shrdlu/src/tests/nlp-test2.ts"/>
-						<F N="packs_web/shrdlu/src/tests/planning-test.ts"/>
 					</Folder>
 				</Folder>
+				<F N="packs_web/shrdlu/.project"/>
 				<F N="packs_web/shrdlu/A4-Adventura1.html"/>
 				<F N="packs_web/shrdlu/A4-Aventura4-Simple.html"/>
 				<F N="packs_web/shrdlu/A4-Aventura4.html"/>
@@ -13208,11 +13190,20 @@
 				<F N="packs_web/shrdlu/debug_shrdlu.html"/>
 				<F N="packs_web/shrdlu/eval_socket.js"/>
 				<F N="packs_web/shrdlu/eval_socket.new"/>
+				<F N="packs_web/shrdlu/eval_socket_hydrate.js"/>
 				<F N="packs_web/shrdlu/LICENSE"/>
+				<F N="packs_web/shrdlu/package-lock.json"/>
+				<F N="packs_web/shrdlu/package.json"/>
+				<F N="packs_web/shrdlu/READFIRST.md"/>
 				<F N="packs_web/shrdlu/README.md"/>
 				<F N="packs_web/shrdlu/shrdlu.html"/>
 				<F N="packs_web/shrdlu/swish_config.json"/>
 				<F N="packs_web/shrdlu/tsconfig.json"/>
+				<F N="packs_web/shrdlu/tsconfig.json.dist"/>
+				<F N="packs_web/shrdlu/world.save.blob.pl"/>
+				<F N="packs_web/shrdlu/world.save.propvals.pl"/>
+				<F N="packs_web/shrdlu/world.save.types.pl"/>
+				<F N="packs_web/shrdlu/yarn-error.log"/>
 			</Folder>
 			<Folder Name="swish">
 				<Folder Name="applications">
