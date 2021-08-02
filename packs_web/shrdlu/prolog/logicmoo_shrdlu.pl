@@ -293,7 +293,7 @@ js_test:-
   mmake_hook,
   js_test('1+1'),
   js_test('null'),
-  js_test('this.game=window.theA4Game; null'),
+  js_test('this.game=window.theA4Game; !((window.theA4Game))'),
   js_test('Object.keys(this.game)'),  
   js_test(`Term.fromString("property.problem('etaoin'[#id], erased('etaoin-memory'[#id]))", window.theA4Game.ontology)`),
   js_test(`Term.fromString("goal(D:'player'[#id], verb.find(X, 'shrdlu'[#id]))", window.theA4Game.ontology);`),
@@ -302,7 +302,7 @@ js_test:-
   js_test("window.location.reload()"),
   !.
 
-mmake_hook:- js_test('$(jQuery).getScript("eval_socket.js"); jsev.classOf(theA4Game)'),mmake.
+mmake_hook:- js_test('$.getScript("eval_socket.js"); !!(window.theA4Game)'),mmake.
 
 js_test0:-
    mmake_hook,

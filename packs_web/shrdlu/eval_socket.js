@@ -90,8 +90,11 @@ var MAX_RECONNECT_DELAY = 30000;
 		if (obj == null) return "null";
 		var typeOf = (typeof obj);
 		if (typeOf !== "object") return typeOf;
+		var cn = obj[classNameKey]; 
+		if (cn && cn.length>0) return cn;
 		var funcNameRegex = /function (.{1,})\(/;
 		var constructor = (obj).constructor;
+		
 		if (constructor == null || typeof constructor === "undefined") return typeOf;
 		var results = (funcNameRegex).exec(constructor.toString());
 		return (results && results.length > 1) ? results[1] : "";
@@ -157,11 +160,10 @@ var MAX_RECONNECT_DELAY = 30000;
 							evalThis = false;
 						}
 						if (evalThis) {
-							var res = window.eval(messageData);
-
 							var t0 = performance.now()
+							var res = window.eval(messageData);
+							debugger;
 							var reply = null;
-							//
 							var html = jsev.maybeHtml(res, 0);
 							if (jsev.isHtmlish(html)) {
 								reply = html;
@@ -187,6 +189,7 @@ var MAX_RECONNECT_DELAY = 30000;
 										reply = jsev.stringifyAsJson("#REF:$" + messageData, res);
 									} catch (ignore) {
 										console.log(ignore);
+										debugger;
 										throw ignore
 									}
 								}
@@ -463,7 +466,7 @@ var MAX_RECONNECT_DELAY = 30000;
 	}
 
 	JSCtrl.prototype.typeIfy = function(obj) {
-		if (obj == null || (!(typeof obj === 'object'))) return null;
+		if (obj == null || (!(typeof obj === 'object'))) return obj;
 
 		var proxy = o2prox.get(obj);
 		if (proxy) return proxy;
@@ -475,7 +478,7 @@ var MAX_RECONNECT_DELAY = 30000;
 		if (!obj.hasOwnProperty(classNameKey)) {
 			try {
 				var cn = jsev.classOf(obj);
-				obj[classNameKey] = cn;
+				if (cn) obj[classNameKey] = cn;
 			} catch (ee) {
 				console.log(`${clasNameKey}: ` + obj);
 				console.error(ee);
@@ -504,7 +507,7 @@ var MAX_RECONNECT_DELAY = 30000;
 			{
 				try {
 					var cn = jsev.classOf(obj);
-					proxy[classNameKey] = cn;
+					if (cn) proxy[classNameKey] = cn;
 				} catch (ee) {
 					console.log(`${classNameKey}: ` + obj);
 					console.error(ee);
