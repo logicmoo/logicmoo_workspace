@@ -365,14 +365,26 @@ ptgf(G):-
    [quoted(true),portray(false),max_depth(4),attributes(portray),spacing(next_argument)]),
     (trace,G)))).
 
+base_obj('game').
+base_obj('app').
+
 text_to_atom(Text,Atom):- text_to_string(Text,Str),any_to_atom(Str,Atom).
+
+atom_to_a4_obj(Atom,Obj):- base_obj(Game),atomic_list_concat(['.',Game,'.'],DotGameDot),
+  sub_atom(Atom,_,_,After,DotGameDot),sub_atom(Atom,_,After,0,M),
+  atom_to_a4_obj(M,MObj),atomic_list_concat([Game,'.',MObj],MObj2),
+  atom_to_a4_obj(MObj2,Obj).
 atom_to_a4_obj(Atom,Obj):- atom_concat(M,'()',Atom),atom_to_a4_obj(M,Obj).
 atom_to_a4_obj(Atom,Obj):- atom_concat(M,'.outerHTML',Atom),atom_to_a4_obj(M,Obj).
-atom_to_a4_obj(Atom,Obj):- atom_concat('$.',M,Atom),atom_to_a4_obj(M,Obj).
-atom_to_a4_obj(Atom,Obj):- sub_atom(Atom,_,_,After,'.game.'),sub_atom(Atom,_,After,0,M),atom_to_a4_obj(M,Obj).
-atom_to_a4_obj(Atom,Obj):- atom_concat('game.',M,Atom),atom_to_a4_obj(M,Obj).
 atom_to_a4_obj(Atom,Obj):- Atom=Obj.
+
 text_to_a4obj(Text,Obj):- text_to_atom(Text,Atom),atom_to_a4_obj(Atom,Obj),!.
+
+obj_path(Obj,A4):- atom(Obj),atom_number(Obj,A4),!.
+obj_path(Obj,A4):- atomic(Obj), arg(_,v('[','.',']'),E), atomic_list_concat([L1,L2|List],E,Obj),!,obj_path([L1,L2|List],A4).
+obj_path(Obj,A4):- is_list(Obj),select('',Obj,ObjM),!,obj_path(ObjM,A4).
+obj_path(Obj,A4):- is_list(Obj),!,maplist(obj_path,Obj,AM),(Obj==AM-> AM=A4 ; (flatten(AM,AF),obj_path(AF,AM))),!.
+obj_path(Obj,A4):- Obj=A4,!.
 
 process_a4_obj(Obj0,A4):- ptgf(process_a4_obj_1(Obj0,A4)).
 process_a4_obj_1(Obj0,A4):- text_to_a4obj(Obj0,Obj), retractall(the:a4Game([Obj|_],_,_,_)),process_a4([Obj],A4),!.

@@ -34,5 +34,5 @@ fi
 
 echo WHOAMI=`whoami`
 echo source $LOGICMOO_WS/logicmoo_env.sh
-source $LOGICMOO_WS/logicmoo_env.sh
+#source $LOGICMOO_WS/logicmoo_env.sh
 

@@ -17,6 +17,7 @@ var ShrdluGameScript = /** @class */ (function () {
         this.contextEtaoin = null;
         this.contextQwerty = null;
         this.contextShrdlu = null;
+        this.contextPlayer = null;
         this.thoughtBubbleQueue = [];
         this.act = "intro";
         this.act_intro_state = 0;
@@ -341,6 +342,11 @@ var ShrdluGameScript = /** @class */ (function () {
         var previous_state = this.act_intro_state;
         if (this.act_intro_state >= 1 && this.contextQwerty == null)
             this.contextQwerty = this.game.qwertyAI.contextForSpeaker(this.playerID);
+        if (this.game.currentPlayer.findObjectByID("player-masterkey") == null) {
+            var key = this.game.objectFactory.createObject("master-key", this.game, false, false);
+            key.ID = "player-masterkey";
+            this.game.currentPlayer.inventory.push(key);
+        }
         switch (this.act_intro_state) {
             /* --------------------------------------------------------
                 Tutorial part 1: talking to qwerty.
@@ -3360,6 +3366,7 @@ var ShrdluGameScript = /** @class */ (function () {
         this.contextEtaoin = this.game.etaoinAI.contextForSpeaker(this.playerID);
         this.contextQwerty = this.game.qwertyAI.contextForSpeaker(this.playerID);
         this.contextShrdlu = this.game.shrdluAI.contextForSpeaker(this.playerID);
+        this.contextPlayer = this.game.shrdluAI.contextForSpeaker(this.etaoinID);
     };
     return ShrdluGameScript;
 }());

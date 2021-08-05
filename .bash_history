@@ -1,264 +1,3 @@
-ls
-su -
-grep liquidprompt *
-pwd
-grep liquidprompt . -R
-grep liquidprompt .bash* -R
-vi .bashrc
-logout 
-ps axf
-ls /tmp/
-ls /tmp/swilibs1521850490000/
-ls /tmp/swilibs1521850490000/linux/
-ls /tmp/swilibs1521850490000/linux/
-cd /tmp/
-ls
-ls
-ls
-ls
-ls
-ls
-ls swilibs1521850490000/
-ls swilibs1521850490000/linux/
-cd swilibs1521850490000/linux
-ls
-rm library
-rm library/zlib.pl 
-cp rm library/zlib.pl ~/
-cp library/zlib.pl ~/
-cp rm library/zlib.pl
-rm library/zlib.pl
-ls
-ls ../linuxy/
-ls /tmp/consult_server.pl
-ls /tmp/consult_server.pl -l
-ls -l
-ls -l
-ls -l
-eclipse-ide 
-logout 
-ls
-cd /opt/eclipse-ide-java/antlr-4.4-complete
-ls
-pwd
-../eclipse 
-../eclipse 
-../eclipse 
-export NO_AT_BRIDGE=1
-../eclipse 
-ls  /tmp/swilibs1521850490000/linux/library/
-ls  /tmp/swilibs1521850490000/
-ls
-ls -l
-ls  /tmp/swilibs1521850490000/
-ls  /tmp/swilibs1521850490000/ -l
-fg
-bg
-ps axf
-ps axfw
-ps axfw
-ps axofw
-ps -ae
-ps
-ps f
-ps af
-ps auf
-ps af
-
-kill -9 21977 
-kill -9 21977 
-kill -9 21977 
-kill -9 21977 18741
-kill -9 21977 18741
-mkdir foo
-../eclipse 
-cls
-cls
-../eclipse 
-cls ; ../eclipse 
-cls ; ../eclipse 
-cls ; ../eclipse 
-cls ; ../eclipse 
-cls ; ../eclipse 
-cls ; ../eclipse 
-cls ; ../eclipse 
-cls ; ../eclipse --console
-cls ; ../eclipse -console
-cls ; rlwrap ../eclipse -console
-cls ; rlwrap ../eclipse
-psa xf
-ps axf
-ls /tmp/
-ls /tmp/
-ls
-ls /tmp/swilibs1521850490000/linux/
-ps axf
-ls  /opt/logicmoo_workspace/bin/swipl
-ls  /opt/logicmoo_workspace/bin/swipl -l
-ls
-ls -l
-ls -a
-ls -A
-ls -A ~
-ls -a ~
-ls -A ~
-ls -A ~
-ls -A ~ --color
-cp ~root/.swiplrc
-cp ~root/.swiplrc .
-cls ; ../eclipse
-cls ; ../eclipse
-cls ; ../eclipse
-cd /tmp/swilibs1521850490000/linux/
-ls
-cd -
-cls ; ../eclipse
-cls ; ../eclipse
-ps
-cls ; ../eclipse
-cls ; ../eclipse
-cls ; ../eclipse
-cls ; ../eclipse
-cls ; ../eclipse
-pwd
-cd .
-cd /opt/logicmoo_workspace/
-df -h
-ls
-cd ide/java_boot_classes/
-../eclipse/eclipse 
-../eclipse/eclipse 
-ls
-ln -s /mnt/sdf1/root/.p2 
-eclipse
-export DISPLAY=10.0.0.122:0.0
-eclipse &
-fg
-/opt/eclipse-ide-java/eclipse 
-cat `which eclipse-ide.dunno` 
-vi /usr/bin/eclipse
-mv /usr/bin/eclipse /usr/bin/eclipse.SOME
-eclipse
-eclipse
-logout 
-logout 
-Xvnc 
- vncserver -kill :1
- vncserver :3
-login
-logout 
-vncserver :3
-vncserver :3
-cd .vnc/
-ls
-vi xstartup 
-cd ..
-ls
-find -name noVNC
-cd packs_web/
-ls
-cd lispWebIDEs/
-ls
-cd ..
-find -name noVNC
-cd ..
-find -name noVNC 2>&1 | grep -v "Permission denied"
-find . -type d -name noVNC 2>&1 | grep -v "Permission denied"
-cd ./packs_web/desktop_web/noVNC
-./utils/launch.sh --vnc localhost:5903
-nohup ./utils/launch.sh --vnc localhost:5903
-bg
-ls
-w
-ps axf
-eclipse &
-fg
-export DISPLAY=:3
-eclipse &
-twm &
-twm
-apt-get install  twm
-export DISPLAY=:3
-twm &
-apt-get install vnc4server xvnc4viewer
-apt-get install lxde-core
-twm &
-vtwm
-apt-get install vtwm
-vtwm
-cd -
-vi .vnc/xstartup 
-vi .vnc/passwd 
-fg
-fg
-ps axf
-vncserver -kill :3
-vncserver -kill :3
-Xvnc --help
-Xvnc :3 
-export DISPLAY=:3
-vncserver :3 --help
-apt-get update && apt-get remove vnc ; apt-get install tightvnc
-vncpasswd 
-vncpasswd 
-vncpasswd --help
-vncpasswd 
-vncserver :3 -SecurityTypes None 
-vncserver -kill :3
-vncserver -list
-vncserver -kill :2
-vncserver -kill :2
-vncserver -kill :1
-vncserver :3 -noauth -novncauth
-tail  /opt/logicmoo_workspace/.vnc/gitlab:3.log
-tail  /opt/logicmoo_workspace/.vnc/gitlab:3.log -f &
-vncserver :3 -noauth -novncauth
-cat  /opt/logicmoo_workspace/.vnc/gitlab:3.log
-ps axf
-fg
-fg
-cat  /opt/logicmoo_workspace/.vnc/gitlab:3.log &
-export DISPLAY=
-unset DISPLAY
-vncserver :3 
-fg
-cat  /opt/logicmoo_workspace/.vnc/gitlab:3.log
-tail  /opt/logicmoo_workspace/.vnc/gitlab:3.log -f & 
-vncserver --help
-vncserver  /opt/logicmoo_workspace/.vnc/gitlab:3.log
-vncserver :3 -noauth -novncauth -port 5900
-vncserver :3 --kill
-vncserver :3 -kill
-vncserver -kill :3 
-vncserver -kill :3 
-vncserver :3 -noauth -novncauth -port 5903
-ps axf
-timedatectl 
-apt-get install novnc 
-echo | vncpasswd -f > /etc/vnc-passwd
-echo | vncpasswd -f
-echo | vncpasswd -f .vnc/passwd 
-echo | vncpasswd .vnc/passwd 
-vi .vnc/passwd 
-echo | vncpasswd -f 
-vncpasswd 
-vncpasswd --help
-dpkg -L novnc
-apt-get install x11vnc vnc-java
- cls ; vnc4server -forever -usepw -httpdir /usr/share/vnc-java/ -httpport 5800 -noauth -novncauth :3
-killall -9 tail
-killall -9 tail
- cls ; vnc4server -forever -usepw -httpdir /usr/share/vnc-java/ -httpport 5800 -noauth -novncauth  :3
-cat  /opt/logicmoo_workspace/.vnc/gitlab:1.log
-vncserver -kill 1
-vncserver -kill :1
-vncserver -kill :1
- cls ; vnc4server -httpdir /usr/share/vnc-java/ -httpport 5800 -noauth -novncauth  :3
-tail -f /opt/logicmoo_workspace/.vnc/gitlab:1.log
-tail -f /opt/logicmoo_workspace/.vnc/gitlab:1.log &
- cls ; vncserver -httpdir /usr/share/vnc-java/ -httpport 5800 -noauth -novncauth  :3
-tail -f /opt/logicmoo_workspace/.vnc/gitlab:1.log &
-fg
 fg
 fg
 tail -f /opt/logicmoo_workspace/.vnc/*(.log &
@@ -691,4 +430,178 @@ swipl
 git add .config/swi-prolog/dir-history/F5UG63LFF5WG6Z3JMNWW6327OVZWK4Q\= 
 cd .local/share/swi-prolog/pack/
 ln -s ~/packs_lib/rserve_client .
+exit
+vi ~/.bashrc 
+vi ~/.profile 
+nvm
+exit
+nvm
+wget -qO- https://raw.githubusercontent.com/nvm-sh/nvm/v0.37.2/install.sh | bash
+command -v nvm
+nvm install node
+exit
+wget -qO- https://raw.githubusercontent.com/nvm-sh/nvm/v1.16.1/install.sh | bash
+nvm
+wget https://raw.githubusercontent.com/nvm-sh/nvm/v1.16.1/install.sh
+exit
+wget https://raw.githubusercontent.com/nvm-sh/nvm/v16.16.1/install.sh
+wget https://raw.githubusercontent.com/nvm-sh/nvm/latest/install.sh
+wget -qO- https://raw.githubusercontent.com/nvm-sh/nvm/v0.38.0/install.sh | bash
+wget https://raw.githubusercontent.com/nvm-sh/nvm/latest/install.sh
+wget -qO- https://raw.githubusercontent.com/nvm-sh/nvm/v0.38.0/install.sh 
+wget -qO- https://raw.githubusercontent.com/nvm-sh/nvm/v0.38.0/install.sh 
+wget https://raw.githubusercontent.com/nvm-sh/nvm/v0.38.0/install.sh
+cat install.sh 
+chmod 777 install.sh 
+./install.sh 
+ls -l
+vi .gitconfig 
+ls
+nvm
+exit
+exit
+nvm
+wget -qO- https://raw.githubusercontent.com/nvm-sh/nvm/v0.38.0/install.sh | bash
+cd .nvm/
+ls
+cd ..
+rm -rf .nvm/
+wget -qO- https://raw.githubusercontent.com/nvm-sh/nvm/v0.38.0/install.sh | bash
+mv .git ..
+exit
+wget -qO- https://raw.githubusercontent.com/nvm-sh/nvm/v0.38.0/install.sh | bash
+vi install.sh 
+./install.sh 
+vi install.sh 
+cp /root/.vimrc .
+cp prologmud_server/.vimrc .
+vi install.sh 
+./install.sh 
+./install.sh 
+ git clone https://github.com/nvm-sh/nvm.git --depth=1 /home/logicmoo_workspace/.nvm
+git config --global --unset remote.origin.fetch
+ git clone https://github.com/nvm-sh/nvm.git --depth=1 /home/logicmoo_workspace/.nvm
+./install.sh 
+wget -qO- https://raw.githubusercontent.com/nvm-sh/nvm/v0.38.0/install.sh | bash
+rm -rf .nvm/
+wget -qO- https://raw.githubusercontent.com/nvm-sh/nvm/v0.38.0/install.sh | bash
+mv .gitconfig lm.gitconfig
+wget -qO- https://raw.githubusercontent.com/nvm-sh/nvm/v0.38.0/install.sh | bash
+vi .bashrc 
+mv .bashrc .bashrc.dist
+wget -qO- https://raw.githubusercontent.com/nvm-sh/nvm/v0.38.0/install.sh | bash
+mv .profile .profile.dist
+mv .bashrc .bashrc.dist
+exit
+ls
+cp /etc/skel/.bashrc .
+cp /etc/skel/.profile .
+ls
+exit
+ls
+wget -qO- https://raw.githubusercontent.com/nvm-sh/nvm/v0.38.0/install.sh | bash
+nvm
+[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
+[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
+nvm
+nvm install node      
+nvm use node            
+ls
+vsce
+cd packs_sys/lsp_server/
+vsce
+vsce publci
+cd vscode/
+vsce publish
+ls ~/.vscode/extensions/
+vscode
+mkdir /home/logicmoo_workspace/.vscode/extensions/
+ls
+cp * /home/logicmoo_workspace/.vscode/extensions/
+cd /home/logicmoo_workspace/.vscode/extensions/
+ls
+vsce public
+vsce publish
+npm list --production --parseable --depth=99999 --loglevel=error
+npm install vscode-languageclient 
+vsce publish
+vsce 
+vsce package
+vsce ls
+ls
+cd ~
+ls
+cd prologmud_server/
+ls
+exit
+ls
+export DISPLAY=10.0.0.78:0.0
+sudo snap install --classic code 
+sudo snap install --classic code # or code-insiders
+wget -qO- https://packages.microsoft.com/keys/microsoft.asc | gpg --dearmor > packages.microsoft.gpg
+sudo install -o root -g root -m 644 packages.microsoft.gpg /etc/apt/trusted.gpg.d/
+sudo sh -c 'echo "deb [arch=amd64,arm64,armhf signed-by=/etc/apt/trusted.gpg.d/packages.microsoft.gpg] https://packages.microsoft.com/repos/code stable main" > /etc/apt/sources.list.d/vscode.list'
+rm -f packages.microsoft.gpg
+sudo apt install apt-transport-https
+sudo apt update
+sudo apt install code-insiders
+code-insiders 
+export DISPLAY=10.0.0.78:0.0
+code-insiders 
+xdg-mime default code.desktop text/plain
+sudo update-alternatives --set editor /usr/bin/code
+sudo update-alternatives --install editor /usr/bin/editor $(which code)
+which code
+sudo update-alternatives --install editor /usr/bin/editor $(which code) 199
+sudo update-alternatives --install editor editor $(which code) 199
+sudo update-alternatives --install editor /usr/bin/editor $(which code) 199
+sudo update-alternatives --install /usr/bin/editor /usr/bin/editor $(which code) 199
+sudo update-alternatives --install editor /usr/bin/editor $(which code) 199
+sudo update-alternatives --set editor /usr/bin/code
+sudo update-alternatives --install editor /usr/bin/editor $(which code) 0
+sudo apt-get install gvfs-bin
+which code
+which code-insiders 
+/usr/bin/code-insiders
+ls 
+ls -a
+ls -A
+vi ~/.bashrc
+vi ~/.profile
+alias
+grep color .bashrc
+vi .bashrc
+exitr
+exit
+ls
+ls *fig*
+git config --global 
+git config --global  credential.helper 'cache --timeout=300'
+cat .gitconfig 
+vi lm.gitconfig 
+mv lm.gitconfig .gitconfig 
+ls
+git status
+ls
+mv .HIDE.git/ .git
+ls
+exit
+code --help
+ls /home/logicmoo_workspace/snap/code/70
+code --help
+code-insiders --help
+sudo apt-get install code
+sudo apt-get install code-insiders 
+code --help
+code-insiders -v --list-extensions
+code-insiders --verbose --list-extensions
+code-insiders --verbose --list-extensions --install-extension prolog
+code-insiders --verbose --install-extension prolog
+code-insiders --help
+code-insiders -n
+code-insiders --disable-gpu  --telemetry  
+code-insiders --disable-gpu 
+code-insiders 
+ps axf
+ps 
 exit

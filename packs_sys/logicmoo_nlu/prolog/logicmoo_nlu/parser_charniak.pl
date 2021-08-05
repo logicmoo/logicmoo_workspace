@@ -17,7 +17,7 @@
 :- reexport(library(logicmoo_nlu/parser_penn_trees)).
 
 charniak_stream(Text,Out):-
-  process_create(path(bash), [('/opt/logicmoo_workspace/packs_xtra/logicmoo_pldata/bllip-parser/CharniakParse.sh'), Text ],
+  process_create(path(bash), [('/opt/logicmoo_workspace/packs_xtra/logicmoo_pldata/.mirror/bllip-parser/CharniakParse.sh'), Text ],
     [ stdout(pipe(Out))]).
 
 charniak_parse(Text, Lines) :-

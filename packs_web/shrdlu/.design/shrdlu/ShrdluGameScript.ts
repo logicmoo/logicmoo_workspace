@@ -356,7 +356,14 @@ class ShrdluGameScript {
 	{
 		let previous_state:number = this.act_intro_state;
 
-		if (this.act_intro_state >= 1 && this.contextQwerty == null) this.contextQwerty = this.game.qwertyAI.contextForSpeaker(this.playerID);
+		if (this.act_intro_state >= 1 && this.contextQwerty == null) 
+			  this.contextQwerty = this.game.qwertyAI.contextForSpeaker(this.playerID);
+
+		if (this.game.currentPlayer.findObjectByID("player-masterkey") == null) {
+			let key:A4Object = this.game.objectFactory.createObject("master-key", this.game, false, false);
+			key.ID = "player-masterkey";
+			this.game.currentPlayer.inventory.push(key);
+		}
 
 		switch(this.act_intro_state) {
 		/* --------------------------------------------------------

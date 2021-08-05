@@ -174,6 +174,11 @@ var A4Game = /** @class */ (function () {
         this.errorMessagesForLog = [];
         this.inGameActionsForLog = [];
         this.debugTextBubbleLog = null; // this is already defined in A4Game
+        this.screen_width_last = -1;
+        this.screen_height_last = -1;
+        this.mouse_x_last = -1;
+        this.mouse_y_last = -1;
+        this.mouse_draw_skip = -1;
         // LOGICMOO ADDED
         window['theA4Game'] = this;
         this.objectFactory = a4of;
@@ -183,6 +188,8 @@ var A4Game = /** @class */ (function () {
     A4Game.prototype.loadContentFromXML = function (xml, game_path, ontology_path, GLTM, SFXM) {
         this.ontology = new Ontology();
         Sort.clear();
+        this.screen_height_last = 1;
+        this.screen_width_last = 1;
         var xmlhttp = new XMLHttpRequest();
         xmlhttp.overrideMimeType("text/xml");
         xmlhttp.open("GET", ontology_path, false);
@@ -818,6 +825,8 @@ var A4Game = /** @class */ (function () {
         this.drawHUD(screen_width, screen_height, split);
     };
     A4Game.prototype.drawWorld = function (screen_width, screen_height) {
+        this.screen_width_last = screen_width;
+        this.screen_height_last = screen_height;
         if (this.currentPlayer != null) {
             var map = this.currentPlayer.map;
             var mapx = this.getCameraX(this.currentPlayer, map.width * this.tileWidth, screen_width);
@@ -843,6 +852,24 @@ var A4Game = /** @class */ (function () {
         if (mouse_y < PIXEL_SIZE * 8 * 17) {
             // click in the game screen: this should skip text bubbles, etc.
             this.skipSpeechBubble();
+            if (this.currentPlayer != null) {
+                if (!(this.mouse_draw_skip > 0)) {
+                    this.mouse_draw_skip = 100;
+                    this.mouse_x_last = mouse_x;
+                    this.mouse_y_last = mouse_y;
+                    var map = this.currentPlayer.map;
+                    var screen_width = this.screen_width_last;
+                    var screen_height = this.screen_height_last;
+                    var mapx = this.getCameraX(this.currentPlayer, map.width * this.tileWidth, screen_width);
+                    var mapy = this.getCameraY(this.currentPlayer, map.height * this.tileHeight, screen_height);
+                    var tx = Math.floor(mouse_x / this.tileWidth);
+                    var ty = Math.floor(mouse_y / this.tileHeight);
+                    var vr = map.visibilityRegion(tx, ty);
+                    //  map.drawRegion(mapx, mapy, this.zoom, screen_width, screen_height, vr, this);							 
+                    console.log("map.drawRegion(" + mapx + ", " + mapy + ", " + this.zoom + ", " + screen_width + ", " + screen_height + ", " + vr + ", this);");
+                }
+                console.log("mouse_x/y= " + (mouse_x - this.currentPlayer.x) + "/" + (mouse_y - this.currentPlayer.y) + " = " + button + " ");
+            }
         }
         if (mouse_x >= PIXEL_SIZE * 8 * 27 &&
             mouse_x < PIXEL_SIZE * 8 * 28 &&

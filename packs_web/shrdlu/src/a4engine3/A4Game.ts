@@ -134,6 +134,9 @@ class A4Game {
         this.ontology = new Ontology();
         Sort.clear();
 
+		this.screen_height_last = 1;
+		this.screen_width_last = 1;
+
         let xmlhttp:XMLHttpRequest = new XMLHttpRequest();
         xmlhttp.overrideMimeType("text/xml");
         xmlhttp.open("GET", ontology_path, false); 
@@ -832,17 +835,18 @@ class A4Game {
         this.drawHUD(screen_width, screen_height, split);
     }
 
-
     drawWorld(screen_width:number, screen_height:number)
     {
-        if (this.currentPlayer!=null) {
-            let map:A4Map = this.currentPlayer.map;
-            let mapx:number = this.getCameraX(this.currentPlayer, map.width*this.tileWidth, screen_width);
-            let mapy:number = this.getCameraY(this.currentPlayer, map.height*this.tileHeight, screen_height);
-            let tx:number = Math.floor(this.currentPlayer.x/this.tileWidth);
-            let ty:number = Math.floor(this.currentPlayer.y/this.tileHeight);
-            map.drawRegion(mapx, mapy, this.zoom, screen_width, screen_height, map.visibilityRegion(tx,ty), this);
-            map.drawTextBubblesRegion(mapx, mapy, this.zoom, screen_width, screen_height, map.visibilityRegion(tx,ty), this);
+		this.screen_width_last = screen_width;
+		this.screen_height_last = screen_height;
+		if (this.currentPlayer!=null) {
+			let map:A4Map = this.currentPlayer.map;
+			let mapx:number = this.getCameraX(this.currentPlayer, map.width*this.tileWidth, screen_width);
+			let mapy:number = this.getCameraY(this.currentPlayer, map.height*this.tileHeight, screen_height);
+			let tx:number = Math.floor(this.currentPlayer.x/this.tileWidth);
+			let ty:number = Math.floor(this.currentPlayer.y/this.tileHeight);
+			map.drawRegion(mapx, mapy, this.zoom, screen_width, screen_height, map.visibilityRegion(tx,ty), this);
+			map.drawTextBubblesRegion(mapx, mapy, this.zoom, screen_width, screen_height, map.visibilityRegion(tx,ty), this);
         } else {
             let map:A4Map = this.maps[0];
             map.drawRegion(0, 0, this.zoom, screen_width, screen_height, map.visibilityRegion(0,0), this);
@@ -866,6 +870,24 @@ class A4Game {
         if (mouse_y < PIXEL_SIZE*8*17) {
             // click in the game screen: this should skip text bubbles, etc.
             this.skipSpeechBubble();
+			 if (this.currentPlayer!=null) {
+				 if(!(this.mouse_draw_skip > 0)) {
+					this.mouse_draw_skip = 100;
+					this.mouse_x_last = mouse_x;
+					this.mouse_y_last = mouse_y;
+					let map:A4Map = this.currentPlayer.map;
+					let screen_width:number = this.screen_width_last;
+					let screen_height:number = this.screen_height_last;
+                    let mapx:number = this.getCameraX(this.currentPlayer, map.width*this.tileWidth, screen_width);
+					let mapy:number = this.getCameraY(this.currentPlayer, map.height*this.tileHeight, screen_height);
+					let tx:number = Math.floor(mouse_x/this.tileWidth);
+					let ty:number = Math.floor(mouse_y/this.tileHeight);
+					let vr =  map.visibilityRegion(tx,ty);				
+				  //  map.drawRegion(mapx, mapy, this.zoom, screen_width, screen_height, vr, this);							 
+					console.log(`map.drawRegion(${mapx}, ${mapy}, ${this.zoom}, ${screen_width}, ${screen_height}, ${vr}, this);`);			
+				 }
+				console.log(`mouse_x/y= ${mouse_x - this.currentPlayer.x}/${mouse_y - this.currentPlayer.y} = ${button} `);
+			 }
         }
 
         if (mouse_x >= PIXEL_SIZE*8*27 &&
@@ -1712,6 +1734,12 @@ class A4Game {
     errorMessagesForLog:string[][] = [];
     inGameActionsForLog:string[][] = [];    
     debugTextBubbleLog:[number,string,A4TextBubble][] = null;  // this is already defined in A4Game
+
+	screen_width_last:number = -1;
+	screen_height_last:number = -1;
+	mouse_x_last:number = -1;
+	mouse_y_last:number = -1;
+	mouse_draw_skip:number = -1;
 
 }
 

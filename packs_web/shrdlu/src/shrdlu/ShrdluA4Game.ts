@@ -152,8 +152,10 @@ class ShrdluA4Game extends A4Game {
         this.naturalLanguageParser.talkingTargets = ["player", "shrdlu", "qwerty", "etaoin"];
 
         // load the AIs:
-        this.etaoinAI = new EtaoinAI(this.ontology, this.naturalLanguageParser, [], this, 
-                                      ["data/general-kb.xml","data/etaoin-kb.xml"]);
+		this.etaoinAI = new EtaoinAI(this.ontology, this.naturalLanguageParser, [], this, 
+									  ["data/general-kb.xml","data/etaoin-kb.xml"]);
+		this.playerAI = new PlayerAI(this.ontology, this.naturalLanguageParser, this.currentPlayer, [], this, 
+									  ["data/general-kb.xml","data/etaoin-kb.xml"]);
         this.qwertyAI = new QwertyAI(this.ontology, this.naturalLanguageParser, <A4AICharacter>(this.findObjectByName("Qwerty")[0]), this, 
                                       ["data/general-kb.xml","data/qwerty-kb.xml"]);
         this.shrdluAI = new ShrdluAI(this.ontology, this.naturalLanguageParser, <A4AICharacter>(this.findObjectByName("Shrdlu")[0]), this, 
@@ -165,6 +167,7 @@ class ShrdluA4Game extends A4Game {
           this.etaoinAI.debugActionLog = this.debugActionLog;
           this.qwertyAI.debugActionLog = this.debugActionLog;
           this.shrdluAI.debugActionLog = this.debugActionLog;
+		  this.playerAI.debugActionLog = this.debugActionLog;
         }
 
         if (saveGameXml) {
@@ -172,6 +175,7 @@ class ShrdluA4Game extends A4Game {
             this.etaoinAI.restoreFromXML(ais_xml[0]);
             this.qwertyAI.restoreFromXML(ais_xml[1]);
             this.shrdluAI.restoreFromXML(ais_xml[2]);
+			this.playerAI.restoreFromXML(ais_xml[0]); // uses etaoin's
         }
 
         Sort.precomputeIsA();
@@ -252,6 +256,7 @@ class ShrdluA4Game extends A4Game {
         this.etaoinAI.precalculateLocationKnowledge(this, this.ontology);
         this.shrdluAI.precalculateLocationKnowledge(this, this.ontology);
         this.qwertyAI.precalculateLocationKnowledge(this, this.ontology);
+		this.playerAI.precalculateLocationKnowledge(this, this.ontology);
 
         this.getMap("Tardis 8").reevaluateVisibility();
         this.getMap("Tardis 8").recalculateLightsOnStatus(this.rooms_with_lights, this.rooms_with_lights_on, 
@@ -677,6 +682,7 @@ class ShrdluA4Game extends A4Game {
             }
         }
 
+
         return true;        
     }
 
@@ -704,6 +710,15 @@ class ShrdluA4Game extends A4Game {
 
     drawWorld(screen_width:number, screen_height:number)
     {
+		this.screen_width_last = screen_width;
+		this.screen_height_last = screen_height;
+
+		if(this.mouse_draw_skip > 0) {
+			 this.mouse_draw_skip--;
+			 if(this.mouse_draw_skip<1) {
+				 console.log("mouse_draw_skip is done");
+			 }
+		}
         if (this.currentPlayer!=null) {
             let map:A4Map = this.currentPlayer.map;
             let mapx:number = this.getCameraX(this.currentPlayer, map.width*this.tileWidth, screen_width);
@@ -711,7 +726,7 @@ class ShrdluA4Game extends A4Game {
             let tx:number = Math.floor(this.currentPlayer.x/this.tileWidth);
             let ty:number = Math.floor(this.currentPlayer.y/this.tileHeight);
             map.drawRegion(mapx, mapy, this.zoom, screen_width, screen_height, map.visibilityRegion(tx,ty), this);
-            this.drawEyesclosedCover(screen_width, screen_height);
+			this.drawEyesclosedCover(screen_width, screen_height);
             map.drawTextBubblesRegion(mapx, mapy, this.zoom, screen_width, screen_height, map.visibilityRegion(tx,ty), this);
         } else {
             /*
@@ -1085,6 +1100,14 @@ class ShrdluA4Game extends A4Game {
                 ctx.fillText("Etaoin is thinking...",2*PIXEL_SIZE,(thinkingY+1)*PIXEL_SIZE);
                 thinkingY-=10;
             }
+            if (this.playerAI.currentInferenceProcess != null) {
+                // player is thinking:
+                ctx.fillStyle = MSX_COLOR_BLACK;
+                ctx.fillRect(2*PIXEL_SIZE,thinkingY*PIXEL_SIZE,130*PIXEL_SIZE,10*PIXEL_SIZE);
+                ctx.fillStyle = MSX_COLOR_WHITE;
+                ctx.fillText("playerAI is thinking...",2*PIXEL_SIZE,(thinkingY+1)*PIXEL_SIZE);
+                thinkingY-=10;
+            }
             if (this.qwertyAI.currentInferenceProcess != null) {
                 // etaoin is thinking:
                 ctx.fillStyle = MSX_COLOR_BLACK;
@@ -1364,6 +1387,7 @@ class ShrdluA4Game extends A4Game {
     etaoinAI:EtaoinAI = null;
     qwertyAI:QwertyAI = null;
     shrdluAI:ShrdluAI = null;
+	playerAI:RobotAI = null;
 
     communicatorConnectedTo:string = null;
     communicatorConnectionTime:number = 0;

@@ -183,6 +183,34 @@ packs_sys\logicmoo_nlu\ext\chat80_lm\chat80.vpj=Release
     + ISSUE_TEMPLATE
   + wiki\.github
     + ISSUE_TEMPLATE
+  + prologmud_server\.local
+    + share
+      + swi-prolog
+        + pack
+          + logicmoo_utils\.github
+            + workflows
+          + logicmoo_utils
+            + prolog
+              + body_reordering
+              + cpviz
+              + debuggery
+              + lm_utils
+              + logicmoo
+              + multivar
+                + t
+              + xlisting
+                + pixmaps
+                  + popupmenu
+                    + scripts
+                    + styles
+                  + selected
+                    + css
+                    + example
+                    + img
+                    + js
+                + swish_lib
+                  + render
+            + t
   + prologmud_server\.pki
     + nssdb
   + prologmud_server\.ros
@@ -1289,9 +1317,6 @@ packs_sys\logicmoo_nlu\ext\chat80_lm\chat80.vpj=Release
                   + resource_interfaces
                   + resources
                   + TISdefs
-        - stanford
-          + parser
-            + conf
       - prolog
         + config_nomicmu
           + example_bt
@@ -1307,24 +1332,6 @@ packs_sys\logicmoo_nlu\ext\chat80_lm\chat80.vpj=Release
           - e2c
       + test
         + logicmoo_nlu
-    + logicmoo_utils
-      - prolog
-        + body_reordering
-        + cpviz
-        - debuggery
-        + lm_utils
-        - logicmoo
-        + multivar
-          + t
-        - xlisting
-          - pixmaps
-            - popupmenu
-              - scripts
-              + styles
-            + selected
-          - swish_lib
-            - render
-      + t
     + lsp_server
       + prolog
       + test
@@ -1380,8 +1387,8 @@ packs_sys\logicmoo_nlu\ext\chat80_lm\chat80.vpj=Release
             + mudconsole
       + t
     - prologmud_samples
-      + prolog
-    + slack_prolog
+      - prolog
+    - slack_prolog
       - prolog
       + t
     + swicli
@@ -1623,105 +1630,6 @@ packs_sys\logicmoo_nlu\ext\chat80_lm\chat80.vpj=Release
         + sounds
         + sprites
         + style
-    + node_modules
-      + c3\.github
-      + printthis\.github
-        + ISSUE_TEMPLATE
-      + ace
-        + build
-          + demo
-            + bookmarklet
-            + kitchen-sink
-              + docs
-          + src
-            + snippets
-          + src-min
-            + snippets
-          + src-min-noconflict
-            + snippets
-          + src-noconflict
-            + snippets
-          + textarea
-            + images
-      + bootstrap
-        + js
-          + tests
-      + c3
-        + node_modules
-          + d3
-      + codemirror
-        + component-tools
-      + commander
-      + d3
-      + d3-array
-      + d3-axis
-      + d3-brush
-      + d3-chord
-      + d3-collection
-      + d3-color
-      + d3-contour
-      + d3-dispatch
-      + d3-drag
-      + d3-dsv
-      + d3-ease
-      + d3-fetch
-      + d3-force
-      + d3-format
-      + d3-geo
-      + d3-hierarchy
-      + d3-interpolate
-      + d3-path
-      + d3-polygon
-      + d3-quadtree
-      + d3-random
-      + d3-scale
-      + d3-scale-chromatic
-      + d3-selection
-      + d3-shape
-      + d3-time
-      + d3-time-format
-      + d3-timer
-      + d3-transition
-      + d3-voronoi
-      + d3-zoom
-      + iconv-lite
-      + jquery
-      + jquery.splitter
-      + js-sha1
-      + laconic
-      + monaco-editor
-      + opencollective-postinstall
-      + printthis
-      + requirejs
-      + rw
-      + safer-buffer
-      + sparkline
-      + svg-pan-zoom
-      + tagmanager
-        + node_modules
-          + jquery
-      + typeahead.js
-        + doc
-          + migration
-      + xterm
-        + css
-        + lib
-        + src
-          + browser
-            + input
-            + public
-            + renderer
-              + atlas
-              + dom
-            + selection
-            + services
-          + common
-            + buffer
-            + data
-            + input
-            + parser
-            + services
-        + typings
     - shrdlu
       + A4
       - data
@@ -1755,7 +1663,6 @@ packs_sys\logicmoo_nlu\ext\chat80_lm\chat80.vpj=Release
           + inferences
           + nlp
         + auxiliar
-        + blocksworld
         + lib
         + shrdlu
           + ai
@@ -1849,75 +1756,6 @@ packs_sys\logicmoo_nlu\ext\chat80_lm\chat80.vpj=Release
         + BN-search
         + pHa_code
     + logicmoo_pldata
-      + AceWiki
-        + data
-          + anothertest
-          + gf__Geography
-          + gf__Phrasebook
-          + gf__TestAttempto
-          + test
-          + test.users
-        + docker
-          + plain
-        + lib
-        + licenses
-        + src
-          + ch
-            + uzh
-              + ifi
-                + attempto
-                  + aceeditor
-                    + test
-                  + acewiki
-                    + aceowl
-                      + test
-                    + core
-                    + gf
-                    + gui
-                      + img
-                    + owl
-                  + base
-                  + chartparser
-                  + codeco
-                  + echocomp
-                    + style
-                  + preditor
-        + tools
-        + war
-          + errors
-          + gf_wikis
-          + META-INF
-            + nextapp
-              + echo
-          + WEB-INF
-            + logs
-      + bllip-parser
-        + dockerfiles
-          + centos6
-          + python
-            + userfiles\.config
-              + lxterminal
-            + userfiles
-        + first-stage
-          + TRAIN
-        + second-stage
-          + programs
-            + eval-beam
-            + eval-weights
-            + features
-            + prepare-data
-            + wlle
-      + deps
-        + edu
-          + stanford
-            + nlp
-              + models
-                + kbp
-                  + semgrex
-                  + tokensregex
-        + twitie-tagger
-      + eclipse
-        + readme
       - eclipse-workspace
         + FAtiMA_impl\.metadata\.plugins
           + org.eclipse.core.resources\.projects
@@ -2190,8 +2028,6 @@ packs_sys\logicmoo_nlu\ext\chat80_lm\chat80.vpj=Release
               + Uijlings actions
               + WorldAgent
         + WumpusAgents
-      + ext
-        - plkb0988
       - prolog
   + Patch
     + rootfs
@@ -2201,13 +2037,13 @@ packs_sys\logicmoo_nlu\ext\chat80_lm\chat80.vpj=Release
             + swipl
               + boot
               + library
-  + prologmud_server
+  - prologmud_server
     + attic
     + btepisode
     + circlemuddata
     + config-enabled-swish
       + gitty
-    + src_game_nani
+    - src_game_nani
       + web
         + css
         + icons
@@ -2246,140 +2082,122 @@ packs_sys\logicmoo_nlu\ext\chat80_lm\chat80.vpj=Release
   + wikis
     - logicmoo_workspace.wiki
 + other_files.vpj
-scroll:27
+scroll:0
 [State]
-SCREEN: 1920 1200 -6 77 1918 1017 0 0 M 0 0 0 0 1560 611
+SCREEN: 1920 1200 9 118 1918 997 0 0 N 0 0 0 0 1542 484
 CWD: C:\Program Files (x86)\SlickEdit\win
-BUFFER: BN="packs_sys\logicmoo_utils\prolog\logicmoo\butterfly_console.pl"
-BI: MA=1 174 1  TABS=1 3  WWS=1 IWT=0 ST=0 IN=2 BW=0 US=32000 RO=0 SE=1 SN=0 BIN=0 MN=Prolog	HM=0 MF=8 TL=0 MLL=0 ASE=0 LNL=6 LCF=0 CAPS=0 E=0 ESBU2=-1
-VIEW: LN=.26355 CL=61 LE=0 CX=60 CY=13 WI=5 BI=33 HT=0 HN=0 HF=0 HC=4
-BUFFER: BN="packs_sys\logicmoo_utils\prolog\logicmoo\pretty_clauses.pl"
-BI: MA=1 174 1  TABS=1 3  WWS=1 IWT=0 ST=0 IN=2 BW=0 US=32000 RO=0 SE=1 SN=0 BIN=0 MN=Prolog	HM=0 MF=8 TL=0 MLL=0 ASE=0 LNL=6 LCF=0 CAPS=0 E=0 ESBU2=-1
-VIEW: LN=.102419 CL=47 LE=0 CX=46 CY=24 WI=5 BI=32 HT=0 HN=0 HF=0 HC=4
-BUFFER: BN="packs_web\shrdlu\prolog\logicmoo_shrdlu.pl"
-BI: MA=1 174 1  TABS=1 3  WWS=1 IWT=0 ST=0 IN=2 BW=0 US=32000 RO=0 SE=1 SN=0 BIN=0 MN=Prolog	HM=0 MF=40 TL=0 MLL=0 ASE=0 LNL=6 LCF=0 CAPS=0 E=0 ESBU2=-1
-VIEW: LN=.8122 CL=29 LE=0 CX=28 CY=14 WI=5 BI=34 HT=0 HN=0 HF=0 HC=4
-BUFFER: BN="packs_web\shrdlu\eval_socket.js"
-BI: MA=1 74 1  TABS=1 5  WWS=1 IWT=1 ST=0 IN=2 BW=0 US=32000 RO=0 SE=1 SN=0 BIN=0 MN=JavaScript	HM=0 MF=40 TL=0 MLL=0 ASE=0 LNL=6 LCF=0 CAPS=0 E=0 ESBU2=-1
-VIEW: LN=.6911 CL=36 LE=0 CX=35 CY=13 WI=5 BI=29 HT=0 HN=0 HF=0 HC=4
-BUFFER: BN="packs_web\shrdlu\src\a4engine3\A4MapTile.ts"
-BI: MA=1 74 1  TABS=1 5  WWS=1 IWT=1 ST=0 IN=2 BW=0 US=32000 RO=0 SE=1 SN=0 BIN=0 MN=JavaScript	HM=0 MF=8 TL=0 MLL=0 ASE=0 LNL=6 LCF=0 CAPS=0 E=0 ESBU2=-1
-VIEW: LN=.596 CL=5 LE=0 CX=4 CY=9 WI=5 BI=38 HT=0 HN=0 HF=0 HC=4
-BUFFER: BN="packs_web\shrdlu\src\a4engine3\A4EventRule.ts"
-BI: MA=1 74 1  TABS=1 5  WWS=1 IWT=1 ST=0 IN=2 BW=0 US=32000 RO=0 SE=1 SN=0 BIN=0 MN=JavaScript	HM=0 MF=8 TL=0 MLL=0 ASE=0 LNL=6 LCF=0 CAPS=0 E=0 ESBU2=-1
-VIEW: LN=.8136 CL=5 LE=0 CX=4 CY=14 WI=5 BI=39 HT=0 HN=0 HF=0 HC=4
-BUFFER: BN="packs_web\shrdlu\src\a4engine3\A4Script.ts"
-BI: MA=1 74 1  TABS=1 5  WWS=1 IWT=1 ST=0 IN=2 BW=0 US=32000 RO=0 SE=1 SN=0 BIN=0 MN=JavaScript	HM=0 MF=8 TL=0 MLL=0 ASE=0 LNL=6 LCF=0 CAPS=0 E=0 ESBU2=-1
-VIEW: LN=.70604 CL=5 LE=0 CX=4 CY=14 WI=5 BI=37 HT=0 HN=0 HF=0 HC=4
-BUFFER: BN="packs_web\shrdlu\src\ai\Sort.ts"
-BI: MA=1 74 1  TABS=1 5  WWS=1 IWT=1 ST=0 IN=2 BW=0 US=32000 RO=0 SE=1 SN=0 BIN=0 MN=JavaScript	HM=0 MF=8 TL=0 MLL=0 ASE=0 LNL=6 LCF=0 CAPS=0 E=0 ESBU2=-1
-VIEW: LN=.415 CL=5 LE=0 CX=4 CY=14 WI=5 BI=42 HT=0 HN=0 HF=0 HC=4
-BUFFER: BN="packs_web\shrdlu\src\ai\Inference.ts"
-BI: MA=1 74 1  TABS=1 5  WWS=1 IWT=1 ST=0 IN=2 BW=0 US=32000 RO=0 SE=1 SN=0 BIN=0 MN=JavaScript	HM=0 MF=8 TL=0 MLL=0 ASE=0 LNL=6 LCF=0 CAPS=0 E=0 ESBU2=-1
-VIEW: LN=.28427 CL=39 LE=0 CX=38 CY=7 WI=5 BI=41 HT=0 HN=0 HF=0 HC=4
-BUFFER: BN="packs_web\shrdlu\src\ai\RuleBasedAI.ts"
-BI: MA=1 74 1  TABS=1 5  WWS=1 IWT=1 ST=0 IN=2 BW=0 US=32000 RO=0 SE=1 SN=0 BIN=0 MN=JavaScript	HM=0 MF=40 TL=0 MLL=0 ASE=0 LNL=6 LCF=0 CAPS=0 E=0 ESBU2=-1
-VIEW: LN=.10771 CL=8 LE=0 CX=7 CY=11 WI=5 BI=35 HT=0 HN=0 HF=0 HC=4
+BUFFER: BN="packs_sys\prologmud_samples\prolog\prologmud_samples.pl"
+BI: MA=1 174 1  TABS=1 3  WWS=1 IWT=0 ST=0 IN=2 BW=0 US=32000 RO=0 SE=1 SN=0 BIN=0 MN=Prolog	HM=0 MF=0 TL=0 MLL=0 ASE=0 LNL=6 LCF=0 CAPS=0 E=0 ESBU2=-1
+VIEW: LN=.0 CL=1 LE=0 CX=0 CY=0 WI=5 BI=27 HT=0 HN=0 HF=0 HC=4
+BUFFER: BN="packs_sys\slack_prolog\prolog\slack_client.pl"
+BI: MA=1 174 1  TABS=1 3  WWS=1 IWT=0 ST=0 IN=2 BW=0 US=32000 RO=0 SE=1 SN=0 BIN=0 MN=Prolog	HM=0 MF=0 TL=0 MLL=0 ASE=0 LNL=6 LCF=0 CAPS=0 E=0 ESBU2=-1
+VIEW: LN=.0 CL=1 LE=0 CX=0 CY=0 WI=5 BI=39 HT=0 HN=0 HF=0 HC=4
+BUFFER: BN="packs_sys\slack_prolog\prolog\slack_client.new"
+BI: MA=1 74 1  TABS=1 9  WWS=1 IWT=1 ST=0 IN=1 BW=0 US=32000 RO=0 SE=1 SN=0 BIN=0 MN=Fundamental	HM=0 MF=0 TL=0 MLL=0 ASE=0 LNL=6 LCF=0 CAPS=0 E=0 ESBU2=-1
+VIEW: LN=.0 CL=1 LE=0 CX=0 CY=0 WI=5 BI=38 HT=0 HN=0 HF=0 HC=4
 BUFFER: BN="packs_web\shrdlu\src\ai\nlp\NLContext.ts"
-BI: MA=1 74 1  TABS=1 5  WWS=1 IWT=1 ST=0 IN=2 BW=0 US=32000 RO=0 SE=1 SN=0 BIN=0 MN=JavaScript	HM=0 MF=8 TL=0 MLL=0 ASE=0 LNL=6 LCF=0 CAPS=0 E=0 ESBU2=-1
-VIEW: LN=.72537 CL=5 LE=0 CX=4 CY=14 WI=5 BI=40 HT=0 HN=0 HF=0 HC=4
-BUFFER: BN="packs_sys\logicmoo_utils\prolog\logicmoo\butterfly_term_html.pl"
-BI: MA=1 174 1  TABS=1 3  WWS=1 IWT=0 ST=0 IN=2 BW=0 US=32000 RO=0 SE=1 SN=0 BIN=0 MN=Prolog	HM=0 MF=8 TL=0 MLL=0 ASE=0 LNL=6 LCF=0 CAPS=0 E=0 ESBU2=-1
-VIEW: LN=.333 CL=9 LE=0 CX=8 CY=11 WI=5 BI=31 HT=0 HN=0 HF=0 HC=4
-BUFFER: BN="packs_sys\logicmoo_nlu\prolog\logicmoo_nlu\parser_e2c.pl"
-BI: MA=1 174 1  TABS=1 3  WWS=1 IWT=0 ST=0 IN=2 BW=0 US=32000 RO=0 SE=1 SN=0 BIN=0 MN=Prolog	HM=0 MF=8 TL=0 MLL=0 ASE=0 LNL=6 LCF=0 CAPS=0 E=0 ESBU2=-1
-VIEW: LN=.0 CL=1 LE=0 CX=0 CY=0 WI=5 BI=30 HT=0 HN=0 HF=0 HC=4
-BUFFER: BN="packs_sys\logicmoo_utils\prolog\xlisting\xlisting_web.pl"
-BI: MA=1 174 1  TABS=1 3  WWS=1 IWT=0 ST=0 IN=2 BW=0 US=32000 RO=0 SE=1 SN=0 BIN=0 MN=Prolog	HM=0 MF=8 TL=0 MLL=0 ASE=0 LNL=6 LCF=0 CAPS=0 E=0 ESBU2=-1
-VIEW: LN=.37134 CL=2 LE=0 CX=1 CY=4 WI=5 BI=27 HT=0 HN=0 HF=0 HC=4
-BUFFER: BN="prologmud_server\run_mud_server.pl"
-BI: MA=1 174 1  TABS=1 3  WWS=1 IWT=0 ST=0 IN=2 BW=0 US=32000 RO=0 SE=1 SN=0 BIN=0 MN=Prolog	HM=0 MF=8 TL=0 MLL=0 ASE=0 LNL=6 LCF=0 CAPS=0 E=0 ESBU2=-1
-VIEW: LN=.26054 CL=19 LE=0 CX=18 CY=15 WI=5 BI=26 HT=0 HN=0 HF=0 HC=4
-BUFFER: BN="docker\rootfs\usr\local\lib\swipl\library\hashtable.pl"
-BI: MA=1 174 1  TABS=1 3  WWS=1 IWT=0 ST=0 IN=2 BW=0 US=32000 RO=0 SE=1 SN=0 BIN=0 MN=Prolog	HM=0 MF=8 TL=0 MLL=0 ASE=0 LNL=6 LCF=0 CAPS=0 E=0 ESBU2=-1
-VIEW: LN=.0 CL=1 LE=0 CX=0 CY=0 WI=5 BI=25 HT=0 HN=0 HF=0 HC=4
-BUFFER: BN="packs_sys\logicmoo_utils\prolog\logicmoo\portray_vars.pl"
-BI: MA=1 174 1  TABS=1 3  WWS=1 IWT=0 ST=0 IN=2 BW=0 US=32000 RO=0 SE=1 SN=0 BIN=0 MN=Prolog	HM=0 MF=8 TL=0 MLL=0 ASE=0 LNL=6 LCF=0 CAPS=0 E=0 ESBU2=-1
-VIEW: LN=.36856 CL=21 LE=0 CX=20 CY=15 WI=5 BI=23 HT=0 HN=0 HF=0 HC=4
-BUFFER: BN="packs_sys\logicmoo_nlu\ext\pldata\nl_iface.pl"
-BI: MA=1 174 1  TABS=1 3  WWS=1 IWT=0 ST=0 IN=2 BW=0 US=32000 RO=0 SE=1 SN=0 BIN=0 MN=Prolog	HM=0 MF=8 TL=0 MLL=0 ASE=0 LNL=6 LCF=0 CAPS=0 E=0 ESBU2=-1
-VIEW: LN=.3971 CL=19 LE=0 CX=18 CY=14 WI=5 BI=28 HT=0 HN=0 HF=0 HC=4
-BUFFER: BN="packs_sys\logicmoo_utils\prolog\logicmoo\filesystem.pl"
-BI: MA=1 174 1  TABS=1 3  WWS=1 IWT=0 ST=0 IN=2 BW=0 US=32000 RO=0 SE=1 SN=0 BIN=0 MN=Prolog	HM=0 MF=8 TL=0 MLL=0 ASE=0 LNL=6 LCF=0 CAPS=0 E=0 ESBU2=-1
-VIEW: LN=.0 CL=1 LE=0 CX=0 CY=0 WI=5 BI=36 HT=0 HN=0 HF=0 HC=4
-BUFFER: BN="packs_sys\prologmud_samples\prolog\prologmud_samples.pl"
-BI: MA=1 174 1  TABS=1 3  WWS=1 IWT=0 ST=0 IN=2 BW=0 US=32000 RO=0 SE=1 SN=0 BIN=0 MN=Prolog	HM=0 MF=8 TL=0 MLL=0 ASE=0 LNL=6 LCF=0 CAPS=0 E=0 ESBU2=-1
-VIEW: LN=.0 CL=1 LE=0 CX=0 CY=0 WI=5 BI=24 HT=0 HN=0 HF=0 HC=4
-WINDOW: 130 130 1378 429 -1 -1 N  WF=0 WT=20 "Default Fixed Font,14,0,1"
+BI: MA=1 74 1  TABS=1 5  WWS=1 IWT=1 ST=0 IN=2 BW=0 US=32000 RO=0 SE=1 SN=0 BIN=0 MN=JavaScript	HM=0 MF=0 TL=0 MLL=0 ASE=0 LNL=6 LCF=0 CAPS=0 E=0 ESBU2=-1
+VIEW: LN=.56909 CL=35 LE=0 CX=34 CY=12 WI=5 BI=37 HT=0 HN=0 HF=0 HC=4
 BUFFER: BN="packs_web\shrdlu\src\ai\RuleBasedAI.ts"
-VIEW: LN=.10771 CL=8 LE=0 CX=7 CY=11 WI=184 BI=35 HT=0 HN=0 HF=0 HC=4
-WINDOW: 182 182 1378 429 -1 -1 N  WF=0 WT=22 "Default Fixed Font,14,0,1"
+BI: MA=1 74 1  TABS=1 5  WWS=1 IWT=1 ST=0 IN=2 BW=0 US=32000 RO=0 SE=1 SN=0 BIN=0 MN=JavaScript	HM=0 MF=0 TL=0 MLL=0 ASE=0 LNL=6 LCF=0 CAPS=0 E=0 ESBU2=-1
+VIEW: LN=.10771 CL=8 LE=0 CX=7 CY=11 WI=5 BI=36 HT=0 HN=0 HF=0 HC=4
 BUFFER: BN="packs_web\shrdlu\src\ai\Inference.ts"
-VIEW: LN=.28427 CL=39 LE=0 CX=38 CY=7 WI=188 BI=41 HT=0 HN=0 HF=0 HC=4
-WINDOW: 156 156 1378 429 -1 -1 N  WF=0 WT=21 "Default Fixed Font,14,0,1"
+BI: MA=1 74 1  TABS=1 5  WWS=1 IWT=1 ST=0 IN=2 BW=0 US=32000 RO=0 SE=1 SN=0 BIN=0 MN=JavaScript	HM=0 MF=0 TL=0 MLL=0 ASE=0 LNL=6 LCF=0 CAPS=0 E=0 ESBU2=-1
+VIEW: LN=.28427 CL=39 LE=0 CX=38 CY=7 WI=5 BI=35 HT=0 HN=0 HF=0 HC=4
 BUFFER: BN="packs_web\shrdlu\src\ai\Sort.ts"
-VIEW: LN=.415 CL=5 LE=0 CX=4 CY=14 WI=186 BI=42 HT=0 HN=0 HF=0 HC=4
-WINDOW: 26 26 1378 429 -1 -1 N  WF=0 WT=12 "Default Fixed Font,14,0,1"
+BI: MA=1 74 1  TABS=1 5  WWS=1 IWT=1 ST=0 IN=2 BW=0 US=32000 RO=0 SE=1 SN=0 BIN=0 MN=JavaScript	HM=0 MF=0 TL=0 MLL=0 ASE=0 LNL=6 LCF=0 CAPS=0 E=0 ESBU2=-1
+VIEW: LN=.415 CL=5 LE=0 CX=4 CY=14 WI=5 BI=34 HT=0 HN=0 HF=0 HC=4
 BUFFER: BN="packs_web\shrdlu\src\a4engine3\A4Script.ts"
-VIEW: LN=.70604 CL=5 LE=0 CX=4 CY=14 WI=225 BI=37 HT=0 HN=0 HF=0 HC=4
-WINDOW: 78 78 1378 429 -1 -1 N  WF=0 WT=18 "Default Fixed Font,14,0,1"
+BI: MA=1 74 1  TABS=1 5  WWS=1 IWT=1 ST=0 IN=2 BW=0 US=32000 RO=0 SE=1 SN=0 BIN=0 MN=JavaScript	HM=0 MF=0 TL=0 MLL=0 ASE=0 LNL=6 LCF=0 CAPS=0 E=0 ESBU2=-1
+VIEW: LN=.70604 CL=5 LE=0 CX=4 CY=14 WI=5 BI=33 HT=0 HN=0 HF=0 HC=4
 BUFFER: BN="packs_web\shrdlu\src\a4engine3\A4EventRule.ts"
-VIEW: LN=.8136 CL=5 LE=0 CX=4 CY=14 WI=182 BI=39 HT=0 HN=0 HF=0 HC=4
-WINDOW: 52 52 1378 429 -1 -1 N  WF=0 WT=13 "Default Fixed Font,14,0,1"
+BI: MA=1 74 1  TABS=1 5  WWS=1 IWT=1 ST=0 IN=2 BW=0 US=32000 RO=0 SE=1 SN=0 BIN=0 MN=JavaScript	HM=0 MF=0 TL=0 MLL=0 ASE=0 LNL=6 LCF=0 CAPS=0 E=0 ESBU2=-1
+VIEW: LN=.8136 CL=5 LE=0 CX=4 CY=14 WI=5 BI=32 HT=0 HN=0 HF=0 HC=4
 BUFFER: BN="packs_web\shrdlu\src\a4engine3\A4MapTile.ts"
-VIEW: LN=.596 CL=5 LE=0 CX=4 CY=9 WI=224 BI=38 HT=0 HN=0 HF=0 HC=4
-WINDOW: 156 156 1378 429 -1 -1 N  WF=0 WT=7 "Default Fixed Font,14,0,1"
-BUFFER: BN="packs_web\shrdlu\eval_socket.js"
-VIEW: LN=.6911 CL=36 LE=0 CX=35 CY=13 WI=166 BI=29 HT=0 HN=0 HF=0 HC=4
-WINDOW: 78 78 1378 429 -1 -1 N  WF=0 WT=4 "Default Fixed Font,14,0,1"
+BI: MA=1 74 1  TABS=1 5  WWS=1 IWT=1 ST=0 IN=2 BW=0 US=32000 RO=0 SE=1 SN=0 BIN=0 MN=JavaScript	HM=0 MF=0 TL=0 MLL=0 ASE=0 LNL=6 LCF=0 CAPS=0 E=0 ESBU2=-1
+VIEW: LN=.596 CL=5 LE=0 CX=4 CY=9 WI=5 BI=31 HT=0 HN=0 HF=0 HC=4
 BUFFER: BN="packs_web\shrdlu\prolog\logicmoo_shrdlu.pl"
-VIEW: LN=.8122 CL=29 LE=0 CX=28 CY=14 WI=175 BI=34 HT=0 HN=0 HF=0 HC=4
-WINDOW: 182 182 1378 429 -1 -1 N  WF=0 WT=8 "Default Fixed Font,14,0,1"
-BUFFER: BN="packs_sys\logicmoo_utils\prolog\logicmoo\pretty_clauses.pl"
-VIEW: LN=.102419 CL=47 LE=0 CX=46 CY=24 WI=163 BI=32 HT=0 HN=0 HF=0 HC=4
-WINDOW: 182 182 1378 429 -1 -1 N  WF=0 WT=6 "Default Fixed Font,14,0,1"
-BUFFER: BN="packs_sys\prologmud_samples\prolog\prologmud_samples.pl"
-VIEW: LN=.0 CL=1 LE=0 CX=0 CY=0 WI=180 BI=24 HT=0 HN=0 HF=0 HC=4
-WINDOW: 156 156 1378 429 -1 -1 N  WF=0 WT=3 "Default Fixed Font,14,0,1"
-BUFFER: BN="packs_sys\logicmoo_utils\prolog\logicmoo\filesystem.pl"
-VIEW: LN=.0 CL=1 LE=0 CX=0 CY=0 WI=178 BI=36 HT=0 HN=0 HF=0 HC=4
-WINDOW: 52 52 1378 429 -1 -1 N  WF=0 WT=16 "Default Fixed Font,14,0,1"
+BI: MA=1 174 1  TABS=1 3  WWS=1 IWT=0 ST=0 IN=2 BW=0 US=32000 RO=0 SE=1 SN=0 BIN=0 MN=Prolog	HM=0 MF=0 TL=0 MLL=0 ASE=0 LNL=6 LCF=0 CAPS=0 E=0 ESBU2=-1
+VIEW: LN=.8107 CL=29 LE=0 CX=28 CY=14 WI=5 BI=29 HT=0 HN=0 HF=0 HC=4
 BUFFER: BN="packs_sys\logicmoo_nlu\ext\pldata\nl_iface.pl"
-VIEW: LN=.3971 CL=19 LE=0 CX=18 CY=14 WI=167 BI=28 HT=0 HN=0 HF=0 HC=4
-WINDOW: 156 156 1378 429 -1 -1 N  WF=0 WT=10 "Default Fixed Font,14,0,1"
-BUFFER: BN="packs_sys\logicmoo_utils\prolog\logicmoo\portray_vars.pl"
-VIEW: LN=.36856 CL=21 LE=0 CX=20 CY=15 WI=174 BI=23 HT=0 HN=0 HF=0 HC=4
-WINDOW: 130 130 1378 429 -1 -1 N  WF=0 WT=5 "Default Fixed Font,14,0,1"
-BUFFER: BN="packs_web\shrdlu\eval_socket.js"
-VIEW: LN=.8689 CL=30 LE=0 CX=29 CY=15 WI=172 BI=29 HT=0 HN=0 HF=0 HC=4
-WINDOW: 52 52 1378 429 -1 -1 N  WF=0 WT=2 "Default Fixed Font,14,0,1"
+BI: MA=1 174 1  TABS=1 3  WWS=1 IWT=0 ST=0 IN=2 BW=0 US=32000 RO=0 SE=1 SN=0 BIN=0 MN=Prolog	HM=0 MF=0 TL=0 MLL=0 ASE=0 LNL=6 LCF=0 CAPS=0 E=0 ESBU2=-1
+VIEW: LN=.3971 CL=19 LE=0 CX=18 CY=14 WI=5 BI=26 HT=0 HN=0 HF=0 HC=4
 BUFFER: BN="docker\rootfs\usr\local\lib\swipl\library\hashtable.pl"
-VIEW: LN=.0 CL=1 LE=0 CX=0 CY=0 WI=170 BI=25 HT=0 HN=0 HF=0 HC=4
-WINDOW: 78 78 1378 429 -1 -1 N  WF=0 WT=17 "Default Fixed Font,14,0,1"
+BI: MA=1 174 1  TABS=1 3  WWS=1 IWT=0 ST=0 IN=2 BW=0 US=32000 RO=0 SE=1 SN=0 BIN=0 MN=Prolog	HM=0 MF=0 TL=0 MLL=0 ASE=0 LNL=6 LCF=0 CAPS=0 E=0 ESBU2=-1
+VIEW: LN=.0 CL=1 LE=0 CX=0 CY=0 WI=5 BI=25 HT=0 HN=0 HF=0 HC=4
 BUFFER: BN="prologmud_server\run_mud_server.pl"
-VIEW: LN=.26054 CL=19 LE=0 CX=18 CY=15 WI=169 BI=26 HT=0 HN=0 HF=0 HC=4
-WINDOW: 52 52 1378 429 -1 -1 N  WF=0 WT=11 "Default Fixed Font,14,0,1"
-BUFFER: BN="packs_sys\logicmoo_utils\prolog\xlisting\xlisting_web.pl"
-VIEW: LN=.37134 CL=2 LE=0 CX=1 CY=4 WI=168 BI=27 HT=0 HN=0 HF=0 HC=4
+BI: MA=1 174 1  TABS=1 3  WWS=1 IWT=0 ST=0 IN=2 BW=0 US=32000 RO=0 SE=1 SN=0 BIN=0 MN=Prolog	HM=0 MF=0 TL=0 MLL=0 ASE=0 LNL=6 LCF=0 CAPS=0 E=0 ESBU2=-1
+VIEW: LN=.26025 CL=19 LE=0 CX=18 CY=15 WI=5 BI=24 HT=0 HN=0 HF=0 HC=4
+BUFFER: BN="packs_sys\logicmoo_nlu\prolog\logicmoo_nlu\parser_e2c.pl"
+BI: MA=1 174 1  TABS=1 3  WWS=1 IWT=0 ST=0 IN=2 BW=0 US=32000 RO=0 SE=1 SN=0 BIN=0 MN=Prolog	HM=0 MF=0 TL=0 MLL=0 ASE=0 LNL=6 LCF=0 CAPS=0 E=0 ESBU2=-1
+VIEW: LN=.0 CL=1 LE=0 CX=0 CY=0 WI=5 BI=23 HT=0 HN=0 HF=0 HC=4
+BUFFER: BN="prologmud_server\src_game_nani\a_nani_household.pfc.pl"
+BI: MA=1 174 1  TABS=1 3  WWS=1 IWT=0 ST=0 IN=2 BW=0 US=32000 RO=0 SE=1 SN=0 BIN=0 MN=Prolog	HM=0 MF=0 TL=0 MLL=0 ASE=0 LNL=6 LCF=0 CAPS=0 E=0 ESBU2=-1
+VIEW: LN=.1278 CL=45 LE=0 CX=44 CY=17 WI=5 BI=28 HT=0 HN=0 HF=0 HC=4
+BUFFER: BN="packs_web\shrdlu\eval_socket.js"
+BI: MA=1 74 1  TABS=1 5  WWS=1 IWT=1 ST=0 IN=2 BW=0 US=32000 RO=0 SE=1 SN=0 BIN=0 MN=JavaScript	HM=0 MF=0 TL=0 MLL=0 ASE=0 LNL=6 LCF=0 CAPS=0 E=0 ESBU2=-1
+VIEW: LN=.6870 CL=36 LE=0 CX=35 CY=13 WI=5 BI=30 HT=0 HN=0 HF=0 HC=4
+WINDOW: 26 26 1378 429 -1 -1 N  WF=0 WT=1 "Default Fixed Font,14,0,1"
+BUFFER: BN="prologmud_server\src_game_nani\a_nani_household.pfc.pl"
+VIEW: LN=.1278 CL=45 LE=0 CX=44 CY=17 WI=184 BI=28 HT=0 HN=0 HF=0 HC=4
 WINDOW: 26 26 1378 429 -1 -1 N  WF=0 WT=15 "Default Fixed Font,14,0,1"
 BUFFER: BN="packs_sys\logicmoo_nlu\prolog\logicmoo_nlu\parser_e2c.pl"
-VIEW: LN=.0 CL=1 LE=0 CX=0 CY=0 WI=165 BI=30 HT=0 HN=0 HF=0 HC=4
-WINDOW: 0 0 1378 429 -1 -1 N  WF=0 WT=14 "Default Fixed Font,14,0,1"
-BUFFER: BN="packs_sys\logicmoo_utils\prolog\logicmoo\butterfly_term_html.pl"
-VIEW: LN=.333 CL=9 LE=0 CX=8 CY=11 WI=164 BI=31 HT=0 HN=0 HF=0 HC=4
-WINDOW: 0 0 1378 429 -1 -1 N  WF=0 WT=9 "Default Fixed Font,14,0,1"
-BUFFER: BN="packs_sys\logicmoo_utils\prolog\logicmoo\butterfly_console.pl"
-VIEW: LN=.26355 CL=61 LE=0 CX=60 CY=13 WI=162 BI=33 HT=0 HN=0 HF=0 HC=4
-WINDOW: 104 104 1378 429 -1 -1 M  WF=0 WT=19 "Default Fixed Font,14,0,1"
+VIEW: LN=.0 CL=1 LE=0 CX=0 CY=0 WI=183 BI=23 HT=0 HN=0 HF=0 HC=4
+WINDOW: 78 78 1378 429 -1 -1 N  WF=0 WT=17 "Default Fixed Font,14,0,1"
+BUFFER: BN="prologmud_server\run_mud_server.pl"
+VIEW: LN=.26025 CL=19 LE=0 CX=18 CY=15 WI=182 BI=24 HT=0 HN=0 HF=0 HC=4
+WINDOW: 52 52 1378 429 -1 -1 N  WF=0 WT=2 "Default Fixed Font,14,0,1"
+BUFFER: BN="docker\rootfs\usr\local\lib\swipl\library\hashtable.pl"
+VIEW: LN=.0 CL=1 LE=0 CX=0 CY=0 WI=181 BI=25 HT=0 HN=0 HF=0 HC=4
+WINDOW: 130 130 1378 429 -1 -1 N  WF=0 WT=5 "Default Fixed Font,14,0,1"
+BUFFER: BN="packs_web\shrdlu\eval_socket.js"
+VIEW: LN=.8689 CL=30 LE=0 CX=29 CY=15 WI=180 BI=30 HT=0 HN=0 HF=0 HC=4
+WINDOW: 52 52 1378 429 -1 -1 N  WF=0 WT=16 "Default Fixed Font,14,0,1"
+BUFFER: BN="packs_sys\logicmoo_nlu\ext\pldata\nl_iface.pl"
+VIEW: LN=.3971 CL=19 LE=0 CX=18 CY=14 WI=179 BI=26 HT=0 HN=0 HF=0 HC=4
+WINDOW: 78 78 1378 429 -1 -1 N  WF=0 WT=4 "Default Fixed Font,14,0,1"
+BUFFER: BN="packs_web\shrdlu\prolog\logicmoo_shrdlu.pl"
+VIEW: LN=.8107 CL=29 LE=0 CX=28 CY=14 WI=178 BI=29 HT=0 HN=0 HF=0 HC=4
+WINDOW: 52 52 1378 429 -1 -1 N  WF=0 WT=13 "Default Fixed Font,14,0,1"
+BUFFER: BN="packs_web\shrdlu\src\a4engine3\A4MapTile.ts"
+VIEW: LN=.596 CL=5 LE=0 CX=4 CY=9 WI=176 BI=31 HT=0 HN=0 HF=0 HC=4
+WINDOW: 78 78 1378 429 -1 -1 N  WF=0 WT=18 "Default Fixed Font,14,0,1"
+BUFFER: BN="packs_web\shrdlu\src\a4engine3\A4EventRule.ts"
+VIEW: LN=.8136 CL=5 LE=0 CX=4 CY=14 WI=175 BI=32 HT=0 HN=0 HF=0 HC=4
+WINDOW: 26 26 1378 429 -1 -1 N  WF=0 WT=12 "Default Fixed Font,14,0,1"
+BUFFER: BN="packs_web\shrdlu\src\a4engine3\A4Script.ts"
+VIEW: LN=.70604 CL=5 LE=0 CX=4 CY=14 WI=174 BI=33 HT=0 HN=0 HF=0 HC=4
+WINDOW: 156 156 1378 429 -1 -1 N  WF=0 WT=21 "Default Fixed Font,14,0,1"
+BUFFER: BN="packs_web\shrdlu\src\ai\Sort.ts"
+VIEW: LN=.415 CL=5 LE=0 CX=4 CY=14 WI=173 BI=34 HT=0 HN=0 HF=0 HC=4
+WINDOW: 182 182 1378 429 -1 -1 N  WF=0 WT=22 "Default Fixed Font,14,0,1"
+BUFFER: BN="packs_web\shrdlu\src\ai\Inference.ts"
+VIEW: LN=.28427 CL=39 LE=0 CX=38 CY=7 WI=172 BI=35 HT=0 HN=0 HF=0 HC=4
+WINDOW: 130 130 1378 429 -1 -1 N  WF=0 WT=20 "Default Fixed Font,14,0,1"
+BUFFER: BN="packs_web\shrdlu\src\ai\RuleBasedAI.ts"
+VIEW: LN=.10771 CL=8 LE=0 CX=7 CY=11 WI=171 BI=36 HT=0 HN=0 HF=0 HC=4
+WINDOW: 104 104 1378 429 -1 -1 N  WF=0 WT=19 "Default Fixed Font,14,0,1"
 BUFFER: BN="packs_web\shrdlu\src\ai\nlp\NLContext.ts"
-VIEW: LN=.6483 CL=5 LE=0 CX=4 CY=13 WI=183 BI=40 HT=0 HN=0 HF=0 HC=4
+VIEW: LN=.56909 CL=35 LE=0 CX=34 CY=12 WI=170 BI=37 HT=0 HN=0 HF=0 HC=4
+WINDOW: 182 182 1378 429 -1 -1 N  WF=0 WT=3 "Default Fixed Font,14,0,1"
+BUFFER: BN="packs_sys\slack_prolog\prolog\slack_client.new"
+VIEW: LN=.0 CL=1 LE=0 CX=0 CY=0 WI=169 BI=38 HT=0 HN=0 HF=0 HC=4
+WINDOW: 0 0 1378 429 -1 -1 N  WF=0 WT=8 "Default Fixed Font,14,0,1"
+BUFFER: BN="packs_sys\slack_prolog\prolog\slack_client.pl"
+VIEW: LN=.0 CL=1 LE=0 CX=0 CY=0 WI=168 BI=39 HT=0 HN=0 HF=0 HC=4
+WINDOW: 182 182 1378 429 -1 -1 N  WF=0 WT=6 "Default Fixed Font,14,0,1"
+BUFFER: BN="packs_sys\prologmud_samples\prolog\prologmud_samples.pl"
+VIEW: LN=.0 CL=1 LE=0 CX=0 CY=0 WI=167 BI=27 HT=0 HN=0 HF=0 HC=4
+WINDOW: 156 156 1378 429 -1 -1 M  WF=0 WT=7 "Default Fixed Font,14,0,1"
+BUFFER: BN="packs_web\shrdlu\eval_socket.js"
+VIEW: LN=.6870 CL=36 LE=0 CX=35 CY=13 WI=177 BI=30 HT=0 HN=0 HF=0 HC=4
 FILEHIST: 9
-C:\Program Files (x86)\SlickEdit\builtins\builtins.js
-packs_web\shrdlu\eval_socket.js
-packs_web\shrdlu\src\a4engine3\A4Script.ts
-packs_web\shrdlu\src\ai\RuleBasedAI.ts
 packs_web\shrdlu\src\ai\Sort.ts
 packs_web\shrdlu\src\a4engine3\A4MapTile.ts
 packs_web\shrdlu\src\a4engine3\A4EventRule.ts
-packs_web\shrdlu\src\ai\nlp\NLContext.ts
 packs_web\shrdlu\src\ai\Inference.ts
+packs_web\shrdlu\src\ai\nlp\NLContext.ts
+packs_sys\slack_prolog\prolog\slack_client.new
+packs_sys\slack_prolog\prolog\slack_client.pl
+packs_sys\prologmud_samples\prolog\prologmud_samples.pl
+prologmud_server\src_game_nani\a_nani_household.pfc.pl

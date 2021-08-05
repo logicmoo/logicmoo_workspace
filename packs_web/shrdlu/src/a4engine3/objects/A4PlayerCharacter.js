@@ -65,4 +65,4 @@ var A4PlayerCharacter = /** @class */ (function (_super) {
         this.selectedItem = -1;
     };
     return A4PlayerCharacter;
-}(A4Character));
+}(A4AICharacter));

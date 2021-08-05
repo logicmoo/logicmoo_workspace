@@ -1,5 +1,4 @@
 #!/bin/bash
-
 function MAINTAINER {
    /bin/true
 }

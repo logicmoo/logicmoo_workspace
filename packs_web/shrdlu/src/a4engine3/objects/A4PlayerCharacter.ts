@@ -1,4 +1,4 @@
-class A4PlayerCharacter extends A4Character {
+class A4PlayerCharacter extends A4AICharacter {
     constructor(name:string, sort:Sort)
     {
         super(name, sort);
