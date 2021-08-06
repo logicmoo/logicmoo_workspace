@@ -1,2 +1,0 @@
-;;; Generated package description from org-repo-todo.el  -*- no-byte-compile: t -*-
-(define-package "org-repo-todo" "0.0.3" "Simple repository todo management with org-mode" 'nil :commit "cba6145c6821fd2bbd96a1c9ef2346c281b76ad2" :authors '(("justin talbott" . "justin@waymondo.com")) :maintainer '("justin talbott" . "justin@waymondo.com") :keywords '("convenience") :url "https://github.com/waymondo/org-repo-todo")

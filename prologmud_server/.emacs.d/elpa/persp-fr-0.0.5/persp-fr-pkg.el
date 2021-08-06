@@ -1,2 +1,0 @@
-;;; Generated package description from persp-fr.el  -*- no-byte-compile: t -*-
-(define-package "persp-fr" "0.0.5" "In persp-mode, show perspective list in the GUI window title" '((emacs "25.1") (persp-mode "2.9.6") (dash "2.13.0")) :commit "1adbb6a9f9a4db580a9b7ed8b4091738e01345e6" :authors '(("Francesc Rocher" . "francesc.rocher@gmail.com")) :maintainer '("Francesc Rocher" . "francesc.rocher@gmail.com") :keywords '("perspectives" "workspace" "windows" "convenience") :url "http://github.com/rocher/persp-fr")

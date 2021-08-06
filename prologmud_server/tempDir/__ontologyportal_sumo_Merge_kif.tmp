@@ -1,4 +1,0 @@
-:-multifile lisp_trans/2.
-:-dynamic lisp_trans/2.
-:-style_check(-singleton).
-lisp_trans(translated('/mnt/gggg/c/Users/logicmoo/AppData/Local/swi-prolog/pack/prologmud_samples/prolog/prologmud_sample_games/tempDir/ontologyportal_sumo/Merge.kif','__ontologyportal_sumo_Merge_kif.tmp','Merge.kif'),'Merge.kif': -1).

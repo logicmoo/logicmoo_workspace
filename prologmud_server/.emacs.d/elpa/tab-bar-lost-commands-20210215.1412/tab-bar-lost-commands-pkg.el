@@ -1,2 +1,0 @@
-;;; Generated package description from tab-bar-lost-commands.el  -*- no-byte-compile: t -*-
-(define-package "tab-bar-lost-commands" "20210215.1412" "The \"lost commands\" of the tab bar" '((emacs "27.1")) :commit "e587cdb5d6d2c8d509c43db4b5bb285415916c4e" :authors '(("Fritz Grabo" . "me@fritzgrabo.com")) :maintainer '("Fritz Grabo" . "me@fritzgrabo.com") :keywords '("convenience") :url "https://github.com/fritzgrabo/tab-bar-lost-commands")

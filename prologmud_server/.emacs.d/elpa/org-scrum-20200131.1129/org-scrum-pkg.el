@@ -1,2 +1,0 @@
-;;; Generated package description from org-scrum.el  -*- no-byte-compile: t -*-
-(define-package "org-scrum" "20200131.1129" "org mode extensions for scrum planning and reporting" '((emacs "24.5") (org "8.2") (seq "2.3") (cl-lib "1.0")) :commit "f7a46bc4bc85305f0c2b72565170ea0e007c42fd" :authors '(("Ian Martins" . "ianxm@jhu.edu")) :maintainer '("Ian Martins" . "ianxm@jhu.edu") :url "https://github.com/ianxm/emacs-scrum")

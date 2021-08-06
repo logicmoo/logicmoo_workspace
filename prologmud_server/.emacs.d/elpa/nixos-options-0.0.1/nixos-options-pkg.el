@@ -1,2 +1,0 @@
-;;; Generated package description from nixos-options.el  -*- no-byte-compile: t -*-
-(define-package "nixos-options" "0.0.1" "Interface for browsing and completing NixOS options." '((emacs "24") (json "1.4")) :commit "5fc8fa29bea9dd8e9c822af92f9bc6ddc223635f" :authors '(("Diego Berrocal" . "cestdiego@gmail.com") ("Travis B. Hartwell" . "nafai@travishartwell.net")) :maintainer '("Diego Berrocal" . "cestdiego@gmail.com") :keywords '("unix") :url "http://www.github.com/travisbhartwell/nix-emacs/")

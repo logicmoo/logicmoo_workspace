@@ -1,2 +1,0 @@
-;;; Generated package description from tab-bar-echo-area.el  -*- no-byte-compile: t -*-
-(define-package "tab-bar-echo-area" "20210525.2204" "Display tab names of the tab bar in the echo area" '((emacs "27.1")) :commit "2196e76cb6f11e6ae0f35ac8259dfb755ea60336" :authors '(("Fritz Grabo" . "me@fritzgrabo.com")) :maintainer '("Fritz Grabo" . "me@fritzgrabo.com") :keywords '("convenience") :url "https://github.com/fritzgrabo/tab-bar-echo-area")

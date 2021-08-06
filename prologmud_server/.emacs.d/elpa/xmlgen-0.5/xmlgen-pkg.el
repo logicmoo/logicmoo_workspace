@@ -1,2 +1,0 @@
-;;; Generated package description from xmlgen.el  -*- no-byte-compile: t -*-
-(define-package "xmlgen" "0.5" "A DSL for generating XML." 'nil :commit "dba66681f0c5e621a9e70e8afb34903c9ffe93c4" :authors '(("Philip Jackson" . "phil@shellarchive.co.uk")) :maintainer '("Philip Jackson" . "phil@shellarchive.co.uk"))

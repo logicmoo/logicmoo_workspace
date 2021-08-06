@@ -1,2 +1,0 @@
-;;; Generated package description from with-proxy.el  -*- no-byte-compile: t -*-
-(define-package "with-proxy" "20200510.414" "Evaluate expressions with proxy" '((emacs "24.4")) :commit "93b1ed2f3060f305009fa71f4fb5bb10173a10e3" :authors '(("Gong Qijian" . "gongqijian@gmail.com")) :maintainer '("Gong Qijian" . "gongqijian@gmail.com") :keywords '("comm") :url "https://github.com/twlz0ne/with-proxy.el")

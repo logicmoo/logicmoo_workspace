@@ -1,3 +1,0 @@
-config(swish, link).
-config(email, copy).
-config(user_profile, link).

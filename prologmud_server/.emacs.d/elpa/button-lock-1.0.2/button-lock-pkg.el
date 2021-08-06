@@ -1,2 +1,0 @@
-;;; Generated package description from button-lock.el  -*- no-byte-compile: t -*-
-(define-package "button-lock" "1.0.2" "Clickable text defined by regular expression" 'nil :commit "cd0bf4a3c2f224d851e6ed8a54a6e80c129b225f" :authors '(("Roland Walker" . "walker@pobox.com")) :maintainer '("Roland Walker" . "walker@pobox.com") :keywords '("mouse" "button" "hypermedia" "extensions") :url "http://github.com/rolandwalker/button-lock")

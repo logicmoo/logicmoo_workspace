@@ -1,2 +1,0 @@
-;;; Generated package description from rtm.el  -*- no-byte-compile: t -*-
-(define-package "rtm" "20180329.1508" "An elisp implementation of the Remember The Milk API" '((cl-lib "1.0")) :commit "3e3d09387cb84801343ecca8fb02e82f213e7bbe" :authors '(("Friedrich Delgado Friedrichs" . "frie...@nomaden.org")) :maintainer '("Friedrich Delgado Friedrichs" . "frie...@nomaden.org") :keywords '("remember" "the" "milk" "productivity" "todo") :url "https://github.com/pmiddend/emacs-rtm")

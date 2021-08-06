@@ -1,2 +1,0 @@
-;;; Generated package description from swap-buffers.el  -*- no-byte-compile: t -*-
-(define-package "swap-buffers" "20150506.2139" "The quickest way to swap buffers between windows. Based on switch-window package." 'nil :commit "46ab31359b70d935add6c6e9533443116dc51103" :authors '(("Evgeniy Kazakov" . "evgeniy.kazakov@gmail.com")) :maintainer '("Evgeniy Kazakov" . "evgeniy.kazakov@gmail.com") :keywords '("window" "swap" "buffer" "exchange") :url "https://github.com/ekazakov/swap-buffers")

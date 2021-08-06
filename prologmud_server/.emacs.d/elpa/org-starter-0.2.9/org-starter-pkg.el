@@ -1,2 +1,0 @@
-;;; Generated package description from org-starter.el  -*- no-byte-compile: t -*-
-(define-package "org-starter" "0.2.9" "A basic configuration framework for org mode" '((emacs "25.1") (dash "2.12") (dash-functional "1.2.0")) :commit "49237ef8d174a15a594d984438cebe23ffcf54df" :authors '(("Akira Komamura" . "akira.komamura@gmail.com")) :maintainer '("Akira Komamura" . "akira.komamura@gmail.com") :url "https://github.com/akirak/org-starter")

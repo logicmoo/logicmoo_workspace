@@ -1,2 +1,0 @@
-;;; Generated package description from org-picklink.el  -*- no-byte-compile: t -*-
-(define-package "org-picklink" "20210210.516" "Pick a headline link from org-agenda" '((emacs "24.4")) :commit "bfdc22b436482752be41c5d6f6f37dca76b1c7c3" :authors '(("Feng Shu" . "tumashu@163.com")) :maintainer '("Feng Shu" . "tumashu@163.com") :keywords '("convenience") :url "https://github.com/tumashu/org-picklink")

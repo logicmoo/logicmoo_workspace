@@ -1,2 +1,0 @@
-;;; Generated package description from orgtbl-ascii-plot.el  -*- no-byte-compile: t -*-
-(define-package "orgtbl-ascii-plot" "20200411.711" "ascii-art bar plots in org-mode tables" 'nil :commit "59618630205fc8c0fcc74fb34c4581d9712a5181" :authors '(("Thierry Banel  tbanelwebmin at free dot fr") ("Michael Brand")) :maintainer '("Thierry Banel  tbanelwebmin at free dot fr") :keywords '("org" "table" "ascii" "plot"))

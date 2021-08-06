@@ -1,6 +1,0 @@
--*-mode:sgml;sgml-default-doctype-name:"foo"-*-
-<!-- Check that the sgml-default-doctype-name is properly upper cased
-and that the doctype is set up to be "FOO" and so the top element.
- -->
-<bar>
-<!-- should here be in BAR in FOO -->

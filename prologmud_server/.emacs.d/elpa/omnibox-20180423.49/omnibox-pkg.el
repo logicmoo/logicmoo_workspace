@@ -1,2 +1,0 @@
-;;; Generated package description from omnibox.el  -*- no-byte-compile: t -*-
-(define-package "omnibox" "20180423.49" "Selection package" '((emacs "26.1") (dash "2.13") (frame-local "0.0.1")) :commit "8ee75c71c20c438ebc43ba24ef6f543633d118f3" :authors '(("Sebastien Chapuis" . "sebastien@chapu.is")) :maintainer '("Sebastien Chapuis" . "sebastien@chapu.is") :keywords '("completion" "selection" "convenience" "frames") :url "https://github.com/sebastiencs/omnibox")

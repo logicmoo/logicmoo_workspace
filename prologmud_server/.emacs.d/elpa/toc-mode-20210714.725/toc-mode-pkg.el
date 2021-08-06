@@ -1,2 +1,0 @@
-;;; Generated package description from toc-mode.el  -*- no-byte-compile: t -*-
-(define-package "toc-mode" "20210714.725" "Manage outlines/table of contents of pdf and djvu documents" '((emacs "26.1")) :commit "977bec00d8d448ad2a5e2e4c17b9c9ba3e194ec2" :authors '(("Daniel Laurens Nicolai" . "dalanicolai@gmail.com")) :maintainer '("Daniel Laurens Nicolai" . "dalanicolai@gmail.com") :keywords '("tools" "outlines" "convenience") :url "https://github.com/dalanicolai/toc-mode")

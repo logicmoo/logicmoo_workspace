@@ -1,2 +1,0 @@
-created(1497932586.3021252).
-assert(openid_user_server('http://specs.openid.net/auth/2.0/identifier_select','https://openid.stackexchange.com/openid/provider')).

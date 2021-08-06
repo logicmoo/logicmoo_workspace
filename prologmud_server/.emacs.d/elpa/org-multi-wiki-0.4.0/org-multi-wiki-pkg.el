@@ -1,2 +1,0 @@
-;;; Generated package description from org-multi-wiki.el  -*- no-byte-compile: t -*-
-(define-package "org-multi-wiki" "0.4.0" "Multiple wikis based on Org mode" '((emacs "26.1") (dash "2.12") (s "1.12") (org-ql "0.4") (org "9.3")) :commit "80791ea872939df0578dc3a2992a2f7fd5618971" :authors '(("Akira Komamura" . "akira.komamura@gmail.com")) :maintainer '("Akira Komamura" . "akira.komamura@gmail.com") :keywords '("org" "outlines" "files") :url "https://github.com/akirak/org-multi-wiki")

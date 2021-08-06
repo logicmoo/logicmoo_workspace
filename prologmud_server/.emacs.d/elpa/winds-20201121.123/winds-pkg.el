@@ -1,2 +1,0 @@
-;;; Generated package description from winds.el  -*- no-byte-compile: t -*-
-(define-package "winds" "20201121.123" "Window configuration switcher grouped by workspaces" '((emacs "25.1")) :commit "5827e890059d0ce67ebb4779da63c15afccf0973" :authors '(("Javier A. Pollak" . "javi.po.123@gmail.com")) :maintainer '("Javier A. Pollak" . "javi.po.123@gmail.com") :keywords '("convenience") :url "https://github.com/Javyre/winds.el")

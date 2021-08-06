@@ -1,2 +1,0 @@
-;;; Generated package description from org-id-cleanup.el  -*- no-byte-compile: t -*-
-(define-package "org-id-cleanup" "1.7.0" "Interactively find, present and maybe clean up unused IDs of org-id" '((org "9.3") (dash "2.12") (emacs "26.3")) :commit "2cb87624238281b438cda67ed375c56403524489" :authors '(("Marc Ihm" . "1@2484.de")) :maintainer '("Marc Ihm" . "1@2484.de") :url "https://github.com/marcIhm/org-id-cleanup")

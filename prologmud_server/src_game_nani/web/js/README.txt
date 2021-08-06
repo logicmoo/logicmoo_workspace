@@ -1,1 +1,0 @@
-per-MUD Javascript

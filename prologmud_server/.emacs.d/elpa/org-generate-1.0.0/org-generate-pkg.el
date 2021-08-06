@@ -1,2 +1,0 @@
-;;; Generated package description from org-generate.el  -*- no-byte-compile: t -*-
-(define-package "org-generate" "1.0.0" "Generate template files/folders from org document" '((emacs "26.1") (org "9.3") (mustache "0.23")) :commit "0c25f12cd25d835428dece427f26df53f1d60ce3" :authors '(("Naoya Yamashita" . "conao3@gmail.com")) :maintainer '("Naoya Yamashita" . "conao3@gmail.com") :keywords '("convenience") :url "https://github.com/conao3/org-generate.el")

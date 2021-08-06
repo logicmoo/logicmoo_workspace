@@ -1,2 +1,0 @@
-;;; Generated package description from system-specific-settings.el  -*- no-byte-compile: t -*-
-(define-package "system-specific-settings" "0.2" "Apply settings only on certain systems" 'nil :commit "0050d85b2175095aa5ecf580a2fe43c069b0eef3" :authors '(("Ryan C. Thompson")) :maintainer '("Ryan C. Thompson") :keywords '("configuration") :url "https://github.com/DarwinAwardWinner/emacs-system-specific-settings")

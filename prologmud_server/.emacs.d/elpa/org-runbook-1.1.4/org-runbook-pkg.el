@@ -1,2 +1,0 @@
-;;; Generated package description from org-runbook.el  -*- no-byte-compile: t -*-
-(define-package "org-runbook" "1.1.4" "Org mode for runbooks" '((emacs "25.1") (seq "2.3") (f "0.20.0") (s "1.12.0") (dash "2.17.0") (mustache "0.24") (ht "0.9")) :commit "e5d1e30a05552ce1d63d13ada1487643a41b92cb" :authors '(("Tyler Dodge")) :maintainer '("Tyler Dodge") :keywords '("convenience" "processes" "terminals" "files") :url "https://github.com/tyler-dodge/org-runbook")

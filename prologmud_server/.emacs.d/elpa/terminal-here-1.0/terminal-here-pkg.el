@@ -1,2 +1,0 @@
-;;; Generated package description from terminal-here.el  -*- no-byte-compile: t -*-
-(define-package "terminal-here" "1.0" "Run an external terminal in current directory" '((emacs "24") (cl-lib "0.5")) :commit "e176d1675dc5c41b6aebd05122fb2efc44b6cff0" :authors '(("David Shepherd" . "davidshepherd7@gmail.com")) :maintainer '("David Shepherd" . "davidshepherd7@gmail.com") :keywords '("tools" "frames") :url "https://github.com/davidshepherd7/terminal-here")

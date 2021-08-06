@@ -1,2 +1,0 @@
-;;; Generated package description from lsp-ltex.el  -*- no-byte-compile: t -*-
-(define-package "lsp-ltex" "20210715.942" "LSP Clients for LTEX" '((emacs "26.1") (lsp-mode "6.1") (f "0.20.0")) :commit "b9a930757c71f7eb30a0828a502a237bfd882b43" :authors '(("Shen, Jen-Chieh" . "jcs090218@gmail.com")) :maintainer '("Shen, Jen-Chieh" . "jcs090218@gmail.com") :url "https://github.com/emacs-languagetool/lsp-ltex")

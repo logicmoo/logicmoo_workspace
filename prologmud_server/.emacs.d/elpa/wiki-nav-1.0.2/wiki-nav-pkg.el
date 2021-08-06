@@ -1,2 +1,0 @@
-;;; Generated package description from wiki-nav.el  -*- no-byte-compile: t -*-
-(define-package "wiki-nav" "1.0.2" "Simple file navigation using [[WikiStrings]]" '((button-lock "1.0.2") (nav-flash "1.0.0")) :commit "cd0bf4a3c2f224d851e6ed8a54a6e80c129b225f" :authors '(("Roland Walker" . "walker@pobox.com")) :maintainer '("Roland Walker" . "walker@pobox.com") :keywords '("mouse" "button" "hypermedia" "navigation") :url "http://github.com/rolandwalker/button-lock")

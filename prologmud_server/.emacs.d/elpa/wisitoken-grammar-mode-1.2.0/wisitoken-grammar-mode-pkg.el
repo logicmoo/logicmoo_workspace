@@ -1,2 +1,0 @@
-;; Generated package description from wisitoken-grammar-mode.el  -*- no-byte-compile: t -*-
-(define-package "wisitoken-grammar-mode" "1.2.0" "Major mode for editing WisiToken grammar files" '((wisi "3.1.1") (emacs "25.0") (mmm-mode "0.5.7")) :keywords '("languages") :authors '(("Stephen Leake" . "stephen_leake@stephe-leake.org")) :maintainer '("Stephen Leake" . "stephen_leake@stephe-leake.org") :url "http://www.nongnu.org/ada-mode/")
