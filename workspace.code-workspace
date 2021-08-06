@@ -7,8 +7,8 @@
 	"extensions": {
 		"recommendations": [
 			"arthurwang.vsc-prolog",
-			"jamesnvc.prolog-lsp",
-			"jan-dolejsi.pddl"
+			"jan-dolejsi.pddl",
+			"jamesnvc.prolog-lsp"
 		]
 	},
 	"settings": {
@@ -45,7 +45,7 @@
 		"pddl.validatorPath": "/root/.vscode-server-insiders/data/User/globalStorage/jan-dolejsi.pddl/val/Val-20210215.2-Linux/bin/Validate",
 		"pddl.valueSeqPath": "/root/.vscode-server-insiders/data/User/globalStorage/jan-dolejsi.pddl/val/Val-20210215.2-Linux/bin/ValueSeq",
 		"pddl.valStepPath": "/root/.vscode-server-insiders/data/User/globalStorage/jan-dolejsi.pddl/val/Val-20210215.2-Linux/bin/ValStep",
-		"files.autoSave": "afterDelay",
+		"files.autoSave": "off",
 		"pddl.selectedPlanner": "http://solver.planning.domains/solve",
 		"workbench.editor.enablePreview": false,
 		"atomKeymap.promptV3Features": true,

@@ -20,6 +20,8 @@
 
 :- '$set_source_module'(mu).
 
+:- ensure_loaded(adv_loader).
+
 :- meta_predicate with_agent_console(*, 0).
 /*
 with_agent_console(Agent, Goal):-

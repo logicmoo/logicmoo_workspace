@@ -17,8 +17,8 @@
 %
 */
 :- '$set_source_module'(mu).
-
-:- ensure_loaded('adv_props').
+:- ensure_loaded(adv_loader).
+:- ensure_loaded(adv_props).
 
 % %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % CODE FILE SECTION
@@ -46,7 +46,9 @@ save_term_exists(Filename, _) :-
 save_term_exists(Filename, _) :-
  player_format('Failed to open file "~w" for saving.~n', [Filename]).
 
-
+%% record_saved(+State) is det.
+%
+%  Check to see if State is saved
 record_saved(State) :- is_list(State), !,
   sort(State, Term),
   with_mutex(save_advstate, must_mw1(save_term(library('episodic_memory/adv_state_db.pl'), write , Term))), !.

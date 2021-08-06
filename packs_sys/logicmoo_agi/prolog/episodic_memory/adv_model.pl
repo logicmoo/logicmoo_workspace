@@ -17,6 +17,7 @@
 %
 */
 :- '$set_source_module'(mu).
+:- ensure_loaded(adv_loader).
 
 must_be_same(X, Y):- must_mw1(X==Y).
 model_prepend(X, Y, Z):- append(X, Y, Z).

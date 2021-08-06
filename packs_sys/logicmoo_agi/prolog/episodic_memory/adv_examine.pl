@@ -17,6 +17,8 @@
 %
 */
 :- '$set_source_module'(mu).
+:- ensure_loaded(adv_loader).
+
 
 /*
 nearby_objs(Agent, Here, Nearby, S0):-

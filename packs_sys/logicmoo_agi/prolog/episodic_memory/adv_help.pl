@@ -17,6 +17,7 @@
 %
 */
 :- '$set_source_module'(mu).
+:- ensure_loaded(adv_loader).
 
 :- dynamic(mu_global:cmd_help/2).
 :- multifile(mu_global:cmd_help/2).
@@ -46,7 +47,7 @@ call_oh(G):- call(call, online_help:G).
 
 add_help(Cmd, HelpStr):-
  retractall(mu_global:cmd_help(Cmd, _)),
- assert(mu_global:cmd_help(Cmd, HelpStr)).
+ assert(mu_global:cmd_help(Cmd, HelpStr)). 
 
 add_help_cmd_borked(_Cmd):- !.
 /*

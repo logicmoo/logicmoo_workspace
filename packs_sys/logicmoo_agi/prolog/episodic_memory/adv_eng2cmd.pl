@@ -15,6 +15,8 @@
 %
 */
 :- '$set_source_module'(mu).
+:- ensure_loaded(adv_loader).
+
 %:- rtrace.
 
 % % %:- listing(user:prolog_load_file/2).

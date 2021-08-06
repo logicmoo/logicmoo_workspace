@@ -18,6 +18,8 @@
 */
 % Marty's Tokenizer/Scanner/Lexer, written in Prolog.
 :- '$set_source_module'(mu).
+:- ensure_loaded(adv_loader).
+
 /*
 :- module(adv_io, [
  read_line_to_tokens/4,

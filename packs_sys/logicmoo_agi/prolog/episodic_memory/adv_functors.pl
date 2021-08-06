@@ -17,6 +17,7 @@
 %
 */
 :- '$set_source_module'(mu).
+:- ensure_loaded(adv_loader).
 
 % Some Inform properties:
 % light - rooms that have light in them

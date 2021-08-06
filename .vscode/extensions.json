@@ -2,6 +2,7 @@
     "recommendations": [
         "alefragnani.project-manager",
         "bajdzis.vscode-database",
-        "jan-dolejsi.pddl"
+        "jan-dolejsi.pddl",
+        "jamesnvc.prolog-lsp"
     ]
 }

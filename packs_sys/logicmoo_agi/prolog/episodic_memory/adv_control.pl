@@ -26,3 +26,6 @@ setup_moo2 ==> {writeln(setup_moo2)}.
 
 :- module(mu).
 
+%:- ensure_loaded(adv_loader).
+
+

@@ -34,6 +34,7 @@
 :- reexport(library(logicmoo_utils_all)).
 ludef:- list_undefined([module_class([user, system, library, test, development])]).
 
+:- ensure_loaded(adv_loader).
 
 simplify_memlists(Term,E):- has_list_functor(Term), 
   member(F,[propOf(_, _),memlist_for(_),structure_label(_),inst(_)]),member_unopen(E,Term),compound(E),F=E,!.
@@ -104,6 +105,7 @@ is_state_list(_, [G1|_], {GG, '...'}):- compound(G1), G1=structure_type(GG), !.
 is_state_list(Z, [_|G], GG):- is_state_list(Z, G, GG).
 
 clip_cons(Z, G, GG):- is_state_list(Z, G, GG), !.
+
 clip_cons(Z, List, ClipTail, {Len, LeftS, ClipTail}):- fail,
  get_zoption(Z, len, MaxLen, 7),
  length(List, Len),

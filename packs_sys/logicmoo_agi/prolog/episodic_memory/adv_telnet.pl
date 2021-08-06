@@ -17,6 +17,7 @@
 %
 */
 :- '$set_source_module'(mu).
+:- ensure_loaded(adv_loader).
 
 :- dynamic(mu_tmp:no_autostart/0).
 :- volatile(mu_tmp:no_autostart/0).

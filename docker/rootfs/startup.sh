@@ -1,6 +1,6 @@
 #!/bin/bash
 
-set +x
+set +x +e
 #set +e
 
 export DEBIAN_FRONTEND=noninteractive
@@ -115,6 +115,8 @@ if [ $DO_PULL -gt 0 ]; then
 else 
    echo "Skipping pull"
 fi
+
+ln -sf `which swipl` /usr/bin/swipl
 
 chmod a+w -R /tmp/
 

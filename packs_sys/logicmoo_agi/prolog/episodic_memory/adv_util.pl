@@ -18,6 +18,7 @@
 */
 :- '$set_source_module'(mu).
 :- op(700, xfx, (univ_safe)).
+:- ensure_loaded(adv_loader).
 
 call_z(P, G):- call(P, G).
 

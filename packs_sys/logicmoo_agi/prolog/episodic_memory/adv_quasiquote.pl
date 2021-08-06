@@ -1,5 +1,6 @@
 
 :- '$set_source_module'(mu).
+:- ensure_loaded(adv_loader).
 
 % @TODO
 parse_kind(Type, String, Logic):- trace_or_throw(parse_kind(Type, String, Logic)).

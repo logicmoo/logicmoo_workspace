@@ -20,6 +20,8 @@
 :- op(500, fx, ~).
 
 
+:- ensure_loaded(adv_loader).
+
 
 :- discontiguous(implications/4).
 

@@ -19,6 +19,9 @@
 
 :- '$set_source_module'(mu).
 
+:- ensure_loaded(adv_loader).
+
+
 :- op(1200, xfy, ('==>>')).
 :- op(1200, xfy, ('::=')).
 :- op(700, fx, ('~')).

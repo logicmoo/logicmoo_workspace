@@ -111,6 +111,9 @@ git clone --recursive https://logicmoo.org/gitlab/logicmoo/logicmoo_workspace.gi
 cd logicmoo_workspace
 ./INSTALL.md
 ./StartLogicmoo.sh
+
+code-insiders --user-data-dir=/opt/logicmoo_workspace/prologmud_server/.config/Code\ -\ Insiders/  --no-sandbox
+
 ```
 
 
