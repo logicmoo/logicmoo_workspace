@@ -16,9 +16,9 @@
 % Main file.
 %
 */
+:- use_module(library(logicmoo_common)).
 :- '$set_source_module'(mu).
 :- ensure_loaded(adv_loader).
-
 
 
 % get_all_props(Object, AllProps, S0):- findall(Prop, getprop(Object, Prop, S0), AllProps).

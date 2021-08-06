@@ -16,7 +16,10 @@
 % Main file.
 %
 */
+:- use_module(library(logicmoo_common)).
 :- '$set_source_module'(mu).
+:- ensure_loaded(adv_loader).
+
 
 %:- nop(ensure_loaded('adv_chat80')).
 

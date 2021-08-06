@@ -36,8 +36,9 @@
  current_error/1 % , set_error/1
  ]).
 
-:- dumpST.
 :- throw(dont_use_this_file(adv_io_key)).
+:- dumpST.
+:- ensure_loaded(adv_loader).
 
 mutex_create_safe(M):- notrace(catch(mutex_create(M), _, true)).
 
