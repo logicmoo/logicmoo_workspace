@@ -171,7 +171,11 @@ var MAX_RECONNECT_DELAY = 30000;
 								var other = jsev.typeIfy(res);
 								if (jsev.classOf(res) != jsev.classOf(other)) {
 									try {
-										if (reply == null) reply = JSON.stringify(other);
+										if (reply == null) 
+										//reply = 
+										JSON.stringify(other);
+										res = other;
+
 									} catch (ignore) {
 										// console.log(ignore);
 									}
@@ -185,10 +189,10 @@ var MAX_RECONNECT_DELAY = 30000;
 								}
 								if (reply == null) {
 									try {
-										reply = jsev.stringifyAsJson("#REF:$" + messageData, res);
+										reply = jsev.stringifyAsJson("#REF:" + messageData, res);
 									} catch (ignore) {
 										console.log(ignore);
-										debugger;
+										//debugger;
 										throw ignore
 									}
 								}
@@ -304,7 +308,7 @@ var MAX_RECONNECT_DELAY = 30000;
 
 		var traverse = (parent, field) => {
 			var obj = parent;
-			var path = '#REF:$';
+			var path = '#REF:';
 
 			if (field !== undefined) {
 				obj = parent[field];
@@ -475,6 +479,8 @@ var MAX_RECONNECT_DELAY = 30000;
 	}
 
 	JSCtrl.prototype.typeIfy = function(obj) {
+
+	
 		if (obj == null || (!(typeof obj === 'object'))) return obj;
 
 		var proxy = o2prox.get(obj);
@@ -497,18 +503,28 @@ var MAX_RECONNECT_DELAY = 30000;
 		try {
 			if (obj instanceof Map) {
 				proxy = Object.fromEntries(obj);
-				if (false) proxy[classNameKey] = "Map";
+				//if (false) proxy[classNameKey] = "Map";
 				return proxy;
 			}
 
 			if (Array.isArray(obj)) {
-				if (false) obj[classNameKey] = "Array";
-				return obj;
+				proxy = obj;
+				/*
+				proxy = [];
+				prox2o.set(proxy, obj);
+				o2prox.set(obj, proxy);
+				for (var i of obj) {
+					//var t = jsev.typeIfy(i);
+					proxy.push(i);
+				}*/
+				return proxy;
+			
 			}
 
-			if (obj instanceof Set) {
-				if (false) obj[classNameKey] = "Set";
-				return obj;
+			if (obj instanceof Set) {			   
+                proxy = new Set(obj);
+				// if (false) proxy[classNameKey] = "Set";
+				return proxy;
 			}
 
 			proxy = {}; // proxy = Object.create(obj); //{};
@@ -534,7 +550,7 @@ var MAX_RECONNECT_DELAY = 30000;
 						if (typeof v === 'function') {
 							v = Object.getOwnPropertyDescriptor(obj, key);
 						} else {
-							//var r = jsev.typeIfy(v);
+							//var v = jsev.typeIfy(v);
 						}
 						try {
 							proxy[key] = v;

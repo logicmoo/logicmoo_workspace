@@ -23,4 +23,14 @@
       </metadata>
     </info>
   </bookmark>
+  <bookmark href="file:///opt/logicmoo_workspace" added="2021-08-06T16:42:32.871999Z" modified="2021-08-06T16:42:32.872002Z" visited="2021-08-06T16:42:32.872000Z">
+    <info>
+      <metadata owner="http://freedesktop.org">
+        <mime:mime-type type="inode/directory"/>
+        <bookmark:applications>
+          <bookmark:application name="code-insiders" exec="&apos;code-insiders %u&apos;" modified="2021-08-06T16:42:32.872000Z" count="1"/>
+        </bookmark:applications>
+      </metadata>
+    </info>
+  </bookmark>
 </xbel>

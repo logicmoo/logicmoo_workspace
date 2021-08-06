@@ -605,3 +605,21 @@ code-insiders
 ps axf
 ps 
 exit
+code-insiders 
+export DISPLAY=10.0.0.78:0.0
+code-insiders 
+cd /opt/logicmoo_workspace/packs_web/
+cd ..
+cd packs_xtra/
+cd logicmoo_pldata/
+git status
+cd eclipse-workspace/stanford_corenlp
+ls
+ls models/
+mv models/* .
+ls
+rm edu
+mv stanford-corenlp-4.2.0-models* /
+mv stanford-corenlp-4.2.0-models* /tmp/
+ls
+mv models/* .

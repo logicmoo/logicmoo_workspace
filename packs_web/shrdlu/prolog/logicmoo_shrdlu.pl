@@ -163,7 +163,7 @@ cvt_js_result_structure(element(T,P,L), Term):- L==[], !, cvt_js_result_structur
 cvt_js_result_structure('@'(Jsv), Term):- !, Term=Jsv.
 cvt_js_result_structure('ele'([Jsv]), Term):- !, cvt_js_result_structure(Jsv, Term).
 cvt_js_result_structure('ele'(Jsv), Term):- !, cvt_js_result_structure(Jsv, Term).
-cvt_js_result_structure('ref'(Jsv), 'ref'(A4)):- atom_to_a4_obj(Jsv,A4),!.
+cvt_js_result_structure('ref'(Jsv), 'ref'(Path)):- atom_to_a4_obj(Jsv,A4),!,obj_path(A4,Path).
 cvt_js_result_structure(super=String, super=StringL):- string(String),atomic_list_concat(StringL,',',String).
 cvt_js_result_structure(json(List),Term):- fail, !,
   must_or_rtrace(into_pairzs(List,Pairs)),
