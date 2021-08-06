@@ -184,7 +184,7 @@ var ShrdluA4Game = /** @class */ (function (_super) {
         this.naturalLanguageParser.talkingTargets = ["player", "shrdlu", "qwerty", "etaoin"];
         // load the AIs:
         this.etaoinAI = new EtaoinAI(this.ontology, this.naturalLanguageParser, [], this, ["data/general-kb.xml", "data/etaoin-kb.xml"]);
-        this.playerAI = new PlayerAI(this.ontology, this.naturalLanguageParser, this.currentPlayer, [], this, ["data/general-kb.xml", "data/etaoin-kb.xml"]);
+        this.playerAI = new PlayerAI(this.ontology, this.naturalLanguageParser, this.currentPlayer, this, ["data/general-kb.xml", "data/etaoin-kb.xml"]);
         this.qwertyAI = new QwertyAI(this.ontology, this.naturalLanguageParser, (this.findObjectByName("Qwerty")[0]), this, ["data/general-kb.xml", "data/qwerty-kb.xml"]);
         this.shrdluAI = new ShrdluAI(this.ontology, this.naturalLanguageParser, (this.findObjectByName("Shrdlu")[0]), this, ["data/general-kb.xml", "data/shrdlu-kb.xml"]);
         if (LOG_ACTIONS_IN_DEBUG_LOG) {
@@ -193,14 +193,16 @@ var ShrdluA4Game = /** @class */ (function (_super) {
             this.etaoinAI.debugActionLog = this.debugActionLog;
             this.qwertyAI.debugActionLog = this.debugActionLog;
             this.shrdluAI.debugActionLog = this.debugActionLog;
-            this.playerAI.debugActionLog = this.debugActionLog;
+            if (this.playerAI != null)
+                this.playerAI.debugActionLog = this.debugActionLog;
         }
         if (saveGameXml) {
             var ais_xml = getElementChildrenByTag(saveGameXml, "RuleBasedAI");
             this.etaoinAI.restoreFromXML(ais_xml[0]);
             this.qwertyAI.restoreFromXML(ais_xml[1]);
             this.shrdluAI.restoreFromXML(ais_xml[2]);
-            this.playerAI.restoreFromXML(ais_xml[0]); // uses etaoin's
+            if (this.playerAI != null)
+                this.playerAI.restoreFromXML(ais_xml[1]); // uses etaoin's
         }
         Sort.precomputeIsA();
         this.gameScript = new ShrdluGameScript(this, this.app);
@@ -290,7 +292,8 @@ var ShrdluA4Game = /** @class */ (function (_super) {
         this.etaoinAI.precalculateLocationKnowledge(this, this.ontology);
         this.shrdluAI.precalculateLocationKnowledge(this, this.ontology);
         this.qwertyAI.precalculateLocationKnowledge(this, this.ontology);
-        this.playerAI.precalculateLocationKnowledge(this, this.ontology);
+        if (this.playerAI != null)
+            this.playerAI.precalculateLocationKnowledge(this, this.ontology);
         this.getMap("Tardis 8").reevaluateVisibility();
         this.getMap("Tardis 8").recalculateLightsOnStatus(this.rooms_with_lights, this.rooms_with_lights_on, this.map_location_names[this.getMapIndex("Tardis 8")]);
     };
@@ -1093,14 +1096,15 @@ var ShrdluA4Game = /** @class */ (function (_super) {
                 ctx.fillText("Etaoin is thinking...", 2 * PIXEL_SIZE, (thinkingY + 1) * PIXEL_SIZE);
                 thinkingY -= 10;
             }
-            if (this.playerAI.currentInferenceProcess != null) {
-                // player is thinking:
-                ctx.fillStyle = MSX_COLOR_BLACK;
-                ctx.fillRect(2 * PIXEL_SIZE, thinkingY * PIXEL_SIZE, 130 * PIXEL_SIZE, 10 * PIXEL_SIZE);
-                ctx.fillStyle = MSX_COLOR_WHITE;
-                ctx.fillText("playerAI is thinking...", 2 * PIXEL_SIZE, (thinkingY + 1) * PIXEL_SIZE);
-                thinkingY -= 10;
-            }
+            if (this.playerAI != null)
+                if (this.playerAI.currentInferenceProcess != null) {
+                    // player is thinking:
+                    ctx.fillStyle = MSX_COLOR_BLACK;
+                    ctx.fillRect(2 * PIXEL_SIZE, thinkingY * PIXEL_SIZE, 130 * PIXEL_SIZE, 10 * PIXEL_SIZE);
+                    ctx.fillStyle = MSX_COLOR_WHITE;
+                    ctx.fillText("playerAI is thinking...", 2 * PIXEL_SIZE, (thinkingY + 1) * PIXEL_SIZE);
+                    thinkingY -= 10;
+                }
             if (this.qwertyAI.currentInferenceProcess != null) {
                 // etaoin is thinking:
                 ctx.fillStyle = MSX_COLOR_BLACK;

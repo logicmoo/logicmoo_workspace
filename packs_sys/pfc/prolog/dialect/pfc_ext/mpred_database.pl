@@ -478,7 +478,7 @@ db_op_call(_What,How,Data):- call(How,Data).
 
 % attempt_side_effect_mpa(M,OpA,Data):- record_se,!,add_side_effect(OpA,M:Data).
 attempt_side_effect_mpa(M,db_op_call(_,retract_u0),Data0):- \+ lookup_u(M:Data0),!,fail.
-attempt_side_effect_mpa(M,OpA,Data0):- \+ record_se, is_side_effect_disabled,!,mpred_warn('no_attempt_side_effects ~p',attempt_side_effect_mpa(M,OpA,Data0)).
+attempt_side_effect_mpa(M,OpA,Data0):- \+ record_se, is_side_effect_disabled,!,mpred_warn('no_attempt_side_effects ~p',[attempt_side_effect_mpa(M,OpA,Data0)]).
 % @TODO BROKEN phys ical_side_effect_call(M,assertz_i,Data0):- must((compile_aux_clauses(M:Data0))),!.
 attempt_side_effect_mpa(M,OpA,Data0):- show_failure(M:call(M:OpA,M:Data0)).
 

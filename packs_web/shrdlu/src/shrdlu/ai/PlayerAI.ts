@@ -1,11 +1,11 @@
 
-class PlayerAI extends QwertyAI {
-	constructor(o:Ontology, nlp:NLParser, player:A4AICharacter, stationMaps:A4Map[], game:ShrdluA4Game,
+class PlayerAI extends RobotAI {
+	constructor(o:Ontology, nlp:NLParser, player:A4AICharacter, game:ShrdluA4Game,
 				rulesFileNames:string[])
 	{
+		super(o, nlp, player, game, rulesFileNames);
 		//super(o, nlp, game, 12, 0, DEFAULT_QUESTION_PATIENCE_TIMER);
 		//super(o, nlp, game, player stationMaps, rulesFileNames);
-		super(o, nlp, player, game, rulesFileNames);
 		console.log("PlayerAI.constructor end...");
 		this.robot.ID = "player";
 		this.selfID = "player";
@@ -81,7 +81,6 @@ class PlayerAI extends QwertyAI {
 		}
 		return super.canGoTo(map, locationID, requester);
 	}
-
 
 }
 

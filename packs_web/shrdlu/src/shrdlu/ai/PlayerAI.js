@@ -15,11 +15,10 @@ var __extends = (this && this.__extends) || (function () {
 })();
 var PlayerAI = /** @class */ (function (_super) {
     __extends(PlayerAI, _super);
-    function PlayerAI(o, nlp, player, stationMaps, game, rulesFileNames) {
-        var _this = 
+    function PlayerAI(o, nlp, player, game, rulesFileNames) {
+        var _this = _super.call(this, o, nlp, player, game, rulesFileNames) || this;
         //super(o, nlp, game, 12, 0, DEFAULT_QUESTION_PATIENCE_TIMER);
         //super(o, nlp, game, player stationMaps, rulesFileNames);
-        _super.call(this, o, nlp, player, game, rulesFileNames) || this;
         console.log("PlayerAI.constructor end...");
         _this.robot.ID = "player";
         _this.selfID = "player";
@@ -82,4 +81,4 @@ var PlayerAI = /** @class */ (function (_super) {
         return _super.prototype.canGoTo.call(this, map, locationID, requester);
     };
     return PlayerAI;
-}(QwertyAI));
+}(RobotAI));

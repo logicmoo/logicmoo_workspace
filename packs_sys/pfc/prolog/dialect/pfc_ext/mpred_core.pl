@@ -1501,7 +1501,7 @@ mpred_post12(P,S):- quietly_ex((maybe_updated_value(P,RP,OLD))),!,subst(S,P,RP,R
 mpred_post12(actn(P),S):- !, 
   with_current_why(S,call(P)), mpred_post13(actn(P),S).
 
-mpred_post12(P,S):- mpred_post13(P,S).
+mpred_post12(P,S):- mpred_post13(P,S),!.
 
 % Two versions exists of this function one expects for a clean database (fresh_mode) and adds new information.
 % tries to assert a fact or set of fact to the database.
