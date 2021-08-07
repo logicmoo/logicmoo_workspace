@@ -546,7 +546,7 @@ packs_sys\logicmoo_nlu\ext\chat80_lm\chat80.vpj=Release
       + prolog
         + checkers
       + tests
-  - packs_sys
+  + packs_sys
     + logicmoo_ec\.github
       + ISSUE_TEMPLATE
     + dictoo
@@ -1756,7 +1756,7 @@ packs_sys\logicmoo_nlu\ext\chat80_lm\chat80.vpj=Release
         + BN-search
         + pHa_code
     + logicmoo_pldata
-      - eclipse-workspace
+      + eclipse-workspace
         + FAtiMA_impl\.metadata\.plugins
           + org.eclipse.core.resources\.projects
             + FAtiMA
@@ -1769,26 +1769,26 @@ packs_sys\logicmoo_nlu\ext\chat80_lm\chat80.vpj=Release
           + org.eclipse.ui.workbench
         + Servers\.settings
         + DearLeader
-          + Assets
+          - Assets
             + Characters
             + Other
-            + Plots
+            - Plots
             + Story generator
             + Unity
           + ProjectSettings
-        + DEIRA
+        - DEIRA
           + etc
             + HaptekLink
               + Data
             + VisageLink
             + VisageLinkStub
-          + run
+          - run
             + hapteklink
               + body_male
               + leno
               + torso_female
-            + hrss
-            + vs
+            - hrss
+            - vs
         + FAtiMA_impl
           + data
             + characters
@@ -2082,344 +2082,17 @@ packs_sys\logicmoo_nlu\ext\chat80_lm\chat80.vpj=Release
   + wikis
     - logicmoo_workspace.wiki
 + other_files.vpj
-scroll:167
+scroll:36
 [State]
-SCREEN: 1920 1200 9 88 1918 997 0 0 M 0 0 0 0 1560 581
-CWD: prologmud_server\.local\share\swi-prolog\pack\logicmoo_utils\prolog
-BUFFER: BN="packs_web\shrdlu\eval_socket.js"
-BI: MA=1 74 1  TABS=1 5  WWS=1 IWT=1 ST=0 IN=2 BW=0 US=32000 RO=0 SE=1 SN=0 BIN=0 MN=JavaScript	HM=0 MF=8 TL=0 MLL=0 ASE=0 LNL=6 LCF=0 CAPS=0 E=0 ESBU2=-1
-VIEW: LN=.14256 CL=27 LE=0 CX=26 CY=18 WI=5 BI=39 HT=0 HN=0 HF=0 HC=4
-BUFFER: BN="packs_web\shrdlu\src\a4engine3\A4PathFinding.ts"
-BI: MA=1 74 1  TABS=1 5  WWS=1 IWT=1 ST=0 IN=2 BW=0 US=32000 RO=0 SE=1 SN=0 BIN=0 MN=JavaScript	HM=0 MF=8 TL=0 MLL=0 ASE=0 LNL=6 LCF=0 CAPS=0 E=0 ESBU2=-1
-VIEW: LN=.6908 CL=17 LE=0 CX=16 CY=49 WI=5 BI=47 HT=0 HN=0 HF=0 HC=4
-BUFFER: BN="packs_web\shrdlu\src\a4engine3\A4Agenda.ts"
-BI: MA=1 74 1  TABS=1 5  WWS=1 IWT=1 ST=0 IN=2 BW=0 US=32000 RO=0 SE=1 SN=0 BIN=0 MN=JavaScript	HM=0 MF=8 TL=0 MLL=0 ASE=0 LNL=6 LCF=0 CAPS=0 E=0 ESBU2=-1
-VIEW: LN=.0 CL=1 LE=0 CX=0 CY=0 WI=5 BI=56 HT=0 HN=0 HF=0 HC=4
-BUFFER: BN="packs_web\shrdlu\src\ai\actions\Call.ts"
-BI: MA=1 74 1  TABS=1 5  WWS=1 IWT=1 ST=0 IN=2 BW=0 US=32000 RO=0 SE=1 SN=0 BIN=0 MN=JavaScript	HM=0 MF=8 TL=0 MLL=0 ASE=0 LNL=6 LCF=0 CAPS=0 E=0 ESBU2=-1
-VIEW: LN=.1731 CL=30 LE=0 CX=29 CY=38 WI=5 BI=43 HT=0 HN=0 HF=0 HC=4
-BUFFER: BN="packs_web\shrdlu\src\a4engine3\A4Map.ts"
-BI: MA=1 74 1  TABS=1 5  WWS=1 IWT=1 ST=0 IN=2 BW=0 US=32000 RO=0 SE=1 SN=0 BIN=0 MN=JavaScript	HM=0 MF=8 TL=0 MLL=0 ASE=0 LNL=6 LCF=0 CAPS=0 E=0 ESBU2=-1
-VIEW: LN=.41935 CL=5 LE=0 CX=4 CY=49 WI=5 BI=33 HT=0 HN=0 HF=0 HC=4
-BUFFER: BN="packs_web\shrdlu\src\a4engine3\objects\A4MapBridge.ts"
-BI: MA=1 74 1  TABS=1 5  WWS=1 IWT=1 ST=0 IN=2 BW=0 US=32000 RO=0 SE=1 SN=0 BIN=0 MN=JavaScript	HM=0 MF=8 TL=0 MLL=0 ASE=0 LNL=6 LCF=0 CAPS=0 E=0 ESBU2=-1
-VIEW: LN=.0 CL=1 LE=0 CX=0 CY=0 WI=5 BI=34 HT=0 HN=0 HF=0 HC=4
-BUFFER: BN="packs_web\shrdlu\src\a4engine3\objects\A4Food.ts"
-BI: MA=1 74 1  TABS=1 5  WWS=1 IWT=1 ST=0 IN=2 BW=0 US=32000 RO=0 SE=1 SN=0 BIN=0 MN=JavaScript	HM=0 MF=8 TL=0 MLL=0 ASE=0 LNL=6 LCF=0 CAPS=0 E=0 ESBU2=-1
-VIEW: LN=.0 CL=1 LE=0 CX=0 CY=0 WI=5 BI=26 HT=0 HN=0 HF=0 HC=4
-BUFFER: BN="packs_web\shrdlu\src\a4engine3\objects\A4Item.ts"
-BI: MA=1 74 1  TABS=1 5  WWS=1 IWT=1 ST=0 IN=2 BW=0 US=32000 RO=0 SE=1 SN=0 BIN=0 MN=JavaScript	HM=0 MF=8 TL=0 MLL=0 ASE=0 LNL=6 LCF=0 CAPS=0 E=0 ESBU2=-1
-VIEW: LN=.73 CL=6 LE=0 CX=5 CY=3 WI=5 BI=37 HT=0 HN=0 HF=0 HC=4
-BUFFER: BN="packs_web\shrdlu\src\a4engine3\objects\A4Door.ts"
-BI: MA=1 74 1  TABS=1 5  WWS=1 IWT=1 ST=0 IN=2 BW=0 US=32000 RO=0 SE=1 SN=0 BIN=0 MN=JavaScript	HM=0 MF=8 TL=0 MLL=0 ASE=0 LNL=6 LCF=0 CAPS=0 E=0 ESBU2=-1
-VIEW: LN=.0 CL=1 LE=0 CX=0 CY=0 WI=5 BI=44 HT=0 HN=0 HF=0 HC=4
-BUFFER: BN="packs_web\shrdlu\src\a4engine3\objects\A4PlayerCharacter.ts"
-BI: MA=1 74 1  TABS=1 5  WWS=1 IWT=1 ST=0 IN=2 BW=0 US=32000 RO=0 SE=1 SN=0 BIN=0 MN=JavaScript	HM=0 MF=8 TL=0 MLL=0 ASE=0 LNL=6 LCF=0 CAPS=0 E=0 ESBU2=-1
-VIEW: LN=.0 CL=40 LE=0 CX=39 CY=0 WI=5 BI=49 HT=0 HN=0 HF=0 HC=4
-BUFFER: BN="packs_web\shrdlu\src\a4engine3\objects\A4AICharacter.ts"
-BI: MA=1 74 1  TABS=1 5  WWS=1 IWT=1 ST=0 IN=2 BW=0 US=32000 RO=0 SE=1 SN=0 BIN=0 MN=JavaScript	HM=0 MF=8 TL=0 MLL=0 ASE=0 LNL=6 LCF=0 CAPS=0 E=0 ESBU2=-1
-VIEW: LN=.0 CL=1 LE=0 CX=0 CY=0 WI=5 BI=27 HT=0 HN=0 HF=0 HC=4
-BUFFER: BN="packs_web\shrdlu\src\auxiliar\GLTile.ts"
-BI: MA=1 74 1  TABS=1 5  WWS=1 IWT=1 ST=0 IN=2 BW=0 US=32000 RO=0 SE=1 SN=0 BIN=0 MN=JavaScript	HM=0 MF=8 TL=0 MLL=0 ASE=0 LNL=6 LCF=0 CAPS=0 E=0 ESBU2=-1
-VIEW: LN=.0 CL=1 LE=0 CX=0 CY=0 WI=5 BI=25 HT=0 HN=0 HF=0 HC=4
-BUFFER: BN="packs_web\shrdlu\src\auxiliar\GLTManager.ts"
-BI: MA=1 74 1  TABS=1 5  WWS=1 IWT=1 ST=0 IN=2 BW=0 US=32000 RO=0 SE=1 SN=0 BIN=0 MN=JavaScript	HM=0 MF=8 TL=0 MLL=0 ASE=0 LNL=6 LCF=0 CAPS=0 E=0 ESBU2=-1
-VIEW: LN=.0 CL=1 LE=0 CX=0 CY=0 WI=5 BI=29 HT=0 HN=0 HF=0 HC=4
-BUFFER: BN="packs_web\shrdlu\src\auxiliar\BButton.ts"
-BI: MA=1 74 1  TABS=1 5  WWS=1 IWT=1 ST=0 IN=2 BW=0 US=32000 RO=0 SE=1 SN=0 BIN=0 MN=JavaScript	HM=0 MF=8 TL=0 MLL=0 ASE=0 LNL=6 LCF=0 CAPS=0 E=0 ESBU2=-1
-VIEW: LN=.0 CL=1 LE=0 CX=0 CY=0 WI=5 BI=45 HT=0 HN=0 HF=0 HC=4
-BUFFER: BN="packs_web\shrdlu\src\auxiliar\auxiliar-gfx.ts"
-BI: MA=1 74 1  TABS=1 5  WWS=1 IWT=1 ST=0 IN=2 BW=0 US=32000 RO=0 SE=1 SN=0 BIN=0 MN=JavaScript	HM=0 MF=8 TL=0 MLL=0 ASE=0 LNL=6 LCF=0 CAPS=0 E=0 ESBU2=-1
-VIEW: LN=.0 CL=1 LE=0 CX=0 CY=0 WI=5 BI=50 HT=0 HN=0 HF=0 HC=4
-BUFFER: BN="packs_web\shrdlu\src\auxiliar\auxiliar.ts"
-BI: MA=1 74 1  TABS=1 5  WWS=1 IWT=1 ST=0 IN=2 BW=0 US=32000 RO=0 SE=1 SN=0 BIN=0 MN=JavaScript	HM=0 MF=8 TL=0 MLL=0 ASE=0 LNL=6 LCF=0 CAPS=0 E=0 ESBU2=-1
-VIEW: LN=.0 CL=1 LE=0 CX=0 CY=0 WI=5 BI=51 HT=0 HN=0 HF=0 HC=4
-BUFFER: BN="packs_web\shrdlu\src\auxiliar\BInterface.ts"
-BI: MA=1 74 1  TABS=1 5  WWS=1 IWT=1 ST=0 IN=2 BW=0 US=32000 RO=0 SE=1 SN=0 BIN=0 MN=JavaScript	HM=0 MF=8 TL=0 MLL=0 ASE=0 LNL=6 LCF=0 CAPS=0 E=0 ESBU2=-1
-VIEW: LN=.0 CL=1 LE=0 CX=0 CY=0 WI=5 BI=36 HT=0 HN=0 HF=0 HC=4
-BUFFER: BN="packs_web\shrdlu\src\auxiliar\BInterfaceElement.ts"
-BI: MA=1 74 1  TABS=1 5  WWS=1 IWT=1 ST=0 IN=2 BW=0 US=32000 RO=0 SE=1 SN=0 BIN=0 MN=JavaScript	HM=0 MF=8 TL=0 MLL=0 ASE=0 LNL=6 LCF=0 CAPS=0 E=0 ESBU2=-1
-VIEW: LN=.0 CL=1 LE=0 CX=0 CY=0 WI=5 BI=24 HT=0 HN=0 HF=0 HC=4
-BUFFER: BN="packs_web\shrdlu\src\auxiliar\SFXManager.ts"
-BI: MA=1 74 1  TABS=1 5  WWS=1 IWT=1 ST=0 IN=2 BW=0 US=32000 RO=0 SE=1 SN=0 BIN=0 MN=JavaScript	HM=0 MF=8 TL=0 MLL=0 ASE=0 LNL=6 LCF=0 CAPS=0 E=0 ESBU2=-1
-VIEW: LN=.0 CL=1 LE=0 CX=0 CY=0 WI=5 BI=52 HT=0 HN=0 HF=0 HC=4
-BUFFER: BN="packs_web\shrdlu\src\shrdlu\ShrdluCutScenes.ts"
-BI: MA=1 74 1  TABS=1 5  WWS=1 IWT=1 ST=0 IN=2 BW=0 US=32000 RO=0 SE=1 SN=0 BIN=0 MN=JavaScript	HM=0 MF=8 TL=0 MLL=0 ASE=0 LNL=6 LCF=0 CAPS=0 E=0 ESBU2=-1
-VIEW: LN=.0 CL=1 LE=0 CX=0 CY=0 WI=5 BI=53 HT=0 HN=0 HF=0 HC=4
-BUFFER: BN="packs_web\shrdlu\src\a4engine3\A4MapLayer.ts"
-BI: MA=1 74 1  TABS=1 5  WWS=1 IWT=1 ST=0 IN=2 BW=0 US=32000 RO=0 SE=1 SN=0 BIN=0 MN=JavaScript	HM=0 MF=8 TL=0 MLL=0 ASE=0 LNL=6 LCF=0 CAPS=0 E=0 ESBU2=-1
-VIEW: LN=.0 CL=1 LE=0 CX=0 CY=0 WI=5 BI=54 HT=0 HN=0 HF=0 HC=4
-BUFFER: BN="packs_web\shrdlu\src\a4engine3\objects\A4Character.ts"
-BI: MA=1 74 1  TABS=1 5  WWS=1 IWT=1 ST=0 IN=2 BW=0 US=32000 RO=0 SE=1 SN=0 BIN=0 MN=JavaScript	HM=0 MF=8 TL=0 MLL=0 ASE=0 LNL=6 LCF=0 CAPS=0 E=0 ESBU2=-1
-VIEW: LN=.1962 CL=33 LE=0 CX=32 CY=49 WI=5 BI=5 HT=0 HN=0 HF=0 HC=4
-BUFFER: BN="packs_web\shrdlu\src\a4engine3\objects\A4WalkingObject.ts"
-BI: MA=1 74 1  TABS=1 5  WWS=1 IWT=1 ST=0 IN=2 BW=0 US=32000 RO=0 SE=1 SN=0 BIN=0 MN=JavaScript	HM=0 MF=8 TL=0 MLL=0 ASE=0 LNL=6 LCF=0 CAPS=0 E=0 ESBU2=-1
-VIEW: LN=.0 CL=1 LE=0 CX=0 CY=0 WI=5 BI=42 HT=0 HN=0 HF=0 HC=4
-BUFFER: BN="packs_web\shrdlu\src\shrdlu\ai\actions\RobotStop.ts"
-BI: MA=1 74 1  TABS=1 5  WWS=1 IWT=1 ST=0 IN=2 BW=0 US=32000 RO=0 SE=1 SN=0 BIN=0 MN=JavaScript	HM=0 MF=8 TL=0 MLL=0 ASE=0 LNL=6 LCF=0 CAPS=0 E=0 ESBU2=-1
-VIEW: LN=.0 CL=1 LE=0 CX=0 CY=0 WI=5 BI=68 HT=0 HN=0 HF=0 HC=4
-BUFFER: BN="packs_web\shrdlu\src\shrdlu\ai\actions\RobotStay.ts"
-BI: MA=1 74 1  TABS=1 5  WWS=1 IWT=1 ST=0 IN=2 BW=0 US=32000 RO=0 SE=1 SN=0 BIN=0 MN=JavaScript	HM=0 MF=8 TL=0 MLL=0 ASE=0 LNL=6 LCF=0 CAPS=0 E=0 ESBU2=-1
-VIEW: LN=.0 CL=1 LE=0 CX=0 CY=0 WI=5 BI=67 HT=0 HN=0 HF=0 HC=4
-BUFFER: BN="packs_web\shrdlu\src\shrdlu\ai\EtaoinAI.ts"
-BI: MA=1 74 1  TABS=1 5  WWS=1 IWT=1 ST=0 IN=2 BW=0 US=32000 RO=0 SE=1 SN=0 BIN=0 MN=JavaScript	HM=0 MF=8 TL=0 MLL=0 ASE=0 LNL=6 LCF=0 CAPS=0 E=0 ESBU2=-1
-VIEW: LN=.206 CL=1 LE=0 CX=0 CY=12 WI=5 BI=66 HT=0 HN=0 HF=0 HC=4
-BUFFER: BN="prologmud_server\.local\share\swi-prolog\pack\logicmoo_utils\prolog\debuggery\ucatch.pl"
-BI: MA=1 174 1  TABS=1 3  WWS=1 IWT=0 ST=0 IN=2 BW=0 US=32000 RO=0 SE=1 SN=0 BIN=0 MN=Prolog	HM=0 MF=8 TL=0 MLL=0 ASE=0 LNL=6 LCF=0 CAPS=0 E=0 ESBU2=-1
-VIEW: LN=.32086 CL=3 LE=0 CX=2 CY=4 WI=5 BI=70 HT=0 HN=0 HF=0 HC=4
-BUFFER: BN="prologmud_server\.local\share\swi-prolog\pack\logicmoo_utils\prolog\debuggery\dmsg.pl"
-BI: MA=1 174 1  TABS=1 3  WWS=1 IWT=0 ST=0 IN=2 BW=0 US=32000 RO=0 SE=1 SN=0 BIN=0 MN=Prolog	HM=0 MF=8 TL=0 MLL=0 ASE=0 LNL=6 LCF=0 CAPS=0 E=0 ESBU2=-1
-VIEW: LN=.20427 CL=1 LE=0 CX=0 CY=11 WI=5 BI=71 HT=0 HN=0 HF=0 HC=4
-BUFFER: BN="packs_sys\pfc\prolog\dialect\pfc_ext\mpred_database.pl"
-BI: MA=1 174 1  TABS=1 3  WWS=1 IWT=0 ST=0 IN=2 BW=0 US=32000 RO=0 SE=1 SN=0 BIN=0 MN=Prolog	HM=0 MF=8 TL=0 MLL=0 ASE=0 LNL=6 LCF=0 CAPS=0 E=0 ESBU2=-1
-VIEW: LN=.8685 CL=2 LE=0 CX=1 CY=9 WI=5 BI=69 HT=0 HN=0 HF=0 HC=4
-BUFFER: BN="packs_sys\pfc\prolog\dialect\pfc_ext\mpred_core.pl"
-BI: MA=1 174 1  TABS=1 3  WWS=1 IWT=0 ST=0 IN=2 BW=0 US=32000 RO=0 SE=1 SN=0 BIN=0 MN=Prolog	HM=0 MF=8 TL=0 MLL=0 ASE=0 LNL=6 LCF=0 CAPS=0 E=0 ESBU2=-1
-VIEW: LN=.142818 CL=6 LE=0 CX=5 CY=12 WI=5 BI=72 HT=0 HN=0 HF=0 HC=4
-BUFFER: BN="packs_web\shrdlu\prolog\logicmoo_shrdlu.pl"
-BI: MA=1 174 1  TABS=1 3  WWS=1 IWT=0 ST=0 IN=2 BW=0 US=32000 RO=0 SE=1 SN=0 BIN=0 MN=Prolog	HM=0 MF=8 TL=0 MLL=0 ASE=0 LNL=6 LCF=0 CAPS=0 E=0 ESBU2=-1
-VIEW: LN=.6655 CL=85 LE=0 CX=84 CY=13 WI=5 BI=76 HT=0 HN=0 HF=0 HC=4
-BUFFER: BN="packs_web\shrdlu\shrdlu.html"
-BI: MA=1 74 1  TABS=1 5  WWS=1 IWT=1 ST=0 IN=2 BW=0 US=32000 RO=0 SE=1 SN=0 BIN=0 MN=HTML	HM=0 MF=40 TL=0 MLL=0 ASE=0 LNL=6 LCF=0 CAPS=0 E=0 ESBU2=-1
-VIEW: LN=.4046 CL=36 LE=0 CX=35 CY=17 WI=5 BI=75 HT=0 HN=0 HF=0 HC=4
-BUFFER: BN="packs_web\shrdlu\src\shrdlu\ShrdluA4Game.ts"
-BI: MA=1 74 1  TABS=1 5  WWS=1 IWT=1 ST=0 IN=2 BW=0 US=32000 RO=0 SE=1 SN=0 BIN=0 MN=JavaScript	HM=0 MF=8 TL=0 MLL=0 ASE=0 LNL=6 LCF=0 CAPS=0 E=0 ESBU2=-1
-VIEW: LN=.9020 CL=74 LE=0 CX=73 CY=21 WI=5 BI=57 HT=0 HN=0 HF=0 HC=4
-BUFFER: BN="packs_web\shrdlu\world.save.types.pl"
-BI: MA=1 174 1  TABS=1 3  WWS=1 IWT=0 ST=0 IN=2 BW=0 US=32000 RO=0 SE=1 SN=0 BIN=0 MN=Prolog	HM=0 MF=8 TL=0 MLL=0 ASE=0 LNL=6 LCF=0 CAPS=0 E=0 ESBU2=-1
-VIEW: LN=.2818158 CL=20 LE=0 CX=19 CY=6 WI=5 BI=77 HT=0 HN=0 HF=0 HC=4
-BUFFER: BN="packs_web\shrdlu\src\shrdlu\ai\QwertyAI.ts"
-BI: MA=1 74 1  TABS=1 5  WWS=1 IWT=1 ST=0 IN=2 BW=0 US=32000 RO=0 SE=1 SN=0 BIN=0 MN=JavaScript	HM=0 MF=8 TL=0 MLL=0 ASE=0 LNL=6 LCF=0 CAPS=0 E=0 ESBU2=-1
-VIEW: LN=.0 CL=7 LE=0 CX=6 CY=0 WI=5 BI=62 HT=0 HN=0 HF=0 HC=4
-BUFFER: BN="packs_web\shrdlu\src\a4engine3\A4Animation.ts"
-BI: MA=1 74 1  TABS=1 5  WWS=1 IWT=1 ST=0 IN=2 BW=0 US=32000 RO=0 SE=1 SN=0 BIN=0 MN=JavaScript	HM=0 MF=8 TL=0 MLL=0 ASE=0 LNL=6 LCF=0 CAPS=0 E=0 ESBU2=-1
-VIEW: LN=.0 CL=1 LE=0 CX=0 CY=0 WI=5 BI=55 HT=0 HN=0 HF=0 HC=4
-BUFFER: BN="packs_sys\pfc\prolog\dialect\pfc_ext\mpred_justify.pl"
-BI: MA=1 174 1  TABS=1 3  WWS=1 IWT=0 ST=0 IN=2 BW=0 US=32000 RO=0 SE=1 SN=0 BIN=0 MN=Prolog	HM=0 MF=8 TL=0 MLL=0 ASE=0 LNL=6 LCF=0 CAPS=0 E=0 ESBU2=-1
-VIEW: LN=.7668 CL=1 LE=0 CX=0 CY=11 WI=5 BI=73 HT=0 HN=0 HF=0 HC=4
-BUFFER: BN="packs_sys\logicmoo_base\prolog\logicmoo\common_logic\common_logic_snark.pl"
-BI: MA=1 174 1  TABS=1 3  WWS=1 IWT=0 ST=0 IN=2 BW=0 US=32000 RO=0 SE=1 SN=0 BIN=0 MN=Prolog	HM=0 MF=8 TL=0 MLL=0 ASE=0 LNL=6 LCF=0 CAPS=0 E=0 ESBU2=-1
-VIEW: LN=.5876 CL=4 LE=0 CX=3 CY=1 WI=5 BI=74 HT=0 HN=0 HF=0 HC=4
-BUFFER: BN="packs_web\shrdlu\src\shrdlu\ai\A4RuleBasedAI.ts"
-BI: MA=1 74 1  TABS=1 5  WWS=1 IWT=1 ST=0 IN=2 BW=0 US=32000 RO=0 SE=1 SN=0 BIN=0 MN=JavaScript	HM=0 MF=8 TL=0 MLL=0 ASE=0 LNL=6 LCF=0 CAPS=0 E=0 ESBU2=-1
-VIEW: LN=.1 CL=31 LE=0 CX=30 CY=1 WI=5 BI=58 HT=0 HN=0 HF=0 HC=4
-BUFFER: BN="packs_web\shrdlu\src\ai\RuleBasedAI.ts"
-BI: MA=1 74 1  TABS=1 5  WWS=1 IWT=1 ST=0 IN=2 BW=0 US=32000 RO=0 SE=1 SN=0 BIN=0 MN=JavaScript	HM=0 MF=8 TL=0 MLL=0 ASE=0 LNL=6 LCF=0 CAPS=0 E=0 ESBU2=-1
-VIEW: LN=.19260 CL=1 LE=0 CX=0 CY=49 WI=5 BI=59 HT=0 HN=0 HF=0 HC=4
-BUFFER: BN="packs_web\shrdlu\src\shrdlu\ai\AILocation.ts"
-BI: MA=1 74 1  TABS=1 5  WWS=1 IWT=1 ST=0 IN=2 BW=0 US=32000 RO=0 SE=1 SN=0 BIN=0 MN=JavaScript	HM=0 MF=8 TL=0 MLL=0 ASE=0 LNL=6 LCF=0 CAPS=0 E=0 ESBU2=-1
-VIEW: LN=.7488 CL=24 LE=0 CX=23 CY=49 WI=5 BI=65 HT=0 HN=0 HF=0 HC=4
-BUFFER: BN="packs_web\shrdlu\src\a4engine3\A4Game.ts"
-BI: MA=1 74 1  TABS=1 5  WWS=1 IWT=1 ST=0 IN=2 BW=0 US=32000 RO=0 SE=1 SN=0 BIN=0 MN=JavaScript	HM=0 MF=8 TL=0 MLL=0 ASE=0 LNL=6 LCF=0 CAPS=0 E=0 ESBU2=-1
-VIEW: LN=.33075 CL=20 LE=0 CX=19 CY=49 WI=5 BI=28 HT=0 HN=0 HF=0 HC=4
-BUFFER: BN="packs_web\shrdlu\src\shrdlu\ShrdluGameScript.ts"
-BI: MA=1 74 1  TABS=1 5  WWS=1 IWT=1 ST=0 IN=2 BW=0 US=32000 RO=0 SE=1 SN=0 BIN=0 MN=JavaScript	HM=0 MF=8 TL=0 MLL=0 ASE=0 LNL=6 LCF=0 CAPS=0 E=0 ESBU2=-1
-VIEW: LN=.39362 CL=43 LE=0 CX=42 CY=49 WI=5 BI=32 HT=0 HN=0 HF=0 HC=4
-BUFFER: BN="packs_web\shrdlu\src\shrdlu\ai\PlayerAI.ts"
-BI: MA=1 74 1  TABS=1 5  WWS=1 IWT=1 ST=0 IN=2 BW=0 US=32000 RO=0 SE=1 SN=0 BIN=0 MN=JavaScript	HM=0 MF=8 TL=0 MLL=0 ASE=0 LNL=6 LCF=0 CAPS=0 E=0 ESBU2=-1
-VIEW: LN=.1 CL=21 LE=0 CX=20 CY=1 WI=5 BI=60 HT=0 HN=0 HF=0 HC=4
-BUFFER: BN="packs_web\shrdlu\src\shrdlu\ai\RobotAI.ts"
-BI: MA=1 74 1  TABS=1 5  WWS=1 IWT=1 ST=0 IN=2 BW=0 US=32000 RO=0 SE=1 SN=0 BIN=0 MN=JavaScript	HM=0 MF=8 TL=0 MLL=0 ASE=0 LNL=6 LCF=0 CAPS=0 E=0 ESBU2=-1
-VIEW: LN=.146 CL=6 LE=0 CX=5 CY=3 WI=5 BI=63 HT=0 HN=0 HF=0 HC=4
-BUFFER: BN="packs_web\shrdlu\src\shrdlu\ai\ShrdluAI.ts"
-BI: MA=1 74 1  TABS=1 5  WWS=1 IWT=1 ST=0 IN=2 BW=0 US=32000 RO=0 SE=1 SN=0 BIN=0 MN=JavaScript	HM=0 MF=8 TL=0 MLL=0 ASE=0 LNL=6 LCF=0 CAPS=0 E=0 ESBU2=-1
-VIEW: LN=.0 CL=1 LE=0 CX=0 CY=0 WI=5 BI=64 HT=0 HN=0 HF=0 HC=4
-BUFFER: BN="packs_web\shrdlu\src\shrdlu\ai\actions\EtaoinClose.ts"
-BI: MA=1 74 1  TABS=1 5  WWS=1 IWT=1 ST=0 IN=2 BW=0 US=32000 RO=0 SE=1 SN=0 BIN=0 MN=JavaScript	HM=0 MF=8 TL=0 MLL=0 ASE=0 LNL=6 LCF=0 CAPS=0 E=0 ESBU2=-1
-VIEW: LN=.291 CL=16 LE=0 CX=15 CY=12 WI=5 BI=61 HT=0 HN=0 HF=0 HC=4
-BUFFER: BN="packs_web\shrdlu\src\a4engine3\objects\A4PressurePlate.ts"
-BI: MA=1 74 1  TABS=1 5  WWS=1 IWT=1 ST=0 IN=2 BW=0 US=32000 RO=0 SE=1 SN=0 BIN=0 MN=JavaScript	HM=0 MF=8 TL=0 MLL=0 ASE=0 LNL=6 LCF=0 CAPS=0 E=0 ESBU2=-1
-VIEW: LN=.0 CL=1 LE=0 CX=0 CY=0 WI=5 BI=23 HT=0 HN=0 HF=0 HC=4
-BUFFER: BN="packs_web\shrdlu\src\shrdlu\ShrdluApp.ts"
-BI: MA=1 74 1  TABS=1 5  WWS=1 IWT=1 ST=0 IN=2 BW=0 US=32000 RO=0 SE=1 SN=0 BIN=0 MN=JavaScript	HM=0 MF=8 TL=0 MLL=0 ASE=0 LNL=6 LCF=0 CAPS=0 E=0 ESBU2=-1
-VIEW: LN=.17964 CL=46 LE=0 CX=45 CY=49 WI=5 BI=35 HT=0 HN=0 HF=0 HC=4
-BUFFER: BN="packs_web\shrdlu\src\shrdlu\main.ts"
-BI: MA=1 74 1  TABS=1 5  WWS=1 IWT=1 ST=0 IN=2 BW=0 US=32000 RO=0 SE=1 SN=0 BIN=0 MN=JavaScript	HM=0 MF=8 TL=0 MLL=0 ASE=0 LNL=6 LCF=0 CAPS=0 E=0 ESBU2=-1
-VIEW: LN=.4435 CL=16 LE=0 CX=15 CY=49 WI=5 BI=46 HT=0 HN=0 HF=0 HC=4
-BUFFER: BN="packs_web\shrdlu\src\shrdlu\ai\RuleBasedAIDebugger.ts"
-BI: MA=1 74 1  TABS=1 5  WWS=1 IWT=1 ST=0 IN=2 BW=0 US=32000 RO=0 SE=1 SN=0 BIN=0 MN=JavaScript	HM=0 MF=8 TL=0 MLL=0 ASE=0 LNL=6 LCF=0 CAPS=0 E=0 ESBU2=-1
-VIEW: LN=.77 CL=5 LE=0 CX=4 CY=8 WI=5 BI=48 HT=0 HN=0 HF=0 HC=4
-BUFFER: BN="packs_web\shrdlu\data\objects.xml"
-BI: MA=1 74 1  TABS=1 5  WWS=1 IWT=0 ST=0 IN=2 BW=0 US=32000 RO=0 SE=1 SN=0 BIN=0 MN=XML	HM=0 MF=8 TL=0 MLL=0 ASE=0 LNL=6 LCF=0 CAPS=0 E=70 ESBU2=-1
-VIEW: LN=.0 CL=1 LE=0 CX=0 CY=0 WI=5 BI=38 HT=0 HN=0 HF=0 HC=4
-BUFFER: BN="packs_web\shrdlu\src\a4engine3\A4ObjectFactory.ts"
-BI: MA=1 74 1  TABS=1 5  WWS=1 IWT=1 ST=0 IN=2 BW=0 US=32000 RO=0 SE=1 SN=0 BIN=0 MN=JavaScript	HM=0 MF=8 TL=0 MLL=0 ASE=0 LNL=6 LCF=0 CAPS=0 E=0 ESBU2=-1
-VIEW: LN=.0 CL=1 LE=0 CX=0 CY=0 WI=5 BI=30 HT=0 HN=0 HF=0 HC=4
-WINDOW: 52 52 1378 399 -1 -1 N  WF=0 WT=57 "Default Fixed Font,14,0,1"
-BUFFER: BN="packs_web\shrdlu\prolog\logicmoo_shrdlu.pl"
-VIEW: LN=.17654 CL=1 LE=0 CX=0 CY=21 WI=341 BI=76 HT=0 HN=0 HF=0 HC=4
-WINDOW: 130 130 1378 399 -1 -1 N  WF=0 WT=52 "Default Fixed Font,14,0,1"
-BUFFER: BN="packs_sys\pfc\prolog\dialect\pfc_ext\mpred_core.pl"
-VIEW: LN=.142818 CL=6 LE=0 CX=5 CY=12 WI=192 BI=72 HT=0 HN=0 HF=0 HC=4
-WINDOW: 26 26 1378 399 -1 -1 N  WF=0 WT=56 "Default Fixed Font,14,0,1"
-BUFFER: BN="packs_web\shrdlu\world.save.types.pl"
-VIEW: LN=.2818158 CL=20 LE=0 CX=19 CY=6 WI=339 BI=77 HT=0 HN=0 HF=0 HC=4
-WINDOW: 156 156 1378 399 -1 -1 N  WF=0 WT=37 "Default Fixed Font,14,0,1"
-BUFFER: BN="packs_web\shrdlu\src\shrdlu\ShrdluA4Game.ts"
-VIEW: LN=.9020 CL=74 LE=0 CX=73 CY=21 WI=299 BI=57 HT=0 HN=0 HF=0 HC=4
-WINDOW: 0 0 1378 399 -1 -1 N  WF=0 WT=55 "Default Fixed Font,14,0,1"
-BUFFER: BN="packs_web\shrdlu\shrdlu.html"
-VIEW: LN=.4046 CL=36 LE=0 CX=35 CY=17 WI=337 BI=75 HT=0 HN=0 HF=0 HC=4
-WINDOW: 26 26 1378 399 -1 -1 N  WF=0 WT=3 "Default Fixed Font,14,0,1"
-BUFFER: BN="packs_web\shrdlu\src\shrdlu\ShrdluGameScript.ts"
-VIEW: LN=.39362 CL=43 LE=0 CX=42 CY=12 WI=252 BI=32 HT=0 HN=0 HF=0 HC=4
-WINDOW: 26 26 1378 399 -1 -1 N  WF=0 WT=40 "Default Fixed Font,14,0,1"
-BUFFER: BN="packs_web\shrdlu\src\shrdlu\ai\PlayerAI.ts"
-VIEW: LN=.1 CL=15 LE=0 CX=14 CY=1 WI=311 BI=60 HT=0 HN=0 HF=0 HC=4
-WINDOW: 130 130 1378 399 -1 -1 N  WF=0 WT=44 "Default Fixed Font,14,0,1"
-BUFFER: BN="packs_web\shrdlu\src\shrdlu\ai\ShrdluAI.ts"
-VIEW: LN=.0 CL=1 LE=0 CX=0 CY=0 WI=322 BI=64 HT=0 HN=0 HF=0 HC=4
-WINDOW: 78 78 1378 399 -1 -1 N  WF=0 WT=42 "Default Fixed Font,14,0,1"
-BUFFER: BN="packs_web\shrdlu\src\shrdlu\ai\QwertyAI.ts"
-VIEW: LN=.0 CL=7 LE=0 CX=6 CY=0 WI=316 BI=62 HT=0 HN=0 HF=0 HC=4
-WINDOW: 182 182 1378 399 -1 -1 N  WF=0 WT=38 "Default Fixed Font,14,0,1"
-BUFFER: BN="packs_web\shrdlu\src\shrdlu\ai\A4RuleBasedAI.ts"
-VIEW: LN=.1 CL=31 LE=0 CX=30 CY=1 WI=309 BI=58 HT=0 HN=0 HF=0 HC=4
-WINDOW: 182 182 1378 399 -1 -1 N  WF=0 WT=46 "Default Fixed Font,14,0,1"
-BUFFER: BN="packs_web\shrdlu\src\shrdlu\ai\EtaoinAI.ts"
-VIEW: LN=.206 CL=1 LE=0 CX=0 CY=12 WI=329 BI=66 HT=0 HN=0 HF=0 HC=4
-WINDOW: 104 104 1378 399 -1 -1 N  WF=0 WT=35 "Default Fixed Font,14,0,1"
-BUFFER: BN="packs_web\shrdlu\src\a4engine3\A4Animation.ts"
-VIEW: LN=.0 CL=1 LE=0 CX=0 CY=0 WI=295 BI=55 HT=0 HN=0 HF=0 HC=4
-WINDOW: 52 52 1378 399 -1 -1 N  WF=0 WT=49 "Default Fixed Font,14,0,1"
-BUFFER: BN="packs_sys\pfc\prolog\dialect\pfc_ext\mpred_database.pl"
-VIEW: LN=.8685 CL=2 LE=0 CX=1 CY=9 WI=237 BI=69 HT=0 HN=0 HF=0 HC=4
-WINDOW: 104 104 1378 399 -1 -1 N  WF=0 WT=51 "Default Fixed Font,14,0,1"
-BUFFER: BN="prologmud_server\.local\share\swi-prolog\pack\logicmoo_utils\prolog\debuggery\dmsg.pl"
-VIEW: LN=.20427 CL=1 LE=0 CX=0 CY=11 WI=208 BI=71 HT=0 HN=0 HF=0 HC=4
-WINDOW: 78 78 1378 399 -1 -1 N  WF=0 WT=50 "Default Fixed Font,14,0,1"
-BUFFER: BN="prologmud_server\.local\share\swi-prolog\pack\logicmoo_utils\prolog\debuggery\ucatch.pl"
-VIEW: LN=.32086 CL=3 LE=0 CX=2 CY=4 WI=202 BI=70 HT=0 HN=0 HF=0 HC=4
-WINDOW: 26 26 1378 399 -1 -1 N  WF=0 WT=48 "Default Fixed Font,14,0,1"
-BUFFER: BN="packs_web\shrdlu\src\shrdlu\ai\actions\RobotStay.ts"
-VIEW: LN=.540 CL=22 LE=0 CX=21 CY=15 WI=335 BI=67 HT=0 HN=0 HF=0 HC=4
-WINDOW: 0 0 1378 399 -1 -1 N  WF=0 WT=47 "Default Fixed Font,14,0,1"
-BUFFER: BN="packs_web\shrdlu\src\shrdlu\ai\actions\RobotStop.ts"
-VIEW: LN=.0 CL=1 LE=0 CX=0 CY=0 WI=333 BI=68 HT=0 HN=0 HF=0 HC=4
-WINDOW: 104 104 1378 399 -1 -1 N  WF=0 WT=43 "Default Fixed Font,14,0,1"
-BUFFER: BN="packs_web\shrdlu\src\shrdlu\ai\RobotAI.ts"
-VIEW: LN=.0 CL=14 LE=0 CX=13 CY=0 WI=320 BI=63 HT=0 HN=0 HF=0 HC=4
-WINDOW: 0 0 1378 399 -1 -1 N  WF=0 WT=39 "Default Fixed Font,14,0,1"
-BUFFER: BN="packs_web\shrdlu\src\ai\RuleBasedAI.ts"
-VIEW: LN=.19260 CL=1 LE=0 CX=0 CY=14 WI=306 BI=59 HT=0 HN=0 HF=0 HC=4
-WINDOW: 130 130 1378 399 -1 -1 N  WF=0 WT=12 "Default Fixed Font,14,0,1"
-BUFFER: BN="packs_web\shrdlu\src\a4engine3\A4Game.ts"
-VIEW: LN=.33075 CL=20 LE=0 CX=19 CY=13 WI=172 BI=28 HT=0 HN=0 HF=0 HC=4
-WINDOW: 156 156 1378 399 -1 -1 N  WF=0 WT=45 "Default Fixed Font,14,0,1"
-BUFFER: BN="packs_web\shrdlu\src\shrdlu\ai\AILocation.ts"
-VIEW: LN=.7488 CL=24 LE=0 CX=23 CY=12 WI=324 BI=65 HT=0 HN=0 HF=0 HC=4
-WINDOW: 52 52 1378 399 -1 -1 N  WF=0 WT=41 "Default Fixed Font,14,0,1"
-BUFFER: BN="packs_web\shrdlu\src\shrdlu\ai\actions\EtaoinClose.ts"
-VIEW: LN=.291 CL=16 LE=0 CX=15 CY=12 WI=314 BI=61 HT=0 HN=0 HF=0 HC=4
-WINDOW: 156 156 1378 399 -1 -1 N  WF=0 WT=13 "Default Fixed Font,14,0,1"
-BUFFER: BN="packs_web\shrdlu\src\a4engine3\A4Map.ts"
-VIEW: LN=.17882 CL=5 LE=0 CX=4 CY=1 WI=258 BI=33 HT=0 HN=0 HF=0 HC=4
-WINDOW: 104 104 1378 399 -1 -1 N  WF=0 WT=11 "Default Fixed Font,14,0,1"
-BUFFER: BN="packs_web\shrdlu\src\shrdlu\ShrdluApp.ts"
-VIEW: LN=.17964 CL=46 LE=0 CX=45 CY=10 WI=157 BI=35 HT=0 HN=0 HF=0 HC=4
-WINDOW: 182 182 1378 399 -1 -1 N  WF=0 WT=22 "Default Fixed Font,14,0,1"
-BUFFER: BN="packs_web\shrdlu\src\a4engine3\objects\A4WalkingObject.ts"
-VIEW: LN=.0 CL=1 LE=0 CX=0 CY=0 WI=262 BI=42 HT=0 HN=0 HF=0 HC=4
-WINDOW: 130 130 1378 399 -1 -1 N  WF=0 WT=36 "Default Fixed Font,14,0,1"
-BUFFER: BN="packs_web\shrdlu\src\a4engine3\A4Agenda.ts"
-VIEW: LN=.0 CL=1 LE=0 CX=0 CY=0 WI=297 BI=56 HT=0 HN=0 HF=0 HC=4
-WINDOW: 52 52 1378 399 -1 -1 N  WF=0 WT=9 "Default Fixed Font,14,0,1"
-BUFFER: BN="packs_web\shrdlu\src\a4engine3\A4PathFinding.ts"
-VIEW: LN=.6908 CL=17 LE=0 CX=16 CY=9 WI=254 BI=47 HT=0 HN=0 HF=0 HC=4
-WINDOW: 78 78 1378 399 -1 -1 N  WF=0 WT=34 "Default Fixed Font,14,0,1"
-BUFFER: BN="packs_web\shrdlu\src\a4engine3\A4MapLayer.ts"
-VIEW: LN=.0 CL=1 LE=0 CX=0 CY=0 WI=293 BI=54 HT=0 HN=0 HF=0 HC=4
-WINDOW: 52 52 1378 399 -1 -1 N  WF=0 WT=33 "Default Fixed Font,14,0,1"
-BUFFER: BN="packs_web\shrdlu\src\shrdlu\ShrdluCutScenes.ts"
-VIEW: LN=.0 CL=1 LE=0 CX=0 CY=0 WI=291 BI=53 HT=0 HN=0 HF=0 HC=4
-WINDOW: 26 26 1378 399 -1 -1 N  WF=0 WT=32 "Default Fixed Font,14,0,1"
-BUFFER: BN="packs_web\shrdlu\src\auxiliar\SFXManager.ts"
-VIEW: LN=.0 CL=1 LE=0 CX=0 CY=0 WI=289 BI=52 HT=0 HN=0 HF=0 HC=4
-WINDOW: 104 104 1378 399 -1 -1 N  WF=0 WT=27 "Default Fixed Font,14,0,1"
-BUFFER: BN="packs_web\shrdlu\src\auxiliar\BInterfaceElement.ts"
-VIEW: LN=.0 CL=1 LE=0 CX=0 CY=0 WI=279 BI=24 HT=0 HN=0 HF=0 HC=4
-WINDOW: 0 0 1378 399 -1 -1 N  WF=0 WT=31 "Default Fixed Font,14,0,1"
-BUFFER: BN="packs_web\shrdlu\src\auxiliar\auxiliar.ts"
-VIEW: LN=.0 CL=1 LE=0 CX=0 CY=0 WI=287 BI=51 HT=0 HN=0 HF=0 HC=4
-WINDOW: 182 182 1378 399 -1 -1 N  WF=0 WT=30 "Default Fixed Font,14,0,1"
-BUFFER: BN="packs_web\shrdlu\src\auxiliar\auxiliar-gfx.ts"
-VIEW: LN=.0 CL=1 LE=0 CX=0 CY=0 WI=285 BI=50 HT=0 HN=0 HF=0 HC=4
-WINDOW: 156 156 1378 399 -1 -1 N  WF=0 WT=29 "Default Fixed Font,14,0,1"
-BUFFER: BN="packs_web\shrdlu\src\auxiliar\BButton.ts"
-VIEW: LN=.0 CL=1 LE=0 CX=0 CY=0 WI=283 BI=45 HT=0 HN=0 HF=0 HC=4
-WINDOW: 130 130 1378 399 -1 -1 N  WF=0 WT=28 "Default Fixed Font,14,0,1"
-BUFFER: BN="packs_web\shrdlu\src\auxiliar\GLTManager.ts"
-VIEW: LN=.0 CL=1 LE=0 CX=0 CY=0 WI=281 BI=29 HT=0 HN=0 HF=0 HC=4
-WINDOW: 52 52 1378 399 -1 -1 N  WF=0 WT=25 "Default Fixed Font,14,0,1"
-BUFFER: BN="packs_web\shrdlu\src\auxiliar\GLTile.ts"
-VIEW: LN=.0 CL=1 LE=0 CX=0 CY=0 WI=275 BI=25 HT=0 HN=0 HF=0 HC=4
-WINDOW: 78 78 1378 399 -1 -1 N  WF=0 WT=26 "Default Fixed Font,14,0,1"
-BUFFER: BN="packs_web\shrdlu\src\auxiliar\BInterface.ts"
-VIEW: LN=.0 CL=1 LE=0 CX=0 CY=0 WI=277 BI=36 HT=0 HN=0 HF=0 HC=4
-WINDOW: 26 26 1378 399 -1 -1 N  WF=0 WT=24 "Default Fixed Font,14,0,1"
-BUFFER: BN="packs_web\shrdlu\src\a4engine3\objects\A4AICharacter.ts"
-VIEW: LN=.0 CL=1 LE=0 CX=0 CY=0 WI=273 BI=27 HT=0 HN=0 HF=0 HC=4
-WINDOW: 26 26 1378 399 -1 -1 N  WF=0 WT=16 "Default Fixed Font,14,0,1"
-BUFFER: BN="packs_web\shrdlu\src\a4engine3\objects\A4PlayerCharacter.ts"
-VIEW: LN=.0 CL=40 LE=0 CX=39 CY=0 WI=260 BI=49 HT=0 HN=0 HF=0 HC=4
-WINDOW: 52 52 1378 399 -1 -1 N  WF=0 WT=17 "Default Fixed Font,14,0,1"
-BUFFER: BN="packs_web\shrdlu\src\a4engine3\objects\A4Character.ts"
-VIEW: LN=.1962 CL=33 LE=0 CX=32 CY=6 WI=181 BI=5 HT=0 HN=0 HF=0 HC=4
-WINDOW: 0 0 1378 399 -1 -1 N  WF=0 WT=23 "Default Fixed Font,14,0,1"
-BUFFER: BN="packs_web\shrdlu\src\a4engine3\objects\A4PressurePlate.ts"
-VIEW: LN=.0 CL=1 LE=0 CX=0 CY=0 WI=271 BI=23 HT=0 HN=0 HF=0 HC=4
-WINDOW: 156 156 1378 399 -1 -1 N  WF=0 WT=21 "Default Fixed Font,14,0,1"
-BUFFER: BN="packs_web\shrdlu\src\a4engine3\objects\A4Item.ts"
-VIEW: LN=.73 CL=6 LE=0 CX=5 CY=3 WI=269 BI=37 HT=0 HN=0 HF=0 HC=4
-WINDOW: 104 104 1378 399 -1 -1 N  WF=0 WT=19 "Default Fixed Font,14,0,1"
-BUFFER: BN="packs_web\shrdlu\src\a4engine3\objects\A4Food.ts"
-VIEW: LN=.0 CL=1 LE=0 CX=0 CY=0 WI=265 BI=26 HT=0 HN=0 HF=0 HC=4
-WINDOW: 130 130 1378 399 -1 -1 N  WF=0 WT=20 "Default Fixed Font,14,0,1"
-BUFFER: BN="packs_web\shrdlu\src\a4engine3\objects\A4Door.ts"
-VIEW: LN=.0 CL=1 LE=0 CX=0 CY=0 WI=267 BI=44 HT=0 HN=0 HF=0 HC=4
-WINDOW: 78 78 1378 399 -1 -1 N  WF=0 WT=18 "Default Fixed Font,14,0,1"
-BUFFER: BN="packs_web\shrdlu\src\a4engine3\objects\A4MapBridge.ts"
-VIEW: LN=.0 CL=1 LE=0 CX=0 CY=0 WI=263 BI=34 HT=0 HN=0 HF=0 HC=4
-WINDOW: 0 0 1378 399 -1 -1 N  WF=0 WT=15 "Default Fixed Font,14,0,1"
-BUFFER: BN="packs_web\shrdlu\src\shrdlu\ai\RuleBasedAIDebugger.ts"
-VIEW: LN=.77 CL=5 LE=0 CX=4 CY=8 WI=243 BI=48 HT=0 HN=0 HF=0 HC=4
-WINDOW: 182 182 1378 399 -1 -1 N  WF=0 WT=14 "Default Fixed Font,14,0,1"
-BUFFER: BN="packs_web\shrdlu\src\shrdlu\main.ts"
-VIEW: LN=.4435 CL=16 LE=0 CX=15 CY=12 WI=164 BI=46 HT=0 HN=0 HF=0 HC=4
-WINDOW: 78 78 1378 399 -1 -1 N  WF=0 WT=10 "Default Fixed Font,14,0,1"
-BUFFER: BN="packs_web\shrdlu\src\ai\actions\Call.ts"
-VIEW: LN=.1731 CL=30 LE=0 CX=29 CY=14 WI=256 BI=43 HT=0 HN=0 HF=0 HC=4
-WINDOW: 0 0 1378 399 -1 -1 N  WF=0 WT=8 ",,,"
-BUFFER: BN="packs_web\shrdlu\eval_socket.js"
-VIEW: LN=.14256 CL=27 LE=0 CX=26 CY=18 WI=155 BI=39 HT=0 HN=0 HF=0 HC=4
-WINDOW: 182 182 1378 399 -1 -1 N  WF=0 WT=6 "Default Unicode Font,10,0,1"
-BUFFER: BN="packs_web\shrdlu\data\objects.xml"
-VIEW: LN=.16185 CL=40 LE=0 CX=40 CY=15 WI=153 BI=38 HT=0 HN=0 HF=0 HC=4
-WINDOW: 156 156 1378 399 -1 -1 N  WF=0 WT=4 "Default Fixed Font,14,0,1"
-BUFFER: BN="packs_web\shrdlu\src\a4engine3\A4ObjectFactory.ts"
-VIEW: LN=.1530 CL=5 LE=0 CX=4 CY=12 WI=187 BI=30 HT=0 HN=0 HF=0 HC=4
-WINDOW: 104 104 1378 399 -1 -1 N  WF=0 WT=2 ",,,"
-BUFFER: BN="packs_web\shrdlu\eval_socket.js"
-VIEW: LN=.14256 CL=27 LE=0 CX=26 CY=14 WI=175 BI=39 HT=0 HN=0 HF=0 HC=4
-WINDOW: 156 156 1378 429 -1 -1 N  WF=0 WT=7 "Default Fixed Font,14,0,1"
-BUFFER: BN="packs_web\shrdlu\eval_socket.js"
-VIEW: LN=.6919 CL=36 LE=0 CX=35 CY=13 WI=184 BI=39 HT=0 HN=0 HF=0 HC=4
-WINDOW: 156 156 1378 399 -1 -1 N  WF=0 WT=53 "Default Fixed Font,14,0,1"
-BUFFER: BN="packs_sys\pfc\prolog\dialect\pfc_ext\mpred_justify.pl"
-VIEW: LN=.7668 CL=1 LE=0 CX=0 CY=11 WI=304 BI=73 HT=0 HN=0 HF=0 HC=4
-WINDOW: 182 182 1378 399 -1 -1 N  WF=0 WT=54 "Default Fixed Font,14,0,1"
-BUFFER: BN="packs_sys\logicmoo_base\prolog\logicmoo\common_logic\common_logic_snark.pl"
-VIEW: LN=.10276 CL=6 LE=0 CX=5 CY=13 WI=319 BI=74 HT=0 HN=0 HF=0 HC=4
-WINDOW: 130 130 1378 429 -1 -1 M  WF=0 WT=5 "Default Fixed Font,14,0,1"
-BUFFER: BN="packs_web\shrdlu\eval_socket.js"
-VIEW: LN=.13557 CL=1 LE=0 CX=0 CY=12 WI=171 BI=39 HT=0 HN=0 HF=0 HC=4
+SCREEN: 1920 1200 60 15 1918 997 0 0 M 0 0 0 0 1560 581
+CWD: C:\Program Files (x86)\SlickEdit\win
 FILEHIST: 9
-packs_web\shrdlu\src\shrdlu\ai\A4RuleBasedAI.ts
-packs_web\shrdlu\src\shrdlu\ai\QwertyAI.ts
-packs_web\shrdlu\src\shrdlu\ShrdluGameScript.ts
-packs_web\shrdlu\src\shrdlu\ai\PlayerAI.ts
-packs_web\shrdlu\shrdlu.html
-packs_web\shrdlu\src\shrdlu\ShrdluA4Game.ts
 packs_web\shrdlu\world.save.types.pl
 packs_web\shrdlu\prolog\logicmoo_shrdlu.pl
 packs_web\shrdlu\eval_socket.js
+packs_xtra\logicmoo_pldata\eclipse-workspace\DearLeader\Assets\Plots.meta
+packs_xtra\logicmoo_pldata\eclipse-workspace\DearLeader\Assets\Plots\depression.prolog
+packs_xtra\logicmoo_pldata\eclipse-workspace\DearLeader\Assets\Plots\heros_journey.prolog.meta
+packs_xtra\logicmoo_pldata\eclipse-workspace\DearLeader\Assets\Plots\heros_journey.prolog
+packs_xtra\logicmoo_pldata\eclipse-workspace\DearLeader\Assets\Plots\quest.prolog
+packs_web\shrdlu\A4config.xml
