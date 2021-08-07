@@ -42,12 +42,10 @@ define('ELFINDER_DROPBOX_APPSECRET', '2jm62atdx3za6oi');
 elFinder::$netDrivers['googledrive'] = 'GoogleDrive';
 // // GoogleDrive Netmount driver need next two settings. You can get at https://console.developers.google.com
 // // AND reuire regist redirect url to "YOUR_CONNECTOR_URL?cmd=netmount&protocol=googledrive&host=1"
-// define('ELFINDER_GOOGLEDRIVE_CLIENTID',     '');
-// define('ELFINDER_GOOGLEDRIVE_CLIENTSECRET', '');
-// // Required case of without composer
 define('ELFINDER_GOOGLEDRIVE_CLIENTID',     '131442651-0b9tbp7n2ihu4or4nj31395n05v1lg2c.apps.googleusercontent.com');
 define('ELFINDER_GOOGLEDRIVE_CLIENTSECRET', 'jykqJiZikgMteL3vq0IhjPDC');
-define('ELFINDER_GOOGLEDRIVE_GOOGLEAPICLIENT', '/home/prologmud_server/lib/elFinder/php/vendor/autoload.php');
+// // Required case of without composer
+define('ELFINDER_GOOGLEDRIVE_GOOGLEAPICLIENT', '/opt/logicmoo_workspace/html/ef/php/vendor/autoload.php');
 // ===============================================
 
 // // Required for Google Drive network mount with Flysystem
@@ -253,7 +251,7 @@ class elFinderSimpleLogger {
 function access($attr, $path, $data, $volume, $isDir) {
 	$basename = basename($path);
 	return $basename[0] === '.'                  // if file/folder begins with '.' (dot)
-			 && strlen($relpath) !== 1           // but with out volume root
+			/* && strlen($relpath) !== 1 */          // but with out volume root
 		? !($attr == 'read' || $attr == 'write') // set read+write to false, other (locked+hidden) set to true
 		:  null;                                 // else elFinder decide it itself
 }

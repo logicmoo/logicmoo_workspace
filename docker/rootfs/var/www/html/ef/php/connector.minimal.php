@@ -308,9 +308,9 @@ $opts = array(
 	'roots' => array(
 		array(
 			'driver'     => 'LocalFileSystem',
-			'path'       => '../files/',
-			'startPath'  => '../files/',
-			'URL'        => dirname($_SERVER['PHP_SELF']) . '/../files/',
+			'path'       => '/opt/logicmoo_workspace/',
+			'startPath'  => '/opt/logicmoo_workspace/',
+			'URL'        => dirname($_SERVER['PHP_SELF']) . '/opt/logicmoo_workspace/',
 			'trashHash'  => 't1_Lw',                     // elFinder's hash of trash folder
 			// 'treeDeep'   => 3,
 			// 'alias'      => 'File system',
@@ -343,8 +343,8 @@ $opts = array(
 		array(
 			'id'            => '1',
 			'driver'        => 'Trash',
-			'path'          => '../files/.trash/',
-			'tmbURL'        => dirname($_SERVER['PHP_SELF']) . '/../files/.trash/.tmb/',
+			'path'          => '/opt/logicmoo_workspace/.trash/',
+			'tmbURL'        => dirname($_SERVER['PHP_SELF']) . '/opt/logicmoo_workspace/.trash/.tmb/',
 			'uploadDeny'    => array('all'),                // Recomend the same settings as the original volume that uses the trash
 			'uploadAllow'   => array('image', 'text/plain'),// Same as above
 			'uploadOrder'   => array('deny', 'allow'),      // Same as above
