@@ -1,12 +1,6 @@
 [submodule "wikis/logicmoo_workspace.wiki"]
 	path = wikis/logicmoo_workspace.wiki
 	url = https://github.com/logicmoo/logicmoo_workspace.wiki
-[submodule "wiki"]
-	path = wiki
-	url = https://logicmoo.org/gitlab/logicmoo/logicmoo_wiki.git
-[submodule "packs_xtra/logicmoo_pldata"]
-	path = packs_xtra/logicmoo_pldata
-	url = https://logicmoo.org/gitlab/logicmoo/logicmoo_pldata.git/
 [submodule "prologmud_server"]
 	path = prologmud_server
 	url = https://logicmoo.org/gitlab/logicmoo/prologmud_server
