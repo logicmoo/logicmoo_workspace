@@ -1,0 +1,19 @@
+import { TypedJSON } from './parser';
+export function toJson(optionsOrTarget) {
+    if (typeof optionsOrTarget === 'function') {
+        toJsonDecorator(optionsOrTarget, {});
+        return;
+    }
+    return (target) => {
+        toJsonDecorator(target, optionsOrTarget);
+    };
+}
+function toJsonDecorator(target, options) {
+    if (options.overwrite !== true && target.prototype.toJSON !== undefined) {
+        throw new Error(`${target.name} already has toJSON defined!`);
+    }
+    target.prototype.toJSON = function toJSON() {
+        return TypedJSON.toPlainJson(this, Object.getPrototypeOf(this).constructor);
+    };
+}
+//# sourceMappingURL=to-json.js.map

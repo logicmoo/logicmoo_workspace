@@ -1,0 +1,20 @@
+{
+  "ecmaVersion": 8,
+  "libs": [],
+  "loadEagerly": [],
+  "dontLoad": [],
+  "plugins": {
+    "doc_comment": true,
+    "modules": {
+      "dontLoad": "",
+      "load": "",
+      "modules": ""
+    },
+    "node_resolve": {},
+    "node": {
+      "dontLoad": "",
+      "load": "",
+      "modules": ""
+    }
+  }
+}

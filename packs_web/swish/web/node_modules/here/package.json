@@ -1,0 +1,23 @@
+{
+  "name": "here",
+  "version": "0.0.2",
+  "description": "here-document on node.js",
+  "main": "lib/here.js",
+  "directories": {
+    "test": "test"
+  },
+  "scripts": {
+    "test": "node test/test.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/cho45/node-here.js.git"
+  },
+  "keywords": [
+    "here",
+    "document",
+    "utility"
+  ],
+  "author": "cho45",
+  "license": "MIT"
+}

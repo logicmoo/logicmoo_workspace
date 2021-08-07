@@ -1,0 +1,28 @@
+{
+  "name": "hydrate",
+  "version": "1.0.1",
+  "author": "Max Aller <nanodeath@gmail.com>",
+  "description": "dehydrate (serialize) and reconstitute your JavaScript objects",
+  "scripts": {
+    "test": "cake test:prepare && jasmine-node spec/"
+  },
+  "main": "./src/hydrate-bootstrap",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/nanodeath/HydrateJS.git"
+  },
+  "keywords": [
+    "serialization"
+  ],
+  "dependencies" : {
+    "coffee-script"   :  "1.6.x"
+  },
+  "devDependencies": {
+    "jasmine-node"    :  "1.4.x",
+    "q"               :  "0.9.x"
+  },
+  "license": "MIT",
+  "engines": {
+    "node": ">=0.6"
+  }
+}
