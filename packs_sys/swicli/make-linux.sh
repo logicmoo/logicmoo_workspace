@@ -67,13 +67,6 @@ echo local C build complete!
 fi
 
 
-if [ "$target" == "install" ] || [ "$target" == "all" ]; then
-mkdir -p lib/amd64/
-export LIBARCH=./lib/x86_64-linux
-cp -a ${LIBARCH}/?* lib/amd64/
-fi
-
-
 if [ "$target" == "prepare" ] || [ "$target" == "csharp" ] || [ "$target" == "all" ]; then
 mkdir -p ${ODIR}
 fi
@@ -84,7 +77,7 @@ fi
 
 if [ "$target" == "compile" ] || [ "$target" == "csharp" ] || [ "$target" == "all" ]; then
 echo doing local C# build
-mcs ${DMCS_OPTS} src/Swicli.Library/?*.cs -out:${ODIR}/PInvokeTest
+mcs ${DMCS_OPTS} src/Swicli.Library/?*.cs -out:${ODIR}/PInvokeTest.exe
 mcs ${DMCS_OPTS} src/Swicli.Library/?*.cs -out:${ODIR}/Swicli.Library.dll
 mcs ${DMCS_OPTS} src/SWICLITestDLL/?*.cs -r:Swicli.Library -out:${ODIR}/SWICLITestDLL.dll
 mcs ${DMCS_OPTS}  src/SWICFFITests/?*.cs -r:Swicli.Library -out:${ODIR}/SWICFFITests.exe
@@ -96,7 +89,8 @@ fi
 if [ "$target" == "install" ] || [ "$target" == "all" ]; then
 echo ODIR=$ODIR
 find $ODIR -xdev -iname "*.so" -or -iname "*.dll" -or -iname "*.pdb" -or -iname "*.lib" -or -iname "*.dll.config" -or -iname "*.pl" -or -iname "*.cffi"  -or -iname "*.exe"
-\cp lib/* -af ${PLBASE}/lib/
+\cp lib/*.* -af ${PLBASE}/lib/
+\cp lib/*/ -afv ${PLBASE}/lib/
 echo Done
 fi
 
