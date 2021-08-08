@@ -40,16 +40,17 @@ namespace Swicli.Library
 
         public static void cliStartDbg()
         {
-         //   ikvm.debugger.Debugger.MainStart(false, 5005);
+             cliStartDbg(false, 5005);
         }
         public static void cliStartDbg(bool server, int port)
         {
-            ikvm.debugger.Debugger.MainStart(server, port);
+            //ikvm.debugger.Debugger.MainStart(server, port);
+			GetType("ikvm.debugger.Debugger").GetMethod(.MainStart(server, port);
         }
         public static void cliStartJmx()
         {
-         //   cliStartJmx(9999);
-            ;
+            cliStartJmx(9999);
+         //   ;
         }
         public static void cliStartJmx(int port9999)
         {
@@ -73,7 +74,8 @@ namespace Swicli.Library
             java.lang.System.setProperty("com.sun.management.jmxremote.ssl", "false");
             java.lang.System.setProperty("com.sun.management.jmxremote.port", "" + port9999);
 
-            sun.management.Agent.startAgent();
+			//sun.management.Agent.startAgent().
+            GetType("sun.management.Agent").GetMethod("startAgent").invoke();
 
         }
 #endif

@@ -68,7 +68,7 @@ namespace Swicli.Library
         }
         internal static int IncrementUseCount(Thread thread, Dictionary<Thread, int> registration)
         {
-            lock (ThreadRegLock)
+            lock (ThreadRegLock) lock (registration)
             {
                 int regs = 0;
                 if (!registration.TryGetValue(thread, out regs))
@@ -84,7 +84,7 @@ namespace Swicli.Library
         }
         internal static int DecrementUseCount(Thread thread, Dictionary<Thread, int> registration)
         {
-            lock (ThreadRegLock)
+            lock (ThreadRegLock) lock (registration)
             {
                 int regs = 0;
                 if (!registration.TryGetValue(thread, out regs))
@@ -228,7 +228,7 @@ namespace Swicli.Library
                 {
                    // if (count > 1) return;
                 }
-                lock (ThreadRegLock) unregisteredThreads.Remove(thread);
+                lock (unregisteredThreads) unregisteredThreads.Remove(thread);
                 IntPtr _iEngineNumber;
                 IntPtr _iEngineNumberReally = IntPtr.Zero;
                 lock (SafeThreads) if (SafeThreads.TryGetValue(thread.ManagedThreadId, out _iEngineNumber)) return;
@@ -324,7 +324,7 @@ namespace Swicli.Library
             if (thread == CreatorThread) return;
             lock (ThreadRegLock)
             {
-                lock (ThreadRegLock) unregisteredThreads.Remove(thread);
+                lock (unregisteredThreads) unregisteredThreads.Remove(thread);
                 int oldSelf;
                 bool threadHasSelf = threadToEngine.TryGetValue(thread.ManagedThreadId, out oldSelf);
                 if (!threadHasSelf)
@@ -345,7 +345,7 @@ namespace Swicli.Library
             lock (ThreadRegLock)
             {
                 IncrementUseCount(thread);
-                lock (ThreadRegLock) unregisteredThreads.Remove(thread);
+                lock (unregisteredThreads) unregisteredThreads.Remove(thread);
                 int self = libpl.PL_thread_self();
                 int oldSelf;
                 Thread otherThread;
@@ -393,7 +393,7 @@ namespace Swicli.Library
             lock (ThreadRegLock)
             {
                 IncrementUseCount(thread);
-                lock (ThreadRegLock) unregisteredThreads.Remove(thread);
+                lock (unregisteredThreads) unregisteredThreads.Remove(thread);
                 PlMtEngine oldSelf;
                 if (ThreadEngines.TryGetValue(thread.ManagedThreadId, out oldSelf))
                 {

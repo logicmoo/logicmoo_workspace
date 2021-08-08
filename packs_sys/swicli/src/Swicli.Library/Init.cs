@@ -57,18 +57,20 @@ namespace Swicli.Library
         }
 
         private static readonly object PrologIsSetupLock = new object();
-        private static bool PrologIsSetup;
+        private static bool PrologIsSetupBegan;
+		public static bool PrologIsSetupComplete = false;
         public static void SetupProlog()
         {
             lock (PrologIsSetupLock)
             {
-                if (PrologIsSetup) return;
+                if (PrologIsSetupBegan) return;
                 Embedded.ConsoleWriteLine(typeof(PrologCLR).Name + ".AssemblyResolve starting");
                 AppDomain.CurrentDomain.AssemblyResolve += CurrentDomain_AssemblyResolve;
-                PrologIsSetup = true;
+                PrologIsSetupBegan = true;
                 SafelyRun(SetupProlog0);               
                 SafelyRun(SetupProlog2);
                 RegisterPLCSForeigns();
+				PrologIsSetupComplete = true;
             }
         }
         public static void SetupProlog0()
@@ -399,7 +401,7 @@ namespace Swicli.Library
                 process.WaitForExit();
             }
             PingThreadFactories();
-            bool demo = false;
+            //bool demo = false;
             SetupProlog();
             libpl.PL_initialise(args0.Length, args0);
             //Main12(args0);
@@ -411,7 +413,7 @@ namespace Swicli.Library
         public static void Main_Was(string[] args0)
         {
             PingThreadFactories();
-            bool demo = false;
+            bool demo = true;
             SetupProlog();
 
             if (demo)

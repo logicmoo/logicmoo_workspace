@@ -103,7 +103,15 @@ namespace Swicli.Library
 
         public static void ConsoleWriteLine(string text)
         {
-            Console.Error.WriteLine(text);
+			try {
+			    // System.Console.Error.WriteLine(text);
+			    // System.Windows.Forms.MessageBox.Show(text);
+				System.Console.WriteLine(text);
+			} catch (System.TypeInitializationException e) {
+				// @TODO
+			} catch (Exception e) {
+				// @TODO
+			}
         }
 
         public static unsafe bool Warn(string text, params object[] ps)
@@ -134,7 +142,7 @@ namespace Swicli.Library
         public static void Debug(string text, params object[] ps)
         {
             text = PlStringFormat(text, ps);
-            Console.Error.WriteLine(text);
+            ConsoleWriteLine(text);
         }
 
         public static string PlStringFormat(string text, params object[] ps)

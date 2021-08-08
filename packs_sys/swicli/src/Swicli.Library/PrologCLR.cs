@@ -64,7 +64,7 @@ namespace Swicli.Library
             _singleInstance = this;
             ClientModule = null;
             ClientPrefix = "cli_";
-            SetupProlog();
+            PrologCLR.SetupProlog();
         }
 
         public readonly static Type[] ZERO_TYPES = new Type[0];

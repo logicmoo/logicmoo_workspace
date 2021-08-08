@@ -1,8 +1,8 @@
 [Global]
 CurrentProject=logicmoo_workspace.vpj
 [ProjectDates]
-logicmoo_workspace.vpj=20210807151708845
-other_files.vpj=20210731004953773
+logicmoo_workspace.vpj=20210808050438341
+other_files.vpj=20210806230350216
 [ActiveConfig]
 logicmoo_workspace.vpj=Release
 packs_usr\wam_common_lisp\wamcl.vpj=,Release
@@ -183,6 +183,34 @@ packs_sys\logicmoo_nlu\ext\chat80_lm\chat80.vpj=Release
     + ISSUE_TEMPLATE
   + wiki\.github
     + ISSUE_TEMPLATE
+  + prologmud_server\.local
+    + share
+      + swi-prolog
+        + pack
+          + logicmoo_utils\.github
+            + workflows
+          + logicmoo_utils
+            + prolog
+              + body_reordering
+              + cpviz
+              + debuggery
+              + lm_utils
+              + logicmoo
+              + multivar
+                + t
+              + xlisting
+                + pixmaps
+                  + popupmenu
+                    + scripts
+                    + styles
+                  + selected
+                    + css
+                    + example
+                    + img
+                    + js
+                + swish_lib
+                  + render
+            + t
   + prologmud_server\.pki
     + nssdb
   + prologmud_server\.ros
@@ -2054,9 +2082,9 @@ packs_sys\logicmoo_nlu\ext\chat80_lm\chat80.vpj=Release
   + wikis
     - logicmoo_workspace.wiki
 + other_files.vpj
-scroll:0
+scroll:36
 [State]
-SCREEN: 1920 1200 -1866 344 1918 997 0 0 N 0 0 0 0 1542 484
+SCREEN: 1920 1200 60 15 1918 997 0 0 M 0 0 0 0 1560 581
 CWD: C:\Program Files (x86)\SlickEdit\win
 FILEHIST: 9
 packs_web\shrdlu\world.save.types.pl

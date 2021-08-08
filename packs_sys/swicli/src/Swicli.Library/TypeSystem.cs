@@ -275,13 +275,13 @@ namespace Swicli.Library
 
         public static void ConsoleTrace(object s)
         {
-            try
-            {
-                Console.WriteLine(s);
-            }
-            catch (Exception)
-            {
-            }  
+			try {
+				System.Console.WriteLine(s);
+			} catch (System.TypeInitializationException e) {
+				// @TODO
+			} catch (Exception e) {
+				// @TODO
+			}
         }
 
         [IKVMBased]
