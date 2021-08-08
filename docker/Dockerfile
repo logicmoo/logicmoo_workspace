@@ -620,6 +620,11 @@ MAINTAINER RUN apt-get update \
     && export DEBIAN_FRONTEND=noninteractive \
     && apt-get -y install --no-install-recommends apt-utils dialog 2>&1
 
+RUN add-apt-repository -y ppa:chris-lea/node.js \
+  && apt update \
+  && apt install -y npm \
+  && npm install -g typescript
+
 #ENTRYPOINT ["/startup_logicmoo.sh"]
 #ENTRYPOINT ["/startup.sh"]
 ENTRYPOINT ["/bin/sh", "-ec", "while :; do echo '.'; sleep 600 ; done"]
