@@ -620,7 +620,7 @@ MAINTAINER RUN apt-get update \
     && export DEBIAN_FRONTEND=noninteractive \
     && apt-get -y install --no-install-recommends apt-utils dialog 2>&1
 
-RUN add-apt-repository -y ppa:chris-lea/node.js \
+RUN # add-apt-repository -y ppa:chris-lea/node.js \
   && apt update \
   && apt install -y npm \
   && npm install -g typescript
