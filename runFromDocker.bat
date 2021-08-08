@@ -1,7 +1,8 @@
 @echo on
 docker container rm logicmoo
+docker pull logicmoo/logicmoo_workspace:latest
 @SET DOCKER_RUN=docker run
-@SET DOCKER_RUN=%DOCKER_RUN% --privileged=true 
+@SET DOCKER_RUN=%DOCKER_RUN% --privileged=true
 @SET DOCKER_RUN=%DOCKER_RUN% --rm -it
 @SET DOCKER_RUN=%DOCKER_RUN% --no-healthcheck
 @SET DOCKER_RUN=%DOCKER_RUN% -v %CD%:/opt/logicmoo_workspace

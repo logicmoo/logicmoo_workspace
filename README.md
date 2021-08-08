@@ -59,7 +59,7 @@ Finding/Setting LD_LIBRARY_PATH...
    ansi                  # Opens LOGICMOO Main Termninal
    emacs                 # Opens IDE in a web browser
    bfly                  # Opens LOGICMOO Main Termninal in web brower
-   telnet                # Connect via Telnet
+   telnet                # Connect MUD via Telnet
    www                   # Display LOGICMOO WWW in a web browser
    cls                   # Clear the SCREEN
    bash                  # Opens Bash Terminal on your Docker image
@@ -72,7 +72,7 @@ Finding/Setting LD_LIBRARY_PATH...
 docker run --privileged=true --rm -it --no-healthcheck  -v /opt/logicmoo_workspace:/opt/logicmoo_workspace --name logicmoo -p 4000-4019:4000-4019 -p 4021-4199:4021-4199 -p 4243:443 -p 4280:80 -p 4020:3020  -p 3020:3020 -p 4222:22 -p 4220:3020 -p 4200:5900 -p 4201:9001 -p 4290:4090 -p 6079-6081:6079-6081 logicmoo/logicmoo_workspace:latest
 ```
 
-# Docker RUN on Windows
+# Docker RUN on Windows (tested with Docker Desktop for Windows v20.10.7)
 (output from ./runFromDocker.bat assuming `c:/opt/logicmoo_workspace/` )
 ```bash
 docker run --privileged=true --rm -it --no-healthcheck  -v C:\opt\logicmoo_workspace:/opt/logicmoo_workspace --name logicmoo -p 4000-4019:4000-4019 -p 4021-4199:4021-4199 -p 4243:443 -p 4280:80 -p 4020:3020  -p 3020:3020 -p 4222:22 -p 4220:3020 -p 4200:5900 -p 4201:9001 -p 4290:4090 -p 6079-6081:6079-6081 logicmoo/logicmoo_workspace:latest
