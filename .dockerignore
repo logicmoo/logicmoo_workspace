@@ -102,15 +102,12 @@
 ./packs_usr/.project
 ./packs_web/
 !./packs_web/butterfly/
-./prologmud_server
+./prologmud_server/
 ./packs_web/.gitignore
 ./packs_web/ClioPatria/
 ./packs_web/logicmoo_webui/
 ./packs_web/swish/
 ./packs_xtra/
-./packs_xtra/logicmoo_packages/
-./packs_xtra/logicmoo_pldata/
-./packs_xtra/packs_xtra.vpj
 ./Patch/
 ./Patch/lib/
 ./potential_plt_tests.txt

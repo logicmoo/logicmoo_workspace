@@ -17,7 +17,7 @@
 :- reexport(library(logicmoo_nlu/parser_penn_trees)).
 
 charniak_stream(Text,Out):-
-  process_create(path(bash), [('/opt/logicmoo_workspace/packs_xtra/logicmoo_pldata/eclipse-workspace/bllip-parser/CharniakParse.sh'), Text ],
+  process_create(path(bash), [('/opt/logicmoo_workspace/prologmud_server/eclipse-workspace/bllip-parser/CharniakParse.sh'), Text ],
     [ stdout(pipe(Out))]).
 
 charniak_parse(Text, Lines) :-
@@ -30,7 +30,7 @@ charniak_parse(Text, Lines) :-
 test_charniak_parse1 :-
  Text = "Can the can do the Can Can?",
  setup_call_cleanup(
-  process_create(path(bash), [('/opt/logicmoo_workspace/packs_xtra/logicmoo_pldata/eclipse-workspace/bllip-parser/CharniakParse.sh'), Text ],
+  process_create(path(bash), [('/opt/logicmoo_workspace/prologmud_server/eclipse-workspace/bllip-parser/CharniakParse.sh'), Text ],
     [ stdout(pipe(Out)) ]),
   read_line_to_string(Out, Lines),
   close(Out)),

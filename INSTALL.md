@@ -134,7 +134,6 @@ touch /opt/ros/eloquent/setup.bash
 
 # make our process running user
 adduser --disabled-password --gecos "" --no-create-home $LOGICMOO_USER --home $LOGICMOO_GAMES
-mkdir -p $LOGICMOO_GAMES/.config/nomicmu 
 chown -R $LOGICMOO_USER $LOGICMOO_GAMES
 
 
@@ -165,23 +164,23 @@ MAINTAINER cp -n $LOGICMOO_GAMES/.??*rc ~root/ \
 
 echo "Chowning and Chmoding..."
 cd $LOGICMOO_WS \
- && touch $LOGICMOO_GAMES/history_4000 \
- && touch $LOGICMOO_GAMES/completion_4000 \
- && touch $LOGICMOO_GAMES/history_4001 \
- && touch $LOGICMOO_GAMES/completion_4001 \
- && touch $LOGICMOO_GAMES/history_4002 \
- && touch $LOGICMOO_GAMES/completion_4002 \
- && touch $LOGICMOO_GAMES/history_4003 \
- && touch $LOGICMOO_GAMES/completion_4003 \
- && touch $LOGICMOO_GAMES/history_4004 \
- && touch $LOGICMOO_GAMES/completion_4004 \
- && touch $LOGICMOO_GAMES/history_4023 \
- && touch $LOGICMOO_GAMES/completion_4023 \
- && touch $LOGICMOO_GAMES/history_4025 \
- && touch $LOGICMOO_GAMES/completion_4025 \
+ && touch $LOGICMOO_GAMES/tempData/history_4000 \
+ && touch $LOGICMOO_GAMES/tempData/completion_4000 \
+ && touch $LOGICMOO_GAMES/tempData/history_4001 \
+ && touch $LOGICMOO_GAMES/tempData/completion_4001 \
+ && touch $LOGICMOO_GAMES/tempData/history_4002 \
+ && touch $LOGICMOO_GAMES/tempData/completion_4002 \
+ && touch $LOGICMOO_GAMES/tempData/history_4003 \
+ && touch $LOGICMOO_GAMES/tempData/completion_4003 \
+ && touch $LOGICMOO_GAMES/tempData/history_4004 \
+ && touch $LOGICMOO_GAMES/tempData/completion_4004 \
+ && touch $LOGICMOO_GAMES/tempData/history_4023 \
+ && touch $LOGICMOO_GAMES/tempData/completion_4023 \
+ && touch $LOGICMOO_GAMES/tempData/history_4025 \
+ && touch $LOGICMOO_GAMES/tempData/completion_4025 \
  && touch $LOGICMOO_GAMES/nohup.out \
- && chmod 777 $LOGICMOO_GAMES/completion_* \
- && chmod 777 $LOGICMOO_GAMES/history_* \
+ && chmod 777 $LOGICMOO_GAMES/tempData/completion_* \
+ && chmod 777 $LOGICMOO_GAMES/tempData/history_* \
  && chmod 777 $LOGICMOO_GAMES/nohup* \
  && chown $LOGICMOO_USER $LOGICMOO_GAMES/?*0* \
  && chmod 777 /opt/logicmoo_workspace/packs_sys/*/ \

@@ -123,6 +123,7 @@ fi
 
 export LIBJVM
 export LD_LIBRARY_PATH
+export PATH
 
 (eval `swipl --dump-runtime-variables` ) 2>/dev/null
 

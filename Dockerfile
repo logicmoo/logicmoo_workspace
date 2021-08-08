@@ -148,8 +148,7 @@ MAINTAINER RUN cd $LOGICMOO_WS && set -x \
  && git commit -am "plkb0988-$(date)" \
  && cd $LOGICMOO_WS/packs_xtra/ \
  && git add logicmoo_pldata \
- && git commit -am "logicmoo_pldata-$(date)" \
- && rm -rf $LOGICMOO_WS/packs_xtra/logicmoo_pldata/*/
+ && git commit -am "logicmoo_pldata-$(date)"
 
 MAINTAINER RUN SNIPPET="export PROMPT_COMMAND='history -a' && export HISTFILE=/commandhistory/.bash_history" \
     && echo $SNIPPET >> "/root/.bashrc"
