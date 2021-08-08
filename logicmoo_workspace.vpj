@@ -624,6 +624,731 @@
 				<F N="wiki/.github/ISSUE_TEMPLATE/general.md"/>
 			</Folder>
 		</Folder>
+		<Folder Name="prologmud_server/.local">
+			<Folder Name="share">
+				<Folder Name="swi-prolog">
+					<Folder Name="pack">
+						<Folder Name="logicmoo_utils/.github">
+							<Folder Name="workflows">
+								<F N="prologmud_server/.local/share/swi-prolog/pack/logicmoo_utils/.github/workflows/blank.yml"/>
+								<F N="prologmud_server/.local/share/swi-prolog/pack/logicmoo_utils/.github/workflows/google.yml"/>
+							</Folder>
+						</Folder>
+						<Folder Name="butterfly">
+							<Folder Name="lib">
+								<Folder Name="python3.7">
+									<Folder Name="site-packages">
+										<Folder Name="virtualenv">
+											<Folder Name="activation">
+												<Folder Name="batch">
+													<F N="prologmud_server/.local/share/swi-prolog/pack/butterfly/lib/python3.7/site-packages/virtualenv/activation/batch/activate.bat"/>
+													<F N="prologmud_server/.local/share/swi-prolog/pack/butterfly/lib/python3.7/site-packages/virtualenv/activation/batch/deactivate.bat"/>
+													<F N="prologmud_server/.local/share/swi-prolog/pack/butterfly/lib/python3.7/site-packages/virtualenv/activation/batch/pydoc.bat"/>
+												</Folder>
+											</Folder>
+										</Folder>
+									</Folder>
+								</Folder>
+							</Folder>
+							<Folder Name="lib64">
+								<Folder Name="python3.7">
+									<Folder Name="site-packages">
+										<Folder Name="virtualenv">
+											<Folder Name="activation">
+												<Folder Name="batch">
+													<F N="prologmud_server/.local/share/swi-prolog/pack/butterfly/lib64/python3.7/site-packages/virtualenv/activation/batch/activate.bat"/>
+													<F N="prologmud_server/.local/share/swi-prolog/pack/butterfly/lib64/python3.7/site-packages/virtualenv/activation/batch/deactivate.bat"/>
+													<F N="prologmud_server/.local/share/swi-prolog/pack/butterfly/lib64/python3.7/site-packages/virtualenv/activation/batch/pydoc.bat"/>
+												</Folder>
+											</Folder>
+										</Folder>
+									</Folder>
+								</Folder>
+							</Folder>
+						</Folder>
+						<Folder Name="cplint">
+							<Folder Name="docs">
+								<Folder Name="_build">
+									<Folder Name="latex">
+										<F N="prologmud_server/.local/share/swi-prolog/pack/cplint/docs/_build/latex/make.bat"/>
+									</Folder>
+								</Folder>
+								<F N="prologmud_server/.local/share/swi-prolog/pack/cplint/docs/make.bat"/>
+							</Folder>
+						</Folder>
+						<Folder Name="logicmoo_cg">
+							<Folder Name="test">
+								<Folder Name="cgworld">
+									<Folder Name="beans">
+										<F N="prologmud_server/.local/share/swi-prolog/pack/logicmoo_cg/test/cgworld/beans/sicstus_run.bat"/>
+									</Folder>
+									<F N="prologmud_server/.local/share/swi-prolog/pack/logicmoo_cg/test/cgworld/CgEditor.bat"/>
+									<F N="prologmud_server/.local/share/swi-prolog/pack/logicmoo_cg/test/cgworld/convert.bat"/>
+									<F N="prologmud_server/.local/share/swi-prolog/pack/logicmoo_cg/test/cgworld/convert_jview.bat"/>
+								</Folder>
+								<Folder Name="prologPlusCG">
+									<F N="prologmud_server/.local/share/swi-prolog/pack/logicmoo_cg/test/prologPlusCG/start.bat"/>
+								</Folder>
+							</Folder>
+						</Folder>
+						<Folder Name="logicmoo_nlu">
+							<Folder Name="ext">
+								<Folder Name="ape">
+									<F N="prologmud_server/.local/share/swi-prolog/pack/logicmoo_nlu/ext/ape/make_exe.bat"/>
+									<F N="prologmud_server/.local/share/swi-prolog/pack/logicmoo_nlu/ext/ape/make_exe_new.bat"/>
+								</Folder>
+								<Folder Name="Parser_SUPPLE">
+									<Folder Name="lib">
+										<F N="prologmud_server/.local/share/swi-prolog/pack/logicmoo_nlu/ext/Parser_SUPPLE/lib/gate.bat"/>
+									</Folder>
+								</Folder>
+								<Folder Name="regulus">
+									<Folder Name="doc">
+										<Folder Name="ACL2003">
+											<Folder Name="Experiments">
+												<Folder Name="GrammarScaleScripts">
+													<F N="prologmud_server/.local/share/swi-prolog/pack/logicmoo_nlu/ext/regulus/doc/ACL2003/Experiments/GrammarScaleScripts/run_recserver.bat"/>
+													<F N="prologmud_server/.local/share/swi-prolog/pack/logicmoo_nlu/ext/regulus/doc/ACL2003/Experiments/GrammarScaleScripts/run_regulus_server.bat"/>
+													<F N="prologmud_server/.local/share/swi-prolog/pack/logicmoo_nlu/ext/regulus/doc/ACL2003/Experiments/GrammarScaleScripts/run_toy_app_prolog.bat"/>
+												</Folder>
+											</Folder>
+										</Folder>
+									</Folder>
+									<Folder Name="Examples">
+										<Folder Name="Calendar">
+											<Folder Name="corpora">
+												<Folder Name="JapDataCollSep2008">
+													<F N="prologmud_server/.local/share/swi-prolog/pack/logicmoo_nlu/ext/regulus/Examples/Calendar/corpora/JapDataCollSep2008/edit_wavfiles_kikuko.bat"/>
+													<F N="prologmud_server/.local/share/swi-prolog/pack/logicmoo_nlu/ext/regulus/Examples/Calendar/corpora/JapDataCollSep2008/edit_wavfiles_mayuko.bat"/>
+													<F N="prologmud_server/.local/share/swi-prolog/pack/logicmoo_nlu/ext/regulus/Examples/Calendar/corpora/JapDataCollSep2008/edit_wavfiles_miki.bat"/>
+													<F N="prologmud_server/.local/share/swi-prolog/pack/logicmoo_nlu/ext/regulus/Examples/Calendar/corpora/JapDataCollSep2008/edit_wavfiles_ozawa.bat"/>
+													<F N="prologmud_server/.local/share/swi-prolog/pack/logicmoo_nlu/ext/regulus/Examples/Calendar/corpora/JapDataCollSep2008/edit_wavfiles_yuriko.bat"/>
+												</Folder>
+											</Folder>
+											<Folder Name="japanese_wavfiles">
+												<F N="prologmud_server/.local/share/swi-prolog/pack/logicmoo_nlu/ext/regulus/Examples/Calendar/japanese_wavfiles/edit_wavfiles.bat"/>
+												<F N="prologmud_server/.local/share/swi-prolog/pack/logicmoo_nlu/ext/regulus/Examples/Calendar/japanese_wavfiles/record_wavfiles.bat"/>
+												<F N="prologmud_server/.local/share/swi-prolog/pack/logicmoo_nlu/ext/regulus/Examples/Calendar/japanese_wavfiles/xwavedit_all.bat"/>
+											</Folder>
+											<Folder Name="java">
+												<F N="prologmud_server/.local/share/swi-prolog/pack/logicmoo_nlu/ext/regulus/Examples/Calendar/java/run_calendar.bat"/>
+											</Folder>
+											<Folder Name="scripts">
+												<F N="prologmud_server/.local/share/swi-prolog/pack/logicmoo_nlu/ext/regulus/Examples/Calendar/scripts/run_app_using_server.bat"/>
+												<F N="prologmud_server/.local/share/swi-prolog/pack/logicmoo_nlu/ext/regulus/Examples/Calendar/scripts/run_app_using_server_im2.bat"/>
+												<F N="prologmud_server/.local/share/swi-prolog/pack/logicmoo_nlu/ext/regulus/Examples/Calendar/scripts/run_app_using_server_nodebug.bat"/>
+												<F N="prologmud_server/.local/share/swi-prolog/pack/logicmoo_nlu/ext/regulus/Examples/Calendar/scripts/run_japanese_app.bat"/>
+												<F N="prologmud_server/.local/share/swi-prolog/pack/logicmoo_nlu/ext/regulus/Examples/Calendar/scripts/run_japanese_app_nodebug.bat"/>
+												<F N="prologmud_server/.local/share/swi-prolog/pack/logicmoo_nlu/ext/regulus/Examples/Calendar/scripts/run_japanese_dm_server.bat"/>
+												<F N="prologmud_server/.local/share/swi-prolog/pack/logicmoo_nlu/ext/regulus/Examples/Calendar/scripts/run_japanese_recserver.bat"/>
+												<F N="prologmud_server/.local/share/swi-prolog/pack/logicmoo_nlu/ext/regulus/Examples/Calendar/scripts/run_recserver.bat"/>
+												<F N="prologmud_server/.local/share/swi-prolog/pack/logicmoo_nlu/ext/regulus/Examples/Calendar/scripts/run_recserver_im2.bat"/>
+												<F N="prologmud_server/.local/share/swi-prolog/pack/logicmoo_nlu/ext/regulus/Examples/Calendar/scripts/run_server.bat"/>
+												<F N="prologmud_server/.local/share/swi-prolog/pack/logicmoo_nlu/ext/regulus/Examples/Calendar/scripts/run_server_im2.bat"/>
+												<F N="prologmud_server/.local/share/swi-prolog/pack/logicmoo_nlu/ext/regulus/Examples/Calendar/scripts/run_server_regulus_parser.bat"/>
+												<F N="prologmud_server/.local/share/swi-prolog/pack/logicmoo_nlu/ext/regulus/Examples/Calendar/scripts/run_vocalizer4.bat"/>
+											</Folder>
+										</Folder>
+										<Folder Name="EnglishRobots">
+											<Folder Name="scripts">
+												<F N="prologmud_server/.local/share/swi-prolog/pack/logicmoo_nlu/ext/regulus/Examples/EnglishRobots/scripts/run_app_multi_ling.bat"/>
+												<F N="prologmud_server/.local/share/swi-prolog/pack/logicmoo_nlu/ext/regulus/Examples/EnglishRobots/scripts/run_recserver_multi_ling.bat"/>
+												<F N="prologmud_server/.local/share/swi-prolog/pack/logicmoo_nlu/ext/regulus/Examples/EnglishRobots/scripts/run_resource_manager.bat"/>
+												<F N="prologmud_server/.local/share/swi-prolog/pack/logicmoo_nlu/ext/regulus/Examples/EnglishRobots/scripts/run_vocalizer4_english.bat"/>
+												<F N="prologmud_server/.local/share/swi-prolog/pack/logicmoo_nlu/ext/regulus/Examples/EnglishRobots/scripts/run_vocalizer4_german.bat"/>
+											</Folder>
+										</Folder>
+										<Folder Name="GermanRobots">
+											<Folder Name="scripts">
+												<F N="prologmud_server/.local/share/swi-prolog/pack/logicmoo_nlu/ext/regulus/Examples/GermanRobots/scripts/run_recserver.bat"/>
+												<F N="prologmud_server/.local/share/swi-prolog/pack/logicmoo_nlu/ext/regulus/Examples/GermanRobots/scripts/run_xapp.bat"/>
+											</Folder>
+										</Folder>
+										<Folder Name="Misc">
+											<F N="prologmud_server/.local/share/swi-prolog/pack/logicmoo_nlu/ext/regulus/Examples/Misc/run_client.bat"/>
+											<F N="prologmud_server/.local/share/swi-prolog/pack/logicmoo_nlu/ext/regulus/Examples/Misc/run_server.bat"/>
+										</Folder>
+										<Folder Name="PSA">
+											<Folder Name="scripts">
+												<F N="prologmud_server/.local/share/swi-prolog/pack/logicmoo_nlu/ext/regulus/Examples/PSA/scripts/run_recserver.bat"/>
+												<F N="prologmud_server/.local/share/swi-prolog/pack/logicmoo_nlu/ext/regulus/Examples/PSA/scripts/run_regulus_server.bat"/>
+												<F N="prologmud_server/.local/share/swi-prolog/pack/logicmoo_nlu/ext/regulus/Examples/PSA/scripts/run_toy_app_prolog.bat"/>
+											</Folder>
+										</Folder>
+										<Folder Name="Toy0">
+											<Folder Name="scripts">
+												<F N="prologmud_server/.local/share/swi-prolog/pack/logicmoo_nlu/ext/regulus/Examples/Toy0/scripts/compile_jdemo.bat"/>
+												<F N="prologmud_server/.local/share/swi-prolog/pack/logicmoo_nlu/ext/regulus/Examples/Toy0/scripts/java_settings.bat"/>
+												<F N="prologmud_server/.local/share/swi-prolog/pack/logicmoo_nlu/ext/regulus/Examples/Toy0/scripts/run_app.bat"/>
+												<F N="prologmud_server/.local/share/swi-prolog/pack/logicmoo_nlu/ext/regulus/Examples/Toy0/scripts/run_app_with_get_param.bat"/>
+												<F N="prologmud_server/.local/share/swi-prolog/pack/logicmoo_nlu/ext/regulus/Examples/Toy0/scripts/run_jdemo.bat"/>
+												<F N="prologmud_server/.local/share/swi-prolog/pack/logicmoo_nlu/ext/regulus/Examples/Toy0/scripts/run_recserver.bat"/>
+												<F N="prologmud_server/.local/share/swi-prolog/pack/logicmoo_nlu/ext/regulus/Examples/Toy0/scripts/run_recserver_hand_coded.bat"/>
+												<F N="prologmud_server/.local/share/swi-prolog/pack/logicmoo_nlu/ext/regulus/Examples/Toy0/scripts/run_slt_app.bat"/>
+												<F N="prologmud_server/.local/share/swi-prolog/pack/logicmoo_nlu/ext/regulus/Examples/Toy0/scripts/run_vocalizer3.bat"/>
+												<F N="prologmud_server/.local/share/swi-prolog/pack/logicmoo_nlu/ext/regulus/Examples/Toy0/scripts/run_vocalizer3_fre.bat"/>
+												<F N="prologmud_server/.local/share/swi-prolog/pack/logicmoo_nlu/ext/regulus/Examples/Toy0/scripts/run_vocalizer4.bat"/>
+												<F N="prologmud_server/.local/share/swi-prolog/pack/logicmoo_nlu/ext/regulus/Examples/Toy0/scripts/run_xapp.bat"/>
+												<F N="prologmud_server/.local/share/swi-prolog/pack/logicmoo_nlu/ext/regulus/Examples/Toy0/scripts/run_xapp_hand_coded.bat"/>
+											</Folder>
+										</Folder>
+										<Folder Name="Toy0Strcat">
+											<Folder Name="scripts">
+												<F N="prologmud_server/.local/share/swi-prolog/pack/logicmoo_nlu/ext/regulus/Examples/Toy0Strcat/scripts/run_app.bat"/>
+												<F N="prologmud_server/.local/share/swi-prolog/pack/logicmoo_nlu/ext/regulus/Examples/Toy0Strcat/scripts/run_recserver.bat"/>
+												<F N="prologmud_server/.local/share/swi-prolog/pack/logicmoo_nlu/ext/regulus/Examples/Toy0Strcat/scripts/run_xapp.bat"/>
+											</Folder>
+										</Folder>
+										<Folder Name="Toy1">
+											<Folder Name="scripts">
+												<F N="prologmud_server/.local/share/swi-prolog/pack/logicmoo_nlu/ext/regulus/Examples/Toy1/scripts/run_app.bat"/>
+												<F N="prologmud_server/.local/share/swi-prolog/pack/logicmoo_nlu/ext/regulus/Examples/Toy1/scripts/run_app_corrections.bat"/>
+												<F N="prologmud_server/.local/share/swi-prolog/pack/logicmoo_nlu/ext/regulus/Examples/Toy1/scripts/run_asynchronous_app.bat"/>
+												<F N="prologmud_server/.local/share/swi-prolog/pack/logicmoo_nlu/ext/regulus/Examples/Toy1/scripts/run_open_mic_app.bat"/>
+												<F N="prologmud_server/.local/share/swi-prolog/pack/logicmoo_nlu/ext/regulus/Examples/Toy1/scripts/run_open_mic_app_self_contained.bat"/>
+												<F N="prologmud_server/.local/share/swi-prolog/pack/logicmoo_nlu/ext/regulus/Examples/Toy1/scripts/run_open_mic_server.bat"/>
+												<F N="prologmud_server/.local/share/swi-prolog/pack/logicmoo_nlu/ext/regulus/Examples/Toy1/scripts/run_recserver.bat"/>
+												<F N="prologmud_server/.local/share/swi-prolog/pack/logicmoo_nlu/ext/regulus/Examples/Toy1/scripts/run_recserver_corrections.bat"/>
+												<F N="prologmud_server/.local/share/swi-prolog/pack/logicmoo_nlu/ext/regulus/Examples/Toy1/scripts/run_server.bat"/>
+												<F N="prologmud_server/.local/share/swi-prolog/pack/logicmoo_nlu/ext/regulus/Examples/Toy1/scripts/run_server_app.bat"/>
+												<F N="prologmud_server/.local/share/swi-prolog/pack/logicmoo_nlu/ext/regulus/Examples/Toy1/scripts/run_slow_server.bat"/>
+												<F N="prologmud_server/.local/share/swi-prolog/pack/logicmoo_nlu/ext/regulus/Examples/Toy1/scripts/run_slow_server_app.bat"/>
+												<F N="prologmud_server/.local/share/swi-prolog/pack/logicmoo_nlu/ext/regulus/Examples/Toy1/scripts/run_slt_app.bat"/>
+												<F N="prologmud_server/.local/share/swi-prolog/pack/logicmoo_nlu/ext/regulus/Examples/Toy1/scripts/run_vocalizer3.bat"/>
+												<F N="prologmud_server/.local/share/swi-prolog/pack/logicmoo_nlu/ext/regulus/Examples/Toy1/scripts/run_vocalizer3_fre.bat"/>
+												<F N="prologmud_server/.local/share/swi-prolog/pack/logicmoo_nlu/ext/regulus/Examples/Toy1/scripts/run_vocalizer4.bat"/>
+												<F N="prologmud_server/.local/share/swi-prolog/pack/logicmoo_nlu/ext/regulus/Examples/Toy1/scripts/run_xapp.bat"/>
+											</Folder>
+										</Folder>
+										<Folder Name="Toy1Alterf">
+											<Folder Name="scripts">
+												<F N="prologmud_server/.local/share/swi-prolog/pack/logicmoo_nlu/ext/regulus/Examples/Toy1Alterf/scripts/run_app.bat"/>
+												<F N="prologmud_server/.local/share/swi-prolog/pack/logicmoo_nlu/ext/regulus/Examples/Toy1Alterf/scripts/run_recserver.bat"/>
+												<F N="prologmud_server/.local/share/swi-prolog/pack/logicmoo_nlu/ext/regulus/Examples/Toy1Alterf/scripts/run_vocalizer3.bat"/>
+												<F N="prologmud_server/.local/share/swi-prolog/pack/logicmoo_nlu/ext/regulus/Examples/Toy1Alterf/scripts/run_vocalizer4.bat"/>
+												<F N="prologmud_server/.local/share/swi-prolog/pack/logicmoo_nlu/ext/regulus/Examples/Toy1Alterf/scripts/run_xapp.bat"/>
+											</Folder>
+										</Folder>
+										<Folder Name="Toy1Course">
+											<Folder Name="scripts">
+												<F N="prologmud_server/.local/share/swi-prolog/pack/logicmoo_nlu/ext/regulus/Examples/Toy1Course/scripts/run_license.bat"/>
+												<F N="prologmud_server/.local/share/swi-prolog/pack/logicmoo_nlu/ext/regulus/Examples/Toy1Course/scripts/run_recserver.bat"/>
+												<F N="prologmud_server/.local/share/swi-prolog/pack/logicmoo_nlu/ext/regulus/Examples/Toy1Course/scripts/run_xapp.bat"/>
+											</Folder>
+										</Folder>
+										<Folder Name="Toy1Dynamic">
+											<Folder Name="scripts">
+												<F N="prologmud_server/.local/share/swi-prolog/pack/logicmoo_nlu/ext/regulus/Examples/Toy1Dynamic/scripts/run_compilation-server.bat"/>
+												<F N="prologmud_server/.local/share/swi-prolog/pack/logicmoo_nlu/ext/regulus/Examples/Toy1Dynamic/scripts/run_compilation_server.bat"/>
+												<F N="prologmud_server/.local/share/swi-prolog/pack/logicmoo_nlu/ext/regulus/Examples/Toy1Dynamic/scripts/run_recserver.bat"/>
+												<F N="prologmud_server/.local/share/swi-prolog/pack/logicmoo_nlu/ext/regulus/Examples/Toy1Dynamic/scripts/run_resource-manager.bat"/>
+												<F N="prologmud_server/.local/share/swi-prolog/pack/logicmoo_nlu/ext/regulus/Examples/Toy1Dynamic/scripts/run_resource_manager.bat"/>
+												<F N="prologmud_server/.local/share/swi-prolog/pack/logicmoo_nlu/ext/regulus/Examples/Toy1Dynamic/scripts/run_xapp.bat"/>
+												<F N="prologmud_server/.local/share/swi-prolog/pack/logicmoo_nlu/ext/regulus/Examples/Toy1Dynamic/scripts/test_nl-tool.bat"/>
+											</Folder>
+										</Folder>
+										<Folder Name="Toy1Specialised">
+											<Folder Name="scripts">
+												<F N="prologmud_server/.local/share/swi-prolog/pack/logicmoo_nlu/ext/regulus/Examples/Toy1Specialised/scripts/run_app.bat"/>
+												<F N="prologmud_server/.local/share/swi-prolog/pack/logicmoo_nlu/ext/regulus/Examples/Toy1Specialised/scripts/run_app_multi_ling.bat"/>
+												<F N="prologmud_server/.local/share/swi-prolog/pack/logicmoo_nlu/ext/regulus/Examples/Toy1Specialised/scripts/run_recserver.bat"/>
+												<F N="prologmud_server/.local/share/swi-prolog/pack/logicmoo_nlu/ext/regulus/Examples/Toy1Specialised/scripts/run_recserver_multi_ling.bat"/>
+												<F N="prologmud_server/.local/share/swi-prolog/pack/logicmoo_nlu/ext/regulus/Examples/Toy1Specialised/scripts/run_resource_manager.bat"/>
+												<F N="prologmud_server/.local/share/swi-prolog/pack/logicmoo_nlu/ext/regulus/Examples/Toy1Specialised/scripts/run_slt_app.bat"/>
+												<F N="prologmud_server/.local/share/swi-prolog/pack/logicmoo_nlu/ext/regulus/Examples/Toy1Specialised/scripts/run_vocalizer3.bat"/>
+												<F N="prologmud_server/.local/share/swi-prolog/pack/logicmoo_nlu/ext/regulus/Examples/Toy1Specialised/scripts/run_vocalizer3_fre.bat"/>
+												<F N="prologmud_server/.local/share/swi-prolog/pack/logicmoo_nlu/ext/regulus/Examples/Toy1Specialised/scripts/run_vocalizer4.bat"/>
+												<F N="prologmud_server/.local/share/swi-prolog/pack/logicmoo_nlu/ext/regulus/Examples/Toy1Specialised/scripts/run_vocalizer4_english.bat"/>
+												<F N="prologmud_server/.local/share/swi-prolog/pack/logicmoo_nlu/ext/regulus/Examples/Toy1Specialised/scripts/run_vocalizer4_french.bat"/>
+												<F N="prologmud_server/.local/share/swi-prolog/pack/logicmoo_nlu/ext/regulus/Examples/Toy1Specialised/scripts/run_xapp.bat"/>
+											</Folder>
+										</Folder>
+										<Folder Name="Toy1SpecialisedDynamic">
+											<Folder Name="scripts">
+												<F N="prologmud_server/.local/share/swi-prolog/pack/logicmoo_nlu/ext/regulus/Examples/Toy1SpecialisedDynamic/scripts/run_compilation_server.bat"/>
+												<F N="prologmud_server/.local/share/swi-prolog/pack/logicmoo_nlu/ext/regulus/Examples/Toy1SpecialisedDynamic/scripts/run_recserver.bat"/>
+												<F N="prologmud_server/.local/share/swi-prolog/pack/logicmoo_nlu/ext/regulus/Examples/Toy1SpecialisedDynamic/scripts/run_resource_manager.bat"/>
+												<F N="prologmud_server/.local/share/swi-prolog/pack/logicmoo_nlu/ext/regulus/Examples/Toy1SpecialisedDynamic/scripts/run_toy_dynamic_app.bat"/>
+											</Folder>
+										</Folder>
+										<Folder Name="Toy1Strcat">
+											<Folder Name="scripts">
+												<F N="prologmud_server/.local/share/swi-prolog/pack/logicmoo_nlu/ext/regulus/Examples/Toy1Strcat/scripts/run_recserver.bat"/>
+												<F N="prologmud_server/.local/share/swi-prolog/pack/logicmoo_nlu/ext/regulus/Examples/Toy1Strcat/scripts/run_xapp.bat"/>
+											</Folder>
+										</Folder>
+									</Folder>
+									<Folder Name="Java">
+										<F N="prologmud_server/.local/share/swi-prolog/pack/logicmoo_nlu/ext/regulus/Java/compile.bat"/>
+										<F N="prologmud_server/.local/share/swi-prolog/pack/logicmoo_nlu/ext/regulus/Java/copy_from_workspace.bat"/>
+										<F N="prologmud_server/.local/share/swi-prolog/pack/logicmoo_nlu/ext/regulus/Java/copy_to_workspace.bat"/>
+										<F N="prologmud_server/.local/share/swi-prolog/pack/logicmoo_nlu/ext/regulus/Java/run_java.bat"/>
+										<F N="prologmud_server/.local/share/swi-prolog/pack/logicmoo_nlu/ext/regulus/Java/run_java2.bat"/>
+										<F N="prologmud_server/.local/share/swi-prolog/pack/logicmoo_nlu/ext/regulus/Java/run_java_with_specific_version.bat"/>
+										<F N="prologmud_server/.local/share/swi-prolog/pack/logicmoo_nlu/ext/regulus/Java/run_prolog.bat"/>
+										<F N="prologmud_server/.local/share/swi-prolog/pack/logicmoo_nlu/ext/regulus/Java/run_prolog2.bat"/>
+										<F N="prologmud_server/.local/share/swi-prolog/pack/logicmoo_nlu/ext/regulus/Java/run_prolog_and_java.bat"/>
+										<F N="prologmud_server/.local/share/swi-prolog/pack/logicmoo_nlu/ext/regulus/Java/run_prolog_and_java2.bat"/>
+										<F N="prologmud_server/.local/share/swi-prolog/pack/logicmoo_nlu/ext/regulus/Java/run_prolog_and_java_with_specific_version.bat"/>
+										<F N="prologmud_server/.local/share/swi-prolog/pack/logicmoo_nlu/ext/regulus/Java/run_testgui_prolog.bat"/>
+									</Folder>
+									<Folder Name="RegulusSpeechServer">
+										<Folder Name="SampleApp">
+											<Folder Name="Scripts">
+												<F N="prologmud_server/.local/share/swi-prolog/pack/logicmoo_nlu/ext/regulus/RegulusSpeechServer/SampleApp/Scripts/compile_grammar.bat"/>
+												<F N="prologmud_server/.local/share/swi-prolog/pack/logicmoo_nlu/ext/regulus/RegulusSpeechServer/SampleApp/Scripts/run_prolog_app.bat"/>
+												<F N="prologmud_server/.local/share/swi-prolog/pack/logicmoo_nlu/ext/regulus/RegulusSpeechServer/SampleApp/Scripts/run_recserver.bat"/>
+												<F N="prologmud_server/.local/share/swi-prolog/pack/logicmoo_nlu/ext/regulus/RegulusSpeechServer/SampleApp/Scripts/run_regulus_server.bat"/>
+											</Folder>
+										</Folder>
+									</Folder>
+								</Folder>
+								<Folder Name="SIRIDUS">
+									<Folder Name="TALK_unimodal_grammar_lib">
+										<Folder Name="delux">
+											<F N="prologmud_server/.local/share/swi-prolog/pack/logicmoo_nlu/ext/SIRIDUS/TALK_unimodal_grammar_lib/delux/run.bat"/>
+										</Folder>
+										<Folder Name="djgodis">
+											<F N="prologmud_server/.local/share/swi-prolog/pack/logicmoo_nlu/ext/SIRIDUS/TALK_unimodal_grammar_lib/djgodis/compile_nuance_grammar.bat"/>
+											<F N="prologmud_server/.local/share/swi-prolog/pack/logicmoo_nlu/ext/SIRIDUS/TALK_unimodal_grammar_lib/djgodis/run.bat"/>
+										</Folder>
+										<Folder Name="trindikit4">
+											<Folder Name="examples">
+												<Folder Name="godis-basic">
+													<Folder Name="Agents">
+														<F N="prologmud_server/.local/share/swi-prolog/pack/logicmoo_nlu/ext/SIRIDUS/TALK_unimodal_grammar_lib/trindikit4/examples/godis-basic/Agents/compileTextIO.bat"/>
+													</Folder>
+													<F N="prologmud_server/.local/share/swi-prolog/pack/logicmoo_nlu/ext/SIRIDUS/TALK_unimodal_grammar_lib/trindikit4/examples/godis-basic/godis-basic.bat"/>
+													<F N="prologmud_server/.local/share/swi-prolog/pack/logicmoo_nlu/ext/SIRIDUS/TALK_unimodal_grammar_lib/trindikit4/examples/godis-basic/single_agent.bat"/>
+												</Folder>
+											</Folder>
+										</Folder>
+										<F N="prologmud_server/.local/share/swi-prolog/pack/logicmoo_nlu/ext/SIRIDUS/TALK_unimodal_grammar_lib/export_grammars_to_godis.bat"/>
+									</Folder>
+									<Folder Name="UGOT-D31">
+										<Folder Name="godis-apps">
+											<Folder Name="domain-agendatalk">
+												<Folder Name="Speech">
+													<F N="prologmud_server/.local/share/swi-prolog/pack/logicmoo_nlu/ext/SIRIDUS/UGOT-D31/godis-apps/domain-agendatalk/Speech/agenda_speech.bat"/>
+													<F N="prologmud_server/.local/share/swi-prolog/pack/logicmoo_nlu/ext/SIRIDUS/UGOT-D31/godis-apps/domain-agendatalk/Speech/agenda_speech_swe.bat"/>
+													<F N="prologmud_server/.local/share/swi-prolog/pack/logicmoo_nlu/ext/SIRIDUS/UGOT-D31/godis-apps/domain-agendatalk/Speech/compile-nuance-grammars.bat"/>
+													<F N="prologmud_server/.local/share/swi-prolog/pack/logicmoo_nlu/ext/SIRIDUS/UGOT-D31/godis-apps/domain-agendatalk/Speech/setup-nuance.bat"/>
+												</Folder>
+											</Folder>
+											<Folder Name="domain-legoturtle">
+												<F N="prologmud_server/.local/share/swi-prolog/pack/logicmoo_nlu/ext/SIRIDUS/UGOT-D31/godis-apps/domain-legoturtle/setup-nuance.bat"/>
+											</Folder>
+											<Folder Name="domain-player">
+												<Folder Name="inoutnuance">
+													<F N="prologmud_server/.local/share/swi-prolog/pack/logicmoo_nlu/ext/SIRIDUS/UGOT-D31/godis-apps/domain-player/inoutnuance/compile.bat"/>
+													<F N="prologmud_server/.local/share/swi-prolog/pack/logicmoo_nlu/ext/SIRIDUS/UGOT-D31/godis-apps/domain-player/inoutnuance/run.bat"/>
+												</Folder>
+												<F N="prologmud_server/.local/share/swi-prolog/pack/logicmoo_nlu/ext/SIRIDUS/UGOT-D31/godis-apps/domain-player/player.speech.bat"/>
+											</Folder>
+											<Folder Name="domain-ta">
+												<Folder Name="Resources">
+													<F N="prologmud_server/.local/share/swi-prolog/pack/logicmoo_nlu/ext/SIRIDUS/UGOT-D31/godis-apps/domain-ta/Resources/compile_nuance_grammar.bat"/>
+												</Folder>
+											</Folder>
+											<Folder Name="domain-vcr">
+												<Folder Name="Speech">
+													<F N="prologmud_server/.local/share/swi-prolog/pack/logicmoo_nlu/ext/SIRIDUS/UGOT-D31/godis-apps/domain-vcr/Speech/vcr_speech.bat"/>
+												</Folder>
+											</Folder>
+										</Folder>
+										<Folder Name="trindikit4-0.1alpha">
+											<Folder Name="examples">
+												<Folder Name="godis-basic">
+													<Folder Name="Agents">
+														<F N="prologmud_server/.local/share/swi-prolog/pack/logicmoo_nlu/ext/SIRIDUS/UGOT-D31/trindikit4-0.1alpha/examples/godis-basic/Agents/compileTextIO.bat"/>
+													</Folder>
+													<F N="prologmud_server/.local/share/swi-prolog/pack/logicmoo_nlu/ext/SIRIDUS/UGOT-D31/trindikit4-0.1alpha/examples/godis-basic/godis-basic.bat"/>
+													<F N="prologmud_server/.local/share/swi-prolog/pack/logicmoo_nlu/ext/SIRIDUS/UGOT-D31/trindikit4-0.1alpha/examples/godis-basic/single_agent.bat"/>
+												</Folder>
+											</Folder>
+										</Folder>
+									</Folder>
+								</Folder>
+							</Folder>
+						</Folder>
+						<Folder Name="logicmoo_utils">
+							<Folder Name="prolog">
+								<Folder Name="body_reordering">
+									<F N="prologmud_server/.local/share/swi-prolog/pack/logicmoo_utils/prolog/body_reordering/logicmoo_util_autocut.pl"/>
+									<F N="prologmud_server/.local/share/swi-prolog/pack/logicmoo_utils/prolog/body_reordering/logicmoo_util_body_nauts.pl"/>
+									<F N="prologmud_server/.local/share/swi-prolog/pack/logicmoo_utils/prolog/body_reordering/logicmoo_util_body_reorder.pl"/>
+									<F N="prologmud_server/.local/share/swi-prolog/pack/logicmoo_utils/prolog/body_reordering/logicmoo_util_body_textstr.pl"/>
+									<F N="prologmud_server/.local/share/swi-prolog/pack/logicmoo_utils/prolog/body_reordering/README.md"/>
+								</Folder>
+								<Folder Name="cpviz">
+									<F N="prologmud_server/.local/share/swi-prolog/pack/logicmoo_utils/prolog/cpviz/structures.pl"/>
+									<F N="prologmud_server/.local/share/swi-prolog/pack/logicmoo_utils/prolog/cpviz/visualize_tree.pl"/>
+								</Folder>
+								<Folder Name="debuggery">
+									<F N="prologmud_server/.local/share/swi-prolog/pack/logicmoo_utils/prolog/debuggery/block3_legacy.extra"/>
+									<F N="prologmud_server/.local/share/swi-prolog/pack/logicmoo_utils/prolog/debuggery/bugger.pl"/>
+									<F N="prologmud_server/.local/share/swi-prolog/pack/logicmoo_utils/prolog/debuggery/dmsg.pl"/>
+									<F N="prologmud_server/.local/share/swi-prolog/pack/logicmoo_utils/prolog/debuggery/dumpst.pl"/>
+									<F N="prologmud_server/.local/share/swi-prolog/pack/logicmoo_utils/prolog/debuggery/first.pl"/>
+									<F N="prologmud_server/.local/share/swi-prolog/pack/logicmoo_utils/prolog/debuggery/frames.pl"/>
+									<F N="prologmud_server/.local/share/swi-prolog/pack/logicmoo_utils/prolog/debuggery/rtrace.pl"/>
+									<F N="prologmud_server/.local/share/swi-prolog/pack/logicmoo_utils/prolog/debuggery/sanity_tests.pl"/>
+									<F N="prologmud_server/.local/share/swi-prolog/pack/logicmoo_utils/prolog/debuggery/sanity_tests.plt"/>
+									<F N="prologmud_server/.local/share/swi-prolog/pack/logicmoo_utils/prolog/debuggery/ucatch.pl"/>
+									<F N="prologmud_server/.local/share/swi-prolog/pack/logicmoo_utils/prolog/debuggery/ucatch_unused_rtrace.unused"/>
+									<F N="prologmud_server/.local/share/swi-prolog/pack/logicmoo_utils/prolog/debuggery/util_supp.extra"/>
+								</Folder>
+								<Folder Name="lm_utils">
+									<F N="prologmud_server/.local/share/swi-prolog/pack/logicmoo_utils/prolog/lm_utils/each_call_cleanup.pl"/>
+									<F N="prologmud_server/.local/share/swi-prolog/pack/logicmoo_utils/prolog/lm_utils/hook_hybrid.pl"/>
+									<F N="prologmud_server/.local/share/swi-prolog/pack/logicmoo_utils/prolog/lm_utils/listing_vars.pl"/>
+									<F N="prologmud_server/.local/share/swi-prolog/pack/logicmoo_utils/prolog/lm_utils/logicmoo_util_common.pl"/>
+									<F N="prologmud_server/.local/share/swi-prolog/pack/logicmoo_utils/prolog/lm_utils/logicmoo_util_strings.pl"/>
+									<F N="prologmud_server/.local/share/swi-prolog/pack/logicmoo_utils/prolog/lm_utils/loop_check.pl"/>
+								</Folder>
+								<Folder Name="logicmoo">
+									<F N="prologmud_server/.local/share/swi-prolog/pack/logicmoo_utils/prolog/logicmoo/attvar_reader.pl"/>
+									<F N="prologmud_server/.local/share/swi-prolog/pack/logicmoo_utils/prolog/logicmoo/attvar_serializer.next"/>
+									<F N="prologmud_server/.local/share/swi-prolog/pack/logicmoo_utils/prolog/logicmoo/attvar_serializer.pl"/>
+									<F N="prologmud_server/.local/share/swi-prolog/pack/logicmoo_utils/prolog/logicmoo/butterfly_console.pl"/>
+									<F N="prologmud_server/.local/share/swi-prolog/pack/logicmoo_utils/prolog/logicmoo/butterfly_term_html.pl"/>
+									<F N="prologmud_server/.local/share/swi-prolog/pack/logicmoo_utils/prolog/logicmoo/call_from_module.pl"/>
+									<F N="prologmud_server/.local/share/swi-prolog/pack/logicmoo_utils/prolog/logicmoo/call_reorder.pl"/>
+									<F N="prologmud_server/.local/share/swi-prolog/pack/logicmoo_utils/prolog/logicmoo/clause_attvars.pl"/>
+									<F N="prologmud_server/.local/share/swi-prolog/pack/logicmoo_utils/prolog/logicmoo/dcg_meta.pl"/>
+									<F N="prologmud_server/.local/share/swi-prolog/pack/logicmoo_utils/prolog/logicmoo/dcg_must.pl"/>
+									<F N="prologmud_server/.local/share/swi-prolog/pack/logicmoo_utils/prolog/logicmoo/each_call.pl"/>
+									<F N="prologmud_server/.local/share/swi-prolog/pack/logicmoo_utils/prolog/logicmoo/filestreams.pl"/>
+									<F N="prologmud_server/.local/share/swi-prolog/pack/logicmoo_utils/prolog/logicmoo/filesystem.pl"/>
+									<F N="prologmud_server/.local/share/swi-prolog/pack/logicmoo_utils/prolog/logicmoo/lockable_vars.pl"/>
+									<F N="prologmud_server/.local/share/swi-prolog/pack/logicmoo_utils/prolog/logicmoo/loop_check_unused.txt"/>
+									<F N="prologmud_server/.local/share/swi-prolog/pack/logicmoo_utils/prolog/logicmoo/misc_terms.pl"/>
+									<F N="prologmud_server/.local/share/swi-prolog/pack/logicmoo_utils/prolog/logicmoo/nb_set_term.pl"/>
+									<F N="prologmud_server/.local/share/swi-prolog/pack/logicmoo_utils/prolog/logicmoo/no_loops.pl"/>
+									<F N="prologmud_server/.local/share/swi-prolog/pack/logicmoo_utils/prolog/logicmoo/no_repeats.pl"/>
+									<F N="prologmud_server/.local/share/swi-prolog/pack/logicmoo_utils/prolog/logicmoo/old_loop_check.pl"/>
+									<F N="prologmud_server/.local/share/swi-prolog/pack/logicmoo_utils/prolog/logicmoo/portray_vars.pl"/>
+									<F N="prologmud_server/.local/share/swi-prolog/pack/logicmoo_utils/prolog/logicmoo/predicate_inheritance.pl"/>
+									<F N="prologmud_server/.local/share/swi-prolog/pack/logicmoo_utils/prolog/logicmoo/pretty_clauses.pl"/>
+									<F N="prologmud_server/.local/share/swi-prolog/pack/logicmoo_utils/prolog/logicmoo/README.dcg.md"/>
+									<F N="prologmud_server/.local/share/swi-prolog/pack/logicmoo_utils/prolog/logicmoo/redo_locally.pl"/>
+									<F N="prologmud_server/.local/share/swi-prolog/pack/logicmoo_utils/prolog/logicmoo/subclause_expansion.pl"/>
+									<F N="prologmud_server/.local/share/swi-prolog/pack/logicmoo_utils/prolog/logicmoo/test_tcf.pl"/>
+									<F N="prologmud_server/.local/share/swi-prolog/pack/logicmoo_utils/prolog/logicmoo/toplevel_variable_names.pl"/>
+									<F N="prologmud_server/.local/share/swi-prolog/pack/logicmoo_utils/prolog/logicmoo/util_bb_env.pl"/>
+									<F N="prologmud_server/.local/share/swi-prolog/pack/logicmoo_utils/prolog/logicmoo/util_bb_frame.pl"/>
+									<F N="prologmud_server/.local/share/swi-prolog/pack/logicmoo_utils/prolog/logicmoo/util_bb_gvar.pl"/>
+									<F N="prologmud_server/.local/share/swi-prolog/pack/logicmoo_utils/prolog/logicmoo/util_ctx_frame.pl"/>
+									<F N="prologmud_server/.local/share/swi-prolog/pack/logicmoo_utils/prolog/logicmoo/util_dlist.pl"/>
+									<F N="prologmud_server/.local/share/swi-prolog/pack/logicmoo_utils/prolog/logicmoo/util_dra.pl"/>
+									<F N="prologmud_server/.local/share/swi-prolog/pack/logicmoo_utils/prolog/logicmoo/util_engines.pl"/>
+									<F N="prologmud_server/.local/share/swi-prolog/pack/logicmoo_utils/prolog/logicmoo/util_strings.pl"/>
+									<F N="prologmud_server/.local/share/swi-prolog/pack/logicmoo_utils/prolog/logicmoo/util_structs.pl"/>
+									<F N="prologmud_server/.local/share/swi-prolog/pack/logicmoo_utils/prolog/logicmoo/util_varnames.pl"/>
+									<F N="prologmud_server/.local/share/swi-prolog/pack/logicmoo_utils/prolog/logicmoo/virtualize_source.pl"/>
+									<F N="prologmud_server/.local/share/swi-prolog/pack/logicmoo_utils/prolog/logicmoo/with_no_x.pl"/>
+									<F N="prologmud_server/.local/share/swi-prolog/pack/logicmoo_utils/prolog/logicmoo/xml_reader.pl"/>
+								</Folder>
+								<Folder Name="multivar">
+									<Folder Name="t">
+										<F N="prologmud_server/.local/share/swi-prolog/pack/logicmoo_utils/prolog/multivar/t/sanity_tests.pl"/>
+									</Folder>
+									<F N="prologmud_server/.local/share/swi-prolog/pack/logicmoo_utils/prolog/multivar/.gitignore"/>
+									<F N="prologmud_server/.local/share/swi-prolog/pack/logicmoo_utils/prolog/multivar/answer_sources.pl"/>
+									<F N="prologmud_server/.local/share/swi-prolog/pack/logicmoo_utils/prolog/multivar/dmiles.patch"/>
+									<F N="prologmud_server/.local/share/swi-prolog/pack/logicmoo_utils/prolog/multivar/LICENSE.md"/>
+									<F N="prologmud_server/.local/share/swi-prolog/pack/logicmoo_utils/prolog/multivar/neg.pl"/>
+									<F N="prologmud_server/.local/share/swi-prolog/pack/logicmoo_utils/prolog/multivar/README.md"/>
+									<F N="prologmud_server/.local/share/swi-prolog/pack/logicmoo_utils/prolog/multivar/stlc.pl"/>
+									<F N="prologmud_server/.local/share/swi-prolog/pack/logicmoo_utils/prolog/multivar/subvar_inherit.pl"/>
+									<F N="prologmud_server/.local/share/swi-prolog/pack/logicmoo_utils/prolog/multivar/vhar.pl"/>
+									<F N="prologmud_server/.local/share/swi-prolog/pack/logicmoo_utils/prolog/multivar/vprox.pl"/>
+								</Folder>
+								<Folder Name="xlisting">
+									<Folder Name="pixmaps">
+										<Folder Name="popupmenu">
+											<Folder Name="scripts">
+												<F N="prologmud_server/.local/share/swi-prolog/pack/logicmoo_utils/prolog/xlisting/pixmaps/popupmenu/scripts/Example.js"/>
+												<F N="prologmud_server/.local/share/swi-prolog/pack/logicmoo_utils/prolog/xlisting/pixmaps/popupmenu/scripts/Popup-plugin.js"/>
+											</Folder>
+											<Folder Name="styles">
+												<F N="prologmud_server/.local/share/swi-prolog/pack/logicmoo_utils/prolog/xlisting/pixmaps/popupmenu/styles/Example.css"/>
+												<F N="prologmud_server/.local/share/swi-prolog/pack/logicmoo_utils/prolog/xlisting/pixmaps/popupmenu/styles/Popup-plugin.css"/>
+											</Folder>
+											<F N="prologmud_server/.local/share/swi-prolog/pack/logicmoo_utils/prolog/xlisting/pixmaps/popupmenu/ExamplePopups.html"/>
+											<F N="prologmud_server/.local/share/swi-prolog/pack/logicmoo_utils/prolog/xlisting/pixmaps/popupmenu/Home Google Icon.png"/>
+											<F N="prologmud_server/.local/share/swi-prolog/pack/logicmoo_utils/prolog/xlisting/pixmaps/popupmenu/Home Icon.png"/>
+										</Folder>
+										<Folder Name="selected">
+											<Folder Name="css">
+												<F N="prologmud_server/.local/share/swi-prolog/pack/logicmoo_utils/prolog/xlisting/pixmaps/selected/css/example.css"/>
+												<F N="prologmud_server/.local/share/swi-prolog/pack/logicmoo_utils/prolog/xlisting/pixmaps/selected/css/social.selection.css"/>
+											</Folder>
+											<Folder Name="example">
+												<F N="prologmud_server/.local/share/swi-prolog/pack/logicmoo_utils/prolog/xlisting/pixmaps/selected/example/index.html"/>
+											</Folder>
+											<Folder Name="img">
+												<F N="prologmud_server/.local/share/swi-prolog/pack/logicmoo_utils/prolog/xlisting/pixmaps/selected/img/ask.svg"/>
+												<F N="prologmud_server/.local/share/swi-prolog/pack/logicmoo_utils/prolog/xlisting/pixmaps/selected/img/baidu.svg"/>
+												<F N="prologmud_server/.local/share/swi-prolog/pack/logicmoo_utils/prolog/xlisting/pixmaps/selected/img/bing.svg"/>
+												<F N="prologmud_server/.local/share/swi-prolog/pack/logicmoo_utils/prolog/xlisting/pixmaps/selected/img/blogger.svg"/>
+												<F N="prologmud_server/.local/share/swi-prolog/pack/logicmoo_utils/prolog/xlisting/pixmaps/selected/img/codepen.svg"/>
+												<F N="prologmud_server/.local/share/swi-prolog/pack/logicmoo_utils/prolog/xlisting/pixmaps/selected/img/digg.svg"/>
+												<F N="prologmud_server/.local/share/swi-prolog/pack/logicmoo_utils/prolog/xlisting/pixmaps/selected/img/discord.svg"/>
+												<F N="prologmud_server/.local/share/swi-prolog/pack/logicmoo_utils/prolog/xlisting/pixmaps/selected/img/douban.svg"/>
+												<F N="prologmud_server/.local/share/swi-prolog/pack/logicmoo_utils/prolog/xlisting/pixmaps/selected/img/duckduckgo.svg"/>
+												<F N="prologmud_server/.local/share/swi-prolog/pack/logicmoo_utils/prolog/xlisting/pixmaps/selected/img/evernote.svg"/>
+												<F N="prologmud_server/.local/share/swi-prolog/pack/logicmoo_utils/prolog/xlisting/pixmaps/selected/img/facebook.svg"/>
+												<F N="prologmud_server/.local/share/swi-prolog/pack/logicmoo_utils/prolog/xlisting/pixmaps/selected/img/github.svg"/>
+												<F N="prologmud_server/.local/share/swi-prolog/pack/logicmoo_utils/prolog/xlisting/pixmaps/selected/img/gmail.svg"/>
+												<F N="prologmud_server/.local/share/swi-prolog/pack/logicmoo_utils/prolog/xlisting/pixmaps/selected/img/google.svg"/>
+												<F N="prologmud_server/.local/share/swi-prolog/pack/logicmoo_utils/prolog/xlisting/pixmaps/selected/img/instagram.svg"/>
+												<F N="prologmud_server/.local/share/swi-prolog/pack/logicmoo_utils/prolog/xlisting/pixmaps/selected/img/line.svg"/>
+												<F N="prologmud_server/.local/share/swi-prolog/pack/logicmoo_utils/prolog/xlisting/pixmaps/selected/img/linkedin.svg"/>
+												<F N="prologmud_server/.local/share/swi-prolog/pack/logicmoo_utils/prolog/xlisting/pixmaps/selected/img/patreon.svg"/>
+												<F N="prologmud_server/.local/share/swi-prolog/pack/logicmoo_utils/prolog/xlisting/pixmaps/selected/img/pinterest.svg"/>
+												<F N="prologmud_server/.local/share/swi-prolog/pack/logicmoo_utils/prolog/xlisting/pixmaps/selected/img/qrcode.svg"/>
+												<F N="prologmud_server/.local/share/swi-prolog/pack/logicmoo_utils/prolog/xlisting/pixmaps/selected/img/qshare.svg"/>
+												<F N="prologmud_server/.local/share/swi-prolog/pack/logicmoo_utils/prolog/xlisting/pixmaps/selected/img/qzone.svg"/>
+												<F N="prologmud_server/.local/share/swi-prolog/pack/logicmoo_utils/prolog/xlisting/pixmaps/selected/img/reddit.svg"/>
+												<F N="prologmud_server/.local/share/swi-prolog/pack/logicmoo_utils/prolog/xlisting/pixmaps/selected/img/renren.svg"/>
+												<F N="prologmud_server/.local/share/swi-prolog/pack/logicmoo_utils/prolog/xlisting/pixmaps/selected/img/search.svg"/>
+												<F N="prologmud_server/.local/share/swi-prolog/pack/logicmoo_utils/prolog/xlisting/pixmaps/selected/img/share.svg"/>
+												<F N="prologmud_server/.local/share/swi-prolog/pack/logicmoo_utils/prolog/xlisting/pixmaps/selected/img/sms.svg"/>
+												<F N="prologmud_server/.local/share/swi-prolog/pack/logicmoo_utils/prolog/xlisting/pixmaps/selected/img/soundcloud.svg"/>
+												<F N="prologmud_server/.local/share/swi-prolog/pack/logicmoo_utils/prolog/xlisting/pixmaps/selected/img/stackoverflow.svg"/>
+												<F N="prologmud_server/.local/share/swi-prolog/pack/logicmoo_utils/prolog/xlisting/pixmaps/selected/img/telegram.svg"/>
+												<F N="prologmud_server/.local/share/swi-prolog/pack/logicmoo_utils/prolog/xlisting/pixmaps/selected/img/tumblr.svg"/>
+												<F N="prologmud_server/.local/share/swi-prolog/pack/logicmoo_utils/prolog/xlisting/pixmaps/selected/img/twitch.svg"/>
+												<F N="prologmud_server/.local/share/swi-prolog/pack/logicmoo_utils/prolog/xlisting/pixmaps/selected/img/twitter.svg"/>
+												<F N="prologmud_server/.local/share/swi-prolog/pack/logicmoo_utils/prolog/xlisting/pixmaps/selected/img/visit.svg"/>
+												<F N="prologmud_server/.local/share/swi-prolog/pack/logicmoo_utils/prolog/xlisting/pixmaps/selected/img/wechat.svg"/>
+												<F N="prologmud_server/.local/share/swi-prolog/pack/logicmoo_utils/prolog/xlisting/pixmaps/selected/img/weibo.svg"/>
+												<F N="prologmud_server/.local/share/swi-prolog/pack/logicmoo_utils/prolog/xlisting/pixmaps/selected/img/whatsapp.svg"/>
+												<F N="prologmud_server/.local/share/swi-prolog/pack/logicmoo_utils/prolog/xlisting/pixmaps/selected/img/wikipedia.svg"/>
+												<F N="prologmud_server/.local/share/swi-prolog/pack/logicmoo_utils/prolog/xlisting/pixmaps/selected/img/wolframalpha.svg"/>
+												<F N="prologmud_server/.local/share/swi-prolog/pack/logicmoo_utils/prolog/xlisting/pixmaps/selected/img/wordpress.svg"/>
+												<F N="prologmud_server/.local/share/swi-prolog/pack/logicmoo_utils/prolog/xlisting/pixmaps/selected/img/xing.svg"/>
+												<F N="prologmud_server/.local/share/swi-prolog/pack/logicmoo_utils/prolog/xlisting/pixmaps/selected/img/yahoo.svg"/>
+												<F N="prologmud_server/.local/share/swi-prolog/pack/logicmoo_utils/prolog/xlisting/pixmaps/selected/img/yandex.svg"/>
+												<F N="prologmud_server/.local/share/swi-prolog/pack/logicmoo_utils/prolog/xlisting/pixmaps/selected/img/yelp.svg"/>
+												<F N="prologmud_server/.local/share/swi-prolog/pack/logicmoo_utils/prolog/xlisting/pixmaps/selected/img/youtube.svg"/>
+											</Folder>
+											<Folder Name="js">
+												<F N="prologmud_server/.local/share/swi-prolog/pack/logicmoo_utils/prolog/xlisting/pixmaps/selected/js/social.selection.js"/>
+											</Folder>
+											<F N="prologmud_server/.local/share/swi-prolog/pack/logicmoo_utils/prolog/xlisting/pixmaps/selected/README.md"/>
+										</Folder>
+										<F N="prologmud_server/.local/share/swi-prolog/pack/logicmoo_utils/prolog/xlisting/pixmaps/1pixel.gif"/>
+										<F N="prologmud_server/.local/share/swi-prolog/pack/logicmoo_utils/prolog/xlisting/pixmaps/alpha-browser-disabled.gif"/>
+										<F N="prologmud_server/.local/share/swi-prolog/pack/logicmoo_utils/prolog/xlisting/pixmaps/alpha-browser.gif"/>
+										<F N="prologmud_server/.local/share/swi-prolog/pack/logicmoo_utils/prolog/xlisting/pixmaps/alpha.gif"/>
+										<F N="prologmud_server/.local/share/swi-prolog/pack/logicmoo_utils/prolog/xlisting/pixmaps/arrowdown.gif"/>
+										<F N="prologmud_server/.local/share/swi-prolog/pack/logicmoo_utils/prolog/xlisting/pixmaps/arrowup.gif"/>
+										<F N="prologmud_server/.local/share/swi-prolog/pack/logicmoo_utils/prolog/xlisting/pixmaps/assert-tool.gif"/>
+										<F N="prologmud_server/.local/share/swi-prolog/pack/logicmoo_utils/prolog/xlisting/pixmaps/at_work.gif"/>
+										<F N="prologmud_server/.local/share/swi-prolog/pack/logicmoo_utils/prolog/xlisting/pixmaps/back.gif"/>
+										<F N="prologmud_server/.local/share/swi-prolog/pack/logicmoo_utils/prolog/xlisting/pixmaps/beta.gif"/>
+										<F N="prologmud_server/.local/share/swi-prolog/pack/logicmoo_utils/prolog/xlisting/pixmaps/bl_menu.gif"/>
+										<F N="prologmud_server/.local/share/swi-prolog/pack/logicmoo_utils/prolog/xlisting/pixmaps/bl_sdi.gif"/>
+										<F N="prologmud_server/.local/share/swi-prolog/pack/logicmoo_utils/prolog/xlisting/pixmaps/blank.gif"/>
+										<F N="prologmud_server/.local/share/swi-prolog/pack/logicmoo_utils/prolog/xlisting/pixmaps/blue.gif"/>
+										<F N="prologmud_server/.local/share/swi-prolog/pack/logicmoo_utils/prolog/xlisting/pixmaps/brick_bk.gif"/>
+										<F N="prologmud_server/.local/share/swi-prolog/pack/logicmoo_utils/prolog/xlisting/pixmaps/bug_btn_s.gif"/>
+										<F N="prologmud_server/.local/share/swi-prolog/pack/logicmoo_utils/prolog/xlisting/pixmaps/bug_btn_s.png"/>
+										<F N="prologmud_server/.local/share/swi-prolog/pack/logicmoo_utils/prolog/xlisting/pixmaps/bullet.gif"/>
+										<F N="prologmud_server/.local/share/swi-prolog/pack/logicmoo_utils/prolog/xlisting/pixmaps/caution.gif"/>
+										<F N="prologmud_server/.local/share/swi-prolog/pack/logicmoo_utils/prolog/xlisting/pixmaps/celtic_bar.gif"/>
+										<F N="prologmud_server/.local/share/swi-prolog/pack/logicmoo_utils/prolog/xlisting/pixmaps/clumps.gif"/>
+										<F N="prologmud_server/.local/share/swi-prolog/pack/logicmoo_utils/prolog/xlisting/pixmaps/compass.gif"/>
+										<F N="prologmud_server/.local/share/swi-prolog/pack/logicmoo_utils/prolog/xlisting/pixmaps/compose-tool.gif"/>
+										<F N="prologmud_server/.local/share/swi-prolog/pack/logicmoo_utils/prolog/xlisting/pixmaps/create-tool.gif"/>
+										<F N="prologmud_server/.local/share/swi-prolog/pack/logicmoo_utils/prolog/xlisting/pixmaps/crossbones.gif"/>
+										<F N="prologmud_server/.local/share/swi-prolog/pack/logicmoo_utils/prolog/xlisting/pixmaps/cy_menu.gif"/>
+										<F N="prologmud_server/.local/share/swi-prolog/pack/logicmoo_utils/prolog/xlisting/pixmaps/cy_sdi.gif"/>
+										<F N="prologmud_server/.local/share/swi-prolog/pack/logicmoo_utils/prolog/xlisting/pixmaps/cyan.gif"/>
+										<F N="prologmud_server/.local/share/swi-prolog/pack/logicmoo_utils/prolog/xlisting/pixmaps/cyanstar.gif"/>
+										<F N="prologmud_server/.local/share/swi-prolog/pack/logicmoo_utils/prolog/xlisting/pixmaps/cyc-arrow-down.gif"/>
+										<F N="prologmud_server/.local/share/swi-prolog/pack/logicmoo_utils/prolog/xlisting/pixmaps/cyc-arrow-left.gif"/>
+										<F N="prologmud_server/.local/share/swi-prolog/pack/logicmoo_utils/prolog/xlisting/pixmaps/cyc-arrow-right.gif"/>
+										<F N="prologmud_server/.local/share/swi-prolog/pack/logicmoo_utils/prolog/xlisting/pixmaps/cyc-arrow-up.gif"/>
+										<F N="prologmud_server/.local/share/swi-prolog/pack/logicmoo_utils/prolog/xlisting/pixmaps/cyc-ball-sm.gif"/>
+										<F N="prologmud_server/.local/share/swi-prolog/pack/logicmoo_utils/prolog/xlisting/pixmaps/cyc-down-triangle-violet.gif"/>
+										<F N="prologmud_server/.local/share/swi-prolog/pack/logicmoo_utils/prolog/xlisting/pixmaps/cyc-left-triangle-violet.gif"/>
+										<F N="prologmud_server/.local/share/swi-prolog/pack/logicmoo_utils/prolog/xlisting/pixmaps/cyc-logo-3-t-orig.gif"/>
+										<F N="prologmud_server/.local/share/swi-prolog/pack/logicmoo_utils/prolog/xlisting/pixmaps/cyc-logo-3-t.gif"/>
+										<F N="prologmud_server/.local/share/swi-prolog/pack/logicmoo_utils/prolog/xlisting/pixmaps/cyc-logo-5-t.gif"/>
+										<F N="prologmud_server/.local/share/swi-prolog/pack/logicmoo_utils/prolog/xlisting/pixmaps/cyc-logo-50-t.gif"/>
+										<F N="prologmud_server/.local/share/swi-prolog/pack/logicmoo_utils/prolog/xlisting/pixmaps/cyc-logo-tiny.gif"/>
+										<F N="prologmud_server/.local/share/swi-prolog/pack/logicmoo_utils/prolog/xlisting/pixmaps/cyc-logo-violet-16.gif"/>
+										<F N="prologmud_server/.local/share/swi-prolog/pack/logicmoo_utils/prolog/xlisting/pixmaps/cyc-logo-violet-60.gif"/>
+										<F N="prologmud_server/.local/share/swi-prolog/pack/logicmoo_utils/prolog/xlisting/pixmaps/cyc-no-triangle-violet.gif"/>
+										<F N="prologmud_server/.local/share/swi-prolog/pack/logicmoo_utils/prolog/xlisting/pixmaps/cyc-right-triangle-violet.gif"/>
+										<F N="prologmud_server/.local/share/swi-prolog/pack/logicmoo_utils/prolog/xlisting/pixmaps/cyc-up-triangle-violet.gif"/>
+										<F N="prologmud_server/.local/share/swi-prolog/pack/logicmoo_utils/prolog/xlisting/pixmaps/cycle.gif"/>
+										<F N="prologmud_server/.local/share/swi-prolog/pack/logicmoo_utils/prolog/xlisting/pixmaps/doc-tool.gif"/>
+										<F N="prologmud_server/.local/share/swi-prolog/pack/logicmoo_utils/prolog/xlisting/pixmaps/down-triangle-blue.gif"/>
+										<F N="prologmud_server/.local/share/swi-prolog/pack/logicmoo_utils/prolog/xlisting/pixmaps/facet-browser-disabled.gif"/>
+										<F N="prologmud_server/.local/share/swi-prolog/pack/logicmoo_utils/prolog/xlisting/pixmaps/facet-browser.gif"/>
+										<F N="prologmud_server/.local/share/swi-prolog/pack/logicmoo_utils/prolog/xlisting/pixmaps/facets.gif"/>
+										<F N="prologmud_server/.local/share/swi-prolog/pack/logicmoo_utils/prolog/xlisting/pixmaps/fact-editor-disabled.gif"/>
+										<F N="prologmud_server/.local/share/swi-prolog/pack/logicmoo_utils/prolog/xlisting/pixmaps/fact-editor.gif"/>
+										<F N="prologmud_server/.local/share/swi-prolog/pack/logicmoo_utils/prolog/xlisting/pixmaps/favicon.ico"/>
+										<F N="prologmud_server/.local/share/swi-prolog/pack/logicmoo_utils/prolog/xlisting/pixmaps/gr_menu.gif"/>
+										<F N="prologmud_server/.local/share/swi-prolog/pack/logicmoo_utils/prolog/xlisting/pixmaps/gr_plus.gif"/>
+										<F N="prologmud_server/.local/share/swi-prolog/pack/logicmoo_utils/prolog/xlisting/pixmaps/gr_sdi.gif"/>
+										<F N="prologmud_server/.local/share/swi-prolog/pack/logicmoo_utils/prolog/xlisting/pixmaps/gray.gif"/>
+										<F N="prologmud_server/.local/share/swi-prolog/pack/logicmoo_utils/prolog/xlisting/pixmaps/green.gif"/>
+										<F N="prologmud_server/.local/share/swi-prolog/pack/logicmoo_utils/prolog/xlisting/pixmaps/green_yellow.gif"/>
+										<F N="prologmud_server/.local/share/swi-prolog/pack/logicmoo_utils/prolog/xlisting/pixmaps/grey.gif"/>
+										<F N="prologmud_server/.local/share/swi-prolog/pack/logicmoo_utils/prolog/xlisting/pixmaps/grnstar.gif"/>
+										<F N="prologmud_server/.local/share/swi-prolog/pack/logicmoo_utils/prolog/xlisting/pixmaps/help_btn_s.gif"/>
+										<F N="prologmud_server/.local/share/swi-prolog/pack/logicmoo_utils/prolog/xlisting/pixmaps/hierarchy-browser-disabled.gif"/>
+										<F N="prologmud_server/.local/share/swi-prolog/pack/logicmoo_utils/prolog/xlisting/pixmaps/hierarchy-browser.gif"/>
+										<F N="prologmud_server/.local/share/swi-prolog/pack/logicmoo_utils/prolog/xlisting/pixmaps/history-tool.gif"/>
+										<F N="prologmud_server/.local/share/swi-prolog/pack/logicmoo_utils/prolog/xlisting/pixmaps/index-browser-disabled.gif"/>
+										<F N="prologmud_server/.local/share/swi-prolog/pack/logicmoo_utils/prolog/xlisting/pixmaps/index-browser.gif"/>
+										<F N="prologmud_server/.local/share/swi-prolog/pack/logicmoo_utils/prolog/xlisting/pixmaps/lightbulb.gif"/>
+										<F N="prologmud_server/.local/share/swi-prolog/pack/logicmoo_utils/prolog/xlisting/pixmaps/lightgrey.gif"/>
+										<F N="prologmud_server/.local/share/swi-prolog/pack/logicmoo_utils/prolog/xlisting/pixmaps/lightning.gif"/>
+										<F N="prologmud_server/.local/share/swi-prolog/pack/logicmoo_utils/prolog/xlisting/pixmaps/logo.gif"/>
+										<F N="prologmud_server/.local/share/swi-prolog/pack/logicmoo_utils/prolog/xlisting/pixmaps/logoText-gray.gif"/>
+										<F N="prologmud_server/.local/share/swi-prolog/pack/logicmoo_utils/prolog/xlisting/pixmaps/logoText.gif"/>
+										<F N="prologmud_server/.local/share/swi-prolog/pack/logicmoo_utils/prolog/xlisting/pixmaps/med-clumps.gif"/>
+										<F N="prologmud_server/.local/share/swi-prolog/pack/logicmoo_utils/prolog/xlisting/pixmaps/mini-logo.gif"/>
+										<F N="prologmud_server/.local/share/swi-prolog/pack/logicmoo_utils/prolog/xlisting/pixmaps/minus.gif"/>
+										<F N="prologmud_server/.local/share/swi-prolog/pack/logicmoo_utils/prolog/xlisting/pixmaps/naut.gif"/>
+										<F N="prologmud_server/.local/share/swi-prolog/pack/logicmoo_utils/prolog/xlisting/pixmaps/new.gif"/>
+										<F N="prologmud_server/.local/share/swi-prolog/pack/logicmoo_utils/prolog/xlisting/pixmaps/nonwff.gif"/>
+										<F N="prologmud_server/.local/share/swi-prolog/pack/logicmoo_utils/prolog/xlisting/pixmaps/note.gif"/>
+										<F N="prologmud_server/.local/share/swi-prolog/pack/logicmoo_utils/prolog/xlisting/pixmaps/null.gif"/>
+										<F N="prologmud_server/.local/share/swi-prolog/pack/logicmoo_utils/prolog/xlisting/pixmaps/orange.gif"/>
+										<F N="prologmud_server/.local/share/swi-prolog/pack/logicmoo_utils/prolog/xlisting/pixmaps/pi_sdi.gif"/>
+										<F N="prologmud_server/.local/share/swi-prolog/pack/logicmoo_utils/prolog/xlisting/pixmaps/pink.gif"/>
+										<F N="prologmud_server/.local/share/swi-prolog/pack/logicmoo_utils/prolog/xlisting/pixmaps/plus-green.gif"/>
+										<F N="prologmud_server/.local/share/swi-prolog/pack/logicmoo_utils/prolog/xlisting/pixmaps/plus-purple.gif"/>
+										<F N="prologmud_server/.local/share/swi-prolog/pack/logicmoo_utils/prolog/xlisting/pixmaps/plus-yellow.gif"/>
+										<F N="prologmud_server/.local/share/swi-prolog/pack/logicmoo_utils/prolog/xlisting/pixmaps/plus.gif"/>
+										<F N="prologmud_server/.local/share/swi-prolog/pack/logicmoo_utils/prolog/xlisting/pixmaps/purple.gif"/>
+										<F N="prologmud_server/.local/share/swi-prolog/pack/logicmoo_utils/prolog/xlisting/pixmaps/query-library-tool.gif"/>
+										<F N="prologmud_server/.local/share/swi-prolog/pack/logicmoo_utils/prolog/xlisting/pixmaps/query-tool.gif"/>
+										<F N="prologmud_server/.local/share/swi-prolog/pack/logicmoo_utils/prolog/xlisting/pixmaps/quest_mark.gif"/>
+										<F N="prologmud_server/.local/share/swi-prolog/pack/logicmoo_utils/prolog/xlisting/pixmaps/red.gif"/>
+										<F N="prologmud_server/.local/share/swi-prolog/pack/logicmoo_utils/prolog/xlisting/pixmaps/red_diam.gif"/>
+										<F N="prologmud_server/.local/share/swi-prolog/pack/logicmoo_utils/prolog/xlisting/pixmaps/redcross.gif"/>
+										<F N="prologmud_server/.local/share/swi-prolog/pack/logicmoo_utils/prolog/xlisting/pixmaps/right-triangle-blue.gif"/>
+										<F N="prologmud_server/.local/share/swi-prolog/pack/logicmoo_utils/prolog/xlisting/pixmaps/scales.gif"/>
+										<F N="prologmud_server/.local/share/swi-prolog/pack/logicmoo_utils/prolog/xlisting/pixmaps/search_tree.gif"/>
+										<F N="prologmud_server/.local/share/swi-prolog/pack/logicmoo_utils/prolog/xlisting/pixmaps/sigmaSymbol-gray.gif"/>
+										<F N="prologmud_server/.local/share/swi-prolog/pack/logicmoo_utils/prolog/xlisting/pixmaps/sigmaSymbol.gif"/>
+										<F N="prologmud_server/.local/share/swi-prolog/pack/logicmoo_utils/prolog/xlisting/pixmaps/skull.gif"/>
+										<F N="prologmud_server/.local/share/swi-prolog/pack/logicmoo_utils/prolog/xlisting/pixmaps/skull24.gif"/>
+										<F N="prologmud_server/.local/share/swi-prolog/pack/logicmoo_utils/prolog/xlisting/pixmaps/sm-clumps.gif"/>
+										<F N="prologmud_server/.local/share/swi-prolog/pack/logicmoo_utils/prolog/xlisting/pixmaps/sm_gr_plus.gif"/>
+										<F N="prologmud_server/.local/share/swi-prolog/pack/logicmoo_utils/prolog/xlisting/pixmaps/sm_pr_plus.gif"/>
+										<F N="prologmud_server/.local/share/swi-prolog/pack/logicmoo_utils/prolog/xlisting/pixmaps/sm_yw_plus.gif"/>
+										<F N="prologmud_server/.local/share/swi-prolog/pack/logicmoo_utils/prolog/xlisting/pixmaps/star.gif"/>
+										<F N="prologmud_server/.local/share/swi-prolog/pack/logicmoo_utils/prolog/xlisting/pixmaps/subjects-browser-disabled.gif"/>
+										<F N="prologmud_server/.local/share/swi-prolog/pack/logicmoo_utils/prolog/xlisting/pixmaps/subjects-browser.gif"/>
+										<F N="prologmud_server/.local/share/swi-prolog/pack/logicmoo_utils/prolog/xlisting/pixmaps/tools.gif"/>
+										<F N="prologmud_server/.local/share/swi-prolog/pack/logicmoo_utils/prolog/xlisting/pixmaps/trans.gif"/>
+										<F N="prologmud_server/.local/share/swi-prolog/pack/logicmoo_utils/prolog/xlisting/pixmaps/tree.gif"/>
+										<F N="prologmud_server/.local/share/swi-prolog/pack/logicmoo_utils/prolog/xlisting/pixmaps/up.gif"/>
+										<F N="prologmud_server/.local/share/swi-prolog/pack/logicmoo_utils/prolog/xlisting/pixmaps/warning.gif"/>
+										<F N="prologmud_server/.local/share/swi-prolog/pack/logicmoo_utils/prolog/xlisting/pixmaps/warning.nb.gif"/>
+										<F N="prologmud_server/.local/share/swi-prolog/pack/logicmoo_utils/prolog/xlisting/pixmaps/warning_btn_s.gif"/>
+										<F N="prologmud_server/.local/share/swi-prolog/pack/logicmoo_utils/prolog/xlisting/pixmaps/white.gif"/>
+										<F N="prologmud_server/.local/share/swi-prolog/pack/logicmoo_utils/prolog/xlisting/pixmaps/wnet.gif"/>
+										<F N="prologmud_server/.local/share/swi-prolog/pack/logicmoo_utils/prolog/xlisting/pixmaps/wordnet-browser-disabled.gif"/>
+										<F N="prologmud_server/.local/share/swi-prolog/pack/logicmoo_utils/prolog/xlisting/pixmaps/wordnet-browser.gif"/>
+										<F N="prologmud_server/.local/share/swi-prolog/pack/logicmoo_utils/prolog/xlisting/pixmaps/yellow.gif"/>
+										<F N="prologmud_server/.local/share/swi-prolog/pack/logicmoo_utils/prolog/xlisting/pixmaps/yellow_green.gif"/>
+										<F N="prologmud_server/.local/share/swi-prolog/pack/logicmoo_utils/prolog/xlisting/pixmaps/yl_menu.gif"/>
+										<F N="prologmud_server/.local/share/swi-prolog/pack/logicmoo_utils/prolog/xlisting/pixmaps/yl_sdi.gif"/>
+									</Folder>
+									<Folder Name="swish_lib">
+										<Folder Name="render">
+											<F N="prologmud_server/.local/share/swi-prolog/pack/logicmoo_utils/prolog/xlisting/swish_lib/render/html.pl"/>
+										</Folder>
+									</Folder>
+									<F N="prologmud_server/.local/share/swi-prolog/pack/logicmoo_utils/prolog/xlisting/mpred_pldoc_util.pl"/>
+									<F N="prologmud_server/.local/share/swi-prolog/pack/logicmoo_utils/prolog/xlisting/mpred_rdf.pl"/>
+									<F N="prologmud_server/.local/share/swi-prolog/pack/logicmoo_utils/prolog/xlisting/README.md"/>
+									<F N="prologmud_server/.local/share/swi-prolog/pack/logicmoo_utils/prolog/xlisting/xlisting_console.pl"/>
+									<F N="prologmud_server/.local/share/swi-prolog/pack/logicmoo_utils/prolog/xlisting/xlisting_hooks.pl"/>
+									<F N="prologmud_server/.local/share/swi-prolog/pack/logicmoo_utils/prolog/xlisting/xlisting_sanity_tests.plt"/>
+									<F N="prologmud_server/.local/share/swi-prolog/pack/logicmoo_utils/prolog/xlisting/xlisting_web.pfc.pl"/>
+									<F N="prologmud_server/.local/share/swi-prolog/pack/logicmoo_utils/prolog/xlisting/xlisting_web.pl"/>
+									<F N="prologmud_server/.local/share/swi-prolog/pack/logicmoo_utils/prolog/xlisting/xlisting_web_cm.pl"/>
+									<F N="prologmud_server/.local/share/swi-prolog/pack/logicmoo_utils/prolog/xlisting/xlisting_web_sanity_tests.pl"/>
+									<F N="prologmud_server/.local/share/swi-prolog/pack/logicmoo_utils/prolog/xlisting/xlisting_web_server.pl"/>
+								</Folder>
+								<F N="prologmud_server/.local/share/swi-prolog/pack/logicmoo_utils/prolog/assert_db_local.pl"/>
+								<F N="prologmud_server/.local/share/swi-prolog/pack/logicmoo_utils/prolog/each_call_cleanup.pl"/>
+								<F N="prologmud_server/.local/share/swi-prolog/pack/logicmoo_utils/prolog/file_scope.pl"/>
+								<F N="prologmud_server/.local/share/swi-prolog/pack/logicmoo_utils/prolog/hook_database.pl"/>
+								<F N="prologmud_server/.local/share/swi-prolog/pack/logicmoo_utils/prolog/hook_hybrid.pl"/>
+								<F N="prologmud_server/.local/share/swi-prolog/pack/logicmoo_utils/prolog/INDEX.pl"/>
+								<F N="prologmud_server/.local/share/swi-prolog/pack/logicmoo_utils/prolog/listing_vars.pl"/>
+								<F N="prologmud_server/.local/share/swi-prolog/pack/logicmoo_utils/prolog/logicmoo_common.pl"/>
+								<F N="prologmud_server/.local/share/swi-prolog/pack/logicmoo_utils/prolog/logicmoo_lib.pl"/>
+								<F N="prologmud_server/.local/share/swi-prolog/pack/logicmoo_utils/prolog/logicmoo_packs.pl"/>
+								<F N="prologmud_server/.local/share/swi-prolog/pack/logicmoo_utils/prolog/logicmoo_remote.pl"/>
+								<F N="prologmud_server/.local/share/swi-prolog/pack/logicmoo_utils/prolog/logicmoo_startup.pl"/>
+								<F N="prologmud_server/.local/share/swi-prolog/pack/logicmoo_utils/prolog/logicmoo_util_common.pl"/>
+								<F N="prologmud_server/.local/share/swi-prolog/pack/logicmoo_utils/prolog/logicmoo_util_strings.pl"/>
+								<F N="prologmud_server/.local/share/swi-prolog/pack/logicmoo_utils/prolog/logicmoo_utils.pl"/>
+								<F N="prologmud_server/.local/share/swi-prolog/pack/logicmoo_utils/prolog/logicmoo_utils_all.pl"/>
+								<F N="prologmud_server/.local/share/swi-prolog/pack/logicmoo_utils/prolog/loop_check.pl"/>
+								<F N="prologmud_server/.local/share/swi-prolog/pack/logicmoo_utils/prolog/multimodal_dcg.pl"/>
+								<F N="prologmud_server/.local/share/swi-prolog/pack/logicmoo_utils/prolog/multivar.pl"/>
+								<F N="prologmud_server/.local/share/swi-prolog/pack/logicmoo_utils/prolog/must_sanity.pl"/>
+								<F N="prologmud_server/.local/share/swi-prolog/pack/logicmoo_utils/prolog/must_trace.pl"/>
+								<F N="prologmud_server/.local/share/swi-prolog/pack/logicmoo_utils/prolog/script_files.pl"/>
+								<F N="prologmud_server/.local/share/swi-prolog/pack/logicmoo_utils/prolog/xlisting.pl"/>
+							</Folder>
+							<Folder Name="t">
+								<F N="prologmud_server/.local/share/swi-prolog/pack/logicmoo_utils/t/each_call_cleanup.plt"/>
+								<F N="prologmud_server/.local/share/swi-prolog/pack/logicmoo_utils/t/locally_sanity_tests.plt"/>
+								<F N="prologmud_server/.local/share/swi-prolog/pack/logicmoo_utils/t/loop_check_tests.plt"/>
+								<F N="prologmud_server/.local/share/swi-prolog/pack/logicmoo_utils/t/sanity_tests.pl"/>
+								<F N="prologmud_server/.local/share/swi-prolog/pack/logicmoo_utils/t/sanity_tests.plt2"/>
+								<F N="prologmud_server/.local/share/swi-prolog/pack/logicmoo_utils/t/sanity_tests_cav.plt"/>
+								<F N="prologmud_server/.local/share/swi-prolog/pack/logicmoo_utils/t/sce_sanity_tests.plt"/>
+								<F N="prologmud_server/.local/share/swi-prolog/pack/logicmoo_utils/t/test_no_repeats.plt"/>
+							</Folder>
+							<F N="prologmud_server/.local/share/swi-prolog/pack/logicmoo_utils/.gitattributes"/>
+							<F N="prologmud_server/.local/share/swi-prolog/pack/logicmoo_utils/.gitignore"/>
+							<F N="prologmud_server/.local/share/swi-prolog/pack/logicmoo_utils/.travis.yml"/>
+							<F N="prologmud_server/.local/share/swi-prolog/pack/logicmoo_utils/LICENSE.md"/>
+							<F N="prologmud_server/.local/share/swi-prolog/pack/logicmoo_utils/pack.pl"/>
+							<F N="prologmud_server/.local/share/swi-prolog/pack/logicmoo_utils/README.md"/>
+						</Folder>
+						<Folder Name="swicli">
+							<F N="prologmud_server/.local/share/swi-prolog/pack/swicli/make-windows.bat"/>
+						</Folder>
+						<Folder Name="swish">
+							<Folder Name="web">
+								<Folder Name="node_modules">
+									<Folder Name="ace">
+										<Folder Name="build">
+											<Folder Name="demo">
+												<Folder Name="kitchen-sink">
+													<Folder Name="docs">
+														<F N="prologmud_server/.local/share/swi-prolog/pack/swish/web/node_modules/ace/build/demo/kitchen-sink/docs/batchfile.bat"/>
+													</Folder>
+												</Folder>
+											</Folder>
+										</Folder>
+									</Folder>
+								</Folder>
+							</Folder>
+						</Folder>
+					</Folder>
+				</Folder>
+				<F N="prologmud_server/.local/share/recently-used.xbel"/>
+			</Folder>
+		</Folder>
 		<Folder Name="prologmud_server/.pki">
 			<Folder Name="nssdb">
 				<F N="prologmud_server/.pki/nssdb/cert9.db"/>
@@ -652,6 +1377,70 @@
 					<F N="prologmud_server/.ros/rosdep/sources.cache/index"/>
 				</Folder>
 			</Folder>
+		</Folder>
+		<Folder Name="prologmud_server/.vscode-insiders">
+			<Folder Name="extensions">
+				<Folder Name="ms-python.python-2021.8.1102490946">
+					<Folder Name="pythonFiles">
+						<Folder Name="lib">
+							<Folder Name="python">
+								<Folder Name="debugpy">
+									<Folder Name="_vendored">
+										<Folder Name="pydevd">
+											<Folder Name="pydevd_attach_to_process">
+												<Folder Name="windows">
+													<F N="prologmud_server/.vscode-insiders/extensions/ms-python.python-2021.8.1102490946/pythonFiles/lib/python/debugpy/_vendored/pydevd/pydevd_attach_to_process/windows/compile_windows.bat"/>
+												</Folder>
+											</Folder>
+										</Folder>
+									</Folder>
+								</Folder>
+							</Folder>
+						</Folder>
+					</Folder>
+				</Folder>
+				<Folder Name="ms-python.python-2021.8.1105858891">
+					<Folder Name="pythonFiles">
+						<Folder Name="lib">
+							<Folder Name="python">
+								<Folder Name="debugpy">
+									<Folder Name="_vendored">
+										<Folder Name="pydevd">
+											<Folder Name="pydevd_attach_to_process">
+												<Folder Name="windows">
+													<F N="prologmud_server/.vscode-insiders/extensions/ms-python.python-2021.8.1105858891/pythonFiles/lib/python/debugpy/_vendored/pydevd/pydevd_attach_to_process/windows/compile_windows.bat"/>
+												</Folder>
+											</Folder>
+										</Folder>
+									</Folder>
+								</Folder>
+							</Folder>
+						</Folder>
+					</Folder>
+				</Folder>
+				<Folder Name="ms-python.python-2021.9.1105654064-dev">
+					<Folder Name="pythonFiles">
+						<Folder Name="lib">
+							<Folder Name="python">
+								<Folder Name="debugpy">
+									<Folder Name="_vendored">
+										<Folder Name="pydevd">
+											<Folder Name="pydevd_attach_to_process">
+												<Folder Name="windows">
+													<F N="prologmud_server/.vscode-insiders/extensions/ms-python.python-2021.9.1105654064-dev/pythonFiles/lib/python/debugpy/_vendored/pydevd/pydevd_attach_to_process/windows/compile_windows.bat"/>
+												</Folder>
+											</Folder>
+										</Folder>
+									</Folder>
+								</Folder>
+							</Folder>
+						</Folder>
+					</Folder>
+				</Folder>
+			</Folder>
+		</Folder>
+		<Folder Name="bin">
+			<F N="bin/StartMUDServer.bat"/>
 		</Folder>
 		<Folder Name="docker">
 			<Folder Name="noetic">
@@ -1118,6 +1907,7 @@
 													</Folder>
 													<Folder Name="zahed">
 														<F N="docker/rootfs/usr/local/lib/swipl/doc/packages/examples/jpl/java/zahed/README"/>
+														<F N="docker/rootfs/usr/local/lib/swipl/doc/packages/examples/jpl/java/zahed/run.bat"/>
 														<F N="docker/rootfs/usr/local/lib/swipl/doc/packages/examples/jpl/java/zahed/run.sh"/>
 													</Folder>
 													<F N="docker/rootfs/usr/local/lib/swipl/doc/packages/examples/jpl/java/README.md"/>
@@ -2813,6 +3603,48 @@
 							<Folder Name="pkgconfig">
 								<F N="docker/rootfs/usr/local/share/pkgconfig/swipl.pc"/>
 							</Folder>
+							<Folder Name="swipl">
+								<Folder Name="doc">
+									<Folder Name="packages">
+										<Folder Name="examples">
+											<Folder Name="jpl">
+												<Folder Name="java">
+													<Folder Name="exceptions">
+														<F N="docker/rootfs/usr/local/share/swipl/doc/packages/examples/jpl/java/exceptions/run.bat"/>
+													</Folder>
+													<Folder Name="exceptions2">
+														<F N="docker/rootfs/usr/local/share/swipl/doc/packages/examples/jpl/java/exceptions2/run.bat"/>
+													</Folder>
+													<Folder Name="family">
+														<F N="docker/rootfs/usr/local/share/swipl/doc/packages/examples/jpl/java/family/run.bat"/>
+													</Folder>
+													<Folder Name="familyMT">
+														<F N="docker/rootfs/usr/local/share/swipl/doc/packages/examples/jpl/java/familyMT/run.bat"/>
+													</Folder>
+													<Folder Name="semWeb">
+														<F N="docker/rootfs/usr/local/share/swipl/doc/packages/examples/jpl/java/semWeb/run.bat"/>
+													</Folder>
+													<Folder Name="test">
+														<F N="docker/rootfs/usr/local/share/swipl/doc/packages/examples/jpl/java/test/run.bat"/>
+													</Folder>
+													<Folder Name="test2">
+														<F N="docker/rootfs/usr/local/share/swipl/doc/packages/examples/jpl/java/test2/run.bat"/>
+													</Folder>
+													<Folder Name="time">
+														<F N="docker/rootfs/usr/local/share/swipl/doc/packages/examples/jpl/java/time/run.bat"/>
+													</Folder>
+													<Folder Name="versions">
+														<F N="docker/rootfs/usr/local/share/swipl/doc/packages/examples/jpl/java/versions/run.bat"/>
+													</Folder>
+													<Folder Name="zahed">
+														<F N="docker/rootfs/usr/local/share/swipl/doc/packages/examples/jpl/java/zahed/run.bat"/>
+													</Folder>
+												</Folder>
+											</Folder>
+										</Folder>
+									</Folder>
+								</Folder>
+							</Folder>
 						</Folder>
 					</Folder>
 				</Folder>
@@ -3063,7 +3895,25 @@
 			</Folder>
 			<F N="docs/index.md"/>
 			<F N="docs/installation.rst"/>
+			<F N="docs/make.bat"/>
 			<F N="docs/readme.rst"/>
+		</Folder>
+		<Folder Name="lib">
+			<Folder Name="swipl">
+				<Folder Name="doc">
+					<Folder Name="packages">
+						<Folder Name="examples">
+							<Folder Name="jpl">
+								<Folder Name="java">
+									<Folder Name="zahed">
+										<F N="lib/swipl/doc/packages/examples/jpl/java/zahed/run.bat"/>
+									</Folder>
+								</Folder>
+							</Folder>
+						</Folder>
+					</Folder>
+				</Folder>
+			</Folder>
 		</Folder>
 		<Folder Name="packs_lib">
 			<Folder Name="aleph">
@@ -3185,7 +4035,13 @@
 			</Folder>
 			<Folder Name="cplint">
 				<Folder Name="docs">
+					<Folder Name="_build">
+						<Folder Name="latex">
+							<F N="packs_lib/cplint/docs/_build/latex/make.bat"/>
+						</Folder>
+					</Folder>
 					<F N="packs_lib/cplint/docs/.nojekyll"/>
+					<F N="packs_lib/cplint/docs/make.bat"/>
 				</Folder>
 				<Folder Name="prolog">
 					<Folder Name="cplint_test">
@@ -5211,6 +6067,7 @@
 					<Folder Name="cgworld">
 						<Folder Name="beans">
 							<F N="packs_sys/logicmoo_cg/test/cgworld/beans/operations.pl"/>
+							<F N="packs_sys/logicmoo_cg/test/cgworld/beans/sicstus_run.bat"/>
 							<F N="packs_sys/logicmoo_cg/test/cgworld/beans/translator.pl"/>
 						</Folder>
 						<Folder Name="example">
@@ -5229,8 +6086,11 @@
 						<Folder Name="levels">
 							<F N="packs_sys/logicmoo_cg/test/cgworld/levels/level3.pl"/>
 						</Folder>
+						<F N="packs_sys/logicmoo_cg/test/cgworld/CgEditor.bat"/>
 						<F N="packs_sys/logicmoo_cg/test/cgworld/cgpro.md"/>
 						<F N="packs_sys/logicmoo_cg/test/cgworld/cgpro2.md"/>
+						<F N="packs_sys/logicmoo_cg/test/cgworld/convert.bat"/>
+						<F N="packs_sys/logicmoo_cg/test/cgworld/convert_jview.bat"/>
 						<F N="packs_sys/logicmoo_cg/test/cgworld/README"/>
 					</Folder>
 					<Folder Name="ontology">
@@ -5280,6 +6140,7 @@
 						<F N="packs_sys/logicmoo_cg/test/prologPlusCG/mortelSocrate.pro"/>
 						<F N="packs_sys/logicmoo_cg/test/prologPlusCG/pattern.pro"/>
 						<F N="packs_sys/logicmoo_cg/test/prologPlusCG/README.txt"/>
+						<F N="packs_sys/logicmoo_cg/test/prologPlusCG/start.bat"/>
 						<F N="packs_sys/logicmoo_cg/test/prologPlusCG/test.pro"/>
 						<F N="packs_sys/logicmoo_cg/test/prologPlusCG/test.sh"/>
 						<F N="packs_sys/logicmoo_cg/test/prologPlusCG/testall.sh"/>
@@ -7639,7 +8500,9 @@
 						<F N="packs_sys/logicmoo_nlu/ext/ape/ape.pl"/>
 						<F N="packs_sys/logicmoo_nlu/ext/ape/CHANGES.md"/>
 						<F N="packs_sys/logicmoo_nlu/ext/ape/get_ape_results.pl"/>
+						<F N="packs_sys/logicmoo_nlu/ext/ape/make_exe.bat"/>
 						<F N="packs_sys/logicmoo_nlu/ext/ape/make_exe.sh"/>
+						<F N="packs_sys/logicmoo_nlu/ext/ape/make_exe_new.bat"/>
 						<F N="packs_sys/logicmoo_nlu/ext/ape/pack.pl"/>
 						<F N="packs_sys/logicmoo_nlu/ext/ape/README.md"/>
 						<F N="packs_sys/logicmoo_nlu/ext/ape/run.sh"/>
@@ -8508,6 +9371,7 @@
 							<F N="packs_sys/logicmoo_nlu/ext/Parser_SUPPLE/config/mapping.config"/>
 						</Folder>
 						<Folder Name="lib">
+							<F N="packs_sys/logicmoo_nlu/ext/Parser_SUPPLE/lib/gate.bat"/>
 							<F N="packs_sys/logicmoo_nlu/ext/Parser_SUPPLE/lib/gate.sh"/>
 							<F N="packs_sys/logicmoo_nlu/ext/Parser_SUPPLE/lib/GATEXML-content.sh"/>
 							<F N="packs_sys/logicmoo_nlu/ext/Parser_SUPPLE/lib/GATEXML-statistics.sh"/>
@@ -8744,6 +9608,9 @@
 										<F N="packs_sys/logicmoo_nlu/ext/regulus/doc/ACL2003/Experiments/GrammarScaleScripts/build_nuance_files_orig.pl"/>
 										<F N="packs_sys/logicmoo_nlu/ext/regulus/doc/ACL2003/Experiments/GrammarScaleScripts/build_nuance_files_travel_deals.pl"/>
 										<F N="packs_sys/logicmoo_nlu/ext/regulus/doc/ACL2003/Experiments/GrammarScaleScripts/load.pl"/>
+										<F N="packs_sys/logicmoo_nlu/ext/regulus/doc/ACL2003/Experiments/GrammarScaleScripts/run_recserver.bat"/>
+										<F N="packs_sys/logicmoo_nlu/ext/regulus/doc/ACL2003/Experiments/GrammarScaleScripts/run_regulus_server.bat"/>
+										<F N="packs_sys/logicmoo_nlu/ext/regulus/doc/ACL2003/Experiments/GrammarScaleScripts/run_toy_app_prolog.bat"/>
 										<F N="packs_sys/logicmoo_nlu/ext/regulus/doc/ACL2003/Experiments/GrammarScaleScripts/run_toy_app_prolog.pl"/>
 									</Folder>
 									<Folder Name="IterationScripts">
@@ -8814,6 +9681,13 @@
 							</Folder>
 							<Folder Name="Calendar">
 								<Folder Name="corpora">
+									<Folder Name="JapDataCollSep2008">
+										<F N="packs_sys/logicmoo_nlu/ext/regulus/Examples/Calendar/corpora/JapDataCollSep2008/edit_wavfiles_kikuko.bat"/>
+										<F N="packs_sys/logicmoo_nlu/ext/regulus/Examples/Calendar/corpora/JapDataCollSep2008/edit_wavfiles_mayuko.bat"/>
+										<F N="packs_sys/logicmoo_nlu/ext/regulus/Examples/Calendar/corpora/JapDataCollSep2008/edit_wavfiles_miki.bat"/>
+										<F N="packs_sys/logicmoo_nlu/ext/regulus/Examples/Calendar/corpora/JapDataCollSep2008/edit_wavfiles_ozawa.bat"/>
+										<F N="packs_sys/logicmoo_nlu/ext/regulus/Examples/Calendar/corpora/JapDataCollSep2008/edit_wavfiles_yuriko.bat"/>
+									</Folder>
 									<Folder Name="speech">
 										<F N="packs_sys/logicmoo_nlu/ext/regulus/Examples/Calendar/corpora/speech/README.txt"/>
 									</Folder>
@@ -8840,7 +9714,10 @@
 									<F N="packs_sys/logicmoo_nlu/ext/regulus/Examples/Calendar/Generated/README.txt"/>
 								</Folder>
 								<Folder Name="japanese_wavfiles">
+									<F N="packs_sys/logicmoo_nlu/ext/regulus/Examples/Calendar/japanese_wavfiles/edit_wavfiles.bat"/>
 									<F N="packs_sys/logicmoo_nlu/ext/regulus/Examples/Calendar/japanese_wavfiles/README.txt"/>
+									<F N="packs_sys/logicmoo_nlu/ext/regulus/Examples/Calendar/japanese_wavfiles/record_wavfiles.bat"/>
+									<F N="packs_sys/logicmoo_nlu/ext/regulus/Examples/Calendar/japanese_wavfiles/xwavedit_all.bat"/>
 								</Folder>
 								<Folder Name="java">
 									<Folder Name="doc">
@@ -8848,6 +9725,7 @@
 									</Folder>
 									<F N="packs_sys/logicmoo_nlu/ext/regulus/Examples/Calendar/java/calendar.prop"/>
 									<F N="packs_sys/logicmoo_nlu/ext/regulus/Examples/Calendar/java/readme.txt"/>
+									<F N="packs_sys/logicmoo_nlu/ext/regulus/Examples/Calendar/java/run_calendar.bat"/>
 								</Folder>
 								<Folder Name="Prolog">
 									<F N="packs_sys/logicmoo_nlu/ext/regulus/Examples/Calendar/Prolog/calendar_nbest.pl"/>
@@ -8924,6 +9802,13 @@
 									<F N="packs_sys/logicmoo_nlu/ext/regulus/Examples/Calendar/scripts/make_transcriptions_data_into_sent_data.pl"/>
 									<F N="packs_sys/logicmoo_nlu/ext/regulus/Examples/Calendar/scripts/make_transcriptions_data_into_sent_data_training_only.pl"/>
 									<F N="packs_sys/logicmoo_nlu/ext/regulus/Examples/Calendar/scripts/randomly_split_transcriptions_data_into_test_and_training.pl"/>
+									<F N="packs_sys/logicmoo_nlu/ext/regulus/Examples/Calendar/scripts/run_app_using_server.bat"/>
+									<F N="packs_sys/logicmoo_nlu/ext/regulus/Examples/Calendar/scripts/run_app_using_server_im2.bat"/>
+									<F N="packs_sys/logicmoo_nlu/ext/regulus/Examples/Calendar/scripts/run_app_using_server_nodebug.bat"/>
+									<F N="packs_sys/logicmoo_nlu/ext/regulus/Examples/Calendar/scripts/run_japanese_app.bat"/>
+									<F N="packs_sys/logicmoo_nlu/ext/regulus/Examples/Calendar/scripts/run_japanese_app_nodebug.bat"/>
+									<F N="packs_sys/logicmoo_nlu/ext/regulus/Examples/Calendar/scripts/run_japanese_dm_server.bat"/>
+									<F N="packs_sys/logicmoo_nlu/ext/regulus/Examples/Calendar/scripts/run_japanese_recserver.bat"/>
 									<F N="packs_sys/logicmoo_nlu/ext/regulus/Examples/Calendar/scripts/run_japanese_speech_test.pl"/>
 									<F N="packs_sys/logicmoo_nlu/ext/regulus/Examples/Calendar/scripts/run_japanese_speech_test_again.pl"/>
 									<F N="packs_sys/logicmoo_nlu/ext/regulus/Examples/Calendar/scripts/run_japanese_speech_test_no_sortal_feats.pl"/>
@@ -8934,6 +9819,11 @@
 									<F N="packs_sys/logicmoo_nlu/ext/regulus/Examples/Calendar/scripts/run_make_help_resources.pl"/>
 									<F N="packs_sys/logicmoo_nlu/ext/regulus/Examples/Calendar/scripts/run_make_japanese_help_resources.pl"/>
 									<F N="packs_sys/logicmoo_nlu/ext/regulus/Examples/Calendar/scripts/run_make_paraphrase_csv_file.pl"/>
+									<F N="packs_sys/logicmoo_nlu/ext/regulus/Examples/Calendar/scripts/run_recserver.bat"/>
+									<F N="packs_sys/logicmoo_nlu/ext/regulus/Examples/Calendar/scripts/run_recserver_im2.bat"/>
+									<F N="packs_sys/logicmoo_nlu/ext/regulus/Examples/Calendar/scripts/run_server.bat"/>
+									<F N="packs_sys/logicmoo_nlu/ext/regulus/Examples/Calendar/scripts/run_server_im2.bat"/>
+									<F N="packs_sys/logicmoo_nlu/ext/regulus/Examples/Calendar/scripts/run_server_regulus_parser.bat"/>
 									<F N="packs_sys/logicmoo_nlu/ext/regulus/Examples/Calendar/scripts/run_speech_test.pl"/>
 									<F N="packs_sys/logicmoo_nlu/ext/regulus/Examples/Calendar/scripts/run_speech_test_again.pl"/>
 									<F N="packs_sys/logicmoo_nlu/ext/regulus/Examples/Calendar/scripts/run_speech_test_again_1_best.pl"/>
@@ -8949,6 +9839,7 @@
 									<F N="packs_sys/logicmoo_nlu/ext/regulus/Examples/Calendar/scripts/run_update_judgements_jap_sep2008_no_datastructures.pl"/>
 									<F N="packs_sys/logicmoo_nlu/ext/regulus/Examples/Calendar/scripts/run_update_speech_judgements.pl"/>
 									<F N="packs_sys/logicmoo_nlu/ext/regulus/Examples/Calendar/scripts/run_update_speech_judgements_test_only.pl"/>
+									<F N="packs_sys/logicmoo_nlu/ext/regulus/Examples/Calendar/scripts/run_vocalizer4.bat"/>
 									<F N="packs_sys/logicmoo_nlu/ext/regulus/Examples/Calendar/scripts/update_transcriptions.pl"/>
 								</Folder>
 								<Folder Name="SLM">
@@ -9013,6 +9904,11 @@
 								<Folder Name="scripts">
 									<F N="packs_sys/logicmoo_nlu/ext/regulus/Examples/EnglishRobots/scripts/build_nuance_files_english_multi_ling.pl"/>
 									<F N="packs_sys/logicmoo_nlu/ext/regulus/Examples/EnglishRobots/scripts/load_and_run_app_multi_ling.pl"/>
+									<F N="packs_sys/logicmoo_nlu/ext/regulus/Examples/EnglishRobots/scripts/run_app_multi_ling.bat"/>
+									<F N="packs_sys/logicmoo_nlu/ext/regulus/Examples/EnglishRobots/scripts/run_recserver_multi_ling.bat"/>
+									<F N="packs_sys/logicmoo_nlu/ext/regulus/Examples/EnglishRobots/scripts/run_resource_manager.bat"/>
+									<F N="packs_sys/logicmoo_nlu/ext/regulus/Examples/EnglishRobots/scripts/run_vocalizer4_english.bat"/>
+									<F N="packs_sys/logicmoo_nlu/ext/regulus/Examples/EnglishRobots/scripts/run_vocalizer4_german.bat"/>
 								</Folder>
 							</Folder>
 							<Folder Name="Generic">
@@ -9037,12 +9933,16 @@
 								</Folder>
 								<Folder Name="scripts">
 									<F N="packs_sys/logicmoo_nlu/ext/regulus/Examples/GermanRobots/scripts/build_nuance_files_german_multi_ling.pl"/>
+									<F N="packs_sys/logicmoo_nlu/ext/regulus/Examples/GermanRobots/scripts/run_recserver.bat"/>
 									<F N="packs_sys/logicmoo_nlu/ext/regulus/Examples/GermanRobots/scripts/run_recserver.sh"/>
+									<F N="packs_sys/logicmoo_nlu/ext/regulus/Examples/GermanRobots/scripts/run_xapp.bat"/>
 								</Folder>
 							</Folder>
 							<Folder Name="Misc">
 								<F N="packs_sys/logicmoo_nlu/ext/regulus/Examples/Misc/load_and_run_client.pl"/>
 								<F N="packs_sys/logicmoo_nlu/ext/regulus/Examples/Misc/load_and_run_server.pl"/>
+								<F N="packs_sys/logicmoo_nlu/ext/regulus/Examples/Misc/run_client.bat"/>
+								<F N="packs_sys/logicmoo_nlu/ext/regulus/Examples/Misc/run_server.bat"/>
 								<F N="packs_sys/logicmoo_nlu/ext/regulus/Examples/Misc/system_call_example.pl"/>
 								<F N="packs_sys/logicmoo_nlu/ext/regulus/Examples/Misc/toy_v2_xml_client.pl"/>
 								<F N="packs_sys/logicmoo_nlu/ext/regulus/Examples/Misc/toy_v2_xml_server.pl"/>
@@ -9071,6 +9971,9 @@
 								<Folder Name="scripts">
 									<F N="packs_sys/logicmoo_nlu/ext/regulus/Examples/PSA/scripts/build_nuance_files.pl"/>
 									<F N="packs_sys/logicmoo_nlu/ext/regulus/Examples/PSA/scripts/library_declarations.pl"/>
+									<F N="packs_sys/logicmoo_nlu/ext/regulus/Examples/PSA/scripts/run_recserver.bat"/>
+									<F N="packs_sys/logicmoo_nlu/ext/regulus/Examples/PSA/scripts/run_regulus_server.bat"/>
+									<F N="packs_sys/logicmoo_nlu/ext/regulus/Examples/PSA/scripts/run_toy_app_prolog.bat"/>
 									<F N="packs_sys/logicmoo_nlu/ext/regulus/Examples/PSA/scripts/run_toy_app_prolog.pl"/>
 								</Folder>
 							</Folder>
@@ -9117,15 +10020,28 @@
 								</Folder>
 								<Folder Name="scripts">
 									<F N="packs_sys/logicmoo_nlu/ext/regulus/Examples/Toy0/scripts/build_nuance_files.pl"/>
+									<F N="packs_sys/logicmoo_nlu/ext/regulus/Examples/Toy0/scripts/compile_jdemo.bat"/>
+									<F N="packs_sys/logicmoo_nlu/ext/regulus/Examples/Toy0/scripts/java_settings.bat"/>
 									<F N="packs_sys/logicmoo_nlu/ext/regulus/Examples/Toy0/scripts/load_and_run_app.pl"/>
 									<F N="packs_sys/logicmoo_nlu/ext/regulus/Examples/Toy0/scripts/load_and_run_app_with_get_param.pl"/>
 									<F N="packs_sys/logicmoo_nlu/ext/regulus/Examples/Toy0/scripts/load_and_run_slt_app.pl"/>
+									<F N="packs_sys/logicmoo_nlu/ext/regulus/Examples/Toy0/scripts/run_app.bat"/>
 									<F N="packs_sys/logicmoo_nlu/ext/regulus/Examples/Toy0/scripts/run_app.sh"/>
+									<F N="packs_sys/logicmoo_nlu/ext/regulus/Examples/Toy0/scripts/run_app_with_get_param.bat"/>
+									<F N="packs_sys/logicmoo_nlu/ext/regulus/Examples/Toy0/scripts/run_jdemo.bat"/>
 									<F N="packs_sys/logicmoo_nlu/ext/regulus/Examples/Toy0/scripts/run_jdemo.sh"/>
+									<F N="packs_sys/logicmoo_nlu/ext/regulus/Examples/Toy0/scripts/run_recserver.bat"/>
 									<F N="packs_sys/logicmoo_nlu/ext/regulus/Examples/Toy0/scripts/run_recserver.sh"/>
+									<F N="packs_sys/logicmoo_nlu/ext/regulus/Examples/Toy0/scripts/run_recserver_hand_coded.bat"/>
 									<F N="packs_sys/logicmoo_nlu/ext/regulus/Examples/Toy0/scripts/run_recserver_hand_coded.sh"/>
+									<F N="packs_sys/logicmoo_nlu/ext/regulus/Examples/Toy0/scripts/run_slt_app.bat"/>
 									<F N="packs_sys/logicmoo_nlu/ext/regulus/Examples/Toy0/scripts/run_slt_app.sh"/>
+									<F N="packs_sys/logicmoo_nlu/ext/regulus/Examples/Toy0/scripts/run_vocalizer3.bat"/>
 									<F N="packs_sys/logicmoo_nlu/ext/regulus/Examples/Toy0/scripts/run_vocalizer3.sh"/>
+									<F N="packs_sys/logicmoo_nlu/ext/regulus/Examples/Toy0/scripts/run_vocalizer3_fre.bat"/>
+									<F N="packs_sys/logicmoo_nlu/ext/regulus/Examples/Toy0/scripts/run_vocalizer4.bat"/>
+									<F N="packs_sys/logicmoo_nlu/ext/regulus/Examples/Toy0/scripts/run_xapp.bat"/>
+									<F N="packs_sys/logicmoo_nlu/ext/regulus/Examples/Toy0/scripts/run_xapp_hand_coded.bat"/>
 									<F N="packs_sys/logicmoo_nlu/ext/regulus/Examples/Toy0/scripts/run_xapp_hand_coded.sh"/>
 								</Folder>
 							</Folder>
@@ -9136,6 +10052,9 @@
 								<Folder Name="scripts">
 									<F N="packs_sys/logicmoo_nlu/ext/regulus/Examples/Toy0Strcat/scripts/build_nuance_files.pl"/>
 									<F N="packs_sys/logicmoo_nlu/ext/regulus/Examples/Toy0Strcat/scripts/load_and_run_app.pl"/>
+									<F N="packs_sys/logicmoo_nlu/ext/regulus/Examples/Toy0Strcat/scripts/run_app.bat"/>
+									<F N="packs_sys/logicmoo_nlu/ext/regulus/Examples/Toy0Strcat/scripts/run_recserver.bat"/>
+									<F N="packs_sys/logicmoo_nlu/ext/regulus/Examples/Toy0Strcat/scripts/run_xapp.bat"/>
 								</Folder>
 							</Folder>
 							<Folder Name="Toy1">
@@ -9208,9 +10127,26 @@
 									<F N="packs_sys/logicmoo_nlu/ext/regulus/Examples/Toy1/scripts/load_and_run_server.pl"/>
 									<F N="packs_sys/logicmoo_nlu/ext/regulus/Examples/Toy1/scripts/load_and_run_slow_server.pl"/>
 									<F N="packs_sys/logicmoo_nlu/ext/regulus/Examples/Toy1/scripts/load_and_run_slt_app.pl"/>
+									<F N="packs_sys/logicmoo_nlu/ext/regulus/Examples/Toy1/scripts/run_app.bat"/>
 									<F N="packs_sys/logicmoo_nlu/ext/regulus/Examples/Toy1/scripts/run_app.sh"/>
+									<F N="packs_sys/logicmoo_nlu/ext/regulus/Examples/Toy1/scripts/run_app_corrections.bat"/>
+									<F N="packs_sys/logicmoo_nlu/ext/regulus/Examples/Toy1/scripts/run_asynchronous_app.bat"/>
+									<F N="packs_sys/logicmoo_nlu/ext/regulus/Examples/Toy1/scripts/run_open_mic_app.bat"/>
+									<F N="packs_sys/logicmoo_nlu/ext/regulus/Examples/Toy1/scripts/run_open_mic_app_self_contained.bat"/>
+									<F N="packs_sys/logicmoo_nlu/ext/regulus/Examples/Toy1/scripts/run_open_mic_server.bat"/>
+									<F N="packs_sys/logicmoo_nlu/ext/regulus/Examples/Toy1/scripts/run_recserver.bat"/>
 									<F N="packs_sys/logicmoo_nlu/ext/regulus/Examples/Toy1/scripts/run_recserver.sh"/>
+									<F N="packs_sys/logicmoo_nlu/ext/regulus/Examples/Toy1/scripts/run_recserver_corrections.bat"/>
+									<F N="packs_sys/logicmoo_nlu/ext/regulus/Examples/Toy1/scripts/run_server.bat"/>
+									<F N="packs_sys/logicmoo_nlu/ext/regulus/Examples/Toy1/scripts/run_server_app.bat"/>
+									<F N="packs_sys/logicmoo_nlu/ext/regulus/Examples/Toy1/scripts/run_slow_server.bat"/>
+									<F N="packs_sys/logicmoo_nlu/ext/regulus/Examples/Toy1/scripts/run_slow_server_app.bat"/>
+									<F N="packs_sys/logicmoo_nlu/ext/regulus/Examples/Toy1/scripts/run_slt_app.bat"/>
 									<F N="packs_sys/logicmoo_nlu/ext/regulus/Examples/Toy1/scripts/run_slt_app.sh"/>
+									<F N="packs_sys/logicmoo_nlu/ext/regulus/Examples/Toy1/scripts/run_vocalizer3.bat"/>
+									<F N="packs_sys/logicmoo_nlu/ext/regulus/Examples/Toy1/scripts/run_vocalizer3_fre.bat"/>
+									<F N="packs_sys/logicmoo_nlu/ext/regulus/Examples/Toy1/scripts/run_vocalizer4.bat"/>
+									<F N="packs_sys/logicmoo_nlu/ext/regulus/Examples/Toy1/scripts/run_xapp.bat"/>
 									<F N="packs_sys/logicmoo_nlu/ext/regulus/Examples/Toy1/scripts/test_dialogue_and_translation.pl"/>
 									<F N="packs_sys/logicmoo_nlu/ext/regulus/Examples/Toy1/scripts/test_dialogue_speech.pl"/>
 								</Folder>
@@ -9241,9 +10177,14 @@
 								<Folder Name="scripts">
 									<F N="packs_sys/logicmoo_nlu/ext/regulus/Examples/Toy1Alterf/scripts/build_nuance_files.pl"/>
 									<F N="packs_sys/logicmoo_nlu/ext/regulus/Examples/Toy1Alterf/scripts/load_and_run_app.pl"/>
+									<F N="packs_sys/logicmoo_nlu/ext/regulus/Examples/Toy1Alterf/scripts/run_app.bat"/>
 									<F N="packs_sys/logicmoo_nlu/ext/regulus/Examples/Toy1Alterf/scripts/run_app.sh"/>
+									<F N="packs_sys/logicmoo_nlu/ext/regulus/Examples/Toy1Alterf/scripts/run_recserver.bat"/>
 									<F N="packs_sys/logicmoo_nlu/ext/regulus/Examples/Toy1Alterf/scripts/run_recserver.sh"/>
+									<F N="packs_sys/logicmoo_nlu/ext/regulus/Examples/Toy1Alterf/scripts/run_vocalizer3.bat"/>
 									<F N="packs_sys/logicmoo_nlu/ext/regulus/Examples/Toy1Alterf/scripts/run_vocalizer3.sh"/>
+									<F N="packs_sys/logicmoo_nlu/ext/regulus/Examples/Toy1Alterf/scripts/run_vocalizer4.bat"/>
+									<F N="packs_sys/logicmoo_nlu/ext/regulus/Examples/Toy1Alterf/scripts/run_xapp.bat"/>
 									<F N="packs_sys/logicmoo_nlu/ext/regulus/Examples/Toy1Alterf/scripts/run_xapp.sh"/>
 									<F N="packs_sys/logicmoo_nlu/ext/regulus/Examples/Toy1Alterf/scripts/test_alterf.pl"/>
 									<F N="packs_sys/logicmoo_nlu/ext/regulus/Examples/Toy1Alterf/scripts/test_alterf_patterns.pl"/>
@@ -9256,7 +10197,10 @@
 									<F N="packs_sys/logicmoo_nlu/ext/regulus/Examples/Toy1Course/Prolog/eng_to_fre.pl"/>
 								</Folder>
 								<Folder Name="scripts">
+									<F N="packs_sys/logicmoo_nlu/ext/regulus/Examples/Toy1Course/scripts/run_license.bat"/>
+									<F N="packs_sys/logicmoo_nlu/ext/regulus/Examples/Toy1Course/scripts/run_recserver.bat"/>
 									<F N="packs_sys/logicmoo_nlu/ext/regulus/Examples/Toy1Course/scripts/run_recserver.sh"/>
+									<F N="packs_sys/logicmoo_nlu/ext/regulus/Examples/Toy1Course/scripts/run_xapp.bat"/>
 								</Folder>
 							</Folder>
 							<Folder Name="Toy1Dynamic">
@@ -9265,6 +10209,15 @@
 								</Folder>
 								<Folder Name="Generated">
 									<F N="packs_sys/logicmoo_nlu/ext/regulus/Examples/Toy1Dynamic/Generated/README.txt"/>
+								</Folder>
+								<Folder Name="scripts">
+									<F N="packs_sys/logicmoo_nlu/ext/regulus/Examples/Toy1Dynamic/scripts/run_compilation-server.bat"/>
+									<F N="packs_sys/logicmoo_nlu/ext/regulus/Examples/Toy1Dynamic/scripts/run_compilation_server.bat"/>
+									<F N="packs_sys/logicmoo_nlu/ext/regulus/Examples/Toy1Dynamic/scripts/run_recserver.bat"/>
+									<F N="packs_sys/logicmoo_nlu/ext/regulus/Examples/Toy1Dynamic/scripts/run_resource-manager.bat"/>
+									<F N="packs_sys/logicmoo_nlu/ext/regulus/Examples/Toy1Dynamic/scripts/run_resource_manager.bat"/>
+									<F N="packs_sys/logicmoo_nlu/ext/regulus/Examples/Toy1Dynamic/scripts/run_xapp.bat"/>
+									<F N="packs_sys/logicmoo_nlu/ext/regulus/Examples/Toy1Dynamic/scripts/test_nl-tool.bat"/>
 								</Folder>
 							</Folder>
 							<Folder Name="Toy1RoleMarked">
@@ -9334,12 +10287,24 @@
 									<F N="packs_sys/logicmoo_nlu/ext/regulus/Examples/Toy1Specialised/scripts/load_and_run_app.pl"/>
 									<F N="packs_sys/logicmoo_nlu/ext/regulus/Examples/Toy1Specialised/scripts/load_and_run_app_multi_ling.pl"/>
 									<F N="packs_sys/logicmoo_nlu/ext/regulus/Examples/Toy1Specialised/scripts/load_and_run_slt_app.pl"/>
+									<F N="packs_sys/logicmoo_nlu/ext/regulus/Examples/Toy1Specialised/scripts/run_app.bat"/>
 									<F N="packs_sys/logicmoo_nlu/ext/regulus/Examples/Toy1Specialised/scripts/run_app.sh"/>
+									<F N="packs_sys/logicmoo_nlu/ext/regulus/Examples/Toy1Specialised/scripts/run_app_multi_ling.bat"/>
 									<F N="packs_sys/logicmoo_nlu/ext/regulus/Examples/Toy1Specialised/scripts/run_app_multi_ling.sh"/>
+									<F N="packs_sys/logicmoo_nlu/ext/regulus/Examples/Toy1Specialised/scripts/run_recserver.bat"/>
 									<F N="packs_sys/logicmoo_nlu/ext/regulus/Examples/Toy1Specialised/scripts/run_recserver.sh"/>
+									<F N="packs_sys/logicmoo_nlu/ext/regulus/Examples/Toy1Specialised/scripts/run_recserver_multi_ling.bat"/>
+									<F N="packs_sys/logicmoo_nlu/ext/regulus/Examples/Toy1Specialised/scripts/run_resource_manager.bat"/>
+									<F N="packs_sys/logicmoo_nlu/ext/regulus/Examples/Toy1Specialised/scripts/run_slt_app.bat"/>
 									<F N="packs_sys/logicmoo_nlu/ext/regulus/Examples/Toy1Specialised/scripts/run_slt_app.sh"/>
+									<F N="packs_sys/logicmoo_nlu/ext/regulus/Examples/Toy1Specialised/scripts/run_vocalizer3.bat"/>
 									<F N="packs_sys/logicmoo_nlu/ext/regulus/Examples/Toy1Specialised/scripts/run_vocalizer3.sh"/>
+									<F N="packs_sys/logicmoo_nlu/ext/regulus/Examples/Toy1Specialised/scripts/run_vocalizer3_fre.bat"/>
 									<F N="packs_sys/logicmoo_nlu/ext/regulus/Examples/Toy1Specialised/scripts/run_vocalizer3_fre.sh"/>
+									<F N="packs_sys/logicmoo_nlu/ext/regulus/Examples/Toy1Specialised/scripts/run_vocalizer4.bat"/>
+									<F N="packs_sys/logicmoo_nlu/ext/regulus/Examples/Toy1Specialised/scripts/run_vocalizer4_english.bat"/>
+									<F N="packs_sys/logicmoo_nlu/ext/regulus/Examples/Toy1Specialised/scripts/run_vocalizer4_french.bat"/>
+									<F N="packs_sys/logicmoo_nlu/ext/regulus/Examples/Toy1Specialised/scripts/run_xapp.bat"/>
 									<F N="packs_sys/logicmoo_nlu/ext/regulus/Examples/Toy1Specialised/scripts/run_xapp.sh"/>
 									<F N="packs_sys/logicmoo_nlu/ext/regulus/Examples/Toy1Specialised/scripts/test_dialogue_and_translation.pl"/>
 								</Folder>
@@ -9364,6 +10329,10 @@
 								<Folder Name="scripts">
 									<F N="packs_sys/logicmoo_nlu/ext/regulus/Examples/Toy1SpecialisedDynamic/scripts/build_nuance_files.pl"/>
 									<F N="packs_sys/logicmoo_nlu/ext/regulus/Examples/Toy1SpecialisedDynamic/scripts/load_and_run_toy_dynamic_app.pl"/>
+									<F N="packs_sys/logicmoo_nlu/ext/regulus/Examples/Toy1SpecialisedDynamic/scripts/run_compilation_server.bat"/>
+									<F N="packs_sys/logicmoo_nlu/ext/regulus/Examples/Toy1SpecialisedDynamic/scripts/run_recserver.bat"/>
+									<F N="packs_sys/logicmoo_nlu/ext/regulus/Examples/Toy1SpecialisedDynamic/scripts/run_resource_manager.bat"/>
+									<F N="packs_sys/logicmoo_nlu/ext/regulus/Examples/Toy1SpecialisedDynamic/scripts/run_toy_dynamic_app.bat"/>
 								</Folder>
 							</Folder>
 							<Folder Name="Toy1Strcat">
@@ -9372,6 +10341,8 @@
 								</Folder>
 								<Folder Name="scripts">
 									<F N="packs_sys/logicmoo_nlu/ext/regulus/Examples/Toy1Strcat/scripts/build_nuance_files.pl"/>
+									<F N="packs_sys/logicmoo_nlu/ext/regulus/Examples/Toy1Strcat/scripts/run_recserver.bat"/>
+									<F N="packs_sys/logicmoo_nlu/ext/regulus/Examples/Toy1Strcat/scripts/run_xapp.bat"/>
 								</Folder>
 							</Folder>
 							<F N="packs_sys/logicmoo_nlu/ext/regulus/Examples/README.txt"/>
@@ -9386,10 +10357,22 @@
 								<F N="packs_sys/logicmoo_nlu/ext/regulus/Java/RegulusGUI/ReadOneCorpusFile.java"/>
 								<F N="packs_sys/logicmoo_nlu/ext/regulus/Java/RegulusGUI/ReadTwoCorpusFiles.java"/>
 							</Folder>
+							<F N="packs_sys/logicmoo_nlu/ext/regulus/Java/compile.bat"/>
+							<F N="packs_sys/logicmoo_nlu/ext/regulus/Java/copy_from_workspace.bat"/>
+							<F N="packs_sys/logicmoo_nlu/ext/regulus/Java/copy_to_workspace.bat"/>
 							<F N="packs_sys/logicmoo_nlu/ext/regulus/Java/README.txt"/>
 							<F N="packs_sys/logicmoo_nlu/ext/regulus/Java/README_JUDGE_GUI.txt"/>
+							<F N="packs_sys/logicmoo_nlu/ext/regulus/Java/run_java.bat"/>
 							<F N="packs_sys/logicmoo_nlu/ext/regulus/Java/run_java.sh"/>
+							<F N="packs_sys/logicmoo_nlu/ext/regulus/Java/run_java2.bat"/>
+							<F N="packs_sys/logicmoo_nlu/ext/regulus/Java/run_java_with_specific_version.bat"/>
+							<F N="packs_sys/logicmoo_nlu/ext/regulus/Java/run_prolog.bat"/>
 							<F N="packs_sys/logicmoo_nlu/ext/regulus/Java/run_prolog.sh"/>
+							<F N="packs_sys/logicmoo_nlu/ext/regulus/Java/run_prolog2.bat"/>
+							<F N="packs_sys/logicmoo_nlu/ext/regulus/Java/run_prolog_and_java.bat"/>
+							<F N="packs_sys/logicmoo_nlu/ext/regulus/Java/run_prolog_and_java2.bat"/>
+							<F N="packs_sys/logicmoo_nlu/ext/regulus/Java/run_prolog_and_java_with_specific_version.bat"/>
+							<F N="packs_sys/logicmoo_nlu/ext/regulus/Java/run_testgui_prolog.bat"/>
 							<F N="packs_sys/logicmoo_nlu/ext/regulus/Java/test_gui.pl"/>
 						</Folder>
 						<Folder Name="Prolog">
@@ -9613,7 +10596,11 @@
 									<F N="packs_sys/logicmoo_nlu/ext/regulus/RegulusSpeechServer/SampleApp/Prolog/toy_app.pl"/>
 								</Folder>
 								<Folder Name="Scripts">
+									<F N="packs_sys/logicmoo_nlu/ext/regulus/RegulusSpeechServer/SampleApp/Scripts/compile_grammar.bat"/>
 									<F N="packs_sys/logicmoo_nlu/ext/regulus/RegulusSpeechServer/SampleApp/Scripts/load_and_run_prolog_app.pl"/>
+									<F N="packs_sys/logicmoo_nlu/ext/regulus/RegulusSpeechServer/SampleApp/Scripts/run_prolog_app.bat"/>
+									<F N="packs_sys/logicmoo_nlu/ext/regulus/RegulusSpeechServer/SampleApp/Scripts/run_recserver.bat"/>
+									<F N="packs_sys/logicmoo_nlu/ext/regulus/RegulusSpeechServer/SampleApp/Scripts/run_regulus_server.bat"/>
 								</Folder>
 							</Folder>
 						</Folder>
@@ -9652,6 +10639,7 @@
 								<F N="packs_sys/logicmoo_nlu/ext/SIRIDUS/TALK_unimodal_grammar_lib/delux/app_search_paths.pl"/>
 								<F N="packs_sys/logicmoo_nlu/ext/SIRIDUS/TALK_unimodal_grammar_lib/delux/lamps_unimodal.config"/>
 								<F N="packs_sys/logicmoo_nlu/ext/SIRIDUS/TALK_unimodal_grammar_lib/delux/lamps_unimodal.pl"/>
+								<F N="packs_sys/logicmoo_nlu/ext/SIRIDUS/TALK_unimodal_grammar_lib/delux/run.bat"/>
 								<F N="packs_sys/logicmoo_nlu/ext/SIRIDUS/TALK_unimodal_grammar_lib/delux/run.sh"/>
 							</Folder>
 							<Folder Name="djgodis">
@@ -9671,8 +10659,10 @@
 									<F N="packs_sys/logicmoo_nlu/ext/SIRIDUS/TALK_unimodal_grammar_lib/djgodis/Resources/stations_player.pl"/>
 								</Folder>
 								<F N="packs_sys/logicmoo_nlu/ext/SIRIDUS/TALK_unimodal_grammar_lib/djgodis/app_search_paths.pl"/>
+								<F N="packs_sys/logicmoo_nlu/ext/SIRIDUS/TALK_unimodal_grammar_lib/djgodis/compile_nuance_grammar.bat"/>
 								<F N="packs_sys/logicmoo_nlu/ext/SIRIDUS/TALK_unimodal_grammar_lib/djgodis/player_unimodal.config"/>
 								<F N="packs_sys/logicmoo_nlu/ext/SIRIDUS/TALK_unimodal_grammar_lib/djgodis/player_unimodal.pl"/>
+								<F N="packs_sys/logicmoo_nlu/ext/SIRIDUS/TALK_unimodal_grammar_lib/djgodis/run.bat"/>
 								<F N="packs_sys/logicmoo_nlu/ext/SIRIDUS/TALK_unimodal_grammar_lib/djgodis/run.sh"/>
 							</Folder>
 							<Folder Name="godis">
@@ -9782,6 +10772,7 @@
 									<Folder Name="godis-basic">
 										<Folder Name="Agents">
 											<F N="packs_sys/logicmoo_nlu/ext/SIRIDUS/TALK_unimodal_grammar_lib/trindikit4/examples/godis-basic/Agents/app_search_paths.pl"/>
+											<F N="packs_sys/logicmoo_nlu/ext/SIRIDUS/TALK_unimodal_grammar_lib/trindikit4/examples/godis-basic/Agents/compileTextIO.bat"/>
 											<F N="packs_sys/logicmoo_nlu/ext/SIRIDUS/TALK_unimodal_grammar_lib/trindikit4/examples/godis-basic/Agents/compileTextIO.sh"/>
 											<F N="packs_sys/logicmoo_nlu/ext/SIRIDUS/TALK_unimodal_grammar_lib/trindikit4/examples/godis-basic/Agents/control_agent.pl"/>
 											<F N="packs_sys/logicmoo_nlu/ext/SIRIDUS/TALK_unimodal_grammar_lib/trindikit4/examples/godis-basic/Agents/dme_agent.pl"/>
@@ -9815,15 +10806,18 @@
 										<Folder Name="TISdefs">
 											<F N="packs_sys/logicmoo_nlu/ext/SIRIDUS/TALK_unimodal_grammar_lib/trindikit4/examples/godis-basic/TISdefs/is_def.pl"/>
 										</Folder>
+										<F N="packs_sys/logicmoo_nlu/ext/SIRIDUS/TALK_unimodal_grammar_lib/trindikit4/examples/godis-basic/godis-basic.bat"/>
 										<F N="packs_sys/logicmoo_nlu/ext/SIRIDUS/TALK_unimodal_grammar_lib/trindikit4/examples/godis-basic/godis-basic.config"/>
 										<F N="packs_sys/logicmoo_nlu/ext/SIRIDUS/TALK_unimodal_grammar_lib/trindikit4/examples/godis-basic/godis-basic.sh"/>
 										<F N="packs_sys/logicmoo_nlu/ext/SIRIDUS/TALK_unimodal_grammar_lib/trindikit4/examples/godis-basic/README.txt"/>
+										<F N="packs_sys/logicmoo_nlu/ext/SIRIDUS/TALK_unimodal_grammar_lib/trindikit4/examples/godis-basic/single_agent.bat"/>
 										<F N="packs_sys/logicmoo_nlu/ext/SIRIDUS/TALK_unimodal_grammar_lib/trindikit4/examples/godis-basic/single_agent.sh"/>
 									</Folder>
 									<F N="packs_sys/logicmoo_nlu/ext/SIRIDUS/TALK_unimodal_grammar_lib/trindikit4/examples/readme.txt"/>
 								</Folder>
 								<F N="packs_sys/logicmoo_nlu/ext/SIRIDUS/TALK_unimodal_grammar_lib/trindikit4/README.txt"/>
 							</Folder>
+							<F N="packs_sys/logicmoo_nlu/ext/SIRIDUS/TALK_unimodal_grammar_lib/export_grammars_to_godis.bat"/>
 							<F N="packs_sys/logicmoo_nlu/ext/SIRIDUS/TALK_unimodal_grammar_lib/export_grammars_to_godis.sh"/>
 							<F N="packs_sys/logicmoo_nlu/ext/SIRIDUS/TALK_unimodal_grammar_lib/README.txt"/>
 						</Folder>
@@ -9972,9 +10966,13 @@
 									</Folder>
 									<Folder Name="Speech">
 										<F N="packs_sys/logicmoo_nlu/ext/SIRIDUS/UGOT-D31/godis-apps/domain-agendatalk/Speech/agenda.config"/>
+										<F N="packs_sys/logicmoo_nlu/ext/SIRIDUS/UGOT-D31/godis-apps/domain-agendatalk/Speech/agenda_speech.bat"/>
+										<F N="packs_sys/logicmoo_nlu/ext/SIRIDUS/UGOT-D31/godis-apps/domain-agendatalk/Speech/agenda_speech_swe.bat"/>
 										<F N="packs_sys/logicmoo_nlu/ext/SIRIDUS/UGOT-D31/godis-apps/domain-agendatalk/Speech/agenda_swe.config"/>
 										<F N="packs_sys/logicmoo_nlu/ext/SIRIDUS/UGOT-D31/godis-apps/domain-agendatalk/Speech/agendatalk_nuance.pl"/>
 										<F N="packs_sys/logicmoo_nlu/ext/SIRIDUS/UGOT-D31/godis-apps/domain-agendatalk/Speech/asrg_agenda_english.pl"/>
+										<F N="packs_sys/logicmoo_nlu/ext/SIRIDUS/UGOT-D31/godis-apps/domain-agendatalk/Speech/compile-nuance-grammars.bat"/>
+										<F N="packs_sys/logicmoo_nlu/ext/SIRIDUS/UGOT-D31/godis-apps/domain-agendatalk/Speech/setup-nuance.bat"/>
 										<F N="packs_sys/logicmoo_nlu/ext/SIRIDUS/UGOT-D31/godis-apps/domain-agendatalk/Speech/start_agenda_nuance.pl"/>
 									</Folder>
 									<F N="packs_sys/logicmoo_nlu/ext/SIRIDUS/UGOT-D31/godis-apps/domain-agendatalk/agendatalk_nuance.pl"/>
@@ -10008,6 +11006,7 @@
 									<F N="packs_sys/logicmoo_nlu/ext/SIRIDUS/UGOT-D31/godis-apps/domain-legoturtle/lexicon_legoturtle_svenska.pl"/>
 									<F N="packs_sys/logicmoo_nlu/ext/SIRIDUS/UGOT-D31/godis-apps/domain-legoturtle/pbforth.srec"/>
 									<F N="packs_sys/logicmoo_nlu/ext/SIRIDUS/UGOT-D31/godis-apps/domain-legoturtle/semsort_legoturtle.pl"/>
+									<F N="packs_sys/logicmoo_nlu/ext/SIRIDUS/UGOT-D31/godis-apps/domain-legoturtle/setup-nuance.bat"/>
 									<F N="packs_sys/logicmoo_nlu/ext/SIRIDUS/UGOT-D31/godis-apps/domain-legoturtle/start_legoturtle.pl"/>
 								</Folder>
 								<Folder Name="domain-medical">
@@ -10046,6 +11045,10 @@
 										<Folder Name="MultiModal">
 											<F N="packs_sys/logicmoo_nlu/ext/SIRIDUS/UGOT-D31/godis-apps/domain-player/DJGoDisGram/MultiModal/README"/>
 										</Folder>
+									</Folder>
+									<Folder Name="inoutnuance">
+										<F N="packs_sys/logicmoo_nlu/ext/SIRIDUS/UGOT-D31/godis-apps/domain-player/inoutnuance/compile.bat"/>
+										<F N="packs_sys/logicmoo_nlu/ext/SIRIDUS/UGOT-D31/godis-apps/domain-player/inoutnuance/run.bat"/>
 									</Folder>
 									<Folder Name="player-old">
 										<Folder Name="Resources">
@@ -10096,12 +11099,14 @@
 									<F N="packs_sys/logicmoo_nlu/ext/SIRIDUS/UGOT-D31/godis-apps/domain-player/interpret_gf.pl"/>
 									<F N="packs_sys/logicmoo_nlu/ext/SIRIDUS/UGOT-D31/godis-apps/domain-player/output_mm.pl"/>
 									<F N="packs_sys/logicmoo_nlu/ext/SIRIDUS/UGOT-D31/godis-apps/domain-player/player.config"/>
+									<F N="packs_sys/logicmoo_nlu/ext/SIRIDUS/UGOT-D31/godis-apps/domain-player/player.speech.bat"/>
 									<F N="packs_sys/logicmoo_nlu/ext/SIRIDUS/UGOT-D31/godis-apps/domain-player/player_unimodal.pl"/>
 									<F N="packs_sys/logicmoo_nlu/ext/SIRIDUS/UGOT-D31/godis-apps/domain-player/tts_killer_agent.pl"/>
 								</Folder>
 								<Folder Name="domain-ta">
 									<Folder Name="Resources">
 										<F N="packs_sys/logicmoo_nlu/ext/SIRIDUS/UGOT-D31/godis-apps/domain-ta/Resources/asrg_travel_english.pl"/>
+										<F N="packs_sys/logicmoo_nlu/ext/SIRIDUS/UGOT-D31/godis-apps/domain-ta/Resources/compile_nuance_grammar.bat"/>
 										<F N="packs_sys/logicmoo_nlu/ext/SIRIDUS/UGOT-D31/godis-apps/domain-ta/Resources/database_travel.pl"/>
 										<F N="packs_sys/logicmoo_nlu/ext/SIRIDUS/UGOT-D31/godis-apps/domain-ta/Resources/domain_travel.pl"/>
 										<F N="packs_sys/logicmoo_nlu/ext/SIRIDUS/UGOT-D31/godis-apps/domain-ta/Resources/lexicon_travel_english.pl"/>
@@ -10194,6 +11199,7 @@
 									</Folder>
 									<Folder Name="Speech">
 										<F N="packs_sys/logicmoo_nlu/ext/SIRIDUS/UGOT-D31/godis-apps/domain-vcr/Speech/vcr.config"/>
+										<F N="packs_sys/logicmoo_nlu/ext/SIRIDUS/UGOT-D31/godis-apps/domain-vcr/Speech/vcr_speech.bat"/>
 									</Folder>
 									<Folder Name="Trash">
 										<F N="packs_sys/logicmoo_nlu/ext/SIRIDUS/UGOT-D31/godis-apps/domain-vcr/Trash/device_vcr_fnuttar.pl"/>
@@ -10317,6 +11323,7 @@
 									<Folder Name="godis-basic">
 										<Folder Name="Agents">
 											<F N="packs_sys/logicmoo_nlu/ext/SIRIDUS/UGOT-D31/trindikit4-0.1alpha/examples/godis-basic/Agents/app_search_paths.pl"/>
+											<F N="packs_sys/logicmoo_nlu/ext/SIRIDUS/UGOT-D31/trindikit4-0.1alpha/examples/godis-basic/Agents/compileTextIO.bat"/>
 											<F N="packs_sys/logicmoo_nlu/ext/SIRIDUS/UGOT-D31/trindikit4-0.1alpha/examples/godis-basic/Agents/compileTextIO.sh"/>
 											<F N="packs_sys/logicmoo_nlu/ext/SIRIDUS/UGOT-D31/trindikit4-0.1alpha/examples/godis-basic/Agents/control_agent.pl"/>
 											<F N="packs_sys/logicmoo_nlu/ext/SIRIDUS/UGOT-D31/trindikit4-0.1alpha/examples/godis-basic/Agents/dme_agent.pl"/>
@@ -10350,9 +11357,11 @@
 										<Folder Name="TISdefs">
 											<F N="packs_sys/logicmoo_nlu/ext/SIRIDUS/UGOT-D31/trindikit4-0.1alpha/examples/godis-basic/TISdefs/is_def.pl"/>
 										</Folder>
+										<F N="packs_sys/logicmoo_nlu/ext/SIRIDUS/UGOT-D31/trindikit4-0.1alpha/examples/godis-basic/godis-basic.bat"/>
 										<F N="packs_sys/logicmoo_nlu/ext/SIRIDUS/UGOT-D31/trindikit4-0.1alpha/examples/godis-basic/godis-basic.config"/>
 										<F N="packs_sys/logicmoo_nlu/ext/SIRIDUS/UGOT-D31/trindikit4-0.1alpha/examples/godis-basic/godis-basic.sh"/>
 										<F N="packs_sys/logicmoo_nlu/ext/SIRIDUS/UGOT-D31/trindikit4-0.1alpha/examples/godis-basic/README.txt"/>
+										<F N="packs_sys/logicmoo_nlu/ext/SIRIDUS/UGOT-D31/trindikit4-0.1alpha/examples/godis-basic/single_agent.bat"/>
 										<F N="packs_sys/logicmoo_nlu/ext/SIRIDUS/UGOT-D31/trindikit4-0.1alpha/examples/godis-basic/single_agent.sh"/>
 									</Folder>
 									<F N="packs_sys/logicmoo_nlu/ext/SIRIDUS/UGOT-D31/trindikit4-0.1alpha/examples/readme.txt"/>
@@ -12215,6 +13224,7 @@
 				<F N="packs_sys/swicli/.ignore-on-commit"/>
 				<F N="packs_sys/swicli/.project"/>
 				<F N="packs_sys/swicli/make-linux.sh"/>
+				<F N="packs_sys/swicli/make-windows.bat"/>
 				<F N="packs_sys/swicli/pack.pl"/>
 				<F N="packs_sys/swicli/README.md"/>
 			</Folder>
@@ -12934,6 +13944,11 @@
 									<Folder Name="bash">
 										<F N="packs_web/butterfly/lib/python3.7/site-packages/virtualenv/activation/bash/activate.sh"/>
 									</Folder>
+									<Folder Name="batch">
+										<F N="packs_web/butterfly/lib/python3.7/site-packages/virtualenv/activation/batch/activate.bat"/>
+										<F N="packs_web/butterfly/lib/python3.7/site-packages/virtualenv/activation/batch/deactivate.bat"/>
+										<F N="packs_web/butterfly/lib/python3.7/site-packages/virtualenv/activation/batch/pydoc.bat"/>
+									</Folder>
 								</Folder>
 							</Folder>
 							<Folder Name="virtualenv-20.1.0.dist-info">
@@ -12950,6 +13965,21 @@
 							</Folder>
 							<Folder Name="zipp-3.4.0.dist-info">
 								<F N="packs_web/butterfly/lib/python3.7/site-packages/zipp-3.4.0.dist-info/INSTALLER"/>
+							</Folder>
+						</Folder>
+					</Folder>
+				</Folder>
+				<Folder Name="lib64">
+					<Folder Name="python3.7">
+						<Folder Name="site-packages">
+							<Folder Name="virtualenv">
+								<Folder Name="activation">
+									<Folder Name="batch">
+										<F N="packs_web/butterfly/lib64/python3.7/site-packages/virtualenv/activation/batch/activate.bat"/>
+										<F N="packs_web/butterfly/lib64/python3.7/site-packages/virtualenv/activation/batch/deactivate.bat"/>
+										<F N="packs_web/butterfly/lib64/python3.7/site-packages/virtualenv/activation/batch/pydoc.bat"/>
+									</Folder>
+								</Folder>
 							</Folder>
 						</Folder>
 					</Folder>
@@ -14846,6 +15876,19 @@
 						<F N="packs_web/swish/web/js/term.js"/>
 						<F N="packs_web/swish/web/js/utils.js"/>
 						<F N="packs_web/swish/web/js/version.js"/>
+					</Folder>
+					<Folder Name="node_modules">
+						<Folder Name="ace">
+							<Folder Name="build">
+								<Folder Name="demo">
+									<Folder Name="kitchen-sink">
+										<Folder Name="docs">
+											<F N="packs_web/swish/web/node_modules/ace/build/demo/kitchen-sink/docs/batchfile.bat"/>
+										</Folder>
+									</Folder>
+								</Folder>
+							</Folder>
+						</Folder>
 					</Folder>
 					<Folder Name="patches">
 						<F N="packs_web/swish/web/patches/jsplitter.patch"/>
@@ -22854,6 +23897,15 @@
 							<F N="prologmud_server/eclipse-workspace/DEIRA/run/hrss/RaceDataReceiver.java"/>
 							<F N="prologmud_server/eclipse-workspace/DEIRA/run/hrss/Reporter.java"/>
 						</Folder>
+						<F N="prologmud_server/eclipse-workspace/DEIRA/run/debug.bat"/>
+						<F N="prologmud_server/eclipse-workspace/DEIRA/run/deira-debug.bat"/>
+						<F N="prologmud_server/eclipse-workspace/DEIRA/run/deira.bat"/>
+						<F N="prologmud_server/eclipse-workspace/DEIRA/run/hapteklink.bat"/>
+						<F N="prologmud_server/eclipse-workspace/DEIRA/run/hrss-debug.bat"/>
+						<F N="prologmud_server/eclipse-workspace/DEIRA/run/hrss.bat"/>
+						<F N="prologmud_server/eclipse-workspace/DEIRA/run/run.bat"/>
+						<F N="prologmud_server/eclipse-workspace/DEIRA/run/setpaths.bat"/>
+						<F N="prologmud_server/eclipse-workspace/DEIRA/run/visagestub.bat"/>
 					</Folder>
 					<Folder Name="src">
 						<Folder Name="nl">
@@ -23242,6 +24294,13 @@
 						<F N="prologmud_server/eclipse-workspace/FAtiMA_impl/WorldTest/.project"/>
 					</Folder>
 					<F N="prologmud_server/eclipse-workspace/FAtiMA_impl/accessibility.properties"/>
+					<F N="prologmud_server/eclipse-workspace/FAtiMA_impl/John.bat"/>
+					<F N="prologmud_server/eclipse-workspace/FAtiMA_impl/Luke.bat"/>
+					<F N="prologmud_server/eclipse-workspace/FAtiMA_impl/Lupo.bat"/>
+					<F N="prologmud_server/eclipse-workspace/FAtiMA_impl/Maia.bat"/>
+					<F N="prologmud_server/eclipse-workspace/FAtiMA_impl/setpaths.bat"/>
+					<F N="prologmud_server/eclipse-workspace/FAtiMA_impl/WorldTest (FearNot).bat"/>
+					<F N="prologmud_server/eclipse-workspace/FAtiMA_impl/WorldTest (RedHood).bat"/>
 				</Folder>
 				<Folder Name="logicmoo_pfc_example">
 					<F N="prologmud_server/eclipse-workspace/logicmoo_pfc_example/.project"/>
@@ -23760,6 +24819,7 @@
 					</Folder>
 					<Folder Name="twitie-tagger">
 						<F N="prologmud_server/eclipse-workspace/stanford_corenlp/twitie-tagger/orth.en.csv"/>
+						<F N="prologmud_server/eclipse-workspace/stanford_corenlp/twitie-tagger/show-result.bat"/>
 						<F N="prologmud_server/eclipse-workspace/stanford_corenlp/twitie-tagger/show-result.sh"/>
 						<F N="prologmud_server/eclipse-workspace/stanford_corenlp/twitie-tagger/t_eval.vcb-labelled"/>
 					</Folder>
@@ -23773,9 +24833,11 @@
 						<F N="prologmud_server/eclipse-workspace/stanford_parser/bin/makeSerialized.csh"/>
 					</Folder>
 					<F N="prologmud_server/eclipse-workspace/stanford_parser/DependencyParserDemo.java"/>
+					<F N="prologmud_server/eclipse-workspace/stanford_parser/lexparser-gui.bat"/>
 					<F N="prologmud_server/eclipse-workspace/stanford_parser/lexparser-gui.sh"/>
 					<F N="prologmud_server/eclipse-workspace/stanford_parser/lexparser-lang-train-test.sh"/>
 					<F N="prologmud_server/eclipse-workspace/stanford_parser/lexparser-lang.sh"/>
+					<F N="prologmud_server/eclipse-workspace/stanford_parser/lexparser.bat"/>
 					<F N="prologmud_server/eclipse-workspace/stanford_parser/lexparser.sh"/>
 					<F N="prologmud_server/eclipse-workspace/stanford_parser/ParserDemo.java"/>
 					<F N="prologmud_server/eclipse-workspace/stanford_parser/ParserDemo2.java"/>
@@ -23784,6 +24846,9 @@
 				</Folder>
 				<Folder Name="SWI-Prolog-JPL">
 					<Folder Name="pl">
+						<Folder Name="bin">
+							<F N="prologmud_server/eclipse-workspace/SWI-Prolog-JPL/pl/bin/mkboot.bat"/>
+						</Folder>
 						<Folder Name="doc">
 							<Folder Name="packages">
 								<Folder Name="examples">
@@ -23794,21 +24859,26 @@
 											</Folder>
 											<Folder Name="Exceptions">
 												<F N="prologmud_server/eclipse-workspace/SWI-Prolog-JPL/pl/doc/packages/examples/jpl/java/Exceptions/Exceptions.java"/>
+												<F N="prologmud_server/eclipse-workspace/SWI-Prolog-JPL/pl/doc/packages/examples/jpl/java/Exceptions/run.bat"/>
 											</Folder>
 											<Folder Name="Exceptions2">
 												<F N="prologmud_server/eclipse-workspace/SWI-Prolog-JPL/pl/doc/packages/examples/jpl/java/Exceptions2/Exceptions2.java"/>
+												<F N="prologmud_server/eclipse-workspace/SWI-Prolog-JPL/pl/doc/packages/examples/jpl/java/Exceptions2/run.bat"/>
 											</Folder>
 											<Folder Name="factorial">
 												<F N="prologmud_server/eclipse-workspace/SWI-Prolog-JPL/pl/doc/packages/examples/jpl/java/factorial/Factorial.java"/>
 											</Folder>
 											<Folder Name="FamilyMT">
 												<F N="prologmud_server/eclipse-workspace/SWI-Prolog-JPL/pl/doc/packages/examples/jpl/java/FamilyMT/FamilyMT.java"/>
+												<F N="prologmud_server/eclipse-workspace/SWI-Prolog-JPL/pl/doc/packages/examples/jpl/java/FamilyMT/run.bat"/>
 											</Folder>
 											<Folder Name="family">
 												<F N="prologmud_server/eclipse-workspace/SWI-Prolog-JPL/pl/doc/packages/examples/jpl/java/family/Family.java"/>
 												<F N="prologmud_server/eclipse-workspace/SWI-Prolog-JPL/pl/doc/packages/examples/jpl/java/family/FamilyMT.java"/>
+												<F N="prologmud_server/eclipse-workspace/SWI-Prolog-JPL/pl/doc/packages/examples/jpl/java/family/run.bat"/>
 											</Folder>
 											<Folder Name="semWeb">
+												<F N="prologmud_server/eclipse-workspace/SWI-Prolog-JPL/pl/doc/packages/examples/jpl/java/semWeb/run.bat"/>
 												<F N="prologmud_server/eclipse-workspace/SWI-Prolog-JPL/pl/doc/packages/examples/jpl/java/semWeb/SemWeb.java"/>
 											</Folder>
 											<Folder Name="system">
@@ -23817,9 +24887,11 @@
 												<F N="prologmud_server/eclipse-workspace/SWI-Prolog-JPL/pl/doc/packages/examples/jpl/java/system/Versions.java"/>
 											</Folder>
 											<Folder Name="Test2">
+												<F N="prologmud_server/eclipse-workspace/SWI-Prolog-JPL/pl/doc/packages/examples/jpl/java/Test2/run.bat"/>
 												<F N="prologmud_server/eclipse-workspace/SWI-Prolog-JPL/pl/doc/packages/examples/jpl/java/Test2/Test2.java"/>
 											</Folder>
 											<Folder Name="test">
+												<F N="prologmud_server/eclipse-workspace/SWI-Prolog-JPL/pl/doc/packages/examples/jpl/java/test/run.bat"/>
 												<F N="prologmud_server/eclipse-workspace/SWI-Prolog-JPL/pl/doc/packages/examples/jpl/java/test/Test.java"/>
 											</Folder>
 											<Folder Name="testGC">
@@ -23829,15 +24901,19 @@
 												<F N="prologmud_server/eclipse-workspace/SWI-Prolog-JPL/pl/doc/packages/examples/jpl/java/thread/PrologMT.java"/>
 											</Folder>
 											<Folder Name="time">
+												<F N="prologmud_server/eclipse-workspace/SWI-Prolog-JPL/pl/doc/packages/examples/jpl/java/time/run.bat"/>
 												<F N="prologmud_server/eclipse-workspace/SWI-Prolog-JPL/pl/doc/packages/examples/jpl/java/time/Time.java"/>
 											</Folder>
 											<Folder Name="Versions">
+												<F N="prologmud_server/eclipse-workspace/SWI-Prolog-JPL/pl/doc/packages/examples/jpl/java/Versions/run.bat"/>
 												<F N="prologmud_server/eclipse-workspace/SWI-Prolog-JPL/pl/doc/packages/examples/jpl/java/Versions/Versions.java"/>
 											</Folder>
 											<Folder Name="zahed">
+												<F N="prologmud_server/eclipse-workspace/SWI-Prolog-JPL/pl/doc/packages/examples/jpl/java/zahed/run.bat"/>
 												<F N="prologmud_server/eclipse-workspace/SWI-Prolog-JPL/pl/doc/packages/examples/jpl/java/zahed/run.sh"/>
 												<F N="prologmud_server/eclipse-workspace/SWI-Prolog-JPL/pl/doc/packages/examples/jpl/java/zahed/Zahed.java"/>
 											</Folder>
+											<F N="prologmud_server/eclipse-workspace/SWI-Prolog-JPL/pl/doc/packages/examples/jpl/java/env.bat"/>
 										</Folder>
 									</Folder>
 									<Folder Name="protobufs">
@@ -23898,6 +24974,7 @@
 						<F N="prologmud_server/eclipse-workspace/VirtualStoryteller/log/W_agent_2.vs.knowledge.PrologKB.html.lck"/>
 					</Folder>
 					<Folder Name="log.dead">
+						<F N="prologmud_server/eclipse-workspace/VirtualStoryteller/log.dead/__delete_logs.bat"/>
 						<F N="prologmud_server/eclipse-workspace/VirtualStoryteller/log.dead/C_agent_3.vs.characteragent.behaviour.ProposeResponderBehaviour.html"/>
 						<F N="prologmud_server/eclipse-workspace/VirtualStoryteller/log.dead/C_agent_3.vs.fabula.PrologFabulaKnowledgeBase.html"/>
 						<F N="prologmud_server/eclipse-workspace/VirtualStoryteller/log.dead/C_agent_3.vs.knowledge.PrologKB.html"/>
@@ -24155,6 +25232,11 @@
 						</Folder>
 					</Folder>
 					<F N="prologmud_server/eclipse-workspace/VirtualStoryteller/.project"/>
+					<F N="prologmud_server/eclipse-workspace/VirtualStoryteller/compile.bat"/>
+					<F N="prologmud_server/eclipse-workspace/VirtualStoryteller/cpappend.bat"/>
+					<F N="prologmud_server/eclipse-workspace/VirtualStoryteller/process_launcher.bat"/>
+					<F N="prologmud_server/eclipse-workspace/VirtualStoryteller/run.bat"/>
+					<F N="prologmud_server/eclipse-workspace/VirtualStoryteller/setpaths.bat"/>
 				</Folder>
 				<Folder Name="WumpusAgents">
 					<F N="prologmud_server/eclipse-workspace/WumpusAgents/.project"/>
@@ -24399,6 +25481,50 @@
 			<F N="prologmud_server/TONOTIFY.md"/>
 			<F N="prologmud_server/TONOTIFY.md"/>
 		</Folder>
+		<Folder Name="share">
+			<Folder Name="swipl">
+				<Folder Name="doc">
+					<Folder Name="packages">
+						<Folder Name="examples">
+							<Folder Name="jpl">
+								<Folder Name="java">
+									<Folder Name="exceptions">
+										<F N="share/swipl/doc/packages/examples/jpl/java/exceptions/run.bat"/>
+									</Folder>
+									<Folder Name="exceptions2">
+										<F N="share/swipl/doc/packages/examples/jpl/java/exceptions2/run.bat"/>
+									</Folder>
+									<Folder Name="family">
+										<F N="share/swipl/doc/packages/examples/jpl/java/family/run.bat"/>
+									</Folder>
+									<Folder Name="familyMT">
+										<F N="share/swipl/doc/packages/examples/jpl/java/familyMT/run.bat"/>
+									</Folder>
+									<Folder Name="semWeb">
+										<F N="share/swipl/doc/packages/examples/jpl/java/semWeb/run.bat"/>
+									</Folder>
+									<Folder Name="test">
+										<F N="share/swipl/doc/packages/examples/jpl/java/test/run.bat"/>
+									</Folder>
+									<Folder Name="test2">
+										<F N="share/swipl/doc/packages/examples/jpl/java/test2/run.bat"/>
+									</Folder>
+									<Folder Name="time">
+										<F N="share/swipl/doc/packages/examples/jpl/java/time/run.bat"/>
+									</Folder>
+									<Folder Name="versions">
+										<F N="share/swipl/doc/packages/examples/jpl/java/versions/run.bat"/>
+									</Folder>
+									<Folder Name="zahed">
+										<F N="share/swipl/doc/packages/examples/jpl/java/zahed/run.bat"/>
+									</Folder>
+								</Folder>
+							</Folder>
+						</Folder>
+					</Folder>
+				</Folder>
+			</Folder>
+		</Folder>
 		<Folder Name="wiki">
 			<Folder Name="docs">
 				<Folder Name="_static">
@@ -24456,96 +25582,96 @@
 		<F
 			N="*.*"
 			Recurse="1"
-			Excludes="swi-prolog;logicmoo_workspace/;usr/;docker/;logicmoo_pldata/;*~/;~*/;~*;*~;.metadata/;.svn/;.git/;CVS/;node_modules/;*.sav?/;*.sav??/;*.sav/;pldata/;*.pldata;*.nldata;.cache/;.deps/;.github/;.bin/;.tmp/;*.pl_;*.pld*;*.pldata;*.Plo;*.sav*/;*.sav/;*.sav?/;*.sav??/;*~/;~*/;.bin/;.cache/;.deps/;.git/;.github/;.metadata/;.svn/;.tmp/;CVS/;Mirrors/;node_modules/;pldata/;*.0*;*.1*;*.2*;*.3*;*.4*;*.5*;*.6*;*.7*;*.8*;*.9*;*.a;*.abap;*.abc;*.abs;*.abw;*.act2g;*.add;*.ahk;*.ai;*.ail;*.ailog;*.aim;*.aiml;*.aimmspack;*.alda;*.am;*.ann;*.Apache;*.apex;*.aql;*.arff;*.ari;*.arq;*.arrange;*.as;*.attr;*.auto;*.autopos;*.autopron;*.aux;*.avg;*.awk;*.b;*.b?*;*.backup;*.bak;*.bbl;*.bib;*.bin;*.bis;*.bis1;*.bis2;*.bis3;*.bis4;*.blif;*.bm;*.bro;*.BSD;*.bst;*.bz2;*.bzl;*.c9search_results;*.cabal;*.cache;*.carine;*.cd;*.cfe;*.cfgm;*.cfs;*.CGE;*.cgi;*.cgx;*.chan;*.chan~bak;*.check_cache;*.chk;*.cirru;*.clang-format;*.class;*.classpath;*.cls;*.co;*.code;*.com%2Ffeed%2F;*.compile;*.component;*.conf;*.configuration;*.container;*.copyright;*.correct;*.cp;*.cpackignore;*.cr;*.crt;*.csd;*.csl;*.csr;*.csv;*.cty;*.cvsignore;*.d;*.dart;*.dat;*.data;*.db;*.dcl;*.dddmp;*.dead;*.deb;*.dedam;*.default;*.del;*.deps;*.dia;*.diff;*.dimacs;*.dirstamp;*.dist;*.dll;*.dmp;*.do;*.doc;*.dockerignore;*.doctest;*.dox;*.drace;*.DS_Store;*.dsc;*.dsl;*.dsw;*.dtxt;*.dur;*.dvi;*.dzn;*.edi;*.eex;*.egg;*.egg-link;*.ejs;*.emacs_poole;*.english;*.ent;*.eot;*.epp;*.eprime;*.eps;*.eqp;*.erb;*.err;*.eslintignore;*.ex;*.exe;*.exp;*.expand;*.explode0;*.explode1;*.explode2;*.explode3;*.exsd;*.extra;*.f;*.f90;*.fdb_latexmk;*.fdt;*.fdx;*.feature;*.fgrep;*.fileheader;*.filtered;*.filters;*.finder;*.fit;*.fla;*.fls;*.fn;*.fnm;*.form;*.format;*.frink;*.frq;*.frt;*.fsi;*.fsl;*.ftl;*.full;*.gbg;*.gbs;*.gcode;*.gen;*.generate;*.geo;*.gfcm;*.gfx;*.gif;*.gmr;*.goldpos;*.GPL;*.gr;*.grammar;*.groups;*.grtext;*.gsl;*.guess;*.gyp;*.gz;*.haml;*.hbs;*.hdt;*.hhc;*.hhk;*.hide;*.hjson;*.hlp;*.home;*.hostsp;*.hrc;*.htm;*.html;*.hx;*.icn;*.icns;*.ico;*.ico*;*.ics;*.idx;*.ignore-on-commit;*.ilf;*.ilg;*.in;*.inc;*.includecache;*.ind;*.index;*.info;*.internal;*.inv;*.inx;*.io;*.isabelle;*.ist;*.jar;*.java_;*.jjt;*.jl;*.jpeg;*.jpg;*.jpt;*.jq;*.js;*.jscsrc;*.jsdoc;*.jsdtscope;*.jsfdia;*.jshintrc;*.jsmooth;*.jssm;*.jsx;*.key;*.kt;*.ky;*.la;*.lai;*.layout;*.lck;*.less;*.LESSER;*.leveldb;*.lex;*.lgpl;*.lib;*.liquid;*.list;*.listing;*.lm;*.lnk;*.lo;*.lock;*.Log;*.ls;*.lst;*.ltv;*.lucene;*.lyx;*.m;*.m4;*.macosx;*.macosxu;*.magic;*.make-senitel;*.map;*.mark;*.markdown;*.markers;*.marks;*.mask;*.mat;*.max1;*.max2;*.mc;*.mel;*.metitarski;*.mgtp;*.missing;*.mixal;*.mixt;*.mm;*.mo;*.mod;*.mod2g;*.more;*.mtl;*.mysql;*.mz;*.mzn;*.n;*.name;*.ner;*.net;*.new;*.next;*.nginx;*.nim;*.nix;*.nld*;*.nldata;*.nojekyll;*.noquotes;*.nospan0;*.nospan1;*.nospan2;*.nospan3;*.not;*.npmignore;*.nrm;*.nsi;*.nsmap;*.nt;*.nunjucks;*.nuspec;*.o;*.obj;*.obp;*.ocl;*.ocl_need_dom;*.odt;*.okay;*.old;*.old1;*.old2;*.oldone;*.omdoc;*.opensdf;*.opts;*.orc;*.ord;*.org;*.orig;*.original;*.otf;*.out2;*.p1;*.p12;*.p6;*.package_visibility;*.pages;*.param;*.parses;*.pb;*.pc;*.pdb;*.pdf;*.pdn;*.pem;*.perl;*.persistence;*.pg;*.pgsql;*.pig;*.pins;*.pipe;*.pl-old;*.pl-staffan;*.plp;*.pl~;*.pm;*.png;*.po;*.pom;*.pont;*.pos;*.ppdb;*.pprj;*.ppt;*.pptx;*.praat;*.prc;*.prefix;*.preprocessing;*.pri;*.prisma;*.prl;*.probs;*.profile;*.PrologMUD-freenode;*.prop;*.proto;*.prx;*.ps;*.ps*;*.ps1;*.psd;*.PSF;*.psi;*.pth;*.ptr;*.pug;*.pwd;*.pwp;*.pyc;*.pyi;*.qi;*.qlf;*.qm;*.qml;*.qrc;*.rar;*.rc;*.Rd;*.read;*.readylog;*.red;*.reform;*.registry;*.regression;*.regression0;*.regression1;*.regression2;*.regression3;*.repository;*.Rhtml;*.rtf;*.rty;*.ru;*.run;*.running;*.s;*.sample;*.sass;*.sav;*.saved;*.scad;*.sco;*.scott;*.scss;*.sem;*.ser;*.service;*.sex;*.shorten;*.si;*.sipl;*.sitemap;*.size;*.sjs;*.skel;*.sketch;*.sl;*.slim;*.slot_definitions;*.smarty;*.smj;*.smt1;*.snap;*.snark;*.snippets;*.snk;*.so;*.soc;*.socket;*.solaris;*.sources;*.soy;*.space;*.sprfn;*.sqlserver;*.srec;*.srj;*.srx;*.Start;*.status;*.std;*.stlx;*.stp;*.sty;*.styl;*.style;*.stylelintrc;*.stylesheet;*.sub;*.sunos;*.svn-base;*.swf;*.swift;*.swp;*.syntax;*.system;*.tag;*.tar;*.targets;*.tb;*.tbz2;*.temp;*.test;*.testdddmp;*.tf;*.tgz;*.tif;*.tii;*.tis;*.tmp;*.tmpl;*.tmSnippet;*.tok;*.tp;*.tps;*.tr;*.tr1;*.tr2;*.trans;*.travis;*.tree;*.trp;*.ts;*.tsv;*.tsx;*.ttf;*.uber;*.ui;*.uninstalled;*.unix;*.unstable;*.unused;*.url;*.user;*.user~bak;*.v;*.vala;*.variables;*.verb;*.version;*.vfp;*.vhd;*.vlw;*.vm;*.vpj;*.vpj~;*.vpw;*.vpwhist;*.vr;*.vtg;*.vtg~;*.waldmeister;*.wav;*.whl;*.win;*.win32;*.wld;*.wlk;*.woff;*.woff2;*.wppl;*.wrong;*.xb*;*.xbm;*.xcf;*.xdb;*.xdy;*.xinet;*.xl*;*.xls;*.xmi;*.xp*;*.xpdl;*.xpm;*.xq;*.xsd;*.y;*.yesterday;*.zeek;*.zinc;*.zip"/>
+			Excludes="logicmoo_workspace/;usr/;docker/;logicmoo_pldata/;*~/;~*/;~*;*~;.metadata/;.svn/;.git/;CVS/;node_modules/;*.sav?/;*.sav??/;*.sav/;pldata/;*.pldata;*.nldata;.cache/;.deps/;.github/;.bin/;.tmp/;*.pl_;*.pld*;*.pldata;*.Plo;*.sav*/;*.sav/;*.sav?/;*.sav??/;*~/;~*/;.bin/;.cache/;.deps/;.git/;.github/;.metadata/;.svn/;.tmp/;CVS/;Mirrors/;node_modules/;pldata/;*.0*;*.1*;*.2*;*.3*;*.4*;*.5*;*.6*;*.7*;*.8*;*.9*;*.a;*.abap;*.abc;*.abs;*.abw;*.act2g;*.add;*.ahk;*.ai;*.ail;*.ailog;*.aim;*.aiml;*.aimmspack;*.alda;*.am;*.ann;*.Apache;*.apex;*.aql;*.arff;*.ari;*.arq;*.arrange;*.as;*.attr;*.auto;*.autopos;*.autopron;*.aux;*.avg;*.awk;*.b;*.b?*;*.backup;*.bak;*.bbl;*.bib;*.bin;*.bis;*.bis1;*.bis2;*.bis3;*.bis4;*.blif;*.bm;*.bro;*.BSD;*.bst;*.bz2;*.bzl;*.c9search_results;*.cabal;*.cache;*.carine;*.cd;*.cfe;*.cfgm;*.cfs;*.CGE;*.cgi;*.cgx;*.chan;*.chan~bak;*.check_cache;*.chk;*.cirru;*.clang-format;*.class;*.classpath;*.cls;*.co;*.code;*.com%2Ffeed%2F;*.compile;*.component;*.conf;*.configuration;*.container;*.copyright;*.correct;*.cp;*.cpackignore;*.cr;*.crt;*.csd;*.csl;*.csr;*.csv;*.cty;*.cvsignore;*.d;*.dart;*.dat;*.data;*.db;*.dcl;*.dddmp;*.dead;*.deb;*.dedam;*.default;*.del;*.deps;*.dia;*.diff;*.dimacs;*.dirstamp;*.dist;*.dll;*.dmp;*.do;*.doc;*.dockerignore;*.doctest;*.dox;*.drace;*.DS_Store;*.dsc;*.dsl;*.dsw;*.dtxt;*.dur;*.dvi;*.dzn;*.edi;*.eex;*.egg;*.egg-link;*.ejs;*.emacs_poole;*.english;*.ent;*.eot;*.epp;*.eprime;*.eps;*.eqp;*.erb;*.err;*.eslintignore;*.ex;*.exe;*.exp;*.expand;*.explode0;*.explode1;*.explode2;*.explode3;*.exsd;*.extra;*.f;*.f90;*.fdb_latexmk;*.fdt;*.fdx;*.feature;*.fgrep;*.fileheader;*.filtered;*.filters;*.finder;*.fit;*.fla;*.fls;*.fn;*.fnm;*.form;*.format;*.frink;*.frq;*.frt;*.fsi;*.fsl;*.ftl;*.full;*.gbg;*.gbs;*.gcode;*.gen;*.generate;*.geo;*.gfcm;*.gfx;*.gif;*.gmr;*.goldpos;*.GPL;*.gr;*.grammar;*.groups;*.grtext;*.gsl;*.guess;*.gyp;*.gz;*.haml;*.hbs;*.hdt;*.hhc;*.hhk;*.hide;*.hjson;*.hlp;*.home;*.hostsp;*.hrc;*.htm;*.html;*.hx;*.icn;*.icns;*.ico;*.ico*;*.ics;*.idx;*.ignore-on-commit;*.ilf;*.ilg;*.in;*.inc;*.includecache;*.ind;*.index;*.info;*.internal;*.inv;*.inx;*.io;*.isabelle;*.ist;*.jar;*.java_;*.jjt;*.jl;*.jpeg;*.jpg;*.jpt;*.jq;*.js;*.jscsrc;*.jsdoc;*.jsdtscope;*.jsfdia;*.jshintrc;*.jsmooth;*.jssm;*.jsx;*.key;*.kt;*.ky;*.la;*.lai;*.layout;*.lck;*.less;*.LESSER;*.leveldb;*.lex;*.lgpl;*.lib;*.liquid;*.list;*.listing;*.lm;*.lnk;*.lo;*.lock;*.Log;*.ls;*.lst;*.ltv;*.lucene;*.lyx;*.m;*.m4;*.macosx;*.macosxu;*.magic;*.make-senitel;*.map;*.mark;*.markdown;*.markers;*.marks;*.mask;*.mat;*.max1;*.max2;*.mc;*.mel;*.metitarski;*.mgtp;*.missing;*.mixal;*.mixt;*.mm;*.mo;*.mod;*.mod2g;*.more;*.mtl;*.mysql;*.mz;*.mzn;*.n;*.name;*.ner;*.net;*.new;*.next;*.nginx;*.nim;*.nix;*.nld*;*.nldata;*.nojekyll;*.noquotes;*.nospan0;*.nospan1;*.nospan2;*.nospan3;*.not;*.npmignore;*.nrm;*.nsi;*.nsmap;*.nt;*.nunjucks;*.nuspec;*.o;*.obj;*.obp;*.ocl;*.ocl_need_dom;*.odt;*.okay;*.old;*.old1;*.old2;*.oldone;*.omdoc;*.opensdf;*.opts;*.orc;*.ord;*.org;*.orig;*.original;*.otf;*.out2;*.p1;*.p12;*.p6;*.package_visibility;*.pages;*.param;*.parses;*.pb;*.pc;*.pdb;*.pdf;*.pdn;*.pem;*.perl;*.persistence;*.pg;*.pgsql;*.pig;*.pins;*.pipe;*.pl-old;*.pl-staffan;*.plp;*.pl~;*.pm;*.png;*.po;*.pom;*.pont;*.pos;*.ppdb;*.pprj;*.ppt;*.pptx;*.praat;*.prc;*.prefix;*.preprocessing;*.pri;*.prisma;*.prl;*.probs;*.profile;*.PrologMUD-freenode;*.prop;*.proto;*.prx;*.ps;*.ps*;*.ps1;*.psd;*.PSF;*.psi;*.pth;*.ptr;*.pug;*.pwd;*.pwp;*.pyc;*.pyi;*.qi;*.qlf;*.qm;*.qml;*.qrc;*.rar;*.rc;*.Rd;*.read;*.readylog;*.red;*.reform;*.registry;*.regression;*.regression0;*.regression1;*.regression2;*.regression3;*.repository;*.Rhtml;*.rtf;*.rty;*.ru;*.run;*.running;*.s;*.sample;*.sass;*.sav;*.saved;*.scad;*.sco;*.scott;*.scss;*.sem;*.ser;*.service;*.sex;*.shorten;*.si;*.sipl;*.sitemap;*.size;*.sjs;*.skel;*.sketch;*.sl;*.slim;*.slot_definitions;*.smarty;*.smj;*.smt1;*.snap;*.snark;*.snippets;*.snk;*.so;*.soc;*.socket;*.solaris;*.sources;*.soy;*.space;*.sprfn;*.sqlserver;*.srec;*.srj;*.srx;*.Start;*.status;*.std;*.stlx;*.stp;*.sty;*.styl;*.style;*.stylelintrc;*.stylesheet;*.sub;*.sunos;*.svn-base;*.swf;*.swift;*.swp;*.syntax;*.system;*.tag;*.tar;*.targets;*.tb;*.tbz2;*.temp;*.test;*.testdddmp;*.tf;*.tgz;*.tif;*.tii;*.tis;*.tmp;*.tmpl;*.tmSnippet;*.tok;*.tp;*.tps;*.tr;*.tr1;*.tr2;*.trans;*.travis;*.tree;*.trp;*.ts;*.tsv;*.tsx;*.ttf;*.uber;*.ui;*.uninstalled;*.unix;*.unstable;*.unused;*.url;*.user;*.user~bak;*.v;*.vala;*.variables;*.verb;*.version;*.vfp;*.vhd;*.vlw;*.vm;*.vpj;*.vpj~;*.vpw;*.vpwhist;*.vr;*.vtg;*.vtg~;*.waldmeister;*.wav;*.whl;*.win;*.win32;*.wld;*.wlk;*.woff;*.woff2;*.wppl;*.wrong;*.xb*;*.xbm;*.xcf;*.xdb;*.xdy;*.xinet;*.xl*;*.xls;*.xmi;*.xp*;*.xpdl;*.xpm;*.xq;*.xsd;*.y;*.yesterday;*.zeek;*.zinc;*.zip"/>
 		<F
 			N="*.clif"
 			Recurse="1"
 			Refilter="0"
-			Excludes="logicmoo_workspace/;swi-prolog/;usr/;docker/;logicmoo_pldata/;*~/;~*/;~*;*~;.metadata/;.svn/;.git/;CVS/;node_modules/;*.sav?/;*.sav??/;*.sav/;pldata/;*.pldata;*.nldata;.cache/;.deps/;.github/;.bin/;.tmp/"/>
+			Excludes="logicmoo_workspace/;usr/;docker/;logicmoo_pldata/;*~/;~*/;~*;*~;.metadata/;.svn/;.git/;CVS/;node_modules/;*.sav?/;*.sav??/;*.sav/;pldata/;*.pldata;*.nldata;.cache/;.deps/;.github/;.bin/;.tmp/"/>
 		<F
 			N="*.clp"
 			Recurse="1"
 			Refilter="0"
-			Excludes="logicmoo_workspace/;swi-prolog/;usr/;docker/;logicmoo_pldata/;*~/;~*/;~*;*~;.metadata/;.svn/;.git/;CVS/;node_modules/;*.sav?/;*.sav??/;*.sav/;pldata/;*.pldata;*.nldata;.cache/;.deps/;.github/;.bin/;.tmp/"/>
+			Excludes="logicmoo_workspace/;usr/;docker/;logicmoo_pldata/;*~/;~*/;~*;*~;.metadata/;.svn/;.git/;CVS/;node_modules/;*.sav?/;*.sav??/;*.sav/;pldata/;*.pldata;*.nldata;.cache/;.deps/;.github/;.bin/;.tmp/"/>
 		<F
 			N="*.conf"
 			Recurse="1"
 			Refilter="0"
-			Excludes="logicmoo_workspace/;swi-prolog/;usr/;docker/;logicmoo_pldata/;*~/;~*/;~*;*~;.metadata/;.svn/;.git/;CVS/;node_modules/;*.sav?/;*.sav??/;*.sav/;pldata/;*.pldata;*.nldata;.cache/;.deps/;.github/;.bin/;.tmp/"/>
+			Excludes="logicmoo_workspace/;usr/;docker/;logicmoo_pldata/;*~/;~*/;~*;*~;.metadata/;.svn/;.git/;CVS/;node_modules/;*.sav?/;*.sav??/;*.sav/;pldata/;*.pldata;*.nldata;.cache/;.deps/;.github/;.bin/;.tmp/"/>
 		<F
 			N="*.e"
 			Recurse="1"
 			Refilter="0"
-			Excludes="logicmoo_workspace/;swi-prolog/;usr/;docker/;logicmoo_pldata/;*~/;~*/;~*;*~;.metadata/;.svn/;.git/;CVS/;node_modules/;*.sav?/;*.sav??/;*.sav/;pldata/;*.pldata;*.nldata;.cache/;.deps/;.github/;.bin/;.tmp/"/>
+			Excludes="logicmoo_workspace/;usr/;docker/;logicmoo_pldata/;*~/;~*/;~*;*~;.metadata/;.svn/;.git/;CVS/;node_modules/;*.sav?/;*.sav??/;*.sav/;pldata/;*.pldata;*.nldata;.cache/;.deps/;.github/;.bin/;.tmp/"/>
 		<F
 			N="*.jess"
 			Recurse="1"
 			Refilter="0"
-			Excludes="logicmoo_workspace/;swi-prolog/;usr/;docker/;logicmoo_pldata/;*~/;~*/;~*;*~;.metadata/;.svn/;.git/;CVS/;node_modules/;*.sav?/;*.sav??/;*.sav/;pldata/;*.pldata;*.nldata;.cache/;.deps/;.github/;.bin/;.tmp/"/>
+			Excludes="logicmoo_workspace/;usr/;docker/;logicmoo_pldata/;*~/;~*/;~*;*~;.metadata/;.svn/;.git/;CVS/;node_modules/;*.sav?/;*.sav??/;*.sav/;pldata/;*.pldata;*.nldata;.cache/;.deps/;.github/;.bin/;.tmp/"/>
 		<F
 			N="*.kif"
 			Recurse="1"
 			Refilter="0"
-			Excludes="logicmoo_workspace/;swi-prolog/;usr/;docker/;logicmoo_pldata/;*~/;~*/;~*;*~;.metadata/;.svn/;.git/;CVS/;node_modules/;*.sav?/;*.sav??/;*.sav/;pldata/;*.pldata;*.nldata;.cache/;.deps/;.github/;.bin/;.tmp/"/>
+			Excludes="logicmoo_workspace/;usr/;docker/;logicmoo_pldata/;*~/;~*/;~*;*~;.metadata/;.svn/;.git/;CVS/;node_modules/;*.sav?/;*.sav??/;*.sav/;pldata/;*.pldata;*.nldata;.cache/;.deps/;.github/;.bin/;.tmp/"/>
 		<F
 			N="*.md"
 			Recurse="1"
 			Refilter="0"
-			Excludes="logicmoo_workspace/;swi-prolog/;usr/;docker/;logicmoo_pldata/;*~/;~*/;~*;*~;.metadata/;.svn/;.git/;CVS/;node_modules/;*.sav?/;*.sav??/;*.sav/;pldata/;*.pldata;*.nldata;.cache/;.deps/;.github/;.bin/;.tmp/"/>
+			Excludes="logicmoo_workspace/;usr/;docker/;logicmoo_pldata/;*~/;~*/;~*;*~;.metadata/;.svn/;.git/;CVS/;node_modules/;*.sav?/;*.sav??/;*.sav/;pldata/;*.pldata;*.nldata;.cache/;.deps/;.github/;.bin/;.tmp/"/>
 		<F
 			N="*.owl"
 			Recurse="1"
 			Refilter="0"
-			Excludes="logicmoo_workspace/;swi-prolog/;usr/;docker/;logicmoo_pldata/;*~/;~*/;~*;*~;.metadata/;.svn/;.git/;CVS/;node_modules/;*.sav?/;*.sav??/;*.sav/;pldata/;*.pldata;*.nldata;.cache/;.deps/;.github/;.bin/;.tmp/"/>
+			Excludes="logicmoo_workspace/;usr/;docker/;logicmoo_pldata/;*~/;~*/;~*;*~;.metadata/;.svn/;.git/;CVS/;node_modules/;*.sav?/;*.sav??/;*.sav/;pldata/;*.pldata;*.nldata;.cache/;.deps/;.github/;.bin/;.tmp/"/>
 		<F
 			N="*.P"
 			Recurse="1"
 			Refilter="0"
-			Excludes="logicmoo_workspace/;swi-prolog/;usr/;docker/;logicmoo_pldata/;*~/;~*/;~*;*~;.metadata/;.svn/;.git/;CVS/;node_modules/;*.sav?/;*.sav??/;*.sav/;pldata/;*.pldata;*.nldata;.cache/;.deps/;.github/;.bin/;.tmp/"/>
+			Excludes="logicmoo_workspace/;usr/;docker/;logicmoo_pldata/;*~/;~*/;~*;*~;.metadata/;.svn/;.git/;CVS/;node_modules/;*.sav?/;*.sav??/;*.sav/;pldata/;*.pldata;*.nldata;.cache/;.deps/;.github/;.bin/;.tmp/"/>
 		<F
 			N="*.pl"
 			Recurse="1"
 			Refilter="0"
-			Excludes="logicmoo_workspace/;swi-prolog/;usr/;docker/;logicmoo_pldata/;*~/;~*/;~*;*~;.metadata/;.svn/;.git/;CVS/;node_modules/;*.sav?/;*.sav??/;*.sav/;pldata/;*.pldata;*.nldata;.cache/;.deps/;.github/;.bin/;.tmp/"/>
+			Excludes="logicmoo_workspace/;usr/;docker/;logicmoo_pldata/;*~/;~*/;~*;*~;.metadata/;.svn/;.git/;CVS/;node_modules/;*.sav?/;*.sav??/;*.sav/;pldata/;*.pldata;*.nldata;.cache/;.deps/;.github/;.bin/;.tmp/"/>
 		<F
 			N="*.pprj"
 			Recurse="1"
 			Refilter="0"
-			Excludes="logicmoo_workspace/;swi-prolog/;usr/;docker/;logicmoo_pldata/;*~/;~*/;~*;*~;.metadata/;.svn/;.git/;CVS/;node_modules/;*.sav?/;*.sav??/;*.sav/;pldata/;*.pldata;*.nldata;.cache/;.deps/;.github/;.bin/;.tmp/"/>
+			Excludes="logicmoo_workspace/;usr/;docker/;logicmoo_pldata/;*~/;~*/;~*;*~;.metadata/;.svn/;.git/;CVS/;node_modules/;*.sav?/;*.sav??/;*.sav/;pldata/;*.pldata;*.nldata;.cache/;.deps/;.github/;.bin/;.tmp/"/>
 		<F
 			N="*.pro"
 			Recurse="1"
 			Refilter="0"
-			Excludes="logicmoo_workspace/;swi-prolog/;usr/;docker/;logicmoo_pldata/;*~/;~*/;~*;*~;.metadata/;.svn/;.git/;CVS/;node_modules/;*.sav?/;*.sav??/;*.sav/;pldata/;*.pldata;*.nldata;.cache/;.deps/;.github/;.bin/;.tmp/"/>
+			Excludes="logicmoo_workspace/;usr/;docker/;logicmoo_pldata/;*~/;~*/;~*;*~;.metadata/;.svn/;.git/;CVS/;node_modules/;*.sav?/;*.sav??/;*.sav/;pldata/;*.pldata;*.nldata;.cache/;.deps/;.github/;.bin/;.tmp/"/>
 		<F
 			N="*.prolog"
 			Recurse="1"
 			Refilter="0"
-			Excludes="logicmoo_workspace/;swi-prolog/;usr/;docker/;logicmoo_pldata/;*~/;~*/;~*;*~;.metadata/;.svn/;.git/;CVS/;node_modules/;*.sav?/;*.sav??/;*.sav/;pldata/;*.pldata;*.nldata;.cache/;.deps/;.github/;.bin/;.tmp/"/>
+			Excludes="logicmoo_workspace/;usr/;docker/;logicmoo_pldata/;*~/;~*/;~*;*~;.metadata/;.svn/;.git/;CVS/;node_modules/;*.sav?/;*.sav??/;*.sav/;pldata/;*.pldata;*.nldata;.cache/;.deps/;.github/;.bin/;.tmp/"/>
 		<F
 			N="*.sh"
 			Recurse="1"
 			Refilter="0"
-			Excludes="logicmoo_workspace/;swi-prolog/;usr/;docker/;logicmoo_pldata/;*~/;~*/;~*;*~;.metadata/;.svn/;.git/;CVS/;node_modules/;*.sav?/;*.sav??/;*.sav/;pldata/;*.pldata;*.nldata;.cache/;.deps/;.github/;.bin/;.tmp/"/>
+			Excludes="logicmoo_workspace/;usr/;docker/;logicmoo_pldata/;*~/;~*/;~*;*~;.metadata/;.svn/;.git/;CVS/;node_modules/;*.sav?/;*.sav??/;*.sav/;pldata/;*.pldata;*.nldata;.cache/;.deps/;.github/;.bin/;.tmp/"/>
 		<F
 			N="*.subl"
 			Recurse="1"
 			Refilter="0"
-			Excludes="logicmoo_workspace/;swi-prolog/;usr/;docker/;logicmoo_pldata/;*~/;~*/;~*;*~;.metadata/;.svn/;.git/;CVS/;node_modules/;*.sav?/;*.sav??/;*.sav/;pldata/;*.pldata;*.nldata;.cache/;.deps/;.github/;.bin/;.tmp/"/>
+			Excludes="logicmoo_workspace/;usr/;docker/;logicmoo_pldata/;*~/;~*/;~*;*~;.metadata/;.svn/;.git/;CVS/;node_modules/;*.sav?/;*.sav??/;*.sav/;pldata/;*.pldata;*.nldata;.cache/;.deps/;.github/;.bin/;.tmp/"/>
 		<F
 			N="*.trig"
 			Recurse="1"
 			Refilter="0"
-			Excludes="logicmoo_workspace/;swi-prolog/;usr/;docker/;logicmoo_pldata/;*~/;~*/;~*;*~;.metadata/;.svn/;.git/;CVS/;node_modules/;*.sav?/;*.sav??/;*.sav/;pldata/;*.pldata;*.nldata;.cache/;.deps/;.github/;.bin/;.tmp/"/>
+			Excludes="logicmoo_workspace/;usr/;docker/;logicmoo_pldata/;*~/;~*/;~*;*~;.metadata/;.svn/;.git/;CVS/;node_modules/;*.sav?/;*.sav??/;*.sav/;pldata/;*.pldata;*.nldata;.cache/;.deps/;.github/;.bin/;.tmp/"/>
 		<F
 			N="*.ttl"
 			Recurse="1"
 			Refilter="0"
-			Excludes="logicmoo_workspace/;swi-prolog/;usr/;docker/;logicmoo_pldata/;*~/;~*/;~*;*~;.metadata/;.svn/;.git/;CVS/;node_modules/;*.sav?/;*.sav??/;*.sav/;pldata/;*.pldata;*.nldata;.cache/;.deps/;.github/;.bin/;.tmp/"/>
+			Excludes="logicmoo_workspace/;usr/;docker/;logicmoo_pldata/;*~/;~*/;~*;*~;.metadata/;.svn/;.git/;CVS/;node_modules/;*.sav?/;*.sav??/;*.sav/;pldata/;*.pldata;*.nldata;.cache/;.deps/;.github/;.bin/;.tmp/"/>
 		<F
 			N=".*ignore*"
 			Recurse="1"
-			Excludes="logicmoo_workspace/;swi-prolog/;usr/;docker/;logicmoo_pldata/;*~/;~*/;~*;*~;.metadata/;.svn/;.git/;CVS/;node_modules/;*.sav?/;*.sav??/;*.sav/;pldata/;*.pldata;*.nldata;.cache/;.deps/;.github/;.bin/;.tmp/"/>
+			Excludes="logicmoo_workspace/;usr/;docker/;logicmoo_pldata/;*~/;~*/;~*;*~;.metadata/;.svn/;.git/;CVS/;node_modules/;*.sav?/;*.sav??/;*.sav/;pldata/;*.pldata;*.nldata;.cache/;.deps/;.github/;.bin/;.tmp/"/>
 		<F N=".dockerignore"/>
 		<F N=".gitattributes"/>
 		<F N=".gitignore"/>
@@ -24556,7 +25682,7 @@
 			N="config*"
 			Recurse="1"
 			Refilter="0"
-			Excludes="logicmoo_workspace/;swi-prolog/;usr/;docker/;logicmoo_pldata/;*~/;~*/;~*;*~;.metadata/;.svn/;.git/;CVS/;node_modules/;*.sav?/;*.sav??/;*.sav/;pldata/;*.pldata;*.nldata;.cache/;.deps/;.github/;.bin/;.tmp/"/>
+			Excludes="logicmoo_workspace/;usr/;docker/;logicmoo_pldata/;*~/;~*/;~*;*~;.metadata/;.svn/;.git/;CVS/;node_modules/;*.sav?/;*.sav??/;*.sav/;pldata/;*.pldata;*.nldata;.cache/;.deps/;.github/;.bin/;.tmp/"/>
 		<F N="docker-compose.yml"/>
 		<F N="Dockerfile"/>
 		<F N="Dockerfile.new"/>
@@ -24564,7 +25690,7 @@
 			N="INSTALL*"
 			Recurse="1"
 			Refilter="0"
-			Excludes="logicmoo_workspace/;swi-prolog/;usr/;docker/;logicmoo_pldata/;*~/;~*/;~*;*~;.metadata/;.svn/;.git/;CVS/;node_modules/;*.sav?/;*.sav??/;*.sav/;pldata/;*.pldata;*.nldata;.cache/;.deps/;.github/;.bin/;.tmp/"/>
+			Excludes="logicmoo_workspace/;usr/;docker/;logicmoo_pldata/;*~/;~*/;~*;*~;.metadata/;.svn/;.git/;CVS/;node_modules/;*.sav?/;*.sav??/;*.sav/;pldata/;*.pldata;*.nldata;.cache/;.deps/;.github/;.bin/;.tmp/"/>
 		<F N="INSTALL-DEPS.md"/>
 		<F N="INSTALL-EGGDROP.md"/>
 		<F N="INSTALL-GITSUBMODULES.md"/>
@@ -24579,20 +25705,23 @@
 			N="makefile*"
 			Recurse="1"
 			Refilter="0"
-			Excludes="logicmoo_workspace/;swi-prolog/;usr/;docker/;logicmoo_pldata/;*~/;~*/;~*;*~;.metadata/;.svn/;.git/;CVS/;node_modules/;*.sav?/;*.sav??/;*.sav/;pldata/;*.pldata;*.nldata;.cache/;.deps/;.github/;.bin/;.tmp/"/>
+			Excludes="logicmoo_workspace/;usr/;docker/;logicmoo_pldata/;*~/;~*/;~*;*~;.metadata/;.svn/;.git/;CVS/;node_modules/;*.sav?/;*.sav??/;*.sav/;pldata/;*.pldata;*.nldata;.cache/;.deps/;.github/;.bin/;.tmp/"/>
 		<F N="other_files.vpj"/>
 		<F N="potential_plt_tests.txt"/>
 		<F
 			N="readme*"
 			Recurse="1"
 			Refilter="0"
-			Excludes="logicmoo_workspace/;swi-prolog/;usr/;docker/;logicmoo_pldata/;*~/;~*/;~*;*~;.metadata/;.svn/;.git/;CVS/;node_modules/;*.sav?/;*.sav??/;*.sav/;pldata/;*.pldata;*.nldata;.cache/;.deps/;.github/;.bin/;.tmp/"/>
+			Excludes="logicmoo_workspace/;usr/;docker/;logicmoo_pldata/;*~/;~*/;~*;*~;.metadata/;.svn/;.git/;CVS/;node_modules/;*.sav?/;*.sav??/;*.sav/;pldata/;*.pldata;*.nldata;.cache/;.deps/;.github/;.bin/;.tmp/"/>
 		<F N="README.md"/>
 		<F N="README.rst"/>
+		<F N="runFromDocker.bat"/>
 		<F N="runFromDocker.sh"/>
 		<F N="SECURITY.md"/>
+		<F N="startLogicmoo.bat"/>
 		<F N="StartLogicmoo.sh"/>
 		<F N="web_install.sh"/>
+		<F N="windows-fixup-git.bat"/>
 		<F N="workspace.code-workspace"/>
 	</Files>
 </Project>
