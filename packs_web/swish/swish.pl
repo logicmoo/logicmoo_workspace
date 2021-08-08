@@ -77,7 +77,7 @@
 		 /*******************************
 		 *	      VERSION		*
 		 *******************************/
-setup_versions :- is_logicmoo.
+setup_versions :- is_logicmoo,!.
 setup_versions :-
 	prolog_load_context(directory, Dir),
 	register_git_module(swish,
@@ -214,7 +214,7 @@ swish_config:config(show_beware,        false).
 swish_config:config(tabled_results,     false).
 swish_config:config(application,        swish).
 
-is_logicmoo :- gethostname(gitlab),!.
+%is_logicmoo :- gethostname(gitlab),!.
 is_logicmoo :- !.
 
 

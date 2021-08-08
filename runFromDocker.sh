@@ -21,7 +21,7 @@ fi
 apt install -y git screen docker docker.io
 
 DIR0="$( cd "$( dirname "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )"
-DIR0=/opt/logicmoo_workspace
+#DIR0=/opt/logicmoo_workspace
 ROOT_DIRECTORY=$DIR0
 
 if [ "${TERM}" == "screen" ]; then

@@ -4,6 +4,12 @@
    webui_load_swish_and_clio/0,
    webui_start_swish_and_clio/0]).
 
+:- multifile(prolog_version:git_update_versions/1).
+:- dynamic(prolog_version:git_update_versions/1).
+:- multifile(swish_version:git_update_versions/1).
+:- dynamic(swish_version:git_update_versions/1).
+
+
 :- use_module(library(prolog_pack)).
 
 :- if( \+ current_prolog_flag(windows,true)).
@@ -38,9 +44,9 @@ load_web_package_dirs:-
 
   findall(PackDir,'$pack':pack(Pack, PackDir),Before),  
 
-   ignore(catch(make_directory('/tmp/tempDir/pack'),_,true)),
-   (user:file_search_path(pack,'/tmp/tempDir/pack') -> true ; asserta(user:file_search_path(pack,'/tmp/tempDir/pack'))),
-   attach_packs('/tmp/tempDir/pack'),
+   %ignore(catch(make_directory('/tmp/tempDir/pack'),_,true)),
+   %(user:file_search_path(pack,'/tmp/tempDir/pack') -> true ; asserta(user:file_search_path(pack,'/tmp/tempDir/pack'))),
+   %attach_packs('/tmp/tempDir/pack'),
    % pack_install(trill,[upgrade(true),interactive(false)]),    
    % pack_install(cplint_r,[upgrade(true),interactive(false)]),
    % pack_install(rocksdb,[upgrade(true),interactive(false)]),
@@ -58,7 +64,6 @@ load_web_package_dirs:-
   findall(PackDir,'$pack':pack(Pack, PackDir),After),
   (Before\==After -> (writeln(load_package_dirs(After)),pack_list_installed) ; true),
   !.
-
 
   
 :- initialization(load_web_package_dirs, now).
@@ -177,19 +182,24 @@ sandbox:safe_meta_predicate(system:notrace/1).
 :- endif.
 
 :- use_module(library(logicmoo_web_long_message)).
+:- set_long_message_server('https://logicmoo.org').
 :- use_module(library('../../shrdlu/prolog/logicmoo_shrdlu')).
 
-inoxf(Goal):- ignore(notrace(on_x_fail(Goal))).
+%inoxf(Goal):- ignore(notrace(on_x_fail(Goal))).
+inoxf(Goal):- call(Goal),!.
 
-webui_load_swish_and_clio:-
-   ignore(notrace(on_x_fail(webui_load_swish_and_clio_now))).
+:- dynamic(already_webui_load_swish_and_clio/0).
 
-webui_load_swish_and_clio_now:-
+webui_load_swish_and_clio:- already_webui_load_swish_and_clio,!.
+webui_load_swish_and_clio:- 
+   asserta(already_webui_load_swish_and_clio),
    maplist(inoxf,[
    lmconfig:logicmoo_webui_dir(Dir),
    % trace,
    absolute_file_name('../../swish/run_swish_and_clio',Run,[relative_to(Dir),file_type(prolog),file_errors(fail)]),
    user:ensure_loaded(Run),
+   asserta((prolog_version:git_update_versions(V):- (wdmsg(skip(prolog_version:git_update_versions(V))),!))),
+   asserta((swish_version:git_update_versions(V):- (wdmsg(skip(swish_version:git_update_versions(V))),!))),
    swish_app:load_config('./config-enabled-swish'),
    listing(swish_config:login_item/2)]),!.
 
@@ -197,9 +207,9 @@ webui_load_swish_and_clio_now:-
 webui_start_swish_and_clio:- 
    maplist(inoxf,[
    webui_load_swish_and_clio,
-   broadcast:broadcast(http(pre_server_start)),
-   cp_server:cp_server([]),   
    set_long_message_server('https://logicmoo.org'),
+   broadcast:broadcast(http(pre_server_start)),
+   cp_server:cp_server([]),      
    broadcast:broadcast(http(post_server_start)),
    swish:start_swish_stat_collector]),!.
 

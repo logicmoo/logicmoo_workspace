@@ -1,21 +1,52 @@
 #!/bin/bash
-#--help # Clear the SCREEN
+#--help # Clear the SCREEN of \$1
 
-echo -e -n '\033\143'
-printf '\e[H \e2J' 
-echo -e -n '\033]50;ClearScrollback\a'
-echo -e -n "\ec\e[3J"
-echo -ne '\033c'
+export THIS_CMD="$0"
 
-printf '\033[2J\033[H\033[3J'
-echo -e -n '\eP\033]50;ClearScrollback\a\e\P\e\\\\'
+if [ -n "$ZSH_EVAL_CONTEXT" ]; then 
+    [[ $ZSH_EVAL_CONTEXT =~ :file$ ]] && SOURCED=1
+elif [ -n "$KSH_VERSION" ]; then
+    [[ "$(cd $(dirname -- $THIS_CMD) && pwd -P)/$(basename -- $THIS_CMD)" != "$(cd $(dirname -- ${.sh.file}) && pwd -P)/$(basename -- ${.sh.file})" ]] && SOURCED=1
+elif [ -n "$BASH_VERSION" ]; then
+    [[ $THIS_CMD != "$BASH_SOURCE" ]] && SOURCED=1
+elif grep -q dash /proc/$$/cmdline; then
+    case $THIS_CMD in *dash*) SOURCED=1 ;; esac
+fi
 
-clear
-reset -w
-tput reset
-tput rmam
-return 0 2>/dev/null
-exit 0
+if [[ "$SOURCED"=="1" ]] ; then
+    export THIS_CMD=$BASH_SOURCE
+fi
+
+
+if [ -z "$PROMPT_COMMAND" ]; then
+ export PROMPT_COMMAND="resize &>/dev/null; $PROMPT_COMMAND"
+fi
+
+if [ -z "$1" ]; then
+ reset -w
+ export INFO=\"$(ls -l /dev/tty)\"
+ # $THIS_CMD /dev/tty FROM $INFO
+ # -user `whoami` 
+ find /dev/pts/ -type c -writable -exec "$THIS_CMD" {} $1 $2 FROM $INFO \;
+    if [[ "$SOURCED"=="1" ]] ; then
+	shift
+	#echo "The script $BASH_SOURCE $1 $2 WAS sourced."
+    fi
+ return 0 2>/dev/null ; exit 0
+fi
+
+CLS_TO=$1
+
+unset CLS
+export CLS="\e[7h$(stty sane ; stty rows 33 ; stty columns 133 ; stty echo ; clear ; tput reset ; tput rmam ; tset )" > $CLS_TO
+export CLS="${CLS}\e[2K\e[J\e]50;ClearScrollback\a\ec\e[3J\e\143\e[H\e[2J"
+echo -e -n $CLS > $CLS_TO
+echo -e -n "\eP$CLS\e\\\\" > $CLS_TO
+echo -e -n "$(whoami) $THIS_CMD $*\n" > $CLS_TO
+
+return 0 2>/dev/null ; exit 0
+
+#reset -w $CLS_TO
 
 
 
