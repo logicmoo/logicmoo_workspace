@@ -147,6 +147,7 @@ git update-index --assume-unchanged docker/rootfs/etc/letsencrypt/live/logicmoo.
 git update-index --assume-unchanged share
 
 cd prologmud_server
+git update-index --assume-unchanged .config/pcmanfm/LXDE/desktop-items-0.conf
 git update-index --assume-unchanged completion_4001
 git update-index --assume-unchanged __ontologyportal_sumo_Merge_kif.tmp
 git update-index --assume-unchanged completion_4023
