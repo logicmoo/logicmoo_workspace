@@ -164,23 +164,23 @@ MAINTAINER cp -n $LOGICMOO_GAMES/.??*rc ~root/ \
 
 echo "Chowning and Chmoding..."
 cd $LOGICMOO_WS \
- && touch $LOGICMOO_GAMES/tempData/history_4000 \
- && touch $LOGICMOO_GAMES/tempData/completion_4000 \
- && touch $LOGICMOO_GAMES/tempData/history_4001 \
- && touch $LOGICMOO_GAMES/tempData/completion_4001 \
- && touch $LOGICMOO_GAMES/tempData/history_4002 \
- && touch $LOGICMOO_GAMES/tempData/completion_4002 \
- && touch $LOGICMOO_GAMES/tempData/history_4003 \
- && touch $LOGICMOO_GAMES/tempData/completion_4003 \
- && touch $LOGICMOO_GAMES/tempData/history_4004 \
- && touch $LOGICMOO_GAMES/tempData/completion_4004 \
- && touch $LOGICMOO_GAMES/tempData/history_4023 \
- && touch $LOGICMOO_GAMES/tempData/completion_4023 \
- && touch $LOGICMOO_GAMES/tempData/history_4025 \
- && touch $LOGICMOO_GAMES/tempData/completion_4025 \
+ && touch $LOGICMOO_GAMES/tempDir/history_4000 \
+ && touch $LOGICMOO_GAMES/tempDir/completion_4000 \
+ && touch $LOGICMOO_GAMES/tempDir/history_4001 \
+ && touch $LOGICMOO_GAMES/tempDir/completion_4001 \
+ && touch $LOGICMOO_GAMES/tempDir/history_4002 \
+ && touch $LOGICMOO_GAMES/tempDir/completion_4002 \
+ && touch $LOGICMOO_GAMES/tempDir/history_4003 \
+ && touch $LOGICMOO_GAMES/tempDir/completion_4003 \
+ && touch $LOGICMOO_GAMES/tempDir/history_4004 \
+ && touch $LOGICMOO_GAMES/tempDir/completion_4004 \
+ && touch $LOGICMOO_GAMES/tempDir/history_4023 \
+ && touch $LOGICMOO_GAMES/tempDir/completion_4023 \
+ && touch $LOGICMOO_GAMES/tempDir/history_4025 \
+ && touch $LOGICMOO_GAMES/tempDir/completion_4025 \
  && touch $LOGICMOO_GAMES/nohup.out \
- && chmod 777 $LOGICMOO_GAMES/tempData/completion_* \
- && chmod 777 $LOGICMOO_GAMES/tempData/history_* \
+ && chmod 777 $LOGICMOO_GAMES/tempDir/completion_* \
+ && chmod 777 $LOGICMOO_GAMES/tempDir/history_* \
  && chmod 777 $LOGICMOO_GAMES/nohup* \
  && chown $LOGICMOO_USER $LOGICMOO_GAMES/?*0* \
  && chmod 777 /opt/logicmoo_workspace/packs_sys/*/ \

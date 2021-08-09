@@ -22,6 +22,10 @@ SUSER=$3
 STASK=$4
 BF_VEROPTS="--i_hereby_declare_i_dont_want_any_security_whatsoever --debug --unminified --unsecure"
 #BF_VEROPTS="--debug"
+#export HIST_COMP=/tmp/tempDir
+
+#touch $HIST_COMP/completion_$PORT
+#touch $HIST_COMP/history_$PORT
 
 
 if [ "${1}" = "kill" ]; then

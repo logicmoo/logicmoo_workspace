@@ -20,14 +20,15 @@ if [ $# -eq 0 ]
    PORT=$1
 fi
 
-export WD=/opt/logicmoo_workspace/packs_sys/prologmud_samples/prolog/prologmud_sample_games
+export WD=/opt/logicmoo_workspace/prologmud_server
+export HIST_COMP=/tmp/tempDir
 export PATH=/usr/bin:$PATH
 
-touch $WD/completion_$PORT
-touch $WD/history_$PORT
+touch $HIST_COMP/completion_$PORT
+touch $HIST_COMP/history_$PORT
 
 function connect() {
-   rlwrap -a -A -r -c -N -r --file=$WD/completion_$PORT --history-filename=$WD/history_$PORT -s 1111 telnet localhost $PORT
+   rlwrap -a -A -r -c -N -r --file=$HIST_COMP/completion_$PORT --history-filename=$HIST_COMP/history_$PORT -s 1111 telnet localhost $PORT
    return 0
 }
 LOOP=1
