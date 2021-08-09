@@ -2,7 +2,7 @@
 
 <html>
 <head>
-<title>SWI-Prolog 8.3.27 Reference Manual: Section 6.4</title><link rel="home" href="index.html">
+<title>SWI-Prolog 8.3.28 Reference Manual: Section 6.4</title><link rel="home" href="index.html">
 <link rel="contents" href="Contents.html">
 <link rel="index" href="DocIndex.html">
 <link rel="summary" href="summary.html">
@@ -241,7 +241,7 @@ autoloading for modules</span></a></h2>
 <p>SWI-Prolog by default support <em>autoloading</em> from its standard 
 library. Autoloading implies that when a predicate is found missing 
 during execution the library is searched and the predicate is imported 
-lazily using <a id="idx:usemodule2:1944"></a><a class="pred" href="import.html#use_module/2">use_module/2</a>. 
+lazily using <a id="idx:usemodule2:1949"></a><a class="pred" href="import.html#use_module/2">use_module/2</a>. 
 See <a class="sec" href="autoload.html#sec:2.14">section 2.14</a> for 
 details.
 
@@ -255,32 +255,32 @@ autoload predicate.
 
 <p>Nevertheless, a disadvantage of this autoloader is that the 
 dependencies of a module on the libraries are not explicit and tooling 
-such as PceEmacs or <a id="idx:gxref0:1945"></a><a class="pred" href="xref.html#gxref/0">gxref/0</a> 
+such as PceEmacs or <a id="idx:gxref0:1950"></a><a class="pred" href="xref.html#gxref/0">gxref/0</a> 
 are required to find these dependencies. Some users want explicit 
 control over which library predicates are accessed from where, 
-preferably by using <a id="idx:usemodule2:1946"></a><a class="pred" href="import.html#use_module/2">use_module/2</a> 
+preferably by using <a id="idx:usemodule2:1951"></a><a class="pred" href="import.html#use_module/2">use_module/2</a> 
 which explicitly states which predicates are imported from which 
-library.<sup class="fn">168<span class="fn-text">Note that built-in 
+library.<sup class="fn">171<span class="fn-text">Note that built-in 
 predicates still add predicates for general use to all name spaces.</span></sup>
 
 <p>Large applications typically contain source files that are not 
 immediately needed and often are not needed at all in many runs of the 
 program. This can be solved by creating an application-specific autoload 
 library, but with multiple parties providing autoloadable predicates the 
-maintenance becomes fragile. For these two reasons we added <a id="idx:autoload1:1947"></a><a class="pred" href="module-autoload.html#autoload/1">autoload/1</a> 
-and <a id="idx:autoload2:1948"></a><a class="pred" href="module-autoload.html#autoload/2">autoload/2</a> 
-that behave similar to <a id="idx:usemodule12:1949"></a><a class="pred" href="import.html#use_module/1">use_module/[1,2]</a>, 
+maintenance becomes fragile. For these two reasons we added <a id="idx:autoload1:1952"></a><a class="pred" href="module-autoload.html#autoload/1">autoload/1</a> 
+and <a id="idx:autoload2:1953"></a><a class="pred" href="module-autoload.html#autoload/2">autoload/2</a> 
+that behave similar to <a id="idx:usemodule12:1954"></a><a class="pred" href="import.html#use_module/1">use_module/[1,2]</a>, 
 but do not perform the actual loading. The generic autoloader now 
 proceeds as follows if a missing predicate is encountered:
 
 <p>
 <ol class="latex">
-<li>Check <a id="idx:autoload2:1950"></a><a class="pred" href="module-autoload.html#autoload/2">autoload/2</a> 
-declarations. If one specifies the predicate, import it using <a id="idx:usemodule2:1951"></a><a class="pred" href="import.html#use_module/2">use_module/2</a>.
-<li>Check <a id="idx:autoload1:1952"></a><a class="pred" href="module-autoload.html#autoload/1">autoload/1</a> 
+<li>Check <a id="idx:autoload2:1955"></a><a class="pred" href="module-autoload.html#autoload/2">autoload/2</a> 
+declarations. If one specifies the predicate, import it using <a id="idx:usemodule2:1956"></a><a class="pred" href="import.html#use_module/2">use_module/2</a>.
+<li>Check <a id="idx:autoload1:1957"></a><a class="pred" href="module-autoload.html#autoload/1">autoload/1</a> 
 declarations. If the specified file is loaded, check its export list. 
 Otherwise read the module declaration of the target file to find the 
-exports. If the target predicate is found, import it using <a id="idx:usemodule2:1953"></a><a class="pred" href="import.html#use_module/2">use_module/2</a>.
+exports. If the target predicate is found, import it using <a id="idx:usemodule2:1958"></a><a class="pred" href="import.html#use_module/2">use_module/2</a>.
 <li>Perform autoloading from the library if the <a class="flag" href="flags.html#flag:autoload">autoload</a> 
 is <code>true</code>.
 </ol>
@@ -291,31 +291,31 @@ is <code>true</code>.
 +Imports</var>)</a></dt>
 <dd class="defbody">
 Declare that possibly missing predicates in the module in which this 
-declaration occurs are to be resolved by using <a id="idx:usemodule2:1954"></a><a class="pred" href="import.html#use_module/2">use_module/2</a> 
+declaration occurs are to be resolved by using <a id="idx:usemodule2:1959"></a><a class="pred" href="import.html#use_module/2">use_module/2</a> 
 on
 <var>File</var> to (possibly) load the file and make the target 
-predicate available. The <a id="idx:autoload2:1955"></a><a class="pred" href="module-autoload.html#autoload/2">autoload/2</a> 
-variant is tried before <a id="idx:autoload1:1956"></a><a class="pred" href="module-autoload.html#autoload/1">autoload/1</a>. 
-It is not allowed for two <a id="idx:autoload2:1957"></a><a class="pred" href="module-autoload.html#autoload/2">autoload/2</a> 
+predicate available. The <a id="idx:autoload2:1960"></a><a class="pred" href="module-autoload.html#autoload/2">autoload/2</a> 
+variant is tried before <a id="idx:autoload1:1961"></a><a class="pred" href="module-autoload.html#autoload/1">autoload/1</a>. 
+It is not allowed for two <a id="idx:autoload2:1962"></a><a class="pred" href="module-autoload.html#autoload/2">autoload/2</a> 
 declarations to provide the same predicate and it is not allowed to 
-define a predicate provided in this way locally. See also <a id="idx:require1:1958"></a><a class="pred" href="consulting.html#require/1">require/1</a>, 
+define a predicate provided in this way locally. See also <a id="idx:require1:1963"></a><a class="pred" href="consulting.html#require/1">require/1</a>, 
 which allows specifying predicates for autoloading from their default 
 location.
 
-<p>Predicates made available using <a id="idx:autoload2:1959"></a><a class="pred" href="module-autoload.html#autoload/2">autoload/2</a> 
+<p>Predicates made available using <a id="idx:autoload2:1964"></a><a class="pred" href="module-autoload.html#autoload/2">autoload/2</a> 
 behave as defined predicates, which implies that any operation on them 
-will perform autoloading if necessary. Notably <a id="idx:predicateproperty2:1960"></a><a class="pred" href="examineprog.html#predicate_property/2">predicate_property/2</a>, <a id="idx:currentpredicate1:1961"></a><a class="pred" href="examineprog.html#current_predicate/1">current_predicate/1</a> 
+will perform autoloading if necessary. Notably <a id="idx:predicateproperty2:1965"></a><a class="pred" href="examineprog.html#predicate_property/2">predicate_property/2</a>, <a id="idx:currentpredicate1:1966"></a><a class="pred" href="examineprog.html#current_predicate/1">current_predicate/1</a> 
 and
-<a id="idx:clause2:1962"></a><a class="pred" href="examineprog.html#clause/2">clause/2</a> 
+<a id="idx:clause2:1967"></a><a class="pred" href="examineprog.html#clause/2">clause/2</a> 
 are supported.
 
 <p>Currently, neither the existence of <var>File</var>, nor whether it 
-actually exports the given predicates (<a id="idx:autoload2:1963"></a><a class="pred" href="module-autoload.html#autoload/2">autoload/2</a>) 
+actually exports the given predicates (<a id="idx:autoload2:1968"></a><a class="pred" href="module-autoload.html#autoload/2">autoload/2</a>) 
 is verified when the file is loaded. Instead, the declarations are 
 verified when searching for a missing predicate.
 
 <p>If the Prolog flag <a class="flag" href="flags.html#flag:autoload">autoload</a> 
-is set to <code>false</code>, these declarations are interpreted as <a id="idx:usemodule12:1964"></a><a class="pred" href="import.html#use_module/1">use_module/[1,2]</a>.
+is set to <code>false</code>, these declarations are interpreted as <a id="idx:usemodule12:1969"></a><a class="pred" href="import.html#use_module/1">use_module/[1,2]</a>.
 </dd>
 </dl>
 

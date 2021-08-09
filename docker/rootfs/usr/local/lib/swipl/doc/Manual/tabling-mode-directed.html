@@ -2,7 +2,7 @@
 
 <html>
 <head>
-<title>SWI-Prolog 8.3.27 Reference Manual: Section 7.3</title><link rel="home" href="index.html">
+<title>SWI-Prolog 8.3.28 Reference Manual: Section 7.3</title><link rel="home" href="index.html">
 <link rel="contents" href="Contents.html">
 <link rel="index" href="DocIndex.html">
 <link rel="summary" href="summary.html">
@@ -238,7 +238,7 @@ subsumption or mode directed tabling</span></a></h2>
 
 <a id="sec:tabling-mode-directed"></a>
 
-<p><a id="idx:answersubsumptiontabling:2041"></a>Tabling as defined 
+<p><a id="idx:answersubsumptiontabling:2046"></a>Tabling as defined 
 above has a serious limitation. Although the definition of connection/2 
 from section
 <a class="sec" href="tabling-non-termination.html#sec:7.2">section 7.2</a> 
@@ -251,7 +251,7 @@ running out of memory.
 
 <p>The solution to this problem is called <em>mode directed tabling</em> 
 or
-<em>answer subsumption</em>.<sup class="fn">169<span class="fn-text">The 
+<em>answer subsumption</em>.<sup class="fn">172<span class="fn-text">The 
 term <em>answer subsumption</em> is used by XSB and <em>mode directed 
 tabling</em> by YAP and B-Prolog. The idea is that some arguments are 
 considered&lsquo;outputs', where multiple values for the same&lsquo;input' 
@@ -262,7 +262,7 @@ value for these arguments. The example below is derived from
 <a class="sec" href="tabling-non-termination.html#sec:7.2">section 7.2</a> 
 and returns the connection as a list of cities. This argument is defined 
 as a <em>moded</em> argument using the
-<code>lattice(PI)</code> mode.<sup class="fn">170<span class="fn-text">This 
+<code>lattice(PI)</code> mode.<sup class="fn">173<span class="fn-text">This 
 mode is compatible to XSB Prolog.</span></sup> This causes the tabling 
 engine each time that it finds an new path to call shortest/3 and keep 
 the shortest route.

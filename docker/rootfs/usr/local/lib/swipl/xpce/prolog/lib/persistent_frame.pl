@@ -2,7 +2,7 @@
 
     Author:        Jan Wielemaker and Anjo Anjewierden
     E-mail:        J.Wielemaker@cs.vu.nl
-    WWW:           http://www.swi-prolog.org/projects/xpce/
+    WWW:           http://www.swi-prolog.org/packages/xpce/
     Copyright (c)  2002-2013, University of Amsterdam
                               VU University Amsterdam
     All rights reserved.

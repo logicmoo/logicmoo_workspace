@@ -2,7 +2,7 @@
 
 <html>
 <head>
-<title>SWI-Prolog 8.3.27 Reference Manual: Section 8.2</title><link rel="home" href="index.html">
+<title>SWI-Prolog 8.3.28 Reference Manual: Section 8.2</title><link rel="home" href="index.html">
 <link rel="contents" href="Contents.html">
 <link rel="index" href="DocIndex.html">
 <link rel="summary" href="summary.html">
@@ -240,7 +240,7 @@ table.frame-box
 <p>Coroutining allows us to delay the execution of Prolog goals until 
 their truth can be safely decided.
 
-<p>Among the most important coroutining predicates is <a id="idx:dif2:2138"></a><a class="pred" href="coroutining.html#dif/2">dif/2</a>, 
+<p>Among the most important coroutining predicates is <a id="idx:dif2:2143"></a><a class="pred" href="coroutining.html#dif/2">dif/2</a>, 
 which expresses <i>disequality</i> of terms in a sound way. The actual 
 test is delayed until the terms are sufficiently different, or have 
 become identical. For example:
@@ -256,7 +256,7 @@ false.
 
 <p>There are also lower-level coroutining predicates that are intended 
 as building blocks for higher-level constraints. For example, we can use
-<a id="idx:freeze2:2139"></a><a class="pred" href="coroutining.html#freeze/2">freeze/2</a> 
+<a id="idx:freeze2:2144"></a><a class="pred" href="coroutining.html#freeze/2">freeze/2</a> 
 to define a variable that can only be assigned an atom:
 
 <pre class="code">
@@ -264,7 +264,7 @@ to define a variable that can only be assigned an atom:
 X = a.
 </pre>
 
-<p>In this case, calling <a id="idx:atom1:2140"></a><a class="pred" href="typetest.html#atom/1">atom/1</a> 
+<p>In this case, calling <a id="idx:atom1:2145"></a><a class="pred" href="typetest.html#atom/1">atom/1</a> 
 earlier causes the whole query to fail:
 
 <pre class="code">
@@ -291,24 +291,24 @@ X = 2.
 </pre>
 
 <p>Remaining constraints, such as <code>X mod 2#=0</code> in the example 
-above, are called <em>residual</em><a id="idx:residual:2141"></a> goals. 
+above, are called <em>residual</em><a id="idx:residual:2146"></a> goals. 
 They are said to
-<em>flounder</em><a id="idx:flounder:2142"></a>, because their truth is 
+<em>flounder</em><a id="idx:flounder:2147"></a>, because their truth is 
 not yet decided. Declaratively, the query is only true if all residual 
-goals are satisfiable. Use <a id="idx:callresiduevars2:2143"></a><a class="pred" href="coroutining.html#call_residue_vars/2">call_residue_vars/2</a> 
+goals are satisfiable. Use <a id="idx:callresiduevars2:2148"></a><a class="pred" href="coroutining.html#call_residue_vars/2">call_residue_vars/2</a> 
 to collect all variables that are involved in constraints.
 
 <dl class="latex">
 <dt class="pubdef"><a id="dif/2"><strong>dif</strong>(<var>@A, @B</var>)</a></dt>
 <dd class="defbody">
-The <a id="idx:dif2:2144"></a><a class="pred" href="coroutining.html#dif/2">dif/2</a> 
+The <a id="idx:dif2:2149"></a><a class="pred" href="coroutining.html#dif/2">dif/2</a> 
 predicate is a <i>constraint</i> that is true if and only if <var>A</var> 
 and <var>B</var> are different terms. If <var>A</var> and <var>B</var> 
-can never unify, <a id="idx:dif2:2145"></a><a class="pred" href="coroutining.html#dif/2">dif/2</a> 
+can never unify, <a id="idx:dif2:2150"></a><a class="pred" href="coroutining.html#dif/2">dif/2</a> 
 succeeds deterministically. If <var>A</var> and <var>B</var> are 
 identical, it fails immediately. Finally, if <var>A</var> and <var>B</var> 
 can unify, goals are delayed that prevent <var>A</var> and <var>B</var> 
-to become equal. It is this last property that makes <a id="idx:dif2:2146"></a><a class="pred" href="coroutining.html#dif/2">dif/2</a> 
+to become equal. It is this last property that makes <a id="idx:dif2:2151"></a><a class="pred" href="coroutining.html#dif/2">dif/2</a> 
 a more general and more declarative alternative for <a class="pred" href="compare.html#\=/2">\=/2</a> 
 and related predicates.
 
@@ -316,7 +316,7 @@ and related predicates.
 <code>dif(X, Y) :- when(?=(X,Y), X \== Y)</code>. See also <a class="pred" href="compare.html#?=/2">?=/2</a>. 
 The implementation can deal with cyclic terms.
 
-<p>The <a id="idx:dif2:2147"></a><a class="pred" href="coroutining.html#dif/2">dif/2</a> 
+<p>The <a id="idx:dif2:2152"></a><a class="pred" href="coroutining.html#dif/2">dif/2</a> 
 predicate is realised using attributed variables associated with the 
 module <code>dif</code>. It is an autoloaded predicate that is defined 
 in the library <code>library(dif)</code>.</dd>
@@ -326,11 +326,11 @@ in the library <code>library(dif)</code>.</dd>
 Delay the execution of <var>Goal</var> until <var>Var</var> is bound 
 (i.e., is not a variable or attributed variable). If <var>Var</var> is 
 bound on entry
-<a id="idx:freeze2:2148"></a><a class="pred" href="coroutining.html#freeze/2">freeze/2</a> 
-is equivalent to <a id="idx:call1:2149"></a><a class="pred" href="metacall.html#call/1">call/1</a>. 
-The <a id="idx:freeze2:2150"></a><a class="pred" href="coroutining.html#freeze/2">freeze/2</a> 
+<a id="idx:freeze2:2153"></a><a class="pred" href="coroutining.html#freeze/2">freeze/2</a> 
+is equivalent to <a id="idx:call1:2154"></a><a class="pred" href="metacall.html#call/1">call/1</a>. 
+The <a id="idx:freeze2:2155"></a><a class="pred" href="coroutining.html#freeze/2">freeze/2</a> 
 predicate is realised using an attributed variable associated with the 
-module <code>freeze</code>. See also <a id="idx:frozen2:2151"></a><a class="pred" href="coroutining.html#frozen/2">frozen/2</a>.</dd>
+module <code>freeze</code>. See also <a id="idx:frozen2:2156"></a><a class="pred" href="coroutining.html#frozen/2">frozen/2</a>.</dd>
 <dt class="pubdef"><span class="pred-tag">[det]</span><a id="frozen/2"><strong>frozen</strong>(<var>@Term, 
 -Goal</var>)</a></dt>
 <dd class="defbody">
@@ -338,26 +338,26 @@ Unify <var>Goal</var> with the goal or conjunction of goals delayed on
 some attributed variable in <var>Term</var>. If <var>Term</var> is free 
 of attributed variables, <var>Goal</var> is unified to <code>true</code>. 
 Note that
-<a id="idx:frozen2:2152"></a><a class="pred" href="coroutining.html#frozen/2">frozen/2</a> 
+<a id="idx:frozen2:2157"></a><a class="pred" href="coroutining.html#frozen/2">frozen/2</a> 
 reports all delayed goals, not only those delayed due to
-<a id="idx:freeze2:2153"></a><a class="pred" href="coroutining.html#freeze/2">freeze/2</a>. 
-The goals are extracted using <a id="idx:copyterm3:2154"></a><a class="pred" href="attvar.html#copy_term/3">copy_term/3</a>.<sup class="fn">175<span class="fn-text">Versions 
-prior to 8.3.7 only report goals delayed using <a id="idx:freeze2:2155"></a><a class="pred" href="coroutining.html#freeze/2">freeze/2</a> 
+<a id="idx:freeze2:2158"></a><a class="pred" href="coroutining.html#freeze/2">freeze/2</a>. 
+The goals are extracted using <a id="idx:copyterm3:2159"></a><a class="pred" href="attvar.html#copy_term/3">copy_term/3</a>.<sup class="fn">178<span class="fn-text">Versions 
+prior to 8.3.7 only report goals delayed using <a id="idx:freeze2:2160"></a><a class="pred" href="coroutining.html#freeze/2">freeze/2</a> 
 on a plain variable. The new behaviour is compatible with SICStus.</span></sup> 
 See also
-<a id="idx:termattvars2:2156"></a><a class="pred" href="attvar.html#term_attvars/2">term_attvars/2</a> 
-and <a id="idx:callresiduevars2:2157"></a><a class="pred" href="coroutining.html#call_residue_vars/2">call_residue_vars/2</a>.</dd>
+<a id="idx:termattvars2:2161"></a><a class="pred" href="attvar.html#term_attvars/2">term_attvars/2</a> 
+and <a id="idx:callresiduevars2:2162"></a><a class="pred" href="coroutining.html#call_residue_vars/2">call_residue_vars/2</a>.</dd>
 <dt class="pubdef"><a id="when/2"><strong>when</strong>(<var>@Condition, 
 :Goal</var>)</a></dt>
 <dd class="defbody">
 Execute <var>Goal</var> when <var>Condition</var> becomes true. <var>Condition</var> 
 is one of <code>?=(X, Y)</code>, <code>nonvar(X)</code>, <code>ground(X)</code>,
 <code><code>,</code>(Cond1, Cond2)</code> or <code><code>;</code>(Cond1, 
-Cond2)</code>. See also <a id="idx:freeze2:2158"></a><a class="pred" href="coroutining.html#freeze/2">freeze/2</a> 
-and <a id="idx:dif2:2159"></a><a class="pred" href="coroutining.html#dif/2">dif/2</a>. 
+Cond2)</code>. See also <a id="idx:freeze2:2163"></a><a class="pred" href="coroutining.html#freeze/2">freeze/2</a> 
+and <a id="idx:dif2:2164"></a><a class="pred" href="coroutining.html#dif/2">dif/2</a>. 
 The implementation can deal with cyclic terms in <var>X</var> and <var>Y</var>.
 
-<p>The <a id="idx:when2:2160"></a><a class="pred" href="coroutining.html#when/2">when/2</a> 
+<p>The <a id="idx:when2:2165"></a><a class="pred" href="coroutining.html#when/2">when/2</a> 
 predicate is realised using attributed variables associated with the 
 module <code>when</code>. It is defined in the autoload library
 <code>library(when)</code>.</dd>
@@ -374,12 +374,12 @@ predicate is invoked. Such programs should fail, but sometimes succeed
 because the constraint solver is too weak to detect the contradiction. 
 Ideally, delayed goals and constraints are all executed at the end of 
 the computation. The meta predicate
-<a id="idx:callresiduevars2:2161"></a><a class="pred" href="coroutining.html#call_residue_vars/2">call_residue_vars/2</a> 
+<a id="idx:callresiduevars2:2166"></a><a class="pred" href="coroutining.html#call_residue_vars/2">call_residue_vars/2</a> 
 finds variables that are given attributes or whose attributes are 
 modified by <var>Goal</var>, regardless of whether or not these 
 variables are reachable from the arguments of
-<var>Goal</var>.<sup class="fn">176<span class="fn-text">The 
-implementation of <a id="idx:callresiduevars2:2162"></a><a class="pred" href="coroutining.html#call_residue_vars/2">call_residue_vars/2</a> 
+<var>Goal</var>.<sup class="fn">179<span class="fn-text">The 
+implementation of <a id="idx:callresiduevars2:2167"></a><a class="pred" href="coroutining.html#call_residue_vars/2">call_residue_vars/2</a> 
 is completely redone in version 7.3.2 (7.2.1) after discussion with Bart 
 Demoen. The current implementation no longer performs full scans of the 
 stacks. The overhead is proportional to the number of attributed 

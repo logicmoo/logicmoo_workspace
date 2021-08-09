@@ -2341,9 +2341,10 @@ Universally Unique Identifier (UUID) Library</span></a></h2>
 <p><a id="sec:uuid"></a>
 
 <dl class="tags">
-<dt class="tag">See also</dt>
+<dt class="mtag">See also</dt>
 <dd>
-<a class="url" href="http://www.ossp.org/pkg/lib/uuid/">http://www.ossp.org/pkg/lib/uuid/</a>
+- <a class="url" href="http://www.ossp.org/pkg/lib/uuid/">http://www.ossp.org/pkg/lib/uuid/</a> <br>
+- <a class="url" href="https://en.wikipedia.org/wiki/Universally_unique_identifier">https://en.wikipedia.org/wiki/Universally_unique_identifier</a>
 </dd>
 <dt class="tag">To be done</dt>
 <dd>
@@ -2396,6 +2397,35 @@ Representation of the <var>UUID</var>. Default is <code>atom</code>,
 yielding atoms such as <code>8304efdd-bd6e-5b7c-a27f-83f3f05c64e0</code>. 
 The alternative is <code>integer</code>, returning a large integer that 
 represents the 128 bits of the <var>UUID</var>.
+</dd>
+</dl>
+
+<p>If SWI-Prolog was not built with the OSSP <var>UUID</var> dependency 
+library a simple Prolog alternative that only implements version 4 
+random UUIDs is provided. In this case the default version is 4 and the 
+only admissible options are <code>version(4)</code> and <code>format(atom)</code>.</dd>
+<dt class="pubdef"><a id="uuid_property/2"><strong>uuid_property</strong>(<var>+UUID, 
+?Property</var>)</a></dt>
+<dd class="defbody">
+True when <var>UUID</var> is a property of the given <var>UUID</var>. 
+Supported properties are:
+
+<dl class="latex">
+<dt><strong>version</strong>(<var>V</var>)</dt>
+<dd class="defbody">
+Return the version of the <var>UUID</var> (1..5)
+</dd>
+<dt><strong>time</strong>(<var>-Stamp</var>)</dt>
+<dd class="defbody">
+Time using SWI-Prolog's time stamp (float with seconds since January 1, 
+1970, UTC). Only for version 1 and 2 UUIDs
+</dd>
+</dl>
+
+<dl class="tags">
+<dt class="tag">To be done</dt>
+<dd>
+Implement more properties.
 </dd>
 </dl>
 
@@ -3979,6 +4009,7 @@ callbacks.
 <dt><a class="idx" href="#user_info/2">user_info/2</a></dt>
 <dt><a class="idx" href="#uuid/1">uuid/1</a></dt>
 <dt><a class="idx" href="#uuid/2">uuid/2</a></dt>
+<dt><a class="idx" href="#uuid_property/2">uuid_property/2</a></dt>
 <dt><a class="idx" href="#wait/2">wait/2</a></dt>
 <dt>wait_for_input/3</dt>
 <dd>

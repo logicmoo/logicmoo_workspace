@@ -2,7 +2,7 @@
 
 <html>
 <head>
-<title>SWI-Prolog 8.3.27 Reference Manual: Section 4.21</title><link rel="home" href="index.html">
+<title>SWI-Prolog 8.3.28 Reference Manual: Section 4.21</title><link rel="home" href="index.html">
 <link rel="contents" href="Contents.html">
 <link rel="index" href="DocIndex.html">
 <link rel="summary" href="summary.html">
@@ -305,7 +305,7 @@ unified with the
 be unbound. In this case <var>Value</var> will be unified with the 
 successive arguments of the term. On successful unification, <var>Arg</var> 
 is unified with the argument number. Backtracking yields alternative 
-solutions.<sup class="fn">106<span class="fn-text">The instantiation 
+solutions.<sup class="fn">107<span class="fn-text">The instantiation 
 pattern (-, +, ?) is an extension to&lsquo;standard' Prolog. Some 
 systems provide genarg/3 that covers this pattern.</span></sup> The 
 predicate <a id="idx:arg3:1398"></a><a class="pred" href="manipterm.html#arg/3">arg/3</a> 
@@ -400,7 +400,7 @@ What to do if an attributed variable is encountered. Options are
 to ignore the attributed variable, <code>bind</code> which causes it to 
 treat it as a normal variable and assign the next <code>'$VAR'</code>(N) 
 term to it, or (default)
-<code>error</code> which raises a <code>type_error</code> exception.<sup class="fn">107<span class="fn-text">This 
+<code>error</code> which raises a <code>type_error</code> exception.<sup class="fn">108<span class="fn-text">This 
 behaviour was decided after a long discussion between David Reitter, 
 Richard O'Keefe, Bart Demoen and Tom Schrijvers.</span></sup></dd>
 <dt><strong>singletons</strong>(<var>+Bool</var>)</dt>
@@ -427,7 +427,7 @@ representation that has no textual equivalent.</dd>
 -List</var>)</a></dt>
 <dd class="defbody">
 Unify <var>List</var> with a list of variables, each sharing with a 
-unique variable of <var>Term</var>.<sup class="fn">108<span class="fn-text">This 
+unique variable of <var>Term</var>.<sup class="fn">109<span class="fn-text">This 
 predicate used to be called free_variables/2 . The name <a id="idx:termvariables2:1414"></a><a class="pred" href="manipterm.html#term_variables/2">term_variables/2</a> 
 is more widely used. The old predicate is still available from the 
 library <code>library(backcomp)</code>.</span></sup> The variables in <var>List</var> 

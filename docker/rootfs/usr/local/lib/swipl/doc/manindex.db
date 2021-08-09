@@ -6,6 +6,69 @@ i(section(2,'2.21','sec:64bits'),"SWI-Prolog and 64-bit machines",swi_man_manual
 i(section(3,'2.21.1','sec:64bitsplatforms'),"Supported platforms",swi_man_manual('64bits.html'),manual,3926).
 i(section(3,'2.21.2','sec:32vs64bits'),"Comparing 32- and 64-bits Prolog",swi_man_manual('64bits.html'),manual,4373).
 i(section(3,'2.21.3','sec:32vs64bitschoice'),"Choosing between 32- and 64-bit Prolog",swi_man_manual('64bits.html'),manual,6857).
+i(section(1,'G','sec:bibliography'),"Bibliography",swi_man_manual('Bibliography.html'),manual,3508).
+i(section(2,'4.13','sec:DCG'),"DCG Grammar rules",swi_man_manual('DCG.html'),manual,3503).
+i(/(phrase,2),"Equivalent to phrase(DCGBody, InputList, []).",swi_man_manual('DCG.html'),manual,5502).
+i(/(phrase,3),"True when DCGBody applies to the difference List/Rest.",swi_man_manual('DCG.html'),manual,5708).
+i(/(call_dcg,3),"As phrase/3, but without type checking State0 and State.",swi_man_manual('DCG.html'),manual,8865).
+i(section(2,'4.44','sec:DDE'),"Windows DDE interface",swi_man_manual('DDE.html'),manual,3517).
+i(section(3,'4.44.1','sec:dde-client'),"DDE client interface",swi_man_manual('DDE.html'),manual,4384).
+i(/(open_dde_conversation,3),"Open a conversation with a server supporting the given service name and topic (atoms).",swi_man_manual('DDE.html'),manual,5245).
+i(/(close_dde_conversation,1),"Close the conversation associated with Handle.",swi_man_manual('DDE.html'),manual,5641).
+i(/(dde_request,3),"Request a value from the server.",swi_man_manual('DDE.html'),manual,5997).
+i(/(dde_execute,2),"Request the DDE server to execute the given command string.",swi_man_manual('DDE.html'),manual,6373).
+i(/(dde_poke,4),"Issue a POKE command to the server on the specified Item.",swi_man_manual('DDE.html'),manual,6655).
+i(section(3,'4.44.2','sec:dde-server'),"DDE server mode",swi_man_manual('DDE.html'),manual,6952).
+i(/(dde_register_service,2),"Register a server to handle DDE request or DDE execute requests from other applications.",swi_man_manual('DDE.html'),manual,7494).
+i(/(dde_unregister_service,1),"Stop responding to Service.",swi_man_manual('DDE.html'),manual,9477).
+i(/(dde_current_service,2),"Find currently registered services and the topics served on them.",swi_man_manual('DDE.html'),manual,9741).
+i(/(dde_current_connection,2),"Find currently open conversations.",swi_man_manual('DDE.html'),manual,9959).
+i(section(1,'3','sec:IDE'),"Initialising and Managing a Prolog Project",swi_man_manual('IDE.html'),manual,3521).
+i(section(2,'4.17','sec:IO'),"Input and output",swi_man_manual('IO.html'),manual,3529).
+i(section(3,'4.17.1','sec:streamalias'),"Predefined stream aliases",swi_man_manual('IO.html'),manual,4738).
+i(section(3,'4.17.2','sec:isoIO'),"ISO Input and Output Streams",swi_man_manual('IO.html'),manual,8218).
+i(/(open,4),"True when SrcDest can be opened in Mode and Stream is an I/O stream to/from the object.",swi_man_manual('IO.html'),manual,9936).
+i(/(open,3),"Equivalent to open/4 with an empty option list.",swi_man_manual('IO.html'),manual,18998).
+i(/(open_null_stream,1),"Open an output stream that produces no output.",swi_man_manual('IO.html'),manual,19281).
+i(/(close,1),"Close the specified stream.",swi_man_manual('IO.html'),manual,20170).
+i(/(close,2),"Provides close(Stream, [force(true)]) as the only option.",swi_man_manual('IO.html'),manual,21191).
+i(/(stream_property,2),"True when StreamProperty is a property of Stream.",swi_man_manual('IO.html'),manual,21529).
+i(/(current_stream,3),"The predicate current_stream/3 is used to access the status of a stream as well as to generate all open streams.",swi_man_manual('IO.html'),manual,29680).
+i(/(is_stream,1),"True if Term is a stream name or valid stream handle.",swi_man_manual('IO.html'),manual,30577).
+i(/(stream_pair,3),"This predicate can be used in mode (-,+,+) to create a stream-pair from an input stream and an output stream.",swi_man_manual('IO.html'),manual,30846).
+i(/(set_stream_position,2),"Set the current position of Stream to Pos.",swi_man_manual('IO.html'),manual,32148).
+i(/(stream_position_data,3),"Extracts information from the opaque stream position term as returned by stream_property/2 requesting the position(Pos) property.",swi_man_manual('IO.html'),manual,32679).
+i(/(seek,4),"Reposition the current point of the given Stream.",swi_man_manual('IO.html'),manual,33813).
+i(/(set_stream,2),"Modify an attribute of an existing stream.",swi_man_manual('IO.html'),manual,36508).
+i(/(set_prolog_IO,3),"Prepare the given streams for interactive behaviour normally associated to the terminal.",swi_man_manual('IO.html'),manual,43764).
+i(/(set_system_IO,3),"Bind the given streams to the operating system I/O streams 0-2 using POSIX dup2() API.",swi_man_manual('IO.html'),manual,44852).
+i(section(3,'4.17.3','sec:edinburghIO'),"Edinburgh-style I/O",swi_man_manual('IO.html'),manual,46613).
+i(/(see,1),"Open SrcDest for reading and make it the current input (see set_input/1).",swi_man_manual('IO.html'),manual,51460).
+i(/(tell,1),"Open SrcDest for writing and make it the current output (see set_output/1).",swi_man_manual('IO.html'),manual,51916).
+i(/(append,1),"Similar to tell/1, but positions the file pointer at the end of File rather than truncating an existing file.",swi_man_manual('IO.html'),manual,52379).
+i(/(seeing,1),"Same as current_input/1, except that user is returned if the current input is the stream user_input to improve compatibility with traditional Edinburgh I/O.",swi_man_manual('IO.html'),manual,52739).
+i(/(telling,1),"Same as current_output/1, except that user is returned if the current output is the stream user_output to improve compatibility with traditional Edinburgh I/O.",swi_man_manual('IO.html'),manual,53224).
+i(/(seen,0),"Close the current input stream.",swi_man_manual('IO.html'),manual,53716).
+i(/(told,0),"Close the current output stream.",swi_man_manual('IO.html'),manual,53893).
+i(section(3,'4.17.4','sec:edinburgh-iso-io'),"Switching between Edinburgh and ISO I/O",swi_man_manual('IO.html'),manual,54084).
+i(/(set_input,1),"Set the current input stream to become Stream.",swi_man_manual('IO.html'),manual,54423).
+i(/(set_output,1),"Set the current output stream to become Stream.",swi_man_manual('IO.html'),manual,54743).
+i(/(current_input,1),"Get the current input stream.",swi_man_manual('IO.html'),manual,55075).
+i(/(current_output,1),"Get the current output stream.",swi_man_manual('IO.html'),manual,55347).
+i(section(3,'4.17.5','sec:iri-schema'),"Adding IRI schemas",swi_man_manual('IO.html'),manual,55555).
+i(/(register_iri_scheme,3),"Register Hook to be called by all file handling predicates if a name that starts with Scheme:// is encountered.",swi_man_manual('IO.html'),manual,56791).
+i(section(3,'4.17.6','sec:write-on-atom'),"Write onto atoms, code-lists, etc.",swi_man_manual('IO.html'),manual,58582).
+i(/(with_output_to,2),"Run Goal as once/1, while characters written to the current output are sent to Output.",swi_man_manual('IO.html'),manual,58791).
+i(section(3,'4.17.7','sec:fast-term-io'),"Fast binary term I/O",swi_man_manual('IO.html'),manual,62365).
+i(/(fast_term_serialized,2),"(De-)serialize Term to/from String.",swi_man_manual('IO.html'),manual,64292).
+i(/(fast_write,2),"Write Term using the fast serialization format to the Output stream.",swi_man_manual('IO.html'),manual,64501).
+i(/(fast_read,2),"Read Term using the fast serialization format from the Input stream.",swi_man_manual('IO.html'),manual,64776).
+i(section(2,'7.6','sec:WFS'),"Well Founded Semantics",swi_man_manual('WFS.html'),manual,3562).
+i(/(undefined,0),"Unknown represents neither true nor false in the well formed model.",swi_man_manual('WFS.html'),manual,8063).
+i(/(call_residual_program,2),"True when Goal is an answer according to the Well Founded Semantics.",swi_man_manual('WFS.html'),manual,9773).
+i(/(call_delays,2),"True when Goal is an answer that is true when Condition can be satisfied.",swi_man_manual('WFS.html'),manual,10268).
+i(/(delays_residual_program,2),"Program is a list of clauses that represents the connected program associated with Condition.",swi_man_manual('WFS.html'),manual,10667).
+i(section(3,'7.6.1','sec:wfs-toplevel'),"Well founded semantics and the toplevel",swi_man_manual('WFS.html'),manual,11458).
 i(section(2,'2.22','sec:abi-versions'),"Binary compatibility",swi_man_manual('abi-versions.html'),manual,3505).
 i(section(2,'1.6','sec:acknowledge'),"Acknowledgements",swi_man_manual('acknowledge.html'),manual,3524).
 i(section(2,'A.1','sec:aggregate'),"library(aggregate): Aggregation operators on backtrackable predicates",swi_man_manual('aggregate.html'),manual,3512).
@@ -224,7 +287,6 @@ i(//(eos,0),"Matches end-of-input.",swi_man_manual('basics.html'),manual,11179).
 i(//(remainder,1),"Unify List with the remainder of the input.",swi_man_manual('basics.html'),manual,11622).
 i(//(prolog_var_name,1),"Matches a Prolog variable name.",swi_man_manual('basics.html'),manual,11812).
 i(//(atom,1),"Generate codes of Atom.",swi_man_manual('basics.html'),manual,12114).
-i(section(1,'G','sec:bibliography'),"Bibliography",swi_man_manual('Bibliography.html'),manual,3508).
 i(section(2,'5.4','sec:bidicts'),"Dicts: structures with named arguments",swi_man_manual('bidicts.html'),manual,3536).
 i(section(3,'5.4.1','sec:ext-dict-functions'),"Functions on dicts",swi_man_manual('bidicts.html'),manual,5904).
 i(/('.',3),"This predicate is called to evaluate .",swi_man_manual('bidicts.html'),manual,8465).
@@ -263,7 +325,7 @@ i(/(unlisten,3),"Deregister all entries created with listen/3 whose Listener, Te
 i(/(listening,3),"Examine the current listeners.",swi_man_manual('broadcast.html'),manual,9080).
 i(section(1,'4','sec:builtin'),"Built-in Predicates",swi_man_manual('builtin.html'),manual,3509).
 i(section(2,'4.29','sec:builtinlist'),"Built-in list operations",swi_man_manual('builtinlist.html'),manual,3529).
-i(/(is_list,1),"True if Term is bound to the empty list ([]) or a compound term with name‘[|]’126The traditional list functor name is the dot (’.').",swi_man_manual('builtinlist.html'),manual,3966).
+i(/(is_list,1),"True if Term is bound to the empty list ([]) or a compound term with name‘[|]’127The traditional list functor name is the dot (’.').",swi_man_manual('builtinlist.html'),manual,3966).
 i(/(memberchk,2),"True when Elem is an element of List.",swi_man_manual('builtinlist.html'),manual,5566).
 i(/(length,2),"True if Length represents the number of elements in List.",swi_man_manual('builtinlist.html'),manual,6735).
 i(/(sort,2),"True if Sorted can be unified with a list holding the elements of List, sorted to the standard order of terms (see section 4.6).",swi_man_manual('builtinlist.html'),manual,8353).
@@ -380,7 +442,6 @@ i(/(chr_show_store,1),"Prints all suspended constraints of module Mod to the sta
 i(/(find_chr_constraint,1),"Returns a constraint in the constraint store.",swi_man_manual('chr-debugging.html'),manual,10315).
 i(section(2,'9.5','sec:chr-examples'),"CHR Examples",swi_man_manual('chr-examples.html'),manual,3546).
 i(section(2,'9.7','sec:chr-guidelines'),"CHR Programming Tips and Tricks",swi_man_manual('chr-guidelines.html'),manual,3566).
-i(section(1,'9','sec:chr'),"CHR: Constraint Handling Rules",swi_man_manual('chr.html'),manual,3513).
 i(section(2,'9.1','sec:chr-intro'),"Introduction to CHR",swi_man_manual('chr-intro.html'),manual,3536).
 i(section(2,'9.2','sec:chr-syntaxandsemantics'),"CHR Syntax and Semantics",swi_man_manual('chr-syntaxandsemantics.html'),manual,3522).
 i(section(3,'9.2.1','sec:chr-syntax'),"Syntax of CHR rules",swi_man_manual('chr-syntaxandsemantics.html'),manual,3713).
@@ -388,6 +449,8 @@ i(section(3,'9.2.2','sec:chr-semantics'),"Semantics of CHR",swi_man_manual('chr-
 i(/(chr_option,2),"It is possible to specify options that apply to all the CHR rules in the module.",swi_man_manual('chr-syntaxandsemantics.html'),manual,8838).
 i(section(2,'9.8','sec:chr-warnings-and-errors'),"CHR Compiler Errors and Warnings",swi_man_manual('chr-warnings-and-errors.html'),manual,3528).
 i(section(3,'9.8.1','sec:chr-errors'),"CHR Compiler Errors",swi_man_manual('chr-warnings-and-errors.html'),manual,3830).
+i(section(1,'9','sec:chr'),"CHR: Constraint Handling Rules",swi_man_manual('chr.html'),manual,3513).
+i(section(1,'8','sec:clp'),"Constraint Logic Programming",swi_man_manual('clp.html'),manual,3511).
 i(section(2,'A.8','sec:clpb'),"library(clpb): CLP(B): Constraint Logic Programming over Boolean Variables",swi_man_manual('clpb.html'),manual,3506).
 i(section(3,'A.8.1','sec:clpb-intro'),"Introduction",swi_man_manual('clpb.html'),manual,3870).
 i(section(3,'A.8.2','sec:clpb-exprs'),"Boolean expressions",swi_man_manual('clpb.html'),manual,5895).
@@ -500,7 +563,6 @@ i(/(fdset_union,3),"The FD set Union is the union of FD sets Set1 and Set2.",swi
 i(/(fdset_union,2),"The FD set Union is the n-ary union of all FD sets in the list Sets.",swi_man_manual('clpfd.html'),manual,83428).
 i(/(fdset_complement,2),"The FD set Complement is the complement of the FD set Set.",swi_man_manual('clpfd.html'),manual,83755).
 i(section(3,'A.9.18','sec:clpfd-closing-opening'),"Closing and opening words about CLP(FD)",swi_man_manual('clpfd.html'),manual,84099).
-i(section(1,'8','sec:clp'),"Constraint Logic Programming",swi_man_manual('clp.html'),manual,3511).
 i(section(2,'A.10','sec:clpqr'),"library(clpqr): Constraint Logic Programming over Rationals and Reals",swi_man_manual('clpqr.html'),manual,3503).
 i(section(3,'A.10.1','sec:clpqr-predicates'),"Solver predicates",swi_man_manual('clpqr.html'),manual,5197).
 i(/({},1),"Adds the constraints given by Constraints to the constraint store.",swi_man_manual('clpqr.html'),manual,5460).
@@ -697,27 +759,22 @@ i(/(term_hash,2),"If Term is a ground term (see ground/1), HashKey is unified wi
 i(/(term_hash,4),"As term_hash/2, but only considers Term to the specified Depth.",swi_man_manual('db.html'),manual,55004).
 i(/(variant_sha1,2),"Compute a SHA1-hash from Term.",swi_man_manual('db.html'),manual,55815).
 i(/(variant_hash,2),"Similar to variant_sha1/2, but using a non-cryptographic hash and produces an integer result like term_hash/2.",swi_man_manual('db.html'),manual,57382).
-i(section(2,'4.13','sec:DCG'),"DCG Grammar rules",swi_man_manual('DCG.html'),manual,3503).
-i(/(phrase,2),"Equivalent to phrase(DCGBody, InputList, []).",swi_man_manual('DCG.html'),manual,5502).
-i(/(phrase,3),"True when DCGBody applies to the difference List/Rest.",swi_man_manual('DCG.html'),manual,5708).
-i(/(call_dcg,3),"As phrase/3, but without type checking State0 and State.",swi_man_manual('DCG.html'),manual,8865).
-i(section(2,'4.44','sec:DDE'),"Windows DDE interface",swi_man_manual('DDE.html'),manual,3517).
-i(section(3,'4.44.1','sec:dde-client'),"DDE client interface",swi_man_manual('DDE.html'),manual,4384).
-i(/(open_dde_conversation,3),"Open a conversation with a server supporting the given service name and topic (atoms).",swi_man_manual('DDE.html'),manual,5245).
-i(/(close_dde_conversation,1),"Close the conversation associated with Handle.",swi_man_manual('DDE.html'),manual,5641).
-i(/(dde_request,3),"Request a value from the server.",swi_man_manual('DDE.html'),manual,5997).
-i(/(dde_execute,2),"Request the DDE server to execute the given command string.",swi_man_manual('DDE.html'),manual,6373).
-i(/(dde_poke,4),"Issue a POKE command to the server on the specified Item.",swi_man_manual('DDE.html'),manual,6655).
-i(section(3,'4.44.2','sec:dde-server'),"DDE server mode",swi_man_manual('DDE.html'),manual,6952).
-i(/(dde_register_service,2),"Register a server to handle DDE request or DDE execute requests from other applications.",swi_man_manual('DDE.html'),manual,7494).
-i(/(dde_unregister_service,1),"Stop responding to Service.",swi_man_manual('DDE.html'),manual,9477).
-i(/(dde_current_service,2),"Find currently registered services and the topics served on them.",swi_man_manual('DDE.html'),manual,9741).
-i(/(dde_current_connection,2),"Find currently open conversations.",swi_man_manual('DDE.html'),manual,9959).
 i(section(2,'13.5','sec:debug-deployed-systems'),"Debugging and updating deployed systems",swi_man_manual('debug-deployed-systems.html'),manual,3545).
 i(section(2,'4.40','sec:debug-determinism'),"Debugging and declaring determinism",swi_man_manual('debug-determinism.html'),manual,3523).
 i(/(det,1),"Declare a number of predicates as det, deterministic.",swi_man_manual('debug-determinism.html'),manual,4441).
 i(/($,0),"The $/0 constructs acts similar to the !/0, but in addition declares that the remainder of the clause body shall succeed deterministically.",swi_man_manual('debug-determinism.html'),manual,5362).
 i(/($,1),"Verify that Goal succeeds deterministically.",swi_man_manual('debug-determinism.html'),manual,5951).
+i(section(2,'A.14','sec:debug'),"library(debug): Print debug messages and test assertions",swi_man_manual('debug.html'),manual,3515).
+i(/(debugging,1),"Examine debug topics.",swi_man_manual('debug.html'),manual,4487).
+i(/(debugging,2),"Examine debug topics.",swi_man_manual('debug.html'),manual,4487).
+i(/(debug,1),"Add/remove a topic from being printed.",swi_man_manual('debug.html'),manual,5333).
+i(/(nodebug,1),"Add/remove a topic from being printed.",swi_man_manual('debug.html'),manual,5333).
+i(/(list_debug_topics,0),"List currently known debug topics and their setting.",swi_man_manual('debug.html'),manual,6128).
+i(/(debug_message_context,1),"Specify additional context for debug messages.",swi_man_manual('debug.html'),manual,6333).
+i(/(debug,3),"Format a message if debug topic is enabled.",swi_man_manual('debug.html'),manual,6796).
+i(:(prolog,/(debug_print_hook,3)),"Hook called by debug/3.",swi_man_manual('debug.html'),manual,8069).
+i(/(assertion,1),"Acts similar to C assert() macro.",swi_man_manual('debug.html'),manual,8583).
+i(:(prolog,/(assertion_failed,2)),"This hook is called if the Goal of assertion/1 fails.",swi_man_manual('debug.html'),manual,9431).
 i(section(2,'4.39','sec:debugger'),"Debugging and Tracing Programs",swi_man_manual('debugger.html'),manual,3537).
 i(/(trace,0),"Start the tracer.",swi_man_manual('debugger.html'),manual,4152).
 i(/(tracing,0),"True if the tracer is currently switched on.",swi_man_manual('debugger.html'),manual,4558).
@@ -735,17 +792,6 @@ i(/(leash,1),"Set/query leashing (ports which allow for user interaction).",swi_
 i(/(visible,1),"Set the ports shown by the debugger.",swi_man_manual('debugger.html'),manual,10129).
 i(/(unknown,2),"Edinburgh-Prolog compatibility predicate, interfacing to the ISO Prolog flag unknown.",swi_man_manual('debugger.html'),manual,10459).
 i(/(style_check,1),"Modify/query style checking options.",swi_man_manual('debugger.html'),manual,11039).
-i(section(2,'A.14','sec:debug'),"library(debug): Print debug messages and test assertions",swi_man_manual('debug.html'),manual,3515).
-i(/(debugging,1),"Examine debug topics.",swi_man_manual('debug.html'),manual,4487).
-i(/(debugging,2),"Examine debug topics.",swi_man_manual('debug.html'),manual,4487).
-i(/(debug,1),"Add/remove a topic from being printed.",swi_man_manual('debug.html'),manual,5333).
-i(/(nodebug,1),"Add/remove a topic from being printed.",swi_man_manual('debug.html'),manual,5333).
-i(/(list_debug_topics,0),"List currently known debug topics and their setting.",swi_man_manual('debug.html'),manual,6128).
-i(/(debug_message_context,1),"Specify additional context for debug messages.",swi_man_manual('debug.html'),manual,6333).
-i(/(debug,3),"Format a message if debug topic is enabled.",swi_man_manual('debug.html'),manual,6796).
-i(:(prolog,/(debug_print_hook,3)),"Hook called by debug/3.",swi_man_manual('debug.html'),manual,8069).
-i(/(assertion,1),"Acts similar to C assert() macro.",swi_man_manual('debug.html'),manual,8583).
-i(:(prolog,/(assertion_failed,2)),"This hook is called if the Goal of assertion/1 fails.",swi_man_manual('debug.html'),manual,9431).
 i(section(2,'2.10','sec:debugoverview'),"Overview of the Debugger",swi_man_manual('debugoverview.html'),manual,3523).
 i(section(3,'2.10.1','sec:byrd-box-model'),"The Byrd Box Model And Ports",swi_man_manual('debugoverview.html'),manual,4997).
 i(section(3,'2.10.2','sec:trace-example'),"Trace Mode Example",swi_man_manual('debugoverview.html'),manual,7921).
@@ -768,13 +814,13 @@ i(/(reset,3),"Call Goal.",swi_man_manual('delcont.html'),manual,8219).
 i(/(shift,1),"Abandon the execution of the current goal, returning control to just after the matching reset/3 call.",swi_man_manual('delcont.html'),manual,9903).
 i(/(shift_for_copy,1),"Similar to shift/1.",swi_man_manual('delcont.html'),manual,10653).
 i(section(2,'13.1','sec:deployment-options'),"Deployment options",swi_man_manual('deployment-options.html'),manual,3525).
-i(section(1,'C','sec:dialect'),"Compatibility with other Prolog dialects",swi_man_manual('dialect.html'),manual,3539).
-i(/(expects_dialect,1),"This directive states that the code following the directive is written for the given Prolog Dialect.",swi_man_manual('dialect.html'),manual,6814).
-i(/(source_exports,2),"Is true if source Spec exports Export, a predicate indicator.",swi_man_manual('dialect.html'),manual,8359).
 i(section(2,'C.2','sec:dialect-notes'),"Notes on specific dialects",swi_man_manual('dialect-notes.html'),manual,3544).
 i(section(3,'C.2.1','sec:dialect-xsb'),"Notes on specific dialects",swi_man_manual('dialect-notes.html'),manual,3983).
 i(section(4,'C.2.1.1','sec:xsb-source'),"Loading XSB source files",swi_man_manual('dialect-notes.html'),manual,5677).
 i(section(3,'C.2.2','sec:xsb-import'),"The XSB import directive",swi_man_manual('dialect-notes.html'),manual,8069).
+i(section(1,'C','sec:dialect'),"Compatibility with other Prolog dialects",swi_man_manual('dialect.html'),manual,3539).
+i(/(expects_dialect,1),"This directive states that the code following the directive is written for the given Prolog Dialect.",swi_man_manual('dialect.html'),manual,6814).
+i(/(source_exports,2),"Is true if source Spec exports Export, a predicate indicator.",swi_man_manual('dialect.html'),manual,8359).
 i(section(2,'A.15','sec:dicts'),"library(dicts): Dict utilities",swi_man_manual('dicts.html'),manual,3507).
 i(/(dicts_same_tag,2),"True when List is a list of dicts that all have the tag Tag.",swi_man_manual('dicts.html'),manual,3925).
 i(/(dict_size,2),"True when KeyCount is the number of keys in Dict.",swi_man_manual('dicts.html'),manual,4183).
@@ -786,6 +832,7 @@ i(/(dicts_join,3),"Join dicts in Dicts that have the same value for Key, provide
 i(/(dicts_join,4),"Join two lists of dicts (Dicts1 and Dicts2) on Key.",swi_man_manual('dicts.html'),manual,7139).
 i(/(dicts_slice,3),"DictsOut is a list of Dicts only containing values for Keys.",swi_man_manual('dicts.html'),manual,8056).
 i(/(dicts_to_compounds,4),"True when Dicts and Compounds are lists of the same length and each element of Compounds is a compound term whose arguments represent the values associated with the corresponding keys in Keys.",swi_man_manual('dicts.html'),manual,8319).
+i(section(2,'6.13','sec:dynamic-modules'),"Dynamic Modules",swi_man_manual('dynamic-modules.html'),manual,3529).
 i(section(2,'4.15','sec:declare'),"Declaring predicate properties",swi_man_manual('dynamic.html'),manual,3513).
 i(/(dynamic,1),"Informs the interpreter that the definition of the predicate(s) may change during execution (using assert/1 and/or retract/1).",swi_man_manual('dynamic.html'),manual,7801).
 i(/(dynamic,2),"As dynamic/1, but allows for setting additional properties.",swi_man_manual('dynamic.html'),manual,8731).
@@ -794,7 +841,6 @@ i(/(multifile,1),"Informs the system that the specified predicate(s) may be defi
 i(/(discontiguous,1),"Informs the system that the clauses of the specified predicate(s) might not be together in the source file.",swi_man_manual('dynamic.html'),manual,12486).
 i(/(public,1),"Instructs the cross-referencer that the predicate can be called.",swi_man_manual('dynamic.html'),manual,12888).
 i(/(non_terminal,1),"Sets the non_terminal property on the predicate.",swi_man_manual('dynamic.html'),manual,14259).
-i(section(2,'6.13','sec:dynamic-modules'),"Dynamic Modules",swi_man_manual('dynamic-modules.html'),manual,3529).
 i(section(2,'4.4','sec:edit'),"Editor Interface",swi_man_manual('edit.html'),manual,3522).
 i(/(edit,1),"First, exploit prolog_edit:locate/3 to translate Specification into a list of Locations.",swi_man_manual('edit.html'),manual,5302).
 i(/(edit,0),"Edit the‘default' file using edit/1.",swi_man_manual('edit.html'),manual,6015).
@@ -858,8 +904,6 @@ i(/(nth_clause,3),"Provides access to the clauses of a predicate using their ind
 i(/(clause_property,2),"Queries properties of a clause.",swi_man_manual('examineprog.html'),manual,28906).
 i(section(2,'B.5','sec:excepthook'),"Adding context to errors: prolog_exception_hook",swi_man_manual('excepthook.html'),manual,3526).
 i(/(prolog_exception_hook,4),"This hook predicate, if defined in the module user, is between raising an exception and handling it.",swi_man_manual('excepthook.html'),manual,4130).
-i(section(2,'B.6','sec:exception3'),"Hooks using the exception predicate",swi_man_manual('exception3.html'),manual,3530).
-i(/(exception,3),"Dynamic predicate, normally not defined.",swi_man_manual('exception3.html'),manual,4584).
 i(section(2,'4.10','sec:exception'),"Exception handling",swi_man_manual('exception.html'),manual,3517).
 i(/(catch,3),"Behaves as call/1 if no exception is raised when executing Goal.",swi_man_manual('exception.html'),manual,3951).
 i(/(throw,1),"Raise an exception.",swi_man_manual('exception.html'),manual,5582).
@@ -869,7 +913,8 @@ i(section(3,'4.10.2','sec:debugexceptions'),"Debugging and exceptions",swi_man_m
 i(section(3,'4.10.3','sec:exceptterm'),"The exception term",swi_man_manual('exception.html'),manual,15989).
 i(section(4,'4.10.3.1','sec:generalformofexceptionterm'),"General form of the ISO standard exception term",swi_man_manual('exception.html'),manual,16160).
 i(section(4,'4.10.3.2','sec:throwsfromuserpreds'),"Throwing exceptions from applications and libraries",swi_man_manual('exception.html'),manual,19252).
-i(section(1,'5','sec:extensions'),"SWI-Prolog extensions",swi_man_manual('extensions.html'),manual,3509).
+i(section(2,'B.6','sec:exception3'),"Hooks using the exception predicate",swi_man_manual('exception3.html'),manual,3530).
+i(/(exception,3),"Dynamic predicate, normally not defined.",swi_man_manual('exception3.html'),manual,4584).
 i(section(2,'5.5','sec:ext-integration'),"Integration of strings and dicts in the libraries",swi_man_manual('ext-integration.html'),manual,3506).
 i(section(3,'5.5.1','sec:ext-dict-options'),"Dicts and option processing",swi_man_manual('ext-integration.html'),manual,4413).
 i(section(3,'5.5.2','sec:ext-dict-in-core-data'),"Dicts in core data structures",swi_man_manual('ext-integration.html'),manual,4749).
@@ -883,6 +928,7 @@ i(section(2,'5.3','sec:ext-syntax'),"Syntax changes since SWI-Prolog\xA0\7",swi_
 i(section(3,'5.3.1','sec:ext-syntax-op'),"Operators and quoted atoms",swi_man_manual('ext-syntax.html'),manual,3697).
 i(section(3,'5.3.2','sec:ext-compound-zero'),"Compound terms with zero arguments",swi_man_manual('ext-syntax.html'),manual,5237).
 i(section(3,'5.3.3','sec:ext-blockop'),"Block operators",swi_man_manual('ext-syntax.html'),manual,7914).
+i(section(1,'5','sec:extensions'),"SWI-Prolog extensions",swi_man_manual('extensions.html'),manual,3509).
 i(section(2,'4.36','sec:files'),"File System Interaction",swi_man_manual('files.html'),manual,3515).
 i(/(access_file,2),"True if File exists and can be accessed by this Prolog process under mode Mode.",swi_man_manual('files.html'),manual,3693).
 i(/(exists_file,1),"True if File exists and is a regular file.",swi_man_manual('files.html'),manual,5651).
@@ -895,19 +941,19 @@ i(/(rename_file,2),"Rename File1 as File2.",swi_man_manual('files.html'),manual,
 i(/(size_file,2),"Unify Size with the size of File in bytes.",swi_man_manual('files.html'),manual,10572).
 i(/(time_file,2),"Unify the last modification time of File with Time.",swi_man_manual('files.html'),manual,10764).
 i(/(absolute_file_name,2),"Expand a local filename into an absolute path.",swi_man_manual('files.html'),manual,11254).
-i(/(absolute_file_name,3),"Convert the given file specification into an absolute path.",swi_man_manual('files.html'),manual,12027).
-i(/(is_absolute_file_name,1),"True if File specifies an absolute path name.",swi_man_manual('files.html'),manual,16777).
-i(/(file_name_extension,3),"This predicate is used to add, remove or test filename extensions.",swi_man_manual('files.html'),manual,17496).
-i(/(directory_files,2),"Unify Entries with a list of entries in Directory.",swi_man_manual('files.html'),manual,18105).
-i(/(expand_file_name,2),"Unify List with a sorted list of files or directories matching WildCard.",swi_man_manual('files.html'),manual,18934).
-i(/(prolog_to_os_filename,2),"Convert between the internal Prolog path name conventions and the operating system path name conventions.",swi_man_manual('files.html'),manual,20682).
-i(/(read_link,3),"If File points to a symbolic link, unify Link with the value of the link and Target to the file the link is pointing to.",swi_man_manual('files.html'),manual,21218).
-i(/(tmp_file,2),"Create a name for a temporary file.",swi_man_manual('files.html'),manual,21721).
-i(/(tmp_file_stream,3),"Create a temporary filename FileName, open it for writing and unify Stream with the output stream.",swi_man_manual('files.html'),manual,22532).
-i(/(make_directory,1),"Create a new directory (folder) on the filesystem.",swi_man_manual('files.html'),manual,24764).
-i(/(delete_directory,1),"Delete directory (folder) from the filesystem.",swi_man_manual('files.html'),manual,25099).
-i(/(working_directory,2),"Unify Old with an absolute path to the current working directory and change working directory to New.",swi_man_manual('files.html'),manual,25403).
-i(/(chdir,1),"Compatibility predicate.",swi_man_manual('files.html'),manual,26502).
+i(/(absolute_file_name,3),"Convert the given file specification into an absolute path.",swi_man_manual('files.html'),manual,13506).
+i(/(is_absolute_file_name,1),"True if File specifies an absolute path name.",swi_man_manual('files.html'),manual,18686).
+i(/(file_name_extension,3),"This predicate is used to add, remove or test filename extensions.",swi_man_manual('files.html'),manual,19405).
+i(/(directory_files,2),"Unify Entries with a list of entries in Directory.",swi_man_manual('files.html'),manual,20014).
+i(/(expand_file_name,2),"Unify List with a sorted list of files or directories matching WildCard.",swi_man_manual('files.html'),manual,20843).
+i(/(prolog_to_os_filename,2),"Convert between the internal Prolog path name conventions and the operating system path name conventions.",swi_man_manual('files.html'),manual,22591).
+i(/(read_link,3),"If File points to a symbolic link, unify Link with the value of the link and Target to the file the link is pointing to.",swi_man_manual('files.html'),manual,23127).
+i(/(tmp_file,2),"Create a name for a temporary file.",swi_man_manual('files.html'),manual,23630).
+i(/(tmp_file_stream,3),"Create a temporary filename FileName, open it for writing and unify Stream with the output stream.",swi_man_manual('files.html'),manual,24441).
+i(/(make_directory,1),"Create a new directory (folder) on the filesystem.",swi_man_manual('files.html'),manual,26673).
+i(/(delete_directory,1),"Delete directory (folder) from the filesystem.",swi_man_manual('files.html'),manual,27008).
+i(/(working_directory,2),"Unify Old with an absolute path to the current working directory and change working directory to New.",swi_man_manual('files.html'),manual,27312).
+i(/(chdir,1),"Compatibility predicate.",swi_man_manual('files.html'),manual,28411).
 i(section(2,'13.7','sec:findappfile'),"Finding Application files",swi_man_manual('findappfile.html'),manual,3521).
 i(section(2,'12.6','sec:findhome'),"The Prolog‘home' directory",swi_man_manual('findhome.html'),manual,3515).
 i(section(2,'2.12','sec:flags'),"Environment Control (Prolog flags)",swi_man_manual('flags.html'),manual,3519).
@@ -1277,13 +1323,13 @@ i(/(gdebug,0),"Utility defined as guitracer,debug.",swi_man_manual('guitracer.ht
 i(/(gspy,1),"Utility defined as guitracer,spy(Predicate).",swi_man_manual('guitracer.html'),manual,6900).
 i(section(2,'4.33','sec:gvar'),"Global variables",swi_man_manual('gvar.html'),manual,3505).
 i(/(b_setval,2),"Associate the term Value with the atom Name or replace the currently associated value with Value.",swi_man_manual('gvar.html'),manual,6347).
-i(/(b_getval,2),"Get the value associated with the global variable Name and unify it with Value.",swi_man_manual('gvar.html'),manual,6981).
-i(/(nb_setval,2),"Associates a copy of Value created with duplicate_term/2 with the atom Name.",swi_man_manual('gvar.html'),manual,7702).
-i(/(nb_getval,2),"The nb_getval/2 predicate is a synonym for b_getval/2, introduced for compatibility and symmetry.",swi_man_manual('gvar.html'),manual,8153).
-i(/(nb_linkval,2),"Associates the term Value with the atom Name without copying it.",swi_man_manual('gvar.html'),manual,9147).
-i(/(nb_current,2),"Enumerate all defined variables with their value.",swi_man_manual('gvar.html'),manual,10155).
-i(/(nb_delete,1),"Delete the named global variable.",swi_man_manual('gvar.html'),manual,11217).
-i(section(3,'4.33.1','sec:gvars-compat'),"Compatibility of SWI-Prolog Global Variables",swi_man_manual('gvar.html'),manual,11751).
+i(/(b_getval,2),"Get the value associated with the global variable Name and unify it with Value.",swi_man_manual('gvar.html'),manual,7214).
+i(/(nb_setval,2),"Associates a copy of Value created with duplicate_term/2 with the atom Name.",swi_man_manual('gvar.html'),manual,7935).
+i(/(nb_getval,2),"The nb_getval/2 predicate is a synonym for b_getval/2, introduced for compatibility and symmetry.",swi_man_manual('gvar.html'),manual,8386).
+i(/(nb_linkval,2),"Associates the term Value with the atom Name without copying it.",swi_man_manual('gvar.html'),manual,9380).
+i(/(nb_current,2),"Enumerate all defined variables with their value.",swi_man_manual('gvar.html'),manual,10388).
+i(/(nb_delete,1),"Delete the named global variable.",swi_man_manual('gvar.html'),manual,11450).
+i(section(3,'4.33.1','sec:gvars-compat'),"Compatibility of SWI-Prolog Global Variables",swi_man_manual('gvar.html'),manual,11984).
 i(section(1,'B','sec:hack'),"Hackers corner",swi_man_manual('hack.html'),manual,3501).
 i(section(2,'A.13','sec:highorder'),"library(dcg/high_order): High order grammar operations",swi_man_manual('highorder.html'),manual,3509).
 i(//(sequence,2),"Match or generate a sequence of Element.",swi_man_manual('highorder.html'),manual,4193).
@@ -1294,7 +1340,6 @@ i(//(foreach,2),"Generate a list from the solutions of Generator.",swi_man_manua
 i(//(foreach,3),"Generate a list from the solutions of Generator.",swi_man_manual('highorder.html'),manual,6989).
 i(section(2,'2.8','sec:history'),"Command line history",swi_man_manual('history.html'),manual,3522).
 i(section(2,'2.13','sec:hooks'),"An overview of hook predicates",swi_man_manual('hooks.html'),manual,3513).
-i(section(1,'3','sec:IDE'),"Initialising and Managing a Prolog Project",swi_man_manual('IDE.html'),manual,3521).
 i(section(2,'3.8','sec:idepreds'),"Accessing the IDE from your program",swi_man_manual('idepreds.html'),manual,3514).
 i(/(prolog_ide,1),"This predicate ensures the IDE-enabling XPCE component is loaded, creates the XPCE class prolog_ide and sends Action to its one and only instance @prolog_ide.",swi_man_manual('idepreds.html'),manual,4258).
 i(section(2,'3.9','sec:idesummary'),"Summary of the IDE",swi_man_manual('idesummary.html'),manual,3516).
@@ -1317,7 +1362,7 @@ i(/(incr_invalidate_calls,1),"Invalidate all tables for subgoals of Goal as well
 i(/(incr_invalidate_call,1),"This is the XSB name, but the manual says incr_invalidate_calls/1 and the comment with the code suggests this is misnamed.",swi_man_manual('increval.html'),manual,6272).
 i(/(incr_table_update,0),"Updated all invalid tables",swi_man_manual('increval.html'),manual,6801).
 i(/(incr_propagate_calls,1),"Activate the monotonic answer propagation similarly to when a new fact is asserted for a monotonic dynamic predicate.",swi_man_manual('increval.html'),manual,6945).
-i(section(0,'0','Manual/index.html'),"SWI-Prolog 8.3.27 Reference Manual",swi_man_manual('index.html'),manual,3281).
+i(section(0,'0','Manual/index.html'),"SWI-Prolog 8.3.28 Reference Manual",swi_man_manual('index.html'),manual,3281).
 i(section(2,'2.2','sec:initfile'),"The user's initialisation file",swi_man_manual('initfile.html'),manual,3522).
 i(section(2,'2.3','sec:initgoal'),"Initialisation files and goals",swi_man_manual('initgoal.html'),manual,3516).
 i(section(2,'A.19','sec:intercept'),"library(intercept): Intercept and signal interface",swi_man_manual('intercept.html'),manual,3519).
@@ -1332,45 +1377,6 @@ i(/(prolog_list_goal,1),"Hook, normally not defined.",swi_man_manual('intlibs.ht
 i(:(prolog,/(debug_control_hook,1)),"Hook for the debugger control predicates that allows the creator of more high-level programming languages to use the common front-end predicates to control the debugger.",swi_man_manual('intlibs.html'),manual,4822).
 i(:(prolog,/(help_hook,1)),"Hook into help/0 and help/1.",swi_man_manual('intlibs.html'),manual,6836).
 i(section(1,'1','sec:intro'),"Introduction",swi_man_manual('intro.html'),manual,3507).
-i(section(2,'4.17','sec:IO'),"Input and output",swi_man_manual('IO.html'),manual,3529).
-i(section(3,'4.17.1','sec:streamalias'),"Predefined stream aliases",swi_man_manual('IO.html'),manual,4738).
-i(section(3,'4.17.2','sec:isoIO'),"ISO Input and Output Streams",swi_man_manual('IO.html'),manual,8218).
-i(/(open,4),"True when SrcDest can be opened in Mode and Stream is an I/O stream to/from the object.",swi_man_manual('IO.html'),manual,9936).
-i(/(open,3),"Equivalent to open/4 with an empty option list.",swi_man_manual('IO.html'),manual,18998).
-i(/(open_null_stream,1),"Open an output stream that produces no output.",swi_man_manual('IO.html'),manual,19281).
-i(/(close,1),"Close the specified stream.",swi_man_manual('IO.html'),manual,20170).
-i(/(close,2),"Provides close(Stream, [force(true)]) as the only option.",swi_man_manual('IO.html'),manual,21191).
-i(/(stream_property,2),"True when StreamProperty is a property of Stream.",swi_man_manual('IO.html'),manual,21529).
-i(/(current_stream,3),"The predicate current_stream/3 is used to access the status of a stream as well as to generate all open streams.",swi_man_manual('IO.html'),manual,29680).
-i(/(is_stream,1),"True if Term is a stream name or valid stream handle.",swi_man_manual('IO.html'),manual,30577).
-i(/(stream_pair,3),"This predicate can be used in mode (-,+,+) to create a stream-pair from an input stream and an output stream.",swi_man_manual('IO.html'),manual,30846).
-i(/(set_stream_position,2),"Set the current position of Stream to Pos.",swi_man_manual('IO.html'),manual,32148).
-i(/(stream_position_data,3),"Extracts information from the opaque stream position term as returned by stream_property/2 requesting the position(Pos) property.",swi_man_manual('IO.html'),manual,32679).
-i(/(seek,4),"Reposition the current point of the given Stream.",swi_man_manual('IO.html'),manual,33813).
-i(/(set_stream,2),"Modify an attribute of an existing stream.",swi_man_manual('IO.html'),manual,36508).
-i(/(set_prolog_IO,3),"Prepare the given streams for interactive behaviour normally associated to the terminal.",swi_man_manual('IO.html'),manual,43764).
-i(/(set_system_IO,3),"Bind the given streams to the operating system I/O streams 0-2 using POSIX dup2() API.",swi_man_manual('IO.html'),manual,44852).
-i(section(3,'4.17.3','sec:edinburghIO'),"Edinburgh-style I/O",swi_man_manual('IO.html'),manual,46613).
-i(/(see,1),"Open SrcDest for reading and make it the current input (see set_input/1).",swi_man_manual('IO.html'),manual,51460).
-i(/(tell,1),"Open SrcDest for writing and make it the current output (see set_output/1).",swi_man_manual('IO.html'),manual,51916).
-i(/(append,1),"Similar to tell/1, but positions the file pointer at the end of File rather than truncating an existing file.",swi_man_manual('IO.html'),manual,52379).
-i(/(seeing,1),"Same as current_input/1, except that user is returned if the current input is the stream user_input to improve compatibility with traditional Edinburgh I/O.",swi_man_manual('IO.html'),manual,52739).
-i(/(telling,1),"Same as current_output/1, except that user is returned if the current output is the stream user_output to improve compatibility with traditional Edinburgh I/O.",swi_man_manual('IO.html'),manual,53224).
-i(/(seen,0),"Close the current input stream.",swi_man_manual('IO.html'),manual,53716).
-i(/(told,0),"Close the current output stream.",swi_man_manual('IO.html'),manual,53893).
-i(section(3,'4.17.4','sec:edinburgh-iso-io'),"Switching between Edinburgh and ISO I/O",swi_man_manual('IO.html'),manual,54084).
-i(/(set_input,1),"Set the current input stream to become Stream.",swi_man_manual('IO.html'),manual,54423).
-i(/(set_output,1),"Set the current output stream to become Stream.",swi_man_manual('IO.html'),manual,54743).
-i(/(current_input,1),"Get the current input stream.",swi_man_manual('IO.html'),manual,55075).
-i(/(current_output,1),"Get the current output stream.",swi_man_manual('IO.html'),manual,55347).
-i(section(3,'4.17.5','sec:iri-schema'),"Adding IRI schemas",swi_man_manual('IO.html'),manual,55555).
-i(/(register_iri_scheme,3),"Register Hook to be called by all file handling predicates if a name that starts with Scheme:// is encountered.",swi_man_manual('IO.html'),manual,56791).
-i(section(3,'4.17.6','sec:write-on-atom'),"Write onto atoms, code-lists, etc.",swi_man_manual('IO.html'),manual,58582).
-i(/(with_output_to,2),"Run Goal as once/1, while characters written to the current output are sent to Output.",swi_man_manual('IO.html'),manual,58791).
-i(section(3,'4.17.7','sec:fast-term-io'),"Fast binary term I/O",swi_man_manual('IO.html'),manual,62365).
-i(/(fast_term_serialized,2),"(De-)serialize Term to/from String.",swi_man_manual('IO.html'),manual,64292).
-i(/(fast_write,2),"Write Term using the fast serialization format to the Output stream.",swi_man_manual('IO.html'),manual,64501).
-i(/(fast_read,2),"Read Term using the fast serialization format from the Input stream.",swi_man_manual('IO.html'),manual,64776).
 i(section(2,'A.20','sec:iostream'),"library(iostream): Utilities to deal with streams",swi_man_manual('iostream.html'),manual,3519).
 i(/(open_any,5),"Establish a stream from Specification that should be closed using Close, which can either be called or passed to close_any/1.",swi_man_manual('iostream.html'),manual,4906).
 i(/(close_any,1),"Execute the Close closure returned by open_any/5.",swi_man_manual('iostream.html'),manual,7375).
@@ -1598,12 +1604,12 @@ i(/(autoload,2),"Declare that possibly missing predicates in the module in which
 i(section(2,'6.16','sec:modulecompat'),"Compatibility of the Module System",swi_man_manual('modulecompat.html'),manual,3523).
 i(section(2,'6.9','sec:moduleop'),"Operators and modules",swi_man_manual('moduleop.html'),manual,3526).
 i(section(1,'6','sec:modules'),"Modules",swi_man_manual('modules.html'),manual,3513).
-i(section(2,'6.7','sec:mtoplevel'),"Interacting with modules from the top level",swi_man_manual('mtoplevel.html'),manual,3518).
-i(/(module,1),"The call module(Module) may be used to switch the default working module for the interactive top level (see prolog/0).",swi_man_manual('mtoplevel.html'),manual,4656).
 i(section(2,'10.7','sec:mt-xpce'),"Multithreading and the XPCE graphics system",swi_man_manual('mt-xpce.html'),manual,3527).
 i(/(in_pce_thread,1),"Assuming XPCE is running in the foreground thread, this call gives background threads the opportunity to make calls to the XPCE thread.",swi_man_manual('mt-xpce.html'),manual,4986).
 i(/(in_pce_thread_sync,1),"Same as in_pce_thread/1, but wait for Goal to be completed.",swi_man_manual('mt-xpce.html'),manual,5593).
 i(/(pce_dispatch,1),"Create a Prolog thread with the alias name pce for XPCE event handling.",swi_man_manual('mt-xpce.html'),manual,6956).
+i(section(2,'6.7','sec:mtoplevel'),"Interacting with modules from the top level",swi_man_manual('mtoplevel.html'),manual,3518).
+i(/(module,1),"The call module(Module) may be used to switch the default working module for the interactive top level (see prolog/0).",swi_man_manual('mtoplevel.html'),manual,4656).
 i(section(2,'3.6','sec:navigator'),"The Prolog Navigator",swi_man_manual('navigator.html'),manual,3512).
 i(section(2,'A.24','sec:nb_set'),"library(nb_set): Non-backtrackable set",swi_man_manual('nb_set.html'),manual,3517).
 i(/(empty_nb_set,1),"True if Set is a non-backtrackable empty set.",swi_man_manual('nb_set.html'),manual,4855).
@@ -2099,7 +2105,6 @@ i(/(abolish_table_call,2),"Same as abolish_table_subgoals/1.",swi_man_manual('ta
 i(/(abolish_table_subgoals,2),"Behaves as abolish_table_subgoals/1, but allows the default table_gc_action to be over-ridden with a flag, which can be either abolish_tables_transitively or abolish_tables_singly.",swi_man_manual('tables.html'),manual,10627).
 i(section(2,'7.12','sec:tabling-about'),"About the tabling implementation",swi_man_manual('tabling-about.html'),manual,3519).
 i(section(4,'7.12.1','sec:tabling-status'),"Status of tabling",swi_man_manual('tabling-about.html'),manual,5902).
-i(section(1,'7','sec:tabling'),"Tabled execution (SLG resolution)",swi_man_manual('tabling.html'),manual,3527).
 i(section(2,'7.7','sec:tabling-incremental'),"Incremental tabling",swi_man_manual('tabling-incremental.html'),manual,3526).
 i(section(2,'7.1','sec:tabling-memoize'),"Example 1: using tabling for memoizing",swi_man_manual('tabling-memoize.html'),manual,3546).
 i(section(2,'7.3','sec:tabling-mode-directed'),"Answer subsumption or mode directed tabling",swi_man_manual('tabling-mode-directed.html'),manual,3548).
@@ -2136,30 +2141,31 @@ i(section(2,'7.9','sec:tabling-shared'),"Shared tabling",swi_man_manual('tabling
 i(section(3,'7.9.1','sec:tabling-shared-abolish'),"Abolishing shared tables",swi_man_manual('tabling-shared.html'),manual,5754).
 i(section(3,'7.9.2','sec:tabling-shared-status'),"Status and future of shared tabling",swi_man_manual('tabling-shared.html'),manual,7069).
 i(section(2,'7.5','sec:tabling-subsumptive'),"Variant and subsumptive tabling",swi_man_manual('tabling-subsumptive.html'),manual,3508).
+i(section(1,'7','sec:tabling'),"Tabled execution (SLG resolution)",swi_man_manual('tabling.html'),manual,3527).
 i(section(2,'4.20','sec:termrw'),"Term reading and writing",swi_man_manual('termrw.html'),manual,3517).
 i(/(write_term,2),"The predicate write_term/2 is the generic form of all Prolog term-write predicates.",swi_man_manual('termrw.html'),manual,4506).
-i(/(write_term,3),"As write_term/2, but output is sent to Stream rather than the current output.",swi_man_manual('termrw.html'),manual,18487).
-i(/(write_length,3),"True when Length is the number of characters emitted for write_term(Term, Options).",swi_man_manual('termrw.html'),manual,18837).
-i(/(write_canonical,1),"Write Term on the current output stream using standard parenthesised prefix notation (i.e., ignoring operator declarations).",swi_man_manual('termrw.html'),manual,19605).
-i(/(write_canonical,2),"Write Term in canonical form on Stream.",swi_man_manual('termrw.html'),manual,20905).
-i(/(write,1),"Write Term to the current output, using brackets and operators where appropriate.",swi_man_manual('termrw.html'),manual,21143).
-i(/(write,2),"Write Term to Stream.",swi_man_manual('termrw.html'),manual,21383).
-i(/(writeq,1),"Write Term to the current output, using brackets and operators where appropriate.",swi_man_manual('termrw.html'),manual,21583).
-i(/(writeq,2),"Write Term to Stream, inserting quotes.",swi_man_manual('termrw.html'),manual,22065).
-i(/(writeln,1),"Equivalent to write(Term), nl.",swi_man_manual('termrw.html'),manual,22285).
-i(/(writeln,2),"Equivalent to write(Stream, Term), nl(Stream).",swi_man_manual('termrw.html'),manual,22560).
-i(/(print,1),"Print a term for debugging purposes.",swi_man_manual('termrw.html'),manual,22861).
-i(/(print,2),"Print Term to Stream.",swi_man_manual('termrw.html'),manual,24780).
-i(/(portray,1),"A dynamic predicate, which can be defined by the user to change the behaviour of print/1 on (sub)terms.",swi_man_manual('termrw.html'),manual,24945).
-i(/(read,1),"Read the next Prolog term from the current input stream and unify it with Term.",swi_man_manual('termrw.html'),manual,25868).
-i(/(read,2),"Read the next Prolog term from Stream.",swi_man_manual('termrw.html'),manual,27113).
-i(/(read_clause,3),"Equivalent to read_term/3, but sets options according to the current compilation context and optionally processes comments.",swi_man_manual('termrw.html'),manual,27521).
-i(/(read_term,2),"Read a term from the current input stream and unify the term with Term.",swi_man_manual('termrw.html'),manual,29778).
-i(/(read_term,3),"Read term with options from Stream.",swi_man_manual('termrw.html'),manual,41434).
-i(/(read_term_from_atom,3),"Use read_term/3 to read the next term from Atom.",swi_man_manual('termrw.html'),manual,41754).
-i(/(read_term_with_history,2),"Read a term while providing history substitutions.",swi_man_manual('termrw.html'),manual,42371).
-i(/(prompt,2),"Set prompt associated with reading from the user_input stream.",swi_man_manual('termrw.html'),manual,44858).
-i(/(prompt1,1),"Sets the prompt for the next line to be read.",swi_man_manual('termrw.html'),manual,46215).
+i(/(write_term,3),"As write_term/2, but output is sent to Stream rather than the current output.",swi_man_manual('termrw.html'),manual,18904).
+i(/(write_length,3),"True when Length is the number of characters emitted for write_term(Term, Options).",swi_man_manual('termrw.html'),manual,19254).
+i(/(write_canonical,1),"Write Term on the current output stream using standard parenthesised prefix notation (i.e., ignoring operator declarations).",swi_man_manual('termrw.html'),manual,20022).
+i(/(write_canonical,2),"Write Term in canonical form on Stream.",swi_man_manual('termrw.html'),manual,21322).
+i(/(write,1),"Write Term to the current output, using brackets and operators where appropriate.",swi_man_manual('termrw.html'),manual,21560).
+i(/(write,2),"Write Term to Stream.",swi_man_manual('termrw.html'),manual,21800).
+i(/(writeq,1),"Write Term to the current output, using brackets and operators where appropriate.",swi_man_manual('termrw.html'),manual,22000).
+i(/(writeq,2),"Write Term to Stream, inserting quotes.",swi_man_manual('termrw.html'),manual,22482).
+i(/(writeln,1),"Equivalent to write(Term), nl.",swi_man_manual('termrw.html'),manual,22702).
+i(/(writeln,2),"Equivalent to write(Stream, Term), nl(Stream).",swi_man_manual('termrw.html'),manual,22977).
+i(/(print,1),"Print a term for debugging purposes.",swi_man_manual('termrw.html'),manual,23278).
+i(/(print,2),"Print Term to Stream.",swi_man_manual('termrw.html'),manual,25197).
+i(/(portray,1),"A dynamic predicate, which can be defined by the user to change the behaviour of print/1 on (sub)terms.",swi_man_manual('termrw.html'),manual,25362).
+i(/(read,1),"Read the next Prolog term from the current input stream and unify it with Term.",swi_man_manual('termrw.html'),manual,26285).
+i(/(read,2),"Read the next Prolog term from Stream.",swi_man_manual('termrw.html'),manual,27530).
+i(/(read_clause,3),"Equivalent to read_term/3, but sets options according to the current compilation context and optionally processes comments.",swi_man_manual('termrw.html'),manual,27938).
+i(/(read_term,2),"Read a term from the current input stream and unify the term with Term.",swi_man_manual('termrw.html'),manual,30195).
+i(/(read_term,3),"Read term with options from Stream.",swi_man_manual('termrw.html'),manual,41851).
+i(/(read_term_from_atom,3),"Use read_term/3 to read the next term from Atom.",swi_man_manual('termrw.html'),manual,42171).
+i(/(read_term_with_history,2),"Read a term while providing history substitutions.",swi_man_manual('termrw.html'),manual,42788).
+i(/(prompt,2),"Set prompt associated with reading from the user_input stream.",swi_man_manual('termrw.html'),manual,45275).
+i(/(prompt1,1),"Sets the prompt for the next line to be read.",swi_man_manual('termrw.html'),manual,46632).
 i(section(2,'A.48','sec:terms'),"library(terms): Term manipulation",swi_man_manual('terms.html'),manual,3511).
 i(/(term_size,2),"True if Size is the size in cells occupied by Term on the global (term) stack.",swi_man_manual('terms.html'),manual,4043).
 i(/(variant,2),"Same as SWI-Prolog Term1 =@= Term2.",swi_man_manual('terms.html'),manual,4773).
@@ -2179,6 +2185,17 @@ i(/(is_thread,1),"True if Term is a handle to an existing thread.",swi_man_manua
 i(/(thread_property,2),"True if thread Id has Property.",swi_man_manual('thmonitor.html'),manual,4508).
 i(/(thread_statistics,3),"Obtains statistical information on thread Id as statistics/2 does in single-threaded applications.",swi_man_manual('thmonitor.html'),manual,9053).
 i(/(mutex_statistics,0),"Print usage statistics on internal mutexes and mutexes associated with dynamic predicates.",swi_man_manual('thmonitor.html'),manual,10271).
+i(section(2,'A.49','sec:thread'),"library(thread): High level thread primitives",swi_man_manual('thread.html'),manual,3517).
+i(/(concurrent,3),"Run Goals in parallel using N threads.",swi_man_manual('thread.html'),manual,5470).
+i(/(concurrent_forall,2),"True when Action is true for all solutions of Generate.",swi_man_manual('thread.html'),manual,7922).
+i(/(concurrent_forall,3),"True when Action is true for all solutions of Generate.",swi_man_manual('thread.html'),manual,7922).
+i(/(concurrent_and,2),"Concurrent version of (Generator,Test).",swi_man_manual('thread.html'),manual,9376).
+i(/(concurrent_and,3),"Concurrent version of (Generator,Test).",swi_man_manual('thread.html'),manual,9376).
+i(/(concurrent_maplist,2),"Concurrent version of maplist/2.",swi_man_manual('thread.html'),manual,10970).
+i(/(concurrent_maplist,3),"Concurrent version of maplist/2.",swi_man_manual('thread.html'),manual,10970).
+i(/(concurrent_maplist,4),"Concurrent version of maplist/2.",swi_man_manual('thread.html'),manual,10970).
+i(/(first_solution,3),"Try alternative solvers concurrently, returning the first answer.",swi_man_manual('thread.html'),manual,12402).
+i(/(call_in_thread,2),"Run Goal as an interrupt in the context of Thread.",swi_man_manual('thread.html'),manual,14447).
 i(section(2,'10.3','sec:threadcom'),"Thread communication",swi_man_manual('threadcom.html'),manual,3525).
 i(section(3,'10.3.1','sec:msgqueue'),"Message queues",swi_man_manual('threadcom.html'),manual,3692).
 i(/(thread_send_message,2),"Place Term in the given queue or default queue of the indicated thread (which can even be the message queue of itself, see thread_self/1).",swi_man_manual('threadcom.html'),manual,4766).
@@ -2213,17 +2230,6 @@ i(/(thread_initialization,1),"Run Goal when thread is started.",swi_man_manual('
 i(/(thread_at_exit,1),"Run Goal just before releasing the thread resources.",swi_man_manual('threadcreate.html'),manual,20239).
 i(/(thread_setconcurrency,2),"Determine the concurrency of the process, which is defined as the maximum number of concurrently active threads.‘Active' here means they are using CPU time.",swi_man_manual('threadcreate.html'),manual,22116).
 i(/(thread_affinity,3),"True when Current is unified with the current thread affinity and the thread affinity is successfully set to New.",swi_man_manual('threadcreate.html'),manual,22685).
-i(section(2,'A.49','sec:thread'),"library(thread): High level thread primitives",swi_man_manual('thread.html'),manual,3517).
-i(/(concurrent,3),"Run Goals in parallel using N threads.",swi_man_manual('thread.html'),manual,5470).
-i(/(concurrent_forall,2),"True when Action is true for all solutions of Generate.",swi_man_manual('thread.html'),manual,7922).
-i(/(concurrent_forall,3),"True when Action is true for all solutions of Generate.",swi_man_manual('thread.html'),manual,7922).
-i(/(concurrent_and,2),"Concurrent version of (Generator,Test).",swi_man_manual('thread.html'),manual,9376).
-i(/(concurrent_and,3),"Concurrent version of (Generator,Test).",swi_man_manual('thread.html'),manual,9376).
-i(/(concurrent_maplist,2),"Concurrent version of maplist/2.",swi_man_manual('thread.html'),manual,10970).
-i(/(concurrent_maplist,3),"Concurrent version of maplist/2.",swi_man_manual('thread.html'),manual,10970).
-i(/(concurrent_maplist,4),"Concurrent version of maplist/2.",swi_man_manual('thread.html'),manual,10970).
-i(/(first_solution,3),"Try alternative solvers concurrently, returning the first answer.",swi_man_manual('thread.html'),manual,12402).
-i(/(call_in_thread,2),"Run Goal as an interrupt in the context of Thread.",swi_man_manual('thread.html'),manual,14447).
 i(section(2,'A.50','sec:threadpool'),"library(thread_pool): Resource bounded thread management",swi_man_manual('threadpool.html'),manual,3513).
 i(/(thread_pool_create,3),"Create a pool of threads.",swi_man_manual('threadpool.html'),manual,5698).
 i(/(thread_pool_destroy,1),"Destroy the thread pool named Name.",swi_man_manual('threadpool.html'),manual,7136).
@@ -2330,12 +2336,6 @@ i(/(varnumbers,2),"Inverse of numbervars/1.",swi_man_manual('varnumbers.html'),m
 i(/(varnumbers,3),"Inverse of numbervars/3.",swi_man_manual('varnumbers.html'),manual,5534).
 i(/(max_var_number,3),"True when Max is the max of Start and the highest numbered $VAR(N) term.",swi_man_manual('varnumbers.html'),manual,6302).
 i(/(varnumbers_names,3),"If Term is a term with numbered and named variables using the reserved term’$VAR'(X), Copy is a copy of Term where each’$VAR'(X) is consistently replaced by a fresh variable and Bindings is a list X = Var, relating the X terms with the variable it is mapped to.",swi_man_manual('varnumbers.html'),manual,6712).
-i(section(2,'7.6','sec:WFS'),"Well Founded Semantics",swi_man_manual('WFS.html'),manual,3562).
-i(/(undefined,0),"Unknown represents neither true nor false in the well formed model.",swi_man_manual('WFS.html'),manual,8063).
-i(/(call_residual_program,2),"True when Goal is an answer according to the Well Founded Semantics.",swi_man_manual('WFS.html'),manual,9773).
-i(/(call_delays,2),"True when Goal is an answer that is true when Condition can be satisfied.",swi_man_manual('WFS.html'),manual,10268).
-i(/(delays_residual_program,2),"Program is a list of clauses that represents the connected program associated with Condition.",swi_man_manual('WFS.html'),manual,10667).
-i(section(3,'7.6.1','sec:wfs-toplevel'),"Well founded semantics and the toplevel",swi_man_manual('WFS.html'),manual,11458).
 i(section(2,'6.1','sec:whymodules'),"Why Use Modules?",swi_man_manual('whymodules.html'),manual,3518).
 i(section(2,'2.19','sec:widechars'),"Wide character support",swi_man_manual('widechars.html'),manual,3515).
 i(section(3,'2.19.1','sec:encoding'),"Wide character encodings on streams",swi_man_manual('widechars.html'),manual,5296).
@@ -2904,71 +2904,72 @@ i(section(3,'9.1','sec:cgi-considerations'),"Some considerations",swi_man_packag
 i(section(2,'10','sec:crypt'),"Password encryption library",swi_man_packages('clib.html'),packages,95328).
 i(/(crypt,2),"This predicate can be used in three modes.",swi_man_packages('clib.html'),packages,95781).
 i(section(2,'11','sec:uuid'),"library(uuid): Universally Unique Identifier (UUID) Library",swi_man_packages('clib.html'),packages,98562).
-i(/(uuid,1),"UUID is an atom representing a new UUID.",swi_man_packages('clib.html'),packages,99393).
-i(/(uuid,2),"Create a new UUID according to Options.",swi_man_packages('clib.html'),packages,99718).
-i(section(2,'12','sec:sha'),"SHA* Secure Hash Algorithms",swi_man_packages('clib.html'),packages,100902).
-i(/(sha_hash,3),"Hash is the SHA hash of Data.",swi_man_packages('clib.html'),packages,102911).
-i(/(hmac_sha,4),"Quoting Wikipedia: “A keyed-hash message authentication code, or HMAC, is a type of message authentication code (MAC) calculated using a cryptographic hash function in combination with a secret key.",swi_man_packages('clib.html'),packages,104283).
-i(/(hash_atom,2),"True when HexAtom is the commonly used hexadecimal encoding of the hash code.",swi_man_packages('clib.html'),packages,105589).
-i(section(3,'12.1','sec:sha-license'),"License terms",swi_man_packages('clib.html'),packages,106023).
-i(section(2,'13','sec:md5'),"library(md5): MD5 hashes",swi_man_packages('clib.html'),packages,107188).
-i(/(md5_hash,3),"Hash is the MD5 hash of Data, The conversion is controlled by Options: encoding(+Encoding)If Data is a sequence of character codes, this must be translated into a sequence of bytes, because that is what the hashing requires.",swi_man_packages('clib.html'),packages,107730).
-i(section(2,'14','sec:hashstream'),"library(hash_stream): Maintain a hash on a stream",swi_man_packages('clib.html'),packages,108688).
-i(/(open_hash_stream,3),"Open a filter stream on OrgStream that maintains a hash.",swi_man_packages('clib.html'),packages,110897).
-i(/(stream_hash,2),"Unify Digest with a hash for the bytes send to or read from HashStream.",swi_man_packages('clib.html'),packages,111743).
-i(section(2,'15','sec:memory-files'),"Memory files",swi_man_packages('clib.html'),packages,112346).
-i(/(new_memory_file,1),"Create a new memory file and return a unique opaque handle to it.",swi_man_packages('clib.html'),packages,113605).
-i(/(free_memory_file,1),"Discard the memory file and its contents.",swi_man_packages('clib.html'),packages,113804).
-i(/(open_memory_file,3),"Open the memory-file.",swi_man_packages('clib.html'),packages,114022).
-i(/(open_memory_file,4),"Open a memory-file as open_memory_file/3.",swi_man_packages('clib.html'),packages,114951).
-i(/(size_memory_file,2),"Return the content-length of the memory-file in characters in the current encoding of the memory file.",swi_man_packages('clib.html'),packages,116265).
-i(/(size_memory_file,3),"Return the content-length of the memory-file in characters in the given Encoding.",swi_man_packages('clib.html'),packages,116557).
-i(/(atom_to_memory_file,2),"Turn an atom into a read-only memory-file containing the (shared) characters of the atom.",swi_man_packages('clib.html'),packages,116848).
-i(/(insert_memory_file,3),"Insert Data into the memory file at location Offset.",swi_man_packages('clib.html'),packages,117168).
-i(/(delete_memory_file,3),"Delete a Length characters from the memory file, starting at Offset.",swi_man_packages('clib.html'),packages,117763).
-i(/(memory_file_to_atom,2),"Return the content of the memory-file in Atom.",swi_man_packages('clib.html'),packages,118191).
-i(/(memory_file_to_atom,3),"Return the content of the memory-file in Atom, pretending the data is in the given Encoding.",swi_man_packages('clib.html'),packages,118398).
-i(/(memory_file_to_codes,2),"Return the content of the memory-file as a list of character-codes in Codes.",swi_man_packages('clib.html'),packages,118952).
-i(/(memory_file_to_codes,3),"Return the content of the memory-file as a list of character-codes in Codes, pretending the data is in the given Encoding.",swi_man_packages('clib.html'),packages,119192).
-i(/(memory_file_to_string,2),"Return the content of the memory-file as a string in -String.",swi_man_packages('clib.html'),packages,119501).
-i(/(memory_file_to_string,3),"Return the content of the memory-file as a string in String, pretending the data is in the given Encoding.",swi_man_packages('clib.html'),packages,119729).
-i(/(memory_file_substring,5),"SubString is a substring of the memory file.",swi_man_packages('clib.html'),packages,120025).
-i(/(memory_file_line_position,4),"True if the character offset Offset corresponds with the LinePos character on line Line.",swi_man_packages('clib.html'),packages,120864).
-i(section(2,'16','sec:time-and-alarm'),"Time and alarm library",swi_man_packages('clib.html'),packages,121335).
-i(/(alarm,4),"Schedule Callable to be called Time seconds from now.",swi_man_packages('clib.html'),packages,122189).
-i(/(alarm,3),"Same as alarm(Time, Callable, Id,[]).",swi_man_packages('clib.html'),packages,123839).
-i(/(alarm_at,4),"as alarm/3, but Time is the specification of an absolute point in time.",swi_man_packages('clib.html'),packages,124018).
-i(/(install_alarm,1),"Activate an alarm allocated using alarm/4 with the option install(false) or stopped using uninstall_alarm/1.",swi_man_packages('clib.html'),packages,124471).
-i(/(install_alarm,2),"As install_alarm/1, but specifies a new (relative) timeout value.",swi_man_packages('clib.html'),packages,124862).
-i(/(uninstall_alarm,1),"Deactivate a running alarm, but do not invalidate the alarm identifier.",swi_man_packages('clib.html'),packages,125139).
-i(/(remove_alarm,1),"Remove an alarm.",swi_man_packages('clib.html'),packages,125911).
-i(/(current_alarm,4),"Enumerate the not-yet-removed alarms.",swi_man_packages('clib.html'),packages,126106).
-i(/(call_with_time_limit,2),"True if Goal completes within Time seconds.",swi_man_packages('clib.html'),packages,126457).
-i(section(2,'17','sec:unix'),"library(unix): Unix specific operations",swi_man_packages('clib.html'),packages,127427).
-i(/(fork,1),"Clone the current process into two branches.",swi_man_packages('clib.html'),packages,128149).
-i(/(fork_exec,1),"Fork (as fork/1) and exec (using exec/1) the child immediately.",swi_man_packages('clib.html'),packages,129336).
-i(/(exec,1),"Replace the running program by starting Command.",swi_man_packages('clib.html'),packages,129877).
-i(/(wait,2),"Wait for a child to change status.",swi_man_packages('clib.html'),packages,131152).
-i(/(kill,2),"Deliver a software interrupt to the process with identifier Pid using software-interrupt number Signal.",swi_man_packages('clib.html'),packages,132095).
-i(/(pipe,2),"Create a communication-pipe.",swi_man_packages('clib.html'),packages,132733).
-i(/(dup,2),"Interface to Unix dup2(), copying the underlying filedescriptor and thus making both streams point to the same underlying object.",swi_man_packages('clib.html'),packages,133632).
-i(/(detach_IO,1),"This predicate is intended to create Unix deamon processes.",swi_man_packages('clib.html'),packages,134384).
-i(/(detach_IO,0),"Detach I/O similar to detach_IO/1.",swi_man_packages('clib.html'),packages,135738).
-i(/(prctl,1),"Access to Linux process control operations.",swi_man_packages('clib.html'),packages,136379).
-i(/(sysconf,1),"Access system configuration.",swi_man_packages('clib.html'),packages,136965).
-i(section(2,'18','sec:limit-process-resources'),"Limiting process resources",swi_man_packages('clib.html'),packages,137724).
-i(/(rlimit,3),"Query and/or set the limit for Resource.",swi_man_packages('clib.html'),packages,138278).
-i(section(2,'19','sec:udpbroadcast'),"library(udp_broadcast): A UDP broadcast proxy",swi_man_packages('clib.html'),packages,140330).
-i(section(3,'19.1','sec:udp-broadcase-caveats'),"Caveats",swi_man_packages('clib.html'),packages,145453).
-i(/(udp_broadcast_close,1),"Close a UDP broadcast scope.",swi_man_packages('clib.html'),packages,150166).
-i(/(udp_broadcast_initialize,2),"Initialized UDP broadcast bridge.",swi_man_packages('clib.html'),packages,150335).
-i(/(udp_peer_add,2),"Manage and query the set of known peers for a unicast network.",swi_man_packages('clib.html'),packages,152001).
-i(/(udp_peer_del,2),"Manage and query the set of known peers for a unicast network.",swi_man_packages('clib.html'),packages,152001).
-i(/(udp_peer,2),"Manage and query the set of known peers for a unicast network.",swi_man_packages('clib.html'),packages,152001).
-i(/(udp_term_string_hook,3),"Hook for serializing the message Term.",swi_man_packages('clib.html'),packages,152793).
-i(/(udp_unicast_join_hook,3),"This multifile hook is called if an UDP package is received on the port of the unicast network identified by Scope.",swi_man_packages('clib.html'),packages,154579).
-i(section(2,'20','sec:prologstream'),"library(prolog_stream): A stream with Prolog callbacks",swi_man_packages('clib.html'),packages,156035).
-i(/(open_prolog_stream,4),"Create a new stream that implements its I/O by calling predicates in Module.",swi_man_packages('clib.html'),packages,156491).
+i(/(uuid,1),"UUID is an atom representing a new UUID.",swi_man_packages('clib.html'),packages,99549).
+i(/(uuid,2),"Create a new UUID according to Options.",swi_man_packages('clib.html'),packages,99874).
+i(/(uuid_property,2),"True when UUID is a property of the given UUID.",swi_man_packages('clib.html'),packages,101344).
+i(section(2,'12','sec:sha'),"SHA* Secure Hash Algorithms",swi_man_packages('clib.html'),packages,102030).
+i(/(sha_hash,3),"Hash is the SHA hash of Data.",swi_man_packages('clib.html'),packages,104039).
+i(/(hmac_sha,4),"Quoting Wikipedia: “A keyed-hash message authentication code, or HMAC, is a type of message authentication code (MAC) calculated using a cryptographic hash function in combination with a secret key.",swi_man_packages('clib.html'),packages,105411).
+i(/(hash_atom,2),"True when HexAtom is the commonly used hexadecimal encoding of the hash code.",swi_man_packages('clib.html'),packages,106717).
+i(section(3,'12.1','sec:sha-license'),"License terms",swi_man_packages('clib.html'),packages,107151).
+i(section(2,'13','sec:md5'),"library(md5): MD5 hashes",swi_man_packages('clib.html'),packages,108316).
+i(/(md5_hash,3),"Hash is the MD5 hash of Data, The conversion is controlled by Options: encoding(+Encoding)If Data is a sequence of character codes, this must be translated into a sequence of bytes, because that is what the hashing requires.",swi_man_packages('clib.html'),packages,108858).
+i(section(2,'14','sec:hashstream'),"library(hash_stream): Maintain a hash on a stream",swi_man_packages('clib.html'),packages,109816).
+i(/(open_hash_stream,3),"Open a filter stream on OrgStream that maintains a hash.",swi_man_packages('clib.html'),packages,112025).
+i(/(stream_hash,2),"Unify Digest with a hash for the bytes send to or read from HashStream.",swi_man_packages('clib.html'),packages,112871).
+i(section(2,'15','sec:memory-files'),"Memory files",swi_man_packages('clib.html'),packages,113474).
+i(/(new_memory_file,1),"Create a new memory file and return a unique opaque handle to it.",swi_man_packages('clib.html'),packages,114733).
+i(/(free_memory_file,1),"Discard the memory file and its contents.",swi_man_packages('clib.html'),packages,114932).
+i(/(open_memory_file,3),"Open the memory-file.",swi_man_packages('clib.html'),packages,115150).
+i(/(open_memory_file,4),"Open a memory-file as open_memory_file/3.",swi_man_packages('clib.html'),packages,116079).
+i(/(size_memory_file,2),"Return the content-length of the memory-file in characters in the current encoding of the memory file.",swi_man_packages('clib.html'),packages,117393).
+i(/(size_memory_file,3),"Return the content-length of the memory-file in characters in the given Encoding.",swi_man_packages('clib.html'),packages,117685).
+i(/(atom_to_memory_file,2),"Turn an atom into a read-only memory-file containing the (shared) characters of the atom.",swi_man_packages('clib.html'),packages,117976).
+i(/(insert_memory_file,3),"Insert Data into the memory file at location Offset.",swi_man_packages('clib.html'),packages,118296).
+i(/(delete_memory_file,3),"Delete a Length characters from the memory file, starting at Offset.",swi_man_packages('clib.html'),packages,118891).
+i(/(memory_file_to_atom,2),"Return the content of the memory-file in Atom.",swi_man_packages('clib.html'),packages,119319).
+i(/(memory_file_to_atom,3),"Return the content of the memory-file in Atom, pretending the data is in the given Encoding.",swi_man_packages('clib.html'),packages,119526).
+i(/(memory_file_to_codes,2),"Return the content of the memory-file as a list of character-codes in Codes.",swi_man_packages('clib.html'),packages,120080).
+i(/(memory_file_to_codes,3),"Return the content of the memory-file as a list of character-codes in Codes, pretending the data is in the given Encoding.",swi_man_packages('clib.html'),packages,120320).
+i(/(memory_file_to_string,2),"Return the content of the memory-file as a string in -String.",swi_man_packages('clib.html'),packages,120629).
+i(/(memory_file_to_string,3),"Return the content of the memory-file as a string in String, pretending the data is in the given Encoding.",swi_man_packages('clib.html'),packages,120857).
+i(/(memory_file_substring,5),"SubString is a substring of the memory file.",swi_man_packages('clib.html'),packages,121153).
+i(/(memory_file_line_position,4),"True if the character offset Offset corresponds with the LinePos character on line Line.",swi_man_packages('clib.html'),packages,121992).
+i(section(2,'16','sec:time-and-alarm'),"Time and alarm library",swi_man_packages('clib.html'),packages,122463).
+i(/(alarm,4),"Schedule Callable to be called Time seconds from now.",swi_man_packages('clib.html'),packages,123317).
+i(/(alarm,3),"Same as alarm(Time, Callable, Id,[]).",swi_man_packages('clib.html'),packages,124967).
+i(/(alarm_at,4),"as alarm/3, but Time is the specification of an absolute point in time.",swi_man_packages('clib.html'),packages,125146).
+i(/(install_alarm,1),"Activate an alarm allocated using alarm/4 with the option install(false) or stopped using uninstall_alarm/1.",swi_man_packages('clib.html'),packages,125599).
+i(/(install_alarm,2),"As install_alarm/1, but specifies a new (relative) timeout value.",swi_man_packages('clib.html'),packages,125990).
+i(/(uninstall_alarm,1),"Deactivate a running alarm, but do not invalidate the alarm identifier.",swi_man_packages('clib.html'),packages,126267).
+i(/(remove_alarm,1),"Remove an alarm.",swi_man_packages('clib.html'),packages,127039).
+i(/(current_alarm,4),"Enumerate the not-yet-removed alarms.",swi_man_packages('clib.html'),packages,127234).
+i(/(call_with_time_limit,2),"True if Goal completes within Time seconds.",swi_man_packages('clib.html'),packages,127585).
+i(section(2,'17','sec:unix'),"library(unix): Unix specific operations",swi_man_packages('clib.html'),packages,128555).
+i(/(fork,1),"Clone the current process into two branches.",swi_man_packages('clib.html'),packages,129277).
+i(/(fork_exec,1),"Fork (as fork/1) and exec (using exec/1) the child immediately.",swi_man_packages('clib.html'),packages,130464).
+i(/(exec,1),"Replace the running program by starting Command.",swi_man_packages('clib.html'),packages,131005).
+i(/(wait,2),"Wait for a child to change status.",swi_man_packages('clib.html'),packages,132280).
+i(/(kill,2),"Deliver a software interrupt to the process with identifier Pid using software-interrupt number Signal.",swi_man_packages('clib.html'),packages,133223).
+i(/(pipe,2),"Create a communication-pipe.",swi_man_packages('clib.html'),packages,133861).
+i(/(dup,2),"Interface to Unix dup2(), copying the underlying filedescriptor and thus making both streams point to the same underlying object.",swi_man_packages('clib.html'),packages,134760).
+i(/(detach_IO,1),"This predicate is intended to create Unix deamon processes.",swi_man_packages('clib.html'),packages,135512).
+i(/(detach_IO,0),"Detach I/O similar to detach_IO/1.",swi_man_packages('clib.html'),packages,136866).
+i(/(prctl,1),"Access to Linux process control operations.",swi_man_packages('clib.html'),packages,137507).
+i(/(sysconf,1),"Access system configuration.",swi_man_packages('clib.html'),packages,138093).
+i(section(2,'18','sec:limit-process-resources'),"Limiting process resources",swi_man_packages('clib.html'),packages,138852).
+i(/(rlimit,3),"Query and/or set the limit for Resource.",swi_man_packages('clib.html'),packages,139406).
+i(section(2,'19','sec:udpbroadcast'),"library(udp_broadcast): A UDP broadcast proxy",swi_man_packages('clib.html'),packages,141458).
+i(section(3,'19.1','sec:udp-broadcase-caveats'),"Caveats",swi_man_packages('clib.html'),packages,146581).
+i(/(udp_broadcast_close,1),"Close a UDP broadcast scope.",swi_man_packages('clib.html'),packages,151294).
+i(/(udp_broadcast_initialize,2),"Initialized UDP broadcast bridge.",swi_man_packages('clib.html'),packages,151463).
+i(/(udp_peer_add,2),"Manage and query the set of known peers for a unicast network.",swi_man_packages('clib.html'),packages,153129).
+i(/(udp_peer_del,2),"Manage and query the set of known peers for a unicast network.",swi_man_packages('clib.html'),packages,153129).
+i(/(udp_peer,2),"Manage and query the set of known peers for a unicast network.",swi_man_packages('clib.html'),packages,153129).
+i(/(udp_term_string_hook,3),"Hook for serializing the message Term.",swi_man_packages('clib.html'),packages,153921).
+i(/(udp_unicast_join_hook,3),"This multifile hook is called if an UDP package is received on the port of the unicast network identified by Scope.",swi_man_packages('clib.html'),packages,155707).
+i(section(2,'20','sec:prologstream'),"library(prolog_stream): A stream with Prolog callbacks",swi_man_packages('clib.html'),packages,157163).
+i(/(open_prolog_stream,4),"Create a new stream that implements its I/O by calling predicates in Module.",swi_man_packages('clib.html'),packages,157619).
 i(section(0,'0','packages/semweb.html'),"SWI-Prolog Semantic Web Library 3.0",swi_man_packages('semweb.html'),packages,2787).
 i(section(2,'1','sec:semweb-intro'),"Introduction",swi_man_packages('semweb.html'),packages,13144).
 i(section(2,'2','sec:semweb-scalability'),"Scalability",swi_man_packages('semweb.html'),packages,16525).
@@ -3167,11 +3168,11 @@ i(/(turtle_pn_local,1),"True if Atom is a valid Turtle PN_LOCAL name.",swi_man_p
 i(/(turtle_write_quoted_string,2),"Same as turtle_write_quoted_string(Out, Value, false), writing a string with only a single \".",swi_man_packages('semweb.html'),packages,169145).
 i(/(turtle_write_uri,2),"Write a URI as <...>",swi_man_packages('semweb.html'),packages,169513).
 i(/('rdf_db:rdf_load_stream',3),"(Turtle clauses)",swi_man_packages('semweb.html'),packages,169729).
-i(/(rdf_save_ntriples,2),"Save RDF using ntriples format.",swi_man_packages('semweb.html'),packages,169984).
-i(/(rdf_save_canonical_trig,2),"Save triples in a canonical format.",swi_man_packages('semweb.html'),packages,170294).
-i(/(rdf_save_trig,2),"Save multiple RDF graphs into a TriG file.",swi_man_packages('semweb.html'),packages,170626).
-i(/(rdf_save_canonical_turtle,2),"Save triples in a canonical format.",swi_man_packages('semweb.html'),packages,171310).
-i(/(rdf_save_turtle,2),"Save an RDF graph as Turtle.",swi_man_packages('semweb.html'),packages,172157).
+i(/(rdf_save_canonical_turtle,2),"Save triples in a canonical format.",swi_man_packages('semweb.html'),packages,169984).
+i(/(rdf_save_turtle,2),"Save an RDF graph as Turtle.",swi_man_packages('semweb.html'),packages,170831).
+i(/(rdf_save_ntriples,2),"Save RDF using ntriples format.",swi_man_packages('semweb.html'),packages,175158).
+i(/(rdf_save_canonical_trig,2),"Save triples in a canonical format.",swi_man_packages('semweb.html'),packages,175468).
+i(/(rdf_save_trig,2),"Save multiple RDF graphs into a TriG file.",swi_man_packages('semweb.html'),packages,175800).
 i(section(2,'6','sec:rdfntriples'),"library(semweb/rdf_ntriples): Process files in the RDF N-Triples format",swi_man_packages('semweb.html'),packages,176494).
 i(/(read_ntriple,2),"Read the next triple from Stream as Triple.",swi_man_packages('semweb.html'),packages,177543).
 i(/(read_nquad,2),"Read the next quad from Stream as Quad.",swi_man_packages('semweb.html'),packages,178285).

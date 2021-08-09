@@ -2,7 +2,7 @@
 
 <html>
 <head>
-<title>SWI-Prolog 8.3.27 Reference Manual: Section 4.29</title><link rel="home" href="index.html">
+<title>SWI-Prolog 8.3.28 Reference Manual: Section 4.29</title><link rel="home" href="index.html">
 <link rel="contents" href="Contents.html">
 <link rel="index" href="DocIndex.html">
 <link rel="summary" href="summary.html">
@@ -247,12 +247,12 @@ and described here.
 <dt class="pubdef"><a id="is_list/1"><strong>is_list</strong>(<var>+Term</var>)</a></dt>
 <dd class="defbody">
 True if <var>Term</var> is bound to the empty list (<code><code>[]</code></code>) 
-or a compound term with name&lsquo;<code><code>[|]</code></code>&rsquo;<sup class="fn">126<span class="fn-text">The 
+or a compound term with name&lsquo;<code><code>[|]</code></code>&rsquo;<sup class="fn">127<span class="fn-text">The 
 traditional list functor name is the dot (<code>&rsquo;.'</code>). This 
 is still the case of the command line option <strong>--traditional</strong> 
 is given. See also <a class="sec" href="ext-lists.html#sec:5.1">section 
 5.1</a>.</span></sup> and arity&nbsp;2 and the second argument is a 
-list.<sup class="fn">127<span class="fn-text">In versions before 5.0.1, <a id="idx:islist1:1561"></a><a class="pred" href="builtinlist.html#is_list/1">is_list/1</a> 
+list.<sup class="fn">128<span class="fn-text">In versions before 5.0.1, <a id="idx:islist1:1561"></a><a class="pred" href="builtinlist.html#is_list/1">is_list/1</a> 
 just checked for <code><code>[]</code></code> or <code>[_|_]</code> and 
 proper_list/1 had the role of the current <a id="idx:islist1:1562"></a><a class="pred" href="builtinlist.html#is_list/1">is_list/1</a>. 
 The current definition conforms to the de facto standard. Assuming 
@@ -286,7 +286,7 @@ does <em>not</em> perform a full list typecheck. For example, <code>memberchk(a,
 [a|b])</code> succeeds without error. If <var>List</var> is cyclic and <var>Elem</var> 
 is not a member of
 <var>List</var>, <a id="idx:memberchk2:1566"></a><a class="pred" href="builtinlist.html#memberchk/2">memberchk/2</a> 
-eventually raises a <code>type</code> error.<sup class="fn">128<span class="fn-text"><i>Eventually</i> 
+eventually raises a <code>type</code> error.<sup class="fn">129<span class="fn-text"><i>Eventually</i> 
 here means it will scan as many elements as the longest list that may 
 exist given the current stack usage before raising the exception.</span></sup></dd>
 <dt class="pubdef"><span class="pred-tag">[ISO]</span><a id="length/2"><strong>length</strong>(<var>?List, 
@@ -313,7 +313,7 @@ List = [_24698,_25826], Length = 2
 
 <p>It raises errors if <var>Length</var> is bound to a non-integer or a 
 negative integer or if <var>List</var> is neither a list nor a partial 
-list. This error condition includes cyclic lists:<sup class="fn">129<span class="fn-text">ISO 
+list. This error condition includes cyclic lists:<sup class="fn">130<span class="fn-text">ISO 
 demands failure here. We think an error is more appropriate.</span></sup>
 
 <pre class="code">
@@ -322,7 +322,7 @@ ERROR: Type error: `list' expected ...
 </pre>
 
 <p>Covering an edge case, the predicate fails if the tail of <var>List</var> 
-is equivalent to <var>Length</var>:<sup class="fn">130<span class="fn-text">This 
+is equivalent to <var>Length</var>:<sup class="fn">131<span class="fn-text">This 
 is logically correct. An exception would be more appropriate, but to our 
 best knowledge, current practice in Prolog does not describe a suitable 
 candidate exception term.</span></sup>
@@ -342,7 +342,7 @@ false.
 True if <var>Sorted</var> can be unified with a list holding the 
 elements of <var>List</var>, sorted to the standard order of terms (see
 <a class="sec" href="compare.html#sec:4.6">section 4.6</a>). Duplicates 
-are removed. The implementation is in C, using <em>natural merge sort</em>.<sup class="fn">131<span class="fn-text">Contributed 
+are removed. The implementation is in C, using <em>natural merge sort</em>.<sup class="fn">132<span class="fn-text">Contributed 
 by Richard O'Keefe.</span></sup> The <a id="idx:sort2:1567"></a><a class="pred" href="builtinlist.html#sort/2">sort/2</a> 
 predicate can sort a cyclic list, returning a non-cyclic version with 
 the same elements.
@@ -363,7 +363,7 @@ element of
 <var>List</var>. <var>Key</var> determines which part of each element in
 <var>List</var> is used for comparing two term and <var>Order</var> 
 describes the relation between each set of consecutive elements in
-<var>Sorted</var>.<sup class="fn">132<span class="fn-text">The 
+<var>Sorted</var>.<sup class="fn">133<span class="fn-text">The 
 definition of this predicate was established after discussion with 
 Joachim Schimpf from the ECLiPSe team. ECLiPSe currently only accepts <code><code>&lt;</code></code>, <code><code>=&lt;</code></code>, <code><code>&gt;</code></code> 
 and <code><code>&gt;=</code></code> for the <var>Order</var> argument 
@@ -384,7 +384,7 @@ dict does not contain the requested key.
 <p>Deeper nested elements of structures can be selected by using a list 
 of keys for the <var>Key</var> argument.
 
-<p>The <var>Order</var> argument is described in the table below:<sup class="fn">133<span class="fn-text">For 
+<p>The <var>Order</var> argument is described in the table below:<sup class="fn">134<span class="fn-text">For 
 compatibility with ECLiPSe, the values <code><code>&lt;</code></code>, <code><code>=&lt;</code></code>, <code><code>&gt;</code></code> 
 and <code><code>&gt;=</code></code> are allowed as synonyms.</span></sup>
 

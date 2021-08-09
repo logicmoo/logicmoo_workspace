@@ -2,7 +2,7 @@
 
 <html>
 <head>
-<title>SWI-Prolog 8.3.27 Reference Manual: Section 4.20</title><link rel="home" href="index.html">
+<title>SWI-Prolog 8.3.28 Reference Manual: Section 4.20</title><link rel="home" href="index.html">
 <link rel="contents" href="Contents.html">
 <link rel="index" href="DocIndex.html">
 <link rel="summary" href="summary.html">
@@ -373,11 +373,20 @@ instead of the ISO Prolog <code>'.'</code>. Used by <a id="idx:display1:1315"></
 <dt><strong>numbervars</strong>(<var>Bool</var>)</dt>
 <dd class="defbody">
 If <code>true</code>, terms of the format <code>$VAR(N)</code>, where <var>N</var> 
-is a non-negative integer, will be written as a variable name. If <var>N</var> 
-is an atom it is written without quotes. This extension allows for 
-writing variables with user-provided names. The default is <code>false</code>. 
-See also <a id="idx:numbervars3:1316"></a><a class="pred" href="manipterm.html#numbervars/3">numbervars/3</a> 
-and the option <code>variable_names</code>.</dd>
+is an integer that fits in 64-bit,<sup class="fn">105<span class="fn-text">Larger 
+integers are ignored. As no term that fits into memory can have that 
+many variables, this is not a restriction.</span></sup> will be written 
+as a variable name. For <var>N</var> in 0..25 it emits A..Z. For higher 
+numbers it emits An..Zn, where
+<var>n</var> is <var>N</var>//26. For negative numbers it emits S_<var>N</var>, 
+which is used for representing shared sub-terms and cyclic terms.
+
+<p>If <var>N</var> is an atom it is written without quotes. This 
+extension allows for writing variables with user-provided names. The 
+default is
+<code>false</code>. See also <a id="idx:numbervars3:1316"></a><a class="pred" href="manipterm.html#numbervars/3">numbervars/3</a> 
+and the option
+<code>variable_names</code>.</dd>
 <dt><strong>partial</strong>(<var>Bool</var>)</dt>
 <dd class="defbody">
 If <code>true</code> (default <code>false</code>), do not reset the 
@@ -758,7 +767,7 @@ The variables appear in the order they have been read. The latter option
 provides backward compatibility and is used to read terms from source 
 files. Not all singleton variables are reported as a warning. See
 <a class="sec" href="syntax.html#sec:2.16.1.10">section 2.16.1.10</a> 
-for the rules that apply for warning about a singleton variable.<sup class="fn">105<span class="fn-text">As 
+for the rules that apply for warning about a singleton variable.<sup class="fn">106<span class="fn-text">As 
 of version 7.7.17, <em>all</em> variables starting with an underscore 
 except for the truly anonymous variable are returned in <var>Vars</var>. 
 Older versions only reported those that would have been reported if <code>warning</code> 

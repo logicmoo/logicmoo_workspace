@@ -2,7 +2,7 @@
 
 <html>
 <head>
-<title>SWI-Prolog 8.3.27 Reference Manual: Section 4.27</title><link rel="home" href="index.html">
+<title>SWI-Prolog 8.3.28 Reference Manual: Section 4.27</title><link rel="home" href="index.html">
 <link rel="contents" href="Contents.html">
 <link rel="index" href="DocIndex.html">
 <link rel="summary" href="summary.html">
@@ -265,7 +265,7 @@ If
 =&lt;<var>High</var></var>. When <var>Value</var> is a variable it is 
 successively bound to all integers between <var>Low</var> and <var>High</var>. 
 If <var>High</var> is <code>inf</code> or
-<code>infinite</code><sup class="fn">112<span class="fn-text">We prefer <code>infinite</code>, 
+<code>infinite</code><sup class="fn">113<span class="fn-text">We prefer <code>infinite</code>, 
 but some other Prolog systems already use <code>inf</code> for infinity; 
 we accept both for the time being.</span></sup>
 <a id="idx:between3:1538"></a><a class="pred" href="arith.html#between/3">between/3</a> 
@@ -279,7 +279,7 @@ True if <var><var>Int2</var> = <var>Int1</var> + 1</var> and <var><var>Int1</var
 &gt;= 0</var>. At least one of the arguments must be instantiated to a 
 natural number. This predicate raises the domain error <code>not_less_than_zero</code> 
 if called with a negative integer. E.g. <code>succ(X, 0)</code> fails 
-silently and <code>succ(X, -1)</code> raises a domain error.<sup class="fn">113<span class="fn-text">The 
+silently and <code>succ(X, -1)</code> raises a domain error.<sup class="fn">114<span class="fn-text">The 
 behaviour to deal with natural numbers only was defined by Richard 
 O'Keefe to support the common count-down-to-zero in a natural way. Up to 
 5.1.8, <a id="idx:succ2:1539"></a><a class="pred" href="arith.html#succ/2">succ/2</a> 
@@ -314,7 +314,7 @@ versions.</dd>
 +I, -Root, -Remainder</var>)</a></dt>
 <dd class="defbody">
 True when <var>Root ** N + Remainder = I</var>. <var>N</var> and <var>I</var> 
-must be integers.<sup class="fn">114<span class="fn-text">This predicate 
+must be integers.<sup class="fn">115<span class="fn-text">This predicate 
 was suggested by Markus Triska. The final name and argument order is by 
 Richard O'Keefe. The decision to include the remainder is by Jan 
 Wielemaker. Including the remainder makes this predicate about twice as 
@@ -744,7 +744,7 @@ Integer division, defined as <var>Result</var> is <var>rnd_I</var>(<var>Expr1</v
 . The function <var>rnd_I</var> is the default rounding used by the C 
 compiler and available through the Prolog flag
 <a class="flag" href="flags.html#flag:integer_rounding_function">integer_rounding_function</a>. 
-In the C99 standard, C-rounding is defined as <code>towards_zero</code>.<sup class="fn">115<span class="fn-text">Future 
+In the C99 standard, C-rounding is defined as <code>towards_zero</code>.<sup class="fn">116<span class="fn-text">Future 
 versions might guarantee rounding towards zero.</span></sup></dd>
 <dt class="pubdef"><span class="pred-tag">[ISO]</span><a id="f-div/2"><strong>div</strong>(<var>+IntExpr1, 
 +IntExpr2</var>)</a></dt>
@@ -852,7 +852,7 @@ Evaluate to the smaller of <var>Expr1</var> and <var>Expr2</var>. See
 description of type handling.</dd>
 <dt class="pubdef"><span class="pred-tag">[deprecated]</span><a id="f-./2"><strong>.</strong>(<var>+Char,[]</var>)</a></dt>
 <dd class="defbody">
-A list of one element evaluates to the character code of this element.<sup class="fn">116<span class="fn-text">The 
+A list of one element evaluates to the character code of this element.<sup class="fn">117<span class="fn-text">The 
 function is documented as <code><code>.</code>/2</code>. Using 
 SWI-Prolog v7 and later the actual functor is <code><code>[|]</code>/2</code>.</span></sup> 
 This implies <code>"a"</code> evaluates to the character code of the 
@@ -877,7 +877,7 @@ unbounded arithmetic (default) it uses the GMP library random functions.
 In this case, each thread keeps its own random state. The default 
 algorithm is the <em>Mersenne Twister</em> algorithm. The seed is set 
 when the first random number in a thread is generated. If available, it 
-is set from <code>/dev/random</code>.<sup class="fn">117<span class="fn-text">On 
+is set from <code>/dev/random</code>.<sup class="fn">118<span class="fn-text">On 
 Windows the state is initialised from CryptGenRandom().</span></sup> 
 Otherwise it is set from the system clock. If unbounded arithmetic is 
 not supported, random numbers are shared between threads and the seed is 
@@ -899,7 +899,7 @@ also apply for <a class="function" href="arith.html#f-random_float/0">random_flo
 Note that both sides of the domain are <em>open</em>. This avoids 
 evaluation errors on, e.g., <a class="function" href="arith.html#f-log/1">log/1</a> 
 or <a class="function" href="arith.html#f-//2">//2</a> while no 
-practical application can expect 0.0.<sup class="fn">118<span class="fn-text">Richard 
+practical application can expect 0.0.<sup class="fn">119<span class="fn-text">Richard 
 O'Keefe said: &ldquo;If you <em>are</em> generating IEEE doubles with 
 the claimed uniformity, then 0 has a 1 in <var>2^53 = 1 in 
 9,007,199,254,740,992</var> chance of turning up. No program that 
@@ -958,10 +958,10 @@ is Inf.</dd>
 Convert the <var>Expr</var> to a rational number or integer. The 
 function is similar to <a class="function" href="arith.html#f-rational/1">rational/1</a>, 
 but the result is only accurate within the rounding error of floating 
-point numbers, generally producing a much smaller denominator.<sup class="fn">119<span class="fn-text">The 
+point numbers, generally producing a much smaller denominator.<sup class="fn">120<span class="fn-text">The 
 names <a class="function" href="arith.html#f-rational/1">rational/1</a> 
 and <a class="function" href="arith.html#f-rationalize/1">rationalize/1</a> 
-as well as their semantics are inspired by Common Lisp.</span></sup><sup class="fn">120<span class="fn-text">The 
+as well as their semantics are inspired by Common Lisp.</span></sup><sup class="fn">121<span class="fn-text">The 
 implementation of rationalize as well as converting a rational number 
 into a float is copied from ECLiPSe and covered by the <i>Cisco-style 
 Mozilla Public License Version 1.1</i>.</span></sup>
@@ -1208,7 +1208,7 @@ unbounded integer support. This formula is required for Diffie-Hellman
 key-exchange, a technique where two parties can establish a secret key 
 over a public network.
 <var>IntExprBase</var> and <var>IntExprExp</var> must be non-negative (<var>&gt;=0</var>),
-<var>IntExprMod</var> must be positive (<var>&gt;0</var>).<sup class="fn">121<span class="fn-text">The 
+<var>IntExprMod</var> must be positive (<var>&gt;0</var>).<sup class="fn">122<span class="fn-text">The 
 underlying GMP mpz_powm() function allows negative values under some 
 conditions. As the conditions are expensive to pre-compute, error 
 handling from GMP is non-trivial and negative values are not needed for 
@@ -1216,7 +1216,7 @@ Diffie-Hellman key-exchange we do not support these.</span></sup></dd>
 <dt class="pubdef"><a id="f-lgamma/1"><strong>lgamma</strong>(<var>+Expr</var>)</a></dt>
 <dd class="defbody">
 Return the natural logarithm of the absolute value of the Gamma 
-function.<sup class="fn">122<span class="fn-text">Some interfaces also 
+function.<sup class="fn">123<span class="fn-text">Some interfaces also 
 provide the sign of the Gamma function. We cannot do that in an 
 arithmetic function. Future versions may provide a <em>predicate</em> 
 lgamma/3 that returns both the value and the sign.</span></sup></dd>
@@ -1264,7 +1264,7 @@ is
 <var>A</var>&rsquo;works and unifies <var>B</var> to 3, it is widely 
 felt that source level variables in arithmetic expressions should have 
 been limited to numbers. In this view the eval function can be used to 
-evaluate arbitrary expressions.<sup class="fn">123<span class="fn-text">The <a class="function" href="arith.html#f-eval/1">eval/1</a> 
+evaluate arbitrary expressions.<sup class="fn">124<span class="fn-text">The <a class="function" href="arith.html#f-eval/1">eval/1</a> 
 function was first introduced by ECLiPSe and is under consideration for 
 YAP.</span></sup>
 </dd>
@@ -1306,7 +1306,7 @@ integers. The result is equivalent to <code>(IntExprV &gt;&gt; IntExprI)/\1</cod
 but more efficient because materialization of the shifted value is 
 avoided. Future versions will optimise <code>(IntExprV &gt;&gt; IntExprI)/\1</code> 
 to a call to <a class="function" href="arith.html#f-getbit/2">getbit/2</a>, 
-providing both portability and performance.<sup class="fn">124<span class="fn-text">This 
+providing both portability and performance.<sup class="fn">125<span class="fn-text">This 
 issue was fiercely debated at the ISO standard mailinglist. The name <i>getbit</i> 
 was selected for compatibility with ECLiPSe, the only system providing 
 this support. Richard O'Keefe disliked the name and argued that 

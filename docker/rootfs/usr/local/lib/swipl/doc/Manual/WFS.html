@@ -2,7 +2,7 @@
 
 <html>
 <head>
-<title>SWI-Prolog 8.3.27 Reference Manual: Section 7.6</title><link rel="home" href="index.html">
+<title>SWI-Prolog 8.3.28 Reference Manual: Section 7.6</title><link rel="home" href="index.html">
 <link rel="contents" href="Contents.html">
 <link rel="index" href="DocIndex.html">
 <link rel="summary" href="summary.html">
@@ -245,7 +245,7 @@ conclusions from a set of logical rules". Well Founded Semantics (WFS)
 defines a <em>three valued logic</em> representing <em>true</em>,
 <em>false</em> and something that is neither true or false. This latter 
 value is often referred to as <em>bottom</em>, <em>undefined</em> or
-<em>unknown</em>. SWI-Prolog uses <a id="idx:undefined0:2046"></a><a class="pred" href="WFS.html#undefined/0">undefined/0</a>.
+<em>unknown</em>. SWI-Prolog uses <a id="idx:undefined0:2051"></a><a class="pred" href="WFS.html#undefined/0">undefined/0</a>.
 
 <p>Well Founded Semantics allows for reasoning about programs with 
 contradictions or multiple answer sets. It allows for obtaining 
@@ -256,13 +256,13 @@ obtaining the <em>residual</em> program that expresses why an answer is
 not unambiguous.
 
 <p>The notion of <em>Well Founded Semantics</em> is only relevant if the 
-program uses <em>negation</em> as implemented by <a id="idx:tnot1:2047"></a><a class="pred" href="tabling-preds.html#tnot/1">tnot/1</a>. 
+program uses <em>negation</em> as implemented by <a id="idx:tnot1:2052"></a><a class="pred" href="tabling-preds.html#tnot/1">tnot/1</a>. 
 The argument of
-<a id="idx:tnot1:2048"></a><a class="pred" href="tabling-preds.html#tnot/1">tnot/1</a>, 
+<a id="idx:tnot1:2053"></a><a class="pred" href="tabling-preds.html#tnot/1">tnot/1</a>, 
 as the name implies, must be a goal associated with a tabled predicate 
-(see <a id="idx:table1:2049"></a><a class="pred" href="tabling-preds.html#table/1">table/1</a>). 
+(see <a id="idx:table1:2054"></a><a class="pred" href="tabling-preds.html#table/1">table/1</a>). 
 In a nutshell, resolving a goal that implies
-<a id="idx:tnot1:2050"></a><a class="pred" href="tabling-preds.html#tnot/1">tnot/1</a> 
+<a id="idx:tnot1:2055"></a><a class="pred" href="tabling-preds.html#tnot/1">tnot/1</a> 
 is implemented as follows:
 
 <p>Consider the following partial <em>body term</em>:
@@ -289,7 +289,7 @@ for some tabled predicate, record this answer as a
 <em>followers</em>, say <var>f</var>, adding the pair {<var>f</var>,answer} 
 to the delay list. If this leads to an answer, the answer is conditional 
 on this pair.
-<li>After the continuations of all unresolved <a id="idx:tnot1:2051"></a><a class="pred" href="tabling-preds.html#tnot/1">tnot/1</a> 
+<li>After the continuations of all unresolved <a id="idx:tnot1:2056"></a><a class="pred" href="tabling-preds.html#tnot/1">tnot/1</a> 
 calls have been executed the various tables may have conditional answers 
 in addition to normal answers.
 <li>If there are negative literals that have neither conditional answers 
@@ -312,7 +312,7 @@ further positive loops exist and no further simplification is possible.
 <p>The above process may complete without any remaining conditional 
 answers, in which case we are back in the normal Prolog world. It is 
 also possible that some answers remain conditional. The most obvious 
-case is represented by <a id="idx:undefined0:2052"></a><a class="pred" href="WFS.html#undefined/0">undefined/0</a>. 
+case is represented by <a id="idx:undefined0:2057"></a><a class="pred" href="WFS.html#undefined/0">undefined/0</a>. 
 The toplevel responds with
 <b>undefined</b> instead of <b>true</b> if an answer is conditional.
 
@@ -331,17 +331,17 @@ undefined :- tnot(undefined).
 <p></dd>
 </dl>
 
-<p><a id="idx:residualWFS:2053"></a>Solving a set of predicates under 
+<p><a id="idx:residualWFS:2058"></a>Solving a set of predicates under 
 well formed semantics results in a
 <em>residual program</em>. This program contains clauses for all tabled 
 predicates with condition answers where each clause head represents and 
 answer and each clause body its condition. The condition is a 
 disjunction of conjunctions where each literal is either a tabled goal 
-or <a id="idx:tnot1:2054"></a><a class="pred" href="tabling-preds.html#tnot/1">tnot/1</a> 
+or <a id="idx:tnot1:2059"></a><a class="pred" href="tabling-preds.html#tnot/1">tnot/1</a> 
 of a tabled goal. The remaining model has at least a cycle through a 
-negative literal (<a id="idx:tnot1:2055"></a><a class="pred" href="tabling-preds.html#tnot/1">tnot/1</a>) 
+negative literal (<a id="idx:tnot1:2060"></a><a class="pred" href="tabling-preds.html#tnot/1">tnot/1</a>) 
 and has no single solution in the <em>stable model semantics</em>, i.e., 
-it either expresses a contradiction (as <a id="idx:undefined0:2056"></a><a class="pred" href="WFS.html#undefined/0">undefined/0</a>, 
+it either expresses a contradiction (as <a id="idx:undefined0:2061"></a><a class="pred" href="WFS.html#undefined/0">undefined/0</a>, 
 i.e., there is no stable model) or a multiple stable models as in the 
 program below, where both
 {p} and {q} are stable models.
@@ -367,7 +367,7 @@ program.
 <dd class="defbody">
 True when <var>Goal</var> is an answer according to the Well Founded 
 Semantics. If <var>Program</var> is the empty list, <var>Goal</var> is 
-unconditionally true. Otherwise this is a program as described by <a id="idx:delaysresidualprogram2:2057"></a><a class="pred" href="WFS.html#delays_residual_program/2">delays_residual_program/2</a>.</dd>
+unconditionally true. Otherwise this is a program as described by <a id="idx:delaysresidualprogram2:2062"></a><a class="pred" href="WFS.html#delays_residual_program/2">delays_residual_program/2</a>.</dd>
 <dt class="pubdef"><a id="call_delays/2"><strong>call_delays</strong>(<var>:Goal, 
 -Condition</var>)</a></dt>
 <dd class="defbody">
@@ -385,7 +385,7 @@ the condition that must hold for this answer to be true. The body is a
 disjunction of conjunctions. Each leaf in this condition is either a 
 term <code>tnot(Goal)</code> or a plain <var>Goal</var>. Each
 <var>Goal</var> is associated with a tabled predicate. The program 
-always contains at least one cycle that involves <a id="idx:tnot1:2058"></a><a class="pred" href="tabling-preds.html#tnot/1">tnot/1</a>.
+always contains at least one cycle that involves <a id="idx:tnot1:2063"></a><a class="pred" href="tabling-preds.html#tnot/1">tnot/1</a>.
 </dd>
 </dl>
 
@@ -398,11 +398,11 @@ founded semantics and the toplevel</span></a></h3>
 whether the current answer is true. The mode is selected by the Prolog 
 flag
 <a class="flag" href="flags.html#flag:toplevel_list_wfs_residual_program">toplevel_list_wfs_residual_program</a>. 
-If <code>true</code>, the toplevel uses <a id="idx:calldelays2:2059"></a><a class="pred" href="WFS.html#call_delays/2">call_delays/2</a> 
-and <a id="idx:delaysresidualprogram2:2060"></a><a class="pred" href="WFS.html#delays_residual_program/2">delays_residual_program/2</a> 
+If <code>true</code>, the toplevel uses <a id="idx:calldelays2:2064"></a><a class="pred" href="WFS.html#call_delays/2">call_delays/2</a> 
+and <a id="idx:delaysresidualprogram2:2065"></a><a class="pred" href="WFS.html#delays_residual_program/2">delays_residual_program/2</a> 
 to find the conditional answers used and the <em>residual</em> program 
 associated with these answers. It then prints the residual program, 
-followed by the answer and the conditional answers. For <a id="idx:undefined0:2061"></a><a class="pred" href="WFS.html#undefined/0">undefined/0</a>, 
+followed by the answer and the conditional answers. For <a id="idx:undefined0:2066"></a><a class="pred" href="WFS.html#undefined/0">undefined/0</a>, 
 this results in the following output:
 
 <pre class="code">
@@ -414,7 +414,7 @@ undefined.
 </pre>
 
 <p>If the <a class="flag" href="flags.html#flag:toplevel_list_wfs_residual_program">toplevel_list_wfs_residual_program</a> 
-is false, any undefined answer is a conjunction with <a id="idx:undefined0:2062"></a><a class="pred" href="WFS.html#undefined/0">undefined/0</a>. 
+is false, any undefined answer is a conjunction with <a id="idx:undefined0:2067"></a><a class="pred" href="WFS.html#undefined/0">undefined/0</a>. 
 See the program and output below.
 
 <pre class="code">

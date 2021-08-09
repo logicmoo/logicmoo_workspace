@@ -2,7 +2,7 @@
 
 <html>
 <head>
-<title>SWI-Prolog 8.3.27 Reference Manual: Section 10.1</title><link rel="home" href="index.html">
+<title>SWI-Prolog 8.3.28 Reference Manual: Section 10.1</title><link rel="home" href="index.html">
 <link rel="contents" href="Contents.html">
 <link rel="index" href="DocIndex.html">
 <link rel="summary" href="summary.html">
@@ -242,7 +242,7 @@ and destroying Prolog threads</span></a></h2>
 <dt class="pubdef"><a id="thread_create/2"><strong>thread_create</strong>(<var>:Goal, 
 -Id</var>)</a></dt>
 <dd class="defbody">
-Shorthand for <code>thread_create(Goal, Id, [])</code>. See <a id="idx:threadcreate3:2180"></a><a class="pred" href="threadcreate.html#thread_create/3">thread_create/3</a>.</dd>
+Shorthand for <code>thread_create(Goal, Id, [])</code>. See <a id="idx:threadcreate3:2185"></a><a class="pred" href="threadcreate.html#thread_create/3">thread_create/3</a>.</dd>
 <dt class="pubdef"><a id="thread_create/3"><strong>thread_create</strong>(<var>:Goal, 
 -Id, +Options</var>)</a></dt>
 <dd class="defbody">
@@ -254,8 +254,8 @@ successfully, the thread identifier of the created thread is unified to <var>Id<
 is given. Otherwise it is a <em>blob</em> of type <code>thread</code>. 
 The anonymous blobs are subject to atom garbage collection. If a thread 
 handle is garbage collected and the thread is not <em>detached</em>, it 
-is <em>joined</em> if it has already terminated (see <a id="idx:threadjoin2:2181"></a><a class="pred" href="threadcreate.html#thread_join/2">thread_join/2</a>) 
-and detached otherwise (see <a id="idx:threaddetach1:2182"></a><a class="pred" href="threadcreate.html#thread_detach/1">thread_detach/1</a>).<sup class="fn">179<span class="fn-text">Up 
+is <em>joined</em> if it has already terminated (see <a id="idx:threadjoin2:2186"></a><a class="pred" href="threadcreate.html#thread_join/2">thread_join/2</a>) 
+and detached otherwise (see <a id="idx:threaddetach1:2187"></a><a class="pred" href="threadcreate.html#thread_detach/1">thread_detach/1</a>).<sup class="fn">182<span class="fn-text">Up 
 to version 7.3.23, anonymous thread handles were integers. Using 
 integers did not allow for safe checking of the thread's status as the 
 thread may have died and the handle may have been reused and did not 
@@ -264,7 +264,7 @@ The thread identifier blobs are printed as <code>&lt;thread&gt;(</code><var>I</v
 where <var>I</var> is the internal thread identifier and <var>Ptr</var> 
 is the unique address of the identifier. The <var>I</var> is accepted as 
 input argument for all thread APIs that accept a thread identifier for 
-convenient interaction from the toplevel. See also <a id="idx:threadproperty2:2183"></a><a class="pred" href="thmonitor.html#thread_property/2">thread_property/2</a>.
+convenient interaction from the toplevel. See also <a id="idx:threadproperty2:2188"></a><a class="pred" href="thmonitor.html#thread_property/2">thread_property/2</a>.
 
 <p><var>Options</var> is a list of options. The currently defined 
 options are below. Stack size options can also take the value <code>inf</code> 
@@ -290,64 +290,64 @@ way to discover whether this option is supported.</span></sup></dd>
 <dd class="defbody">
 Associate an&lsquo;alias name' with the thread. This name may be used to 
 refer to the thread and remains valid until the thread is joined (see
-<a id="idx:threadjoin2:2184"></a><a class="pred" href="threadcreate.html#thread_join/2">thread_join/2</a>). 
+<a id="idx:threadjoin2:2189"></a><a class="pred" href="threadcreate.html#thread_join/2">thread_join/2</a>). 
 If the OS supports it (e.g., Linux), the operating system thread is 
 named as well.</dd>
 <dt><strong>at_exit</strong>(<var>:AtExit</var>)</dt>
 <dd class="defbody">
-Register <var>AtExit</var> as using <a id="idx:threadatexit1:2185"></a><a class="pred" href="threadcreate.html#thread_at_exit/1">thread_at_exit/1</a> 
-before entering the thread goal. Unlike calling <a id="idx:threadatexit1:2186"></a><a class="pred" href="threadcreate.html#thread_at_exit/1">thread_at_exit/1</a> 
+Register <var>AtExit</var> as using <a id="idx:threadatexit1:2190"></a><a class="pred" href="threadcreate.html#thread_at_exit/1">thread_at_exit/1</a> 
+before entering the thread goal. Unlike calling <a id="idx:threadatexit1:2191"></a><a class="pred" href="threadcreate.html#thread_at_exit/1">thread_at_exit/1</a> 
 as part of the normal
 <var>Goal</var>, this <em>ensures</em> the <var>AtExit</var> is called. 
 Using
-<a id="idx:threadatexit1:2187"></a><a class="pred" href="threadcreate.html#thread_at_exit/1">thread_at_exit/1</a>, 
-the thread may be signalled or run out of resources before <a id="idx:threadatexit1:2188"></a><a class="pred" href="threadcreate.html#thread_at_exit/1">thread_at_exit/1</a> 
-is reached. See <a id="idx:threadatexit1:2189"></a><a class="pred" href="threadcreate.html#thread_at_exit/1">thread_at_exit/1</a> 
+<a id="idx:threadatexit1:2192"></a><a class="pred" href="threadcreate.html#thread_at_exit/1">thread_at_exit/1</a>, 
+the thread may be signalled or run out of resources before <a id="idx:threadatexit1:2193"></a><a class="pred" href="threadcreate.html#thread_at_exit/1">thread_at_exit/1</a> 
+is reached. See <a id="idx:threadatexit1:2194"></a><a class="pred" href="threadcreate.html#thread_at_exit/1">thread_at_exit/1</a> 
 for details.</dd>
 <dt><strong>debug</strong>(<var>+Bool</var>)</dt>
 <dd class="defbody">
 Enable/disable debugging the new thread. If <code>false</code> (default
 <code>true</code>), the new thread is created with the property
 <code>debug(false)</code> and debugging is disabled before the new 
-thread is started. The thread debugging predicates such as <a id="idx:tspy1:2190"></a><a class="pred" href="thutil.html#tspy/1">tspy/1</a> 
-and <a id="idx:tdebug0:2191"></a><a class="pred" href="thutil.html#tdebug/0">tdebug/0</a> 
+thread is started. The thread debugging predicates such as <a id="idx:tspy1:2195"></a><a class="pred" href="thutil.html#tspy/1">tspy/1</a> 
+and <a id="idx:tdebug0:2196"></a><a class="pred" href="thutil.html#tdebug/0">tdebug/0</a> 
 do not signal threads with the debug property set to
-<code>false</code>.<sup class="fn">180<span class="fn-text">Currently, 
+<code>false</code>.<sup class="fn">183<span class="fn-text">Currently, 
 the flag is only used as a hint for the various debugging primitives, 
 i.e., the system does not really enforce that the target thread stays in <em>nodebug</em> 
 mode.</span></sup></dd>
 <dt><strong>detached</strong>(<var>Bool</var>)</dt>
 <dd class="defbody">
 If <code>false</code> (default), the thread can be waited for using
-<a id="idx:threadjoin2:2192"></a><a class="pred" href="threadcreate.html#thread_join/2">thread_join/2</a>. <a id="idx:threadjoin2:2193"></a><a class="pred" href="threadcreate.html#thread_join/2">thread_join/2</a> 
+<a id="idx:threadjoin2:2197"></a><a class="pred" href="threadcreate.html#thread_join/2">thread_join/2</a>. <a id="idx:threadjoin2:2198"></a><a class="pred" href="threadcreate.html#thread_join/2">thread_join/2</a> 
 must be called on this thread to reclaim all resources associated with 
 the thread. If <code>true</code>, the system will reclaim all associated 
 resources automatically after the thread finishes. Please note that 
 thread identifiers are freed for reuse after a detached thread finishes 
-or a normal thread has been joined. See also <a id="idx:threadjoin2:2194"></a><a class="pred" href="threadcreate.html#thread_join/2">thread_join/2</a> 
-and <a id="idx:threaddetach1:2195"></a><a class="pred" href="threadcreate.html#thread_detach/1">thread_detach/1</a>.
+or a normal thread has been joined. See also <a id="idx:threadjoin2:2199"></a><a class="pred" href="threadcreate.html#thread_join/2">thread_join/2</a> 
+and <a id="idx:threaddetach1:2200"></a><a class="pred" href="threadcreate.html#thread_detach/1">thread_detach/1</a>.
 
 <p>If a detached thread dies due to failure or exception of the initial 
-goal, the thread prints a message using <a id="idx:printmessage2:2196"></a><a class="pred" href="printmsg.html#print_message/2">print_message/2</a>. 
+goal, the thread prints a message using <a id="idx:printmessage2:2201"></a><a class="pred" href="printmsg.html#print_message/2">print_message/2</a>. 
 If such termination is considered normal, the code must be wrapped using
-<a id="idx:ignore1:2197"></a><a class="pred" href="metacall.html#ignore/1">ignore/1</a> 
-and/or <a id="idx:catch3:2198"></a><a class="pred" href="exception.html#catch/3">catch/3</a> 
+<a id="idx:ignore1:2202"></a><a class="pred" href="metacall.html#ignore/1">ignore/1</a> 
+and/or <a id="idx:catch3:2203"></a><a class="pred" href="exception.html#catch/3">catch/3</a> 
 to ensure successful completion.</dd>
 <dt><strong>inherit_from</strong>(<var>+ThreadId</var>)</dt>
 <dd class="defbody">
 Inherit defaults from the given <var>ThreadId</var> instead of the 
 calling thread. This option was added to ensure that the
-<code>__thread_pool_manager</code> (see <a id="idx:threadcreateinpool4:2199"></a><a class="pred" href="threadpool.html#thread_create_in_pool/4">thread_create_in_pool/4</a>), 
+<code>__thread_pool_manager</code> (see <a id="idx:threadcreateinpool4:2204"></a><a class="pred" href="threadpool.html#thread_create_in_pool/4">thread_create_in_pool/4</a>), 
 which is created lazily, has a predictable state. The following 
 properties are inherited:
 
 <p>
 <ul class="latex">
-<li>The prompt (see <a id="idx:prompt2:2200"></a><a class="pred" href="termrw.html#prompt/2">prompt/2</a>)
-<li>The <em>typein</em> module (see <a id="idx:module1:2201"></a><a class="pred" href="mtoplevel.html#module/1">module/1</a>)
+<li>The prompt (see <a id="idx:prompt2:2205"></a><a class="pred" href="termrw.html#prompt/2">prompt/2</a>)
+<li>The <em>typein</em> module (see <a id="idx:module1:2206"></a><a class="pred" href="mtoplevel.html#module/1">module/1</a>)
 <li>The standard streams (<code>user_input</code>, etc.)
 <li>The default encoding (see <a class="flag" href="flags.html#flag:encoding">encoding</a>)
-<li>The default locale (see <a id="idx:setlocale1:2202"></a><a class="pred" href="locale.html#set_locale/1">set_locale/1</a>)
+<li>The default locale (see <a id="idx:setlocale1:2207"></a><a class="pred" href="locale.html#set_locale/1">set_locale/1</a>)
 <li>All prolog flags
 <li>The stack limit (see Prolog flag <a class="flag" href="flags.html#flag:stack_limit">stack_limit</a>).
 </ul>
@@ -355,7 +355,7 @@ properties are inherited:
 <dt><strong>queue_max_size</strong>(<var>Size</var>)</dt>
 <dd class="defbody">
 Enforces a maximum to the number of terms in the input queue. See
-<a id="idx:messagequeuecreate2:2203"></a><a class="pred" href="threadcom.html#message_queue_create/2">message_queue_create/2</a> 
+<a id="idx:messagequeuecreate2:2208"></a><a class="pred" href="threadcom.html#message_queue_create/2">message_queue_create/2</a> 
 with the <code>max_size(o)</code>ption for details.</dd>
 <dt><strong>stack_limit</strong>(<var>Bytes</var>)</dt>
 <dd class="defbody">
@@ -380,12 +380,12 @@ Get the Prolog thread identifier of the running thread. If the thread
 has an alias, the alias name is returned.</dd>
 <dt class="pubdef"><a id="thread_join/1"><strong>thread_join</strong>(<var>+Id</var>)</a></dt>
 <dd class="defbody">
-Calls <a id="idx:threadjoin2:2204"></a><a class="pred" href="threadcreate.html#thread_join/2">thread_join/2</a> 
+Calls <a id="idx:threadjoin2:2209"></a><a class="pred" href="threadcreate.html#thread_join/2">thread_join/2</a> 
 and succeeds if thread <var>Id</var> terminated with success. Otherwise 
 the exception
 <code>error(<code>thread_error(Id, Status)</code>, _)</code> is raised, 
 where
-<var>Status</var> is the status as returned by <a id="idx:threadjoin2:2205"></a><a class="pred" href="threadcreate.html#thread_join/2">thread_join/2</a>.</dd>
+<var>Status</var> is the status as returned by <a id="idx:threadjoin2:2210"></a><a class="pred" href="threadcreate.html#thread_join/2">thread_join/2</a>.</dd>
 <dt class="pubdef"><a id="thread_join/2"><strong>thread_join</strong>(<var>+Id, 
 -Status</var>)</a></dt>
 <dd class="defbody">
@@ -395,13 +395,13 @@ this call, <var>Id</var> becomes invalid and all resources associated
 with the thread are reclaimed. It is not allowed for two threads to join 
 the same thread and the thread being joined cannot be <em>detached</em> 
 (see the
-<code>detached(true)</code> option for <a id="idx:threadcreate3:2206"></a><a class="pred" href="threadcreate.html#thread_create/3">thread_create/3</a> 
-and <a id="idx:threaddetach1:2207"></a><a class="pred" href="threadcreate.html#thread_detach/1">thread_detach/1</a>).
+<code>detached(true)</code> option for <a id="idx:threadcreate3:2211"></a><a class="pred" href="threadcreate.html#thread_create/3">thread_create/3</a> 
+and <a id="idx:threaddetach1:2212"></a><a class="pred" href="threadcreate.html#thread_detach/1">thread_detach/1</a>).
 
-<p>A thread that has been completed without <a id="idx:threadjoin2:2208"></a><a class="pred" href="threadcreate.html#thread_join/2">thread_join/2</a> 
+<p>A thread that has been completed without <a id="idx:threadjoin2:2213"></a><a class="pred" href="threadcreate.html#thread_join/2">thread_join/2</a> 
 being called on it is partly reclaimed: the Prolog stacks are released 
 and the C thread is destroyed. A small data structure representing the 
-exit status of the thread is retained until <a id="idx:threadjoin2:2209"></a><a class="pred" href="threadcreate.html#thread_join/2">thread_join/2</a> 
+exit status of the thread is retained until <a id="idx:threadjoin2:2214"></a><a class="pred" href="threadcreate.html#thread_join/2">thread_join/2</a> 
 is called on the thread. Defined values for <var>Status</var> are:
 
 <dl class="latex">
@@ -413,24 +413,24 @@ The goal has been proven successfully.</dd>
 The goal has failed.</dd>
 <dt><strong>exception</strong>(<var>Term</var>)</dt>
 <dd class="defbody">
-The thread is terminated on an exception. See <a id="idx:printmessage2:2210"></a><a class="pred" href="printmsg.html#print_message/2">print_message/2</a> 
+The thread is terminated on an exception. See <a id="idx:printmessage2:2215"></a><a class="pred" href="printmsg.html#print_message/2">print_message/2</a> 
 to turn system exceptions into readable messages.</dd>
 <dt><strong>exited</strong>(<var>Term</var>)</dt>
 <dd class="defbody">
-The thread is terminated on <a id="idx:threadexit1:2211"></a><a class="pred" href="threadcreate.html#thread_exit/1">thread_exit/1</a> 
+The thread is terminated on <a id="idx:threadexit1:2216"></a><a class="pred" href="threadcreate.html#thread_exit/1">thread_exit/1</a> 
 using the argument <var>Term</var>.
 </dd>
 </dl>
 
 <p>Note that the pthread primitive pthread_join() cannot be interrupted. 
 Some systems provide pthread_timedjoin_np(). If this is provided
-<a id="idx:threadjoin2:2212"></a><a class="pred" href="threadcreate.html#thread_join/2">thread_join/2</a> 
+<a id="idx:threadjoin2:2217"></a><a class="pred" href="threadcreate.html#thread_join/2">thread_join/2</a> 
 is implemented as a loop of timed joins with a 0.25 sec timeout while 
 signals are being tested after each timeout. Such systems allow 
-combining <a id="idx:threadjoin2:2213"></a><a class="pred" href="threadcreate.html#thread_join/2">thread_join/2</a> 
-with <a id="idx:callwithtimelimit2:2214"></a><span class="pred-ext">call_with_time_limit/2</span> 
-as well as signalling threads blocked in <a id="idx:threadjoin2:2215"></a><a class="pred" href="threadcreate.html#thread_join/2">thread_join/2</a> 
-using <a id="idx:threadsignal2:2216"></a><a class="pred" href="threadcom.html#thread_signal/2">thread_signal/2</a>.</dd>
+combining <a id="idx:threadjoin2:2218"></a><a class="pred" href="threadcreate.html#thread_join/2">thread_join/2</a> 
+with <a id="idx:callwithtimelimit2:2219"></a><span class="pred-ext">call_with_time_limit/2</span> 
+as well as signalling threads blocked in <a id="idx:threadjoin2:2220"></a><a class="pred" href="threadcreate.html#thread_join/2">thread_join/2</a> 
+using <a id="idx:threadsignal2:2221"></a><a class="pred" href="threadcom.html#thread_signal/2">thread_signal/2</a>.</dd>
 <dt class="pubdef"><a id="thread_alias/1"><strong>thread_alias</strong>(<var>+Alias</var>)</a></dt>
 <dd class="defbody">
 Set the alias name of the calling thread to <var>Alias</var>. An error 
@@ -440,39 +440,39 @@ is in use for a thread or message queue.</dd>
 <dd class="defbody">
 Switch thread into detached state (see <code>detached(Bool)</code> 
 option at
-<a id="idx:threadcreate3:2217"></a><a class="pred" href="threadcreate.html#thread_create/3">thread_create/3</a>) 
+<a id="idx:threadcreate3:2222"></a><a class="pred" href="threadcreate.html#thread_create/3">thread_create/3</a>) 
 at runtime. <var>Id</var> is the identifier of the thread placed in 
-detached state. This may be the result of <a id="idx:threadself1:2218"></a><a class="pred" href="threadcreate.html#thread_self/1">thread_self/1</a>.
+detached state. This may be the result of <a id="idx:threadself1:2223"></a><a class="pred" href="threadcreate.html#thread_self/1">thread_self/1</a>.
 
 <p>One of the possible applications is to simplify debugging. Threads 
 that are created as <em>detached</em> leave no traces if they crash. For 
 non-detached threads the status can be inspected using
-<a id="idx:threadproperty2:2219"></a><a class="pred" href="thmonitor.html#thread_property/2">thread_property/2</a>. 
+<a id="idx:threadproperty2:2224"></a><a class="pred" href="thmonitor.html#thread_property/2">thread_property/2</a>. 
 Threads nobody is waiting for may be created normally and detach 
 themselves just before completion. This way they leave no traces on 
 normal completion and their reason for failure can be inspected.</dd>
 <dt class="pubdef"><span class="pred-tag">[deprecated]</span><a id="thread_exit/1"><strong>thread_exit</strong>(<var>+Term</var>)</a></dt>
 <dd class="defbody">
 Terminates the thread immediately, leaving <code>exited(Term)</code> as 
-result state for <a id="idx:threadjoin2:2220"></a><a class="pred" href="threadcreate.html#thread_join/2">thread_join/2</a>. 
+result state for <a id="idx:threadjoin2:2225"></a><a class="pred" href="threadcreate.html#thread_join/2">thread_join/2</a>. 
 If the thread has the attribute
 <code>detached(true)</code> it terminates, but its exit status cannot be 
-retrieved using <a id="idx:threadjoin2:2221"></a><a class="pred" href="threadcreate.html#thread_join/2">thread_join/2</a>, 
+retrieved using <a id="idx:threadjoin2:2226"></a><a class="pred" href="threadcreate.html#thread_join/2">thread_join/2</a>, 
 making the value of <var>Term</var> irrelevant. The Prolog stacks and C 
 thread are reclaimed.
 
 <p>The current implementation does not guarantee proper releasing of all 
-mutexes and proper cleanup in <a id="idx:setupcallcleanup3:2222"></a><a class="pred" href="metacall.html#setup_call_cleanup/3">setup_call_cleanup/3</a>, 
-etc. Please use the exception mechanism (<a id="idx:throw1:2223"></a><a class="pred" href="exception.html#throw/1">throw/1</a>) 
+mutexes and proper cleanup in <a id="idx:setupcallcleanup3:2227"></a><a class="pred" href="metacall.html#setup_call_cleanup/3">setup_call_cleanup/3</a>, 
+etc. Please use the exception mechanism (<a id="idx:throw1:2228"></a><a class="pred" href="exception.html#throw/1">throw/1</a>) 
 to abort execution using non-standard control.<sup class="fn">bug<span class="fn-text">The 
 Windows port does not properly cleanup for <em>detached</em> threads 
-while the cleanup for other threads is executed by the thread running <a id="idx:threadjoin2:2224"></a><a class="pred" href="threadcreate.html#thread_join/2">thread_join/2</a> 
+while the cleanup for other threads is executed by the thread running <a id="idx:threadjoin2:2229"></a><a class="pred" href="threadcreate.html#thread_join/2">thread_join/2</a> 
 using the exited thread as <em>engine</em>. This is due to a bug in the <a class="url" href="https://sourceforge.net/p/mingw-w64/bugs/469/">MinGW 
 pthread implementation</a>.</span></sup></dd>
 <dt class="pubdef"><a id="thread_initialization/1"><strong>thread_initialization</strong>(<var>:Goal</var>)</a></dt>
 <dd class="defbody">
 Run <var>Goal</var> when thread is started. This predicate is similar to
-<a id="idx:initialization1:2225"></a><a class="pred" href="consulting.html#initialization/1">initialization/1</a>, 
+<a id="idx:initialization1:2230"></a><a class="pred" href="consulting.html#initialization/1">initialization/1</a>, 
 but is intended for initialization operations of the runtime stacks, 
 such as setting global variables as described in
 <a class="sec" href="gvar.html#sec:4.33">section 4.33</a>. <var>Goal</var> 
@@ -480,27 +480,27 @@ is run on four occasions: at the call to this predicate, after loading a
 saved state, on starting a new thread and on creating a Prolog engine 
 through the C interface. On loading a saved state, <var>Goal</var> is 
 executed <em>after</em> running the
-<a id="idx:initialization1:2226"></a><a class="pred" href="consulting.html#initialization/1">initialization/1</a> 
+<a id="idx:initialization1:2231"></a><a class="pred" href="consulting.html#initialization/1">initialization/1</a> 
 hooks.</dd>
 <dt class="pubdef"><a id="thread_at_exit/1"><strong>thread_at_exit</strong>(<var>:Goal</var>)</a></dt>
 <dd class="defbody">
 Run <var>Goal</var> just before releasing the thread resources. This is 
-to be compared to <a id="idx:athalt1:2227"></a><a class="pred" href="consulting.html#at_halt/1">at_halt/1</a>, 
+to be compared to <a id="idx:athalt1:2232"></a><a class="pred" href="consulting.html#at_halt/1">at_halt/1</a>, 
 but only for the current thread. These hooks are run regardless of why 
 the execution of the thread has been completed. When these hooks are 
 run, the return code is already available through
-<a id="idx:threadproperty2:2228"></a><a class="pred" href="thmonitor.html#thread_property/2">thread_property/2</a> 
-using the result of <a id="idx:threadself1:2229"></a><a class="pred" href="threadcreate.html#thread_self/1">thread_self/1</a> 
+<a id="idx:threadproperty2:2233"></a><a class="pred" href="thmonitor.html#thread_property/2">thread_property/2</a> 
+using the result of <a id="idx:threadself1:2234"></a><a class="pred" href="threadcreate.html#thread_self/1">thread_self/1</a> 
 as thread identifier. Note that there are two scenarios for using exit 
-hooks. Using <a id="idx:threadatexit1:2230"></a><a class="pred" href="threadcreate.html#thread_at_exit/1">thread_at_exit/1</a> 
+hooks. Using <a id="idx:threadatexit1:2235"></a><a class="pred" href="threadcreate.html#thread_at_exit/1">thread_at_exit/1</a> 
 is typically used if the thread creates a side-effect that must be 
 reverted if the thread dies. Another scenario is where the creator of 
 the thread wants to be informed when the thread ends. That cannot be 
-guaranteed by means of <a id="idx:threadatexit1:2231"></a><a class="pred" href="threadcreate.html#thread_at_exit/1">thread_at_exit/1</a> 
+guaranteed by means of <a id="idx:threadatexit1:2236"></a><a class="pred" href="threadcreate.html#thread_at_exit/1">thread_at_exit/1</a> 
 because it is possible that the thread cannot be created or dies almost 
 instantly due to a signal or resource error. The <code>at_exit(Goal)</code> 
 option of
-<a id="idx:threadcreate3:2232"></a><a class="pred" href="threadcreate.html#thread_create/3">thread_create/3</a> 
+<a id="idx:threadcreate3:2237"></a><a class="pred" href="threadcreate.html#thread_create/3">thread_create/3</a> 
 is designed to deal with this scenario.
 
 <p>The <var>Goal</var> is executed with signal processing disabled. This 
@@ -510,7 +510,7 @@ has just finished when the signal arrives.</dd>
 <dt class="pubdef"><a id="thread_setconcurrency/2"><strong>thread_setconcurrency</strong>(<var>-Old, 
 +New</var>)</a></dt>
 <dd class="defbody">
-<a id="idx:Solaris:2233"></a>Determine the concurrency of the process, 
+<a id="idx:Solaris:2238"></a>Determine the concurrency of the process, 
 which is defined as the maximum number of concurrently active threads.&lsquo;Active' 
 here means they are using CPU time. This option is provided if the 
 thread implementation provides pthread_setconcurrency(). Solaris is a 
@@ -523,7 +523,7 @@ True when <var>Current</var> is unified with the current thread affinity
 and the thread affinity is successfully set to <var>New</var>. The <em>thread 
 affinity</em> specifies the set of CPUs on which this thread is allowed 
 to run. The affinity is represented as a list of non-negative integers. 
-See also the option <code>affinity(+Affinity)</code> of <a id="idx:threadcreate3:2234"></a><a class="pred" href="threadcreate.html#thread_create/3">thread_create/3</a>.
+See also the option <code>affinity(+Affinity)</code> of <a id="idx:threadcreate3:2239"></a><a class="pred" href="threadcreate.html#thread_create/3">thread_create/3</a>.
 
 <p>This predicate is only present if this functionality can be supported 
 and has been ported to the target operating system. Currently, only 

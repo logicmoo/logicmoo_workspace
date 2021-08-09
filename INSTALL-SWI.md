@@ -132,6 +132,12 @@ MAKE=make
  # rm -rf swipl-devel/build
 )
 
+
+(
+cd packs_sys/swicli
+./make-linux.sh
+)
+
 find packs_* -name "*.qlf"
 # swipl 
 

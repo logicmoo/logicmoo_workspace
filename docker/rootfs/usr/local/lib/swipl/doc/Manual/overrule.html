@@ -2,7 +2,7 @@
 
 <html>
 <head>
-<title>SWI-Prolog 8.3.27 Reference Manual: Section 6.6</title><link rel="home" href="index.html">
+<title>SWI-Prolog 8.3.28 Reference Manual: Section 6.6</title><link rel="home" href="index.html">
 <link rel="contents" href="Contents.html">
 <link rel="index" href="DocIndex.html">
 <link rel="summary" href="summary.html">
@@ -264,7 +264,7 @@ Here are a few examples:
 
 <p>Note that the second example is the same due to the Prolog flag
 <a class="flag" href="flags.html#flag:colon_sets_calling_context">colon_sets_calling_context</a>. 
-The system predicate <a id="idx:asserta1:1982"></a><a class="pred" href="db.html#asserta/1">asserta/1</a> 
+The system predicate <a id="idx:asserta1:1987"></a><a class="pred" href="db.html#asserta/1">asserta/1</a> 
 is called in the module <code>world</code>, which is possible because 
 system predicates are <em>visible</em> in all modules. At the same time, 
 the
@@ -291,12 +291,12 @@ Execute <var>Goal</var>, setting the calling context to <var>Module</var>.
 Setting the calling context affects meta-predicates, for which meta 
 arguments are qualified with <var>Module</var> and transparent 
 predicates (see
-<a id="idx:moduletransparent1:1983"></a><a class="pred" href="ctxmodule.html#module_transparent/1">module_transparent/1</a>). 
+<a id="idx:moduletransparent1:1988"></a><a class="pred" href="ctxmodule.html#module_transparent/1">module_transparent/1</a>). 
 It has no implications for other predicates.
 
 <p>For example, the code <code>asserta(done)@world</code> is the same as
 <code>asserta(world:done)</code>. Unlike in <code>world:asserta(done)</code>,
-<a id="idx:asserta1:1984"></a><a class="pred" href="db.html#asserta/1">asserta/1</a> 
+<a id="idx:asserta1:1989"></a><a class="pred" href="db.html#asserta/1">asserta/1</a> 
 is resolved in the current module rather than the module
 <code>world</code>. This makes no difference for system predicates, but 
 usually does make a difference for user predicates.

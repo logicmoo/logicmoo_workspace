@@ -3789,35 +3789,6 @@ Write a URI as <code>&lt;...&gt;</code></dd>
 +Stream, :Options</var>)</a></dt>
 <dd class="defbody">
 (Turtle clauses)</dd>
-<dt class="pubdef"><span class="pred-tag">[det]</span><a id="rdf_save_ntriples/2"><strong>rdf_save_ntriples</strong>(<var>+Spec, 
-:Options</var>)</a></dt>
-<dd class="defbody">
-Save RDF using ntriples format. The ntriples format is a subset of 
-Turtle, writing each triple fully qualified on its own line.</dd>
-<dt class="pubdef"><span class="pred-tag">[det]</span><a id="rdf_save_canonical_trig/2"><strong>rdf_save_canonical_trig</strong>(<var>+Spec, 
-:Options</var>)</a></dt>
-<dd class="defbody">
-Save triples in a canonical format. See
-<a class="pred" href="#rdf_save_canonical_turtle/2">rdf_save_canonical_turtle/2</a> 
-foir details.</dd>
-<dt class="pubdef"><span class="pred-tag">[det]</span><a id="rdf_save_trig/2"><strong>rdf_save_trig</strong>(<var>+Spec, 
-:Options</var>)</a></dt>
-<dd class="defbody">
-Save multiple RDF graphs into a TriG file. <var>Options</var> are the 
-same as for <a class="pred" href="#rdf_save_turtle/2">rdf_save_turtle/2</a>. <a class="pred" href="#rdf_save_trig/2">rdf_save_trig/2</a> 
-ignores the
-<code>graph(+Graph)</code> option and instead processes one additional 
-option:
-
-<dl class="latex">
-<dt><strong>graphs</strong>(<var>+ListOfGraphs</var>)</dt>
-<dd class="defbody">
-List of graphs to save. When omitted, all graphs in the RDF store are 
-stored in the TriG file.
-</dd>
-</dl>
-
-</dd>
 <dt class="pubdef"><span class="pred-tag">[det]</span><a id="rdf_save_canonical_turtle/2"><strong>rdf_save_canonical_turtle</strong>(<var>+Spec, 
 :Options</var>)</a></dt>
 <dd class="defbody">
@@ -3961,6 +3932,35 @@ triple_in(RDF, S,P,O,_G) :-
 <tr><td><var>Out</var> </td><td>is one of <code>stream(Stream)</code>, a 
 stream handle, a file-URL or an atom that denotes a filename. </td></tr>
 </table>
+</dd>
+<dt class="pubdef"><span class="pred-tag">[det]</span><a id="rdf_save_ntriples/2"><strong>rdf_save_ntriples</strong>(<var>+Spec, 
+:Options</var>)</a></dt>
+<dd class="defbody">
+Save RDF using ntriples format. The ntriples format is a subset of 
+Turtle, writing each triple fully qualified on its own line.</dd>
+<dt class="pubdef"><span class="pred-tag">[det]</span><a id="rdf_save_canonical_trig/2"><strong>rdf_save_canonical_trig</strong>(<var>+Spec, 
+:Options</var>)</a></dt>
+<dd class="defbody">
+Save triples in a canonical format. See
+<a class="pred" href="#rdf_save_canonical_turtle/2">rdf_save_canonical_turtle/2</a> 
+foir details.</dd>
+<dt class="pubdef"><span class="pred-tag">[det]</span><a id="rdf_save_trig/2"><strong>rdf_save_trig</strong>(<var>+Spec, 
+:Options</var>)</a></dt>
+<dd class="defbody">
+Save multiple RDF graphs into a TriG file. <var>Options</var> are the 
+same as for <a class="pred" href="#rdf_save_turtle/2">rdf_save_turtle/2</a>. <a class="pred" href="#rdf_save_trig/2">rdf_save_trig/2</a> 
+ignores the
+<code>graph(+Graph)</code> option and instead processes one additional 
+option:
+
+<dl class="latex">
+<dt><strong>graphs</strong>(<var>+ListOfGraphs</var>)</dt>
+<dd class="defbody">
+List of graphs to save. When omitted, all graphs in the RDF store are 
+stored in the TriG file.
+</dd>
+</dl>
+
 </dd>
 </dl>
 

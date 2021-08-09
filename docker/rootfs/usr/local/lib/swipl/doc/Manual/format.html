@@ -2,7 +2,7 @@
 
 <html>
 <head>
-<title>SWI-Prolog 8.3.27 Reference Manual: Section 4.32</title><link rel="home" href="index.html">
+<title>SWI-Prolog 8.3.28 Reference Manual: Section 4.32</title><link rel="home" href="index.html">
 <link rel="contents" href="Contents.html">
 <link rel="index" href="DocIndex.html">
 <link rel="summary" href="summary.html">
@@ -346,7 +346,7 @@ Equivalent to <code>swritef(String, Format, []).</code>
 
 <a id="sec:format-predicates"></a>
 
-<p>The format family of predicates is the most versatile and portable<sup class="fn">134<span class="fn-text">Unfortunately 
+<p>The format family of predicates is the most versatile and portable<sup class="fn">135<span class="fn-text">Unfortunately 
 not covered by any standard.</span></sup> way to produce textual output.
 
 <dl class="latex">
@@ -369,7 +369,7 @@ arguments are put in a list.
 <p>Special sequences start with the tilde (<code><code>~</code></code>), 
 followed by an optional numeric argument, optionally followed by a colon 
 modifier (:),
-<sup class="fn">135<span class="fn-text">The colon modifiers is a 
+<sup class="fn">136<span class="fn-text">The colon modifiers is a 
 SWI-Prolog extension, proposed by Richard O'Keefe.</span></sup> followed 
 by a character describing the action to be undertaken. A numeric 
 argument is either a sequence of digits, representing a positive decimal 
@@ -510,7 +510,7 @@ Same as <b>r</b>, but uses uppercase letters for digits above 9.
 Output text from a list of character codes or a string (see <a id="idx:string1:1622"></a><a class="pred" href="typetest.html#string/1">string/1</a> 
 and
 <a class="sec" href="string.html#sec:5.2">section 5.2</a>) from the next 
-argument.<sup class="fn">136<span class="fn-text">The <b>s</b> modifier 
+argument.<sup class="fn">137<span class="fn-text">The <b>s</b> modifier 
 also accepts an atom for compatibility. This is deprecated due to the 
 ambiguity of <code><code>[]</code></code>.</span></sup>
 <li><code>@</code><br>
@@ -584,7 +584,7 @@ As <a id="idx:format2:1626"></a><a class="pred" href="format.html#format/2">form
 but write the output on the given <var>Output</var>. The de-facto 
 standard only allows <var>Output</var> to be a stream. The SWI-Prolog 
 implementation allows all valid arguments for
-<a id="idx:withoutputto2:1627"></a><a class="pred" href="IO.html#with_output_to/2">with_output_to/2</a>.<sup class="fn">137<span class="fn-text">Earlier 
+<a id="idx:withoutputto2:1627"></a><a class="pred" href="IO.html#with_output_to/2">with_output_to/2</a>.<sup class="fn">138<span class="fn-text">Earlier 
 versions defined sformat/3 . These predicates have been moved to the 
 library <code>library(backcomp)</code>.</span></sup> For example:
 
