@@ -1,7 +1,7 @@
-prefix=/opt/logicmoo_workspace
+prefix=/opt/logicmoo_workspace_linux
 exec_prefix=${prefix}
-libdir=/opt/logicmoo_workspace/lib/swipl/lib/x86_64-linux
-includedir=/opt/logicmoo_workspace/lib/swipl/include
+libdir=/opt/logicmoo_workspace_linux/lib/swipl/lib/x86_64-linux
+includedir=/opt/logicmoo_workspace_linux/lib/swipl/include
 
 Name: swipl
 Description: ISO/Edinburgh-style Prolog compiler

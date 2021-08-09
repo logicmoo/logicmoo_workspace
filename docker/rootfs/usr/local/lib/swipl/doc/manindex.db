@@ -3167,11 +3167,11 @@ i(/(turtle_pn_local,1),"True if Atom is a valid Turtle PN_LOCAL name.",swi_man_p
 i(/(turtle_write_quoted_string,2),"Same as turtle_write_quoted_string(Out, Value, false), writing a string with only a single \".",swi_man_packages('semweb.html'),packages,169145).
 i(/(turtle_write_uri,2),"Write a URI as <...>",swi_man_packages('semweb.html'),packages,169513).
 i(/('rdf_db:rdf_load_stream',3),"(Turtle clauses)",swi_man_packages('semweb.html'),packages,169729).
-i(/(rdf_save_canonical_turtle,2),"Save triples in a canonical format.",swi_man_packages('semweb.html'),packages,169984).
-i(/(rdf_save_turtle,2),"Save an RDF graph as Turtle.",swi_man_packages('semweb.html'),packages,170831).
-i(/(rdf_save_ntriples,2),"Save RDF using ntriples format.",swi_man_packages('semweb.html'),packages,175158).
-i(/(rdf_save_canonical_trig,2),"Save triples in a canonical format.",swi_man_packages('semweb.html'),packages,175468).
-i(/(rdf_save_trig,2),"Save multiple RDF graphs into a TriG file.",swi_man_packages('semweb.html'),packages,175800).
+i(/(rdf_save_ntriples,2),"Save RDF using ntriples format.",swi_man_packages('semweb.html'),packages,169984).
+i(/(rdf_save_canonical_trig,2),"Save triples in a canonical format.",swi_man_packages('semweb.html'),packages,170294).
+i(/(rdf_save_trig,2),"Save multiple RDF graphs into a TriG file.",swi_man_packages('semweb.html'),packages,170626).
+i(/(rdf_save_canonical_turtle,2),"Save triples in a canonical format.",swi_man_packages('semweb.html'),packages,171310).
+i(/(rdf_save_turtle,2),"Save an RDF graph as Turtle.",swi_man_packages('semweb.html'),packages,172157).
 i(section(2,'6','sec:rdfntriples'),"library(semweb/rdf_ntriples): Process files in the RDF N-Triples format",swi_man_packages('semweb.html'),packages,176494).
 i(/(read_ntriple,2),"Read the next triple from Stream as Triple.",swi_man_packages('semweb.html'),packages,177543).
 i(/(read_nquad,2),"Read the next quad from Stream as Quad.",swi_man_packages('semweb.html'),packages,178285).
