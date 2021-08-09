@@ -625,7 +625,7 @@ RUN apt update \
   && npm install -g typescript
 
 RUN apt update \
-  && apt install -y mono-complete ikvm mono-4.0-gac mono-tools-devel ttyd
+  && apt install -y mono-complete mono-4.0-gac mono-tools-devel
   
 
 #ENTRYPOINT ["/startup_logicmoo.sh"]
