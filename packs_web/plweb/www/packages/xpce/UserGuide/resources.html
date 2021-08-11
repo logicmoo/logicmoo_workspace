@@ -1,0 +1,221 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+
+<HTML>
+<HEAD>
+<TITLE>Programming in XPCE/Prolog</TITLE><LINK REL=home HREF="index.html">
+<LINK REL=contents HREF="Contents.html">
+<LINK REL=index HREF="DocIndex.html">
+<LINK REL=summary HREF="summary.html">
+<LINK REL=previous HREF="sec-8.4.html">
+<LINK REL=next HREF="techniques.html">
+<STYLE type="text/css">
+/* Style sheet for SWI-Prolog latex2html
+*/
+
+dd.defbody
+{ margin-bottom: 1em;
+}
+
+dt.pubdef
+{ background-color: #c5e1ff;
+}
+
+pre.code
+{ margin-left: 1.5em;
+margin-right: 1.5em;
+border: 1px dotted;
+padding-top: 5px;
+padding-left: 5px;
+padding-bottom: 5px;
+background-color: #f8f8f8;
+}
+
+div.navigate
+{ text-align: center;
+background-color: #f0f0f0;
+border: 1px dotted;
+padding: 5px;
+}
+
+div.title
+{ text-align: center;
+padding-bottom: 1em;
+font-size: 200%;
+font-weight: bold;
+}
+
+div.author
+{ text-align: center;
+font-style: italic;
+}
+
+div.abstract
+{ margin-top: 2em;
+background-color: #f0f0f0;
+border: 1px dotted;
+padding: 5px;
+margin-left: 10%; margin-right:10%;
+}
+
+div.abstract-title
+{ text-align: center;
+padding: 5px;
+font-size: 120%;
+font-weight: bold;
+}
+
+div.toc-h1
+{ font-size: 200%;
+font-weight: bold;
+}
+
+div.toc-h2
+{ font-size: 120%;
+font-weight: bold;
+margin-left: 2em;
+}
+
+div.toc-h3
+{ font-size: 100%;
+font-weight: bold;
+margin-left: 4em;
+}
+
+div.toc-h4
+{ font-size: 100%;
+margin-left: 6em;
+}
+
+span.sec-nr
+{ 
+}
+
+span.sec-title
+{ 
+}
+
+span.pred-ext
+{ font-weight: bold;
+}
+
+/* Footnotes */
+
+sup.fn { color: blue; text-decoration: underline; }
+span.fn-text: { display: none; }
+sup.fn span {display: none;}
+sup:hover span 
+{ display: block !important;
+position: absolute; top: auto; left: auto; width: 80%;
+color: #000; background: white;
+border: 2px solid;
+padding: 5px; margin: 10px; z-index: 100;
+font-size: smaller;
+}
+</STYLE>
+</HEAD>
+<BODY BGCOLOR="white">
+<DIV class="navigate"><A class="nav" href="index.html"><IMG SRC="home.gif" BORDER=0 ALT="Home"></A>
+<A class="nav" href="Contents.html"><IMG SRC="index.gif" BORDER=0 ALT="Contents"></A>
+<A class="nav" href="DocIndex.html"><IMG SRC="yellow_pages.gif" BORDER=0 ALT="Index"></A>
+<A class="nav" href="summary.html"><IMG SRC="info.gif" BORDER=0 ALT="Summary"></A>
+<A class="nav" href="sec-8.4.html"><IMG SRC="prev.gif" BORDER=0 ALT="Previous"></A>
+<A class="nav" href="techniques.html"><IMG SRC="next.gif" BORDER=0 ALT="Next"></A>
+</DIV>
+
+<H1><A NAME="sec:9"><SPAN class="sec-nr">9</SPAN> <SPAN class="sec-title">Program 
+resources</SPAN></A></H1>
+
+<A NAME="sec:resources"></A>
+
+<P>Resources, in the new sense of the word is data that is required by 
+an application but cannot be expressed easily as program-code. Examples 
+are image-files, help-files, and other files using non-Prolog syntax. 
+Such files are declared by defining clauses for the predicate
+<A NAME="idx:resource3:273"></A><A class="pred" href="resources.html#resource/3">resource/3</A>:
+
+<DL>
+<DT class="pubdef"><A NAME="resource/3"><STRONG>resource</STRONG>(<VAR>?Name, 
+?Class, ?PathSpec</VAR>)</A></DT>
+<DD class="defbody">
+Define the file specified by <VAR>PathSpec</VAR> to contain data for the 
+resource named <VAR>Name</VAR> of resource-class <VAR>Class</VAR>.
+
+<P><VAR>Name</VAR> refers to the logical name of the resource, which is 
+interpreted locally for a Prolog module. Declarations in the module
+<CODE>user</CODE> are visible as defaults from all other modules.
+<VAR>Class</VAR> defines the type of object to be expected in the file. 
+Right now, they provide an additional name-space for resources. <VAR>PathSpec</VAR> 
+is a file specification as acceptable to <A NAME="idx:absolutefilename23:274"></A><SPAN class="pred-ext">absolute_file_name/[2,3]</SPAN>.
+</DD>
+</DL>
+
+<P>Resources can be handled both from Prolog as for <font size=-1>XPCE</font>. 
+From Prolog, this is achieved using <A NAME="idx:openresource3:275"></A><SPAN class="pred-ext">open_resource/3</SPAN>:
+
+<DL>
+<DT class="pubdef"><A NAME="open_resource/4"><STRONG>open_resource</STRONG>(<VAR>+Name, 
+?Class, -Stream</VAR>)</A></DT>
+<DD class="defbody">
+Opens the resource specified by <VAR>Name</VAR> and <VAR>Class</VAR>. If 
+the latter is a variable, it will be unified to the class of the first 
+resource found that has the specified <VAR>Name</VAR>. If successful,
+<VAR>Stream</VAR> becomes a handle to a binary input stream, providing 
+access to the content of the resource.
+
+<P>The predicate <A NAME="idx:openresource3:276"></A><SPAN class="pred-ext">open_resource/3</SPAN> 
+first checks <A NAME="idx:resource3:277"></A><A class="pred" href="resources.html#resource/3">resource/3</A>. 
+If successful it will open the returned resource source-file. Otherwise 
+it will look in the programs resource database. When creating a 
+saved-state, the system saves the resource contents into the resource 
+archive, but does not save the resource clauses.
+
+<P>This way, the development environment uses the files (and 
+modifications to the <A NAME="idx:resource3:278"></A><A class="pred" href="resources.html#resource/3">resource/3</A> 
+declarations and/or files containing resource info thus immediately 
+affect the running environment, while the runtime system quickly 
+accesses the system resources.
+</DD>
+</DL>
+
+<P>From <font size=-1>XPCE</font>, resources are accessed using the 
+class
+<A class="" href="summary.html#class:resource">resource</A>, which is 
+located next to <A class="" href="summary.html#class:file">file</A> 
+below the common data-representation class <A class="" href="summary.html#class:source_sink">source_sink</A>. 
+Many of the methods that require data accept instances of <A class="" href="summary.html#class:source_sink">source_sink</A>, 
+making resources a suitable candidate.
+
+<P>Below is the preferred way to specify and use an icon.
+
+<PRE class="code">
+resource(my_icon,       image,  image('my_icon.xpm')).
+
+        ...,
+        send(Button, label, image(resource(my_icon))),
+        ...,
+
+</PRE>
+
+<P>The directive <A NAME="idx:pceimagedirectory1:279"></A><SPAN class="pred-ext">pce_image_directory/1</SPAN> 
+adds the provided directory to the search-path for images (represented 
+in the class-variable
+<B><CODE>image.path</CODE></B>), as well as to the image/1 definition of <A NAME="idx:filesearchpath2:280"></A><SPAN class="pred-ext">file_search_path/2</SPAN>.
+
+<P>Please note that MS-Windows formatted image files can currently not 
+be loaded through <A class="" href="summary.html#class:resource">resource</A> 
+objects. The Windows API only provides functions to extract these 
+objects from a single file, or nested as Windows resources in a <CODE>.dll</CODE> 
+or <CODE>.exe</CODE> file.
+
+<P>Right now, it is advised to translate the images into <CODE>.xpm</CODE> 
+format using the following simple command:
+
+<PRE class="code">
+?- send(image('myicon.ico'), save, 'myicon,xpm', xpm).
+</PRE>
+
+<P>This transformation is complete as the <CODE>.XPM</CODE> image format 
+covers all aspects of the Microsoft image formats. For further details 
+on image formats and manipulation, see <A class="sec" href="images.html">section 
+10.10</A>.
+</BODY></HTML>

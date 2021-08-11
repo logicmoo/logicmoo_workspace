@@ -1,0 +1,10 @@
+.news-component a {
+  text-decoration: none;
+}
+
+.news-component a:active,
+.news-component a:focus,
+.news-component a:hover {
+  text-decoration: underline;
+}
+

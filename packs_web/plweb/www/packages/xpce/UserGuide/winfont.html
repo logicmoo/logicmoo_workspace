@@ -1,0 +1,284 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+
+<HTML>
+<HEAD>
+<TITLE>Programming in XPCE/Prolog: Section B.5</TITLE><LINK REL=home HREF="index.html">
+<LINK REL=contents HREF="Contents.html">
+<LINK REL=index HREF="DocIndex.html">
+<LINK REL=summary HREF="summary.html">
+<LINK REL=previous HREF="sec-B.4.html">
+<LINK REL=next HREF="sec-B.6.html">
+<STYLE type="text/css">
+/* Style sheet for SWI-Prolog latex2html
+*/
+
+dd.defbody
+{ margin-bottom: 1em;
+}
+
+dt.pubdef
+{ background-color: #c5e1ff;
+}
+
+pre.code
+{ margin-left: 1.5em;
+margin-right: 1.5em;
+border: 1px dotted;
+padding-top: 5px;
+padding-left: 5px;
+padding-bottom: 5px;
+background-color: #f8f8f8;
+}
+
+div.navigate
+{ text-align: center;
+background-color: #f0f0f0;
+border: 1px dotted;
+padding: 5px;
+}
+
+div.title
+{ text-align: center;
+padding-bottom: 1em;
+font-size: 200%;
+font-weight: bold;
+}
+
+div.author
+{ text-align: center;
+font-style: italic;
+}
+
+div.abstract
+{ margin-top: 2em;
+background-color: #f0f0f0;
+border: 1px dotted;
+padding: 5px;
+margin-left: 10%; margin-right:10%;
+}
+
+div.abstract-title
+{ text-align: center;
+padding: 5px;
+font-size: 120%;
+font-weight: bold;
+}
+
+div.toc-h1
+{ font-size: 200%;
+font-weight: bold;
+}
+
+div.toc-h2
+{ font-size: 120%;
+font-weight: bold;
+margin-left: 2em;
+}
+
+div.toc-h3
+{ font-size: 100%;
+font-weight: bold;
+margin-left: 4em;
+}
+
+div.toc-h4
+{ font-size: 100%;
+margin-left: 6em;
+}
+
+span.sec-nr
+{ 
+}
+
+span.sec-title
+{ 
+}
+
+span.pred-ext
+{ font-weight: bold;
+}
+
+/* Footnotes */
+
+sup.fn { color: blue; text-decoration: underline; }
+span.fn-text: { display: none; }
+sup.fn span {display: none;}
+sup:hover span 
+{ display: block !important;
+position: absolute; top: auto; left: auto; width: 80%;
+color: #000; background: white;
+border: 2px solid;
+padding: 5px; margin: 10px; z-index: 100;
+font-size: smaller;
+}
+</STYLE>
+</HEAD>
+<BODY BGCOLOR="white">
+<DIV class="navigate"><A class="nav" href="index.html"><IMG SRC="home.gif" BORDER=0 ALT="Home"></A>
+<A class="nav" href="Contents.html"><IMG SRC="index.gif" BORDER=0 ALT="Contents"></A>
+<A class="nav" href="DocIndex.html"><IMG SRC="yellow_pages.gif" BORDER=0 ALT="Index"></A>
+<A class="nav" href="summary.html"><IMG SRC="info.gif" BORDER=0 ALT="Summary"></A>
+<A class="nav" href="sec-B.4.html"><IMG SRC="prev.gif" BORDER=0 ALT="Previous"></A>
+<A class="nav" href="sec-B.6.html"><IMG SRC="next.gif" BORDER=0 ALT="Next"></A>
+</DIV>
+
+<H2><A NAME="sec:B.5"><SPAN class="sec-nr">B.5</SPAN> <SPAN class="sec-title">Accessing 
+Windows Fonts</SPAN></A></H2>
+
+<A NAME="sec:winfont"></A>
+
+<P>The normal screen, helvetica, roman and times font families available 
+in the Unix/X11 version are available using the same names. The system 
+will try to use an as close as possible equivalent Windows TrueType font 
+for these.
+
+<P>The Windows `stock' fonts as available from the GetStockObject() API 
+are available under the special `family' "win". They are in
+<A class="tab" href="winfont.html#tab:winfonts">table 11</A>
+
+<P>
+<CENTER>
+<TABLE BORDER=2 FRAME=box RULES=groups>
+<TR VALIGN=top><TD><TT>font(win, ansi_fixed)</TT></TD><TD>Default ANSI 
+encoded fixed font</TD></TR>
+<TR VALIGN=top><TD><TT>font(win, ansi_var)</TT></TD><TD>Default ANSI 
+encoded variable font</TD></TR>
+<TR VALIGN=top><TD><TT>font(win, device_default)</TT></TD><TD>Default 
+device font</TD></TR>
+<TR VALIGN=top><TD><TT>font(win, oem_fixed)</TT></TD><TD>Computers 
+`native' fixed font (PC)</TD></TR>
+<TR VALIGN=top><TD><TT>font(win, system)</TT></TD><TD>Variable pitched 
+system font</TD></TR>
+<TR VALIGN=top><TD><TT>font(win, system_fixed)</TT></TD><TD>Fixed system 
+font</TD></TR>
+</TABLE>
+
+</CENTER>
+<TABLE ALIGN=center WIDTH="75%"><TR><TD>
+<B>Table 11 : </B>Windows font name mapping</TABLE>
+
+<A NAME="tab:winfonts"></A>
+
+<P>Note that these fonts do not have a specified point-size. Their 
+point-size depends on the Windows installation. The get-method <B><CODE>&lt;-</CODE>points</B> 
+will return the <B><CODE>&lt;-</CODE>height</B> of the font.
+
+<P>Other Windows fonts may be accessed using a similar method as in 
+Unix/X11: provide a fourth argument describing the font using the hosts 
+conventions. For the Win32 API, this is a textual description of the 
+Windows API structure LOGFONT passed to CreateFontIndirect(). The 
+description is a `:' (colon) separated list of attributes of the 
+structure. The attributes need not be specified in the order of the 
+structure-layout. Omited attributes are set to their default.
+
+<P>Attributes come in four types: numeric, boolean, enumerated and 
+string. In general, an attribute is specified as: 
+<BLOCKQUOTE>&lt;<VAR>name</VAR>&gt;(&lt;<VAR>value</VAR>&gt;)</BLOCKQUOTE>
+&lt;<VAR>name</VAR>&gt; is matches case-insensitive against the name of 
+the structure field without the leading `lf' string. For numeric types, 
+the argument is interpreted as a decimal number (spaces are not 
+allowed). For a boolean argument, the (value) part is omitted. By 
+default the boolean attributes are FALSE. Including the attribute name 
+in the specification sets the field to TRUE. Enumerated fields are 
+specified using their symbolic name. Name-matching is case-insensitive. 
+Common parts of the API identifier to make the symbol unique (for 
+example _CHARSET in ANSI_CHARSET) are removed. String arguments simply 
+take the value between the brackets. Spaces are included in the output, 
+case is not changed and there is no escape for the closing-brace.
+
+<P>The default settings are in <A class="tab" href="winfont.html#tab:winfontdefaults">table 
+12</A>, the attributes are in <A class="tab" href="winfont.html#tab:winfontattributes">table 
+13</A>.
+
+<P>
+<CENTER>
+<TABLE BORDER=2 FRAME=box RULES=groups>
+<TR VALIGN=top><TD><CODE>charset</CODE> </TD><TD>ansi </TD></TR>
+<TR VALIGN=top><TD><CODE>height</CODE> </TD><TD><VAR>&lt;<VAR>points</VAR>&gt; &times; 
+font.scale</VAR> </TD></TR>
+<TR VALIGN=top><TD><CODE>weigth</CODE> </TD><TD>bold if &lt;<VAR>style</VAR>&gt; 
+is bold, normal otherwise </TD></TR>
+<TR VALIGN=top><TD><CODE>italic</CODE> </TD><TD>TRUE if &lt;<VAR>style</VAR>&gt; 
+is italic or oblique </TD></TR>
+<TR VALIGN=top><TD><CODE>pitch</CODE> </TD><TD>fixed if &lt;<VAR>family</VAR>&gt; 
+is screen </TD></TR>
+<TR VALIGN=top><TD><CODE>family</CODE> </TD><TD>swiss if &lt;<VAR>family</VAR>&gt; 
+is helvetica, roman if &lt;<VAR>family</VAR>&gt; is times, modern if &lt;<VAR>family</VAR>&gt; 
+is screen dontcare otherwise. </TD></TR>
+<TR VALIGN=top><TD><CODE>face</CODE> </TD><TD>&lt;<VAR>family</VAR>&gt; </TD></TR>
+</TABLE>
+
+</CENTER>
+<TABLE ALIGN=center WIDTH="75%"><TR><TD>
+<B>Table 12 : </B>Windows font defaults</TABLE>
+
+<A NAME="tab:winfontdefaults"></A>
+
+<P>
+<CENTER>
+<TABLE BORDER=2 FRAME=box RULES=groups>
+<TR VALIGN=top><TD><CODE>height</CODE>(int)</TD><TD>point-size of the 
+requested font </TD></TR>
+<TR VALIGN=top><TD><CODE>width</CODE>(int)</TD><TD>average width of the 
+characters </TD></TR>
+<TR VALIGN=top><TD><CODE>escapement</CODE>(int)</TD><TD>angle in 1/10 
+degrees of the baseline </TD></TR>
+<TR VALIGN=top><TD><CODE>orientation</CODE>(int)</TD><TD>angle for each 
+character </TD></TR>
+<TR VALIGN=top><TD><CODE>weigth</CODE>(int)</TD><TD>0..1000 scale for 
+thickness </TD></TR>
+<TR VALIGN=top><TD><CODE>italic</CODE> </TD><TD>request italic look </TD></TR>
+<TR VALIGN=top><TD><CODE>underline</CODE> </TD><TD>underline all 
+characters </TD></TR>
+<TR VALIGN=top><TD><CODE>strikeout</CODE> </TD><TD>use strikeout-fonts </TD></TR>
+<TR VALIGN=top><TD><CODE>charset</CODE>(enum)</TD><TD>character encoding
+{<CODE>ansi, oem, symbol</CODE>} </TD></TR>
+<TR VALIGN=top><TD><CODE>outprecision</CODE>(enum)</TD><TD>accurate 
+aspects
+{<CODE>character, default, string, stroke</CODE>} </TD></TR>
+<TR VALIGN=top><TD><CODE>clipprecision</CODE>(enum)</TD><TD>how the 
+characters clip
+{<CODE>character, default, stroke</CODE>} </TD></TR>
+<TR VALIGN=top><TD><CODE>quality</CODE>(enum)</TD><TD>Quality of output
+{<CODE>default, draft, proof</CODE>} </TD></TR>
+<TR VALIGN=top><TD><CODE>pitch</CODE>(enum)</TD><TD>Spacing attributes
+{<CODE>default, fixed, variable</CODE>} </TD></TR>
+<TR VALIGN=top><TD><CODE>family</CODE>(enum)</TD><TD>Style of the 
+characters
+{<CODE>decorative, dontcare, modern, roman, script, swiss</CODE>}</TD></TR>
+<TR VALIGN=top><TD><CODE>face</CODE>(string)</TD><TD>Use specific font 
+database </TD></TR>
+</TABLE>
+
+</CENTER>
+<TABLE ALIGN=center WIDTH="75%"><TR><TD>
+<B>Table 13 : </B>Windows font attributes</TABLE>
+
+<A NAME="tab:winfontattributes"></A>
+
+<P>The following example binds the Windows `WingDings' symbol-font:
+
+<PRE class="code">
+1 ?- new(F, font(wingdings, roman, 20, 'charset(symbol)')).
+</PRE>
+
+<P>The following example uses this font to create an image from such a 
+character:
+
+<PRE class="code">
+:- send(@display, font_alias, wingdings,
+        font(wingdings, roman, 20, 'charset(symbol)')).
+
+wingding_image(Index, Image) :-
+        new(Image, image(@nil, 32, 32)),
+        new(T, text(string('%c', Index), center, wingdings)),
+        send(T, center, point(16, 16)),
+        send(Image, draw_in, T),
+        send(T, done).
+
+test :-
+        wingding_image(60, Floppy),
+        send(label(test, Floppy), open).
+</PRE>
+
+<P></BODY></HTML>

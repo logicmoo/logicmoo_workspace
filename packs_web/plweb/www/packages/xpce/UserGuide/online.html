@@ -1,0 +1,181 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+
+<HTML>
+<HEAD>
+<TITLE>Programming in XPCE/Prolog</TITLE><LINK REL=home HREF="index.html">
+<LINK REL=contents HREF="Contents.html">
+<LINK REL=index HREF="DocIndex.html">
+<LINK REL=summary HREF="summary.html">
+<LINK REL=previous HREF="sec-2.9.html">
+<LINK REL=next HREF="sec-3.1.html">
+<STYLE type="text/css">
+/* Style sheet for SWI-Prolog latex2html
+*/
+
+dd.defbody
+{ margin-bottom: 1em;
+}
+
+dt.pubdef
+{ background-color: #c5e1ff;
+}
+
+pre.code
+{ margin-left: 1.5em;
+margin-right: 1.5em;
+border: 1px dotted;
+padding-top: 5px;
+padding-left: 5px;
+padding-bottom: 5px;
+background-color: #f8f8f8;
+}
+
+div.navigate
+{ text-align: center;
+background-color: #f0f0f0;
+border: 1px dotted;
+padding: 5px;
+}
+
+div.title
+{ text-align: center;
+padding-bottom: 1em;
+font-size: 200%;
+font-weight: bold;
+}
+
+div.author
+{ text-align: center;
+font-style: italic;
+}
+
+div.abstract
+{ margin-top: 2em;
+background-color: #f0f0f0;
+border: 1px dotted;
+padding: 5px;
+margin-left: 10%; margin-right:10%;
+}
+
+div.abstract-title
+{ text-align: center;
+padding: 5px;
+font-size: 120%;
+font-weight: bold;
+}
+
+div.toc-h1
+{ font-size: 200%;
+font-weight: bold;
+}
+
+div.toc-h2
+{ font-size: 120%;
+font-weight: bold;
+margin-left: 2em;
+}
+
+div.toc-h3
+{ font-size: 100%;
+font-weight: bold;
+margin-left: 4em;
+}
+
+div.toc-h4
+{ font-size: 100%;
+margin-left: 6em;
+}
+
+span.sec-nr
+{ 
+}
+
+span.sec-title
+{ 
+}
+
+span.pred-ext
+{ font-weight: bold;
+}
+
+/* Footnotes */
+
+sup.fn { color: blue; text-decoration: underline; }
+span.fn-text: { display: none; }
+sup.fn span {display: none;}
+sup:hover span 
+{ display: block !important;
+position: absolute; top: auto; left: auto; width: 80%;
+color: #000; background: white;
+border: 2px solid;
+padding: 5px; margin: 10px; z-index: 100;
+font-size: smaller;
+}
+</STYLE>
+</HEAD>
+<BODY BGCOLOR="white">
+<DIV class="navigate"><A class="nav" href="index.html"><IMG SRC="home.gif" BORDER=0 ALT="Home"></A>
+<A class="nav" href="Contents.html"><IMG SRC="index.gif" BORDER=0 ALT="Contents"></A>
+<A class="nav" href="DocIndex.html"><IMG SRC="yellow_pages.gif" BORDER=0 ALT="Index"></A>
+<A class="nav" href="summary.html"><IMG SRC="info.gif" BORDER=0 ALT="Summary"></A>
+<A class="nav" href="sec-2.9.html"><IMG SRC="prev.gif" BORDER=0 ALT="Previous"></A>
+<A class="nav" href="sec-3.1.html"><IMG SRC="next.gif" BORDER=0 ALT="Next"></A>
+</DIV>
+
+<H1><A NAME="sec:3"><SPAN class="sec-nr">3</SPAN> <SPAN class="sec-title">Using 
+the online manual</SPAN></A></H1>
+
+<A NAME="sec:online"></A>
+
+<P>In the previous sections we have introduced <font size=-1>XPCE</font> 
+using examples. The language primitives of <font size=-1>XPCE</font> are 
+simple, but <font size=-1>XPCE</font> as a whole is a massive library of 
+very diverse classes with many methods. The current system contains 
+about 160 classes defining over 2700 methods.
+
+<P>To help you finding your way around in the package as well as in 
+libraries and private code loaded in <font size=-1>XPCE</font>, an 
+integrated manual is provided. This manual extracts all information, 
+except for a natural language description of the class, method or slot 
+from the system and thus guarantees exact and consistent information on 
+available classes, methods, slots, types, inheritance in the system.
+
+<P>The manual consists of a number of search tools using different entry 
+points to the material. A successful query displays the summary 
+information for the relevant hyper-cards. Clicking on the summary 
+displays the cards themselves and hyper-links between the cards aid to 
+quickly browse the environment of related material.
+
+<P>
+<HR>
+<CENTER>
+
+<H2>Section Index</H2>
+
+</CENTER>
+<HR>
+<DIV class="toc">
+<DIV class="toc-h2"><A class="sec" href="sec-3.1.html"><SPAN class="sec-nr">3.1</SPAN> <SPAN class="sec-title">Overview</SPAN></A></DIV>
+<DIV class="toc-h2"><A class="sec" href="sec-3.2.html"><SPAN class="sec-nr">3.2</SPAN> <SPAN class="sec-title">Notational 
+conventions</SPAN></A></DIV>
+<DIV class="toc-h3"><A class="sec" href="sec-3.2.html#sec:3.2.1"><SPAN class="sec-nr">3.2.1</SPAN> <SPAN class="sec-title">Argument 
+types</SPAN></A></DIV>
+<DIV class="toc-h2"><A class="sec" href="sec-3.3.html"><SPAN class="sec-nr">3.3</SPAN> <SPAN class="sec-title">Guided 
+tour</SPAN></A></DIV>
+<DIV class="toc-h3"><A class="sec" href="sec-3.3.html#sec:3.3.1"><SPAN class="sec-nr">3.3.1</SPAN> <SPAN class="sec-title">Class 
+browser</SPAN></A></DIV>
+<DIV class="toc-h4"><A class="sec" href="sec-3.3.html#sec:3.3.1.1"><SPAN class="sec-nr">3.3.1.1</SPAN> <SPAN class="sec-title">The 
+ClassBrowser dialog</SPAN></A></DIV>
+<DIV class="toc-h4"><A class="sec" href="sec-3.3.html#sec:3.3.1.2"><SPAN class="sec-nr">3.3.1.2</SPAN> <SPAN class="sec-title">Example 
+queries to the classbrowser</SPAN></A></DIV>
+<DIV class="toc-h4"><A class="sec" href="sec-3.3.html#sec:3.3.1.3"><SPAN class="sec-nr">3.3.1.3</SPAN> <SPAN class="sec-title">Methods 
+with special meaning</SPAN></A></DIV>
+<DIV class="toc-h3"><A class="sec" href="sec-3.3.html#sec:3.3.2"><SPAN class="sec-nr">3.3.2</SPAN> <SPAN class="sec-title">Reading 
+cards</SPAN></A></DIV>
+<DIV class="toc-h3"><A class="sec" href="sec-3.3.html#sec:3.3.3"><SPAN class="sec-nr">3.3.3</SPAN> <SPAN class="sec-title">Search 
+tool</SPAN></A></DIV>
+<DIV class="toc-h3"><A class="sec" href="sec-3.3.html#sec:3.3.4"><SPAN class="sec-nr">3.3.4</SPAN> <SPAN class="sec-title">Class 
+hierarchy</SPAN></A></DIV>
+<DIV class="toc-h2"><A class="sec" href="sec-3.4.html"><SPAN class="sec-nr">3.4</SPAN> <SPAN class="sec-title">Summary</SPAN></A></DIV>
+</DIV>
+</BODY></HTML>

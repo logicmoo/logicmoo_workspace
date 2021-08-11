@@ -1,0 +1,7 @@
+Tar image of a relocatable SWI-Prolog installation. This merged image
+was created on Ubuntu 10.10 (64-bit) and Debian 6.0 (32-bit). It
+contains copies of shared libraries that are less widely available
+and/or suffer regularly from version issues. If you are a one-time user,
+check whether your Linux distro provides SWI-Prolog. If you are a
+frequent user, consider to download and [[compile][</build/unix.html>]]
+the source.

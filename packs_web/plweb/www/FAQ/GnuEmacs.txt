@@ -1,0 +1,62 @@
+---+ Using SWI-Prolog with GNU Emacs
+
+There is an excellent Prolog mode for GNU Emacs _and_ XEmacs. It is
+maintained by Stefan Bruda and available from
+https://bruda.ca/emacs/prolog_mode_for_emacs
+
+The mode plays nicely with SWI-Prolog and other Prolog systems. It
+features syntax highlighting, automatic indentation, a predicate menu,
+and full interaction with a Prolog process.
+
+The Prolog mode that is included in GNU Emacs ships with regressions
+that have been
+[reported](https://debbugs.gnu.org/cgi/bugreport.cgi?bug=21526) but
+not yet resolved. Therefore, we recommend to use Stefan Bruda's
+version of the mode as described in the following.
+
+---++ Installation Hints for GNU Emacs
+
+   1. Download the file `prolog.el` from
+      https://bruda.ca/emacs/prolog_mode_for_emacs and save it in your
+      `load-path` so that Emacs can find it.
+
+   2. Optionally, you can _byte-compile_ `prolog.el` for better
+      performance. Load `prolog.el` into Emacs and do
+      =|M-x byte-compile-file RET|=.
+
+   3. Add the following lines to =|~/.emacs|= (=|~/_emacs|= on Windows):
+
+	==
+        (autoload 'prolog-mode "prolog" "Major mode for editing Prolog programs." t)
+        (add-to-list 'auto-mode-alist '("\\.pl\\'" . prolog-mode))
+	==
+
+      Where is *|~/_emacs|*?
+
+      ~ is a shortcut for the home directory, on Windows it is system
+      and language specific. It may be for example =|C:\|= or
+      =|C:\Dokumente|=. The best way to find "~" is: select
+      "Files->Open.." and enter "~". Then Emacs prints the directory
+      name and contents.
+
+   4. Customize the Prolog mode. The following page explains how to
+      enable electric indentation, syntax checking and PceEmacs-style
+      comments: https://www.metalevel.at/pceprolog/
+
+---++ ediprolog: Run Prolog queries in Emacs
+
+**ediprolog** allows you to interact with SWI-Prolog in all Emacs
+buffers. You can quickly consult buffers and regions, and run queries
+that are embedded in your source files. ediprolog is available from:
+https://github.com/triska/ediprolog
+
+---++ Ptags: create Prolog tags for Emacs
+
+Djamé Seddah pointed to the existence of ptags, a program to make
+tag-files for finding definitions in Prolog programs. This is the
+[[original
+site][http://www-2.cs.cmu.edu/afs/cs.cmu.edu/project/ai-repository/ai/lang/prolog/util/ptags/0.html]].
+We have a local copy of the c-code: [[ptags.tgz][<ptags.tgz>]]
+
+
+

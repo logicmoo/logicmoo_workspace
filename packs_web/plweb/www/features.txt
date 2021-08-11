@@ -1,0 +1,291 @@
+# SWI-Prolog's features
+
+## Overview
+
+SWI-Prolog is a versatile implementation of the
+[Prolog](https://en.wikipedia.org/wiki/Prolog) language. Although
+SWI-Prolog gained its popularity primarily in education, its development
+is mostly driven by the needs for __application development__. This is
+facilitated by a rich interface to other IT components by supporting
+many document types and (network) protocols as well as a comprehensive
+low-level interface to C that is the basis for high-level interfaces to
+C++, Java (bundled), C#, Python, etc (externally available). Data type
+extensions such as [dicts](</pldoc/man?section=bidicts>) and
+[strings](</pldoc/man?section=strings>) as well as full support for
+Unicode and unbounded integers simplify smooth exchange of data with
+other components.
+
+SWI-Prolog aims at __scalability__. Its robust support for
+multi-threading exploits multi-core hardware efficiently and simplifies
+embedding in concurrent applications. Its _Just In Time Indexing_ (JITI)
+provides transparent and efficient support for predicates with millions
+of clauses.
+
+SWI-Prolog __unifies many extensions__ of the core language that have
+been developed in the Prolog community such as _tabling_, _constraints_,
+_global variables_, _destructive assignment_, _delimited continuations_
+and _interactors_.
+
+SWI-Prolog offers a variety of __development tools__, most of which may
+be combined at will. The native system provides an editor written in
+Prolog that is a close clone of Emacs. It provides _semantic_
+highlighting based on real time analysis of the code by the Prolog
+system itself. Complementary tools include a graphical debugger,
+profiler and cross-referencer. Alternatively, there is a mode for
+GNU-Emacs and, Eclipse plugin called
+[PDT](https://sewiki.iai.uni-bonn.de/research/pdt/docs/start) and a VSC
+[plugin](https://marketplace.visualstudio.com/items?itemName=arthurwang.vsc-prolog),
+each of which may be combined with the native graphical tools. Finally,
+a _computational notebook_ and web based IDE is provided by
+[SWISH](https://swish.swi-prolog.org).  SWISH is a versatile tool that
+can be configured and extended to suit many different scenarios.
+
+SWI-Prolog provides an add-on distribution and installation mechanism
+called __packs__. A _pack_ is a directory with minimal organizational
+conventions and a _control_ file that describes the origin, version,
+dependencies and automatic upgrade support. Packs can be installed from
+an archive, GIT repository or URL using pack_install/1. Packs are used
+to share code in the community. The pack system has grown a couple of
+eco systems for dealing with types, coroutining, etc.
+
+
+## Server applications
+
+SWI-Prolog is equipped with an extensive __web server__ (HTTP) framework
+that can be used both for providing (REST) services and end-user
+applications based on HTML5+CSS+JavaScript. Pengines (Prolog engines)
+allow clients to run queries against a client-provided program on a
+remote server using a generic API. Such programs can be executed in a
+_sandbox_.
+
+For (web) server support SWI-Prolog provides __scalable multi
+threading__. We measured an 80 times speedup running on a 128 core power
+pc system. This feature makes SWI-Prolog attractive for CPU intensive
+server tasks where multiple clients require access to a large shared and
+possibly dynamic dataset. Note that many other high-level languages such
+as Python and Node.js only use a single core and switch between tasks
+based on blocking I/O. This approach generally provides good resource
+usage for I/O intensive services with a high number of connections but a
+task blocking on a computation delays all other clients. As SWI-Prolog's
+__global garbage collectors__ for atoms and removed dynamic clauses run
+__fully asynchronous__ in a dedicated thread, its (soft) _real time_
+behaviour is excellent.
+
+SWI-Prolog has several unique features that reduce the need to restart
+servers for fixing bugs or injecting diagnostic code. Its __incremental
+compilation__ combined with generally local and backtrackable data
+structures (undo) allows for __patching the program without
+restarting__. SWI-Prolog allows for reloading running code from another
+thread safely, provided the signature of the running predicates is not
+changed. This implies it is allowed to add, remove and modify clauses
+but it is _not_ allowed to add, remove or reorder arguments. Still, this
+feature is valuable for __hot-fixing servers__ or __inject diagnostic
+code__ to a server without restarting.
+
+
+## Prolog as unifying language
+
+Although Prolog is widely recognised as a _special purpose language_ for
+tasks such as rule evaluation we consider it primarily a platform that
+is suitable to be used as _glue_ between various components. The main
+reason for this is that __data is at the core of many modern
+applications__ while there is a large variety in which data is
+structured and stored. Classical query languages such as SQL, SPARQL,
+XPATH, etc. can each deal with one such format only, while Prolog can
+provide a concise and natural query language for each of these formats
+that can either be executed directly or be compiled into dedicated query
+language expressions. Prolog's __relational paradigm__ fits well with
+tabular data (RDBMS), while __optimized support for recursive code__
+fits well with tree and graph shaped data (RDF).
+
+Prolog is a suitable language for _Domain Specific Languages_ (DSL).
+SWI-Prolog has improved this support by syntactical extensions to the
+Prolog language. Examples of valid syntax that can be processed
+unambiguously are ``a[1][2]``, `point{x:1, y:1}` and `function()`. In
+addition, __quasi quotations__ allow for safe and clean integration
+with the syntax of arbitrary languages. For example, the following
+statement specifies a fragment of JavaScript with a _safe_ interpolation
+of the Prolog value `X`.
+
+    {|javascript(X)||var x = X;|}
+
+
+## Feature list
+
+Below is a list of what we consider key features of SWI-Prolog with
+links to the relevant documentation.
+
+### Engine
+
+    * *fast* compilation. E.g., loads [WordNet
+    3.0](https://wordnet.princeton.edu/download/current-version)
+    in 14 seconds from the Prolog source or 0.4 seconds from _quick load
+    file_ format (see qcompile/1).  The WordNet source counts 821,515
+    lines.  System: Ubuntu 16.04 on Intel i7-3770, 32Gb memory.
+
+    * *Robust* and *|free of memory leaks|*.  In use for several
+    servers that run 24x7 (including this web service).
+
+    * *Small*. The full development environment, including graphics,
+    libraries and many interface packages, requires approximately 100MB
+    hard disk. The kernel is about 1.4MB (Ubuntu 16.04 .so file)
+
+    * *Scales* well for large applications. *No limits* on program size,
+    atom length, term arity or integer values. No performance
+    degradation on predicates with many (indexed) facts.
+
+    * *|Just-In-Time|* indexing of both static and dynamic code on any
+    argument greatly simplifies handling multi-moded relations with
+    many clauses. As of version 7.5, __multi-argument JITI__ is
+    supported. This creates an index for the combined value of two
+    arguments if there is no selective single-argument index.  As of
+    version 7.7 we also support indexing on the arguments of compound
+    terms.  This feature notably improves the performance for handling
+    _terminals_ in grammar rules (DCGs).
+
+    * *|Unbounded integer|* and *rational* number arithmetic
+    based on [[GMP library][<gmp:>]].
+
+    * The goodies: *modules* (upward compatible to Quintus and SICStus),
+    *|garbage-collection|* (transparent to C/C++-code, including *atom*
+    and *clause* garbage collection), *|last-call|* optimisation,
+    dynamic expansion of the runtime stacks, *|exception-handling|*
+    (including C/C++ interface for both catching and throwing
+    exceptions).
+
+    * *|attributed variables|*, coroutining (freeze/2, when/2, dif/2),
+    global variables, cyclic terms.
+
+    * Flag-controlled handling of *|occurs-check|* (false/true/error)
+    see current_prolog_flag/2. Efficient implementation of occurs
+    checking that only verifies that _new bindings_ do not introduce
+    cycles.
+
+    * *UNICODE* character set handling internal. Ideal for web and
+    international applications.
+
+    * *|[[Multi-threading][</pldoc/man?section=threads>]]|* support: run multiple
+    pre-emptively scheduled prolog engines on the same database.
+
+    * [*Engines*](</pldoc/man?section=engines>), also known as
+    *interactors* provide _coroutines_ that can be used for state
+    accumulation and massive concurrency for e.g., _swarm intelligence_
+    and simulations.
+
+    * [*Delimited continuations*](</pldoc/man?section=delcont>) is a
+    powerful building block for new control structures and realise
+    __aspect programming__.
+
+    * [Tabling (SLG resolution)](<pldoc/man?section=tabling>) provides
+    a more robust resolution technique for solving queries over complex
+    interrelated rules with guaranteed termination.
+
+    * Following XSB, the 8.1.x development series provide _well founded
+    semantics_ for negation as well as incremental tabling to
+    automatically update affected tabling with a changing knowledge
+    base. This provides _Datalog_ style _deductive database_ features.
+
+### Constraint handling
+
+    * Libraries for
+    *|[[CHR][</pldoc/man?section=chr>]]|* (Constraint Handling
+    Rules), *|[[clp(FD)][</pldoc/man?section=clpfd>]]|*,
+    *|[[clp(R,Q)][</pldoc/man?section=clpqr>]]|* and various others.
+
+### Connectivity
+
+    * SWI-Prolog provides extensive client and *server* libraries
+    for *HTTP*.  The HTTP server framework deals with generating
+    HTML, exchange of JSON or XML, authentication, sessions, and
+    much more.  Both client and server supports HTTPS.
+
+    * Flexible and fast interface to the *|C-|* and *|C++-language|*.
+    The interface allows for calling both ways, handling of
+    non-determinism both ways and *embedding* of the SWI-Prolog kernel
+    in C/C++ projects.
+
+    * Interfaces to high level languages such as
+    Java using [JPL](</packages/jpl/>), Python and C# are available.
+
+    * Database connectivity is provided by the
+    *|[[ODBC][</pldoc/package/odbc.html>]]|* interface.
+
+    * Low level network support includes _sockets_ (both TCP
+    and UDP), *|[[SSL][</pldoc/package/ssl.html>]]|* and
+    [TIPC](</pldoc/package/tipc.html>).
+
+    * Libraries for parsing and generating
+    [__SGML/XML/HTML__](</pldoc/package/sgml.html>),
+    [__JSON__](</pldoc/man?section=jsonsupport>) and
+    [__YAML__](<pldoc/man?section=yaml>)
+
+    * Linked Data (RDF) support includes reading and writing many
+    RDF formats (RDF/XML, Turtle, Ntriples, NQuads) and an efficient
+    triple store.  See the [semweb](</pldoc/package/semweb.html>)
+    package.
+
+
+### Development tools
+
+    * [[Source-level debugger][<gtrace.html>]] on all platforms that
+    supports graphics through XPCE (Windows, Unix/Linux, MacOSX).
+
+    * Execution *|profiler.txt|* (time and call statistics) for all
+    major platforms (Windows, Linux, MacOSX).
+
+    * *|[[Cross-Referencer][gxref.txt]]|*. gxref/0 provides a graphical
+    front-end for the extensible Prolog cross-referencer (xref).
+
+    * *|Literate programming|* support through
+    *|[[PlDoc][</pldoc/package/pldoc.html>]]|*. Provides integrated view
+    on manual and application documentation and producing LaTeX
+    documentation for your application.
+
+    * *|Unit testing|* support through
+    *|[[PlUnit][</pldoc/package/plunit.html>]]|*.
+
+    * [*SWISH*](https://swish.swi-prolog.org) provides a web-based
+    platform for developing and running Prolog code in a collaborative
+    environment.
+
+### Compatibility
+
+    * Comprehensive set of built-in predicates, covering *|Part 1 of the
+    ISO standard|*, the de-facto *Edinburgh* Prolog standard and
+    important parts of Quintus and SICStus Prolog. Fair
+    compatibility to Ciao, YAP and GNU-Prolog.  Although the aim is to
+    maintain compatibility wherever possible, SWI-Prolog deliberately
+    deviates from the ISO standard to accommodate additional
+    functionality and synchronise with modern languages.  Read
+    more in [Extensions](<pldoc/man?section=extensions>) and
+    [Directions](</Directions.html>)
+
+### Portability
+
+    * *Portable* to many platforms, including almost all *|Unix/Linux|*
+    platforms, *Windows*, *|MacOS X|* (using Xquartz for graphics)
+    __WebAssembly (WASM)__, __Android Termux__ and many more. Both
+    __32-bit__ and __64-bit__ hardware is supported. SWI-Prolog has been
+    compiled and tested on many CPUs, e.g., x86, x64, SPARC, PowerPC,
+    many ARM models. Sources are plain C99, configured automatically
+    using CMake (as of version 7.7.20). Support for cross-compilation is
+    steadily improving.
+
+    * Machine-independent *|saved-states|* (save on one platform, run
+    using the virtual machine of another platform).
+
+    * Regular *|binary distributions|* for Windows (32/64 bits) and
+    MacOS X (64 bits)) and PPAs for
+    [Ubuntu](http://www.ubuntu.com) ([stable](https://launchpad.net/~swi-prolog/+archive/stable)
+    and [development](https://launchpad.net/~swi-prolog/+archive/devel))
+
+    * Regular distribution of the *full source* packages. The sources are
+    also accessible through [[GIT][</git.html>]].
+
+### Legal
+
+    * SWI-Prolog is distributed under the _Simplified
+    BSD license_, also known as the BSD-2 license. Some of the used
+    libraries and extension packages have different license conditions.
+    The licenses applicable to a running configuration can be examined
+    by running license/0.  See license.txt for details.

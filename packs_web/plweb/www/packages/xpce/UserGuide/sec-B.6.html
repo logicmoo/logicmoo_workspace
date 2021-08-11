@@ -1,0 +1,172 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+
+<HTML>
+<HEAD>
+<TITLE>Programming in XPCE/Prolog: Section B.6</TITLE><LINK REL=home HREF="index.html">
+<LINK REL=contents HREF="Contents.html">
+<LINK REL=index HREF="DocIndex.html">
+<LINK REL=summary HREF="summary.html">
+<LINK REL=previous HREF="winfont.html">
+<LINK REL=next HREF="globalarch.html">
+<STYLE type="text/css">
+/* Style sheet for SWI-Prolog latex2html
+*/
+
+dd.defbody
+{ margin-bottom: 1em;
+}
+
+dt.pubdef
+{ background-color: #c5e1ff;
+}
+
+pre.code
+{ margin-left: 1.5em;
+margin-right: 1.5em;
+border: 1px dotted;
+padding-top: 5px;
+padding-left: 5px;
+padding-bottom: 5px;
+background-color: #f8f8f8;
+}
+
+div.navigate
+{ text-align: center;
+background-color: #f0f0f0;
+border: 1px dotted;
+padding: 5px;
+}
+
+div.title
+{ text-align: center;
+padding-bottom: 1em;
+font-size: 200%;
+font-weight: bold;
+}
+
+div.author
+{ text-align: center;
+font-style: italic;
+}
+
+div.abstract
+{ margin-top: 2em;
+background-color: #f0f0f0;
+border: 1px dotted;
+padding: 5px;
+margin-left: 10%; margin-right:10%;
+}
+
+div.abstract-title
+{ text-align: center;
+padding: 5px;
+font-size: 120%;
+font-weight: bold;
+}
+
+div.toc-h1
+{ font-size: 200%;
+font-weight: bold;
+}
+
+div.toc-h2
+{ font-size: 120%;
+font-weight: bold;
+margin-left: 2em;
+}
+
+div.toc-h3
+{ font-size: 100%;
+font-weight: bold;
+margin-left: 4em;
+}
+
+div.toc-h4
+{ font-size: 100%;
+margin-left: 6em;
+}
+
+span.sec-nr
+{ 
+}
+
+span.sec-title
+{ 
+}
+
+span.pred-ext
+{ font-weight: bold;
+}
+
+/* Footnotes */
+
+sup.fn { color: blue; text-decoration: underline; }
+span.fn-text: { display: none; }
+sup.fn span {display: none;}
+sup:hover span 
+{ display: block !important;
+position: absolute; top: auto; left: auto; width: 80%;
+color: #000; background: white;
+border: 2px solid;
+padding: 5px; margin: 10px; z-index: 100;
+font-size: smaller;
+}
+</STYLE>
+</HEAD>
+<BODY BGCOLOR="white">
+<DIV class="navigate"><A class="nav" href="index.html"><IMG SRC="home.gif" BORDER=0 ALT="Home"></A>
+<A class="nav" href="Contents.html"><IMG SRC="index.gif" BORDER=0 ALT="Contents"></A>
+<A class="nav" href="DocIndex.html"><IMG SRC="yellow_pages.gif" BORDER=0 ALT="Index"></A>
+<A class="nav" href="summary.html"><IMG SRC="info.gif" BORDER=0 ALT="Summary"></A>
+<A class="nav" href="winfont.html"><IMG SRC="prev.gif" BORDER=0 ALT="Previous"></A>
+<A class="nav" href="globalarch.html"><IMG SRC="next.gif" BORDER=0 ALT="Next"></A>
+</DIV>
+
+<H2><A NAME="sec:B.6"><SPAN class="sec-nr">B.6</SPAN> <SPAN class="sec-title">Accessing 
+Windows Cursors</SPAN></A></H2>
+
+<P>The Win32 version of <font size=-1>XPCE</font> supports all the X11 
+cursors. It also supports the definition of cursors from images. Note 
+that such cursors are generally limited to <VAR>32 &times; 32</VAR> 
+pixels on Windows (formally there is no limit in X11, but many (colour) 
+servers exhibit strange behaviour when given cursors larger than this 
+size). The window cursor names are in <A class="tab" href="sec-B.6.html#tab:wincursors">table 
+14</A>. Use the File/Demo/Cursors entry from the PCE Manual to inspect 
+all available cursors.
+
+<P>
+<CENTER>
+<TABLE BORDER=2 FRAME=box RULES=groups>
+<TR VALIGN=top><TD><CODE>win_arrow</CODE> </TD><TD>Default Windows arrow</TD></TR>
+<TR VALIGN=top><TD><CODE>win_ibeam</CODE> </TD><TD>Like xterm</TD></TR>
+<TR VALIGN=top><TD><CODE>win_wait</CODE> </TD><TD>hour-class (good 
+replacement of `watch')</TD></TR>
+<TR VALIGN=top><TD><CODE>win_cross</CODE> </TD><TD>like crosshair</TD></TR>
+<TR VALIGN=top><TD><CODE>win_uparrow</CODE> </TD><TD>long up arrow (no 
+good X11 replacement)</TD></TR>
+<TR VALIGN=top><TD><CODE>win_size</CODE> </TD><TD>A bit like `fleur'</TD></TR>
+<TR VALIGN=top><TD><CODE>win_icon</CODE> </TD><TD>(see icon and 
+icon_cross)</TD></TR>
+<TR VALIGN=top><TD><CODE>win_sizenwse</CODE> </TD><TD>NorthWest - 
+SouthEast arrow (no X11 replacement)</TD></TR>
+<TR VALIGN=top><TD><CODE>win_sizenesw</CODE> </TD><TD>NorthEast - 
+SouthWest arrow</TD></TR>
+<TR VALIGN=top><TD><CODE>win_sizewe</CODE> </TD><TD>West - East arrow</TD></TR>
+<TR VALIGN=top><TD><CODE>win_sizens</CODE> </TD><TD>North - South arrow</TD></TR>
+<TR VALIGN=top><TD><CODE>win_sizeall</CODE> </TD><TD>as win_size</TD></TR>
+<TR VALIGN=top><TD><CODE>win_no</CODE> </TD><TD>Stop-sign</TD></TR>
+<TR VALIGN=top><TD><CODE>win_appstarting</CODE> </TD><TD>Arrow with 
+hour-class</TD></TR>
+</TABLE>
+
+</CENTER>
+<TABLE ALIGN=center WIDTH="75%"><TR><TD>
+<B>Table 14 : </B>Windows cursor name mapping</TABLE>
+
+<A NAME="tab:wincursors"></A>
+
+<P>The distributed <CODE>Defaults</CODE> file assigns <CODE>win_arrow</CODE> 
+as the default cursor under Windows. <CODE>win_ibeam</CODE> is the 
+default editor cursor and <CODE>win_wait</CODE> is the default wait 
+cursor.
+</BODY></HTML>

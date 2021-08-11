@@ -1,0 +1,365 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+
+<HTML>
+<HEAD>
+<TITLE>Programming in XPCE/Prolog: Section 7.1</TITLE><LINK REL=home HREF="index.html">
+<LINK REL=contents HREF="Contents.html">
+<LINK REL=index HREF="DocIndex.html">
+<LINK REL=summary HREF="summary.html">
+<LINK REL=previous HREF="udc.html">
+<LINK REL=next HREF="slots.html">
+<STYLE type="text/css">
+/* Style sheet for SWI-Prolog latex2html
+*/
+
+dd.defbody
+{ margin-bottom: 1em;
+}
+
+dt.pubdef
+{ background-color: #c5e1ff;
+}
+
+pre.code
+{ margin-left: 1.5em;
+margin-right: 1.5em;
+border: 1px dotted;
+padding-top: 5px;
+padding-left: 5px;
+padding-bottom: 5px;
+background-color: #f8f8f8;
+}
+
+div.navigate
+{ text-align: center;
+background-color: #f0f0f0;
+border: 1px dotted;
+padding: 5px;
+}
+
+div.title
+{ text-align: center;
+padding-bottom: 1em;
+font-size: 200%;
+font-weight: bold;
+}
+
+div.author
+{ text-align: center;
+font-style: italic;
+}
+
+div.abstract
+{ margin-top: 2em;
+background-color: #f0f0f0;
+border: 1px dotted;
+padding: 5px;
+margin-left: 10%; margin-right:10%;
+}
+
+div.abstract-title
+{ text-align: center;
+padding: 5px;
+font-size: 120%;
+font-weight: bold;
+}
+
+div.toc-h1
+{ font-size: 200%;
+font-weight: bold;
+}
+
+div.toc-h2
+{ font-size: 120%;
+font-weight: bold;
+margin-left: 2em;
+}
+
+div.toc-h3
+{ font-size: 100%;
+font-weight: bold;
+margin-left: 4em;
+}
+
+div.toc-h4
+{ font-size: 100%;
+margin-left: 6em;
+}
+
+span.sec-nr
+{ 
+}
+
+span.sec-title
+{ 
+}
+
+span.pred-ext
+{ font-weight: bold;
+}
+
+/* Footnotes */
+
+sup.fn { color: blue; text-decoration: underline; }
+span.fn-text: { display: none; }
+sup.fn span {display: none;}
+sup:hover span 
+{ display: block !important;
+position: absolute; top: auto; left: auto; width: 80%;
+color: #000; background: white;
+border: 2px solid;
+padding: 5px; margin: 10px; z-index: 100;
+font-size: smaller;
+}
+</STYLE>
+</HEAD>
+<BODY BGCOLOR="white">
+<DIV class="navigate"><A class="nav" href="index.html"><IMG SRC="home.gif" BORDER=0 ALT="Home"></A>
+<A class="nav" href="Contents.html"><IMG SRC="index.gif" BORDER=0 ALT="Contents"></A>
+<A class="nav" href="DocIndex.html"><IMG SRC="yellow_pages.gif" BORDER=0 ALT="Index"></A>
+<A class="nav" href="summary.html"><IMG SRC="info.gif" BORDER=0 ALT="Summary"></A>
+<A class="nav" href="udc.html"><IMG SRC="prev.gif" BORDER=0 ALT="Previous"></A>
+<A class="nav" href="slots.html"><IMG SRC="next.gif" BORDER=0 ALT="Next"></A>
+</DIV>
+
+<H2><A NAME="sec:7.1"><SPAN class="sec-nr">7.1</SPAN> <SPAN class="sec-title">The 
+class definition skeleton</SPAN></A></H2>
+
+<P>We introduce the syntax for user-defined classes using a skeleton. 
+Except for the <A NAME="idx:pcebeginclass23:188"></A><A class="pred" href="sec-7.1.html#pce_begin_class/[2,3]">pce_begin_class/[2,3]</A> 
+and <A NAME="idx:pceendclass0:189"></A><SPAN class="pred-ext">pce_end_class/0</SPAN>, 
+everything in the skeleton is optional and may be repeated multiple 
+times. The order of declarations is not important, but the order of the 
+skeleton is the proposed order. An exception to this rule is the <A NAME="idx:pcegroup1:190"></A><A class="pred" href="sec-7.1.html#pce_group/1">pce_group/1</A> 
+directive, that may be placed anywhere and defines the group-identifier 
+for the declarations that follow. The skeleton is given in <A class="fig" href="sec-7.1.html#fig:udcskeleton">figure 
+14</A>.
+
+<P>
+<HR>
+:- pce_begin_class([&lt;<VAR>Meta</VAR>&gt;:]&lt;<VAR>Class</VAR>&gt;[({&lt;<VAR>TermName</VAR>&gt;})], &lt;<VAR>Super</VAR>&gt;[, &lt;<VAR>Summary</VAR>&gt;]).
+
+<P>:- use_class_template(&lt;<VAR>TemplateClass</VAR>&gt;).<BR>
+:- send(<A NAME="idx:class:191"></A><B>@class</B>, &lt;<VAR>Selector</VAR>&gt;{, &lt;<VAR>Arg</VAR>&gt;}).<BR>
+:- pce_class_directive(&lt;<VAR>Goal</VAR>&gt;).
+
+<P>variable(&lt;<VAR>Name</VAR>&gt;, &lt;<VAR>Type</VAR>&gt;[:= &lt;<VAR>Value</VAR>&gt;], &lt;<VAR>Access</VAR>&gt; [, &lt;<VAR>Summary</VAR>&gt;]).
+
+<P>delegate_to(&lt;<VAR>VarName</VAR>&gt;).
+
+<P>class_variable(&lt;<VAR>Name</VAR>&gt;, &lt;<VAR>Type</VAR>&gt;, &lt;<VAR>Default</VAR>&gt; [, &lt;<VAR>Summary</VAR>&gt;]).
+
+<P>handle(&lt;<VAR>X</VAR>&gt;, &lt;<VAR>Y</VAR>&gt;, &lt;<VAR>Kind</VAR>&gt;, &lt;<VAR>Name</VAR>&gt;).
+
+<P>:- pce_group(&lt;<VAR>Group</VAR>&gt;).
+
+<P>&lt;<VAR>SendSelector</VAR>&gt;(&lt;<VAR>Receiver</VAR>&gt;{, &lt;<VAR>Arg</VAR>&gt;[:[&lt;<VAR>AName</VAR>&gt;=]&lt;<VAR>Type</VAR>&gt;]}) <CODE>:-&gt;</CODE><BR>
+<CODE>	</CODE>[&lt;<VAR>Summary</VAR>&gt;::]<BR>
+<CODE>	</CODE>&lt;<VAR>PrologBody</VAR>&gt;.
+
+<P>&lt;<VAR>GetSelector</VAR>&gt;(&lt;<VAR>Receiver</VAR>&gt;{, &lt;<VAR>Arg</VAR>&gt;[:[&lt;<VAR>AName</VAR>&gt;=]&lt;<VAR>Type</VAR>&gt;]}, &lt;<VAR>RVal</VAR>&gt;[:&lt;<VAR>Type</VAR>&gt;]) <CODE>:&lt;-</CODE><BR>
+<CODE>	</CODE>[&lt;<VAR>Summary</VAR>&gt;::]<BR>
+<CODE>	</CODE>&lt;<VAR>PrologBody</VAR>&gt;.
+
+<P>:- pce_end_class.
+<HR>
+<TABLE ALIGN=center WIDTH="75%"><TR><TD>
+<B>Figure 14 : </B>Skeleton for user-defined classes</TABLE>
+
+<A NAME="fig:udcskeleton"></A>
+
+<H3><A NAME="sec:7.1.1"><SPAN class="sec-nr">7.1.1</SPAN> <SPAN class="sec-title">Definition 
+of the template elements</SPAN></A></H3>
+
+<DL>
+<DT class="pubdef"><A NAME="pce_begin_class/[2,3]"><STRONG>pce_begin_class</STRONG>(<VAR>+[Meta:]Class, +Super, [+Summary]</VAR>)</A></DT>
+<DD class="defbody">
+Start the definition of an <font size=-1>XPCE</font> user-defined class. 
+This directive can appear anywhere in a Prolog source file. The 
+definition must be closed using <A NAME="idx:pceendclass0:192"></A><SPAN class="pred-ext">pce_end_class/0</SPAN> 
+and definitions may not be nested. <EM>Class</EM> describes the class to 
+be created. Besides giving the class-name, the meta-class (class of the 
+class) may be specified. When omitted, the meta-class of the <EM>Super</EM> 
+will be used, which is normally class <A class="" href="summary.html#class:class">class</A>. 
+An example of meta-class programming can be found in PceDraw's file <TT>shape.pl</TT>, 
+see <CITE><A class="cite" href="Bibliography.html#XPCE:draw">Wielemaker, 
+1992</A></CITE>.
+
+<P>The class-name may be followed by a list of <EM>TermNames</EM> that 
+define the result of <A NAME="idx:object2:193"></A><A class="pred" href="sec-D.1.html#object/2">object/2</A>. <A NAME="idx:object2:194"></A><A class="pred" href="sec-D.1.html#object/2">object/2</A> 
+unifies its second argument with a term whose functor is the name of the 
+class and whose arguments are the result of a `get' operation using the <EM>TermName</EM> 
+as selector. For example, <TT>point(x,y)</TT> specifies that object(P,&nbsp;T) 
+unifies
+<EM>T</EM> to a term point /2 with the <B><CODE>&lt;-</CODE>x</B> and <B><CODE>&lt;-</CODE>y</B> 
+of the point instance as arguments. When omitted, the term-description 
+of the super-class is inherited.
+</DD>
+<DT class="pubdef"><A NAME="use_class_template/1"><STRONG>use_class_template</STRONG>(<VAR>TemplateClass</VAR>)</A></DT>
+<DD class="defbody">
+Import a class template. See <A class="sec" href="sec-7.5.html">section 
+7.5.2.1</A>.
+</DD>
+<DT class="pubdef"><A NAME="send/[2-12]"><STRONG>send</STRONG>(<VAR>\index{@class}\objectname{class}, ...</VAR>)</A></DT>
+<DD class="defbody">
+Directives like this may be used to invoke methods on the class under 
+construction. This can be used to modify the class in ways that are not 
+defined by this preprocessor. The following example tells the system 
+that the `visual' attribute of an imaginary user-defined class should 
+not be saved to file when the object is saved using
+<A NAME="idx:objectsendsaveinfile:195"></A>`<B>object<CODE>-&gt;</CODE>_save_in_file</B>'.
+
+<PRE class="code">
+:- send(@class, save_style_variable, nil).
+</PRE>
+
+<P>See also <A NAME="idx:pceclassdirective1:196"></A><A class="pred" href="sec-7.1.html#pce_class_directive/1">pce_class_directive/1</A> 
+and <A class="sec" href="sec-7.5.html">section 7.5.3</A>.
+</DD>
+<DT class="pubdef"><A NAME="pce_class_directive/1"><STRONG>pce_class_directive</STRONG>(<VAR>+:Goal</VAR>)</A></DT>
+<DD class="defbody">
+Define <EM>Goal</EM> to be a goal that manipulates the class instance 
+directly. See <A class="sec" href="sec-7.5.html">section 7.5.3</A>.</DD>
+<DT class="pubdef"><A NAME="variable/[3,4]"><STRONG>variable</STRONG>(<VAR>Name, 
+Type, Access, [Summary]</VAR>)</A></DT>
+<DD class="defbody">
+Define a new instance variable. <EM>Name</EM> is the name of the 
+variable, which is local to the class and its subclasses. <EM>Type</EM> 
+defines the type. See <A class="sec" href="sec-3.2.html">section 3.2.1</A> 
+and <A class="sec" href="sec-7.5.html">section 7.5.1</A>. The type may 
+be postfixed with <TT>:=</TT> <VAR>Value</VAR> to specify an initial 
+value. If <VAR>Value</VAR> can be modified (i.e. is not a <A class="" href="summary.html#class:constant">constant</A>, 
+int or
+<A class="" href="summary.html#class:name">name</A>) it is often 
+desirable to use <TT>:=</TT> <CODE>new(NewTerm)</CODE> to force each 
+instance to create its own unique copy of the initial value. <EM>Access</EM> 
+defines which implicit <EM>universal</EM> methods will be associated 
+with the variable. A universal method is defined to be a method that 
+reads or writes the slot, without performing any additional actions. See 
+also <A class="sec" href="slots.html">section 7.2</A>.</DD>
+<DT class="pubdef"><A NAME="delegate_to/1"><STRONG>delegate_to</STRONG>(<VAR>VariableName</VAR>)</A></DT>
+<DD class="defbody">
+Declares the variable named <EM>VariableName</EM> to be a candidate for 
+delegation. See <A class="sec" href="delegation.html">section C.4</A>.</DD>
+<DT class="pubdef"><A NAME="class_variable/[3,4]"><STRONG>class_variable</STRONG>(<VAR>Name, 
+Type, Default, [Summary]</VAR>)</A></DT>
+<DD class="defbody">
+Declare a class-variable for the class. Class-variables describe common 
+properties for all instances of the class. The <VAR>Default</VAR> value 
+for a class-variable can de defined in the <CODE>Defaults</CODE> file. 
+See
+<A class="sec" href="classvar.html">chapter 8</A> for details.
+
+<P>The <EM>Default</EM> entry describes the default value if there is no 
+value specified in the <CODE>Defaults</CODE> file. Example:
+
+<PRE class="code">
+class_variable(size, size, size(400,200), "Default size of object").
+</PRE>
+
+</DD>
+<DT class="pubdef"><A NAME="handle/3,4"><STRONG>handle</STRONG>(<VAR>X, 
+Y, Kind, Name</VAR>)</A></DT>
+<DD class="defbody">
+Equivalent to the expression below. See also <A class="sec" href="connection.html">section 
+5.3</A>.
+
+<PRE class="code">
+:- send(@class, handle, handle(X, Y, Kind, Name)).
+</PRE>
+
+</DD>
+<DT class="pubdef"><A NAME="pce_group/1"><STRONG>pce_group</STRONG>(<VAR>GroupIdentifier</VAR>)</A></DT>
+<DD class="defbody">
+Sets the <A NAME="idx:behaviourbothgroup:197"></A>`<B>behaviour<CODE>&lt;-&gt;</CODE>group</B>' 
+attribute of any variable or method definition following this directive. 
+Groups are used to organise methods by the ClassBrowser. Groups have no 
+semantic implications.
+<TT>:- pce_group(<A NAME="idx:default:198"></A><B>@default</B>).</TT> 
+makes methods inherit their group from the method that is re(de)fined. 
+If no method is re(de)fined, the group will be <TT>miscellaneous</TT>.
+</DD>
+<DT class="pubdef"><A NAME="pce_end_class/1"><STRONG>pce_end_class</STRONG>(<VAR>Class</VAR>)</A></DT>
+<DD class="defbody">
+End the definition of the named <VAR>Class</VAR>. <VAR>Class</VAR> must 
+be the same as the class-name used by the most recent <A NAME="idx:pcebeginclass23:199"></A><A class="pred" href="sec-7.1.html#pce_begin_class/[2,3]">pce_begin_class/[2,3]</A>. 
+This variation of <A NAME="idx:pceendclass0:200"></A><SPAN class="pred-ext">pce_end_class/0</SPAN> 
+provides better documentation and error correction.
+</DD>
+<DT class="pubdef"><A NAME="pce_begin_class/0"><STRONG>pce_begin_class</STRONG>(<VAR></VAR>)</A></DT>
+<DD class="defbody">
+Close the definition of the most recently started class. See also
+<A NAME="idx:pceendclass1:201"></A><A class="pred" href="sec-7.1.html#pce_end_class/1">pce_end_class/1</A>.
+</DD>
+</DL>
+
+<H4><A NAME="sec:7.1.1.1"><SPAN class="sec-nr">7.1.1.1</SPAN> <SPAN class="sec-title">Syntax 
+details</SPAN></A></H4>
+
+<P>Table <A class="tab" href="sec-7.1.html#tab:udcsyntax">table 6</A> 
+describes the details of the non-terminals in the above skeleton in more 
+detail. The notation is an incomplete BNF notation.
+
+<P>
+<TABLE BORDER=2 FRAME=box RULES=groups>
+<TR VALIGN=top><TD>&lt;<VAR>Meta</VAR>&gt; </TD><TD ALIGN=right>::=</TD><TD>&lt;<VAR>Name</VAR>&gt; </TD><TD>Name 
+of the class this class will be an instance of. Default is the 
+meta-class of the super-class </TD></TR>
+<TR VALIGN=top><TD>&lt;<VAR>Class</VAR>&gt; </TD><TD ALIGN=right>::=</TD><TD>&lt;<VAR>Name</VAR>&gt; </TD><TD>Name 
+of the class to be defined </TD></TR>
+<TR VALIGN=top><TD>&lt;<VAR>TermName</VAR>&gt; </TD><TD ALIGN=right>::=</TD><TD>&lt;<VAR>Name</VAR>&gt; </TD><TD>Selector 
+name to fetch <A NAME="idx:object2:202"></A><A class="pred" href="sec-D.1.html#object/2">object/2</A> 
+argument. For example, a point is translated into point(&lt;<VAR>X</VAR>&gt;, &lt;<VAR>Y</VAR>&gt;) 
+and the description is <TT>point(x,y)</TT> </TD></TR>
+<TR VALIGN=top><TD>&lt;<VAR>Super</VAR>&gt; </TD><TD ALIGN=right>::=</TD><TD>&lt;<VAR>Name</VAR>&gt; </TD><TD>Name 
+of the super-class. <TT>object</TT> refers to the most general class </TD></TR>
+<TR VALIGN=top><TD>&lt;<VAR>Summary</VAR>&gt; </TD><TD ALIGN=right>::=</TD><TD><TT>"</TT>{&lt;<VAR>Char</VAR>&gt;}<TT>"</TT>
+</TD><TD>Summary description as appearing in the online manual. <VAR>&lt; 
+40</VAR> characters, no newlines, Prolog string </TD></TR>
+<TR VALIGN=top><TD>&lt;<VAR>TemplateClass</VAR>&gt; </TD><TD ALIGN=right>::=</TD><TD>&lt;<VAR>Name</VAR>&gt; </TD><TD>Import 
+a template class. See
+<A class="sec" href="sec-7.5.html">section 7.5.2.1</A> </TD></TR>
+<TR VALIGN=top><TD>&lt;<VAR>Selector</VAR>&gt; </TD><TD ALIGN=right>::=</TD><TD>&lt;<VAR>Name</VAR>&gt; </TD><TD>Name 
+of a method </TD></TR>
+<TR VALIGN=top><TD>&lt;<VAR>X</VAR>&gt; </TD><TD ALIGN=right>::=</TD><TD>&lt;<VAR>IntExpr</VAR>&gt; </TD><TD>See 
+class <A class="" href="summary.html#class:handle">handle</A> </TD></TR>
+<TR VALIGN=top><TD>&lt;<VAR>Y</VAR>&gt; </TD><TD ALIGN=right>::=</TD><TD>&lt;<VAR>IntExpr</VAR>&gt; </TD><TD>See 
+class <A class="" href="summary.html#class:handle">handle</A> </TD></TR>
+<TR VALIGN=top><TD>&lt;<VAR>Kind</VAR>&gt; </TD><TD ALIGN=right>::=</TD><TD>&lt;<VAR>Name</VAR>&gt; </TD><TD>Category 
+indicator. See class
+<A class="" href="summary.html#class:handle">handle</A> </TD></TR>
+<TR VALIGN=top><TD>&lt;<VAR>Access</VAR>&gt; </TD><TD ALIGN=right>::=</TD><TD><CODE>both</CODE> <TT>| <CODE>get</CODE> </TT><TT>| <CODE>send</CODE> </TT><TT>| <CODE>none</CODE></TT>
+</TD><TD>Defines the access right to this variable </TD></TR>
+<TR VALIGN=top><TD>&lt;<VAR>VarName</VAR>&gt; </TD><TD ALIGN=right>::=</TD><TD>&lt;<VAR>Name</VAR>&gt; </TD><TD>Name 
+of variable used for delegation </TD></TR>
+<TR VALIGN=top><TD>&lt;<VAR>Group</VAR>&gt; </TD><TD ALIGN=right>::=</TD><TD>&lt;<VAR>Name</VAR>&gt; </TD><TD>Functional 
+group of the following methods or variables. Used to organise the 
+ClassBrowser </TD></TR>
+<TR VALIGN=top><TD>&lt;<VAR>SendSelector</VAR>&gt; </TD><TD ALIGN=right>::=</TD><TD>&lt;<VAR>Name</VAR>&gt; </TD><TD>Name 
+of send-method to define </TD></TR>
+<TR VALIGN=top><TD>&lt;<VAR>GetSelector</VAR>&gt; </TD><TD ALIGN=right>::=</TD><TD>&lt;<VAR>Name</VAR>&gt; </TD><TD>Name 
+of get-method to define </TD></TR>
+<TR VALIGN=top><TD>&lt;<VAR>Receiver</VAR>&gt; </TD><TD ALIGN=right>::=</TD><TD>&lt;<VAR>Variable</VAR>&gt; </TD><TD>Prolog 
+variable bound to the receiver </TD></TR>
+<TR VALIGN=top><TD>&lt;<VAR>Arg</VAR>&gt; </TD><TD ALIGN=right>::=</TD><TD>&lt;<VAR>Variable</VAR>&gt; </TD><TD>Prolog 
+variable bound to argument </TD></TR>
+<TR VALIGN=top><TD>&lt;<VAR>RVal</VAR>&gt; </TD><TD ALIGN=right>::=</TD><TD>&lt;<VAR>Variable</VAR>&gt; </TD><TD>Prolog 
+variable that should be bound to the return value </TD></TR>
+<TR VALIGN=top><TD>&lt;<VAR>AName</VAR>&gt; </TD><TD ALIGN=right>::=</TD><TD>&lt;<VAR>Name</VAR>&gt; </TD><TD><font size=-1>XPCE</font> 
+name for named argument </TD></TR>
+<TR VALIGN=top><TD>&lt;<VAR>Type</VAR>&gt; </TD><TD ALIGN=right></TD><TD></TD><TD>See <A class="sec" href="sec-3.2.html">section 
+3.2.1</A> and
+<A class="sec" href="sec-7.5.html">section 7.5.1</A> </TD></TR>
+<TR VALIGN=top><TD>&lt;<VAR>PrologBody</VAR>&gt; </TD><TD ALIGN=right></TD><TD></TD><TD>Ordinary 
+Prolog code </TD></TR>
+<TR VALIGN=top><TD>&lt;<VAR>Value</VAR>&gt; </TD><TD ALIGN=right></TD><TD></TD><TD>Initial 
+value for the instance variable. At this moment, only using constants is 
+supported (int, name, bool) </TD></TR>
+</TABLE>
+
+<TABLE ALIGN=center WIDTH="75%"><TR><TD>
+<B>Table 6 : </B>Syntax details for User Defined Classes</TABLE>
+
+<A NAME="tab:udcsyntax"></A>
+
+<P></BODY></HTML>

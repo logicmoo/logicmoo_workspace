@@ -1,0 +1,359 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+
+<HTML>
+<HEAD>
+<TITLE>Programming in XPCE/Prolog: Section 10.1</TITLE><LINK REL=home HREF="index.html">
+<LINK REL=contents HREF="Contents.html">
+<LINK REL=index HREF="DocIndex.html">
+<LINK REL=summary HREF="summary.html">
+<LINK REL=previous HREF="techniques.html">
+<LINK REL=next HREF="exeobjects.html">
+<STYLE type="text/css">
+/* Style sheet for SWI-Prolog latex2html
+*/
+
+dd.defbody
+{ margin-bottom: 1em;
+}
+
+dt.pubdef
+{ background-color: #c5e1ff;
+}
+
+pre.code
+{ margin-left: 1.5em;
+margin-right: 1.5em;
+border: 1px dotted;
+padding-top: 5px;
+padding-left: 5px;
+padding-bottom: 5px;
+background-color: #f8f8f8;
+}
+
+div.navigate
+{ text-align: center;
+background-color: #f0f0f0;
+border: 1px dotted;
+padding: 5px;
+}
+
+div.title
+{ text-align: center;
+padding-bottom: 1em;
+font-size: 200%;
+font-weight: bold;
+}
+
+div.author
+{ text-align: center;
+font-style: italic;
+}
+
+div.abstract
+{ margin-top: 2em;
+background-color: #f0f0f0;
+border: 1px dotted;
+padding: 5px;
+margin-left: 10%; margin-right:10%;
+}
+
+div.abstract-title
+{ text-align: center;
+padding: 5px;
+font-size: 120%;
+font-weight: bold;
+}
+
+div.toc-h1
+{ font-size: 200%;
+font-weight: bold;
+}
+
+div.toc-h2
+{ font-size: 120%;
+font-weight: bold;
+margin-left: 2em;
+}
+
+div.toc-h3
+{ font-size: 100%;
+font-weight: bold;
+margin-left: 4em;
+}
+
+div.toc-h4
+{ font-size: 100%;
+margin-left: 6em;
+}
+
+span.sec-nr
+{ 
+}
+
+span.sec-title
+{ 
+}
+
+span.pred-ext
+{ font-weight: bold;
+}
+
+/* Footnotes */
+
+sup.fn { color: blue; text-decoration: underline; }
+span.fn-text: { display: none; }
+sup.fn span {display: none;}
+sup:hover span 
+{ display: block !important;
+position: absolute; top: auto; left: auto; width: 80%;
+color: #000; background: white;
+border: 2px solid;
+padding: 5px; margin: 10px; z-index: 100;
+font-size: smaller;
+}
+</STYLE>
+</HEAD>
+<BODY BGCOLOR="white">
+<DIV class="navigate"><A class="nav" href="index.html"><IMG SRC="home.gif" BORDER=0 ALT="Home"></A>
+<A class="nav" href="Contents.html"><IMG SRC="index.gif" BORDER=0 ALT="Contents"></A>
+<A class="nav" href="DocIndex.html"><IMG SRC="yellow_pages.gif" BORDER=0 ALT="Index"></A>
+<A class="nav" href="summary.html"><IMG SRC="info.gif" BORDER=0 ALT="Summary"></A>
+<A class="nav" href="techniques.html"><IMG SRC="prev.gif" BORDER=0 ALT="Previous"></A>
+<A class="nav" href="exeobjects.html"><IMG SRC="next.gif" BORDER=0 ALT="Next"></A>
+</DIV>
+
+<H2><A NAME="sec:10.1"><SPAN class="sec-nr">10.1</SPAN> <SPAN class="sec-title">Control-structure 
+of <font size=-1>XPCE/P</font>rolog applications</SPAN></A></H2>
+
+<A NAME="sec:control"></A>
+
+<P><A NAME="idx:controlstructure:281"></A>This section deals with the 
+control-structure of interactive applications written in <font size=-1>XPCE/P</font>rolog 
+. Interactive graphical applications are very different from terminal 
+oriented applications. Terminal oriented applications often have a top 
+level control structure of the form:
+
+<PRE class="code">
+go :-
+        initialise,
+        main_loop.
+
+main_loop :-
+        present_question,
+        read_answer(Answer),
+        process_answer(Answer),
+        main_loop.
+</PRE>
+
+<P>This schema is often refined with sub-loops dealing with 
+question/answers in a specific context.
+
+<P>Many interactive graphical applications present various UI components 
+simultaneously: the user is free on which component s/he wants to 
+operate next. The users actions (keyboard-typing, mouse movement, and 
+mouse-clicking) must be related to the correct UI component and 
+interpreted accordingly in the application. This interpretation is much 
+more complex than the interpretation of a stream of ASCII characters 
+typed by the user.
+
+<H3><A NAME="sec:10.1.1"><SPAN class="sec-nr">10.1.1</SPAN> <SPAN class="sec-title">Event-driven 
+applications</SPAN></A></H3>
+
+<P><A NAME="idx:eventdriven:282"></A>One approach is to write a 
+main-loop that reads events, locates the UI-component referred to and 
+executes the appropriate actions. This loop, which must take care of 
+repaint-requests, various local feedback procedures (changing the 
+mouse-cursor, inverting objects, etc.), is complicated. The approach 
+taken by most graphical programming systems including XPCE , is to move 
+this loop into the infra-structure (i.e. into the XPCE kernel). The 
+application programmer creates the desired UI-components and supplies 
+code fragments that will be called by the main-loop when a certain event 
+happens. This control-structure is called <EM>event-driven</EM> control. 
+Consider a button:
+
+<PRE class="code">
+1 ?- new(B, button(hello,
+                   message(@pce, write_ln, hello))),
+     send(B, open).
+</PRE>
+
+<P>In this example the application creates and displays a button UI 
+component and associates a code fragment (the message) to be executed 
+when the button is pressed. The XPCE kernel will loop through the main 
+event-loop. For each event it will locate the UI component that should 
+handle the event. When the button has recognised a `click' it will 
+execute the code fragment attached to it. This behaviour is part of the 
+definition of class <A class="" href="summary.html#class:button">button</A>.
+
+<P>It is clear that this approach relieves the application programmer of 
+many of the complications associated with event-processing. As a 
+consequence, the `main-loop' of a XPCE application is no longer in the 
+application itself, but in the XPCE kernel. Below is an outline of the 
+control structure of a <font size=-1>XPCE/P</font>rolog application:
+
+<PRE class="code">
+go :-
+        initialise_database,
+        create_ui_components.
+
+handle_help_pressed :-
+        create_help_window.
+
+handle_solve :-
+        solve_the_problem,
+        create_solution_window.
+
+...
+</PRE>
+
+<P>The predicate go will exit after it has initialised the application 
+and created the UI components. Assuming the application window has a 
+button invoking the predicate handle_help_pressed, XPCE will call this 
+predicate when the user presses the help button.
+
+<H4><A NAME="sec:10.1.1.1"><SPAN class="sec-nr">10.1.1.1</SPAN> <SPAN class="sec-title">Keeping 
+control</SPAN></A></H4>
+
+<P>The application code often wants to wait for the user to finish an 
+interaction. In <A class="sec" href="modal.html">section 4.4</A>, we 
+have seen a simple way of programming this using <A NAME="idx:framegetconfirm:283"></A>`<B>frame<CODE>&lt;-</CODE>confirm</B>'. 
+In this section, we will provide some other options.
+
+<P><B>Message Queue</B> One possibility is to fall back to the <font size=-1>XPCE</font> 
+1 and 2 compatibility, where <A NAME="idx:prolog:284"></A><B>@prolog</B> 
+implements a queue of messages.
+<A NAME="idx:prolog:285"></A><B>@prolog</B> is an instance of class <A class="" href="summary.html#class:host">host</A>. 
+The relevant methods are:
+
+<DL>
+<DT><STRONG>host -&gt;call_back:</STRONG> <VAR>bool</VAR></DT>
+<DD class="defbody">
+The default is <A NAME="idx:on:286"></A><B>@on</B>. In this case, a 
+message to <A NAME="idx:prolog:287"></A><B>@prolog</B> is translated 
+into a predicate call on the Prolog engine. If <A NAME="idx:off:288"></A><B>@off</B>, 
+a message is appended to the <A NAME="idx:hostgetmessages:289"></A>`<B>host<CODE>&lt;-</CODE>messages</B>' 
+queue.
+</DD>
+<DT><STRONG>host -&gt;catch_all:</STRONG> <VAR>Selector:name, Arg:any...</VAR></DT>
+<DD class="defbody">
+If <B><CODE>&lt;-</CODE>call_back</B> equals <A NAME="idx:on:290"></A><B>@on</B>, 
+use the <VAR>Selector</VAR> to determine the predicate to call, and the 
+arguments to construct the argument vector for the predicate. Call the 
+predicate and succeed or fail according to success or failure of the 
+Prolog predicate.
+
+<P>If <B><CODE>&lt;-</CODE>call_back</B> equals <A NAME="idx:off:291"></A><B>@off</B>, 
+create a <A class="" href="summary.html#class:message">message</A> of 
+the form
+<BLOCKQUOTE> message(<A NAME="idx:prolog:292"></A><B>@prolog</B>, <VAR>Selector</VAR>, <VAR>Arg</VAR> 
+...)
+</BLOCKQUOTE>
+
+<P>and append this message to the <B><CODE>&lt;-</CODE>messages</B> 
+queue.
+</DD>
+<DT><STRONG>host &lt;-message:</STRONG> <VAR></VAR></DT>
+<DD class="defbody">
+message Return the <B><CODE>&lt;-</CODE>head</B> of the <B><CODE>&lt;-</CODE>messages</B> 
+queue. If the queue is empty, ensure
+<B><CODE>&lt;-</CODE>call_back</B> is (temporary) set to <A NAME="idx:off:293"></A><B>@off</B>, 
+and dispatch events using
+<A NAME="idx:objectnamedisplaysenddispatch:294"></A>`<B><B>@display</B><CODE>-&gt;</CODE>dispatch</B>' 
+as long as the <B><CODE>&lt;-</CODE>messages</B> queue is empty.
+</DD>
+</DL>
+
+<P>Note that it is possible to create multiple instances of class
+<A class="" href="summary.html#class:host">host</A>, to realise multiple 
+message queues. It is not desirable to modify the <A NAME="idx:prolog:295"></A><B>@prolog</B> 
+host object, as other code may rely on the <B><CODE>&lt;-</CODE>call_back</B> 
+properties of <A NAME="idx:prolog:296"></A><B>@prolog</B>.
+<BLOCKQUOTE>
+<B>Warning</B> During normal operation, event processing guards the 
+objects created that are not assigned to any other object and destroys 
+all such objects after the event has completely been processed (see <A class="sec" href="memory.html">section 
+E</A>. Using the host message queue mechanism, the Prolog programmer 
+becomes responsible for such objects. For example, the message object 
+returned should be discarded using <A NAME="idx:objectsenddone:297"></A>`<B>object<CODE>-&gt;</CODE>done</B>' 
+after processing.
+</BLOCKQUOTE>
+
+<P><B>Explicit dispatching</B> An alternative to the above, and the
+<A NAME="idx:framegetconfirm:298"></A>`<B>frame<CODE>&lt;-</CODE>confirm</B>' 
+mechanism is to dispatch the events yourself. This is realised using <CODE>send(<A NAME="idx:display:299"></A><B>@display</B>, 
+dispatch)</CODE>, described below. This mechanism is the base of all the 
+others. It should be used to realise different interaction schemas than 
+the default callback schema.
+
+<DL>
+<DT><STRONG>display -&gt;dispatch:</STRONG> <VAR></VAR></DT>
+<DD class="defbody">
+Process events and return on any of the following conditions
+<UL>
+<LI><I>event has been processed</I><BR>
+Either a normal event, a timer or an input stream has been processed. 
+The method fails in this case.
+<LI><I>timeout</I><BR>
+The timeout (see <A NAME="idx:displaymanagersenddispatch:300"></A>`<B>display_manager<CODE>-&gt;</CODE>dispatch</B>') 
+has expired. The method fails in this case.
+<LI><I>Input on the console</I><BR>
+There is input from the Prolog window. The message succeeds in this 
+case.
+</UL>
+
+<P>For example, the following processes events in call-back style until 
+the fact <A NAME="idx:quit0:301"></A><SPAN class="pred-ext">quit/0</SPAN> 
+is in the Prolog database:
+
+<PRE class="code">
+:- dynamic
+        quit/0.
+
+process_to_quit :-
+        repeat,
+            send(@display, dispatch),
+        quit, !.</PRE>
+
+<P></DD>
+</DL>
+
+<H3><A NAME="sec:10.1.2"><SPAN class="sec-nr">10.1.2</SPAN> <SPAN class="sec-title">XPCE 
+and existing applications</SPAN></A></H3>
+
+<P>Due to the different control-regime described in the previous 
+section, traditional terminal oriented applications are not easily 
+transformed into <font size=-1>XPCE/P</font>rolog graphical 
+applications. Depending on the application, there are two ways to 
+proceed.
+
+<P>The first is to keep the existing control-regime. This implies that 
+the questions asked on the terminal will be replaced by <A NAME="idx:modal:302">modal</A> 
+dialog windows. The main loop will be:
+
+<PRE class="code">
+go :-
+        initialise_database,
+        create_dialog(Dialog).
+
+main_loop(Dialog) :-
+        fill_dialog_with_next_question(Dialog),
+        send(Dialog, fit),
+        get(Dialog, confirm, Answer),
+        process_answer(Answer),
+        main_loop(Dialog).
+</PRE>
+
+<P>This example reuses the same dialog window for all questions. It is 
+trivial to change this loop to use a new dialog window for each 
+question. Output from the program may be presented in other windows. The 
+approach does not exploit the potentially larger freedom for the user 
+that is possible in graphical user interfaces.
+
+<P>If the application could be viewed as a number of commands operating 
+on some data-structure and this data-structure is stored on the Prolog 
+heap using <A NAME="idx:assert1:303"></A><SPAN class="pred-ext">assert/1</SPAN> 
+or <A NAME="idx:recorda2:304"></A><SPAN class="pred-ext">recorda/2</SPAN> 
+one could consider rewriting the toplevel control and provide a more 
+flexible interface.
+
+<P></BODY></HTML>

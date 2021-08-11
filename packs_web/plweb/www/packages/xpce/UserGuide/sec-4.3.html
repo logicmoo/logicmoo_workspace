@@ -1,0 +1,325 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+
+<HTML>
+<HEAD>
+<TITLE>Programming in XPCE/Prolog: Section 4.3</TITLE><LINK REL=home HREF="index.html">
+<LINK REL=contents HREF="Contents.html">
+<LINK REL=index HREF="DocIndex.html">
+<LINK REL=summary HREF="summary.html">
+<LINK REL=previous HREF="sec-4.2.html">
+<LINK REL=next HREF="modal.html">
+<STYLE type="text/css">
+/* Style sheet for SWI-Prolog latex2html
+*/
+
+dd.defbody
+{ margin-bottom: 1em;
+}
+
+dt.pubdef
+{ background-color: #c5e1ff;
+}
+
+pre.code
+{ margin-left: 1.5em;
+margin-right: 1.5em;
+border: 1px dotted;
+padding-top: 5px;
+padding-left: 5px;
+padding-bottom: 5px;
+background-color: #f8f8f8;
+}
+
+div.navigate
+{ text-align: center;
+background-color: #f0f0f0;
+border: 1px dotted;
+padding: 5px;
+}
+
+div.title
+{ text-align: center;
+padding-bottom: 1em;
+font-size: 200%;
+font-weight: bold;
+}
+
+div.author
+{ text-align: center;
+font-style: italic;
+}
+
+div.abstract
+{ margin-top: 2em;
+background-color: #f0f0f0;
+border: 1px dotted;
+padding: 5px;
+margin-left: 10%; margin-right:10%;
+}
+
+div.abstract-title
+{ text-align: center;
+padding: 5px;
+font-size: 120%;
+font-weight: bold;
+}
+
+div.toc-h1
+{ font-size: 200%;
+font-weight: bold;
+}
+
+div.toc-h2
+{ font-size: 120%;
+font-weight: bold;
+margin-left: 2em;
+}
+
+div.toc-h3
+{ font-size: 100%;
+font-weight: bold;
+margin-left: 4em;
+}
+
+div.toc-h4
+{ font-size: 100%;
+margin-left: 6em;
+}
+
+span.sec-nr
+{ 
+}
+
+span.sec-title
+{ 
+}
+
+span.pred-ext
+{ font-weight: bold;
+}
+
+/* Footnotes */
+
+sup.fn { color: blue; text-decoration: underline; }
+span.fn-text: { display: none; }
+sup.fn span {display: none;}
+sup:hover span 
+{ display: block !important;
+position: absolute; top: auto; left: auto; width: 80%;
+color: #000; background: white;
+border: 2px solid;
+padding: 5px; margin: 10px; z-index: 100;
+font-size: smaller;
+}
+</STYLE>
+</HEAD>
+<BODY BGCOLOR="white">
+<DIV class="navigate"><A class="nav" href="index.html"><IMG SRC="home.gif" BORDER=0 ALT="Home"></A>
+<A class="nav" href="Contents.html"><IMG SRC="index.gif" BORDER=0 ALT="Contents"></A>
+<A class="nav" href="DocIndex.html"><IMG SRC="yellow_pages.gif" BORDER=0 ALT="Index"></A>
+<A class="nav" href="summary.html"><IMG SRC="info.gif" BORDER=0 ALT="Summary"></A>
+<A class="nav" href="sec-4.2.html"><IMG SRC="prev.gif" BORDER=0 ALT="Previous"></A>
+<A class="nav" href="modal.html"><IMG SRC="next.gif" BORDER=0 ALT="Next"></A>
+</DIV>
+
+<H2><A NAME="sec:4.3"><SPAN class="sec-nr">4.3</SPAN> <SPAN class="sec-title">Layout 
+in dialog windows</SPAN></A></H2>
+
+<P><A NAME="idx:layoutindialog:126"></A><A NAME="idx:dialoglayoutin:127"></A>The 
+layout inside a dialog window may be specified by two means, either 
+using pixel-coordinates or using symbolic layout descriptions. The 
+latter is strongly encouraged, both because it is generally much easier 
+and because the layout will work properly if the end-user uses different 
+preferences (see <A class="sec" href="classvar.html">chapter 8</A>) than 
+the application developer.
+
+<P>The following methods can be used to define the layout of a dialog. 
+All methods actually have both send- and get-versions. The methods 
+listed only as `<B><CODE>-&gt;</CODE>send</B>' methods are unlikely to 
+be used as get-methods in application code.
+
+<DL>
+<DT><STRONG>dialog_item -&gt;above:</STRONG> <VAR>dialog_item</VAR></DT>
+<DD class="defbody">
+</DD>
+<DT><STRONG>dialog_item -&gt;below:</STRONG> <VAR>dialog_item</VAR></DT>
+<DD class="defbody">
+</DD>
+<DT><STRONG>dialog_item -&gt;left:</STRONG> <VAR>dialog_item</VAR></DT>
+<DD class="defbody">
+</DD>
+<DT><STRONG>dialog_item -&gt;rigth:</STRONG> <VAR>dialog_item</VAR></DT>
+<DD class="defbody">
+These relations built a two-dimensional grid of dialog-items and 
+determine the relative positioning of the dialog items. It suffices to 
+relate each dialog item to one other item.
+</DD>
+<DT><STRONG>device -&gt;append_dialog_item:</STRONG> <VAR>graphical, [{below,right,next_row}]</VAR></DT>
+<DD class="defbody">
+</DD>
+<DT><STRONG>dialog -&gt;append:</STRONG> <VAR>graphical, [{below,right,next_row}]</VAR></DT>
+<DD class="defbody">
+Append a dialog item relative to the last one appended. This method is 
+the principal methods used to fill dialog windows. For the first item, 
+the last argument is ignored. If the last argument is <TT>below</TT>, 
+this item is placed below the previous one. If the argument is <TT>right</TT>, 
+it is placed right of the previous one and if the argument is <TT>next_row</TT>, 
+the item is placed below the first one of the current row of dialog 
+items. If the last argument is <A NAME="idx:default:128"></A><B>@default</B>, 
+dialog objects are placed <TT>next_row</TT>, except for buttons, which 
+are placed in rows, left to right.
+</DD>
+<DT><STRONG>dialog -&gt;gap:</STRONG> <VAR>size</VAR></DT>
+<DD class="defbody">
+Defines the distance between rows and columns of items as well as the 
+distance between the bounding box of all items and the window border.
+</DD>
+<DT><STRONG>dialog_item &lt;-&gt;reference:</STRONG> <VAR>point</VAR></DT>
+<DD class="defbody">
+Point relative to the top-left corner that defines the <EM>reference-point</EM> 
+of the dialog item. If two items are aligned horizontally or vertically, 
+it are actually their reference points that are aligned.
+</DD>
+<DT><STRONG>dialog_item -&gt;alignment:</STRONG> <VAR>{column,left,center,right}</VAR></DT>
+<DD class="defbody">
+This attribute controls how items are aligned left-to-right in their 
+row. An item with <B><CODE>-&gt;</CODE>alignment</B>: <TT>column</TT> 
+will be alignment horizontally using the references of its upper or 
+lower neighbour. Horizontally adjacent items with the same alignment 
+will be flushed left, centered or flushed right if the alignment is one 
+of <TT>left</TT>, <TT>center</TT> or <TT>right</TT>. The alignment value 
+is normally specified as a class-variable and used to determine the 
+layout of rows of <A class="" href="summary.html#class:button">button</A> 
+objects.
+</DD>
+<DT><STRONG>dialog_item -&gt;hor_stretch:</STRONG> <VAR></VAR></DT>
+<DD class="defbody">
+0..100 After completing the initial layout, possibly remaining 
+horizontal space is distributed proportionally over items that return a 
+non-zero value for this attribute. By default, class <A class="" href="summary.html#class:text_item">text_item</A> 
+yields 100 for this value, normally extending text_items as far as 
+possible to the right.
+</DD>
+</DL>
+
+<P>The methods above deal with the placement of items relative to each 
+other. The methods below ensure that columns of items have properly 
+aligned labels and values.
+
+<DL>
+<DT><STRONG>dialog_item &lt;-&gt;label_width:</STRONG> <VAR>[0..]</VAR></DT>
+<DD class="defbody">
+If the item has a visible label, the label_width is the width of the box 
+in which the label is printed. The dialog layout mechanism will align 
+the labels of items that are placed above each other if
+<B><CODE>&lt;-</CODE>auto_label_align</B> is <A NAME="idx:on:129"></A><B>@on</B>. 
+The argument <A NAME="idx:default:130"></A><B>@default</B> assigns the 
+minimum width of the label, the width required by the text of the label.
+</DD>
+<DT><STRONG>dialog_item &lt;-&gt;label_format:</STRONG> <VAR>{left,center,right}</VAR></DT>
+<DD class="defbody">
+Determines how the label is aligned in its box. The values are
+<TT>left</TT>, <TT>center</TT> and <TT>right</TT>. This value is 
+normally defined by the look and feel.
+</DD>
+<DT><STRONG>dialog_item &lt;-&gt;value_width:</STRONG> <VAR>[0..]</VAR></DT>
+<DD class="defbody">
+If the item displays multiple values left-to-right (only class
+<A class="" href="summary.html#class:menu">menu</A> at the moment), <A NAME="idx:dialogitemsendvaluewidth:131"></A>`<B>dialog_item<CODE>-&gt;</CODE>value_width</B>' 
+is used to negotiate equal width of the value-boxes similar to <B><CODE>-&gt;</CODE>label_width</B> 
+if
+<B><CODE>&lt;-</CODE>auto_value_align</B> is <A NAME="idx:on:132"></A><B>@on</B>.
+</DD>
+</DL>
+
+<P>The methods listed below activate the layout mechanism. Normally, 
+only <A NAME="idx:devicesendlayoutdialog:133"></A>`<B>device<CODE>-&gt;</CODE>layout_dialog</B>' 
+needs to be called by the user.
+
+<DL>
+<DT><STRONG>dialog -&gt;layout:</STRONG> <VAR>[size]</VAR></DT>
+<DD class="defbody">
+</DD>
+<DT><STRONG>device -&gt;layout_dialog:</STRONG> <VAR>gap=[size], 
+size=[size], border=[size]</VAR></DT>
+<DD class="defbody">
+Implements the dialog layout mechanism. <A NAME="idx:dialogsendlayout:134"></A>`<B>Dialog<CODE>-&gt;</CODE>layout</B>' 
+simply calls
+<A NAME="idx:devicesendlayoutdialog:135"></A>`<B>device<CODE>-&gt;</CODE>layout_dialog</B>' 
+using <A NAME="idx:dialoggetgap:136"></A>`<B>dialog<CODE>&lt;-</CODE>gap</B>'. <A NAME="idx:devicesendlayoutdialog:137"></A>`<B>Device<CODE>-&gt;</CODE>layout_dialog</B>' 
+first uses the <B><CODE>&lt;-</CODE>above</B>, etc. attributes to build 
+a two-dimensional array of items. Next, it will align the labels and 
+value of items placed in the same column. Then it will determine the 
+size and reference point for each of the items and determine the 
+cell-size. It will then align all items vertically and afterwards 
+horizontally, while considering the
+<A NAME="idx:dialogitemgetalignment:138"></A>`<B>dialog_item<CODE>&lt;-</CODE>alignment</B>'.
+</DD>
+<DT><STRONG>dialog -&gt;_compute_desired_size:</STRONG> <VAR></VAR></DT>
+<DD class="defbody">
+Sent from <A NAME="idx:framesendfit:139"></A>`<B>frame<CODE>-&gt;</CODE>fit</B>' 
+to each of the member windows. For class
+<A class="" href="summary.html#class:dialog">dialog</A>, this activates <B><CODE>-&gt;</CODE>layout</B> 
+and then computes the desired size of the window.
+</DD>
+</DL>
+
+<H3><A NAME="sec:4.3.1"><SPAN class="sec-nr">4.3.1</SPAN> <SPAN class="sec-title">Practical 
+usage and problems</SPAN></A></H3>
+
+<P>Most of the above methods are only used rarely for fine-tuning the 
+layout. Almost all dialog windows used in the development environment, 
+demo applications and Prolog library simply use <A NAME="idx:dialogsendappend:140"></A>`<B>dialog<CODE>-&gt;</CODE>append</B>', 
+sometimes specifying the last argument.
+
+<P>Two problems are currently not taken care of very well. Aligning 
+multiple objects with a single third object can only be achieved using a 
+sub-dialog in the form of a device and often requires some additional 
+messages. The dialog of <A class="fig" href="sec-4.3.html#fig:layoutdemo1">figure 
+9</A> is created using the following code:
+
+<PRE class="code">
+layoutdemo1 :-
+        new(D, dialog('Layout Demo 1')),
+        send(D, append,
+             new(BTS, dialog_group(buttons, group))),
+        send(BTS, gap, size(0, 30)),
+        send(BTS, append, button(add)),
+        send(BTS, append, button(rename), below),
+        send(BTS, append, button(delete), below),
+        send(BTS, layout_dialog),
+        send(D, append, new(LB, list_browser), right),
+        send(D, append, new(TI, text_item(name, ''))),
+        send(LB, alignment, left),
+        send(D, layout),
+        send(LB, bottom_side, BTS?bottom_side),
+        send(LB, right_side, TI?right_side),
+        send(D, open).</PRE>
+
+<P><A NAME="fig:layoutdemo1"></A>
+<CENTER>
+<IMG SRC="layoutdemo1.gif">
+</CENTER>
+<TABLE ALIGN=center WIDTH="75%"><TR><TD>
+<B>Figure 9 : </B>Aligning multiple items</TABLE>
+
+<P>In line&nbsp;3, a <A class="" href="summary.html#class:device">device</A> 
+is added to the dialog to contain the stack of buttons. This device is 
+sent an explicit <B><CODE>-&gt;</CODE>layout_dialog</B> to position the 
+buttons. Next, the list_browser is placed to the right of this stack and 
+the text_item on the next row.
+
+<P>If you try this layout, the first column will hold the device and the 
+text_item and the list_browser will be placed right of this column and 
+thus right of the text_item. Using <A NAME="idx:dialogitemsendalignment:141"></A>`<B>dialog_item<CODE>-&gt;</CODE>alignment</B>: 
+left' enforces the list_browser to flush left towards the device. Now we 
+enforce the layout and adjust the bottom and right sides of the 
+list_browser to the device and text_item.
+
+<P><A NAME="idx:dialogresizing:142"></A>Dialog windows do not reposition 
+their contents if the window is resized in the current implementation. 
+If the window is enlarged, the items stay in the top-left corner. If the 
+window is made smaller, part of the items may become invisible. Resizing 
+can be implemented by the user by trapping the <A NAME="idx:windowsendresizemessage:143"></A>`<B>window<CODE>-&gt;</CODE>resize_message</B>'.
+
+<P></BODY></HTML>

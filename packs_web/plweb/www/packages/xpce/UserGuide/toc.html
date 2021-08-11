@@ -1,0 +1,284 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+
+<HTML>
+<HEAD>
+<TITLE>Programming in XPCE/Prolog: Section 11.4</TITLE><LINK REL=home HREF="index.html">
+<LINK REL=contents HREF="Contents.html">
+<LINK REL=index HREF="DocIndex.html">
+<LINK REL=summary HREF="summary.html">
+<LINK REL=previous HREF="libdia.html">
+<LINK REL=next HREF="tabular.html">
+<STYLE type="text/css">
+/* Style sheet for SWI-Prolog latex2html
+*/
+
+dd.defbody
+{ margin-bottom: 1em;
+}
+
+dt.pubdef
+{ background-color: #c5e1ff;
+}
+
+pre.code
+{ margin-left: 1.5em;
+margin-right: 1.5em;
+border: 1px dotted;
+padding-top: 5px;
+padding-left: 5px;
+padding-bottom: 5px;
+background-color: #f8f8f8;
+}
+
+div.navigate
+{ text-align: center;
+background-color: #f0f0f0;
+border: 1px dotted;
+padding: 5px;
+}
+
+div.title
+{ text-align: center;
+padding-bottom: 1em;
+font-size: 200%;
+font-weight: bold;
+}
+
+div.author
+{ text-align: center;
+font-style: italic;
+}
+
+div.abstract
+{ margin-top: 2em;
+background-color: #f0f0f0;
+border: 1px dotted;
+padding: 5px;
+margin-left: 10%; margin-right:10%;
+}
+
+div.abstract-title
+{ text-align: center;
+padding: 5px;
+font-size: 120%;
+font-weight: bold;
+}
+
+div.toc-h1
+{ font-size: 200%;
+font-weight: bold;
+}
+
+div.toc-h2
+{ font-size: 120%;
+font-weight: bold;
+margin-left: 2em;
+}
+
+div.toc-h3
+{ font-size: 100%;
+font-weight: bold;
+margin-left: 4em;
+}
+
+div.toc-h4
+{ font-size: 100%;
+margin-left: 6em;
+}
+
+span.sec-nr
+{ 
+}
+
+span.sec-title
+{ 
+}
+
+span.pred-ext
+{ font-weight: bold;
+}
+
+/* Footnotes */
+
+sup.fn { color: blue; text-decoration: underline; }
+span.fn-text: { display: none; }
+sup.fn span {display: none;}
+sup:hover span 
+{ display: block !important;
+position: absolute; top: auto; left: auto; width: 80%;
+color: #000; background: white;
+border: 2px solid;
+padding: 5px; margin: 10px; z-index: 100;
+font-size: smaller;
+}
+</STYLE>
+</HEAD>
+<BODY BGCOLOR="white">
+<DIV class="navigate"><A class="nav" href="index.html"><IMG SRC="home.gif" BORDER=0 ALT="Home"></A>
+<A class="nav" href="Contents.html"><IMG SRC="index.gif" BORDER=0 ALT="Contents"></A>
+<A class="nav" href="DocIndex.html"><IMG SRC="yellow_pages.gif" BORDER=0 ALT="Index"></A>
+<A class="nav" href="summary.html"><IMG SRC="info.gif" BORDER=0 ALT="Summary"></A>
+<A class="nav" href="libdia.html"><IMG SRC="prev.gif" BORDER=0 ALT="Previous"></A>
+<A class="nav" href="tabular.html"><IMG SRC="next.gif" BORDER=0 ALT="Next"></A>
+</DIV>
+
+<H2><A NAME="sec:11.4"><SPAN class="sec-nr">11.4</SPAN> <SPAN class="sec-title">Library 
+``pce_toc'': displaying hierarchies</SPAN></A></H2>
+
+<A NAME="sec:toc"></A>
+
+<P>The table-of-content library defines a <A class="" href="summary.html#class:window">window</A> 
+displaying a <A class="" href="summary.html#class:tree">tree</A> in an 
+explorer-like style. This library is programmed by refining its 
+base-class
+<B>toc_window</B>. We will introduce this library using an example 
+exploring the filesystem. A screendump of this application is in <A class="fig" href="toc.html#fig:libtoc">figure 
+21</A>.
+
+<P><A NAME="fig:libtoc"></A>
+<CENTER>
+<IMG SRC="libtoc.gif">
+</CENTER>
+<TABLE ALIGN=center WIDTH="75%"><TR><TD>
+<B>Figure 21 : </B>Exploring the filesystem</TABLE>
+
+<PRE class="code">
+:- pce_autoload(toc_window, library(pce_toc)).
+:- pce_autoload(report_dialog, library(pce_report)).
+
+:- pce_begin_class(explorer, frame, "Explore the filesystem").
+
+initialise(E, Dir:directory) :-&gt;
+        "Explore from directory"::
+        send_super(E, initialise, 'Simple explorer'),
+        send(E, append, new(DH, directory_hierarchy(Dir))),
+        send(new(view), right, DH),
+        send(new(report_dialog), below, DH).
+
+open_node(E, Node:file) :-&gt;
+        "Show file content of opened node"::
+        get(E, member, view, View),
+        send(View, load, Node).
+
+:- pce_end_class.
+
+
+:- pce_begin_class(directory_hierarchy, toc_window,
+                   "Browser for a directory-hierarchy").
+
+initialise(FB, Root:directory) :-&gt;
+        send(FB, send_super, initialise),
+        get(Root, name, Name),
+        send(FB, root, toc_folder(Name, Root)).
+
+expand_node(FB, D:directory) :-&gt;
+        "Called if a node is to be expanded"::
+        new(SubDirsNames, chain),
+        new(FileNames, chain),
+        send(D, scan, FileNames, SubDirsNames),
+
+        get(SubDirsNames, map, ?(D, directory, @arg1), SubDirs),
+        send(SubDirs, for_all,
+             message(FB, son, D,
+                     create(toc_folder, @arg1?name, @arg1))),
+        get(FileNames, map, ?(D, file, @arg1), SubFiles),
+        send(SubFiles, for_all,
+             message(FB, son, D,
+                     create(toc_file, @arg1?base_name, @arg1))).        
+
+open_node(FB, Node:file) :-&gt;
+        "Called if a file is double-clicked"::
+        send(FB?frame, open_node, Node).
+        
+:- pce_end_class.</PRE>
+
+<P>Programming is achieved by subclassing <B>toc_window</B> and in some 
+cases the support classes <B>toc_folder</B> and <B>toc_file</B>, 
+representing expandable and leaf-nodes.
+
+<P>Each node is assigned an <EM>identifier</EM>, a unique reference to 
+the node. In the example below we used <A class="" href="summary.html#class:file">file</A> 
+and <A class="" href="summary.html#class:directory">directory</A> 
+objects for this purpose. The identifier is the second argument to the 
+creation of the node. When omitted, the node is turned into an 
+identifier of itself. This distinction is used to hide the existence of 
+graphical node objects for users of the basic functionality.
+
+<P>Below we describe the important methods of this package. We start 
+with the virtual methods on class <B>toc_window</B> that should be 
+refined by most applications.
+
+<DL>
+<DT><STRONG>toc_window -&gt;expand_node:</STRONG> <VAR>Id:any</VAR></DT>
+<DD class="defbody">
+The user clicked the <CODE>[+]</CODE> sign or double-clicked a <B>toc_folder</B>. 
+This method is normally refined to add sub-nodes for <VAR>Id</VAR> to 
+the current node using <A NAME="idx:tocwindowsendson:494"></A>`<B>toc_window<CODE>-&gt;</CODE>son</B>'. 
+If the implementation of <B>toc_window</B> is activated at the end the 
+window will scroll such that as much as possible of the subtree below <VAR>Id</VAR> 
+is visible.</DD>
+<DT><STRONG>toc_window -&gt;open_node:</STRONG> <VAR>Id:any</VAR></DT>
+<DD class="defbody">
+Called on double-click on a <B>toc_file</B> node. The implementation of
+<B>toc_window</B> is empty.</DD>
+<DT><STRONG>toc_window -&gt;select_node:</STRONG> <VAR>Id:any</VAR></DT>
+<DD class="defbody">
+Called after single-click on <B>toc_folder</B> or <B>toc_file</B>. Note 
+that double-clicking activates both <B><CODE>-&gt;</CODE>select_node</B> 
+and <B><CODE>-&gt;</CODE>open_node</B> and therefore the action 
+following select_node should execute quickly.</DD>
+<DT><STRONG>toc_window &lt;-popup:</STRONG> <VAR>Id:any</VAR></DT>
+<DD class="defbody">
+Popup:popup This method is called on a right-down. If it returns a <A class="" href="summary.html#class:popup">popup</A> 
+object this is displayed.
+</DD>
+</DL>
+
+<P>The methods below are used for general querying and manipulation of 
+the hierarchy.
+
+<DL>
+<DT><STRONG>toc_window &lt;-selection:</STRONG> <VAR></VAR></DT>
+<DD class="defbody">
+ChainOfNodes Returns a <A class="" href="summary.html#class:chain">chain</A> 
+holding the <A class="" href="summary.html#class:node">node</A> objects 
+that are currently selected.</DD>
+<DT><STRONG>toc_window &lt;-node:</STRONG> <VAR>Id:any</VAR></DT>
+<DD class="defbody">
+Node:toc_node Map a node-identifier to a node. Fails silently if this 
+identifier is not in the tree.</DD>
+<DT><STRONG>toc_window -&gt;root:</STRONG> <VAR>Root:toc_folder</VAR></DT>
+<DD class="defbody">
+Assign the hierarchy a (new) root.</DD>
+<DT><STRONG>toc_window -&gt;son:</STRONG> <VAR>Parent:any, Son:toc_node</VAR></DT>
+<DD class="defbody">
+Make a new node below the node representing <VAR>Parent</VAR>. If the 
+node is a leaf, <VAR>Son</VAR> is a subclass of <B>toc_file</B>, 
+otherwise it is a subclass of <B>toc_folder</B>.</DD>
+<DT><STRONG>toc_window -&gt;expand_root:</STRONG> <VAR></VAR></DT>
+<DD class="defbody">
+Expands the root-node. This is normally called from <B><CODE>-&gt;</CODE>initialise</B> 
+to get a sensible initial hierarchy.
+</DD>
+</DL>
+
+<P>The classes <B>toc_folder</B> and <B>toc_file</B> are summarised 
+below. Subclassing may be used to modify interaction and/or store 
+additional information with the node.
+
+<DL>
+<DT><STRONG>toc_folder -&gt;initialise:</STRONG> <VAR></VAR></DT>
+<DD class="defbody">
+Create an expandable node. <VAR>Id</VAR> defaults to the node object 
+itself and the two images to the standard opened/closed folder images. 
+Folders assume they can be expanded, <VAR>CanExpand</VAR> may be set to <A NAME="idx:off:495"></A><B>@off</B> 
+to indicate `an empty folder'.</DD>
+<DT><STRONG>toc_file -&gt;indicate:</STRONG> <VAR></VAR></DT>
+<DD class="defbody">
+Create a `file'-node from its <VAR>Label</VAR>, <VAR>Id</VAR> (defaults 
+to the created node object) and <VAR>Image</VAR> (defaults to a 
+`document' icon).
+</DD>
+</DL>
+
+</BODY></HTML>

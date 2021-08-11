@@ -1,0 +1,267 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+
+<HTML>
+<HEAD>
+<TITLE>Programming in XPCE/Prolog: Section 5.1</TITLE><LINK REL=home HREF="index.html">
+<LINK REL=contents HREF="Contents.html">
+<LINK REL=index HREF="DocIndex.html">
+<LINK REL=summary HREF="summary.html">
+<LINK REL=previous HREF="graphics.html">
+<LINK REL=next HREF="sec-5.2.html">
+<STYLE type="text/css">
+/* Style sheet for SWI-Prolog latex2html
+*/
+
+dd.defbody
+{ margin-bottom: 1em;
+}
+
+dt.pubdef
+{ background-color: #c5e1ff;
+}
+
+pre.code
+{ margin-left: 1.5em;
+margin-right: 1.5em;
+border: 1px dotted;
+padding-top: 5px;
+padding-left: 5px;
+padding-bottom: 5px;
+background-color: #f8f8f8;
+}
+
+div.navigate
+{ text-align: center;
+background-color: #f0f0f0;
+border: 1px dotted;
+padding: 5px;
+}
+
+div.title
+{ text-align: center;
+padding-bottom: 1em;
+font-size: 200%;
+font-weight: bold;
+}
+
+div.author
+{ text-align: center;
+font-style: italic;
+}
+
+div.abstract
+{ margin-top: 2em;
+background-color: #f0f0f0;
+border: 1px dotted;
+padding: 5px;
+margin-left: 10%; margin-right:10%;
+}
+
+div.abstract-title
+{ text-align: center;
+padding: 5px;
+font-size: 120%;
+font-weight: bold;
+}
+
+div.toc-h1
+{ font-size: 200%;
+font-weight: bold;
+}
+
+div.toc-h2
+{ font-size: 120%;
+font-weight: bold;
+margin-left: 2em;
+}
+
+div.toc-h3
+{ font-size: 100%;
+font-weight: bold;
+margin-left: 4em;
+}
+
+div.toc-h4
+{ font-size: 100%;
+margin-left: 6em;
+}
+
+span.sec-nr
+{ 
+}
+
+span.sec-title
+{ 
+}
+
+span.pred-ext
+{ font-weight: bold;
+}
+
+/* Footnotes */
+
+sup.fn { color: blue; text-decoration: underline; }
+span.fn-text: { display: none; }
+sup.fn span {display: none;}
+sup:hover span 
+{ display: block !important;
+position: absolute; top: auto; left: auto; width: 80%;
+color: #000; background: white;
+border: 2px solid;
+padding: 5px; margin: 10px; z-index: 100;
+font-size: smaller;
+}
+</STYLE>
+</HEAD>
+<BODY BGCOLOR="white">
+<DIV class="navigate"><A class="nav" href="index.html"><IMG SRC="home.gif" BORDER=0 ALT="Home"></A>
+<A class="nav" href="Contents.html"><IMG SRC="index.gif" BORDER=0 ALT="Contents"></A>
+<A class="nav" href="DocIndex.html"><IMG SRC="yellow_pages.gif" BORDER=0 ALT="Index"></A>
+<A class="nav" href="summary.html"><IMG SRC="info.gif" BORDER=0 ALT="Summary"></A>
+<A class="nav" href="graphics.html"><IMG SRC="prev.gif" BORDER=0 ALT="Previous"></A>
+<A class="nav" href="sec-5.2.html"><IMG SRC="next.gif" BORDER=0 ALT="Next"></A>
+</DIV>
+
+<H2><A NAME="sec:5.1"><SPAN class="sec-nr">5.1</SPAN> <SPAN class="sec-title">Graphical 
+building blocks</SPAN></A></H2>
+
+<P><A NAME="idx:graphicalwindow:170"></A><A NAME="idx:windowcoordinates:171"></A>A <A class="" href="summary.html#class:window">window</A> 
+is the most generic window class of <font size=-1>XPCE</font>. Drawings 
+are often displayed on a <A class="" href="summary.html#class:picture">picture</A>, 
+which is a window with scrollbars. The drawing area of a window is 
+two-dimensional and infinitely large (both positive and negative). The 
+query below creates a picture and opens it on the screen.
+
+<PRE class="code">
+1 ?- new(@p, picture('Demo Picture')),
+     send(@p, open).
+</PRE>
+
+<P>The following queries draw various primitive graphicals on this 
+picture.
+
+<PRE class="code">
+2 ?- send(@p, display,
+          new(@bo, box(100,100))).
+3 ?- send(@p, display,
+          new(@ci, circle(50)), point(25,25)).
+4 ?- send(@p, display,
+          new(@bm, bitmap('32x32/books.xpm')), point(100,100)).
+5 ?- send(@p, display,
+          new(@tx, text('Hello')), point(120, 50)).
+6 ?- send(@p, display,
+          new(@bz, bezier_curve(point(50,100),
+                                point(120,132),
+                                point(50, 160),
+                                point(120, 200)))).
+</PRE>
+
+<P><font size=-1>XPCE</font>'s graphics infrastructure automatically 
+takes care of the necessary repaint operations when graphical objects 
+are manipulated. Try the queries below to appreciate this. The result is 
+shown in
+<A class="fig" href="sec-5.1.html#fig:graphics">figure 12</A>.
+
+<PRE class="code">
+7  ?- send(@bo, radius, 10).
+8  ?- send(@ci, fill_pattern, colour(orange)).
+9  ?- send(@tx, font, font(times, bold, 18)).
+10 ?- send(@bz, arrows, both).
+</PRE>
+
+<P><A NAME="fig:graphics"></A>
+<CENTER>
+<IMG SRC="graphics.gif">
+</CENTER>
+<TABLE ALIGN=center WIDTH="75%"><TR><TD>
+<B>Figure 12 : </B>Example graphics</TABLE>
+
+<P><font size=-1>XPCE</font> avoids unnecessary repaint operations and 
+expensive computations involved in updating the screen. The screen is 
+only updated <EM>after</EM> all available input has been processed or on 
+an explicit request to update it. The following code illustrates this. 
+Running
+<TT>?- square_to_circle(<A NAME="idx:bo:172"></A><B>@bo</B>).</TT> will 
+show the box immediately as a circle without showing any of the 
+intermediate results.
+
+<PRE class="code">
+:- require([between/3, forall/2]).
+
+square_to_circle(Box) :-
+        get(Box, height, H),
+        MaxRadius is H // 2,
+        forall(between(0, MaxRadius, Radius),
+               send(Box, radius, Radius)).
+</PRE>
+
+<P>To get the intended animating behaviour, use <A NAME="idx:graphicalsendflush:173"></A>`<B>graphical<CODE>-&gt;</CODE>flush</B>' 
+to explicitly force redraw right now:
+
+<PRE class="code">
+:- require([between/3, forall/2]).
+
+square_to_circle(Box) :-
+        get(Box, height, H),
+        MaxRadius is H // 2,
+        forall(between(0, MaxRadius, Radius),
+               (   send(Box, radius, Radius),
+                   send(Box, flush)
+               )).
+</PRE>
+
+<H3><A NAME="sec:5.1.1"><SPAN class="sec-nr">5.1.1</SPAN> <SPAN class="sec-title">Available 
+primitive graphical objects</SPAN></A></H3>
+
+<P>An overview of the available primitive graphical classes is most 
+easily obtained using the Class Hierarchy tool described in
+<A class="sec" href="sec-3.3.html">section 3.3.4</A>. Table <A class="tab" href="sec-5.1.html#tab:primgraphics">table 
+2</A> provides an overview of the primitive graphicals.
+
+<P>
+<CENTER>
+<TABLE BORDER=2 FRAME=box RULES=groups>
+<TR VALIGN=top><TD><A class="" href="summary.html#class:arrow">arrow</A> </TD><TD>Arrow-head. 
+Normally used implicitly by class <A class="" href="summary.html#class:line">line</A>. </TD></TR>
+<TBODY>
+<TR VALIGN=top><TD><B>bezier</B> </TD><TD>Bezier curve. Both quadratic 
+and cubic Biezer curves are supported. </TD></TR>
+<TBODY>
+<TR VALIGN=top><TD><A class="" href="summary.html#class:bitmap">bitmap</A> </TD><TD>Visualisation 
+of an image. Both monochrome and full-colour images are supported. 
+Images can have shape. See <A class="sec" href="images.html">section 
+10.10</A>. </TD></TR>
+<TBODY>
+<TR VALIGN=top><TD><A class="" href="summary.html#class:pixmap">pixmap</A> </TD><TD>Subclass 
+of bitmap only for coloured images. </TD></TR>
+<TBODY>
+<TR VALIGN=top><TD><A class="" href="summary.html#class:box">box</A> </TD><TD>Rectangle. 
+Can be rounded and filled. </TD></TR>
+<TBODY>
+<TR VALIGN=top><TD><A class="" href="summary.html#class:circle">circle</A> </TD><TD>Special 
+case of ellipse. </TD></TR>
+<TBODY>
+<TR VALIGN=top><TD><A class="" href="summary.html#class:ellipse">ellipse</A> </TD><TD>Elliptical 
+shape. May be filled. </TD></TR>
+<TBODY>
+<TR VALIGN=top><TD><A class="" href="summary.html#class:arc">arc</A> </TD><TD>Part 
+of an ellipse. Can have arrows. Can show as <A NAME="idx:pieslice:174">pie-slice</A>. </TD></TR>
+<TBODY>
+<TR VALIGN=top><TD><A class="" href="summary.html#class:line">line</A> </TD><TD>Straight 
+line segment. Can have arrows. </TD></TR>
+<TBODY>
+<TR VALIGN=top><TD><A class="" href="summary.html#class:path">path</A> </TD><TD>Poly-line 
+through multiple points. Can have arrows. Can be <A NAME="idx:smooth:175">smooth</A>. </TD></TR>
+<TBODY>
+<TR VALIGN=top><TD><A class="" href="summary.html#class:text">text</A> </TD><TD>Visualisation 
+of a string in some font. Can have various attributes, can be clipped, 
+formatted, etc. </TD></TR>
+</TABLE>
+
+</CENTER>
+<TABLE ALIGN=center WIDTH="75%"><TR><TD>
+<B>Table 2 : </B>Primitive graphical objects</TABLE>
+
+<A NAME="tab:primgraphics"></A>
+
+<P></BODY></HTML>

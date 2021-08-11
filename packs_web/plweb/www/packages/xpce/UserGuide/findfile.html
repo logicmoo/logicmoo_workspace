@@ -1,0 +1,174 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+
+<HTML>
+<HEAD>
+<TITLE>Programming in XPCE/Prolog: Section 11.1</TITLE><LINK REL=home HREF="index.html">
+<LINK REL=contents HREF="Contents.html">
+<LINK REL=index HREF="DocIndex.html">
+<LINK REL=summary HREF="summary.html">
+<LINK REL=previous HREF="libraries.html">
+<LINK REL=next HREF="balloon.html">
+<STYLE type="text/css">
+/* Style sheet for SWI-Prolog latex2html
+*/
+
+dd.defbody
+{ margin-bottom: 1em;
+}
+
+dt.pubdef
+{ background-color: #c5e1ff;
+}
+
+pre.code
+{ margin-left: 1.5em;
+margin-right: 1.5em;
+border: 1px dotted;
+padding-top: 5px;
+padding-left: 5px;
+padding-bottom: 5px;
+background-color: #f8f8f8;
+}
+
+div.navigate
+{ text-align: center;
+background-color: #f0f0f0;
+border: 1px dotted;
+padding: 5px;
+}
+
+div.title
+{ text-align: center;
+padding-bottom: 1em;
+font-size: 200%;
+font-weight: bold;
+}
+
+div.author
+{ text-align: center;
+font-style: italic;
+}
+
+div.abstract
+{ margin-top: 2em;
+background-color: #f0f0f0;
+border: 1px dotted;
+padding: 5px;
+margin-left: 10%; margin-right:10%;
+}
+
+div.abstract-title
+{ text-align: center;
+padding: 5px;
+font-size: 120%;
+font-weight: bold;
+}
+
+div.toc-h1
+{ font-size: 200%;
+font-weight: bold;
+}
+
+div.toc-h2
+{ font-size: 120%;
+font-weight: bold;
+margin-left: 2em;
+}
+
+div.toc-h3
+{ font-size: 100%;
+font-weight: bold;
+margin-left: 4em;
+}
+
+div.toc-h4
+{ font-size: 100%;
+margin-left: 6em;
+}
+
+span.sec-nr
+{ 
+}
+
+span.sec-title
+{ 
+}
+
+span.pred-ext
+{ font-weight: bold;
+}
+
+/* Footnotes */
+
+sup.fn { color: blue; text-decoration: underline; }
+span.fn-text: { display: none; }
+sup.fn span {display: none;}
+sup:hover span 
+{ display: block !important;
+position: absolute; top: auto; left: auto; width: 80%;
+color: #000; background: white;
+border: 2px solid;
+padding: 5px; margin: 10px; z-index: 100;
+font-size: smaller;
+}
+</STYLE>
+</HEAD>
+<BODY BGCOLOR="white">
+<DIV class="navigate"><A class="nav" href="index.html"><IMG SRC="home.gif" BORDER=0 ALT="Home"></A>
+<A class="nav" href="Contents.html"><IMG SRC="index.gif" BORDER=0 ALT="Contents"></A>
+<A class="nav" href="DocIndex.html"><IMG SRC="yellow_pages.gif" BORDER=0 ALT="Index"></A>
+<A class="nav" href="summary.html"><IMG SRC="info.gif" BORDER=0 ALT="Summary"></A>
+<A class="nav" href="libraries.html"><IMG SRC="prev.gif" BORDER=0 ALT="Previous"></A>
+<A class="nav" href="balloon.html"><IMG SRC="next.gif" BORDER=0 ALT="Next"></A>
+</DIV>
+
+<H2><A NAME="sec:11.1"><SPAN class="sec-nr">11.1</SPAN> <SPAN class="sec-title">Library 
+``find_file''</SPAN></A></H2>
+
+<A NAME="sec:findfile"></A>
+
+<P><A NAME="idx:filepromptingfor:477"></A>The library <CODE>library(find_file)</CODE> 
+defines the class <B>finder</B>, representing a modal dialog window for 
+entering a filename. This class defines the method <A NAME="idx:findergetfile:478"></A>`<B>finder<CODE>&lt;-</CODE>file</B>':
+
+<DL>
+<DT><STRONG>finder &lt;-file:</STRONG> <VAR>Exists:[bool], 
+Ext:[name|chain], Dir:[directory], Def:[file]</VAR></DT>
+<DD class="defbody">
+name Ask the user for a file. If <VAR>Exists</VAR> is <A NAME="idx:on:479"></A><B>@on</B>, 
+only existing files can be returned. <VAR>Ext</VAR> is either an atom 
+denoting a single extension or a chain of allowed extensions. Extensions 
+can be specified with or without the leading dot. I.e. both <CODE>pl</CODE> 
+and <CODE>'.pl'</CODE> are valid specifications of files ending in
+<CODE>'.pl'</CODE>. <VAR>Dir</VAR> is the directory to start from. When 
+omitted, this is the last directory visited by this instance of <B>finder</B> 
+or the current working directory. <VAR>Def</VAR> is the default 
+file-name returned. When omitted there is no default.
+
+<P>Below is the typical declaration and usage. In this example we ask 
+for an existing Prolog file.
+
+<PRE class="code">
+:- pce_autoload(finder, library(find_file)).
+:- pce_global(@finder, new(finder)).
+
+        ...,
+        get(@finder, file, @on, pl, PlFile),
+        ...,
+</PRE>
+
+<P></DD>
+</DL>
+
+<P><A NAME="idx:filegetnameinWindows:480"></A>The Windows version of <font size=-1>XPCE</font> 
+implements the method
+<A NAME="idx:displaygetwinfilename:481"></A>`<B>display<CODE>&lt;-</CODE>win_file_name</B>', 
+using the Win32 API standard functions GetOpenFileName() or 
+GetSaveFileName() to obtain a file-name for saving or loading. If this 
+method is defined, <A NAME="idx:findergetfile:482"></A>`<B>finder<CODE>&lt;-</CODE>file</B>' 
+uses it, showing the users familiar dialog.
+
+<P>Names for the extensions (as `Prolog file' rather than '*.pl') can be 
+defined by extending the multifile predicate pce_finder:file_type/2. See 
+the library source for the standard definition.
+</BODY></HTML>

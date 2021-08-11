@@ -1,0 +1,8 @@
+/* Style the sindice search-form */
+
+div.top
+{ text-align: right;
+  border-style: dotted;
+  border-width: 1px;
+  padding: 5px;
+}

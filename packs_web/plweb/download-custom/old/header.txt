@@ -1,0 +1,5 @@
+---+ Download SWI-Prolog old binaries
+
+These are binaries of some old SWI-Prolog [[versions][</versions.txt>]].
+We only provide the Windows binaries. You can access the sources via
+[[GIT][</git.html>]]. 

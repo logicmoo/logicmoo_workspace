@@ -109,6 +109,7 @@ if ! [[ -z "${LIBJVM}" ]]; then
 fi
 
 $ECHO "#* LD_LIBRARY_PATH=$LD_LIBRARY_PATH"
+$ECHO "#* PATH=$PATH"
 
 if [[ ! -v SSH_TTY ]]; then
 /bin/true
@@ -124,9 +125,7 @@ fi
 export LIBJVM
 export LD_LIBRARY_PATH
 export PATH
-
 (eval `swipl --dump-runtime-variables` ) 2>/dev/null
-
 
 
 

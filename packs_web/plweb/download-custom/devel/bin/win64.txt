@@ -1,0 +1,3 @@
+Self-installing executable for Microsoft's 7/8/10 64-bit
+editions. See the [[reference manual][</man/64bits.html>]] for deciding
+on whether to use the 32- or 64-bits version.

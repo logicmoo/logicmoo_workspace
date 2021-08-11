@@ -1,0 +1,153 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+
+<HTML>
+<HEAD>
+<TITLE>Programming in XPCE/Prolog: Section 2.9</TITLE><LINK REL=home HREF="index.html">
+<LINK REL=contents HREF="Contents.html">
+<LINK REL=index HREF="DocIndex.html">
+<LINK REL=summary HREF="summary.html">
+<LINK REL=previous HREF="fileviewer.html">
+<LINK REL=next HREF="online.html">
+<STYLE type="text/css">
+/* Style sheet for SWI-Prolog latex2html
+*/
+
+dd.defbody
+{ margin-bottom: 1em;
+}
+
+dt.pubdef
+{ background-color: #c5e1ff;
+}
+
+pre.code
+{ margin-left: 1.5em;
+margin-right: 1.5em;
+border: 1px dotted;
+padding-top: 5px;
+padding-left: 5px;
+padding-bottom: 5px;
+background-color: #f8f8f8;
+}
+
+div.navigate
+{ text-align: center;
+background-color: #f0f0f0;
+border: 1px dotted;
+padding: 5px;
+}
+
+div.title
+{ text-align: center;
+padding-bottom: 1em;
+font-size: 200%;
+font-weight: bold;
+}
+
+div.author
+{ text-align: center;
+font-style: italic;
+}
+
+div.abstract
+{ margin-top: 2em;
+background-color: #f0f0f0;
+border: 1px dotted;
+padding: 5px;
+margin-left: 10%; margin-right:10%;
+}
+
+div.abstract-title
+{ text-align: center;
+padding: 5px;
+font-size: 120%;
+font-weight: bold;
+}
+
+div.toc-h1
+{ font-size: 200%;
+font-weight: bold;
+}
+
+div.toc-h2
+{ font-size: 120%;
+font-weight: bold;
+margin-left: 2em;
+}
+
+div.toc-h3
+{ font-size: 100%;
+font-weight: bold;
+margin-left: 4em;
+}
+
+div.toc-h4
+{ font-size: 100%;
+margin-left: 6em;
+}
+
+span.sec-nr
+{ 
+}
+
+span.sec-title
+{ 
+}
+
+span.pred-ext
+{ font-weight: bold;
+}
+
+/* Footnotes */
+
+sup.fn { color: blue; text-decoration: underline; }
+span.fn-text: { display: none; }
+sup.fn span {display: none;}
+sup:hover span 
+{ display: block !important;
+position: absolute; top: auto; left: auto; width: 80%;
+color: #000; background: white;
+border: 2px solid;
+padding: 5px; margin: 10px; z-index: 100;
+font-size: smaller;
+}
+</STYLE>
+</HEAD>
+<BODY BGCOLOR="white">
+<DIV class="navigate"><A class="nav" href="index.html"><IMG SRC="home.gif" BORDER=0 ALT="Home"></A>
+<A class="nav" href="Contents.html"><IMG SRC="index.gif" BORDER=0 ALT="Contents"></A>
+<A class="nav" href="DocIndex.html"><IMG SRC="yellow_pages.gif" BORDER=0 ALT="Index"></A>
+<A class="nav" href="summary.html"><IMG SRC="info.gif" BORDER=0 ALT="Summary"></A>
+<A class="nav" href="fileviewer.html"><IMG SRC="prev.gif" BORDER=0 ALT="Previous"></A>
+<A class="nav" href="online.html"><IMG SRC="next.gif" BORDER=0 ALT="Next"></A>
+</DIV>
+
+<H2><A NAME="sec:2.9"><SPAN class="sec-nr">2.9</SPAN> <SPAN class="sec-title">Summary</SPAN></A></H2>
+
+<P><font size=-1>XPCE</font>'s world consists of objects. An object is 
+an entity with persistent state that belongs to a class. The <font size=-1>XPCE/P</font>rolog 
+interface defines four basic predicates, <A NAME="idx:new2:74"></A><A class="pred" href="sec-D.1.html#new/2">new/2</A> 
+to create objects from a description and returns an object reference, <A NAME="idx:send212:75"></A><A class="pred" href="sec-7.1.html#send/[2-12]">send/[2-12]</A> 
+to change the state of an object and succeeds if the requested change 
+could be made, <A NAME="idx:get313:76"></A><A class="pred" href="sec-D.1.html#get/3">get/[3-13]</A> 
+to request an object to compute a value and return it, and <A NAME="idx:free1:77"></A><A class="pred" href="sec-D.1.html#free/1">free/1</A> 
+to remove objects from the <font size=-1>XPCE</font> database.
+
+<P>Objects of the <A class="" href="summary.html#class:message">message</A> 
+are `dormant' send operations. They may be activated by other objects 
+(button, text_item, ...). In this case a send operation is started. 
+Objects of class <A class="" href="summary.html#class:?">?</A> are 
+called
+<EM><A NAME="idx:obtainer:78">obtainer</A></EM> and represent `dormant' 
+get operations. The `?' sign is defined as a prolog infix operator, 
+allowing for constructs as:
+
+<PRE class="code">
+        send(Frame, height, Frame?display?height)
+</PRE>
+
+<P>The object <A NAME="idx:prolog:79"></A><B>@prolog</B> (class <A class="" href="summary.html#class:host">host</A>) 
+allows calling Prolog predicates from the <font size=-1>XPCE</font> 
+environment.
+
+<P></BODY></HTML>

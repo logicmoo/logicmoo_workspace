@@ -1,0 +1,4 @@
+Linux RPM package created on SuSE Linux 11.2. You may try on other
+Linux releases.  If you are a one-time user, check whether your
+Linux distro provides SWI-Prolog.  If you are a frequent user,
+consider to download and [[compile][</build/unix.html>]] the source.

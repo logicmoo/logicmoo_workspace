@@ -1,0 +1,255 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+
+<HTML>
+<HEAD>
+<TITLE>Programming in XPCE/Prolog: Section 10.5</TITLE><LINK REL=home HREF="index.html">
+<LINK REL=contents HREF="Contents.html">
+<LINK REL=index HREF="DocIndex.html">
+<LINK REL=summary HREF="summary.html">
+<LINK REL=previous HREF="whoiswho.html">
+<LINK REL=next HREF="framelayout.html">
+<STYLE type="text/css">
+/* Style sheet for SWI-Prolog latex2html
+*/
+
+dd.defbody
+{ margin-bottom: 1em;
+}
+
+dt.pubdef
+{ background-color: #c5e1ff;
+}
+
+pre.code
+{ margin-left: 1.5em;
+margin-right: 1.5em;
+border: 1px dotted;
+padding-top: 5px;
+padding-left: 5px;
+padding-bottom: 5px;
+background-color: #f8f8f8;
+}
+
+div.navigate
+{ text-align: center;
+background-color: #f0f0f0;
+border: 1px dotted;
+padding: 5px;
+}
+
+div.title
+{ text-align: center;
+padding-bottom: 1em;
+font-size: 200%;
+font-weight: bold;
+}
+
+div.author
+{ text-align: center;
+font-style: italic;
+}
+
+div.abstract
+{ margin-top: 2em;
+background-color: #f0f0f0;
+border: 1px dotted;
+padding: 5px;
+margin-left: 10%; margin-right:10%;
+}
+
+div.abstract-title
+{ text-align: center;
+padding: 5px;
+font-size: 120%;
+font-weight: bold;
+}
+
+div.toc-h1
+{ font-size: 200%;
+font-weight: bold;
+}
+
+div.toc-h2
+{ font-size: 120%;
+font-weight: bold;
+margin-left: 2em;
+}
+
+div.toc-h3
+{ font-size: 100%;
+font-weight: bold;
+margin-left: 4em;
+}
+
+div.toc-h4
+{ font-size: 100%;
+margin-left: 6em;
+}
+
+span.sec-nr
+{ 
+}
+
+span.sec-title
+{ 
+}
+
+span.pred-ext
+{ font-weight: bold;
+}
+
+/* Footnotes */
+
+sup.fn { color: blue; text-decoration: underline; }
+span.fn-text: { display: none; }
+sup.fn span {display: none;}
+sup:hover span 
+{ display: block !important;
+position: absolute; top: auto; left: auto; width: 80%;
+color: #000; background: white;
+border: 2px solid;
+padding: 5px; margin: 10px; z-index: 100;
+font-size: smaller;
+}
+</STYLE>
+</HEAD>
+<BODY BGCOLOR="white">
+<DIV class="navigate"><A class="nav" href="index.html"><IMG SRC="home.gif" BORDER=0 ALT="Home"></A>
+<A class="nav" href="Contents.html"><IMG SRC="index.gif" BORDER=0 ALT="Contents"></A>
+<A class="nav" href="DocIndex.html"><IMG SRC="yellow_pages.gif" BORDER=0 ALT="Index"></A>
+<A class="nav" href="summary.html"><IMG SRC="info.gif" BORDER=0 ALT="Summary"></A>
+<A class="nav" href="whoiswho.html"><IMG SRC="prev.gif" BORDER=0 ALT="Previous"></A>
+<A class="nav" href="framelayout.html"><IMG SRC="next.gif" BORDER=0 ALT="Next"></A>
+</DIV>
+
+<H2><A NAME="sec:10.5"><SPAN class="sec-nr">10.5</SPAN> <SPAN class="sec-title">Relating 
+frames</SPAN></A></H2>
+
+<A NAME="sec:application"></A>
+
+<P>Applications may consist of multiple <A class="" href="summary.html#class:frame">frames</A>, 
+either permanent, or temporary such as for opening a `settings' window. 
+This section discusses how frame references can be found, as well as how 
+frames can force the user to deal with this frame first, in favour of 
+all the other frames of the application: <A NAME="idx:modal:353">modal</A> 
+frames.
+
+<H3><A NAME="sec:10.5.1"><SPAN class="sec-nr">10.5.1</SPAN> <SPAN class="sec-title">Class 
+application</SPAN></A></H3>
+
+<P>The class <A class="" href="summary.html#class:application">application</A> 
+is the key to this section. An
+<A class="" href="summary.html#class:application">application</A> is a 
+subclass of <A class="" href="summary.html#class:visual">visual</A>, and 
+optionally located between <A class="" href="summary.html#class:display">display</A> 
+and <A class="" href="summary.html#class:frame">frame</A> in the visual 
+consists-of hierarchy. It defines the <A NAME="idx:applicationgetmember:354"></A>`<B>application<CODE>&lt;-</CODE>member</B>' 
+method to located named frames, and thus supports locating frames 
+similar to other graphicals as described in <A class="sec" href="whoiswho.html">section 
+10.4</A>.
+
+<P>A <A class="" href="summary.html#class:frame">frame</A> is made part 
+of an <A class="" href="summary.html#class:application">application</A> 
+using the method
+<A NAME="idx:framesendapplication:355"></A>`<B>frame<CODE>-&gt;</CODE>application</B>'. 
+The application to which a frame is related may be changed. Frames are 
+not required to be part of an application.
+
+<DL>
+<DT><STRONG>frame -&gt;application:</STRONG> <VAR>application*</VAR></DT>
+<DD class="defbody">
+Changes the application object the receiver belongs too. Combining 
+multiple frame objects in an application allows for finding frames as 
+well as defining modal relations between frames. See <A NAME="idx:framesendmodal:356"></A>`<B>frame<CODE>-&gt;</CODE>modal</B>'.
+
+<P>The application to which a frame belongs may be changed at any time. 
+Using the <A NAME="idx:nil:357"></A><B>@nil</B> argument, to frame is 
+detached from any application.
+
+<P>This method invokes <A NAME="idx:applicationsenddelete:358"></A>`<B>application<CODE>-&gt;</CODE>delete</B>' 
+to the application currently holding the frame (if any) and <A NAME="idx:applicationsendappend:359"></A>`<B>application<CODE>-&gt;</CODE>append</B>' 
+to the application receiving the frame. These methods may be redefined 
+if an application wants to keep track of its associated frames.
+</DD>
+<DT><STRONG>application &lt;-member:</STRONG> <VAR>name</VAR></DT>
+<DD class="defbody">
+frame Return the frame for which <A NAME="idx:framegetname:360"></A>`<B>frame<CODE>&lt;-</CODE>name</B>' 
+returns the argument name. See also <A NAME="idx:devicegetmember:361"></A>`<B>device<CODE>&lt;-</CODE>member</B>' 
+and <A class="sec" href="whoiswho.html">section 10.4</A>.
+</DD>
+</DL>
+
+<H3><A NAME="sec:10.5.2"><SPAN class="sec-nr">10.5.2</SPAN> <SPAN class="sec-title">Transient 
+frames</SPAN></A></H3>
+
+<P><A NAME="idx:transientframe:362"></A>The term <EM>transient</EM> 
+window is taken from X11. A transient window (frame) is a frame that 
+supports another frame. Transient windows are normally used for 
+prompting. The related method is:
+
+<DL>
+<DT><STRONG>frame -&gt;transient_for:</STRONG> <VAR>frame</VAR></DT>
+<DD class="defbody">
+Make the receiver a transient window for the argument. This notion is 
+handed to the X11 window manager, but the support varies. Therefore
+<font size=-1>XPCE</font> ensures that:
+<UL>
+<LI><I>The transient window stays on top</I><BR>
+Whenever the main window is raised, the transient window is raised too, 
+ensuring the transient window does not get hidden behind the main 
+window.
+<LI><I>Synchronise status change and destruction</I><BR>
+Status change (see <A NAME="idx:framesendstatus:363"></A>`<B>frame<CODE>-&gt;</CODE>status</B>: {unmapped,hidden,iconic,open}') 
+of the main window are forwarded to the transient windows. If the main 
+window is destroyed, so is the transient window.
+</UL>
+</DD>
+</DL>
+
+<H3><A NAME="sec:10.5.3"><SPAN class="sec-nr">10.5.3</SPAN> <SPAN class="sec-title">Modal 
+operation</SPAN></A></H3>
+
+<P><A NAME="idx:modal:364"></A>The method <A NAME="idx:framesendmodal:365"></A>`<B>frame<CODE>-&gt;</CODE>modal</B>' 
+works in combination with class
+<A class="" href="summary.html#class:application">application</A> and 
+transient frames to define what frames are temporary insensitive to 
+events, forcing the user to operate on the modal frame first.
+
+<DL>
+<DT><STRONG>frame -&gt;modal:</STRONG> <VAR>{application,transient}*</VAR></DT>
+<DD class="defbody">
+Operate as a modal frame for all frames in the <B><CODE>&lt;-</CODE>application</B>, 
+the frame I am <B><CODE>&lt;-</CODE>transient_for</B>, or none. A common 
+sequence to display a modal dialog window centered on a frame is below. 
+Note that, instead of `frame
+<B><CODE>-&gt;</CODE>open_centered</B>', one could also have used <A NAME="idx:framegetconfirmcentered:366"></A>`<B>frame<CODE>&lt;-</CODE>confirm_centered</B>'.
+
+<PRE class="code">
+settings(Frame) :-&gt;
+        "Open settings dialog"::                      
+        new(D, dialog(settings)),
+        send(D, transient_for, Frame),
+        send(D, modal, transient),
+        ...,
+        &lt;fill the dialog&gt;,
+        ...,
+        send(D, open_centered, Frame?area?center).
+</PRE>
+
+<P>Instead of using the center of a frame, the method can also use the 
+location of <A NAME="idx:event:367"></A><B>@event</B> to position 
+itself. The code fragment for that is:
+
+<PRE class="code">
+        ...,
+        (   send(@event, instance_of, event)
+        -&gt;  get(@event, position, @display, EventPos)
+        ;   EventPos = @default)
+        ),
+        send(D, open_centered, EventPos).
+</PRE>
+
+<P></DD>
+</DL>
+
+<P></BODY></HTML>

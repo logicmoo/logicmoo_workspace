@@ -1,0 +1,348 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+
+<HTML>
+<HEAD>
+<TITLE>Programming in XPCE/Prolog: Section 11.7</TITLE><LINK REL=home HREF="index.html">
+<LINK REL=contents HREF="Contents.html">
+<LINK REL=index HREF="DocIndex.html">
+<LINK REL=summary HREF="summary.html">
+<LINK REL=previous HREF="libplot.html">
+<LINK REL=next HREF="dragdrop.html">
+<STYLE type="text/css">
+/* Style sheet for SWI-Prolog latex2html
+*/
+
+dd.defbody
+{ margin-bottom: 1em;
+}
+
+dt.pubdef
+{ background-color: #c5e1ff;
+}
+
+pre.code
+{ margin-left: 1.5em;
+margin-right: 1.5em;
+border: 1px dotted;
+padding-top: 5px;
+padding-left: 5px;
+padding-bottom: 5px;
+background-color: #f8f8f8;
+}
+
+div.navigate
+{ text-align: center;
+background-color: #f0f0f0;
+border: 1px dotted;
+padding: 5px;
+}
+
+div.title
+{ text-align: center;
+padding-bottom: 1em;
+font-size: 200%;
+font-weight: bold;
+}
+
+div.author
+{ text-align: center;
+font-style: italic;
+}
+
+div.abstract
+{ margin-top: 2em;
+background-color: #f0f0f0;
+border: 1px dotted;
+padding: 5px;
+margin-left: 10%; margin-right:10%;
+}
+
+div.abstract-title
+{ text-align: center;
+padding: 5px;
+font-size: 120%;
+font-weight: bold;
+}
+
+div.toc-h1
+{ font-size: 200%;
+font-weight: bold;
+}
+
+div.toc-h2
+{ font-size: 120%;
+font-weight: bold;
+margin-left: 2em;
+}
+
+div.toc-h3
+{ font-size: 100%;
+font-weight: bold;
+margin-left: 4em;
+}
+
+div.toc-h4
+{ font-size: 100%;
+margin-left: 6em;
+}
+
+span.sec-nr
+{ 
+}
+
+span.sec-title
+{ 
+}
+
+span.pred-ext
+{ font-weight: bold;
+}
+
+/* Footnotes */
+
+sup.fn { color: blue; text-decoration: underline; }
+span.fn-text: { display: none; }
+sup.fn span {display: none;}
+sup:hover span 
+{ display: block !important;
+position: absolute; top: auto; left: auto; width: 80%;
+color: #000; background: white;
+border: 2px solid;
+padding: 5px; margin: 10px; z-index: 100;
+font-size: smaller;
+}
+</STYLE>
+</HEAD>
+<BODY BGCOLOR="white">
+<DIV class="navigate"><A class="nav" href="index.html"><IMG SRC="home.gif" BORDER=0 ALT="Home"></A>
+<A class="nav" href="Contents.html"><IMG SRC="index.gif" BORDER=0 ALT="Contents"></A>
+<A class="nav" href="DocIndex.html"><IMG SRC="yellow_pages.gif" BORDER=0 ALT="Index"></A>
+<A class="nav" href="summary.html"><IMG SRC="info.gif" BORDER=0 ALT="Summary"></A>
+<A class="nav" href="libplot.html"><IMG SRC="prev.gif" BORDER=0 ALT="Previous"></A>
+<A class="nav" href="dragdrop.html"><IMG SRC="next.gif" BORDER=0 ALT="Next"></A>
+</DIV>
+
+<H2><A NAME="sec:11.7"><SPAN class="sec-nr">11.7</SPAN> <SPAN class="sec-title">Multi-lingual 
+applications</SPAN></A></H2>
+
+<A NAME="sec:mlingual"></A>
+
+<P><font size=-1>XPCE</font> provides some support for building 
+multi-lingual applications without explicitly mapping terms all the 
+time. This section provides an overview of how multi-lingual operation 
+was realised in a simulator for optics.
+
+<P>When writing a multi-lingual application, several different types of 
+information needs to be translated. We will discuss each of them below.
+
+<P>
+<UL>
+<LI><I>Labels</I><BR>
+Labels as they are used by the subclasses of <A class="" href="summary.html#class:dialog_item">dialog_item</A>, 
+menu items, etc. These can be mapped by redefining a number of methods 
+that realise the default mapping between internal names and externally 
+visible names:
+
+<DL>
+<DT><STRONG>dialog_item &lt;-label_name:</STRONG> <VAR>Id</VAR></DT>
+<DD class="defbody">
+Label This method performs the mapping that ensures that the code
+<CODE>text_item(user_name, '')</CODE> renders as:
+
+<P>
+<CENTER>
+</CENTER>
+
+<P>This method may be redefined to return another name or image object, 
+depending on the current language mapping.</DD>
+<DT><STRONG>menu_item &lt;-label_name:</STRONG> <VAR>Id</VAR></DT>
+<DD class="defbody">
+Label Similar to <A NAME="idx:dialogitemgetlabelname:513"></A>`<B>dialog_item<CODE>&lt;-</CODE>label_name</B>'.</DD>
+<DT><STRONG>dialog_group &lt;-label_name:</STRONG> <VAR>Id</VAR></DT>
+<DD class="defbody">
+Label Similar to <A NAME="idx:dialogitemgetlabelname:514"></A>`<B>dialog_item<CODE>&lt;-</CODE>label_name</B>', 
+but is, in the current implementation, not allowed to return an <A class="" href="summary.html#class:image">image</A>. 
+This method needs to be redefined separately as <A class="" href="summary.html#class:dialog_group">dialog_group</A> 
+(a super-class of <A class="" href="summary.html#class:tab">tab</A>) is 
+not in the same branch of the inheritance hierarchy as <A class="" href="summary.html#class:dialog_item">dialog_item</A>.
+
+<P></DD>
+</DL>
+
+<P>In the current implementation, window and frame labels are not 
+covered by this schema.
+
+<P>
+<LI><I>Error messages</I><BR>
+Although it is convenient to present error messages directly using the 
+report mechanism described in <A class="sec" href="report.html">section 
+10.7</A>, this approach is not very well suited for multi-lingual 
+applications. A better approach is to use <A class="" href="summary.html#class:error">error</A> 
+objects, as described in
+<A class="sec" href="errors.html">section 10.8</A>.
+
+<P>Using error objects is slightly more cumbersome as errors need to be 
+declared separately, but they improve the embedding possibilities using 
+error handling, and the mapping from an error identifier to a format 
+string provides the indirection necessary in multi-lingual applications.
+
+<P>
+<LI><I>Other messages and help text</I><BR>
+There is no special support for other textual information, help-texts, 
+etc.
+</UL>
+
+<P>Below is a summary of the file <CODE>language.pl</CODE> as using in 
+the optics simulator to reach at an English/Dutch application.
+
+<P>
+<HR>
+
+<PRE class="code">
+:- module(language,
+          [ message/2,                  % Id, Message
+            current_language/1,         % -Language
+            set_language/1              % +Language
+          ]).
+:- use_module(pce).
+:- use_module(configdb).
+:- require([ concat_atom/2
+           , is_list/1
+           , memberchk/2
+           ]).
+
+:- dynamic
+        current_language/1.
+
+current_language(english).              % the default
+%current_language(dutch).
+
+set_language(Lan) :-
+        retractall(current_language(_)),
+        assert(current_language(Lan)),
+        make_errors.
+
+%       message(+Term, -Translation)
+%       The heart of the translator. Map a term
+%       (normally an atom, but if can be an arbitrary
+%       Prolog term, into an image or atom. If no
+%       translation is found, the default case and
+%       underscore translation is performed.
+
+message(Term, Translation) :-
+        current_language(Lan),
+        term(Term, Translations),
+        (   is_list(Translations)
+        -&gt;  T =.. [Lan, Translation0],
+            memberchk(T, Translations),
+            (   is_list(Translation0)
+            -&gt;  concat_atom(Translation0, Translation)
+            ;   Translation = Translation0
+            )
+        ;   Translation = Translations
+        ), !.
+message(Term, Translation) :-
+        get(Term, label_name, Translation).
+
+
+                 /*******************************
+                 *    MAP DIALOG IDENTIFIERS    *
+                 *******************************/
+
+:- pce_extend_class(dialog_item).
+
+label_name(DI, Id:name, Label:'name|image') :&lt;-
+        "Multi-lingual label service"::
+        message(Id, Label0),
+        (   atomic(Label0)
+        -&gt;  get(DI, label_suffix, Suffix),
+            get(Label0, ensure_suffix, Suffix, Label)
+        ;   Label = Label0
+        ).
+
+:- pce_end_class.
+
+:- pce_extend_class(dialog_group).
+
+label_name(_DI, Id:name, Label:name) :&lt;-
+        "Multi-lingual label service"::
+        (   message(Id, Label),
+            atomic(Label)
+        -&gt;  true
+        ;   get(Id, label_name, Label)
+        ).
+
+:- pce_end_class.
+
+:- pce_extend_class(menu_item).
+
+default_label(_MI, Id:name, Label:'name|image') :&lt;-
+        "Multilingual label service"::
+        message(Id, Label).
+
+:- pce_end_class.
+
+                 /*******************************
+                 *        GENERIC LABELS        *
+                 *******************************/
+
+%       term(+Term, -Translated)
+%
+%       Term translates a term. There are three examples
+%       here. The first only contains the translation
+%       for an English label name into a Dutch one. The
+%       second replaces all labels named 
+%       image. The last is for generating a more
+%       elaborate message from an identifier.
+
+term(settings,
+     [ dutch('Instellingen')
+     ]).
+term(label,
+     image('label.lbl')).
+term(start_named_test(Name),
+     [ english(['Click "OK" to start test "', Name, '"']),
+       dutch(['Klik op "OK" om aan de toets "', Name,
+              '" te beginnen'])
+     ]).
+     
+
+                 /*******************************
+                 *             ERRORS           *
+                 *******************************/
+
+%       error(Id, Kind, Translations)
+%
+%       Specify and create the required error messages.
+%       An object that detects there are too many
+%       instruments directs this information to the user
+%       by
+%
+%               ...
+%               send(MySelf, error, max_instruments, 5),
+%               ...
+
+error(max_instruments, error,
+      [ dutch('%IU kunt niet meer dan %d van deze \
+               instrumenten gebruiken'),
+        english('%IYou can not use more than %d of \
+                 these instruments')
+      ]).
+
+make_errors :-
+        current_language(Lan),
+        T =.. [Lan, Message],
+        error(Id, Kind, Messages),
+        (   memberchk(T, Messages)
+        -&gt;  true
+        ;   Message = Id
+        ),
+        new(_E, error(Id, Message, Kind, report)),
+        fail.
+make_errors.
+
+:- initialization make_errors.</PRE>
+
+<P>
+<HR>
+</BODY></HTML>

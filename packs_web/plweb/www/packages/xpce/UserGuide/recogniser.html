@@ -1,0 +1,196 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+
+<HTML>
+<HEAD>
+<TITLE>Programming in XPCE/Prolog: Section 5.5</TITLE><LINK REL=home HREF="index.html">
+<LINK REL=contents HREF="Contents.html">
+<LINK REL=index HREF="DocIndex.html">
+<LINK REL=summary HREF="summary.html">
+<LINK REL=previous HREF="sec-5.4.html">
+<LINK REL=next HREF="sec-5.6.html">
+<STYLE type="text/css">
+/* Style sheet for SWI-Prolog latex2html
+*/
+
+dd.defbody
+{ margin-bottom: 1em;
+}
+
+dt.pubdef
+{ background-color: #c5e1ff;
+}
+
+pre.code
+{ margin-left: 1.5em;
+margin-right: 1.5em;
+border: 1px dotted;
+padding-top: 5px;
+padding-left: 5px;
+padding-bottom: 5px;
+background-color: #f8f8f8;
+}
+
+div.navigate
+{ text-align: center;
+background-color: #f0f0f0;
+border: 1px dotted;
+padding: 5px;
+}
+
+div.title
+{ text-align: center;
+padding-bottom: 1em;
+font-size: 200%;
+font-weight: bold;
+}
+
+div.author
+{ text-align: center;
+font-style: italic;
+}
+
+div.abstract
+{ margin-top: 2em;
+background-color: #f0f0f0;
+border: 1px dotted;
+padding: 5px;
+margin-left: 10%; margin-right:10%;
+}
+
+div.abstract-title
+{ text-align: center;
+padding: 5px;
+font-size: 120%;
+font-weight: bold;
+}
+
+div.toc-h1
+{ font-size: 200%;
+font-weight: bold;
+}
+
+div.toc-h2
+{ font-size: 120%;
+font-weight: bold;
+margin-left: 2em;
+}
+
+div.toc-h3
+{ font-size: 100%;
+font-weight: bold;
+margin-left: 4em;
+}
+
+div.toc-h4
+{ font-size: 100%;
+margin-left: 6em;
+}
+
+span.sec-nr
+{ 
+}
+
+span.sec-title
+{ 
+}
+
+span.pred-ext
+{ font-weight: bold;
+}
+
+/* Footnotes */
+
+sup.fn { color: blue; text-decoration: underline; }
+span.fn-text: { display: none; }
+sup.fn span {display: none;}
+sup:hover span 
+{ display: block !important;
+position: absolute; top: auto; left: auto; width: 80%;
+color: #000; background: white;
+border: 2px solid;
+padding: 5px; margin: 10px; z-index: 100;
+font-size: smaller;
+}
+</STYLE>
+</HEAD>
+<BODY BGCOLOR="white">
+<DIV class="navigate"><A class="nav" href="index.html"><IMG SRC="home.gif" BORDER=0 ALT="Home"></A>
+<A class="nav" href="Contents.html"><IMG SRC="index.gif" BORDER=0 ALT="Contents"></A>
+<A class="nav" href="DocIndex.html"><IMG SRC="yellow_pages.gif" BORDER=0 ALT="Index"></A>
+<A class="nav" href="summary.html"><IMG SRC="info.gif" BORDER=0 ALT="Summary"></A>
+<A class="nav" href="sec-5.4.html"><IMG SRC="prev.gif" BORDER=0 ALT="Previous"></A>
+<A class="nav" href="sec-5.6.html"><IMG SRC="next.gif" BORDER=0 ALT="Next"></A>
+</DIV>
+
+<H2><A NAME="sec:5.5"><SPAN class="sec-nr">5.5</SPAN> <SPAN class="sec-title">Activating 
+graphicals using the mouse</SPAN></A></H2>
+
+<A NAME="sec:recogniser"></A>
+
+<P><A NAME="idx:eventprocessing:178"></A><A NAME="idx:sensitive:179"></A><A NAME="idx:movinggraphicals:180"></A><B>Recogniser</B> 
+objects enable detection of mouse- and keyboard activities. <font size=-1>XPCE</font> 
+defines both primitive and complex recognisers. The first (called <A class="" href="summary.html#class:handler">handler</A>) 
+processes a single event. The latter processes a <A class="" href="summary.html#class:gesture">gesture</A>: 
+sequence of events starting with a mouse-button-down up to the 
+corresponding mouse-button-up. The following example allows us to move 
+the icon by dragging with the middle mouse button:
+
+<PRE class="code">
+11 ?- send(@ic, recogniser, new(move_gesture)).
+</PRE>
+
+<P>The second example allows us to double-click on the icon. This is a 
+common way to `open'<A NAME="idx:openicon:181"></A> an icon. In the 
+example we will just print 'hello' in the Prolog window.
+
+<PRE class="code">
+12 ?- send(@ic, recogniser,
+           click_gesture(left, '', double,
+                         message(@pce, write_ln, hello))).
+</PRE>
+
+<P>The predefined recogniser classes are summarised in
+<A class="tab" href="recogniser.html#tab:recognisers">table 5</A>. 
+Besides the built-in recognisers, the <font size=-1>XPCE/P</font>rolog 
+library defines various additional ones. See also <A class="sec" href="dragdrop.html">section 
+11.8</A>.
+
+<P>
+<CENTER>
+<TABLE BORDER=2 FRAME=box RULES=groups>
+<TR VALIGN=top><TD><A class="" href="summary.html#class:handler">handler</A> </TD><TD>Binds 
+a single event to a <A class="" href="summary.html#class:message">message</A>. </TD></TR>
+<TBODY>
+<TR VALIGN=top><TD><A class="" href="summary.html#class:handler_group">handler_group</A> </TD><TD>Combines 
+multiple recognisers into a single. </TD></TR>
+<TBODY>
+<TR VALIGN=top><TD><A class="" href="summary.html#class:key_binding">key_binding</A> </TD><TD>Maps 
+keyboard sequences to commands. </TD></TR>
+<TBODY>
+<TR VALIGN=top><TD><A class="" href="summary.html#class:click_gesture">click_gesture</A> </TD><TD>Maps 
+a mouse-click to a message. Allows to specify modifiers (alt/meta, 
+control, shift), button and multi (single, double, triple). </TD></TR>
+<TBODY>
+<TR VALIGN=top><TD><A class="" href="summary.html#class:connect_gesture">connect_gesture</A> </TD><TD>Connect 
+two graphicals dragging from the first to the second. </TD></TR>
+<TBODY>
+<TR VALIGN=top><TD><A class="" href="summary.html#class:move_gesture">move_gesture</A> </TD><TD>Move 
+graphical by dragging it. </TD></TR>
+<TBODY>
+<TR VALIGN=top><TD><A class="" href="summary.html#class:move_outline_gesture">move_outline_gesture</A> </TD><TD>Move 
+graphical by dragging an outline. </TD></TR>
+<TBODY>
+<TR VALIGN=top><TD><A class="" href="summary.html#class:resize_gesture">resize_gesture</A> </TD><TD>Resize 
+graphical by dragging a side or corner. </TD></TR>
+<TBODY>
+<TR VALIGN=top><TD><A class="" href="summary.html#class:resize_outline_gesture">resize_outline_gesture</A> </TD><TD>Resize 
+graphical by dragging a side or corner of the outline. </TD></TR>
+</TABLE>
+
+</CENTER>
+<TABLE ALIGN=center WIDTH="75%"><TR><TD>
+<B>Table 5 : </B>Recogniser classes</TABLE>
+
+<A NAME="tab:recognisers"></A>
+
+<P></BODY></HTML>

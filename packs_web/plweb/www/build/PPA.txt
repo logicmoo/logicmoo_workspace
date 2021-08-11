@@ -1,0 +1,31 @@
+# Installing from PPA (Ubuntu Personal Package Archive)
+
+There are PPAs for [SWI-Prolog
+stable](https://launchpad.net/~swi-prolog/+archive/stable) and
+[SWI-Prolog
+development](https://launchpad.net/~swi-prolog/+archive/devel) based on
+the official Debian packaging structure and corresponding SWI-Prolog
+release. This PPA version can be installed using the commands below in
+recent Ubuntu versions.
+
+These PPAs are updated with every new release.  Thanks to Yves Raimond for setting up the PPA snd Eugeniy Meshcheryakov for creating the Debian configuration.  The PPA is registered using `apt-add-repository`, which is by default available on desktops, but not on servers or Linux containers.  It is installed using:
+
+  ==
+  % sudo apt-get install software-properties-common
+  ==
+
+---+++ Stable versions
+
+  ==
+  % sudo apt-add-repository ppa:swi-prolog/stable
+  % sudo apt-get update
+  % sudo apt-get install swi-prolog
+  ==
+
+---+++ Development versions
+
+  ==
+  % sudo apt-add-repository ppa:swi-prolog/devel
+  % sudo apt-get update
+  % sudo apt-get install swi-prolog
+  ==

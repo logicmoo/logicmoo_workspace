@@ -1,0 +1,389 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+
+<HTML>
+<HEAD>
+<TITLE>Programming in XPCE/Prolog: Section 11.5</TITLE><LINK REL=home HREF="index.html">
+<LINK REL=contents HREF="Contents.html">
+<LINK REL=index HREF="DocIndex.html">
+<LINK REL=summary HREF="summary.html">
+<LINK REL=previous HREF="toc.html">
+<LINK REL=next HREF="libplot.html">
+<STYLE type="text/css">
+/* Style sheet for SWI-Prolog latex2html
+*/
+
+dd.defbody
+{ margin-bottom: 1em;
+}
+
+dt.pubdef
+{ background-color: #c5e1ff;
+}
+
+pre.code
+{ margin-left: 1.5em;
+margin-right: 1.5em;
+border: 1px dotted;
+padding-top: 5px;
+padding-left: 5px;
+padding-bottom: 5px;
+background-color: #f8f8f8;
+}
+
+div.navigate
+{ text-align: center;
+background-color: #f0f0f0;
+border: 1px dotted;
+padding: 5px;
+}
+
+div.title
+{ text-align: center;
+padding-bottom: 1em;
+font-size: 200%;
+font-weight: bold;
+}
+
+div.author
+{ text-align: center;
+font-style: italic;
+}
+
+div.abstract
+{ margin-top: 2em;
+background-color: #f0f0f0;
+border: 1px dotted;
+padding: 5px;
+margin-left: 10%; margin-right:10%;
+}
+
+div.abstract-title
+{ text-align: center;
+padding: 5px;
+font-size: 120%;
+font-weight: bold;
+}
+
+div.toc-h1
+{ font-size: 200%;
+font-weight: bold;
+}
+
+div.toc-h2
+{ font-size: 120%;
+font-weight: bold;
+margin-left: 2em;
+}
+
+div.toc-h3
+{ font-size: 100%;
+font-weight: bold;
+margin-left: 4em;
+}
+
+div.toc-h4
+{ font-size: 100%;
+margin-left: 6em;
+}
+
+span.sec-nr
+{ 
+}
+
+span.sec-title
+{ 
+}
+
+span.pred-ext
+{ font-weight: bold;
+}
+
+/* Footnotes */
+
+sup.fn { color: blue; text-decoration: underline; }
+span.fn-text: { display: none; }
+sup.fn span {display: none;}
+sup:hover span 
+{ display: block !important;
+position: absolute; top: auto; left: auto; width: 80%;
+color: #000; background: white;
+border: 2px solid;
+padding: 5px; margin: 10px; z-index: 100;
+font-size: smaller;
+}
+</STYLE>
+</HEAD>
+<BODY BGCOLOR="white">
+<DIV class="navigate"><A class="nav" href="index.html"><IMG SRC="home.gif" BORDER=0 ALT="Home"></A>
+<A class="nav" href="Contents.html"><IMG SRC="index.gif" BORDER=0 ALT="Contents"></A>
+<A class="nav" href="DocIndex.html"><IMG SRC="yellow_pages.gif" BORDER=0 ALT="Index"></A>
+<A class="nav" href="summary.html"><IMG SRC="info.gif" BORDER=0 ALT="Summary"></A>
+<A class="nav" href="toc.html"><IMG SRC="prev.gif" BORDER=0 ALT="Previous"></A>
+<A class="nav" href="libplot.html"><IMG SRC="next.gif" BORDER=0 ALT="Next"></A>
+</DIV>
+
+<H2><A NAME="sec:11.5"><SPAN class="sec-nr">11.5</SPAN> <SPAN class="sec-title">Tabular 
+layout</SPAN></A></H2>
+
+<A NAME="sec:tabular"></A>
+
+<P><font size=-1>XPCE</font> provides various mechanisms for 
+two-dimensional layout.
+
+<P>
+<UL>
+<LI><I> Controller layout using <A NAME="idx:devicesendlayoutdialog:496"></A>`<B>device<CODE>-&gt;</CODE>layout_dialog</B>'</I><BR>
+This method is used by the classes <A class="" href="summary.html#class:dialog">dialog</A> 
+and
+<A class="" href="summary.html#class:dialog_group">dialog_group</A>. It 
+knows about layout requirements in controller windows, such as alignment 
+of label- and value-width in stacked controllers. etc. Layout of 
+controllers is described in <A class="sec" href="controller.html">chapter 
+4</A>.
+
+<P>
+<LI><I> Simple tabular layout using <A class="" href="summary.html#class:format">format</A></I><BR>
+In instance of class <A class="" href="summary.html#class:format">format</A> 
+can be attached to a <A class="" href="summary.html#class:device">device</A> 
+using <A NAME="idx:devicesendformat:497"></A>`<B>device<CODE>-&gt;</CODE>format</B>'. 
+This causes the device to place its graphicals according to the 
+specification in the format object. This technique is frequently used to 
+label images, place images in an image browser, etc. See <A class="sec" href="tabular.html">section 
+11.5.1</A>.
+
+<P>
+<LI><I> Full table support using <A class="" href="summary.html#class:table">table</A></I><BR>
+An instance of <A class="" href="summary.html#class:table">table</A> can 
+be associated with a <A class="" href="summary.html#class:device">device</A> 
+to realise modern tables using the same primitives as defined in HTML-3: 
+row- and column spanning, alignment, spacing, rules and borders, etc. 
+The library <CODE>library(tabular)</CODE> provides a user-friendly 
+front-end for most of the functionality of class <A class="" href="summary.html#class:table">table</A>.
+</UL>
+
+<H3><A NAME="sec:11.5.1"><SPAN class="sec-nr">11.5.1</SPAN> <SPAN class="sec-title">Using 
+format</SPAN></A></H3>
+
+<A NAME="sec:format"></A>
+
+<P>Class <A class="" href="summary.html#class:format">format</A> can be 
+seen as a poor-mens version of
+<A class="" href="summary.html#class:table">table</A>. On the other 
+hand, there are two cases that still make it a valuable solution. One is 
+to deal with simple compound graphicals, such as a bitmap with a label 
+displayed below it. The other is for browsing collections of graphical 
+objects such as images.
+
+<P>The class <B>icon</B> below displays a label-text below an image.
+
+<PRE class="code">
+:- pce_begin_class(icon, device).
+
+:- pce_global(@icon_format, make_icon_format).
+
+make_icon_format(F) :-
+        new(F, format(horizontal, 1, @on)),
+        send(F, adjustment, vector(center)),
+        send(F, row_sep, 2).
+
+initialise(Icon, Img:image, Label:name) :-&gt;
+        send_super(Icon, initialise),
+        send(Icon, format, @icon_format),
+        send(Icon, display, bitmap(Img)),
+        send(Icon, display, text(Label, center)). 
+
+:- pce_end_class.</PRE>
+
+<P>An example using <A class="" href="summary.html#class:format">format</A> 
+for distribution graphicals over a window is the library <CODE>library(pce_image_browser)</CODE>.
+
+<H3><A NAME="sec:11.5.2"><SPAN class="sec-nr">11.5.2</SPAN> <SPAN class="sec-title">Using 
+table using the ``tabular'' library</SPAN></A></H3>
+
+<P><A NAME="idx:layoutmanager:498"></A>The class <A class="" href="summary.html#class:table">table</A> 
+acts much the same way as class <A class="" href="summary.html#class:format">format</A> 
+in the sense that it is attached to a <A class="" href="summary.html#class:device">device</A> 
+and modifies the layout management of this device. For this purpose it 
+uses an interface defined in <font size=-1>XPCE</font> version 5.0 and 
+realised using the methods
+<A NAME="idx:devicebothlayoutmanager:499"></A>`<B>device<CODE>&lt;-&gt;</CODE>layout_manager</B>' 
+and <A NAME="idx:graphicalbothlayoutinterface:500"></A>`<B>graphical<CODE>&lt;-&gt;</CODE>layout_interface</B>'.
+<A class="fig" href="tabular.html#fig:layoutmgr">Figure 22</A> gives an 
+overview of the classes realising tabular layout.
+
+<P><A NAME="fig:layoutmgr"></A>
+<CENTER>
+<IMG SRC="layoutmgr.gif">
+</CENTER>
+<TABLE ALIGN=center WIDTH="75%"><TR><TD>
+<B>Figure 22 : </B>Layout manager interface for tables</TABLE>
+
+<P>The advantage of the approach using layout manager objects is that 
+they can easily be associated with any subclass of <A class="" href="summary.html#class:device">device</A>, 
+such as a <A class="" href="summary.html#class:window">window</A>. The 
+disadvantage is that the communication gets more difficult due to the 
+different objects involved. This complication is hidden in the <font size=-1>XPCE/P</font>rolog 
+class <B>tabular</B>, a subclass of
+<A class="" href="summary.html#class:device">device</A> with an 
+associated <A class="" href="summary.html#class:table">table</A> and 
+methods for guiding the messages for common usage.
+
+<DL>
+<DT><STRONG>tabular -&gt;initialise:</STRONG> <VAR></VAR></DT>
+<DD class="defbody">
+Create a device with associated table.</DD>
+<DT><STRONG>tabular -&gt;append:</STRONG> <VAR></VAR></DT>
+<DD class="defbody">
+Append a new cell. Cells are places left-to-right. The arguments are:
+
+<P>
+<UL>
+<LI><I><VAR>Label</VAR></I><BR>
+Defines the content. It this is a <A class="" href="summary.html#class:name">name</A>, 
+a <A class="" href="summary.html#class:text">text</A> is created. 
+Otherwise the graphical is immediately placed in the table.
+
+<P>
+<LI><I><VAR>Font</VAR></I><BR>
+Defines the <A class="" href="summary.html#class:font">font</A> if a <A class="" href="summary.html#class:text">text</A> 
+is created from a
+<VAR>Label</VAR> of type <A class="" href="summary.html#class:name">name</A>.
+
+<P>
+<LI><I><VAR>HAlign</VAR></I><BR>
+Horizontal alignment. When omitted, the value from the corresponding
+<A class="" href="summary.html#class:table_column">table_column</A> is 
+used.
+
+<P>
+<LI><I><VAR>VAlign</VAR></I><BR>
+Vertical alignment. When omitted, the value from the corresponding
+<A class="" href="summary.html#class:table_row">table_row</A> is used.
+
+<P>
+<LI><I><VAR>Colspan</VAR></I><BR>
+Number of columns spanned. Default is 1.
+
+<P>
+<LI><I><VAR>Rowspan</VAR></I><BR>
+Number of rows spanned. Default is 1.
+
+<P>
+<LI><I><VAR>Background</VAR></I><BR>
+Colour or pattern used to fill the background of the cell. When omitted, 
+the value from row or column is used or the background is left 
+untouched.
+
+<P>
+<LI><I><VAR>Colour</VAR></I><BR>
+Defines the default foreground colour when painting the cell's 
+graphical. When omitted, the row, column and finally device are tried.
+</UL>
+</DD>
+<DT><STRONG>tabular -&gt;append_label_button:</STRONG> <VAR>Field:name</VAR></DT>
+<DD class="defbody">
+This method appends a button that is nicely aligned with the cell. If 
+the button is depressed it activates <B><CODE>-&gt;</CODE>sort_rows</B>, 
+providing the column index and the row below the row holding the button.</DD>
+<DT><STRONG>tabular -&gt;sort_rows:</STRONG> <VAR>Col:int, Row:int</VAR></DT>
+<DD class="defbody">
+A virtual method with a body that prints an informative message. It is 
+called from a button installed using <B><CODE>-&gt;</CODE>append_label_button</B> 
+and receives the column to sort-on as well as the first row to sort.</DD>
+<DT><STRONG>tabular &lt;-table:</STRONG> <VAR></VAR></DT>
+<DD class="defbody">
+Table Returns the <A class="" href="summary.html#class:table">table</A> 
+serving as <B><CODE>&lt;-</CODE>layout_manager</B>.</DD>
+<DT><STRONG>tabular -&gt;table_width:</STRONG> <VAR>Width:int</VAR></DT>
+<DD class="defbody">
+Force the table to perform the layout in the indicated width. Initially 
+the width of a <B>tabular</B> is defined by the content. Setting the 
+width forces the <A class="" href="summary.html#class:table">table</A> 
+to negotiate with its columns and then force the width of the columns.</DD>
+<DT><STRONG>tabular -&gt;event:</STRONG> <VAR>Event:event</VAR></DT>
+<DD class="defbody">
+This refinement of <A NAME="idx:devicesendevent:501"></A>`<B>device<CODE>-&gt;</CODE>event</B>' 
+determines the cell in which the event occurs. If this cell has a <A NAME="idx:cellbothnotemark:502"></A>`<B>cell<CODE>&lt;-&gt;</CODE>note_mark</B>' 
+attached and the graphical defines the method <B><CODE>-&gt;</CODE>on_mark_clicked</B>, 
+the event is checked against the mark-image. Otherwise the event is 
+forwarded to the graphical inside the cell, even it it doesn't occur in 
+the area of the graphical, making small (text-)objects sensitive to all 
+events in the cell. Finally, this method checks for attempts to drag the 
+column-borders, changing the layout of the table.
+</DD>
+</DL>
+
+<P>As <B>tabular</B> <EM>delegates</EM> all messages not understood to 
+the <B><CODE>&lt;-</CODE>table</B>, the messages of this class are also 
+available. Below are the most important ones.
+
+<DL>
+<DT><STRONG>table -&gt;next_row:</STRONG> <VAR>EndGroup:[bool]</VAR></DT>
+<DD class="defbody">
+Start the next row in the table. If <VAR>EndGroup</VAR> is <A NAME="idx:on:503"></A><B>@on</B>, 
+the just-finished row is marked to end a row-group. See also <B><CODE>-&gt;</CODE>rules</B>.</DD>
+<DT><STRONG>table -&gt;border:</STRONG> <VAR>Border:0..</VAR></DT>
+<DD class="defbody">
+Defines the thickness of border and rule-lines. Default is 0, not 
+drawing any lines.</DD>
+<DT><STRONG>table -&gt;frame:</STRONG> <VAR>{void,above,below,hsides,vsides,box}</VAR></DT>
+<DD class="defbody">
+Defines which parts of the box around the table are painted (if <B><CODE>&lt;-</CODE>border</B>
+<VAR>&gt; 0</VAR>). The terminology is from HTML-3.</DD>
+<DT><STRONG>table -&gt;rules:</STRONG> <VAR>{none,groups,rows,cols,all}</VAR></DT>
+<DD class="defbody">
+Defines which lines between rows/columns are painted (if <B><CODE>&lt;-</CODE>border</B>
+<VAR>&gt; 0</VAR>). The terminology is from HTML-3.</DD>
+<DT><STRONG>table -&gt;cell_padding:</STRONG> <VAR>Padding:int<TT>|</TT>size</VAR></DT>
+<DD class="defbody">
+Defines the space around the content of a cell. If this is an integer 
+this space is the same in horizontal and vertical directions. If it is a <A class="" href="summary.html#class:size">size</A> 
+these can be specified independently.</DD>
+<DT><STRONG>table -&gt;cell_spacing:</STRONG> <VAR>Spacing:int<TT>|</TT>size</VAR></DT>
+<DD class="defbody">
+Defines the distance between the cells. Same rules as for <B><CODE>-&gt;</CODE>cell_padding</B> 
+applies. In some cases pretty effects can be achieved setting this value 
+to minus the <B><CODE>&lt;-</CODE>border</B>.
+</DD>
+</DL>
+
+<P>Below we build a small example.
+
+<PRE class="code">
+:- use_module(library(tabular)).
+:- use_module(library(autowin)).
+
+make_table :-
+        new(P, auto_sized_picture('Table with merged cells')), 
+        send(P, display, new(T, tabular)),
+        send(T, border, 1),
+        send(T, cell_spacing, -1),
+        send(T, rules, all),
+        send_list(T,
+                  [ append(new(graphical), rowspan := 2),
+                    append('Length/mm', bold, center, colspan := 3),
+                    next_row,
+                    append('body', bold, center),
+                    append('tail', bold, center),
+                    append('ears', bold, center),
+                    next_row,
+                    append('males', bold),
+                    append('31.4'),
+                    append('23.7'),
+                    append('3.8'),
+                    next_row,
+                    append('females', bold),
+                    append('29.6'),
+                    append('20.8'),
+                    append('3.4')
+                  ]),
+        send(P, open).</PRE>
+
+<P><A NAME="fig:tabular"></A>
+<CENTER>
+<IMG SRC="tabular.gif">
+</CENTER>
+<TABLE ALIGN=center WIDTH="75%"><TR><TD>
+<B>Figure 23 : </B>Small table with row/column spanning</TABLE>
+
+</BODY></HTML>

@@ -1,0 +1,51 @@
+#!/bin/bash
+# fix permissions to run the SWI-Prolog website as www-data, group www-data
+
+groupshared()
+{ chgrp -R www-data .
+  find . -type d | xargs chmod 2775
+  find refs -type f | xargs chmod 664
+  git config core.sharedRepository group
+}
+
+fixwiki()
+{ git config user.email "wiki@swi-prolog.org"
+  git config user.name "Wiki manager"
+  chgrp -R www-data .
+  find . -name '*.txt' | xargs chmod 664
+  find . -type d | xargs chmod 2775
+  (cd `git rev-parse --git-dir` && groupshared)
+}
+
+fixexamples()
+{ ( cd examples
+    chgrp -R www-data .
+    find . -type f | xargs chmod 664
+    find . -type d | xargs chmod 2775
+    (cd `git rev-parse --git-dir` && groupshared)
+  )
+}
+
+fixblog()
+{ ( cd blog
+    chgrp -R www-data .
+    find . -type f | xargs chmod 664
+    find . -type d | xargs chmod 2775
+    (cd `git rev-parse --git-dir` && groupshared)
+  )
+}
+
+(cd www && fixwiki)
+fixexamples
+fixblog
+
+# Create and fix the logfile permissions
+mkdir -p log pack
+chgrp -R www-data log pack
+find log  -type d | xargs chmod 2775
+find pack -type d | xargs chmod 2775
+
+# Make the database writeable
+chgrp www-data *.db
+chmod 664 *.db
+

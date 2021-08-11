@@ -1,0 +1,31 @@
+---+ Creating a Windows console application from SWI-Prolog
+
+If you want to use a SWI-Prolog program as a stand-alone *|.exe|*, you can
+do this using qsave_program/2 or using the commandline. The command
+below creates =|myapp.exe|= from =load.pl= and makes the program start at
+main/0
+
+==
+swipl.exe -o myapp.exe -c load.pl --goal=main
+==
+
+To run, =|myapp.exe|= requires *|.dll|* files from the installation's
+=bin= directory. The required *|.dll|* files are listed below. Note that
+the details may depend on the version and installation. Notably
+=|libdwarf.dll|= may not be present and the others may have a different
+version.
+
+  - =|libswipl.dll|=
+  - =|libdwarf.dll|=
+  - =|libgmp-10.dll|=
+  - =|libwinpthread-1.dll|=
+  - =|libgcc_s_seh-1.dll|=
+
+Your application may depend on additional *|.dll|* files loaded through
+use_foreign_library/1. You can find these with
+current_foreign_library/2.
+
+The required *|.dll|* files must be installed in the same directory as
+the executable or in a directory available through =|%PATH%|=.
+
+@see In many cases, it is way easier to start an application [from the Prolog source](<PrologScript.html>).

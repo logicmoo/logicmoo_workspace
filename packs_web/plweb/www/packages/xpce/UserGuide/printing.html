@@ -1,0 +1,244 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+
+<HTML>
+<HEAD>
+<TITLE>Programming in XPCE/Prolog: Section 10.13</TITLE><LINK REL=home HREF="index.html">
+<LINK REL=contents HREF="Contents.html">
+<LINK REL=index HREF="DocIndex.html">
+<LINK REL=summary HREF="summary.html">
+<LINK REL=previous HREF="ugraphics.html">
+<LINK REL=next HREF="libraries.html">
+<STYLE type="text/css">
+/* Style sheet for SWI-Prolog latex2html
+*/
+
+dd.defbody
+{ margin-bottom: 1em;
+}
+
+dt.pubdef
+{ background-color: #c5e1ff;
+}
+
+pre.code
+{ margin-left: 1.5em;
+margin-right: 1.5em;
+border: 1px dotted;
+padding-top: 5px;
+padding-left: 5px;
+padding-bottom: 5px;
+background-color: #f8f8f8;
+}
+
+div.navigate
+{ text-align: center;
+background-color: #f0f0f0;
+border: 1px dotted;
+padding: 5px;
+}
+
+div.title
+{ text-align: center;
+padding-bottom: 1em;
+font-size: 200%;
+font-weight: bold;
+}
+
+div.author
+{ text-align: center;
+font-style: italic;
+}
+
+div.abstract
+{ margin-top: 2em;
+background-color: #f0f0f0;
+border: 1px dotted;
+padding: 5px;
+margin-left: 10%; margin-right:10%;
+}
+
+div.abstract-title
+{ text-align: center;
+padding: 5px;
+font-size: 120%;
+font-weight: bold;
+}
+
+div.toc-h1
+{ font-size: 200%;
+font-weight: bold;
+}
+
+div.toc-h2
+{ font-size: 120%;
+font-weight: bold;
+margin-left: 2em;
+}
+
+div.toc-h3
+{ font-size: 100%;
+font-weight: bold;
+margin-left: 4em;
+}
+
+div.toc-h4
+{ font-size: 100%;
+margin-left: 6em;
+}
+
+span.sec-nr
+{ 
+}
+
+span.sec-title
+{ 
+}
+
+span.pred-ext
+{ font-weight: bold;
+}
+
+/* Footnotes */
+
+sup.fn { color: blue; text-decoration: underline; }
+span.fn-text: { display: none; }
+sup.fn span {display: none;}
+sup:hover span 
+{ display: block !important;
+position: absolute; top: auto; left: auto; width: 80%;
+color: #000; background: white;
+border: 2px solid;
+padding: 5px; margin: 10px; z-index: 100;
+font-size: smaller;
+}
+</STYLE>
+</HEAD>
+<BODY BGCOLOR="white">
+<DIV class="navigate"><A class="nav" href="index.html"><IMG SRC="home.gif" BORDER=0 ALT="Home"></A>
+<A class="nav" href="Contents.html"><IMG SRC="index.gif" BORDER=0 ALT="Contents"></A>
+<A class="nav" href="DocIndex.html"><IMG SRC="yellow_pages.gif" BORDER=0 ALT="Index"></A>
+<A class="nav" href="summary.html"><IMG SRC="info.gif" BORDER=0 ALT="Summary"></A>
+<A class="nav" href="ugraphics.html"><IMG SRC="prev.gif" BORDER=0 ALT="Previous"></A>
+<A class="nav" href="libraries.html"><IMG SRC="next.gif" BORDER=0 ALT="Next"></A>
+</DIV>
+
+<H2><A NAME="sec:10.13"><SPAN class="sec-nr">10.13</SPAN> <SPAN class="sec-title">Printing 
+from <font size=-1>XPCE</font> applications</SPAN></A></H2>
+
+<A NAME="sec:printing"></A>
+
+<P><A NAME="idx:printing:469"></A>You're wonderful application is 
+finished ... but the users want
+<B>printing???</B>. What to do? A computer screen is not a set of 
+paper-sheets and therefore there is no trivial answer to this question. 
+It depends on the nature of the data that needs to be printed, and also 
+on the operating system used.
+
+<P><A NAME="idx:PostScript:470"></A><B>In Unix</B> , printing is 
+achieved by producing a document in a format that can be understood by 
+the print-spooler program, normally either plain text or PostScript. If 
+formatted text and/or included graphics are required it is often 
+desirable to produce input for a formatting program, call the formatter 
+and send the result to the printer.
+
+<P><B>In Windows</B> the printer is not driven by a document, but using 
+a series of calls on a GDI (Graphical Device Interface) representing the 
+printer. The good news of this is that whatever you can get on the 
+screen you easily get on the printer. The bad news has been explained 
+above: paper is not the same as your screen. It has pages, is generally 
+worse in colour-handling but provides a much higher resolution. The 
+users do not expect a series of screendumps from your applications. Most 
+Windows applications however are WYSIWYG and there are no established 
+standards for formatting applications.
+
+<H3><A NAME="sec:10.13.1"><SPAN class="sec-nr">10.13.1</SPAN> <SPAN class="sec-title">Options 
+for document generation</SPAN></A></H3>
+
+<P>Below is a brief overview of the options available.
+
+<P>
+<UL>
+<LI><I>Generating PostScript</I><BR>
+All <font size=-1>XPCE</font> <A class="" href="summary.html#class:graphical">graphical</A> 
+objects support the method <B><CODE>&lt;-</CODE>postscript</B> that 
+creates an Adobe PostScript representation of the object. For most 
+objects used in diagrams (lines, curves, text), the produced PostScript 
+is clean PostScript ready for perfect scaling. The remaining objects 
+(for example a menu or button) are translated into an <A class="" href="summary.html#class:image">image</A> 
+which is then translated to PostScript. Such objects scale poorly.
+
+<P>This facility is useful for creating high-quality diagrams that can 
+be imported in a text created on an external application. This is fairly 
+portable, but using Microsoft applications you must have a PostScript 
+printer attached and there is no previewing. On Windows platform there 
+is no well-supported automated way to print a PostScript file unless you 
+can asks your users to install a PostScript viewer such as
+<A NAME="idx:AlladinGsView:471">Alladin GsView</A><A NAME="idx:gsview:472"></A>.
+
+<P>
+<LI><I>Generating plain text</I><BR>
+If you need to produce a listing, you can generate a plain ISO-Latin-1 
+(or other 8-bit character set) string and print this. On Unix this is 
+achieved by sending the text to the printer-spooler. On Windows you can 
+save the data to a temporary file and start the command <CODE>notepad /p 
+"file"</CODE>. This route provides no support for graphics or any kind 
+of advanced formatting.
+
+<P>
+<LI><I>Generating markup</I><BR>
+Translating project data to output on a page is a craft that is 
+understood by text-manipulation programs that accept a high-level input 
+specification such as Troff, LaTeX or an SGML variant. If you can expect 
+your users to have or install a particular package and this package can 
+deal with PostScript graphics this is the ideal way to generate 
+good-looking documents from your application. On Unix these tools are 
+widely available and installed on most machines. Most of them are 
+available on Windows, but not installed on most systms.
+
+<P>The <CODE>library(http/html_write)</CODE> library described in <B>section 
+??</B> provides a good infra-structure for emitting documents in HTML or 
+another SGML or XML dialect. There is no such library for LaTeX , but 
+this can be designed using the same principles.
+
+<P>Using HTML, the application can be transformed into a web-server 
+using the infrastructure described in <A class="sec" href="httpd.html">section 
+11.9</A>. The user can use standard web-technologies to process the 
+page. Unfortunately well-established web technology does not support 
+vector-drawings, though the emerging <A NAME="idx:SVG:473">SVG</A> 
+technology may change that.
+
+<P>
+<LI><I>Generating a Windows meta-file</I><BR>
+<A NAME="idx:WMF:474"></A><A NAME="idx:EMF:475"></A>Windows metafiles 
+are implemented in the class <B>win_metafile</B>, providing both input 
+and output of metafiles. Such files preserve the vector properties of <font size=-1>XPCE</font> 
+graphicals and can be imported in most native Windows applications. 
+Unfortunately the scaling properties, especially of text, are much worse 
+than PostScript.
+
+<P>An example of exporting Windows Metafiles is in PceDraw in the file
+<CODE>library(draw/canvas)</CODE>.
+
+<P>
+<LI><I>Printing to a Windows printer</I><BR>
+Using class <B>win_printer</B>, the user can open a device on which 
+graphicals can be painted and that can be advanced to the next page. 
+This technique only works on Windows and requires you to program all 
+details of the page. For WYSIWYG objects such as most drawings, this 
+techinique is appropriate, but rendering textual documents require the 
+implementation of a formatter, where you are responsible for page 
+headers and footers, alignment, etc.
+
+<P>Formatting text in sections, paragraphs lists, etc. is provided by 
+the
+<font size=-1>XPCE</font> document-rendering classes described in <A class="sec" href="docrender.html">section 
+11.10</A>. These classes cannot handle pagination though. Another 
+alternative is the use of <A class="" href="summary.html#class:editor">editor</A> 
+and friends, drawing the <A class="" href="summary.html#class:text_image">text_image</A> 
+on a page while traversing through the document.
+
+<P>An example of printing using <B>win_printer</B> is in PceDraw in the 
+file <CODE>library(draw/canvas)</CODE>.
+</UL>
+
+<P></BODY></HTML>

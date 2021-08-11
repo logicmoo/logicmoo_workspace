@@ -1,0 +1,258 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+
+<HTML>
+<HEAD>
+<TITLE>Programming in XPCE/Prolog: Section 2.8</TITLE><LINK REL=home HREF="index.html">
+<LINK REL=contents HREF="Contents.html">
+<LINK REL=index HREF="DocIndex.html">
+<LINK REL=summary HREF="summary.html">
+<LINK REL=previous HREF="sec-2.7.html">
+<LINK REL=next HREF="sec-2.9.html">
+<STYLE type="text/css">
+/* Style sheet for SWI-Prolog latex2html
+*/
+
+dd.defbody
+{ margin-bottom: 1em;
+}
+
+dt.pubdef
+{ background-color: #c5e1ff;
+}
+
+pre.code
+{ margin-left: 1.5em;
+margin-right: 1.5em;
+border: 1px dotted;
+padding-top: 5px;
+padding-left: 5px;
+padding-bottom: 5px;
+background-color: #f8f8f8;
+}
+
+div.navigate
+{ text-align: center;
+background-color: #f0f0f0;
+border: 1px dotted;
+padding: 5px;
+}
+
+div.title
+{ text-align: center;
+padding-bottom: 1em;
+font-size: 200%;
+font-weight: bold;
+}
+
+div.author
+{ text-align: center;
+font-style: italic;
+}
+
+div.abstract
+{ margin-top: 2em;
+background-color: #f0f0f0;
+border: 1px dotted;
+padding: 5px;
+margin-left: 10%; margin-right:10%;
+}
+
+div.abstract-title
+{ text-align: center;
+padding: 5px;
+font-size: 120%;
+font-weight: bold;
+}
+
+div.toc-h1
+{ font-size: 200%;
+font-weight: bold;
+}
+
+div.toc-h2
+{ font-size: 120%;
+font-weight: bold;
+margin-left: 2em;
+}
+
+div.toc-h3
+{ font-size: 100%;
+font-weight: bold;
+margin-left: 4em;
+}
+
+div.toc-h4
+{ font-size: 100%;
+margin-left: 6em;
+}
+
+span.sec-nr
+{ 
+}
+
+span.sec-title
+{ 
+}
+
+span.pred-ext
+{ font-weight: bold;
+}
+
+/* Footnotes */
+
+sup.fn { color: blue; text-decoration: underline; }
+span.fn-text: { display: none; }
+sup.fn span {display: none;}
+sup:hover span 
+{ display: block !important;
+position: absolute; top: auto; left: auto; width: 80%;
+color: #000; background: white;
+border: 2px solid;
+padding: 5px; margin: 10px; z-index: 100;
+font-size: smaller;
+}
+</STYLE>
+</HEAD>
+<BODY BGCOLOR="white">
+<DIV class="navigate"><A class="nav" href="index.html"><IMG SRC="home.gif" BORDER=0 ALT="Home"></A>
+<A class="nav" href="Contents.html"><IMG SRC="index.gif" BORDER=0 ALT="Contents"></A>
+<A class="nav" href="DocIndex.html"><IMG SRC="yellow_pages.gif" BORDER=0 ALT="Index"></A>
+<A class="nav" href="summary.html"><IMG SRC="info.gif" BORDER=0 ALT="Summary"></A>
+<A class="nav" href="sec-2.7.html"><IMG SRC="prev.gif" BORDER=0 ALT="Previous"></A>
+<A class="nav" href="sec-2.9.html"><IMG SRC="next.gif" BORDER=0 ALT="Next"></A>
+</DIV>
+
+<H2><A NAME="sec:2.8"><SPAN class="sec-nr">2.8</SPAN> <SPAN class="sec-title">Example: 
+show files in directory</SPAN></A></H2>
+
+<A NAME="sec:fileviewer"></A>
+
+<P>In this section we illustrate the above with some simple examples. We 
+also show how the GUI can call procedures in the Prolog system.
+
+<P>The demo creates a list of files from a given directory and allows 
+the user to view a file. <A class="fig" href="fileviewer.html#fig:fileviewer">Figure 
+2</A> shows the result.
+
+<P><A NAME="fig:fileviewer"></A>
+<CENTER>
+<IMG SRC="fileviewer.gif">
+</CENTER>
+<TABLE ALIGN=center WIDTH="75%"><TR><TD>
+<B>Figure 2 : </B>The FileViewer demo</TABLE>
+
+<PRE class="code">
+fileviewer(Dir) :-
+        new(DirObj, directory(Dir)),
+        new(F, frame('File Viewer')),
+        send(F, append(new(B, browser))),
+        send(new(D, dialog), below(B)),
+        send(D, append(button(view,
+                              message(@prolog, view,
+                                      DirObj, B?selection?key)))),
+        send(D, append(button(quit,
+                              message(F, destroy)))),
+        send(B, members(DirObj?files)),
+        send(F, open).
+
+view(DirObj, F) :-
+        send(new(V, view(F)), open),
+        get(DirObj, file(F), FileObj),
+        send(V, load(FileObj)).</PRE>
+
+<P>The main window of the application consists of a <A class="" href="summary.html#class:frame">frame</A> 
+holding two specialised <A class="" href="summary.html#class:window">window</A> 
+instances. A <A class="" href="summary.html#class:frame">frame</A> is a 
+collection of <EM>tiled</EM> windows. Any opened window in <font size=-1>XPCE</font> 
+is enclosed in a <A class="" href="summary.html#class:frame">frame</A>. 
+The windows are positioned using the methods
+<B><CODE>-&gt;</CODE>above</B>, <B><CODE>-&gt;</CODE>below</B>, <B><CODE>-&gt;</CODE>right</B> 
+and <B><CODE>-&gt;</CODE>left</B>. The frame ensures that its member 
+windows are properly aligned and handles resizing of the frame. See also <A class="sec" href="framelayout.html">section 
+10.6</A>.
+
+<P>In line 3, a <A class="" href="summary.html#class:browser">browser</A> 
+is <B><CODE>-&gt;</CODE>append</B>ed to the frame object. A browser is a 
+window specialised for displaying a list of objects. Next, a <A class="" href="summary.html#class:dialog">dialog</A> 
+is positioned below the browser. A dialog is a window specialised in 
+handling the layout of controllers, or
+<A class="" href="summary.html#class:dialog_item">dialog_item</A> 
+objects as <font size=-1>XPCE</font> calls them.
+
+<P>Line 5 adds a <A class="" href="summary.html#class:button">button</A> 
+to the dialog. `view' specifies the <EM>name</EM> of the button. <font size=-1>XPCE</font> 
+defines a central mapping from `dialog_item
+<B><CODE>&lt;-&gt;</CODE>name</B>' to the label displayed. The default 
+mapping capitalises the name and replaces underscores with spaces. In <A class="sec" href="mlingual.html">section 
+11.7</A>, we describe how this can be used to realise multi-lingual 
+applications. The second argument of the button specifies the <EM>action</EM> 
+associated with the button. A <A class="" href="summary.html#class:message">message</A> 
+is a dormant send-operation. When pressed, the button executes
+
+<PRE class="code">
+send(@prolog, view, DirObj, B?selection?key)
+</PRE>
+
+<P>If a message is sent to <A NAME="idx:prolog:70"></A><B>@prolog</B>, 
+this calls a predicate with the name of the <EM>selector</EM> of the 
+message and an arity that equals the number of arguments to the message 
+(2 here).
+
+<P>The second argument is a term with principal functor <A class="" href="summary.html#class:?">?</A> 
+and defines an `obtainer', a dormant get-operation. It is defined as a 
+Prolog infix operator of type <TT>yfx</TT>, priority 500. This implies 
+that
+<TT>B?selection?key</TT> should be read as<SUP class="fn">4<SPAN class="fn-text">Initial 
+versions of <font size=-1>XPCE</font> lacked the obtainer. In this case 
+the browser <EM>B</EM> would be passed to the predicate <A NAME="idx:view1:71"></A><SPAN class="pred-ext">view/1</SPAN>, 
+which would extract the current filename from the browser. Obtainers 
+improve the readability and avoid the need to mix UI related code with 
+application code.</SPAN></SUP>
+
+<PRE class="code">
+?(?(B, selection), key)
+</PRE>
+
+<P>The result of the get-operation <B><CODE>&lt;-</CODE>selection</B> on 
+a browser returns the
+<A class="" href="summary.html#class:dict_item">dict_item</A> object 
+currently selected. Dict-items are the elements of a <A class="" href="summary.html#class:dict">dict</A>, 
+the underlying data object of a browser. A <A class="" href="summary.html#class:dict_item">dict_item</A> 
+consists of a <B><CODE>&lt;-</CODE>key</B> (its identifier), a <B><CODE>&lt;-</CODE>label</B> 
+(the visual text) and optionally an associated <B><CODE>&lt;-</CODE>object</B>.
+
+<P>Line 8 appends a second button to the dialog window. The dialog 
+window will automatically align this one to the right of the first. The 
+action sends a message directly to another <font size=-1>XPCE</font> 
+object and <B><CODE>-&gt;</CODE>destroys</B> the frame object if the 
+quit button is pressed. Note that this will erase all UI objects 
+associated with the frame. The garbage collector destroys all related 
+objects.
+
+<P>Line 10 fills the <A class="" href="summary.html#class:browser">browser</A> 
+with the files from the specified directory. The expression <TT>DirObj?files</TT> 
+defines an obtainer operating on an instance of class <A class="" href="summary.html#class:directory">directory</A>. 
+The obtainer evaluates to a <A class="" href="summary.html#class:chain">chain</A>, <font size=-1>XPCE</font>'s 
+notion of a list, holding the names of all files in the directory. This 
+chain is sent to the members-method of the browser <VAR>B</VAR>.
+
+<P>Again, the garbage collector takes care of the directory and chain 
+objects. The browser automatically converts the given names to
+<A class="" href="summary.html#class:dict_item">dict_item</A> objects.<SUP class="fn">5<SPAN class="fn-text">This 
+conversion is implemented with class <A class="" href="summary.html#class:dict_item">dict_item</A>. 
+In fact, the browser just specifies the desired type and the message 
+passing kernel invokes the conversion method of class <A class="" href="summary.html#class:dict_item">dict_item</A>.</SPAN></SUP>
+
+<P>Finally, the frame is <B><CODE>-&gt;</CODE>open</B>ed. This will 
+cause the frame to ask each of the windows to compute its desired size, 
+after which the frame aligns the windows, decides on their final 
+geometry and creates the Window-system counterpart.
+
+<P>The <A NAME="idx:view2:72"></A><SPAN class="pred-ext">view/2</SPAN> 
+callback predicate opens an instance of <A class="" href="summary.html#class:view">view</A>, 
+a window specialised in text-editing, gets the file-object for the given 
+filename F. and loads the file into the view. The method <A NAME="idx:viewsendload:73"></A>`<B>view<CODE>-&gt;</CODE>load</B>' 
+expects an instance of class <A class="" href="summary.html#class:file">file</A>. 
+Again, the type-conversion will deal with this.
+
+<P></BODY></HTML>

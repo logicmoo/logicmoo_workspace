@@ -1,0 +1,2 @@
+Sources in =|.tar.gz|= format, including packages and generated documentation
+files.  See [[build instructions][</build/>]].

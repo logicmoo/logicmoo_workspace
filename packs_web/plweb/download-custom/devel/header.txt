@@ -1,0 +1,12 @@
+---+ Download SWI-Prolog development versions
+
+[[linux.png;align="left",width="24px"][</build/unix.html>]]
+We collect information about available packages and issues for building
+on specific distros [[here][</build/unix.html>]].
+We provide a [[PPA][</build/PPA.html>]]
+for [[Ubuntu][http://www.ubuntu.com/]] and [[snap
+images][</build/snap.html>]]
+
+[[WIP.png;align="left",width="24px"][</ChangeLog?branch=development>]]
+Examine the [[ChangeLog][</ChangeLog?branch=development>]].
+

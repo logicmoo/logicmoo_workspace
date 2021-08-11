@@ -1,0 +1,2416 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+
+<HTML>
+<HEAD>
+<TITLE>Programming in XPCE/Prolog</TITLE><LINK REL=home HREF="index.html">
+<LINK REL=contents HREF="Contents.html">
+<LINK REL=index HREF="DocIndex.html">
+<LINK REL=summary HREF="summary.html">
+<LINK REL=previous HREF="glossary.html">
+<LINK REL=next HREF="DocIndex.html">
+<STYLE type="text/css">
+/* Style sheet for SWI-Prolog latex2html
+*/
+
+dd.defbody
+{ margin-bottom: 1em;
+}
+
+dt.pubdef
+{ background-color: #c5e1ff;
+}
+
+pre.code
+{ margin-left: 1.5em;
+margin-right: 1.5em;
+border: 1px dotted;
+padding-top: 5px;
+padding-left: 5px;
+padding-bottom: 5px;
+background-color: #f8f8f8;
+}
+
+div.navigate
+{ text-align: center;
+background-color: #f0f0f0;
+border: 1px dotted;
+padding: 5px;
+}
+
+div.title
+{ text-align: center;
+padding-bottom: 1em;
+font-size: 200%;
+font-weight: bold;
+}
+
+div.author
+{ text-align: center;
+font-style: italic;
+}
+
+div.abstract
+{ margin-top: 2em;
+background-color: #f0f0f0;
+border: 1px dotted;
+padding: 5px;
+margin-left: 10%; margin-right:10%;
+}
+
+div.abstract-title
+{ text-align: center;
+padding: 5px;
+font-size: 120%;
+font-weight: bold;
+}
+
+div.toc-h1
+{ font-size: 200%;
+font-weight: bold;
+}
+
+div.toc-h2
+{ font-size: 120%;
+font-weight: bold;
+margin-left: 2em;
+}
+
+div.toc-h3
+{ font-size: 100%;
+font-weight: bold;
+margin-left: 4em;
+}
+
+div.toc-h4
+{ font-size: 100%;
+margin-left: 6em;
+}
+
+span.sec-nr
+{ 
+}
+
+span.sec-title
+{ 
+}
+
+span.pred-ext
+{ font-weight: bold;
+}
+
+/* Footnotes */
+
+sup.fn { color: blue; text-decoration: underline; }
+span.fn-text: { display: none; }
+sup.fn span {display: none;}
+sup:hover span 
+{ display: block !important;
+position: absolute; top: auto; left: auto; width: 80%;
+color: #000; background: white;
+border: 2px solid;
+padding: 5px; margin: 10px; z-index: 100;
+font-size: smaller;
+}
+</STYLE>
+</HEAD>
+<BODY BGCOLOR="white">
+<DIV class="navigate"><A class="nav" href="index.html"><IMG SRC="home.gif" BORDER=0 ALT="Home"></A>
+<A class="nav" href="Contents.html"><IMG SRC="index.gif" BORDER=0 ALT="Contents"></A>
+<A class="nav" href="DocIndex.html"><IMG SRC="yellow_pages.gif" BORDER=0 ALT="Index"></A>
+<A class="nav" href="summary.html"><IMG SRC="info.gif" BORDER=0 ALT="Summary"></A>
+<A class="nav" href="glossary.html"><IMG SRC="prev.gif" BORDER=0 ALT="Previous"></A>
+<A class="nav" href="DocIndex.html"><IMG SRC="next.gif" BORDER=0 ALT="Next"></A>
+</DIV>
+
+<H1><A NAME="sec:H"><SPAN class="sec-nr">H</SPAN> <SPAN class="sec-title">Class 
+summary descriptions</SPAN></A></H1>
+
+<A NAME="sec:summary"></A>
+
+<P>This appendix provides a complete overview of all built-in classes of
+<font size=-1>XPCE</font>. For each class, it presents the name, 
+arguments needed to create an instance, place in the inheritance and 
+delegation hierarchies as well as a summary description. For many 
+classes we added a small illustrative example of typical usage of the 
+class.
+
+<P>The summaries stress on describing what the class is commonly used 
+for and what other classes are designed to cooperate with the class.
+
+<P>The classes are presented in alphabetical order. Some classes that 
+are closely related and have symbol-names (<CODE>&gt;, +</CODE>) are 
+combined into one description, sometimes violating the alphabetical 
+order.
+
+<DL>
+<DT><A NAME="class::="><STRONG>:=</STRONG>(<VAR></VAR>)</A></DT>
+<DD class="defbody">
+Instances of this class are used to specify named arguments, see
+<A class="sec" href="namedargs.html">section 2.4</A>. Example:
+
+<PRE class="code">
+...,
+send(Editor, style,
+     sensitive, style(underline := @on,
+                      colour := dark_green)),
+...,
+</PRE>
+
+</DD>
+<DT><A NAME="class:=="><STRONG>==</STRONG>(<VAR></VAR>)</A></DT>
+<DD class="defbody">
+</DD>
+<DT><A NAME="class:\=="><STRONG>\==</STRONG>(<VAR></VAR>)</A></DT>
+<DD class="defbody">
+Conditional code object that succeeds if both arguments evaluate to the 
+same object. Normally used to specify the conditions of <A class="" href="summary.html#class:if">if</A> 
+or
+<A class="" href="summary.html#class:while">while</A>. The following 
+example yields the names of all user-defined classes:
+
+<PRE class="code">
+?- new(UDC, chain),
+   send(@classes, for_all,
+        if(@arg2?creator \== built_in,
+           message(UDC, append, @arg1))).
+</PRE>
+
+</DD>
+<DT><A NAME="class:?"><STRONG>?</STRONG>(<VAR></VAR>)</A></DT>
+<DD class="defbody">
+Class <A class="" href="summary.html#class:?">?</A>, pronounced as 
+`obtainer', represents a `dormant' get-operation. Obtainers are commonly 
+used to `obtain' arguments for other code objects. For example:
+
+<PRE class="code">
+...,
+send(Dialog, append,
+     new(TI, text_item(name))),
+send(Dialog, append,
+     button(ok, message(Dialog, return, TI?selection))),
+</PRE>
+
+</DD>
+<DT><A NAME="class:@="><STRONG>@=</STRONG>(<VAR></VAR>)</A></DT>
+<DD class="defbody">
+Class <A class="" href="summary.html#class:@=">@=</A> assigns a symbolic 
+reference name to the argument object. It is used to define global 
+objects in the class-variable display.initialise. See the system 
+defaults file
+<CODE>&lt;<VAR>pcehome</VAR>&gt;/Defaults</CODE>. The following example 
+from <CODE>Defaults</CODE> creates the objects <A NAME="idx:dialogbg:750"></A><B>@_dialog_bg</B> 
+and <A NAME="idx:winpen:751"></A><B>@_win_pen</B> depending on whether 
+or not the display is monochrome or colour.
+
+<PRE class="code">
+display.initialise: \
+        and(_dialog_bg @= when(@colour_display, \
+                               grey80, white), \
+            _win_pen   @= when(@colour_display, \
+                               0, 1))
+</PRE>
+
+</DD>
+<DT><A NAME="class:and"><STRONG>and</STRONG>(<VAR></VAR>)</A></DT>
+<DD class="defbody">
+Code object that executes its arguments one by one. It fails as soon as 
+one of the arguments fails and succeeds otherwise. Commonly used to 
+specify multiple actions for controllers. For example:
+
+<PRE class="code">
+...,
+get(Dialog, frame, Frame),
+send(Dialog, append,
+     new(Function, text_item(function))),
+send(Dialog, append,
+     button(switch_to,
+            and(message(Frame, switch_to,
+                        Function?selection),
+                message(Function, clear)))),
+...,
+</PRE>
+
+</DD>
+<DT><A NAME="class:application"><STRONG>application</STRONG>(<VAR></VAR>)</A></DT>
+<DD class="defbody">
+An application object is a <A class="" href="summary.html#class:visual">visual</A> 
+object used to combine multiple <A class="" href="summary.html#class:frame">frames</A>. 
+See <A class="sec" href="application.html">section 10.5</A> for a 
+discussion on its usage.</DD>
+<DT><A NAME="class:arc"><STRONG>arc</STRONG>(<VAR></VAR>)</A></DT>
+<DD class="defbody">
+Graphical primitive describing a section from a circle. It may be used 
+to create a <A NAME="idx:piechart:752">pie-chart</A> segment.
+
+<PRE class="code">
+?- new(A, arc(100, 20, 50)),
+   send(A, close, pie_slice).
+</PRE>
+
+</DD>
+<DT><A NAME="class:area"><STRONG>area</STRONG>(<VAR></VAR>)</A></DT>
+<DD class="defbody">
+Combination of <EM>X</EM>, <EM>Y</EM>, <EM>Width</EM> and <EM>Height</EM> 
+used by
+<A class="" href="summary.html#class:graphical">graphical</A> to store 
+the bounding box of the graphical. Also used to communicate with 
+graphical objects and frames about their dimension.
+
+<PRE class="code">
+...,
+get(Box, area, area(X, Y, W, H)),
+...,
+</PRE>
+
+</DD>
+<DT><A NAME="class:arrow"><STRONG>arrow</STRONG>(<VAR></VAR>)</A></DT>
+<DD class="defbody">
+Arrow-head. Normally only used implicitly to attach arrows to a
+<A class="" href="summary.html#class:line">line</A>, <A class="" href="summary.html#class:arc">arc</A> 
+or <A class="" href="summary.html#class:path">path</A>, the subclasses 
+of class
+<A class="" href="summary.html#class:joint">joint</A>. See <A NAME="idx:jointsendarrows:753"></A>`<B>joint<CODE>-&gt;</CODE>arrows</B>'. <A class="" href="summary.html#class:arrow">arrow</A> 
+can be used directory to create fancy arrows.
+
+<PRE class="code">
+?- new(L, line(0, 0, 100, 50, second))
+</PRE>
+
+</DD>
+<DT><A NAME="class:assign"><STRONG>assign</STRONG>(<VAR></VAR>)</A></DT>
+<DD class="defbody">
+Assign a value to an instance of class <A class="" href="summary.html#class:var">var</A>, 
+an <font size=-1>XPCE</font> variable. Used to realise variables in 
+compound executable objects.
+
+<PRE class="code">
+and(assign(new(C, var), @arg1?controller),
+    message(C, ...),
+    message(C, ...),
+    ...)
+</PRE>
+
+</DD>
+<DT><A NAME="class:attribute"><STRONG>attribute</STRONG>(<VAR></VAR>)</A></DT>
+<DD class="defbody">
+Attributes can be associated with any object to store data related to 
+that object without the need to create a subclass. Normally attribute 
+objects are used implicitly through the method
+<A NAME="idx:objectbothattribute:754"></A>`<B>object<CODE>&lt;-&gt;</CODE>attribute</B>'.
+
+<PRE class="code">
+send(Frame, attribute, visualises, bicycle24)
+</PRE>
+
+</DD>
+<DT><A NAME="class:behaviour"><STRONG>behaviour</STRONG>(<VAR></VAR>)</A></DT>
+<DD class="defbody">
+Super class of <A class="" href="summary.html#class:method">method</A> 
+and <A class="" href="summary.html#class:variable">variable</A>, 
+representing the two types of objects that can realise behaviour in 
+classes. Not useful for the application programmer.</DD>
+<DT><A NAME="class:bezier_curve"><STRONG>bezier_curve</STRONG>(<VAR></VAR>)</A></DT>
+<DD class="defbody">
+Create a Bezier curve from <VAR>start</VAR> to <VAR>end</VAR> using one 
+or two control-points (quadradic or cubic Bezier curve). Bezier curves 
+are nice smooth curves departing and arriving in a specified direction. 
+See also <A class="" href="summary.html#class:path">path</A>.</DD>
+<DT><A NAME="class:binary_condition"><STRONG>binary_condition</STRONG>(<VAR></VAR>)</A></DT>
+<DD class="defbody">
+</DD>
+<DT><A NAME="class:<"><STRONG>&lt;</STRONG>(<VAR></VAR>)</A></DT>
+<DD class="defbody">
+</DD>
+<DT><A NAME="class:="><STRONG>=</STRONG>(<VAR></VAR>)</A></DT>
+<DD class="defbody">
+</DD>
+<DT><A NAME="class:=<"><STRONG>=&lt;</STRONG>(<VAR></VAR>)</A></DT>
+<DD class="defbody">
+</DD>
+<DT><A NAME="class:>"><STRONG>&gt;</STRONG>(<VAR></VAR>)</A></DT>
+<DD class="defbody">
+</DD>
+<DT><A NAME="class:>="><STRONG>&gt;=</STRONG>(<VAR></VAR>)</A></DT>
+<DD class="defbody">
+Arithmetic conditional code objects. These objects are normally used to 
+specify the conditions of <A class="" href="summary.html#class:if">if</A> 
+or <A class="" href="summary.html#class:while">while</A>. The following 
+example creates a <A class="" href="summary.html#class:chain">chain</A> 
+holding all graphicals on a device that either have <B><CODE>&lt;-</CODE>width</B> <VAR>&lt;</VAR> 
+5 or <B><CODE>&lt;-</CODE>height</B> <VAR>&lt;</VAR> 5.
+
+<PRE class="code">
+...,
+get(Device?graphicals, find_all,
+    or(@arg1?width &lt; 5,
+       @arg1?height &lt; 5),
+    SmallGraphicals),
+...,
+</PRE>
+
+</DD>
+<DT><A NAME="class:binary_expression"><STRONG>binary_expression</STRONG>(<VAR></VAR>)</A></DT>
+<DD class="defbody">
+</DD>
+<DT><A NAME="class:*"><STRONG>*</STRONG>(<VAR></VAR>)</A></DT>
+<DD class="defbody">
+</DD>
+<DT><A NAME="class:+"><STRONG>+</STRONG>(<VAR></VAR>)</A></DT>
+<DD class="defbody">
+</DD>
+<DT><A NAME="class:-"><STRONG>-</STRONG>(<VAR></VAR>)</A></DT>
+<DD class="defbody">
+</DD>
+<DT><A NAME="class:/"><STRONG>/</STRONG>(<VAR></VAR>)</A></DT>
+<DD class="defbody">
+Arithmetic functions, commonly used for computation of graphical 
+dimensions or to specify spatial relations using class <A class="" href="summary.html#class:spatial">spatial</A> 
+or for simple functional computation from Prolog. For example:
+
+<PRE class="code">
+...
+send(Box, height, Text?height + 10),
+...
+</PRE>
+
+</DD>
+<DT><A NAME="class:bitmap"><STRONG>bitmap</STRONG>(<VAR></VAR>)</A></DT>
+<DD class="defbody">
+A bitmap turns an <A class="" href="summary.html#class:image">image</A> 
+or <A class="" href="summary.html#class:pixmap">pixmap</A> into a 
+graphical object that can be displayed on a <A class="" href="summary.html#class:device">device</A>.
+
+<PRE class="code">
+?- new(I, image('pce.bm')),
+   new(B, bitmap(I)).
+</PRE>
+
+</DD>
+<DT><A NAME="class:block"><STRONG>block</STRONG>(<VAR></VAR>)</A></DT>
+<DD class="defbody">
+A <A class="" href="summary.html#class:block">block</A> is similar to <A class="" href="summary.html#class:and">and</A>, 
+but provides formal parameters.
+
+<PRE class="code">
+?- send(block(new(A, var),
+              new(B, var),
+              message(@pce, write_ln, A, B)),
+        forward, hello, world).
+
+hello world
+</PRE>
+
+</DD>
+<DT><A NAME="class:bool"><STRONG>bool</STRONG>(<VAR></VAR>)</A></DT>
+<DD class="defbody">
+Class <A class="" href="summary.html#class:bool">bool</A> defines two 
+instances: <A NAME="idx:on:755"></A><B>@on</B> and <A NAME="idx:off:756"></A><B>@off</B>, 
+representing `true' and `false'. The use cannot create instances of this 
+class.
+
+<PRE class="code">
+...,
+send(Image, transparent, @on)
+...
+</PRE>
+
+</DD>
+<DT><A NAME="class:box"><STRONG>box</STRONG>(<VAR></VAR>)</A></DT>
+<DD class="defbody">
+Graphical representing a rectangle. Corners can be rounded, the interior 
+can be filled, the texture and thickness of the line can be controlled 
+and a shadow can be defined.
+
+<PRE class="code">
+?- new(B, box(100, 50)),
+   send(B, radius, 10).
+</PRE>
+
+</DD>
+<DT><A NAME="class:browser"><STRONG>browser</STRONG>(<VAR></VAR>)</A></DT>
+<DD class="defbody">
+A <A class="" href="summary.html#class:browser">browser</A> is a window 
+version of a <A class="" href="summary.html#class:list_browser">list_browser</A>. 
+A browser visualises a list of <A class="" href="summary.html#class:dict_item">dict_item</A> 
+objects. The items are organised in a <A class="" href="summary.html#class:dict">dict</A>, 
+providing fast access to browser items, even if there are many items in 
+the browser. Individual items may be coloured, underlined, etc. using 
+the <A class="" href="summary.html#class:style">style</A> mechanism also 
+available for <A class="" href="summary.html#class:editor">editor</A>. 
+Columns can be realised using tab_stops on the <A class="" href="summary.html#class:text_image">text_image</A> 
+object that displays the actual text of the browser.
+
+<PRE class="code">
+?- new(B, browser),
+   send_list(B, append, [gnu, gnat]).
+</PRE>
+
+</DD>
+<DT><A NAME="class:browser_select_gesture"><STRONG>browser_select_gesture</STRONG>(<VAR></VAR>)</A></DT>
+<DD class="defbody">
+Internal class dealing with selection handling in class
+<A class="" href="summary.html#class:list_browser">list_browser</A>.</DD>
+<DT><A NAME="class:button"><STRONG>button</STRONG>(<VAR></VAR>)</A></DT>
+<DD class="defbody">
+A button is a push-button controller. It has an associated
+<A class="" href="summary.html#class:message">message</A> that is 
+executed if the button is activated using the mouse. Inside a <A class="" href="summary.html#class:dialog">dialog</A>, 
+one button can be assigned as `default' button.
+
+<PRE class="code">
+?- new(B, button(hello,
+                 message(@pce, write_ln, hello))).
+</PRE>
+
+</DD>
+<DT><A NAME="class:c"><STRONG>c</STRONG>(<VAR></VAR>)</A></DT>
+<DD class="defbody">
+Class <A class="" href="summary.html#class:c">c</A> is a subclass of 
+class <A class="" href="summary.html#class:host">host</A>, providing 
+communication to C and C++ code. It is not used directly by the 
+application programmer.</DD>
+<DT><A NAME="class:c_pointer"><STRONG>c_pointer</STRONG>(<VAR></VAR>)</A></DT>
+<DD class="defbody">
+Class <A class="" href="summary.html#class:c_pointer">c_pointer</A> 
+encapsulates an anonymous C pointer (<TT>void *</TT>). It is used to 
+register references to Prolog predicates with <font size=-1>XPCE</font> 
+methods. See also <A class="sec" href="udc.html">chapter 7</A>.
+
+<PRE class="code">
+?- pce_predicate_reference(gnat:gnu(_,_), X).
+X = @1190997/c_pointer
+</PRE>
+
+</DD>
+<DT><A NAME="class:chain"><STRONG>chain</STRONG>(<VAR></VAR>)</A></DT>
+<DD class="defbody">
+Class <A class="" href="summary.html#class:chain">chain</A> represents a 
+single-linked list of arbitrary objects. Chains are commonly used inside <font size=-1>XPCE</font> 
+to represent collections. Chains have methods to find elements, sort the 
+chain, delete elements, etc. The predicate <A NAME="idx:chainlist2:757"></A><A class="pred" href="sec-D.2.html#chain_list/2">chain_list/2</A> 
+converts between an <font size=-1>XPCE</font> chain and a Prolog list. 
+It also provides methods to run code on all elements of the list, which 
+is generally faster than translating the chain to a Prolog list and 
+using Prolog iteration. In the example, <A NAME="idx:devicegetgraphicals:758"></A>`<B>device<CODE>&lt;-</CODE>graphicals</B>' 
+returns a chain holding the graphicals displayed on the device. The 
+example changes the font of all objects of class <A class="" href="summary.html#class:text">text</A> 
+to `bold'.
+
+<PRE class="code">
+...,
+send(Device?graphicals, for_all,
+     if(message(@arg1, instance_of, text),
+        message(@arg1, font, bold))),
+...
+</PRE>
+
+</DD>
+<DT><A NAME="class:chain_hyper"><STRONG>chain_hyper</STRONG>(<VAR></VAR>)</A></DT>
+<DD class="defbody">
+Link two objects with a `chain'. If either dies, the other will die with 
+it. See also the library <CODE>library(hyper)</CODE> and <A class="sec" href="hyper.html">section 
+10.11</A>.</DD>
+<DT><A NAME="class:chain_table"><STRONG>chain_table</STRONG>(<VAR></VAR>)</A></DT>
+<DD class="defbody">
+Version of a <A class="" href="summary.html#class:hash_table">hash_table</A> 
+that allows multiple values to be associated with the same key. The key 
+can be any object. If the value for a key is requested, a chain of 
+values associated with this key is returned.</DD>
+<DT><A NAME="class:char_array"><STRONG>char_array</STRONG>(<VAR></VAR>)</A></DT>
+<DD class="defbody">
+Class <A class="" href="summary.html#class:char_array">char_array</A> is 
+a super-class of the classes <A class="" href="summary.html#class:string">string</A>, 
+representing modifiable text and <A class="" href="summary.html#class:name">name</A>, 
+representing read-only unique textual constants. Class <A class="" href="summary.html#class:char_array">char_array</A> 
+defines most of the analysis methods for its two subclasses. Almost the 
+only usage of this class for application programmers is as type 
+specifier for methods in user-defined classes that do not modify textual 
+arguments.
+
+<PRE class="code">
+insert_bold_text(Editor, Text:char_array) :-&gt;
+        "Insert text with fragment of bold text"::
+        get(Editor, caret, Start),
+        send(Editor, insert, Text),
+        get(Editor, caret, End),
+        Len is End-Start,
+        new(_, fragment(Editor, Start, Len, bold)).
+</PRE>
+
+</DD>
+<DT><A NAME="class:circle"><STRONG>circle</STRONG>(<VAR></VAR>)</A></DT>
+<DD class="defbody">
+Equivalent to an ellipse with the same <B><CODE>&lt;-</CODE>width</B> 
+and <B><CODE>&lt;-</CODE>height</B>. Not used frequently.</DD>
+<DT><A NAME="class:class"><STRONG>class</STRONG>(<VAR></VAR>)</A></DT>
+<DD class="defbody">
+All <font size=-1>XPCE</font> classes are represented by an instance of 
+class <A class="" href="summary.html#class:class">class</A>. A class is 
+a normal object and can thus be manipulated using
+<A NAME="idx:send212:759"></A><A class="pred" href="sec-7.1.html#send/[2-12]">send/[2-12]</A>, <A NAME="idx:get313:760"></A><A class="pred" href="sec-D.1.html#get/3">get/[3-13]</A> 
+and <A NAME="idx:new2:761"></A><A class="pred" href="sec-D.1.html#new/2">new/2</A>. 
+Classes are normally only created and modified through the user-defined 
+class layer described in
+<A class="sec" href="udc.html">chapter 7</A>. Get methods on classes are 
+used to extract meta-information about its instances, as exploited by 
+the online manual tools.
+
+<PRE class="code">
+?- get(@pce, convert, box, class, ClassBox),
+   get(ClassBox, super_class, X).
+X = @graphical_class/class.
+</PRE>
+
+</DD>
+<DT><A NAME="class:class_variable"><STRONG>class_variable</STRONG>(<VAR></VAR>)</A></DT>
+<DD class="defbody">
+
+<P>A <A class="" href="summary.html#class:class_variable">class_variable</A> 
+provides can be used to describe class properties as well as to provide 
+access to the <font size=-1>XPCE</font>
+<CODE>Defaults</CODE> database. Typically, class-variables are defined 
+similar to instance-variables in the <font size=-1>XPCE</font>/Prolog 
+class definition:
+
+<PRE class="code">
+:- pce_begin_class(title_text, text).
+
+class_variable(font, font, huge, "Default font for titles").
+
+...
+</PRE>
+
+</DD>
+<DT><A NAME="class:click_gesture"><STRONG>click_gesture</STRONG>(<VAR></VAR>)</A></DT>
+<DD class="defbody">
+Class <A class="" href="summary.html#class:click_gesture">click_gesture</A> 
+is a <A class="" href="summary.html#class:recogniser">recogniser</A> 
+that parses button-events to a click. If the click is detected, it will 
+execute the associated message. This class is normally used to make 
+graphical objects sensitive to clicks.
+
+<PRE class="code">
+...,
+send(Bitmap, recogniser,
+     click_gesture(left, double, message(Bitmap, open))),
+...
+</PRE>
+
+</DD>
+<DT><A NAME="class:code"><STRONG>code</STRONG>(<VAR></VAR>)</A></DT>
+<DD class="defbody">
+Class <A class="" href="summary.html#class:code">code</A> is a 
+super-class for all `executable' objects. An important sub-class is 
+class <A class="" href="summary.html#class:function">function</A>, 
+representing executable objects that yield a value. The method <A NAME="idx:codesendforward:762"></A>`<B>code<CODE>-&gt;</CODE>forward</B>: 
+any ...' pushes the <A class="" href="summary.html#class:var">var</A> 
+objects <A NAME="idx:arg1:763"></A><B>@arg1</B>, ... and then executes 
+the code object. Code objects are often associated with controllers to 
+describe the action the controller should perform. They also serve the 
+role of <A NAME="idx:lambda:764">lambda</A> functions. See also <A class="sec" href="exeobjects.html">section 
+10.2</A>.
+
+<PRE class="code">
+?- send(message(@prolog, format, 'Hello ~w.', @arg1),
+        forward, world).
+Hello world.
+</PRE>
+
+</DD>
+<DT><A NAME="class:code_vector"><STRONG>code_vector</STRONG>(<VAR></VAR>)</A></DT>
+<DD class="defbody">
+A <A class="" href="summary.html#class:code_vector">code_vector</A> is a 
+subclass of class <A class="" href="summary.html#class:vector">vector</A> 
+that can represent functions as well as normal objects. It is used for 
+packing multiple arguments passed to a variable-argument method. Do not 
+use this class directly. See <A class="sec" href="sec-7.5.html">section 
+7.5.2</A>.</DD>
+<DT><A NAME="class:colour"><STRONG>colour</STRONG>(<VAR></VAR>)</A></DT>
+<DD class="defbody">
+A <A class="" href="summary.html#class:colour">colour</A> represents an 
+`RGB' triple.<SUP class="fn">21<SPAN class="fn-text">Colour screens 
+create their colour by mixing the `primary' colours `red', `green' and 
+`blue'. With an `RBG' triple, we refer to a triple of three numeric 
+values representing the intensities of the three primary colours</SPAN></SUP> 
+Colours are used as attributes to graphicals, windows, <A class="" href="summary.html#class:style">styles</A> 
+and
+<A class="" href="summary.html#class:pixmap">pixmaps</A></DD>
+<DT><A NAME="class:colour_map"><STRONG>colour_map</STRONG>(<VAR></VAR>)</A></DT>
+<DD class="defbody">
+Manipulate the colourmap. Colourmaps are normally left untouched, but 
+using a 256 entries colour palette in MS-Windows they can be used to 
+improve full-colour image rendering. See also <A class="sec" href="images.html">section 
+10.10.1</A>.</DD>
+<DT><A NAME="class:connect_gesture"><STRONG>connect_gesture</STRONG>(<VAR></VAR>)</A></DT>
+<DD class="defbody">
+A <A class="" href="summary.html#class:connect_gesture">connect_gesture</A> 
+allows the user to connect two graphicals by dragging from the first to 
+the second. This requires two graphicals with <A class="" href="summary.html#class:handle">handles</A>s 
+attached, a <A class="" href="summary.html#class:link">link</A> that is 
+compatible with the handles and a <A class="" href="summary.html#class:connect_gesture">connect_gesture</A> 
+associated width the graphical at which the connection should start. The 
+demo program PceDraw as well as the <font size=-1>XPCE</font> Dialog 
+Editor described in <A class="sec" href="dialogeditor.html">chapter A</A> 
+exploit connections and connect_gestures.</DD>
+<DT><A NAME="class:connection"><STRONG>connection</STRONG>(<VAR></VAR>)</A></DT>
+<DD class="defbody">
+A <A class="" href="summary.html#class:connection">connection</A> is a 
+line between two graphical objects that automatically updates on 
+geometry, device and displayed-status changes to either of the connected 
+graphicals. Both of the graphicals must have one or more <A class="" href="summary.html#class:handle">handles</A> 
+associated with them. The connection can be attached to a specific 
+handle, or to any handle of the proper
+<A NAME="idx:handlegetkind:765"></A>`<B>handle<CODE>&lt;-</CODE>kind</B>'. 
+In the latter case, the system will automatically choose the 
+`best-looking' handle.</DD>
+<DT><A NAME="class:constant"><STRONG>constant</STRONG>(<VAR></VAR>)</A></DT>
+<DD class="defbody">
+A <A class="" href="summary.html#class:constant">constant</A> is a 
+unique handle. <font size=-1>XPCE</font> predefines the following 
+constants: <A NAME="idx:nil:766"></A><B>@nil</B>, <A NAME="idx:default:767"></A><B>@default</B>, 
+and from the subclass <A class="" href="summary.html#class:bool">bool</A>, <A NAME="idx:on:768"></A><B>@on</B> 
+and <A NAME="idx:off:769"></A><B>@off</B>. The use can define additional 
+constants and give them their own unique meaning. The most obvious usage 
+is to indicate a slot that can hold arbitrary data including <A NAME="idx:nil:770"></A><B>@nil</B> 
+and <A NAME="idx:default:771"></A><B>@default</B> is in a special state.
+
+<PRE class="code">
+?- new(@uninitialised,
+       constant(uninitialised,
+                'Not yet initialised slot')).
+</PRE>
+
+</DD>
+<DT><A NAME="class:constraint"><STRONG>constraint</STRONG>(<VAR></VAR>)</A></DT>
+<DD class="defbody">
+A constraint is a relation between 2 objects that has to be maintained 
+if either of the objects is changed. The <A NAME="idx:constraintgetrelation:772"></A>`<B>constraint<CODE>&lt;-</CODE>relation</B>' 
+is a description of the relation maintained by the constrained. The 
+system defines the relations <A class="" href="summary.html#class:identity">identity</A> 
+(both objects have an attribute that has same value) and <A class="" href="summary.html#class:spatial">spatial</A> 
+(general purpose geometry-relation between two (graphical) objects. It 
+is possible to define new <A class="" href="summary.html#class:relation">relation</A> 
+classes. Constraints are getting out of fashion as <font size=-1>XPCE</font> 
+lacks a good mechanism to detect when an object has been changed and 
+therefore evaluates the relation far too often. User-defined classes, 
+possibly combined with <A class="" href="summary.html#class:hyper">hyper</A> 
+objects form an attractive alternative. The following keeps a text 
+centered in a box.
+
+<PRE class="code">
+...,
+new(_, constraint(Box, Text, identity(center))),
+...
+</PRE>
+
+</DD>
+<DT><A NAME="class:create"><STRONG>create</STRONG>(<VAR></VAR>)</A></DT>
+<DD class="defbody">
+Function that creates an instance of a class. It is often required if a 
+code fragment executed by an `iterator' method such as <A NAME="idx:chainsendforall:773"></A>`<B>chain<CODE>-&gt;</CODE>for_all</B>' 
+has to create objects. The following code generates <A class="" href="summary.html#class:dict_item">dict_items</A> 
+from all <A class="" href="summary.html#class:send_method">send_method</A>s 
+of the specified class and displays them to a <A class="" href="summary.html#class:browser">browser</A>.
+
+<PRE class="code">
+send_methods_of_class(ClassName) :-
+        new(B, browser(ClassName)),
+        get(@pce, convert, ClassName, class, Class),
+        get(Class, send_methods, SendMethods),
+        send(SendMethods, for_all,
+             message(B, append,
+                     create(dict_item,
+                            @arg1?name,
+                            @default,
+                            @arg1))),
+        send(B, open).
+</PRE>
+
+</DD>
+<DT><A NAME="class:cursor"><STRONG>cursor</STRONG>(<VAR></VAR>)</A></DT>
+<DD class="defbody">
+A <A class="" href="summary.html#class:cursor">cursor</A> defines the 
+shape that indicates the position of the
+<A NAME="idx:pointer:774">pointer</A> (also called <A NAME="idx:mouse:775">mouse</A>). 
+The system provides a large set of predefined cursors from <A NAME="idx:X11:776">X11</A>. 
+The Win32 version adds the standard Windows cursors to this set. Cursors 
+can also be created from an <A class="" href="summary.html#class:image">image</A>. 
+The demo program <STRONG>Cursors</STRONG> displays all defined cursors.
+
+<P>Cursors can be associated with graphicals and windows using the <B><CODE>-&gt;</CODE>cursor</B> 
+method. They are also associated to <A class="" href="summary.html#class:gesture">gestures</A>, 
+where they define the cursor that is visible while the gesture is active 
+(i.e. while the mouse-button that activated the gesture is down).
+
+<P>Type-conversion converts names into cursor objects. Explicit creation 
+of cursors is rarely used.
+
+<PRE class="code">
+...,
+send(Box, cursor, gobbler),
+...
+</PRE>
+
+</DD>
+<DT><A NAME="class:date"><STRONG>date</STRONG>(<VAR></VAR>)</A></DT>
+<DD class="defbody">
+A <A class="" href="summary.html#class:date">date</A> objects represents 
+a point in time. The underlying representation is the POSIX file 
+time-stamp: seconds elapsed since 00.00, Jan 1-st, 1970. This limits the 
+applicability of this class to time-stamps of computer resources 
+(files), agenda systems and other domains that do not require a 
+granularity below 1 second or have to represent time-stamps in far 
+history or future. Class <A class="" href="summary.html#class:date">date</A> 
+can parse various textual representations into date objects.
+
+<PRE class="code">
+?- send(@pce, format, 'It is now "%s"\n',
+        new(date)?string).
+It is now "Tue Jan 30 14:07:05 1996"
+</PRE>
+
+</DD>
+<DT><A NAME="class:device"><STRONG>device</STRONG>(<VAR></VAR>)</A></DT>
+<DD class="defbody">
+A graphical <A class="" href="summary.html#class:device">device</A> is a <A NAME="idx:compoundgraphical:777">compound graphical</A>. 
+It is the super-class of class <A class="" href="summary.html#class:window">window</A>. 
+It is a sub-class of <A class="" href="summary.html#class:graphical">graphical</A>, 
+which implies devices can be used to create a consist-of structure of 
+graphical objects, giving structure to a diagram. Devices are commonly 
+refined to establish <A NAME="idx:userdefinedgraphics:778">user-defined graphics</A>, 
+see <A class="sec" href="ugraphics.html">section 10.12</A>. See also 
+class <A class="" href="summary.html#class:figure">figure</A>.
+
+<PRE class="code">
+make_icon(Icon, Image, Label) :-
+        new(Icon, device),
+        send(Icon, display,
+             new(BM, bitmap(Image))),
+        send(Icon, display,
+             new(T, text(Label, center))),
+        send(T, y, BM?bottom_side),
+        send(T, center_x, BM?center_x).
+</PRE>
+
+</DD>
+<DT><A NAME="class:dialog"><STRONG>dialog</STRONG>(<VAR></VAR>)</A></DT>
+<DD class="defbody">
+A <A class="" href="summary.html#class:dialog">dialog</A> is a <A class="" href="summary.html#class:window">window</A> 
+specialised for the layout and message handling required by <A class="" href="summary.html#class:dialog_item">dialog_items</A>, 
+the super-class of the <font size=-1>XPCE</font> <A NAME="idx:controller:779">controller</A>s. 
+In most cases, controller-windows are created by simply <B><CODE>-&gt;</CODE>append</B>ing 
+a number of controllers to a dialog window. The <A class="" href="summary.html#class:frame">frame</A>- 
+and <A class="" href="summary.html#class:dialog">dialog</A>-layout 
+services take care of proper window sizes and layout of the controllers. 
+Dialog windows are also involved in forwarding <B><CODE>-&gt;</CODE>report</B> 
+messages (see <A class="sec" href="report.html">section 10.7</A>) and 
+keyboard accelerators, handling the default button.
+
+<PRE class="code">
+:- pce_autoload(file_item, library(file_item)).
+
+edit_file_dialog :-
+        new(D, dialog('Edit File')),
+        send(D, append,
+             file_item(edit_file, '')),
+        send(D, append,
+             button(edit, message(@prolog, emacs, @arg1))),
+        send(D, append,
+             button(cancel, message(D, destroy))),
+        send(D, open).
+</PRE>
+
+</DD>
+<DT><A NAME="class:dialog_group"><STRONG>dialog_group</STRONG>(<VAR></VAR>)</A></DT>
+<DD class="defbody">
+A <A class="" href="summary.html#class:dialog_group">dialog_group</A> is 
+a collection of <A class="" href="summary.html#class:dialog_item">dialog_items</A>. 
+Dialog groups may be used to realise a (labeled) box around a group of 
+controllers, or to combine multiple controllers into a compound one for 
+technical or layout reasons. See also <A class="" href="summary.html#class:tab">tab</A>.</DD>
+<DT><A NAME="class:dialog_item"><STRONG>dialog_item</STRONG>(<VAR></VAR>)</A></DT>
+<DD class="defbody">
+Class <A class="" href="summary.html#class:dialog_item">dialog_item</A> 
+is a super-class of all <font size=-1>XPCE</font> controllers. It 
+contains the code necessary to negotiate geometry with its neighbours 
+and enclosing <A class="" href="summary.html#class:dialog">dialog</A> 
+window and provides default fonts for the label, etc. Class <A class="" href="summary.html#class:graphical">graphical</A> 
+defines similar methods to allow integration of raw graphical objects 
+into dialog windows easily, but
+<A class="" href="summary.html#class:graphical">graphical</A> uses the 
+more expensive object-level attributes for storing the necessary status. 
+Open the class-hierarchy below class
+<A class="" href="summary.html#class:dialog_item">dialog_item</A> to 
+find all available <A NAME="idx:controllers:780">controllers</A>.</DD>
+<DT><A NAME="class:dict"><STRONG>dict</STRONG>(<VAR></VAR>)</A></DT>
+<DD class="defbody">
+A <A class="" href="summary.html#class:dict">dict</A> is an abbreviation 
+of <A NAME="idx:dictionary:781">dictionary</A>. Dicts map keywords to <A class="" href="summary.html#class:dict_item">dict_item</A> 
+objects. Small dicts simply use a linear list (<A class="" href="summary.html#class:chain">chain</A>) 
+of items. Large dicts will automatically built a
+<A class="" href="summary.html#class:hash_table">hash_table</A> for 
+quick lookup on the first request that profits from the availability of 
+a table. A dict provides the storage for a
+<A class="" href="summary.html#class:list_browser">list_browser</A>. See 
+also class <A class="" href="summary.html#class:browser">browser</A>.</DD>
+<DT><A NAME="class:dict_item"><STRONG>dict_item</STRONG>(<VAR></VAR>)</A></DT>
+<DD class="defbody">
+Item in a <A class="" href="summary.html#class:dict">dict</A>. The <EM>key</EM> 
+is used for lookup. <EM>label</EM> is the text displayed by the <A class="" href="summary.html#class:browser">browser</A> 
+(<A NAME="idx:default:782"></A><B>@default</B> uses the <EM>key</EM>).
+<EM>Object</EM> is an arbitrary object that can be associated to the 
+dict. If a dict presents a set of <font size=-1>XPCE</font> objects, it 
+is common practice to extract the key and or label from the object and 
+store the object itself in the
+<A NAME="idx:dictitembothobject:783"></A>`<B>dict_item<CODE>&lt;-&gt;</CODE>object</B>' 
+slot.
+
+<P>A <A class="" href="summary.html#class:name">name</A> is translated 
+to a dict_item using the name as <EM>key</EM>, default label and <A NAME="idx:nil:784"></A><B>@nil</B> 
+object. <A NAME="idx:dictitembothstyle:785"></A>`<B>dict_item<CODE>&lt;-&gt;</CODE>style</B>' 
+can be used to give an item special attributes (colour, font, etc.).</DD>
+<DT><A NAME="class:directory"><STRONG>directory</STRONG>(<VAR></VAR>)</A></DT>
+<DD class="defbody">
+A <A class="" href="summary.html#class:directory">directory</A> 
+represents an node (<A NAME="idx:folder:786">folder</A>) in the 
+computer's file-system. Directories are most commonly used to enumerate 
+the files and sub directories. Directory objects can also be used to 
+create or delete directories from the file-system.
+
+<PRE class="code">
+?- get(directory(.), files, Files).
+</PRE>
+
+</DD>
+<DT><A NAME="class:display"><STRONG>display</STRONG>(<VAR></VAR>)</A></DT>
+<DD class="defbody">
+A <A class="" href="summary.html#class:display">display</A> represents 
+what X11 calls a <A NAME="idx:screen:787">screen</A>, a desktop on which 
+windows can be displayed with a mouse and keyboard attached to it.
+<font size=-1>XPCE</font> support multiple display instances under X11 
+and only the predefined default display <A NAME="idx:display:788"></A><B>@display</B> 
+under Win32. The display implements a number of global operations: 
+getting the screen <B><CODE>&lt;-</CODE>size</B>, showing modal message 
+boxes using <B><CODE>-&gt;</CODE>inform</B> and <B><CODE>-&gt;</CODE>confirm</B>, 
+etc.
+
+<PRE class="code">
+?- get(@display. size, size(W, H)).
+W = 1024, H = 786
+</PRE>
+
+</DD>
+<DT><A NAME="class:display_manager"><STRONG>display_manager</STRONG>(<VAR></VAR>)</A></DT>
+<DD class="defbody">
+The object <A NAME="idx:displaymanager:789"></A><B>@display_manager</B> 
+is the only instance of this class. It represents the collection of 
+available <A class="" href="summary.html#class:display">display</A> 
+objects and provides access to the system-wide event-dispatching 
+services. It is the root of the consist-of hierarchy of <A class="" href="summary.html#class:visual">visual</A> 
+objects as displayed by the <STRONG>Visual Hierarchy</STRONG> tool.</DD>
+<DT><A NAME="class:edit_text_gesture"><STRONG>edit_text_gesture</STRONG>(<VAR></VAR>)</A></DT>
+<DD class="defbody">
+Used internally to handle selection inside a <A class="" href="summary.html#class:text">text</A> 
+object. See also the library <CODE>library(pce_editable_text)</CODE>.</DD>
+<DT><A NAME="class:editor"><STRONG>editor</STRONG>(<VAR></VAR>)</A></DT>
+<DD class="defbody">
+An <A class="" href="summary.html#class:editor">editor</A> is a 
+general-purpose text editor. It is a graphical. Class <A class="" href="summary.html#class:view">view</A> 
+provides a window-based version of the editor. <font size=-1>XPCE</font>'s 
+editors have commands and key-bindings that are based on
+<A NAME="idx:GNUEmacs:790">GNU-Emacs</A>. Editors are fully 
+programmable. The associated
+<A class="" href="summary.html#class:key_binding">key_binding</A> object 
+parses key-strokes into commands that are defined as methods on the 
+editor.
+
+<P>An editor is a compound object and a subclass of <A class="" href="summary.html#class:device">device</A>. 
+The other components are a <A class="" href="summary.html#class:text_image">text_image</A> 
+to form the actual display, a
+<A class="" href="summary.html#class:text_buffer">text_buffer</A> to 
+provide the storage for the text, elementary operations on the text and <A NAME="idx:undo:791">undo</A>, 
+a <A class="" href="summary.html#class:text_cursor">text_cursor</A> to 
+indicate the location of the caret, and optionally a <A class="" href="summary.html#class:text_margin">text_margin</A> 
+to visualise the presence of <A NAME="idx:annotations:792">annotations</A>.
+
+<P>A single <A class="" href="summary.html#class:text_buffer">text_buffer</A> 
+can be associated with multiple
+<A class="" href="summary.html#class:editor">editor</A> objects, 
+providing <A NAME="idx:sharedediting:793">shared editing</A>.
+
+<P>Editors can handle sensitive regions, different fonts, colours and 
+attributes using <A class="" href="summary.html#class:fragment">fragment</A> 
+objects. All text windows in <font size=-1>XPCE</font>'s demo programs 
+(PceEmacs, cards from the online help, application help, etc.) either 
+use class view or class editor to display the text.</DD>
+<DT><A NAME="class:elevation"><STRONG>elevation</STRONG>(<VAR></VAR>)</A></DT>
+<DD class="defbody">
+An <A class="" href="summary.html#class:elevation">elevation</A> object 
+describes an elevated region on the screen. Elevations come in two 
+flavours: as a shadow for monochrome displays and using light and dark 
+edges on colour displays. The elevation object itself just contains the 
+colour definitions. The actual painting is left to the graphical object 
+the elevation is attached to.
+
+<P>Most controllers handle elevations. The only general purpose 
+graphical supporting an elevation is <A class="" href="summary.html#class:figure">figure</A>.</DD>
+<DT><A NAME="class:ellipse"><STRONG>ellipse</STRONG>(<VAR></VAR>)</A></DT>
+<DD class="defbody">
+Elliptical shape. Class <A class="" href="summary.html#class:ellipse">ellipse</A> 
+defines similar attributes as
+<A class="" href="summary.html#class:box">box</A>: pen, texture, 
+fill_pattern and shadow. See also
+<A class="" href="summary.html#class:circle">circle</A>.</DD>
+<DT><A NAME="class:error"><STRONG>error</STRONG>(<VAR></VAR>)</A></DT>
+<DD class="defbody">
+An <A class="" href="summary.html#class:error">error</A> object 
+represents a runtime message. Whenever an error is trapped or a message 
+needs to be displayed, the system will invoke
+<A NAME="idx:objectsenderror:794"></A>`<B>object<CODE>-&gt;</CODE>error</B>: 
+id, context ...' to the object that trapped the error. If this method is 
+not redefined, the system will report the error using the <A NAME="idx:objectsendreport:795"></A>`<B>object<CODE>-&gt;</CODE>report</B>' 
+mechanism described in <A class="sec" href="report.html">section 10.7</A>. 
+Errors can be prevented from being reported using <A NAME="idx:pcecatcherror2:796"></A><A class="pred" href="errors.html#pce_catch_error/2">pce_catch_error/2</A>. 
+The
+<STRONG>Error Browser</STRONG> of the online manual shows all defined 
+errors.
+
+<P>The development system will report errors that are considered 
+`programming errors' (undefined methods, type violations, invalid object 
+references, etc.) to the terminal and start the tracer. See also
+<A class="sec" href="debugging.html">section 12</A>.</DD>
+<DT><A NAME="class:event"><STRONG>event</STRONG>(<VAR></VAR>)</A></DT>
+<DD class="defbody">
+An <A class="" href="summary.html#class:event">event</A> represents an 
+action from the application user: pressing a key, moving the mouse, 
+pressing a mouse-button, or entering or leaving an area with the mouse. 
+The main loop of <font size=-1>XPCE</font> will read window-system 
+events from the computing environment (X11 or Win32). If the event 
+concerns a repaint or similar system event, it will be handled 
+appropriately. If it can be expressed as an <font size=-1>XPCE</font> 
+event, an
+<A class="" href="summary.html#class:event">event</A> object will be 
+created and send to the window for which the event was reported by the 
+system using the method <A NAME="idx:eventsendpost:797"></A>`<B>event<CODE>-&gt;</CODE>post</B>'.
+
+<P>Graphical objects and windows can redefine their event handling using 
+two mechanisms: by redefining the <B><CODE>-&gt;</CODE>event</B> method 
+or by associating a <A class="" href="summary.html#class:recogniser">recogniser</A> 
+object using <A NAME="idx:graphicalsendrecogniser:798"></A>`<B>graphical<CODE>-&gt;</CODE>recogniser</B>'.
+
+<P>Normally, <font size=-1>XPCE</font> will read and dispatch events 
+when `there is nothing else to do'. For processing events during 
+computation, see `graphical
+<B><CODE>-&gt;</CODE>synchronise</B>' and <A NAME="idx:displaysenddispatch:799"></A>`<B>display<CODE>-&gt;</CODE>dispatch</B>'.</DD>
+<DT><A NAME="class:event_node"><STRONG>event_node</STRONG>(<VAR></VAR>)</A></DT>
+<DD class="defbody">
+An <A class="" href="summary.html#class:event_node">event_node</A> is a 
+node in the event `is_a' hierarchy. See the demo program <STRONG>Events</STRONG>. 
+Event-types are normally tested using
+<A NAME="idx:eventsendisa:800"></A>`<B>event<CODE>-&gt;</CODE>is_a</B>'.
+
+<PRE class="code">
+event(Dev, Ev:event) :-&gt;
+        "Forward all keyboard events to the text"::
+        (   send(Ev, is_a, keyboard)
+        -&gt;  get(Dev, member, text, Text),
+            send(Ev, post, Text)
+        ;   send(Dev, send_super, event, Ev)
+        ).
+</PRE>
+
+</DD>
+<DT><A NAME="class:event_tree"><STRONG>event_tree</STRONG>(<VAR></VAR>)</A></DT>
+<DD class="defbody">
+Event `is_a' hierarchy. The only instance is <A NAME="idx:eventtree:801"></A><B>@event_tree</B>.</DD>
+<DT><A NAME="class:figure"><STRONG>figure</STRONG>(<VAR></VAR>)</A></DT>
+<DD class="defbody">
+A <A class="" href="summary.html#class:figure">figure</A> is a 
+refinement of a <A class="" href="summary.html#class:device">device</A>. 
+It is a compound graphical, but in addition can define a background, 
+surrounding box with margin, possibly rounded corners and <A class="" href="summary.html#class:elevation">elevation</A> 
+and a
+<A NAME="idx:clipping:802">clipping</A> region. Finally, figures may be 
+used not only to display all member graphicals, but also to show `one 
+of' the member graphicals only. See <A NAME="idx:figuresendstatus:803"></A>`<B>figure<CODE>-&gt;</CODE>status</B>'. 
+An example of the usage of figures are the `object cards' of the <STRONG>Inspector</STRONG> 
+tool.</DD>
+<DT><A NAME="class:file"><STRONG>file</STRONG>(<VAR></VAR>)</A></DT>
+<DD class="defbody">
+An <font size=-1>XPCE</font> <A class="" href="summary.html#class:file">file</A> 
+object represents a file on the computers file-system. It can be used to 
+specify a file, query a file for various attributes, read a file, etc. 
+See also <A class="" href="summary.html#class:directory">directory</A>.
+
+<PRE class="code">
+?- get(file('summary.doc', size, Size).
+Size = 30762
+</PRE>
+
+</DD>
+<DT><A NAME="class:font"><STRONG>font</STRONG>(<VAR></VAR>)</A></DT>
+<DD class="defbody">
+A <A class="" href="summary.html#class:font">font</A> is a reusable 
+object that describes the typeface of text.
+<A class="sec" href="font.html">Section 10.9</A> documents the 
+specification of physical and logical fonts.
+
+<PRE class="code">
+...,
+send(Text, font, bold),
+...
+</PRE>
+
+</DD>
+<DT><A NAME="class:format"><STRONG>format</STRONG>(<VAR></VAR>)</A></DT>
+<DD class="defbody">
+A <A class="" href="summary.html#class:format">format</A> describes the <A NAME="idx:layoutofgraphicals:804">layout of graphicals</A> 
+on a
+<A class="" href="summary.html#class:device">device</A>. It can specify 
+`<A NAME="idx:tabular:805">tabular</A>' and `<A NAME="idx:paragraph:806">paragraph</A>' 
+style layout. A format itself just specifies the parameters, `device
+<B><CODE>-&gt;</CODE>format</B>' actually realises the format.</DD>
+<DT><A NAME="class:fragment"><STRONG>fragment</STRONG>(<VAR></VAR>)</A></DT>
+<DD class="defbody">
+A <A class="" href="summary.html#class:fragment">fragment</A> defines a 
+region of text in a <A class="" href="summary.html#class:text_buffer">text_buffer</A> 
+using a start-position and a length. Fragments are automatically updated 
+if the contents of the text_buffer changes. A fragment can be assigned a 
+logical `category', called `style'. The <A class="" href="summary.html#class:editor">editor</A> 
+visualising the text_buffer maps the style-names of fragments into
+<A class="" href="summary.html#class:style">style</A> objects using <A NAME="idx:editorsendstyle:807"></A>`<B>editor<CODE>-&gt;</CODE>style</B>'.
+
+<PRE class="code">
+...,
+send(Editor, style, title, style(font := huge)),
+new(_, fragment(Editor, Start, Len, title)),
+...
+</PRE>
+
+</DD>
+<DT><A NAME="class:frame"><STRONG>frame</STRONG>(<VAR></VAR>)</A></DT>
+<DD class="defbody">
+A <A class="" href="summary.html#class:frame">frame</A> is a collection 
+of <A class="" href="summary.html#class:tile">tile</A><EM>d</EM> 
+windows. Frames handle the layout, resizing, etc. of its member windows. 
+Any <font size=-1>XPCE</font> window is enclosed in a frame, though it 
+is often not necessary to specify a frame explicitly. Applications are 
+often implemented as subclasses of <A class="" href="summary.html#class:frame">frame</A>. <A class="sec" href="framelayout.html">Section 
+10.6</A> describes the layout of windows inside a frame.
+
+<PRE class="code">
+...,
+new(F, frame('My application')),
+send(F, append, new(B, browser)),
+send(new(P, picture), right, B),
+...
+send(F, open).
+</PRE>
+
+</DD>
+<DT><A NAME="class:function"><STRONG>function</STRONG>(<VAR></VAR>)</A></DT>
+<DD class="defbody">
+A <A class="" href="summary.html#class:function">function</A> is a <A class="" href="summary.html#class:code">code</A> 
+object that yields a value when executed. See <A class="sec" href="exeobjects.html">section 
+10.2.2</A>.</DD>
+<DT><A NAME="class:gesture"><STRONG>gesture</STRONG>(<VAR></VAR>)</A></DT>
+<DD class="defbody">
+Class <A class="" href="summary.html#class:gesture">gesture</A> is the 
+super-class for the <A class="" href="summary.html#class:recogniser">recogniser</A> 
+classes that deal with the sequence mouse-button-down ... dragging ... 
+mouse-button-up. This super-class validates the various conditions, 
+handles the cursor and focus and activates the <B><CODE>-&gt;</CODE>initiate</B>,
+<B><CODE>-&gt;</CODE>drag</B> and <B><CODE>-&gt;</CODE>terminate</B> 
+methods that are redefined in its subclasses. This class is often 
+sub-classed.</DD>
+<DT><A NAME="class:get_method"><STRONG>get_method</STRONG>(<VAR></VAR>)</A></DT>
+<DD class="defbody">
+Specification of get-behaviour that is associated with a class using
+<A NAME="idx:classsendgetmethod:808"></A>`<B>class<CODE>-&gt;</CODE>get_method</B>' 
+or with an individual object using `object
+<B><CODE>-&gt;</CODE>get_method</B>'. Normally specified through the 
+preprocessor layer defined in <A class="sec" href="udc.html">chapter 7</A>.</DD>
+<DT><A NAME="class:graphical"><STRONG>graphical</STRONG>(<VAR></VAR>)</A></DT>
+<DD class="defbody">
+The most generic graphical object. This class defines generic geometry 
+management, display, update, event-handling, etc. This class can be 
+sub-classed to defined specialised graphics. See <A class="sec" href="ugraphics.html">section 
+10.12</A>.</DD>
+<DT><A NAME="class:grbox"><STRONG>grbox</STRONG>(<VAR></VAR>)</A></DT>
+<DD class="defbody">
+Embed a graphical in a <A class="" href="summary.html#class:parbox">parbox</A>. 
+Using <CODE>left</CODE> or
+<CODE>right</CODE> alignment, <A class="" href="summary.html#class:grbox">grbox</A> 
+can also be used to have text floating around graphical illustrations. 
+See <A class="sec" href="docrender.html">section 11.10</A>.</DD>
+<DT><A NAME="class:handle"><STRONG>handle</STRONG>(<VAR></VAR>)</A></DT>
+<DD class="defbody">
+A <A class="" href="summary.html#class:handle">handle</A> defines a 
+typed and named position on a graphical used by connections to connect 
+to. The positions are formulas expressed in the with and height of the 
+graphical. The following definitions are encountered regularly:
+
+<PRE class="code">
+:- pce_global(@north_handle,
+              new(handle(w/2, 0, link, north))).
+:- pce_global(@south_handle,
+              new(handle(w/2, h, link, south))).
+:- pce_global(@east_handle,
+              new(handle(0, h/2, link, east))).
+:- pce_global(@west_handle,
+              new(handle(w, h/2, link, west))).
+</PRE>
+
+</DD>
+<DT><A NAME="class:handler"><STRONG>handler</STRONG>(<VAR></VAR>)</A></DT>
+<DD class="defbody">
+A <A class="" href="summary.html#class:handler">handler</A> is the most 
+primitive <A class="" href="summary.html#class:recogniser">recogniser</A>, 
+mapping an event-type to a message. Since the introduction of the more 
+specialised
+<A class="" href="summary.html#class:gesture">gesture</A> and <A class="" href="summary.html#class:key_binding">key_binding</A> 
+as well as the possibility to refine the <A NAME="idx:graphicalsendevent:809"></A>`<B>graphical<CODE>-&gt;</CODE>event</B>' 
+method, it is now rarely used.
+
+<PRE class="code">
+...,
+send(Graphical, recogniser,
+     handler(area_enter,
+             message(Graphical, report,
+                     'Hi, I''m %s',
+                     Graphical?name))),
+...
+</PRE>
+
+</DD>
+<DT><A NAME="class:handler_group"><STRONG>handler_group</STRONG>(<VAR></VAR>)</A></DT>
+<DD class="defbody">
+A <A class="" href="summary.html#class:handler_group">handler_group</A> 
+is a compound <A class="" href="summary.html#class:recogniser">recogniser</A> 
+object. When asked to handle an event, it will try each of its members 
+until one accepts the event, after which it will return success to its 
+caller. The following defines a combined move- an resize-gesture. Note 
+the order: resize gestures only activate close by the edges of the 
+graphical, while move gestures do not have such a limitation.
+
+<PRE class="code">
+:- pce_global(@move_resize_gesture,
+      new(handler_group(new(resize_gesture),
+                        new(move_gesture)))).
+</PRE>
+
+</DD>
+<DT><A NAME="class:hash_table"><STRONG>hash_table</STRONG>(<VAR></VAR>)</A></DT>
+<DD class="defbody">
+A <A class="" href="summary.html#class:hash_table">hash_table</A> is a 
+fast association table between pairs of objects. For example, <A NAME="idx:classes:810"></A><B>@classes</B> 
+is a hash_table mapping class-names into class objects. Names are often 
+used as <EM>keys</EM>, but the implementation poses no limit on the type 
+of the key.
+
+<PRE class="code">
+?- new(@ht, hash_table),
+   send(@ht, append, gnu, image('gnu.img')).
+
+?- get(@ht, member, gnu, Image).
+</PRE>
+
+</DD>
+<DT><A NAME="class:hbox"><STRONG>hbox</STRONG>(<VAR></VAR>)</A></DT>
+<DD class="defbody">
+Superclass of <A class="" href="summary.html#class:tbox">tbox</A> and <A class="" href="summary.html#class:grbox">grbox</A> 
+dealing with document-rendering. Instances of <A class="" href="summary.html#class:hbox">hbox</A> 
+itself can be used to define `rubber'. See <A class="sec" href="docrender.html">section 
+11.10</A> for details.</DD>
+<DT><A NAME="class:host"><STRONG>host</STRONG>(<VAR></VAR>)</A></DT>
+<DD class="defbody">
+Class <A class="" href="summary.html#class:host">host</A> represents the <A NAME="idx:hostlanguage:811">host-language</A>, 
+Prolog for this manual. It predefines a single instance called <A NAME="idx:prolog:812"></A><B>@prolog</B>. 
+Sending messages to <A NAME="idx:prolog:813"></A><B>@prolog</B> calls 
+predicates. See also <A class="sec" href="pceprolog.html">section 6</A>.
+
+<PRE class="code">
+?- send(@prolog, write, hello).
+hello
+</PRE>
+
+</DD>
+<DT><A NAME="class:host_data"><STRONG>host_data</STRONG>(<VAR></VAR>)</A></DT>
+<DD class="defbody">
+Support class for passing data of the host-language natively around in
+<font size=-1>XPCE</font>. The Prolog interface defines the subclass
+<B>prolog_term</B> and the interface-type <B><CODE>prolog</CODE></B>. 
+Details are discussed in the interface definition in <A class="sec" href="prologdata.html">section 
+6.2</A>.</DD>
+<DT><A NAME="class:hyper"><STRONG>hyper</STRONG>(<VAR></VAR>)</A></DT>
+<DD class="defbody">
+A <A class="" href="summary.html#class:hyper">hyper</A> is a <A NAME="idx:binaryrelation:814">binary relation</A> 
+between two objects. The relation can be created, destroyed and 
+inspected. It is automatically destroyed if either of the two connected 
+objects is destroyed. The destruction can be trapped. Messages may be 
+forwarded easily to all related objects. See also <A class="sec" href="hyper.html">section 
+10.11</A>.</DD>
+<DT><A NAME="class:identity"><STRONG>identity</STRONG>(<VAR></VAR>)</A></DT>
+<DD class="defbody">
+An <A class="" href="summary.html#class:identity">identity</A> is a <A class="" href="summary.html#class:relation">relation</A> 
+that maintains the identify between an attribute on one object and an 
+attribute on another object. Given a slider and a box, the following 
+ensures the selection of the slider is the same as the width of the box, 
+regardless of which of the two is changed. See also <A class="" href="summary.html#class:constraint">constraint</A>.
+
+<PRE class="code">
+new(_, constraint(Slider, Box,
+                  identity(selection, width)))
+</PRE>
+
+</DD>
+<DT><A NAME="class:if"><STRONG>if</STRONG>(<VAR></VAR>)</A></DT>
+<DD class="defbody">
+Code object implementing a <A NAME="idx:branch:815">branch</A>. All 
+three arguments are statements. Both `then' and `else' are optional, and 
+when omitted, simply succeed. Class <A class="" href="summary.html#class:if">if</A> 
+is most commonly used in combination with the iteration methods such as <A NAME="idx:chainsendforall:816"></A>`<B>chain<CODE>-&gt;</CODE>for_all</B>':
+
+<PRE class="code">
+...,
+send(Device?graphicals, for_all,
+     if(message(@arg1, instance_of, device),
+        ...)),
+...
+</PRE>
+
+</DD>
+<DT><A NAME="class:image"><STRONG>image</STRONG>(<VAR></VAR>)</A></DT>
+<DD class="defbody">
+An <A class="" href="summary.html#class:image">image</A> is a 
+two-dimensional array of pixels. Images come in two flavours: 
+monochrome, where each pixel represents a boolean and colour, where each 
+pixel represents a colour. <font size=-1>XPCE</font> can save and load 
+both monochrome and colour images. Images are displayed on a graphical 
+device using a <A class="" href="summary.html#class:bitmap">bitmap</A>. 
+They are also used to specify
+<A class="" href="summary.html#class:cursor">cursor</A> objects and the 
+icon associated with a `frame'. See <A class="sec" href="images.html">section 
+10.10</A>.</DD>
+<DT><A NAME="class:int_item"><STRONG>int_item</STRONG>(<VAR></VAR>)</A></DT>
+<DD class="defbody">
+Subclass of <A class="" href="summary.html#class:text_item">text_item</A> 
+for entering integer values. Has stepper buttons for incrementing and 
+decrementing the value.</DD>
+<DT><A NAME="class:joint"><STRONG>joint</STRONG>(<VAR></VAR>)</A></DT>
+<DD class="defbody">
+Class <A class="" href="summary.html#class:joint">joint</A> is a 
+super-class of the various line-types with a start- end end-point. It 
+provides the code dealing with attached
+<A class="" href="summary.html#class:arrow">arrow</A><EM>-heads</EM> at 
+either end. As well as common code to reason about the start and end. 
+See also <A class="" href="summary.html#class:line">line</A>, <A class="" href="summary.html#class:path">path</A>,
+<A class="" href="summary.html#class:arc">arc</A> and <A class="" href="summary.html#class:connection">connection</A>.</DD>
+<DT><A NAME="class:key_binding"><STRONG>key_binding</STRONG>(<VAR></VAR>)</A></DT>
+<DD class="defbody">
+A <A class="" href="summary.html#class:key_binding">key_binding</A> 
+object parses events into messages or methods on the object for which it 
+is handling events. Key-bindings are used by the classes <A class="" href="summary.html#class:text">text</A>, <A class="" href="summary.html#class:text_item">text_item</A>, <A class="" href="summary.html#class:editor">editor</A> 
+and
+<A class="" href="summary.html#class:list_browser">list_browser</A>. 
+They can be used to defined
+<A NAME="idx:keyboardaccelerators:817">keyboard-accelerators</A>, though <A NAME="idx:menuitembothaccelerator:818"></A>`<B>menu_item<CODE>&lt;-&gt;</CODE>accelerator</B>' 
+is generally more suitable for this purpose.</DD>
+<DT><A NAME="class:label"><STRONG>label</STRONG>(<VAR></VAR>)</A></DT>
+<DD class="defbody">
+A <A class="" href="summary.html#class:label">label</A> is a controller 
+used to display read-only text or
+<A class="" href="summary.html#class:image">image</A>. Labels can handle <B><CODE>-&gt;</CODE>report</B> 
+messages. See <A class="sec" href="report.html">section 10.7</A>. The 
+code below is the typical way to associate a label that will catch 
+report messages for all windows of the <A class="" href="summary.html#class:frame">frame</A> 
+in which the
+<A class="" href="summary.html#class:dialog">dialog</A> is enclosed.
+
+<PRE class="code">
+...,
+send(Dialog, append, label(reporter)),
+...
+</PRE>
+
+</DD>
+<DT><A NAME="class:label_box"><STRONG>label_box</STRONG>(<VAR></VAR>)</A></DT>
+<DD class="defbody">
+Subclass of <A class="" href="summary.html#class:dialog_group">dialog_group</A> 
+for the definition of compound controllers with a properly aligned label 
+at their left-hand side.</DD>
+<DT><A NAME="class:layout_manager"><STRONG>layout_manager</STRONG>(<VAR></VAR>)</A></DT>
+<DD class="defbody">
+</DD>
+<DT><A NAME="class:layout_interface"><STRONG>layout_interface</STRONG>(<VAR></VAR>)</A></DT>
+<DD class="defbody">
+
+<P>A <A class="" href="summary.html#class:layout_manager">layout_manager</A> 
+may be attached to a graphical <A class="" href="summary.html#class:device">device</A> 
+(including a <A class="" href="summary.html#class:window">window</A>) to 
+manage the layout of graphicals displayed on the device, as well as 
+painting the background of the device. See <A class="" href="summary.html#class:table">table</A> 
+for a typical example.</DD>
+<DT><A NAME="class:lbox"><STRONG>lbox</STRONG>(<VAR></VAR>)</A></DT>
+<DD class="defbody">
+Class of the document-rendering system to render a list environment, a 
+sequence of labels and text. See <A class="sec" href="docrender.html">section 
+11.10</A> for details.</DD>
+<DT><A NAME="class:line"><STRONG>line</STRONG>(<VAR></VAR>)</A></DT>
+<DD class="defbody">
+A <A class="" href="summary.html#class:line">line</A> is a straight 
+line-segment with optional arrows, thickness and texture. Class <A class="" href="summary.html#class:path">path</A> 
+implements a `multi-line'.</DD>
+<DT><A NAME="class:link"><STRONG>link</STRONG>(<VAR></VAR>)</A></DT>
+<DD class="defbody">
+A <A class="" href="summary.html#class:link">link</A> is a reusable 
+specification for a <A class="" href="summary.html#class:connection">connection</A>. 
+Links are used for defining connections and <A class="" href="summary.html#class:connect_gesture">connect_gesture</A> 
+objects. A connection knows about the link used to instantiate it. The 
+example defines the <A class="" href="summary.html#class:handle">handles</A>, <A class="" href="summary.html#class:link">link</A> 
+and
+<A class="" href="summary.html#class:connect_gesture">connect_gesture</A> 
+and shapes that allows the user to create links with an error from `out' 
+ports to `in' ports.
+
+<PRE class="code">
+:- pce_global(@in_handle,
+              new(handle(0, h/2, in, in))).
+:- pce_global(@out_handle,
+              new(handle(w, h/2, out, out))).
+:- pce_global(@inout_link,
+              new(link(out, in,
+                       line(arrows := second)))).
+:- pce_global(@link_in_out_gesture,
+              new(connect_gesture(left, '',
+                                  @inout_link))).
+
+make_shape(S) :-
+        new(S, box(50,50)),
+        send_list(S, handle,
+                  [@in_handle, @out_handle]),
+        send(S, recogniser, @link_in_out_gesture).
+</PRE>
+
+</DD>
+<DT><A NAME="class:list_browser"><STRONG>list_browser</STRONG>(<VAR></VAR>)</A></DT>
+<DD class="defbody">
+A <A class="" href="summary.html#class:list_browser">list_browser</A> is 
+a graphical version of a <A class="" href="summary.html#class:browser">browser</A>, 
+the visualisation of a list of items (<A class="" href="summary.html#class:dict_item">dict_item</A>) 
+stored in a
+<A class="" href="summary.html#class:dict">dict</A>. The graphical 
+version is sometimes displayed with other controllers on a <A class="" href="summary.html#class:dialog">dialog</A> 
+window. The example created a
+<A class="" href="summary.html#class:list_browser">list_browser</A> 
+holding all current Prolog source files. Double-clicking a file will 
+start <STRONG>PceEmacs</STRONG> on the file. Selecting a file and 
+pressing <B>Consult</B> will (re)consult the file.
+
+<PRE class="code">
+show_source_files :-
+        new(D, dialog('Prolog Source Files')),
+        send(D, append, new(B, list_browser)),
+        forall(source_file(X), send(B, append, X)),
+        send(B, open_message,
+             message(@prolog, emacs, @arg1?key)),
+        send(D, append,
+             button(consult,
+                    message(@prolog, consult,
+                            B?selection?key))),
+        send(D, open).
+</PRE>
+
+</DD>
+<DT><A NAME="class:menu"><STRONG>menu</STRONG>(<VAR></VAR>)</A></DT>
+<DD class="defbody">
+Class <A class="" href="summary.html#class:menu">menu</A> realises 
+various different styles of menus and is the super-class for <A class="" href="summary.html#class:popup">popup</A>. 
+Basically, a menu presents multiple values, allows the user to choose 
+one or more items (`menu
+<B><CODE>-&gt;</CODE>multiple_selection</B>') and defines a `look'. The <A NAME="idx:menusendkind:819"></A>`<B>menu<CODE>-&gt;</CODE>kind</B>' 
+set the various attributes to often-used combinations. The other 
+`look-and-feel' attributes may be used to fine-tune the result 
+afterwards.
+
+<P>Menu-items can have a textual or <A class="" href="summary.html#class:image">image</A> 
+label. Labels can be coloured and specify a different <A class="" href="summary.html#class:font">font</A>.
+
+<PRE class="code">
+...,
+new(M, menu(gender, choice)),
+send_list(M, append, [male, female]),
+send(M, layout, horizontal),
+...,
+</PRE>
+
+</DD>
+<DT><A NAME="class:menu_bar"><STRONG>menu_bar</STRONG>(<VAR></VAR>)</A></DT>
+<DD class="defbody">
+A menu-bar is a row of pull-down menus. Many applications define a 
+single menu-bar at the top of the frame presenting the various commands 
+in the application.
+
+<PRE class="code">
+:- pce_begin_class(my_application, frame).
+
+initialise(F) :-&gt;
+        send(F, send_super, initialise,
+             'My Application'),
+        send(F, append, new(MBD, dialog)),
+        new(V, view),
+        send(new(B, browser, left, V)),
+        send(B, below, MBD),
+        send(MBD, append, new(MB, menu_bar)),
+        send(MB, append, new(F, popup(file))),
+        send(MB, append, new(E, popup(edit))),
+        send_list(F, append,
+                  [ menu_item(load,
+                              message(F, load)),
+                    ...
+</PRE>
+
+</DD>
+<DT><A NAME="class:menu_item"><STRONG>menu_item</STRONG>(<VAR></VAR>)</A></DT>
+<DD class="defbody">
+Item of a <A class="" href="summary.html#class:menu">menu</A> or <A class="" href="summary.html#class:popup">popup</A>. 
+For <A class="" href="summary.html#class:popup">popup</A> menus, the 
+items are normally created explicitly as each item often defines a 
+unique command. For <A class="" href="summary.html#class:menu">menus</A>, 
+it is common practice to simply append the alternatives as <A class="" href="summary.html#class:menu_item">menu_item</A> 
+will translate a
+<A class="" href="summary.html#class:name">name</A> into a menu_item 
+with this <B><CODE>&lt;-</CODE>value</B>, <B><CODE>&lt;-</CODE>message</B> <A NAME="idx:default:820"></A><B>@default</B> 
+and a <B><CODE>&lt;-</CODE>label</B> created by `capitalising' the 
+value.</DD>
+<DT><A NAME="class:message"><STRONG>message</STRONG>(<VAR></VAR>)</A></DT>
+<DD class="defbody">
+A <A class="" href="summary.html#class:message">message</A> is a dormant 
+`send-operation'. When executed using
+<B><CODE>-&gt;</CODE>execute</B> or <B><CODE>-&gt;</CODE>forward</B>, a 
+message is sent to the <EM>receiver</EM>. Message are the most popular <A class="" href="summary.html#class:code">code</A> 
+objects. See <A class="sec" href="exeobjects.html">section 10.2</A> and 
+many examples in this chapter.</DD>
+<DT><A NAME="class:method"><STRONG>method</STRONG>(<VAR></VAR>)</A></DT>
+<DD class="defbody">
+Class <A class="" href="summary.html#class:method">method</A> is the 
+super-class of <A class="" href="summary.html#class:send_method">send_method</A> 
+and
+<A class="" href="summary.html#class:get_method">get_method</A>. 
+Instances of this class itself are useless.</DD>
+<DT><A NAME="class:modifier"><STRONG>modifier</STRONG>(<VAR></VAR>)</A></DT>
+<DD class="defbody">
+A <A class="" href="summary.html#class:modifier">modifier</A> is a 
+reusable object that defines a condition on the status of the three 
+`modifier keys' <A NAME="idx:shift:821">shift</A>, <A NAME="idx:control:822">control</A> 
+and
+<A NAME="idx:meta:823">meta</A>/<A NAME="idx:alt:824">alt</A>. Modifiers 
+are used by class <A class="" href="summary.html#class:gesture">gesture</A> 
+and its sub-classes. They are normally specified through their 
+conversion method, which translates a <A class="" href="summary.html#class:name">name</A> 
+consisting of the letters
+<CODE>s</CODE>, <CODE>c</CODE> and <CODE>m</CODE> into a modifier that 
+requires the shift, control and/or meta-key to be down an the other 
+modifier keys to be up. The example specifies a `<A NAME="idx:shiftclick:825">shift-click</A>' 
+gesture.
+
+<PRE class="code">
+...,
+click_gesture(left, 's', single,
+              message(...)),
+...
+</PRE>
+
+</DD>
+<DT><A NAME="class:move_gesture"><STRONG>move_gesture</STRONG>(<VAR></VAR>)</A></DT>
+<DD class="defbody">
+If a <A class="" href="summary.html#class:move_gesture">move_gesture</A> 
+is attached to a <A class="" href="summary.html#class:graphical">graphical</A>, 
+the graphical can be moved by dragging it using the specified 
+mouse-button. See also <A class="" href="summary.html#class:move_outline_gesture">move_outline_gesture</A>.
+
+<PRE class="code">
+...,
+send(Box, gesture, new(move_gesture)),
+...
+</PRE>
+
+</DD>
+<DT><A NAME="class:move_outline_gesture"><STRONG>move_outline_gesture</STRONG>(<VAR></VAR>)</A></DT>
+<DD class="defbody">
+Similar to a <A class="" href="summary.html#class:move_gesture">move_gesture</A>, 
+but while the gesture is active, it is not the graphical itself that is 
+moved, but a dotted box indicating the outline of the graphical. If the 
+button is released, the graphical is moved to the location of the 
+outline. Should be used for complicated objects with many constraints or 
+connections as a direct move_gesture would be too slow.</DD>
+<DT><A NAME="class:name"><STRONG>name</STRONG>(<VAR></VAR>)</A></DT>
+<DD class="defbody">
+A <A class="" href="summary.html#class:name">name</A> is a unique 
+textual constant, similar to an <A NAME="idx:atom:826">atom</A> in 
+Prolog. Whenever an atom is handed to <font size=-1>XPCE</font>, the 
+interface will automatically create a <A class="" href="summary.html#class:name">name</A> 
+for it. There is no limit to the number of characters that can be stored 
+in a name, but some Prolog implementations may limit the number of 
+characters in an atom. On these platforms, it is 
+implementation-dependent what will happen to long names that are handed 
+to the Prolog interface.</DD>
+<DT><A NAME="class:node"><STRONG>node</STRONG>(<VAR></VAR>)</A></DT>
+<DD class="defbody">
+A <EM>node</EM> is a node in a <A class="" href="summary.html#class:tree">tree</A> 
+of <A class="" href="summary.html#class:graphical">graphical</A> 
+objects.
+
+<PRE class="code">
+...,
+new(T, tree(new(Root, node(text(shapes))))),
+send(Root, son, node(circle(50))),
+send(Root, son, node(box(50, 50))),
+...
+</PRE>
+
+</DD>
+<DT><A NAME="class:not"><STRONG>not</STRONG>(<VAR></VAR>)</A></DT>
+<DD class="defbody">
+Code object that inverses the success/failure of its argument statement. 
+Often used for code objects that represent conditions.
+
+<PRE class="code">
+primitives(Device, Primitives) :-
+        get(Device?graphicals, find_all,
+            not(message(@arg1, instance_of, device)),
+            Primitives).
+</PRE>
+
+</DD>
+<DT><A NAME="class:number"><STRONG>number</STRONG>(<VAR></VAR>)</A></DT>
+<DD class="defbody">
+A <A class="" href="summary.html#class:number">number</A> is the object 
+version of an integer (<A NAME="idx:int:827">int</A>). If may be as a 
+storage bin. To compute the widest graphical of a device:
+
+<PRE class="code">
+widest_graphical(Device, Width) :-
+        new(N, number(0)),
+        send(Device, for_all,
+             message(N, maximum, @arg1?width)),
+        get(N, value, Width),
+        send(N, done).
+</PRE>
+
+</DD>
+<DT><A NAME="class:object"><STRONG>object</STRONG>(<VAR></VAR>)</A></DT>
+<DD class="defbody">
+Class <A class="" href="summary.html#class:object">object</A> is the 
+root of <font size=-1>XPCE</font>'s class-inheritance hierarchy. It 
+defines methods for general object-management, comparison, hypers, 
+attributes, etc. It is possible to create instances of class
+<A class="" href="summary.html#class:object">object</A>, but generally 
+not very useful.</DD>
+<DT><A NAME="class:operator"><STRONG>operator</STRONG>(<VAR></VAR>)</A></DT>
+<DD class="defbody">
+Part of <font size=-1>XPCE</font>'s object parser. Not (yet) available 
+to the application programmer.</DD>
+<DT><A NAME="class:or"><STRONG>or</STRONG>(<VAR></VAR>)</A></DT>
+<DD class="defbody">
+Disjunctive <A class="" href="summary.html#class:code">code</A> object. 
+An or starts executing its argument statements left-to-right and 
+terminates successfully as soon as one succeeds. The empty <A class="" href="summary.html#class:or">or</A> 
+fails immediately.</DD>
+<DT><A NAME="class:parbox"><STRONG>parbox</STRONG>(<VAR></VAR>)</A></DT>
+<DD class="defbody">
+Class to render text with mixed fonts and colours together with 
+graphics. Class <A class="" href="summary.html#class:parbox">parbox</A> 
+is the heart of the document-rendering primitives described in <A class="sec" href="docrender.html">section 
+11.10</A>.</DD>
+<DT><A NAME="class:parser"><STRONG>parser</STRONG>(<VAR></VAR>)</A></DT>
+<DD class="defbody">
+Part of <font size=-1>XPCE</font>'s object parser. Not (yet) available 
+to the application programmer.</DD>
+<DT><A NAME="class:path"><STRONG>path</STRONG>(<VAR></VAR>)</A></DT>
+<DD class="defbody">
+A <A class="" href="summary.html#class:path">path</A> is a <A NAME="idx:multisegmentline:828">multi-segment line</A>. 
+It comes in two flavours:
+<TT>poly</TT> as a number of straight connected line-segments and
+<TT>smooth</TT> as an <A NAME="idx:interpolated:829">interpolated</A> 
+line through a number of `control-points'. Its line attributes can be 
+defined and the interior can be filled. Paths are used both to define 
+new graphicals, for example a <A NAME="idx:triangle:830">triangle</A>, 
+or to defines <A NAME="idx:curves:831">curves</A>.
+
+<PRE class="code">
+draw_sine :-
+        send(new(Pict, picture), open),
+        send(Pict, display, new(P, path)),
+        (   between(0, 360, X),
+                Y is sin((X * 6.283185)/360) * 100,
+                send(P, append, point(X, Y)),
+            fail
+        ;   true
+        ).
+</PRE>
+
+</DD>
+<DT><A NAME="class:pce"><STRONG>pce</STRONG>(<VAR></VAR>)</A></DT>
+<DD class="defbody">
+Class <A class="" href="summary.html#class:pce">pce</A> defines a single 
+instance called <A NAME="idx:pce:832"></A><B>@pce</B>. Actions that 
+cannot sensibly be related to a particular object are often defined on 
+class <A class="" href="summary.html#class:pce">pce</A>.
+
+<PRE class="code">
+?- get(@pce, user, User).
+User = jan
+</PRE>
+
+</DD>
+<DT><A NAME="class:pen"><STRONG>pen</STRONG>(<VAR></VAR>)</A></DT>
+<DD class="defbody">
+Reserved for future usage.</DD>
+<DT><A NAME="class:picture"><STRONG>picture</STRONG>(<VAR></VAR>)</A></DT>
+<DD class="defbody">
+A <A class="" href="summary.html#class:picture">picture</A> is a <A class="" href="summary.html#class:window">window</A> 
+with scrollbars, normally used for application graphics. If a graphical 
+window without scrollbars is required, <A class="" href="summary.html#class:window">window</A> 
+should be considered.</DD>
+<DT><A NAME="class:pixmap"><STRONG>pixmap</STRONG>(<VAR></VAR>)</A></DT>
+<DD class="defbody">
+A <A class="" href="summary.html#class:pixmap">pixmap</A> is a subclass 
+of <A class="" href="summary.html#class:image">image</A> that is 
+reserved for colour images. All functionality of this class is in class
+<A class="" href="summary.html#class:image">image</A>. The main reason 
+for its existence is that some graphical operations <EM>require</EM> a 
+colour image and the introduction of a class for it is the only way to 
+allow this to be specified using <font size=-1>XPCE</font>'s type 
+system. The <B><CODE>-&gt;</CODE>initialise</B> method is specialised 
+for handling colour images.</DD>
+<DT><A NAME="class:point"><STRONG>point</STRONG>(<VAR></VAR>)</A></DT>
+<DD class="defbody">
+Position in a two-dimensional plane. Together with <A class="" href="summary.html#class:size">size</A> 
+and
+<A class="" href="summary.html#class:area">area</A> used to communicate 
+with graphicals about geometry.
+
+<PRE class="code">
+...
+get(Box, center, Point),
+get(Point, mirror, Mirrored),
+send(Box, center, Mirrored),
+...
+</PRE>
+
+</DD>
+<DT><A NAME="class:popup"><STRONG>popup</STRONG>(<VAR></VAR>)</A></DT>
+<DD class="defbody">
+A <A class="" href="summary.html#class:popup">popup</A> menu is a menu 
+that is shown after pressing a button on the object the menu is attached 
+to. Popups are used in two different contexts, as <A NAME="idx:pulldown:833">pulldown</A> 
+menus attached to a <A class="" href="summary.html#class:menu_bar">menu_bar</A> 
+and as popup-menus associated with windows or individual graphical 
+objects.
+
+<P>Popups are <B><CODE>-&gt;</CODE>append</B>ed to menu_bars. Various 
+classes define the method
+<B><CODE>-&gt;</CODE>popup</B> to associate popup menus. Finally, class <A class="" href="summary.html#class:popup_gesture">popup_gesture</A> 
+provides a gesture that operates popup menus.
+
+<P>A popup consists of <A class="" href="summary.html#class:menu_item">menu_items</A>, 
+each of which normally defines a message to be executed if the 
+corresponding item is activated. Pull-right sub-menus are realised by 
+appending a popup to a popup.
+
+<PRE class="code">
+...,
+new(P, popup(options)),
+send(P, append,
+     new(L, popup(layout, message(Tree, layout, @arg1)))),
+send_list(L, append, [horizontal, vertical, list]),
+send(P, append,
+     menu_item(quit, message(Tree, destroy))),
+...
+</PRE>
+
+</DD>
+<DT><A NAME="class:popup_gesture"><STRONG>popup_gesture</STRONG>(<VAR></VAR>)</A></DT>
+<DD class="defbody">
+A <A class="" href="summary.html#class:popup_gesture">popup_gesture</A> 
+parses events and activates a <A class="" href="summary.html#class:popup">popup</A> 
+menu. Popup gestures are explicitly addressed by the application 
+programmer to define compound gestures involving a popup:
+
+<PRE class="code">
+:- pce_global(@graph_node_gesture,
+              make_graph_node_gesture).
+
+make_graph_node_gesture(G) :-
+        new(P, popup),
+        send_list(P, append, [...]),
+        new(G, handler_group(connect_gesture(...),
+                             move_gesture(middle),
+                             popup_gesture(P))).
+</PRE>
+
+</DD>
+<DT><A NAME="class:process"><STRONG>process</STRONG>(<VAR></VAR>)</A></DT>
+<DD class="defbody">
+A <A class="" href="summary.html#class:process">process</A> encapsulates 
+a stream- or terminal program to get its input from a graphical program 
+and redirect its output to the same graphical program. Various of the <font size=-1>XPCE</font> 
+tools and demo programs exploit processes: The <TT>M-x shell</TT>, <TT>M-x 
+grep</TT> and other shell commands of <STRONG>PceEmacs</STRONG>, the <STRONG>ispell</STRONG> 
+program and the <STRONG>chess</STRONG> front-end. See also <A class="" href="summary.html#class:socket">socket</A>.</DD>
+<DT><A NAME="class:progn"><STRONG>progn</STRONG>(<VAR></VAR>)</A></DT>
+<DD class="defbody">
+Code object with semantics like the LISP progn function. A <A class="" href="summary.html#class:progn">progn</A> 
+executes its statements. If all statements are successfully executed and 
+the last argument is a <A class="" href="summary.html#class:function">function</A>, 
+execute the function and return the result of it or, if the last 
+argument is not a function, simply return it. Used infrequently in the <font size=-1>XPCE/P</font>rolog 
+context.</DD>
+<DT><A NAME="class:program_object"><STRONG>program_object</STRONG>(<VAR></VAR>)</A></DT>
+<DD class="defbody">
+The super-class of almost the entire `meta-word' of XPCE: classes, 
+behaviour, attributes, types, etc. Class <A class="" href="summary.html#class:program_object">program_object</A> 
+defines the <font size=-1>XPCE</font> tracer. See <A NAME="idx:tracepce1:834"></A><A class="pred" href="sec-D.2.html#tracepce/1">tracepce/1</A> 
+and <A NAME="idx:breakpce1:835"></A><SPAN class="pred-ext">breakpce/1</SPAN>.</DD>
+<DT><A NAME="class:quote_function"><STRONG>quote_function</STRONG>(<VAR></VAR>)</A></DT>
+<DD class="defbody">
+Most of <font size=-1>XPCE</font> is defined to evaluate function 
+objects at the appropriate time without the user having to worry about 
+this. Sometimes however, type-checking or execution of a statement will 
+enforce the execution of a function where this is not desired. In this 
+case class
+<A class="" href="summary.html#class:quote_function">quote_function</A> 
+can help. As a direct sub-class of
+<A class="" href="summary.html#class:object">object</A>, it will 
+generally be passed unchanged, but type-conversion will translate 
+extract the function itself if appropriate, while delegation allows the 
+quote_function to be treated as a function.
+
+<P>In the example, <EM>ChainOfChains</EM> is a chain holding chains as 
+its elements. The task is to sort each of the member chains, using the
+<A class="" href="summary.html#class:function">function</A> <TT>?(<A NAME="idx:arg1:836"></A><B>@arg1</B>, 
+compare, <A NAME="idx:arg2:837"></A><B>@arg2</B>)</TT> for sorting. If 
+not enclosed in a <A class="" href="summary.html#class:quote_function">quote_function</A>, 
+the message will try to evaluate the function. Now it passes the 
+quote_function unchanged. The <A NAME="idx:chainsendsort:838"></A>`<B>chain<CODE>-&gt;</CODE>sort</B>' 
+method requires a <A class="" href="summary.html#class:code">code</A> 
+argument and therefore the function will be extracted from the 
+quote_function.
+
+<PRE class="code">
+...,
+send(ChainOfChains, for_all,
+     message(@arg1, sort,
+         quote_function(?(@arg1, compare, @arg2)))),
+...
+</PRE>
+
+</DD>
+<DT><A NAME="class:real"><STRONG>real</STRONG>(<VAR></VAR>)</A></DT>
+<DD class="defbody">
+A <A class="" href="summary.html#class:real">real</A> is <font size=-1>XPCE</font>'s 
+notion of a floating-point number. Reals are represented using a C 
+single-precision `<A NAME="idx:float:839">float</A>'. Reals define the 
+same operation as class <A class="" href="summary.html#class:number">number</A>, 
+its integer equivalent.</DD>
+<DT><A NAME="class:recogniser"><STRONG>recogniser</STRONG>(<VAR></VAR>)</A></DT>
+<DD class="defbody">
+Class <A class="" href="summary.html#class:recogniser">recogniser</A> is 
+the super-class of all event-parsing classes. The sub-tree <A class="" href="summary.html#class:gesture">gesture</A> 
+handles mouse-button related events, <A class="" href="summary.html#class:key_binding">key_binding</A> 
+handles typing and <A class="" href="summary.html#class:handler">handler</A> 
+may be used for all events. The main purpose of this class itself is to 
+provide a type for all its sub-classes.</DD>
+<DT><A NAME="class:regex"><STRONG>regex</STRONG>(<VAR></VAR>)</A></DT>
+<DD class="defbody">
+A <A class="" href="summary.html#class:regex">regex</A> is <font size=-1>XPCE</font>'s 
+encapsulation of the (GNU) <A NAME="idx:RegularExpression:840">Regular Expression</A> 
+library. Regular expression form a powerful mechanism for the analysis 
+of text. Class <A class="" href="summary.html#class:regex">regex</A> can 
+be used to search both <A class="" href="summary.html#class:char_array">char_array</A> 
+(<A class="" href="summary.html#class:name">name</A> and <A class="" href="summary.html#class:string">string</A>) 
+text and text from a <A class="" href="summary.html#class:text_buffer">text_buffer</A> 
+as used by <A class="" href="summary.html#class:editor">editor</A>. It 
+is possible to access the `registers' of the regular expression.
+
+<PRE class="code">
+?- new(S, string('Hello World')),
+   new(R, regex('Hello\s +\(\w+\)')),
+   send(R, match, S),
+   get(R, register_value, S, 1, name, W).
+
+W = 'World'
+</PRE>
+
+</DD>
+<DT><A NAME="class:region"><STRONG>region</STRONG>(<VAR></VAR>)</A></DT>
+<DD class="defbody">
+A <A class="" href="summary.html#class:region">region</A> defines a 
+sub-region of a graphical. They are used to restrict <A class="" href="summary.html#class:handler">handler</A> 
+objects to a sub-area of a graphical. Backward compatibility only.</DD>
+<DT><A NAME="class:relation"><STRONG>relation</STRONG>(<VAR></VAR>)</A></DT>
+<DD class="defbody">
+Class <A class="" href="summary.html#class:relation">relation</A> is the 
+super-class of <A class="" href="summary.html#class:identity">identity</A> 
+and
+<A class="" href="summary.html#class:spatial">spatial</A>. Relations 
+form the reusable part of
+<A class="" href="summary.html#class:constraint">constraints</A>. Class <A class="" href="summary.html#class:relation">relation</A> 
+may be sub-classed to define new relation-types.</DD>
+<DT><A NAME="class:resize_gesture"><STRONG>resize_gesture</STRONG>(<VAR></VAR>)</A></DT>
+<DD class="defbody">
+A <A class="" href="summary.html#class:resize_gesture">resize_gesture</A> 
+handles mouse-drag events to resize a graphical object on the corners or 
+edges. See also <A class="" href="summary.html#class:move_gesture">move_gesture</A> 
+and
+<A class="" href="summary.html#class:resize_outline_gesture">resize_outline_gesture</A>.
+
+<PRE class="code">
+...,
+send(Box, recogniser, new(resize_gesture)),
+...
+</PRE>
+
+</DD>
+<DT><A NAME="class:resize_outline_gesture"><STRONG>resize_outline_gesture</STRONG>(<VAR></VAR>)</A></DT>
+<DD class="defbody">
+Outline version of the <A class="" href="summary.html#class:resize_gesture">resize_gesture</A>, 
+often used to resize objects that are expensive to resize, such as <A class="" href="summary.html#class:editor">editor</A> 
+or
+<A class="" href="summary.html#class:list_browser">list_browser</A>.</DD>
+<DT><A NAME="class:resize_table_slice_gesture"><STRONG>resize_table_slice_gesture</STRONG>(<VAR></VAR>)</A></DT>
+<DD class="defbody">
+Gesture that can be used together with class <A class="" href="summary.html#class:table">table</A> 
+to allow the user dragging the boundaries between columns and rows in a 
+table. See also <A class="sec" href="tabular.html">section 11.5</A>.</DD>
+<DT><A NAME="class:resource"><STRONG>resource</STRONG>(<VAR></VAR>)</A></DT>
+<DD class="defbody">
+
+<P>A <A class="" href="summary.html#class:resource">resource</A> is data 
+associated with the application. It is most commonly used to get access 
+to image-data. Example:
+
+<PRE class="code">
+resource(splash, image, image('splash.gif')).
+
+show_splash_screen :-
+        new(W, window),
+        send(W, kind, popup),           % don't show border
+        new(I, image(resource(splash))),
+        get(I, size, size(W, H)),
+        send(W, size, size(W, H)),
+        send(W, display, bitmap(I)),
+        send(W, open_centered),
+        send(timer(2), delay),
+        send(W, destroy).
+        
+</PRE>
+
+</DD>
+<DT><A NAME="class:rubber"><STRONG>rubber</STRONG>(<VAR></VAR>)</A></DT>
+<DD class="defbody">
+Defines how elastic objects in the document-rendering system such as
+<A class="" href="summary.html#class:hbox">hbox</A> and its subclasses 
+are. Used by <A class="" href="summary.html#class:parbox">parbox</A> to 
+realise layout. See <A class="sec" href="docrender.html">section 11.10</A> 
+for a full description of the rendering primitives.</DD>
+<DT><A NAME="class:scroll_bar"><STRONG>scroll_bar</STRONG>(<VAR></VAR>)</A></DT>
+<DD class="defbody">
+A <A class="" href="summary.html#class:scroll_bar">scroll_bar</A> is 
+used to indicate and control the visible part of a large object viewed 
+through a window. Though possible, scroll_bars are rarely used outside 
+the context of the predefined scrollbars associated with <A class="" href="summary.html#class:list_browser">list_browser</A>, <A class="" href="summary.html#class:editor">editor</A> 
+and <A class="" href="summary.html#class:window">window</A>.
+
+<PRE class="code">
+...,
+send(Window, scrollbars, vertical),
+...
+</PRE>
+
+</DD>
+<DT><A NAME="class:send_method"><STRONG>send_method</STRONG>(<VAR></VAR>)</A></DT>
+<DD class="defbody">
+A <A class="" href="summary.html#class:send_method">send_method</A> maps 
+the name of a method <EM>selector</EM> onto an implementation and 
+defines various attributes of the method, such as the required 
+arguments, the source-location, etc. Send-methods are normally specified 
+through user-defined classes preprocessor as described in <A class="sec" href="udc.html">chapter 
+7</A>.</DD>
+<DT><A NAME="class:sheet"><STRONG>sheet</STRONG>(<VAR></VAR>)</A></DT>
+<DD class="defbody">
+A <A class="" href="summary.html#class:sheet">sheet</A> is a dynamic set 
+of attribute/value pairs. The introduction of object-level attributes 
+implemented by `object
+<B><CODE>&lt;-&gt;</CODE>attribute</B>' and user-defined classes have 
+made sheets obsolete.</DD>
+<DT><A NAME="class:size"><STRONG>size</STRONG>(<VAR></VAR>)</A></DT>
+<DD class="defbody">
+Combination of <B><CODE>&lt;-</CODE>width</B> and <B><CODE>&lt;-</CODE>height</B> 
+used to communicate with graphical objects about dimension. See also <A class="" href="summary.html#class:point">point</A> 
+and <A class="" href="summary.html#class:area">area</A>.</DD>
+<DT><A NAME="class:slider"><STRONG>slider</STRONG>(<VAR></VAR>)</A></DT>
+<DD class="defbody">
+Controller for a numeric value inside a range that does not require 
+exact values. Specifying volume or speed are good examples of the use of 
+sliders. They can also be used to realise a <A NAME="idx:percentdone:841">percent-done</A> 
+gauge.
+
+<PRE class="code">
+...,
+new(Done, slider(done, 0, 100, 0)),
+send(Done, show_label, @off),
+send(Done, show_value, @off),
+...
+send(Done, selection, N),
+send(Done, synchronise),
+...
+</PRE>
+
+</DD>
+<DT><A NAME="class:socket"><STRONG>socket</STRONG>(<VAR></VAR>)</A></DT>
+<DD class="defbody">
+Communication end-point for a <A NAME="idx:TCPIP:842">TCP/IP</A> or 
+Unix-domain interprocess communication stream. <font size=-1>XPCE</font> 
+supports both `server' and `client' sockets. On the Win32 platform, only 
+TCP/IP sockets are provided and only Windows-NT supports server sockets. 
+The <CODE>library(pce_server)</CODE> provides a good starting point for 
+defining server sockets. The support executable <TT><A NAME="idx:xpceclient:843">xpce-client</A></TT> 
+may be used to communicate with <font size=-1>XPCE</font> server 
+sockets. See also PceEmacs server mode as defined in <CODE>library('emacs/server')</CODE>.</DD>
+<DT><A NAME="class:source_location"><STRONG>source_location</STRONG>(<VAR></VAR>)</A></DT>
+<DD class="defbody">
+Specifies the location in a source file. Used by <A class="" href="summary.html#class:method">method</A> 
+objects to register the location they are defined.</DD>
+<DT><A NAME="class:source_sink"><STRONG>source_sink</STRONG>(<VAR></VAR>)</A></DT>
+<DD class="defbody">
+Abstract super-class of <A class="" href="summary.html#class:file">file</A>, <A class="" href="summary.html#class:resource">resource</A> 
+and
+<A class="" href="summary.html#class:text_buffer">text_buffer</A> for 
+type-checking purposes. All <A class="" href="summary.html#class:source_sink">source_sink</A> 
+objects may be used for storing and retrieving image-data. Notably a <A class="" href="summary.html#class:resource">resource</A> 
+can be used for creating images (see
+<A class="sec" href="resources.html">section 9</A> and <A class="" href="summary.html#class:text_buffer">text_buffer</A> 
+can be used to communicate images over network connections (see <A class="sec" href="httpd.html">section 
+11.9</A>).</DD>
+<DT><A NAME="class:spatial"><STRONG>spatial</STRONG>(<VAR></VAR>)</A></DT>
+<DD class="defbody">
+A <A class="" href="summary.html#class:spatial">spatial</A> defines a 
+geometry <A class="" href="summary.html#class:relation">relation</A> 
+between two objects. The first two equations express the <EM>reference</EM> 
+point of the 1st graphical in terms of its x, y, w and h. The second 
+pair does the same for the second graphical, while the remaining two 
+equations relate the mutual widths and heights. The example defines the 
+second graphical to be 10 pixels wider and higher than the first, to 
+share the same lower edge and be centered horizontally.
+
+<PRE class="code">
+new(_, constraint(Gr1, Gr2,
+                  spatial(xref=x+w/2, yref=y+h,
+                          xref=x+w/w, yref=y+h,
+                          w2=w+2, h2=h+2)))
+</PRE>
+
+</DD>
+<DT><A NAME="class:stream"><STRONG>stream</STRONG>(<VAR></VAR>)</A></DT>
+<DD class="defbody">
+Class <A class="" href="summary.html#class:stream">stream</A> is the 
+super-class of <A class="" href="summary.html#class:socket">socket</A> 
+and
+<A class="" href="summary.html#class:process">process</A>, defining the 
+stream-communication. It handles both synchronous and asynchronous input 
+from the socket or process. It is not possible to created instances of 
+this class.</DD>
+<DT><A NAME="class:string"><STRONG>string</STRONG>(<VAR></VAR>)</A></DT>
+<DD class="defbody">
+A <A class="" href="summary.html#class:string">string</A> represents a 
+string of characters that may be modified. This class defines a large 
+number of methods to analyse the text that are inherited from <A class="" href="summary.html#class:char_array">char_array</A> 
+and a large number of methods to manipulate the text. Class <A class="" href="summary.html#class:regex">regex</A> 
+can analyse and modify string objects. There is no limit to the number 
+of characters in a string. Storage is (re)allocated dynamically and 
+always is `just enough' to hold the text. For large texts that need many 
+manipulations, consider the usage of <A class="" href="summary.html#class:text_buffer">text_buffer</A> 
+that implement more efficient manipulation.
+
+<P>Strings are commonly used to hold descriptions, text entered by the 
+user, etc.</DD>
+<DT><A NAME="class:style"><STRONG>style</STRONG>(<VAR></VAR>)</A></DT>
+<DD class="defbody">
+A <A class="" href="summary.html#class:style">style</A> defines 
+attributes for a text <A class="" href="summary.html#class:fragment">fragment</A> 
+as handled by a <A class="" href="summary.html#class:editor">editor</A>/classtext_buffer 
+or a <A class="" href="summary.html#class:dict_item">dict_item</A> as 
+handled by a <A class="" href="summary.html#class:list_browser">list_browser</A>/<A class="" href="summary.html#class:dict">dict</A>. 
+It defines the font, fore- and background colours as well as 
+underlining, etc. The example defines a browser that displays files 
+using normal and directories using bold font.
+
+<PRE class="code">
+make_browser(B) :-
+        new(B, browser),
+        send(B, style, file, style(font := normal)),
+        send(B, style, directory, style(font := bold)),
+        send(B, open).
+
+append_file(B, Name) :-
+        send(B, append,
+             dict_item(Name, style := file)).
+append_dir(B, Name) :-
+        send(B, append,
+             dict_item(Name, style := directory)).
+</PRE>
+
+</DD>
+<DT><A NAME="class:syntax_table"><STRONG>syntax_table</STRONG>(<VAR></VAR>)</A></DT>
+<DD class="defbody">
+Syntax tables are used by class <A class="" href="summary.html#class:text_buffer">text_buffer</A> 
+to describe the syntax of the text. They describe the various 
+syntactical categories of characters (word-characters, 
+digit-characters), the syntax for quoted text, for comments as well as a 
+definition for the end of a sentence and paragraph. Syntax tables are 
+introduced to support the implementation of <A NAME="idx:modes:844">modes</A> 
+in PceEmacs. See also the
+<A NAME="idx:emacsbeginmode5:845"></A><SPAN class="pred-ext">emacs_begin_mode/5</SPAN> 
+directive as defined in <CODE>library(emacs_extend)</CODE>.</DD>
+<DT><A NAME="class:tab"><STRONG>tab</STRONG>(<VAR></VAR>)</A></DT>
+<DD class="defbody">
+A <A class="" href="summary.html#class:tab">tab</A> is a subclass of <A class="" href="summary.html#class:dialog_group">dialog_group</A>, 
+rendering as a collection of <A class="" href="summary.html#class:dialog_item">dialog_items</A> 
+with a `tag' associated. Tabs are normally displayed on a <A class="" href="summary.html#class:tab_stack">tab_stack</A>, 
+which in turn is displayed on a <A class="" href="summary.html#class:dialog">dialog</A>. 
+Skeleton:
+
+<PRE class="code">
+        new(D, dialog(settings)),
+        send(D, append, new(TS, tab_stack)),
+        send(TS, append, new(G, tab(global))),
+        send(TS, append, new(U, tab(user))),
+        ...,
+        &lt;fill G and U&gt;
+        ...,
+        send(D, append, button(ok)),
+        send(D, append, button(cancel)).
+</PRE>
+
+</DD>
+<DT><A NAME="class:tab_stack"><STRONG>tab_stack</STRONG>(<VAR></VAR>)</A></DT>
+<DD class="defbody">
+Defines a stack of tagged sub-dialogs (<A class="" href="summary.html#class:tab">tab</A> 
+objects) that can be displayed on a <A class="" href="summary.html#class:dialog">dialog</A>. 
+See <A class="" href="summary.html#class:tab">tab</A> for an example.</DD>
+<DT><A NAME="class:table"><STRONG>table</STRONG>(<VAR></VAR>)</A></DT>
+<DD class="defbody">
+A <A class="" href="summary.html#class:table">table</A> defines a 
+two-dimensional tabular layout of graphical objects on a graphical <A class="" href="summary.html#class:device">device</A>. 
+The functionality of <font size=-1>XPCE</font> tables is modelled after 
+HTML-3. Example:
+
+<PRE class="code">
+simple_table :-
+        new(P, picture),
+        send(P, layout_manager, new(T, table)),
+        send(T, border, 1),
+        send(T, frame, box),
+        send(T, append, text('row1/col1')),
+        send(T, append, text('row1/col2')),
+        send(T, next_row),
+        send(T, append,
+             new(C, table_cell(text(spanned, font := bold)))),
+        send(C, col_span, 2),
+        send(C, halign, center),
+        send(P, open).
+</PRE>
+
+</DD>
+<DT><A NAME="class:table_cell"><STRONG>table_cell</STRONG>(<VAR></VAR>)</A></DT>
+<DD class="defbody">
+
+<P>Provides the <A class="" href="summary.html#class:layout_interface">layout_interface</A> 
+to a <A class="" href="summary.html#class:table">table</A>. Table cells 
+are automatically created if a graphical is appended to a <A class="" href="summary.html#class:table">table</A>. 
+Explicit creation can be used to manipulate spanning, background and 
+other parameters of the cell.</DD>
+<DT><A NAME="class:table_column"><STRONG>table_column</STRONG>(<VAR></VAR>)</A></DT>
+<DD class="defbody">
+</DD>
+<DT><A NAME="class:table_row"><STRONG>table_row</STRONG>(<VAR></VAR>)</A></DT>
+<DD class="defbody">
+</DD>
+<DT><A NAME="class:table_slice"><STRONG>table_slice</STRONG>(<VAR></VAR>)</A></DT>
+<DD class="defbody">
+
+<P>These classes are used for storing row- and column information in
+<A class="" href="summary.html#class:table">table</A> objects. They are 
+normally created implicitly by the table. References to these objects 
+can be used to change attributes or delete rows or columns from the 
+table. Example:
+
+<PRE class="code">
+        ...,
+        get(Table, column, 2, @on, Column),
+        send(Column, halign, center),
+        ...
+</PRE>
+
+</DD>
+<DT><A NAME="class:tbox"><STRONG>tbox</STRONG>(<VAR></VAR>)</A></DT>
+<DD class="defbody">
+Add text using a defined <A class="" href="summary.html#class:style">style</A> 
+to a <A class="" href="summary.html#class:parbox">parbox</A>. Part of 
+the document-rendering infra-structure. See <A class="sec" href="docrender.html">section 
+11.10</A>.</DD>
+<DT><A NAME="class:relation_table"><STRONG>relation_table</STRONG>(<VAR></VAR>)</A></DT>
+<DD class="defbody">
+A <A class="" href="summary.html#class:relation_table">relation_table</A> 
+defines a multi-column table data object that can have one or more 
+indexed <EM>key</EM> fields. They are (infrequently) used for storing 
+complex relational data as <font size=-1>XPCE</font> objects.</DD>
+<DT><A NAME="class:text"><STRONG>text</STRONG>(<VAR></VAR>)</A></DT>
+<DD class="defbody">
+Graphical representing a string in a specified font. Class text defines 
+various multi-line and wrapping/scrolling options. It also implements 
+methods for editing. Class <B>editable_text</B> as defined in <CODE>library(pce_editable_text)</CODE> 
+exploits these methods to arrive at a flexible editable text object.</DD>
+<DT><A NAME="class:text_buffer"><STRONG>text_buffer</STRONG>(<VAR></VAR>)</A></DT>
+<DD class="defbody">
+A <A class="" href="summary.html#class:text_buffer">text_buffer</A> 
+provides the storage for an <A class="" href="summary.html#class:editor">editor</A>. 
+Multiple editors may be attached to the same <A class="" href="summary.html#class:text_buffer">text_buffer</A>, 
+realising shared editing on the same text. A text_buffer has an 
+associated <A class="" href="summary.html#class:syntax_table">syntax_table</A> 
+that describes the character categories and other properties of the text 
+contained. It can have <A class="" href="summary.html#class:fragment">fragment</A> 
+objects associated that describe the properties of regions in the text.
+
+<P>See class <A class="" href="summary.html#class:editor">editor</A> for 
+an overview of the other objects involved in editing text.</DD>
+<DT><A NAME="class:text_cursor"><STRONG>text_cursor</STRONG>(<VAR></VAR>)</A></DT>
+<DD class="defbody">
+Cursor as displayed by an <A class="" href="summary.html#class:editor">editor</A>. 
+Not intended for public usage. The example hides the caret from an 
+editor.
+
+<PRE class="code">
+...,
+send(Editor?text_cursor, displayed, @off),
+...
+</PRE>
+
+</DD>
+<DT><A NAME="class:text_image"><STRONG>text_image</STRONG>(<VAR></VAR>)</A></DT>
+<DD class="defbody">
+A <A class="" href="summary.html#class:text_image">text_image</A> object 
+is used by the classes <A class="" href="summary.html#class:editor">editor</A> 
+and
+<A class="" href="summary.html#class:list_browser">list_browser</A> to 
+actually display the text. It defines the <A NAME="idx:tabstops:846">tab-stops</A> 
+and <A NAME="idx:linewrapping:847">line-wrapping</A> properties. It also 
+provides methods to translate coordinates into character indices and 
+vise-versa. The user sometimes associates <A class="" href="summary.html#class:recogniser">recogniser</A> 
+objects with the <A class="" href="summary.html#class:text_image">text_image</A> 
+to redefine event-processing.</DD>
+<DT><A NAME="class:text_item"><STRONG>text_item</STRONG>(<VAR></VAR>)</A></DT>
+<DD class="defbody">
+A <A class="" href="summary.html#class:text_item">text_item</A> is a 
+controller for entering one-line textual values. Text items (<A NAME="idx:textentryfield:848">text-entry-field</A>) 
+can have an associated
+<A class="" href="summary.html#class:type">type</A> and/or <EM>value-set</EM>. 
+If a value-set is present or can be extracted from the type using <A NAME="idx:typegetvalueset:849"></A>`<B>type<CODE>&lt;-</CODE>value_set</B>', 
+the item will perform <A NAME="idx:completion:850">completion</A>, which 
+is by default bound to the space-bar. If a type is specified, the typed 
+value will be converted to the type and an error will be raised if this 
+fails. The following text-item is suitable for entering integers:
+
+<PRE class="code">
+...,
+new(T, text_item(height, 0)),
+send(T, type, int),
+send(T, length, 8),
+...
+</PRE>
+
+</DD>
+<DT><A NAME="class:text_margin"><STRONG>text_margin</STRONG>(<VAR></VAR>)</A></DT>
+<DD class="defbody">
+A <A class="" href="summary.html#class:text_margin">text_margin</A> can 
+be associated with an <A class="" href="summary.html#class:editor">editor</A> 
+using
+<A NAME="idx:editorsendmarginwidth:851"></A>`<B>editor<CODE>-&gt;</CODE>margin_width</B>' <VAR>&gt;</VAR> 
+0. If the <A class="" href="summary.html#class:text_buffer">text_buffer</A> 
+defines fragments, and the <A class="" href="summary.html#class:style">style</A> 
+objects define <A NAME="idx:stylegeticon:852"></A>`<B>style<CODE>&lt;-</CODE>icon</B>', 
+the margin will show an icon near the start of the fragment. After the 
+introduction of multiple fonts, attributes and colour this mechanism has 
+become obsolete.</DD>
+<DT><A NAME="class:tile"><STRONG>tile</STRONG>(<VAR></VAR>)</A></DT>
+<DD class="defbody">
+Tiles are used to realise the `tile-layout' of windows in a
+<A class="" href="summary.html#class:frame">frame</A>. <A class="sec" href="framelayout.html">Section 
+10.6</A> explains this in detail. Tiles can also be used to realise 
+tabular layout of other re-sizable graphical objects.</DD>
+<DT><A NAME="class:tile_adjuster"><STRONG>tile_adjuster</STRONG>(<VAR></VAR>)</A></DT>
+<DD class="defbody">
+Small window displayed on top of a <A class="" href="summary.html#class:frame">frame</A> 
+at the right/bottom of a user-adjustable window. Dragging this window 
+allows the user the adjust the subwindow layout.</DD>
+<DT><A NAME="class:timer"><STRONG>timer</STRONG>(<VAR></VAR>)</A></DT>
+<DD class="defbody">
+Timers are used to initiate messages at regular intervals, schedule a 
+single message in the future or delay execution for a specified time. 
+The example realises a <A NAME="idx:blinking:853">blinking</A> 
+graphical. Note that prior to destruction of the graphical, the timer 
+must be destroyed to avoid it sending messages to a non-existing object.
+
+<PRE class="code">
+...,
+new(T, timer(0.5, message(Gr, inverted,
+                          Gr?inverted?negate))),
+...
+</PRE>
+
+</DD>
+<DT><A NAME="class:tokeniser"><STRONG>tokeniser</STRONG>(<VAR></VAR>)</A></DT>
+<DD class="defbody">
+A <A class="" href="summary.html#class:tokeniser">tokeniser</A> returns 
+tokens from the input source according to the syntax specified. It is 
+part of the <font size=-1>XPCE</font> object parser and its 
+specification is not (yet) public.</DD>
+<DT><A NAME="class:tree"><STRONG>tree</STRONG>(<VAR></VAR>)</A></DT>
+<DD class="defbody">
+Trees realise hierarchical layout for <A class="" href="summary.html#class:graphical">graphical</A> 
+objects. Class
+<A class="" href="summary.html#class:tree">tree</A> itself is a subclass 
+of <A class="" href="summary.html#class:figure">figure</A>. The 
+hierarchy is built from <A class="" href="summary.html#class:node">node</A> 
+objects, each of which encapsulates a graphical. Trees trap changes to 
+the geometry of the displayed graphicals and will automatically update 
+the layout. For an example, see <A class="" href="summary.html#class:node">node</A>.</DD>
+<DT><A NAME="class:tuple"><STRONG>tuple</STRONG>(<VAR></VAR>)</A></DT>
+<DD class="defbody">
+Anonymous tuple of two objects. Commonly used by get-methods that have 
+to return two values.</DD>
+<DT><A NAME="class:type"><STRONG>type</STRONG>(<VAR></VAR>)</A></DT>
+<DD class="defbody">
+A <A class="" href="summary.html#class:type">type</A> defines, 
+implicitly or explicitly, a set of object that satisfy the type, as well 
+as optional conversion rules to translate certain other object to an 
+object that satisfies the type. The basic set consists of a type for 
+each class, defining the set of all instances of the class or any of its 
+sub-classes, a few `primitive' types (int, char and event_id are 
+examples). Disjunctive types can be created. See also
+<A class="sec" href="sec-3.2.html">section 3.2.1</A> and <A class="sec" href="sec-7.5.html">section 
+7.5.1</A>.
+
+<PRE class="code">
+?- get(type(int), check, '42', X). X = 42
+</PRE>
+
+</DD>
+<DT><A NAME="class:var"><STRONG>var</STRONG>(<VAR></VAR>)</A></DT>
+<DD class="defbody">
+A <A class="" href="summary.html#class:var">var</A> object is a <A class="" href="summary.html#class:function">function</A> 
+that yields the stored value when evaluated. Vars in <font size=-1>XPCE</font> 
+have global existence (like any object), but local, dynamically scoped, 
+binding. Scopes are started/ended with the execution of (user-defined) 
+methods, <A NAME="idx:codesendforward:854"></A>`<B>code<CODE>-&gt;</CODE>forward</B>' 
+and the execution of a <A class="" href="summary.html#class:block">block</A>.
+
+<P>The system predefines a number of <A class="" href="summary.html#class:var">var</A> 
+objects providing context for messages, methods, etc: <A NAME="idx:arg1:855"></A><B>@arg1</B>, 
+... <A NAME="idx:arg10:856"></A><B>@arg10</B> for argument forwarding,
+<A NAME="idx:event:857"></A><B>@event</B> for the current event, <A NAME="idx:receiver:858"></A><B>@receiver</B> 
+for the receiver of an event or message and <A NAME="idx:class:859"></A><B>@class</B> 
+for the class under construction are the most popular ones. Class <A class="" href="summary.html#class:block">block</A> 
+and <A class="" href="summary.html#class:and">and</A> give examples of 
+using these objects.</DD>
+<DT><A NAME="class:variable"><STRONG>variable</STRONG>(<VAR></VAR>)</A></DT>
+<DD class="defbody">
+A <A class="" href="summary.html#class:variable">variable</A> is a 
+class' instance-variable. They are, like
+<A class="" href="summary.html#class:send_method">send_method</A> and <A class="" href="summary.html#class:get_method">get_method</A>, 
+normally defined through the user-defined classes preprocessor described 
+in <A class="sec" href="udc.html">chapter 7</A>.</DD>
+<DT><A NAME="class:vector"><STRONG>vector</STRONG>(<VAR></VAR>)</A></DT>
+<DD class="defbody">
+Vector of arbitrary objects. Vectors can be dynamically expanded by 
+adding objects at arbitrary indices. Vectors are used at various places 
+of <font size=-1>XPCE</font>'s programming world: specifying the types 
+of methods, the instance variables of a class, to pack the arguments for 
+variable-argument methods, etc. They share a lot of behaviour with
+<A class="" href="summary.html#class:chain">chain</A> can sometimes be 
+an attractive alternative.</DD>
+<DT><A NAME="class:view"><STRONG>view</STRONG>(<VAR></VAR>)</A></DT>
+<DD class="defbody">
+A <A class="" href="summary.html#class:view">view</A> is a <A class="" href="summary.html#class:window">window</A> 
+displaying an <A class="" href="summary.html#class:editor">editor</A>. 
+View itself implements a reasonable powerful set of built-in commands 
+conforming the GNU-Emacs key-bindings. See also <STRONG>PceEmacs</STRONG> 
+and
+<A NAME="idx:showkeybindings1:860"></A><SPAN class="pred-ext">show_key_bindings/1</SPAN>.</DD>
+<DT><A NAME="class:visual"><STRONG>visual</STRONG>(<VAR></VAR>)</A></DT>
+<DD class="defbody">
+Visual is the super-class of anything in <font size=-1>XPCE</font> that 
+can `visualise' things. The class itself defines no storage. Each 
+subclass must implement the <A NAME="idx:visualgetcontains:861"></A>`<B>visual<CODE>&lt;-</CODE>contains</B>' 
+and <A NAME="idx:visualgetcontainedin:862"></A>`<B>visual<CODE>&lt;-</CODE>contained_in</B>' 
+methods that define the visual consists-of hierarchy as shown by the
+<STRONG>Visual Hierarchy</STRONG>. Class visual itself plays a role in 
+the
+<B><CODE>-&gt;</CODE>report</B> mechanism as described in <A class="sec" href="report.html">section 
+10.7</A> and defines
+<A NAME="idx:visualsenddestroy:863"></A>`<B>visual<CODE>-&gt;</CODE>destroy</B>' 
+to ensure destruction of a sub-tree of the visual consists-of hierarchy.</DD>
+<DT><A NAME="class:when"><STRONG>when</STRONG>(<VAR></VAR>)</A></DT>
+<DD class="defbody">
+Class <A class="" href="summary.html#class:when">when</A> realises a 
+function version of <A class="" href="summary.html#class:if">if</A>. It 
+evaluates the <EM>condition</EM> and then returns the return-value of 
+either of the two functions. It is commonly used to define conditional 
+class-variable values.
+
+<PRE class="code">
+editor.selection_style: \
+        when(@colour_display, \
+             style(background := yellow), \
+             style(highlight := @on))
+</PRE>
+
+</DD>
+<DT><A NAME="class:while"><STRONG>while</STRONG>(<VAR></VAR>)</A></DT>
+<DD class="defbody">
+Code statement executing <EM>body</EM> as long as <EM>condition</EM> 
+executes successfully. Not used frequently. Most iteration in <font size=-1>XPCE</font> 
+uses the
+<B><CODE>-&gt;</CODE>for_all</B>, <B><CODE>-&gt;</CODE>for_some</B>, <B><CODE>&lt;-</CODE>find</B> 
+and <B><CODE>&lt;-</CODE>find_all</B> methods defines on most collection 
+classes.</DD>
+<DT><A NAME="class:window"><STRONG>window</STRONG>(<VAR></VAR>)</A></DT>
+<DD class="defbody">
+The most generic <font size=-1>XPCE</font> window class. A <A class="" href="summary.html#class:window">window</A> 
+is a sub-class of
+<A class="" href="summary.html#class:device">device</A> and thus capable 
+of displaying graphical objects. One or more windows are normally 
+combined in a <A class="" href="summary.html#class:frame">frame</A> as 
+described in <A class="sec" href="framelayout.html">section 10.6</A>. 
+The four main specialisations of window are <A class="" href="summary.html#class:dialog">dialog</A> 
+for windows holding controllers, <A class="" href="summary.html#class:view">view</A> 
+for windows holding text, <A class="" href="summary.html#class:browser">browser</A> 
+for windows displaying a list of items and finally, <A class="" href="summary.html#class:picture">picture</A> 
+for displaying graphics.
+
+<P>Class <A class="" href="summary.html#class:window">window</A> can be 
+used as a graphics window if no scrollbars are needed.</DD>
+<DT><A NAME="class:window_decorator"><STRONG>window_decorator</STRONG>(<VAR></VAR>)</A></DT>
+<DD class="defbody">
+A <A class="" href="summary.html#class:window_decorator">window_decorator</A> 
+is a window that displays another window and its `decorations': 
+scrollbars and label. A <A class="" href="summary.html#class:picture">picture</A> 
+for example is actually a window displayed on a window-decorator 
+displaying the scrollbars. Almost never used directly by the application 
+programmer.
+</DD>
+</DL>
+
+<P></BODY></HTML>

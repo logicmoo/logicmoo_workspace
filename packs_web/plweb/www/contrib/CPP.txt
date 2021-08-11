@@ -1,0 +1,12 @@
+---+ SWI-Prolog C++ interfaces
+
+SWI-Prolog comes bundled with =|SWI-cpp.h|=, which provides a quite
+simpleminded C++ interface.  In addition, there is
+
+    
+    * [[A C++ interface by a C++
+    programmer][http://www.volker-wysk.de/swiprolog-c++/index.html]] 
+    by Volker Wysk <post@volker-wysk.de>
+
+    * [[Wrap Prolog streams as C++ iostream][<swi-iostream.cc>]] by
+    Salvador Fandino

@@ -1,0 +1,327 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+
+<HTML>
+<HEAD>
+<TITLE>Programming in XPCE/Prolog: Section 10.7</TITLE><LINK REL=home HREF="index.html">
+<LINK REL=contents HREF="Contents.html">
+<LINK REL=index HREF="DocIndex.html">
+<LINK REL=summary HREF="summary.html">
+<LINK REL=previous HREF="framelayout.html">
+<LINK REL=next HREF="errors.html">
+<STYLE type="text/css">
+/* Style sheet for SWI-Prolog latex2html
+*/
+
+dd.defbody
+{ margin-bottom: 1em;
+}
+
+dt.pubdef
+{ background-color: #c5e1ff;
+}
+
+pre.code
+{ margin-left: 1.5em;
+margin-right: 1.5em;
+border: 1px dotted;
+padding-top: 5px;
+padding-left: 5px;
+padding-bottom: 5px;
+background-color: #f8f8f8;
+}
+
+div.navigate
+{ text-align: center;
+background-color: #f0f0f0;
+border: 1px dotted;
+padding: 5px;
+}
+
+div.title
+{ text-align: center;
+padding-bottom: 1em;
+font-size: 200%;
+font-weight: bold;
+}
+
+div.author
+{ text-align: center;
+font-style: italic;
+}
+
+div.abstract
+{ margin-top: 2em;
+background-color: #f0f0f0;
+border: 1px dotted;
+padding: 5px;
+margin-left: 10%; margin-right:10%;
+}
+
+div.abstract-title
+{ text-align: center;
+padding: 5px;
+font-size: 120%;
+font-weight: bold;
+}
+
+div.toc-h1
+{ font-size: 200%;
+font-weight: bold;
+}
+
+div.toc-h2
+{ font-size: 120%;
+font-weight: bold;
+margin-left: 2em;
+}
+
+div.toc-h3
+{ font-size: 100%;
+font-weight: bold;
+margin-left: 4em;
+}
+
+div.toc-h4
+{ font-size: 100%;
+margin-left: 6em;
+}
+
+span.sec-nr
+{ 
+}
+
+span.sec-title
+{ 
+}
+
+span.pred-ext
+{ font-weight: bold;
+}
+
+/* Footnotes */
+
+sup.fn { color: blue; text-decoration: underline; }
+span.fn-text: { display: none; }
+sup.fn span {display: none;}
+sup:hover span 
+{ display: block !important;
+position: absolute; top: auto; left: auto; width: 80%;
+color: #000; background: white;
+border: 2px solid;
+padding: 5px; margin: 10px; z-index: 100;
+font-size: smaller;
+}
+</STYLE>
+</HEAD>
+<BODY BGCOLOR="white">
+<DIV class="navigate"><A class="nav" href="index.html"><IMG SRC="home.gif" BORDER=0 ALT="Home"></A>
+<A class="nav" href="Contents.html"><IMG SRC="index.gif" BORDER=0 ALT="Contents"></A>
+<A class="nav" href="DocIndex.html"><IMG SRC="yellow_pages.gif" BORDER=0 ALT="Index"></A>
+<A class="nav" href="summary.html"><IMG SRC="info.gif" BORDER=0 ALT="Summary"></A>
+<A class="nav" href="framelayout.html"><IMG SRC="prev.gif" BORDER=0 ALT="Previous"></A>
+<A class="nav" href="errors.html"><IMG SRC="next.gif" BORDER=0 ALT="Next"></A>
+</DIV>
+
+<H2><A NAME="sec:10.7"><SPAN class="sec-nr">10.7</SPAN> <SPAN class="sec-title">Informing 
+the user</SPAN></A></H2>
+
+<A NAME="sec:report"></A>
+
+<H3><A NAME="sec:10.7.1"><SPAN class="sec-nr">10.7.1</SPAN> <SPAN class="sec-title">Aim 
+of the report mechanism</SPAN></A></H3>
+
+<P>Objects perform actions on behalf of the user. Sometimes it is 
+desirable to inform the application user of progress, status or 
+problems. In older applications, the action code often contained 
+knowledge about the environment in which the object was embedded. This 
+harms reusability and therefore <font size=-1>XPCE</font> provides a 
+generic mechanism to deal with such messages.
+
+<H3><A NAME="sec:10.7.2"><SPAN class="sec-nr">10.7.2</SPAN> <SPAN class="sec-title">The 
+report interface</SPAN></A></H3>
+
+<P>Whenever an object needs to inform the user, the programmer can use 
+the
+<A NAME="idx:objectsendreport:378"></A>`<B>object<CODE>-&gt;</CODE>report</B>' 
+method. The definition of this method is below.
+
+<DL>
+<DT><STRONG>object -&gt;report:</STRONG> <VAR>type, format, argument ...</VAR></DT>
+<DD class="defbody">
+Inform the user. The message is constructed from <EM>format</EM> and the <EM>argument</EM> 
+list. See <A NAME="idx:stringsendformat:379"></A>`<B>string<CODE>-&gt;</CODE>format</B>' 
+for a description of the C printf-like formatting syntax of <font size=-1>XPCE</font>. <EM>type</EM> 
+describes the nature of the message and is used by the reporting 
+mechanism to decide on the presentation-style. See <A class="sec" href="report.html">section 
+10.7.2.1</A> for the available types and their meaning.
+</DD>
+</DL>
+
+<P>The object posting the report message will normally not be able to 
+display the message. The main task of the implementations of this method 
+in class <A class="" href="summary.html#class:object">object</A>, <A class="" href="summary.html#class:visual">visual</A>, <A class="" href="summary.html#class:frame">frame</A> 
+and
+<A class="" href="summary.html#class:dialog">dialog</A> is to divert the 
+report to an object that can present it. By default, this is either a <A class="" href="summary.html#class:label">label</A> 
+or the <A class="" href="summary.html#class:display">display</A> object 
+(<A NAME="idx:display:380"></A><B>@display</B>).
+
+<P>The implementation of <A NAME="idx:objectsendreport:381"></A>`<B>object<CODE>-&gt;</CODE>report</B>' 
+will simply check whether there is a current event (see <A NAME="idx:event:382"></A><B>@event</B>), 
+which implicates the action was initiated by the user and then forward 
+the <B><CODE>-&gt;</CODE>report</B> message to the
+<A NAME="idx:eventgetreceiver:383"></A>`<B>event<CODE>&lt;-</CODE>receiver</B>', 
+which is normally the controller activated by the user. If there is no 
+current event, the action must be initiated by a user query to the 
+host-language and therefore <A NAME="idx:objectsendreport:384"></A>`<B>object<CODE>-&gt;</CODE>report</B>' 
+will print its feedback to the host-language console using <A NAME="idx:objectnamepcesendformat:385"></A>`<B><B>@pce</B><CODE>-&gt;</CODE>format</B>'.
+
+<P>The implementation of <A NAME="idx:visualsendreport:386"></A>`<B>visual<CODE>-&gt;</CODE>report</B>' 
+will simply forward the message to its containing visual object. If the 
+message arrives at an instance of class <A class="" href="summary.html#class:frame">frame</A>, 
+the implementation of <A NAME="idx:framesendreport:387"></A>`<B>frame<CODE>-&gt;</CODE>report</B>' 
+will broadcast the message to each of its windows, but avoid sending it 
+back to the window it came from. If this fails and the frame is a 
+transient frame for another frame, the report is forward to the main 
+frame. Class
+<A class="" href="summary.html#class:dialog">dialog</A> will look for an 
+object named <TT>reporter</TT>. If it can find such an object (typically 
+a <A class="" href="summary.html#class:label">label</A>), the report is 
+sent to this object.
+
+<P>If all fails, the report will arrive at the <A NAME="idx:display:388"></A><B>@display</B> 
+object, which takes care of default handling. See <A class="sec" href="report.html">section 
+10.7.2.1</A> on how the different report types are handled.
+
+<H4><A NAME="sec:10.7.2.1"><SPAN class="sec-nr">10.7.2.1</SPAN> <SPAN class="sec-title">Information 
+types</SPAN></A></H4>
+
+<A NAME="sec:reporttypes"></A>
+
+<P>The report <EM>type</EM> indicates the semantic category of the 
+report and defines how it is handled. The following report types are 
+defined:
+
+<P>
+<UL>
+<LI><I>status</I><BR>
+Information on progress, status change of the system, etc. such 
+information should not attract much attention. By default, <font size=-1>XPCE</font> 
+will format the message at an appropriate location. If no such location 
+can be found the message is ignored.
+<LI><I>inform</I><BR>
+The user requested information and this is the reply. Handled as
+<TT>status</TT>, but if no appropriate location can be found it will 
+invoke <A NAME="idx:objectnamedisplaysendinform:389"></A>`<B><B>@display</B><CODE>-&gt;</CODE>inform</B>', 
+presenting a messagebox.
+<LI><I>progress</I><BR>
+Indicates progress in ongoing computation. Feedback is generally similar 
+to <TT>status</TT>, but followed by a <A NAME="idx:graphicalsendflush:390"></A>`<B>graphical<CODE>-&gt;</CODE>flush</B>' 
+to take immediate effect. A sequence of <TT>progress</TT> reports should 
+be closed with a
+<TT>done</TT> report.
+<LI><I>done</I><BR>
+Terminates a (sequence of) <B><CODE>-&gt;</CODE>report</B>: progress 
+messages.
+<LI><I>warning</I><BR>
+The user probably made a minor mistake for which a simple alert such as 
+provided by <A NAME="idx:graphicalsendalert:391"></A>`<B>graphical<CODE>-&gt;</CODE>alert</B>' 
+suffices. If there is an appropriate location for the message it will be 
+formatted there.
+<LI><I>error</I><BR>
+Something serious went wrong and the user needs to be informed of this. 
+For example a file could not be read or written. If no appropriate 
+location could be found <A NAME="idx:objectnamedisplaysendinform:392"></A>`<B><B>@display</B><CODE>-&gt;</CODE>inform</B>' 
+is used to bring the message to the attention of the user.
+</UL>
+
+<H3><A NAME="sec:10.7.3"><SPAN class="sec-nr">10.7.3</SPAN> <SPAN class="sec-title">Redefining 
+report handling</SPAN></A></H3>
+
+<P>There are two aspects in which the reporting mechanism can be 
+redefined. The first concerns the <EM>location</EM> and the other the <EM>presentation</EM> 
+of the report. The <EM>location</EM> is changed by defining the method <B><CODE>&lt;-</CODE>report_to</B>. 
+All the generic implementations of this method will first invoke <B><CODE>&lt;-</CODE>report_to</B> 
+on itself. If this method yields an answer, the report is forwarded to 
+this answer. For example, class
+<A class="" href="summary.html#class:text_buffer">text_buffer</A> 
+defines a <B><CODE>&lt;-</CODE>report_to</B> that forwards all reports 
+to its associated editor object.
+
+<P>The <EM>presentation</EM> is changed by changing the implementation 
+of
+<A NAME="idx:labelsendreport:393"></A>`<B>label<CODE>-&gt;</CODE>report</B>' 
+or <A NAME="idx:displaysendreport:394"></A>`<B>display<CODE>-&gt;</CODE>report</B>. 
+As this determines the look and feel of an application, applications 
+should be reluctant using this.
+
+<H3><A NAME="sec:10.7.4"><SPAN class="sec-nr">10.7.4</SPAN> <SPAN class="sec-title">Example</SPAN></A></H3>
+
+<P>The typical way to exploit the report mechanism is by attaching a 
+label named <EM>reporter</EM> to a dialog window of the applications 
+frame. For example, an application consisting of a menu-bar, browser and 
+a graphical window window could choose to make place for a small dialog 
+for feedback at the bottom. The following fragment would build the 
+window layout of such an application:
+
+<PRE class="code">
+reportdemo :-
+        new(Frame, frame('Reporter demo')),
+        new(B, browser),
+        send(new(picture), right, B),
+        send(new(MD, dialog), above, B),
+        send(new(RD, dialog), below, B),
+        send(Frame, append, B),
+        
+        send(MD, append, new(MB, menu_bar)),
+        send(MD, pen, 0),
+        send(MD, gap, size(0,0)),
+        send(MB, append, new(File, popup(file))),
+        send_list(File, append,
+                  [ menu_item(load,
+                              message(@prolog, load, Frame),
+                              end_group := @on),
+                    menu_item(quit, message(Frame, destroy))
+                  ]),
+
+        send(RD, append, label(reporter)),
+        send(RD, gap, size(5, 0)),
+        send(Frame, open).</PRE>
+
+<P>Now suppose the implementation of the `load' action takes 
+considerable time. The implementation below reads a file assuming each 
+line in the file contains a word.
+
+<PRE class="code">
+:- pce_autoload(finder, library(find_file)).
+:- pce_global(@finder, new(finder)).
+
+load(Frame) :-
+        get(@finder, file, exists := @on, FileName),
+        send(Frame, report, progress,
+             'Loading %s ...', FileName),
+        get(Frame, member, browser, Browser),
+        new(File, file(FileName)),
+        send(File, open, read),
+        (   repeat,
+                (   get(File, read_line, Line)
+                -&gt;  send(Line, strip),
+                    send(Browser, append, Line),
+                    fail
+                ;   !,
+                    send(File, close)
+                )
+        ),
+        send(Frame, report, done).</PRE>
+
+<P>The result is shown in <A class="fig" href="report.html#fig:reportdemo">figure 
+18</A>.
+
+<P><A NAME="fig:reportdemo"></A>
+<CENTER>
+<IMG SRC="reportdemo.gif">
+</CENTER>
+<TABLE ALIGN=center WIDTH="75%"><TR><TD>
+<B>Figure 18 : </B>The `reporter' demo</TABLE>
+
+</BODY></HTML>

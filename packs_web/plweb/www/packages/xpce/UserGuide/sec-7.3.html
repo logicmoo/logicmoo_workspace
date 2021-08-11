@@ -1,0 +1,482 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+
+<HTML>
+<HEAD>
+<TITLE>Programming in XPCE/Prolog: Section 7.3</TITLE><LINK REL=home HREF="index.html">
+<LINK REL=contents HREF="Contents.html">
+<LINK REL=index HREF="DocIndex.html">
+<LINK REL=summary HREF="summary.html">
+<LINK REL=previous HREF="slots.html">
+<LINK REL=next HREF="udcpreds.html">
+<STYLE type="text/css">
+/* Style sheet for SWI-Prolog latex2html
+*/
+
+dd.defbody
+{ margin-bottom: 1em;
+}
+
+dt.pubdef
+{ background-color: #c5e1ff;
+}
+
+pre.code
+{ margin-left: 1.5em;
+margin-right: 1.5em;
+border: 1px dotted;
+padding-top: 5px;
+padding-left: 5px;
+padding-bottom: 5px;
+background-color: #f8f8f8;
+}
+
+div.navigate
+{ text-align: center;
+background-color: #f0f0f0;
+border: 1px dotted;
+padding: 5px;
+}
+
+div.title
+{ text-align: center;
+padding-bottom: 1em;
+font-size: 200%;
+font-weight: bold;
+}
+
+div.author
+{ text-align: center;
+font-style: italic;
+}
+
+div.abstract
+{ margin-top: 2em;
+background-color: #f0f0f0;
+border: 1px dotted;
+padding: 5px;
+margin-left: 10%; margin-right:10%;
+}
+
+div.abstract-title
+{ text-align: center;
+padding: 5px;
+font-size: 120%;
+font-weight: bold;
+}
+
+div.toc-h1
+{ font-size: 200%;
+font-weight: bold;
+}
+
+div.toc-h2
+{ font-size: 120%;
+font-weight: bold;
+margin-left: 2em;
+}
+
+div.toc-h3
+{ font-size: 100%;
+font-weight: bold;
+margin-left: 4em;
+}
+
+div.toc-h4
+{ font-size: 100%;
+margin-left: 6em;
+}
+
+span.sec-nr
+{ 
+}
+
+span.sec-title
+{ 
+}
+
+span.pred-ext
+{ font-weight: bold;
+}
+
+/* Footnotes */
+
+sup.fn { color: blue; text-decoration: underline; }
+span.fn-text: { display: none; }
+sup.fn span {display: none;}
+sup:hover span 
+{ display: block !important;
+position: absolute; top: auto; left: auto; width: 80%;
+color: #000; background: white;
+border: 2px solid;
+padding: 5px; margin: 10px; z-index: 100;
+font-size: smaller;
+}
+</STYLE>
+</HEAD>
+<BODY BGCOLOR="white">
+<DIV class="navigate"><A class="nav" href="index.html"><IMG SRC="home.gif" BORDER=0 ALT="Home"></A>
+<A class="nav" href="Contents.html"><IMG SRC="index.gif" BORDER=0 ALT="Contents"></A>
+<A class="nav" href="DocIndex.html"><IMG SRC="yellow_pages.gif" BORDER=0 ALT="Index"></A>
+<A class="nav" href="summary.html"><IMG SRC="info.gif" BORDER=0 ALT="Summary"></A>
+<A class="nav" href="slots.html"><IMG SRC="prev.gif" BORDER=0 ALT="Previous"></A>
+<A class="nav" href="udcpreds.html"><IMG SRC="next.gif" BORDER=0 ALT="Next"></A>
+</DIV>
+
+<H2><A NAME="sec:7.3"><SPAN class="sec-nr">7.3</SPAN> <SPAN class="sec-title">Refining 
+and redefining methods</SPAN></A></H2>
+
+<P>Re(de)fining methods is a common technique in object-oriented 
+programming. This section describes how methods can be re(de)fined and 
+what methods have special meaning in <font size=-1>XPCE</font> and are 
+commonly redefined.
+
+<P>The method definition for a re(de)fined method is exactly the same as 
+for a new method. The redefined method will inherit its group (see <A NAME="idx:pcegroup1:204"></A><A class="pred" href="sec-7.1.html#pce_group/1">pce_group/1</A>) 
+from the method of the super-class.
+
+<P>When refining a method we often want to call the method of our 
+super-class. For this reason there are two additional interface 
+predicates to access the behaviour of a specific class. In 99% of the 
+cases we wish to invoke a method of the immediate super-class. For this 
+reason the class-compiler realises compile-time rewrite of
+<A NAME="idx:sendsuper212:205"></A><A class="pred" href="sec-7.3.html#send_super/2">send_super/[2-12]</A> 
+and <A NAME="idx:getsuper313:206"></A><A class="pred" href="sec-7.3.html#get_super/3">get_super/[3-13]</A> 
+to <A NAME="idx:sendclass2:207"></A><SPAN class="pred-ext">send_class/2</SPAN> 
+and <A NAME="idx:getclass3:208"></A><A class="pred" href="sec-D.1.html#get_class/3">get_class/3</A>.
+
+<DL>
+<DT class="pubdef"><A NAME="send_class/3"><STRONG>send_class</STRONG>(<VAR>+Object, 
++Class, +Message</VAR>)</A></DT>
+<DD class="defbody">
+Invoke <VAR>Message</VAR> on <VAR>Object</VAR> using the implementation 
+defined with class <VAR>Class</VAR>. <VAR>Class</VAR> must be the actual 
+class of
+<VAR>Object</VAR> or one of its super-classes or an error is raised.</DD>
+<DT class="pubdef"><A NAME="get_class/4"><STRONG>get_class</STRONG>(<VAR>+Object, 
++Class, +Message, -Result</VAR>)</A></DT>
+<DD class="defbody">
+This is the get-equivalent of <A NAME="idx:sendclass3:209"></A><A class="pred" href="sec-7.3.html#send_class/3">send_class/3</A>.</DD>
+<DT class="pubdef"><A NAME="send_super/2"><STRONG>send_super</STRONG>(<VAR>+Object, 
++Message</VAR>)</A></DT>
+<DD class="defbody">
+The class-compiler converts goals of this format to an appropriate
+<A NAME="idx:sendclass3:210"></A><A class="pred" href="sec-7.3.html#send_class/3">send_class/3</A> 
+call. Note that it is not possible to provide predicates as an 
+alternative to the compile-time expansion and therefore meta-calls 
+cannot use <A NAME="idx:sendsuper2:211"></A><A class="pred" href="sec-7.3.html#send_super/2">send_super/2</A>.</DD>
+<DT class="pubdef"><A NAME="get_super/3"><STRONG>get_super</STRONG>(<VAR>+Object, 
++Message, -Result</VAR>)</A></DT>
+<DD class="defbody">
+This is the get-equivalent of <A NAME="idx:sendsuper2:212"></A><A class="pred" href="sec-7.3.html#send_super/2">send_super/2</A>.
+</DD>
+</DL>
+
+<P>Similar as the predicates <A NAME="idx:send2:213"></A><A class="pred" href="sec-D.1.html#send/2">send/2</A> 
+and <A NAME="idx:get3:214"></A><A class="pred" href="sec-D.1.html#get/3">get/3</A> 
+may be written as <A NAME="idx:send312:215"></A><SPAN class="pred-ext">send/[3-12]</SPAN> 
+and <A NAME="idx:get413:216"></A><SPAN class="pred-ext">get/[4-13]</SPAN> 
+this is possible for <A NAME="idx:sendsuper2:217"></A><A class="pred" href="sec-7.3.html#send_super/2">send_super/2</A> 
+and <A NAME="idx:getsuper3:218"></A><A class="pred" href="sec-7.3.html#get_super/3">get_super/3</A>. 
+In addition the pre-5.0 <A NAME="idx:objectsendsendsuper:219"></A>`<B>object<CODE>-&gt;</CODE>send_super</B>' 
+and <A NAME="idx:objectgetgetsuper:220"></A>`<B>object<CODE>&lt;-</CODE>get_super</B>' 
+are expanded to <A NAME="idx:sendclass2:221"></A><SPAN class="pred-ext">send_class/2</SPAN> 
+and <A NAME="idx:getclass3:222"></A><A class="pred" href="sec-D.1.html#get_class/3">get_class/3</A>. 
+The following calls are all equivalent. The last one should not be used 
+by new code.
+
+<PRE class="code">
+        send_super(Object, my_method(Arg1))
+        send_super(Object, my_method, Arg1)
+        send(Object, send_super, my_method, Arg1)</PRE>
+
+<H3><A NAME="sec:7.3.1"><SPAN class="sec-nr">7.3.1</SPAN> <SPAN class="sec-title">General 
+redefinitions</SPAN></A></H3>
+
+<A NAME="sec:omsmethods"></A>
+
+<P>The most commonly redefined methods are <B><CODE>-&gt;</CODE>initialise</B> 
+and <B><CODE>-&gt;</CODE>unlink</B> to redefine object creation and 
+destruction. <B>Note that none of these methods should ever be invoked 
+directly on an object</B>, because the implementation often makes 
+assumptions that are only true in the context they are normally invoked 
+by the kernel.
+
+<DL>
+<DT><STRONG>object -&gt;initialise:</STRONG> <VAR>&lt;<VAR>Class-Defined</VAR>&gt;</VAR></DT>
+<DD class="defbody">
+Initialise a new instance of the class. The initialisation is not 
+allowed to access behaviour or slots of the super-class without invoking 
+the <B><CODE>-&gt;</CODE>initialise</B> on th super-class. Omitting is a 
+common source of errors, often leading to crashes.
+
+<P>The initialise method should initialise all slots declared in this 
+class that have no specified value in the variable declaration and 
+cannot have the value <A NAME="idx:nil:223"></A><B>@nil</B>. See also <A NAME="idx:checkpce0:224"></A><A class="pred" href="sec-D.2.html#checkpce/0">checkpce/0</A>.
+
+<P>If <B><CODE>-&gt;</CODE>initialise</B> fails, the exception <TT>initialise_failed</TT> 
+will be raised, passing the instance and the argument vector. 
+Afterwards, the (possible named) reference is destroyed and the object's 
+slots are reset to <A NAME="idx:nil:225"></A><B>@nil</B>. Finally, the 
+instance is deallocated. <B><CODE>-&gt;</CODE>unlink</B> (see below) is 
+not called. In general, it is not good programming style to let
+<B><CODE>-&gt;</CODE>initialise</B> fail.
+</DD>
+<DT><STRONG>object -&gt;unlink:</STRONG> <VAR></VAR></DT>
+<DD class="defbody">
+Called from the object-management system if the object is to be 
+destroyed. This method <EM>must</EM> call <B><CODE>-&gt;</CODE>unlink</B> 
+of the super-class somewhere in the process. It is an error if <B><CODE>-&gt;</CODE>unlink</B> 
+fails.
+
+<P>This method is normally used to unlink the object from related 
+objects. For example, <A class="" href="summary.html#class:graphical">graphical</A> 
+objects use it to remove themselves from their device if they are 
+displayed. There is no need to reset slot-values as dereferencing the 
+slot-values will be done by the object-management system after <B><CODE>-&gt;</CODE>unlink</B> 
+has finished.
+
+<P><B><CODE>-&gt;</CODE>unlink</B> is always called, whether the object 
+was destroyed using <B><CODE>-&gt;</CODE>free</B> or by the 
+garbage-collector.
+</DD>
+<DT><STRONG>object &lt;-convert:</STRONG> <VAR>&lt;<VAR>Class-Defined</VAR>&gt;</VAR></DT>
+<DD class="defbody">
+Instance This get method converts another object into an object of this 
+class. It is called by the type-checker. Suppose an object <EM>X</EM> is 
+handed to the type checker for checking against this class. If <EM>X</EM> 
+is not already an instance of this class or any of its subclasses, the 
+type checker will:
+<UL COMPACT>
+<LI>Check <EM>X</EM> against the &lt;<VAR>Class-Defined</VAR>&gt; type.
+<LI>Run this method, passing the (possibly converted) <EM>X</EM>.
+</UL>
+
+<P>The receiver is not defined during the execution of this method. The 
+method should either fail or succeed and return an instance of the 
+requested class or one of its super-classes. The argument vector 
+consists of a single argument. The type-conversion system guarantees the 
+argument is of the satisfied type. It is allowed, but not obligatory to 
+use the method of the super-class.
+
+<P>For example, suppose we are defining a class <EM>person</EM>, who has 
+a unique name. There is a table <A NAME="idx:persons:226"></A><B>@persons</B>, 
+that maps the name onto the person. We would like to be able to pass the 
+name rather then a person instance to a method argument with the type <TT>person</TT>. 
+If no such person exist, a new person instance is created. Below is the 
+implementation for this:
+
+<PRE class="code">
+convert(_, Name:name, P:person) :&lt;-
+        "Lookup from @persons or create a new one"::
+        (   get(@persons, member, Name, P)
+        -&gt;  true
+        ;   new(P, person(Name))
+        ).
+</PRE>
+
+<P>See also <B><CODE>&lt;-</CODE>lookup</B> described below.
+</DD>
+<DT><STRONG>object &lt;-lookup:</STRONG> <VAR>&lt;<VAR>Class-Defined</VAR>&gt;</VAR></DT>
+<DD class="defbody">
+Instance Called from the new() virtual machine operation to deal with <EM>reusable</EM> 
+objects before <B><CODE>-&gt;</CODE>initialise</B> is considered. The 
+arguments are normally the same as for <B><CODE>-&gt;</CODE>initialise</B>. 
+If this method returns an instance, this will be the value returned by 
+new(). If it fails, a new instance is allocated and <B><CODE>-&gt;</CODE>initialise</B>d.
+</DD>
+</DL>
+
+<H3><A NAME="sec:7.3.2"><SPAN class="sec-nr">7.3.2</SPAN> <SPAN class="sec-title">Redefinition 
+in graphical classes</SPAN></A></H3>
+
+<A NAME="sec:graphmethods"></A>
+
+<P>The generic graphical class <A class="" href="summary.html#class:graphical">graphical</A> 
+is prepared to have several of its methods redefined in subclasses. This 
+section describes the most important of these methods.
+
+<DL>
+<DT><STRONG>graphical -&gt;event:</STRONG> <VAR>event</VAR></DT>
+<DD class="defbody">
+Called when a user-event needs to be dispatched. This message is 
+initially sent to the window object receiving the event. Graphical 
+devices (and thus windows) collect all graphicals for which `graphical
+<B><CODE>-&gt;</CODE>in_event_area</B>' succeeds. These are normally all 
+graphicals that overlap with the current position of the pointer. It 
+will sort these objects to their stacking order, the topmost object 
+first. See <A NAME="idx:devicegetpointed:227"></A>`<B>device<CODE>&lt;-</CODE>pointed</B>'. 
+Next the device will use <A NAME="idx:eventsendpost:228"></A>`<B>event<CODE>-&gt;</CODE>post</B>' 
+to post the event to each of these graphicals until one accepts the 
+event, after which the method immediately returns success. If none of 
+the <B><CODE>&lt;-</CODE>pointed</B> objects is prepared to accept the 
+event, <A NAME="idx:graphicalsendevent:229"></A>`<B>graphical<CODE>-&gt;</CODE>event</B>' 
+will be invoked, trying all he <A class="" href="summary.html#class:recogniser">recogniser</A> 
+objects associated with this graphical.
+
+<P>Notably most subclasses of class <A class="" href="summary.html#class:dialog_item">dialog_item</A>, 
+the standard controllers, refine <B><CODE>-&gt;</CODE>event</B>.
+
+<P>The method <B><CODE>-&gt;</CODE>event</B> is commonly redefined in 
+user-defined graphicals to make them sensitive to the mouse. The 
+following fragment of a class definition makes it possible to resize and 
+move instances.
+
+<PRE class="code">
+:- pce_global(@resize_and_move_recogniser,
+              new(handler_group(new(resize_gesture),
+                                new(move_gesture)))).
+
+event(Gr, Ev:event) :-&gt;
+        "Make the object re-sizeable and movable"::
+        (   send_super(Gr, event, Ev)
+        ;   send(@resize_and_move_recogniser, event, Ev)
+        ).
+</PRE>
+
+<P>Note that the implementation first tries the super-class. If the 
+super-class has no specific event-handling, this allows recognisers to 
+be attached that overrule the resize/move behaviour. Also, if it is a
+<A class="" href="summary.html#class:device">device</A>, invoking the 
+super-class behaviour will test components displayed on the device to be 
+considered before the device as a whole.
+
+<P>It is not obligatory to use <B><CODE>-&gt;</CODE>event</B> on the 
+super-class and if it is used, no specific ordering is required. If 
+there is no behaviour of the super-class that conflicts with your 
+extension we recommend to try the super-class first, to ensure 
+recognisers and local event-processing in graphicals displayed on a 
+device with redefined event-processing are considered before your 
+extensions.
+
+<P>Note the way recognisers are activated from event methods. The 
+graphical object itself is not passed. Instead, <A NAME="idx:recognisersendevent:230"></A>`<B>recogniser<CODE>-&gt;</CODE>event</B>' 
+reads the receiver from <A NAME="idx:eventgetreceiver:231"></A>`<B>event<CODE>&lt;-</CODE>receiver</B>' 
+set by <A NAME="idx:eventsendpost:232"></A>`<B>event<CODE>-&gt;</CODE>post</B>'.
+
+<P>As a consequence, do not call <A NAME="idx:graphicalsendevent:233"></A>`<B>graphical<CODE>-&gt;</CODE>event</B>' 
+directly. An event is directed to a graphical using <A NAME="idx:eventsendpost:234"></A>`<B>event<CODE>-&gt;</CODE>post</B>'. 
+For example, the event-method of a device displaying an editable text 
+object may decide to forward all button and keyboard events to the text. 
+The following accomplishes this:
+
+<PRE class="code">
+event(D, Ev:event) :-&gt;
+        (   (   send(Ev, is_a, button)
+            ;   send(Ev, is_a, keyboard)
+            )
+        -&gt;  % assumes text is named `text'
+            get(D, member, text, Text), 
+            send(Ev, post, Text)
+        ;   send_super(D, event, Ev)
+        ).
+</PRE>
+
+</DD>
+<DT><STRONG>graphical -&gt;geometry:</STRONG> <VAR>X:[int], Y:[int], 
+W:[int], H:[int]</VAR></DT>
+<DD class="defbody">
+Requests the receiver to position itself at the <VAR>X,Y</VAR> and to be <VAR>W &times; 
+H</VAR> pixels in size. Any of these values may be <A NAME="idx:default:235"></A><B>@default</B>, 
+indicating that the specific parameter is not to be changed.
+
+<P>Redefining <B><CODE>-&gt;</CODE>geometry</B> is the proper way to 
+interfere with positioning or resizing as this is the central method 
+called by all move and resize methods.
+
+<P>The example below takes the text-box to ensure proper geometry 
+handling by this class. Note that (I) the size of a device is by 
+definition the bounding box of all displayed graphicals and (II) the 
+text must be centered again.
+
+<PRE class="code">
+geometry(D, X:[int], Y:[int], W:[int], H:[int]) :-&gt;
+        get(D, member, box, B),
+        get(D, member, text, T),
+        send(B, set, @default, @default, W, H),
+        send(T, center, B?center),
+        send_super(D, geometry, X, Y).
+</PRE>
+
+<P><A NAME="idx:constraintvsmethod:236"></A>Note that the relation 
+between the text and the box could also be maintained using a <A class="" href="summary.html#class:constraint">constraint</A> 
+object. The above implementation however is only executed when the 
+geometry of the device is changed, while constraints will be executed 
+whenever a message arrives on the box or text.
+</DD>
+<DT><STRONG>graphical -&gt;request_geometry:</STRONG> <VAR>X:[int], 
+Y:[int], W:[int], H:[int]</VAR></DT>
+<DD class="defbody">
+Is much like <B><CODE>-&gt;</CODE>geometry</B>, except that the 
+interpretation of the units is left to the graphical. For example <A class="" href="summary.html#class:editor">editor</A> 
+will use the current font to translate <VAR>W</VAR> and <VAR>H</VAR> to 
+pixels and then invoke <B><CODE>-&gt;</CODE>geometry</B>. Not used very 
+often.
+</DD>
+<DT><STRONG>graphical -&gt;compute:</STRONG> <VAR></VAR></DT>
+<DD class="defbody">
+This method cooperates with <B><CODE>-&gt;</CODE>request_compute</B> and 
+may be used to delay expensive graphical operations. Suppose we have a 
+graphical representation and a database object linked using a <A class="" href="summary.html#class:hyper">hyper</A> 
+like this:
+
+<PRE class="code">
+new(_, hyper(Db, Gr, controller, model))
+</PRE>
+
+<P>If the database object (model) is modified, it could use the 
+following to inform all associated controllers about the change:
+
+<PRE class="code">
+send(Db, send_hyper, controller, request_compute)
+</PRE>
+
+<P><font size=-1>XPCE</font> remembers that the state of this graphical 
+is not consistent. If
+<font size=-1>XPCE</font> requires the graphical to be in a consistent 
+state, either because it needs to paint the graphical or because it 
+requires information about the geometry of the graphical, it will invoke 
+the method <B><CODE>-&gt;</CODE>compute</B> on the graphical.
+
+<P>This mechanism is used by graphicals that have a complicated 
+structure and are difficult to update. An example in the built-in 
+classes is class
+<A class="" href="summary.html#class:text_image">text_image</A>, 
+displaying the text of an <A class="" href="summary.html#class:editor">editor</A>. 
+Any modification to the text in the displayed region of the text_image 
+requires expensive computation to recompute the layout of the text. 
+Suppose the <B><CODE>-&gt;</CODE>request_compute</B> and <B><CODE>-&gt;</CODE>compute</B> 
+mechanism is not available. It this case, multiple modifications by the 
+program to the text would require this expensive process to run several 
+times. Now, after modifying the text, <B><CODE>-&gt;</CODE>request_compute</B> 
+is invoked on the text_image. Whenever <font size=-1>XPCE</font> has 
+processed all pending events, it will invoke <B><CODE>-&gt;</CODE>compute</B> 
+to the text_image and then repaint it.
+
+<P>The method below is a far to simple example, where the <B><CODE>-&gt;</CODE>compute</B> 
+method simply copies the name of the represented object into the text 
+object displayed on the device <B><CODE>-&gt;</CODE>compute</B> is 
+defined on.
+
+<PRE class="code">
+compute(C) :-&gt;
+        "Update according to model"::
+        get(C, get_hyper, model, name, Name),
+        get(C, member, text, T),
+        send(T, string, Name),
+        send_super(C, compute).
+</PRE>
+
+</DD>
+<DT><STRONG>graphical -&gt;_redraw_area:</STRONG> <VAR>area</VAR></DT>
+<DD class="defbody">
+Called by the graphical repaint thread. Its task is to repaint itself.
+<EM>Area</EM> indicates the area in the device coordinate system that 
+needs to be repainted. This area overlaps with the <B><CODE>&lt;-</CODE>area</B> 
+of the device.
+
+<P>Exploitation of this method to realise new graphical primitives is 
+explained in <A class="sec" href="ugraphics.html">section 10.12</A>.
+</DD>
+</DL>
+
+<P></BODY></HTML>

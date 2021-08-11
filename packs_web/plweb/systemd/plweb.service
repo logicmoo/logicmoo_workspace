@@ -1,0 +1,20 @@
+# swi-prolog - SWI-Prolog website server
+#
+# The SWI-Prolog website server
+
+[Unit]
+Description=SWI-Prolog website
+
+[Service]
+UMask=022
+Environment=LANG=en_US.utf8
+Environment=LD_LIBRARY_PATH=/usr/lib/jvm/default-java/jre/lib/amd64/server:/usr/lib/jvm/default-java/jre/lib/amd64:/usr/lib/jvm/default-java/lib
+Restart=on-failure
+StartLimitInterval=60
+StartLimitBurst=5
+WorkingDirectory=/home/swipl/src/plweb
+ExecReload=/bin/kill -HUP $MAINPID
+ExecStart=/home/swipl/bin/swipl daemon.pl --no-fork --port=80 --user=www-data
+
+[Install]
+WantedBy=multi-user.target

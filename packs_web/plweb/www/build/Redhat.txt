@@ -1,0 +1,73 @@
+# SWI-Prolog on Redhat (Fedora, RHEL, CentOS)
+
+| Fedora release | 23, 24, 25, 28 |
+| RHEL | 5 and 6 |
+| CentOS | 5 |
+| SWI-Prolog release | 8.0.x and 8.1.x |
+| Package page | <http://koji.fedoraproject.org/koji/buildinfo?buildID=485155> |
+| Maintainer | Petr Pisar |
+
+## Status
+
+This page was written for SWI-Prolog pre-dating the migration to
+the CMake configure and build infrastructure. The page has been updated,
+but the details have not been tested. Please report issues.
+
+## Dependencies
+
+Use the following commands to obtain all dependencies for a full build
+from source.
+
+```
+dnf install \
+  cmake \
+  ninja-build \
+  libunwind \
+  gperftools-devel \
+  freetype-devel \
+  gmp-devel \
+  java-1.8.0-openjdk-devel \
+  jpackage-utils \
+  libICE-devel \
+  libjpeg-turbo-devel \
+  libSM-devel \
+  libX11-devel \
+  libXaw-devel \
+  libXext-devel \
+  libXft-devel \
+  libXinerama-devel \
+  libXmu-devel \
+  libXpm-devel \
+  libXrender-devel \
+  libXt-devel \
+  ncurses-devel \
+  openssl-devel \
+  pkgconfig \
+  readline-devel \
+  libedit-devel \
+  unixODBC-devel \
+  zlib-devel \
+  uuid-devel \
+  libarchive-devel \
+  libyaml-devel
+```
+
+The above is tested on Fedora 23, 24 and 25.  On Fedora < 23 the
+following may be different:
+
+  - `dnf` was once called `yum`,
+
+  - `uuid-devel` was once called `libossp-uuid-devel`,
+
+  - before `java-1.8.0-openjdk-devel` there was
+    `java-1.7.0-openjdk-devel`,
+
+  - `libjpeg-turbo-devel` was once called `libjpeg-devel`.
+
+## Building the RPM
+
+You can build an RPM package  from   the  sources, for example to deploy
+locally using the CMake CPack tool. See  `CMAKE.md` in the top directory
+of the sources.
+
+@see LinuxDistro.txt

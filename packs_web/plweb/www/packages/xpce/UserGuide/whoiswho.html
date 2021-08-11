@@ -1,0 +1,432 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+
+<HTML>
+<HEAD>
+<TITLE>Programming in XPCE/Prolog: Section 10.4</TITLE><LINK REL=home HREF="index.html">
+<LINK REL=contents HREF="Contents.html">
+<LINK REL=index HREF="DocIndex.html">
+<LINK REL=summary HREF="summary.html">
+<LINK REL=previous HREF="namedref.html">
+<LINK REL=next HREF="application.html">
+<STYLE type="text/css">
+/* Style sheet for SWI-Prolog latex2html
+*/
+
+dd.defbody
+{ margin-bottom: 1em;
+}
+
+dt.pubdef
+{ background-color: #c5e1ff;
+}
+
+pre.code
+{ margin-left: 1.5em;
+margin-right: 1.5em;
+border: 1px dotted;
+padding-top: 5px;
+padding-left: 5px;
+padding-bottom: 5px;
+background-color: #f8f8f8;
+}
+
+div.navigate
+{ text-align: center;
+background-color: #f0f0f0;
+border: 1px dotted;
+padding: 5px;
+}
+
+div.title
+{ text-align: center;
+padding-bottom: 1em;
+font-size: 200%;
+font-weight: bold;
+}
+
+div.author
+{ text-align: center;
+font-style: italic;
+}
+
+div.abstract
+{ margin-top: 2em;
+background-color: #f0f0f0;
+border: 1px dotted;
+padding: 5px;
+margin-left: 10%; margin-right:10%;
+}
+
+div.abstract-title
+{ text-align: center;
+padding: 5px;
+font-size: 120%;
+font-weight: bold;
+}
+
+div.toc-h1
+{ font-size: 200%;
+font-weight: bold;
+}
+
+div.toc-h2
+{ font-size: 120%;
+font-weight: bold;
+margin-left: 2em;
+}
+
+div.toc-h3
+{ font-size: 100%;
+font-weight: bold;
+margin-left: 4em;
+}
+
+div.toc-h4
+{ font-size: 100%;
+margin-left: 6em;
+}
+
+span.sec-nr
+{ 
+}
+
+span.sec-title
+{ 
+}
+
+span.pred-ext
+{ font-weight: bold;
+}
+
+/* Footnotes */
+
+sup.fn { color: blue; text-decoration: underline; }
+span.fn-text: { display: none; }
+sup.fn span {display: none;}
+sup:hover span 
+{ display: block !important;
+position: absolute; top: auto; left: auto; width: 80%;
+color: #000; background: white;
+border: 2px solid;
+padding: 5px; margin: 10px; z-index: 100;
+font-size: smaller;
+}
+</STYLE>
+</HEAD>
+<BODY BGCOLOR="white">
+<DIV class="navigate"><A class="nav" href="index.html"><IMG SRC="home.gif" BORDER=0 ALT="Home"></A>
+<A class="nav" href="Contents.html"><IMG SRC="index.gif" BORDER=0 ALT="Contents"></A>
+<A class="nav" href="DocIndex.html"><IMG SRC="yellow_pages.gif" BORDER=0 ALT="Index"></A>
+<A class="nav" href="summary.html"><IMG SRC="info.gif" BORDER=0 ALT="Summary"></A>
+<A class="nav" href="namedref.html"><IMG SRC="prev.gif" BORDER=0 ALT="Previous"></A>
+<A class="nav" href="application.html"><IMG SRC="next.gif" BORDER=0 ALT="Next"></A>
+</DIV>
+
+<H2><A NAME="sec:10.4"><SPAN class="sec-nr">10.4</SPAN> <SPAN class="sec-title">Using 
+object references: ``Who's Who?''</SPAN></A></H2>
+
+<A NAME="sec:whoiswho"></A>
+
+<P>A user interface generally consists of a large amount of UI 
+components. Some of these are used as input devices and some as output 
+devices. Input devices generally activate functionality in the host 
+system. Output devices are addressed by the host system to present 
+results. Both input- and output devices may be related to entities 
+within the application. For example, a particular icon may be the 
+visualisation of a file in the computer's file-system.
+
+<P>The application must be able to find the references to these UI 
+components. Various techniques are available to keep track of objects in 
+the user interface. Below we will discuss the following case:
+<BLOCKQUOTE> We want to create a frame, consisting of a dialog window 
+and a picture window. The dialog contains a menu holding fill-patterns. 
+The picture contains a box with a popup-menu that fills the interior of 
+the box with the currently selected fill-pattern.
+</BLOCKQUOTE>
+
+<P>To reduce the code of the individual examples, the following 
+predicate creating the fill-pattern menu is assumed to be available:
+
+<PRE class="code">
+fill_pattern(@white_image).
+fill_pattern(@grey12_image).
+fill_pattern(@grey25_image).
+fill_pattern(@grey50_image).
+fill_pattern(@grey75_image).
+fill_pattern(@black_image).
+
+make_fill_pattern_menu(M) :-
+        new(M, menu(fill_pattern, marked)),
+        send(M, layout, horizontal),
+        forall(fill_pattern(P),
+               send(M, append, menu_item(P, @default, P))).</PRE>
+
+<H3><A NAME="sec:10.4.1"><SPAN class="sec-nr">10.4.1</SPAN> <SPAN class="sec-title">Global 
+named references</SPAN></A></H3>
+
+<P>Using this approach, we will call the menu <A NAME="idx:fillpatternmenu:343"></A><B>@fill_pattern_menu</B>. 
+It leads to the following (minimal) program:
+
+<PRE class="code">
+fill_1(P) :-
+        new(D, dialog('Fill 1')),
+        make_fill_pattern_menu(@fill_pattern_menu),
+        send(D, append, @fill_pattern_menu),
+        send(new(P, picture), below, D),
+        send(D, open).
+
+add_box_1(P) :-
+        send(P, display, new(B, box(100,100)), point(20,20)),
+        send(B, popup, new(Pop, popup)),
+        send(Pop, append,
+             menu_item(fill,
+                       message(B, fill_pattern,
+                               @fill_pattern_menu?selection))).</PRE>
+
+<PRE class="code">
+1 ?-    fill_1(P),
+        add_box_1(P).
+</PRE>
+
+<P>This approach is straightforward. Unfortunately it has various 
+serious disadvantages:
+
+<P>
+<UL>
+<LI><I>Name conflicts</I><BR>
+Large applications will have many objects whose references needs to be 
+available. Unless the application provides a structure that can be used 
+to generate meaningful names, one is likely to run into name conflicts 
+quickly.
+<LI><I>Object life-time</I><BR>
+With named references, the application is responsible for destruction of 
+the object. Thus, if a window holding named objects is freed, the named 
+objects will not be destroyed. This has to be done explicitly. See also <A class="sec" href="memory.html">appendix 
+E</A>.
+<LI><I>No multiple instances</I><BR>
+The code above cannot be called more than once to create more than one 
+such frame.
+</UL>
+
+<P>Global references are part of PCE to keep track of objects that are 
+created once and will remain in existence during the entire PCE session. 
+Examples are the predefined global objects <A NAME="idx:pce:344"></A><B>@pce</B>, <A NAME="idx:prolog:345"></A><B>@prolog</B>, <A NAME="idx:display:346"></A><B>@display</B>, 
+etc. Other examples are reusable objects such as relations, messages, 
+recognisers, methods, images to be used as fill-patterns, etc. See 
+below:
+
+<PRE class="code">
+:- pce_global(@center,
+              new(spatial(xref=x+w/2, yref=y+h/2,
+                          xref=x+w/2, yref=y+h/2)).
+:- pce_global(@move_outline,
+              new(move_outline_gesture)).
+</PRE>
+
+<H3><A NAME="sec:10.4.2"><SPAN class="sec-nr">10.4.2</SPAN> <SPAN class="sec-title">Using 
+the prolog database</SPAN></A></H3>
+
+<P>Dynamic predicates form another technique often used by novice PCE 
+users. Using dynamic predicates the ``label'' would result in:
+
+<PRE class="code">
+:- dynamic
+        fill_pattern_menu/1.
+
+fill_2(P) :-
+        new(D, dialog('Fill 2')),
+        make_fill_pattern_menu(M),
+        send(D, append, M),
+        asserta(fill_pattern_menu(M)),
+        send(new(P, picture), below, D),
+        send(D, open).
+
+add_box_2(P) :-
+        send(P, display, new(B, box(100,100)), point(20,20)),
+        send(B, popup, new(Pop, popup)),
+        fill_pattern_menu(M),
+        send(Pop, append,
+             menu_item(fill,
+                       message(B, fill_pattern,
+                               M?selection))).</PRE>
+
+<PRE class="code">
+1 ?-    fill_2(P),
+        add_box_2(P).
+</PRE>
+
+<P>This is not a proper way to deal with references either. First of 
+all, it does not really solve the danger of name conflicts unless one is 
+using Prolog modules to establish storage of the dynamic predicates 
+local to the module that uses them. More seriously, using implicit 
+object references, PCE assumes it is allowed to destroy the object 
+whenever no other PCE object has a reference to it. The
+<A NAME="idx:fillpatternmenu1:347"></A><SPAN class="pred-ext">fill_pattern_menu/1</SPAN> 
+predicate then holds an invalid reference.
+
+<H3><A NAME="sec:10.4.3"><SPAN class="sec-nr">10.4.3</SPAN> <SPAN class="sec-title">Using 
+object-level attributes</SPAN></A></H3>
+
+<P>PCE object-level attributes provide another approach:
+
+<PRE class="code">
+fill_3(P) :-
+        new(D, dialog('Fill 3')),
+        make_fill_pattern_menu(M),
+        send(D, append, M),
+        send(new(P, picture), below, D),
+        send(P, attribute, fill_pattern_menu, M),
+        send(D, open).
+
+add_box_3(P) :-
+        send(P, display, new(B, box(100,100)), point(20,20)),
+        send(B, popup, new(Pop, popup)),
+        get(P, fill_pattern_menu, M),
+        send(Pop, append,
+             menu_item(fill,
+                       message(B, fill_pattern,
+                               M?selection))).</PRE>
+
+<PRE class="code">
+1 ?-    fill_3(P),
+        add_box_3(P).
+</PRE>
+
+<P>This approach is much better. There no longer is a potential 
+name-conflict and PCE has access to all information it needs for proper 
+memory management. Two disadvantages remain. First of all, the message 
+object has a direct reference to `P' and therefore the entire recogniser 
+object cannot be shared by multiple graphical objects (reused<A NAME="idx:reusability:348"></A>). 
+Second, the code for the box assumes the picture has an attribute 
+fill_pattern_menu and this attribute refers to a menu holding 
+fill-patterns.
+
+<H3><A NAME="sec:10.4.4"><SPAN class="sec-nr">10.4.4</SPAN> <SPAN class="sec-title">Using 
+window and graphical behaviour</SPAN></A></H3>
+
+<A NAME="sec:devicemember"></A>
+
+<P><A NAME="idx:graphicalfinding:349"></A><A NAME="idx:findinggraphicals:350"></A><A NAME="idx:graphicalname:351"></A>All 
+graphicals in PCE have a name, and graphical devices define the method <A NAME="idx:devicegetmember:352"></A>`<B>device<CODE>&lt;-</CODE>member</B>: 
+name' to find the (first) graphical with this name. The default name for 
+a graphical is its class name. For dialog-items it is the label of the 
+item. Using <B><CODE>&lt;-</CODE>member</B> results in:
+
+<PRE class="code">
+fill_4(P) :-
+        new(D, dialog('Fill 4')),
+        make_fill_pattern_menu(M),
+        send(D, append, M),
+        send(new(P, picture), below, D),
+        send(D, open).
+
+:- pce_global(@fill_with_current_pattern,
+              make_fill_with_current_pattern).
+
+make_fill_with_current_pattern(G) :-
+        new(G, popup),
+        send(G, append,
+             menu_item(fill,
+                       message(Gr, fill_pattern,
+                               ?(?(Gr?frame, member, dialog),
+                                 member,
+                                 fill_pattern)?selection))).
+
+add_box_4(P) :-
+        send(P, display, new(B, box(100,100)), point(20,20)),
+        send(B, popup, @fill_with_current_pattern).</PRE>
+
+<PRE class="code">
+fill4 :-
+        fill_4(P),
+        add_box_4(P).
+</PRE>
+
+<P>In this example we have made the recogniser generic. This saves both 
+time and memory. Note however that this approach could be used in the 
+previous example as well.
+
+<P>This example has largely the same (dis)advantages as the previous 
+two. As an advantage, the attribute object may be omitted. The 
+assumption here is that the frame the box is in contains a dialog which 
+in turn contains a graphical object named `fill_pattern' that implements 
+a <B><CODE>&lt;-</CODE>selection</B> method yielding an image.
+
+<H3><A NAME="sec:10.4.5"><SPAN class="sec-nr">10.4.5</SPAN> <SPAN class="sec-title">Using 
+user defined classes</SPAN></A></H3>
+
+<P>Using user-defined classes we can hide the implementation details and 
+make objects depend on each other in a much more organised manner.
+
+<PRE class="code">
+:- pce_begin_class(fill5, frame).
+
+initialise(F) :-&gt;
+        send(F, send_super, initialise, 'Fill 5'),
+        send(F, append, new(D, dialog)),
+        make_fill_pattern_menu(M),
+        send(D, append, M),
+        send(new(picture), below, D).
+
+current_fill_pattern(F, P:image) :&lt;-
+        get(F, member, dialog, D),
+        get(D, member, fill_pattern, M),
+        get(M, selection, P).
+
+draw_box(F) :-&gt;
+        get(F, member, picture, P),
+        send(P, display, fillbox(100,100), point(20,20)).
+
+:- pce_end_class.
+
+:- pce_begin_class(fillbox, box).
+
+:- pce_global(@fillbox_recogniser, make_fillbox_recogniser).
+make_fillbox_recogniser(G) :-
+        Gr = @arg1,
+        new(G, popup_gesture(new(P, popup))),
+        send(P, append,
+             menu_item(fill,
+                       message(Gr, fill_pattern,
+                               Gr?frame?current_fill_pattern))).
+
+event(B, Ev:event) :-&gt;
+        (   send(B, send_super, event, Ev)
+        ;   send(@fillbox_recogniser, event, Ev)
+        ).
+:- pce_end_class.</PRE>
+
+<PRE class="code">
+1 ?- send(new(F, fill5), open),
+     send(F, draw_box).
+</PRE>
+
+<P>The fillbox now only assumes it is contained in an application window 
+that defines <B><CODE>&lt;-</CODE>current_fill_pattern</B>, while the 
+application (the frame) hides its internal window organisation using the 
+methods
+<B><CODE>&lt;-</CODE>current_fill_pattern</B> and <B><CODE>-&gt;</CODE>draw_box</B>.
+
+<H3><A NAME="sec:10.4.6"><SPAN class="sec-nr">10.4.6</SPAN> <SPAN class="sec-title">Summary</SPAN></A></H3>
+
+<P>Using global references or the Prolog database to keep track of 
+instances in the UI is not the appropriate way. This approach quickly 
+leads to name-conflicts, harms the memory management of PCE and makes it 
+difficult to write reusable code.
+
+<P>Using attributes or user-defined classes to find (graphical) objects 
+solves the name-conflict problems and allows PCE to perform proper 
+memory management. It also allows multiple copies of these windows to 
+run simultaneously. Using user-defined classes allows one to make the 
+code more robust against later changes and allow low-level objects to be 
+better reusable.
+
+<P>Large applications should carefully design the infra-structure to 
+manage the structure of the UI components as well as the relation 
+between UI objects and application entities. See <CITE><A class="cite" href="Bibliography.html#Wielemaker:89">Wielemaker &amp; 
+Anjewierden, 1989</A></CITE>.
+
+<P>Hyper objects as described in <A class="sec" href="hyper.html">section 
+10.11</A> form an alternative to relate objects that is suitable if 
+dependent objects cannot rely on each other's existence.
+</BODY></HTML>

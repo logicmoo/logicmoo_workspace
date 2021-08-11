@@ -1,0 +1,197 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+
+<HTML>
+<HEAD>
+<TITLE>Programming in XPCE/Prolog: Section E.1</TITLE><LINK REL=home HREF="index.html">
+<LINK REL=contents HREF="Contents.html">
+<LINK REL=index HREF="DocIndex.html">
+<LINK REL=summary HREF="summary.html">
+<LINK REL=previous HREF="memory.html">
+<LINK REL=next HREF="sec-E.2.html">
+<STYLE type="text/css">
+/* Style sheet for SWI-Prolog latex2html
+*/
+
+dd.defbody
+{ margin-bottom: 1em;
+}
+
+dt.pubdef
+{ background-color: #c5e1ff;
+}
+
+pre.code
+{ margin-left: 1.5em;
+margin-right: 1.5em;
+border: 1px dotted;
+padding-top: 5px;
+padding-left: 5px;
+padding-bottom: 5px;
+background-color: #f8f8f8;
+}
+
+div.navigate
+{ text-align: center;
+background-color: #f0f0f0;
+border: 1px dotted;
+padding: 5px;
+}
+
+div.title
+{ text-align: center;
+padding-bottom: 1em;
+font-size: 200%;
+font-weight: bold;
+}
+
+div.author
+{ text-align: center;
+font-style: italic;
+}
+
+div.abstract
+{ margin-top: 2em;
+background-color: #f0f0f0;
+border: 1px dotted;
+padding: 5px;
+margin-left: 10%; margin-right:10%;
+}
+
+div.abstract-title
+{ text-align: center;
+padding: 5px;
+font-size: 120%;
+font-weight: bold;
+}
+
+div.toc-h1
+{ font-size: 200%;
+font-weight: bold;
+}
+
+div.toc-h2
+{ font-size: 120%;
+font-weight: bold;
+margin-left: 2em;
+}
+
+div.toc-h3
+{ font-size: 100%;
+font-weight: bold;
+margin-left: 4em;
+}
+
+div.toc-h4
+{ font-size: 100%;
+margin-left: 6em;
+}
+
+span.sec-nr
+{ 
+}
+
+span.sec-title
+{ 
+}
+
+span.pred-ext
+{ font-weight: bold;
+}
+
+/* Footnotes */
+
+sup.fn { color: blue; text-decoration: underline; }
+span.fn-text: { display: none; }
+sup.fn span {display: none;}
+sup:hover span 
+{ display: block !important;
+position: absolute; top: auto; left: auto; width: 80%;
+color: #000; background: white;
+border: 2px solid;
+padding: 5px; margin: 10px; z-index: 100;
+font-size: smaller;
+}
+</STYLE>
+</HEAD>
+<BODY BGCOLOR="white">
+<DIV class="navigate"><A class="nav" href="index.html"><IMG SRC="home.gif" BORDER=0 ALT="Home"></A>
+<A class="nav" href="Contents.html"><IMG SRC="index.gif" BORDER=0 ALT="Contents"></A>
+<A class="nav" href="DocIndex.html"><IMG SRC="yellow_pages.gif" BORDER=0 ALT="Index"></A>
+<A class="nav" href="summary.html"><IMG SRC="info.gif" BORDER=0 ALT="Summary"></A>
+<A class="nav" href="memory.html"><IMG SRC="prev.gif" BORDER=0 ALT="Previous"></A>
+<A class="nav" href="sec-E.2.html"><IMG SRC="next.gif" BORDER=0 ALT="Next"></A>
+</DIV>
+
+<H2><A NAME="sec:E.1"><SPAN class="sec-nr">E.1</SPAN> <SPAN class="sec-title">Lifetime 
+of an object</SPAN></A></H2>
+
+<P><A NAME="idx:garbagecollection:702"></A><A NAME="idx:objectremoving:703"></A>Object 
+lifetime management is a difficult issue in PCE/Prolog as PCE cannot be 
+aware of all references to PCE objects stored in Prolog. Another 
+complicating factor is that non-incremental garbage collection as 
+performed by most Lisp systems is undesirable because they harm the 
+interactive response of the system. For these reasons PCE performs <EM>incremental</EM> 
+garbage collection. It distinguishes a number of prototypical 
+`life-cycles' for objects. Heuristics tell the system which of these is 
+applicable and when the object may be deleted.
+
+<P>PCE distinguishes between <EM>global-</EM>, <EM>top level-</EM>, <EM>support-</EM>, <EM>argument-</EM> 
+and <EM>answer-</EM> objects. <EM>Global</EM> objects are created and 
+exist for the entire PCE session: <A NAME="idx:prolog:704"></A><B>@prolog</B>, 
+class objects, etc. <EM>Top-level</EM> objects are the principal objects 
+of the application. They should exist even if no other PCE object refers 
+to them. An example of a top level object is a frame or hash_table 
+representing a database in the application. <EM>Support</EM> objects 
+only complete the definition of other objects. If this `other' object is 
+removed, the support object may be removed as well. An example is the 
+area attribute of a graphical. <EM>Argument</EM> objects are objects 
+created to serve as an argument to a message. For example a graphical 
+may be moved to a position described by a point object. The point may be 
+deleted when the message is completed. Finally, <EM>answer</EM> objects 
+are the result of some computation. For example <A NAME="idx:areagetsize:705"></A>`<B>area<CODE>&lt;-</CODE>size</B>' 
+returns a size object. This object may be deleted when the code that 
+requested the value is done with it.
+
+<P>PCE maintains the following information on objects to support garbage 
+collection. This information may be requested using the PCE inspector 
+(see <A class="sec" href="inspector.html">section 12.5</A>).
+
+<DL>
+<LI><I>Protect Flag</I><BR>
+This flag may be set using <A NAME="idx:objectsendprotect:706"></A>`<B>object<CODE>-&gt;</CODE>protect</B>'. 
+When set, the object can not be freed by any means. This flag is set for 
+most global and reusable objects: <A NAME="idx:prolog:707"></A><B>@prolog</B>, <A NAME="idx:pce:708"></A><B>@pce</B>, <A NAME="idx:display:709"></A><B>@display</B>, 
+names, classes, etc.
+<LI><I>Lock Flag</I><BR>
+This flag indicates that the object may not be removed by the garbage 
+collector. Locked objects can only be freed by sending an explicit
+<A NAME="idx:objectsendfree:710"></A>`<B>object<CODE>-&gt;</CODE>free</B>' 
+message' or using the predicate <A NAME="idx:free1:711"></A><A class="pred" href="sec-D.1.html#free/1">free/1</A>. 
+It is used to avoid that `top level' objects such as frames are deleted 
+by the garbage collector. It is also used to indicate that Prolog wants 
+to be responsible for destruction of the object rather than PCE's 
+garbage collector. The lock flag is automatically set on any object that 
+has a named reference. If Prolog wants to store integer object 
+references in the Prolog database locking is often necessary to protect 
+the object for the PCE garbage collector. See also <A class="sec" href="pceprolog.html">section 
+6</A>.
+<LI><I>Answer Flag</I><BR>
+This flag indicates that the object has been created as an answer of 
+some computation or as a result of the Prolog predicate <A NAME="idx:new2:712"></A><A class="pred" href="sec-D.1.html#new/2">new/2</A>. 
+The
+<EM>answer</EM> status is cleared if the object is used to fill a slot 
+of another object<SUP class="fn">19<SPAN class="fn-text">PCE assumes the 
+object has become a <EM>support</EM> object. This is generally not 
+correct for code objects. Class <A class="" href="summary.html#class:code">code</A> 
+therefore has <A NAME="idx:classgetunanswer:713"></A>`<B>class<CODE>&lt;-</CODE>un_answer</B>: <A NAME="idx:off:714"></A><B>@off</B>', 
+which implies that objects that fill a slot of a code object will not 
+loose their `answer' status.</SPAN></SUP> or <A NAME="idx:objectsenddone:715"></A>`<B>object<CODE>-&gt;</CODE>done</B>' 
+is invoked on the object.
+<LI><I>Reference Count</I><BR>
+PCE maintains the number of other objects referring to this object. When 
+the reference count drops to zero and none of the protect, lock or 
+answer flags are set PCE assumes the object is garbage and removes the 
+object from the object base.
+</DL>
+
+<P></BODY></HTML>

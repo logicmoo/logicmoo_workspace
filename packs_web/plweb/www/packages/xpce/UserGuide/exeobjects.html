@@ -1,0 +1,452 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+
+<HTML>
+<HEAD>
+<TITLE>Programming in XPCE/Prolog: Section 10.2</TITLE><LINK REL=home HREF="index.html">
+<LINK REL=contents HREF="Contents.html">
+<LINK REL=index HREF="DocIndex.html">
+<LINK REL=summary HREF="summary.html">
+<LINK REL=previous HREF="control.html">
+<LINK REL=next HREF="namedref.html">
+<STYLE type="text/css">
+/* Style sheet for SWI-Prolog latex2html
+*/
+
+dd.defbody
+{ margin-bottom: 1em;
+}
+
+dt.pubdef
+{ background-color: #c5e1ff;
+}
+
+pre.code
+{ margin-left: 1.5em;
+margin-right: 1.5em;
+border: 1px dotted;
+padding-top: 5px;
+padding-left: 5px;
+padding-bottom: 5px;
+background-color: #f8f8f8;
+}
+
+div.navigate
+{ text-align: center;
+background-color: #f0f0f0;
+border: 1px dotted;
+padding: 5px;
+}
+
+div.title
+{ text-align: center;
+padding-bottom: 1em;
+font-size: 200%;
+font-weight: bold;
+}
+
+div.author
+{ text-align: center;
+font-style: italic;
+}
+
+div.abstract
+{ margin-top: 2em;
+background-color: #f0f0f0;
+border: 1px dotted;
+padding: 5px;
+margin-left: 10%; margin-right:10%;
+}
+
+div.abstract-title
+{ text-align: center;
+padding: 5px;
+font-size: 120%;
+font-weight: bold;
+}
+
+div.toc-h1
+{ font-size: 200%;
+font-weight: bold;
+}
+
+div.toc-h2
+{ font-size: 120%;
+font-weight: bold;
+margin-left: 2em;
+}
+
+div.toc-h3
+{ font-size: 100%;
+font-weight: bold;
+margin-left: 4em;
+}
+
+div.toc-h4
+{ font-size: 100%;
+margin-left: 6em;
+}
+
+span.sec-nr
+{ 
+}
+
+span.sec-title
+{ 
+}
+
+span.pred-ext
+{ font-weight: bold;
+}
+
+/* Footnotes */
+
+sup.fn { color: blue; text-decoration: underline; }
+span.fn-text: { display: none; }
+sup.fn span {display: none;}
+sup:hover span 
+{ display: block !important;
+position: absolute; top: auto; left: auto; width: 80%;
+color: #000; background: white;
+border: 2px solid;
+padding: 5px; margin: 10px; z-index: 100;
+font-size: smaller;
+}
+</STYLE>
+</HEAD>
+<BODY BGCOLOR="white">
+<DIV class="navigate"><A class="nav" href="index.html"><IMG SRC="home.gif" BORDER=0 ALT="Home"></A>
+<A class="nav" href="Contents.html"><IMG SRC="index.gif" BORDER=0 ALT="Contents"></A>
+<A class="nav" href="DocIndex.html"><IMG SRC="yellow_pages.gif" BORDER=0 ALT="Index"></A>
+<A class="nav" href="summary.html"><IMG SRC="info.gif" BORDER=0 ALT="Summary"></A>
+<A class="nav" href="control.html"><IMG SRC="prev.gif" BORDER=0 ALT="Previous"></A>
+<A class="nav" href="namedref.html"><IMG SRC="next.gif" BORDER=0 ALT="Next"></A>
+</DIV>
+
+<H2><A NAME="sec:10.2"><SPAN class="sec-nr">10.2</SPAN> <SPAN class="sec-title">Executable 
+objects</SPAN></A></H2>
+
+<A NAME="sec:exeobjects"></A>
+
+<P><A NAME="idx:statementasobject:305"></A><A NAME="idx:executableobject:306"></A><A NAME="idx:programasobject:307"></A><A NAME="idx:lambdafunctions:308"></A>PCE 
+defines <EM>executable</EM> objects. Executable objects (called <A NAME="idx:codeobject:309">code object</A>s) 
+can be compared to lambda functions in Lisp. They are used in the 
+contexts given below.
+
+<P>
+<UL>
+<LI><I>Definition of `<A NAME="idx:callback:310">call-back</A>' actions</I><BR>
+The most common usage of executable objects is to specify the action 
+undertaken by interactive UI components when they are activated. We have 
+seen examples of this in <A class="sec" href="fileviewer.html">section 
+2.8</A>.
+<LI><I>As parameter to a method</I><BR>
+Various methods take an executable object as a parameter to specify the 
+action undertaken. Suppose we want to remove all graphicals in the 
+selection of a graphical device. The method <A NAME="idx:devicegetselection:311"></A>`<B>device<CODE>&lt;-</CODE>selection</B>' 
+returns a <A class="" href="summary.html#class:chain">chain</A> object 
+containing all graphicals currently selected on the device. The 
+implementation is:
+
+<PRE class="code">
+...,
+send(Dev?graphicals, for_all, message(@arg1, free)).
+...
+</PRE>
+
+<P>The method <A NAME="idx:chainsendforall:312"></A>`<B>chain<CODE>-&gt;</CODE>for_all</B>' 
+will execute the argument <A class="" href="summary.html#class:message">message</A> 
+object in a loop for all elements in the chain. It will bind <A NAME="idx:arg1:313"></A><B>@arg1</B> 
+to the currently processed element of the chain.
+</UL>
+
+<P>Two major groups of code objects are distinguished: <EM>procedures</EM> 
+and <EM>functions</EM>. The first only returns status information 
+similar to the send-operation. The latter returns a value or failure 
+status information similar to the get-operation.
+
+<H3><A NAME="sec:10.2.1"><SPAN class="sec-nr">10.2.1</SPAN> <SPAN class="sec-title">Procedures</SPAN></A></H3>
+
+<P>Procedures perform an action when executed. Similar to Prolog, the 
+execution of a procedure either returns successful or failed completion. 
+Procedures are normally executed by the object or method they are handed 
+to. For example, the procedure associated to a <A class="" href="summary.html#class:button">button</A> 
+object is executed when the button is pressed. The procedure handed to 
+the
+<A NAME="idx:chainsendforall:314"></A>`<B>chain<CODE>-&gt;</CODE>for_all</B>' 
+method we have seen above is executed by this method for each element of 
+the chain.
+
+<P>Procedures can also be executed explicitly using the method
+<A NAME="idx:codesendforward:315"></A>`<B>code<CODE>-&gt;</CODE>forward</B>'. 
+This binds the argument-forwarding objects <A NAME="idx:arg1:316"></A><B>@arg1</B>, 
+..., and then executes the procedure and restores the old bindings of 
+argument-forwarding objects. For example:
+
+<PRE class="code">
+1 ?- new(@m, message(@prolog, format, 'Hello ~w~n', @arg1)).
+2 ?- send(@m, forward, world).
+Hello world
+</PRE>
+
+<P><UL COMPACT>
+<LI><I>message(Receiver, Selector, Argument ...)</I><BR>
+A <A class="" href="summary.html#class:message">message</A> object 
+starts a send-operation when executed. The arguments of a message are 
+either objects or <EM>functions</EM>. In the latter case these are 
+evaluated before the message itself is evaluated. If the evaluation of 
+one of the argument functions fails, the message is not executed. The <EM>Receiver</EM> 
+of a the message can be <A NAME="idx:prolog:317"></A><B>@prolog</B> to 
+invoke a predicate in the Prolog environment.
+<LI><I>and(Statement, ...)</I><BR>
+An <A class="" href="summary.html#class:and">and</A> is a sequence of 
+code objects. It fails if one of the members fails and succeeds 
+otherwise. If a statement is a function, it will be evaluated. Functions 
+fail only if they return the fail control-value. Notably, a function 
+that returned the boolean <A NAME="idx:off:318"></A><B>@off</B> (false) 
+is considered to have succeeded.
+<LI><I>if(Condition, [Then], [Else])</I><BR>
+An <A class="" href="summary.html#class:if">if</A> implements a branch. 
+It first evaluates <EM>Condition</EM> and then either of <EM>Then</EM> 
+or <EM>Else</EM>. The success of the entire if is determined by the 
+success of the executed <EM>Then</EM> or <EM>Else</EM>. Either or both 
+of these statements may be omitted. The construct
+<TT>if(<EM>Statement</EM>)</TT> may be used to force success of a code 
+object.
+<LI><I>Conditions: (A <TT>==</TT> B, A <TT>\==</TT> B, A <TT>&lt;</TT> 
+B, ...)</I><BR>
+These executable objects are commonly used as conditions for the
+<A class="" href="summary.html#class:if">if</A> object.
+</UL>
+
+<P>The online manual may be used to get an overview of the other 
+available code objects. See <A class="sec" href="sec-3.3.html">section 
+3.3.4</A>.
+
+<H3><A NAME="sec:10.2.2"><SPAN class="sec-nr">10.2.2</SPAN> <SPAN class="sec-title">Functions</SPAN></A></H3>
+
+<A NAME="sec:function"></A>
+
+<P>Functions are code objects which ---when executed--- evaluate to a 
+value. They are commonly used as arguments to other code objects or as 
+arguments to any method. A function is automatically evaluated iff:
+
+<P><UL COMPACT>
+<LI>It appears as part of a code object that is executed
+<LI>Type checking demands execution
+</UL>
+
+<P>The most important function objects are:
+
+<P>
+<UL>
+<LI><I>?(Receiver, Selector, Argument, ...)</I><BR>
+Class <A class="" href="summary.html#class:?">?</A> starts a 
+get-operation when executed (= evaluated). The classname is pronounced 
+as <EM><A NAME="idx:obtainer:319">obtainer</A></EM>. All the arguments 
+may be functions. These will be evaluated before the get-operation is 
+performed. As with <A class="" href="summary.html#class:message">message</A>, 
+a failing evaluation of one of the arguments forces failure of the 
+whole.
+<LI><I>var</I><BR>
+Class <A class="" href="summary.html#class:var">var</A> describes a 
+variable. The objects <A NAME="idx:arg1:320"></A><B>@arg1</B>, <A NAME="idx:arg2:321"></A><B>@arg2</B>, 
+...,
+<A NAME="idx:arg10:322"></A><B>@arg10</B>, <A NAME="idx:receiver:323"></A><B>@receiver</B> 
+and <A NAME="idx:event:324"></A><B>@event</B> are the most commonly used 
+var objects.
+
+<P>The objects <A NAME="idx:arg1:325"></A><B>@arg1</B>, ... are the 
+message <EM>forwarding</EM> arguments. Assume the following message.
+
+<PRE class="code">
+?- new(@m, message(@pce, format,
+                   'Hello %s\n', @arg1)).
+</PRE>
+
+<P>When executed, <A NAME="idx:arg1:326"></A><B>@arg1</B> (a <A class="" href="summary.html#class:function">function</A>) 
+is first evaluated. The method <A NAME="idx:codesendforward:327"></A>`<B>code<CODE>-&gt;</CODE>forward</B>: 
+argument, ...' binds these <A class="" href="summary.html#class:var">var</A> 
+objects locally:
+
+<PRE class="code">
+?- send(@m, execute),
+   send(@m, forward, world),
+   send(@m, execute).
+@default
+world
+@default
+</PRE>
+
+<P>The objects <A NAME="idx:receiver:328"></A><B>@receiver</B> and <A NAME="idx:event:329"></A><B>@event</B> 
+are functions referring to the receiver of the currently executing 
+method and the current user-event. Var objects are rarely created 
+explicitly by application programmers.
+<LI><I>arithmetic functions (+, -, *, /)</I><BR>
+<A NAME="idx:arithmetic:330"></A>These functions define <EM>integer</EM> 
+arithmetic and are commonly used to deal with graphical computations in 
+code objects.
+<LI><I>create(Class, InitArg, ...)</I><BR>
+This function evaluates to a new instance of <EM>Class</EM> from the 
+given
+<EM>InitArg</EM> initialisation arguments. Its usage is best explained 
+using an example. Consider we want to iterate over all boxes in a 
+graphical device, writing a file with lines of the form
+
+<PRE class="code">
+BOX &lt;name&gt; at X, Y
+</PRE>
+
+<P>A naive approach and common beginners mistake is to write:
+
+<PRE class="code">
+        ...,
+        new(F, file(Output)),
+        send(F, open, write),
+        send(Dev?graphicals, for_all,
+             if(message(@arg1, instance_of, box),
+                message(F, append,
+                        string('BOX %s at %d,%d\n',
+                               @arg1?name,
+                               @arg1?x,
+                               @arg1?y)))),
+        send(F, close),
+        ...
+</PRE>
+
+<P>This example will yield a warning:
+
+<PRE class="code">
+[PCE error: get: No implementation for:
+                        @default/constant &lt;-x
+        in: get(@default/constant, x)]
+PCE:  4 fail: get(@default/constant, x) ? 
+</PRE>
+
+<P>The reason for this is that the <EM>interface</EM> will translate 
+string(...) into an instance of class <A class="" href="summary.html#class:string">string</A>, 
+instead of the execution of the <B><CODE>-&gt;</CODE>for_all</B> 
+method's body creating different strings for each box displayed on the 
+device. The correct solution is to use:
+
+<PRE class="code">
+        ...,
+        new(F, file(Output)),
+        send(F, open, write),
+        send(Dev?graphicals, for_all,
+             if(message(@arg1, instance_of, box),
+                message(F, append,
+                        create(string,
+                               'BOX %s at %d,%d\n',
+                               @arg1?name,
+                               @arg1?x,
+                               @arg1?y)))),
+        send(F, close),
+        ...
+</PRE>
+
+<P>The construct `create(...)' will create an instance of class
+<A class="" href="summary.html#class:create">create</A>. <A NAME="idx:messagesendexecute:331"></A>`<B>message<CODE>-&gt;</CODE>execute</B>' 
+will first evaluate all functions in the message and thus create an 
+instance of class
+<A class="" href="summary.html#class:string">string</A>.
+</UL>
+
+<H3><A NAME="sec:10.2.3"><SPAN class="sec-nr">10.2.3</SPAN> <SPAN class="sec-title">Example 
+1: Finding objects</SPAN></A></H3>
+
+<P>A common problem is to find objects, notably some specific graphical 
+object on a window. If we want to find all instances of class
+<A class="" href="summary.html#class:box">box</A> within a graphical <A class="" href="summary.html#class:device">device</A>, 
+we can use the call below, collecting all boxes on the device in a new <A class="" href="summary.html#class:chain">chain</A>.
+
+<PRE class="code">
+        ...
+        get(Dev?graphicals, find_all.
+            message(@arg1, instance_of, box),
+            Boxes),
+        ...</PRE>
+
+<H3><A NAME="sec:10.2.4"><SPAN class="sec-nr">10.2.4</SPAN> <SPAN class="sec-title">Example 
+2: Internal behaviour of dialog window</SPAN></A></H3>
+
+<P>Code are most commonly used to specify the internal behaviour of 
+dialog windows, such that the call-back predicate can concentrate on the 
+real function. We have seen an example of this in <A class="sec" href="fileviewer.html">section 
+2.8</A>.
+
+<P><A NAME="idx:PostScript:332"></A>Below there is another example. <EM>Data</EM> 
+is assumed to be an <font size=-1>XPCE</font>
+<A class="" href="summary.html#class:string">string</A> object 
+containing a PostScript&reg; description of a graphical object as can be 
+obtained using
+
+<PRE class="code">
+        ...,
+        get(Graphical, postscript, PostScriptString),
+        ...,
+</PRE>
+
+<P>In this example both the internal dynamics of the dialog window (the 
+label of the text-entry fields changes if the user switches from file to 
+printer) and grabbing the arguments from the various dialog items is 
+written using <font size=-1>XPCE</font> executable objects. Prolog will 
+only be called to do the real work: printing the data to the requested 
+destination.
+
+<P>Note that <font size=-1>XPCE/P</font>rolog does not <B>require</B> 
+you to use <font size=-1>XPCE</font> executable objects this way. It is 
+also possible to call Prolog from both the menu and the buttons, passing 
+the dialog window as argument and write all behaviour in Prolog. We 
+leave this as an exercise to the user.
+
+<PRE class="code">
+postscript(Data) :-
+        new(D, dialog('Print destination')),
+        send(D, append, new(T, menu(destination, marked))),
+        send_list(T, append, [printer, file]),
+        send(T, layout, horizontal),
+        send(D, append,
+             new(A, text_item(printer_name, 'PostScript'))),
+        send(T, message,
+             if(T?selection == printer,
+                message(A, label,
+                        ?(A, label_name, printer_name)),
+                message(A, label,
+                        ?(A, label_name, file_name)))),
+        send(D, append,
+             button(ok, and(message(@prolog,
+                                    print_postscript,
+                                    T?selection,
+                                    A?selection,
+                                    Data),
+                            message(D, destroy)))),
+        send(D, append,
+             button(cancel, message(D, destroy))),
+        send(D, default_button, ok),
+        send(D, open).
+          
+print_postscript(printer, Address, Data) :- !,
+        new(F, file),
+        send(F, open, write),
+        send(F, append, Data),
+        send(F, close),
+        get(F, name, TmpFile),
+        get(string('lpr -P%s %s', Address, TmpFile),
+            value, Command),
+        unix(shell(Command)),     
+        send(F, remove).
+print_postscript(file, Address, Data) :-
+        new(F, file(Address)),
+        send(F, open, write),
+        send(F, append, Data),
+        send(F, close).</PRE>
+
+<P><A NAME="fig:printps"></A>
+<CENTER>
+<IMG SRC="printps.gif">
+</CENTER>
+<TABLE ALIGN=center WIDTH="75%"><TR><TD>
+<B>Figure 15 : </B>Print destination dialog using code objects for 
+internal behaviour</TABLE>
+
+<P></BODY></HTML>

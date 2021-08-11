@@ -1,0 +1,41 @@
+# Building SWI-Prolog for MS-Windows using MinGW
+
+The [MinGW](http://www.mingw.org) compiler suite is a port of GCC that
+targets the Windows platform. Unlike Cygwin which comes with an
+extensive POSIX runtime emulation, MinGW targets the native Windows API
+including MSVCRT (The MSVC runtime library that provides some POSIX
+capabilities).
+
+MinGW is distributed as a cross-compiler for many Linux distributions
+and can be used under MSYS, _|"a collection of GNU utilities such as
+bash, make, gawk and grep to allow building of applications and programs
+which depend on traditionally UNIX tools to be present. It is intended
+to supplement MinGW and the deficiencies of the cmd shell."|_.
+
+Building SWI-Prolog for MS-Windows under Linux is supported using
+[Docker](https://github.com/SWI-Prolog/docker-swipl-build-mingw)
+
+## Building on Windows itself
+
+According to Matthias Gondon most of the system can be build on Windows
+as follows:
+
+  - install msys2 from msys2.org
+  - ``pacman -Syu``
+  - ``pacman -Syu``
+  - ``pacman -S mingw-w64-x86_64-gcc mingw-w64-x86_64-cmake git make mingw-w64-x86_64-libjpeg mingw-w64-x86_64-xpm-nox mingw-w64-x86_64-libyaml mingw-w64-x86_64-diffutils mingw-w64-x86_64-pcre mingw-w64-x86_64-db libdb-devel``
+  - ``ftp: download libuuid-1.6.2.tar.gz from ftp (dot) ossp (dot) org/pkg/lib/uuid/, configure --prefix=/usr/local, make, make install, ignore the error relating to strip.exe``
+  - ``git clone https://github.com/SWI-Prolog/swipl-devel.git``
+  - ``cd swipl-devel``
+  - ``git submodule update --init``
+  - ``mkdir build``
+  - ``cd build``
+  - ``cmake -DMINGW_ROOT=/mingw64 -DLIBUUID_INCLUDE_DIR=/usr/local/include -DUUID_LIBRARY=/usr/local/lib/libuuid.a -DBDB_LIBRARY=/mingw64/bin/libdb-6.0.dll -DINSTALL_DOCUMENTATION=OFF -DSWIPL_PACKAGES_X=OFF -DCMAKE_INSTALL_PREFIX:PATH=/usr/local -G "MSYS Makefiles" ..``
+  - only dot dot in the previous line, and avoid "typographic" quotation marks
+  - ``make``
+  - ``make install``
+  - ``swipl``
+
+See this [post on Discourse](https://swi-prolog.discourse.group/t/compiling-with-msys2/3936/4)
+
+@see [Daily builds](</download/daily/bin/>)

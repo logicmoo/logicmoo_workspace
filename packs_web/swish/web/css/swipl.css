@@ -1,0 +1,512 @@
+@import url(https://fonts.googleapis.com/css?family=Source+Sans+Pro:400,700|Fauna+One);
+@import url('https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@400&display=swap');
+
+body {
+    margin: 0px;
+    width: 100%;
+    background-color: #ecebe3;
+    font-family:  Source Sans Pro, sans;
+}
+
+pre {
+    font-family: 'Roboto Mono', monospace;
+}
+
+#outer-container {
+    margin-left: auto;
+    margin-right: auto;
+}
+
+#upper-header {
+    margin-left: auto;
+    margin-right: auto;
+    width: 100%;
+    background-image: url("/icons/bluegrad.png");
+    background-repeat: repeat-x;
+    color:  #FFF;
+    border: 5px;
+}
+
+#upper-header form {
+    display: inline;
+}
+
+#upper-header-contents {
+    width: 960px;
+    margin-left: auto;
+    margin-right: auto;
+    padding: 0px 0px;
+}
+
+#submit-for {
+    display: none !important;
+}
+
+#dyknow-container {
+    width: 99%;
+}
+
+#dyknow-container  .lbl {
+    font-weight: 700;
+}
+
+#dyknow a
+{ text-decoration: none;
+}
+
+#dyknow a:hover
+{ text-decoration: underline;
+}
+
+#dyknow a:visited
+{ color: #fff;
+}
+
+#dyknow a span.colored
+{ color: #f0f;
+}
+
+#search-container {
+    white-space: nowrap;
+}
+
+#search-container input {
+    width: 227px;
+    height: 19px;
+}
+
+#tag-line-area {
+    margin-left: auto;
+    margin-right: auto;
+    width: 960px;
+    valign-text: center;
+}
+
+#tag-line-area img {
+    margin-left: 104px;
+    margin-right: 47px;
+    margin-top: 30px;
+    margin-bottom: 2px;
+    height: 112px;
+}
+
+#header-line-area {
+    margin: 2ex auto;
+    width: 900px;
+}
+
+#header-line-area td {
+    vertical-align: middle;
+}
+
+#header-line-area img.owl {
+    height: 84px;
+    width: 102px;
+}
+
+#for {
+    width: 200px;
+}
+
+#logo {
+    padding-right: 3ex;
+    white-space: nowrap;
+}
+
+.primary-header {
+     font-family: Source Sans Pro, sans;
+     font-size: 40px;
+     font-weight: 700;
+     color:  #333333;
+     width: 99%;
+}
+
+div.file-buttons {
+    position: relative;
+    top: -20px;
+    margin-bottom: -20px;
+    text-align: right;
+    width: 960px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+div.file-buttons img {
+    width: 32px;
+    height: 32px;
+}
+
+.tagline {
+     font-family: Source Sans Pro, sans;
+     font-size: 22pt;
+}
+
+span.tagline {
+    vertical-align: middle;
+    position: absolute;
+    margin-top: 55px;
+    margin-left:  0;
+}
+
+.breadcrumb a {
+    color:   #d47618;
+}
+
+.breadcrumb {
+    margin: 20px 0 20px 200px;
+}
+
+.fixed-width {
+    margin-left: auto;
+    margin-right: auto;
+    width: 960px;
+}
+
+.menubar {
+    border: 2px solid #d57719;
+    background: #ef9439;
+    border-radius: 3px;
+}
+
+ul.menubar-container {
+    margin: 0px;
+    padding: 0px;
+    list-style-type: none;
+    text-align: center;
+}
+
+ul.menubar-container > li {
+    line-height: 34px;
+    text-align: left;
+    display: inline-block;
+    color: #FFF;
+    padding: 0px 18px;
+    border-left: 2px solid #d57719;
+    font-size: 14pt;
+    font-weight: 700;
+}
+
+ul.menubar-container > li:first-child {
+    border-left: 0px;
+}
+
+ul.menubar-container a {
+    display: block;
+}
+
+ul.menubar-container > li > a:link {
+    color: #FFF;
+    text-decoration: none;
+    font-size: 14pt;
+    font-weight: 700;
+}
+ul.menubar-container > li > a:visited {
+    color: #FFF;
+    text-decoration: none;
+}
+ul.menubar-container > li > a:hover {
+    color: #d9d8cf;
+    text-decoration: underline;
+}
+ul.menubar-container > li > a:active {
+    color: #d57719;
+    text-decoration: none;
+}
+
+ul.menubar-container > li > ul {
+    display: none;
+}
+
+ul.menubar-container > li > ul.mouseovermenu {
+    display: block;
+    position: absolute;
+    float: left;
+    z-index: 10;
+}
+
+ul.menubar-container > li > ul.activemenu {
+    display: block;
+    position: absolute;
+    float: left;
+    z-index: 10;
+}
+
+/* any dropdown box */
+ul.menubar-container > li ul {
+    background-color: #ffd8b2;
+    border: 1px solid #d47618;
+    padding: 0;
+}
+
+/* any dropdown box item */
+ul.menubar-container > li ul li {
+    min-width: 199px;
+    padding-left: 8px;
+}
+
+.mouseovermenuitem {
+    color: #FFF !important;
+    background-color: #d57719 !important;
+    min-width: 199px !important;
+}
+
+.mouseovermenuitem > a {
+    color: #FFF !important;
+    background-color: #d57719 !important;
+    min-width: 199px !important;
+}
+.mouseovermenuitem .arrow {
+    color: #FFF !important;
+    background-color: #d57719;
+}
+.arrow, .ext-link {
+    float: right;
+    margin-right: 8px;
+}
+.ext-link {
+    margin-top: 6px;
+}
+.mouseovermenuitem .ext-link {
+    background-color: inherit;
+}
+
+.menubar-container > li * {
+    color: #d47618;
+    font-size: 14pt;
+    font-weight: 400;
+    text-decoration: none;
+    line-height: 27px;
+}
+
+.menubar-container > li li {
+    width: 200px;
+    overflow: hidden;
+}
+
+.menubar-container > li > ul > li > ul {
+    position: absolute;
+    display: none;
+}
+.menubar-container > li > ul > li *{
+    background-color: #ffd8b2;
+    color: #d47618;
+}
+
+.menubar-container a:active {
+    color: #d9d8cf !important;
+}
+
+.mouseovermenuitem > ul {
+    display: block !important;
+}
+
+.inner-contents
+{ margin-left: auto;
+  margin-right: auto;
+  width: 960px;
+}
+
+.contents
+{ margin: 20px 0px 45px 0px;
+  background-color: #f6f5ee;
+  padding: 20px 27px;
+}
+
+#forum_embed
+{ display:block;
+  margin-left: auto;
+  margin-right: auto;
+  width: 960px;
+  height: 1000px;
+  box-sizing: border-box;
+}
+
+/* overrule above.  This is handled by PlDoc itself */
+
+.contents.pldoc
+{ margin: 0;
+  padding: 0;
+  background-color: inherit;
+}
+
+.contents.pldoc div.navcontent
+{ margin-left: 17em;
+  margin-right: 0px;
+}
+
+.contents.pldoc div.navtree
+{ margin-left: 0px;
+  width: 16em;
+}
+
+
+#blurb {
+    margin-left: auto;
+    margin-right: auto;
+    width: 960px;
+}
+
+#blurb div {
+    margin: 45px 0px;
+    background-color: #FFF;
+    padding: 25px 27px;
+    font-size: 20pt;
+    font-style: italic;
+}
+
+#cta-container {
+    margin-left: auto;
+    margin-right: auto;
+    width: 960px;
+    margin-bottom: 45px;
+}
+
+#cta-container  td {
+    width: 33%;
+    font-family: Fauna One, sans;
+    font-size: 18pt;
+    padding: 0px;
+    vertical-align: middle;
+    color: #0a3d6c;
+}
+
+#cta-container a
+{ text-decoration: none;
+  color: #0a3d6c;
+}
+
+#cta-container a:hover
+{ text-decoration: underline;
+}
+
+#enhanced-search-container {
+    clear: both;
+    width: 100%;
+    background-color:  #d9d8cf;
+    height: 87px;
+    line-height: 87px;
+}
+
+#enhanced-search-container > div {
+width: 100%;
+margin-left: auto;
+margin-right: auto;
+text-align: center;
+}
+
+#enhanced-search-container form {
+    display: inline;
+}
+
+#enhanced-search-container .lbl {
+    color: #0a3d6c;
+    font-size: 16pt;
+}
+
+#enhanced-search-container input[type="text"] {
+    width: 532px;
+    height: 35px;
+}
+
+#enhanced-search-container input[type="image"] {
+    width: 43px;
+    height: 36px;
+    vertical-align: middle;
+    border: none;
+}
+
+#tail-end {
+    height: 120px;
+}
+
+.user-annotations {
+    background-color: #d8d8ce;
+    clear: both;
+}
+
+div.current-user > a:hover {
+	text-decoration: underline;
+}
+
+div.current-user > a.login:active {
+	text-decoration: underline;
+}
+
+div.edit-anotations
+{ margin-top: 20px;
+  margin-left: 103px;
+}
+
+.annotation  .comment {
+	margin-left: 103px;
+	margin-right: 58px;
+	margin-top: 3px;
+	margin-bottom: 8px;
+	border: 1px solid #0a3d6c;
+	min-height: 60px;
+	font-size: 14px;
+	color: #000;
+	font-weight: plain;
+}
+
+.annotation .commenter {
+	margin-left: 103px;
+	font-family: Source Sans Pro, sans;
+	font-size: 14px;
+	font-weight: bold;
+	color: #0a3d6c;
+}
+
+.annotation .commenter a:link {
+	text-decoration: none;
+	font-weight: inherit;
+	color: #0a3d6c;
+}
+
+.annotation .commenter a:unvisited {
+	text-decoration: none;
+	font-weight: inherit;
+	color: #0a3d6c;
+}
+
+.annotation .commenter a:hover {
+	text-decoration: underline;
+	font-weight: inherit;
+	color: #0a3d6c;
+}
+
+.annotation .commenter a:active {
+	text-decoration: underline;
+	font-weight: inherit;
+	color: #0a3d6c;
+}
+
+.annotation span.editlink  {
+	float: right;
+	margin-right: 58px;
+}
+
+.annotation span.editlink  a:link {
+	text-decoration: none;
+	color: #0a3d6c;
+	font-weight: normal;
+}
+
+.annotation span.editlink  a:visited {
+	text-decoration: none;
+	color: #0a3d6c;
+	font-weight: normal;
+}
+
+.annotation span.editlink  a:hover {
+	text-decoration: underline;
+	color: #0a3d6c;
+	font-weight: normal;
+}
+
+.annotation span.editlink  a:active {
+	text-decoration: underline;
+	color: #0a3d6c;
+	font-weight: bold;
+}
+

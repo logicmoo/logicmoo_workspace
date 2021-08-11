@@ -1,0 +1,322 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+
+<HTML>
+<HEAD>
+<TITLE>Programming in XPCE/Prolog</TITLE><LINK REL=home HREF="index.html">
+<LINK REL=contents HREF="Contents.html">
+<LINK REL=index HREF="DocIndex.html">
+<LINK REL=summary HREF="summary.html">
+<LINK REL=previous HREF="trouble.html">
+<LINK REL=next HREF="summary.html">
+<STYLE type="text/css">
+/* Style sheet for SWI-Prolog latex2html
+*/
+
+dd.defbody
+{ margin-bottom: 1em;
+}
+
+dt.pubdef
+{ background-color: #c5e1ff;
+}
+
+pre.code
+{ margin-left: 1.5em;
+margin-right: 1.5em;
+border: 1px dotted;
+padding-top: 5px;
+padding-left: 5px;
+padding-bottom: 5px;
+background-color: #f8f8f8;
+}
+
+div.navigate
+{ text-align: center;
+background-color: #f0f0f0;
+border: 1px dotted;
+padding: 5px;
+}
+
+div.title
+{ text-align: center;
+padding-bottom: 1em;
+font-size: 200%;
+font-weight: bold;
+}
+
+div.author
+{ text-align: center;
+font-style: italic;
+}
+
+div.abstract
+{ margin-top: 2em;
+background-color: #f0f0f0;
+border: 1px dotted;
+padding: 5px;
+margin-left: 10%; margin-right:10%;
+}
+
+div.abstract-title
+{ text-align: center;
+padding: 5px;
+font-size: 120%;
+font-weight: bold;
+}
+
+div.toc-h1
+{ font-size: 200%;
+font-weight: bold;
+}
+
+div.toc-h2
+{ font-size: 120%;
+font-weight: bold;
+margin-left: 2em;
+}
+
+div.toc-h3
+{ font-size: 100%;
+font-weight: bold;
+margin-left: 4em;
+}
+
+div.toc-h4
+{ font-size: 100%;
+margin-left: 6em;
+}
+
+span.sec-nr
+{ 
+}
+
+span.sec-title
+{ 
+}
+
+span.pred-ext
+{ font-weight: bold;
+}
+
+/* Footnotes */
+
+sup.fn { color: blue; text-decoration: underline; }
+span.fn-text: { display: none; }
+sup.fn span {display: none;}
+sup:hover span 
+{ display: block !important;
+position: absolute; top: auto; left: auto; width: 80%;
+color: #000; background: white;
+border: 2px solid;
+padding: 5px; margin: 10px; z-index: 100;
+font-size: smaller;
+}
+</STYLE>
+</HEAD>
+<BODY BGCOLOR="white">
+<DIV class="navigate"><A class="nav" href="index.html"><IMG SRC="home.gif" BORDER=0 ALT="Home"></A>
+<A class="nav" href="Contents.html"><IMG SRC="index.gif" BORDER=0 ALT="Contents"></A>
+<A class="nav" href="DocIndex.html"><IMG SRC="yellow_pages.gif" BORDER=0 ALT="Index"></A>
+<A class="nav" href="summary.html"><IMG SRC="info.gif" BORDER=0 ALT="Summary"></A>
+<A class="nav" href="trouble.html"><IMG SRC="prev.gif" BORDER=0 ALT="Previous"></A>
+<A class="nav" href="summary.html"><IMG SRC="next.gif" BORDER=0 ALT="Next"></A>
+</DIV>
+
+<H1><A NAME="sec:G"><SPAN class="sec-nr">G</SPAN> <SPAN class="sec-title">Glossary</SPAN></A></H1>
+
+<A NAME="sec:glossary"></A>
+
+<DL>
+<DT><A NAME="gloss:attribute"><STRONG>Attribute</STRONG></A></DT>
+<DD class="defbody">
+A <A class="" href="summary.html#class:attribute">attribute</A> object 
+is used to define additional properties of an object. The term <A class="" href="glossary.html#gloss:attribute">attribute</A> 
+is also used as a synonym for <A class="" href="glossary.html#gloss:slot">slot</A> 
+and <A class="" href="glossary.html#gloss:instance-variable">instance-variable</A> 
+referring to class defined properties.
+</DD>
+<DT><A NAME="gloss:clas"><STRONG>Class</STRONG></A></DT>
+<DD class="defbody">
+A <A class="" href="glossary.html#gloss:clas">class</A> is an object 
+that acts as a description of other objects called <A class="" href="glossary.html#gloss:instance">instances</A> 
+of the <A class="" href="glossary.html#gloss:clas">class</A>. Besides 
+various house-keeping information, a PCE <A class="" href="glossary.html#gloss:clas">class</A> 
+describes the <A class="" href="glossary.html#gloss:instance-variable">instance-variables</A> 
+and <A class="" href="glossary.html#gloss:method">methods</A> of its <A class="" href="glossary.html#gloss:instance">instances</A>.
+</DD>
+<DT><A NAME="gloss:class-variable"><STRONG>Class-Variable</STRONG></A></DT>
+<DD class="defbody">
+A <A class="" href="glossary.html#gloss:class-variable">class-variable</A> 
+defines a constant for all instances of the class. Class variables can 
+be used to define default values for an <A class="" href="glossary.html#gloss:instance-variable">instance-variable</A>. 
+Initial values for class-variables can be specified in the <CODE>Defaults</CODE> 
+file. See <A class="sec" href="classvar.html">section 8</A>.
+</DD>
+<DT><A NAME="gloss:code"><STRONG>Code</STRONG></A></DT>
+<DD class="defbody">
+A <A class="" href="glossary.html#gloss:code">code</A> object is an 
+object that represents a procedure. <A class="" href="glossary.html#gloss:code">Code</A> 
+objects are used for implementation of methods and to associate actions 
+with various events. For example a button object executes its associated 
+code object when depressed. The most typical code object is a <A class="" href="summary.html#class:message">message</A>.
+</DD>
+<DT><A NAME="gloss:control"><STRONG>Control</STRONG></A></DT>
+<DD class="defbody">
+A <A class="" href="glossary.html#gloss:control">control</A> is a 
+standard <A class="" href="glossary.html#gloss:gui">GUI</A> object 
+normally placed in dialog windows. Examples are buttons, text-entry 
+fields and menus.
+</DD>
+<DT><A NAME="gloss:event"><STRONG>Event</STRONG></A></DT>
+<DD class="defbody">
+An <A class="" href="glossary.html#gloss:event">event</A> is an object 
+that represents an activity of the user: mouse-movements, mouse-buttons, 
+keyboard activities.
+</DD>
+<DT><A NAME="gloss:forwarding-of-argument"><STRONG>Forwarding of argument</STRONG></A></DT>
+<DD class="defbody">
+When code objects are executed it is common to bind the <A class="" href="glossary.html#gloss:var">var</A> 
+objects <A NAME="idx:arg1:739"></A><B>@arg1</B>, <A NAME="idx:arg2:740"></A><B>@arg2</B>, 
+... to pass context information for the executing code. For example, 
+when a method object executes its code it will bind the arguments given 
+to the method to <A NAME="idx:arg1:741"></A><B>@arg1</B>, ...
+</DD>
+<DT><A NAME="gloss:function"><STRONG>Function</STRONG></A></DT>
+<DD class="defbody">
+A <A class="" href="glossary.html#gloss:function">function</A> is a 
+subclass of class <A class="" href="summary.html#class:code">code</A> 
+which yields a value when executed. The most important functions are 
+local variables (<A class="" href="glossary.html#gloss:var">var</A>), <A class="" href="glossary.html#gloss:obtainer">obtainers</A> 
+and mathetical operations. They may be used as arguments to code 
+objects. They are executed when the code object is executed or when the 
+function needs to be converted to a type that does not accept a 
+function.
+</DD>
+<DT><A NAME="gloss:get-operation"><STRONG>Get operation</STRONG></A></DT>
+<DD class="defbody">
+Virtual machine operation to request information from some object. 
+Started by the Prolog predicate <A NAME="idx:get313:742"></A><A class="pred" href="sec-D.1.html#get/3">get/[3-13]</A>, 
+when an obtainer is executed or from PCE's built-in functionality.
+</DD>
+<DT><A NAME="gloss:gui"><STRONG>GUI</STRONG></A></DT>
+<DD class="defbody">
+Abbreviation for Graphical User Interface.
+</DD>
+<DT><A NAME="gloss:inheritance"><STRONG>Inheritance</STRONG></A></DT>
+<DD class="defbody">
+The sharing of definition from a super-class. When a PCE <A class="" href="glossary.html#gloss:clas">class</A> 
+is created from a <A class="" href="glossary.html#gloss:super-clas">super-class</A> 
+it is initially a copy of this
+<A class="" href="glossary.html#gloss:super-clas">super-class</A>. After 
+creation, instance variables and methods may be added and/or redefined.
+</DD>
+<DT><A NAME="gloss:instance"><STRONG>Instance</STRONG></A></DT>
+<DD class="defbody">
+Synonym for <A class="" href="glossary.html#gloss:object">object</A>, 
+often use to stress the fact that an object belongs to a particular 
+class.
+</DD>
+<DT><A NAME="gloss:instance-variable"><STRONG>Instance-variable</STRONG></A></DT>
+<DD class="defbody">
+Placeholder for the local-state associated with an <A class="" href="glossary.html#gloss:object">object</A>. 
+An
+<A class="" href="glossary.html#gloss:instance-variable">instance-variable</A> 
+is associated with a class and has a name and a type. Each of the <A class="" href="glossary.html#gloss:instance">instances</A> 
+of the class defines a value for the instance variable. Instance 
+variables are represented by class
+<A class="" href="summary.html#class:variable">variable</A>.
+</DD>
+<DT><A NAME="gloss:message"><STRONG>Message</STRONG></A></DT>
+<DD class="defbody">
+A <A class="" href="glossary.html#gloss:message">message</A> is an 
+object representing a <A class="" href="glossary.html#gloss:send-operation">send-operation</A>. 
+The phrase ``sending a message to X'' is equivalent to ``invoking a get- 
+or send-operation on X''.
+</DD>
+<DT><A NAME="gloss:method"><STRONG>Method</STRONG></A></DT>
+<DD class="defbody">
+A <A class="" href="glossary.html#gloss:method">method</A> maps a <A class="" href="glossary.html#gloss:selector">selector</A> 
+and a type vector onto an implementation which is either a C-function or 
+a <A class="" href="glossary.html#gloss:code">code</A> object. PCE 
+defines both get- and send-methods. If a <A class="" href="glossary.html#gloss:send-operation">send-operation</A> 
+is invoked on an object, PCE will find a method associated with the 
+class of the object with a matching <A class="" href="glossary.html#gloss:selector">selector</A>, 
+check the argument types and invoke the implementation of the method.
+</DD>
+<DT><A NAME="gloss:object-reference"><STRONG>Object-reference</STRONG></A></DT>
+<DD class="defbody">
+An <EM>object-reference</EM> is the identifier for a particular 
+instance. In Prolog <A class="" href="glossary.html#gloss:object-reference">object-references</A> 
+are represented by
+<A NAME="idx:Integer:743"></A><B>@Integer</B> or <A NAME="idx:Atom:744"></A><B>@Atom</B>.
+</DD>
+<DT><A NAME="gloss:object"><STRONG>Object</STRONG></A></DT>
+<DD class="defbody">
+An <A class="" href="glossary.html#gloss:object">object</A> is en entity 
+in PCE's world that is identified by an <A class="" href="glossary.html#gloss:object-reference">object-reference</A> 
+and has a local state. An object is an
+<A class="" href="glossary.html#gloss:instance">instance</A> of a <A class="" href="glossary.html#gloss:clas">class</A>. 
+The <A class="" href="glossary.html#gloss:clas">class</A> defines both 
+the constituents of the local state as well as the operations (<A class="" href="glossary.html#gloss:method">methods</A>) 
+understood by the object.
+</DD>
+<DT><A NAME="gloss:obtainer"><STRONG>Obtainer</STRONG></A></DT>
+<DD class="defbody">
+An <A class="" href="glossary.html#gloss:obtainer">obtainer</A> is a <A class="" href="glossary.html#gloss:function">function</A> 
+which invokes a <A class="" href="glossary.html#gloss:get-operation">get-operation</A> 
+when evaluated. The class name is `?'.
+</DD>
+<DT><A NAME="gloss:recogniser"><STRONG>Recogniser</STRONG></A></DT>
+<DD class="defbody">
+A <A class="" href="glossary.html#gloss:recogniser">recogniser</A> 
+object parses <A class="" href="glossary.html#gloss:event">events</A> 
+for a graphical object.
+</DD>
+<DT><A NAME="gloss:selector"><STRONG>Selector</STRONG></A></DT>
+<DD class="defbody">
+A <A class="" href="glossary.html#gloss:selector">selector</A> is the 
+name of a <A class="" href="glossary.html#gloss:send-operation">send-operation</A> 
+or <A class="" href="glossary.html#gloss:get-operation">get-operation</A>.
+</DD>
+<DT><A NAME="gloss:send-method"><STRONG>Send Method</STRONG></A></DT>
+<DD class="defbody">
+Refinement of <A class="" href="summary.html#class:method">method</A> 
+that maps a <A class="" href="glossary.html#gloss:send-operation">send-operation</A> 
+onto its implementation. See also <A class="" href="glossary.html#gloss:method">Method</A>
+</DD>
+<DT><A NAME="gloss:send-operation"><STRONG>Send operation</STRONG></A></DT>
+<DD class="defbody">
+Virtual machine operation which invokes of a <A class="" href="glossary.html#gloss:send-method">send-method</A> 
+on some object. Started by the Prolog predicate <A NAME="idx:send212:745"></A><A class="pred" href="sec-7.1.html#send/[2-12]">send/[2-12]</A>, 
+when an <A class="" href="glossary.html#gloss:message">message</A> is 
+executed or from PCE's built-in functionality.
+</DD>
+<DT><A NAME="gloss:slot"><STRONG>Slot</STRONG></A></DT>
+<DD class="defbody">
+Equivalent to <A class="" href="glossary.html#gloss:instance-variable">instance_variable</A>.
+</DD>
+<DT><A NAME="gloss:super-clas"><STRONG>Super-class</STRONG></A></DT>
+<DD class="defbody">
+The <A class="" href="glossary.html#gloss:super-clas">super-class</A> of 
+a <A class="" href="glossary.html#gloss:clas">class</A> serves as the 
+initial definition of a <A class="" href="glossary.html#gloss:clas">class</A>. 
+See also <A class="" href="glossary.html#gloss:inheritance">inheritance</A>.
+</DD>
+<DT><A NAME="gloss:template-clas"><STRONG>Template-class</STRONG></A></DT>
+<DD class="defbody">
+User-defined subclass of class <B>template</B>. The refinements 
+introduced from <B>template</B> can be imported in another user-defined 
+class using the predicate <A NAME="idx:useclasstemplate1:746"></A><A class="pred" href="sec-7.1.html#use_class_template/1">use_class_template/1</A>.
+</DD>
+<DT><A NAME="gloss:var"><STRONG>Var</STRONG></A></DT>
+<DD class="defbody">
+A <A class="" href="glossary.html#gloss:var">var</A> object is a <A class="" href="glossary.html#gloss:function">function</A>. 
+The commonly used <A class="" href="glossary.html#gloss:var">vars</A> 
+objects are: <A NAME="idx:arg1:747"></A><B>@arg1</B>, ... (general 
+argument forwarding), <A NAME="idx:receiver:748"></A><B>@receiver</B> 
+(receiver or a message), <A NAME="idx:event:749"></A><B>@event</B> 
+(currently processes event object).
+</DD>
+</DL>
+
+</BODY></HTML>

@@ -1,0 +1,181 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+
+<HTML>
+<HEAD>
+<TITLE>Programming in XPCE/Prolog: Section 8.3</TITLE><LINK REL=home HREF="index.html">
+<LINK REL=contents HREF="Contents.html">
+<LINK REL=index HREF="DocIndex.html">
+<LINK REL=summary HREF="summary.html">
+<LINK REL=previous HREF="sec-8.2.html">
+<LINK REL=next HREF="sec-8.4.html">
+<STYLE type="text/css">
+/* Style sheet for SWI-Prolog latex2html
+*/
+
+dd.defbody
+{ margin-bottom: 1em;
+}
+
+dt.pubdef
+{ background-color: #c5e1ff;
+}
+
+pre.code
+{ margin-left: 1.5em;
+margin-right: 1.5em;
+border: 1px dotted;
+padding-top: 5px;
+padding-left: 5px;
+padding-bottom: 5px;
+background-color: #f8f8f8;
+}
+
+div.navigate
+{ text-align: center;
+background-color: #f0f0f0;
+border: 1px dotted;
+padding: 5px;
+}
+
+div.title
+{ text-align: center;
+padding-bottom: 1em;
+font-size: 200%;
+font-weight: bold;
+}
+
+div.author
+{ text-align: center;
+font-style: italic;
+}
+
+div.abstract
+{ margin-top: 2em;
+background-color: #f0f0f0;
+border: 1px dotted;
+padding: 5px;
+margin-left: 10%; margin-right:10%;
+}
+
+div.abstract-title
+{ text-align: center;
+padding: 5px;
+font-size: 120%;
+font-weight: bold;
+}
+
+div.toc-h1
+{ font-size: 200%;
+font-weight: bold;
+}
+
+div.toc-h2
+{ font-size: 120%;
+font-weight: bold;
+margin-left: 2em;
+}
+
+div.toc-h3
+{ font-size: 100%;
+font-weight: bold;
+margin-left: 4em;
+}
+
+div.toc-h4
+{ font-size: 100%;
+margin-left: 6em;
+}
+
+span.sec-nr
+{ 
+}
+
+span.sec-title
+{ 
+}
+
+span.pred-ext
+{ font-weight: bold;
+}
+
+/* Footnotes */
+
+sup.fn { color: blue; text-decoration: underline; }
+span.fn-text: { display: none; }
+sup.fn span {display: none;}
+sup:hover span 
+{ display: block !important;
+position: absolute; top: auto; left: auto; width: 80%;
+color: #000; background: white;
+border: 2px solid;
+padding: 5px; margin: 10px; z-index: 100;
+font-size: smaller;
+}
+</STYLE>
+</HEAD>
+<BODY BGCOLOR="white">
+<DIV class="navigate"><A class="nav" href="index.html"><IMG SRC="home.gif" BORDER=0 ALT="Home"></A>
+<A class="nav" href="Contents.html"><IMG SRC="index.gif" BORDER=0 ALT="Contents"></A>
+<A class="nav" href="DocIndex.html"><IMG SRC="yellow_pages.gif" BORDER=0 ALT="Index"></A>
+<A class="nav" href="summary.html"><IMG SRC="info.gif" BORDER=0 ALT="Summary"></A>
+<A class="nav" href="sec-8.2.html"><IMG SRC="prev.gif" BORDER=0 ALT="Previous"></A>
+<A class="nav" href="sec-8.4.html"><IMG SRC="next.gif" BORDER=0 ALT="Next"></A>
+</DIV>
+
+<H2><A NAME="sec:8.3"><SPAN class="sec-nr">8.3</SPAN> <SPAN class="sec-title">The 
+`Defaults' file</SPAN></A></H2>
+
+<P>The <CODE>Defaults</CODE> file consists of statements. Each statement 
+is on a separate line. A statement may be split over several lines by 
+preceeding the newline with a backslash (<CODE>\</CODE>). The 
+exclamation mark (<CODE>!</CODE>) is the line-comment character. All 
+input from the <CODE>!</CODE> upto the following newline is replaced by 
+a single space-character. Empty lines or lines containing only blank 
+space are ignored.
+
+<P>Default files may include other default files using the statement
+<BLOCKQUOTE>
+<TT>#include</TT> &lt;<VAR>file</VAR>&gt;
+</BLOCKQUOTE>
+
+<P>Default statements are of the form:
+<BLOCKQUOTE>
+&lt;<VAR>class</VAR>&gt;.&lt;<VAR>class-variable</VAR>&gt;: &lt;<VAR>value</VAR>&gt;
+</BLOCKQUOTE>
+
+<P>Where &lt;<VAR>class</VAR>&gt; denotes the name of the class, or <CODE>*</CODE> 
+to indicate the default applies for any class defining this 
+class-variable. If both forms are found, the statement with the explicit 
+class-name is used.
+&lt;<VAR>class-variable</VAR>&gt; denotes the class-variable name. &lt;<VAR>value</VAR>&gt; 
+is the default value of the class-variable. The syntax for &lt;<VAR>value</VAR>&gt; 
+is similar to the arguments of <A NAME="idx:send212:269"></A><A class="pred" href="sec-7.1.html#send/[2-12]">send/[2-12]</A>. 
+The (informal) syntax for &lt;<VAR>value</VAR>&gt; is below.
+<BLOCKQUOTE>
+<TABLE BORDER=2 FRAME=box RULES=groups>
+<TR VALIGN=top><TD>&lt;<VAR>Any</VAR>&gt; </TD><TD ALIGN=right>::=</TD><TD>&lt;<VAR>int</VAR>&gt; </TD></TR>
+<TR VALIGN=top><TD></TD><TD ALIGN=right>|</TD><TD>&lt;<VAR>float</VAR>&gt; </TD></TR>
+<TR VALIGN=top><TD></TD><TD ALIGN=right>|</TD><TD>&lt;<VAR>Name</VAR>&gt; </TD></TR>
+<TR VALIGN=top><TD></TD><TD ALIGN=right>|</TD><TD>@&lt;<VAR>Name</VAR>&gt; </TD></TR>
+<TR VALIGN=top><TD></TD><TD ALIGN=right>|</TD><TD>&lt;<VAR>Chain</VAR>&gt; </TD></TR>
+<TR VALIGN=top><TD></TD><TD ALIGN=right>|</TD><TD>&lt;<VAR>Object</VAR>&gt; </TD></TR>
+<TBODY>
+<TR VALIGN=top><TD>&lt;<VAR>Chain</VAR>&gt; </TD><TD ALIGN=right>::=</TD><TD><TT>[</TT> &lt;<VAR>Any</VAR>&gt; {, &lt;<VAR>Any</VAR>&gt;} <TT>]</TT> </TD></TR>
+<TR VALIGN=top><TD></TD><TD ALIGN=right>|</TD><TD><TT>[</TT> &lt;<VAR>Blank</VAR>&gt; <TT>]</TT> </TD></TR>
+<TBODY>
+<TR VALIGN=top><TD>&lt;<VAR>Object</VAR>&gt; </TD><TD ALIGN=right>::=</TD><TD>&lt;<VAR>ClassName</VAR>&gt;<TT>()</TT> </TD></TR>
+<TR VALIGN=top><TD></TD><TD ALIGN=right>|</TD><TD>&lt;<VAR>ClassName</VAR>&gt;<TT>(</TT> &lt;<VAR>Any</VAR>&gt; {, &lt;<VAR>Any</VAR>&gt;} <TT>)</TT> </TD></TR>
+<TR VALIGN=top><TD></TD><TD ALIGN=right>|</TD><TD>&lt;<VAR>PrefixOp</VAR>&gt; &lt;<VAR>Any</VAR>&gt; </TD></TR>
+<TR VALIGN=top><TD></TD><TD ALIGN=right>|</TD><TD>&lt;<VAR>Any</VAR>&gt; &lt;<VAR>InfixOp</VAR>&gt; &lt;<VAR>Any</VAR>&gt; </TD></TR>
+<TR VALIGN=top><TD></TD><TD ALIGN=right>|</TD><TD>&lt;<VAR>Any</VAR>&gt; &lt;<VAR>PostfixOp</VAR>&gt; </TD></TR>
+<TR VALIGN=top><TD></TD><TD ALIGN=right>|</TD><TD><TT>"</TT> &lt;<VAR>String</VAR>&gt; <TT>"</TT> </TD></TR>
+<TBODY>
+<TR VALIGN=top><TD>&lt;<VAR>String</VAR>&gt; </TD><TD ALIGN=right>::=</TD><TD>{&lt;<VAR>CharNotDoubleQuote</VAR>&gt;<VAR>|</VAR><TT>""</TT>} </TD></TR>
+<TBODY>
+<TR VALIGN=top><TD>&lt;<VAR>Name</VAR>&gt; </TD><TD ALIGN=right>::=</TD><TD>&lt;<VAR>Letter</VAR>&gt;{&lt;<VAR>Letter</VAR>&gt;<VAR>|</VAR>&lt;<VAR>Digit</VAR>&gt;} </TD></TR>
+<TR VALIGN=top><TD></TD><TD ALIGN=right>|</TD><TD><TT>'</TT> {&lt;<VAR>CharNotSingleQuote</VAR>&gt;<VAR>|</VAR><TT>''</TT>} <TT>'</TT> </TD></TR>
+</TABLE>
+
+</BLOCKQUOTE>
+
+<P></BODY></HTML>

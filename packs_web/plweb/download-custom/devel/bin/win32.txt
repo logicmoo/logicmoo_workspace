@@ -1,0 +1,2 @@
+Self-installing executable for MS-Windows. Installs *|swipl-win.exe|*
+and *|swipl.exe|*. Works on Windows 7/8/10.

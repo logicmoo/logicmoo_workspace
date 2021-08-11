@@ -1,0 +1,291 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+
+<HTML>
+<HEAD>
+<TITLE>Programming in XPCE/Prolog: Section 11.8</TITLE><LINK REL=home HREF="index.html">
+<LINK REL=contents HREF="Contents.html">
+<LINK REL=index HREF="DocIndex.html">
+<LINK REL=summary HREF="summary.html">
+<LINK REL=previous HREF="mlingual.html">
+<LINK REL=next HREF="httpd.html">
+<STYLE type="text/css">
+/* Style sheet for SWI-Prolog latex2html
+*/
+
+dd.defbody
+{ margin-bottom: 1em;
+}
+
+dt.pubdef
+{ background-color: #c5e1ff;
+}
+
+pre.code
+{ margin-left: 1.5em;
+margin-right: 1.5em;
+border: 1px dotted;
+padding-top: 5px;
+padding-left: 5px;
+padding-bottom: 5px;
+background-color: #f8f8f8;
+}
+
+div.navigate
+{ text-align: center;
+background-color: #f0f0f0;
+border: 1px dotted;
+padding: 5px;
+}
+
+div.title
+{ text-align: center;
+padding-bottom: 1em;
+font-size: 200%;
+font-weight: bold;
+}
+
+div.author
+{ text-align: center;
+font-style: italic;
+}
+
+div.abstract
+{ margin-top: 2em;
+background-color: #f0f0f0;
+border: 1px dotted;
+padding: 5px;
+margin-left: 10%; margin-right:10%;
+}
+
+div.abstract-title
+{ text-align: center;
+padding: 5px;
+font-size: 120%;
+font-weight: bold;
+}
+
+div.toc-h1
+{ font-size: 200%;
+font-weight: bold;
+}
+
+div.toc-h2
+{ font-size: 120%;
+font-weight: bold;
+margin-left: 2em;
+}
+
+div.toc-h3
+{ font-size: 100%;
+font-weight: bold;
+margin-left: 4em;
+}
+
+div.toc-h4
+{ font-size: 100%;
+margin-left: 6em;
+}
+
+span.sec-nr
+{ 
+}
+
+span.sec-title
+{ 
+}
+
+span.pred-ext
+{ font-weight: bold;
+}
+
+/* Footnotes */
+
+sup.fn { color: blue; text-decoration: underline; }
+span.fn-text: { display: none; }
+sup.fn span {display: none;}
+sup:hover span 
+{ display: block !important;
+position: absolute; top: auto; left: auto; width: 80%;
+color: #000; background: white;
+border: 2px solid;
+padding: 5px; margin: 10px; z-index: 100;
+font-size: smaller;
+}
+</STYLE>
+</HEAD>
+<BODY BGCOLOR="white">
+<DIV class="navigate"><A class="nav" href="index.html"><IMG SRC="home.gif" BORDER=0 ALT="Home"></A>
+<A class="nav" href="Contents.html"><IMG SRC="index.gif" BORDER=0 ALT="Contents"></A>
+<A class="nav" href="DocIndex.html"><IMG SRC="yellow_pages.gif" BORDER=0 ALT="Index"></A>
+<A class="nav" href="summary.html"><IMG SRC="info.gif" BORDER=0 ALT="Summary"></A>
+<A class="nav" href="mlingual.html"><IMG SRC="prev.gif" BORDER=0 ALT="Previous"></A>
+<A class="nav" href="httpd.html"><IMG SRC="next.gif" BORDER=0 ALT="Next"></A>
+</DIV>
+
+<H2><A NAME="sec:11.8"><SPAN class="sec-nr">11.8</SPAN> <SPAN class="sec-title">Drag 
+and drop interface</SPAN></A></H2>
+
+<A NAME="sec:dragdrop"></A>
+
+<P><font size=-1>XPCE</font>'s drag-and-drop interface allows the user 
+to drag-and-drop
+<A class="" href="summary.html#class:graphical">graphical</A> objects 
+and <A class="" href="summary.html#class:dict_item">dict_item</A> 
+objects. Drag-and-drop is a common GUI technique to specify operations 
+that require two objects in a specific order. Moving files to another 
+directory by dragging them to the icon of the target directory is a 
+common example.
+
+<P>It may also be used to specify operations on a single object, where 
+the operation is represented by an icon. Dragging files to a trash-bin 
+is the most commonly found example.
+
+<P>For the drag-and-drop interface to work, the programmer must connect 
+a <B>drag_and_drop_gesture</B> to the object to be dragged.<SUP class="fn">12<SPAN class="fn-text">Attach 
+a <B>drag_and_drop_dict_item_gesture</B> to a <A class="" href="summary.html#class:list_browser">list_browser</A> 
+to enable dragging the items in the dictionary</SPAN></SUP>. A <EM>Drop-zone</EM> 
+defines the method <B><CODE>-&gt;</CODE>drop</B> and (not strictly 
+obligatory) <B><CODE>-&gt;</CODE>preview_drop</B>. <B><CODE>-&gt;</CODE>drop</B> 
+is called to actually perform the associated operation, while <B><CODE>-&gt;</CODE>preview_drop</B> 
+may be used to indicate what will happen if the object is dropped now.
+
+<P>Below is a complete example that allows the user to drag objects for 
+moving and copying on another window.
+
+<P>Class drop_picture defines a graphical window that imports graphical 
+objects when they are dropped onto it. The feedback is a dotted 
+rectangle indicating the area of the graphical to be imported. See
+<A NAME="idx:graphicalsendpreviewdrop:515"></A>`graphical <B><CODE>-&gt;</CODE>preview_drop</B>' 
+for a description of the arguments.
+
+<PRE class="code"><A NAME="idx:droppicture:516"></A>
+:- pce_begin_class(drop_picture, picture).
+<A NAME="idx:droppicturesendpreviewdrop:517"></A>
+preview_drop(P, Gr:graphical*, Pos:[point]) :-&gt;<A NAME="idx:nil:518"></A>
+        (   Gr == @nil                  % pointer leaves area
+        -&gt;  (   get(P, attribute, drop_outline, OL)
+            -&gt;  send(OL, free),
+                send(P, delete_attribute, drop_outline)
+            ;   true
+            )
+        ;   (   get(P, attribute, drop_outline, OL)
+            -&gt;  send(OL, position, Pos)
+            ;   get(Gr?area, size, size(W, H)),
+                new(OL, box(W, H)),
+                send(OL, texture, dotted),
+                send(P, display, OL, Pos),
+                send(P, attribute, drop_outline, OL)
+            )
+        ).</PRE>
+
+<P>The method <B><CODE>-&gt;</CODE>drop</B>. If the graphical originates 
+from the same picture just move it. Otherwise <B><CODE>&lt;-</CODE>clone</B> 
+the graphical and display the clone.
+
+<PRE class="code"><A NAME="idx:droppicturesenddrop:519"></A>
+drop(P, Gr:graphical, Pos:point) :-&gt;
+        (   get(Gr, device, P)
+        -&gt;  send(Gr, position, Pos)
+        ;   get(Gr, clone, Gr2),
+            send(P, display, Gr2, Pos)
+        ).
+
+:- pce_end_class.</PRE>
+
+<P>Class dragbox defines a simple subclass of class box that can be 
+resized and dragged.
+
+<PRE class="code"><A NAME="idx:dragbox:520"></A>
+:- pce_begin_class(dragbox, box).
+
+:- pce_autoload(drag_and_drop_gesture, library(dragdrop)).<A NAME="idx:dragboxrecogniser:521"></A>
+:- pce_global(@dragbox_recogniser, make_dragbox_recogniser).
+<A NAME="idx:makedragboxrecogniser1:522"></A>
+make_dragbox_recogniser(G) :-
+        new(G, handler_group(resize_gesture(left),
+                             drag_and_drop_gesture(left))).
+<A NAME="idx:dragboxsendevent:523"></A>
+event(B, Ev:event) :-&gt;
+        (   send(B, send_super, event, Ev)<A NAME="idx:dragboxrecogniser:524"></A>
+        ;   send(@dragbox_recogniser, event, Ev)
+        ).
+
+:- pce_end_class.</PRE>
+
+<P>The toplevel predicate creates two drop_pictures in one frame (note 
+that drag-and-drop-gestures work accross frames, but not accross 
+multiple XPCE processes at the moment). It displays one dragbox in one 
+of the windows. Dragging it inside a picture moves the box, dragging it 
+to the other windows makes a copy of the box.
+
+<PRE class="code"><A NAME="idx:dragdropdemo0:525"></A>
+dragdropdemo :-
+        new(F, frame('Drag and Drop Demo')),
+        send(F, append, new(P1, drop_picture)),
+        send(new(drop_picture), right, P1),
+        send(P1, display, dragbox(100, 50), point(20,20)),
+        send(F, open).</PRE>
+
+<H3><A NAME="sec:11.8.1"><SPAN class="sec-nr">11.8.1</SPAN> <SPAN class="sec-title">Related 
+methods</SPAN></A></H3>
+
+<DL>
+<DT><STRONG>drag_and_drop_gesture -&gt;initialise:</STRONG> <VAR>Button, 
+Modifier, Warp, GetSource</VAR></DT>
+<DD class="defbody">
+Initialises a new <B>drag_and_drop_gesture</B>. <EM>Button</EM> is the 
+name of the pointer-button the gesture should be connected to (left, 
+middle or right). <EM>Modifier</EM> is a <A class="" href="summary.html#class:modifier">modifier</A> 
+description (see class <A class="" href="summary.html#class:modifier">modifier</A>). <EM>Warp</EM> 
+is for compatibility with older releases of this library.
+<EM>GetSource</EM> is a function used to fetch the object dragged from 
+the graphical representing it. Suppose the graphical to which the 
+gesture is attached represents a database record. In this case it is 
+much more natural to pass the identifier for the database record to the
+<B><CODE>-&gt;</CODE>drop</B> and <B><CODE>-&gt;</CODE>preview_drop</B> 
+methods than to pass the icon representing it. <EM>GetSource</EM> is a 
+function that is evaluated with <A NAME="idx:arg1:526"></A><B>@arg1</B> 
+bound to the graphical when the gesture is activated. An example could 
+be:
+
+<PRE class="code">
+drag_and_drop_gesture(left,
+                      get_source :=
+                             @arg1?db_record)
+</PRE>
+
+</DD>
+<DT><STRONG>graphical -&gt;drop:</STRONG> <VAR>Object:&lt;<VAR>Type</VAR>&gt; 
+[, Pos:point]</VAR></DT>
+<DD class="defbody">
+This method may be defined on any graphical object that is a drop-zone. 
+It will only be activated if the drag_and_drop_gesture can locate the 
+method and make the necessary type transformations. Thus, if the type is 
+specified as <TT>file</TT>, this method will only be activated if the 
+dragged object can be converted to a <A class="" href="summary.html#class:file">file</A> 
+object. See also the discussion about the get_source argument above.
+
+<P>If the method accepts a point for the second argument, a point will 
+be passed that represents the location of the pointer in the coordinate 
+system of the drop-zone, subtracted by the distance between the top-left 
+corner of the dragged graphical to the pointer at the moment the button 
+was depressed. To get the position of the pointer itself, just ask for 
+the position of <A NAME="idx:event:527"></A><B>@event</B> relative to 
+the drop-zone.
+</DD>
+<DT><STRONG>graphical -&gt;preview_drop:</STRONG> <VAR>Object:&lt;<VAR>Type</VAR>&gt;* 
+[, Pos:[point]]</VAR></DT>
+<DD class="defbody">
+Sent by the <B>drag_and_drop_gesture</B> to allow the drop-zone 
+providing feedback. The arguments and semantics are the same as for <B><CODE>-&gt;</CODE>drop</B>, 
+but the first argument can be <A NAME="idx:nil:528"></A><B>@nil</B>, 
+indicating that the mouse has left the drop-zone. Under this condition, 
+the position argument is <A NAME="idx:default:529"></A><B>@default</B>.
+
+<P>If a position argument is available, the <B>drag_and_drop_gesture</B> 
+will be activated on each <TT>drag</TT> event. Otherwise it is only 
+activated if the pointer enters the area of the drop-zone.
+</DD>
+</DL>
+
+<P></BODY></HTML>

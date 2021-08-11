@@ -1,0 +1,288 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+
+<HTML>
+<HEAD>
+<TITLE>Programming in XPCE/Prolog: Section A.2</TITLE><LINK REL=home HREF="index.html">
+<LINK REL=contents HREF="Contents.html">
+<LINK REL=index HREF="DocIndex.html">
+<LINK REL=summary HREF="summary.html">
+<LINK REL=previous HREF="sec-A.1.html">
+<LINK REL=next HREF="sec-A.3.html">
+<STYLE type="text/css">
+/* Style sheet for SWI-Prolog latex2html
+*/
+
+dd.defbody
+{ margin-bottom: 1em;
+}
+
+dt.pubdef
+{ background-color: #c5e1ff;
+}
+
+pre.code
+{ margin-left: 1.5em;
+margin-right: 1.5em;
+border: 1px dotted;
+padding-top: 5px;
+padding-left: 5px;
+padding-bottom: 5px;
+background-color: #f8f8f8;
+}
+
+div.navigate
+{ text-align: center;
+background-color: #f0f0f0;
+border: 1px dotted;
+padding: 5px;
+}
+
+div.title
+{ text-align: center;
+padding-bottom: 1em;
+font-size: 200%;
+font-weight: bold;
+}
+
+div.author
+{ text-align: center;
+font-style: italic;
+}
+
+div.abstract
+{ margin-top: 2em;
+background-color: #f0f0f0;
+border: 1px dotted;
+padding: 5px;
+margin-left: 10%; margin-right:10%;
+}
+
+div.abstract-title
+{ text-align: center;
+padding: 5px;
+font-size: 120%;
+font-weight: bold;
+}
+
+div.toc-h1
+{ font-size: 200%;
+font-weight: bold;
+}
+
+div.toc-h2
+{ font-size: 120%;
+font-weight: bold;
+margin-left: 2em;
+}
+
+div.toc-h3
+{ font-size: 100%;
+font-weight: bold;
+margin-left: 4em;
+}
+
+div.toc-h4
+{ font-size: 100%;
+margin-left: 6em;
+}
+
+span.sec-nr
+{ 
+}
+
+span.sec-title
+{ 
+}
+
+span.pred-ext
+{ font-weight: bold;
+}
+
+/* Footnotes */
+
+sup.fn { color: blue; text-decoration: underline; }
+span.fn-text: { display: none; }
+sup.fn span {display: none;}
+sup:hover span 
+{ display: block !important;
+position: absolute; top: auto; left: auto; width: 80%;
+color: #000; background: white;
+border: 2px solid;
+padding: 5px; margin: 10px; z-index: 100;
+font-size: smaller;
+}
+</STYLE>
+</HEAD>
+<BODY BGCOLOR="white">
+<DIV class="navigate"><A class="nav" href="index.html"><IMG SRC="home.gif" BORDER=0 ALT="Home"></A>
+<A class="nav" href="Contents.html"><IMG SRC="index.gif" BORDER=0 ALT="Contents"></A>
+<A class="nav" href="DocIndex.html"><IMG SRC="yellow_pages.gif" BORDER=0 ALT="Index"></A>
+<A class="nav" href="summary.html"><IMG SRC="info.gif" BORDER=0 ALT="Summary"></A>
+<A class="nav" href="sec-A.1.html"><IMG SRC="prev.gif" BORDER=0 ALT="Previous"></A>
+<A class="nav" href="sec-A.3.html"><IMG SRC="next.gif" BORDER=0 ALT="Next"></A>
+</DIV>
+
+<H2><A NAME="sec:A.2"><SPAN class="sec-nr">A.2</SPAN> <SPAN class="sec-title">Miscellaneous 
+topics</SPAN></A></H2>
+
+<P>This section discusses various topics that were omitted from the 
+Guided Tour to keep it simple.
+
+<H3><A NAME="sec:A.2.1"><SPAN class="sec-nr">A.2.1</SPAN> <SPAN class="sec-title">Specifying 
+callback to prolog</SPAN></A></H3>
+
+<P>Using the background popup of the behaviour editor, the object <A NAME="idx:prolog:615"></A><B>@prolog</B> 
+(see <A class="sec" href="pceprolog.html">section 6</A>) can be added to 
+the model. Select <B>Add Send Port</B> to add a new predicate to the <A NAME="idx:prolog:616"></A><B>@prolog</B> 
+interface. Then type the name of the predicate. Now link the event-port 
+of a control to the predicate and link the arguments.
+
+<P>If the predicate is not defined, select `Edit' on menu of <A NAME="idx:prolog:617"></A><B>@prolog</B> 
+to start PceEmacs on the source file. Now drag the predicate to the 
+PceEmacs window. This will insert the head of the predicate at the 
+caret. See <A class="fig" href="sec-A.2.html#fig:diaprolog">figure 38</A>
+
+<P><A NAME="fig:diaprolog"></A>
+<CENTER>
+<IMG SRC="diaprolog.gif">
+</CENTER>
+<TABLE ALIGN=center WIDTH="75%"><TR><TD>
+<B>Figure 38 : </B>Specifying Call-back to Prolog</TABLE>
+
+<H3><A NAME="sec:A.2.2"><SPAN class="sec-nr">A.2.2</SPAN> <SPAN class="sec-title">Advanced 
+example of behaviour</SPAN></A></H3>
+
+<P><A class="fig" href="sec-A.2.html#fig:viewer">Figure 39</A> is the 
+screen dump of an application and its behaviour model of a tool that 
+shows all files in a directory and clicking on a file shows the file's 
+contents in the editor to the left. It demonstrates various aspects of 
+advanced features for specifying behaviour.
+
+<P>
+<UL>
+<LI><I>The text-field <B>directory</B></I><BR>
+Represented in the model by (1). It is a normal <A class="" href="summary.html#class:text_item">text_item</A>, 
+but the <A NAME="idx:textitembothtype:618"></A>`<B>text_item<CODE>&lt;-&gt;</CODE>type</B>' 
+field is set to `directory'. This implies the
+<B><CODE>&lt;-</CODE>selection</B> of the text-item will return a <A class="" href="summary.html#class:directory">directory</A> 
+object.
+<LI><I>Showing the files of the directory</I><BR>
+If the text-item is modified, a list of files in the directory should be 
+shown in the `file_list', a <A class="" href="summary.html#class:list_browser">list_browser</A>. 
+The method
+<A NAME="idx:listbrowsersendmembers:619"></A>`<B>list_browser<CODE>-&gt;</CODE>members</B>' 
+may be used to fill the browser with a collection of items. This method 
+expects a <A class="" href="summary.html#class:chain">chain</A> object. 
+The get method <A NAME="idx:directorygetfiles:620"></A>`<B>directory<CODE>&lt;-</CODE>files</B>' 
+provides a chain holding the names of all files in the directory.
+
+<P>Thus, the event-port `message' of the directory field must invoke the 
+send-port `members' of the file-list. The argument should be the result 
+of applying <B><CODE>&lt;-</CODE>files</B> on the <B><CODE>&lt;-</CODE>selection</B> 
+of the text-entry field. To specify this, the get-port `selection' is <EM>expanded</EM> 
+using the popup menu of this port. This operation adds (2) to the 
+diagram. The system infers this expansion is an instance of class <A class="" href="summary.html#class:directory">directory</A> 
+and shows the most useful get-ports in its get-port menu. The `files' 
+get-port is added to (2) and linked to the activation relation between
+<A NAME="idx:textitemsendmessage:621"></A>`<B>text_item<CODE>-&gt;</CODE>message</B>' 
+and <A NAME="idx:listbrowsersendmembers:622"></A>`<B>list_browser<CODE>-&gt;</CODE>members</B>'.
+
+<P>To <B>test</B> this part, put the Dialog editor in `run' mode, type 
+the name of a directory and <B>ENTER</B> to activate the event-port. If 
+anything goes wrong, the <B>Simulate</B> option of the various popup 
+menus in the diagram may be used to test small parts of the model. The <EM>Documentation</EM> 
+option of these menus may be used to view the relevant documentation 
+from the online manual tools.
+<LI><I>Specifying the initial directory as a parameter</I><BR>
+Initialisation of the dialog is expressed by adding one or more <EM>init-ports</EM> 
+to the diagram using the background menu. In this particular case, we 
+would like to be able to pass a directory to start as a parameter. 
+Hence, a <EM>parameter-port</EM> is added with the name `dir'. First, 
+the <B><CODE>-&gt;</CODE>selection</B> is set using the parameter and 
+then the item is
+<B><CODE>-&gt;</CODE>executed</B> to activate its <B><CODE>-&gt;</CODE>message</B>.
+
+<P>Code generation will append the directory parameter to the identifier 
+of the <A NAME="idx:dialog2:623"></A><A class="pred" href="sec-A.1.html#dialog/2">dialog/2</A> 
+clause. In this case, this clause will start as:
+
+<PRE class="code">
+dialog(viewer(Dir),
+       [ ...
+       ]).
+</PRE>
+
+<P>An instance is opened using the following calls:
+
+<PRE class="code">
+        ...,
+        make_dialog(D, viewer(StartDir)),
+        send(D, open),
+        ...
+</PRE>
+
+<P>
+<LI><I>Showing a file</I><BR>
+The first step is to link the event-port `select_message' of the 
+file_list to the file_contents (3) <A class="" href="summary.html#class:editor">editor</A> 
+object's send-port `load'. This method expects a file. Due to the type 
+conversion rules of class <A class="" href="summary.html#class:file">file</A>, 
+the name of a file suffices, but the names from file_list are relative 
+to the directory object (2). First, the
+<B><CODE>&lt;-</CODE>selection</B> of the file_list is expanded, 
+resulting in (5), a
+<A class="" href="summary.html#class:dict_item">dict_item</A> object. 
+The <A NAME="idx:dictitemgetkey:624"></A>`<B>dict_item<CODE>&lt;-</CODE>key</B>' 
+contains the name of the file.
+
+<P>The method <A NAME="idx:directorygetfile:625"></A>`<B>directory<CODE>&lt;-</CODE>file</B>' 
+can be used to create a <A class="" href="summary.html#class:file">file</A> 
+object from a name, that specifies an absolute path. A get-port `file' 
+is added to (2) and this get-port is linked to the activation relation. 
+This get operation requires the filename argument from (5).
+</UL>
+
+<P><A NAME="fig:viewer"></A>
+<CENTER>
+<IMG SRC="viewer.gif">
+</CENTER>
+<TABLE ALIGN=center WIDTH="75%"><TR><TD>
+<B>Figure 39 : </B>A file viewer</TABLE>
+
+<H3><A NAME="sec:A.2.3"><SPAN class="sec-nr">A.2.3</SPAN> <SPAN class="sec-title">Specifying 
+conditional actions</SPAN></A></H3>
+
+<P><A class="fig" href="sec-A.2.html#fig:diacond">Figure 40</A> shows an 
+example of a conditional activation relation. A conditional relation is 
+created making a connection from the fat dot in the middle of an 
+activation relation to a send-port. Success or failure of the send-port 
+will be interpreted as a condition on the activation relation.
+
+<P><A NAME="fig:diacond"></A>
+<CENTER>
+<IMG SRC="diacond.gif">
+</CENTER>
+<TABLE ALIGN=center WIDTH="75%"><TR><TD>
+<B>Figure 40 : </B>Conditional activation</TABLE>
+
+<H3><A NAME="sec:A.2.4"><SPAN class="sec-nr">A.2.4</SPAN> <SPAN class="sec-title">Load 
+and save formats</SPAN></A></H3>
+
+<P>The Dialog Editor provides two load/save formats. The <B>Load</B>,
+<B>Save</B>, <B>Save As</B> and <B>Save All</B> save and load the status 
+of the dialog editor as an <font size=-1>XPCE</font> object using <A NAME="idx:objectsendsaveinfile:626"></A>`<B>object<CODE>-&gt;</CODE>save_in_file</B>'. 
+This format loads quickly, but is rather vulnerable to future changes in 
+the Dialog Editor or any of the graphical classes.
+
+<P>Alternatively, the Dialog Editor can restore itself from the 
+identifier of a <A NAME="idx:dialog2:627"></A><A class="pred" href="sec-A.1.html#dialog/2">dialog/2</A> 
+clause generated by itself or (slightly) modified. In this case, the 
+layout of the behaviour model will be lost.
+
+<P>We advice to use Save/Load during application development. If, during 
+the maintenance phase of your product it is necessary to modify a 
+dialog, either simply edit the <A NAME="idx:dialog2:628"></A><A class="pred" href="sec-A.1.html#dialog/2">dialog/2</A> 
+clause, or load both the application and the dialog editor and use <B>Reload 
+From Id</B> to restart the Dialog Editor.
+
+<P></BODY></HTML>

@@ -1,0 +1,261 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+
+<HTML>
+<HEAD>
+<TITLE>Programming in XPCE/Prolog: Section 6.2</TITLE><LINK REL=home HREF="index.html">
+<LINK REL=contents HREF="Contents.html">
+<LINK REL=index HREF="DocIndex.html">
+<LINK REL=summary HREF="summary.html">
+<LINK REL=previous HREF="notprolog.html">
+<LINK REL=next HREF="udc.html">
+<STYLE type="text/css">
+/* Style sheet for SWI-Prolog latex2html
+*/
+
+dd.defbody
+{ margin-bottom: 1em;
+}
+
+dt.pubdef
+{ background-color: #c5e1ff;
+}
+
+pre.code
+{ margin-left: 1.5em;
+margin-right: 1.5em;
+border: 1px dotted;
+padding-top: 5px;
+padding-left: 5px;
+padding-bottom: 5px;
+background-color: #f8f8f8;
+}
+
+div.navigate
+{ text-align: center;
+background-color: #f0f0f0;
+border: 1px dotted;
+padding: 5px;
+}
+
+div.title
+{ text-align: center;
+padding-bottom: 1em;
+font-size: 200%;
+font-weight: bold;
+}
+
+div.author
+{ text-align: center;
+font-style: italic;
+}
+
+div.abstract
+{ margin-top: 2em;
+background-color: #f0f0f0;
+border: 1px dotted;
+padding: 5px;
+margin-left: 10%; margin-right:10%;
+}
+
+div.abstract-title
+{ text-align: center;
+padding: 5px;
+font-size: 120%;
+font-weight: bold;
+}
+
+div.toc-h1
+{ font-size: 200%;
+font-weight: bold;
+}
+
+div.toc-h2
+{ font-size: 120%;
+font-weight: bold;
+margin-left: 2em;
+}
+
+div.toc-h3
+{ font-size: 100%;
+font-weight: bold;
+margin-left: 4em;
+}
+
+div.toc-h4
+{ font-size: 100%;
+margin-left: 6em;
+}
+
+span.sec-nr
+{ 
+}
+
+span.sec-title
+{ 
+}
+
+span.pred-ext
+{ font-weight: bold;
+}
+
+/* Footnotes */
+
+sup.fn { color: blue; text-decoration: underline; }
+span.fn-text: { display: none; }
+sup.fn span {display: none;}
+sup:hover span 
+{ display: block !important;
+position: absolute; top: auto; left: auto; width: 80%;
+color: #000; background: white;
+border: 2px solid;
+padding: 5px; margin: 10px; z-index: 100;
+font-size: smaller;
+}
+</STYLE>
+</HEAD>
+<BODY BGCOLOR="white">
+<DIV class="navigate"><A class="nav" href="index.html"><IMG SRC="home.gif" BORDER=0 ALT="Home"></A>
+<A class="nav" href="Contents.html"><IMG SRC="index.gif" BORDER=0 ALT="Contents"></A>
+<A class="nav" href="DocIndex.html"><IMG SRC="yellow_pages.gif" BORDER=0 ALT="Index"></A>
+<A class="nav" href="summary.html"><IMG SRC="info.gif" BORDER=0 ALT="Summary"></A>
+<A class="nav" href="notprolog.html"><IMG SRC="prev.gif" BORDER=0 ALT="Previous"></A>
+<A class="nav" href="udc.html"><IMG SRC="next.gif" BORDER=0 ALT="Next"></A>
+</DIV>
+
+<H2><A NAME="sec:6.2"><SPAN class="sec-nr">6.2</SPAN> <SPAN class="sec-title">Dealing 
+with Prolog data</SPAN></A></H2>
+
+<A NAME="sec:prologdata"></A>
+
+<P>By nature, XPCE data is not Prolog data. This implies that anything 
+passed to a XPCE method must be converted from Prolog to something 
+suitable for XPCE . A natural mapping with fast and automatic 
+translation is defined for atoms, and numbers (both integers and 
+floating point). As we have seen in <A class="sec" href="starting.html">section 
+2</A>, compound terms are translated into instances using the 
+functor-name as class-name.
+
+<P>In XPCE 5.0 we added the possibility to embed arbitrary Prolog data 
+in an object. There are three cases where Prolog data is passed natively 
+embedded in a instance of the class <B>prolog_term</B>.
+
+<P>
+<UL>
+<LI><I> Explicit usage of <CODE>prolog(Data)</CODE></I><BR>
+By tagging a Prolog term using the functor prolog/1 ,
+<VAR>Data</VAR> is embedded in an instance of <B>prolog_term</B>. This 
+term is passed unaltered unless it is passed to a method that does not 
+accept the type <B><CODE>Any</CODE></B>, in which case translation to an 
+object is enforced.
+<LI><I> When passed to a method typed <B><CODE>Prolog</CODE></B></I><BR>
+Prolog defined methods and instance-variables (see <A class="sec" href="udc.html">section 
+7</A>) can define their type as <B><CODE>Prolog</CODE></B>. In this case 
+the data is packed in a <B>prolog_term</B> object.
+<LI><I> When passed to a method typed <B><CODE>unchecked</CODE></B></I><BR>
+A few methods in the system don't do type-checking themselves.
+</UL>
+
+<P>We will explain the complications using examples. First we create a <A class="" href="summary.html#class:code">code</A> 
+object:
+
+<PRE class="code">
+1 ?- new(@m, and(message(@prolog, write, @arg1),
+                 message(@prolog, nl))).
+</PRE>
+
+<P>This code object will print the provided argument in the Prolog 
+window followed by a newline:
+
+<PRE class="code">
+2 ?- send(@m, forward, hello).
+hello
+</PRE>
+
+<P>From this example one might expect that <font size=-1>XPCE</font> is 
+transparent to Prolog data. This is true for integers, floats and atoms 
+as these have a natural representation in both languages. However:
+
+<PRE class="code">
+3 ?- send(@m, forward, chain(hello)).
+@774516
+4 ?- send(@m, forward, 3 + 4).
+7
+5 ?- send(@m, forward, [hello, world]).
+@608322
+</PRE>
+
+<P>In all these examples the argument is a Prolog compound term which 
+---according to the definition of <A NAME="idx:send3:182"></A><SPAN class="pred-ext">send/3</SPAN>--- 
+is translated into a <font size=-1>XPCE</font> instance of the class of 
+the principal functor. In 3) this is an instance of class <A class="" href="summary.html#class:chain">chain</A>. 
+In 4) this is an instance of class
+<A class="" href="summary.html#class:+">+</A>. Class <A class="" href="summary.html#class:+">+</A> 
+however is a subclass of the <font size=-1>XPCE</font> class
+<A class="" href="summary.html#class:function">function</A> and <A NAME="idx:function:183">function</A> 
+objects are evaluated when given to a method that does not accept a 
+function-type argument. Example 5) illustrates that a list is converted 
+to a XPCE <A class="" href="summary.html#class:chain">chain</A>.
+
+<P>We can fix these problems using the prolog/1 functor. Example 7) 
+illustrates that also non-ground terms may be passed.
+
+<PRE class="code">
+6 ?- send(@m, forward, prolog(chain(hello))).
+chain(hello)
+7 ?- send(@m, forward, prolog(X)).
+_G335
+
+X = _G335
+</PRE>
+
+<P>Below is a another realistic example of this misconception.
+
+<PRE class="code">
+?- new(D, dialog('Bug')),
+   send(D, append, button(verbose,
+                          message(@prolog, assert,
+                                  verbose(on)))),
+   send(D, open).
+[PCE warning: new: Unknown class: verbose
+        in: new(verbose(on)) ]</PRE>
+
+<P>One correct solution for this task is below. An alternative is to 
+call a predicate <A NAME="idx:setverbose0:184"></A><SPAN class="pred-ext">set_verbose/0</SPAN> 
+that realises the assertion.
+
+<PRE class="code">
+make_verbose_dialog :-
+        new(D, dialog('Correct')),
+        send(D, append,
+             button(verbose,
+                    message(@prolog, assert,
+                            prolog(verbose(on))))),
+        send(D, open).</PRE>
+
+<H3><A NAME="sec:6.2.1"><SPAN class="sec-nr">6.2.1</SPAN> <SPAN class="sec-title">Life-time 
+of Prolog terms in XPCE</SPAN></A></H3>
+
+.
+
+<P><A NAME="idx:prologtermlifetime:185"></A>XPCE is connected to Prolog 
+through the foreign language interface. Its interface predicates are 
+passed Prolog terms by reference. Such a reference however is only valid 
+during the execution of the foreign procedure. So, why does the example 
+above work? As soon as the <A NAME="idx:send3:186"></A><SPAN class="pred-ext">send/3</SPAN> 
+in <A NAME="idx:makeverbosedialog0:187"></A><SPAN class="pred-ext">make_verbose_dialog/0</SPAN> 
+returns the term-reference holding the term <CODE>verbose(on)</CODE> is 
+no longer valid!
+
+<P>To solve this problem, <B>prolog_term</B> has two alternative 
+representations. It is created from a term-reference. After the 
+interface call (send/3 in this case) returns, it checks whether it has 
+created Prolog term objects. If it finds such an object that is not 
+referenced, it destroys the object. If it finds an object that is 
+referenced it records Prolog terms into the database and stores a 
+reference to the recorded database record.
+
+<P>Summarising, Prolog terms are copied as soon as the method to which 
+they are passed returns. Normally this is the case if a Prolog terms is 
+used to fill an instance-variable in XPCE .
+
+<P></BODY></HTML>

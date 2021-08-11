@@ -1,0 +1,109 @@
+# SWI-Prolog Versions
+
+SWI-Prolog is distributed as platform specific binary package for
+popular platforms (currently MS-Windows and MacOS X). For
+[Ubuntu](http://www.ubuntu.com) Linux we provide a
+[PPA](</build/PPA.html>).  For all Linux systems supporting snap we
+provide the snap package [`swi-prolog`](</build/snap.html>).
+
+The source package provides the GNU autoconf/make suite to configure and
+build fully automatically on many platforms. It builds on a wide range
+of 32 and 64 bit systems with an ANSI C compiler. The MS-Windows version
+is built using [[MinGW][http://mingw.org/]] as a cross-compiler under
+Linux. See the file README.mingw in the toplevel directory.
+
+SWI-Prolog *stable* releases have an *even* minor version number
+(8.0.x, 8.2.x, 8.4.x, ...) and *development* releases an *odd* minor
+version number (8.1.x, 8.3.x, ...). The development versions are
+released frequently, typically every couple of weeks). A new stable
+cycle is started when the development version has improved enough to
+make upgrading valuable for many users and large changes to the
+development versions have proven to be stable. As of 7.4.x we plan to
+provide regular stability and security fixes for the stable version and
+we will avoid incompatible changes.
+
+All sources are available on [GitHub](http://github.com/SWI-Prolog). The
+repository [swipl.git](http://github.com/SWI-Prolog/swipl.git) is used for
+the stable versions and the repository
+[swipl-devel.git](http://github.com/SWI-Prolog/swipl-devel.git) for the
+development series.  Releases are tagged *V*_|Major.Minor.Patch|_.
+
+  $ 8.3.0: Current development series.
+
+  $ 8.2.x: Brings advanced tabling support of XSB to SWI-Prolog: Well
+  Founded Semantics, restraints, incremental tabling and shared tabling.
+  It also makes rational numbers primary citizens. Using Google's
+  tcmalloc reduces the memory footprint drastically on some
+  multi-threaded workloads.
+
+  $ 8.0.x: Indexing on multiple arguments together, indexing inside compounds,
+  Mode-directed tabling, saved states using ZIP files, many deployment
+  enhancements. Moved build environment to [CMake](https://cmake.org) and
+  removed most of the build tool dependencies.  Builds documentation along
+  with the binary.
+
+  $ 7.6.x: Major release. Multi-argument indexing, better multi-threaded
+  performance, threaded global GC (atoms and clauses), mode-directed
+  tabling, restored same expand and directive semantics for initial load
+  and reloading files, cleaner initialization and command line handling.
+
+  $ 7.4.x: Major release.  More robust and better scalable support
+  for multi-core hardware, tabling, engines.  Many enhancements to
+  the RDF, HTTP and SSL libraries.  This is the first release licensed
+  under the _Simplified BSD_ (BSD-2) license.
+
+  $ 7.2.x: Major release, providing native key-value support by means
+  of _dicts_, native _strings_ using "hello world" syntax,
+  web-accessible Prolog engines (Pengines) and a high level SQL library
+  called CQL. See [extensions](</pldoc/man?section=extensions>).
+
+  $ 6.6.x: Mostly a stability release. 6.6.x comes with some
+  modification, notably to processing commandline arguments. It has been
+  stabilised rather quickly because the 7.1.x branch introduces many and
+  partially incompatible changes.
+
+  $ 6.4.x: RDF database version 3, quasi quotations, many enhancements to
+  HTTP and HTML environment, many enhancements to the development tools,
+  bug fixes.
+
+  $ 6.2.x: The _pack_ package installer, better =|:- include(file).|=
+  support, many enhancements to debugger and environment.  Windows version
+  built using MinGW (about 20% faster then MSVC2005 version).
+
+  $ 6.0.x: Stable branch created from 5.11.37.  Notably provides just-in-time
+  indexing on multiple arguments and supports the PDT Eclipse IDE out of the
+  box.
+
+  $ 5.11.x: External requirements have forced the release of 5.10.x
+  before the wishlist of new functionality was complete. Notably
+  generational GC remains on the wishlist.
+
+  $ 5.10.x: Stable branch with the achieved 5.9.x enhancements: better
+  scalability in terms of memory usage and concurrency, better
+  reliability and better compatibility.
+
+  $ 5.8.x: Stable branch providing performance enhancements from 5.7.x,
+  many extensions and enhancements to the libraries; notably the
+  web and semantic web libraries.
+
+  $ 5.6.x: Stable branch providing UNICODE handling, unbounded and
+  rational arithmetic, enhanced Leuven CHR system, clp(q,r), clp(fd),
+  much enhanced (semantic) web libraries, etc.
+
+  $ 5.4.x: Stable branch providing attributed variables, coroutining,
+  CHR (Constraint Handling Rules), infinite trees (cyclic terms) and
+  many more. This is the last version that runs on Windows 95/98/ME.
+  5.5.x and later require Windows NT, 2000 or XP.
+
+  $ 5.2.0: Stable version providing multi-threading.
+
+  $ 5.x.y: Moved to uniform LGPL license. Standard distribution contains
+  core packages: XPCE (graphics), TCP/IP, CGI, SGML/XML/HTML/RDF, HTTP,
+  ODBC and many more.
+
+  $ 3.4.5: Version prior to integration. Compliant to the ISO Prolog
+  standard (part1).
+
+  $ 3.2.9: Last pre-ISO version. As 3.3.0 is not fully upward compatible
+  this version will remain on this server for a while. It will not be
+  maintained (by us)

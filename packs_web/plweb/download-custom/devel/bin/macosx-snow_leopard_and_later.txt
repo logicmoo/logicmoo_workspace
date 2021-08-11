@@ -1,0 +1,6 @@
+Mac OS X disk image with [relocatable application
+bundle](https://en.wikipedia.org/wiki/Bundle_%28macOS%29#macOS_application_bundles).
+Needs [[xquartz][<xquartz:>]] (X11) installed for running the
+[[development tools][</IDE.html>]]. The bundle also provides the
+commandline tools in the =Contents/MacOS= directory.
+

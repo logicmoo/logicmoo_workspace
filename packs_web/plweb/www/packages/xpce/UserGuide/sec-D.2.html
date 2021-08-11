@@ -1,0 +1,326 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+
+<HTML>
+<HEAD>
+<TITLE>Programming in XPCE/Prolog: Section D.2</TITLE><LINK REL=home HREF="index.html">
+<LINK REL=contents HREF="Contents.html">
+<LINK REL=index HREF="DocIndex.html">
+<LINK REL=summary HREF="summary.html">
+<LINK REL=previous HREF="sec-D.1.html">
+<LINK REL=next HREF="memory.html">
+<STYLE type="text/css">
+/* Style sheet for SWI-Prolog latex2html
+*/
+
+dd.defbody
+{ margin-bottom: 1em;
+}
+
+dt.pubdef
+{ background-color: #c5e1ff;
+}
+
+pre.code
+{ margin-left: 1.5em;
+margin-right: 1.5em;
+border: 1px dotted;
+padding-top: 5px;
+padding-left: 5px;
+padding-bottom: 5px;
+background-color: #f8f8f8;
+}
+
+div.navigate
+{ text-align: center;
+background-color: #f0f0f0;
+border: 1px dotted;
+padding: 5px;
+}
+
+div.title
+{ text-align: center;
+padding-bottom: 1em;
+font-size: 200%;
+font-weight: bold;
+}
+
+div.author
+{ text-align: center;
+font-style: italic;
+}
+
+div.abstract
+{ margin-top: 2em;
+background-color: #f0f0f0;
+border: 1px dotted;
+padding: 5px;
+margin-left: 10%; margin-right:10%;
+}
+
+div.abstract-title
+{ text-align: center;
+padding: 5px;
+font-size: 120%;
+font-weight: bold;
+}
+
+div.toc-h1
+{ font-size: 200%;
+font-weight: bold;
+}
+
+div.toc-h2
+{ font-size: 120%;
+font-weight: bold;
+margin-left: 2em;
+}
+
+div.toc-h3
+{ font-size: 100%;
+font-weight: bold;
+margin-left: 4em;
+}
+
+div.toc-h4
+{ font-size: 100%;
+margin-left: 6em;
+}
+
+span.sec-nr
+{ 
+}
+
+span.sec-title
+{ 
+}
+
+span.pred-ext
+{ font-weight: bold;
+}
+
+/* Footnotes */
+
+sup.fn { color: blue; text-decoration: underline; }
+span.fn-text: { display: none; }
+sup.fn span {display: none;}
+sup:hover span 
+{ display: block !important;
+position: absolute; top: auto; left: auto; width: 80%;
+color: #000; background: white;
+border: 2px solid;
+padding: 5px; margin: 10px; z-index: 100;
+font-size: smaller;
+}
+</STYLE>
+</HEAD>
+<BODY BGCOLOR="white">
+<DIV class="navigate"><A class="nav" href="index.html"><IMG SRC="home.gif" BORDER=0 ALT="Home"></A>
+<A class="nav" href="Contents.html"><IMG SRC="index.gif" BORDER=0 ALT="Contents"></A>
+<A class="nav" href="DocIndex.html"><IMG SRC="yellow_pages.gif" BORDER=0 ALT="Index"></A>
+<A class="nav" href="summary.html"><IMG SRC="info.gif" BORDER=0 ALT="Summary"></A>
+<A class="nav" href="sec-D.1.html"><IMG SRC="prev.gif" BORDER=0 ALT="Previous"></A>
+<A class="nav" href="memory.html"><IMG SRC="next.gif" BORDER=0 ALT="Next"></A>
+</DIV>
+
+<H2><A NAME="sec:D.2"><SPAN class="sec-nr">D.2</SPAN> <SPAN class="sec-title">Additional 
+interface libraries</SPAN></A></H2>
+
+<P><A NAME="idx:autoloading:689"></A>This section describes Some of the 
+predicates available from the
+<font size=-1>XPCE</font>/Prolog library.
+
+<H3><A NAME="sec:D.2.1"><SPAN class="sec-nr">D.2.1</SPAN> <SPAN class="sec-title">Library 
+``pce_util''</SPAN></A></H3>
+
+<P>The predicates in this section used to be <font size=-1>XPCE</font> 
+principal predicates. Changes to <font size=-1>XPCE</font>, the 
+interface and our current understanding about programming the <font size=-1>XPCE</font>/Prolog 
+environment have made these predicates less important.
+
+<DL>
+<DT class="pubdef"><A NAME="send_list/2,3"><STRONG>send_list</STRONG>(<VAR>+Receiver, 
++Selector [, +Argument]</VAR>)</A></DT>
+<DD class="defbody">
+Invoke send-behaviour as <A NAME="idx:send212:690"></A><A class="pred" href="sec-7.1.html#send/[2-12]">send/[2-12]</A>. 
+Each of the arguments is either as accepted by <A NAME="idx:send212:691"></A><A class="pred" href="sec-7.1.html#send/[2-12]">send/[2-12]</A> 
+or a list of such arguments. The definition of <A NAME="idx:sendlist2:692"></A><SPAN class="pred-ext">send_list/2</SPAN> 
+is below.
+
+<PRE class="code">
+send_list([], _) :- !.
+send_list(_, []) :- !.
+send_list([Object|Objects], Selectors) :- !, 
+        send_list(Object, Selectors), 
+        send_list(Objects, Selectors).
+send_list(Object, [Selector|Selectors]) :- !, 
+        send_list(Object, Selector), 
+        send_list(Object, Selectors).
+send_list(Object, Selector) :-
+        send(Object, Selector).
+</PRE>
+
+<P>Note that, since <A NAME="idx:send2:693"></A><A class="pred" href="sec-D.1.html#send/2">send/2</A> 
+accepts <CODE>Selector(Arg...)</CODE> the following is now valid code:
+
+<PRE class="code">
+        ...,
+        send_list(Box,
+                  [ colour(red),
+                    fill_pattern(colour(greed))
+                  ]),
+</PRE>
+
+</DD>
+<DT class="pubdef"><A NAME="get_object/[3-13]"><STRONG>get_object</STRONG>(<VAR>+Receiver, 
++Selector, +Argument..., -Result</VAR>)</A></DT>
+<DD class="defbody">
+Equivalent to <A NAME="idx:get313:694"></A><A class="pred" href="sec-D.1.html#get/3">get/[3-13]</A>, 
+but instead of unifying a variable with a reference the variable is 
+unified with the term-description. The arguments are unified as in <A NAME="idx:get313:695"></A><A class="pred" href="sec-D.1.html#get/3">get/[3-13]</A>. 
+Normally only used from the Prolog top level for debugging purposes.</DD>
+<DT class="pubdef"><A NAME="chain_list/2"><STRONG>chain_list</STRONG>(<VAR>?Chain, 
+?List</VAR>)</A></DT>
+<DD class="defbody">
+Converts between a <font size=-1>XPCE</font> chain and a Prolog list. 
+This may be useful to exploit Prolog's list-processing primitives. Note 
+however that <font size=-1>XPCE</font> chains define various operations 
+that may be exploited to avoid the translation. Suppose `Pict' is a 
+picture and `Pos' is a point object. We want to determine the topmost 
+graphical object overlapping with `Pos'. The following two programs are 
+identical:
+
+<PRE class="code">
+topmost_graphical(Pict, Pos, Gr) :-
+        get(Pict, graphicals, Grs0),
+        chain_list(Grs0, Grs1),
+        topmost(Grs1, Pos, @nil, Gr),
+        Gr \== @nil.
+
+topmost([], _, Gr, Gr).
+topmost([H|T], Pos, _, Gr) :-
+        send(H, overlap, Pos), !,
+        topmost(T, Pos, H, Gr).
+topmost([_|T], Pos, Gr0, Gr) :-
+        topmost(T, Pos, Gr0, Gr).
+</PRE>
+
+<P>Or, using <font size=-1>XPCE</font>'s list processing:
+
+<PRE class="code">
+topmost_graphical(Dev, Pos, Gr) :-
+        get(Dev, graphicals, Grs),
+        get(Grs, find_all,
+            message(@arg1, overlap, Pos), O),
+        get(O, tail, Gr),
+        send(O, done).
+</PRE>
+
+<P>The second implementation is not only shorter, it also requires far 
+less data conversions between Prolog and <font size=-1>XPCE</font> and 
+is therefore much faster.</DD>
+<DT class="pubdef"><A NAME="get_chain/3"><STRONG>get_chain</STRONG>(<VAR>+Receiver, 
++Selector, -List</VAR>)</A></DT>
+<DD class="defbody">
+Utility predicate implemented as:
+
+<PRE class="code">
+get_chain(Receiver, Selector, List) :-
+        get(Receiver, Selector, Chain),
+        chain_list(Chain, List).
+</PRE>
+
+<P>See comments with <A NAME="idx:chainlist2:696"></A><A class="pred" href="sec-D.2.html#chain_list/2">chain_list/2</A>.
+</DD>
+</DL>
+
+<H3><A NAME="sec:D.2.2"><SPAN class="sec-nr">D.2.2</SPAN> <SPAN class="sec-title">Library 
+``pce_debug''</SPAN></A></H3>
+
+<P>The predicates in this section provide shorthands for common commands 
+for debugging <font size=-1>XPCE</font> programs. See <A class="sec" href="debugging.html">section 
+12</A> for more information on debugging <font size=-1>XPCE/P</font>rolog 
+programs.
+
+<DL>
+<DT class="pubdef"><A NAME="tracepce/1"><STRONG>tracepce</STRONG>(<VAR>+Class <TT>&lt;-|-&gt;|-</TT> 
+Selector</VAR>)</A></DT>
+<DD class="defbody">
+Find send- (<CODE>-&gt;</CODE>), get- (<CODE>&lt;-</CODE>) method or 
+variable (<CODE>-</CODE>) and cause invocations thereof to be printed on 
+the console.
+
+<P>Syntax note: (<CODE>-&gt;</CODE>) is a standard Prolog operator with
+<VAR>priority &gt; 1000</VAR>. Therefore many Prolog systems require 
+additional brackets:
+
+<PRE class="code">
+1 ?- tracepce((graphical -&gt;selected)).
+</PRE>
+
+<P>In SWI-Prolog this is not necessary. To be able to trace get-methods 
+with this predicate (<CODE>&lt;-</CODE>) must be declared as an infix 
+operator.</DD>
+<DT class="pubdef"><A NAME="notracepce/1"><STRONG>notracepce</STRONG>(<VAR>+Class <TT>&lt;-|-&gt;|-</TT> 
+Selector</VAR>)</A></DT>
+<DD class="defbody">
+Disables trace-point set with <A NAME="idx:tracepce1:697"></A><A class="pred" href="sec-D.2.html#tracepce/1">tracepce/1</A>.</DD>
+<DT class="pubdef"><A NAME="checkpce/0"><STRONG>checkpce</STRONG></A></DT>
+<DD class="defbody">
+Collect all global (named-) objects and run <A NAME="idx:objectsendcheck:698"></A>`<B>object<CODE>-&gt;</CODE>_check</B>' 
+on them. This performs various consistency checks on the objects and 
+prints diagnostic messages if something is wrong. <A NAME="idx:objectsendcheck:699"></A>`<B>object<CODE>-&gt;</CODE>_check</B>' 
+checks all objects it can (recursively) find through slot-references, 
+chains, vectors and hash-tables and deals properly with loops in the 
+data-structure.
+</DD>
+<DT class="pubdef"><A NAME="show_slots/1"><STRONG>show_slots</STRONG>(<VAR>+Reference</VAR>)</A></DT>
+<DD class="defbody">
+Prints the values of all instance variables of <VAR>Reference</VAR>:
+
+<PRE class="code">
+1 ?- new(@move_gesture, move_gesture).
+2 ?- show_slots(@move_gesture).
+@move_gesture/move_gesture
+        active                @on/bool
+        button                middle
+        modifier              @810918/modifier
+        condition             @nil/constant
+        status                inactive
+        cursor                @default/constant
+        offset                @548249/point
+</PRE>
+
+<P>A graphical tool for inspecting instance variables is described in
+<A class="sec" href="inspector.html">section 12.5</A>.
+</DD>
+</DL>
+
+<H3><A NAME="sec:D.2.3"><SPAN class="sec-nr">D.2.3</SPAN> <SPAN class="sec-title">Accessing 
+the <font size=-1>XPCE</font> manual</SPAN></A></H3>
+
+<A NAME="sec:manpce"></A>
+
+<DL>
+<DT class="pubdef"><A NAME="manpce/0"><STRONG>manpce</STRONG></A></DT>
+<DD class="defbody">
+Start the <font size=-1>XPCE</font> online manual tools. This opens a 
+small GUI console at the top-left of the screen, providing access to the 
+manual, demo programs and tools described in this manual. See <A class="sec" href="online.html">chapter 
+3</A>.</DD>
+<DT class="pubdef"><A NAME="manpce/1"><STRONG>manpce</STRONG>(<VAR>+Spec</VAR>)</A></DT>
+<DD class="defbody">
+As <A NAME="idx:manpce0:700"></A><A class="pred" href="sec-D.2.html#manpce/0">manpce/0</A>, 
+but immediately opens the the manual from <VAR>Spec</VAR>.
+<VAR>Spec</VAR> is either a class-name, opening the ClassBrowser, or a 
+term Class <TT>&lt;-|-&gt;|-</TT> Selector (see <A NAME="idx:tracepce1:701"></A><A class="pred" href="sec-D.2.html#tracepce/1">tracepce/1</A>) 
+to open the manual-card of the specified behaviour. Examples:
+
+<PRE class="code">
+1 ?- manpce(box).
+2 ?- manpce((view-&gt;caret)).
+</PRE>
+
+<P></DD>
+</DL>
+
+</BODY></HTML>

@@ -1,0 +1,158 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+
+<HTML>
+<HEAD>
+<TITLE>Programming in XPCE/Prolog: Section 12.4</TITLE><LINK REL=home HREF="index.html">
+<LINK REL=contents HREF="Contents.html">
+<LINK REL=index HREF="DocIndex.html">
+<LINK REL=summary HREF="summary.html">
+<LINK REL=previous HREF="sec-12.3.html">
+<LINK REL=next HREF="inspector.html">
+<STYLE type="text/css">
+/* Style sheet for SWI-Prolog latex2html
+*/
+
+dd.defbody
+{ margin-bottom: 1em;
+}
+
+dt.pubdef
+{ background-color: #c5e1ff;
+}
+
+pre.code
+{ margin-left: 1.5em;
+margin-right: 1.5em;
+border: 1px dotted;
+padding-top: 5px;
+padding-left: 5px;
+padding-bottom: 5px;
+background-color: #f8f8f8;
+}
+
+div.navigate
+{ text-align: center;
+background-color: #f0f0f0;
+border: 1px dotted;
+padding: 5px;
+}
+
+div.title
+{ text-align: center;
+padding-bottom: 1em;
+font-size: 200%;
+font-weight: bold;
+}
+
+div.author
+{ text-align: center;
+font-style: italic;
+}
+
+div.abstract
+{ margin-top: 2em;
+background-color: #f0f0f0;
+border: 1px dotted;
+padding: 5px;
+margin-left: 10%; margin-right:10%;
+}
+
+div.abstract-title
+{ text-align: center;
+padding: 5px;
+font-size: 120%;
+font-weight: bold;
+}
+
+div.toc-h1
+{ font-size: 200%;
+font-weight: bold;
+}
+
+div.toc-h2
+{ font-size: 120%;
+font-weight: bold;
+margin-left: 2em;
+}
+
+div.toc-h3
+{ font-size: 100%;
+font-weight: bold;
+margin-left: 4em;
+}
+
+div.toc-h4
+{ font-size: 100%;
+margin-left: 6em;
+}
+
+span.sec-nr
+{ 
+}
+
+span.sec-title
+{ 
+}
+
+span.pred-ext
+{ font-weight: bold;
+}
+
+/* Footnotes */
+
+sup.fn { color: blue; text-decoration: underline; }
+span.fn-text: { display: none; }
+sup.fn span {display: none;}
+sup:hover span 
+{ display: block !important;
+position: absolute; top: auto; left: auto; width: 80%;
+color: #000; background: white;
+border: 2px solid;
+padding: 5px; margin: 10px; z-index: 100;
+font-size: smaller;
+}
+</STYLE>
+</HEAD>
+<BODY BGCOLOR="white">
+<DIV class="navigate"><A class="nav" href="index.html"><IMG SRC="home.gif" BORDER=0 ALT="Home"></A>
+<A class="nav" href="Contents.html"><IMG SRC="index.gif" BORDER=0 ALT="Contents"></A>
+<A class="nav" href="DocIndex.html"><IMG SRC="yellow_pages.gif" BORDER=0 ALT="Index"></A>
+<A class="nav" href="summary.html"><IMG SRC="info.gif" BORDER=0 ALT="Summary"></A>
+<A class="nav" href="sec-12.3.html"><IMG SRC="prev.gif" BORDER=0 ALT="Previous"></A>
+<A class="nav" href="inspector.html"><IMG SRC="next.gif" BORDER=0 ALT="Next"></A>
+</DIV>
+
+<H2><A NAME="sec:12.4"><SPAN class="sec-nr">12.4</SPAN> <SPAN class="sec-title">Visual 
+hierarchy tool</SPAN></A></H2>
+
+<A NAME="sec:vishierarchy"></A>
+
+<P><A NAME="idx:hierarchyofUIcomponents:588"></A>The ``Visual 
+Hierarchy'' tool provides an overview of the consists-of relations 
+between the various UI components in a tool. It is part of the online 
+manual tools and may be started from the ``Tool'' entry in the main 
+dialog. <A class="fig" href="vishierarchy.html#fig:vishierarchy">Figure 
+31</A> shows this tool examining the structure of the ``PceDraw'' demo 
+program.
+
+<P><A NAME="fig:vishierarchy"></A>
+<CENTER>
+<IMG SRC="vishierarchy.gif">
+</CENTER>
+<TABLE ALIGN=center WIDTH="75%"><TR><TD>
+<B>Figure 31 : </B>Visual Hierarchy Tool showing ``PceDraw''</TABLE>
+
+<P>This tool is very useful to examine the structure of existing 
+applications (for example the various demo programs). It may also be 
+used to find object-references and to launch the inspector (<A class="sec" href="inspector.html">section 
+12.5</A>) on a particular object.
+
+<P>There are three ways to expand the tree of the visual hierarchy tool. 
+The first is to expand the tree from the initially displayed root 
+object. The second is to type the reference in the ``Visual'' text_item 
+and press <font size=-1>RETURN</font>. The most comfortable way is to 
+position the mouse in the target object and type <font size=-1>META-SHIFT-CONTROL-V</font>.<SUP class="fn">14<SPAN class="fn-text">To 
+remember this sequence: <B>V</B> for Visual and all defined modifiers to 
+avoid a conflict with application defined key-bindings.</SPAN></SUP>
+
+<P></BODY></HTML>

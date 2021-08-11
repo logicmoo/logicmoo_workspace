@@ -1,0 +1,328 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+
+<HTML>
+<HEAD>
+<TITLE>Programming in XPCE/Prolog: Section 2.2</TITLE><LINK REL=home HREF="index.html">
+<LINK REL=contents HREF="Contents.html">
+<LINK REL=index HREF="DocIndex.html">
+<LINK REL=summary HREF="summary.html">
+<LINK REL=previous HREF="sec-2.1.html">
+<LINK REL=next HREF="sec-2.3.html">
+<STYLE type="text/css">
+/* Style sheet for SWI-Prolog latex2html
+*/
+
+dd.defbody
+{ margin-bottom: 1em;
+}
+
+dt.pubdef
+{ background-color: #c5e1ff;
+}
+
+pre.code
+{ margin-left: 1.5em;
+margin-right: 1.5em;
+border: 1px dotted;
+padding-top: 5px;
+padding-left: 5px;
+padding-bottom: 5px;
+background-color: #f8f8f8;
+}
+
+div.navigate
+{ text-align: center;
+background-color: #f0f0f0;
+border: 1px dotted;
+padding: 5px;
+}
+
+div.title
+{ text-align: center;
+padding-bottom: 1em;
+font-size: 200%;
+font-weight: bold;
+}
+
+div.author
+{ text-align: center;
+font-style: italic;
+}
+
+div.abstract
+{ margin-top: 2em;
+background-color: #f0f0f0;
+border: 1px dotted;
+padding: 5px;
+margin-left: 10%; margin-right:10%;
+}
+
+div.abstract-title
+{ text-align: center;
+padding: 5px;
+font-size: 120%;
+font-weight: bold;
+}
+
+div.toc-h1
+{ font-size: 200%;
+font-weight: bold;
+}
+
+div.toc-h2
+{ font-size: 120%;
+font-weight: bold;
+margin-left: 2em;
+}
+
+div.toc-h3
+{ font-size: 100%;
+font-weight: bold;
+margin-left: 4em;
+}
+
+div.toc-h4
+{ font-size: 100%;
+margin-left: 6em;
+}
+
+span.sec-nr
+{ 
+}
+
+span.sec-title
+{ 
+}
+
+span.pred-ext
+{ font-weight: bold;
+}
+
+/* Footnotes */
+
+sup.fn { color: blue; text-decoration: underline; }
+span.fn-text: { display: none; }
+sup.fn span {display: none;}
+sup:hover span 
+{ display: block !important;
+position: absolute; top: auto; left: auto; width: 80%;
+color: #000; background: white;
+border: 2px solid;
+padding: 5px; margin: 10px; z-index: 100;
+font-size: smaller;
+}
+</STYLE>
+</HEAD>
+<BODY BGCOLOR="white">
+<DIV class="navigate"><A class="nav" href="index.html"><IMG SRC="home.gif" BORDER=0 ALT="Home"></A>
+<A class="nav" href="Contents.html"><IMG SRC="index.gif" BORDER=0 ALT="Contents"></A>
+<A class="nav" href="DocIndex.html"><IMG SRC="yellow_pages.gif" BORDER=0 ALT="Index"></A>
+<A class="nav" href="summary.html"><IMG SRC="info.gif" BORDER=0 ALT="Summary"></A>
+<A class="nav" href="sec-2.1.html"><IMG SRC="prev.gif" BORDER=0 ALT="Previous"></A>
+<A class="nav" href="sec-2.3.html"><IMG SRC="next.gif" BORDER=0 ALT="Next"></A>
+</DIV>
+
+<H2><A NAME="sec:2.2"><SPAN class="sec-nr">2.2</SPAN> <SPAN class="sec-title">Prolog 
+... and what?</SPAN></A></H2>
+
+<P>This section describes the four basic Prolog predicates used to 
+control <font size=-1>XPCE</font> from Prolog. These four predicates map 
+onto the basic functions of <font size=-1>XPCE</font>'s virtual machine: 
+creating, destroying, manipulating and querying <EM>objects</EM>, the 
+basic entities of
+<font size=-1>XPCE</font>.
+
+<P>For those not familiar with this jargon, an object is an entity with 
+a state and associated procedures, called <EM>methods</EM>. Objects may 
+represent just about anything. In <font size=-1>XPCE</font>'s world 
+there are objects representing a position in a two-dimensional plane as 
+well as an entire window on your screen. Each object belongs to a <EM>class</EM>. 
+The class defines the constituents of the state as well as the 
+procedures associated with the object. For example, a position in a 
+two-dimensional plane is represented by an object of class <A class="" href="summary.html#class:point">point</A>. 
+The state of a point object consists of its X- and Y-coordinates. A 
+point has methods to set the X- and Y-coordinate, mirror the point over 
+a reference point, compute its distance to another point, etc.
+
+<H3><A NAME="sec:2.2.1"><SPAN class="sec-nr">2.2.1</SPAN> <SPAN class="sec-title">Creating 
+objects: new</SPAN></A></H3>
+
+<A NAME="sec:new2"></A>
+
+<P><A NAME="idx:objectreference:17"></A><A NAME="idx:referenceobject:18"></A>The 
+predicate <A NAME="idx:new2:19"></A><A class="pred" href="sec-D.1.html#new/2">new/2</A> 
+(new(?Reference,&nbsp;+NewTerm)) <EM>creates</EM> an object in the <font size=-1>XPCE</font> 
+world and either assigns the given <EM>reference</EM> to it or unifies 
+the first argument with a <font size=-1>XPCE</font> generated reference. 
+An (object-) reference is a unique handle used in further communication 
+with the object. Below are some examples (<CODE>?-</CODE> is the Prolog 
+prompt):
+
+<PRE class="code">
+1 ?- new(P, point(10,20)).
+P = @772024
+
+2 ?- new(@demo, dialog('Demo Window')).
+</PRE>
+
+<P>The first example creates an instance of class point from the 
+arguments `10' and `20'. The reference is represented in Prolog using 
+the prefix operator @/1 . For <font size=-1>XPCE</font> generated 
+references the argument of this term is a <font size=-1>XPCE</font> 
+generated integer value. These integers are guaranteed to be unique. The 
+second example creates a dialog object. A dialog is a window that is 
+specialised for displaying controllers such as buttons, 
+text-entry-fields, etc. In this example we have specified the reference. 
+Such a reference must be of the form <A NAME="idx:Atom:20"></A><B>@Atom</B>. <font size=-1>XPCE</font> 
+will associate the created object with this reference.<SUP class="fn">1<SPAN class="fn-text">Normal 
+applications use almost exclusively <font size=-1>XPCE</font> generated 
+references. Many of the examples in this manual are typed from the 
+terminal and Prolog specified references are easier to type.</SPAN></SUP>
+
+<P>As illustrated by the examples above, the second argument to <A NAME="idx:new2:21"></A><A class="pred" href="sec-D.1.html#new/2">new/2</A> 
+is a term. The principal functor denotes the name of the class of which 
+an instance is created and the arguments are the initialisation 
+parameters. The complete transformation rules are given in
+<A class="sec" href="interface.html">appendix D</A>.
+
+<P>As stated before, an object has a state. At creation time, the 
+initial state is defined by the class from which the object is created 
+and the initialisation arguments. In our example, the point is assigned 
+an x-value of 10 and and y-value of 20. The dialog is assigned the label 
+`Demo Window'. A dialog window has many <EM>slots</EM><SUP class="fn">2<SPAN class="fn-text">The 
+attributes of an object state are called slots. In other languages they 
+may be called <EM>instance variables</EM> or fields.</SPAN></SUP> The 
+example defines the `label'. All the other slots are set to the default 
+value described in the class definition.
+
+<H3><A NAME="sec:2.2.2"><SPAN class="sec-nr">2.2.2</SPAN> <SPAN class="sec-title">Modifying 
+object state: send</SPAN></A></H3>
+
+<P>The state of an object may be manipulated using the predicate
+<A NAME="idx:send2:22"></A><A class="pred" href="sec-D.1.html#send/2">send/2</A> 
+(send(+Receiver, +Selector(...Args...))). The first argument of this 
+predicate is an object reference. The second is a term. The principal 
+functor of which is the name of the method to invoke (<EM>selector</EM>) 
+and the arguments are arguments to the operation.
+
+<PRE class="code">
+3 ?- send(@772024, x(15)).
+4 ?- send(@demo, append(text_item(name))).
+</PRE>
+
+<P>The first example invokes the <EM>method</EM> `x' of the point 
+object. It sets the instance variable x of the corresponding point 
+object to the argument value. The second example invokes the method 
+`append' of class dialog. This method appends a UI component to the 
+dialog window. The component is specified by the term `text_item(name)', 
+which is converted into an object just as the second argument of <A NAME="idx:new2:23"></A><A class="pred" href="sec-D.1.html#new/2">new/2</A>. 
+The query below opens the dialog window.
+
+<PRE class="code">
+5 ?- send(@demo, open).
+</PRE>
+
+<P>If everything is ok, a window as shown in <A class="fig" href="sec-2.2.html#fig:dialog">figure 
+1</A> appears on your screen. The border (in the figure this is the 
+title-bar displayed above the window) is determined by the window 
+manager you are using. It should look the same as any other window on 
+your terminal. If an error of any kind appears, please refer to
+<A class="sec" href="trouble.html">appendix F</A>.
+
+<P><A NAME="fig:dialog"></A>
+<CENTER>
+<IMG SRC="dialog.gif">
+</CENTER>
+<TABLE ALIGN=center WIDTH="75%"><TR><TD>
+<B>Figure 1 : </B>Example Dialog Window</TABLE>
+
+<H3><A NAME="sec:2.2.3"><SPAN class="sec-nr">2.2.3</SPAN> <SPAN class="sec-title">Querying 
+objects: get</SPAN></A></H3>
+
+<P>The next fundamental interface predicate is <A NAME="idx:get3:24"></A><A class="pred" href="sec-D.1.html#get/3">get/3</A>. 
+It is used to obtain information on the state of objects. The first two 
+arguments are the same as for <A NAME="idx:send2:25"></A><A class="pred" href="sec-D.1.html#send/2">send/2</A>. 
+The last argument is unified with the return-value. The return value is 
+normally an object reference, except for <font size=-1>XPCE</font>
+<A class="" href="summary.html#class:name">name</A> objects, that are 
+returned as a Prolog <A NAME="idx:atom:26">atom</A>,
+<font size=-1>XPCE</font> integers (<A NAME="idx:int:27">int</A>) that 
+are translated to Prolog integers and <font size=-1>XPCE</font> <A class="" href="summary.html#class:real">real</A> 
+objects, that are translated to Prolog
+<A NAME="idx:floatingpoint:28">floating point</A> numbers. Examples:
+
+<PRE class="code">
+6 ?- get(@772024, y, Y).
+Y = 20
+7 ?- get(@demo, display, D).
+D = @display/display
+8 ?- get(@772024, distance(point(100,100)), Distance).
+Distance = 117
+</PRE>
+
+<P>The first example just obtains the value of the `y' instance 
+variable. The second example returns the display object on which <A NAME="idx:demo:29"></A><B>@demo</B> 
+is displayed. This is the reference to an object of class display that 
+represents your screen.<SUP class="fn">3<SPAN class="fn-text">Prolog 
+would normally print `<A NAME="idx:display:30"></A><B>@display</B>'. The <CODE>library(pce_portray)</CODE> 
+defines a clause for the Prolog predicate <A NAME="idx:portray1:31"></A><SPAN class="pred-ext">portray/1</SPAN> 
+that prints object references as `<A NAME="idx:Reference:32"></A><B>@Reference</B>/Class'. 
+This library is used throughout all the examples of this manual.</SPAN></SUP> 
+The last example again shows the creation of objects from the arguments 
+to <A NAME="idx:send2:33"></A><A class="pred" href="sec-D.1.html#send/2">send/2</A> 
+and <A NAME="idx:get3:34"></A><A class="pred" href="sec-D.1.html#get/3">get/3</A> 
+and also shows that the returned value does not need to be a direct 
+instance variable of the object. The return value is an integer 
+representing the (rounded) distance between <A NAME="idx:772024:35"></A><B>@772024</B> 
+and point(100,100).
+
+<P>The second example illustrates that <A NAME="idx:get3:36"></A><A class="pred" href="sec-D.1.html#get/3">get/3</A> 
+returns objects by their reference. This reference may be used for 
+further queries. The example below computes the width and height of your 
+screen.
+
+<PRE class="code">
+9 ?- get(@display, size, Size),
+     get(Size, width, W),
+     get(Size, height, H).
+Size = @4653322, W = 1152, H = 900
+</PRE>
+
+<P>As a final example, type something in the text entry field and try 
+the following:
+
+<PRE class="code">
+10 ?- get(@demo, member(name), TextItem),
+      get(TextItem, selection, Text).
+TextItem = @573481/text_item, Text = hello
+</PRE>
+
+<P><A NAME="idx:graphicalfinding:37"></A><A NAME="idx:findinggraphical:38"></A>The 
+first get operation requests a member of the dialog with the given name 
+(`name'). This will return the object reference of the text_item object 
+appended to the dialog. The next request obtains the `selection' of the 
+text_item. This is the text typed in by the user.
+
+<H3><A NAME="sec:2.2.4"><SPAN class="sec-nr">2.2.4</SPAN> <SPAN class="sec-title">Removing 
+objects: free</SPAN></A></H3>
+
+<P><A NAME="idx:removeobjects:39"></A><A NAME="idx:objectremove:40"></A>The 
+final principal interface predicate is <A NAME="idx:free1:41"></A><A class="pred" href="sec-D.1.html#free/1">free/1</A>. 
+Its argument is an object reference as returned by <A NAME="idx:new2:42"></A><A class="pred" href="sec-D.1.html#new/2">new/2</A> 
+or <A NAME="idx:get3:43"></A><A class="pred" href="sec-D.1.html#get/3">get/3</A>. 
+It will remove the object from the <font size=-1>XPCE</font> object 
+base. Examples:
+
+<PRE class="code">
+12 ?- free(@772024).
+13 ?- free(@demo).
+14 ?- free(@display).
+No
+</PRE>
+
+<P>The second example not only removed the dialog window object from the <font size=-1>XPCE</font> 
+object base, it also removes the associated window from the screen. The 
+last example illustrates that certain system objects have been protected 
+against freeing.
+
+<P></BODY></HTML>

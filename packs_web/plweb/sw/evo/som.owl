@@ -1,0 +1,716 @@
+<?xml version="1.0"?>
+
+
+<!DOCTYPE rdf:RDF [
+    <!ENTITY doap "http://usefulinc.com/ns/doap#" >
+    <!ENTITY owl "http://www.w3.org/2002/07/owl#" >
+    <!ENTITY dc "http://purl.org/dc/elements/1.1/" >
+    <!ENTITY xsd "http://www.w3.org/2001/XMLSchema#" >
+    <!ENTITY owl2xml "http://www.w3.org/2006/12/owl2-xml#" >
+    <!ENTITY rdfs "http://www.w3.org/2000/01/rdf-schema#" >
+    <!ENTITY rdf "http://www.w3.org/1999/02/22-rdf-syntax-ns#" >
+
+]>
+
+
+<rdf:RDF xmlns="http://www.ifi.unizh.ch/ddis/evoont/2008/11/som"
+     xml:base="http://www.ifi.unizh.ch/ddis/evoont/2008/11/som#"
+     xmlns:dc="http://purl.org/dc/elements/1.1/"
+     xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#"
+     xmlns:owl2xml="http://www.w3.org/2006/12/owl2-xml#"
+     xmlns:owl="http://www.w3.org/2002/07/owl#"
+     xmlns:xsd="http://www.w3.org/2001/XMLSchema#"
+     xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+     xmlns:doap="http://usefulinc.com/ns/doap#">
+    <owl:Ontology rdf:about="">
+        <rdfs:comment rdf:datatype="&xsd;string"
+            >Ontology used to represent oo-code</rdfs:comment>
+        <dc:contributor>Jonas Tappolet</dc:contributor>
+        <dc:rights
+            >licensed under a Creative Commons Attribution 2.5 Switzerland License, see http:www.ifi.uzh.ch/ddis/evo</dc:rights>
+        <owl:versionInfo>4.1</owl:versionInfo>
+        <dc:creator
+            >Dynamic and Distributed Systems Group, University of Zurich, http:www.ifi.uzh.ch/ddis</dc:creator>
+        <owl:imports rdf:resource="http://www.ifi.unizh.ch/ddis/evoont/2008/11/vom"/>
+    </owl:Ontology>
+    
+
+
+    <!-- 
+    ///////////////////////////////////////////////////////////////////////////////////////
+    //
+    // Annotation properties
+    //
+    ///////////////////////////////////////////////////////////////////////////////////////
+     -->
+
+    <owl:AnnotationProperty rdf:about="&dc;contributor"/>
+    <owl:AnnotationProperty rdf:about="&dc;creator"/>
+    <owl:AnnotationProperty rdf:about="&dc;rights"/>
+    
+
+
+    <!-- 
+    ///////////////////////////////////////////////////////////////////////////////////////
+    //
+    // Object Properties
+    //
+    ///////////////////////////////////////////////////////////////////////////////////////
+     -->
+
+    
+
+
+    <!-- http://www.ifi.unizh.ch/ddis/evoont/2008/02/som#accesses -->
+
+    <owl:ObjectProperty rdf:about="accesses">
+        <rdfs:comment xml:lang="en">variable access</rdfs:comment>
+        <rdfs:domain rdf:resource="BehaviouralEntity"/>
+        <rdfs:range rdf:resource="StructuralEntity"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://www.ifi.unizh.ch/ddis/evoont/2008/02/som#hasAnonymousClass -->
+
+    <owl:ObjectProperty rdf:about="hasAnonymousClass">
+        <rdfs:comment xml:lang="en"
+            >relates a BehavouralEntity with its defined annonymous classes</rdfs:comment>
+        <rdfs:domain rdf:resource="BehaviouralEntity"/>
+        <rdfs:range rdf:resource="Class"/>
+        <owl:inverseOf rdf:resource="isAnonymousClassOf"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://www.ifi.unizh.ch/ddis/evoont/2008/02/som#hasAttribute -->
+
+    <owl:ObjectProperty rdf:about="hasAttribute">
+        <rdfs:comment xml:lang="en"
+            >relation between a class and its attribute variables</rdfs:comment>
+        <rdfs:range rdf:resource="Attribute"/>
+        <rdfs:domain rdf:resource="Class"/>
+        <owl:inverseOf rdf:resource="isAttributeOf"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://www.ifi.unizh.ch/ddis/evoont/2008/02/som#hasDeclaredClass -->
+
+    <owl:ObjectProperty rdf:about="hasDeclaredClass">
+        <rdf:type rdf:resource="&owl;FunctionalProperty"/>
+        <rdfs:comment xml:lang="en"
+            >connection between a structural entity and its defining class</rdfs:comment>
+        <rdfs:range rdf:resource="Class"/>
+        <rdfs:domain rdf:resource="StructuralEntity"/>
+        <owl:inverseOf rdf:resource="isDeclaredClassOf"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://www.ifi.unizh.ch/ddis/evoont/2008/02/som#hasDeclaredReturnClass -->
+
+    <owl:ObjectProperty rdf:about="hasDeclaredReturnClass">
+        <rdf:type rdf:resource="&owl;FunctionalProperty"/>
+        <rdfs:comment xml:lang="en"
+            >A BehavouralEntity might declare a return value which is a Class</rdfs:comment>
+        <rdfs:domain rdf:resource="BehaviouralEntity"/>
+        <rdfs:range rdf:resource="Class"/>
+        <owl:inverseOf rdf:resource="isDeclaredReturnClassOf"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://www.ifi.unizh.ch/ddis/evoont/2008/02/som#hasFormalParameter -->
+
+    <owl:ObjectProperty rdf:about="hasFormalParameter">
+        <rdfs:comment xml:lang="en"
+            >Connection between a BehavouralEntity and its parameter(s)</rdfs:comment>
+        <rdfs:domain rdf:resource="BehaviouralEntity"/>
+        <rdfs:range rdf:resource="FormalParameter"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://www.ifi.unizh.ch/ddis/evoont/2008/02/som#hasLocalVariable -->
+
+    <owl:ObjectProperty rdf:about="hasLocalVariable">
+        <rdfs:comment xml:lang="en"
+            >The connection between a BehaviouralEntity and its defined variables</rdfs:comment>
+        <rdfs:domain rdf:resource="BehaviouralEntity"/>
+        <rdfs:range rdf:resource="LocalVariable"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://www.ifi.unizh.ch/ddis/evoont/2008/02/som#hasMethod -->
+
+    <owl:ObjectProperty rdf:about="hasMethod">
+        <rdfs:comment xml:lang="en"
+            >Connection between a Class and its defined BehaviouralEntities</rdfs:comment>
+        <rdfs:range rdf:resource="BehaviouralEntity"/>
+        <rdfs:domain rdf:resource="Class"/>
+        <owl:inverseOf rdf:resource="isMethodOf"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://www.ifi.unizh.ch/ddis/evoont/2008/02/som#hasSubclass -->
+
+    <owl:ObjectProperty rdf:about="hasSubclass">
+        <rdf:type rdf:resource="&owl;TransitiveProperty"/>
+        <rdfs:comment xml:lang="en"
+            >Subclass inheritance relation</rdfs:comment>
+        <rdfs:range rdf:resource="Class"/>
+        <rdfs:domain rdf:resource="Class"/>
+        <owl:inverseOf rdf:resource="isSubclassOf"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://www.ifi.unizh.ch/ddis/evoont/2008/02/som#hasSubspace -->
+
+    <owl:ObjectProperty rdf:about="hasSubspace">
+        <rdf:type rdf:resource="&owl;TransitiveProperty"/>
+        <rdfs:comment xml:lang="en"
+            >denotes that a Namespace (subject) is parent of another Namespace (object)</rdfs:comment>
+        <rdfs:range rdf:resource="Namespace"/>
+        <rdfs:domain rdf:resource="Namespace"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://www.ifi.unizh.ch/ddis/evoont/2008/02/som#hasSubtype -->
+
+    <owl:ObjectProperty rdf:about="hasSubtype">
+        <rdf:type rdf:resource="&owl;TransitiveProperty"/>
+        <rdfs:comment xml:lang="en"
+            >Subtypes are interfaces implementations of a class</rdfs:comment>
+        <rdfs:range rdf:resource="Class"/>
+        <rdfs:domain rdf:resource="Class"/>
+        <owl:inverseOf rdf:resource="isSubtypeOf"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://www.ifi.unizh.ch/ddis/evoont/2008/02/som#invokes -->
+
+    <owl:ObjectProperty rdf:about="invokes">
+        <rdfs:comment xml:lang="en"
+            >The invokation of Methods or Functions (subject: caller, object: callee)</rdfs:comment>
+        <rdfs:range rdf:resource="BehaviouralEntity"/>
+        <rdfs:domain rdf:resource="BehaviouralEntity"/>
+        <owl:inverseOf rdf:resource="isInvokedBy"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://www.ifi.unizh.ch/ddis/evoont/2008/02/som#isAccessedBy -->
+
+    <owl:ObjectProperty rdf:about="isAccessedBy">
+        <rdfs:comment xml:lang="en"
+            >inverse of accesses</rdfs:comment>
+        <rdfs:range rdf:resource="BehaviouralEntity"/>
+        <rdfs:domain rdf:resource="StructuralEntity"/>
+        <owl:inverseOf rdf:resource="accesses"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://www.ifi.unizh.ch/ddis/evoont/2008/02/som#isAnonymousClassOf -->
+
+    <owl:ObjectProperty rdf:about="isAnonymousClassOf">
+        <rdfs:comment xml:lang="en"
+            >inverse of hasAnonymousClass</rdfs:comment>
+        <rdfs:range rdf:resource="BehaviouralEntity"/>
+        <rdfs:domain rdf:resource="Class"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://www.ifi.unizh.ch/ddis/evoont/2008/02/som#isAttributeOf -->
+
+    <owl:ObjectProperty rdf:about="isAttributeOf">
+        <rdfs:comment xml:lang="en"
+            >inverse of hasAttribute</rdfs:comment>
+        <rdfs:domain rdf:resource="Attribute"/>
+        <rdfs:range rdf:resource="Class"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://www.ifi.unizh.ch/ddis/evoont/2008/02/som#isDeclaredClassOf -->
+
+    <owl:ObjectProperty rdf:about="isDeclaredClassOf">
+        <rdf:type rdf:resource="&owl;InverseFunctionalProperty"/>
+        <rdfs:comment xml:lang="en"
+            >inverse of hasDeclaredClass</rdfs:comment>
+        <rdfs:domain rdf:resource="Class"/>
+        <rdfs:range rdf:resource="StructuralEntity"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://www.ifi.unizh.ch/ddis/evoont/2008/02/som#isDeclaredReturnClassOf -->
+
+    <owl:ObjectProperty rdf:about="isDeclaredReturnClassOf">
+        <rdfs:comment xml:lang="en"
+            >inverse of hasDeclaredReturnClass</rdfs:comment>
+        <rdfs:domain rdf:resource="Class"/>
+        <rdfs:range rdf:resource="Method"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://www.ifi.unizh.ch/ddis/evoont/2008/02/som#isFormalParameterOf -->
+
+    <owl:ObjectProperty rdf:about="isFormalParameterOf">
+        <rdfs:comment xml:lang="en"
+            >inverse of hasFormalParameter</rdfs:comment>
+        <rdfs:range rdf:resource="BehaviouralEntity"/>
+        <rdfs:domain rdf:resource="FormalParameter"/>
+        <owl:inverseOf rdf:resource="hasFormalParameter"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://www.ifi.unizh.ch/ddis/evoont/2008/02/som#isInvokedBy -->
+
+    <owl:ObjectProperty rdf:about="isInvokedBy">
+        <rdfs:comment xml:lang="en"
+            >inverse of invokes</rdfs:comment>
+        <rdfs:range rdf:resource="BehaviouralEntity"/>
+        <rdfs:domain rdf:resource="BehaviouralEntity"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://www.ifi.unizh.ch/ddis/evoont/2008/02/som#isLocalVariableOf -->
+
+    <owl:ObjectProperty rdf:about="isLocalVariableOf">
+        <rdfs:comment xml:lang="en"
+            >inverse of hasLocalVariable</rdfs:comment>
+        <rdfs:range rdf:resource="BehaviouralEntity"/>
+        <rdfs:domain rdf:resource="LocalVariable"/>
+        <owl:inverseOf rdf:resource="hasLocalVariable"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://www.ifi.unizh.ch/ddis/evoont/2008/02/som#isMethodOf -->
+
+    <owl:ObjectProperty rdf:about="isMethodOf">
+        <rdfs:comment xml:lang="en"
+            >inverse of hasMethod</rdfs:comment>
+        <rdfs:domain rdf:resource="BehaviouralEntity"/>
+        <rdfs:range rdf:resource="Class"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://www.ifi.unizh.ch/ddis/evoont/2008/02/som#isSubclassOf -->
+
+    <owl:ObjectProperty rdf:about="isSubclassOf">
+        <rdf:type rdf:resource="&owl;TransitiveProperty"/>
+        <rdfs:comment xml:lang="en"
+            >inverse of hasSubclass</rdfs:comment>
+        <rdfs:domain rdf:resource="Class"/>
+        <rdfs:range rdf:resource="Class"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://www.ifi.unizh.ch/ddis/evoont/2008/02/som#isSubspaceOf -->
+
+    <owl:ObjectProperty rdf:about="isSubspaceOf">
+        <rdf:type rdf:resource="&owl;TransitiveProperty"/>
+        <rdfs:comment xml:lang="en"
+            >denotes that a Namespace (subject) is a child of another Namespace (object)</rdfs:comment>
+        <rdfs:range rdf:resource="Namespace"/>
+        <rdfs:domain rdf:resource="Namespace"/>
+        <owl:inverseOf rdf:resource="hasSubspace"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://www.ifi.unizh.ch/ddis/evoont/2008/02/som#isSubtypeOf -->
+
+    <owl:ObjectProperty rdf:about="isSubtypeOf">
+        <rdf:type rdf:resource="&owl;TransitiveProperty"/>
+        <rdfs:comment xml:lang="en"
+            >inverse of hasSubtype</rdfs:comment>
+        <rdfs:domain rdf:resource="Class"/>
+        <rdfs:range rdf:resource="Class"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://www.ifi.unizh.ch/ddis/evoont/2008/10/som#defines -->
+
+    <owl:ObjectProperty rdf:about="defines">
+        <rdfs:comment xml:lang="en"
+            >Denotes which version of a path (in a version control system) this class is defined by.</rdfs:comment>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://www.ifi.unizh.ch/ddis/evoont/2008/10/som#isDefinedIn -->
+
+    <owl:ObjectProperty rdf:about="isDefinedIn">
+        <rdfs:comment xml:lang="en"
+            >Links a Class with a Version of a path in a version control system.</rdfs:comment>
+        <rdfs:range rdf:resource="&doap;Version"/>
+        <rdfs:domain rdf:resource="Class"/>
+        <owl:inverseOf rdf:resource="defines"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- 
+    ///////////////////////////////////////////////////////////////////////////////////////
+    //
+    // Data properties
+    //
+    ///////////////////////////////////////////////////////////////////////////////////////
+     -->
+
+    
+
+
+    <!-- http://www.ifi.unizh.ch/ddis/evoont/2008/02/som#accessControlQualifier -->
+
+    <owl:DatatypeProperty rdf:about="accessControlQualifier">
+        <rdf:type rdf:resource="&owl;FunctionalProperty"/>
+        <rdfs:comment xml:lang="en"
+            >Is a string with a language dependent interpretation, that defines who is allowed to access it (for instance, &#39;public&#39;, &#39;private&#39;&#8230;).</rdfs:comment>
+        <rdfs:domain rdf:resource="Attribute"/>
+        <rdfs:domain rdf:resource="Class"/>
+        <rdfs:domain rdf:resource="Function"/>
+        <rdfs:domain rdf:resource="GlobalVariable"/>
+        <rdfs:domain rdf:resource="Method"/>
+        <rdfs:range rdf:resource="&xsd;string"/>
+    </owl:DatatypeProperty>
+    
+
+
+    <!-- http://www.ifi.unizh.ch/ddis/evoont/2008/02/som#comments -->
+
+    <owl:DatatypeProperty rdf:about="comments">
+        <rdfs:comment xml:lang="en"
+            >Entities and associations may own a number of comments, where developers and tools
+store textual information about the object.</rdfs:comment>
+        <rdfs:domain rdf:resource="Entity"/>
+        <rdfs:range rdf:resource="&xsd;string"/>
+    </owl:DatatypeProperty>
+    
+
+
+    <!-- http://www.ifi.unizh.ch/ddis/evoont/2008/02/som#hasClassScope -->
+
+    <owl:DatatypeProperty rdf:about="hasClassScope">
+        <rdf:type rdf:resource="&owl;FunctionalProperty"/>
+        <rdfs:comment
+            >denotes wheter a BehaviouralEntity is &#39;public&#39; or &#39;private&#39;</rdfs:comment>
+        <rdfs:domain rdf:resource="BehaviouralEntity"/>
+        <rdfs:range rdf:resource="&xsd;boolean"/>
+    </owl:DatatypeProperty>
+    
+
+
+    <!-- http://www.ifi.unizh.ch/ddis/evoont/2008/02/som#isAbstract -->
+
+    <owl:DatatypeProperty rdf:about="isAbstract">
+        <rdf:type rdf:resource="&owl;FunctionalProperty"/>
+        <rdfs:comment xml:lang="en"
+            >Is a predicate telling whether the class is declared abstract. Abstract classes are important in OO modelling, but how they are recognised in source code is a language dependent issue.</rdfs:comment>
+        <rdfs:domain rdf:resource="Entity"/>
+        <rdfs:range rdf:resource="&xsd;boolean"/>
+    </owl:DatatypeProperty>
+    
+
+
+    <!-- http://www.ifi.unizh.ch/ddis/evoont/2008/02/som#isConstructor -->
+
+    <owl:DatatypeProperty rdf:about="isConstructor">
+        <rdf:type rdf:resource="&owl;FunctionalProperty"/>
+        <rdfs:comment xml:lang="en"
+            >Is a predicate telling whether the method is a constructor. A constructor is a method that creates an (initialised) instance of the class it is defined on. Thus a method that creates an instance of another class is not considered a constructor. How constructor methods are recognised in source code is a language dependent issue.</rdfs:comment>
+        <rdfs:domain rdf:resource="Method"/>
+        <rdfs:range rdf:resource="&xsd;boolean"/>
+    </owl:DatatypeProperty>
+    
+
+
+    <!-- http://www.ifi.unizh.ch/ddis/evoont/2008/02/som#isFinal -->
+
+    <owl:DatatypeProperty rdf:about="isFinal">
+        <rdf:type rdf:resource="&owl;FunctionalProperty"/>
+        <rdfs:comment
+            >Denotes wheter the entity has set a &#39;final&#39; flag.</rdfs:comment>
+        <rdfs:domain rdf:resource="Entity"/>
+        <rdfs:range rdf:resource="&xsd;boolean"/>
+    </owl:DatatypeProperty>
+    
+
+
+    <!-- http://www.ifi.unizh.ch/ddis/evoont/2008/02/som#isInRange -->
+
+    <owl:DatatypeProperty rdf:about="isInRange">
+        <rdf:type rdf:resource="&owl;FunctionalProperty"/>
+        <rdfs:range rdf:resource="&xsd;boolean"/>
+    </owl:DatatypeProperty>
+    
+
+
+    <!-- http://www.ifi.unizh.ch/ddis/evoont/2008/02/som#isInit -->
+
+    <owl:DatatypeProperty rdf:about="isInit">
+        <rdf:type rdf:resource="&owl;FunctionalProperty"/>
+        <rdfs:comment
+            >denotes wheter a BehaviouralEntity is a program starting point, e.g., main() method</rdfs:comment>
+        <rdfs:domain rdf:resource="BehaviouralEntity"/>
+        <rdfs:range rdf:resource="&xsd;boolean"/>
+    </owl:DatatypeProperty>
+    
+
+
+    <!-- http://www.ifi.unizh.ch/ddis/evoont/2008/02/som#isInterface -->
+
+    <owl:DatatypeProperty rdf:about="isInterface">
+        <rdf:type rdf:resource="&owl;FunctionalProperty"/>
+        <rdfs:comment
+            >denotes wheter a class is a interface.</rdfs:comment>
+        <rdfs:domain rdf:resource="Entity"/>
+        <rdfs:range rdf:resource="&xsd;boolean"/>
+    </owl:DatatypeProperty>
+    
+
+
+    <!-- http://www.ifi.unizh.ch/ddis/evoont/2008/02/som#isStatic -->
+
+    <owl:DatatypeProperty rdf:about="isStatic">
+        <rdf:type rdf:resource="&owl;FunctionalProperty"/>
+        <rdfs:comment
+            >denotes wheter an entity has set a &#39;static&#39; flag</rdfs:comment>
+        <rdfs:domain rdf:resource="Entity"/>
+        <rdfs:range rdf:resource="&xsd;boolean"/>
+    </owl:DatatypeProperty>
+    
+
+
+    <!-- http://www.ifi.unizh.ch/ddis/evoont/2008/02/som#name -->
+
+    <owl:DatatypeProperty rdf:about="name">
+        <rdf:type rdf:resource="&owl;FunctionalProperty"/>
+        <rdfs:comment
+            >the name of the entity</rdfs:comment>
+        <rdfs:domain rdf:resource="Entity"/>
+        <rdfs:range rdf:resource="&xsd;string"/>
+    </owl:DatatypeProperty>
+    
+
+
+    <!-- http://www.ifi.unizh.ch/ddis/evoont/2008/02/som#position -->
+
+    <owl:DatatypeProperty rdf:about="position">
+        <rdf:type rdf:resource="&owl;FunctionalProperty"/>
+        <rdfs:comment xml:lang="en"
+            >The position of the parameter in the list of parameters.</rdfs:comment>
+        <rdfs:domain rdf:resource="FormalParameter"/>
+        <rdfs:range rdf:resource="&xsd;int"/>
+    </owl:DatatypeProperty>
+    
+
+
+    <!-- http://www.ifi.unizh.ch/ddis/evoont/2008/02/som#sourceAnchor -->
+
+    <owl:DatatypeProperty rdf:about="sourceAnchor">
+        <rdf:type rdf:resource="&owl;FunctionalProperty"/>
+        <rdfs:comment xml:lang="en"
+            >Identifies the location in the source where the information is extracted.
+The exact format of the qualifier is dependent on the source of the information. Usually, it will be an anchor in a source file, in which case the following format should be used
+file &quot;&lt;filespec&gt;&quot; start &lt;start_index&gt; end &lt;end_index&gt;. Where &lt;filespec&gt; is a string holding the name of the source-file in an operating system dependent format (preferably a filename relative to some project directory). Note that filenames may contain spaces and double quotation marks. A double quotation mark in a filename should be escaped with a \&quot;. &lt;start_index&gt; and &lt;end_index&gt; are indices starting at 1 and holding the beginning/ending character position in the source file. Extra position indices or whole source anchors may be added to handle anchors in files that may need to be displayed with external editors. For instance, the line and column of the character (startline, startcol, endline, endcol). Or the negative offset counting from the end of the file instead of from the beginning (negstart, negend).</rdfs:comment>
+        <rdfs:domain rdf:resource="Entity"/>
+        <rdfs:range rdf:resource="&xsd;string"/>
+    </owl:DatatypeProperty>
+    
+
+
+    <!-- http://www.ifi.unizh.ch/ddis/evoont/2008/02/som#uniqueName -->
+
+    <owl:DatatypeProperty rdf:about="uniqueName">
+        <rdf:type rdf:resource="&owl;FunctionalProperty"/>
+        <rdfs:comment xml:lang="en"
+            >Is a string that is computed based on the name of the entity. Each class of entities must
+define its specific formula. The uniqueName serves as an external reference to that entity
+and must be unique for all entities in the model.</rdfs:comment>
+        <rdfs:domain rdf:resource="Entity"/>
+        <rdfs:range rdf:resource="&xsd;string"/>
+    </owl:DatatypeProperty>
+    
+
+
+    <!-- 
+    ///////////////////////////////////////////////////////////////////////////////////////
+    //
+    // Classes
+    //
+    ///////////////////////////////////////////////////////////////////////////////////////
+     -->
+
+    
+
+
+    <!-- http://usefulinc.com/ns/doap#Version -->
+
+    <owl:Class rdf:about="&doap;Version"/>
+    
+
+
+    <!-- http://www.ifi.unizh.ch/ddis/evoont/2008/02/som#Attribute -->
+
+    <owl:Class rdf:about="Attribute">
+        <rdfs:subClassOf rdf:resource="StructuralEntity"/>
+        <owl:disjointWith rdf:resource="FormalParameter"/>
+        <owl:disjointWith rdf:resource="GlobalVariable"/>
+        <owl:disjointWith rdf:resource="ImplicitVariable"/>
+        <owl:disjointWith rdf:resource="LocalVariable"/>
+        <rdfs:comment xml:lang="en"
+            >Attributes are variables at Class level.</rdfs:comment>
+    </owl:Class>
+    
+
+
+    <!-- http://www.ifi.unizh.ch/ddis/evoont/2008/02/som#BehaviouralEntity -->
+
+    <owl:Class rdf:about="BehaviouralEntity">
+        <rdfs:subClassOf rdf:resource="Entity"/>
+        <owl:disjointWith rdf:resource="Context"/>
+        <owl:disjointWith rdf:resource="StructuralEntity"/>
+        <rdfs:comment xml:lang="en"
+            >A Behavioural Entity describes elements in source code that can take an active role in the code, i.e. can be executed. This is typically a method or a function.</rdfs:comment>
+    </owl:Class>
+    
+
+
+    <!-- http://www.ifi.unizh.ch/ddis/evoont/2008/02/som#Class -->
+
+    <owl:Class rdf:about="Class">
+        <rdfs:subClassOf rdf:resource="Context"/>
+        <owl:disjointWith rdf:resource="Namespace"/>
+        <rdfs:comment xml:lang="en"
+            >Class as a central encapsulating element combining a certain functionality in object oriented languages.</rdfs:comment>
+    </owl:Class>
+    
+
+
+    <!-- http://www.ifi.unizh.ch/ddis/evoont/2008/02/som#Context -->
+
+    <owl:Class rdf:about="Context">
+        <rdfs:subClassOf rdf:resource="Entity"/>
+        <owl:disjointWith rdf:resource="StructuralEntity"/>
+        <rdfs:comment xml:lang="en"
+            >A context is a container entity typically defining its own namespace and/or visibility context.</rdfs:comment>
+    </owl:Class>
+    
+
+
+    <!-- http://www.ifi.unizh.ch/ddis/evoont/2008/02/som#Entity -->
+
+    <owl:Class rdf:about="Entity">
+        <rdfs:comment xml:lang="en"
+            >Entity is the topmost container element for object oriented source code elements.</rdfs:comment>
+    </owl:Class>
+    
+
+
+    <!-- http://www.ifi.unizh.ch/ddis/evoont/2008/02/som#FormalParameter -->
+
+    <owl:Class rdf:about="FormalParameter">
+        <rdfs:subClassOf rdf:resource="StructuralEntity"/>
+        <owl:disjointWith rdf:resource="GlobalVariable"/>
+        <owl:disjointWith rdf:resource="ImplicitVariable"/>
+        <owl:disjointWith rdf:resource="LocalVariable"/>
+        <rdfs:comment xml:lang="en"
+            >a FormalParameter is an argument that is passed to a BehaviouralEntity, i.e. a method parameter.</rdfs:comment>
+    </owl:Class>
+    
+
+
+    <!-- http://www.ifi.unizh.ch/ddis/evoont/2008/02/som#Function -->
+
+    <owl:Class rdf:about="Function">
+        <rdfs:subClassOf rdf:resource="BehaviouralEntity"/>
+        <owl:disjointWith rdf:resource="Method"/>
+        <rdfs:comment xml:lang="en"
+            >Executable (callable,invokable)  element.</rdfs:comment>
+    </owl:Class>
+    
+
+
+    <!-- http://www.ifi.unizh.ch/ddis/evoont/2008/02/som#GlobalVariable -->
+
+    <owl:Class rdf:about="GlobalVariable">
+        <rdfs:subClassOf rdf:resource="StructuralEntity"/>
+        <owl:disjointWith rdf:resource="ImplicitVariable"/>
+        <owl:disjointWith rdf:resource="LocalVariable"/>
+        <rdfs:comment xml:lang="en"
+            >A GlobalVariable represents the definition in source code of a variable with a lifetime equal to the lifetime of a running system, and which is globally accessible. What exactly constitutes such a definition is a language dependent issue.</rdfs:comment>
+    </owl:Class>
+    
+
+
+    <!-- http://www.ifi.unizh.ch/ddis/evoont/2008/02/som#ImplicitVariable -->
+
+    <owl:Class rdf:about="ImplicitVariable">
+        <rdfs:subClassOf rdf:resource="StructuralEntity"/>
+        <owl:disjointWith rdf:resource="LocalVariable"/>
+        <rdfs:comment xml:lang="en"
+            >Implicit variables&#39; values are given by their context. Examples are &quot;this&quot; and &quot;super&quot;.</rdfs:comment>
+    </owl:Class>
+    
+
+
+    <!-- http://www.ifi.unizh.ch/ddis/evoont/2008/02/som#LocalVariable -->
+
+    <owl:Class rdf:about="LocalVariable">
+        <rdfs:subClassOf rdf:resource="StructuralEntity"/>
+        <rdfs:comment xml:lang="en"
+            >A LocalVariable represents the definition in source code of a variable defined locally to a behavioural entity. What exactly constitutes such a definition is a language dependent issue.</rdfs:comment>
+    </owl:Class>
+    
+
+
+    <!-- http://www.ifi.unizh.ch/ddis/evoont/2008/02/som#Method -->
+
+    <owl:Class rdf:about="Method">
+        <rdfs:subClassOf rdf:resource="BehaviouralEntity"/>
+        <rdfs:comment xml:lang="en"
+            >Executable (callable,invokable)  element.</rdfs:comment>
+    </owl:Class>
+    
+
+
+    <!-- http://www.ifi.unizh.ch/ddis/evoont/2008/02/som#Namespace -->
+
+    <owl:Class rdf:about="Namespace">
+        <rdfs:subClassOf rdf:resource="Context"/>
+        <rdfs:comment xml:lang="en"
+            >a namespace is an abstract entity defining a certain taxonomy in programm code elements. Namespaces can occur in materialized form such as Java&#39;s packages (folders).</rdfs:comment>
+    </owl:Class>
+    
+
+
+    <!-- http://www.ifi.unizh.ch/ddis/evoont/2008/02/som#StructuralEntity -->
+
+    <owl:Class rdf:about="StructuralEntity">
+        <rdfs:subClassOf rdf:resource="Entity"/>
+        <rdfs:comment xml:lang="en"
+            >Structural entities are data containers with a symbolic name and a (changing) value. I.e. variables</rdfs:comment>
+    </owl:Class>
+</rdf:RDF>
+
+
+
+<!-- Generated by the OWL API (version 2.2.1.842) http://owlapi.sourceforge.net -->
+

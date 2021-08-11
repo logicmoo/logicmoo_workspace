@@ -1,0 +1,219 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+
+<HTML>
+<HEAD>
+<TITLE>Programming in XPCE/Prolog: Section B.4</TITLE><LINK REL=home HREF="index.html">
+<LINK REL=contents HREF="Contents.html">
+<LINK REL=index HREF="DocIndex.html">
+<LINK REL=summary HREF="summary.html">
+<LINK REL=previous HREF="sec-B.3.html">
+<LINK REL=next HREF="winfont.html">
+<STYLE type="text/css">
+/* Style sheet for SWI-Prolog latex2html
+*/
+
+dd.defbody
+{ margin-bottom: 1em;
+}
+
+dt.pubdef
+{ background-color: #c5e1ff;
+}
+
+pre.code
+{ margin-left: 1.5em;
+margin-right: 1.5em;
+border: 1px dotted;
+padding-top: 5px;
+padding-left: 5px;
+padding-bottom: 5px;
+background-color: #f8f8f8;
+}
+
+div.navigate
+{ text-align: center;
+background-color: #f0f0f0;
+border: 1px dotted;
+padding: 5px;
+}
+
+div.title
+{ text-align: center;
+padding-bottom: 1em;
+font-size: 200%;
+font-weight: bold;
+}
+
+div.author
+{ text-align: center;
+font-style: italic;
+}
+
+div.abstract
+{ margin-top: 2em;
+background-color: #f0f0f0;
+border: 1px dotted;
+padding: 5px;
+margin-left: 10%; margin-right:10%;
+}
+
+div.abstract-title
+{ text-align: center;
+padding: 5px;
+font-size: 120%;
+font-weight: bold;
+}
+
+div.toc-h1
+{ font-size: 200%;
+font-weight: bold;
+}
+
+div.toc-h2
+{ font-size: 120%;
+font-weight: bold;
+margin-left: 2em;
+}
+
+div.toc-h3
+{ font-size: 100%;
+font-weight: bold;
+margin-left: 4em;
+}
+
+div.toc-h4
+{ font-size: 100%;
+margin-left: 6em;
+}
+
+span.sec-nr
+{ 
+}
+
+span.sec-title
+{ 
+}
+
+span.pred-ext
+{ font-weight: bold;
+}
+
+/* Footnotes */
+
+sup.fn { color: blue; text-decoration: underline; }
+span.fn-text: { display: none; }
+sup.fn span {display: none;}
+sup:hover span 
+{ display: block !important;
+position: absolute; top: auto; left: auto; width: 80%;
+color: #000; background: white;
+border: 2px solid;
+padding: 5px; margin: 10px; z-index: 100;
+font-size: smaller;
+}
+</STYLE>
+</HEAD>
+<BODY BGCOLOR="white">
+<DIV class="navigate"><A class="nav" href="index.html"><IMG SRC="home.gif" BORDER=0 ALT="Home"></A>
+<A class="nav" href="Contents.html"><IMG SRC="index.gif" BORDER=0 ALT="Contents"></A>
+<A class="nav" href="DocIndex.html"><IMG SRC="yellow_pages.gif" BORDER=0 ALT="Index"></A>
+<A class="nav" href="summary.html"><IMG SRC="info.gif" BORDER=0 ALT="Summary"></A>
+<A class="nav" href="sec-B.3.html"><IMG SRC="prev.gif" BORDER=0 ALT="Previous"></A>
+<A class="nav" href="winfont.html"><IMG SRC="next.gif" BORDER=0 ALT="Next"></A>
+</DIV>
+
+<H2><A NAME="sec:B.4"><SPAN class="sec-nr">B.4</SPAN> <SPAN class="sec-title">Accessing 
+Windows Colours</SPAN></A></H2>
+
+<P>Colours may be created from their X11 names. The X11 name-table is in
+<CODE>&lt;<VAR>pcehome</VAR>&gt;/lib/rgb.txt</CODE>. In the Windows API, 
+all colours described as <A NAME="idx:RGB:642">RGB</A> (Red, Green, 
+Blue) tuples. This is no problem as <font size=-1>XPCE</font> also 
+provides RGB colours. Note however that Win32 intensity is ranged 
+0..255, where the <font size=-1>XPCE</font> intensity is ranged 
+0..65535. This is true on all <font size=-1>XPCE</font>'s platforms.
+
+<P>To provide access to the window-system colours as they can be 
+obtained using the Win32 API function GetSysColor(), <font size=-1>XPCE</font> 
+binds these colours to named colour objects. These colour objects are 
+normally used in the <font size=-1>XPCE</font> resource file (<CODE>&lt;<VAR>pcehome</VAR>&gt;/Defaults</CODE>) 
+to colour
+<font size=-1>XPCE</font>'s controller objects according to the user's 
+preferences.
+
+<P>If the name of the Windows API colours are COLOR_SOMETHING, the <font size=-1>XPCE</font> 
+name is <CODE>win_something</CODE>. The full list is in <A class="tab" href="sec-B.4.html#tab:wincolours">table 
+10</A>.
+
+<P>
+<CENTER>
+<TABLE BORDER=2 FRAME=box RULES=groups>
+<TR VALIGN=top><TD><CODE>win_3ddkshadow</CODE> </TD><TD>Dark shadow for 
+three-dimensional display elements. </TD></TR>
+<TR VALIGN=top><TD><CODE>win_3dface</CODE> </TD></TR>
+<TR VALIGN=top><TD><CODE>win_btnface</CODE> </TD><TD>Face color for 
+three-dimensional display elements. </TD></TR>
+<TR VALIGN=top><TD><CODE>win_3dhilight</CODE> </TD></TR>
+<TR VALIGN=top><TD><CODE>win_3dhighlight</CODE> </TD></TR>
+<TR VALIGN=top><TD><CODE>win_btnhilight</CODE> </TD></TR>
+<TR VALIGN=top><TD><CODE>win_btnhighlight</CODE> </TD><TD>Highlight 
+color for three-dimensional display elements </TD></TR>
+<TR VALIGN=top><TD><CODE>win_3dlight</CODE> </TD><TD>Light color for 
+three-dimensional display elements </TD></TR>
+<TR VALIGN=top><TD><CODE>win_3dshadow</CODE> </TD></TR>
+<TR VALIGN=top><TD><CODE>win_btnshadow</CODE> </TD><TD>Shadow color for 
+three-dimensional display elements </TD></TR>
+<TR VALIGN=top><TD><CODE>win_activeborder</CODE> </TD><TD>Active window 
+border. </TD></TR>
+<TR VALIGN=top><TD><CODE>win_activecaption</CODE> </TD><TD>Active window 
+title bar. </TD></TR>
+<TR VALIGN=top><TD><CODE>win_appworkspace</CODE> </TD><TD>Background 
+color of MDI applications. </TD></TR>
+<TR VALIGN=top><TD><CODE>win_background</CODE> </TD></TR>
+<TR VALIGN=top><TD><CODE>win_desktop</CODE> </TD><TD>Desktop. </TD></TR>
+<TR VALIGN=top><TD><CODE>win_btntext</CODE> </TD><TD>Text on push 
+buttons. </TD></TR>
+<TR VALIGN=top><TD><CODE>win_captiontext</CODE> </TD><TD>Text in 
+caption, size box, and scroll bar arrow box. </TD></TR>
+<TR VALIGN=top><TD><CODE>win_gradientactivecaption</CODE> </TD><TD>Right 
+side color of an active window's title bar. </TD></TR>
+<TR VALIGN=top><TD><CODE>win_activecaption</CODE> </TD><TD>specifies the 
+left side color. </TD></TR>
+<TR VALIGN=top><TD><CODE>win_gradientinactivecaption</CODE> </TD><TD>Right 
+side color of an inactive window's title bar. </TD></TR>
+<TR VALIGN=top><TD><CODE>win_inactivecaption</CODE> </TD><TD>specifies 
+the left side color. </TD></TR>
+<TR VALIGN=top><TD><CODE>win_graytext</CODE> </TD><TD>Grayed (disabled) 
+text. </TD></TR>
+<TR VALIGN=top><TD><CODE>win_highlight</CODE> </TD><TD>Item(s) selected 
+in a control. </TD></TR>
+<TR VALIGN=top><TD><CODE>win_highlighttext</CODE> </TD><TD>Text of 
+item(s) selected in a control. </TD></TR>
+<TR VALIGN=top><TD><CODE>win_hotlight</CODE> </TD><TD>Color for a 
+hot-tracked item. </TD></TR>
+<TR VALIGN=top><TD><CODE>win_inactiveborder</CODE> </TD><TD>Inactive 
+window border. </TD></TR>
+<TR VALIGN=top><TD><CODE>win_inactivecaption</CODE> </TD><TD>Inactive 
+window caption. </TD></TR>
+<TR VALIGN=top><TD><CODE>win_inactivecaptiontext</CODE> </TD><TD>Color 
+of text in an inactive caption. </TD></TR>
+<TR VALIGN=top><TD><CODE>win_infobk</CODE> </TD><TD>Background color for 
+tooltip controls. </TD></TR>
+<TR VALIGN=top><TD><CODE>win_infotext</CODE> </TD><TD>Text color for 
+tooltip controls. </TD></TR>
+<TR VALIGN=top><TD><CODE>win_menu</CODE> </TD><TD>Menu background. </TD></TR>
+<TR VALIGN=top><TD><CODE>win_menutext</CODE> </TD><TD>Text in menus. </TD></TR>
+<TR VALIGN=top><TD><CODE>win_scrollbar</CODE> </TD><TD>Scroll bar gray 
+area. </TD></TR>
+<TR VALIGN=top><TD><CODE>win_window</CODE> </TD><TD>Window background. </TD></TR>
+<TR VALIGN=top><TD><CODE>win_windowframe</CODE> </TD><TD>Window frame. </TD></TR>
+<TR VALIGN=top><TD><CODE>win_windowtext</CODE> </TD><TD>Text in windows </TD></TR>
+</TABLE>
+
+</CENTER>
+<TABLE ALIGN=center WIDTH="75%"><TR><TD>
+<B>Table 10 : </B>Windows colour name mapping</TABLE>
+
+<A NAME="tab:wincolours"></A>
+
+<P></BODY></HTML>

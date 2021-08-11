@@ -1,0 +1,12 @@
+## SWI-Prolog version 8
+
+The SWI-Prolog 8.0 major  release  marks   mostly  a  milestone  for the
+internals, stability, deployment options  and   maintainability  of  the
+system. SWI-Prolog extensions  and   incompatibilities  wrt. traditional
+Prolog are described in [extensions](</pldoc/man?section=extensions>).
+
+SWI-Prolog 8.2 notably brings much of   the  advanced tabling support of
+XSB  to  SWI-Prolog:  Well  Founded    Semantics,   restraints  (bounded
+rationality), incremental tabling and  shared   tabling.  It  also makes
+rational numbers primary citizens. Using   Google's tcmalloc reduces the
+memory footprint drastically on some multi-threaded workloads.

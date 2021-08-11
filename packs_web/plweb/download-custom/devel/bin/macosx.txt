@@ -1,0 +1,5 @@
+Installer with binaries created using [[Macports][<macports:>]].
+Installs =|/opt/local/bin/swipl|=. Needs [[xquartz][<xquartz:>]] (X11)
+installed for running the [[development tools][</IDE.html>]]. Currently,
+version 2.4.0 is required.  You can check the version by opening an X11
+application and then checking `about' in the X11 menu.

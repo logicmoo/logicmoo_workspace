@@ -1,0 +1,250 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+
+<HTML>
+<HEAD>
+<TITLE>Programming in XPCE/Prolog</TITLE><LINK REL=home HREF="index.html">
+<LINK REL=contents HREF="Contents.html">
+<LINK REL=index HREF="DocIndex.html">
+<LINK REL=summary HREF="summary.html">
+<LINK REL=previous HREF="printing.html">
+<LINK REL=next HREF="findfile.html">
+<STYLE type="text/css">
+/* Style sheet for SWI-Prolog latex2html
+*/
+
+dd.defbody
+{ margin-bottom: 1em;
+}
+
+dt.pubdef
+{ background-color: #c5e1ff;
+}
+
+pre.code
+{ margin-left: 1.5em;
+margin-right: 1.5em;
+border: 1px dotted;
+padding-top: 5px;
+padding-left: 5px;
+padding-bottom: 5px;
+background-color: #f8f8f8;
+}
+
+div.navigate
+{ text-align: center;
+background-color: #f0f0f0;
+border: 1px dotted;
+padding: 5px;
+}
+
+div.title
+{ text-align: center;
+padding-bottom: 1em;
+font-size: 200%;
+font-weight: bold;
+}
+
+div.author
+{ text-align: center;
+font-style: italic;
+}
+
+div.abstract
+{ margin-top: 2em;
+background-color: #f0f0f0;
+border: 1px dotted;
+padding: 5px;
+margin-left: 10%; margin-right:10%;
+}
+
+div.abstract-title
+{ text-align: center;
+padding: 5px;
+font-size: 120%;
+font-weight: bold;
+}
+
+div.toc-h1
+{ font-size: 200%;
+font-weight: bold;
+}
+
+div.toc-h2
+{ font-size: 120%;
+font-weight: bold;
+margin-left: 2em;
+}
+
+div.toc-h3
+{ font-size: 100%;
+font-weight: bold;
+margin-left: 4em;
+}
+
+div.toc-h4
+{ font-size: 100%;
+margin-left: 6em;
+}
+
+span.sec-nr
+{ 
+}
+
+span.sec-title
+{ 
+}
+
+span.pred-ext
+{ font-weight: bold;
+}
+
+/* Footnotes */
+
+sup.fn { color: blue; text-decoration: underline; }
+span.fn-text: { display: none; }
+sup.fn span {display: none;}
+sup:hover span 
+{ display: block !important;
+position: absolute; top: auto; left: auto; width: 80%;
+color: #000; background: white;
+border: 2px solid;
+padding: 5px; margin: 10px; z-index: 100;
+font-size: smaller;
+}
+</STYLE>
+</HEAD>
+<BODY BGCOLOR="white">
+<DIV class="navigate"><A class="nav" href="index.html"><IMG SRC="home.gif" BORDER=0 ALT="Home"></A>
+<A class="nav" href="Contents.html"><IMG SRC="index.gif" BORDER=0 ALT="Contents"></A>
+<A class="nav" href="DocIndex.html"><IMG SRC="yellow_pages.gif" BORDER=0 ALT="Index"></A>
+<A class="nav" href="summary.html"><IMG SRC="info.gif" BORDER=0 ALT="Summary"></A>
+<A class="nav" href="printing.html"><IMG SRC="prev.gif" BORDER=0 ALT="Previous"></A>
+<A class="nav" href="findfile.html"><IMG SRC="next.gif" BORDER=0 ALT="Next"></A>
+</DIV>
+
+<H1><A NAME="sec:11"><SPAN class="sec-nr">11</SPAN> <SPAN class="sec-title">Commonly 
+used libraries</SPAN></A></H1>
+
+<A NAME="sec:libraries"></A>
+
+<P>In this chapter we document some of the libraries from the
+<CODE>&lt;<VAR>pcehome</VAR>&gt;/prolog/lib</CODE> <font size=-1>XPCE/P</font>rolog 
+library. The libraries described here are only the commonly used ones. 
+For more information check the file <CODE>Overview</CODE> in the library 
+directory and the source-code of the library.
+
+<P>
+<UL>
+<LI><A class="" href="findfile.html#sec:11.1">Asking a filename</A> This 
+library defines the object <A NAME="idx:finder:476"></A><B>@finder</B>, 
+instance of <B>finder</B>. The finder allows for asking filenames.
+
+<P>
+<LI><A class="" href="balloon.html#sec:11.2">Show help-balloon</A> The 
+library <CODE>library(help_message)</CODE> registers balloon-text with 
+graphical objects.
+
+<P>
+<LI><A class="" href="libdia.html#sec:11.3">Dialog utilities</A> 
+Toolbars and reporting facilities. Includes example code for an 
+application framework.
+
+<P>
+<LI><A class="" href="toc.html#sec:11.4">Table-of-content like 
+hierarchies</A> This library extends class <A class="" href="summary.html#class:tree">tree</A>, 
+displaying a modern-style hierarchy inside a window. This library is 
+used for displaying the VisualHierachy and ClassHierarchy tools of the <font size=-1>XPCE</font> 
+manual toolkit. See <A class="sec" href="online.html">chapter 3</A>.
+
+<P>
+<LI><A class="" href="tabular.html#sec:11.5">Tabular layout</A> 
+Primitives for dealing with tables.
+
+<P>
+<LI><A class="" href="libplot.html#sec:11.6">Plotting graphs and 
+barcharts</A> This section describes a number of libraries providing 
+primitives for drawing graphs and barcharts.
+
+<P>
+<LI><A class="" href="mlingual.html#sec:11.7">Multi-lingual applications</A> 
+Discusses support for multi-lingual applications.
+
+<P>
+<LI><A class="" href="dragdrop.html#sec:11.8">Drag and Drop Interface</A> 
+This library allows for drapping objects within one <font size=-1>XPCE</font> 
+application.
+
+<P>
+<LI><A class="" href="httpd.html#sec:11.9">Playing WEB (HTTP) server</A> 
+Class <B>httpd</B> is a subclass of <A class="" href="summary.html#class:socket">socket</A> 
+that deals with the HTTP protocol. It allows <font size=-1>XPCE</font> 
+to act as a web-server.
+
+<P>
+<LI><A class="" href="docrender.html#sec:11.10">Document rendering</A> 
+Primitives for rendering mixed text/graphics, handling fonts, alignment, 
+tables and other common text-layout primitives.
+</UL>
+
+<P>
+<HR>
+<CENTER>
+
+<H2>Section Index</H2>
+
+</CENTER>
+<HR>
+<DIV class="toc">
+<DIV class="toc-h2"><A class="sec" href="findfile.html"><SPAN class="sec-nr">11.1</SPAN> <SPAN class="sec-title">Library 
+``find_file''</SPAN></A></DIV>
+<DIV class="toc-h2"><A class="sec" href="balloon.html"><SPAN class="sec-nr">11.2</SPAN> <SPAN class="sec-title">Showing 
+help-balloons</SPAN></A></DIV>
+<DIV class="toc-h2"><A class="sec" href="libdia.html"><SPAN class="sec-nr">11.3</SPAN> <SPAN class="sec-title">Dialog 
+support libraries</SPAN></A></DIV>
+<DIV class="toc-h3"><A class="sec" href="libdia.html#sec:11.3.1"><SPAN class="sec-nr">11.3.1</SPAN> <SPAN class="sec-title">Reporting 
+errors and warnings</SPAN></A></DIV>
+<DIV class="toc-h3"><A class="sec" href="libdia.html#sec:11.3.2"><SPAN class="sec-nr">11.3.2</SPAN> <SPAN class="sec-title">Toolbar 
+support</SPAN></A></DIV>
+<DIV class="toc-h3"><A class="sec" href="libdia.html#sec:11.3.3"><SPAN class="sec-nr">11.3.3</SPAN> <SPAN class="sec-title">Example</SPAN></A></DIV>
+<DIV class="toc-h2"><A class="sec" href="toc.html"><SPAN class="sec-nr">11.4</SPAN> <SPAN class="sec-title">Library 
+``pce_toc'': displaying hierarchies</SPAN></A></DIV>
+<DIV class="toc-h2"><A class="sec" href="tabular.html"><SPAN class="sec-nr">11.5</SPAN> <SPAN class="sec-title">Tabular 
+layout</SPAN></A></DIV>
+<DIV class="toc-h3"><A class="sec" href="tabular.html#sec:11.5.1"><SPAN class="sec-nr">11.5.1</SPAN> <SPAN class="sec-title">Using 
+format</SPAN></A></DIV>
+<DIV class="toc-h3"><A class="sec" href="tabular.html#sec:11.5.2"><SPAN class="sec-nr">11.5.2</SPAN> <SPAN class="sec-title">Using 
+table using the ``tabular'' library</SPAN></A></DIV>
+<DIV class="toc-h2"><A class="sec" href="libplot.html"><SPAN class="sec-nr">11.6</SPAN> <SPAN class="sec-title">Plotting 
+graphs and barcharts</SPAN></A></DIV>
+<DIV class="toc-h3"><A class="sec" href="libplot.html#sec:11.6.1"><SPAN class="sec-nr">11.6.1</SPAN> <SPAN class="sec-title">Painting 
+axis</SPAN></A></DIV>
+<DIV class="toc-h3"><A class="sec" href="libplot.html#sec:11.6.2"><SPAN class="sec-nr">11.6.2</SPAN> <SPAN class="sec-title">Plotting 
+graphs</SPAN></A></DIV>
+<DIV class="toc-h3"><A class="sec" href="libplot.html#sec:11.6.3"><SPAN class="sec-nr">11.6.3</SPAN> <SPAN class="sec-title">Drawing 
+barcharts using ``plot/barchart''</SPAN></A></DIV>
+<DIV class="toc-h4"><A class="sec" href="libplot.html#sec:11.6.3.1"><SPAN class="sec-nr">11.6.3.1</SPAN> <SPAN class="sec-title">Class <B>bar</B></SPAN></A></DIV>
+<DIV class="toc-h4"><A class="sec" href="libplot.html#sec:11.6.3.2"><SPAN class="sec-nr">11.6.3.2</SPAN> <SPAN class="sec-title">Class <B>bar_button_group</B></SPAN></A></DIV>
+<DIV class="toc-h2"><A class="sec" href="mlingual.html"><SPAN class="sec-nr">11.7</SPAN> <SPAN class="sec-title">Multi-lingual 
+applications</SPAN></A></DIV>
+<DIV class="toc-h2"><A class="sec" href="dragdrop.html"><SPAN class="sec-nr">11.8</SPAN> <SPAN class="sec-title">Drag 
+and drop interface</SPAN></A></DIV>
+<DIV class="toc-h3"><A class="sec" href="dragdrop.html#sec:11.8.1"><SPAN class="sec-nr">11.8.1</SPAN> <SPAN class="sec-title">Related 
+methods</SPAN></A></DIV>
+<DIV class="toc-h2"><A class="sec" href="httpd.html"><SPAN class="sec-nr">11.9</SPAN> <SPAN class="sec-title">Playing 
+WEB (HTTP) server</SPAN></A></DIV>
+<DIV class="toc-h3"><A class="sec" href="httpd.html#sec:11.9.1"><SPAN class="sec-nr">11.9.1</SPAN> <SPAN class="sec-title">Class <B>httpd</B></SPAN></A></DIV>
+<DIV class="toc-h2"><A class="sec" href="docrender.html"><SPAN class="sec-nr">11.10</SPAN> <SPAN class="sec-title">Document 
+rendering primitives</SPAN></A></DIV>
+<DIV class="toc-h3"><A class="sec" href="docrender.html#sec:11.10.1"><SPAN class="sec-nr">11.10.1</SPAN> <SPAN class="sec-title">The 
+rendering library</SPAN></A></DIV>
+<DIV class="toc-h3"><A class="sec" href="docrender.html#sec:11.10.2"><SPAN class="sec-nr">11.10.2</SPAN> <SPAN class="sec-title">Predefined 
+objects</SPAN></A></DIV>
+<DIV class="toc-h3"><A class="sec" href="docrender.html#sec:11.10.3"><SPAN class="sec-nr">11.10.3</SPAN> <SPAN class="sec-title">Class 
+and method reference</SPAN></A></DIV>
+<DIV class="toc-h4"><A class="sec" href="docrender.html#sec:11.10.3.1"><SPAN class="sec-nr">11.10.3.1</SPAN> <SPAN class="sec-title">Class <B>vfont</B></SPAN></A></DIV>
+<DIV class="toc-h4"><A class="sec" href="docrender.html#sec:11.10.3.2"><SPAN class="sec-nr">11.10.3.2</SPAN> <SPAN class="sec-title">Rendering 
+actions</SPAN></A></DIV>
+<DIV class="toc-h3"><A class="sec" href="docrender.html#sec:11.10.4"><SPAN class="sec-nr">11.10.4</SPAN> <SPAN class="sec-title">Using 
+the ``doc/emit'' library</SPAN></A></DIV>
+</DIV>
+</BODY></HTML>

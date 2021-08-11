@@ -1,0 +1,294 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+
+<HTML>
+<HEAD>
+<TITLE>Programming in XPCE/Prolog: Section 4.4</TITLE><LINK REL=home HREF="index.html">
+<LINK REL=contents HREF="Contents.html">
+<LINK REL=index HREF="DocIndex.html">
+<LINK REL=summary HREF="summary.html">
+<LINK REL=previous HREF="sec-4.3.html">
+<LINK REL=next HREF="sec-4.5.html">
+<STYLE type="text/css">
+/* Style sheet for SWI-Prolog latex2html
+*/
+
+dd.defbody
+{ margin-bottom: 1em;
+}
+
+dt.pubdef
+{ background-color: #c5e1ff;
+}
+
+pre.code
+{ margin-left: 1.5em;
+margin-right: 1.5em;
+border: 1px dotted;
+padding-top: 5px;
+padding-left: 5px;
+padding-bottom: 5px;
+background-color: #f8f8f8;
+}
+
+div.navigate
+{ text-align: center;
+background-color: #f0f0f0;
+border: 1px dotted;
+padding: 5px;
+}
+
+div.title
+{ text-align: center;
+padding-bottom: 1em;
+font-size: 200%;
+font-weight: bold;
+}
+
+div.author
+{ text-align: center;
+font-style: italic;
+}
+
+div.abstract
+{ margin-top: 2em;
+background-color: #f0f0f0;
+border: 1px dotted;
+padding: 5px;
+margin-left: 10%; margin-right:10%;
+}
+
+div.abstract-title
+{ text-align: center;
+padding: 5px;
+font-size: 120%;
+font-weight: bold;
+}
+
+div.toc-h1
+{ font-size: 200%;
+font-weight: bold;
+}
+
+div.toc-h2
+{ font-size: 120%;
+font-weight: bold;
+margin-left: 2em;
+}
+
+div.toc-h3
+{ font-size: 100%;
+font-weight: bold;
+margin-left: 4em;
+}
+
+div.toc-h4
+{ font-size: 100%;
+margin-left: 6em;
+}
+
+span.sec-nr
+{ 
+}
+
+span.sec-title
+{ 
+}
+
+span.pred-ext
+{ font-weight: bold;
+}
+
+/* Footnotes */
+
+sup.fn { color: blue; text-decoration: underline; }
+span.fn-text: { display: none; }
+sup.fn span {display: none;}
+sup:hover span 
+{ display: block !important;
+position: absolute; top: auto; left: auto; width: 80%;
+color: #000; background: white;
+border: 2px solid;
+padding: 5px; margin: 10px; z-index: 100;
+font-size: smaller;
+}
+</STYLE>
+</HEAD>
+<BODY BGCOLOR="white">
+<DIV class="navigate"><A class="nav" href="index.html"><IMG SRC="home.gif" BORDER=0 ALT="Home"></A>
+<A class="nav" href="Contents.html"><IMG SRC="index.gif" BORDER=0 ALT="Contents"></A>
+<A class="nav" href="DocIndex.html"><IMG SRC="yellow_pages.gif" BORDER=0 ALT="Index"></A>
+<A class="nav" href="summary.html"><IMG SRC="info.gif" BORDER=0 ALT="Summary"></A>
+<A class="nav" href="sec-4.3.html"><IMG SRC="prev.gif" BORDER=0 ALT="Previous"></A>
+<A class="nav" href="sec-4.5.html"><IMG SRC="next.gif" BORDER=0 ALT="Next"></A>
+</DIV>
+
+<H2><A NAME="sec:4.4"><SPAN class="sec-nr">4.4</SPAN> <SPAN class="sec-title">Modal 
+dialogs: prompting for answers</SPAN></A></H2>
+
+<A NAME="sec:modal"></A>
+
+<P><A NAME="idx:modaldialog:144"></A><A NAME="idx:askquestions:145"></A><A NAME="idx:prompt:146"></A>A <EM>modal</EM> 
+dialog is a dialog that is displayed and blocks the application until 
+the user has finished answering the questions posed in the dialog. Modal 
+dialogs are often used to prompt for values needed to create a new 
+entity in the application or for changing settings.
+
+<P>Modal windows are implemented using the methods <A NAME="idx:framegetconfirm:147"></A>`<B>frame<CODE>&lt;-</CODE>confirm</B>' 
+and
+<A NAME="idx:framesendreturn:148"></A>`<B>frame<CODE>-&gt;</CODE>return</B>'. <A NAME="idx:framegetconfirm:149"></A>`<B>Frame<CODE>&lt;-</CODE>confirm</B>' 
+invokes <A NAME="idx:framesendopen:150"></A>`<B>frame<CODE>-&gt;</CODE>open</B>' 
+if the frame is not visible and then starts reading events and 
+processing them.
+<A NAME="idx:framesendreturn:151"></A>`<B>Frame<CODE>-&gt;</CODE>return</B>: 
+value' causes <A NAME="idx:framegetconfirm:152"></A>`<B>frame<CODE>&lt;-</CODE>confirm</B>' 
+to return with the value passed as argument to <B><CODE>-&gt;</CODE>return</B>. 
+The following code is a very simple example opening a dialog and waiting 
+for the user to enter a name and press <font size=-1>RETURN</font> or 
+the <B>Ok</B> button.
+
+<PRE class="code">
+ask_name(Name) :-
+        new(D, dialog('Prompting for name')),
+        send(D, append,
+             new(TI, text_item(name, ''))),
+        send(D, append,
+             button(ok, message(D, return,
+                                TI?selection))),
+        send(D, append,
+             button(cancel, message(D, return, @nil))),
+        send(D, default_button, ok), % Ok: default button
+        get(D, confirm, Answer),     % This blocks!
+        send(D, destroy),
+        Answer \== @nil,             % canceled
+        Name = Answer.
+
+?- ask_name(X).
+
+X = 'Bob Worker'
+</PRE>
+
+<P>See also <A class="sec" href="application.html">section 10.5</A> for 
+a discussion on how frames may be related, as well as alternatives for 
+keeping control in Prolog.
+
+<H3><A NAME="sec:4.4.1"><SPAN class="sec-nr">4.4.1</SPAN> <SPAN class="sec-title">Example: 
+a simple editor for multiple fonts</SPAN></A></H3>
+
+<P>The following example allows the user to select text in an editor and 
+change its appearance. The application is shown in <A class="fig" href="modal.html#fig:wysiwyg">figure 
+10</A>.
+
+<P><A NAME="fig:wysiwyg"></A>
+<CENTER>
+<IMG SRC="wysiwyg.gif">
+</CENTER>
+<TABLE ALIGN=center WIDTH="75%"><TR><TD>
+<B>Figure 10 : </B>Very simple WYSIWYG editor</TABLE>
+
+<P>
+<HR>
+A typical XPCE/Prolog module header. Always make sure to load module 
+library(pce) explicitly if you want to write modules portable to the 
+various Prolog dialects supported by XPCE.
+
+<PRE class="code">
+:- module(wysiwyg,
+          [ wysiwyg/1           % +File
+          ]).
+:- use_module(library(pce)).
+:- use_module(library(pce_style_item)).</PRE>
+
+<P>Create the main window, consisting of a frame holding a dialog window 
+with a button for defining new styles and a menu for setting the style 
+of the selection. Both dialog items use call-back to <A NAME="idx:prolog:153"></A><B>@prolog</B>.
+
+<PRE class="code"><A NAME="idx:wysiwyg1:154"></A>
+wysiwyg(File) :-
+        new(Fr, frame(File)),
+        send(Fr, append, new(D, dialog)),
+        send(new(V, view), below, D),
+        send(V, font, normal),
+        send(D, append,
+             button(define_style,<A NAME="idx:prolog:155"></A>
+                    message(@prolog, define_style, Fr))),
+        send(D, append,
+             menu(style, toggle,<A NAME="idx:prolog:156"></A>
+                  and(message(@prolog, set_style, Fr, @arg1),
+                      message(V, selection, 0, 0),<A NAME="idx:receiver:157"></A>
+                      message(@receiver, clear_selection))),
+             right),
+        append_style(Fr, bold,   style(font := bold)),
+        append_style(Fr, italic, style(font := italic)),
+        send(V, load, File),
+        send(Fr, open).</PRE>
+
+<P>Set the style for the current selection. Simply pick the selection 
+start and end and make a fragment using the selection parameters and the 
+style-name.
+
+<PRE class="code"><A NAME="idx:setstyle2:158"></A>
+set_style(Fr, Style) :-
+        get(Fr, member, view, V),
+        get(V, selection, point(Start, End)),
+        (   Start == End
+        -&gt;  send(Fr, report, warning, 'No selection')
+        ;   get(V, text_buffer, TB),
+            new(_, fragment(TB, Start, End-Start, Style))
+        ).</PRE>
+
+<P>Define a new style and add it to the menu and the view.
+
+<PRE class="code"><A NAME="idx:definestyle1:159"></A>
+define_style(Fr) :-
+        ask_style(Fr, Name, Style),
+        append_style(Fr, Name, Style).
+<A NAME="idx:appendstyle3:160"></A>
+append_style(Fr, Name, Style) :-
+        get(Fr, member, dialog, D),
+        get(D, member, style, Menu),
+        send(Menu, append, Name),<A NAME="idx:on:161"></A>
+        send(Menu, active, @on),
+        get(Fr, member, view, View),
+        send(View, style, Name, Style).</PRE>
+
+<P>Prompt for the style-name and style-object. Class style_item is 
+defined in the library(pce_style_item). <A NAME="idx:framesendtransientfor:162"></A>`frame <B><CODE>-&gt;</CODE>transient_for</B>' 
+tells the window manager the dialog is a supporting frame for the main 
+application.
+<A NAME="idx:framegetconfirmcentered:163"></A>`frame <B><CODE>&lt;-</CODE>confirm_centered</B>' 
+opens the frame centered around the given location and starts processing 
+events until <A NAME="idx:framesendreturn:164"></A>`frame <B><CODE>-&gt;</CODE>return</B>' 
+is activated.
+
+<PRE class="code"><A NAME="idx:askstyle3:165"></A>
+ask_style(Fr, Name, Style) :-
+        new(D, dialog('Define Style')),
+        send(D, append,
+             new(N, text_item(name, ''))),
+        send(D, append,
+             new(S, style_item(style))),
+        send(D, append,
+             button(ok, message(D, return, ok))),
+        send(D, append,
+             button(cancel, message(D, return, cancel))),
+        send(D, default_button, ok),
+        send(D, transient_for, Fr),
+        repeat,
+        get(D, confirm_centered, Fr?area?center, Answer),
+        (   Answer == ok
+        -&gt;  get(N, selection, Name),
+            (   Name == ''
+            -&gt;  send(D, report, error,
+                     'Please enter a name'),
+                fail
+            ;   !,
+                get(S, selection, Style),<A NAME="idx:on:166"></A>
+                send(Style, lock_object, @on),
+                send(D, destroy)
+            )
+        ;   !,
+            send(D, destroy),
+            fail
+        ).</PRE>
+
+<P></BODY></HTML>

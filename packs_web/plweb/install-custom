@@ -1,0 +1,7 @@
+#!/bin/bash
+
+for f in `find download-custom -name '*.txt'`; do
+   target="`echo $f | sed 's/download-custom/download/'`"
+   ./ln-install $f `dirname $target`
+done
+   

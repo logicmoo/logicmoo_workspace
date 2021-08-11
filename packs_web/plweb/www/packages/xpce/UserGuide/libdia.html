@@ -1,0 +1,317 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+
+<HTML>
+<HEAD>
+<TITLE>Programming in XPCE/Prolog: Section 11.3</TITLE><LINK REL=home HREF="index.html">
+<LINK REL=contents HREF="Contents.html">
+<LINK REL=index HREF="DocIndex.html">
+<LINK REL=summary HREF="summary.html">
+<LINK REL=previous HREF="balloon.html">
+<LINK REL=next HREF="toc.html">
+<STYLE type="text/css">
+/* Style sheet for SWI-Prolog latex2html
+*/
+
+dd.defbody
+{ margin-bottom: 1em;
+}
+
+dt.pubdef
+{ background-color: #c5e1ff;
+}
+
+pre.code
+{ margin-left: 1.5em;
+margin-right: 1.5em;
+border: 1px dotted;
+padding-top: 5px;
+padding-left: 5px;
+padding-bottom: 5px;
+background-color: #f8f8f8;
+}
+
+div.navigate
+{ text-align: center;
+background-color: #f0f0f0;
+border: 1px dotted;
+padding: 5px;
+}
+
+div.title
+{ text-align: center;
+padding-bottom: 1em;
+font-size: 200%;
+font-weight: bold;
+}
+
+div.author
+{ text-align: center;
+font-style: italic;
+}
+
+div.abstract
+{ margin-top: 2em;
+background-color: #f0f0f0;
+border: 1px dotted;
+padding: 5px;
+margin-left: 10%; margin-right:10%;
+}
+
+div.abstract-title
+{ text-align: center;
+padding: 5px;
+font-size: 120%;
+font-weight: bold;
+}
+
+div.toc-h1
+{ font-size: 200%;
+font-weight: bold;
+}
+
+div.toc-h2
+{ font-size: 120%;
+font-weight: bold;
+margin-left: 2em;
+}
+
+div.toc-h3
+{ font-size: 100%;
+font-weight: bold;
+margin-left: 4em;
+}
+
+div.toc-h4
+{ font-size: 100%;
+margin-left: 6em;
+}
+
+span.sec-nr
+{ 
+}
+
+span.sec-title
+{ 
+}
+
+span.pred-ext
+{ font-weight: bold;
+}
+
+/* Footnotes */
+
+sup.fn { color: blue; text-decoration: underline; }
+span.fn-text: { display: none; }
+sup.fn span {display: none;}
+sup:hover span 
+{ display: block !important;
+position: absolute; top: auto; left: auto; width: 80%;
+color: #000; background: white;
+border: 2px solid;
+padding: 5px; margin: 10px; z-index: 100;
+font-size: smaller;
+}
+</STYLE>
+</HEAD>
+<BODY BGCOLOR="white">
+<DIV class="navigate"><A class="nav" href="index.html"><IMG SRC="home.gif" BORDER=0 ALT="Home"></A>
+<A class="nav" href="Contents.html"><IMG SRC="index.gif" BORDER=0 ALT="Contents"></A>
+<A class="nav" href="DocIndex.html"><IMG SRC="yellow_pages.gif" BORDER=0 ALT="Index"></A>
+<A class="nav" href="summary.html"><IMG SRC="info.gif" BORDER=0 ALT="Summary"></A>
+<A class="nav" href="balloon.html"><IMG SRC="prev.gif" BORDER=0 ALT="Previous"></A>
+<A class="nav" href="toc.html"><IMG SRC="next.gif" BORDER=0 ALT="Next"></A>
+</DIV>
+
+<H2><A NAME="sec:11.3"><SPAN class="sec-nr">11.3</SPAN> <SPAN class="sec-title">Dialog 
+support libraries</SPAN></A></H2>
+
+<A NAME="sec:libdia"></A>
+
+<P>This section deals with a number of classes from the library to 
+simplify the creation of dialog windows.
+
+<H3><A NAME="sec:11.3.1"><SPAN class="sec-nr">11.3.1</SPAN> <SPAN class="sec-title">Reporting 
+errors and warnings</SPAN></A></H3>
+
+<P><A NAME="idx:messagesreporting:484"></A><A NAME="idx:errorsreporting:485"></A><A NAME="idx:reporting:486"></A>Error, 
+and warning and informational messages are raised using the
+<B><CODE>-&gt;</CODE>report</B> or <B><CODE>-&gt;</CODE>error</B> method 
+defined on all <font size=-1>XPCE</font> objects. Basic error and 
+message handling is described in <A class="sec" href="errors.html">section 
+10.8</A>. The library
+<CODE>library(pce_report)</CODE> defines the classes <B>reporter</B> and
+<B>report_dialog</B>.
+
+<P>
+<UL>
+<LI><I><B>reporter</B></I><BR>
+This is a refinement of class <A class="" href="summary.html#class:label">label</A>, 
+displayed using the fashionable lowered 3D-style. In addition, it 
+redefines the <B><CODE>-&gt;</CODE>report</B> message to colour error 
+messages red.
+
+<P>
+<LI><I><B>report_dialog</B></I><BR>
+This is a trivial subclass of <A class="" href="summary.html#class:dialog">dialog</A>, 
+displaying a
+<B>reporter</B> and constraining this reporter to occupy the entire 
+window.
+</UL>
+
+<P>An example using these classes is in <A class="sec" href="libdia.html">section 
+11.3.2</A>.
+
+<H3><A NAME="sec:11.3.2"><SPAN class="sec-nr">11.3.2</SPAN> <SPAN class="sec-title">Toolbar 
+support</SPAN></A></H3>
+
+<A NAME="sec:toolbar"></A>
+
+<P><A NAME="idx:buttonbar:487"></A>The library <CODE>library(toolbar)</CODE> 
+defines the classes <B>tool_bar</B>,
+<B>tool_button</B> and <B>tool_status_button</B> to simplify the 
+definition of tool-bars.
+
+<DL>
+<DT><STRONG>tool_bar -&gt;initialise:</STRONG> <VAR>Client:object*, 
+Orientation:[{horizontal,vertical}]</VAR></DT>
+<DD class="defbody">
+Create a <B>tool_bar</B> for which the buttons execute actions on
+<VAR>Client</VAR> (see class <B>tool_button</B> for details). By default 
+the buttons are placed left-to-right, but using <CODE>vertical</CODE>
+<VAR>Orientation</VAR> they can be stacked top-to-bottom.</DD>
+<DT><STRONG>tool_bar -&gt;append:</STRONG> <VAR>Button:tool_button<TT>|</TT>{gap}</VAR></DT>
+<DD class="defbody">
+Append a tool-button to the bar or, using the name <CODE>gap</CODE>, 
+make a small gap to separate logical groups of buttons.</DD>
+<DT><STRONG>tool_bar -&gt;activate:</STRONG> <VAR></VAR></DT>
+<DD class="defbody">
+Send <B><CODE>-&gt;</CODE>activate</B> to all member buttons, reflecting 
+whether they are ready to accept commands or `grayed-out'.</DD>
+<DT><STRONG>tool_button -&gt;initialise:</STRONG> <VAR></VAR></DT>
+<DD class="defbody">
+Define a button for <A NAME="idx:toolbarsendappend:488"></A>`<B>tool_bar<CODE>-&gt;</CODE>append</B>'. <VAR>Action</VAR> 
+is the action to execute. If this is a plain atom, this method without 
+arguments is invoked on the <A NAME="idx:toolbargetclient:489"></A>`<B>tool_bar<CODE>&lt;-</CODE>client</B>'. 
+If it is a code object this code is simply executed. <VAR>Label</VAR> is 
+the label. Normally for toolbars this will be an <A class="" href="summary.html#class:image">image</A> 
+object. <VAR>Balloon</VAR> defines the text for the popup-window if the 
+user rests the pointer long enough on the button. It it is a name, this 
+balloon is subject to
+<A NAME="idx:namegetlabelname:490"></A>`<B>name<CODE>&lt;-</CODE>label_name</B>' 
+(see <A class="sec" href="mlingual.html">section 11.7</A>), otherwise it 
+is passed literally. Finally, if <VAR>Condition</VAR> is present it is 
+evaluated by
+<B><CODE>-&gt;</CODE>activate</B> to determine the activation-state of 
+the button.</DD>
+<DT><STRONG>tool_button -&gt;activate:</STRONG> <VAR></VAR></DT>
+<DD class="defbody">
+If <B><CODE>&lt;-</CODE>condition</B> is present, evaluate it and send <B><CODE>-&gt;</CODE>active</B>.</DD>
+<DT><STRONG>tool_button -&gt;active:</STRONG> <VAR>Active:bool</VAR></DT>
+<DD class="defbody">
+If <A NAME="idx:off:491"></A><B>@off</B>, deactivate the button and 
+provide visual feedback for this.
+</DD>
+</DL>
+
+<P>A <B>tool_status_button</B> is toggled between depressed state and 
+normal state on each click. If it has an atomic <B><CODE>&lt;-</CODE>action</B> 
+it will send <VAR>action</VAR>: <A NAME="idx:on:492"></A><B>@on</B> to 
+the client when going to depressed state and <VAR>action</VAR>:<A NAME="idx:off:493"></A><B>@off</B> 
+when returning to normal state. If the <B><CODE>&lt;-</CODE>action</B> 
+is a code object this boolean will for forwarded over the code object. 
+See <A class="sec" href="exeobjects.html">section 10.2</A>.
+
+<H3><A NAME="sec:11.3.3"><SPAN class="sec-nr">11.3.3</SPAN> <SPAN class="sec-title">Example</SPAN></A></H3>
+
+<P>The example below uses these classes as well as class <A class="" href="summary.html#class:menu_bar">menu_bar</A> 
+to arrive at a typical modern application layout.
+
+<P><A NAME="fig:libdia"></A>
+<CENTER>
+<IMG SRC="libdia.gif">
+</CENTER>
+<TABLE ALIGN=center WIDTH="75%"><TR><TD>
+<B>Figure 20 : </B>Simple application framework</TABLE>
+
+<PRE class="code">
+%       Pull in the classes
+
+:- pce_autoload(report_dialog, library(pce_report)).
+:- pce_autoload(tool_bar, library(toolbar)).
+:- pce_autoload(finder, library(find_file)).
+:- pce_global(@finder, new(finder)).
+
+%       Define icons as program resources
+
+resource(printer,       image,  image('16x16/print.xpm')).
+resource(floppy,        image,  image('16x16/save.xpm')).
+
+%       Define the application as a subclass of frame.
+
+:- pce_begin_class(myapp, frame,
+                   "Frame representing the application").
+
+initialise(MyApp) :-&gt;
+        send_super(MyApp, initialise, 'My application'),
+        send(MyApp, append, new(D, dialog)),
+        send(D, pen, 0),
+        send(D, gap, size(5, 5)),
+        send(D, append, new(menu_bar)),
+        send(D, append, new(tool_bar(MyApp))),
+        send(MyApp, fill_menu_bar),
+        send(MyApp, fill_tool_bar),
+        send(new(W, myapp_workspace), below, D),
+        send(new(report_dialog), below, W).
+
+fill_menu_bar(F) :-&gt;
+        get(F, member, dialog, D),
+        get(D, member, menu_bar, MB),
+        send_list(MB, append,
+                  [ new(File, popup(file)),
+                    new(_Edit, popup(edit))
+                  ]),
+
+        send_list(File, append,
+                  [ menu_item(load,
+                              message(F, load),
+                              end_group := @on),
+                    menu_item(print,
+                              message(F, print))
+                  ]).
+
+fill_tool_bar(F) :-&gt;
+        get(F, member, dialog, D),
+        get(D, member, tool_bar, TB),
+        send_list(TB, append,
+                  [ tool_button(load,
+                                resource(floppy),
+                                load),
+                    gap,                % skip a little
+                    tool_button(print,
+                                resource(printer),
+                                print)
+                  ]).
+                                
+print(MyApp) :-&gt;
+        "Print the document"::
+        send(MyApp, report, progress, 'Printing ...'),
+        get(MyApp, member, myapp_workspace, WS),
+        send(WS, print),
+        send(MyApp, report, progress, done).
+
+load(MyApp) :-&gt;
+        "Ask a file and load it"::
+        get(@finder, file, @on, myp, File),
+        get(MyApp, member, myapp_workspace, WS),
+        send(WS, load, File).
+
+:- pce_end_class(myapp).
+
+
+%       dummy class for the work-area of your application
+
+:- pce_begin_class(myapp_workspace, window).
+
+:- pce_end_class(myapp_workspace).</PRE>
+
+<P></BODY></HTML>

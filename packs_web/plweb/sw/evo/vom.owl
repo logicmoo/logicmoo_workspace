@@ -1,0 +1,385 @@
+<?xml version="1.0"?>
+
+
+<!DOCTYPE rdf:RDF [
+    <!ENTITY ns "http://rdfs.org/sioc/ns#" >
+    <!ENTITY doap "http://usefulinc.com/ns/doap#" >
+    <!ENTITY owl "http://www.w3.org/2002/07/owl#" >
+    <!ENTITY dc "http://purl.org/dc/elements/1.1/" >
+    <!ENTITY xsd "http://www.w3.org/2001/XMLSchema#" >
+    <!ENTITY owl2xml "http://www.w3.org/2006/12/owl2-xml#" >
+    <!ENTITY rdfs "http://www.w3.org/2000/01/rdf-schema#" >
+    <!ENTITY evoont "http://www.ifi.uzh.ch/ddis/evoont/2008/11/" >
+    <!ENTITY rdf "http://www.w3.org/1999/02/22-rdf-syntax-ns#" >
+]>
+
+
+<rdf:RDF xmlns="&evoont;vom#"
+     xml:base="&evoont;vom"
+     xmlns:dc="http://purl.org/dc/elements/1.1/"
+     xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#"
+     xmlns:ns="http://rdfs.org/sioc/ns#"
+     xmlns:owl2xml="http://www.w3.org/2006/12/owl2-xml#"
+     xmlns:owl="http://www.w3.org/2002/07/owl#"
+     xmlns:xsd="http://www.w3.org/2001/XMLSchema#"
+     xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+     xmlns:evoont="http://www.ifi.uzh.ch/ddis/evoont/2008/11/"
+     xmlns:doap="http://usefulinc.com/ns/doap#">
+    <owl:Ontology rdf:about="">
+        <owl:priorVersion rdf:datatype="&xsd;ENTITY"
+            >http://www.ifi.uzh.ch/ddis/evoont/2008/10/vom/vom.owl</owl:priorVersion>
+        <dc:creator
+            >Dynamic and Distributed Systems Group, University of Zurich, http:www.ifi.uzh.ch/ddis</dc:creator>
+        <rdfs:comment
+            >The version ontology model describes the enities related to versioning systems. These are, e.g., CVS or Subversion. The basic elements are Paths (abstract form of a file or folder but without any content information), Versions (the content and metadata of a Path during a certain time instant) and Releases (a collection of a version of certain paths)</rdfs:comment>
+        <owl:versionInfo>4.1</owl:versionInfo>
+        <dc:rights>licensed under a Creative Commons Attribution 2.5 Switzerland License, see http:www.ifi.uzh.ch/ddis/evo</dc:rights>
+        <dc:contributor>Jonas Tappolet</dc:contributor>
+        <owl:imports rdf:resource="http://rdfs.org/sioc/ns"/>
+        <owl:imports rdf:resource="http://usefulinc.com/ns/doap"/>
+    </owl:Ontology>
+    
+
+
+    <!-- 
+    ///////////////////////////////////////////////////////////////////////////////////////
+    //
+    // Annotation properties
+    //
+    ///////////////////////////////////////////////////////////////////////////////////////
+     -->
+
+    <owl:AnnotationProperty rdf:about="&dc;contributor"/>
+    <owl:AnnotationProperty rdf:about="&dc;creator"/>
+    
+
+
+    <!-- 
+    ///////////////////////////////////////////////////////////////////////////////////////
+    //
+    // Object Properties
+    //
+    ///////////////////////////////////////////////////////////////////////////////////////
+     -->
+
+    
+
+
+    <!-- http://www.ifi.uzh.ch/ddis/evoont/2008/11/hasAuthor -->
+
+    <owl:ObjectProperty rdf:about="&evoont;hasAuthor">
+        <rdfs:comment
+            >denotes who created an entity, i.e. a Path, Version or Release</rdfs:comment>
+        <rdfs:range rdf:resource="&ns;User"/>
+        <owl:inverseOf rdf:resource="&evoont;isAuthorOf"/>
+        <rdfs:domain>
+            <owl:Class>
+                <owl:unionOf rdf:parseType="Collection">
+                    <rdf:Description rdf:about="&evoont;Path"/>
+                    <rdf:Description rdf:about="&evoont;Release"/>
+                    <rdf:Description rdf:about="&evoont;Version"/>
+                </owl:unionOf>
+            </owl:Class>
+        </rdfs:domain>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://www.ifi.uzh.ch/ddis/evoont/2008/11/hasChild -->
+
+    <owl:ObjectProperty rdf:about="&evoont;hasChild">
+        <rdf:type rdf:resource="&owl;TransitiveProperty"/>
+        <rdfs:comment
+            >points to child elements of a path element. This property is transitive meaning that a query returns the whole chain of hasChild relations.</rdfs:comment>
+        <rdfs:domain rdf:resource="&evoont;Path"/>
+        <rdfs:range rdf:resource="&evoont;Path"/>
+        <owl:inverseOf rdf:resource="&evoont;hasParent"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://www.ifi.uzh.ch/ddis/evoont/2008/11/hasParent -->
+
+    <owl:ObjectProperty rdf:about="&evoont;hasParent">
+        <rdf:type rdf:resource="&owl;TransitiveProperty"/>
+        <rdfs:comment
+            >points to a parent element of a path. This property is transitive meaning that a query returns the whole chain of hasParent relations.</rdfs:comment>
+        <rdfs:domain rdf:resource="&evoont;Path"/>
+        <rdfs:range rdf:resource="&evoont;Path"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://www.ifi.uzh.ch/ddis/evoont/2008/11/hasRelease -->
+
+    <owl:ObjectProperty rdf:about="&evoont;hasRelease">
+        <rdfs:comment
+            >points from a repository to a release that is defined within this repository.</rdfs:comment>
+        <rdfs:domain rdf:resource="&doap;Repository"/>
+        <rdfs:range rdf:resource="&evoont;Release"/>
+        <owl:inverseOf rdf:resource="&evoont;isReleaseOf"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://www.ifi.uzh.ch/ddis/evoont/2008/11/hasVersion -->
+
+    <owl:ObjectProperty rdf:about="&evoont;hasVersion">
+        <rdfs:comment
+            >relates a version with a path. As a path is a unique identifier, the version of a path refers to the different states (contents) this paths describes during time.</rdfs:comment>
+        <rdfs:domain rdf:resource="&evoont;Path"/>
+        <rdfs:range rdf:resource="&evoont;Version"/>
+        <owl:inverseOf rdf:resource="&evoont;isVersionOf"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://www.ifi.uzh.ch/ddis/evoont/2008/11/hostsPath -->
+
+    <owl:ObjectProperty rdf:about="&evoont;hostsPath">
+        <rdfs:comment
+            >links a path with a repository. A repository describes a closed collection of certain documents (paths, versions and releases)</rdfs:comment>
+        <rdfs:domain rdf:resource="&doap;Repository"/>
+        <rdfs:range rdf:resource="&evoont;Path"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://www.ifi.uzh.ch/ddis/evoont/2008/11/inRepository -->
+
+    <owl:ObjectProperty rdf:about="&evoont;inRepository">
+        <rdfs:comment
+            >denoted to which repository a specific path belongs to.</rdfs:comment>
+        <rdfs:range rdf:resource="&doap;Repository"/>
+        <rdfs:domain rdf:resource="&evoont;Path"/>
+        <owl:inverseOf rdf:resource="&evoont;hostsPath"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://www.ifi.uzh.ch/ddis/evoont/2008/11/isAuthorOf -->
+
+    <owl:ObjectProperty rdf:about="&evoont;isAuthorOf">
+        <rdfs:comment
+            >Points to an entity (object) this Person (subject) is author of.</rdfs:comment>
+        <rdfs:domain rdf:resource="&ns;User"/>
+        <rdfs:range>
+            <owl:Class>
+                <owl:unionOf rdf:parseType="Collection">
+                    <rdf:Description rdf:about="&evoont;Path"/>
+                    <rdf:Description rdf:about="&evoont;Release"/>
+                    <rdf:Description rdf:about="&evoont;Version"/>
+                </owl:unionOf>
+            </owl:Class>
+        </rdfs:range>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://www.ifi.uzh.ch/ddis/evoont/2008/11/isReleaseOf -->
+
+    <owl:ObjectProperty rdf:about="&evoont;isReleaseOf">
+        <rdfs:comment
+            >denotes to which repository a specific release belongs to.</rdfs:comment>
+        <rdfs:range rdf:resource="&doap;Repository"/>
+        <rdfs:domain rdf:resource="&evoont;Release"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://www.ifi.uzh.ch/ddis/evoont/2008/11/isVersionOf -->
+
+    <owl:ObjectProperty rdf:about="&evoont;isVersionOf">
+        <rdfs:comment
+            >relates a version with a path</rdfs:comment>
+        <rdfs:range rdf:resource="&evoont;Path"/>
+        <rdfs:domain rdf:resource="&evoont;Version"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://www.ifi.uzh.ch/ddis/evoont/2008/11/latestVersion -->
+
+    <owl:ObjectProperty rdf:about="&evoont;latestVersion">
+        <rdf:type rdf:resource="&owl;FunctionalProperty"/>
+        <rdfs:comment
+            >points to the latest version (object) of a path (subject)</rdfs:comment>
+        <rdfs:domain rdf:resource="&evoont;Path"/>
+        <rdfs:range rdf:resource="&evoont;Version"/>
+        <owl:inverseOf rdf:resource="&evoont;latestVersionOf"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://www.ifi.uzh.ch/ddis/evoont/2008/11/latestVersionOf -->
+
+    <owl:ObjectProperty rdf:about="&evoont;latestVersionOf">
+        <rdfs:comment
+            >points to the latest version (object) of the path (subject)</rdfs:comment>
+        <rdfs:range rdf:resource="&evoont;Path"/>
+        <rdfs:domain rdf:resource="&evoont;Version"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://www.ifi.uzh.ch/ddis/evoont/2008/11/nextVersion -->
+
+    <owl:ObjectProperty rdf:about="&evoont;nextVersion">
+        <rdf:type rdf:resource="&owl;InverseFunctionalProperty"/>
+        <rdfs:comment
+            >points to a subsequent version (object) of a version (subject)</rdfs:comment>
+        <rdfs:range rdf:resource="&evoont;Version"/>
+        <rdfs:domain rdf:resource="&evoont;Version"/>
+        <owl:inverseOf rdf:resource="&evoont;previousVersion"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://www.ifi.uzh.ch/ddis/evoont/2008/11/previousVersion -->
+
+    <owl:ObjectProperty rdf:about="&evoont;previousVersion">
+        <rdf:type rdf:resource="&owl;FunctionalProperty"/>
+        <rdfs:comment
+            >points to the precedent version (object) of a certain version (subject)</rdfs:comment>
+        <rdfs:range rdf:resource="&evoont;Version"/>
+        <rdfs:domain rdf:resource="&evoont;Version"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- 
+    ///////////////////////////////////////////////////////////////////////////////////////
+    //
+    // Data properties
+    //
+    ///////////////////////////////////////////////////////////////////////////////////////
+     -->
+
+    
+
+
+    <!-- http://www.ifi.uzh.ch/ddis/evoont/2008/11/creationTime -->
+
+    <owl:DatatypeProperty rdf:about="&evoont;creationTime">
+        <rdf:type rdf:resource="&owl;FunctionalProperty"/>
+        <rdfs:comment
+            >the date when an entity in the repository was created.</rdfs:comment>
+        <rdfs:domain rdf:resource="&evoont;Path"/>
+        <rdfs:domain rdf:resource="&evoont;Release"/>
+        <rdfs:domain rdf:resource="&evoont;Version"/>
+        <rdfs:range rdf:resource="&xsd;dateTime"/>
+    </owl:DatatypeProperty>
+    
+
+
+    <!-- http://www.ifi.uzh.ch/ddis/evoont/2008/11/fullPath -->
+
+    <owl:DatatypeProperty rdf:about="&evoont;fullPath">
+        <rdf:type rdf:resource="&owl;FunctionalProperty"/>
+        <rdfs:comment
+            >the full pathname. The name property of a path might only describe the folder&#39;s or file&#39;s name.</rdfs:comment>
+        <rdfs:domain rdf:resource="&evoont;Path"/>
+        <rdfs:range rdf:resource="&xsd;string"/>
+    </owl:DatatypeProperty>
+    
+
+
+    <!-- http://www.ifi.uzh.ch/ddis/evoont/2008/11/message -->
+
+    <owl:DatatypeProperty rdf:about="&evoont;message">
+        <rdf:type rdf:resource="&owl;FunctionalProperty"/>
+        <rdfs:comment
+            >a string message composed by the author of a version. This message typically contains a human readable form of the changes that lead to this new version.</rdfs:comment>
+        <rdfs:domain rdf:resource="&evoont;Version"/>
+        <rdfs:range rdf:resource="&xsd;string"/>
+    </owl:DatatypeProperty>
+    
+
+
+    <!-- http://www.ifi.uzh.ch/ddis/evoont/2008/11/name -->
+
+    <owl:DatatypeProperty rdf:about="&evoont;name">
+        <rdf:type rdf:resource="&owl;FunctionalProperty"/>
+        <rdfs:comment
+            >the name of the entity. In case of a Release, this is the identifier of the release. In case of a Path, this is the file or folder name.</rdfs:comment>
+        <rdfs:domain rdf:resource="&evoont;Path"/>
+        <rdfs:domain rdf:resource="&evoont;Release"/>
+        <rdfs:range rdf:resource="&xsd;string"/>
+    </owl:DatatypeProperty>
+    
+
+
+    <!-- http://www.ifi.uzh.ch/ddis/evoont/2008/11/number -->
+
+    <owl:DatatypeProperty rdf:about="&evoont;number">
+        <rdf:type rdf:resource="&owl;FunctionalProperty"/>
+        <rdfs:comment
+            >a version does not have a name for identification in the repository but a number that is continuously incremented.</rdfs:comment>
+        <rdfs:domain rdf:resource="&evoont;Version"/>
+        <rdfs:range rdf:resource="&xsd;string"/>
+    </owl:DatatypeProperty>
+    
+
+
+    <!-- 
+    ///////////////////////////////////////////////////////////////////////////////////////
+    //
+    // Classes
+    //
+    ///////////////////////////////////////////////////////////////////////////////////////
+     -->
+
+    
+
+
+    <!-- http://rdfs.org/sioc/ns#User -->
+
+    <owl:Class rdf:about="&ns;User"/>
+    
+
+
+    <!-- http://usefulinc.com/ns/doap#Repository -->
+
+    <owl:Class rdf:about="&doap;Repository"/>
+    
+
+
+    <!-- http://www.ifi.uzh.ch/ddis/evoont/2008/11/Path -->
+
+    <owl:Class rdf:about="&evoont;Path">
+        <rdfs:subClassOf rdf:resource="&owl;Thing"/>
+        <owl:disjointWith rdf:resource="&evoont;Release"/>
+        <rdfs:comment
+            >a Path is an abstract entity of a filesystem path. It is not linked to any specific content of a file but to versions of this content.</rdfs:comment>
+    </owl:Class>
+    
+
+
+    <!-- http://www.ifi.uzh.ch/ddis/evoont/2008/11/Release -->
+
+    <owl:Class rdf:about="&evoont;Release">
+        <rdfs:comment
+            >a Release is a selection of versions of different files. A release must not contain two or more versions of the same file.</rdfs:comment>
+    </owl:Class>
+    
+
+
+    <!-- http://www.ifi.uzh.ch/ddis/evoont/2008/11/Version -->
+
+    <owl:Class rdf:about="&evoont;Version">
+        <rdfs:subClassOf rdf:resource="&owl;Thing"/>
+        <rdfs:comment
+            >A Version describes an entity&#39;s state at a certain time instant. A version always points to exactly one physical version of the content of a file. Versions are linked between each other using the properties hasPreviousVersion / hasNextVersion.</rdfs:comment>
+    </owl:Class>
+    
+
+
+    <!-- http://www.w3.org/2002/07/owl#Thing -->
+
+    <owl:Class rdf:about="&owl;Thing"/>
+</rdf:RDF>
+
+
+
+<!-- Generated by the OWL API (version 2.2.1.842) http://owlapi.sourceforge.net -->
+

@@ -1,0 +1,300 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+
+<HTML>
+<HEAD>
+<TITLE>Programming in XPCE/Prolog: Section 10.6</TITLE><LINK REL=home HREF="index.html">
+<LINK REL=contents HREF="Contents.html">
+<LINK REL=index HREF="DocIndex.html">
+<LINK REL=summary HREF="summary.html">
+<LINK REL=previous HREF="application.html">
+<LINK REL=next HREF="report.html">
+<STYLE type="text/css">
+/* Style sheet for SWI-Prolog latex2html
+*/
+
+dd.defbody
+{ margin-bottom: 1em;
+}
+
+dt.pubdef
+{ background-color: #c5e1ff;
+}
+
+pre.code
+{ margin-left: 1.5em;
+margin-right: 1.5em;
+border: 1px dotted;
+padding-top: 5px;
+padding-left: 5px;
+padding-bottom: 5px;
+background-color: #f8f8f8;
+}
+
+div.navigate
+{ text-align: center;
+background-color: #f0f0f0;
+border: 1px dotted;
+padding: 5px;
+}
+
+div.title
+{ text-align: center;
+padding-bottom: 1em;
+font-size: 200%;
+font-weight: bold;
+}
+
+div.author
+{ text-align: center;
+font-style: italic;
+}
+
+div.abstract
+{ margin-top: 2em;
+background-color: #f0f0f0;
+border: 1px dotted;
+padding: 5px;
+margin-left: 10%; margin-right:10%;
+}
+
+div.abstract-title
+{ text-align: center;
+padding: 5px;
+font-size: 120%;
+font-weight: bold;
+}
+
+div.toc-h1
+{ font-size: 200%;
+font-weight: bold;
+}
+
+div.toc-h2
+{ font-size: 120%;
+font-weight: bold;
+margin-left: 2em;
+}
+
+div.toc-h3
+{ font-size: 100%;
+font-weight: bold;
+margin-left: 4em;
+}
+
+div.toc-h4
+{ font-size: 100%;
+margin-left: 6em;
+}
+
+span.sec-nr
+{ 
+}
+
+span.sec-title
+{ 
+}
+
+span.pred-ext
+{ font-weight: bold;
+}
+
+/* Footnotes */
+
+sup.fn { color: blue; text-decoration: underline; }
+span.fn-text: { display: none; }
+sup.fn span {display: none;}
+sup:hover span 
+{ display: block !important;
+position: absolute; top: auto; left: auto; width: 80%;
+color: #000; background: white;
+border: 2px solid;
+padding: 5px; margin: 10px; z-index: 100;
+font-size: smaller;
+}
+</STYLE>
+</HEAD>
+<BODY BGCOLOR="white">
+<DIV class="navigate"><A class="nav" href="index.html"><IMG SRC="home.gif" BORDER=0 ALT="Home"></A>
+<A class="nav" href="Contents.html"><IMG SRC="index.gif" BORDER=0 ALT="Contents"></A>
+<A class="nav" href="DocIndex.html"><IMG SRC="yellow_pages.gif" BORDER=0 ALT="Index"></A>
+<A class="nav" href="summary.html"><IMG SRC="info.gif" BORDER=0 ALT="Summary"></A>
+<A class="nav" href="application.html"><IMG SRC="prev.gif" BORDER=0 ALT="Previous"></A>
+<A class="nav" href="report.html"><IMG SRC="next.gif" BORDER=0 ALT="Next"></A>
+</DIV>
+
+<H2><A NAME="sec:10.6"><SPAN class="sec-nr">10.6</SPAN> <SPAN class="sec-title">Window 
+layout in a frame</SPAN></A></H2>
+
+<A NAME="sec:framelayout"></A>
+
+<P><A NAME="idx:framelayout:368"></A><A NAME="idx:windowlayoutinframe:369"></A><A NAME="idx:layoutwindow:370"></A>A <A class="" href="summary.html#class:frame">frame</A> 
+is the gateway between a collection of tiled
+<A class="" href="summary.html#class:window">window</A><EM>s</EM> 
+(graphics, dialog) and the Window System. Any displayed window has a 
+frame. The <A NAME="idx:windowsendcreate:371"></A>`<B>window<CODE>-&gt;</CODE>create</B>' 
+method (invoked by
+<A NAME="idx:windowsendopen:372"></A>`<B>window<CODE>-&gt;</CODE>open</B>') 
+will create a default frame for a window if the window does not have a 
+frame.
+
+<P>Windows in a frame are controlled by a hierarchy of <A class="" href="summary.html#class:tile">tile</A> 
+objects. The leaves of this hierarchy manage an individual window, while 
+the non-leaf tiles either manages a left-to-right list of sub-tiles or a 
+top-to-bottom list. A non-leaf <EM>horizontal</EM> (left-to-right) tile 
+forces all windows to be as high as the highest wishes to be and 
+distributes the horizontal space over the sub-tiles, while a <EM>vertical</EM> 
+tile forces all members to the same (widest) member and distributes the 
+vertical space.
+
+<P>A tile hierarchy is built using the methods <A NAME="idx:windowsendabove:373"></A>`<B>window<CODE>-&gt;</CODE>above</B>', 
+etc. described below. Each window is born with a leaf-tile. If two 
+windows are connected using <B><CODE>-&gt;</CODE>left</B> or <B><CODE>-&gt;</CODE>right</B>, 
+a horizontal tile is created. Any other window associated to the left or 
+right will be added as a member to this horizontal tile. A analogous 
+story applies to vertically stacked windows.
+
+<P>If a window or collection of windows is placed left of a vertical 
+tiled stack of windows, a horizontal tile is created.
+
+<P>Whenever a window receives one of the <B><CODE>-&gt;</CODE>above</B>, <B><CODE>-&gt;</CODE>left</B>, 
+etc. messages, it will forward these messages to the root of the 
+associated tile hierarchy. Assuming both windows are not yet related, 
+the root tiles negotiate the alignment (combine, become member, create a 
+new root).
+
+<P>Suppose we want to realise the window layout shown in <A class="fig" href="framelayout.html#fig:flayout1">figure 
+16</A>. Now, look for windows that have equal width or height. This is 
+the starting point, <B>W3</B> and <B>W4</B> in this example. So, the 
+first statement is:
+
+<PRE class="code">
+        send(W3, above, W4)
+</PRE>
+
+<P><A NAME="fig:flayout1"></A>
+<CENTER>
+<IMG SRC="flayout1.gif">
+</CENTER>
+<TABLE ALIGN=center WIDTH="75%"><TR><TD>
+<B>Figure 16 : </B>Demo window layout</TABLE>
+
+<P>Note that `send(W4, below, W3)' is the same, except that if both <B>W3</B> 
+and <B>W4</B> have a <A class="" href="summary.html#class:frame">frame</A> 
+attached, the frame of the <EM>argument</EM> of the message will hold 
+both windows, while the frame of the <EM>receiver</EM> is destroyed.
+
+<P>Now simply continue inwards-out:
+
+<PRE class="code">
+        send(W2, left, W3),
+        send(W1, above, W2),
+        send(W5, below, W2)
+</PRE>
+
+<P>Note that `send(W2, left, W4)' is <EM>exactly</EM> the same as 
+positioning
+<B>W2</B> left of <B>W3</B>. The resulting tile hierarchy is shown in
+<A class="fig" href="framelayout.html#fig:tilehier1">figure 17</A>. The 
+numbers indicate the order of creation of the various objects.
+
+<P><A NAME="fig:tilehier1"></A>
+<CENTER>
+<IMG SRC="tilehier1.gif">
+</CENTER>
+<TABLE ALIGN=center WIDTH="75%"><TR><TD>
+<B>Figure 17 : </B>Tile hierarchy of example</TABLE>
+
+<H3><A NAME="sec:10.6.1"><SPAN class="sec-nr">10.6.1</SPAN> <SPAN class="sec-title">Windows 
+sizes and automatic adjustment</SPAN></A></H3>
+
+<P><A NAME="idx:windowsizespecification:374"></A>A <A class="" href="summary.html#class:tile">tile</A> 
+defines six size parameters, described below.
+
+<DL>
+<DT><STRONG>tile -&gt;ideal_width:</STRONG> <VAR>int</VAR></DT>
+<DD class="defbody">
+</DD>
+<DT><STRONG>tile -&gt;ideal_height:</STRONG> <VAR>int</VAR></DT>
+<DD class="defbody">
+These two parameters describe the <EM>ideal</EM> size of the tile. The 
+initial values for these parameters are read from the window for which 
+the tile is created. A non-leaf horizontal tile sets the ideal width to 
+the sum of its members and the ideal height to the maximum of its 
+members.
+</DD>
+<DT><STRONG>tile -&gt;hor_stretch:</STRONG> <VAR>0..100</VAR></DT>
+<DD class="defbody">
+</DD>
+<DT><STRONG>tile -&gt;ver_stretch:</STRONG> <VAR>0..100</VAR></DT>
+<DD class="defbody">
+These two parameters describe how easy the window stretches (gets 
+bigger). A non-leaf horizontal tile sets hor_stretch to the maximum of 
+its members and ver_stretch to the minimum of its members.
+</DD>
+<DT><STRONG>tile -&gt;hor_shrink:</STRONG> <VAR>0..100</VAR></DT>
+<DD class="defbody">
+</DD>
+<DT><STRONG>tile -&gt;ver_shrink:</STRONG> <VAR>0..100</VAR></DT>
+<DD class="defbody">
+Same, but deals with making the window/tile smaller than its ideal size.
+</DD>
+</DL>
+
+<P>The various built-in window types have the following defaults shown 
+in
+<A class="tab" href="framelayout.html#tab:windowsizes">table 7</A>.
+
+<P>
+<CENTER>
+<TABLE BORDER=2 FRAME=box RULES=groups>
+<TR VALIGN=top><TD><B>class</B></TD><TD ALIGN=center>width</TD><TD ALIGN=center>height</TD><TD ALIGN=center>hor_shrink</TD><TD ALIGN=center>ver_shrink</TD><TD ALIGN=center>hor_stretch</TD><TD ALIGN=center>ver_stretch </TD></TR>
+<TBODY>
+<TBODY>
+<TR VALIGN=top><TD><B>window</B></TD><TD ALIGN=center>200</TD><TD ALIGN=center>100</TD><TD ALIGN=center>100</TD><TD ALIGN=center>100</TD><TD ALIGN=center>100</TD><TD ALIGN=center>100 </TD></TR>
+<TR VALIGN=top><TD><B>picture</B></TD><TD ALIGN=center>400</TD><TD ALIGN=center>200</TD><TD ALIGN=center>100</TD><TD ALIGN=center>100</TD><TD ALIGN=center>100</TD><TD ALIGN=center>100 </TD></TR>
+<TR VALIGN=top><TD><B>dialog</B></TD><TD ALIGN=center>200&alpha; </TD><TD ALIGN=center>100&alpha; </TD><TD ALIGN=center>0</TD><TD ALIGN=center>0</TD><TD ALIGN=center>0</TD><TD ALIGN=center>0 </TD></TR>
+<TR VALIGN=top><TD><B>browser</B></TD><TD ALIGN=center>25&beta; </TD><TD ALIGN=center>10&beta; </TD><TD ALIGN=center>0</TD><TD ALIGN=center>100</TD><TD ALIGN=center>0</TD><TD ALIGN=center>100 </TD></TR>
+<TR VALIGN=top><TD><B>view</B></TD><TD ALIGN=center>80&beta; </TD><TD ALIGN=center>20&beta; </TD><TD ALIGN=center>100</TD><TD ALIGN=center>100</TD><TD ALIGN=center>100</TD><TD ALIGN=center>100 </TD></TR>
+</TABLE>
+
+<P>(1)If the dialog is not empty, the bounding box of the contents with 
+the <B><CODE>&lt;-</CODE>gap</B> around it will be used.
+
+<P>(2)Interpreted as character units.
+</CENTER>
+<TABLE ALIGN=center WIDTH="75%"><TR><TD>
+<B>Table 7 : </B>The window types and their default sizes</TABLE>
+
+<A NAME="tab:windowsizes"></A>
+
+<P>These rules will often suffice for simple applications. You may 
+adjust the stretch and shrink parameters after creating the window, but 
+before opening the window.
+
+<H3><A NAME="sec:10.6.2"><SPAN class="sec-nr">10.6.2</SPAN> <SPAN class="sec-title">Manipulating 
+an open frame</SPAN></A></H3>
+
+<P>Windows may be added to an open frame using the <B><CODE>-&gt;</CODE>above</B>, 
+etc. message, specifying any of the member windows as argument. Windows 
+may be deleted from a frame using <A NAME="idx:framesenddelete:375"></A>`<B>frame<CODE>-&gt;</CODE>delete</B>'. 
+If a window is added or deleted from an open window, the message <A NAME="idx:framesendfit:376"></A>`<B>frame<CODE>-&gt;</CODE>fit</B>' 
+will be called to readjust the contents. This will normally change the 
+size of the frame. If this is not desired, class <A class="" href="summary.html#class:frame">frame</A> 
+must be sub-classed as below. Note that fixed_size should not be set to <A NAME="idx:on:377"></A><B>@on</B> 
+before the frame is open.
+
+<PRE class="code">
+:- pce_begin_class(my_dynamic_frame, frame,
+                   "Add fixed_size").
+
+variable(fixed_size, bool := @off, both,
+         "Do not resize on -&gt;fit").
+
+fit(F) :-&gt;
+        "Request to fit the contents"::
+        (   get(F, fixed_size, @on)
+        -&gt;  send(F, resize)
+        ;   send(F, send_super, fit)
+        ).</PRE>
+
+<P></BODY></HTML>

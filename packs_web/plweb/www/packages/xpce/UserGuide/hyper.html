@@ -1,0 +1,319 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+
+<HTML>
+<HEAD>
+<TITLE>Programming in XPCE/Prolog: Section 10.11</TITLE><LINK REL=home HREF="index.html">
+<LINK REL=contents HREF="Contents.html">
+<LINK REL=index HREF="DocIndex.html">
+<LINK REL=summary HREF="summary.html">
+<LINK REL=previous HREF="images.html">
+<LINK REL=next HREF="ugraphics.html">
+<STYLE type="text/css">
+/* Style sheet for SWI-Prolog latex2html
+*/
+
+dd.defbody
+{ margin-bottom: 1em;
+}
+
+dt.pubdef
+{ background-color: #c5e1ff;
+}
+
+pre.code
+{ margin-left: 1.5em;
+margin-right: 1.5em;
+border: 1px dotted;
+padding-top: 5px;
+padding-left: 5px;
+padding-bottom: 5px;
+background-color: #f8f8f8;
+}
+
+div.navigate
+{ text-align: center;
+background-color: #f0f0f0;
+border: 1px dotted;
+padding: 5px;
+}
+
+div.title
+{ text-align: center;
+padding-bottom: 1em;
+font-size: 200%;
+font-weight: bold;
+}
+
+div.author
+{ text-align: center;
+font-style: italic;
+}
+
+div.abstract
+{ margin-top: 2em;
+background-color: #f0f0f0;
+border: 1px dotted;
+padding: 5px;
+margin-left: 10%; margin-right:10%;
+}
+
+div.abstract-title
+{ text-align: center;
+padding: 5px;
+font-size: 120%;
+font-weight: bold;
+}
+
+div.toc-h1
+{ font-size: 200%;
+font-weight: bold;
+}
+
+div.toc-h2
+{ font-size: 120%;
+font-weight: bold;
+margin-left: 2em;
+}
+
+div.toc-h3
+{ font-size: 100%;
+font-weight: bold;
+margin-left: 4em;
+}
+
+div.toc-h4
+{ font-size: 100%;
+margin-left: 6em;
+}
+
+span.sec-nr
+{ 
+}
+
+span.sec-title
+{ 
+}
+
+span.pred-ext
+{ font-weight: bold;
+}
+
+/* Footnotes */
+
+sup.fn { color: blue; text-decoration: underline; }
+span.fn-text: { display: none; }
+sup.fn span {display: none;}
+sup:hover span 
+{ display: block !important;
+position: absolute; top: auto; left: auto; width: 80%;
+color: #000; background: white;
+border: 2px solid;
+padding: 5px; margin: 10px; z-index: 100;
+font-size: smaller;
+}
+</STYLE>
+</HEAD>
+<BODY BGCOLOR="white">
+<DIV class="navigate"><A class="nav" href="index.html"><IMG SRC="home.gif" BORDER=0 ALT="Home"></A>
+<A class="nav" href="Contents.html"><IMG SRC="index.gif" BORDER=0 ALT="Contents"></A>
+<A class="nav" href="DocIndex.html"><IMG SRC="yellow_pages.gif" BORDER=0 ALT="Index"></A>
+<A class="nav" href="summary.html"><IMG SRC="info.gif" BORDER=0 ALT="Summary"></A>
+<A class="nav" href="images.html"><IMG SRC="prev.gif" BORDER=0 ALT="Previous"></A>
+<A class="nav" href="ugraphics.html"><IMG SRC="next.gif" BORDER=0 ALT="Next"></A>
+</DIV>
+
+<H2><A NAME="sec:10.11"><SPAN class="sec-nr">10.11</SPAN> <SPAN class="sec-title">Using 
+hyper links to relate objects</SPAN></A></H2>
+
+<A NAME="sec:hyper"></A>
+
+<P>A <A class="" href="summary.html#class:hyper">hyper</A> is a binary 
+relation between two objects. Hypers are, like <A class="" href="summary.html#class:connection">connection</A> 
+objects, guarded automatically against destruction of one of the related 
+objects. Special methods allow for easy communication between <EM>hypered</EM> 
+objects.
+
+<P>Hypers form an adequate answer if objects need to be related that 
+depend temporary and incidentally on each other. It is possible to be 
+informed of the destruction of hypers, which enables a hypered object to 
+keep track of its environment. Good examples for the usage of hypers are 
+to express the relation between multiple <EM>frame</EM> objects working 
+together to form a single application or maintaining the relation 
+between an application object (persistent object, model) and its 
+visualisation (controller).
+
+<P>Of course relations between objects can be maintained using 
+instance-variables, but this process requires awareness from both 
+related objects as well as significant bookkeeping.
+
+<H3><A NAME="sec:10.11.1"><SPAN class="sec-nr">10.11.1</SPAN> <SPAN class="sec-title">Programming 
+existence dependencies</SPAN></A></H3>
+
+<P>The example of this section demonstrates a common existence 
+relationship. If the `main' object is destroyed, all related `part' 
+objects should be destroyed too, but if a part is destroyed, the main 
+should not be destroyed. This semantic is expressed using a refinement 
+of class <A class="" href="summary.html#class:hyper">hyper</A> that can 
+be found in <CODE>library(hyper)</CODE> of the
+<font size=-1>XPCE/P</font>rolog libraries.
+
+<PRE class="code">
+:- pce_begin_class(partof_hyper, hyper,
+                   "&lt;-to is a part of &lt;-from").
+
+unlink_from(H) :-&gt;
+        "-&gt;destroy the &lt;-to part"::
+        get(H, to, Part),
+        (   object(Part),
+            send(Part, has_send_method, destroy)
+        -&gt;  send(Part, destroy)
+        ;   free(Part)
+        ),
+        free(H).
+
+:- pce_end_class.</PRE>
+
+<P>This hyper is demonstrated in the following application. We have an 
+application for editing a graphical representation. The colour of the 
+objects can be modified by double-clicking an object and selecting a 
+colour in a dialog window. In this example we do not use a modal dialog 
+and using the hyper serves two purposes. First of all it tells the 
+dialog what object should be changed, but second, it ensures the dialog 
+is destroyed if the box is.
+
+<PRE class="code">
+:- use_module(library(hyper)).
+
+:- pce_begin_class(link_demo, picture).
+
+initialise(P) :-&gt;
+        send_super(P, initialise, 'Link Demo'),
+        send(P, recogniser,
+             click_gesture(left, '', single,
+                           message(P, add_box, @event?position))).
+
+add_box(P, At:point) :-&gt;
+        send(P, display, new(link_box), At).
+
+:- pce_end_class(link_demo).
+
+:- pce_begin_class(link_box, box).
+
+handle(w/2, 0, link, north).
+handle(w/2, h, link, south).
+handle(0, h/2, link, west).
+handle(w, h/2, link, east).
+
+initialise(B) :-&gt;
+        send_super(B, initialise, 100, 50),
+        send_list(B, recogniser,
+                  [ click_gesture(left, '', double,
+                                  message(B, edit)),
+                    new(connect_gesture),
+                    new(move_gesture)
+                  ]).
+
+colour(red).
+colour(green).
+colour(blue).
+colour(yellow).
+
+edit(B) :-&gt;
+        "Allow changing colour"::
+        new(D, dialog('Select colour')),
+        send(D, append, new(M, menu(colour, choice,
+                                    message(?(D, hypered, box),
+                                            fill_pattern,
+                                            @arg1)))),
+        (   colour(Colour),
+            send(M, append,
+                 menu_item(colour(Colour),
+                           @default,
+                           pixmap(@nil,
+                                  background := Colour,
+                                  width := 32,
+                                  height := 16))),
+            fail
+        ;   true
+        ),
+        send(D, append, button(done, message(D, destroy))),
+        new(_, partof_hyper(B, D, dialog, box)),
+        get(B, display_position, PosB),
+        get(PosB, plus, point(20,100), PosD),
+        send(D, open, PosD).
+
+:- pce_end_class(link_box).</PRE>
+
+<P><A NAME="fig:linkhyper"></A>
+<CENTER>
+<IMG SRC="linkhyper.gif">
+</CENTER>
+<TABLE ALIGN=center WIDTH="75%"><TR><TD>
+<B>Figure 19 : </B>Using a hyper to link a window to an object</TABLE>
+
+<H3><A NAME="sec:10.11.2"><SPAN class="sec-nr">10.11.2</SPAN> <SPAN class="sec-title">Methods 
+for handling hyper objects</SPAN></A></H3>
+
+<H4><A NAME="sec:10.11.2.1"><SPAN class="sec-nr">10.11.2.1</SPAN> <SPAN class="sec-title">Methods 
+on class hyper</SPAN></A></H4>
+
+<DL>
+<DT><STRONG>hyper -&gt;initialise:</STRONG> <VAR>F:object, T:object, 
+FName:name, TName:[name]</VAR></DT>
+<DD class="defbody">
+Create a new hyper object. Seen from <EM>F</EM>, this hyper is called <EM>FName</EM>; 
+seen from <EM>T</EM> it is called <EM>TName</EM>. The default for <EM>TName</EM> 
+is <EM>FName</EM>.
+</DD>
+<DT><STRONG>hyper -&gt;unlink_from:</STRONG> <VAR></VAR></DT>
+<DD class="defbody">
+Called by the object-management system when the <B><CODE>&lt;-</CODE>from</B> 
+side of the hyper is being destroyed. May be refined.
+</DD>
+<DT><STRONG>hyper -&gt;unlink_to:</STRONG> <VAR></VAR></DT>
+<DD class="defbody">
+Called by the object-management system when the <B><CODE>&lt;-</CODE>to</B> 
+side of the hyper is being destroyed. May be refined.
+</DD>
+</DL>
+
+<H4><A NAME="sec:10.11.2.2"><SPAN class="sec-nr">10.11.2.2</SPAN> <SPAN class="sec-title">Methods 
+on class object</SPAN></A></H4>
+
+<P>Below are the two most commonly used methods dealing with hypers and 
+defined on class <A class="" href="summary.html#class:object">object</A>. <font size=-1>XPCE</font> 
+defines various other methods for deleting and inspecting the hyper 
+structure. Use the online manual for details.
+
+<DL>
+<DT><STRONG>object -&gt;send_hyper:</STRONG> <VAR>Name:[name], 
+Selector:name, Arg:unchecked ...</VAR></DT>
+<DD class="defbody">
+Broadcast a send-operation to all (named) <B><CODE>&lt;-</CODE>hypered</B> 
+objects. Similar to <B><CODE>&lt;-</CODE>get_hyper</B>, but does not 
+stop if the method is received successfully. Succeeds if at least one 
+hypered object accepted the message.
+</DD>
+<DT><STRONG>object &lt;-hypered:</STRONG> <VAR>Name:[name], Test:[code]</VAR></DT>
+<DD class="defbody">
+object Find a hyper-related object. Name is the name of the hyper (seen 
+from the side of the receiver). Test is an optional additional test. If 
+present, this test is executed using the arguments given below. The 
+first matching object is returned. See also <B><CODE>&lt;-</CODE>all_hypers</B>.
+
+<P>
+<CENTER>
+<TABLE BORDER=0 FRAME=void RULES=groups>
+<TR VALIGN=top><TD><A NAME="idx:arg1:460"></A><B>@arg1</B> </TD><TD>This 
+object </TD></TR>
+<TR VALIGN=top><TD><A NAME="idx:arg2:461"></A><B>@arg2</B> </TD><TD>The 
+hyper object </TD></TR>
+<TR VALIGN=top><TD><A NAME="idx:arg3:462"></A><B>@arg3</B> </TD><TD>The 
+object at the other end of the hyper </TD></TR>
+</TABLE>
+
+</CENTER>
+</DD>
+</DL>
+
+<P></BODY></HTML>

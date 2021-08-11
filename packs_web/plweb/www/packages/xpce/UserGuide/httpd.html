@@ -1,0 +1,483 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+
+<HTML>
+<HEAD>
+<TITLE>Programming in XPCE/Prolog: Section 11.9</TITLE><LINK REL=home HREF="index.html">
+<LINK REL=contents HREF="Contents.html">
+<LINK REL=index HREF="DocIndex.html">
+<LINK REL=summary HREF="summary.html">
+<LINK REL=previous HREF="dragdrop.html">
+<LINK REL=next HREF="docrender.html">
+<STYLE type="text/css">
+/* Style sheet for SWI-Prolog latex2html
+*/
+
+dd.defbody
+{ margin-bottom: 1em;
+}
+
+dt.pubdef
+{ background-color: #c5e1ff;
+}
+
+pre.code
+{ margin-left: 1.5em;
+margin-right: 1.5em;
+border: 1px dotted;
+padding-top: 5px;
+padding-left: 5px;
+padding-bottom: 5px;
+background-color: #f8f8f8;
+}
+
+div.navigate
+{ text-align: center;
+background-color: #f0f0f0;
+border: 1px dotted;
+padding: 5px;
+}
+
+div.title
+{ text-align: center;
+padding-bottom: 1em;
+font-size: 200%;
+font-weight: bold;
+}
+
+div.author
+{ text-align: center;
+font-style: italic;
+}
+
+div.abstract
+{ margin-top: 2em;
+background-color: #f0f0f0;
+border: 1px dotted;
+padding: 5px;
+margin-left: 10%; margin-right:10%;
+}
+
+div.abstract-title
+{ text-align: center;
+padding: 5px;
+font-size: 120%;
+font-weight: bold;
+}
+
+div.toc-h1
+{ font-size: 200%;
+font-weight: bold;
+}
+
+div.toc-h2
+{ font-size: 120%;
+font-weight: bold;
+margin-left: 2em;
+}
+
+div.toc-h3
+{ font-size: 100%;
+font-weight: bold;
+margin-left: 4em;
+}
+
+div.toc-h4
+{ font-size: 100%;
+margin-left: 6em;
+}
+
+span.sec-nr
+{ 
+}
+
+span.sec-title
+{ 
+}
+
+span.pred-ext
+{ font-weight: bold;
+}
+
+/* Footnotes */
+
+sup.fn { color: blue; text-decoration: underline; }
+span.fn-text: { display: none; }
+sup.fn span {display: none;}
+sup:hover span 
+{ display: block !important;
+position: absolute; top: auto; left: auto; width: 80%;
+color: #000; background: white;
+border: 2px solid;
+padding: 5px; margin: 10px; z-index: 100;
+font-size: smaller;
+}
+</STYLE>
+</HEAD>
+<BODY BGCOLOR="white">
+<DIV class="navigate"><A class="nav" href="index.html"><IMG SRC="home.gif" BORDER=0 ALT="Home"></A>
+<A class="nav" href="Contents.html"><IMG SRC="index.gif" BORDER=0 ALT="Contents"></A>
+<A class="nav" href="DocIndex.html"><IMG SRC="yellow_pages.gif" BORDER=0 ALT="Index"></A>
+<A class="nav" href="summary.html"><IMG SRC="info.gif" BORDER=0 ALT="Summary"></A>
+<A class="nav" href="dragdrop.html"><IMG SRC="prev.gif" BORDER=0 ALT="Previous"></A>
+<A class="nav" href="docrender.html"><IMG SRC="next.gif" BORDER=0 ALT="Next"></A>
+</DIV>
+
+<H2><A NAME="sec:11.9"><SPAN class="sec-nr">11.9</SPAN> <SPAN class="sec-title">Playing 
+WEB (HTTP) server</SPAN></A></H2>
+
+<A NAME="sec:httpd"></A>
+
+<P>Web presentation has attractive features. It is well accepted, 
+standardised (if you stick to the basics) and network-transparent. Many 
+people think you need a web-server like
+<A class="url" href="http://www.apache.org">Apache</A> with some sort of 
+server-scripting (<A NAME="idx:CGI:530">CGI</A>) to realise a server. 
+This is not true. Any application capable of elementary TCP/IP 
+communication can easily act as a web-server.
+
+<P>Using <font size=-1>XPCE</font> for this task may be attractive for a 
+number of reasons.
+
+<P>
+<UL>
+<LI><I>Prototyping</I><BR>
+As the <font size=-1>XPCE/P</font>rolog running on your desktop is the 
+server you can use the full debugging capabilities of Prolog to debug 
+your server application.
+
+<P>
+<LI><I>Including graphics</I><BR>
+<font size=-1>XPCE</font> can generate GIF and JPEG images for your 
+web-pages on the fly. You can include <font size=-1>XPCE</font> <A class="" href="summary.html#class:graphical">graphical</A> 
+objects directly in the output and have the server library handle the 
+required transformations.
+
+<P>
+<LI><I>Remote presentation</I><BR>
+<font size=-1>XPCE</font> can be used as <A NAME="idx:groupware:531">groupware</A> 
+server, presenting state of the applications and allowing remote users 
+to interact using their web-browser<SUP class="fn">13<SPAN class="fn-text">Using 
+the Unix/X11 version <font size=-1>XPCE</font> can manage windows on 
+multiple desktops. For MS-Windows users this is not supported.</SPAN></SUP>
+
+<P>
+<LI><I>Report generation</I><BR>
+Applications may to use HTML as framework for report generation. Though 
+rather weak in its expressiveness, the advantage is the wide support on 
+presentation and distribution applications.
+</UL>
+
+<P>We start with a small demo, illustrating frames and text.
+
+<P><A NAME="fig:httpd"></A>
+<CENTER>
+<IMG SRC="httpd.gif">
+</CENTER>
+<TABLE ALIGN=center WIDTH="75%"><TR><TD>
+<B>Figure 28 : </B>Mozilla showing <font size=-1>XPCE</font> generated 
+figure</TABLE>
+
+<PRE class="code">
+:- module(my_httpd,
+          [ go/1
+          ]).
+:- use_module(library(pce)).
+:- use_module(library('http/httpd')).
+:- use_module(library('http/html_write')).
+:- use_module(library('draw/importpl')).
+
+%       Create server at Port
+<A NAME="idx:go1:532"></A>
+go(Port) :-
+        new(_, my_httpd(Port)).
+<A NAME="idx:myhttpd:533"></A>
+:- pce_begin_class(my_httpd, httpd, "Demo Web server").</PRE>
+
+<P><B><CODE>-&gt;</CODE>request</B> is sent after the super-class has 
+received a complete request header. We get the `path' and have a Prolog 
+predicate generating the replies.
+
+<PRE class="code"><A NAME="idx:myhttpdsendrequest:534"></A>
+request(HTTPD, Request:sheet) :-&gt;
+        "A request came in."::
+        get(Request, path, Path),
+        reply(Path, HTTPD).
+
+:- discontiguous
+        reply/2.</PRE>
+
+<P><B><CODE>-&gt;</CODE>reply_html</B> takes &lt;<VAR>Module</VAR>&gt;:&lt;<VAR>DCGRuleSet</VAR>&gt; 
+to formulate a reply. This uses the html_write library, converting a 
+complex Prolog term into a formatted HTML document. The complex term can 
+invoke additional DCG rulesets, providing nicely structured 
+content-generation.
+
+<PRE class="code">
+reply('/', HTTPD) :- !,
+        send(HTTPD, reply_html, my_httpd:frames).
+
+frames --&gt;
+        html(html([ head(title('Demo')),
+                    frameset([cols('25%,75%')],
+                             [ frame([ src('/index'),
+                                       name(index)
+                                     ]),
+                               frame([ src('/blank'),
+                                       name(body)
+                                     ])
+                             ])
+                  ])).
+
+<A NAME="idx:reply2:535"></A>
+reply('/blank', HTTPD) :-
+        send(HTTPD, reply_html, my_httpd:blank).
+
+blank --&gt;
+        page(title('Blank'),
+             []).
+<A NAME="idx:reply2:536"></A>
+reply('/index', HTTPD) :-
+        send(HTTPD, reply_html, my_httpd:index).
+
+index --&gt;
+        page(title('Index'),
+             [ a([ href('/text'), target(body) ],
+                 [ 'Show text' ]),
+               br([]),
+               a([ href('/picture'), target(body) ],
+                 [ 'Show picture' ])
+             ]).
+<A NAME="idx:reply2:537"></A>
+reply('/text', HTTPD) :-
+        send(HTTPD, reply_html, my_httpd:text).
+
+text --&gt;
+        page(title('Text'),
+             [ p(['Just showing a little text'])
+             ]).</PRE>
+
+<P>Reply a graphical object. The server translates the graphical to a 
+GIF or JPEG bitmap and provides the proper HTTP reply header. You can 
+also embed graphicals into the HTML structures used above.
+
+<P>The drawing itself is exported from the demo program PceDraw and 
+turned into an XPCE graphical using the support library draw/importpl.
+
+<PRE class="code"><A NAME="idx:reply2:538"></A>
+reply('/picture', HTTPD) :-
+        make_picture(Gr),
+        send(HTTPD, reply, Gr, 'image/gif').
+<A NAME="idx:makepicture1:539"></A>
+make_picture(Dev) :-
+        new(Dev, device),
+        drawing(xpcenetscape, Drawing),
+        realise_drawing(Dev, Drawing).
+
+%       Drawing imported from PceDraw
+
+drawing(xpcenetscape,
+        [ compound(new(A, figure),
+                   drawing([ display(box(137, 74)+radius(17),
+                                     point(0, 0)),
+                             display(text('XPCE', center, normal),
+                                     point(52, 30))
+                           ]),
+                   point(163, 183)),
+          compound(new(B, figure),
+                   drawing([ display(box(137, 74)+radius(17),
+                                     point(0, 0)),
+                             display(text('Netscape', center, normal),
+                                     point(42, 30))
+                           ]),
+                   point(350, 183)),
+          connect(connection(A,
+                             B,
+                             handle(w, h/2, link, east),
+                             handle(0, h/2, link, west)) +
+                    arrows(both))
+        ]).
+
+:- pce_end_class(my_httpd).</PRE>
+
+<H3><A NAME="sec:11.9.1"><SPAN class="sec-nr">11.9.1</SPAN> <SPAN class="sec-title">Class <B>httpd</B></SPAN></A></H3>
+
+<P>The library <CODE>library(http/httpd)</CODE> defines the class <B>httpd</B>. 
+This subclass of <A class="" href="summary.html#class:socket">socket</A> 
+deals with most of the HTTP protocol details, breaking down HTTP 
+requests and encapsulating responses with the proper headers. The class 
+itself is an <EM>abstract</EM> class, a subclass needs to be created and 
+some of the <EM>virtual methods</EM> needs to be refined to arrive at a 
+useful application.
+
+<DL>
+<DT><STRONG>httpd -&gt;initialise:</STRONG> <VAR>Port:[int]</VAR></DT>
+<DD class="defbody">
+Create a server and bind it to <VAR>Port</VAR>. If <VAR>Port</VAR> is 
+omitted a free port is chosen. With a specified port, 8080 is a commonly 
+used alternative to the standard 80 used by web-servers. If you have a 
+web-server running on the same machine you may can generate a page on 
+your website redirecting a page to this server. The URI of this server 
+is <TT>http://&lt;<VAR>host</VAR>&gt;/&lt;<VAR>Port</VAR>&gt;</TT>.</DD>
+<DT><STRONG>httpd -&gt;accepted:</STRONG> <VAR></VAR></DT>
+<DD class="defbody">
+This is sent after a connection has been accepted. The system 
+implementation logs the new connection if debugging is enabled. You can 
+refine or redefine this method, asking for the <A NAME="idx:socketgetpeername:540"></A>`<B>socket<CODE>&lt;-</CODE>peer_name</B>' 
+and sending <B><CODE>-&gt;</CODE>free</B> to the socket if you want to 
+restrict access.</DD>
+<DT><STRONG>httpd -&gt;request:</STRONG> <VAR>Data:sheet</VAR></DT>
+<DD class="defbody">
+This is sent from <B><CODE>-&gt;</CODE>input</B> after a complete 
+request-header is received.
+<B><CODE>-&gt;</CODE>input</B> decodes the header-fields, places them in <VAR>Data</VAR> 
+and then calls <B><CODE>-&gt;</CODE>request</B>. The attribute-names in 
+the sheet are downcase versions of the case-insensitive request fields 
+of the HTTP header. In addition, the following fields are defined:
+
+<P>
+<CENTER>
+<TABLE BORDER=2 FRAME=box RULES=groups>
+<TR VALIGN=top><TD COLSPAN=2 ALIGN=center><B>Fields that are always 
+present</B></TR>
+<TBODY>
+<TR VALIGN=top><TD>request</TD><TD><CODE>GET</CODE>, <CODE>POST</CODE>, 
+etc. I.e. the first word of the request-header. In most cases this will 
+be
+<CODE>GET</CODE>. </TD></TR>
+<TR VALIGN=top><TD>path</TD><TD>The `path' part of the request. This is 
+normally used to decide on the response. If the path contains a ? 
+(question mark) this and the remaining data are removed and decoded to 
+the `form' attribute. </TD></TR>
+<TR VALIGN=top><TD>form</TD><TD>If the request is a <CODE>GET</CODE> 
+request with form-data, the form attribute contains another sheet 
+holding the decoded form-data. Otherwise <B><CODE>&lt;-</CODE>form</B> 
+holds <A NAME="idx:nil:541"></A><B>@nil</B>. </TD></TR>
+<TR VALIGN=top><TD>http_version</TD><TD>Version of the HTTP protocol 
+used by the client. Normally
+<CODE>1.0</CODE> or <CODE>1.1</CODE>. </TD></TR>
+<TBODY>
+<TR VALIGN=top><TD COLSPAN=2 ALIGN=center><B>Other fields</B></TR>
+<TBODY>
+<TR VALIGN=top><TD>user</TD><TD>If authorisation data is present, this 
+contains the user-name. If this field is present, the password field is 
+present too. </TD></TR>
+<TR VALIGN=top><TD>password</TD><TD>Contains the decoded password 
+supplied by the user. </TD></TR>
+</TABLE>
+
+</CENTER>
+
+<P>After decoding the request, the user should compose a response and 
+use
+<B><CODE>-&gt;</CODE>reply</B> or <B><CODE>-&gt;</CODE>reply_html</B> to 
+return the response to the client.</DD>
+<DT><STRONG>httpd -&gt;reply:</STRONG> <VAR></VAR></DT>
+<DD class="defbody">
+Send a reply. This method or <B><CODE>-&gt;</CODE>reply_html</B> is 
+normally activated at the end of the user's <B><CODE>-&gt;</CODE>request</B> 
+implementation. Data is one of:
+
+<P>
+<UL>
+<LI><I>A string or source_sink</I><BR>
+If the reply is a <A class="" href="summary.html#class:string">string</A>, <A class="" href="summary.html#class:text_buffer">text_buffer</A>, <A class="" href="summary.html#class:resource">resource</A> 
+or <A class="" href="summary.html#class:file">file</A>, the data in this 
+object will be returned. Unless otherwise specified <B><CODE>-&gt;</CODE>reply</B> 
+assumes the data has <A NAME="idx:mimetype:542">mime-type</A> <CODE>text/plain</CODE>.
+
+<P>
+<LI><I>A pixmap</I><BR>
+If the reply is a <A class="" href="summary.html#class:pixmap">pixmap</A> 
+(or can be converted automatically, for example any <A class="" href="summary.html#class:graphical">graphical</A>), 
+this image is encoded as GIF or JPEG and sent with the corresponding <A NAME="idx:imagegif:543">image/gif</A> 
+or <A NAME="idx:imagejpeg:544">image/jpeg</A> mime-type. For more 
+information on image save-types, see <A NAME="idx:imagesendsavein:545"></A>`<B>image<CODE>-&gt;</CODE>save_in</B>'.
+</UL>
+
+<P><VAR>Type</VAR> is the mimi-type returned and tells the browser what 
+to do with the data. This should correspond with the content of <VAR>Data</VAR>. 
+For example, you can return a PNG picture from a file using
+
+<PRE class="code">
+        send(HTTPD, reply, file('pict.png'), 'image/png'),
+</PRE>
+
+<P><VAR>Status</VAR> is used to tell the client in a formal way how the 
+request was processed. The default is <CODE>200 OK</CODE>. See the 
+methods below for returning other values.
+
+<P><VAR>Header</VAR> is a <A class="" href="summary.html#class:sheet">sheet</A> 
+holding additional name-value pairs. If present, they are simply added 
+to the end of the reply-header. For example if you want to prevent the 
+browser caching the result you can use
+
+<PRE class="code">
+        send(HTTPD, reply, ...,
+             sheet(attribute('Cache-Control', 'no-cache'))),
+</PRE>
+
+</DD>
+<DT><STRONG>httpd -&gt;reply_html:</STRONG> <VAR></VAR></DT>
+<DD class="defbody">
+Uses the <CODE>library(http/html_write)</CODE> library to translate <VAR>Term</VAR> 
+into HTML text using DCG rules and then invokes <B><CODE>-&gt;</CODE>reply</B> 
+using the <VAR>Type</VAR>
+<CODE>text/html</CODE>. <VAR>Status</VAR> and <VAR>Header</VAR> are 
+passed unmodified to <B><CODE>-&gt;</CODE>reply</B>.
+</DD>
+</DL>
+
+<P>In addition to the principal methods above, a number of methods are 
+defined for dealing with abnormal replies such as denying permission, 
+etc.
+
+<DL>
+<DT><STRONG>httpd -&gt;forbidden:</STRONG> <VAR>What:[name]</VAR></DT>
+<DD class="defbody">
+Replies with a <CODE>403 Forbidden</CODE> message. <VAR>What</VAR> may 
+be provided to indicate what is forbidden. Default is the path from the 
+current
+<B><CODE>&lt;-</CODE>request</B>.</DD>
+<DT><STRONG>httpd -&gt;authorization_required:</STRONG> <VAR></VAR></DT>
+<DD class="defbody">
+Challenges the user to provide a name and password. The only method 
+provided is <CODE>Basic</CODE>. <VAR>Realm</VAR> tells the user for 
+which service permission is requested. On all subsequence contacts from 
+this client to this server the <B><CODE>-&gt;</CODE>request</B> data 
+contains the <CODE>user</CODE> and
+<CODE>password</CODE> fields. The demo implementation of <B><CODE>-&gt;</CODE>request</B> 
+in
+<B>httpd</B> contains the following example code:
+
+<PRE class="code">
+request(S, Header:sheet) :-&gt;
+        "Process a request.  The argument is the header"::
+        (   get(Header, path, '/no')
+        -&gt;  send(S, forbidden, '/no')
+        ;   get(Header, path, '/maybe')
+        -&gt;  (   get(Header, value, user, jan),
+                get(Header, value, password, test)
+            -&gt;  send(S, reply, 'You hacked me')
+            ;   send(S, authorization_required)
+            )
+        ;   send(S, reply, 'Nice try')
+        ).</PRE>
+
+</DD>
+<DT><STRONG>httpd -&gt;not_found:</STRONG> <VAR>What:[char_array]</VAR></DT>
+<DD class="defbody">
+Reply with a <CODE>404 Not Found</CODE> message, using the request-path 
+as default for <VAR>What</VAR>.</DD>
+<DT><STRONG>httpd -&gt;moved:</STRONG> <VAR>Where:char_array</VAR></DT>
+<DD class="defbody">
+Reply with a <CODE>301 Moved Permanently</CODE>. Normally the client 
+will retry the request using the URL returned in <VAR>Where</VAR>.</DD>
+<DT><STRONG>httpd -&gt;server_error:</STRONG> <VAR>What:[char_array]</VAR></DT>
+<DD class="defbody">
+Reply with a <CODE>500 Internal Server</CODE> using `<VAR>What</VAR> as 
+additional information to the user. This is the default reply if <B><CODE>-&gt;</CODE>request</B> 
+fails or raised an exception.
+</DD>
+</DL>
+
+<P></BODY></HTML>

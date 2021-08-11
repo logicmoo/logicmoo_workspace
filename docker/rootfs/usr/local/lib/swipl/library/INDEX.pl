@@ -196,6 +196,11 @@ index((test_installation), 0, check_installation, check_installation).
 index((test_installation), 1, check_installation, check_installation).
 index((check_old_last), 0, checklast, checklast).
 index((check_old_select), 0, checkselect, checkselect).
+index((chr_show_store), 1, chr, chr).
+index((find_chr_constraint), 1, chr, chr).
+index((chr_trace), 0, chr, chr).
+index((chr_notrace), 0, chr, chr).
+index((chr_leash), 1, chr, chr).
 index((format_to_codes), 3, codesio, codesio).
 index((format_to_codes), 4, codesio, codesio).
 index((write_to_codes), 2, codesio, codesio).

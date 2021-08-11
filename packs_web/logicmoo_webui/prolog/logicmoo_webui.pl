@@ -198,8 +198,8 @@ webui_load_swish_and_clio:-
    % trace,
    absolute_file_name('../../swish/run_swish_and_clio',Run,[relative_to(Dir),file_type(prolog),file_errors(fail)]),
    user:ensure_loaded(Run),
-   asserta((prolog_version:git_update_versions(V):- (wdmsg(skip(prolog_version:git_update_versions(V))),!))),
-   asserta((swish_version:git_update_versions(V):- (wdmsg(skip(swish_version:git_update_versions(V))),!))),
+   asserta((prolog_version:git_update_versions(V):- (dmsg(skip(prolog_version:git_update_versions(V))),!))),
+   asserta((swish_version:git_update_versions(V):- (dmsg(skip(swish_version:git_update_versions(V))),!))),
    swish_app:load_config('./config-enabled-swish'),
    listing(swish_config:login_item/2)]),!.
 

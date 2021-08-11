@@ -1,0 +1,224 @@
+		 /*******************************
+		 *	       TABLES		*
+		 *******************************/
+
+table.packlist
+{ border-width: 1px;
+  border-style: solid;
+  border-collapse: collapse;
+  margin-left: 0.5cm;
+  margin-top: 1em;
+}
+
+table.packlist tr.even th
+{ background-color: #e0e0e0;
+}
+
+table.packlist tr.skip th
+{ color:white;
+  background-color: blue;
+  text-align: center;
+  padding-top: 1cm;
+  padding-bottom: 1cm;
+}
+
+table.packlist td, table.packlist th
+{ border-width: 0 1px 0 1px;
+  border-style: solid;
+  padding: 0 2px;
+}
+
+tr.even td
+{ background-color: #e0e0e0;
+}
+
+td.int
+{ text-align:right;
+  padding-right:5px;
+}
+
+td.empty, td.int_c
+{ text-align:center;
+}
+
+tr.even td.buttons
+{ background-color: #fff;
+}
+
+table.packlist td.total
+{ border-width: 1px 0 0 0;
+  font-weight: bold;
+}
+
+table.packlist th, tr.header th
+{ background-color: #0c3d6e;
+  color:  #FFF;
+  border: 1px solid #ccc;
+  font-size: 16pt;
+  vertical-align: top;
+}
+
+table.packlist th.total
+{ text-align: right;
+  padding-right: 7px;
+  border-width: 0 1px 0 1px;
+  border-style: solid;
+  color:black;
+  background: transparent;
+}
+
+table.packlist a.resort
+{ color: #fff;
+  text-decoration: none;
+}
+
+table.packlist span.annot
+{ color: #888;
+  font-size: 80%;
+  position: relative; top: -0.7ex;
+}
+
+table.packlist span.annot:before { content: "("; }
+table.packlist span.annot:after  { content: ")"; }
+
+table.packlist span.votes
+{ color: #888;
+  font-size: 80%;
+}
+
+table.packlist a.resort:hover
+{ color: #fff;
+  text-decoration: underline;
+}
+
+table.packlist i.sorted
+{ text-decoration: underline;
+}
+
+table.packlist th.p_name
+{ text-align: right;
+  background: transparent;
+  border-width: 0 1px 0 1px;
+}
+
+table.packlist div.sth
+{ font-size: 75%;
+  font-weight: normal;
+  color: #ccc;
+}
+
+table.packlist span.rating
+{ white-space: nowrap;
+}
+
+table.packlist td.pack-title
+{ max-width: 50ex;
+  white-space: nowrap;
+  overflow: hidden;
+}
+
+table.packlist td.pack-version
+{ padding-left: 2ex;
+}
+
+table.packlist td.pack-downloads
+{ padding-left: 5ex;
+}
+
+/* Package information table */
+
+table.pack
+{ margin-left: 1cm;
+}
+
+table.pack th
+{ text-align: right;
+  padding-right: 1ex;
+}
+
+span.title
+{ font-style: italic;
+}
+
+/* File info table */
+
+span.hash
+{ font-family: courier;
+}
+
+td.count
+{ text-align: right;
+  padding-right: 1ex;
+}
+
+/* Hierarchical overview of files in a pack */
+
+div.pack-files
+{ margin-left: 5ex;
+}
+
+span.file-tree-info
+{ font-size: -1;
+  color: #888;
+  margin-left: 1ex;
+}
+
+/* Reviews, comments and ratings */
+
+div.rated
+{ display: inline-block;
+  background-color: #888;
+}
+
+div.rated .jRatingColor
+{ background-color: red;
+}
+
+div.review div.comment
+{ background-color: white;
+  color: black;
+  margin-left: 1.5em;
+  margin-right: 1.5em;
+  margin-top: 1ex;
+  margin-bottom: 0ex;
+  padding: 0px;
+  border: 1px dotted;
+}
+
+div.review div.reviewer
+{ font-size: 80%;
+  font-style: italic;
+  color: #666;
+  text-align: right;
+  margin-right: 1.5em;
+}
+
+div.review div.rating
+{ margin-left: 1.5em;
+}
+
+div.review div.update
+{ text-align: right;
+  font-size: 60%;
+  font-style: italic;
+  padding-right: 2px;
+}
+
+form.review th
+{ text-align:right;
+  mrgin-right:1ex;
+}
+
+form.review a.update
+{ font-size: 80%;
+  margin-left: 1ex;
+}
+
+div.edit-profile
+{ margin-top: 1ex;
+  border-bottom: 1px solid;
+  color: #888;
+  font-size: 80%;
+  font-style: italic;
+  text-align:right;
+}

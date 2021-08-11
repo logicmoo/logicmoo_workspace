@@ -1,0 +1,403 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+
+<HTML>
+<HEAD>
+<TITLE>Programming in XPCE/Prolog: Section 10.12</TITLE><LINK REL=home HREF="index.html">
+<LINK REL=contents HREF="Contents.html">
+<LINK REL=index HREF="DocIndex.html">
+<LINK REL=summary HREF="summary.html">
+<LINK REL=previous HREF="hyper.html">
+<LINK REL=next HREF="printing.html">
+<STYLE type="text/css">
+/* Style sheet for SWI-Prolog latex2html
+*/
+
+dd.defbody
+{ margin-bottom: 1em;
+}
+
+dt.pubdef
+{ background-color: #c5e1ff;
+}
+
+pre.code
+{ margin-left: 1.5em;
+margin-right: 1.5em;
+border: 1px dotted;
+padding-top: 5px;
+padding-left: 5px;
+padding-bottom: 5px;
+background-color: #f8f8f8;
+}
+
+div.navigate
+{ text-align: center;
+background-color: #f0f0f0;
+border: 1px dotted;
+padding: 5px;
+}
+
+div.title
+{ text-align: center;
+padding-bottom: 1em;
+font-size: 200%;
+font-weight: bold;
+}
+
+div.author
+{ text-align: center;
+font-style: italic;
+}
+
+div.abstract
+{ margin-top: 2em;
+background-color: #f0f0f0;
+border: 1px dotted;
+padding: 5px;
+margin-left: 10%; margin-right:10%;
+}
+
+div.abstract-title
+{ text-align: center;
+padding: 5px;
+font-size: 120%;
+font-weight: bold;
+}
+
+div.toc-h1
+{ font-size: 200%;
+font-weight: bold;
+}
+
+div.toc-h2
+{ font-size: 120%;
+font-weight: bold;
+margin-left: 2em;
+}
+
+div.toc-h3
+{ font-size: 100%;
+font-weight: bold;
+margin-left: 4em;
+}
+
+div.toc-h4
+{ font-size: 100%;
+margin-left: 6em;
+}
+
+span.sec-nr
+{ 
+}
+
+span.sec-title
+{ 
+}
+
+span.pred-ext
+{ font-weight: bold;
+}
+
+/* Footnotes */
+
+sup.fn { color: blue; text-decoration: underline; }
+span.fn-text: { display: none; }
+sup.fn span {display: none;}
+sup:hover span 
+{ display: block !important;
+position: absolute; top: auto; left: auto; width: 80%;
+color: #000; background: white;
+border: 2px solid;
+padding: 5px; margin: 10px; z-index: 100;
+font-size: smaller;
+}
+</STYLE>
+</HEAD>
+<BODY BGCOLOR="white">
+<DIV class="navigate"><A class="nav" href="index.html"><IMG SRC="home.gif" BORDER=0 ALT="Home"></A>
+<A class="nav" href="Contents.html"><IMG SRC="index.gif" BORDER=0 ALT="Contents"></A>
+<A class="nav" href="DocIndex.html"><IMG SRC="yellow_pages.gif" BORDER=0 ALT="Index"></A>
+<A class="nav" href="summary.html"><IMG SRC="info.gif" BORDER=0 ALT="Summary"></A>
+<A class="nav" href="hyper.html"><IMG SRC="prev.gif" BORDER=0 ALT="Previous"></A>
+<A class="nav" href="printing.html"><IMG SRC="next.gif" BORDER=0 ALT="Next"></A>
+</DIV>
+
+<H2><A NAME="sec:10.12"><SPAN class="sec-nr">10.12</SPAN> <SPAN class="sec-title">User 
+defined graphicals</SPAN></A></H2>
+
+<A NAME="sec:ugraphics"></A>
+
+<P>This section discusses various approaches for defining new graphical 
+objects. <font size=-1>XPCE</font> offers three approaches for defining 
+new graphical objects:
+
+<P>
+<UL>
+<LI><I>Combining graphicals</I><BR>
+The simplest way to create a new graphical object is by combining 
+multiple graphical objects on a graphical device. The following 
+predicate creates a `text-box':
+
+<PRE class="code">
+text_box(TB, Text, Width, Height) :-
+        new(TB, device),
+        send(TB, display,
+             new(B, box(Width, Height))),
+        send(TB, display,
+             new(T, text(Text, center, normal))),
+        send(T, center, B?center).
+</PRE>
+
+<P>For some applications, this is a suitable and simple approach. 
+However, it is not a very good approach to build a library of GUI 
+objects or, more in general, to make <EM>generic</EM> and <EM>reusable</EM> 
+new graphical objects. The above object does not handle resize properly, 
+and the user has to know the internal structure to modify the object.
+<LI><I>Subclassing class device</I><BR>
+Since the introduction of user-defined classes (see <A class="sec" href="udc.html">section 
+7</A>), sub-classing <A class="" href="summary.html#class:device">device</A> 
+is a common way to define new graphicals. Using this technique, <A NAME="idx:devicesendinitialise:463"></A>`<B>device<CODE>-&gt;</CODE>initialise</B>' 
+is refined to display the part of the compound graphical. <A NAME="idx:devicesendevent:464"></A>`<B>device<CODE>-&gt;</CODE>event</B>' 
+and <A NAME="idx:devicesendgeometry:465"></A>`<B>device<CODE>-&gt;</CODE>geometry</B>' 
+are normally redefined to define event-handling and resize of the new 
+graphical object. See <A class="sec" href="sec-7.3.html">section 7.3.2</A> 
+for details.
+<LI><I>(Re)defining the repaint method</I><BR>
+The method <A NAME="idx:graphicalsendredrawarea:466"></A>`<B>graphical<CODE>-&gt;</CODE>_redraw_area</B>' 
+can be redefined to define the look of a graphical. We will discuss the 
+advantages and disadvantages of this approach in this section and give 
+some examples.
+</UL>
+
+<H3><A NAME="sec:10.12.1"><SPAN class="sec-nr">10.12.1</SPAN> <SPAN class="sec-title">(Re)defining 
+the repaint method</SPAN></A></H3>
+
+<P>The most basic way to (re)define the look of a graphical object is by 
+redefining the method that paints the graphical. This method is called
+<B><CODE>-&gt;</CODE>_redraw_area</B>. The method <B><CODE>-&gt;</CODE>_redraw_area</B> <B>cannot 
+be called directly</B> by the user, but it is called by the graphical 
+infra-structure whenever the graphical needs to be repainted. The 
+definition of the method is below:
+
+<DL>
+<DT><STRONG>graphical -&gt;_redraw_area:</STRONG> <VAR>Area:area</VAR></DT>
+<DD class="defbody">
+This method is called by the repaint infra-structure of <font size=-1>XPCE</font>. 
+Its task is to paint the graphical on the current graphical device. <EM>Area</EM> 
+indicates the area ---in the coordinate system of the device--- that 
+needs to be repainted. This area is guaranteed to overlap with the
+<B><CODE>&lt;-</CODE>area</B> of the graphical.
+
+<P>It is not allowed for this method to paint outside the <B><CODE>&lt;-</CODE>area</B> 
+of the receiver. There is no clipping (see <B><CODE>-&gt;</CODE>clip</B>) 
+to prevent this. If there is no cheap way to prevent this, bracket the 
+graphical operations in <B><CODE>-&gt;</CODE>clip</B> and <B><CODE>-&gt;</CODE>unclip</B>, 
+but be aware that setting and undoing the clip-region is an expensive 
+operation. Note that is is <B>not</B> necessary to limit the applied 
+paint only inside the given argument <EM>Area</EM>. The graphical 
+infra-structure automatically clips all graphical operation to this 
+area. In general, <EM>Area</EM> should only be considered to avoid large 
+numbers of unnecessary drawing operations.
+</DD>
+</DL>
+
+<P>There are three sets of methods to implement the drawing job. The 
+first is <A NAME="idx:graphicalsenddraw:467"></A>`<B>graphical<CODE>-&gt;</CODE>draw</B>', 
+that allows drawing other graphical objects in this place. The second 
+are methods to manipulate the clipping and state of the graphical 
+device. The last is a set of methods to realise primitive drawing 
+operations, such as drawing lines, rectangles, images, text, etc. These 
+methods can be used in any combination. It is allowed, but not 
+obligatory, to call the <B><CODE>-&gt;</CODE>send_super</B> method in 
+order to invoke the default behaviour of the graphical. These methods 
+are summarised in <A class="tab" href="ugraphics.html#tab:paintmethods">table 
+9</A>. Full documentation is available from the online manual.
+
+<P>
+<CENTER>
+<TABLE BORDER=2 FRAME=box RULES=groups>
+<TR VALIGN=top><TD><B><CODE>-&gt;</CODE>draw</B> </TD><TD>Paint other 
+graphical </TD></TR>
+<TBODY>
+<TR VALIGN=top><TD><B><CODE>-&gt;</CODE>clip</B> </TD><TD>Clip to area 
+or <B><CODE>&lt;-</CODE>area</B> of graphical </TD></TR>
+<TR VALIGN=top><TD><B><CODE>-&gt;</CODE>unclip</B> </TD><TD>Undo last <B><CODE>-&gt;</CODE>clip</B> </TD></TR>
+<TBODY>
+<TR VALIGN=top><TD><B><CODE>-&gt;</CODE>save_graphics_state</B> </TD><TD>Save 
+current pen and colours </TD></TR>
+<TR VALIGN=top><TD><B><CODE>-&gt;</CODE>restore_graphics_state</B></TD><TD>Restore 
+saved values </TD></TR>
+<TR VALIGN=top><TD><B><CODE>-&gt;</CODE>graphics_state</B> </TD><TD>Set 
+graphics attributes </TD></TR>
+<TBODY>
+<TR VALIGN=top><TD><B><CODE>-&gt;</CODE>draw_arc</B> </TD><TD>Draw 
+ellipse-part </TD></TR>
+<TR VALIGN=top><TD><B><CODE>-&gt;</CODE>draw_box</B> </TD><TD>Draw 
+rectangle (rounded, filled, etc.) </TD></TR>
+<TR VALIGN=top><TD><B><CODE>-&gt;</CODE>draw_fill</B> </TD><TD>Fill/invert/clear 
+rectangle </TD></TR>
+<TR VALIGN=top><TD><B><CODE>-&gt;</CODE>draw_image</B> </TD><TD>Paint 
+(part of) image </TD></TR>
+<TR VALIGN=top><TD><B><CODE>-&gt;</CODE>draw_line</B> </TD><TD>Draw a 
+line segment </TD></TR>
+<TR VALIGN=top><TD><B><CODE>-&gt;</CODE>draw_poly</B> </TD><TD>Draw a 
+polygon </TD></TR>
+<TR VALIGN=top><TD><B><CODE>-&gt;</CODE>draw_text</B> </TD><TD>Draw 
+string in font </TD></TR>
+<TBODY>
+<TR VALIGN=top><TD><B><CODE>-&gt;</CODE>paint_selected</B> </TD><TD>Paint 
+visual feedback of <B><CODE>-&gt;</CODE>selected</B> </TD></TR>
+</TABLE>
+
+</CENTER>
+<TABLE ALIGN=center WIDTH="75%"><TR><TD>
+<B>Table 9 : </B>Methods for (re)defining <B><CODE>-&gt;</CODE>_redraw_area</B></TABLE>
+
+<A NAME="tab:paintmethods"></A>
+
+<H3><A NAME="sec:10.12.2"><SPAN class="sec-nr">10.12.2</SPAN> <SPAN class="sec-title">Example-I: 
+a window with a grid</SPAN></A></H3>
+
+<P><font size=-1>XPCE</font> built-in class window does not provide a 
+grid. Implementing a grid using graphical objects is difficult. The best 
+approach would be to display a <A class="" href="summary.html#class:device">device</A> 
+on the window that provides the background and displays the lines of the 
+grid. The resize and scroll messages need to be trapped to ensure the 
+proper number of lines are displayed with the correct length. 
+Furthermore, the code handling the inside of the window needs to be 
+aware of the grid. It should ensure the grid is not exposed or deleted, 
+etc.
+
+<P>It is much simpler to redefine the <A NAME="idx:windowsendredrawarea:468"></A>`<B>window<CODE>-&gt;</CODE>_redraw_area</B>' 
+method, paint the grid and then call the super-method. The code is 
+below.
+
+<PRE class="code">
+:- pce_begin_class(grid_picture, picture,
+                   "Graphical window with optional 
+
+variable(grid,     '1..|size*' := 20, get,
+         "Size of the grid").
+variable(grid_pen, pen,               get,
+         "Pen used to draw the grid").
+
+initialise(P, Lbl:[name], Size:[size], Disp:[display]) :-&gt;
+        send(P, send_super, initialise, Lbl, Size, Disp),
+        (   get(@display, visual_type, monochrome)
+        -&gt;  Texture = dotted, Colour = black
+        ;   Texture = none,   Colour = grey90
+        ),
+        send(P, slot, grid_pen, pen(1, Texture, Colour)).
+
+'_redraw_area'(P, A:area) :-&gt;
+        "Draw a grid"::
+        get(P, grid, Grid),
+        (   Grid \== @nil
+        -&gt;  (   integer(Grid)
+            -&gt;  GX = Grid,
+                GY = Grid
+            ;   object(Grid, size(GX&lt; GY))
+            ),
+            send(P, save_graphics_state),
+            get(P, grid_pen, pen(Pen, Texture, Colour)),
+            send(P, graphics_state, Pen, Texture, Colour),
+            object(A, area(X, Y, W, H)),
+            StartX is (X//GX) * GX,
+            StartY is (Y//GY) * GY,
+            Xlines is ((W + X - StartX)+GX-1)//GX,
+            Ylines is ((H + Y - StartY)+GY-1)//GY,
+            (   between(1, Xlines, Xline),
+                    Xnow is StartX + (Xline-1)*GX,
+                    send(P, draw_line, Xnow, Y, Xnow, Y+H),
+                fail
+            ;   true
+            ),
+            (   between(1, Ylines, Yline),
+                    Ynow is StartY + (Yline-1)*GY,
+                    send(P, draw_line, X, Ynow, X+W, Ynow),
+                fail
+            ;   true
+            ),
+            send(P, restore_graphics_state)
+        ;   true
+        ),
+        send(P, send_super, '_redraw_area', A).
+
+
+grid(P, Grid:'1..|size*') :-&gt;
+        send(P, slot, grid, Grid),
+        send(P, redraw).                % changed?
+
+grid_pen(P, Penn:pen) :-&gt;
+        send(P, slot, grid_pen, Pen),
+        send(P, redraw).                % changed?
+
+:- pce_end_class.</PRE>
+
+<H3><A NAME="sec:10.12.3"><SPAN class="sec-nr">10.12.3</SPAN> <SPAN class="sec-title">Example-II: 
+a shape with text</SPAN></A></H3>
+
+<P>The following example is yet another implementation of a shape filled 
+with text. Redefining <B><CODE>-&gt;</CODE>_redraw_area</B> has several 
+advantages and disadvantages over the <A class="" href="summary.html#class:device">device</A> 
+based implementation:
+
+<P>
+<UL>
+<LI><I><TT>++</TT> Memory usage</I><BR>
+This approach uses considerably less memory than the combination of a
+<A class="" href="summary.html#class:device">device</A>, <A class="" href="summary.html#class:box">box</A> 
+and <A class="" href="summary.html#class:text">text</A>.
+<LI><I><TT>--</TT> Poor PostScript quality</I><BR>
+The current version of the system will generate PostScript for 
+user-defined graphicals by painting the graphical on an <A class="" href="summary.html#class:image">image</A> 
+and translating the result in a PostScript image description.
+<LI><I><TT>--</TT> More rigid</I><BR>
+This version of the text-box does not have different colours for box and 
+text, etc. Of course it is possible to implement a version with all 
+thinkable attributes, but this is a lot of work.
+
+<P>Implementing edit facilities for the text will be hard. The best 
+approach would be to display a normal <A class="" href="summary.html#class:text">text</A> 
+object on top of the text-box and replace the <B><CODE>&lt;-&gt;</CODE>string</B> 
+when editing is finished.
+</UL>
+
+<PRE class="code">
+:- pce_begin_class(text_shape, graphical,
+                   "text with box or ellipse").
+
+variable(string,        char_array,     get,
+         "Displayed string").
+variable(font,          font,           get,
+         "Font used to display string").
+variable(shape,         {box,ellipse},  get,
+         "Outline shape").
+
+initialise(S, Str:string=char_array, Shape:shape={box,ellipse},
+           W:width=int, H:height=int, Font:[font]) :-&gt;
+        default(Font, normal, TheFont),
+        send(S, send_super, initialise, 0, 0, W, H),
+        send(S, slot, string, Str),
+        send(S, slot, shape, Shape),
+        send(S, slot, font, TheFont).
+
+'_redraw_area'(S, _A:area) :-&gt;
+        get(S, area, area(X, Y, W, H)),
+        get(S, string, String),
+        get(S, font, Font),
+        get(S, shape, Shape),
+        send(S, clip),                  % text may be bigger
+        (   Shape == box
+        -&gt;  send(S, draw_box, X, Y, W, H)
+        ;   send(S, draw_arc, X, Y, W, H)
+        ),
+        send(S, draw_text,
+             String, Font, X, Y, W, H,
+             center, center),
+        send(S, unclip),
+        send(S, send_super, redraw).
+
+:- pce_end_class.</PRE>
+
+<P></BODY></HTML>

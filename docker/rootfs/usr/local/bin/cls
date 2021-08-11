@@ -17,14 +17,15 @@ if [[ "$SOURCED"=="1" ]] ; then
     export THIS_CMD=$BASH_SOURCE
 fi
 
-
 if [ -z "$PROMPT_COMMAND" ]; then
  export PROMPT_COMMAND="resize &>/dev/null; $PROMPT_COMMAND"
 fi
 
 if [ -z "$1" ]; then
  reset -w
- export INFO=\"$(ls -l /dev/tty)\"
+ if [ -z $STY ]; then $THIS_CMD /dev/tty ; return 0 2>/dev/null ; exit 0 ; fi
+ INFO="\"$(ls -l /dev/tty)\"" 
+
  # $THIS_CMD /dev/tty FROM $INFO
  # -user `whoami` 
  find /dev/pts/ -type c -writable -exec "$THIS_CMD" {} $1 $2 FROM $INFO \;
@@ -37,9 +38,8 @@ fi
 
 CLS_TO=$1
 
-unset CLS
-export CLS="\e[7h$(stty sane ; stty rows 33 ; stty columns 133 ; stty echo ; clear ; tput reset ; tput rmam ; tset )" > $CLS_TO
-export CLS="${CLS}\e[2K\e[J\e]50;ClearScrollback\a\ec\e[3J\e\143\e[H\e[2J"
+CLS="\e[7h$(stty sane ; stty rows 33 ; stty columns 133 ; stty echo ; clear ; tput reset ; tput rmam ; tset )" > $CLS_TO
+CLS="${CLS}\e[2K\e[J\e]50;ClearScrollback\a\ec\e[3J\e\143\e[H\e[2J"
 echo -e -n $CLS > $CLS_TO
 echo -e -n "\eP$CLS\e\\\\" > $CLS_TO
 echo -e -n "$(whoami) $THIS_CMD $*\n" > $CLS_TO

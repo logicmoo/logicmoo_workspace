@@ -1,0 +1,451 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+
+<HTML>
+<HEAD>
+<TITLE>Programming in XPCE/Prolog: Section 11.6</TITLE><LINK REL=home HREF="index.html">
+<LINK REL=contents HREF="Contents.html">
+<LINK REL=index HREF="DocIndex.html">
+<LINK REL=summary HREF="summary.html">
+<LINK REL=previous HREF="tabular.html">
+<LINK REL=next HREF="mlingual.html">
+<STYLE type="text/css">
+/* Style sheet for SWI-Prolog latex2html
+*/
+
+dd.defbody
+{ margin-bottom: 1em;
+}
+
+dt.pubdef
+{ background-color: #c5e1ff;
+}
+
+pre.code
+{ margin-left: 1.5em;
+margin-right: 1.5em;
+border: 1px dotted;
+padding-top: 5px;
+padding-left: 5px;
+padding-bottom: 5px;
+background-color: #f8f8f8;
+}
+
+div.navigate
+{ text-align: center;
+background-color: #f0f0f0;
+border: 1px dotted;
+padding: 5px;
+}
+
+div.title
+{ text-align: center;
+padding-bottom: 1em;
+font-size: 200%;
+font-weight: bold;
+}
+
+div.author
+{ text-align: center;
+font-style: italic;
+}
+
+div.abstract
+{ margin-top: 2em;
+background-color: #f0f0f0;
+border: 1px dotted;
+padding: 5px;
+margin-left: 10%; margin-right:10%;
+}
+
+div.abstract-title
+{ text-align: center;
+padding: 5px;
+font-size: 120%;
+font-weight: bold;
+}
+
+div.toc-h1
+{ font-size: 200%;
+font-weight: bold;
+}
+
+div.toc-h2
+{ font-size: 120%;
+font-weight: bold;
+margin-left: 2em;
+}
+
+div.toc-h3
+{ font-size: 100%;
+font-weight: bold;
+margin-left: 4em;
+}
+
+div.toc-h4
+{ font-size: 100%;
+margin-left: 6em;
+}
+
+span.sec-nr
+{ 
+}
+
+span.sec-title
+{ 
+}
+
+span.pred-ext
+{ font-weight: bold;
+}
+
+/* Footnotes */
+
+sup.fn { color: blue; text-decoration: underline; }
+span.fn-text: { display: none; }
+sup.fn span {display: none;}
+sup:hover span 
+{ display: block !important;
+position: absolute; top: auto; left: auto; width: 80%;
+color: #000; background: white;
+border: 2px solid;
+padding: 5px; margin: 10px; z-index: 100;
+font-size: smaller;
+}
+</STYLE>
+</HEAD>
+<BODY BGCOLOR="white">
+<DIV class="navigate"><A class="nav" href="index.html"><IMG SRC="home.gif" BORDER=0 ALT="Home"></A>
+<A class="nav" href="Contents.html"><IMG SRC="index.gif" BORDER=0 ALT="Contents"></A>
+<A class="nav" href="DocIndex.html"><IMG SRC="yellow_pages.gif" BORDER=0 ALT="Index"></A>
+<A class="nav" href="summary.html"><IMG SRC="info.gif" BORDER=0 ALT="Summary"></A>
+<A class="nav" href="tabular.html"><IMG SRC="prev.gif" BORDER=0 ALT="Previous"></A>
+<A class="nav" href="mlingual.html"><IMG SRC="next.gif" BORDER=0 ALT="Next"></A>
+</DIV>
+
+<H2><A NAME="sec:11.6"><SPAN class="sec-nr">11.6</SPAN> <SPAN class="sec-title">Plotting 
+graphs and barcharts</SPAN></A></H2>
+
+<A NAME="sec:libplot"></A>
+
+<P><A NAME="idx:axis:504"></A><A NAME="idx:plot:505"></A><A NAME="idx:diagram:506"></A><A NAME="idx:chart:507"></A><A NAME="idx:barchart:508"></A>This 
+section describes three libraries residing in
+<CODE>&lt;<VAR>pcehome</VAR>&gt;/prolog/lib/plot</CODE> to deal with 
+plotting graphs and barcharts.
+
+<H3><A NAME="sec:11.6.1"><SPAN class="sec-nr">11.6.1</SPAN> <SPAN class="sec-title">Painting 
+axis</SPAN></A></H3>
+
+<P>The library <CODE>library(plot/axis)</CODE> defines the class <B>plot_axis</B> 
+to draw an X- or Y-axis. The class deals with computing the layout, 
+placing rule-marks, values and labels as well as translation between 
+coordinates and real values. Normally this class is used together with
+<B>plotter</B>, <B>plot_axis</B> does not rely on other library classes 
+and may therefore be used independent of the remainder of the plotting 
+infrastructure.
+
+<P>We start with a small example from the library itself, creating the 
+picture below.
+
+<PRE class="code">
+?- [library('plot/axis')].
+% library('plot/axis') compiled into plot_axis 0.03 sec, 27,012 bytes
+
+?- send(new(P, picture), open),
+           send(P, display,
+                plot_axis(x, 0, 100, @default, 400, point(40, 320))),
+           send(P, display,
+                plot_axis(y, 0, 500, @default, 300, point(40, 320))).
+</PRE>
+
+<P><A NAME="fig:axis"></A>
+<CENTER>
+<IMG SRC="axis.gif">
+</CENTER>
+<TABLE ALIGN=center WIDTH="75%"><TR><TD>
+<B>Figure 24 : </B>A picture showing two axis</TABLE>
+
+<P>Below is a reference to the important methods of this class. The 
+sources to the class itself are a good example of complicated and 
+advanced layout computations and delaying of these until they are really 
+needed.
+
+<DL>
+<DT><STRONG>plot_axis -&gt;initialise:</STRONG> <VAR></VAR></DT>
+<DD class="defbody">
+Create a new axis. <VAR>type</VAR> defines whether it is an X- or 
+Y-axis. The axis represents values in the range [<VAR>low</VAR>...<VAR>high</VAR>]. 
+If <VAR>step</VAR> is specified, a rule-mark with value is placed at 
+these intervals. Otherwise the library computes its marking dynamically. 
+The <VAR>length</VAR> argument specifies the length of the axis in 
+pixels, the default is 200 and finally the <VAR>origin</VAR> defines the 
+pixel-location of the origin.</DD>
+<DT><STRONG>plot_axis -&gt;label:</STRONG> <VAR>graphical*</VAR></DT>
+<DD class="defbody">
+Label to position near the end of the axis. This is a graphical to 
+provide full flexibility.</DD>
+<DT><STRONG>plot_axis -&gt;format:</STRONG> <VAR>[name]</VAR></DT>
+<DD class="defbody">
+Define the printf()-format for rendering the values printed along the 
+axis.</DD>
+<DT><STRONG>plot_axis &lt;-location:</STRONG> <VAR>int<TT>|</TT>real</VAR></DT>
+<DD class="defbody">
+int Determine the coordinate in the device's coordinate system 
+representing the given value. See also <A NAME="idx:plottergettranslate:509"></A>`<B>plotter<CODE>&lt;-</CODE>translate</B>'.</DD>
+<DT><STRONG>plot_axis &lt;-value_from_coordinate:</STRONG> <VAR>int</VAR></DT>
+<DD class="defbody">
+int<TT>|</TT>real The inverse of <B><CODE>&lt;-</CODE>location</B>, 
+returning the value along the axis from a pixel coordinate.
+</DD>
+</DL>
+
+<P>Besides the principal methods below, the following methods are 
+available for changing attributes of an existing axis: <B><CODE>-&gt;</CODE>origin</B>,
+<B><CODE>-&gt;</CODE>low</B>, <B><CODE>-&gt;</CODE>high</B>, <B><CODE>-&gt;</CODE>step</B>, <B><CODE>-&gt;</CODE>small_step</B> 
+(interval for rule-marks without a value), <B><CODE>-&gt;</CODE>length</B> 
+and <B><CODE>-&gt;</CODE>type</B>: {x,y}.
+
+<H3><A NAME="sec:11.6.2"><SPAN class="sec-nr">11.6.2</SPAN> <SPAN class="sec-title">Plotting 
+graphs</SPAN></A></H3>
+
+<P>The library <CODE>library(plot/plotter)</CODE> defines the classes <B>plotter</B> 
+and <B>plot_graph</B> for displaying graphs. Class <B>plotter</B> is a 
+subclass of <A class="" href="summary.html#class:device">device</A>. The 
+example below plots the function
+<VAR>Y = sine(X)</VAR>
+
+<PRE class="code">
+:- use_module(library('plot/plotter')).
+:- use_module(library(autowin)).
+
+plot_function :-
+        plot_function(X:sin(X)).
+
+plot_function(Template) :-
+        To is 2*pi,
+        PlotStep is To/100,
+        Step is pi/4,
+        new(W, auto_sized_picture('Plotter demo')),
+        send(W, display, new(P, plotter)),
+        send(P, axis, new(X, plot_axis(x, 0, To, Step, 300))),
+        send(P, axis, plot_axis(y, -1, 1, @default, 200)),
+        send(X, format, '%.2f'),
+        send(P, graph, new(G, plot_graph)),
+        plot_function(0, To, PlotStep, Template, G),
+        send(W, open).
+
+plot_function(X, To, _, _, _) :-
+        X &gt;= To, !.
+plot_function(X, To, Step, Template, G) :-
+        copy_term(Template, X:Func),
+        Y is Func,
+        send(G, append, X, Y),
+        NewX is X + Step,
+        plot_function(NewX, To, Step, Template, G).</PRE>
+
+<P><A NAME="fig:plotsine"></A>
+<CENTER>
+<IMG SRC="plotsine.gif">
+</CENTER>
+<TABLE ALIGN=center WIDTH="75%"><TR><TD>
+<B>Figure 25 : </B>Plotter showing sine function</TABLE>
+
+<DL>
+<DT><STRONG>plotter -&gt;axis:</STRONG> <VAR>plot_axis</VAR></DT>
+<DD class="defbody">
+Associate a <B>plot_axis</B>. Before using the plotter both an <VAR>X</VAR> 
+and
+<VAR>Y</VAR> axis must be associated. Associating an axis that already 
+exists causes the existing axis to be destroyed.</DD>
+<DT><STRONG>plotter -&gt;graph:</STRONG> <VAR>plot_graph</VAR></DT>
+<DD class="defbody">
+Append a graph. Multiple graphs can be displayed on the same plotter.</DD>
+<DT><STRONG>plotter -&gt;clear:</STRONG> <VAR></VAR></DT>
+<DD class="defbody">
+Remove all graphs. The X- and Y-axis are not removed.</DD>
+<DT><STRONG>plotter &lt;-translate:</STRONG> <VAR>X:int<TT>|</TT>real, 
+Y:int<TT>|</TT>real</VAR></DT>
+<DD class="defbody">
+point Translate a coordinate in the value-space to physical coordinates.</DD>
+<DT><STRONG>plotter &lt;-value_from_x:</STRONG> <VAR>int</VAR></DT>
+<DD class="defbody">
+int<TT>|</TT>real Translate an X-coordinate to a value.</DD>
+<DT><STRONG>plotter &lt;-value_from_y:</STRONG> <VAR>int</VAR></DT>
+<DD class="defbody">
+int<TT>|</TT>real Translate an Y-coordinate to a value.
+</DD>
+</DL>
+
+<P>Graphs themselves are instances of class <B>plot_graph</B>, a 
+subclass of <A class="" href="summary.html#class:path">path</A>. Instead 
+of normal <A class="" href="summary.html#class:point">point</A> objects, 
+the points are represented using the subclass <B>plot_point</B> that 
+attaches the real values to the physical coordinates. Methods:
+
+<DL>
+<DT><STRONG>plot_graph -&gt;initialise:</STRONG> <VAR></VAR></DT>
+<DD class="defbody">
+The <VAR>type</VAR> argument denotes the interpolation used. Using
+<CODE>poly</CODE> (default), straight lines are drawn between the 
+points. Using <CODE>smooth</CODE>, the curve is interpolated (see <A class="" href="summary.html#class:path">path</A> 
+for details) and using <CODE>points_only</CODE>, no lines is painted, 
+just the marks. Using the <VAR>mark</VAR> argument the user may specify 
+marks to be drawn at each control-point.</DD>
+<DT><STRONG>plot_graph -&gt;append:</STRONG> <VAR>x=int<TT>|</TT>real, 
+y=int<TT>|</TT>real</VAR></DT>
+<DD class="defbody">
+Append a control-point using the coordinate-system of the axis of the 
+plotter.
+</DD>
+</DL>
+
+<H3><A NAME="sec:11.6.3"><SPAN class="sec-nr">11.6.3</SPAN> <SPAN class="sec-title">Drawing 
+barcharts using ``plot/barchart''</SPAN></A></H3>
+
+<P><A NAME="idx:barchart:510"></A>The <CODE>library(plot/barchart)</CODE> 
+library draws simple bar-charts. It is based on the <B>plotter</B> and <B>plot_axis</B> 
+classes, adding simple bars, grouped bars and stacked bars. Below is an 
+example from
+<CODE>library(plot/demo)</CODE> showing all active <font size=-1>XPCE</font>, 
+classes, where active is defined that more than 250 instances are 
+created. The code, except for the calculation parts is show below.
+
+<P><A NAME="fig:plotclasses"></A>
+<CENTER>
+<IMG SRC="plotclasses.gif">
+</CENTER>
+<TABLE ALIGN=center WIDTH="75%"><TR><TD>
+<B>Figure 26 : </B>Classes of <font size=-1>XPCE</font> with <VAR>&gt; 
+250</VAR> instances created</TABLE>
+
+<PRE class="code">
+barchart :-
+        barchart(vertical).
+barchart(HV) :-
+        new(W, picture),
+        active_classes(Classes),
+        length(Classes, N),
+        required_scale(Classes, Scale),
+        send(W, display, new(BC, bar_chart(HV, 0, Scale, 200, N))),
+        forall(member(class(Name, Created, Freed), Classes),
+               send(BC, append,
+                    bar_group(Name,
+                              bar(created, Created, green),
+                              bar(freed, Freed, red)))),
+        send(W, open).</PRE>
+
+<DL>
+<DT><STRONG>bar_chart -&gt;initialise:</STRONG> <VAR></VAR></DT>
+<DD class="defbody">
+Initialise a <B>bar_chart</B>, a subclass of <B>plotter</B> for 
+displaying bar-charts. The <VAR>orientation</VAR> indicates whether the 
+bars are vertical or horizontal. The <VAR>low</VAR> and <VAR>high</VAR> 
+arguments are the scale arguments for the value-axis, while <VAR>scale_length</VAR> 
+denotes the length of the axis. The <VAR>nbars</VAR> argument determines 
+the length of the axis on which the bars are footed.</DD>
+<DT><STRONG>bar_chart -&gt;append:</STRONG> <VAR>bar<TT>|</TT>bar_stack</VAR></DT>
+<DD class="defbody">
+Append a single <B>bar</B>, <B>bar_stack</B> or <B>bar_group</B> to the 
+chart. Bars and bar-stacks are named and can be addressed using their 
+name.</DD>
+<DT><STRONG>bar_chart -&gt;delete:</STRONG> <VAR>member:bar<TT>|</TT>bar_stack</VAR></DT>
+<DD class="defbody">
+Remove the given bar. The <CODE>member:</CODE> construct makes the 
+type-conversion system translate a bar-name into a bar. If the bar is 
+somewhere in the middle, the remaining bars are compacted again.</DD>
+<DT><STRONG>bar_chart -&gt;clear:</STRONG> <VAR></VAR></DT>
+<DD class="defbody">
+Removes all bars from the chart.</DD>
+<DT><STRONG>bar_chart &lt;-&gt;value:</STRONG> <VAR>name</VAR></DT>
+<DD class="defbody">
+real Modifies or requests the value of the named bar. Fails if no bar 
+with this name is on the chart.</DD>
+<DT><STRONG>bar_chart -&gt;event:</STRONG> <VAR>event</VAR></DT>
+<DD class="defbody">
+Processes a single-click outside the bars to clear the selection.</DD>
+<DT><STRONG>bar_chart -&gt;select:</STRONG> <VAR>bar<TT>|</TT>bar_stack, 
+[{toggle,set}]</VAR></DT>
+<DD class="defbody">
+</DD>
+<DT><STRONG>bar_chart -&gt;selection:</STRONG> <VAR>bar<TT>|</TT>bar_stack<TT>|</TT>chain*</VAR></DT>
+<DD class="defbody">
+</DD>
+<DT><STRONG>bar_stack &lt;-selection:</STRONG> <VAR></VAR></DT>
+<DD class="defbody">
+chain Deal with the selection. Selection is visualised by selecting the 
+labels, but communicated in terms of the bars themselves.
+</DD>
+</DL>
+
+<H4><A NAME="sec:11.6.3.1"><SPAN class="sec-nr">11.6.3.1</SPAN> <SPAN class="sec-title">Class <B>bar</B></SPAN></A></H4>
+
+<P>Bars can either be displayed directly on a <B>bar_chart</B>, or as 
+part of a stack or group. Stacked bars are used to indicate composition 
+of a value, while grouped bars often indicate development or otherwise 
+related values for the same object.
+
+<DL>
+<DT><STRONG>bar -&gt;initialise:</STRONG> <VAR></VAR></DT>
+<DD class="defbody">
+Create a <B>bar</B> from its <VAR>name</VAR> and <VAR>value</VAR>. The 
+bar itself is a subclass of <A class="" href="summary.html#class:box">box</A> 
+and <VAR>colour</VAR> is used to fill the interior. The <VAR>orientation</VAR> 
+needs only be specified if the bar is not attached to a <B>bar_chart</B>.</DD>
+<DT><STRONG>bar -&gt;value:</STRONG> <VAR>real</VAR></DT>
+<DD class="defbody">
+Set the value of th bar. This updates the bar-size automatically.</DD>
+<DT><STRONG>bar -&gt;range:</STRONG> <VAR>low=real, high=real</VAR></DT>
+<DD class="defbody">
+If the bar is editable (see also <B><CODE>-&gt;</CODE>message</B> and <B><CODE>-&gt;</CODE>drag_message</B>), 
+these are the lowest and highest values that can be set by the user.</DD>
+<DT><STRONG>bar -&gt;message:</STRONG> <VAR>code*</VAR></DT>
+<DD class="defbody">
+If not <A NAME="idx:nil:511"></A><B>@nil</B>, the bar may be modified by 
+dragging it. After releasing the mouse-button, the new <B><CODE>&lt;-</CODE>value</B> 
+is forwarded over the <A class="" href="summary.html#class:code">code</A>.</DD>
+<DT><STRONG>bar -&gt;drag_message:</STRONG> <VAR>code*</VAR></DT>
+<DD class="defbody">
+If not <A NAME="idx:nil:512"></A><B>@nil</B>, the bar may be modified by 
+dragging it. While dragging, the new value is forwarded on every change 
+over the <A class="" href="summary.html#class:code">code</A>. It is 
+allowed to specify both <B><CODE>-&gt;</CODE>message</B> and <B><CODE>-&gt;</CODE>drag_message</B>.</DD>
+<DT><STRONG>bar_stack -&gt;initialise:</STRONG> <VAR>name, bar ...</VAR></DT>
+<DD class="defbody">
+Create a pile of bars representing a value composed of multiple smaller 
+values.</DD>
+<DT><STRONG>bar_group -&gt;initialise:</STRONG> <VAR>name, bar ...</VAR></DT>
+<DD class="defbody">
+Same as <B>bar_stack</B>, but places the bars next to each other instead 
+of stacked.
+</DD>
+</DL>
+
+<H4><A NAME="sec:11.6.3.2"><SPAN class="sec-nr">11.6.3.2</SPAN> <SPAN class="sec-title">Class <B>bar_button_group</B></SPAN></A></H4>
+
+<P>A subclass of <A class="" href="summary.html#class:dialog_group">dialog_group</A> 
+that can be used to associate one or more buttons or other controllers 
+with a <B>bar</B> or
+<B>bar_stack</B>. This association is achieved by simply creating an 
+instance of this class. <A class="fig" href="libplot.html#fig:boot">Figure 
+27</A> shows both associated buttons and a stacked bar.
+
+<DL>
+<DT><STRONG>bar_button_group -&gt;initialise:</STRONG> <VAR>bar<TT>|</TT>bar_stack, 
+graphical ...</VAR></DT>
+<DD class="defbody">
+Associate the given graphicals with given bar.</DD>
+<DT><STRONG>bar_button_group &lt;-bar:</STRONG> <VAR></VAR></DT>
+<DD class="defbody">
+bar<TT>|</TT>bar_stack Return the bar or stack this group is connected 
+too. This behaviour may be used to make to make the buttons less 
+dependent on the bar they are attached too.
+</DD>
+</DL>
+
+<P><A NAME="fig:boot"></A>
+<CENTER>
+<IMG SRC="boot.gif">
+</CENTER>
+<TABLE ALIGN=center WIDTH="75%"><TR><TD>
+<B>Figure 27 : </B>Stacked bars with associated buttons</TABLE>
+
+</BODY></HTML>

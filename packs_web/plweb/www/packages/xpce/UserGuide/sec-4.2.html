@@ -1,0 +1,194 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+
+<HTML>
+<HEAD>
+<TITLE>Programming in XPCE/Prolog: Section 4.2</TITLE><LINK REL=home HREF="index.html">
+<LINK REL=contents HREF="Contents.html">
+<LINK REL=index HREF="DocIndex.html">
+<LINK REL=summary HREF="summary.html">
+<LINK REL=previous HREF="sec-4.1.html">
+<LINK REL=next HREF="sec-4.3.html">
+<STYLE type="text/css">
+/* Style sheet for SWI-Prolog latex2html
+*/
+
+dd.defbody
+{ margin-bottom: 1em;
+}
+
+dt.pubdef
+{ background-color: #c5e1ff;
+}
+
+pre.code
+{ margin-left: 1.5em;
+margin-right: 1.5em;
+border: 1px dotted;
+padding-top: 5px;
+padding-left: 5px;
+padding-bottom: 5px;
+background-color: #f8f8f8;
+}
+
+div.navigate
+{ text-align: center;
+background-color: #f0f0f0;
+border: 1px dotted;
+padding: 5px;
+}
+
+div.title
+{ text-align: center;
+padding-bottom: 1em;
+font-size: 200%;
+font-weight: bold;
+}
+
+div.author
+{ text-align: center;
+font-style: italic;
+}
+
+div.abstract
+{ margin-top: 2em;
+background-color: #f0f0f0;
+border: 1px dotted;
+padding: 5px;
+margin-left: 10%; margin-right:10%;
+}
+
+div.abstract-title
+{ text-align: center;
+padding: 5px;
+font-size: 120%;
+font-weight: bold;
+}
+
+div.toc-h1
+{ font-size: 200%;
+font-weight: bold;
+}
+
+div.toc-h2
+{ font-size: 120%;
+font-weight: bold;
+margin-left: 2em;
+}
+
+div.toc-h3
+{ font-size: 100%;
+font-weight: bold;
+margin-left: 4em;
+}
+
+div.toc-h4
+{ font-size: 100%;
+margin-left: 6em;
+}
+
+span.sec-nr
+{ 
+}
+
+span.sec-title
+{ 
+}
+
+span.pred-ext
+{ font-weight: bold;
+}
+
+/* Footnotes */
+
+sup.fn { color: blue; text-decoration: underline; }
+span.fn-text: { display: none; }
+sup.fn span {display: none;}
+sup:hover span 
+{ display: block !important;
+position: absolute; top: auto; left: auto; width: 80%;
+color: #000; background: white;
+border: 2px solid;
+padding: 5px; margin: 10px; z-index: 100;
+font-size: smaller;
+}
+</STYLE>
+</HEAD>
+<BODY BGCOLOR="white">
+<DIV class="navigate"><A class="nav" href="index.html"><IMG SRC="home.gif" BORDER=0 ALT="Home"></A>
+<A class="nav" href="Contents.html"><IMG SRC="index.gif" BORDER=0 ALT="Contents"></A>
+<A class="nav" href="DocIndex.html"><IMG SRC="yellow_pages.gif" BORDER=0 ALT="Index"></A>
+<A class="nav" href="summary.html"><IMG SRC="info.gif" BORDER=0 ALT="Summary"></A>
+<A class="nav" href="sec-4.1.html"><IMG SRC="prev.gif" BORDER=0 ALT="Previous"></A>
+<A class="nav" href="sec-4.3.html"><IMG SRC="next.gif" BORDER=0 ALT="Next"></A>
+</DIV>
+
+<H2><A NAME="sec:4.2"><SPAN class="sec-nr">4.2</SPAN> <SPAN class="sec-title">Built-in 
+dialog items</SPAN></A></H2>
+
+<P><A NAME="idx:controllersbuiltin:119"></A><A NAME="idx:dialogitembuiltintypes:120"></A><A class="tab" href="sec-4.2.html#tab:diaitems">Table 
+1</A> provides an overview of the built-in dialog items. The <font size=-1>XPCE/P</font>rolog 
+library defines various additional items as Prolog classes. See the file 
+Overview in the library directory.
+
+<P>
+<CENTER>
+<TABLE BORDER=2 FRAME=box RULES=groups>
+<TR VALIGN=top><TD><A class="" href="summary.html#class:button">button</A> </TD><TD>Simple <A NAME="idx:pushbutton:121">push-button</A>. 
+Executes <B><CODE>&lt;-</CODE>message</B> when pressed. </TD></TR>
+<TBODY>
+<TR VALIGN=top><TD><A class="" href="summary.html#class:text_item">text_item</A> </TD><TD>A <A NAME="idx:textentryfield:122">text-entry field</A>. 
+Editable or non-editable, built-in type conversion (for example to enter 
+a numerical value), completion using the space-bar if a value-set is 
+provided. </TD></TR>
+<TBODY>
+<TR VALIGN=top><TD><A class="" href="summary.html#class:int_item">int_item</A> </TD><TD>Like 
+a <A class="" href="summary.html#class:text_item">text_item</A>, but 
+providing properly sized field, buttons for one-up/down, type- and 
+range-checking. </TD></TR>
+<TBODY>
+<TR VALIGN=top><TD><A class="" href="summary.html#class:slider">slider</A> </TD><TD>Select 
+numerical value in a range. Handles both integers and floating point 
+values. </TD></TR>
+<TBODY>
+<TR VALIGN=top><TD><A class="" href="summary.html#class:menu">menu</A> </TD><TD>Implements 
+various styles of menus with different visual feedback. Realises <A NAME="idx:radiobutton:123">radio-button</A>,
+<A NAME="idx:tickbox:124">tick-box</A>, <A NAME="idx:combobox:125">combo-box</A> 
+and much more. </TD></TR>
+<TBODY>
+<TR VALIGN=top><TD><A class="" href="summary.html#class:menu_bar">menu_bar</A> </TD><TD>Row 
+of pulldown (<A class="" href="summary.html#class:popup">popup</A>) 
+menus. Normally displayed in a small dialog above the other windows in 
+the frame. </TD></TR>
+<TBODY>
+<TR VALIGN=top><TD><A class="" href="summary.html#class:label">label</A> </TD><TD>Image 
+or textual label. Normally not sensitive to user actions. </TD></TR>
+<TBODY>
+<TR VALIGN=top><TD><A class="" href="summary.html#class:list_browser">list_browser</A> </TD><TD>Shows 
+a list of items. List-browsers have been designed to handle lists with 
+many items. Class
+<A class="" href="summary.html#class:browser">browser</A> is a 
+window-based version. </TD></TR>
+<TBODY>
+<TR VALIGN=top><TD><A class="" href="summary.html#class:editor">editor</A> </TD><TD>Powerful 
+text-editor. Handles multiple and proportional fonts, text-attributes, 
+fragment marking, etc. Class <A class="" href="summary.html#class:view">view</A> 
+is a window based version. </TD></TR>
+<TBODY>
+<TR VALIGN=top><TD><A class="" href="summary.html#class:tab">tab</A> </TD><TD>Tagged 
+sub-dialog, that may be combined with other <A class="" href="summary.html#class:tab">tabs</A> 
+into a <A class="" href="summary.html#class:tab_stack">tab_stack</A>, 
+realising a tabbed controller-window. Often seen in modern applications 
+to deal with many setting options. </TD></TR>
+<TR VALIGN=top><TD><A class="" href="summary.html#class:tab_stack">tab_stack</A> </TD><TD>Stack 
+of <A class="" href="summary.html#class:tab">tab</A> objects. </TD></TR>
+<TR VALIGN=top><TD><A class="" href="summary.html#class:dialog_group">dialog_group</A> </TD><TD>Group 
+of dialog items, possible with border and label. </TD></TR>
+</TABLE>
+
+</CENTER>
+<TABLE ALIGN=center WIDTH="75%"><TR><TD>
+<B>Table 1 : </B>Built-in dialog items</TABLE>
+
+<A NAME="tab:diaitems"></A>
+
+<P></BODY></HTML>

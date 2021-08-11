@@ -1073,6 +1073,9 @@ with_real_pp(ansi,swish,Goal):- wots(S,Goal), sformat(SO,'<pre class="swish">~w<
 %wots(S,in_bfly(t,bfly_html_goal(Goal))), ttyflush, format('~s',[S]).
 
 with_real_pp(bfly,ansi,Goal):- bfly_out_in(in_bfly(f,Goal)).
+
+with_real_pp(bfly,http,Goal):- in_pp(http),!,call(Goal).
+
 with_real_pp(bfly,http,Goal):- ttyflush,format('<http>'),ttyflush, actually_bfly(Goal), ttyflush, format('</http>',[]).
 with_real_pp(bfly,bfly,Goal):- bfly_html_goal(in_bfly(t,Goal)).
 with_real_pp(bfly,swish,Goal):- ttyflush,format('<swish>'),ttyflush, actually_bfly(Goal), ttyflush, format('</swish>',[]).

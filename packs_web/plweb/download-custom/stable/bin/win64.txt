@@ -1,0 +1,5 @@
+Self-installing executable for Microsoft's Windows 64-bit editions.
+Requires at least Windows 7. See the [[reference
+manual][</man/64bits.html>]] for deciding on whether to use the 32- or
+64-bits version. This binary is linked against GMP 6.1.1 which is
+covered by the LGPL license.

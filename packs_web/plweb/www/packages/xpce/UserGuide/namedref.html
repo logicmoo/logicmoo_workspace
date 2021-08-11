@@ -1,0 +1,268 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+
+<HTML>
+<HEAD>
+<TITLE>Programming in XPCE/Prolog: Section 10.3</TITLE><LINK REL=home HREF="index.html">
+<LINK REL=contents HREF="Contents.html">
+<LINK REL=index HREF="DocIndex.html">
+<LINK REL=summary HREF="summary.html">
+<LINK REL=previous HREF="exeobjects.html">
+<LINK REL=next HREF="whoiswho.html">
+<STYLE type="text/css">
+/* Style sheet for SWI-Prolog latex2html
+*/
+
+dd.defbody
+{ margin-bottom: 1em;
+}
+
+dt.pubdef
+{ background-color: #c5e1ff;
+}
+
+pre.code
+{ margin-left: 1.5em;
+margin-right: 1.5em;
+border: 1px dotted;
+padding-top: 5px;
+padding-left: 5px;
+padding-bottom: 5px;
+background-color: #f8f8f8;
+}
+
+div.navigate
+{ text-align: center;
+background-color: #f0f0f0;
+border: 1px dotted;
+padding: 5px;
+}
+
+div.title
+{ text-align: center;
+padding-bottom: 1em;
+font-size: 200%;
+font-weight: bold;
+}
+
+div.author
+{ text-align: center;
+font-style: italic;
+}
+
+div.abstract
+{ margin-top: 2em;
+background-color: #f0f0f0;
+border: 1px dotted;
+padding: 5px;
+margin-left: 10%; margin-right:10%;
+}
+
+div.abstract-title
+{ text-align: center;
+padding: 5px;
+font-size: 120%;
+font-weight: bold;
+}
+
+div.toc-h1
+{ font-size: 200%;
+font-weight: bold;
+}
+
+div.toc-h2
+{ font-size: 120%;
+font-weight: bold;
+margin-left: 2em;
+}
+
+div.toc-h3
+{ font-size: 100%;
+font-weight: bold;
+margin-left: 4em;
+}
+
+div.toc-h4
+{ font-size: 100%;
+margin-left: 6em;
+}
+
+span.sec-nr
+{ 
+}
+
+span.sec-title
+{ 
+}
+
+span.pred-ext
+{ font-weight: bold;
+}
+
+/* Footnotes */
+
+sup.fn { color: blue; text-decoration: underline; }
+span.fn-text: { display: none; }
+sup.fn span {display: none;}
+sup:hover span 
+{ display: block !important;
+position: absolute; top: auto; left: auto; width: 80%;
+color: #000; background: white;
+border: 2px solid;
+padding: 5px; margin: 10px; z-index: 100;
+font-size: smaller;
+}
+</STYLE>
+</HEAD>
+<BODY BGCOLOR="white">
+<DIV class="navigate"><A class="nav" href="index.html"><IMG SRC="home.gif" BORDER=0 ALT="Home"></A>
+<A class="nav" href="Contents.html"><IMG SRC="index.gif" BORDER=0 ALT="Contents"></A>
+<A class="nav" href="DocIndex.html"><IMG SRC="yellow_pages.gif" BORDER=0 ALT="Index"></A>
+<A class="nav" href="summary.html"><IMG SRC="info.gif" BORDER=0 ALT="Summary"></A>
+<A class="nav" href="exeobjects.html"><IMG SRC="prev.gif" BORDER=0 ALT="Previous"></A>
+<A class="nav" href="whoiswho.html"><IMG SRC="next.gif" BORDER=0 ALT="Next"></A>
+</DIV>
+
+<H2><A NAME="sec:10.3"><SPAN class="sec-nr">10.3</SPAN> <SPAN class="sec-title">Defining 
+global named objects</SPAN></A></H2>
+
+<A NAME="sec:namedref"></A>
+
+<P>As explained before, named references should be restricted to 
+debugging and reusable objects. A couple of problems related to their 
+creation and usage can be identified:
+
+<P>
+<UL>
+<LI><I>Creating</I><BR>
+Objects need to be created before they can be used. Reusable objects 
+generally are used from various places in the application. How are they 
+best declared and when are they best created?
+<LI><I>Versioning</I><BR>
+Symbolic programming languages generally allow the programmer to change 
+the program when it is running. This property makes them suitable for 
+rapid-prototyping. Global objects are created from the Prolog system. It 
+is desirable that the global object changes if the source-code that 
+declares it has been changed.
+</UL>
+
+<P>Various alternatives to creating global objects have been tried. We 
+will present some of the straight-forward approaches below and describe 
+the (dis)advantages. <A class="sec" href="namedref.html">Section 10.3.3</A> 
+describes the <A NAME="idx:pceglobal2:333"></A><A class="pred" href="sec-D.1.html#pce_global/2">pce_global/2</A> 
+directive to solve this problem. We will use a particular fill-pattern 
+(image) as an example.
+
+<H3><A NAME="sec:10.3.1"><SPAN class="sec-nr">10.3.1</SPAN> <SPAN class="sec-title">Using 
+directives</SPAN></A></H3>
+
+<P>Using a directive to create a reusable global object appears to be a 
+logical way of dealing with them. This leads to the following code:
+
+<PRE class="code">
+:- new(@stones_image, image(stones)).
+
+        ...,
+        send(Box, fill_pattern, @stones_image),
+        ...
+</PRE>
+
+<P>This code has a serious disadvantage. Whenever this file is reloaded 
+after the Prolog code inside it has changed, the directive will be 
+executed as well. The predicate <A NAME="idx:new2:334"></A><A class="pred" href="sec-D.1.html#new/2">new/2</A> 
+will generate a warning on an attempt to create an object with an 
+existing name.
+
+<H3><A NAME="sec:10.3.2"><SPAN class="sec-nr">10.3.2</SPAN> <SPAN class="sec-title">Inline 
+testing</SPAN></A></H3>
+
+<P>Another common approach is to test inline. For the example, this 
+would look like:
+
+<PRE class="code">
+        ...,
+        (   object(@stones_image)
+        -&gt;  true
+        ;   new(@stones_image, image(stones))
+        ),
+        send(Box, fill_pattern, @stones_image),
+        ...
+</PRE>
+
+<P>This approach is bad programming style. If <A NAME="idx:stonesbitmap:335"></A><B>@stones_bitmap</B> 
+is required at various places in the source files this construct needs 
+to be repeated at various places.
+
+<H3><A NAME="sec:10.3.3"><SPAN class="sec-nr">10.3.3</SPAN> <SPAN class="sec-title">The 
+`pce_global' directive</SPAN></A></H3>
+
+<A NAME="sec:global"></A>
+
+<P>This approach is based on <A NAME="idx:exceptionhandling:336">exception-handling</A>. 
+If PCE translates a named reference into an internal reference and the 
+named reference does not exist it will raise an exception. The <A NAME="idx:pceglobal2:337"></A><A class="pred" href="sec-D.1.html#pce_global/2">pce_global/2</A> 
+directive installs an exception handler dealing with a specific global 
+reference. The example becomes:
+
+<PRE class="code">
+:- pce_global(@stones_image, new(image(stones))).
+
+        ...,
+        send(Box, fill_pattern, @stones_image),
+        ...
+</PRE>
+
+<P><A NAME="idx:globalobjectswithreconsult:338"></A>This directive 
+applies some heuristics to take care of redefinitions when the file is 
+reconsulted: if the definition is still the same it will not complain. 
+If the definition has modified and the object is already created it will 
+rename the object using `object
+<B><CODE>-&gt;</CODE>name_reference</B>'. A later reference to the 
+object will trap the exception handler again, creating a new object 
+according to the current specification. The directive prints diagnostics 
+messages on redefinitions and other possible problems during 
+compilation. See
+<A class="sec" href="interface.html">appendix D</A> for details on <A NAME="idx:pceglobal2:339"></A><A class="pred" href="sec-D.1.html#pce_global/2">pce_global/2</A>.
+
+<H3><A NAME="sec:10.3.4"><SPAN class="sec-nr">10.3.4</SPAN> <SPAN class="sec-title">Global 
+objects for recognisers</SPAN></A></H3>
+
+<P>Recogniser objects (see <A class="sec" href="recogniser.html">section 
+5.5</A>) that make graphical objects sensitive to mouse events are often 
+created with a global reference. Suppose an application requires box 
+objects that can be moved, resized and that have a popup menu. The 
+recogniser may be defined as:
+
+<PRE class="code">
+:- pce_global(@mybox_recogniser, make_mybox_recogniser).
+
+make_mybox_recogniser(R) :-
+        Gr = @arg1,
+        new(P, popup),
+        send_list(P, append,
+                  [ menu_item(cut, message(Gr, free))
+                    ...
+                  ]),
+        new(R, handler_group(new(resize_gesture),
+                             new(move_gesture),
+                             popup_gesture(P))).</PRE>
+
+<P>This recogniser object may be attached to the graphical objects 
+either using <A NAME="idx:graphicalsendrecogniser:340"></A>`<B>graphical<CODE>-&gt;</CODE>recogniser</B>' 
+or by redefining the <A NAME="idx:graphicalsendevent:341"></A>`<B>graphical<CODE>-&gt;</CODE>event</B>' 
+method. In the first case, the recogniser is an integral part of the 
+graphical object and cannot be changed easily during the lifetime of the 
+object. In the second case, the reference to the gesture is through the 
+Prolog implementation of the method and replacing the global object will 
+make all members of the class behave according to the new definition 
+immediately.
+
+<P>If the latter approach is taken and the recogniser is under 
+development, you may wish to use <A NAME="idx:free1:342"></A><A class="pred" href="sec-D.1.html#free/1">free/1</A> 
+to make sure the new definition is created:
+
+<PRE class="code">
+:- free(@mybox_recogniser).
+:- pce_global(@mybox_recogniser, make_mybox_recogniser).
+</PRE>
+
+<P></BODY></HTML>

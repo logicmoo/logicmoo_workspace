@@ -1,0 +1,68 @@
+---+ Reading about Prolog
+
+This topic is on reading material: books, articles on the web, etc.
+providing useful training and background material on Prolog. I started
+this topic after seeing this message on comp.lang.prolog:
+
+    Hi, can't say that I'm much better, since I just started myself, but
+    take a look at these links:
+
+    * http://kti.mff.cuni.cz/~bartak/prolog/ - Roman Barták
+    * http://www.csupomona.edu/~jrfisher/www/prolog_tutorial/contents.html - J R Fischer
+    * http://www.amzi.com/AdventureInProlog/ - Dennis Merritt and Amzi! inc.
+    * http://www.compapp.dcu.ie/~alex/LOGIC/start.html - James Power and Alex Monaghan
+    * http://www.arch.su.edu.au/~jose/prolog/tutorial.html - José Damski
+    * http://cs.wwc.edu/~cs_dept/KU/PR/Prolog.html - Anthony Aaby
+    * http://www.dcs.qmw.ac.uk/~mmh/AINotes/ - Matthew Muntbach
+    * http://www.dcs.kcl.ac.uk/teaching/units/cs2lap/notes.html - Dov Gabbay and Ulle Endriss 
+
+Here are some links, if they are helpful, help yourself.
+
+I have myself a book called Programming in Prolog 4th Edition, but many
+here in Sweden says that The Art of Prolog is one of the better ones
+they have seen.
+
+Personally, I would like to add that if you think you know Prolog, you
+have two choices to move on. One is to write a compiler and the other is
+to read The Craft of Prolog by Richard O'Keefe.
+
+To help alleviate the enormous frustration that may arise when
+struggling with prolog for the first time, I started writing material to
+accompany the prolog course at the University of Osnabrück, where I was
+a student, late in 1999.
+
+Helmar Gust, who runs the prolog lecture, welcomed the idea and made it
+possible that the former "Institut für semantische
+Informationsverarbeitung", now the "Insitute for Cognitive Science",
+kindly provided funding for this endeavour.
+
+He, Tobias Thelen and Christoph Peylo answered countless questions on
+the subject and suggested many improvements. Timo Steffens contributed a
+chapter on predicate calculus. Kim Wallum translated the text from
+German into much better English.
+
+When I stopped working on the material in 2002, Helmar Gust agreed to
+release it under the GNU FDL. This gives anybody the freedom to use and
+improve the material.
+
+While the material is used in Osnabrück, only three people from outside
+Osnabrück have contacted me with regards to the text since 2002.
+
+By posting this, I intend to make the text more widely available.
+Unfortunately, I do not have time to improve the material myself and
+thus I am interested in finding a dedicated person to hand the project
+over to.
+
+    * [[German version][<buch.ps.zip>]]
+    * [[English version][<book.ps.zip>]]
+    * [[LaTeX sources][<prolog-text.tgz>]]
+
+While the material is far from being perfect and no doubt contains many
+smaller infelicities, I am sure it can serve as a springboard for a
+better introduction to prolog.
+
+I would appreciate it if you let me know what you think.
+
+@author Sebastian Kanty
+@author Patrick Tschorn
+@tbd	Check and restructure

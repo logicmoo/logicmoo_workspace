@@ -1,0 +1,37 @@
+# Using SWI-Prolog for commercial applications
+
+SWI-Prolog is being used for commercial applications. The [license
+conditions](</license.html>) allow for embedding in commercial
+applications without restrictions on the license conditions for the
+proprietary code.
+
+We welcome commercial usage of the system.  Commercial users have
+had a major impact on the system by sponsoring the
+development.  Examples of *sponsored* features and components are:
+
+  - The initial garbage collector
+  - Unbound integer and rational number support
+  - The [PlDoc](</pldoc/package/pldoc.html>) documentation system
+  - The [PlUnit](</pldoc/package/plunit.html>) testing system
+  - The [SSL](</pldoc/package/ssl.html>) interface
+  - Redesign of the (stack) memory management to avoid using
+    the C stack for recursive traversal of Prolog terms, make
+    threads more memory efficient and remove the limitation of
+    the number of threads.
+
+Commercial users have greatly helped in *debugging* several features,
+notably multi-threading support and the
+[ODBC](</pldoc/package/odbc.html>) interface.
+
+Finally, commercial users have *provided packages*.  While making your
+package available requires an investment, you get a pay-back because
+others will help you to debug it and clean the interfaces.  Examples of
+such packages are:
+
+  - The [JPL](</packages/jpl/>) Java interface.
+  - The [TIPC](</pldoc/package/tipc.html>) networking interface.
+  - The [Google protocol buffers](</pldoc/package/protobufs.html>)
+    interface.
+  - The [CQL](</pldoc/man?section=cql>) library
+
+Involvement of commercial users is vital to the project!

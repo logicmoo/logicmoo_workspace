@@ -1,0 +1,124 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2//EN">
+
+<HTML>
+<HEAD>
+<TITLE>Programming in XPCE/Prolog</TITLE><LINK REL=home HREF="index.html">
+<LINK REL=contents HREF="Contents.html">
+<LINK REL=index HREF="DocIndex.html">
+<LINK REL=summary HREF="summary.html">
+<LINK REL=previous HREF="summary.html">
+<LINK REL=next HREF="DocIndex.html">
+
+</HEAD>
+<BODY BGCOLOR="white">
+<HR>
+<CENTER>
+<A HREF="index.html"><IMG SRC="home.gif" BORDER=0 ALT="Home"></A>
+<A HREF="Contents.html"><IMG SRC="index.gif" BORDER=0 ALT="Contents"></A>
+<A HREF="DocIndex.html"><IMG SRC="yellow_pages.gif" BORDER=0 ALT="Index"></A>
+<A HREF="summary.html"><IMG SRC="info.gif" BORDER=0 ALT="Summary"></A>
+<A HREF="summary.html"><IMG SRC="prev.gif" BORDER=0 ALT="Previous"></A>
+<A HREF="DocIndex.html"><IMG SRC="next.gif" BORDER=0 ALT="Next"></A>
+
+</CENTER>
+<HR>
+
+<H1><A NAME="document-notes">Footnotes</A></H1>
+
+<DL>
+
+<P>
+<DT><A NAME=note-1 HREF="sec-2.2.html#back-to-note-1">note-1</A><DD>
+Normal applications use almost exclusively <font size=-1>XPCE</font> 
+generated references. Many of the examples in this manual are typed from 
+the terminal and Prolog specified references are easier to type.
+<DT><A NAME=note-2 HREF="sec-2.2.html#back-to-note-2">note-2</A><DD>
+The attributes of an object state are called slots. In other languages 
+they may be called <EM>instance variables</EM> or fields.
+<DT><A NAME=note-3 HREF="sec-2.2.html#back-to-note-3">note-3</A><DD>
+Prolog would normally print `<A NAME="idx:display:875"></A><B>@display</B>'. 
+The <CODE>library(pce_portray)</CODE> defines a clause for the Prolog 
+predicate <A NAME="idx:portray1:876"></A><B>portray/1</B> that prints 
+object references as `<A NAME="idx:Reference:877"></A><B>@Reference</B>/Class'. 
+This library is used throughout all the examples of this manual.
+<DT><A NAME=note-4 HREF="fileviewer.html#back-to-note-4">note-4</A><DD>
+Initial versions of <font size=-1>XPCE</font> lacked the obtainer. In 
+this case the browser <EM>B</EM> would be passed to the predicate <A NAME="idx:view1:878"></A><B>view/1</B>, 
+which would extract the current filename from the browser. Obtainers 
+improve the readability and avoid the need to mix UI related code with 
+application code.
+<DT><A NAME=note-5 HREF="fileviewer.html#back-to-note-5">note-5</A><DD>
+This conversion is implemented with class <A HREF="summary.html#class:dict_item">dict_item</A>. 
+In fact, the browser just specifies the desired type and the message 
+passing kernel invokes the conversion method of class <A HREF="summary.html#class:dict_item">dict_item</A>.
+<DT><A NAME=note-6 HREF="sec-3.3.html#back-to-note-6">note-6</A><DD>
+Given the dynamic nature of delegation, the system cannot possibly 
+determine all methods available through delegation. Consider a slot 
+specified with type <A HREF="summary.html#class:graphical">graphical</A>. 
+The system can infer it will surely be able to use behaviour defined at 
+class <A HREF="summary.html#class:graphical">graphical</A>. If at 
+runtime, the slot is filled with a <A HREF="summary.html#class:box">box</A>, 
+all methods defined at class box will be available too.
+<DT><A NAME=note-7 HREF="notprolog.html#back-to-note-7">note-7</A><DD>
+This example uses <font size=-1>XPCE</font> user-defined classes. The 
+details of this mechanism do not matter for the argument in this 
+section. User-defined classes are described in <A HREF="udc.html">chapter 
+7</A>.
+<DT><A NAME=note-8 HREF="udc.html#back-to-note-8">note-8</A><DD>
+<font size=-1>XPCE</font> defines four implementation techniques for 
+methods. <EM>C-function pointers</EM> are used for almost all the 
+built-in behaviour. <EM>C++-function pointers</EM> are used when classes 
+are defined in C++ (<CITE><A HREF="Bibliography.html#XPCE:cpp">Wielemaker &amp; 
+Anjewierden, 1994</A></CITE>) . Instances of <A HREF="summary.html#class:c_pointer">c_pointer</A> 
+are left to the host object for interpretation and finally, <A HREF="summary.html#class:code">code</A> 
+objects are executed.
+<DT><A NAME=note-9 HREF="sec-7.1.html#back-to-note-9">note-9</A><DD>
+Value must be an int, name or <A HREF="summary.html#class:constant">constant</A> 
+in the current implementation.
+<DT><A NAME=note-10 HREF="sec-7.5.html#back-to-note-10">note-10</A><DD>
+To facilitate the translation of old code, the construct <TT>:- send(<A NAME="idx:class:879"></A><B>@class</B>, 
+...</TT> is treated automatically as if it was embedded using <A NAME="idx:pceclassdirective1:880"></A><A HREF="sec-7.1.html#pce_class_directive/1">pce_class_directive/1</A>
+<DT><A NAME=note-11 HREF="classvar.html#back-to-note-11">note-11</A><DD>
+On Windows systems, <CODE>~</CODE> expands to <CODE>\%HOME\%</CODE>, <CODE>\%USERPROFILE\%</CODE>, <CODE>\%HOMEDRIVE\%/\%HOMEPATH\%</CODE> 
+or the root of the current drive. See <A NAME="idx:expandfilename2:881"></A><B>expand_file_name/2</B> 
+of the SWI-Prolog manual.
+<DT><A NAME=note-12 HREF="font.html#back-to-note-12">note-12</A><DD>
+See <A HREF="classvar.html">section 8</A> for the default syntax.
+<DT><A NAME=note-13 HREF="dragdrop.html#back-to-note-13">note-13</A><DD>
+Attach a <B>drag_and_drop_dict_item_gesture</B> to a <A HREF="summary.html#class:list_browser">list_browser</A> 
+to enable dragging the items in the dictionary
+<DT><A NAME=note-14 HREF="httpd.html#back-to-note-14">note-14</A><DD>
+Using the Unix/X11 version <font size=-1>XPCE</font> can manage windows 
+on multiple desktops. For MS-Windows users this is not supported.
+<DT><A NAME=note-15 HREF="vishierarchy.html#back-to-note-15">note-15</A><DD>
+To remember this sequence: <B>V</B> for Visual and all defined modifiers 
+to avoid a conflict with application defined key-bindings.
+<DT><A NAME=note-16 HREF="sec-C.2.html#back-to-note-16">note-16</A><DD>
+We will mix the terms <EM>instance</EM> and <EM>object</EM> freely in 
+this document. They are considered synonyms.
+<DT><A NAME=note-17 HREF="sec-C.2.html#back-to-note-17">note-17</A><DD>
+Class class is an instance of itself. In other systems (SmallTalk, <CITE><A HREF="Bibliography.html#Goldberg:83a">Goldberg &amp; 
+Robson, 1983</A></CITE>), classes are instances of a <EM>meta-class</EM>. 
+Yet in other systems, classes have a completely different status (for 
+example widgets in the X11 Intrinsics)
+<DT><A NAME=note-18 HREF="sec-C.2.html#back-to-note-18">note-18</A><DD>
+Multiple inheritance introduces various technical and conceptual 
+problems. <font size=-1>XPCE</font> uses delegation and templates to 
+achieve similar results. This is explained in <A HREF="delegation.html">section 
+C.4</A> and <A HREF="sec-7.5.html">section 7.5.2.1</A>.
+<DT><A NAME=note-19 HREF="sec-E.1.html#back-to-note-19">note-19</A><DD>
+PCE assumes the object has become a <EM>support</EM> object. This is 
+generally not correct for code objects. Class <A HREF="summary.html#class:code">code</A> 
+therefore has <A NAME="idx:classgetunanswer:882"></A>`<B>class<CODE>&lt;-</CODE>un_answer</B>: <A NAME="idx:off:883"></A><B>@off</B>', 
+which implies that objects that fill a slot of a code object will not 
+loose their `answer' status.
+<DT><A NAME=note-20 HREF="trouble.html#back-to-note-20">note-20</A><DD>
+A `ground' term is a Prolog term that has no unbound variables.
+<DT><A NAME=note-21 HREF="summary.html#back-to-note-21">note-21</A><DD>
+Colour screens create their colour by mixing the `primary' colours 
+`red', `green' and `blue'. With an `RBG' triple, we refer to a triple of 
+three numeric values representing the intensities of the three primary 
+colours
+</DL>
+
+</BODY></HTML>

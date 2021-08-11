@@ -1,0 +1,433 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+
+<HTML>
+<HEAD>
+<TITLE>Programming in XPCE/Prolog: Section 3.3</TITLE><LINK REL=home HREF="index.html">
+<LINK REL=contents HREF="Contents.html">
+<LINK REL=index HREF="DocIndex.html">
+<LINK REL=summary HREF="summary.html">
+<LINK REL=previous HREF="sec-3.2.html">
+<LINK REL=next HREF="sec-3.4.html">
+<STYLE type="text/css">
+/* Style sheet for SWI-Prolog latex2html
+*/
+
+dd.defbody
+{ margin-bottom: 1em;
+}
+
+dt.pubdef
+{ background-color: #c5e1ff;
+}
+
+pre.code
+{ margin-left: 1.5em;
+margin-right: 1.5em;
+border: 1px dotted;
+padding-top: 5px;
+padding-left: 5px;
+padding-bottom: 5px;
+background-color: #f8f8f8;
+}
+
+div.navigate
+{ text-align: center;
+background-color: #f0f0f0;
+border: 1px dotted;
+padding: 5px;
+}
+
+div.title
+{ text-align: center;
+padding-bottom: 1em;
+font-size: 200%;
+font-weight: bold;
+}
+
+div.author
+{ text-align: center;
+font-style: italic;
+}
+
+div.abstract
+{ margin-top: 2em;
+background-color: #f0f0f0;
+border: 1px dotted;
+padding: 5px;
+margin-left: 10%; margin-right:10%;
+}
+
+div.abstract-title
+{ text-align: center;
+padding: 5px;
+font-size: 120%;
+font-weight: bold;
+}
+
+div.toc-h1
+{ font-size: 200%;
+font-weight: bold;
+}
+
+div.toc-h2
+{ font-size: 120%;
+font-weight: bold;
+margin-left: 2em;
+}
+
+div.toc-h3
+{ font-size: 100%;
+font-weight: bold;
+margin-left: 4em;
+}
+
+div.toc-h4
+{ font-size: 100%;
+margin-left: 6em;
+}
+
+span.sec-nr
+{ 
+}
+
+span.sec-title
+{ 
+}
+
+span.pred-ext
+{ font-weight: bold;
+}
+
+/* Footnotes */
+
+sup.fn { color: blue; text-decoration: underline; }
+span.fn-text: { display: none; }
+sup.fn span {display: none;}
+sup:hover span 
+{ display: block !important;
+position: absolute; top: auto; left: auto; width: 80%;
+color: #000; background: white;
+border: 2px solid;
+padding: 5px; margin: 10px; z-index: 100;
+font-size: smaller;
+}
+</STYLE>
+</HEAD>
+<BODY BGCOLOR="white">
+<DIV class="navigate"><A class="nav" href="index.html"><IMG SRC="home.gif" BORDER=0 ALT="Home"></A>
+<A class="nav" href="Contents.html"><IMG SRC="index.gif" BORDER=0 ALT="Contents"></A>
+<A class="nav" href="DocIndex.html"><IMG SRC="yellow_pages.gif" BORDER=0 ALT="Index"></A>
+<A class="nav" href="summary.html"><IMG SRC="info.gif" BORDER=0 ALT="Summary"></A>
+<A class="nav" href="sec-3.2.html"><IMG SRC="prev.gif" BORDER=0 ALT="Previous"></A>
+<A class="nav" href="sec-3.4.html"><IMG SRC="next.gif" BORDER=0 ALT="Next"></A>
+</DIV>
+
+<H2><A NAME="sec:3.3"><SPAN class="sec-nr">3.3</SPAN> <SPAN class="sec-title">Guided 
+tour</SPAN></A></H2>
+
+<P>This section provides a `guided tour' through the manual system. If 
+you have <font size=-1>XPCE/P</font>rolog at hand, please start it and 
+try the examples. For each of the central tools of the manual we will 
+present a screendump in a typical situation and explain the purpose and 
+some common ways to use the tool.
+
+<H3><A NAME="sec:3.3.1"><SPAN class="sec-nr">3.3.1</SPAN> <SPAN class="sec-title">Class 
+browser</SPAN></A></H3>
+
+<A NAME="sec:classbrowser"></A>
+
+<P><A NAME="fig:classbrowser"></A>
+<CENTER>
+<IMG SRC="classbrowser.gif">
+</CENTER>
+<TABLE ALIGN=center WIDTH="75%"><TR><TD>
+<B>Figure 3 : </B>The Class Browser</TABLE>
+
+<P>The ``Class Browser'' is the central tool of the online manual. It 
+provides an overview of the functionality of a class and options to 
+limit the displayed information. <A class="fig" href="sec-3.3.html#fig:classbrowser">Figure 
+3</A> shows this tool in a typical situation. In this example the user 
+is interested in methods dealing with `caret' in an <A class="" href="summary.html#class:editor">editor</A>.
+
+<P>The dialog to the left-side of the tool specifies <EM>what</EM> 
+information is displayed. The top-right window displays the class 
+together with the initialisation arguments (the arguments needed to 
+create an instance of this class). Double-left-click on this text will 
+open the description for <B><CODE>-&gt;</CODE>initialise</B>.
+
+<P>Below this text a hierarchy is displayed that indicates the place in 
+the inheritance hierarchy as well as the classes to which messages are <EM>delegated</EM> 
+(see <A class="sec" href="delegation.html">section C.4</A>). The user 
+can select multiple classes only if there is delegation and the tree 
+actually has branches. Use class <A class="" href="summary.html#class:editor">editor</A> 
+or class view to explore these facilities. After the user has selected 
+one or more classes, the <B>Apply</B> button makes the class-browser 
+search for methods in all classes below the selected classes. If a 
+method is found in multiple classes the class-browser will automatically 
+display only the one method that will actually be used by this class.
+
+<P>The large right window displays a list of matching classes, 
+variables, methods and class-variables. If an item is tagged with a ``<A NAME="idx::100">(+)</A>'' 
+there is additional information that may be obtained by (double-) 
+clicking the card to start the ``Card Viewer'' (see <A class="sec" href="sec-3.3.html">section 
+3.3.2</A>).
+
+<H4><A NAME="sec:3.3.1.1"><SPAN class="sec-nr">3.3.1.1</SPAN> <SPAN class="sec-title">The 
+ClassBrowser dialog</SPAN></A></H4>
+
+<P>The <B>Class</B> text_item (text-entry-field) may be used to switch 
+to a new class. Note that this text_item implements <A NAME="idx:completion:101">completion</A> 
+(bound to the space-bar).
+
+<P>The <B>Filter</B> menu filters the candidate objects according to 
+their categorisation. Selecting <B>all</B> switches off filtering, which 
+is often useful in combination with <B>Search</B>. Clicking <B>all</B> 
+again switches back to the old selection of categories. The meaning of 
+the categories is:
+
+<P>
+<UL>
+<LI><I>Basic</I><BR>
+Principal methods that are used very often. This is, together with
+<EM>Application</EM>, the default selection of this menu.
+<LI><I>Advanced</I><BR>
+Less often used and sometimes complicated methods.
+<LI><I>Rare</I><BR>
+Infrequently used methods. Note that does not mean they are complicated 
+or do things you'd hardly ever want to use. For example, most of the 
+caret-manipulation of class editor is in this category. It is essential 
+and commonly used behaviour of the editor, but rarely used directly from 
+program-control.
+<LI><I>Internal</I><BR>
+Behaviour that is not directly intended for public usage. It may be 
+useful to understand how other methods interact. Try to avoid using 
+these methods or variables in your code.
+<LI><I>Basic OO</I><BR>
+Methods intended to be redefined in user-defined classes. See
+<A class="sec" href="udc.html">chapter 7</A>.
+<LI><I>Advanced OO</I><BR>
+Methods that may be redefined in user-defined classes, but for which 
+this is far less common.
+<LI><I>Application</I><BR>
+Methods implemented in the host-language.
+</UL>
+
+<P>The <B>Display</B> menu determines the objects searched for. <B>Self</B> 
+refers to the class itself, <B>Sub Class</B> refers to the direct sub 
+classes of this class. The other fields refer to instance-variables, 
+methods with send- and get-access and class-variables.
+
+<P>The <B>Search</B> and <B>... In</B> controllers limit the displayed 
+cards to those that have the specified search string in one of the 
+specified fields. While searching, the case of the characters is ignored 
+(i.e. lower- and uppercase versions of the same letter match). Searching 
+in the <B>Name</B> field is useful to find a particular method if the 
+name (or part of it) is known.
+
+<H4><A NAME="sec:3.3.1.2"><SPAN class="sec-nr">3.3.1.2</SPAN> <SPAN class="sec-title">Example 
+queries to the classbrowser</SPAN></A></H4>
+
+<P>Below we illustrate how some commonly asked questions may be answered 
+with the class browser.
+
+<P>
+<UL>
+<LI><I>What are variables of a bitmap?</I><BR>
+Select <B>variable</B> in the <B>Display</B> menu, clear <B>Search</B>, 
+and set <B>Filter</B> to <B>All</B>. Then type `bitmap' in <B>Class</B> 
+and hit return. Note that by double-clicking on class <A class="" href="summary.html#class:graphical">graphical</A> 
+in the inheritance display not only the variables of class
+<A class="" href="summary.html#class:bitmap">bitmap</A> itself are 
+shown, but also those of class
+<A class="" href="summary.html#class:graphical">graphical</A>.
+<LI><I>How can I position the caret in an editor?</I><BR>
+The caret can only be changed using send-methods. Either the name or the 
+summary is likely to have `caret' as a substring. Thus, <B>Display</B> 
+is set to
+<B>Send Method</B>, <B>Field</B> to <B>Name</B> and <B>Summary</B>, 
+search `caret'.
+</UL>
+
+<H4><A NAME="sec:3.3.1.3"><SPAN class="sec-nr">3.3.1.3</SPAN> <SPAN class="sec-title">Methods 
+with special meaning</SPAN></A></H4>
+
+<P>This section describes the role of the `special' methods. These are 
+methods that are not used directly, but they define the behaviour of
+<A NAME="idx:new2:102"></A><A class="pred" href="sec-D.1.html#new/2">new/2</A>, 
+type conversion, etc. and knowing about them is therefore essential for 
+understanding an <font size=-1>XPCE</font> class.
+
+<DL>
+<DT><STRONG>object -&gt;initialise:</STRONG> <VAR>&lt;<VAR>Class-Defined</VAR>&gt;</VAR></DT>
+<DD class="defbody">
+<A NAME="idx:objectscreating:103"></A>The <B><CODE>-&gt;</CODE>initialise</B> 
+method of a class defines what happens when an instance of this class is 
+created. It may be compared to the <A NAME="idx:constructor:104">constructor</A> 
+in C++. Note that double-clicking the class description in the 
+class-browser (top-right window) opens the reference card for the
+<B><CODE>-&gt;</CODE>initialise</B> method. See also <A NAME="idx:new2:105"></A><A class="pred" href="sec-D.1.html#new/2">new/2</A>, <A class="sec" href="sec-2.2.html">section 
+2.2.1</A>.
+</DD>
+<DT><STRONG>object -&gt;unlink:</STRONG> <VAR></VAR></DT>
+<DD class="defbody">
+<A NAME="idx:objectremove:106"></A>The <B><CODE>-&gt;</CODE>unlink</B> 
+method describes what happens when an instance of this class is removed 
+from the object-base and may be compared to the C++
+<A NAME="idx:destructor:107">destructor</A>.
+</DD>
+<DT><STRONG>object &lt;-lookup:</STRONG> <VAR>&lt;<VAR>Class-Defined</VAR>&gt;</VAR></DT>
+<DD class="defbody">
+object
+<A NAME="idx:reusability:108"></A>If defined, this method describes the 
+lookup an already defined instance instead of object creation. For 
+example
+
+<PRE class="code">
+1 ?- new(X, font(screen, roman, 13)).
+X = @screen_roman_13
+2 ?- new(Y, font(screen, roman, 13)).
+Y = @screen_roman_13
+</PRE>
+
+<P>The same instance of the reusable font instance is returned on a 
+second attempt to create a font from the same parameters. Examples of 
+classes with this capability are: <A class="" href="summary.html#class:name">name</A>, <A class="" href="summary.html#class:font">font</A>, <A class="" href="summary.html#class:colour">colour</A>,
+<A class="" href="summary.html#class:image">image</A> and <A class="" href="summary.html#class:modifier">modifier</A>.
+</DD>
+<DT><STRONG>object &lt;-convert:</STRONG> <VAR>&lt;<VAR>Class-Defined</VAR>&gt;</VAR></DT>
+<DD class="defbody">
+object
+<A NAME="idx:typeconversion:109"></A>Defines what can be converted into 
+an instance of this type. If an instance of this class is requested by a 
+type but another object is provided
+<font size=-1>XPCE</font> will call this method to translate the given 
+argument into an instance of this class.
+</DD>
+<DT><STRONG>object -&gt;catch_all:</STRONG> <VAR>&lt;<VAR>Class-Defined</VAR>&gt;</VAR></DT>
+<DD class="defbody">
+<A NAME="idx:catchall:110"></A>The <B><CODE>-&gt;</CODE>catch_all</B> 
+method defines what happens with messages invoked on this object that 
+are not implemented by any other method.
+</DD>
+<DT><STRONG>object &lt;-catch_all:</STRONG> <VAR>&lt;<VAR>Class-Defined</VAR>&gt;</VAR></DT>
+<DD class="defbody">
+any As <B><CODE>-&gt;</CODE>catch_all</B>, but for get-operations.
+</DD>
+</DL>
+
+<H3><A NAME="sec:3.3.2"><SPAN class="sec-nr">3.3.2</SPAN> <SPAN class="sec-title">Reading 
+cards</SPAN></A></H3>
+
+<A NAME="sec:card"></A>
+
+<P><A NAME="fig:card"></A>
+<CENTER>
+<IMG SRC="card.gif">
+</CENTER>
+<TABLE ALIGN=center WIDTH="75%"><TR><TD>
+<B>Figure 4 : </B>The Card Viewer</TABLE>
+
+<P>The other tools of the manual allow the user to <EM>find</EM> cards 
+with documentation on the topic(s) the user is looking for. The 
+information provided by the summary-lists often suffices for this 
+purpose. Whenever a card is marked with a ``(+)'' in the summary list it 
+may be opened by double-clicking it. This starts the ``Card Viewer'' 
+tool.
+<A class="fig" href="sec-3.3.html#fig:card">Figure 4</A> is a screendump 
+of this tool showing the `selection' group of class `device'.
+
+<P>The ``Card Viewer'' displays the formal information and all available 
+attributes from the card related to the displayed object (method, 
+variable, class, ...). It uses patterns to determine relations to other 
+manual material from the text. Each hit of these patterns is 
+highlighted. When the user double-clicks on highlighted text the ``Card 
+Viewer'' will jump to the related material.
+
+<P>If the user double-clicks a group-title in the ClassBrowser, all 
+cards in the group will be displayed in the CardViewer. Some objects 
+share their documentation with another object. Opening the card for such 
+an object will show two titles above the card. The card from which the 
+documentation originates will have an underlined type-indicator.
+
+<P>The <B>Goto</B> field allows for switching to a new card. The syntax 
+for this field is similar to <A NAME="idx:manpce1:111"></A><A class="pred" href="sec-D.2.html#manpce/1">manpce/1</A>, <A NAME="idx:tracepce1:112"></A><A class="pred" href="sec-D.2.html#tracepce/1">tracepce/1</A> 
+and <A NAME="idx:editpce1:113"></A><SPAN class="pred-ext">editpce/1</SPAN> 
+predicates description in <A class="sec" href="debugging.html">section 
+12</A>. It consists of a classname, followed by <CODE>-&gt;</CODE> to 
+indicate a send-method, <CODE>&lt;-</CODE> for a get-method and
+<CODE>-</CODE> to specify an instance-variable without considering 
+associated methods.
+
+<P>The item performs <EM>completion</EM> bound to the space-bar. The 
+first word is completed to a class-name. The second to a send-method, 
+variable or get-method. Method completion considers inheritance and 
+delegation.<SUP class="fn">6<SPAN class="fn-text">Given the dynamic 
+nature of delegation, the system cannot possibly determine all methods 
+available through delegation. Consider a slot specified with type <A class="" href="summary.html#class:graphical">graphical</A>. 
+The system can infer it will surely be able to use behaviour defined at 
+class <A class="" href="summary.html#class:graphical">graphical</A>. If 
+at runtime, the slot is filled with a <A class="" href="summary.html#class:box">box</A>, 
+all methods defined at class box will be available too.</SPAN></SUP>
+
+<H3><A NAME="sec:3.3.3"><SPAN class="sec-nr">3.3.3</SPAN> <SPAN class="sec-title">Search 
+tool</SPAN></A></H3>
+
+<A NAME="sec:searchtool"></A>
+
+<P>The search tool is shown in <A class="fig" href="sec-3.3.html#fig:searchtool">figure 
+5</A>. It allows the user to search through all <font size=-1>XPCE</font> 
+manual cards in an efficient manner with queries similar to that what is 
+found in <A NAME="idx:WAIS:114">WAIS</A> tools. A search specification 
+is an expression formed from the following primitives:
+
+<P>
+<UL>
+<LI><I>Word</I><BR>
+Specifies all cards containing a word for which the search specification 
+is the <EM>prefix</EM>. Case is ignored.
+<LI><I><TT>&lt;</TT>Word<TT>&gt;</TT></I><BR>
+Specifies all cards that contain the indicated word. Case is ignored.
+<LI><I>Expr1 <TT>and</TT> Expr2</I><BR>
+Specifies all cards satisfying both conditions.
+<LI><I>Expr1 <TT>or</TT> Expr2</I><BR>
+Specifies all cards satisfying either condition.
+</UL>
+
+<P>As a special shorthand, just specifying multiple words refers to all 
+cards containing all these words.
+
+<P>If the user stops typing for more than a second, the system will 
+parse the expression and display the number of matching cards.
+
+<P>The <A class="" href="summary.html#class:browser">browser</A> window 
+on the left contains all words occurring anywhere in the manual. The 
+window on the right is used to display the card summaries of all 
+matching cards.
+
+<P><A NAME="fig:searchtool"></A>
+<CENTER>
+<IMG SRC="searchtool.gif">
+</CENTER>
+<TABLE ALIGN=center WIDTH="75%"><TR><TD>
+<B>Figure 5 : </B>Manual search tool</TABLE>
+
+<H3><A NAME="sec:3.3.4"><SPAN class="sec-nr">3.3.4</SPAN> <SPAN class="sec-title">Class 
+hierarchy</SPAN></A></H3>
+
+<A NAME="sec:classhierarchy"></A>
+
+<P><A NAME="fig:classhierarchy"></A>
+<CENTER>
+<IMG SRC="classhierarchy.gif">
+</CENTER>
+<TABLE ALIGN=center WIDTH="75%"><TR><TD>
+<B>Figure 6 : </B>Class Hierachy Tool</TABLE>
+
+<P>The ``Class Hierachy'' tool shown in <A class="fig" href="sec-3.3.html#fig:classhierarchy">figure 
+6</A> may be used to get an overview of <font size=-1>XPCE</font>'s 
+class hierarchy or to find the (inheritance) relations of a particular 
+class with other classes. Note that <font size=-1>XPCE</font>'s 
+inheritance hierarchy has a technical foundation rather than a 
+conceptual. Super-classes are motivated by the need for code-sharing.
+
+<P></BODY></HTML>

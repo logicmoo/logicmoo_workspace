@@ -1,0 +1,116 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; truncate-lines: t; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:et:sw=4:ts=4:sts=4
+# $Id: Portfile 57749 2009-09-16 04:30:02Z ryandesign@macports.org $
+
+PortSystem	1.0
+
+name		swi-prolog-devel
+version		5.9.6
+revision        1
+epoch		20051223
+
+categories	lang
+maintainers	uva.nl:J.Wielemaker logtalk.org:pmoura
+platforms	darwin
+description	SWI-Prolog compiler plus extra packages (development version)
+
+long_description	\
+	ISO/Edinburgh-style Prolog compiler including modules,		\
+	autoload, libraries, Garbage-collector, stack-expandor,		\
+	C/C++-interface, Multiple threads, GNU-readline interface,	\
+	coroutining, constraint programming, global variables,		\
+	very fast compiler. Including packages clib (Unix process	\
+	control, sockets, MIME), cpp (C++ interface), sgml (reading	\
+	XML/SGML), sgml/RDF (reading RDF into triples), ODBC		\
+	interface and XPCE (Graphics UI toolkit, integrated editor	\
+	(Emacs-clone) and graphical debugger).
+
+homepage	http://www.swi-prolog.org/
+master_sites	http://www.swi-prolog.org/download/devel/src/
+
+checksums       \
+        md5     9ca24374f7ecff0dd0dd9d6a0e69132b \
+        sha1    f81d2cd74c2f72017515cec4d8372cbd8c3c4c70 \
+        rmd160  bdca930325b896b52bdb58a33430548af2e5eb0a
+
+depends_build   \
+	port:gawk	\
+	port:junit
+
+depends_lib		\
+	port:readline		\
+	port:ncurses		\
+	port:jpeg		\
+	port:libmcrypt		\
+	port:gmp		\
+	port:zlib		\
+	port:libarchive		\
+	port:ossp-uuid		\
+	port:xorg-libs
+
+use_parallel_build	no
+
+platform darwin 9 {
+	depends_lib-append port:expat
+}
+
+distname	pl-${version}
+
+configure.env	\
+	LIBRARY_PATH=/usr/lib:${prefix}/lib	\
+	CPATH=/usr/include:${prefix}/include	\
+	JUNIT=${prefix}/share/java/junit.jar
+
+configure.ldflags
+
+configure.args	\
+	--mandir=${prefix}/share/man	\
+    --x-includes=${prefix}/include  \
+    --x-libraries=${prefix}/lib     \
+	--with-world
+
+build.env	\
+	LIBRARY_PATH=/usr/lib:${prefix}/lib	\
+	CPATH=/usr/include:${prefix}/include	\
+	JUNIT=${prefix}/share/java/junit.jar \
+	CC=${configure.cc}
+
+post-build {
+	file mkdir ${workpath}/macosx
+	file copy -force -- ${workpath}/pl-${version}/man/macosx/License.html ${workpath}/macosx/
+	file copy -force -- ${workpath}/pl-${version}/man/macosx/macosx.html ${workpath}/macosx/
+	file copy -force -- ${workpath}/pl-${version}/man/macosx/Welcome.html ${workpath}/macosx/
+}
+
+post-pkg {
+	set resources ${workpath}/${name}-${version}.pkg/Contents/Resources/
+	file copy -force -- ${workpath}/macosx/License.html ${resources}
+	file copy -force -- ${workpath}/macosx/macosx.html ${resources}
+	file copy -force -- ${workpath}/macosx/Welcome.html ${resources}
+	file rename ${resources}/macosx.html ${resources}/ReadMe.html
+	file delete -force -- ${resources}/Welcome.rtf
+}
+
+post-mpkg {
+	set resources ${workpath}/${name}-${version}.mpkg/Contents/Resources/
+	file copy -force -- ${workpath}/macosx/License.html ${resources}
+	file copy -force -- ${workpath}/macosx/macosx.html ${resources}
+	file copy -force -- ${workpath}/macosx/Welcome.html ${resources}
+	file rename ${resources}/macosx.html ${resources}/ReadMe.html
+	file delete -force -- ${resources}/Welcome.rtf
+}
+
+if {![variant_isset st]} {
+	default_variants +mt
+}
+
+variant st conflicts mt description {Single-threaded} {
+	configure.args-append --disable-mt
+}
+
+variant mt conflicts st description {Multi-threaded} {
+	configure.args-append --enable-mt
+}
+
+livecheck.type      regexm
+livecheck.url       ${homepage}download/devel
+livecheck.regex     "/download/devel/src/pl-(\\d+\\.\\d+\\.\\d+).tar.gz"

@@ -1,0 +1,379 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+
+<HTML>
+<HEAD>
+<TITLE>Programming in XPCE/Prolog: Section 7.5</TITLE><LINK REL=home HREF="index.html">
+<LINK REL=contents HREF="Contents.html">
+<LINK REL=index HREF="DocIndex.html">
+<LINK REL=summary HREF="summary.html">
+<LINK REL=previous HREF="udcpreds.html">
+<LINK REL=next HREF="classvar.html">
+<STYLE type="text/css">
+/* Style sheet for SWI-Prolog latex2html
+*/
+
+dd.defbody
+{ margin-bottom: 1em;
+}
+
+dt.pubdef
+{ background-color: #c5e1ff;
+}
+
+pre.code
+{ margin-left: 1.5em;
+margin-right: 1.5em;
+border: 1px dotted;
+padding-top: 5px;
+padding-left: 5px;
+padding-bottom: 5px;
+background-color: #f8f8f8;
+}
+
+div.navigate
+{ text-align: center;
+background-color: #f0f0f0;
+border: 1px dotted;
+padding: 5px;
+}
+
+div.title
+{ text-align: center;
+padding-bottom: 1em;
+font-size: 200%;
+font-weight: bold;
+}
+
+div.author
+{ text-align: center;
+font-style: italic;
+}
+
+div.abstract
+{ margin-top: 2em;
+background-color: #f0f0f0;
+border: 1px dotted;
+padding: 5px;
+margin-left: 10%; margin-right:10%;
+}
+
+div.abstract-title
+{ text-align: center;
+padding: 5px;
+font-size: 120%;
+font-weight: bold;
+}
+
+div.toc-h1
+{ font-size: 200%;
+font-weight: bold;
+}
+
+div.toc-h2
+{ font-size: 120%;
+font-weight: bold;
+margin-left: 2em;
+}
+
+div.toc-h3
+{ font-size: 100%;
+font-weight: bold;
+margin-left: 4em;
+}
+
+div.toc-h4
+{ font-size: 100%;
+margin-left: 6em;
+}
+
+span.sec-nr
+{ 
+}
+
+span.sec-title
+{ 
+}
+
+span.pred-ext
+{ font-weight: bold;
+}
+
+/* Footnotes */
+
+sup.fn { color: blue; text-decoration: underline; }
+span.fn-text: { display: none; }
+sup.fn span {display: none;}
+sup:hover span 
+{ display: block !important;
+position: absolute; top: auto; left: auto; width: 80%;
+color: #000; background: white;
+border: 2px solid;
+padding: 5px; margin: 10px; z-index: 100;
+font-size: smaller;
+}
+</STYLE>
+</HEAD>
+<BODY BGCOLOR="white">
+<DIV class="navigate"><A class="nav" href="index.html"><IMG SRC="home.gif" BORDER=0 ALT="Home"></A>
+<A class="nav" href="Contents.html"><IMG SRC="index.gif" BORDER=0 ALT="Contents"></A>
+<A class="nav" href="DocIndex.html"><IMG SRC="yellow_pages.gif" BORDER=0 ALT="Index"></A>
+<A class="nav" href="summary.html"><IMG SRC="info.gif" BORDER=0 ALT="Summary"></A>
+<A class="nav" href="udcpreds.html"><IMG SRC="prev.gif" BORDER=0 ALT="Previous"></A>
+<A class="nav" href="classvar.html"><IMG SRC="next.gif" BORDER=0 ALT="Next"></A>
+</DIV>
+
+<H2><A NAME="sec:7.5"><SPAN class="sec-nr">7.5</SPAN> <SPAN class="sec-title">Advanced 
+topics</SPAN></A></H2>
+
+<H3><A NAME="sec:7.5.1"><SPAN class="sec-nr">7.5.1</SPAN> <SPAN class="sec-title">More 
+on type declarations</SPAN></A></H3>
+
+<A NAME="sec:moretypes"></A>
+
+<P>The basic <font size=-1>XPCE</font> type-syntax is described in <A class="sec" href="sec-3.2.html">section 
+3.2.1</A> of this manual. Types are first-class reusable <font size=-1>XPCE</font> 
+objects that are created from the type-declaration in arguments and 
+variables. The conversion from the textual representation to the object 
+is performed by <font size=-1>XPCE</font> itself (together with the 
+resource syntax, one of the few places where <font size=-1>XPCE</font> 
+defines syntax). All types can be specified as Prolog quoted atoms. For 
+example:
+
+<PRE class="code">
+mymethod(Me, A:'graphical|dict_item|0..') :-&gt;
+        ...
+</PRE>
+
+<P>For most cases however, this is not necessary. If the type is not an 
+atom, the class-compiler will convert the Prolog term into an atom 
+suitable for <font size=-1>XPCE</font>'s type system. Hence, <TT>[point]</TT> 
+will translate to the atom '[point]', which is interpreted by <font size=-1>XPCE</font> 
+as ``an instance of class <A class="" href="summary.html#class:point">point</A> 
+or the constant <A NAME="idx:default:241"></A><B>@default</B>''. The 
+atoms <TT>*</TT> and
+<TT>...</TT> are defined as postfix operators, while <TT>..</TT> is an 
+infix operator. This makes `<TT>any ...</TT>' a valid notation for ``any 
+number of anything'' (see <A class="sec" href="sec-7.5.html">section 
+7.5.2</A> below) and `<TT>0..5</TT>' a valid expression for ``an integer 
+in the range 0 to 5 (including the boundaries).
+
+<P>Also, <TT>[box|circle]</TT> is a valid description for ``an instance 
+of
+<A class="" href="summary.html#class:box">box</A> or <A class="" href="summary.html#class:circle">circle</A> 
+or the constant <A NAME="idx:default:242"></A><B>@default</B>. Note 
+however that <TT>[box|circle|ellipse]</TT> is <EM>not</EM> valid Prolog 
+syntax and should be written as <TT>'[box|circle|ellipse]'</TT>. 
+Whenever you are in doubt, use quotes to prevent surprises.
+
+<H3><A NAME="sec:7.5.2"><SPAN class="sec-nr">7.5.2</SPAN> <SPAN class="sec-title">Methods 
+with variable number of arguments</SPAN></A></H3>
+
+<A NAME="sec:varargs"></A>
+
+<P><A NAME="idx:variablenumberofarguments:243"></A><A NAME="idx:vararg:244"></A><A NAME="idx:stdarg:245"></A>Methods 
+such as <A NAME="idx:chainsendinitialise:246"></A>`<B>chain<CODE>-&gt;</CODE>initialise</B>' 
+and <A NAME="idx:stringsendformat:247"></A>`<B>string<CODE>-&gt;</CODE>format</B>' 
+handle an arbitrary number of arguments. The argument declaration for 
+such a method first defines a number (possibly zero) of `normal' 
+arguments. The last argument is postfixed with `<TT>...</TT>'. The 
+arguments assigned to the `vararg' type are passed in a Prolog list.
+
+<P>Below is a refinement of <A NAME="idx:labelsendreport:248"></A>`<B>label<CODE>-&gt;</CODE>report</B>' 
+that will colour the label depending on the nature of the message. The <B><CODE>-&gt;</CODE>report</B> 
+method takes two obligatory arguments, the <EM>kind</EM> of the report 
+and a <EM>format</EM> string, as well as an undefined number of 
+arguments required by the format specification.
+
+<PRE class="code">
+:- pce_begin_class(coloured_reporter, label,
+                   "Coloured reporter label").
+
+report(L, Kind:name, Format:char_array, Args:any ...) :-&gt;
+        Msg =.. [report, Kind, Format | Args],
+        send_super(L, Msg),
+        get(L, colour_from_report_category, Kind, Colour),
+        send(L, colour, Colour).
+
+colour_from_report_category(L, Kind:name, Colour:colour) :&lt;-
+        &lt;left to the user&gt;.
+
+:- pce_end_class.</PRE>
+
+<H4><A NAME="sec:7.5.2.1"><SPAN class="sec-nr">7.5.2.1</SPAN> <SPAN class="sec-title">Using 
+class templates</SPAN></A></H4>
+
+<A NAME="sec:template"></A>
+
+<P><font size=-1>XPCE</font> provides two alternatives to multiple 
+inheritance. Delegation is discussed in <A class="sec" href="delegation.html">section 
+C.4</A>. See also the directive
+<A NAME="idx:delegateto1:249"></A><A class="pred" href="sec-7.1.html#delegate_to/1">delegate_to/1</A> 
+for user-defined class definitions. The <EM>template</EM> mechanism is 
+much closer to real multiple inheritance. A template is a named partial 
+class-definition that may be included in other classes. It behaves as if 
+the source-code of the template definition was literally included at the 
+place of the <A NAME="idx:useclasstemplate1:250"></A><A class="pred" href="sec-7.1.html#use_class_template/1">use_class_template/1</A> 
+directive.
+
+<P>In fact, the class-attributes (variables, method objects) are <EM>copied</EM>, 
+while the implementation (the Prolog clauses) are <EM>shared</EM> 
+between multiple references to the same template.
+
+<P>Templates itself form a hierarchy below class <B>template</B>, which 
+is an immediate subclass of <A class="" href="summary.html#class:object">object</A>. 
+Including a template will make all variables and methods defined between 
+the template class and class <B>template</B> available to the receiving 
+class.
+
+<P>We illustrate the example below, making both editable boxes as 
+editable ellipses. First we define the template class.
+
+<PRE class="code">
+:- use_module(library(pce_template)).
+
+:- pce_begin_class(editable_graphical, template).
+
+:- pce_global(@editable_graphical_recogniser,
+              make_editable_graphical_recogniser).
+
+make_editable_graphical_recogniser(G) :-
+        Gr = @arg1,
+        new(Dev, Gr?device),
+        new(P, popup),
+        send_list(P, append,
+                  [ menu_item(cut, message(Gr, free)),
+                    menu_item(duplicate,
+                              message(Dev, display, Gr?clone,
+                                      ?(Gr?position, plus,
+                                        point(10,10))))
+                  ]),
+        new(G, handler_group(new(resize_gesture),
+                             new(move_gesture),
+                             popup_gesture(P))).
+
+
+event(G, Ev:event) :-&gt;
+        (   send_super(G, event, Ev)
+        ;   send(@editable_graphical_recogniser, event, Ev)
+        ).
+:- pce_end_class.</PRE>
+
+<P>The main program can now be defined as:
+
+<PRE class="code">
+:- require([use_class_template/1]).
+
+:- pce_begin_class(editable_box, box).
+:- use_class_template(editable_graphical).
+:- pce_end_class.
+
+:- pce_begin_class(editable_ellipse, ellipse).
+:- use_class_template(editable_graphical).
+:- pce_end_class.
+
+test :-
+        send(new(P, picture('Template Demo')), open),
+        send(P, display,
+             editable_box(100,50), point(20,20)),
+        send(P, display,
+             editable_ellipse(100, 50), point(20, 90)).</PRE>
+
+<P>Note that <A NAME="idx:useclasstemplate1:251"></A><A class="pred" href="sec-7.1.html#use_class_template/1">use_class_template/1</A> <EM>imports</EM> 
+the definitions from the template in the current class. Thus, the 
+following <B>will not extend</B> further on the <A NAME="idx:editablegraphicalsendevent:252"></A>`<B>editable_graphical<CODE>-&gt;</CODE>event</B>' 
+definition, but instead <B>replace</B> this definition. Of course it is 
+allowed to subclass the definition of editable_box above and further 
+refine the event method in the subclass.
+
+<PRE class="code">
+:- require([use_class_template/1]).
+
+:- pce_begin_class(editable_box, box).
+:- use_class_template(editable_graphical).
+
+event(Gr, Ev:event) :-&gt;
+        (   send_super(Gr, event, Ev)
+        ;   ...
+        ).
+:- pce_end_class.</PRE>
+
+<H3><A NAME="sec:7.5.3"><SPAN class="sec-nr">7.5.3</SPAN> <SPAN class="sec-title">Implementation 
+notes</SPAN></A></H3>
+
+<A NAME="sec:ucdimplementation"></A>
+
+<P>The <font size=-1>XPCE/P</font>rolog class-compilation is defined 
+using the Prolog preprocessing capabilities of <A NAME="idx:termexpansion2:253"></A><SPAN class="pred-ext">term_expansion/2</SPAN>. 
+While the class is compiled, Prolog gathers the expressions belonging to 
+the class. The expansion of <TT>:- pce_end_class(<EM>Class</EM>)</TT> 
+emits the actual code for the class.
+
+<P>The method implementation is realised by the predicates 
+pce_principal:send_implementation/3 and 
+pce_principal:get_implementation/4. that take the form:
+
+<DL>
+<DT class="pubdef"><A NAME="send_implementation/3"><STRONG>send_implementation</STRONG>(<VAR>MethodId, 
+Method(Arg...), Object</VAR>)</A></DT>
+<DD class="defbody">
+Where <VAR>MethodId</VAR> is unique identifier for the class and method,
+<VAR>Method</VAR> is the method implemented, <VAR>Arg...</VAR> are the 
+arguments accepted by the method and <VAR>Object</VAR> is the receiving 
+object.
+</DD>
+<DT class="pubdef"><A NAME="get_implementation/4"><STRONG>get_implementation</STRONG>(<VAR>MethodId, 
+Method(Arg...), Object, -Result</VAR>)</A></DT>
+<DD class="defbody">
+This is the get-equivalent of <A NAME="idx:sendimplementation3:254"></A><A class="pred" href="sec-7.5.html#send_implementation/3">send_implementation/3</A>.
+</DD>
+</DL>
+
+<PRE class="code">
+:- pce_begin_class(gnus, ...
+gnu(X, A:int) :-&gt; ...
+gnats(X, A:name, B:int) :-&gt; ...
+</PRE>
+
+<P>is translated into
+
+<PRE class="code">
+pce_principal:send_implementation('gnus$+$-&gt;gnu', gnu(A), O) :- ...
+pce_principal:send_implementation('gnats$+$-&gt;gnu', gnats(A, B), O) :- ...
+</PRE>
+
+<P>The remainder of the class specification is translated into a number 
+of Prolog clauses describing the class. No <font size=-1>XPCE</font> 
+class is created. If
+<font size=-1>XPCE</font> generates an <TT>undefined_class</TT> 
+exception, it will scan for the class-description in the Prolog database 
+and create the
+<font size=-1>XPCE</font> <A class="" href="summary.html#class:class">class</A> 
+instance. No methods are associated with the new class. Instead, all 
+method binding is again based on exception handling.
+
+<P>Modifications to the class beyond what is provided by the 
+preprocessing facilities (for example changing the <A NAME="idx:variablesendclonestyle:255"></A>`<B>variable<CODE>-&gt;</CODE>clone_style</B>') 
+cannot be made by sending messages to the class inside the class 
+definition body as this would address the not-yet-existing class. 
+Instead, they should be embedded in the <A NAME="idx:pceclassdirective1:256"></A><A class="pred" href="sec-7.1.html#pce_class_directive/1">pce_class_directive/1</A> 
+directive.<SUP class="fn">9<SPAN class="fn-text">To facilitate the 
+translation of old code, the construct <TT>:- send(<A NAME="idx:class:257"></A><B>@class</B>, 
+...</TT> is treated automatically as if it was embedded using <A NAME="idx:pceclassdirective1:258"></A><A class="pred" href="sec-7.1.html#pce_class_directive/1">pce_class_directive/1</A></SPAN></SUP>. 
+The <EM>Goal</EM> argument of <A NAME="idx:pceclassdirective1:259"></A><A class="pred" href="sec-7.1.html#pce_class_directive/1">pce_class_directive/1</A> 
+should refer to the class using the <font size=-1>XPCE</font> <A class="" href="summary.html#class:var">var</A> 
+object <A NAME="idx:class:260"></A><B>@class</B>. When the class is 
+realised the exception system will bind <A NAME="idx:class:261"></A><B>@class</B> 
+to the current class while running <EM>Goal</EM>. <EM>Goal</EM> is 
+called from the Prolog module in which the class is defined.
+
+<P><A NAME="idx:runtimegeneration:262"></A>The main reason for the above 
+approach is to exploit the runtime-generation facilities of the hosting 
+Prolog system to create fast-starting portable and (depending on the 
+hosting Prolog's capabilities) stand-alone executables.
+
+<P>One of the consequences of the chosen approach is that the 
+class-building directives are not accessible as predicates. There is no 
+preprocessing support for the dynamic creation of classes and the 
+programmer should thus fall back to raw manipulation of the <font size=-1>XPCE</font> 
+class objects.
+</BODY></HTML>

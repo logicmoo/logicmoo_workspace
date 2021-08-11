@@ -1,0 +1,295 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+
+<HTML>
+<HEAD>
+<TITLE>Programming in XPCE/Prolog</TITLE><LINK REL=home HREF="index.html">
+<LINK REL=contents HREF="Contents.html">
+<LINK REL=index HREF="DocIndex.html">
+<LINK REL=summary HREF="summary.html">
+<LINK REL=previous HREF="resources.html">
+<LINK REL=next HREF="control.html">
+<STYLE type="text/css">
+/* Style sheet for SWI-Prolog latex2html
+*/
+
+dd.defbody
+{ margin-bottom: 1em;
+}
+
+dt.pubdef
+{ background-color: #c5e1ff;
+}
+
+pre.code
+{ margin-left: 1.5em;
+margin-right: 1.5em;
+border: 1px dotted;
+padding-top: 5px;
+padding-left: 5px;
+padding-bottom: 5px;
+background-color: #f8f8f8;
+}
+
+div.navigate
+{ text-align: center;
+background-color: #f0f0f0;
+border: 1px dotted;
+padding: 5px;
+}
+
+div.title
+{ text-align: center;
+padding-bottom: 1em;
+font-size: 200%;
+font-weight: bold;
+}
+
+div.author
+{ text-align: center;
+font-style: italic;
+}
+
+div.abstract
+{ margin-top: 2em;
+background-color: #f0f0f0;
+border: 1px dotted;
+padding: 5px;
+margin-left: 10%; margin-right:10%;
+}
+
+div.abstract-title
+{ text-align: center;
+padding: 5px;
+font-size: 120%;
+font-weight: bold;
+}
+
+div.toc-h1
+{ font-size: 200%;
+font-weight: bold;
+}
+
+div.toc-h2
+{ font-size: 120%;
+font-weight: bold;
+margin-left: 2em;
+}
+
+div.toc-h3
+{ font-size: 100%;
+font-weight: bold;
+margin-left: 4em;
+}
+
+div.toc-h4
+{ font-size: 100%;
+margin-left: 6em;
+}
+
+span.sec-nr
+{ 
+}
+
+span.sec-title
+{ 
+}
+
+span.pred-ext
+{ font-weight: bold;
+}
+
+/* Footnotes */
+
+sup.fn { color: blue; text-decoration: underline; }
+span.fn-text: { display: none; }
+sup.fn span {display: none;}
+sup:hover span 
+{ display: block !important;
+position: absolute; top: auto; left: auto; width: 80%;
+color: #000; background: white;
+border: 2px solid;
+padding: 5px; margin: 10px; z-index: 100;
+font-size: smaller;
+}
+</STYLE>
+</HEAD>
+<BODY BGCOLOR="white">
+<DIV class="navigate"><A class="nav" href="index.html"><IMG SRC="home.gif" BORDER=0 ALT="Home"></A>
+<A class="nav" href="Contents.html"><IMG SRC="index.gif" BORDER=0 ALT="Contents"></A>
+<A class="nav" href="DocIndex.html"><IMG SRC="yellow_pages.gif" BORDER=0 ALT="Index"></A>
+<A class="nav" href="summary.html"><IMG SRC="info.gif" BORDER=0 ALT="Summary"></A>
+<A class="nav" href="resources.html"><IMG SRC="prev.gif" BORDER=0 ALT="Previous"></A>
+<A class="nav" href="control.html"><IMG SRC="next.gif" BORDER=0 ALT="Next"></A>
+</DIV>
+
+<H1><A NAME="sec:10"><SPAN class="sec-nr">10</SPAN> <SPAN class="sec-title">Programming 
+techniques</SPAN></A></H1>
+
+<A NAME="sec:techniques"></A>
+
+<P>This chapter is an assorted collection of techniques to programming 
+problems that appear in many applications and for which support for 
+generic solutions is present, but cannot easily be found using the 
+online reference manual.
+
+<P>
+<UL>
+<LI><A class="" href="control.html#sec:10.1">Control-structure of 
+PCE/Prolog applications</A> Discusses the event-driven control-structure 
+used by <font size=-1>XPCE</font> applications. Also describes how to 
+avoid using this structure.
+<LI><A class="" href="exeobjects.html#sec:10.2">Executable Objects</A> 
+Discusses <font size=-1>XPCE</font> code objects and their usage in 
+controls, methods and as parameters.
+<LI><A class="" href="namedref.html#sec:10.3">Defining global named 
+objects</A> Discusses handling of globally named system-wide objects.
+<LI><A class="" href="whoiswho.html#sec:10.4">Using object references: 
+``Who's Who?''</A> Discusses mechanism available to find object 
+references, avoiding global references and explicit storage of 
+references.
+<LI><A class="" href="application.html#sec:10.5">Relating frames</A> 
+Discusses combining frames in a application, transient frames and 
+various styles of modal operation and event handling.
+<LI><A class="" href="report.html#sec:10.7">Informing the user</A> 
+Discusses the generic reporting system used to inform the user of 
+progress, status and errors.
+<LI><A class="" href="errors.html#sec:10.8">Errors</A> Specifying, 
+handling and generating errors.
+<LI><A class="" href="font.html#sec:10.9">Specifying fonts</A> Discusses 
+the indirections in the font-specification mechanism.
+<LI><A class="" href="images.html#sec:10.10">Using images and cursors</A> 
+Discusses images, icons and cursors.
+<LI><A class="" href="hyper.html#sec:10.11">Using Hyper Links to Relate 
+Objects</A> Discusses a technique to relate objects.
+<LI><A class="" href="ugraphics.html#sec:10.12">User Defined Graphicals</A> 
+Discusses the definition of new graphical primitives.
+<LI><A class="" href="printing.html#sec:10.13">Printing</A> Discusses 
+printing from <font size=-1>XPCE</font> applications.
+</UL>
+
+<P>
+<HR>
+<CENTER>
+
+<H2>Section Index</H2>
+
+</CENTER>
+<HR>
+<DIV class="toc">
+<DIV class="toc-h2"><A class="sec" href="control.html"><SPAN class="sec-nr">10.1</SPAN> <SPAN class="sec-title">Control-structure 
+of <font size=-1>XPCE/P</font>rolog applications</SPAN></A></DIV>
+<DIV class="toc-h3"><A class="sec" href="control.html#sec:10.1.1"><SPAN class="sec-nr">10.1.1</SPAN> <SPAN class="sec-title">Event-driven 
+applications</SPAN></A></DIV>
+<DIV class="toc-h4"><A class="sec" href="control.html#sec:10.1.1.1"><SPAN class="sec-nr">10.1.1.1</SPAN> <SPAN class="sec-title">Keeping 
+control</SPAN></A></DIV>
+<DIV class="toc-h3"><A class="sec" href="control.html#sec:10.1.2"><SPAN class="sec-nr">10.1.2</SPAN> <SPAN class="sec-title">XPCE 
+and existing applications</SPAN></A></DIV>
+<DIV class="toc-h2"><A class="sec" href="exeobjects.html"><SPAN class="sec-nr">10.2</SPAN> <SPAN class="sec-title">Executable 
+objects</SPAN></A></DIV>
+<DIV class="toc-h3"><A class="sec" href="exeobjects.html#sec:10.2.1"><SPAN class="sec-nr">10.2.1</SPAN> <SPAN class="sec-title">Procedures</SPAN></A></DIV>
+<DIV class="toc-h3"><A class="sec" href="exeobjects.html#sec:10.2.2"><SPAN class="sec-nr">10.2.2</SPAN> <SPAN class="sec-title">Functions</SPAN></A></DIV>
+<DIV class="toc-h3"><A class="sec" href="exeobjects.html#sec:10.2.3"><SPAN class="sec-nr">10.2.3</SPAN> <SPAN class="sec-title">Example 
+1: Finding objects</SPAN></A></DIV>
+<DIV class="toc-h3"><A class="sec" href="exeobjects.html#sec:10.2.4"><SPAN class="sec-nr">10.2.4</SPAN> <SPAN class="sec-title">Example 
+2: Internal behaviour of dialog window</SPAN></A></DIV>
+<DIV class="toc-h2"><A class="sec" href="namedref.html"><SPAN class="sec-nr">10.3</SPAN> <SPAN class="sec-title">Defining 
+global named objects</SPAN></A></DIV>
+<DIV class="toc-h3"><A class="sec" href="namedref.html#sec:10.3.1"><SPAN class="sec-nr">10.3.1</SPAN> <SPAN class="sec-title">Using 
+directives</SPAN></A></DIV>
+<DIV class="toc-h3"><A class="sec" href="namedref.html#sec:10.3.2"><SPAN class="sec-nr">10.3.2</SPAN> <SPAN class="sec-title">Inline 
+testing</SPAN></A></DIV>
+<DIV class="toc-h3"><A class="sec" href="namedref.html#sec:10.3.3"><SPAN class="sec-nr">10.3.3</SPAN> <SPAN class="sec-title">The 
+`pce_global' directive</SPAN></A></DIV>
+<DIV class="toc-h3"><A class="sec" href="namedref.html#sec:10.3.4"><SPAN class="sec-nr">10.3.4</SPAN> <SPAN class="sec-title">Global 
+objects for recognisers</SPAN></A></DIV>
+<DIV class="toc-h2"><A class="sec" href="whoiswho.html"><SPAN class="sec-nr">10.4</SPAN> <SPAN class="sec-title">Using 
+object references: ``Who's Who?''</SPAN></A></DIV>
+<DIV class="toc-h3"><A class="sec" href="whoiswho.html#sec:10.4.1"><SPAN class="sec-nr">10.4.1</SPAN> <SPAN class="sec-title">Global 
+named references</SPAN></A></DIV>
+<DIV class="toc-h3"><A class="sec" href="whoiswho.html#sec:10.4.2"><SPAN class="sec-nr">10.4.2</SPAN> <SPAN class="sec-title">Using 
+the prolog database</SPAN></A></DIV>
+<DIV class="toc-h3"><A class="sec" href="whoiswho.html#sec:10.4.3"><SPAN class="sec-nr">10.4.3</SPAN> <SPAN class="sec-title">Using 
+object-level attributes</SPAN></A></DIV>
+<DIV class="toc-h3"><A class="sec" href="whoiswho.html#sec:10.4.4"><SPAN class="sec-nr">10.4.4</SPAN> <SPAN class="sec-title">Using 
+window and graphical behaviour</SPAN></A></DIV>
+<DIV class="toc-h3"><A class="sec" href="whoiswho.html#sec:10.4.5"><SPAN class="sec-nr">10.4.5</SPAN> <SPAN class="sec-title">Using 
+user defined classes</SPAN></A></DIV>
+<DIV class="toc-h3"><A class="sec" href="whoiswho.html#sec:10.4.6"><SPAN class="sec-nr">10.4.6</SPAN> <SPAN class="sec-title">Summary</SPAN></A></DIV>
+<DIV class="toc-h2"><A class="sec" href="application.html"><SPAN class="sec-nr">10.5</SPAN> <SPAN class="sec-title">Relating 
+frames</SPAN></A></DIV>
+<DIV class="toc-h3"><A class="sec" href="application.html#sec:10.5.1"><SPAN class="sec-nr">10.5.1</SPAN> <SPAN class="sec-title">Class 
+application</SPAN></A></DIV>
+<DIV class="toc-h3"><A class="sec" href="application.html#sec:10.5.2"><SPAN class="sec-nr">10.5.2</SPAN> <SPAN class="sec-title">Transient 
+frames</SPAN></A></DIV>
+<DIV class="toc-h3"><A class="sec" href="application.html#sec:10.5.3"><SPAN class="sec-nr">10.5.3</SPAN> <SPAN class="sec-title">Modal 
+operation</SPAN></A></DIV>
+<DIV class="toc-h2"><A class="sec" href="framelayout.html"><SPAN class="sec-nr">10.6</SPAN> <SPAN class="sec-title">Window 
+layout in a frame</SPAN></A></DIV>
+<DIV class="toc-h3"><A class="sec" href="framelayout.html#sec:10.6.1"><SPAN class="sec-nr">10.6.1</SPAN> <SPAN class="sec-title">Windows 
+sizes and automatic adjustment</SPAN></A></DIV>
+<DIV class="toc-h3"><A class="sec" href="framelayout.html#sec:10.6.2"><SPAN class="sec-nr">10.6.2</SPAN> <SPAN class="sec-title">Manipulating 
+an open frame</SPAN></A></DIV>
+<DIV class="toc-h2"><A class="sec" href="report.html"><SPAN class="sec-nr">10.7</SPAN> <SPAN class="sec-title">Informing 
+the user</SPAN></A></DIV>
+<DIV class="toc-h3"><A class="sec" href="report.html#sec:10.7.1"><SPAN class="sec-nr">10.7.1</SPAN> <SPAN class="sec-title">Aim 
+of the report mechanism</SPAN></A></DIV>
+<DIV class="toc-h3"><A class="sec" href="report.html#sec:10.7.2"><SPAN class="sec-nr">10.7.2</SPAN> <SPAN class="sec-title">The 
+report interface</SPAN></A></DIV>
+<DIV class="toc-h4"><A class="sec" href="report.html#sec:10.7.2.1"><SPAN class="sec-nr">10.7.2.1</SPAN> <SPAN class="sec-title">Information 
+types</SPAN></A></DIV>
+<DIV class="toc-h3"><A class="sec" href="report.html#sec:10.7.3"><SPAN class="sec-nr">10.7.3</SPAN> <SPAN class="sec-title">Redefining 
+report handling</SPAN></A></DIV>
+<DIV class="toc-h3"><A class="sec" href="report.html#sec:10.7.4"><SPAN class="sec-nr">10.7.4</SPAN> <SPAN class="sec-title">Example</SPAN></A></DIV>
+<DIV class="toc-h2"><A class="sec" href="errors.html"><SPAN class="sec-nr">10.8</SPAN> <SPAN class="sec-title">Errors</SPAN></A></DIV>
+<DIV class="toc-h3"><A class="sec" href="errors.html#sec:10.8.1"><SPAN class="sec-nr">10.8.1</SPAN> <SPAN class="sec-title">Handling 
+errors in the application</SPAN></A></DIV>
+<DIV class="toc-h3"><A class="sec" href="errors.html#sec:10.8.2"><SPAN class="sec-nr">10.8.2</SPAN> <SPAN class="sec-title">Raising 
+errors</SPAN></A></DIV>
+<DIV class="toc-h3"><A class="sec" href="errors.html#sec:10.8.3"><SPAN class="sec-nr">10.8.3</SPAN> <SPAN class="sec-title">Repairable 
+errors</SPAN></A></DIV>
+<DIV class="toc-h2"><A class="sec" href="font.html"><SPAN class="sec-nr">10.9</SPAN> <SPAN class="sec-title">Specifying 
+fonts</SPAN></A></DIV>
+<DIV class="toc-h3"><A class="sec" href="font.html#sec:10.9.1"><SPAN class="sec-nr">10.9.1</SPAN> <SPAN class="sec-title">Physical 
+fonts</SPAN></A></DIV>
+<DIV class="toc-h4"><A class="sec" href="font.html#sec:10.9.1.1"><SPAN class="sec-nr">10.9.1.1</SPAN> <SPAN class="sec-title">Defining 
+additional fonts</SPAN></A></DIV>
+<DIV class="toc-h3"><A class="sec" href="font.html#sec:10.9.2"><SPAN class="sec-nr">10.9.2</SPAN> <SPAN class="sec-title">Logical 
+fonts</SPAN></A></DIV>
+<DIV class="toc-h2"><A class="sec" href="images.html"><SPAN class="sec-nr">10.10</SPAN> <SPAN class="sec-title">Using 
+images and cursors</SPAN></A></DIV>
+<DIV class="toc-h3"><A class="sec" href="images.html#sec:10.10.1"><SPAN class="sec-nr">10.10.1</SPAN> <SPAN class="sec-title">Colour 
+handling</SPAN></A></DIV>
+<DIV class="toc-h4"><A class="sec" href="images.html#sec:10.10.1.1"><SPAN class="sec-nr">10.10.1.1</SPAN> <SPAN class="sec-title">Colour-mapped 
+displays on MS-Windows</SPAN></A></DIV>
+<DIV class="toc-h4"><A class="sec" href="images.html#sec:10.10.1.2"><SPAN class="sec-nr">10.10.1.2</SPAN> <SPAN class="sec-title">Colour-mapped 
+displays on X11/Unix</SPAN></A></DIV>
+<DIV class="toc-h3"><A class="sec" href="images.html#sec:10.10.2"><SPAN class="sec-nr">10.10.2</SPAN> <SPAN class="sec-title">Supported 
+Image Formats</SPAN></A></DIV>
+<DIV class="toc-h4"><A class="sec" href="images.html#sec:10.10.2.1"><SPAN class="sec-nr">10.10.2.1</SPAN> <SPAN class="sec-title">Creating 
+XPM files</SPAN></A></DIV>
+<DIV class="toc-h4"><A class="sec" href="images.html#sec:10.10.2.2"><SPAN class="sec-nr">10.10.2.2</SPAN> <SPAN class="sec-title">Using 
+Images</SPAN></A></DIV>
+<DIV class="toc-h2"><A class="sec" href="hyper.html"><SPAN class="sec-nr">10.11</SPAN> <SPAN class="sec-title">Using 
+hyper links to relate objects</SPAN></A></DIV>
+<DIV class="toc-h3"><A class="sec" href="hyper.html#sec:10.11.1"><SPAN class="sec-nr">10.11.1</SPAN> <SPAN class="sec-title">Programming 
+existence dependencies</SPAN></A></DIV>
+<DIV class="toc-h3"><A class="sec" href="hyper.html#sec:10.11.2"><SPAN class="sec-nr">10.11.2</SPAN> <SPAN class="sec-title">Methods 
+for handling hyper objects</SPAN></A></DIV>
+<DIV class="toc-h4"><A class="sec" href="hyper.html#sec:10.11.2.1"><SPAN class="sec-nr">10.11.2.1</SPAN> <SPAN class="sec-title">Methods 
+on class hyper</SPAN></A></DIV>
+<DIV class="toc-h4"><A class="sec" href="hyper.html#sec:10.11.2.2"><SPAN class="sec-nr">10.11.2.2</SPAN> <SPAN class="sec-title">Methods 
+on class object</SPAN></A></DIV>
+<DIV class="toc-h2"><A class="sec" href="ugraphics.html"><SPAN class="sec-nr">10.12</SPAN> <SPAN class="sec-title">User 
+defined graphicals</SPAN></A></DIV>
+<DIV class="toc-h3"><A class="sec" href="ugraphics.html#sec:10.12.1"><SPAN class="sec-nr">10.12.1</SPAN> <SPAN class="sec-title">(Re)defining 
+the repaint method</SPAN></A></DIV>
+<DIV class="toc-h3"><A class="sec" href="ugraphics.html#sec:10.12.2"><SPAN class="sec-nr">10.12.2</SPAN> <SPAN class="sec-title">Example-I: 
+a window with a grid</SPAN></A></DIV>
+<DIV class="toc-h3"><A class="sec" href="ugraphics.html#sec:10.12.3"><SPAN class="sec-nr">10.12.3</SPAN> <SPAN class="sec-title">Example-II: 
+a shape with text</SPAN></A></DIV>
+<DIV class="toc-h2"><A class="sec" href="printing.html"><SPAN class="sec-nr">10.13</SPAN> <SPAN class="sec-title">Printing 
+from <font size=-1>XPCE</font> applications</SPAN></A></DIV>
+<DIV class="toc-h3"><A class="sec" href="printing.html#sec:10.13.1"><SPAN class="sec-nr">10.13.1</SPAN> <SPAN class="sec-title">Options 
+for document generation</SPAN></A></DIV>
+</DIV>
+</BODY></HTML>

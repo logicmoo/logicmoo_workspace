@@ -1,0 +1,369 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+
+<HTML>
+<HEAD>
+<TITLE>Programming in XPCE/Prolog: Section 10.10</TITLE><LINK REL=home HREF="index.html">
+<LINK REL=contents HREF="Contents.html">
+<LINK REL=index HREF="DocIndex.html">
+<LINK REL=summary HREF="summary.html">
+<LINK REL=previous HREF="font.html">
+<LINK REL=next HREF="hyper.html">
+<STYLE type="text/css">
+/* Style sheet for SWI-Prolog latex2html
+*/
+
+dd.defbody
+{ margin-bottom: 1em;
+}
+
+dt.pubdef
+{ background-color: #c5e1ff;
+}
+
+pre.code
+{ margin-left: 1.5em;
+margin-right: 1.5em;
+border: 1px dotted;
+padding-top: 5px;
+padding-left: 5px;
+padding-bottom: 5px;
+background-color: #f8f8f8;
+}
+
+div.navigate
+{ text-align: center;
+background-color: #f0f0f0;
+border: 1px dotted;
+padding: 5px;
+}
+
+div.title
+{ text-align: center;
+padding-bottom: 1em;
+font-size: 200%;
+font-weight: bold;
+}
+
+div.author
+{ text-align: center;
+font-style: italic;
+}
+
+div.abstract
+{ margin-top: 2em;
+background-color: #f0f0f0;
+border: 1px dotted;
+padding: 5px;
+margin-left: 10%; margin-right:10%;
+}
+
+div.abstract-title
+{ text-align: center;
+padding: 5px;
+font-size: 120%;
+font-weight: bold;
+}
+
+div.toc-h1
+{ font-size: 200%;
+font-weight: bold;
+}
+
+div.toc-h2
+{ font-size: 120%;
+font-weight: bold;
+margin-left: 2em;
+}
+
+div.toc-h3
+{ font-size: 100%;
+font-weight: bold;
+margin-left: 4em;
+}
+
+div.toc-h4
+{ font-size: 100%;
+margin-left: 6em;
+}
+
+span.sec-nr
+{ 
+}
+
+span.sec-title
+{ 
+}
+
+span.pred-ext
+{ font-weight: bold;
+}
+
+/* Footnotes */
+
+sup.fn { color: blue; text-decoration: underline; }
+span.fn-text: { display: none; }
+sup.fn span {display: none;}
+sup:hover span 
+{ display: block !important;
+position: absolute; top: auto; left: auto; width: 80%;
+color: #000; background: white;
+border: 2px solid;
+padding: 5px; margin: 10px; z-index: 100;
+font-size: smaller;
+}
+</STYLE>
+</HEAD>
+<BODY BGCOLOR="white">
+<DIV class="navigate"><A class="nav" href="index.html"><IMG SRC="home.gif" BORDER=0 ALT="Home"></A>
+<A class="nav" href="Contents.html"><IMG SRC="index.gif" BORDER=0 ALT="Contents"></A>
+<A class="nav" href="DocIndex.html"><IMG SRC="yellow_pages.gif" BORDER=0 ALT="Index"></A>
+<A class="nav" href="summary.html"><IMG SRC="info.gif" BORDER=0 ALT="Summary"></A>
+<A class="nav" href="font.html"><IMG SRC="prev.gif" BORDER=0 ALT="Previous"></A>
+<A class="nav" href="hyper.html"><IMG SRC="next.gif" BORDER=0 ALT="Next"></A>
+</DIV>
+
+<H2><A NAME="sec:10.10"><SPAN class="sec-nr">10.10</SPAN> <SPAN class="sec-title">Using 
+images and cursors</SPAN></A></H2>
+
+<A NAME="sec:images"></A>
+
+<P>Many today graphical user interfaces extensively use (iconic) images. 
+There are many image formats, some for specific machines, some with 
+specific goals in mind, such as optimal compression at the loss of 
+accuracy or provide alternatives for different screen properties.
+
+<P>One of <font size=-1>XPCE</font>'s aim is to provide portability 
+between the supported platform. Therefore, we have chosen to support a 
+few formats across all platforms, in addition to the most popular 
+formats for each individual platform.
+
+<H3><A NAME="sec:10.10.1"><SPAN class="sec-nr">10.10.1</SPAN> <SPAN class="sec-title">Colour 
+handling</SPAN></A></H3>
+
+<A NAME="sec:colour"></A>
+
+<P><A NAME="idx:colourimages:434"></A>Colour handling is a hard task for 
+todays computerprogrammer. There is a large variety in techniques, each 
+providing their own advantages and disadvantages. <font size=-1>XPCE</font> 
+doesn't aim for programmers that need to get the best performance and 
+best results rendering colours, but for the programmer who wants a 
+reasonable result at little effort.
+
+<P>As long as you are not using many colours, which is normally the case 
+as long as you do not handle full-colour images, there is no problem. 
+This is why this general topic is handled in the section on images.
+
+<P>Displays differ in the number of colours they can display 
+simultaneously and whether this set can be changed or not. X11 defines 6 
+types of
+<A NAME="idx:visuals:435">visuals</A>. Luckily, these days only three 
+models are popular.
+
+<P><A NAME="idx:colour256:436"></A><A NAME="idx:colour16bits:437"></A><A NAME="idx:colourtrue:438"></A>
+<UL>
+<LI><I>8-bit colour-mapped</I><BR>
+This is that hard one. It allows displaying 256 colours at the same 
+time. Applications have to negotiate with each others and the windowing 
+systems which colours are used at any given moment.
+
+<P>It is hard to do this without some advice from the user. On the other 
+hand, this format is popular because it leads to good graphical 
+performance.
+
+<P>
+<LI><I>16-bit `high-colour'</I><BR>
+This schema is a low-colour-resolution version of true-colour, normally 
+using 5-bit on the red and blue channels and 6 on the green channel. It 
+is not very good showing perfect colours, nor showing colour gradients.
+
+<P>It is as easy for the programmer as true-colour and still fairly 
+efficient in terms of memory.
+
+<P>
+<LI><I>24/32 bit true-colour</I><BR>
+This uses the full 8-bit resolution supported by most hardware on all 
+three channels. The 32-bit version wastes one byte for each pixel, 
+achieving comfortable alignment. Depending on the hardware, 32 bit 
+colour is sometimes much faster.
+</UL>
+
+<P>We will further discuss 8-bit colour below. As handling this is 
+totally different in X11 and MS-Windows we do this in two separate 
+sections.
+
+<H4><A NAME="sec:10.10.1.1"><SPAN class="sec-nr">10.10.1.1</SPAN> <SPAN class="sec-title">Colour-mapped 
+displays on MS-Windows</SPAN></A></H4>
+
+<P>In MS-Windows one has the choice to stick with the reserved 20 
+colours of the system palette or use a colourmap (palette, called by 
+Microsoft).
+
+<P>If an application chooses to use a colourmap switching to this 
+application causes the entire screen to be repainted using the 
+application's colourmap. The idea is that the active application looks 
+perfect and the other applications look a little distorted as they have 
+to do their job using an imperfect colourmap.
+
+<P>By default, <font size=-1>XPCE</font> makes a <A class="" href="summary.html#class:colour_map">colour_map</A> 
+that holds a copy of the reserved colours. As colours are required they 
+are added to this map. This schema is suitable for applications using 
+(small) icons and solid colours for graphics. When loading large 
+colourful images the colourmap will get very big and optimising its 
+mapping to the display slow and poor. In this case it is a good idea to 
+use a fixed colourmap. See class <A class="" href="summary.html#class:colour_map">colour_map</A> 
+for details.
+
+<P>When using <font size=-1>XPCE</font> with many full-colour images it 
+is advised to use high-colour or true-colour modes.
+
+<H4><A NAME="sec:10.10.1.2"><SPAN class="sec-nr">10.10.1.2</SPAN> <SPAN class="sec-title">Colour-mapped 
+displays on X11/Unix</SPAN></A></H4>
+
+<P>X11 provides colourmap sharing between applications. This avoids the 
+flickering when changing applications, but limits the number of 
+available colours. Even worse, depending on the other applications there 
+can be a large difference in available colours. The alternative is to 
+use a <A NAME="idx:privatecolourmap:439">private colourmap</A>, but 
+unlike MS-Windows the other applications appear in totally random 
+colours. <font size=-1>XPCE</font> does not support the use of private 
+colourmaps therefore.
+
+<P>In practice, it is strongly advised to run X11 in 16, 24 or 32 bit 
+mode when running multiple applications presenting colourful images. For 
+example <A NAME="idx:Netscape:440">Netscape</A> insists creating its own 
+colourmap and starting Netscape after another application has consumed 
+too many colours will simply fail.
+
+<H3><A NAME="sec:10.10.2"><SPAN class="sec-nr">10.10.2</SPAN> <SPAN class="sec-title">Supported 
+Image Formats</SPAN></A></H3>
+
+<P>The table below illustrates the image format capabilities of each of 
+the platforms. Shape support means that the format can indicate <EM>transparent</EM> 
+areas. If such an image file is loaded, the resulting
+<A class="" href="summary.html#class:image">image</A> object will have 
+an <A NAME="idx:imagegetmask:441"></A>`<B>image<CODE>&lt;-</CODE>mask</B>' 
+associated: a monochrome image of the same side that indicates where 
+paint is to be applied. This is required for defining cursors (see 
+`cursor
+<B><CODE>-&gt;</CODE>initialise</B>') from a single image file. <EM>Hotspot</EM> 
+means the format can specify a location. If a Hotspot is found, the <A NAME="idx:imagegethotspot:442"></A>`<B>image<CODE>&lt;-</CODE>hot_spot</B>' 
+attribute is filled with it. A Hotspot is necessary for cursors, but can 
+also be useful for other images.
+
+<P>
+<CENTER>
+<A NAME="idx:XPMfileformat:443"></A><A NAME="idx:ICOfileformat:444"></A><A NAME="idx:CURfileformat:445"></A><A NAME="idx:XBMfileformat:446"></A><A NAME="idx:JPEGfileformat:447"></A><A NAME="idx:GIFfileformat:448"></A><A NAME="idx:BMPfileformat:449"></A><A NAME="idx:PNMfileformat:450"></A><A NAME="idx:imagefileformats:451"></A><A NAME="idx:imageshape:452"></A><A NAME="idx:cursor:453"></A><A NAME="idx:icon:454"></A>
+<TABLE BORDER=2 FRAME=box RULES=groups>
+<TR VALIGN=top><TD><B>Format</B></TD><TD ALIGN=center><B>Colour</B></TD><TD ALIGN=center><B>HotSpot</B></TD><TD ALIGN=center><B>Shape</B></TD><TD COLSPAN=2 ALIGN=center><B>Unix/X11</B><TD COLSPAN=2 ALIGN=center><B>Win32</B></TR>
+<TR VALIGN=top><TD></TD><TD ALIGN=center></TD><TD ALIGN=center></TD><TD ALIGN=center></TD><TD ALIGN=center>load</TD><TD ALIGN=center>save</TD><TD ALIGN=center>load</TD><TD ALIGN=center>save </TD></TR>
+<TBODY>
+<TR VALIGN=top><TD COLSPAN=8 ALIGN=center>Icons, Cursors and shaped 
+images</TR>
+<TBODY>
+<TR VALIGN=top><TD>XPM</TD><TD ALIGN=center>+</TD><TD ALIGN=center>+</TD><TD ALIGN=center>+</TD><TD ALIGN=center>+</TD><TD ALIGN=center>+</TD><TD ALIGN=center>+</TD><TD ALIGN=center>+ </TD></TR>
+<TR VALIGN=top><TD>ICO</TD><TD ALIGN=center>+</TD><TD ALIGN=center>-</TD><TD ALIGN=center>+</TD><TD ALIGN=center>-</TD><TD ALIGN=center>-</TD><TD ALIGN=center>+</TD><TD ALIGN=center>- </TD></TR>
+<TR VALIGN=top><TD>CUR</TD><TD ALIGN=center>+</TD><TD ALIGN=center>+</TD><TD ALIGN=center>+</TD><TD ALIGN=center>-</TD><TD ALIGN=center>-</TD><TD ALIGN=center>+</TD><TD ALIGN=center>- </TD></TR>
+<TBODY>
+<TR VALIGN=top><TD COLSPAN=8 ALIGN=center>Rectangular monochrome images</TR>
+<TBODY>
+<TR VALIGN=top><TD>XBM</TD><TD ALIGN=center>-</TD><TD ALIGN=center>-</TD><TD ALIGN=center>-</TD><TD ALIGN=center>+</TD><TD ALIGN=center>+</TD><TD ALIGN=center>+</TD><TD ALIGN=center>- </TD></TR>
+<TBODY>
+<TR VALIGN=top><TD COLSPAN=8 ALIGN=center>Large rectangular images</TR>
+<TBODY>
+<TR VALIGN=top><TD>JPEG</TD><TD ALIGN=center>+</TD><TD ALIGN=center>-</TD><TD ALIGN=center>-</TD><TD ALIGN=center>+</TD><TD ALIGN=center>+</TD><TD ALIGN=center>+</TD><TD ALIGN=center>+ </TD></TR>
+<TR VALIGN=top><TD>GIF</TD><TD ALIGN=center>+</TD><TD ALIGN=center>-</TD><TD ALIGN=center>+</TD><TD ALIGN=center>+</TD><TD ALIGN=center>+</TD><TD ALIGN=center>+</TD><TD ALIGN=center>+ </TD></TR>
+<TR VALIGN=top><TD>BMP</TD><TD ALIGN=center>+</TD><TD ALIGN=center>-</TD><TD ALIGN=center>-</TD><TD ALIGN=center>-</TD><TD ALIGN=center>-</TD><TD ALIGN=center>+</TD><TD ALIGN=center>- </TD></TR>
+<TR VALIGN=top><TD>PNM</TD><TD ALIGN=center>+</TD><TD ALIGN=center>-</TD><TD ALIGN=center>-</TD><TD ALIGN=center>+</TD><TD ALIGN=center>+</TD><TD ALIGN=center>+</TD><TD ALIGN=center>+ </TD></TR>
+</TABLE>
+
+</CENTER>
+
+<P>The XPM format (<B>X</B> <B>P</B>ix<B>M</B>ap) is the preferred 
+format for platform-independent storage of images that are used by the 
+application for cursors, icons and other nice pictures. The XPM format 
+and supporting libraries are actively developed as a contributed package 
+to X11.
+
+<H4><A NAME="sec:10.10.2.1"><SPAN class="sec-nr">10.10.2.1</SPAN> <SPAN class="sec-title">Creating 
+XPM files</SPAN></A></H4>
+
+<P><B>Unix</B> There are two basic ways to create XPM files. One is to 
+convert from another format. On Unix, there are two popular conversion 
+tools. The <B>xv</B> program is a good interactive tool for format 
+conversion and applying graphical operations to images.
+
+<P>ImageMagic can be found at <A class="url" href="http://www.simplesystems.org/ImageMagick/">http://www.simplesystems.org/ImageMagick/</A> 
+and provides a comprehensive toolkit for converting images.
+
+<P>The <B>pixmap</B> program is a comprehensive icon editor, supporting 
+all of XPM's features. The image tools mentioned here, as well as the 
+XPM library sources and a FAQ dealing with XPM related issues can be 
+found at <A class="url" href="ftp://swi.psy.uva.nl/xpce/util/images/">ftp://swi.psy.uva.nl/xpce/util/images/</A>
+
+<P><B>Windows</B> 
+
+<P><font size=-1>XPCE</font> supports the Windows native <CODE>.ICO</CODE>, <CODE>.CUR</CODE> 
+and
+<CODE>.BMP</CODE> formats. Any editor, such as the resource editors that 
+comes with most C(++) development environments can be used. When 
+portability of the application becomes an issue, simply load the icons 
+into <font size=-1>XPCE</font>, and write them in the XPM format using 
+the `image
+<B><CODE>-&gt;</CODE>save</B>' method. See the skeleton below:
+
+<PRE class="code">
+to_xpm(In, Out) :-
+        new(I, image(In)),
+        send(I, save, Out, xpm),
+        free(I).
+</PRE>
+
+<P>Note that the above mentioned ImageMagick toolkit is also available 
+for MS-Windows.
+
+<H4><A NAME="sec:10.10.2.2"><SPAN class="sec-nr">10.10.2.2</SPAN> <SPAN class="sec-title">Using 
+Images</SPAN></A></H4>
+
+<P>Images in any of the formats are recognised by many of <font size=-1>XPCE</font>'s 
+GUI classes. Table <A class="tab" href="images.html#tab:imageusage">table 
+8</A> provides a brief list:
+
+<P>
+<CENTER>
+<TABLE BORDER=2 FRAME=box RULES=groups>
+<TR VALIGN=top><TD><A class="" href="summary.html#class:bitmap">bitmap</A> </TD><TD>A <A class="" href="summary.html#class:bitmap">bitmap</A> 
+converts an image into a first class <A class="" href="summary.html#class:graphical">graphical</A> 
+object that can be displayed anywhere. </TD></TR>
+<TBODY>
+<TR VALIGN=top><TD><A class="" href="summary.html#class:cursor">cursor</A> </TD><TD>A <A class="" href="summary.html#class:cursor">cursor</A> 
+may be created of an image that has a mask and hot-spot. </TD></TR>
+<TBODY>
+<TR VALIGN=top><TD><A NAME="idx:framesendicon:455"></A>`<B>frame<CODE>-&gt;</CODE>icon</B>'</TD><TD>Sets 
+the icon of the frame. The visual result depends on the window system 
+and X11 window manager used. Using the Windows 95 or NT 4.0 shell, the 
+image is displayed in the task-bar and top-left of the window. </TD></TR>
+<TBODY>
+<TR VALIGN=top><TD><A NAME="idx:dialogitemsendlabel:456"></A>`<B>dialog_item<CODE>-&gt;</CODE>label</B>'</TD><TD>The 
+label of all subclasses of class
+<A class="" href="summary.html#class:dialog_item">dialog_item</A> can be 
+an image. </TD></TR>
+<TBODY>
+<TR VALIGN=top><TD><A NAME="idx:labelsendselection:457"></A>`<B>label<CODE>-&gt;</CODE>selection</B>'</TD><TD>A <A class="" href="summary.html#class:label">label</A> 
+can have an image as its visualisation. </TD></TR>
+<TBODY>
+<TR VALIGN=top><TD><A NAME="idx:menuitemsendselection:458"></A>`<B>menu_item<CODE>-&gt;</CODE>selection</B>'</TD><TD>The 
+items of a menu can be an image. </TD></TR>
+<TR VALIGN=top><TD><A NAME="idx:stylesendicon:459"></A>`<B>style<CODE>-&gt;</CODE>icon</B>'</TD><TD>Allows 
+association of images to lines in a <A class="" href="summary.html#class:list_browser">list_browser</A>, 
+as well as marking
+<A class="" href="summary.html#class:fragment">fragments</A> in an <A class="" href="summary.html#class:editor">editor</A>. </TD></TR>
+</TABLE>
+
+</CENTER>
+<TABLE ALIGN=center WIDTH="75%"><TR><TD>
+<B>Table 8 : </B>GUI classes using <A class="" href="summary.html#class:image">image</A> 
+objects</TABLE>
+
+<A NAME="tab:imageusage"></A>
+
+<P></BODY></HTML>

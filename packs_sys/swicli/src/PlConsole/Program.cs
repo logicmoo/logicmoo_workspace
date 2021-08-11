@@ -15,7 +15,7 @@ namespace PlConsole
            // libpl.PL_initialise(args.Length, args);
             try
             {
-                org.armedbear.lisp.Main.main(args);
+                Type.GetType("org.armedbear.lisp.Main").GetMethod("main").Invoke(null, args);
                 //org.armedbear.lisp.Main.main(args);
             }
             catch (Exception exception )

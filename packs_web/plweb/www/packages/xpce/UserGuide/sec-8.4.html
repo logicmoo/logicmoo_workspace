@@ -1,0 +1,168 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+
+<HTML>
+<HEAD>
+<TITLE>Programming in XPCE/Prolog: Section 8.4</TITLE><LINK REL=home HREF="index.html">
+<LINK REL=contents HREF="Contents.html">
+<LINK REL=index HREF="DocIndex.html">
+<LINK REL=summary HREF="summary.html">
+<LINK REL=previous HREF="sec-8.3.html">
+<LINK REL=next HREF="resources.html">
+<STYLE type="text/css">
+/* Style sheet for SWI-Prolog latex2html
+*/
+
+dd.defbody
+{ margin-bottom: 1em;
+}
+
+dt.pubdef
+{ background-color: #c5e1ff;
+}
+
+pre.code
+{ margin-left: 1.5em;
+margin-right: 1.5em;
+border: 1px dotted;
+padding-top: 5px;
+padding-left: 5px;
+padding-bottom: 5px;
+background-color: #f8f8f8;
+}
+
+div.navigate
+{ text-align: center;
+background-color: #f0f0f0;
+border: 1px dotted;
+padding: 5px;
+}
+
+div.title
+{ text-align: center;
+padding-bottom: 1em;
+font-size: 200%;
+font-weight: bold;
+}
+
+div.author
+{ text-align: center;
+font-style: italic;
+}
+
+div.abstract
+{ margin-top: 2em;
+background-color: #f0f0f0;
+border: 1px dotted;
+padding: 5px;
+margin-left: 10%; margin-right:10%;
+}
+
+div.abstract-title
+{ text-align: center;
+padding: 5px;
+font-size: 120%;
+font-weight: bold;
+}
+
+div.toc-h1
+{ font-size: 200%;
+font-weight: bold;
+}
+
+div.toc-h2
+{ font-size: 120%;
+font-weight: bold;
+margin-left: 2em;
+}
+
+div.toc-h3
+{ font-size: 100%;
+font-weight: bold;
+margin-left: 4em;
+}
+
+div.toc-h4
+{ font-size: 100%;
+margin-left: 6em;
+}
+
+span.sec-nr
+{ 
+}
+
+span.sec-title
+{ 
+}
+
+span.pred-ext
+{ font-weight: bold;
+}
+
+/* Footnotes */
+
+sup.fn { color: blue; text-decoration: underline; }
+span.fn-text: { display: none; }
+sup.fn span {display: none;}
+sup:hover span 
+{ display: block !important;
+position: absolute; top: auto; left: auto; width: 80%;
+color: #000; background: white;
+border: 2px solid;
+padding: 5px; margin: 10px; z-index: 100;
+font-size: smaller;
+}
+</STYLE>
+</HEAD>
+<BODY BGCOLOR="white">
+<DIV class="navigate"><A class="nav" href="index.html"><IMG SRC="home.gif" BORDER=0 ALT="Home"></A>
+<A class="nav" href="Contents.html"><IMG SRC="index.gif" BORDER=0 ALT="Contents"></A>
+<A class="nav" href="DocIndex.html"><IMG SRC="yellow_pages.gif" BORDER=0 ALT="Index"></A>
+<A class="nav" href="summary.html"><IMG SRC="info.gif" BORDER=0 ALT="Summary"></A>
+<A class="nav" href="sec-8.3.html"><IMG SRC="prev.gif" BORDER=0 ALT="Previous"></A>
+<A class="nav" href="resources.html"><IMG SRC="next.gif" BORDER=0 ALT="Next"></A>
+</DIV>
+
+<H2><A NAME="sec:8.4"><SPAN class="sec-nr">8.4</SPAN> <SPAN class="sec-title">Class 
+variables in User Defined Classes</SPAN></A></H2>
+
+<P>Class-variables are declared, similar to instance-variables. through 
+macro-expansion inside the :- <A NAME="idx:pcebeginclass23:270"></A><A class="pred" href="sec-7.1.html#pce_begin_class/[2,3]">pce_begin_class/[2,3]</A> 
+... :-
+<A NAME="idx:pceendclass0:271"></A><SPAN class="pred-ext">pce_end_class/0</SPAN> 
+definition of a class. The syntax is:
+<BLOCKQUOTE>
+<TT>class_variable(</TT>&lt;<VAR>name</VAR>&gt;<TT>,</TT>
+&lt;<VAR>type</VAR>&gt;<TT>,</TT>
+&lt;<VAR>default</VAR>&gt;<TT>,</TT> [&lt;<VAR>summary</VAR>&gt;]<TT>)</TT>.
+</BLOCKQUOTE>
+
+<P>&lt;<VAR>default</VAR>&gt; defines the value if not overruled in the <CODE>Defaults</CODE> 
+file. It is a Prolog term describing an object similar to the arguments 
+of <A NAME="idx:send212:272"></A><A class="pred" href="sec-7.1.html#send/[2-12]">send/[2-12]</A>.
+
+<P>In the following example. there is a class with the property 
+`expert_level'. The program defines the default level to be novice. The 
+user may change that in his/her personal <CODE>Defaults</CODE> file or 
+change it while the application is running. As the value may change at 
+runtime, there should be an instance- as well as a class-variable. Below 
+is the skeleton for this code:
+
+<PRE class="code">
+variable(expert_level, {novice,advanced,expert}, get,
+         "Experience level of the user").
+
+class_variable(expert_level, @default, novice).
+
+expert_level(Obj, Level:{novice,advanced,expert}) :-&gt;
+        send(Obj, slot, expert_level, Level),
+        &lt;handle changes&gt;.
+
+        ...,
+        (   get(Obj, expert_level, expert)
+        -&gt;  ...
+        ;   ...
+        ),
+        ...
+</PRE>
+
+<P></BODY></HTML>

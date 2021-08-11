@@ -1,0 +1,3 @@
+#!/bin/bash
+
+valgrind --tool=helgrind --gen-suppressions=all $*

@@ -1,0 +1,129 @@
+---+ Building SWI-Prolog on MS-Windows
+
+*The build instructions here are outdated.  The MSVC make files and 
+ resources are not maintained any longer.  See the [MinGW](<MinGW.html>) build instructions*
+
+--
+*Old stuff*
+
+There are only a few cases where you would like to build the Windows
+version from source:
+
+    * You want a debugging version to simplify debugging of foreign code
+    you add to SWI-Prolog.
+    * You want to modify SWI-Prolog.
+    * You want to use libraries optimised for your system (e.g., GMP).
+    * You want to stay in touch with the bleeding edge using GIT.
+
+As of the integrated XPCE/SWI-Prolog 4.0.0, the installation is no
+longer based on MSVC project files that are simply too hard to maintain
+if building involves many custom steps. Instead, there are makefiles for
+NMAKE that run from a command window.
+
+---++ Before starting the build, you'll need:
+
+    * Windows-NT/2000/XP/Vista/Win7. Older versions (Windows-95/98/me)
+    are not supported after 5.4.x and even the 5.4.x versions can only
+    be compiled on NT based platforms.
+
+    * VC2008 or later. We use
+    [[Microsoft Windows SDK for Windows 7 and .NET Framework 3.5 SP1][http://www.microsoft.com/downloads/details.aspx?familyid=71DEB800-C591-4F97-A900-BEA146E4FAE1&displaylang=en]],
+    which contains a free version of the VC2008 C-compiler and
+    associated command line tools.
+
+    * The pthread-win32 POSIX thread API library from
+    [[Redhat][http://sources.redhat.com/pthreads-win32/]]. (1)
+
+    * The GMP library for Windows. (1)
+
+    * The JPEG and ported XPM libraries. (1)
+
+    * The ZLIB library. (1)
+
+    * The RFC822 and RFC2045 libraries. (1)
+
+    * OpenSSL binaries from
+    [[Shining Light Productions][http://www.slproweb.com/products/Win32OpenSSL.html]]
+    , if you want ssl functionality. Note that the standard OpenSSL
+    installation is not ok.  Install OpenSSL in the =|Program Files|=
+    folder (e.g., =|C:\Program Files\OpenSSL|=) and install the binaries
+    inside the OpenSSL folder. Latest version that we tested is
+    =|Win64OpenSSL-1_0_0a.exe|= (2)
+
+    * The SUN Java2 SDK, downloadable from SUN if you want the JPL
+    Java/Prolog interface.  Latest version that we tested is
+    =|jdk-6u22-windows-x64.exe|= (2)
+
+ 1. Will be downloaded automatically from the SWI-Prolog web-site
+    in the procedure outlined below.
+ 2. Optional.
+
+
+---++ Now proceed as follows:
+
+    * Unpack the sources (anywhere)
+
+    * Find the $(prefix)\pl\src folder and double click the config.cmd
+    script file. This script will go through a number of questions
+    relative to your system and required output. *|Both 32 and 64 bit
+    versions|* can be built. The config.cmd delivers a file config.dat,
+    which contains the parameters chosen by you and serves as input to
+    the build process. Additionally a file called call_vcvars.cmd will
+    be created and is used to set the build environment for your system.
+
+    * In case the required pre-requisites are not found in the
+    $(prefix)\pl\src\ directory, you will be prompted to download and
+    unpack the required libraries automatically from the SWI-Prolog web.
+
+    * The script will detect, whether you have SSL and/or JRE installed,
+    if not, you will be prompted and informed of this. The build will be
+    carried out without the SSL and/or JPL packages.
+
+    * For SSL, make sure you install the binaries in the appropriate
+    "Program Files" or "Program Files (x86)" folder. Select the option
+    to install the files in the OpenSSL directory. Please, be aware that
+    these choices are not the default settings of the installer.
+
+    * At the end of the script, you are prompted to either complete the
+    build with the chosen parameters, or you can now exit the script.
+    You will be shown a summary of the parameters set. The build can,
+    with the parameters in config.dat, be carried out at any time by
+    double clicking make.cmd.
+
+
+Thats all. You can now start *|plwin.exe|* or *|plcon.exe|* from the
+$(prefix)\pl\bin\ directory. If you want you can associate *|.pl|* with
+plwin.exe and/or add plwin.exe to your start menu. Cleanup After
+installing you may discard the entire source-tree or invoke one of the
+targets below to clean the object files or all generated files
+
+==
+nmake /f makefile.mak clean
+nmake /f makefile.mak distclean
+==
+
+---++ Compile for debugging
+
+To compile SWI-Prolog for debugging, use a clean source-tree (using
+nmake /f makefile.mak clean), build and install SWI-Prolog using
+
+==
+nmake DBG=true /f makefile.mak
+nmake DBG=true /f makefile.mak install
+==
+
+---++ Using your own library or libraries:
+
+The script will ask you whether you would like to supply your own
+versions of the libraries and override some or all of the libraries in
+the downloaded pre-requisites package.
+
+In this case the script will create $(prefix)\pl\X86 (32bit) and/or
+$(prefix)\pl\X64 (64bit) directories, sub-directories include/lib will
+equally be created.
+
+Place the libraries and/or header files in the appropriate include or
+lib folder. These versions will now override the ones in the download
+package.
+
+@see [[Build using MinGW][MinGW.txt]]

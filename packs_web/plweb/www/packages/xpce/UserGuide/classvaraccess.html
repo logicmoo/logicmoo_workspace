@@ -1,0 +1,159 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+
+<HTML>
+<HEAD>
+<TITLE>Programming in XPCE/Prolog: Section 8.1</TITLE><LINK REL=home HREF="index.html">
+<LINK REL=contents HREF="Contents.html">
+<LINK REL=index HREF="DocIndex.html">
+<LINK REL=summary HREF="summary.html">
+<LINK REL=previous HREF="classvar.html">
+<LINK REL=next HREF="sec-8.2.html">
+<STYLE type="text/css">
+/* Style sheet for SWI-Prolog latex2html
+*/
+
+dd.defbody
+{ margin-bottom: 1em;
+}
+
+dt.pubdef
+{ background-color: #c5e1ff;
+}
+
+pre.code
+{ margin-left: 1.5em;
+margin-right: 1.5em;
+border: 1px dotted;
+padding-top: 5px;
+padding-left: 5px;
+padding-bottom: 5px;
+background-color: #f8f8f8;
+}
+
+div.navigate
+{ text-align: center;
+background-color: #f0f0f0;
+border: 1px dotted;
+padding: 5px;
+}
+
+div.title
+{ text-align: center;
+padding-bottom: 1em;
+font-size: 200%;
+font-weight: bold;
+}
+
+div.author
+{ text-align: center;
+font-style: italic;
+}
+
+div.abstract
+{ margin-top: 2em;
+background-color: #f0f0f0;
+border: 1px dotted;
+padding: 5px;
+margin-left: 10%; margin-right:10%;
+}
+
+div.abstract-title
+{ text-align: center;
+padding: 5px;
+font-size: 120%;
+font-weight: bold;
+}
+
+div.toc-h1
+{ font-size: 200%;
+font-weight: bold;
+}
+
+div.toc-h2
+{ font-size: 120%;
+font-weight: bold;
+margin-left: 2em;
+}
+
+div.toc-h3
+{ font-size: 100%;
+font-weight: bold;
+margin-left: 4em;
+}
+
+div.toc-h4
+{ font-size: 100%;
+margin-left: 6em;
+}
+
+span.sec-nr
+{ 
+}
+
+span.sec-title
+{ 
+}
+
+span.pred-ext
+{ font-weight: bold;
+}
+
+/* Footnotes */
+
+sup.fn { color: blue; text-decoration: underline; }
+span.fn-text: { display: none; }
+sup.fn span {display: none;}
+sup:hover span 
+{ display: block !important;
+position: absolute; top: auto; left: auto; width: 80%;
+color: #000; background: white;
+border: 2px solid;
+padding: 5px; margin: 10px; z-index: 100;
+font-size: smaller;
+}
+</STYLE>
+</HEAD>
+<BODY BGCOLOR="white">
+<DIV class="navigate"><A class="nav" href="index.html"><IMG SRC="home.gif" BORDER=0 ALT="Home"></A>
+<A class="nav" href="Contents.html"><IMG SRC="index.gif" BORDER=0 ALT="Contents"></A>
+<A class="nav" href="DocIndex.html"><IMG SRC="yellow_pages.gif" BORDER=0 ALT="Index"></A>
+<A class="nav" href="summary.html"><IMG SRC="info.gif" BORDER=0 ALT="Summary"></A>
+<A class="nav" href="classvar.html"><IMG SRC="prev.gif" BORDER=0 ALT="Previous"></A>
+<A class="nav" href="sec-8.2.html"><IMG SRC="next.gif" BORDER=0 ALT="Next"></A>
+</DIV>
+
+<H2><A NAME="sec:8.1"><SPAN class="sec-nr">8.1</SPAN> <SPAN class="sec-title">Accessing 
+Class Variables</SPAN></A></H2>
+
+<A NAME="sec:classvaraccess"></A>
+
+<P>Class variables define <EM>get-</EM>behaviour and can be accessed 
+using the normal <A NAME="idx:get313:265"></A><A class="pred" href="sec-D.1.html#get/3">get/[3-13]</A> 
+call. Class variables are the last type of behaviour checked when 
+resolving a get-method. Below are the most commonly used methods to 
+access class-variables.
+
+<DL>
+<DT><STRONG>object &lt;-class_variable_value:</STRONG> <VAR>name</VAR></DT>
+<DD class="defbody">
+any Return the value of the named class-variable. Fails silently if the 
+class does not define the given class-variable.
+</DD>
+<DT><STRONG>class &lt;-class_variable:</STRONG> <VAR>name</VAR></DT>
+<DD class="defbody">
+class_variable Return the <A class="" href="summary.html#class:class_variable">class_variable</A> 
+object with the given name. Fails silently if the class does not define 
+the given class-variable.
+</DD>
+<DT><STRONG>class_variable &lt;-&gt;value:</STRONG> <VAR>any</VAR></DT>
+<DD class="defbody">
+Reads or writes the class-variable value. The argument is type-checked 
+using <A NAME="idx:classvariablegettype:266"></A>`<B>class_variable<CODE>&lt;-</CODE>type</B>' 
+if the value is written. Writing class-variables should be handled with 
+care, as existing instances of the class are not notified of the change, 
+and may not be prepared deal with changes of the class-variable value. <A NAME="idx:pceimagedirectory1:267"></A><SPAN class="pred-ext">pce_image_directory/1</SPAN> 
+is an example of a predicate modifying the image.path class-variable.
+</DD>
+</DL>
+
+<P></BODY></HTML>

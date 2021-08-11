@@ -326,12 +326,14 @@ ccls:- cls,bfly_write(ansi,escape_from_screen([call(cls)])).
 
 
 bfly_in:- inside_bfly_html_esc,!,flag('$inside_bfly_html_esc_level',X,X+1).
+bfly_in:- \+ in_pp(bfly),!.
 bfly_in:- bflyw,set_bfly_style('html_esc',t),!,bfly_write(_,escape_from_screen([esc(80),';HTML|'])).
 %bfly_in:- set_bfly_style('html_esc',t),bfly_write(_,[escape_from_screen('$start'),esc(80),';HTML|']).
 %bfly_in:- set_bfly_style('html_esc',t),!,bfly_write(_,[escape_from_screen(7),';HTML|']).
 %bfly_in:- set_bfly_style('html_esc',t),bfly_write(_,[escape_from_screen('$start'),7,';HTML|']).
 
 bfly_out:- \+ inside_bfly_html_esc,!,flag('$inside_bfly_html_esc_level',X,X-1).
+bfly_out:- \+ in_pp(bfly),!.
 bfly_out:- bfly_write(_,escape_from_screen(esc(80))),!, set_bfly_style('html_esc',f).
 %bfly_out:- bfly_write(_,[esc(80),when_in_screen(esc(92))]), set_bfly_style('html_esc',f).
 

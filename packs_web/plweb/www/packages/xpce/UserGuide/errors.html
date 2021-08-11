@@ -1,0 +1,322 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+
+<HTML>
+<HEAD>
+<TITLE>Programming in XPCE/Prolog: Section 10.8</TITLE><LINK REL=home HREF="index.html">
+<LINK REL=contents HREF="Contents.html">
+<LINK REL=index HREF="DocIndex.html">
+<LINK REL=summary HREF="summary.html">
+<LINK REL=previous HREF="report.html">
+<LINK REL=next HREF="font.html">
+<STYLE type="text/css">
+/* Style sheet for SWI-Prolog latex2html
+*/
+
+dd.defbody
+{ margin-bottom: 1em;
+}
+
+dt.pubdef
+{ background-color: #c5e1ff;
+}
+
+pre.code
+{ margin-left: 1.5em;
+margin-right: 1.5em;
+border: 1px dotted;
+padding-top: 5px;
+padding-left: 5px;
+padding-bottom: 5px;
+background-color: #f8f8f8;
+}
+
+div.navigate
+{ text-align: center;
+background-color: #f0f0f0;
+border: 1px dotted;
+padding: 5px;
+}
+
+div.title
+{ text-align: center;
+padding-bottom: 1em;
+font-size: 200%;
+font-weight: bold;
+}
+
+div.author
+{ text-align: center;
+font-style: italic;
+}
+
+div.abstract
+{ margin-top: 2em;
+background-color: #f0f0f0;
+border: 1px dotted;
+padding: 5px;
+margin-left: 10%; margin-right:10%;
+}
+
+div.abstract-title
+{ text-align: center;
+padding: 5px;
+font-size: 120%;
+font-weight: bold;
+}
+
+div.toc-h1
+{ font-size: 200%;
+font-weight: bold;
+}
+
+div.toc-h2
+{ font-size: 120%;
+font-weight: bold;
+margin-left: 2em;
+}
+
+div.toc-h3
+{ font-size: 100%;
+font-weight: bold;
+margin-left: 4em;
+}
+
+div.toc-h4
+{ font-size: 100%;
+margin-left: 6em;
+}
+
+span.sec-nr
+{ 
+}
+
+span.sec-title
+{ 
+}
+
+span.pred-ext
+{ font-weight: bold;
+}
+
+/* Footnotes */
+
+sup.fn { color: blue; text-decoration: underline; }
+span.fn-text: { display: none; }
+sup.fn span {display: none;}
+sup:hover span 
+{ display: block !important;
+position: absolute; top: auto; left: auto; width: 80%;
+color: #000; background: white;
+border: 2px solid;
+padding: 5px; margin: 10px; z-index: 100;
+font-size: smaller;
+}
+</STYLE>
+</HEAD>
+<BODY BGCOLOR="white">
+<DIV class="navigate"><A class="nav" href="index.html"><IMG SRC="home.gif" BORDER=0 ALT="Home"></A>
+<A class="nav" href="Contents.html"><IMG SRC="index.gif" BORDER=0 ALT="Contents"></A>
+<A class="nav" href="DocIndex.html"><IMG SRC="yellow_pages.gif" BORDER=0 ALT="Index"></A>
+<A class="nav" href="summary.html"><IMG SRC="info.gif" BORDER=0 ALT="Summary"></A>
+<A class="nav" href="report.html"><IMG SRC="prev.gif" BORDER=0 ALT="Previous"></A>
+<A class="nav" href="font.html"><IMG SRC="next.gif" BORDER=0 ALT="Next"></A>
+</DIV>
+
+<H2><A NAME="sec:10.8"><SPAN class="sec-nr">10.8</SPAN> <SPAN class="sec-title">Errors</SPAN></A></H2>
+
+<A NAME="sec:errors"></A>
+
+<P>Errors are abnormalities that are detected during a programs 
+execution. Errors may be caused by bugs in <font size=-1>XPCE</font>, 
+bugs in the application program and finally by the application user 
+making errors in operating the application (e.g. specifying a protected 
+file).
+
+<P>Errors may also be discriminated according to their `seriousness': If 
+a certain font cannot be found it can easily be substituted by another. 
+If a method expects an integer argument but the actual argument is a 
+graphical object it is impossible to carry-out the operation. In such 
+cases <font size=-1>XPCE</font> will normally trap the tracer. If the 
+user decides to continue execution the method will return failure to its 
+caller. Finally, some problems are categorised as `fatal'. When such a 
+problem is encountered <font size=-1>XPCE</font> does not know how 
+execution can be continued.
+
+<P>All errors (except for some that may result from <font size=-1>XPCE</font> 
+bugs during the boot phase of <font size=-1>XPCE</font>) are represented 
+by an <A class="" href="summary.html#class:error">error</A> object. An 
+error object has the following properties:
+
+<P>
+<UL>
+<LI><I>id</I><BR>
+Unique identifier name of the error. It may be used to generate errors; 
+look-up error objects in the <A NAME="idx:errors:395"></A><B>@errors</B> 
+database or catch errors (see <A NAME="idx:pcecatcherror2:396"></A><A class="pred" href="errors.html#pce_catch_error/2">pce_catch_error/2</A>).
+<LI><I>kind</I><BR>
+The kind describes how serious the error is considered to be. The 
+possible values are: <EM>ignored</EM> if the error is (currently) not 
+regarded an error at all; <EM>warning</EM> if the error is to be 
+reported, but no further action is required; <EM>error</EM> if the error 
+is to be fixed. After printing the error the system will start the 
+tracer, allowing a programmer to examine the problem context. Finally, <EM>fatal</EM> 
+errors do not allow execution to be continued. The system will print 
+context information and request Prolog to abort back to the Prolog 
+interactive top level.
+<LI><I>feedback</I><BR>
+Determines how the error is to be reported. If <CODE>print</CODE> the 
+error is printed in the Prolog window. If <CODE>report</CODE> the error 
+is reported using the report mechanism described in
+<A class="sec" href="report.html">section 10.7</A>. The `report' 
+mechanism is for errors that may be caused by application users, for 
+example file errors. If <CODE>throw</CODE> and there is a Prolog goal on 
+the stack, the error is mapped to a Prolog exception. See below.
+
+<P>In the <A NAME="idx:runtimesystem:397">runtime-system</A>, all errors 
+use feedback `report'.
+<LI><I>format</I><BR>
+A format specification to construct a message text from the context 
+arguments provided by the generator of the error.
+</UL>
+
+<P><A NAME="idx:errordescriptionof:398"></A>The online manual ``Errors 
+Browser'' may be used to examine the defined errors; change attributes 
+of errors and get precise description of errors.
+
+<H3><A NAME="sec:10.8.1"><SPAN class="sec-nr">10.8.1</SPAN> <SPAN class="sec-title">Handling 
+errors in the application</SPAN></A></H3>
+
+<P><A NAME="idx:errorscatching:399"></A><A NAME="idx:catcherrors:400"></A>Sometimes 
+the application wants to anticipate on certain errors. Explicit testing 
+of all conditions is a cumbersome solution to this problem. Therefore <font size=-1>XPCE</font> 
+allows catching of errors by the application.
+
+<P>There are two mechanism available to do this. Regardless of the
+<A NAME="idx:errorgetfeedback:401"></A>`<B>error<CODE>&lt;-</CODE>feedback</B>' 
+type of the error, all except fatal errors can be silenced using <A NAME="idx:pcecatcherror2:402"></A><A class="pred" href="errors.html#pce_catch_error/2">pce_catch_error/2</A>:
+
+<DL>
+<DT class="pubdef"><A NAME="pce_catch_error/2"><STRONG>pce_catch_error</STRONG>(<VAR>+ErrorSpec, 
+:Goal</VAR>)</A></DT>
+<DD class="defbody">
+Run <VAR>Goal</VAR> like <A NAME="idx:once1:403"></A><SPAN class="pred-ext">once/1</SPAN>. 
+It an error matching <VAR>ErrorSpec</VAR> is raised, this error is not 
+reported, but stored in <A NAME="idx:objectnamepcegetlasterror:404"></A>`<B><B>@pce</B><CODE>&lt;-</CODE>last_error</B>'.
+<VAR>ErrorSpec</VAR> is the <B><CODE>&lt;-</CODE>id</B> of an error, a 
+chain holding error-ids or <A NAME="idx:default:405"></A><B>@default</B>. 
+The latter implies none but fatal errors are reported.
+
+<P>The example below silently ignores errors from creating a backup of <VAR>File</VAR>. 
+Note that the call does fail if backup raises an error.
+
+<PRE class="code">
+        ...,
+        pce_catch_error(backup_file, send(File, backup)),
+        ...
+</PRE>
+
+<P></DD>
+</DL>
+
+<P>If the <B><CODE>&lt;-</CODE>feedback</B> of the error is <CODE>throw</CODE> 
+and the error is not silenced with <A NAME="idx:pcecatcherror2:406"></A><A class="pred" href="errors.html#pce_catch_error/2">pce_catch_error/2</A> 
+it is mapped to a Prolog exception of the form
+<BLOCKQUOTE>
+<CODE>error(<CODE>pce(Id, ContextArgs)</CODE>, Goal)</CODE>
+</BLOCKQUOTE>
+
+<P>For example:
+
+<PRE class="code">
+?- catch(send(@pce, foobar), E, true).
+
+E = error(pce(no_behaviour, [@pce/pce,  (-&gt;), foobar]),
+          send(@pce/pce, foobar))
+</PRE>
+
+<H3><A NAME="sec:10.8.2"><SPAN class="sec-nr">10.8.2</SPAN> <SPAN class="sec-title">Raising 
+errors</SPAN></A></H3>
+
+<P>The application programmer may define new (application specific) 
+errors. The error object is a normal <font size=-1>XPCE</font> object 
+and may thus be created using <A NAME="idx:new2:407"></A><A class="pred" href="sec-D.1.html#new/2">new/2</A>. 
+An error is raised by invoking <A NAME="idx:objectsenderror:408"></A>`<B>object<CODE>-&gt;</CODE>error</B>'. 
+The example below illustrates this:
+
+<PRE class="code">
+:- new(_, error(no_user,
+                '%N: Unknown user: %s',
+                warning, report)).
+
+        ...,
+        (   get(UserDatabase, user, Name)
+        -&gt;  ...
+        ;   send(UserDatabase, error, no_user, Name)
+        ),
+        ...
+</PRE>
+
+<P>Note that the names of errors should be unique. It is advised to 
+reuse existing error-id's if possible.
+
+<H3><A NAME="sec:10.8.3"><SPAN class="sec-nr">10.8.3</SPAN> <SPAN class="sec-title">Repairable 
+errors</SPAN></A></H3>
+
+<P><A NAME="idx:exception:409"></A>On trapping certain `repairable` 
+errors, <font size=-1>XPCE</font> will first raise an <EM>exception</EM>. 
+Exceptions may be trapped by an <EM>exception handler</EM> which may 
+solve the problem. If the exception-handler fails to solve the problem, <font size=-1>XPCE</font> 
+will raise an <EM>error</EM>. See <A class="sec" href="errors.html">section 
+10.8</A>.
+
+<P>Exceptions are raised by invoking <A NAME="idx:objectnamepcesendexception:410"></A>`<B><B>@pce</B><CODE>-&gt;</CODE>exception</B>: 
+id, arg ...'. Exception handlers are registered in the sheet <A NAME="idx:objectnamepcesendexceptionhandlers:411"></A>`<B><B>@pce</B><CODE>-&gt;</CODE>exception_handlers</B>', 
+which maps an exception-id onto a code object that handles the 
+exception. The following illustrates this:
+
+<PRE class="code">
+1 ?- [user].
+|: add_user(Name) :- write(Name), nl.
+^D
+
+2 ?- send(@pce?exception_handlers, value,
+          no_user,
+          message(@prolog, add_user, @arg1)).
+
+3 ?- send(@pce, exception, no_user, fred).
+fred
+</PRE>
+
+<P>The <EM>context arguments</EM> passed with an exception are defined 
+by the code raising the exception. The currently defined exceptions are 
+listed below. See also the online manual: <A NAME="idx:pcesendexception:412"></A>`<B>pce<CODE>-&gt;</CODE>exception</B>' 
+and
+<A NAME="idx:pcegetexceptionhandlers:413"></A>`<B>pce<CODE>&lt;-</CODE>exception_handlers</B>'.
+
+<P>
+<UL>
+<LI><I>undefined_class</I><BR>
+<A NAME="idx:classundefined:414"></A><A NAME="idx:undefinedclass:415"></A>An 
+attempt is made to reference a non-existing class while doing one of the 
+following: create an object; load an object from file using <A NAME="idx:filegetobject:416"></A>`<B>File<CODE>&lt;-</CODE>object</B>'; 
+create a subclass. <A NAME="idx:arg1:417"></A><B>@arg1</B> is bound to 
+the class-name. This trap is used by <A NAME="idx:pceautoload2:418"></A><SPAN class="pred-ext">pce_autoload/2</SPAN>, 
+as well as by the code that realises compiled classes.
+<LI><I>undefined_assoc</I><BR>
+<A NAME="idx:assocundefined:419"></A><A NAME="idx:undefinedobjectreference:420"></A>An 
+attempt is made to resolve a symbolic reference (i.e. <A NAME="idx:pce:421"></A><B>@pce</B>), 
+but the reference is unknown. <A NAME="idx:arg1:422"></A><B>@arg1</B> is 
+bound to the missing reference name. This trap is used by <A NAME="idx:pceglobal2:423"></A><A class="pred" href="sec-D.1.html#pce_global/2">pce_global/2</A>.
+<LI><I>redefined_assoc</I><BR>
+<A NAME="idx:assocredefined:424"></A><A NAME="idx:redefinedobjectreference:425"></A>An 
+attempt is made to create an object with the same symbolic reference as 
+an already existing object. <A NAME="idx:arg1:426"></A><B>@arg1</B> is 
+bound to the already existing reference name. This trap is used by
+<CODE>library(pce_renew)</CODE>.
+<LI><I>initialisation_failed</I><BR>
+<A NAME="idx:newfailed:427"></A><A NAME="idx:initialisationfailed:428"></A>The <B><CODE>-&gt;</CODE>initialisation</B> 
+method for some instance failed. <A NAME="idx:arg1:429"></A><B>@arg1</B> 
+is bound to the (partial) instance; <A NAME="idx:arg2:430"></A><B>@arg2</B>, 
+... are bound to the arguments given to the new-operation.
+</UL>
+</BODY></HTML>

@@ -1,0 +1,157 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+
+<HTML>
+<HEAD>
+<TITLE>Programming in XPCE/Prolog: Section C.1</TITLE><LINK REL=home HREF="index.html">
+<LINK REL=contents HREF="Contents.html">
+<LINK REL=index HREF="DocIndex.html">
+<LINK REL=summary HREF="summary.html">
+<LINK REL=previous HREF="globalarch.html">
+<LINK REL=next HREF="sec-C.2.html">
+<STYLE type="text/css">
+/* Style sheet for SWI-Prolog latex2html
+*/
+
+dd.defbody
+{ margin-bottom: 1em;
+}
+
+dt.pubdef
+{ background-color: #c5e1ff;
+}
+
+pre.code
+{ margin-left: 1.5em;
+margin-right: 1.5em;
+border: 1px dotted;
+padding-top: 5px;
+padding-left: 5px;
+padding-bottom: 5px;
+background-color: #f8f8f8;
+}
+
+div.navigate
+{ text-align: center;
+background-color: #f0f0f0;
+border: 1px dotted;
+padding: 5px;
+}
+
+div.title
+{ text-align: center;
+padding-bottom: 1em;
+font-size: 200%;
+font-weight: bold;
+}
+
+div.author
+{ text-align: center;
+font-style: italic;
+}
+
+div.abstract
+{ margin-top: 2em;
+background-color: #f0f0f0;
+border: 1px dotted;
+padding: 5px;
+margin-left: 10%; margin-right:10%;
+}
+
+div.abstract-title
+{ text-align: center;
+padding: 5px;
+font-size: 120%;
+font-weight: bold;
+}
+
+div.toc-h1
+{ font-size: 200%;
+font-weight: bold;
+}
+
+div.toc-h2
+{ font-size: 120%;
+font-weight: bold;
+margin-left: 2em;
+}
+
+div.toc-h3
+{ font-size: 100%;
+font-weight: bold;
+margin-left: 4em;
+}
+
+div.toc-h4
+{ font-size: 100%;
+margin-left: 6em;
+}
+
+span.sec-nr
+{ 
+}
+
+span.sec-title
+{ 
+}
+
+span.pred-ext
+{ font-weight: bold;
+}
+
+/* Footnotes */
+
+sup.fn { color: blue; text-decoration: underline; }
+span.fn-text: { display: none; }
+sup.fn span {display: none;}
+sup:hover span 
+{ display: block !important;
+position: absolute; top: auto; left: auto; width: 80%;
+color: #000; background: white;
+border: 2px solid;
+padding: 5px; margin: 10px; z-index: 100;
+font-size: smaller;
+}
+</STYLE>
+</HEAD>
+<BODY BGCOLOR="white">
+<DIV class="navigate"><A class="nav" href="index.html"><IMG SRC="home.gif" BORDER=0 ALT="Home"></A>
+<A class="nav" href="Contents.html"><IMG SRC="index.gif" BORDER=0 ALT="Contents"></A>
+<A class="nav" href="DocIndex.html"><IMG SRC="yellow_pages.gif" BORDER=0 ALT="Index"></A>
+<A class="nav" href="summary.html"><IMG SRC="info.gif" BORDER=0 ALT="Summary"></A>
+<A class="nav" href="globalarch.html"><IMG SRC="prev.gif" BORDER=0 ALT="Previous"></A>
+<A class="nav" href="sec-C.2.html"><IMG SRC="next.gif" BORDER=0 ALT="Next"></A>
+</DIV>
+
+<H2><A NAME="sec:C.1"><SPAN class="sec-nr">C.1</SPAN> <SPAN class="sec-title">What 
+is ``Object-Oriented''?</SPAN></A></H2>
+
+<P><font size=-1>XPCE</font> is an object-oriented system. This implies 
+that the basic entity in <font size=-1>XPCE</font>'s world is an object, 
+an entity with state capable of performing actions. Such an action is 
+activated by sending the object a <EM>message</EM>.
+
+<P>So far, most object oriented systems agree. Starting from these 
+notions however one can find object oriented environments that take 
+widely different approaches for representing objects, actions on objects 
+and sending messages.
+
+<P>Rather than specifying operations on each individual object most OO 
+environments define some way of sharing the operation definitions 
+(called <EM>methods</EM>). There are two ways to share methods. One is 
+to create objects as a copy of other objects and then modify them (by 
+attaching and deleting slots and methods) to fit the particular need. If 
+a series of similar objects is needed, one first creates an object that 
+satisfies the common functionality and then creates multiple copies of 
+this object. This approach is followed by SELF
+<CITE><A class="cite" href="Bibliography.html#chambers:89">Chambers <EM>et 
+al.</EM>, 1989</A></CITE>. The other ---more traditional--- approach is 
+to define a <EM>class</EM>. A class is an entity in the object oriented 
+environment that defines the constituents of the persistent state and 
+the methods for each of its <EM>instantiations</EM>.
+
+<P><font size=-1>XPCE</font> takes the latter approach, but adds some 
+notions of the object-copying approach because GUI's often contain 
+unique objects and because object modification is more dynamic and 
+therefore more suitable for rapid prototyping.
+
+<P></BODY></HTML>

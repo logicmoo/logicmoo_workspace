@@ -1,0 +1,213 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+
+<HTML>
+<HEAD>
+<TITLE>Programming in XPCE/Prolog: Section 3.1</TITLE><LINK REL=home HREF="index.html">
+<LINK REL=contents HREF="Contents.html">
+<LINK REL=index HREF="DocIndex.html">
+<LINK REL=summary HREF="summary.html">
+<LINK REL=previous HREF="online.html">
+<LINK REL=next HREF="sec-3.2.html">
+<STYLE type="text/css">
+/* Style sheet for SWI-Prolog latex2html
+*/
+
+dd.defbody
+{ margin-bottom: 1em;
+}
+
+dt.pubdef
+{ background-color: #c5e1ff;
+}
+
+pre.code
+{ margin-left: 1.5em;
+margin-right: 1.5em;
+border: 1px dotted;
+padding-top: 5px;
+padding-left: 5px;
+padding-bottom: 5px;
+background-color: #f8f8f8;
+}
+
+div.navigate
+{ text-align: center;
+background-color: #f0f0f0;
+border: 1px dotted;
+padding: 5px;
+}
+
+div.title
+{ text-align: center;
+padding-bottom: 1em;
+font-size: 200%;
+font-weight: bold;
+}
+
+div.author
+{ text-align: center;
+font-style: italic;
+}
+
+div.abstract
+{ margin-top: 2em;
+background-color: #f0f0f0;
+border: 1px dotted;
+padding: 5px;
+margin-left: 10%; margin-right:10%;
+}
+
+div.abstract-title
+{ text-align: center;
+padding: 5px;
+font-size: 120%;
+font-weight: bold;
+}
+
+div.toc-h1
+{ font-size: 200%;
+font-weight: bold;
+}
+
+div.toc-h2
+{ font-size: 120%;
+font-weight: bold;
+margin-left: 2em;
+}
+
+div.toc-h3
+{ font-size: 100%;
+font-weight: bold;
+margin-left: 4em;
+}
+
+div.toc-h4
+{ font-size: 100%;
+margin-left: 6em;
+}
+
+span.sec-nr
+{ 
+}
+
+span.sec-title
+{ 
+}
+
+span.pred-ext
+{ font-weight: bold;
+}
+
+/* Footnotes */
+
+sup.fn { color: blue; text-decoration: underline; }
+span.fn-text: { display: none; }
+sup.fn span {display: none;}
+sup:hover span 
+{ display: block !important;
+position: absolute; top: auto; left: auto; width: 80%;
+color: #000; background: white;
+border: 2px solid;
+padding: 5px; margin: 10px; z-index: 100;
+font-size: smaller;
+}
+</STYLE>
+</HEAD>
+<BODY BGCOLOR="white">
+<DIV class="navigate"><A class="nav" href="index.html"><IMG SRC="home.gif" BORDER=0 ALT="Home"></A>
+<A class="nav" href="Contents.html"><IMG SRC="index.gif" BORDER=0 ALT="Contents"></A>
+<A class="nav" href="DocIndex.html"><IMG SRC="yellow_pages.gif" BORDER=0 ALT="Index"></A>
+<A class="nav" href="summary.html"><IMG SRC="info.gif" BORDER=0 ALT="Summary"></A>
+<A class="nav" href="online.html"><IMG SRC="prev.gif" BORDER=0 ALT="Previous"></A>
+<A class="nav" href="sec-3.2.html"><IMG SRC="next.gif" BORDER=0 ALT="Next"></A>
+</DIV>
+
+<H2><A NAME="sec:3.1"><SPAN class="sec-nr">3.1</SPAN> <SPAN class="sec-title">Overview</SPAN></A></H2>
+
+<P>The online manual consists of a large set of tools to examine 
+different aspects of the <font size=-1>XPCE/P</font>rolog environment 
+and to navigate through the available material from different 
+view-points.
+
+<DL>
+<DT><STRONG>The inheritance hierarchy</STRONG> <I>(Browsers/Class 
+Hierarchy)</I></DT>
+<DD class="defbody">
+<A NAME="idx:classhierarchy:80"></A>The `Class Hierarchy' tool allows 
+the user to examine <font size=-1>XPCE</font>'s class hierarchy. This 
+tool reads the inheritance relations from the class objects and thus 
+also visualises application or library classes.
+<A class="fig" href="sec-C.2.html#fig:pceclasshierarchy">Figure 42</A> 
+is created using this tool.
+</DD>
+<DT><STRONG>The structure of a class</STRONG> <I>(Browsers/Class Browser)</I></DT>
+<DD class="defbody">
+<A NAME="idx:classstructure:81"></A>The most important tool is the 
+`Class Browser'. It provides the user with a view of material related to 
+a class. As everything in
+<font size=-1>XPCE</font> is an object and thus an instance of a class 
+this tool provides access to everything in <font size=-1>XPCE</font>, 
+except for the Prolog interface.
+</DD>
+<DT><STRONG>Search Tool</STRONG> <I>(Browsers/Search)</I></DT>
+<DD class="defbody">
+This tool provides full search capabilities on the entire manual 
+contents, including combined search specifications.
+</DD>
+<DT><STRONG>Globally available object references</STRONG> <I>(Browsers/Global 
+Objects)</I></DT>
+<DD class="defbody">
+<A NAME="idx:globalobjects:82"></A>The <font size=-1>XPCE</font> 
+environment provides predefined objects (<A NAME="idx:pce:83"></A><B>@pce</B>, <A NAME="idx:prolog:84"></A><B>@prolog</B>, <A NAME="idx:arg1:85"></A><B>@arg1</B>, 
+etc.). The tool allows the user to find these objects.
+</DD>
+<DT><STRONG>Prolog interface predicates</STRONG> <I>(Browsers/Prolog 
+Predicates)</I></DT>
+<DD class="defbody">
+<A NAME="idx:Prologinterface:86"></A>This tool documents all the <font size=-1>XPCE/P</font>rolog 
+predicates.
+</DD>
+<DT><STRONG>Instances</STRONG> <I>(Tools/Inspector)</I></DT>
+<DD class="defbody">
+<A NAME="idx:inspectinginstances:87"></A><A NAME="idx:objectinspecting:88"></A>This 
+tool is part of the runtime support system. It allows you to inspect the 
+persistent state associated with objects.
+</DD>
+<DT><STRONG>Structure of User Interface</STRONG> <I>(Tools/Visual 
+Hierarchy)</I></DT>
+<DD class="defbody">
+<A NAME="idx:UIstructureof:89"></A><A NAME="idx:consistsof:90"></A>This 
+tool provides a `consists-of' view of all displayed visual objects. It 
+provides a quick overview of the structure of an interface. It is a 
+useful for finding object-references, examining the structure of an 
+unknown UI and verifying that your program created the expected 
+structure.
+</DD>
+<DT><STRONG>The manual itself (help)</STRONG> <I>(File/Help)</I></DT>
+<DD class="defbody">
+<A NAME="idx:helponmanual:91"></A>The manual tools are documented by 
+itself. Each tool has a `Help' button that documents the tool.
+</DD>
+<DT><STRONG><font size=-1>XPCE</font> Demo programs</STRONG> <I>(File/Demo 
+Programs)</I></DT>
+<DD class="defbody">
+<A NAME="idx:demoprograms:92"></A>The `Demo Programs' entry of the 
+`File' menu starts an overview of the available demo programs. A demo 
+can be started by double-clicking it. The sources of the demos may be 
+found in <CODE>&lt;<VAR>home</VAR>&gt;/prolog/demo</CODE>, where &lt;<VAR>home</VAR>&gt; 
+refers to the <font size=-1>XPCE</font> installation directory, which 
+may be obtained using
+
+<PRE class="code">
+1 ?- get(@pce, home, Home).
+Home = '/usr/local/lib/pl-4.0.0/xpce'
+</PRE>
+
+<P>Note that the DemoBrowser allows to view the sources of the main file 
+of a demo application immediately. Also consider using the 
+VisualHierarchy and ClassBrowser to analyse the structure of the demo 
+programs.
+</DD>
+</DL>
+
+<P></BODY></HTML>

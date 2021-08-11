@@ -1,0 +1,2498 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+
+<HTML>
+<HEAD>
+<TITLE>Programming in XPCE/Prolog</TITLE><LINK REL=home HREF="index.html">
+<LINK REL=contents HREF="Contents.html">
+<LINK REL=index HREF="DocIndex.html">
+<LINK REL=summary HREF="summary.html">
+<LINK REL=previous HREF="summary.html">
+<STYLE type="text/css">
+/* Style sheet for SWI-Prolog latex2html
+*/
+
+dd.defbody
+{ margin-bottom: 1em;
+}
+
+dt.pubdef
+{ background-color: #c5e1ff;
+}
+
+pre.code
+{ margin-left: 1.5em;
+margin-right: 1.5em;
+border: 1px dotted;
+padding-top: 5px;
+padding-left: 5px;
+padding-bottom: 5px;
+background-color: #f8f8f8;
+}
+
+div.navigate
+{ text-align: center;
+background-color: #f0f0f0;
+border: 1px dotted;
+padding: 5px;
+}
+
+div.title
+{ text-align: center;
+padding-bottom: 1em;
+font-size: 200%;
+font-weight: bold;
+}
+
+div.author
+{ text-align: center;
+font-style: italic;
+}
+
+div.abstract
+{ margin-top: 2em;
+background-color: #f0f0f0;
+border: 1px dotted;
+padding: 5px;
+margin-left: 10%; margin-right:10%;
+}
+
+div.abstract-title
+{ text-align: center;
+padding: 5px;
+font-size: 120%;
+font-weight: bold;
+}
+
+div.toc-h1
+{ font-size: 200%;
+font-weight: bold;
+}
+
+div.toc-h2
+{ font-size: 120%;
+font-weight: bold;
+margin-left: 2em;
+}
+
+div.toc-h3
+{ font-size: 100%;
+font-weight: bold;
+margin-left: 4em;
+}
+
+div.toc-h4
+{ font-size: 100%;
+margin-left: 6em;
+}
+
+span.sec-nr
+{ 
+}
+
+span.sec-title
+{ 
+}
+
+span.pred-ext
+{ font-weight: bold;
+}
+
+/* Footnotes */
+
+sup.fn { color: blue; text-decoration: underline; }
+span.fn-text: { display: none; }
+sup.fn span {display: none;}
+sup:hover span 
+{ display: block !important;
+position: absolute; top: auto; left: auto; width: 80%;
+color: #000; background: white;
+border: 2px solid;
+padding: 5px; margin: 10px; z-index: 100;
+font-size: smaller;
+}
+</STYLE>
+</HEAD>
+<BODY BGCOLOR="white">
+<DIV class="navigate"><A class="nav" href="index.html"><IMG SRC="home.gif" BORDER=0 ALT="Home"></A>
+<A class="nav" href="Contents.html"><IMG SRC="index.gif" BORDER=0 ALT="Contents"></A>
+<A class="nav" href="DocIndex.html"><IMG SRC="yellow_pages.gif" BORDER=0 ALT="Index"></A>
+<A class="nav" href="summary.html"><IMG SRC="info.gif" BORDER=0 ALT="Summary"></A>
+<A class="nav" href="summary.html"><IMG SRC="prev.gif" BORDER=0 ALT="Previous"></A>
+</DIV>
+
+<H1><A NAME="document-index">Index</A></H1>
+
+<DL>
+<DT><STRONG>(</STRONG></DT>
+<DD>
+</DD>
+<DT>(+)</DT>
+<DD>
+<A class="idx" href="sec-3.3.html#idx::100">3.3.1</A></DD>
+<DT><STRONG>*</STRONG></DT>
+<DD>
+</DD>
+<DT><A class="idx" href="summary.html#class:*">*</A></DT>
+<DD>
+</DD>
+<DT><STRONG>+</STRONG></DT>
+<DD>
+</DD>
+<DT><A class="idx" href="summary.html#class:+">+</A></DT>
+<DD>
+<A class="sec" href="prologdata.html#sec:6.2">6.2</A> <A class="sec" href="prologdata.html#sec:6.2">6.2</A></DD>
+<DT><STRONG>-</STRONG></DT>
+<DD>
+</DD>
+<DT><A class="idx" href="summary.html#class:-">-</A></DT>
+<DD>
+</DD>
+<DT><STRONG>/</STRONG></DT>
+<DD>
+</DD>
+<DT><A class="idx" href="summary.html#class:/">/</A></DT>
+<DD>
+</DD>
+<DT><STRONG>:</STRONG></DT>
+<DD>
+</DD>
+<DT><A class="idx" href="summary.html#class::=">:=</A></DT>
+<DD>
+</DD>
+<DT><STRONG>&lt;</STRONG></DT>
+<DD>
+</DD>
+<DT><A class="idx" href="summary.html#class:<">&lt;</A></DT>
+<DD>
+</DD>
+<DT><STRONG>=</STRONG></DT>
+<DD>
+</DD>
+<DT><A class="idx" href="summary.html#class:=">=</A></DT>
+<DD>
+</DD>
+<DT><A class="idx" href="summary.html#class:=<">=&lt;</A></DT>
+<DD>
+</DD>
+<DT><A class="idx" href="summary.html#class:==">==</A></DT>
+<DD>
+</DD>
+<DT><STRONG>&gt;</STRONG></DT>
+<DD>
+</DD>
+<DT><A class="idx" href="summary.html#class:>">&gt;</A></DT>
+<DD>
+</DD>
+<DT><A class="idx" href="summary.html#class:>=">&gt;=</A></DT>
+<DD>
+</DD>
+<DT><STRONG>?</STRONG></DT>
+<DD>
+</DD>
+<DT><A class="idx" href="summary.html#class:?">?</A></DT>
+<DD>
+<A class="sec" href="fileviewer.html#sec:2.8">2.8</A> <A class="sec" href="sec-2.9.html#sec:2.9">2.9</A> <A class="sec" href="exeobjects.html#sec:10.2.2">10.2.2</A> <A class="sec" href="summary.html#sec:H">H</A></DD>
+<DT><STRONG>@</STRONG></DT>
+<DD>
+</DD>
+<DT>@2535252</DT>
+<DD>
+<A class="idx" href="sec-D.1.html#idx:2535252:652">D.1</A></DD>
+<DT>@772024</DT>
+<DD>
+<A class="idx" href="sec-2.2.html#idx:772024:35">2.2.3</A></DD>
+<DT><A class="idx" href="summary.html#class:@=">@=</A></DT>
+<DD>
+<A class="sec" href="summary.html#sec:H">H</A></DD>
+<DT><STRONG>\</STRONG></DT>
+<DD>
+</DD>
+<DT><A class="idx" href="summary.html#class:\==">==</A></DT>
+<DD>
+</DD>
+<DT><STRONG>A</STRONG></DT>
+<DD>
+</DD>
+<DT>absolute_file_name/[2,3]</DT>
+<DD>
+<A class="idx" href="resources.html#idx:absolutefilename23:274">9</A></DD>
+<DT>Alladin GsView</DT>
+<DD>
+<A class="idx" href="printing.html#idx:AlladinGsView:471">10.13.1</A></DD>
+<DT>alt</DT>
+<DD>
+<A class="idx" href="summary.html#idx:alt:824">H</A></DD>
+<DT><A class="idx" href="summary.html#class:and">and</A></DT>
+<DD>
+<A class="sec" href="exeobjects.html#sec:10.2.1">10.2.1</A> <A class="sec" href="summary.html#sec:H">H</A> <A class="sec" href="summary.html#sec:H">H</A></DD>
+<DT>annotations</DT>
+<DD>
+<A class="idx" href="summary.html#idx:annotations:792">H</A></DD>
+<DT>append_style/3</DT>
+<DD>
+<A class="idx" href="modal.html#idx:appendstyle3:160">4.4.1</A></DD>
+<DT><A class="idx" href="summary.html#class:application">application</A></DT>
+<DD>
+<A class="sec" href="application.html#sec:10.5.1">10.5.1</A> <A class="sec" href="application.html#sec:10.5.1">10.5.1</A> <A class="sec" href="application.html#sec:10.5.1">10.5.1</A> <A class="sec" href="application.html#sec:10.5.3">10.5.3</A></DD>
+<DT>application,<B><CODE>&lt;-</CODE>member</B></DT>
+<DD>
+<A class="idx" href="application.html#idx:applicationgetmember:354">10.5.1</A></DD>
+<DT>application,<B><CODE>-&gt;</CODE>append</B></DT>
+<DD>
+<A class="idx" href="application.html#idx:applicationsendappend:359">10.5.1</A></DD>
+<DT>application,<B><CODE>-&gt;</CODE>delete</B></DT>
+<DD>
+<A class="idx" href="application.html#idx:applicationsenddelete:358">10.5.1</A></DD>
+<DT><A class="idx" href="summary.html#class:arc">arc</A></DT>
+<DD>
+<A class="sec" href="sec-5.1.html#sec:5.1.1">5.1.1</A> <A class="sec" href="summary.html#sec:H">H</A> <A class="sec" href="summary.html#sec:H">H</A></DD>
+<DT><A class="idx" href="summary.html#class:area">area</A></DT>
+<DD>
+<A class="sec" href="summary.html#sec:H">H</A> <A class="sec" href="summary.html#sec:H">H</A></DD>
+<DT>area,<B><CODE>&lt;-</CODE>size</B></DT>
+<DD>
+<A class="idx" href="sec-E.1.html#idx:areagetsize:705">E.1</A></DD>
+<DT>area,<B><CODE>-&gt;</CODE>set</B></DT>
+<DD>
+<A class="idx" href="namedargs.html#idx:areasendset:53">2.4</A></DD>
+<DT>@arg1</DT>
+<DD>
+<A class="idx" href="sec-3.1.html#idx:arg1:85">3.1</A> <A class="idx" href="exeobjects.html#idx:arg1:313">10.2</A> <A class="idx" href="exeobjects.html#idx:arg1:316">10.2.1</A> <A class="idx" href="exeobjects.html#idx:arg1:320">10.2.2</A> <A class="idx" href="exeobjects.html#idx:arg1:325">10.2.2</A> <A class="idx" href="exeobjects.html#idx:arg1:326">10.2.2</A> <A class="idx" href="errors.html#idx:arg1:417">10.8.3</A> <A class="idx" href="errors.html#idx:arg1:422">10.8.3</A> <A class="idx" href="errors.html#idx:arg1:426">10.8.3</A> <A class="idx" href="errors.html#idx:arg1:429">10.8.3</A> <A class="idx" href="hyper.html#idx:arg1:460">10.11.2.2</A> <A class="idx" href="dragdrop.html#idx:arg1:526">11.8.1</A> <A class="idx" href="glossary.html#idx:arg1:739">G</A> <A class="idx" href="glossary.html#idx:arg1:741">G</A> <A class="idx" href="glossary.html#idx:arg1:747">G</A> <A class="idx" href="summary.html#idx:arg1:763">H</A> <A class="idx" href="summary.html#idx:arg1:836">H</A> <A class="idx" href="summary.html#idx:arg1:855">H</A></DD>
+<DT>@arg10</DT>
+<DD>
+<A class="idx" href="exeobjects.html#idx:arg10:322">10.2.2</A> <A class="idx" href="summary.html#idx:arg10:856">H</A></DD>
+<DT>@arg2</DT>
+<DD>
+<A class="idx" href="exeobjects.html#idx:arg2:321">10.2.2</A> <A class="idx" href="errors.html#idx:arg2:430">10.8.3</A> <A class="idx" href="hyper.html#idx:arg2:461">10.11.2.2</A> <A class="idx" href="glossary.html#idx:arg2:740">G</A> <A class="idx" href="summary.html#idx:arg2:837">H</A></DD>
+<DT>@arg3</DT>
+<DD>
+<A class="idx" href="hyper.html#idx:arg3:462">10.11.2.2</A></DD>
+<DT>argument,named</DT>
+<DD>
+<A class="idx" href="namedargs.html#idx:argumentnamed:49">2.4</A></DD>
+<DT>argument,optional</DT>
+<DD>
+<A class="idx" href="sec-2.3.html#idx:argumentoptional:46">2.3</A></DD>
+<DT>arguments,typed</DT>
+<DD>
+<A class="idx" href="sec-2.5.html#idx:argumentstyped:55">2.5</A></DD>
+<DT>argument,type</DT>
+<DD>
+<A class="idx" href="sec-3.2.html#idx:argumenttype:94">3.2.1</A></DD>
+<DT>arithmetic</DT>
+<DD>
+<A class="idx" href="exeobjects.html#idx:arithmetic:330">10.2.2</A></DD>
+<DT><A class="idx" href="summary.html#class:arrow">arrow</A></DT>
+<DD>
+<A class="sec" href="sec-5.1.html#sec:5.1.1">5.1.1</A> <A class="sec" href="summary.html#sec:H">H</A> <A class="sec" href="summary.html#sec:H">H</A></DD>
+<DT>ask questions</DT>
+<DD>
+<A class="idx" href="modal.html#idx:askquestions:145">4.4</A></DD>
+<DT>ask_style/3</DT>
+<DD>
+<A class="idx" href="modal.html#idx:askstyle3:165">4.4.1</A></DD>
+<DT>assert/1</DT>
+<DD>
+<A class="idx" href="control.html#idx:assert1:303">10.1.2</A></DD>
+<DT>assert_employee/5</DT>
+<DD>
+<A class="idx" href="sec-4.1.html#idx:assertemployee5:118">4.1</A></DD>
+<DT><A class="idx" href="summary.html#class:assign">assign</A></DT>
+<DD>
+</DD>
+<DT>assoc,redefined</DT>
+<DD>
+<A class="idx" href="errors.html#idx:assocredefined:424">10.8.3</A></DD>
+<DT>assoc,undefined</DT>
+<DD>
+<A class="idx" href="errors.html#idx:assocundefined:419">10.8.3</A></DD>
+<DT>@Atom</DT>
+<DD>
+<A class="idx" href="sec-2.2.html#idx:Atom:20">2.2.1</A> <A class="idx" href="glossary.html#idx:Atom:744">G</A></DD>
+<DT>atom</DT>
+<DD>
+<A class="idx" href="sec-2.2.html#idx:atom:26">2.2.3</A> <A class="idx" href="summary.html#idx:atom:826">H</A></DD>
+<DT><A class="idx" href="summary.html#class:attribute">attribute</A></DT>
+<DD>
+<A class="sec" href="glossary.html#sec:G">G</A></DD>
+<DT>attribute,editing</DT>
+<DD>
+<A class="idx" href="sec-4.5.html#idx:attributeediting:167">4.5</A></DD>
+<DT><A class="idx" href="sec-D.1.html#auto_call/1">auto_call/1</A></DT>
+<DD>
+</DD>
+<DT>autoloading</DT>
+<DD>
+<A class="idx" href="sec-D.2.html#idx:autoloading:689">D.2</A></DD>
+<DT>axis</DT>
+<DD>
+<A class="idx" href="libplot.html#idx:axis:504">11.6</A></DD>
+<DT><STRONG>B</STRONG></DT>
+<DD>
+</DD>
+<DT>balloon</DT>
+<DD>
+<A class="idx" href="balloon.html#idx:balloon:483">11.2</A></DD>
+<DT>bar</DT>
+<DD>
+<A class="sec" href="libplot.html#sec:11.6.3">11.6.3</A> <A class="sec" href="libplot.html#sec:11.6.3">11.6.3</A> <A class="sec" href="libplot.html#sec:11.6.3.1">11.6.3.1</A> <A class="sec" href="libplot.html#sec:11.6.3.2">11.6.3.2</A></DD>
+<DT>bar_button_group</DT>
+<DD>
+<A class="sec" href="libplot.html#sec:11.6.3.1">11.6.3.1</A></DD>
+<DT>bar_chart</DT>
+<DD>
+<A class="sec" href="libplot.html#sec:11.6.3">11.6.3</A> <A class="sec" href="libplot.html#sec:11.6.3.1">11.6.3.1</A> <A class="sec" href="libplot.html#sec:11.6.3.1">11.6.3.1</A></DD>
+<DT>barchart</DT>
+<DD>
+<A class="idx" href="libplot.html#idx:barchart:508">11.6</A> <A class="idx" href="libplot.html#idx:barchart:510">11.6.3</A></DD>
+<DT>bar_group</DT>
+<DD>
+<A class="sec" href="libplot.html#sec:11.6.3">11.6.3</A></DD>
+<DT>bar_stack</DT>
+<DD>
+<A class="sec" href="libplot.html#sec:11.6.3">11.6.3</A> <A class="sec" href="libplot.html#sec:11.6.3.1">11.6.3.1</A> <A class="sec" href="libplot.html#sec:11.6.3.2">11.6.3.2</A></DD>
+<DT><A class="idx" href="summary.html#class:behaviour">behaviour</A></DT>
+<DD>
+</DD>
+<DT>behaviour,<B><CODE>&lt;-&gt;</CODE>group</B></DT>
+<DD>
+<A class="idx" href="sec-7.1.html#idx:behaviourbothgroup:197">7.1.1</A></DD>
+<DT>bezier</DT>
+<DD>
+<A class="sec" href="sec-5.1.html#sec:5.1.1">5.1.1</A></DD>
+<DT><A class="idx" href="summary.html#class:bezier_curve">bezier_curve</A></DT>
+<DD>
+</DD>
+<DT><A class="idx" href="summary.html#class:binary_condition">binary_condition</A></DT>
+<DD>
+</DD>
+<DT><A class="idx" href="summary.html#class:binary_expression">binary_expression</A></DT>
+<DD>
+</DD>
+<DT>binary relation</DT>
+<DD>
+<A class="idx" href="summary.html#idx:binaryrelation:814">H</A></DD>
+<DT><A class="idx" href="summary.html#class:bitmap">bitmap</A></DT>
+<DD>
+<A class="sec" href="sec-3.3.html#sec:3.3.1.2">3.3.1.2</A> <A class="sec" href="sec-5.1.html#sec:5.1.1">5.1.1</A> <A class="sec" href="images.html#sec:10.10.2.2">10.10.2.2</A> <A class="sec" href="images.html#sec:10.10.2.2">10.10.2.2</A> <A class="sec" href="summary.html#sec:H">H</A></DD>
+<DT>blinking</DT>
+<DD>
+<A class="idx" href="summary.html#idx:blinking:853">H</A></DD>
+<DT><A class="idx" href="summary.html#class:block">block</A></DT>
+<DD>
+<A class="sec" href="summary.html#sec:H">H</A> <A class="sec" href="summary.html#sec:H">H</A> <A class="sec" href="summary.html#sec:H">H</A></DD>
+<DT>BMP,file format</DT>
+<DD>
+<A class="idx" href="images.html#idx:BMPfileformat:449">10.10.2</A></DD>
+<DT>@bo</DT>
+<DD>
+<A class="idx" href="sec-5.1.html#idx:bo:172">5.1</A></DD>
+<DT><A class="idx" href="summary.html#class:bool">bool</A></DT>
+<DD>
+<A class="sec" href="summary.html#sec:H">H</A> <A class="sec" href="summary.html#sec:H">H</A></DD>
+<DT><A class="idx" href="summary.html#class:box">box</A></DT>
+<DD>
+<A class="sec" href="sec-3.3.html#sec:3.3.2">3.3.2</A> <A class="sec" href="sec-5.1.html#sec:5.1.1">5.1.1</A> <A class="sec" href="sec-7.5.html#sec:7.5.1">7.5.1</A> <A class="sec" href="exeobjects.html#sec:10.2.3">10.2.3</A> <A class="sec" href="ugraphics.html#sec:10.12.3">10.12.3</A> <A class="sec" href="libplot.html#sec:11.6.3.1">11.6.3.1</A> <A class="sec" href="docrender.html#sec:11.10">11.10</A> <A class="sec" href="summary.html#sec:H">H</A></DD>
+<DT>box,<B><CODE>-&gt;</CODE>colour</B></DT>
+<DD>
+<A class="idx" href="sec-2.7.html#idx:boxsendcolour:66">2.7</A> <A class="idx" href="sec-2.7.html#idx:boxsendcolour:68">2.7</A></DD>
+<DT>@br</DT>
+<DD>
+<A class="idx" href="docrender.html#idx:br:551">11.10.2</A> <A class="idx" href="docrender.html#idx:br:564">11.10.3.2</A></DD>
+<DT>branch</DT>
+<DD>
+<A class="idx" href="summary.html#idx:branch:815">H</A></DD>
+<DT>break</DT>
+<DD>
+<A class="idx" href="sec-12.3.html#idx:break:582">12.3</A></DD>
+<DT>breakpce/1</DT>
+<DD>
+<A class="idx" href="summary.html#idx:breakpce1:835">H</A></DD>
+<DT><A class="idx" href="summary.html#class:browser">browser</A></DT>
+<DD>
+<A class="sec" href="fileviewer.html#sec:2.8">2.8</A> <A class="sec" href="fileviewer.html#sec:2.8">2.8</A> <A class="sec" href="sec-3.3.html#sec:3.3.3">3.3.3</A> <A class="sec" href="sec-4.2.html#sec:4.2">4.2</A> <A class="sec" href="summary.html#sec:H">H</A> <A class="sec" href="summary.html#sec:H">H</A> <A class="sec" href="summary.html#sec:H">H</A> <A class="sec" href="summary.html#sec:H">H</A> <A class="sec" href="summary.html#sec:H">H</A> <A class="sec" href="summary.html#sec:H">H</A></DD>
+<DT><A class="idx" href="summary.html#class:browser_select_gesture">browser_select_gesture</A></DT>
+<DD>
+</DD>
+<DT>bug,reporting</DT>
+<DD>
+<A class="idx" href="faq.html#idx:bugreporting:3">1.2</A></DD>
+<DT>bullet_list</DT>
+<DD>
+<A class="sec" href="docrender.html#sec:11.10.3.2">11.10.3.2</A> <A class="sec" href="docrender.html#sec:11.10.3.2">11.10.3.2</A> <A class="sec" href="docrender.html#sec:11.10.3.2">11.10.3.2</A></DD>
+<DT><A class="idx" href="summary.html#class:button">button</A></DT>
+<DD>
+<A class="sec" href="fileviewer.html#sec:2.8">2.8</A> <A class="sec" href="sec-4.2.html#sec:4.2">4.2</A> <A class="sec" href="sec-4.3.html#sec:4.3">4.3</A> <A class="sec" href="control.html#sec:10.1.1">10.1.1</A> <A class="sec" href="exeobjects.html#sec:10.2.1">10.2.1</A></DD>
+<DT>button-bar</DT>
+<DD>
+<A class="idx" href="libdia.html#idx:buttonbar:487">11.3.2</A></DD>
+<DT><STRONG>C</STRONG></DT>
+<DD>
+</DD>
+<DT>C++</DT>
+<DD>
+<A class="idx" href="sec-1.3.html#idx:C:4">1.3</A> <A class="idx" href="namedargs.html#idx:C:52">2.4</A></DD>
+<DT><A class="idx" href="summary.html#class:c">c</A></DT>
+<DD>
+<A class="sec" href="summary.html#sec:H">H</A></DD>
+<DT>call/1</DT>
+<DD>
+<A class="idx" href="sec-D.1.html#idx:call1:688">D.1.1</A></DD>
+<DT>call-back</DT>
+<DD>
+<A class="idx" href="exeobjects.html#idx:callback:310">10.2</A></DD>
+<DT>canonical</DT>
+<DD>
+<A class="sec" href="docrender.html#sec:11.10.3.2">11.10.3.2</A></DD>
+<DT>catch-all</DT>
+<DD>
+<A class="idx" href="sec-3.3.html#idx:catchall:110">3.3.1.3</A></DD>
+<DT>catch,errors</DT>
+<DD>
+<A class="idx" href="errors.html#idx:catcherrors:400">10.8.1</A></DD>
+<DT>cell,<B><CODE>&lt;-&gt;</CODE>note_mark</B></DT>
+<DD>
+<A class="idx" href="tabular.html#idx:cellbothnotemark:502">11.5.2</A></DD>
+<DT>CGI</DT>
+<DD>
+<A class="idx" href="httpd.html#idx:CGI:530">11.9</A></DD>
+<DT><A class="idx" href="summary.html#class:chain">chain</A></DT>
+<DD>
+<A class="sec" href="fileviewer.html#sec:2.8">2.8</A> <A class="sec" href="prologdata.html#sec:6.2">6.2</A> <A class="sec" href="prologdata.html#sec:6.2">6.2</A> <A class="sec" href="exeobjects.html#sec:10.2">10.2</A> <A class="sec" href="exeobjects.html#sec:10.2.3">10.2.3</A> <A class="sec" href="toc.html#sec:11.4">11.4</A> <A class="sec" href="sec-A.2.html#sec:A.2.2">A.2.2</A> <A class="sec" href="sec-D.1.html#sec:D.1">D.1</A> <A class="sec" href="summary.html#sec:H">H</A> <A class="sec" href="summary.html#sec:H">H</A> <A class="sec" href="summary.html#sec:H">H</A> <A class="sec" href="summary.html#sec:H">H</A></DD>
+<DT><A class="idx" href="summary.html#class:chain_hyper">chain_hyper</A></DT>
+<DD>
+</DD>
+<DT><A class="idx" href="sec-D.2.html#chain_list/2">chain_list/2</A></DT>
+<DD>
+<A class="idx" href="sec-D.2.html#idx:chainlist2:696">D.2.1</A> <A class="idx" href="summary.html#idx:chainlist2:757">H</A></DD>
+<DT>chain,<B><CODE>-&gt;</CODE>for_all</B></DT>
+<DD>
+<A class="idx" href="exeobjects.html#idx:chainsendforall:312">10.2</A> <A class="idx" href="exeobjects.html#idx:chainsendforall:314">10.2.1</A> <A class="idx" href="summary.html#idx:chainsendforall:773">H</A> <A class="idx" href="summary.html#idx:chainsendforall:816">H</A></DD>
+<DT>chain,<B><CODE>-&gt;</CODE>initialise</B></DT>
+<DD>
+<A class="idx" href="sec-7.5.html#idx:chainsendinitialise:246">7.5.2</A></DD>
+<DT>chain,<B><CODE>-&gt;</CODE>sort</B></DT>
+<DD>
+<A class="idx" href="summary.html#idx:chainsendsort:838">H</A></DD>
+<DT><A class="idx" href="summary.html#class:chain_table">chain_table</A></DT>
+<DD>
+</DD>
+<DT><A class="idx" href="summary.html#class:char_array">char_array</A></DT>
+<DD>
+<A class="sec" href="sec-3.2.html#sec:3.2.1">3.2.1</A> <A class="sec" href="summary.html#sec:H">H</A> <A class="sec" href="summary.html#sec:H">H</A> <A class="sec" href="summary.html#sec:H">H</A> <A class="sec" href="summary.html#sec:H">H</A></DD>
+<DT>chart</DT>
+<DD>
+<A class="idx" href="libplot.html#idx:chart:507">11.6</A></DD>
+<DT><A class="idx" href="sec-D.2.html#checkpce/0">checkpce/0</A></DT>
+<DD>
+<A class="idx" href="sec-7.3.html#idx:checkpce0:224">7.3.1</A> <A class="idx" href="sec-12.1.html#idx:checkpce0:576">12.1</A> <A class="idx" href="sec-12.1.html#idx:checkpce0:577">12.1</A></DD>
+<DT><A class="idx" href="summary.html#class:circle">circle</A></DT>
+<DD>
+<A class="sec" href="sec-5.1.html#sec:5.1.1">5.1.1</A> <A class="sec" href="sec-7.5.html#sec:7.5.1">7.5.1</A> <A class="sec" href="summary.html#sec:H">H</A></DD>
+<DT>@class</DT>
+<DD>
+<A class="idx" href="sec-7.1.html#idx:class:191">7.1</A> <A class="idx" href="sec-7.5.html#idx:class:257">7.5.3</A> <A class="idx" href="sec-7.5.html#idx:class:260">7.5.3</A> <A class="idx" href="sec-7.5.html#idx:class:261">7.5.3</A> <A class="idx" href="summary.html#idx:class:859">H</A></DD>
+<DT><A class="idx" href="summary.html#class:class">class</A></DT>
+<DD>
+<A class="sec" href="sec-7.1.html#sec:7.1.1">7.1.1</A> <A class="sec" href="sec-7.5.html#sec:7.5.3">7.5.3</A> <A class="sec" href="summary.html#sec:H">H</A></DD>
+<DT>@class_default</DT>
+<DD>
+<A class="idx" href="sec-8.2.html#idx:classdefault:268">8.2</A></DD>
+<DT>@classes</DT>
+<DD>
+<A class="idx" href="summary.html#idx:classes:810">H</A></DD>
+<DT>class,<B><CODE>&lt;-</CODE>instance</B></DT>
+<DD>
+<A class="idx" href="sec-D.1.html#idx:classgetinstance:656">D.1</A></DD>
+<DT>class,<B><CODE>&lt;-</CODE>instance_size</B></DT>
+<DD>
+<A class="idx" href="sec-E.3.html#idx:classgetinstancesize:728">E.3</A></DD>
+<DT>class,<B><CODE>&lt;-</CODE>un_answer</B></DT>
+<DD>
+<A class="idx" href="sec-E.1.html#idx:classgetunanswer:713">E.1</A></DD>
+<DT>class,hierarchy</DT>
+<DD>
+<A class="idx" href="sec-3.1.html#idx:classhierarchy:80">3.1</A></DD>
+<DT>class,<B><CODE>-&gt;</CODE>get_method</B></DT>
+<DD>
+<A class="idx" href="summary.html#idx:classsendgetmethod:808">H</A></DD>
+<DT>class,structure</DT>
+<DD>
+<A class="idx" href="sec-3.1.html#idx:classstructure:81">3.1</A></DD>
+<DT>class,undefined</DT>
+<DD>
+<A class="idx" href="errors.html#idx:classundefined:414">10.8.3</A></DD>
+<DT><A class="idx" href="summary.html#class:class_variable">class_variable</A></DT>
+<DD>
+<A class="sec" href="classvar.html#sec:8">8</A> <A class="sec" href="classvaraccess.html#sec:8.1">8.1</A> <A class="sec" href="summary.html#sec:H">H</A></DD>
+<DT><A class="idx" href="sec-7.1.html#class_variable/[3,4]">class_variable/[3,4]</A></DT>
+<DD>
+</DD>
+<DT>class_variable,<B><CODE>&lt;-</CODE>type</B></DT>
+<DD>
+<A class="idx" href="classvaraccess.html#idx:classvariablegettype:266">8.1</A></DD>
+<DT><A class="idx" href="summary.html#class:click_gesture">click_gesture</A></DT>
+<DD>
+<A class="sec" href="recogniser.html#sec:5.5">5.5</A> <A class="sec" href="summary.html#sec:H">H</A></DD>
+<DT>clipping</DT>
+<DD>
+<A class="idx" href="summary.html#idx:clipping:802">H</A></DD>
+<DT>close/1</DT>
+<DD>
+<A class="idx" href="sec-D.1.html#idx:close1:684">D.1</A></DD>
+<DT><A class="idx" href="summary.html#class:code">code</A></DT>
+<DD>
+<A class="sec" href="prologdata.html#sec:6.2">6.2</A> <A class="sec" href="udc.html#sec:7">7</A> <A class="sec" href="libplot.html#sec:11.6.3.1">11.6.3.1</A> <A class="sec" href="libplot.html#sec:11.6.3.1">11.6.3.1</A> <A class="sec" href="sec-A.1.html#sec:A.1.4">A.1.4</A> <A class="sec" href="sec-A.1.html#sec:A.1.6">A.1.6</A> <A class="sec" href="sec-E.1.html#sec:E.1">E.1</A> <A class="sec" href="glossary.html#sec:G">G</A> <A class="sec" href="summary.html#sec:H">H</A> <A class="sec" href="summary.html#sec:H">H</A> <A class="sec" href="summary.html#sec:H">H</A> <A class="sec" href="summary.html#sec:H">H</A> <A class="sec" href="summary.html#sec:H">H</A></DD>
+<DT>code object</DT>
+<DD>
+<A class="idx" href="exeobjects.html#idx:codeobject:309">10.2</A></DD>
+<DT>code,<B><CODE>-&gt;</CODE>forward</B></DT>
+<DD>
+<A class="idx" href="exeobjects.html#idx:codesendforward:315">10.2.1</A> <A class="idx" href="exeobjects.html#idx:codesendforward:327">10.2.2</A> <A class="idx" href="summary.html#idx:codesendforward:762">H</A> <A class="idx" href="summary.html#idx:codesendforward:854">H</A></DD>
+<DT><A class="idx" href="summary.html#class:code_vector">code_vector</A></DT>
+<DD>
+<A class="sec" href="summary.html#sec:H">H</A></DD>
+<DT><A class="idx" href="summary.html#class:colour">colour</A></DT>
+<DD>
+<A class="sec" href="sec-3.3.html#sec:3.3.1.3">3.3.1.3</A> <A class="sec" href="summary.html#sec:H">H</A></DD>
+<DT>colour,256</DT>
+<DD>
+<A class="idx" href="images.html#idx:colour256:436">10.10.1</A></DD>
+<DT>colour,16-bits</DT>
+<DD>
+<A class="idx" href="images.html#idx:colour16bits:437">10.10.1</A></DD>
+<DT>colour,images</DT>
+<DD>
+<A class="idx" href="images.html#idx:colourimages:434">10.10.1</A></DD>
+<DT><A class="idx" href="summary.html#class:colour_map">colour_map</A></DT>
+<DD>
+<A class="sec" href="images.html#sec:10.10.1.1">10.10.1.1</A> <A class="sec" href="images.html#sec:10.10.1.1">10.10.1.1</A></DD>
+<DT>colour,true</DT>
+<DD>
+<A class="idx" href="images.html#idx:colourtrue:438">10.10.1</A></DD>
+<DT>combo-box</DT>
+<DD>
+<A class="idx" href="sec-4.2.html#idx:combobox:125">4.2</A></DD>
+<DT>completion</DT>
+<DD>
+<A class="idx" href="sec-3.3.html#idx:completion:101">3.3.1.1</A> <A class="idx" href="summary.html#idx:completion:850">H</A></DD>
+<DT>compound graphical</DT>
+<DD>
+<A class="idx" href="summary.html#idx:compoundgraphical:777">H</A></DD>
+<DT><A class="idx" href="summary.html#class:connect_gesture">connect_gesture</A></DT>
+<DD>
+<A class="sec" href="connection.html#sec:5.3">5.3</A> <A class="sec" href="connection.html#sec:5.3">5.3</A> <A class="sec" href="recogniser.html#sec:5.5">5.5</A> <A class="sec" href="summary.html#sec:H">H</A> <A class="sec" href="summary.html#sec:H">H</A> <A class="sec" href="summary.html#sec:H">H</A> <A class="sec" href="summary.html#sec:H">H</A></DD>
+<DT><A class="idx" href="summary.html#class:connection">connection</A></DT>
+<DD>
+<A class="sec" href="connection.html#sec:5.3">5.3</A> <A class="sec" href="connection.html#sec:5.3">5.3</A> <A class="sec" href="connection.html#sec:5.3">5.3</A> <A class="sec" href="sec-5.6.html#sec:5.6">5.6</A> <A class="sec" href="hyper.html#sec:10.11">10.11</A> <A class="sec" href="summary.html#sec:H">H</A> <A class="sec" href="summary.html#sec:H">H</A> <A class="sec" href="summary.html#sec:H">H</A></DD>
+<DT>consists-of</DT>
+<DD>
+<A class="idx" href="sec-3.1.html#idx:consistsof:90">3.1</A></DD>
+<DT><A class="idx" href="summary.html#class:constant">constant</A></DT>
+<DD>
+<A class="sec" href="sec-7.1.html#sec:7.1.1">7.1.1</A> <A class="sec" href="sec-8.2.html#sec:8.2">8.2</A> <A class="sec" href="summary.html#sec:H">H</A></DD>
+<DT><A class="idx" href="summary.html#class:constraint">constraint</A></DT>
+<DD>
+<A class="sec" href="sec-7.3.html#sec:7.3.2">7.3.2</A> <A class="sec" href="summary.html#sec:H">H</A> <A class="sec" href="summary.html#sec:H">H</A></DD>
+<DT>constraint,<B><CODE>&lt;-</CODE>relation</B></DT>
+<DD>
+<A class="idx" href="summary.html#idx:constraintgetrelation:772">H</A></DD>
+<DT>constraint,vs. method</DT>
+<DD>
+<A class="idx" href="sec-7.3.html#idx:constraintvsmethod:236">7.3.2</A></DD>
+<DT>constructor</DT>
+<DD>
+<A class="idx" href="namedargs.html#idx:constructor:51">2.4</A> <A class="idx" href="sec-3.3.html#idx:constructor:104">3.3.1.3</A></DD>
+<DT>control</DT>
+<DD>
+<A class="idx" href="summary.html#idx:control:822">H</A></DD>
+<DT>controller</DT>
+<DD>
+<A class="idx" href="summary.html#idx:controller:779">H</A></DD>
+<DT>controllers</DT>
+<DD>
+<A class="idx" href="controller.html#idx:controllers:115">4</A> <A class="idx" href="summary.html#idx:controllers:780">H</A></DD>
+<DT>controllers,built-in</DT>
+<DD>
+<A class="idx" href="sec-4.2.html#idx:controllersbuiltin:119">4.2</A></DD>
+<DT>controls,GUI tool for</DT>
+<DD>
+<A class="idx" href="dialogeditor.html#idx:controlsGUItoolfor:592">A</A></DD>
+<DT>control,structure</DT>
+<DD>
+<A class="idx" href="control.html#idx:controlstructure:281">10.1</A></DD>
+<DT>CORBA</DT>
+<DD>
+<A class="idx" href="sec-B.2.html#idx:CORBA:637">B.2</A></DD>
+<DT><A class="idx" href="summary.html#class:c_pointer">c_pointer</A></DT>
+<DD>
+<A class="sec" href="udc.html#sec:7">7</A> <A class="sec" href="summary.html#sec:H">H</A></DD>
+<DT><A class="idx" href="summary.html#class:create">create</A></DT>
+<DD>
+<A class="sec" href="exeobjects.html#sec:10.2.2">10.2.2</A></DD>
+<DT>CUR,file format</DT>
+<DD>
+<A class="idx" href="images.html#idx:CURfileformat:445">10.10.2</A></DD>
+<DT><A class="idx" href="summary.html#class:cursor">cursor</A></DT>
+<DD>
+<A class="idx" href="images.html#idx:cursor:453">10.10.2</A> <A class="sec" href="images.html#sec:10.10.2.2">10.10.2.2</A> <A class="sec" href="images.html#sec:10.10.2.2">10.10.2.2</A> <A class="sec" href="summary.html#sec:H">H</A> <A class="sec" href="summary.html#sec:H">H</A></DD>
+<DT>curves</DT>
+<DD>
+<A class="idx" href="summary.html#idx:curves:831">H</A></DD>
+<DT>cut-and-paste</DT>
+<DD>
+<A class="idx" href="sec-B.2.html#idx:cutandpaste:639">B.2</A></DD>
+<DT><STRONG>D</STRONG></DT>
+<DD>
+</DD>
+<DT><A class="idx" href="summary.html#class:date">date</A></DT>
+<DD>
+<A class="sec" href="summary.html#sec:H">H</A> <A class="sec" href="summary.html#sec:H">H</A></DD>
+<DT>DDE</DT>
+<DD>
+<A class="idx" href="sec-B.2.html#idx:DDE:633">B.2</A></DD>
+<DT>@default</DT>
+<DD>
+<A class="idx" href="sec-2.3.html#idx:default:47">2.3</A> <A class="idx" href="sec-2.3.html#idx:default:48">2.3</A> <A class="idx" href="namedargs.html#idx:default:54">2.4</A> <A class="idx" href="sec-3.2.html#idx:default:97">3.2.1</A> <A class="idx" href="sec-3.2.html#idx:default:98">3.2.1</A> <A class="idx" href="sec-4.3.html#idx:default:128">4.3</A> <A class="idx" href="sec-4.3.html#idx:default:130">4.3</A> <A class="idx" href="sec-7.1.html#idx:default:198">7.1.1</A> <A class="idx" href="sec-7.3.html#idx:default:235">7.3.2</A> <A class="idx" href="udcpreds.html#idx:default:239">7.4</A> <A class="idx" href="udcpreds.html#idx:default:240">7.4</A> <A class="idx" href="sec-7.5.html#idx:default:241">7.5.1</A> <A class="idx" href="sec-7.5.html#idx:default:242">7.5.1</A> <A class="idx" href="errors.html#idx:default:405">10.8.1</A> <A class="idx" href="dragdrop.html#idx:default:529">11.8.1</A> <A class="idx" href="sec-D.1.html#idx:default:660">D.1</A> <A class="idx" href="summary.html#idx:default:767">H</A> <A class="idx" href="summary.html#idx:default:771">H</A> <A class="idx" href="summary.html#idx:default:782">H</A> <A class="idx" href="summary.html#idx:default:820">H</A></DD>
+<DT><A class="idx" href="udcpreds.html#default/3">default/3</A></DT>
+<DD>
+<A class="idx" href="udcpreds.html#idx:default3:237">7.4</A></DD>
+<DT>default arguments</DT>
+<DD>
+<A class="idx" href="sec-2.3.html#idx:defaultarguments:44">2.3</A></DD>
+<DT>define_style/1</DT>
+<DD>
+<A class="idx" href="modal.html#idx:definestyle1:159">4.4.1</A></DD>
+<DT>definition_list</DT>
+<DD>
+<A class="sec" href="docrender.html#sec:11.10.3.2">11.10.3.2</A> <A class="sec" href="docrender.html#sec:11.10.3.2">11.10.3.2</A></DD>
+<DT><A class="idx" href="sec-7.1.html#delegate_to/1">delegate_to/1</A></DT>
+<DD>
+<A class="idx" href="sec-7.5.html#idx:delegateto1:249">7.5.2.1</A></DD>
+<DT>delegation</DT>
+<DD>
+<A class="idx" href="delegation.html#idx:delegation:647">C.4</A></DD>
+<DT>@demo</DT>
+<DD>
+<A class="idx" href="sec-2.2.html#idx:demo:29">2.2.3</A></DD>
+<DT>demo programs</DT>
+<DD>
+<A class="idx" href="sec-3.1.html#idx:demoprograms:92">3.1</A></DD>
+<DT>destructor</DT>
+<DD>
+<A class="idx" href="sec-3.3.html#idx:destructor:107">3.3.1.3</A></DD>
+<DT><A class="idx" href="summary.html#class:device">device</A></DT>
+<DD>
+<A class="sec" href="sec-4.3.html#sec:4.3.1">4.3.1</A> <A class="sec" href="sec-5.2.html#sec:5.2">5.2</A> <A class="sec" href="sec-5.2.html#sec:5.2">5.2</A> <A class="sec" href="sec-5.2.html#sec:5.2">5.2</A> <A class="sec" href="sec-5.2.html#sec:5.2">5.2</A> <A class="sec" href="sec-5.2.html#sec:5.2">5.2</A> <A class="sec" href="sec-7.3.html#sec:7.3.2">7.3.2</A> <A class="sec" href="exeobjects.html#sec:10.2.3">10.2.3</A> <A class="sec" href="ugraphics.html#sec:10.12">10.12</A> <A class="sec" href="ugraphics.html#sec:10.12.2">10.12.2</A> <A class="sec" href="ugraphics.html#sec:10.12.3">10.12.3</A> <A class="sec" href="ugraphics.html#sec:10.12.3">10.12.3</A> <A class="sec" href="tabular.html#sec:11.5">11.5</A> <A class="sec" href="tabular.html#sec:11.5">11.5</A> <A class="sec" href="tabular.html#sec:11.5.2">11.5.2</A> <A class="sec" href="tabular.html#sec:11.5.2">11.5.2</A> <A class="sec" href="tabular.html#sec:11.5.2">11.5.2</A> <A class="sec" href="libplot.html#sec:11.6.2">11.6.2</A> <A class="sec" href="docrender.html#sec:11.10">11.10</A> <A class="sec" href="docrender.html#sec:11.10">11.10</A> <A class="sec" href="docrender.html#sec:11.10">11.10</A> <A class="sec" href="docrender.html#sec:11.10.3.2">11.10.3.2</A> <A class="sec" href="summary.html#sec:H">H</A> <A class="sec" href="summary.html#sec:H">H</A> <A class="sec" href="summary.html#sec:H">H</A> <A class="sec" href="summary.html#sec:H">H</A> <A class="sec" href="summary.html#sec:H">H</A> <A class="sec" href="summary.html#sec:H">H</A> <A class="sec" href="summary.html#sec:H">H</A> <A class="sec" href="summary.html#sec:H">H</A></DD>
+<DT>device,<B><CODE>&lt;-&gt;</CODE>layout_manager</B></DT>
+<DD>
+<A class="idx" href="tabular.html#idx:devicebothlayoutmanager:499">11.5.2</A></DD>
+<DT>device,<B><CODE>&lt;-</CODE>graphicals</B></DT>
+<DD>
+<A class="idx" href="summary.html#idx:devicegetgraphicals:758">H</A></DD>
+<DT>device,<B><CODE>&lt;-</CODE>member</B></DT>
+<DD>
+<A class="idx" href="whoiswho.html#idx:devicegetmember:352">10.4.4</A> <A class="idx" href="application.html#idx:devicegetmember:361">10.5.1</A></DD>
+<DT>device,<B><CODE>&lt;-</CODE>pointed</B></DT>
+<DD>
+<A class="idx" href="sec-7.3.html#idx:devicegetpointed:227">7.3.2</A></DD>
+<DT>device,<B><CODE>&lt;-</CODE>selection</B></DT>
+<DD>
+<A class="idx" href="exeobjects.html#idx:devicegetselection:311">10.2</A></DD>
+<DT>device,<B><CODE>-&gt;</CODE>event</B></DT>
+<DD>
+<A class="idx" href="ugraphics.html#idx:devicesendevent:464">10.12</A> <A class="idx" href="tabular.html#idx:devicesendevent:501">11.5.2</A></DD>
+<DT>device,<B><CODE>-&gt;</CODE>format</B></DT>
+<DD>
+<A class="idx" href="sec-5.2.html#idx:devicesendformat:176">5.2</A> <A class="idx" href="tabular.html#idx:devicesendformat:497">11.5</A></DD>
+<DT>device,<B><CODE>-&gt;</CODE>geometry</B></DT>
+<DD>
+<A class="idx" href="ugraphics.html#idx:devicesendgeometry:465">10.12</A></DD>
+<DT>device,<B><CODE>-&gt;</CODE>initialise</B></DT>
+<DD>
+<A class="idx" href="ugraphics.html#idx:devicesendinitialise:463">10.12</A></DD>
+<DT>device,<B><CODE>-&gt;</CODE>layout_dialog</B></DT>
+<DD>
+<A class="idx" href="sec-4.3.html#idx:devicesendlayoutdialog:133">4.3</A> <A class="idx" href="sec-4.3.html#idx:devicesendlayoutdialog:135">4.3</A> <A class="idx" href="sec-4.3.html#idx:devicesendlayoutdialog:137">4.3</A> <A class="idx" href="tabular.html#idx:devicesendlayoutdialog:496">11.5</A></DD>
+<DT>diagram</DT>
+<DD>
+<A class="idx" href="libplot.html#idx:diagram:506">11.6</A></DD>
+<DT><A class="idx" href="summary.html#class:dialog">dialog</A></DT>
+<DD>
+<A class="sec" href="fileviewer.html#sec:2.8">2.8</A> <A class="sec" href="controller.html#sec:4">4</A> <A class="sec" href="sec-4.1.html#sec:4.1">4.1</A> <A class="sec" href="sec-4.3.html#sec:4.3">4.3</A> <A class="sec" href="report.html#sec:10.7.2">10.7.2</A> <A class="sec" href="report.html#sec:10.7.2">10.7.2</A> <A class="sec" href="libdia.html#sec:11.3.1">11.3.1</A> <A class="sec" href="tabular.html#sec:11.5">11.5</A> <A class="sec" href="summary.html#sec:H">H</A> <A class="sec" href="summary.html#sec:H">H</A> <A class="sec" href="summary.html#sec:H">H</A> <A class="sec" href="summary.html#sec:H">H</A> <A class="sec" href="summary.html#sec:H">H</A> <A class="sec" href="summary.html#sec:H">H</A> <A class="sec" href="summary.html#sec:H">H</A> <A class="sec" href="summary.html#sec:H">H</A> <A class="sec" href="summary.html#sec:H">H</A></DD>
+<DT><A class="idx" href="sec-A.1.html#dialog/2">dialog/2</A></DT>
+<DD>
+<A class="idx" href="dialogeditor.html#idx:dialog2:593">A</A> <A class="idx" href="dialogeditor.html#idx:dialog2:595">A</A> <A class="idx" href="sec-A.1.html#idx:dialog2:607">A.1.6</A> <A class="idx" href="sec-A.1.html#idx:dialog2:608">A.1.6</A> <A class="idx" href="sec-A.2.html#idx:dialog2:623">A.2.2</A> <A class="idx" href="sec-A.2.html#idx:dialog2:627">A.2.4</A> <A class="idx" href="sec-A.2.html#idx:dialog2:628">A.2.4</A></DD>
+<DT>@_dialog_bg</DT>
+<DD>
+<A class="idx" href="summary.html#idx:dialogbg:750">H</A></DD>
+<DT>dialog,<B><CODE>&lt;-</CODE>gap</B></DT>
+<DD>
+<A class="idx" href="sec-4.3.html#idx:dialoggetgap:136">4.3</A></DD>
+<DT><A class="idx" href="summary.html#class:dialog_group">dialog_group</A></DT>
+<DD>
+<A class="sec" href="sec-4.2.html#sec:4.2">4.2</A> <A class="sec" href="tabular.html#sec:11.5">11.5</A> <A class="sec" href="libplot.html#sec:11.6.3.2">11.6.3.2</A> <A class="sec" href="mlingual.html#sec:11.7">11.7</A> <A class="sec" href="summary.html#sec:H">H</A> <A class="sec" href="summary.html#sec:H">H</A> <A class="sec" href="summary.html#sec:H">H</A></DD>
+<DT><A class="idx" href="summary.html#class:dialog_item">dialog_item</A></DT>
+<DD>
+<A class="sec" href="fileviewer.html#sec:2.8">2.8</A> <A class="sec" href="controller.html#sec:4">4</A> <A class="sec" href="sec-4.1.html#sec:4.1">4.1</A> <A class="sec" href="sec-7.3.html#sec:7.3.2">7.3.2</A> <A class="sec" href="images.html#sec:10.10.2.2">10.10.2.2</A> <A class="sec" href="mlingual.html#sec:11.7">11.7</A> <A class="sec" href="mlingual.html#sec:11.7">11.7</A> <A class="sec" href="summary.html#sec:H">H</A> <A class="sec" href="summary.html#sec:H">H</A> <A class="sec" href="summary.html#sec:H">H</A> <A class="sec" href="summary.html#sec:H">H</A> <A class="sec" href="summary.html#sec:H">H</A></DD>
+<DT>dialog_item,built-in types</DT>
+<DD>
+<A class="idx" href="sec-4.2.html#idx:dialogitembuiltintypes:120">4.2</A></DD>
+<DT>dialog_item,<B><CODE>&lt;-</CODE>alignment</B></DT>
+<DD>
+<A class="idx" href="sec-4.3.html#idx:dialogitemgetalignment:138">4.3</A></DD>
+<DT>dialog_item,<B><CODE>&lt;-</CODE>label_name</B></DT>
+<DD>
+<A class="idx" href="mlingual.html#idx:dialogitemgetlabelname:513">11.7</A> <A class="idx" href="mlingual.html#idx:dialogitemgetlabelname:514">11.7</A></DD>
+<DT>dialog_item,<B><CODE>-&gt;</CODE>alignment</B></DT>
+<DD>
+<A class="idx" href="sec-4.3.html#idx:dialogitemsendalignment:141">4.3.1</A></DD>
+<DT>dialog_item,<B><CODE>-&gt;</CODE>label</B></DT>
+<DD>
+<A class="idx" href="images.html#idx:dialogitemsendlabel:456">10.10.2.2</A></DD>
+<DT>dialog_item,<B><CODE>-&gt;</CODE>value_width</B></DT>
+<DD>
+<A class="idx" href="sec-4.3.html#idx:dialogitemsendvaluewidth:131">4.3</A></DD>
+<DT>dialog,layout in</DT>
+<DD>
+<A class="idx" href="sec-4.3.html#idx:dialoglayoutin:127">4.3</A></DD>
+<DT>dialog,resizing</DT>
+<DD>
+<A class="idx" href="sec-4.3.html#idx:dialogresizing:142">4.3.1</A></DD>
+<DT>dialog,<B><CODE>-&gt;</CODE>append</B></DT>
+<DD>
+<A class="idx" href="sec-4.3.html#idx:dialogsendappend:140">4.3.1</A></DD>
+<DT>dialog,<B><CODE>-&gt;</CODE>layout</B></DT>
+<DD>
+<A class="idx" href="sec-4.3.html#idx:dialogsendlayout:134">4.3</A></DD>
+<DT><A class="idx" href="summary.html#class:dict">dict</A></DT>
+<DD>
+<A class="sec" href="fileviewer.html#sec:2.8">2.8</A> <A class="sec" href="summary.html#sec:H">H</A> <A class="sec" href="summary.html#sec:H">H</A> <A class="sec" href="summary.html#sec:H">H</A> <A class="sec" href="summary.html#sec:H">H</A> <A class="sec" href="summary.html#sec:H">H</A></DD>
+<DT>dictionary</DT>
+<DD>
+<A class="idx" href="summary.html#idx:dictionary:781">H</A></DD>
+<DT><A class="idx" href="summary.html#class:dict_item">dict_item</A></DT>
+<DD>
+<A class="sec" href="fileviewer.html#sec:2.8">2.8</A> <A class="sec" href="fileviewer.html#sec:2.8">2.8</A> <A class="sec" href="fileviewer.html#sec:2.8">2.8</A> <A class="sec" href="fileviewer.html#sec:2.8">2.8</A> <A class="sec" href="fileviewer.html#sec:2.8">2.8</A> <A class="sec" href="dragdrop.html#sec:11.8">11.8</A> <A class="sec" href="sec-A.2.html#sec:A.2.2">A.2.2</A> <A class="sec" href="summary.html#sec:H">H</A> <A class="sec" href="summary.html#sec:H">H</A> <A class="sec" href="summary.html#sec:H">H</A> <A class="sec" href="summary.html#sec:H">H</A> <A class="sec" href="summary.html#sec:H">H</A></DD>
+<DT>dict_item,<B><CODE>&lt;-&gt;</CODE>object</B></DT>
+<DD>
+<A class="idx" href="summary.html#idx:dictitembothobject:783">H</A></DD>
+<DT>dict_item,<B><CODE>&lt;-&gt;</CODE>style</B></DT>
+<DD>
+<A class="idx" href="summary.html#idx:dictitembothstyle:785">H</A></DD>
+<DT>dict_item,<B><CODE>&lt;-</CODE>key</B></DT>
+<DD>
+<A class="idx" href="sec-A.2.html#idx:dictitemgetkey:624">A.2.2</A></DD>
+<DT>direct-manipulation</DT>
+<DD>
+<A class="idx" href="sec-1.6.html#idx:directmanipulation:14">1.6</A></DD>
+<DT><A class="idx" href="summary.html#class:directory">directory</A></DT>
+<DD>
+<A class="sec" href="fileviewer.html#sec:2.8">2.8</A> <A class="sec" href="toc.html#sec:11.4">11.4</A> <A class="sec" href="sec-A.2.html#sec:A.2.2">A.2.2</A> <A class="sec" href="sec-A.2.html#sec:A.2.2">A.2.2</A> <A class="sec" href="summary.html#sec:H">H</A> <A class="sec" href="summary.html#sec:H">H</A></DD>
+<DT>directory,<B><CODE>&lt;-</CODE>file</B></DT>
+<DD>
+<A class="idx" href="sec-A.2.html#idx:directorygetfile:625">A.2.2</A></DD>
+<DT>directory,<B><CODE>&lt;-</CODE>files</B></DT>
+<DD>
+<A class="idx" href="sec-A.2.html#idx:directorygetfiles:620">A.2.2</A></DD>
+<DT>@display</DT>
+<DD>
+<A class="idx" href="sec-2.2.html#idx:display:30">2.2.3</A> <A class="idx" href="control.html#idx:display:299">10.1.1.1</A> <A class="idx" href="whoiswho.html#idx:display:346">10.4.1</A> <A class="idx" href="report.html#idx:display:380">10.7.2</A> <A class="idx" href="report.html#idx:display:388">10.7.2</A> <A class="idx" href="sec-E.1.html#idx:display:709">E.1</A> <A class="idx" href="summary.html#idx:display:788">H</A></DD>
+<DT><A class="idx" href="summary.html#class:display">display</A></DT>
+<DD>
+<A class="sec" href="application.html#sec:10.5.1">10.5.1</A> <A class="sec" href="report.html#sec:10.7.2">10.7.2</A> <A class="sec" href="font.html#sec:10.9.1">10.9.1</A> <A class="sec" href="summary.html#sec:H">H</A> <A class="sec" href="summary.html#sec:H">H</A></DD>
+<DT>display,<B><CODE>&lt;-&gt;</CODE>address</B></DT>
+<DD>
+<A class="idx" href="trouble.html#idx:displaybothaddress:729">F</A></DD>
+<DT>display,<B><CODE>&lt;-&gt;</CODE>font_alias</B></DT>
+<DD>
+<A class="idx" href="font.html#idx:displaybothfontalias:432">10.9.2</A></DD>
+<DT>display,<B><CODE>&lt;-</CODE>win_file_name</B></DT>
+<DD>
+<A class="idx" href="findfile.html#idx:displaygetwinfilename:481">11.1</A></DD>
+<DT>@display_manager</DT>
+<DD>
+<A class="idx" href="summary.html#idx:displaymanager:789">H</A></DD>
+<DT><A class="idx" href="summary.html#class:display_manager">display_manager</A></DT>
+<DD>
+</DD>
+<DT>display_manager,<B><CODE>-&gt;</CODE>dispatch</B></DT>
+<DD>
+<A class="idx" href="control.html#idx:displaymanagersenddispatch:300">10.1.1.1</A></DD>
+<DT>display,<B><CODE>-&gt;</CODE>dispatch</B></DT>
+<DD>
+<A class="idx" href="summary.html#idx:displaysenddispatch:799">H</A></DD>
+<DT>display,<B><CODE>-&gt;</CODE>load_font_aliases</B></DT>
+<DD>
+<A class="idx" href="font.html#idx:displaysendloadfontaliases:433">10.9.2</A></DD>
+<DT>display,<B><CODE>-&gt;</CODE>report</B></DT>
+<DD>
+<A class="idx" href="report.html#idx:displaysendreport:394">10.7.3</A></DD>
+<DT>DLL</DT>
+<DD>
+<A class="idx" href="sec-B.2.html#idx:DLL:640">B.2</A></DD>
+<DT><A class="idx" href="docrender.html#doc:action/3">doc:action/3</A></DT>
+<DD>
+</DD>
+<DT>doc_mode</DT>
+<DD>
+<A class="sec" href="docrender.html#sec:11.10.1">11.10.1</A> <A class="sec" href="docrender.html#sec:11.10.3.2">11.10.3.2</A></DD>
+<DT>doc_mode,<B><CODE>&lt;-</CODE>link_colour</B></DT>
+<DD>
+<A class="idx" href="docrender.html#idx:docmodegetlinkcolour:568">11.10.3.2</A></DD>
+<DT>doc_mode,<B><CODE>&lt;-</CODE>space_mode</B></DT>
+<DD>
+<A class="idx" href="docrender.html#idx:docmodegetspacemode:548">11.10.1</A></DD>
+<DT>doc_table</DT>
+<DD>
+<A class="sec" href="docrender.html#sec:11.10.3.2">11.10.3.2</A></DD>
+<DT>drag-and-drop</DT>
+<DD>
+<A class="idx" href="sec-B.2.html#idx:draganddrop:638">B.2</A></DD>
+<DT>drag_and_drop_dict_item_gesture</DT>
+<DD>
+<A class="sec" href="dragdrop.html#sec:11.8">11.8</A></DD>
+<DT>drag_and_drop_gesture</DT>
+<DD>
+<A class="sec" href="dragdrop.html#sec:11.8">11.8</A> <A class="sec" href="dragdrop.html#sec:11.8.1">11.8.1</A> <A class="sec" href="dragdrop.html#sec:11.8.1">11.8.1</A> <A class="sec" href="dragdrop.html#sec:11.8.1">11.8.1</A></DD>
+<DT>dragbox</DT>
+<DD>
+<A class="idx" href="dragdrop.html#idx:dragbox:520">11.8</A></DD>
+<DT>@dragbox_recogniser</DT>
+<DD>
+<A class="idx" href="dragdrop.html#idx:dragboxrecogniser:521">11.8</A> <A class="idx" href="dragdrop.html#idx:dragboxrecogniser:524">11.8</A></DD>
+<DT>dragbox,<B><CODE>-&gt;</CODE>event</B></DT>
+<DD>
+<A class="idx" href="dragdrop.html#idx:dragboxsendevent:523">11.8</A></DD>
+<DT>dragdropdemo/0</DT>
+<DD>
+<A class="idx" href="dragdrop.html#idx:dragdropdemo0:525">11.8</A></DD>
+<DT>drop_picture</DT>
+<DD>
+<A class="idx" href="dragdrop.html#idx:droppicture:516">11.8</A></DD>
+<DT>drop_picture,<B><CODE>-&gt;</CODE>drop</B></DT>
+<DD>
+<A class="idx" href="dragdrop.html#idx:droppicturesenddrop:519">11.8</A></DD>
+<DT>drop_picture,<B><CODE>-&gt;</CODE>preview_drop</B></DT>
+<DD>
+<A class="idx" href="dragdrop.html#idx:droppicturesendpreviewdrop:517">11.8</A></DD>
+<DT><STRONG>E</STRONG></DT>
+<DD>
+</DD>
+<DT>editable_graphical,<B><CODE>-&gt;</CODE>event</B></DT>
+<DD>
+<A class="idx" href="sec-7.5.html#idx:editablegraphicalsendevent:252">7.5.2.1</A></DD>
+<DT>editable_text</DT>
+<DD>
+<A class="sec" href="summary.html#sec:H">H</A></DD>
+<DT><A class="idx" href="summary.html#class:editor">editor</A></DT>
+<DD>
+<A class="sec" href="sec-3.3.html#sec:3.3.1">3.3.1</A> <A class="sec" href="sec-3.3.html#sec:3.3.1">3.3.1</A> <A class="sec" href="sec-4.2.html#sec:4.2">4.2</A> <A class="sec" href="sec-7.3.html#sec:7.3.2">7.3.2</A> <A class="sec" href="sec-7.3.html#sec:7.3.2">7.3.2</A> <A class="sec" href="images.html#sec:10.10.2.2">10.10.2.2</A> <A class="sec" href="printing.html#sec:10.13.1">10.13.1</A> <A class="sec" href="sec-A.2.html#sec:A.2.2">A.2.2</A> <A class="sec" href="delegation.html#sec:C.4">C.4</A> <A class="sec" href="delegation.html#sec:C.4">C.4</A> <A class="sec" href="summary.html#sec:H">H</A> <A class="sec" href="summary.html#sec:H">H</A> <A class="sec" href="summary.html#sec:H">H</A> <A class="sec" href="summary.html#sec:H">H</A> <A class="sec" href="summary.html#sec:H">H</A> <A class="sec" href="summary.html#sec:H">H</A> <A class="sec" href="summary.html#sec:H">H</A> <A class="sec" href="summary.html#sec:H">H</A> <A class="sec" href="summary.html#sec:H">H</A> <A class="sec" href="summary.html#sec:H">H</A> <A class="sec" href="summary.html#sec:H">H</A> <A class="sec" href="summary.html#sec:H">H</A> <A class="sec" href="summary.html#sec:H">H</A> <A class="sec" href="summary.html#sec:H">H</A> <A class="sec" href="summary.html#sec:H">H</A></DD>
+<DT>editor,<B><CODE>-&gt;</CODE>margin_width</B></DT>
+<DD>
+<A class="idx" href="summary.html#idx:editorsendmarginwidth:851">H</A></DD>
+<DT>editor,<B><CODE>-&gt;</CODE>style</B></DT>
+<DD>
+<A class="idx" href="summary.html#idx:editorsendstyle:807">H</A></DD>
+<DT>editpce/1</DT>
+<DD>
+<A class="idx" href="sec-3.3.html#idx:editpce1:113">3.3.2</A></DD>
+<DT><A class="idx" href="summary.html#class:edit_text_gesture">edit_text_gesture</A></DT>
+<DD>
+</DD>
+<DT><A class="idx" href="summary.html#class:elevation">elevation</A></DT>
+<DD>
+<A class="sec" href="summary.html#sec:H">H</A> <A class="sec" href="summary.html#sec:H">H</A></DD>
+<DT><A class="idx" href="summary.html#class:ellipse">ellipse</A></DT>
+<DD>
+<A class="sec" href="sec-5.1.html#sec:5.1.1">5.1.1</A> <A class="sec" href="summary.html#sec:H">H</A></DD>
+<DT>emacs_begin_mode/5</DT>
+<DD>
+<A class="idx" href="summary.html#idx:emacsbeginmode5:845">H</A></DD>
+<DT>EMF</DT>
+<DD>
+<A class="idx" href="printing.html#idx:EMF:475">10.13.1</A></DD>
+<DT><A class="idx" href="docrender.html#emit/3">emit/3</A></DT>
+<DD>
+<A class="idx" href="docrender.html#idx:emit3:547">11.10.1</A> <A class="idx" href="docrender.html#idx:emit3:550">11.10.1</A> <A class="idx" href="docrender.html#idx:emit3:557">11.10.3</A> <A class="idx" href="docrender.html#idx:emit3:560">11.10.3.2</A> <A class="idx" href="docrender.html#idx:emit3:561">11.10.3.2</A> <A class="idx" href="docrender.html#idx:emit3:562">11.10.3.2</A> <A class="idx" href="docrender.html#idx:emit3:563">11.10.3.2</A> <A class="idx" href="docrender.html#idx:emit3:565">11.10.3.2</A> <A class="idx" href="docrender.html#idx:emit3:566">11.10.3.2</A> <A class="idx" href="docrender.html#idx:emit3:573">11.10.4</A> <A class="idx" href="docrender.html#idx:emit3:574">11.10.4</A> <A class="idx" href="docrender.html#idx:emit3:575">11.10.4</A></DD>
+<DT>enum_list</DT>
+<DD>
+<A class="sec" href="docrender.html#sec:11.10.3.2">11.10.3.2</A> <A class="sec" href="docrender.html#sec:11.10.3.2">11.10.3.2</A></DD>
+<DT><A class="idx" href="summary.html#class:error">error</A></DT>
+<DD>
+<A class="sec" href="errors.html#sec:10.8">10.8</A> <A class="sec" href="mlingual.html#sec:11.7">11.7</A> <A class="sec" href="summary.html#sec:H">H</A></DD>
+<DT>error,description of</DT>
+<DD>
+<A class="idx" href="errors.html#idx:errordescriptionof:398">10.8</A></DD>
+<DT>error,<B><CODE>&lt;-</CODE>feedback</B></DT>
+<DD>
+<A class="idx" href="errors.html#idx:errorgetfeedback:401">10.8.1</A></DD>
+<DT>@errors</DT>
+<DD>
+<A class="idx" href="errors.html#idx:errors:395">10.8</A></DD>
+<DT>errors,catching</DT>
+<DD>
+<A class="idx" href="errors.html#idx:errorscatching:399">10.8.1</A></DD>
+<DT>errors,reporting</DT>
+<DD>
+<A class="idx" href="libdia.html#idx:errorsreporting:485">11.3.1</A></DD>
+<DT>@event</DT>
+<DD>
+<A class="idx" href="exeobjects.html#idx:event:324">10.2.2</A> <A class="idx" href="exeobjects.html#idx:event:329">10.2.2</A> <A class="idx" href="application.html#idx:event:367">10.5.3</A> <A class="idx" href="report.html#idx:event:382">10.7.2</A> <A class="idx" href="dragdrop.html#idx:event:527">11.8.1</A> <A class="idx" href="glossary.html#idx:event:749">G</A> <A class="idx" href="summary.html#idx:event:857">H</A></DD>
+<DT><A class="idx" href="summary.html#class:event">event</A></DT>
+<DD>
+<A class="sec" href="summary.html#sec:H">H</A> <A class="sec" href="summary.html#sec:H">H</A></DD>
+<DT>event-driven</DT>
+<DD>
+<A class="idx" href="control.html#idx:eventdriven:282">10.1.1</A></DD>
+<DT>event,<B><CODE>&lt;-</CODE>receiver</B></DT>
+<DD>
+<A class="idx" href="sec-7.3.html#idx:eventgetreceiver:231">7.3.2</A> <A class="idx" href="report.html#idx:eventgetreceiver:383">10.7.2</A></DD>
+<DT><A class="idx" href="summary.html#class:event_node">event_node</A></DT>
+<DD>
+<A class="sec" href="summary.html#sec:H">H</A></DD>
+<DT>event,port</DT>
+<DD>
+<A class="idx" href="sec-A.1.html#idx:eventport:601">A.1.4</A></DD>
+<DT>event,processing</DT>
+<DD>
+<A class="idx" href="recogniser.html#idx:eventprocessing:178">5.5</A></DD>
+<DT>event,<B><CODE>-&gt;</CODE>is_a</B></DT>
+<DD>
+<A class="idx" href="summary.html#idx:eventsendisa:800">H</A></DD>
+<DT>event,<B><CODE>-&gt;</CODE>post</B></DT>
+<DD>
+<A class="idx" href="sec-7.3.html#idx:eventsendpost:228">7.3.2</A> <A class="idx" href="sec-7.3.html#idx:eventsendpost:232">7.3.2</A> <A class="idx" href="sec-7.3.html#idx:eventsendpost:234">7.3.2</A> <A class="idx" href="summary.html#idx:eventsendpost:797">H</A></DD>
+<DT>@event_tree</DT>
+<DD>
+<A class="idx" href="summary.html#idx:eventtree:801">H</A></DD>
+<DT><A class="idx" href="summary.html#class:event_tree">event_tree</A></DT>
+<DD>
+</DD>
+<DT>exception</DT>
+<DD>
+<A class="idx" href="errors.html#idx:exception:409">10.8.3</A></DD>
+<DT>exception-handling</DT>
+<DD>
+<A class="idx" href="namedref.html#idx:exceptionhandling:336">10.3.3</A></DD>
+<DT>executable,object</DT>
+<DD>
+<A class="idx" href="exeobjects.html#idx:executableobject:306">10.2</A></DD>
+<DT>expand_file_name/2</DT>
+<DD>
+<A class="idx" href="classvar.html#idx:expandfilename2:264">8</A></DD>
+<DT><STRONG>F</STRONG></DT>
+<DD>
+</DD>
+<DT><A class="idx" href="summary.html#class:figure">figure</A></DT>
+<DD>
+<A class="sec" href="sec-5.2.html#sec:5.2">5.2</A> <A class="sec" href="summary.html#sec:H">H</A> <A class="sec" href="summary.html#sec:H">H</A> <A class="sec" href="summary.html#sec:H">H</A> <A class="sec" href="summary.html#sec:H">H</A></DD>
+<DT>figure,<B><CODE>-&gt;</CODE>status</B></DT>
+<DD>
+<A class="idx" href="summary.html#idx:figuresendstatus:803">H</A></DD>
+<DT><A class="idx" href="summary.html#class:file">file</A></DT>
+<DD>
+<A class="sec" href="fileviewer.html#sec:2.8">2.8</A> <A class="sec" href="resources.html#sec:9">9</A> <A class="sec" href="toc.html#sec:11.4">11.4</A> <A class="sec" href="dragdrop.html#sec:11.8.1">11.8.1</A> <A class="sec" href="httpd.html#sec:11.9.1">11.9.1</A> <A class="sec" href="sec-A.2.html#sec:A.2.2">A.2.2</A> <A class="sec" href="sec-A.2.html#sec:A.2.2">A.2.2</A> <A class="sec" href="summary.html#sec:H">H</A> <A class="sec" href="summary.html#sec:H">H</A></DD>
+<DT>file,get name in Windows</DT>
+<DD>
+<A class="idx" href="findfile.html#idx:filegetnameinWindows:480">11.1</A></DD>
+<DT>file,<B><CODE>&lt;-</CODE>object</B></DT>
+<DD>
+<A class="idx" href="errors.html#idx:filegetobject:416">10.8.3</A></DD>
+<DT>file,prompting for</DT>
+<DD>
+<A class="idx" href="findfile.html#idx:filepromptingfor:477">11.1</A></DD>
+<DT>file_search_path/2</DT>
+<DD>
+<A class="idx" href="resources.html#idx:filesearchpath2:280">9</A></DD>
+<DT>@fill_pattern_menu</DT>
+<DD>
+<A class="idx" href="whoiswho.html#idx:fillpatternmenu:343">10.4.1</A></DD>
+<DT>fill_pattern_menu/1</DT>
+<DD>
+<A class="idx" href="whoiswho.html#idx:fillpatternmenu1:347">10.4.2</A></DD>
+<DT>@finder</DT>
+<DD>
+<A class="idx" href="libraries.html#idx:finder:476">11</A></DD>
+<DT>finder</DT>
+<DD>
+<A class="sec" href="libraries.html#sec:11">11</A> <A class="sec" href="findfile.html#sec:11.1">11.1</A> <A class="sec" href="findfile.html#sec:11.1">11.1</A></DD>
+<DT>finder,<B><CODE>&lt;-</CODE>file</B></DT>
+<DD>
+<A class="idx" href="findfile.html#idx:findergetfile:478">11.1</A> <A class="idx" href="findfile.html#idx:findergetfile:482">11.1</A></DD>
+<DT>finding,graphical</DT>
+<DD>
+<A class="idx" href="sec-2.2.html#idx:findinggraphical:38">2.2.3</A></DD>
+<DT>finding,graphicals</DT>
+<DD>
+<A class="idx" href="whoiswho.html#idx:findinggraphicals:350">10.4.4</A></DD>
+<DT>float</DT>
+<DD>
+<A class="idx" href="summary.html#idx:float:839">H</A></DD>
+<DT>floating point</DT>
+<DD>
+<A class="idx" href="sec-2.2.html#idx:floatingpoint:28">2.2.3</A></DD>
+<DT>folder</DT>
+<DD>
+<A class="idx" href="summary.html#idx:folder:786">H</A></DD>
+<DT><A class="idx" href="summary.html#class:font">font</A></DT>
+<DD>
+<A class="sec" href="sec-2.5.html#sec:2.5">2.5</A> <A class="sec" href="sec-3.3.html#sec:3.3.1.3">3.3.1.3</A> <A class="sec" href="font.html#sec:10.9.1.1">10.9.1.1</A> <A class="sec" href="font.html#sec:10.9.2">10.9.2</A> <A class="sec" href="tabular.html#sec:11.5.2">11.5.2</A> <A class="sec" href="docrender.html#sec:11.10">11.10</A> <A class="sec" href="docrender.html#sec:11.10.3.1">11.10.3.1</A> <A class="sec" href="summary.html#sec:H">H</A> <A class="sec" href="summary.html#sec:H">H</A></DD>
+<DT><A class="idx" href="summary.html#class:format">format</A></DT>
+<DD>
+<A class="sec" href="sec-5.2.html#sec:5.2">5.2</A> <A class="sec" href="sec-5.2.html#sec:5.2">5.2</A> <A class="sec" href="tabular.html#sec:11.5">11.5</A> <A class="sec" href="tabular.html#sec:11.5">11.5</A> <A class="sec" href="tabular.html#sec:11.5">11.5</A> <A class="sec" href="tabular.html#sec:11.5.1">11.5.1</A> <A class="sec" href="tabular.html#sec:11.5.1">11.5.1</A> <A class="sec" href="tabular.html#sec:11.5.2">11.5.2</A> <A class="sec" href="summary.html#sec:H">H</A></DD>
+<DT><A class="idx" href="summary.html#class:fragment">fragment</A></DT>
+<DD>
+<A class="sec" href="images.html#sec:10.10.2.2">10.10.2.2</A> <A class="sec" href="summary.html#sec:H">H</A> <A class="sec" href="summary.html#sec:H">H</A> <A class="sec" href="summary.html#sec:H">H</A> <A class="sec" href="summary.html#sec:H">H</A></DD>
+<DT><A class="idx" href="summary.html#class:frame">frame</A></DT>
+<DD>
+<A class="sec" href="fileviewer.html#sec:2.8">2.8</A> <A class="sec" href="fileviewer.html#sec:2.8">2.8</A> <A class="sec" href="fileviewer.html#sec:2.8">2.8</A> <A class="sec" href="application.html#sec:10.5">10.5</A> <A class="sec" href="application.html#sec:10.5.1">10.5.1</A> <A class="sec" href="application.html#sec:10.5.1">10.5.1</A> <A class="sec" href="framelayout.html#sec:10.6">10.6</A> <A class="sec" href="framelayout.html#sec:10.6">10.6</A> <A class="sec" href="framelayout.html#sec:10.6.2">10.6.2</A> <A class="sec" href="report.html#sec:10.7.2">10.7.2</A> <A class="sec" href="report.html#sec:10.7.2">10.7.2</A> <A class="sec" href="summary.html#sec:H">H</A> <A class="sec" href="summary.html#sec:H">H</A> <A class="sec" href="summary.html#sec:H">H</A> <A class="sec" href="summary.html#sec:H">H</A> <A class="sec" href="summary.html#sec:H">H</A> <A class="sec" href="summary.html#sec:H">H</A> <A class="sec" href="summary.html#sec:H">H</A> <A class="sec" href="summary.html#sec:H">H</A></DD>
+<DT>frame,<B><CODE>&lt;-</CODE>confirm</B></DT>
+<DD>
+<A class="idx" href="modal.html#idx:framegetconfirm:147">4.4</A> <A class="idx" href="modal.html#idx:framegetconfirm:149">4.4</A> <A class="idx" href="modal.html#idx:framegetconfirm:152">4.4</A> <A class="idx" href="control.html#idx:framegetconfirm:283">10.1.1.1</A> <A class="idx" href="control.html#idx:framegetconfirm:298">10.1.1.1</A></DD>
+<DT>frame,<B><CODE>&lt;-</CODE>confirm_centered</B></DT>
+<DD>
+<A class="idx" href="modal.html#idx:framegetconfirmcentered:163">4.4.1</A> <A class="idx" href="application.html#idx:framegetconfirmcentered:366">10.5.3</A></DD>
+<DT>frame,<B><CODE>&lt;-</CODE>name</B></DT>
+<DD>
+<A class="idx" href="application.html#idx:framegetname:360">10.5.1</A></DD>
+<DT>frame,layout</DT>
+<DD>
+<A class="idx" href="framelayout.html#idx:framelayout:368">10.6</A></DD>
+<DT>frame,<B><CODE>-&gt;</CODE>application</B></DT>
+<DD>
+<A class="idx" href="application.html#idx:framesendapplication:355">10.5.1</A></DD>
+<DT>frame,<B><CODE>-&gt;</CODE>delete</B></DT>
+<DD>
+<A class="idx" href="framelayout.html#idx:framesenddelete:375">10.6.2</A></DD>
+<DT>frame,<B><CODE>-&gt;</CODE>fit</B></DT>
+<DD>
+<A class="idx" href="sec-4.3.html#idx:framesendfit:139">4.3</A> <A class="idx" href="framelayout.html#idx:framesendfit:376">10.6.2</A></DD>
+<DT>frame,<B><CODE>-&gt;</CODE>icon</B></DT>
+<DD>
+<A class="idx" href="images.html#idx:framesendicon:455">10.10.2.2</A></DD>
+<DT>frame,<B><CODE>-&gt;</CODE>label</B></DT>
+<DD>
+<A class="idx" href="docrender.html#idx:framesendlabel:567">11.10.3.2</A></DD>
+<DT>frame,<B><CODE>-&gt;</CODE>modal</B></DT>
+<DD>
+<A class="idx" href="application.html#idx:framesendmodal:356">10.5.1</A> <A class="idx" href="application.html#idx:framesendmodal:365">10.5.3</A></DD>
+<DT>frame,<B><CODE>-&gt;</CODE>open</B></DT>
+<DD>
+<A class="idx" href="modal.html#idx:framesendopen:150">4.4</A></DD>
+<DT>frame,<B><CODE>-&gt;</CODE>report</B></DT>
+<DD>
+<A class="idx" href="report.html#idx:framesendreport:387">10.7.2</A></DD>
+<DT>frame,<B><CODE>-&gt;</CODE>return</B></DT>
+<DD>
+<A class="idx" href="modal.html#idx:framesendreturn:148">4.4</A> <A class="idx" href="modal.html#idx:framesendreturn:151">4.4</A> <A class="idx" href="modal.html#idx:framesendreturn:164">4.4.1</A> <A class="idx" href="sec-A.1.html#idx:framesendreturn:613">A.1.6</A></DD>
+<DT>frame,<B><CODE>-&gt;</CODE>status</B></DT>
+<DD>
+<A class="idx" href="application.html#idx:framesendstatus:363">10.5.2</A></DD>
+<DT>frame,<B><CODE>-&gt;</CODE>transient_for</B></DT>
+<DD>
+<A class="idx" href="modal.html#idx:framesendtransientfor:162">4.4.1</A></DD>
+<DT><A class="idx" href="sec-D.1.html#free/1">free/1</A></DT>
+<DD>
+<A class="idx" href="sec-2.2.html#idx:free1:41">2.2.4</A> <A class="idx" href="sec-2.9.html#idx:free1:77">2.9</A> <A class="idx" href="namedref.html#idx:free1:342">10.3.4</A> <A class="idx" href="sec-D.1.html#idx:free1:662">D.1</A> <A class="idx" href="sec-E.1.html#idx:free1:711">E.1</A></DD>
+<DT><A class="idx" href="summary.html#class:function">function</A></DT>
+<DD>
+<A class="sec" href="sec-3.2.html#sec:3.2.1">3.2.1</A> <A class="sec" href="sec-4.5.html#sec:4.5">4.5</A> <A class="sec" href="prologdata.html#sec:6.2">6.2</A> <A class="idx" href="prologdata.html#idx:function:183">6.2</A> <A class="sec" href="exeobjects.html#sec:10.2.2">10.2.2</A> <A class="sec" href="summary.html#sec:H">H</A> <A class="sec" href="summary.html#sec:H">H</A> <A class="sec" href="summary.html#sec:H">H</A> <A class="sec" href="summary.html#sec:H">H</A> <A class="sec" href="summary.html#sec:H">H</A></DD>
+<DT><STRONG>G</STRONG></DT>
+<DD>
+</DD>
+<DT>garbage collection</DT>
+<DD>
+<A class="idx" href="sec-E.1.html#idx:garbagecollection:702">E.1</A></DD>
+<DT><A class="idx" href="summary.html#class:gesture">gesture</A></DT>
+<DD>
+<A class="sec" href="recogniser.html#sec:5.5">5.5</A> <A class="sec" href="summary.html#sec:H">H</A> <A class="sec" href="summary.html#sec:H">H</A> <A class="sec" href="summary.html#sec:H">H</A> <A class="sec" href="summary.html#sec:H">H</A> <A class="sec" href="summary.html#sec:H">H</A></DD>
+<DT><A class="idx" href="sec-D.1.html#get/3">get/3</A></DT>
+<DD>
+<A class="idx" href="sec-2.2.html#idx:get3:24">2.2.3</A> <A class="idx" href="sec-2.2.html#idx:get3:34">2.2.3</A> <A class="idx" href="sec-2.2.html#idx:get3:36">2.2.3</A> <A class="idx" href="sec-2.2.html#idx:get3:43">2.2.4</A> <A class="idx" href="sendmanyargs.html#idx:get3:59">2.6</A> <A class="idx" href="sendmanyargs.html#idx:get3:63">2.6</A> <A class="idx" href="sec-7.3.html#idx:get3:214">7.3</A></DD>
+<DT>get/[3-13]</DT>
+<DD>
+<A class="idx" href="sendmanyargs.html#idx:get313:61">2.6</A> <A class="idx" href="sec-2.9.html#idx:get313:76">2.9</A> <A class="idx" href="classvaraccess.html#idx:get313:265">8.1</A> <A class="idx" href="sec-C.3.html#idx:get313:646">C.3</A> <A class="idx" href="sec-D.2.html#idx:get313:694">D.2.1</A> <A class="idx" href="sec-D.2.html#idx:get313:695">D.2.1</A> <A class="idx" href="sec-E.2.html#idx:get313:719">E.2</A> <A class="idx" href="sec-E.2.html#idx:get313:721">E.2</A> <A class="idx" href="sec-E.2.html#idx:get313:724">E.2</A> <A class="idx" href="trouble.html#idx:get313:735">F</A> <A class="idx" href="trouble.html#idx:get313:738">F</A> <A class="idx" href="glossary.html#idx:get313:742">G</A> <A class="idx" href="summary.html#idx:get313:760">H</A></DD>
+<DT>get/[4-13]</DT>
+<DD>
+<A class="idx" href="sec-7.3.html#idx:get413:216">7.3</A></DD>
+<DT><A class="idx" href="sec-D.2.html#get_chain/3">get_chain/3</A></DT>
+<DD>
+</DD>
+<DT><A class="idx" href="sec-D.1.html#get_class/3">get_class/3</A></DT>
+<DD>
+<A class="idx" href="sec-7.3.html#idx:getclass3:208">7.3</A> <A class="idx" href="sec-7.3.html#idx:getclass3:222">7.3</A></DD>
+<DT><A class="idx" href="sec-7.3.html#get_class/4">get_class/4</A></DT>
+<DD>
+<A class="idx" href="sec-D.1.html#idx:getclass4:665">D.1</A> <A class="idx" href="sec-D.1.html#idx:getclass4:669">D.1</A></DD>
+<DT><A class="idx" href="sec-7.5.html#get_implementation/4">get_implementation/4</A></DT>
+<DD>
+</DD>
+<DT><A class="idx" href="summary.html#class:get_method">get_method</A></DT>
+<DD>
+<A class="sec" href="summary.html#sec:H">H</A> <A class="sec" href="summary.html#sec:H">H</A></DD>
+<DT><A class="idx" href="sec-D.2.html#get_object/[3-13]">get_object/[3-13]</A></DT>
+<DD>
+</DD>
+<DT>get,port</DT>
+<DD>
+<A class="idx" href="sec-A.1.html#idx:getport:600">A.1.4</A></DD>
+<DT><A class="idx" href="sec-7.3.html#get_super/3">get_super/3</A></DT>
+<DD>
+<A class="idx" href="sec-7.3.html#idx:getsuper3:218">7.3</A></DD>
+<DT>get_super/[3-13]</DT>
+<DD>
+<A class="idx" href="sec-7.3.html#idx:getsuper313:206">7.3</A> <A class="idx" href="sec-D.1.html#idx:getsuper313:667">D.1</A></DD>
+<DT>GIF,file format</DT>
+<DD>
+<A class="idx" href="images.html#idx:GIFfileformat:448">10.10.2</A></DD>
+<DT>global objects</DT>
+<DD>
+<A class="idx" href="sec-3.1.html#idx:globalobjects:82">3.1</A></DD>
+<DT>global objects,with reconsult</DT>
+<DD>
+<A class="idx" href="namedref.html#idx:globalobjectswithreconsult:338">10.3.3</A></DD>
+<DT>GNU-Emacs</DT>
+<DD>
+<A class="idx" href="summary.html#idx:GNUEmacs:790">H</A></DD>
+<DT>go/1</DT>
+<DD>
+<A class="idx" href="httpd.html#idx:go1:532">11.9</A></DD>
+<DT>goal_expansion/2</DT>
+<DD>
+<A class="idx" href="sendmanyargs.html#idx:goalexpansion2:64">2.6</A></DD>
+<DT>graph</DT>
+<DD>
+<A class="idx" href="connection.html#idx:graph:177">5.3</A></DD>
+<DT><A class="idx" href="summary.html#class:graphical">graphical</A></DT>
+<DD>
+<A class="sec" href="sec-2.5.html#sec:2.5">2.5</A> <A class="sec" href="sec-3.3.html#sec:3.3.1.2">3.3.1.2</A> <A class="sec" href="sec-3.3.html#sec:3.3.1.2">3.3.1.2</A> <A class="sec" href="sec-3.3.html#sec:3.3.2">3.3.2</A> <A class="sec" href="sec-3.3.html#sec:3.3.2">3.3.2</A> <A class="sec" href="connection.html#sec:5.3">5.3</A> <A class="sec" href="connection.html#sec:5.3">5.3</A> <A class="sec" href="sec-7.3.html#sec:7.3.1">7.3.1</A> <A class="sec" href="sec-7.3.html#sec:7.3.2">7.3.2</A> <A class="sec" href="images.html#sec:10.10.2.2">10.10.2.2</A> <A class="sec" href="printing.html#sec:10.13.1">10.13.1</A> <A class="sec" href="balloon.html#sec:11.2">11.2</A> <A class="sec" href="balloon.html#sec:11.2">11.2</A> <A class="sec" href="dragdrop.html#sec:11.8">11.8</A> <A class="sec" href="httpd.html#sec:11.9">11.9</A> <A class="sec" href="httpd.html#sec:11.9.1">11.9.1</A> <A class="sec" href="docrender.html#sec:11.10">11.10</A> <A class="sec" href="summary.html#sec:H">H</A> <A class="sec" href="summary.html#sec:H">H</A> <A class="sec" href="summary.html#sec:H">H</A> <A class="sec" href="summary.html#sec:H">H</A> <A class="sec" href="summary.html#sec:H">H</A> <A class="sec" href="summary.html#sec:H">H</A> <A class="sec" href="summary.html#sec:H">H</A></DD>
+<DT>graphical,<B><CODE>&lt;-&gt;</CODE>layout_interface</B></DT>
+<DD>
+<A class="idx" href="tabular.html#idx:graphicalbothlayoutinterface:500">11.5.2</A></DD>
+<DT>graphical,finding</DT>
+<DD>
+<A class="idx" href="sec-2.2.html#idx:graphicalfinding:37">2.2.3</A> <A class="idx" href="whoiswho.html#idx:graphicalfinding:349">10.4.4</A></DD>
+<DT>graphical,name</DT>
+<DD>
+<A class="idx" href="whoiswho.html#idx:graphicalname:351">10.4.4</A></DD>
+<DT>graphical,<B><CODE>-&gt;</CODE>alert</B></DT>
+<DD>
+<A class="idx" href="report.html#idx:graphicalsendalert:391">10.7.2.1</A></DD>
+<DT>graphical,<B><CODE>-&gt;</CODE>draw</B></DT>
+<DD>
+<A class="idx" href="ugraphics.html#idx:graphicalsenddraw:467">10.12.1</A></DD>
+<DT>graphical,<B><CODE>-&gt;</CODE>event</B></DT>
+<DD>
+<A class="idx" href="sec-7.3.html#idx:graphicalsendevent:229">7.3.2</A> <A class="idx" href="sec-7.3.html#idx:graphicalsendevent:233">7.3.2</A> <A class="idx" href="namedref.html#idx:graphicalsendevent:341">10.3.4</A> <A class="idx" href="summary.html#idx:graphicalsendevent:809">H</A></DD>
+<DT>graphical,<B><CODE>-&gt;</CODE>flush</B></DT>
+<DD>
+<A class="idx" href="sec-5.1.html#idx:graphicalsendflush:173">5.1</A> <A class="idx" href="report.html#idx:graphicalsendflush:390">10.7.2.1</A></DD>
+<DT>graphical,<B><CODE>-&gt;</CODE>preview_drop</B></DT>
+<DD>
+<A class="idx" href="dragdrop.html#idx:graphicalsendpreviewdrop:515">11.8</A></DD>
+<DT>graphical,<B><CODE>-&gt;</CODE>recogniser</B></DT>
+<DD>
+<A class="idx" href="namedref.html#idx:graphicalsendrecogniser:340">10.3.4</A> <A class="idx" href="summary.html#idx:graphicalsendrecogniser:798">H</A></DD>
+<DT>graphical,<B><CODE>-&gt;</CODE>_redraw_area</B></DT>
+<DD>
+<A class="idx" href="ugraphics.html#idx:graphicalsendredrawarea:466">10.12</A></DD>
+<DT>graphical,window</DT>
+<DD>
+<A class="idx" href="sec-5.1.html#idx:graphicalwindow:170">5.1</A></DD>
+<DT><A class="idx" href="summary.html#class:grbox">grbox</A></DT>
+<DD>
+<A class="sec" href="docrender.html#sec:11.10">11.10</A> <A class="sec" href="docrender.html#sec:11.10">11.10</A> <A class="sec" href="docrender.html#sec:11.10">11.10</A> <A class="sec" href="summary.html#sec:H">H</A> <A class="sec" href="summary.html#sec:H">H</A></DD>
+<DT>groupware</DT>
+<DD>
+<A class="idx" href="httpd.html#idx:groupware:531">11.9</A></DD>
+<DT>gsview</DT>
+<DD>
+<A class="idx" href="printing.html#idx:gsview:472">10.13.1</A></DD>
+<DT><STRONG>H</STRONG></DT>
+<DD>
+</DD>
+<DT>@h</DT>
+<DD>
+<A class="idx" href="docrender.html#idx:h:555">11.10.2</A> <A class="idx" href="docrender.html#idx:h:556">11.10.2</A></DD>
+<DT><A class="idx" href="summary.html#class:handle">handle</A></DT>
+<DD>
+<A class="sec" href="connection.html#sec:5.3">5.3</A> <A class="sec" href="connection.html#sec:5.3">5.3</A> <A class="sec" href="sec-7.1.html#sec:7.1.1.1">7.1.1.1</A> <A class="sec" href="sec-7.1.html#sec:7.1.1.1">7.1.1.1</A> <A class="sec" href="sec-7.1.html#sec:7.1.1.1">7.1.1.1</A> <A class="sec" href="summary.html#sec:H">H</A> <A class="sec" href="summary.html#sec:H">H</A> <A class="sec" href="summary.html#sec:H">H</A> <A class="sec" href="summary.html#sec:H">H</A></DD>
+<DT><A class="idx" href="sec-7.1.html#handle/3,4">handle/3,4</A></DT>
+<DD>
+</DD>
+<DT>handle,<B><CODE>&lt;-</CODE>kind</B></DT>
+<DD>
+<A class="idx" href="summary.html#idx:handlegetkind:765">H</A></DD>
+<DT><A class="idx" href="summary.html#class:handler">handler</A></DT>
+<DD>
+<A class="sec" href="recogniser.html#sec:5.5">5.5</A> <A class="sec" href="recogniser.html#sec:5.5">5.5</A> <A class="sec" href="summary.html#sec:H">H</A> <A class="sec" href="summary.html#sec:H">H</A> <A class="sec" href="summary.html#sec:H">H</A></DD>
+<DT><A class="idx" href="summary.html#class:handler_group">handler_group</A></DT>
+<DD>
+<A class="sec" href="recogniser.html#sec:5.5">5.5</A> <A class="sec" href="summary.html#sec:H">H</A></DD>
+<DT><A class="idx" href="summary.html#class:hash_table">hash_table</A></DT>
+<DD>
+<A class="sec" href="summary.html#sec:H">H</A> <A class="sec" href="summary.html#sec:H">H</A> <A class="sec" href="summary.html#sec:H">H</A></DD>
+<DT><A class="idx" href="summary.html#class:hbox">hbox</A></DT>
+<DD>
+<A class="sec" href="docrender.html#sec:11.10">11.10</A> <A class="sec" href="docrender.html#sec:11.10">11.10</A> <A class="sec" href="docrender.html#sec:11.10">11.10</A> <A class="sec" href="docrender.html#sec:11.10">11.10</A> <A class="sec" href="docrender.html#sec:11.10.2">11.10.2</A> <A class="sec" href="docrender.html#sec:11.10.2">11.10.2</A> <A class="sec" href="docrender.html#sec:11.10.2">11.10.2</A> <A class="sec" href="summary.html#sec:H">H</A> <A class="sec" href="summary.html#sec:H">H</A></DD>
+<DT>help,on manual</DT>
+<DD>
+<A class="idx" href="sec-3.1.html#idx:helponmanual:91">3.1</A></DD>
+<DT>@hfill</DT>
+<DD>
+<A class="idx" href="docrender.html#idx:hfill:553">11.10.2</A></DD>
+<DT>hierarchy,of UI components</DT>
+<DD>
+<A class="idx" href="vishierarchy.html#idx:hierarchyofUIcomponents:588">12.4</A></DD>
+<DT>home,web</DT>
+<DD>
+<A class="idx" href="faq.html#idx:homeweb:1">1.2</A></DD>
+<DT><A class="idx" href="summary.html#class:host">host</A></DT>
+<DD>
+<A class="sec" href="sec-2.9.html#sec:2.9">2.9</A> <A class="sec" href="control.html#sec:10.1.1.1">10.1.1.1</A> <A class="sec" href="control.html#sec:10.1.1.1">10.1.1.1</A> <A class="sec" href="summary.html#sec:H">H</A> <A class="sec" href="summary.html#sec:H">H</A></DD>
+<DT><A class="idx" href="summary.html#class:host_data">host_data</A></DT>
+<DD>
+</DD>
+<DT>host,<B><CODE>&lt;-</CODE>messages</B></DT>
+<DD>
+<A class="idx" href="control.html#idx:hostgetmessages:289">10.1.1.1</A></DD>
+<DT>host-language</DT>
+<DD>
+<A class="idx" href="summary.html#idx:hostlanguage:811">H</A></DD>
+<DT>httpd</DT>
+<DD>
+<A class="sec" href="libraries.html#sec:11">11</A> <A class="sec" href="httpd.html#sec:11.9">11.9</A> <A class="sec" href="httpd.html#sec:11.9.1">11.9.1</A> <A class="sec" href="httpd.html#sec:11.9.1">11.9.1</A></DD>
+<DT><A class="idx" href="summary.html#class:hyper">hyper</A></DT>
+<DD>
+<A class="sec" href="sec-7.3.html#sec:7.3.2">7.3.2</A> <A class="sec" href="hyper.html#sec:10.11">10.11</A> <A class="sec" href="hyper.html#sec:10.11.1">10.11.1</A> <A class="sec" href="summary.html#sec:H">H</A> <A class="sec" href="summary.html#sec:H">H</A></DD>
+<DT><STRONG>I</STRONG></DT>
+<DD>
+</DD>
+<DT>ICO,file format</DT>
+<DD>
+<A class="idx" href="images.html#idx:ICOfileformat:444">10.10.2</A></DD>
+<DT>icon</DT>
+<DD>
+<A class="idx" href="images.html#idx:icon:454">10.10.2</A> <A class="sec" href="tabular.html#sec:11.5.1">11.5.1</A></DD>
+<DT><A class="idx" href="summary.html#class:identity">identity</A></DT>
+<DD>
+<A class="sec" href="summary.html#sec:H">H</A> <A class="sec" href="summary.html#sec:H">H</A> <A class="sec" href="summary.html#sec:H">H</A></DD>
+<DT><A class="idx" href="summary.html#class:if">if</A></DT>
+<DD>
+<A class="sec" href="exeobjects.html#sec:10.2.1">10.2.1</A> <A class="sec" href="exeobjects.html#sec:10.2.1">10.2.1</A> <A class="sec" href="summary.html#sec:H">H</A> <A class="sec" href="summary.html#sec:H">H</A> <A class="sec" href="summary.html#sec:H">H</A> <A class="sec" href="summary.html#sec:H">H</A></DD>
+<DT><A class="idx" href="summary.html#class:image">image</A></DT>
+<DD>
+<A class="sec" href="sec-2.5.html#sec:2.5">2.5</A> <A class="sec" href="sec-3.3.html#sec:3.3.1.3">3.3.1.3</A> <A class="sec" href="images.html#sec:10.10.2">10.10.2</A> <A class="sec" href="images.html#sec:10.10.2.2">10.10.2.2</A> <A class="sec" href="ugraphics.html#sec:10.12.3">10.12.3</A> <A class="sec" href="printing.html#sec:10.13.1">10.13.1</A> <A class="sec" href="libdia.html#sec:11.3.2">11.3.2</A> <A class="sec" href="mlingual.html#sec:11.7">11.7</A> <A class="sec" href="summary.html#sec:H">H</A> <A class="sec" href="summary.html#sec:H">H</A> <A class="sec" href="summary.html#sec:H">H</A> <A class="sec" href="summary.html#sec:H">H</A> <A class="sec" href="summary.html#sec:H">H</A> <A class="sec" href="summary.html#sec:H">H</A> <A class="sec" href="summary.html#sec:H">H</A></DD>
+<DT>image,file formats</DT>
+<DD>
+<A class="idx" href="images.html#idx:imagefileformats:451">10.10.2</A></DD>
+<DT>image,<B><CODE>&lt;-</CODE>hot_spot</B></DT>
+<DD>
+<A class="idx" href="images.html#idx:imagegethotspot:442">10.10.2</A></DD>
+<DT>image,<B><CODE>&lt;-</CODE>mask</B></DT>
+<DD>
+<A class="idx" href="images.html#idx:imagegetmask:441">10.10.2</A></DD>
+<DT>image/gif</DT>
+<DD>
+<A class="idx" href="httpd.html#idx:imagegif:543">11.9.1</A></DD>
+<DT>image/jpeg</DT>
+<DD>
+<A class="idx" href="httpd.html#idx:imagejpeg:544">11.9.1</A></DD>
+<DT>image,<B><CODE>-&gt;</CODE>save_in</B></DT>
+<DD>
+<A class="idx" href="httpd.html#idx:imagesendsavein:545">11.9.1</A></DD>
+<DT>image,shape</DT>
+<DD>
+<A class="idx" href="images.html#idx:imageshape:452">10.10.2</A></DD>
+<DT>inheritance,multiple</DT>
+<DD>
+<A class="idx" href="delegation.html#idx:inheritancemultiple:649">C.4</A></DD>
+<DT>inheritance,of classes</DT>
+<DD>
+<A class="idx" href="sec-C.2.html#idx:inheritanceofclasses:643">C.2.1</A></DD>
+<DT>initialisation,failed</DT>
+<DD>
+<A class="idx" href="errors.html#idx:initialisationfailed:428">10.8.3</A></DD>
+<DT>inspecting instances</DT>
+<DD>
+<A class="idx" href="sec-3.1.html#idx:inspectinginstances:87">3.1</A></DD>
+<DT>inspector</DT>
+<DD>
+<A class="idx" href="inspector.html#idx:inspector:591">12.5</A></DD>
+<DT>int</DT>
+<DD>
+<A class="idx" href="sec-2.2.html#idx:int:27">2.2.3</A> <A class="idx" href="summary.html#idx:int:827">H</A></DD>
+<DT>@Integer</DT>
+<DD>
+<A class="idx" href="sec-D.1.html#idx:Integer:670">D.1</A> <A class="idx" href="glossary.html#idx:Integer:743">G</A></DD>
+<DT>interpolated</DT>
+<DD>
+<A class="idx" href="summary.html#idx:interpolated:829">H</A></DD>
+<DT><A class="idx" href="summary.html#class:int_item">int_item</A></DT>
+<DD>
+<A class="sec" href="sec-4.2.html#sec:4.2">4.2</A></DD>
+<DT><STRONG>J</STRONG></DT>
+<DD>
+</DD>
+<DT><A class="idx" href="summary.html#class:joint">joint</A></DT>
+<DD>
+<A class="sec" href="summary.html#sec:H">H</A> <A class="sec" href="summary.html#sec:H">H</A></DD>
+<DT>joint,<B><CODE>-&gt;</CODE>arrows</B></DT>
+<DD>
+<A class="idx" href="summary.html#idx:jointsendarrows:753">H</A></DD>
+<DT>JPEG,file format</DT>
+<DD>
+<A class="idx" href="images.html#idx:JPEGfileformat:447">10.10.2</A></DD>
+<DT><STRONG>K</STRONG></DT>
+<DD>
+</DD>
+<DT><A class="idx" href="summary.html#class:key_binding">key_binding</A></DT>
+<DD>
+<A class="sec" href="recogniser.html#sec:5.5">5.5</A> <A class="sec" href="summary.html#sec:H">H</A> <A class="sec" href="summary.html#sec:H">H</A> <A class="sec" href="summary.html#sec:H">H</A> <A class="sec" href="summary.html#sec:H">H</A></DD>
+<DT>keyboard-accelerators</DT>
+<DD>
+<A class="idx" href="summary.html#idx:keyboardaccelerators:817">H</A></DD>
+<DT><STRONG>L</STRONG></DT>
+<DD>
+</DD>
+<DT><A class="idx" href="summary.html#class:label">label</A></DT>
+<DD>
+<A class="sec" href="sec-4.2.html#sec:4.2">4.2</A> <A class="sec" href="report.html#sec:10.7.2">10.7.2</A> <A class="sec" href="report.html#sec:10.7.2">10.7.2</A> <A class="sec" href="images.html#sec:10.10.2.2">10.10.2.2</A> <A class="sec" href="libdia.html#sec:11.3.1">11.3.1</A> <A class="sec" href="summary.html#sec:H">H</A></DD>
+<DT><A class="idx" href="summary.html#class:label_box">label_box</A></DT>
+<DD>
+</DD>
+<DT>label,<B><CODE>-&gt;</CODE>report</B></DT>
+<DD>
+<A class="idx" href="sec-7.5.html#idx:labelsendreport:248">7.5.2</A> <A class="idx" href="report.html#idx:labelsendreport:393">10.7.3</A></DD>
+<DT>label,<B><CODE>-&gt;</CODE>selection</B></DT>
+<DD>
+<A class="idx" href="images.html#idx:labelsendselection:457">10.10.2.2</A></DD>
+<DT>lambda</DT>
+<DD>
+<A class="idx" href="summary.html#idx:lambda:764">H</A></DD>
+<DT>lambda functions</DT>
+<DD>
+<A class="idx" href="exeobjects.html#idx:lambdafunctions:308">10.2</A></DD>
+<DT>layout, in dialog</DT>
+<DD>
+<A class="idx" href="sec-4.3.html#idx:layoutindialog:126">4.3</A></DD>
+<DT><A class="idx" href="summary.html#class:layout_interface">layout_interface</A></DT>
+<DD>
+<A class="sec" href="summary.html#sec:H">H</A></DD>
+<DT>layout,manager</DT>
+<DD>
+<A class="idx" href="tabular.html#idx:layoutmanager:498">11.5.2</A></DD>
+<DT><A class="idx" href="summary.html#class:layout_manager">layout_manager</A></DT>
+<DD>
+<A class="sec" href="summary.html#sec:H">H</A></DD>
+<DT>layout of graphicals</DT>
+<DD>
+<A class="idx" href="summary.html#idx:layoutofgraphicals:804">H</A></DD>
+<DT>layout,window</DT>
+<DD>
+<A class="idx" href="framelayout.html#idx:layoutwindow:370">10.6</A></DD>
+<DT><A class="idx" href="summary.html#class:lbox">lbox</A></DT>
+<DD>
+<A class="sec" href="docrender.html#sec:11.10">11.10</A> <A class="sec" href="docrender.html#sec:11.10.3.2">11.10.3.2</A></DD>
+<DT><A class="idx" href="summary.html#class:line">line</A></DT>
+<DD>
+<A class="sec" href="sec-5.1.html#sec:5.1.1">5.1.1</A> <A class="sec" href="sec-5.1.html#sec:5.1.1">5.1.1</A> <A class="sec" href="connection.html#sec:5.3">5.3</A> <A class="sec" href="connection.html#sec:5.3">5.3</A> <A class="sec" href="summary.html#sec:H">H</A> <A class="sec" href="summary.html#sec:H">H</A> <A class="sec" href="summary.html#sec:H">H</A></DD>
+<DT>line-wrapping</DT>
+<DD>
+<A class="idx" href="summary.html#idx:linewrapping:847">H</A></DD>
+<DT><A class="idx" href="summary.html#class:link">link</A></DT>
+<DD>
+<A class="sec" href="connection.html#sec:5.3">5.3</A> <A class="sec" href="summary.html#sec:H">H</A> <A class="sec" href="summary.html#sec:H">H</A> <A class="sec" href="summary.html#sec:H">H</A></DD>
+<DT><A class="idx" href="summary.html#class:list_browser">list_browser</A></DT>
+<DD>
+<A class="sec" href="sec-4.2.html#sec:4.2">4.2</A> <A class="sec" href="images.html#sec:10.10.2.2">10.10.2.2</A> <A class="sec" href="dragdrop.html#sec:11.8">11.8</A> <A class="sec" href="sec-A.2.html#sec:A.2.2">A.2.2</A> <A class="sec" href="summary.html#sec:H">H</A> <A class="sec" href="summary.html#sec:H">H</A> <A class="sec" href="summary.html#sec:H">H</A> <A class="sec" href="summary.html#sec:H">H</A> <A class="sec" href="summary.html#sec:H">H</A> <A class="sec" href="summary.html#sec:H">H</A> <A class="sec" href="summary.html#sec:H">H</A> <A class="sec" href="summary.html#sec:H">H</A> <A class="sec" href="summary.html#sec:H">H</A> <A class="sec" href="summary.html#sec:H">H</A></DD>
+<DT>list_browser,<B><CODE>-&gt;</CODE>members</B></DT>
+<DD>
+<A class="idx" href="sec-A.2.html#idx:listbrowsersendmembers:619">A.2.2</A> <A class="idx" href="sec-A.2.html#idx:listbrowsersendmembers:622">A.2.2</A></DD>
+<DT>look-and-feel</DT>
+<DD>
+<A class="idx" href="sec-1.5.html#idx:lookandfeel:10">1.5</A></DD>
+<DT><STRONG>M</STRONG></DT>
+<DD>
+</DD>
+<DT><A class="idx" href="sec-A.1.html#make_dialog/2">make_dialog/2</A></DT>
+<DD>
+<A class="idx" href="dialogeditor.html#idx:makedialog2:594">A</A> <A class="idx" href="sec-A.1.html#idx:makedialog2:605">A.1.6</A> <A class="idx" href="sec-A.1.html#idx:makedialog2:606">A.1.6</A> <A class="idx" href="sec-A.1.html#idx:makedialog2:609">A.1.6</A> <A class="idx" href="sec-A.1.html#idx:makedialog2:610">A.1.6</A> <A class="idx" href="sec-A.1.html#idx:makedialog2:612">A.1.6</A> <A class="idx" href="sec-A.1.html#idx:makedialog2:614">A.1.7</A></DD>
+<DT>make_dragbox_recogniser/1</DT>
+<DD>
+<A class="idx" href="dragdrop.html#idx:makedragboxrecogniser1:522">11.8</A></DD>
+<DT>make_picture/1</DT>
+<DD>
+<A class="idx" href="httpd.html#idx:makepicture1:539">11.9</A></DD>
+<DT>make_verbose_dialog/0</DT>
+<DD>
+<A class="idx" href="prologdata.html#idx:makeverbosedialog0:187">6.2.1</A></DD>
+<DT><A class="idx" href="sec-D.2.html#manpce/0">manpce/0</A></DT>
+<DD>
+<A class="idx" href="sec-A.1.html#idx:manpce0:596">A.1.1</A> <A class="idx" href="sec-D.2.html#idx:manpce0:700">D.2.3</A></DD>
+<DT><A class="idx" href="sec-D.2.html#manpce/1">manpce/1</A></DT>
+<DD>
+<A class="idx" href="sec-3.3.html#idx:manpce1:111">3.3.2</A></DD>
+<DT>mathematical symbols</DT>
+<DD>
+<A class="idx" href="font.html#idx:mathematicalsymbols:431">10.9.2</A></DD>
+<DT>memory usage</DT>
+<DD>
+<A class="idx" href="sec-E.3.html#idx:memoryusage:727">E.3</A></DD>
+<DT><A class="idx" href="summary.html#class:menu">menu</A></DT>
+<DD>
+<A class="sec" href="sec-4.2.html#sec:4.2">4.2</A> <A class="sec" href="sec-4.3.html#sec:4.3">4.3</A> <A class="sec" href="balloon.html#sec:11.2">11.2</A> <A class="sec" href="summary.html#sec:H">H</A> <A class="sec" href="summary.html#sec:H">H</A> <A class="sec" href="summary.html#sec:H">H</A></DD>
+<DT><A class="idx" href="summary.html#class:menu_bar">menu_bar</A></DT>
+<DD>
+<A class="sec" href="sec-4.2.html#sec:4.2">4.2</A> <A class="sec" href="libdia.html#sec:11.3.3">11.3.3</A> <A class="sec" href="summary.html#sec:H">H</A></DD>
+<DT><A class="idx" href="summary.html#class:menu_item">menu_item</A></DT>
+<DD>
+<A class="sec" href="summary.html#sec:H">H</A> <A class="sec" href="summary.html#sec:H">H</A></DD>
+<DT>menu_item,<B><CODE>&lt;-&gt;</CODE>accelerator</B></DT>
+<DD>
+<A class="idx" href="summary.html#idx:menuitembothaccelerator:818">H</A></DD>
+<DT>menu_item,<B><CODE>-&gt;</CODE>selection</B></DT>
+<DD>
+<A class="idx" href="images.html#idx:menuitemsendselection:458">10.10.2.2</A></DD>
+<DT>menu,<B><CODE>-&gt;</CODE>kind</B></DT>
+<DD>
+<A class="idx" href="summary.html#idx:menusendkind:819">H</A></DD>
+<DT><A class="idx" href="summary.html#class:message">message</A></DT>
+<DD>
+<A class="sec" href="fileviewer.html#sec:2.8">2.8</A> <A class="sec" href="sec-2.9.html#sec:2.9">2.9</A> <A class="sec" href="sec-4.1.html#sec:4.1">4.1</A> <A class="sec" href="recogniser.html#sec:5.5">5.5</A> <A class="sec" href="control.html#sec:10.1.1.1">10.1.1.1</A> <A class="sec" href="exeobjects.html#sec:10.2">10.2</A> <A class="sec" href="exeobjects.html#sec:10.2.1">10.2.1</A> <A class="sec" href="exeobjects.html#sec:10.2.2">10.2.2</A> <A class="sec" href="glossary.html#sec:G">G</A> <A class="sec" href="summary.html#sec:H">H</A> <A class="sec" href="summary.html#sec:H">H</A></DD>
+<DT>message,<B><CODE>-&gt;</CODE>execute</B></DT>
+<DD>
+<A class="idx" href="exeobjects.html#idx:messagesendexecute:331">10.2.2</A></DD>
+<DT>messages,reporting</DT>
+<DD>
+<A class="idx" href="libdia.html#idx:messagesreporting:484">11.3.1</A></DD>
+<DT>meta</DT>
+<DD>
+<A class="idx" href="summary.html#idx:meta:823">H</A></DD>
+<DT><A class="idx" href="summary.html#class:method">method</A></DT>
+<DD>
+<A class="sec" href="glossary.html#sec:G">G</A> <A class="sec" href="summary.html#sec:H">H</A> <A class="sec" href="summary.html#sec:H">H</A> <A class="sec" href="summary.html#sec:H">H</A></DD>
+<DT>mime-type</DT>
+<DD>
+<A class="idx" href="httpd.html#idx:mimetype:542">11.9.1</A></DD>
+<DT>MIT_MAGIC_COOKIE</DT>
+<DD>
+<A class="idx" href="trouble.html#idx:MITMAGICCOOKIE:731">F</A></DD>
+<DT>modal</DT>
+<DD>
+<A class="idx" href="control.html#idx:modal:302">10.1.2</A> <A class="idx" href="application.html#idx:modal:353">10.5</A> <A class="idx" href="application.html#idx:modal:364">10.5.3</A></DD>
+<DT>modal,dialog</DT>
+<DD>
+<A class="idx" href="modal.html#idx:modaldialog:144">4.4</A></DD>
+<DT>modes</DT>
+<DD>
+<A class="idx" href="summary.html#idx:modes:844">H</A></DD>
+<DT><A class="idx" href="summary.html#class:modifier">modifier</A></DT>
+<DD>
+<A class="sec" href="sec-3.3.html#sec:3.3.1.3">3.3.1.3</A> <A class="sec" href="dragdrop.html#sec:11.8.1">11.8.1</A> <A class="sec" href="dragdrop.html#sec:11.8.1">11.8.1</A> <A class="sec" href="summary.html#sec:H">H</A></DD>
+<DT>Motif</DT>
+<DD>
+<A class="idx" href="sec-1.4.html#idx:Motif:7">1.4.1</A> <A class="idx" href="sec-1.5.html#idx:Motif:11">1.5</A></DD>
+<DT>mouse</DT>
+<DD>
+<A class="idx" href="summary.html#idx:mouse:775">H</A></DD>
+<DT><A class="idx" href="summary.html#class:move_gesture">move_gesture</A></DT>
+<DD>
+<A class="sec" href="recogniser.html#sec:5.5">5.5</A> <A class="sec" href="summary.html#sec:H">H</A> <A class="sec" href="summary.html#sec:H">H</A> <A class="sec" href="summary.html#sec:H">H</A></DD>
+<DT><A class="idx" href="summary.html#class:move_outline_gesture">move_outline_gesture</A></DT>
+<DD>
+<A class="sec" href="recogniser.html#sec:5.5">5.5</A> <A class="sec" href="summary.html#sec:H">H</A></DD>
+<DT>moving graphicals</DT>
+<DD>
+<A class="idx" href="recogniser.html#idx:movinggraphicals:180">5.5</A></DD>
+<DT>MS-Windows</DT>
+<DD>
+<A class="idx" href="sec-1.5.html#idx:MSWindows:13">1.5</A></DD>
+<DT>multiple inheritance</DT>
+<DD>
+<A class="idx" href="delegation.html#idx:multipleinheritance:648">C.4</A></DD>
+<DT>multi-segment line</DT>
+<DD>
+<A class="idx" href="summary.html#idx:multisegmentline:828">H</A></DD>
+<DT>@my_diagram</DT>
+<DD>
+<A class="idx" href="sec-D.1.html#idx:mydiagram:653">D.1</A></DD>
+<DT>my_httpd</DT>
+<DD>
+<A class="idx" href="httpd.html#idx:myhttpd:533">11.9</A></DD>
+<DT>my_httpd,<B><CODE>-&gt;</CODE>request</B></DT>
+<DD>
+<A class="idx" href="httpd.html#idx:myhttpdsendrequest:534">11.9</A></DD>
+<DT><STRONG>N</STRONG></DT>
+<DD>
+</DD>
+<DT><A class="idx" href="summary.html#class:name">name</A></DT>
+<DD>
+<A class="sec" href="sec-2.2.html#sec:2.2.3">2.2.3</A> <A class="sec" href="sec-2.5.html#sec:2.5">2.5</A> <A class="sec" href="sec-3.2.html#sec:3.2.1">3.2.1</A> <A class="sec" href="sec-3.3.html#sec:3.3.1.3">3.3.1.3</A> <A class="sec" href="notprolog.html#sec:6.1">6.1</A> <A class="sec" href="sec-7.1.html#sec:7.1.1">7.1.1</A> <A class="sec" href="tabular.html#sec:11.5.2">11.5.2</A> <A class="sec" href="tabular.html#sec:11.5.2">11.5.2</A> <A class="sec" href="sec-D.1.html#sec:D.1">D.1</A> <A class="sec" href="summary.html#sec:H">H</A> <A class="sec" href="summary.html#sec:H">H</A> <A class="sec" href="summary.html#sec:H">H</A> <A class="sec" href="summary.html#sec:H">H</A> <A class="sec" href="summary.html#sec:H">H</A> <A class="sec" href="summary.html#sec:H">H</A> <A class="sec" href="summary.html#sec:H">H</A></DD>
+<DT>named argument</DT>
+<DD>
+<A class="idx" href="namedargs.html#idx:namedargument:50">2.4</A></DD>
+<DT>named pipes</DT>
+<DD>
+<A class="idx" href="sec-B.2.html#idx:namedpipes:635">B.2</A></DD>
+<DT>name,<B><CODE>&lt;-</CODE>label_name</B></DT>
+<DD>
+<A class="idx" href="libdia.html#idx:namegetlabelname:490">11.3.2</A></DD>
+<DT>@nbsp</DT>
+<DD>
+<A class="idx" href="docrender.html#idx:nbsp:552">11.10.2</A></DD>
+<DT>Netscape</DT>
+<DD>
+<A class="idx" href="images.html#idx:Netscape:440">10.10.1.2</A></DD>
+<DT><A class="idx" href="sec-D.1.html#new/2">new/2</A></DT>
+<DD>
+<A class="idx" href="sec-2.1.html#idx:new2:15">2.1</A> <A class="idx" href="sec-2.2.html#idx:new2:19">2.2.1</A> <A class="idx" href="sec-2.2.html#idx:new2:21">2.2.1</A> <A class="idx" href="sec-2.2.html#idx:new2:23">2.2.2</A> <A class="idx" href="sec-2.2.html#idx:new2:42">2.2.4</A> <A class="idx" href="sec-2.9.html#idx:new2:74">2.9</A> <A class="idx" href="sec-3.3.html#idx:new2:102">3.3.1.3</A> <A class="idx" href="sec-3.3.html#idx:new2:105">3.3.1.3</A> <A class="idx" href="controller.html#idx:new2:116">4</A> <A class="idx" href="namedref.html#idx:new2:334">10.3.1</A> <A class="idx" href="errors.html#idx:new2:407">10.8.2</A> <A class="idx" href="sec-A.1.html#idx:new2:611">A.1.6</A> <A class="idx" href="sec-C.3.html#idx:new2:644">C.3</A> <A class="idx" href="sec-D.1.html#idx:new2:654">D.1</A> <A class="idx" href="sec-D.1.html#idx:new2:655">D.1</A> <A class="idx" href="sec-D.1.html#idx:new2:657">D.1</A> <A class="idx" href="sec-D.1.html#idx:new2:658">D.1</A> <A class="idx" href="sec-D.1.html#idx:new2:675">D.1</A> <A class="idx" href="sec-E.1.html#idx:new2:712">E.1</A> <A class="idx" href="sec-E.2.html#idx:new2:717">E.2</A> <A class="idx" href="sec-E.2.html#idx:new2:720">E.2</A> <A class="idx" href="sec-E.2.html#idx:new2:722">E.2</A> <A class="idx" href="trouble.html#idx:new2:736">F</A> <A class="idx" href="summary.html#idx:new2:761">H</A></DD>
+<DT>new,failed</DT>
+<DD>
+<A class="idx" href="errors.html#idx:newfailed:427">10.8.3</A></DD>
+<DT>@nil</DT>
+<DD>
+<A class="idx" href="sec-3.2.html#idx:nil:99">3.2.1</A> <A class="idx" href="sec-7.3.html#idx:nil:223">7.3.1</A> <A class="idx" href="sec-7.3.html#idx:nil:225">7.3.1</A> <A class="idx" href="application.html#idx:nil:357">10.5.1</A> <A class="idx" href="libplot.html#idx:nil:511">11.6.3.1</A> <A class="idx" href="libplot.html#idx:nil:512">11.6.3.1</A> <A class="idx" href="dragdrop.html#idx:nil:518">11.8</A> <A class="idx" href="dragdrop.html#idx:nil:528">11.8.1</A> <A class="idx" href="httpd.html#idx:nil:541">11.9.1</A> <A class="idx" href="sec-A.1.html#idx:nil:603">A.1.4</A> <A class="idx" href="summary.html#idx:nil:766">H</A> <A class="idx" href="summary.html#idx:nil:770">H</A> <A class="idx" href="summary.html#idx:nil:784">H</A></DD>
+<DT><A class="idx" href="summary.html#class:node">node</A></DT>
+<DD>
+<A class="sec" href="toc.html#sec:11.4">11.4</A> <A class="sec" href="delegation.html#sec:C.4">C.4</A> <A class="sec" href="summary.html#sec:H">H</A> <A class="sec" href="summary.html#sec:H">H</A></DD>
+<DT><A class="idx" href="summary.html#class:not">not</A></DT>
+<DD>
+</DD>
+<DT>notation,in this manual</DT>
+<DD>
+<A class="idx" href="sec-2.7.html#idx:notationinthismanual:65">2.7</A></DD>
+<DT><A class="idx" href="sec-D.2.html#notracepce/1">notracepce/1</A></DT>
+<DD>
+<A class="idx" href="sec-12.2.html#idx:notracepce1:580">12.2</A></DD>
+<DT><A class="idx" href="summary.html#class:number">number</A></DT>
+<DD>
+<A class="sec" href="summary.html#sec:H">H</A> <A class="sec" href="summary.html#sec:H">H</A></DD>
+<DT><STRONG>O</STRONG></DT>
+<DD>
+</DD>
+<DT>@Object</DT>
+<DD>
+<A class="idx" href="docrender.html#idx:Object:549">11.10.1</A></DD>
+<DT><A class="idx" href="summary.html#class:object">object</A></DT>
+<DD>
+<A class="sec" href="sec-3.2.html#sec:3.2.1">3.2.1</A> <A class="sec" href="sec-7.5.html#sec:7.5.2.1">7.5.2.1</A> <A class="sec" href="report.html#sec:10.7.2">10.7.2</A> <A class="sec" href="hyper.html#sec:10.11.2.2">10.11.2.2</A> <A class="sec" href="summary.html#sec:H">H</A> <A class="sec" href="summary.html#sec:H">H</A> <A class="sec" href="summary.html#sec:H">H</A></DD>
+<DT><A class="idx" href="sec-D.1.html#object/1">object/1</A></DT>
+<DD>
+<A class="idx" href="sec-D.1.html#idx:object1:671">D.1</A> <A class="idx" href="sec-D.1.html#idx:object1:672">D.1</A> <A class="idx" href="sec-D.1.html#idx:object1:673">D.1</A></DD>
+<DT><A class="idx" href="sec-D.1.html#object/2">object/2</A></DT>
+<DD>
+<A class="idx" href="sec-7.1.html#idx:object2:193">7.1.1</A> <A class="idx" href="sec-7.1.html#idx:object2:194">7.1.1</A> <A class="idx" href="sec-7.1.html#idx:object2:202">7.1.1.1</A></DD>
+<DT>object,<B><CODE>&lt;-&gt;</CODE>attribute</B></DT>
+<DD>
+<A class="idx" href="summary.html#idx:objectbothattribute:754">H</A></DD>
+<DT>object,<B><CODE>&lt;-&gt;</CODE>slot</B></DT>
+<DD>
+<A class="idx" href="slots.html#idx:objectbothslot:203">7.2</A></DD>
+<DT>object,<B><CODE>&lt;-</CODE>get_super</B></DT>
+<DD>
+<A class="idx" href="sec-7.3.html#idx:objectgetgetsuper:220">7.3</A></DD>
+<DT>object,inspecting</DT>
+<DD>
+<A class="idx" href="sec-3.1.html#idx:objectinspecting:88">3.1</A> <A class="idx" href="inspector.html#idx:objectinspecting:590">12.5</A></DD>
+<DT>object,management</DT>
+<DD>
+<A class="idx" href="sec-E.2.html#idx:objectmanagement:716">E.2</A></DD>
+<DT>object,memory usage</DT>
+<DD>
+<A class="idx" href="sec-E.3.html#idx:objectmemoryusage:726">E.3</A></DD>
+<DT><B>@display</B>,<B><CODE>-&gt;</CODE>dispatch</B></DT>
+<DD>
+<A class="idx" href="control.html#idx:objectnamedisplaysenddispatch:294">10.1.1.1</A></DD>
+<DT><B>@display</B>,<B><CODE>-&gt;</CODE>inform</B></DT>
+<DD>
+<A class="idx" href="report.html#idx:objectnamedisplaysendinform:389">10.7.2.1</A> <A class="idx" href="report.html#idx:objectnamedisplaysendinform:392">10.7.2.1</A></DD>
+<DT><B>@pce</B>,<B><CODE>&lt;-</CODE>home</B></DT>
+<DD>
+<A class="idx" href="classvar.html#idx:objectnamepcegethome:263">8</A></DD>
+<DT><B>@pce</B>,<B><CODE>&lt;-</CODE>last_error</B></DT>
+<DD>
+<A class="idx" href="errors.html#idx:objectnamepcegetlasterror:404">10.8.1</A> <A class="idx" href="sec-D.1.html#idx:objectnamepcegetlasterror:686">D.1</A></DD>
+<DT><B>@pce</B>,<B><CODE>-&gt;</CODE>exception</B></DT>
+<DD>
+<A class="idx" href="errors.html#idx:objectnamepcesendexception:410">10.8.3</A></DD>
+<DT><B>@pce</B>,<B><CODE>-&gt;</CODE>exception_handlers</B></DT>
+<DD>
+<A class="idx" href="errors.html#idx:objectnamepcesendexceptionhandlers:411">10.8.3</A></DD>
+<DT><B>@pce</B>,<B><CODE>-&gt;</CODE>format</B></DT>
+<DD>
+<A class="idx" href="report.html#idx:objectnamepcesendformat:385">10.7.2</A></DD>
+<DT>object,reference</DT>
+<DD>
+<A class="idx" href="sec-2.2.html#idx:objectreference:17">2.2.1</A></DD>
+<DT>object,remove</DT>
+<DD>
+<A class="idx" href="sec-2.2.html#idx:objectremove:40">2.2.4</A> <A class="idx" href="sec-3.3.html#idx:objectremove:106">3.3.1.3</A></DD>
+<DT>object,removing</DT>
+<DD>
+<A class="idx" href="sec-E.1.html#idx:objectremoving:703">E.1</A></DD>
+<DT>objects,creating</DT>
+<DD>
+<A class="idx" href="sec-3.3.html#idx:objectscreating:103">3.3.1.3</A></DD>
+<DT>object,<B><CODE>-&gt;</CODE>_check</B></DT>
+<DD>
+<A class="idx" href="sec-D.2.html#idx:objectsendcheck:698">D.2.2</A> <A class="idx" href="sec-D.2.html#idx:objectsendcheck:699">D.2.2</A></DD>
+<DT>object,<B><CODE>-&gt;</CODE>done</B></DT>
+<DD>
+<A class="idx" href="control.html#idx:objectsenddone:297">10.1.1.1</A> <A class="idx" href="sec-E.1.html#idx:objectsenddone:715">E.1</A> <A class="idx" href="sec-E.2.html#idx:objectsenddone:723">E.2</A> <A class="idx" href="sec-E.2.html#idx:objectsenddone:725">E.2</A></DD>
+<DT>object,<B><CODE>-&gt;</CODE>error</B></DT>
+<DD>
+<A class="idx" href="errors.html#idx:objectsenderror:408">10.8.2</A> <A class="idx" href="summary.html#idx:objectsenderror:794">H</A></DD>
+<DT>object,<B><CODE>-&gt;</CODE>free</B></DT>
+<DD>
+<A class="idx" href="sec-E.1.html#idx:objectsendfree:710">E.1</A></DD>
+<DT>object,<B><CODE>-&gt;</CODE>protect</B></DT>
+<DD>
+<A class="idx" href="sec-D.1.html#idx:objectsendprotect:663">D.1</A> <A class="idx" href="sec-E.1.html#idx:objectsendprotect:706">E.1</A></DD>
+<DT>object,<B><CODE>-&gt;</CODE>report</B></DT>
+<DD>
+<A class="idx" href="report.html#idx:objectsendreport:378">10.7.2</A> <A class="idx" href="report.html#idx:objectsendreport:381">10.7.2</A> <A class="idx" href="report.html#idx:objectsendreport:384">10.7.2</A> <A class="idx" href="summary.html#idx:objectsendreport:795">H</A></DD>
+<DT>object,<B><CODE>-&gt;</CODE>_save_in_file</B></DT>
+<DD>
+<A class="idx" href="sec-7.1.html#idx:objectsendsaveinfile:195">7.1.1</A></DD>
+<DT>object,<B><CODE>-&gt;</CODE>save_in_file</B></DT>
+<DD>
+<A class="idx" href="sec-A.2.html#idx:objectsendsaveinfile:626">A.2.4</A></DD>
+<DT>object,<B><CODE>-&gt;</CODE>send_super</B></DT>
+<DD>
+<A class="idx" href="sec-7.3.html#idx:objectsendsendsuper:219">7.3</A></DD>
+<DT>obtainer</DT>
+<DD>
+<A class="idx" href="sec-2.9.html#idx:obtainer:78">2.9</A> <A class="idx" href="exeobjects.html#idx:obtainer:319">10.2.2</A></DD>
+<DT>@off</DT>
+<DD>
+<A class="idx" href="control.html#idx:off:288">10.1.1.1</A> <A class="idx" href="control.html#idx:off:291">10.1.1.1</A> <A class="idx" href="control.html#idx:off:293">10.1.1.1</A> <A class="idx" href="exeobjects.html#idx:off:318">10.2.1</A> <A class="idx" href="libdia.html#idx:off:491">11.3.2</A> <A class="idx" href="libdia.html#idx:off:493">11.3.2</A> <A class="idx" href="toc.html#idx:off:495">11.4</A> <A class="idx" href="sec-E.1.html#idx:off:714">E.1</A> <A class="idx" href="summary.html#idx:off:756">H</A> <A class="idx" href="summary.html#idx:off:769">H</A></DD>
+<DT>OLE</DT>
+<DD>
+<A class="idx" href="sec-B.2.html#idx:OLE:636">B.2</A></DD>
+<DT>@on</DT>
+<DD>
+<A class="idx" href="sec-4.3.html#idx:on:129">4.3</A> <A class="idx" href="sec-4.3.html#idx:on:132">4.3</A> <A class="idx" href="modal.html#idx:on:161">4.4.1</A> <A class="idx" href="modal.html#idx:on:166">4.4.1</A> <A class="idx" href="sec-4.5.html#idx:on:168">4.5</A> <A class="idx" href="sec-4.5.html#idx:on:169">4.5</A> <A class="idx" href="control.html#idx:on:286">10.1.1.1</A> <A class="idx" href="control.html#idx:on:290">10.1.1.1</A> <A class="idx" href="framelayout.html#idx:on:377">10.6.2</A> <A class="idx" href="findfile.html#idx:on:479">11.1</A> <A class="idx" href="libdia.html#idx:on:492">11.3.2</A> <A class="idx" href="tabular.html#idx:on:503">11.5.2</A> <A class="idx" href="docrender.html#idx:on:569">11.10.3.2</A> <A class="idx" href="docrender.html#idx:on:571">11.10.3.2</A> <A class="idx" href="summary.html#idx:on:755">H</A> <A class="idx" href="summary.html#idx:on:768">H</A></DD>
+<DT>once/1</DT>
+<DD>
+<A class="idx" href="errors.html#idx:once1:403">10.8.1</A></DD>
+<DT>open,icon</DT>
+<DD>
+<A class="idx" href="recogniser.html#idx:openicon:181">5.5</A></DD>
+<DT>open,object as stream</DT>
+<DD>
+<A class="idx" href="sec-D.1.html#idx:openobjectasstream:679">D.1</A></DD>
+<DT>open_resource/3</DT>
+<DD>
+<A class="idx" href="resources.html#idx:openresource3:275">9</A> <A class="idx" href="resources.html#idx:openresource3:276">9</A></DD>
+<DT><A class="idx" href="resources.html#open_resource/4">open_resource/4</A></DT>
+<DD>
+</DD>
+<DT>OpenWindows</DT>
+<DD>
+<A class="idx" href="sec-1.4.html#idx:OpenWindows:6">1.4.1</A> <A class="idx" href="sec-1.5.html#idx:OpenWindows:12">1.5</A></DD>
+<DT><A class="idx" href="summary.html#class:operator">operator</A></DT>
+<DD>
+</DD>
+<DT>optional arguments</DT>
+<DD>
+<A class="idx" href="sec-2.3.html#idx:optionalarguments:45">2.3</A></DD>
+<DT><A class="idx" href="summary.html#class:or">or</A></DT>
+<DD>
+<A class="sec" href="summary.html#sec:H">H</A></DD>
+<DT><STRONG>P</STRONG></DT>
+<DD>
+</DD>
+<DT>paragraph</DT>
+<DD>
+<A class="idx" href="summary.html#idx:paragraph:806">H</A></DD>
+<DT><A class="idx" href="summary.html#class:parbox">parbox</A></DT>
+<DD>
+<A class="sec" href="docrender.html#sec:11.10">11.10</A> <A class="sec" href="docrender.html#sec:11.10">11.10</A> <A class="sec" href="docrender.html#sec:11.10">11.10</A> <A class="sec" href="docrender.html#sec:11.10">11.10</A> <A class="sec" href="docrender.html#sec:11.10">11.10</A> <A class="sec" href="docrender.html#sec:11.10">11.10</A> <A class="sec" href="docrender.html#sec:11.10">11.10</A> <A class="sec" href="docrender.html#sec:11.10">11.10</A> <A class="sec" href="docrender.html#sec:11.10">11.10</A> <A class="sec" href="docrender.html#sec:11.10.1">11.10.1</A> <A class="sec" href="summary.html#sec:H">H</A> <A class="sec" href="summary.html#sec:H">H</A> <A class="sec" href="summary.html#sec:H">H</A> <A class="sec" href="summary.html#sec:H">H</A></DD>
+<DT>parbox,<B><CODE>&lt;-</CODE>content</B></DT>
+<DD>
+<A class="idx" href="docrender.html#idx:parboxgetcontent:558">11.10.3</A></DD>
+<DT>parbox,<B><CODE>-&gt;</CODE>cdata</B></DT>
+<DD>
+<A class="idx" href="docrender.html#idx:parboxsendcdata:546">11.10</A></DD>
+<DT><A class="idx" href="summary.html#class:parser">parser</A></DT>
+<DD>
+</DD>
+<DT><A class="idx" href="summary.html#class:path">path</A></DT>
+<DD>
+<A class="sec" href="sec-5.1.html#sec:5.1.1">5.1.1</A> <A class="sec" href="libplot.html#sec:11.6.2">11.6.2</A> <A class="sec" href="libplot.html#sec:11.6.2">11.6.2</A> <A class="sec" href="summary.html#sec:H">H</A> <A class="sec" href="summary.html#sec:H">H</A> <A class="sec" href="summary.html#sec:H">H</A> <A class="sec" href="summary.html#sec:H">H</A> <A class="sec" href="summary.html#sec:H">H</A></DD>
+<DT>pbox</DT>
+<DD>
+<A class="sec" href="docrender.html#sec:11.10.1">11.10.1</A> <A class="sec" href="docrender.html#sec:11.10.1">11.10.1</A> <A class="sec" href="docrender.html#sec:11.10.3.2">11.10.3.2</A> <A class="sec" href="docrender.html#sec:11.10.3.2">11.10.3.2</A> <A class="sec" href="docrender.html#sec:11.10.3.2">11.10.3.2</A></DD>
+<DT>pbox,<B><CODE>&lt;-</CODE>anchor</B></DT>
+<DD>
+<A class="idx" href="docrender.html#idx:pboxgetanchor:570">11.10.3.2</A></DD>
+<DT>@pce</DT>
+<DD>
+<A class="idx" href="sec-3.1.html#idx:pce:83">3.1</A> <A class="idx" href="whoiswho.html#idx:pce:344">10.4.1</A> <A class="idx" href="errors.html#idx:pce:421">10.8.3</A> <A class="idx" href="sec-E.1.html#idx:pce:708">E.1</A> <A class="idx" href="summary.html#idx:pce:832">H</A></DD>
+<DT><A class="idx" href="summary.html#class:pce">pce</A></DT>
+<DD>
+<A class="sec" href="summary.html#sec:H">H</A> <A class="sec" href="summary.html#sec:H">H</A></DD>
+<DT>pce_autoload/2</DT>
+<DD>
+<A class="idx" href="errors.html#idx:pceautoload2:418">10.8.3</A></DD>
+<DT><A class="idx" href="sec-7.1.html#pce_begin_class/0">pce_begin_class/0</A></DT>
+<DD>
+</DD>
+<DT><A class="idx" href="sec-7.1.html#pce_begin_class/[2,3]">pce_begin_class/[2,3]</A></DT>
+<DD>
+<A class="idx" href="sec-7.1.html#idx:pcebeginclass23:188">7.1</A> <A class="idx" href="sec-7.1.html#idx:pcebeginclass23:199">7.1.1</A> <A class="idx" href="sec-8.4.html#idx:pcebeginclass23:270">8.4</A></DD>
+<DT><A class="idx" href="errors.html#pce_catch_error/2">pce_catch_error/2</A></DT>
+<DD>
+<A class="idx" href="errors.html#idx:pcecatcherror2:396">10.8</A> <A class="idx" href="errors.html#idx:pcecatcherror2:402">10.8.1</A> <A class="idx" href="errors.html#idx:pcecatcherror2:406">10.8.1</A> <A class="idx" href="summary.html#idx:pcecatcherror2:796">H</A></DD>
+<DT><A class="idx" href="sec-7.1.html#pce_class_directive/1">pce_class_directive/1</A></DT>
+<DD>
+<A class="idx" href="sec-7.1.html#idx:pceclassdirective1:196">7.1.1</A> <A class="idx" href="sec-7.5.html#idx:pceclassdirective1:256">7.5.3</A> <A class="idx" href="sec-7.5.html#idx:pceclassdirective1:258">7.5.3</A> <A class="idx" href="sec-7.5.html#idx:pceclassdirective1:259">7.5.3</A></DD>
+<DT>pce_end_class/0</DT>
+<DD>
+<A class="idx" href="sec-7.1.html#idx:pceendclass0:189">7.1</A> <A class="idx" href="sec-7.1.html#idx:pceendclass0:192">7.1.1</A> <A class="idx" href="sec-7.1.html#idx:pceendclass0:200">7.1.1</A> <A class="idx" href="sec-8.4.html#idx:pceendclass0:271">8.4</A></DD>
+<DT><A class="idx" href="sec-7.1.html#pce_end_class/1">pce_end_class/1</A></DT>
+<DD>
+<A class="idx" href="sec-7.1.html#idx:pceendclass1:201">7.1.1</A></DD>
+<DT>pce,<B><CODE>&lt;-</CODE>exception_handlers</B></DT>
+<DD>
+<A class="idx" href="errors.html#idx:pcegetexceptionhandlers:413">10.8.3</A></DD>
+<DT>pce,<B><CODE>&lt;-</CODE>window_system</B></DT>
+<DD>
+<A class="idx" href="sec-B.3.html#idx:pcegetwindowsystem:641">B.3</A></DD>
+<DT><A class="idx" href="sec-D.1.html#pce_global/2">pce_global/2</A></DT>
+<DD>
+<A class="idx" href="namedref.html#idx:pceglobal2:333">10.3</A> <A class="idx" href="namedref.html#idx:pceglobal2:337">10.3.3</A> <A class="idx" href="namedref.html#idx:pceglobal2:339">10.3.3</A> <A class="idx" href="errors.html#idx:pceglobal2:423">10.8.3</A> <A class="idx" href="sec-D.1.html#idx:pceglobal2:674">D.1</A></DD>
+<DT><A class="idx" href="sec-7.1.html#pce_group/1">pce_group/1</A></DT>
+<DD>
+<A class="idx" href="sec-7.1.html#idx:pcegroup1:190">7.1</A> <A class="idx" href="sec-7.3.html#idx:pcegroup1:204">7.3</A></DD>
+<DT>pce_image_directory/1</DT>
+<DD>
+<A class="idx" href="classvaraccess.html#idx:pceimagedirectory1:267">8.1</A> <A class="idx" href="resources.html#idx:pceimagedirectory1:279">9</A></DD>
+<DT><A class="idx" href="sec-D.1.html#pce_open/3">pce_open/3</A></DT>
+<DD>
+<A class="idx" href="sec-D.1.html#idx:pceopen3:680">D.1</A></DD>
+<DT>pce,<B><CODE>-&gt;</CODE>exception</B></DT>
+<DD>
+<A class="idx" href="errors.html#idx:pcesendexception:412">10.8.3</A></DD>
+<DT><A class="idx" href="summary.html#class:pen">pen</A></DT>
+<DD>
+</DD>
+<DT>percent-done</DT>
+<DD>
+<A class="idx" href="summary.html#idx:percentdone:841">H</A></DD>
+<DT>@persons</DT>
+<DD>
+<A class="idx" href="sec-7.3.html#idx:persons:226">7.3.1</A></DD>
+<DT><A class="idx" href="summary.html#class:picture">picture</A></DT>
+<DD>
+<A class="sec" href="sec-5.1.html#sec:5.1">5.1</A> <A class="sec" href="summary.html#sec:H">H</A> <A class="sec" href="summary.html#sec:H">H</A> <A class="sec" href="summary.html#sec:H">H</A></DD>
+<DT>pie-chart</DT>
+<DD>
+<A class="idx" href="summary.html#idx:piechart:752">H</A></DD>
+<DT>pie-slice</DT>
+<DD>
+<A class="idx" href="sec-5.1.html#idx:pieslice:174">5.1.1</A></DD>
+<DT><A class="idx" href="summary.html#class:pixmap">pixmap</A></DT>
+<DD>
+<A class="sec" href="sec-5.1.html#sec:5.1.1">5.1.1</A> <A class="sec" href="httpd.html#sec:11.9.1">11.9.1</A> <A class="sec" href="summary.html#sec:H">H</A> <A class="sec" href="summary.html#sec:H">H</A> <A class="sec" href="summary.html#sec:H">H</A></DD>
+<DT>plot</DT>
+<DD>
+<A class="idx" href="libplot.html#idx:plot:505">11.6</A></DD>
+<DT>plot_axis</DT>
+<DD>
+<A class="sec" href="libplot.html#sec:11.6.1">11.6.1</A> <A class="sec" href="libplot.html#sec:11.6.1">11.6.1</A> <A class="sec" href="libplot.html#sec:11.6.2">11.6.2</A> <A class="sec" href="libplot.html#sec:11.6.3">11.6.3</A></DD>
+<DT>plot_graph</DT>
+<DD>
+<A class="sec" href="libplot.html#sec:11.6.2">11.6.2</A> <A class="sec" href="libplot.html#sec:11.6.2">11.6.2</A></DD>
+<DT>plot_point</DT>
+<DD>
+<A class="sec" href="libplot.html#sec:11.6.2">11.6.2</A></DD>
+<DT>plotter</DT>
+<DD>
+<A class="sec" href="libplot.html#sec:11.6.1">11.6.1</A> <A class="sec" href="libplot.html#sec:11.6.2">11.6.2</A> <A class="sec" href="libplot.html#sec:11.6.2">11.6.2</A> <A class="sec" href="libplot.html#sec:11.6.3">11.6.3</A> <A class="sec" href="libplot.html#sec:11.6.3">11.6.3</A></DD>
+<DT>plotter,<B><CODE>&lt;-</CODE>translate</B></DT>
+<DD>
+<A class="idx" href="libplot.html#idx:plottergettranslate:509">11.6.1</A></DD>
+<DT>PNM,file format</DT>
+<DD>
+<A class="idx" href="images.html#idx:PNMfileformat:450">10.10.2</A></DD>
+<DT><A class="idx" href="summary.html#class:point">point</A></DT>
+<DD>
+<A class="sec" href="sec-2.2.html#sec:2.2">2.2</A> <A class="sec" href="sec-7.5.html#sec:7.5.1">7.5.1</A> <A class="sec" href="libplot.html#sec:11.6.2">11.6.2</A> <A class="sec" href="summary.html#sec:H">H</A></DD>
+<DT>pointer</DT>
+<DD>
+<A class="idx" href="summary.html#idx:pointer:774">H</A></DD>
+<DT><A class="idx" href="summary.html#class:popup">popup</A></DT>
+<DD>
+<A class="sec" href="sec-4.2.html#sec:4.2">4.2</A> <A class="sec" href="toc.html#sec:11.4">11.4</A> <A class="sec" href="summary.html#sec:H">H</A> <A class="sec" href="summary.html#sec:H">H</A> <A class="sec" href="summary.html#sec:H">H</A> <A class="sec" href="summary.html#sec:H">H</A> <A class="sec" href="summary.html#sec:H">H</A></DD>
+<DT><A class="idx" href="summary.html#class:popup_gesture">popup_gesture</A></DT>
+<DD>
+<A class="sec" href="summary.html#sec:H">H</A> <A class="sec" href="summary.html#sec:H">H</A></DD>
+<DT>portray/1</DT>
+<DD>
+<A class="idx" href="sec-2.2.html#idx:portray1:31">2.2.3</A></DD>
+<DT>PostScript</DT>
+<DD>
+<A class="idx" href="exeobjects.html#idx:PostScript:332">10.2.4</A> <A class="idx" href="printing.html#idx:PostScript:470">10.13</A></DD>
+<DT>printing</DT>
+<DD>
+<A class="idx" href="printing.html#idx:printing:469">10.13</A></DD>
+<DT>private colourmap</DT>
+<DD>
+<A class="idx" href="images.html#idx:privatecolourmap:439">10.10.1.2</A></DD>
+<DT><A class="idx" href="summary.html#class:process">process</A></DT>
+<DD>
+<A class="sec" href="summary.html#sec:H">H</A> <A class="sec" href="summary.html#sec:H">H</A></DD>
+<DT><A class="idx" href="summary.html#class:progn">progn</A></DT>
+<DD>
+<A class="sec" href="summary.html#sec:H">H</A></DD>
+<DT>program,as object</DT>
+<DD>
+<A class="idx" href="exeobjects.html#idx:programasobject:307">10.2</A></DD>
+<DT><A class="idx" href="summary.html#class:program_object">program_object</A></DT>
+<DD>
+<A class="sec" href="summary.html#sec:H">H</A></DD>
+<DT>@prolog</DT>
+<DD>
+<A class="idx" href="fileviewer.html#idx:prolog:70">2.8</A> <A class="idx" href="sec-2.9.html#idx:prolog:79">2.9</A> <A class="idx" href="sec-3.1.html#idx:prolog:84">3.1</A> <A class="idx" href="modal.html#idx:prolog:153">4.4.1</A> <A class="idx" href="modal.html#idx:prolog:155">4.4.1</A> <A class="idx" href="modal.html#idx:prolog:156">4.4.1</A> <A class="idx" href="control.html#idx:prolog:284">10.1.1.1</A> <A class="idx" href="control.html#idx:prolog:285">10.1.1.1</A> <A class="idx" href="control.html#idx:prolog:287">10.1.1.1</A> <A class="idx" href="control.html#idx:prolog:292">10.1.1.1</A> <A class="idx" href="control.html#idx:prolog:295">10.1.1.1</A> <A class="idx" href="control.html#idx:prolog:296">10.1.1.1</A> <A class="idx" href="exeobjects.html#idx:prolog:317">10.2.1</A> <A class="idx" href="whoiswho.html#idx:prolog:345">10.4.1</A> <A class="idx" href="sec-A.2.html#idx:prolog:615">A.2.1</A> <A class="idx" href="sec-A.2.html#idx:prolog:616">A.2.1</A> <A class="idx" href="sec-A.2.html#idx:prolog:617">A.2.1</A> <A class="idx" href="sec-C.5.html#idx:prolog:650">C.5</A> <A class="idx" href="sec-C.7.html#idx:prolog:651">C.7</A> <A class="idx" href="sec-E.1.html#idx:prolog:704">E.1</A> <A class="idx" href="sec-E.1.html#idx:prolog:707">E.1</A> <A class="idx" href="summary.html#idx:prolog:812">H</A> <A class="idx" href="summary.html#idx:prolog:813">H</A></DD>
+<DT>Prolog interface</DT>
+<DD>
+<A class="idx" href="sec-3.1.html#idx:Prologinterface:86">3.1</A></DD>
+<DT>prolog_term</DT>
+<DD>
+<A class="sec" href="prologdata.html#sec:6.2">6.2</A> <A class="sec" href="prologdata.html#sec:6.2">6.2</A> <A class="sec" href="prologdata.html#sec:6.2">6.2</A> <A class="sec" href="prologdata.html#sec:6.2.1">6.2.1</A> <A class="sec" href="summary.html#sec:H">H</A></DD>
+<DT>prolog-term,life-time</DT>
+<DD>
+<A class="idx" href="prologdata.html#idx:prologtermlifetime:185">6.2.1</A></DD>
+<DT>prompt</DT>
+<DD>
+<A class="idx" href="modal.html#idx:prompt:146">4.4</A></DD>
+<DT>pulldown</DT>
+<DD>
+<A class="idx" href="summary.html#idx:pulldown:833">H</A></DD>
+<DT>push-button</DT>
+<DD>
+<A class="idx" href="sec-4.2.html#idx:pushbutton:121">4.2</A></DD>
+<DT><STRONG>Q</STRONG></DT>
+<DD>
+</DD>
+<DT>quit/0</DT>
+<DD>
+<A class="idx" href="control.html#idx:quit0:301">10.1.1.1</A></DD>
+<DT><A class="idx" href="summary.html#class:quote_function">quote_function</A></DT>
+<DD>
+<A class="sec" href="summary.html#sec:H">H</A> <A class="sec" href="summary.html#sec:H">H</A></DD>
+<DT><STRONG>R</STRONG></DT>
+<DD>
+</DD>
+<DT>radio-button</DT>
+<DD>
+<A class="idx" href="sec-4.2.html#idx:radiobutton:123">4.2</A></DD>
+<DT>read,text from object</DT>
+<DD>
+<A class="idx" href="sec-D.1.html#idx:readtextfromobject:677">D.1</A></DD>
+<DT><A class="idx" href="summary.html#class:real">real</A></DT>
+<DD>
+<A class="sec" href="sec-2.2.html#sec:2.2.3">2.2.3</A> <A class="sec" href="sec-2.5.html#sec:2.5">2.5</A> <A class="sec" href="notprolog.html#sec:6.1">6.1</A> <A class="sec" href="summary.html#sec:H">H</A></DD>
+<DT>@receiver</DT>
+<DD>
+<A class="idx" href="modal.html#idx:receiver:157">4.4.1</A> <A class="idx" href="exeobjects.html#idx:receiver:323">10.2.2</A> <A class="idx" href="exeobjects.html#idx:receiver:328">10.2.2</A> <A class="idx" href="glossary.html#idx:receiver:748">G</A> <A class="idx" href="summary.html#idx:receiver:858">H</A></DD>
+<DT>Recogniser</DT>
+<DD>
+<A class="sec" href="recogniser.html#sec:5.5">5.5</A></DD>
+<DT><A class="idx" href="summary.html#class:recogniser">recogniser</A></DT>
+<DD>
+<A class="sec" href="sec-5.6.html#sec:5.6">5.6</A> <A class="sec" href="sec-7.3.html#sec:7.3.2">7.3.2</A> <A class="sec" href="summary.html#sec:H">H</A> <A class="sec" href="summary.html#sec:H">H</A> <A class="sec" href="summary.html#sec:H">H</A> <A class="sec" href="summary.html#sec:H">H</A> <A class="sec" href="summary.html#sec:H">H</A> <A class="sec" href="summary.html#sec:H">H</A> <A class="sec" href="summary.html#sec:H">H</A></DD>
+<DT>recogniser,<B><CODE>-&gt;</CODE>event</B></DT>
+<DD>
+<A class="idx" href="sec-7.3.html#idx:recognisersendevent:230">7.3.2</A></DD>
+<DT>recorda/2</DT>
+<DD>
+<A class="idx" href="control.html#idx:recorda2:304">10.1.2</A></DD>
+<DT>redefined,object reference</DT>
+<DD>
+<A class="idx" href="errors.html#idx:redefinedobjectreference:425">10.8.3</A></DD>
+<DT>@Reference</DT>
+<DD>
+<A class="idx" href="sec-2.2.html#idx:Reference:32">2.2.3</A></DD>
+<DT>reference, object</DT>
+<DD>
+<A class="idx" href="sec-2.2.html#idx:referenceobject:18">2.2.1</A></DD>
+<DT><A class="idx" href="summary.html#class:regex">regex</A></DT>
+<DD>
+<A class="sec" href="summary.html#sec:H">H</A> <A class="sec" href="summary.html#sec:H">H</A> <A class="sec" href="summary.html#sec:H">H</A></DD>
+<DT><A class="idx" href="summary.html#class:region">region</A></DT>
+<DD>
+<A class="sec" href="summary.html#sec:H">H</A></DD>
+<DT>Regular Expression</DT>
+<DD>
+<A class="idx" href="summary.html#idx:RegularExpression:840">H</A></DD>
+<DT><A class="idx" href="summary.html#class:relation">relation</A></DT>
+<DD>
+<A class="sec" href="summary.html#sec:H">H</A> <A class="sec" href="summary.html#sec:H">H</A> <A class="sec" href="summary.html#sec:H">H</A> <A class="sec" href="summary.html#sec:H">H</A> <A class="sec" href="summary.html#sec:H">H</A></DD>
+<DT><A class="idx" href="summary.html#class:relation_table">relation_table</A></DT>
+<DD>
+<A class="sec" href="summary.html#sec:H">H</A></DD>
+<DT>remove,objects</DT>
+<DD>
+<A class="idx" href="sec-2.2.html#idx:removeobjects:39">2.2.4</A></DD>
+<DT>reply/2</DT>
+<DD>
+<A class="idx" href="httpd.html#idx:reply2:535">11.9</A> <A class="idx" href="httpd.html#idx:reply2:536">11.9</A> <A class="idx" href="httpd.html#idx:reply2:537">11.9</A> <A class="idx" href="httpd.html#idx:reply2:538">11.9</A></DD>
+<DT>report_dialog</DT>
+<DD>
+<A class="sec" href="libdia.html#sec:11.3.1">11.3.1</A> <A class="sec" href="libdia.html#sec:11.3.1">11.3.1</A></DD>
+<DT>reporter</DT>
+<DD>
+<A class="sec" href="libdia.html#sec:11.3.1">11.3.1</A> <A class="sec" href="libdia.html#sec:11.3.1">11.3.1</A> <A class="sec" href="libdia.html#sec:11.3.1">11.3.1</A></DD>
+<DT>reporting</DT>
+<DD>
+<A class="idx" href="libdia.html#idx:reporting:486">11.3.1</A></DD>
+<DT><A class="idx" href="sec-D.1.html#require/1">require/1</A></DT>
+<DD>
+<A class="idx" href="sec-D.1.html#idx:require1:687">D.1.1</A></DD>
+<DT><A class="idx" href="summary.html#class:resize_gesture">resize_gesture</A></DT>
+<DD>
+<A class="sec" href="recogniser.html#sec:5.5">5.5</A> <A class="sec" href="summary.html#sec:H">H</A> <A class="sec" href="summary.html#sec:H">H</A></DD>
+<DT><A class="idx" href="summary.html#class:resize_outline_gesture">resize_outline_gesture</A></DT>
+<DD>
+<A class="sec" href="recogniser.html#sec:5.5">5.5</A> <A class="sec" href="summary.html#sec:H">H</A></DD>
+<DT><A class="idx" href="summary.html#class:resize_table_slice_gesture">resize_table_slice_gesture</A></DT>
+<DD>
+</DD>
+<DT><A class="idx" href="summary.html#class:resource">resource</A></DT>
+<DD>
+<A class="sec" href="resources.html#sec:9">9</A> <A class="sec" href="resources.html#sec:9">9</A> <A class="sec" href="httpd.html#sec:11.9.1">11.9.1</A> <A class="sec" href="summary.html#sec:H">H</A> <A class="sec" href="summary.html#sec:H">H</A> <A class="sec" href="summary.html#sec:H">H</A></DD>
+<DT><A class="idx" href="resources.html#resource/3">resource/3</A></DT>
+<DD>
+<A class="idx" href="resources.html#idx:resource3:273">9</A> <A class="idx" href="resources.html#idx:resource3:277">9</A> <A class="idx" href="resources.html#idx:resource3:278">9</A></DD>
+<DT>re-usability</DT>
+<DD>
+<A class="idx" href="whoiswho.html#idx:reusability:348">10.4.3</A></DD>
+<DT>reusability</DT>
+<DD>
+<A class="idx" href="sec-3.3.html#idx:reusability:108">3.3.1.3</A></DD>
+<DT>RGB</DT>
+<DD>
+<A class="idx" href="sec-B.4.html#idx:RGB:642">B.4</A></DD>
+<DT><A class="idx" href="summary.html#class:rubber">rubber</A></DT>
+<DD>
+<A class="sec" href="docrender.html#sec:11.10">11.10</A> <A class="sec" href="docrender.html#sec:11.10">11.10</A></DD>
+<DT>runtime generation</DT>
+<DD>
+<A class="idx" href="sec-7.5.html#idx:runtimegeneration:262">7.5.3</A></DD>
+<DT>runtime-system</DT>
+<DD>
+<A class="idx" href="errors.html#idx:runtimesystem:397">10.8</A></DD>
+<DT><STRONG>S</STRONG></DT>
+<DD>
+</DD>
+<DT>screen</DT>
+<DD>
+<A class="idx" href="summary.html#idx:screen:787">H</A></DD>
+<DT><A class="idx" href="summary.html#class:scroll_bar">scroll_bar</A></DT>
+<DD>
+<A class="sec" href="summary.html#sec:H">H</A></DD>
+<DT><A class="idx" href="sec-D.1.html#send/2">send/2</A></DT>
+<DD>
+<A class="idx" href="sec-2.2.html#idx:send2:22">2.2.2</A> <A class="idx" href="sec-2.2.html#idx:send2:25">2.2.3</A> <A class="idx" href="sec-2.2.html#idx:send2:33">2.2.3</A> <A class="idx" href="sendmanyargs.html#idx:send2:58">2.6</A> <A class="idx" href="sendmanyargs.html#idx:send2:62">2.6</A> <A class="idx" href="sec-7.3.html#idx:send2:213">7.3</A> <A class="idx" href="sec-D.2.html#idx:send2:693">D.2.1</A></DD>
+<DT>send/3</DT>
+<DD>
+<A class="idx" href="prologdata.html#idx:send3:182">6.2</A> <A class="idx" href="prologdata.html#idx:send3:186">6.2.1</A></DD>
+<DT><A class="idx" href="sec-7.1.html#send/[2-12]">send/[2-12]</A></DT>
+<DD>
+<A class="idx" href="sendmanyargs.html#idx:send212:60">2.6</A> <A class="idx" href="sec-2.9.html#idx:send212:75">2.9</A> <A class="idx" href="controller.html#idx:send212:117">4</A> <A class="idx" href="udcpreds.html#idx:send212:238">7.4</A> <A class="idx" href="sec-8.3.html#idx:send212:269">8.3</A> <A class="idx" href="sec-8.4.html#idx:send212:272">8.4</A> <A class="idx" href="sec-C.3.html#idx:send212:645">C.3</A> <A class="idx" href="sec-D.1.html#idx:send212:659">D.1</A> <A class="idx" href="sec-D.1.html#idx:send212:661">D.1</A> <A class="idx" href="sec-D.2.html#idx:send212:690">D.2.1</A> <A class="idx" href="sec-D.2.html#idx:send212:691">D.2.1</A> <A class="idx" href="sec-E.2.html#idx:send212:718">E.2</A> <A class="idx" href="trouble.html#idx:send212:733">F</A> <A class="idx" href="trouble.html#idx:send212:734">F</A> <A class="idx" href="trouble.html#idx:send212:737">F</A> <A class="idx" href="glossary.html#idx:send212:745">G</A> <A class="idx" href="summary.html#idx:send212:759">H</A></DD>
+<DT>send/[3-12]</DT>
+<DD>
+<A class="idx" href="sec-7.3.html#idx:send312:215">7.3</A></DD>
+<DT>send_class/2</DT>
+<DD>
+<A class="idx" href="sec-7.3.html#idx:sendclass2:207">7.3</A> <A class="idx" href="sec-7.3.html#idx:sendclass2:221">7.3</A></DD>
+<DT><A class="idx" href="sec-7.3.html#send_class/3">send_class/3</A></DT>
+<DD>
+<A class="idx" href="sec-7.3.html#idx:sendclass3:209">7.3</A> <A class="idx" href="sec-7.3.html#idx:sendclass3:210">7.3</A> <A class="idx" href="sec-D.1.html#idx:sendclass3:664">D.1</A> <A class="idx" href="sec-D.1.html#idx:sendclass3:668">D.1</A></DD>
+<DT><A class="idx" href="sec-7.5.html#send_implementation/3">send_implementation/3</A></DT>
+<DD>
+<A class="idx" href="sec-7.5.html#idx:sendimplementation3:254">7.5.3</A></DD>
+<DT>send_list/2</DT>
+<DD>
+<A class="idx" href="sec-D.2.html#idx:sendlist2:692">D.2.1</A></DD>
+<DT><A class="idx" href="sec-D.2.html#send_list/2,3">send_list/2,3</A></DT>
+<DD>
+</DD>
+<DT><A class="idx" href="summary.html#class:send_method">send_method</A></DT>
+<DD>
+<A class="sec" href="summary.html#sec:H">H</A> <A class="sec" href="summary.html#sec:H">H</A> <A class="sec" href="summary.html#sec:H">H</A> <A class="sec" href="summary.html#sec:H">H</A></DD>
+<DT>send,port</DT>
+<DD>
+<A class="idx" href="sec-A.1.html#idx:sendport:599">A.1.4</A></DD>
+<DT><A class="idx" href="sec-7.3.html#send_super/2">send_super/2</A></DT>
+<DD>
+<A class="idx" href="sec-7.3.html#idx:sendsuper2:211">7.3</A> <A class="idx" href="sec-7.3.html#idx:sendsuper2:212">7.3</A> <A class="idx" href="sec-7.3.html#idx:sendsuper2:217">7.3</A></DD>
+<DT>send_super/[2-12]</DT>
+<DD>
+<A class="idx" href="sec-7.3.html#idx:sendsuper212:205">7.3</A> <A class="idx" href="sec-D.1.html#idx:sendsuper212:666">D.1</A></DD>
+<DT>sensitive</DT>
+<DD>
+<A class="idx" href="recogniser.html#idx:sensitive:179">5.5</A></DD>
+<DT>set_style/2</DT>
+<DD>
+<A class="idx" href="modal.html#idx:setstyle2:158">4.4.1</A></DD>
+<DT>set_verbose/0</DT>
+<DD>
+<A class="idx" href="prologdata.html#idx:setverbose0:184">6.2</A></DD>
+<DT>shared editing</DT>
+<DD>
+<A class="idx" href="summary.html#idx:sharedediting:793">H</A></DD>
+<DT><A class="idx" href="summary.html#class:sheet">sheet</A></DT>
+<DD>
+<A class="sec" href="httpd.html#sec:11.9.1">11.9.1</A> <A class="sec" href="summary.html#sec:H">H</A></DD>
+<DT>shift</DT>
+<DD>
+<A class="idx" href="summary.html#idx:shift:821">H</A></DD>
+<DT>shift-click</DT>
+<DD>
+<A class="idx" href="summary.html#idx:shiftclick:825">H</A></DD>
+<DT>show_key_bindings/1</DT>
+<DD>
+<A class="idx" href="summary.html#idx:showkeybindings1:860">H</A></DD>
+<DT><A class="idx" href="sec-D.2.html#show_slots/1">show_slots/1</A></DT>
+<DD>
+<A class="idx" href="inspector.html#idx:showslots1:589">12.5</A></DD>
+<DT><A class="idx" href="summary.html#class:size">size</A></DT>
+<DD>
+<A class="sec" href="tabular.html#sec:11.5.2">11.5.2</A> <A class="sec" href="summary.html#sec:H">H</A></DD>
+<DT><A class="idx" href="summary.html#class:slider">slider</A></DT>
+<DD>
+<A class="sec" href="sec-4.2.html#sec:4.2">4.2</A></DD>
+<DT>smooth</DT>
+<DD>
+<A class="idx" href="sec-5.1.html#idx:smooth:175">5.1.1</A></DD>
+<DT><A class="idx" href="summary.html#class:socket">socket</A></DT>
+<DD>
+<A class="sec" href="libraries.html#sec:11">11</A> <A class="sec" href="httpd.html#sec:11.9.1">11.9.1</A> <A class="sec" href="summary.html#sec:H">H</A> <A class="sec" href="summary.html#sec:H">H</A></DD>
+<DT>socket,<B><CODE>&lt;-</CODE>peer_name</B></DT>
+<DD>
+<A class="idx" href="httpd.html#idx:socketgetpeername:540">11.9.1</A></DD>
+<DT>source code,from dialog editor</DT>
+<DD>
+<A class="idx" href="sec-A.1.html#idx:sourcecodefromdialogeditor:604">A.1.5</A></DD>
+<DT><A class="idx" href="summary.html#class:source_location">source_location</A></DT>
+<DD>
+</DD>
+<DT><A class="idx" href="summary.html#class:source_sink">source_sink</A></DT>
+<DD>
+<A class="sec" href="resources.html#sec:9">9</A> <A class="sec" href="resources.html#sec:9">9</A> <A class="sec" href="summary.html#sec:H">H</A></DD>
+<DT>@space_rubber</DT>
+<DD>
+<A class="idx" href="docrender.html#idx:spacerubber:554">11.10.2</A></DD>
+<DT><A class="idx" href="summary.html#class:spatial">spatial</A></DT>
+<DD>
+<A class="sec" href="sec-5.4.html#sec:5.4">5.4</A> <A class="sec" href="summary.html#sec:H">H</A> <A class="sec" href="summary.html#sec:H">H</A> <A class="sec" href="summary.html#sec:H">H</A> <A class="sec" href="summary.html#sec:H">H</A></DD>
+<DT>spy</DT>
+<DD>
+<A class="idx" href="sec-12.3.html#idx:spy:581">12.3</A></DD>
+<DT>spy/1</DT>
+<DD>
+<A class="idx" href="sec-12.3.html#idx:spy1:583">12.3</A></DD>
+<DT><A class="idx" href="sec-12.3.html#spypce/1">spypce/1</A></DT>
+<DD>
+<A class="idx" href="sec-12.3.html#idx:spypce1:585">12.3</A></DD>
+<DT>statement,as object</DT>
+<DD>
+<A class="idx" href="exeobjects.html#idx:statementasobject:305">10.2</A></DD>
+<DT>stdarg</DT>
+<DD>
+<A class="idx" href="sec-7.5.html#idx:stdarg:245">7.5.2</A></DD>
+<DT>@stones_bitmap</DT>
+<DD>
+<A class="idx" href="namedref.html#idx:stonesbitmap:335">10.3.2</A></DD>
+<DT><A class="idx" href="summary.html#class:stream">stream</A></DT>
+<DD>
+<A class="sec" href="summary.html#sec:H">H</A></DD>
+<DT>stream,open Object as</DT>
+<DD>
+<A class="idx" href="sec-D.1.html#idx:streamopenObjectas:676">D.1</A></DD>
+<DT><A class="idx" href="summary.html#class:string">string</A></DT>
+<DD>
+<A class="sec" href="sec-2.5.html#sec:2.5">2.5</A> <A class="sec" href="sec-3.2.html#sec:3.2.1">3.2.1</A> <A class="sec" href="exeobjects.html#sec:10.2.2">10.2.2</A> <A class="sec" href="exeobjects.html#sec:10.2.2">10.2.2</A> <A class="sec" href="exeobjects.html#sec:10.2.4">10.2.4</A> <A class="sec" href="httpd.html#sec:11.9.1">11.9.1</A> <A class="sec" href="summary.html#sec:H">H</A> <A class="sec" href="summary.html#sec:H">H</A> <A class="sec" href="summary.html#sec:H">H</A></DD>
+<DT>string,<B><CODE>-&gt;</CODE>format</B></DT>
+<DD>
+<A class="idx" href="sec-7.5.html#idx:stringsendformat:247">7.5.2</A> <A class="idx" href="report.html#idx:stringsendformat:379">10.7.2</A></DD>
+<DT><A class="idx" href="summary.html#class:style">style</A></DT>
+<DD>
+<A class="sec" href="namedargs.html#sec:2.4">2.4</A> <A class="sec" href="summary.html#sec:H">H</A> <A class="sec" href="summary.html#sec:H">H</A> <A class="sec" href="summary.html#sec:H">H</A> <A class="sec" href="summary.html#sec:H">H</A> <A class="sec" href="summary.html#sec:H">H</A> <A class="sec" href="summary.html#sec:H">H</A></DD>
+<DT>style,<B><CODE>&lt;-</CODE>icon</B></DT>
+<DD>
+<A class="idx" href="summary.html#idx:stylegeticon:852">H</A></DD>
+<DT>style,<B><CODE>-&gt;</CODE>icon</B></DT>
+<DD>
+<A class="idx" href="images.html#idx:stylesendicon:459">10.10.2.2</A></DD>
+<DT>summary line</DT>
+<DD>
+<A class="idx" href="sec-3.2.html#idx:summaryline:93">3.2</A></DD>
+<DT>SVG</DT>
+<DD>
+<A class="idx" href="printing.html#idx:SVG:473">10.13.1</A></DD>
+<DT><A class="idx" href="summary.html#class:syntax_table">syntax_table</A></DT>
+<DD>
+<A class="sec" href="summary.html#sec:H">H</A></DD>
+<DT><STRONG>T</STRONG></DT>
+<DD>
+</DD>
+<DT><A class="idx" href="summary.html#class:tab">tab</A></DT>
+<DD>
+<A class="sec" href="sec-4.2.html#sec:4.2">4.2</A> <A class="sec" href="sec-4.2.html#sec:4.2">4.2</A> <A class="sec" href="sec-4.2.html#sec:4.2">4.2</A> <A class="sec" href="mlingual.html#sec:11.7">11.7</A> <A class="sec" href="summary.html#sec:H">H</A> <A class="sec" href="summary.html#sec:H">H</A> <A class="sec" href="summary.html#sec:H">H</A> <A class="sec" href="summary.html#sec:H">H</A></DD>
+<DT><A class="idx" href="summary.html#class:table">table</A></DT>
+<DD>
+<A class="sec" href="sec-5.2.html#sec:5.2">5.2</A> <A class="sec" href="tabular.html#sec:11.5">11.5</A> <A class="sec" href="tabular.html#sec:11.5">11.5</A> <A class="sec" href="tabular.html#sec:11.5">11.5</A> <A class="sec" href="tabular.html#sec:11.5.1">11.5.1</A> <A class="sec" href="tabular.html#sec:11.5.1">11.5.1</A> <A class="sec" href="tabular.html#sec:11.5.2">11.5.2</A> <A class="sec" href="tabular.html#sec:11.5.2">11.5.2</A> <A class="sec" href="tabular.html#sec:11.5.2">11.5.2</A> <A class="sec" href="tabular.html#sec:11.5.2">11.5.2</A> <A class="sec" href="docrender.html#sec:11.10.3.2">11.10.3.2</A> <A class="sec" href="summary.html#sec:H">H</A> <A class="sec" href="summary.html#sec:H">H</A> <A class="sec" href="summary.html#sec:H">H</A> <A class="sec" href="summary.html#sec:H">H</A> <A class="sec" href="summary.html#sec:H">H</A> <A class="sec" href="summary.html#sec:H">H</A></DD>
+<DT><A class="idx" href="summary.html#class:table_cell">table_cell</A></DT>
+<DD>
+<A class="sec" href="docrender.html#sec:11.10.3.2">11.10.3.2</A></DD>
+<DT><A class="idx" href="summary.html#class:table_column">table_column</A></DT>
+<DD>
+<A class="sec" href="tabular.html#sec:11.5.2">11.5.2</A></DD>
+<DT><A class="idx" href="summary.html#class:table_row">table_row</A></DT>
+<DD>
+<A class="sec" href="tabular.html#sec:11.5.2">11.5.2</A> <A class="sec" href="docrender.html#sec:11.10.3.2">11.10.3.2</A></DD>
+<DT>table_row,<B><CODE>-&gt;</CODE>end_group</B></DT>
+<DD>
+<A class="idx" href="docrender.html#idx:tablerowsendendgroup:572">11.10.3.2</A></DD>
+<DT><A class="idx" href="summary.html#class:table_slice">table_slice</A></DT>
+<DD>
+</DD>
+<DT><A class="idx" href="summary.html#class:tab_stack">tab_stack</A></DT>
+<DD>
+<A class="sec" href="sec-4.2.html#sec:4.2">4.2</A> <A class="sec" href="sec-4.2.html#sec:4.2">4.2</A> <A class="sec" href="summary.html#sec:H">H</A></DD>
+<DT>tab-stops</DT>
+<DD>
+<A class="idx" href="summary.html#idx:tabstops:846">H</A></DD>
+<DT>tabular</DT>
+<DD>
+<A class="sec" href="tabular.html#sec:11.5.2">11.5.2</A> <A class="sec" href="tabular.html#sec:11.5.2">11.5.2</A> <A class="sec" href="tabular.html#sec:11.5.2">11.5.2</A> <A class="idx" href="summary.html#idx:tabular:805">H</A></DD>
+<DT><A class="idx" href="summary.html#class:tbox">tbox</A></DT>
+<DD>
+<A class="sec" href="docrender.html#sec:11.10">11.10</A> <A class="sec" href="docrender.html#sec:11.10">11.10</A> <A class="sec" href="docrender.html#sec:11.10">11.10</A> <A class="sec" href="docrender.html#sec:11.10">11.10</A> <A class="sec" href="docrender.html#sec:11.10.3.2">11.10.3.2</A> <A class="sec" href="summary.html#sec:H">H</A></DD>
+<DT>TCP/IP</DT>
+<DD>
+<A class="idx" href="summary.html#idx:TCPIP:842">H</A></DD>
+<DT>template</DT>
+<DD>
+<A class="sec" href="sec-7.5.html#sec:7.5.2.1">7.5.2.1</A> <A class="sec" href="sec-7.5.html#sec:7.5.2.1">7.5.2.1</A> <A class="sec" href="glossary.html#sec:G">G</A> <A class="sec" href="glossary.html#sec:G">G</A></DD>
+<DT>term_expansion/2</DT>
+<DD>
+<A class="idx" href="sec-7.5.html#idx:termexpansion2:253">7.5.3</A></DD>
+<DT><A class="idx" href="summary.html#class:text">text</A></DT>
+<DD>
+<A class="sec" href="sec-5.1.html#sec:5.1.1">5.1.1</A> <A class="sec" href="sec-8.2.html#sec:8.2">8.2</A> <A class="sec" href="ugraphics.html#sec:10.12.3">10.12.3</A> <A class="sec" href="ugraphics.html#sec:10.12.3">10.12.3</A> <A class="sec" href="tabular.html#sec:11.5.2">11.5.2</A> <A class="sec" href="tabular.html#sec:11.5.2">11.5.2</A> <A class="sec" href="summary.html#sec:H">H</A> <A class="sec" href="summary.html#sec:H">H</A> <A class="sec" href="summary.html#sec:H">H</A></DD>
+<DT><A class="idx" href="summary.html#class:text_buffer">text_buffer</A></DT>
+<DD>
+<A class="sec" href="report.html#sec:10.7.3">10.7.3</A> <A class="sec" href="httpd.html#sec:11.9.1">11.9.1</A> <A class="sec" href="summary.html#sec:H">H</A> <A class="sec" href="summary.html#sec:H">H</A> <A class="sec" href="summary.html#sec:H">H</A> <A class="sec" href="summary.html#sec:H">H</A> <A class="sec" href="summary.html#sec:H">H</A> <A class="sec" href="summary.html#sec:H">H</A> <A class="sec" href="summary.html#sec:H">H</A> <A class="sec" href="summary.html#sec:H">H</A> <A class="sec" href="summary.html#sec:H">H</A> <A class="sec" href="summary.html#sec:H">H</A> <A class="sec" href="summary.html#sec:H">H</A></DD>
+<DT>text_buffer,<B><CODE>&lt;-</CODE>read_as_file</B></DT>
+<DD>
+<A class="idx" href="sec-D.1.html#idx:textbuffergetreadasfile:681">D.1</A></DD>
+<DT>text_buffer,<B><CODE>&lt;-</CODE>size_as_file</B></DT>
+<DD>
+<A class="idx" href="sec-D.1.html#idx:textbuffergetsizeasfile:682">D.1</A></DD>
+<DT>text_buffer,<B><CODE>-&gt;</CODE>format</B></DT>
+<DD>
+<A class="idx" href="sec-D.1.html#idx:textbuffersendformat:685">D.1</A></DD>
+<DT>text_buffer,<B><CODE>-&gt;</CODE>write_as_file</B></DT>
+<DD>
+<A class="idx" href="sec-D.1.html#idx:textbuffersendwriteasfile:683">D.1</A></DD>
+<DT><A class="idx" href="summary.html#class:text_cursor">text_cursor</A></DT>
+<DD>
+<A class="sec" href="summary.html#sec:H">H</A></DD>
+<DT>text-entry field</DT>
+<DD>
+<A class="idx" href="sec-4.2.html#idx:textentryfield:122">4.2</A></DD>
+<DT>text-entry-field</DT>
+<DD>
+<A class="idx" href="summary.html#idx:textentryfield:848">H</A></DD>
+<DT><A class="idx" href="summary.html#class:text_image">text_image</A></DT>
+<DD>
+<A class="sec" href="sec-7.3.html#sec:7.3.2">7.3.2</A> <A class="sec" href="printing.html#sec:10.13.1">10.13.1</A> <A class="sec" href="summary.html#sec:H">H</A> <A class="sec" href="summary.html#sec:H">H</A> <A class="sec" href="summary.html#sec:H">H</A> <A class="sec" href="summary.html#sec:H">H</A></DD>
+<DT><A class="idx" href="summary.html#class:text_item">text_item</A></DT>
+<DD>
+<A class="sec" href="sec-4.2.html#sec:4.2">4.2</A> <A class="sec" href="sec-4.2.html#sec:4.2">4.2</A> <A class="sec" href="sec-4.3.html#sec:4.3">4.3</A> <A class="sec" href="sec-A.2.html#sec:A.2.2">A.2.2</A> <A class="sec" href="summary.html#sec:H">H</A> <A class="sec" href="summary.html#sec:H">H</A> <A class="sec" href="summary.html#sec:H">H</A></DD>
+<DT>text_item,<B><CODE>&lt;-&gt;</CODE>type</B></DT>
+<DD>
+<A class="idx" href="sec-A.1.html#idx:textitembothtype:598">A.1.2</A> <A class="idx" href="sec-A.2.html#idx:textitembothtype:618">A.2.2</A></DD>
+<DT>text_item,<B><CODE>&lt;-</CODE>selection</B></DT>
+<DD>
+<A class="idx" href="sec-A.1.html#idx:textitemgetselection:602">A.1.4</A></DD>
+<DT>text_item,<B><CODE>-&gt;</CODE>message</B></DT>
+<DD>
+<A class="idx" href="sec-A.2.html#idx:textitemsendmessage:621">A.2.2</A></DD>
+<DT><A class="idx" href="summary.html#class:text_margin">text_margin</A></DT>
+<DD>
+<A class="sec" href="summary.html#sec:H">H</A> <A class="sec" href="summary.html#sec:H">H</A></DD>
+<DT>tick-box</DT>
+<DD>
+<A class="idx" href="sec-4.2.html#idx:tickbox:124">4.2</A></DD>
+<DT><A class="idx" href="summary.html#class:tile">tile</A></DT>
+<DD>
+<A class="sec" href="framelayout.html#sec:10.6">10.6</A> <A class="sec" href="framelayout.html#sec:10.6.1">10.6.1</A> <A class="sec" href="summary.html#sec:H">H</A></DD>
+<DT><A class="idx" href="summary.html#class:tile_adjuster">tile_adjuster</A></DT>
+<DD>
+</DD>
+<DT><A class="idx" href="summary.html#class:timer">timer</A></DT>
+<DD>
+</DD>
+<DT>toc_file</DT>
+<DD>
+<A class="sec" href="toc.html#sec:11.4">11.4</A> <A class="sec" href="toc.html#sec:11.4">11.4</A> <A class="sec" href="toc.html#sec:11.4">11.4</A> <A class="sec" href="toc.html#sec:11.4">11.4</A> <A class="sec" href="toc.html#sec:11.4">11.4</A></DD>
+<DT>toc_folder</DT>
+<DD>
+<A class="sec" href="toc.html#sec:11.4">11.4</A> <A class="sec" href="toc.html#sec:11.4">11.4</A> <A class="sec" href="toc.html#sec:11.4">11.4</A> <A class="sec" href="toc.html#sec:11.4">11.4</A> <A class="sec" href="toc.html#sec:11.4">11.4</A></DD>
+<DT>toc_window</DT>
+<DD>
+<A class="sec" href="toc.html#sec:11.4">11.4</A> <A class="sec" href="toc.html#sec:11.4">11.4</A> <A class="sec" href="toc.html#sec:11.4">11.4</A> <A class="sec" href="toc.html#sec:11.4">11.4</A> <A class="sec" href="toc.html#sec:11.4">11.4</A></DD>
+<DT>toc_window,<B><CODE>-&gt;</CODE>son</B></DT>
+<DD>
+<A class="idx" href="toc.html#idx:tocwindowsendson:494">11.4</A></DD>
+<DT><A class="idx" href="summary.html#class:tokeniser">tokeniser</A></DT>
+<DD>
+<A class="sec" href="summary.html#sec:H">H</A></DD>
+<DT>tool_bar</DT>
+<DD>
+<A class="sec" href="libdia.html#sec:11.3.2">11.3.2</A> <A class="sec" href="libdia.html#sec:11.3.2">11.3.2</A></DD>
+<DT>tool_bar,<B><CODE>&lt;-</CODE>client</B></DT>
+<DD>
+<A class="idx" href="libdia.html#idx:toolbargetclient:489">11.3.2</A></DD>
+<DT>tool_bar,<B><CODE>-&gt;</CODE>append</B></DT>
+<DD>
+<A class="idx" href="libdia.html#idx:toolbarsendappend:488">11.3.2</A></DD>
+<DT>tool_button</DT>
+<DD>
+<A class="sec" href="libdia.html#sec:11.3.2">11.3.2</A> <A class="sec" href="libdia.html#sec:11.3.2">11.3.2</A></DD>
+<DT>tool_status_button</DT>
+<DD>
+<A class="sec" href="libdia.html#sec:11.3.2">11.3.2</A> <A class="sec" href="libdia.html#sec:11.3.2">11.3.2</A></DD>
+<DT>trace/0</DT>
+<DD>
+<A class="idx" href="sec-12.3.html#idx:trace0:584">12.3</A> <A class="idx" href="sec-12.3.html#idx:trace0:587">12.3</A></DD>
+<DT><A class="idx" href="sec-D.2.html#tracepce/1">tracepce/1</A></DT>
+<DD>
+<A class="idx" href="sec-3.3.html#idx:tracepce1:112">3.3.2</A> <A class="idx" href="sec-12.2.html#idx:tracepce1:578">12.2</A> <A class="idx" href="sec-12.2.html#idx:tracepce1:579">12.2</A> <A class="idx" href="sec-12.3.html#idx:tracepce1:586">12.3</A> <A class="idx" href="sec-D.2.html#idx:tracepce1:697">D.2.2</A> <A class="idx" href="sec-D.2.html#idx:tracepce1:701">D.2.3</A> <A class="idx" href="summary.html#idx:tracepce1:834">H</A></DD>
+<DT>transient,frame</DT>
+<DD>
+<A class="idx" href="application.html#idx:transientframe:362">10.5.2</A></DD>
+<DT><A class="idx" href="summary.html#class:tree">tree</A></DT>
+<DD>
+<A class="sec" href="libraries.html#sec:11">11</A> <A class="sec" href="toc.html#sec:11.4">11.4</A> <A class="sec" href="delegation.html#sec:C.4">C.4</A> <A class="sec" href="summary.html#sec:H">H</A> <A class="sec" href="summary.html#sec:H">H</A></DD>
+<DT>triangle</DT>
+<DD>
+<A class="idx" href="summary.html#idx:triangle:830">H</A></DD>
+<DT><A class="idx" href="summary.html#class:tuple">tuple</A></DT>
+<DD>
+</DD>
+<DT><A class="idx" href="summary.html#class:type">type</A></DT>
+<DD>
+<A class="idx" href="sec-2.5.html#idx:type:56">2.5</A> <A class="idx" href="sec-3.2.html#idx:type:95">3.2.1</A> <A class="sec" href="sec-3.2.html#sec:3.2.1">3.2.1</A> <A class="sec" href="udcpreds.html#sec:7.4">7.4</A> <A class="sec" href="summary.html#sec:H">H</A> <A class="sec" href="summary.html#sec:H">H</A></DD>
+<DT>type,conversion</DT>
+<DD>
+<A class="idx" href="sec-2.5.html#idx:typeconversion:57">2.5</A> <A class="idx" href="sec-3.3.html#idx:typeconversion:109">3.3.1.3</A></DD>
+<DT>type,<B><CODE>&lt;-</CODE>convert</B></DT>
+<DD>
+<A class="idx" href="sec-3.2.html#idx:typegetconvert:96">3.2.1</A></DD>
+<DT>type,<B><CODE>&lt;-</CODE>value_set</B></DT>
+<DD>
+<A class="idx" href="summary.html#idx:typegetvalueset:849">H</A></DD>
+<DT><STRONG>U</STRONG></DT>
+<DD>
+</DD>
+<DT>UI,structure of</DT>
+<DD>
+<A class="idx" href="sec-3.1.html#idx:UIstructureof:89">3.1</A></DD>
+<DT>undefined,class</DT>
+<DD>
+<A class="idx" href="errors.html#idx:undefinedclass:415">10.8.3</A></DD>
+<DT>undefined,object reference</DT>
+<DD>
+<A class="idx" href="errors.html#idx:undefinedobjectreference:420">10.8.3</A></DD>
+<DT>undo</DT>
+<DD>
+<A class="idx" href="summary.html#idx:undo:791">H</A></DD>
+<DT><A class="idx" href="sec-7.1.html#use_class_template/1">use_class_template/1</A></DT>
+<DD>
+<A class="idx" href="sec-7.5.html#idx:useclasstemplate1:250">7.5.2.1</A> <A class="idx" href="sec-7.5.html#idx:useclasstemplate1:251">7.5.2.1</A> <A class="idx" href="glossary.html#idx:useclasstemplate1:746">G</A></DD>
+<DT>user-defined graphics</DT>
+<DD>
+<A class="idx" href="summary.html#idx:userdefinedgraphics:778">H</A></DD>
+<DT>user_help/0</DT>
+<DD>
+<A class="idx" href="sec-A.1.html#idx:userhelp0:597">A.1.1</A></DD>
+<DT><STRONG>V</STRONG></DT>
+<DD>
+</DD>
+<DT><A class="idx" href="summary.html#class:var">var</A></DT>
+<DD>
+<A class="sec" href="notprolog.html#sec:6.1">6.1</A> <A class="sec" href="sec-7.5.html#sec:7.5.3">7.5.3</A> <A class="sec" href="exeobjects.html#sec:10.2.2">10.2.2</A> <A class="sec" href="exeobjects.html#sec:10.2.2">10.2.2</A> <A class="sec" href="summary.html#sec:H">H</A> <A class="sec" href="summary.html#sec:H">H</A> <A class="sec" href="summary.html#sec:H">H</A> <A class="sec" href="summary.html#sec:H">H</A></DD>
+<DT>vararg</DT>
+<DD>
+<A class="idx" href="sec-7.5.html#idx:vararg:244">7.5.2</A></DD>
+<DT><A class="idx" href="summary.html#class:variable">variable</A></DT>
+<DD>
+<A class="sec" href="glossary.html#sec:G">G</A> <A class="sec" href="summary.html#sec:H">H</A> <A class="sec" href="summary.html#sec:H">H</A></DD>
+<DT><A class="idx" href="sec-7.1.html#variable/[3,4]">variable/[3,4]</A></DT>
+<DD>
+</DD>
+<DT>variable number of arguments</DT>
+<DD>
+<A class="idx" href="sec-7.5.html#idx:variablenumberofarguments:243">7.5.2</A></DD>
+<DT>variable,<B><CODE>-&gt;</CODE>clone_style</B></DT>
+<DD>
+<A class="idx" href="sec-7.5.html#idx:variablesendclonestyle:255">7.5.3</A></DD>
+<DT><A class="idx" href="summary.html#class:vector">vector</A></DT>
+<DD>
+<A class="sec" href="summary.html#sec:H">H</A></DD>
+<DT>version</DT>
+<DD>
+<A class="idx" href="sec-2.1.html#idx:version:16">2.1</A></DD>
+<DT>vfont</DT>
+<DD>
+<A class="sec" href="docrender.html#sec:11.10.3">11.10.3</A> <A class="sec" href="docrender.html#sec:11.10.3.1">11.10.3.1</A> <A class="sec" href="docrender.html#sec:11.10.3.1">11.10.3.1</A> <A class="sec" href="docrender.html#sec:11.10.3.2">11.10.3.2</A></DD>
+<DT>vfont,<B><CODE>&lt;-</CODE>font</B></DT>
+<DD>
+<A class="idx" href="docrender.html#idx:vfontgetfont:559">11.10.3.1</A></DD>
+<DT><A class="idx" href="summary.html#class:view">view</A></DT>
+<DD>
+<A class="sec" href="fileviewer.html#sec:2.8">2.8</A> <A class="sec" href="sec-4.2.html#sec:4.2">4.2</A> <A class="sec" href="delegation.html#sec:C.4">C.4</A> <A class="sec" href="delegation.html#sec:C.4">C.4</A> <A class="sec" href="summary.html#sec:H">H</A> <A class="sec" href="summary.html#sec:H">H</A> <A class="sec" href="summary.html#sec:H">H</A></DD>
+<DT>view/1</DT>
+<DD>
+<A class="idx" href="fileviewer.html#idx:view1:71">2.8</A></DD>
+<DT>view/2</DT>
+<DD>
+<A class="idx" href="fileviewer.html#idx:view2:72">2.8</A></DD>
+<DT>view,<B><CODE>-&gt;</CODE>load</B></DT>
+<DD>
+<A class="idx" href="fileviewer.html#idx:viewsendload:73">2.8</A></DD>
+<DT><A class="idx" href="summary.html#class:visual">visual</A></DT>
+<DD>
+<A class="sec" href="application.html#sec:10.5.1">10.5.1</A> <A class="sec" href="report.html#sec:10.7.2">10.7.2</A> <A class="sec" href="balloon.html#sec:11.2">11.2</A> <A class="sec" href="summary.html#sec:H">H</A> <A class="sec" href="summary.html#sec:H">H</A></DD>
+<DT>visual,<B><CODE>&lt;-</CODE>contained_in</B></DT>
+<DD>
+<A class="idx" href="summary.html#idx:visualgetcontainedin:862">H</A></DD>
+<DT>visual,<B><CODE>&lt;-</CODE>contains</B></DT>
+<DD>
+<A class="idx" href="summary.html#idx:visualgetcontains:861">H</A></DD>
+<DT>visuals</DT>
+<DD>
+<A class="idx" href="images.html#idx:visuals:435">10.10.1</A></DD>
+<DT>visual,<B><CODE>-&gt;</CODE>destroy</B></DT>
+<DD>
+<A class="idx" href="summary.html#idx:visualsenddestroy:863">H</A></DD>
+<DT>visual,<B><CODE>-&gt;</CODE>report</B></DT>
+<DD>
+<A class="idx" href="report.html#idx:visualsendreport:386">10.7.2</A></DD>
+<DT><STRONG>W</STRONG></DT>
+<DD>
+</DD>
+<DT>WAIS</DT>
+<DD>
+<A class="idx" href="sec-3.3.html#idx:WAIS:114">3.3.3</A></DD>
+<DT><A class="idx" href="summary.html#class:when">when</A></DT>
+<DD>
+<A class="sec" href="summary.html#sec:H">H</A></DD>
+<DT><A class="idx" href="summary.html#class:while">while</A></DT>
+<DD>
+<A class="sec" href="summary.html#sec:H">H</A> <A class="sec" href="summary.html#sec:H">H</A></DD>
+<DT><A class="idx" href="summary.html#class:window">window</A></DT>
+<DD>
+<A class="sec" href="fileviewer.html#sec:2.8">2.8</A> <A class="sec" href="controller.html#sec:4">4</A> <A class="sec" href="sec-5.1.html#sec:5.1">5.1</A> <A class="sec" href="sec-5.2.html#sec:5.2">5.2</A> <A class="sec" href="framelayout.html#sec:10.6">10.6</A> <A class="sec" href="toc.html#sec:11.4">11.4</A> <A class="sec" href="tabular.html#sec:11.5.2">11.5.2</A> <A class="sec" href="delegation.html#sec:C.4">C.4</A> <A class="sec" href="delegation.html#sec:C.4">C.4</A> <A class="sec" href="summary.html#sec:H">H</A> <A class="sec" href="summary.html#sec:H">H</A> <A class="sec" href="summary.html#sec:H">H</A> <A class="sec" href="summary.html#sec:H">H</A> <A class="sec" href="summary.html#sec:H">H</A> <A class="sec" href="summary.html#sec:H">H</A> <A class="sec" href="summary.html#sec:H">H</A> <A class="sec" href="summary.html#sec:H">H</A> <A class="sec" href="summary.html#sec:H">H</A></DD>
+<DT>window,coordinates</DT>
+<DD>
+<A class="idx" href="sec-5.1.html#idx:windowcoordinates:171">5.1</A></DD>
+<DT><A class="idx" href="summary.html#class:window_decorator">window_decorator</A></DT>
+<DD>
+<A class="sec" href="summary.html#sec:H">H</A></DD>
+<DT>window,<B><CODE>&lt;-</CODE>height</B></DT>
+<DD>
+<A class="idx" href="sec-2.7.html#idx:windowgetheight:67">2.7</A> <A class="idx" href="sec-2.7.html#idx:windowgetheight:69">2.7</A></DD>
+<DT>window,layout in frame</DT>
+<DD>
+<A class="idx" href="framelayout.html#idx:windowlayoutinframe:369">10.6</A></DD>
+<DT>Windows 2000</DT>
+<DD>
+<A class="idx" href="mswin.html#idx:Windows2000:631">B</A></DD>
+<DT>Windows 95</DT>
+<DD>
+<A class="idx" href="sec-1.4.html#idx:Windows95:8">1.4.2</A> <A class="idx" href="mswin.html#idx:Windows95:629">B</A></DD>
+<DT>window,<B><CODE>-&gt;</CODE>above</B></DT>
+<DD>
+<A class="idx" href="framelayout.html#idx:windowsendabove:373">10.6</A></DD>
+<DT>window,<B><CODE>-&gt;</CODE>create</B></DT>
+<DD>
+<A class="idx" href="framelayout.html#idx:windowsendcreate:371">10.6</A></DD>
+<DT>window,<B><CODE>-&gt;</CODE>open</B></DT>
+<DD>
+<A class="idx" href="framelayout.html#idx:windowsendopen:372">10.6</A></DD>
+<DT>window,<B><CODE>-&gt;</CODE>_redraw_area</B></DT>
+<DD>
+<A class="idx" href="ugraphics.html#idx:windowsendredrawarea:468">10.12.2</A></DD>
+<DT>window,<B><CODE>-&gt;</CODE>resize_message</B></DT>
+<DD>
+<A class="idx" href="sec-4.3.html#idx:windowsendresizemessage:143">4.3.1</A></DD>
+<DT>window,size specification</DT>
+<DD>
+<A class="idx" href="framelayout.html#idx:windowsizespecification:374">10.6.1</A></DD>
+<DT>Windows NT</DT>
+<DD>
+<A class="idx" href="sec-1.4.html#idx:WindowsNT:9">1.4.2</A> <A class="idx" href="mswin.html#idx:WindowsNT:630">B</A></DD>
+<DT>Windows XP</DT>
+<DD>
+<A class="idx" href="mswin.html#idx:WindowsXP:632">B</A></DD>
+<DT>win_metafile</DT>
+<DD>
+<A class="sec" href="printing.html#sec:10.13.1">10.13.1</A></DD>
+<DT>@_win_pen</DT>
+<DD>
+<A class="idx" href="summary.html#idx:winpen:751">H</A></DD>
+<DT>win_printer</DT>
+<DD>
+<A class="sec" href="printing.html#sec:10.13.1">10.13.1</A> <A class="sec" href="printing.html#sec:10.13.1">10.13.1</A></DD>
+<DT>WinSock</DT>
+<DD>
+<A class="idx" href="sec-B.2.html#idx:WinSock:634">B.2</A></DD>
+<DT>WMF</DT>
+<DD>
+<A class="idx" href="printing.html#idx:WMF:474">10.13.1</A></DD>
+<DT>write,text to object</DT>
+<DD>
+<A class="idx" href="sec-D.1.html#idx:writetexttoobject:678">D.1</A></DD>
+<DT>WWW,addresses</DT>
+<DD>
+<A class="idx" href="faq.html#idx:WWWaddresses:2">1.2</A></DD>
+<DT>wysiwyg/1</DT>
+<DD>
+<A class="idx" href="modal.html#idx:wysiwyg1:154">4.4.1</A></DD>
+<DT><STRONG>X</STRONG></DT>
+<DD>
+</DD>
+<DT>X11</DT>
+<DD>
+<A class="idx" href="summary.html#idx:X11:776">H</A></DD>
+<DT>xauth</DT>
+<DD>
+<A class="idx" href="trouble.html#idx:xauth:730">F</A></DD>
+<DT>XBM,file format</DT>
+<DD>
+<A class="idx" href="images.html#idx:XBMfileformat:446">10.10.2</A></DD>
+<DT>xhost</DT>
+<DD>
+<A class="idx" href="trouble.html#idx:xhost:732">F</A></DD>
+<DT>xpce-client</DT>
+<DD>
+<A class="idx" href="summary.html#idx:xpceclient:843">H</A></DD>
+<DT>XPM,file format</DT>
+<DD>
+<A class="idx" href="images.html#idx:XPMfileformat:443">10.10.2</A></DD>
+<DT>X-windows</DT>
+<DD>
+<A class="idx" href="sec-1.4.html#idx:Xwindows:5">1.4.1</A></DD>
+</DL>
+
+</BODY></HTML>

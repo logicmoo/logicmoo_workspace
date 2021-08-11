@@ -1,0 +1,203 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+
+<HTML>
+<HEAD>
+<TITLE>Programming in XPCE/Prolog</TITLE><LINK REL=home HREF="index.html">
+<LINK REL=contents HREF="Contents.html">
+<LINK REL=index HREF="DocIndex.html">
+<LINK REL=summary HREF="summary.html">
+<LINK REL=previous HREF="Bibliography.html">
+<LINK REL=next HREF="sec-A.1.html">
+<STYLE type="text/css">
+/* Style sheet for SWI-Prolog latex2html
+*/
+
+dd.defbody
+{ margin-bottom: 1em;
+}
+
+dt.pubdef
+{ background-color: #c5e1ff;
+}
+
+pre.code
+{ margin-left: 1.5em;
+margin-right: 1.5em;
+border: 1px dotted;
+padding-top: 5px;
+padding-left: 5px;
+padding-bottom: 5px;
+background-color: #f8f8f8;
+}
+
+div.navigate
+{ text-align: center;
+background-color: #f0f0f0;
+border: 1px dotted;
+padding: 5px;
+}
+
+div.title
+{ text-align: center;
+padding-bottom: 1em;
+font-size: 200%;
+font-weight: bold;
+}
+
+div.author
+{ text-align: center;
+font-style: italic;
+}
+
+div.abstract
+{ margin-top: 2em;
+background-color: #f0f0f0;
+border: 1px dotted;
+padding: 5px;
+margin-left: 10%; margin-right:10%;
+}
+
+div.abstract-title
+{ text-align: center;
+padding: 5px;
+font-size: 120%;
+font-weight: bold;
+}
+
+div.toc-h1
+{ font-size: 200%;
+font-weight: bold;
+}
+
+div.toc-h2
+{ font-size: 120%;
+font-weight: bold;
+margin-left: 2em;
+}
+
+div.toc-h3
+{ font-size: 100%;
+font-weight: bold;
+margin-left: 4em;
+}
+
+div.toc-h4
+{ font-size: 100%;
+margin-left: 6em;
+}
+
+span.sec-nr
+{ 
+}
+
+span.sec-title
+{ 
+}
+
+span.pred-ext
+{ font-weight: bold;
+}
+
+/* Footnotes */
+
+sup.fn { color: blue; text-decoration: underline; }
+span.fn-text: { display: none; }
+sup.fn span {display: none;}
+sup:hover span 
+{ display: block !important;
+position: absolute; top: auto; left: auto; width: 80%;
+color: #000; background: white;
+border: 2px solid;
+padding: 5px; margin: 10px; z-index: 100;
+font-size: smaller;
+}
+</STYLE>
+</HEAD>
+<BODY BGCOLOR="white">
+<DIV class="navigate"><A class="nav" href="index.html"><IMG SRC="home.gif" BORDER=0 ALT="Home"></A>
+<A class="nav" href="Contents.html"><IMG SRC="index.gif" BORDER=0 ALT="Contents"></A>
+<A class="nav" href="DocIndex.html"><IMG SRC="yellow_pages.gif" BORDER=0 ALT="Index"></A>
+<A class="nav" href="summary.html"><IMG SRC="info.gif" BORDER=0 ALT="Summary"></A>
+<A class="nav" href="Bibliography.html"><IMG SRC="prev.gif" BORDER=0 ALT="Previous"></A>
+<A class="nav" href="sec-A.1.html"><IMG SRC="next.gif" BORDER=0 ALT="Next"></A>
+</DIV>
+
+<H1><A NAME="sec:A"><SPAN class="sec-nr">A</SPAN> <SPAN class="sec-title">The 
+dialog editor</SPAN></A></H1>
+
+<A NAME="sec:dialogeditor"></A>
+
+<P><A NAME="idx:controlsGUItoolfor:592"></A>The dialog editor is a GUI 
+based tool for the definition of dialog windows (windows with controls). 
+It supports the following phases of the definition of a GUI:
+
+<P>
+<UL>
+<LI><I>Specifying the required controls</I><BR>
+Prototypes of controls are dragged to the <EM>target</EM> dialog window. 
+They are moved to---roughly---the right location.
+<LI><I>Refining the controls</I><BR>
+The controls may be refined: specifying labels, sizes, fonts, items in 
+menus, etc.
+<LI><I>Fixing the layout and size of the window</I><BR>
+The layout specification for the dialog window is established. The 
+Dialog Editor guesses the layout intentions of the user and translates 
+these into <font size=-1>XPCE</font>'s dialog-window symbolic layout 
+statements.
+<LI><I>Specifying behaviour</I><BR>
+Both internal behaviour and the link to the application may be 
+established using graphics. The dialog may be tested, while graphical 
+animation illustrates how user-actions are processed and transferred to 
+the application.
+<LI><I>Generation of code</I><BR>
+A Prolog description of the dialog window is realised by dragging the 
+dialog from the list of dialog-windows to a PceEmacs window running in 
+Prolog mode.
+<LI><I>Linking the dialog in the application</I><BR>
+The generated code is a clause of the predicate <A NAME="idx:dialog2:593"></A><A class="pred" href="sec-A.1.html#dialog/2">dialog/2</A>. 
+The first argument of this clause <EM>identifies</EM> the dialog, while 
+the second arguments describes the structure and behaviour of the 
+dialog. The body is empty. The library predicate <A NAME="idx:makedialog2:594"></A><A class="pred" href="sec-A.1.html#make_dialog/2">make_dialog/2</A> 
+is used to create a dialog window from the description of <A NAME="idx:dialog2:595"></A><A class="pred" href="sec-A.1.html#dialog/2">dialog/2</A>.
+</UL>
+
+<P>
+<HR>
+<CENTER>
+
+<H2>Section Index</H2>
+
+</CENTER>
+<HR>
+<DIV class="toc">
+<DIV class="toc-h2"><A class="sec" href="sec-A.1.html"><SPAN class="sec-nr">A.1</SPAN> <SPAN class="sec-title">Guided 
+tour</SPAN></A></DIV>
+<DIV class="toc-h3"><A class="sec" href="sec-A.1.html#sec:A.1.1"><SPAN class="sec-nr">A.1.1</SPAN> <SPAN class="sec-title">Creating 
+the target dialog window</SPAN></A></DIV>
+<DIV class="toc-h3"><A class="sec" href="sec-A.1.html#sec:A.1.2"><SPAN class="sec-nr">A.1.2</SPAN> <SPAN class="sec-title">Adding 
+controls to the new window</SPAN></A></DIV>
+<DIV class="toc-h3"><A class="sec" href="sec-A.1.html#sec:A.1.3"><SPAN class="sec-nr">A.1.3</SPAN> <SPAN class="sec-title">Defining 
+the layout</SPAN></A></DIV>
+<DIV class="toc-h3"><A class="sec" href="sec-A.1.html#sec:A.1.4"><SPAN class="sec-nr">A.1.4</SPAN> <SPAN class="sec-title">Specifying 
+the behaviour</SPAN></A></DIV>
+<DIV class="toc-h3"><A class="sec" href="sec-A.1.html#sec:A.1.5"><SPAN class="sec-nr">A.1.5</SPAN> <SPAN class="sec-title">Generating 
+source code</SPAN></A></DIV>
+<DIV class="toc-h3"><A class="sec" href="sec-A.1.html#sec:A.1.6"><SPAN class="sec-nr">A.1.6</SPAN> <SPAN class="sec-title">Linking 
+the source code</SPAN></A></DIV>
+<DIV class="toc-h3"><A class="sec" href="sec-A.1.html#sec:A.1.7"><SPAN class="sec-nr">A.1.7</SPAN> <SPAN class="sec-title">Summary</SPAN></A></DIV>
+<DIV class="toc-h2"><A class="sec" href="sec-A.2.html"><SPAN class="sec-nr">A.2</SPAN> <SPAN class="sec-title">Miscellaneous 
+topics</SPAN></A></DIV>
+<DIV class="toc-h3"><A class="sec" href="sec-A.2.html#sec:A.2.1"><SPAN class="sec-nr">A.2.1</SPAN> <SPAN class="sec-title">Specifying 
+callback to prolog</SPAN></A></DIV>
+<DIV class="toc-h3"><A class="sec" href="sec-A.2.html#sec:A.2.2"><SPAN class="sec-nr">A.2.2</SPAN> <SPAN class="sec-title">Advanced 
+example of behaviour</SPAN></A></DIV>
+<DIV class="toc-h3"><A class="sec" href="sec-A.2.html#sec:A.2.3"><SPAN class="sec-nr">A.2.3</SPAN> <SPAN class="sec-title">Specifying 
+conditional actions</SPAN></A></DIV>
+<DIV class="toc-h3"><A class="sec" href="sec-A.2.html#sec:A.2.4"><SPAN class="sec-nr">A.2.4</SPAN> <SPAN class="sec-title">Load 
+and save formats</SPAN></A></DIV>
+<DIV class="toc-h2"><A class="sec" href="sec-A.3.html"><SPAN class="sec-nr">A.3</SPAN> <SPAN class="sec-title">Status 
+and problems</SPAN></A></DIV>
+<DIV class="toc-h2"><A class="sec" href="sec-A.4.html"><SPAN class="sec-nr">A.4</SPAN> <SPAN class="sec-title">Summary 
+and Conclusions</SPAN></A></DIV>
+</DIV>
+</BODY></HTML>

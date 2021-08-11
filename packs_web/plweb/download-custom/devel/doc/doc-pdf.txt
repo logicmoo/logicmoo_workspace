@@ -1,0 +1,2 @@
+SWI-Prolog reference manual as PDF file. This does _not_ include the
+[[package][</pldoc/index.html>]] documentation.

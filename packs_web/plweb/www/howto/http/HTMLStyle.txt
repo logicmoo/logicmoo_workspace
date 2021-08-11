@@ -1,0 +1,150 @@
+---++ Adding style (CSS and simple JavaScript) to your pages
+
+Adding style using CSS and JavaScript seems easy: just link the required
+style-sheet and javascript source from the page-head and add the
+appropriate attributes (class, id, onXXX) to your HTML elements. Even
+better, this works! So, what is wrong with it?
+
+Well, *|it breaks the reusability|*. Why? Think of our
+=|\predicates_ul(Preds)|= that created an 1980-ugly unnumbered list of
+predicates. If we add style to the elements themselves, we end-up with
+ugly HTML that cannot be reused with different skins while CSS
+programming now needs do be done in Prolog. This harms hiring a
+CSS-wizard to do the nice styling in a CSS file that we, programmers,
+cannot do. If we put the style in a file however, we cannot just use
+=|\predicates_ul(Preds)|= anywhere in our code, but we also have to
+adjust the page header. I.e., whenever we create a page-header, we must
+be aware of all components we include and what style we need for them.
+Same story for JavaScript that can be needed by the component.  This
+page discusses a web-application with CSS-styling.
+
+---++ The demo: A Simple Linked Open Data browser
+
+*|NOTE: Sindice currently (Jan 17, 2013) serves RDF/XML using the
+invalid =|Content-Type: text/xml|=. [[This
+patch][http://www.swi-prolog.org/git/packages/semweb.git/commit/2ce4e9dff66a14fdc2de0f6378b4938c1d692cd3]]
+provides a work around for this issue.  It will appear in SWI-Prolog
+6.2.7/6.3.9.
+|*
+
+Now that we covered the basics, it is time for a bit more sexy demo:
+a browser for [[Linked Open Data][http://linkeddata.org/]]. Our program
+consists of four files.  The file lod_crawler.pl is the main topic of
+this page.
+
+    * lod_crawler.pl is the web-server implementing the crawler
+    * [[sindice.css][<sindice.css>]]
+    is the CSS style-sheet for the Sindice search-form
+    * [[ptable.css][<ptable.css>]]
+    is the CSS style-sheet for an RDF property-table
+    * lod.pl is Prolog code to get data from the web-of-data.
+
+First, our familiar declarations. The first block gets the HTML and HTTP
+infrastructure that we need. The library(http/html_head) is new and
+deals with dependencies. The second block gets the RDF and Linked Open
+Data (LOD) infrastructure and the third block defines the HTTP locations
+that we serve. We define a welcome page (/), a page to handle search
+requests (/search?q=Query), a page to display a result (/resource?r=URI)
+and because we are going to deal with a style-sheet, we define a new
+alias =css= (last block) and use it to define the HTTP location of our
+style-sheets. The handlers for the style-sheets use the
+library-predicate http_reply_file/3 to serve a static file.
+
+==
+:- use_module(library(http/thread_httpd)).
+:- use_module(library(http/http_dispatch)).
+:- use_module(library(http/html_write)).
+:- use_module(library(http/http_parameters)).
+:- use_module(library(http/html_head)).		% new
+
+:- use_module(library(semweb/rdf_db)).
+:- use_module(lod).
+
+:- http_handler(root(.),	home,	  []).
+:- http_handler(root(search),	search,	  []).
+:- http_handler(root(resource),	resource, []).
+:- http_handler(css('ptable.css'),  http_reply_file('ptable.css', []), []).
+:- http_handler(css('sindice.css'), http_reply_file('sindice.css', []), []).
+
+http:location(css, root(css), []).
+==
+
+Next step, we provide the main page of the server. This should all be
+familiar by now. Using class(Class), we just add an HTML class-attribute
+for the CSS-file. The DCG-rule search_form//0 contains a new element:
+=|\html_requires(css('sindice.css'))|=, tells the HTML infrastructure
+that the page needs the HTML resource =|css('sindice.css')|=.
+
+==
+server(Port) :-
+	http_server(http_dispatch, [port(Port)]).
+
+%%	home(+Request)
+%
+%	Provides the initial page of the LOD-crawler with a form
+%	to search on http://sindice.com
+
+home(_Request) :-
+	reply_html_page(title('LOD Crawler'),
+			[ h1(class(title), 'LOD Crawler'),
+			  p(class(banner),
+			    [ 'Welcome to the SWI-Prolog Linked Open Data ',
+			      'crawler.  To start your experience, enter a ',
+			      'search term such as "Amsterdam".'
+			    ]),
+			  \search_form
+			]).
+
+search_form -->
+	{ http_link_to_id(search, [], Ref) },
+	html([ \html_requires(css('sindice.css')),	% new
+	       form([id(search), action(Ref)],
+		    [ input(name(q)),
+		      input([type(submit), value('Search')])
+		    ])
+	     ]).
+==
+
+We skip most of the rest of the code, except for two fragments.  The
+rule property_table//1 below shows another use of html_requires//1.
+Both search_form//1 and property_table//1 depend on CSS styling and
+both ensure they get the needed style-sheet without any modifications
+to the head in reply_html_page/2.
+
+==
+property_table(Grouped) -->
+	html([ \html_requires(css('ptable.css')),	% new
+	       table(class(properties),
+		     [ \ptable_header
+		     | \ptable_rows(Grouped)
+		     ])
+	     ]).
+==
+
+The final fragment illustrates that reply_html_page/2 can be hooked to
+define the overall structure of all pages generated by this predicate.
+in this example, the hook adds a =div= holding the search-form at the
+top of the page, unless the page itself already contains such a form.
+
+==
+%%	body(+Content)//
+%
+%	Define overall style. This hook into reply_html_page/2 is called
+%	to translate the 2nd argument. It is searched for in the current
+%	module as well as the user-module.
+%
+%	Redefining head//1 or body//1 is a   way to redefine the overall
+%	page-style of all pages served.
+
+body(Content) -->			% contents already provides a form
+	{ sub_term(\search_form, Content)
+	}, !,
+	html(Content).
+body(Content) -->			% add header with search-form
+	html([ div(class(top), \search_form)
+	     | Content
+	     ]).
+==
+
+@see Sources: lod_crawler.pl lod.pl [[sindice.css][<sindice.css>]]
+	      [[ptable.css][<ptable.css>]]

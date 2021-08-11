@@ -1,0 +1,244 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+
+<HTML>
+<HEAD>
+<TITLE>Programming in XPCE/Prolog: Section 4.5</TITLE><LINK REL=home HREF="index.html">
+<LINK REL=contents HREF="Contents.html">
+<LINK REL=index HREF="DocIndex.html">
+<LINK REL=summary HREF="summary.html">
+<LINK REL=previous HREF="modal.html">
+<LINK REL=next HREF="graphics.html">
+<STYLE type="text/css">
+/* Style sheet for SWI-Prolog latex2html
+*/
+
+dd.defbody
+{ margin-bottom: 1em;
+}
+
+dt.pubdef
+{ background-color: #c5e1ff;
+}
+
+pre.code
+{ margin-left: 1.5em;
+margin-right: 1.5em;
+border: 1px dotted;
+padding-top: 5px;
+padding-left: 5px;
+padding-bottom: 5px;
+background-color: #f8f8f8;
+}
+
+div.navigate
+{ text-align: center;
+background-color: #f0f0f0;
+border: 1px dotted;
+padding: 5px;
+}
+
+div.title
+{ text-align: center;
+padding-bottom: 1em;
+font-size: 200%;
+font-weight: bold;
+}
+
+div.author
+{ text-align: center;
+font-style: italic;
+}
+
+div.abstract
+{ margin-top: 2em;
+background-color: #f0f0f0;
+border: 1px dotted;
+padding: 5px;
+margin-left: 10%; margin-right:10%;
+}
+
+div.abstract-title
+{ text-align: center;
+padding: 5px;
+font-size: 120%;
+font-weight: bold;
+}
+
+div.toc-h1
+{ font-size: 200%;
+font-weight: bold;
+}
+
+div.toc-h2
+{ font-size: 120%;
+font-weight: bold;
+margin-left: 2em;
+}
+
+div.toc-h3
+{ font-size: 100%;
+font-weight: bold;
+margin-left: 4em;
+}
+
+div.toc-h4
+{ font-size: 100%;
+margin-left: 6em;
+}
+
+span.sec-nr
+{ 
+}
+
+span.sec-title
+{ 
+}
+
+span.pred-ext
+{ font-weight: bold;
+}
+
+/* Footnotes */
+
+sup.fn { color: blue; text-decoration: underline; }
+span.fn-text: { display: none; }
+sup.fn span {display: none;}
+sup:hover span 
+{ display: block !important;
+position: absolute; top: auto; left: auto; width: 80%;
+color: #000; background: white;
+border: 2px solid;
+padding: 5px; margin: 10px; z-index: 100;
+font-size: smaller;
+}
+</STYLE>
+</HEAD>
+<BODY BGCOLOR="white">
+<DIV class="navigate"><A class="nav" href="index.html"><IMG SRC="home.gif" BORDER=0 ALT="Home"></A>
+<A class="nav" href="Contents.html"><IMG SRC="index.gif" BORDER=0 ALT="Contents"></A>
+<A class="nav" href="DocIndex.html"><IMG SRC="yellow_pages.gif" BORDER=0 ALT="Index"></A>
+<A class="nav" href="summary.html"><IMG SRC="info.gif" BORDER=0 ALT="Summary"></A>
+<A class="nav" href="modal.html"><IMG SRC="prev.gif" BORDER=0 ALT="Previous"></A>
+<A class="nav" href="graphics.html"><IMG SRC="next.gif" BORDER=0 ALT="Next"></A>
+</DIV>
+
+<H2><A NAME="sec:4.5"><SPAN class="sec-nr">4.5</SPAN> <SPAN class="sec-title">Editing 
+attributes</SPAN></A></H2>
+
+<P><A NAME="idx:attributeediting:167"></A>In the previous section, we 
+discussed dialogs for entering values. Another typical use of dialog 
+windows is to modify setting of the application, or more in general, 
+edit attributes of existing entities in the application. These entities 
+may both be represented as <font size=-1>XPCE</font> objects or as 
+constructs in the host language (dynamic predicates or the recorded 
+database in Prolog).
+
+<P>Such dialog windows first show the current settings. It allows for 
+modifying the controls showing the various aspects of the current state 
+and three buttons providing the following functions:
+
+<P>
+<UL>
+<LI><I><B>Apply</B></I><BR>
+Apply the current controls, which implies invoking some behaviour on the 
+application to realise the setting of the---modified--- controls.
+<LI><I><B>Restore</B></I><BR>
+Reset the controls to the current status of the application.
+<LI><I><B>Cancel</B></I><BR>
+Destroy the dialog and do not modify the current settings of the 
+application.
+</UL>
+
+<P>The following methods are defined on all primitive controls as well 
+as on the dialog window faciliate the implementations of dialog windows 
+as described above.
+
+<DL>
+<DT><STRONG>dialog_item -&gt;default:</STRONG> <VAR>any<VAR>|</VAR>function</VAR></DT>
+<DD class="defbody">
+</DD>
+<DT><STRONG>dialog_item -&gt;restore:</STRONG> <VAR></VAR></DT>
+<DD class="defbody">
+For most dialog items, the <B><CODE>&lt;-&gt;</CODE>default</B> value is 
+the second initialisation argument. Instead of a plain value, this can 
+be a <A class="" href="summary.html#class:function">function</A> object. 
+The initial <B><CODE>&lt;-</CODE>selection</B> is set by evaluating this 
+function. In addition, <B><CODE>-&gt;</CODE>restore</B> will evaluate 
+the function again and reset the selection.
+</DD>
+<DT><STRONG>dialog_item -&gt;apply:</STRONG> <VAR>always:bool</VAR></DT>
+<DD class="defbody">
+Execute the <B><CODE>-&gt;</CODE>message</B> of each dialog item for 
+which `dialog_item
+<B><CODE>&lt;-</CODE>modified</B>' yields <A NAME="idx:on:168"></A><B>@on</B>. 
+If the argument is <A NAME="idx:on:169"></A><B>@on</B>, the modified 
+flag is not checked.
+</DD>
+<DT><STRONG>dialog -&gt;apply:</STRONG> <VAR></VAR></DT>
+<DD class="defbody">
+</DD>
+<DT><STRONG>dialog -&gt;restore:</STRONG> <VAR></VAR></DT>
+<DD class="defbody">
+Broadcasts <B><CODE>-&gt;</CODE>apply</B> or <B><CODE>-&gt;</CODE>restore</B> 
+to each item in the dialog.
+</DD>
+</DL>
+
+<H3><A NAME="sec:4.5.1"><SPAN class="sec-nr">4.5.1</SPAN> <SPAN class="sec-title">Example: 
+editing attributes of a graphical</SPAN></A></H3>
+
+<P>We will illustrate these methods described above in this example, 
+which implements a dialog for editing the colour of the interior and 
+thickness of the line around a graphical. Double-clicking on a graphical 
+pops up a dialog window for changing these values. The result is show in
+<A class="fig" href="sec-4.5.html#fig:editgraphical">figure 11</A>.
+
+<PRE class="code">
+colour(white).
+colour(red).
+colour(green).
+colour(blue).
+colour(black).
+
+append_colour(M, C) :-
+        new(Img, pixmap(@nil, white, black, 32, 16)),
+        send(Img, fill, colour(C)),
+        send(M, append, menu_item(colour(C), label := Img)).
+
+edit_graphical(Gr) :-
+        new(D, dialog(string('Edit graphical %s', Gr?name))),
+        send(D, append,
+             new(M, menu(colour, choice,
+                         message(Gr, fill_pattern, @arg1)))),
+        send(M, layout, horizontal),
+        forall(colour(C), append_colour(M, C)),
+        send(M, default, Gr?fill_pattern),
+        send(D, append, slider(pen, 0, 10, Gr?pen,
+                               message(Gr, pen, @arg1))),
+        send(D, append, button(apply)),
+        send(D, append, button(restore)),
+        send(D, append, button(quit, message(D, destroy))),
+        send(D, default_button, apply),
+        send(D, open).
+
+attributedemo :-
+        send(new(P, picture('Attribute Demo')), open),
+        send(P, display,
+             new(B, box(100, 100)), point(20, 20)),
+        send(P, display,
+             new(E, ellipse(100, 50)), point(150, 20)),
+        send_list([B, E], fill_pattern, colour(white)),
+        new(C, click_gesture(left, '', double,
+                             message(@prolog, edit_graphical,
+                                     @receiver))),
+        send(B, recogniser, C),
+        send(E, recogniser, C).</PRE>
+
+<P><A NAME="fig:editgraphical"></A>
+<CENTER>
+<IMG SRC="editgraphical.gif">
+</CENTER>
+<TABLE ALIGN=center WIDTH="75%"><TR><TD>
+<B>Figure 11 : </B>Attribute editor for graphical objects</TABLE>
+
+</BODY></HTML>

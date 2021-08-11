@@ -1,0 +1,18 @@
+[submodule "www"]
+	path = www
+	url = ../plweb-www.git
+[submodule "packs/recaptcha"]
+	path = packs/recaptcha
+	url = https://github.com/JanWielemaker/recaptcha.git
+[submodule "packs/smtp"]
+	path = packs/smtp
+	url = https://github.com/JanWielemaker/smtp.git
+[submodule "packs/googleclient"]
+	path = packs/googleclient
+	url = https://github.com/JanWielemaker/googleclient.git
+[submodule "examples"]
+	path = examples
+	url = ../plweb-examples.git
+[submodule "blog"]
+	path = blog
+	url = ../plweb-blog.git

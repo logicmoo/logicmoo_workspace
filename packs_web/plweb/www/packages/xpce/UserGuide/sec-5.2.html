@@ -1,0 +1,176 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+
+<HTML>
+<HEAD>
+<TITLE>Programming in XPCE/Prolog: Section 5.2</TITLE><LINK REL=home HREF="index.html">
+<LINK REL=contents HREF="Contents.html">
+<LINK REL=index HREF="DocIndex.html">
+<LINK REL=summary HREF="summary.html">
+<LINK REL=previous HREF="sec-5.1.html">
+<LINK REL=next HREF="connection.html">
+<STYLE type="text/css">
+/* Style sheet for SWI-Prolog latex2html
+*/
+
+dd.defbody
+{ margin-bottom: 1em;
+}
+
+dt.pubdef
+{ background-color: #c5e1ff;
+}
+
+pre.code
+{ margin-left: 1.5em;
+margin-right: 1.5em;
+border: 1px dotted;
+padding-top: 5px;
+padding-left: 5px;
+padding-bottom: 5px;
+background-color: #f8f8f8;
+}
+
+div.navigate
+{ text-align: center;
+background-color: #f0f0f0;
+border: 1px dotted;
+padding: 5px;
+}
+
+div.title
+{ text-align: center;
+padding-bottom: 1em;
+font-size: 200%;
+font-weight: bold;
+}
+
+div.author
+{ text-align: center;
+font-style: italic;
+}
+
+div.abstract
+{ margin-top: 2em;
+background-color: #f0f0f0;
+border: 1px dotted;
+padding: 5px;
+margin-left: 10%; margin-right:10%;
+}
+
+div.abstract-title
+{ text-align: center;
+padding: 5px;
+font-size: 120%;
+font-weight: bold;
+}
+
+div.toc-h1
+{ font-size: 200%;
+font-weight: bold;
+}
+
+div.toc-h2
+{ font-size: 120%;
+font-weight: bold;
+margin-left: 2em;
+}
+
+div.toc-h3
+{ font-size: 100%;
+font-weight: bold;
+margin-left: 4em;
+}
+
+div.toc-h4
+{ font-size: 100%;
+margin-left: 6em;
+}
+
+span.sec-nr
+{ 
+}
+
+span.sec-title
+{ 
+}
+
+span.pred-ext
+{ font-weight: bold;
+}
+
+/* Footnotes */
+
+sup.fn { color: blue; text-decoration: underline; }
+span.fn-text: { display: none; }
+sup.fn span {display: none;}
+sup:hover span 
+{ display: block !important;
+position: absolute; top: auto; left: auto; width: 80%;
+color: #000; background: white;
+border: 2px solid;
+padding: 5px; margin: 10px; z-index: 100;
+font-size: smaller;
+}
+</STYLE>
+</HEAD>
+<BODY BGCOLOR="white">
+<DIV class="navigate"><A class="nav" href="index.html"><IMG SRC="home.gif" BORDER=0 ALT="Home"></A>
+<A class="nav" href="Contents.html"><IMG SRC="index.gif" BORDER=0 ALT="Contents"></A>
+<A class="nav" href="DocIndex.html"><IMG SRC="yellow_pages.gif" BORDER=0 ALT="Index"></A>
+<A class="nav" href="summary.html"><IMG SRC="info.gif" BORDER=0 ALT="Summary"></A>
+<A class="nav" href="sec-5.1.html"><IMG SRC="prev.gif" BORDER=0 ALT="Previous"></A>
+<A class="nav" href="connection.html"><IMG SRC="next.gif" BORDER=0 ALT="Next"></A>
+</DIV>
+
+<H2><A NAME="sec:5.2"><SPAN class="sec-nr">5.2</SPAN> <SPAN class="sec-title">Compound 
+graphicals</SPAN></A></H2>
+
+<P>Often one would like to combine two or more primitive graphical 
+objects into a single unit. This is achieved using class <A class="" href="summary.html#class:device">device</A>. 
+Below we create an icon, consisting of a bitmap and a textual label 
+displayed below it.
+
+<PRE class="code">
+9 ?- new(@ic, device),
+     send(@ic, display, bitmap('happy.bm')),
+     send(@ic, display, text('Happy'), point(0, 64)),
+     send(@p, display, @ic, point(250, 20)).
+</PRE>
+
+<P>A compound graphical may be treated as a unit. It may be moved, 
+erased, coloured, etc. by sending a single message to the compound. 
+Compound graphicals are normal graphicals and thus may de displayed on 
+other compound graphicals, resulting in a consists-of hierarchy of 
+nested graphicals. See also <A class="sec" href="vishierarchy.html">section 
+12.4</A>. The classes related to compound graphical objects are shown in <A class="tab" href="sec-5.2.html#tab:compoundgraphics">table 
+3</A>.
+
+<P>
+<CENTER>
+<TABLE BORDER=2 FRAME=box RULES=groups>
+<TR VALIGN=top><TD><A class="" href="summary.html#class:device">device</A> </TD><TD>Most 
+generic compound graphical object. The
+<A class="" href="summary.html#class:window">window</A> is a subclass of <A class="" href="summary.html#class:device">device</A> 
+and all graphical operations are defined on class <A class="" href="summary.html#class:device">device</A>. </TD></TR>
+<TBODY>
+<TR VALIGN=top><TD><A class="" href="summary.html#class:figure">figure</A> </TD><TD>Subclass 
+of <A class="" href="summary.html#class:device">device</A>, provides 
+clipping, background, containing rectangle, border and the possibility 
+to show a subset of the displayed graphical objects. </TD></TR>
+<TBODY>
+<TR VALIGN=top><TD><A class="" href="summary.html#class:format">format</A> </TD><TD>A 
+format object specifies a two-dimensional table layout. Formats may be 
+associated to graphical devices using <A NAME="idx:devicesendformat:176"></A>`<B>device<CODE>-&gt;</CODE>format</B>'. </TD></TR>
+<TR VALIGN=top><TD><A class="" href="summary.html#class:table">table</A> </TD><TD>The 
+successor of <A class="" href="summary.html#class:format">format</A> 
+realises tabular layout compatible to the HTML-3 model for tables. See <A class="sec" href="tabular.html">section 
+11.5</A>. </TD></TR>
+</TABLE>
+
+</CENTER>
+<TABLE ALIGN=center WIDTH="75%"><TR><TD>
+<B>Table 3 : </B>Compound graphical classes</TABLE>
+
+<A NAME="tab:compoundgraphics"></A>
+
+<P></BODY></HTML>

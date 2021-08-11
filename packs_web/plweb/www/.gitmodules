@@ -1,0 +1,3 @@
+[submodule "js/tagit"]
+	path = js/tagit
+	url = https://github.com/SWI-Prolog/tag-it.git

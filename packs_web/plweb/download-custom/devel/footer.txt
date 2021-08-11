@@ -1,0 +1,25 @@
+## About the development releases
+
+The development branches have their own GIT repository at the address
+below. See the general [[GIT][</git.html>]] instructions for details.
+
+```
+% git clone https://github.com/SWI-Prolog/swipl-devel.git
+```
+
+### Should I use the development release or the stable one?
+
+Many active SWI-Prolog users  track  the   development  releases  or GIT
+versions for developing Prolog  applications.  Most   of  the  time  the
+development versions are fairly stable.   Infrequent  larger rewrites to
+the  core  infrastructure  that  may   cause  instability  is  typically
+announced on the mailinglist.
+
+Tracking the latest version offers some advantages for you are user:
+
+  - Bug fixes are quickly available.
+  - When you are stuck on a missing feature you can use this quickly
+    after it has been added.
+  - Although you are a little more often confronted with
+    incompatibilities and regressions, such issues can be discussed and
+    resolved.

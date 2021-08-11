@@ -213,6 +213,7 @@ style_emitter(_Out,html):- use_html_styles,!.
 style_emitter(Out,sgr):- dis_pp(bfly), is_tty(Out), !.
 style_emitter(_Out,none):- \+ use_html_styles.
 
+cnvt_in_out(_, _Out,_Ctrl,true,true):- \+ in_pp(bfly),!.
 cnvt_in_out(none, _Out,_Ctrl,true,true).
 cnvt_in_out(_,_Out,html,(in_pp(Was),pp_set(http)),pp_set(Was)).
 cnvt_in_out(_,_Out,pp_set(PP),(in_pp(Was),pp_set(PP)),pp_set(Was)).

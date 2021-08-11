@@ -1,0 +1,71 @@
+/* Examples */
+
+.ex-list {
+  overflow: hidden;
+}
+
+.ex-list h4 {
+  background-color: #16a1ca;
+  color: #fff;
+  padding: 2px 5px 0px 10px;
+  margin-bottom: 5px;
+  font-size: 18px;
+}
+
+.ex-header .title:hover {
+  text-decoration: underline;
+}
+
+.ex-header .title {
+ display: inline-block;
+ padding-left: 5px;
+ position: relative;
+ font-weight: bold;
+}
+
+.ex-header .author {
+ font-style: italic;
+ float:right;
+}
+
+.ex-flag {
+  margin-left: 5px;
+  position: relative;
+  top: 3px;
+  display: inline-block;
+  width: 18px;
+  height: 16px;
+  padding: 0px;
+  background-repeat: no-repeat;
+  background-size: 100% 100%;
+}
+
+.ex-flag.file      { background-image: url("../icons/star.png"); }
+.ex-flag.titleref  { background-image: url("../icons/star.png"); }
+.ex-flag.query     { background-image: url("../icons/query.png"); }
+.ex-flag.called    { background-image: url("../icons/called.png"); }
+.ex-flag.reference { background-image: url("../icons/ref.png"); }
+
+.ex-content h1:first-of-type { display: none; }
+.ex-content .keyword-author  { display: none; }
+
+.ex-content h2.wiki {
+  padding-left: 3em;
+  font-size: 100%;
+  background-color: transparent;
+  color: #000;
+  font-style: italic;
+  font-weight: 600;
+}
+.ex-content h3.wiki {
+  padding-left: 3em;
+  font-size: 100%;
+  background-color: transparent;
+  color: #000;
+  font-style: italic;
+}
+
+.ex            .ex-content { display: none; }
+.ex.ex-current .ex-content { display: block; }
+.ex            .ex-header:before { content: "\25ba"; }
+.ex.ex-current .ex-header:before { content: "\25bc"; }

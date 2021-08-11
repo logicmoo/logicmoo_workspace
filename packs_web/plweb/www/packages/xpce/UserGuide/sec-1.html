@@ -1,0 +1,196 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+
+<HTML>
+<HEAD>
+<TITLE>Programming in XPCE/Prolog</TITLE><LINK REL=home HREF="index.html">
+<LINK REL=contents HREF="Contents.html">
+<LINK REL=index HREF="DocIndex.html">
+<LINK REL=summary HREF="summary.html">
+<LINK REL=previous HREF="Contents.html">
+<LINK REL=next HREF="sec-1.1.html">
+<STYLE type="text/css">
+/* Style sheet for SWI-Prolog latex2html
+*/
+
+dd.defbody
+{ margin-bottom: 1em;
+}
+
+dt.pubdef
+{ background-color: #c5e1ff;
+}
+
+pre.code
+{ margin-left: 1.5em;
+margin-right: 1.5em;
+border: 1px dotted;
+padding-top: 5px;
+padding-left: 5px;
+padding-bottom: 5px;
+background-color: #f8f8f8;
+}
+
+div.navigate
+{ text-align: center;
+background-color: #f0f0f0;
+border: 1px dotted;
+padding: 5px;
+}
+
+div.title
+{ text-align: center;
+padding-bottom: 1em;
+font-size: 200%;
+font-weight: bold;
+}
+
+div.author
+{ text-align: center;
+font-style: italic;
+}
+
+div.abstract
+{ margin-top: 2em;
+background-color: #f0f0f0;
+border: 1px dotted;
+padding: 5px;
+margin-left: 10%; margin-right:10%;
+}
+
+div.abstract-title
+{ text-align: center;
+padding: 5px;
+font-size: 120%;
+font-weight: bold;
+}
+
+div.toc-h1
+{ font-size: 200%;
+font-weight: bold;
+}
+
+div.toc-h2
+{ font-size: 120%;
+font-weight: bold;
+margin-left: 2em;
+}
+
+div.toc-h3
+{ font-size: 100%;
+font-weight: bold;
+margin-left: 4em;
+}
+
+div.toc-h4
+{ font-size: 100%;
+margin-left: 6em;
+}
+
+span.sec-nr
+{ 
+}
+
+span.sec-title
+{ 
+}
+
+span.pred-ext
+{ font-weight: bold;
+}
+
+/* Footnotes */
+
+sup.fn { color: blue; text-decoration: underline; }
+span.fn-text: { display: none; }
+sup.fn span {display: none;}
+sup:hover span 
+{ display: block !important;
+position: absolute; top: auto; left: auto; width: 80%;
+color: #000; background: white;
+border: 2px solid;
+padding: 5px; margin: 10px; z-index: 100;
+font-size: smaller;
+}
+</STYLE>
+</HEAD>
+<BODY BGCOLOR="white">
+<DIV class="navigate"><A class="nav" href="index.html"><IMG SRC="home.gif" BORDER=0 ALT="Home"></A>
+<A class="nav" href="Contents.html"><IMG SRC="index.gif" BORDER=0 ALT="Contents"></A>
+<A class="nav" href="DocIndex.html"><IMG SRC="yellow_pages.gif" BORDER=0 ALT="Index"></A>
+<A class="nav" href="summary.html"><IMG SRC="info.gif" BORDER=0 ALT="Summary"></A>
+<A class="nav" href="Contents.html"><IMG SRC="prev.gif" BORDER=0 ALT="Previous"></A>
+<A class="nav" href="sec-1.1.html"><IMG SRC="next.gif" BORDER=0 ALT="Next"></A>
+</DIV>
+
+<H1><A NAME="sec:1"><SPAN class="sec-nr">1</SPAN> <SPAN class="sec-title">Introduction</SPAN></A></H1>
+
+<P><font size=-1>XPCE</font> is an object-oriented library for building 
+Graphical User Interfaces (GUI's) for symbolic or strongly typed 
+languages. It provides high level GUI specification primitives and 
+dynamic modification of the program to allow for rapid development of 
+interfaces. It integrates a graphical tool for the specification of 
+interfaces, in addition to powerful and uniform mechanisms to facilitate 
+automatic generation of GUI's.
+
+<P><font size=-1>XPCE</font> is not a programming language in the 
+traditional sense. Language constructs and objects of the system do not 
+have a direct textual representation. The interface to the `hosting' 
+language defines what
+<font size=-1>XPCE</font> looks like from the programmers point of view. 
+As a consequence, the programmer will first of all experience <font size=-1>XPCE</font> 
+as a <EM>library</EM>.
+
+<P><font size=-1>XPCE</font> however, does provide all semantic elements 
+that can be found in many object-oriented programming languages: 
+classes, objects, methods, instance-variables, inheritance, statements, 
+conditions, iteration, etc.
+
+<P>All the above primitives are represented by first-class <EM>objects</EM> 
+that may be created, modified, inspected and destroyed. This allows the 
+programmer to extend the <font size=-1>XPCE</font> object-oriented 
+system with new methods and classes from the host-language. In addition, 
+procedures can be expressed as objects and then given to <font size=-1>XPCE</font> 
+for execution.
+
+<P>The interface between <font size=-1>XPCE</font> and its hosting 
+language is small, which makes <font size=-1>XPCE</font> especially a 
+good GUI candidate for special-purpose languages.
+
+<P>The main target language for <font size=-1>XPCE</font> is <EM>Prolog</EM> 
+and this document concentrates on <font size=-1>XPCE/P</font>rolog 
+rather then <font size=-1>XPCE</font>/Lisp or <font size=-1>XPCE</font>/C++.
+<font size=-1>XPCE/P</font>rolog comes with a graphical programming 
+environment that allows for quick browsing of the source-code, provides 
+debugging tools and allows for the graphical construction of <EM>dialog 
+boxes</EM> (graphical windows with <EM>controllers</EM>). <font size=-1>XPCE</font>'s 
+built-in editor is modelled after the standard (GNU-)Emacs editor and 
+can be programmed in
+<font size=-1>XPCE/P</font>rolog .
+
+<P>
+<HR>
+<CENTER>
+
+<H2>Section Index</H2>
+
+</CENTER>
+<HR>
+<DIV class="toc">
+<DIV class="toc-h2"><A class="sec" href="sec-1.1.html"><SPAN class="sec-nr">1.1</SPAN> <SPAN class="sec-title">Organisation 
+of the XPCE documentation</SPAN></A></DIV>
+<DIV class="toc-h2"><A class="sec" href="faq.html"><SPAN class="sec-nr">1.2</SPAN> <SPAN class="sec-title">Other 
+sources of information</SPAN></A></DIV>
+<DIV class="toc-h2"><A class="sec" href="sec-1.3.html"><SPAN class="sec-nr">1.3</SPAN> <SPAN class="sec-title">Language 
+interfaces</SPAN></A></DIV>
+<DIV class="toc-h2"><A class="sec" href="sec-1.4.html"><SPAN class="sec-nr">1.4</SPAN> <SPAN class="sec-title">Portability</SPAN></A></DIV>
+<DIV class="toc-h3"><A class="sec" href="sec-1.4.html#sec:1.4.1"><SPAN class="sec-nr">1.4.1</SPAN> <SPAN class="sec-title">Unix/X-windows</SPAN></A></DIV>
+<DIV class="toc-h3"><A class="sec" href="sec-1.4.html#sec:1.4.2"><SPAN class="sec-nr">1.4.2</SPAN> <SPAN class="sec-title">Win32 
+(Windows 95 and NT)</SPAN></A></DIV>
+<DIV class="toc-h2"><A class="sec" href="sec-1.5.html"><SPAN class="sec-nr">1.5</SPAN> <SPAN class="sec-title">Look-and-feel</SPAN></A></DIV>
+<DIV class="toc-h2"><A class="sec" href="sec-1.6.html"><SPAN class="sec-nr">1.6</SPAN> <SPAN class="sec-title">A 
+brief history of (X)PCE</SPAN></A></DIV>
+<DIV class="toc-h2"><A class="sec" href="sec-1.7.html"><SPAN class="sec-nr">1.7</SPAN> <SPAN class="sec-title">About 
+this manual</SPAN></A></DIV>
+<DIV class="toc-h2"><A class="sec" href="sec-1.8.html"><SPAN class="sec-nr">1.8</SPAN> <SPAN class="sec-title">Acknowledgements</SPAN></A></DIV>
+</DIV>
+</BODY></HTML>

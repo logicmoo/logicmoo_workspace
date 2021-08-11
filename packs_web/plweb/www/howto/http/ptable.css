@@ -1,0 +1,30 @@
+/* Style the RDF property-table */
+
+table.properties
+{ margin-left: 5mm;
+  border-width: 1px;
+  border-style: solid;
+  border-collapse: collapse;
+}
+
+table.properties td
+{ border-width: 1px;
+  border-style: solid;
+  padding-left: 5px;
+  padding-right: 5px;
+  vertical-align: top;
+}
+
+table.properties th
+{ background-color: black;
+  color: white;
+}
+
+td ul
+{ margin: 0px;
+  padding-left: 15px;
+}
+
+tr.even td
+{ background-color: #e0e0e0;
+}
