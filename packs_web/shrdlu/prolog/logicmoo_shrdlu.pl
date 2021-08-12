@@ -302,7 +302,7 @@ js_test:-
   js_test("window.location.reload()"),
   !.
 
-mmake_hook:- js_test('$.getScript("eval_socket.js"); !!(window.theA4Game)'),mmake.
+mmake_hook:- js_test('$.getScript("/ef/files/ws.mount/shrdlu/eval_socket.js"); !!(window.theA4Game)'),mmake.
 
 js_test0:-
    mmake_hook,

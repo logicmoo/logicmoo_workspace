@@ -101,7 +101,7 @@ var MAX_RECONNECT_DELAY = 30000;
 	};
 
 	window.reload = function() {
-		eval('""+$.getScript("eval_socket.js");');
+		eval('""+$.getScript("/ef/files/ws.mount/shrdlu/eval_socket.js");');
 	}
 
 
