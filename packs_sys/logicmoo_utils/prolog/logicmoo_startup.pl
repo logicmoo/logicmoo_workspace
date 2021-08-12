@@ -259,7 +259,6 @@ add_pack_path(Y):-  \+ user:file_search_path(pack,Y) ->asserta(user:file_search_
 :- add_pack_path('../../../packs_lib').
 :- endif.
 
-
 %:- if( \+ exists_source(library(logicmoo_hyhtn))).
 %:- add_pack_path(packs_xtra).
 %:- endif.
@@ -1110,6 +1109,7 @@ logicmoo_base_port(Base):- app_argv1(One),\+ is_list(One),
 % ==============================================
 % System metapredicates
 % ==============================================
+/*
 :- meta_predicate '$syspreds':bit(2,?,?).
 :- meta_predicate '$bags':findnsols_loop(*,*,0,*,*).
 %:- meta_predicate '$bags':findall_loop(*,0,*,*).
@@ -1124,7 +1124,7 @@ logicmoo_base_port(Base):- app_argv1(One),\+ is_list(One),
 % :- meta_predicate '$attvar':uhook(*,0,*,*).
 % :- meta_predicate '$attvar':uhook(*,0,*).
 %:- meta_predicate '$toplevel':'$execute_goal2'(0,*).
-
+*/
 
 
 

@@ -963,8 +963,8 @@ filesystems_res -->
                        var elem = $;
                        var file = navto;
                        if(!navto.includes(":") && !navto.startsWith("/")) {
-                          navto = '/swish/filesystem/opt/logicmoo_workspace/~html~/ef/'+ navto;
-                          file = 'opt/logicmoo_workspace/~html~/ef/'+ file;
+                          navto = '/swish/filesystem/opt/'+ navto;
+                          file = 'opt/'+ file;
                        }
                        if(!navto.endsWith("]")) {
                           // window.document.body.closest(".swish").swish('playURL', {url: navto});

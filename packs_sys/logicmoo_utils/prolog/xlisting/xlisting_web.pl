@@ -121,6 +121,7 @@
             show_iframe/3,
             show_pcall_footer/0,
             show_search_filters/1,
+            suppliment_cp_menu/0,
             term_to_pretty_string/3,
             this_listing/1,
             test_tmw/0,
