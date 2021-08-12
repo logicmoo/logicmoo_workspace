@@ -193,16 +193,18 @@ inoxf(Goal):- call(Goal),!.
 webui_load_swish_and_clio:- already_webui_load_swish_and_clio,!.
 webui_load_swish_and_clio:- 
    asserta(already_webui_load_swish_and_clio),
-   maplist(inoxf,[
-   lmconfig:logicmoo_webui_dir(Dir),
-   % trace,
-   absolute_file_name('../../swish/run_swish_and_clio',Run,[relative_to(Dir),file_type(prolog),file_errors(fail)]),
-   user:ensure_loaded(Run),
-   asserta((prolog_version:git_update_versions(V):- (dmsg(skip(prolog_version:git_update_versions(V))),!))),
-   asserta((swish_version:git_update_versions(V):- (dmsg(skip(swish_version:git_update_versions(V))),!))),
-   swish_app:load_config('./config-enabled-swish'),
-   listing(swish_config:login_item/2)]),!.
-
+  maplist(inoxf,[
+  lmconfig:logicmoo_webui_dir(Dir),
+  % trace,
+  \+ \+ (absolute_file_name('../../swish/run_swish_and_clio',Run,[relative_to(Dir),file_type(prolog),file_errors(fail)]),
+  user:ensure_loaded(Run)),
+  asserta((prolog_version:git_update_versions(V):- (dmsg(skip(prolog_version:git_update_versions(V))),!))),
+  asserta((swish_version:git_update_versions(V):- (dmsg(skip(swish_version:git_update_versions(V))),!))),
+  swish_app:load_config('./config-enabled-swish'),
+  %\+ \+ (absolute_file_name('../../swish/remote_ide',Run,[relative_to(Dir),file_type(prolog),file_errors(fail)]),
+  %user:ensure_loaded(Run)),!,
+  listing(swish_config:login_item/2)]),!.
+% serve_files_in_directory
 
 webui_start_swish_and_clio:- 
    maplist(inoxf,[

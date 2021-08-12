@@ -22,8 +22,8 @@ if [ -z "$PROMPT_COMMAND" ]; then
 fi
 
 if [ -z "$1" ]; then
- reset -w
- if [ -z $STY ]; then $THIS_CMD /dev/tty ; return 0 2>/dev/null ; exit 0 ; fi
+reset -w
+if [ -z $STY ]; then $THIS_CMD /dev/tty ; return 0 2>/dev/null ; exit 0 ; fi
  INFO="\"$(ls -l /dev/tty)\"" 
 
  # $THIS_CMD /dev/tty FROM $INFO
@@ -43,7 +43,7 @@ CLS="${CLS}\e[2K\e[J\e]50;ClearScrollback\a\ec\e[3J\e\143\e[H\e[2J"
 echo -e -n $CLS > $CLS_TO
 echo -e -n "\eP$CLS\e\\\\" > $CLS_TO
 echo -e -n "$(whoami) $THIS_CMD $*\n" > $CLS_TO
-
+#setupcon --force
 return 0 2>/dev/null ; exit 0
 
 #reset -w $CLS_TO

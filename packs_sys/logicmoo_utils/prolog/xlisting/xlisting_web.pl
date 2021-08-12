@@ -257,6 +257,33 @@ cp_menu:cp_menu(X,X).
 %cp_menu:cp_menu.
 :- endif.
 
+extra_cp_menu -->  
+   { \+ (( httpd_wrapper:http_current_request(Request),member(request_uri(URI),Request), atom_contains(URI,pldoc))) },!,
+   pldoc_search:doc_links([],[]).
+extra_cp_menu --> [].
+
+:- multifile(cp_menu:(cp_menu/2)).
+:- dynamic(cp_menu:(cp_menu/2)).
+
+% handler_with_output_to 
+suppliment_cp_menu:- 
+ asserta((    
+  cp_menu:cp_menu(A, B) :- 
+   cp_menu:
+   (!,
+    findall(Key-Item,
+            current_menu_item(Key, Item),
+            Pairs0),
+    sort(Pairs0, Pairs),
+    group_pairs_by_key(Pairs, ByKey),
+    sort_menu_popups(ByKey, Menu),
+    C=A,
+    html_requires(css('menu.css'), C, D),
+    html(ul(id(nav), \menu(Menu)), D, B1),
+    html(\ extra_cp_menu,B1,B)))).
+
+:- suppliment_cp_menu.
+
 :- dynamic(baseKB:param_default_value/2).
 :- kb_global(baseKB:param_default_value/2).
 %:- kb_global(baseKB:mtExact/1).

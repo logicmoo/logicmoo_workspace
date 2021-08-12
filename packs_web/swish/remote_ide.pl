@@ -34,8 +34,8 @@
 */
 
 :- module(swish_ide,
-	  [ swish/0,
-	    swish/1			% ?Port
+	  [ swish_remote/0,
+	    swish_remote/1			% ?Port
 	  ]).
 
 :- use_module(library(http/thread_httpd)).
@@ -269,7 +269,7 @@ swish_config:authenticate(Request, User) :-
 
   
 
-:- maplist(  ( [F] >> (ensure_loaded('config-enabled-swish'/F))),
+swish_remote_plugins:- maplist(  ( [F] >> (ensure_loaded('config-enabled-swish'/F))),
   [auth_google,  auth_stackoverflow,  data,   email,  hdt,    
           rlimit,  r_serve,  user_profile, % network,
    auth_unity,          debug,      logging,  notifications,  
@@ -280,23 +280,24 @@ swish_config:authenticate(Request, User) :-
 %
 %	Start the SWISH server and open the main page in your browser.
 
-:- initialization(swish).
+:- initialization(swish_remote).
 
-swish :-
-	swish('0.0.0.0':3020).
+swish_remote :-
+  swish_remote_plugins,
+	swish_remote('0.0.0.0':3020).
 
-swish(Port) :-
+swish_remote(Port) :-
 	http_server_property(Port, goal(swish_ide:http_dispatch)), !,
 	remote_open_browser(Port).
-swish(_:Port) :-
+swish_remote(_:Port) :-
 	integer(Port),
 	http_server_property(Port, goal(swish_ide:http_dispatch)), !,
 	remote_open_browser(Port).
-swish(Port) :-
-	http_server(http_dispatch,
+swish_remote(Port) :-
+	catch(http_server(http_dispatch,
 		    [ port(Port),
 		      workers(16)
-		    ]),
+		    ]),_,true),
 	remote_open_browser(Port).
 
 remote_open_browser(Port):- !, dmsg(remote_open_browser(Port)).
@@ -337,7 +338,7 @@ pet:- pengine_rpc("http://logicmoo.org:3020",
 
 :- debug.
 
-:- swish.
+:- swish_remote.
 
 
 user:file_search_path(What, Alias):- % maybe confirm this is not SWISH?

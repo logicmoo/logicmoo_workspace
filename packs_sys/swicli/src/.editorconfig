@@ -1,0 +1,4 @@
+﻿[*.cs]
+
+# CS0006: Metadata file 'T:\opt\logicmoo_workspace\packs_sys\swicli\src\Debugger.Core.JDWP\Debugger.Core\bin\x64\Debug\Debugger.Core.Boo.dll' could not be found
+dotnet_diagnostic.CS0006.severity = warning

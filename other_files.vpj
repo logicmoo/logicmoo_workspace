@@ -98,11 +98,6 @@
 						<Folder Name="logicmoo_nlu">
 							<Folder Name="ext">
 								<Folder Name="pldata">
-									<Folder Name="plkb0988">
-										<F N="V:/opt/logicmoo_workspace/packs_sys/logicmoo_nlu/ext/pldata/plkb0988/plkb0988_iface.pl"/>
-										<F N="V:/opt/logicmoo_workspace/packs_sys/logicmoo_nlu/ext/pldata/plkb0988/plkb0988_kb.pl"/>
-										<F N="V:/opt/logicmoo_workspace/packs_sys/logicmoo_nlu/ext/pldata/plkb0988/plkb0988_kb_supp.pl"/>
-									</Folder>
 									<Folder Name="plkb7166">
 										<F N="V:/opt/logicmoo_workspace/packs_sys/logicmoo_nlu/ext/pldata/plkb7166/kb7166.pl"/>
 									</Folder>
@@ -132,7 +127,6 @@
 									<F N="V:/opt/logicmoo_workspace/packs_sys/logicmoo_nlu/ext/pldata/tiny_kb.pl"/>
 									<F N="V:/opt/logicmoo_workspace/packs_sys/logicmoo_nlu/ext/pldata/trans_header.pl"/>
 									<F N="V:/opt/logicmoo_workspace/packs_sys/logicmoo_nlu/ext/pldata/transform_dump.pl"/>
-									<F N="V:/opt/logicmoo_workspace/packs_sys/logicmoo_nlu/ext/pldata/tt0_00022_cycl.pl"/>
 									<F N="V:/opt/logicmoo_workspace/packs_sys/logicmoo_nlu/ext/pldata/tt0_iface.pl"/>
 									<F N="V:/opt/logicmoo_workspace/packs_sys/logicmoo_nlu/ext/pldata/verbnet_candc_boxer.pl"/>
 									<F N="V:/opt/logicmoo_workspace/packs_sys/logicmoo_nlu/ext/pldata/verbnet_iface.pl"/>
@@ -143,40 +137,6 @@
 									<F N="V:/opt/logicmoo_workspace/packs_sys/logicmoo_nlu/ext/pldata/wn_iface.pl"/>
 								</Folder>
 							</Folder>
-						</Folder>
-					</Folder>
-					<Folder Name="packs_xtra">
-						<Folder Name="logicmoo_pldata">
-							<Folder Name="bllip-parser">
-								<Folder Name="dockerfiles">
-									<Folder Name="python">
-										<Folder Name="userfiles">
-											<F N="V:/opt/logicmoo_workspace/packs_xtra/logicmoo_pldata/bllip-parser/dockerfiles/python/userfiles/runvnc.sh"/>
-										</Folder>
-									</Folder>
-								</Folder>
-								<F N="V:/opt/logicmoo_workspace/packs_xtra/logicmoo_pldata/bllip-parser/CharniakParse.sh"/>
-								<F N="V:/opt/logicmoo_workspace/packs_xtra/logicmoo_pldata/bllip-parser/eval-reranker.sh"/>
-								<F N="V:/opt/logicmoo_workspace/packs_xtra/logicmoo_pldata/bllip-parser/LogicmooCharniak.sh"/>
-								<F N="V:/opt/logicmoo_workspace/packs_xtra/logicmoo_pldata/bllip-parser/nfeatures-train-eval-reranker.sh"/>
-								<F N="V:/opt/logicmoo_workspace/packs_xtra/logicmoo_pldata/bllip-parser/oparse.sh"/>
-								<F N="V:/opt/logicmoo_workspace/packs_xtra/logicmoo_pldata/bllip-parser/parse-50best.sh"/>
-								<F N="V:/opt/logicmoo_workspace/packs_xtra/logicmoo_pldata/bllip-parser/parse-and-fuse.sh"/>
-								<F N="V:/opt/logicmoo_workspace/packs_xtra/logicmoo_pldata/bllip-parser/parse-eval.sh"/>
-								<F N="V:/opt/logicmoo_workspace/packs_xtra/logicmoo_pldata/bllip-parser/parse.sh"/>
-								<F N="V:/opt/logicmoo_workspace/packs_xtra/logicmoo_pldata/bllip-parser/train-eval-reranker.sh"/>
-							</Folder>
-							<Folder Name="ext">
-								<Folder Name="plkb0988">
-									<F N="V:/opt/logicmoo_workspace/packs_xtra/logicmoo_pldata/ext/plkb0988/plkb0988_iface.pl"/>
-									<F N="V:/opt/logicmoo_workspace/packs_xtra/logicmoo_pldata/ext/plkb0988/plkb0988_kb.pl"/>
-									<F N="V:/opt/logicmoo_workspace/packs_xtra/logicmoo_pldata/ext/plkb0988/plkb0988_kb_supp.pl"/>
-								</Folder>
-							</Folder>
-							<Folder Name="prolog">
-								<F N="V:/opt/logicmoo_workspace/packs_xtra/logicmoo_pldata/prolog/logicmoo_pldata.pl"/>
-							</Folder>
-							<F N="V:/opt/logicmoo_workspace/packs_xtra/logicmoo_pldata/pack.pl"/>
 						</Folder>
 					</Folder>
 				</Folder>
@@ -249,14 +209,12 @@
 						<F N="packs_sys/logicmoo_agi/prolog/abduction/domain_cake.pl"/>
 						<F N="packs_sys/logicmoo_agi/prolog/abduction/domain_party.pl"/>
 						<F N="packs_sys/logicmoo_agi/prolog/abduction/domain_wumpus.pl"/>
-						<F N="packs_sys/logicmoo_agi/prolog/abduction/is_dir"/>
 						<F N="packs_sys/logicmoo_agi/prolog/abduction/knowledgeBaseCGI.pl"/>
 						<F N="packs_sys/logicmoo_agi/prolog/abduction/pknows_mindi.pl"/>
 					</Folder>
 					<Folder Name="agi_lib">
 						<F N="packs_sys/logicmoo_agi/prolog/agi_lib/agent.pl"/>
 						<F N="packs_sys/logicmoo_agi/prolog/agi_lib/doc_print.pl"/>
-						<F N="packs_sys/logicmoo_agi/prolog/agi_lib/is_dir"/>
 						<F N="packs_sys/logicmoo_agi/prolog/agi_lib/pipeline.pl"/>
 						<F N="packs_sys/logicmoo_agi/prolog/agi_lib/README.md"/>
 					</Folder>
@@ -300,31 +258,26 @@
 						<F N="packs_sys/logicmoo_agi/prolog/episodic_memory/IFMUD.md"/>
 						<F N="packs_sys/logicmoo_agi/prolog/episodic_memory/index.html"/>
 						<F N="packs_sys/logicmoo_agi/prolog/episodic_memory/input.log"/>
-						<F N="packs_sys/logicmoo_agi/prolog/episodic_memory/is_dir"/>
 						<F N="packs_sys/logicmoo_agi/prolog/episodic_memory/README.md"/>
 					</Folder>
 					<Folder Name="libnlu">
 						<F N="packs_sys/logicmoo_agi/prolog/libnlu/adv_eng2cmd_dcg.pl"/>
 						<F N="packs_sys/logicmoo_agi/prolog/libnlu/adv_test.pl"/>
-						<F N="packs_sys/logicmoo_agi/prolog/libnlu/is_dir"/>
 					</Folder>
 					<Folder Name="MIndiGolog">
 						<Folder Name="listings">
-							<F N="packs_sys/logicmoo_agi/prolog/MIndiGolog/listings/is_dir"/>
 							<F N="packs_sys/logicmoo_agi/prolog/MIndiGolog/listings/makeSalad_output_congolog.txt"/>
 							<F N="packs_sys/logicmoo_agi/prolog/MIndiGolog/listings/makeSalad_output_congolog_timer.txt"/>
 							<F N="packs_sys/logicmoo_agi/prolog/MIndiGolog/listings/makeSalad_output_mindigolog.txt"/>
 							<F N="packs_sys/logicmoo_agi/prolog/MIndiGolog/listings/makeSalad_output_mindigolog_timer.txt"/>
 						</Folder>
 						<F N="packs_sys/logicmoo_agi/prolog/MIndiGolog/domain.pl"/>
-						<F N="packs_sys/logicmoo_agi/prolog/MIndiGolog/is_dir"/>
 						<F N="packs_sys/logicmoo_agi/prolog/MIndiGolog/main.pl"/>
 						<F N="packs_sys/logicmoo_agi/prolog/MIndiGolog/mindigolog.pl"/>
 						<F N="packs_sys/logicmoo_agi/prolog/MIndiGolog/program.pl"/>
 						<F N="packs_sys/logicmoo_agi/prolog/MIndiGolog/README.txt"/>
 						<F N="packs_sys/logicmoo_agi/prolog/MIndiGolog/sitcalc.pl"/>
 					</Folder>
-					<F N="packs_sys/logicmoo_agi/prolog/is_dir"/>
 					<F N="packs_sys/logicmoo_agi/prolog/logicmoo_agi.pl"/>
 				</Folder>
 			</Folder>
@@ -829,40 +782,6 @@
 					<F N="packs_sys/logicmoo_base/prolog/logicmoo_user.pl"/>
 					<F N="packs_sys/logicmoo_base/prolog/logicmoo_xpce.pl"/>
 					<F N="packs_sys/logicmoo_base/prolog/logicmoo_xray.pl"/>
-				</Folder>
-			</Folder>
-			<Folder Name="logicmoo_cg">
-				<Folder Name="prolog">
-					<Folder Name="MProlog-2.0">
-						<F N="packs_sys/logicmoo_cg/prolog/MProlog-2.0/auxiliary.pl"/>
-						<F N="packs_sys/logicmoo_cg/prolog/MProlog-2.0/belief.cal"/>
-						<F N="packs_sys/logicmoo_cg/prolog/MProlog-2.0/belief_box.cal"/>
-						<F N="packs_sys/logicmoo_cg/prolog/MProlog-2.0/belief_test1.mpl"/>
-						<F N="packs_sys/logicmoo_cg/prolog/MProlog-2.0/belief_test2.mpl"/>
-						<F N="packs_sys/logicmoo_cg/prolog/MProlog-2.0/compile_c.pl"/>
-						<F N="packs_sys/logicmoo_cg/prolog/MProlog-2.0/compile_p.pl"/>
-						<F N="packs_sys/logicmoo_cg/prolog/MProlog-2.0/compiler.pl"/>
-						<F N="packs_sys/logicmoo_cg/prolog/MProlog-2.0/datastr.pl"/>
-						<F N="packs_sys/logicmoo_cg/prolog/MProlog-2.0/groups.cal"/>
-						<F N="packs_sys/logicmoo_cg/prolog/MProlog-2.0/mprolog.pl"/>
-						<F N="packs_sys/logicmoo_cg/prolog/MProlog-2.0/params.pl"/>
-						<F N="packs_sys/logicmoo_cg/prolog/MProlog-2.0/parser.pl"/>
-						<F N="packs_sys/logicmoo_cg/prolog/MProlog-2.0/platform.pl"/>
-						<F N="packs_sys/logicmoo_cg/prolog/MProlog-2.0/README.txt"/>
-						<F N="packs_sys/logicmoo_cg/prolog/MProlog-2.0/smnm.cal"/>
-						<F N="packs_sys/logicmoo_cg/prolog/MProlog-2.0/smnm_test1.mpl"/>
-						<F N="packs_sys/logicmoo_cg/prolog/MProlog-2.0/smnm_test2.mpl"/>
-						<F N="packs_sys/logicmoo_cg/prolog/MProlog-2.0/smnm_test3.mpl"/>
-						<F N="packs_sys/logicmoo_cg/prolog/MProlog-2.0/smnm_test4.mpl"/>
-						<F N="packs_sys/logicmoo_cg/prolog/MProlog-2.0/smnm_test5.mpl"/>
-						<F N="packs_sys/logicmoo_cg/prolog/MProlog-2.0/smnm_test6.mpl"/>
-						<F N="packs_sys/logicmoo_cg/prolog/MProlog-2.0/smnm_test7.mpl"/>
-						<F N="packs_sys/logicmoo_cg/prolog/MProlog-2.0/solver.pl"/>
-						<F N="packs_sys/logicmoo_cg/prolog/MProlog-2.0/temp.pl"/>
-						<F N="packs_sys/logicmoo_cg/prolog/MProlog-2.0/tracer.pl"/>
-						<F N="packs_sys/logicmoo_cg/prolog/MProlog-2.0/wise_men_3.mpl"/>
-						<F N="packs_sys/logicmoo_cg/prolog/MProlog-2.0/wise_men_n.mpl"/>
-					</Folder>
 				</Folder>
 			</Folder>
 			<Folder Name="logicmoo_ec">
@@ -2658,7 +2577,6 @@
 							<F N="packs_sys/logicmoo_nlu/ext/chat80/original/newdict.pl"/>
 							<F N="packs_sys/logicmoo_nlu/ext/chat80/original/newg.pl"/>
 							<F N="packs_sys/logicmoo_nlu/ext/chat80/original/newtop.pl"/>
-							<F N="packs_sys/logicmoo_nlu/ext/chat80/original/newtop.pl.bak"/>
 							<F N="packs_sys/logicmoo_nlu/ext/chat80/original/ptree.pl"/>
 							<F N="packs_sys/logicmoo_nlu/ext/chat80/original/qplan.pl"/>
 							<F N="packs_sys/logicmoo_nlu/ext/chat80/original/read_atoms_lc.pl"/>
@@ -2666,13 +2584,10 @@
 							<F N="packs_sys/logicmoo_nlu/ext/chat80/original/README.TXT"/>
 							<F N="packs_sys/logicmoo_nlu/ext/chat80/original/scopes.pl"/>
 							<F N="packs_sys/logicmoo_nlu/ext/chat80/original/slots.pl"/>
-							<F N="packs_sys/logicmoo_nlu/ext/chat80/original/slots.pl.bak"/>
 							<F N="packs_sys/logicmoo_nlu/ext/chat80/original/talkr.pl"/>
-							<F N="packs_sys/logicmoo_nlu/ext/chat80/original/talkr.pl.bak"/>
 							<F N="packs_sys/logicmoo_nlu/ext/chat80/original/templa.pl"/>
 							<F N="packs_sys/logicmoo_nlu/ext/chat80/original/test_ext.pl"/>
 							<F N="packs_sys/logicmoo_nlu/ext/chat80/original/world0.pl"/>
-							<F N="packs_sys/logicmoo_nlu/ext/chat80/original/world1.pl"/>
 							<F N="packs_sys/logicmoo_nlu/ext/chat80/original/xgproc.pl"/>
 							<F N="packs_sys/logicmoo_nlu/ext/chat80/original/xgrun.pl"/>
 						</Folder>
@@ -2715,7 +2630,6 @@
 							<F N="packs_sys/logicmoo_nlu/ext/chat80/target/newdict_regress.pl"/>
 							<F N="packs_sys/logicmoo_nlu/ext/chat80/target/newdict_shared.pl"/>
 							<F N="packs_sys/logicmoo_nlu/ext/chat80/target/newtop.pl"/>
-							<F N="packs_sys/logicmoo_nlu/ext/chat80/target/newtop.pl.bak"/>
 							<F N="packs_sys/logicmoo_nlu/ext/chat80/target/portray.pl"/>
 							<F N="packs_sys/logicmoo_nlu/ext/chat80/target/ptree.pl"/>
 							<F N="packs_sys/logicmoo_nlu/ext/chat80/target/qplan.pl"/>
@@ -2723,7 +2637,6 @@
 							<F N="packs_sys/logicmoo_nlu/ext/chat80/target/README.TXT"/>
 							<F N="packs_sys/logicmoo_nlu/ext/chat80/target/scopes.pl"/>
 							<F N="packs_sys/logicmoo_nlu/ext/chat80/target/slots.pl"/>
-							<F N="packs_sys/logicmoo_nlu/ext/chat80/target/slots.pl.bak"/>
 							<F N="packs_sys/logicmoo_nlu/ext/chat80/target/talkr.pl"/>
 							<F N="packs_sys/logicmoo_nlu/ext/chat80/target/world0.pl"/>
 							<F N="packs_sys/logicmoo_nlu/ext/chat80/target/xgproc.pl"/>
@@ -2759,7 +2672,6 @@
 						<F N="packs_sys/logicmoo_nlu/ext/pldata/tiny_kb.pl"/>
 						<F N="packs_sys/logicmoo_nlu/ext/pldata/trans_header.pl"/>
 						<F N="packs_sys/logicmoo_nlu/ext/pldata/transform_dump.pl"/>
-						<F N="packs_sys/logicmoo_nlu/ext/pldata/tt0_00022_cycl.pl"/>
 						<F N="packs_sys/logicmoo_nlu/ext/pldata/tt0_iface.pl"/>
 						<F N="packs_sys/logicmoo_nlu/ext/pldata/verbnet_candc_boxer.pl"/>
 						<F N="packs_sys/logicmoo_nlu/ext/pldata/verbnet_iface.pl"/>
@@ -2783,23 +2695,15 @@
 														<F N="packs_sys/logicmoo_nlu/prolog/config_nomicmu/example_bt/doc/d/20200312/www.cdc.gov/coronavirus/2019-ncov/downloads/COVID-19_CAREKit_ENG.pdf"/>
 														<F N="packs_sys/logicmoo_nlu/prolog/config_nomicmu/example_bt/doc/d/20200312/www.cdc.gov/coronavirus/2019-ncov/downloads/COVID-19_CAREKit_ENG.txt"/>
 														<F N="packs_sys/logicmoo_nlu/prolog/config_nomicmu/example_bt/doc/d/20200312/www.cdc.gov/coronavirus/2019-ncov/downloads/COVID-19_CAREKit_ENG.txt.nlu.pl"/>
-														<F N="packs_sys/logicmoo_nlu/prolog/config_nomicmu/example_bt/doc/d/20200312/www.cdc.gov/coronavirus/2019-ncov/downloads/is_dir"/>
 													</Folder>
-													<F N="packs_sys/logicmoo_nlu/prolog/config_nomicmu/example_bt/doc/d/20200312/www.cdc.gov/coronavirus/2019-ncov/is_dir"/>
 												</Folder>
-												<F N="packs_sys/logicmoo_nlu/prolog/config_nomicmu/example_bt/doc/d/20200312/www.cdc.gov/coronavirus/is_dir"/>
 											</Folder>
-											<F N="packs_sys/logicmoo_nlu/prolog/config_nomicmu/example_bt/doc/d/20200312/www.cdc.gov/is_dir"/>
 										</Folder>
-										<F N="packs_sys/logicmoo_nlu/prolog/config_nomicmu/example_bt/doc/d/20200312/is_dir"/>
 									</Folder>
-									<F N="packs_sys/logicmoo_nlu/prolog/config_nomicmu/example_bt/doc/d/is_dir"/>
 								</Folder>
 								<Folder Name="research">
-									<F N="packs_sys/logicmoo_nlu/prolog/config_nomicmu/example_bt/doc/research/is_dir"/>
 									<F N="packs_sys/logicmoo_nlu/prolog/config_nomicmu/example_bt/doc/research/to.do"/>
 								</Folder>
-								<F N="packs_sys/logicmoo_nlu/prolog/config_nomicmu/example_bt/doc/is_dir"/>
 							</Folder>
 							<F N="packs_sys/logicmoo_nlu/prolog/config_nomicmu/example_bt/chores.pl"/>
 							<F N="packs_sys/logicmoo_nlu/prolog/config_nomicmu/example_bt/coronavirus.pl"/>
@@ -2810,7 +2714,6 @@
 							<F N="packs_sys/logicmoo_nlu/prolog/config_nomicmu/example_bt/food_pantries.pl"/>
 							<F N="packs_sys/logicmoo_nlu/prolog/config_nomicmu/example_bt/groceries.pl"/>
 							<F N="packs_sys/logicmoo_nlu/prolog/config_nomicmu/example_bt/incoming.pl"/>
-							<F N="packs_sys/logicmoo_nlu/prolog/config_nomicmu/example_bt/is_dir"/>
 							<F N="packs_sys/logicmoo_nlu/prolog/config_nomicmu/example_bt/movement_discipline.pl"/>
 							<F N="packs_sys/logicmoo_nlu/prolog/config_nomicmu/example_bt/paperwork.pl"/>
 							<F N="packs_sys/logicmoo_nlu/prolog/config_nomicmu/example_bt/sickness.pl"/>
@@ -2823,10 +2726,8 @@
 							<F N="packs_sys/logicmoo_nlu/prolog/config_nomicmu/plugins/example_more_nl.pl"/>
 							<F N="packs_sys/logicmoo_nlu/prolog/config_nomicmu/plugins/example_new_command.pl"/>
 							<F N="packs_sys/logicmoo_nlu/prolog/config_nomicmu/plugins/example_plan_domain.pl"/>
-							<F N="packs_sys/logicmoo_nlu/prolog/config_nomicmu/plugins/is_dir"/>
 							<F N="packs_sys/logicmoo_nlu/prolog/config_nomicmu/plugins/load_example_bt.pl"/>
 						</Folder>
-						<F N="packs_sys/logicmoo_nlu/prolog/config_nomicmu/is_dir"/>
 					</Folder>
 					<Folder Name="logicmoo_nlu">
 						<Folder Name="e2c">
@@ -2842,11 +2743,9 @@
 							<F N="packs_sys/logicmoo_nlu/prolog/logicmoo_nlu/e2c/e2c_sentence.pl"/>
 							<F N="packs_sys/logicmoo_nlu/prolog/logicmoo_nlu/e2c/e2c_utility.pl"/>
 							<F N="packs_sys/logicmoo_nlu/prolog/logicmoo_nlu/e2c/e2c_verb_phrase.pl"/>
-							<F N="packs_sys/logicmoo_nlu/prolog/logicmoo_nlu/e2c/is_dir"/>
 							<F N="packs_sys/logicmoo_nlu/prolog/logicmoo_nlu/e2c/logicmoo_cyc_nl_sem.pl"/>
 							<F N="packs_sys/logicmoo_nlu/prolog/logicmoo_nlu/e2c/logicmoo_nl_sem_dcgRedress.pl"/>
 						</Folder>
-						<F N="packs_sys/logicmoo_nlu/prolog/logicmoo_nlu/is_dir"/>
 						<F N="packs_sys/logicmoo_nlu/prolog/logicmoo_nlu/nl_pipeline.pl"/>
 						<F N="packs_sys/logicmoo_nlu/prolog/logicmoo_nlu/parser_ape.pl"/>
 						<F N="packs_sys/logicmoo_nlu/prolog/logicmoo_nlu/parser_bratko.pl"/>
@@ -2874,7 +2773,6 @@
 						<F N="packs_sys/logicmoo_nlu/prolog/logicmoo_nlu/parser_tokenize.pl"/>
 						<F N="packs_sys/logicmoo_nlu/prolog/logicmoo_nlu/README.md"/>
 					</Folder>
-					<F N="packs_sys/logicmoo_nlu/prolog/is_dir"/>
 					<F N="packs_sys/logicmoo_nlu/prolog/logicmoo_nlu.pl"/>
 					<F N="packs_sys/logicmoo_nlu/prolog/nomic_mu.pl"/>
 				</Folder>
@@ -2882,7 +2780,6 @@
 			<Folder Name="logicmoo_utils">
 				<Folder Name="prolog">
 					<Folder Name="body_reordering">
-						<F N="packs_sys/logicmoo_utils/prolog/body_reordering/INDEX.pl"/>
 						<F N="packs_sys/logicmoo_utils/prolog/body_reordering/logicmoo_util_autocut.pl"/>
 						<F N="packs_sys/logicmoo_utils/prolog/body_reordering/logicmoo_util_body_nauts.pl"/>
 						<F N="packs_sys/logicmoo_utils/prolog/body_reordering/logicmoo_util_body_reorder.pl"/>
@@ -4021,83 +3918,6 @@
 			</Folder>
 			<Folder Name="prologmud_samples">
 				<Folder Name="prolog">
-					<Folder Name="prologmud_sample_games">
-						<Folder Name="attic">
-							<F N="prologmud_server/attic/daemon.pl"/>
-							<F N="prologmud_server/attic/remote_swish.pl"/>
-							<F N="prologmud_server/attic/server.pl"/>
-							<F N="prologmud_server/attic/test_release.pl"/>
-						</Folder>
-						<Folder Name="btepisode">
-							<F N="prologmud_server/btepisode/npc.pl"/>
-						</Folder>
-						<Folder Name="config-enabled-swish">
-							<F N="prologmud_server/config-enabled-swish/auth_google.pl"/>
-							<F N="prologmud_server/config-enabled-swish/auth_http.pl"/>
-							<F N="prologmud_server/config-enabled-swish/auth_stackoverflow.pl"/>
-							<F N="prologmud_server/config-enabled-swish/auth_unity.pl"/>
-							<F N="prologmud_server/config-enabled-swish/data.pl"/>
-							<F N="prologmud_server/config-enabled-swish/debug.pl"/>
-							<F N="prologmud_server/config-enabled-swish/email.pl"/>
-							<F N="prologmud_server/config-enabled-swish/hdt.pl"/>
-							<F N="prologmud_server/config-enabled-swish/logging.pl"/>
-							<F N="prologmud_server/config-enabled-swish/notifications.pl"/>
-							<F N="prologmud_server/config-enabled-swish/r_serve.pl"/>
-							<F N="prologmud_server/config-enabled-swish/rlimit.pl"/>
-							<F N="prologmud_server/config-enabled-swish/rpc.pl"/>
-							<F N="prologmud_server/config-enabled-swish/user_profile.pl"/>
-						</Folder>
-						<Folder Name="src_game_nani">
-							<Folder Name="web">
-								<Folder Name="prolog">
-									<F N="prologmud_server/src_game_nani/web/prolog/mud_specific.pl"/>
-								</Folder>
-							</Folder>
-							<F N="prologmud_server/src_game_nani/a_nani_household.pfc.pl"/>
-							<F N="prologmud_server/src_game_nani/andrew_ke.pfc.pl"/>
-							<F N="prologmud_server/src_game_nani/annie_ke.pfc.pl"/>
-							<F N="prologmud_server/src_game_nani/dmiles_ke.pfc.pl"/>
-							<F N="prologmud_server/src_game_nani/jess_ke.pfc.pl"/>
-							<F N="prologmud_server/src_game_nani/justin_ke.pfc.pl"/>
-							<F N="prologmud_server/src_game_nani/meredith_ke.pfc.pl"/>
-							<F N="prologmud_server/src_game_nani/objs_misc_household.pfc.pl"/>
-						</Folder>
-						<Folder Name="src_game_sims">
-							<Folder Name="web">
-								<Folder Name="prolog">
-									<F N="prologmud_server/src_game_sims/web/prolog/mud_specific.pl"/>
-								</Folder>
-							</Folder>
-							<F N="prologmud_server/src_game_sims/objs_misc_household.pfc.pl"/>
-						</Folder>
-						<Folder Name="src_game_startrek">
-							<Folder Name="holodeck">
-								<F N="prologmud_server/src_game_startrek/holodeck/maze.map.pfc.pl"/>
-								<F N="prologmud_server/src_game_startrek/holodeck/objs_misc_household.pfc.pl"/>
-								<F N="prologmud_server/src_game_startrek/holodeck/objs_misc_monster.pfc.pl"/>
-								<F N="prologmud_server/src_game_startrek/holodeck/predator.map.pfc.pl"/>
-								<F N="prologmud_server/src_game_startrek/holodeck/rooms_conf.pl"/>
-								<F N="prologmud_server/src_game_startrek/holodeck/vacuum.map.pfc.pl"/>
-							</Folder>
-							<Folder Name="mobs">
-								<F N="prologmud_server/src_game_startrek/mobs/federation.pl"/>
-							</Folder>
-							<Folder Name="web">
-								<Folder Name="prolog">
-									<F N="prologmud_server/src_game_startrek/web/prolog/mud_specific.pl"/>
-								</Folder>
-							</Folder>
-							<F N="prologmud_server/src_game_startrek/startrek.all.pfc.pl"/>
-						</Folder>
-						<Folder Name="src_game_wumpus">
-							<F N="prologmud_server/src_game_wumpus/maze.map.pfc.pl"/>
-							<F N="prologmud_server/src_game_wumpus/objs_misc_monster.pfc.pl"/>
-						</Folder>
-						<F N="prologmud_server/compile_mud_server.pl"/>
-						<F N="prologmud_server/init_mud_server.pl"/>
-						<F N="prologmud_server/run-clio.pl"/>
-						<F N="prologmud_server/run_mud_server.pl"/>
-					</Folder>
 					<F N="packs_sys/prologmud_samples/prolog/prologmud_samples.pl"/>
 				</Folder>
 			</Folder>
@@ -4368,17 +4188,36 @@
 						Excludes=""/>
 				</Folder>
 			</Folder>
-			<Folder Name="logicmoo_pldata">
-				<Folder Name="prolog">
-					<F N="packs_xtra/logicmoo_pldata/prolog/logicmoo_pldata.pl"/>
-				</Folder>
+		</Folder>
+		<Folder Name="prologmud_server">
+			<Folder Name="attic">
+				<F N="prologmud_server/attic/daemon.pl"/>
+				<F N="prologmud_server/attic/remote_swish.pl"/>
+				<F N="prologmud_server/attic/server.pl"/>
+				<F N="prologmud_server/attic/test_release.pl"/>
 			</Folder>
+			<Folder Name="btepisode">
+				<F N="prologmud_server/btepisode/npc.pl"/>
+			</Folder>
+			<Folder Name="config-enabled-swish">
+				<F N="prologmud_server/config-enabled-swish/auth_google.pl"/>
+				<F N="prologmud_server/config-enabled-swish/auth_http.pl"/>
+				<F N="prologmud_server/config-enabled-swish/auth_stackoverflow.pl"/>
+				<F N="prologmud_server/config-enabled-swish/auth_unity.pl"/>
+				<F N="prologmud_server/config-enabled-swish/data.pl"/>
+				<F N="prologmud_server/config-enabled-swish/debug.pl"/>
+				<F N="prologmud_server/config-enabled-swish/email.pl"/>
+				<F N="prologmud_server/config-enabled-swish/hdt.pl"/>
+				<F N="prologmud_server/config-enabled-swish/logging.pl"/>
+				<F N="prologmud_server/config-enabled-swish/notifications.pl"/>
+				<F N="prologmud_server/config-enabled-swish/r_serve.pl"/>
+				<F N="prologmud_server/config-enabled-swish/rlimit.pl"/>
+				<F N="prologmud_server/config-enabled-swish/rpc.pl"/>
+				<F N="prologmud_server/config-enabled-swish/user_profile.pl"/>
+			</Folder>
+			<F N="prologmud_server/run_mud_server.pl"/>
 		</Folder>
 		<F N="AUTHORS.rst"/>
-		<F N="buildenv.sh"/>
-		<F N="buildenvmingw32.sh"/>
-		<F N="buildenvmingw64.sh"/>
-		<F N="cookies.txt"/>
 		<F N="docker-compose.yml"/>
 		<F N="Dockerfile"/>
 		<F N="INSTALL-DEPS.md"/>

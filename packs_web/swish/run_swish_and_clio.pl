@@ -64,7 +64,15 @@
 :- endif.
 
 
-:- if( \+ exists_source(library(lps_syntax)); \+ exists_source(pack(plweb/pack_info))).
+:- if( \+ exists_source(pack(plweb/pack_info))).
+:- attach_packs('/opt/logicmoo_workspace/packs_web').
+:- endif.
+
+:- if( \+ exists_source(library(lps_syntax))).
+:- attach_packs('/opt/logicmoo_workspace/packs_sys').
+:- endif.
+
+:- if( \+ exists_source(library(lps_syntax))).
 :- attach_packs('/opt/logicmoo_workspace/packs_web').
 :- endif.
 
@@ -111,6 +119,9 @@ from_http(G):-
 
 :- prolog_load_context(directory,Dir),asserta(user:file_search_path(swish, Dir)).
 
+:- multifile(prolog:doc_directory/1).
+:- dynamic(prolog:doc_directory/1).
+prolog:doc_directory(_Dir).
 
 user:file_search_path(project, '.').
 
@@ -229,7 +240,7 @@ swish_config:authenticate(Request, User) :- \+ http_session:http_in_session(_),
 %	Start the SWISH server and open the main page in your browser.
 
 remote_swish :-
-	remote_swish('logicmoo.org':3020).
+	remote_swish('0.0.0.0':3020).
 
 remote_swish(Port) :-
 	http_server_property(Port, _), !,
@@ -239,10 +250,10 @@ remote_swish(_:Port) :-
 	http_server_property(Port, _), !,
 	open_browser(Port).
 remote_swish(Port) :-
-	http_server(http_dispatch,
+	catch(http_server(http_dispatch,
 		    [ port(Port),
 		      workers(16)
-		    ]),
+		    ]),_,fail),
 	open_browser(Port).
 
 open_browser(Address) :-
@@ -424,6 +435,7 @@ start_swish_and_clio_real:- asserta(did_start_swish_and_clio),
    broadcast:broadcast(http(post_server_start)).
 
 :- use_module(swish(lib/plugin/login)).
+
 
 :- runtime_boot(start_swish_and_clio).
 
