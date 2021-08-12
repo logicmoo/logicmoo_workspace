@@ -53,4 +53,7 @@ prologmud_server/.config/swi-prolog/xpce/
 prologmud_server/config-enabled-swish/Geometry.cnf
 prologmud_server/core
 prologmud_server/nohup.out
+packs_sys/swicli/src/packages/
+packs_web/sewiki.iai.uni-bonn.de/
+packs_web/xrfoundation/
 
