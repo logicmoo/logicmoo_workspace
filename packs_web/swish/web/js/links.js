@@ -217,6 +217,26 @@ define(["jquery", "config", "modal"],
             }
           }
 
+		  if(href.indexOf("?fa=")>=0 || href.startsWith("/swish/lm_xref")) {
+			// handled in term.js
+			done = true;
+            ev.preventDefault();
+			return;
+		  }
+		  if (href.startsWith("/opt")) {
+			 href = "/filesystem" + href;
+			 //done = false;
+		  }
+		  if (href.startsWith("/help")||href.startsWith("/file")) {
+			 href = "/swish" + href;
+			 a.attr("href",href);
+			 //accept();
+			 functions.followLink(ev);
+			 return;
+		   //  done = false;
+			// debugger;
+		  }
+
           if (!done) {
 
 
@@ -224,6 +244,12 @@ define(["jquery", "config", "modal"],
             if(href.startsWith("#")) {
               return;
             }
+
+			if (href.startsWith("/swish/") && !href.startsWith("/swish/lm_xref")) {
+				$(ev.target).closest(".swish").swish('playURL', {url: href});
+				return;
+			}
+
             var target;
            //
             if ((target = modal.find("#" + id)).length == 1) {
@@ -240,19 +266,7 @@ define(["jquery", "config", "modal"],
 
               accept();
 
-			  if(href.indexOf("?fa=")>=0 || href.startsWith("/swish/lm_xref")) {
-				// handled in term.js
-				return;
-			  }
 
-			  if (href.startsWith("/help")||href.startsWith("/file")||href.startsWith("/opt")) {
-				  href = "/swish" + href;
-			  }
-			  //debugger;
-              if (href.startsWith("/swish/") && !href.startsWith("/swish/lm_xref")) {
-                $(ev.target).closest(".swish").swish('playURL', {url: href});
-                return;
-              }
 			  if(!href.startsWith("/") && !href.startsWith(":")) {
 				 window.open(href, '_blank');
 				 return;

@@ -1505,8 +1505,8 @@ clause_u_here(H,B,Ref):- catch(call(call,clause_u(H,B,Ref)),_,clause(H,B,Ref)).
 portray_refinfo(R):- (var(R) ; R == 0),!.
 portray_refinfo(R):- \+ catch(clause_property(R,module(_)),_,fail), in_cmt(format('Ref: ~p',[R])),!.
 portray_refinfo(R):- clause_property(R,erased), in_cmt(format('Warn: ~p is erased!',[R])),fail.
-portray_refinfo(R):- source_file_info(R,Info), in_cmt(format('Fileinfo: ~w',[Info])),!.
-portray_refinfo(R):- in_cmt(format('Ref: ~q',[R])),!.
+portray_refinfo(R):- source_file_info(R,Info), in_cmt(format('Fileinfo: ~w',[Info])),!,format('~N',[]).
+portray_refinfo(R):- in_cmt(format('Ref: ~q',[R])),!,format('~N',[]).
 
 source_file_info(R,F:L):- (clause_property(R,line_count(L));L= (-1)), (clause_property(R,file(F));clause_property(R,source(F));F=unk).
 %= 	 	 

@@ -116,6 +116,7 @@ http:status_page(Term, Context, HTML):- pprint_ecp(red,http:status_page(Term, Co
 
 %:- ((http_handler(handler(root(filesystem), swish_filesystems:serve_file_or_directory('/'), true, [id(example_serv_root_slash)]))).
 :- ((http_handler(swish(filesystem), swish_filesystems:serve_file_or_directory('/'), [id(example_serv_swish_slash)]))).
+:- ((http_handler(root('opt'), swish_filesystems:serve_file_or_directory('/'), [id(example_serv_swish_slash_opt)]))).
 %:- asserta((http_dispatch:handler(root(example), swish_filesystems:serve_file_or_directory(example), true, [id(example_serv_root)]))).
 %:- ((http_handler(swish(example), swish_filesystems:serve_file_or_directory(example), true, [id(example_serv_swish)]))).
 
@@ -141,8 +142,6 @@ serve_file_or_directory(Alias, Request):- non_asset(Alias),
          absolute_file_name(PathInfo,Path,[access(read), file_errors(fail)]),
          exists_file(Path),
          catch_reply(http_dispatch_http_reply_file(Path, [unsafe(false), static_gzip(true)], Request),_,fail),!.
-
-
 
 % serve_file_or_directory(Alias, Request):- non_asset(Alias), whine_serve_file_or_directory(Alias, Request),fail.
 serve_file_or_directory(Alias, Request):- 

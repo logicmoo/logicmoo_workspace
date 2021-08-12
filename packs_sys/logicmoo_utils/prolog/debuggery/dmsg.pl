@@ -18,9 +18,10 @@
             ansicall/3,
             ansicall_4/3,
             ansicall_6/3,
+            once_in_while/1,
             ansifmt/2,
             ansifmt/3,
-            
+            dis_pp/1,
             colormsg/2,
             mesg_color/2,
             contains_atom/2,
@@ -213,7 +214,8 @@ style_emitter(_Out,html):- use_html_styles,!.
 style_emitter(Out,sgr):- dis_pp(bfly), is_tty(Out), !.
 style_emitter(_Out,none):- \+ use_html_styles.
 
-cnvt_in_out(_, _Out,_Ctrl,true,true):- \+ in_pp(bfly),!.
+cnvt_in_out(_, _Out,_Ctrl,true,true):- dis_pp(ansi),!.
+cnvt_in_out(_, _Out,_Ctrl,true,true):- on_x_fail(httpd_wrapper:http_current_request(_)),!.
 cnvt_in_out(none, _Out,_Ctrl,true,true).
 cnvt_in_out(_,_Out,html,(in_pp(Was),pp_set(http)),pp_set(Was)).
 cnvt_in_out(_,_Out,pp_set(PP),(in_pp(Was),pp_set(PP)),pp_set(Was)).
@@ -2001,6 +2003,14 @@ into_color_name(C,C):- atom(C), ansi_term:ansi_color(C,_).
 %
 sgr_code_on_off(Ctrl,OnCode,OffCode):-sgr_on_code(Ctrl,OnCode),sgr_off_code(Ctrl,OffCode),!.
 sgr_code_on_off(_Ctrl,_OnCode,[default]):-!.
+
+:- thread_local(t_l:once_shown/2).
+once_in_while(G):- once_in(G,60*5).  % every 5 minutes
+once_in(G,Often):- term_to_atom(G,A),
+  (( \+ (t_l:once_shown(A,WasThen), When is WasThen+Often, get_time(Now), When < Now))
+   -> catch(G,_,fail) ; true),
+  retractall(t_l:once_shown(A,_)),
+  asserta(t_l:once_shown(A,Now)).
 
 
 

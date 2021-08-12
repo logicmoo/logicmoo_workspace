@@ -893,7 +893,9 @@ handler_logicmoo_cyclone000(Request):-
   get_webproc(WebProc),
   write_begin_html(WebProc),
   ((ignore( \+ ((  
-    get_param_req(cmd,Call), url_decode_term(Call,Prolog),
+    get_param_req(cmd,Call),
+    url_decode_term(Call,Prolog),
+    dmsg(cmd=Prolog),
     ignore((nonvar(Prolog),asserta_new(offer_testcase(Prolog)))), 
      weto(write_expandable(true,Prolog))))))),
 
@@ -3041,7 +3043,12 @@ sensical_nonvar(O):-nonvar(O), O \= (_ - _).
 %
 url_decode_term(Sym,T,Vs):- var(Sym),!, T=Sym, term_varnames(T,Vs,_),!.
 url_decode_term(Sym,T,Vs):- empty_str(Sym),!, T=Sym, Vs=[].
-url_decode_term(Sym,T,Vs):- atom(Sym) -> url_decode_atom(Sym,T,Vs) ; url_decode_nonatom(Sym,T,Vs).
+
+url_decode_term(Sym,T,Vs):- url_decode_term0(Sym,TMid,VsMid), 
+  ((atom(TMid),(atom_contains(TMid,'.');atom_contains(TMid,')'))) 
+   -> atom_to_term(TMid,T,Vs) ; (VsMid=Vs,T=TMid)).
+
+url_decode_term0(Sym,T,Vs):- atom(Sym) -> url_decode_atom(Sym,T,Vs) ; url_decode_nonatom(Sym,T,Vs).
 
 url_decode_nonatom(Sym,T,Vs):- compound(Sym), decode_f1(Sym,T,Vs), !.
 url_decode_nonatom(Sym,T,Vs):- blob(Sym,clause),!, clause(H,B,Sym), !, T = (H:-B), term_varnames(T,Vs,_),!.

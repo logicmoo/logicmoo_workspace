@@ -267,7 +267,7 @@ bfly_html_goal(Goal):-
 bfly_write_h(S0):- prepend_trim_for_html(S0,SM), prepend_trim(SM,S), ignore((\+ empty_str(S), 
  setup_call_cleanup(bfly_in, write(S),(bfly_out,flush_output)))),ttyflush,flush_output.
 
-%prepend_trim_for_html(S,S):-!.
+% prepend_trim_for_html(S,S):-!. Fileinfo
 %prepend_trim_for_html(S,SS):- correct_html_len(S,SS).
 prepend_trim_for_html(S,SS):- prepend_trim(S,SM),correct_html_len(SM,SS).
 
@@ -288,19 +288,19 @@ find_and_ofset('> ',0).
 
 
 find_place_to_split1(S,Before):- 
-  max_html_width(W120),
+  max_html_width(W120), W110 is W120-10,
   find_and_ofset(Split,Offset0),
   (Offset0 == len, atom_length(Split,Offset) ; Offset = Offset0),
   sub_atom(S,Before0,_,_,Split),
   Before is Before0+Offset,
-  Before > 50,  Before < W120,!.
+  Before > 50,  Before < W110,!.
 
 
 find_place_to_split1(S,Before):- 
-  max_html_width(W120), W150 is W120 + 30,
+  max_html_width(W120), 
   member(Split,['</','<','/>','>',')','  ','/*',' ']),
   sub_atom(S,Before,_,_,Split),
-  Before > 50,  Before < W150,
+  Before > 50,  Before < W120,
   sub_atom(S,0,Before,_,Left), 
   \+ atom_contains(Left,'<pre'),!.
 

@@ -35,6 +35,16 @@
 define(["jquery"],
 function() {
 
+	$(document).on('click', '.cm-file', function(e) {
+		var a = $(this);
+		var href = a['href'];
+		if (href) {
+			debugger;
+		} else {
+			debugger;
+		}
+	});
+
 	// import 'jquery-contextmenu';
 
 	function unfold() {

@@ -63,6 +63,7 @@ var tokenHelp = {
   "file": function(data, cm) {
     if ( data ) {
       addFileTranslation(cm, data.text, data.path);
+	  debugger;
       return $.el.div("File: ",
 		      $.el.span({class:"file-path"},
 				data.path));
