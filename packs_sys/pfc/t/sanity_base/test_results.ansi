@@ -1,0 +1,43 @@
+
+
+ALL TESTs
+
+
+
+
+Running Matching Tests: ./test_prolog.sh  *_01*.p* *_02*.p* *_03*.p* *_04*.p* *_05*.p* *_06*.p* *_07*.p* *_08*.p* *_09*.p* *_10*.p* *_11*.p* *_12*.p*
+
+
+swipl -g 'set_prolog_flag(runtime_testing,4)' -g "(['abc_01.pfc'])" -g "test_completed"
+call_mpred_post4 :- 
+  unique is assertion_status , 
+  post1 = b(2) , 
+  fix_mp=baseKB , 
+  mz=baseKB , 
+  p0 = b(2) , 
+  support_fact = mfl4(_19454,baseKB,'/opt/logicmoo_workspace_linux/packs_sys/pfc/t/sanity_base/abc_01.pfc',15) , 
+  support_trig=ax , 
+  none is support_status
+baseKB : mpred_fwc1( b(2))
+[36m%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+[0m[32m%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+[0m[32m%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+[0m[33m%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+[0m
+[31m%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+[0m[33m%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+[0m
+Justifications for b(2):
+[31m%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+[0m[36m    1.1 mfl4(_,baseKB,'/opt/logicmoo_workspace_linux/packs_sys/pfc/t/sanity_base/abc_01.pfc',15) [0m
+[32m%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+[0m[32m%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+[0m:- dynamic test_results/3.
+
+
+
+
+SUCCESS: ./test_prolog.sh  abc_01.pfc (returned 7)
+
+
+swipl -g 'set_prolog_flag(runtime_testing,4)' -g "(['attvar_01.pl'])" -g "test_completed"
