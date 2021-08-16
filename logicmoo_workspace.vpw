@@ -3,5 +3,6 @@
 	<Projects>
 		<Project File="logicmoo_workspace.vpj"/>
 		<Project File="other_files.vpj"/>
+                <Project File="T:\\opt\\logicmoo_workspace\\platform\\new-platform.vpj"/>
 	</Projects>
 </Workspace>

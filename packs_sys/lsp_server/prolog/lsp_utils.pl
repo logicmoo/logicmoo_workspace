@@ -20,6 +20,7 @@ source and stuff.
 :- use_module(library(apply), [maplist/3, exclude/3]).
 :- use_module(library(prolog_xref)).
 :- use_module(library(prolog_source), [read_source_term_at_location/3]).
+:- prolog_help:(export(help_html/3),export(help_objects/3)).
 :- use_module(library(help), [help_html/3, help_objects/3]).
 :- use_module(library(lynx/html_text), [html_text/1]).
 :- use_module(library(solution_sequences), [distinct/2]).
@@ -194,7 +195,7 @@ linechar_offset(Stream, line_char(Line1, Char0), Offset) :-
 
 seek_to_line(Stream, N) :-
     N > 1, !,
-    skip(Stream, 0'\n),
+    skip(Stream, 0'\n),   % '
     NN is N - 1,
     seek_to_line(Stream, NN).
 seek_to_line(_, _).
@@ -317,4 +318,4 @@ find_var(Term, Offset, parentheses_term_position(F, T, SubPoses), Var) =>
 find_var({SubTerm}, Offset, brace_term_position(F, T, SubPos), Var) =>
     between(F, T, Offset),
     find_var(SubTerm, Offset, SubPos, Var).
-find_var(Term, Offset, SubPos, Var), Term \== Var => fail.
+find_var(Term, _Offset, _SubPos, Var), Term \== Var => fail.

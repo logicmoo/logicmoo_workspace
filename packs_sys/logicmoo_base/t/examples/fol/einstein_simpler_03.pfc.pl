@@ -1,6 +1,5 @@
 %:-consult('/opt/logicmoo_workspace/packs_sys/logicmoo_base/t/examples/fol/einstein_simpler_03.pfc.pl').
 
-:- include(test_header).
 
 /* 
 % =============================================
@@ -45,36 +44,31 @@
 % swipl -g "[(pack(logicmoo_base/t/examples/fol/'einstein_simpler_03.pfc')]."
 
 
+:- include(test_header).
 
-:- file_begin(pfc).
+:- expects_dialect(pfc).
+
+% :- module(baseKB).
 
 :- op(600,xfy, (/\)).
 :- op(0,xfx,'=>').
-:- op(1150,xfy,'=>').
+:- op(1150,xfy,('=>')).
 
-:- wdmsg([pack(logicmoo_base/t/examples/fol/'einstein_simpler_03.pfc')]).
+:- prolog_load_context(source,X),wdmsg(prolog_load_context(source,X)).
+% reconsult((pack(logicmoo_base/t/examples/fol/'einstein_simpler_03.pfc'))).
 
 never_assert_u(boxlog((lives(A, _):-neighbor(A, _))),singletons).
 
 % add this to our vocab
 props((/\),ftSentenceOp,tLogicalConjunction).
 
+
+
 % Source http://www.iflscience.com/editors-blog/solving-einsteins-riddle
 
-%= There are five houses in a row.
-exists(H1,exists(H2,exists(H3,exists(H4,exists(H5,
-  leftof(H1, H2) /\ leftof(H2, H3) /\ leftof(H3, H4) /\ leftof(H4, H5)))))).
 
-%= In each house lives a person with a unique nationality.
-% we write this in SUMO
-% all(H,exists(P,exists(U,(house(H) => (person(P) /\ lives(P, H) /\ unique(U,nationality(P,U))))))).
-% SANITY count the persons (shouild be 5)
-% :- sanity(( findall(P,person(P),L),length(L,5))).
-
-% Helper functions
+% Helper functional constraints
 % 
-(lives(PA, HA) /\ (leftof(HA, HB); leftof(HB, HA)) /\ lives(PB, HB)) <=> neighbor(PA,PB).
-
 meta_argtypes(lives(person,house)).
 meta_argtypes(pet(person,animal)).
 meta_argtypes(position(person,int)).
@@ -82,18 +76,11 @@ meta_argtypes(smokes(person,brand)).
 meta_argtypes(drinks(person,beverage)).
 meta_argtypes(leftof(house,house)).
 
-exists([P1,I1,I2,P2,H1,H2],
-  ((position(P1,I1) /\ lives(P1,H1) /\ leftof(H1,H2) /\ ({plus(I1, 1, I2)}) /\ position(P2,I2) /\ lives(P2,H2)))).
 
-% Other facts:
+% Facts:  https://udel.edu/~os/riddle.html
 % 
 %= 1. The Brit lives in the red house. 
 lives(englishman, red).
-
-
-% forward chain these into houses
-leftof(HA, HB) ==> (house(HA) , house(HB)).
-
 
 %= 2. The Swede keeps dogs as pets. 
 pet(swede, dogs).
@@ -104,8 +91,12 @@ drinks(dane, tea).
 %= 4. The green house is on the immediate left of the white house. 
 leftof(green, white).
 
+:- break.
+:- rtrace.
 %= 5. The green house's owner drinks coffee. 
 exists(X, lives(X, green) /\ drinks(X, coffee)).
+
+:- break.
 
 %= 6. The owner who smokes Pall Mall rears birds. 
 exists(X, smokes(X, pallmalls) /\ pet(X, birds)).
@@ -137,13 +128,35 @@ exists(X, neighbor(norwegian, X) /\ lives(X, blue)).
 %= 15. The owner who smokes Blends lives next to the one who drinks water. 
 exists(X,exists(Y,smokes(X, blends) /\ neighbor(X,Y) /\ drinks(Y, water))).
 
-
-
 %= The five owners drinks a certain type of beverage, smokes a certain brand of
 %= cigar and keep a certain pet. 
 
 trait(drinks). trait(smokes). trait(pet).
 trait(position). % we add position 
+
+
+% forward chain these into houses
+leftof(HA, HB) ==> (house(HA) , house(HB)).
+
+:- break.
+
+%= There are five houses in a row.
+:- rtrace.
+exists(H1,exists(H2,exists(H3,exists(H4,exists(H5,
+  leftof(H1, H2) /\ leftof(H2, H3) /\ leftof(H3, H4) /\ leftof(H4, H5)))))).
+% SANITY count the persons (shouild be 5)
+% :- sanity(( findall(P,person(P),L),length(L,5))).
+
+:- break.
+
+%= In each house lives a person with a unique nationality.
+% we write this in SUMO
+all(H,exists(P,exists(U,(house(H) => (person(P) /\ lives(P, H) /\ unique(U,nationality(P,U))))))).
+
+(lives(PA, HA) /\ (leftof(HA, HB); leftof(HB, HA)) /\ lives(PB, HB)) <=> neighbor(PA,PB).
+
+exists([P1,I1,I2,P2,H1,H2],
+  ((position(P1,I1) /\ lives(P1,H1) /\ leftof(H1,H2) /\ ({plus(I1, 1, I2)}) /\ position(P2,I2) /\ lives(P2,H2)))).
 
 
 :- if(true).  % No HiLog
@@ -155,7 +168,7 @@ all(P,
 
 % No owners have the same pet, smokes the same
 % brand of cigar, or drinks the same beverage.
-different_insts(person,PA,PB) /\ trait(Trait) /\ t(Trait,PA,What) => ~t(Trait,PB,What).
+(different_insts(person,PA,PB) /\ trait(Trait) /\ t(Trait,PA,What)) => ~t(Trait,PB,What).
 
 :- else.  % Yes HiLog
 /*

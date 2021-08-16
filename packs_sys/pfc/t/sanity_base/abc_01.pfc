@@ -12,7 +12,6 @@
 
 :- mpred_trace_exec.
 
-
 ==> b(2).
 
 :- mpred_why( b(2)).

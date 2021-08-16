@@ -1,8 +1,9 @@
 [Global]
 CurrentProject=logicmoo_workspace.vpj
 [ProjectDates]
-logicmoo_workspace.vpj=20210811175019216
+logicmoo_workspace.vpj=20210813220852356
 other_files.vpj=20210811164604306
+T:\\opt\\logicmoo_workspace\\platform\\new-platform.vpj=20210814125554159
 [ActiveConfig]
 logicmoo_workspace.vpj=Release
 packs_usr\wam_common_lisp\wamcl.vpj=,Release
@@ -11,11 +12,11 @@ packs_sys\logicmoo_nlu\ext\chat80_lm\chat80.vpj=Release
 [TreeExpansion2]
 - logicmoo_workspace.vpj
   + prologmud_server\.cache
-    - mozilla
-      - firefox
+    + mozilla
+      + firefox
         + uzgmtqbk.default-release
   + prologmud_server\.config
-    - Code - Insiders
+    + Code - Insiders
   + prologmud_server\.emacs.d
     + elpa
       + auctex-13.0.12
@@ -104,10 +105,10 @@ packs_sys\logicmoo_nlu\ext\chat80_lm\chat80.vpj=Release
   + .github
     + ISSUE_TEMPLATE
   + prologmud_server\.local
-    - share
-      - swi-prolog
-        - pack
-          - logicmoo_pldata
+    + share
+      + swi-prolog
+        + pack
+          + logicmoo_pldata
   + prologmud_server\.mozilla
     + firefox
       + uzgmtqbk.default-release
@@ -409,13 +410,13 @@ packs_sys\logicmoo_nlu\ext\chat80_lm\chat80.vpj=Release
       + tomoki1207.pdf-1.1.0
       + vfd.vs2017-light-theme-1.0.1
       + visualstudioexptteam.vscodeintellicode-1.2.14
-  + docker
+  - docker
     + noetic
     + noetic-testing
-    + rootfs
-      + etc
-        + apache2
-          + conf-available
+    - rootfs
+      - etc
+        - apache2
+          - conf-available
           + sites-enabled
           + ssl
         + butterfly
@@ -3663,9 +3664,9 @@ packs_sys\logicmoo_nlu\ext\chat80_lm\chat80.vpj=Release
               + lib
                 + x86_64-linux
               + library
-  - prologmud_server
-    - eclipse-workspace\.metadata
-    - eclipse-workspace\.metadata\.mylyn
+  + prologmud_server
+    + eclipse-workspace\.metadata
+    + eclipse-workspace\.metadata\.mylyn
     + eclipse-workspace\.metadata\.plugins
       + org.eclipse.core.resources\.projects\.org.eclipse.egit.core.cmp
       + org.eclipse.egit.core\.org.eclipse.egit.core.cmp
@@ -4954,678 +4955,1403 @@ packs_sys\logicmoo_nlu\ext\chat80_lm\chat80.vpj=Release
       + external
         + code
       + misc
-  - wikis
+  + wikis
     + logicmoo_workspace.wiki
-+ other_files.vpj
-  + V:\
-    - opt
-      - logicmoo_workspace
-        - packs_sys
-          - logicmoo_ec
-            - prolog
-              - ec_planner
-                + iwfms
-          + logicmoo_nlu
-            + ext
-              + pldata
-                + plkb7166
-                + plkb7166_supports
-  - docker
-    + rootfs
-      + etc
-        + apache2
-          + conf-available
-          + sites-enabled
-          + ssl
-        + letsencrypt
-          + live
-            + logicmoo.org
-        + nginx
-          + sites-enabled
-        + profile.d
-        + supervisor
-          + conf.d
-  + packs_sys
-    + logicmoo_ec\.github
-      + ISSUE_TEMPLATE
-      + workflows
-    + logicmoo_agi
-      + prolog
-        + abduction
-        + agi_lib
-        + episodic_memory
-        + libnlu
-        + MIndiGolog
-          + listings
-    + logicmoo_base
-      + prolog
-        + logicmoo
-          + common_logic
-          + motel
-          + pdt_server
-            + PDT Examples
-              + CTeditorTests
-              + editor
-              + graphical_views_tests
-              + load_message_tracking
-              + transparent
-            + PDT Tutorial
-              + analysis
-              + callgraph
-              + completion
-              + metainference
-              + outline
-              + search
-            + pdt.analysis
-              + pl
-            + pdt.builder
-              + example_files
-                + meta_finder_examples
-              + outdated_prolog_sources
-              + prolog-src
-                + analyzer
-                + util
-            + pdt.common
-              + pl
-                + callgraph
-                + lgt
-                + metainference
-                + xref
-                  + testcase
-            + pdt.connector
-              + org
-                + cs3
-                  + prolog
-                    + connector
-                      + internal
-                        + process
-                          + socket
-                      + process
-              + pl
-                + lgt
-            + pdt.console
-              + pl
-            + pdt.editor
-              + org
-                + cs3
-                  + pdt
-                    + editor
-                      + internal
-                        + views
-                          + testdata
-              + pl
-                + editor
-                  + lgt
-              + src
-                + org
-                  + cs3
-                    + pdt
-                      + editor
-                        + internal
-                          + views
-                            + testdata
-            + pdt.graphicalviews
-              + pl
-                + lgt
-            + prolog.connector
-              + org
-                + cs3
-                  + prolog
-                    + connector
-                      + internal
-                        + process
-                          + socket
-                      + process
-              + src
-                + org
-                  + cs3
-                    + prolog
-                      + connector
-                        + internal
-                          + process
-                            + socket
-                        + process
-            + prolog.library
-              + pl
-            + PrologBenchmarkTool
-              + example
-              + resources
-          + pfc
-          + plarkc
-          + pttp
-          + tptp
-            + infra
-              + lib
-                + documents
-                  + doc
-                    + planner
-                      + examples
-              + src
-                + swilib
-            + leancop
-            + pdl-tableau
-          + typesystem
-    + logicmoo_ec
-      + docs
-        + files
-          + driverlog
-          + letseat
-        + images
-      + ext
-        + aiswi
-          + dist
-            + javadoc
-              + index-files
-              + javasciff
-                + class-use
-              + resources
-              + test
-                + class-use
-          + img
-          + project_template
-          + relazione
-          + sciff
-          + src
-            + gamegui
-            + icons
-            + javasciff
-            + lib
-            + test
-          + xml
-        + dialog_test
-        + ec_sources
-          + ecnet
-          + examples
-            + AkmanEtAl2004
-            + Antoniou1997
-            + BrewkaDixKonolige1997
-            + Cassimatis2002
-            + ecasp
-            + ecasp-decreasoner
-            + FrankEtAl2003
-            + GiunchigliaEtAl2004
-            + Manual
-            + MillerShanahan2002
-            + Mueller2004a
-            + Mueller2004b
-            + Mueller2006
-              + Chapter10
-              + Chapter11
-              + Chapter12
-              + Chapter13
-              + Chapter14
-              + Chapter2
-              + Chapter3
-              + Chapter4
-              + Chapter6
-              + Chapter7
-              + Chapter8
-              + Chapter9
-              + Exercises
-            + ReiterCriscuolo1981
-            + Shanahan1997
-            + Shanahan1999
-          + foundations
-          + includes
-            + SaaSPatterns
-              + PolicyPatterns
-              + PolicySetPatterns
-              + RulesPatterns
-        + flp
-          + templates
-            + flp
-          + worlds
-            + flp
-        + PKnows-0.9.9
-          + vpdl
-        + RTEC
-          + examples
-            + caviar
-              + CE patterns
-              + data
-                + complete caviar
-              + execution scripts
-                + complete caviar
-            + ctm
-              + CE patterns
-              + execution scripts
-                + 100_vehicles
-            + toy
-          + src
-            + utilities
-        + theorist
-          + ailog
-            + ailog_code
-              + ch05
-              + ch12
-              + ch13
-              + ch14
-          + cilog_code
-            + ch2
-            + ch3
-            + ch4
-            + ch6
-            + ch8
-        + Tom
-          + Doc
-          + Samples
-          + Src
-        + xray
-        + yadlr
-          + examples
-            + iris
-            + trains
-          + pl
-      + prolog
-        + ccalc
-          + CVS
-          + examples
-            + additive
-            + airport
-            + nmct
-            + traffic
-            + zoo
-          + solvers
-            + CVS
-            + Linux
-              + CVS
-            + SunOS
-              + CVS
-          + tutorial
-        + code_icl
-        + dialect
-          + logicmoo
-        + ec_planner
-          + hist
-          + iwfms
-        + hyhtn_pddl
-          + ptools
-      + test
-        + domains_ocl
-          + assTaxi
-          + c0251943_WashingMachine
-          + chameleonWorld
-          + domains
-          + icons
-          + library
-          + ocl_files
-          + robot
-          + toasterWorldv2
-        + ec_planner
-          + abdemo_test
-          + asp
-          + bin
-          + ec2asp_linux_files
-            + page0001-2_files
-            + page0002_files
-            + page0003_files
-            + page0004_files
-          + ecasp-source
-          + ectest
-        + lps_planner
-        + lps_user_examples
-          + SzaboContractExamples
-        + pddl_reader
-          + ipc2008-no-cybersec
-            + netben-opt
-              + crewplanning-numeric
-              + elevators-numeric
-              + elevators-strips
-              + openstacks-adl
-              + openstacks-numericadl
-              + openstacks-stripsneg
-              + pegsol-strips
-              + transport-numeric
-              + woodworking-numeric
-            + seq-opt
-              + elevators-strips
-              + openstacks-adl
-              + openstacks-strips
-              + parcprinter-strips
-              + pegsol-strips
-              + scanalyzer-strips
-              + sokoban-strips
-              + transport-strips
-              + woodworking-strips
-            + seq-sat
-              + elevators-strips
-              + openstacks-adl
-              + openstacks-strips
-              + parcprinter-strips
-              + pegsol-strips
-        + pddl_tests
-          + benchmarks
-            + airport
-            + airport-adl
-            + assembly
-            + barman-opt11-strips
-            + barman-sat11-strips
-            + blocks
-            + depot
-            + driverlog
-            + elevators-opt08-strips
-            + elevators-opt11-strips
-            + elevators-sat08-strips
-            + elevators-sat11-strips
-            + floortile-opt11-strips
-            + floortile-sat11-strips
-            + freecell
-            + grid
-            + gripper
-            + logistics00
-            + logistics98
-            + miconic
-            + miconic-fulladl
-            + miconic-simpleadl
-            + movie
-            + mprime
-            + mystery
-            + no-mprime
-            + no-mystery
-            + nomystery-opt11-strips
-            + nomystery-sat11-strips
-            + openstacks
-            + openstacks-opt08-adl
-            + openstacks-opt08-strips
-            + openstacks-opt11-strips
-            + openstacks-sat08-adl
-            + openstacks-sat08-strips
-            + openstacks-sat11-strips
-            + openstacks-strips
-            + optical-telegraphs
-            + parcprinter-08-strips
-            + parcprinter-opt11-strips
-            + parcprinter-sat11-strips
-            + parking-opt11-strips
-            + parking-sat11-strips
-            + pathways
-            + pathways-noneg
-            + pegsol-08-strips
-            + pegsol-opt11-strips
-            + pegsol-sat11-strips
-            + philosophers
-            + pipesworld-notankage
-            + pipesworld-tankage
-            + psr-large
-            + psr-middle
-            + psr-small
-            + rovers
-            + satellite
-            + scanalyzer-08-strips
-            + scanalyzer-opt11-strips
-            + scanalyzer-sat11-strips
-            + schedule
-            + sokoban-opt08-strips
-            + sokoban-opt11-strips
-            + sokoban-sat08-strips
-            + sokoban-sat11-strips
-            + storage
-            + tidybot-opt11-strips
-            + tidybot-sat11-strips
-            + tpp
-            + transport-opt08-strips
-            + transport-opt11-strips
-            + transport-sat08-strips
-            + transport-sat11-strips
-            + trucks
-            + trucks-strips
-            + visitall-opt11-strips
-            + visitall-sat11-strips
-            + woodworking-opt08-strips
-            + woodworking-opt11-strips
-            + woodworking-sat08-strips
-            + woodworking-sat11-strips
-            + zenotravel
-          + elearning
-          + failing_or_too_slow
-          + orig_pddl_parser
-            + charts
-            + docs
-            + output
-            + test
-              + blocks
-              + elevators
-              + gripper
-              + hanoi
-          + sanity
-          + sizes
-            + psr-large
-            + psr-middle
-            + psr-small
-          + syntax
-          + ZenoTravel
-        + prolog_files
-          + delrob
-        + uw-yale-pddl
-          + doc
-          + domains
-            + transplan
-            + washington
-          + src
-          + strict-domains
-            + art
-            + art-1d
-            + art-1d-rd
-            + art-md
-            + art-md-ns
-            + art-md-ns-rd
-            + art-md-rd
-            + assembly
-            + blocks-world
-            + briefcase
-            + d1s1
-            + eight
-            + ferry
-            + fridge
-            + gripper
-            + homeowner
-            + logistics
-            + meet-pass
-            + molgen
-            + monkey
-            + montlake
-            + morris
-            + movie
-            + mystery
-            + occam
-            + safety-domain
-            + tire-world
-            + trains
-            + transplan
-            + travel
-            + truckworld
-            + woodshop
-    + logicmoo_nars
-      + config
-      + examples
-        + english
-        + more
-        + nal
-        + prolog
-          + games
-            + PongTalk
-          + nal
-      + misc
-        + C
-        + CPP
-        + Networking
-        + Python
-      + nal-tests
-        + application
-        + multi_step
-        + nal1
-        + nal2
-        + nal4
-        + nal5
-        + nal6
-        + single_step
-        + stability
-      + prolog
-        + miles
-          + doc
-          + examples
-          + gencon_instances
-          + xmiles_resources
-        + multagnt
-        + nars
-        + sldr_dl
-        + sre_dna
-      + unused
-        + NetworkNAR
-        + system_tests
-        + unit_tests
-    + logicmoo_nlu
-      + ext
-        + chat80
-          + current
-          + original
-          + previous
-          + regressed
-          + target
-        + pldata
-          + plkb7166
-          + plkb7166_supports
-      + prolog
-        + config_nomicmu
-          + example_bt
-            + doc
-              + d
-                + 20200312
-                  + www.cdc.gov
-                    + coronavirus
-                      + 2019-ncov
-                        + downloads
-              + research
-          + plugins
-        + logicmoo_nlu
-          + e2c
-    + logicmoo_utils
-      + prolog
-        + body_reordering
-        + cpviz
-        + debuggery
-        + lm_utils
-        + logicmoo
-        + multivar
-          + t
-        + xlisting
-          + swish_lib
-            + render
-    + pfc
-      + doc
-        + swish
-      + prolog
-        + dialect
-          + pfc_ext
-        + dra
-        + pfclib
+- T:\\opt\\logicmoo_workspace\\platform\\new-platform.vpj
+  + ..\
+  + conf
+    + run
+  + contrib
+    + abcl-asdf
       + t
-        + feature_inherit_kb
-        + misc
-        + regression
-        + sanity_base
-        + tabling-tests
-          + Bench
-            + aspclp
-            + clpfd
-            + prolog
-            + tabling
+      + tests
+    + abcl-introspect
+      + t
+    + asdf-install
+    + asdf-jar
+    + jfli
+      + examples
+        + swing
+        + swt
+      + test
+    + jss
+      + t
+    + mvn
+    + named-readtables
+      + src
+      + test
+        + src
+    + quicklisp
+  + data
+    + ebmt
+      + testing
+        + earnings-reports
+          + 20060720T144359
+          + 20060720T161729
+          + 20060721T132311
+          + 20060721T133817
+          + 20060721T144019
+          + 20060721t171032
+          + 20060721t182805
+          + 20060722t090511
+          + 20060722t185139
+          + 20060723t033803
+          + 20060723t122807
+          + 20060723t211808
+          + 20060724t101550
+          + 20060724t104453
+          + 20060724t160817
+          + 20060725t014804
+          + 20060725t122554
+          + 20060725t232351
+          + 20060726t091358
+          + 20060726t190405
+          + 20060727t045427
+          + 20060727t164336
+          + 20060728t025647
+          + 20060728t123618
+          + 20060728t161523
+          + 20060728t234420
+          + 20060729t070602
+          + 20060729t142416
+          + 20060729t214226
+          + 20060730t050036
+          + 20060730t121845
+          + 20060730t193656
+          + 20060731t025839
+          + 20060731t121206
+          + 20060807t163959
+          + 20060810t153312
+          + 20060814t134656
+          + 20060815t101640
+        + financial
+          + mt
+            + 20060817114322
+            + 20060819213056
+            + 20060820232633
+        + query-library
+          + 20060804171934
+          + 20060810173914
+          + 20060814121513
+          + 20060821014001
+          + 20060821120609
+    + parsers
+      + hpsg
+    + rtp
+  + daydreamer
+    + HIDE
+  + doc
+    + manual
+  + e2c
+    + backup
+    + cl
+      + emacs-cl
+        + contrib
+          + closette
+          + gabriel
+    + cogbotstuff
+    + cynd
+    + cyndpandor3
+    + microEx
+    + microPrologIIV4
+    + microUt
+    + paip
+    + pjb-micro-prolog-ii
+    + setup
+  + etc
+  + examples
+    + google-app-engine
+      + src
+    + java-exception
+    + java-interface
+    + java-to-lisp-1
+    + java-to-lisp-2
+    + lisp-to-java
+    + misc
+    + pure-lisp-to-java
+  + init
+  + lib
+    + all-deps
+      + resources
+  + main
+    + armedbear-j-src
+      + doc
+        + manual
+      + themes
+  + mainly
+    + armedbear-j-src
+      + doc
+        + manual
+      + themes
+  + myfrdcsa
+    + codebases
+      + minor
+        + kmax\.incoming
+          + emacs-tips
+        + 3t-frdcsa
+          + acl81
+            + acache
+              + doc
+            + ansicl
+              + chapter
+              + dictentr
+              + glossary
+              + images
+              + indexcha
+              + meta
+              + section
+              + subsecti
+              + subsubse
+              + subsubsu
+            + bin
+            + code
+            + doc
+              + aserve
+              + cg
+                + ide-ug
+              + classes
+                + cg
+                + date-time
+                + dde
+                + defsys
+                + excl
+                + ff
+                + ide
+                + jlinker
+                + mp
+                + mysql
+                + post-office
+                + rpc
+                + socket
+                + uri
+              + faq
+              + ide-menus-and-dialogs
+              + javadoc
+                + com
+                  + franz
+                    + jlinker
+              + mop
+              + operators
+                + cg
+                  + a
+                  + b
+                  + c
+                  + d
+                  + e
+                  + f
+                  + g
+                  + h
+                  + i
+                  + j
+                  + k
+                  + l
+                  + m
+                  + n
+                  + o
+                  + other
+                  + p
+                  + r
+                  + s
+                  + t
+                  + u
+                  + v
+                  + w
+                  + y
+                  + z
+                + compiler
+                + composer
+                + date-time
+                + dbi
+                + dde
+                + defsys
+                + excl
+                + ff
+                + ide
+                + jil
+                + jlinker
+                + mp
+                + mysql
+                + ndbm
+                + post-office
+                + prof
+                + rpc
+                + socket
+                + system
+                + tpl
+                + uri
+                + util.test
+                + windows
+                + xref
+              + other
+              + pictures
+              + tpl-commands
+              + variables
+                + cg
+                + compiler
+                + composer
+                + date-time
+                + dbi
+                + dde
+                + defsys
+                + excl
+                + ide
+                + jil
+                + jlinker
+                + mp
+                + mysql
+                + prof
+                + rpc
+                + socket
+                + system
+                + tpl
+                + uri
+                + util.test
+                + xref
+            + eli
+              + examples
+            + examples
+              + aclrpc
+                + cluster-example
+              + addcaps
+                + sample
+                  + 1996-08-Aug
+                  + 1997-11-Nov
+                  + L8L18-LUGM
+                  + L9J06-Sep
+                  + L9J18-Sep
+                  + OTHER
+                + src
+                  + CDbase
+                    + AddCaps
+                  + files
+              + aserve
+              + cg
+                + pixmaps
+              + checklinks
+              + ide
+              + jlinker
+                + applet
+                + basic
+                + javabean
+                + servlet
+                + timecard
+                + trekdata
+              + sax
+              + snpp
+              + soap
+              + ssl
+              + streams
+              + testapp
+              + xml-rpc
+            + gtk
+              + lispex-gtk12
+              + lispex-gtk20
+            + gui-builder-tutorial
+              + doc
+              + final
+              + steps
+                + tutorial-ch1s004
+                + tutorial-ch1s013
+                + tutorial-ch2s010
+                + tutorial-ch3s022
+                + tutorial-ch3s031
+                + tutorial-ch3s046
+                + tutorial-ch3s051
+                + tutorial-ch4s006
+                + tutorial-ch4s018
+                + tutorial-ch4s021
+                + tutorial-ch4s024
+                + tutorial-ch4s026
+                + tutorial-ch4s028
+                + tutorial-ch5s010
+                + tutorial-ch5s021
+                + tutorial-ch5s031
+                + tutorial-ch5s038
+                + tutorial-ch5s047
+                + tutorial-ch5s054
+                + tutorial-ch5s061
+                + tutorial-ch5s071
+                + tutorial-ch5s079
+                + tutorial-ch5s084
+                + tutorial-ch5s092
+                + tutorial-ch5s100
+                + tutorial-ch6s005
+                + tutorial-ch6s012
+                + tutorial-ch6s015
+                + tutorial-ch6s018
+                + tutorial-ch6s025
+                + tutorial-ch6s033
+                + tutorial-ch6s041
+                + tutorial-ch6s058
+            + jil
+              + audio
+              + images
+            + jlinker
+            + locales
+            + misc
+            + opengl
+              + cggl
+              + glx
+              + gtkgl
+              + linux-1.3
+              + macosx-2.0
+              + win32-1.1
+            + orblink
+              + doc
+                + javapro
+              + examples
+                + anytest
+                  + cl
+                  + idl
+                + chart
+                  + cl
+                  + java
+                    + visibroker
+                + chatdemo
+                + diret1.0
+                  + DATA
+                + grid
+                  + CC
+                    + visibroker
+                      + sparc
+                  + cl
+                  + idl
+                  + java
+                    + orbixweb
+                    + visibroker
+                + ior-io
+                  + cl
+                  + java
+                + naming
+                + test
+              + idl
+            + src
+              + aserve
+                + doc
+                + examples
+                + htmlgen
+                + test
+                  + testdir
+                    + suba
+                      + subd
+                      + subsuba
+                    + subb
+                    + subc
+                    + subd
+                + webactions
+                  + clpcode
+                  + doc
+                  + test
+                    + sitea
+              + clim
+                + demo
+            + update
+            + xeli
+              + examples
+          + conf
+            + backup
+          + doc
+            + acl81-doc
+              + aserve
+              + cg
+                + ide-ug
+              + classes
+                + cg
+                + date-time
+                + dde
+                + defsys
+                + excl
+                + ff
+                + ide
+                + jlinker
+                + mp
+                + mysql
+                + post-office
+                + rpc
+                + socket
+                + uri
+              + faq
+              + ide-menus-and-dialogs
+              + javadoc
+                + com
+                  + franz
+                    + jlinker
+              + mop
+              + operators
+                + cg
+                  + a
+                  + b
+                  + c
+                  + d
+                  + e
+                  + f
+                  + g
+                  + h
+                  + i
+                  + j
+                  + k
+                  + l
+                  + m
+                  + n
+                  + o
+                  + other
+                  + p
+                  + r
+                  + s
+                  + t
+                  + u
+                  + v
+                  + w
+                  + y
+                  + z
+                + compiler
+                + composer
+                + date-time
+                + dbi
+                + dde
+                + defsys
+                + excl
+                + ff
+                + ide
+                + jil
+                + jlinker
+                + mp
+                + mysql
+                + ndbm
+                + post-office
+                + prof
+                + rpc
+                + socket
+                + system
+                + tpl
+                + uri
+                + util.test
+                + windows
+                + xref
+              + other
+              + pictures
+              + tpl-commands
+              + variables
+                + cg
+                + compiler
+                + composer
+                + date-time
+                + dbi
+                + dde
+                + defsys
+                + excl
+                + ide
+                + jil
+                + jlinker
+                + mp
+                + mysql
+                + prof
+                + rpc
+                + socket
+                + system
+                + tpl
+                + uri
+                + util.test
+                + xref
+            + papers
+          + frdcsa
+            + sys
+              + cso
+                + autoload
+          + help-acl
+          + parse
+          + planner
+            + AllegroGraph
+              + ontologies
+                + terrorism
+            + applications
+              + rferguson
+              + RTS-AI
+            + belief-network
+              + api
+              + diagnostic-analysis
+              + io
+              + NeticaL
+                + NeticaJ-API
+                + network-files
+              + subscriptions
+            + counterplanning
+            + doc
+              + getting-started
+            + domains
+              + afsat
+              + CBRN
+                + Bio
+                + Chem
+                + Equipment
+                + Nuke
+                + RTS-AI
+              + commerce
+              + computer
+                + CAPA
+                + infosec
+                  + attack
+              + demos
+                + blocks
+                + eBay
+                + pddl3.1-examples
+              + DoD
+              + Geography
+              + military
+              + NAS
+              + nasa
+              + spacecraft
+              + terrorism
+              + transportation
+            + execution-monitor
+            + plan-recognition
+            + planning
+            + replanning
+            + representation
+              + action
+              + assumption
+              + axiom
+              + owl
+              + predicates
+              + problem
+              + situation
+            + system
+              + csp
+              + ui
+                + CLIM-GUI
+                  + guiapp
+            + user
+              + debug
+              + developer-tools
+                + simulate-execution
+              + file-io
+                + json
+                  + cl-json
+                    + doc
+                    + src
+                + ntriples
+              + running
+          + planner-working
+            + AllegroGraph
+              + ontologies
+            + belief-network
+              + diagnostic-analysis
+              + io
+              + NeticaL
+                + network-files
+              + plan-recognition
+            + counterplanning
+            + csp
+            + doc
+              + user-guide
+            + domains
+              + afsat
+              + CBRN
+                + bio
+                + chem
+              + commerce
+              + computer
+              + deception
+              + demos
+                + blocks
+              + DoD
+              + Geography
+              + nasa
+                + anml
+                  + yr1
+                  + yr2
+                + prl
+                  + old
+              + nasanew
+              + terrorism
+              + transportation
+            + execution-monitor
+            + plan-recognition
+            + planning
+            + registry
+            + replanning
+            + representation
+              + action
+              + assumption
+              + axiom
+              + owl
+              + predicates
+              + situation
+            + system
+              + file-io
+            + ui
+              + CLIM-GUI
+                + guiapp
+            + user
+              + developer-tools
+                + debug
+          + scripts
+        + kmax
+          + frdcsa
+            + emacs
+              + kmax-command-log-mode
+          + KMax
+            + Util
+          + misc
+            + old-kmax
+              + kmax-0.1
+                + frdcsa
+          + scripts
+    + collections
+      + traclabs
+        + svn.traclabs.com
+          + svn
+            + 3t
+              + 3t
+                + branches
+                  + planner-working
+                    + AllegroGraph
+                      + ontologies
+                    + belief-network
+                      + diagnostic-analysis
+                      + io
+                      + NeticaL
+                        + network-files
+                      + plan-recognition
+                    + counterplanning
+                    + csp
+                    + doc
+                      + user-guide
+                    + domains
+                      + afsat
+                      + CBRN
+                        + bio
+                        + chem
+                      + commerce
+                      + computer
+                      + deception
+                      + demos
+                        + blocks
+                      + DoD
+                      + Geography
+                      + nasa
+                        + anml
+                          + yr1
+                          + yr2
+                        + prl
+                          + old
+                      + nasanew
+                      + terrorism
+                      + transportation
+                    + execution-monitor
+                    + plan-recognition
+                    + planning
+                    + registry
+                    + replanning
+                    + representation
+                      + action
+                      + assumption
+                      + axiom
+                      + owl
+                      + predicates
+                      + situation
+                    + system
+                      + file-io
+                    + ui
+                      + CLIM-GUI
+                        + guiapp
+                    + user
+                      + developer-tools
+                        + debug
+                + trunk
+                  + planner
+                    + AllegroGraph
+                      + ontologies
+                        + terrorism
+                    + applications
+                      + rferguson
+                      + RTS-AI
+                    + belief-network
+                      + api
+                      + diagnostic-analysis
+                      + io
+                      + NeticaL
+                        + NeticaJ-API
+                        + network-files
+                      + subscriptions
+                    + counterplanning
+                    + doc
+                      + getting-started
+                    + domains
+                      + afsat
+                      + CBRN
+                        + Bio
+                        + Chem
+                        + Equipment
+                        + Nuke
+                        + RTS-AI
+                      + commerce
+                      + computer
+                        + CAPA
+                        + infosec
+                          + attack
+                      + demos
+                        + blocks
+                        + eBay
+                        + pddl3.1-examples
+                      + DoD
+                      + Geography
+                      + military
+                      + NAS
+                      + nasa
+                      + spacecraft
+                      + terrorism
+                      + transportation
+                    + execution-monitor
+                    + plan-recognition
+                    + planning
+                    + replanning
+                    + representation
+                      + action
+                      + assumption
+                      + axiom
+                      + owl
+                      + predicates
+                      + problem
+                      + situation
+                    + system
+                      + csp
+                      + ui
+                        + CLIM-GUI
+                          + guiapp
+                    + user
+                      + debug
+                      + developer-tools
+                        + simulate-execution
+                      + file-io
+                        + json
+                          + cl-json
+                            + doc
+                            + src
+                        + ntriples
+                      + running
+    + private
+      + external
+        + acl81
+          + acache
+            + doc
+          + ansicl
+            + chapter
+            + dictentr
+            + glossary
+            + images
+            + indexcha
+            + meta
+            + section
+            + subsecti
+            + subsubse
+            + subsubsu
+          + bin
+          + code
+          + doc
+            + aserve
+            + cg
+              + ide-ug
+            + classes
+              + cg
+              + date-time
+              + dde
+              + defsys
+              + excl
+              + ff
+              + ide
+              + jlinker
+              + mp
+              + mysql
+              + post-office
+              + rpc
+              + socket
+              + uri
+            + faq
+            + ide-menus-and-dialogs
+            + javadoc
+              + com
+                + franz
+                  + jlinker
+            + mop
+            + operators
+              + cg
+                + a
+                + b
+                + c
+                + d
+                + e
+                + f
+                + g
+                + h
+                + i
+                + j
+                + k
+                + l
+                + m
+                + n
+                + o
+                + other
+                + p
+                + r
+                + s
+                + t
+                + u
+                + v
+                + w
+                + y
+                + z
+              + compiler
+              + composer
+              + date-time
+              + dbi
+              + dde
+              + defsys
+              + excl
+              + ff
+              + ide
+              + jil
+              + jlinker
+              + mp
+              + mysql
+              + ndbm
+              + post-office
+              + prof
+              + rpc
+              + socket
+              + system
+              + tpl
+              + uri
+              + util.test
+              + windows
+              + xref
+            + other
+            + pictures
+            + tpl-commands
+            + variables
+              + cg
+              + compiler
+              + composer
+              + date-time
+              + dbi
+              + dde
+              + defsys
+              + excl
+              + ide
+              + jil
+              + jlinker
+              + mp
+              + mysql
+              + prof
+              + rpc
+              + socket
+              + system
+              + tpl
+              + uri
+              + util.test
+              + xref
+          + eli
+            + examples
           + examples
-            + LTL
-            + XSB
-          + mttests
-          + negation_tests
-          + table_tests
-        + tabling_benchmarks
-        + unit_tests
-    + prologmud
-      + prolog
-        + prologmud
-          + actions
-          + mobs
-            + affordance
-          + objs
-          + parsing
-          + server
-          + vworld
-        + prologmud_web
-          + src_webui
-            + http
-            + model
-            + mudconsole
-    + prologmud_samples
-      + prolog
-  + packs_web
-    + swish
+            + aclrpc
+              + cluster-example
+            + addcaps
+              + sample
+                + 1996-08-Aug
+                + 1997-11-Nov
+                + L8L18-LUGM
+                + L9J06-Sep
+                + L9J18-Sep
+                + OTHER
+              + src
+                + CDbase
+                  + AddCaps
+                + files
+            + aserve
+            + cg
+              + pixmaps
+            + checklinks
+            + ide
+            + jlinker
+              + applet
+              + basic
+              + javabean
+              + servlet
+              + timecard
+              + trekdata
+            + sax
+            + snpp
+            + soap
+            + ssl
+            + streams
+            + testapp
+            + xml-rpc
+          + gtk
+            + lispex-gtk12
+            + lispex-gtk20
+          + gui-builder-tutorial
+            + doc
+            + final
+            + steps
+              + tutorial-ch1s004
+              + tutorial-ch1s013
+              + tutorial-ch2s010
+              + tutorial-ch3s022
+              + tutorial-ch3s031
+              + tutorial-ch3s046
+              + tutorial-ch3s051
+              + tutorial-ch4s006
+              + tutorial-ch4s018
+              + tutorial-ch4s021
+              + tutorial-ch4s024
+              + tutorial-ch4s026
+              + tutorial-ch4s028
+              + tutorial-ch5s010
+              + tutorial-ch5s021
+              + tutorial-ch5s031
+              + tutorial-ch5s038
+              + tutorial-ch5s047
+              + tutorial-ch5s054
+              + tutorial-ch5s061
+              + tutorial-ch5s071
+              + tutorial-ch5s079
+              + tutorial-ch5s084
+              + tutorial-ch5s092
+              + tutorial-ch5s100
+              + tutorial-ch6s005
+              + tutorial-ch6s012
+              + tutorial-ch6s015
+              + tutorial-ch6s018
+              + tutorial-ch6s025
+              + tutorial-ch6s033
+              + tutorial-ch6s041
+              + tutorial-ch6s058
+          + jil
+            + audio
+            + images
+          + jlinker
+          + locales
+          + misc
+          + opengl
+            + cggl
+            + glx
+            + gtkgl
+            + linux-1.3
+            + macosx-2.0
+            + win32-1.1
+          + orblink
+            + doc
+              + javapro
+            + examples
+              + anytest
+                + cl
+                + idl
+              + chart
+                + cl
+                + java
+                  + visibroker
+              + chatdemo
+              + diret1.0
+                + DATA
+              + grid
+                + CC
+                  + visibroker
+                    + sparc
+                + cl
+                + idl
+                + java
+                  + orbixweb
+                  + visibroker
+              + ior-io
+                + cl
+                + java
+              + naming
+              + test
+            + idl
+          + src
+            + aserve
+              + doc
+              + examples
+              + htmlgen
+              + test
+                + testdir
+                  + suba
+                    + subd
+                    + subsuba
+                  + subb
+                  + subc
+                  + subd
+              + webactions
+                + clpcode
+                + doc
+                + test
+                  + sitea
+            + clim
+              + demo
+          + update
+          + xeli
+            + examples
+  + ..\old-ansi-tests
+  + site-lisp
+    + 3t
+    + backup
+    + cb-logicmoo
+    + cl-bench
+      + files
+        + cl-ppcre
+      + play
+      + sysdep
+    + cl-fad
+    + cl-prevalence
+      + src
+      + test
+    + cusp
+      + contrib
+    + daydreamer
+    + doom
+    + e2c
+    + e2c-cogbotstuff
+    + e2c-cynd
+    + e2c-cyndpandor3
+    + fiveam
+      + docs
+      + src
+      + t
+    + fiveam-asdf
+    + jnil
+      + addit-knowledge
+        + db
+      + ast
+      + coders
+      + format
+      + support
+    + loom4.0
+      + abox
+      + kbclasses
+      + measures
+      + patch
+      + tbox
+    + org.sourceforge.eclisp_1.2.0
       + lib
-        + data
-        + plugin
-        + render
-      + rdf
-        + cpack
-      + web
-        + css
-        + help
-        + js
-          + codemirror
-            + addon
-              + hint
-              + hover
-            + mode
-              + prolog
-            + theme
-          + render
-          + tutorials
-  + packs_xtra
-    + logicmoo_packages
-      + prolog
-        + BN-search
-        + pHa_code
-  + prologmud_server
-    + attic
-    + btepisode
-    + config-enabled-swish
+        + examples
+          + timecard
+    + paip
+    + pddl-tools
+      + pddl
+      + planners
+      + utils
+        + tests
+    + pjb-micro-prolog-ii
+    + quicklisp
+      + dists
+        + quicklisp
+          + software
+            + alexandria-20181210-git
+              + doc
+            + babel-20171227-git
+              + scripts
+              + src
+              + tests
+            + bordeaux-threads-v0.8.6
+              + src
+              + test
+            + cffi_0.20.0
+              + doc
+              + examples
+              + grovel
+              + libffi
+              + scripts
+              + src
+                + c2ffi
+              + tests
+              + toolchain
+              + uffi-compat
+            + cl-base64-20150923-git
+            + ironclad-v0.45
+              + benchmark
+              + src
+                + aead
+                + ciphers
+                + digests
+                + kdf
+                + macs
+                + opt
+                  + ccl
+                  + ecl
+                  + sbcl
+                + prng
+                + public-key
+              + testing
+                + test-vectors
+            + iterate-20180228-git
+              + doc
+                + examples
+            + nibbles-20180831-git
+              + sbcl-opt
+            + pzmq-20190521-git
+            + trivial-features-20161204-git
+              + src
+              + tests
+            + trivial-garbage-20190521-git
+            + trivial-utf-8-20111001-darcs
+            + uuid-20180831-git
+      + quicklisp
+    + shop3
+      + jenkins
+      + shop3
+        + common
+        + examples
+          + blocks
+          + depots
+          + IPC-2002
+            + Depots
+              + SimpleTime
+                + easy_probs
+                + hard_probs
+              + Time
+                + easy_probs
+                + hard_probs
+            + Rovers
+              + SimpleTime
+                + easy_probs
+                + hard_probs
+            + Satellite
+              + SimpleTime
+                + easy_probs
+                + hard_probs
+            + ZenoTravel
+              + SimpleTime
+                + easy_probs
+                + hard_probs
+              + Time
+                + easy_probs
+                + hard_probs
+          + logistic
+          + openstacks-adl
+          + rovers
+            + strips
+          + satellite
+            + strips
+          + toy
+          + UMT2
+        + explicit-stack-search
+        + io
+        + looping-tasks
+        + minimal-subtree
+        + pddl
+        + plan-grapher
+        + planning-engine
+        + planning-tree
+        + shop3-theorem-prover.api
+        + tests
+          + umt-domain
+        + theorem-prover
+        + unification
+    + shrdlu
+      + src
+      + srcF
+    + slime
+      + contrib
+      + swank
+    + sublisp-cl
+      + emacs-cl
+        + contrib
+          + closette
+          + gabriel
+    + XP
+  + src
+    + com
+      + cyc
+        + tool
+          + subl
+            + jrtl
+              + nativeCode
+                + mapper
+                + subLisp
+                + type
+                  + core
+                  + exception
+                  + number
+                  + operator
+                  + stream
+                  + symbol
+              + translatedCode
+                + sublisp
+            + management
+            + parser
+            + ui
+            + util
+            + webserver
+    + META-INF
+      + services
+    + org
+      + armedbear
+        + lisp
+          + java
+            + awt
+            + swing
+          + protocol
+          + scripting
+            + lisp
+          + util
+  + src-devel
+    + org
+      + armedbear
+        + lisp
+          + scripting
+            + lisp
+  + srcy
+    + org
+      + armedbear
+        + lisp
+          + scripting
+            + lisp
+  + t
+  + target
+    + classes
+      + com
+        + cyc
+          + blue
+          + framework
+            + ui
+              + blue
+      + doc
+        + manual
+      + org
+        + armedbear
+          + lisp
+            + scripting
+              + lisp
+      + themes
+  + test
+    + lisp
+      + abcl
+      + ansi
+      + cl-bench
+  + tools
+    + jar-size
+  + webapps
+    + apps
+      + New folder
+        + cycAppToolkitSandbox
+          + doc
+            + archive
+            + course
+            + vocab
++ other_files.vpj
 scroll:0
 [State]
-SCREEN: 1920 1200 140 68 1918 997 0 0 M 0 0 0 0 1560 581
-CWD: \Program Files (x86)\SlickEdit\win
-BUFFER: BN="Dockerfile"
+SCREEN: 1920 1200 9 31 1918 997 0 0 M 0 0 0 0 1560 581
+CWD: ..\logicmoo_workspace
+BUFFER: BN="docker\rootfs\etc\apache2\conf-available\cliopatria_swish.conf"
+BI: MA=1 74 1  TABS=1 5  WWS=1 IWT=0 ST=0 IN=2 BW=0 US=32000 RO=0 SE=1 SN=0 BIN=0 MN=Config	HM=0 MF=0 TL=0 MLL=0 ASE=0 LNL=6 LCF=0 CAPS=0 E=0 ESBU2=-1
+VIEW: LN=.9268 CL=31 LE=0 CX=30 CY=13 WI=5 BI=39 HT=0 HN=0 HF=0 HC=4
+BUFFER: BN="docker\rootfs\etc\apache2\conf-available\doc_root_ssl.conf"
+BI: MA=1 74 1  TABS=1 5  WWS=1 IWT=0 ST=0 IN=2 BW=0 US=32000 RO=0 SE=1 SN=0 BIN=0 MN=Config	HM=0 MF=0 TL=0 MLL=0 ASE=0 LNL=6 LCF=0 CAPS=0 E=0 ESBU2=-1
+VIEW: LN=.1394 CL=1 LE=0 CX=0 CY=14 WI=5 BI=26 HT=0 HN=0 HF=0 HC=4
+BUFFER: BN="prologmud_server\run_mud_server.pl"
+BI: MA=1 174 1  TABS=1 3  WWS=1 IWT=0 ST=0 IN=2 BW=0 US=32000 RO=0 SE=1 SN=0 BIN=0 MN=Prolog	HM=0 MF=0 TL=0 MLL=0 ASE=0 LNL=6 LCF=0 CAPS=0 E=0 ESBU2=-1
+VIEW: LN=.491 CL=1 LE=0 CX=0 CY=13 WI=5 BI=38 HT=0 HN=0 HF=0 HC=4
+BUFFER: BN="prologmud_server\README.md"
 BI: MA=1 74 1  TABS=1 9  WWS=1 IWT=1 ST=0 IN=1 BW=0 US=32000 RO=0 SE=1 SN=0 BIN=0 MN=Fundamental	HM=0 MF=0 TL=0 MLL=0 ASE=0 LNL=6 LCF=0 CAPS=0 E=0 ESBU2=-1
-VIEW: LN=.123 CL=25 LE=0 CX=24 CY=5 WI=5 BI=31 HT=0 HN=0 HF=0 HC=4
-BUFFER: BN="prologmud_server\.local\share\swi-prolog\pack\logicmoo_pldata\.git"
-BI: MA=1 74 1  TABS=1 9  WWS=1 IWT=1 ST=0 IN=1 BW=0 US=32000 RO=0 SE=1 SN=0 BIN=0 MN=Fundamental	HM=0 MF=0 TL=0 MLL=0 ASE=0 LNL=6 LCF=0 CAPS=0 E=0 ESBU2=-1
-VIEW: LN=.0 CL=1 LE=0 CX=0 CY=0 WI=5 BI=26 HT=0 HN=0 HF=0 HC=4
-BUFFER: BN="prologmud_server\.config\Code - Insiders\.gitignore"
-BI: MA=1 74 1  TABS=1 9  WWS=1 IWT=1 ST=0 IN=1 BW=0 US=32000 RO=0 SE=1 SN=0 BIN=0 MN=Fundamental	HM=0 MF=0 TL=0 MLL=0 ASE=0 LNL=6 LCF=0 CAPS=0 E=0 ESBU2=-1
-VIEW: LN=.0 CL=1 LE=0 CX=0 CY=0 WI=5 BI=24 HT=0 HN=0 HF=0 HC=4
-BUFFER: BN="prologmud_server\eclipse-workspace\.metadata\.mylyn\.tasks.xml.zip"
-BI: MA=1 74 1  TABS=1 9  WWS=1 IWT=1 ST=0 IN=1 BW=0 US=32000 RO=0 SE=1 SN=0 BIN=0 MN=Fundamental	HM=0 MF=0 TL=0 MLL=0 ASE=0 LNL=6 LCF=0 CAPS=0 E=0 ESBU2=-1
-VIEW: LN=.0 CL=1 LE=0 CX=0 CY=0 WI=5 BI=30 HT=0 HN=0 HF=0 HC=4
-BUFFER: BN="prologmud_server\eclipse-workspace\.metadata\.log"
-BI: MA=1 74 1  TABS=1 9  WWS=1 IWT=1 ST=0 IN=1 BW=0 US=32000 RO=0 SE=1 SN=0 BIN=0 MN=Fundamental	HM=0 MF=0 TL=0 MLL=0 ASE=0 LNL=6 LCF=0 CAPS=0 E=0 ESBU2=-1
-VIEW: LN=.0 CL=1 LE=0 CX=0 CY=0 WI=5 BI=29 HT=0 HN=0 HF=0 HC=4
-WINDOW: 52 52 1378 399 -1 -1 N  WF=0 WT=5 "Default Fixed Font,14,0,1"
-BUFFER: BN="prologmud_server\eclipse-workspace\.metadata\.mylyn\.tasks.xml.zip"
-VIEW: LN=.0 CL=1 LE=0 CX=0 CY=0 WI=186 BI=30 HT=0 HN=0 HF=0 HC=4
-WINDOW: 26 26 1378 399 -1 -1 N  WF=0 WT=4 "Default Fixed Font,14,0,1"
-BUFFER: BN="prologmud_server\.config\Code - Insiders\.gitignore"
-VIEW: LN=.0 CL=1 LE=0 CX=0 CY=0 WI=184 BI=24 HT=0 HN=0 HF=0 HC=4
-WINDOW: 0 0 1378 399 -1 -1 N  WF=0 WT=3 "Default Fixed Font,14,0,1"
-BUFFER: BN="prologmud_server\.local\share\swi-prolog\pack\logicmoo_pldata\.git"
-VIEW: LN=.0 CL=1 LE=0 CX=0 CY=0 WI=182 BI=26 HT=0 HN=0 HF=0 HC=4
-WINDOW: 182 182 1378 399 -1 -1 N  WF=0 WT=2 "Default Fixed Font,14,0,1"
-BUFFER: BN="Dockerfile"
-VIEW: LN=.123 CL=25 LE=0 CX=24 CY=5 WI=181 BI=31 HT=0 HN=0 HF=0 HC=4
-WINDOW: 78 78 1378 399 -1 -1 M  WF=0 WT=1 "Default Fixed Font,14,0,1"
-BUFFER: BN="prologmud_server\eclipse-workspace\.metadata\.log"
-VIEW: LN=.0 CL=1 LE=0 CX=0 CY=0 WI=188 BI=29 HT=0 HN=0 HF=0 HC=4
+VIEW: LN=.2 CL=36 LE=0 CX=35 CY=2 WI=5 BI=37 HT=0 HN=0 HF=0 HC=4
+BUFFER: BN="prologmud_server\StartMUD.sh"
+BI: MA=1 74 1  TABS=1 4  WWS=1 IWT=0 ST=0 IN=2 BW=0 US=32000 RO=0 SE=1 SN=0 BIN=0 MN=Slick-C	HM=0 MF=0 TL=0 MLL=0 ASE=0 LNL=6 LCF=0 CAPS=0 E=0 ESBU2=-1
+VIEW: LN=.894 CL=4 LE=0 CX=3 CY=10 WI=5 BI=36 HT=0 HN=0 HF=0 HC=4
+BUFFER: BN="packs_sys\logicmoo_base\t\examples\fol\einstein_simpler_02.pfc.pl"
+BI: MA=1 174 1  TABS=1 3  WWS=1 IWT=0 ST=0 IN=2 BW=0 US=32000 RO=0 SE=1 SN=0 BIN=0 MN=Prolog	HM=0 MF=0 TL=0 MLL=0 ASE=0 LNL=6 LCF=0 CAPS=0 E=0 ESBU2=-1
+VIEW: LN=.228 CL=28 LE=0 CX=27 CY=9 WI=5 BI=35 HT=0 HN=0 HF=0 HC=4
+BUFFER: BN="packs_sys\logicmoo_base\t\examples\fol\test_header.pl"
+BI: MA=1 174 1  TABS=1 3  WWS=1 IWT=0 ST=0 IN=2 BW=0 US=32000 RO=0 SE=1 SN=0 BIN=0 MN=Prolog	HM=0 MF=0 TL=0 MLL=0 ASE=0 LNL=6 LCF=0 CAPS=0 E=0 ESBU2=-1
+VIEW: LN=.0 CL=1 LE=0 CX=0 CY=0 WI=5 BI=34 HT=0 HN=0 HF=0 HC=4
+BUFFER: BN="packs_sys\logicmoo_base\t\examples\fol\einstein_simpler_04.pfc.pl"
+BI: MA=1 174 1  TABS=1 3  WWS=1 IWT=0 ST=0 IN=2 BW=0 US=32000 RO=0 SE=1 SN=0 BIN=0 MN=Prolog	HM=0 MF=0 TL=0 MLL=0 ASE=0 LNL=6 LCF=0 CAPS=0 E=0 ESBU2=-1
+VIEW: LN=.4928 CL=1 LE=0 CX=0 CY=14 WI=5 BI=33 HT=0 HN=0 HF=0 HC=4
+BUFFER: BN="T:\opt\logicmoo_workspace\prologmud_server\.local\share\swi-prolog\pack\pfc\prolog\dialect\pfc_ext\mpred_core.pl"
+BI: MA=1 174 1  TABS=1 3  WWS=1 IWT=0 ST=0 IN=2 BW=0 US=32000 RO=0 SE=1 SN=0 BIN=0 MN=Prolog	HM=0 MF=0 TL=0 MLL=0 ASE=0 LNL=6 LCF=0 CAPS=0 E=0 ESBU2=-1
+VIEW: LN=.0 CL=1 LE=0 CX=0 CY=0 WI=5 BI=32 HT=0 HN=0 HF=0 HC=4
+BUFFER: BN="packs_sys\pfc\prolog\pfc_lib.pl"
+BI: MA=1 174 1  TABS=1 3  WWS=1 IWT=0 ST=0 IN=2 BW=0 US=32000 RO=0 SE=1 SN=0 BIN=0 MN=Prolog	HM=0 MF=0 TL=0 MLL=0 ASE=0 LNL=6 LCF=0 CAPS=0 E=0 ESBU2=-1
+VIEW: LN=.625 CL=34 LE=0 CX=33 CY=13 WI=5 BI=31 HT=0 HN=0 HF=0 HC=4
+BUFFER: BN="packs_sys\logicmoo_ec\prolog\ec_planner\lps_pddl_convert.pl"
+BI: MA=1 174 1  TABS=1 3  WWS=1 IWT=0 ST=0 IN=2 BW=0 US=32000 RO=0 SE=1 SN=0 BIN=0 MN=Prolog	HM=0 MF=0 TL=0 MLL=0 ASE=0 LNL=6 LCF=0 CAPS=0 E=0 ESBU2=-1
+VIEW: LN=.6909 CL=38 LE=0 CX=37 CY=12 WI=5 BI=30 HT=0 HN=0 HF=0 HC=4
+BUFFER: BN="T:\opt\logicmoo_workspace\packs_sys\pfc\prolog\dialect\pfc_ext\mpred_core.pl"
+BI: MA=1 174 1  TABS=1 3  WWS=1 IWT=0 ST=0 IN=2 BW=0 US=32000 RO=0 SE=1 SN=0 BIN=0 MN=Prolog	HM=0 MF=0 TL=0 MLL=0 ASE=0 LNL=6 LCF=0 CAPS=0 E=0 ESBU2=-1
+VIEW: LN=.150672 CL=41 LE=0 CX=40 CY=14 WI=5 BI=28 HT=0 HN=0 HF=0 HC=4
+BUFFER: BN="packs_sys\logicmoo_base\t\examples\fol\einstein_simpler_03.pfc.pl"
+BI: MA=1 174 1  TABS=1 3  WWS=1 IWT=0 ST=0 IN=2 BW=0 US=32000 RO=0 SE=1 SN=0 BIN=0 MN=Prolog	HM=0 MF=0 TL=0 MLL=0 ASE=0 LNL=6 LCF=0 CAPS=0 E=0 ESBU2=-1
+VIEW: LN=.2883 CL=51 LE=0 CX=50 CY=14 WI=5 BI=29 HT=0 HN=0 HF=0 HC=4
+BUFFER: BN="packs_sys\logicmoo_base\prolog\logicmoo\common_logic\common_logic_exists.pl"
+BI: MA=1 174 1  TABS=1 3  WWS=1 IWT=0 ST=0 IN=2 BW=0 US=32000 RO=0 SE=1 SN=0 BIN=0 MN=Prolog	HM=0 MF=0 TL=0 MLL=0 ASE=0 LNL=6 LCF=0 CAPS=0 E=0 ESBU2=-1
+VIEW: LN=.18069 CL=30 LE=0 CX=29 CY=14 WI=5 BI=5 HT=0 HN=0 HF=0 HC=4
+BUFFER: BN="packs_sys\logicmoo_utils\prolog\multivar.pl"
+BI: MA=1 174 1  TABS=1 3  WWS=1 IWT=0 ST=0 IN=2 BW=0 US=32000 RO=0 SE=1 SN=0 BIN=0 MN=Prolog	HM=0 MF=0 TL=0 MLL=0 ASE=0 LNL=6 LCF=0 CAPS=0 E=0 ESBU2=-1
+VIEW: LN=.8062 CL=1 LE=0 CX=0 CY=13 WI=5 BI=25 HT=0 HN=0 HF=0 HC=4
+BUFFER: BN="T:\opt\logicmoo_workspace\packs_sys\logicmoo_base\prolog\logicmoo\typesystem\mpred_type_constraints.pl"
+BI: MA=1 174 1  TABS=1 3  WWS=1 IWT=0 ST=0 IN=2 BW=0 US=32000 RO=0 SE=1 SN=0 BIN=0 MN=Prolog	HM=0 MF=0 TL=0 MLL=0 ASE=0 LNL=6 LCF=0 CAPS=0 E=0 ESBU2=-1
+VIEW: LN=.37925 CL=48 LE=0 CX=47 CY=14 WI=5 BI=27 HT=0 HN=0 HF=0 HC=4
+BUFFER: BN="docker\rootfs\etc\apache2\sites-enabled\000-logicmoo.conf"
+BI: MA=1 74 1  TABS=1 5  WWS=1 IWT=0 ST=0 IN=2 BW=0 US=32000 RO=0 SE=1 SN=0 BIN=0 MN=Config	HM=0 MF=0 TL=0 MLL=0 ASE=0 LNL=6 LCF=0 CAPS=0 E=0 ESBU2=-1
+VIEW: LN=.4803 CL=1 LE=0 CX=0 CY=13 WI=5 BI=40 HT=0 HN=0 HF=0 HC=4
+WINDOW: 78 78 1378 399 -1 -1 N  WF=0 WT=15 "Default Fixed Font,14,0,1"
+BUFFER: BN="packs_sys\logicmoo_utils\prolog\multivar.pl"
+VIEW: LN=.8062 CL=1 LE=0 CX=0 CY=13 WI=182 BI=25 HT=0 HN=0 HF=0 HC=4
+WINDOW: 52 52 1378 399 -1 -1 N  WF=0 WT=14 "Default Fixed Font,14,0,1"
+BUFFER: BN="T:\opt\logicmoo_workspace\packs_sys\logicmoo_base\prolog\logicmoo\typesystem\mpred_type_constraints.pl"
+VIEW: LN=.37925 CL=48 LE=0 CX=47 CY=14 WI=183 BI=27 HT=0 HN=0 HF=0 HC=4
+WINDOW: 26 26 1378 399 -1 -1 N  WF=0 WT=13 "Default Fixed Font,14,0,1"
+BUFFER: BN="packs_sys\logicmoo_base\prolog\logicmoo\common_logic\common_logic_exists.pl"
+VIEW: LN=.18069 CL=30 LE=0 CX=29 CY=14 WI=181 BI=5 HT=0 HN=0 HF=0 HC=4
+WINDOW: 78 78 1378 399 -1 -1 N  WF=0 WT=8 "Default Fixed Font,14,0,1"
+BUFFER: BN="packs_sys\logicmoo_base\t\examples\fol\einstein_simpler_03.pfc.pl"
+VIEW: LN=.2883 CL=51 LE=0 CX=50 CY=14 WI=180 BI=29 HT=0 HN=0 HF=0 HC=4
+WINDOW: 130 130 1378 399 -1 -1 N  WF=0 WT=10 "Default Fixed Font,14,0,1"
+BUFFER: BN="T:\opt\logicmoo_workspace\packs_sys\pfc\prolog\dialect\pfc_ext\mpred_core.pl"
+VIEW: LN=.150672 CL=41 LE=0 CX=40 CY=14 WI=179 BI=28 HT=0 HN=0 HF=0 HC=4
+WINDOW: 182 182 1378 399 -1 -1 N  WF=0 WT=12 "Default Fixed Font,14,0,1"
+BUFFER: BN="packs_sys\logicmoo_ec\prolog\ec_planner\lps_pddl_convert.pl"
+VIEW: LN=.6909 CL=38 LE=0 CX=37 CY=12 WI=178 BI=30 HT=0 HN=0 HF=0 HC=4
+WINDOW: 156 156 1378 399 -1 -1 N  WF=0 WT=11 "Default Fixed Font,14,0,1"
+BUFFER: BN="packs_sys\pfc\prolog\pfc_lib.pl"
+VIEW: LN=.625 CL=34 LE=0 CX=33 CY=13 WI=177 BI=31 HT=0 HN=0 HF=0 HC=4
+WINDOW: 104 104 1378 399 -1 -1 N  WF=0 WT=9 "Default Fixed Font,14,0,1"
+BUFFER: BN="T:\opt\logicmoo_workspace\prologmud_server\.local\share\swi-prolog\pack\pfc\prolog\dialect\pfc_ext\mpred_core.pl"
+VIEW: LN=.0 CL=1 LE=0 CX=0 CY=0 WI=176 BI=32 HT=0 HN=0 HF=0 HC=4
+WINDOW: 26 26 1378 399 -1 -1 N  WF=0 WT=6 "Default Fixed Font,14,0,1"
+BUFFER: BN="packs_sys\logicmoo_base\t\examples\fol\einstein_simpler_04.pfc.pl"
+VIEW: LN=.4928 CL=1 LE=0 CX=0 CY=14 WI=175 BI=33 HT=0 HN=0 HF=0 HC=4
+WINDOW: 52 52 1378 399 -1 -1 N  WF=0 WT=7 "Default Fixed Font,14,0,1"
+BUFFER: BN="packs_sys\logicmoo_base\t\examples\fol\test_header.pl"
+VIEW: LN=.0 CL=1 LE=0 CX=0 CY=0 WI=174 BI=34 HT=0 HN=0 HF=0 HC=4
+WINDOW: 0 0 1378 399 -1 -1 N  WF=0 WT=5 "Default Fixed Font,14,0,1"
+BUFFER: BN="packs_sys\logicmoo_base\t\examples\fol\einstein_simpler_02.pfc.pl"
+VIEW: LN=.228 CL=28 LE=0 CX=27 CY=9 WI=173 BI=35 HT=0 HN=0 HF=0 HC=4
+WINDOW: 182 182 1378 399 -1 -1 N  WF=0 WT=4 "Default Fixed Font,14,0,1"
+BUFFER: BN="prologmud_server\StartMUD.sh"
+VIEW: LN=.894 CL=4 LE=0 CX=3 CY=10 WI=172 BI=36 HT=0 HN=0 HF=0 HC=4
+WINDOW: 130 130 1378 399 -1 -1 N  WF=0 WT=2 "Default Fixed Font,14,0,1"
+BUFFER: BN="prologmud_server\README.md"
+VIEW: LN=.2 CL=36 LE=0 CX=35 CY=2 WI=171 BI=37 HT=0 HN=0 HF=0 HC=4
+WINDOW: 156 156 1378 399 -1 -1 N  WF=0 WT=3 "Default Fixed Font,14,0,1"
+BUFFER: BN="prologmud_server\run_mud_server.pl"
+VIEW: LN=.491 CL=1 LE=0 CX=0 CY=13 WI=170 BI=38 HT=0 HN=0 HF=0 HC=4
+WINDOW: 78 78 1378 399 -1 -1 N  WF=0 WT=17 "Default Fixed Font,14,0,1"
+BUFFER: BN="docker\rootfs\etc\apache2\conf-available\doc_root_ssl.conf"
+VIEW: LN=.1394 CL=1 LE=0 CX=0 CY=14 WI=169 BI=26 HT=0 HN=0 HF=0 HC=4
+WINDOW: 104 104 1378 399 -1 -1 N  WF=0 WT=1 "Default Fixed Font,14,0,1"
+BUFFER: BN="docker\rootfs\etc\apache2\sites-enabled\000-logicmoo.conf"
+VIEW: LN=.4803 CL=1 LE=0 CX=0 CY=13 WI=184 BI=40 HT=0 HN=0 HF=0 HC=4
+WINDOW: 52 52 1378 399 -1 -1 M  WF=0 WT=16 "Default Fixed Font,14,0,1"
+BUFFER: BN="docker\rootfs\etc\apache2\conf-available\cliopatria_swish.conf"
+VIEW: LN=.6717 CL=3 LE=0 CX=2 CY=11 WI=168 BI=39 HT=0 HN=0 HF=0 HC=4
 FILEHIST: 9
-wikis\logicmoo_workspace.wiki\CycBehaviorLanguage.md
-prologmud_server\.vscode-insiders\extensions\jamesnvc.prolog-lsp-2.2.7\.vsixmanifest
-V:\opt\logicmoo_workspace\packs_sys\logicmoo_ec\prolog\ec_planner\ec_common.pl
-V:\opt\logicmoo_workspace\packs_sys\logicmoo_ec\prolog\ec_planner\ec_common_sicstus.pl
-Dockerfile
-prologmud_server\.local\share\swi-prolog\pack\logicmoo_pldata\.git
-prologmud_server\.config\Code - Insiders\.gitignore
-prologmud_server\eclipse-workspace\.metadata\.mylyn\.tasks.xml.zip
-prologmud_server\eclipse-workspace\.metadata\.log
+prologmud_server\.local\share\swi-prolog\pack\lsp_server\prolog\lsp_utils.pl
+packs_sys\logicmoo_base\prolog\logicmoo\common_logic\common_logic_exists.pl
+packs_sys\logicmoo_base\t\examples\fol\einstein_simpler_03.pfc.pl
+packs_sys\logicmoo_utils\prolog\multivar.pl
+T:\opt\logicmoo_workspace\packs_sys\logicmoo_base\prolog\logicmoo\typesystem\mpred_type_constraints.pl
+prologmud_server\run_mud_server.pl
+docker\rootfs\etc\apache2\conf-available\doc_root_ssl.conf
+docker\rootfs\etc\apache2\sites-enabled\000-logicmoo.conf
+docker\rootfs\etc\apache2\conf-available\cliopatria_swish.conf

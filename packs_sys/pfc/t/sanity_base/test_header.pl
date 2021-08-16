@@ -1,34 +1,37 @@
 
-:- if(\+ current_prolog_flag(pfc_version,2.0)).
+% doing these inside of if/endifs so they dont appear before module/2
+:- if((prolog_load_context(source,S),format(user_error,'~N~q,~n',[running(S)]))).
+:- endif.
 
+:- if(set_prolog_flag(pfc_version,v(2,0,0))).
+:- endif.
+
+:- if(\+ current_prolog_flag(pfc_version,v(2,_,_))).
 :- include(test_header_1_8).
-
 :- else.
 
 :- if(current_prolog_flag(test_header,_)).
-
 :- wdmsg(reload_of_test_header).
-
-:- use_module(library(pfc)).
-
 :- mpred_reset.
-
+% runtype: default = pfc
 :- else.
 
-
-% runtype: default = pfc
 :- if(current_prolog_flag(runtime_testing_module,_)->true;
   set_prolog_flag(runtime_testing_module,test_header)).
 :- endif.
 
+
+:- if(( \+ current_prolog_flag(test_module,_),set_prolog_flag(test_module,baseKB))). :- endif.
 
 
 :- if(( \+ current_prolog_flag(test_header,_),set_prolog_flag(test_header,loaded))).
 
 
 :- if((prolog_load_context(module,user), \+ current_module(pfc_lib))).
-:- module(header_sane,[test_header_include/0]).
-test_header_include.
+% writes a temp header file and include/1s it
+:- if((current_prolog_flag(test_module,Module),open('/tmp/module_header.pl',write,OS),
+  format(OS,'\n:- module(~q,[test_header_include/0]).\n test_header_include. ',[Module]),close(OS))). :- endif.
+:- include('/tmp/module_header.pl').
 :- endif.
 
 %:- set_prolog_flag(runtime_speed,0). % 0 = dont care

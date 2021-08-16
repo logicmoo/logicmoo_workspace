@@ -458,9 +458,8 @@ relax_N(_,_,Val):- var(Val),!, ((mtc_get_attr(Val,iz,_);mtc_get_attr(Val,iza,_))
 relax_N(G,N,Val):- dont_relax(Val)->true;(nb_setarg(N,G,NewVar),put_value(NewVar,Val)).
 
 :- if(exists_source(library(multivar))).
-% put_value(Var,Value):- multivar(Var),iz(Var,[Value]),mv_set1(Var,Value).
-
-% put_value(Var,Value):- Var==Value,!.
+put_value(Var,Value):- var(Var),multivar(Var),iz(Var,[Value]),mv_set1(Var,Value).
+put_value(Var,Value):- Var==Value,!.
 put_value(Var,Value):- is_dict(Value,Tag),!,
      (Tag==Var->true;put_value(Var,Tag)),
      dict_pairs(Value,_Tag2,Pairs),
@@ -1074,7 +1073,7 @@ add_cond3(Var,Dom1,Prop):- as_constraint_for(Var,Prop,Constraint),
 map_one_or_list(Call2,ArgOrL):- is_list(ArgOrL)->maplist(Call2,ArgOrL);call(Call2,ArgOrL).
 
 has_cond(Var,Prop):- obtain_conds(Var,Doms),map_one_or_list(has_cond(Doms,Var),Prop).
-has_cond(Doms,Var,Prop):- as_constraint_for(Var,Prop,C),member(C,Doms).
+has_cond(Doms,Var,Prop):- must_be(nonvar,Doms),as_constraint_for(Var,Prop,C),member(C,Doms).
 
 rem_cond(Var,Prop):- obtain_conds(Var,Doms),map_one_or_list(rem_cond(Doms,Var),Prop).
 rem_cond(Doms,Var,Prop):- as_constraint_for(Var,Prop,C),select(C,Doms,NewDoms),mtc_put_attr(Var,iza,NewDoms).

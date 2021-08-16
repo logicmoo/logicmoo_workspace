@@ -8,6 +8,8 @@
 % Tests Retraction undoes Backchaining memo idea is working
 %  was_module(bc_01a,[]).
 
+:- if(set_prolog_flag(test_module,baseKB)). :- endif.
+
 :- include(test_header).
 % :- baseKB:ensure_loaded(library('pfclib/system_autoexec.pfc')).
 :- set_prolog_flag(retry_undefined, kb_shared).
@@ -27,9 +29,10 @@
 bc_q(N) <- bc_p(N).
 
 
-:- listing(bct/2).
-:- listing(pt/2).
 
+:- listing(bc_p/1).
+:- listing('$pt'/3).
+:- listing('$bt'/2).
 :- listing(bc_q/1).
 
 :- printAll((
@@ -43,8 +46,8 @@ bc_p(b).
 
 
 :- if(false).
-\+ never_assert_u(bc_q(a),too_early).
-\+ never_assert_u((pt(bc_p(A), rhs([bc_q(A)]))),too_early).
+%\+ never_assert_u(bc_q(a),too_early).
+%\+ never_assert_u((pt(bc_p(A), rhs([bc_q(A)]))),too_early).
 :- endif.
 
 :- mpred_test(call_u(bc_p(b))).
@@ -53,7 +56,6 @@ bc_p(b).
 :- listing(bc_q/1).
 
 :- mpred_test(\+ clause(bc_q(_),true)).
-
 
 :- mpred_test(((bc_q(b)))).
 
