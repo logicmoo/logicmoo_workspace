@@ -16,7 +16,7 @@
 
 :- set_defaultAssertMt(myMt).
 
-:- begin_pfc.
+:- expects_dialect(pfc).
 
 :- mpred_trace_exec.
 

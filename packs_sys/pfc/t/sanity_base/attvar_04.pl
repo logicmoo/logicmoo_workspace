@@ -20,7 +20,7 @@ baseKB:rtArgsVerbatum(my_sk).
 
 :- read_attvars(true).
 
-% :- file_begin(pl).
+:- expects_dialect(swi).
 my_sk(aVar([vn='Ex',sk='SKF-666'])).
 
 :- must((my_sk(Ex),get_attr(Ex,sk,What),What=='SKF-666')).

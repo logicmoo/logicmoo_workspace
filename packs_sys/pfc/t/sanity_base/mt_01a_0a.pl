@@ -42,7 +42,7 @@ baseKB:mtHybrid(socialMt).
 :- set_defaultAssertMt(myMt).
 :- set_fileAssertMt(myMt).
 
-:- on_f_rtrace((on_x_rtrace(begin_pfc),is_pfc_file)).
+:- must(is_pfc_file).
 
 baseKB:arity(loves,2).
 

@@ -9,7 +9,7 @@
 
 :- include(test_header).
 :- set_file_abox_module(user).
-:- file_begin(pfc).
+:- expects_dialect(pfc).
 :- include(test_header).
 
 

@@ -14,7 +14,7 @@
 
 :- dynamic(meta_argtypes/1).
 
-:- begin_pfc.
+:- expects_dialect(pfc).
 
 :- include('df_include.pi').
 

@@ -34,7 +34,7 @@
 :- abolish(b,1).
 :- dynamic((aaa/1,b/1,c/0,f/1,zzz/1)).
 
-:- file_begin(pfc).
+:- expects_dialect(pfc).
 
 
 

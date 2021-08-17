@@ -11,7 +11,7 @@
 
 :- include(test_header).
 
-%:- file_begin(pfc).
+%:- expects_dialect(pfc).
 
 %:- set_defaultAssertMt(myMt).
 

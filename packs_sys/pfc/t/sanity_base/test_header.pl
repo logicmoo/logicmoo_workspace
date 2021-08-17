@@ -29,9 +29,11 @@
 
 :- if((prolog_load_context(module,user), \+ current_module(pfc_lib))).
 % writes a temp header file and include/1s it
-:- if((current_prolog_flag(test_module,Module),open('/tmp/module_header.pl',write,OS),
+:- if((current_prolog_flag(test_module,Module),open('/tmp/logicmoo_testing/module_header.pl',write,OS),
   format(OS,'\n:- module(~q,[test_header_include/0]).\n test_header_include. ',[Module]),close(OS))). :- endif.
-:- include('/tmp/module_header.pl').
+:- include('/tmp/logicmoo_testing/module_header.pl').
+:- else.
+:- current_prolog_flag(test_module,Module),module(Module).
 :- endif.
 
 %:- set_prolog_flag(runtime_speed,0). % 0 = dont care
@@ -43,18 +45,20 @@
 
 :- endif.
 
+
 :- if(\+ exists_source(library(logicmoo_utils_all))).
 :-  prolog_load_context(directory,X),absolute_file_name('../../..',O,[relative_to(X),file_type(directory)]),
     attach_packs(O).
 :- endif.
+
+:- use_module(library(logicmoo_utils)).
 
 :- if(\+ exists_source(library(pfc_lib))).
 :-  prolog_load_context(directory,X),absolute_file_name('../../prolog',O,[relative_to(X),file_type(directory)]),
     asserta(user:file_search_path(library,O)).
 :- endif.
 
-
-
+% sets up history for interactive testing
 :- if(exists_source(library(editline))).
 :- use_module(library(editline)).
 :- else.
@@ -62,24 +66,20 @@
 :- use_module(library(readline)).
 :- endif.
 :- endif.
-
 :-  '$toplevel':setup_history.
 
-
-
-%:- set_stream(user_input,tty(false)).
-
-
-%:- endif. % current_prolog_flag(test_header,_).
-
-:- ensure_loaded(library(pfc)).
+:- ensure_loaded(library(pfc_lib)).
 
 :- prolog_load_context(source,File),!,
-   ignore((((atom_contains(File,'.pfc')-> sanity(is_pfc_file) ; sanity( \+ is_pfc_file))))),!.
+   ignore((((sub_atom(File,_,_,_,'.pfc')
+   -> (sanity(is_pfc_file),set_prolog_flag(is_pfc_file_dialect,true))
+   ; sanity( \+ is_pfc_file)),set_prolog_flag(is_pfc_file_dialect,false)))),!.
+
+   
 
 %:- '$current_source_module'(W), '$set_typein_module'(W).
 
-:- mpred_trace_exec.
+%:- mpred_trace_exec.
 
 
 %:- set_prolog_flag(debug, true).
@@ -95,7 +95,10 @@
 
 
 */
-
+:- ensure_loaded(library(pfc)).
 :- ensure_loaded(library(pfc_test)).
+
+% system:term_expansion( (begin_of_file), [] ):- current_prolog_flag(is_pfc_file_dialect,true).
+system:term_expansion( (:- break), [] ):- getenv(keep_going,'-k'). 
 
 :- endif.

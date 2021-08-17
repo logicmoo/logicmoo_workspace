@@ -10,7 +10,7 @@
 
 :- include(test_header).
 
-:- begin_pfc.
+:- expects_dialect(pfc).
 
 :- show_call(defaultAssertMt(_)).
 :- show_call(fileAssertMt(_)).
@@ -26,7 +26,7 @@
  
 :- dynamic(most/1).
 
-:- begin_pfc.
+:- expects_dialect(pfc).
 
 meta_argtypes(most(ftAssertable)).
 
@@ -60,7 +60,7 @@ a(X) ==> c(X).
 most(c(X) ==> b(X)) .
 a(1).
 
-:- listing([a/1,b/1,c/1,(==>)/2,most/1,pt,nt,bct]).
+:- listing([a/1,b/1,c/1,(==>)/2,most/1,'$pt','$nt','$bt']).
 
 :- mpred_test(b(1)).
 

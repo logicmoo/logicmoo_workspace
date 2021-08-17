@@ -13,7 +13,7 @@
 
 
 
-:- begin_pfc.
+:- expects_dialect(pfc).
 
 :- set_defaultAssertMt(myMt).
 

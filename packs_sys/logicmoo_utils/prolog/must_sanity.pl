@@ -179,8 +179,9 @@ sanity(Goal):- \+ ( nb_current('$inprint_message', Messages), Messages\==[] ),
    !,
    (1 is random(10)-> must(Goal) ; true).
 sanity(Goal):- quietly(Goal),!.
-sanity(_):- break, dumpST,fail.
 sanity(Goal):- tlbugger:show_must_go_on,!,dmsg(show_failure(sanity,Goal)).
+sanity(Goal):- getenv(keep_going,'-k'),!,dmsg(insane(Goal)=getenv(keep_going,'-k')),fail.
+sanity(_):- break, dumpST,fail.
 sanity(Goal):- setup_call_cleanup(wdmsg(begin_FAIL_in(Goal)),rtrace(Goal),wdmsg(end_FAIL_in(Goal))),!,dtrace(assertion(Goal)).
 
 %! must_once(:Goal) is det.
@@ -245,7 +246,7 @@ X = 3.
 :- module_transparent(mquietly/1).
 :- export(mquietly/1).
 %:- system:import(mquietly/1).
-mquietly(Var):- var(Var),!,break.
+mquietly(Var):- var(Var),!,trace_or_throw(var_mquietly(Var)).
 %mquietly((G1,G2)):- !, call(G1),mquietly(G2).
 %mquietly((G1;G2)):- !, call(G1);mquietly(G2).
 %mquietly(M:(G1,G2)):- !, call(M:G1),mquietly(M:G2).

@@ -43,7 +43,7 @@
 
 :- set_fileAssertMt(header_sane).
 
-:- file_begin(pfc).
+:- expects_dialect(pfc).
 
 
 :- dynamic(full_name/2).

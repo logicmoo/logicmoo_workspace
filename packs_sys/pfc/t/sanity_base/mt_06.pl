@@ -10,7 +10,7 @@
 %  was_module(mt_06,[]).
 
 :- include(test_header).
-:- begin_pfc.
+:- expects_dialect(pfc).
 
 baseKB:mtProlog(code1).
 baseKB:mtHybrid(kb2).

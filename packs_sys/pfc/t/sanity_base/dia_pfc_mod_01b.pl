@@ -1,4 +1,5 @@
 
+:- ensure_loaded(library(pfc_test)).
 :- expects_dialect(pfc).
 
 ==> a(1).

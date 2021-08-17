@@ -10,7 +10,7 @@
 
 :- include(test_header).
 
-:- begin_pfc.
+:- expects_dialect(pfc).
 
 :- dynamic(test1_2_3/3).
 :- dynamic(meta_argtypes/1).
@@ -24,7 +24,7 @@
  
 :- dynamic(most/1).
 
-:- begin_pfc.
+:- expects_dialect(pfc).
 
 meta_argtypes(most(ftAssertable)).
 

@@ -12,7 +12,7 @@
 :- include(test_header).
 
 :- mpred_trace_exec.
-:- begin_pfc.
+:- expects_dialect(pfc).
 
 %:- sanity(current_prolog_flag(retry_undefined, kb_shared)).
 %

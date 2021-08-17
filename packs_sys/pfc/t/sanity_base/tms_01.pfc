@@ -25,7 +25,7 @@
 
 :- include(test_header).
 
-:- file_begin(pfc).
+:- expects_dialect(pfc).
 
 :- dynamic(rdf_rewrite:(~)/1).
 

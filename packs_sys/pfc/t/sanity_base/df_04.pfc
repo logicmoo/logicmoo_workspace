@@ -11,7 +11,7 @@
 :- include(test_header).
 %:- baseKB:use_module(library(pfc)).
 
-:- begin_pfc.
+:- expects_dialect(pfc).
 
 :- dynamic(test1_2_3/3).
 :- dynamic(meta_argtypes/1).
@@ -25,7 +25,7 @@
  
 :- dynamic(most/1).
 
-:- begin_pfc.
+:- expects_dialect(pfc).
 
 :- mpred_trace_exec.
 
@@ -54,7 +54,7 @@ most(Q)/(mpred_positive_literal(Q),if_missing_mask(Q,R,Test)) ==> ( ((R/( \+(R=Q
 %(most(P=>Q)/(mpred_literal_nv(Q),if_missing_mask(Q,R,Test)))  ==> ((P, \+ R/Test) => Q).
 %(most(P=>Q)/nonvar(Q)) ==> (P => most(Q)).
 
-:- begin_pfc.
+:- expects_dialect(pfc).
 :- debug_logicmoo(logicmoo(_)).
  % :- mpred_trace_exec.
 

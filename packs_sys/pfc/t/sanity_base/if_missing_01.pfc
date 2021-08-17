@@ -15,7 +15,7 @@
 :- debug_logicmoo(logicmoo(_)).
  % :- mpred_trace_exec.
 
-:- begin_pfc.
+:- expects_dialect(pfc).
 
 % this should have been ok
 % (if_missing(Missing,Create) ==> ((\+ Missing/(Missing\==Create), \+ Create , \+ ~(Create)) ==> Create)).

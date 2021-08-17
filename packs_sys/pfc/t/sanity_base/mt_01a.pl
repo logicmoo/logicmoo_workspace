@@ -27,7 +27,7 @@ baseKB:mtHybrid(socialMt).
 
 :- set_defaultAssertMt(myMt).
 
-:- on_f_rtrace((on_x_rtrace(begin_pfc),is_pfc_file)).
+:- on_f_rtrace((on_x_rtrace(expects_dialect(pfc)),is_pfc_file)).
 
 baseKB:arity(loves,2).
 

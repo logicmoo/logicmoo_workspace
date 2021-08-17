@@ -15,7 +15,7 @@
 
 :- include('df_include.pfc').
 
-:- begin_pfc.
+:- expects_dialect(pfc).
 
 :- dynamic((a/1,b/1,c/1)).
 

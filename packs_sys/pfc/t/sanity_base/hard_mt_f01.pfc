@@ -11,14 +11,14 @@
 
 :- include(test_header).
 
-:- begin_pfc.
+:- expects_dialect(pfc).
 
 baseKB:mtHybrid(socialOneMt).
 baseKB:mtHybrid(socialTwoMt).
 
 :- set_defaultAssertMt(myMt).
 
-:- begin_pfc.
+:- expects_dialect(pfc).
 
 
 mt1:predicateConventionMt(loves,socialOneMt).

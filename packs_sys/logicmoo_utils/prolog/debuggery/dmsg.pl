@@ -192,6 +192,7 @@ use_html_styles0 :- current_predicate(is_butterfly_console/0), (inside_bfly_html
 % Sgr Code Whenever Off.
 %
 
+dis_pp(ansi):- getenv(keep_going,'-k'),!.
 dis_pp(PP):- current_predicate(in_pp/1), in_pp(PP).
 
 using_style(Out,Ctrl,Goal,How):- 
@@ -214,7 +215,7 @@ style_emitter(_Out,html):- use_html_styles,!.
 style_emitter(Out,sgr):- dis_pp(bfly), is_tty(Out), !.
 style_emitter(_Out,none):- \+ use_html_styles.
 
-cnvt_in_out(_, _Out,_Ctrl,true,true):- dis_pp(ansi),!.
+%cnvt_in_out(_, _Out,_Ctrl,true,true):- dis_pp(ansi),!.
 cnvt_in_out(_, _Out,_Ctrl,true,true):- on_x_fail(httpd_wrapper:http_current_request(_)),!.
 cnvt_in_out(none, _Out,_Ctrl,true,true).
 cnvt_in_out(_,_Out,html,(in_pp(Was),pp_set(http)),pp_set(Was)).

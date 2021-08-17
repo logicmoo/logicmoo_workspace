@@ -10,20 +10,10 @@
 
 :- include(test_header).
 
-:- begin_pfc.
+:- expects_dialect(pfc).
 
 :- dynamic(meta_argtypes/1).
-
-%
-%  PFC is a language extension for prolog.. there is so much that can be done in this language extension to Prolog
-%
-% Dec 13, 2035
-% Douglas Miles
-%  cls ; kill -9 %1 ; fg ; swipl -g "ensure_loaded(pack(logicmoo_base/t/examples/base/'sanity_abc.pfc'))."
- 
 :- dynamic(most/1).
-
-:- begin_pfc.
 
 meta_argtypes(most(ftAssertable)).
 

@@ -11,7 +11,7 @@
 
 :- include(test_header).
 
-:- begin_pfc.
+:- expects_dialect(pfc).
 
 %:- add_import_module(mt_01,baseKB,end).
 

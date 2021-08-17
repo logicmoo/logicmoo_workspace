@@ -20,7 +20,7 @@
 
 
 :- must(mpred_trace_exec).
-:- begin_pfc.
+:- expects_dialect(pfc).
 :- ensure_loaded(library(attvar_reader)).
 :- read_attvars(true).
 

@@ -25,7 +25,7 @@
 
 :- include(test_header).
 
-:- file_begin(pfc).
+:- expects_dialect(pfc).
 
 (tType(COL)==>{kb_local(COL/1)},
  functorDeclares(COL),

@@ -15,7 +15,7 @@
 :- debug_logicmoo(logicmoo(_)).
  % :- mpred_trace_exec.
 
-:- begin_pfc.
+:- expects_dialect(pfc).
 
 % :- rtrace.
 if_missing(foob(_),foob(a)).

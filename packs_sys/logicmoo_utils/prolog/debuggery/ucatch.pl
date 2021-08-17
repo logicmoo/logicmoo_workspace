@@ -963,10 +963,10 @@ show_source_location:- if_interactive((dumpST,dtrace)).
 show_current_source_location:- ignore((get_source_location(FL),!, show_current_source_location(FL))).
 show_current_source_location(FL):- t_l:last_shown_current_source_location(FL),!,
                                    retractall(t_l:last_shown_current_source_location(_)),
-                                   format_to_error('~N% OOPSY ~w ',[FL]),!.
+                                   format_to_error('~N% FILE: ~w ~N',[FL]),!.
 show_current_source_location(FL):- retractall(t_l:last_shown_current_source_location(_)),
                                    asserta(t_l:last_shown_current_source_location(FL)),!,
-                                   format_to_error('~N% OOPS ~w ',[FL]),!. 
+                                   format_to_error('~N% FIlE: ~w ~N',[FL]),!. 
 
 get_source_location(FL):- current_source_file(FL),nonvar(FL),!.
 get_source_location(F:L):- source_location(F,L),!.
@@ -1476,7 +1476,9 @@ for obvious reasons.
 %
 trace_or_throw(E):- hide_non_user_console,quietly((thread_self(Self),wdmsg(thread_trace_or_throw(Self+E)),!,throw(abort),
                     thread_exit(trace_or_throw(E)))).
-trace_or_throw(E):- wdmsg(trace_or_throw(E)),trace,break,dtrace((dtrace,throw(E))).
+
+
+trace_or_throw(E):- wdmsg(trace_or_throw(E)),if_interactive((trace,break),true),dtrace((dtrace,throw(E))).
 
  %:-interactor.
 

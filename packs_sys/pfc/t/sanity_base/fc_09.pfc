@@ -9,7 +9,7 @@
 
 :- include(test_header).
 
-:- file_begin(pfc).
+:- expects_dialect(pfc).
 
 :- flag_call(runtime_debug=4).
 :- set_prolog_flag(unsafe_speedups,false).
@@ -22,7 +22,7 @@
 :- nodebug_logicmoo(http(_)).
 :- debug_logicmoo(logicmoo(_)).
  % :- mpred_trace_exec.
-:- begin_pfc.
+:- expects_dialect(pfc).
 
 a(t).
 a(X) ==> b(X).

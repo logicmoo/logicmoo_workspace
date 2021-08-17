@@ -43,7 +43,7 @@
 
 :- set_fileAssertMt(header_sane).
 
-:- file_begin(pfc).
+:- expects_dialect(pfc).
 
 singleValued(list_holder_one/1).
 

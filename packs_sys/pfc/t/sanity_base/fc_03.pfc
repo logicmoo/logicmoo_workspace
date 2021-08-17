@@ -11,7 +11,7 @@
 
 :- include(test_header).
 
-:- file_begin(pfc).
+:- expects_dialect(pfc).
 :- flag_call(runtime_debug=true).
 
 :- defaultAssertMt(MT), wdmsg(begin_abc(MT)).

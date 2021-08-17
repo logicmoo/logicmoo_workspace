@@ -13,8 +13,9 @@
 :- module(baseKB).
 :- use_module(library(pfc)).
 :- set_fileAssertMt(baseKB).
+:- ensure_loaded(library(pfc_test)).
 
-:- begin_pfc.
+:- expects_dialect(pfc).
 % :- mpred_trace_exec.
 
 notice_fc(P) ==>  ( P ==> {wdmsg(notice_fc(P))}).

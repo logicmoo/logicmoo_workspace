@@ -10,7 +10,7 @@
 functor_foo(P,F,A):- ground(P),functor(P,F,A).
 
 
-:- begin_pfc.
+:- expects_dialect(pfc).
 
 
 ((p, {member(X,[px,py,pz])}) ==> {writeq(X)}).

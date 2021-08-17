@@ -12,7 +12,7 @@
 
 :- include(test_header).
 
-:- begin_pfc.
+:- expects_dialect(pfc).
 
 
 header_sane:(must_clause_asserted(G):- cwc, must(clause_asserted_u(G))).

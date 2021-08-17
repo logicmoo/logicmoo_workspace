@@ -12,7 +12,7 @@
 :- include(test_header).
 
 % :- rtrace.
-:- begin_pfc.
+:- expects_dialect(pfc).
 
 :- must(is_pfc_file).
 

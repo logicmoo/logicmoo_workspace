@@ -17,7 +17,7 @@
 :- debug_logicmoo(logicmoo(_)).
  % :- mpred_trace_exec.
 :- mpred_trace.
-:- begin_pfc.
+:- expects_dialect(pfc).
 
 :- dynamic(dmost/1).
 

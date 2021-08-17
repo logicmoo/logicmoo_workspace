@@ -24,7 +24,7 @@
 :- dynamic(sk2_out/1).
 :- dynamic(sk2_in/1).
 
-:- begin_pfc.
+:- expects_dialect(pfc).
 
 :- read_attvars(true).
 

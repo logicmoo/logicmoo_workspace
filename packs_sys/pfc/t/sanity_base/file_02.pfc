@@ -11,7 +11,7 @@
 :- include(test_header).
 %:- make.
 
-:- begin_pfc.
+:- expects_dialect(pfc).
 
 header_sane:(must_clause_asserted(G):- cwc, must(clause_asserted_u(G))).
 :- header_sane:ain((must_clause_asserted(G):- cwc, must(clause_asserted_u(G)))).

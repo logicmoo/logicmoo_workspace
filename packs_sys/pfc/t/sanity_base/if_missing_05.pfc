@@ -27,7 +27,7 @@
 
 :- dynamic((foob/1,if_missing/2)).
 
-% :- begin_pfc.
+% :- expects_dialect(pfc).
 
 % this should have been ok
 % (if_missing(Missing,Create) ==> ((\+ Missing/(Missing\==Create), \+ Create , \+ ~(Create)) ==> Create)).

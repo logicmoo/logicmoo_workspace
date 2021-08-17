@@ -374,7 +374,7 @@ genlPreds(prologSideEffects,rtNotForUnboundPredicates).
 :- kb_shared(warningsAbout/2).
 
 ==>prologHybrid(warningsAbout/2,rtArgsVerbatum).
-warningsAbout(Msg,Why)==>{wdmsg_pfc(error(warningsAbout(Msg,Why))),break}.
+warningsAbout(Msg,Why)==>{wdmsg_pfc(error(warningsAbout(Msg,Why))),if_interactive(break,true)}.
 
 %% t( ?CALL) is semidet.
 %

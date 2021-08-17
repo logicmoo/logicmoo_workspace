@@ -19,7 +19,7 @@
 % mtProlog(code1).
 % mtHybrid(code1).
 
-:- begin_pfc.
+:- expects_dialect(pfc).
 
 mtHybrid(kb2).
 mtHybrid(kb3).

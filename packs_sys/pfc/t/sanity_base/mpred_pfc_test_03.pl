@@ -4,7 +4,7 @@
 % :- use_listing_vars.
 
 
-:- begin_pfc.
+:- expects_dialect(pfc).
 
 
 % :- (( must((defaultAssertMt(M)->M==red_test01)))).

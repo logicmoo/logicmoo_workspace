@@ -756,6 +756,10 @@ test_for_release_problems(File):-
 %
 if_interactive(Goal):-if_interactive(Goal,true),!.
 
+if_interactive(_Goal,Else):- getenv(keep_going,'-k'), !,
+   terminal_ansi_goal(current_output,[fg(red)],(format("~n(NOT INTERACTIVE (~q))~n",[Else]))),!,
+   terminal_ansi_goal(current_output,[fg(yellow)],(call(Else))).
+
 if_interactive(Goal,Else):- 
   thread_self(main),
   current_input(In),
@@ -789,6 +793,7 @@ if_interactive(Goal,Else):-
     C = 'd' -> (dmsg("(... dump )~n",[]),dumpST,fail);
     C = 't' -> (dmsg("(... trace )~n",[]),nb_setarg(1,WantTrace,trace),fail);
     true -> fail))).
+
 
 if_interactive(_Goal,Else):- 
    (dmsg("~n(NOT INTERACTIVE (~q))~n",[Else]),!,call(Else)).

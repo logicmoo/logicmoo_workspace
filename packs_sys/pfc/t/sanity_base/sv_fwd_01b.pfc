@@ -35,7 +35,7 @@
 
 :- set_fileAssertMt(header_sane).
 
-:- file_begin(pfc).
+:- expects_dialect(pfc).
 
 :- (header_sane:ain(prologSingleValued(inChair/1))).
 

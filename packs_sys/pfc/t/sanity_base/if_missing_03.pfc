@@ -11,7 +11,7 @@
 
 :- dynamic((foob/1,good/0,if_missing/2)).
 
-:- begin_pfc.
+:- expects_dialect(pfc).
 
 % this should have been ok
 

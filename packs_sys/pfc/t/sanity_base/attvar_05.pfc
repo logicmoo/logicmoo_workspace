@@ -15,7 +15,7 @@
 :- nodebug_logicmoo(http(_)).
 :- debug_logicmoo(logicmoo(_)).
  % :- mpred_trace_exec.
-:- begin_pfc.
+:- expects_dialect(pfc).
 
 :- dynamic(sk5_out/1).
 :- dynamic(sk5_in/1).

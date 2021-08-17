@@ -1,7 +1,9 @@
 
 :- module(bar,[]).
 
-:- set_prolog_flag(pfc_version,1.8).
+:- ensure_loaded(library(pfc_test)).
+% :- set_prolog_flag(pfc_version,1.8).
+:- set_prolog_flag(pfc_version,v(1,8,2)).
 
 :- expects_dialect(pfc).
 

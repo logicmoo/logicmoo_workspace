@@ -11,7 +11,7 @@
 
 :- include(test_header).
 
-:- begin_pfc.
+:- expects_dialect(pfc).
 
 :- set_fileAssertMt(cycKB1).
 

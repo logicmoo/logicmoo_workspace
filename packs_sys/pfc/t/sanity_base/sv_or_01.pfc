@@ -35,7 +35,7 @@
 
 :- set_fileAssertMt(header_sane).
 
-:- file_begin(pfc).
+:- expects_dialect(pfc).
 
 p(a). p(b).
 single_override(p(a),p(b)).

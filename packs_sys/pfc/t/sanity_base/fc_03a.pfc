@@ -15,7 +15,7 @@
 
 :- dmsg(begin_abc).
               
-:- file_begin(pfc).
+:- expects_dialect(pfc).
 
 :- abolish(a3a,0).
 :- abolish(b3a,0).

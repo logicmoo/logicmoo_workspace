@@ -161,7 +161,8 @@ test_completed_exit(N):- dmsg_pretty(test_completed_exit(N)),fail.
 test_completed_exit(7):- halt(7).
 test_completed_exit(4):- halt(4).
 test_completed_exit(5):- halt(5).
-test_completed_exit(N):- (debugging-> break ; true), halt(N).
+
+test_completed_exit(N):- getenv(keep_going,'-k'),!, halt(N).
 test_completed_exit(N):- (debugging-> true ; halt(N)).
 
 test_completed_exit_maybe(_):- system:test_results(_,error,_),test_completed_exit(9).
