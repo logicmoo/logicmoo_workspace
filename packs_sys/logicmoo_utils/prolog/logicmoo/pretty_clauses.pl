@@ -1395,6 +1395,7 @@ pt1(FS,Tab,List) :- List=[_|_], !,
 % H:-B
 pt1(_FS,Tab, H:- T) :- 
   OP = (','),
+  compound(T),
   compound_name_arity(T,OP, 2),      
   pred_juncts_to_list(OP,T,List),!,
   prefix_spaces(Tab), print_tree_no_nl(H),  
@@ -1816,9 +1817,22 @@ merge_canonical_defaults(O,[],O):-!.
 %           ]
 %       ==
 
+saneify_vars(Term,TermO):- \+ compound(Term),!,Term=TermO.
+saneify_vars('VAR$'(Term),'VAR$'(TermO)):- !, to_sane_varname(Term,TermO).
+saneify_vars(Term,TermO):- compound_name_arguments(Term,F,Args), maplist(saneify_vars,Args,ArgsO), compound_name_arguments(TermO,F,ArgsO).
 
-pprint_tree(Term, Options) :-
-    \+ \+ pprint_tree_2(Term, Options).
+to_sane_varname(Term,TermO):- var(Term),!,term_to_atom(Term,TermM),to_sane_varname(TermM,TermO).
+to_sane_varname(Term,TermO):- \+ compound(Term),!,toPropercase(Term,TermO).
+to_sane_varname(N=V,NO=V):- !, to_sane_varname(N,NO).
+to_sane_varname(Term,Term).
+
+pprint_tree(Term, Options) :- select('variable_names'(Vs),Options,OptionsM),!,
+  saneify_vars(Term,TermO), maplist(to_sane_varname,Vs,VsO),
+  pprint_tree_1(TermO,['variable_names'(VsO)|OptionsM]).
+pprint_tree(Term, Options) :-  saneify_vars(Term,TermO), pprint_tree_1(TermO, Options).
+
+pprint_tree_1(Term, Options) :- prolog_pretty_print:print_tree(Term, Options).
+%pprint_tree(Term, Options) :- \+ \+ pprint_tree_2(Term, Options).
 
 pprint_tree_2(Term, Options0) :-
     prepare_term(Term, Template, Cycles, Constraints),

@@ -1,3 +1,4 @@
+#!/usr/bin/env swipl
 :- include(test_header).
 
 lives(englishman, red)

@@ -471,9 +471,9 @@ sblank --> [C], {nonvar(C),charvar(C),!,bx(C =< 32)},!,swhite.
 sblank_line --> eoln,!.
 sblank_line --> [C],{bx(C =< 32)},!, sblank_line.
 
-s_string(Text)                 --> `"`, !, zalwayz(s_string_cont(Text)),!.
-s_string_cont("")             --> `"`,!, swhite.
-s_string_cont(Txt)                 --> sexpr_string(S), swhite,{text_to_string_safe(S,Txt)}.
+s_string(Text)                 --> sexpr_string(Text).
+s_string(Text)                 --> {kif_ok},`'`, !, zalwayz(read_string_until_no_esc(Text,`'`)),!.
+
 
 
 swhite --> sblank,!.
@@ -499,9 +499,11 @@ sexpr_lazy_list_character_count(Here, CharNo, Stream) :-
 
 comment_expr('$COMMENT'(Expr,I,CP)) --> comment_expr_3(Expr,I,CP),!.
 
-comment_expr_3(T,N,CharPOS) --> `#|`, !, my_lazy_list_location(file(_,_,N,CharPOS)),!, zalwayz(read_string_until_no_esc(S,`|#`)),!,
+comment_expr_3(T,N,CharPOS) --> {\+ kif_ok}, `#|`, !, my_lazy_list_location(file(_,_,N,CharPOS)),!, zalwayz(read_string_until_no_esc(S,`|#`)),!,
   {text_to_string_safe(S,T)},!.
 comment_expr_3(T,N,CharPOS) -->  `;`,!, my_lazy_list_location(file(_,_,N,CharPOS)),!,zalwayz(read_string_until_no_esc(S,eoln)),!,
+  {text_to_string_safe(S,T)},!.
+comment_expr_3(T,N,CharPOS) --> {kif_ok}, `#!`,!, my_lazy_list_location(file(_,_,N,CharPOS)),!,zalwayz(read_string_until_no_esc(S,eoln)),!,
   {text_to_string_safe(S,T)},!.
 
 
@@ -532,7 +534,10 @@ sexpr_vector0(X) --> one_blank,!,sexpr_vector0(X).
 sexpr_vector0([],End) --> End, !.
 sexpr_vector0([First|Rest],End) --> sexpr(First), !, sexpr_vector0(Rest,End).
 
-sexpr_string(X)--> read_string_until(X,`"`).
+%s_string_cont(Until,"")             --> Until,!, swhite.
+sexpr_string(Text)                 --> `“`, !, zalwayz(read_string_until_no_esc(Text,`”`)),!.
+sexpr_string(Text)                 --> `"`, !, zalwayz(read_string_until_no_esc(Text,`"`)),!.
+sexpr_string(Text)                 --> `#|`, !, zalwayz(read_string_until_no_esc(Text,`|#`)),!.
 %sexpr_string([C|S],End) --> `\\`,!, zalwayz(escaped_char(C)),!, sexpr_string(S,End).
 %sexpr_string([],End) --> End, !.
 % sexpr_string([32|S]) --> [C],{eoln(C)}, sexpr_string(S).
@@ -1228,11 +1233,13 @@ next_args_are_lists_unless_string('let*',0).
 %sexpr_sterm_to_pterm(TD,[S|TERM],PTERM):- is_relation_sexpr(S),zalwayz((sexpr_sterm_to_pterm_list(TD,TERM,PLIST),PTERM=..[S|PLIST])),!.
 %sexpr_sterm_to_pterm(TD,STERM,PTERM):- STERM=..[S|TERM],sexpr_sterm_to_pterm_list(TD,TERM,PLIST),s_univ(TD,PTERM,[S|PLIST]),!.
 
+s_functor(F):- \+ atom(F), !,fail.
+s_functor(F):- \+ atom_concat('?',_,F).
 
 s_univ(1,S,S):-!.
-s_univ(_TD,P,[F|ARGS]):- atom(F),is_list(ARGS),length(ARGS,A),l_arity(F,A),P=..[F|ARGS].
-s_univ(0,P,[F|ARGS]):- atom(F),is_list(ARGS),P=..[F|ARGS].
-s_univ(_TD,P,[F|ARGS]):- atom(F),is_list(ARGS),P=..[F|ARGS].
+s_univ(_TD,P,[F|ARGS]):- s_functor(F),is_list(ARGS),length(ARGS,A),l_arity(F,A),P=..[F|ARGS].
+s_univ(0,P,[F|ARGS]):- s_functor(F),is_list(ARGS),P=..[F|ARGS].
+s_univ(_TD,P,[F|ARGS]):- s_functor(F),is_list(ARGS),P=..[F|ARGS].
 s_univ(_TD,P,S):-P=S.
 
 l_arity(F,A):- clause_b(arity(F,A)).

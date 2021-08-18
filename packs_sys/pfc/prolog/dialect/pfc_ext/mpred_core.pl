@@ -4199,13 +4199,15 @@ not_not_ignore_quietly_ex(G):- notrace(ignore(quietly_ex(\+ \+ G))).
 
 % needed:  mpred_trace_rule(Name)  ...
 
-log_failure(ALL):- quietly_ex((log_failure_red,maybe_mpred_break(ALL),log_failure_red)).
+log_failure(ALL):- quietly_ex((log_lines(red,failure+ALL),maybe_mpred_break(ALL),log_failure_red)).
+log_success(ALL):- quietly_ex((log_lines(green,success+ALL),fmt(ALL),log_success_green)).
 
-log_failure_red:- quietly(doall((
+log_failure_red:- log_lines(red,failure).
+log_success_green:- log_lines(green,success).
+
+log_lines(Color,Message):- quietly(doall((
   show_current_source_location,
-  between(1,3,_),
-  ansifmt(red,"%%%%%%%%%%%%%%%%%%%%%%%%%%% find log_failure_red in srcs %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%\n"),
-  ansifmt(yellow,"%%%%%%%%%%%%%%%%%%%%%%%%%%% find log_failure_red in srcs %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%\n")))).
+  ansifmt(Color,"%%%%%%%%%%%%%%%%%%%%%%%%%%% (~w) ~w %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%\n",[Color,Message])))).
 
 %% with_no_breaks(+P) is semidet.
 %

@@ -8,31 +8,27 @@
 
 %  was_module(header_sane,[]).
 
-:- module(header_sane,[test_header_include/0]).
-test_header_include.
+%:- module(header_sane,[test_header_include/0]).
+%test_header_include.
 %:- endif.
 
 :- expects_dialect(pfc).
 
-% :- include(test_header).
-:- module(header_sane).
+:- include(test_header).
+% :- module(header_sane).
 
 :- mpred_trace_exec.
 
 a11 ==> b11.
 
-:- rtrace(add_PFC(a11)).
+% :- rtrace(add_PFC(a11)).
 
-:- break.
 
 :- mpred_test(a11).
 :- mpred_test(b11).
 
 \+ a11.
 
-:- break.
-:- rtrace.
-:- nortrace.
 
 :- mpred_test(\+ a11).
 :- mpred_test(\+ b11).

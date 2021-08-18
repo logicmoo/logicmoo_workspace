@@ -1,10 +1,17 @@
 #!/usr/bin/env swipl
 :- include(test_header).
+
+% 
+% Alternatively..
+% :- prolog_load_context(stream,Stream), load_clif(Stream).
+:- kif_io.
+
 ;; Module - Test Puzzle in CLIF for SWI-Prolog
 ;; Maintainer: Douglas Miles
 ;; Load with  ?- load_clif(pack(logicmoo_base/t/examples/fol/'exactly_01.clif'))
 ;; causes deduction of argument types
 ;; (:- (ensure_loaded (library logicmoo_clif)))
+
 (set-kif-option :assume-wff)
 (kif-mode tell)
 

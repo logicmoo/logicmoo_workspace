@@ -38,13 +38,18 @@ test_red_lined(Failed):- notrace((
 %
 % PFC Test.
 %
+
+%mpred_test(G):- notrace(mpred_test0(G)) -> true ; with_no_breaks(with_mpred_trace_exec(must(mpred_test_fok(G)))),!.
+mpred_test(G):- notrace(mpred_test_fok(G)).
+
 mpred_test0(G):- notrace((var(G),dmsg_pretty(var_mpred_test(G)))),!,trace_or_throw(var_mpred_test(G)).
 %mpred_test((G1;G2)):- !,call_u(G1);mpred_test(G2).
 mpred_test0(_):- notrace((compiling; current_prolog_flag(xref,true))),!.
 mpred_test0(G):- notrace(mpred_is_silent),!, with_no_mpred_trace_exec(must(mpred_test_fok(G))),!.
 mpred_test0(G):- notrace((dmsg_pretty(:-mpred_test(G)),fail)).
 mpred_test0(G):- notrace((current_prolog_flag(runtime_debug,D),D<1)),!,with_no_mpred_trace_exec(must((G))),!.
-mpred_test(G):- notrace(mpred_test0(G)) -> true ; with_no_breaks(with_mpred_trace_exec(must(mpred_test_fok(G)))),!.
+
+
 :- if(false).
 mpred_test(MPRED):- must(mpred_to_pfc(MPRED,PFC)),!,(show_call(umt(PFC))*->true;(call_u(PFC)*->mpred_why2(MPRED);test_red_lined(mpred_test(MPRED)),!,fail)).
 %mpred_test(MPRED):- must(mpred_to_pfc(MPRED,PFC)),!,(show_call(call_u(PFC))*->true;(call(PFC)*->mpred_why2(MPRED);test_red_lined(mpred_test(MPRED)),!,fail)).
@@ -52,16 +57,62 @@ mpred_why2(MPRED):- must(mpred_to_pfc(MPRED,PFC)),!,(show_call(mpred_why(PFC))*-
 :- endif.
 
 
-% mpred_test_fok(G):- source_file(_,_),!,mpred_test_fok0(G),!.
+% mpred_test_fok(G):- source_file(_,_),!,mpred_test_fok_0(G),!.
 :- meta_predicate(mpred_test_fok(:)).
-mpred_test_fok(G):- mpred_test_fok0(G),!.
+mpred_test_fok(G):- must((generate_test_name(G, Testcase), mpred_test_fok(Testcase, G))).
 
-mpred_test_fok0(\+ G):-!, ( \+ call_u(G) -> wdmsg_pretty(passed_mpred_test(\+ G)) ; (log_failure(failed_mpred_test(\+ G)),!,
-  ignore(why_was_true(G)),!,fail)).
-% mpred_test_fok(G):- (call_u(G) -> ignore(sanity(why_was_true(G))) ; (log_failure(failed_mpred_test(G))),!,fail).
-mpred_test_fok0(G):- (call_u(G) *-> ignore(must(why_was_true(G))) ; (log_failure(failed_mpred_test(G))),!,fail).
+:- thread_local(t_l:mpred_current_testcase/1).
+
+:- abolish(j_u:junit_prop/3).
+:- dynamic(j_u:junit_prop/3).
+
+mpred_test_fok(Testcase, G):- 
+  add_test_info(testsuite,testcase,Testcase),
+  locally(t_l:mpred_current_testcase(Testcase), mpred_test_fok_2(Testcase, G)).
+
+mpred_test_fok_2(Testcase, G):- 
+ must_det_l((
+  add_test_info(Testcase,goal,G),
+  ignore((source_location(S,L),atom(S),add_test_info(Testcase,src,S:L),
+   sformat(URI,'~w#L~w',[S,L]),
+   replace_in_string(
+    [ "/opt/logicmoo_workspace"="https://logicmoo.org:2082/gitlab/logicmoo/logicmoo_workspace/-/blob/master"],
+    URI,URL),
+   add_test_info(Testcase,url,URL))),
+  mpred_test_fok_4(G, TestResult, Elapsed),
+  add_test_info(Testcase,time,Elapsed),
+  TestResult=..[Type|Info],add_test_info(Testcase,Type,Info),
+  add_test_info(Testcase,result,Type))).
+
+mpred_test_fok_4(\+ G, TestResult, Elapsed):- !,
+must_det_l((
+  get_time(Start),
+  catch(( ( \+ call_u(G) ) -> TestResult = passed; TestResult = failure),E, TestResult=error(E)),
+  get_time(End),
+  Elapsed is End - Start,
+  (TestResult == failure -> Retry = G ;  Retry = ( \+ G)),
+  save_info_to(info,why_was_true(Retry)))).
+mpred_test_fok_4(G, TestResult, Elapsed):- !,
+must_det_l((
+  get_time(Start),
+  catch(( (  call_u(G) ) -> TestResult = passed; TestResult = failure),E, TestResult=error(E)),
+  get_time(End),
+  Elapsed is End - Start,
+  (TestResult == failure -> Retry = ( \+ G ) ;  Retry = G),
+  save_info_to(info,why_was_true(Retry)))).
 
 
+generate_test_name(baseKB:G,Testcase):- nonvar(G), !, generate_test_name(G,Testcase).
+generate_test_name(\+ G, Name):- nonvar(G), !, generate_test_name(G,Name1), sformat(Name,'\naf ~w',[Name1]).
+generate_test_name(call_u(G), Name):- nonvar(G), !, generate_test_name(G,Name).
+generate_test_name(G,Name):- callable(G), (source_location(_,L); (_='',L='')), sformat(Name1,'~q. @ ~w',[G,L]),!, generate_test_name(Name1,Name).
+generate_test_name(G,G):-!.
+generate_test_name(G,Name):- string(G),!, 
+  replace_in_string([
+   '('='_',
+   ')'='',
+   ','='_',
+   '__'='_'],G,Name).
                     
 :- module_transparent(pfc_feature/1).
 :- dynamic(pfc_feature/1).
@@ -118,6 +169,13 @@ skip_warning(T):- \+ compound(T),!,fail.
 skip_warning(_:T):- !, compound(T),functor(T,F,_),skip_warning(F).
 skip_warning(T):-compound(T),functor(T,F,_),skip_warning(F).
 
+add_test_info(Type,Info):- ignore((t_l:mpred_current_testcase(Testcase), add_test_info(Testcase,Type,Info))).
+
+save_info_to(TestResult,Goal):- with_output_to(string(S),ignore(Goal)), add_test_info(TestResult,S).
+
+add_test_info(Testcase,Type,Info):- j_u:junit_prop(Testcase,Type,InfoM),Info=@=InfoM,!.
+add_test_info(Testcase,Type,_):- retract(j_u:junit_prop(Testcase,Type,[])),fail.
+add_test_info(Testcase,Type,Info):- assertz(j_u:junit_prop(Testcase,Type,Info)).
 
 
 inform_message_hook(T1,T2,_):- (skip_warning(T1);skip_warning(T2);(\+ thread_self_main)),!.
@@ -130,17 +188,19 @@ inform_message_hook(ignored_weak_import(header_sane,_),_,_).
 inform_message_hook(error(existence_error(procedure,'$toplevel':_),_),error,_).
 % inform_message_hook(_,warning,_).
 
+
 inform_message_hook(T,Type,Warn):- atom(Type),
   memberchk(Type,[error,warning]),!,
-  once((dmsg_pretty(message_hook_type(Type)),dmsg_pretty(message_hook(T,Type,Warn)),
+  once((dmsg_pretty(message_hook_type(Type)),dmsg_pretty(message_hook(T,Type,Warn)),  
   ignore((source_location(File,Line),dmsg_pretty(source_location(File,Line)))),
-  assertz(system:test_results(File:Line/T,Type,Warn)),nop(dumpST),
+  add_test_info(Type,{type:Type,info:T,data:Warn,src:(File:Line)}),
+  nop(dumpST),
   nop(dmsg_pretty(message_hook(File:Line:T,Type,Warn))))),   
   fail.
 inform_message_hook(T,Type,Warn):-
   ignore(source_location(File,Line)),
   once((nl,dmsg_pretty(message_hook(T,Type,Warn)),nl,
-  assertz(system:test_results(File:Line/T,Type,Warn)),
+  add_test_info(Type,{type:Type,info:T,data:Warn,src:(File:Line)}),
   dumpST,nl,dmsg_pretty(message_hook(File:Line:T,Type,Warn)),nl)),
   fail.
 
@@ -148,27 +208,200 @@ inform_message_hook(T,Type,Warn):- dmsg_pretty(message_hook(T,Type,Warn)),dumpST
 inform_message_hook(_,error,_):- current_prolog_flag(runtime_debug, N),N>2,break.
 inform_message_hook(_,warning,_):- current_prolog_flag(runtime_debug, N),N>2,break.
 
+list_test_results:- !.
+list_test_results:-
+  format('\n<!--  \n'),
+  % listing(j_u:junit_prop/3), 
+  show_junit_results,
+  format(' -->\n').
+
+show_junit_results:- 
+  outer_junit(format('<?xml version="1.0" encoding="utf-8"?>\n<testsuites>\n',[])),
+  findall(File,j_u:junit_prop(testsuite,file,File),L),list_to_set(L,S),
+  maplist(save_testsuite,S),
+  outer_junit(format('</testsuites>\n',[])).
+
+outer_junit(G):- nop(G).
 
 :- multifile prolog:message//1, user:message_hook/3.
 
-:- dynamic(system:test_results/3).
+halt_junit:- j_u:junit_prop(system,shown_testing_complete,true),!.
+halt_junit:- asserta(j_u:junit_prop(system,shown_testing_complete,true)), list_test_results,
+  save_results_single.
 
-system:test_repl:-  assertz(system:test_results(need_retake,warn,need_retake)).
-system:test_completed:- listing(system:test_results/3),test_completed_exit_maybe(7).
-system:test_retake:- listing(system:test_results/3),test_completed_exit_maybe(3).
+
+:- at_halt(halt_junit).
+
+
+system:test_repl:-  assertz(system:junit_prop(need_retake,warn,need_retake)).
+system:test_completed:- halt_junit,test_completed_exit_maybe(7).
+system:test_retake:- halt_junit,test_completed_exit_maybe(3).
+
 
 test_completed_exit(N):- dmsg_pretty(test_completed_exit(N)),fail.
-test_completed_exit(7):- halt(7).
-test_completed_exit(4):- halt(4).
-test_completed_exit(5):- halt(5).
+test_completed_exit(7):- halt(7). % Passed
+test_completed_exit(4):- halt(4). % Aborted by User
+test_completed_exit(5):- halt(5). % Aborted by System
 
 test_completed_exit(N):- getenv(keep_going,'-k'),!, halt(N).
 test_completed_exit(N):- (debugging-> true ; halt(N)).
 
-test_completed_exit_maybe(_):- system:test_results(_,error,_),test_completed_exit(9).
-test_completed_exit_maybe(_):- system:test_results(_,warning,_),test_completed_exit(3).
-test_completed_exit_maybe(_):- system:test_results(_,warn,_),test_completed_exit(3).
+test_completed_exit_maybe(_):- j_u:junit_prop(_,error,_),test_completed_exit(9).
+test_completed_exit_maybe(_):- j_u:junit_prop(_,warning,_),test_completed_exit(3).
+test_completed_exit_maybe(_):- j_u:junit_prop(_,warn,_),test_completed_exit(3).
 test_completed_exit_maybe(N):- test_completed_exit(N).
+
+
+/* 
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- a description of the JUnit XML format and how Jenkins parses it. See also junit.xsd -->
+
+<!-- if only a single testsuite element is present, the testsuites
+     element can be omitted. All attributes are optional. -->
+<testsuites disabled="#" <!-- total number of disabled tests from all testsuites. -->
+            errors="#"   <!-- total number of tests with error result from all testsuites. -->
+            failures="#" <!-- total number of failed tests from all testsuites. -->
+            name=""
+            tests="#"    <!-- total number of successful tests from all testsuites. -->
+            time="Total"     <!-- time in seconds to execute all test suites. -->
+        >
+
+  <!-- testsuite can appear multiple times, if contained in a testsuites element.
+       It can also be the root element. -->
+  <testsuite name=""      <!-- Full (class) name of the test for non-aggregated testsuite documents.
+                               Class name without the package for aggregated testsuites documents. Required -->
+         tests="#"     <!-- The total number of tests in the suite, required. -->
+         disabled="#"  <!-- the total number of disabled tests in the suite. optional -->
+             errors="#"    <!-- The total number of tests in the suite that errored. An errored test is one that had an unanticipated problem,
+                               for example an unchecked throwable; or a problem with the implementation of the test. optional -->
+             failures=""  <!-- The total number of tests in the suite that failed. A failure is a test which the code has explicitly failed
+                               by using the mechanisms for that purpose. e.g., via an assertEquals. optional -->
+             hostname=""  <!-- Host on which the tests were executed. 'localhost' should be used if the hostname cannot be determined. optional -->
+         id=""        <!-- Starts at 0 for the first testsuite and is incremented by 1 for each following testsuite -->
+         package=""   <!-- Derived from testsuite/@name in the non-aggregated documents. optional -->
+         skipped=""   <!-- The total number of skipped tests. optional -->
+         time=""      <!-- Time taken (in seconds) to execute the tests in the suite. optional -->
+         timestamp="" <!-- when the test was executed in ISO 8601 format (2014-01-21T16:17:18). Timezone may not be specified. optional -->
+         >
+
+    <!-- Properties (e.g., environment settings) set during test
+     execution. The properties element can appear 0 or once. -->
+    <properties>
+      <!-- property can appear multiple times. The name and value attributres are required. -->
+      <property name="" value=""/>
+    </properties>
+
+    <!-- testcase can appear multiple times, see /testsuites/testsuite@tests -->
+    <testcase name=""       <!-- Name of the test method, required. -->
+          assertions="" <!-- number of assertions in the test case. optional -->
+          classname=""  <!-- Full class name for the class the test method is in. required -->
+          status=""
+          time=""       <!-- Time taken (in seconds) to execute the test. optional -->
+          >
+
+      <!-- If the test was not executed or failed, you can specify one
+           the skipped, error or failure elements. -->
+
+      <!-- skipped can appear 0 or once. optional -->
+      <skipped/>
+
+      <!-- Indicates that the test errored. An errored test is one
+           that had an unanticipated problem. For example an unchecked
+           throwable or a problem with the implementation of the
+           test. Contains as a text node relevant data for the error,
+           for example a stack trace. optional -->
+      <error message="" <!-- The error message. e.g., if a java exception is thrown, the return value of getMessage() -->
+         type=""    <!-- The type of error that occured. e.g., if a java execption is thrown the full class name of the exception. -->
+         ></error>
+
+      <!-- Indicates that the test failed. A failure is a test which
+       the code has explicitly failed by using the mechanisms for
+       that purpose. For example via an assertEquals. Contains as
+       a text node relevant data for the failure, e.g., a stack
+       trace. optional -->
+      <failure message="" <!-- The message specified in the assert. -->
+           type=""    <!-- The type of the assert. -->
+           ></failure>
+
+      <!-- Data that was written to standard out while the test was executed. optional -->
+      <system-out></system-out>
+
+      <!-- Data that was written to standard error while the test was executed. optional -->
+      <system-err></system-err>
+    </testcase>
+
+    <!-- Data that was written to standard out while the test suite was executed. optional -->
+    <system-out></system-out>
+    <!-- Data that was written to standard error while the test suite was executed. optional -->
+    <system-err></system-err>
+  </testsuite>
+</testsuites>
+  */
+save_results:-
+ j_u:junit_prop(testsuite,file,Name), 
+ with_output_to(string(Text),show_junit_results),
+ output_to_junit_file(Name,Text).
+
+save_results_single:-
+  tell('/tmp/logicmoo_testing/junit_single.xml'),
+  show_junit_results,
+  told.
+
+
+output_to_junit_file(Name,Text):- 
+  atom_concat(Name,'_junit.xml',SaveFile), 
+    open(SaveFile, write, _, [alias(junit)]),
+      format(junit,'~w',Text), 
+      close(junit).
+
+save_testsuite(File):- 
+   outer_junit(format("  <testsuite name=\"~w\">\n", [File])),
+   findall(Name,j_u:junit_prop(testsuite,testcase,Name),L),list_to_set(L,S),
+    maplist(save_testcase_result(File),S),
+   outer_junit(format("  </testsuite>\n", [])).
+  %plunit:check_for_test_errors.
+
+good_type(passed).
+nongood_type(warn).
+nongood_type(error).
+nongood_type(warning).
+nongood_type(failure).
+info_type(T):- \+ good_type(T), \+ nongood_type(T).
+
+save_testcase_result(Suite,Testcase):- 
+ ignore((
+ format('
+     <testcase name=~q ', [Testcase]),
+ replace_in_string([".pfc"="",'/opt/logicmoo_workspace/packs_'='','/'='.',
+  '.t.'='.','sys.pfc.'='','.pfc'='.'],Suite,Package),
+  format('package="~w" ', [Package]),
+ ignore((j_u:junit_prop(Testcase,time,Time),format('time="~20f"', [Time]))),
+ format('>\n\n', []),
+ ignore((write_test_test_info(Testcase))),
+ format("\n    </testcase>\n", []))),!.
+
+
+testcase_props(Testcase):-
+ format("\n    <system-err><![CDATA[\n", []),
+ forall(j_u:junit_prop(Testcase,Type,Warn), write_testcase_prop(Type,Warn)),
+ format("\n    ]]></system-err>\n", []).
+
+write_testcase_prop(_Type,[]):-!.
+write_testcase_prop(info,S):- !, nop(format('~N~w~n',[S])).
+write_testcase_prop(Type,Warn):- format('~N\t~w \t= ~q.~n',[Type,Warn]).
+
+write_test_test_info(Testcase):- j_u:junit_prop(Testcase,result,failure),!,
+  with_output_to(string(NonGood), forall((j_u:junit_prop(Testcase,Type,Warn), nongood_type(Type)), format('~N~w = ~q.~n',[Type,Warn]))),
+  format("      <failure message=~q />\n", [NonGood]),
+  testcase_props(Testcase).
+
+write_test_test_info(Testcase):- \+ j_u:junit_prop(Testcase,result,passed),!,
+  with_output_to(string(NonGood), forall((j_u:junit_prop(Testcase,Type,Warn), nongood_type(Type)), format('~N~w = ~q.~n',[Type,Warn]))),
+  format("      <error message=~q />\n", [NonGood]),
+  testcase_props(Testcase).  
+
+write_test_test_info(Testcase):- testcase_props(Testcase).
+
 
 set_file_abox_module(User):- '$set_typein_module'(User), '$set_source_module'(User),
   set_fileAssertMt(User).
@@ -195,7 +428,7 @@ message_hook_handle(T,Type,Warn):-
 :- endif.
 
 user:message_hook(T,Type,Warn):- 
-   Type \== silent,Type \== debug, Type \== informational,
+   Type \== silent, Type \== debug, Type \== informational,
    current_prolog_flag(logicmoo_message_hook,Was),Was\==none,
    once(message_hook_handle(T,Type,Warn)),!.
 

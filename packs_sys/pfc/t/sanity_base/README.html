@@ -347,46 +347,683 @@ window.setInterval(function() {
 <body class="f9 b9">
 <pre><code>
 
+&lt;!--
+Running Matching Tests: /opt/logicmoo_workspace/bin/test_prolog.sh -k fc_01*
+--&gt;
 
-Running Matching Tests: ./test_prolog.sh -k dia_pfc_mod_01a.pl dia_pfc_mod_01b.pl dia_pfc_mod_01c.pl dia_pfc_mod_01.pl
+&lt;testsuite name=&quot;fc_01.pfc&quot;&gt;
+&lt;system-out&gt;&lt;![CDATA[
+call_mpred_post4 :- 
+  unique is assertion_status , 
+  post1 = a11==&gt;b11 , 
+  fix_mp=baseKB , 
+  mz=baseKB , 
+  p0 = a11==&gt;b11 , 
+  support_fact = mfl4(_1700,baseKB,'/opt/logicmoo_workspace/packs_sys/pfc/t/sanity_base/fc_01.pfc',18) , 
+  support_trig=ax , 
+  none is support_status
+baseKB : mpred_fwc1( a11==&gt;b11)
+call_mpred_post4 :- 
+  unique is assertion_status , 
+  post1 = mpred_prop(baseKB,b11,0,pfcRHS) , 
+  fix_mp=baseKB , 
+  mz=baseKB , 
+  p0 = mpred_prop(baseKB,b11,0,pfcRHS) , 
+  support_fact = mfl4(_21650,baseKB,'/opt/logicmoo_workspace/packs_sys/pfc/t/sanity_base/fc_01.pfc',18) , 
+  support_trig=ax , 
+  none is support_status
+baseKB : mpred_fwc1( mpred_prop(baseKB,b11,0,pfcRHS))
+call_mpred_post4 :- 
+  unique is assertion_status , 
+  post1 = mpred_prop(baseKB,b11,0,pfcCreates) , 
+  fix_mp=baseKB , 
+  mz=baseKB , 
+  p0 = mpred_prop(baseKB,b11,0,pfcCreates) , 
+  support_fact = mpred_prop(baseKB,b11,0,pfcRHS) , 
+  support_trig = '$pt'(baseKB,mpred_prop(baseKB,b11,0,pfcRHS),rhs([mpred_prop(baseKB,b11,0,pfcCreates)])) , 
+  none is support_status
+baseKB : mpred_fwc1( mpred_prop(baseKB,b11,0,pfcCreates))
+call_mpred_post4 :- 
+  unique is assertion_status , 
+  post1 = mpred_prop(baseKB,b11,0,kb_shared) , 
+  fix_mp=baseKB , 
+  mz=baseKB , 
+  p0 = mpred_prop(baseKB,b11,0,kb_shared) , 
+  support_fact = mfl4(_414,baseKB,'/opt/logicmoo_workspace/packs_sys/pfc/t/sanity_base/fc_01.pfc',18),ax , 
+  support_trig = mfl4(_918,baseKB,'/opt/logicmoo_workspace/packs_sys/pfc/t/sanity_base/fc_01.pfc',18) , 
+  none is support_status
+baseKB : mpred_fwc1( mpred_prop(baseKB,b11,0,kb_shared))
+call_mpred_post4 :- 
+  unique is assertion_status , 
+  post1 = mpred_prop(baseKB,b11,0,pfcControlled) , 
+  fix_mp=baseKB , 
+  mz=baseKB , 
+  p0 = mpred_prop(baseKB,b11,0,pfcControlled) , 
+  support_fact = mpred_prop(baseKB,b11,0,pfcRHS) , 
+  support_trig = '$pt'( baseKB, 
+                   mpred_prop(baseKB,b11,0,pfcRHS), 
+                   genlPreds(pfcRHS,pfcControlled)*-&gt;rhs([mpred_prop(baseKB,b11,0,pfcControlled)])) , 
+  none is support_status
+baseKB : mpred_fwc1( mpred_prop(baseKB,b11,0,pfcControlled))
+call_mpred_post4 :- 
+  unique is assertion_status , 
+  post1 = mpred_prop(baseKB,b11,0,prologHybrid) , 
+  fix_mp=baseKB , 
+  mz=baseKB , 
+  p0 = mpred_prop(baseKB,b11,0,prologHybrid) , 
+  support_fact = mpred_prop(baseKB,b11,0,pfcControlled) , 
+  support_trig = '$pt'( baseKB, 
+                   mpred_prop(baseKB,b11,0,pfcControlled), 
+                   genlPreds(pfcControlled,prologHybrid)*-&gt;rhs([mpred_prop(baseKB,b11,0,prologHybrid)])) , 
+  none is support_status
+baseKB : mpred_fwc1( mpred_prop(baseKB,b11,0,prologHybrid))
+call_mpred_post4 :- 
+  unique is assertion_status , 
+  post1 = mpred_prop(baseKB,a11,0,pfcLHS) , 
+  fix_mp=baseKB , 
+  mz=baseKB , 
+  p0 = mpred_prop(baseKB,a11,0,pfcLHS) , 
+  support_fact = mfl4(_1342,baseKB,'/opt/logicmoo_workspace/packs_sys/pfc/t/sanity_base/fc_01.pfc',18) , 
+  support_trig=ax , 
+  none is support_status
+baseKB : mpred_fwc1( mpred_prop(baseKB,a11,0,pfcLHS))
+call_mpred_post4 :- 
+  unique is assertion_status , 
+  post1 = arity(a11,0) , 
+  fix_mp=baseKB , 
+  mz=baseKB , 
+  p0 = arity(a11,0) , 
+  support_fact = mpred_prop(baseKB,a11,0,pfcLHS) , 
+  support_trig = '$pt'( baseKB, 
+                   mpred_prop(baseKB,a11,0,pfcLHS), 
+                   rhs( [ arity(a11,0), 
+                          functorIsMacro(a11), 
+                          mpred_prop(baseKB,a11,0,pfcWatches)])) , 
+  none is support_status
+baseKB : mpred_fwc1( arity(a11,0))
+call_mpred_post4 :- 
+  unique is assertion_status , 
+  post1 = functorIsMacro(a11) , 
+  fix_mp=baseKB , 
+  mz=baseKB , 
+  p0 = functorIsMacro(a11) , 
+  support_fact = mpred_prop(baseKB,a11,0,pfcLHS) , 
+  support_trig = '$pt'( baseKB, 
+                   mpred_prop(baseKB,a11,0,pfcLHS), 
+                   rhs( [ arity(a11,0), 
+                          functorIsMacro(a11), 
+                          mpred_prop(baseKB,a11,0,pfcWatches)])) , 
+  none is support_status
+baseKB : mpred_fwc1( functorIsMacro(a11))
+call_mpred_post4 :- 
+  unique is assertion_status , 
+  post1 = mpred_prop(baseKB,a11,0,pfcWatches) , 
+  fix_mp=baseKB , 
+  mz=baseKB , 
+  p0 = mpred_prop(baseKB,a11,0,pfcWatches) , 
+  support_fact = mpred_prop(baseKB,a11,0,pfcLHS) , 
+  support_trig = '$pt'( baseKB, 
+                   mpred_prop(baseKB,a11,0,pfcLHS), 
+                   rhs( [ arity(a11,0), 
+                          functorIsMacro(a11), 
+                          mpred_prop(baseKB,a11,0,pfcWatches)])) , 
+  none is support_status
+baseKB : mpred_fwc1( mpred_prop(baseKB,a11,0,pfcWatches))
+call_mpred_post4 :- 
+  unique is assertion_status , 
+  post1 = mpred_prop(baseKB,a11,0,kb_shared) , 
+  fix_mp=baseKB , 
+  mz=baseKB , 
+  p0 = mpred_prop(baseKB,a11,0,kb_shared) , 
+  support_fact = mfl4(_406,baseKB,'/opt/logicmoo_workspace/packs_sys/pfc/t/sanity_base/fc_01.pfc',18),ax , 
+  support_trig = mfl4(_908,baseKB,'/opt/logicmoo_workspace/packs_sys/pfc/t/sanity_base/fc_01.pfc',18) , 
+  none is support_status
+baseKB : mpred_fwc1( mpred_prop(baseKB,a11,0,kb_shared))
+call_mpred_post4 :- 
+  unique is assertion_status , 
+  post1 = mpred_prop(baseKB,a11,0,pfcPosTrigger) , 
+  fix_mp=baseKB , 
+  mz=baseKB , 
+  p0 = mpred_prop(baseKB,a11,0,pfcPosTrigger) , 
+  support_fact = mfl4(_21558,baseKB,'/opt/logicmoo_workspace/packs_sys/pfc/t/sanity_base/fc_01.pfc',18) , 
+  support_trig=ax , 
+  none is support_status
+baseKB : mpred_fwc1( mpred_prop(baseKB,a11,0,pfcPosTrigger))
+call_mpred_post4 :- 
+  identical is assertion_status , 
+  post1 = mpred_prop(baseKB,a11,0,pfcWatches) , 
+  fix_mp=baseKB , 
+  mz=baseKB , 
+  p0 = mpred_prop(baseKB,a11,0,pfcWatches) , 
+  support_fact = mpred_prop(baseKB,a11,0,pfcPosTrigger) , 
+  support_trig = '$pt'( baseKB, 
+                   mpred_prop(baseKB,a11,0,pfcPosTrigger), 
+                   rhs([mpred_prop(baseKB,a11,0,pfcWatches)])) , 
+  ( simular( ( mpred_prop(baseKB,a11,0,pfcLHS) , 
+               '$pt'( baseKB, 
+                 mpred_prop(baseKB,a11,0,pfcLHS), 
+                 rhs( [ arity(a11,0), 
+                        functorIsMacro(a11), 
+                        mpred_prop(baseKB,a11,0,pfcWatches)])))) is 
+    support_status)
+call_mpred_post4 :- 
+  unique is assertion_status , 
+  post1=a11 , 
+  fix_mp=baseKB , 
+  mz=baseKB , 
+  p0=a11 , 
+  support_fact = mfl4(_63858,baseKB,'/opt/logicmoo_workspace/packs_sys/pfc/t/sanity_base/fc_01.pfc',19) , 
+  support_trig=ax , 
+  none is support_status
+baseKB : mpred_fwc1(a11)
+call_mpred_post4 :- 
+  unique is assertion_status , 
+  post1=b11 , 
+  fix_mp=baseKB , 
+  mz=baseKB , 
+  p0=b11 , 
+  support_fact=a11 , 
+  support_trig = '$pt'(baseKB,a11,rhs([b11])) , 
+  none is support_status
+baseKB : mpred_fwc1(b11)
+:- dynamic a11/0.
+:- multifile a11/0.
+:- public a11/0.
+:- module_transparent a11/0.
+
+a11.
+
+<span class="f6">%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</span>
+<span class="f2">%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</span>
+<span class="f2">%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</span>
+<span class="f3">%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</span>
+<span class="f1">%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</span>
+<span class="f3">%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</span>
+
+Justifications for b11:
+<span class="f1">%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</span>
+<span class="f6">    1.1 a11 </span><span class="f0"><span class="bold"> % [/opt/logicmoo_workspace/packs_sys/pfc/t/sanity_base/fc_01.pfc:19] </span></span>
+<span class="f6">    1.2 a11==&gt;b11 </span><span class="f0"><span class="bold"> % [/opt/logicmoo_workspace/packs_sys/pfc/t/sanity_base/fc_01.pfc:18] </span></span>
+<span class="f6">    1.3 mfl4(_,baseKB,'/opt/logicmoo_workspace/packs_sys/pfc/t/sanity_base/fc_01.pfc',19) </span>
+<span class="f6">    1.4 mfl4(_,baseKB,'/opt/logicmoo_workspace/packs_sys/pfc/t/sanity_base/fc_01.pfc',18) </span>
+<span class="f2">%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</span>
+<span class="f2">%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</span>
+]]&gt;&lt;/system-out&gt;
+
+     &lt;testcase name=&quot;b11. @ 26&quot; package=&quot;sanity_base.fc_01&quot; time=&quot;0.00002193450927734375&quot;&gt;
 
 
-swipl -g 'set_prolog_flag(runtime_testing,5)' -g &quot;(['dia_pfc_mod_01a.pl'])&quot; -g &quot;test_completed&quot;
-bar:a(1).
-bar:a(2).
+    &lt;system-err&gt;&lt;![CDATA[
+	goal 	= baseKB:b11.
+	src 	= '/opt/logicmoo_workspace/packs_sys/pfc/t/sanity_base/fc_01.pfc':26.
+	url 	= &quot;https://logicmoo.org:2082/gitlab/logicmoo/logicmoo_workspace/-/blob/master/packs_sys/pfc/t/sanity_base/fc_01.pfc#L26&quot;.
+	time 	= 2.193450927734375e-5.
+	result 	= passed.
 
-:- dynamic a/1.
-:- multifile a/1.
-:- public a/1.
-:- module_transparent a/1.
+    ]]&gt;&lt;/system-err&gt;
 
-
-
-<span class="f1">(NOT INTERACTIVE (baseKB:true))</span>
-:- dynamic test_results/3.
+    &lt;/testcase&gt;
+&lt;/testsuite&gt;
 
 
-swipl -g 'set_prolog_flag(runtime_testing,5)' -g &quot;(['dia_pfc_mod_01b.pl'])&quot; -g &quot;test_completed&quot;
-:- dynamic test_results/3.
 
 
-swipl -g 'set_prolog_flag(runtime_testing,5)' -g &quot;(['dia_pfc_mod_01c.pl'])&quot; -g &quot;test_completed&quot;
-:- dynamic test_results/3.
+&lt;testsuite name=&quot;fc_01r.pfc&quot;&gt;
+&lt;system-out&gt;&lt;![CDATA[
+call_mpred_post4 :- 
+  unique is assertion_status , 
+  post1 = a11==&gt;b11 , 
+  fix_mp=header_sane , 
+  mz=header_sane , 
+  p0 = a11==&gt;b11 , 
+  support_fact = mfl4(_54774,header_sane,'/opt/logicmoo_workspace/packs_sys/pfc/t/sanity_base/fc_01r.pfc',23) , 
+  support_trig=ax , 
+  none is support_status
+header_sane : mpred_fwc1( a11==&gt;b11)
+call_mpred_post4 :- 
+  unique is assertion_status , 
+  post1 = mpred_prop(header_sane,b11,0,pfcRHS) , 
+  fix_mp=baseKB , 
+  mz=header_sane , 
+  p0 = mpred_prop(header_sane,b11,0,pfcRHS) , 
+  support_fact = mfl4(_75434,header_sane,'/opt/logicmoo_workspace/packs_sys/pfc/t/sanity_base/fc_01r.pfc',23) , 
+  support_trig=ax , 
+  none is support_status
+header_sane : mpred_fwc1( mpred_prop(header_sane,b11,0,pfcRHS))
+call_mpred_post4 :- 
+  unique is assertion_status , 
+  post1 = mpred_prop(header_sane,b11,0,pfcCreates) , 
+  fix_mp=baseKB , 
+  mz=header_sane , 
+  p0 = mpred_prop(header_sane,b11,0,pfcCreates) , 
+  support_fact = mpred_prop(header_sane,b11,0,pfcRHS) , 
+  support_trig = '$pt'( baseKB, 
+                   mpred_prop(header_sane,b11,0,pfcRHS), 
+                   rhs([mpred_prop(header_sane,b11,0,pfcCreates)])) , 
+  none is support_status
+header_sane : mpred_fwc1( mpred_prop(header_sane,b11,0,pfcCreates))
+call_mpred_post4 :- 
+  unique is assertion_status , 
+  post1 = mpred_prop(header_sane,b11,0,kb_shared) , 
+  fix_mp=baseKB , 
+  mz=header_sane , 
+  p0 = mpred_prop(header_sane,b11,0,kb_shared) , 
+  support_fact = mfl4(_418,header_sane,'/opt/logicmoo_workspace/packs_sys/pfc/t/sanity_base/fc_01r.pfc',23),ax , 
+  support_trig = mfl4(_922,header_sane,'/opt/logicmoo_workspace/packs_sys/pfc/t/sanity_base/fc_01r.pfc',23) , 
+  none is support_status
+header_sane : mpred_fwc1( mpred_prop(header_sane,b11,0,kb_shared))
+call_mpred_post4 :- 
+  unique is assertion_status , 
+  post1 = mpred_prop(header_sane,a11,0,pfcLHS) , 
+  fix_mp=baseKB , 
+  mz=header_sane , 
+  p0 = mpred_prop(header_sane,a11,0,pfcLHS) , 
+  support_fact = mfl4(_59270,header_sane,'/opt/logicmoo_workspace/packs_sys/pfc/t/sanity_base/fc_01r.pfc',23) , 
+  support_trig=ax , 
+  none is support_status
+header_sane : mpred_fwc1( mpred_prop(header_sane,a11,0,pfcLHS))
+call_mpred_post4 :- 
+  unique is assertion_status , 
+  post1 = arity(a11,0) , 
+  fix_mp=baseKB , 
+  mz=header_sane , 
+  p0 = arity(a11,0) , 
+  support_fact = mpred_prop(header_sane,a11,0,pfcLHS) , 
+  support_trig = '$pt'( baseKB, 
+                   mpred_prop(header_sane,a11,0,pfcLHS), 
+                   rhs( [ arity(a11,0), 
+                          functorIsMacro(a11), 
+                          mpred_prop(header_sane,a11,0,pfcWatches)])) , 
+  none is support_status
+header_sane : mpred_fwc1( arity(a11,0))
+call_mpred_post4 :- 
+  unique is assertion_status , 
+  post1 = functorIsMacro(a11) , 
+  fix_mp=header_sane , 
+  mz=header_sane , 
+  p0 = functorIsMacro(a11) , 
+  support_fact = mpred_prop(header_sane,a11,0,pfcLHS) , 
+  support_trig = '$pt'( baseKB, 
+                   mpred_prop(header_sane,a11,0,pfcLHS), 
+                   rhs( [ arity(a11,0), 
+                          functorIsMacro(a11), 
+                          mpred_prop(header_sane,a11,0,pfcWatches)])) , 
+  none is support_status
+header_sane : mpred_fwc1( functorIsMacro(a11))
+call_mpred_post4 :- 
+  unique is assertion_status , 
+  post1 = mpred_prop(header_sane,a11,0,pfcWatches) , 
+  fix_mp=baseKB , 
+  mz=header_sane , 
+  p0 = mpred_prop(header_sane,a11,0,pfcWatches) , 
+  support_fact = mpred_prop(header_sane,a11,0,pfcLHS) , 
+  support_trig = '$pt'( baseKB, 
+                   mpred_prop(header_sane,a11,0,pfcLHS), 
+                   rhs( [ arity(a11,0), 
+                          functorIsMacro(a11), 
+                          mpred_prop(header_sane,a11,0,pfcWatches)])) , 
+  none is support_status
+header_sane : mpred_fwc1( mpred_prop(header_sane,a11,0,pfcWatches))
+call_mpred_post4 :- 
+  unique is assertion_status , 
+  post1 = mpred_prop(header_sane,a11,0,kb_shared) , 
+  fix_mp=baseKB , 
+  mz=header_sane , 
+  p0 = mpred_prop(header_sane,a11,0,kb_shared) , 
+  support_fact = mfl4(_410,header_sane,'/opt/logicmoo_workspace/packs_sys/pfc/t/sanity_base/fc_01r.pfc',23),ax , 
+  support_trig = mfl4(_912,header_sane,'/opt/logicmoo_workspace/packs_sys/pfc/t/sanity_base/fc_01r.pfc',23) , 
+  none is support_status
+header_sane : mpred_fwc1( mpred_prop(header_sane,a11,0,kb_shared))
+call_mpred_post4 :- 
+  unique is assertion_status , 
+  post1 = mpred_prop(header_sane,a11,0,pfcPosTrigger) , 
+  fix_mp=baseKB , 
+  mz=header_sane , 
+  p0 = mpred_prop(header_sane,a11,0,pfcPosTrigger) , 
+  support_fact = mfl4(_83736,header_sane,'/opt/logicmoo_workspace/packs_sys/pfc/t/sanity_base/fc_01r.pfc',23) , 
+  support_trig=ax , 
+  none is support_status
+header_sane : mpred_fwc1( mpred_prop(header_sane,a11,0,pfcPosTrigger))
+call_mpred_post4 :- 
+  identical is assertion_status , 
+  post1 = mpred_prop(header_sane,a11,0,pfcWatches) , 
+  fix_mp=baseKB , 
+  mz=header_sane , 
+  p0 = mpred_prop(header_sane,a11,0,pfcWatches) , 
+  support_fact = mpred_prop(header_sane,a11,0,pfcPosTrigger) , 
+  support_trig = '$pt'( baseKB, 
+                   mpred_prop(header_sane,a11,0,pfcPosTrigger), 
+                   rhs([mpred_prop(header_sane,a11,0,pfcWatches)])) , 
+  ( simular( ( mpred_prop(header_sane,a11,0,pfcLHS) , 
+               '$pt'( baseKB, 
+                 mpred_prop(header_sane,a11,0,pfcLHS), 
+                 rhs( [ arity(a11,0), 
+                        functorIsMacro(a11), 
+                        mpred_prop(header_sane,a11,0,pfcWatches)])))) is 
+    support_status)
+call_mpred_post4 :- 
+  unique is assertion_status , 
+  post1 = b11==&gt;a11 , 
+  fix_mp=header_sane , 
+  mz=header_sane , 
+  p0 = b11==&gt;a11 , 
+  support_fact = mfl4(_106004,header_sane,'/opt/logicmoo_workspace/packs_sys/pfc/t/sanity_base/fc_01r.pfc',24) , 
+  support_trig=ax , 
+  none is support_status
+header_sane : mpred_fwc1( b11==&gt;a11)
+call_mpred_post4 :- 
+  unique is assertion_status , 
+  post1 = mpred_prop(header_sane,a11,0,pfcRHS) , 
+  fix_mp=baseKB , 
+  mz=header_sane , 
+  p0 = mpred_prop(header_sane,a11,0,pfcRHS) , 
+  support_fact = mfl4(_1292,header_sane,'/opt/logicmoo_workspace/packs_sys/pfc/t/sanity_base/fc_01r.pfc',24) , 
+  support_trig=ax , 
+  none is support_status
+header_sane : mpred_fwc1( mpred_prop(header_sane,a11,0,pfcRHS))
+call_mpred_post4 :- 
+  unique is assertion_status , 
+  post1 = mpred_prop(header_sane,b11,0,pfcLHS) , 
+  fix_mp=baseKB , 
+  mz=header_sane , 
+  p0 = mpred_prop(header_sane,b11,0,pfcLHS) , 
+  support_fact = mfl4(_15492,header_sane,'/opt/logicmoo_workspace/packs_sys/pfc/t/sanity_base/fc_01r.pfc',24) , 
+  support_trig=ax , 
+  none is support_status
+header_sane : mpred_fwc1( mpred_prop(header_sane,b11,0,pfcLHS))
+call_mpred_post4 :- 
+  unique is assertion_status , 
+  post1 = mpred_prop(header_sane,b11,0,pfcPosTrigger) , 
+  fix_mp=baseKB , 
+  mz=header_sane , 
+  p0 = mpred_prop(header_sane,b11,0,pfcPosTrigger) , 
+  support_fact = mfl4(_61682,header_sane,'/opt/logicmoo_workspace/packs_sys/pfc/t/sanity_base/fc_01r.pfc',24) , 
+  support_trig=ax , 
+  none is support_status
+header_sane : mpred_fwc1( mpred_prop(header_sane,b11,0,pfcPosTrigger))
+call_mpred_post4 :- 
+  unique is assertion_status , 
+  post1=a11 , 
+  fix_mp=header_sane , 
+  mz=header_sane , 
+  p0=a11 , 
+  support_fact = mfl4(_80478,header_sane,'/opt/logicmoo_workspace/packs_sys/pfc/t/sanity_base/fc_01r.pfc',25) , 
+  support_trig=ax , 
+  none is support_status
+header_sane : mpred_fwc1(a11)
+call_mpred_post4 :- 
+  unique is assertion_status , 
+  post1=b11 , 
+  fix_mp=header_sane , 
+  mz=header_sane , 
+  p0=b11 , 
+  support_fact=a11 , 
+  support_trig = '$pt'(header_sane,a11,rhs([b11])) , 
+  none is support_status
+header_sane : mpred_fwc1(b11)
+call_mpred_post4 :- 
+  identical is assertion_status , 
+  post1=a11 , 
+  fix_mp=header_sane , 
+  mz=header_sane , 
+  p0=a11 , 
+  support_fact=b11 , 
+  support_trig = '$pt'(header_sane,b11,rhs([a11])) , 
+  ( simular( mfl4(Header_sane,header_sane,'/opt/logicmoo_workspace/packs_sys/pfc/t/sanity_base/fc_01r.pfc',25),ax) is 
+    support_status)
+]]&gt;&lt;/system-out&gt;
+&lt;/testsuite&gt;
 
 
-swipl -g 'set_prolog_flag(runtime_testing,5)' -g &quot;(['dia_pfc_mod_01.pl'])&quot; -g &quot;test_completed&quot;
-:- dynamic a/1.
-:- multifile a/1.
-:- public a/1.
-:- module_transparent a/1.
 
 
-foo:a(1).
-foo:a(2).
+&lt;testsuite name=&quot;fc_01s.pfc&quot;&gt;
+&lt;system-out&gt;&lt;![CDATA[
+call_mpred_post4 :- 
+  unique is assertion_status , 
+  post1=b11 , 
+  fix_mp=baseKB , 
+  mz=baseKB , 
+  p0=b11 , 
+  support_fact = mfl4(_11154,baseKB,'/opt/logicmoo_workspace/packs_sys/pfc/t/sanity_base/fc_01s.pfc',36) , 
+  support_trig=ax , 
+  none is support_status
+baseKB : mpred_fwc1(b11)
+call_mpred_post4 :- 
+  unique is assertion_status , 
+  post1=c11 , 
+  fix_mp=baseKB , 
+  mz=baseKB , 
+  p0=c11 , 
+  support_fact=b11 , 
+  support_trig = '$pt'(baseKB,b11,rhs([c11])) , 
+  none is support_status
+baseKB : mpred_fwc1(c11)
+call_mpred_post4 :- 
+  unique is assertion_status , 
+  post1=a11 , 
+  fix_mp=baseKB , 
+  mz=baseKB , 
+  p0=a11 , 
+  support_fact=c11 , 
+  support_trig = '$pt'(baseKB,c11,rhs([a11])) , 
+  none is support_status
+baseKB : mpred_fwc1(a11)
+call_mpred_post4 :- 
+  identical is assertion_status , 
+  post1=b11 , 
+  fix_mp=baseKB , 
+  mz=baseKB , 
+  p0=b11 , 
+  support_fact=a11 , 
+  support_trig = '$pt'(baseKB,a11,rhs([b11])) , 
+  ( simular( mfl4(BaseKB,baseKB,'/opt/logicmoo_workspace/packs_sys/pfc/t/sanity_base/fc_01s.pfc',36),ax) is 
+    support_status)
+]]&gt;&lt;/system-out&gt;
+
+     &lt;testcase name=&quot;a11. @ 24&quot; package=&quot;sanity_base.fc_01s&quot; time=&quot;0.00001406669616699219&quot;&gt;
 
 
-<span class="f1">(NOT INTERACTIVE (baseKB:true))</span>
-:- dynamic test_results/3.
+    &lt;system-err&gt;&lt;![CDATA[
+	goal 	= baseKB:a11.
+	src 	= '/opt/logicmoo_workspace/packs_sys/pfc/t/sanity_base/fc_01s.pfc':24.
+	url 	= &quot;https://logicmoo.org:2082/gitlab/logicmoo/logicmoo_workspace/-/blob/master/packs_sys/pfc/t/sanity_base/fc_01s.pfc#L24&quot;.
+	time 	= 1.4066696166992188e-5.
+	result 	= passed.
+
+    ]]&gt;&lt;/system-err&gt;
+
+    &lt;/testcase&gt;
+
+     &lt;testcase name=&quot;b11. @ 25&quot; package=&quot;sanity_base.fc_01s&quot; time=&quot;0.00001192092895507812&quot;&gt;
+
+
+    &lt;system-err&gt;&lt;![CDATA[
+	goal 	= baseKB:b11.
+	src 	= '/opt/logicmoo_workspace/packs_sys/pfc/t/sanity_base/fc_01s.pfc':25.
+	url 	= &quot;https://logicmoo.org:2082/gitlab/logicmoo/logicmoo_workspace/-/blob/master/packs_sys/pfc/t/sanity_base/fc_01s.pfc#L25&quot;.
+	time 	= 1.1920928955078125e-5.
+	result 	= passed.
+
+    ]]&gt;&lt;/system-err&gt;
+
+    &lt;/testcase&gt;
+
+     &lt;testcase name=&quot;c11. @ 26&quot; package=&quot;sanity_base.fc_01s&quot; time=&quot;0.00001168251037597656&quot;&gt;
+
+
+    &lt;system-err&gt;&lt;![CDATA[
+	goal 	= baseKB:c11.
+	src 	= '/opt/logicmoo_workspace/packs_sys/pfc/t/sanity_base/fc_01s.pfc':26.
+	url 	= &quot;https://logicmoo.org:2082/gitlab/logicmoo/logicmoo_workspace/-/blob/master/packs_sys/pfc/t/sanity_base/fc_01s.pfc#L26&quot;.
+	time 	= 1.1682510375976562e-5.
+	result 	= passed.
+
+    ]]&gt;&lt;/system-err&gt;
+
+    &lt;/testcase&gt;
+
+     &lt;testcase name=&quot;\naf a11. @ 30&quot; package=&quot;sanity_base.fc_01s&quot; time=&quot;0.00001335144042968750&quot;&gt;
+
+
+    &lt;system-err&gt;&lt;![CDATA[
+	goal 	= baseKB:(\+a11).
+	src 	= '/opt/logicmoo_workspace/packs_sys/pfc/t/sanity_base/fc_01s.pfc':30.
+	url 	= &quot;https://logicmoo.org:2082/gitlab/logicmoo/logicmoo_workspace/-/blob/master/packs_sys/pfc/t/sanity_base/fc_01s.pfc#L30&quot;.
+	time 	= 1.33514404296875e-5.
+	result 	= passed.
+
+    ]]&gt;&lt;/system-err&gt;
+
+    &lt;/testcase&gt;
+
+     &lt;testcase name=&quot;\naf b11. @ 31&quot; package=&quot;sanity_base.fc_01s&quot; time=&quot;0.00001692771911621094&quot;&gt;
+
+
+    &lt;system-err&gt;&lt;![CDATA[
+	goal 	= baseKB:(\+b11).
+	src 	= '/opt/logicmoo_workspace/packs_sys/pfc/t/sanity_base/fc_01s.pfc':31.
+	url 	= &quot;https://logicmoo.org:2082/gitlab/logicmoo/logicmoo_workspace/-/blob/master/packs_sys/pfc/t/sanity_base/fc_01s.pfc#L31&quot;.
+	time 	= 1.6927719116210938e-5.
+	result 	= passed.
+
+    ]]&gt;&lt;/system-err&gt;
+
+    &lt;/testcase&gt;
+
+     &lt;testcase name=&quot;\naf c11. @ 32&quot; package=&quot;sanity_base.fc_01s&quot; time=&quot;0.00001668930053710938&quot;&gt;
+
+
+    &lt;system-err&gt;&lt;![CDATA[
+	goal 	= baseKB:(\+c11).
+	src 	= '/opt/logicmoo_workspace/packs_sys/pfc/t/sanity_base/fc_01s.pfc':32.
+	url 	= &quot;https://logicmoo.org:2082/gitlab/logicmoo/logicmoo_workspace/-/blob/master/packs_sys/pfc/t/sanity_base/fc_01s.pfc#L32&quot;.
+	time 	= 1.6689300537109375e-5.
+	result 	= passed.
+
+    ]]&gt;&lt;/system-err&gt;
+
+    &lt;/testcase&gt;
+
+     &lt;testcase name=&quot;a11. @ 38&quot; package=&quot;sanity_base.fc_01s&quot; time=&quot;0.00001287460327148438&quot;&gt;
+
+
+    &lt;system-err&gt;&lt;![CDATA[
+	goal 	= baseKB:a11.
+	src 	= '/opt/logicmoo_workspace/packs_sys/pfc/t/sanity_base/fc_01s.pfc':38.
+	url 	= &quot;https://logicmoo.org:2082/gitlab/logicmoo/logicmoo_workspace/-/blob/master/packs_sys/pfc/t/sanity_base/fc_01s.pfc#L38&quot;.
+	time 	= 1.2874603271484375e-5.
+	result 	= passed.
+
+    ]]&gt;&lt;/system-err&gt;
+
+    &lt;/testcase&gt;
+
+     &lt;testcase name=&quot;b11. @ 39&quot; package=&quot;sanity_base.fc_01s&quot; time=&quot;0.00001168251037597656&quot;&gt;
+
+
+    &lt;system-err&gt;&lt;![CDATA[
+	goal 	= baseKB:b11.
+	src 	= '/opt/logicmoo_workspace/packs_sys/pfc/t/sanity_base/fc_01s.pfc':39.
+	url 	= &quot;https://logicmoo.org:2082/gitlab/logicmoo/logicmoo_workspace/-/blob/master/packs_sys/pfc/t/sanity_base/fc_01s.pfc#L39&quot;.
+	time 	= 1.1682510375976562e-5.
+	result 	= passed.
+
+    ]]&gt;&lt;/system-err&gt;
+
+    &lt;/testcase&gt;
+
+     &lt;testcase name=&quot;c11. @ 40&quot; package=&quot;sanity_base.fc_01s&quot; time=&quot;0.00001168251037597656&quot;&gt;
+
+
+    &lt;system-err&gt;&lt;![CDATA[
+	goal 	= baseKB:c11.
+	src 	= '/opt/logicmoo_workspace/packs_sys/pfc/t/sanity_base/fc_01s.pfc':40.
+	url 	= &quot;https://logicmoo.org:2082/gitlab/logicmoo/logicmoo_workspace/-/blob/master/packs_sys/pfc/t/sanity_base/fc_01s.pfc#L40&quot;.
+	time 	= 1.1682510375976562e-5.
+	result 	= passed.
+
+    ]]&gt;&lt;/system-err&gt;
+
+    &lt;/testcase&gt;
+&lt;/testsuite&gt;
+
+
+
+
+&lt;testsuite name=&quot;fc_01u.pfc&quot;&gt;
+&lt;system-out&gt;&lt;![CDATA[
+]]&gt;&lt;/system-out&gt;
+&lt;/testsuite&gt;
+
+
+
+
+&lt;testsuite name=&quot;fc_01v.pfc&quot;&gt;
+&lt;system-out&gt;&lt;![CDATA[
+]]&gt;&lt;/system-out&gt;
+
+     &lt;testcase name=&quot;user:a11. @ 27&quot; package=&quot;sanity_base.fc_01v&quot; time=&quot;0.00003790855407714844&quot;&gt;
+
+      &lt;failure message=&quot;failure = [].\n&quot; /&gt;
+
+    &lt;system-err&gt;&lt;![CDATA[
+	goal 	= user:a11.
+	src 	= '/opt/logicmoo_workspace/packs_sys/pfc/t/sanity_base/fc_01v.pfc':27.
+	url 	= &quot;https://logicmoo.org:2082/gitlab/logicmoo/logicmoo_workspace/-/blob/master/packs_sys/pfc/t/sanity_base/fc_01v.pfc#L27&quot;.
+	time 	= 3.790855407714844e-5.
+	result 	= failure.
+
+    ]]&gt;&lt;/system-err&gt;
+
+    &lt;/testcase&gt;
+
+     &lt;testcase name=&quot;user:b11. @ 28&quot; package=&quot;sanity_base.fc_01v&quot; time=&quot;0.00003409385681152344&quot;&gt;
+
+      &lt;failure message=&quot;failure = [].\n&quot; /&gt;
+
+    &lt;system-err&gt;&lt;![CDATA[
+	goal 	= user:b11.
+	src 	= '/opt/logicmoo_workspace/packs_sys/pfc/t/sanity_base/fc_01v.pfc':28.
+	url 	= &quot;https://logicmoo.org:2082/gitlab/logicmoo/logicmoo_workspace/-/blob/master/packs_sys/pfc/t/sanity_base/fc_01v.pfc#L28&quot;.
+	time 	= 3.409385681152344e-5.
+	result 	= failure.
+
+    ]]&gt;&lt;/system-err&gt;
+
+    &lt;/testcase&gt;
+
+     &lt;testcase name=&quot;user:(\\+a11). @ 33&quot; package=&quot;sanity_base.fc_01v&quot; time=&quot;0.00004553794860839844&quot;&gt;
+
+
+    &lt;system-err&gt;&lt;![CDATA[
+	goal 	= user:(\+a11).
+	src 	= '/opt/logicmoo_workspace/packs_sys/pfc/t/sanity_base/fc_01v.pfc':33.
+	url 	= &quot;https://logicmoo.org:2082/gitlab/logicmoo/logicmoo_workspace/-/blob/master/packs_sys/pfc/t/sanity_base/fc_01v.pfc#L33&quot;.
+	time 	= 4.553794860839844e-5.
+	result 	= passed.
+
+    ]]&gt;&lt;/system-err&gt;
+
+    &lt;/testcase&gt;
+
+     &lt;testcase name=&quot;user:(\\+b11). @ 34&quot; package=&quot;sanity_base.fc_01v&quot; time=&quot;0.00004029273986816406&quot;&gt;
+
+
+    &lt;system-err&gt;&lt;![CDATA[
+	goal 	= user:(\+b11).
+	src 	= '/opt/logicmoo_workspace/packs_sys/pfc/t/sanity_base/fc_01v.pfc':34.
+	url 	= &quot;https://logicmoo.org:2082/gitlab/logicmoo/logicmoo_workspace/-/blob/master/packs_sys/pfc/t/sanity_base/fc_01v.pfc#L34&quot;.
+	time 	= 4.029273986816406e-5.
+	result 	= passed.
+
+    ]]&gt;&lt;/system-err&gt;
+
+    &lt;/testcase&gt;
+&lt;/testsuite&gt;
+
+
+
 
 
 </code></pre>

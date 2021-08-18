@@ -79,18 +79,6 @@ if [ "$1" == "-k" ]; then
   shift
 fi
 
-exitPrompt(){
-                            
-    read -r -n1 -t1 -p "" ans #// clear pending key
-    read -r -n1 -t10 -p "Do you wish to continue? [y]es or [N]o: " ans
-    if [ "$ans" == 'y' ]
-    then
-	    return 1
-    else
-        echo "Exiting the script. Have a nice day!"
-        return 0         
-    fi
-}
 
 #// For test_prolog  (no args)
  declare -a listOfNames=( 
@@ -103,26 +91,30 @@ exitPrompt(){
                         # "*_f01*.p*" "*_f02*.p*" "*_f03*.p*" "_f04*.p*" "*_f05*.p*" "*_f06*.p*" "*_f07*.p*" "*_f08*.p*" "*_f09*.p*" "*_f10*.p*" "*_f11*.p*" "*_f12*.p*" 
 )                           
 
-kill -9  %2 %3 %4 ; kill -9  %1 %2 %3 %4 
-cls
-kill -9  %1 %2 %3 %4 %5 %6 2>/dev/null
+kill -9  %2 %3 %4 &>/dev/null ; kill -9  %1 %2 %3 %4 &>/dev/null
+[ -t 1 ] && echo "<!--" && cls && echo -e "\n-->"
+kill -9  %1 %2 %3 %4 %5 %6 &>/dev/null
 
 if [ $# -ne 0 ] 
 then
    listOfNames=( "$@" )
    if [ $# -eq 1 ]
    then
-      echo on_complete=true
+      [ -t 1 ] && echo "<!-- on_complete=true -->"
       on_complete=test_completed
    else
-      cls
+      
+      [ -t 1 ] && echo "<!--" && cls && echo -e "\n-->"
+      echo -e "\\n\\n<testsuites>\\n\\n"
+      EXIT_COMPLETE="\\n\\n</testsuites>\\n\\n"
    fi
 else
-   echo -e "\\n\\nALL TESTs\\n\\n"
+      echo -e "\\n\\n<testsuites>\\n\\n"
+      EXIT_COMPLETE="\\n\\n</testsuites>\\n\\n"
 fi
 
   			 
-echo -e "\\n\\nRunning Matching Tests: $me $keep_going ${listOfNames[*]}\\n\\n"
+echo -e "\\n<!--\\nRunning Matching Tests: $me $keep_going ${listOfNames[*]}\\n-->\\n"
 
 for ele2 in "${listOfNames[@]}"
   do 
@@ -141,15 +133,21 @@ for ele2 in "${listOfNames[@]}"
          #CMD="swipl -g 'set_prolog_flag(runtime_testing,${runtime_testing})' -g \"thread_create(['${ele}'],Id),thread_join(Id),$on_complete\" "
          CMD="swipl -g 'set_prolog_flag(runtime_testing,${runtime_testing})' -g \"(['${ele}'])\" -g \"$on_complete\" "
         fi
-        
-       (echo $CMD ; eval $CMD ) | tee /tmp/logicmoo_testing/CMD_LAST.ansi
-        
-		exitcode=$?
-      echo -e "\nEXITCODE=$exitcode \n" >> /tmp/logicmoo_testing/CMD_LAST.ansi
+
+        echo "<testsuite name=\"${ele}\">"
+        echo "<system-out><![CDATA["
+        echo $CMD >> /tmp/logicmoo_testing/CMD_LAST.ansi
+        eval $CMD | tee -a /tmp/logicmoo_testing/CMD_LAST.ansi
+        exitcode=$?
+        echo "]]></system-out>"
+        cat /tmp/logicmoo_testing/junit_single.xml
+        echo -e "</testsuite>\n\n\n\n"
+		
+      echo -e "\n<!-- EXITCODE=$exitcode -->\n" >> /tmp/logicmoo_testing/CMD_LAST.ansi
        
         if [ $exitcode -eq $good_exit ]; then
 			[ "${next_cls}" == 1 ] && cls && next_cls=0
-			echo -e "\\n\\nSUCCESS: $0 ${keep_going} ${ele} (returned ${exitcode})\\n\\n"
+			echo -e "\\n\\n<!-- SUCCESS: $0 ${keep_going} ${ele} (returned ${exitcode}) -->\\n\\n"
          cat /tmp/logicmoo_testing/CMD_LAST.ansi >> /tmp/logicmoo_testing/successes.ansi
 			continue
 	     fi
@@ -158,16 +156,16 @@ for ele2 in "${listOfNames[@]}"
 
         next_cls=0
 
-      [ "$on_complete" == 'on_complete' ] && [ $exitcode -ne 7 ] && echo -e "\\n\\nFAILED: $0 ${keep_going} ${ele} (returned ${exitcode})\\n\\n"
-      [ $exitcode -eq 7 ] && echo -e "\\n\\nSUCCESS: $0 ${keep_going} ${ele} (returned ${exitcode})\\n\\n"
-      [ $exitcode -eq 0 ] && [ "$on_complete" == 'true' ] && echo -e "\\n\\nSUCCESS: $0 ${keep_going} ${ele} (returned ${exitcode})\\n\\n"
+      [ "$on_complete" == 'on_complete' ] && [ $exitcode -ne 7 ] && echo -e "\\n<!--\\nFAILED: $0 ${keep_going} ${ele} (returned ${exitcode})\\n-->\\n"
+      [ $exitcode -eq 7 ] && echo -e "\\n<!--\\nSUCCESS: $0 ${keep_going} ${ele} (returned ${exitcode})\\n-->\\n"
+      [ $exitcode -eq 0 ] && [ "$on_complete" == 'true' ] && echo -e "\\n<!--\\nSUCCESS: $0 ${keep_going} ${ele} (returned ${exitcode})\\n-->\\n"
       [ $exitcode -eq 6 ] && retry=1 && continue 
 
       
 		# // 2 -> 1
 		if [ $exitcode -eq 2 ]; then
          [ "$keep_going" == "-k" ] && echo "...keep going..." && continue
-         echo "not keep going"
+         echo "<!--not keep going-->"
          exit 1
       fi
 		 
@@ -176,7 +174,7 @@ for ele2 in "${listOfNames[@]}"
 
 
         
-		echo "Do you wish to continue? [y]es, [a]lways [Up/r]etry or [N]o: "
+		echo "<!-- Do you wish to continue? [y]es, [a]lways [Up/r]etry or [N]o: "
 		read -sN1 -r -t 0.0001 k1
 		export k1
 		
@@ -197,7 +195,8 @@ for ele2 in "${listOfNames[@]}"
 			esac
 			echo "ans=$ans"
 		done
-      echo "ans=$ans"
+            echo "ans=$ans"
+            echo "-->"
 
       [ "$ans" == '' ] && [ $exitcode -eq 0 ] && [ "$on_complete" == 'true' ]  && retry=1 && continue 
 
@@ -209,13 +208,16 @@ for ele2 in "${listOfNames[@]}"
 		[ "$ans" == 'A' ] && retry=1 && cls && continue  # up arrow
 		[ "$ans" == 'r' ] && retry=1 && continue 
       
-		echo "Exiting the script. Have a nice day!"
-
+		echo "<!-- Exiting the script. Have a nice day!-->"
+      echo -e $EXIT_COMPLETE
 		exit $exitcode    
 	  done
 	done
   done
+
+echo -e $EXIT_COMPLETE
 exit $exitcode  
 
 fi
+
 

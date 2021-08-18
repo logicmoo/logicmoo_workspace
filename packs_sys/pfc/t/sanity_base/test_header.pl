@@ -95,10 +95,20 @@
 
 
 */
+
+
 :- ensure_loaded(library(pfc)).
 :- ensure_loaded(library(pfc_test)).
 
+:- use_module(library(junit)).
+
+% system:term_expansion( (begin_of_file), [] ):- current_prolog_flag(is_pfc_file_dialect,true).
+%system:term_expansion( (:- break), [] ):- getenv(keep_going,'-k'). 
+
+:- prolog_load_context(source,SF),add_test_info(testsuite,file,SF).
+
 % system:term_expansion( (begin_of_file), [] ):- current_prolog_flag(is_pfc_file_dialect,true).
 system:term_expansion( (:- break), [] ):- getenv(keep_going,'-k'). 
+system:term_expansion( (end_of_file), [] ):- source_location(F,_),j_u:junit_prop(testsuite,file,F), halt_junit, fail.
 
 :- endif.

@@ -1,4 +1,4 @@
-
+#!/usr/bin/env swipl
 
 :- module(kbii,[]).
 

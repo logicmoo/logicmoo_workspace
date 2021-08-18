@@ -68,6 +68,7 @@
 :- endif.
 :-  '$toplevel':setup_history.
 
+/*
 :- ensure_loaded(library(pfc_lib)).
 
 :- prolog_load_context(source,File),!,
@@ -75,10 +76,29 @@
    -> (sanity(is_pfc_file),set_prolog_flag(is_pfc_file_dialect,true))
    ; sanity( \+ is_pfc_file)),set_prolog_flag(is_pfc_file_dialect,false)))),!.
 
+*/
 
 :- ensure_loaded(library(pfc_test)).
-
 :- use_module(library(logicmoo_clif)).
+
+:- dmsg(this_test_might_need(:- use_module(library(logicmoo_plarkc)))).
+
+
+:- op(1199,fx,('==>')).
+:- op(1190,xfx,('::::')).
+:- op(1180,xfx,('==>')).
+:- op(1170,xfx,'<==>').
+:- op(1160,xfx,('<-')).
+:- op(1150,xfx,'=>').
+:- op(1140,xfx,'<=').
+:- op(1130,xfx,'<=>').
+%:- op(1100,fx,('nesc')).
+:- op(300,fx,'-').
+:- op(300,fx,'~').
+:- op(600,yfx,'&').
+:- op(600,yfx,'v').
+:- op(1075,xfx,'<-').
+:- op(350,xfx,'xor').
 
 %:- cls.
 
@@ -100,11 +120,20 @@
 
 
 */
-:- ensure_loaded(library(pfc)).
-:- ensure_loaded(library(pfc_test)).
+:- abolish(j_u:junit_prop/2).
+:- dynamic(j_u:junit_prop/2).
+
+testing_complete:- j_u:junit_prop(shown_testing_complete,true),!.
+testing_complete:- asserta(j_u:junit_prop(shown_testing_complete,true)),
+  listing(j_u:junit_prop/2).
+
+:- prolog_load_context(source,SF),asserta(j_u:junit_prop(file,SF)).
 
 % system:term_expansion( (begin_of_file), [] ):- current_prolog_flag(is_pfc_file_dialect,true).
 system:term_expansion( (:- break), [] ):- getenv(keep_going,'-k'). 
+system:term_expansion( (end_of_file), [] ):- source_location(F,_),j_u:junit_prop(file,SF), testing_complete, fail.
+
+:- at_halt(testing_complete).
 
 :- endif.
 

@@ -31,10 +31,6 @@ a11.
 
 \+ a11.
 
-:- break.
-:- rtrace.
-:- nortrace.
-
 :- mpred_test(\+ a11).
 :- mpred_test(\+ b11).
 

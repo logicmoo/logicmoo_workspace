@@ -2,7 +2,11 @@
 
 :- module(t123,[]).
 
+%:- ensure_loaded(library(pfc_test)).
+%:- use_module(library(logicmoo_clif)).
+%:- use_module(library(logicmoo_plarkc)).
 :- include(test_header).
+
 
 
 :- test_boxlog(( ~fallacy_t(PROP) => unknown_t(PROP) v false_t(PROP) v true_t(PROP) )).
