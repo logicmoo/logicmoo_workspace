@@ -24,11 +24,11 @@ echo "</testsuites>" >> ./$TEST_STEM-junit.xml
 
 # Generate Html Reports
 (cat $TESTING_TEMP/test_results.ansi | ansi2html.sh > ./README.html) &> /dev/null ; /bin/true
-npm install -g junit-viewer
+#npm install -g junit-viewer
 (junit-viewer --results=./$TEST_STEM-junit.xml --save=./$TEST_STEM-junit-viewer.html &> ./$TEST_STEM-junit-viewer.debug.html ) > /dev/null  ; /bin/true
-npm install -g xunit-viewer
+#npm install -g xunit-viewer
 (xunit-viewer --results ./$TEST_STEM-junit.xml -o ./$TEST_STEM-xunit-viewer.html ) ; /bin/true
-pip3 install junit2html
+#pip3 install junit2html
 (junit2html ./$TEST_STEM-junit.xml ./$TEST_STEM-junit.html) ; /bin/true
 echo "TEST_STEM=${TEST_STEM}"
 
