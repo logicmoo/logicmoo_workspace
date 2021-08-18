@@ -23,7 +23,7 @@ sed -r "s/\x1B\[(([0-9]{1,2})?(;)?([0-9]{1,2})?)?[m,K,H,f,J]//g" $TESTING_TEMP/t
 echo "</testsuites>" >> ./$TEST_STEM-junit.xml
 
 # Generate Html Reports
-(cat $TESTING_TEMP/test_results.ansi | ansi2html.sh > ./README.html) &> /dev/null ; /bin/true
+(cat $TESTING_TEMP/test_results.ansi | ansi2html.sh > ./$TEST_STEM-README.html) &> /dev/null ; /bin/true
 #npm install -g junit-viewer
 (junit-viewer --results=./$TEST_STEM-junit.xml --save=./$TEST_STEM-junit-viewer.html &> ./$TEST_STEM-junit-viewer.debug.html ) > /dev/null  ; /bin/true
 #npm install -g xunit-viewer

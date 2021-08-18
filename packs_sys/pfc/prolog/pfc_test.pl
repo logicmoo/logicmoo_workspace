@@ -91,7 +91,7 @@ must_det_l((
   get_time(End),
   Elapsed is End - Start,
   (TestResult == failure -> Retry = G ;  Retry = ( \+ G)),
-  save_info_to(info,why_was_true(Retry)))).
+  save_info_to(TestResult,why_was_true(Retry)))).
 mpred_test_fok_4(G, TestResult, Elapsed):- !,
 must_det_l((
   get_time(Start),
@@ -99,7 +99,7 @@ must_det_l((
   get_time(End),
   Elapsed is End - Start,
   (TestResult == failure -> Retry = ( \+ G ) ;  Retry = G),
-  save_info_to(info,why_was_true(Retry)))).
+  save_info_to(TestResult,why_was_true(Retry)))).
 
 
 generate_test_name(baseKB:G,Testcase):- nonvar(G), !, generate_test_name(G,Testcase).
@@ -171,7 +171,9 @@ skip_warning(T):-compound(T),functor(T,F,_),skip_warning(F).
 
 add_test_info(Type,Info):- ignore((t_l:mpred_current_testcase(Testcase), add_test_info(Testcase,Type,Info))).
 
-save_info_to(TestResult,Goal):- with_output_to(string(S),ignore(Goal)), add_test_info(TestResult,S).
+save_info_to(TestResult,Goal):- with_output_to(string(S),
+  (fmt(TestResult=info(Goal)),
+   ignore(Goal))), add_test_info(TestResult,S).
 
 add_test_info(Testcase,Type,Info):- j_u:junit_prop(Testcase,Type,InfoM),Info=@=InfoM,!.
 add_test_info(Testcase,Type,_):- retract(j_u:junit_prop(Testcase,Type,[])),fail.
@@ -380,7 +382,7 @@ save_testcase_result(Suite,Testcase):-
   format('classname="~w" ', [Package]),
  ignore((j_u:junit_prop(Testcase,time,Time),format('time="~20f"', [Time]))),
  format('>\n\n', []),
- ignore((write_test_test_info(Testcase))),
+ ignore((write_testcase_info(Testcase))),
  format("\n    </testcase>\n", []))),!.
 
 
@@ -390,25 +392,25 @@ testcase_props(Testcase):-
  format("\n    ]]></system-err>\n", []).
 
 write_testcase_prop(_Type,[]):-!.
-write_testcase_prop(info,S):- !, nop(format('~N~w~n',[S])).
+write_testcase_prop(info,S):- !, format('~N~w~n',[S]).
 write_testcase_prop(Type,Warn):- format('~N\t~w \t= ~q.~n',[Type,Warn]).
 
 :- use_module(library(sgml)).
 escape_attribute(I,O):-xml_quote_attribute(I,O).
 
-write_test_test_info(Testcase):- j_u:junit_prop(Testcase,result,failure),!,
+write_testcase_info(Testcase):- j_u:junit_prop(Testcase,result,failure),!,
   with_output_to(string(NonGood), forall((j_u:junit_prop(Testcase,Type,Warn), nongood_type(Type)), format('~N~w = ~q.~n',[Type,Warn]))),
   escape_attribute(NonGood,ENonGood),
   format("      <failure message=~q />\n", [ENonGood]),
   testcase_props(Testcase).
 
-write_test_test_info(Testcase):- \+ j_u:junit_prop(Testcase,result,passed),!,
+write_testcase_info(Testcase):- \+ j_u:junit_prop(Testcase,result,passed),!,
   with_output_to(string(NonGood), forall((j_u:junit_prop(Testcase,Type,Warn), nongood_type(Type)), format('~N~w = ~q.~n',[Type,Warn]))),
   escape_attribute(NonGood,ENonGood),
   format("      <error message=~q />\n", [ENonGood]),
   testcase_props(Testcase).  
 
-write_test_test_info(Testcase):- testcase_props(Testcase).
+write_testcase_info(Testcase):- testcase_props(Testcase).
 
 
 set_file_abox_module(User):- '$set_typein_module'(User), '$set_source_module'(User),
