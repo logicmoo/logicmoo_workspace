@@ -343,6 +343,7 @@ save_results:-
  output_to_junit_file(Name,Text).
 
 save_results_single:-
+  % $TESTING_TEMP
   tell('/tmp/logicmoo_testing/junit_single.xml'),
   show_junit_results,
   told.
@@ -375,6 +376,7 @@ save_testcase_result(Suite,Testcase):-
  replace_in_string([".pfc"="",'/opt/logicmoo_workspace/packs_'='','/'='.',
   '.t.'='.','sys.pfc.'='','.pfc'='.'],Suite,Package),
   format('package="~w" ', [Package]),
+  format('classname="~w" ', [Package]),
  ignore((j_u:junit_prop(Testcase,time,Time),format('time="~20f"', [Time]))),
  format('>\n\n', []),
  ignore((write_test_test_info(Testcase))),

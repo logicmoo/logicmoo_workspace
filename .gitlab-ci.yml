@@ -8,6 +8,16 @@ test-job1:
   script:
     - echo "This job tests something"
 
+javascript:
+  stage: test
+  script:
+    - './test_on_release.sh'
+  artifacts:
+    when: always
+    reports:
+      junit:
+        - ./**/*junit.xml
+
 test-job2:
   stage: test
   script:

@@ -1,13 +1,12 @@
 #!/bin/bash
 
-
 sourced=0
-if [ -n "$ZSH_EVAL_CONTEXT" ]; then 
+if [ -n "$ZSH_EVAL_CONTEXT" ]; then
   case $ZSH_EVAL_CONTEXT in *:file) sourced=1;; esac
 elif [ -n "$KSH_VERSION" ]; then
   [ "$(cd $(dirname -- $0) && pwd -P)/$(basename -- $0)" != "$(cd $(dirname -- ${.sh.file}) && pwd -P)/$(basename -- ${.sh.file})" ] && sourced=1
 elif [ -n "$BASH_VERSION" ]; then
-  (return 0 2>/dev/null) && sourced=1 
+  (return 0 2>/dev/null) && sourced=1
 else # All other shells: examine $0 for known shell binary filenames
   # Detects `sh` and `dash`; add additional shell filenames as needed.
   case ${0##*/} in sh|dash) sourced=1;; esac
@@ -30,7 +29,6 @@ if [ -z `which swipl` ]; then
         exit 1
     fi
 fi
-
 
 
 # Symlink resolution: http://stackoverflow.com/a/697552/726581
@@ -64,7 +62,7 @@ exitcode=$good_exit
 
 
 [ -z "${keep_going}" ] && export keep_going=""
-if [[ "$*" == *"-k"* ]]; then 
+if [[ "$*" == *"-k"* ]]; then
   export keep_going="-k"
 fi
 
@@ -81,21 +79,23 @@ fi
 
 
 #// For test_prolog  (no args)
- declare -a listOfNames=( 
+ declare -a listOfNames=(
                         # // sanity tests
-                           "*_01*.p*" "*_02*.p*" 
+                           "*_01*.p*" "*_02*.p*"
                         # // full tests
-                         "*_03*.p*" "*_04*.p*" "*_05*.p*" "*_06*.p*" "*_07*.p*" 
-						 "*_08*.p*" "*_09*.p*" "*_10*.p*" "*_11*.p*" "*_12*.p*" 
+                         "*_03*.p*" "*_04*.p*" "*_05*.p*" "*_06*.p*" "*_07*.p*"
+						 "*_08*.p*" "*_09*.p*" "*_10*.p*" "*_11*.p*" "*_12*.p*"
                         # // feature tests
-                        # "*_f01*.p*" "*_f02*.p*" "*_f03*.p*" "_f04*.p*" "*_f05*.p*" "*_f06*.p*" "*_f07*.p*" "*_f08*.p*" "*_f09*.p*" "*_f10*.p*" "*_f11*.p*" "*_f12*.p*" 
-)                           
+                        # "*_f01*.p*" "*_f02*.p*" "*_f03*.p*" "_f04*.p*" "*_f05*.p*" "*_f06*.p*" "*_f07*.p*" "*_f08*.p*" "*_f09*.p*" "*_f10*.p*" "*_f11*.p*" "*_f12*.p*"
+) 
 
-kill -9  %2 %3 %4 &>/dev/null ; kill -9  %1 %2 %3 %4 &>/dev/null
+# kill old dead jobs
+kill -9  %2 %3 %4 &>/dev/null
+kill -9  %1 %2 %3 %4 &>/dev/null
 [ -t 1 ] && echo "<!--" && cls && echo -e "\n-->"
 kill -9  %1 %2 %3 %4 %5 %6 &>/dev/null
 
-if [ $# -ne 0 ] 
+if [ $# -ne 0 ]
 then
    listOfNames=( "$@" )
    if [ $# -eq 1 ]
@@ -103,77 +103,77 @@ then
       [ -t 1 ] && echo "<!-- on_complete=true -->"
       on_complete=test_completed
    else
-      
       [ -t 1 ] && echo "<!--" && cls && echo -e "\n-->"
-      echo -e "\\n\\n<testsuites>\\n\\n"
-      EXIT_COMPLETE="\\n\\n</testsuites>\\n\\n"
    fi
 else
-      echo -e "\\n\\n<testsuites>\\n\\n"
-      EXIT_COMPLETE="\\n\\n</testsuites>\\n\\n"
+      echo -e ""
 fi
 
-  			 
+[ -z "$TESTING_TEMP" ] && export TESTING_TEMP=/tmp/logicmoo_testing  			
 echo -e "\\n<!--\\nRunning Matching Tests: $me $keep_going ${listOfNames[*]}\\n-->\\n"
 
 for ele2 in "${listOfNames[@]}"
-  do 
+  do
   	for ele in $ele2
-	do 
+	do
 	  retry=1
 	  while [ $retry == 1 ]
 	   do
 	    retry=0
 		  [[ "$ele" == *".ansi" ]] && continue
         [[ "$ele" == *".html" ]] && continue
+        [[ "$ele" == *".xml" ]] && continue
+        [[ "$ele" == *".sh" ]] && continue
         if [[ "$ele" == *".sh" && -x "$ele" ]]; then
          CMD="./${ele}"
         else
-   		#// Runs the test -f .swiplrc 
+   		#// Runs the test -f .swiplrc
          #CMD="swipl -g 'set_prolog_flag(runtime_testing,${runtime_testing})' -g \"thread_create(['${ele}'],Id),thread_join(Id),$on_complete\" "
          CMD="swipl -g 'set_prolog_flag(runtime_testing,${runtime_testing})' -g \"(['${ele}'])\" -g \"$on_complete\" "
         fi
 
         echo "<testsuite name=\"${ele}\">"
         echo "<system-out><![CDATA["
-        echo $CMD >> /tmp/logicmoo_testing/CMD_LAST.ansi
-        eval $CMD | tee -a /tmp/logicmoo_testing/CMD_LAST.ansi
+        echo /dev/null > $TESTING_TEMP/junit_single.xml
+        echo /dev/null > $TESTING_TEMP/CMD_LAST.ansi
+        echo $CMD  # | tee -a $TESTING_TEMP/CMD_LAST.ansi
+        ( eval $CMD )  # | tee -a $TESTING_TEMP/CMD_LAST.ansi )
         exitcode=$?
         echo "]]></system-out>"
-        cat /tmp/logicmoo_testing/junit_single.xml
+        cat $TESTING_TEMP/junit_single.xml
         echo -e "</testsuite>\n\n\n\n"
 		
-      echo -e "\n<!-- EXITCODE=$exitcode -->\n" >> /tmp/logicmoo_testing/CMD_LAST.ansi
-       
+        # echo -e "\n<!-- EXITCODE=$exitcode -->\n" >> $TESTING_TEMP/CMD_LAST.ansi
+
         if [ $exitcode -eq $good_exit ]; then
 			[ "${next_cls}" == 1 ] && cls && next_cls=0
 			echo -e "\\n\\n<!-- SUCCESS: $0 ${keep_going} ${ele} (returned ${exitcode}) -->\\n\\n"
-         cat /tmp/logicmoo_testing/CMD_LAST.ansi >> /tmp/logicmoo_testing/successes.ansi
+         # cat $TESTING_TEMP/CMD_LAST.ansi >> $TESTING_TEMP/successes.ansi
 			continue
 	     fi
- 
-        cat /tmp/logicmoo_testing/CMD_LAST.ansi >> /tmp/logicmoo_testing/failures.ansi 
+
+        # cat $TESTING_TEMP/CMD_LAST.ansi >> $TESTING_TEMP/failures.ansi
 
         next_cls=0
 
       [ "$on_complete" == 'on_complete' ] && [ $exitcode -ne 7 ] && echo -e "\\n<!--\\nFAILED: $0 ${keep_going} ${ele} (returned ${exitcode})\\n-->\\n"
       [ $exitcode -eq 7 ] && echo -e "\\n<!--\\nSUCCESS: $0 ${keep_going} ${ele} (returned ${exitcode})\\n-->\\n"
       [ $exitcode -eq 0 ] && [ "$on_complete" == 'true' ] && echo -e "\\n<!--\\nSUCCESS: $0 ${keep_going} ${ele} (returned ${exitcode})\\n-->\\n"
-      [ $exitcode -eq 6 ] && retry=1 && continue 
+      [ $exitcode -eq 6 ] && retry=1 && continue
 
-      
+
 		# // 2 -> 1
 		if [ $exitcode -eq 2 ]; then
-         [ "$keep_going" == "-k" ] && echo "...keep going..." && continue
-         echo "<!--not keep going-->"
+         [ "$keep_going" == "-k" ] && echo "<!-- ...keep going... -->" && continue
+         echo "<!-- ...NOT keep going... -->"
          exit 1
       fi
-		 
+		
 		# // Not Abort
 		[ $exitcode -ne 1 ] && [ "$keep_going" == "-k" ] && continue
 
 
-        
+
 		echo "<!-- Do you wish to continue? [y]es, [a]lways [Up/r]etry or [N]o: "
 		read -sN1 -r -t 0.0001 k1
 		export k1
@@ -195,10 +195,11 @@ for ele2 in "${listOfNames[@]}"
 			esac
 			echo "ans=$ans"
 		done
-            echo "ans=$ans"
-            echo "-->"
 
-      [ "$ans" == '' ] && [ $exitcode -eq 0 ] && [ "$on_complete" == 'true' ]  && retry=1 && continue 
+      echo "ans=$ans"
+      echo "-->"
+
+      [ "$ans" == '' ] && [ $exitcode -eq 0 ] && [ "$on_complete" == 'true' ]  && retry=1 && continue
 
       [ "$ans" == '' ] && [ $exitcode -eq 7 ] && retry=1 && cls && continue  # 7 + enter
 
@@ -206,18 +207,14 @@ for ele2 in "${listOfNames[@]}"
       [ "$ans" == 'a' ] && KEEP_GOING=1 && continue
 		[ "$ans" == 'B' ] && continue # down arrow
 		[ "$ans" == 'A' ] && retry=1 && cls && continue  # up arrow
-		[ "$ans" == 'r' ] && retry=1 && continue 
-      
+		[ "$ans" == 'r' ] && retry=1 && continue
+
 		echo "<!-- Exiting the script. Have a nice day!-->"
-      echo -e $EXIT_COMPLETE
-		exit $exitcode    
+		exit $exitcode
 	  done
 	done
   done
-
-echo -e $EXIT_COMPLETE
-exit $exitcode  
-
+  exit $exitcode
 fi
 
 
