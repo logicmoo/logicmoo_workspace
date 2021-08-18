@@ -370,9 +370,10 @@ nongood_type(failure).
 info_type(T):- \+ good_type(T), \+ nongood_type(T).
 
 save_testcase_result(Suite,Testcase):- 
+ escape_attribute(Testcase,ETestcase),
  ignore((
  format('
-     <testcase name=~q ', [Testcase]),
+     <testcase name=~q ', [ETestcase]),
  replace_in_string([".pfc"="",'/opt/logicmoo_workspace/packs_'='','/'='.',
   '.t.'='.','sys.pfc.'='','.pfc'='.'],Suite,Package),
   format('package="~w" ', [Package]),
@@ -392,14 +393,19 @@ write_testcase_prop(_Type,[]):-!.
 write_testcase_prop(info,S):- !, nop(format('~N~w~n',[S])).
 write_testcase_prop(Type,Warn):- format('~N\t~w \t= ~q.~n',[Type,Warn]).
 
+:- use_module(library(sgml)).
+escape_attribute(I,O):-xml_quote_attribute(I,O).
+
 write_test_test_info(Testcase):- j_u:junit_prop(Testcase,result,failure),!,
   with_output_to(string(NonGood), forall((j_u:junit_prop(Testcase,Type,Warn), nongood_type(Type)), format('~N~w = ~q.~n',[Type,Warn]))),
-  format("      <failure message=~q />\n", [NonGood]),
+  escape_attribute(NonGood,ENonGood),
+  format("      <failure message=~q />\n", [ENonGood]),
   testcase_props(Testcase).
 
 write_test_test_info(Testcase):- \+ j_u:junit_prop(Testcase,result,passed),!,
   with_output_to(string(NonGood), forall((j_u:junit_prop(Testcase,Type,Warn), nongood_type(Type)), format('~N~w = ~q.~n',[Type,Warn]))),
-  format("      <error message=~q />\n", [NonGood]),
+  escape_attribute(NonGood,ENonGood),
+  format("      <error message=~q />\n", [ENonGood]),
   testcase_props(Testcase).  
 
 write_test_test_info(Testcase):- testcase_props(Testcase).
