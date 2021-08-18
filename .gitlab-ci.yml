@@ -4,8 +4,6 @@ build-job:
     - echo "Hello, $GITLAB_USER_LOGIN!"
 
 test_on_release:
-  dependencies:
-    - build
   stage: test
   script:
     - './test_on_release.sh'
@@ -17,7 +15,9 @@ test_on_release:
     paths:
         - ./**/Report*.html
 
+
 deploy-prod:
   stage: deploy
   script:
     - echo "This job deploys something from the $CI_COMMIT_BRANCH branch."
+
