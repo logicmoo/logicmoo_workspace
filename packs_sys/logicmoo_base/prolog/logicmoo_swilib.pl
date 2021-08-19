@@ -17,7 +17,12 @@
 */
 
 :- module(logicmoo_swilib,[]).
+/** <module> Utility LOGICMOO_COMMON
+This module makes sure any SWI libraries are loaded Early to mitigate swi-library changes over time. 
 
+@author Douglas R. Miles
+@license LGPL 
+*/
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % MISC UTILS
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

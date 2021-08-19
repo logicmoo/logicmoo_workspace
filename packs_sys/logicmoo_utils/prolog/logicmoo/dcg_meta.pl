@@ -44,6 +44,13 @@
          dcgReorder/4
 	 ]).
 
+
+/** <module> Utility LOGICMOO_DCG_META
+This module allows DCGs to use meta predicates like And Or Not. 
+
+@author Douglas R. Miles
+@license LGPL 
+*/
 :- set_module(class(library)).
 
 :- meta_predicate track_stream(*,0).
