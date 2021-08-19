@@ -267,7 +267,7 @@ junit_goal_expansion( rtrace, dmsg(rtrace) ):- getenv(keep_going,'-k').
 
 junit_goal_expansion( listing(X), dmsg(listing(X)) ):- getenv(keep_going,'-k'). 
 
-junit_goal_expansion( must(A),mpred_test(A)).
+%junit_goal_expansion( must(A),mpred_test(A)).
 
 
 :- at_halt(halt_junit).
