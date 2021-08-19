@@ -1,5 +1,4 @@
 :- include(test_header).
-;; Module zebra5 - Test Zerbra Puzzle in CLIF for SWI-Prolog
 ;; Maintainer: Douglas Miles
 ;; Load with  ?- load_clif(pack(logicmoo_base/t/examples/fol/exactly_one_instance)).
 ;; causes deduction of argument types
@@ -12,13 +11,13 @@
 (domain address 2 tAddress)
 (argQuotedIsa address 2 ftInt)
 
-;; Special Logicmoo operator specific to forward chaining
+;; ==> is a special Logicmoo operator specific to forward chaining
 (==> (and (domain ?P ?n ?c) (admittedArgument ?p ?n ?i)) (instance ?i ?c))
 
 ; ============================================================
-; There is only one entity with address 1
+; There is only one entity with the address 666
 ; ============================================================
-(exactly 1 ?h1 (address ?h1 1))
+(exactly 1 ?h1 (address ?h1 666))
 
 ; ============================================================
 ; There is only one Devil
@@ -26,9 +25,19 @@
 
 (exactly 1 ?g (instance ?g Devil))
 
+(deftest "Exact existentials have the correct count"
+     (countAll ?Some (instance ??What Devil))
+     (= ?Some 1))
 
 ; ============================================================
 ; Devil has exactly one name
 ; ============================================================
 
 (exactly 1 ?name (isNamed Devil ?name))
+
+
+(deftest "Existentials at least produce a value"
+     (isNamed Devil ?What)
+     (= ?What ??Anything))
+
+

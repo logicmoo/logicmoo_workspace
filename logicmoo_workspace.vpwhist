@@ -410,10 +410,11 @@ packs_sys\logicmoo_nlu\ext\chat80_lm\chat80.vpj=Release
       + tomoki1207.pdf-1.1.0
       + vfd.vs2017-light-theme-1.0.1
       + visualstudioexptteam.vscodeintellicode-1.2.14
+  - bin
   - docker
     + noetic
     + noetic-testing
-    - rootfs
+    + rootfs
       - etc
         - apache2
           - conf-available
@@ -429,8 +430,8 @@ packs_sys\logicmoo_nlu\ext\chat80_lm\chat80.vpj=Release
         + supervisor
           + conf.d
       + usr
-        + local
-          + bin
+        - local
+          - bin
             + old-scripts
           + lib
             + cmake
@@ -807,7 +808,23 @@ packs_sys\logicmoo_nlu\ext\chat80_lm\chat80.vpj=Release
       + prolog
         + checkers
       + tests
-  + packs_sys
+  - packs_sys
+    + biocham
+      + library
+        + examples
+          + modalINF473L
+      + libsbml-5.13.0
+        - examples
+          + perl
+            + layout
+        - src
+          - bindings
+            + perl
+      - modules
+        - graphviz
+          - examples
+        + partialfrac
+        + sbml
     + dictoo
       + prolog
       + t
@@ -819,9 +836,9 @@ packs_sys\logicmoo_nlu\ext\chat80_lm\chat80.vpj=Release
       + conf
       + prolog
       + t
-    + instant_prolog_docs
+    - instant_prolog_docs
       + pldox
-      + prolog
+      - prolog
       + t
     + logicmoo_agi
       + ImportantDocs
@@ -836,8 +853,9 @@ packs_sys\logicmoo_nlu\ext\chat80_lm\chat80.vpj=Release
         + MIndiGolog
           + listings
         + talespin-annie
-    + logicmoo_base
-      + prolog
+    - logicmoo_base
+      - prolog
+        - dialect
         + logicmoo
           + common_logic
           + motel
@@ -1011,13 +1029,13 @@ packs_sys\logicmoo_nlu\ext\chat80_lm\chat80.vpj=Release
             + tptp2x
           + typesystem
           + xray
-      + t
+      - t
         + docs
-        + examples
+        - examples
           + api
           + bugs
           + csp
-          + fol
+          - fol
           + perf
           + pfc
           + sanity_user
@@ -2491,12 +2509,12 @@ packs_sys\logicmoo_nlu\ext\chat80_lm\chat80.vpj=Release
       + test
         + logicmoo_nlu
     + logicmoo_utils
-      + prolog
+      - prolog
         + body_reordering
         + cpviz
-        + debuggery
+        - debuggery
         + lm_utils
-        + logicmoo
+        - logicmoo
         + multivar
           + t
         + xlisting
@@ -2515,15 +2533,15 @@ packs_sys\logicmoo_nlu\ext\chat80_lm\chat80.vpj=Release
       + prolog
       + test
       + vscode
-    + pfc
+    - pfc
       + doc
         + swish
-      + prolog
+      - prolog
         + dialect
           + pfc_ext
         + dra
-        + pfclib
-      + t
+        - pfclib
+      - t
         + feature_inherit_kb
         + misc
         + regression
@@ -2859,9 +2877,9 @@ packs_sys\logicmoo_nlu\ext\chat80_lm\chat80.vpj=Release
           + Properties
         + swicli
         + swicliYap
-    + wam_common_lisp
-      + prolog
-        + wam_cl
+    - wam_common_lisp
+      - prolog
+        - wam_cl
           + compat
           + reference
           + src
@@ -4957,7 +4975,7 @@ packs_sys\logicmoo_nlu\ext\chat80_lm\chat80.vpj=Release
       + misc
   + wikis
     + logicmoo_workspace.wiki
-- T:\\opt\\logicmoo_workspace\\platform\\new-platform.vpj
++ T:\\opt\\logicmoo_workspace\\platform\\new-platform.vpj
   + ..\
   + conf
     + run
@@ -6239,119 +6257,83 @@ packs_sys\logicmoo_nlu\ext\chat80_lm\chat80.vpj=Release
             + course
             + vocab
 + other_files.vpj
-scroll:0
+scroll:125
 [State]
 SCREEN: 1920 1200 9 31 1918 997 0 0 M 0 0 0 0 1560 581
-CWD: ..\logicmoo_workspace
-BUFFER: BN="docker\rootfs\etc\apache2\conf-available\cliopatria_swish.conf"
-BI: MA=1 74 1  TABS=1 5  WWS=1 IWT=0 ST=0 IN=2 BW=0 US=32000 RO=0 SE=1 SN=0 BIN=0 MN=Config	HM=0 MF=0 TL=0 MLL=0 ASE=0 LNL=6 LCF=0 CAPS=0 E=0 ESBU2=-1
-VIEW: LN=.9268 CL=31 LE=0 CX=30 CY=13 WI=5 BI=39 HT=0 HN=0 HF=0 HC=4
-BUFFER: BN="docker\rootfs\etc\apache2\conf-available\doc_root_ssl.conf"
-BI: MA=1 74 1  TABS=1 5  WWS=1 IWT=0 ST=0 IN=2 BW=0 US=32000 RO=0 SE=1 SN=0 BIN=0 MN=Config	HM=0 MF=0 TL=0 MLL=0 ASE=0 LNL=6 LCF=0 CAPS=0 E=0 ESBU2=-1
-VIEW: LN=.1394 CL=1 LE=0 CX=0 CY=14 WI=5 BI=26 HT=0 HN=0 HF=0 HC=4
-BUFFER: BN="prologmud_server\run_mud_server.pl"
-BI: MA=1 174 1  TABS=1 3  WWS=1 IWT=0 ST=0 IN=2 BW=0 US=32000 RO=0 SE=1 SN=0 BIN=0 MN=Prolog	HM=0 MF=0 TL=0 MLL=0 ASE=0 LNL=6 LCF=0 CAPS=0 E=0 ESBU2=-1
-VIEW: LN=.491 CL=1 LE=0 CX=0 CY=13 WI=5 BI=38 HT=0 HN=0 HF=0 HC=4
-BUFFER: BN="prologmud_server\README.md"
-BI: MA=1 74 1  TABS=1 9  WWS=1 IWT=1 ST=0 IN=1 BW=0 US=32000 RO=0 SE=1 SN=0 BIN=0 MN=Fundamental	HM=0 MF=0 TL=0 MLL=0 ASE=0 LNL=6 LCF=0 CAPS=0 E=0 ESBU2=-1
-VIEW: LN=.2 CL=36 LE=0 CX=35 CY=2 WI=5 BI=37 HT=0 HN=0 HF=0 HC=4
-BUFFER: BN="prologmud_server\StartMUD.sh"
+CWD: T:\opt\logicmoo_workspace\packs_sys\pfc\prolog
+BUFFER: BN="packs_sys\pfc\t\sanity_base\test_on_release.sh"
 BI: MA=1 74 1  TABS=1 4  WWS=1 IWT=0 ST=0 IN=2 BW=0 US=32000 RO=0 SE=1 SN=0 BIN=0 MN=Slick-C	HM=0 MF=0 TL=0 MLL=0 ASE=0 LNL=6 LCF=0 CAPS=0 E=0 ESBU2=-1
-VIEW: LN=.894 CL=4 LE=0 CX=3 CY=10 WI=5 BI=36 HT=0 HN=0 HF=0 HC=4
-BUFFER: BN="packs_sys\logicmoo_base\t\examples\fol\einstein_simpler_02.pfc.pl"
+VIEW: LN=.16 CL=16 LE=0 CX=15 CY=2 WI=5 BI=53 HT=0 HN=0 HF=0 HC=4
+BUFFER: BN=".gitlab-ci.yml"
+BI: MA=1 74 1  TABS=1 9  WWS=1 IWT=1 ST=0 IN=1 BW=0 US=32000 RO=0 SE=1 SN=0 BIN=0 MN=Fundamental	HM=0 MF=0 TL=0 MLL=0 ASE=0 LNL=6 LCF=0 CAPS=0 E=0 ESBU2=-1
+VIEW: LN=.203 CL=17 LE=0 CX=16 CY=13 WI=5 BI=38 HT=0 HN=0 HF=0 HC=4
+BUFFER: BN="bin\junit_prolog.sh"
+BI: MA=1 74 1  TABS=1 4  WWS=1 IWT=0 ST=0 IN=2 BW=0 US=32000 RO=0 SE=1 SN=0 BIN=0 MN=Slick-C	HM=0 MF=0 TL=0 MLL=0 ASE=0 LNL=6 LCF=0 CAPS=0 E=0 ESBU2=-1
+VIEW: LN=.1108 CL=17 LE=0 CX=16 CY=7 WI=5 BI=75 HT=0 HN=0 HF=0 HC=4
+BUFFER: BN="docker\rootfs\usr\local\bin\test_prolog.sh"
+BI: MA=1 74 1  TABS=1 4  WWS=1 IWT=0 ST=0 IN=2 BW=0 US=32000 RO=0 SE=1 SN=0 BIN=0 MN=Slick-C	HM=0 MF=0 TL=0 MLL=0 ASE=0 LNL=6 LCF=0 CAPS=0 E=0 ESBU2=-1
+VIEW: LN=.4102 CL=40 LE=0 CX=39 CY=7 WI=5 BI=72 HT=0 HN=0 HF=0 HC=4
+BUFFER: BN="packs_sys\instant_prolog_docs\prolog\junit.pl"
 BI: MA=1 174 1  TABS=1 3  WWS=1 IWT=0 ST=0 IN=2 BW=0 US=32000 RO=0 SE=1 SN=0 BIN=0 MN=Prolog	HM=0 MF=0 TL=0 MLL=0 ASE=0 LNL=6 LCF=0 CAPS=0 E=0 ESBU2=-1
-VIEW: LN=.228 CL=28 LE=0 CX=27 CY=9 WI=5 BI=35 HT=0 HN=0 HF=0 HC=4
+VIEW: LN=.4443 CL=14 LE=0 CX=13 CY=8 WI=5 BI=32 HT=0 HN=0 HF=0 HC=4
+BUFFER: BN="packs_sys\logicmoo_base\prolog\logicmoo\pdt_server\pdt.plunit\plugin.xml"
+BI: MA=1 74 1  TABS=1 5  WWS=1 IWT=0 ST=0 IN=2 BW=0 US=32000 RO=0 SE=1 SN=0 BIN=0 MN=XML	HM=0 MF=0 TL=0 MLL=0 ASE=0 LNL=6 LCF=0 CAPS=0 E=70 ESBU2=-1
+VIEW: LN=.192 CL=22 LE=0 CX=21 CY=7 WI=5 BI=63 HT=0 HN=0 HF=0 HC=4
+BUFFER: BN="packs_sys\pfc\prolog\pfc_test.pl"
+BI: MA=1 174 1  TABS=1 3  WWS=1 IWT=0 ST=0 IN=2 BW=0 US=32000 RO=0 SE=1 SN=0 BIN=0 MN=Prolog	HM=0 MF=0 TL=0 MLL=0 ASE=0 LNL=6 LCF=0 CAPS=0 E=0 ESBU2=-1
+VIEW: LN=.7103 CL=23 LE=0 CX=22 CY=14 WI=5 BI=73 HT=0 HN=0 HF=0 HC=4
+BUFFER: BN="packs_sys\logicmoo_base\prolog\dialect\clif.pl"
+BI: MA=1 174 1  TABS=1 3  WWS=1 IWT=0 ST=0 IN=2 BW=0 US=32000 RO=0 SE=1 SN=0 BIN=0 MN=Prolog	HM=0 MF=0 TL=0 MLL=0 ASE=0 LNL=6 LCF=0 CAPS=0 E=0 ESBU2=-1
+VIEW: LN=.0 CL=1 LE=0 CX=0 CY=0 WI=5 BI=27 HT=0 HN=0 HF=0 HC=4
+BUFFER: BN="packs_sys\logicmoo_base\prolog\logicmoo_clif.pl"
+BI: MA=1 174 1  TABS=1 3  WWS=1 IWT=0 ST=0 IN=2 BW=0 US=32000 RO=0 SE=1 SN=0 BIN=0 MN=Prolog	HM=0 MF=0 TL=0 MLL=0 ASE=0 LNL=6 LCF=0 CAPS=0 E=0 ESBU2=-1
+VIEW: LN=.0 CL=1 LE=0 CX=0 CY=0 WI=5 BI=42 HT=0 HN=0 HF=0 HC=4
+BUFFER: BN="packs_sys\pfc\t\sanity_base\test_header.pl"
+BI: MA=1 174 1  TABS=1 3  WWS=1 IWT=0 ST=0 IN=2 BW=0 US=32000 RO=0 SE=1 SN=0 BIN=0 MN=Prolog	HM=0 MF=0 TL=0 MLL=0 ASE=0 LNL=6 LCF=0 CAPS=0 E=0 ESBU2=-1
+VIEW: LN=.3360 CL=71 LE=0 CX=70 CY=7 WI=5 BI=34 HT=0 HN=0 HF=0 HC=4
 BUFFER: BN="packs_sys\logicmoo_base\t\examples\fol\test_header.pl"
 BI: MA=1 174 1  TABS=1 3  WWS=1 IWT=0 ST=0 IN=2 BW=0 US=32000 RO=0 SE=1 SN=0 BIN=0 MN=Prolog	HM=0 MF=0 TL=0 MLL=0 ASE=0 LNL=6 LCF=0 CAPS=0 E=0 ESBU2=-1
-VIEW: LN=.0 CL=1 LE=0 CX=0 CY=0 WI=5 BI=34 HT=0 HN=0 HF=0 HC=4
-BUFFER: BN="packs_sys\logicmoo_base\t\examples\fol\einstein_simpler_04.pfc.pl"
-BI: MA=1 174 1  TABS=1 3  WWS=1 IWT=0 ST=0 IN=2 BW=0 US=32000 RO=0 SE=1 SN=0 BIN=0 MN=Prolog	HM=0 MF=0 TL=0 MLL=0 ASE=0 LNL=6 LCF=0 CAPS=0 E=0 ESBU2=-1
-VIEW: LN=.4928 CL=1 LE=0 CX=0 CY=14 WI=5 BI=33 HT=0 HN=0 HF=0 HC=4
-BUFFER: BN="T:\opt\logicmoo_workspace\prologmud_server\.local\share\swi-prolog\pack\pfc\prolog\dialect\pfc_ext\mpred_core.pl"
-BI: MA=1 174 1  TABS=1 3  WWS=1 IWT=0 ST=0 IN=2 BW=0 US=32000 RO=0 SE=1 SN=0 BIN=0 MN=Prolog	HM=0 MF=0 TL=0 MLL=0 ASE=0 LNL=6 LCF=0 CAPS=0 E=0 ESBU2=-1
-VIEW: LN=.0 CL=1 LE=0 CX=0 CY=0 WI=5 BI=32 HT=0 HN=0 HF=0 HC=4
-BUFFER: BN="packs_sys\pfc\prolog\pfc_lib.pl"
-BI: MA=1 174 1  TABS=1 3  WWS=1 IWT=0 ST=0 IN=2 BW=0 US=32000 RO=0 SE=1 SN=0 BIN=0 MN=Prolog	HM=0 MF=0 TL=0 MLL=0 ASE=0 LNL=6 LCF=0 CAPS=0 E=0 ESBU2=-1
-VIEW: LN=.625 CL=34 LE=0 CX=33 CY=13 WI=5 BI=31 HT=0 HN=0 HF=0 HC=4
-BUFFER: BN="packs_sys\logicmoo_ec\prolog\ec_planner\lps_pddl_convert.pl"
-BI: MA=1 174 1  TABS=1 3  WWS=1 IWT=0 ST=0 IN=2 BW=0 US=32000 RO=0 SE=1 SN=0 BIN=0 MN=Prolog	HM=0 MF=0 TL=0 MLL=0 ASE=0 LNL=6 LCF=0 CAPS=0 E=0 ESBU2=-1
-VIEW: LN=.6909 CL=38 LE=0 CX=37 CY=12 WI=5 BI=30 HT=0 HN=0 HF=0 HC=4
-BUFFER: BN="T:\opt\logicmoo_workspace\packs_sys\pfc\prolog\dialect\pfc_ext\mpred_core.pl"
-BI: MA=1 174 1  TABS=1 3  WWS=1 IWT=0 ST=0 IN=2 BW=0 US=32000 RO=0 SE=1 SN=0 BIN=0 MN=Prolog	HM=0 MF=0 TL=0 MLL=0 ASE=0 LNL=6 LCF=0 CAPS=0 E=0 ESBU2=-1
-VIEW: LN=.150672 CL=41 LE=0 CX=40 CY=14 WI=5 BI=28 HT=0 HN=0 HF=0 HC=4
-BUFFER: BN="packs_sys\logicmoo_base\t\examples\fol\einstein_simpler_03.pfc.pl"
-BI: MA=1 174 1  TABS=1 3  WWS=1 IWT=0 ST=0 IN=2 BW=0 US=32000 RO=0 SE=1 SN=0 BIN=0 MN=Prolog	HM=0 MF=0 TL=0 MLL=0 ASE=0 LNL=6 LCF=0 CAPS=0 E=0 ESBU2=-1
-VIEW: LN=.2883 CL=51 LE=0 CX=50 CY=14 WI=5 BI=29 HT=0 HN=0 HF=0 HC=4
-BUFFER: BN="packs_sys\logicmoo_base\prolog\logicmoo\common_logic\common_logic_exists.pl"
-BI: MA=1 174 1  TABS=1 3  WWS=1 IWT=0 ST=0 IN=2 BW=0 US=32000 RO=0 SE=1 SN=0 BIN=0 MN=Prolog	HM=0 MF=0 TL=0 MLL=0 ASE=0 LNL=6 LCF=0 CAPS=0 E=0 ESBU2=-1
-VIEW: LN=.18069 CL=30 LE=0 CX=29 CY=14 WI=5 BI=5 HT=0 HN=0 HF=0 HC=4
-BUFFER: BN="packs_sys\logicmoo_utils\prolog\multivar.pl"
-BI: MA=1 174 1  TABS=1 3  WWS=1 IWT=0 ST=0 IN=2 BW=0 US=32000 RO=0 SE=1 SN=0 BIN=0 MN=Prolog	HM=0 MF=0 TL=0 MLL=0 ASE=0 LNL=6 LCF=0 CAPS=0 E=0 ESBU2=-1
-VIEW: LN=.8062 CL=1 LE=0 CX=0 CY=13 WI=5 BI=25 HT=0 HN=0 HF=0 HC=4
-BUFFER: BN="T:\opt\logicmoo_workspace\packs_sys\logicmoo_base\prolog\logicmoo\typesystem\mpred_type_constraints.pl"
-BI: MA=1 174 1  TABS=1 3  WWS=1 IWT=0 ST=0 IN=2 BW=0 US=32000 RO=0 SE=1 SN=0 BIN=0 MN=Prolog	HM=0 MF=0 TL=0 MLL=0 ASE=0 LNL=6 LCF=0 CAPS=0 E=0 ESBU2=-1
-VIEW: LN=.37925 CL=48 LE=0 CX=47 CY=14 WI=5 BI=27 HT=0 HN=0 HF=0 HC=4
-BUFFER: BN="docker\rootfs\etc\apache2\sites-enabled\000-logicmoo.conf"
-BI: MA=1 74 1  TABS=1 5  WWS=1 IWT=0 ST=0 IN=2 BW=0 US=32000 RO=0 SE=1 SN=0 BIN=0 MN=Config	HM=0 MF=0 TL=0 MLL=0 ASE=0 LNL=6 LCF=0 CAPS=0 E=0 ESBU2=-1
-VIEW: LN=.4803 CL=1 LE=0 CX=0 CY=13 WI=5 BI=40 HT=0 HN=0 HF=0 HC=4
-WINDOW: 78 78 1378 399 -1 -1 N  WF=0 WT=15 "Default Fixed Font,14,0,1"
-BUFFER: BN="packs_sys\logicmoo_utils\prolog\multivar.pl"
-VIEW: LN=.8062 CL=1 LE=0 CX=0 CY=13 WI=182 BI=25 HT=0 HN=0 HF=0 HC=4
-WINDOW: 52 52 1378 399 -1 -1 N  WF=0 WT=14 "Default Fixed Font,14,0,1"
-BUFFER: BN="T:\opt\logicmoo_workspace\packs_sys\logicmoo_base\prolog\logicmoo\typesystem\mpred_type_constraints.pl"
-VIEW: LN=.37925 CL=48 LE=0 CX=47 CY=14 WI=183 BI=27 HT=0 HN=0 HF=0 HC=4
-WINDOW: 26 26 1378 399 -1 -1 N  WF=0 WT=13 "Default Fixed Font,14,0,1"
-BUFFER: BN="packs_sys\logicmoo_base\prolog\logicmoo\common_logic\common_logic_exists.pl"
-VIEW: LN=.18069 CL=30 LE=0 CX=29 CY=14 WI=181 BI=5 HT=0 HN=0 HF=0 HC=4
-WINDOW: 78 78 1378 399 -1 -1 N  WF=0 WT=8 "Default Fixed Font,14,0,1"
-BUFFER: BN="packs_sys\logicmoo_base\t\examples\fol\einstein_simpler_03.pfc.pl"
-VIEW: LN=.2883 CL=51 LE=0 CX=50 CY=14 WI=180 BI=29 HT=0 HN=0 HF=0 HC=4
-WINDOW: 130 130 1378 399 -1 -1 N  WF=0 WT=10 "Default Fixed Font,14,0,1"
-BUFFER: BN="T:\opt\logicmoo_workspace\packs_sys\pfc\prolog\dialect\pfc_ext\mpred_core.pl"
-VIEW: LN=.150672 CL=41 LE=0 CX=40 CY=14 WI=179 BI=28 HT=0 HN=0 HF=0 HC=4
-WINDOW: 182 182 1378 399 -1 -1 N  WF=0 WT=12 "Default Fixed Font,14,0,1"
-BUFFER: BN="packs_sys\logicmoo_ec\prolog\ec_planner\lps_pddl_convert.pl"
-VIEW: LN=.6909 CL=38 LE=0 CX=37 CY=12 WI=178 BI=30 HT=0 HN=0 HF=0 HC=4
-WINDOW: 156 156 1378 399 -1 -1 N  WF=0 WT=11 "Default Fixed Font,14,0,1"
-BUFFER: BN="packs_sys\pfc\prolog\pfc_lib.pl"
-VIEW: LN=.625 CL=34 LE=0 CX=33 CY=13 WI=177 BI=31 HT=0 HN=0 HF=0 HC=4
-WINDOW: 104 104 1378 399 -1 -1 N  WF=0 WT=9 "Default Fixed Font,14,0,1"
-BUFFER: BN="T:\opt\logicmoo_workspace\prologmud_server\.local\share\swi-prolog\pack\pfc\prolog\dialect\pfc_ext\mpred_core.pl"
-VIEW: LN=.0 CL=1 LE=0 CX=0 CY=0 WI=176 BI=32 HT=0 HN=0 HF=0 HC=4
-WINDOW: 26 26 1378 399 -1 -1 N  WF=0 WT=6 "Default Fixed Font,14,0,1"
-BUFFER: BN="packs_sys\logicmoo_base\t\examples\fol\einstein_simpler_04.pfc.pl"
-VIEW: LN=.4928 CL=1 LE=0 CX=0 CY=14 WI=175 BI=33 HT=0 HN=0 HF=0 HC=4
-WINDOW: 52 52 1378 399 -1 -1 N  WF=0 WT=7 "Default Fixed Font,14,0,1"
-BUFFER: BN="packs_sys\logicmoo_base\t\examples\fol\test_header.pl"
-VIEW: LN=.0 CL=1 LE=0 CX=0 CY=0 WI=174 BI=34 HT=0 HN=0 HF=0 HC=4
-WINDOW: 0 0 1378 399 -1 -1 N  WF=0 WT=5 "Default Fixed Font,14,0,1"
-BUFFER: BN="packs_sys\logicmoo_base\t\examples\fol\einstein_simpler_02.pfc.pl"
-VIEW: LN=.228 CL=28 LE=0 CX=27 CY=9 WI=173 BI=35 HT=0 HN=0 HF=0 HC=4
-WINDOW: 182 182 1378 399 -1 -1 N  WF=0 WT=4 "Default Fixed Font,14,0,1"
-BUFFER: BN="prologmud_server\StartMUD.sh"
-VIEW: LN=.894 CL=4 LE=0 CX=3 CY=10 WI=172 BI=36 HT=0 HN=0 HF=0 HC=4
-WINDOW: 130 130 1378 399 -1 -1 N  WF=0 WT=2 "Default Fixed Font,14,0,1"
-BUFFER: BN="prologmud_server\README.md"
-VIEW: LN=.2 CL=36 LE=0 CX=35 CY=2 WI=171 BI=37 HT=0 HN=0 HF=0 HC=4
+VIEW: LN=.0 CL=1 LE=0 CX=0 CY=0 WI=5 BI=54 HT=0 HN=0 HF=0 HC=4
 WINDOW: 156 156 1378 399 -1 -1 N  WF=0 WT=3 "Default Fixed Font,14,0,1"
-BUFFER: BN="prologmud_server\run_mud_server.pl"
-VIEW: LN=.491 CL=1 LE=0 CX=0 CY=13 WI=170 BI=38 HT=0 HN=0 HF=0 HC=4
-WINDOW: 78 78 1378 399 -1 -1 N  WF=0 WT=17 "Default Fixed Font,14,0,1"
-BUFFER: BN="docker\rootfs\etc\apache2\conf-available\doc_root_ssl.conf"
-VIEW: LN=.1394 CL=1 LE=0 CX=0 CY=14 WI=169 BI=26 HT=0 HN=0 HF=0 HC=4
-WINDOW: 104 104 1378 399 -1 -1 N  WF=0 WT=1 "Default Fixed Font,14,0,1"
-BUFFER: BN="docker\rootfs\etc\apache2\sites-enabled\000-logicmoo.conf"
-VIEW: LN=.4803 CL=1 LE=0 CX=0 CY=13 WI=184 BI=40 HT=0 HN=0 HF=0 HC=4
-WINDOW: 52 52 1378 399 -1 -1 M  WF=0 WT=16 "Default Fixed Font,14,0,1"
-BUFFER: BN="docker\rootfs\etc\apache2\conf-available\cliopatria_swish.conf"
-VIEW: LN=.6717 CL=3 LE=0 CX=2 CY=11 WI=168 BI=39 HT=0 HN=0 HF=0 HC=4
+BUFFER: BN="packs_sys\pfc\t\sanity_base\test_header.pl"
+VIEW: LN=.3360 CL=71 LE=0 CX=70 CY=7 WI=354 BI=34 HT=0 HN=0 HF=0 HC=4
+WINDOW: 156 156 1378 399 -1 -1 N  WF=0 WT=11 "Default Fixed Font,14,0,1"
+BUFFER: BN="packs_sys\logicmoo_base\prolog\logicmoo_clif.pl"
+VIEW: LN=.0 CL=1 LE=0 CX=0 CY=0 WI=456 BI=42 HT=0 HN=0 HF=0 HC=4
+WINDOW: 130 130 1378 399 -1 -1 N  WF=0 WT=10 "Default Fixed Font,14,0,1"
+BUFFER: BN="packs_sys\logicmoo_base\prolog\dialect\clif.pl"
+VIEW: LN=.0 CL=1 LE=0 CX=0 CY=0 WI=453 BI=27 HT=0 HN=0 HF=0 HC=4
+WINDOW: 182 182 1378 399 -1 -1 N  WF=0 WT=4 "Default Fixed Font,14,0,1"
+BUFFER: BN="packs_sys\pfc\prolog\pfc_test.pl"
+VIEW: LN=.7103 CL=23 LE=0 CX=22 CY=14 WI=433 BI=73 HT=0 HN=0 HF=0 HC=4
+WINDOW: 0 0 1378 399 -1 -1 N  WF=0 WT=5 "Default Unicode Font,10,0,1"
+BUFFER: BN="packs_sys\logicmoo_base\prolog\logicmoo\pdt_server\pdt.plunit\plugin.xml"
+VIEW: LN=.192 CL=22 LE=0 CX=17 CY=7 WI=424 BI=63 HT=0 HN=0 HF=0 HC=4
+WINDOW: 104 104 1378 399 -1 -1 N  WF=0 WT=9 "Default Fixed Font,14,0,1"
+BUFFER: BN="packs_sys\instant_prolog_docs\prolog\junit.pl"
+VIEW: LN=.4443 CL=14 LE=0 CX=13 CY=8 WI=170 BI=32 HT=0 HN=0 HF=0 HC=4
+WINDOW: 78 78 1378 399 -1 -1 N  WF=0 WT=8 "Default Fixed Font,14,0,1"
+BUFFER: BN="docker\rootfs\usr\local\bin\test_prolog.sh"
+VIEW: LN=.4102 CL=40 LE=0 CX=39 CY=7 WI=430 BI=72 HT=0 HN=0 HF=0 HC=4
+WINDOW: 52 52 1378 399 -1 -1 N  WF=0 WT=7 "Default Fixed Font,14,0,1"
+BUFFER: BN="bin\junit_prolog.sh"
+VIEW: LN=.1108 CL=17 LE=0 CX=16 CY=7 WI=237 BI=75 HT=0 HN=0 HF=0 HC=4
+WINDOW: 26 26 1378 399 -1 -1 N  WF=0 WT=6 "Default Fixed Font,14,0,1"
+BUFFER: BN=".gitlab-ci.yml"
+VIEW: LN=.203 CL=17 LE=0 CX=16 CY=13 WI=352 BI=38 HT=0 HN=0 HF=0 HC=4
+WINDOW: 130 130 1378 399 -1 -1 N  WF=0 WT=2 "Default Fixed Font,14,0,1"
+BUFFER: BN="packs_sys\pfc\t\sanity_base\test_on_release.sh"
+VIEW: LN=.16 CL=16 LE=0 CX=15 CY=2 WI=402 BI=53 HT=0 HN=0 HF=0 HC=4
+WINDOW: 182 182 1378 399 -1 -1 M  WF=0 WT=1 "Default Fixed Font,14,0,1"
+BUFFER: BN="packs_sys\logicmoo_base\t\examples\fol\test_header.pl"
+VIEW: LN=.0 CL=1 LE=0 CX=0 CY=0 WI=458 BI=54 HT=0 HN=0 HF=0 HC=4
 FILEHIST: 9
-prologmud_server\.local\share\swi-prolog\pack\lsp_server\prolog\lsp_utils.pl
-packs_sys\logicmoo_base\prolog\logicmoo\common_logic\common_logic_exists.pl
-packs_sys\logicmoo_base\t\examples\fol\einstein_simpler_03.pfc.pl
-packs_sys\logicmoo_utils\prolog\multivar.pl
-T:\opt\logicmoo_workspace\packs_sys\logicmoo_base\prolog\logicmoo\typesystem\mpred_type_constraints.pl
-prologmud_server\run_mud_server.pl
-docker\rootfs\etc\apache2\conf-available\doc_root_ssl.conf
-docker\rootfs\etc\apache2\sites-enabled\000-logicmoo.conf
-docker\rootfs\etc\apache2\conf-available\cliopatria_swish.conf
+packs_sys\pfc\prolog\pfc_test.pl
+packs_sys\logicmoo_base\prolog\logicmoo\pdt_server\pdt.plunit\plugin.xml
+.gitlab-ci.yml
+bin\junit_prolog.sh
+docker\rootfs\usr\local\bin\test_prolog.sh
+packs_sys\instant_prolog_docs\prolog\junit.pl
+packs_sys\logicmoo_base\prolog\dialect\clif.pl
+packs_sys\logicmoo_base\prolog\logicmoo_clif.pl
+packs_sys\logicmoo_base\t\examples\fol\test_header.pl
