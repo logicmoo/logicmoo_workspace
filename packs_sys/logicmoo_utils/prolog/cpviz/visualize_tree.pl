@@ -22,6 +22,13 @@
 	label_visualization/3
 	]).
 
+
+/** <module> Utility LOGICMOO_CPVIZ
+This module includes utilities for visualizing prolog data. 
+
+@author Douglas R. Miles
+@license LGPL 
+*/
 :- use_module(library(types)).
 :- use_module(library(timeout)).
 :- use_module(library(lists)).
