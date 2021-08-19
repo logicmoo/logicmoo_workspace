@@ -133,25 +133,37 @@ for ele2 in "${listOfNames[@]}"
         fi
 
         echo "<testsuite name=\"${ele}\">"
+        ON_CONTINUE="</testsuite>\n\n\n\n"
         echo "<system-out><![CDATA["
-        echo /dev/null > $TESTING_TEMP/junit_single.xml
-        echo /dev/null > $TESTING_TEMP/CMD_LAST.ansi
+        echo "<!-- junit_single -->" > $TESTING_TEMP/junit_single.xml
+        echo "<!-- CMD_LAST -->" > $TESTING_TEMP/CMD_LAST.ansi
+        export RunTestSuite="Run TestSuite ${ele}"
         echo $CMD  # | tee -a $TESTING_TEMP/CMD_LAST.ansi
+        startTime=$(date +%s);
         ( eval $CMD )  # | tee -a $TESTING_TEMP/CMD_LAST.ansi )
+        endTime=$(date +%s);
+        totalTime=$(($endTime-$startTime));
         exitcode=$?
         echo "]]></system-out>"
+          
+        
+        
         cat $TESTING_TEMP/junit_single.xml
-        echo -e "</testsuite>\n\n\n\n"
-		
+        
+
         # echo -e "\n<!-- EXITCODE=$exitcode -->\n" >> $TESTING_TEMP/CMD_LAST.ansi
 
         if [ $exitcode -eq $good_exit ]; then
 			[ "${next_cls}" == 1 ] && cls && next_cls=0
 			echo -e "\\n\\n<!-- SUCCESS: $0 ${keep_going} ${ele} (returned ${exitcode}) -->\\n\\n"
-         # cat $TESTING_TEMP/CMD_LAST.ansi >> $TESTING_TEMP/successes.ansi
+         echo "<testcase name=\"$RunTestSuite\" package='loader' time='$totalTime'/>"
+         echo -e $ON_CONTINUE
 			continue
 	     fi
-
+        echo "<testcase name=\"$RunTestSuite\" package='loader' time='$totalTime'>"
+        echo " <failure message='FAILED: $0 ${keep_going} ${ele} (returned ${exitcode})'/>"
+        echo "</testcase>"
+        echo -e $ON_CONTINUE
         # cat $TESTING_TEMP/CMD_LAST.ansi >> $TESTING_TEMP/failures.ansi
 
         next_cls=0
@@ -171,8 +183,6 @@ for ele2 in "${listOfNames[@]}"
 		
 		# // Not Abort
 		[ $exitcode -ne 1 ] && [ "$keep_going" == "-k" ] && continue
-
-
 
 		echo "<!-- Do you wish to continue? [y]es, [a]lways [Up/r]etry or [N]o: "
 		read -sN1 -r -t 0.0001 k1

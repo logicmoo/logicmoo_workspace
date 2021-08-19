@@ -52,8 +52,9 @@
 :- set_prolog_flag(logicmoo_message_hook,dumpst).
 %:- use_module(library(junit)).
 %:- ensure_loaded(library(pfc)).
+:- abolish(j_u:junit_prop/3).
+:- dynamic(j_u:junit_prop/3).
 :- ensure_loaded(library(pfc_test)).
-
 :- prolog_load_context(source,SF),add_test_info(testsuite,file,SF).
 
 /*
