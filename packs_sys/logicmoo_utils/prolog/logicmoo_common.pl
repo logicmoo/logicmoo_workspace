@@ -17,7 +17,12 @@
 */
 
 :- module(logicmoo_common,[add_library_search_path/2,locally/2]).
+/** <module> Utility LOGICMOO_COMMON
+This module allows easier loading of common logicmoo utility predicates.
 
+@author Douglas R. Miles
+@license LGPL 
+*/
 :- set_module(class(library)).
 
 
