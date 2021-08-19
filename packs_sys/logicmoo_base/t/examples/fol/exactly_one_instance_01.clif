@@ -1,10 +1,12 @@
 :- include(test_header).
 ;; Maintainer: Douglas Miles
 ;; Load with  ?- load_clif(pack(logicmoo_base/t/examples/fol/exactly_one_instance)).
-;; causes deduction of argument types
 (:- (module exactly_one_instance ()))
 (:- (ensure_loaded (library logicmoo_clif)))
+
+;; causes deduction of argument types
 (set-kif-option :assume-wff)
+
 (kif-mode :tell)
 
 (domain address 1 tHouse)
