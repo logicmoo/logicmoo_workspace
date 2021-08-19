@@ -65,6 +65,12 @@ File,
 Thread.
 
 */
+/** <module> Utility LOGICMOO FILE SCOPE
+This module allows changes to prolog state to be maintained and to only happen locally to a file module. 
+
+@author Douglas R. Miles
+@license LGPL 
+*/
 %:-must(forall(retract(at_eof_action(CALL)),must(CALL))).
 % :-must((asserta((user:term_expansion(A,B):-cyc_to_clif_notify(A,B),!),CLREF),asserta(at_eof_action(erase(CLREF))))).
 
