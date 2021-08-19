@@ -14,6 +14,12 @@
    with_vars_lock_else/2,
    skip_varlocks/0]).
 
+/** <module> Utility LOGICMOO LOCKABLE VARS
+This module prevents bugs due accidental tampering, allows one to write code that keeps free variables from being accidently tampered with unification one way.
+ 
+@author Douglas R. Miles
+@license LGPL 
+*/ 
 :- set_module(class(library)).
 
 %:- use_module(util_varnames,[get_var_name/2]).
