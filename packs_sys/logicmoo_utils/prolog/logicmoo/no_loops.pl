@@ -19,6 +19,12 @@
             lc_tcall/1
           ]).
 
+/** <module> Utility LOGICMOO LOOP CHECK
+This module prevents infinite loops.
+ 
+@author Douglas R. Miles
+@license LGPL 
+*/
 :- set_module(class(library)).
 
 % :- autoload(library(apply),[maplist/2, maplist/3]).
