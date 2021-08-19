@@ -37,9 +37,6 @@ holds_f/5,
 holds_f/6,
 holds_f/7,
 holds_f/8,
-holds_plist_t/2,
-holds_relaxed_0_t/4,
-holds_relaxed_t/3,
 holds_t/1,
 holds_t/2,
 holds_t/3,
@@ -48,6 +45,10 @@ holds_t/5,
 holds_t/6,
 holds_t/7,
 holds_t/8,
+
+holds_plist_t/2,
+holds_relaxed_0_t/4,
+holds_relaxed_t/3,
 holds_f_p2/2,
 holds_relaxed_0_f/4,
 holds_relaxed_f/3,
@@ -325,6 +326,22 @@ verb_after_arg/3
 :- meta_predicate call_whichlist_t(?,0,?).
 
 :- dynamic((
+holds_f/1,
+holds_f/2,
+holds_f/3,
+holds_f/4,
+holds_f/5,
+holds_f/6,
+holds_f/7,
+holds_f/8,
+holds_t/1,
+holds_t/2,
+holds_t/3,
+holds_t/4,
+holds_t/5,
+holds_t/6,
+holds_t/7,
+holds_t/8,
 (which_t)/1
 /*
 fact_always_true/1

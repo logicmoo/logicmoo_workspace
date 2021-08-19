@@ -23,7 +23,7 @@
 % =================================================================================
 
 :- set_lang(clif).
-:- begin_pfc.
+:- expects_dialect(pfc).
 
 % deduce instances from usages in args having the effect of deducing human,dwelling,beverage_class are classes
 ==> feature_setting(make_wff,true).
@@ -40,6 +40,7 @@
 
 :- kif_compile.
 
+:- expects_dialect(clif).
 
 % =================================================================================
 % Begin program
@@ -54,17 +55,21 @@ exists(Key,glythed(Key,"9")). exists(Key,glythed(Key,"0")).
 exists(Key,glythed(Key,"+")). exists(Key,glythed(Key,"-")).
 exists(Key,glythed(Key,"=")). exists(Key,glythed(Key,"CLR")). 
 
+:- kif_compile.
+
 :- listing(glythed).
 
 % Let same/2 be our unification identify 
-forall(X,same(X,X)).    
+all(X,same(X,X)).
+
+:- listing(same/2).
 
 % Make each key unique depending on its label
-forall([Key1,Key2,Label1,Label2],
+all([Key1,Key2,Label1,Label2],
   glythed(Key1,Label1) & glythed(Key2,Label2) & different(Label1,Label2) => different(Key1,Key2)).
 
 % same/2 implies not differnt
-forall([X,Y], same(X,Y) => ~ different(X,Y)).
+all([X,Y], same(X,Y) => ~ different(X,Y)).
 
 % Note all unquantified vars will be universal from here on out
 subclass(S,C) & inst(I,S) => inst(I,C).
@@ -92,7 +97,7 @@ exactly(10,X, inst(X,screenLocation)).
 */
 
 % All number buffers have a, inital value of 0
-(forall(X,inst(X,numbuffer) => initalValue(X,0))).
+(all(X,inst(X,numbuffer) => initalValue(X,0))).
 
 % exists an initial world 
 exists(C,initialWorld(C)).
@@ -101,17 +106,20 @@ exists(C,initialWorld(C)).
 initalValue(N,V) & initialWorld(W) =>  currentValue(W,N,V).
 
 % All numeric buffers have a value
-forall(W,forall(N,exists(V,inst(N,numbuffer) & world(W) => currentValue(W,N,V)))).
+all(W,all(N,exists(V,inst(N,numbuffer) & world(W) => currentValue(W,N,V)))).
 
 % Op buffer is intialized to null
-forall(X,inst(X,opbuffer) => initalValue(X,null)).
+all(X,inst(X,opbuffer) => initalValue(X,null)).
 
 % exists a current world (Fluent 1)
 exists(C,currentWorld(C)).
 
-
+%:- rtrace.
 nextWorld(C,N) => inst(C,world) & inst(N,world).
+:- nortrace.
 
+:- \+ current_predicate(nextWorld/2) -> true;
+   (listing(nextWorld/2), break).
 
 % CTL or LTL version of automation?
 
@@ -125,19 +133,17 @@ onEvent(Evt,Props) =>
 
 
 % after "CLR" is pressed re_init the buffers
-onEvent(pressed("CLR"), forall([N,V], initalValue(N,V) => currentValue(N,V))).
+onEvent(pressed("CLR"), all([N,V], initalValue(N,V) => currentValue(N,V))).
 
 % after "=" is pressed the "accumulator" buffer is shown.
 
 % after "+" or "_" is pressed the  
 
-
-
-
 :- test_boxlog((non_empty_world(W) <=> 
  exists([W,Prop],
      (true_in_world(Prop,W))))).
 
+% :- break.
 
 end_of_file.
 
@@ -280,7 +286,7 @@ equiv(W,Prop1,Prop2) <=>
 % v4 sameness (current implementation in LogicMOO )
 equiv_v4(W,X,Y) <=> 
  same(X,Y) &
- forall(X, 
+ all(X, 
   exists(W, 
    true_in_world(X,W))).
                                               

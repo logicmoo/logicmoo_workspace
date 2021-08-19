@@ -2123,7 +2123,7 @@ retract_mu((H:-B)):-!, clause_u(H,B,R),erase(R).
  :- meta_predicate repropagate_meta_wrapper(*).
  :- meta_predicate mpred_get_support_via_sentence(*,*).
 
-:- dynamic(infoF/1).
+:- dynamic(system:infoF/1).
 
 
 

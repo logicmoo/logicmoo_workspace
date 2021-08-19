@@ -21,7 +21,7 @@
 :- endif.
 
 
-:- if(( \+ current_prolog_flag(test_module,_),set_prolog_flag(test_module,baseKB))). :- endif.
+:- if(( \+ current_prolog_flag(test_module,_),set_prolog_flag(test_module,baseKB),assert(baseKB:this_is_baseKB))). :- endif.
 
 
 :- if(( \+ current_prolog_flag(test_header,_),set_prolog_flag(test_header,loaded))).
@@ -68,7 +68,6 @@
 :- endif.
 :-  '$toplevel':setup_history.
 
-/*
 :- ensure_loaded(library(pfc_lib)).
 
 :- prolog_load_context(source,File),!,
@@ -76,9 +75,44 @@
    -> (sanity(is_pfc_file),set_prolog_flag(is_pfc_file_dialect,true))
    ; sanity( \+ is_pfc_file)),set_prolog_flag(is_pfc_file_dialect,false)))),!.
 
+
+
+%:- '$current_source_module'(W), '$set_typein_module'(W).
+
+%:- mpred_trace_exec.
+
+
+%:- set_prolog_flag(debug, true).
+%:- set_prolog_flag(gc, false).
+
+/*
+:- must(
+ ((fileAssertMt(Mt2),
+(defaultAssertMt(Mt1),
+    %fileAssertMt(Mt2),
+   source_module(Mt3))),
+  sanity((Mt1==Mt2,Mt1==Mt3)))).
+
+
 */
 
+
+:- use_module(library(junit)).
+:- ensure_loaded(library(pfc)).
 :- ensure_loaded(library(pfc_test)).
+
+
+% system:term_expansion( (begin_of_file), [] ):- current_prolog_flag(is_pfc_file_dialect,true).
+%system:term_expansion( (:- break), [] ):- getenv(keep_going,'-k'). 
+
+:- prolog_load_context(source,SF),add_test_info(testsuite,file,SF).
+
+% system:term_expansion( (begin_of_file), [] ):- current_prolog_flag(is_pfc_file_dialect,true).
+system:term_expansion( (:- break), [] ):- getenv(keep_going,'-k'). 
+system:term_expansion( (end_of_file), [] ):- source_location(F,_),j_u:junit_prop(testsuite,file,F), halt_junit, fail.
+
+:- endif.
+
 :- use_module(library(logicmoo_clif)).
 
 :- dmsg(this_test_might_need(:- use_module(library(logicmoo_plarkc)))).
@@ -99,52 +133,5 @@
 :- op(600,yfx,'v').
 :- op(1075,xfx,'<-').
 :- op(350,xfx,'xor').
-
-%:- cls.
-
-   
-
-%:- '$current_source_module'(W), '$set_typein_module'(W).
-
-%:- mpred_trace_exec.
-
-
-
-/*
-:- must(
- ((fileAssertMt(Mt2),
-(defaultAssertMt(Mt1),
-    %fileAssertMt(Mt2),
-   source_module(Mt3))),
-  sanity((Mt1==Mt2,Mt1==Mt3)))).
-
-
-*/
-:- abolish(j_u:junit_prop/2).
-:- dynamic(j_u:junit_prop/2).
-
-testing_complete:- j_u:junit_prop(shown_testing_complete,true),!.
-testing_complete:- asserta(j_u:junit_prop(shown_testing_complete,true)),
-  listing(j_u:junit_prop/2).
-
-:- prolog_load_context(source,SF),asserta(j_u:junit_prop(file,SF)).
-
-% system:term_expansion( (begin_of_file), [] ):- current_prolog_flag(is_pfc_file_dialect,true).
-system:term_expansion( (:- break), [] ):- getenv(keep_going,'-k'). 
-system:term_expansion( (end_of_file), [] ):- source_location(F,_),j_u:junit_prop(file,SF), testing_complete, fail.
-
-:- at_halt(testing_complete).
-
-:- endif.
-
-
-:- set_prolog_flag(debug, true).
-:- set_prolog_flag(gc, false).
-%:- set_prolog_flag(debug, false).
-%:- set_prolog_flag(gc, true).
-
-:- '$current_source_module'(W), '$set_typein_module'(W).
-:- prolog_load_context(source,File),unload_file(File).
-
 
 

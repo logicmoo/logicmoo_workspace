@@ -1088,6 +1088,7 @@ db_assert_sv_replace_with(Must,C,F,A,COLD,CNEW,OLD,NEW):-
 %
 % Equals Call.
 %
+% :- dynamic(equals_call/2).
 equals_call(X,Y):-unify_with_occurs_check(X,Y),!.
 equals_call(X,Y):-once((any_to_string(X,XX),any_to_string(Y,YY))),unify_with_occurs_check(XX,YY),!.
 equals_call(X,Y):-once((to_word_list(X,XX),to_word_list(Y,YY))),unify_with_occurs_check(XX,YY),!.

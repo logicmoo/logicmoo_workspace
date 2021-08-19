@@ -523,7 +523,6 @@ maybe_should_rename(O,O).
 
 :- discontiguous(baseKB:'$pldoc'/4).
 
-% in_dialect_pfc:- prolog_load_context(dialect,pfc),!.
 in_dialect_pfc:- is_pfc_file. % \+ current_prolog_flag(dialect_pfc,cwc),!.
 % in_dialect_pfc:- expecting_pfc_dialect.
 
@@ -542,6 +541,10 @@ is_pfc_file:- quietly(is_pfc_file_notrace),!.
 %:- header_sane:import(is_pfc_file/0).
 
 :- pfc_lib:export(pfc_lib:is_pfc_file_notrace/0).
+%is_pfc_file_notrace:- prolog_load_context(dialect,pfc),!.
+is_pfc_file_notrace:- prolog_load_context(dialect,Other),Other\==swi,Other\==pfc,
+  % dmsg(prolog_load_context(dialect,Other)),
+  !,fail.
 is_pfc_file_notrace:- notrace(( prolog_load_context(source, SFile), 
                        (source_location(File,_W);prolog_load_context(file,File)))),!,
               is_pfc_filename(File,SFile),!.
@@ -831,11 +834,14 @@ module_uses_pfc(SM):- current_predicate(SM:'$uses_pfc_toplevel'/0).
 :- multifile(pfc_goal_expansion/4).
 :- dynamic(pfc_goal_expansion/4).
 :- module_transparent(pfc_goal_expansion/4).
-pfc_goal_expansion(I,P,O,PO):- 
+pfc_goal_expansion(I,P,O,PO):- var(P), % Not a file goal     
+  pfc_goal_expansion(I,O),PO=P.
+
+pfc_goal_expansion(I,O):-
  quietly(( 
      callable(I),          
      current_prolog_flag(emulated_dialect, pfc),
-     var(P), % Not a file goal     
+     
      \+ source_location(_,_),
      \+ current_prolog_flag(xref,true), 
      \+ current_prolog_flag(mpred_te,false),
@@ -847,8 +853,8 @@ pfc_goal_expansion(I,P,O,PO):-
      fully_expand(I,M),
      % quietly
      ((
-     O=CM:call_u(M),
-     PO=P)).
+     O=(CM:call_u(M))
+     )).
 
 
 saveBaseKB:- tell(baseKB),listing(baseKB:_),told.

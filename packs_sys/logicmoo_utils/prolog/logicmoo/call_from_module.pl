@@ -942,6 +942,7 @@ warn_if_static(F,A):-
   functor(Goal,F,A),
   is_static_predicate(F/A),
   listing(Goal),
+  if_interactive(break),
   trace_or_throw(warn(pfcPosTrigger,Goal,static)))).
 
 

@@ -453,30 +453,110 @@ export_everywhere(M,F,A):- M:export(M:F/A),system:import(M:F/A),user:import(M:F/
 
 %make_as_dynamic(M,F,A):- make_as_dynamic(make_as_dynamic,M,F,A).
 
-make_as_dynamic(Reason,M,F,A):- Reason= kb_global(_),!,make_as_dynamic_realy(Reason,M,F,A),export_everywhere(M,F,A).
-make_as_dynamic(Reason,M,F,A):- Reason= kb_local(_),!,make_as_dynamic_realy(Reason,M,F,A),!. 
-make_as_dynamic(Reason,M,F,A):- Reason= decl_kb_type(_,_),!,make_as_dynamic_realy(Reason,M,F,A),!. 
-make_as_dynamic(Reason,M,F,A):- F== is_pfc_file, break, make_as_dynamic_realy(Reason,M,F,A).
-make_as_dynamic(Reason,M,F,A):- dmsg(make_as_dynamic(Reason,M,F,A)),!,make_as_dynamic_realy(Reason,M,F,A),!. 
+make_as_dynamic(Reason,M,F,A):- Reason= kb_global(_),!,make_as_dynamic_really(Reason,M,F,A),export_everywhere(M,F,A).
+make_as_dynamic(Reason,M,F,A):- Reason= kb_local(_),!,make_as_dynamic_really(Reason,M,F,A),!. 
+make_as_dynamic(Reason,M,F,A):- Reason= decl_kb_type(_,_),!,make_as_dynamic_really(Reason,M,F,A),!. 
+make_as_dynamic(Reason,M,F,A):- F== is_pfc_file, break, make_as_dynamic_really(Reason,M,F,A).
+make_as_dynamic(Reason,M,F,A):- dmsg(make_as_dynamic(Reason,M,F,A)),!,make_as_dynamic_really(Reason,M,F,A),!. 
 
 :- multifile(user:message_hook/3).
 :- dynamic(user:message_hook/3).
 %user:message_hook(import_private(Module, Private),_,_):- Module==system,!, nop(dmsg(import_private(Module, Private))).
 %user:message_hook(import_private(Module, Private),_,_):- current_prolog_flag(runtime_message_hook, true), dmsg(import_private(Module, Private)).
 
-make_as_dynamic_realy(Reason,M,F,A):- 
- must_det_l((
-   functor(PI,F,A),
-   M:multifile(M:F/A),
-   M:discontiguous(M:F/A),
-   M:module_transparent(M:F/A),
-   (is_static_predicate(M:PI) -> true ; (predicate_property(M:PI,dynamic) -> true ; must(M:dynamic(M:F/A)))),   
+make_as_dynamic_really(Reason,M,F,A):- functor(PI,F,A), make_as_dynamic_really(Reason,M,PI,F,A).
+
+
+make_as_dynamic_really(Reason,M,PI,F,A):- 
+  ignore((is_static_predicate(M:PI),really_remake_as_dynamic(Reason,M,PI,F,A))),
+  ignore((is_static_predicate(M:PI),really_remake_as_dynamic_no_props(Reason,M,PI,F,A))),
+  make_as_dynamic_really_two(Reason,M,PI,F,A).
+
+
+make_as_dynamic_really_two(Reason,M,PI,F,A):- 
+  notrace(catch((public(M:F/A),fail),_,true)),
+  predicate_property(M:PI,imported_from(OM)),!,
+  make_as_dynamic_really(Reason,OM,PI,F,A).
+
+make_as_dynamic_really_two(Reason,M,PI,F,A):-
+  notrace(catch((public(M:F/A),fail),_,true)),
+  really_remake_as_dynamic_no_props(Reason,M,PI,F,A),
+  make_as_dynamic_really_two(Reason,M,PI,F,A).
+
+  
+make_as_dynamic_really_two(Reason,M,PI,F,A):-
+ must_det_l((   
+   (is_static_predicate(M:PI) -> true ; (predicate_property(M:PI,dynamic) -> true ; must(M:dynamic(M:F/A)))),      
    public(M:F/A),
-   nop(on_f_throw( (M:F/A)\== (baseKB:loaded_external_kbs/1))),
-   nop(assertz_if_new(( M:PI :- (fail,infoF(createdFor(Reason)))))))).
+   nop(on_f_throw( (M:F/A)\== (baseKB:loaded_external_kbs/1))),   
+   nop((is_static_predicate(M:PI) -> true ; (ignore(source_location(S,L)),assertz_if_new(( M:PI :- (fail,infoF(make_as_dynamic_really(Reason,S,L)))))))),
+   M:module_transparent(M:F/A),
+   M:discontiguous(M:F/A),
+   M:multifile(M:F/A))).
 
 
 do_inherit(_SM,_M,_F,_A).
+
+
+/*
+ * Copy all clauses whose head unifies Arg3 from module Arg1 to 
+ * module Arg2 without deleting the original clauses.
+ */   
+copy_module_predicate(InpMod, OutMod, Head) :-
+   copy_predicate_clauses(InpMod:Head, OutMod:Head).  % SWI-PL
+
+copy_module_predicate_no_props(InpMod, OutMod, Head) :-
+   copy_predicate_clauses_no_props(InpMod:Head, OutMod:Head).  % SWI-PL
+
+copy_predicate_clauses_no_props(From, To) :-
+        copy_predicate_clauses_too_head(From, MF:FromHead),
+        copy_predicate_clauses_too_head(To, MT:ToHead),
+        FromHead =.. [_|Args],
+        ToHead =.. [_|Args],
+        forall(clause(MF:FromHead, Body),
+               assertz(MT:ToHead, Body)).
+
+copy_predicate_clauses_too_head(From, M:Head) :-
+        strip_module(From, M, Name/Arity),
+        functor(Head, Name, Arity).
+
+
+
+really_remake_as_dynamic_no_props(Reason,M,PI,F,A):- 
+  predicate_property(M:PI,imported_from(OM)),
+  dmsg(warn(really_remake_as_dynamic_no_props(OM:PI,for(M,Reason)))),
+  really_remake_as_dynamic_no_props(Reason,OM,PI,F,A).
+
+really_remake_as_dynamic_no_props(Reason,M,PI,F,A):- 
+  dmsg(warn(really_remake_as_dynamic_no_props2(M:PI,bc(Reason)))),
+  % must((predicate_property(M:PI,module(Was)),Was=M)),
+  ignore(delete_import_module(make_as_dynamic,system)),
+  ignore(delete_import_module(make_as_dynamic,user)),
+  ignore(delete_import_module(make_as_dynamic,M)),
+  dynamic(make_as_dynamic:F/A),
+  copy_module_predicate_no_props(M,make_as_dynamic,PI),
+  abolish(M:F/A),
+  copy_module_predicate_no_props(make_as_dynamic,M,PI),
+  abolish(make_as_dynamic:F/A).
+
+
+
+really_remake_as_dynamic(Reason,M,PI,F,A):- 
+  predicate_property(M:PI,imported_from(OM)),
+  dmsg(warn(really_remake_as_dynamic(OM:PI,for(M,Reason)))),
+  really_remake_as_dynamic(Reason,OM,PI,F,A).
+really_remake_as_dynamic(Reason,M,PI,F,A):- 
+  dmsg(warn(really_remake_as_dynamic2(M:PI,bc(Reason)))),
+  % must((predicate_property(M:PI,module(Was)),Was=M)),
+  ignore(delete_import_module(make_as_dynamic,system)),
+  ignore(delete_import_module(make_as_dynamic,user)),
+  ignore(delete_import_module(make_as_dynamic,M)),
+  dynamic(make_as_dynamic:F/A),
+  copy_module_predicate(M,make_as_dynamic,PI),
+  abolish(M:F/A),
+  copy_module_predicate(make_as_dynamic,M,PI),
+  abolish(make_as_dynamic:F/A).
+
 
 % TODO uncomment these out!
 %do_import(system,M,F,A):-throw(unexpected(do_import(system,M,F,A))).

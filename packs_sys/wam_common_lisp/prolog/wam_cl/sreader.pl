@@ -72,7 +72,7 @@ def_compile_all(I,O):- wdmsg(undefined_compile_all(I)),I=O.
 %:- use_module(eightball).
 
 :- thread_local(t_l:sreader_options/2).
-kif_ok:- t_l:sreader_options(logicmoo_read_kif,true),!.
+kif_ok:- t_l:sreader_options(logicmoo_read_kif,TF),!,TF==true.
 
 with_kif_ok(G):-
   locally(t_l:sreader_options(logicmoo_read_kif,true),G).
@@ -241,8 +241,22 @@ file_sexpr_with_comments(end_of_file) --> file_eof,!.
 file_sexpr_with_comments(O) --> one_blank,!,file_sexpr_with_comments(O),!.  % WANT? 
 file_sexpr_with_comments(C)                 --> dcg_peek(`#|`),!,zalwayz(comment_expr(C)),swhite,!.
 file_sexpr_with_comments(C)                 --> dcg_peek(`;`),!, zalwayz(comment_expr(C)),swhite,!.
+file_sexpr_with_comments(Out) --> {kif_ok}, prolog_expr_next, prolog_readable_term(Out), !.
 file_sexpr_with_comments(Out,S,E):- \+ t_l:sreader_options(with_text,true),!,phrase(file_sexpr(Out),S,E),!.
 file_sexpr_with_comments(Out,S,E):- expr_with_text(Out,file_sexpr(O),O,S,E),!.
+
+prolog_expr_next--> dcg_peek(`:-`).
+prolog_expr_next--> dcg_peek(read_string_until(S,(eol;`.`))),{atom_contains(S,':-')}.
+prolog_readable_term(Expr,S,E):- 
+  catch((read_term_from_codes(S,Expr,[subterm_positions(FromTo),cycles(true), % module(baseKB),
+   double_quotes(string),comments(CMT), variable_names(Vars)]),implode_threse_vars(Vars),
+   arg(2,FromTo,To), length(TermCodes,To),
+   append(TermCodes,Remaining,S),
+   `.`=[Dot],(Remaining=[Dot|E]/*;Remaining=E*/),!,
+    must(record_plterm_comments(CMT))),_,fail).
+record_plterm_comments(L):- is_list(L),!,maplist(record_plterm_comments,L).
+record_plterm_comments(_-CMT):- assert(t_l:s_reader_info(CMT)).
+
 
 % in Cyc there was a fitness heuristic that every time an logical axiom had a generated a unique consequent it was considered to have utility as it would expand the breadth of a search .. the problem often was those consequents would feed a another axiom's antecedant where that 
 :- asserta((system:'$and'(X,Y):- (X,Y))).
@@ -535,6 +549,7 @@ sexpr_vector0([],End) --> End, !.
 sexpr_vector0([First|Rest],End) --> sexpr(First), !, sexpr_vector0(Rest,End).
 
 %s_string_cont(Until,"")             --> Until,!, swhite.
+:- encoding(iso_latin_1).
 sexpr_string(Text)                 --> `“`, !, zalwayz(read_string_until_no_esc(Text,`”`)),!.
 sexpr_string(Text)                 --> `"`, !, zalwayz(read_string_until_no_esc(Text,`"`)),!.
 sexpr_string(Text)                 --> `#|`, !, zalwayz(read_string_until_no_esc(Text,`|#`)),!.

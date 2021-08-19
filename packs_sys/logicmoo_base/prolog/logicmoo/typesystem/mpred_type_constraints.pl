@@ -64,6 +64,9 @@
             mpred_type_constraints_file/0
           ]).
 
+:- multifile(same/2).
+:- dynamic(same/2).
+
 %:- set_prolog_flag(generate_debug_info, true).
 :- user:use_module(library(logicmoo_common)).
 :- user:use_module(library(gvar_globals_api)).

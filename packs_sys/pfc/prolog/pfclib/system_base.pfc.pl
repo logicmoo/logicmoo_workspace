@@ -337,8 +337,9 @@ mpred_prop(M,F,A,What)/(\+ ground(F/A))==>{trace_or_throw_ex(mpred_prop(M,F,A,Wh
 
 mpred_prop(M,F,A,pfcCreates)==> 
  % {functor(P,F,A),quietly(make_dynamic(P)),kb_shared(F/A),create_predicate_inheritance(abox,F,A)},
-  {kb_shared(M:F/A)},
-  {M:warn_if_static(F,A)}.
+  {M:warn_if_static(F,A)},
+  {kb_shared(M:F/A)}.
+
 mpred_prop(M,F,A,pfcControlled)==> {kb_shared(M:F/A)}.
 mpred_prop(M,F,A,pfcWatches)==> {kb_shared(M:F/A)}.
                                                                                      
