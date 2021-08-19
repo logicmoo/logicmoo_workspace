@@ -216,6 +216,13 @@
      op(1150,fx,(baseKB:kb_shared))
 
           ]).
+
+/** <module> Utility LOGICMOO_DEBUGGERY
+This module supplies support for utilities, like DCG_must and must_trace, that allow for easier debugging.
+
+@author Douglas R. Miles
+@license LGPL 
+*/
 :- meta_predicate with_skip_bugger(*).
 :- meta_predicate 
     do_ref_job(*,*),
