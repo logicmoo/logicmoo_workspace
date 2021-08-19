@@ -58,7 +58,7 @@
             my_module_sensitive_code/1
           ]).
 
-/** <module> Utility LOGICMOO_DEBUGGERY
+/** <module> Utility LOGICMOO_HOOK_DATABASE
 This module allows for the following functions: 
 when prolog data changes in database this allows for attribute variables to be put in the data base. Logicmoo_attvar_serializer uses this to add and remove attribute variable in database. It also allows PFC to have more elaborate database interaction.
  
