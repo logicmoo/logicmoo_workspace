@@ -64,7 +64,7 @@ mdefault(inChairZ(isMissing)).
 
 :- add_history(((ain(\+ (dmilesWorld ==> inChairZ(ddd)))),listing(inChairZ/1))).
 
-:- repropagate(dmilesWorld).
+:- throw(locks_unit_test(repropagate(dmilesWorld))).
 
 :- listing(inChairZ/1).
 

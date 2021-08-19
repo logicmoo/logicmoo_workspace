@@ -109,7 +109,7 @@ else
       echo -e ""
 fi
 
-[ -z "$TESTING_TEMP" ] && export TESTING_TEMP=/tmp/logicmoo_testing  			
+[ -z "$TESTING_TEMP" ] && export TESTING_TEMP=$(mktemp -d -t logicmoo_testing-$(date +%Y-%m-%d-%H-%M-%S)-XXXXXXXXXX)
 echo -e "\\n<!--\\nRunning Matching Tests: $me $keep_going ${listOfNames[*]}\\n-->\\n"
 
 for ele2 in "${listOfNames[@]}"

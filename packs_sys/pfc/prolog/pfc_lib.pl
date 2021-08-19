@@ -25,10 +25,10 @@
 :- system:import(baseKB:'$pt'/3).
 :- system:export(baseKB:'$pt'/3).
 
-wdmsg_pfc(X):- format('~N'),print_tree(X),format('~N'),!.
+wdmsg_pfc(X):- format('~N'),in_cmt((print_tree_with_final(X,'.'))),format('~N'),!.
 %wdmsg_pfc((X:-Y)):- !, pprint_ecp_cmt(yellow,(X:-Y)),!.
 %wdmsg_pfc(X):- with_output_to(string(S),print_tree(X)), pprint_ecp_cmt(yellow,S),!.
-wdmsg_pfc(X,Y):- wdmsg_pretty(X,Y),!.
+wdmsg_pfc(X,Y):- format('~N'),in_cmt((wdmsg_pretty(X,Y))),format('~N'),!.
 %:- if(( (current_prolog_flag(pfc_version, v(2,0,_))))).
 
 :- multifile(user:prolog_load_file/2).

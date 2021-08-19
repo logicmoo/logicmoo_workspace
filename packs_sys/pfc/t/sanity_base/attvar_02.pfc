@@ -22,7 +22,7 @@
 
 % :- process_this_script.
 
-:- autoload([verbose(false)]).
+:- autoload_all([verbose(false)]).
 
 
 :- debug_logicmoo(_).

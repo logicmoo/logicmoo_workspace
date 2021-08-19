@@ -33,7 +33,7 @@ b(t).
 :- wdmsg("testing b...").
 :- mpred_test(b(t)).
 :- listing(b/1).
-:- forall(spft(b(X),Y,Z),wdmsg(spft(b(X),Y,Z))).
+:- forall($spft'(b(X),Y,Z),wdmsg('$spft'(b(X),Y,Z))).
 
 \+ a(t).
 

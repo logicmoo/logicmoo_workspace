@@ -2413,7 +2413,7 @@ extra_classes(['pl-level-0'], Options) :-
 extra_classes([], _).
 
 html_raw(S) --> [S].
-
+:- export(html_raw/3).
 %!  arg_options(+Options, -OptionsOut) is det.
 %!  arg_options(+Options, +Extra, -OptionsOut) is det.
 %

@@ -4308,8 +4308,9 @@ mpred_load_term(TermO):-mpred_ain_object(TermO).
 
 :- export(why_was_true/1).
 
-why_was_true((A,B)):- !,mpred_why(A),mpred_why(B).
-why_was_true(P):- predicate_property(P,dynamic),mpred_why(P),!.
+why_was_true((A,B)):- !,why_was_true(A),why_was_true(B).
+why_was_true(P):- % predicate_property(P,dynamic),
+                  mpred_why(P),!.
 why_was_true(P):- dmsg_pretty(justfied_true(P)),!.
 
 %

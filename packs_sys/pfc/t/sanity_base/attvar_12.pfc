@@ -28,7 +28,7 @@
 :- must(clause_asserted_i(sk_in(avar([vn='Ex',sk='SKF-666'])))).
 :- abolish(sk_in/1).
 
-:- with_fc_mode(zdirect,must((get_fc_mode(xx,(xxxf,ax),DMode),DMode=zdirect))).
+:- with_fc_mode(zdirect,must((get_fc_mode(xx(xxxf,ax),DMode),DMode=zdirect))).
 
 sk_in(avar([vn='Ex',sk='SKF-666'])).
 

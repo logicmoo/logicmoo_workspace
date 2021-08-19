@@ -109,6 +109,7 @@
             section_close/1,
             section_open/1,
             sensical_nonvar/1,
+            send_tokens/1,
             session_checkbox/3,
             session_checked/1,
             set_line_pos/1,
@@ -2032,11 +2033,6 @@ output_telnet_console2(Port):- HttpPort is Port +100,
   write_html(HTML).
 
 
-output_html(Var):- var(Var),!,term_to_atom(Var,Atom),output_html(pre([Atom])).
-%output_html(html(HTML)):- !,output_html(HTML). 
-output_html(HTML):- atomic(HTML),!,write_html(HTML). 
-%output_html(HTML):- is_list(HTML),send_tokens(HTML).
-output_html(HTML):- html_write:phrase(html(HTML), Tokens,[]),!,send_tokens(Tokens).
 
 remove_if_last(Tokens,TokensRight,TokensLeft):-append(TokensLeft,TokensRight,Tokens),!.
 remove_if_last(TokensRightLeft,_,TokensRightLeft).
@@ -2048,9 +2044,13 @@ send_tokens_1(Tokens):- with_output_to(string(HTMLString), html_write:print_html
 
 %write_html(HTMLString):- ((pengines:pengine_self(_) -> pengines:pengine_output(HTMLString) ;write(HTMLString))),!.
 write_html(HTMLString):- bfly_html_goal(format(HTMLString)).
-
 %write_html(HTML):- phrase(html(HTML), Tokens), html_write:print_html(Out, Tokens))).
 % output_html(html([div([id('cp-menu'), class(menu)], cp_skin: cp_logo_and_menu)]))
+output_html(Var):- var(Var),!,term_to_atom(Var,Atom),output_html(pre([Atom])).
+%output_html(html(HTML)):- !,output_html(HTML). 
+output_html(HTML):- atomic(HTML),!,write_html(HTML). 
+%output_html(HTML):- is_list(HTML),send_tokens(HTML).
+output_html(HTML):- html_write:phrase(html(HTML), Tokens,[]),!,send_tokens(Tokens).
 
 
 

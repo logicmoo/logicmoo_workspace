@@ -374,9 +374,9 @@ exactlyAssertedEL_first(isa, xor, 'ELRelation-OneWay', 'UniversalVocabularyMt', 
 exactlyAssertedEL_first(isa, xor, 'CommutativeRelation', 'UniversalVocabularyMt', vStrDef).
 
 
-%:- if((current_prolog_flag(runtime_debug,D),D>2)).
+:- if((current_prolog_flag(runtime_debug,D),D>3)).
 :- listing(exactlyAssertedEL_first/5).
-%:- endif.
+:- endif.
 :- sanity(clause_asserted(exactlyAssertedEL_first(isa, xor, rtLogicalConnective, iUniversalVocabularyMt, vStrDef))).
 
 exactlyAssertedEL_first(isa, xor, 'BinaryRelation', 'UniversalVocabularyMt', vStrDef).

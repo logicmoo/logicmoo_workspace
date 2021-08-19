@@ -22,7 +22,7 @@ baseKB:mtHybrid(socialMt).
 
 :- wdmsg(feature_test_may_fail).
 
-%:- set_defaultAssertMt(header_sane).
+:- set_defaultAssertMt(header_sane).
 
 :- debug(mpred).
 :- debug(mpred(_)).

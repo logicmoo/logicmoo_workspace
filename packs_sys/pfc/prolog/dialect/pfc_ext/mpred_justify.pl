@@ -408,14 +408,17 @@ mpred_why_justs_1a(P) :-
   (Count==[]-> format("~N No justifications for ~p. ~n~n",[P]) ; true),
   color_line(green,2).
 */
-mpred_why_justs_1a(P) :-    
+mpred_why_justs_1a(\+ P) :- !, mpred_why_justs_1a(\+ P, ~(P)),!.
+mpred_why_justs_1a(P) :- mpred_why_justs_1a(P,P).
+
+mpred_why_justs_1a(DP,P) :-    
   color_line(green,2),
   Found=fnd(0),!,
   forall(justifications(P,Js),
     (color_line(yellow,1),
      nb_setarg(1,Found,1),
      pfcShowJustifications(P,Js))),
-  (Found==fnd(0)-> format("~N No justifications for ~p. ~n~n",[P]) ; true),
+  (Found==fnd(0)-> format("~N No justifications for ~p. ~n~n",[DP]) ; true),
   color_line(green,2),!,
   Found\==fnd(0).
 

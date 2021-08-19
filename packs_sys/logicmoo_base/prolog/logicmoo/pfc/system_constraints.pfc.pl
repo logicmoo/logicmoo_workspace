@@ -98,7 +98,7 @@ weak_test("Weak0","weAk2").
 
 :- export(weak_test/2).
 :- public(weak_test/2).
-:- if((current_prolog_flag(runtime_debug,D),D>2)).
+:- if((current_prolog_flag(runtime_debug,D),D>3)).
 :- listing(weak_test/2).
 :- endif.
 

@@ -173,7 +173,8 @@ add_test_info(Type,Info):- ignore((t_l:mpred_current_testcase(Testcase), add_tes
 
 save_info_to(TestResult,Goal):- with_output_to(string(S),
   (fmt(TestResult=info(Goal)),
-   ignore(Goal))), add_test_info(TestResult,S).
+   ignore(Goal))), write(S),
+  add_test_info(TestResult,S).
 
 add_test_info(Testcase,Type,Info):- j_u:junit_prop(Testcase,Type,InfoM),Info=@=InfoM,!.
 add_test_info(Testcase,Type,_):- retract(j_u:junit_prop(Testcase,Type,[])),fail.
@@ -230,6 +231,24 @@ outer_junit(G):- nop(G).
 halt_junit:- j_u:junit_prop(system,shown_testing_complete,true),!.
 halt_junit:- asserta(j_u:junit_prop(system,shown_testing_complete,true)), list_test_results,
   save_results_single.
+
+junit_term_expansion(_ , _ ):- prolog_load_context(file,SF), \+ j_u:junit_prop(testsuite,file,SF),!,fail.
+junit_term_expansion(Var , _ ):- var(Var),!,fail.
+junit_term_expansion( (end_of_file), [] ):- !, halt_junit, fail.
+junit_term_expansion(M:I,M:O):- !, junit_term_expansion(I,O).
+junit_term_expansion((:- I),O):- !, junit_goal_expansion(I,M), (is_list(M) -> O=M ; O=(:-M)).
+
+junit_goal_expansion(Var , _ ):- var(Var),!,fail.
+junit_goal_expansion((A,B),(AO,BO)):- !,junit_goal_expansion(A,AO),junit_goal_expansion(B,BO).
+junit_goal_expansion((A;B),(AO;BO)):- !,junit_goal_expansion(A,AO),junit_goal_expansion(B,BO).
+junit_goal_expansion(M:I,M:O):- !, junit_goal_expansion(I,O).
+junit_goal_expansion( break, dmsg(break) ):- getenv(keep_going,'-k'). 
+junit_goal_expansion( cls, dmsg(cls) ):- getenv(keep_going,'-k'). 
+junit_goal_expansion( rtrace, dmsg(rtrace) ):- getenv(keep_going,'-k'). 
+
+junit_goal_expansion( listing(X), dmsg(listing(X)) ):- getenv(keep_going,'-k'). 
+
+junit_goal_expansion( must(A),mpred_test(A)).
 
 
 :- at_halt(halt_junit).

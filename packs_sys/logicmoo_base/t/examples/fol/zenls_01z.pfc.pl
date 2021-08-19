@@ -14,13 +14,11 @@
 % :- guitracer,leash(-all),visible(-all),trace,member(_,[_]),!,notrace,leash(+all),visible(+all).
 */
 
- 
-
-:- file_begin(pfc).
+:- expects_dialect(pfc).
 
 :- ensure_mpred_file_loaded('logicmoo/pfc/autoexec.pfc').
 % :- ensure_mpred_file_loaded('logicmoo/pfc/system_genls.pfc').
-
+:- mpred_trace_exec.
 % :- mpred_autoload(genls/2).
 
 tCol(tFly).

@@ -167,7 +167,7 @@ bfly_decl_style_http(Request) :-
 print_term_to_html_page(Tree):- 
   wots((S),
     in_pp_html(print_tree(Tree))),
-    phrase(html([
+    phrase(pretty_clauses:html([
      html([head(''),body(pre( \ html_raw(S)))])]), Tokens),
      print_html(Tokens),!.
 
@@ -199,6 +199,8 @@ print_html_term(Term):- current_print_write_options(Options), print_html_term(Te
 print_html_term(Term, Options):- 
  must_or_rtrace(phrase(bfly_term(Term,Options),Tokens)),!,
  must_or_rtrace(send_tokens(Tokens)),!.
+
+
 
 bfly_portray(X):- 
   \+ tracing, ground(X),
