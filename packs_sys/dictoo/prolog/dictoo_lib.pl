@@ -37,6 +37,12 @@
 
 */
 
+/** <module> Utility LOGICMOO_DICTOO
+Now everyone can get dictoo! Dict-like OO Syntax - allows dictionary to be used in object orientated ways, common interface for hashmaps, dictionaries trees, object-orientated objects used in the same ways.
+
+@author Douglas R. Miles
+@license LGPL 
+*/
 
 
 :- set_module(class(library)).
