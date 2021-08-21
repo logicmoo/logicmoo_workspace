@@ -32,7 +32,7 @@ Now everyone can get dictoo! Dict-like OO Syntax - allows dictionary to be used 
 - @license LGPL
  Author:        Douglas R. Miles
     E-mail:        logicmoo@gmail.com
-    WWW:           http://www.logicmoo.org
+    WWW:           [http://www.logicmoo.org]
     Copyright (C): 2017
 
 */
