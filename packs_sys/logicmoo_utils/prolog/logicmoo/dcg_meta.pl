@@ -3,7 +3,7 @@
 % File 'dcg_meta.pl'
 % Purpose: An Implementation in SWI-Prolog of certain debugging tools
 % Maintainer: Douglas Miles
-% Contact: $Author: dmiles $@users.sourceforge.net ;
+% Contact: $Author: logicmoo@gmail.com ;
 % Version: 'logicmoo_util_bugger.pl' 1.0.0
 % Revision:  $Revision: 1.1 $
 % Revised At:   $Date: 2002/07/11 21:57:28 $
@@ -48,8 +48,8 @@
 /** <module> Utility LOGICMOO_DCG_META
 This module allows DCGs to use meta predicates like And Or Not. 
 
-@author Douglas R. Miles
-@license LGPL 
+- @author Douglas R. Miles
+- @license LGPL 
 */
 :- set_module(class(library)).
 
