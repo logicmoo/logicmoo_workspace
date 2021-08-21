@@ -25,23 +25,16 @@
   oo_get_dict/3  
   ]).
 
-/** <module> dictoo_lib - Dict-like OO Syntax Pack
+/** <module> Utility LOGICMOO DICTOO  Dict-like OO Syntax Pack
+Now everyone can get dictoo! Dict-like OO Syntax - allows dictionary to be used in object orientated ways, common interface for hashmaps, dictionaries trees, object-orientated objects used in the same ways.
 
-    Author:        Douglas R. Miles
+- @author Douglas R. Miles
+- @license LGPL
+ Author:        Douglas R. Miles
     E-mail:        logicmoo@gmail.com
     WWW:           http://www.logicmoo.org
     Copyright (C): 2017
-                       
-    This program is free software; you can redistribute it and/or
-    modify it.
 
-*/
-
-/** <module> Utility LOGICMOO_DICTOO
-Now everyone can get dictoo! Dict-like OO Syntax - allows dictionary to be used in object orientated ways, common interface for hashmaps, dictionaries trees, object-orientated objects used in the same ways.
-
-@author Douglas R. Miles
-@license LGPL 
 */
 
 
