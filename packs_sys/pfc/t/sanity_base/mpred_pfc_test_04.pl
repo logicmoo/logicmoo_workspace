@@ -91,15 +91,15 @@
 :- system:use_module(library(lists)).
 
 
-:- make.
-:- listing(check).
-:- check.
+:- mpred_test(make).
+:- mpred_test(listing(check)).
+:- mpred_test(check).
 
-:- autoload.
+:- autoload_all.
 
-:- make.
-:- listing(check).
-:- check.
+:- mpred_test(make).
+:- mpred_test(listing(check)).
+:- mpred_test(check).
 
 % use_module(library(pfc)),make,check.
 

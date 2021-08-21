@@ -3,4 +3,14 @@ echo -e "Running release (all) tests\n ( cd $PWD ; $BASH_SOURCE )"
 
 source ./logicmoo_env.sh -v
 
-find . -mindepth 2 -name "test_on_*.sh" -execdir bash '{}' \;
+find -name "Report-*ml" -delete
+
+TEST_PARAMS="$*"
+
+find . -mindepth 2 -name "test_on_*.sh" -execdir bash '{}' $TEST_PARAMS \;
+
+echo "<testsuites>" > junit.xml
+find -name "Report-*.xml" -exec sed -e "s/<testsuites>//d" -e "s/<\/testsuites>//d" {} >> junit.xml \;
+echo "</testsuites>" >> junit.xml
+
+

@@ -257,17 +257,19 @@ junit_term_expansion( (end_of_file), [] ):- !, halt_junit, fail.
 junit_term_expansion(M:I,M:O):- !, junit_term_expansion(I,O).
 junit_term_expansion((:- I),O):- !, junit_goal_expansion(I,M), (is_list(M) -> O=M ; O=(:-M)).
 
-junit_goal_expansion(Var , _ ):- var(Var),!,fail.
+junit_goal_expansion(Var , Var ):- var(Var),!.
 junit_goal_expansion((A,B),(AO,BO)):- !,junit_goal_expansion(A,AO),junit_goal_expansion(B,BO).
 junit_goal_expansion((A;B),(AO;BO)):- !,junit_goal_expansion(A,AO),junit_goal_expansion(B,BO).
 junit_goal_expansion(M:I,M:O):- !, junit_goal_expansion(I,O).
+
 junit_goal_expansion( break, dmsg(break) ):- getenv(keep_going,'-k'). 
 junit_goal_expansion( cls, dmsg(cls) ):- getenv(keep_going,'-k'). 
 junit_goal_expansion( rtrace, dmsg(rtrace) ):- getenv(keep_going,'-k'). 
-
 junit_goal_expansion( listing(X), dmsg(listing(X)) ):- getenv(keep_going,'-k'). 
 
-:- system:import(pfc_test:junit_goal_expansion/2).
+:- export(junit_term_expansion/2).
+:- system:import(pfc_test:junit_term_expansion/2).
+:- export(junit_goal_expansion/2).
 :- system:import(pfc_test:junit_goal_expansion/2).
 
 %junit_goal_expansion( must(A),mpred_test(A)).
@@ -436,7 +438,9 @@ testcase_props(Testcase):-
 
 write_testcase_prop(_Type,[]):-!.
 write_testcase_prop(info,S):- !, format('~N~w~n',[S]).
-write_testcase_prop(Type,Warn):- format('~N\t~w \t= ~q.~n',[Type,Warn]).
+write_testcase_prop(url,Warn):- !, format('~N\t~w \t= <pre>~w</pre>~n',[url,Warn]).
+write_testcase_prop(Type,Warn):- string(Warn),!,format('~N\t~w \t= ~w.~n',[Type,Warn]).
+write_testcase_prop(Type,Warn):- format('~N\t~w \t= ~w.~n',[Type,Warn]).
 
 :- use_module(library(sgml)).
 escape_attribute(I,O):-xml_quote_attribute(I,O).
