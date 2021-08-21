@@ -1,4 +1,9 @@
 :- module(nb_set_term, [nb_set_has/2, nb_set_add/2, nb_set_add1/2, nb_set_rem/2, nb_set_rem1/2]).
+/** <module> Utility LOGICMOO_NB_SET_TERM
+This module allows non-backtrackable manipulation of prolog data.
+@author Douglas R. Miles
+@license LGPL
+*/
 :- set_module(class(library)).
 /*  Logicmoo Debug Tools
 % ===================================================================
