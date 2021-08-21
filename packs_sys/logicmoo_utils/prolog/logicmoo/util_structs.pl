@@ -64,6 +64,12 @@
             term_to_ord_term/2,
             to_datatype/3
           ]).
+/** <module> Utility LOGICMOO_UTIL_STRUCTS
+This module allows use of C++ like structures in prolog. 
+@author Douglas R. Miles
+@license LGPL
+*/
+
 :- meta_predicate
         sisctus_key(:, -).
 :- module_transparent
