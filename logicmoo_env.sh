@@ -126,6 +126,7 @@ if [[ -d ~/.local/share/swi-prolog/pack/ ]]; then
    $ECHO "#* Found ~/.local/share/swi-prolog/pack"
 else 
    echo "#* Attempting: ln -s $LOGICMOO_WS/prologmud_server/ ~/.local/share/swi-prolog/pack"
+   mkdir -p ~/.local/share/swi-prolog
    ln -s $LOGICMOO_WS/prologmud_server/ ~/.local/share/swi-prolog/pack
 fi
 
