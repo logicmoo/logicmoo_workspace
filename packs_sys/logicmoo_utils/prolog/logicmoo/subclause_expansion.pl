@@ -4,10 +4,10 @@
 % File 'clause_expansion.pl'
 % Purpose: An Implementation in SWI-Prolog of certain debugging tools
 % Maintainer: Douglas Miles
-% Contact: $Author: dmiles $@users.sourceforge.net ;
+% Contact: $Author: dmiles logicmoo@gmail.com ;
 % Version: 'clause_expansion.pl' 1.0.0
 % Revision: $Revision: 1.1 $
-% Revised At:  $Date: 2016/07/11 21:57:28 $
+% Revised At:  $Date: 2021/07/11 21:57:28 $
 % Licience: LGPL
 % ===================================================================
 */
@@ -16,8 +16,8 @@
 
 /** <module>Utility LOGICMOO SUBCLAUSE EXPANSION
 This module fixes all the problems with prolog term expansion by designing how terms will be divided between clauses goals and basic terms. 
-@author Douglas R. Miles
-@license LGPL
+- @author Douglas R. Miles
+- @license LGPL
 
 Prolog compile-time and runtime source-code transformations
  This module specifies a set of more specialized term and goal expansions as they are read from a file before they are processed by the compiler.
