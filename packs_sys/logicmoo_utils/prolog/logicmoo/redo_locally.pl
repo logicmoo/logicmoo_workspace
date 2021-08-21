@@ -28,6 +28,12 @@
         wtl(+,*,0,3),
         wtl_how(3,0,0,0,0).        
 
+/** <module> Utility LOGICMOO_REDO_LOCALLY
+This module allows drastic changes to prolog data to happen very temporarily. (to be reset or temporarily changed.)
+@author Douglas R. Miles
+@license LGPL
+*/
+
 % :- system:use_module(library(logicmoo_startup)).
 % % % OFF :- system:use_module(library(must_sanity)).
 
