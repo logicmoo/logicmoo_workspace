@@ -16,6 +16,11 @@
            bfly_term//2,          % +Term, +Options
    color_format_maybe/3,print_tree/1,print_as_tree/1,current_print_write_options/1,mort/1,print_tree_with_final/2]).
 
+*/
+/** <module> Utility LOGICMOO_PREDICATE_STREAMS
+This module creates pretty printing of complex terms. 
+@author Douglas R. Miles
+@license LGPL
 
 :- set_module(class(library)).
 
