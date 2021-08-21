@@ -5,7 +5,7 @@
   test_logicmoo_lps_sanity/0,
   test_logicmoo_lps_full/0]).
 
-/** <module> MODULE LOGICMOO_LPS
+/** <module> MODULE LOGICMOO LPS
 This module makes LOGICMOO load the LPS server UI through Swish.
 @author Douglas R. Miles
 @license LGPL
