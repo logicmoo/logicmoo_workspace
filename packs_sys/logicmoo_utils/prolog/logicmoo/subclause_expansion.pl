@@ -14,11 +14,13 @@
 % File: /opt/PrologMUD/pack/logicmoo_base/prolog/logicmoo/util/clause_expansion.pl
 :- module(subclause_expansion, [save_pred_to/2]).
 
-/** <module> Prolog compile-time and runtime source-code transformations
+/** <module>Utility LOGICMOO SUBCLAUSE EXPANSION
+This module fixes all the problems with prolog term expansion by designing how terms will be divided between clauses goals and basic terms. 
+@author Douglas R. Miles
+@license LGPL
 
- This module specifies a set of more specialized term and goal expansions
-
-as they are read from a file before they are processed by the compiler.
+Prolog compile-time and runtime source-code transformations
+ This module specifies a set of more specialized term and goal expansions as they are read from a file before they are processed by the compiler.
 
 The toplevel is expand_clause/2.  This uses other translators:
 
@@ -30,6 +32,7 @@ cannot be generated  by  clause_expansion/2   rules:  they  must literally
 appear in the source-code.
 
 */
+
 
 :- set_module(class(library)).
 % % % OFF :- system:use_module(library(apply)).
