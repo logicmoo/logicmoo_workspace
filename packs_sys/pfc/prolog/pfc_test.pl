@@ -267,6 +267,9 @@ junit_goal_expansion( rtrace, dmsg(rtrace) ):- getenv(keep_going,'-k').
 
 junit_goal_expansion( listing(X), dmsg(listing(X)) ):- getenv(keep_going,'-k'). 
 
+:- system:import(pfc_test:junit_goal_expansion/2).
+:- system:import(pfc_test:junit_goal_expansion/2).
+
 %junit_goal_expansion( must(A),mpred_test(A)).
 
 
