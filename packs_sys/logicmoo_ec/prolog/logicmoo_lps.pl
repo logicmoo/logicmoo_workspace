@@ -7,8 +7,8 @@
 
 /** <module> MODULE LOGICMOO LPS
 This module makes LOGICMOO load the LPS server UI through Swish. Logicmoo interface to all LPS tools. 
-@author Douglas R. Miles
-@license LGPL
+- @author Douglas R. Miles
+- @license LGPL
 */
 % [Required] Load the Logicmoo Library Utils
 :- ensure_loaded(library(logicmoo_common)).
