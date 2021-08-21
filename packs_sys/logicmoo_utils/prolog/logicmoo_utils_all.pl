@@ -2,16 +2,16 @@
 % ===================================================================
     File:         'logicmoo_util_library.pl'
     Purpose:       To load the logicmoo libraries as needed
-    Contact:       $Author: dmiles $@users.sourceforge.net ;
+    Contact:       $Author: logicmoo@gmail.com ;
     Version:       'logicmoo_util_library.pl' 1.0.0
     Revision:      $Revision: 1.7 $
     Revised At:    $Date: 2002/07/11 21:57:28 $
     Author:        Douglas R. Miles
     Maintainers:   logicmoo
     E-mail:        logicmoo@gmail.com
-    WWW:           http://www.prologmoo.com
+    WWW:           http://www.logicmoo.org
     SCM:           https://github.com/logicmoo/PrologMUD/tree/master/pack/logicmoo_base
-    Copyleft:      1999-2015, LogicMOO Prolog Extensions
+    Copyleft:      1999-2021, LogicMOO Prolog Extensions
     License:       Lesser GNU Public License
 % ===================================================================
 */
