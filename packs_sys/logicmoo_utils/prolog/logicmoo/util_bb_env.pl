@@ -66,6 +66,11 @@
    push_prefix_arg/4,
    term_expansion_add_context/5
 ]).
+/** <module> Utility LOGICMOO_UTIL_BB_ENV
+This module sets up the blackboard environment.  
+@author Douglas R. Miles
+@license LGPL
+*/
 
 :- kb_global(baseKB:mpred_prop/4).
 
