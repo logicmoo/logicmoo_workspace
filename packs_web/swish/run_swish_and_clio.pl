@@ -1,4 +1,17 @@
-/*  Part of SWISH
+/* 
+*/
+/*
+:- module(swish_ide,
+	  [ remote_swish/0,
+	    remote_swish/1			% ?Port
+	  ]).
+*/
+/** <module> Utility LOGICMOO UTILS
+This module starts Swish and Cleopatra. The purpose is to run Swish and Clio Together for LOGICMOO Web UI.   
+- @author Douglas R. Miles
+- @license LGPL
+
+ Part of SWISH
 
     Author:        Jan Wielemaker
     E-mail:        J.Wielemaker@vu.nl
@@ -30,17 +43,6 @@
     LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN
     ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
     POSSIBILITY OF SUCH DAMAGE.
-*/
-/*
-:- module(swish_ide,
-	  [ remote_swish/0,
-	    remote_swish/1			% ?Port
-	  ]).
-*/
-/** <module> Utility LOGICMOO UTILS
-This module starts Swish and Cleopatra. The purpose is to run Swish and Clio Together for LOGICMOO Web UI.   
-@author Douglas R. Miles
-@license LGPL
 */
 :- use_module(library(http/thread_httpd)).
 :- use_module(library(http/http_dispatch)).
