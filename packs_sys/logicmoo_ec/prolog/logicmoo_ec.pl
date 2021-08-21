@@ -1,8 +1,8 @@
 :- module(logicmoo_ec,[]).
 /** <module> MODULE LOGICMOO EC
 This module combines all LOGICMOO EventCalc modules into a unified interface for DEC LPS, PPDL. 
-@author Douglas R. Miles
-@license LGPL
+-@author Douglas R. Miles
+-@license LGPL
 */
 
 % [Required] Load the Logicmoo Library Utils
