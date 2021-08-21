@@ -42,18 +42,24 @@
           notice_file/3
           ]).
 
-/** <module> Prolog compile-time and runtime source-code "Settings"
 
- This module specifies a set of settings for files
+/** <module> Utility LOGICMOO FILE SCOPE
+This module allows changes to prolog state to be maintained and to only happen locally to a file module. 
 
-as they are read from a file before they are processed by the compiler.
+- @author Douglas R. Miles
+- @license LGPL 
+
+
+Prolog compile-time and runtime source-code "Settings"
+
+ This module specifies a set of settings for files as they are read from a file before they are processed by the compiler.
 
 The toplevel is expand_clause/2.  This uses other translators:
 
 	* Conditional compilation
 	* clause_expansion/2 rules provided by the user
 
-Note that this ordering implies  that conditional compilation directives
+Note that this ordering implies that conditional compilation directives
 cannot be generated  by  clause_expansion/2   rules:  they  must literally
 appear in the source-code.
 
@@ -64,12 +70,6 @@ Module,
 File,
 Thread.
 
-*/
-/** <module> Utility LOGICMOO FILE SCOPE
-This module allows changes to prolog state to be maintained and to only happen locally to a file module. 
-
-@author Douglas R. Miles
-@license LGPL 
 */
 %:-must(forall(retract(at_eof_action(CALL)),must(CALL))).
 % :-must((asserta((user:term_expansion(A,B):-cyc_to_clif_notify(A,B),!),CLREF),asserta(at_eof_action(erase(CLREF))))).
