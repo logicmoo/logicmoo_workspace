@@ -122,6 +122,13 @@ else
  chmod o+rw $SSH_TTY
 fi
 
+if [[ -d ~/.local/share/swi-prolog/pack/ ]]; then
+   $ECHO "#* Found ~/.local/share/swi-prolog/pack"
+else 
+   echo "#* Attempting: ln -s $LOGICMOO_WS/prologmud_server/ ~/.local/share/swi-prolog/pack"
+   ln -s $LOGICMOO_WS/prologmud_server/ ~/.local/share/swi-prolog/pack
+fi
+
 export LIBJVM
 export LD_LIBRARY_PATH
 export PATH
