@@ -10,7 +10,7 @@ TEST_PARAMS="$*"
 find . -mindepth 2 -name "test_on_*.sh" -execdir bash '{}' $TEST_PARAMS \;
 
 echo "<testsuites>" > junit.xml
-find -name "Report-*.xml" -exec sed -e "s/<testsuites>//d" -e "s/<\/testsuites>//d" {} >> junit.xml \;
+find -name "Report-*.xml" -exec sed -e "s/<testsuites>//g" -e "s|</testsuites>||g" {}  \;
 echo "</testsuites>" >> junit.xml
 
 
