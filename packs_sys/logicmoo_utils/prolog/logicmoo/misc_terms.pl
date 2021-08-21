@@ -38,7 +38,11 @@
     invalidate any other reasons why the executable file might be covered by
     the GNU General Public License.
 */
-
+/** <module> Common Util MISC_TERMS
+This module includes random predicate utilities that manipulate terms for substitution, decomposes, recomposes, composes, etc.
+@author Douglas R. Miles
+@license free or GNU 2
+*/
 :- module(logicmoo_util_terms,
         [
 at_start/1,
