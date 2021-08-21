@@ -26,6 +26,12 @@
  Prolog source-code will echo while running
 
 */
+/** <module> Utility LOGICMOO_PREDICATE_STREAMS
+This module allows running prolog files as scripts. 
+@author Douglas R. Miles
+@license LGPL
+*/
+
 :- set_module(class(library)).
 
 :- use_module(library(occurs)).
