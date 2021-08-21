@@ -16,17 +16,16 @@
  op(300,fx,'~'),
  op(300,fx,'-').
 
-/** <module> logicmoo_plarkc - special module hooks into the logicmoo engine allow
-   clif syntax to be recocogized via our CycL/KIF handlers 
+/** <module> MODULE LOGICMOO CLIF / logicmoo_plarkc
+Logicmoo CLIF - Base Libraries that extend Prolog to support Dynamic Epistemic Logic (DEL) with Constraints.
+This special module hooks into the logicmoo engine allow clif syntax to be recocogized via our CycL/KIF handlers 
  
- Logicmoo Project: A LarKC Server written in Prolog
- Maintainer: Douglas Miles
+ Logicmoo Projects LarKC Server written in Prolog
  Dec 13, 2035
-
- ?- ensure_loaded(library(logicmoo_clif)).
-
-:- set_prolog_flag(verbose_autoload,true).
+@author Douglas R. Miles
+@license LGPL
 */
+
 
 :- '$set_source_module'(baseKB).
 
