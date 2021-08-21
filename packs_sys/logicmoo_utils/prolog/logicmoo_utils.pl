@@ -17,6 +17,12 @@
 */
 
 :- module(logicmoo_utils,[]).
+/** <module> Utility LOGICMOO UTILS
+This module holds less common utils that have to be loaded individually.  
+@author Douglas R. Miles
+@license LGPL
+*/
+
 %:- discontiguous(logicmoo_utils:'$exported_op'/3).
 %:- logicmoo_utils:use_module(library(logicmoo_common)).
 :- reexport(library(logicmoo_common)).
