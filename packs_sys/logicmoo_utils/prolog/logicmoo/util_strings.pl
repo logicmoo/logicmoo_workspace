@@ -138,6 +138,11 @@
             vars_to_ucase/2,
             vars_to_ucase_0/2
           ]).
+/** <module> Utility LOGICMOO_UTIL_STRINGS
+This module introduces string replacements for find replacement in strings, capitalization, etc for text normalization.  
+@author Douglas R. Miles
+@license LGPL
+*/
 % autoloading user:portray_clause_pi/2 from /opt/PrologMUD/pack/logicmoo_base/prolog/logicmoo/util/logicmoo_util_first
 :- multifile 
         double_quotes_was_strings/1,
