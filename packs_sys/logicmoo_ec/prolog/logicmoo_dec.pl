@@ -1,8 +1,8 @@
 :- module(logicmoo_dec,[test_logicmoo_dec/0]).
 /** <module> MODULE LOGICMOO DEC
 This module holds Eric Mullers DEC reasoner E-file interface for LOGICMOO.
-@author Douglas R. Miles
-@license LGPL
+- @author Douglas R. Miles
+- @license LGPL
 */
 
 % [Required] Load the Logicmoo Library Utils
