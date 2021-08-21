@@ -34,6 +34,12 @@
           init_why/2,
           run_pending_inits/0]).
 
+/** <module> Utility LOGICMOO_STARTUP
+This module manages logicmoo startup (adding history and tests, etc). 
+@author Douglas R. Miles
+@license LGPL
+*/
+
 :- dynamic   user:file_search_path/2.
 :- multifile user:file_search_path/2.
 
