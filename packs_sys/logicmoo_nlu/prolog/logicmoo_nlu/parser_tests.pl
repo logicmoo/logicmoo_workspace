@@ -200,7 +200,7 @@ ape_test(122, 'If 1.1 * 2 = 2.2 then 0.9 = 2 - 1.1.').
 ape_test(123, 'If E approaches 2 then 3.14 approaches Pi.').
 
 ape_test(124, 'Bill is John\'s father.').
-ape_test(125, 'John\'s father likes Bill.').
+ape_test(125, 'John\'s father likes Bill.'). 
 ape_test(126, 'Bill likes John\'s father.').
 ape_test(127, 'If something X is a father of something Y then X is a parent of Y.').
 ape_test(128, 'If something X is a part of something Y and Y is a part of something Z then X is a part of Z.').

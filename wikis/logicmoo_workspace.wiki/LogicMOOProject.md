@@ -1,1 +1,0 @@
-[[LogicMOOProject]] is 

@@ -1,5 +1,0 @@
-SHRDLU
-
-Early [[NaturalLanguageUnderstanding]] system.
-
-
