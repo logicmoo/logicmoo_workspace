@@ -103,7 +103,10 @@
           ]).
 
 
-/** <module> Name Prolog variables (debugging)
+/** <module> Utility LOGICMOO UTIL VARNAMES / Name Prolog variables (debugging)
+This module holds utilities to access and change the names of prolog variables. 
+@author Douglas R. Miles
+@license LGPL
 */
 
 % % % OFF :- system:use_module(library(must_sanity)).
