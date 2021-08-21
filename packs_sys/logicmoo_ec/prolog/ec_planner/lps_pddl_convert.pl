@@ -1,4 +1,3 @@
-
 %:- prolog_load_context(file, File), throw(wrong_file(File)).
 % =========================================
 % Goal/Plan translating
@@ -12,6 +11,11 @@
    lps_pddl_convert/1]).
                      
 
+/** <module> MODULE LOGICMOO LPS PDDL CONVERTER
+This module extends the LPS engine to run PPDL files.   
+@author Douglas R. Miles
+@license LGPL
+*/
 :- use_module(library(logicmoo_common)).
 
 /*export_transparent(P):-
