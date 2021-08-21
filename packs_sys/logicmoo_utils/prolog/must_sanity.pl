@@ -22,6 +22,12 @@
       must_or_rtrace/1
     ]).
 
+/** <module> Utility LOGICMOO_MUST_SANITY
+This module includes predicate utilities that allows program to detect unwanted failures. 
+@author Douglas R. Miles
+@license LGPL
+*/
+
 :- meta_predicate
         must(*),
         must_once(*),
