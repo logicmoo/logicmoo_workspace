@@ -1,8 +1,13 @@
-
 :- module(logicmoo_webui,[
    load_web_package_dirs/0,
    webui_load_swish_and_clio/0,
    webui_start_swish_and_clio/0]).
+
+/** <module> MODULE LOGICMOO WEBUI 
+This module starts and defines the web UI for LOGICMOO.  
+@author Douglas R. Miles
+@license LGPL
+*/
 
 :- multifile(prolog_version:git_update_versions/1).
 :- dynamic(prolog_version:git_update_versions/1).
