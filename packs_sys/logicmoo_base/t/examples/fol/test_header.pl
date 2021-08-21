@@ -50,7 +50,7 @@
 :- set_prolog_flag(runtime_safety, 3).  % 3 = very important
 :- set_prolog_flag(unsafe_speedups, false).
 :- set_prolog_flag(logicmoo_message_hook,dumpst).
-:- use_module(library(junit)).
+% :- use_module(library(junit)).
 :- ensure_loaded(library(pfc)).
 :- ensure_loaded(library(pfc_test)).
 
@@ -67,7 +67,6 @@
 
 */
 % junit_term_expansion( (begin_of_file), [] ):- current_prolog_flag(is_pfc_file_dialect,true).
-
 system:term_expansion(I,P,O,PO):- junit_term_expansion(I,O),P=PO.
 system:goal_expansion(I,P,O,PO):- junit_goal_expansion(I,O),P=PO.
 :- endif.

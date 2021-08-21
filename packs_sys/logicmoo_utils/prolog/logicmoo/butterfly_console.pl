@@ -24,7 +24,9 @@
   is_butterfly_console/0,
   set_is_butterfly_console/1,
   bfly_test/1,
+  write_html/1,
   bfly_tests/0,
+  send_tokens/1,
   pre_style/0,mouse_over_span/0]).
 
 :- use_module(library(logicmoo_common)).
@@ -201,6 +203,16 @@ print_html_term(Term, Options):-
  must_or_rtrace(send_tokens(Tokens)),!.
 
 
+remove_if_last(Tokens,TokensRight,TokensLeft):-append(TokensLeft,TokensRight,Tokens),!.
+remove_if_last(TokensRightLeft,_,TokensRightLeft).
+
+send_tokens(['<',html,'>'|Tokens]):-!,remove_if_last(Tokens,['</',html,'>'],TokensLeft),send_tokens_1(TokensLeft).
+send_tokens(Tokens):- send_tokens_1(Tokens).
+send_tokens_1([nl(1)|Tokens]):-!,remove_if_last(Tokens,[nl(1)],TokensLeft),send_tokens(TokensLeft).
+send_tokens_1(Tokens):- with_output_to(string(HTMLString), html_write:print_html(Tokens)),write_html(HTMLString).
+
+%write_html(HTMLString):- ((pengines:pengine_self(_) -> pengines:pengine_output(HTMLString) ;write(HTMLString))),!.
+write_html(HTMLString):- bfly_html_goal(format(HTMLString)).
 
 bfly_portray(X):- 
   \+ tracing, ground(X),
@@ -319,9 +331,9 @@ correct_html_len1(S,S).
 :- meta_predicate(bfly_out_in(0)).
 bfly_out_in(Goal):- inside_bfly_html_esc -> setup_call_cleanup(bfly_out, wotso(Goal), bfly_in) ; call(Goal).
 
-bflyw(F):- bflyz(F).
+%bflyw(F):- bflyz(F).
 bflyw:-!.
-bflyz:- bflyw(264).
+%bflyz:- bflyw(264).
 
 ccls:- cls,bfly_write(ansi,escape_from_screen([call(cls)])).
 

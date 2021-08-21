@@ -16,36 +16,12 @@
            bfly_term//2,          % +Term, +Options
    color_format_maybe/3,print_tree/1,print_as_tree/1,current_print_write_options/1,mort/1,print_tree_with_final/2]).
 
-*/
-/** <module> Utility LOGICMOO_PREDICATE_STREAMS
-This module creates pretty printing of complex terms. 
-@author Douglas R. Miles
-@license LGPL
-*/
-:- set_module(class(library)).
 
-:- autoload(library(http/html_write),[html/3,print_html/1]).
-:- autoload(library(lynx/html_text),[html_text/2]).
-:- autoload(library(option),
-            [merge_options/3, select_option/3, select_option/4,
-             option/2, option/3]).
-
-
-:- use_module(library(http/html_write)).
-:- use_module(library(option)).
-:- use_module(library(error)).
-:- use_module(library(debug)).
-
-% :- multifile blob_rendering//3.              % +Type, +Blob, +Options
-
-/** <module> Represent Prolog terms as HTML
+/** <module> Pretty Print Prolog terms in plain or HTML
 
 This file is primarily designed to   support running Prolog applications
 over the web. It provides a   replacement for write_term/2 which renders
 terms as structured HTML.
-*/
-
-/** <module> Pretty Print Prolog terms in plain or HTML
 
 This module is a first  start  of   what  should  become a full-featured
 pretty printer for Prolog  terms  with   many  options  and  parameters.
@@ -60,7 +36,28 @@ etc.
 
 @tbd The current approach is far too simple, often resulting in illegal
      terms.
+
+@author Douglas R. Miles
+@license LGPL
+
 */
+
+:- set_module(class(library)).
+
+:- autoload(library(http/html_write),[html/3,print_html/1]).
+:- autoload(library(lynx/html_text),[html_text/2]).
+:- autoload(library(option),
+            [merge_options/3, select_option/3, select_option/4,
+             option/2, option/3]).
+
+
+:- use_module(library(http/html_write)).
+:- use_module(library(option)).
+:- use_module(library(error)).
+:- use_module(library(debug)).
+
+:- multifile blob_rendering//3.              % +Type, +Blob, +Options
+
 
 :- predicate_options(pprint_tree/2, 2,
                      [ output(stream),
@@ -1126,7 +1123,7 @@ display_length(X,L):- wots(S,display(X)),atom_length(S,L),!.
 
 
 
-
+%:- use_module(pretty_clauses).
 
 
 %pformat(S,Fmt,Args):- with_output_to(S,pformat(Fmt,Args)).
@@ -1143,10 +1140,10 @@ pformat_html(_):- in_pp(ansi),!.
 pformat_html(Fmt):- var(Fmt),!,sformat('~w',[Fmt]).
 pformat_html(PREC):- PREC == pre(:), !, write(':').
 pformat_html(pre(Fmt)):- pformat_string(Fmt,S), !, into_attribute(S,Attr),write(Attr). % print_html(['<pre>',S,'</pre>']).
-%pformat_html(pre(Fmt)):- pformat_string(Fmt,S), phrase(bfly_term_html:html(S), Tokens), print_html(Tokens).
+%pformat_html(pre(Fmt)):- pformat_string(Fmt,S), phrase(pretty_clauses:html(S), Tokens), print_html(Tokens).
 pformat_html(Fmt):- pformat_std(pformat_html,Fmt), !.
 pformat_html(Fmt):- atomic(Fmt),!,bfly_html_goal(pformat_write(Fmt)).
-pformat_html(Fmt):- phrase(bfly_term_html:html(Fmt), Tokens), print_html(Tokens).
+pformat_html(Fmt):- phrase(pretty_clauses:html(Fmt), Tokens), print_html(Tokens).
 
 
 pformat_string(Fmt,S):- \+ compound(Fmt),!,any_to_string(Fmt,S).
@@ -2338,7 +2335,7 @@ html_any(Term, Options) -->
     },
     html_dict(Term, Options).
 html_any(Term, Options) -->
-    { assertion((html_compound(Term);Term==[]))
+    { assertion((compound(Term);Term==[]))
     },
     html_compound(Term, Options).
 

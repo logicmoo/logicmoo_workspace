@@ -50,7 +50,7 @@
             i2tml_hbr/3,
             if_html/2,
             output_html/1,
-            write_html/1,
+            % write_html/1,
             show_map_legend/0,
             indent_nbsp/1,
             indent_nbsp/2,
@@ -109,7 +109,7 @@
             section_close/1,
             section_open/1,
             sensical_nonvar/1,
-            send_tokens/1,
+            %send_tokens/1,
             session_checkbox/3,
             session_checked/1,
             set_line_pos/1,
@@ -2034,16 +2034,7 @@ output_telnet_console2(Port):- HttpPort is Port +100,
 
 
 
-remove_if_last(Tokens,TokensRight,TokensLeft):-append(TokensLeft,TokensRight,Tokens),!.
-remove_if_last(TokensRightLeft,_,TokensRightLeft).
 
-send_tokens(['<',html,'>'|Tokens]):-!,remove_if_last(Tokens,['</',html,'>'],TokensLeft),send_tokens_1(TokensLeft).
-send_tokens(Tokens):- send_tokens_1(Tokens).
-send_tokens_1([nl(1)|Tokens]):-!,remove_if_last(Tokens,[nl(1)],TokensLeft),send_tokens(TokensLeft).
-send_tokens_1(Tokens):- with_output_to(string(HTMLString), html_write:print_html(Tokens)),write_html(HTMLString).
-
-%write_html(HTMLString):- ((pengines:pengine_self(_) -> pengines:pengine_output(HTMLString) ;write(HTMLString))),!.
-write_html(HTMLString):- bfly_html_goal(format(HTMLString)).
 %write_html(HTML):- phrase(html(HTML), Tokens), html_write:print_html(Out, Tokens))).
 % output_html(html([div([id('cp-menu'), class(menu)], cp_skin: cp_logo_and_menu)]))
 output_html(Var):- var(Var),!,term_to_atom(Var,Atom),output_html(pre([Atom])).
