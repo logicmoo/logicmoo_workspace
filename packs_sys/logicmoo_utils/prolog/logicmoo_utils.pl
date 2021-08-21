@@ -2,10 +2,10 @@
 % ===================================================================
     Previous File:         'logicmoo_util_library.pl'
     Purpose:       To load the logicmoo libraries as needed
-    Contact:       $Author: dmiles $@users.sourceforge.net ;
+    Contact:       $Author: logicmoo@gmail.com ;
     Version:       'logicmoo_util_library.pl' 1.0.0
     Revision:      $Revision: 1.7 $
-    Revised At:    $Date: 2002/07/11 21:57:28 $
+    Revised At:    $Date: 2021/07/11 21:57:28 $
     Author:        Douglas R. Miles
     Maintainers:   logicmoo
     E-mail:        logicmoo@gmail.com
