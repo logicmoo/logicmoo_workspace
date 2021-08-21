@@ -14,7 +14,7 @@
 
 :- use_module(library(logicmoo_user)).
 
-:- file_begin(pfc).
+:- expects_dialect(pfc).
 
 :- ensure_mpred_file_loaded('logicmoo/pfc/autoexec.pfc').
 % :- ensure_mpred_file_loaded('logicmoo/pfc/system_genls.pfc').

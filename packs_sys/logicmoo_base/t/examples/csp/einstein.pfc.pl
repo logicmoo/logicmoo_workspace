@@ -40,7 +40,7 @@
 :- op(0,xfx,'=>').
 :- op(1150,xfy,'=>').
 
-:- file_begin(pfc).
+:- expects_dialect(pfc).
 
 % add this to our vocab
 props((/\),ftSentenceOp,tLogicalConjunction).

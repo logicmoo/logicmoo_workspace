@@ -25,7 +25,7 @@
 
 :- include(test_header).
 :- set_file_abox_module(user).
-:- file_begin(pfc).
+:- expects_dialect(pfc).
 
 % :- rtrace(ain(((tType(COL)==>{kb_local(COL/2)},(t(COL,ext,X)<==>iza(X,COL)))))).
 

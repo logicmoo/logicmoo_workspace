@@ -17,6 +17,7 @@
 %
 */
 
+:- expects_dialect(pfc).
 
 grid_key( ed='tEdgeOfWorld').
 grid_key( hw='tHighWall').

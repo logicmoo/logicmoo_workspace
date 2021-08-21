@@ -1,1 +1,2 @@
 
+:- module(cgp_swipl,[]).

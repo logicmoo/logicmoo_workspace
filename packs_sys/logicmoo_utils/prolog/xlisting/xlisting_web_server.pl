@@ -13,8 +13,16 @@
           [ register_logicmoo_browser/0
           ]).
 
-
 :- set_module(class(library)).
+
+
+
+swish_reply_config_root(_Request):-
+  swish_config:
+  (json_config(JSON, []),
+	 reply_json(JSON)).
+
+:- http_handler('/swish_config.json', swish_reply_config_root,[]).
 
 
 :- dynamic user:library_directory/1.

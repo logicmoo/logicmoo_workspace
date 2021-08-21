@@ -15,7 +15,7 @@
 % Douglas Miles
 %
 */
-
+:- expects_dialect(pfc).
 
 grid_key(ed='tEdgeOfWorld').
 grid_key(wl=wall).

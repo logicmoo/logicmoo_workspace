@@ -40,7 +40,7 @@
 :- (header_sane:ain(prologSingleValued(inChair/1))).
 
 :- listing(singleValuedInArgAX/3).
-:- rtrace(sanity(singleValuedInArgAX(inChair,1,1))).
+:- sanity(singleValuedInArgAX(inChair,1,1)).
 
 dmilesWorld.
 dmilesWorld ==> inChair(a).

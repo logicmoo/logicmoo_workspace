@@ -221,6 +221,7 @@ bad_varname(UP):-
 
 mort((G1,G2)):- !, mort(G1),mort(G2).
 mort(G):- notrace(catch(G,E,(nl,display(mort_error(E)),nl,fail))),!.
+mort(G):- tracing,display(failed_mort(G)),!,break,(G).
 mort(G):- nortrace,notrace,display(failed_mort(G)),trace,rtrace(G),notrace,trace,break.
 
 to_var_or_name(L,LL):- var(L),!,LL=L.

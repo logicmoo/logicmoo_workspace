@@ -28,7 +28,7 @@ vim: set filetype=md:
 :- set_how_virtualize_file(bodies).
 
 % we ensure we are in "pfc" consultation mode (so the syntax rules will define correctly)
-:- file_begin(pfc).
+:- expects_dialect(pfc).
 
 :- kb_shared(baseKB:wid/3).
 

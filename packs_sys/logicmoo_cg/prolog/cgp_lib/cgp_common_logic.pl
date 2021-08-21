@@ -2,14 +2,14 @@
   [%run_tests/0, 
    convert_clif_to_cg/2]).
 
-
 :- use_module(library(logicmoo_common)).
 :- use_module(library(logicmoo/dcg_meta)).
 :- use_module(library(logicmoo/util_bb_frame)).
-% :- ensure_loaded(library(cgp_lib/cgp_swipl)).
+:- ensure_loaded(library(cgp_lib/cgp_swipl)).
 :- use_module(library(logicmoo_clif)).
+:- cgp_common_logic:import(dcg_basics:eol/2).
 
-
+:-ensure_loaded('cgp_common_logic.plt').
 
 % ==========================================================================
 % do_varaibles/5 replaces the VARS in things like (exists ...VARS... Stuff)
@@ -141,10 +141,10 @@ kif_to_term(InS, Clif):-
 run_1_test(String):-
    write('\n\n\n'), 
    dmsg("================================================="), 
-   kif_to_term(String, Clif), 
-   pprint_ecp(magenta, (?- run_1_test(String))), 
-   pprint_ecp(yellow, clif=Clif), 
-   convert_clif_to_cg(Clif, CG), 
+  mpred_test(mort(cgp_common_logic:kif_to_term(String, Clif))),
+  pprint_ecp(magenta, (?- run_1_test(String))), 
+  pprint_ecp(yellow, clif=Clif), 
+  mpred_test(mort(cgp_common_logic:convert_clif_to_cg(Clif, CG))),
    pprint_ecp(cyan, cg(CG)), 
    dmsg("================================================="), !.
 

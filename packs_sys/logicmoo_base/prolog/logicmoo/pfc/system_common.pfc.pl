@@ -59,7 +59,7 @@ without_depth_limit(G):-
 
 %:- use_module(library(rtrace)).
 :- mpred_unload_file.
-:- begin_pfc.
+:- expects_dialect(pfc).
 % :- '$set_source_module'(baseKB).
 % :- prolog_load_context(module,Mod),sanity(Mod==baseKB),writeq(prolog_load_context(module,Mod)),nl.
 
@@ -742,7 +742,7 @@ arity(typeProps,2).
 % ==>(genls(isEach(prologMultiValued,prologOrdered,prologNegByFailure,prologHybrid,prologPTTP,prologDynamic,prologBuiltin,prologKIF,functorIsMacro,prologListValued,prologSingleValued),tPred)).
 :- assert_hasInstance(tCol,tCol).
 :- expects_dialect(pfc).
-:- file_begin(pfc).
+:- expects_dialect(pfc).
 
  
 % FIXXXXXXXXXXXXXXXXXXXXXXXXXXXXXxxx
@@ -1240,14 +1240,14 @@ ttAgentType(mobPhilosopher).
 %:- mpred_trace_all.
 isa(iPlato7,mobPhilosopher).
 
-:-must(isa(iPlato7,mobPhilosopher)).
+:- sanity(isa(iPlato7,mobPhilosopher)).
 
 :- if((current_prolog_flag(runtime_debug,D),D>2)).
-:- mpred_test(\+ isa(iPlato7,ftAtom)).
+:- sanity(\+ isa(iPlato7,ftAtom)).
 
 %:- mpred_test(\+ quotedIsa(iPlato7,mobPhilosopher)).
-%:- sanity(mpred_test(~quotedIsa(iPlato7,mobPhilosopher))).
-:- sanity(mpred_test(quotedIsa(iPlato7,ftAtom))).
+%:- sanity((~quotedIsa(iPlato7,mobPhilosopher))).
+:- sanity((quotedIsa(iPlato7,ftAtom))).
 :- mpred_notrace_all.
 :- endif.
 

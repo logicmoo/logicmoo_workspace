@@ -231,7 +231,7 @@ Object applies:
 % mudLabelTypeProps(Lbl,Type,Props)/ground(mudLabelTypeProps(Lbl,Type,Props))==> (typeHasGlyph(Type,Lbl) , typeProps(Type,Props)).
 % :-register_module_type(dynamic).
 
-:-file_begin(pfc).
+:-expects_dialect(pfc).
 
 predTypeMax(mudEnergy,tAgent,120).
 

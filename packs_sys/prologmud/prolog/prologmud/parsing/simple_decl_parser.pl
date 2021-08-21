@@ -11,7 +11,7 @@
 
 :- check_clause_counts.
 :- include(prologmud(mud_header)).
-:- use_module(library(pfc)).
+:- expects_dialect(pfc).
 :- check_clause_counts.
 
 :-discontiguous((translation_spo/6,parserTest/2,parserTest/3,translation_w//

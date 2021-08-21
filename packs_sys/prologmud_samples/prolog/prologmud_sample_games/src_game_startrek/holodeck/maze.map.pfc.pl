@@ -16,7 +16,7 @@
 %
 */
 
-:-file_begin(pfc).
+:-expects_dialect(pfc).
 
 
 grid_key(ed='tEdgeOfWorld').

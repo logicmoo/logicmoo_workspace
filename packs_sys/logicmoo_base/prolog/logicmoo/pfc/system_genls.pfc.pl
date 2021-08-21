@@ -37,7 +37,7 @@ genlsUpTo(ttTypeType).
 
 % to load this files use  ?- ensure_mpred_file_loaded('logicmoo/pfc/system_genls.pfc').
 :- dynamic(mudIsa/2).
-:- file_begin(pfc).
+:- expects_dialect(pfc).
 
 
 tooSlow==>((type_checking ==> (((genls(X,Y),{X\=Y},genls(Y,X))) ==> {mpred_withdraw(genls(Y,X))}))).

@@ -37,7 +37,7 @@
 
 :- expects_dialect(pfc).
 
-:- file_begin(pfc).
+:- expects_dialect(pfc).
 
 :- kb_shared(predicate_relaxed/1).
 

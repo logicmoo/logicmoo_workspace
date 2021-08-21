@@ -32,7 +32,7 @@
 ==> t(tBird,iChilly).
 
 :- dynamic(instanceOf/2).
-%:- file_begin(pfc).
+%:- expects_dialect(pfc).
 
 (tType(COL)==>{kb_local(COL/1)},
  functorDeclares(COL),

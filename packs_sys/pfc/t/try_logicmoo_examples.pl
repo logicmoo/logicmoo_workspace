@@ -82,7 +82,7 @@ out.
 :- process_this_script.
 
 %=  setup pfc
-:- file_begin(pfc).
+:- expects_dialect(pfc).
 
 %= save compiled clauses using forward chaining storage (by default)
 %= we are using forward chaining just so any logical errors, performance and program bugs manefest

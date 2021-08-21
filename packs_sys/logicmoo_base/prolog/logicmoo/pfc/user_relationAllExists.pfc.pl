@@ -5,7 +5,7 @@
 
 :- set_prolog_flag_until_eof(do_renames,term_expansion).
 
-:- file_begin(pfc).
+:- expects_dialect(pfc).
 :- expects_dialect(pfc).
 
 

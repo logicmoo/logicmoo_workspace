@@ -1,7 +1,7 @@
 % Prolog Forward Chaining
 
-%=  load pfc
-:- use_module(library(pfc)).		
+%=  setup pfc
+:- expects_dialect(pfc).
 
 % Your program goes here
 
@@ -10,8 +10,6 @@
 %= immediately
 :- set_clause_compile(fwc).
 
-%=  setup pfc
-:- file_begin(pfc).
 
 %=  Trace execution
 :- mpred_trace_exec.

@@ -17,7 +17,7 @@
 :- style_check(-discontiguous).
 % :- style_check(-atom).
 
-:- file_begin(pfc).
+:- expects_dialect(pfc).
 
 :- declare_load_dbase('../src_game_nani/**/*.pfc.pl').
 

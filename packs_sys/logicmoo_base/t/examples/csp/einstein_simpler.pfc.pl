@@ -42,7 +42,7 @@
 
 :- ensure_loaded(library(logicmoo_user)).
 
-:- file_begin(pfc).
+:- expects_dialect(pfc).
 
 :- op(600,xfy, (/\)).
 :- op(0,xfx,'=>').

@@ -1794,6 +1794,9 @@ thconsult(( File )):-
 \index{read\_all}
 \begin{verbatim} */
 
+:- multifile(explain_cmd/1).
+:- dynamic(explain_cmd/1).
+
 :- meta_predicate(th_call(*)).
 th_call(explain(T)):- !, explain_cmd(T).
 th_call(T):- call(T).

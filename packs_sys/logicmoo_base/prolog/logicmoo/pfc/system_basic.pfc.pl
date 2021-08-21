@@ -231,7 +231,7 @@ never_assert_u(meta_argtypes(tSet(ftAssertable)),badRules).
 :- kb_shared(tCol/1).
 :- kb_shared(ttTypeFacet/1).
 
-:- begin_pfc.
+:- expects_dialect(pfc).
 
 
 % ((prologHybrid(F),arity(F,A))==>{kb_shared(F/A)}).
@@ -604,9 +604,9 @@ tAtemporalNecessarilyEssentialCollectionType(ANECT)==>
 
 % prologHybrid(arity/2).
 
-:- begin_pfc.
-:- sanity(get_lang(pfc)).
-:- set_file_lang(pfc).
+:- expects_dialect(pfc).
+%:- sanity(get_lang(pfc)).
+%:- set_file_lang(pfc).
 % :- mpred_ops.
 
 :- mpred_notrace_exec.

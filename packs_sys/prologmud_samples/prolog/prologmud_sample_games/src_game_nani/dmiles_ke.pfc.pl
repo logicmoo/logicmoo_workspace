@@ -15,7 +15,7 @@ use this file with...
 
 :- op(600,fx,onSpawn).
 
-:- file_begin(pfc).
+:- expects_dialect(pfc).
 
 tRegion(iDMilesRoom).
 onSpawn mudAreaConnected(iDMilesRoom,iHallWay7).

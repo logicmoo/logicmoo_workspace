@@ -6,9 +6,9 @@
 %
 */
 :- module(baseKB).
-:- use_module(library(pfc)).
+:- expects_dialect(pfc).
 
-%:- file_begin(pfc).
+%:- expects_dialect(pfc).
 
 :- install_constant_renamer_until_eof.
 

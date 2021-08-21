@@ -204,7 +204,7 @@ ensure_prolog_file_consulted(M:File,Options):-must(load_files(M:File,Options)),!
 ensure_mpred_file_consulted(M:File,Options):- 
  call_from_module(M,
   with_mpred_expansions(locally_tl(pretend_loading_file(File),
-              must((file_begin(pfc),
+              must((expects_dialect(pfc),
                     load_files(M:File,Options)))))),!.
 
 

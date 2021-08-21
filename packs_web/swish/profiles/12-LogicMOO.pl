@@ -1,8 +1,8 @@
 % LogicMOO Skel
 
 :- use_module(library(logicmoo_user)).	 
-%=  load pfc
-:- use_module(library(pfc)).
+%=  setup pfc
+:- expects_dialect(pfc).
 
 %= Constraint Logic Programming
 :- use_module(library(dif)).		% Sound inequality
@@ -17,8 +17,6 @@
 %= immediately
 :- set_clause_compile(fwc).
 
-%=  setup pfc
-:- file_begin(pfc).
 
 %=  Trace execution
 :- mpred_trace_exec.

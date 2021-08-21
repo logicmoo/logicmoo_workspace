@@ -23,6 +23,7 @@ end_of_file.
 :- register_module_type(planning).
 
 :-decl_type(tFederation).
+:- expects_dialect(pfc).
 
 vette_federation_idea(Agent,Act,Act):-var(Act),!,dmsg(vette_federation_idea(Agent,Act)).
 vette_federation_idea(_,actSit,actSit):-!.

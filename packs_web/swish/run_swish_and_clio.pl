@@ -1,13 +1,19 @@
-/*
+
 :- module(swish_ide,
-	  [ remote_swish/0,
-	    remote_swish/1			% ?Port
+	  [ start_swish_and_clio/0,
+      start_swish_and_clio_real/0
+      %remote_swish/0,
+	    %remote_swish/1			% ?Port
 	  ]).
-*/
-/** <not-module> Utility LOGICMOO UTILS
-This module starts Swish and Cleopatra. The purpose is to run Swish and Clio Together for LOGICMOO Web UI.   
+
+/** <module> Utility LOGICMOO UTILS
+This module starts Swish and Cliopatria. 
+
+The purpose is to run Swish and Clio Together for LOGICMOO Web UI.   
+
 - @author Douglas R. Miles
 - @license LGPL
+
 
  Part of SWISH
 
@@ -274,6 +280,8 @@ host_port(Port,_, Port):-!.
 
 :- endif. % false
 
+
+
 pet_test:- pengine_rpc("https://logicmoo.org:3020",
                        sin_table(X,Y),
                        [ src_text(':- dynamic(sin_table/2). sin_table(1,2).'),
@@ -428,6 +436,7 @@ rt123:- rtrace(swish_highlight:codemirror_tokens([protocol(http),method(post),re
 :- dynamic(did_start_swish_and_clio/0).
 start_swish_and_clio:- did_start_swish_and_clio,!.
 start_swish_and_clio:- !.
+%start_swish_and_clio:- start_swish_and_clio_real.
 start_swish_and_clio_real:- asserta(did_start_swish_and_clio),
  % :- cd('/opt/logicmoo_workspace/packs_web/ClioPatria').
    current_prolog_flag(argv,WasArgV),

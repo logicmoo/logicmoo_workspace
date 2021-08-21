@@ -190,8 +190,8 @@ sandbox:safe_meta_predicate(system:notrace/1).
 :- set_long_message_server('https://logicmoo.org').
 :- use_module(library('../../shrdlu/prolog/logicmoo_shrdlu')).
 
-%inoxf(Goal):- ignore(notrace(on_x_fail(Goal))).
-inoxf(Goal):- call(Goal),!.
+inoxf(Goal):- ignore(notrace(catch(Goal,E,format(user_error,'~N~ncall(~q) caused: ~q!~n~n',[Goal,E])))).
+%inoxf(Goal):- catch(Goal),!.
 
 :- dynamic(already_webui_load_swish_and_clio/0).
 

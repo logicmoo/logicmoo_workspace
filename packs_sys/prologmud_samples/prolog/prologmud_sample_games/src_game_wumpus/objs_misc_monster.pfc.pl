@@ -226,6 +226,7 @@ Object applies:
 % :- include(library(prologmud/server/mud_header)).
 
 :-register_module_type([world_types,parser]).
+:- expects_dialect(pfc).
 
 % :-register_module_type(dynamic).
 

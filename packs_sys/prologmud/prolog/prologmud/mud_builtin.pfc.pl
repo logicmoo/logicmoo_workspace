@@ -60,10 +60,10 @@ listing_break(G):- cwc, listing(G),break.
 % :- gripe_time(60,user:ensure_loaded(library(logicmoo_user))).
 
 % :- set_defaultAssertMt(baseKB).
-:- file_begin(pfc).
+:- expects_dialect(pfc).
 
 
-:- file_begin(code).
+:- expects_dialect(swi).
 
 :- kb_global(baseKB:(  irc_event_hooks/3)).
 :- kb_global(baseKB:(  deliver_event_hooks/2)).
@@ -92,7 +92,7 @@ listing_break(G):- cwc, listing(G),break.
 :- kb_global(baseKB:   agent_text_command/4).
 :- kb_global(baseKB:   check_permanence/4).
 
-:- file_begin(pfc).
+:- expects_dialect(pfc).
 
 
 :-op(0,fx,  ('disabled')).

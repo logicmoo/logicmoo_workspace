@@ -17,7 +17,7 @@
 
 % :- register_module_type (mtCommand).
 
-% :- file_begin(mudcode).
+% :- expects_dialect(mudcode).
 
 
 agent_text_command(Agent,[DirSS],Agent,OUT):-nonvar(DirSS), to_case_breaks(DirSS,[xti(DirS,_),

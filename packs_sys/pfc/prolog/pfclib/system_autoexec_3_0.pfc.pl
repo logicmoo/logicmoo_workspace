@@ -713,7 +713,6 @@ prologBuiltin(var/1).
 :- pfc_unload_file.
 
 :- expects_dialect(pfc).
-:- file_begin(pfc).
 
 :- sanity(is_pfc_file).
 

@@ -24,8 +24,8 @@
 %# Tests Finin original defeasabilty system is working over 2nd order
 
 :- include(test_header).
-:- rtrace(set_file_abox_module(user)).
-:- file_begin(pfc).
+:- set_file_abox_module(user).
+:- expects_dialect(pfc).
 
   
 tType(tFly).

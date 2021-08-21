@@ -14,7 +14,7 @@
 
 % :-export(eng_fully_expand/2).
 
-%:- file_begin(prolog).
+%:- expects_dialect(prolog).
 
 when_command_show(Agent,ActionType):- 
   findall(Show,on_command_show(Agent,ActionType,Show),MORELOOK),
@@ -292,7 +292,7 @@ anglify_noun_known(Obj,_Hint,StringO):- findall(String,holds_t(nameString,Obj,St
 %anglify_noun_known(Obj,_Hint,String):-
 %nameString(X,Y,_,_)
 
-%:- file_begin(prolog).
+%:- expects_dialect(prolog).
 
 
 

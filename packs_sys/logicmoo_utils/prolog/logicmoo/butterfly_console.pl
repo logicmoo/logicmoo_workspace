@@ -462,15 +462,6 @@ esc_screen(X):- Style=current,
    call(X),
    bfly_write(Style,when_in_screen(esc(97)))).
 
-
-swish_reply_config_root(_Request):-
-  swish_config:
-  (json_config(JSON, []),
-	 reply_json(JSON)).
-
-:- http_handler('/swish_config.json', swish_reply_config_root,[]).
-
-
 use_bfly_setting :- false.
 
 in_bfly_style(Name,Value):- use_bfly_setting, !, bfly_get(Name,Value).

@@ -13,7 +13,7 @@
 %
 */
 :- include(prologmud(mud_header)).
-:- use_module(library(pfc)).
+:- expects_dialect(pfc).
 
 :- ensure_loaded(library(instant_prolog_docs)).
 

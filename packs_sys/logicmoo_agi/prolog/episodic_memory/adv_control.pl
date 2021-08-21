@@ -18,7 +18,7 @@
 
 setup_moo ==> {writeln(setup_moo)}.
 
-:- begin_pfc.
+%:- expects_dialect(pfc).
 
 setup_moo2 ==> {writeln(setup_moo2)}.
 
