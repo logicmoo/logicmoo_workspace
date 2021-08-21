@@ -37,6 +37,11 @@
 	    remote_swish/1			% ?Port
 	  ]).
 */
+/** <module> Utility LOGICMOO UTILS
+This module starts Swish and Cleopatra. The purpose is to run Swish and Clio Together for LOGICMOO Web UI.   
+@author Douglas R. Miles
+@license LGPL
+*/
 :- use_module(library(http/thread_httpd)).
 :- use_module(library(http/http_dispatch)).
 :- use_module(library(http/http_path)).
