@@ -21,7 +21,7 @@
 This module creates pretty printing of complex terms. 
 @author Douglas R. Miles
 @license LGPL
-
+*/
 :- set_module(class(library)).
 
 :- autoload(library(http/html_write),[html/3,print_html/1]).
