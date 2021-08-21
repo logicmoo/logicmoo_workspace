@@ -1,17 +1,18 @@
 /* Part of LogicMOO Base Logicmoo Utils
 % ===================================================================
-    File:         'logicmoo_util_startuo.pl'
+    File:          'logicmoo_startup.pl'
+    Previous File: 'logicmoo_util_startuo.pl'
     Purpose:       To load the logicmoo libraries inits as needed
-    Contact:       $Author: dmiles $@users.sourceforge.net ;
+    Contact:       $Author: logicmoo@gmail.com ;
     Version:       'logicmoo_util_startuo.pl' 1.0.0
     Revision:      $Revision: 1.2 $
     Revised At:    $Date: 2017/06/02 21:57:28 $
     Author:        Douglas R. Miles
     Maintainers:   logicmoo
     E-mail:        logicmoo@gmail.com
-    WWW:           http://www.prologmoo.com
+    WWW:           http://www.logicmoo.org
     SCM:           https://github.com/logicmoo/logicmoo_utils/blob/master/prolog/logicmoo_startup.pl
-    Copyleft:      1999-2015, LogicMOO Prolog Extensions
+    Copyleft:      1999-2021, LogicMOO Prolog Extensions
     License:       Lesser GNU Public License
 % ===================================================================
 */
