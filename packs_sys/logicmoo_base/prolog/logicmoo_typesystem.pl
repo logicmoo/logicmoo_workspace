@@ -2,7 +2,7 @@
 %
 %
 % Dec 13, 2035
-% Douglas Miles
+% Douglas Miles logicmoo@gmail.com
 
 */
 :- module(logicmoo_typesystem,
@@ -22,6 +22,11 @@
  op(300,fx,'~'),
  op(300,fx,'-')*/  ]).
 
+/** <module> MODULE LOGICMOO TYPESYSTEM
+This module constrains arguments for faster and more exact search. 
+ - @author Douglas R. Miles
+ - @license LGPL 
+*/
 :- set_module(class(library)).
 
 /*
