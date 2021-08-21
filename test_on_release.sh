@@ -6,6 +6,9 @@ source ./logicmoo_env.sh -v
 find -name "Report-*ml" -delete
 
 TEST_PARAMS="$*"
+if [ -z "$TEST_PARAMS" ]; then 
+  TEST_PARAMS="*04.p*"
+fi
 
 find . -mindepth 2 -name "test_on_*.sh" -execdir bash '{}' $TEST_PARAMS \;
 
