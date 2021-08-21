@@ -39,7 +39,7 @@
     blocks for Sockets in some Prolog I cannot remember.
 
 */
-/** <module> Utility LOGICMOO_PREDICATE_STREAMS
+/** <module> Utility LOGICMOO PREDICATE STREAMS
 This module creates virtual/abstract input and output streams in prolog using predicates. 
 @author Douglas R. Miles
 @license LGPL
