@@ -1,12 +1,13 @@
 #!/bin/bash -x
 
-[ -z "$TESTING_TEMP" ] && export TESTING_TEMP=docs/test_results
+source ./logicmoo_env.sh -v
+
+[ -z "$TESTING_TEMP" ] && export TESTING_TEMP=$(pwd)/docs/test_results
 
 
 [ -z "$TESTING_TEMP" ] && export TESTING_TEMP=$(mktemp -d -t logicmoo_testing-$(date +%Y-%m-%d-%H-%M-%S)-XXXXXXXXXX)
 mkdir -p $TESTING_TEMP
 
-source ./logicmoo_env.sh -v
 
 find $TESTING_TEMP -name "Report-*ml" -delete
 
