@@ -3,6 +3,6 @@
 	<Projects>
 		<Project File="logicmoo_workspace.vpj"/>
 		<Project File="other_files.vpj"/>
-                <Project File="T:\\opt\\logicmoo_workspace\\platform\\new-platform.vpj"/>
+                <Project File="../CYC_JRTL_with_CommonLisp/platform/new-platform.vpj"/>^M
 	</Projects>
 </Workspace>
