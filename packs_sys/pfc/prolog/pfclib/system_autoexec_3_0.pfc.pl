@@ -332,7 +332,7 @@ rtNotForUnboundPredicates(call).
 pfc_checking ==> (mpred_prop(M,F,A,pfcPosTrigger)==>{M:warn_if_static(F,A)}).
 pfc_checking ==> (mpred_prop(M,F,A,pfcNegTrigger)==>{M:warn_if_static(F,A)}).
 pfc_checking ==> (mpred_prop(M,F,A,pfcBcTrigger)==>{M:warn_if_static(F,A)}).
-mpred_prop(M,F,A,What)/(\+ ground(F/A))==>{trace_or_throw_ex(mpred_prop(M,F,A,What))}.
+mpred_prop(M,F,A,What)/(\+ ground(F/A))==>{trace_or_throw(mpred_prop(M,F,A,What))}.
 
 
 mpred_prop(M,F,A,pfcCreates)==> 
@@ -392,7 +392,7 @@ warningsAbout(Msg,Why)==>{wdmsg_pfc(error(warningsAbout(Msg,Why))),if_interactiv
 %
 % True Structure.
 %
-% t(C,I):- cwc,  trace_or_throw_ex(t(C,I)),t(C,I). % ,fail,loop_check_term(isa_backchaing(I,C),t(C,I),fail).
+% t(C,I):- cwc,  trace_or_throw(t(C,I)),t(C,I). % ,fail,loop_check_term(isa_backchaing(I,C),t(C,I),fail).
 % t(P,A1):- vwc, isa(A1,P).
 t(A,B):- cwc, atom(A),!,ABC=..[A,B],call_u(ABC).
 %t(A,B):- (atom(A)->true;(no_repeats(arity(A,1)),atom(A))),ABC=..[A,B],loop_check(call_u(ABC)).

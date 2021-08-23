@@ -35,7 +35,7 @@
 
 :- use_module(library(logicmoo_user)).
 
-:- begin_pfc.
+:- expects_dialect(pfc).
 
 %= Test escaping of pfclog/1
 

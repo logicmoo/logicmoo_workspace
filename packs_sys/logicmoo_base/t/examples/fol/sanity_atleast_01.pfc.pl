@@ -65,7 +65,7 @@ subtest([subtest_assert(tHeart(_)),
 
 :- cls.
 
-:- begin_pfc.
+:- expects_dialect(pfc).
 
 :- t122.
 

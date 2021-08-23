@@ -1856,9 +1856,9 @@ expand_props(Op,Term,OUT):-expand_props(_,Op,Term,OUT).
 % Expand Props.
 %
 expand_props(_Prefix,_,Sent,OUT):- t_l:no_db_expand_props, (not_ftCompound(Sent)),!,OUT=Sent.
-%expand_props(Prefix,Op,Term,OUT):- stack_check,(is_ftVar(OpeR);is_ftVar(Term)),!,trace_or_throw_ex(var_expand_units(OpeR,Term,OUT)).
+%expand_props(Prefix,Op,Term,OUT):- stack_check,(is_ftVar(OpeR);is_ftVar(Term)),!,trace_or_throw(var_expand_units(OpeR,Term,OUT)).
 expand_props(Prefix,Op,Sent,OUT):-  Sent  univ_safe  [And|C12],is_sentence_functor(And),!,maplist(expand_props(Prefix,Op),C12,O12),OUT  univ_safe  [And|O12].
-expand_props(_Prefix,_ ,props(Obj,Open),props(Obj,Open)):- is_ftVar(Open),!. % ,trace_or_throw_ex(expand_props(Prefix,Op,props(Obj,Open))->OUT).
+expand_props(_Prefix,_ ,props(Obj,Open),props(Obj,Open)):- is_ftVar(Open),!. % ,trace_or_throw(expand_props(Prefix,Op,props(Obj,Open))->OUT).
 expand_props(_Prefix,change(assert,_),props(_Obj,List),true):- List==[],!.
 expand_props(_Prefix,_,props(Obj,List),{nonvar(Obj)}):- List==[],!.
 % expand_props(_Prefix,_ ,props(_Obj,List),true):- List==[],!.
@@ -1881,7 +1881,7 @@ expand_props(Prefix,Op,props(Obj,PropVal),OUT):-
     expand_props(Prefix,Op,props(Obj,PropVal2),OUT),!.
 expand_props(Prefix,Op,props(Obj,PropVal),OUT):- PropVal  univ_safe  [Prop|Val], \+ (infix_op(Prop,_)),!,from_univ(Prefix,Op,[Prop,Obj|Val],OUT).
 expand_props(Prefix,Op,props(Obj,PropVal),OUT):- PropVal  univ_safe  [Prop|Val],!,dtrace(from_univ(Prefix,Op,[Prop,Obj|Val],OUT)).
-expand_props(Prefix,Op,props(Obj,Open),props(Obj,Open)):- trace_or_throw_ex(unk_expand_props(Prefix,Op,props(Obj,Open))).
+expand_props(Prefix,Op,props(Obj,Open),props(Obj,Open)):- trace_or_throw(unk_expand_props(Prefix,Op,props(Obj,Open))).
 
 expand_props(Prefix,OpeR,ClassTemplate,OUT):- ClassTemplate  univ_safe  [props,Inst,Second,Third|Props],!,
    expand_props(Prefix,OpeR,props(Inst,[Second,Third|Props]),OUT),!.
@@ -1914,7 +1914,7 @@ conjoin_l(A,B,C):-conjoin(A,B,C).
 % Converted To Managed Predicate Form.
 %
 
-% into_mpred_form(Var,MPRED):- is_ftVar(Var), trace_or_throw_ex(var_into_mpred_form(Var,MPRED)).
+% into_mpred_form(Var,MPRED):- is_ftVar(Var), trace_or_throw(var_into_mpred_form(Var,MPRED)).
 into_mpred_form(V,VO):- (not_ftCompound(V)),!,VO=V.
 into_mpred_form(M:X,M:O):- atom(M),!,into_mpred_form(X,O),!.
 % convered into_mpred_form(Sent,SentO):-is_ftNonvar(Sent),get_ruleRewrite(Sent,SentM),!,into_mpred_form(SentM,SentO).
@@ -1935,7 +1935,7 @@ into_mpred_form(IN,OUT):-
    cnas(OUT,FO,ArgsO).
 
 
-% into_mpred_form(I,O):- /*quietly*/(loop_check(into_mpred_form_ilc(I,O),O=I)). % trace_or_throw_ex(into_mpred_form(I,O).
+% into_mpred_form(I,O):- /*quietly*/(loop_check(into_mpred_form_ilc(I,O),O=I)). % trace_or_throw(into_mpred_form(I,O).
 
 %:- mpred_trace_nochilds(into_mpred_form/2).
 
@@ -2038,9 +2038,9 @@ transform_holds_3(_,props(Obj,Props),props(Obj,Props)):-!.
 transform_holds_3(_,A,A):-compound(A),safe_functor(A,F,N), predicate_property(A,_),arity_no_bc(F,N),!.
 transform_holds_3(HFDS,M:Term,M:OUT):-atom(M),!,transform_holds_3(HFDS,Term,OUT).
 transform_holds_3(HFDS,[P,A|ARGS],DBASE):- is_ftVar(P),!,DBASE  univ_safe  [HFDS,P,A|ARGS].
-transform_holds_3(HFDS, ['[|]'|ARGS],DBASE):- trace_or_throw_ex(list_transform_holds_3(HFDS,['[|]'|ARGS],DBASE)).
+transform_holds_3(HFDS, ['[|]'|ARGS],DBASE):- trace_or_throw(list_transform_holds_3(HFDS,['[|]'|ARGS],DBASE)).
 transform_holds_3(Op,[SVOFunctor,Obj,Prop|ARGS],OUT):- if_defined(is_svo_functor(SVOFunctor)),!,transform_holds_3(Op,[Prop,Obj|ARGS],OUT).
-transform_holds_3(Op,[P|ARGS],[P|ARGS]):- not(atom(P)),!,dmsg_pretty(transform_holds_3),trace_or_throw_ex(transform_holds_3(Op,[P|ARGS],[P|ARGS])).
+transform_holds_3(Op,[P|ARGS],[P|ARGS]):- not(atom(P)),!,dmsg_pretty(transform_holds_3),trace_or_throw(transform_holds_3(Op,[P|ARGS],[P|ARGS])).
 transform_holds_3(HFDS,[HOFDS,P,A|ARGS],OUT):- a(is_holds_true,HOFDS),!,transform_holds_3(HFDS,[P,A|ARGS],OUT).
 transform_holds_3(HFDS,[HOFDS,P,A|ARGS],OUT):- HFDS==HOFDS, !, transform_holds_3(HFDS,[P,A|ARGS],OUT).
 transform_holds_3(_,HOFDS,isa(I,C)) :- was_isa_ex(HOFDS,I,C),!.
@@ -2058,7 +2058,7 @@ transform_holds_3(_,[Type,Inst|PROPS],props(Inst,[isa(Type)|PROPS])):-
                   must_det(\+(if_defined(is_never_type(Type)))),!.
 
 transform_holds_3(_,[P,A|ARGS],DBASE):- atom(P),!,DBASE  univ_safe  [P,A|ARGS].
-transform_holds_3(Op,[P,A|ARGS],DBASE):- !, is_ftNonvar(P),dumpST,trace_or_throw_ex(transform_holds_3(Op,[P,A|ARGS],DBASE)), DBASE  univ_safe  [P,A|ARGS].
+transform_holds_3(Op,[P,A|ARGS],DBASE):- !, is_ftNonvar(P),dumpST,trace_or_throw(transform_holds_3(Op,[P,A|ARGS],DBASE)), DBASE  univ_safe  [P,A|ARGS].
 transform_holds_3(Op,DBASE_T,OUT):- DBASE_T  univ_safe  [P,A|ARGS],!,transform_holds_3(Op,[P,A|ARGS],OUT).
 
 
@@ -2145,7 +2145,7 @@ db_reop(Op,Term):-db_reop_l(Op,Term).
 db_reop_l(query(_HLDS,Must),Call) :- !,preq(Must,Call).
 db_reop_l(Op,DATA):-no_loop_check(db_op0(Op,DATA)).
 
- dm sg_hook(transform_holds(t,_What,props(ttSpatialType,[isa(isa),isa]))):-trace_or_throw_ex(dtrace).
+ dm sg_hook(transform_holds(t,_What,props(ttSpatialType,[isa(isa),isa]))):-trace_or_throw(dtrace).
 
 */
 
@@ -2160,7 +2160,7 @@ db_reop_l(Op,DATA):-no_loop_check(db_op0(Op,DATA)).
 %
 expand_goal_correct_argIsa(A,B):- expand_goal(A,B).
 
-% db_op_simpler(query(HLDS,_),MODULE:C0,call_u(call,MODULE:C0)):- atom(MODULE), is_ftNonvar(C0),not(not(predicate_property(C0,_PP))),!. % , functor_catch(C0,F,A), dmsg_pretty(todo(unmodulize(F/A))), %trace_or_throw_ex(module_form(MODULE:C0)), %   db_op(Op,C0).
+% db_op_simpler(query(HLDS,_),MODULE:C0,call_u(call,MODULE:C0)):- atom(MODULE), is_ftNonvar(C0),not(not(predicate_property(C0,_PP))),!. % , functor_catch(C0,F,A), dmsg_pretty(todo(unmodulize(F/A))), %trace_or_throw(module_form(MODULE:C0)), %   db_op(Op,C0).
 
 %= 	 	 
 
@@ -2196,7 +2196,7 @@ simply_functors(Db_pred,query(HLDS,Must),Wild):- once(into_mpred_form(Wild,Simpl
 simply_functors(Db_pred,Op,Wild):- once(into_mpred_form(Wild,Simpler)),Wild\=@=Simpler,!,call(Db_pred,Op,Simpler).
 
 
-% -  dmsg_hook(db_op(query(HLDS,call),holds_t(ft_info,tCol,'$VAR'(_)))):-trace_or_throw_ex(dtrace).
+% -  dmsg_hook(db_op(query(HLDS,call),holds_t(ft_info,tCol,'$VAR'(_)))):-trace_or_throw(dtrace).
 
 lin_visits(P,Visits):-attvar(P),get_attr(P,linv,num(Visits)),!.
 lin_visits(_,0).
@@ -2423,7 +2423,7 @@ db_quf_l_0(Op, And,[C|C12],PreO,TemplO):-
 db_quf(Op,C,Template):- db_quf(Op,C,true,Template),!.
 
 db_quf(_ ,C,Pretest,Template):- (not_ftCompound(C)),!,must(Pretest=true),must(Template=C).
-db_quf(Op,C,Pretest,Template):-is_ftVar(C),!,trace_or_throw_ex(var_db_quf(Op,C,Pretest,Template)).
+db_quf(Op,C,Pretest,Template):-is_ftVar(C),!,trace_or_throw(var_db_quf(Op,C,Pretest,Template)).
 db_quf(_ ,C,Pretest,Template):-as_is_term(C),!,must(Pretest=true),must(Template=C),!.
 
 db_quf(Op,M:C,Pretest,M:Template):-atom(M),!,must(db_quf(Op,C,Pretest,Template)).
@@ -2551,7 +2551,7 @@ expanded_different_ic(G0,G1):- G0\==G1.
 %
 expanded_different_1(NV:G0,G1):-is_ftNonvar(NV),!,expanded_different_1(G0,G1).
 expanded_different_1(G0,NV:G1):-is_ftNonvar(NV),!,expanded_different_1(G0,G1).
-expanded_different_1(G0,G1):- (is_ftVar(G0);is_ftVar(G1)),!,trace_or_throw_ex(expanded_different(G0,G1)).
+expanded_different_1(G0,G1):- (is_ftVar(G0);is_ftVar(G1)),!,trace_or_throw(expanded_different(G0,G1)).
 expanded_different_1(G0,G1):- G0 \= G1,!.
 
 

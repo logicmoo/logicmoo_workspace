@@ -213,11 +213,12 @@
 
 % Avoid Warning: mpred_loader:prolog_load_context(reload,true), which is called from
 %
-mpred_unload_file:-!.
 mpred_unload_file:- prolog_load_context(reloading,true),!.
 mpred_unload_file:- source_location(File,_),mpred_unload_file(File).
-mpred_unload_file(File):- dmsg(mpred_unload_file(File)),!.
+mpred_unload_file:-!.
 
+
+mpred_unload_file(File):- dmsg(mpred_unload_file(File)),!.
 mpred_unload_file(File):-
   findall(
     mpred_withdraw(Data,(mfl4(VarNameZ,Module, File, LineNum),AX)),
@@ -434,7 +435,7 @@ mpred_expander_now_physically(M,I,OO):-
  '$set_source_module'(Old,M),
  call_cleanup(M:((
    quietly_must((source_context_module(CM),CM\==pfc_lib,CM\==mpred_loader)),
-   quietly_must(loop_check(expand_term_to_load_calls(I,O),trace_or_throw_ex(in_loop(expand_term_to_load_calls(I,O))))),!,
+   quietly_must(loop_check(expand_term_to_load_calls(I,O),trace_or_throw(in_loop(expand_term_to_load_calls(I,O))))),!,
    quietly_must(I\=@=O),
   (((t_l:mpred_term_expansion_ok;mpred_expand_inside_file_anyways)-> true ;
     ((show_load_context,dmsg_pretty(warning,wanted_mpred_term_expansion(I,O))),fail)),
@@ -913,6 +914,7 @@ show_interesting_cl(Dir,P):- loading_source_file(File),get_file_type(File,Type),
 %
 % Clause Assert.
 %
+cl_assert(clif(Dir),P):- cl_assert(kif(Dir),P).
 cl_assert(kif(Dir),P):- show_if_debug(must_det_l(( show_interesting_cl(kif(Dir),P),call(call,kif_process,P)))),!.
 cl_assert(Dir,P):- show_interesting_cl(Dir,P),ain(P),!.
 cl_assert(pl,P):-  !, show_if_debug(must_det_l((source_location(F,_L), '$compile_aux_clauses'(P,F)))).
@@ -1122,7 +1124,7 @@ check_clause_count(MMask):- swc,
      (Diff ==0 -> true;
      (Diff == -1 -> true;
      ((Diff<0 ,Change is N/abs(Diff ), Change>0.20)
-         -> trace_or_throw_ex(bad_count(Mask,(Was --> N))) ; dmsg_pretty(good_count(Mask,(Was --> N)))))).
+         -> trace_or_throw(bad_count(Mask,(Was --> N))) ; dmsg_pretty(good_count(Mask,(Was --> N)))))).
 
 check_clause_counts:-!.
 check_clause_counts:- flag_call(runtime_speed==true),!.
@@ -1710,11 +1712,11 @@ compile_clause(CL):- quietly_must((make_dynamic(CL),assertz_if_new(CL),!,clause_
 %
 make_dynamic((H:-_)):- sanity(nonvar(H)),!,must(make_dynamic(H)).
 make_dynamic(M:(H:-_)):- sanity(nonvar(H)),!,must(make_dynamic(M:H)).
-make_dynamic(C):- loop_check(make_dynamic_ilc(C),trace_or_throw_ex(looped_make_dynamic(C))).
+make_dynamic(C):- loop_check(make_dynamic_ilc(C),trace_or_throw(looped_make_dynamic(C))).
 
 make_dynamic_ilc(baseKB:C):- predicate_property(baseKB:C, dynamic),!.
 % make_dynamic_ilc(C):- predicate_property(C, dynamic).
-make_dynamic_ilc(C):- % trace_or_throw_ex(make_dynamic_ilc(C)),
+make_dynamic_ilc(C):- % trace_or_throw(make_dynamic_ilc(C)),
    compound(C),strip_module(C,MIn,_),get_functor(C,F,A),quietly_must(F\=='$VAR'),
   (\+ a(mtHybrid,MIn) -> must(defaultAssertMt(M)) ; MIn =M),
   functor(P,F,A),
@@ -2292,7 +2294,7 @@ convert_side_effect_0b(assert(Data),Result):-!,convert_side_effect_0a(assertz(Da
 %
 convert_side_effect_0c(OpData,Reproduce):- convert_side_effect_0b(OpData,Reproduce),!.
 convert_side_effect_0c(OpData,Reproduce):- show_success(convert_side_effect,convert_side_effect_buggy(OpData,Reproduce)),!.
-convert_side_effect_0c(OpData,Reproduce):- trace_or_throw_ex(unknown_convert_side_effect(OpData,Reproduce)),!.
+convert_side_effect_0c(OpData,Reproduce):- trace_or_throw(unknown_convert_side_effect(OpData,Reproduce)),!.
 
 % todo
 

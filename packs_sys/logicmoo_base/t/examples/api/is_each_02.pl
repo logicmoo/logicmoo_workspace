@@ -8,9 +8,7 @@
 
 % :- module(is_each_01,[]).
 
-:- ensure_loaded(library(pfc)).
-
-:- begin_pfc.
+:- expects_dialect(pfc).
 
 % :- fully_expand( (isEach([system(X),system(Y)]) :- related(X,Y)), _O).
 

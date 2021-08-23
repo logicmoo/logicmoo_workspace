@@ -100,7 +100,7 @@ clif_dialect_ge(expects_dialect(Dialect), clif_expects_dialect(Dialect)):- !.
 
 clif_dialect_te(I,clif(I)):- I \= ( :- _ ).
 clif_dialect_te(I,O):- \+ compound(I),!,as_pfc_expansion(I,O).
-clif_dialect_te('=>'(A,B),kif(O)):- I='implies'(A,B), ((fail,as_pfc_expansion(I,O)) -> true ; O=I),!.
+clif_dialect_te('=>'(A,B),clif(O)):- I='implies'(A,B), ((fail,as_pfc_expansion(I,O)) -> true ; O=I),!.
 clif_dialect_te(I,O):- as_pfc_expansion(I,O).
 
 as_pfc_expansion(I,O):-  

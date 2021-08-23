@@ -199,6 +199,6 @@ for ele2 in "${listOfNames[@]}"
   return $exitcode 2>/dev/null ; exit $exitcode
 ) 
 
-sed -r "s/\x1B\[(([0-9]{1,2})?(;)?([0-9]{1,2})?)?[m,K,H,f,J]//g" $JUNIT_TESTS_GLOBBED > $JUNIT_TESTS_GLOBBED-junit.xml
 JECHO "</testsuite>\n\n\n\n"
+sed -r "s/\x1B\[(([0-9]{1,2})?(;)?([0-9]{1,2})?)?[m,K,H,f,J]//g" $JUNIT_TESTS_GLOBBED > $JUNIT_TESTS_GLOBBED-junit.xml
 

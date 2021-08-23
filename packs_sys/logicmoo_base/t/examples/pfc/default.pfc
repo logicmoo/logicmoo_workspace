@@ -3,7 +3,7 @@
 % -*-Prolog-*-
 % here is an example which defines default facts and rules.  Will it work?
 
-:- begin_pfc.
+:- expects_dialect(pfc).
 
 (default(P)/mpred_literal(P))  ==>  (~( ~P) ==> P).
 

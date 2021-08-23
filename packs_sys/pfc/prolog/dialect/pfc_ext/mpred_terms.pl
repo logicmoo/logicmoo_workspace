@@ -140,7 +140,7 @@ replace_nth_arglist([T|FARGS],A,VAR,[T|FARGO]):-
 %
 % Replace Nth Ref.
 %
-replace_nth_ref([],_N,_OldVar,_NewVar,[]):- !,trace_or_throw_ex(missed_the_boat).
+replace_nth_ref([],_N,_OldVar,_NewVar,[]):- !,trace_or_throw(missed_the_boat).
 replace_nth_ref([OldVar|ARGS],1,OldVar,NewVar,[NewVar|ARGS]):- !.
 replace_nth_ref([Carry|ARGS],Which,OldVar,NewVar,[Carry|NEWARGS]):- 
  Which1 is Which-1,
@@ -155,7 +155,7 @@ replace_nth_ref([Carry|ARGS],Which,OldVar,NewVar,[Carry|NEWARGS]):-
 %
 % Update Value.
 %
-update_value(OLD,NEW,NEXT):- var(NEW),!,trace_or_throw_ex(logicmoo_bug(update_value(OLD,NEW,NEXT))).
+update_value(OLD,NEW,NEXT):- var(NEW),!,trace_or_throw(logicmoo_bug(update_value(OLD,NEW,NEXT))).
 update_value(OLD,NEW,NEWV):- var(OLD),!,compute_value_no_dice(NEW,NEWV).
 update_value(OLD,X,NEW):- is_list(OLD),!,list_update_op(OLD,X,NEW),!.
 update_value(OLDI,+X,NEW):- compute_value(OLDI,OLD),number(OLD),catch(NEW is OLD + X,_,fail),!.

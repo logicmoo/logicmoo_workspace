@@ -4,7 +4,7 @@
 
 :- include('sanity_fi_human.pfc').
 
-:- begin_pfc. 
+:- expects_dialect(pfc).
 
 /*
 

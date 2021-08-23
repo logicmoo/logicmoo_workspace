@@ -5,7 +5,7 @@
 :- include('sanity_fi_sk.pfc').
 :- rtrace(kb_shared((<-)/2)).
 
-:- begin_pfc.
+:- expects_dialect(pfc).
 
 %= simply retract (so we can re-deduce)
 ==> \+ human(douglas).

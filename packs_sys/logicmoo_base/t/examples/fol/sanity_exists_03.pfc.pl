@@ -51,7 +51,7 @@ do_subtest(List):- must_maplist(call,List).
 
 :- cls.
 
-:- begin_pfc.
+:- expects_dialect(pfc).
 
 tAnimal(iBob).
 

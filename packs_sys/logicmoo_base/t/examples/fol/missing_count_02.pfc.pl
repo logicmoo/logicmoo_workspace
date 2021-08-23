@@ -4,7 +4,9 @@
 
 :- debug_logicmoo(_).
 :- nodebug_logicmoo(http(_)).
-:- begin_pfc.
+
+:- expects_dialect(pfc).
+
 
 user:existing_count(X,G,EC):- findall(X,G,List),length(List,EC).
       

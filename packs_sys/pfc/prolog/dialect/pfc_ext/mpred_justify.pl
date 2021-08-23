@@ -438,7 +438,7 @@ mpred_why_justs_2(P) :-
 */
 /*
 
-mpred_why_1(P):- loop_check(quietly_ex((must_ex(mpred_why_try_each(P)),color_line(green,2))),true).
+mpred_why_1(P):- loop_check(quietly((must_ex(mpred_why_try_each(P)),color_line(green,2))),true).
 
 % user:mpred_why_1((user:prolog_exception_hook(A, B, C, D) :- exception_hook(A, B, C, D))).
 % mpred_why_1((prolog_exception_hook(A, B, C, D) :- exception_hook(A, B, C, D))).
@@ -649,7 +649,7 @@ mpred_why_maybe(_,P):-ignore(mpred_why_1(P)).
 
 mpred_why_sub(P):- nop(trace), loop_check(mpred_why_sub0(P),true).
 mpred_why_sub0(P):- mpred_why_2(P,Why),!,wdmsg_pfc(:-mpred_why_1(P)),wdmsgl(mpred_why_maybe(P),Why).
-mpred_why_sub0(P):-loop_check(mpred_why_sub_lc(P),trace_or_throw_ex(mpred_why_sub_lc(P)))-> \+ \+ call(t_l:whybuffer(_,_)),!.
+mpred_why_sub0(P):-loop_check(mpred_why_sub_lc(P),trace_or_throw(mpred_why_sub_lc(P)))-> \+ \+ call(t_l:whybuffer(_,_)),!.
 mpred_why_sub_lc(P):- 
   justifications(P,Js),
   nb_setval('$last_printed',[]),
@@ -679,7 +679,7 @@ mpred_why1(P):-
 
 % non-interactive
 mpred_whyBrouse(P,Js):-
-   must_ex(quietly_ex(in_cmt((mpred_pp_db_justifications(P,Js))))), !.
+   must_ex(quietly(in_cmt((mpred_pp_db_justifications(P,Js))))), !.
 
 % Interactive
 mpred_whyBrouse(P,Js):-
@@ -720,7 +720,7 @@ mpred_unhandled_command(X,_,_):-
 
 mpred_pp_db_justifications(P,Js):-
  show_current_source_location, 
- must_ex(quietly_ex(( format("~NJustifications for ~p:",[P]),
+ must_ex(quietly(( format("~NJustifications for ~p:",[P]),
   mpred_pp_db_justification1('',Js,1)))).
 
 mpred_pp_db_justification1(_Prefix,[],_).

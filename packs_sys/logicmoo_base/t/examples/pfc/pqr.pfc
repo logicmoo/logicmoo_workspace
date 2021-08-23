@@ -3,7 +3,7 @@
 
 :- use_module(library(logicmoo_base)).
 
-:- begin_pfc.
+:- expects_dialect(pfc).
 
 ==> p(1).
 p(X) ==> q(X).

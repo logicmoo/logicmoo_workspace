@@ -210,7 +210,7 @@ get_file_type_local(File,Type):-clause_bq(lmcache:mpred_directive_value(File,lan
 mtCanAssert(M):- is_mtCanAssert(M).
 
 is_mtCanAssert(Module):- clause_bq(mtNonAssertable(Module)),!,fail.
-is_mtCanAssert(ABox):- \+ \+ (ABox=abox),!,trace_or_throw_ex(is_mtCanAssert(ABox)),fail.
+is_mtCanAssert(ABox):- \+ \+ (ABox=abox),!,trace_or_throw(is_mtCanAssert(ABox)),fail.
 is_mtCanAssert(Module):- clause_bq(mtHybrid(Module)).
 is_mtCanAssert(user):-  is_user_pfc.
 is_mtCanAssert(Module):- \+ pfc_lib:is_code_module(Module),!.
@@ -631,7 +631,7 @@ inherit_into_module(Child,Parent):- ain(baseKB:genlMt(Child,Parent)).
 %
 % Ensure Imports Tbox.
 %
-ensure_imports_tbox(M,TBox):- trace_or_throw_ex(unexpected_ensure_imports_tbox(M,TBox)), M==TBox,!.
+ensure_imports_tbox(M,TBox):- trace_or_throw(unexpected_ensure_imports_tbox(M,TBox)), M==TBox,!.
 ensure_imports_tbox(M,TBox):-
   lmcache:is_ensured_imports_tbox(M,TBox),!.
 ensure_imports_tbox(M,TBox):-
@@ -663,7 +663,7 @@ fixup_module(_,[user]).
 fixup_module(M,_L):- skip_user(M).
 
 
-fixup_modules:-  trace_or_throw_ex(unexpected(fixup_modules)),
+fixup_modules:-  trace_or_throw(unexpected(fixup_modules)),
    doall((current_module(M),once((findall(I,import_module(M,I),L))),once(fixup_module(M,L)))).
 
 % :- autoload([verbose(false)]).
@@ -717,7 +717,7 @@ add_import_predicate(Mt,Goal,OtherMt):- fail,
    must( /*ex*/predicate_property(Mt:Goal,imported_from(OtherMt))),!.
 
 
-add_import_predicate(Mt,Goal,OtherMt):- trace_or_throw_ex(add_import_predicate(Mt,Goal,OtherMt)),
+add_import_predicate(Mt,Goal,OtherMt):- trace_or_throw(add_import_predicate(Mt,Goal,OtherMt)),
    catch(Mt:import(OtherMt:Goal),_,fail),!.
 add_import_predicate(Mt,Goal,OtherMt):-
    safe_functor(Goal,F,A),

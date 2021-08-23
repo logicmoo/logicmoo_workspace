@@ -24,11 +24,19 @@
 :- use_module(library(lists)).
 :- use_module(library(must_trace)).
 
+%quietly_must_ex(G):- !, must_or_rtrace(G).
+quietly_must_ex(G):- tracing -> (notrace,call_cleanup(must_or_rtrace(G),trace)); quietly_must(G).
+
+must_ex(G):- !, must_or_rtrace(G).
+%must_ex(G):- !, must(G).
+%must_ex(G):- !, (catch(G,Error,(wdmsg(error_must_ex(G,Error)),fail))*->true;(wdmsg(must_ex(G)),if_interactive((ignore(rtrace(G)),wdmsg(must_ex(G)), break)))).
+%must_ex(G):- (catch(quietly(G),Error,(wdmsg(error_must_ex(G,Error)),fail))*->true;(wdmsg(must_ex(G)),if_interactive((ignore(rtrace(G)),wdmsg(must_ex(G)), break)))).
+
 %:- dumpST.
 
 test_red_lined(Failed):- notrace((
   format('~N',[]),
-  quietly_ex((doall((between(1,3,_),
+  quietly((doall((between(1,3,_),
   ansifmt(red,"%%%%%%%%%%%%%%%%%%%%%%%%%%% find ~q in srcs %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%\n",[Failed]),
   ansifmt(yellow,"%%%%%%%%%%%%%%%%%%%%%%%%%%% find test_red_lined in srcs %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%\n"))))))).
 
@@ -40,14 +48,8 @@ test_red_lined(Failed):- notrace((
 %
 
 %mpred_test(G):- notrace(mpred_test0(G)) -> true ; with_no_breaks(with_mpred_trace_exec(must(mpred_test_fok(G)))),!.
+mpred_test(_):- notrace((compiling; current_prolog_flag(xref,true))),!.
 mpred_test(G):- notrace(mpred_test_fok(G)).
-
-mpred_test0(G):- notrace((var(G),dmsg_pretty(var_mpred_test(G)))),!,trace_or_throw(var_mpred_test(G)).
-%mpred_test((G1;G2)):- !,call_u(G1);mpred_test(G2).
-mpred_test0(_):- notrace((compiling; current_prolog_flag(xref,true))),!.
-mpred_test0(G):- notrace(mpred_is_silent),!, with_no_mpred_trace_exec(must(mpred_test_fok(G))),!.
-mpred_test0(G):- notrace((dmsg_pretty(:-mpred_test(G)),fail)).
-mpred_test0(G):- notrace((current_prolog_flag(runtime_debug,D),D<1)),!,with_no_mpred_trace_exec(must((G))),!.
 
 
 :- if(false).
@@ -55,6 +57,7 @@ mpred_test(MPRED):- must(mpred_to_pfc(MPRED,PFC)),!,(show_call(umt(PFC))*->true;
 %mpred_test(MPRED):- must(mpred_to_pfc(MPRED,PFC)),!,(show_call(call_u(PFC))*->true;(call(PFC)*->mpred_why2(MPRED);test_red_lined(mpred_test(MPRED)),!,fail)).
 mpred_why2(MPRED):- must(mpred_to_pfc(MPRED,PFC)),!,(show_call(mpred_why(PFC))*->true;(test_red_lined(mpred_why(MPRED)),!,fail)).
 :- endif.
+
 
 
 % mpred_test_fok(G):- source_file(_,_),!,mpred_test_fok_0(G),!.
@@ -92,7 +95,7 @@ mpred_test_fok_2(Testcase, G):-
 mpred_test_fok_4(\+ G, TestResult, Elapsed):- !,
  must_det_l((
   get_time(Start),
-  catch(( ( \+ call_u(G) ) -> TestResult = passed; TestResult = failure),E, TestResult=error(E)),
+  catch(( ( \+ call_u_hook(G) ) -> TestResult = passed; TestResult = failure),E, TestResult=error(E)),
   get_time(End),
   Elapsed is End - Start,
   (TestResult == failure -> Retry = G ;  Retry = ( \+ G)),
@@ -100,11 +103,22 @@ mpred_test_fok_4(\+ G, TestResult, Elapsed):- !,
 mpred_test_fok_4(G, TestResult, Elapsed):- !,
  must_det_l((
   get_time(Start),
-  catch(( (  call_u(G) ) -> TestResult = passed; TestResult = failure),E, TestResult=error(E)),
+  catch(( (  call_u_hook(G) ) -> TestResult = passed; TestResult = failure),E, TestResult=error(E)),
   get_time(End),
   Elapsed is End - Start,
   (TestResult == failure -> Retry = ( \+ G ) ;  Retry = G),
   save_info_to(TestResult,why_was_true(Retry)))).
+
+call_u_hook(G):- current_predicate(call_u/1),!,call(call,call_u,G).
+call_u_hook(G):- call(G).
+
+mpred_why_hook(P):- current_predicate(call_u/1),!,call(call,mpred_why,P).
+
+:- export(why_was_true/1).
+why_was_true((A,B)):- !,why_was_true(A),why_was_true(B).
+why_was_true(P):- % predicate_property(P,dynamic),
+                  mpred_why_hook(P),!.
+why_was_true(P):- dmsg_pretty(justfied_true(P)),!.
 
 
 generate_test_name(baseKB:G,Testcase):- nonvar(G), !, generate_test_name(G,Testcase).
@@ -534,10 +548,6 @@ write_message_ele(Ele,NonGood):-
   text_to_string(ENonGood,SENonGood),
   format("      <~w message=~q ><system-err><![CDATA[  ~w  ]]></system-err></~w>\n", [Ele,SENonGood,SNonGood,Ele]).
 
-set_file_abox_module(User):- '$set_typein_module'(User), '$set_source_module'(User),
-  set_fileAssertMt(User).
-
-set_file_abox_module_wa(User):- set_file_abox_module(User),set_defaultAssertMt(User).
 
 :- multifile prolog:message//1, user:message_hook/3.
 % message_hook_handle(import_private(pfc_lib,_:_/_),warning,_):- source_location(_,_),!.

@@ -35,13 +35,14 @@
        ;(exists_source(library(readerline)),use_module(library(readline)))),
    '$toplevel':setup_history)). :- endif.
 
-:- ensure_loaded(library(pfc_lib)).
 %:- mpred_trace_exec.
 :- prolog_load_context(source,File),!,
    ignore((((sub_atom(File,_,_,_,'.pfc')
-   -> (sanity(is_pfc_file),set_prolog_flag(is_pfc_file_dialect,true))
-   ; sanity( \+ is_pfc_file)),set_prolog_flag(is_pfc_file_dialect,false)))),!.
+   -> (set_prolog_flag(is_pfc_file_dialect,true))
+   ; set_prolog_flag(is_pfc_file_dialect,false))))),!.
 
+:- current_prolog_flag(is_pfc_file_dialect,true)-> sanity(is_pfc_file) ; true.
+%   ; current_prolog_flag(is_pfc_file_dialect,false)-> sanity( \+ is_pfc_file) ; true.
 %:- set_prolog_flag(debug, true).
 %:- set_prolog_flag(gc, false).
 %:- set_prolog_flag(runtime_speed,0). % 0 = dont care
@@ -52,8 +53,9 @@
 :- set_prolog_flag(logicmoo_message_hook,dumpst).
 %:- use_module(library(junit)).
 %:- ensure_loaded(library(pfc)).
-:- abolish(j_u:junit_prop/3).
-:- dynamic(j_u:junit_prop/3).
+%:- abolish(j_u:junit_prop/3).
+%:- dynamic(j_u:junit_prop/3).
+%:- ensure_loaded(library(pfc_lib)).
 :- ensure_loaded(library(pfc_test)).
 :- prolog_load_context(source,SF),add_test_info(testsuite,file,SF).
 
@@ -78,4 +80,4 @@ system:goal_expansion(I,P,O,PO):- junit_goal_expansion(I,O),P=PO.
 
 %:- '$current_source_module'(W), '$set_typein_module'(W).
 :- if((current_prolog_flag(test_module,Module)->module(Module);true)). :- endif.
-:- mpred_trace_exec.
+:- if((current_prolog_flag(is_pfc_file_dialect,true),ensure_loaded(library(pfc_lib)),mpred_trace_exec)). :- endif.

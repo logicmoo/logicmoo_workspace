@@ -51,7 +51,7 @@ do_subtest(List):- must_maplist(call,List).
 :- add_test(t125,
   (all(Human,isa(Human,tAnimal) => exists(Heart, (isa(Heart,tHeart)  =>  hasOrgan(Human,Heart)))))).
 
-:- begin_pfc.
+:- expects_dialect(pfc).
 
 :- t121.
 

@@ -21,10 +21,7 @@
 % Dec 13, 2035
 % Douglas Miles
 
-
-
-
-:- begin_pfc.
+:- expects_dialect(pfc).
 
 
 tCol(tFly).

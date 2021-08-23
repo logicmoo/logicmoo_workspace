@@ -8,7 +8,7 @@
 
 :- debug_logicmoo(_).
 :- nodebug_logicmoo(http(_)).
-:- begin_pfc.
+:- expects_dialect(pfc).
 
 :- dynamic(parent/2).
 

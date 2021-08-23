@@ -101,7 +101,7 @@ N=((min_isa, max_isa),dom,[pred])
 
 
 %=  setup pfc
-:- begin_pfc.
+:- expects_dialect(pfc).
 :- kif_compile.
 
 % :- process_this_script.

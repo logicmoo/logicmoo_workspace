@@ -144,7 +144,7 @@ test_boxlogq(P):- test_boxlog([+qualify], P), !.
 % test_boxlog_m(P, BoxLog):-logicmoo_motel:kif_to_motelog(P, BoxLog), !.
 test_boxlog(KV, P):-
  locally_tl(kif_option_list(KV), (
-  mmake,
+  %mmake,
   % ignore(source_location(_, _) -> add_boxlog_history(test_boxlog(KV, P)) ; true),
  \+ \+
  must_det_l((

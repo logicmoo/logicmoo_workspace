@@ -144,7 +144,9 @@ equal_papers_v1(paper1,paper2) <->
 
 :- debug_logicmoo(_).
 :- nodebug_logicmoo(http(_)).
-:- begin_pfc.
+
+:- expects_dialect(pfc).
+
 
 house(red).
 house(blue).

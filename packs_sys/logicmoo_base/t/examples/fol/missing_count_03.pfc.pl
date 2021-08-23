@@ -9,7 +9,8 @@ existing_count(X,G,EC):- findall(X,G,List),length(List,EC).
 
 :- debug_logicmoo(_).
 :- nodebug_logicmoo(http(_)).
-:- begin_pfc.
+:- expects_dialect(pfc).
+
 
 house(red).
 house(blue).

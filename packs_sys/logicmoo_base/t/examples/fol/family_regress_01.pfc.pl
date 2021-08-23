@@ -1,12 +1,6 @@
 :- include(test_header).
 
-
-
-
-
- 
-
-:- begin_pfc.
+:- expects_dialect(pfc).
 
 :- process_this_script.
 
