@@ -77,7 +77,7 @@ export GLOB="$*"
 
 REPORT_STEM=$(echo "$TEST_STEM-${PWD}" | sed -e "s/[*]/vSTARv/g" -e "s/[?]/vQUESTv/g" -e "s/[.]/vDOTv/g" -e "s/[^a-Z0-9_]/-/g" -e "s/--/-/g" -e "s/_/-/g"  -e "s/--/-/g" )
 
-JUNIT_TESTS_GLOBBED="${TESTING_TEMP}/${REPORT_STEM}-glob-junit.xml"
+JUNIT_TESTS_GLOBBED="${TESTING_TEMP}/${REPORT_STEM}-glob"
 
 echo "" > $JUNIT_TESTS_GLOBBED
 function JECHO {
@@ -199,5 +199,6 @@ for ele2 in "${listOfNames[@]}"
   return $exitcode 2>/dev/null ; exit $exitcode
 ) 
 
+mv $JUNIT_TESTS_GLOBBED $JUNIT_TESTS_GLOBBED-junit.xml
 JECHO "</testsuite>\n\n\n\n"
 
