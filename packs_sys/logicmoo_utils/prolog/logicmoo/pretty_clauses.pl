@@ -564,6 +564,10 @@ without_ec_portray_hook(Goal):- exact_ec_portray_hook(1000,Goal).
 %pc_portray(Term):- Term==[], !, color_format_maybe(hfg(blue),'~q',[[]]).
 %pc_portray(Term):- notrace(tracing),!,ec_portray_hook(Term).
 %pc_portray(X):- is_list(X),print_tree(X).
+
+pc_portray(Term):- var(Term),!,fail.
+pc_portray(Term):- atom(Term), exists_file(Term),public_file_link(Term,Public),writeq(Public).
+pc_portray(Term:L):- integer(L),atom(Term), exists_file(Term),public_file_link(Term:L,Public),writeq(Public).
 pc_portray(Term):- 
   \+ ( nb_current('$inprint_message', Messages), Messages\==[] ), 
   % (tracing->dumpST;true),
