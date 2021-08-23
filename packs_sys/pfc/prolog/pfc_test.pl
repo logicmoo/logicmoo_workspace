@@ -437,8 +437,14 @@ shorten_and_clean_name(Name,RSName):-
 last_n_chars(SName,RSName):- sub_atom(SName,0,20,0,RSName),!.
 last_n_chars(SName,SName).
 
+is_control_code(10).
+is_control_code(13).
+is_control_code(C):- C < 32.
+is_control_code(C):- \+ char_type(C,print),!.
 
-clean_away_ansi(Text,CleanText)
+
+clean_away_ansi(DirtyText,CleanText):- atom_codes(DirtyText,Codes),exclude(is_control_code,Codes,CodesC),sformat(CleanText,'~s',[CodesC]).
+clean_away_ansi(DirtyText,DirtyText).
 
 save_to_junit_file(Name,DirtyText):-
  clean_away_ansi(DirtyText,Text),
