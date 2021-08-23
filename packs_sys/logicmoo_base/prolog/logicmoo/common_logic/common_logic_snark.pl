@@ -843,7 +843,7 @@ kif_to_boxlog(Wff,Out):- Wff\=(_:-_), why_to_id(rule,Wff,Why),!,must(kif_to_boxl
 % Knowledge Interchange Format Converted To Datalog.
 %
 :- export(kif_to_boxlog/3).
-kif_to_boxlog(Wff,Out,Why):- Wff\=(_:-_), kif_to_boxlog(Wff,'$VAR'('KB'),Why,Out),!.
+kif_to_boxlog(Wff,Out,Why):- Wff\=(_:-_), w_o_c(kif_to_boxlog(Wff,'$VAR'('KB'),Why,Out)),!.
 
 
 %% kif_to_boxlog( +Fml, ?KB, +Why, -Datalog) is det.
