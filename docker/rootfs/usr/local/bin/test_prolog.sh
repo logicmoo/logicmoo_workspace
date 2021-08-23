@@ -129,10 +129,10 @@ for ele2 in "${listOfNames[@]}"
         classname=$(echo `pwd` | sed -e 's|/|.|g')
         if [ $exitcode -eq $good_exit ]; then
 			[ "${next_cls}" == 1 ] && cls && next_cls=0			
-         JECHO "<testcase name=\"$RunTestFile\" classname='$classname' time='$totalTime'>"
-           INFO "SUCCESS: $0 ${keep_going} ${ele} (returned ${exitcode})"
-           JECHO "<system-out><![CDATA[$(cat $TEE_FILE2)]]></system-out>\n"
+         JECHO "<testcase name=\"$RunTestFile\" classname='$classname' time='$totalTime'>"         
+         JECHO "<system-out><![CDATA[$(cat $TEE_FILE2)]]></system-out>\n"
          JECHO "</testcase>"
+         INFO "SUCCESS: $0 ${keep_going} ${ele} (returned ${exitcode})"
 			continue
 	     fi
         JECHO "<testcase name=\"$RunTestFile\" classname='$classname' time='$totalTime'>"
