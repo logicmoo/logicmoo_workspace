@@ -13,7 +13,7 @@ test_e2c(X,[ape(Y)]):- ape_test(Y,X).
 test_e2c(X,[owlswrl(Y)]):- current_predicate(test_owlswrl/2),call(call,test_owlswrl(Y,X)), \+ clause(ape_test(Y,X),true).
 
 
-:-decl_test([
+test_e2c([
   nlu_assert("The baby cries."),
   nlu_assert(
     ["She looks at it.",
@@ -49,9 +49,6 @@ test_e2c(X,[owlswrl(Y)]):- current_predicate(test_owlswrl/2),call(call,test_owls
     'The baby.',
     [learned,it]),
   ]).
-
-
- note(problem, ' Note that second premise is unnecessary and irrelevant. ').
 
 
 ape_test(13, 'Every man likes at least 3 things.').
