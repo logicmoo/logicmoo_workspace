@@ -126,7 +126,7 @@ for ele2 in "${listOfNames[@]}"
         totalTime=$(($endTime-$startTime));        
         ####JECHO "]]></system-out>"
 
-        classname=$(echo $PWD | sed -e 's|/|.|g")
+        classname=$(echo `pwd` | sed -e 's|/|.|g')
         if [ $exitcode -eq $good_exit ]; then
 			[ "${next_cls}" == 1 ] && cls && next_cls=0			
          JECHO "<testcase name=\"$RunTestFile\" classname='$classname' time='$totalTime'>"
