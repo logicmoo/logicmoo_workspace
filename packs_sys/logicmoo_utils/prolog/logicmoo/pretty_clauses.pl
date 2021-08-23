@@ -568,6 +568,7 @@ without_ec_portray_hook(Goal):- exact_ec_portray_hook(1000,Goal).
 pc_portray(Term):- var(Term),!,fail.
 pc_portray(Term):- atom(Term), exists_file(Term),public_file_link(Term,Public),writeq(Public).
 pc_portray(Term:L):- integer(L),atom(Term), exists_file(Term),public_file_link(Term:L,Public),writeq(Public).
+pc_portray(mfl4(M,F,Term,L)):- integer(L),atom(Term), exists_file(Term),public_file_link(Term:L,Public),writeq(mfl4(M,F,Public,L)).
 pc_portray(Term):- 
   \+ ( nb_current('$inprint_message', Messages), Messages\==[] ), 
   % (tracing->dumpST;true),

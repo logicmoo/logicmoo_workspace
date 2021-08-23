@@ -992,7 +992,7 @@ ensure_compute_file_link(S,S).
 maybe_compute_file_link(S,O):- atom(S),!, lmconf:http_file_stem(F,R),atomic_list_concat([_,A],F,S),!,atom_concat(R,A,O).
 maybe_compute_file_link(S:L,O):- integer(L),!,maybe_compute_file_link(S,F),format(atom(O),'~w#L~w',[F,L]).
 
-public_file_link(S,O):-maybe_compute_file_link(S,M),sformat(O,'<pre>~w</pre>',[M]).
+public_file_link(S,O):-maybe_compute_file_link(S,M),sformat(O,'<pre><a href="~w">~q</a></pre>',[M,S]).
 public_file_link(MG,MG).
 
 
