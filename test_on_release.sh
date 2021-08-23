@@ -13,7 +13,7 @@ rm -f $TESTING_TEMP/?*
 
 TEST_PARAMS="$*"
 if [ -z "$TEST_PARAMS" ]; then 
-  TEST_PARAMS="*04.p*"
+  TEST_PARAMS="*04.p* *01.p*"
   # TEST_PARAMS=attvar_04.pl
 fi
 
