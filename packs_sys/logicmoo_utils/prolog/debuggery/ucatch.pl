@@ -996,7 +996,7 @@ maybe_compute_file_link(S:L,O):- integer(L),!,maybe_compute_file_link(S,F),forma
 public_file_link(S,O):-maybe_compute_file_link(S,M),into_link(S,M,O).
 public_file_link(MG,MG).
 
-into_link(_,M,O):- format(atom(O),'~w',[M]),!.
+into_link(_,M,O):- format(atom(O),'<pre>~w</pre>',[M]),!.
 into_link(S,M,O):- format(atom(O),'<pre><a href="~w">~q</a></pre>',[M,S]).
 
 :-export( as_clause_no_m/3).
