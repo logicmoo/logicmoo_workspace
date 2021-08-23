@@ -78,4 +78,4 @@ system:goal_expansion(I,P,O,PO):- junit_goal_expansion(I,O),P=PO.
 
 %:- '$current_source_module'(W), '$set_typein_module'(W).
 :- if((current_prolog_flag(test_module,Module)->module(Module);true)). :- endif.
-
+:- mpred_trace_exec.

@@ -2,8 +2,7 @@
 
 source ./logicmoo_env.sh -v
 
-[ -z "$TESTING_TEMP" ] && export TESTING_TEMP=$(pwd)/docs/test_results
-
+[ -z "$TESTING_TEMP" ] && export TESTING_TEMP=$(pwd)/test_results
 
 [ -z "$TESTING_TEMP" ] && export TESTING_TEMP=$(mktemp -d -t logicmoo_testing-$(date +%Y-%m-%d-%H-%M-%S)-XXXXXXXXXX)
 mkdir -p $TESTING_TEMP
@@ -20,8 +19,8 @@ echo -e "Running release (all) tests\nTESTING_TEMP=$TESTING_TEMP\n( cd $PWD ; $B
 
 find . -mindepth 2 -name "test_on_*.sh" -execdir bash -c "source '{}' $TEST_PARAMS" \;
 
-echo "<testsuites>" > $TESTING_TEMP/junit.xml
-find $TESTING_TEMP -name "Report-*.xml" -exec sed -e "s/<testsuites>//g" -e "s|</testsuites>||g" {} >> $TESTING_TEMP/junit.xml  \;
-echo "</testsuites>" >> $TESTING_TEMP/junit.xml
+#echo "<testsuites>" > $TESTING_TEMP/junit.xml
+#find $TESTING_TEMP -name "Report-*.xml" -exec sed -e "s/<testsuites>//g" -e "s|</testsuites>||g" {} >> $TESTING_TEMP/junit.xml  \;
+#echo "</testsuites>" >> $TESTING_TEMP/junit.xml
 
 

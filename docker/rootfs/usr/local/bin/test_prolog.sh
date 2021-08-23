@@ -1,22 +1,5 @@
 #!/bin/bash
 
-sourced=0
-if [ -n "$ZSH_EVAL_CONTEXT" ]; then
-  case $ZSH_EVAL_CONTEXT in *:file) sourced=1;; esac
-elif [ -n "$KSH_VERSION" ]; then
-  [ "$(cd $(dirname -- $0) && pwd -P)/$(basename -- $0)" != "$(cd $(dirname -- ${.sh.file}) && pwd -P)/$(basename -- ${.sh.file})" ] && sourced=1
-elif [ -n "$BASH_VERSION" ]; then
-  (return 0 2>/dev/null) && sourced=1
-else # All other shells: examine $0 for known shell binary filenames
-  # Detects `sh` and `dash`; add additional shell filenames as needed.
-  case ${0##*/} in sh|dash) sourced=1;; esac
-fi
-
-if [[ sourced -ne 0 ]] ; then
-   echo "Script is being sourced (bye)"
-   sleep 2
-else
-
 SWIPL=swipl
 if [ -z `which swipl` ]; then
     # default locations on OS X
@@ -25,46 +8,19 @@ if [ -z `which swipl` ]; then
         SWIPL=~/bin/swipl;
     fi
     if [ ! -e $SWIPL ]; then
-        echo PFC requires SWI-Prolog. Please download from http://www.swi-prolog.org/
-        exit 1
+        INFO PFC requires SWI-Prolog. Please download from http://www.swi-prolog.org/
+        return 1 2>/dev/null ; exit 1
     fi
 fi
 
+OUTER_TEE=""
+[ -t 1 ] && OUTER_TEE="1"
 
-# Symlink resolution: http://stackoverflow.com/a/697552/726581
-
-# get the absolute path of the executable
-SELF_PATH=$(cd -P -- "$(dirname -- "$0")" && pwd -P) && SELF_PATH=$SELF_PATH/$(basename -- "$0")
-
-# resolve symlinks
-while [[ -h $SELF_PATH ]]; do
-    # 1) cd to directory of the symlink
-    # 2) cd to the directory of where the symlink points
-    # 3) get the pwd
-    # 4) append the basename
-    DIR=$(dirname -- "$SELF_PATH")
-    SYM=$(readlink "$SELF_PATH")
-    SELF_PATH=$(cd "$DIR" && cd "$(dirname -- "$SYM")" && pwd)/$(basename -- "$SYM")
-done
-
-PATH_TO_ME=`dirname $SELF_PATH`;
-if [ -z "$BIOMAKE_PATH" ]; then
-    BIOMAKE_PATH=$PATH_TO_ME/../prolog;
-fi
-
-#$PATH_TO_ME/swipl_wrap -L0 -G0 -T0 -q -p library=$BIOMAKE_PATH  -g 'assert(biomake_prog("'$0'")),main,halt' -t halt -s $BIOMAKE_PATH/biomake/cli -- "$@"
-
-#[[ $_ != "$0" ]] && echo "Script is being sourced" && exit 9
-
-me="${BASH_SOURCE[${#BASH_SOURCE[@]} - 1]}"
 good_exit=7
 exitcode=$good_exit
 
-
 [ -z "${keep_going}" ] && export keep_going=""
-if [[ "$*" == *"-k"* ]]; then
-  export keep_going="-k"
-fi
+[ "$*" == *"-k"* ] && export keep_going="-k"
 
 runtime_testing=4
 export next_cls=0
@@ -78,6 +34,8 @@ if [ "$1" == "-k" ]; then
 fi
 
 
+[ -z "${TESTING_TEMP}" ] && export TESTING_TEMP=$(mktemp -d -t logicmoo_testing-$(date +%Y-%m-%d-%H-%M-%S)-XXXXXXXXXX)
+
 #// For test_prolog  (no args)
  declare -a listOfNames=(
                         # // sanity tests
@@ -90,28 +48,51 @@ fi
 ) 
 
 # kill old dead jobs
-kill -9  %2 %3 %4 &>/dev/null
-kill -9  %1 %2 %3 %4 &>/dev/null
-[ -t 1 ] && echo "<!--" && cls && echo -e "\n-->"
-kill -9  %1 %2 %3 %4 %5 %6 &>/dev/null
+kill -9  %1 %2 %6 %5 %4 %3 %2 %1 &>/dev/null
+kill -9  %1 %2 %6 %5 %4 %3 %2 %1 &>/dev/null
+#[ -z "${OUTER_TEE}" ] && echo "<!--" && cls && echo -e "\n-->"
+kill -9  %1 %2 %6 %5 %4 %3 %2 %1 &>/dev/null
 
 if [ $# -ne 0 ]
 then
    listOfNames=( "$@" )
    if [ $# -eq 1 ]
    then
-      [ -t 1 ] && echo "<!-- on_complete=true -->"
+      [ -z "${OUTER_TEE}" ] && echo "<!-- on_complete=true -->"
       on_complete=test_completed
    else
-      [ -t 1 ] && echo "<!--" && cls && echo -e "\n-->"
+      echo -e "" # [ -z "${OUTER_TEE}" ] && echo "<!--" && cls && echo -e "\n-->"
    fi
 else
       echo -e ""
 fi
 
-[ -z "$TESTING_TEMP" ] && export TESTING_TEMP=$(mktemp -d -t logicmoo_testing-$(date +%Y-%m-%d-%H-%M-%S)-XXXXXXXXXX)
-echo -e "\\n<!--\\nRunning Matching Tests: $me $keep_going ${listOfNames[*]}\\n-->\\n"
 
+
+
+export GLOB="$*"
+[ -z "$GLOB" ] && GLOB="*_01.*"
+
+[ -z "${TEST_STEM}" ] && TEST_STEM=Report-$(echo "${GLOB}-Units" | sed -e "s/[*]/vSTARv/g" -e "s/[?]/vQUESTv/g" -e "s/[.]/vDOTv/g" -e "s/[^a-Z0-9_]/-/g" -e "s/--/-/g" -e "s/-/-/g"  -e "s/--/-/g" )
+
+REPORT_STEM=$(echo "$TEST_STEM-${PWD}" | sed -e "s/[*]/vSTARv/g" -e "s/[?]/vQUESTv/g" -e "s/[.]/vDOTv/g" -e "s/[^a-Z0-9_]/-/g" -e "s/--/-/g" -e "s/_/-/g"  -e "s/--/-/g" )
+
+JUNIT_TESTS_GLOBBED="${TESTING_TEMP}/${REPORT_STEM}-glob-junit.xml"
+
+echo "" > $JUNIT_TESTS_GLOBBED
+function JECHO {
+ (echo -e "${*}\n") >> $JUNIT_TESTS_GLOBBED
+}
+function INFO {
+ JECHO "<!-- ${*} -->"
+ echo -e "${*}\n"
+}
+
+JECHO "<testsuite name=\"${REPORT_STEM}\">"
+me="${BASH_SOURCE[${#BASH_SOURCE[@]} - 1]}"
+INFO "Running Matching Tests: $me $keep_going ${listOfNames[*]}"
+
+(
 for ele2 in "${listOfNames[@]}"
   do
   	for ele in $ele2
@@ -120,6 +101,7 @@ for ele2 in "${listOfNames[@]}"
 	  while [ $retry == 1 ]
 	   do
 	    retry=0
+        export RunTestFile=Run_TestFile.$(echo "${PWD}/${ele}" | sed -e "s/[.]/_/g" -e "s|/|_|g")
 		  [[ "$ele" == *".ansi" ]] && continue
         [[ "$ele" == *".html" ]] && continue
         [[ "$ele" == *".xml" ]] && continue
@@ -132,52 +114,43 @@ for ele2 in "${listOfNames[@]}"
          CMD="swipl -g 'set_prolog_flag(runtime_testing,${runtime_testing})' -g \"(['${ele}'])\" -g \"$on_complete\" "
         fi
 
-        echo "<testsuite name=\"${ele}\">"
-        ON_CONTINUE="</testsuite>\n\n\n\n"
-        echo "<system-out><![CDATA["
-        echo "<!-- junit_single -->" > $TESTING_TEMP/junit_single.xml
-        echo "<!-- CMD_LAST -->" > $TESTING_TEMP/CMD_LAST.ansi
-        export RunTestSuite="Run TestSuite ${ele}"
-        echo $CMD  # | tee -a $TESTING_TEMP/CMD_LAST.ansi
+        export TEE_FILE=$TESTING_TEMP/CMD_LAST.ansi
+        export TEE_FILE2=${TEE_FILE}.too
+        ####JECHO "<system-out><![CDATA["
+        INFO "${date} (cd $PWD ; $CMD)" > $TEE_FILE
+        INFO "${date} (cd $PWD ; $CMD)" > $TEE_FILE2
         startTime=$(date +%s);
-        ( eval $CMD )  # | tee -a $TESTING_TEMP/CMD_LAST.ansi )
+        ( eval $CMD ) 2>&1 | tee -a $TEE_FILE | tee $TEE_FILE2
+        exitcode=${PIPESTATUS[0]}
         endTime=$(date +%s);
-        totalTime=$(($endTime-$startTime));
-        exitcode=$?
-        echo "]]></system-out>"
-          
-        
-        
-        cat $TESTING_TEMP/junit_single.xml
-        
-
-        # echo -e "\n<!-- EXITCODE=$exitcode -->\n" >> $TESTING_TEMP/CMD_LAST.ansi
+        totalTime=$(($endTime-$startTime));        
+        ####JECHO "]]></system-out>"
 
         if [ $exitcode -eq $good_exit ]; then
-			[ "${next_cls}" == 1 ] && cls && next_cls=0
-			echo -e "\\n\\n<!-- SUCCESS: $0 ${keep_going} ${ele} (returned ${exitcode}) -->\\n\\n"
-         echo "<testcase name=\"$RunTestSuite\" package='loader' time='$totalTime'/>"
-         echo -e $ON_CONTINUE
+			[ "${next_cls}" == 1 ] && cls && next_cls=0			
+         JECHO "<testcase name=\"$RunTestFile\" package='loader' time='$totalTime'>"
+           INFO "SUCCESS: $0 ${keep_going} ${ele} (returned ${exitcode})"
+           JECHO "<system-out><![CDATA[$(cat $TEE_FILE2)]]></system-out>\n"
+         JECHO "</testcase>"
 			continue
 	     fi
-        echo "<testcase name=\"$RunTestSuite\" package='loader' time='$totalTime'>"
-        echo " <failure message='FAILED: $0 ${keep_going} ${ele} (returned ${exitcode})'/>"
-        echo "</testcase>"
-        echo -e $ON_CONTINUE
-        # cat $TESTING_TEMP/CMD_LAST.ansi >> $TESTING_TEMP/failures.ansi
+        JECHO "<testcase name=\"$RunTestFile\" package='loader' time='$totalTime'>"
+        JECHO " <failure message='FAILED: $0 ${keep_going} ${ele} (returned ${exitcode})'>"
+           JECHO "<system-err><![CDATA[$(cat $TEE_FILE2)]]></system-err>\n"
+        JECHO "</testcase>"
 
         next_cls=0
 
-      [ "$on_complete" == 'on_complete' ] && [ $exitcode -ne 7 ] && echo -e "\\n<!--\\nFAILED: $0 ${keep_going} ${ele} (returned ${exitcode})\\n-->\\n"
-      [ $exitcode -eq 7 ] && echo -e "\\n<!--\\nSUCCESS: $0 ${keep_going} ${ele} (returned ${exitcode})\\n-->\\n"
-      [ $exitcode -eq 0 ] && [ "$on_complete" == 'true' ] && echo -e "\\n<!--\\nSUCCESS: $0 ${keep_going} ${ele} (returned ${exitcode})\\n-->\\n"
+      [ "$on_complete" == 'on_complete' ] && [ $exitcode -ne 7 ] && INFO "FAILED: $0 ${keep_going} ${ele} (returned ${exitcode})"
+      [ $exitcode -eq 7 ] && INFO "SUCCESS: $0 ${keep_going} ${ele} (returned ${exitcode})"
+      [ $exitcode -eq 0 ] && [ "$on_complete" == 'true' ] && INFO "SUCCESS: $0 ${keep_going} ${ele} (returned ${exitcode})"
       [ $exitcode -eq 6 ] && retry=1 && continue
 
 
 		# // 2 -> 1
 		if [ $exitcode -eq 2 ]; then
-         [ "$keep_going" == "-k" ] && echo "<!-- ...keep going... -->" && continue
-         echo "<!-- ...NOT keep going... -->"
+         [ "$keep_going" == "-k" ] && INFO "...keep going..." && continue
+         INFO "...NOT keep going..."
          exit 1
       fi
 		
@@ -203,11 +176,10 @@ for ele2 in "${listOfNames[@]}"
 				E) break;;
             D) break;;
 			esac
-			echo "ans=$ans"
+			INFO "ans=$ans"
 		done
 
-      echo "ans=$ans"
-      echo "-->"
+      INFO "ans=$ans"
 
       [ "$ans" == '' ] && [ $exitcode -eq 0 ] && [ "$on_complete" == 'true' ]  && retry=1 && continue
 
@@ -219,12 +191,13 @@ for ele2 in "${listOfNames[@]}"
 		[ "$ans" == 'A' ] && retry=1 && cls && continue  # up arrow
 		[ "$ans" == 'r' ] && retry=1 && continue
 
-		echo "<!-- Exiting the script. Have a nice day!-->"
-		exit $exitcode
+		INFO "Exiting the script. Have a nice day!"
+		return $exitcode 2>/dev/null ; exit $exitcode
 	  done
 	done
   done
-  exit $exitcode
-fi
+  return $exitcode 2>/dev/null ; exit $exitcode
+) 
 
+JECHO "</testsuite>\n\n\n\n"
 

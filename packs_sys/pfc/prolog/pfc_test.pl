@@ -81,10 +81,16 @@ mpred_test_fok_2(Testcase, G):-
   mpred_test_fok_4(G, TestResult, Elapsed),
   add_test_info(Testcase,time,Elapsed),
   TestResult=..[Type|Info],add_test_info(Testcase,Type,Info),
-  add_test_info(Testcase,result,Type))).
+  add_test_info(Testcase,result,Type))),
+ must_det_l((getenv('TEE_FILE',Tee),
+   read_file_to_string(Tee,Str,[]),
+   add_test_info(Testcase,out,Str),
+   save_single_testcase(Testcase),
+   sformat(Exec,'cat /dev/null > ~w',[Tee]),
+   shell(Exec))).
 
 mpred_test_fok_4(\+ G, TestResult, Elapsed):- !,
-must_det_l((
+ must_det_l((
   get_time(Start),
   catch(( ( \+ call_u(G) ) -> TestResult = passed; TestResult = failure),E, TestResult=error(E)),
   get_time(End),
@@ -92,7 +98,7 @@ must_det_l((
   (TestResult == failure -> Retry = G ;  Retry = ( \+ G)),
   save_info_to(TestResult,why_was_true(Retry)))).
 mpred_test_fok_4(G, TestResult, Elapsed):- !,
-must_det_l((
+ must_det_l((
   get_time(Start),
   catch(( (  call_u(G) ) -> TestResult = passed; TestResult = failure),E, TestResult=error(E)),
   get_time(End),
@@ -243,7 +249,7 @@ outer_junit(G):- nop(G).
 halt_junit:- j_u:junit_prop(system,shown_testing_complete,true),!.
 halt_junit:- asserta(j_u:junit_prop(system,shown_testing_complete,true)),!,
   % list_test_results,
-  save_results_single.
+  save_results.
 
 junit_term_expansion(_ , _ ):- prolog_load_context(file,SF), \+ j_u:junit_prop(testsuite,file,SF),!,fail.
 junit_term_expansion(Var , _ ):- var(Var),!,fail.
@@ -389,31 +395,55 @@ test_completed_exit_maybe(N):- test_completed_exit(N).
 </testsuites>
   */
 save_results:-
- j_u:junit_prop(testsuite,file,Name), 
- with_output_to(string(Text),show_all_junit_suites),
- output_to_junit_file(Name,Text).
+ forall(j_u:junit_prop(testsuite,file,File), 
+    (with_output_to(string(Text),show_junit_suite_xml(File)),
+     save_to_junit_file(File,Text))).
+
+show_junit_suite_xml(File):- 
+  format('<?xml version="1.0" encoding="utf-8"?>~n'),
+  format('<testsuites>\n',[]),
+  maplist(show_junit_suite,File),
+  format('</testsuites>\n',[]).
+
+show_junit_suite(File):- 
+   format("  <testsuite name=\"~w\">\n", [File]),
+   findall(Name,j_u:junit_prop(testsuite,testcase,Name),L),list_to_set(L,S),
+    maplist(show_junit_testcase(File),S),
+   format("  </testsuite>\n", []).
+
+save_single_testcase(Name):- 
+ with_output_to(string(Text),
+  (format('<?xml version="1.0" encoding="utf-8"?>~n'),
+   j_u:junit_prop(testsuite,file,File),
+   format("  <testsuites>\n", []),
+   format("  <testsuite name=\"~w\">\n", [File]),
+   show_junit_testcase(File,Name),
+   format("  </testsuite>\n", []),
+   format(" </testsuites>\n", []))),
+ % write(Text),
+ atomic_list_concat([File,Name],SName),
+ p_n_atom_filter_var_chars(SName,RSName),
+ save_to_junit_file(RSName,Text).
+
+
+
+save_to_junit_file(Name,Text):- 
+ must_det_l(( 
+  getenv('TEST_STEM_PATH',Dir),
+  atomic_list_concat([Dir,'-',Name,'_junit.xml'],Full), 
+    open(Full, write, _, [alias(junit)]),
+      format(junit,'~w',Text), 
+      close(junit))).
 
 save_results_single:-
   % $TESTING_TEMP
   getenv('TESTING_TEMP',Dir),
-  directory_file_path(Dir,'junit_single.xml',Full),!,
+  directory_file_path(Dir,'junit_single.ansi',Full),!,
   tell(Full),
   show_all_junit_suites,
   told.
 save_results_single.
 
-output_to_junit_file(Name,Text):- 
-  atom_concat(Name,'_junit.xml',SaveFile), 
-    open(SaveFile, write, _, [alias(junit)]),
-      format(junit,'~w',Text), 
-      close(junit).
-
-show_junit_suite(File):- 
-   outer_junit(format("  <testsuite name=\"~w\">\n", [File])),
-   findall(Name,j_u:junit_prop(testsuite,testcase,Name),L),list_to_set(L,S),
-    maplist(show_junit_testcases(File),S),
-   outer_junit(format("  </testsuite>\n", [])).
-  %plunit:check_for_test_errors.
 
 good_type(passed).
 nongood_type(warn).
@@ -426,7 +456,7 @@ suite_to_package(Suite,Package):-
   atomic_list_concat(Split,'/logicmoo_workspace/',Suite),last(Split,Right),
   replace_in_string([".pfc"="",".pl"="",'/'='.'],Right,Package),!.
 
-show_junit_testcases(Suite,Testcase):- 
+show_junit_testcase(Suite,Testcase):- 
  escape_attribute(Testcase,ETestcase),
  ignore((
  format('
@@ -441,12 +471,17 @@ show_junit_testcases(Suite,Testcase):-
 
 
 testcase_props(Testcase):-
+ ignore((j_u:junit_prop(Testcase,out,Str),
+  format("\n    <system-out><![CDATA[\n", []),
+  format('~w',[Str]),
+  format("\n    ]]></system-out>\n", []))),    
  format("\n    <system-err><![CDATA[\n", []),
  forall(j_u:junit_prop(Testcase,Type,Term), write_testcase_prop(Type,Term)),
  format("\n    ]]></system-err>\n", []).
 
 write_testcase_prop(_Type,[]):-!.
 write_testcase_prop(info,S):- !, format('~N~w~n',[S]).
+write_testcase_prop(out,_).
 write_testcase_prop(url,Term):- !, format('~N\t~w \t= <pre>~w</pre>~n',[url,Term]).
 write_testcase_prop(Type,Term):- string(Term),!,format('~N\t~w \t=~w~n',[Type,Term]).
 write_testcase_prop(Type,Term):- format('~N\t~w \t= ~w.~n',[Type,Term]).
