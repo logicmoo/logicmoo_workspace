@@ -429,7 +429,11 @@ save_single_testcase(Name):-
 
 shorten_and_clean_name(Name,RSName):- 
   ensure_compute_file_link(Name,Name0),
-  replace_in_string(['https://logicmoo.org:2082/gitlab/logicmoo/'="",'-/blob/'='','/'='_','_master_packs_','_'],Name0,Name1),
+  replace_in_string(
+  ['https://logicmoo.org:2082/gitlab/logicmoo/'="",
+   '-/blob/'='',
+   '/'='_',
+   '_master_packs_'='_'],Name0,Name1),
   p_n_atom_filter_var_chars(Name1,Name2),
   replace_in_string(['__'='_'],Name2,Name3),
   last_n_chars(Name3,RSName),!.
@@ -443,7 +447,7 @@ is_control_code(C):- C < 32.
 is_control_code(C):- \+ char_type(C,print),!.
 
 
-clean_away_ansi(DirtyText,CleanText):- atom_codes(DirtyText,Codes),exclude(is_control_code,Codes,CodesC),sformat(CleanText,'~s',[CodesC]).
+clean_away_ansi(DirtyText,CleanText):- atom_codes(DirtyText,Codes),exclude(is_control_code,Codes,CodesC),sformat(CleanText,'~s',[CodesC]),!.
 clean_away_ansi(DirtyText,DirtyText).
 
 save_to_junit_file(Name,DirtyText):-
