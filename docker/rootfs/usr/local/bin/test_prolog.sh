@@ -126,15 +126,16 @@ for ele2 in "${listOfNames[@]}"
         totalTime=$(($endTime-$startTime));        
         ####JECHO "]]></system-out>"
 
+        classname=$(echo $PWD | sed -e 's|/|.|g")
         if [ $exitcode -eq $good_exit ]; then
 			[ "${next_cls}" == 1 ] && cls && next_cls=0			
-         JECHO "<testcase name=\"$RunTestFile\" package='loader' time='$totalTime'>"
+         JECHO "<testcase name=\"$RunTestFile\" classname='$classname' time='$totalTime'>"
            INFO "SUCCESS: $0 ${keep_going} ${ele} (returned ${exitcode})"
            JECHO "<system-out><![CDATA[$(cat $TEE_FILE2)]]></system-out>\n"
          JECHO "</testcase>"
 			continue
 	     fi
-        JECHO "<testcase name=\"$RunTestFile\" package='loader' time='$totalTime'>"
+        JECHO "<testcase name=\"$RunTestFile\" classname='$classname' time='$totalTime'>"
         JECHO " <failure message='FAILED: $0 ${keep_going} ${ele} (returned ${exitcode})'>"
            JECHO "<system-err><![CDATA[$(cat $TEE_FILE2)]]></system-err>\n"
         JECHO " </failure></testcase>"
