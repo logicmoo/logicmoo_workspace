@@ -20,7 +20,8 @@ echo "<testsuites>" > $TESTING_TEMP/junit.xml
 find $TESTING_TEMP -name "Report-*.xml" -exec sed -e "s/<testsuites>//g" -e "s|</testsuites>||g" {} >> $TESTING_TEMP/junit.xml  \;
 echo "</testsuites>" >> $TESTING_TEMP/junit.xml
 
-echo "COPY .. cp $TESTING_TEMP/junit.xml /tmp/junit.xml"
-cp -f $TESTING_TEMP/junit.xml .git/junit.xml
 
+cp -f $TESTING_TEMP/junit.xml .git/junit.xml
+touch .git/junit.xml
+head .git/junit.xml
 
