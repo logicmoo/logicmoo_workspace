@@ -120,7 +120,7 @@ for ele2 in "${listOfNames[@]}"
         INFO "${date} (cd $PWD ; $CMD)" > $TEE_FILE
         INFO "${date} (cd $PWD ; $CMD)" > $TEE_FILE2
         startTime=$(date +%s);
-        ( eval $CMD ) 2>&1 | tee -a $TEE_FILE | tee $TEE_FILE2
+        ( eval $CMD ) 2>&1 | sed -r "s/\x1B\[(([0-9]{1,2})?(;)?([0-9]{1,2})?)?[m,K,H,f,J]//g" | tee -a $TEE_FILE | tee $TEE_FILE2
         exitcode=${PIPESTATUS[0]}
         endTime=$(date +%s);
         totalTime=$(($endTime-$startTime));        
@@ -199,6 +199,6 @@ for ele2 in "${listOfNames[@]}"
   return $exitcode 2>/dev/null ; exit $exitcode
 ) 
 
-mv $JUNIT_TESTS_GLOBBED $JUNIT_TESTS_GLOBBED-junit.xml
+sed -r "s/\x1B\[(([0-9]{1,2})?(;)?([0-9]{1,2})?)?[m,K,H,f,J]//g" $JUNIT_TESTS_GLOBBED > $JUNIT_TESTS_GLOBBED-junit.xml
 JECHO "</testsuite>\n\n\n\n"
 

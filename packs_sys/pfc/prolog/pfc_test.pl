@@ -429,7 +429,7 @@ save_single_testcase(Name):-
 
 shorten_and_clean_name(Name,RSName):- 
   ensure_compute_file_link(Name,Name0),
-  replace_in_string(['https://logicmoo.org:2082/gitlab/logicmoo/'="",'-/blob/'='','/'='_'],Name0,Name1),
+  replace_in_string(['https://logicmoo.org:2082/gitlab/logicmoo/'="",'-/blob/'='','/'='_','_master_packs_','_'],Name0,Name1),
   p_n_atom_filter_var_chars(Name1,Name2),
   replace_in_string(['__'='_'],Name2,Name3),
   last_n_chars(Name3,RSName),!.
@@ -438,8 +438,10 @@ last_n_chars(SName,RSName):- sub_atom(SName,0,20,0,RSName),!.
 last_n_chars(SName,SName).
 
 
+clean_away_ansi(Text,CleanText)
 
-save_to_junit_file(Name,Text):- 
+save_to_junit_file(Name,DirtyText):-
+ clean_away_ansi(DirtyText,Text),
  must_det_l(( 
   getenv('TEST_STEM_PATH',Dir),
   atomic_list_concat([Dir,'-',Name,'_junit.xml'],Full), 
