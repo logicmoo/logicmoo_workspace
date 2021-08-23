@@ -963,10 +963,12 @@ show_source_location:- if_interactive((dumpST,dtrace)).
 show_current_source_location:- ignore((get_source_location(FL),!, show_current_source_location(FL))).
 show_current_source_location(FL):- t_l:last_shown_current_source_location(FL),!,
                                    retractall(t_l:last_shown_current_source_location(_)),
-                                   format_to_error('~N% FILE: ~w ~N',[FL]),!.
+                                   public_file_link(FL,FLO),
+                                   format_to_error('~N% FILE: ~w ~N',[FLO]),!.
 show_current_source_location(FL):- retractall(t_l:last_shown_current_source_location(_)),
                                    asserta(t_l:last_shown_current_source_location(FL)),!,
-                                   format_to_error('~N% FIlE: ~w ~N',[FL]),!. 
+                                   public_file_link(FL,FLO),
+                                   format_to_error('~N% FIlE: ~w ~N',[FLO]),!. 
 
 get_source_location(FL):- current_source_file(FL),nonvar(FL),!.
 get_source_location(F:L):- source_location(F,L),!.
@@ -974,6 +976,25 @@ get_source_location(get_source_location_unknown).
 
 
 % :- ensure_loaded(hook_database).
+
+:- dynamic(lmconf:http_file_stem/2).
+lmconf:http_file_stem(logicmoo_workspace,"https://logicmoo.org:2082/gitlab/logicmoo/logicmoo_workspace/-/blob/master").
+lmconf:http_file_stem(logicmoo_utils,"https://logicmoo.org:2082/gitlab/logicmoo/logicmoo_workspace/-/blob/master/packs_sys/logicmoo_utils").
+
+
+:- export(ensure_compute_file_link/2).
+:- export(public_file_link/2).
+:- export(maybe_compute_file_link/2).
+
+ensure_compute_file_link(S,URL):- maybe_compute_file_link(S,URL),!.
+ensure_compute_file_link(S,S).
+
+maybe_compute_file_link(S,O):- atom(S),!, lmconf:http_file_stem(F,R),atomic_list_concat([_,A],F,O),!,atom_concat(R,A,O).
+maybe_compute_file_link(S:L,O):- integer(L),!,maybe_compute_file_link(S,F),format(atom(O),'~w#L~w',[F,L]).
+
+public_file_link(S,O),maybe_compute_file_link(S,M),sformat(O,'<pre>~w</pre>',[M]).
+public_file_link(MG,MG).
+
 
 :-export( as_clause_no_m/3).
 
