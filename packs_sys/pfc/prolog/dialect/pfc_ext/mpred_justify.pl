@@ -622,9 +622,10 @@ pfc_short_filename(F,FN):- atomic_list_concat([_,FN],'/pack/',F),!.
 pfc_short_filename(F,FN):- atomic_list_concat([_,FN],swipl,F),!.
 pfc_short_filename(F,FN):- F=FN,!.
 
-pfcShowSingleJust_MFL(MFL):- MFL=mfl4(VarNameZ,_M,F,L),atom(F),pfc_short_filename(F,FN),!,varnames_load_context(VarNameZ),
-   color_format([hfg(black)]," % [~w:~w] ",[FN,L]).
-pfcShowSingleJust_MFL(MFL):- color_format([hfg(black)]," % [~w] ",[MFL]),!.
+pfcShowSingleJust_MFL(MFL):- MFL=mfl4(VarNameZ,_M,F,L),atom(F),pfc_short_filename(F,FN),varnames_load_context(VarNameZ),
+   public_file_link(FN:L,FNL),color_format([hfg(black)]," % [~w] ",[FNL]),!.
+pfcShowSingleJust_MFL(MFL):- 
+  public_file_link(MFL,FNL),color_format([hfg(black)]," % [~w] ",[FNL]),!.
 
 pfcAsk(Msg,Ans) :-
   format("~n~w",[Msg]),

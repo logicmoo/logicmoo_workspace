@@ -403,20 +403,7 @@ attrs_to_list(_ATTRS,[]).
 % Simplify Goal Printed.
 %
 
-% simplify_filename(M:G,MG):-
-
-http_file_stem(logicmoo_workspace,"https://logicmoo.org:2082/gitlab/logicmoo/logicmoo_workspace/-/blob/master").
-http_file_stem(logicmoo_utils,"https://logicmoo.org:2082/gitlab/logicmoo/logicmoo_workspace/-/blob/master/packs_sys/logicmoo_utils").
-
-file_to_http_link(S,Extra,O):- http_file_stem(F,R),atomic_list_concat([_,A],F,S),sformat(O,'~w~w',[R,A,Extra]).
-
-:- export(compute_file_link/2).
-
-compute_file_link(S:L,URL):- atom(S),integer(L),file_to_http_link(S,F), sformat(URL,'~w#L~w',[F,L]).
-compute_file_link(S,URL):- atom(S),file_to_http_link(S,F), sformat(URL,'~w',[F]).
-
-simplify_filename(S,O),compute_file_link(S,M),sformat(O,'<pre>~w</pre>',[M]).
-simplify_filename(MG,MG).
+% public_file_link(M:G,MG):-
 
 :- multifile(dumpst_hook:simple_rewrite/2).
 :- dynamic(dumpst_hook:simple_rewrite/2).
@@ -440,8 +427,8 @@ simplify_goal_printed(setup_call_cleanup,scc).
 simplify_goal_printed(each_call_cleanup,ecc).
 simplify_goal_printed(call_cleanup,cc).
 simplify_goal_printed([Var|_],'$'):-compound(Var),Var = (VT = _ ), (attvar(VT);var(VT);VT = var_tracker(_); VT = fbound(_)),!.
-simplify_goal_printed(M:G,MG):-atom(M),number(G), simplify_filename(M:G,MG),!.
-simplify_goal_printed(M,MG):-atom(M),exists_file(M), simplify_filename(M,MG),!.
+simplify_goal_printed(M:G,MG):-atom(M),number(G), public_file_link(M:G,MG),!.
+simplify_goal_printed(M,MG):-atom(M),exists_file(M), public_file_link(M,MG),!.
 simplify_goal_printed(M:G,MS:GS):-atom(M), simplify_m(M,MS),!,simplify_goal_printed(G,GS).
 simplify_goal_printed(M:I,M:O):-!, simplify_goal_printed(I,O).
 %simplify_goal_printed(M:I,O):- atom(M),(M==user;M==system),!,simplify_goal_printed(I,O).
