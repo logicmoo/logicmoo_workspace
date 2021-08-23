@@ -1,19 +1,22 @@
 
-echo -e "Running release (all) tests\n ( cd $PWD ; $BASH_SOURCE )"
+[ -z "$TESTING_TEMP" ] && export TESTING_TEMP=$(mktemp -d -t logicmoo_testing-$(date +%Y-%m-%d-%H-%M-%S)-XXXXXXXXXX)
+mkdir -p $TESTING_TEMP
 
 source ./logicmoo_env.sh -v
 
-find -name "Report-*ml" -delete
+find $TESTING_TEMP -name "Report-*ml" -delete
 
 TEST_PARAMS="$*"
 if [ -z "$TEST_PARAMS" ]; then 
   TEST_PARAMS="*04.p*"
 fi
 
-find . -mindepth 2 -name "test_on_*.sh" -execdir bash '{}' $TEST_PARAMS \;
+echo -e "Running release (all) tests\nTESTING_TEMP=$TESTING_TEMP\n( cd $PWD ; $BASH_SOURCE $TEST_PARAMS )"
 
-echo "<testsuites>" > junit.xml
-find -name "Report-*.xml" -exec sed -e "s/<testsuites>//g" -e "s|</testsuites>||g" {} >> junit.xml  \;
-echo "</testsuites>" >> junit.xml
+find . -mindepth 2 -name "test_on_*.sh" -execdir bash -c "source '{}'" $TEST_PARAMS \;
+
+echo "<testsuites>" > /tmp/junit.xml
+find $TESTING_TEMP -name "Report-*.xml" -exec sed -e "s/<testsuites>//g" -e "s|</testsuites>||g" {} >> /tmp/junit.xml  \;
+echo "</testsuites>" >> /tmp/junit.xml
 
 
