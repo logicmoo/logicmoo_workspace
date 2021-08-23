@@ -420,11 +420,19 @@ save_single_testcase(Name):-
    show_junit_testcase(File,Name),
    format("  </testsuite>\n", []),
    format(" </testsuites>\n", []))),
- % write(Text),
- atomic_list_concat([File,Name],SName),
- p_n_atom_filter_var_chars(SName,RSName),
-
+ % write(Text), 
+ 
+ shorten_and_clean_name(File,SFile),
+ shorten_and_clean_name(Name,SName),
+ atomic_list_concat([SFile,SName],RSName),
  save_to_junit_file(RSName,Text).
+
+shorten_and_clean_name(Name,RSName):- 
+  p_n_atom_filter_var_chars(Name,SName),
+  last_n_chars(SName,RSName).
+
+last_n_chars(SName,RSName):- sub_atom(SName,0,20,0,RSName),!.
+last_n_chars(SName,SName).
 
 
 
