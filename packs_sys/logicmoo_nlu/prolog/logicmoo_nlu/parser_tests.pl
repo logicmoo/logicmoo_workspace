@@ -13,6 +13,47 @@ test_e2c(X,[ape(Y)]):- ape_test(Y,X).
 test_e2c(X,[owlswrl(Y)]):- current_predicate(test_owlswrl/2),call(call,test_owlswrl(Y,X)), \+ clause(ape_test(Y,X),true).
 
 
+:-decl_test([
+  nlu_assert("The baby cries."),
+  nlu_assert(
+    ["She looks at it.",
+     "She talks to it."]),
+
+  nlu_ask_answer(
+   "How many agents are here?",
+   'At least one.', [infer_unique_objects]),
+
+  nlu_ask_answer(
+    'Did it cry?',
+    'It did if the baby was it.',
+    [it]).
+
+  nlu_ask_answer(
+    'What is "it"?',
+    'Unknown.',
+    [false_positives]),
+
+  nlu_assert("The baby is it."),
+
+  nlu_ask_answer(
+   "How many agents are here?",
+   'At least two.',[infer_unique_objects]),
+
+  nlu_ask_answer(
+    'Did it cry?',
+    'yes.',
+    [it]).
+
+  nlu_ask_answer(
+    'What is "it"?',
+    'The baby.',
+    [learned,it]),
+  ]).
+
+
+ note(problem, ' Note that second premise is unnecessary and irrelevant. ').
+
+
 ape_test(13, 'Every man likes at least 3 things.').
 ape_test(14, 'If a thing A is taller than a thing B then B is shorter than A.').
 ape_test(15, 'If something A is taller than something B and B is taller than something C then A is taller than C.').
@@ -195,7 +236,7 @@ ape_test(119, 'If a room contains E and contains F then it is false that the roo
 ape_test(120, 'No room that contains E and that contains F contains a sculpture that is not E and that is not F.').
 
 ape_test(121, 'If there is a number X then X + 1 = John.').
-ape_test(122, 'If 1.1 * 2 = 2.2 then 0.9 = 2 - 1.1.').
+ape_test(122, 'If 1.1 * 2 = 2.2 then 0.9 = 2 - 1.1.', [math]).
 % Note: E is a variable, Pi is a proper name.
 ape_test(123, 'If E approaches 2 then 3.14 approaches Pi.').
 
@@ -233,7 +274,7 @@ test_e2c("Iraq is a country.", [ bratko]).
 test_e2c("A happy author wrote principia.", [ bratko]).
 test_e2c("Is Bertrand an author?", [ bratko]).
 test_e2c("Bertrand is an author.", [ bratko]).
-test_e2c("Is Bertrand an author?", [ bratko]).
+test_e2c("Is Bertrand an author?", [ bratko, is_a_test ]).
 test_e2c("Every author is a programmer.", [ bratko]).
 test_e2c("Is Bertrand an programmer?", [ bratko]).  % Just a sanity test
 test_e2c("What is a author?", [ bratko]).  % Just a sanity test
