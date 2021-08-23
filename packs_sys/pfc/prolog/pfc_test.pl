@@ -124,8 +124,10 @@ why_was_true(P):- dmsg_pretty(justfied_true(P)),!.
 generate_test_name(baseKB:G,Testcase):- nonvar(G), !, generate_test_name(G,Testcase).
 generate_test_name(\+ G, Name):- nonvar(G), !, generate_test_name(G,Name1), sformat(Name,'\naf ~w',[Name1]).
 generate_test_name(call_u(G), Name):- nonvar(G), !, generate_test_name(G,Name).
-generate_test_name(G,Name):- callable(G), (source_location(_,L); (_='',L='')), sformat(Name1,'~q. @ ~w',[G,L]),!, generate_test_name(Name1,Name).
-generate_test_name(G,G):-!.
+generate_test_name(G,Name):- callable(G), (source_location(_,L); (_='',L='')), 
+  sformat(Name1,'Line_~4d',[L]),!,replace_in_string(['_0.'='_'],Name1,Name2), generate_test_name(Name2,Name).
+generate_test_name(SName,RSName):- atomic(SName),shorten_and_clean_name(SName,RSName),!.
+generate_test_name(G,G).
                     
 :- module_transparent(pfc_feature/1).
 :- dynamic(pfc_feature/1).
@@ -441,6 +443,10 @@ save_single_testcase(Name):-
  atomic_list_concat([SFile,'-',SName],RSName),
  save_to_junit_file(RSName,Text).
 
+classname_to_package(CN,P,C):- atomic_list_concat(List,'.',CN), append(Left,[C],List),atomic_list_concat(Left,'.',P).
+shorten_and_clean_name(Name,RSName):- atomic_list_concat([L,_|_],'.',Name),!,shorten_and_clean_name(L,RSName).
+shorten_and_clean_name(Name,RSName):- atomic_list_concat(List,'/',Name),append(_,[N1,N2,N3,N4],List),
+  atomic_list_concat(['prolog.',test_,N1,'.',N2,'.',N3,'.',N4],'',RSName).
 shorten_and_clean_name(Name,RSName):- 
   ensure_compute_file_link(Name,Name0),
   replace_in_string(
@@ -493,18 +499,21 @@ nongood_type(warning).
 nongood_type(failure).
 info_type(T):- \+ good_type(T), \+ nongood_type(T).
 
-suite_to_package(Suite,Package):- 
-  atomic_list_concat(Split,'/logicmoo_workspace/',Suite),last(Split,Right),
+suite_to_package(Suite,Package):- shorten_and_clean_name(Suite,Suite0),
+  atomic_list_concat(Split,'/logicmoo_workspace/',Suite0),last(Split,Right),
   replace_in_string([".pfc"="",".pl"="",'/'='.'],Right,Package),!.
 
 show_junit_testcase(Suite,Testcase):- 
- escape_attribute(Testcase,ETestcase),
+ j_u:junit_prop(Testcase,goal,Goal),
+ suite_to_package(Suite,Classname),
+ classname_to_package(Classname,Package,Class),
+ sformat(DisplayName,'~w@~w: ~p',[Class,Testcase, Goal]),
+ escape_attribute(DisplayName,EDisplayName),
  ignore((
  format('
-     <testcase name=~q ', [ETestcase]),
-  suite_to_package(Suite,Package),
+     <testcase name=~q ', [EDisplayName]),
   format('package="~w" ', [Package]),
-  format('classname="~w" ', [Package]),
+  format('classname="~w" ', [Classname]),
  ignore((j_u:junit_prop(Testcase,time,Time),format('time="~20f"', [Time]))),
  format('>\n\n', []),
  ignore((write_testcase_info(Testcase))),

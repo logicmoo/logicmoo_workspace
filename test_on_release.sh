@@ -4,12 +4,12 @@ source ./logicmoo_env.sh -v
 
 unset TESTING_TEMP
 
-[ -z "$TESTING_TEMP" ] && [ -d "$(pwd)/test_results" ] && export TESTING_TEMP=$(pwd)/test_results/$(whomai)
-#[ -z "$TESTING_TEMP" ] && export TESTING_TEMP=$(mktemp -d -t logicmoo_testing-$(date +%Y-%m-%d-%H-%M-%S)-XXXXXXXXXX)
+[ -z "$TESTING_TEMP" ] && [ -d "$(pwd)/test_results" ] && export TESTING_TEMP=$(pwd)/test_results/$(whoami)
+[ -z "$TESTING_TEMP" ] && export TESTING_TEMP=$(mktemp -d -t logicmoo_testing-$(date +%Y-%m-%d-%H-%M-%S)-XXXXXXXXXX)
 
 mkdir -p $TESTING_TEMP
 # find $TESTING_TEMP -type f -name "Report-*" -delete
-rm $TESTING_TEMP/?*
+rm -f $TESTING_TEMP/?*
 
 TEST_PARAMS="$*"
 if [ -z "$TEST_PARAMS" ]; then 

@@ -20,9 +20,9 @@
 
 :- read_attvars(true).
 
-:- expects_dialect(swi).
+% :- expects_dialect(swi).
 my_sk(aVar([vn='Ex',sk='SKF-666'])).
 
-:- must((my_sk(Ex),get_attr(Ex,sk,What),What=='SKF-666')).
+:- mpred_test((my_sk(Ex),get_attr(Ex,sk,What),What=='SKF-666')).
 
 
