@@ -137,7 +137,7 @@ for ele2 in "${listOfNames[@]}"
         JECHO "<testcase name=\"$RunTestFile\" package='loader' time='$totalTime'>"
         JECHO " <failure message='FAILED: $0 ${keep_going} ${ele} (returned ${exitcode})'>"
            JECHO "<system-err><![CDATA[$(cat $TEE_FILE2)]]></system-err>\n"
-        JECHO "</testcase>"
+        JECHO " </failure></testcase>"
 
         next_cls=0
 
