@@ -202,6 +202,7 @@ nr_lc_ex(G):- no_repeats(loop_check(G,trace_or_throw(looped(G)))).
 
 :- dynamic(lmcache:mpred_is_spying_pred/2).
 
+:- use_module(library(pfc_test)).
 :- use_module(library(logicmoo_common)).
 :- use_module(library(logicmoo/misc_terms)).
 
