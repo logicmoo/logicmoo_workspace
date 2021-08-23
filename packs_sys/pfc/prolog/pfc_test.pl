@@ -121,6 +121,9 @@ why_was_true(P):- % predicate_property(P,dynamic),
 why_was_true(P):- dmsg_pretty(justfied_true(P)),!.
 
 catch_timeout(P):- catch(call_with_time_limit(P,30),E,wdmsg(P->E)).
+   
+
+:- 
 
 generate_test_name(baseKB:G,Testcase):- nonvar(G), !, generate_test_name(G,Testcase).
 generate_test_name(\+ G, Name):- nonvar(G), !, generate_test_name(G,Name1), sformat(Name,'\naf ~w',[Name1]).

@@ -17,7 +17,9 @@
             locally_tl/2,
             locally_hide/2,
             locally_hide_each/2,
-            local_override/2
+            local_override/2,
+            w_o_c/1,
+            w_o_c/2
           ]).
 
 :- meta_predicate
@@ -77,6 +79,10 @@ locally_hide(Fact,Cm:Call):-
 locally_hide_each(Fact,Cm:Call):-  
   quietly(module_effect((Fact :- !,fail),M,BareEffect)) ->
     wtl(M,BareEffect,Cm:Call,Cm:each_call_cleanup).
+
+w_o_c(G):- w_o_c(error, G). 
+w_o_c(How, G):- 
+   locally(set_prolog_flag(occurs_check,How),G).
 
 
 %% locally_each( :Effect, :Call) is nondet.
