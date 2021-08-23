@@ -41,7 +41,6 @@
    -> (set_prolog_flag(is_pfc_file_dialect,true))
    ; set_prolog_flag(is_pfc_file_dialect,false))))),!.
 
-:- current_prolog_flag(is_pfc_file_dialect,true)-> sanity(is_pfc_file) ; true.
 %   ; current_prolog_flag(is_pfc_file_dialect,false)-> sanity( \+ is_pfc_file) ; true.
 %:- set_prolog_flag(debug, true).
 %:- set_prolog_flag(gc, false).
@@ -81,3 +80,5 @@ system:goal_expansion(I,P,O,PO):- junit_goal_expansion(I,O),P=PO.
 %:- '$current_source_module'(W), '$set_typein_module'(W).
 :- if((current_prolog_flag(test_module,Module)->module(Module);true)). :- endif.
 :- if((current_prolog_flag(is_pfc_file_dialect,true),ensure_loaded(library(pfc_lib)),mpred_trace_exec)). :- endif.
+:- current_prolog_flag(is_pfc_file_dialect,true)-> sanity(is_pfc_file) ; true.
+
