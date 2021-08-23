@@ -109,17 +109,18 @@ mpred_test_fok_4(G, TestResult, Elapsed):- !,
   (TestResult == failure -> Retry = ( \+ G ) ;  Retry = G),
   save_info_to(TestResult,why_was_true(Retry)))).
 
-call_u_hook(G):- current_predicate(call_u/1),!,call(call,call_u,G).
-call_u_hook(G):- call(G).
+call_u_hook(G):- current_predicate(call_u/1),!,catch_timeout(call(call,call_u,G)).
+call_u_hook(G):- catch_timeout(G).
 
-mpred_why_hook(P):- current_predicate(call_u/1),!,call(call,mpred_why,P).
+mpred_why_hook(P):- current_predicate(call_u/1),!,catch_timeout(call(call,mpred_why,P)).
 
 :- export(why_was_true/1).
 why_was_true((A,B)):- !,why_was_true(A),why_was_true(B).
 why_was_true(P):- % predicate_property(P,dynamic),
-                  mpred_why_hook(P),!.
+                  catch_timeout(mpred_why_hook(P)),!.
 why_was_true(P):- dmsg_pretty(justfied_true(P)),!.
 
+catch_timeout(P):- catch(call_with_time_limit(P,30),E,wdmsg(P->E)).
 
 generate_test_name(baseKB:G,Testcase):- nonvar(G), !, generate_test_name(G,Testcase).
 generate_test_name(\+ G, Name):- nonvar(G), !, generate_test_name(G,Name1), sformat(Name,'\naf ~w',[Name1]).
