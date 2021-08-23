@@ -1,3 +1,4 @@
+#!/bin/bash -x
 
 [ -z "$TESTING_TEMP" ] && export TESTING_TEMP=$(mktemp -d -t logicmoo_testing-$(date +%Y-%m-%d-%H-%M-%S)-XXXXXXXXXX)
 mkdir -p $TESTING_TEMP
