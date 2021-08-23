@@ -80,7 +80,7 @@ locally_hide_each(Fact,Cm:Call):-
   quietly(module_effect((Fact :- !,fail),M,BareEffect)) ->
     wtl(M,BareEffect,Cm:Call,Cm:each_call_cleanup).
 
-w_o_c(G):- catch(w_o_c(error, G),E,(wdmsg(w_o_c(error=E, G)),dumpST,wdmsg(w_o_c(error=E, G)),!,w_o_c(fail,G))).
+w_o_c(G):- catch(w_o_c(error, G),E,(wdmsg(w_o_c(error=E, G)),dumpST,wdmsg(w_o_c(error=E, G)),!,w_o_c(true,G))).
 w_o_c(How, G):- 
    locally(set_prolog_flag(occurs_check,How),G).
 
