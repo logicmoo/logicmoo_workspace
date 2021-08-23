@@ -989,10 +989,10 @@ lmconf:http_file_stem(logicmoo_utils,"https://logicmoo.org:2082/gitlab/logicmoo/
 ensure_compute_file_link(S,URL):- maybe_compute_file_link(S,URL),!.
 ensure_compute_file_link(S,S).
 
-maybe_compute_file_link(S,O):- atom(S),!, lmconf:http_file_stem(F,R),atomic_list_concat([_,A],F,O),!,atom_concat(R,A,O).
+maybe_compute_file_link(S,O):- atom(S),!, lmconf:http_file_stem(F,R),atomic_list_concat([_,A],F,S),!,atom_concat(R,A,O).
 maybe_compute_file_link(S:L,O):- integer(L),!,maybe_compute_file_link(S,F),format(atom(O),'~w#L~w',[F,L]).
 
-public_file_link(S,O),maybe_compute_file_link(S,M),sformat(O,'<pre>~w</pre>',[M]).
+public_file_link(S,O):-maybe_compute_file_link(S,M),sformat(O,'<pre>~w</pre>',[M]).
 public_file_link(MG,MG).
 
 
