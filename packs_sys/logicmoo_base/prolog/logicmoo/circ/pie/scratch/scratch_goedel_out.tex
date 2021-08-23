@@ -1,0 +1,2298 @@
+\documentclass[a4paper]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{imakeidx}
+\usepackage[hidelinks]{hyperref}
+%% A screen friendly geometry:	    
+\usepackage[paper=a5paper,scale=0.9]{geometry}
+%% PPL Setup
+	   
+\newcommand{\assign}{\mathrel{\mathop:}=}
+\newcommand{\concat}{\mathrel{+\!+}}
+	    
+\newcommand{\f}[1]{\mathsf{#1}}
+\newcommand{\true}{\top}
+\newcommand{\false}{\bot}
+\newcommand{\imp}{\rightarrow}
+\newcommand{\revimp}{\leftarrow}
+\newcommand{\equi}{\leftrightarrow}
+\newcommand{\entails}{\models}	    
+\newcommand{\eqdef}{\; 
+\raisebox{-0.1ex}[0mm]{$ \stackrel{\raisebox{-0.2ex}{\tiny 
+\textnormal{def}}}{=} $}\; }
+\newcommand{\iffdef}{\n{iff}_{\mbox{\scriptsize \textnormal{def}}}}
+
+\newcommand{\pplmacro}[1]{\mathit{#1}}
+\newcommand{\ppldefmacro}[1]{\mathit{#1}}
+\newcommand{\pplparam}[1]{\mathit{#1}}
+\newcommand{\pplparamidx}[2]{\mathit{#1}_{#2}}
+\newcommand{\pplparamplain}[1]{#1}
+\newcommand{\pplparamplainidx}[2]{#1_{#2}}
+\newcommand{\pplparamsup}[2]{\mathit{#1}^{#2}}
+\newcommand{\pplparamsupidx}[3]{\mathit{#1}^{#2}_{#3}}
+\newcommand{\pplparamplainsup}[2]{#1^{#2}}
+\newcommand{\pplparamplainsupidx}[3]{#1^{#2}_{#3}}
+\newcommand{\pplparamnum}[1]{\mathit{X}_{#1}}
+
+%%	    
+%% We use @startsection just to obtain reduced vertical spacing above
+%% macro headers which are immediately after other headers, e.g. of sections
+%%	    
+\makeatletter%
+\newcounter{entry}%
+\newcommand{\entrymark}[1]{}%
+\newcommand\entryhead{%
+\@startsection{entry}{10}{\z@}{12pt plus 2pt minus 2pt}{0pt}{}}%
+\makeatother
+	    
+\newcommand{\pplkbBefore}
+{\entryhead*{}%
+\setlength{\arraycolsep}{0pt}%
+\pagebreak[0]%
+\begin{samepage}%
+\noindent%
+\rule[0.5pt]{\textwidth}{2pt}\\%
+\noindent}
+
+% \newcommand{\pplkbDefType}[1]{\hspace{\fill}{{[}#1{]}\\}}
+
+\newcommand{\pplkbBetween}
+{\setlength{\arraycolsep}{3pt}%
+\\\rule[3pt]{\textwidth}{1pt}%
+\par\nopagebreak\noindent Defined as\begin{center}}
+
+\newcommand{\pplkbAfter}{\end{center}\end{samepage}\noindent}
+
+\newcommand{\pplkbBodyBefore}{\par\noindent where\begin{center}}
+\newcommand{\pplkbBodyAfter}{\end{center}}
+
+\newcommand{\pplkbFreePredicates}[1]{\f{free\_predicates}(#1)}
+% \newcommand{\pplkbRenameFreeOccurrences}[3]{\f{rename\_free\_occurrences}(#1,#2,#3)}
+
+\newcommand{\pplIsValid}[1]{\noindent This formula is valid: $#1$\par}
+\newcommand{\pplIsNotValid}[1]{\noindent This formula is not valid: $#1$\par}	    
+\newcommand{\pplFailedToValidate}[1]{\noindent Failed to validate this formula: $#1$\par}
+
+\newcounter{def}
+	    
+\makeindex
+\usepackage{graphicx}
+\usepackage{amssymb}
+\usepackage{filecontents}
+\begin{filecontents}{\jobname.bib}
+@book{benthem:mlcl,
+  author =        {Johan van Benthem},
+  title =         {Modal Logic and Classical Logic},
+  publisher =     {Bibliopolis},
+  year =          {1983},
+}
+
+@book{benthem:open,
+  author =        {Johan van Benthem},
+  title =         {Modal Logic for Open Minds},
+  publisher =     {CSLI Publications},
+  year =          {2010},
+}
+
+@book{fitting:god,
+  author =        {Melvin Fitting},
+  title =         {Types, Tableaus, and Gödel's God},
+  publisher =     {Springer},
+  year =          {2002}
+}
+
+@book{sobel:theism,
+  author =        {Jordan Howard Sobel},
+  title =         {Logic and Theism},
+  year =          {2004},
+  publisher =     {Cambridge University Press},
+  address =       {Cambridge}
+}
+
+@incollection{sobel:1987:goedel,
+  author =        {Jordan Howard Sobel},
+  title =         {Gödel's Ontological Proof},
+  year =          {1987},
+  booktitle =     {On Being and Saying: Essays for Richard Cartwright},
+  editor  =       {Judith Jarvis Thomson},
+  publisher  =    {MIT Press},	  
+  address =       {Cambridge, MA}
+}
+  
+@inproceedings{benzmueller:etal:2014:goedel,
+  author    = {Christoph Benzmüller and Bruno {Woltzenlogel Paleo}},
+  title     = {Automating {G}ödel's Ontological Proof of God's Existence
+               with Higher-order Automated Theorem Provers},
+  booktitle = {ECAI 2014},
+  series    = {FAIA},
+  volume    = {263},	   
+  pages     = {93--98},
+  year      = {2014},
+  publisher = {IOS Press},
+}
+
+@article{benzmueller:etal:2017:assisted,
+  author    = {Christoph Benzmüller and
+               Leon Weber and
+               Bruno {Woltzenlogel Paleo}},
+  title     = {Computer-Assisted Analysis of the {A}nderson-{H}ájek
+                  Ontological Controversy},
+  journal   = {Logica Universalis},
+  volume    = {11},
+  number    = {1},
+  pages     = {139--151},
+  year      = {2017},
+}
+
+@article{kirchner:etal:2019:metaphysics,
+  author = {Daniel Kirchner and Christoph Benzmüller and Edward N. Zalta},
+  year = {2019},
+  title = {Computer Science and Metaphysics: A Cross-Fertilization},
+  note = {Preprint \url{http://doi.org/10.13140/RG.2.2.25229.18403}}
+}
+
+@article{dls,
+  author =        {Patrick Doherty and Witold {\L}ukaszewicz and
+	           Andrzej Sza{\l}as},
+  journal =       {JAR},
+  number =        {3},
+  pages =         {297--338},
+  title =         {Computing Circumscription Revisited: A Reduction
+                   Algorithm},
+  volume =        {18},
+  year =          {1997},
+}
+
+@inproceedings{dls:snc,
+  author =        {Patrick Doherty and Witold {\L}ukaszewicz and
+	           Andrzej Sza{\l}as},
+  booktitle =     {IJCAI-01},
+  pages =         {145--151},
+  publisher =     {Morgan Kaufmann},
+  title =         {Computing Strongest Necessary and Weakest Sufficient
+                   Conditions of First-Order Formulas},
+  year =          {2001},
+}
+
+@book{soqe:book,
+  author =        {Dov M. Gabbay and Renate A. Schmidt and Andrzej Sza{\l}as},
+  title =         {Second-Order Quantifier Elimination:
+                   Foundations, Computational Aspects and Applications},
+  publisher =     {College Publications},
+  year =          {2008},
+}
+
+@article{lin:snc,
+  author =        {Fangzhen Lin},
+  journal =       {Artificial Intelligence},
+  pages =         {143--159},
+  title =         {On Strongest Necessary and Weakest Sufficient
+                   Conditions},
+  volume =        {128},
+  year =          {2001},
+}
+
+@article{cw:2012:projcirc,
+  author =        {Christoph Wernhard},
+  journal =       {Journal of Symbolic Computation},
+  pages =         {1089--1108},
+  title =         {Projection and Scope-Determined Circumscription},
+  volume =        {47},
+  year =          {2012},
+}
+
+@inproceedings{cw:2016:pie,
+  author    = {Christoph Wernhard},
+  title     = {The {PIE} system for Proving, Interpolating
+               and Eliminating},
+  booktitle = {PAAR 2016},
+  year      = {2016},
+  volume = {1635},
+  pages = {125--138},
+  series = {CEUR Workshop Proceedings},
+  publisher = {CEUR-WS.org}
+}
+\end{filecontents}
+\newcommand{\name}[1]{\textit{#1}}
+\newcommand{\g}[1]{\mathit{#1}}
+\newcommand{\quoted}[1]{\ulcorner #1\urcorner}
+\newcommand{\highlightpar}{\noindent\raisebox{0.2ex}[0pt][0pt]{$\blacktriangleright\hspace{0.8em}$}}
+\renewcommand{\theequation}{\roman{equation}}
+
+\begin{document}
+%
+% Doc at position 0
+%
+ \title{Inspecting Gödel's Ontological Proof\\
+ {\Large ``Literate automated theorem proving'' document\\ created with
+  \name{\href{http://cs.christophwernhard.com/pie}{PIE}}}\\
+  -- Draft --}
+  \author{Christoph Wernhard}
+  \date{Revision: May 10, 2019; Rendered: \today}
+  \maketitle
+
+%
+% Doc at position 3023
+%
+  \tableofcontents
+%
+% Doc at position 3130
+%
+\subsection*{Remark: Current Status of this Document}
+
+  This is a draft of inspecting Gödel's ontological proof with the \name{PIE}
+  (\name{Proving, Interpolating, Eliminating}) system.  It gives an example of
+  applying the system's ``literate automated theorem proving'' interface to
+  formalize and investigate a nontrivial theory. The source code demonstrates
+  for several recently added system features how these can be used.  With
+  respect to the subject, the analysis of Gödel's proof, this version of the
+  document is to be seen just a very first draft. Nevertheless, some aspects
+  might already be of interest, in particular those made possible through
+  second-order quantifier elimination such as ``reduced'' views on
+  \name{essence} and \name{necessary existence} as well as approaches to find
+  weakest sufficient frame conditions.
+  
+%
+% Doc at position 3993
+%
+  \section{Introduction}
+
+  \subsection{Background}
+  
+  Gödel bequeathed a short text with an ontological proof of the existence of
+  God.  In 1970 he showed the proof to Scott, who also recorded it in a
+  slightly different version. Transcripts of both handwritten manuscripts have
+  been published later by Sobel \cite{sobel:1987:goedel}. From this starting
+  point, a number of variations of Gödel's axiomatization have since been
+  suggested in the literature.  Comprehensive background and discussion is
+  provided in Sobel's book \cite{sobel:theism}, which also reproduces the
+  transcripts, and in Fitting's book \cite{fitting:god}.  Both books present
+  formalizations in modal predicate logic, along with formal proofs, in a
+  natural deduction system and in the framework of analytic tableaux,
+  respectively.
+
+  The investigation of Gödel's proof with automated systems was initiated by
+  Benz\-müller and Woltzenlogel Paleo in \cite{benzmueller:etal:2014:goedel}.
+  A higher-order modal logic is embedded there into classical higher-order
+  logic, which, in turn, is supported by a combination of automated theorem
+  proving and verification systems. In several follow-up works variations of
+  Gödel's proof have been analyzed with different techniques and automated
+  systems (see \cite{kirchner:etal:2019:metaphysics} for an overview).  The
+  automated approach enforces precise and detailed formalizations. Together
+  with the possibility to test for vast numbers of combinations of axioms
+  whether they entail candidate theorems this led to many new observations.
+  
+  Here we approach Gödel's proof with an automated system that is centered
+  round \emph{first-order} theorem proving, which it extends by second-order
+  quantifier elimination and the support for expressing first-order
+  formalizations by means of schemas or macros.  The impact of these
+  techniques on the analysis of axiomatizations and proofs is can be
+  summarized as follows:
+
+  \paragraph{Classical First-Order Logic as Basis.}
+
+  Compared to a higher-order setting, immediate limitations are that
+  quantification upon predicate symbols is not permitted, predicates are not
+  allowed to occur in argument position, and there is no abstraction mechanism
+  that allows to construct predicates from formulas.\footnote{Similar remarks
+  also hold for functions in addition to predicates.}  The first aspect,
+  quantification upon predicates, is supported to some degree in our framework
+  with second-order quantifier elimination, discussed below.  The other
+  aspects, predicates as arguments and construction of predicates through
+  abstraction are in Gödel's proof actually only required with respect to
+  specific instances that can be expressed in first-order logic.  A potential
+  reward for the explicit creation of instances is that information about
+  which instances are used in proofs is then trivially available.  Explicit
+  instantiation by predicates and in some contexts also individuals suggests
+  to use first-order logic together with schemas, as common in mathematics.
+  Our framework supports this approach with a mechanism to specify formula
+  macros.  We represent modal formulas directly in their standard translation,
+  which facilitates the consideration of frame conditions that are represented
+  directly by first- or second-order formulas.  First-order logic is
+  well-known, ensuring that the results of investigations do not reflect
+  unnoticed features of some special underlying logic.
+  
+  \paragraph{Second-Order Quantifier Elimination.}
+
+  Second-order quantifier elimination \cite{soqe:book} is the computational
+  task of computing for a given second-order formula an equivalent first-order
+  formula. Since not all second-order formulas have a first-order equivalent,
+  this task is inherently incomplete.  A traditional application field of
+  second-order quantifier elimination is to compute from a given modal axiom
+  the corresponding frame property. Consider, for example, the axiom $\Box p
+  \imp p$, known as $M$ or $T$. Its correspondence to reflexivity of the
+  accessibility relation $\f{r}$ can be automatically established by
+  second-order quantifier elimination:
+
+  \smallskip
+  
+
+\noindent Input: $\forall \mathit{p} \, \forall \mathit{v} \, (\forall \mathit{w} \, (\mathsf{r}(\mathit{v},\mathit{w}) \imp  \mathit{p}(\mathit{w})) \imp  \mathit{p}(\mathit{v})).$\\
+\noindent Result of elimination:
+\[\begin{array}{lllll}
+\forall \mathit{x} \, \mathsf{r}(\mathit{x},\mathit{x}).
+\end{array}
+\]
+%
+% Doc at position 8305
+%
+  \noindent The elimination result extracts from the modal axiom what it
+  states about the accessibility relation.  In general, the extraction of
+  knowledge about a subvocabulary by second-order quantifier elimination can
+  be useful to gain insight into the meaning of axioms and defined concepts.
+
+  \paragraph{Computing Weakest Sufficient Conditions.}
+  \label{sec-wsc-informal}
+  
+  The \emph{weakest sufficient condition}
+  \cite{lin:snc,dls:snc,cw:2012:projcirc} of formula $G$ on a set~$Q$ of
+  predicates within a formula $F$ can be characterized as the second-order
+  formula \[\forall p_1 \ldots \forall p_n\, (F \imp G),\] where $p_1, \ldots,
+  p_n$ are all predicates that occur free in $F \imp G$ and are not members of
+  $Q$.  This second-order formula denotes the weakest (with respect to
+  entailment) formula~$H$ in which only predicates in $Q$ occur free such that
+  $F \land H \imp G$ is valid, or equivalently, such that $H \imp (F \imp G)$
+  is valid.  Second-order quantifier elimination can be applied to ``compute''
+  a weakest sufficient condition, that is, converting it to a first-order
+  formula, which, of course, is inherently not possible in all cases.  This
+  application pattern of second-order quantifier elimination seems
+  particularly useful in the inspection of theories, as it allows to
+  characterize in a backward, goal-oriented or abductive way the requirements
+  about predicates $Q$ that are missing to conclude from some given axioms~$F$
+  a given theorem~$G$.
+  
+  \subsection{Technical Notes}
+
+  \begin{enumerate}
+
+  \item This document is processed by the \name{PIE} system, described in
+  \cite{cw:2016:pie}. The formal macro definitions are read by the system.
+  Macros without parameters play the role of formula names.  The system
+  invokes reasoners on proving, elimination and interpolation tasks.  Their
+  outputs are presented with phrases such as \name{This formula is valid},
+  \name{This formula is not valid}, and \name{Result of elimination}.
+  
+  \item We write formulas of modal predicate logic as formulas of classical
+  first-order logic by applying the standard translation from
+  \cite[Sec.~11.4]{benthem:open} and \cite[Chap.~XII]{benthem:mlcl}.  The
+  binary predicates $\f{r}$ and $\f{e}$ are used for world accessibility and
+  membership in the domain of a world.
+  
+  \item As target logic we do not use a two-sorted logic nor encode
+  two-sortedness explicitly with relativizer predicates. However, the
+  translation of modal formula yields formulas in which all quantifications
+  are relativized by $\f{r}$ or by $\f{e}$, which seems to subsume the effect
+  of such relativizer predicates.  To express that free individual symbols are
+  of sort \name{world} we use the unary predicate
+  $\f{world}$. Macros~\ref{def:r:world} and \ref{def:r:world:1} defined below
+  can be used as axioms that relate $\f{world}$ and $\f{r}$ as far as needed
+  here.
+
+  \item The used standard translation realizes with respect to the represented
+  modal logic \name{varying domain semantics} (\name{actualist notion of
+  quantification}), expressed with the existence predicate $\f{e}$. Axioms
+  that state domain increase and decrease can be used to to obtain
+  \name{constant domain semantics} (\name{possibilist notion of
+  quantification}).
+
+  \item As technical basis for Gödel's proof we use the presentation of
+  Scott's version \cite[Chapter~IV, Appendix B]{sobel:theism} in
+  \cite[Fig.~1]{benzmueller:etal:2017:assisted}. The axiom and theorem
+  numbering follow these documents.  In
+  \cite[Fig.~1]{benzmueller:etal:2017:assisted} there are two additional
+  lemmas, \name{L1} and \name{L2}. Of these, we only use \name{L1} and call it
+  \name{Lemma~2}, reserving \name{Lemma~1} for another lemma, used in an
+  earlier proof stage.
+
+  \item The \LaTeX\ presentation of formulas and macro definitions bears some
+  footprint from Prolog's syntax, since the underlying system \name{PIE} uses
+  a Prolog-based syntax for logical formulas and supports interaction through
+  the Prolog interpreter: Macro parameters and bound logical variables that
+  are to be bound to fresh symbols at macro expansion are represented in the
+  system by Prolog variables, and thus start with capital letters.
+  Where-clauses in macro definitions are used to display in abstracted form
+  special Prolog code that is executed at macro expansion.
+
+  \item The available automated deduction techniques include the following:
+
+  \begin{itemize}
+
+  \item First-order theorem proving, in particular with
+  resolution/paramodulation (\name{Prover9}) and clausal tableaux (\name{CM}),
+  as well as finding finite first-order ``countermodels''
+  (\name{Mace4}).\footnote{Other first-order systems that support the TPTP
+  format as well as propositional systems that support the DIMACS format could
+  also be integrated.} The clausal tableau prover is weak with equality, as it
+  operates in a goal-oriented way, sometimes quite sensitive to settings like
+  the particular division of a problem into axiom and theorem part, and has no
+  means to ensure that a problem is (counter-) satisfiable like \name{Mace4}.
+  It outputs clausal tableaux that can be graphically displayed.
+
+  \item Second-order quantifier elimination with an implementation of the
+  \name{DLS} algorithm \cite{dls} that is based on Ackermann's Lemma.
+
+  \item Various methods for formula simplification, clausification and
+  unskolemization that are applied in preprocessing, inprocessing, and for
+  output presentation. (The latter seems a major issue by itself that is far
+  from being solved.)
+
+  \item First-order Craig interpolation on the basis of clausal tableaux
+  (currently not used in this document).
+
+  \end{itemize}
+  
+  \end{enumerate}
+
+  \subsection{Structure of the Document}
+
+  Sections~\ref{sec-positiveness}--\ref{sec-thm-3} each discuss a stage of
+  Gödel's argument, roughly following the division in
+  \cite[Chapter~11]{fitting:god}.  Further aspects and variants are discussed
+  in Sections~\ref{sec-special-thm-3}--\ref{sec-special-last}.
+  Section~\ref{sec-aux} is for auxiliary definitions of merely technical
+  system related character.  Observations that seem to be of particular
+  interest for further investigation are highlighted with
+  ``\raisebox{0.2ex}[0pt][0pt]{$\blacktriangleright$}''.
+  
+%
+% Doc at position 14726
+%
+  
+  \section{Positiveness}
+  \label{sec-positiveness}
+  
+  \subsection{Auxiliary Sort Inference Predicate}
+
+  To express that free individual symbols are of sort \name{world} we use the
+  unary predicate $\f{world}$. The following formulas can be used as axioms
+  that leads from $\f{r}(v,w)$ to $\f{world}(v)$ and $\f{world}(w)$ or, just
+  to $\f{world}(w)$, respectively. The latter, weaker, formula is sufficient
+  in some of the considered contexts.
+  
+%
+% Statement at position 15194
+%
+\pplkbBefore
+\index{r_world@$\ppldefmacro{r\_world}$}\refstepcounter{def}\label{def:r:world}%
+\ref{def:r:world}. $\begin{array}{lllll}
+\ppldefmacro{r\_world}
+\end{array}
+$\pplkbBetween
+$\begin{array}{lllll}
+\forall \mathit{v} \forall \mathit{w} \, (\mathsf{r}(\mathit{v},\mathit{w}) \imp  \mathsf{world}(\mathit{v}) \land  \mathsf{world}(\mathit{w})).
+\end{array}
+$\pplkbAfter
+%
+% Statement at position 15255
+%
+\pplkbBefore
+\index{r_world_1@$\ppldefmacro{r\_world_{1}}$}\refstepcounter{def}\label{def:r:world:1}%
+\ref{def:r:world:1}. $\begin{array}{lllll}
+\ppldefmacro{r\_world_{1}}
+\end{array}
+$\pplkbBetween
+$\begin{array}{lllll}
+\forall \mathit{v} \forall \mathit{w} \, (\mathsf{r}(\mathit{v},\mathit{w}) \imp  \mathsf{world}(\mathit{w})).
+\end{array}
+$\pplkbAfter
+%
+% Doc at position 15308
+%
+
+  \subsection{Representing Verum and Falsum}
+  \label{sec-assoc-constant}
+%
+% Doc at position 15501
+%
+
+  \name{Positiveness} is in Gödel's theory a predicate that applies to
+  predicates.  In the actual proof, however, it is used only in a small number
+  of instances with specific argument predicates: $\lambda x . x = x$,
+  $\lambda x . x \neq x$, and an arbitrary but fixed predicate.  In
+  correspondence with the standard translation, we represent $\lambda x . x =
+  x$ and $\lambda x . x \neq x$ by binary predicates~$\top$ and~$\bot$, where
+  the first argument is a world.  These predicates may be defined
+  follows:\footnote{Perhaps there are other possibilities to define them. The
+  interplay of these predicates with the existence predicate seems not
+  straightforward.}
+
+%
+% Statement at position 16191
+%
+\pplkbBefore
+\index{topbot_def@$\ppldefmacro{topbot\_def}$}\refstepcounter{def}\label{def:topbot:def}%
+\ref{def:topbot:def}. $\begin{array}{lllll}
+\ppldefmacro{topbot\_def}
+\end{array}
+$\pplkbBetween
+$\begin{array}{lllll}
+\forall \mathit{v} \forall \mathit{x} \, (\mathsf{world}(\mathit{v}) \imp  (\mathsf{\top}(\mathit{v},\mathit{x}) \equi  \mathsf{e}(\mathit{v},\mathit{x}))) &&&&\; \land \\
+\forall \mathit{v} \forall \mathit{x} \, (\mathsf{world}(\mathit{v}) \imp  (\mathsf{\bot}(\mathit{v},\mathit{x}) \equi  \lnot  \mathsf{e}(\mathit{v},\mathit{x}))).
+\end{array}
+$\pplkbAfter
+%
+% Doc at position 16310
+%
+
+  \noindent The following formula expresses equivalence of the binary
+  predicate $\top$ and $\lambda v x . \lnot \bot(v,x)$:
+%
+% Statement at position 16445
+%
+\pplkbBefore
+\index{topbot_equiv@$\ppldefmacro{topbot\_equiv}$}\refstepcounter{def}\label{def:topbot:equiv}%
+\ref{def:topbot:equiv}. $\begin{array}{lllll}
+\ppldefmacro{topbot\_equiv}
+\end{array}
+$\pplkbBetween
+$\begin{array}{lllll}
+\forall \mathit{v} \forall \mathit{x} \, (\mathsf{world}(\mathit{v}) \imp  (\mathsf{\top}(\mathit{v},\mathit{x}) \equi  \lnot  \mathsf{\bot}(\mathit{v},\mathit{x}))).
+\end{array}
+$\pplkbAfter
+\pplIsValid{\pplmacro{topbot\_def} \imp  \pplmacro{topbot\_equiv}.}
+%
+% Doc at position 16577
+%
+
+  \medskip
+  
+  \noindent In our first-order framework we do not admit a predicate that has
+  a predicate as argument.  But for the purpose of Gödel's proof, this can be
+  simulated it by a predicate that is applied instead to an individual
+  constant representing the argument predicate.  We use the constants
+  $\quoted{\top}$, $\quoted{\bot}$ and $\quoted{\lnot \top}$ to designate the
+  individuals associated with $\top$, $\bot$ and $\lambda v x . \lnot \top(v,
+  x)$, respectively.  The following axiom leads from the equivalence expressed
+  by Macro~\ref{def:topbot:equiv} to equality of the associated individuals
+  $\quoted{\bot}$ and $\quoted{\lnot \top}$:
+
+%
+% Statement at position 17254
+%
+\pplkbBefore
+\index{topbot_equiv_equal@$\ppldefmacro{topbot\_equiv\_equal}$}\refstepcounter{def}\label{def:topbot:equiv:equal}%
+\ref{def:topbot:equiv:equal}. $\begin{array}{lllll}
+\ppldefmacro{topbot\_equiv\_equal}
+\end{array}
+$\pplkbBetween
+$\begin{array}{lllll}
+\pplmacro{topbot\_equiv} \imp  \mathsf{\quoted{\bot}}=\mathsf{\quoted{\lnot\top}}.
+\end{array}
+$\pplkbAfter
+%
+% Doc at position 17318
+%
+
+  \noindent Equality is here understood with respect to first-order logic, not
+  qualified by a world parameter.  In Section~\ref{sec-lemma-1-pre-weaker}
+  below an alternative is shown, where in essence the equality is replaced by
+  a weaker substitutivity property.
+
+%
+% Doc at position 17597
+%
+
+  \subsection{Proving Theorem~1}
+  \label{sec-thm-1}
+  
+  \noindent The left-to-right direction of Axiom~1 of Scott's version is
+  rendered by the following macro. (The right-to-left direction is stated
+  below as Macro~\ref{def:ax:1:rl:2}.) We represent \name{is positive} by the
+  binary predicate $\f{pos}$ which has a world and an individual representing
+  a predicate as argument.
+
+  At macro expansion, the individual constants $P'$ and $N'$ associated with
+  the supplied predicate symbol~$P$ and with $\lambda v x . \lnot P(v,x)$,
+  respectively, are determined by the code in the where clause. This technique
+  is also used in further macro definitions.
+
+  In general, we expose the current world as a macro parameter~$V$. This
+  facilitates to identify proofs steps where axioms are not applied just with
+  respect to the initially given current world but to some other reachable
+  world.
+  
+%
+% Statement at position 18508
+%
+\pplkbBefore
+\index{ax_1_lr(V,P)@$\ppldefmacro{ax_{1}^{\rightarrow}}(\pplparamplain{V},\pplparamplain{P})$}\refstepcounter{def}\label{def:ax:1:lr:2}%
+\ref{def:ax:1:lr:2}. $\begin{array}{lllll}
+\ppldefmacro{ax_{1}^{\rightarrow}}(\pplparamplain{V},\pplparamplain{P})
+\end{array}
+$\pplkbBetween
+$\begin{array}{lllll}
+\mathsf{world}(\pplparamplain{V}) \imp  (\mathsf{pos}(\pplparamplain{V},\pplparamplainsup{N}{\prime}) \imp  \lnot  \mathsf{pos}(\pplparamplain{V},\pplparamplainsup{P}{\prime})),
+\end{array}
+$\pplkbAfter
+\pplkbBodyBefore
+$
+\begin{array}{l}\pplparamplainsup{N}{\prime}\; \assign\; \ulcorner \lnot  \pplparamplain{P}\urcorner,\\
+\pplparamplainsup{P}{\prime}\; \assign\; \ulcorner \pplparamplain{P}\urcorner.
+
+\end{array}$\pplkbBodyAfter
+%
+% Doc at position 18609
+%
+  \medskip
+  
+  \noindent The following macro renders Axiom~2 of Scott's version:
+
+%
+% Statement at position 18701
+%
+\pplkbBefore
+\index{ax_2(V,P,Q)@$\ppldefmacro{ax_{2}}(\pplparamplain{V},\pplparamplain{P},\pplparamplain{Q})$}\refstepcounter{def}\label{def:ax:2:3}%
+\ref{def:ax:2:3}. $\begin{array}{lllll}
+\ppldefmacro{ax_{2}}(\pplparamplain{V},\pplparamplain{P},\pplparamplain{Q})
+\end{array}
+$\pplkbBetween
+$\begin{array}{lllll}
+\mathsf{world}(\pplparamplain{V}) &&&&\; \imp \\
+(\mathsf{pos}(\pplparamplain{V},\pplparamplainsup{P}{\prime}) &&\; \land \\
+\hphantom{(} \forall \pplparamplain{W} \, (\mathsf{r}(\pplparamplain{V},\pplparamplain{W}) \imp  \forall \pplparamplain{X} \, (\mathsf{e}(\pplparamplain{W},\pplparamplain{X}) \imp  (\pplparamplain{P}(\pplparamplain{W},\pplparamplain{X}) \imp  \pplparamplain{Q}(\pplparamplain{W},\pplparamplain{X})))) &&&\; \imp \\
+\hphantom{(} \mathsf{pos}(\pplparamplain{V},\pplparamplainsup{Q}{\prime})),
+\end{array}
+$\pplkbAfter
+\pplkbBodyBefore
+$
+\begin{array}{l}\pplparamplainsup{P}{\prime}\; \assign\; \ulcorner \pplparamplain{P}\urcorner,\\
+\pplparamplainsup{Q}{\prime}\; \assign\; \ulcorner \pplparamplain{Q}\urcorner.
+
+\end{array}$\pplkbBodyAfter
+%
+% Doc at position 18865
+%
+  \medskip
+  
+  \highlightpar We can now derive the following lemma, called here Lemma~1 (it
+  is not explicitly present in Scott's version), using just a single instance
+  of each of $\begin{array}{l}
+\pplmacro{ax_{1}^{\rightarrow}}
+\end{array}
+$ and $\begin{array}{l}
+\pplmacro{ax_{2}}
+\end{array}
+$, where
+  $\top$ and $\bot$ are the only predicates used for instantiating:
+  
+%
+% Statement at position 19184
+%
+\pplkbBefore
+\index{lemma_1(V)@$\ppldefmacro{lemma_{1}}(\pplparamplain{V})$}\refstepcounter{def}\label{def:lemma:1:1}%
+\ref{def:lemma:1:1}. $\begin{array}{lllll}
+\ppldefmacro{lemma_{1}}(\pplparamplain{V})
+\end{array}
+$\pplkbBetween
+$\begin{array}{lllll}
+\mathsf{world}(\pplparamplain{V}) \imp  \lnot  \mathsf{pos}(\pplparamplain{V},\mathsf{\quoted{\bot}}).
+\end{array}
+$\pplkbAfter
+%
+% Statement at position 19232
+%
+\pplkbBefore
+\index{pre_lemma_1(V)@$\ppldefmacro{pre\_lemma_{1}}(\pplparamplain{V})$}\refstepcounter{def}\label{def:pre:lemma:1:1}%
+\ref{def:pre:lemma:1:1}. $\begin{array}{lllll}
+\ppldefmacro{pre\_lemma_{1}}(\pplparamplain{V})
+\end{array}
+$\pplkbBetween
+$\begin{array}{lllll}
+\pplmacro{r\_world_{1}} &&&&\; \land \\
+\pplmacro{topbot\_def} &&&&\; \land \\
+\pplmacro{topbot\_equiv\_equal} &&&&\; \land \\
+\pplmacro{ax_{1}^{\rightarrow}}(\pplparamplain{V},\mathsf{\top}) &&&&\; \land \\
+\pplmacro{ax_{2}}(\pplparamplain{V},\mathsf{\bot},\mathsf{\top}).
+\end{array}
+$\pplkbAfter
+\pplIsValid{\pplmacro{pre\_lemma_{1}}(\mathsf{v}) \imp  \pplmacro{lemma_{1}}(\mathsf{v}).}
+%
+% Doc at position 19412
+%
+
+  \medskip
+
+  \noindent Theorem~1 of Scott's version can be rendered as a macro with a
+  predicate parameter:
+
+%
+% Statement at position 19532
+%
+\pplkbBefore
+\index{thm_1(V,P)@$\ppldefmacro{thm_{1}}(\pplparamplain{V},\pplparamplain{P})$}\refstepcounter{def}\label{def:thm:1:2}%
+\ref{def:thm:1:2}. $\begin{array}{lllll}
+\ppldefmacro{thm_{1}}(\pplparamplain{V},\pplparamplain{P})
+\end{array}
+$\pplkbBetween
+$\begin{array}{lllll}
+\mathsf{world}(\pplparamplain{V}) &&&&\; \imp \\
+(\mathsf{pos}(\pplparamplain{V},\pplparamplainsup{P}{\prime}) \imp  \exists \pplparamplain{W} \, (\mathsf{r}(\pplparamplain{V},\pplparamplain{W}) \land  \exists \pplparamplain{X} \, (\mathsf{e}(\pplparamplain{W},\pplparamplain{X}) \land  \pplparamplain{P}(\pplparamplain{W},\pplparamplain{X})))),
+\end{array}
+$\pplkbAfter
+\pplkbBodyBefore
+$
+\begin{array}{l}\pplparamplainsup{P}{\prime}\; \assign\; \ulcorner \pplparamplain{P}\urcorner.
+
+\end{array}$\pplkbBodyAfter
+%
+% Doc at position 19642
+%
+  \medskip \noindent Instances of $\begin{array}{l}
+\pplmacro{thm_{1}}(\pplparamplain{V},\pplparamplain{P})
+\end{array}
+$ can be proven for
+  arbitrary worlds $V$ and predicates $P$, from the respective instance of the
+  axioms $\begin{array}{l}
+\pplmacro{pre\_thm_{1}}(\pplparamplain{V},\pplparamplain{P})
+\end{array}
+$.  A further instance of
+  $\begin{array}{l}
+\pplmacro{ax_{2}}
+\end{array}
+$ (beyond that used to prove $\begin{array}{l}
+\pplmacro{lemma_{1}}
+\end{array}
+$) is
+  now required, with respect to $\false$ and the given predicate~$P$.
+%
+% Statement at position 20022
+%
+\pplkbBefore
+\index{pre_thm_1(V,P)@$\ppldefmacro{pre\_thm_{1}}(\pplparamplain{V},\pplparamplain{P})$}\refstepcounter{def}\label{def:pre:thm:1:2}%
+\ref{def:pre:thm:1:2}. $\begin{array}{lllll}
+\ppldefmacro{pre\_thm_{1}}(\pplparamplain{V},\pplparamplain{P})
+\end{array}
+$\pplkbBetween
+$\begin{array}{lllll}
+\pplmacro{lemma_{1}}(\pplparamplain{V}) \land  \pplmacro{ax_{2}}(\pplparamplain{V},\pplparamplain{P},\mathsf{\bot}).
+\end{array}
+$\pplkbAfter
+\pplIsValid{\pplmacro{pre\_thm_{1}}(\mathsf{v},\mathsf{p}) \imp  \pplmacro{thm_{1}}(\mathsf{v},\mathsf{p}).}
+%
+% Doc at position 20147
+%
+  \medskip \noindent When expanded, the formula $\begin{array}{l}
+\pplmacro{pre\_thm_{1}}(\mathsf{v},\mathsf{p}) \imp  \pplmacro{thm_{1}}(\mathsf{v},\mathsf{p})
+\end{array}
+$, whose validity has just been shown, looks as follows:
+
+\[\begin{array}{lllll}
+(\mathsf{world}(\mathsf{v}) \imp  \lnot  \mathsf{pos}(\mathsf{v},\mathsf{\quoted{\bot}})) &&&\; \land \\
+(\mathsf{world}(\mathsf{v}) &&\; \imp \\
+\hphantom{(} (\mathsf{pos}(\mathsf{v},\mathsf{\quoted{g}}) \; \land \\
+\hphantom{((} \forall \mathit{x} \, (\mathsf{r}(\mathsf{v},\mathit{x}) \imp  \forall \mathit{y} \, (\mathsf{e}(\mathit{x},\mathit{y}) \imp  (\mathsf{g}(\mathit{x},\mathit{y}) \imp  \mathsf{\bot}(\mathit{x},\mathit{y})))) &\; \imp \\
+\hphantom{((} \mathsf{pos}(\mathsf{v},\mathsf{\quoted{\bot}}))) &&&&\; \imp \\
+(\mathsf{world}(\mathsf{v}) &&&\; \imp \\
+\hphantom{(} (\mathsf{pos}(\mathsf{v},\mathsf{\quoted{g}}) \imp  \exists \mathit{x} \, (\mathsf{r}(\mathsf{v},\mathit{x}) \land  \exists \mathit{y} \, (\mathsf{e}(\mathit{x},\mathit{y}) \land  \mathsf{g}(\mathit{x},\mathit{y}))))).
+\end{array}
+\]
+%
+% Doc at position 20458
+%
+
+  \section{Possibly God Exists}
+
+  \subsection{A Corollary of Theorem~1}
+  
+  Axiom~3 of Scott's version states that the predicate \name{god-like} has the
+  property \name{is positive}.  Together with Theorem~1 instantiated by
+  $\name{god-like}$ it is used to derive corollary \name{Coro}. This is
+  rendered in the following formula definitions and validity statement, where
+  \name{god-like} is represented by $\f{g}$.  Scott lets the definition of
+  \name{god-like} precede Axiom~3.  Since that definition is not required to
+  prove $\name{Coro}$, we postpone its discussion to Section~\ref{sec-def-g}.
+%
+% Statement at position 21074
+%
+\pplkbBefore
+\index{ax_3(V)@$\ppldefmacro{ax_{3}}(\pplparamplain{V})$}\refstepcounter{def}\label{def:ax:3:1}%
+\ref{def:ax:3:1}. $\begin{array}{lllll}
+\ppldefmacro{ax_{3}}(\pplparamplain{V})
+\end{array}
+$\pplkbBetween
+$\begin{array}{lllll}
+\mathsf{world}(\pplparamplain{V}) \imp  \mathsf{pos}(\pplparamplain{V},\mathsf{\quoted{g}}).
+\end{array}
+$\pplkbAfter
+%
+% Statement at position 21117
+%
+\pplkbBefore
+\index{coro(V)@$\ppldefmacro{coro}(\pplparamplain{V})$}\refstepcounter{def}\label{def:coro:1}%
+\ref{def:coro:1}. $\begin{array}{lllll}
+\ppldefmacro{coro}(\pplparamplain{V})
+\end{array}
+$\pplkbBetween
+$\begin{array}{lllll}
+\mathsf{world}(\pplparamplain{V}) \imp  \exists \pplparamplain{W} \, (\mathsf{r}(\pplparamplain{V},\pplparamplain{W}) \land  \exists \pplparamplain{X} \, (\mathsf{e}(\pplparamplain{W},\pplparamplain{X}) \land  \mathsf{g}(\pplparamplain{W},\pplparamplain{X}))).
+\end{array}
+$\pplkbAfter
+%
+% Statement at position 21188
+%
+\pplkbBefore
+\index{pre_coro(V)@$\ppldefmacro{pre\_coro}(\pplparamplain{V})$}\refstepcounter{def}\label{def:pre:coro:1}%
+\ref{def:pre:coro:1}. $\begin{array}{lllll}
+\ppldefmacro{pre\_coro}(\pplparamplain{V})
+\end{array}
+$\pplkbBetween
+$\begin{array}{lllll}
+\pplmacro{thm_{1}}(\pplparamplain{V},\mathsf{g}) \land  \pplmacro{ax_{3}}(\pplparamplain{V}).
+\end{array}
+$\pplkbAfter
+\pplIsValid{\pplmacro{pre\_coro}(\mathsf{v}) \imp  \pplmacro{coro}(\mathsf{v}).}
+%
+% Doc at position 21377
+%
+
+  \section{Essence}
+
+  \subsection{Fragments of the Definition of God-Like}
+  \label{sec-def-g}
+
+  With macros $\begin{array}{l}
+\pplmacro{def_{1}^{\rightarrow}}
+\end{array}
+$ and $\begin{array}{l}
+\pplmacro{def_{1}^{\rightarrow \lnot}}
+\end{array}
+$, defined
+  now, we represent the left-to-right direction of the definition of
+  \name{god-like} in Scott's version.
+
+  \highlightpar Actually, only this direction is used in the proof of the
+  existence of God.
+
+  \noindent The macros have a predicate as parameter that would be universally
+  quantified in a higher-order version. The first macro expands into a formula
+  in which the supplied predicate~$P$ and its associated constant (see
+  Section~\ref{sec-assoc-constant}) do occur. In the second macro, their
+  respective places are taken by the negated supplied predicate and the
+  corresponding constant, that is, the constant associated with $\lambda v x
+  . \lnot P(v,x)$.
+
+%
+% Statement at position 22237
+%
+\pplkbBefore
+\index{def_1_lr(V,X,P)@$\ppldefmacro{def_{1}^{\rightarrow}}(\pplparamplain{V},\pplparamplain{X},\pplparamplain{P})$}\refstepcounter{def}\label{def:def:1:lr:3}%
+\ref{def:def:1:lr:3}. $\begin{array}{lllll}
+\ppldefmacro{def_{1}^{\rightarrow}}(\pplparamplain{V},\pplparamplain{X},\pplparamplain{P})
+\end{array}
+$\pplkbBetween
+$\begin{array}{lllll}
+\mathsf{g}(\pplparamplain{V},\pplparamplain{X}) \imp  (\mathsf{pos}(\pplparamplain{V},\pplparamplainsup{P}{\prime}) \imp  \pplparamplain{P}(\pplparamplain{V},\pplparamplain{X})),
+\end{array}
+$\pplkbAfter
+\pplkbBodyBefore
+$
+\begin{array}{l}\pplparamplainsup{P}{\prime}\; \assign\; \ulcorner \pplparamplain{P}\urcorner.
+
+\end{array}$\pplkbBodyAfter
+%
+% Statement at position 22315
+%
+\pplkbBefore
+\index{def_1_lrn(V,X,P)@$\ppldefmacro{def_{1}^{\rightarrow \lnot}}(\pplparamplain{V},\pplparamplain{X},\pplparamplain{P})$}\refstepcounter{def}\label{def:def:1:lrn:3}%
+\ref{def:def:1:lrn:3}. $\begin{array}{lllll}
+\ppldefmacro{def_{1}^{\rightarrow \lnot}}(\pplparamplain{V},\pplparamplain{X},\pplparamplain{P})
+\end{array}
+$\pplkbBetween
+$\begin{array}{lllll}
+\mathsf{g}(\pplparamplain{V},\pplparamplain{X}) \imp  (\mathsf{pos}(\pplparamplain{V},\pplparamplainsup{P}{\prime}) \imp  \lnot  \pplparamplain{P}(\pplparamplain{V},\pplparamplain{X})),
+\end{array}
+$\pplkbAfter
+\pplkbBodyBefore
+$
+\begin{array}{l}\pplparamplainsup{P}{\prime}\; \assign\; \ulcorner \lnot  \pplparamplain{P}\urcorner.
+
+\end{array}$\pplkbBodyAfter
+%
+% Doc at position 22396
+%
+  
+  \subsection{The Essence of an Individual}
+
+  The following macro $\begin{array}{l}
+\pplmacro{val\_ess}
+\end{array}
+$ renders the definiens of the
+  \name{Ess}, or \name{essence of}, relationship between a predicate and an
+  individual in Scott's version.  It is originally a formula with predicate
+  quantification, but without application of a predicate to a predicate.  Our
+  macro exposes the universally quantified predicate as parameter~$Q$, which
+  permits to use it just instantiated with some specific predicate. The
+  quantified version can be still be expressed simply by prefixing a predicate
+  quantifier upon~$Q$.
+    
+%
+% Statement at position 23013
+%
+\pplkbBefore
+\index{val_ess(V,P,X,Q)@$\ppldefmacro{val\_ess}(\pplparamplain{V},\pplparamplain{P},\pplparamplain{X},\pplparamplain{Q})$}\refstepcounter{def}\label{def:val:ess:4}%
+\ref{def:val:ess:4}. $\begin{array}{lllll}
+\ppldefmacro{val\_ess}(\pplparamplain{V},\pplparamplain{P},\pplparamplain{X},\pplparamplain{Q})
+\end{array}
+$\pplkbBetween
+$\begin{array}{lllll}
+\pplparamplain{P}(\pplparamplain{V},\pplparamplain{X}) &&&&\; \land \\
+(\pplparamplain{Q}(\pplparamplain{V},\pplparamplain{X}) &&&\; \imp \\
+\hphantom{(} \forall \pplparamplain{W} \, (\mathsf{r}(\pplparamplain{V},\pplparamplain{W}) \imp  \forall \pplparamplain{Y} \, (\mathsf{e}(\pplparamplain{W},\pplparamplain{Y}) \imp  (\pplparamplain{P}(\pplparamplain{W},\pplparamplain{Y}) \imp  \pplparamplain{Q}(\pplparamplain{W},\pplparamplain{Y}))))).
+\end{array}
+$\pplkbAfter
+%
+% Doc at position 23121
+%
+  \medskip
+
+  \highlightpar Eliminating the quantified predicate gives another view on
+  \name{essence}:
+  
+
+\noindent Input: $\forall \mathit{q} \, \pplmacro{val\_ess}(\mathsf{v},\mathsf{p},\mathsf{x},\mathit{q}).$\\
+\noindent Result of elimination:
+\[\begin{array}{lllll}
+\mathsf{p}(\mathsf{v},\mathsf{x}) &&&&\; \land \\
+\forall \mathit{y} \forall \mathit{z} \, (\mathsf{e}(\mathit{y},\mathit{z}) \land  \mathsf{p}(\mathit{y},\mathit{z}) \land  \mathsf{r}(\mathsf{v},\mathit{y}) \imp  \mathit{y}=\mathsf{v}) &&&&\; \land \\
+\forall \mathit{y} \forall \mathit{z} \, (\mathsf{e}(\mathit{y},\mathit{z}) \land  \mathsf{p}(\mathit{y},\mathit{z}) \land  \mathsf{r}(\mathsf{v},\mathit{y}) \imp  \mathit{z}=\mathsf{x}).
+\end{array}
+\]
+%
+% Doc at position 23311
+%
+  
+  \medskip \noindent We define a predicate $\begin{array}{l}
+\mathsf{ess}
+\end{array}
+$ in terms of the
+  macro $\begin{array}{l}
+\pplmacro{val\_ess}
+\end{array}
+$. This facilitates combining propositions that
+  depend on the definiens with propositions that can be established
+  independently from it:
+  
+%
+% Statement at position 23575
+%
+\pplkbBefore
+\index{def_ess(V,P)@$\ppldefmacro{def\_ess}(\pplparamplain{V},\pplparamplain{P})$}\refstepcounter{def}\label{def:def:ess:2}%
+\ref{def:def:ess:2}. $\begin{array}{lllll}
+\ppldefmacro{def\_ess}(\pplparamplain{V},\pplparamplain{P})
+\end{array}
+$\pplkbBetween
+$\begin{array}{lllll}
+\mathsf{world}(\pplparamplain{V}) \imp  \forall \pplparamplain{X} \, (\mathsf{ess}(\pplparamplain{V},\pplparamplainsup{P}{\prime},\pplparamplain{X}) \equi  \forall \pplparamplain{Q} \, \pplmacro{val\_ess}(\pplparamplain{V},\pplparamplain{P},\pplparamplain{X},\pplparamplain{Q})),
+\end{array}
+$\pplkbAfter
+\pplkbBodyBefore
+$
+\begin{array}{l}\pplparamplainsup{P}{\prime}\; \assign\; \ulcorner \pplparamplain{P}\urcorner.
+
+\end{array}$\pplkbBodyAfter
+%
+% Doc at position 23683
+%
+
+  \medskip
+  
+  \noindent The following two observations are mentioned as \name{Note} in
+  Scott's version. We express them with the predicate version
+  $\begin{array}{l}
+\mathsf{ess}
+\end{array}
+$ of $\name{Ess}$ to facilitate their use as
+  axioms in other statements:
+%
+% Statement at position 23939
+%
+\pplkbBefore
+\index{note_1(V,P,Q)@$\ppldefmacro{note_{1}}(\pplparamplain{V},\pplparamplain{P},\pplparamplain{Q})$}\refstepcounter{def}\label{def:note:1:3}%
+\ref{def:note:1:3}. $\begin{array}{lllll}
+\ppldefmacro{note_{1}}(\pplparamplain{V},\pplparamplain{P},\pplparamplain{Q})
+\end{array}
+$\pplkbBetween
+$\begin{array}{lllll}
+\mathsf{world}(\pplparamplain{V}) &&&&\; \imp \\
+(\exists \pplparamplain{X} \, (\mathsf{ess}(\pplparamplain{V},\pplparamplainsup{P}{\prime},\pplparamplain{X}) \land  \mathsf{ess}(\pplparamplain{V},\pplparamplainsup{Q}{\prime},\pplparamplain{X})) &&&\; \imp \\
+\hphantom{(} \forall \pplparamplain{W} \, (\mathsf{r}(\pplparamplain{V},\pplparamplain{W}) \imp  \forall \pplparamplain{Y} \, (\mathsf{e}(\pplparamplain{W},\pplparamplain{Y}) \imp  (\pplparamplain{P}(\pplparamplain{W},\pplparamplain{Y}) \equi  \pplparamplain{Q}(\pplparamplain{W},\pplparamplain{Y}))))),
+\end{array}
+$\pplkbAfter
+\pplkbBodyBefore
+$
+\begin{array}{l}\pplparamplainsup{P}{\prime}\; \assign\; \ulcorner \pplparamplain{P}\urcorner,\\
+\pplparamplainsup{Q}{\prime}\; \assign\; \ulcorner \pplparamplain{Q}\urcorner.
+
+\end{array}$\pplkbBodyAfter
+\pplIsValid{\pplmacro{def\_ess}(\mathsf{v},\mathsf{p_{1}}) \land  \pplmacro{def\_ess}(\mathsf{v},\mathsf{p_{2}}) \imp  \pplmacro{note_{1}}(\mathsf{v},\mathsf{p_{1}},\mathsf{p_{2}}).}
+%
+% Statement at position 24218
+%
+\pplkbBefore
+\index{note_2(V,P,X)@$\ppldefmacro{note_{2}}(\pplparamplain{V},\pplparamplain{P},\pplparamplain{X})$}\refstepcounter{def}\label{def:note:2:3}%
+\ref{def:note:2:3}. $\begin{array}{lllll}
+\ppldefmacro{note_{2}}(\pplparamplain{V},\pplparamplain{P},\pplparamplain{X})
+\end{array}
+$\pplkbBetween
+$\begin{array}{lllll}
+\mathsf{world}(\pplparamplain{V}) &&&&\; \imp \\
+(\mathsf{ess}(\pplparamplain{V},\pplparamplainsup{P}{\prime},\pplparamplain{X}) &&&\; \imp \\
+\hphantom{(} \forall \pplparamplain{W} \, (\mathsf{r}(\pplparamplain{V},\pplparamplain{W}) \imp  \forall \pplparamplain{Y} \, (\mathsf{e}(\pplparamplain{W},\pplparamplain{Y}) \imp  (\pplparamplain{P}(\pplparamplain{W},\pplparamplain{Y}) \imp  \pplparamplain{Y}=\pplparamplain{X})))),
+\end{array}
+$\pplkbAfter
+\pplkbBodyBefore
+$
+\begin{array}{l}\pplparamplainsup{P}{\prime}\; \assign\; \ulcorner \pplparamplain{P}\urcorner.
+
+\end{array}$\pplkbBodyAfter
+\pplIsValid{\pplmacro{def\_ess}(\mathsf{v},\mathsf{p}) \imp  \pplmacro{note_{2}}(\mathsf{v},\mathsf{p},\mathsf{x}).}
+%
+% Doc at position 24427
+%
+  
+  \subsection{Deriving Theorem~2 -- Almost}
+
+  The right-to-left direction of Axiom~1 and Axiom~4 of Scott's version are
+  rendered by macros $\begin{array}{l}
+\pplmacro{ax_{1}^{\leftarrow}}
+\end{array}
+$ and $\begin{array}{l}
+\pplmacro{ax_{1}^{\leftarrow}}
+\end{array}
+$,
+  respectively, which are defined now. Both original axioms involve a
+  universally quantified predicate that appears only in argument role. In the
+  macro, that predicate appears simply as a parameter.
+  
+%
+% Statement at position 24839
+%
+\pplkbBefore
+\index{ax_1_rl(V,P)@$\ppldefmacro{ax_{1}^{\leftarrow}}(\pplparamplain{V},\pplparamplain{P})$}\refstepcounter{def}\label{def:ax:1:rl:2}%
+\ref{def:ax:1:rl:2}. $\begin{array}{lllll}
+\ppldefmacro{ax_{1}^{\leftarrow}}(\pplparamplain{V},\pplparamplain{P})
+\end{array}
+$\pplkbBetween
+$\begin{array}{lllll}
+\mathsf{world}(\pplparamplain{V}) \imp  (\lnot  \mathsf{pos}(\pplparamplain{V},\pplparamplainsup{P}{\prime}) \imp  \mathsf{pos}(\pplparamplain{V},\pplparamplainsup{N}{\prime})),
+\end{array}
+$\pplkbAfter
+\pplkbBodyBefore
+$
+\begin{array}{l}\pplparamplainsup{N}{\prime}\; \assign\; \ulcorner \lnot  \pplparamplain{P}\urcorner,\\
+\pplparamplainsup{P}{\prime}\; \assign\; \ulcorner \pplparamplain{P}\urcorner.
+
+\end{array}$\pplkbBodyAfter
+%
+% Statement at position 24939
+%
+\pplkbBefore
+\index{ax_4(V,P)@$\ppldefmacro{ax_{4}}(\pplparamplain{V},\pplparamplain{P})$}\refstepcounter{def}\label{def:ax:4:2}%
+\ref{def:ax:4:2}. $\begin{array}{lllll}
+\ppldefmacro{ax_{4}}(\pplparamplain{V},\pplparamplain{P})
+\end{array}
+$\pplkbBetween
+$\begin{array}{lllll}
+\mathsf{world}(\pplparamplain{V}) \imp  (\mathsf{pos}(\pplparamplain{V},\pplparamplainsup{P}{\prime}) \imp  \forall \pplparamplain{W} \, (\mathsf{r}(\pplparamplain{V},\pplparamplain{W}) \imp  \mathsf{pos}(\pplparamplain{W},\pplparamplainsup{P}{\prime}))),
+\end{array}
+$\pplkbAfter
+\pplkbBodyBefore
+$
+\begin{array}{l}\pplparamplainsup{P}{\prime}\; \assign\; \ulcorner \pplparamplain{P}\urcorner.
+
+\end{array}$\pplkbBodyAfter
+%
+% Doc at position 25037
+%
+
+  \medskip
+
+  \noindent The following macro renders the rudiment of Theorem~2 of Scott's
+  version. Originally, the $Q$ parameter is a universally quantified predicate
+  inherited from the definiens of \name{Ess}.
+  
+%
+% Statement at position 25265
+%
+\pplkbBefore
+\index{raw_thm_2(V,X,Q)@$\ppldefmacro{raw\_thm_{2}}(\pplparamplain{V},\pplparamplain{X},\pplparamplain{Q})$}\refstepcounter{def}\label{def:raw:thm:2:3}%
+\ref{def:raw:thm:2:3}. $\begin{array}{lllll}
+\ppldefmacro{raw\_thm_{2}}(\pplparamplain{V},\pplparamplain{X},\pplparamplain{Q})
+\end{array}
+$\pplkbBetween
+$\begin{array}{lllll}
+\mathsf{world}(\pplparamplain{V}) \imp  (\mathsf{e}(\pplparamplain{V},\pplparamplain{X}) \imp  (\mathsf{g}(\pplparamplain{V},\pplparamplain{X}) \imp  \pplmacro{val\_ess}(\pplparamplain{V},\mathsf{g},\pplparamplain{X},\pplparamplain{Q}))).
+\end{array}
+$\pplkbAfter
+%
+% Statement at position 25345
+%
+\pplkbBefore
+\index{pre_thm_2(V,X,Q)@$\ppldefmacro{pre\_thm_{2}}(\pplparamplain{V},\pplparamplain{X},\pplparamplain{Q})$}\refstepcounter{def}\label{def:pre:thm:2:3}%
+\ref{def:pre:thm:2:3}. $\begin{array}{lllll}
+\ppldefmacro{pre\_thm_{2}}(\pplparamplain{V},\pplparamplain{X},\pplparamplain{Q})
+\end{array}
+$\pplkbBetween
+$\begin{array}{lllll}
+\pplmacro{ax_{1}^{\leftarrow}}(\pplparamplain{V},\pplparamplain{Q}) &&&&\; \land \\
+\forall \pplparamplain{W} \, (\mathsf{r}(\pplparamplain{V},\pplparamplain{W}) \imp  \forall \pplparamplain{X} \, (\mathsf{e}(\pplparamplain{W},\pplparamplain{X}) \imp  \pplmacro{def_{1}^{\rightarrow}}(\pplparamplain{W},\pplparamplain{X},\pplparamplain{Q}))) &&&&\; \land \\
+\pplmacro{def_{1}^{\rightarrow \lnot}}(\pplparamplain{V},\pplparamplain{X},\pplparamplain{Q}) &&&&\; \land \\
+\pplmacro{ax_{4}}(\pplparamplain{V},\pplparamplain{Q}).
+\end{array}
+$\pplkbAfter
+%
+% Doc at position 25471
+%
+
+  \medskip \noindent Theorem~2 would correspond to \[\begin{array}{l}
+\forall \mathit{q} \forall \mathit{v} \forall \mathit{x} \, \pplmacro{raw\_thm_{2}}(\mathit{v},\mathit{x},\mathit{q})
+\end{array}
+.\] The following statement can be proven for
+  arbitrary individual symbols $\f{v}, \f{x}$ and predicate
+  symbols~$\f{q}$. It is sufficient to derive a particular instance of the
+  universally quantified Theorem~2 from a corresponding instance of the
+  required axioms:
+
+  \smallskip
+\pplIsValid{\pplmacro{pre\_thm_{2}}(\mathsf{v},\mathsf{x},\mathsf{q}) \imp  \pplmacro{raw\_thm_{2}}(\mathsf{v},\mathsf{x},\mathsf{q}).}
+%
+% Doc at position 25937
+%
+
+  \medskip
+  \noindent Moving a bit more to the full quantified version of Theorem~2, we
+  can also prove:
+  
+%
+% Statement at position 26056
+%
+\pplkbBefore
+\index{derive_almost_thm_2@$\ppldefmacro{derive\_almost\_thm_{2}}$}\refstepcounter{def}\label{def:derive:almost:thm:2}%
+\ref{def:derive:almost:thm:2}. $\begin{array}{lllll}
+\ppldefmacro{derive\_almost\_thm_{2}}
+\end{array}
+$\pplkbBetween
+$\begin{array}{lllll}
+\forall \mathit{q} \, (\forall \mathit{v} \forall \mathit{x} \, \exists \mathit{q_{q}} \exists \mathit{not\_q_{q}} \, \pplmacro{pre\_thm_{2}}(\mathit{v},\mathit{x},\mathit{q}) &&&&\; \imp \\
+\hphantom{\forall \mathit{q} \, (} \forall \mathit{v} \forall \mathit{x} \, \pplmacro{raw\_thm_{2}}(\mathit{v},\mathit{x},\mathit{q})).
+\end{array}
+$\pplkbAfter
+\pplIsValid{\pplmacro{derive\_almost\_thm_{2}}.}
+%
+% Doc at position 26229
+%
+
+  \medskip \noindent The following statement represents that Theorem~2 is
+  implied by the required axioms $\begin{array}{l}
+\pplmacro{pre\_thm_{2}}
+\end{array}
+$, also under
+  universal quantifications of its parameters and existential quantification
+  of the predicate representatives:
+  
+%
+% Statement at position 26499
+%
+\pplkbBefore
+\index{derive_thm_2@$\ppldefmacro{derive\_thm_{2}}$}\refstepcounter{def}\label{def:derive:thm:2}%
+\ref{def:derive:thm:2}. $\begin{array}{lllll}
+\ppldefmacro{derive\_thm_{2}}
+\end{array}
+$\pplkbBetween
+$\begin{array}{lllll}
+\forall \mathit{q} \, \forall \mathit{v} \forall \mathit{x} \, \exists \mathit{q_{q}} \exists \mathit{not\_q_{q}} \, \pplmacro{pre\_thm_{2}}(\mathit{v},\mathit{x},\mathit{q}) &&&&\; \imp \\
+\forall \mathit{q} \, \forall \mathit{v} \forall \mathit{x} \, \pplmacro{raw\_thm_{2}}(\mathit{v},\mathit{x},\mathit{q}).
+\end{array}
+$\pplkbAfter
+%
+% Doc at position 26621
+%
+
+  \highlightpar The validity of $\begin{array}{l}
+\pplmacro{derive\_thm_{2}}
+\end{array}
+$ seems derivable
+  from the validity of $\begin{array}{l}
+\pplmacro{derive\_almost\_thm_{2}}
+\end{array}
+$ quite easily on a
+  shallow level by Boolean reasoning and quantifier manipulation.  The current
+  version of \name{PIE}, however, would try to prove validity of
+  $\begin{array}{l}
+\pplmacro{derive\_thm_{2}}
+\end{array}
+$ by eliminating the universal predicate
+  quantifier in the antecedent, on which it does not succeed.  Thus, at this
+  point, with the current version of \name{PIE} there is a gap in the formal
+  proof, which, however, should be resolvable in principle.
+  
+%
+% Doc at position 27294
+%
+
+  \section{If God Exists, then Necessarily God Exists}
+
+  \subsection{Necessary Existence}
+
+  The property \name{NE} in Scott's version applies to an individual and means
+  that it necessarily exists if it has an essential property.  The definiens
+  of \name{NE} is rendered here by the macro $\begin{array}{l}
+\pplmacro{val\_ne}
+\end{array}
+$.  It is
+  originally expressed as a formula with predicate quantification, inherited
+  from the definiens of \name{Ess} but without application of a predicate to a
+  predicate.
+  
+%
+% Statement at position 27802
+%
+\pplkbBefore
+\index{val_ne(V,X)@$\ppldefmacro{val\_ne}(\pplparamplain{V},\pplparamplain{X})$}\refstepcounter{def}\label{def:val:ne:2}%
+\ref{def:val:ne:2}. $\begin{array}{lllll}
+\ppldefmacro{val\_ne}(\pplparamplain{V},\pplparamplain{X})
+\end{array}
+$\pplkbBetween
+$\begin{array}{lllll}
+\forall \pplparamplain{P} \, (\forall \pplparamplain{Q} \, \pplmacro{val\_ess}(\pplparamplain{V},\pplparamplain{P},\pplparamplain{X},\pplparamplain{Q}) &&&&\; \imp \\
+\hphantom{\forall \pplparamplain{P} \, (} \forall \pplparamplain{W} \, (\mathsf{r}(\pplparamplain{V},\pplparamplain{W}) \imp  \exists \pplparamplain{Y} \, (\mathsf{e}(\pplparamplain{W},\pplparamplain{Y}) \land  \pplparamplain{P}(\pplparamplain{W},\pplparamplain{Y})))).
+\end{array}
+$\pplkbAfter
+%
+% Doc at position 27911
+%
+  \medskip
+
+  \highlightpar Eliminating the quantified predicate gives another view on
+  \name{NE}:
+  
+
+\noindent Input: $\pplmacro{val\_ne}(\mathsf{v},\mathsf{x}).$\\
+\noindent Result of elimination:
+\[\begin{array}{lllll}
+\forall \mathit{y} \, (\mathsf{r}(\mathsf{v},\mathit{y}) \imp  \mathit{y}=\mathsf{v}) \land  \forall \mathit{y} \, (\mathsf{r}(\mathsf{v},\mathit{y}) \imp  \mathsf{e}(\mathit{y},\mathsf{x})).
+\end{array}
+\]
+%
+% Doc at position 28083
+%
+  
+  \medskip \noindent We define a predicate $\begin{array}{l}
+\mathsf{ne}
+\end{array}
+$ in terms of the
+  macro $\begin{array}{l}
+\pplmacro{val\_ne}
+\end{array}
+$, in analogy to the definition of
+  the predicate $\begin{array}{l}
+\mathsf{ess}
+\end{array}
+$:
+  
+%
+% Statement at position 28276
+%
+\pplkbBefore
+\index{def_ne(V,X)@$\ppldefmacro{def\_ne}(\pplparamplain{V},\pplparamplain{X})$}\refstepcounter{def}\label{def:def:ne:2}%
+\ref{def:def:ne:2}. $\begin{array}{lllll}
+\ppldefmacro{def\_ne}(\pplparamplain{V},\pplparamplain{X})
+\end{array}
+$\pplkbBetween
+$\begin{array}{lllll}
+\mathsf{world}(\pplparamplain{V}) \imp  (\mathsf{e}(\pplparamplain{V},\pplparamplain{X}) \imp  (\mathsf{ne}(\pplparamplain{V},\pplparamplain{X}) \equi  \pplmacro{val\_ne}(\pplparamplain{V},\pplparamplain{X}))).
+\end{array}
+$\pplkbAfter
+%
+% Doc at position 28348
+%
+
+  \subsection{Deriving that if God Exists, then Necessarily God Exists}
+
+%
+% Doc at position 28430
+%
+  The statement $\exists x\, \f{g}(x) \imp \Box \exists x\, \f{g}(x)$ is used
+  as an unlabelled lemma in Scott's version. In
+  \cite[Fig.~1]{benzmueller:etal:2017:assisted} it is called \name{L1}.  We
+  call it here \name{Lemma~2} and render it below in
+  Macro~\ref{def:lemma:2:1} as $\begin{array}{l}
+\pplmacro{lemma_{2}}
+\end{array}
+$.  In Scott's version
+  it can be derived from Theorem~2, the definitions of $\name{NE}$ and
+  $\name{Ess}$ as well as a further axiom, \name{Axiom~5}. Actually, the proof
+  from these preconditions is largely independent from the definientia of
+  $\name{NE}$ and $\name{Ess}$.  reconstruction.  The following formula
+  renders \name{Theorem 2}, now expressed in terms of the predicate $\f{ess}$:
+  
+%
+% Statement at position 29148
+%
+\pplkbBefore
+\index{thm_2(V,X)@$\ppldefmacro{thm_{2}}(\pplparamplain{V},\pplparamplain{X})$}\refstepcounter{def}\label{def:thm:2:2}%
+\ref{def:thm:2:2}. $\begin{array}{lllll}
+\ppldefmacro{thm_{2}}(\pplparamplain{V},\pplparamplain{X})
+\end{array}
+$\pplkbBetween
+$\begin{array}{lllll}
+\mathsf{world}(\pplparamplain{V}) \imp  (\mathsf{e}(\pplparamplain{V},\pplparamplain{X}) \imp  (\mathsf{g}(\pplparamplain{V},\pplparamplain{X}) \imp  \mathsf{ess}(\pplparamplain{V},\mathsf{\quoted{g}},\pplparamplain{X}))).
+\end{array}
+$\pplkbAfter
+%
+% Doc at position 29218
+%
+
+  \medskip \noindent The following formula renders a fragment of the
+  definition of \name{NE} on a ``shallow'' level, that is, in terms of just
+  the predicates $\f{ess}$ and $\f{ne}$, without referring to
+  $\begin{array}{l}
+\pplmacro{val\_ess}
+\end{array}
+$ and $\begin{array}{l}
+\pplmacro{val\_ne}
+\end{array}
+$:
+  
+%
+% Statement at position 29491
+%
+\pplkbBefore
+\index{def_3_lr(V,X,P)@$\ppldefmacro{def_{3}^{\rightarrow}}(\pplparamplain{V},\pplparamplain{X},\pplparamplain{P})$}\refstepcounter{def}\label{def:def:3:lr:3}%
+\ref{def:def:3:lr:3}. $\begin{array}{lllll}
+\ppldefmacro{def_{3}^{\rightarrow}}(\pplparamplain{V},\pplparamplain{X},\pplparamplain{P})
+\end{array}
+$\pplkbBetween
+$\begin{array}{lllll}
+\mathsf{world}(\pplparamplain{V}) &&&&\; \imp \\
+(\mathsf{e}(\pplparamplain{V},\pplparamplain{X}) &&&\; \imp \\
+\hphantom{(} (\mathsf{ne}(\pplparamplain{V},\pplparamplain{X}) &&\; \imp \\
+\hphantom{((} (\mathsf{ess}(\pplparamplain{V},\pplparamplainsup{P}{\prime},\pplparamplain{X}) \imp  \forall \pplparamplain{W} \, (\mathsf{r}(\pplparamplain{V},\pplparamplain{W}) \imp  \exists \pplparamplain{Y} \, (\mathsf{e}(\pplparamplain{W},\pplparamplain{Y}) \land  \pplparamplain{P}(\pplparamplain{W},\pplparamplain{Y})))))),
+\end{array}
+$\pplkbAfter
+\pplkbBodyBefore
+$
+\begin{array}{l}\pplparamplainsup{P}{\prime}\; \assign\; \ulcorner \pplparamplain{P}\urcorner.
+
+\end{array}$\pplkbBodyAfter
+%
+% Doc at position 29658
+%
+
+  \noindent Correctness of $\begin{array}{l}
+\pplmacro{def_{3}^{\rightarrow}}
+\end{array}
+$ can be established by
+  showing that it follows from definitions of $\f{ess}$ and $\f{ne}$ with
+  definientia according to $\begin{array}{l}
+\pplmacro{val\_ess}
+\end{array}
+$ and $\begin{array}{l}
+\pplmacro{val\_ne}
+\end{array}
+$:
+
+  \smallskip
+\pplIsValid{\pplmacro{def\_ess}(\mathsf{v},\mathsf{g}) \land  \pplmacro{def\_ne}(\mathsf{v},\mathsf{x}) \imp  \pplmacro{def_{3}^{\rightarrow}}(\mathsf{v},\mathsf{x},\mathsf{g}).}
+%
+% Doc at position 30012
+%
+  \medskip \noindent (Validating this implication revealed a subtle
+  shortcoming of the current version of \name{PIE}: If the biconditional signs
+  in $\begin{array}{l}
+\pplmacro{def\_ess}
+\end{array}
+$ and $\begin{array}{l}
+\pplmacro{def\_ess}
+\end{array}
+$ would be replaced by
+  implication signs, the implication just shown should also be valid. Although
+  elimination on the involved predicate quantifiers should in principle
+  succeed as it does in the variant with biconditionals, \name{PIE} currently
+  seems to fail there.)
+
+  \medskip
+  
+  The remaining macros in this section render \name{Axiom~5} of Scott's
+  version, the lemma $\exists x\, \f{g}(x) \imp \Box \exists x\, \f{g}(x)$
+  mentioned above and preconditions for proving it.
+%
+% Statement at position 30712
+%
+\pplkbBefore
+\index{ax_5(V)@$\ppldefmacro{ax_{5}}(\pplparamplain{V})$}\refstepcounter{def}\label{def:ax:5:1}%
+\ref{def:ax:5:1}. $\begin{array}{lllll}
+\ppldefmacro{ax_{5}}(\pplparamplain{V})
+\end{array}
+$\pplkbBetween
+$\begin{array}{lllll}
+\mathsf{world}(\pplparamplain{V}) \imp  \mathsf{pos}(\pplparamplain{V},\mathsf{\quoted{ne}}).
+\end{array}
+$\pplkbAfter
+%
+% Statement at position 30755
+%
+\pplkbBefore
+\index{lemma_2(V)@$\ppldefmacro{lemma_{2}}(\pplparamplain{V})$}\refstepcounter{def}\label{def:lemma:2:1}%
+\ref{def:lemma:2:1}. $\begin{array}{lllll}
+\ppldefmacro{lemma_{2}}(\pplparamplain{V})
+\end{array}
+$\pplkbBetween
+$\begin{array}{lllll}
+\mathsf{world}(\pplparamplain{V}) &&&&\; \imp \\
+(\exists \pplparamplain{X} \, (\mathsf{e}(\pplparamplain{V},\pplparamplain{X}) \land  \mathsf{g}(\pplparamplain{V},\pplparamplain{X})) &&&\; \imp \\
+\hphantom{(} \forall \pplparamplain{W} \, (\mathsf{r}(\pplparamplain{V},\pplparamplain{W}) \imp  \exists \pplparamplain{Y} \, (\mathsf{e}(\pplparamplain{W},\pplparamplain{Y}) \land  \mathsf{g}(\pplparamplain{W},\pplparamplain{Y})))).
+\end{array}
+$\pplkbAfter
+%
+% Statement at position 30862
+%
+\pplkbBefore
+\index{pre_lemma_2(V,X)@$\ppldefmacro{pre\_lemma_{2}}(\pplparamplain{V},\pplparamplain{X})$}\refstepcounter{def}\label{def:pre:lemma:2:2}%
+\ref{def:pre:lemma:2:2}. $\begin{array}{lllll}
+\ppldefmacro{pre\_lemma_{2}}(\pplparamplain{V},\pplparamplain{X})
+\end{array}
+$\pplkbBetween
+$\begin{array}{lllll}
+\pplmacro{ax_{5}}(\pplparamplain{V}) \land  \pplmacro{def_{1}^{\rightarrow}}(\pplparamplain{V},\pplparamplain{X},\mathsf{ne}) \land  \pplmacro{def_{3}^{\rightarrow}}(\pplparamplain{V},\pplparamplain{X},\mathsf{g}) \land  \pplmacro{thm_{2}}(\pplparamplain{V},\pplparamplain{X}).
+\end{array}
+$\pplkbAfter
+\pplIsValid{\forall \mathit{v} \, (\forall \mathit{x} \, \pplmacro{pre\_lemma_{2}}(\mathit{v},\mathit{x}) \imp  \pplmacro{lemma_{2}}(\mathit{v})).}
+%
+% Doc at position 31131
+%
+
+  \section{Necessarily God Exists}
+  \label{sec-thm-3}
+  
+  \subsection{Proving the Main Result, Theorem~3}
+  
+  The following formula states \name{Theorem~3} of Scott's version, the
+  overall result to show:
+
+%
+% Statement at position 31352
+%
+\pplkbBefore
+\index{thm_3(V)@$\ppldefmacro{thm_{3}}(\pplparamplain{V})$}\refstepcounter{def}\label{def:thm:3:1}%
+\ref{def:thm:3:1}. $\begin{array}{lllll}
+\ppldefmacro{thm_{3}}(\pplparamplain{V})
+\end{array}
+$\pplkbBetween
+$\begin{array}{lllll}
+\mathsf{world}(\pplparamplain{V}) \imp  \forall \pplparamplain{W} \, (\mathsf{r}(\pplparamplain{V},\pplparamplain{W}) \imp  \exists \pplparamplain{Y} \, (\mathsf{e}(\pplparamplain{W},\pplparamplain{Y}) \land  \mathsf{g}(\pplparamplain{W},\pplparamplain{Y}))).
+\end{array}
+$\pplkbAfter
+%
+% Doc at position 31427
+%
+
+  \noindent In proving \name{Theorem~3}, Scott proceeds from the lemma called
+  here $\begin{array}{l}
+\pplmacro{lemma_{2}}
+\end{array}
+$ (Macro~\ref{def:lemma:2:1}) and the corollary
+  \name{Coro}, which corresponds to our Macro~\ref{def:coro:1}.  He applies
+  the modal axiom~\name{E} (or~\name{5}), which expresses that the
+  accessibility relation is Euclidean. As shown apparently first in
+  \cite{benzmueller:etal:2014:goedel}, \name{Theorem~3} can not be just proven
+  in the modal logic~S5, but also in~KB, whose accessibility relation is less
+  constrained.  In particular, the modal axiom~\name{B}, which expresses that
+  the accessibility relation is symmetric, holds in KB.  We show that the
+  proof is possible for a Euclidean as well as a symmetric accessibility
+  relation in a single statement by presupposing the disjunction of both
+  properties:
+%
+% Statement at position 32271
+%
+\pplkbBefore
+\index{euclidean@$\ppldefmacro{euclidean}$}\refstepcounter{def}\label{def:euclidean}%
+\ref{def:euclidean}. $\begin{array}{lllll}
+\ppldefmacro{euclidean}
+\end{array}
+$\pplkbBetween
+$\begin{array}{lllll}
+\forall \mathit{x} \forall \mathit{y} \forall \mathit{z} \, (\mathsf{r}(\mathit{x},\mathit{y}) \land  \mathsf{r}(\mathit{x},\mathit{z}) \imp  \mathsf{r}(\mathit{z},\mathit{y})).
+\end{array}
+$\pplkbAfter
+%
+% Statement at position 32332
+%
+\pplkbBefore
+\index{symmetric@$\ppldefmacro{symmetric}$}\refstepcounter{def}\label{def:symmetric}%
+\ref{def:symmetric}. $\begin{array}{lllll}
+\ppldefmacro{symmetric}
+\end{array}
+$\pplkbBetween
+$\begin{array}{lllll}
+\forall \mathit{x} \forall \mathit{y} \, (\mathsf{r}(\mathit{x},\mathit{y}) \imp  \mathsf{r}(\mathit{y},\mathit{x})).
+\end{array}
+$\pplkbAfter
+%
+% Statement at position 32383
+%
+\pplkbBefore
+\index{pre_thm_3(V)@$\ppldefmacro{pre\_thm_{3}}(\pplparamplain{V})$}\refstepcounter{def}\label{def:pre:thm:3:1}%
+\ref{def:pre:thm:3:1}. $\begin{array}{lllll}
+\ppldefmacro{pre\_thm_{3}}(\pplparamplain{V})
+\end{array}
+$\pplkbBetween
+$\begin{array}{lllll}
+\pplmacro{r\_world_{1}} \land  \forall \mathit{v} \, \pplmacro{lemma_{2}}(\mathit{v}) \land  \pplmacro{coro}(\pplparamplain{V}).
+\end{array}
+$\pplkbAfter
+\pplIsValid{\pplmacro{symmetric} \lor  \pplmacro{euclidean} \imp  (\pplmacro{pre\_thm_{3}}(\mathsf{v}) \imp  \pplmacro{thm_{3}}(\mathsf{v})).}
+%
+% Doc at position 32555
+%
+  \medskip \noindent Precondition $\begin{array}{l}
+\pplmacro{pre\_thm_{3}}
+\end{array}
+$ includes
+  $\begin{array}{l}
+\pplmacro{coro}
+\end{array}
+$ instantiated with just the current world and
+  $\begin{array}{l}
+\pplmacro{lemma_{2}}
+\end{array}
+$ with a universal quantifier upon the world
+  parameter. If fact, using $\begin{array}{l}
+\pplmacro{lemma_{2}}
+\end{array}
+$ there just instantiated
+  with the current world would not be sufficient to derive
+  $\begin{array}{l}
+\pplmacro{thm_{3}}
+\end{array}
+$:
+
+  \medskip
+\pplIsNotValid{\pplmacro{symmetric} \lor  \pplmacro{euclidean} \imp  (\pplmacro{r\_world_{1}} \land  \pplmacro{lemma_{2}}(\mathsf{v}) \land  \pplmacro{coro}(\mathsf{v}) \imp  \pplmacro{thm_{3}}(\mathsf{v})).}
+%
+% Doc at position 33234
+%
+
+  \section{Monotheism}
+
+  In Fitting's system the proposition $\exists x \forall y\, (\f{g}(y) \equi
+  y=x)$ can be derived \cite[Section~7.1]{fitting:god}. This can be proven in
+  our system from $\begin{array}{l}
+\pplmacro{thm_{2}}
+\end{array}
+$, $\begin{array}{l}
+\pplmacro{note_{2}}
+\end{array}
+$ and
+  $\begin{array}{l}
+\pplmacro{thm_{3}}
+\end{array}
+$ under the additional assumption of reflexivity of the
+  accessibility relation. Without that assumption, it can be shown that $\Box
+  \exists x \Box \forall y\, (\f{g}(y) \equi y=x)$:
+%
+% Statement at position 33698
+%
+\pplkbBefore
+\index{pre_monotheism@$\ppldefmacro{pre\_monotheism}$}\refstepcounter{def}\label{def:pre:monotheism}%
+\ref{def:pre:monotheism}. $\begin{array}{lllll}
+\ppldefmacro{pre\_monotheism}
+\end{array}
+$\pplkbBetween
+$\begin{array}{lllll}
+\forall \mathit{x} \forall \mathit{v} \, \pplmacro{thm_{2}}(\mathit{v},\mathit{x}) &&&&\; \land \\
+\forall \mathit{x} \forall \mathit{v} \, \pplmacro{note_{2}}(\mathit{v},\mathsf{g},\mathit{x}) &&&&\; \land \\
+\forall \mathit{x} \forall \mathit{v} \, \pplmacro{thm_{3}}(\mathit{v}) &&&&\; \land \\
+\pplmacro{r\_world}.
+\end{array}
+$\pplkbAfter
+%
+% Statement at position 33804
+%
+\pplkbBefore
+\index{monotheism@$\ppldefmacro{monotheism}$}\refstepcounter{def}\label{def:monotheism}%
+\ref{def:monotheism}. $\begin{array}{lllll}
+\ppldefmacro{monotheism}
+\end{array}
+$\pplkbBetween
+$\begin{array}{lllll}
+\forall \mathit{v} \, \exists \mathit{x} \, (\mathsf{e}(\mathit{v},\mathit{x}) \land  \forall \mathit{y} \, (\mathsf{e}(\mathit{v},\mathit{y}) \imp  (\mathsf{g}(\mathit{v},\mathit{y}) \equi  \mathit{y}=\mathit{x}))).
+\end{array}
+$\pplkbAfter
+\pplIsValid{\pplmacro{pre\_monotheism} \land  \pplmacro{reflexive} \imp  \pplmacro{monotheism}.}
+%
+% Statement at position 33982
+%
+\pplkbBefore
+\index{nec_monotheism@$\ppldefmacro{nec\_monotheism}$}\refstepcounter{def}\label{def:nec:monotheism}%
+\ref{def:nec:monotheism}. $\begin{array}{lllll}
+\ppldefmacro{nec\_monotheism}
+\end{array}
+$\pplkbBetween
+$\begin{array}{lllll}
+\forall \mathit{v} \forall \mathit{w} \, (\mathsf{r}(\mathit{v},\mathit{w}) &&&&\; \imp \\
+\hphantom{\forall \mathit{v} \forall \mathit{w} \, (} \exists \mathit{x} \, (\mathsf{e}(\mathit{w},\mathit{x}) &&&\; \land \\
+\hphantom{\forall \mathit{v} \forall \mathit{w} \, (\exists \mathit{x} \, (} \forall \mathit{w_{1}} \, (\mathsf{r}(\mathit{w},\mathit{w_{1}}) \imp  \forall \mathit{y} \, (\mathsf{e}(\mathit{w_{1}},\mathit{y}) \imp  (\mathsf{g}(\mathit{w_{1}},\mathit{y}) \equi  \mathit{y}=\mathit{x}))))).
+\end{array}
+$\pplkbAfter
+\pplIsValid{\pplmacro{pre\_monotheism} \imp  \pplmacro{nec\_monotheism}.}
+%
+% Doc at position 34272
+%
+
+  \section{Modal Collapse}
+
+  A well-known objection to Gödel's theory is that it implies modal collapse
+  \cite{sobel:1987:goedel}.
+  
+%
+% Statement at position 34419
+%
+\pplkbBefore
+\index{collapse@$\ppldefmacro{collapse}$}\refstepcounter{def}\label{def:collapse}%
+\ref{def:collapse}. $\begin{array}{lllll}
+\ppldefmacro{collapse}
+\end{array}
+$\pplkbBetween
+$\begin{array}{lllll}
+\forall \mathit{x} \forall \mathit{y} \, (\mathsf{r}(\mathit{x},\mathit{y}) \imp  \mathit{y}=\mathit{x}).
+\end{array}
+$\pplkbAfter
+%
+% Doc at position 34467
+%
+
+  \medskip \noindent In our system, modal collapse can be derived from the
+  following preconditions, selected after Fitting's reconstruction
+  \cite[Chapter~11, Section~8]{fitting:god} of Sobel's proof
+  \cite{sobel:theism,sobel:1987:goedel}:
+  
+%
+% Statement at position 34725
+%
+\pplkbBefore
+\index{pre_collapse@$\ppldefmacro{pre\_collapse}$}\refstepcounter{def}\label{def:pre:collapse}%
+\ref{def:pre:collapse}. $\begin{array}{lllll}
+\ppldefmacro{pre\_collapse}
+\end{array}
+$\pplkbBetween
+$\begin{array}{lllll}
+\forall \mathit{x} \forall \mathit{v} \, \pplmacro{thm_{2}}(\mathit{v},\mathit{x}) &&&&\; \land \\
+\forall \mathit{x} \forall \mathit{v} \, \pplmacro{thm_{3}}(\mathit{v}) &&&&\; \land \\
+\forall \mathit{v} \, \pplmacro{def\_ess}(\mathit{v},\mathsf{g}) &&&&\; \land \\
+\pplmacro{r\_world} &&&&\; \land \\
+\pplmacro{reflexive}.
+\end{array}
+$\pplkbAfter
+\pplIsValid{\pplmacro{pre\_collapse} \imp  \pplmacro{collapse}.}
+%
+% Doc at position 34926
+%
+  \medskip \noindent In presence of \name{collapse}, the choice between frame
+  conditions \name{symmetric} and \name{euclidean} (or the modal logics KB and
+  S5) becomes immaterial, as both properties are implied by \name{collapse}.
+  Also Axiom~4 is in presence of \name{collapse} redundant.
+
+  \smallskip
+  
+\pplIsValid{\pplmacro{collapse} \imp  \pplmacro{symmetric} \land  \pplmacro{euclidean}.}
+\pplIsValid{\pplmacro{collapse} \imp  \pplmacro{ax_{4}}(\mathsf{v},\mathsf{p}).}
+%
+% Doc at position 35386
+%
+
+  \section{Alternate Weaker Preconditions for Lemma 1}
+  \label{sec-lemma-1-pre-weaker}
+
+  The precondition $\begin{array}{l}
+\pplmacro{pre\_lemma_{1}}
+\end{array}
+$ used in Section
+  \ref{sec-positiveness} to derive $\begin{array}{l}
+\pplmacro{lemma_{1}}
+\end{array}
+$ includes
+  \[\begin{array}{l}
+\pplmacro{topbot\_def} \land  \pplmacro{topbot\_equiv\_equal}
+\end{array}
+.\] The following formula is
+  a weaker formula that is also sufficient for deriving
+  $\begin{array}{l}
+\pplmacro{lemma_{1}}
+\end{array}
+$:
+  
+%
+% Statement at position 35781
+%
+\pplkbBefore
+\index{topbot_alt_1@$\ppldefmacro{topbot\_alt_{1}}$}\refstepcounter{def}\label{def:topbot:alt:1}%
+\ref{def:topbot:alt:1}. $\begin{array}{lllll}
+\ppldefmacro{topbot\_alt_{1}}
+\end{array}
+$\pplkbBetween
+$\begin{array}{lllll}
+\forall \mathit{v} \, (\mathsf{world}(\mathit{v}) \imp  \forall \mathit{x} \, (\mathsf{e}(\mathit{v},\mathit{x}) \imp  \mathsf{\top}(\mathit{v},\mathit{x}))) &&&&\; \land \\
+\forall \mathit{v} \, (\mathsf{world}(\mathit{v}) \imp  (\mathsf{pos}(\mathit{v},\mathsf{\quoted{\bot}}) \imp  \mathsf{pos}(\mathit{v},\mathsf{\quoted{\lnot\top}}))).
+\end{array}
+$\pplkbAfter
+\pplIsValid{\pplmacro{topbot\_def} \land  \pplmacro{topbot\_equiv\_equal} \imp  \pplmacro{topbot\_alt_{1}}.}
+%
+% Statement at position 36016
+%
+\pplkbBefore
+\index{pre_lemma_1_drop_topbot(V)@$\ppldefmacro{pre\_lemma\_1\_drop\_topbot}(\pplparamplain{V})$}\refstepcounter{def}\label{def:pre:lemma:1:drop:topbot:1}%
+\ref{def:pre:lemma:1:drop:topbot:1}. $\begin{array}{lllll}
+\ppldefmacro{pre\_lemma\_1\_drop\_topbot}(\pplparamplain{V})
+\end{array}
+$\pplkbBetween
+$\begin{array}{lllll}
+\pplparamplain{F},
+\end{array}
+$\pplkbAfter
+\pplkbBodyBefore
+$
+\begin{array}{l}\pplparamplain{F} \textrm{ is like } \pplmacro{pre\_lemma_{1}}(\pplparamplain{V}) \textrm{ except }\\
+\hspace*{2em} \true  \textrm{ instead of } \pplmacro{topbot\_def}\\
+\hspace*{2em} \true  \textrm{ instead of } \pplmacro{topbot\_equiv\_equal}.
+
+\end{array}$\pplkbBodyAfter
+\pplIsValid{\pplmacro{topbot\_alt_{1}} \land  \pplmacro{pre\_lemma\_1\_drop\_topbot}(\mathsf{v}) \imp  \pplmacro{lemma_{1}}(\mathsf{v}).}
+%
+% Doc at position 36270
+%
+  
+  \medskip \noindent A third possibility to derive $\begin{array}{l}
+\pplmacro{pre\_lemma_{1}}
+\end{array}
+$
+  is with the formula $\begin{array}{l}
+\pplmacro{topbot\_alt_{2}}
+\end{array}
+$ defined below, which is
+  like $\begin{array}{l}
+\pplmacro{topbot\_alt_{1}}
+\end{array}
+$ except that $\top$ in the first conjunct
+  is replaced by $\lnot \bot$:
+  
+%
+% Statement at position 36548
+%
+\pplkbBefore
+\index{topbot_alt_2@$\ppldefmacro{topbot\_alt_{2}}$}\refstepcounter{def}\label{def:topbot:alt:2}%
+\ref{def:topbot:alt:2}. $\begin{array}{lllll}
+\ppldefmacro{topbot\_alt_{2}}
+\end{array}
+$\pplkbBetween
+$\begin{array}{lllll}
+\pplparamplain{F},
+\end{array}
+$\pplkbAfter
+\pplkbBodyBefore
+$
+\begin{array}{l}\pplparamplain{F} \textrm{ is like } \pplmacro{topbot\_alt_{1}} \textrm{ except }\\
+\hspace*{2em} \lnot  \mathsf{\bot}(\pplparamplain{V},\pplparamplain{X}) \textrm{ instead of } \mathsf{\top}(\pplparamplain{V},\pplparamplain{X}).
+
+\end{array}$\pplkbBodyAfter
+\pplIsValid{\pplmacro{topbot\_def} \land  \pplmacro{topbot\_equiv\_equal} \imp  \pplmacro{topbot\_alt_{2}}.}
+\pplIsValid{\pplmacro{topbot\_alt_{2}} \land  \pplmacro{pre\_lemma\_1\_drop\_topbot}(\mathsf{v}) \imp  \pplmacro{lemma_{1}}(\mathsf{v}).}
+%
+% Doc at position 36933
+%
+
+  \section{Frame Conditions for Deriving Theorem~3}
+  \label{sec-special-thm-3}
+  \label{sec-special-last}
+
+  \subsection{The Weakest Sufficient Condition}
+
+  We turn again to the proof of $\begin{array}{l}
+\pplmacro{thm_{3}}
+\end{array}
+$
+  (Macro~\ref{def:thm:3:1}) from $\begin{array}{l}
+\pplmacro{pre\_thm_{3}}
+\end{array}
+$
+  (Macro~\ref{def:pre:thm:3:1}) in Section~\ref{sec-thm-3}, where we used the
+  additional frame condition $\begin{array}{l}
+\pplmacro{euclidean} \lor  \pplmacro{symmetric}
+\end{array}
+$.  The
+  question is now, whether it is possible to find a weaker frame condition for
+  deriving $\begin{array}{l}
+\pplmacro{thm_{3}}
+\end{array}
+$.  Actually, the weakest such frame condition
+  can be characterized as a second-order formula, the \name{weakest sufficient
+  condition}, described briefly in Section~\ref{sec-wsc-informal}, on the
+  accessibility relation and possibly the domain membership relation:
+%
+% Statement at position 37743
+%
+\pplkbBefore
+\index{wsc_thm_3@$\ppldefmacro{wsc\_thm_{3}}$}\refstepcounter{def}\label{def:wsc:thm:3}%
+\ref{def:wsc:thm:3}. $\begin{array}{lllll}
+\ppldefmacro{wsc\_thm_{3}}
+\end{array}
+$\pplkbBetween
+$\begin{array}{lllll}
+\forall \mathit{g} \, \forall \mathit{v} \, (\pplmacro{pre\_thm_{3}}(\mathit{v}) \imp  \pplmacro{thm_{3}}(\mathit{v})).
+\end{array}
+$\pplkbAfter
+%
+% Doc at position 37807
+%
+  However, elimination fails for this formula (at least with the current
+  version of \name{PIE}).  The idea is now to replace
+  $\begin{array}{l}
+\pplmacro{pre\_thm_{3}}
+\end{array}
+$ with a weaker formula such that elimination
+  becomes possible. We investigate this first in a simplified scenario.
+  
+  \subsection{Frame Conditions in a Modal Propositional Setting}
+  
+  The following macros specify versions of the formulas involved in deriving
+  $\begin{array}{l}
+\pplmacro{thm_{3}}
+\end{array}
+$ from $\begin{array}{l}
+\pplmacro{lemma_{2}}
+\end{array}
+$ which are simplified in
+  that they are just for propositional modal logics:
+%
+% Statement at position 38364
+%
+\pplkbBefore
+\index{lemma_2_simp(V)@$\ppldefmacro{lemma_{2}\_simp}(\pplparamplain{V})$}\refstepcounter{def}\label{def:lemma:2:simp:1}%
+\ref{def:lemma:2:simp:1}. $\begin{array}{lllll}
+\ppldefmacro{lemma_{2}\_simp}(\pplparamplain{V})
+\end{array}
+$\pplkbBetween
+$\begin{array}{lllll}
+\mathsf{g}(\pplparamplain{V}) \imp  \forall \pplparamplain{W} \, (\mathsf{r}(\pplparamplain{V},\pplparamplain{W}) \imp  \mathsf{g}(\pplparamplain{W})).
+\end{array}
+$\pplkbAfter
+%
+% Statement at position 38423
+%
+\pplkbBefore
+\index{coro_simp(V)@$\ppldefmacro{coro\_simp}(\pplparamplain{V})$}\refstepcounter{def}\label{def:coro:simp:1}%
+\ref{def:coro:simp:1}. $\begin{array}{lllll}
+\ppldefmacro{coro\_simp}(\pplparamplain{V})
+\end{array}
+$\pplkbBetween
+$\begin{array}{lllll}
+\exists \pplparamplain{W} \, (\mathsf{r}(\pplparamplain{V},\pplparamplain{W}) \land  \mathsf{g}(\pplparamplain{W})).
+\end{array}
+$\pplkbAfter
+%
+% Statement at position 38468
+%
+\pplkbBefore
+\index{thm_3_simp(V)@$\ppldefmacro{thm_{3}\_simp}(\pplparamplain{V})$}\refstepcounter{def}\label{def:thm:3:simp:1}%
+\ref{def:thm:3:simp:1}. $\begin{array}{lllll}
+\ppldefmacro{thm_{3}\_simp}(\pplparamplain{V})
+\end{array}
+$\pplkbBetween
+$\begin{array}{lllll}
+\forall \pplparamplain{W} \, (\mathsf{r}(\pplparamplain{V},\pplparamplain{W}) \imp  \mathsf{g}(\pplparamplain{W})).
+\end{array}
+$\pplkbAfter
+%
+% Statement at position 38517
+%
+\pplkbBefore
+\index{pre_thm_3_simp(V)@$\ppldefmacro{pre\_thm_{3}\_simp}(\pplparamplain{V})$}\refstepcounter{def}\label{def:pre:thm:3:simp:1}%
+\ref{def:pre:thm:3:simp:1}. $\begin{array}{lllll}
+\ppldefmacro{pre\_thm_{3}\_simp}(\pplparamplain{V})
+\end{array}
+$\pplkbBetween
+$\begin{array}{lllll}
+\forall \mathit{v} \, \pplmacro{lemma_{2}\_simp}(\mathit{v}) \land  \pplmacro{coro\_simp}(\pplparamplain{V}).
+\end{array}
+$\pplkbAfter
+%
+% Doc at position 38583
+%
+
+  \medskip \noindent However, elimination to obtain the weakest sufficient
+  frame condition as a first-order formula still fails for the simplified
+  scenario (at least with \name{PIE}). The corresponding second-order formula
+  is $\begin{array}{l}
+\forall \mathit{g} \, (\pplmacro{pre\_thm_{3}\_simp}(\mathsf{v}) \imp  \pplmacro{thm_{3}\_simp}(\mathsf{v}))
+\end{array}
+$.  The issue
+  is now to find a weaker formula in which elimination succeed.  We inspect
+  the clausal tableau proof of the following task:
+\pplIsValid{\pplmacro{symmetric} \imp  (\pplmacro{pre\_thm_{3}\_simp}(\mathsf{v}) \imp  \pplmacro{thm_{3}\_simp}(\mathsf{v})).}
+%
+% Doc at position 39337
+%
+  It is shown in Figure~\ref{fig:proof:simp:thm:3}.  Actually only two
+  instances of $\begin{array}{l}
+\forall \mathit{v} \, \pplmacro{lemma_{2}\_simp}(\mathit{v})
+\end{array}
+$ are used in the proof.
+  The following formula is a version of $\begin{array}{l}
+\pplmacro{pre\_thm_{3}\_simp}
+\end{array}
+$ with
+  the required two instances, the second one inserted into an unfolding of
+  $\begin{array}{l}
+\pplmacro{coro\_simp}
+\end{array}
+$:
+  
+  \newsavebox{\figaux}
+  \savebox{\figaux}{$\begin{array}{l}
+\forall \mathit{v} \, \pplmacro{lemma_{2}\_simp}(\mathit{v})
+\end{array}
+$}
+
+  \begin{figure}
+  \centering
+  \includegraphics[width=25em]{/tmp/tmp_pie_dotgraph_01}
+  \caption{Clausal tableau proof -- see discussion following
+  Macro~\ref{def:pre:thm:3:simp:1}.  The two instances of \usebox{\figaux}
+  appear in the clausal tableau as the two ternary clauses.}
+  \label{fig:proof:simp:thm:3}
+  \end{figure}
+%
+% Statement at position 40092
+%
+\pplkbBefore
+\index{pre_thm_3_simp_inst(V)@$\ppldefmacro{pre\_thm_{3}\_simp\_inst}(\pplparamplain{V})$}\refstepcounter{def}\label{def:pre:thm:3:simp:inst:1}%
+\ref{def:pre:thm:3:simp:inst:1}. $\begin{array}{lllll}
+\ppldefmacro{pre\_thm_{3}\_simp\_inst}(\pplparamplain{V})
+\end{array}
+$\pplkbBetween
+$\begin{array}{lllll}
+\pplmacro{lemma_{2}\_simp}(\pplparamplain{V}) \land  \exists \pplparamplain{W} \, (\mathsf{r}(\pplparamplain{V},\pplparamplain{W}) \land  \mathsf{g}(\pplparamplain{W}) \land  \pplmacro{lemma_{2}\_simp}(\pplparamplain{W})).
+\end{array}
+$\pplkbAfter
+%
+% Doc at position 40181
+%
+  The instantiated preconditions $\begin{array}{l}
+\pplmacro{pre\_thm_{3}\_simp\_inst}
+\end{array}
+$ are
+  indeed implied by the original preconditions:
+
+  \smallskip
+\pplIsValid{\pplmacro{pre\_thm_{3}\_simp}(\mathsf{v}) \imp  \pplmacro{pre\_thm_{3}\_simp\_inst}(\mathsf{v}).}
+%
+% Doc at position 40399
+%
+  
+  \medskip \noindent The instantiated preconditions
+  $\begin{array}{l}
+\pplmacro{pre\_thm_{3}\_simp\_inst}
+\end{array}
+$ are sufficiently strong to derive
+  $\begin{array}{l}
+\pplmacro{thm_{3}\_simp}
+\end{array}
+$, under the additional precondition
+  $\begin{array}{l}
+\pplmacro{symmetric}
+\end{array}
+$, and, alternatively, also under the additional
+  precondition $\begin{array}{l}
+\pplmacro{euclidean}
+\end{array}
+$:
+
+  \smallskip
+\pplIsValid{\pplmacro{symmetric} \imp  (\pplmacro{pre\_thm_{3}\_simp\_inst}(\mathsf{v}) \imp  \pplmacro{thm_{3}\_simp}(\mathsf{v})).}
+\pplIsValid{\pplmacro{euclidean} \imp  (\pplmacro{pre\_thm_{3}\_simp\_inst}(\mathsf{v}) \imp  \pplmacro{thm_{3}\_simp}(\mathsf{v})).}
+%
+% Doc at position 40918
+%
+  \medskip \highlightpar With $\begin{array}{l}
+\pplmacro{pre\_thm_{3}\_simp\_inst}
+\end{array}
+$ as
+  precondition for $\begin{array}{l}
+\pplmacro{thm_{3}\_simp}
+\end{array}
+$ elimination to obtain the
+  weakest sufficient frame condition as a first-order formula now succeeds:
+
+  \smallskip
+
+\noindent Input: $\forall \mathit{g} \, \forall \mathit{v} \, (\pplmacro{pre\_thm_{3}\_simp\_inst}(\mathit{v}) \imp  \pplmacro{thm_{3}\_simp}(\mathit{v})).$\\
+\noindent Result of elimination:
+\[\begin{array}{lllll}
+\forall \mathit{x} \forall \mathit{y} \forall \mathit{z} \, (\mathsf{r}(\mathit{x},\mathit{y}) \land  \mathsf{r}(\mathit{x},\mathit{z}) \imp  \mathsf{r}(\mathit{y},\mathit{x}) \lor  \mathsf{r}(\mathit{y},\mathit{z}) \lor  \mathit{x}=\mathit{y} \lor  \mathit{y}=\mathit{z}).
+\end{array}
+\]
+%
+% Doc at position 41287
+%
+  \noindent We write the resulting first-order formula in a slightly different
+  form and give it a name:
+
+%
+% Statement at position 41402
+%
+\pplkbBefore
+\index{frame_cond_simp@$\ppldefmacro{frame\_cond\_simp}$}\refstepcounter{def}\label{def:frame:cond:simp}%
+\ref{def:frame:cond:simp}. $\begin{array}{lllll}
+\ppldefmacro{frame\_cond\_simp}
+\end{array}
+$\pplkbBetween
+$\begin{array}{lllll}
+\forall \mathit{x} \forall \mathit{y} \forall \mathit{z} \, (\mathsf{r}(\mathit{x},\mathit{y}) \land  \mathsf{r}(\mathit{x},\mathit{z}) \land  \mathit{y}\neq \mathit{x} \land  \mathit{z}\neq \mathit{y} \imp  \mathsf{r}(\mathit{y},\mathit{x}) \lor  \mathsf{r}(\mathit{y},\mathit{z})).
+\end{array}
+$\pplkbAfter
+\pplIsValid{\pplmacro{frame\_cond\_simp} \equi  \pplmacro{last\_result}.}
+%
+% Doc at position 41557
+%
+
+  \medskip \highlightpar The obtained frame condition is under the assumption
+  of reflexivity of the accessibility relation equivalent to
+  $\begin{array}{l}
+\pplmacro{symmetric} \lor  \pplmacro{euclidean}
+\end{array}
+$, and without that assumption strictly
+  weaker:
+
+%
+% Statement at position 41792
+%
+\pplkbBefore
+\index{reflexive@$\ppldefmacro{reflexive}$}\refstepcounter{def}\label{def:reflexive}%
+\ref{def:reflexive}. $\begin{array}{lllll}
+\ppldefmacro{reflexive}
+\end{array}
+$\pplkbBetween
+$\begin{array}{lllll}
+\forall \mathit{x} \, \mathsf{r}(\mathit{x},\mathit{x}).
+\end{array}
+$\pplkbAfter
+\pplIsValid{\pplmacro{reflexive} \imp  (\pplmacro{symmetric} \lor  \pplmacro{euclidean} \equi  \pplmacro{frame\_cond\_simp}).}
+\pplIsValid{\pplmacro{symmetric} \lor  \pplmacro{euclidean} \imp  \pplmacro{frame\_cond\_simp}.}
+\pplIsNotValid{\pplmacro{frame\_cond\_simp} \imp  \pplmacro{symmetric} \lor  \pplmacro{euclidean}.}
+%
+% Doc at position 42086
+%
+  \medskip \highlightpar Thus we have shown for the propositional modal
+  setting that the first-order formula $\begin{array}{l}
+\pplmacro{frame\_cond\_simp}
+\end{array}
+$ is the
+  weakest frame condition to derive $\begin{array}{l}
+\pplmacro{thm_{3}\_simp}(\mathsf{v})
+\end{array}
+$ from
+  $\begin{array}{l}
+\pplmacro{pre\_thm_{3}\_simp\_inst}(\mathsf{v})
+\end{array}
+$.  Under the assumption of reflexivity
+  this condition is equivalent to $\begin{array}{l}
+\pplmacro{symmetric} \lor  \pplmacro{euclidean}
+\end{array}
+$. Without
+  that assumption it is strictly weaker.  As a corollary it follows that this
+  condition is also sufficient as frame condition to derive
+  $\begin{array}{l}
+\pplmacro{thm_{3}\_simp}(\mathsf{v})
+\end{array}
+$ from $\begin{array}{l}
+\pplmacro{pre\_thm_{3}\_simp}(\mathsf{v})
+\end{array}
+$, but in
+  in this case it is not necessarily the weakest such frame condition.
+
+  \medskip \highlightpar The pattern in which we proceeded here might possibly
+  be also applicable in other situations. It can be described as follows: Our
+  original problem involved a universal second-order quantifier, for which
+  elimination fails. We considered a stronger universal second-order formula
+  on which elimination succeeds.  Since $\forall$ can be represented by $\lnot
+  \exists \lnot$, with respect to \emph{existential} predicate quantification,
+  this corresponds to considering a \emph{weaker} second-order formula. We
+  obtained a solution of the modified problem that also provides a solution of
+  the original problem, although not necessarily the ``best'' solution
+  (\emph{weakest} sufficient condition, in our case).
+
+%
+% Doc at position 43509
+%
+
+  \subsection{Considering Modal Predicate Logic Again}
+
+  We now turn back to the problem of finding weak frame conditions for
+  \[\begin{array}{l}
+\pplmacro{pre\_thm_{3}}(\mathsf{v}) \imp  \pplmacro{thm_{3}}(\mathsf{v})
+\end{array}
+.\]
+  \highlightpar In fact, the frame condition obtained for the propositional
+  case also works in this case:
+
+  \smallskip
+\pplIsValid{\pplmacro{frame\_cond\_simp} \imp  (\pplmacro{pre\_thm_{3}}(\mathsf{v}) \imp  \pplmacro{thm_{3}}(\mathsf{v})).}
+%
+% Doc at position 43919
+%
+
+  \medskip \noindent Can further results be obtained for the modal predicate
+  logic case?  Our first attempt is to form $\begin{array}{l}
+\pplmacro{pre\_thm_{3}\_inst}
+\end{array}
+$ in
+  analogy to $\begin{array}{l}
+\pplmacro{pre\_thm_{3}\_simp\_inst}
+\end{array}
+$:
+
+%
+% Statement at position 44135
+%
+\pplkbBefore
+\index{pre_thm_3_inst(V)@$\ppldefmacro{pre\_thm_{3}\_inst}(\pplparamplain{V})$}\refstepcounter{def}\label{def:pre:thm:3:inst:1}%
+\ref{def:pre:thm:3:inst:1}. $\begin{array}{lllll}
+\ppldefmacro{pre\_thm_{3}\_inst}(\pplparamplain{V})
+\end{array}
+$\pplkbBetween
+$\begin{array}{lllll}
+\pplmacro{r\_world_{1}} &&&&\; \land \\
+\pplmacro{lemma_{2}}(\pplparamplain{V}) &&&&\; \land \\
+(\mathsf{world}(\pplparamplain{V}) \imp  \exists \pplparamplain{W} \, (\mathsf{r}(\pplparamplain{V},\pplparamplain{W}) \land  \exists \pplparamplain{X} \, (\mathsf{e}(\pplparamplain{W},\pplparamplain{X}) \land  \mathsf{g}(\pplparamplain{W},\pplparamplain{X})) \land  \pplmacro{lemma_{2}}(\pplparamplain{W}))).
+\end{array}
+$\pplkbAfter
+%
+% Doc at position 44253
+%
+  \medskip \noindent Unfortunately, however, elimination on
+  \[\begin{array}{l}
+\forall \mathit{g} \, \forall \mathit{v} \, (\pplmacro{pre\_thm_{3}\_inst}(\mathit{v}) \imp  \pplmacro{thm_{3}}(\mathit{v}))
+\end{array}
+\] does not
+  succeed with \name{PIE}. We thus build a formula with a more tight
+  integration of $\begin{array}{l}
+\pplmacro{lemma_{2}}
+\end{array}
+$ and $\begin{array}{l}
+\pplmacro{coro}
+\end{array}
+$:
+%
+% Statement at position 44535
+%
+\pplkbBefore
+\index{pre_thm_3_tight(V)@$\ppldefmacro{pre\_thm_{3}\_tight}(\pplparamplain{V})$}\refstepcounter{def}\label{def:pre:thm:3:tight:1}%
+\ref{def:pre:thm:3:tight:1}. $\begin{array}{lllll}
+\ppldefmacro{pre\_thm_{3}\_tight}(\pplparamplain{V})
+\end{array}
+$\pplkbBetween
+$\begin{array}{lllll}
+\pplmacro{lemma_{2}}(\pplparamplain{V}) &&&&\; \land \\
+(\mathsf{world}(\pplparamplain{V}) &&&\; \imp \\
+\hphantom{(} \exists \pplparamplain{W} \, (\mathsf{r}(\pplparamplain{V},\pplparamplain{W}) &&\; \land \\
+\hphantom{(\exists \pplparamplain{W} \, (} \exists \pplparamplain{X} \, (\mathsf{e}(\pplparamplain{W},\pplparamplain{X}) \land  \mathsf{g}(\pplparamplain{W},\pplparamplain{X})) &&\; \land \\
+\hphantom{(\exists \pplparamplain{W} \, (} \forall \pplparamplainidx{W}{1} \, (\mathsf{r}(\pplparamplain{W},\pplparamplainidx{W}{1}) \imp  \exists \pplparamplain{Y} \, (\mathsf{e}(\pplparamplainidx{W}{1},\pplparamplain{Y}) \land  \mathsf{g}(\pplparamplainidx{W}{1},\pplparamplain{Y}))))).
+\end{array}
+$\pplkbAfter
+%
+% Doc at position 44692
+%
+  It satisfies our basic requirements:
+
+  \smallskip
+\pplIsValid{\pplmacro{pre\_thm_{3}}(\mathsf{v}) \imp  \pplmacro{pre\_thm_{3}\_tight}(\mathsf{v}).}
+\pplIsValid{\pplmacro{frame\_cond\_simp} \imp  (\pplmacro{pre\_thm_{3}\_tight}(\mathsf{v}) \imp  \pplmacro{thm_{3}}(\mathsf{v})).}
+%
+% Doc at position 44946
+%
+  \medskip \noindent And, it permits elimination. Since the result formula
+  obtained from the elimination procedure looks clumsy, here it is simplified
+  ``by hand'' and mechanically verified:
+%
+% Statement at position 45149
+%
+\pplkbBefore
+\index{frame_cond_tight@$\ppldefmacro{frame\_cond\_tight}$}\refstepcounter{def}\label{def:frame:cond:tight}%
+\ref{def:frame:cond:tight}. $\begin{array}{lllll}
+\ppldefmacro{frame\_cond\_tight}
+\end{array}
+$\pplkbBetween
+$\begin{array}{lllll}
+\forall \mathit{v} \, (\mathsf{world}(\mathit{v}) &&&&\; \imp \\
+\hphantom{\forall \mathit{v} \, (} \forall \mathit{w} \, (\mathsf{r}(\mathit{v},\mathit{w}) \land  \mathit{w}\neq \mathit{v} \land  \exists \mathit{x} \, \mathsf{e}(\mathit{w},\mathit{x}) &&&\; \imp \\
+\hphantom{\forall \mathit{v} \, (\forall \mathit{w} \, (} \forall \mathit{w_{1}} \, (\mathsf{r}(\mathit{v},\mathit{w_{1}}) \land  \mathit{w}\neq \mathit{w_{1}} &&\; \imp \\
+\hphantom{\forall \mathit{v} \, (\forall \mathit{w} \, (\forall \mathit{w_{1}} \, (} \exists \mathit{w_{2}} \, (\mathsf{r}(\mathit{w},\mathit{w_{2}}) \land  (\exists \mathit{v} \, \mathsf{e}(\mathit{w_{2}},\mathit{v}) \imp  \mathit{w_{1}}=\mathit{w_{2}} \lor  \mathit{v}=\mathit{w_{2}}))))).
+\end{array}
+$\pplkbAfter
+\pplIsValid{\pplmacro{frame\_cond\_tight} \equi  \forall \mathit{g} \, \forall \mathit{v} \, (\pplmacro{pre\_thm_{3}\_tight}(\mathit{v}) \imp  \pplmacro{thm_{3}}(\mathit{v})).}
+%
+% Doc at position 45517
+%
+  
+  \medskip\noindent Under the preconditions $\begin{array}{l}
+\pplmacro{r\_world}
+\end{array}
+$, and
+  $\begin{array}{l}
+\pplmacro{nonempty}
+\end{array}
+$, which expresses that all worlds have a nonempty
+  domain, the frame condition $\begin{array}{l}
+\pplmacro{frame\_cond\_tight}
+\end{array}
+$ is equivalent
+  to the frame condition $\begin{array}{l}
+\pplmacro{frame\_cond\_simp}
+\end{array}
+$
+  (Macro~\ref{def:frame:cond:simp}) of the simplified scenario:
+  
+%
+% Statement at position 45878
+%
+\pplkbBefore
+\index{nonempty@$\ppldefmacro{nonempty}$}\refstepcounter{def}\label{def:nonempty}%
+\ref{def:nonempty}. $\begin{array}{lllll}
+\ppldefmacro{nonempty}
+\end{array}
+$\pplkbBetween
+$\begin{array}{lllll}
+\forall \mathit{v} \, (\mathsf{world}(\mathit{v}) \imp  \exists \mathit{x} \, \mathsf{e}(\mathit{v},\mathit{x})).
+\end{array}
+$\pplkbAfter
+\pplIsValid{\pplmacro{r\_world} \land  \pplmacro{nonempty} \imp  (\pplmacro{frame\_cond\_tight} \equi  \pplmacro{frame\_cond\_simp}).}
+%
+% Doc at position 46148
+%
+ \section{Auxiliary Definitions}
+  \label{sec-aux}
+%
+% Statement at position 46206
+%
+\pplkbBefore
+\index{last_result@$\ppldefmacro{last\_result}$}\refstepcounter{def}\label{def:last:result}%
+\ref{def:last:result}. $\begin{array}{lllll}
+\ppldefmacro{last\_result}
+\end{array}
+$\pplkbBetween
+$\begin{array}{lllll}
+\pplparamplain{X},
+\end{array}
+$\pplkbAfter
+\pplkbBodyBefore
+$
+\begin{array}{l}\mathrm{last\_ppl\_result(X)}.
+
+\end{array}$\pplkbBodyAfter
+%
+% Doc at position 46334
+%
+\bibliographystyle{alpha}
+\bibliography{\jobname}
+\printindex
+\end{document}

@@ -1,0 +1,679 @@
+Wed May 19 11:34:04 2021
+
+- Fix in logop_fol.pl 
+
+==============================================================================
+Wed May  5 14:24:04 2021
+
+- Improved the interface to provers that accept the TPTP format as input:
+  - added support for Vampire
+  - possibility to supply prover-specific options as
+    vampire_options and eprover_options
+  - conversion of symbols that are not permitted in the TPTP
+    format as function symbols (e.g. =>, +, -) to other symbols
+    (fresh symbols from f, f1, f2, etc.)
+  - Example invocation of Vampire:
+
+    ppl_valid((p->p),
+              [prover=tptp(vampire), vampire_options='--mode casc',
+	       timeout=30]).
+
+- README: Added hints how to use tptp2X with recent versions of SWI-Prolog
+
+==============================================================================
+Wed Mar 10 10:26:58 2021
+
+- Minor changes and fixes
+
+- Fixed: Error in craigtask_cm: m_remove_hconstraints did not properly
+  preserve nonground clauses
+
+==============================================================================y
+Sat Mar 28 16:46:01 2020
+
+- Fixed: LaTeX pretty printing: Argument of *unary* functor that is not an
+  operator should not be wrapped in parentheses.
+
+- Fixed: First- and second-order variables named 't' (which is also used for
+  some internal term representation) are now handled properly.
+
+- Fixed: In pplatex.pl: call of pp_form, pp_matrix, write_form without style
+  option.
+
+==============================================================================
+Fri Feb  7 10:35:43 2020
+
+- ppl_valid now supports SAT solvers (MiniSat) with prover=satsolver.
+
+  Also (counter-)models obtained from MiniSat, with symbols mapped to input
+  atoms can be obtained.
+
+  By default a definitional CNF transformation is
+  used. sat_options=[cnf_trafo=nosimp] or sat_options=[cnf_trafo=simp]
+  switches to direct CNF transformations.
+  
+  First-order inputs with universal first-order quantifiers (also embedded in
+  the formulas or implicit as negated existential quantifiers) are Skolemized
+  to propositional formulas.
+
+  Limitation: So far, equality is not considered consequently for
+  propositional formulas. That is, formulas with equality (i.e. the predicate
+  =/2) may or may not be pre- and postprocessed in ways where the special
+  meaning of =/2 is considered.
+
+  Example calls:
+
+  ?- ppl_valid((p(a); ~p(a)), [prover=satsolver]).
+  *Valid*
+
+  ?- ppl_valid((p(a); ~p(b)), [prover=satsolver,cmodel=M]).
+  *Not valid*
+  M = [~'def_000005$', 'def_000006$', p(b), ~p(a)].
+
+  ?- ppl_valid((p(a); ~p(b)),
+  [prover=satsolver, cmodel=M, sat_options=[cnf_trafo=nosimp]]).
+  *Not valid*
+  M = [p(b), ~p(a)].
+
+  ?- ppl_valid((ex(x, p(x))-> all(x, p(x))),
+               [prover=satsolver,cmodel=M,sat_options=[cnf_trafo=nosimp]]).
+  *Not valid*
+  M = [p('$x3'), ~p('$x4')].
+
+- Fixes in general_cm.pl (write_number, write_natnum now handle 0.0 as input
+  correctly).
+
+==============================================================================
+Thu Jan 30 17:48:25 2020
+
+- Minor changes in some modules in swilib/ (started to document predicates in
+  the SWI-Prolog Source Documentation Version 2 format).
+
+==============================================================================
+Thu Dec  5 15:44:03 2019
+
+- New ppl options document_header=LaTeXCode and document_footer=LaTeXCode for
+  more flexibility in the formatting of the generated LaTeX documents.
+  See module folelim(ppl_macrokb).
+
+==============================================================================
+Mon Sep 23 17:17:04 2019
+
+- Craig interpolation with CM:
+
+  Simplification of the matrix combined from both sides is now changed and
+  performed before goal clause selection.
+
+  Formula preparation: equality axioms are now included to both sides if
+  equality at least one side is with equality (required e.g. for proper
+  application of simplifications that perform cheap forms of elimination)
+
+- nfutils: m_add_equality now adds equality axioms also if equality is not
+  present in the input
+
+- ppl_override_options/2 and ppl_set_options/2 now always have effect on the
+  Prolog shell (i.e. "user" module, in addition to the prolog_load_context as
+  before).
+
+==============================================================================
+Wed Sep  4 18:41:29 2019
+
+- pplatex.pl: fixes and extension for lambda arguments in pplatex.
+
+- Fix: prover9 proof conversion now converts generated symbols of the form
+  $pDIGITS properly
+
+- Fix: ppl_valid with elim=true now considers elim_options.
+
+- New option cmodel=Model to ppl_valid: in case of "not valid" returns the
+  "countermodel" obtained from mace4. Actually, it just returns the list of
+  model representations from mace4 as terms. For now without taking care of
+  conversions of special symbols.
+
+- ppl_... predicates: remove_void_quantifiers is now invoked on results
+
+- Example files: added revision date to the headers,
+  new document with simple examples: scratch_wlp_2019.pl
+
+- Versions of CNF/DNF conversion similar to cnf5, dnf5 but with further
+  simplifications (currently: subsumption resolution). Perhaps not suited for
+  larger formulas. Conversion predicates are cnf6/2 and
+  dnf6/2. Simplifications based on them are c6 and d6 (analogous to c5 and
+  d5).
+
+==============================================================================
+Mon Jun 10 08:17:14 2019
+
+- Support for lambda expressions as values for Prolog variables in predicate
+  position of macros (see notes Apr 11 2019). Example:
+
+  def(symm(E)) :: all([x,y], (E(x,y) -> E(y,x))).
+  ?- mac_expand(symm(lambda([x,y],(x=a,y=b;x=a,y=c)))).
+  all([x, y], ((x=a, y=b;x=a, y=c)->(y=a, x=b;y=a, x=c)))
+
+  A singleton lambda list can be also written just as the argument variables.
+  The lambda body is a formula, and thus may contain quantifers.
+
+==============================================================================
+Sun Jun  2 17:50:34 2019
+
+- unskclausal.pl: New option skolems=... to specify explicitly the symbols
+  considered as Skolem functions and constants
+
+- New elim option no_unsk: Do not perform unskolemization within the DLS
+  elimination process. Elimination results then may contain Skolem functions
+
+- Bugfixes and minor improvements: inline_eq/2, inline_eq_pullout_result/4 in
+  simp_fol.pl and elim_fol.pl
+  
+==============================================================================
+Fri May 10 19:48:01 2019
+
+- New example that illustrates many features: scratch_goedel.pl
+
+- LaTeX fragments in PIE documents now support \prolog{PrologCode}: The output
+  of PrologCode is inserted in place. PrologCode is read in with replacing
+  variables VarName by terms '$VAR'(VarName), which are printed as VarName by
+  writeq and also by ppl_form
+
+- New ppl option "qstyle=quant" to pretty-print multiple quantifications of
+  the same kind in LaTeX by explicit quantifiers instead of a comma-separated
+  list
+
+- Extended prettyprinting syntax for functor names: Suffixes _p, _pp, _ppp etc
+  will be translated to superscripted primes. Works together with subscripts
+  which have to appear before the _p... suffix. Example: f_1_pp for
+  f^{\prime\prime}_{1}, f_pp for f^{\prime\prime}
+
+- Support for new predicate in macro definitions to specify a macro
+  "like some other macro, except that":
+
+        mac_like(OtherMacro, Modifiers, ResultFormula).
+
+  Modifiers are applied to the toplevel expansion of OtherMacro.  Modifiers
+  include: replace(From, To) (pattern-based term rewriting, operates on the
+  input considered as Prolog term as a whole), conjoin(Formula) and
+  add_precondition(Formula). mac_expand_1/1 can be used to view the result in
+  the Prolog shell
+
+- util_fol.pl - changed sorting of literals for prettifying matrices
+
+- New script ppl-new.sh for processing documents that internally specify their
+  way to be processed with the latex_processing=... option
+
+- Fixes in pretty.pl: taking modules into account now implemented in a
+  different way; parens for xfx operators
+
+- Various minor improvements and fixes
+
+==============================================================================
+Fri Apr 26 19:59:39 2019
+
+- util_macrokb.pl:
+
+  - New predicates ppl_set_options/1, ppl_override_options/1: sets default
+    options for *all* tasks (elim, form, ipol, ppl, valid)
+
+  - New options for task "ppl":
+
+    1. latex_processing=ListOfCommands to specify the invocation sequence
+       of LaTeX commands. Currently supported commands: pdflatex, bibtex
+       Default: [pdflatex]
+    
+       Example:
+          latex_processing=[pdflatex,pdflatex]
+  	  to ensure that labels are handled properly
+
+       Example:
+          latex_processing=[pdflatex,bibtex,pdflatex,pdflatex]
+	  to incorporate BibTeX processing, for example using the
+	  filecontents mechanism of LaTeX (possible with the
+	  before_begin_document=Hook option)
+
+       Example:
+          latex_processing=[]
+	  no LaTeX processing invoked from Prolog
+
+    2. deflabels=Boolean
+
+       If true, a label is added for each definition and the associated
+       counter value is printed.  Label names are of the form def:Atom or
+       def:Functor:Arity, respectively, where characters that are not ascii
+       and alnum are replaced by ":". The formatting of the counter value
+       at the definition can be controlled by the deflabel_fmt option.
+
+  - Bugfixes
+
+- ppl_valid: output is now "three valued", corresponding to valid, not valid
+  (e.g. established by countermodel of negation) or "failed to validate".
+
+  Corresponding internal changes: external_prover9.pl: renamed from
+  external_fol.pl, three-valued interface predicate fol_status_prover9/3
+
+- ppl_valid: LaTeX formatting of ppl_valid result now closes with "\par"
+
+- unskclausal.pl: bugfix
+
+- utils_fol.pl: orienting of equations in certain simplifications now
+  considers Skolem functions specially, mainly to achieve independence of the
+  starting number used for generating the Skolem symbols
+
+- ppllatex.pl: bugfix
+
+==============================================================================
+Thu Apr 18 08:30:06 2019
+
+- Improved handling of options in the ppl_elim/ipol/valid/form predicates:
+
+  Options specified with the invocation of these ppl_ predicate are now always
+  merged with default options specified with ppl_set_options/2 or
+  ppl_override_options/2.  The versions with just one argument now all invoke
+  the version with two arguments with [] supplied as options.
+
+- Improved LaTeX pretty printing:
+
+  1. pplatex.pl: New predicate register_pplatex_functor(PrologFunctor,
+     LaTeXCode, PrintLengthInLaTeX) to pretty print functors in LaTeX in
+     special ways. Example:
+
+     :- register_pplatex_functor(a1_lr_true, 'a_{1\\rightarrow\\true}', 4).
+
+     Can be called with a variable as LaTeXCode to undo the registration
+     without supplying another one. Undoing works analogously for
+     register_pplatex_op/4
+
+  2. support_macrokb.pl: register_ppl_pl_method/3 to extend methods for pretty
+     printing Prolog code in macro specifications (was already present but
+     deactivated)
+
+  3. Short parameters are now pretty printed in special wrappers
+     (pplparamplain, pplparamplainidx in contrast to pplparam, pplparamidx) to
+     allow better spacing for them.
+     
+- New module: unskclausal.pl, an implementation of McCune's unskolemization
+  method for clause sets. This now replaces the matrix-to-formula conversion
+  e.g. in simplifications c5 and d5.
+
+- prep_fol.pl: bugfix concerning "<->" in second-order inputs
+
+==============================================================================
+Thu Apr 11 14:18:12 2019
+
+- Improved the way to specify macros:
+
+  1. Free Prolog variables are now automatically bound to fresh symbols. In
+  macros with a body (i.e. a "::-" part) this is done after the body has been
+  processed.
+  
+  Example: def(foo(X)) :: ex(Y, p(X,Y)).
+
+  Then foo(a) expands into something like ex('$x2', p(a, '$x2')).
+
+  2. Support for variables in predicate and function position. Functors
+  starting with an upper case letter or '_' are converted to
+  variables. Enabled by:
+
+     :- set_prolog_flag(allow_variable_name_as_functor, true).
+
+  (That SWI-Prolog flag is necessary to read-in files with variable names as
+  functors. If it is set, in addition PIE handles macro specifications in
+  specific ways.)  These variables are also automatically bound to fresh
+  symbols as described above. If there is an actual Prolog variable with a
+  name of such a predicate variable, then it is bound to that predicate
+  variable. (Thus, this technique may lead to "unjustified" singleton variable
+  warnings at read time as these bindings are only performed later.)
+  
+  Example: def(test(P)) :: ex2(Q, (Q(a) -> P(a))).
+
+  This feature is still experimental - interplay with all supported forms of
+  def-patterns has not been tested.
+
+- util_macrokb.pl: mac_expand/1 now prettifies the variable names. For the
+  above examples it would show foo(a) as ex(x, p(a, x)), and test(p) as ex2(q,
+  (q(a)->p(a)))
+
+- nf_utils.pl: f_signature/3: fix such that functions and predicates
+  quantified with ex2 and all2 do not appear
+
+- macrokb.pl: mac_install/0 - changed the implementation to operate always on
+  source files instead of the clause database, which is necessary to keep
+  track of variable names.
+
+- Longer and symbolic subscripts in functor names can now also be specified in
+  "{...}".  'Example: p_{\\false}'
+
+==============================================================================
+Tue Apr  9 09:55:55 2019
+
+- util_macrokb.pl:
+
+  - Handling of the "r=Result" option in the ppl_ predicates: bugfix
+
+  - ppl_valid: split_iff=true option: added support for formulas of the form
+    (A -> (B<->C)), also with some quantifier patterns, removed support for
+    nested use of "all", e.g., all([x,y], all([z], ...)), which could be
+    expressed as all([x,y,z], ...)
+    
+  - ppl_elim/ipol/valid predicates: added simp_result=SIMP option which
+    specifies simplifications of the result performed prior to prettifying,
+    examples: simp_result=[d5], simp_result=[c5]
+  
+==============================================================================
+Thu Apr  4 07:53:24 2019
+
+- New option "r=Result" in the ppl_elim/ipol/valid predicates: Result is bound
+  to the result formula. Together with style=skip this facilitates the use of
+  these ppl_ predicates in programs with usual Prolog-style parameter passing.
+
+- scratch_demo_04.pl: now includes a visualized proof graph for the
+  interpolation example
+
+- tabx_dotgraph.pl: fix such that also PNG (not just GIF) files can be
+  created, depending on the supplied file extension
+
+==============================================================================
+Wed Apr  3 16:04:00 2019
+
+- elim_fol.pl: additional elim preprocessing option: d5, bugfix
+
+- innexing.pl: bugfix in elim preprocessing with option qex
+
+- logop_fol.pl: logform_conjoin/3 and logform_disjoin/3 now consider
+  associativity
+
+- utils_fol.pl: more equality simplifications at cnf5/2, dnf5/2
+
+- nf.pl, matrix_to_form/2: a bit more rudimentary unskolemization for use in
+  CNF/DNF-based formula simplifications, throws an exception in case
+  unskolemization fails (should be replaced by or merged with cnf_to_form_u/2
+  and dnf_to_form_u/2 in future versions).  matrix_to_form_keep_skolems/2:
+  handles Skolem terms just like ordinary terms, corresponds to the old
+  version of matrix_to_form/2
+
+- pplatex.pl: Option "style=skip" to suppress printing (passed "up" to the
+  ppl_... predicates).
+
+- New modules (experimental): solution.pl with support for solution
+  computation for quantifier-free formulas and pointwise.pl with support for
+  elimination and solution computation for single ground atoms ("points"). The
+  elimination is basically by Lin and Reiter's forgetting technique.
+
+- Interpolation (craigproof_cm.pl, tabx.pl): CM results obtained with steq
+  equality can now be used; changed simplifications on the propositional level
+  such that tautological equality atoms can be eliminated already at that
+  level.
+
+  As an effect of the modifications of the default simplifications used for
+  interpolants, the example results may have slightly different form from
+  previous versions (e.g., different order of conjuncts).
+
+- simp_fol.pl: improvements of formula simplifications. Additional interface
+  simp_form/3 and simp_form/4.
+
+==============================================================================
+Sat Feb 23 08:49:00 2019
+
+- More options for invoking Prover9, including proof=Proof, to return a proof
+  representation obtained via prooftrans and left_right=Left-Right to identify
+  the left- and right-side input assumptions passed for interpolation
+  problems.  For the proof format see module prooftrans.pl.
+
+- New variants of CNF/DNF conversion that are much faster for some inputs and
+  based on the propositional implementations cnf_prop and dnf_prop: cnf4,
+  dnf4, cnf5, dnf5, simp_fol_c4, simp_fol_d4
+
+- Minor enhancements and fixes
+
+==============================================================================
+Sun Jan 20 22:29:22 2019
+
+- scripts/cm-prove-tptp-problem.sh
+  scripts/ppl.sh
+  scripts/ppl-with-bibtex.sh
+
+  Changes of the SWI-Prolog invocation for the 8.0.0 Version of SWI-Prolog
+
+- tabx_dotgraph.pl
+
+  Changed the color scheme for interpolation tableaux: left=red, right=green
+
+==============================================================================
+Fri Nov 30 16:39:08 2018
+
+- ipol_support: fix (missing import)
+- tptpio.pl: new predicate writeq_tptp/1
+  writes a formula with TPTP operators and "numbervars"
+  (similar to pp_tptp/1 but without pretty printing)
+
+==============================================================================
+Thu Nov 22 09:49:20 2018
+
+- Added experimental support for interpolation with the Hyper prover.
+  Can be invoked with: ppl_ipol(F->G, [prover=hyper])
+
+==============================================================================
+Mon Oct  1 10:54:33 2018
+
+- tabx.pl:
+
+  Interpolant lifting now fully implemented, to work also with respect
+  to functions
+
+==============================================================================
+Wed Jul 18 18:06:28 2018
+
+- Changed syntax for elimination preprocessing options
+- Introduced "inp" (for "inprocessing") options: preprocessing applied to
+  subformulas after performing elimination on then
+- increase elimination power, for example:
+  [elim_options=[inp=[qex], pre=[dl]]]).
+- cnf3, dnf3
+  more simplifications than cnf2, dnf3
+- Normalization options for external provers
+  (e.g. def nf for prover9)
+
+==============================================================================
+Mon Jul 16 09:51:45 2018
+
+- New options for preprocessing before elimination. Implemented in
+  modules elim_fol.pl and the new module innexing.pl.
+
+  - pre_in: quantifiers inward, without distribution
+  - pre_qex: Quine's expansion to separate quantifiers if possible
+  - pre_d, pred_dl: DNF-like distribution, the _dl variant distributes
+    only upon linked disjuncts
+
+  Can be supplied to ppl_elim options as elim_options=[...].
+
+==============================================================================
+Tue Jun 26 17:51:06 2018
+
+- Renamed dnf_to_form/2 and cnf_to_form/2 in toytools/auxiliary.pl to
+  propositional_dnf_to_form/2 and propositional_cnf_to_form/2 since these are
+  implemented just for propositional matrices.
+
+- Addition to utils_fol:
+
+  cnf2/2 and dnf2/2: Versions of NF transformation that perform some
+  equality simplifications, in particular inlining of reflexivity in CNF (and
+  its dual in DNF).
+
+  cnf_to_form/2 and dnf_to_form/2, which operate on first-order matrices and
+  reconstruct the main quantifier (i.e. do not perform unskolemization).
+
+  cnf_to_form_u/2 and dnf_to_form_u/2 which are like cnf_to_form/2 and
+  dnf_to_form/2, except that they also invoke unskolemization. They raise an
+  error if unskolemization fails.
+
+- Further prettify option values to the ppl_ predicates. Improved the
+  output for existing options.
+
+==============================================================================
+Thu Apr 26 08:45:41 2018
+
+- Re-activated an advanced equality handling for the CM prover implemented
+  around 1998 apparently after: L. Bachmair, H. Ganzinger, A. Voronkov:
+  "Elimination of Equality via Transformation with Ordering Constraints",
+  Tech. Rep. MPI-I-97, 1997 and CADE 1998. It is called here STEQ.
+
+  Related CM options are 
+
+     steq - compile with support for STEQ equality handling
+     lex(LEX) - specify lex ordering:
+        LEX is a list of funnction specifiers F/N or a key:
+        default, otter, exp1 
+     steq_s_off - switch off special subgoal sorting for STEQ
+     steq_d_off - switch off ignoring negative equality for depth cost
+     steq_x_off - switch off preference of reflexivity
+     steq_a_off - switch off skipping constraints at end of body
+     
+  Related proof task options are 
+
+     eq=steq - activate steq equality handling
+     lex=LEX - specify lex ordering, passed to
+        the formula transformation and to CM
+     steq_options=STEQ_OPTIONS - see below
+
+  The STEQ_OPTIONS specify options of the formula transformation:
+    
+     lex(LEX) - specify lex ordering, see CM options
+     add_units(pos_eq), add_units(off) - add unmodified unit equations
+         (seems to stem from SETHEO), default: pos_eq
+     psimp(N) - clause simplification after pulling out terms
+        0 - no simplification
+        1 - merge equalities with identical left side (default)
+        2 - like 1 plus inline reflexivity
+     tsimp(N) - final clause simplification
+        0 - no simplification
+        1 - merge equalities with identical left side (default)
+
+  If any of these options are used for problems without equality, they should
+  have no effect, such that they can be part of general option configurations.
+
+  STEQ equality handling can be activated with the "eq=steq" proof task option.
+  The default conventional equality handling is ensured with "eq=std_r_st".
+  
+- SWI 7.4.6 seems to handle the prolog flag "unknown" with value "fail" not
+  properly, that is, with non-termination instead of failure. This flag has
+  been used in the CM runtime module - in some configurations a predicate from
+  the logic formula may not result in the generation of a clause with a
+  corresponding head. Instead of the flag, now dummy clauses with "fail" as
+  body are generated to prevent "undefined predicate" errors.
+
+==============================================================================
+Sun Mar 18 08:20:13 2018
+
+- Small changes concerning benchmarking:
+  - The printed cm_result term now includes also the host name
+  - The script cm-prove-problem.sh calls ulimit with the timeout again
+    (this has effect on Linux, but no effect on OSX)
+
+==============================================================================
+Tue Feb 13 19:23:40 2018
+
+- New predicate ppl_override_options(Task, Options). Similar
+  to ppl_set_options(Task, Options) but only adds and modifies
+  specified options, leaving other options at their previous
+  values.
+
+- In ppl_set_options(Task, Options) and ppl_override_options(Task, Options)
+  now also ppl is accepted as a task argument, representing a call to ppl.
+  
+- New ppl option before_begin_document=Call as hook to insert code into the
+  LaTeX header before \begin{document} of files generated with ppl. Usage
+  example:
+
+   aux :- write('\\newcommand{\\test}{TEST}\n').	
+   :- ppl_override_options(ppl, [before_begin_document=aux]).
+
+- The LaTeX output of ppl_valid is now handled through LaTeX commands
+  \pplIsValid and \pplFailedToValidate which can be overridden by redefining
+  these commands with the before_begin_document mechanism.
+
+- write_form/2, which is called e.g. by ppl_valid, is now invoked with a
+  higher "environment" priority such that also complex formula get no
+  surrounding parentheses.
+
+- Fix in elim_fol.pl: Formulas output if elimination fails are now printed to
+  user_error instead of user_output.
+
+- Added some incomplete modules for experimenting: craigtask_hyper,
+  hyper_proof_conversion, forminspect_fol
+
+- Thanks to Walter Forkel for suggesting some of these improvements!
+
+==============================================================================
+Sun Aug 13 21:16:48 2017
+
+- pplatex.pl
+  bugfix
+
+==============================================================================
+Sun Jul  9 21:08:36 2017
+
+- Generated intermediate LaTeX files are now preserved by ppl.sh and
+  ppl-with-bibtex.sh and put along with the PDFs below scratch/ in the
+  distribution archive. This makes it easier to detect differences in the
+  generated files produced by different versions of PIE.
+
+==============================================================================
+Tue May 30 16:35:56 2017
+
+- dotgraph.ps 
+  added support for PNG and PS2 images
+
+==============================================================================
+Fri May 19 14:48:51 2017
+
+- pplatex.pl: The LaTeX formula pretty printer now lets quantifiers bind more
+  strongly than connectives, because this is more common. (A notable book
+  where the previous version, quantifier scopes extending as far to the right
+  as possible, are used is John Harisson: "Handbook of Practical Logic and
+  Automated Reasoning", 2009.)
+
+==============================================================================
+Tue Mar 28 17:54:37 2017
+
+- mac_install/0: compatibility changes for SWI Prolog >= 7.4
+
+- tabx_dotgraph.pl: conversion of clausal tableaux to dot graphs now accepts
+  arguments of the form printstyle(Filename) and printstyle(Dotgraph) which
+  leads to colors suitable for BW printing.
+
+- craigtask_cm.pl: Renamings: 
+    Option ipol_simp_sides -> ip_simp_sides,
+    cm_craig_inductive/3 -> cm_craig_symmetric/3
+
+- tabx.pl: First-order interpolation: support for Skolem terms in non-Skolem
+  functors
+
+==============================================================================
+Wed Mar  8 22:06:03 2017
+
+- Some "prettify_" predicates, now in prettysymbols.pl,
+  (for use as option in the ppl_... predicates)
+
+- Fix at unskolemize/4
+
+==============================================================================
+Tue Mar  7 11:28:35 2017
+
+- The formulation of circumscription in scratch_circ.pl has been revised
+  thoroughly and some simple examples are provided.
+
+- Prettify option for the ppl_... predicates. The default style now tries
+  to present formulas as implications (for now only in some cases that
+  are simple to detect).
+
+- Some small changes in fol_elim
+
+- Bugfixes in pplatex.pl: 
+  - singleton variables in quantifiers were not printed in mathit
+  - in write_form_arguments_brief_latex/3 arguments were switched
+
+==============================================================================
+Tue May 17 16:33:27 2016
+
+- Small edits in README.txt and scratch/scratch_demo_04.pl
+- Fix in src/tptpio.pl
+

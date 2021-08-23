@@ -1,0 +1,557 @@
+===============================================================================
+THE CM PROVER - USAGE
+===============================================================================
+===============================================================================
+COMPILE
+===============================================================================
+
+cm(+MATRIX, ?KB, +OPTIONLIST)
+
+	Translates MATRIX to prolog-contrapositives and writes them as
+	a prolog program to the file KB.
+
+	If KB is a variable, no file is written, instead KB is
+        bound to the list of output clauses (suitable as argument to
+        compile_term in eclipse prolog).
+
+
+CM OPTIONS
+===========
+
+IN SHORT
+--------
+
+Good options for non-horn matrices: [r1,r4,r5]
+Good options for horn matrices:     [r4,r5,mrn,no_fan]
+
+Better options for non-horn matrices: [r1,r4,r5,hd1]
+Better options for horn matrices:     [r4,r5,hd1,mrn,no_fan]
+
+REDUCTIONS (don't affect completeness)
+--------------------------------------
+
+r1  - if goal == identical to ancestor then fail.
+r2  - if goal == complementary to ancestor then reduction and cut.
+r3  - if subsumed by unit clause then extension and cut.
+r4  - insert subsumption nequations (see NOTES below, see also cm_limit).
+r5  - insert tautology nequations.
+r6  - antilemma checking - see below.
+mr2 - cut if at reduction a goal == complementary to ancestor is
+      encountered (this is a weaker reduction than r2)
+
+default: no reduction.
+
+r1-3 are adapted from stickel's pttp, r4-r5 (and r6) from setheo.
+
+
+SEARCH SPACE (doesn't affect completeness)
+----------------------------------------
+
+hd  - depth is no of solution depth (as default in setheo?).
+hd1 - depth := depth - (number of subgoals)
+hd2 - depth := (depth - 1) // (number of subgoals)
+hs  - depth is no of subgoals (as in stickel).
+
+default: hd (exlusive options, set at most one).
+
+NOTE: hd [for now] does not record the solution depth (ie. in each
+depth also the proofs with lower depths are returned).
+
+
+SUBGOAL SORTING
+---------------
+
+sh  - sort subgoals heuristically (similar to description in the
+      setheo paper).
+sn  - dont' order subgoals (ie. take ordering from input matrix).
+
+default: sh (exlusive options, set at most one)
+
+
+SEARCH
+------
+
+inc - increment by minimum of depth needed to get a larger search space
+      (as suggested by stickel, seems only occasionaly useful since
+      this increment is rather often 1 anyways)
+
+inc1 - only increment depth if depth bound actually has been reached,
+      terminate otherwise. This option slows down search somewhat, but
+      for unprovable tasks, the prover might terminate instead of
+      looping.
+
+
+MISCELLANEOUS
+-------------
+
+acn - no cut after solutions to goals without arguments (i.e. Prolog atoms),
+      useful to obtain alternative proofs in backtracking.
+
+
+INCOMPLETE STRATEGIES (complete only for certain classes of formulas)
+---------------------------------------------------------------------
+
+mrn -  don't perform me-reduction (eg. for horn clauses)
+mrc -  perform cut after me-reduction
+default: perform me-reduction
+
+oen - no occur check at extension
+orn - no occur check at me-reduction
+default: full occur checks 	
+
+
+OUTPUT
+------
+
+t -  enable abstraction terms
+p -  enable proof representation
+default: none of both
+
+
+GOAL
+----
+
+frs - "freeze runsolve", ie. enable use of negated query as runtime
+      determined axiom using compilation.
+
+      Useful if different queries should be posed against a once
+      compiled non-horn knowledge base. 
+
+[rus - "runsolve", ie. enable use of negated query as runtime
+      determined axiom. (now obsoleted by frs)]
+
+
+NOFAN
+-----
+
+no_fan - don't fan clauses into contrapositives.
+         (use the given ordering of the clause, leftmost literal
+         is the head, the others the body).
+
+See also clause option no_fan.
+
+
+LEX
+---
+
+lex(PrecedenceList) - specify lrpo ordering for use in hconstraints
+	(see also '$hconstrain'/3 built-in).
+
+	If PrecedenceList is 'default' or the lex/1 option is omitted,
+	a default ordering is used, which currently is determined as
+	in Otter 3.0:
+
+		[ constants ,  high-arity, ...,  binary ,  unary]
+	        Within arity, the lexicographic ascii ordering 
+		(i.e. the Prolog routine sort) is used.
+
+
+	Otherwise PrecedenceList is a list containing elements of the form:
+		Functor/Arity		|
+		Functor/Arity-Positions
+
+	The ordering of PrecedenceList specifies the lrpo symbol ordering
+	(smallest_first).
+
+	Positions is a list of numbers specifying the order of argument
+	positions used in lexical comparision. Default: left to right.
+	Positions might also be a subset of actual argument positions, term
+	comparision is then performed only on these arguments.
+
+	All constants and functions must be declared with this option.
+
+OTHER OPTIONS
+-------------
+
+r4_limit(Limit) - a limit of a ressources used at CM compilation. Specifically
+	for some matrices the r4 option might generate results which are
+        exponential to clause_lengths in size.
+
+	This option just restricts reductions and has no effect on 
+	completeness.
+
+	If Limit is -1 stands no limitation is used. This is the default. 
+
+        [2015: SWI's inference count is used]
+	[OLD: A reasonable value might be 50? or less?]
+
+run_module(Module) - module in which the proof task will be run, default:
+        runcm. Must be supplied with the same value as option to proof/2.
+ 
+        Can be used to operate on different prove tasks at the same time or
+	interleaved.
+
+
+SYNTAX OF THE INPUT-MATRIX
+==========================
+
+matrix = list_of_clauses | abstraction_term - list_of_clauses, 
+clause == list_of_literals
+literal == atom | ~atom, vars are prolog vars
+
+Instantiations of the abstraction_term may be output by the proof
+procedure, the abstraction_term defaults to 'k' (see below).
+
+Input matrices and clauses must be non-empty.
+
+Variables may be reused in different clauses.
+
+
+BUILT-INS
+=========
+
+In clause length dependent depth bound modes (eg. hd1, hs), built in
+literals do not count to the cost.
+
+Start Predicates
+----------------
+
+'$query'/N - can be used as start predicates. Might get some heuristic
+support.
+
+
+Syntactic Equality
+------------------
+
+'$eq'(X,Y), ~'$eq'(X,Y) 
+
+	X and Y are syntactically unequal (rsp. equal). Disequality
+	is implemented using the Eclipses delayed disequality
+	predicate ~=/2.
+
+
+Options
+-------
+
+~'$options'(ClauseOptions) can be used to supply clause specific options.
+	It is ignored within proving. A clause can contain at most
+        one ~'$options'/1 literal.
+
+	ClauseOptions is a list of clause options:
+
+        no_fan  - don't fan this clause into contrapositives (see
+                  CM option 'no_fan').
+	no_cp(Literal) - dont't create a contrapositive with Literal
+                  (compared by '==') as head. This option can be
+                  specified multiply within an options literal.
+	no_sort - dont't reorder literals
+	theorem - indicate that the clause comes from the theorem
+                  to be proved (used for heuristic purposes only).
+
+Constraints
+-----------
+
+~'$constrain'(Variable, TermList)                       [experimental]
+
+	Variable is constrained to values in TermList.
+
+	For now: Current implementation simply uses member/2 
+        with occur check unification and postpones ~'$constrain'/2
+	literals in the subgoal ordering.
+
+        Notice: In the current implementation proofs contain
+	just variables (not proof terms) for solutions of
+        ~constrain/2.
+
+        Planned: Experiments using real constraints.
+ 
+
+~'$hconstrain'(Variable, Operator, Argument)             [experimental]
+
+	Variable is constrained corresponding to Operator and
+	Argument. These constraints are not enforced, the prover is
+	just allowed to use them for heuristic purposes.
+
+	The following operators are supported:
+
+	lex_lessq - Variable is smaller or equal than Argument
+	lex_less  - Variable is smaller than Argument
+
+		These operators work on the term ordering specified by the
+		lex/1 CM option. 
+
+		In the current implementation they fail if they are
+		violated (i.e. Variable is greater rsp. greater or 
+		identical to Argument).
+
+Calling Prolog
+--------------
+
+~'$prolog'(Call) 
+~'$prolog_post'(Call) 
+
+        is proved by calling Call directly.
+
+~'$prolog'(Call,I) 
+~'$prolog_post'(Call,I) 
+
+        is proved by calling Call directly, while I is
+        bound to the I-structure. Example: ~'$prolog'(write(I),I).
+
+
+The calls are inserted into a contrapositive before [for _post: after]
+normal subgoals (when subgoal sorting is used).
+
+These predicates can only be used in the compiled matrix, not in a
+query. (You might add a clause eg. [pro(Call), ~prolog(Call)] to
+the matrix and then use pro(Call) in queries).
+
+The Call argument is inserted directly into the contrapositive (not
+wrapped into call/1), such that the scope of a cut can be the whole
+contrapositive.
+
+
+Recognized Predicates
+---------------------
+
+Equality predicates: starting with '=' or 'eq'. Currently only used
+for some heuristics which are not yet fully evaluated.
+
+
+Obsolete
+--------
+
+[~'$cost'(N) pretends a subgoal that can be solved with cost N.
+         (N can be negative ??? Wed Dec 18 18:23:00 1996)
+	 % not checked in the current version
+         % different effects with hd and hs?]
+
+
+NOTES
+=====
+
+r4 and r5 are based on the input matrix, they ignore literals of the
+form: ~options(_), but take other built in literals (such as
+~prolog...) into account like normal literals.
+
+--------------------
+
+r4 is incomplete in some cases, eg:
+
+ [[~ query], [query, ~ q(a)], [q(A)], [~q(A)]]
+
+when queried with proof([[query]]).
+
+- complete for consistent axiom-sets ???
+- examples for this incompleteness that survive nf trafo ?
+
+--------------------
+
+The program resulting from cm needs a few runtime support predicates.
+These are in the runtime_support_cm module.
+
+--------------------
+
+
+BUGS
+====
+
+- optimal subgoal ordering is still a problem (literature???)
+- todo: option - only report proofs with depth>d
+- useless but harmless contrapositives with c_not_prolog, c_not_cost
+  as head are generated
+
+
+EXPERIMENTAL, DUBIOUS AND OBSOLETE OPTIONS
+==========================================
+
+ANTILEMMAS
+
+r6 - antilemma checking (probably not complete for 'hs')
+     [current implementation uses an array of limited size]
+
+
+EXPERIMENTAL REDUCTION OPTIONS
+
+rsub - use  \+ subsumes_chk instead \== of for r4 and r5
+       ??? \+ subsumes_chk is probably incomplete for r5 
+       behaves better than neq (in eclipse).
+
+
+===============================================================================
+PROOF
+===============================================================================
+
+proof(+*MATRIX, +*OPTIONLIST)
+
+proof(MATRIX) :- proof(MATRIX,[]).
+
+	MATRIX - like the MATRIX argument of cm/3, i.e. 
+	list_of_clauses | abstraction_term-list_of_clauses.
+	 
+
+
+PROOF OPTIONS
+=============
+
+t(T)    - T is unified with list of abstraction terms.
+p(P)    - P is unified with the proof tree.
+d(N)    - N is the mindepth for the iterative deepening search 
+          (default 0).
+i(I)    - I is the increment for the iterative deepening search.
+          - default: increment by 1
+          - 0 for automatic increment 
+          - a number (? works only with the 'inc' cm option)
+          - dyna(ThresholdFactor,IncrementFactor,ThresholdTime,Thresholddepth,DefaultIncrement)
+m(N)    - N is the maximal depth for the iterative deepening search 
+          (-1 for no restriction) (default -1).
+
+[cq    - "choose query" - choose a single clause from the query as
+         start clause (default: all clauses in query will be attempted
+         as start clauses). Selection criteria [for now]: 1. clause containing
+         only negative literals (ie. positive query), 2. short length.
+         [this is rather arbitray, needs work, literature?]
+         [*** low connectivity might be a criterion ***]
+         [*** probably obsoleted by choose_query during nf trafo, 
+	      with a special literal query(...), see util_cm.pl]
+
+run_module(Module) - module in which the proof task will be run, default:
+         runcm.  Must be supplied with the same value as option to cm/3.
+
+t(T) and p(P) require compilation (cm/3) with the t rsp. p option to
+work, compilation with these options however requires not t(T) nor
+p(P).
+
+
+Proof Representation
+====================
+
+Constructors:
+
+<proof> = q(<subproofs>)                  % "root" (query)
+<subproof> = e(<literal>, <subproofs>) |  % extension step 
+             r(<literal>)                 % reduction step
+	     b(<fact>)                    % builtin (Prolog call)
+
+<subproofs> is a (possibly empty) list of subproofs
+
+
+Abstraction Terms
+=================
+
+A means to obtain indefinite answers. The list of abstraction terms
+contains all instances of the abstraction term used in the proof.
+
+===============================================================================
+
+depth_bound_reached/0
+
+:- set_stream(cm_info, output).
+:- set_stream(cm_info, null).
+
+===============================================================================
+UTILITIES IN CM.PL
+===============================================================================
+ 
+describe_i
+
+	writes a description of current cm_options and a schematic
+	description of corresponding i structures:
+	d1, d2 	- depth in, out
+	a 	- ancestors
+	t1, t2 	- abstraction term in, out
+	p	- proof tree
+	kb	- kb identifier
+	
+
+===============================================================================
+UTILITIES AROUND CM
+==============================================================================
+
+[Several newer utilities - see util_cm.pl]
+
+clean_kb(+Module) 
+
+        Abolishes the predicates of the proof task currently compiled into
+        Module. Should be called before compiling a new proof task into Module.
+
+mv(*Term,+*Query)
+
+	Succeds just once for each different (modulo variant)
+	instantiation of Term at calling Query.
+
+
+mvp(*Term,+*Query) 	
+
+	Like mv/2 but Term is expected to be a list and considered
+	different modulo variant and set equality (using prolog's sort).
+
+
+
+===============================================================================
+NF
+===============================================================================
+
+
+df(+FORMULA,-DEFINITORIAL,-LITERAL)
+
+	Returns a definitorial formula DEFINITORIAL with
+	top-level predicate LITERAL for FORMULA.
+	
+
+cnf(+FORMULA,-MATRIX), dnf(+FORMULA,-MATRIX)
+
+	MATRIX is a cnf rsp. dnf of FORMULA.
+
+	MATRIX is a list of clauses as required by cm/3, however it
+	might be empty or contain empty clauses.
+	
+	Performs taut,subs,mult and unit reductions (propostional
+	comparision via ==).
+
+
+skrem(+*MATRIX1,-MATRIX2)
+	
+	remove unneccessary arguments from skolem functions
+
+	should works with a MATRIX1 returned by cnf/2, dnf/2
+
+	will probably be added to cnf/2, dnf/2
+
+ 	(might effect unification of variables in different clauses 
+	which does  not influence semantics)
+
+set_sk_counter(N),
+	
+	set gensym counter for skolem functions to given number
+ 
+
+SYNTAX OF FORMULAS
+------------------
+
+<->, ->, <-, ;, ,, ~,
+all(x,_),ex(x,_),
+all([x1,...xn],_)
+ex([x1,...xn],_)
+
+constants are the globally free atomics.
+x in quantor(x,p) can be a single atomic or a non-empty list of those.
+
+
+RESERVED NAMES
+--------------
+
+skN, N an integer, are used as skolem functions
+p_N, N an integer, are used as definitorial predicates by df/3
+
+
+===============================================================================
+PRETTY
+===============================================================================
+
+pp(X)
+
+	Prettyprint X.
+
+pp(X, Columns)
+
+	Prettyprint X with a width of Columns columns. Default is 80.
+
+
+
+
+
+
+
+
+

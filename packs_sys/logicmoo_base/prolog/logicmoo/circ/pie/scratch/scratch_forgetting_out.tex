@@ -1,0 +1,382 @@
+\documentclass[a4paper]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{imakeidx}
+\usepackage[hidelinks]{hyperref}
+%% A screen friendly geometry:	    
+\usepackage[paper=a5paper,scale=0.9]{geometry}
+%% PPL Setup
+	   
+\newcommand{\assign}{\mathrel{\mathop:}=}
+\newcommand{\concat}{\mathrel{+\!+}}
+	    
+\newcommand{\f}[1]{\mathsf{#1}}
+\newcommand{\true}{\top}
+\newcommand{\false}{\bot}
+\newcommand{\imp}{\rightarrow}
+\newcommand{\revimp}{\leftarrow}
+\newcommand{\equi}{\leftrightarrow}
+\newcommand{\entails}{\models}	    
+\newcommand{\eqdef}{\; 
+\raisebox{-0.1ex}[0mm]{$ \stackrel{\raisebox{-0.2ex}{\tiny 
+\textnormal{def}}}{=} $}\; }
+\newcommand{\iffdef}{\n{iff}_{\mbox{\scriptsize \textnormal{def}}}}
+
+\newcommand{\pplmacro}[1]{\mathit{#1}}
+\newcommand{\ppldefmacro}[1]{\mathit{#1}}
+\newcommand{\pplparam}[1]{\mathit{#1}}
+\newcommand{\pplparamidx}[2]{\mathit{#1}_{#2}}
+\newcommand{\pplparamplain}[1]{#1}
+\newcommand{\pplparamplainidx}[2]{#1_{#2}}
+\newcommand{\pplparamsup}[2]{\mathit{#1}^{#2}}
+\newcommand{\pplparamsupidx}[3]{\mathit{#1}^{#2}_{#3}}
+\newcommand{\pplparamplainsup}[2]{#1^{#2}}
+\newcommand{\pplparamplainsupidx}[3]{#1^{#2}_{#3}}
+\newcommand{\pplparamnum}[1]{\mathit{X}_{#1}}
+
+%%	    
+%% We use @startsection just to obtain reduced vertical spacing above
+%% macro headers which are immediately after other headers, e.g. of sections
+%%	    
+\makeatletter%
+\newcounter{entry}%
+\newcommand{\entrymark}[1]{}%
+\newcommand\entryhead{%
+\@startsection{entry}{10}{\z@}{12pt plus 2pt minus 2pt}{0pt}{}}%
+\makeatother
+	    
+\newcommand{\pplkbBefore}
+{\entryhead*{}%
+\setlength{\arraycolsep}{0pt}%
+\pagebreak[0]%
+\begin{samepage}%
+\noindent%
+\rule[0.5pt]{\textwidth}{2pt}\\%
+\noindent}
+
+% \newcommand{\pplkbDefType}[1]{\hspace{\fill}{{[}#1{]}\\}}
+
+\newcommand{\pplkbBetween}
+{\setlength{\arraycolsep}{3pt}%
+\\\rule[3pt]{\textwidth}{1pt}%
+\par\nopagebreak\noindent Defined as\begin{center}}
+
+\newcommand{\pplkbAfter}{\end{center}\end{samepage}\noindent}
+
+\newcommand{\pplkbBodyBefore}{\par\noindent where\begin{center}}
+\newcommand{\pplkbBodyAfter}{\end{center}}
+
+\newcommand{\pplkbFreePredicates}[1]{\f{free\_predicates}(#1)}
+% \newcommand{\pplkbRenameFreeOccurrences}[3]{\f{rename\_free\_occurrences}(#1,#2,#3)}
+
+\newcommand{\pplIsValid}[1]{\noindent This formula is valid: $#1$\par}
+\newcommand{\pplIsNotValid}[1]{\noindent This formula is not valid: $#1$\par}	    
+\newcommand{\pplFailedToValidate}[1]{\noindent Failed to validate this formula: $#1$\par}
+
+\newcounter{def}
+	    
+\makeindex
+
+\begin{document}
+%
+% Doc at position 0
+%
+\title{Forgetting and Projection}
+\date{Revision: March 3, 2017; Rendered: \today}
+\maketitle
+
+\noindent Definitions of projection, literal forgetting, literal projection,
+and approximate versions of the latter two.  Formalized with the
+\href{http://cs.christophwernhard.com/pie/}{\textit{PIE}} system.
+%
+% Doc at position 436
+%
+\section{Literal Forgetting}
+%
+% Statement at position 473
+%
+\pplkbBefore
+\index{forglit(P-p,F)@$\ppldefmacro{forglit}(\pplparamplain{P}\textrm{-}\mathsf{p},\pplparamplain{F})$}$\begin{array}{lllll}
+\ppldefmacro{forglit}(\pplparamplain{P}\textrm{-}\mathsf{p},\pplparamplain{F})
+\end{array}
+$\pplkbBetween
+$\begin{array}{lllll}
+\exists \pplparamplain{Q} \, (\pplparamplain{G} \land  \forall \pplparamplain{X} \, (\pplparamplainidx{P}{X} \imp  \pplparamplainidx{Q}{X})),
+\end{array}
+$\pplkbAfter
+\pplkbBodyBefore
+$
+\begin{array}{l}\pplparamplain{G} \assign \pplparamplain{F}[\pplparamplain{P} \mapsto \pplparamplain{Q}],\\
+\pplparamplain{N} \assign \mathrm{arity\ of }\; \pplparamplain{P}\; \mathrm{ in }\; \pplparamplain{F},\\
+\pplparamplain{X} \assign x_1,\ldots,x_{\pplparamplain{N}},\\
+\pplparamplainidx{Q}{X} \assign \pplparamplain{Q}(\pplparamplain{X}),\\
+\pplparamplainidx{P}{X} \assign \pplparamplain{P}(\pplparamplain{X}).
+
+\end{array}$\pplkbBodyAfter
+%
+% Statement at position 680
+%
+\pplkbBefore
+\index{forglit(P-n,F)@$\ppldefmacro{forglit}(\pplparamplain{P}\textrm{-}\mathsf{n},\pplparamplain{F})$}$\begin{array}{lllll}
+\ppldefmacro{forglit}(\pplparamplain{P}\textrm{-}\mathsf{n},\pplparamplain{F})
+\end{array}
+$\pplkbBetween
+$\begin{array}{lllll}
+\exists \pplparamplain{Q} \, (\pplparamplain{G} \land  \forall \pplparamplain{X} \, (\pplparamplainidx{Q}{X} \imp  \pplparamplainidx{P}{X})),
+\end{array}
+$\pplkbAfter
+\pplkbBodyBefore
+$
+\begin{array}{l}\pplparamplain{G} \assign \pplparamplain{F}[\pplparamplain{P} \mapsto \pplparamplain{Q}],\\
+\pplparamplain{N} \assign \mathrm{arity\ of }\; \pplparamplain{P}\; \mathrm{ in }\; \pplparamplain{F},\\
+\pplparamplain{X} \assign x_1,\ldots,x_{\pplparamplain{N}},\\
+\pplparamplainidx{Q}{X} \assign \pplparamplain{Q}(\pplparamplain{X}),\\
+\pplparamplainidx{P}{X} \assign \pplparamplain{P}(\pplparamplain{X}).
+
+\end{array}$\pplkbBodyAfter
+%
+% Statement at position 887
+%
+\pplkbBefore
+\index{forglit(P-pn,F)@$\ppldefmacro{forglit}(\pplparamplain{P}\textrm{-}\mathsf{pn},\pplparamplain{F})$}$\begin{array}{lllll}
+\ppldefmacro{forglit}(\pplparamplain{P}\textrm{-}\mathsf{pn},\pplparamplain{F})
+\end{array}
+$\pplkbBetween
+$\begin{array}{lllll}
+\exists \pplparamplain{P} \, \pplparamplain{F}.
+\end{array}
+$\pplkbAfter
+%
+% Statement at position 924
+%
+\pplkbBefore
+\index{forglit([P-Ps],F)@$\ppldefmacro{forglit}({[}\pplparamplain{P}\vert\pplparam{Ps}{]},\pplparamplain{F})$}$\begin{array}{lllll}
+\ppldefmacro{forglit}({[}\pplparamplain{P}\vert\pplparam{Ps}{]},\pplparamplain{F})
+\end{array}
+$\pplkbBetween
+$\begin{array}{lllll}
+\pplmacro{forglit}(\pplparamplain{P},\pplmacro{forglit}(\pplparam{Ps},\pplparamplain{F})).
+\end{array}
+$\pplkbAfter
+%
+% Statement at position 979
+%
+\pplkbBefore
+\index{forglit([],F)@$\ppldefmacro{forglit}({[]},\pplparamplain{F})$}$\begin{array}{lllll}
+\ppldefmacro{forglit}({[]},\pplparamplain{F})
+\end{array}
+$\pplkbBetween
+$\begin{array}{lllll}
+\pplparamplain{F}.
+\end{array}
+$\pplkbAfter
+%
+% Doc at position 1006
+%
+\subsection{Literal Forgetting: Examples}
+%
+% Statement at position 1056
+%
+\pplkbBefore
+\index{ex_basic@$\ppldefmacro{ex\_basic}$}$\begin{array}{lllll}
+\ppldefmacro{ex\_basic}
+\end{array}
+$\pplkbBetween
+$\begin{array}{lllll}
+\forall \mathit{x} \, (\mathsf{a}\mathit{x} \imp  \mathsf{p}\mathit{x}) \land  \forall \mathit{x} \, (\mathsf{p}\mathit{x} \imp  \mathsf{b}\mathit{x}).
+\end{array}
+$\pplkbAfter
+
+\noindent Input: $\pplmacro{forglit}({[}\mathsf{p}\textrm{-}\mathsf{p}{]},\pplmacro{ex\_basic}).$\\
+\noindent Result of elimination:
+\[\begin{array}{lllll}
+\forall \mathit{x} \, (\mathsf{b}\mathit{x} \lor  (\lnot  \mathsf{a}\mathit{x} \land  \lnot  \mathsf{p}\mathit{x})).
+\end{array}
+\]
+
+\noindent Input: $\pplmacro{forglit}({[}\mathsf{p}\textrm{-}\mathsf{n}{]},\pplmacro{ex\_basic}).$\\
+\noindent Result of elimination:
+\[\begin{array}{lllll}
+\forall \mathit{x} \, (\mathsf{a}\mathit{x} \imp  \mathsf{b}\mathit{x} \land  \mathsf{p}\mathit{x}).
+\end{array}
+\]
+
+\noindent Input: $\pplmacro{forglit}({[}\mathsf{p}\textrm{-}\mathsf{p},\mathsf{p}\textrm{-}\mathsf{n}{]},\pplmacro{ex\_basic}).$\\
+\noindent Result of elimination:
+\[\begin{array}{lllll}
+\forall \mathit{x} \, (\mathsf{a}\mathit{x} \imp  \mathsf{b}\mathit{x}).
+\end{array}
+\]
+%
+% Doc at position 1376
+%
+\section{Projection}
+%
+% Statement at position 1405
+%
+\pplkbBefore
+\index{proj(S,F)@$\ppldefmacro{proj}(\pplparamplain{S},\pplparamplain{F})$}$\begin{array}{lllll}
+\ppldefmacro{proj}(\pplparamplain{S},\pplparamplain{F})
+\end{array}
+$\pplkbBetween
+$\begin{array}{lllll}
+\exists \pplparamplainidx{S}{1} \, \pplparamplain{F},
+\end{array}
+$\pplkbAfter
+\pplkbBodyBefore
+$
+\begin{array}{l}\pplparamplainidx{S}{2} \assign \pplkbFreePredicates{\pplparamplain{F}},\\
+\pplparamplainidx{S}{1} \assign \pplparamplainidx{S}{2} \setminus \pplparamplain{S}.
+
+\end{array}$\pplkbBodyAfter
+%
+% Statement at position 1494
+%
+\pplkbBefore
+\index{projlit(S,F)@$\ppldefmacro{projlit}(\pplparamplain{S},\pplparamplain{F})$}$\begin{array}{lllll}
+\ppldefmacro{projlit}(\pplparamplain{S},\pplparamplain{F})
+\end{array}
+$\pplkbBetween
+$\begin{array}{lllll}
+\pplmacro{forglit}(\pplparamplainidx{S}{1},\pplparamplain{F}),
+\end{array}
+$\pplkbAfter
+\pplkbBodyBefore
+$
+\begin{array}{l}\pplparamplainidx{S}{2} \assign \pplparamplain{S}\; \mathrm{(in\ different\ representation)},\\
+\pplparamplainidx{S}{3} \assign \pplkbFreePredicates{\pplparamplain{F}}\; \mathrm{in\ scope\ representation} ,\\
+\pplparamplainidx{S}{4} \assign \pplparamplainidx{S}{3} \setminus \pplparamplainidx{S}{2},\\
+\pplparamplainidx{S}{5} \assign \pplparamplainidx{S}{4}\; \mathrm{closed\ under\ duals},\\
+\pplparamplainidx{S}{6} \assign \pplparamplainidx{S}{5} \setminus \pplparamplainidx{S}{2},\\
+\mathrm{scse\_to\_scsp(S6,S1)}.
+
+\end{array}$\pplkbBodyAfter
+%
+% Doc at position 1695
+%
+Here we subtract, add duals and subtract again to avoid \emph{literal}
+forgetting induced by occurences in the formula in just a specific
+polarity. Semantically we could just subtract as realized in the following
+version:
+
+%
+% Statement at position 1926
+%
+\pplkbBefore
+\index{projlit_s(S,F)@$\ppldefmacro{projlit_{s}}(\pplparamplain{S},\pplparamplain{F})$}$\begin{array}{lllll}
+\ppldefmacro{projlit_{s}}(\pplparamplain{S},\pplparamplain{F})
+\end{array}
+$\pplkbBetween
+$\begin{array}{lllll}
+\pplmacro{forglit}(\pplparamplainidx{S}{1},\pplparamplain{F}),
+\end{array}
+$\pplkbAfter
+\pplkbBodyBefore
+$
+\begin{array}{l}\pplparamplainidx{S}{2} \assign \pplparamplain{S}\; \mathrm{(in\ different\ representation)},\\
+\pplparamplainidx{S}{3} \assign \pplkbFreePredicates{\pplparamplain{F}}\; \mathrm{in\ scope\ representation} ,\\
+\pplparamplainidx{S}{4} \assign \pplparamplainidx{S}{3} \setminus \pplparamplainidx{S}{2},\\
+\mathrm{scse\_to\_scsp(S4,S1)}.
+
+\end{array}$\pplkbBodyAfter
+%
+% Doc at position 2157
+%
+\section{Approximate Version of Literal Forgetting}
+
+Existentially quantifying upon all occurrences with specified polarity yields
+a possibly weaker formula than literal forgetting that might be simpler to
+process (see application in scratch\_definientia). Also a version of
+projection, based on the weakened forgetting is specified.
+%
+% Statement at position 2499
+%
+\pplkbBefore
+\index{lemma_projlit(S,F)@$\ppldefmacro{lemma\_projlit}(\pplparamplain{S},\pplparamplain{F})$}$\begin{array}{lllll}
+\ppldefmacro{lemma\_projlit}(\pplparamplain{S},\pplparamplain{F})
+\end{array}
+$\pplkbBetween
+$\begin{array}{lllll}
+\pplmacro{lemma\_forglit}(\pplparamplainidx{S}{1},\pplparamplain{F}),
+\end{array}
+$\pplkbAfter
+\pplkbBodyBefore
+$
+\begin{array}{l}\pplparamplainidx{S}{2} \assign \pplparamplain{S}\; \mathrm{(in\ different\ representation)},\\
+\pplparamplainidx{S}{3} \assign \pplkbFreePredicates{\pplparamplain{F}}\; \mathrm{in\ scope\ representation} ,\\
+\pplparamplainidx{S}{4} \assign \pplparamplainidx{S}{3} \setminus \pplparamplainidx{S}{2},\\
+\mathrm{scse\_to\_scsp(S4,S1)}.
+
+\end{array}$\pplkbBodyAfter
+%
+% Statement at position 2660
+%
+\pplkbBefore
+\index{lemma_forglit(P-p,F)@$\ppldefmacro{lemma\_forglit}(\pplparamplain{P}\textrm{-}\mathsf{p},\pplparamplain{F})$}$\begin{array}{lllll}
+\ppldefmacro{lemma\_forglit}(\pplparamplain{P}\textrm{-}\mathsf{p},\pplparamplain{F})
+\end{array}
+$\pplkbBetween
+$\begin{array}{lllll}
+\exists \pplparamplain{Q} \, \pplparamplain{G},
+\end{array}
+$\pplkbAfter
+\pplkbBodyBefore
+$
+\begin{array}{l}\pplparamplain{G} \assign \pplparamplain{F}[\pplparamplain{P}\textrm{-}\f{p} \mapsto \pplparamplain{Q}].
+
+\end{array}$\pplkbBodyAfter
+%
+% Statement at position 2747
+%
+\pplkbBefore
+\index{lemma_forglit(P-n,F)@$\ppldefmacro{lemma\_forglit}(\pplparamplain{P}\textrm{-}\mathsf{n},\pplparamplain{F})$}$\begin{array}{lllll}
+\ppldefmacro{lemma\_forglit}(\pplparamplain{P}\textrm{-}\mathsf{n},\pplparamplain{F})
+\end{array}
+$\pplkbBetween
+$\begin{array}{lllll}
+\exists \pplparamplain{Q} \, \pplparamplain{G},
+\end{array}
+$\pplkbAfter
+\pplkbBodyBefore
+$
+\begin{array}{l}\pplparamplain{G} \assign \pplparamplain{F}[\pplparamplain{P}\textrm{-}\f{n} \mapsto \pplparamplain{Q}].
+
+\end{array}$\pplkbBodyAfter
+%
+% Statement at position 2834
+%
+\pplkbBefore
+\index{lemma_forglit(P-pn,F)@$\ppldefmacro{lemma\_forglit}(\pplparamplain{P}\textrm{-}\mathsf{pn},\pplparamplain{F})$}$\begin{array}{lllll}
+\ppldefmacro{lemma\_forglit}(\pplparamplain{P}\textrm{-}\mathsf{pn},\pplparamplain{F})
+\end{array}
+$\pplkbBetween
+$\begin{array}{lllll}
+\exists \pplparamplain{P} \, \pplparamplain{F}.
+\end{array}
+$\pplkbAfter
+%
+% Statement at position 2877
+%
+\pplkbBefore
+\index{lemma_forglit([P-Ps],F)@$\ppldefmacro{lemma\_forglit}({[}\pplparamplain{P}\vert\pplparam{Ps}{]},\pplparamplain{F})$}$\begin{array}{lllll}
+\ppldefmacro{lemma\_forglit}({[}\pplparamplain{P}\vert\pplparam{Ps}{]},\pplparamplain{F})
+\end{array}
+$\pplkbBetween
+$\begin{array}{lllll}
+\pplmacro{lemma\_forglit}(\pplparamplain{P},\pplmacro{lemma\_forglit}(\pplparam{Ps},\pplparamplain{F})).
+\end{array}
+$\pplkbAfter
+%
+% Statement at position 2950
+%
+\pplkbBefore
+\index{lemma_forglit([],F)@$\ppldefmacro{lemma\_forglit}({[]},\pplparamplain{F})$}$\begin{array}{lllll}
+\ppldefmacro{lemma\_forglit}({[]},\pplparamplain{F})
+\end{array}
+$\pplkbBetween
+$\begin{array}{lllll}
+\pplparamplain{F}.
+\end{array}
+$\pplkbAfter
+\printindex
+\end{document}

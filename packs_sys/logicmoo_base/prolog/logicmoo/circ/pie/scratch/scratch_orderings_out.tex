@@ -1,0 +1,397 @@
+\documentclass[a4paper]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{imakeidx}
+\usepackage[hidelinks]{hyperref}
+%% A screen friendly geometry:	    
+\usepackage[paper=a5paper,scale=0.9]{geometry}
+%% PPL Setup
+	   
+\newcommand{\assign}{\mathrel{\mathop:}=}
+\newcommand{\concat}{\mathrel{+\!+}}
+	    
+\newcommand{\f}[1]{\mathsf{#1}}
+\newcommand{\true}{\top}
+\newcommand{\false}{\bot}
+\newcommand{\imp}{\rightarrow}
+\newcommand{\revimp}{\leftarrow}
+\newcommand{\equi}{\leftrightarrow}
+\newcommand{\entails}{\models}	    
+\newcommand{\eqdef}{\; 
+\raisebox{-0.1ex}[0mm]{$ \stackrel{\raisebox{-0.2ex}{\tiny 
+\textnormal{def}}}{=} $}\; }
+\newcommand{\iffdef}{\n{iff}_{\mbox{\scriptsize \textnormal{def}}}}
+
+\newcommand{\pplmacro}[1]{\mathit{#1}}
+\newcommand{\ppldefmacro}[1]{\mathit{#1}}
+\newcommand{\pplparam}[1]{\mathit{#1}}
+\newcommand{\pplparamidx}[2]{\mathit{#1}_{#2}}
+\newcommand{\pplparamplain}[1]{#1}
+\newcommand{\pplparamplainidx}[2]{#1_{#2}}
+\newcommand{\pplparamsup}[2]{\mathit{#1}^{#2}}
+\newcommand{\pplparamsupidx}[3]{\mathit{#1}^{#2}_{#3}}
+\newcommand{\pplparamplainsup}[2]{#1^{#2}}
+\newcommand{\pplparamplainsupidx}[3]{#1^{#2}_{#3}}
+\newcommand{\pplparamnum}[1]{\mathit{X}_{#1}}
+
+%%	    
+%% We use @startsection just to obtain reduced vertical spacing above
+%% macro headers which are immediately after other headers, e.g. of sections
+%%	    
+\makeatletter%
+\newcounter{entry}%
+\newcommand{\entrymark}[1]{}%
+\newcommand\entryhead{%
+\@startsection{entry}{10}{\z@}{12pt plus 2pt minus 2pt}{0pt}{}}%
+\makeatother
+	    
+\newcommand{\pplkbBefore}
+{\entryhead*{}%
+\setlength{\arraycolsep}{0pt}%
+\pagebreak[0]%
+\begin{samepage}%
+\noindent%
+\rule[0.5pt]{\textwidth}{2pt}\\%
+\noindent}
+
+% \newcommand{\pplkbDefType}[1]{\hspace{\fill}{{[}#1{]}\\}}
+
+\newcommand{\pplkbBetween}
+{\setlength{\arraycolsep}{3pt}%
+\\\rule[3pt]{\textwidth}{1pt}%
+\par\nopagebreak\noindent Defined as\begin{center}}
+
+\newcommand{\pplkbAfter}{\end{center}\end{samepage}\noindent}
+
+\newcommand{\pplkbBodyBefore}{\par\noindent where\begin{center}}
+\newcommand{\pplkbBodyAfter}{\end{center}}
+
+\newcommand{\pplkbFreePredicates}[1]{\f{free\_predicates}(#1)}
+% \newcommand{\pplkbRenameFreeOccurrences}[3]{\f{rename\_free\_occurrences}(#1,#2,#3)}
+
+\newcommand{\pplIsValid}[1]{\noindent This formula is valid: $#1$\par}
+\newcommand{\pplIsNotValid}[1]{\noindent This formula is not valid: $#1$\par}	    
+\newcommand{\pplFailedToValidate}[1]{\noindent Failed to validate this formula: $#1$\par}
+
+\newcounter{def}
+	    
+\makeindex
+
+\begin{document}
+%
+% Doc at position 0
+%
+\title{Axiomatizations of Orderings}
+\date{Revision: August 24, 2018; Rendered: \today}
+\maketitle
+
+\noindent Formalized with the
+\href{http://cs.christophwernhard.com/pie/}{\textit{PIE}} system.
+%
+% Doc at position 492
+%
+\section{General Properties of Binary Relations}
+%
+% Statement at position 549
+%
+\pplkbBefore
+\index{is_reflexive(P)@$\ppldefmacro{is\_reflexive}(\pplparamplain{P})$}$\begin{array}{lllll}
+\ppldefmacro{is\_reflexive}(\pplparamplain{P})
+\end{array}
+$\pplkbBetween
+$\begin{array}{lllll}
+\forall \mathit{x} \, \pplparamplain{P}\mathit{x}\mathit{x}.
+\end{array}
+$\pplkbAfter
+%
+% Statement at position 605
+%
+\pplkbBefore
+\index{is_irreflexive(P)@$\ppldefmacro{is\_irreflexive}(\pplparamplain{P})$}$\begin{array}{lllll}
+\ppldefmacro{is\_irreflexive}(\pplparamplain{P})
+\end{array}
+$\pplkbBetween
+$\begin{array}{lllll}
+\forall \mathit{x} \, \lnot  \pplparamplain{P}\mathit{x}\mathit{x}.
+\end{array}
+$\pplkbAfter
+%
+% Statement at position 664
+%
+\pplkbBefore
+\index{is_symmetric(P)@$\ppldefmacro{is\_symmetric}(\pplparamplain{P})$}$\begin{array}{lllll}
+\ppldefmacro{is\_symmetric}(\pplparamplain{P})
+\end{array}
+$\pplkbBetween
+$\begin{array}{lllll}
+\forall \mathit{x}\mathit{y} \, (\pplparamplain{P}\mathit{x}\mathit{y} \imp  \pplparamplain{P}\mathit{y}\mathit{x}).
+\end{array}
+$\pplkbAfter
+%
+% Statement at position 730
+%
+\pplkbBefore
+\index{is_asymmetric(P)@$\ppldefmacro{is\_asymmetric}(\pplparamplain{P})$}$\begin{array}{lllll}
+\ppldefmacro{is\_asymmetric}(\pplparamplain{P})
+\end{array}
+$\pplkbBetween
+$\begin{array}{lllll}
+\forall \mathit{x}\mathit{y} \, (\pplparamplain{P}\mathit{x}\mathit{y} \imp  \lnot  \pplparamplain{P}\mathit{y}\mathit{x}).
+\end{array}
+$\pplkbAfter
+%
+% Statement at position 798
+%
+\pplkbBefore
+\index{is_antisymmetric(P)@$\ppldefmacro{is\_antisymmetric}(\pplparamplain{P})$}$\begin{array}{lllll}
+\ppldefmacro{is\_antisymmetric}(\pplparamplain{P})
+\end{array}
+$\pplkbBetween
+$\begin{array}{lllll}
+\forall \mathit{x}\mathit{y} \, (\pplparamplain{P}\mathit{x}\mathit{y} \land  \pplparamplain{P}\mathit{y}\mathit{x} \imp  \mathit{x}=\mathit{y}).
+\end{array}
+$\pplkbAfter
+%
+% Statement at position 873
+%
+\pplkbBefore
+\index{is_total(P)@$\ppldefmacro{is\_total}(\pplparamplain{P})$}$\begin{array}{lllll}
+\ppldefmacro{is\_total}(\pplparamplain{P})
+\end{array}
+$\pplkbBetween
+$\begin{array}{lllll}
+\forall \mathit{x}\mathit{y} \, (\pplparamplain{P}\mathit{x}\mathit{y} \lor  \pplparamplain{P}\mathit{y}\mathit{x}).
+\end{array}
+$\pplkbAfter
+%
+% Statement at position 934
+%
+\pplkbBefore
+\index{is_transitive(P)@$\ppldefmacro{is\_transitive}(\pplparamplain{P})$}$\begin{array}{lllll}
+\ppldefmacro{is\_transitive}(\pplparamplain{P})
+\end{array}
+$\pplkbBetween
+$\begin{array}{lllll}
+\forall \mathit{x}\mathit{y}\mathit{z} \, (\pplparamplain{P}\mathit{x}\mathit{y} \land  \pplparamplain{P}\mathit{y}\mathit{z} &&&&\; \imp \\
+\hphantom{\forall \mathit{x}\mathit{y}\mathit{z} \, (} \pplparamplain{P}\mathit{x}\mathit{z}).
+\end{array}
+$\pplkbAfter
+%
+% Statement at position 1007
+%
+\pplkbBefore
+\index{is_trichotomous(P)@$\ppldefmacro{is\_trichotomous}(\pplparamplain{P})$}$\begin{array}{lllll}
+\ppldefmacro{is\_trichotomous}(\pplparamplain{P})
+\end{array}
+$\pplkbBetween
+$\begin{array}{lllll}
+\forall \mathit{x}\mathit{y} \, ((\pplparamplain{P}\mathit{x}\mathit{y} \land  \lnot  \pplparamplain{P}\mathit{y}\mathit{x} \land  \mathit{x}\neq \mathit{y}) &&&&\; \lor \\
+\hphantom{\forall \mathit{x}\mathit{y} \, (} (\lnot  \pplparamplain{P}\mathit{x}\mathit{y} \land  \pplparamplain{P}\mathit{y}\mathit{x} \land  \mathit{x}\neq \mathit{y}) &&&&\; \lor \\
+\hphantom{\forall \mathit{x}\mathit{y} \, (} (\lnot  \pplparamplain{P}\mathit{x}\mathit{y} \land  \lnot  \pplparamplain{P}\mathit{y}\mathit{x} \land  \mathit{x}=\mathit{y})).
+\end{array}
+$\pplkbAfter
+%
+% Statement at position 1133
+%
+\pplkbBefore
+\index{is_connected(P)@$\ppldefmacro{is\_connected}(\pplparamplain{P})$}$\begin{array}{lllll}
+\ppldefmacro{is\_connected}(\pplparamplain{P})
+\end{array}
+$\pplkbBetween
+$\begin{array}{lllll}
+\forall \mathit{x}\mathit{y} \, (\pplparamplain{P}\mathit{x}\mathit{y} \lor  \pplparamplain{P}\mathit{y}\mathit{x} \lor  \mathit{x}=\mathit{y}).
+\end{array}
+$\pplkbAfter
+%
+% Doc at position 1204
+%
+\section{Orderings of Binary Relations}
+%
+% Statement at position 1252
+%
+\pplkbBefore
+\index{is_total_order(P)@$\ppldefmacro{is\_total\_order}(\pplparamplain{P})$}$\begin{array}{lllll}
+\ppldefmacro{is\_total\_order}(\pplparamplain{P})
+\end{array}
+$\pplkbBetween
+$\begin{array}{lllll}
+\pplmacro{is\_antisymmetric}(\pplparamplain{P}) \land  \pplmacro{is\_transitive}(\pplparamplain{P}) \land  \pplmacro{is\_total}(\pplparamplain{P}).
+\end{array}
+$\pplkbAfter
+%
+% Statement at position 1333
+%
+\pplkbBefore
+\index{is_strict_total_order(P)@$\ppldefmacro{is\_strict\_total\_order}(\pplparamplain{P})$}$\begin{array}{lllll}
+\ppldefmacro{is\_strict\_total\_order}(\pplparamplain{P})
+\end{array}
+$\pplkbBetween
+$\begin{array}{lllll}
+\pplmacro{is\_irreflexive}(\pplparamplain{P}) \land  \pplmacro{is\_transitive}(\pplparamplain{P}) \land  \pplmacro{is\_connected}(\pplparamplain{P}).
+\end{array}
+$\pplkbAfter
+%
+% Statement at position 1424
+%
+\pplkbBefore
+\index{is_strict_total_order_v2(P)@$\ppldefmacro{is\_strict\_total\_order\_v_{2}}(\pplparamplain{P})$}$\begin{array}{lllll}
+\ppldefmacro{is\_strict\_total\_order\_v_{2}}(\pplparamplain{P})
+\end{array}
+$\pplkbBetween
+$\begin{array}{lllll}
+\pplmacro{is\_transitive}(\pplparamplain{P}) \land  \pplmacro{is\_trichotomous}(\pplparamplain{P}).
+\end{array}
+$\pplkbAfter
+%
+% Statement at position 1501
+%
+\pplkbBefore
+\index{is_partial_order(P)@$\ppldefmacro{is\_partial\_order}(\pplparamplain{P})$}$\begin{array}{lllll}
+\ppldefmacro{is\_partial\_order}(\pplparamplain{P})
+\end{array}
+$\pplkbBetween
+$\begin{array}{lllll}
+\pplmacro{is\_antisymmetric}(\pplparamplain{P}) \land  \pplmacro{is\_transitive}(\pplparamplain{P}) \land  \pplmacro{is\_reflexive}(\pplparamplain{P}).
+\end{array}
+$\pplkbAfter
+%
+% Statement at position 1588
+%
+\pplkbBefore
+\index{is_strict_partial_order(P)@$\ppldefmacro{is\_strict\_partial\_order}(\pplparamplain{P})$}$\begin{array}{lllll}
+\ppldefmacro{is\_strict\_partial\_order}(\pplparamplain{P})
+\end{array}
+$\pplkbBetween
+$\begin{array}{lllll}
+\pplmacro{is\_irreflexive}(\pplparamplain{P}) \land  \pplmacro{is\_transitive}(\pplparamplain{P}).
+\end{array}
+$\pplkbAfter
+%
+% Doc at position 1663
+%
+Some properties of orderings, for testing with theorem provers.  Not all these
+problems are for all provers as easy as they seem -- see comments in the
+source.
+%
+% Statement at position 2068
+%
+\pplkbBefore
+\index{test_orderings_1@$\ppldefmacro{test\_orderings_{1}}$}$\begin{array}{lllll}
+\ppldefmacro{test\_orderings_{1}}
+\end{array}
+$\pplkbBetween
+$\begin{array}{lllll}
+\pplmacro{is\_asymmetric}(\mathsf{p}) \equi  \pplmacro{is\_antisymmetric}(\mathsf{p}) \land  \pplmacro{is\_irreflexive}(\mathsf{p}).
+\end{array}
+$\pplkbAfter
+%
+% Statement at position 2157
+%
+\pplkbBefore
+\index{test_orderings_2@$\ppldefmacro{test\_orderings_{2}}$}$\begin{array}{lllll}
+\ppldefmacro{test\_orderings_{2}}
+\end{array}
+$\pplkbBetween
+$\begin{array}{lllll}
+\pplmacro{is\_transitive}(\mathsf{p}) \imp  (\pplmacro{is\_asymmetric}(\mathsf{p}) \equi  \pplmacro{is\_irreflexive}(\mathsf{p})).
+\end{array}
+$\pplkbAfter
+%
+% Statement at position 2245
+%
+\pplkbBefore
+\index{test_orderings_3@$\ppldefmacro{test\_orderings_{3}}$}$\begin{array}{lllll}
+\ppldefmacro{test\_orderings_{3}}
+\end{array}
+$\pplkbBetween
+$\begin{array}{lllll}
+\pplmacro{is\_irreflexive}(\mathsf{p}) \land  \pplmacro{is\_transitive}(\mathsf{p}) &&&&\; \imp \\
+(\pplmacro{is\_connected}(\mathsf{p}) \equi  \pplmacro{is\_trichotomous}(\mathsf{p})).
+\end{array}
+$\pplkbAfter
+%
+% Statement at position 2352
+%
+\pplkbBefore
+\index{test_orderings_4@$\ppldefmacro{test\_orderings_{4}}$}$\begin{array}{lllll}
+\ppldefmacro{test\_orderings_{4}}
+\end{array}
+$\pplkbBetween
+$\begin{array}{lllll}
+\pplmacro{is\_strict\_total\_order\_v_{2}}(\mathsf{p}) \revimp  \pplmacro{is\_strict\_total\_order}(\mathsf{p}).
+\end{array}
+$\pplkbAfter
+%
+% Statement at position 2485
+%
+\pplkbBefore
+\index{test_orderings_5@$\ppldefmacro{test\_orderings_{5}}$}$\begin{array}{lllll}
+\ppldefmacro{test\_orderings_{5}}
+\end{array}
+$\pplkbBetween
+$\begin{array}{lllll}
+\pplmacro{is\_strict\_total\_order\_v_{2}}(\mathsf{p}) \imp  \pplmacro{is\_strict\_total\_order}(\mathsf{p}).
+\end{array}
+$\pplkbAfter
+%
+% Statement at position 2672
+%
+\pplkbBefore
+\index{test_orderings_6@$\ppldefmacro{test\_orderings_{6}}$}$\begin{array}{lllll}
+\ppldefmacro{test\_orderings_{6}}
+\end{array}
+$\pplkbBetween
+$\begin{array}{lllll}
+\pplmacro{is\_strict\_total\_order\_v_{2}}(\mathsf{p}) \equi  \pplmacro{is\_strict\_total\_order}(\mathsf{p}).
+\end{array}
+$\pplkbAfter
+%
+% Statement at position 2756
+%
+\pplkbBefore
+\index{test_orderings_7@$\ppldefmacro{test\_orderings_{7}}$}$\begin{array}{lllll}
+\ppldefmacro{test\_orderings_{7}}
+\end{array}
+$\pplkbBetween
+$\begin{array}{lllll}
+\pplmacro{is\_total\_order}(\mathsf{p}) \imp  \pplmacro{is\_partial\_order}(\mathsf{p}).
+\end{array}
+$\pplkbAfter
+%
+% Statement at position 2824
+%
+\pplkbBefore
+\index{test_orderings_8@$\ppldefmacro{test\_orderings_{8}}$}$\begin{array}{lllll}
+\ppldefmacro{test\_orderings_{8}}
+\end{array}
+$\pplkbBetween
+$\begin{array}{lllll}
+\pplmacro{is\_strict\_total\_order}(\mathsf{p}) \imp  \pplmacro{is\_strict\_partial\_order}(\mathsf{p}).
+\end{array}
+$\pplkbAfter
+%
+% Statement at position 2906
+%
+\pplkbBefore
+\index{test_orderings_9@$\ppldefmacro{test\_orderings_{9}}$}$\begin{array}{lllll}
+\ppldefmacro{test\_orderings_{9}}
+\end{array}
+$\pplkbBetween
+$\begin{array}{lllll}
+\pplmacro{is\_strict\_partial\_order}(\mathsf{p}) \imp  \lnot  \pplmacro{is\_partial\_order}(\mathsf{p}).
+\end{array}
+$\pplkbAfter
+%
+% Statement at position 2984
+%
+\pplkbBefore
+\index{test_orderings_10@$\ppldefmacro{test\_orderings_{10}}$}$\begin{array}{lllll}
+\ppldefmacro{test\_orderings_{10}}
+\end{array}
+$\pplkbBetween
+$\begin{array}{lllll}
+\pplmacro{is\_strict\_total\_order}(\mathsf{p}) \imp  \lnot  \pplmacro{is\_total\_order}(\mathsf{p}).
+\end{array}
+$\pplkbAfter
+\printindex
+\end{document}

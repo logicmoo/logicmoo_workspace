@@ -1,0 +1,534 @@
+\documentclass[a4paper]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{imakeidx}
+\usepackage[hidelinks]{hyperref}
+%% A screen friendly geometry:	    
+\usepackage[paper=a5paper,scale=0.9]{geometry}
+%% PPL Setup
+	   
+\newcommand{\assign}{\mathrel{\mathop:}=}
+\newcommand{\concat}{\mathrel{+\!+}}
+	    
+\newcommand{\f}[1]{\mathsf{#1}}
+\newcommand{\true}{\top}
+\newcommand{\false}{\bot}
+\newcommand{\imp}{\rightarrow}
+\newcommand{\revimp}{\leftarrow}
+\newcommand{\equi}{\leftrightarrow}
+\newcommand{\entails}{\models}	    
+\newcommand{\eqdef}{\; 
+\raisebox{-0.1ex}[0mm]{$ \stackrel{\raisebox{-0.2ex}{\tiny 
+\textnormal{def}}}{=} $}\; }
+\newcommand{\iffdef}{\n{iff}_{\mbox{\scriptsize \textnormal{def}}}}
+
+\newcommand{\pplmacro}[1]{\mathit{#1}}
+\newcommand{\ppldefmacro}[1]{\mathit{#1}}
+\newcommand{\pplparam}[1]{\mathit{#1}}
+\newcommand{\pplparamidx}[2]{\mathit{#1}_{#2}}
+\newcommand{\pplparamplain}[1]{#1}
+\newcommand{\pplparamplainidx}[2]{#1_{#2}}
+\newcommand{\pplparamsup}[2]{\mathit{#1}^{#2}}
+\newcommand{\pplparamsupidx}[3]{\mathit{#1}^{#2}_{#3}}
+\newcommand{\pplparamplainsup}[2]{#1^{#2}}
+\newcommand{\pplparamplainsupidx}[3]{#1^{#2}_{#3}}
+\newcommand{\pplparamnum}[1]{\mathit{X}_{#1}}
+
+%%	    
+%% We use @startsection just to obtain reduced vertical spacing above
+%% macro headers which are immediately after other headers, e.g. of sections
+%%	    
+\makeatletter%
+\newcounter{entry}%
+\newcommand{\entrymark}[1]{}%
+\newcommand\entryhead{%
+\@startsection{entry}{10}{\z@}{12pt plus 2pt minus 2pt}{0pt}{}}%
+\makeatother
+	    
+\newcommand{\pplkbBefore}
+{\entryhead*{}%
+\setlength{\arraycolsep}{0pt}%
+\pagebreak[0]%
+\begin{samepage}%
+\noindent%
+\rule[0.5pt]{\textwidth}{2pt}\\%
+\noindent}
+
+% \newcommand{\pplkbDefType}[1]{\hspace{\fill}{{[}#1{]}\\}}
+
+\newcommand{\pplkbBetween}
+{\setlength{\arraycolsep}{3pt}%
+\\\rule[3pt]{\textwidth}{1pt}%
+\par\nopagebreak\noindent Defined as\begin{center}}
+
+\newcommand{\pplkbAfter}{\end{center}\end{samepage}\noindent}
+
+\newcommand{\pplkbBodyBefore}{\par\noindent where\begin{center}}
+\newcommand{\pplkbBodyAfter}{\end{center}}
+
+\newcommand{\pplkbFreePredicates}[1]{\f{free\_predicates}(#1)}
+% \newcommand{\pplkbRenameFreeOccurrences}[3]{\f{rename\_free\_occurrences}(#1,#2,#3)}
+
+\newcommand{\pplIsValid}[1]{\noindent This formula is valid: $#1$\par}
+\newcommand{\pplIsNotValid}[1]{\noindent This formula is not valid: $#1$\par}	    
+\newcommand{\pplFailedToValidate}[1]{\noindent Failed to validate this formula: $#1$\par}
+
+\newcounter{def}
+	    
+\makeindex
+\usepackage{graphicx}
+\usepackage{amssymb}
+
+\begin{document}
+%
+% Doc at position 0
+%
+ \title{\textit{PIE} Document: WLP 2019 Examples}
+  \date{Revision: August 29, 2019; Rendered: \today}
+  \maketitle
+
+  \noindent Examples from the DECLARE/WLP 2019 presentation \textit{PIE --
+  Proving, Interpolating and Eliminating on the Basis of First-Order Logic}.
+  
+%
+% Doc at position 965
+%
+ \section{Abduction with the Weakest Sufficient Condition}
+%
+% Statement at position 1031
+%
+\pplkbBefore
+\index{kb1@$\ppldefmacro{kb_{1}}$}$\begin{array}{lllll}
+\ppldefmacro{kb_{1}}
+\end{array}
+$\pplkbBetween
+$\begin{array}{lllll}
+(\mathsf{sprinkler\_was\_on} \imp  \mathsf{wet}(\mathsf{grass})) &&&&\; \land \\
+(\mathsf{rained\_last\_night} \imp  \mathsf{wet}(\mathsf{grass})) &&&&\; \land \\
+(\mathsf{wet}(\mathsf{grass}) \imp  \mathsf{wet}(\mathsf{shoes})).
+\end{array}
+$\pplkbAfter
+%
+% Doc at position 1141
+%
+ A knowledge base.
+%
+% Statement at position 1167
+%
+\pplkbBefore
+\index{explanation(Kb,Na,Obs)@$\ppldefmacro{explanation}(\pplparam{Kb},\pplparam{Na},\pplparam{Obs})$}$\begin{array}{lllll}
+\ppldefmacro{explanation}(\pplparam{Kb},\pplparam{Na},\pplparam{Obs})
+\end{array}
+$\pplkbBetween
+$\begin{array}{lllll}
+\forall \pplparam{Na} \, (\pplparam{Kb} \imp  \pplparam{Obs}).
+\end{array}
+$\pplkbAfter
+%
+% Doc at position 1224
+%
+ The weakest sufficient condition of observation $\begin{array}{l}
+\pplparam{Obs}
+\end{array}
+$ on
+  the complement of $\begin{array}{l}
+\pplparam{Na}
+\end{array}
+$ as
+  assumables within knowledge base $\begin{array}{l}
+\pplparam{Kb}
+\end{array}
+$.
+  \par\medskip\noindent
+  The expression $\begin{array}{l}
+\pplmacro{explanation}(\pplmacro{kb_{1}},{[}\mathsf{wet}{]},\mathsf{wet}(\mathsf{shoes}))
+\end{array}
+$ expands into:
+
+\[\begin{array}{lllll}
+\forall \mathit{p} \, ((\mathsf{sprinkler\_was\_on} \imp  \mathit{p}(\mathsf{grass})) &&&\; \land \\
+\hphantom{\forall \mathit{p} \, (} (\mathsf{rained\_last\_night} \imp  \mathit{p}(\mathsf{grass})) &&&\; \land \\
+\hphantom{\forall \mathit{p} \, (} (\mathit{p}(\mathsf{grass}) \imp  \mathit{p}(\mathsf{shoes})) &&&&\; \imp \\
+\hphantom{\forall \mathit{p} \, (} \mathit{p}(\mathsf{shoes})).
+\end{array}
+\]
+%
+% Doc at position 1591
+%
+ \par\medskip\noindent Second-order quantifier elimination
+    computes the abductive explanation: \par\medskip
+
+\noindent Input: $\pplmacro{explanation}(\pplmacro{kb_{1}},{[}\mathsf{wet}{]},\mathsf{wet}(\mathsf{shoes})).$\\
+\noindent Result of elimination:
+\[\begin{array}{lllll}
+\mathsf{rained\_last\_night} \lor  \mathsf{sprinkler\_was\_on}.
+\end{array}
+\]
+%
+% Doc at position 1775
+%
+ \noindent The following is shown by invoking a first-order prover, Prover9
+    by default: \par\medskip
+\pplIsValid{\pplmacro{kb_{1}} \land  \mathsf{rained\_last\_night} \imp  \mathsf{wet}(\mathsf{shoes}).}
+%
+% Doc at position 1963
+%
+ \section{A Simple Example of Second-Order Quantifier Elimination}
+
+\noindent Input: $\exists \mathit{p} \, (\forall \mathit{x} \, (\mathsf{q}(\mathit{x}) \imp  \mathit{p}(\mathit{x})) \land  \forall \mathit{x} \, (\mathit{p}(\mathit{x}) \imp  \mathsf{r}(\mathit{x}))).$\\
+\noindent Result of elimination:
+\[\begin{array}{lllll}
+\forall \mathit{x} \, (\mathsf{q}(\mathit{x}) \imp  \mathsf{r}(\mathit{x})).
+\end{array}
+\]
+%
+% Doc at position 2134
+%
+ \section{Predicate Circumscription}
+%
+% Statement at position 2180
+%
+\pplkbBefore
+\index{circ(P,F)@$\ppldefmacro{circ}(\pplparamplain{P},\pplparamplain{F})$}$\begin{array}{lllll}
+\ppldefmacro{circ}(\pplparamplain{P},\pplparamplain{F})
+\end{array}
+$\pplkbBetween
+$\begin{array}{lllll}
+\pplparamplain{F} \land  \lnot  \exists \pplparamplainsup{P}{\prime} \, (\pplparamplainsup{F}{\prime} \land  \pplparamplainidx{T}{1} \land  \lnot  \pplparamplainidx{T}{2}),
+\end{array}
+$\pplkbAfter
+\pplkbBodyBefore
+$
+\begin{array}{l}\pplparamplainsup{F}{\prime} \assign \pplparamplain{F}[\pplparamplain{P} \mapsto \pplparamplainsup{P}{\prime}],\\
+\pplparamplain{A} \assign \mathrm{arity\ of }\; \pplparamplain{P}\; \mathrm{ in }\; \pplparamplain{F},\\
+\pplparamplainidx{T}{1} \assign \mathrm{transfer\ clauses}\; {[}\pplparamplain{P}/\pplparamplain{A}\textrm{-}\mathsf{n}{]} \rightarrow {[}\pplparamplainsup{P}{\prime}{]},\\
+\pplparamplainidx{T}{2} \assign \mathrm{transfer\ clauses}\; {[}\pplparamplainsup{P}{\prime}{]} \rightarrow {[}\pplparamplain{P}/\pplparamplain{A}\textrm{-}\mathsf{n}{]}.
+
+\end{array}$\pplkbBodyAfter
+%
+% Doc at position 2398
+%
+   Predicate circumscription of a single predicate. The formula
+   $\begin{array}{l}
+\pplmacro{circ}(\mathsf{p},\mathsf{p}(\mathsf{a}))
+\end{array}
+$, for example, expands into:
+\[\begin{array}{lllll}
+\mathsf{p}(\mathsf{a}) &&&&\; \land \\
+\lnot  \exists \mathit{q} \, (\mathit{q}(\mathsf{a}) \land  \forall \mathit{x} \, (\mathit{q}(\mathit{x}) \imp  \mathsf{p}(\mathit{x})) \land  \lnot  \forall \mathit{x} \, (\mathsf{p}(\mathit{x}) \imp  \mathit{q}(\mathit{x}))).
+\end{array}
+\]
+%
+% Doc at position 2590
+%
+ \par\medskip\noindent Second-order quantifier elimination can be applied
+    to to compute that circumscription:\par\medskip
+
+\noindent Input: $\pplmacro{circ}(\mathsf{p},\mathsf{p}(\mathsf{a})).$\\
+\noindent Result of elimination:
+\[\begin{array}{lllll}
+\mathsf{p}(\mathsf{a}) \land  \forall \mathit{x} \, (\mathsf{p}(\mathit{x}) \imp  \mathit{x}=\mathsf{a}).
+\end{array}
+\]
+%
+% Doc at position 2766
+%
+ \par\medskip\noindent Similarly we can compute the circumscription of
+    $\begin{array}{l}
+\mathsf{wet}
+\end{array}
+$ in $\begin{array}{l}
+\pplmacro{kb_{1}}
+\end{array}
+$:\par\medskip
+
+\noindent Input: $\pplmacro{circ}(\mathsf{wet},\pplmacro{kb_{1}}).$\\
+\noindent Result of elimination:
+\[\begin{array}{lllll}
+(\mathsf{rained\_last\_night} \imp  \mathsf{wet}(\mathsf{grass})) &&&&\; \land \\
+(\mathsf{sprinkler\_was\_on} \imp  \mathsf{wet}(\mathsf{grass})) &&&&\; \land \\
+(\mathsf{wet}(\mathsf{grass}) \imp  \mathsf{wet}(\mathsf{shoes})) &&&&\; \land \\
+\forall \mathit{x} \, (\mathsf{wet}(\mathit{x}) \imp  \mathsf{rained\_last\_night} \lor  \mathsf{sprinkler\_was\_on}) &&&&\; \land \\
+\forall \mathit{x} \, (\mathsf{wet}(\mathit{x}) \land  \mathsf{wet}(\mathsf{grass}) \imp  \mathit{x}=\mathsf{grass} \lor  \mathit{x}=\mathsf{shoes}).
+\end{array}
+\]
+%
+% Doc at position 2970
+%
+  \section{Computing Modal Correspondences}  
+%
+% Doc at position 3024
+%
+ $\Box p \imp p$, known as axiom $M$ or $T$, corresponds to reflexivity of
+   the accessibility relation:
+
+\noindent Input: $\forall \mathit{p} \, \forall \mathit{v} \, (\forall \mathit{w} \, (\mathsf{r}(\mathit{v},\mathit{w}) \imp  \mathit{p}(\mathit{w})) \imp  \mathit{p}(\mathit{v})).$\\
+\noindent Result of elimination:
+\[\begin{array}{lllll}
+\forall \mathit{x} \, \mathsf{r}(\mathit{x},\mathit{x}).
+\end{array}
+\]
+%
+% Doc at position 3220
+%
+\par\medskip\noindent
+  $\Box p \imp \Box \Box p$, known as axiom $4$, corresponds to transitivity:
+
+
+\noindent Input: $\forall \mathit{p} \, \forall \mathit{v} \, (\forall \mathit{w} \, (\mathsf{r}(\mathit{v},\mathit{w}) \imp  \mathit{p}(\mathit{w})) \imp  \forall \mathit{w} \, (\mathsf{r}(\mathit{v},\mathit{w}) \imp  \forall \mathit{w_{1}} \, (\mathsf{r}(\mathit{w},\mathit{w_{1}}) \imp  \mathit{p}(\mathit{w_{1}})))).$\\
+\noindent Result of elimination:
+\[\begin{array}{lllll}
+\forall \mathit{x} \forall \mathit{y} \, (\mathsf{r}(\mathit{x},\mathit{y}) \imp  \forall \mathit{z} \, (\mathsf{r}(\mathit{y},\mathit{z}) \imp  \mathsf{r}(\mathit{x},\mathit{z}))).
+\end{array}
+\]
+%
+% Doc at position 3481
+%
+  \section{Craig Interpolation}
+%
+% Doc at position 3521
+%
+ A simple propositional example for Craig interpolation:
+
+%
+% Statement at position 3586
+%
+\pplkbBefore
+\index{ip1@$\ppldefmacro{ip_{1}}$}$\begin{array}{lllll}
+\ppldefmacro{ip_{1}}
+\end{array}
+$\pplkbBetween
+$\begin{array}{lllll}
+\mathsf{p} \land  \mathsf{q} \imp  \mathsf{p} \lor  \mathsf{r}.
+\end{array}
+$\pplkbAfter
+
+\noindent Input: $\pplmacro{ip_{1}}.$\\
+\noindent Result of interpolation:
+\[\begin{array}{lllll}
+\mathsf{p}.
+\end{array}
+\]
+%
+% Doc at position 3651
+%
+ \par\bigskip\noindent A first-order example for Craig interpolation with
+    combined universal and existential quantification:
+
+%
+% Statement at position 3788
+%
+\pplkbBefore
+\index{ip2@$\ppldefmacro{ip_{2}}$}$\begin{array}{lllll}
+\ppldefmacro{ip_{2}}
+\end{array}
+$\pplkbBetween
+$\begin{array}{lllll}
+\forall \mathit{x} \, \mathsf{p}(\mathsf{a},\mathit{x}) \land  \mathsf{q} \imp  \exists \mathit{x} \, \mathsf{p}(\mathit{x},\mathsf{b}) \lor  \mathsf{r}.
+\end{array}
+$\pplkbAfter
+
+\noindent Input: $\pplmacro{ip_{2}}.$\\
+\noindent Result of interpolation:
+\[\begin{array}{lllll}
+\exists \mathit{x} \, \forall \mathit{y} \, \mathsf{p}(\mathit{x},\mathit{y}).
+\end{array}
+\]
+%
+% Doc at position 3878
+%
+ \par\bigskip\noindent
+    A simple first-order example for Craig interpolation, with
+    displayed underlying tableau:
+
+%
+% Statement at position 4006
+%
+\pplkbBefore
+\index{ip3@$\ppldefmacro{ip_{3}}$}$\begin{array}{lllll}
+\ppldefmacro{ip_{3}}
+\end{array}
+$\pplkbBetween
+$\begin{array}{lllll}
+\forall \mathit{x} \, \mathsf{p}(\mathit{x}) \land  \forall \mathit{x} \, (\mathsf{p}(\mathit{x}) \imp  \mathsf{q}(\mathit{x})) \imp  \mathsf{q}(\mathsf{c}).
+\end{array}
+$\pplkbAfter
+
+\noindent Input: $\pplmacro{ip_{3}}.$\\
+\noindent Result of interpolation:
+\[\begin{array}{lllll}
+\forall \mathit{x} \, \mathsf{q}(\mathit{x}).
+\end{array}
+\]
+%
+% Doc at position 4169
+%
+The clausal tableau proof underlying interpolant extraction can be visualized,
+colors representing the sides with respect to interpolation. The color of the
+closing marks indicate the side of the connection partner:
+
+\begin{center}
+\includegraphics[width=10em]{/tmp/tmp_pie_dotgraph01}
+\end{center}
+%
+% Doc at position 4478
+%
+ \section{Definientia, Definability}
+%
+% Statement at position 4522
+%
+\pplkbBefore
+\index{definiens(G,F,P)@$\ppldefmacro{definiens}(\pplparamplain{G},\pplparamplain{F},\pplparamplain{P})$}$\begin{array}{lllll}
+\ppldefmacro{definiens}(\pplparamplain{G},\pplparamplain{F},\pplparamplain{P})
+\end{array}
+$\pplkbBetween
+$\begin{array}{lllll}
+\exists \pplparamplain{P} \, (\pplparamplain{F} \land  \pplparamplain{G}) \imp  \forall \pplparamplain{P} \, (\pplparamplain{F} \imp  \pplparamplain{G}).
+\end{array}
+$\pplkbAfter
+%
+% Doc at position 4584
+%
+  The interpolants of the left and right side of this implication are exactly
+  the definientia of $G$ in $F$ in terms of all predicates not in $P$.  The
+  implication is valid if and only if definability holds.
+  \par\bigskip\noindent Her is an example:
+%
+% Statement at position 4847
+%
+\pplkbBefore
+\index{kb2@$\ppldefmacro{kb_{2}}$}$\begin{array}{lllll}
+\ppldefmacro{kb_{2}}
+\end{array}
+$\pplkbBetween
+$\begin{array}{lllll}
+\forall \mathit{x} \, (\mathsf{p}(\mathit{x}) \imp  \mathsf{q}(\mathit{x}) \land  \mathsf{s}(\mathit{x})) &&&&\; \land \\
+\forall \mathit{x} \, (\mathsf{s}(\mathit{x}) \imp  \mathsf{r}(\mathit{x})) &&&&\; \land \\
+\forall \mathit{x} \, (\mathsf{q}(\mathit{x}) \land  \mathsf{r}(\mathit{x}) \imp  \mathsf{p}(\mathit{x})).
+\end{array}
+$\pplkbAfter
+%
+% Doc at position 4944
+%
+ We verify definability of $p$:\smallskip\par
+\pplIsValid{\pplmacro{definiens}(\mathsf{p}(\mathsf{a}),\pplmacro{kb_{2}},{[}\mathsf{p},\mathsf{s}{]}).}
+%
+% Doc at position 5058
+%
+ \par\medskip\noindent Craig interpolation can now be applied to compute a definiens:\smallskip\par
+
+\noindent Input: $\pplmacro{definiens}(\mathsf{p}(\mathsf{a}),\pplmacro{kb_{2}},{[}\mathsf{p},\mathsf{s}{]}).$\\
+\noindent Result of interpolation:
+\[\begin{array}{lllll}
+\mathsf{q}(\mathsf{a}) \land  \mathsf{r}(\mathsf{a}).
+\end{array}
+\]
+%
+% Doc at position 5225
+%
+ Since $\f{a}$ does not occur free in $\begin{array}{l}
+\pplmacro{kb_{2}}
+\end{array}
+$, it may be
+    considered as representing a variable in a definition of $\f{p}$.
+    That is, we can verify:\smallskip
+  
+\pplIsValid{\pplmacro{kb_{2}} \imp  \forall \mathit{a} \, (\mathsf{p}(\mathit{a}) \equi  \mathsf{q}(\mathit{a}) \land  \mathsf{r}(\mathit{a})).}
+%
+% Doc at position 5484
+%
+ \section{Graph Colorability}
+%
+% Statement at position 5523
+%
+\pplkbBefore
+\index{col2(E)@$\ppldefmacro{col_{2}}(\pplparamplain{E})$}$\begin{array}{lllll}
+\ppldefmacro{col_{2}}(\pplparamplain{E})
+\end{array}
+$\pplkbBetween
+$\begin{array}{lllll}
+\exists \mathit{r} \exists \mathit{g} \, (\forall \mathit{x} \, (\mathit{r}(\mathit{x}) \lor  \mathit{g}(\mathit{x})) &&&&\; \land \\
+\hphantom{\exists \mathit{r} \exists \mathit{g} \, (} \forall \mathit{x} \forall \mathit{y} \, (\pplparamplain{E}(\mathit{x},\mathit{y}) \imp  \lnot  (\mathit{r}(\mathit{x}) \land  \mathit{r}(\mathit{y})) \land  \lnot  (\mathit{g}(\mathit{x}) \land  \mathit{g}(\mathit{y})))).
+\end{array}
+$\pplkbAfter
+%
+% Doc at position 5657
+%
+ 2-colorability as an existential second-order formula.  The predicate
+  describing the graph is exported as a parameter. Predicate parameters may be
+  instantiated with a constant or a $\lambda$-expression. For example,
+  $\begin{array}{l}
+\pplmacro{col_{2}}(\lambda (\mathit{u},\mathit{v}).(\mathit{u}=\mathsf{1} \land  \mathit{v}=\mathsf{2}) \lor  (\mathit{u}=\mathsf{2} \land  \mathit{v}=\mathsf{3}))
+\end{array}
+$ expands into:
+  
+\[\begin{array}{lllll}
+\exists \mathit{p} \exists \mathit{q} \, (\forall \mathit{x} \, (\mathit{p}(\mathit{x}) \lor  \mathit{q}(\mathit{x})) &&&&\; \land \\
+\hphantom{\exists \mathit{p} \exists \mathit{q} \, (} \forall \mathit{x} \forall \mathit{y} \, ((\mathit{x}=\mathsf{1} \land  \mathit{y}=\mathsf{2}) \lor  (\mathit{x}=\mathsf{2} \land  \mathit{y}=\mathsf{3}) \imp  \lnot  (\mathit{p}(\mathit{x}) \land  \mathit{p}(\mathit{y})) \land  \lnot  (\mathit{q}(\mathit{x}) \land  \mathit{q}(\mathit{y})))).
+\end{array}
+\]
+%
+% Doc at position 6056
+%
+  
+    \par\bigskip\noindent We now perform some computations by elimination
+    based on the inner first-order component of the above specification of
+    2-colorability:
+%
+% Statement at position 6235
+%
+\pplkbBefore
+\index{fo_col2(E)@$\ppldefmacro{fo\_col_{2}}(\pplparamplain{E})$}$\begin{array}{lllll}
+\ppldefmacro{fo\_col_{2}}(\pplparamplain{E})
+\end{array}
+$\pplkbBetween
+$\begin{array}{lllll}
+\forall \mathit{x} \, (\mathsf{r}(\mathit{x}) \lor  \mathsf{g}(\mathit{x})) &&&&\; \land \\
+\forall \mathit{x} \forall \mathit{y} \, (\pplparamplain{E}(\mathit{x},\mathit{y}) \imp  \lnot  (\mathsf{r}(\mathit{x}) \land  \mathsf{r}(\mathit{y})) \land  \lnot  (\mathsf{g}(\mathit{x}) \land  \mathsf{g}(\mathit{y}))).
+\end{array}
+$\pplkbAfter
+%
+% Doc at position 6347
+%
+ We can instantiate the graph with a predicate constant and
+    eliminate one of the color predicates:\par\medskip
+
+\noindent Input: $\exists \mathit{g} \, \pplmacro{fo\_col_{2}}(\mathsf{e}).$\\
+\noindent Result of elimination:
+\[\begin{array}{lllll}
+\forall \mathit{x} \forall \mathit{y} \, (\mathsf{e}(\mathit{x},\mathit{y}) \imp  \lnot  (\mathsf{r}(\mathit{y}) \land  \mathsf{r}(\mathit{x})) \land  (\mathsf{r}(\mathit{y}) \lor  \mathsf{r}(\mathit{x}))).
+\end{array}
+\]
+%
+% Doc at position 6519
+%
+ \par\medskip\noindent We can evaluate 2-colorability for a given graph by
+    second-order quantifier elimination. In the current version of
+    \textit{PIE} this does not suceed in a single call to elimination, but
+    works in two steps with different elimination configurations:
+%
+% Statement at position 6809
+%
+\pplkbBefore
+\index{ex_rg(F)@$\ppldefmacro{ex\_rg}(\pplparamplain{F})$}$\begin{array}{lllll}
+\ppldefmacro{ex\_rg}(\pplparamplain{F})
+\end{array}
+$\pplkbBetween
+$\begin{array}{lllll}
+\exists \mathit{r} \, \pplparamplainidx{F}{1},
+\end{array}
+$\pplkbAfter
+\pplkbBodyBefore
+$
+\begin{array}{l}\mathrm{ppl\_elim(ex2([g],F),[elim\_options=[pre=[c6]],printing=false,r=F1])}.
+
+\end{array}$\pplkbBodyAfter
+
+\noindent Input: $\pplmacro{ex\_rg}(\pplmacro{fo\_col_{2}}(\lambda (\mathit{u},\mathit{v}).(\mathit{u}=\mathsf{1} \land  \mathit{v}=\mathsf{2}) \lor  (\mathit{u}=\mathsf{2} \land  \mathit{v}=\mathsf{3}))).$\\
+\noindent Result of elimination:
+\[\begin{array}{lllll}
+\mathsf{1}\neq \mathsf{2} \land  \mathsf{2}\neq \mathsf{3}.
+\end{array}
+\]
+\printindex
+\end{document}

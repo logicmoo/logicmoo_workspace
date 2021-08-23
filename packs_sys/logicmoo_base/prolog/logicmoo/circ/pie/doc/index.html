@@ -1,0 +1,815 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+  <head>
+    <meta http-equiv="content-type"
+         content="text/html; charset=utf-8">
+    <link href="docstyle.css"
+         rel="styleSheet"
+         type="text/css">
+    <title>PIE Documentation (Draft)</title>
+  </head>
+  <body>
+    <div id="centerContainer">
+      <h1><a href="http://cs.christophwernhard.com/pie/">The PIE System </a><br> User/Developer Documentation (Draft)</h1>
+      <div class="modgroup">
+        <div class="modgrouptitle">Module Group <span class="modgroupname">PIE Macro Use</span></div>
+        <div class="modgrouptxt">Utilities for using macros.</div>
+        <div class="mod">
+          <div class="modhead">
+            <a name="mod:util_macrokb">Module <span class="modname">util_macrokb</span></a>
+          </div>
+          <div class="modtxt">Utility predicates for use in PIE documents.</div>
+          <div class="pdshortstart">Exported Predicates in Module <span class="modname">util_macrokb</span> without Specific Documentation</div>
+          <div class="pdsshort">
+            <div class="pdshort">
+              <div class="pdsigshort">
+                <span class="psigshort"><span class="fun">last_ppl_result</span>/1</span>
+              </div>
+            </div>
+            <div class="pdshort">
+              <div class="pdsigshort">
+                <span class="psigshort"><span class="fun">mac_expand</span>/1</span>
+              </div>
+            </div>
+            <div class="pdshort">
+              <div class="pdsigshort">
+                <span class="psigshort"><span class="fun">mac_expand_1</span>/1</span>
+              </div>
+            </div>
+            <div class="pdshort">
+              <div class="pdsigshort">
+                <span class="psigshort"><span class="fun">ppl</span>/0</span>
+              </div>
+            </div>
+            <div class="pdshort">
+              <div class="pdsigshort">
+                <span class="psigshort"><span class="fun">ppl</span>/1</span>
+              </div>
+            </div>
+            <div class="pdshort">
+              <div class="pdsigshort">
+                <span class="psigshort"><span class="fun">ppl_elim</span>/1</span>
+              </div>
+            </div>
+            <div class="pdshort">
+              <div class="pdsigshort">
+                <span class="psigshort"><span class="fun">ppl_elim</span>/2</span>
+              </div>
+            </div>
+            <div class="pdshort">
+              <div class="pdsigshort">
+                <span class="psigshort"><span class="fun">ppl_form</span>/1</span>
+              </div>
+            </div>
+            <div class="pdshort">
+              <div class="pdsigshort">
+                <span class="psigshort"><span class="fun">ppl_form</span>/2</span>
+              </div>
+            </div>
+            <div class="pdshort">
+              <div class="pdsigshort">
+                <span class="psigshort"><span class="fun">ppl_ipol</span>/1</span>
+              </div>
+            </div>
+            <div class="pdshort">
+              <div class="pdsigshort">
+                <span class="psigshort"><span class="fun">ppl_ipol</span>/2</span>
+              </div>
+            </div>
+            <div class="pdshort">
+              <div class="pdsigshort">
+                <span class="psigshort"><span class="fun">ppl_override_options</span>/1</span>
+              </div>
+            </div>
+            <div class="pdshort">
+              <div class="pdsigshort">
+                <span class="psigshort"><span class="fun">ppl_override_options</span>/2</span>
+              </div>
+            </div>
+            <div class="pdshort">
+              <div class="pdsigshort">
+                <span class="psigshort"><span class="fun">ppl_set_options</span>/1</span>
+              </div>
+            </div>
+            <div class="pdshort">
+              <div class="pdsigshort">
+                <span class="psigshort"><span class="fun">ppl_set_options</span>/2</span>
+              </div>
+            </div>
+            <div class="pdshort">
+              <div class="pdsigshort">
+                <span class="psigshort"><span class="fun">ppl_set_source</span>/0</span>
+              </div>
+            </div>
+            <div class="pdshort">
+              <div class="pdsigshort">
+                <span class="psigshort"><span class="fun">ppl_set_verbosity</span>/1</span>
+              </div>
+            </div>
+            <div class="pdshort">
+              <div class="pdsigshort">
+                <span class="psigshort"><span class="fun">ppl_valid</span>/1</span>
+              </div>
+            </div>
+            <div class="pdshort">
+              <div class="pdsigshort">
+                <span class="psigshort"><span class="fun">ppl_valid</span>/2</span>
+              </div>
+            </div>
+            <div class="pdshort">
+              <div class="pdsigshort">
+                <span class="psigshort"><span class="fun">prettify_form</span>/3</span>
+              </div>
+            </div>
+            <div class="pdshort">
+              <div class="pdsigshort">
+                <span class="psigshort"><span class="fun">tptp_export</span>/3</span>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="mod">
+          <div class="modhead">
+            <a name="mod:ppl_macrokb">Module <span class="modname">ppl_macrokb</span></a>
+          </div>
+          <div class="modtxt">Underlying predicates for processing PIE documents.</div>
+          <div class="pdshortstart">Exported Predicates in Module <span class="modname">ppl_macrokb</span> without Specific Documentation</div>
+          <div class="pdsshort">
+            <div class="pdshort">
+              <div class="pdsigshort">
+                <span class="psigshort"><span class="fun">mark_installed_macros</span>/2</span>
+              </div>
+            </div>
+            <div class="pdshort">
+              <div class="pdsigshort">
+                <span class="psigshort"><span class="fun">ppl_content</span>/4</span>
+              </div>
+            </div>
+            <div class="pdshort">
+              <div class="pdsigshort">
+                <span class="psigshort"><span class="fun">ppl_debug_info</span>/1</span>
+              </div>
+            </div>
+            <div class="pdshort">
+              <div class="pdsigshort">
+                <span class="psigshort"><span class="fun">ppl_file</span>/3</span>
+              </div>
+            </div>
+            <div class="pdshort">
+              <div class="pdsigshort">
+                <span class="psigshort"><span class="fun">ppl_is_at_printtime</span>/0</span>
+              </div>
+            </div>
+            <div class="pdshort">
+              <div class="pdsigshort">
+                <span class="psigshort"><span class="fun">ppl_printtime</span>/1</span>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="mod">
+          <div class="modhead">
+            <a name="mod:macrokb">Module <span class="modname">macrokb</span></a>
+          </div>
+          <div class="modtxt">Macro support - core module.</div>
+          <div class="pdshortstart">Exported Predicates in Module <span class="modname">macrokb</span> without Specific Documentation</div>
+          <div class="pdsshort">
+            <div class="pdshort">
+              <div class="pdsigshort">
+                <span class="psigshort"><span class="fun">canonicalize_def</span>/11</span>
+              </div>
+            </div>
+            <div class="pdshort">
+              <div class="pdsigshort">
+                <span class="psigshort"><span class="fun">mac_expand</span>/2</span>
+              </div>
+            </div>
+            <div class="pdshort">
+              <div class="pdsigshort">
+                <span class="psigshort"><span class="fun">mac_expand_step</span>/2</span>
+              </div>
+            </div>
+            <div class="pdshort">
+              <div class="pdsigshort">
+                <span class="psigshort"><span class="fun">mac_expand_toplevel</span>/2</span>
+              </div>
+            </div>
+            <div class="pdshort">
+              <div class="pdsigshort">
+                <span class="psigshort"><span class="fun">mac_has_def</span>/1</span>
+              </div>
+            </div>
+            <div class="pdshort">
+              <div class="pdsigshort">
+                <span class="psigshort"><span class="fun">mac_install</span>/0</span>
+              </div>
+            </div>
+            <div class="pdshort">
+              <div class="pdsigshort">
+                <span class="psigshort"><span class="fun">mac_install</span>/1</span>
+              </div>
+            </div>
+            <div class="pdshort">
+              <div class="pdsigshort">
+                <span class="psigshort"><span class="fun">mac_list</span>/1</span>
+              </div>
+            </div>
+            <div class="pdshort">
+              <div class="pdsigshort">
+                <span class="psigshort"><span class="fun">mac_to_tptp</span>/2</span>
+              </div>
+            </div>
+            <div class="pdshort">
+              <div class="pdsigshort">
+                <span class="psigshort"><span class="fun">mac_uninstall</span>/1</span>
+              </div>
+            </div>
+            <div class="pdshort">
+              <div class="pdsigshort">
+                <span class="psigshort"><span class="fun">tptp_to_mac</span>/2</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="modgroup">
+        <div class="modgrouptitle">Module Group <span class="modgroupname">PIE Macro Definition</span></div>
+        <div class="modgrouptxt">Utilities for specifying macros.</div>
+        <div class="mod">
+          <div class="modhead">
+            <a name="mod:support_macrokb">Module <span class="modname">support_macrokb</span></a>
+          </div>
+          <div class="modtxt">Predicates intended for use in bodies of PIE macro definitions.</div>
+          <div class="pdsfull">
+            <div class="pdfull">
+              <div class="pdsig">
+                <span class="psig"><span class="fun">ppl_pl</span>(<span class="arg">+CallPattern</span>,<span class="arg">+Options</span>)</span>
+              </div>
+              <div class="pdtxt">Effects LaTeX pretty printing of <span class="arg">CallPattern</span>. Implemented for the other predicates in this module.</div>
+            </div>
+          </div>
+          <div class="pdshortstart">Exported Predicates in Module <span class="modname">support_macrokb</span> without Specific Documentation</div>
+          <div class="pdsshort">
+            <div class="pdshort">
+              <div class="pdsigshort">
+                <span class="psigshort"><span class="fun">mac_concat</span>/3</span>
+              </div>
+            </div>
+            <div class="pdshort">
+              <div class="pdsigshort">
+                <span class="psigshort"><span class="fun">mac_free_predicates</span>/2</span>
+              </div>
+            </div>
+            <div class="pdshort">
+              <div class="pdsigshort">
+                <span class="psigshort"><span class="fun">mac_free_predicates_as_scsae</span>/2</span>
+              </div>
+            </div>
+            <div class="pdshort">
+              <div class="pdsigshort">
+                <span class="psigshort"><span class="fun">mac_free_predicates_as_scse</span>/2</span>
+              </div>
+            </div>
+            <div class="pdshort">
+              <div class="pdsigshort">
+                <span class="psigshort"><span class="fun">mac_get_arity</span>/3</span>
+              </div>
+            </div>
+            <div class="pdshort">
+              <div class="pdsigshort">
+                <span class="psigshort"><span class="fun">mac_intersection</span>/3</span>
+              </div>
+            </div>
+            <div class="pdshort">
+              <div class="pdsigshort">
+                <span class="psigshort"><span class="fun">mac_like</span>/3</span>
+              </div>
+            </div>
+            <div class="pdshort">
+              <div class="pdsigshort">
+                <span class="psigshort"><span class="fun">mac_make_args</span>/2</span>
+              </div>
+            </div>
+            <div class="pdshort">
+              <div class="pdsigshort">
+                <span class="psigshort"><span class="fun">mac_make_atom</span>/3</span>
+              </div>
+            </div>
+            <div class="pdshort">
+              <div class="pdsigshort">
+                <span class="psigshort"><span class="fun">mac_make_fresh_arg</span>/1</span>
+              </div>
+            </div>
+            <div class="pdshort">
+              <div class="pdsigshort">
+                <span class="psigshort"><span class="fun">mac_make_fresh_args</span>/2</span>
+              </div>
+            </div>
+            <div class="pdshort">
+              <div class="pdsigshort">
+                <span class="psigshort"><span class="fun">mac_rename_free_functions</span>/4</span>
+              </div>
+            </div>
+            <div class="pdshort">
+              <div class="pdsigshort">
+                <span class="psigshort"><span class="fun">mac_rename_free_predicate</span>/5</span>
+              </div>
+            </div>
+            <div class="pdshort">
+              <div class="pdsigshort">
+                <span class="psigshort"><span class="fun">mac_sc_rename_free_predicates</span>/4</span>
+              </div>
+            </div>
+            <div class="pdshort">
+              <div class="pdsigshort">
+                <span class="psigshort"><span class="fun">mac_subtract</span>/3</span>
+              </div>
+            </div>
+            <div class="pdshort">
+              <div class="pdsigshort">
+                <span class="psigshort"><span class="fun">mac_transfer_clauses</span>/4</span>
+              </div>
+            </div>
+            <div class="pdshort">
+              <div class="pdsigshort">
+                <span class="psigshort"><span class="fun">mac_union</span>/3</span>
+              </div>
+            </div>
+            <div class="pdshort">
+              <div class="pdsigshort">
+                <span class="psigshort"><span class="fun">register_ppl_pl_method</span>/3</span>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="mod">
+          <div class="modhead">
+            <a name="mod:scopespec">Module <span class="modname">scopespec</span></a>
+          </div>
+          <div class="modtxt">Operations on scope specifiers. Useful at specifying macros.</div>
+          <div class="pdshortstart">Exported Predicates in Module <span class="modname">scopespec</span> without Specific Documentation</div>
+          <div class="pdsshort">
+            <div class="pdshort">
+              <div class="pdsigshort">
+                <span class="psigshort"><span class="fun">sc_duals</span>/2</span>
+              </div>
+            </div>
+            <div class="pdshort">
+              <div class="pdsigshort">
+                <span class="psigshort"><span class="fun">sc_to_scsae</span>/3</span>
+              </div>
+            </div>
+            <div class="pdshort">
+              <div class="pdsigshort">
+                <span class="psigshort"><span class="fun">sc_to_scsap</span>/3</span>
+              </div>
+            </div>
+            <div class="pdshort">
+              <div class="pdsigshort">
+                <span class="psigshort"><span class="fun">sc_to_scse</span>/2</span>
+              </div>
+            </div>
+            <div class="pdshort">
+              <div class="pdsigshort">
+                <span class="psigshort"><span class="fun">scp_functor</span>/2</span>
+              </div>
+            </div>
+            <div class="pdshort">
+              <div class="pdsigshort">
+                <span class="psigshort"><span class="fun">scsae_add_duals</span>/2</span>
+              </div>
+            </div>
+            <div class="pdshort">
+              <div class="pdsigshort">
+                <span class="psigshort"><span class="fun">scse_add_duals</span>/2</span>
+              </div>
+            </div>
+            <div class="pdshort">
+              <div class="pdsigshort">
+                <span class="psigshort"><span class="fun">scse_to_scsp</span>/2</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="modgroup">
+        <div class="modgrouptitle">Module Group <span class="modgroupname">CM Prover</span></div>
+        <div class="modgrouptxt">Directly using the CM prover for proving and interpolation.</div>
+        <div class="mod">
+          <div class="modhead">
+            <a name="mod:prooftask_cm">Module <span class="modname">prooftask_cm</span></a>
+          </div>
+          <div class="modtxt">Using the CM prover for proving tasks.</div>
+          <div class="pdsfull">
+            <div class="pdfull">
+              <div class="pdsig">
+                <span class="psig"><span class="fun">cmpr</span>(<span class="arg">+FormulaSpec</span>,<span class="arg">+Options</span>)</span>
+              </div>
+              <div class="pdtxt">Perform a proof task with CM, including preprocessing, compilation and prover invocation. Succeeds once or multiply, depending on the <span class="psig"><span class="fun">timeout</span></span> option.<dl class="argitem"><dt class="argitem"><span class="arg">+FormulaSpec</span></dt><dd class="argitem">Specifies the input formula. Possible values: <dl class="alist"><dt class="alist">An atom</dt><dd class="alist">Interpreted as name of a file in TPTP  FOF or CNF format. If the file does not exist,  interpreted as TPTP (FOF or CNF) problem name.</dd><dt class="alist">A formula</dt><dd class="alist">Must be an implication or reverse implication.</dd><dt class="alist">A matrix</dt><dd class="alist">A first-order matrix.</dd></dl></dd></dl><dl class="argitem"><dt class="argitem"><span class="arg">+Options</span></dt><dd class="argitem">A list of Key=Value pairs. The options are passed trough to preprocessing predicates. The following keys are recognized: <dl class="olist"><dt class="olist"><span class="psig"><span class="fun">add_cm_options</span></span></dt><dd class="olist">See explanation of determining effective CM/PR options below. Can be specified multiply. Possible values:<dl class="vlist"><dt class="vlist"><span class="arg">CMOptions</span></dt><dd class="vlist">CM options to add.</dd><dt class="vlist"><span class="psig"><span class="arg">CMOptions1</span><span class="fun">-</span><span class="arg">CMOptions2</span></span></dt><dd class="vlist">Pair of CM options to add and to remove.</dd></dl></dd><dt class="olist"><span class="psig"><span class="fun">add_pr_options</span></span></dt><dd class="olist">See explanation of determining effective CM/PR options below. Can be specified multiply. Possible values:<dl class="vlist"><dt class="vlist"><span class="arg">PROptions</span></dt><dd class="vlist">PR options to add.</dd><dt class="vlist"><span class="psig"><span class="arg">PROptions1</span><span class="fun">-</span><span class="arg">PROptions2</span></span></dt><dd class="vlist">Pair of PR options to add and to remove.</dd></dl></dd><dt class="olist"><span class="psig"><span class="fun">cm_cfg</span></span></dt><dd class="olist">See explanation of determining effective CM/PR options below.<dl class="vlist"><dt class="vlist"><span class="arg">ConfigId</span></dt><dd class="vlist">Identifier of a preconfigured CM option set</dd></dl></dd><dt class="olist"><span class="psig"><span class="fun">cm_options</span></span></dt><dd class="olist">See explanation of determining effective CM/PR options below. Value:<dl class="vlist"><dt class="vlist"><span class="arg">CMOptions</span></dt><dd class="vlist">CM options.</dd></dl></dd><dt class="olist"><span class="psig"><span class="fun">cnf_trafo</span></span></dt><dd class="olist">Specifies CNF transformation to be used if the input problem is not in CNF. Default is attempt of standard CNF transformation with inference limit, else performing Plaisted-Greenbaum transformation. Possible values:<dl class="vlist"><dt class="vlist"><span class="psig"><span class="fun">std</span></span></dt><dd class="vlist">Standard CNF transformation.</dd><dt class="vlist"><span class="psig"><span class="fun">pg</span></span></dt><dd class="vlist">Plaisted-Greenbaum transformation.</dd><dt class="vlist"><span class="psig"><span class="fun">pgi</span></span></dt><dd class="vlist">Plaisted-Greenbaum transformation followed by identification of literals with detected equivalent non-recursive semi-definitions.</dd><dt class="vlist"><span class="psig"><span class="fun">miniscope</span></span></dt><dd class="vlist">Standard CNF with miniscoping (old implementation, not much tested).</dd><dt class="vlist"><span class="psig"><span class="fun">auto</span>(<span class="arg">Limit</span>)</span></dt><dd class="vlist">Attempt standard CNF transformation in specified inference limit, else perform Plaisted-Greenbaum transformation.</dd></dl></dd><dt class="olist"><span class="psig"><span class="fun">eq</span></span></dt><dd class="olist">Specifies equality transformation applied if equality (=/2) is present in the input after conversion to matrix form. In the following Subs, Ref, Sym, Trans stand for substitutivity, reflexivity, symmetry and transitivity axioms, Symtrans and Transsym for combinations of symmetry and transitivity in a single axiom, and Flatten for a term flattening conversion.<dl class="vlist"><dt class="vlist"><span class="psig"><span class="fun">std</span></span></dt><dd class="vlist">Subs + Ref + Sym + Trans.</dd><dt class="vlist"><span class="psig"><span class="fun">std_r_st</span></span></dt><dd class="vlist">Subs + Ref + Symtrans (default).</dd><dt class="vlist"><span class="psig"><span class="fun">std_r_ts</span></span></dt><dd class="vlist">Subs + Ref + Transsym.</dd><dt class="vlist"><span class="psig"><span class="fun">flatten</span></span></dt><dd class="vlist">Flatten + Ref + Symtrans.</dd><dt class="vlist"><span class="psig"><span class="fun">none</span></span></dt><dd class="vlist">No special processing equality.</dd></dl></dd><dt class="olist"><span class="psig"><span class="fun">file</span></span></dt><dd class="olist">Specifies that the CM compiler writes a file that is then loaded, instead of using Prolog's internal mechanisms for loading compilation result. Useful to inspect the compiler output. YAP prolog requires this option.<dl class="vlist"><dt class="vlist"><span class="arg">Filename</span></dt><dd class="vlist">Name of the file.</dd></dl></dd><dt class="olist"><span class="psig"><span class="fun">flatten</span></span></dt><dd class="olist">Apply a flattening matrix transformation, also in case wherethere is no equality present in the input. Possible values are (see key <span class="psig"><span class="fun">eq</span></span> for meaning of the shorthands) [not fully tested]:<dl class="vlist"><dt class="vlist"><span class="psig"><span class="fun">rst</span></span></dt><dd class="vlist">Flatten + Ref + Symtrans.</dd><dt class="vlist"><span class="psig"><span class="fun">r</span></span></dt><dd class="vlist">Flatten + Ref.</dd><dt class="vlist"><span class="psig"><span class="fun">plain</span></span></dt><dd class="vlist">Flatten.</dd></dl></dd><dt class="olist"><span class="psig"><span class="fun">goal</span></span></dt><dd class="olist">Used to specify the goal clauses.</dd><dt class="olist"><span class="psig"><span class="fun">goal_clause_sign</span></span></dt><dd class="olist">Used to specify the goal clauses.</dd><dt class="olist"><span class="psig"><span class="fun">goal_clauses</span></span></dt><dd class="olist">Used to specify the goal clauses.</dd><dt class="olist"><span class="psig"><span class="fun">goal_pick</span></span></dt><dd class="olist">Used to specify the goal clauses.</dd><dt class="olist"><span class="psig"><span class="fun">info_progress</span></span></dt><dd class="olist">Control terminal output that indicates operation progress.<dl class="vlist"><dt class="vlist"><span class="psig"><span class="fun">0</span></span></dt><dd class="vlist">Disable terminal output indicating progress.</dd><dt class="vlist"><span class="psig"><span class="fun">1</span></span></dt><dd class="vlist">Enable terminal output indicating progress (default).</dd></dl></dd><dt class="olist"><span class="psig"><span class="fun">keep_gensyms</span></span></dt><dd class="olist">Control reinitialization of generated symbol names.<dl class="vlist"><dt class="vlist"><span class="psig"><span class="fun">true</span></span></dt><dd class="vlist">Do not reinitialize symbol generation, thus preventing  name clashes with previously generated symbols.</dd><dt class="vlist"><span class="psig"><span class="fun">false</span></span></dt><dd class="vlist">Reinitialize symbol generation (default).</dd></dl></dd><dt class="olist"><span class="psig"><span class="fun">lean_cuts</span></span></dt><dd class="olist">Insert cuts in specific ways, leading to incompleteness (in part experimental).<dl class="vlist"><dt class="vlist"><span class="psig"><span class="fun">none</span></span></dt><dd class="vlist">No cut insertion (default).</dd><dt class="vlist"><span class="arg">CutSpecifier</span></dt><dd class="vlist">Insert cuts as specified - see source code and examples.</dd></dl></dd><dt class="olist"><span class="psig"><span class="fun">mode</span></span></dt><dd class="olist">Special prover invocation modes for debugging.<dl class="vlist"><dt class="vlist"><span class="psig"><span class="fun">default</span></span></dt><dd class="vlist">Standard invocation.</dd><dt class="vlist"><span class="psig"><span class="fun">rerun</span></span></dt><dd class="vlist">For use with the <span class="psig"><span class="fun">file</span></span> option. Do not create a new file with the compilation result.Instead load the existing file (with possible manual edits) and start the CM runtime system. Otherwise the execution is identical as in default mode (preprocessing etc. are also performed).</dd></dl></dd><dt class="olist"><span class="psig"><span class="fun">pr_cfg</span></span></dt><dd class="olist">See explanation of determining effective CM/PR options below.<dl class="vlist"><dt class="vlist"><span class="arg">ConfigId</span></dt><dd class="vlist">Identifier of a preconfigured PR option set</dd></dl></dd><dt class="olist"><span class="psig"><span class="fun">pr_options</span></span></dt><dd class="olist">See explanation of determining effective CM/PR options below. Value:<dl class="vlist"><dt class="vlist"><span class="arg">PROptions</span></dt><dd class="vlist">PR options.</dd></dl></dd><dt class="olist"><span class="psig"><span class="fun">proof</span></span></dt><dd class="olist">Specifies that proof terms are constructed (which costs runtime) and how they are output. See ... for the syntax specification of the proof terms.<dl class="vlist"><dt class="vlist"><span class="arg">-Variable</span></dt><dd class="vlist">Bind the variable to the proof term.</dd><dt class="vlist"><span class="psig"><span class="fun">writeq</span></span></dt><dd class="vlist">Write the proof term with <span class="psig"><span class="fun">writeq</span></span>.</dd><dt class="vlist"><span class="psig"><span class="fun">write_canonical</span></span></dt><dd class="vlist">Write the proof term with <span class="psig"><span class="fun">write_canonical</span></span>.</dd><dt class="vlist"><span class="psig"><span class="fun">pp</span></span></dt><dd class="vlist">Pretty print the proof term.</dd><dt class="vlist"><span class="psig"><span class="fun">writex</span></span></dt><dd class="vlist">Write the proof term similarly to <span class="psig"><span class="fun">write_canonical</span></span>, but with another implemenation that can handle very large terms.</dd></dl></dd><dt class="olist"><span class="psig"><span class="fun">result</span></span></dt><dd class="olist">Output the result of the proving task.<dl class="vlist"><dt class="vlist"><span class="arg">-Variable</span></dt><dd class="vlist">Unified with an atom indicating the result: <span class="psig"><span class="fun">proved</span></span>, <span class="psig"><span class="fun">failed_exhausted</span></span>, or <span class="psig"><span class="fun">timeout</span></span>.</dd></dl></dd><dt class="olist"><span class="psig"><span class="fun">simp</span></span></dt><dd class="olist">Specify simplifications that are performed separately on the matrices for the theorem and for the axioms.<dl class="vlist"><dt class="vlist"><span class="arg">Simplifications</span></dt><dd class="vlist">A list of predefined terms that specify simplifications. default (as of May 2016): <span class="psig"><span class="fun">[sort_lits, condense(1000), subs(1000), split]</span></span>.</dd></dl></dd><dt class="olist"><span class="psig"><span class="fun">simp_prepare</span></span></dt><dd class="olist">Specify simplifications that are performed after the matrices for the theorem and for the axioms have been merged.<dl class="vlist"><dt class="vlist"><span class="arg">Simplifications</span></dt><dd class="vlist">A list of predefined terms that specify simplifications. default (as of May 2016): <span class="psig"><span class="fun">[purity, elim_cheap]</span></span>.</dd></dl></dd><dt class="olist"><span class="psig"><span class="fun">tabx_dotgraph</span></span></dt><dd class="olist">Return or write a graph representation of the found proof in TABX format.<dl class="vlist"><dt class="vlist"><span class="arg">-Variable</span></dt><dd class="vlist">The variable will be bound to a dotgraph term (see module dotgraph).</dd><dt class="vlist"><span class="arg">Filename</span></dt><dd class="vlist">A GIF file with the graph will be written (requires installation of dot from GraphViz).</dd><dt class="vlist"><span class="psig"><span class="fun">none</span></span></dt><dd class="vlist">No graph output (default).</dd></dl></dd><dt class="olist"><span class="psig"><span class="fun">timeout</span></span></dt><dd class="olist">Specifies the mode of success and a possible timeout.<dl class="vlist"><dt class="vlist"><span class="psig"><span class="fun">0</span></span></dt><dd class="vlist">No timeout, solutions (found proofs) are enumerated. If there  is no (more) proof found, the value of the <span class="psig"><span class="fun">result</span></span> option is set to <span class="psig"><span class="fun">failed_exhausted</span></span>.</dd><dt class="vlist"><span class="arg">Seconds</span></dt><dd class="vlist">The specified timeout must be a number &gt;0. There is a single solution, with result indicated by the value of the<span class="psig"><span class="fun">result</span></span> option.</dd></dl></dd></dl><div class="par"></div><span class="par">Determining effective CM/PR Options. </span>CM takes two lists of options, CMOptions that control compilation and
+PROptions that control the runtime.  cm_options and pr_options specify these
+explicitly. cm_cfg and pr_cfg specify a label (atom or term) that is used to
+choose preconfigured option sets in dependency of matrix properties
+(Horn/non-Horn, number of clauses). add_cm_options and add_pr_options provide
+a means to work with such option sets, but modify them. They can be specified
+multiple times. To determine the effective option list, the options to add are
+collected and the option to remove are collected. From the option list
+determined by cm_options/pr_options or via cm_cfg/pr_cfg first all elements
+that are unifiable with an option to remove are removed and then the options
+to add are added.</dd></dl></div>
+            </div>
+          </div>
+          <div class="pdshortstart">Exported Predicates in Module <span class="modname">prooftask_cm</span> without Specific Documentation</div>
+          <div class="pdsshort">
+            <div class="pdshort">
+              <div class="pdsigshort">
+                <span class="psigshort"><span class="fun">cmpr3</span>/3</span>
+              </div>
+            </div>
+            <div class="pdshort">
+              <div class="pdsigshort">
+                <span class="psigshort"><span class="fun">cmprove</span>/0</span>
+              </div>
+            </div>
+            <div class="pdshort">
+              <div class="pdsigshort">
+                <span class="psigshort"><span class="fun">is_valid_fol_cm</span>/1</span>
+              </div>
+            </div>
+            <div class="pdshort">
+              <div class="pdsigshort">
+                <span class="psigshort"><span class="fun">is_valid_fol_cm</span>/2</span>
+              </div>
+            </div>
+            <div class="pdshort">
+              <div class="pdsigshort">
+                <span class="psigshort"><span class="fun">m_features</span>/2</span>
+              </div>
+            </div>
+            <div class="pdshort">
+              <div class="pdsigshort">
+                <span class="psigshort"><span class="fun">m_info</span>/3</span>
+              </div>
+            </div>
+            <div class="pdshort">
+              <div class="pdsigshort">
+                <span class="psigshort"><span class="fun">m_info_features</span>/3</span>
+              </div>
+            </div>
+            <div class="pdshort">
+              <div class="pdsigshort">
+                <span class="psigshort"><span class="fun">m_red_subs_limited</span>/3</span>
+              </div>
+            </div>
+            <div class="pdshort">
+              <div class="pdsigshort">
+                <span class="psigshort"><span class="fun">m_set_equality</span>/5</span>
+              </div>
+            </div>
+            <div class="pdshort">
+              <div class="pdsigshort">
+                <span class="psigshort"><span class="fun">m_set_goal_clauses</span>/4</span>
+              </div>
+            </div>
+            <div class="pdshort">
+              <div class="pdsigshort">
+                <span class="psigshort"><span class="fun">normalize_formulas</span>/3</span>
+              </div>
+            </div>
+            <div class="pdshort">
+              <div class="pdsigshort">
+                <span class="psigshort"><span class="fun">reset_gensyms</span>/0</span>
+              </div>
+            </div>
+            <div class="pdshort">
+              <div class="pdsigshort">
+                <span class="psigshort"><span class="fun">threshold</span>/2</span>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="mod">
+          <div class="modhead">
+            <a name="mod:cm_option_sets">Module <span class="modname">cm_option_sets</span></a>
+          </div>
+          <div class="modtxt">Labeled configuration sets for the CM prover.</div>
+          <div class="pdshortstart">Exported Predicates in Module <span class="modname">cm_option_sets</span> without Specific Documentation</div>
+          <div class="pdsshort">
+            <div class="pdshort">
+              <div class="pdsigshort">
+                <span class="psigshort"><span class="fun">cm_option_set</span>/5</span>
+              </div>
+            </div>
+            <div class="pdshort">
+              <div class="pdsigshort">
+                <span class="psigshort"><span class="fun">pr_option_set</span>/2</span>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="mod">
+          <div class="modhead">
+            <a name="mod:craigtask_cm">Module <span class="modname">craigtask_cm</span></a>
+          </div>
+          <div class="modtxt">Using the CM prover for interpolation tasks.</div>
+          <div class="pdsfull">
+            <div class="pdfull">
+              <div class="pdsig">
+                <span class="psig"><span class="fun">cm_craigproof</span>(<span class="arg">+Implication</span>,<span class="arg">+Options</span>)</span>
+              </div>
+              <div class="pdtxt">Compute Craig/Lyndon interpolants.<dl class="argitem"><dt class="argitem"><span class="arg">+Implication</span></dt><dd class="argitem">A first-order implication.</dd></dl><dl class="argitem"><dt class="argitem"><span class="arg">+Options</span></dt><dd class="argitem">A list of Key=Value pairs. The options are passed trough to predicates. In addition to (most of) the keys for <span class="psig"><span class="fun">cmpr</span></span> the following keys are recognized:<dl class="olist"><dt class="olist"><span class="psig"><span class="fun">debug</span></span></dt><dd class="olist">Specify a debugging level.<dl class="vlist"><dt class="vlist"><span class="arg">Number</span></dt><dd class="vlist">If the number is &gt; 2, then the validity of the input formula is checked with Prover9/Mace4, if it is &gt; 3, then the interpolant property (w.r.t. predicates and constants) is, verified on the result with Prover9/Mace4. Default is 0.</dd></dl></dd><dt class="olist"><span class="psig"><span class="fun">enum_ips</span></span></dt><dd class="olist">Specify whether backtracking should be performed to search for alternate interpolants.<dl class="vlist"><dt class="vlist"><span class="psig"><span class="fun">true</span></span></dt><dd class="vlist">Perform backtracking.</dd><dt class="vlist"><span class="psig"><span class="fun">false</span></span></dt><dd class="vlist">Do not backtrack after an interpolant has been found (default).</dd></dl></dd><dt class="olist"><span class="psig"><span class="fun">goal_from_shared_signature</span></span></dt><dd class="olist">Specify clauses taking part in goal clause selection.<dl class="vlist"><dt class="vlist"><span class="psig"><span class="fun">true</span></span></dt><dd class="vlist">Only clauses containing a predicate shared by the interpolation sides take part in goal selection.</dd><dt class="vlist"><span class="psig"><span class="fun">false</span></span></dt><dd class="vlist">All clauses take part in goal selection (default).</dd></dl></dd><dt class="olist"><span class="psig"><span class="fun">ip</span></span></dt><dd class="olist">Return an interpolant.<dl class="vlist"><dt class="vlist"><span class="arg">-Variable</span></dt><dd class="vlist">The variable will be bound to the computed interpolant, a first-order formula.</dd></dl></dd><dt class="olist"><span class="psig"><span class="fun">ip_dotgraph</span></span></dt><dd class="olist">Return a dotgraph representation of the underlying propositional proof tableau. See option <span class="psig"><span class="fun">tabx_dotgraph</span></span> of <span class="psig"><span class="fun">cmpr</span></span>/2.</dd><dt class="olist"><span class="psig"><span class="fun">ip_pref_side</span></span></dt><dd class="olist">Specify a side of the interpolation formulas which is preferred if coloring in both colors is possible.<dl class="vlist"><dt class="vlist"><span class="psig"><span class="fun">a</span></span></dt><dd class="vlist">The color of the left side (default).</dd><dt class="vlist"><span class="psig"><span class="fun">b</span></span></dt><dd class="vlist">The color of the right side.</dd></dl></dd><dt class="olist"><span class="psig"><span class="fun">ip_prop</span></span></dt><dd class="olist">Return the underlying propositional interpolant.<dl class="vlist"><dt class="vlist"><span class="arg">-Variable</span></dt><dd class="vlist">The variable will be bound to the propositional interpolant (a propositional formula) that underlies the computed first-order interpolant.</dd></dl></dd><dt class="olist"><span class="psig"><span class="fun">ip_tabx</span></span></dt><dd class="olist">Return the underlying TABX tableau representation.<dl class="vlist"><dt class="vlist"><span class="arg">-Variable</span></dt><dd class="vlist">The variable will be bound to the TABX tableau that underlies the computed propositional and first-order interpolants.</dd></dl></dd></dl></dd></dl></div>
+            </div>
+          </div>
+          <div class="pdshortstart">Exported Predicates in Module <span class="modname">craigtask_cm</span> without Specific Documentation</div>
+          <div class="pdsshort">
+            <div class="pdshort">
+              <div class="pdsigshort">
+                <span class="psigshort"><span class="fun">cm_craig_symmetric</span>/3</span>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="mod">
+          <div class="modhead">
+            <a name="mod:cm">Module <span class="modname">cm</span></a>
+          </div>
+          <div class="modtxt">Core module of the CM prover.</div>
+          <div class="pdsfull">
+            <div class="pdfull">
+              <div class="pdsig">
+                <span class="psig"><span class="fun">cm</span>(<span class="arg">+Matrix</span>,<span class="arg">?CompilationResult</span>,<span class="arg">+Options</span>)</span>
+              </div>
+              <div class="pdtxt">Compile the given matrix into a Prolog program.<dl class="argitem"><dt class="argitem"><span class="arg">+Matrix</span></dt><dd class="argitem">A first-order matrix or a pair <span class="psig"><span class="arg">?AbstractionTerm</span><span class="fun">-</span><span class="arg">+Matrix1</span></span> of a term and a first-order matrix. The pair format allows to extract variable bindings from instantiations of <span class="arg">+Matrix1</span> made in proofs.</dd></dl><dl class="argitem"><dt class="argitem"><span class="arg">?CompilationResult</span></dt><dd class="argitem">If it is a variable then it will be bound to the compliation result, a list of clauses,  if it is an atom denoting a file name, then the compilation result is printed to the file.</dd></dl><dl class="argitem"><dt class="argitem"><span class="arg">+Options</span></dt><dd class="argitem">A list of terms (CM options). The following terms are accepted:<dl class="olist"><dt class="olist"><span class="psig"><span class="fun">acn</span></span></dt><dd class="olist">Supress cut after solution of propositional goals.</dd><dt class="olist"><span class="psig"><span class="fun">ff</span></span></dt><dd class="olist">Write compiled clauses with <span class="psig"><span class="fun">write_canonical</span></span> instead of pretty printing.</dd><dt class="olist"><span class="psig"><span class="fun">hd</span></span></dt><dd class="olist">Depth measure: tableau depth.</dd><dt class="olist"><span class="psig"><span class="fun">hd1</span></span></dt><dd class="olist">Depth measure: combination of tableau depth and clause size.</dd><dt class="olist"><span class="psig"><span class="fun">hs</span></span></dt><dd class="olist">Depth measure: number of solved subgoals.</dd><dt class="olist"><span class="psig"><span class="fun">l</span></span></dt><dd class="olist">Sideways lemmas (leanCoP-like).</dd><dt class="olist"><span class="psig"><span class="fun">xlc</span></span></dt><dd class="olist">Cut after sideways lemma solution (incomplete, leanCoP-like).</dd><dt class="olist"><span class="psig"><span class="fun">mr2</span></span></dt><dd class="olist">ME-reduction with optimizing-only cut.</dd><dt class="olist"><span class="psig"><span class="fun">mrc</span></span></dt><dd class="olist">ME-reduction followed by cut (incomplete, leanCoP-like).</dd><dt class="olist"><span class="psig"><span class="fun">mrn</span></span></dt><dd class="olist">No ME-reduction.</dd><dt class="olist"><span class="psig"><span class="fun">no_fan</span></span></dt><dd class="olist">No fanning into contrapositive.</dd><dt class="olist"><span class="psig"><span class="fun">p</span></span></dt><dd class="olist">Construct proof term.</dd><dt class="olist"><span class="psig"><span class="fun">r1</span></span></dt><dd class="olist">Prune identical ancestors.</dd><dt class="olist"><span class="psig"><span class="fun">r4</span></span></dt><dd class="olist">Insert disequations that fail for subsumed clause instantiations (SETHEO-like).</dd><dt class="olist"><span class="psig"><span class="fun">r4_limit</span>(<span class="arg">+Number</span>)</span></dt><dd class="olist">Inference limit for <span class="psig"><span class="fun">r4</span></span> before resorting to just unit subsumption.</dd><dt class="olist"><span class="psig"><span class="fun">r4a</span></span></dt><dd class="olist">Insert disequations that fail for subsumed clause instantiations (SETHEO-like). Restricted form that just considers unit subsumption.</dd><dt class="olist"><span class="psig"><span class="fun">r4a_max</span>(<span class="arg">+Number</span>)</span></dt><dd class="olist">Maximal number of instantiations to consider for <span class="psig"><span class="fun">r4a</span></span>.</dd><dt class="olist"><span class="psig"><span class="fun">r5</span></span></dt><dd class="olist">Insert disequations that fail for tautological clause instantiations (SETHEO-like).</dd><dt class="olist"><span class="psig"><span class="fun">r8</span>(<span class="arg">+Mode</span>)</span></dt><dd class="olist">Antilemmas (SETHEO-line). The argument specifies what to compare: combinations of the subgoal with ancestors (<span class="psig"><span class="fun">al</span></span>, <span class="psig"><span class="fun">a</span></span>) and sideways lemmas (<span class="psig"><span class="fun">al</span></span>, <span class="psig"><span class="fun">l</span></span>), and subgoal only (<span class="psig"><span class="fun">v</span></span>). Only <span class="psig"><span class="fun">al</span></span> is in complete in general.</dd><dt class="olist"><span class="psig"><span class="fun">sg</span>(<span class="arg">+Mode</span>)</span></dt><dd class="olist">Heuristic subgoal sorting: greedy.The argument is a number specifying the particular strategy. 0 is a standard strategy.</dd><dt class="olist"><span class="psig"><span class="fun">sn</span></span></dt><dd class="olist">No heuristic subgoal sorting.</dd><dt class="olist"><span class="psig"><span class="fun">sq</span>(<span class="arg">+Mode</span>)</span></dt><dd class="olist">Heuristic subgoal sorting: quick and greedy, suggested for larger formulas.The argument is a number specifying the particular strategy. 0 is a standard strategy.</dd></dl><div class="par"></div><span class="par">Remarks. </span>From each the following option sets at most a single member should be given: <span class="psig"><span class="fun">[hd, hd1, hs]</span></span>, <span class="psig"><span class="fun">[mr2, mrc, mrn]</span></span>, <span class="psig"><span class="fun">[r4, r4a]</span></span>, <span class="psig"><span class="fun">[sg(_), sn, sq(_)]</span></span>. For further options (including some experimental ones) see the source code.</dd></dl></div>
+            </div>
+            <div class="pdfull">
+              <div class="pdsig">
+                <span class="psig"><span class="fun">proof</span>(<span class="arg">+GoalMatrix</span>,<span class="arg">+Options</span>)</span>
+              </div>
+              <div class="pdtxt">Process a previously loaded CM compilation result with respect to the given goal matrix.<dl class="argitem"><dt class="argitem"><span class="arg">+GoalMatrix</span></dt><dd class="argitem">A first-order matrix.</dd></dl><dl class="argitem"><dt class="argitem"><span class="arg">+Options</span></dt><dd class="argitem">A list of terms (PR options). The following terms are accepted:<dl class="olist"><dt class="olist"><span class="psig"><span class="fun">d</span>(<span class="arg">+Number</span>)</span></dt><dd class="olist">Initial depth for iterative deepening, default is 0.</dd><dt class="olist"><span class="psig"><span class="fun">depth_timeout</span>(<span class="arg">+Seconds</span>)</span></dt><dd class="olist">If specified, perform iterative deepening with the given timeout at each depth.</dd><dt class="olist"><span class="psig"><span class="fun">i</span>(<span class="arg">+IncrementMode</span>)</span></dt><dd class="olist">A number specifying the increment at iterative deepening (default 1) or a term specifying a particular incrementing strategy. Terms <span class="psig"><span class="fun">dyna</span></span>/5 specify dynamic incrementing (see source code). The number 0 specifies increment by least required number.</dd><dt class="olist"><span class="psig"><span class="fun">p</span>(<span class="arg">-Variable</span>)</span></dt><dd class="olist">Return the proof term. The variable will be bound to the proof term.</dd><dt class="olist"><span class="psig"><span class="fun">t</span>(<span class="arg">-Variable</span>)</span></dt><dd class="olist">Return a list of used abstraction term instances.</dd></dl></dd></dl></div>
+            </div>
+          </div>
+          <div class="pdshortstart">Exported Predicates in Module <span class="modname">cm</span> without Specific Documentation</div>
+          <div class="pdsshort">
+            <div class="pdshort">
+              <div class="pdsigshort">
+                <span class="psigshort"><span class="fun">constr_i</span>/3</span>
+              </div>
+            </div>
+            <div class="pdshort">
+              <div class="pdsigshort">
+                <span class="psigshort"><span class="fun">depth_bound_reached</span>/0</span>
+              </div>
+            </div>
+            <div class="pdshort">
+              <div class="pdsigshort">
+                <span class="psigshort"><span class="fun">describe_i</span>/0</span>
+              </div>
+            </div>
+            <div class="pdshort">
+              <div class="pdsigshort">
+                <span class="psigshort"><span class="fun">describe_i</span>/1</span>
+              </div>
+            </div>
+            <div class="pdshort">
+              <div class="pdsigshort">
+                <span class="psigshort"><span class="fun">proof</span>/1</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="modgroup">
+        <div class="modgrouptitle">Module Group <span class="modgroupname">TPTP Provers</span></div>
+        <div class="modgrouptxt">Directly using TPTP provers for proving.</div>
+        <div class="mod">
+          <div class="modhead">
+            <a name="mod:tptp_prover">Module <span class="modname">tptp_prover</span></a>
+          </div>
+          <div class="modtxt"></div>
+          <div class="pdshortstart">Exported Predicates in Module <span class="modname">tptp_prover</span> without Specific Documentation</div>
+          <div class="pdsshort">
+            <div class="pdshort">
+              <div class="pdsigshort">
+                <span class="psigshort"><span class="fun">is_valid_fol_tptp</span>/1</span>
+              </div>
+            </div>
+            <div class="pdshort">
+              <div class="pdsigshort">
+                <span class="psigshort"><span class="fun">is_valid_fol_tptp</span>/2</span>
+              </div>
+            </div>
+            <div class="pdshort">
+              <div class="pdsigshort">
+                <span class="psigshort"><span class="fun">is_valid_tptpstmts</span>/3</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="modgroup">
+        <div class="modgrouptitle">Module Group <span class="modgroupname">Formula Pretty Printing and Brief Syntax</span></div>
+        <div class="modgrouptxt">Direct access to formula pretty printing and brief syntax.</div>
+        <div class="mod">
+          <div class="modhead">
+            <a name="mod:pplatex">Module <span class="modname">pplatex</span></a>
+          </div>
+          <div class="modtxt">Formula pretty printing in Prolog and LaTeX.</div>
+          <div class="pdshortstart">Exported Predicates in Module <span class="modname">pplatex</span> without Specific Documentation</div>
+          <div class="pdsshort">
+            <div class="pdshort">
+              <div class="pdsigshort">
+                <span class="psigshort"><span class="fun">pp_form</span>/1</span>
+              </div>
+            </div>
+            <div class="pdshort">
+              <div class="pdsigshort">
+                <span class="psigshort"><span class="fun">pp_form</span>/2</span>
+              </div>
+            </div>
+            <div class="pdshort">
+              <div class="pdsigshort">
+                <span class="psigshort"><span class="fun">pp_matrix</span>/1</span>
+              </div>
+            </div>
+            <div class="pdshort">
+              <div class="pdsigshort">
+                <span class="psigshort"><span class="fun">pp_matrix</span>/2</span>
+              </div>
+            </div>
+            <div class="pdshort">
+              <div class="pdsigshort">
+                <span class="psigshort"><span class="fun">register_pplatex_functor</span>/3</span>
+              </div>
+            </div>
+            <div class="pdshort">
+              <div class="pdsigshort">
+                <span class="psigshort"><span class="fun">register_pplatex_op</span>/4</span>
+              </div>
+            </div>
+            <div class="pdshort">
+              <div class="pdsigshort">
+                <span class="psigshort"><span class="fun">set_default_pp_form_options</span>/1</span>
+              </div>
+            </div>
+            <div class="pdshort">
+              <div class="pdsigshort">
+                <span class="psigshort"><span class="fun">write_form</span>/2</span>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="mod">
+          <div class="modhead">
+            <a name="mod:brief_syntax">Module <span class="modname">brief_syntax</span></a>
+          </div>
+          <div class="modtxt">Parsing and conversion of brief syntax (e.g. px instead of p(x)).</div>
+          <div class="pdshortstart">Exported Predicates in Module <span class="modname">brief_syntax</span> without Specific Documentation</div>
+          <div class="pdsshort">
+            <div class="pdshort">
+              <div class="pdsigshort">
+                <span class="psigshort"><span class="fun">brief_to_form</span>/2</span>
+              </div>
+            </div>
+            <div class="pdshort">
+              <div class="pdsigshort">
+                <span class="psigshort"><span class="fun">brief_to_form</span>/3</span>
+              </div>
+            </div>
+            <div class="pdshort">
+              <div class="pdsigshort">
+                <span class="psigshort"><span class="fun">default_brief_options</span>/2</span>
+              </div>
+            </div>
+            <div class="pdshort">
+              <div class="pdsigshort">
+                <span class="psigshort"><span class="fun">set_default_brief_options</span>/1</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="modgroup">
+        <div class="modgrouptitle">Module Group <span class="modgroupname">Utilities for Manipulating First-Order Formulas and Matrices</span></div>
+        <div class="modgrouptxt"></div>
+        <div class="mod">
+          <div class="modhead">
+            <a name="mod:utils_fol">Module <span class="modname">utils_fol</span></a>
+          </div>
+          <div class="modtxt">Utilities for first-order formulas and matrices.</div>
+          <div class="pdshortstart">Exported Predicates in Module <span class="modname">utils_fol</span> without Specific Documentation</div>
+          <div class="pdsshort">
+            <div class="pdshort">
+              <div class="pdsigshort">
+                <span class="psigshort"><span class="fun">check_form</span>/1</span>
+              </div>
+            </div>
+            <div class="pdshort">
+              <div class="pdsigshort">
+                <span class="psigshort"><span class="fun">cnf1</span>/2</span>
+              </div>
+            </div>
+            <div class="pdshort">
+              <div class="pdsigshort">
+                <span class="psigshort"><span class="fun">cnf2</span>/2</span>
+              </div>
+            </div>
+            <div class="pdshort">
+              <div class="pdsigshort">
+                <span class="psigshort"><span class="fun">cnf3</span>/2</span>
+              </div>
+            </div>
+            <div class="pdshort">
+              <div class="pdsigshort">
+                <span class="psigshort"><span class="fun">cnf4</span>/2</span>
+              </div>
+            </div>
+            <div class="pdshort">
+              <div class="pdsigshort">
+                <span class="psigshort"><span class="fun">cnf5</span>/2</span>
+              </div>
+            </div>
+            <div class="pdshort">
+              <div class="pdsigshort">
+                <span class="psigshort"><span class="fun">cnf6</span>/2</span>
+              </div>
+            </div>
+            <div class="pdshort">
+              <div class="pdsigshort">
+                <span class="psigshort"><span class="fun">cnf_to_form</span>/2</span>
+              </div>
+            </div>
+            <div class="pdshort">
+              <div class="pdsigshort">
+                <span class="psigshort"><span class="fun">cnf_to_form_u</span>/2</span>
+              </div>
+            </div>
+            <div class="pdshort">
+              <div class="pdsigshort">
+                <span class="psigshort"><span class="fun">cnf_to_form_u1</span>/2</span>
+              </div>
+            </div>
+            <div class="pdshort">
+              <div class="pdsigshort">
+                <span class="psigshort"><span class="fun">dnf1</span>/2</span>
+              </div>
+            </div>
+            <div class="pdshort">
+              <div class="pdsigshort">
+                <span class="psigshort"><span class="fun">dnf2</span>/2</span>
+              </div>
+            </div>
+            <div class="pdshort">
+              <div class="pdsigshort">
+                <span class="psigshort"><span class="fun">dnf3</span>/2</span>
+              </div>
+            </div>
+            <div class="pdshort">
+              <div class="pdsigshort">
+                <span class="psigshort"><span class="fun">dnf4</span>/2</span>
+              </div>
+            </div>
+            <div class="pdshort">
+              <div class="pdsigshort">
+                <span class="psigshort"><span class="fun">dnf5</span>/2</span>
+              </div>
+            </div>
+            <div class="pdshort">
+              <div class="pdsigshort">
+                <span class="psigshort"><span class="fun">dnf6</span>/2</span>
+              </div>
+            </div>
+            <div class="pdshort">
+              <div class="pdsigshort">
+                <span class="psigshort"><span class="fun">dnf_to_form</span>/2</span>
+              </div>
+            </div>
+            <div class="pdshort">
+              <div class="pdsigshort">
+                <span class="psigshort"><span class="fun">dnf_to_form_u</span>/2</span>
+              </div>
+            </div>
+            <div class="pdshort">
+              <div class="pdsigshort">
+                <span class="psigshort"><span class="fun">dnf_to_form_u1</span>/2</span>
+              </div>
+            </div>
+            <div class="pdshort">
+              <div class="pdsigshort">
+                <span class="psigshort"><span class="fun">fol_red_unit</span>/2</span>
+              </div>
+            </div>
+            <div class="pdshort">
+              <div class="pdsigshort">
+                <span class="psigshort"><span class="fun">m_simp_eq</span>/2</span>
+              </div>
+            </div>
+            <div class="pdshort">
+              <div class="pdsigshort">
+                <span class="psigshort"><span class="fun">prettysort_matrix</span>/2</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>

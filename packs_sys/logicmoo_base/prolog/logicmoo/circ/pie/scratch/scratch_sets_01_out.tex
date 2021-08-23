@@ -1,0 +1,487 @@
+\documentclass[a4paper]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{imakeidx}
+\usepackage[hidelinks]{hyperref}
+%% A screen friendly geometry:	    
+\usepackage[paper=a5paper,scale=0.9]{geometry}
+%% PPL Setup
+	   
+\newcommand{\assign}{\mathrel{\mathop:}=}
+\newcommand{\concat}{\mathrel{+\!+}}
+	    
+\newcommand{\f}[1]{\mathsf{#1}}
+\newcommand{\true}{\top}
+\newcommand{\false}{\bot}
+\newcommand{\imp}{\rightarrow}
+\newcommand{\revimp}{\leftarrow}
+\newcommand{\equi}{\leftrightarrow}
+\newcommand{\entails}{\models}	    
+\newcommand{\eqdef}{\; 
+\raisebox{-0.1ex}[0mm]{$ \stackrel{\raisebox{-0.2ex}{\tiny 
+\textnormal{def}}}{=} $}\; }
+\newcommand{\iffdef}{\n{iff}_{\mbox{\scriptsize \textnormal{def}}}}
+
+\newcommand{\pplmacro}[1]{\mathit{#1}}
+\newcommand{\ppldefmacro}[1]{\mathit{#1}}
+\newcommand{\pplparam}[1]{\mathit{#1}}
+\newcommand{\pplparamidx}[2]{\mathit{#1}_{#2}}
+\newcommand{\pplparamplain}[1]{#1}
+\newcommand{\pplparamplainidx}[2]{#1_{#2}}
+\newcommand{\pplparamsup}[2]{\mathit{#1}^{#2}}
+\newcommand{\pplparamsupidx}[3]{\mathit{#1}^{#2}_{#3}}
+\newcommand{\pplparamplainsup}[2]{#1^{#2}}
+\newcommand{\pplparamplainsupidx}[3]{#1^{#2}_{#3}}
+\newcommand{\pplparamnum}[1]{\mathit{X}_{#1}}
+
+%%	    
+%% We use @startsection just to obtain reduced vertical spacing above
+%% macro headers which are immediately after other headers, e.g. of sections
+%%	    
+\makeatletter%
+\newcounter{entry}%
+\newcommand{\entrymark}[1]{}%
+\newcommand\entryhead{%
+\@startsection{entry}{10}{\z@}{12pt plus 2pt minus 2pt}{0pt}{}}%
+\makeatother
+	    
+\newcommand{\pplkbBefore}
+{\entryhead*{}%
+\setlength{\arraycolsep}{0pt}%
+\pagebreak[0]%
+\begin{samepage}%
+\noindent%
+\rule[0.5pt]{\textwidth}{2pt}\\%
+\noindent}
+
+% \newcommand{\pplkbDefType}[1]{\hspace{\fill}{{[}#1{]}\\}}
+
+\newcommand{\pplkbBetween}
+{\setlength{\arraycolsep}{3pt}%
+\\\rule[3pt]{\textwidth}{1pt}%
+\par\nopagebreak\noindent Defined as\begin{center}}
+
+\newcommand{\pplkbAfter}{\end{center}\end{samepage}\noindent}
+
+\newcommand{\pplkbBodyBefore}{\par\noindent where\begin{center}}
+\newcommand{\pplkbBodyAfter}{\end{center}}
+
+\newcommand{\pplkbFreePredicates}[1]{\f{free\_predicates}(#1)}
+% \newcommand{\pplkbRenameFreeOccurrences}[3]{\f{rename\_free\_occurrences}(#1,#2,#3)}
+
+\newcommand{\pplIsValid}[1]{\noindent This formula is valid: $#1$\par}
+\newcommand{\pplIsNotValid}[1]{\noindent This formula is not valid: $#1$\par}	    
+\newcommand{\pplFailedToValidate}[1]{\noindent Failed to validate this formula: $#1$\par}
+
+\newcounter{def}
+	    
+\makeindex
+
+\begin{document}
+%
+% Doc at position 0
+%
+\title{Virtual Classes}
+\date{Revision: May 10, 2016; Rendered: \today}  
+\maketitle
+
+\noindent Quine's virtual classes and related concepts.  Virtual classes are
+straightforwardly expressible as macros.  Formalized with the
+\href{http://cs.christophwernhard.com/pie/}{\textit{PIE}} system.
+%
+% Doc at position 1190
+%
+\section{Quine's Virtual Classes and Virtual Relations}
+
+See
+\cite[Chap.~5 The Scope of Logic]{quine:1970:philosophy-of-logic},
+\cite[Chap.~I]{quine:1969:set-theory-and-its-logic-revised}.
+Quine notes there that identity (that is, equality) can be ``simulated''
+with subtitutivity axioms for the finite vocabulary of a given formula and
+asks whether set theory can be handled analogousy.
+Virtual classes and their generalization to virtual relations provide a
+translation that applies to set abstraction on the right side of $\in$.
+
+Remark: Quine cites Behmann's book \cite{beh:27} on
+\cite[p.~19]{quine:1969:set-theory-and-its-logic-revised}. He notes that
+Behmann also introduces operations on classes and relations as mere variant
+notation for sentence connectives, as in the virtual theory of classes, but
+that there is a crucial difference as Behmanns assumes classes and relations
+as \emph{values of quantifiable variables}.
+%
+% Doc at position 2129
+%
+\subsection{Virtual Classes and Relations: Abstraction and Operations}
+
+The following macros apply to both, virtual classes and relations. Relations
+are like sets, except that the first argument of $\in$ and the first argument
+%
+% Statement at position 2395
+%
+\pplkbBefore
+\index{inv(Y,setof(X,F_X))@$\pplparamplain{Y}\in_v\mathsf{setof}(\pplparamplain{X},\pplparamplainidx{F}{X})$}$\begin{array}{lllll}
+\pplparamplain{Y}\in_v\mathsf{setof}(\pplparamplain{X},\pplparamplainidx{F}{X})
+\end{array}
+$\pplkbBetween
+$\begin{array}{lllll}
+\pplparamplainidx{F}{Y},
+\end{array}
+$\pplkbAfter
+\pplkbBodyBefore
+$
+\begin{array}{l}\pplparamplainidx{F}{Y} \assign \pplparamplainidx{F}{X}[\pplparamplain{X} \mapsto \pplparamplain{Y}].
+
+\end{array}$\pplkbBodyAfter
+%
+% Statement at position 2477
+%
+\pplkbBefore
+\index{inv(X,complem(Y))@$\pplparamplain{X}\in_v\mathsf{complem}(\pplparamplain{Y})$}$\begin{array}{lllll}
+\pplparamplain{X}\in_v\mathsf{complem}(\pplparamplain{Y})
+\end{array}
+$\pplkbBetween
+$\begin{array}{lllll}
+\lnot  \pplparamplain{X}\in_v\pplparamplain{Y}.
+\end{array}
+$\pplkbAfter
+%
+% Statement at position 2516
+%
+\pplkbBefore
+\index{inv(X,isect(Y,Z))@$\pplparamplain{X}\in_v\mathsf{isect}(\pplparamplain{Y},\pplparamplain{Z})$}$\begin{array}{lllll}
+\pplparamplain{X}\in_v\mathsf{isect}(\pplparamplain{Y},\pplparamplain{Z})
+\end{array}
+$\pplkbBetween
+$\begin{array}{lllll}
+\pplparamplain{X}\in_v\pplparamplain{Y} \land  \pplparamplain{X}\in_v\pplparamplain{Z}.
+\end{array}
+$\pplkbAfter
+%
+% Statement at position 2566
+%
+\pplkbBefore
+\index{inv(X,union(Y,Z))@$\pplparamplain{X}\in_v\mathsf{union}(\pplparamplain{Y},\pplparamplain{Z})$}$\begin{array}{lllll}
+\pplparamplain{X}\in_v\mathsf{union}(\pplparamplain{Y},\pplparamplain{Z})
+\end{array}
+$\pplkbBetween
+$\begin{array}{lllll}
+\pplparamplain{X}\in_v\pplparamplain{Y} \lor  \pplparamplain{X}\in_v\pplparamplain{Z}.
+\end{array}
+$\pplkbAfter
+%
+% Statement at position 2616
+%
+\pplkbBefore
+\index{inv(X,empty)@$\pplparamplain{X}\in_v\mathsf{empty}$}$\begin{array}{lllll}
+\pplparamplain{X}\in_v\mathsf{empty}
+\end{array}
+$\pplkbBetween
+$\begin{array}{lllll}
+\false .
+\end{array}
+$\pplkbAfter
+%
+% Statement at position 2645
+%
+\pplkbBefore
+\index{inv(X,full)@$\pplparamplain{X}\in_v\mathsf{full}$}$\begin{array}{lllll}
+\pplparamplain{X}\in_v\mathsf{full}
+\end{array}
+$\pplkbBetween
+$\begin{array}{lllll}
+\true .
+\end{array}
+$\pplkbAfter
+%
+% Statement at position 2672
+%
+\pplkbBefore
+\index{inv(X,unit(Y))@$\pplparamplain{X}\in_v\mathsf{unit}(\pplparamplain{Y})$}$\begin{array}{lllll}
+\pplparamplain{X}\in_v\mathsf{unit}(\pplparamplain{Y})
+\end{array}
+$\pplkbBetween
+$\begin{array}{lllll}
+\pplparamplain{X}=\pplparamplain{Y}.
+\end{array}
+$\pplkbAfter
+%
+% Statement at position 2701
+%
+\pplkbBefore
+\index{inv(X,upair(Y,Z))@$\pplparamplain{X}\in_v\mathsf{upair}(\pplparamplain{Y},\pplparamplain{Z})$}$\begin{array}{lllll}
+\pplparamplain{X}\in_v\mathsf{upair}(\pplparamplain{Y},\pplparamplain{Z})
+\end{array}
+$\pplkbBetween
+$\begin{array}{lllll}
+\pplparamplain{X}\in_v\mathsf{union}(\mathsf{unit}(\pplparamplain{Y}),\mathsf{unit}(\pplparamplain{Z})).
+\end{array}
+$\pplkbAfter
+%
+% Doc at position 2761
+%
+\subsection{Predicates of Virtual Classes}
+
+The following macros apply to virtual \emph{classes}
+only.
+%
+% Statement at position 2872
+%
+\pplkbBefore
+\index{subseteq_v(X,Y)@$\pplparamplain{X}\subseteq_v\pplparamplain{Y}$}$\begin{array}{lllll}
+\pplparamplain{X}\subseteq_v\pplparamplain{Y}
+\end{array}
+$\pplkbBetween
+$\begin{array}{lllll}
+\forall \pplparamplain{Z} \, (\pplparamplain{Z}\in_v\pplparamplain{X} \imp  \pplparamplain{Z}\in_v\pplparamplain{Y}),
+\end{array}
+$\pplkbAfter
+\pplkbBodyBefore
+$
+\begin{array}{l}\pplparamplain{Z} \assign \mathrm{a\ fresh\ symbol}.
+
+\end{array}$\pplkbBodyAfter
+%
+% Statement at position 2956
+%
+\pplkbBefore
+\index{subset_v(X,Y)@$\pplparamplain{X}\subset_v\pplparamplain{Y}$}$\begin{array}{lllll}
+\pplparamplain{X}\subset_v\pplparamplain{Y}
+\end{array}
+$\pplkbBetween
+$\begin{array}{lllll}
+\pplparamplain{X}\subseteq_v\pplparamplain{Y} \land  \lnot  \pplparamplain{Y}\subseteq_v\pplparamplain{X}.
+\end{array}
+$\pplkbAfter
+%
+% Statement at position 3018
+%
+\pplkbBefore
+\index{eq_v(X,Y)@$\pplparamplain{X}=_v\pplparamplain{Y}$}$\begin{array}{lllll}
+\pplparamplain{X}=_v\pplparamplain{Y}
+\end{array}
+$\pplkbBetween
+$\begin{array}{lllll}
+\forall \pplparamplain{Z} \, (\pplparamplain{Z}\in_v\pplparamplain{X} \equi  \pplparamplain{Z}\in_v\pplparamplain{Y}),
+\end{array}
+$\pplkbAfter
+\pplkbBodyBefore
+$
+\begin{array}{l}\pplparamplain{Z} \assign \mathrm{a\ fresh\ symbol}.
+
+\end{array}$\pplkbBodyAfter
+%
+% Doc at position 3098
+%
+\subsection{Predicates of Virtual Relations}
+
+The following macros apply to virtual relations. The
+relation arity has to be supplied as first argument $N$.
+%
+% Statement at position 3262
+%
+\pplkbBefore
+\index{subseteq_v(N,X,Y)@$\ppldefmacro{subseteq_{v}}(\pplparamplain{N},\pplparamplain{X},\pplparamplain{Y})$}$\begin{array}{lllll}
+\ppldefmacro{subseteq_{v}}(\pplparamplain{N},\pplparamplain{X},\pplparamplain{Y})
+\end{array}
+$\pplkbBetween
+$\begin{array}{lllll}
+\forall \pplparamplain{Z} \, (\pplparamplain{Z}\in_v\pplparamplain{X} \imp  \pplparamplain{Z}\in_v\pplparamplain{Y}),
+\end{array}
+$\pplkbAfter
+\pplkbBodyBefore
+$
+\begin{array}{l}\pplparamplain{Z} \assign \mathrm{a\ sequence\ of\ \pplparamplain{N}\ fresh\ symbols}.
+
+\end{array}$\pplkbBodyAfter
+%
+% Statement at position 3353
+%
+\pplkbBefore
+\index{subset_v(N,X,Y)@$\ppldefmacro{subset_{v}}(\pplparamplain{N},\pplparamplain{X},\pplparamplain{Y})$}$\begin{array}{lllll}
+\ppldefmacro{subset_{v}}(\pplparamplain{N},\pplparamplain{X},\pplparamplain{Y})
+\end{array}
+$\pplkbBetween
+$\begin{array}{lllll}
+\pplmacro{subseteq_{v}}(\pplparamplain{N},\pplparamplain{X},\pplparamplain{Y}) \land  \lnot  \pplmacro{subseteq_{v}}(\pplparamplain{N},\pplparamplain{Y},\pplparamplain{X}).
+\end{array}
+$\pplkbAfter
+%
+% Statement at position 3424
+%
+\pplkbBefore
+\index{eq_v(N,X,Y)@$\ppldefmacro{eq_{v}}(\pplparamplain{N},\pplparamplain{X},\pplparamplain{Y})$}$\begin{array}{lllll}
+\ppldefmacro{eq_{v}}(\pplparamplain{N},\pplparamplain{X},\pplparamplain{Y})
+\end{array}
+$\pplkbBetween
+$\begin{array}{lllll}
+\forall \pplparamplain{Z} \, (\pplparamplain{Z}\in_v\pplparamplain{X} \equi  \pplparamplain{Z}\in_v\pplparamplain{Y}),
+\end{array}
+$\pplkbAfter
+\pplkbBodyBefore
+$
+\begin{array}{l}\mathrm{mac\_make\_fresh\_arg(N,Z)}.
+
+\end{array}$\pplkbBodyAfter
+%
+% Doc at position 3511
+%
+\subsection{Operations on Binary Virtual Relations}
+
+The macros in the following group apply to binary relations.
+%
+% Statement at position 3633
+%
+\pplkbBefore
+\index{inv([X,Y],product_of_classes(A,B))@${[}\pplparamplain{X},\pplparamplain{Y}{]}\in_v\mathsf{product\_of\_classes}(\pplparamplain{A},\pplparamplain{B})$}$\begin{array}{lllll}
+{[}\pplparamplain{X},\pplparamplain{Y}{]}\in_v\mathsf{product\_of\_classes}(\pplparamplain{A},\pplparamplain{B})
+\end{array}
+$\pplkbBetween
+$\begin{array}{lllll}
+\pplparamplain{X}\in_v\pplparamplain{A} \land  \pplparamplain{Y}\in_v\pplparamplain{B}.
+\end{array}
+$\pplkbAfter
+%
+% Statement at position 3697
+%
+\pplkbBefore
+\index{inv([X,Y],converse(R))@${[}\pplparamplain{X},\pplparamplain{Y}{]}\in_v\mathsf{converse}(\pplparamplain{R})$}$\begin{array}{lllll}
+{[}\pplparamplain{X},\pplparamplain{Y}{]}\in_v\mathsf{converse}(\pplparamplain{R})
+\end{array}
+$\pplkbBetween
+$\begin{array}{lllll}
+{[}\pplparamplain{Y},\pplparamplain{X}{]}\in_v\pplparamplain{R}.
+\end{array}
+$\pplkbAfter
+%
+% Statement at position 3744
+%
+\pplkbBefore
+\index{inv([X,Z],resultant(Q,R))@${[}\pplparamplain{X},\pplparamplain{Z}{]}\in_v\mathsf{resultant}(\pplparamplain{Q},\pplparamplain{R})$}$\begin{array}{lllll}
+{[}\pplparamplain{X},\pplparamplain{Z}{]}\in_v\mathsf{resultant}(\pplparamplain{Q},\pplparamplain{R})
+\end{array}
+$\pplkbBetween
+$\begin{array}{lllll}
+\exists \pplparamplain{Y} \, ({[}\pplparamplain{X},\pplparamplain{Y}{]}\in_v\pplparamplain{Q} \land  {[}\pplparamplain{Y},\pplparamplain{Z}{]}\in_v\pplparamplain{R}).
+\end{array}
+$\pplkbAfter
+%
+% Statement at position 3818
+%
+\pplkbBefore
+\index{inv(X,image(R,A))@$\pplparamplain{X}\in_v\mathsf{image}(\pplparamplain{R},\pplparamplain{A})$}$\begin{array}{lllll}
+\pplparamplain{X}\in_v\mathsf{image}(\pplparamplain{R},\pplparamplain{A})
+\end{array}
+$\pplkbBetween
+$\begin{array}{lllll}
+\exists \pplparamplain{Y} \, ({[}\pplparamplain{X},\pplparamplain{Y}{]}\in_v\pplparamplain{R} \land  \pplparamplain{Y}\in_v\pplparamplain{A}).
+\end{array}
+$\pplkbAfter
+%
+% Statement at position 3880
+%
+\pplkbBefore
+\index{inv([X,Y],identity)@${[}\pplparamplain{X},\pplparamplain{Y}{]}\in_v\mathsf{identity}$}$\begin{array}{lllll}
+{[}\pplparamplain{X},\pplparamplain{Y}{]}\in_v\mathsf{identity}
+\end{array}
+$\pplkbBetween
+$\begin{array}{lllll}
+\pplparamplain{X}=\pplparamplain{Y}.
+\end{array}
+$\pplkbAfter
+%
+% Doc at position 3917
+%
+\subsection{Properties of Binary Virtual Relations}
+
+
+Further properties of relations can be defined as macros in terms of the
+previously defined operations -- see
+\cite[p.~22f]{quine:1969:set-theory-and-its-logic-revised}. For example:
+%
+% Statement at position 4162
+%
+\pplkbBefore
+\index{irreflexive_v(R)@$\ppldefmacro{irreflexive_{v}}(\pplparamplain{R})$}$\begin{array}{lllll}
+\ppldefmacro{irreflexive_{v}}(\pplparamplain{R})
+\end{array}
+$\pplkbBetween
+$\begin{array}{lllll}
+\pplmacro{subseteq_{v}}(\mathsf{2},\pplparamplain{R},\mathsf{complem}(\mathsf{identity})).
+\end{array}
+$\pplkbAfter
+%
+% Doc at position 4224
+%
+\section{Quine's Set Abstraction in Element Position}
+
+This is discussed in \cite[p.~64ff]{quine:1970:philosophy-of-logic}.
+%
+% Statement at position 4356
+%
+\pplkbBefore
+\index{inq(setof_q(X,F_X),Y)@$\mathsf{setof_{q}}(\pplparamplain{X},\pplparamplainidx{F}{X})\in_q\pplparamplain{Y}$}$\begin{array}{lllll}
+\mathsf{setof_{q}}(\pplparamplain{X},\pplparamplainidx{F}{X})\in_q\pplparamplain{Y}
+\end{array}
+$\pplkbBetween
+$\begin{array}{lllll}
+\exists \pplparamplain{Z} \, (\pplparamplain{Z}\in_q\pplparamplain{Y} \land  \forall \pplparamplain{X} \, (\pplparamplain{X}\in_q\pplparamplain{Z} \equi  \pplparamplainidx{F}{X})),
+\end{array}
+$\pplkbAfter
+\pplkbBodyBefore
+$
+\begin{array}{l}\pplparamplain{Z} \assign \mathrm{a\ fresh\ symbol}.
+
+\end{array}$\pplkbBodyAfter
+%
+% Statement at position 4459
+%
+\pplkbBefore
+\index{setopsq@$\ppldefmacro{setopsq}$}$\begin{array}{lllll}
+\ppldefmacro{setopsq}
+\end{array}
+$\pplkbBetween
+$\begin{array}{lllll}
+\forall \mathit{y} \, \mathsf{complem_{q}}(\mathit{y})=\mathsf{setof_{q}}(\mathsf{x},\mathsf{~}(\mathsf{x}\in_q\mathit{y})) &&&&\; \land \\
+\forall \mathit{y}\mathit{z} \, \mathsf{isect_{q}}(\mathit{y},\mathit{z})=\mathsf{setof_{q}}(\mathsf{x},(\mathsf{x}\in_q\mathit{y}\land\mathsf{x}\in_q\mathit{z})) &&&&\; \land \\
+\forall \mathit{y}\mathit{z} \, \mathsf{union_{q}}(\mathit{y},\mathit{z})=\mathsf{setof_{q}}(\mathsf{x},(\mathsf{x}\in_q\mathit{y}\lor\mathsf{x}\in_q\mathit{z})) &&&&\; \land \\
+\mathsf{empty_{q}}=\mathsf{setof_{q}}(\mathsf{x},\mathsf{false}) &&&&\; \land \\
+\mathsf{full_{q}}=\mathsf{setof_{q}}(\mathsf{x},\mathsf{true}) &&&&\; \land \\
+\forall \mathit{y} \, \mathsf{unit_{q}}(\mathit{y})=\mathsf{setof_{q}}(\mathsf{x},\mathsf{x}=\mathit{y}) &&&&\; \land \\
+\forall \mathit{y}\mathit{z} \, \mathsf{upair_{q}}(\mathit{y},\mathit{z})=\mathsf{union_{q}}(\mathsf{unit_{q}}(\mathit{y}),\mathsf{unit_{q}}(\mathit{z})).
+\end{array}
+$\pplkbAfter
+%
+% Statement at position 4794
+%
+\pplkbBefore
+\index{Y=setof_q(X,F_X)@$\pplparamplain{Y}=\mathsf{setof_{q}}(\pplparamplain{X},\pplparamplainidx{F}{X})$}$\begin{array}{lllll}
+\pplparamplain{Y}=\mathsf{setof_{q}}(\pplparamplain{X},\pplparamplainidx{F}{X})
+\end{array}
+$\pplkbBetween
+$\begin{array}{lllll}
+\forall \pplparamplain{X} \, (\pplparamplain{X}\in_q\pplparamplain{Y} \equi  \pplparamplainidx{F}{X}).
+\end{array}
+$\pplkbAfter
+%
+% Doc at position 4846
+%
+\bigskip
+
+The expansion of \textit{setopsq} is now:
+\[\begin{array}{lllll}
+\forall \mathit{x}\mathit{y} \, (\mathit{y}\in_q\mathsf{complem_{q}}(\mathit{x}) \equi  \lnot  \mathit{y}\in_q\mathit{x}) &&&&\; \land \\
+\forall \mathit{x}\mathit{y}\mathit{z} \, (\mathit{z}\in_q\mathsf{isect_{q}}(\mathit{x},\mathit{y}) \equi  \mathit{z}\in_q\mathit{x} \land  \mathit{z}\in_q\mathit{y}) &&&&\; \land \\
+\forall \mathit{x}\mathit{y}\mathit{z} \, (\mathit{z}\in_q\mathsf{union_{q}}(\mathit{x},\mathit{y}) \equi  \mathit{z}\in_q\mathit{x} \lor  \mathit{z}\in_q\mathit{y}) &&&&\; \land \\
+\forall \mathit{x} \, (\mathit{x}\in_q\mathsf{empty_{q}} \equi  \false ) &&&&\; \land \\
+\forall \mathit{x} \, (\mathit{x}\in_q\mathsf{full_{q}} \equi  \true ) &&&&\; \land \\
+\forall \mathit{x}\mathit{y} \, (\mathit{y}\in_q\mathsf{unit_{q}}(\mathit{x}) \equi  \mathit{y}=\mathit{x}) &&&&\; \land \\
+\forall \mathit{x}\mathit{y} \, \mathsf{upair_{q}}(\mathit{x},\mathit{y})=\mathsf{union_{q}}(\mathsf{unit_{q}}(\mathit{x}),\mathsf{unit_{q}}(\mathit{y})).
+\end{array}
+\]
+%
+% Doc at position 4959
+%
+\bibliographystyle{alpha}
+\bibliography{bibscratch03}
+\printindex
+\end{document}

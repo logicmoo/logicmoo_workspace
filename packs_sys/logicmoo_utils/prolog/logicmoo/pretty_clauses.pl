@@ -765,8 +765,9 @@ out_o_s_l_2(F,L):-
       output_line_count(OLC),
       asserta(ec_reader:last_output_lc(OLC,F,L)),
       (is_outputing_to_file -> 
-        (format('~N~q.~n', [:- was_s_l(F,L)]), with_output_to(user_error,(color_format_maybe([fg(green)], '~N% From ~w~n', [F:L]),ttyflush)))
-         ; (color_format_maybe([fg(green)], '~N% From ~w~n', [F:L]),ttyflush)),!.
+        (format('~N~q.~n', [:- was_s_l(F,L)]), 
+           with_output_to(user_error,(color_format_maybe([fg(green)], '~N% FRom ~w~n', [F:L]),ttyflush)))
+         ; (color_format_maybe([fg(green)], '~N% FroM ~w~n', [F:L]),ttyflush)),!.
 
 :- export(was_s_l/2).
 was_s_l(B,L):- retractall(ec_reader:o_s_l(_,_)),asserta(ec_reader:o_s_l(B,L)), out_o_s_l_2(B,L).
@@ -1571,11 +1572,11 @@ pt_args_arglist(FS,Tab,S,M,E,[H|T]):-
  pt_s_e(S,  
   pformat_e_args([H|T],      
     ( prefix_spaces(Tab),
-     print_tree_no_nl(H), pt_cont_args(Tab,', ', M, FS,T))),E).
+     print_tree_no_nl(H), pt_cont_args(', ', Tab,', ', M, FS,T))),E).
 
 
-write_ar_simple(_Tab,Sep,[A|R]):- 
- pformat(Sep),
+write_ar_simple(Sep1, _Tab,Sep,[A|R]):- 
+ pformat(Sep1),
  ( (wots(S,writeq([A|R])),atom_concat('[',MR,S),atom_concat(M,']',MR), write(M))->true
  ; (write_simple(A), write_simple_each(Sep,R))).
 
@@ -1605,33 +1606,30 @@ first_n(_,RL,_,_):- (var(RL);RL\=[_|_]),!,fail.
 first_n(N,RL,[],RL):- N<1,!.
 first_n(N,[E|R],[E|List],Right):- NN is N-1, first_n(NN,R,List,Right).
 
-pt_cont_args(_Ab,_Sep,_Mid,_In, Nil) :- Nil==[], !.
-pt_cont_args(Tab,_Sep, Mid, FS, A) :- (var(A) ; A \= [_|_]), !,  pformat(Mid), print_tab_term(Tab,FS,A), !.
-pt_cont_args(Tab, Sep,_Mid, FS,[A|R]) :- R==[], pformat(Sep), !, print_tab_term(Tab,FS,A), !.
+pt_cont_args(_Sep1, _Ab,_Sep,_Mid,_In, Nil) :- Nil==[], !.
+pt_cont_args(_Sep1, Tab,_Sep, Mid, FS, A) :- (var(A) ; A \= [_|_]), !,  pformat(Mid), print_tab_term(Tab,FS,A), !.
+pt_cont_args(Sep1, Tab,_Sep,_Mid, FS,[A|R]) :- R==[], pformat(Sep1), !, print_tab_term(Tab,FS,A), !.
 
-pt_cont_args(Tab,Sep, Mid, FS, RL) :- RL=[A|_], is_arity_lt1(A), slice_eq(==(A),RL,List,Right), List\= [_],!,
-  write_ar_simple(Tab,Sep,List), 
-  ignore(( Right\==[], prefix_spaces(Tab), pt_cont_args(Tab,Sep, Mid, FS, Right))).
+pt_cont_args(Sep1, Tab, Sep, Mid,FS,RL) :-  rev_append(List,Right,RL),
+   length(List,L), L>1, max_output(Tab,80,List),!,
+   write_ar_simple(Sep1,Tab,Sep,List),
+   ignore(( Right\==[], write(Sep), nl, prefix_spaces(Tab), pt_cont_args('', Tab,Sep, Mid, FS, Right))).
 
-pt_cont_args(Tab,Sep, Mid, FS, RL) :- first_n(6, RL, List,Right),List\= [_],!,
-   write_ar_simple(Tab,Sep,List), 
-   ignore(( Right\==[], prefix_spaces(Tab), pt_cont_args(Tab,Sep, Mid, FS, Right))).
+pt_cont_args(Sep1, Tab,Sep, Mid, FS, RL) :- RL=[A|_], is_arity_lt1(A), slice_eq(==(A),RL,List,Right), List\= [_],!,
+  write_ar_simple(Sep1, Tab,Sep,List),
+   ignore(( Right\==[], write(Sep), nl, prefix_spaces(Tab), pt_cont_args('', Tab,Sep, Mid, FS, Right))).
 
+pt_cont_args(Sep1, Tab, Sep, Mid, FS, RL) :- first_n(6, RL, List,Right),List\= [_], max_output(Tab,80,List),!,
+   write_ar_simple(Sep1, Tab,Sep,List),
+   ignore(( Right\==[], write(Sep), nl, prefix_spaces(Tab), pt_cont_args('', Tab,Sep, Mid, FS, Right))).
 
-pt_cont_args(Tab,Sep, Mid, FS, RL) :- fail, rev_append(List,Right,RL),
-   % ground(List),
-   is_list(List),length(List,Len),Len>1, Len<6, maplist(is_arity_lt1,List), !,
-   pformat(Sep), notrace(prefix_spaces(Tab)),pformat(' '), List=[A|R], write_simple(A), write_simple_each(Sep,R),
-   pt_cont_args(Tab,Sep, Mid, FS, Right),!.
+pt_cont_args(Sep1, Tab, Sep,_Mid,_FS, List) :- % ground(List),
+   is_list(List), length(List,Len),Len>1, Len<6, maplist(is_arity_lt1,List), !,
+   pformat(Sep1), notrace(prefix_spaces(Tab)),pformat(' '), List=[A|R], write_simple(A), write_simple_each(Sep,R),!.
 
-pt_cont_args(Tab, Sep,_Mid,_FS,List) :- % ground(List),
-   is_list(List),length(List,Len),Len>1, Len<6, maplist(is_arity_lt1,List), !,
-   pformat(Sep), notrace(prefix_spaces(Tab)),pformat(' '), List=[A|R], write_simple(A), write_simple_each(Sep,R),!.
-
-pt_cont_args(Tab,Sep, Mid, FS,[A|As]) :- !,  
-   pformat(Sep),
-   print_tab_term(Tab,[lf|FS],A),
-   pt_cont_args(Tab,Sep, Mid,[lf|FS],As).
+pt_cont_args(Sep1, Tab,Sep, Mid, FS,[A|As]) :- !,  
+   pformat(Sep1), print_tab_term(Tab,[lf|FS],A),
+   pt_cont_args(Sep, Tab,Sep, Mid,[lf|FS],As).
 
 
 :- export(print_tab_term/2).

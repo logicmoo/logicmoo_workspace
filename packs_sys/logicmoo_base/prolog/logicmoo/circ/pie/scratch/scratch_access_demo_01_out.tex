@@ -1,0 +1,295 @@
+\documentclass[a4paper]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{imakeidx}
+\usepackage[hidelinks]{hyperref}
+%% A screen friendly geometry:	    
+\usepackage[paper=a5paper,scale=0.9]{geometry}
+%% PPL Setup
+	   
+\newcommand{\assign}{\mathrel{\mathop:}=}
+\newcommand{\concat}{\mathrel{+\!+}}
+	    
+\newcommand{\f}[1]{\mathsf{#1}}
+\newcommand{\true}{\top}
+\newcommand{\false}{\bot}
+\newcommand{\imp}{\rightarrow}
+\newcommand{\revimp}{\leftarrow}
+\newcommand{\equi}{\leftrightarrow}
+\newcommand{\entails}{\models}	    
+\newcommand{\eqdef}{\; 
+\raisebox{-0.1ex}[0mm]{$ \stackrel{\raisebox{-0.2ex}{\tiny 
+\textnormal{def}}}{=} $}\; }
+\newcommand{\iffdef}{\n{iff}_{\mbox{\scriptsize \textnormal{def}}}}
+
+\newcommand{\pplmacro}[1]{\mathit{#1}}
+\newcommand{\ppldefmacro}[1]{\mathit{#1}}
+\newcommand{\pplparam}[1]{\mathit{#1}}
+\newcommand{\pplparamidx}[2]{\mathit{#1}_{#2}}
+\newcommand{\pplparamplain}[1]{#1}
+\newcommand{\pplparamplainidx}[2]{#1_{#2}}
+\newcommand{\pplparamsup}[2]{\mathit{#1}^{#2}}
+\newcommand{\pplparamsupidx}[3]{\mathit{#1}^{#2}_{#3}}
+\newcommand{\pplparamplainsup}[2]{#1^{#2}}
+\newcommand{\pplparamplainsupidx}[3]{#1^{#2}_{#3}}
+\newcommand{\pplparamnum}[1]{\mathit{X}_{#1}}
+
+%%	    
+%% We use @startsection just to obtain reduced vertical spacing above
+%% macro headers which are immediately after other headers, e.g. of sections
+%%	    
+\makeatletter%
+\newcounter{entry}%
+\newcommand{\entrymark}[1]{}%
+\newcommand\entryhead{%
+\@startsection{entry}{10}{\z@}{12pt plus 2pt minus 2pt}{0pt}{}}%
+\makeatother
+	    
+\newcommand{\pplkbBefore}
+{\entryhead*{}%
+\setlength{\arraycolsep}{0pt}%
+\pagebreak[0]%
+\begin{samepage}%
+\noindent%
+\rule[0.5pt]{\textwidth}{2pt}\\%
+\noindent}
+
+% \newcommand{\pplkbDefType}[1]{\hspace{\fill}{{[}#1{]}\\}}
+
+\newcommand{\pplkbBetween}
+{\setlength{\arraycolsep}{3pt}%
+\\\rule[3pt]{\textwidth}{1pt}%
+\par\nopagebreak\noindent Defined as\begin{center}}
+
+\newcommand{\pplkbAfter}{\end{center}\end{samepage}\noindent}
+
+\newcommand{\pplkbBodyBefore}{\par\noindent where\begin{center}}
+\newcommand{\pplkbBodyAfter}{\end{center}}
+
+\newcommand{\pplkbFreePredicates}[1]{\f{free\_predicates}(#1)}
+% \newcommand{\pplkbRenameFreeOccurrences}[3]{\f{rename\_free\_occurrences}(#1,#2,#3)}
+
+\newcommand{\pplIsValid}[1]{\noindent This formula is valid: $#1$\par}
+\newcommand{\pplIsNotValid}[1]{\noindent This formula is not valid: $#1$\par}	    
+\newcommand{\pplFailedToValidate}[1]{\noindent Failed to validate this formula: $#1$\par}
+
+\newcounter{def}
+	    
+\makeindex
+
+\begin{document}
+%
+% Doc at position 0
+%
+\title{Access Predicates Demo}
+\date{Revision: March 7, 2017; Rendered: \today}
+\maketitle
+
+\noindent Illustration of the computation of access predicates for an RDF fact
+base. Makes use of scratch\_forgetting and scratch\_definientia. Formalized
+with the \href{http://cs.christophwernhard.com/pie/}{\textit{PIE}} system.
+%
+% Doc at position 621
+%
+
+\section{Introduction}
+
+We assume a RDF knowledge base with facts like 
+
+\begin{center}
+\begin{tabular}{l}
+\texttt{rdf\_triple(p1, name, 'Sulzer').}\\
+\texttt{rdf\_triple(p1, yob, 1720).}
+\end{tabular}
+\end{center}
+
+\section{Specifications of Access Predicates}
+
+Specifications of access predicates for \texttt{person\_name} and
+\texttt{person\_yob}. In practice, these would be automatically generated from
+the schema of the knowledge base.
+
+%
+% Statement at position 1072
+%
+\pplkbBefore
+\index{accessor_spec@$\ppldefmacro{accessor\_spec}$}$\begin{array}{lllll}
+\ppldefmacro{accessor\_spec}
+\end{array}
+$\pplkbBetween
+$\begin{array}{lllll}
+\forall \mathit{p}\mathit{n} \, (\mathsf{b}\mathit{p} \imp  (\mathsf{person\_name}(\mathit{p},\mathit{n}) \equi  \mathsf{person\_name\_bf}(\mathit{p},\mathit{n}))) &&&&\; \land \\
+\forall \mathit{p}\mathit{n} \, (\mathsf{b}\mathit{n} \imp  (\mathsf{person\_name}(\mathit{p},\mathit{n}) \equi  \mathsf{person\_name\_fb}(\mathit{p},\mathit{n}))) &&&&\; \land \\
+\forall \mathit{p}\mathit{n} \, (\mathsf{b}\mathit{p} \imp  (\mathsf{person\_yob}(\mathit{p},\mathit{n}) \equi  \mathsf{person\_yob\_bf}(\mathit{p},\mathit{n}))) &&&&\; \land \\
+\forall \mathit{p}\mathit{n} \, (\mathsf{b}\mathit{n} \imp  (\mathsf{person\_yob}(\mathit{p},\mathit{n}) \equi  \mathsf{person\_yob\_fb}(\mathit{p},\mathit{n}))) &&&&\; \land \\
+\forall \mathit{p}\mathit{n} \, (\mathsf{person\_name}(\mathit{p},\mathit{n}) \imp  \mathsf{b}\mathit{p} \land  \mathsf{b}\mathit{n}) &&&&\; \land \\
+\forall \mathit{p}\mathit{n} \, (\mathsf{person\_yob}(\mathit{p},\mathit{n}) \imp  \mathsf{b}\mathit{p} \land  \mathsf{b}\mathit{n}).
+\end{array}
+$\pplkbAfter
+%
+% Statement at position 1456
+%
+\pplkbBefore
+\index{accessor_spec_1@$\ppldefmacro{accessor\_spec_{1}}$}$\begin{array}{lllll}
+\ppldefmacro{accessor\_spec_{1}}
+\end{array}
+$\pplkbBetween
+$\begin{array}{lllll}
+\forall \mathit{p}\mathit{n} \, (\mathsf{b}\mathit{p} \imp  (\mathsf{person\_name}(\mathit{p},\mathit{n}) \equi  \mathsf{person\_name\_bf}(\mathit{p},\mathit{n}))) &&&&\; \land \\
+\forall \mathit{p}\mathit{n} \, (\mathsf{b}\mathit{n} \imp  (\mathsf{person\_name}(\mathit{p},\mathit{n}) \equi  \mathsf{person\_name\_fb}(\mathit{p},\mathit{n}))) &&&&\; \land \\
+\forall \mathit{p}\mathit{n} \, (\mathsf{person\_name}(\mathit{p},\mathit{n}) \imp  \mathsf{b}\mathit{p} \land  \mathsf{b}\mathit{n}).
+\end{array}
+$\pplkbAfter
+%
+% Doc at position 1665
+%
+\section{Some Example Queries, Processed by Interpolation}
+
+$b(n)$ in the background formula effects that $\texttt{person\_name}$ is
+rewritten \texttt{to person\_name\_fb}:
+
+%
+% Statement at position 1846
+%
+\pplkbBefore
+\index{rewrite_1@$\ppldefmacro{rewrite_{1}}$}$\begin{array}{lllll}
+\ppldefmacro{rewrite_{1}}
+\end{array}
+$\pplkbBetween
+$\begin{array}{lllll}
+\pplmacro{definiens}(\mathsf{person\_name}(\mathsf{p},\mathsf{n}),\\
+\hphantom{\pplmacro{definiens}(} \pplmacro{accessor\_spec_{1}} \land  \mathsf{b}\mathsf{n},\\
+\hphantom{\pplmacro{definiens}(} {[}\mathsf{person\_name\_bf},\mathsf{person\_name\_fb}{]}).
+\end{array}
+$\pplkbAfter
+
+\noindent Input: $\pplmacro{rewrite_{1}}.$\\
+\noindent Result of interpolation:
+\[\begin{array}{lllll}
+\mathsf{person\_name\_fb}(\mathsf{p},\mathsf{n}).
+\end{array}
+\]
+%
+% Doc at position 2222
+%
+\noindent
+This is the macro expansion of \texttt{rewrite\_1}:
+\[\begin{array}{lllll}
+\exists \mathit{q}\mathit{r} \, (\forall \mathit{x}\mathit{y} \, (\mathit{q}\mathit{x} \imp  (\mathit{r}\mathit{x}\mathit{y} \equi  \mathsf{person\_name\_bf}(\mathit{x},\mathit{y}))) &&&\; \land \\
+\hphantom{\exists \mathit{q}\mathit{r} \, (} \forall \mathit{x}\mathit{y} \, (\mathit{q}\mathit{y} \imp  (\mathit{r}\mathit{x}\mathit{y} \equi  \mathsf{person\_name\_fb}(\mathit{x},\mathit{y}))) &&&\; \land \\
+\hphantom{\exists \mathit{q}\mathit{r} \, (} \forall \mathit{x}\mathit{y} \, (\mathit{r}\mathit{x}\mathit{y} \imp  \mathit{q}\mathit{x} \land  \mathit{q}\mathit{y}) &&&\; \land \\
+\hphantom{\exists \mathit{q}\mathit{r} \, (} \mathit{q}\mathsf{n} &&&\; \land \\
+\hphantom{\exists \mathit{q}\mathit{r} \, (} \mathit{r}\mathsf{p}\mathsf{n}) &&&&\; \imp \\
+\lnot  \exists \mathit{q}\mathit{r} \, (\forall \mathit{x}\mathit{y} \, (\mathit{q}\mathit{x} \imp  (\mathit{r}\mathit{x}\mathit{y} \equi  \mathsf{person\_name\_bf}(\mathit{x},\mathit{y}))) &&&\; \land \\
+\hphantom{\lnot  \exists \mathit{q}\mathit{r} \, (} \forall \mathit{x}\mathit{y} \, (\mathit{q}\mathit{y} \imp  (\mathit{r}\mathit{x}\mathit{y} \equi  \mathsf{person\_name\_fb}(\mathit{x},\mathit{y}))) &&&\; \land \\
+\hphantom{\lnot  \exists \mathit{q}\mathit{r} \, (} \forall \mathit{x}\mathit{y} \, (\mathit{r}\mathit{x}\mathit{y} \imp  \mathit{q}\mathit{x} \land  \mathit{q}\mathit{y}) &&&\; \land \\
+\hphantom{\lnot  \exists \mathit{q}\mathit{r} \, (} \mathit{q}\mathsf{n} &&&\; \land \\
+\hphantom{\lnot  \exists \mathit{q}\mathit{r} \, (} \lnot  \mathit{r}\mathsf{p}\mathsf{n}).
+\end{array}
+\]
+%
+% Doc at position 2347
+%
+\noindent
+For given name compute years in which a person with that name has been born:
+%
+% Statement at position 2441
+%
+\pplkbBefore
+\index{rewrite_2@$\ppldefmacro{rewrite_{2}}$}$\begin{array}{lllll}
+\ppldefmacro{rewrite_{2}}
+\end{array}
+$\pplkbBetween
+$\begin{array}{lllll}
+\pplmacro{definiens}(\exists \mathit{p} \, (\mathsf{person\_name}(\mathit{p},\mathsf{n}) \land  \mathsf{person\_yob}(\mathit{p},\mathsf{y})),\\
+\hphantom{\pplmacro{definiens}(} \pplmacro{accessor\_spec} \land  \mathsf{b}\mathsf{n},\\
+\hphantom{\pplmacro{definiens}(} {[}\mathsf{person\_name\_bf},\mathsf{person\_name\_fb},\mathsf{person\_yob\_bf},\mathsf{person\_yob\_fb}{]}).
+\end{array}
+$\pplkbAfter
+
+\noindent Input: $\pplmacro{rewrite_{2}}.$\\
+\noindent Result of interpolation:
+\[\begin{array}{lllll}
+\exists \mathit{x} \, (\mathsf{person\_name\_fb}(\mathit{x},\mathsf{n}) \land  \mathsf{person\_yob\_bf}(\mathit{x},\mathsf{y})).
+\end{array}
+\]
+%
+% Doc at position 2656
+%
+\section{Referential Constraints}
+
+The predicate \texttt{person} can be accessed to ``enumerate''
+all persons. There is a referential constraint from
+\texttt{person\_name} to \texttt{person}.
+%
+% Statement at position 2856
+%
+\pplkbBefore
+\index{person_spec@$\ppldefmacro{person\_spec}$}$\begin{array}{lllll}
+\ppldefmacro{person\_spec}
+\end{array}
+$\pplkbBetween
+$\begin{array}{lllll}
+\forall \mathit{p} \, (\mathsf{person}(\mathit{p}) \imp  \mathsf{b}\mathit{p}) &&&&\; \land \\
+\forall \mathit{p}\mathit{n} \, (\mathsf{person\_name}(\mathit{p},\mathit{n}) \imp  \mathsf{person}(\mathit{p})).
+\end{array}
+$\pplkbAfter
+%
+% Statement at position 2953
+%
+\pplkbBefore
+\index{rewrite_3@$\ppldefmacro{rewrite_{3}}$}$\begin{array}{lllll}
+\ppldefmacro{rewrite_{3}}
+\end{array}
+$\pplkbBetween
+$\begin{array}{lllll}
+\pplmacro{definiens}(\exists \mathit{p} \, \mathsf{person\_name}(\mathit{p},\mathsf{n}),\\
+\hphantom{\pplmacro{definiens}(} \pplmacro{person\_spec} \land  \pplmacro{accessor\_spec},\\
+\hphantom{\pplmacro{definiens}(} {[}\mathsf{person},\mathsf{person\_name\_bf},\mathsf{person\_name\_fb}{]}).
+\end{array}
+$\pplkbAfter
+
+\noindent Input: $\pplmacro{rewrite_{3}}.$\\
+\noindent Result of interpolation:
+\[\begin{array}{lllll}
+\exists \mathit{x} \, (\mathsf{person}(\mathit{x}) \land  \mathsf{person\_name\_bf}(\mathit{x},\mathsf{n})).
+\end{array}
+\]
+%
+% Doc at position 3135
+%
+
+\section{Different Proofs -- Different Interpolants}
+
+Here only the second returned interpolant is without the redundant occurrence
+of \texttt{person}.
+%
+% Statement at position 3296
+%
+\pplkbBefore
+\index{rewrite_4@$\ppldefmacro{rewrite_{4}}$}$\begin{array}{lllll}
+\ppldefmacro{rewrite_{4}}
+\end{array}
+$\pplkbBetween
+$\begin{array}{lllll}
+\pplmacro{definiens}(\exists \mathit{p} \, (\mathsf{person\_name}(\mathit{p},\mathsf{n}) \land  \mathsf{person\_yob}(\mathit{p},\mathsf{y})),\\
+\hphantom{\pplmacro{definiens}(} \pplmacro{person\_spec} \land  \pplmacro{accessor\_spec} \land  \mathsf{b}\mathsf{n},\\
+\hphantom{\pplmacro{definiens}(} {[}\mathsf{person},\mathsf{person\_name\_bf},\mathsf{person\_name\_fb},\mathsf{person\_yob\_bf},\mathsf{person\_yob\_fb}{]}).
+\end{array}
+$\pplkbAfter
+
+\noindent Input: $\pplmacro{rewrite_{4}}.$\\
+\noindent Result of interpolation:
+\[\begin{array}{lllll}
+\exists \mathit{x} \, (\mathsf{person}(\mathit{x}) \land  \mathsf{person\_name\_fb}(\mathit{x},\mathsf{n}) \land  \mathsf{person\_yob\_bf}(\mathit{x},\mathsf{y})).
+\end{array}
+\]
+
+\noindent Input: $\pplmacro{rewrite_{4}}.$\\
+\noindent Result of interpolation:
+\[\begin{array}{lllll}
+\exists \mathit{x} \, (\mathsf{person\_name\_fb}(\mathit{x},\mathsf{n}) \land  \mathsf{person\_yob\_bf}(\mathit{x},\mathsf{y})).
+\end{array}
+\]
+\printindex
+\end{document}

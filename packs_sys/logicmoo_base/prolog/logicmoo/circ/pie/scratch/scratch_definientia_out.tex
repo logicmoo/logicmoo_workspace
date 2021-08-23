@@ -1,0 +1,228 @@
+\documentclass[a4paper]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{imakeidx}
+\usepackage[hidelinks]{hyperref}
+%% A screen friendly geometry:	    
+\usepackage[paper=a5paper,scale=0.9]{geometry}
+%% PPL Setup
+	   
+\newcommand{\assign}{\mathrel{\mathop:}=}
+\newcommand{\concat}{\mathrel{+\!+}}
+	    
+\newcommand{\f}[1]{\mathsf{#1}}
+\newcommand{\true}{\top}
+\newcommand{\false}{\bot}
+\newcommand{\imp}{\rightarrow}
+\newcommand{\revimp}{\leftarrow}
+\newcommand{\equi}{\leftrightarrow}
+\newcommand{\entails}{\models}	    
+\newcommand{\eqdef}{\; 
+\raisebox{-0.1ex}[0mm]{$ \stackrel{\raisebox{-0.2ex}{\tiny 
+\textnormal{def}}}{=} $}\; }
+\newcommand{\iffdef}{\n{iff}_{\mbox{\scriptsize \textnormal{def}}}}
+
+\newcommand{\pplmacro}[1]{\mathit{#1}}
+\newcommand{\ppldefmacro}[1]{\mathit{#1}}
+\newcommand{\pplparam}[1]{\mathit{#1}}
+\newcommand{\pplparamidx}[2]{\mathit{#1}_{#2}}
+\newcommand{\pplparamplain}[1]{#1}
+\newcommand{\pplparamplainidx}[2]{#1_{#2}}
+\newcommand{\pplparamsup}[2]{\mathit{#1}^{#2}}
+\newcommand{\pplparamsupidx}[3]{\mathit{#1}^{#2}_{#3}}
+\newcommand{\pplparamplainsup}[2]{#1^{#2}}
+\newcommand{\pplparamplainsupidx}[3]{#1^{#2}_{#3}}
+\newcommand{\pplparamnum}[1]{\mathit{X}_{#1}}
+
+%%	    
+%% We use @startsection just to obtain reduced vertical spacing above
+%% macro headers which are immediately after other headers, e.g. of sections
+%%	    
+\makeatletter%
+\newcounter{entry}%
+\newcommand{\entrymark}[1]{}%
+\newcommand\entryhead{%
+\@startsection{entry}{10}{\z@}{12pt plus 2pt minus 2pt}{0pt}{}}%
+\makeatother
+	    
+\newcommand{\pplkbBefore}
+{\entryhead*{}%
+\setlength{\arraycolsep}{0pt}%
+\pagebreak[0]%
+\begin{samepage}%
+\noindent%
+\rule[0.5pt]{\textwidth}{2pt}\\%
+\noindent}
+
+% \newcommand{\pplkbDefType}[1]{\hspace{\fill}{{[}#1{]}\\}}
+
+\newcommand{\pplkbBetween}
+{\setlength{\arraycolsep}{3pt}%
+\\\rule[3pt]{\textwidth}{1pt}%
+\par\nopagebreak\noindent Defined as\begin{center}}
+
+\newcommand{\pplkbAfter}{\end{center}\end{samepage}\noindent}
+
+\newcommand{\pplkbBodyBefore}{\par\noindent where\begin{center}}
+\newcommand{\pplkbBodyAfter}{\end{center}}
+
+\newcommand{\pplkbFreePredicates}[1]{\f{free\_predicates}(#1)}
+% \newcommand{\pplkbRenameFreeOccurrences}[3]{\f{rename\_free\_occurrences}(#1,#2,#3)}
+
+\newcommand{\pplIsValid}[1]{\noindent This formula is valid: $#1$\par}
+\newcommand{\pplIsNotValid}[1]{\noindent This formula is not valid: $#1$\par}	    
+\newcommand{\pplFailedToValidate}[1]{\noindent Failed to validate this formula: $#1$\par}
+
+\newcounter{def}
+	    
+\makeindex
+
+\begin{document}
+%
+% Doc at position 0
+%
+\title{Definientia}
+\date{Revision: May 9, 2016; Rendered: \today}
+\maketitle
+
+\noindent Definability in terms of projections, for computing definientia by
+interpolation.  Makes use of scratch\_forgetting. Formalized with the
+\href{http://cs.christophwernhard.com/pie/}{\textit{PIE}} system.
+%
+% Doc at position 339
+%
+\section{Definientia}
+
+The following formula is valid if and only if formula $G$ is definable in
+terms of predicates $S$ within formula $F$. Definientia are exactly
+the interpolants of its antecedent and consequent.
+%
+% Statement at position 563
+%
+\pplkbBefore
+\index{definiens(G,F,S)@$\ppldefmacro{definiens}(\pplparamplain{G},\pplparamplain{F},\pplparamplain{S})$}$\begin{array}{lllll}
+\ppldefmacro{definiens}(\pplparamplain{G},\pplparamplain{F},\pplparamplain{S})
+\end{array}
+$\pplkbBetween
+$\begin{array}{lllll}
+\pplmacro{proj}(\pplparamplain{S},(\pplparamplain{F} \land  \pplparamplain{G})) \imp  \lnot  \pplmacro{proj}(\pplparamplain{S},(\pplparamplain{F} \land  \lnot  \pplparamplain{G})).
+\end{array}
+$\pplkbAfter
+%
+% Doc at position 630
+%
+The following specification based on literal projection
+allows to restrict the polarity of the predicates in $S$:
+%
+% Statement at position 752
+%
+\pplkbBefore
+\index{definiens_lit(G,F,S)@$\ppldefmacro{definiens\_lit}(\pplparamplain{G},\pplparamplain{F},\pplparamplain{S})$}$\begin{array}{lllll}
+\ppldefmacro{definiens\_lit}(\pplparamplain{G},\pplparamplain{F},\pplparamplain{S})
+\end{array}
+$\pplkbBetween
+$\begin{array}{lllll}
+\pplmacro{projlit}(\pplparamplain{S},(\pplparamplain{F} \land  \pplparamplain{G})) \imp  \lnot  \pplmacro{projlit}(\pplparamplainidx{S}{1},(\pplparamplain{F} \land  \lnot  \pplparamplain{G})),
+\end{array}
+$\pplkbAfter
+\pplkbBodyBefore
+$
+\begin{array}{l}\pplparamplainidx{S}{1} \assign \mathrm{duals\ of}\; \pplparamplain{S}.
+
+\end{array}$\pplkbBodyAfter
+%
+% Doc at position 852
+%
+$\mathit{definiens\_lit\_lemma}$ is an incomplete version of
+$\mathit{definiens\_lit}$ that yields formulas which are more efficient to
+handle:
+%
+% Statement at position 1003
+%
+\pplkbBefore
+\index{definiens_lit_lemma(G,F,S)@$\ppldefmacro{definiens\_lit\_lemma}(\pplparamplain{G},\pplparamplain{F},\pplparamplain{S})$}$\begin{array}{lllll}
+\ppldefmacro{definiens\_lit\_lemma}(\pplparamplain{G},\pplparamplain{F},\pplparamplain{S})
+\end{array}
+$\pplkbBetween
+$\begin{array}{lllll}
+\pplmacro{lemma\_projlit}(\pplparamplain{S},(\pplparamplain{F} \land  \pplparamplain{G})) \imp  \lnot  \pplmacro{lemma\_projlit}(\pplparamplainidx{S}{1},(\pplparamplain{F} \land  \lnot  \pplparamplain{G})),
+\end{array}
+$\pplkbAfter
+\pplkbBodyBefore
+$
+\begin{array}{l}\pplparamplainidx{S}{1} \assign \mathrm{duals\ of}\; \pplparamplain{S}.
+
+\end{array}$\pplkbBodyAfter
+%
+% Doc at position 1120
+%
+Definability of a single predicate in terms of a given set of predicates:
+%
+% Statement at position 1201
+%
+\pplkbBefore
+\index{predicate_definiens(P,F,S)@$\ppldefmacro{predicate\_definiens}(\pplparamplain{P},\pplparamplain{F},\pplparamplain{S})$}$\begin{array}{lllll}
+\ppldefmacro{predicate\_definiens}(\pplparamplain{P},\pplparamplain{F},\pplparamplain{S})
+\end{array}
+$\pplkbBetween
+$\begin{array}{lllll}
+\pplmacro{definiens}(\pplparamplainidx{P}{X},\pplparamplain{F},\pplparamplain{S}),
+\end{array}
+$\pplkbAfter
+\pplkbBodyBefore
+$
+\begin{array}{l}\pplparamplain{N} \assign \mathrm{arity\ of }\; \pplparamplain{P}\; \mathrm{ in }\; \pplparamplain{F},\\
+\pplparamplain{X} \assign \mathrm{a\ sequence\ of\ \pplparamplain{N}\ fresh\ symbols},\\
+\pplparamplainidx{P}{X} \assign \pplparamplain{P}(\pplparamplain{X}).
+
+\end{array}$\pplkbBodyAfter
+%
+% Doc at position 1340
+%
+Definability of a single predicate in terms of all other predicates:
+%
+% Statement at position 1416
+%
+\pplkbBefore
+\index{predicate_definiens(P,F)@$\ppldefmacro{predicate\_definiens}(\pplparamplain{P},\pplparamplain{F})$}$\begin{array}{lllll}
+\ppldefmacro{predicate\_definiens}(\pplparamplain{P},\pplparamplain{F})
+\end{array}
+$\pplkbBetween
+$\begin{array}{lllll}
+\exists \pplparamplain{P} \, (\pplparamplain{F} \land  \pplparamplainidx{P}{X}) \imp  \lnot  \exists \pplparamplain{P} \, (\pplparamplain{F} \land  \lnot  \pplparamplainidx{P}{X}),
+\end{array}
+$\pplkbAfter
+\pplkbBodyBefore
+$
+\begin{array}{l}\pplparamplain{N} \assign \mathrm{arity\ of }\; \pplparamplain{P}\; \mathrm{ in }\; \pplparamplain{F},\\
+\pplparamplain{X} \assign \mathrm{a\ sequence\ of\ \pplparamplain{N}\ fresh\ symbols},\\
+\pplparamplainidx{P}{X} \assign \pplparamplain{P}(\pplparamplain{X}).
+
+\end{array}$\pplkbBodyAfter
+%
+% Doc at position 1574
+%
+\subsection{Definientia: Examples}
+%
+% Statement at position 1617
+%
+\pplkbBefore
+\index{ex_definiens_1@$\ppldefmacro{ex\_definiens_{1}}$}$\begin{array}{lllll}
+\ppldefmacro{ex\_definiens_{1}}
+\end{array}
+$\pplkbBetween
+$\begin{array}{lllll}
+\pplmacro{definiens}(\mathsf{p}\mathsf{a},\\
+\hphantom{\pplmacro{definiens}(} \forall \mathit{x} \, (\mathsf{p}\mathit{x} \equi  \mathsf{q}\mathit{x}) \land  \forall \mathit{x} \, (\mathsf{p}\mathit{x} \equi  \mathsf{r}\mathit{x}),\\
+\hphantom{\pplmacro{definiens}(} {[}\mathsf{q}{]}).
+\end{array}
+$\pplkbAfter
+
+\noindent Input: $\pplmacro{ex\_definiens_{1}}.$\\
+\noindent Result of interpolation:
+\[\begin{array}{lllll}
+\mathsf{q}\mathsf{a}.
+\end{array}
+\]
+\printindex
+\end{document}

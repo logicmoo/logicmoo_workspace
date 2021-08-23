@@ -1,0 +1,336 @@
+\documentclass[a4paper]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{imakeidx}
+\usepackage[hidelinks]{hyperref}
+%% A screen friendly geometry:	    
+\usepackage[paper=a5paper,scale=0.9]{geometry}
+%% PPL Setup
+	   
+\newcommand{\assign}{\mathrel{\mathop:}=}
+\newcommand{\concat}{\mathrel{+\!+}}
+	    
+\newcommand{\f}[1]{\mathsf{#1}}
+\newcommand{\true}{\top}
+\newcommand{\false}{\bot}
+\newcommand{\imp}{\rightarrow}
+\newcommand{\revimp}{\leftarrow}
+\newcommand{\equi}{\leftrightarrow}
+\newcommand{\entails}{\models}	    
+\newcommand{\eqdef}{\; 
+\raisebox{-0.1ex}[0mm]{$ \stackrel{\raisebox{-0.2ex}{\tiny 
+\textnormal{def}}}{=} $}\; }
+\newcommand{\iffdef}{\n{iff}_{\mbox{\scriptsize \textnormal{def}}}}
+
+\newcommand{\pplmacro}[1]{\mathit{#1}}
+\newcommand{\ppldefmacro}[1]{\mathit{#1}}
+\newcommand{\pplparam}[1]{\mathit{#1}}
+\newcommand{\pplparamidx}[2]{\mathit{#1}_{#2}}
+\newcommand{\pplparamplain}[1]{#1}
+\newcommand{\pplparamplainidx}[2]{#1_{#2}}
+\newcommand{\pplparamsup}[2]{\mathit{#1}^{#2}}
+\newcommand{\pplparamsupidx}[3]{\mathit{#1}^{#2}_{#3}}
+\newcommand{\pplparamplainsup}[2]{#1^{#2}}
+\newcommand{\pplparamplainsupidx}[3]{#1^{#2}_{#3}}
+\newcommand{\pplparamnum}[1]{\mathit{X}_{#1}}
+
+%%	    
+%% We use @startsection just to obtain reduced vertical spacing above
+%% macro headers which are immediately after other headers, e.g. of sections
+%%	    
+\makeatletter%
+\newcounter{entry}%
+\newcommand{\entrymark}[1]{}%
+\newcommand\entryhead{%
+\@startsection{entry}{10}{\z@}{12pt plus 2pt minus 2pt}{0pt}{}}%
+\makeatother
+	    
+\newcommand{\pplkbBefore}
+{\entryhead*{}%
+\setlength{\arraycolsep}{0pt}%
+\pagebreak[0]%
+\begin{samepage}%
+\noindent%
+\rule[0.5pt]{\textwidth}{2pt}\\%
+\noindent}
+
+% \newcommand{\pplkbDefType}[1]{\hspace{\fill}{{[}#1{]}\\}}
+
+\newcommand{\pplkbBetween}
+{\setlength{\arraycolsep}{3pt}%
+\\\rule[3pt]{\textwidth}{1pt}%
+\par\nopagebreak\noindent Defined as\begin{center}}
+
+\newcommand{\pplkbAfter}{\end{center}\end{samepage}\noindent}
+
+\newcommand{\pplkbBodyBefore}{\par\noindent where\begin{center}}
+\newcommand{\pplkbBodyAfter}{\end{center}}
+
+\newcommand{\pplkbFreePredicates}[1]{\f{free\_predicates}(#1)}
+% \newcommand{\pplkbRenameFreeOccurrences}[3]{\f{rename\_free\_occurrences}(#1,#2,#3)}
+
+\newcommand{\pplIsValid}[1]{\noindent This formula is valid: $#1$\par}
+\newcommand{\pplIsNotValid}[1]{\noindent This formula is not valid: $#1$\par}	    
+\newcommand{\pplFailedToValidate}[1]{\noindent Failed to validate this formula: $#1$\par}
+
+\newcounter{def}
+	    
+\makeindex
+
+\begin{document}
+%
+% Doc at position 0
+%
+\title{Circumscription}
+\date{Revision: February 13, 2018; Rendered: \today}
+\maketitle
+
+\noindent Definition of predicate circumscription.  Formalized with the
+\href{http://cs.christophwernhard.com/pie/}{\textit{PIE}} system.
+
+%
+% Doc at position 278
+%
+\section{Definition of Predicate Circumscription}
+
+%
+% Statement at position 337
+%
+\pplkbBefore
+\index{xcirc(S,F)@$\ppldefmacro{xcirc}(\pplparamplain{S},\pplparamplain{F})$}$\begin{array}{lllll}
+\ppldefmacro{xcirc}(\pplparamplain{S},\pplparamplain{F})
+\end{array}
+$\pplkbBetween
+$\begin{array}{lllll}
+\pplparamplain{F} \land  \lnot  \pplmacro{xraise}(\pplparamplain{S},\pplparamplain{F}).
+\end{array}
+$\pplkbAfter
+%
+% Doc at position 377
+%
+A version of parallel predicate circumscription
+\cite{lifschitz:circumscription:94}.  The $F$ parameter is the circumscribed
+formula.  The $S$ parameter specifies the roles of the predicates in the
+circumscription.  It is a list of specifiers of the following form, where $p$
+is a predicate and the second component indicates positive, negative, or both
+polarities:
+
+\begin{center}
+\begin{tabular}{ll}
+$p$ is to be minimized & $p \mathsf{\textrm{-}n}$\\
+$p$ is to be maximized & $p \mathsf{\textrm{-}p}$\\
+$p$ is varying & $p\mathsf{\textrm{-}pn}$\\
+$p$ is fixed & $p$ is not mentioned in $S$
+\end{tabular}
+\end{center}
+%
+In some cases it might be necessary to specify explicitly also the arity of
+the respective predicates, e.g. $p \mathsf{/1\textrm{-}n}$.
+
+The $S$ argument is considered complementary to the scope argument to
+$\pplmacro{circ}$ in \cite{cw-projcirc} (like in forgetting instead of
+projection).
+
+%
+% Statement at position 1300
+%
+\pplkbBefore
+\index{xraise(S,F)@$\ppldefmacro{xraise}(\pplparamplain{S},\pplparamplain{F})$}$\begin{array}{lllll}
+\ppldefmacro{xraise}(\pplparamplain{S},\pplparamplain{F})
+\end{array}
+$\pplkbBetween
+$\begin{array}{lllll}
+\exists \pplparamplain{Q} \, (\pplparamplainidx{F}{1} \land  \pplparamplainidx{T}{1} \land  \lnot  \pplparamplainidx{T}{2}),
+\end{array}
+$\pplkbAfter
+\pplkbBodyBefore
+$
+\begin{array}{l}\pplparamplainidx{F}{1} \assign \pplparamplain{F}[\pplparamplain{S} \mapsto \pplparamplain{Q}],\\
+\pplparamplainidx{S}{2} \assign \pplparamplain{S}\; \mathrm{with\ arities\ from}\; \pplparamplain{F},\\
+\pplparamplainidx{T}{1} \assign \mathrm{transfer\ clauses}\; \pplparamplainidx{S}{2} \rightarrow \pplparamplain{Q},\\
+\pplparamplainidx{T}{2} \assign \mathrm{transfer\ clauses}\; \pplparamplain{Q} \rightarrow \pplparamplainidx{S}{2}.
+
+\end{array}$\pplkbBodyAfter
+%
+% Doc at position 1491
+%
+The second-order subformula on which $\pplmacro{xcirc}$ is based, Similar
+to $\pplmacro{raise}$ \cite{cw-projcirc}, however the scope argument $S$ is
+considered complementary (like in forgetting instead of projection).
+
+%
+% Doc at position 1799
+%
+\section{Some Examples}
+
+These are examples from \cite{lifschitz:circumscription:94}.
+
+\bigskip
+
+
+\noindent Input: $\pplmacro{xcirc}({[}\mathsf{p}\textrm{-}\mathsf{n}{]},\mathsf{p}\mathsf{a}).$\\
+\noindent Result of elimination:
+\[\begin{array}{lllll}
+\mathsf{p}\mathsf{a} \land  \forall \mathit{x} \, (\mathsf{p}\mathit{x} \imp  \mathit{x}=\mathsf{a}).
+\end{array}
+\]
+
+\noindent Input: $\pplmacro{xcirc}({[}\mathsf{p}\textrm{-}\mathsf{n}{]},\lnot  \mathsf{p}\mathsf{a}).$\\
+\noindent Result of elimination:
+\[\begin{array}{lllll}
+\forall \mathit{x} \, \lnot  \mathsf{p}\mathit{x}.
+\end{array}
+\]
+
+\noindent Input: $\pplmacro{xcirc}({[}\mathsf{p}\textrm{-}\mathsf{n}{]},(\mathsf{p}\mathsf{a} \land  \mathsf{p}\mathsf{b})).$\\
+\noindent Result of elimination:
+\[\begin{array}{lllll}
+\mathsf{p}\mathsf{a} \land  \mathsf{p}\mathsf{b} \land  \forall \mathit{x} \, (\mathsf{p}\mathit{x} \imp  \mathit{x}=\mathsf{a} \lor  \mathit{x}=\mathsf{b}).
+\end{array}
+\]
+
+\noindent Input: $\pplmacro{xcirc}({[}\mathsf{p}\textrm{-}\mathsf{n}{]},(\mathsf{p}\mathsf{a} \lor  \mathsf{p}\mathsf{b})).$\\
+\noindent Result of elimination:
+\[\begin{array}{lllll}
+(\mathsf{p}\mathsf{a} \lor  \mathsf{p}\mathsf{b}) \land  \forall \mathit{x} \, (\mathsf{p}\mathit{x} \imp  (\mathsf{p}\mathsf{a} \imp  \mathit{x}=\mathsf{a}) \land  (\mathsf{p}\mathsf{b} \imp  \mathit{x}=\mathsf{b})).
+\end{array}
+\]
+\pplIsValid{\pplmacro{last\_result} \equi  \forall \mathit{x} \, (\mathsf{p}\mathit{x} \equi  \mathit{x}=\mathsf{a}) \lor  \forall \mathit{x} \, (\mathsf{p}\mathit{x} \equi  \mathit{x}=\mathsf{b}).}
+%
+% Doc at position 2253
+%
+
+\medskip
+
+
+\noindent Input: $\pplmacro{xcirc}({[}\mathsf{p}\textrm{-}\mathsf{n}{]},(\lnot  \mathsf{p}\mathsf{a} \lor  \mathsf{p}\mathsf{b})).$\\
+\noindent Result of elimination:
+\[\begin{array}{lllll}
+\forall \mathit{x} \, \lnot  \mathsf{p}\mathit{x}.
+\end{array}
+\]
+
+\noindent Input: $\pplmacro{xcirc}({[}\mathsf{p}\textrm{-}\mathsf{n}{]},(\mathsf{p}\mathsf{a} \lor  (\mathsf{p}\mathsf{b} \land  \mathsf{p}\mathsf{c}))).$\\
+\noindent Result of elimination:
+\[\begin{array}{lllll}
+(\mathsf{p}\mathsf{a} \lor  (\mathsf{p}\mathsf{b} \land  \mathsf{p}\mathsf{c})) &&&&\; \land \\
+\forall \mathit{x} \, (\mathsf{p}\mathit{x} \imp  (\mathsf{p}\mathsf{a} \imp  \mathit{x}=\mathsf{a}) \land  (\mathsf{p}\mathsf{b} \land  \mathsf{p}\mathsf{c} \imp  \mathit{x}=\mathsf{b} \lor  \mathit{x}=\mathsf{c})).
+\end{array}
+\]
+\pplIsValid{\pplmacro{last\_result} \equi  \forall \mathit{x} \, (\mathsf{p}\mathit{x} \equi  \mathit{x}=\mathsf{a}) \lor  (\forall \mathit{x} \, (\mathsf{p}\mathit{x} \equi  \mathit{x}=\mathsf{b} \lor  \mathit{x}=\mathsf{c}) \land  \mathsf{a}\neq \mathsf{b} \land  \mathsf{a}\neq \mathsf{c}).}
+%
+% Doc at position 2579
+%
+
+\medskip
+
+
+\noindent Input: $\pplmacro{xcirc}({[}\mathsf{p}\textrm{-}\mathsf{n}{]},\forall \mathit{x} \, \mathsf{p}\mathit{x}).$\\
+\noindent Result of elimination:
+\[\begin{array}{lllll}
+\forall \mathit{x} \, \mathsf{p}\mathit{x}.
+\end{array}
+\]
+
+\noindent Input: $\pplmacro{xcirc}({[}\mathsf{p}\textrm{-}\mathsf{n}{]},\forall \mathit{x} \, (\mathsf{q}\mathit{x} \imp  \mathsf{p}\mathit{x})).$\\
+\noindent Result of elimination:
+\[\begin{array}{lllll}
+(\forall \mathit{x} \, (\mathsf{q}\mathit{x} \imp  \mathsf{p}\mathit{x}) \imp  \forall \mathit{x} \, (\mathsf{p}\mathit{x} \imp  \mathsf{q}\mathit{x})) &&&&\; \land \\
+\forall \mathit{x} \, (\mathsf{q}\mathit{x} \imp  \mathsf{p}\mathit{x}).
+\end{array}
+\]
+
+\noindent Input: $\pplmacro{xcirc}({[}\mathsf{p}\textrm{-}\mathsf{n}{]},\exists \mathit{x} \, \mathsf{p}\mathit{x}).$\\
+\noindent Result of elimination:
+\[\begin{array}{lllll}
+\forall \mathit{x} \, (\mathsf{p}\mathit{x} \imp  \forall \mathit{y} \, (\mathsf{p}\mathit{y} \imp  \mathit{x}=\mathit{y})) \land  \exists \mathit{x} \, \mathsf{p}\mathit{x}.
+\end{array}
+\]
+\pplIsValid{\pplmacro{last\_result} \equi  \exists \mathit{x} \, \forall \mathit{y} \, (\mathsf{p}\mathit{y} \equi  \mathit{x}=\mathit{y}).}
+%
+% Doc at position 2861
+%
+
+\medskip
+
+
+\noindent Input: $\pplmacro{xcirc}({[}\mathsf{p}\textrm{-}\mathsf{n}{]},\forall \mathit{x} \, \mathsf{p}\mathit{x}\mathit{x}).$\\
+\noindent Result of elimination:
+\[\begin{array}{lllll}
+(\forall \mathit{x}\mathit{y} \, (\mathsf{p}\mathit{x}\mathit{y} \imp  \mathit{x}=\mathit{y}) \lor  \exists \mathit{x} \, \lnot  \mathsf{p}\mathit{x}\mathit{x}) &&&&\; \land \\
+\forall \mathit{x} \, \mathsf{p}\mathit{x}\mathit{x}.
+\end{array}
+\]
+
+\noindent Input: $\pplmacro{xcirc}({[}\mathsf{p}\textrm{-}\mathsf{n},\mathsf{q}\textrm{-}\mathsf{pn}{]},\forall \mathit{x} \, (\mathsf{q}\mathit{x} \imp  \mathsf{p}\mathit{x})).$\\
+\noindent Result of elimination:
+\[\begin{array}{lllll}
+\forall \mathit{x} \, (\mathsf{q}\mathit{x} \imp  \mathsf{p}\mathit{x}) \land  \forall \mathit{x} \, \lnot  \mathsf{p}\mathit{x}.
+\end{array}
+\]
+\pplIsValid{\pplmacro{last\_result} \equi  \forall \mathit{x} \, \lnot  \mathsf{p}\mathit{x} \land  \forall \mathit{x} \, \lnot  \mathsf{q}\mathit{x}.}
+%
+% Doc at position 3317
+%
+
+\medskip
+
+%
+% Statement at position 3336
+%
+\pplkbBefore
+\index{block_axioms@$\ppldefmacro{block\_axioms}$}$\begin{array}{lllll}
+\ppldefmacro{block\_axioms}
+\end{array}
+$\pplkbBetween
+$\begin{array}{lllll}
+\forall \mathit{x} \, (\mathsf{block}(\mathit{x}) \land  \lnot  \mathsf{ab}(\mathit{x}) \imp  \mathsf{ontable}(\mathit{x})) &&&&\; \land \\
+\lnot  \mathsf{ontable}(\mathsf{b_{1}}) &&&&\; \land \\
+\mathsf{block}(\mathsf{b_{1}}) &&&&\; \land \\
+\mathsf{block}(\mathsf{b_{2}}) &&&&\; \land \\
+\mathsf{b_{1}}\neq \mathsf{b_{2}}.
+\end{array}
+$\pplkbAfter
+
+\noindent Input: $\pplmacro{xcirc}({[}\mathsf{ab}\textrm{-}\mathsf{n},\mathsf{ontable}\textrm{-}\mathsf{pn}{]},\pplmacro{block\_axioms}).$\\
+\noindent Result of elimination:
+\[\begin{array}{lllll}
+\mathsf{b_{1}}\neq \mathsf{b_{2}} &&&&\; \land \\
+\lnot  \mathsf{ontable}(\mathsf{b_{1}}) &&&&\; \land \\
+\mathsf{block}(\mathsf{b_{1}}) &&&&\; \land \\
+\mathsf{block}(\mathsf{b_{2}}) &&&&\; \land \\
+(\mathsf{ab}(\mathsf{b_{1}}) \imp  \forall \mathit{x} \, (\mathsf{ab}(\mathit{x}) \imp  \mathit{x}=\mathsf{b_{1}} \land  \mathsf{block}(\mathit{x}))) &&&&\; \land \\
+\forall \mathit{x} \, (\mathsf{block}(\mathit{x}) \imp  \mathsf{ab}(\mathit{x}) \lor  \mathsf{ontable}(\mathit{x})).
+\end{array}
+\]
+\pplIsValid{\pplmacro{last\_result} \equi  \pplmacro{block\_axioms} \land  \forall \mathit{x} \, (\mathsf{ab}(\mathit{x}) \equi  \mathit{x}=\mathsf{b_{1}}).}
+%
+% Doc at position 3620
+%
+
+\subsection{Auxiliary Macros}
+
+%
+% Statement at position 3659
+%
+\pplkbBefore
+\index{last_result@$\ppldefmacro{last\_result}$}$\begin{array}{lllll}
+\ppldefmacro{last\_result}
+\end{array}
+$\pplkbBetween
+$\begin{array}{lllll}
+\pplparamplain{X},
+\end{array}
+$\pplkbAfter
+\pplkbBodyBefore
+$
+\begin{array}{l}\mathrm{last\_ppl\_result(X)}.
+
+\end{array}$\pplkbBodyAfter
+%
+% Doc at position 3707
+%
+\bibliographystyle{alpha}
+\bibliography{bibscratch03}
+\printindex
+\end{document}

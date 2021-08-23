@@ -1,0 +1,62 @@
+\documentclass[a4paper]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+
+%%%%
+%%%% Usage with TexLive (to enable write18):
+%%%%
+%%%% pdflatex -shell-escape pplatex_demo.tex
+%%%% 
+
+\newcommand{\pplatexoptions}{[maxpos=20]}
+
+\newwrite\ppltempfile
+
+\newcommand{\ppl}[1]{%
+\immediate\openout\ppltempfile=ppl.tmp%
+\immediate\write\ppltempfile{\unexpanded{#1}}%
+\immediate\closeout\ppltempfile%
+\immediate\write18{./pplatex.sh --options='\pplatexoptions' ppl.tmp >/tmp/tmpout.tex}%
+\input{/tmp/tmpout.tex}%
+}
+
+\newcommand{\true}{\top}
+\newcommand{\false}{\bot}
+\newcommand{\imp}{\rightarrow}
+\newcommand{\revimp}{\leftarrow}
+\newcommand{\equi}{\leftrightarrow}
+\newcommand{\entails}{\models}
+
+\begin{document}
+
+\section{Hello}
+
+\renewcommand{\pplatexoptions}{[maxpos=50]}
+
+\begin{equation}
+\ppl{all(x, (p(x), q(x) -> (~r(x), k, ~(x=a))))}
+\end{equation}
+
+\begin{equation}
+\ppl{all(x, (p1(x), q2(x))) => ex(x, (r2(x), (x=y)))}
+\end{equation}
+
+\begin{equation}
+\ppl{all(x, (p1(x), q2(x) -> r2(x), (x=y)))}
+\end{equation}
+
+\renewcommand{\pplatexoptions}{[maxpos=60,style=full]}
+
+\begin{equation}
+\ppl{all(x, (p1(x), q20(x) -> (r2(x) ; x=a)))}
+\end{equation}
+
+
+\renewcommand{\pplatexoptions}{[maxpos=10,style=brief,rightcols=2]}
+
+\begin{equation}
+\ppl{all(x, (p1(x), q20(x) -> (r2(x) , x=a , q , r , s , t , u)))}
+\end{equation}
+
+\end{document}
+

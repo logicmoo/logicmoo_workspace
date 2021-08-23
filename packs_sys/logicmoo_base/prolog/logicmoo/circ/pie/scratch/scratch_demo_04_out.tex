@@ -1,0 +1,236 @@
+\documentclass[a4paper]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{imakeidx}
+\usepackage[hidelinks]{hyperref}
+%% A screen friendly geometry:	    
+\usepackage[paper=a5paper,scale=0.9]{geometry}
+%% PPL Setup
+	   
+\newcommand{\assign}{\mathrel{\mathop:}=}
+\newcommand{\concat}{\mathrel{+\!+}}
+	    
+\newcommand{\f}[1]{\mathsf{#1}}
+\newcommand{\true}{\top}
+\newcommand{\false}{\bot}
+\newcommand{\imp}{\rightarrow}
+\newcommand{\revimp}{\leftarrow}
+\newcommand{\equi}{\leftrightarrow}
+\newcommand{\entails}{\models}	    
+\newcommand{\eqdef}{\; 
+\raisebox{-0.1ex}[0mm]{$ \stackrel{\raisebox{-0.2ex}{\tiny 
+\textnormal{def}}}{=} $}\; }
+\newcommand{\iffdef}{\n{iff}_{\mbox{\scriptsize \textnormal{def}}}}
+
+\newcommand{\pplmacro}[1]{\mathit{#1}}
+\newcommand{\ppldefmacro}[1]{\mathit{#1}}
+\newcommand{\pplparam}[1]{\mathit{#1}}
+\newcommand{\pplparamidx}[2]{\mathit{#1}_{#2}}
+\newcommand{\pplparamplain}[1]{#1}
+\newcommand{\pplparamplainidx}[2]{#1_{#2}}
+\newcommand{\pplparamsup}[2]{\mathit{#1}^{#2}}
+\newcommand{\pplparamsupidx}[3]{\mathit{#1}^{#2}_{#3}}
+\newcommand{\pplparamplainsup}[2]{#1^{#2}}
+\newcommand{\pplparamplainsupidx}[3]{#1^{#2}_{#3}}
+\newcommand{\pplparamnum}[1]{\mathit{X}_{#1}}
+
+%%	    
+%% We use @startsection just to obtain reduced vertical spacing above
+%% macro headers which are immediately after other headers, e.g. of sections
+%%	    
+\makeatletter%
+\newcounter{entry}%
+\newcommand{\entrymark}[1]{}%
+\newcommand\entryhead{%
+\@startsection{entry}{10}{\z@}{12pt plus 2pt minus 2pt}{0pt}{}}%
+\makeatother
+	    
+\newcommand{\pplkbBefore}
+{\entryhead*{}%
+\setlength{\arraycolsep}{0pt}%
+\pagebreak[0]%
+\begin{samepage}%
+\noindent%
+\rule[0.5pt]{\textwidth}{2pt}\\%
+\noindent}
+
+% \newcommand{\pplkbDefType}[1]{\hspace{\fill}{{[}#1{]}\\}}
+
+\newcommand{\pplkbBetween}
+{\setlength{\arraycolsep}{3pt}%
+\\\rule[3pt]{\textwidth}{1pt}%
+\par\nopagebreak\noindent Defined as\begin{center}}
+
+\newcommand{\pplkbAfter}{\end{center}\end{samepage}\noindent}
+
+\newcommand{\pplkbBodyBefore}{\par\noindent where\begin{center}}
+\newcommand{\pplkbBodyAfter}{\end{center}}
+
+\newcommand{\pplkbFreePredicates}[1]{\f{free\_predicates}(#1)}
+% \newcommand{\pplkbRenameFreeOccurrences}[3]{\f{rename\_free\_occurrences}(#1,#2,#3)}
+
+\newcommand{\pplIsValid}[1]{\noindent This formula is valid: $#1$\par}
+\newcommand{\pplIsNotValid}[1]{\noindent This formula is not valid: $#1$\par}	    
+\newcommand{\pplFailedToValidate}[1]{\noindent Failed to validate this formula: $#1$\par}
+
+\newcounter{def}
+	    
+\makeindex
+\usepackage{graphicx}
+
+\begin{document}
+%
+% Doc at position 0
+%
+ \title{\textit{PIE} Example Document}
+  \date{Revision: March 28, 2020; Rendered: \today}
+  \maketitle
+%
+% Doc at position 386
+%
+ \section{Projection and Definientia} 
+%
+% Statement at position 431
+%
+\pplkbBefore
+\index{project(S,F)@$\ppldefmacro{project}(\pplparamplain{S},\pplparamplain{F})$}$\begin{array}{lllll}
+\ppldefmacro{project}(\pplparamplain{S},\pplparamplain{F})
+\end{array}
+$\pplkbBetween
+$\begin{array}{lllll}
+\exists \pplparamplainidx{S}{1} \, \pplparamplain{F},
+\end{array}
+$\pplkbAfter
+\pplkbBodyBefore
+$
+\begin{array}{l}\pplparamplainidx{S}{2} \assign \pplkbFreePredicates{\pplparamplain{F}},\\
+\pplparamplainidx{S}{1} \assign \pplparamplainidx{S}{2} \setminus \pplparamplain{S}.
+
+\end{array}$\pplkbBodyAfter
+%
+% Statement at position 639
+%
+\pplkbBefore
+\index{definiens(G,F,S)@$\ppldefmacro{definiens}(\pplparamplain{G},\pplparamplain{F},\pplparamplain{S})$}$\begin{array}{lllll}
+\ppldefmacro{definiens}(\pplparamplain{G},\pplparamplain{F},\pplparamplain{S})
+\end{array}
+$\pplkbBetween
+$\begin{array}{lllll}
+\pplmacro{project}(\pplparamplain{S},(\pplparamplain{F} \land  \pplparamplain{G})) \imp  \lnot  \pplmacro{project}(\pplparamplain{S},(\pplparamplain{F} \land  \lnot  \pplparamplain{G})).
+\end{array}
+$\pplkbAfter
+%
+% Doc at position 712
+%
+ \section{Obtaining a Definiens with Interpolation} 
+%
+% Doc at position 771
+%
+We specify a background knowledge base:
+%
+% Statement at position 819
+%
+\pplkbBefore
+\index{kb_1@$\ppldefmacro{kb_{1}}$}$\begin{array}{lllll}
+\ppldefmacro{kb_{1}}
+\end{array}
+$\pplkbBetween
+$\begin{array}{lllll}
+\forall \mathit{x} \, ((\mathsf{q}\mathit{x} \imp  \mathsf{p}\mathit{x}) \land  (\mathsf{p}\mathit{x} \imp  \mathsf{r}\mathit{x}) \land  (\mathsf{r}\mathit{x} \imp  \mathsf{q}\mathit{x})).
+\end{array}
+$\pplkbAfter
+%
+% Doc at position 889
+%
+\bigskip
+
+To obtain a definiens of $\exists x\, \f{p}x$ in terms $\{\f{q}, \f{r}\}$
+within $\mathit{kb_1}$ we specify an implication with the $\mathit{definiens}$
+macro:
+%
+% Statement at position 1067
+%
+\pplkbBefore
+\index{ex_1@$\ppldefmacro{ex_{1}}$}$\begin{array}{lllll}
+\ppldefmacro{ex_{1}}
+\end{array}
+$\pplkbBetween
+$\begin{array}{lllll}
+\pplmacro{definiens}(\exists \mathit{x} \, \mathsf{p}\mathit{x},\pplmacro{kb_{1}},{[}\mathsf{q},\mathsf{r}{]}).
+\end{array}
+$\pplkbAfter
+%
+% Doc at position 1132
+%
+\bigskip
+
+We now invoke a utility predicate that computes and prints for a given valid
+implication an interpolant of its antecedent and consequent:
+
+\noindent Input: $\pplmacro{ex_{1}}.$\\
+\noindent Result of interpolation:
+\[\begin{array}{lllll}
+\exists \mathit{x} \, \mathsf{q}\mathit{x}.
+\end{array}
+\]
+%
+% Doc at position 1368
+%
+The proof underlying interpolant extraction can be visualized, colors
+representing the sides with respect to interpolation. The color of
+the closing marks indicate the side of the connection partner:
+
+\begin{center}
+\includegraphics[width=15em]{/tmp/tmp_pie_dotgraph01}
+\end{center}
+%
+% Doc at position 1659
+%
+Before we leave that example, we take a look at the expansion of
+$\mathit{ex}_1$:
+\[\begin{array}{lllll}
+\exists \mathit{p} \, (\forall \mathit{x} \, ((\mathsf{q}\mathit{x} \imp  \mathit{p}\mathit{x}) \land  (\mathit{p}\mathit{x} \imp  \mathsf{r}\mathit{x}) \land  (\mathsf{r}\mathit{x} \imp  \mathsf{q}\mathit{x})) &&&\; \land \\
+\hphantom{\exists \mathit{p} \, (} \exists \mathit{x} \, \mathit{p}\mathit{x}) &&&&\; \imp \\
+\lnot  \exists \mathit{p} \, (\forall \mathit{x} \, ((\mathsf{q}\mathit{x} \imp  \mathit{p}\mathit{x}) \land  (\mathit{p}\mathit{x} \imp  \mathsf{r}\mathit{x}) \land  (\mathsf{r}\mathit{x} \imp  \mathsf{q}\mathit{x})) &&&\; \land \\
+\hphantom{\lnot  \exists \mathit{p} \, (} \lnot  \exists \mathit{x} \, \mathit{p}\mathit{x}).
+\end{array}
+\]
+%
+% Doc at position 1799
+%
+  And we invoke an external prover (\textit{Prover9}) to validate it:
+
+\pplIsValid{\pplmacro{ex_{1}}.}
+%
+% Doc at position 2119
+%
+ \section{Obtaining the Strongest Definiens with Elimination} 
+%
+% Doc at position 2188
+%
+The antecedent of the implication in the expansion of $\mathit{definiens}$
+specifies the strongest necessary condition of $G$ on $S$ within $F$.  In case
+definability holds (that is, the implication is valid), this antecedent denotes
+the strongest definiens. In the example it has a first-order equivalent
+that can be computed by second-order quantifier elimination.
+%
+% Statement at position 2563
+%
+\pplkbBefore
+\index{ex_2@$\ppldefmacro{ex_{2}}$}$\begin{array}{lllll}
+\ppldefmacro{ex_{2}}
+\end{array}
+$\pplkbBetween
+$\begin{array}{lllll}
+\pplmacro{project}({[}\mathsf{q},\mathsf{r}{]},(\pplmacro{kb_{1}} \land  \exists \mathit{x} \, \mathsf{p}\mathit{x})).
+\end{array}
+$\pplkbAfter
+
+\noindent Input: $\pplmacro{ex_{2}}.$\\
+\noindent Result of elimination:
+\[\begin{array}{lllll}
+\forall \mathit{x} \, (\mathsf{r}\mathit{x} \imp  \mathsf{q}\mathit{x}) \land  \forall \mathit{x} \, (\mathsf{q}\mathit{x} \imp  \mathsf{r}\mathit{x}) \land  \exists \mathit{x} \, \mathsf{r}\mathit{x}.
+\end{array}
+\]
+\printindex
+\end{document}

@@ -196,7 +196,7 @@ inoxf(Goal):- ignore(notrace(catch(Goal,E,format(user_error,'~N~ncall(~q) caused
 :- dynamic(already_webui_load_swish_and_clio/0).
 
 
-
+skipping(_):-!.
 skipping(X):- dmsg:once_in_while(dmsg(skipping(X))).
 
 webui_load_swish_and_clio:- already_webui_load_swish_and_clio,!.

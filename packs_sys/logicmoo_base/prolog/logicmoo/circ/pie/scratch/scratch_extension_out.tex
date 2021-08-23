@@ -1,0 +1,349 @@
+\documentclass[a4paper]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{imakeidx}
+\usepackage[hidelinks]{hyperref}
+%% A screen friendly geometry:	    
+\usepackage[paper=a5paper,scale=0.9]{geometry}
+%% PPL Setup
+	   
+\newcommand{\assign}{\mathrel{\mathop:}=}
+\newcommand{\concat}{\mathrel{+\!+}}
+	    
+\newcommand{\f}[1]{\mathsf{#1}}
+\newcommand{\true}{\top}
+\newcommand{\false}{\bot}
+\newcommand{\imp}{\rightarrow}
+\newcommand{\revimp}{\leftarrow}
+\newcommand{\equi}{\leftrightarrow}
+\newcommand{\entails}{\models}	    
+\newcommand{\eqdef}{\; 
+\raisebox{-0.1ex}[0mm]{$ \stackrel{\raisebox{-0.2ex}{\tiny 
+\textnormal{def}}}{=} $}\; }
+\newcommand{\iffdef}{\n{iff}_{\mbox{\scriptsize \textnormal{def}}}}
+
+\newcommand{\pplmacro}[1]{\mathit{#1}}
+\newcommand{\ppldefmacro}[1]{\mathit{#1}}
+\newcommand{\pplparam}[1]{\mathit{#1}}
+\newcommand{\pplparamidx}[2]{\mathit{#1}_{#2}}
+\newcommand{\pplparamplain}[1]{#1}
+\newcommand{\pplparamplainidx}[2]{#1_{#2}}
+\newcommand{\pplparamsup}[2]{\mathit{#1}^{#2}}
+\newcommand{\pplparamsupidx}[3]{\mathit{#1}^{#2}_{#3}}
+\newcommand{\pplparamplainsup}[2]{#1^{#2}}
+\newcommand{\pplparamplainsupidx}[3]{#1^{#2}_{#3}}
+\newcommand{\pplparamnum}[1]{\mathit{X}_{#1}}
+
+%%	    
+%% We use @startsection just to obtain reduced vertical spacing above
+%% macro headers which are immediately after other headers, e.g. of sections
+%%	    
+\makeatletter%
+\newcounter{entry}%
+\newcommand{\entrymark}[1]{}%
+\newcommand\entryhead{%
+\@startsection{entry}{10}{\z@}{12pt plus 2pt minus 2pt}{0pt}{}}%
+\makeatother
+	    
+\newcommand{\pplkbBefore}
+{\entryhead*{}%
+\setlength{\arraycolsep}{0pt}%
+\pagebreak[0]%
+\begin{samepage}%
+\noindent%
+\rule[0.5pt]{\textwidth}{2pt}\\%
+\noindent}
+
+% \newcommand{\pplkbDefType}[1]{\hspace{\fill}{{[}#1{]}\\}}
+
+\newcommand{\pplkbBetween}
+{\setlength{\arraycolsep}{3pt}%
+\\\rule[3pt]{\textwidth}{1pt}%
+\par\nopagebreak\noindent Defined as\begin{center}}
+
+\newcommand{\pplkbAfter}{\end{center}\end{samepage}\noindent}
+
+\newcommand{\pplkbBodyBefore}{\par\noindent where\begin{center}}
+\newcommand{\pplkbBodyAfter}{\end{center}}
+
+\newcommand{\pplkbFreePredicates}[1]{\f{free\_predicates}(#1)}
+% \newcommand{\pplkbRenameFreeOccurrences}[3]{\f{rename\_free\_occurrences}(#1,#2,#3)}
+
+\newcommand{\pplIsValid}[1]{\noindent This formula is valid: $#1$\par}
+\newcommand{\pplIsNotValid}[1]{\noindent This formula is not valid: $#1$\par}	    
+\newcommand{\pplFailedToValidate}[1]{\noindent Failed to validate this formula: $#1$\par}
+
+\newcounter{def}
+	    
+\makeindex
+
+\begin{document}
+%
+% Doc at position 0
+%
+\title{Conservative and Definitional Extensions}
+\date{Revision: May 10, 2016; Rendered: \today}
+\maketitle
+
+\noindent Conservative and definitional extension (see, e.g.,
+\cite{hodges:shorter}). Actually, a generalization of definitional extension
+is presented here. Formalized with the
+\href{http://cs.christophwernhard.com/pie/}{\textit{PIE}} system.
+%
+% Doc at position 470
+%
+\section{Conservative Extension}
+
+Formula $G$ is a \textit{conservative extension} of formula $F$ if and only if
+the following biconditional is valid. The right-to-left direction can be
+expressed as first-order validity, since second-order quantification is only
+in the antecedent and only existential there. The left-to-right direction in
+%
+% Statement at position 860
+%
+\pplkbBefore
+\index{conservative_extension(F,G)@$\ppldefmacro{conservative\_extension}(\pplparamplain{F},\pplparamplain{G})$}$\begin{array}{lllll}
+\ppldefmacro{conservative\_extension}(\pplparamplain{F},\pplparamplain{G})
+\end{array}
+$\pplkbBetween
+$\begin{array}{lllll}
+\pplparamplain{F} \equi  \pplmacro{proj}(\pplparamplain{S},\pplparamplain{G}),
+\end{array}
+$\pplkbAfter
+\pplkbBodyBefore
+$
+\begin{array}{l}\pplparamplain{S} \assign \pplkbFreePredicates{\pplparamplain{F}}.
+
+\end{array}$\pplkbBodyAfter
+%
+% Doc at position 947
+%
+\subsection{Examples for Conservative Extensions}
+%
+% Statement at position 1005
+%
+\pplkbBefore
+\index{f1@$\ppldefmacro{f_{1}}$}$\begin{array}{lllll}
+\ppldefmacro{f_{1}}
+\end{array}
+$\pplkbBetween
+$\begin{array}{lllll}
+\mathsf{a} \imp  \mathsf{b}.
+\end{array}
+$\pplkbAfter
+%
+% Statement at position 1027
+%
+\pplkbBefore
+\index{ex_ce_1@$\ppldefmacro{ex\_ce_{1}}$}$\begin{array}{lllll}
+\ppldefmacro{ex\_ce_{1}}
+\end{array}
+$\pplkbBetween
+$\begin{array}{lllll}
+\pplmacro{conservative\_extension}(\pplmacro{f_{1}},(\pplmacro{f_{1}} \land  (\mathsf{p} \equi  \mathsf{a}))).
+\end{array}
+$\pplkbAfter
+\pplIsValid{\pplmacro{ex\_ce_{1}}.}
+%
+% Statement at position 1168
+%
+\pplkbBefore
+\index{ex_ce_2@$\ppldefmacro{ex\_ce_{2}}$}$\begin{array}{lllll}
+\ppldefmacro{ex\_ce_{2}}
+\end{array}
+$\pplkbBetween
+$\begin{array}{lllll}
+\pplmacro{conservative\_extension}(\pplmacro{f_{1}},(\pplmacro{f_{1}} \land  (\mathsf{p} \revimp  \mathsf{a}))).
+\end{array}
+$\pplkbAfter
+\pplIsValid{\pplmacro{ex\_ce_{2}}.}
+%
+% Doc at position 1308
+%
+\subsection{Counterexamples for Conservative Extensions}
+%
+% Statement at position 1373
+%
+\pplkbBefore
+\index{ex_ce_3@$\ppldefmacro{ex\_ce_{3}}$}$\begin{array}{lllll}
+\ppldefmacro{ex\_ce_{3}}
+\end{array}
+$\pplkbBetween
+$\begin{array}{lllll}
+\pplmacro{conservative\_extension}(\pplmacro{f_{1}},(\pplmacro{f_{1}} \land  (\mathsf{b} \imp  \mathsf{p}) \land  (\mathsf{p} \imp  \mathsf{a}))).
+\end{array}
+$\pplkbAfter
+\pplFailedToValidate{\pplmacro{ex\_ce_{3}}.}
+%
+% Statement at position 1523
+%
+\pplkbBefore
+\index{def_extx(F,G)@$\ppldefmacro{def\_extx}(\pplparamplain{F},\pplparamplain{G})$}$\begin{array}{lllll}
+\ppldefmacro{def\_extx}(\pplparamplain{F},\pplparamplain{G})
+\end{array}
+$\pplkbBetween
+$\begin{array}{lllll}
+\mathsf{predicate\_definiens}(\pplparamplain{P},(\pplparamplain{F},\pplparamplain{G})),
+\end{array}
+$\pplkbAfter
+\pplkbBodyBefore
+$
+\begin{array}{l}\pplparamplainidx{S}{F} \assign \pplkbFreePredicates{\pplparamplain{F}},\\
+\pplparamplainidx{S}{G} \assign \pplkbFreePredicates{\pplparamplain{G}},\\
+\pplparamplainidx{S}{X} \assign \pplparamplainidx{S}{G} \setminus \pplparamplainidx{S}{F},\\
+\mathrm{singleton\_to\_member(S\_X,P)}.
+
+\end{array}$\pplkbBodyAfter
+%
+% Doc at position 1788
+%
+\section{Implicit Definitional Extensions}
+
+We define the following concept: Formula $G$ is an \textit{implicit definitional
+extension} of formula $F$ by unary predicate $p$ iff \begin{enumerate}
+
+\item $p$ does not occur in $F$.
+
+\item There exists a formula $Dx$ with no occurrences of $p$ and with no bound
+occurrences of $x$ such that $G \entails \forall x\, px \equi Dx$.
+
+\item \label{item-ide-ce} $F \equiv \exists p\, G$.
+\end{enumerate}
+
+That property can be verified with just first-order reasoning: $Dx$ is a
+definiens of $p$ that can be computed by interpolation. The right-to left
+direction of the conservative extension property,
+condition~(\ref{item-ide-ce}), can generally be expressed as first-order
+validity. Also the left-to-right condition can be expressed as first-order
+validity, as shown by the following equivalences:
+\[
+\begin{array}{r@{\hspace{1em}}l}
+& F \entails \exists p\, G[p]\\
+\mathrm{ iff } & F \entails \exists p\, G[p] \land \forall x\, px \equi Dx\\
+\mathrm{ iff } & F \entails \exists p\, G[D] \land \forall x\, px \equi Dx\\
+\mathrm{ iff } & F \entails G[D],
+\end{array}
+\]
+where $G[p] = G$ and $G[D]$ stands for $G$ with all occurrences of $p$
+replaced by $Dx$ with $x$ instantiated to the argument of $p$ at the respective occurrence.
+The follwing entailment is another equivvalent way to express the above
+entailments. It is first-order expressible and might be more convenient
+since the replacement of the occurrences of $p$ does not have to be explicitly performed:
+\[F \entails \forall p\,  \lnot (\forall x\, px \equi Dx) \lor G[p].\]
+%
+% Statement at position 3378
+%
+\pplkbBefore
+\index{predicate_definiens_xyz(P,F)@$\ppldefmacro{predicate\_definiens\_xyz}(\pplparamplain{P},\pplparamplain{F})$}$\begin{array}{lllll}
+\ppldefmacro{predicate\_definiens\_xyz}(\pplparamplain{P},\pplparamplain{F})
+\end{array}
+$\pplkbBetween
+$\begin{array}{lllll}
+\exists \pplparamplain{P} \, (\pplparamplain{F} \land  \pplparamplainidx{P}{X}) \imp  \lnot  \exists \pplparamplain{P} \, (\pplparamplain{F} \land  \lnot  \pplparamplainidx{P}{X}),
+\end{array}
+$\pplkbAfter
+\pplkbBodyBefore
+$
+\begin{array}{l}\pplparamplain{N} \assign \mathrm{arity\ of }\; \pplparamplain{P}\; \mathrm{ in }\; \pplparamplain{F},\\
+\pplparamplain{X} \assign x_1,\ldots,x_{\pplparamplain{N}},\\
+\pplparamplainidx{P}{X} \assign \pplparamplain{P}(\pplparamplain{X}).
+
+\end{array}$\pplkbBodyAfter
+%
+% Doc at position 3534
+%
+A version of predicate\_definiens with fixed arguments (as obtained by
+mac\_make\_args). It is assumed that these are not used as constants
+elsewhere.
+%
+% Doc at position 3693
+%
+
+\bigskip
+
+The following predicate implements the sketched method for verifying the
+implicit definitional extension property by means of first-order
+reasoning. The formula arguments are passed to the ppl\_ predicates that
+perform macro expansion.  The predicate succeeds iff the property holds
+and returns a definiens for the argument predicate as binding of $D$.
+{\small
+\begin{verbatim}
+implicit_definitional_extension(F, G, P, D) :- 
+        ppl_valid((ex2(P, G)->F), [prover=cm, printing=false]),
+        last_ppl_result(true),
+        ppl_ipol(predicate_definiens_xyz(P, G),
+                 [prover=cm, printing=false]),
+        last_ppl_result(D),
+        mac_get_arity(P, G, N),
+        mac_make_args(N, X),
+        mac_make_atom(P, X, P_X),
+        ppl_valid( (F -> all2(p,  (all(X,  (P_X<->D))->G))),
+                  [prover=cm, printing=false]),
+        last_ppl_result(true).
+\end{verbatim}}
+%
+% Statement at position 4531
+%
+\pplkbBefore
+\index{f2@$\ppldefmacro{f_{2}}$}$\begin{array}{lllll}
+\ppldefmacro{f_{2}}
+\end{array}
+$\pplkbBetween
+$\begin{array}{lllll}
+\pplmacro{f_{1}} \land  (\mathsf{p} \imp  \mathsf{a}) \land  (\mathsf{a} \land  \mathsf{b} \imp  \mathsf{p}).
+\end{array}
+$\pplkbAfter
+%
+% Statement at position 4570
+%
+\pplkbBefore
+\index{f3@$\ppldefmacro{f_{3}}$}$\begin{array}{lllll}
+\ppldefmacro{f_{3}}
+\end{array}
+$\pplkbBetween
+$\begin{array}{lllll}
+\pplmacro{f_{1}} \land  (\mathsf{p} \imp  \mathsf{a}).
+\end{array}
+$\pplkbAfter
+%
+% Doc at position 4598
+%
+
+Both formulas $f_2$ and $f_3$ are conservative extensions of $f_1$:
+
+\pplIsValid{\pplmacro{conservative\_extension}(\pplmacro{f_{1}},\pplmacro{f_{2}}).}
+%
+% Doc at position 4784
+%
+ 
+\pplIsValid{\pplmacro{conservative\_extension}(\pplmacro{f_{1}},\pplmacro{f_{3}}).}
+%
+% Doc at position 4900
+%
+
+\bigskip
+
+We can test the predicate \texttt{implicit\_definitional\_extension} with these calls:
+
+\begin{verbatim}
+?- implicit_definitional_extension(f1, f2, p, D).  % succeeds
+?- implicit_definitional_extension(f1, f3, p, D).  % fails
+\end{verbatim}
+
+Only formula $f_2$ but not $f_3$ is an implicit definitional extension of $f_1$.
+The following formula is a computed definiens $D$ for
+\begin{center}
+\texttt{implicit\_definitional\_extension(f1, f2, p, D)}:
+\end{center}
+
+\[\begin{array}{lllll}
+\mathsf{a} \land  \mathsf{b}.
+\end{array}
+\]
+%
+% Doc at position 5465
+%
+\bibliographystyle{alpha}
+\bibliography{bibscratch03}
+\printindex
+\end{document}

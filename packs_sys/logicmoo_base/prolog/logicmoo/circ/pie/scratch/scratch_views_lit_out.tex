@@ -1,0 +1,708 @@
+\documentclass[a4paper]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{imakeidx}
+\usepackage[hidelinks]{hyperref}
+%% A screen friendly geometry:	    
+\usepackage[paper=a5paper,scale=0.9]{geometry}
+%% PPL Setup
+	   
+\newcommand{\assign}{\mathrel{\mathop:}=}
+\newcommand{\concat}{\mathrel{+\!+}}
+	    
+\newcommand{\f}[1]{\mathsf{#1}}
+\newcommand{\true}{\top}
+\newcommand{\false}{\bot}
+\newcommand{\imp}{\rightarrow}
+\newcommand{\revimp}{\leftarrow}
+\newcommand{\equi}{\leftrightarrow}
+\newcommand{\entails}{\models}	    
+\newcommand{\eqdef}{\; 
+\raisebox{-0.1ex}[0mm]{$ \stackrel{\raisebox{-0.2ex}{\tiny 
+\textnormal{def}}}{=} $}\; }
+\newcommand{\iffdef}{\n{iff}_{\mbox{\scriptsize \textnormal{def}}}}
+
+\newcommand{\pplmacro}[1]{\mathit{#1}}
+\newcommand{\ppldefmacro}[1]{\mathit{#1}}
+\newcommand{\pplparam}[1]{\mathit{#1}}
+\newcommand{\pplparamidx}[2]{\mathit{#1}_{#2}}
+\newcommand{\pplparamplain}[1]{#1}
+\newcommand{\pplparamplainidx}[2]{#1_{#2}}
+\newcommand{\pplparamsup}[2]{\mathit{#1}^{#2}}
+\newcommand{\pplparamsupidx}[3]{\mathit{#1}^{#2}_{#3}}
+\newcommand{\pplparamplainsup}[2]{#1^{#2}}
+\newcommand{\pplparamplainsupidx}[3]{#1^{#2}_{#3}}
+\newcommand{\pplparamnum}[1]{\mathit{X}_{#1}}
+
+%%	    
+%% We use @startsection just to obtain reduced vertical spacing above
+%% macro headers which are immediately after other headers, e.g. of sections
+%%	    
+\makeatletter%
+\newcounter{entry}%
+\newcommand{\entrymark}[1]{}%
+\newcommand\entryhead{%
+\@startsection{entry}{10}{\z@}{12pt plus 2pt minus 2pt}{0pt}{}}%
+\makeatother
+	    
+\newcommand{\pplkbBefore}
+{\entryhead*{}%
+\setlength{\arraycolsep}{0pt}%
+\pagebreak[0]%
+\begin{samepage}%
+\noindent%
+\rule[0.5pt]{\textwidth}{2pt}\\%
+\noindent}
+
+% \newcommand{\pplkbDefType}[1]{\hspace{\fill}{{[}#1{]}\\}}
+
+\newcommand{\pplkbBetween}
+{\setlength{\arraycolsep}{3pt}%
+\\\rule[3pt]{\textwidth}{1pt}%
+\par\nopagebreak\noindent Defined as\begin{center}}
+
+\newcommand{\pplkbAfter}{\end{center}\end{samepage}\noindent}
+
+\newcommand{\pplkbBodyBefore}{\par\noindent where\begin{center}}
+\newcommand{\pplkbBodyAfter}{\end{center}}
+
+\newcommand{\pplkbFreePredicates}[1]{\f{free\_predicates}(#1)}
+% \newcommand{\pplkbRenameFreeOccurrences}[3]{\f{rename\_free\_occurrences}(#1,#2,#3)}
+
+\newcommand{\pplIsValid}[1]{\noindent This formula is valid: $#1$\par}
+\newcommand{\pplIsNotValid}[1]{\noindent This formula is not valid: $#1$\par}	    
+\newcommand{\pplFailedToValidate}[1]{\noindent Failed to validate this formula: $#1$\par}
+
+\newcounter{def}
+	    
+\makeindex
+
+\begin{document}
+%
+% Doc at position 0
+%
+\title{Access Predicates -- Examples from the Literature}
+\date{Revision: March 28, 2019; Rendered: \today}
+\maketitle
+
+\noindent Some examples of solutions to view-based query processing and query
+optimization tasks from the literature. Makes use of scratch\_forgetting and
+scratch\_definientia. Formalized with the
+\href{http://cs.christophwernhard.com/pie/}{\textit{PIE}} system.
+
+\tableofcontents
+%
+% Doc at position 934
+%
+\section{Examples from Benedikt, ten Cate and Tsamoura: Generating Low-Cost
+Plans from Proofs}
+
+These examples stem from \cite{benedikt:etal:2014:generating}.  The numbering
+of examples refers to that paper.  The representation here is different from
+the paper -- (it seem new and is called here ``SV-modeling''). Also the
+methods and solutions are different.
+%
+% Doc at position 1302
+%
+\subsection{Example 1}
+
+Note: $\f{ia}$ in the background formula represents that the name (``smith'' in
+the paper) is given. However $\f{ia}$ is actually not used to compute the
+interpolant.
+%
+% Statement at position 1501
+%
+\pplkbBefore
+\index{exbct_1_a@$\ppldefmacro{exbct\_1_{a}}$}$\begin{array}{lllll}
+\ppldefmacro{exbct\_1_{a}}
+\end{array}
+$\pplkbBetween
+$\begin{array}{lllll}
+\forall \mathit{n}\mathit{o}\mathit{e} \, (\mathsf{i}\mathit{e} \imp  (\mathsf{profinfo_{a}}(\mathit{n},\mathit{o},\mathit{e}) \equi  \mathsf{profinfo}(\mathit{n},\mathit{o},\mathit{e}))) &&&&\; \land \\
+\forall \mathit{n}\mathit{o}\mathit{e} \, (\mathsf{profinfo}(\mathit{n},\mathit{o},\mathit{e}) \imp  \mathsf{i}\mathit{n} \land  \mathsf{i}\mathit{o} \land  \mathsf{i}\mathit{e}).
+\end{array}
+$\pplkbAfter
+%
+% Statement at position 1636
+%
+\pplkbBefore
+\index{exbct_1_b@$\ppldefmacro{exbct\_1_{b}}$}$\begin{array}{lllll}
+\ppldefmacro{exbct\_1_{b}}
+\end{array}
+$\pplkbBetween
+$\begin{array}{lllll}
+\forall \mathit{n}\mathit{e} \, (\mathsf{udirect}(\mathit{n},\mathit{e}) \imp  \mathsf{i}\mathit{n} \land  \mathsf{i}\mathit{e}) &&&&\; \land \\
+\forall \mathit{n}\mathit{o}\mathit{e} \, (\mathsf{profinfo}(\mathit{n},\mathit{o},\mathit{e}) \imp  \mathsf{udirect}(\mathit{n},\mathit{e})).
+\end{array}
+$\pplkbAfter
+%
+% Statement at position 1746
+%
+\pplkbBefore
+\index{exbtc_1_c@$\ppldefmacro{exbtc\_1_{c}}$}$\begin{array}{lllll}
+\ppldefmacro{exbtc\_1_{c}}
+\end{array}
+$\pplkbBetween
+$\begin{array}{lllll}
+\pplmacro{definiens}(\mathsf{profinfo}(\mathsf{a},\mathsf{b},\mathsf{c}),\\
+\hphantom{\pplmacro{definiens}(} \pplmacro{exbct\_1_{a}} \land  \pplmacro{exbct\_1_{b}} \land  \mathsf{i}\mathsf{a},\\
+\hphantom{\pplmacro{definiens}(} {[}\mathsf{profinfo_{a}},\mathsf{udirect}{]}).
+\end{array}
+$\pplkbAfter
+
+\noindent Input: $\pplmacro{exbtc\_1_{c}}.$\\
+\noindent Result of interpolation:
+\[\begin{array}{lllll}
+\mathsf{udirect}(\mathsf{a},\mathsf{c}) \land  \mathsf{profinfo_{a}}(\mathsf{a},\mathsf{b},\mathsf{c}).
+\end{array}
+\]
+%
+% Doc at position 1916
+%
+\noindent In the following formula the query is expressed more accurately with
+existential midle argument, as described in Example~3 of
+\cite{benedikt:etal:2014:generating}.
+%
+% Statement at position 2098
+%
+\pplkbBefore
+\index{exbtc_1_d@$\ppldefmacro{exbtc\_1_{d}}$}$\begin{array}{lllll}
+\ppldefmacro{exbtc\_1_{d}}
+\end{array}
+$\pplkbBetween
+$\begin{array}{lllll}
+\pplmacro{definiens}(\exists \mathit{o} \, \mathsf{profinfo}(\mathsf{a},\mathit{o},\mathsf{c}),\\
+\hphantom{\pplmacro{definiens}(} \pplmacro{exbct\_1_{a}} \land  \pplmacro{exbct\_1_{b}} \land  \mathsf{i}\mathsf{a},\\
+\hphantom{\pplmacro{definiens}(} {[}\mathsf{profinfo_{a}},\mathsf{udirect}{]}).
+\end{array}
+$\pplkbAfter
+
+\noindent Input: $\pplmacro{exbtc\_1_{d}}.$\\
+\noindent Result of interpolation:
+\[\begin{array}{lllll}
+\exists \mathit{x} \, (\mathsf{udirect}(\mathsf{a},\mathsf{c}) \land  \mathsf{profinfo_{a}}(\mathsf{a},\mathit{x},\mathsf{c})).
+\end{array}
+\]
+%
+% Doc at position 2277
+%
+\subsection{Variant of Example 1}
+
+This is the variant of Example~1 from \cite[p.~101 Left
+Column]{benedikt:etal:2014:generating}.
+It leads to different interpolants, obtained with the enum\_ips option.
+Here the first 3 interpolants are shown.
+%
+% Statement at position 2529
+%
+\pplkbBefore
+\index{exbtc_1_e@$\ppldefmacro{exbtc\_1_{e}}$}$\begin{array}{lllll}
+\ppldefmacro{exbtc\_1_{e}}
+\end{array}
+$\pplkbBetween
+$\begin{array}{lllll}
+\pplmacro{definiens}(\mathsf{profinfo}(\mathsf{a},\mathsf{b},\mathsf{c}),\\
+\hphantom{\pplmacro{definiens}(} \pplmacro{exbct\_1_{a}} &&&\; \land \\
+\hphantom{\pplmacro{definiens}(} \forall \mathit{n}\mathit{e} \, (\mathsf{udirect_{1}}(\mathit{n},\mathit{e}) \imp  \mathsf{i}\mathit{n} \land  \mathsf{i}\mathit{e}) &&&\; \land \\
+\hphantom{\pplmacro{definiens}(} \forall \mathit{n}\mathit{o}\mathit{e} \, (\mathsf{profinfo}(\mathit{n},\mathit{o},\mathit{e}) \imp  \mathsf{udirect_{1}}(\mathit{n},\mathit{e})) &&&\; \land \\
+\hphantom{\pplmacro{definiens}(} \forall \mathit{n}\mathit{e} \, (\mathsf{udirect_{2}}(\mathit{n},\mathit{e}) \imp  \mathsf{i}\mathit{n} \land  \mathsf{i}\mathit{e}) &&&\; \land \\
+\hphantom{\pplmacro{definiens}(} \forall \mathit{n}\mathit{o}\mathit{e} \, (\mathsf{profinfo}(\mathit{n},\mathit{o},\mathit{e}) \imp  \mathsf{udirect_{2}}(\mathit{n},\mathit{e})) &&&\; \land \\
+\hphantom{\pplmacro{definiens}(} \mathsf{i}\mathsf{a},\\
+\hphantom{\pplmacro{definiens}(} {[}\mathsf{profinfo_{a}},\mathsf{udirect_{1}},\mathsf{udirect_{2}}{]}).
+\end{array}
+$\pplkbAfter
+
+\noindent Input: $\pplmacro{exbtc\_1_{e}}.$\\
+\noindent Result of interpolation:
+\[\begin{array}{lllll}
+\mathsf{udirect_{1}}(\mathsf{a},\mathsf{c}) \land  \mathsf{profinfo_{a}}(\mathsf{a},\mathsf{b},\mathsf{c}).
+\end{array}
+\]
+
+\noindent Input: $\pplmacro{exbtc\_1_{e}}.$\\
+\noindent Result of interpolation:
+\[\begin{array}{lllll}
+\mathsf{udirect_{2}}(\mathsf{a},\mathsf{c}) \land  \mathsf{profinfo_{a}}(\mathsf{a},\mathsf{b},\mathsf{c}).
+\end{array}
+\]
+
+\noindent Input: $\pplmacro{exbtc\_1_{e}}.$\\
+\noindent Result of interpolation:
+\[\begin{array}{lllll}
+\mathsf{udirect_{1}}(\mathsf{a},\mathsf{c}) \land  \mathsf{udirect_{2}}(\mathsf{a},\mathsf{c}) \land  \mathsf{profinfo_{a}}(\mathsf{a},\mathsf{b},\mathsf{c}).
+\end{array}
+\]
+%
+% Doc at position 3171
+%
+\subsection{Example~4}
+
+Note that we have the id as last argument of profinfo, following the natural
+language description of Example~1 of the paper. In the formal version, of
+Example~4 in the paper the id is the first argument.
+The $i(a)$ has been dropped here.
+%
+% Statement at position 3441
+%
+\pplkbBefore
+\index{exbtc_4_a@$\ppldefmacro{exbtc\_4_{a}}$}$\begin{array}{lllll}
+\ppldefmacro{exbtc\_4_{a}}
+\end{array}
+$\pplkbBetween
+$\begin{array}{lllll}
+\pplmacro{definiens}(\exists \mathit{c} \, \mathsf{profinfo}(\mathsf{a},\mathsf{o},\mathit{c}),\\
+\hphantom{\pplmacro{definiens}(} \pplmacro{exbct\_1_{a}} \land  \pplmacro{exbct\_1_{b}},\\
+\hphantom{\pplmacro{definiens}(} {[}\mathsf{profinfo_{a}},\mathsf{udirect}{]}).
+\end{array}
+$\pplkbAfter
+
+\noindent Input: $\pplmacro{exbtc\_4_{a}}.$\\
+\noindent Result of interpolation:
+\[\begin{array}{lllll}
+\exists \mathit{x} \, (\mathsf{udirect}(\mathsf{a},\mathit{x}) \land  \mathsf{profinfo_{a}}(\mathsf{a},\mathsf{o},\mathit{x})).
+\end{array}
+\]
+%
+% Doc at position 3610
+%
+\subsection{Example~5}
+
+Note that we have the id as last argument of profinfo, following the natural
+language description of Example~1 of the paper. In the formal version, of
+Examples~4 and 5 in the paper the id is the first argument.
+
+Here we need $i(b)$ because, as described in the paper, the access to profinfo
+requires all arguments bound, where only the first and last can be bound at
+all by udirect. Perhaps this is a bug in the paper.
+
+The point of the example seems that the method of the paper involves all three
+udirect accesses (in some order), but it is hard to see why this is useful,
+when the query could be answered by accessing just one of them.
+%
+% Statement at position 4281
+%
+\pplkbBefore
+\index{exbtc_5_a@$\ppldefmacro{exbtc\_5_{a}}$}$\begin{array}{lllll}
+\ppldefmacro{exbtc\_5_{a}}
+\end{array}
+$\pplkbBetween
+$\begin{array}{lllll}
+\pplmacro{definiens}(\exists \mathit{c} \, \mathsf{profinfo}(\mathsf{a},\mathsf{b},\mathit{c}),\\
+\hphantom{\pplmacro{definiens}(} \forall \mathit{n}\mathit{o}\mathit{e} \, (\mathsf{i}\mathit{n} \land  \mathsf{i}\mathit{o} \land  \mathsf{i}\mathit{e} \imp  (\mathsf{profinfo_{a}}(\mathit{n},\mathit{o},\mathit{e}) \equi  \mathsf{profinfo}(\mathit{n},\mathit{o},\mathit{e}))) &&&\; \land \\
+\hphantom{\pplmacro{definiens}(} \forall \mathit{n}\mathit{o}\mathit{e} \, (\mathsf{profinfo}(\mathit{n},\mathit{o},\mathit{e}) \imp  \mathsf{i}\mathit{n} \land  \mathsf{i}\mathit{o} \land  \mathsf{i}\mathit{e}) &&&\; \land \\
+\hphantom{\pplmacro{definiens}(} \pplmacro{exbct\_1_{a}} &&&\; \land \\
+\hphantom{\pplmacro{definiens}(} \forall \mathit{n}\mathit{e} \, (\mathsf{udirect_{1}}(\mathit{n},\mathit{e}) \imp  \mathsf{i}\mathit{n} \land  \mathsf{i}\mathit{e}) &&&\; \land \\
+\hphantom{\pplmacro{definiens}(} \forall \mathit{n}\mathit{o}\mathit{e} \, (\mathsf{profinfo}(\mathit{n},\mathit{o},\mathit{e}) \imp  \mathsf{udirect_{1}}(\mathit{n},\mathit{e})) &&&\; \land \\
+\hphantom{\pplmacro{definiens}(} \forall \mathit{n}\mathit{e} \, (\mathsf{udirect_{2}}(\mathit{n},\mathit{e}) \imp  \mathsf{i}\mathit{n} \land  \mathsf{i}\mathit{e}) &&&\; \land \\
+\hphantom{\pplmacro{definiens}(} \forall \mathit{n}\mathit{o}\mathit{e} \, (\mathsf{profinfo}(\mathit{n},\mathit{o},\mathit{e}) \imp  \mathsf{udirect_{2}}(\mathit{n},\mathit{e})) &&&\; \land \\
+\hphantom{\pplmacro{definiens}(} \forall \mathit{n}\mathit{e} \, (\mathsf{udirect_{3}}(\mathit{n},\mathit{e}) \imp  \mathsf{i}\mathit{n} \land  \mathsf{i}\mathit{e}) &&&\; \land \\
+\hphantom{\pplmacro{definiens}(} \forall \mathit{n}\mathit{o}\mathit{e} \, (\mathsf{profinfo}(\mathit{n},\mathit{o},\mathit{e}) \imp  \mathsf{udirect_{3}}(\mathit{n},\mathit{e})) &&&\; \land \\
+\hphantom{\pplmacro{definiens}(} \mathsf{i}\mathsf{b},\\
+\hphantom{\pplmacro{definiens}(} {[}\mathsf{profinfo_{a}},\mathsf{udirect_{1}},\mathsf{udirect_{2}},\mathsf{udirect_{3}}{]}).
+\end{array}
+$\pplkbAfter
+
+\noindent Input: $\pplmacro{exbtc\_5_{a}}.$\\
+\noindent Result of interpolation:
+\[\begin{array}{lllll}
+\exists \mathit{x} \, (\mathsf{udirect_{1}}(\mathsf{a},\mathit{x}) \land  \mathsf{profinfo_{a}}(\mathsf{a},\mathsf{b},\mathit{x})).
+\end{array}
+\]
+
+\noindent Input: $\pplmacro{exbtc\_5_{a}}.$\\
+\noindent Result of interpolation:
+\[\begin{array}{lllll}
+\exists \mathit{x} \, (\mathsf{udirect_{2}}(\mathsf{a},\mathit{x}) \land  \mathsf{profinfo_{a}}(\mathsf{a},\mathsf{b},\mathit{x})).
+\end{array}
+\]
+%
+% Doc at position 5042
+%
+\subsection{Example~2}
+
+There seems a bug in the paper: Actually a referential constraint from direct2
+into direct1 w.r.t. $n,a$ is required here. The paper suggests the reverse direction.
+%
+% Statement at position 5239
+%
+\pplkbBefore
+\index{exbtc_2_schema@$\ppldefmacro{exbtc\_2\_schema}$}$\begin{array}{lllll}
+\ppldefmacro{exbtc\_2\_schema}
+\end{array}
+$\pplkbBetween
+$\begin{array}{lllll}
+\forall \mathit{n}\mathit{a}\mathit{u} \, (\mathsf{i}\mathit{n} \land  \mathsf{i}\mathit{u} \imp  (\mathsf{direct1_{a}}(\mathit{n},\mathit{a},\mathit{u}) \equi  \mathsf{direct_{1}}(\mathit{n},\mathit{a},\mathit{u}))) &&&&\; \land \\
+\forall \mathit{n}\mathit{a}\mathit{u} \, (\mathsf{direct_{1}}(\mathit{n},\mathit{a},\mathit{u}) &&&\; \imp \\
+\hphantom{\forall \mathit{n}\mathit{a}\mathit{u} \, (} \mathsf{i}\mathit{n} \land  \mathsf{i}\mathit{a} \land  \mathsf{i}\mathit{u}) &&&&\; \land \\
+\forall \mathit{n}\mathit{a}\mathit{u} \, (\mathsf{direct_{1}}(\mathit{n},\mathit{a},\mathit{u}) \imp  \mathsf{ids}(\mathit{u})) &&&&\; \land \\
+\forall \mathit{u} \, (\mathsf{ids}(\mathit{u}) \imp  \mathsf{i}\mathit{u}) &&&&\; \land \\
+\forall \mathit{n}\mathit{a}\mathit{p} \, (\mathsf{i}\mathit{n} \land  \mathsf{i}\mathit{a} \imp  (\mathsf{direct2_{a}}(\mathit{n},\mathit{a},\mathit{p}) \equi  \mathsf{direct_{2}}(\mathit{n},\mathit{a},\mathit{p}))) &&&&\; \land \\
+\forall \mathit{n}\mathit{a}\mathit{p} \, (\mathsf{direct_{2}}(\mathit{n},\mathit{a},\mathit{p}) &&&\; \imp \\
+\hphantom{\forall \mathit{n}\mathit{a}\mathit{p} \, (} \mathsf{i}\mathit{n} \land  \mathsf{i}\mathit{a} \land  \mathsf{i}\mathit{p}) &&&&\; \land \\
+\forall \mathit{n}\mathit{a}\mathit{p} \, (\mathsf{direct_{2}}(\mathit{n},\mathit{a},\mathit{p}) \imp  \mathsf{names}(\mathit{n})) &&&&\; \land \\
+\forall \mathit{n} \, (\mathsf{names}(\mathit{n}) \imp  \mathsf{i}\mathit{n}) &&&&\; \land \\
+\forall \mathit{n}\mathit{a}\mathit{p} \, (\mathsf{direct_{2}}(\mathit{n},\mathit{a},\mathit{p}) \imp  \exists \mathit{u} \, \mathsf{direct_{1}}(\mathit{n},\mathit{a},\mathit{u})).
+\end{array}
+$\pplkbAfter
+%
+% Statement at position 5716
+%
+\pplkbBefore
+\index{exbtc_2_a@$\ppldefmacro{exbtc\_2_{a}}$}$\begin{array}{lllll}
+\ppldefmacro{exbtc\_2_{a}}
+\end{array}
+$\pplkbBetween
+$\begin{array}{lllll}
+\pplmacro{definiens}(\exists \mathit{n}\mathit{a} \, \mathsf{direct_{2}}(\mathit{n},\mathit{a},\mathsf{p}),\\
+\hphantom{\pplmacro{definiens}(} \pplmacro{exbtc\_2\_schema},\\
+\hphantom{\pplmacro{definiens}(} {[}\mathsf{direct1_{a}},\mathsf{direct2_{a}},\mathsf{ids},\mathsf{names}{]}).
+\end{array}
+$\pplkbAfter
+
+\noindent Input: $\pplmacro{exbtc\_2_{a}}.$\\
+\noindent Result of interpolation:
+\[\begin{array}{lllll}
+\exists \mathit{x},\mathit{y},\mathit{z} \, (\mathsf{ids}(\mathit{z}) &&&&\; \land \\
+\hphantom{\exists \mathit{x},\mathit{y},\mathit{z} \, (} \mathsf{names}(\mathit{x}) &&&&\; \land \\
+\hphantom{\exists \mathit{x},\mathit{y},\mathit{z} \, (} \mathsf{direct1_{a}}(\mathit{x},\mathit{y},\mathit{z}) &&&&\; \land \\
+\hphantom{\exists \mathit{x},\mathit{y},\mathit{z} \, (} \mathsf{direct2_{a}}(\mathit{x},\mathit{y},\mathsf{p})).
+\end{array}
+\]
+%
+% Doc at position 5967
+%
+\section{Examples from Toman and Wedell: Fundamentals of
+Physical Design and Query Compilation}
+
+These examples are from \cite[Chapters~3 and~5]{toman:wedell:book}.
+%
+% Doc at position 6141
+%
+\subsection{Example~5.14}
+%
+% Statement at position 6175
+%
+\pplkbBefore
+\index{extw_514_a@$\ppldefmacro{extw\_514_{a}}$}$\begin{array}{lllll}
+\ppldefmacro{extw\_514_{a}}
+\end{array}
+$\pplkbBetween
+$\begin{array}{lllll}
+\forall \mathit{x}\mathit{y} \, (\mathsf{v_{1}}\mathit{x}\mathit{y} \equi  \exists \mathit{u}\mathit{w} \, (\mathsf{r}\mathit{u}\mathit{x} \land  \mathsf{r}\mathit{u}\mathit{w} \land  \mathsf{r}\mathit{w}\mathit{y})) &&&&\; \land \\
+\forall \mathit{x}\mathit{y} \, (\mathsf{v_{2}}\mathit{x}\mathit{y} \equi  \exists \mathit{u}\mathit{w} \, (\mathsf{r}\mathit{x}\mathit{u} \land  \mathsf{r}\mathit{u}\mathit{w} \land  \mathsf{r}\mathit{w}\mathit{y})) &&&&\; \land \\
+\forall \mathit{x}\mathit{y} \, (\mathsf{v_{3}}\mathit{x}\mathit{y} \equi  \exists \mathit{u} \, (\mathsf{r}\mathit{x}\mathit{u} \land  \mathsf{r}\mathit{u}\mathit{y})).
+\end{array}
+$\pplkbAfter
+%
+% Statement at position 6370
+%
+\pplkbBefore
+\index{extw_514_b@$\ppldefmacro{extw\_514_{b}}$}$\begin{array}{lllll}
+\ppldefmacro{extw\_514_{b}}
+\end{array}
+$\pplkbBetween
+$\begin{array}{lllll}
+\pplmacro{definiens}(\exists \mathit{u}\mathit{v}\mathit{w} \, (\mathsf{r}\mathit{u}\mathsf{x} \land  \mathsf{r}\mathit{u}\mathit{w} \land  \mathsf{r}\mathit{w}\mathit{v} \land  \mathsf{r}\mathit{v}\mathsf{y}),\\
+\hphantom{\pplmacro{definiens}(} \pplmacro{extw\_514_{a}},\\
+\hphantom{\pplmacro{definiens}(} {[}\mathsf{v_{1}},\mathsf{v_{2}},\mathsf{v_{3}}{]}).
+\end{array}
+$\pplkbAfter
+
+\noindent Input: $\pplmacro{extw\_514_{b}}.$\\
+\noindent Result of interpolation:
+\[\begin{array}{lllll}
+\exists \mathit{z} \, \forall \mathit{u} \, (\mathsf{v_{1}}(\mathsf{x},\mathit{z}) \land  (\mathsf{v_{3}}(\mathit{u},\mathit{z}) \imp  \mathsf{v_{2}}(\mathit{u},\mathsf{y}))).
+\end{array}
+\]
+%
+% Doc at position 6579
+%
+Notes: The book shows this solution, but also another, longer formula which is
+then used as basis for plan generation. The longer formula seems not easily to
+obtain as alternative interpolant with CM prover.
+%
+% Statement at position 6795
+%
+\pplkbBefore
+\index{extw_514_altsol@$\ppldefmacro{extw\_514\_altsol}$}$\begin{array}{lllll}
+\ppldefmacro{extw\_514\_altsol}
+\end{array}
+$\pplkbBetween
+$\begin{array}{lllll}
+\exists \mathit{u}\mathit{v} \, (\mathsf{v_{1}}\mathsf{x}\mathit{u} \land  \mathsf{v_{3}}\mathit{v}\mathit{u} \land  \mathsf{v_{2}}\mathit{v}\mathsf{y} \land  \forall \mathit{w} \, (\lnot  \mathsf{v_{3}}\mathit{w}\mathit{u} \lor  \mathsf{v_{2}}\mathit{w}\mathsf{y})).
+\end{array}
+$\pplkbAfter
+%
+% Statement at position 6890
+%
+\pplkbBefore
+\index{extw_514_query@$\ppldefmacro{extw\_514\_query}$}$\begin{array}{lllll}
+\ppldefmacro{extw\_514\_query}
+\end{array}
+$\pplkbBetween
+$\begin{array}{lllll}
+\exists \mathit{u}\mathit{v}\mathit{w} \, (\mathsf{r}\mathit{u}\mathsf{x} \land  \mathsf{r}\mathit{u}\mathit{w} \land  \mathsf{r}\mathit{w}\mathit{v} \land  \mathsf{r}\mathit{v}\mathsf{y}).
+\end{array}
+$\pplkbAfter
+%
+% Statement at position 6958
+%
+\pplkbBefore
+\index{extw_514_check_altsol_1@$\ppldefmacro{extw\_514\_check\_altsol_{1}}$}$\begin{array}{lllll}
+\ppldefmacro{extw\_514\_check\_altsol_{1}}
+\end{array}
+$\pplkbBetween
+$\begin{array}{lllll}
+\pplmacro{extw\_514_{a}} \imp  (\pplmacro{extw\_514\_altsol} \revimp  \pplmacro{extw\_514\_query}).
+\end{array}
+$\pplkbAfter
+%
+% Statement at position 7042
+%
+\pplkbBefore
+\index{extw_514_check_altsol_2@$\ppldefmacro{extw\_514\_check\_altsol_{2}}$}$\begin{array}{lllll}
+\ppldefmacro{extw\_514\_check\_altsol_{2}}
+\end{array}
+$\pplkbBetween
+$\begin{array}{lllll}
+\pplmacro{extw\_514_{a}} \imp  (\pplmacro{extw\_514\_altsol} \imp  \pplmacro{extw\_514\_query}).
+\end{array}
+$\pplkbAfter
+%
+% Doc at position 7126
+%
+The next formula uses literal forgetting for $v3$.  This seems hard for the
+CM prover (12 sec, 3 of them in the last depth 7). When literal forgetting is
+used to restrict polarities for all three access paths, i.e.,
+$[v1-p,v2-p,v3-n]$, the CM prover does not succeed in a few minutes.
+%
+% Statement at position 7419
+%
+\pplkbBefore
+\index{extw_514_c@$\ppldefmacro{extw\_514_{c}}$}$\begin{array}{lllll}
+\ppldefmacro{extw\_514_{c}}
+\end{array}
+$\pplkbBetween
+$\begin{array}{lllll}
+\pplmacro{definiens\_lit}(\exists \mathit{u}\mathit{v}\mathit{w} \, (\mathsf{r}\mathit{u}\mathsf{x} \land  \mathsf{r}\mathit{u}\mathit{w} \land  \mathsf{r}\mathit{w}\mathit{v} \land  \mathsf{r}\mathit{v}\mathsf{y}),\\
+\hphantom{\pplmacro{definiens\_lit}(} \pplmacro{extw\_514_{a}},\\
+\hphantom{\pplmacro{definiens\_lit}(} {[}\mathsf{v_{1}}\textrm{-}\mathsf{pn},\mathsf{v_{2}}\textrm{-}\mathsf{pn},\mathsf{v_{3}}\textrm{-}\mathsf{n}{]}).
+\end{array}
+$\pplkbAfter
+%
+% Statement at position 7536
+%
+\pplkbBefore
+\index{extw_514_d@$\ppldefmacro{extw\_514_{d}}$}$\begin{array}{lllll}
+\ppldefmacro{extw\_514_{d}}
+\end{array}
+$\pplkbBetween
+$\begin{array}{lllll}
+\pplmacro{definiens\_lit\_lemma}(\exists \mathit{u}\mathit{v}\mathit{w} \, (\mathsf{r}\mathit{u}\mathsf{x} \land  \mathsf{r}\mathit{u}\mathit{w} \land  \mathsf{r}\mathit{w}\mathit{v} \land  \mathsf{r}\mathit{v}\mathsf{y}),\\
+\hphantom{\pplmacro{definiens\_lit\_lemma}(} \pplmacro{extw\_514_{a}},\\
+\hphantom{\pplmacro{definiens\_lit\_lemma}(} {[}\mathsf{v_{1}}\textrm{-}\mathsf{pn},\mathsf{v_{2}}\textrm{-}\mathsf{pn},\mathsf{v_{3}}\textrm{-}\mathsf{n}{]}).
+\end{array}
+$\pplkbAfter
+%
+% Statement at position 7659
+%
+\pplkbBefore
+\index{extw_514_e@$\ppldefmacro{extw\_514_{e}}$}$\begin{array}{lllll}
+\ppldefmacro{extw\_514_{e}}
+\end{array}
+$\pplkbBetween
+$\begin{array}{lllll}
+\pplmacro{definiens\_lit\_lemma}(\exists \mathit{u}\mathit{v}\mathit{w} \, (\mathsf{r}\mathit{u}\mathsf{x} \land  \mathsf{r}\mathit{u}\mathit{w} \land  \mathsf{r}\mathit{w}\mathit{v} \land  \mathsf{r}\mathit{v}\mathsf{y}),\\
+\hphantom{\pplmacro{definiens\_lit\_lemma}(} \pplmacro{extw\_514_{a}},\\
+\hphantom{\pplmacro{definiens\_lit\_lemma}(} {[}\mathsf{v_{1}}\textrm{-}\mathsf{p},\mathsf{v_{2}}\textrm{-}\mathsf{p},\mathsf{v_{3}}\textrm{-}\mathsf{n}{]}).
+\end{array}
+$\pplkbAfter
+%
+% Doc at position 7837
+%
+\subsection{Examples~3.2, 3.4, 3.5}
+
+These examples are also discussed in the book in Examples~5.3 and 5.4.
+
+The access paths have arguments \textit{Salary}, \textit{Number},
+\textit{Name}. The employee/3 relation has these arguments in the ordering
+\textit{Number}, \textit{Name} \textit{Salary}.
+
+We give the access paths here different number suffixes than in the book to
+utilize that lexically smaller predicates are preferred by the interpolant
+computation (the ordp option of the CM prover) and thus returned in earlier
+solutions.
+
+NOTE: Currently the ordp option prefers solution with lexically smaller
+predicates, however for the price of possibly choosing a larger clause, which
+might introduce redundancies. The ordp option is not required if access
+patterns are disjoint.
+%
+% Statement at position 8628
+%
+\pplkbBefore
+\index{extw_3_schema@$\ppldefmacro{extw\_3\_schema}$}$\begin{array}{lllll}
+\ppldefmacro{extw\_3\_schema}
+\end{array}
+$\pplkbBetween
+$\begin{array}{lllll}
+\forall \mathit{x}\mathit{y}\mathit{z} \, (\mathsf{emp\_array_{3}}(\mathit{z},\mathit{x},\mathit{y}) \equi  \mathsf{employee}(\mathit{x},\mathit{y},\mathit{z})) &&&&\; \land \\
+\forall \mathit{x}\mathit{y}\mathit{z} \, (\mathsf{i}\mathit{z} \imp  (\mathsf{emp\_array_{2}}(\mathit{z},\mathit{x},\mathit{y}) \equi  \mathsf{employee}(\mathit{x},\mathit{y},\mathit{z}))) &&&&\; \land \\
+\forall \mathit{x}\mathit{y}\mathit{z} \, (\mathsf{i}\mathit{z} \land  \mathsf{i}\mathit{x} \imp  (\mathsf{emp\_array_{1}}(\mathit{z},\mathit{x},\mathit{y}) \equi  \mathsf{employee}(\mathit{x},\mathit{y},\mathit{z}))) &&&&\; \land \\
+\forall \mathit{x}\mathit{y}\mathit{z} \, (\mathsf{employee}(\mathit{x},\mathit{y},\mathit{z}) \imp  \mathsf{i}\mathit{x} \land  \mathsf{i}\mathit{y} \land  \mathsf{i}\mathit{z}).
+\end{array}
+$\pplkbAfter
+%
+% Statement at position 8894
+%
+\pplkbBefore
+\index{extw_32@$\ppldefmacro{extw_{32}}$}$\begin{array}{lllll}
+\ppldefmacro{extw_{32}}
+\end{array}
+$\pplkbBetween
+$\begin{array}{lllll}
+\pplmacro{definiens}(\mathsf{employee}(\mathsf{x},\mathsf{y},\mathsf{z}),\\
+\hphantom{\pplmacro{definiens}(} \pplmacro{extw\_3\_schema},\\
+\hphantom{\pplmacro{definiens}(} {[}\mathsf{emp\_array_{1}},\mathsf{emp\_array_{2}},\mathsf{emp\_array_{3}}{]}).
+\end{array}
+$\pplkbAfter
+%
+% Statement at position 9005
+%
+\pplkbBefore
+\index{extw_34@$\ppldefmacro{extw_{34}}$}$\begin{array}{lllll}
+\ppldefmacro{extw_{34}}
+\end{array}
+$\pplkbBetween
+$\begin{array}{lllll}
+\pplmacro{definiens}(\mathsf{employee}(\mathsf{x},\mathsf{y},\mathsf{z}),\\
+\hphantom{\pplmacro{definiens}(} \pplmacro{extw\_3\_schema} \land  \mathsf{i}\mathsf{z},\\
+\hphantom{\pplmacro{definiens}(} {[}\mathsf{emp\_array_{1}},\mathsf{emp\_array_{2}},\mathsf{emp\_array_{3}}{]}).
+\end{array}
+$\pplkbAfter
+%
+% Statement at position 9126
+%
+\pplkbBefore
+\index{extw_35@$\ppldefmacro{extw_{35}}$}$\begin{array}{lllll}
+\ppldefmacro{extw_{35}}
+\end{array}
+$\pplkbBetween
+$\begin{array}{lllll}
+\pplmacro{definiens}(\mathsf{employee}(\mathsf{x},\mathsf{y},\mathsf{z}),\\
+\hphantom{\pplmacro{definiens}(} \pplmacro{extw\_3\_schema} \land  \mathsf{i}\mathsf{x} \land  \mathsf{i}\mathsf{z},\\
+\hphantom{\pplmacro{definiens}(} {[}\mathsf{emp\_array_{1}},\mathsf{emp\_array_{2}},\mathsf{emp\_array_{3}}{]}).
+\end{array}
+$\pplkbAfter
+
+\noindent Input: $\pplmacro{extw_{32}}.$\\
+\noindent Result of interpolation:
+\[\begin{array}{lllll}
+\mathsf{emp\_array_{3}}(\mathsf{z},\mathsf{x},\mathsf{y}).
+\end{array}
+\]
+
+\noindent Input: $\pplmacro{extw_{34}}.$\\
+\noindent Result of interpolation:
+\[\begin{array}{lllll}
+\mathsf{emp\_array_{2}}(\mathsf{z},\mathsf{x},\mathsf{y}).
+\end{array}
+\]
+
+\noindent Input: $\pplmacro{extw_{35}}.$\\
+\noindent Result of interpolation:
+\[\begin{array}{lllll}
+\mathsf{emp\_array_{1}}(\mathsf{z},\mathsf{x},\mathsf{y}).
+\end{array}
+\]
+%
+% Doc at position 9478
+%
+\subsection{Alternate Modeling, Similar to ``Option 3''}
+
+This is just similar to ``Option~3'' in the book, but we use employee numbers
+directly as IDs of employees. We map the schema to employee/3:
+%
+% Statement at position 9685
+%
+\pplkbBefore
+\index{extw_3_o3_schema_addition@$\ppldefmacro{extw\_3\_o3\_schema\_addition}$}$\begin{array}{lllll}
+\ppldefmacro{extw\_3\_o3\_schema\_addition}
+\end{array}
+$\pplkbBetween
+$\begin{array}{lllll}
+\forall \mathit{x} \, (\mathsf{emp}(\mathit{x}) \equi  \exists \mathit{y}\mathit{z} \, \mathsf{employee}(\mathit{x},\mathit{y},\mathit{z})) &&&&\; \land \\
+\forall \mathit{x}\mathit{y} \, (\mathsf{name}(\mathit{x},\mathit{y}) \equi  \exists \mathit{z} \, \mathsf{employee}(\mathit{x},\mathit{y},\mathit{z})) &&&&\; \land \\
+\forall \mathit{x}\mathit{y} \, (\mathsf{salary}(\mathit{x},\mathit{y}) \equi  \exists \mathit{z} \, \mathsf{employee}(\mathit{x},\mathit{z},\mathit{y})).
+\end{array}
+$\pplkbAfter
+%
+% Statement at position 10007
+%
+\pplkbBefore
+\index{extw_o3_32@$\ppldefmacro{extw\_o3_{32}}$}$\begin{array}{lllll}
+\ppldefmacro{extw\_o3_{32}}
+\end{array}
+$\pplkbBetween
+$\begin{array}{lllll}
+\pplmacro{definiens}(\mathsf{emp}(\mathsf{x}) \land  \mathsf{name}(\mathsf{x},\mathsf{y}) \land  \mathsf{salary}(\mathsf{x},\mathsf{z}),\\
+\hphantom{\pplmacro{definiens}(} \pplmacro{extw\_3\_schema} \land  \pplmacro{extw\_3\_o3\_schema\_addition},\\
+\hphantom{\pplmacro{definiens}(} {[}\mathsf{emp\_array_{1}},\mathsf{emp\_array_{2}},\mathsf{emp\_array_{3}}{]}).
+\end{array}
+$\pplkbAfter
+%
+% Statement at position 10167
+%
+\pplkbBefore
+\index{extw_o3_34@$\ppldefmacro{extw\_o3_{34}}$}$\begin{array}{lllll}
+\ppldefmacro{extw\_o3_{34}}
+\end{array}
+$\pplkbBetween
+$\begin{array}{lllll}
+\pplmacro{definiens}(\mathsf{emp}(\mathsf{x}) \land  \mathsf{name}(\mathsf{x},\mathsf{y}) \land  \mathsf{salary}(\mathsf{x},\mathsf{z}),\\
+\hphantom{\pplmacro{definiens}(} \pplmacro{extw\_3\_schema} \land  \pplmacro{extw\_3\_o3\_schema\_addition} \land  \mathsf{i}\mathsf{z},\\
+\hphantom{\pplmacro{definiens}(} {[}\mathsf{emp\_array_{1}},\mathsf{emp\_array_{2}},\mathsf{emp\_array_{3}}{]}).
+\end{array}
+$\pplkbAfter
+%
+% Statement at position 10333
+%
+\pplkbBefore
+\index{extw_o3_35@$\ppldefmacro{extw\_o3_{35}}$}$\begin{array}{lllll}
+\ppldefmacro{extw\_o3_{35}}
+\end{array}
+$\pplkbBetween
+$\begin{array}{lllll}
+\pplmacro{definiens}(\mathsf{emp}(\mathsf{x}) \land  \mathsf{name}(\mathsf{x},\mathsf{y}) \land  \mathsf{salary}(\mathsf{x},\mathsf{z}),\\
+\hphantom{\pplmacro{definiens}(} \pplmacro{extw\_3\_schema} \land  \pplmacro{extw\_3\_o3\_schema\_addition} \land  \mathsf{i}\mathsf{x} \land  \mathsf{i}\mathsf{z},\\
+\hphantom{\pplmacro{definiens}(} {[}\mathsf{emp\_array_{1}},\mathsf{emp\_array_{2}},\mathsf{emp\_array_{3}}{]}).
+\end{array}
+$\pplkbAfter
+
+\noindent Input: $\pplmacro{extw\_o3_{32}}.$\\
+\noindent Result of interpolation:
+\[\begin{array}{lllll}
+\exists \mathit{u},\mathit{v} \, (\mathsf{emp\_array_{3}}(\mathsf{z},\mathsf{x},\mathit{v}) \land  \mathsf{emp\_array_{3}}(\mathit{u},\mathsf{x},\mathsf{y})).
+\end{array}
+\]
+
+\noindent Input: $\pplmacro{extw\_o3_{34}}.$\\
+\noindent Result of interpolation:
+\[\begin{array}{lllll}
+\exists \mathit{u},\mathit{v} \, (\mathsf{emp\_array_{2}}(\mathsf{z},\mathsf{x},\mathit{v}) \land  \mathsf{emp\_array_{3}}(\mathit{u},\mathsf{x},\mathsf{y})).
+\end{array}
+\]
+
+\noindent Input: $\pplmacro{extw\_o3_{35}}.$\\
+\noindent Result of interpolation:
+\[\begin{array}{lllll}
+\exists \mathit{u},\mathit{v} \, (\mathsf{emp\_array_{1}}(\mathsf{z},\mathsf{x},\mathit{v}) \land  \mathsf{emp\_array_{3}}(\mathit{u},\mathsf{x},\mathsf{y})).
+\end{array}
+\]
+%
+% Doc at position 10817
+%
+\bibliographystyle{alpha}
+\bibliography{bibscratch03}
+\printindex
+\end{document}

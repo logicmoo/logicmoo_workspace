@@ -1,0 +1,142 @@
+\documentclass[a4paper]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{imakeidx}
+\usepackage[hidelinks]{hyperref}
+%% A screen friendly geometry:	    
+\usepackage[paper=a5paper,scale=0.9]{geometry}
+%% PPL Setup
+	   
+\newcommand{\assign}{\mathrel{\mathop:}=}
+\newcommand{\concat}{\mathrel{+\!+}}
+	    
+\newcommand{\f}[1]{\mathsf{#1}}
+\newcommand{\true}{\top}
+\newcommand{\false}{\bot}
+\newcommand{\imp}{\rightarrow}
+\newcommand{\revimp}{\leftarrow}
+\newcommand{\equi}{\leftrightarrow}
+\newcommand{\entails}{\models}	    
+\newcommand{\eqdef}{\; 
+\raisebox{-0.1ex}[0mm]{$ \stackrel{\raisebox{-0.2ex}{\tiny 
+\textnormal{def}}}{=} $}\; }
+\newcommand{\iffdef}{\n{iff}_{\mbox{\scriptsize \textnormal{def}}}}
+
+\newcommand{\pplmacro}[1]{\mathit{#1}}
+\newcommand{\ppldefmacro}[1]{\mathit{#1}}
+\newcommand{\pplparam}[1]{\mathit{#1}}
+\newcommand{\pplparamidx}[2]{\mathit{#1}_{#2}}
+\newcommand{\pplparamplain}[1]{#1}
+\newcommand{\pplparamplainidx}[2]{#1_{#2}}
+\newcommand{\pplparamsup}[2]{\mathit{#1}^{#2}}
+\newcommand{\pplparamsupidx}[3]{\mathit{#1}^{#2}_{#3}}
+\newcommand{\pplparamplainsup}[2]{#1^{#2}}
+\newcommand{\pplparamplainsupidx}[3]{#1^{#2}_{#3}}
+\newcommand{\pplparamnum}[1]{\mathit{X}_{#1}}
+
+%%	    
+%% We use @startsection just to obtain reduced vertical spacing above
+%% macro headers which are immediately after other headers, e.g. of sections
+%%	    
+\makeatletter%
+\newcounter{entry}%
+\newcommand{\entrymark}[1]{}%
+\newcommand\entryhead{%
+\@startsection{entry}{10}{\z@}{12pt plus 2pt minus 2pt}{0pt}{}}%
+\makeatother
+	    
+\newcommand{\pplkbBefore}
+{\entryhead*{}%
+\setlength{\arraycolsep}{0pt}%
+\pagebreak[0]%
+\begin{samepage}%
+\noindent%
+\rule[0.5pt]{\textwidth}{2pt}\\%
+\noindent}
+
+% \newcommand{\pplkbDefType}[1]{\hspace{\fill}{{[}#1{]}\\}}
+
+\newcommand{\pplkbBetween}
+{\setlength{\arraycolsep}{3pt}%
+\\\rule[3pt]{\textwidth}{1pt}%
+\par\nopagebreak\noindent Defined as\begin{center}}
+
+\newcommand{\pplkbAfter}{\end{center}\end{samepage}\noindent}
+
+\newcommand{\pplkbBodyBefore}{\par\noindent where\begin{center}}
+\newcommand{\pplkbBodyAfter}{\end{center}}
+
+\newcommand{\pplkbFreePredicates}[1]{\f{free\_predicates}(#1)}
+% \newcommand{\pplkbRenameFreeOccurrences}[3]{\f{rename\_free\_occurrences}(#1,#2,#3)}
+
+\newcommand{\pplIsValid}[1]{\noindent This formula is valid: $#1$\par}
+\newcommand{\pplIsNotValid}[1]{\noindent This formula is not valid: $#1$\par}	    
+\newcommand{\pplFailedToValidate}[1]{\noindent Failed to validate this formula: $#1$\par}
+
+\newcounter{def}
+	    
+\makeindex
+
+\begin{document}
+%
+% Doc at position 0
+%
+\title{Problems and Axiom Sets from the TPTP}
+\date{Revision: May 10, 2016; Rendered: \today}
+\maketitle
+
+\noindent Macros that make problems and axiom sets from the TPTP or in TPTP
+FOF or CNF format conveniently available as subformulas.  Formalized with the
+\href{http://cs.christophwernhard.com/pie/}{\textit{PIE}} system.
+%
+% Statement at position 408
+%
+\pplkbBefore
+\index{tptp(ProblemSpec)@$\ppldefmacro{tptp}(\pplparam{ProblemSpec})$}$\begin{array}{lllll}
+\ppldefmacro{tptp}(\pplparam{ProblemSpec})
+\end{array}
+$\pplkbBetween
+$\begin{array}{lllll}
+\pplparamplain{F},
+\end{array}
+$\pplkbAfter
+\pplkbBodyBefore
+$
+\begin{array}{l}\mathrm{tptp\_problem(ProblemSpec,[validate=false],Format,T,A)},\\
+\mathit{[\ldots unformattable\ Prolog\ code]}.
+
+\end{array}$\pplkbBodyAfter
+%
+% Doc at position 677
+%
+$F$ represents the TPTP problem as reverse implication $\mathit{Theorem}
+\leftarrow \mathit{Axioms}$. Here are some examples for using the
+$\mathit{tptp}$ macro:
+
+\begin{verbatim}
+?- mac_expand(tptp('PUZ001+1')).
+?- ppl_form(tptp(' PUZ001+1'), [expand=true, style=full]).
+?- ppl_valid(tptp('PUZ001+1'), [prover=cm]).
+?- ppl_ipol(tptp('PUZ001+1'), [style=full]).
+?- ppl_ipol(tptp('PUZ001+1'), [style=full,debug=10]).
+\end{verbatim}
+%
+% Statement at position 1116
+%
+\pplkbBefore
+\index{tptp_axioms(AxiomsSpec)@$\ppldefmacro{tptp\_axioms}(\pplparam{AxiomsSpec})$}$\begin{array}{lllll}
+\ppldefmacro{tptp\_axioms}(\pplparam{AxiomsSpec})
+\end{array}
+$\pplkbBetween
+$\begin{array}{lllll}
+\pplparamplain{F},
+\end{array}
+$\pplkbAfter
+\pplkbBodyBefore
+$
+\begin{array}{l}\mathrm{tptp\_problem(axioms(AxiomsSpec),[validate=false],Format,T,A)},\\
+\mathit{[\ldots unformattable\ Prolog\ code]}.
+
+\end{array}$\pplkbBodyAfter
+\printindex
+\end{document}
