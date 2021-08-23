@@ -423,6 +423,7 @@ save_single_testcase(Name):-
  % write(Text),
  atomic_list_concat([File,Name],SName),
  p_n_atom_filter_var_chars(SName,RSName),
+
  save_to_junit_file(RSName,Text).
 
 

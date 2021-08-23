@@ -22,7 +22,7 @@ mkdir -p $TESTING_TEMP/
 cat /dev/null > $CAPTURE_TEST_ANSI
 
 # Run tests for JUnit Results
-( test_prolog.sh -k $GLOB ) 2>&1 | tee -a $CAPTURE_TEST_ANSI
+( test_prolog.sh -k "$GLOB" ) 2>&1 | tee -a $CAPTURE_TEST_ANSI
 
 junitCombined=$TEST_STEM_PATH-junitCombined
 
