@@ -1,5 +1,8 @@
 #!/bin/bash -x
 
+[ -z "$TESTING_TEMP" ] && export TESTING_TEMP=docs/test_results
+
+
 [ -z "$TESTING_TEMP" ] && export TESTING_TEMP=$(mktemp -d -t logicmoo_testing-$(date +%Y-%m-%d-%H-%M-%S)-XXXXXXXXXX)
 mkdir -p $TESTING_TEMP
 
@@ -20,8 +23,4 @@ echo "<testsuites>" > $TESTING_TEMP/junit.xml
 find $TESTING_TEMP -name "Report-*.xml" -exec sed -e "s/<testsuites>//g" -e "s|</testsuites>||g" {} >> $TESTING_TEMP/junit.xml  \;
 echo "</testsuites>" >> $TESTING_TEMP/junit.xml
 
-
-cp -f $TESTING_TEMP/junit.xml .git/junit.xml
-touch .git/junit.xml
-head .git/junit.xml
 
