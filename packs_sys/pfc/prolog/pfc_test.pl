@@ -424,12 +424,15 @@ save_single_testcase(Name):-
  
  shorten_and_clean_name(File,SFile),
  shorten_and_clean_name(Name,SName),
- atomic_list_concat([SFile,SName],RSName),
+ atomic_list_concat([SFile,'-',SName],RSName),
  save_to_junit_file(RSName,Text).
 
 shorten_and_clean_name(Name,RSName):- 
-  p_n_atom_filter_var_chars(Name,SName),
-  last_n_chars(SName,RSName).
+  public_file_link(Name,Name0),
+  resplace_in_string(['https://logicmoo.org:2082/gitlab/logicmoo/'="logicmoo",'-/blob/'='','/'='_'],Name0,Name1),
+  p_n_atom_filter_var_chars(Name1,Name2),
+  resplace_in_string(['__'='_'],Name2,Name3),
+  last_n_chars(Name3,RSName),!.
 
 last_n_chars(SName,RSName):- sub_atom(SName,0,20,0,RSName),!.
 last_n_chars(SName,SName).
