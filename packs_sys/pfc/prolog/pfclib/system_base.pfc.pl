@@ -643,7 +643,7 @@ P/mpred_positive_fact(P) ==> \+ ~P.
 (nesc(P) /mpred_positive_fact(P) ==>  ( P, (~P ==> \+ ~P))).
 %:- break.
 
- nesc(P)==>P.
+nesc(P)==>P.
 
 % % preventedWhen(P,{Cond})==> (((P:- awc,Cond,!,fail))).
 preventedWhen(P,Cond)==> (((P/mpred_positive_fact(P),Cond)==> nesc(~P))).

@@ -226,7 +226,7 @@ nowdmsg(_).
 
 :- asserta(sandbox:safe(_,_,_,_,_):-!).
 
-:- use_module(library(clpr)).
+:- use_module(library(clpr),[]).
 
 :- multifile sandbox:safe_primitive/1.
 

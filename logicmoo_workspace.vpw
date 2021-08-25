@@ -2,7 +2,8 @@
 <Workspace Version="10.0" VendorName="SlickEdit">
 	<Projects>
 		<Project File="logicmoo_workspace.vpj"/>
+		<Project File="most_searched.vpj"/>
+		<Project File="../CYC_JRTL_with_CommonLisp/platform/new-platform.vpj"/>
 		<Project File="other_files.vpj"/>
-                <Project File="../CYC_JRTL_with_CommonLisp/platform/new-platform.vpj"/>^M
 	</Projects>
 </Workspace>

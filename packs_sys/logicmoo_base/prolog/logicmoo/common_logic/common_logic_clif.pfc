@@ -43,6 +43,7 @@ vim: set filetype=md:
 */
 
 workflow_holder_queue(clif).
+workflow_holder_queue(modal_clif).
 workflow_holder_queue(boxlog).
 workflow_holder_queue(pfclog).
 
@@ -63,13 +64,15 @@ workflow_holder_queue(Atom) ==>
 % {kif_hook_skel(CLIF),functor(CLIF,F,A),kb_shared(F/A)} ==> 
 (CLIF/is_kif_clause(CLIF) ==> clif( CLIF)).
 
-% compile_clif ==> 
-(clif(CLIF) ==> ({delistify_last_arg(CLIF,kif_to_boxlog,BOXLOG)},boxlog(BOXLOG))).
+%compile_modal_clif ==> 
+(clif(CLIF) ==> ({delistify_last_arg(CLIF,clif_to_modal_clif,ModalClif)},modal_clif(ModalClif))).
+compile_clif ==> 
+(modal_clif(CLIF) ==> ({delistify_last_arg(CLIF,kif_to_boxlog,BOXLOG)},boxlog(BOXLOG))).
 % %% compile_clif ==> 
 %(clif(CLIF)/ (\+ is_kif_clause(CLIF)) ==> ({delistify_last_arg(CLIF,kif_to_boxlog,BOXLOG)},boxlog(BOXLOG))).
 % %% compile_clif==> 
 %(clif(CLIF)/is_kif_clause(CLIF) ==> ({delistify_last_arg(CLIF,kif_to_boxlog,BOXLOG)},boxlog(BOXLOG))).
-% %% compile_clif==> 
+compile_clif==> 
 % Remove negations probably
 (clif(~CLIF)/is_kif_clause(CLIF) ==> (\+ clif(CLIF))).
 % {sanity(is_entailed_u(CLIF))}

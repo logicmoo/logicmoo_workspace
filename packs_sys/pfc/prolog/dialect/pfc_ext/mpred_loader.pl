@@ -171,7 +171,7 @@
             lmcache:mpred_directive_value/3,
 
             baseKB:loaded_file_world_time/3,
-            baseKB:mpred_provide_clauses/3,
+            %baseKB:mpred_provide_clauses/3,
             baseKB:never_reload_file/1,
             always_expand_on_thread/1,
             t_l:current_lang/1,
@@ -893,7 +893,7 @@ was_exported_content(I,CALL,'$si$':'$was_imported_kb_content$'(I,CALL)).
 % Hook To [baseKB:mpred_provide_clauses/3] For Module Mpred_loader.
 % Managed Predicate Provide Clauses.
 %
-baseKB:mpred_provide_clauses(_H,_B,_What):- fail.
+%baseKB:mpred_provide_clauses(_H,_B,_What):- fail.
 
 
 

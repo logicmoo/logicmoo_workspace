@@ -172,7 +172,7 @@ nowdmsg(_).
 %:- thread_local(user:db/1).
 
 
-:- use_module(library(clpr)).
+:- use_module(library(clpr),[]).
 
 :- multifile sandbox:safe_primitive/1.
 

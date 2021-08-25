@@ -536,8 +536,10 @@ pretty_and_hide(In, Info):- dzotrace((portray_vars:pretty_numbervars(In,M),hide_
 
 dmsg_pretty(In):- dzotrace( ignore( \+ \+   ( pretty_and_hide(In, Info),dmsg(Info)))).
 
+wdmsg_pretty(In):- !,notrace(in_cmt(format('~q',In))).
 wdmsg_pretty(In):- \+ \+ dzotrace((pretty_and_hide(In, Info),wdmsg(Info))).
 
+wdmsg_pretty(F,In):- !,notrace(in_cmt(format(F,In))).
 wdmsg_pretty(F,In):- \+ \+ dzotrace((pretty_and_hide(In, Info),wdmsg(F,Info))).
 
 %= 	 	 
@@ -960,7 +962,9 @@ portray_append_goals(Var,Goals,(maplist(call,Goals),Var)).
 
 
 %dzotrace(G):- notrace(G),!.
-dzotrace(G):- no_bfly(G),!.
+dzotrace(G):- notrace(woi(no_bfly(G))),!.
+
+woi(G):- setup_call_cleanup(G,true,true).
 
 %= 	 	 
 

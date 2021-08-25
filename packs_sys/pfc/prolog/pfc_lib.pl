@@ -28,7 +28,7 @@
 wdmsg_pfc(X):- format('~N'),in_cmt((print_tree_with_final(X,'.'))),format('~N'),!.
 %wdmsg_pfc((X:-Y)):- !, pprint_ecp_cmt(yellow,(X:-Y)),!.
 %wdmsg_pfc(X):- with_output_to(string(S),print_tree(X)), pprint_ecp_cmt(yellow,S),!.
-wdmsg_pfc(X,Y):- format('~N'),in_cmt((wdmsg_pretty(X,Y))),format('~N'),!.
+wdmsg_pfc(X,Y):- format('~N'),notrace(in_cmt((wdmsg_pretty(X,Y)))),format('~N'),!.
 %:- if(( (current_prolog_flag(pfc_version, v(2,0,_))))).
 
 :- multifile(user:prolog_load_file/2).
@@ -435,12 +435,15 @@ baseKB:mpred_skipped_module(eggdrop).
 
 
 %baseKB:sanity_check:- findall(U,(current_module(U),default_module(U,baseKB)),L),must(L==[baseKB]).
-baseKB:sanity_check:- doall((current_module(M),setof(U,(current_module(U),default_module(U,M),U\==M),L),
+pfc_sanity_check_0:- doall((current_module(M),setof(U,(current_module(U),default_module(U,M),U\==M),L),
      dmsg_pretty(imports_eache :- (L,[sees(M)])))).
-baseKB:sanity_check:- doall((current_module(M),setof(U,(current_module(U),default_module(M,U),U\==M),L),dmsg_pretty(imports(M):-L))).
-baseKB:sanity_check:- doall((baseKB:mtProlog(M),
+pfc_sanity_check_0:- doall((current_module(M),setof(U,(current_module(U),default_module(M,U),U\==M),L),dmsg_pretty(imports(M):-L))).
+pfc_sanity_check_0:- doall((baseKB:mtProlog(M),
     setof(U,(current_module(U),default_module(M,U),U\==M),L),dmsg_pretty(imports(M):-L))).
 
+pfc_sanity_check:- forall(pfc_sanity_check_0,true).
+
+%baseKB:sanity_check:- pfc_sanity_check.
 
 %:- rtrace((pfc_lib:defaultAssertMt(G40331),rtrace(set_prolog_flag(G40331:unknown,warning)))).
 %:- dbreak.
@@ -715,7 +718,7 @@ simple_IM(IM):- atomic(IM),(sub_atom(IM,';');sub_atom(IM,'(');sub_atom(IM,' ')).
 base_clause_expansion(I,O):- strip_mz(I,MZ,_), !, base_clause_expansion(MZ,I,O),!.
 
 base_clause_expansion(_MZ,Var,Var):-var(Var),!.
-base_clause_expansion(_MZ, :- module(W,List), [:- writetln(module(W,List)), :- set_fileAssertMt(W)]):- in_dialect_pfc,!.
+%base_clause_expansion(_MZ, :- module(W,List), [:- writeln(module(W,List)), :- set_fileAssertMt(W)]):- in_dialect_pfc,!.
 base_clause_expansion(_MZ,'?=>'(I), ':-'('?=>'(I))):- !.
 base_clause_expansion(_MZ,':-'(I),':-'(I)):- \+ in_dialect_pfc, !.
 base_clause_expansion(_MZ,':-'(In),':-'(Out)):- in_dialect_pfc,fully_expand(In,Out),!.

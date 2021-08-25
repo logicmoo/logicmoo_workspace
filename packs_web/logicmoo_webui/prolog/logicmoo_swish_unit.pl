@@ -118,7 +118,7 @@ reexport_from(ReExporter,From:P):-
 :- use_module(library(auc)).
 :- use_module(library(matrix)).
 
-:- use_module(library(clpr)).
+:- use_module(library(clpr),[]).
 
 :- endif.
 

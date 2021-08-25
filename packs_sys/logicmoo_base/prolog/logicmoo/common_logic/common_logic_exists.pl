@@ -1004,7 +1004,7 @@ nnf_ex(KB,quant(atleast(N),X,Fml),FreeV,NNF,Paths):- fail, N==1, !,
 nnf_ex(KB, ~ quant(atleast(N),X,Fml), FreeV,NNF,Paths):- NN is N - 1,
    nnf_ex_nnf(KB,quant(atmost(NN),X,Fml),FreeV,NNF,Paths).
 
-nnf_ex(KB,quant(atleast(N),X,Fml),FreeV,NNF1,Paths):-  kif_option(true,skolem(nnf)), !,
+nnf_ex(KB,quant(atleast(N),X,Fml),FreeV,NNF1,Paths):-  use_kif_option(skolem(nnf),true), !,
  must_det_l((
     % add_cond(X,extensional(X)),
     term_slots(KB+FreeV+Fml,SSlots),list_to_set(SSlots,Slots),
@@ -1031,7 +1031,7 @@ nnf_ex(KB,quant(atleast(N),X,Fml),FreeV,NNF,Paths):-  N==2, !,
   % NEWFORM =  (different(X,Y) <=> (exists(X,Fml) & exists(Y,FmlY))),
   nnf(KB,NEWFORM,FreeV,NNF,Paths).
 
-nnf_ex(KB,quant(atleast(N),X,Fml),FreeV,NNF,Paths):- N > 1, kif_option(false,skolem(setOf)),!,  
+nnf_ex(KB,quant(atleast(N),X,Fml),FreeV,NNF,Paths):- N > 1, use_kif_option(skolem(setOf),true),!,  
    NEWFORM =  (all(X, exists(Set, (sizeOfLeast(Set,N) & elem(X,Set)))) <=> Fml), add_var_to_env("Set",Set),
    nnf(KB,NEWFORM,FreeV,NNF,Paths).
 */
@@ -1046,7 +1046,7 @@ nnf_ex(KB,~quant(atmost(0),X,Fml),FreeV,NNF,Paths):-  !,
 nnf_ex(KB,quant(atmost(0),X,Fml),FreeV,NNF,Paths):-  !,
   nnf_ex_nnf(KB,all(X,~(Fml)),FreeV,NNF,Paths).
 
-nnf_ex(KB,quant(atmost(N),X,Fml),FreeV,NNF1,Paths):-  kif_option(true,skolem(nnf)), !,
+nnf_ex(KB,quant(atmost(N),X,Fml),FreeV,NNF1,Paths):-  use_kif_option(skolem(nnf),true), !,
  must_det_l((
     % add_cond(X,extensional(X)),
     term_slots(KB+FreeV+Fml,SSlots),list_to_set(SSlots,Slots),
@@ -1116,7 +1116,7 @@ nnf_ex(KB,quant(exactly(N),X,Fml),FreeV,NNF,Paths):- !,
 
 
 nnf_ex(KB,quant(exactly(N),X,Fml),FreeV,NNF1,Paths):- fail,
- kif_option(true,skolem(nnf)), !,
+ use_kif_option(skolem(nnf),true), !,
  must_det_l((
     % add_cond(X,extensional(X)),
     term_slots(KB+FreeV+Fml,SSlots),list_to_set(SSlots,Slots),

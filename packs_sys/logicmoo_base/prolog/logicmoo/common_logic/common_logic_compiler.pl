@@ -1422,7 +1422,7 @@ if_debugging2(_,G):- call(G).
 % Convert to Clausal Form
 %
 
-cf(_Why,KB,_Original,PNF, FlattenedOUT):- fail,   
+cf(_Original,_Why,KB,PNF, FlattenedOUT):- fail,   
   check_kif_varnames(PNF),
   removeQ(KB,PNF,[], UnQ),
   cnf(KB,UnQ,CNF0),!,
@@ -1431,7 +1431,7 @@ cf(_Why,KB,_Original,PNF, FlattenedOUT):- fail,
   tlog_nnf(PROLOG,even,RULIFY),  
   rulify(constraint,RULIFY,FlattenedOUT),!.
 
-cf(Why,KB,_Original,PNF, FlattenedOUT):- 
+cf(_Original,Why,KB,PNF, FlattenedOUT):- 
  must_det_l((
   check_kif_varnames(PNF),
   removeQ(KB,PNF,[], UnQ),
@@ -1598,24 +1598,27 @@ demodal_sents(KB,I,O):- must(to_modal1(KB,I,M)),must(modal2sent(M,O)).
 
 % to_modal1(KB,In,Prolog):- call_last_is_var(to_modal1(KB,In,Prolog)),!.
 
-to_modal1(KB,Var, NonVar):-  nonvar(NonVar),!,to_modal1(KB,Var, NewVar),!, NewVar=NonVar.
+to_modal1(KB,Var, NonVar):- w_o_c(true, to_modal2(KB,Var, NonVar)),!.
+to_modal1(KB,Var, NonVar):- w_o_c(to_modal2(KB,Var, NonVar)).
 
-to_modal1(_KB,Var, Var):- quietly(var_or_atomic(Var)),!.
+to_modal2(KB,Var, NonVar):-  nonvar(NonVar),!,to_modal2(KB,Var, NewVar),!, NewVar=NonVar.
 
-to_modal1(KB,[H|T],[HH|TT]):- !, to_modal1(KB,H,HH),to_modal1(KB,T,TT).
+to_modal2(_KB,Var, Var):- quietly(var_or_atomic(Var)),!.
 
-to_modal1(KB, nesc(b_d(KB2,X,_),F), HH):- atom(X),KB\==KB2,XF =..[X,KB2,F],!,to_modal1(KB2,XF, HH).
-to_modal1(KB, poss(b_d(KB2,_,X),F), HH):- atom(X),KB\==KB2,XF =..[X,KB2,F],!,to_modal1(KB2,XF, HH).
+to_modal2(KB,[H|T],[HH|TT]):- !, to_modal2(KB,H,HH),to_modal2(KB,T,TT).
 
-to_modal1(KB, nesc(b_d(KB,X,_),F),   HH):- atom(X), XF =..[X,F], !,to_modal1(KB,XF, HH).
-to_modal1(KB, poss(b_d(KB,_,X),F),   HH):- atom(X), XF =..[X,F], !,to_modal1(KB,XF, HH).
+to_modal2(KB, nesc(b_d(KB2,X,_),F), HH):- atom(X),KB\==KB2,XF =..[X,KB2,F],!,to_modal2(KB2,XF, HH).
+to_modal2(KB, poss(b_d(KB2,_,X),F), HH):- atom(X),KB\==KB2,XF =..[X,KB2,F],!,to_modal2(KB2,XF, HH).
 
-to_modal1(KB, -XF,   ~(HH)):- !,to_modal1(KB,XF, HH).
+to_modal2(KB, nesc(b_d(KB,X,_),F),   HH):- atom(X), XF =..[X,F], !,to_modal2(KB,XF, HH).
+to_modal2(KB, poss(b_d(KB,_,X),F),   HH):- atom(X), XF =..[X,F], !,to_modal2(KB,XF, HH).
 
-to_modal1(KB, nesc(_,F),   HH):- XF =..[nesc,F], !,to_modal1(KB,XF, HH).
-to_modal1(KB, poss(_,F),   HH):- XF =..[poss,F], !,to_modal1(KB,XF, HH).
+to_modal2(KB, -XF,   ~(HH)):- !,to_modal2(KB,XF, HH).
 
-to_modal1(KB,H,HH ):- H=..[F|ARGS],!,must_maplist_det(to_modal1(KB),ARGS,ARGSO),!,HH=..[F|ARGSO].
+to_modal2(KB, nesc(_,F),   HH):- XF =..[nesc,F], !,to_modal2(KB,XF, HH).
+to_modal2(KB, poss(_,F),   HH):- XF =..[poss,F], !,to_modal2(KB,XF, HH).
+
+to_modal2(KB,H,HH ):- H=..[F|ARGS],!,must_maplist_det(to_modal2(KB),ARGS,ARGSO),!,HH=..[F|ARGSO].
 
 
 %= 	 	 

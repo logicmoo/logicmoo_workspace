@@ -12,6 +12,7 @@
 % Set our engine up
 % =================================================================================
 
+
 % deduce instances from usages in args having the effect of deducing human,dwelling,beverage_class are classes
 ==> feature_setting(make_wff,true).
 % set truth maintainance system to remove previous assertions that new assertions disagree with 
@@ -21,16 +22,23 @@
 
 :- set_prolog_flag_until_eof(do_renames,mpred_expansion).
 
-:- kif_compile.
+% :- kif_compile.
 
 % =================================================================================
 % Define a couple predicates
 % =================================================================================
 
+:- set_prolog_flag(gc,false).
 % maximum cardinality of livesAt/2 is 1
+:- mpred_trace_all.
+:- mpred_trace_exec.
 instance(livesAt,'FunctionalBinaryPredicate').
+:- listing([clif,modal_clif]).
+:- break.
+
 % thus implies
 arity(livesAt,2).
+
 domain(livesAt,1,human).
 domain(livesAt,2,dwelling).
 
@@ -38,6 +46,7 @@ domain(livesAt,2,dwelling).
 arity(drinks,2).
 domain(drinks,1,human).
 domain(drinks,2,beverage_class).
+
 
 % =================================================================================
 % Note these two assertions are implicit to the system and have no side effect
@@ -47,13 +56,15 @@ domain(drinks,2,beverage_class).
 all(X, if(drinks(X, coffee),possible(drinks(X, coffee)))).
 
 % for any objects in the universe that live in the green house must obvously have that as a possibility
-all(X, if(livesAt(X, green),possible(livesAt(X, green)))).
+all(X, if(livesAt(X, green_house),possible(livesAt(X, green_house)))).
 
 % =================================================================================
 % Some facts about the world
 % =================================================================================
 
 livesAt(joe,red_house).
+
+:- break.
 
 :- must(~possible(livesAt(joe,green_house))).
 

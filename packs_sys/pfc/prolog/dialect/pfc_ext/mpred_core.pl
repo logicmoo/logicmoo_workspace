@@ -1112,7 +1112,7 @@ each_E(P,H,S) :- apply(P,[H|S]).
 %  predicates to examine the state of mpred_
 
 
-pp_qu:- call_u_no_bc(listing(que/1)).
+pp_qu:- call_u_no_bc(listing(que/2)).
 
 %   File   : pfc_lib.pl
 %   Author : Tim Finin, finin@prc.unisys.com
@@ -1652,7 +1652,15 @@ mpred_post_update4(Was,P0,S,What):-
   strip_mz(P0,MZ,P),
   not_not_ignore_quietly_ex(( % (get_mpred_is_tracing(P);get_mpred_is_tracing(S)),
   fix_mp(change(assert,post),P,M,PP),
-  must_ex(S=(F,T)),mpred_trace_msg(call_mpred_post4:- (Was is assertion_status,post1=PP,fix_mp=M,mz=MZ,p0=P0,support_fact=F,support_trig=T,What is support_status)))),
+
+  prolog_current_frame(Frame),prolog_frame_attribute(Frame,level,Lvl),
+  predicate_property(que(_,_),number_of_clauses(NC)),
+  
+  must_ex(S=(F,T)),mpred_trace_msg(call_mpred_post4:- (
+    level=Lvl,que=NC,
+    assertion_status = Was,
+    support_status = What,
+    post1=PP,fix_mp=M,mz=MZ,p0=P0,support_fact=F,support_trig=T)))),
   fail.
 
 mpred_post_update4(identical,_P,_S,exact):-!.
@@ -4508,6 +4516,5 @@ end_of_file.
 :- mpred_test(current_ooZz(booZz)).
 
 :- mpred_reset_kb_0.
-
 
 

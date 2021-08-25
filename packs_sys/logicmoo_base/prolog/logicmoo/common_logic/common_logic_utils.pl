@@ -15,10 +15,11 @@
 delistify_last_arg(Arg,Pred,Last):- no_repeats(Last,must(delistify_last_arg0(Arg,Pred,Last))).
 
 delistify_last_arg0(Arg,Pred,Last):- is_list(Arg),!,member(E,Arg),must(delistify_last_arg0(E,Pred,Last)).
-delistify_last_arg0(Arg,M:Pred,Last):- Pred=..[F|ARGS],append([Arg|ARGS],[NEW],NARGS),NEWCALL=..[F|NARGS],quietly(M:NEWCALL),!,member_ele(NEW,Last).
-delistify_last_arg0(Arg,Pred,Last):- Pred=..[F|ARGS],append([Arg|ARGS],[NEW],NARGS),NEWCALL=..[F|NARGS],quietly(NEWCALL),!,member_ele(NEW,Last).
+delistify_last_arg0(Arg,Pred,Last):- call(Pred,Arg,NEW),each_ele(NEW,Last).
+/*delistify_last_arg0(Arg,M:Pred,Last):- Pred=..[F|ARGS],append([Arg|ARGS],[NEW],NARGS),NEWCALL=..[F|NARGS],
+  quietly(M:NEWCALL),member_ele(NEW,Last).*/
 
-
+each_ele(NEW,Last):- member_ele(NEW,Last).
 
 %% is_kif_clause( ?Var) is det.
 %

@@ -102,7 +102,7 @@ user:prolog_load_file(Spec, Options):- maybe_load_clif_file(Spec, Options),!.
 
 :- baseKB:ensure_loaded(baseKB:library('logicmoo/common_logic/common_logic_clif.pfc')).
 
-:- kif_compile.
+%:- kif_compile.
 
 
 

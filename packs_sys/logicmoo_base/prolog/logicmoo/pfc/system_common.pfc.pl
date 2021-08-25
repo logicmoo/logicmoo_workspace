@@ -1243,11 +1243,14 @@ isa(iPlato7,mobPhilosopher).
 :- sanity(isa(iPlato7,mobPhilosopher)).
 
 :- if((current_prolog_flag(runtime_debug,D),D>2)).
-:- sanity(\+ isa(iPlato7,ftAtom)).
 
 %:- mpred_test(\+ quotedIsa(iPlato7,mobPhilosopher)).
 %:- sanity((~quotedIsa(iPlato7,mobPhilosopher))).
+
 :- sanity((quotedIsa(iPlato7,ftAtom))).
+
+% :- sanity(\+ isa(iPlato7,ftAtom)).
+
 :- mpred_notrace_all.
 :- endif.
 

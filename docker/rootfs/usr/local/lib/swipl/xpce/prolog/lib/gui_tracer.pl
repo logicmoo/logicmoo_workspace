@@ -39,13 +39,18 @@
             gtrace/0,                   % Start tracer and trace
             gtrace/1,                   % :Goal
             gspy/1,                     % Start tracer and set spypoint
-            gdebug/0                    % Start tracer and debug
+            gdebug/0,                   % Start tracer and debug
+            gtrap/1                     % +Error
           ]).
 :- use_module(library(pce)).
+:- use_module(library(edinburgh)).
+:- use_module(library(prolog_debug)).
+
 :- set_prolog_flag(generate_debug_info, false).
 :- meta_predicate
     gtrace(0),
-    gspy(:).
+    gspy(:),
+    gtrap(:).
 
 /** <module> Graphical debugger utilities
 
@@ -163,6 +168,14 @@ gdebug :-
     guitracer,
     debug.
 
+%!  gtrap(+Exception) is det.
+%
+%   Trap exceptions matching Exception using trap/1 and start the
+%   graphical tracer.
+
+gtrap(Error) :-
+    guitracer,
+    trap(Error).
 
                  /*******************************
                  *            MESSAGES          *

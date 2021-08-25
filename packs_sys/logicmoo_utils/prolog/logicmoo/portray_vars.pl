@@ -220,7 +220,7 @@ bad_varname(UP):-
 % mort(G):- must_or_rtrace(G),!.
 
 mort((G1,G2)):- !, mort(G1),mort(G2).
-mort(G):- notrace(catch(G,E,(nl,display(mort_error(E)),nl,fail))),!.
+mort(G):- notrace(catch(w_o_c(error,G),E,(nl,display(mort_error(E)),nl,fail))),!.
 mort(G):- tracing,display(failed_mort(G)),!,break,(G).
 mort(G):- nortrace,notrace,display(failed_mort(G)),trace,rtrace(G),notrace,trace,break.
 
@@ -349,6 +349,7 @@ maybe_xfr_varname(CV,V):- get_var_name(CV,Name),may_debug_var(Name,V).
 
 guess_pretty1(H):- pretty_enough(H), !.
 %guess_pretty1(H):- term_variables(H,Vs),copy_term(H+Vs,CH+CVs),try_get_varname_cache(CH),CVs\=@=Vs,maplist(maybe_xfr_varname,CVs,Vs),!.
+guess_pretty1(_):- !. % dmiles to undo
 guess_pretty1(O):- mort(( ignore(pretty1(O)),ignore(pretty_two(O)),ignore(pretty_three(O)),ignore(pretty_final(O)))),!.
 %make_pretty(I,O):- is_user_output,!,shrink_naut_vars(I,O), pretty1(O),pretty_three(O),pretty_final(O).
 %make_pretty(I,O):- I=O, pretty1(O),pretty_three(O),pretty_final(O).
@@ -741,7 +742,7 @@ ti_name(I,OType,IType):- i_name(I,OType,IType).
 %
 split_name_type(Suggest,InstName,Type):- 
   quietly(split_name_type_0(Suggest,NewInstName,NewType)),!,
-  must((NewInstName=InstName,NewType=Type)),!.
+  w_o_c(must((NewInstName=InstName,NewType=Type))),!.
 :- export(split_name_type/3).
 :- '$hide'(split_name_type/3).
 

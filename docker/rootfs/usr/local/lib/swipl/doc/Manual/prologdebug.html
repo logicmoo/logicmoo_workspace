@@ -1,0 +1,312 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+
+<html>
+<head>
+<title>SWI-Prolog 8.3.28 Reference Manual: Section A.35</title><link rel="home" href="index.html">
+<link rel="contents" href="Contents.html">
+<link rel="index" href="DocIndex.html">
+<link rel="summary" href="summary.html">
+<link rel="previous" href="predicate_options.html">
+<link rel="next" href="prologjiti.html">
+
+<style type="text/css">
+
+/* Style sheet for SWI-Prolog latex2html
+*/
+
+dd.defbody
+{ margin-bottom: 1em;
+}
+
+dt.pubdef, dt.multidef
+{ color: #fff;
+padding: 2px 10px 0px 10px;
+margin-bottom: 5px;
+font-size: 18px;
+vertical-align: middle;
+overflow: hidden;
+}
+
+dt.pubdef { background-color: #0c3d6e; }
+dt.multidef { background-color: #ef9439; }
+
+.bib dd
+{ margin-bottom: 1em;
+}
+
+.bib dt
+{ float: left;
+margin-right: 1.3ex;
+}
+
+pre.code
+{ margin-left: 1.5em;
+margin-right: 1.5em;
+border: 1px dotted;
+padding-top: 5px;
+padding-left: 5px;
+padding-bottom: 5px;
+background-color: #f8f8f8;
+}
+
+div.navigate
+{ text-align: center;
+background-color: #f0f0f0;
+border: 1px dotted;
+padding: 5px;
+}
+
+div.title
+{ text-align: center;
+padding-bottom: 1em;
+font-size: 200%;
+font-weight: bold;
+}
+
+div.author
+{ text-align: center;
+font-style: italic;
+}
+
+div.abstract
+{ margin-top: 2em;
+background-color: #f0f0f0;
+border: 1px dotted;
+padding: 5px;
+margin-left: 10%; margin-right:10%;
+}
+
+div.abstract-title
+{ text-align: center;
+padding: 5px;
+font-size: 120%;
+font-weight: bold;
+}
+
+div.toc-h1
+{ font-size: 200%;
+font-weight: bold;
+}
+
+div.toc-h2
+{ font-size: 120%;
+font-weight: bold;
+margin-left: 2em;
+}
+
+div.toc-h3
+{ font-size: 100%;
+font-weight: bold;
+margin-left: 4em;
+}
+
+div.toc-h4
+{ font-size: 100%;
+margin-left: 6em;
+}
+
+span.sec-nr
+{
+}
+
+span.sec-title
+{
+}
+
+span.pred-ext
+{ font-weight: bold;
+}
+
+span.pred-tag
+{ float: right;
+padding-top: 0.2em;
+font-size: 80%;
+font-style: italic;
+color: #fff;
+}
+
+div.caption
+{ width: 80%;
+margin: auto;
+text-align:center;
+}
+
+/* Footnotes */
+.fn {
+color: red;
+font-size: 70%;
+}
+
+.fn-text, .fnp {
+position: absolute;
+top: auto;
+left: 10%;
+border: 1px solid #000;
+box-shadow: 5px 5px 5px #888;
+display: none;
+background: #fff;
+color: #000;
+margin-top: 25px;
+padding: 8px 12px;
+font-size: larger;
+}
+
+sup:hover span.fn-text
+{ display: block;
+}
+
+/* Lists */
+
+dl.latex
+{ margin-top: 1ex;
+margin-bottom: 0.5ex;
+}
+
+dl.latex dl.latex dd.defbody
+{ margin-bottom: 0.5ex;
+}
+
+/* PlDoc Tags */
+
+dl.tags
+{ font-size: 90%;
+margin-left: 5ex;
+margin-top: 1ex;
+margin-bottom: 0.5ex;
+}
+
+dl.tags dt
+{ margin-left: 0pt;
+font-weight: bold;
+}
+
+dl.tags dd
+{ margin-left: 3ex;
+}
+
+td.param
+{ font-style: italic;
+font-weight: bold;
+}
+
+/* Index */
+
+dt.index-sep
+{ font-weight: bold;
+font-size: +1;
+margin-top: 1ex;
+}
+
+/* Tables */
+
+table.center
+{ margin: auto;
+}
+
+table.latex
+{ border-collapse:collapse;
+}
+
+table.latex tr
+{ vertical-align: text-top;
+}
+
+table.latex td,th
+{ padding: 2px 1em;
+}
+
+table.latex tr.hline td,th
+{ border-top: 1px solid black;
+}
+
+table.frame-box
+{ border: 2px solid black;
+}
+
+</style>
+</head>
+<body style="background:white">
+<div class="navigate"><a class="nav" href="index.html"><img src="home.gif" alt="Home"></a>
+<a class="nav" href="Contents.html"><img src="index.gif" alt="Contents"></a>
+<a class="nav" href="DocIndex.html"><img src="yellow_pages.gif" alt="Index"></a>
+<a class="nav" href="summary.html"><img src="info.gif" alt="Summary"></a>
+<a class="nav" href="predicate_options.html"><img src="prev.gif" alt="Previous"></a>
+<a class="nav" href="prologjiti.html"><img src="next.gif" alt="Next"></a>
+</div>
+<h2 id="sec:prologdebug"><a id="sec:A.35"><span class="sec-nr">A.35</span> <span class="sec-title">library(prolog_debug): 
+User level debugging tools</span></a></h2>
+
+<p><a id="sec:prologdebug"></a>
+
+<p>This library provides tools to control the Prolog debuggers. 
+Traditionally this code was built-in. Because these tools are only 
+required in (interactive) debugging sessions they have been moved into 
+the library.
+
+<dl class="latex">
+<dt class="multidef"><span class="pred-tag">[multifile]</span><a id="prolog:debug_control_hook/1"><span class="module">prolog</span>:<strong>debug_control_hook</strong>(<var>+Action</var>)</a></dt>
+<dd class="defbody">
+Allow user-hooks in the Prolog debugger interaction. See the calls below 
+for the provided hooks. We use a single predicate with action argument 
+to avoid an uncontrolled poliferation of hooks.</dd>
+<dt class="pubdef"><span class="pred-tag">[det]</span><a id="spy/1"><strong>spy</strong>(<var>:Spec</var>)</a></dt>
+<dt class="pubdef"><span class="pred-tag">[det]</span><a id="nospy/1"><strong>nospy</strong>(<var>:Spec</var>)</a></dt>
+<dt class="pubdef"><span class="pred-tag">[det]</span><a id="nospyall/0"><strong>nospyall</strong></a></dt>
+<dd class="defbody">
+Set/clear spy-points. A successfully set or cleared spy-point is 
+reported using <a class="pred" href="printmsg.html#print_message/2">print_message/2</a>, 
+level <code>informational</code>, with one of the following terms, where <var>Spec</var> 
+is of the form M:Head.
+
+<p>
+<ul class="compact">
+<li><code>spy(Spec)</code>
+<li><code>nospy(Spec)</code>
+</ul>
+
+<dl class="tags">
+<dt class="tag">See also</dt>
+<dd>
+<a class="pred" href="debugger.html#spy/1">spy/1</a> and <a class="pred" href="debugger.html#nospy/1">nospy/1</a> 
+call the hook <a class="pred" href="prologdebug.html#prolog:debug_control_hook/1">prolog:debug_control_hook/1</a> 
+to allow for alternative specifications of the thing to debug.
+</dd>
+</dl>
+
+</dd>
+<dt class="pubdef"><span class="pred-tag">[det]</span><a id="debugging/0"><strong>debugging</strong></a></dt>
+<dd class="defbody">
+Report current status of the debugger.</dd>
+<dt class="pubdef"><span class="pred-tag">[det]</span><a id="trap/1"><strong>trap</strong>(<var>+Exception</var>)</a></dt>
+<dt class="pubdef"><span class="pred-tag">[det]</span><a id="notrap/1"><strong>notrap</strong>(<var>+Exception</var>)</a></dt>
+<dd class="defbody">
+Install a trap on <code>error(Formal, Context)</code> exceptions that 
+unify with
+<var>Exception</var>. The tracer is started when a matching exception is 
+raised. This predicate enables <i>debug mode</i> using <a class="pred" href="debugger.html#debug/0">debug/0</a> 
+to get more context about the exception. Even with debug mode disabled 
+exceptions are still trapped and thus one may call <a class="pred" href="debugger.html#nodebug/0">nodebug/0</a> 
+to run in normal mode after installing a trap.
+
+<p>The predicate <a class="pred" href="prologdebug.html#notrap/1">notrap/1</a> 
+removes matching (unifying) traps.
+
+<dl class="tags">
+<dt class="mtag">See also</dt>
+<dd>
+- <span class="pred-ext">gtrap/1</span> to trap using the graphical 
+debugger. <br>
+- <i>Edit exceptions</i> menu in PceEmacs and the graphical debugger 
+that provide a graphical frontend to trap exceptions.
+</dd>
+</dl>
+
+</dd>
+<dt class="pubdef"><span class="pred-tag">[failure]</span><a id="exception_hook/4"><strong>exception_hook</strong>(<var>+ExIn, 
+-ExOut, +Frame, +Catcher</var>)</a></dt>
+<dd class="defbody">
+Trap exceptions and consider whether or not to start the tracer.
+</dd>
+</dl>
+
+<p></body></html>

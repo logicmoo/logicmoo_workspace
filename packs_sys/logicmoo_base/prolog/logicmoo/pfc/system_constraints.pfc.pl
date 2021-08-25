@@ -104,7 +104,7 @@ weak_test("Weak0","weAk2").
 
 %:- listing(weak_test/2).
 
-:- mpred_trace_exec.
+%:- mpred_trace_exec.
 :- if(\+ current_predicate(sanity/1)).
 %:- use_module(library(pfc_test)).
 :- endif.

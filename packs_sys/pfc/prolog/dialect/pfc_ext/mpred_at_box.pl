@@ -90,7 +90,7 @@
 :- include('mpred_header.pi').
 :- flag_call(runtime_debug=false).
 
-baseKB:pfc_load_lib.
+%baseKB:pfc_load_lib.
 
 :- set_how_virtualize_file(bodies).
 

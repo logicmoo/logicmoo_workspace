@@ -83,14 +83,14 @@
 :- thread_local(t_l:kif_option/2).
 :- thread_local(t_l:kif_option_list/1).
 
-kif_value_false(Value):- Value == none ; Value == fail; Value == []; Value == false; Value == no ; Value=todo.
+means_false_kif(Value):- Value == none ; Value == fail; Value == []; Value == false; Value == no ; Value=todo.
 
-kif_option(never,_Jiggler):-!,fail.
-kif_option(always,_Jiggler):-!.
-kif_option(_Default,Jiggler):- foption_to_name(Jiggler,Name), kif_option_value(Name,Value),!, \+ kif_value_false(Value),
+
+use_kif_option(_Jiggler,never):-!,fail.
+use_kif_option(_Jiggler,always):-!.
+use_kif_option(Jiggler,_Default):- foption_to_name(Jiggler,Name), kif_option_value(Name,Value),!, \+ means_false_kif(Value),
      (compound(Jiggler) -> arg(1,Jiggler,Value) ; true).
-
-kif_option(Default,_Jiggler):- \+ kif_value_false(Default).
+use_kif_option(_Jiggler,Default):- \+ means_false_kif(Default).
 
 as_local_kv(-Key,Key,false):-!.
 as_local_kv(+Key,Key,true):-!.
@@ -101,14 +101,18 @@ as_local_kv(KeyValue,Key,Value):- KeyValue=..[_,Key,Value].
 
 set_kif_option(Name+Name2):- !,set_kif_option(Name),set_kif_option(+Name2).
 set_kif_option(Name-Name2):- !,set_kif_option(Name),set_kif_option(-Name2).
+set_kif_option(List):- is_list(List),!,maplist(set_kif_option,List).
 set_kif_option(+Name):- !, set_kif_option(Name,true).
 set_kif_option(-Name):- !, set_kif_option(Name,false).
-set_kif_option(List):- is_list(List),!,maplist(set_kif_option,List).
 set_kif_option(N=V):- !, set_kif_option(N,V).
 set_kif_option(N:V):- !, set_kif_option(N,V).
+set_kif_option(Name):- !, set_kif_option(Name,true).
+
+
 set_kif_option(Name,Value):- assert_setting01(t_l:kif_option(Name,Value)),!.
 
 kif_option_value(Name,Value):- zotrace(kif_option_value0(Name,Value)).
+
 kif_option_value0(Name,Value):- Value==none,!,(kif_option_value(Name,ValueReally)->ValueReally==Value;true).
 kif_option_value0(Name,Value):- t_l:kif_option_list(Dict),atom(Name),
    (is_dict(Dict) -> (get_dict(Key,Dict,Value),atom(Name),atom(Key),atom_concat(Key,_,Name));
@@ -129,10 +133,10 @@ adapt_to_arity_2(Pred1,A,O):- call(Pred1,A),A=O.
 kif_optionally(YN,Pred1,Arg):- kif_optionally(YN,adapt_to_arity_2(Pred1),Arg,_).
 
 :- meta_predicate kif_optionally(+,2,?,?).
-kif_optionally(_,_,JIGGLED,JIGGLED):- JIGGLED==[],!. 
+%kif_optionally(_,_,JIGGLED,JIGGLED):- JIGGLED==[],!. 
 kif_optionally(Default,Jiggler,KIF,JIGGLED):- \+ is_list(KIF),!,kif_optionally_e(Default,Jiggler,KIF,JIGGLED).
-kif_optionally(never,_,JIGGLED,JIGGLED):-!.
-kif_optionally(always,Jiggler,KIF,JIGGLED):-  must_maplist_det(Jiggler,KIF,JIGGLED),!.
+%kif_optionally(never,_,JIGGLED,JIGGLED):-!.
+%kif_optionally(always,Jiggler,KIF,JIGGLED):-  must_maplist_det(Jiggler,KIF,JIGGLED),!.
 kif_optionally(Default,Jiggler,KIF,JIGGLED):- must_maplist_det(kif_optionally_e(Default,Jiggler),KIF,JIGGLED),!.
 
 :- meta_predicate kif_optionally_e(+,1,?).
@@ -141,15 +145,20 @@ kif_optionally_e(YN,Pred1,Arg):- kif_optionally_e(YN,adapt_to_arity_2(Pred1),Arg
 :- meta_predicate kif_optionally_e(+,2,?,?).
 kif_optionally_e(Default,Jiggler,KIF,JIGGLED):- 
    foption_to_name(Jiggler,Name), !,
-  kif_optionally_e(Default,Name,Jiggler,KIF,JIGGLED).
+  must(kif_optionally_ee(Default,Name,Jiggler,KIF,JIGGLED)),!.
 
-kif_optionally_e( never ,_  ,_,JIGGLED,JIGGLED):-!.
-kif_optionally_e(Default,Name,Jiggler,KIF,JIGGLED):-
-     (kif_option_value(Name,Value)-> true ; Value = Default),
-       ((kif_value_false(Value), \+ Default==always) -> KIF=JIGGLED ;
-      ((locally_tl(kif_option(Name,Value),
-         must(call(Jiggler,KIF,JIGGLED))),
-       if_debugging2(Name,(KIF \=@= JIGGLED) -> (sdmsg(Name=JIGGLED)); true)))),!.
+kif_optionally_ee(Default,Name,Jiggler,KIF,JIGGLO):- 
+  kif_optionally_eee(Default,Name,Jiggler,KIF,JIGGLED),
+  (JIGGLED\=nesc(nesc(_))->JIGGLO=JIGGLED
+   ; (dumpST,break,rtrace(kif_optionally_eee(Default,Name,Jiggler,KIF,JIGGLO)),break)).
+
+kif_optionally_eee( never ,_  ,_,JIGGLED,JIGGLED):-!.
+kif_optionally_eee(Default,Name,Jiggler,KIF,JIGGLED):-
+     (kif_option_value(Name,ShouldDo)-> true ; ShouldDo = Default),
+     ((means_false_kif(ShouldDo), \+ Default==always) 
+       -> KIF=JIGGLED 
+       ; ((locally_tl(kif_option(Name,ShouldDo), must(w_o_c(call(Jiggler,KIF,JIGGLED)))),
+          if_debugging2(Name, (KIF \=@= JIGGLED -> sdmsg(Name=(KIF==>JIGGLED)); true))))),!.
 
 :- fixup_exports.
 
@@ -320,7 +329,7 @@ is_not_entailed(CLIF):-  mpred_nochaining((kif_to_boxlog(CLIF,Prolog),
 is_clif(all(_,X)):-compound(X),!.
 is_clif(forall(_,X)):-compound(X),!,is_clif(X).
 is_clif(CLIF):-
-  VVs = v(if,iff,clif_forall,all,exists), % but not: implies,equiv,forall
+  VVs = v(if,iff,clif_forall,all,exists,poss,nesc), % but not: implies,equiv,forall
    (var(CLIF)-> (arg(_,VVs,F),functor(CLIF,F,2));
      compound(CLIF),functor(CLIF,F,2),arg(_,VVs,F)).
 
@@ -843,7 +852,9 @@ kif_to_boxlog(Wff,Out):- Wff\=(_:-_), why_to_id(rule,Wff,Why),!,must(kif_to_boxl
 % Knowledge Interchange Format Converted To Datalog.
 %
 :- export(kif_to_boxlog/3).
-kif_to_boxlog(Wff,Out,Why):- Wff\=(_:-_), w_o_c(kif_to_boxlog(Wff,'$VAR'('KB'),Why,Out)),!.
+kif_to_boxlog(Wff,Out,Why):- must(Wff\=(_:-_)), w_o_c(kif_to_boxlog(Wff,'$VAR'('KB'),Why,Out)),!.
+
+must_det_here(G):- w_o_c(must_det(G)).
 
 
 %% kif_to_boxlog( +Fml, ?KB, +Why, -Datalog) is det.
@@ -877,20 +888,20 @@ kif_to_boxlog_attvars(HB,KB,Why,FlattenedO):- compound(HB),HB=(HEAD:- BODY),!,
 
 kif_to_boxlog_attvars(WffIn0,KB0,Why0,RealOUT):- 
   flag(skolem_count,_,0),
-  must_maplist_det(must_det,[
+  must_maplist_det(must_det_here,[
    must_be_unqualified(WffIn0),
    unnumbervars_with_names(WffIn0:KB0:Why0,WffIn:KB:Why),
    check_is_kb(KB),
-   as_dlog(WffIn,DLOGKIF),!,
+   kif_optionally_e(true,as_dlog,WffIn,DLOGKIF),!,
    guess_varnames(DLOGKIF),
    sdmsg(kif=(DLOGKIF)),
    kif_optionally_e(false,existentialize_objs,DLOGKIF,EXTOBJ),
    kif_optionally_e(false,existentialize_rels,EXTOBJ,EXT),
    kif_optionally_e(true,ensure_quantifiers,EXT,OuterQuantKIF),
-   un_quant3(KB,OuterQuantKIF,NormalOuterQuantKIF),
+   kif_optionally_e(true,un_quant3(KB),OuterQuantKIF,NormalOuterQuantKIF),
    kif_optionally_e(false,rejiggle_quants(KB),NormalOuterQuantKIF,FullQuant),   
    kif_optionally_e(todo,qualify_modality,FullQuant,ModalKIF),
-   adjust_kif(KB,ModalKIF,ModalKBKIF),
+   kif_optionally_e(true,adjust_kif(KB),ModalKIF,ModalKBKIF),
    b_setval('$nnf_outermost',FullQuant),
    kif_optionally_e(true,nnf(KB),ModalKBKIF,NNF),
    term_attvars(NNF,NNFVs), maplist(del_attr_type(skv),NNFVs),
@@ -898,30 +909,31 @@ kif_to_boxlog_attvars(WffIn0,KB0,Why0,RealOUT):-
    % sdmsg(nnf=(NNF)),
    % save_wid(Why,kif,DLOGKIF),
    % save_wid(Why,pkif,FullQuant),
-   removeQ(KB,NNF,[], UnQ), 
-   unless_ignore(NNF\==UnQ, sdmsg(unq=UnQ)),
-   must(kif_to_boxlog_theorist(FullQuant,UnQ,KB,Why,RealOUT))]),!.
+   kif_optionally_e(true,removeQ_3(KB),NNF,UnQ),   
+   must(kif_to_boxlog_theorist(FullQuant,Why,KB,UnQ,RealOUT))]),!.
 
-kif_to_boxlog_theorist2(Original,THIN,KB,Why,RealOUT):-
+removeQ_3(KB,NNF,UnQ):-removeQ(KB,NNF,[],UnQ).
+
+kif_to_boxlog_theorist2(Original,Why,KB,THIN,RealOUT):-
    demodal_clauses(KB,THIN,THIN2),
-   as_prolog_hook(THIN2,THIN3),    
-    must(cf(Why,KB,Original,THIN3,RealOUT)),!.
+   kif_optionally_e(always,as_prolog_hook,THIN2,THIN3),    
+   must(kif_optionally_e(always,cf(Original,Why,KB),THIN3,RealOUT)),!.
 
-kif_to_boxlog_theorist(_Wff666,UnQ,KB,Why,RealOUT):-
-  must_maplist_det(call,[
+kif_to_boxlog_theorist(_FullQuant,Why,KB,UnQ,RealOUT):-
+  %must_maplist_det(call,[
    current_outer_modal_t(HOLDS_T),
    % true cause poss loss
    kif_optionally_e(false,to_tlog(HOLDS_T,KB),UnQ,UnQ666),
-   as_prolog_hook(UnQ666,THIN0),
-   with_no_dmsg(kif_optionally_e(always,to_tnot,THIN0,THIN)),
-   must_be_unqualified(THIN),
+   kif_optionally_e(always,as_prolog_hook,UnQ666,THIN0),
+   kif_optionally_e(always,to_tnot_2,THIN0,THIN),!,
+   must(must_be_unqualified(THIN)),
    % unless_ignore(THIN\==UnQ, sdmsg(tlog_nnf_in=THIN)),
-   with_no_dmsg(kif_optionally_e(always,tlog_nnf(even),THIN,RULIFY)),
-   unless_ignore(THIN\== ~ RULIFY,((as_dlog(RULIFY,DRULIFY), sdmsg(tlog_nnf_out_negated= DRULIFY)))),
+   kif_optionally_e(always,tlog_nnf(even),THIN,RULIFY),
+   unless_ignore(THIN\== ~ RULIFY,kif_optionally_e(always,as_dlog,RULIFY,_)),
    % trace,
-   once((rulify(constraint,RULIFY,SideEffectsList),SideEffectsList\==[])),
-   list_to_set(SideEffectsList,SetList),
-   finish_clausify(KB,Why,SetList,RealOUT)]).
+   once((rulify(constraint,RULIFY,SideEffectsList),SideEffectsList\==[])),!,
+   kif_optionally_e(true,list_to_set,SideEffectsList,SetList),
+   kif_optionally_e(always,finish_clausify(KB,Why),SetList,RealOUT),!.
 
 tlog_nnf(Even,THIN,RULIFY):- th_nnf(THIN,Even,RULIFY).
 
@@ -975,8 +987,8 @@ is_4th_order(F):-is_2nd_order_holds(F).
   
 kb_ify(_,FlattenedOUT,FlattenedOUT):- \+ compound(FlattenedOUT),!.
 kb_ify(_,ist(KB,H),ist(KB,H)):-!.
-kb_ify(_KB,skolem(X,SK),skolem(X,SK)).
-kb_ify(_KB,make_existential(X,SK),make_existential(X,SK)).
+kb_ify(_KB,skolem(X,SK),skolem(X,SK)):-!.
+kb_ify(_KB,make_existential(X,SK),make_existential(X,SK)):-!.
 
 kb_ify(KB,H,HH):- H=..[F,ARG1,ARG2|ARGS],is_4th_order(F),HH=..[F,ARG1,ARG2,KB|ARGS],!.
 kb_ify(KB,H,HH):- H=..[F,ARG1],is_4th_order(F),HH=..[F,KB,ARG1],!.
@@ -1008,8 +1020,8 @@ to_tlog(MD,KB, poss(_,F),   HH):- XF =..[poss,F], !,to_tlog(MD,KB,XF, HH).
 
 to_tlog(_,KB, poss(F),  poss( HH)):-!, to_tlog(poss,KB,F, HH).
 
-to_tlog(MD,KB,(X ; Y),(Xp v Yp)) :- to_tlog(MD,KB,X,Xp), to_tlog(MD,KB,Y,Yp).
-to_tlog(MD,KB,(X v Y),(Xp v Yp)) :- to_tlog(MD,KB,X,Xp), to_tlog(MD,KB,Y,Yp).
+to_tlog(MD,KB,(X ; Y),(Xp v Yp)) :- !, to_tlog(MD,KB,X,Xp), to_tlog(MD,KB,Y,Yp),!.
+to_tlog(MD,KB,(X v Y),(Xp v Yp)) :- !, to_tlog(MD,KB,X,Xp), to_tlog(MD,KB,Y,Yp),!.
 to_tlog(MD,KB,H,HH ):- H=..[F|ARGS],tlog_is_sentence_functor(F),!,must_maplist_det(to_tlog(MD,KB),ARGS,ARGSO),!,HH=..[F|ARGSO].
 to_tlog(MD,KB, ~(XF),  n(HH)):- !,to_tlog(MD,KB,XF, HH).
 to_tlog(MD,KB, n(XF),  n(HH)):- !,to_tlog(MD,KB,XF, HH).
@@ -1024,7 +1036,7 @@ to_tlog(MD,KB,H,HH ):- H=..[F|ARGS],is_quantifier(F),!,
 to_tlog(_,KB,H,HH ):- H=..[F,ARG],is_holds_functor(F),!,(is_ftVar(ARG)->HH=H;to_tlog(F,KB,ARG,HH)).
 to_tlog(_,KB, poss(XF),  HH):- !, to_tlog(poss_t,KB, XF,  HH).
 to_tlog(_,KB,H,HH):- H=..[F,ARG],to_tlog(args,KB,ARG,ARGO),HH=..[F,ARGO],!.
-to_tlog(MD,KB,H,HH):- H=..[F|ARGS],must_maplist_det(to_tlog(args,KB),ARGS,ARGSO),to_tlog_lit(MD,KB,F,ARGSO,HH).
+to_tlog(MD,KB,H,HH):- H=..[F|ARGS],must_maplist_det(to_tlog(args,KB),ARGS,ARGSO),!,to_tlog_lit(MD,KB,F,ARGSO,HH).
 
 tlog_is_sentence_functor(F):- \+ atom(F),!,fail.
 tlog_is_sentence_functor(F):- upcase_atom(F,F).
@@ -1069,15 +1081,17 @@ get_holds_wrapper(disjointWith,c).
 %get_holds_wrapper(_,_):-!,fail.
 %get_holds_wrapper(_P,t).
 
-to_tnot(THIN,THIN):- \+ compound(THIN),!.
-to_tnot(~ THIN0,NTHIN):- to_tnot( THIN0, THIN),!,to_neg(THIN,NTHIN).
+to_tnot_2(ThIn,ThOut):- to_tnot(ThIn,ThOut),!.
+
+to_tnot(ThIn,ThOut):- \+ compound(ThIn),!,ThOut=ThIn.
+to_tnot(~ ThIn,ThOut):- !, to_tnot( ThIn, Mid),!,to_neg(Mid,ThOut).
 to_tnot(poss_t(C,I),POSCI):- atom(C),CI=..[C,I],!,to_poss(CI,POSCI).
-to_tnot(poss(THIN0),NTHIN):- to_poss( THIN0, NTHIN),!.
-to_tnot(nesc(THIN0),(NTHIN)):- to_tnot( THIN0, NTHIN),!.
+to_tnot(poss(ThIn),ThOut):- to_poss( ThIn, ThOut),!.
+to_tnot(nesc(ThIn),ThOut):- !, to_tnot( ThIn, ThOut),!.
 to_tnot((X ; Y),(Xp ; Yp)) :- to_tnot(X,Xp), to_tnot(Y,Yp).
 to_tnot((X :- Y),(Xp :- Yp)) :- to_tnot(X,Xp), to_tnot(Y,Yp).
 to_tnot((X , Y),(Xp , Yp)) :- to_tnot(X,Xp), to_tnot(Y,Yp).
-to_tnot(THIN0,nesc(THIN)):- into_mpred_form(THIN0,THIN).
+to_tnot(ThIn,nesc(ThOut)):- into_mpred_form(ThIn,ThOut).
 
 to_neg(THIN,THIN):- \+ compound(THIN),!.
 to_neg(neg(THIN),THIN).
@@ -1581,7 +1595,7 @@ neg_b_if_neg(HBINFO,B,BBB):-nots_to(B,'~',BB),sort_body(HBINFO,BB,BBB),!.
 %
 % Simp Code.
 %
-simp_code(HB,(H:-BS)):-expand_to_hb(HB,H,B),conjuncts_to_list_det(B,BL),sort(BL,BS),!.
+simp_code(HB,(H:-BS)):-expand_to_hb(HB,H,B),conjuncts_to_list_det(B,BL),sort(BL,BSL),!,list_to_conjuncts_det(BSL,BS).
 simp_code(A,A).
 
 

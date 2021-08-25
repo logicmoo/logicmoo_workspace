@@ -1,4 +1,4 @@
-
+#!env swipl
 
 % :- module(kbii,[]).
 

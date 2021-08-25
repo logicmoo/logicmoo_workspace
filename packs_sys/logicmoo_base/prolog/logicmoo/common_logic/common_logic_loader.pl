@@ -117,7 +117,7 @@ kif_process(_,'kif-mode'(Mode)):- set_kif_mode(Mode).
 kif_process(_,'kif_mode'(Mode)):- set_kif_mode(Mode).
 kif_process(_,end_of_file):- !,signal_eof(kif_process),!.
 kif_process(_,_:EOF):- EOF == end_of_file,!,signal_eof(kif_process),!.
-kif_process(_,'set-kif-option'(ModeIn)):-!,get_atom_or_kw(ModeIn,Mode), dmsg('set-kif-option'(Mode)).
+kif_process(_,'set-kif-option'(ModeIn)):-!,get_atom_or_kw(ModeIn,Mode), dmsg('set-kif-option'(Mode)),set_kif_option(Mode).
 
 kif_process(Mode,List):- 
   is_list(List), sexpr_sterm_to_pterm(List,Wff), List\=@=Wff, !,

@@ -144,6 +144,33 @@ fully_expand_kif_0k(uN(vTheListFn, ROW),ROW).
 fully_expand_kif_0k(['ListFn'|ROW],ROW).
 
 
+clif_to_modal_clif(In,THINOUT):-
+   sumo_to_pdkb(In,WffIn),
+   must_be_unqualified(WffIn),    
+   kif_optionally_e(true,as_dlog,WffIn,DLOGKIF),!,
+   guess_varnames(DLOGKIF),
+   sdmsg(kif=(DLOGKIF)),
+   kif_optionally_e(false,existentialize_objs,DLOGKIF,EXTOBJ),
+   kif_optionally_e(false,existentialize_rels,EXTOBJ,EXT),
+   kif_optionally_e(true,ensure_quantifiers,EXT,OuterQuantKIF),
+   check_is_kb(KB),
+   kif_optionally_e(true,un_quant3(KB),OuterQuantKIF,NormalOuterQuantKIF),
+   kif_optionally_e(false,rejiggle_quants(KB),NormalOuterQuantKIF,FullQuant),   
+   kif_optionally_e(true,qualify_modality,FullQuant,ModalKIF),
+   kif_optionally_e(true,adjust_kif(KB),ModalKIF,ModalKBKIF),
+   b_setval('$nnf_outermost',FullQuant),
+   %%kif_optionally_e(true,nnf(KB),ModalKBKIF,NNF),
+   %term_attvars(NNF,NNFVs), maplist(del_attr_type(skv),NNFVs),
+   %sanity(NNF \== poss(~t)),
+   % sdmsg(nnf=(NNF)),
+   % save_wid(Why,kif,DLOGKIF),
+   % save_wid(Why,pkif,FullQuant),
+   kif_optionally_e(true,removeQ_3(KB),ModalKBKIF,UnQ),   
+   current_outer_modal_t(HOLDS_T),
+   % true cause poss loss
+   kif_optionally_e(false,to_tlog(HOLDS_T,KB),UnQ,UnQ666),
+   kif_optionally_e(never,as_prolog_hook,UnQ666,THIN),
+   must(THINOUT=THIN),nop(THINOUT=THIN).
 
 sumo_to_pdkb(CycL,CycL):- is_ftVar(CycL).
 sumo_to_pdkb('$COMMENT'(A),'$COMMENT'(A)):- !.
