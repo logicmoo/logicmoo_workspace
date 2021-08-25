@@ -1,0 +1,18 @@
+SEARCHDIR=./searchdir
+$SEARCHDIR "$1" acUni
+$SEARCHDIR "$1" completion
+$SEARCHDIR "$1" compute
+$SEARCHDIR "$1" cr
+$SEARCHDIR "$1" display
+$SEARCHDIR "$1" help
+$SEARCHDIR "$1" inout
+$SEARCHDIR "$1" make
+$SEARCHDIR "$1" panndas
+$SEARCHDIR "$1" prolog
+$SEARCHDIR "$1" specVars
+$SEARCHDIR "$1" terms
+$SEARCHDIR "$1" tps
+$SEARCHDIR "$1" tps/kns
+$SEARCHDIR "$1" tps/polyn
+$SEARCHDIR "$1" worlds
+

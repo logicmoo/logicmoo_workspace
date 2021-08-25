@@ -1,0 +1,43 @@
+
+%% Linear completed theory set_t3.th:
+%% Completed used following flags:
+%%
+%%             Flag I Value
+%% -----------------+-------
+%%        max_level I 3
+%%       term_depth I 0
+%%       term_width I 4
+%%      id_maxdepth I 5
+%%       redundancy I strong_at_end
+%%     all_red_test I at_end
+%%     prefer_short I true
+%%     use_anc_lits I true
+%%         minerase I 2
+
+
+set_equal(X_9723, Y_9724), element(Z_9730, X_9723) -> element(Z_9730, Y_9724). %%   1/L: 1/W:  0/initial(input)
+set_equal(X_9728, Y_9729), element(Z_9735, Y_9729) -> element(Z_9735, X_9728). %%   2/L: 1/W:  0/initial(input)
+element(f(X_9736, Y_9737), Y_9737), element(f(X_9736, Y_9737), X_9736) -> set_equal(X_9736, Y_9737). %%   3/L: 1/W:  0/initial(input)
+set_equal(X_9749, Y_9750), element(Z_9756, X_9749), set_equal(Y_9750, Y_9762) -> element(Z_9756, Y_9762). %%   6/L: 2/W:499/deduce(1, 1)
+set_equal(X_9754, Y_9755), element(Z_9761, X_9754), set_equal(X_9767, Y_9755) -> element(Z_9761, X_9767). %%   7/L: 2/W:498/deduce(1, 2)
+set_equal(X_9759, Y_9760), element(f(X_9769, Y_9760), X_9759), element(f(X_9769, Y_9760), X_9769) -> set_equal(X_9769, Y_9760). %%   8/L: 2/W:497/deduce(1, 3)
+set_equal(X_9764, Y_9765), element(f(Y_9765, Y_9774), X_9764), element(f(Y_9765, Y_9774), Y_9774) -> set_equal(Y_9765, Y_9774). %%   9/L: 2/W:496/deduce(1, 3)
+set_equal(X_9774, Y_9775), element(Z_9781, Y_9775), set_equal(X_9774, Y_9787) -> element(Z_9781, Y_9787). %%  11/L: 2/W:494/deduce(2, 1)
+set_equal(X_9779, Y_9780), element(Z_9786, Y_9780), set_equal(X_9792, X_9779) -> element(Z_9786, X_9792). %%  12/L: 2/W:493/deduce(2, 2)
+set_equal(X_9784, Y_9785), element(f(X_9794, X_9784), Y_9785), element(f(X_9794, X_9784), X_9794) -> set_equal(X_9794, X_9784). %%  13/L: 2/W:492/deduce(2, 3)
+set_equal(X_9789, Y_9790), element(f(X_9789, Y_9799), Y_9790), element(f(X_9789, Y_9799), Y_9799) -> set_equal(X_9789, Y_9799). %%  14/L: 2/W:491/deduce(2, 3)
+element(f(X_9802, Y_9803), Y_9803), element(f(X_9802, Y_9803), X_9802), element(Z_9817, X_9802) -> element(Z_9817, Y_9803). %%  16/L: 2/W:489/deduce(3, 1)
+element(f(X_9807, Y_9808), Y_9808), element(f(X_9807, Y_9808), X_9807), element(Z_9822, Y_9808) -> element(Z_9822, X_9807). %%  17/L: 2/W:488/deduce(3, 2)
+~ element(Z_9818, Y_9819), element(Z_9818, X_9825) -> ~ set_equal(X_9825, Y_9819). %%  19/L: 2/W:486/contra(1 / 1)
+~ element(Z_9828, X_9829), element(Z_9828, Y_9835) -> ~ set_equal(X_9829, Y_9835). %%  21/L: 2/W:484/contra(2 / 1)
+~ set_equal(X_9838, Y_9839), element(f(X_9838, Y_9839), X_9838) -> ~ element(f(X_9838, Y_9839), Y_9839). %%  23/L: 2/W:482/contra(3 / 1)
+set_equal(X_9839, Y_9840), element(Z_9846, X_9839), ~ element(Z_9846, Y_9854) -> ~ set_equal(Y_9840, Y_9854). %%  24/L: 3/W:480/deduce(1, 19)
+set_equal(X_9844, Y_9845), element(Z_9851, X_9844), ~ element(Z_9851, X_9859) -> ~ set_equal(X_9859, Y_9845). %%  25/L: 3/W:479/deduce(1, 21)
+set_equal(X_9849, Y_9850), element(f(Y_9850, Y_9859), X_9849), ~ set_equal(Y_9850, Y_9859) -> ~ element(f(Y_9850, Y_9859), Y_9859). %%  26/L: 3/W:478/deduce(1, 23)
+set_equal(X_9854, Y_9855), element(Z_9861, Y_9855), ~ element(Z_9861, Y_9869) -> ~ set_equal(X_9854, Y_9869). %%  27/L: 3/W:477/deduce(2, 19)
+set_equal(X_9859, Y_9860), element(Z_9866, Y_9860), ~ element(Z_9866, X_9874) -> ~ set_equal(X_9874, X_9859). %%  28/L: 3/W:476/deduce(2, 21)
+set_equal(X_9864, Y_9865), element(f(X_9864, Y_9874), Y_9865), ~ set_equal(X_9864, Y_9874) -> ~ element(f(X_9864, Y_9874), Y_9874). %%  29/L: 3/W:475/deduce(2, 23)
+~ element(Z_9871, Y_9872), element(Z_9871, X_9878), element(f(X_9878, Y_9872), X_9878) -> ~ element(f(X_9878, Y_9872), Y_9872). %%  30/L: 3/W:474/deduce(19, 23)
+~ element(Z_9876, X_9877), element(Z_9876, Y_9883), element(f(X_9877, Y_9883), X_9877) -> ~ element(f(X_9877, Y_9883), Y_9883). %%  31/L: 3/W:473/deduce(21, 23)
+~ set_equal(X_9881, Y_9882), element(f(X_9881, Y_9882), X_9881), element(f(X_9881, Y_9882), X_9899) -> ~ set_equal(X_9899, Y_9882). %%  32/L: 3/W:472/deduce(23, 19)
+~ set_equal(X_9886, Y_9887), element(f(X_9886, Y_9887), X_9886), element(f(X_9886, Y_9887), Y_9904) -> ~ set_equal(Y_9887, Y_9904). %%  33/L: 3/W:471/deduce(23, 21)

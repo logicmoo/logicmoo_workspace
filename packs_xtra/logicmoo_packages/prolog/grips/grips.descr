@@ -1,0 +1,54 @@
+                 GRIPS - A FUNCTIONAL LANGUAGE IN PROLOG
+            Contributed by Jocelyn Paine, Oxford University.
+                   Shelved on the 11th of January 1991
+
+
+GRIPS is a pre-processor for  translating a functional version of Prolog
+into Prolog.  By using  it, you can  eliminate the  tedium of  having to
+think up variables to pass output from one predicate to the input of the
+next, and of having to flatten arithmetic expressions into a sequence of
+machine-code-like assignments.
+
+
+Here are two example definitions.
+
+        factorial(N) <- 1 if N =< 0.
+        factorial(N) <- N * factorial(N-1) if N > 0.
+
+        count( [] ) <- 0.
+        count( [_|T] ) <- 1 + count(T).
+
+You can load these by doing 'grips_consult' or 'grips_reconsult' on the
+file they're in. You could then run the interpreter:
+
+        ?- grips.
+        |: do grips_reconsult('test.pl').
+        Done
+        |: factorial(3).
+        Result = 6.
+        |: factorial(factorial(3)).
+        Result = 720.
+        |: count( [a,b,c,d] ).
+        Result = 4.
+        |: 1 + count([a,b,c,d])/factorial(3).
+        Result = 1.66667.
+        |: pr( factorial(3,F) ).
+
+        F = 6
+        More (y/n)? |: y
+        no
+        |:
+
+
+There is  a user manual for  GRIPS. There's also another  library entry,
+COMPILER, which is a simple compiler written in GRIPS.
+
+
+SIZE : 58 kilobytes.
+
+CHECKED ON EDINBURGH-COMPATIBLE (POPLOG) PROLOG : yes.
+
+PORTABILITY : should be no problems. See the comments in the code.
+
+INTERNAL DOCUMENTATION  : as program comments  and some sections  in the
+user guide.

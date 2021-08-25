@@ -1,0 +1,27 @@
+#!/bin/sh
+
+#fuser -k -n tcp 5001
+
+killall pl
+
+# kill -9 `ps -C pl` > /dev/null
+
+# sync
+	   
+
+. ../classes/setpaths
+
+chmod -R 755 ../../*
+chmod -R 777 ../sigma-rt
+chmod 777 ../engine/sigma_image.pl
+chmod 777 ../engine/
+
+export DISPLAY=10.0.0.2:0.0
+
+export PATH=/usr/X11R6/bin:$PATH:/usr/local/sbin:/usr/bin:/usr/sbin/:/sbin:.	   
+screen -dmS PrologServer ./sigmaserver
+
+
+
+
+

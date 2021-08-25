@@ -1,0 +1,17 @@
+:- lc_flag(max_level, 3).
+:- lc_flag(term_width, 4).
+
+% element_substitution1, axiom.
+element(Z, Y) :- 
+    set_equal(X, Y), 
+    element(Z, X).
+
+% element_substitution2, axiom.
+element(Z, X) :- 
+    set_equal(X, Y), 
+    element(Z, Y).
+
+% clause_4, axiom.
+set_equal(X, Y) :- 
+    element(f(X, Y), Y), 
+    element(f(X, Y), X).

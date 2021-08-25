@@ -1,0 +1,13 @@
+Installation
+============
+
+The file 'flux.pl' contains the FLUX kernel.  The file 'fluent.pl'
+contains the constraint handling rules for FLUX.  Put both files in a
+directory, where SICStus Prolog can find them.  Hence, either copy both
+files in the same directory as where your application program resides,
+or set the search path appropriately.
+
+Then start sicstus and load 'flux.pl' before you use the FLUX system in
+your program.
+
+Happy FLUX'ing.

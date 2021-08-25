@@ -1,0 +1,9 @@
+ 
+"renameSpec(+[(OldSort1, NewSort1),...,(OldSortN, NewSortN)],
+	    +[(OldOperator1, NewOperator1),...,(OldOperatorM, NewOperatorM)])."
+
+renames the current specification according to the given lists of sort
+associations and operator associations. Only injective renamings of operators
+are allowed. Sorts may be renamed arbitrarily, provided that the
+subsort relation remains irreflexive. Sorts and operators which are
+not mentioned remain unchanged.

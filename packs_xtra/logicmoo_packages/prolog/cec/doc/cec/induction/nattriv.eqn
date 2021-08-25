@@ -1,0 +1,17 @@
+module nattriv.
+
+nat generatedBy 0,s.
+
+op 0: nat.
+op s: (nat -> nat).
+op (+) : (nat * nat -> nat).
+
+var [m:nat, n:nat].
+
+0+n=n.
+s(m)+n=s(m+n).
+
+/* always superpose on m
+indProve([m+0=m,m+s(n)=s(m+n)]).
+indProve([m+n=n+m]).
+*/

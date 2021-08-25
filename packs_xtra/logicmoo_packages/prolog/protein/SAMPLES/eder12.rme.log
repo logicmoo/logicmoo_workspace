@@ -1,0 +1,23 @@
+
+********************    PROTEIN V2.26   ********************
+
+translating eder12.....
+
+   Static Reorderings:        0
+
+eder12.tme   translated in 0.33 seconds
+
+proving eder12...
+tree depth 1,2,3,4,5,6,7,+++ proved +++
+
+   Proof Time:                0.0 sec
+   Proof Depth:               7
+   Extension Steps:           4
+   Restart Steps:             4
+   Reduction Steps:           6 (incl.   2 with cut)
+   Factoring Steps:           0 (incl.   0 with cut)
+   Inferences:              102
+
+eder12.tme   finished in 0.41 seconds
+
+bye

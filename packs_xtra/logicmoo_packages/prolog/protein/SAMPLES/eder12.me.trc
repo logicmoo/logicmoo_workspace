@@ -1,0 +1,24 @@
+********************    PROTEIN V2.26   ********************
+
+--------------------    input clauses   --------------------
+
+Clause   No.   1 : [p(A), p(f(f(A)))]
+Clause   No.   2 : [not_p(A), not_p(f(A))]
+Query    No.   2 : [query, not_p(A), not_p(f(A))]
+
+--------------------------- flags --------------------------
+
+trace - internal
+
+------------------------ statistics ------------------------
+
+   Static Reorderings:        0
+
+   Proof Time:                0.0 sec
+   Proof Depth:               5
+   Extension Steps:           8
+   Reduction Steps:           2 (incl.   2 with cut)
+   Factoring Steps:           0 (incl.   0 with cut)
+   Inferences:               38
+
+------------------------- answers --------------------------

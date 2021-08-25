@@ -1,0 +1,45 @@
+protein_flag(answers,one).
+
+%% A Blocksworld example
+%% Consider the following situation:
+
+color(a,green).
+on(a,b).
+
+color(d,green).
+on(d,b).
+
+%          +-------+
+%          |   a   |
+%          |       |
+%          | green |
+%          +-------+
+
+
+color(b,blue) ; color(b,green).
+
+%          +-------+
+%          |   b   |
+%          | blue? |
+%          | green?|
+%          +-------+
+
+color(c,blue).
+on(b,c).
+
+%          +-------+
+%          |   c   |
+%          |       |
+%          | blue  |
+%          +-------+
+
+%% Question: Are there blocks, X and Y, sich that on(X,Y) and X is green and Y is blue?
+?- protein_answer(on(X,Y)), on(X,Y), color(X,green), color(Y,blue).
+
+%% A disjunctive answer:
+%%     X = a, Y = b  (in case b is blue)
+%% OR  X = b, Y = c  (in case b is gree)
+
+
+
+

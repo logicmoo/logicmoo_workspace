@@ -1,0 +1,395 @@
+/*************** VERSIONE AGGIORNATA E DEFINITIVA AL 12/7/96 ******************/
+
+
+/* Cambiamenti:
+
+
+e' stato aggiunto un ruolo "prim" negli eventi e negli stati 
+    il ruolo viene istanziato con la primitiva di livello piu' alto
+    (se c'e' cause -> go il cause).
+
+modifica all'angolo a cui e' stata aggiunto il ruolo parte di
+questo ruolo viene usato nelle inferenze
+
+  da:  il tavolo nell'angolo  e angolo parte di ristorante ==> 
+           il tavolo e' nel ristorante 
+
+*/
+
+/* INIZIALIZZAZIONE */
+inizio :- backinit, set, generic_class, int, ruoli_soc, persone, oggetti, luoghi, eventi, stati, processi, carica_frasi.
+
+
+/* DEFINIZIONE DEGLI INSIEMI */
+set :- nomi_propri := aset([john,mary]),
+       masfem      := aset([maschio,femmina]),
+       pol         := 0..1,
+       special     := aset([in,on,under,near]).
+
+
+/* DEFINIZIONE DELLA CLASSE GENERALE */
+generic_class :- general :< anything.
+
+        
+/* DEFINIZIONE DELL'INTERVALLO TEMPORALE */
+int  :- tempo  :< general,
+	tloc   :< tempo.
+
+   
+/* DEFINIZIONE DEI RUOLI SOCIALI */
+ruoli_soc :- social_role :< general.
+
+
+/* DEFINIZIONE E ISTANZE DI PERSONE */
+persone :- man     :< general,
+	     ha_nome     :< domain(man) and range(nomi_propri),
+             sesso       :< domain(man) and range(masfem),
+           waiter  :< man
+	     and all(lavora_in,restaurant).
+
+              
+/* DEFINIZIONE E ISTANZE DI OGGETTI */
+oggetti :- thing   :< general,
+           table   :< thing
+	      and all(locazione,luogo),
+           corner  :< thing
+	      and all(locaz,luogo) and all(spec,special) 
+              and all(locazione,luogo) and all(parteDi,thing),
+	   book    :< thing
+	      and all(locazione,luogo).
+                           
+
+  
+/* DEFINIZIONE E ISTANZE DI LUOGHI */
+luoghi  :- luogo      :< general,
+           ristorante :< luogo.
+	   
+          
+/* DEFINIZIONE E ISTANZE DI EVENTI */              
+eventi  :- ev         :< general
+              and all(time,tempo) and all(polarita,pol),                         	
+           begin      :< ev
+	      and all(agente,man) and all(prop,pr),
+           go         :< ev 
+	      and all(agente,man) and all(locazione,luogo) 
+              and all(prim,primCause) .
+
+
+/* DEFINIZIONE E ISTANZE DI STATI */              
+stati   :- st       :< general
+	      and all(time,tempo),
+	   there_be :< st
+              and all(tema_nonaff,thing) and all(prim,primbe), 		
+           have     :< st
+              and all(agente,man) and all(tema_aff,thing),
+	   there_in :< st
+	      and all(locazione,luogo) and all(goal,general).	   
+
+
+/* DEFINIZIONE E ISTANZE DI PROCESSI */              
+processi :- pr         :< general 
+	      and all(time,tempo),            
+	    read       :< pr
+              and all(agente,man) and all(tema_aff,thing) 
+              and all(prim,primCause), 
+	    take_order :< pr
+	      and all(agente,waiter) and all(goal,man)
+              and all(prim,primCause).
+         
+/* DEFINIZIONE DEL CICLO DI LETTURA */
+
+carica_frasi :- 
+	fatto, fail.
+carica_frasi.
+
+/******************************************************************************/
+
+
+fatto :- fact(_,inst_of,[ind:Y,class:man],1,_,_),
+	Y :: man.                                       
+
+
+fatto :- fact(_,inst_of,[ind:Y,class:thing],1,_,_),
+	Y :: thing.				        
+
+
+fatto :- fact(_,inst_of,[ind:Y,class:social_role],1,_,_),
+	Y :: waiter.				        
+
+	                           
+
+/******************************************************************************/	
+
+
+fatto :- fact(_,name,[X,Y],1,_,_),
+	Y :: ha_nome:X.			
+
+fatto :- fact(_,role,[waiter,X,Y],1,_,_),
+	Y :: lavora_in:X.		       
+
+
+/******************************************************************************/
+
+	
+fatto :- fact(_,isa,[ind:X,class:Y],1,A,Z),        
+	X :: Y and time:A and locazione:Z.
+
+
+fatto :- fact(_,isa,[arg:X,arg:ev],1,A,B),
+	X :: ev and time:A and locazione:B.
+
+
+fatto :- fact(_,isa,[arg:X,arg:pr],1,A,_),
+	X :: pr and time:A.
+
+
+fatto :- fact(_,isa,[arg:X,arg:tloc],1,_,_),
+	X :: tempo.
+
+
+fatto :- fact(_,isa,[arg:X,arg:st],1,A,_),	
+	X :: st and time:A.		        
+												
+
+fatto :- fact(_,isa,[arg:X,arg:Y],1,A,B),
+	X :: Y and time:A and locazione:B.
+
+
+/******************************************************************************/
+
+
+fatto :- fact(X,go,[agente:Z,locat:A],1,B,_),   
+	X :: go and agente:Z and locazione:A and time:B.
+
+
+fatto :- fact(X,there_be,[tema_nonaff:Z],1,B,_),    
+	X :: there_be and tema_nonaff:Z and time:B. 
+
+
+fatto :- fact(X,take_order,[actor:Z,goal:A],1,B,_),	
+	X :: take_order and agente:Z and goal:A and time:B. 
+
+
+fatto :- fact(X,read,[agente:Z,tema_aff:A],1,B,_),    
+	X :: read and agente:Z and tema_aff:A and time:B.
+
+
+fatto :- fact(X,begin,[agente:Z,prop:A],1,B,_),	
+	X :: begin and agente:Z and prop:A and time:B.
+
+
+fatto :- fact(_,X,[arg:Y,poss:Z],1,B,_),	
+	X :: have and agente:Z and tema_aff:Y and time:B.
+
+
+fatto :- fact(_,X,[arg:Y,locativo:Z],1,A,B),	
+	Y :: thing and spec:X and locaz:Z and time:A and locazione:B.
+
+
+fatto :- backretrieve(A=getall(corner)),member([B],A),
+         backretrieve(C=getall(restaurant)),member([D],C),
+         B::corner and parteDi:D .
+
+
+/******************************************************************************/
+
+
+
+/* Lista completa degli identificativi */
+
+/* id2  = restaurant
+   id3  = john
+   id4  = go
+   id5  = tloc
+   id6  = table
+   id7  = corner
+   id8  = there_be
+   id9  = tloc
+   id10 = waiter
+   id12 = take_order 
+   id13 = tloc
+   id14 = tloc
+   id18 = book
+   id19 = read
+   id20 = tloc
+   id21 = begin
+   id22 = tloc
+   infon27 = there_in
+   infon77 = have 
+*/
+
+
+/*INTERROGAZIONI***************************************************************/
+
+chi(X)      :- backretrieve(getall(X)).
+chi(X,Y)    :- backretrieve(X=getall(Y)).    
+cerca(X)    :- backretrieve(getall(man and ha_nome:X)).
+
+/******************************************************************************/
+
+descrivi(X) :- backretrieve(describe X).
+
+/* esempio:
+
+| ?- descrivi(id3).
+
+>>> id3
+  describe:
+          
+               man
+          and  ha_nome:john
+          and  inv(agente):(poss and id19 and id21 and id4)
+          and  inv(goal):id12
+          and  oneof([id3])
+
+
+yes
+| ?- descrivi(id4).
+
+>>> id4
+  describe:
+          
+               go
+          and  locazione:id2
+          and  time:tes(f5_r01)
+          and  agente:id3
+          and  oneof([id4])
+
+
+yes
+*/
+
+/******************************************************************************/
+
+ 
+/* c'era un tavolo , c'era un libro .... */
+
+c_era(X) :- backretrieve(getall(X and locazione:id2)).
+
+/* esempio:
+
+| ?- c_era(book).
+[id18]
+
+yes
+| ?- c_era(table).
+[id6]
+
+yes
+*/
+
+/******************************************************************************/
+
+
+/* che cosa c'era nel ristorante */ 
+
+cosa_cera(Z) :- backretrieve(X=getall(Z)),
+	          member([Y],X),
+	          backretrieve(A=getall(thing and locazione:Y)),
+		  write(A),nl.  
+
+/* esempio:
+
+| ?- cosa_cera(restaurant).
+[[id7],[id6],[id18]]
+
+yes
+*/
+
+
+/******************************************************************************/
+
+
+/* chi c'era nel ristorante */       
+
+chi_cera(Z) :- backretrieve(X=getall(Z)),
+	       member([Y],X),
+	       backretrieve(A=getall(man and locazione:Y)),
+	       write(A),nl.
+
+/* esempio:
+
+| ?- chi_cera(restaurant).
+[[id10]]
+
+yes
+*/
+	  
+/******************************************************************************/
+
+
+/* chi ha ordinato */                       
+ 
+chi_ha_ordinato :- backretrieve(X=getall(take_order)),
+		   X=[[Y]],
+		   backretrieve(Z=getall(man and inv(goal):Y)), nl,
+		   write('take_order = '),
+		   write(Y), nl,
+		   write('goal = '),
+	           write(Z), nl.
+
+/* esempio:
+
+| ?- chi_ha_ordinato.
+
+take_order = id12
+goal = [[id3]]
+
+yes
+*/
+
+/******************************************************************************/
+
+
+/* chi ha preso l`ordine -> sintassi: chi_ha_preso_ordine */             
+
+chi_ha_preso_ordine :- backretrieve(X=getall(take_order)),
+		       X=[[Y]],
+		       backretrieve(Z=getall(man and inv(agente):Y)), nl,
+		       write('take_order = '),
+		       write(Y), nl,
+		       write('agente = '), 
+		       write(Z), nl.
+		       
+/* esempio: 
+| ?- chi_ha_preso_ordine.
+
+take_order = id12
+agente = [[id10]]
+
+yes
+*/
+
+/******************************************************************************/
+
+
+/* dov'e' il cameriere, john, il tavolo ecc... */
+
+dov_e(Z)       :-  backretrieve(X=getall(Z)),
+		   X=[[Y]],
+	           backretrieve(A=getall(anything and inv(locazione):Y)),nl,
+		   write('locazione = '),write(A),nl.
+
+/* esempio:
+
+| ?- dov_e(waiter).
+
+locazione = [[id2]]
+ 
+yes
+| ?- dov_e(book).
+
+locazione = [[id2]]
+ 
+yes 
+| ?- dov_e(table).
+
+locazione = [[id2]]
+ 
+yes
+*/
+
+/******************************************************************************/
+
+		
+

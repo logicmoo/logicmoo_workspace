@@ -1,0 +1,199 @@
+> 
+> 
+> 
+> --========================_7498572==_
+> Content-Type: text/plain; charset="us-ascii"
+> 
+> Di ritorno da Torino, ho lavorato alle nostre cose. Ti mando le
+> rappresentazioni concettuali e la nuova analisi con take_order e qualche
+> altra cosetta. Ciao, Rodolfo
+> 
+> 
+> 
+> --========================_7498572==_
+> Content-Type: text/plain; name="concrep"; charset="us-ascii"
+> Content-Disposition: attachment; filename="concrep"
+> 
+>  pred(esistere[BE(<theme_unaffect>(STAYposit(AT))){(en,tn),(e1,t1)}])
+>  pred(essere[BE(<theme_bound>(GOpropr(TOWARD<acomp>))){(en,tn),(e1,t1)}])
+>  pred(entrare[CAUSE(<agent>(GOposit(FROM[x](INTO<locat_into>)))){(en,tn),(e1
+> ,t1)}])
+>  pred(take_order[CAUSE(<actor>(GO(FROM<goal>))){(e1,t1),(en,tn)}])
+>  pred(incominciare[GO-CIRC(PATH (TO-CIRC
+> (CAUSE(<exper>(STAYcirc(AT<prop/vcomp>)))))){(en,tn),(e1,t1)}])
+>  pred(leggere[LET(<address>(GO(REP(FROM<informtn>))){(en,tn),(e1,t1)}])
+>  pred(leggere[CAUSE(<perciv>(GO(REP(FROM<informtn>))){(en,tn),(e1,t1)}])
+> 
+> 
+> ............
+> r01.new
+> [john, went, into, a, restaurant]
+> 
+> 
+> 
+> loc(infon3, id1, [arg:main_tloc, arg:tr(f5_r01)])
+> loc(infon4, id2, [arg:main_sloc, arg:restaurant])
+> ind(infon5, id3)
+> fact(infon6, inst_of, [ind:id3, class:man], 1, univ, univ)
+> fact(infon7, name, [john, id3], 1, univ, univ)
+> fact(infon9, isa, [arg:id2, arg:restaurant], 1, id1, id2)
+> fact(id4, go, [agente:id3, locat:id2], 1, tes(f5_r01), id2)
+> fact(infon10, isa, [arg:id4, arg:ev], 1, tes(f5_r01), id2)
+> fact(infon11, isa, [arg:id5, arg:tloc], 1, tes(f5_r01), id2)
+> fact(infon12, past, [arg:id5], 1, tes(f5_r01), id2)
+> 
+> overlap(tes(f5_r01), td(f5_r01))
+> 
+> 
+> ............
+> r02.new
+> [there, was, a, table, in, the, corner]
+> 
+> 
+> 
+> ind(infon21, id6)
+> ind(infon22, id7)
+> fact(infon23, inst_of, [ind:id7, class:thing], 1, univ, univ)
+> fact(infon24, isa, [ind:id7, class:corner], 1, id1, id2)
+> fact(infon25, in, [arg:id6, locativo:id7], 1, id1, id2)
+> fact(infon26, isa, [ind:id6, class:table], 1, id1, id2)
+> fact(infon27, inst_of, [ind:id6, class:thing], 1, univ, univ)
+> fact(id8, there_be, [tema_nonaff:id6], 1, tes(f4_free_r02), id2)
+> fact(infon31, isa, [arg:id8, arg:st], 1, tes(f4_free_r02), id2)
+> fact(infon32, isa, [arg:id9, arg:tloc], 1, tes(f4_free_r02), id2)
+> fact(infon33, past, [arg:id9], 1, tes(f4_free_r02), id2)
+> 
+> included(tr(f4_free_r02), id1)
+> contains(tes(f4_free_r02), tes(f5_r01))
+> 
+> 
+> ............
+> r03.new
+> [the, waiter, took, the, order, .]
+> 
+> 
+> 
+> ind(infon42, id10)
+> fact(infon43, inst_of, [ind:id10, class:[social_role]], 1, univ, univ)
+> fact(infon44, isa, [ind:id10, class:waiter], 1, id1, id2)
+> fact(infon45, role, [waiter, id2, id10], 1, id1, id2)
+> fact(id12, take_order, [actor:id10, goal:id3], 1, tes(f2_free_aq), id2)
+> fact(infon48, isa, [arg:id12, arg:pr], 1, tes(f2_free_aq), id2)
+> fact(infon49, isa, [arg:id13, arg:tloc], 1, tes(f2_free_aq), id2)
+> fact(infon50, past, [arg:id13], 1, tes(f2_free_aq), id2)
+> 
+> included(tr(f2_free_aq), id1)
+> after(tes(f2_free_aq), tes(f5_r01))
+> 
+> 
+> ............
+> r04.new
+> [the, air, was, nice, and, clean]
+> 
+> 
+> 
+> loc(infon59, id14, [arg:main_tloc, arg:tes(f2_free_aq)])
+> fact(infon60, isa, [arg:id15, arg:air], 1, id14, id2)
+> fact(infon61, [clean, nice], [arg:id15], 1, id14, id2)
+> fact(id16, be, [prop:infon61], 1, tes(f5_r04), id2)
+> fact(infon62, isa, [arg:id16, arg:st], 1, tes(f5_r04), id2)
+> fact(infon63, isa, [arg:id17, arg:tloc], 1, tes(f5_r04), id2)
+> fact(infon64, past, [arg:id17], 1, tes(f5_r04), id2)
+> 
+> included(tr(f5_r04), id14)
+> contains(tes(f5_r04), tes(f2_free_aq))
+> 
+> 
+> ............
+> r05.new
+> [he, began, to, read, his, book]
+> 
+> 
+> 
+> fact(infon76, isa, [arg:id18, arg:book], 1, id14, id2)
+> fact(infon77, poss, [arg:id18, poss:id3], 1, id14, id2)
+> fact(id19, read, [agente:id3, tema_aff:id18], 1, tes(finf1_free_a1), id2)
+> fact(infon78, isa, [arg:id19, arg:pr], 1, tes(finf1_free_a1), id2)
+> fact(infon79, isa, [arg:id20, arg:tloc], 1, tes(finf1_free_a1), id2)
+> fact(infon80, pres, [arg:id20], 1, tes(finf1_free_a1), id2)
+> fact(id21, begin, [agente:id3, prop:id19], 1, tes(f3_free_a1), id2)
+> fact(infon82, isa, [arg:id21, arg:ev], 1, tes(f3_free_a1), id2)
+> fact(infon83, isa, [arg:id22, arg:tloc], 1, tes(f3_free_a1), id2)
+> fact(infon84, past, [arg:id22], 1, tes(f3_free_a1), id2)
+> 
+> included(tr(f3_free_a1), id14)
+> after(tes(f3_free_a1), tes(f2_free_aq))
+> 
+> 
+> ENTITIES OF THE WORLD
+> 
+> INDIVIDUAL: id3
+> RELEVANCE SCORE: 30
+> 
+> ind(infon5, id3)
+> fact(infon6, inst_of, [ind:id3, class:man], 1, univ, univ)
+> fact(infon7, name, [john, id3], 1, univ, univ)
+> fact(id4, go, [agente:id3, locat:id2], 1, tes(f5_r01), id2)
+> fact(infon77, poss, [arg:id18, poss:id3], 1, id14, id2)
+> fact(id19, read, [agente:id3, tema_aff:id18], 1, tes(finf1_free_a1), id2)
+> fact(id21, begin, [agente:id3, prop:id19], 1, tes(f3_free_a1), id2)
+> 
+> 
+> INDIVIDUAL: id10
+> RELEVANCE SCORE: 6
+> 
+> ind(infon42, id10)
+> fact(infon43, inst_of, [ind:id10, class:[social_role]], 1, univ, univ)
+> fact(infon44, isa, [ind:id10, class:waiter], 1, id1, id2)
+> fact(infon45, role, [waiter, id2, id10], 1, id1, id2)
+> fact(id12, take_order, [actor:id10, goal:id3], 1, tes(f2_free_aq), id2)
+> 
+> 
+> INDIVIDUAL: id6
+> RELEVANCE SCORE: 1
+> 
+> ind(infon21, id6)
+> fact(infon25, in, [arg:id6, locativo:id7], 1, id1, id2)
+> fact(infon26, isa, [ind:id6, class:table], 1, id1, id2)
+> fact(infon27, inst_of, [ind:id6, class:thing], 1, univ, univ)
+> fact(id8, there_be, [tema_nonaff:id6], 1, tes(f4_free_r02), id2)
+> 
+> 
+> INDIVIDUAL: id7
+> RELEVANCE SCORE: 0
+> 
+> ind(infon22, id7)
+> fact(infon23, inst_of, [ind:id7, class:thing], 1, univ, univ)
+> fact(infon24, isa, [ind:id7, class:corner], 1, id1, id2)
+> fact(infon25, in, [arg:id6, locativo:id7], 1, id1, id2)
+> 
+> 
+> 
+> --========================_7498572==_
+> Content-Type: text/plain; charset="us-ascii"
+> 
+> rodolfo delmonte Ph.D.
+> Associate Professor of Applied & Computational Linguistics
+> Ca' Garzoni-Moro, San Marco 3417
+> Universita' Ca' Foscari
+> 30124 - VENEZIA (It)
+> tel.:39-41-2578459/95
+> lab.:39-41-2578452/19
+> fax:39-41-5287683
+> 
+> 
+> 
+> --========================_7498572==_--
+> 
+> 
+
+
+
++------------------------------------+----------------------------------------+
+| Dario Bianchi                                                               |
+| Dipartimento di Ingegneria dell'Informazione    phone   +39 521 905734      |
+| Universita' degli Studi di Parma                fax     +39 521 905723      |
+| 43100 Parma - Italy                             E-mail  bianchi@ce.unipr.it |
+|                                                 or     bianchi@cm2.unipr.it |
++------------------------------------+----------------------------------------+
+

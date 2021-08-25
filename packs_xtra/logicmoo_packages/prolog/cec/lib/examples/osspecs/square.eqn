@@ -1,0 +1,13 @@
+module square using int.
+
+op square : (int -> nat).
+
+var [i:int, k:nat].
+
+i * i = k => square(i) = k.
+
+/* completion does not terminate for the more natural alternative
+   square(i) = i*i.
+
+   Time used: 13.5 sec
+*/

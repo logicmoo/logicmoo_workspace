@@ -1,0 +1,34 @@
+ 
+"superpose(?Rule,?Index,?Literal,?SideL)."
+
+superposes the left-side of the rule "Rule" at each nonvariable
+occurrence of the "SideL"-side of the literal "Literal" of the nonoperational
+equation with index "Index".
+It fails if no nontrivial superpositions can be found, if
+any of the two axioms can be reduced, or if
+superpositions of the specified type need not be computed to achieve fairness.
+
+
+"superpose(reflexivity,?Index,?Literal,_)."
+
+superposes x=x -> true on the literal "Literal" of the nonoperational
+equation with index "Index".
+Failure cases are as before.
+
+Parameter types:
+
+	Rule    : [1 .. MaxRuleIndex]
+	Index   : [1 .. Max<Type>Index]
+	Literal : [conclusion,condition(1) .. condition(n)]
+	SideL   : [left,right]
+
+
+
+
+
+"superpose!(?Rule,?Index,?Literal,?SideL)."
+
+
+same effect as "superpose(?Rule,?Index,?Literal,?SideL).",
+except that the specified superposition will be performed in any
+case, even if not necessary for fairness of completion.

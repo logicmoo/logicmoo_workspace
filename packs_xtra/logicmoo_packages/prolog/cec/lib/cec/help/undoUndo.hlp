@@ -1,0 +1,6 @@
+ 
+"undoUndo."
+
+allows to undo the last "undo"-command at the systems''s top level. Repeated
+use of this command undoes sequences of "undo"-commands. Chains of "undo"-calls
+begin at the last user interaction different from an "undo" or "undoUndo".

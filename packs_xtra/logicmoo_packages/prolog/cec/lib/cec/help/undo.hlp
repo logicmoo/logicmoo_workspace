@@ -1,0 +1,9 @@
+
+"undo."
+
+can be entered at the system's top level to set the system to the state
+before the last command that has caused a state change, if there was
+any. "undo" can be used repeatedly to undo several steps of state changes.
+It also undoes "undoUndo"-calls. At the moment, there is no way to backtrack
+from single decisions that have been taken while running the completion
+process.

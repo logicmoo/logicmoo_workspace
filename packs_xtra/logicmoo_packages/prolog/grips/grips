@@ -1,0 +1,501 @@
+GRIPS                                            Jocelyn Paine, May 1987
+                                                    Updated January 1991
+
+Introduction.
+=============
+
+It has been said that Prolog is the Fortran of logic-programming.
+Teaching Prolog to beginners raises many difficulties: the cut; the need
+to allocate variables to pass data from call to call; the lack of
+syntactic distinction between predicates, functions, and commands with
+side-effects; the tedium of building lists; to name a few.
+
+In one respect, Prolog is perhaps even closer to machine-code than
+Fortran (making the doubtful assumption that Fortran is higher-level
+than machine-code). When writing a Prolog program, things which are
+conceptually function calls must be rewritten relationally. This
+requires you to invent extra variables to pass the output of one
+relation into the input of the next. In addition, relations, unlike
+function calls, can't be nested; so you have to unwind sequences such as
+    f(g(h(x)))
+into
+    h(x,V1), g(V1,V2), f(V2,Result).
+
+This is very similar to the way that machine-code (and some versions of
+Fortran) force you to compile expressions into sequences of calls and
+temporary register allocations. And though that might have been
+necessary in the 1950s, it ought not to be so now.
+
+Another defect of Prolog is the lack of cues for the reader about what a
+predicate is doing. Is something conceptually a function, where all but
+one argument will be inputs and the final one an output? Is it a general
+relation, with many outputs for one input? Or is it a command, being
+called for its side-effects?
+
+The GRIPS pre-processor allows you to write Prolog clauses as function
+definitions which it translates into Prolog clauses. The right-hand side
+of a definition is an expression, consisting of (possibly nested) calls
+to other functions. GRIPS allocates result variables and unwinds calls
+as described above. You can also write definitions as predicates (e.g.
+Prolog), or as commands (to make it clear that they are being written
+for their side-effects).
+
+GRIPS also provides a top-level which reads and evaluates functional
+expressions. This is similar to the Prolog top-level except that the
+input is an expression to be evaluated, not a statement to be proven
+true or false.
+
+
+The top-level interpreter.
+==========================
+
+A term T will be treated as follows:
+
+T=halt  :       Exit from GRIPS (as for Prolog 'halt').
+
+T=prolog:       Restore the Prolog TLI. With the command 'grips' from
+                Prolog, this gives a way to switch between the two.
+
+T=pr(G) :       Evaluate G as a Prolog goal, display its result using
+                the standard Prolog top-level interpreter, and then
+                return to GRIPS.
+
+T=test(G) :     Translate G as if it were a GRIPS guard, then display
+                its result using the standard Prolog interpreter, and
+                then return to GRIPS.
+
+T=do(G) :       Translate G as if it were a GRIPS guard, then call it
+                and return to GRIPS, writing 'Done' if it succeeds, else
+                'Failed'. The difference between 'do' and 'test' is that
+                'do' is for commands whereas 'test' is for guards.
+
+T=echo(E):      As below, but GRIPS displays the result of translating
+                E into Prolog. This is mainly for debugging.
+
+T=<anything else>:
+                Translate T as a GRIPS expression, evaluate it, and
+                display the result, then return to GRIPS. If T fails
+                during evaluation, display 'Failed' and return to GRIPS.
+
+
+Examples of top-level interpreter.
+==================================
+
+G> halt.        - Exits from GRIPS.
+
+G> pr( X=1+2 ). - Displays 'X=1+2' and then the 'More (y/n)' message,
+                  before returning to GRIPS. The 1+2 is left
+                  unevaluated, as in Prolog.
+
+G> test( X=1+2 ).
+                - Displays 'X=3' and then the 'More (y/n)' message,
+                  before returning to GRIPS. The 1+2 has been evaluated,
+                  because it's in a guard.
+
+G> 1+2.         - Displays 'Result=3'.
+
+G> fred(4).     - Displays 'Failed' (assuming that a call of fred(4,_)
+                  would fail.
+
+
+How to consult files.
+=====================
+
+There are two predicates, 'grips_consult(F)' and 'grips_reconsult(F)'.
+Each takes a filename as argument.
+
+These predicates imitate consult and reconsult. The file being read can
+contain the following:                     
+1. GRIPS definitions - these will be translated into Prolog and then
+                       asserted. If you're reconsulting, any definitions
+                       with the same functor and arity will be deleted.
+2. GRIPS directives  - these will be translated into Prolog and called.
+3. Prolog directives - these will be called.
+4. Prolog definitions- these will be asserted. If you're reconsulting,
+                       old definitions will be deleted.
+5. Grammar rules     - these will be translated into Prolog and treated
+                       as above.
+
+
+GRIPS in 'consult' mode.
+========================
+
+When GRIPS is consulting a file, it recognises the following types of
+term. The first six are definitions to be translated into clauses and
+asserted; the other five are to be evaluated immediately.                      
+
+    Head <- Expression.
+    Head does Command.
+    Head if Guard.
+
+    Head :- Tail.
+    Head --> Tail.
+    Head.
+
+    grips(Expression).
+    do( Guard ).
+    test( Guard ).
+    ?- Goal.
+    :- Goal.
+
+
+Function definitions.
+=====================
+
+If the main functor is <-, this defines a function. Functions are
+translated into predicates with an extra argument on the right. The
+right-hand side of the function is translated as described under
+Expressions, into a goal and a result variable. This result variable
+becomes the extra argument of the predicate.
+
+If the right-hand side contains a guard, that guard is translated as
+described under Guards.
+
+The functions are made deterministic - GRIPS inserts a cut after each
+translated condition, or (if none), after the final tail goal.
+
+Note that the forms
+
+    f <- a if b.
+
+    f <- b => a.
+
+    f <-
+        a if b
+    else
+        c if d
+    else
+        e if f.
+
+    f <-
+        a if b
+    else
+        c if d
+    else
+        e.
+
+are actually definitions where the right-hand side is a conditional
+expression.
+
+
+Examples of function definitions.
+=================================
+
+        double( N ) <- N*2.
+    to
+        double( N, V ) :- V is N*2, !.
+
+
+        quadruple( N ) <- double( double(N) ).
+    to
+        quadruple( N, V ) <- double( N, V` ), double( V`, V ), !.
+
+
+        factorial(N) <- 1 if N =< 0.
+        factorial(N) <- N * factorial(N-1) if N > 0.
+    to
+        factorial(N, 1) :-
+            N =< 0,
+            !.
+        factorial(N, V) :-
+            N > 0 , !,
+            V` is N - 1 , factorial(V`, V``), V is N * V``.
+
+
+        count( L ) <- 0 if L = [].
+        count( L ) <- 1 + count( tail(L) ) if L \= [].
+    to
+        count([], 0) :-
+            !.
+        count(L, V) :-
+            L \= [] , ! ,
+            tail(L, V`) , count(V`, V``),
+            V is 1 + V``.
+
+Here, I've used V, V`, V``... to indicate new Prolog variables
+introduced by GRIPS.
+
+Note that GRIPS may optimise some of these translations.
+
+
+Commands definitions.
+=====================          
+
+If the main functor is 'does', this defines a command. Commands are
+translated into predicates with the same number of arguments. GRIPS
+translates the actions in the command body as if they were guards, and
+places them after the translated guards. The commands are made
+deterministic - GRIPS inserts a cut between the conditions and actions,
+or (if no conditions), after the final tail goal.
+
+
+Examples of command definitions.
+================================
+
+        converse does write_list(reply_to(readline('?'))) and converse.
+    to
+        converse :-
+            readline(?, V) , reply_to(V, V`) , write_list(V`),
+            converse, !.
+
+
+Immediate mode evaluation.
+==========================
+
+Just as, with Prolog, ?-G causes G to be called, so, in GRIPS, grips(E)
+invokes the GRIPS interpreter on E. This is only likely to be useful
+if you're calling GRIPS from inside an integrated editor and you want
+to display results.
+
+More useful are do(G) and test(G). If these occur where a definition is
+expected, then G will be translated into Prolog, and called. They are
+thus the GRIPS analogue of ?-G.
+
+You can also use the Prolog directives ?-G and :-G. These are obeyed
+immediately, but G is not translated first.
+
+
+Predicates.
+===========
+
+A definition like
+
+    A if B0
+
+is translated into
+
+    A :- B1
+
+where B0 is treated as a guard and translated into B1. The difference
+between these predicate definitions and Prolog ones is that arguments
+in the guards are treated as function calls, and not left alone.
+
+
+Examples of predicate definitions.
+==================================
+
+        divides_by_4( N ) if ( N/2 rem 2 ) = 0.
+    to
+        divides_by_4(V) :-
+            V` is _1 / 2 rem 2,
+            V` = 0.
+
+
+Prolog definitions.
+===================
+
+If the main functor is anything else, the definition is left alone, and
+compiled by Prolog. Thus
+
+        doit :- glorb(S), bletch(S,U), V is 6.5*U, write(V).
+        ?- op( 100, xfx, *** ).
+        :- consult( bat ).
+        sentence --> np, vp.
+
+are left alone. The second and third invoke goals: the fourth is treated
+as a grammar rule.                   
+
+
+Expressions.
+============
+
+Any expression E is translated into a goal G and a result variable V,
+such that when G is called, it instantiates V.
+
+Numbers, variables, and atoms (including []) are translated into the
+goal 'true', and a result which is the thing itself.
+
+Any expression
+    q(E)
+is translated into the goal 'true' and the result E. This is a way of
+protecting things that you don't want evaluated.
+
+An expression
+    eval(A)
+where A is an atom, is translated into the goal A(V) and the result
+variable V. That is, it calls the one-argument goal whose functor is A.
+This provides a way of calling parameterless functions. Since such
+"functions" are likely only to be of use for their side-effects, this
+use won't be frequent. Any other expression eval(E) is translated as E.
+
+Any expression
+    test(G)
+    do(G)
+is translated to a goal formed by translating G as a guard. The result
+variable is bound to the atom 'true'. Thus
+    test( X=1+2 ).
+goes to
+    GOALS: _1 is 1 + 2
+    RESULT VAR: true
+    Result = true.
+
+Any expression 
+    pr(G)
+is translated  to the goal G. The result variable is bound to 'true'.
+This is as for 'test' and 'do' except that G is left alone, not treated
+as a guard. Thus:
+    pr( X=1+2 ).
+goes to
+    GOALS: _1 = 1 + 2
+    RESULT VAR: true
+    Result = true.
+This is one way of getting Prolog goals into GRIPS untranslated.
+
+Lists are translated by making a new list, each of whose elements will
+be the result of evaluating the corresponding original element. Thus:
+    [ a, b, 1+2, double(4) ] .
+goes to
+    GOALS: _1 is 1 + 2 , double(4, _2)
+    RESULT VAR: [a, b, _1, _2]
+    Result = [a, b, 3, 8].
+
+An expression of the form
+    A++B
+is treated as list concatenation. Each list is translated separately,
+and a goal is then generated in which they're combined by append. ++ has
+the same precedence and associativity as +.
+
+An expression of the form
+    (E where G)
+is translated by translating G as a guard, and then translating E. G
+should instantiate something in E. Thus:
+    [ 1 + V ] where V=4/5 .
+    [ 1 + (V where V=4/5) ].
+both go to
+    GOALS: _1 is 4 / 5 , _2 is 1 + _1
+    RESULT VAR: _2
+    Result = [1.8].
+
+An expression of the form
+    (E if G)
+    (G => E)
+is a conditional expression. It fails if G fails, otherwise it returns
+result E. It is translated by translating G as a guard, and then
+translating E. Note that if it occurs at the outer level of a function
+body, then failure of G will cause GRIPS to try the following clause.
+
+The expression forms
+        A if B
+    else
+        ...
+are extended conditionals. If B succeeds they return A; otherwise they
+go on to the thing after the else. This can be another if..else. You can
+put B=>A instead of A if B.
+
+An expression of the form (all E where G) returns a list of all E's that
+satisfy G.
+
+Structures of other kinds are translated into function calls. How
+depends on whether they are evaluable (in Prolog) by 'is'. If so, then
+an 'is' goal will be built to evaluate as much as possible, with
+subsidiary goals to evaluate some arguments. Otherwise, just subsidiary
+goals will be built, which add an output argument to the structure:
+Thus:
+    1 + 3
+goes to
+    GOALS: _1 is 1 + 3
+    RESULT VAR: _1
+    Result = 4.
+
+    1 + 3 * sin(3)
+goes to
+    GOALS: _1 is 1 + 3 * sin(3)
+    RESULT VAR: _1
+    Result = 1.15701.
+
+    1 + 3 + double(3)
+goes to
+    GOALS: double(3, _1) , _2 is 1 + 3 * _1
+    RESULT VAR: _2
+    Result = 19.
+
+    factorial(1+3*double(3))+4).
+goes to
+    GOALS: double(3, _1) , _2 is 1 + 3 * _1 , factorial(_2, _3) , _4 is
+           _3 + 4
+    RESULT VAR: _4
+    Result = 121645100408832004.
+
+Notice that interior structures are also evaluated, and not left as
+structures.
+
+
+Guards.
+=======
+
+These are GRIPS conditions, which GRIPS translates into Prolog goals.
+
+Any guard
+    pr(G)
+where G is an arbitrary term, is left as G. This is a way of getting
+untranslated Prolog into GRIPS.
+
+Any guard
+    do(G)
+    test(G)
+means the same as G, and is translated by translating G. This is
+pointless, except that it's analogous to the way 'test' behaves with
+expressions.
+
+The guard 'nothing' is translated to true. This allows you to write the
+command definition:
+    c(A) does nothing if A=1.
+
+A guard that is a variable at translation-time is left alone.
+
+Any guard
+    (A and B)
+    (A,B)
+is translated into (A',B'), where A' and B' are the translations of A
+and B as guards.
+
+Any guard
+    (A or B)
+    (A;B)
+is translated likewise into (A';B').
+
+Any guard
+    (A foreach C)
+is translated into foreach(C,A), which does A for as many times as C can
+be resatisfied, and succeeds after all resatisfactions of C. C and A
+must be guards; A should contain commands.
+
+Any guard
+    not(A)
+    call(A)
+is translated into not(A') or call(A'), where A' and B' are the
+translations of A and B as guards.
+
+Any guard
+    (A=>B)
+    (B if A)
+is translated into (A',!,B'), where A' and B' are the translations of A
+and B as guards.
+
+Any guard else(A,B) is translated into (A';B'). This gives the guard
+equivalent of the conditional expressions.
+
+Guards P(A), where P is assert, asserta, retract, or retractall, are
+left alone. This ensures that A is treated as a term to be used with the
+database, and not an expression to be evaluated.
+
+A guard of the form
+    phrase(G,L)
+is assumed to be a call to the parsing predicate phrase/2. The first
+argument G (which will be a non-terminal symbol) is left alone. The
+second argument (which will be a list to be evaluated) is translated as
+an expression.
+
+Other structures are translated by treating their arguments as GRIPS
+expressions, and recursively translating them. This process can be
+optimised for arithmetic operators like < and =:=, which partly evaluate
+their arguments even in Prolog; and for =.
+
+
+User-callable Prolog predicates.
+================================
+
+The predicates below are exported:
+    grips.
+    grips_consult.
+    grips_reconsult.

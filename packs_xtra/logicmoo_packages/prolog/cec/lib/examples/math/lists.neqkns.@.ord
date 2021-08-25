@@ -1,0 +1,20 @@
+order(neqkns for lists).
+greater([['$r'/_2163709,append/2]]).
+greater([['$r-ms','append-list-list-list']]).
+greater([['$r'/_2163709,rev/1]]).
+greater([['$r-ms','rev-list-list']]).
+greater([[rev/1,append/2]]).
+status(['$r':ms]).
+status(['$r-ms':ms]).
+status(['$r'/_2163709:ms]).
+
+constructor('[]-list').
+constructor('[]-list').
+constructor('.-list-elem-list').
+constructor('.-list-elem-list').
+
+
+
+
+
+

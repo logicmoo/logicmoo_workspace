@@ -1,0 +1,587 @@
+/*
+HOWTO.DOC: MIKE IMPLEMENTATION NOTES, updated 11th December, 1990
+
+[Note that all source code files referred to (*.PL) are now
+embedded within one master file called mikev203.pl]
+
+CONTENTS
+
+1. MINIMIKE: A minimalist MIKE interpreter (highlights of BYTE article)
+2. Where to find the main 'bells and whistles' extensions
+3. 'Back door' user-specifiable extensions to MIKE
+4. RETE implementation notes
+5. TMS implementation
+
+
+1. MINIMIKE: A minimalist MIKE interpreter
+==========================================
+
+'Minimalist' MIKE interpreter as described in the BYTE Magazine article
+"A knowledge engineering toolkit" by Eisenstadt & Brayshaw, Oct/Nov 1990.
+
+Copyright (c) 1990 The Open University (U.K.)
+
+The Open University accepts no responsibility for any legal or other
+consequences which may arise directly or indirectly as a result of the
+use of all or parts of the contents of this program.
+*/
+
+/*
+MIKE is implemented as a 'meta-level interpreter', i.e. a Prolog-like 
+interpreter which is itself written in Prolog.  The implementation involves 
+five key ideas: 
+
+     1)  operator declarations provide syntactic sugar 
+     2)  frames are stored as ordinary database 'facts'
+     3)  inheritance is a recursive search along 'subclass_of' relations
+     4)  backward chaining works just like Prolog itself
+     5)  forward chaining searches for the first rule which has all of its 
+           conditions already 'satisfied'
+
+Naturally, details of conflict resolution strategies and extra features such 
+as demons require considerable extra work, but the five key ideas provide a 
+basic working implementation.  These ideas are discussed in turn below.
+This discussion assumes at least a basic knowledge of Prolog.  A more thorough 
+treatement is provided in (Bratko, 1986; Eisenstadt, 1988).
+
+1.1. Operator declarations provide syntactic sugar
+--------------------------------------------------
+An input such as 
+?- note the age of fido is 34.
+is parsed internally as
+note(the(of(age, is(fido,34)))).
+This is because note, the, of, and is are all pre-declared to be operators 
+with the right 'precedences', or 'order of consumption'.  This is analogous to 
+the parsing of a mathematical expression such as
+3 + 4*2
+into the following correct internal representation:
++(3, *(4,2))
+The mathematical expression above is parsed correctly because '+' and '*' are 
+infix operators, with '*' having a lower precedence (earlier order of 
+consumption) than '+'.  
+Operators are declared in Prolog using the following syntax:
+?- op(<precedence>,<associativity>, <name>).
+For example, the mathematical operators would be declared as follows:
+?- op('+', xfy, 310).
+?- op('*', xfy, 400).
+Here are the operator declarations needed for MIKE:
+*/
+
+?- op(1200,fx,rule).
+?- op(1199,xfx,with).
+?- op(1199,xfx,forward).
+?- op(1199,xfx,backward).
+?- op(1100,fx,if).
+?- op(1000,xfx,then).
+?- op(1000,xfx,from).
+?- op(999, fx,make_value).
+?- op(999, fx,add_value).
+?- op(950,fx, '--').
+?- op(950,fx, establish).
+?- op(950,fx, deduce).
+?- op(950,fx, say).
+?- op(950,fx, remove).
+?- op(950,fx, note).
+?- op(950,fx, add).
+?- op(950,fx, announce).
+?- op(950,xfy,explained_by).
+?- op(950,fx,why).
+?- op(950,fx,how).
+?- op(950,fx,describe).
+?- op(950,fx,show).
+?- op(950,fx,strategy).
+?- op(955,xfy, or).
+?- op(954, xfy, '&').
+?- op(953,fx, query).
+?- op(952,xfy, receives_answer).
+?- op(899,fx,the).
+?- op(899,fx,all).
+?- op(898,xfx,of).
+?- op(897,xfx,to).
+?- op(876,xfx,for).
+?- op(850,xfx,are).
+?- op(800,xfx,instance_of).
+?- op(800,xfx,subclass_of).
+?- op(799,xfx,':').
+?- op(200,xfx,'<--').
+?- op(10,fx,'?').
+
+/*
+1.2. Frames are stored as ordinary database facts
+-------------------------------------------------
+
+Consider the following frame:
+fred_smith instance_of person with
+	age: 49,
+	citizenship: uk,
+	weight: 160
+	occupations: [teacher, lifeguard, parent].
+Given the operator declarations presented above, here is the full internal
+representation of the frame for 'fred' (notice that it is stored under
+the predicate 'with':
+
+with(instance_of(fred_smith,person), 
+	','(':'(age, 49),
+	      ','(':'(citizenship, uk),
+	            ','(':'(weight,160),
+	                 ':'(occupations,[teacher, lifeguard, parent]))))).
+
+*/
+/* 
+1.3. Inheritance is a recursive search along 'subclass_of' relations
+--------------------------------------------------------------------
+Here is the relevant Prolog code, assuming our operators have already been
+defined.  The first clause converts the surface form into our internal
+form.  The two clauses of fetch cater for the cases in which the object is
+stored either as an instance_ of something or else when it is stored as a
+subclass_of something. */
+
+the Attribute of Object is Value :-    /*surface form for user*/
+  fetch(Object, Attribute, Value).   /* our internal form*/
+fetch(Object, Attribute, Value) :-   /* here's its definition....*/
+  (Object instance_of SuperObject with Stuff),   /* get stored frame*/
+  retrieve(Object, Attribute, Value, SuperObject, Stuff).  /* invoke real 
+workhose*/
+fetch(Object, Attribute, Value) :-   /* alternatively....*/
+  (Object subclass_of Class with Stuff),   /* stored frame might be found 
+here*/
+  retrieve(Object, Attribute, Value, Class, Stuff).  /* so invoke real 
+workhorse*/
+retrieve(Obj, Attr, Val, Super, (Attr:Val)) :-   /* Direct hit (single 
+slot:filler)*/
+  not(Val = [_ | _]).   /* assumes singleton value, not a list*/
+retrieve(Obj, Attr, Val, Super, (Attr:Val, Rest)):-  /* Direct hit (first 
+slot:filler pair of many)*/
+  not(Val = [_ | _]).   /* assumes singleton value, not a list*/
+retrieve(Obj, Attr, Val, Super, (Attr:Vals)) :-   /* Single slot with filler 
+which is a list*/
+  member(Val, Vals).   /* so see that Val is on list of Vals*/
+retrieve(Obj, Attr, Val, Super, (Attr:Vals, Rest)) :-  /* First pair of many, 
+filler is a list...*/
+  member(Val, Vals).   /* so see that Val is on list of Vals*/
+retrieve(Obj, Attr, Val, Super, (_:_, Rest)) :-   /* last arg is nasty 
+conjunct....*/
+  retrieve(Obj, Attr, Val, Super, Rest). /* so traverse it searching for 
+direct hit*/
+retrieve(Obj, Attr, Val, Super, _) :-   /* direct hits must have failed, 
+so...*/
+  fetch(Super, Attr, Val).   /* recursively check out the superset!!*/
+/*
+The real work is done by the clauses of retrieve, and in particular by its
+final argument.  The first clause of retrieve represents the case where the
+slot-filler pair Attr:Val just happens (a) to be the only slot-filler pair,
+(b) has a filler which is not a list, i.e. does not syntactically match the
+form [_|_], and (c) is a successful match with the slot:filler pair we are
+searching for.  The second clause is similar, but in this case the slot-
+filler pair Attr:Val is the very first pair in the (possibly long)
+conjunction of many.  The third and fourth clauses are analogous to the
+first and second, but cater for the case when the filler is a list of
+values such as [teacher, lifeguard, parent], and therefore it is necessary
+to invoke member to see whether Val is a member of the list of Vals.  The
+fifth clause of retrieve optimistically tries to do more of the same, but
+this time matching against Rest, i.e. all but the very first of the slot-
+filler pairs.  This is a standard cliche in Prolog, used for traversing
+lists or conjunctions of items. The final clause of retrieve is only
+reached when the first five have failed. It invokes fetch, but this time
+passing in Super as the first argument to fetch, so that the searching
+activity begins with the superordinate object in the class hierarchy (e.g.
+person, in the case of fred_smith).  This caters for the cases when the
+slot-filler pair is not retrievable for a given object, so an attempt is
+made to retrieve the information further up the chain-- this is the kernel
+of what is meant by 'inheritance'.  There are some important details which
+are omitted here, especially the problem of what to do when there is a
+conflict between 'directly stored' slot-filler pairs and 'inherited' slot-
+filler pairs.  MIKE handles this correctly (e.g. knowledge that an ostrich
+cannot fly overrides the knowledge that birds can fly), as illustrated in
+the commented MIKE source code which is availabe in the file mikev203.pl
+*/
+
+/* 
+1.4. Backward chaining works just like Prolog itself
+----------------------------------------------------
+The implementation of backward chaining is straightforward, because it merely
+requires an invocation of the basic Prolog proof procedure.  There are four
+main cases to deal with:
+ conjunction of goals (e.g. 'it is raining' & 'it is cold' &
+'it is Tuesday'):  the technique is to invoke the proof procedure
+recursively on the the first conjunct, and then on the remaining conjuncts.
+ frame access: (e.g. the age of john is 32): the technique is to invoke
+the workhorse predicate fetch, which was defined in the preceding section
+ ordinary working memory element (e.g. 'it is raining'): working memory
+elements such as 'it is raining' are stored internally using the predicate
+wm, so we just need to see whether wm(<pattern>) succeeds.
+ conclusion of a rule: the technique is to find a stored rule which matches
+the conclusion, and then recursively prove the premises of that rule.
+These four cases map precisely onto the four clauses of prove shown below: */
+
+prove(First & Rest) :-   /* conjunction of goals...*/
+  prove(First),   /* ... so prove the first one*/
+  prove(Rest).   /* ... and then prove the rest*/
+prove(the Attribute of Object is Value) :-   /* frame access...*/
+  fetch(Object, Attribute, Value).   /* ... so invoke frame access workhorse*/
+prove(Pattern) :-   /* a pattern is 'satisfied'....*/
+  wm(Pattern).   /* ... if it is stored in 'working memory'*/
+prove(Conclusion) :-   /* a conclusion can be proved...*/
+  (rule R backward if Premises then Conclusion),   /* ... by retrieving a rule 
+in which it appears...*/
+  prove(Premises).   /* ... and then proving that rule's premises*/
+
+/* 
+1.5. Forward chaining searches for the first rule which has all of its
+conditions already 'satisfied':
+
+Forward chaining represents 'opportunistic' processing (in contrast to
+goal-directed processing).  The basic processing technique is to find any
+rule, all of whose left-hand-side patterns (premises) are 'satisfied' (i.e.
+in working memory), and then perform the associated right-hand-side actions
+of that rule.  Having done that, the next thing is to do more forward
+chaining.  Successful termination occurs when the symbol halt is placed
+into working memory.  The next three clauses capture this pro cessing
+concept concisely, with the final clause merely representing the
+terminating condition, when no further suitable rules can be found: */
+
+forward_chain :- /* deliberate termination occurs if... */
+  wm(halt),      /* the symbol 'halt' is added to working memory */
+  nl,
+  write('Successful termination.'),
+  nl.            /* ... so inform user accordingly */
+
+forward_chain :-
+  (rule RuleName forward if LHS then RHS), /* find a rule.... */
+  all_in_mem(LHS), /* whose left-hand-side patterns are all satisfied...*/
+  not(already_did(RuleName,LHS)), /* and which we haven't already performed */
+  perform(RHS), /* then perform associated right-hand-side actions */
+  assert(already_did(RuleName,LHS)),   /*avoid repeating this exact case */
+  forward_chain.   /* then carry on forward-chaining */
+forward_chain :-   /* this case only reached when above clause fails */
+  nl,
+  write('No (more) applicable rules.'),
+  nl.  /* ... so inform user accordingly */
+
+
+
+/* A top-level goal fc ensures that working memory is cleared up prior to 
+execution, and places the special symbol 'start' in working memory before 
+invoking the workhorse forward_chain:
+*/
+fc :-     /* top-level invocation*/
+  abolish(wm, 1),   /* clear out working memory*/
+  assert(wm(start)),   /* add special 'start' symbol to working memory*/
+  abolish(already_did, 2),   /* clear flag which prevents duplicate firings*/
+  forward_chain.   /* invoke forward_chain workhorse*/
+
+/*
+During forward chaining, a rule's left-hand-side pattern is said to be
+'satisfied' either by being present in working memory or by being
+retrievable from frame memory.  Working memory elements are stored
+internally using the predicate wm, so in the m ost general case we just
+need to see whether wm(<pattern>) succeeds.  More special cases exist, for
+dealing with patterns such as the X of Y is Z, so the first four clauses of
+in_mem cater with these cases, while the general case is left for last. */
+
+all_in_mem(First & Rest) :-    /* conjunction of left-hand-side patterns*/
+  in_mem(First),   /* see if the first one is satisfied*/
+  all_in_mem(Rest).   /* recursively see if rest are satisfied*/
+all_in_mem(X) :-   /* singleton pattern*/
+  not(X = (_ & _)),   /* this ensures that it really is just a singleton, not 
+a conjunction*/
+  in_mem(X).   /* see if it is stored in working memory  or frame memory*/
+in_mem(the Attr of Obj is Val) :-    /* patterns of this form require frame 
+access..*/
+  fetch(Obj, Attr, Val).   /* ... so invoke the frame-retrieval workhorse*/
+in_mem(X instance_of Y) :-    /* this is useful for looking up instance_of 
+relations...*/
+  (X instance_of Y with _ ).   /* in which case we just ignore the details 
+following 'with'*/
+in_mem(X subclass_of Y) :-    /* this is useful for looking up subclass_of  
+relations...*/
+  (X subclass_of Y with _).   /* in which case we just ignore the details 
+following 'with' */
+in_mem(deduce X) :-    /* this is how we invoke a backward-chaining rule...*/
+  prove(X).   /* ...in which case we let the workhorse  prove do the work*/
+in_mem(X) :-   /* this is the usual case, i.e. looking for an arbitrary 
+pattern...*/
+  wm(X).   /* just see if it is in the Prolog database in this form.*/
+/*
+In a 'pure' production system interpreter, the concept of performing right-
+hand-side actions is restricted to adding or removing elements from working 
+memory.  In MIKE, we make this explicit with the operators add and remove, and 
+allow other special
+actions as well, such as announce and halt.  The first clause below handles
+conjunctions of right hand side elements, while the second and third
+clauses deal respectively with adding and removing working memory elements.
+The fourth clause caters for cosmetic printout routines, and the final
+clause (the default case) adds the special symbol halt to working memory
+for the benefit of the forward_chain workhorse routine. */
+
+perform(First & Rest) :-   /* conjunction of right-hand-side patterns*/
+  perform(First),   /* do the first one (this will involve one of the clauses 
+below)*/
+  perform(Rest).   /* and then do the rest*/
+perform(add X) :-   /* MIKE operator 'add' signifies 'add WM pattern'*/
+  assert(wm(X)).   /* invoke Prolog's assert, which stores pattern in 
+database*/
+perform(remove X) :-   /* MIKE operator 'remove' signifies 'remove WM 
+pattern'*/
+  retract(wm(X)).   /* invoke Prolog's retract, which erases pattern from 
+database*/
+perform(announce X) :-   /* cosmetic printout, e.g. announce ['hi there,', 
+X]*/
+  writel(X).   /* invoke user-defined Prolog utility to perform printout*/
+perform(halt) :-   /* special trap for 'halt' action*/
+  assert(wm(halt)).   /* just add pattern for forward_chain to notice.*/
+
+/* AUXILLIARY DEFINITION NEEDED TO RUN SIMPLE EXAMPLES */
+/* writel  writes out a list of terms (this is invoked by 'announce') */
+
+writel([]) :-     /* end of list to print? */
+  nl.             /* output a 'new line' */
+writel([nl|Rest]) :-  /* special symbol 'nl' included in list? */
+  nl,             /* output a 'new line' */
+  writel(Rest).   /* recursively do the rest */
+writel([X|Xs]) :- /* typical list */
+  write(X),       /* write out first element */
+  writel(Xs).     /* recursively do the rest */
+
+/*
+2. Where to find the main 'bells and whistles' extensions
+=========================================================
+[Note that the files below are now incorporated within
+the single master file mikev203.pl, but can still be
+searched for separately]
+
+MIKE     PL    Master MIKE file; loads the others
+BROWSE   PL    'browse' and 'kb' definitions
+ENGINE1  PL    backward chainer, frame processing, demons
+ENGINE2  PL    MIKE commands 'go' 'add' etc, forward LHS conds, RHS actions
+EXTRAS   PL    multiple-choice menus and 'forall'
+FC_EXEC  PL    Executive control loop of forward-chainer
+FINDALL  PL    Own implementation of 'findall'
+IO       PL    Input/output, especially 'query'
+LOADOPS  PL    Operator declarations
+UTIL     PL    Miscellaneous utilities
+MIKE     INI   MIKE customizing... operators '>', ':=', etc.
+
+3. 'Back door' user-specifiable extensions to MIKE
+==================================================
+
+We have provided a 'back door' trap so that simple extensions to MIKE
+in the form of arbitrary calls to Prolog can be made by the user.
+These can be done anyway by wrapping user code inside the form
+   prolog(<user_code>)
+which will then be handled correctly by MIKE.  However, users may wish
+to augment the syntax of MIKE directly with new operators.  For this,
+we have provided 'back door' extensions which are trapped last of all
+by the predicates which handle left-hand-side conditions and right-hand-side
+actions.  
+
+In MIKE.INI, you'll see some directives of the form
+    ?- allow_prolog_lhs(X > Y).
+
+These directives, allow_prolog_rhs and allow_prolog_lhs
+make assertions of the form 'allowable...' for testing by MIKE, using
+the following definitions:
+*/
+
+/* If database assertion is present then ignore, else make assertion */
+allow_prolog_lhs(Pattern) :-
+   allowable_prolog_lhs(Pattern); assertz(allowable_prolog_lhs(Pattern)).
+
+allow_prolog_rhs(Pattern) :-
+   allowable_prolog_rhs(Pattern);assertz(allowable_prolog_rhs(Pattern)).
+
+/*  [Note... the matching 'comment delimiter' is at the end of this file]
+
+The tests for 'allowable...' appear in the file ENGINE2.PL
+[which is embedded within the file mikev203.pl]
+For example, you'll see that the final clause of 'in_wm/1' looks like this:
+
+in_wm(X):-allowable_prolog_lhs(X), !, call(X).
+
+An analogous clause is used for right-hand-side processing (perform and 
+perform1).
+
+REMEMBER: 'allow...' is the directive, 'allowable...' is the database 
+assertion.  The advantage of using the directive is that such directives
+can be distributed in different places in different user files, whereas
+database assertions would have to be in one contiguous location.
+
+
+4. RETE implementation
+======================
+
+The design of the RETE algorithm implementation is based on the
+description provided in:
+   Merritt, D., Building Expert Systems in Prolog, Springer-Verlag, 1989, 
+   ISBN 0-387-97016-9.  
+We are grateful for permission granted by Dennis Merritt to use the material
+and RETE code developed in chapter 8 of his book.
+
+Flags
+-----
+    rete(X)    returns RETE status (on/off) in X
+
+    The special case flag is of the format shown below.  Each special
+    lhs pattern must have one of these stored in the database.  If you
+    use allow_prolog_lhs/1 a special_case entry will automatically be added.
+    Special case lhs conditions are those whose changes cannot be picked up
+    by the RETE/TMS code, (e.g. prolog(X<Y)).
+
+    special_case(Pattern)
+    e.g. special_case(prolog(_))
+
+Database storage formats for RETE memory
+-------- ------- ------- --- ---- ------
+    root(ID,Pattern,NodeList)
+
+    ID is a unique identification number, Pattern is a single lhs condition
+    and NodeList is a list of RETE nodes to which this Pattern is relevant.
+    These nodes will either be in he form [rule-Rulename] or [ID-N], where
+    ID is a two-input node's unique ID and N is a character (l or r) denoting
+    the side of the two-input node (left or right) which it refers to.
+
+ 
+    bi(ID,LeftStuff,RightStuff,NodeList)
+
+    This is a two-input node on the RETE network, NodeList and ID are
+    just the same as they are in root/3.
+
+
+    rul(ID,RuleName,LHS,RHS)
+
+    The final nodes in the RETE network are of the rul/4 type.
+
+
+    conflict_set(ID,rule Name forward if LHS then RHS)
+
+    Things like this are asserted whenever a rule becomes true as far
+    as RETE is concerned (i.e. all wm/frame conditions are stored in RETE
+    memory). It is the adding of these to the database which prompts the
+    TMS into firing the relevant rules, when the TMS is enabled (see
+    section 8). ID is a unique ID (proportional to the rule's position 
+    in the kb).
+
+
+    m(ID,Pattern)
+
+    This is a RETE memory pattern. Multiple patterns are only stored once
+    to save memory...
+
+
+    mem(ID,RETENode)
+
+    ...multiple patterns are stored as multiple pointers in mem/2 format,
+    ID is the ID of the pattern (stored as m/2) and RETENode is the node on
+    the RETE network to which the Pattern is relevant.
+
+Useful 'utilities'
+------ ---------- 
+    rete_compile      Compiles RETE network and sends all relevant info.
+                      from frame/working memory through the network.
+
+    rete_compil       As RETE compile, but no information is updated.
+
+    find_frames and find_wm_elements are used by rete_compile and other
+    stuff to bring RETE memory right up to date (useful if a kb has just
+    been loaded or you have been running MIKE with RETE off and want to
+    turn it on again, or if you have added a new rule at run-time (see
+    below)).
+
+    find_frames       Gets all relevant information out of frame memory
+                      and sends it through RETE network. This is tediously
+                      slow for large kbs and would benifit
+                      from being speeded up.
+
+    find_wm_elements  This gets all relevant stuff out of working memory
+                      and sends it through the RETE network.
+
+
+    If a rule is added at run time (i.e. by the TMS contradiction handler)
+    add_rule/1 must be used.  Note that you should process this rule      
+    immediately after adding it either by calling find_wm_elements or by  
+    'manually' testing all of the rule's lhs conditions.
+
+    add_rule(rule Name forward if LHS then RHS)
+
+    Automatic updating of RETE memory is done from perform1 and the
+    like using calls to addrete/1 and delrete/1.  If the TMS is enabled
+    these automatically call their TMS conterparts which check for
+    contradictions and the like.
+
+    addrete(Pattern)    Tries to add a pattern to RETE memory
+    delrete(Pattern)    Tries to remove a pattern from RETE memory
+
+    If you add (or find!) a piece of code in MIKE which asserts or retracts
+    anything without telling the RETE network (either directly with addrete
+    and delrete, or indirectly with perform1 or store) then you must stick in
+    an addrete/delrete call. Don't forget that these take care of the TMS too.
+
+    fc_check_lhs performs an optimised check of a rules left-hand-side,
+    that is to say that it makes sure any special cases in it are true,
+    wm/frame stuff is not checked, as it assumed to be true at this stage,
+    as fc_check_lhs is usually called when a rule has entered the conflict
+    set and is just about to be fired.
+
+    gen_nid(ID) returns a unique identification number for various things,
+    from RETE nodes to contradication handling rules.
+
+    stringconcat(String1,String2,ConcatenatedString) concatenates the two
+    strings, String1 and String2, and outputs the result as
+    ConcatenatedString.  COMPATIBILITY NOTE: Two definitions of this are 
+    given, as one is ESL Prolog-2 specific.
+
+    int2string(Integer,String) converts the interger passed in to a string
+    and passes it out as String. COMPATIBILITY NOTE: This is ESL Prolog-2 
+    specific.
+
+
+
+
+5. TMS Implementation
+
+The TMS relies exensively on the RETE network (see above) to know precisely 
+which rules to trigger when working memory patterns are added or removed.  In 
+addition the relation justification/4 is used to hold the answers to 'how' and 
+'justify' queries.
+
+     Flags
+     -----
+     tms(X)     returns TMS status (on/off) in X
+
+     Changes
+     -------
+     Most of the changes are to the FC_EXEC.PL file, although remove, add
+     and the perform1 clauses for add and remove have been slightly altered
+     so as to not create multiple justifications for wm elements, and to
+     remove justifications whenever it's corresponding wm elements is removed.
+     The top level remove clause also now checks for interfering with TMS
+     conclusions etc.
+     IO.PL has been changed so that how X now gives all the justifiactions
+     for X.
+
+     [Files FC_EXEC.PL and IO.PL are now embedded within the 
+     file mikev203.pl]
+
+     Miscellaneous
+     -------------
+
+     Odd loops, paradoxes,and trying to remove something which has been
+     concluded by the TMS have all been taken care of (both is the TMS 
+     proccessing and the justification tree). Contradictions are
+     automatically trapped whenever they occur, and are resolved (if possible)
+     by adding relevant delfaults via contradiction-handler-generated rules
+     (which have full, standard format, justifications). Stuff can now be
+     added to working memory from the right-hand-side of a rule using either
+     'add foo' or just 'foo'.
+
+
+*/
+
+
+
+
+
+
+
+
+

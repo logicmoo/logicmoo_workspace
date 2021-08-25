@@ -1,0 +1,5 @@
+order poly(1).
+
+setInterpretation('+'(x,y)		: x + y + 1).
+setInterpretation(0			: 2).
+constructor(0).

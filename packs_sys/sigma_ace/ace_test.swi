@@ -1,0 +1,716 @@
+% Test Suite for ACE Code
+% and predicates called within ACE.
+
+% Note that at present uppercase letters are not handled so all sentences
+% should be lowercase, as in the examples below.
+
+% Main routines to try are:
+%  for ACE translations alone:
+%    testme_suite(no)
+%    blocks_suite(no)
+%  for ACE translations, plus KIF asserted or queried to Sigma inference engine (must be loaded)
+%    testme_suite(yes)
+%    blocks_suite(yes)
+
+:- style_check(-singleton).
+:- style_check(-discontiguous).
+
+testme_suite(RunFlag) :-
+	testme1(RunFlag), get_return,
+	testme2(RunFlag), get_return,
+	testme3(RunFlag), get_return,
+	testme4(RunFlag), get_return,
+	testme5(RunFlag), get_return,
+	testme6(RunFlag), get_return,
+	testme7(RunFlag), get_return,
+	testme8(RunFlag), get_return,
+	testme9(RunFlag), get_return,
+	testme10(RunFlag), get_return,
+	testme11(RunFlag), get_return,
+	testme12(RunFlag), get_return,
+	testme13(RunFlag), get_return,
+	testme14(RunFlag), get_return,
+	testme15(RunFlag), get_return,
+	testme16(RunFlag), get_return,
+	testme17(RunFlag), get_return,
+	testme18(RunFlag), get_return,
+	testme19(RunFlag), get_return,
+	testme20(RunFlag), get_return,
+	testme21(RunFlag).
+
+% Overall tests.
+
+testme1(RunFlag) :-
+  write('----------------------------------'),nl,
+  eng2log('fido is a president.',RunFlag),nl,nl,
+  write('----------------------------------'),nl.
+
+testme2(RunFlag) :-
+  write('----------------------------------'),nl,
+  eng2log('the president has a cat.',RunFlag),nl,nl,
+  write('----------------------------------'),nl.
+
+testme3(RunFlag) :-
+  write('----------------------------------'),nl,
+  eng2log('the president has a wooden cat.',RunFlag),nl,nl,
+  write('----------------------------------'),nl.
+
+testme4(RunFlag) :-
+  write('----------------------------------'),nl,
+  eng2log('the president writes hamlet.',RunFlag),nl,nl,
+  write('----------------------------------'),nl.
+
+testme5(RunFlag) :-
+  write('----------------------------------'),nl,
+  eng2log('the president has many cats.',RunFlag),nl,nl,
+  write('----------------------------------'),nl.
+
+testme6(RunFlag) :-
+  write('----------------------------------'),nl,
+  eng2log('bill eats george.',RunFlag),nl,nl,
+  write('----------------------------------'),nl.
+
+testme7(RunFlag) :-
+  write('----------------------------------'),nl,
+  eng2log('the president sees hamlet.',RunFlag),nl,nl,
+  write('----------------------------------'),nl.
+
+testme8(RunFlag) :-
+  write('----------------------------------'),nl,
+  eng2log('bill uses the hammer.',RunFlag),nl,nl,
+  write('----------------------------------'),nl.
+
+testme9(RunFlag) :-
+  write('----------------------------------'),nl,
+  eng2log('who is the president?',RunFlag),nl,nl,!,
+  write('----------------------------------'),nl.
+
+testme10(RunFlag) :-
+  write('----------------------------------'),nl,
+  eng2log('what eats the cat?',RunFlag),nl,nl,!,
+  write('----------------------------------'),nl.
+
+testme11(RunFlag) :-
+  write('----------------------------------'),nl,
+  eng2log('all cats are animals.',RunFlag),nl,nl,!,
+  write('----------------------------------'),nl.
+
+testme12(RunFlag) :-
+  write('----------------------------------'),nl,
+  eng2log('every president is a person.',RunFlag),nl,nl,!,
+  write('----------------------------------'),nl.
+
+testme13(RunFlag) :-
+  write('----------------------------------'),nl,
+  eng2log('who sees hamlet?',RunFlag),nl,nl,!,
+  write('----------------------------------'),nl.
+
+testme14(RunFlag) :-
+  write('----------------------------------'),nl,
+  eng2log('who is bill?'), nl,nl,!,
+  write('----------------------------------'),nl.
+
+testme15(RunFlag) :-
+  write('----------------------------------'),nl,
+  eng2log('the cat eats the president.',RunFlag),nl,nl,
+  write('----------------------------------'),nl.
+
+% ADDITIONAL TESTS FOR BLOCKS WORLD EXTENSIONS...
+
+% BLOCKS WORLD TEST SUITE
+
+blocks_suite(RunFlag) :-
+	blocks0(RunFlag), get_return, !,
+	blocks0_check(RunFlag), get_return, !,    % FAILS
+	blocks1(RunFlag), get_return, !,
+	blocks1_check(RunFlag), get_return, !,    % SUCCEEDS
+	% loops: blocks2(RunFlag), get_return, !,
+	blocks3(RunFlag), get_return, !,
+	blocks4(RunFlag), get_return, !,
+	blocks5(RunFlag), get_return, !,
+	blocks6(RunFlag), get_return, !,
+	blocks7(RunFlag), get_return, !,
+	blocks8(RunFlag), get_return, !,
+	blocks9(RunFlag), get_return, !,
+	% loops: blocks10(RunFlag), get_return, !,
+	blocks11(RunFlag), get_return, !,
+	% needs translation debugging: blocks12(RunFlag), get_return, !,
+	blocks13(RunFlag), get_return, !,
+	nl,write('Blocks World Test Suite Completed!'),nl.
+
+get_return :- write('[Paused, hit a carriage return to continue]'), get0(X).
+
+blocks0(RunFlag) :-
+  write('----------------------------------'),nl,
+  eng2log('all blocks are wooden.',RunFlag),nl,nl,
+  write('----------------------------------'),nl.
+
+blocks0_check(RunFlag) :- % FAILS
+  write('----------------------------------'),nl,
+  eng2log('is there a wooden object on the table?',RunFlag),nl,nl,
+  write('----------------------------------'),nl.
+
+blocks1(RunFlag) :-
+  write('----------------------------------'),nl,
+  eng2log('there is a red block on the table.',RunFlag),nl,nl,
+  write('----------------------------------'),nl.
+
+blocks1_check(RunFlag) :- % SUCCEEDS!
+  write('----------------------------------'),nl,
+  eng2log('is there a red block on the table?',RunFlag),nl,nl,
+  write('----------------------------------'),nl.
+
+blocks2(RunFlag) :- % INFINITE LOOP!
+  write('----------------------------------'),nl,
+  eng2log('an iron pyramid is on the red block.',RunFlag),nl,nl,
+  write('----------------------------------'),nl.
+
+blocks2_check(RunFlag) :-
+  write('----------------------------------'),nl,
+  eng2log('is there an iron object on a wooden block?',RunFlag),nl,nl,
+  write('----------------------------------'),nl.
+
+blocks3(RunFlag) :-
+  write('----------------------------------'),nl,
+  eng2log('all pyramids are green.',RunFlag),nl,nl,
+  write('----------------------------------'),nl.
+
+blocks4(RunFlag) :- % SUCCEEDS!, finds LargePyramid1.
+  write('----------------------------------'),nl,
+  eng2log('is there a green object?',RunFlag),nl,nl,
+  write('----------------------------------'),nl.
+
+blocks5(RunFlag) :- % FAILS
+  write('----------------------------------'),nl,
+  eng2log('is there a green object on a block?',RunFlag),nl,nl,
+  write('----------------------------------'),nl.
+
+blocks6(RunFlag) :-
+  write('----------------------------------'),nl,
+  eng2log('no pyramid supports a block.',RunFlag),nl,nl,
+  write('----------------------------------'),nl.
+
+blocks6_check1(RunFlag) :- % FAILS, does not return FALSE.
+  write('----------------------------------'),nl,
+  eng2log('is there a block on a pyramid?',RunFlag),nl,nl,
+  write('----------------------------------'),nl.
+
+blocks6_check2(RunFlag) :- % Succeeds: does not find any.
+  write('----------------------------------'),nl,
+  eng2log('is there a pyramid on a block?',RunFlag),nl,nl,
+  write('----------------------------------'),nl.
+
+blocks7(RunFlag) :-
+  write('----------------------------------'),nl,
+  eng2log('there is a blue cone on the table.',RunFlag),nl,nl,
+  write('----------------------------------'),nl.
+
+blocks7_check(RunFlag) :- % FAILS, does not return TRUE.
+  write('----------------------------------'),nl,
+  eng2log('is there a cone on the table?',RunFlag),nl,nl,
+  write('----------------------------------'),nl.
+
+blocks8(RunFlag) :- % Succeeds: does not find any.
+  write('----------------------------------'),nl,
+  eng2log('is there a block on the cone?',RunFlag),nl,nl,
+  write('----------------------------------'),nl.	
+
+blocks9(RunFlag) :-
+  write('----------------------------------'),nl,
+  eng2log('there is an orange block on the table.',RunFlag),nl,nl,
+  write('----------------------------------'),nl.
+
+blocks9_check(RunFlag) :- % FAILS, does not return TRUE.
+  write('----------------------------------'),nl,
+  eng2log('is there an orange block on the table?',RunFlag),nl,nl,
+  write('----------------------------------'),nl.
+
+blocks10(RunFlag) :- % INFINITE LOOP!
+  write('----------------------------------'),nl,
+  eng2log('the orange block supports a green block.',RunFlag),nl,nl,
+  write('----------------------------------'),nl.
+
+blocks10_check(RunFlag) :-
+  write('----------------------------------'),nl,
+  eng2log('is there a green block on an orange block?',RunFlag),nl,nl,
+  write('----------------------------------'),nl.
+
+blocks11(RunFlag) :-
+  write('----------------------------------'),nl,
+  eng2log('is there a tower?',RunFlag),nl,nl,
+  write('----------------------------------'),nl.
+
+blocks12(RunFlag) :-
+  write('----------------------------------'),nl,
+  eng2log('What is on the table?',RunFlag),nl,nl,
+  write('----------------------------------'),nl.
+
+blocks13(RunFlag) :-
+  write('----------------------------------'),nl,
+  eng2log('is there a tower?',RunFlag),nl,nl,
+  write('----------------------------------'),nl.	
+
+% TESTS FOR DIFFERENT PARTS OF THE BLOCKS WORLD EXTENSIONS...
+
+% New Lexicon
+
+testme16(RunFlag) :-
+  write('----------------------------------'),nl,
+  eng2log('every pyramid is green.',RunFlag),nl,nl,
+  write('----------------------------------'),nl.
+
+testme17(RunFlag) :-
+  write('----------------------------------'),nl,
+  eng2log('the orange block supports a green block.',RunFlag),nl,nl,
+  write('----------------------------------'),nl.
+
+% Handling Prepositions
+
+testme18(RunFlag) :-
+  write('----------------------------------'),nl,
+  eng2log('a large pyramid is on the red block.',RunFlag),nl,nl,!,
+  write('----------------------------------'),nl.
+
+% 'there is' sentences, also with a preposition
+
+testme19(RunFlag) :-
+  write('----------------------------------'),nl,
+  eng2log('there is a red block on the table.',RunFlag),nl,nl,!,
+  write('----------------------------------'),nl.
+
+% 'No' as a quantifier
+
+testme20(RunFlag) :-
+  write('----------------------------------'),nl,
+  eng2log('no pyramid supports a block.',RunFlag),nl,nl,!,
+  write('----------------------------------'),nl.
+
+% 'Is there' queries
+
+testme21(RunFlag) :-
+  write('----------------------------------'),nl,
+  eng2log('is there a green object on the block.',RunFlag),nl,nl,!,
+  write('----------------------------------'),nl.
+
+% tests for...
+% fixExistentials(+Formula,-Revised)
+
+testFix1:-
+     F1 = [implies, [instance-of, ?G12472, cat],
+		    [and, [instance-of, skf(_G12524), perceptionEvent],
+			  [experiencer, skf(_G12524), ?G12472],
+			  [theme, skf(_G12524), hamlet]]],
+     fixExistentials(F1,Fixed1),
+     pprint2(Fixed1).
+     
+testFix2:-
+     F2 = [and, [instance-of, skf(_G9743), cat],
+		[and, [and, [instance-of, skf(_G9803), eatingEvent],
+			    [performedBy, skf(_G9803), skf(_G9743)],
+			    [objectActedOn, skf(_G9803), skf(_G9770)]],
+		      [instance-of, skf(_G9770), president]]],
+     fixExistentials(F2,Fixed2),
+     pprint2(Fixed2).
+
+testFix3:-
+     F3 = [instance-of, bill, ?G23735],
+     fixExistentials(F3,Fixed3),
+     pprint2(Fixed3).
+
+testFix4:-
+     F4 = [instance-of, skf(_G12345), skf(_G67890)],
+     fixExistentials(F4,Fixed4),
+     pprint2(Fixed4).
+
+% tests for...
+% collect_SKFs(+Formula,-SKF_EditPathsFinal)
+
+test_collecting:-
+     F1 = [implies, [instance-of, '?G12472', cat],
+		    [and, [instance-of, skf(_G12524), perceptionEvent],
+			  [experiencer, skf(_G12524), '?G12472'],
+			  [theme, skf(_G12524), hamlet]]],
+     collect_SKFs(F1,Paths1),
+     pprint2(F1),nl,
+     pprint2(Paths1),nl,
+     F2 = [and, [instance-of, skf(_G9743), cat],
+		[and, [and, [instance-of, skf(_G9803), eatingEvent],
+			    [performedBy, skf(_G9803), skf(_G9743)],
+			    [objectActedOn, skf(_G9803), skf(_G9770)]],
+		      [instance-of, skf(_G9770), president]]],
+     collect_SKFs(F2,Paths2),
+     pprint2(F2),nl,
+     pprint2(Paths2),nl.
+
+test_collect:-
+     F3=[instance-of, _G15751, president],
+     collect_SKFs(F3,Paths3),
+     pprint2(F3),nl,
+     pprint2(Paths3),nl.
+
+% tests for...
+% perform_SKF_subs(+Formula,-RevisedFormula)
+% example: perform_SKF_subs([implies, [instance-of, skf(X), cat], [instance-of, skf(X), animal]],Sub).
+
+
+test_sub1  :-     F1 = [implies, [instance-of, ?G12472, cat],
+			             [and, [instance-of, skf(_G12524), perceptionEvent],
+			                   [experiencer, skf(_G12524), ?G12472],
+			                   [theme, skf(_G12524), hamlet]]],
+                           write('----------------------------------'),nl,
+                           pprint2(F1),
+                           perform_SKF_subs(F1,R1),
+                           pprint2(R1),nl,
+                           write('----------------------------------'),nl.
+
+test_sub2 :-
+                      F2 = [and, [instance-of, skf(_G9743), cat],
+                                 [and, [and, [instance-of, skf(_G9803), eatingEvent],
+	                         [performedBy, skf(_G9803), skf(_G9743)],
+	                         [objectActedOn, skf(_G9803), skf(_G9770)]],
+                           [instance-of, skf(_G9770), president]]],
+                      pprint2(F2),
+                      perform_SKF_subs(F2,R2),
+                      pprint2(R2),nl,
+                      write('----------------------------------'),nl.
+
+% tests for...
+% insert_existentials(+FormulaWSubs,+EditPaths,-FinalFormula).
+
+/* Example 1:
+
+R1
+   = [implies, [instance-of, ?G12472, cat],
+               [and, [instance-of, ?G12524, perceptionEvent],
+		     [experiencer, ?G12524, ?G12472],
+		     [theme, ?G12524, hamlet]]].
+
+
+insert_existentials(R1, [[?G12524, 1, 3]],FinalFormula)
+		   
+succeeds with
+  FinalFormula= [implies, [instance-of, ?G12472, cat],
+		          [exists, [?G12524],
+			           [and,
+				       [instance-of, ?G12524, perceptionEvent],
+				       [experiencer, ?G12524, ?G12472],
+		                       [theme, ?G12524, hamlet]]].
+
+*/
+
+test_insert_existentials1:-
+	R1   = [implies, [instance-of, '?G12472', cat],
+		         [and, [instance-of, '?G12524', perceptionEvent],
+		               [experiencer, '?G12524', '?G12472'],
+		               [theme, '?G12524', hamlet]]],
+	insert_existentials(R1,[['G12524', 1, 3]],FinalFormula),
+	pprint2(FinalFormula).
+
+test_insert_existentials2:-
+	R2   =  [and, [instance-of, '?G9743', cat],
+		      [and, [and, [instance-of, '?G9803', eatingEvent],
+			          [performedBy, '?G9803', '?G9743'],
+			          [objectActedOn, '?G9803', '?G9770']],
+	         [instance-of, '?G9770', president]]],
+        Edits = [['?G9743',1],
+	         ['?G9803',1,3,2],
+		 ['?G9770',1,3]],
+	insert_existentials(R2,Edits,FinalFormula),
+	pprint2(FinalFormula).
+
+/* Miscellaneous Tests */
+
+/* To test translation of internal Prolog lists to LISP-like sexps suitable for KIF */
+
+test_listToKIF1 :- listToKIF([exists, [X], [instance, X, cat]],KIF),
+	write(KIF),nl.
+
+test_listToKIF2 :- listToKIF([forall, [X], [implies, [instance, X, dog],
+					             [instance, X, mangy]]],KIF),
+        write(KIF),nl.
+
+test_listToKIF3 :- listToKIF([exists, [_G976], 
+                                      [exists, [_G1063], [and, [attribute, _G976, 'Red'],
+                                                               [instance, _G976, 'Block'], 
+                                                               [instance, _G1063, 'Table'], 
+                                                               [on, _G976, _G1063]]]],KIF),
+
+        write(KIF),nl.
+
+/* sentence_to_list */
+
+test_sentence_to_list1 :- sentenceToList('A block is on the table',List,Kind),
+	format('List = ~w~nKind = ~w~n',[List,Kind]).
+
+test_sentence_to_list2 :- sentenceToList('A block is on the table.',List,Kind),
+	format('List = ~w~nKind = ~w~n',[List,Kind]).
+
+test_sentence_to_list3 :- sentenceToList('A block is on the table?',List,Kind),
+	format('List = ~w~nKind = ~w~n',[List,Kind]).
+
+test_sentence_to_list4 :- sentenceToList('A block is on the table!',List,Kind),
+	format('List = ~w~nKind = ~w~n',[List,Kind]).
+
+/* To test parsing of constituents...*/
+
+/* noun phrases */
+
+test_np1 :- phrase(noun_phrase(NP,NUM),[a,red,block]), write(NP).
+test_np2 :- phrase(noun_phrase(NP,NUM),[an,orange,block]), write(NP).
+test_np3 :- phrase(noun_phrase(NP,NUM),[the,tower]), write(NP).
+test_np4 :- phrase(noun_phrase(NP,NUM),[hamlet]), write(NP).
+
+/* noun phrases modified by prepositions */
+
+test_np5 :- phrase(noun_phrase(NP,NUM),[a,red,block,on,the,green,block]), write(NP).
+test_np6 :- phrase(noun_phrase(NP,NUM),[an,orange,block,on,the,tower]), write(NP).
+test_np7 :- phrase(noun_phrase(NP,NUM),[the,tower,on,the,table]), write(NP).
+test_np8 :- phrase(noun_phrase(NP,NUM),[hamlet,on,the,table]), write(NP).
+test_np9 :- phrase(noun_phrase(NP,NUM),[blocks,on,the,table]), write(NP).
+test_np10 :- phrase(noun_phrase(NP,NUM),[a,green,object,on,the,block]), write(NP).
+
+/* prepositional phrases */
+
+test_pp1 :- phrase(prepositional_phrase(PP),[on,the,green,block]), write(PP).
+
+/* logic conversions */
+
+/* noun phrase without preposition */
+
+testlogic1 :- NP_Parse = np(dt(the), n(table)),
+	tl_noun_phrase(SubjectPlurality,SubjectQuantifier,NP_Parse,NPFormula,Subject,TypeOfSubject),
+	write(NPFormula).
+
+/* noun phrase with preposition */
+
+testlogic2 :- NP_Parse = np(dt(a),m(red),n(block),pp(prep(on),np(dt(the), n(table)))),
+	tl_noun_phrase(SubjectPlurality,SubjectQuantifier,NP_Parse,NPFormula,Subject,TypeOfSubject),
+	write(NPFormula).
+
+/* to test that Sigma inference engine is loaded successfully */
+
+load_sigma :-
+	cd('C:\\Projects\\Dialog Agent System\\Sigma\\Prolog Inference Engine\\Prolog Files'),
+	consult('sigma_server.P').
+
+load_ontologies_SUMO :-
+	u_load_kif('.\\kbs\\SUMO.txt','DefaultContext','tester').
+
+load_ontologies_FINANCE :-
+	u_load_kif('.\\kbs\\Finance.txt','DefaultContext','tester').
+
+load_ontologies_BLOCKS :-
+	u_load_kif('.\\kbs\\Blocks5.txt','DefaultContext','tester').
+
+load_sigma_all :- load_sigma,
+	load_ontologies_SUMO,
+	load_ontologies_FINANCE,
+	load_ontologies_BLOCKS,
+	write('Done!!!'),nl.
+
+%Some queries about these predefined blocks...
+
+%(instance RedBlock1 Block)
+
+%(instance TheTable1 Table)
+
+%(on RedBlock1 TheTable1)
+
+%(instance LargePyramid1 Pyramid)
+
+%(instance BlueCone1 Cone)
+
+%(instance OrangeBlock1 Block)
+
+%(attribute RedBlock1 Red)
+
+%(attribute OrangeBlock1 Orange)
+
+%(attribute BlueCone1 Blue)
+
+%(attribute LargePyramid1 Large)
+
+test_query1a :-  % finds BlueCone1, as it should: test passed.
+	Query = "(exists (?G976) (attribute ?G976 Blue))",
+	u_query(Query,'DefaultContext','Merge','wmurray',UResultsSoFar,Result,Proof,Status),
+	not(UResultsSoFar =(-1)), % Filters duplicate answers
+	write_object('$spacer',Vars), % Puts space between answers
+	write_object(vars(Result),Result),
+	write_object(proof(Proof),Result),
+	fail.			% Forces a backtrack to find next solution
+
+test_query1b :-  % finds BlueCone1, same output as above
+	Query = "(attribute ?G976 Blue)",
+	u_query(Query,'DefaultContext','Merge','wmurray',UResultsSoFar,Result,Proof,Status),
+	not(UResultsSoFar =(-1)), % Filters duplicate answers
+	write_object('$spacer',Vars), % Puts space between answers
+	write_object(vars(Result),Result),
+	write_object(proof(Proof),Result),
+	fail.			% Forces a backtrack to find next solution
+
+test_query2a :- % finds OrangeBlock1, RedBlock1, TowerBlockUpper, TowerBlockMiddle, TowerBlockLower
+	Query = "(exists (?G976) (instance ?G976 Block))",
+	u_query(Query,'DefaultContext','Merge','wmurray',UResultsSoFar,Result,Proof,Status),
+	not(UResultsSoFar =(-1)), % Filters duplicate answers
+	write_object('$spacer',Vars), % Puts space between answers
+	write_object(vars(Result),Result),
+	write_object(proof(Proof),Result),
+	fail.			% Forces a backtrack to find next solution
+
+test_query2b :-  % finds OrangeBlock1 and RedBlock1.
+	Query = "(instance ?G976 Block)",
+	u_query(Query,'DefaultContext','Merge','wmurray',UResultsSoFar,Result,Proof,Status),
+	not(UResultsSoFar =(-1)), % Filters duplicate answers
+	write_object('$spacer',Vars), % Puts space between answers
+	write_object(vars(Result),Result),
+	write_object(proof(Proof),Result),
+	fail.			% Forces a backtrack to find next solution	
+
+test_query3a :-  % finds OrangeBlock1
+	Query = "(exists (?G976) (and (attribute ?G976 Orange) (instance ?G976 Block)))",
+	u_query(Query,'DefaultContext','Merge','wmurray',UResultsSoFar,Result,Proof,Status),
+	not(UResultsSoFar =(-1)), % Filters duplicate answers
+	write_object(vars(Result),Result),
+	write_object(proof(Proof),Result),
+	fail.			% Forces a backtrack to find next solution
+
+test_query3b :-  %  finds OrangeBlock1
+	Query = "(and (attribute ?G976 Orange) (instance ?G976 Block))",
+	u_query(Query,'DefaultContext','Merge','wmurray',UResultsSoFar,Result,Proof,Status),
+	not(UResultsSoFar =(-1)), % Filters duplicate answers
+	write_object('$spacer',Vars), % Puts space between answers
+	write_object(vars(Result),Result),
+	write_object(proof(Proof),Result),
+	fail.			% Forces a backtrack to find next solution
+
+test_query4 :-  % finds x, y; and RedBlock1,TheTable1.
+	Query = "(on ?x ?y)",
+	u_query(Query,'DefaultContext','Merge','wmurray',UResultsSoFar,Result,Proof,Status),
+	not(UResultsSoFar =(-1)), % Filters duplicate answers
+	write_object('$spacer',Vars), % Puts space between answers
+	write_object(vars(Result),Result),
+	write_object(proof(Proof),Result),
+	fail.			% Forces a backtrack to find next solution
+
+test_query5 :-  % finds x; and RedBlock1.
+	Query = "(on ?x TheTable1)",
+	u_query(Query,'DefaultContext','Merge','wmurray',UResultsSoFar,Result,Proof,Status),
+	not(UResultsSoFar =(-1)), % Filters duplicate answers
+	write_object('$spacer',Vars), % Puts space between answers
+	write_object(vars(Result),Result),
+	write_object(proof(Proof),Result),
+	fail.			% Forces a backtrack to find next solution
+
+test_query6 :-  % finds TheTable1
+	Query = "(instance ?x Table)",
+	u_query(Query,'DefaultContext','Merge','wmurray',UResultsSoFar,Result,Proof,Status),
+	not(UResultsSoFar =(-1)), % Filters duplicate answers
+	write_object('$spacer',Vars), % Puts space between answers
+	write_object(vars(Result),Result),
+	write_object(proof(Proof),Result).
+
+test_assert1 :- % No change from before.
+	Sent = "(on BlueCone1 OrangeBlock1)",
+	u_assert(Sent,'DefaultContext','Merge','wmurray'),
+	test_query4.
+
+test_assert2 :- % No change from before.
+	Sent = "(on OrangeBlock1 TheTable1)",
+	u_assert(Sent,'DefaultContext','Merge','wmurray'),
+	test_query5.
+
+test_KIF_assert(Sent) :-
+        string_to_list(Sent,SentenceChars),
+	u_assert(SentenceChars,'DefaultContext','Merge','wmurray').
+
+test_KIF_query(Query) :-
+        string_to_list(Query,QueryChars),
+	u_query(QueryChars,'DefaultContext','Merge','wmurray',UResultsSoFar,Result,Proof,Status),
+	not(UResultsSoFar =(-1)), % Filters duplicate answers
+	write_object('$spacer',Vars), % Puts space between answers
+	write_object(vars(Result),Result),
+	write_object(proof(Proof),Result),
+	fail.			% Forces a backtrack to find next solution
+
+test_KIF_query(Query). % Finally succeeds so testing can continue regardless of the results of one test.
+
+test_sent1 :- % A red block is on the table. 
+	Sent = "(exists (?G805) (exists (?G870) (and (attribute ?G805 Red) (instance ?G805 Block) (instance ?870 Table) (on ?G805 ?G870))))",
+	test_KIF_assert(Sent).
+
+test_sent2 :- % A red block is on the table. 
+	Sent = "(exists (?G878) (exists (?G913) (and (and (attribute ?G878 Large) (instance ?G878 Pyramid)) (and (attribute ?G913 Red) (instance ?G913 Block) (on ?G878 ?G913)))))",
+	test_KIF_assert(Sent).
+
+test_sent3 :- % All pyramids are green.
+	Sent = "(implies (instance ?G1000 Pyramid) (attribute ?G1000 Green))",
+	test_KIF_assert(Sent).
+
+test_ask0 :- % Is there a green pyramid? --> Yes, LargePyramid1. (Correct)
+	Query = "(and (attribute ?G868 Green) (instance ?G868 Pyramid))",
+	test_KIF_query(Query).
+
+test_ask1 :- % Is there a green object? --> Yes, LargePyramid1. (Correct)
+	Query = "(and (attribute ?G868 Green) (instance ?G868 Object))",
+	test_KIF_query(Query).
+
+test_ask2 :- % Is there a green object on a block? --> Result = none, Unproven (Correct)
+	Query = "(and (attribute ?G868 Green) (instance ?G868 Object) (instance ?G939 Block) (on ?G868 ?G939))",
+	test_KIF_query(Query).
+
+test_sent4 :- % The large pyramid is on the red block.
+	Sent = "(on LargePyramid1 RedBlock1)",
+	test_KIF_assert(Sent).
+
+% now try test_ask2 again and it should work after test_sent4.
+% test_ask2.
+% Is there a green object on a block? --> G868 = LargePyramid1, G939 = RedBlock1 (Correct)
+
+test_ask3 :- % Is there a pyramid on a block --> X = LargePyramid1, Y = RedBlock1 (Correct)
+	Query = "(and (instance ?X Pyramid) (instance ?Y Block) (on ?X ?Y))",
+	test_KIF_query(Query).
+
+test_ask4 :- % Is there a large pyramid on a block --> Result = false (INCORRECT)
+	Query = "(and (instance ?X Pyramid) (attribute ?X Large) (instance ?Y Block) (on ?X ?Y))",
+	test_KIF_query(Query).
+
+test_ask5 :- % Is there a green pyramid on a block --> X = LargePyramid1, Y = RedBlock1 (Correct)
+	Query = "(and (instance ?X Pyramid) (attribute ?X Green) (instance ?Y Block) (on ?X ?Y))",
+	test_KIF_query(Query).
+
+test_ask6 :- % Is there a green object on a block? --> Result = false (INCORRECT)
+	Query = "(and (instance ?X Object) (attribute ?X Green) (instance ?Y Block) (on ?X ?Y))",
+	test_KIF_query(Query).
+
+test_ask7 :- % Is there a tower? --> X = Tower1 (Correct)
+	Query = "(instance ?X Tower)",
+	test_KIF_query(Query).
+
+test_ask8 :- % What is TowerBlockBase on? --> X = TheTable1 (Correct)
+	Query = "(on TowerBlockBase ?x)",
+	test_KIF_query(Query).
+
+test_ask9 :- % What is TowerBlockMiddle on? --> Result = none, Unproven (INCORRECT)
+	Query = "(on TowerBlockMiddle ?x)",
+	test_KIF_query(Query).
+
+test_ask10 :- % What is TowerBlockTop on? --> Result = none, Unproven (INCORRECT)
+	Query = "(on TowerBlockUpper ?x)",
+	test_KIF_query(Query).
+
+test_ask11 :- % What is in Tower1? --> X = TowerBlockBase, X = TowerBlockMiddle, X = TowerBlockUpper
+	Query = "(member ?X Tower1)",
+	test_KIF_query(Query).
+
+test_ask12 :- % What is made of wood? --> X = skf... (INCORRECT)
+	Query = "(material ?X BlocksWorldWood)",
+	test_KIF_query(Query).
+
+test_ask13 :- % What is made of iron? --> X = skf... (INCORRECT)
+	Query = "(material ?X BlocksWorldIron)",
+	test_KIF_query(Query).
+
+test_ask14 :- % What is made of concrete? --> X = skf... (INCORRECT)
+	Query = "(material ?X BlocksWorldConcrete)",
+	test_KIF_query(Query).
+

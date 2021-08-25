@@ -1,0 +1,299 @@
+@ARTICLE(ENUMSET1.ABS,
+      AUTHOR  = {Trybulec, Andrzej},
+      TITLE   = {Enumerated Sets},
+      JOURNAL = {Formalized Mathematics},
+      YEAR    = {1990},
+      NUMBER  = {{\bf 1}},
+      VOLUME  = 1,
+      PAGES   = {25--34})
+
+@ARTICLE(ZFMISC_1.ABS,
+      AUTHOR  = {Byli{\'n}ski, Czes{\l}aw},
+      TITLE   = {Some Basic Properties of Sets},
+      JOURNAL = {Formalized Mathematics},
+      YEAR    = {1990},
+      NUMBER  = {{\bf 1}},
+      VOLUME  = 1,
+      PAGES   = {47--53})
+
+@ARTICLE(FUNCT_1.ABS,
+      AUTHOR  = {Byli{\'n}ski, Czes{\l}aw},
+      TITLE   = {Functions and Their Basic Properties},
+      JOURNAL = {Formalized Mathematics},
+      YEAR    = {1990},
+      NUMBER  = {{\bf 1}},
+      VOLUME  = 1,
+      PAGES   = {55--65})
+
+@ARTICLE(SUBSET_1.ABS,
+      AUTHOR  = {Trybulec, Zinaida},
+      TITLE   = {Properties of Subsets},
+      JOURNAL = {Formalized Mathematics},
+      YEAR    = {1990},
+      NUMBER  = {{\bf 1}},
+      VOLUME  = 1,
+      PAGES   = {67--71})
+
+@ARTICLE(RELAT_1.ABS,
+      AUTHOR  = {Woronowicz, Edmund},
+      TITLE   = {Relations and Their Basic Properties},
+      JOURNAL = {Formalized Mathematics},
+      YEAR    = {1990},
+      NUMBER  = {{\bf 1}},
+      VOLUME  = 1,
+      PAGES   = {73--83})
+
+@ARTICLE(ORDINAL1.ABS,
+      AUTHOR  = {Bancerek, Grzegorz},
+      TITLE   = {The Ordinal Numbers},
+      JOURNAL = {Formalized Mathematics},
+      YEAR    = {1990},
+      NUMBER  = {{\bf 1}},
+      VOLUME  = 1,
+      PAGES   = {91--96})
+
+@ARTICLE(MCART_1.ABS,
+      AUTHOR  = {Trybulec, Andrzej},
+      TITLE   = {Tuples, Projections and {C}artesian Products},
+      JOURNAL = {Formalized Mathematics},
+      YEAR    = {1990},
+      NUMBER  = {{\bf 1}},
+      VOLUME  = 1,
+      PAGES   = {97--105})
+
+@ARTICLE(WELLORD1.ABS,
+      AUTHOR  = {Bancerek, Grzegorz},
+      TITLE   = {The Well Ordering Relations},
+      JOURNAL = {Formalized Mathematics},
+      YEAR    = {1990},
+      NUMBER  = {{\bf 1}},
+      VOLUME  = 1,
+      PAGES   = {123--129})
+
+@ARTICLE(SETFAM_1.ABS,
+      AUTHOR  = {Padlewska, Beata},
+      TITLE   = {Families of Sets},
+      JOURNAL = {Formalized Mathematics},
+      YEAR    = {1990},
+      NUMBER  = {{\bf 1}},
+      VOLUME  = 1,
+      PAGES   = {147--152})
+
+@ARTICLE(FUNCT_2.ABS,
+      AUTHOR  = {Byli{\'n}ski, Czes{\l}aw},
+      TITLE   = {Functions from a Set to a Set},
+      JOURNAL = {Formalized Mathematics},
+      YEAR    = {1990},
+      NUMBER  = {{\bf 1}},
+      VOLUME  = 1,
+      PAGES   = {153--164})
+
+@ARTICLE(FINSET_1.ABS,
+      AUTHOR  = {Darmochwa{\l}, Agata},
+      TITLE   = {Finite Sets},
+      JOURNAL = {Formalized Mathematics},
+      YEAR    = {1990},
+      NUMBER  = {{\bf 1}},
+      VOLUME  = 1,
+      PAGES   = {165--167})
+
+@ARTICLE(RELSET_1.ABS,
+      AUTHOR  = {Woronowicz, Edmund},
+      TITLE   = {Relations Defined on Sets},
+      JOURNAL = {Formalized Mathematics},
+      YEAR    = {1990},
+      NUMBER  = {{\bf 1}},
+      VOLUME  = 1,
+      PAGES   = {181--186})
+
+@ARTICLE(LATTICES.ABS,
+      AUTHOR  = {{\.{Z}}ukowski, Stanis{\l}aw},
+      TITLE   = {Introduction to Lattice Theory},
+      JOURNAL = {Formalized Mathematics},
+      YEAR    = {1990},
+      NUMBER  = {{\bf 1}},
+      VOLUME  = 1,
+      PAGES   = {215--222})
+
+@ARTICLE(PRE_TOPC.ABS,
+      AUTHOR  = {Padlewska, Beata and Darmochwa{\l}, Agata},
+      TITLE   = {Topological Spaces and Continuous Functions},
+      JOURNAL = {Formalized Mathematics},
+      YEAR    = {1990},
+      NUMBER  = {{\bf 1}},
+      VOLUME  = 1,
+      PAGES   = {223--230})
+
+@ARTICLE(TOPS_1.ABS,
+      AUTHOR  = {Wysocki, Miros{\l}aw and Darmochwa{\l}, Agata},
+      TITLE   = {Subsets of Topological Spaces},
+      JOURNAL = {Formalized Mathematics},
+      YEAR    = {1990},
+      NUMBER  = {{\bf 1}},
+      VOLUME  = 1,
+      PAGES   = {231--237})
+
+@ARTICLE(TOPS_2.ABS,
+      AUTHOR  = {Darmochwa{\l}, Agata},
+      TITLE   = {Families of Subsets, Subspaces and Mappings in Topological Spaces},
+      JOURNAL = {Formalized Mathematics},
+      YEAR    = {1990},
+      VOLUME  = 1,
+      PAGES   = {257--261},
+      NUMBER  = {{\bf 2}})
+
+@ARTICLE(WELLORD2.ABS,
+      AUTHOR  = {Bancerek, Grzegorz},
+      TITLE   = {Zermelo Theorem and Axiom of Choice},
+      JOURNAL = {Formalized Mathematics},
+      YEAR    = {1990},
+      VOLUME  = 1,
+      PAGES   = {265--267},
+      NUMBER  = {{\bf 2}})
+
+@ARTICLE(COMPTS_1.ABS,
+      AUTHOR  = {Darmochwa{\l}, Agata},
+      TITLE   = {Compact Spaces},
+      JOURNAL = {Formalized Mathematics},
+      YEAR    = {1990},
+      VOLUME  = 1,
+      PAGES   = {383--386},
+      NUMBER  = {{\bf 2}})
+
+@ARTICLE(ORDERS_2.ABS,
+      AUTHOR  = {Trybulec, Wojciech A. and Bancerek, Grzegorz},
+      TITLE   = {Kuratowski -- {Z}orn Lemma},
+      JOURNAL = {Formalized Mathematics},
+      YEAR    = {1990},
+      VOLUME  = 1,
+      PAGES   = {387--393},
+      NUMBER  = {{\bf 2}})
+
+@ARTICLE(CONNSP_2.ABS,
+      AUTHOR  = {Padlewska, Beata},
+      TITLE   = {Locally Connected Spaces},
+      JOURNAL = {Formalized Mathematics},
+      YEAR    = {1991},
+      VOLUME  = 2,
+      PAGES   = {93--96},
+      NUMBER  = {{\bf 1}})
+
+@ARTICLE(FILTER_1.ABS,
+      AUTHOR  = {Bancerek, Grzegorz},
+      TITLE   = {Filters -- Part {II}. {Q}uotient Lattices Modulo Filters and Direct Product of Two Lattices},
+      JOURNAL = {Formalized Mathematics},
+      YEAR    = {1991},
+      VOLUME  = 2,
+      PAGES   = {433--438},
+      NUMBER  = {{\bf 3}})
+
+@ARTICLE(LATTICE3.ABS,
+      AUTHOR  = {Bancerek, Grzegorz},
+      TITLE   = {Complete Lattices},
+      JOURNAL = {Formalized Mathematics},
+      YEAR    = {1991},
+      VOLUME  = 2,
+      PAGES   = {719--725},
+      NUMBER  = {{\bf 5}})
+
+@ARTICLE(TMAP_1.ABS,
+      AUTHOR  = {Karno, Zbigniew},
+      TITLE   = {Continuity of Mappings over the Union  of Subspaces},
+      JOURNAL = {Formalized Mathematics},
+      YEAR    = {1992},
+      VOLUME  = 3,
+      PAGES   = {1--16},
+      NUMBER  = {{\bf 1}})
+
+@ARTICLE(TEX_2.ABS,
+      AUTHOR  = {Karno, Zbigniew},
+      TITLE   = {Maximal Discrete Subspaces of Almost Discrete Topological Spaces},
+      JOURNAL = {Formalized Mathematics},
+      YEAR    = {1993},
+      VOLUME  = 4,
+      PAGES   = {125--135},
+      NUMBER  = {{\bf 1}})
+
+
+@MISC{XBOOLE_0.MIZ,
+  AUTHOR = {Committee, Library},
+  TITLE = {Boolean Properties of Sets --- Definitions},
+  DAY = {06},
+  MONTH = {April},
+  YEAR = {2002},
+  ADDRESS1 = {Association of Mizar Users}}
+
+@MISC{XBOOLE_1.MIZ,
+  AUTHOR = {Committee, Library},
+  TITLE = {Boolean Properties of Sets --- Theorems},
+  SECTION1 = {Main Part},
+  SECTION2 = {Appendix},
+  SECTION3 = {Appendix 2},
+  DAY = {08},
+  MONTH = {April},
+  YEAR = {2002},
+  ADDRESS1 = {Association of Mizar Users}}
+
+@ARTICLE(YELLOW_0.ABS,
+      AUTHOR  = {Bancerek, Grzegorz},
+      TITLE   = {Bounds in Posets and Relational Substructures},
+      JOURNAL = {Formalized Mathematics},
+      YEAR    = {1997},
+      VOLUME  = 6,
+      PAGES   = {81--91},
+      NUMBER  = {{\bf 1}})
+
+@ARTICLE(WAYBEL_0.ABS,
+      AUTHOR  = {Bancerek, Grzegorz},
+      TITLE   = {Directed Sets, Nets, Ideals, Filters, and Maps},
+      JOURNAL = {Formalized Mathematics},
+      YEAR    = {1997},
+      VOLUME  = 6,
+      PAGES   = {93--107},
+      NUMBER  = {{\bf 1}})
+
+@ARTICLE(YELLOW_1.ABS,
+      AUTHOR  = {Grabowski, Adam and Milewski, Robert},
+      TITLE   = {Boolean Posets, Posets under Inclusion and    Products of Relational Structures},
+      JOURNAL = {Formalized Mathematics},
+      YEAR    = {1997},
+      VOLUME  = 6,
+      PAGES   = {117--121},
+      NUMBER  = {{\bf 1}})
+
+@ARTICLE(YELLOW_6.ABS,
+      AUTHOR  = {Trybulec, Andrzej},
+      TITLE   = {{M}oore-{S}mith Convergence},
+      JOURNAL = {Formalized Mathematics},
+      YEAR    = {1997},
+      VOLUME  = 6,
+      PAGES   = {213--225},
+      NUMBER  = {{\bf 2}})
+
+@ARTICLE(WAYBEL_7.ABS,
+      AUTHOR  = {Bancerek, Grzegorz},
+      TITLE   = {Prime Ideals and Filters},
+      JOURNAL = {Formalized Mathematics},
+      YEAR    = {1997},
+      VOLUME  = 6,
+      PAGES   = {241--247},
+      NUMBER  = {{\bf 2}})
+
+@ARTICLE(WAYBEL_9.ABS,
+      AUTHOR  = {Korni{\l}owicz, Artur},
+      TITLE   = {On the Topological Properties of Meet-Continuous Lattices},
+      JOURNAL = {Formalized Mathematics},
+      YEAR    = {1997},
+      VOLUME  = 6,
+      PAGES   = {269--277},
+      NUMBER  = {{\bf 2}})
+
+@ARTICLE(YELLOW19.ABS,
+      AUTHOR  = {Bancerek, Grzegorz and Endou, Noboru and Sakai, Yuji},
+      TITLE   = {On the Characterizations of Compactness},
+      JOURNAL = {Formalized Mathematics},
+      YEAR    = {2001},
+      VOLUME  = 9,
+      PAGES   = {733--738},
+      NUMBER  = {{\bf 4}})
+

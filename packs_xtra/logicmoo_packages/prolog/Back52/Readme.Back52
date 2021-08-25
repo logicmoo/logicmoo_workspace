@@ -1,0 +1,177 @@
+
+Here is our release of the software of Back V5.2.
+Please read the following carefully; things have changed since V4.4
+(compared to V5.0, the installation procedure has not changed, though).
+
+IMPORTANT:	
+    Before downloading and/or using the Back system, read the
+    license agreement in file 'License.Back5'.
+
+We recommend to read also:
+ -  Syntax.Back5: 	syntax of Back V5 (compared to V4)
+ -  WhatIsNew.Back52:	changes of V5.2 wrt. previous versions
+ 
+You should have received the following files:
+
+*********************************************************
+
+Readme.Back52		% This Info
+BACK-V5.intro		% Info on the BACK Project
+License.Back5		% License Agreement for Downloading/Using Back
+InstallQUI.Back52	% Installation File (Quintus Version)
+InstallSWI.Back52	% Installation File (SWI Version)
+WhatIsNew.Back52	% Documentation of changes wrt. V5.2
+Syntax.Back5            % Documentation of syntax of Back V5
+			% (compared to V4)
+BACK-V5.ps		% Tutorial and Manual for Back V5
+ 
+------------ TBox/ ABox Files ---------------------------
+
+backops.pl		% operator definitions
+dynamic.quintus		% dynamic predicate decls for Quintus-Prolog
+quintus.library         % load file for used Quintus libary files
+ 
+tbox1.pl 		% TBox and IBox
+tbox2.pl
+
+btl.pl 			% Term language interface
+ 
+abox.pl 		% ABox
+
+util.pl			% Utility file
+
+------------ Quintus Libraries --------------------------
+
+Subdirectory libraries	% contains Quintus libraries for usage
+			% of BACK under SWI Prolog
+			% Note the copyright notice in each file
+
+basics.pl
+ordsets.pl
+lists.pl
+sets.pl
+bitsets.pl
+between.pl
+flatten.pl
+addportray.pl
+printlength.pl
+types.pl
+
+
+------------ Patch Files --------------------------------
+
+back.patch
+
+------------ Tests & Examples ---------------------------
+
+Subdirectory tests
+
+alltests.pl		      
+cmk.abox		      
+ibox_tests.pl	
+jantest.abox		
+jantest.iabox		
+jantest.retrieval	
+jantest.tbox
+macro_tests.pl
+revision_tests.pl
+role_tests.pl
+value_tests.pl
+feature_tests.pl
+b5tests.pl
+retrievaltests.pl
+displaytests.pl
+
+------------- Back 4 to Back 5 Syntax Converter ---------
+
+Subdirectory translate 
+
+cf. file translate/README 
+
+*********************************************************
+ 
+At the moment, Back 5.2 requires Quintus Prolog or SWI-Prolog to run.
+
+To install Back V5.2 with QUINTUS Prolog:
+
+ -  consult 'InstallQUI.Back52'.
+ 
+
+To install BACK V5.2 with SWI-Prolog:
+
+ -  invoke SWI prolog with the following command line options:
+	'prolog  -L8000 -G8000 -T8000 -A8000'
+
+ -  consult 'InstallSWI.Back52'.
+ 
+
+In both cases, to compile BACK call ':- back.'
+
+
+*********************************************************
+ 
+To get more information on how BACK works:
+
+ -  see Syntax Reference Card;
+
+ -  see the Manual and Tutorial for Back V5 (file 'Back5-Tutorial.ps');
+
+ -  have a look into the test files sent with the system 
+    (subdirectory tests/);
+
+ -  see descriptions of the previous Back 4.4 version, especially 
+
+    -  KIT Report 78 "Implementation of the BACK System Version 4"
+
+    -  KIT Report 75 "The BACK System Revisited"
+
+
+To see more examples running/ to see some abstract tests:
+ 
+ - If you just want to know whether (almost) everything is o.k.,
+   type 'backtest'; note that some tests will cause  ERROR or WARNING 
+   messages which is o.k. if afterwards the message 'xxx test succeeded' 
+   appears; all tests should succeed (despite it's indicated differently)
+
+ - If you are interested in single inferences, defined roles, revision
+   capabilities or retrieval functions take a look at the according test 
+   files and run them by calling the topmost Prolog goal; the files 
+   and their contents are as follows:
+     
+     cmk.abox    	: A sample TBox plus 30 ABox functionality checks
+			  including tests on abox revision and application of
+			  implication links 
+     ibox_tests.pl	: 15 tests of IBox Inferences
+     jantest.abox	: 14 tests of ABox Inferences  	
+     jantest.iabox      :  9 tests of application of implications to objects
+     jantest.retrieval	: two predicates testing retrieval and describe
+     jantest.tbox       : 28 tests of TBox Inferences
+     macro_tests.pl     :  4 tests using macros
+     revision_tests.pl  :  8 tests of pure TBox revision plus 
+                           4 tests of ABox adjusting after TBox revision
+     role_tests.pl	: a bunch of tests on defined roles
+     value_tests.pl	: a bunch of tests on attributes, numbers, and strings
+     feature_tests.pl   : testing the treatment of features
+     retrievaltests.pl  : 53 tests of the retrieval component
+     displaytests.pl    : 53 tests of displaying results
+
+
+
+Best regards,
+ 
+September 9, 1993
+
+the BACKs.
+ 
+*********************************************************
+ 
+
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,1 @@
+../minisat+_64-bit_static -A $1 | grep  MODEL  | perl -e 'while(<>) {@all = m/ v[0-9]+/g; print @all,"\n"}' 

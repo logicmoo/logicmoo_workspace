@@ -1,0 +1,6 @@
+
+"constructor."
+
+asks the user to enter an operator and declares this operator to be
+a constructor, if this is consistent with the current specification.
+

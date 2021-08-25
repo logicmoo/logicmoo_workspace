@@ -1,0 +1,390 @@
+========================================================================================================
+IMPORTANT / CRITICAL ISSUES AND TASKS TO DO FOR CELT NOW
+========================================================================================================
+
+EXTENSIONS FOR STATIVE VERBS: Provide easy-to-use extensions for                  [9/06/02]
+stative verbs.
+
+DOCUMENTATIONS ON HOW TO USE NEW EXTENSIONS AND WEB UPDATES ON PPT SLIDES, ETC.   [9/06/02]
+
+BETTER TRANSLATION WARNINGS. Long-term goal: all failures have intelligible
+error messages. Near term goals:
+
+1. Word not in lexicon for part of speech                                         [9/13/02]           
+2. Word is wrong tense or number                                                  [9/20/02]
+
+
+QUANTIFIERS AND LOGICAL CONNECTIVES. (this year)                                  [10/4/02]
+
+INTEGRATION WITH THEOREM PROVER. (this year)
+--basic program integration                                                       [10/11/02]
+--CELT retention of answer templates when parsing questions                       [10/18/02]
+--proper reasoning with all of SUMO present                                       [10/25/02]
+
+========================================================================================================
+IMPORTANT / CRITICAL ISSUES AND TASKS TO EXTEND CELT DURING THE DAS PROJECT
+========================================================================================================
+
+ONTOLOGY EXTENSIONS FOR NIGHT-VISION DOMAIN. (this year)
+
+WORD-SENSE DISAMBIGUATION HEURISTICS. (next year)
+
+POST-EDITING TO CORRECT WRONG WORD SENSE CHOSEN. (next year)
+
+========================================================================================================
+MODERATELY IMPORTANT ISSUES AND TASKS TO DO FOR CELT
+========================================================================================================
+
+HANDLE COPULA 'X is Y' where Y is a noun should not generate code like (instance ?event instance).
+
+CREATE SEPARATE SUMO/6 CLAUSES FOR EACH SYNONYM OF A WORDNET WORDSENSE:
+
+Problem: 'John drives to the bank.' is parsed but 'John drives to the store.' is not!
+Surface Cause: The word sense of 'store' is of a 'storage of items' not a 'shop' thus
+it is considered a 'time' and there is no entry for the preposition 'to' with a 'time'.
+The latter has been fixed now but the real question is why did it not recognize 'store'
+as the 'shop' sense of 'store'?
+
+The issue is that the Perl program that maps from nouns or verbs
+to sumo/6 clauses only uses the *first* synonym for that word sense
+to index the clause.
+
+Here is the original WordNet entry in WordNetMappings-top:
+
+03325022 06 n 02 shop 0 store 0 038 @ 02986968 n 0000 ~ 02250307 n 0000 ~ 02268715 n 0000 ~ 02314365 n 0000 ~ 02316600 n 0000 ~ 02320393 n 0000 ~ 02349439 n 0000 ~ 02358942 n 0000 ~ 02378820 n 0000 ~ 02418164 n 0000 ~ 02448030 n 0000 ~ 02457495 n 0000 ~ 02483290 n 0000 ~ 02486679 n 0000 ~ 02494265 n 0000 ~ 02517878 n 0000 ~ 02553625 n 0000 ~ 02609978 n 0000 ~ 02701509 n 0000 ~ 02753970 n 0000 ~ 02799217 n 0000 ~ 02809478 n 0000 ~ 02882707 n 0000 ~ 02999914 n 0000 ~ 03075122 n 0000 ~ 03098300 n 0000 ~ 03108057 n 0000 ~ 03110746 n 0000 ~ 03134821 n 0000 ~ 03229145 n 0000 ~ 03271451 n 0000 ~ 03323434 n 0000 %p 03326163 n 0000 ~ 03378536 n 0000 ~ 03399509 n 0000 ~ 03498699 n 0000 ~ 03510886 n 0000 ~ 03525033 n 0000 | a mercantile establishment for the retail sale of goods or services; "he bought it at a shop on Cape Cod" &%Corporation+  
+
+Note there are two synonyms for this word sense: 'show' and 'store'. The Perl program
+takes just the first and outputs this clause:
+
+sumo('Corporation',subsumingExternalConcept,'shop',103325022 ,noun,
+     "a mercantile establishment for the retail sale of goods or services; 'he bought it at a shop on Cape Cod'").
+
+and there is no other clause produced for the other synonyms, in this case 'store'. Thus
+the first word sense for 'store' is not entered, allowing the second word sense to be the
+first meaning selected for 'store'. That sense is a fund, or items set aside as a 'store'. That
+in turn maps to SUMO 'Keeping'.
+
+Thus the WordNet imported entries for CELT's lexicon are:
+
+...
+noun_in_lexicon(store,time,neuter,count,singular,'Keeping',109625793).
+...
+noun_in_lexicon(shop,object,neuter,count,singular,'Corporation',103325022).
+...
+
+and 'store' does not map to the shop-kind of store as that meaning was never
+listed.
+
+The heuristics that divvy up objects into the CELT-required categories of 'time', 'object', or
+'person' map SUMO 'Keeping' to 'time' as 'Keeping' is in the category 'Process' or 'TimeMeasure'.
+I believe I added 'Process' to cover time designations as 'sunrise', 'dawning', 'arrival',
+'finishing', etc.
+
+So that's the problem. What's the solution?
+
+I think if I changed the Prolog importing code to add new SUMO clauses for synoynms
+of a word sense that would fix it. I can do that with the wn_s list. For example, it has
+two entries for word sense 103325022 showing both synoynms:
+
+s(103325022,1,'shop',n,1,1).
+s(103325022,2,'store',n,1,1).
+
+so upon finding the sumo/6 word sense entry with only 'shop' listed I could add other
+entries for the other synonyms, in this case only 'store'.
+
+REGRESSION TESTING: Store list of words that are input to each parse
+test and then the parse results in a separate file. Write comparison
+code to compare last version's results with current results and flag
+all changes for human review.
+
+EXTENSIONS FOR NOUNS: Provide easy-to-use extensions for
+nouns when they require special SUMO code generation (e.g., 'pilot'
+and other 'role' nouns).
+
+EXTENSIONS FOR ADJECTIVES: Provide easy-to-use extensions for
+adjectives when they require special SUMO code generation.
+
+EXTENSIONS FOR ADVERBS: Provide easy-to-use extensions for
+adverbs when they require special SUMO code generation.
+
+COMPOUND WORD NOUNS WITH APOSTROPHE S HANDLED AS POSSESSIVES: Compound
+nouns, such as the common noun "bull's eye" or the proper noun "Hobson's Choice"
+are treated as possessives and not as the multi-word nouns they are.
+
+MISSING TRANSLATION WARNINGS FOR WORD NOT IN LEXICON FOR PART OF SPEECH:
+
+Words not in the lexicon for one part of speech are not reported as
+missing if the word appears in another class. For example,
+
+'The tree is green.' was initially not parsed as 'tree' does not
+appear in the noun lexicon, but no missing lexicon entry is reported
+as it does appear in the verb lexicon in these entries:
+
+  verb_in_lexicon(trees,tree,transitive,singular,event,simple,'Pursuing',200777894).
+  verb_in_lexicon(trees,tree,transitive,singular,event,simple,'Killing',200777894).
+
+We would like a translation warning along the lines of:
+
+  WARNING: Could not parse 'The tree is green.' as 'tree' does not appear as a noun in the
+  lexicon. It does appear as a verb, but not as a noun.
+
+thus explaining the absent noun and the reason why 'The tree is green.' does not
+parse at the present time (the noun 'tree' was not part of the noun lexicon
+until I added it 5/24/02, now it is there in 'lexicon.pl', to replicate this
+error remove it from there and anywhere it may now be in celt_noun_lexicon.pl).
+
+QUERIES WITH AUXILIARIES DO NOT ALLOW COMPOUND WORD VERBS. Currently
+compound word verbs in queries with auxiliaries are not handled,
+although they are handled in queries without auxiliaries.
+
+   'He fills up the car.' is OK
+   'Does he fill up the car?' is not parsed but should be.
+   'Who fills up the car?' is OK
+
+DATES AND TIMES. Do not need to handle all formats, we can specify a
+specific format.
+
+  -- Ontological issues.
+
+  -- Reader / Formatting issues can be handled by restricting formats.
+
+========================================================================================================
+ISSUES OF LESSER IMPORTANCE AND TASKS TO DO FOR CELT -- CAN WAIT FOR A WHILE, NICE TO FIX
+========================================================================================================
+
+HEURISTICS FOR ALLOWING AUTOMATIC PROPER NOUN INTRODUCTION: Consider
+assuming proper nouns for capitalized unknown words and add a
+translation warning for the assumptions made. Infer proper nouns as
+people automatically in sentences like 'Tom gave the card to Sarah.'
+Note this heuristic is useful but this could be wrong, e.,g., 'Readers
+Digest sent a card to Sarah.' This heuristic would also have to be
+coupled with suppressing proper nouns for people imported from
+WordNet.
+
+INTERFERENCE BETWEEN SWI XPCE AND GULP READER. GULP reader seems to choke when
+XPCE tries to load GUI tracer, as it seems the GULP reader is trying to translate
+the file being autoloaded and hits an end-of-file marker.
+
+POSTPROCESSING TO SIMPLIFY GENERATED SUMO CODE. Handling of
+subordinate clauses in generating code: an (equal ?var1 ?var2) clause
+is generated. Postprocessing could eliminate this and produce code
+closer to what a human would write.
+
+POSITION OF PARTICLE IN PHRASAL VERBS--The particle must follow the verb, whereas in English it can also
+appear at the end of a sentence. For example, CELT accepts: 
+
+   'He fills up the car.' but not 'He fills the car up.'
+
+DYNAMIC LABELS: only X, Y, and Z are allowed. Would like to have a wider range of variables.
+
+PROBLEMS WITH 'TO': TEMPORAL EXPRESSIONS FROM...TO. These temporal
+expressions are not yet handled in CELT. From...until is a work around
+for the time.
+
+========================================================================================================
+ISSUES OF LESSER IMPORTANCE WHERE WE NEED TO SEEK CLARIFICATION -- CAN WAIT FOR A WHILE, NICE TO CLARIFY
+========================================================================================================
+
+NUMBER OF MODIFIERS. ACE appears to allow no chaining of adjectives
+and only one modifier. CELT is set up similarly. Issues: (1) What does
+ACE do? (2) Is this limit OK for CELT? [OK to limit for now.]
+
+NUMBER OF ADJUNCTS. ACE appears to allow any number of adjuncts. Is
+this really the case? CELT limits the number to 3. [OK to limit for
+now.]
+
+NUMBER OF EMBEDDED RELATIVE SENTENCES. ACE appears to allow any number
+although all examples show only one level of embedding. CELT limits
+the amount of embedding to one level explicitly. Is this what ACE
+does? Note that more than one embedded sentence can still appear, as
+in "The bank that is Swiss lends money that is useful to John." [OK to
+limit for now.]
+
+CAN A POSSESSIVE AND AN OF-PREPOSITIONAL PHRASE APPEAR TOGETHER IN AN
+NP? It is not clear in ACE whether a sentence like 'John's card of the
+bank' is allowed. In CELT we allow only one or the other, thus either
+'John's card' or 'card of the bank' but not both together. [OK to
+limit for now.]
+
+INTERACTION OF RELATIVE SENTENCES AND QUERIES.  With no restrictions
+the following questions would be allowed:
+
+    "Who is the boy who enters the bank?"
+    "What does John give to the man that inserts the card?"
+    "Whom does Mary give the book from the bank to?"
+    "Which card does Joe insert into the ATM which accepts the card?"
+
+  These are awkward and would be hard to parse as we would have two
+  different kind of gap constructions within the same sentence: one
+  for relative clauses and one for WH-query words.
+
+  To avoid these problems CELT does not allow relative sentences to be
+  embedded within queries.  It is not clear whether ACE would allow
+  this but I could not find any examples in the manual.
+
+  What does ACE do?
+
+CHECK THERE IS NO UNNECESSARY BACKTRACKING IN PARSING NOUN PHRASES:
+Trace phrase/3 to see all failed calls where different nouns are
+tried in multi-word noun phrases. It appears that for nouns like
+'city' that when the noun part is parsed the other words in multi-word
+phrases starting with 'city' are *inserted* into the sentence to
+parse, for example...
+
+[debug] 98 ?- eng2log('The city is in Delaware.').
+ T Call: (8) phrase(sentence(_G995), [the, city, is, in, 'Delaware'])
+ T Call: (13) phrase([active], [in, 'Delaware'], _G2499)
+ T Fail: (13) phrase([active], [in, 'Delaware'], _G2499)
+ T Call: (13) phrase([well], [in, 'Delaware'], _G2499)
+ T Fail: (13) phrase([well], [in, 'Delaware'], _G2499)
+ T Call: (13) phrase([born], [in, 'Delaware'], _G2499)
+ T Fail: (13) phrase([born], [in, 'Delaware'], _G2499)
+ T Call: (13) phrase([full], [in, 'Delaware'], _G2499)
+ T Fail: (13) phrase([full], [in, 'Delaware'], _G2499)
+ T Call: (13) phrase([active], [in, 'Delaware'], _G2499)
+ T Fail: (13) phrase([active], [in, 'Delaware'], _G2499)
+ T Call: (13) phrase([well], [in, 'Delaware'], _G2499)
+ T Fail: (13) phrase([well], [in, 'Delaware'], _G2499)
+ T Call: (13) phrase([born], [in, 'Delaware'], _G2499)
+ T Fail: (13) phrase([born], [in, 'Delaware'], _G2499)
+ T Call: (13) phrase([full], [in, 'Delaware'], _G2499)
+ T Fail: (13) phrase([full], [in, 'Delaware'], _G2499)
+ T Call: (13) phrase([active], [in, 'Delaware'], _G2499)
+ T Fail: (13) phrase([active], [in, 'Delaware'], _G2499)
+ T Call: (13) phrase([well], [in, 'Delaware'], _G2499)
+ T Fail: (13) phrase([well], [in, 'Delaware'], _G2499)
+ T Call: (13) phrase([born], [in, 'Delaware'], _G2499)
+ T Fail: (13) phrase([born], [in, 'Delaware'], _G2499)
+ T Call: (13) phrase([full], [in, 'Delaware'], _G2499)
+ T Fail: (13) phrase([full], [in, 'Delaware'], _G2499)
+ T Call: (14) phrase([planning], [is, in, 'Delaware'], _G2014)
+ T Fail: (14) phrase([planning], [is, in, 'Delaware'], _G2014)
+ T Call: (14) phrase([hall], [is, in, 'Delaware'], _G2002)
+ T Fail: (14) phrase([hall], [is, in, 'Delaware'], _G2002)
+ T Call: (14) phrase([university], [is, in, 'Delaware'], _G2020)
+ T Fail: (14) phrase([university], [is, in, 'Delaware'], _G2020)
+ T Call: (14) phrase([desk], [is, in, 'Delaware'], _G2002)
+ T Fail: (14) phrase([desk], [is, in, 'Delaware'], _G2002)
+ T Call: (14) phrase([state], [is, in, 'Delaware'], _G2005)
+ T Fail: (14) phrase([state], [is, in, 'Delaware'], _G2005)
+ T Call: (14) phrase([council], [is, in, 'Delaware'], _G2011)
+ T Fail: (14) phrase([council], [is, in, 'Delaware'], _G2011)
+ T Call: (14) phrase([line], [is, in, 'Delaware'], _G2002)
+ T Fail: (14) phrase([line], [is, in, 'Delaware'], _G2002)
+ T Call: (14) phrase([center], [is, in, 'Delaware'], _G2008)
+ T Fail: (14) phrase([center], [is, in, 'Delaware'], _G2008)
+ T Call: (14) phrase([district], [is, in, 'Delaware'], _G2014)
+ T Fail: (14) phrase([district], [is, in, 'Delaware'], _G2014)
+ T Call: (14) phrase([limit], [is, in, 'Delaware'], _G2005)
+ T Fail: (14) phrase([limit], [is, in, 'Delaware'], _G2005)
+ T Call: (14) phrase([editor], [is, in, 'Delaware'], _G2008)
+ T Fail: (14) phrase([editor], [is, in, 'Delaware'], _G2008)
+ T Call: (14) phrase([father], [is, in, 'Delaware'], _G2008)
+ T Fail: (14) phrase([father], [is, in, 'Delaware'], _G2008)
+ T Call: (14) phrase([man], [is, in, 'Delaware'], _G1999)
+ T Fail: (14) phrase([man], [is, in, 'Delaware'], _G1999)
+ T Call: (14) phrase([slicker], [is, in, 'Delaware'], _G2011)
+ T Fail: (14) phrase([slicker], [is, in, 'Delaware'], _G2011)
+ T Call: (15) phrase([planning], [is, in, 'Delaware'], _G2014)
+ T Fail: (15) phrase([planning], [is, in, 'Delaware'], _G2014)
+ T Call: (15) phrase([hall], [is, in, 'Delaware'], _G2002)
+ T Fail: (15) phrase([hall], [is, in, 'Delaware'], _G2002)
+ T Call: (15) phrase([university], [is, in, 'Delaware'], _G2020)
+ T Fail: (15) phrase([university], [is, in, 'Delaware'], _G2020)
+ T Call: (15) phrase([desk], [is, in, 'Delaware'], _G2002)
+ T Fail: (15) phrase([desk], [is, in, 'Delaware'], _G2002)
+ T Call: (15) phrase([state], [is, in, 'Delaware'], _G2005)
+ T Fail: (15) phrase([state], [is, in, 'Delaware'], _G2005)
+ T Call: (15) phrase([council], [is, in, 'Delaware'], _G2011)
+ T Fail: (15) phrase([council], [is, in, 'Delaware'], _G2011)
+ T Call: (15) phrase([line], [is, in, 'Delaware'], _G2002)
+ T Fail: (15) phrase([line], [is, in, 'Delaware'], _G2002)
+ T Call: (15) phrase([center], [is, in, 'Delaware'], _G2008)
+ T Fail: (15) phrase([center], [is, in, 'Delaware'], _G2008)
+ T Call: (15) phrase([district], [is, in, 'Delaware'], _G2014)
+ T Fail: (15) phrase([district], [is, in, 'Delaware'], _G2014)
+ T Call: (15) phrase([limit], [is, in, 'Delaware'], _G2005)
+ T Fail: (15) phrase([limit], [is, in, 'Delaware'], _G2005)
+ T Call: (15) phrase([editor], [is, in, 'Delaware'], _G2008)
+ T Fail: (15) phrase([editor], [is, in, 'Delaware'], _G2008)
+ T Call: (15) phrase([father], [is, in, 'Delaware'], _G2008)
+ T Fail: (15) phrase([father], [is, in, 'Delaware'], _G2008)
+ T Call: (15) phrase([man], [is, in, 'Delaware'], _G1999)
+ T Fail: (15) phrase([man], [is, in, 'Delaware'], _G1999)
+ T Call: (15) phrase([slicker], [is, in, 'Delaware'], _G2011)
+ T Fail: (15) phrase([slicker], [is, in, 'Delaware'], _G2011)
+ T Call: (15) phrase([planning], [is, in, 'Delaware'], _G2014)
+ T Fail: (15) phrase([planning], [is, in, 'Delaware'], _G2014)
+ T Call: (15) phrase([hall], [is, in, 'Delaware'], _G2002)
+ T Fail: (15) phrase([hall], [is, in, 'Delaware'], _G2002)
+ T Call: (15) phrase([university], [is, in, 'Delaware'], _G2020)
+ T Fail: (15) phrase([university], [is, in, 'Delaware'], _G2020)
+ T Call: (15) phrase([desk], [is, in, 'Delaware'], _G2002)
+ T Fail: (15) phrase([desk], [is, in, 'Delaware'], _G2002)
+ T Call: (15) phrase([state], [is, in, 'Delaware'], _G2005)
+ T Fail: (15) phrase([state], [is, in, 'Delaware'], _G2005)
+ T Call: (15) phrase([council], [is, in, 'Delaware'], _G2011)
+ T Fail: (15) phrase([council], [is, in, 'Delaware'], _G2011)
+ T Call: (15) phrase([line], [is, in, 'Delaware'], _G2002)
+ T Fail: (15) phrase([line], [is, in, 'Delaware'], _G2002)
+ T Call: (15) phrase([center], [is, in, 'Delaware'], _G2008)
+ T Fail: (15) phrase([center], [is, in, 'Delaware'], _G2008)
+ T Call: (15) phrase([district], [is, in, 'Delaware'], _G2014)
+ T Fail: (15) phrase([district], [is, in, 'Delaware'], _G2014)
+ T Call: (15) phrase([limit], [is, in, 'Delaware'], _G2005)
+ T Fail: (15) phrase([limit], [is, in, 'Delaware'], _G2005)
+ T Call: (15) phrase([editor], [is, in, 'Delaware'], _G2008)
+ T Fail: (15) phrase([editor], [is, in, 'Delaware'], _G2008)
+ T Call: (15) phrase([father], [is, in, 'Delaware'], _G2008)
+ T Fail: (15) phrase([father], [is, in, 'Delaware'], _G2008)
+ T Call: (15) phrase([man], [is, in, 'Delaware'], _G1999)
+ T Fail: (15) phrase([man], [is, in, 'Delaware'], _G1999)
+ T Call: (15) phrase([slicker], [is, in, 'Delaware'], _G2011)
+ T Fail: (15) phrase([slicker], [is, in, 'Delaware'], _G2011)
+ T Call: (15) phrase([planning], [is, in, 'Delaware'], _G2014)
+ T Fail: (15) phrase([planning], [is, in, 'Delaware'], _G2014)
+ T Call: (15) phrase([hall], [is, in, 'Delaware'], _G2002)
+ T Fail: (15) phrase([hall], [is, in, 'Delaware'], _G2002)
+ T Call: (15) phrase([university], [is, in, 'Delaware'], _G2020)
+ T Fail: (15) phrase([university], [is, in, 'Delaware'], _G2020)
+ T Call: (15) phrase([desk], [is, in, 'Delaware'], _G2002)
+ T Fail: (15) phrase([desk], [is, in, 'Delaware'], _G2002)
+ T Call: (15) phrase([state], [is, in, 'Delaware'], _G2005)
+ T Fail: (15) phrase([state], [is, in, 'Delaware'], _G2005)
+ T Call: (15) phrase([council], [is, in, 'Delaware'], _G2011)
+ T Fail: (15) phrase([council], [is, in, 'Delaware'], _G2011)
+ T Call: (15) phrase([line], [is, in, 'Delaware'], _G2002)
+ T Fail: (15) phrase([line], [is, in, 'Delaware'], _G2002)
+ T Call: (15) phrase([center], [is, in, 'Delaware'], _G2008)
+ T Fail: (15) phrase([center], [is, in, 'Delaware'], _G2008)
+ T Call: (15) phrase([district], [is, in, 'Delaware'], _G2014)
+ T Fail: (15) phrase([district], [is, in, 'Delaware'], _G2014)
+ T Call: (15) phrase([limit], [is, in, 'Delaware'], _G2005)
+ T Fail: (15) phrase([limit], [is, in, 'Delaware'], _G2005)
+ T Call: (15) phrase([editor], [is, in, 'Delaware'], _G2008)
+ T Fail: (15) phrase([editor], [is, in, 'Delaware'], _G2008)
+ T Call: (15) phrase([father], [is, in, 'Delaware'], _G2008)
+ T Fail: (15) phrase([father], [is, in, 'Delaware'], _G2008)
+ T Call: (15) phrase([man], [is, in, 'Delaware'], _G1999)
+ T Fail: (15) phrase([man], [is, in, 'Delaware'], _G1999)
+ T Call: (15) phrase([slicker], [is, in, 'Delaware'], _G2011)
+ T Fail: (15) phrase([slicker], [is, in, 'Delaware'], _G2011)
+ T Fail: (8) phrase(sentence(_G995), [the, city, is, in, 'Delaware'])
+
+No
+
+Note: 'city slicker', 'city father', 'city limit', etc. are all in
+the noun lexicon.
+
+========================================================================================================
+ISSUES FOR OTHERS THAN BILL
+========================================================================================================
+
+WORDNET ADJECTIVES AND ADVERBS ARE NOT MAPPED TO SUMO: Too few
+adjectives and adverbs are mapped from WordNet currently.
+
+WORDNET WORDS FOR TIME NOT MAPPED TO SUMO: Too few words for times are
+mapped into SUMO at present.
+
+MAPPINGS FOR STATIVE VERBS: Check that stative verbs that do not map to SUMO relations are indeed
+correctly mapped.

@@ -1,0 +1,32 @@
+1. Introduction
+
+This is version 1.9 of CEC, which is short for Conditional Equational
+Completion. In order to use CEC you need Quintus Prolog. It is known to run
+under Quintus Prolog 3.1.1, on Sun workstations.
+
+
+2. Installing
+
+To install CEC change to directory ./obj/cec.  Edit the declarations at the
+beginning of the Makefile according to your setup. Issue the command
+
+% make cec
+
+and wait. Make will automatically generate CEC for the machine type you use
+(Sun 3 or Sun 4), the resulting executable is then called 'cec.sun3' or
+'cec.sun4'. A log of the output during generation is kept in 'cec.log'.
+Use 
+
+% make install
+
+to copy the executables to the ./bin directory and then
+
+% make cleanup
+
+to remove all intermediate files, uninstalled executables and logs from
+the ./obj/cec directory.
+
+
+3. Documentation
+
+Further documentation is in the ./doc/cec subdirectory.

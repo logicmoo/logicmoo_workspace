@@ -1,0 +1,19 @@
+module lists.
+
+cons []   : list .
+cons '.'  : (elem * list -> list).
+op append : (list * list -> list).
+op rev    : (list -> list). % op reverse : (list*list -> list).
+append([], l) = l.
+append([e | l1], l2) = [e | append(l1, l2)].
+
+rev([]) = [].
+rev([e | l]) = append(rev(l), [e]).
+
+/* linear version
+
+rev(l) = reverse(l,[]).
+
+reverse([x|xs],l) = reverse(xs,[x|l]).
+reverse([],xs) = xs.
+*/

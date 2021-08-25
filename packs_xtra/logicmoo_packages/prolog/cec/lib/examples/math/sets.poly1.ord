@@ -1,0 +1,4 @@
+order poly1 for sets
+	using poly1 for equality
+	+ poly1 for boolTriv
+	+ 'poly1.p' for commSemiGroup .

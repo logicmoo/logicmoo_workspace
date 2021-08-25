@@ -1,0 +1,7 @@
+ 
+"store(+StateName)."
+
+saves the current specification under the name "StateName". For later
+restoring use the command "load". The system remains unchanged except
+for this variable containing afterwards the current specification.
+Variable names are Prolog atoms.

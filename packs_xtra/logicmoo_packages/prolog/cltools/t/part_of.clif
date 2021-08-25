@@ -1,0 +1,36 @@
+
+(cl-comment 'axioms'
+         (forall (x) (a x))
+         (forall (?x ?y ?z)
+                 (if (and (part_of ?x ?z)
+                          (part_of ?z ?y))
+                     (part_of ?x ?y)))
+)
+(cl-comment 'facts'
+  (part_of a b)
+  (part_of b c)
+  (part_of foo bar t1)
+)
+(cl-comment 'test'
+            (and (a foo)
+                 (= z z)
+                 (part_of a c)))
+
+
+
+(forall (a b)
+ (iff (part_of a b)
+(has_part b a)))
+
+(forall (a b)
+ (if (part_of a b)
+  (and (instance a)(instance b))))
+
+
+(forall (student course)
+        (if (and (enrolled student course)
+                 (forall (exam)
+                         (and (has_exam course exam)
+                              (passed student exam))))
+            (passed_all_exams_in student course)))
+

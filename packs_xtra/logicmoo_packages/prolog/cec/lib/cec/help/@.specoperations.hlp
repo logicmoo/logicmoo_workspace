@@ -1,0 +1,11 @@
+
+Operations on Specifications
+----------------------------
+
+As CEC is planned to be an experimental system for specification (program)
+development it offers several operations for combining specifications. The
+operations  include the  renaming of  operator  and  sort  names  (cf. the 
+CEC-command "renameSpec")  as well as the union of two specifications (cf. 
+the CEC-command "combineSpecs").  With  these  primitive  operations  more 
+complex ones,  such as passing  actual parameters to specification modules 
+can be derived.

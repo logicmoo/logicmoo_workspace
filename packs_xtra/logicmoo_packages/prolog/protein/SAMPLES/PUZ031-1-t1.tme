@@ -1,0 +1,269 @@
+%--------------------------------------------------------------------------
+% File     : PUZ031=SteamR-1 : TPTP v1.2.1. Released v1.0.0.
+% Domain   : Puzzles
+% Problem  : Schubert's Steamroller
+% Version  : 
+% English  : Wolves, foxes, birds, caterpillars, and snails are animals, 
+%            and there are some of each of them. Also there are some 
+%            grains, and grains are plants. Every animal either likes 
+%            to eat all plants or all animals much smaller than itself 
+%            that like to eat some plants.
+%            Caterpillars and snails are much smaller than birds, which 
+%            are much smaller than foxes, which in turn are much smaller 
+%            than wolves. Wolves do not like to eat foxes or grains, while 
+%            birds like to eat caterpillars but not snails. Caterpillars 
+%            and snails like to eat some plants. Therefore there 
+%            is an animal that likes to eat a grain eating animal.
+
+% Refs     : Stickel M. (1986), Schubert's Steamroller Problem: 
+%            Formulations and Solution, Journal of Automated Reasoning 
+%            2(2), 89-104.
+%          : Pelletier F.J. (1986), Seventy-Five Problems for Testing 
+%            Automatic Theorem Provers, Journal of Automated Reasoning 
+%            2(2), 191-216.
+%          : Wang T-C., Bledsoe W.W. (1987), Hierarchical Deduction,
+%            Journal of Automated Deduction 3(1), 35-77.
+%          : Manthey R., Bry F. (1988), SATCHMO: a theorem prover 
+%            implemented in Prolog, In Lusk E., Overbeek R. (Eds), 
+%            Proceedings of the 9th International Conference on Automated 
+%            Deduction (Argonne, IL, 1988), (Lecture Notes in Computer 
+%            Science 310), Springer-Verlag, New York, NY, 415-434.
+% Source   : [Pelletier, 1986]
+% Names    : Pelletier 47 [Pelletier, 1986]
+%          : steamroller.ver1.in [ANL]
+%          : steam.in [OTTER]
+%          : SST [Wang & Bledsoe, 1987]
+
+% Status   : unsatisfiable
+% Syntax   : Number of clauses    :   26 (   1 non-Horn;   6 unit;  26 RR)
+%            Number of literals   :   63 (   0 equality)
+%            Maximal clause size  :    8
+%            Number of predicates :   10 (   0 propositional; 1-2 arity)
+%            Number of functors   :    8 (   6 constant; 0-1 arity)
+%            Number of variables  :   33 (   0 singleton)
+%            Maximal term depth   :    2
+
+% Comments : This problem is named after Len Schubert.
+%          : tptp2X: -fprotein PUZ031-1.p 
+%--------------------------------------------------------------------------
+
+begin(theory).
+%% Linear completed theory PUZ031-1-t1.th:
+%% Completed used following flags:
+%%
+%%             Flag I Value
+%% -----------------+-------
+%%        max_level I 3
+%%       term_depth I 0
+%%       term_width I 0
+%%      id_maxdepth I 5
+%%       redundancy I strong_at_end
+%%     all_red_test I at_end
+%%     prefer_short I true
+%%     use_anc_lits I true
+%%         minerase I 2
+% wolf_is_an_animal, axiom.
+% NAME: isa(wolf,animal)
+% THEORY: [animal(X) :- (wolf(X))]
+               wolf(X_5729) -> animal(X_5729). 
+           ~ animal(X_6064) -> ~ wolf(X_6064). 
+% NAME_END
+
+% fox_is_an_animal, axiom.
+% NAME: isa(fox,animal)
+% THEORY: [animal(X) :- (fox(X))]
+                fox(X_5734) -> animal(X_5734). 
+            ~ animal(X_6069) -> ~ fox(X_6069). 
+% NAME_END
+
+% bird_is_an_animal, axiom.
+% NAME: isa(bird,animal)
+% THEORY: [animal(X) :- (bird(X))]
+               bird(X_5739) -> animal(X_5739). 
+           ~ animal(X_6074) -> ~ bird(X_6074). 
+% NAME_END
+
+% caterpillar_is_an_animal, axiom.
+% NAME: isa(caterpillar,animal)
+% THEORY: [animal(X) :- (caterpillar(X))]
+        caterpillar(X_5744) -> animal(X_5744). 
+    ~ animal(X_6079) -> ~ caterpillar(X_6079). 
+% NAME_END
+
+% snail_is_an_animal, axiom.
+% NAME: isa(snail,animal)
+% THEORY: [animal(X) :- (snail(X))]
+              snail(X_5749) -> animal(X_5749). 
+          ~ animal(X_6084) -> ~ snail(X_6084). 
+% NAME_END
+
+% there_is_a_wolf, axiom.
+% NAME: existsa(wolf,a_wolf).
+% THEORY: [wolf(a_wolf)]
+                      ~ wolf(a_wolf) -> false. 
+% NAME_END
+
+% there_is_a_fox, axiom.
+% NAME: existsa(fox,a_fox).
+% THEORY: [fox(a_fox)]
+                        ~ fox(a_fox) -> false. 
+% NAME_END
+
+% there_is_a_bird, axiom.
+% NAME: existsa(bird,a_bird).
+% THEORY: [bird(a_bird)]
+                      ~ bird(a_bird) -> false. 
+% NAME_END
+
+% there_is_a_caterpillar, axiom.
+% NAME: existsa(caterpillar,a_caterpillar).
+% THEORY: [caterpillar(a_caterpillar)]
+        ~ caterpillar(a_caterpillar) -> false. 
+% NAME_END
+
+% there_is_a_snail, axiom.
+% NAME: existsa(snail,a_snail).
+% THEORY: [snail(a_snail)]
+                    ~ snail(a_snail) -> false. 
+% NAME_END
+
+% there_is_a_grain, axiom.
+% NAME: existsa(grain,a_grain).
+% THEORY: [grain(a_grain)]
+                    ~ grain(a_grain) -> false. 
+% NAME_END
+
+% grain_is_a_plant, axiom.
+% NAME: isa(grain,plant)
+% THEORY: [plant(X) :-  (grain(X))]
+               grain(X_5784) -> plant(X_5784). 
+           ~ plant(X_6089) -> ~ grain(X_6089). 
+% NAME_END
+
+% caterpillar_smaller_than_bird, axiom.
+% NAME: 'caterpillar are smaller than birds'
+% THEORY: [much_smaller(Catapillar, Bird) :- (caterpillar(Catapillar), bird(Bird))]
+caterpillar(Catapillar_5789), bird(Bird_5794) -> much_smaller(Catapillar_5789, Bird_5794). 
+caterpillar(Catapillar_5940) -> much_smaller(Catapillar_5940, a_bird). 
+bird(Bird_5965) -> much_smaller(a_caterpillar, Bird_5965). 
+~ much_smaller(Catapillar_6095, Bird_6096), bird(Bird_6096) -> ~ caterpillar(Catapillar_6095). 
+~ much_smaller(Catapillar_6223, a_bird) -> ~ caterpillar(Catapillar_6223). 
+% NAME_END
+
+% snail_smaller_than_bird, axiom.
+% NAME: 'snails are smaller than birds'
+% THEORY: [much_smaller(Snail, Bird) :- (snail(Snail), bird(Bird))]
+snail(Snail_5794), bird(Bird_5799) -> much_smaller(Snail_5794, Bird_5799). 
+snail(Snail_5945) -> much_smaller(Snail_5945, a_bird). 
+bird(Bird_5975) -> much_smaller(a_snail, Bird_5975). 
+~ much_smaller(Snail_6105, Bird_6106), bird(Bird_6106) -> ~ snail(Snail_6105). 
+~ much_smaller(Snail_6228, a_bird) -> ~ snail(Snail_6228). 
+% NAME_END
+
+% bird_smaller_than_fox, axiom.
+% NAME: 'birds are smaller than foxes'
+% THEORY: [much_smaller(Bird, Fox) :- (bird(Bird), fox(Fox))]
+bird(Bird_5799), fox(Fox_5804) -> much_smaller(Bird_5799, Fox_5804). 
+bird(Bird_5925) -> much_smaller(Bird_5925, a_fox). 
+fox(Fox_5950) -> much_smaller(a_bird, Fox_5950). 
+~ much_smaller(Bird_6115, Fox_6116), fox(Fox_6116) -> ~ bird(Bird_6115). 
+~ much_smaller(Bird_6198, a_fox) -> ~ bird(Bird_6198). 
+% NAME_END
+
+% fox_smaller_than_wolf, axiom.
+% NAME: 'foxes are smaller than wolfs'
+% THEORY: [much_smaller(Fox, Wolf) :- (fox(Fox), wolf(Wolf))]
+fox(Fox_5804), wolf(Wolf_5809) -> much_smaller(Fox_5804, Wolf_5809). 
+fox(Fox_5910) -> much_smaller(Fox_5910, a_wolf). 
+wolf(Wolf_5930) -> much_smaller(a_fox, Wolf_5930). 
+~ much_smaller(Fox_6125, Wolf_6126), wolf(Wolf_6126) -> ~ fox(Fox_6125). 
+~ much_smaller(Fox_6188, a_wolf) -> ~ fox(Fox_6188). 
+% NAME_END
+
+% wolf_dont_eat_fox, axiom.
+% NAME: 'wolfs do not eat foxes'
+% THEORY: [false :- (wolf(Wolf), fox(Fox), eats(Wolf, Fox))]
+wolf(Wolf_5809), fox(Fox_5814), eats(Wolf_5809, Fox_5814) -> false. 
+fox(Fox_5915), eats(a_wolf, Fox_5915) -> false. 
+wolf(Wolf_5935), eats(Wolf_5935, a_fox) -> false. 
+                 eats(a_wolf, a_fox) -> false. 
+% NAME_END
+
+% wolf_dont_eat_grain, axiom.
+% NAME: 'wolfs do not eat grain'
+% THEORY: [false :- (wolf(Wolf), grain(Grain), eats(Wolf, Grain))]
+wolf(Wolf_5814), grain(Grain_5819), eats(Wolf_5814, Grain_5819) -> false. 
+grain(Grain_5920), eats(a_wolf, Grain_5920) -> false. 
+wolf(Wolf_5985), eats(Wolf_5985, a_grain) -> false. 
+               eats(a_wolf, a_grain) -> false. 
+% NAME_END
+
+% bird_eats_caterpillar, axiom.
+% NAME: 'wolfs do not eat foxes'
+% THEORY: [eats(Bird, Catapillar) :- (bird(Bird), caterpillar(Catapillar))]
+bird(Bird_5819), caterpillar(Catapillar_5824) -> eats(Bird_5819, Catapillar_5824). 
+caterpillar(Catapillar_5955) -> eats(a_bird, Catapillar_5955). 
+bird(Bird_5970) -> eats(Bird_5970, a_caterpillar). 
+~ eats(Bird_6140, Catapillar_6141), bird(Bird_6140) -> ~ caterpillar(Catapillar_6141). 
+~ eats(a_bird, Catapillar_6233) -> ~ caterpillar(Catapillar_6233). 
+% NAME_END
+
+% bird_dont_eat_snail, axiom.
+% NAME: 'birds do not eat snails'
+% THEORY: [false :- (bird(Bird), snail(Snail), eats(Bird, Snail))]
+bird(Bird_5824), snail(Snail_5829), eats(Bird_5824, Snail_5829) -> false. 
+snail(Snail_5960), eats(a_bird, Snail_5960) -> false. 
+bird(Bird_5980), eats(Bird_5980, a_snail) -> false. 
+               eats(a_bird, a_snail) -> false. 
+% NAME_END
+
+% NAME: 'derived facts'
+% THEORY: [derived_facts]
+bird(Bird_6040), caterpillar(Catapillar_6045), wolf(Bird_6040), fox(Catapillar_6045) -> false. 
+bird(Bird_6045), caterpillar(Catapillar_6050), wolf(Bird_6045), grain(Catapillar_6050) -> false. 
+bird(a_wolf), caterpillar(Catapillar_6179), fox(Catapillar_6179) -> false. 
+bird(a_wolf), caterpillar(Catapillar_6184), grain(Catapillar_6184) -> false. 
+bird(Bird_6190), caterpillar(a_fox), wolf(Bird_6190) -> false. 
+caterpillar(Catapillar_6205), wolf(a_bird), fox(Catapillar_6205) -> false. 
+caterpillar(Catapillar_6210), wolf(a_bird), grain(Catapillar_6210) -> false. 
+bird(Bird_6235), wolf(Bird_6235), fox(a_caterpillar) -> false. 
+bird(Bird_6240), wolf(Bird_6240), grain(a_caterpillar) -> false. 
+bird(Bird_6245), bird(Bird_6245), snail(a_caterpillar) -> false. 
+bird(Bird_6250), caterpillar(a_grain), wolf(Bird_6250) -> false. 
+    caterpillar(a_fox), wolf(a_bird) -> false. 
+caterpillar(Catapillar_6260), snail(Catapillar_6260) -> false. 
+  caterpillar(a_grain), wolf(a_bird) -> false. 
+    bird(a_wolf), fox(a_caterpillar) -> false. 
+  bird(a_wolf), grain(a_caterpillar) -> false. 
+  bird(a_bird), snail(a_caterpillar) -> false. 
+% NAME_END
+end(theory).
+
+% BEGIN_AXIOMS
+% eating_habits, axiom.
+% NAME: 'eating habits of animals'
+eats(Animal, Plant); eats(Animal, Small_animal) :- animal(Animal), plant(Plant), animal(Small_animal), plant(Other_plant), much_smaller(Small_animal, Animal), eats(Small_animal, Other_plant).
+
+% caterpillar_food_is_a_plant, axiom.
+% NAME: 'caterpillar food is a plant'
+plant(caterpillar_food_of(Catapillar)) :- caterpillar(Catapillar).
+
+% caterpillar_eats_caterpillar_food, axiom.
+% NAME: 'caterpillar eat caterpillar food'
+eats(Catapillar, caterpillar_food_of(Catapillar)) :- caterpillar(Catapillar).
+
+% snail_food_is_a_plant, axiom.
+% NAME: 'snail food is a plant'
+plant(snail_food_of(Snail)) :- snail(Snail).
+
+% snail_eats_snail_food, axiom.
+% NAME: 'snails eat snail food'
+eats(Snail, snail_food_of(Snail)) :- snail(Snail).
+
+% prove_the_animal_exists, conjecture.
+% NAME: goal
+?- animal(Animal), animal(Grain_eater), grain(Grain), eats(Animal, Grain_eater), eats(Grain_eater, Grain).
+% END_AXIOMS
+%--------------------------------------------------------------------------
+
+

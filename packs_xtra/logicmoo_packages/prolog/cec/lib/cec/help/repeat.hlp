@@ -1,0 +1,4 @@
+ 
+"repeat(+P)."
+
+causes repeated backtracking of "P" until "P" fails.

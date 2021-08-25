@@ -1,0 +1,13 @@
+ 
+General Technical Information about the Usage of the CEC-System:
+----------------------------------------------------------------
+
+The CEC-system  is built  on top  of a Prolog-system. Any  interactive user 
+input must take the  syntactic form of a Prolog-goal. This is a Prolog term 
+followed by  a full stop '.' and by <return>.  In the case of unfamiliarity 
+with term notation,  the user is referred to standard text books on Prolog, 
+or to the corresponding section in the CEC-manual.
+
+A user may type an arbitrary Prolog goal, should however generally restrict 
+himself to calling CEC functions only.  For any such function specific help 
+information may be obtained by typing '?<function name>.'.

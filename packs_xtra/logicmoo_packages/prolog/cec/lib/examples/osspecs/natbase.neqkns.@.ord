@@ -1,0 +1,64 @@
+order(neqkns for natbase).
+greater([['$r-ms','$inj-object-bool']]).
+greater([['$r',\== /2]]).
+greater([['$r-ms','\==-bool-object-object']]).
+greater([['\==-bool-object-object','$inj-object-bool']]).
+greater([['$r',== /2]]).
+greater([['$r-ms','==-bool-object-object']]).
+greater([['==-bool-object-object','$inj-object-bool']]).
+greater([['$neq4-ms','$r-ms']]).
+greater([['$neq4','$r']]).
+greater([[\== /2,== /2]]).
+greater([['$r-ms','$inj-nat-zero']]).
+greater([['==-bool-object-object','$inj-nat-zero']]).
+greater([['\==-bool-object-object','$inj-nat-zero']]).
+greater([['$r-ms','$inj-nat-posint']]).
+greater([['==-bool-object-object','$inj-nat-posint']]).
+greater([['\==-bool-object-object','$inj-nat-posint']]).
+greater([['$r-ms','$inj-object-nat']]).
+greater([['==-bool-object-object','$inj-object-nat']]).
+greater([['\==-bool-object-object','$inj-object-nat']]).
+greater([['$r',s/1]]).
+greater([['$r-ms','s-posint-nat']]).
+greater([['s-posint-nat','$inj-object-bool']]).
+greater([['s-posint-nat','$inj-nat-zero']]).
+greater([['s-posint-nat','$inj-nat-posint']]).
+greater([['s-posint-nat','$inj-object-nat']]).
+status(['$r':ms]).
+status(['$r-ms':ms]).
+status(['$inj-object-bool':ms]).
+status(['==-bool-object-object':ms]).
+status([== :ms]).
+status(['\==-bool-object-object':ms]).
+status([\== :ms]).
+status(['$neq4-ms':lr]).
+status(['$neq4':lr]).
+status(['$inj-nat-zero':ms]).
+status(['$inj-nat-posint':ms]).
+status(['$inj-object-nat':ms]).
+
+constructor('true-bool').
+constructor('false-bool').
+constructor('0-zero').
+
+
+
+
+
+
+/* ordering of the literals is ms for
+/*	x:object==y:object = y:object==x:object */
+action(status(ms),'$equation'([],['==-bool-object-object'(@'x-object',@'y-object')='==-bool-object-object'(@'y-object',@'x-object')])).
+
+/* ordering of the literals is ms for
+/*	x:object\==y:object = y:object\==x:object */
+action(status(ms),'$equation'([],['\==-bool-object-object'(@'x-object',@'y-object')='\==-bool-object-object'(@'y-object',@'x-object')])).
+
+/* declare as nonoperational :
+/*	x:object==y:object = true => x:object = y:object */
+action(orient(n),'$equation'(['==-bool-object-object'(@'x-object',@'y-object')='true-bool'],[@'x-object'= @'y-object'])).
+
+/* ordering of the literals is [0,1] for
+/*	x:object==y:object = true => x:object = y:object */
+action(status([0,1]),'$equation'(['==-bool-object-object'(@'x-object',@'y-object')='true-bool'],[@'x-object'= @'y-object'])).
+

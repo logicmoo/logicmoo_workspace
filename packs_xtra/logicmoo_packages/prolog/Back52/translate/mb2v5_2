@@ -1,0 +1,7 @@
+%% (c) 1992, 1993 by KIT-BACK, TU Berlin. All rights reserved.
+
+translate(X atell Y,X :: Y).
+translate(X ttelldef Y,X := Y).
+translate(X ttellprim Y,X :< Y).
+translate(retrgetall(X),getall(X)).
+translate(retrdescribe(X),describe(X)).

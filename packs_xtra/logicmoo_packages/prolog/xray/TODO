@@ -1,0 +1,4 @@
+* compatibility_first VERSUS herbrand ???!!!
+* test dystatic
+* false --> []  (disj-lemmas)
+* check skim_reductions (takes too many of them???)

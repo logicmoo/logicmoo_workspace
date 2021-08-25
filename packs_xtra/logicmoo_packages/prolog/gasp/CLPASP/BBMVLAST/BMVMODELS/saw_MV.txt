@@ -1,0 +1,176 @@
+%%% %%% %%% %%% %%% %%% %%% %%% %%% %%% %%% %%% %%%
+%%% 2 dimensional simplified reverse folding
+%%% problem.
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% Encoded in BMV by DFP, August 2010
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%% Running times on a (slow) Netbook MSI U100
+
+%%% zigzag: N/planlength
+%%% 4/2 (0ms), 5/3 (0ms), 6/4 (78ms + 1.4s of constraints)
+%%% 8/6 (23s + 6s of constraints)
+
+%%% spiral: N/planlength
+%%% 4/2 (0ms), 9/4 (31ms + 8s of constraints)
+%%% 16/6  (40s + 135s of constraints)
+
+
+length(8). %%% N
+instance(zigzag).
+%%%instance(spiral).
+
+amino(A) :-
+   length(N),
+   interval(A,1,N).
+direction(clock).
+direction(anticlock).
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+fluent(x(A),1,M) :-
+   length(N), M is 2*N, amino(A).
+
+fluent(y(A),1,M) :-
+   length(N), M is 2*N, amino(A).
+
+fluent(saw,0,1).
+
+%%%%%%%%%%%%%%%%
+
+action(pivot(A,DIR)):-
+   length(N), amino(A),1<A,A<N,
+   direction(DIR).
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+executable(pivot(A,DIR),[]) :-
+    action(pivot(A,DIR)).
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+causes(pivot(A,clock), x(B) eq x(A)^(-1) + y(B)^(-1) - y(A)^(-1),[]):-
+        action(pivot(A,clock)),amino(B),B > A.
+causes(pivot(A,clock), y(B) eq y(A)^(-1) + x(A)^(-1) - x(B)^(-1),[]):-
+        action(pivot(A,clock)),amino(B),B > A.
+
+causes(pivot(A,anticlock), x(B) eq x(A)^(-1) - y(B)^(-1) + y(A)^(-1),[]):-
+        action(pivot(A,anticlock)),amino(B),B > A.
+causes(pivot(A,anticlock), y(B) eq y(A)^(-1) - x(A)^(-1) + x(B)^(-1),[]):-
+        action(pivot(A,anticlock)),amino(B),B > A.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+caused([x(A) eq x(B), y(A) eq y(B)],saw eq 0) :-
+         amino(A),amino(B),A<B.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% initially the protein is a vertical line
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+initially(saw eq 1).
+initially(x(A) eq  N) :-
+    length(N), amino(A).
+initially(y(A) eq  Y) :-
+    length(N), amino(A),Y is N+A-1.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% Invariants
+
+always(x(1) eq N) :- length(N).
+always(y(1) eq N) :- length(N).
+
+always(x(2) eq N) :- length(N).
+always(y(2) eq M) :- length(N), M is N+1.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+goal(saw eq 1).
+
+goal( x(A) eq XN) :-
+    amino(A),length(N),
+    (instance(zigzag) ->
+         zigzag(A,X,_);
+     instance(spiral) ->
+       L is integer(sqrt(N)),
+       spiral(A,X,_,L)
+     ),
+     XN is  X + N.
+
+goal( y(A) eq YN) :-
+    amino(A),length(N),
+    (instance(zigzag) ->
+         zigzag(A,_,Y);
+     instance(spiral) ->
+       L is integer(sqrt(N)),
+       spiral(A,_,Y,L)
+     ),
+     YN is  Y + N.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% FOLDING 1: zig-zag
+%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%      * 6
+%%%      |
+%%%   4*-* 5
+%%%    |
+%%% 2*-* 3
+%%%  |
+%%% 1*
+%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% Amino 1 is in (0,0)
+%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+zigzag(I,X,Y) :-
+   X is (I-1) // 2,
+   Y is I // 2.
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% FOLDING 2: spiral
+%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% N = L^2
+%%%   (in the picture N=16, L=4)
+%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%    5 6 7
+%%% 4*-*-*-*
+%%%  |     |
+%%% 3* *-* * 8
+%%%  | | | |
+%%% 2* * * * 9
+%%%  | |   |
+%%% 1* *-*-* 10
+%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% Amino 1 is in (0,0)
+%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%% spiral(I,X,Y,L) assigns
+%%% the values X and Y to
+%%% aminoacid I in the spiral folding
+
+spiral(I,0,I1,L) :-
+   I =< L, !,
+   I1 is I-1.
+
+spiral(I,X,Y,L) :-
+   L1 is L-1,
+   recspiral(L1,1,0,L1,L,I,X,Y).
+
+recspiral(0,_,_,_,_,_,_,_) :- !.
+recspiral(L,DIR,X0,Y0,K,I,X,Y) :-
+    I > K + 2*L,
+    L1 is L-1,
+    X1 is X0 + L*DIR,
+    Y1 is Y0 - L*DIR,
+    K1 is K + 2*L,
+    recspiral(L1,(-DIR),X1,Y1,K1,I,X,Y).
+recspiral(L,DIR,X0,Y0,K,I,X,Y0) :-
+    I =< K + L,
+    X is X0+(I-K)*DIR.
+recspiral(L,DIR,X0,Y0,K,I,X,Y) :-
+    I > K + L,
+    I =< K + 2*L,
+    X is X0+L*DIR,
+    Y is Y0-(I-K-L)*DIR.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%

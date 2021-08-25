@@ -1,0 +1,8 @@
+order poly1 for natbase using poly1 for object.
+
+setInterpretation([ 0    : 2,
+		    s(x) : x + 4,
+		    's-posint-nat'(x) : x + 4,
+		    '$inj-object-nat'(x) : x + 2,
+		    '$inj-nat-posint'(x) : x + 2,
+		    '$inj-nat-zero'(x) : x + 1]).

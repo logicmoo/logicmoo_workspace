@@ -1,0 +1,3 @@
+#!/bin/bash -f
+ulimit -t 2
+bin/paradox $@

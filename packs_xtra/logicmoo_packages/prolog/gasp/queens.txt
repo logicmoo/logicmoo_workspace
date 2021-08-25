@@ -1,0 +1,4 @@
+n(1..25).
+'1'{queen(R,C):n(R)}'1':-n(C).
+:-queen(R,C),queen(R,C1),n(R),n(C),n(C1),C<C1.
+:-queen(R,C),queen(R1,C1),n(R),n(R1),n(C),n(C1),C<C1,abs(R-R1) == abs(C-C1).

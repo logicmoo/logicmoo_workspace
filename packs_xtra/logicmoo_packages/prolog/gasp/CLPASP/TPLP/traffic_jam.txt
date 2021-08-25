@@ -1,0 +1,201 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% Traffic Jam problem
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%There are two kind of trolleys.
+%Those moving only horizontally (o) and
+%those moving only vertically (v)
+%Trolleys have different length
+%There is a square space of a certain size where
+%trolleys are located.
+%A horizontal trolley can only move in its row
+%A vertical trolley can only move in its column
+%The problem is that of moving trolleys so as
+%to reach a certain situation (eg allowing a trolley
+%to exit the square)
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% Coded by Giovanni Bacci (Univ. of Udine), March 2008
+%%% (corrected Dec 30, 2008 by DFP)
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% Each trolley is identified by a fact
+% trolley( Number, length, o/v, column/row)
+% and by a position in that column/row at(Number,Pos)
+
+%%%%%% EXAMPLE
+size(5).
+%%%%%% INSTANCE 4: (minimal solution in 4 steps)
+trolley(1,2,o,1). initially(at(1,3)).
+trolley(2,2,o,5). initially(at(2,3)).
+trolley(3,2,o,5). initially(at(3,1)).
+trolley(4,3,v,1). initially(at(4,2)).
+trolley(5,2,o,2). initially(at(5,2)).
+trolley(6,2,v,3). initially(at(6,3)).
+trolley(7,4,v,5). initially(at(7,1)).
+goal(at(6,1)).
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% Initial state:
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%ROW1:--117
+%ROW2:455-7
+%ROW3:4-6-7
+%ROW4:4-6-7
+%ROW5:3322-
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Call :-sicsplan(6).
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%% Allowed positions
+
+pos(Pos):-
+   size(Size),
+   interval(Pos,1,Size).
+
+step(S):-
+    size(Size),
+    Min is 1-Size, Max is Size-1,
+    interval(S, Min, Max), S =\= 0.
+
+%% FLUENTS
+
+fluent(at(X,Pos)) :-
+   trolley(X,L,_,_), pos(Pos),
+   size(Size),
+   L+Pos-1 =< Size.
+
+fluent(crush).
+
+
+%% ACTION
+
+action(move(X,S)):-
+   trolley(X,_,_,_), step(S).
+
+%% TROLLEYS cannot exit from the square
+
+executable(move(X,S), [neg(crush), at(X,Pos_x)]):-
+    action(move(X,S)),
+    fluent(at(X,Pos_x)),
+    trolley(X,L,_,_),
+    size(Size),
+    Pos_x+S >= 1, Pos_x+L-1+S =< Size.
+
+%% Effect of moves
+
+causes(move(X,S), at(X,NewPos),[at(X,OldPos)]):-
+    trolley(X,_,_,_), step(S),
+    fluent(at(X,NewPos)),
+    fluent(at(X,OldPos)),
+    NewPos is OldPos+S.
+
+%% Collision (to avoid)
+
+causes(move(X,S), crush, [at(X,Pos_x), at(Y,Pos_y)]):-
+    trolley(X,_,Dir_x,Rail_x), trolley(Y,Ly,Dir_y,Rail_y),
+    Dir_x \== Dir_y, X =\= Y,
+    step(S),
+    fluent(at(X,Pos_x)),
+    fluent(at(Y,Pos_y)),
+    moveInt(at(X,Pos_x),S,[A,B]),
+    Pos_y =< Rail_x, Rail_x =< Pos_y+Ly-1,
+    A =< Rail_y, Rail_y =< B.
+
+causes(move(X,S), crush, [at(X,Pos_x), at(Y,Pos_y)]):-
+    trolley(X,_,Dir,Rail), trolley(Y,Ly,Dir,Rail),
+    X =\= Y,
+    step(S),
+    fluent(at(X,Pos_x)),
+    fluent(at(Y,Pos_y)),
+    moveInt(at(X,Pos_x),S,[A,B]),
+    (S > 0 -> C is Pos_y; S < 0 -> C is Pos_y+Ly-1),
+    A =< C, C =< B.
+
+
+%% TROLLEYS can stay in a unique position
+
+
+caused([at(X,Pos1)], neg(at(X,Pos2))):-
+    fluent(at(X,Pos1)),fluent(at(X,Pos2)),
+    trolley(X,_,_,_),
+    Pos1 =\= Pos2.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+initially(neg(crush)).
+
+
+goal(neg(crush)).
+
+
+%% move range
+
+moveInt(at(X,Pos_x),S,[A,B]):-
+    fluent(at(X,Pos_x)),
+    trolley(X,Lx,_,_),
+    ( S < 0 -> A is Pos_x+S, B is Pos_x+Lx-1
+    ; S > 0 -> A is Pos_x, B is Pos_x+Lx-1+S
+    ).
+
+
+%%% OTHER INSTANCES TO PLAY WITH
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% INSTANCES WITH SIZE 6
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%size(6).
+%%% INSTANCE 1: (minimal solution in _ steps)
+%trolley(6,2,v,3). initially(at(6,4)).
+%trolley(5,3,o,1). initially(at(5,1)).
+%trolley(4,3,o,3). initially(at(4,2)).
+%trolley(3,3,v,6). initially(at(3,2)).
+%trolley(2,2,o,6). initially(at(2,5)).
+%trolley(1,3,o,6). initially(at(1,2)).
+%goal(at(6,1)).
+%%% INSTANCE 2: (minimal solution in _ steps)
+%trolley(6,2,v,3). initially(at(6,5)).
+%trolley(5,2,v,1). initially(at(5,4)).
+%trolley(4,2,o,6). initially(at(4,1)).
+%trolley(3,3,o,4). initially(at(3,2)).
+%trolley(2,3,o,1). initially(at(2,1)).
+%trolley(1,3,v,6). initially(at(1,4)).
+%goal(at(6,1)).
+%%% INSTANCE 3: (minimal solution in 7 steps)
+%trolley(1,3,v,6). initially(at(1,4)).
+%trolley(2,2,o,4). initially(at(2,3)).
+%trolley(3,2,o,3). initially(at(3,5)).
+%trolley(4,2,v,5). initially(at(4,1)).
+%trolley(5,2,v,4). initially(at(5,2)).
+%trolley(6,3,o,1). initially(at(6,2)).
+%trolley(7,2,v,3). initially(at(7,2)).
+%goal(at(7,1)).
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% INSTANCES WITH SIZE  5
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% INSTANCE 5: (minimal solution in 4 steps)
+%trolley(1,2,v,1). initially(at(1,3)).
+%trolley(2,2,v,2). initially(at(2,3)).
+%trolley(3,3,o,3). initially(at(3,3)).
+%trolley(4,2,v,4). initially(at(4,4)).
+%trolley(5,2,o,5). initially(at(5,2)).
+%trolley(6,2,v,1). initially(at(6,1)).
+%goal(at(4,1)).
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% INSTANCES WITH SIZE  4
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%size(4).
+%% INSTANCE 6: (minimal solution in 4 steps)
+%trolley(1,1,o,4). initially(at(1,4)).
+%trolley(2,2,v,4). initially(at(2,2)).
+%trolley(3,2,o,2). initially(at(3,2)).
+%trolley(4,2,v,2). initially(at(4,3)).
+%trolley(5,3,v,1). initially(at(5,1)).
+%goal(at(4,1)).
+%% INSTANCE 7: (minimal solution in 5 steps)
+%trolley(1,2,v,2). initially(at(1,3)).
+%trolley(2,2,o,4). initially(at(2,3)).
+%trolley(3,3,v,4). initially(at(3,1)).
+%trolley(4,3,o,1). initially(at(4,1)).
+%trolley(5,2,v,1). initially(at(5,3)).
+%goal(at(5,1)).
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

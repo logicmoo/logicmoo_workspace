@@ -1,0 +1,40 @@
+#!/bin/sh
+#
+#          Mizar Verifier, example shell command
+#
+
+bindir=bin4.160.1126
+
+accommodate()
+{
+PWD1=`pwd`
+cd `dirname $1`
+$PWD1/$bindir/mizar/accom -l -q -a $1
+ if test "$?" = "0"
+  then
+   cd $PWD1
+   echo ""
+   verify $1
+  else
+   cd $PWD1
+   $bindir/mizar/errflag $1
+   $bindir/mizar/addfmsg $1 $MIZFILES/mizar
+   exit 2
+ fi
+}
+
+verify()
+{
+ $bindir/mizar/verifier -q -l $1
+ $bindir/mizar/errflag $1
+ $bindir/mizar/addfmsg $1 $MIZFILES/mizar
+}
+
+if test -z "$1" 
+ then 
+  echo "> `basename $0` error : Missing parameter" 
+  echo "Usage: `basename $0` mizar_article_name" 
+  exit 1
+ else 
+  accommodate "`dirname $1`/`basename $1 .miz`"
+fi

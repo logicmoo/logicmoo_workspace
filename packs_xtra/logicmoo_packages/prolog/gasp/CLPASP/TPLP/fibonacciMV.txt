@@ -1,0 +1,28 @@
+%%%% The problem is to detect when
+%%%% fibo(n) > n^4
+%%%% Try :-sicsplan(30).
+%%%% Really hard to be solved with Boolean Languages
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%% Coded by DFP, 2008
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+fluent(number,0,10000000).
+fluent(time,0,100).
+
+action(rabbit_gen).
+executable(rabbit_gen,[]).
+
+%%%%%%
+
+causes(rabbit_gen, number eq number^(-1) + number^(-2),
+                   [time gt 0]).
+causes(rabbit_gen, time eq time^(-1) + 1,[]).
+
+%%%%%%
+
+initially(number eq 1).
+initially(time eq 0).
+
+goal(number gt time*time*time*time).
+
+%%%%%%%

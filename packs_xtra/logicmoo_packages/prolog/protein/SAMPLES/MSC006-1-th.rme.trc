@@ -1,0 +1,35 @@
+********************    PROTEIN V2.26   ********************
+
+--------------------    input clauses   --------------------
+
+Th-Rule  No.   1 : [[p(A, B), p(B, C)], [p(A, C)], []]
+Th-Rule  No.   2 : [[not_p(A, B), p(C, B)], [not_p(A, C)], []]
+Th-Rule  No.   3 : [[q(A, B), q(B, C)], [q(A, C)], []]
+Th-Rule  No.   4 : [[q(A, B), not_q(C, A)], [not_q(C, B)], []]
+Th-Rule  No.   5 : [[not_q(A, B), q(C, A)], [not_q(B, C)], []]
+Th-Rule  No.   6 : [[q(A, B)], [q(B, A)], []]
+Th-Rule  No.   7 : [[not_q(A, B)], [not_q(B, A)], []]
+Clause   No.   8 : [p(A, B), q(A, B)]
+Query    No.  10 : [query, not_p(a, b)]
+Restart  No.   9 : [restart, not_q(c, d)]
+Restart  No.  10 : [restart, not_p(a, b)]
+
+--------------------------- flags --------------------------
+
+calculus - rme
+trace - internal
+
+------------------------ statistics ------------------------
+
+   Static Reorderings:        0
+
+   Proof Time:                0.3 sec
+   Proof Depth:              12
+   Extension Steps:           3
+   Restart Steps:             5
+   Reduction Steps:           6 (incl.   2 with cut)
+   Factoring Steps:           0 (incl.   0 with cut)
+   Theory Steps:              9
+   Inferences:             1664
+
+------------------------- answers --------------------------

@@ -1,0 +1,226 @@
+
+\section{Input and Output of Specifications}
+\label{InputOutput}
+
+CEC has a variety of different I/O-commands. There are two commands for reading in
+original specifications from a file (\comRef{in} and \comRef{enrich})
+two commands for saving and restoring partially completed specifications 
+to/from files (\comRef{freeze} and \comRef{thaw})
+two commands for saving and restoring specifications to/from 
+specification variables (\comRef{store} and \comRef{load}) and
+two commands for storing and loading {\em log-files}
+(\comRef{storeLog} and \comRef{loadLog}).
+Also, the commands for saving and 
+restoring the whole CEC state, \comRef{saveCEC} and \comRef{restoreCEC}, can be used. But
+notice that saving CEC states (prolog states) usually generates very
+large files. 
+%Conventions concerning the allowed file and variable names are 
+%those of the underlying prolog system. 
+Reading specifications from standard input
+(keyboard, terminal) is possible by using the predefined file name \cec{user}.
+
+
+\subsection{Reading Specifications from Files}
+\label{InCommand}
+
+\begin{command}[\com{in}{\comArg{ModuleName}\ad\comArg{OrderName}}]
+reads in a specification from the file \comArg{ModuleName}\suffix{.eqn}
+and the associated order specification from the file
+\comArg{ModuleName}\suffix{.}\comArg{OrderName}\suffix{.ord}.
+As log-files are ``enriched'' order specifications, any log-file can
+be used as an order file.
+The  order  base of the order specification determines  the order names for the direct
+imports of a specification. The system will first look for the
+specification variable 
+
+\hbox to \hsize{\hfill
+\nt{specificationName}\kw{.}\nt{orderName}\hfill.}
+If such a variable exists its content will be used. If such a variable does not
+exist and some \nt{orderName} $\neq$ \kw{noorder} is associated with  
+\nt{specificationName} the system will look for the file
+
+\hbox to \hsize{\hfill
+\nt{specificationName}\kw{.}\nt{orderName}\suffix{.q2.0}\hfill}
+\noindent in the current directory containing a frozen state of the
+referenced specification.
+\noindent
+If this file does'nt exist the system looks for a file
+
+\hbox to \hsize{\hfill
+\nt{specificationName}\suffix{.eqn}\hfill}
+\noindent
+which contains the specification according to the syntax of 
+\nt{specification} and for a file 
+
+\hbox to \hsize{\hfill
+\nt{specificationName}\kw{.}\nt{orderName}\suffix{.ord}\hfill}
+\noindent
+which contains the order specification for the specification.
+If the \nt{orderName} associated with \nt{specificationName} is 
+\kw{noorder} the system looks for the specification in file
+
+\hbox to \hsize{\hfill
+\nt{specificationName}\suffix{.eqn}\hfill}
+\noindent
+in the current directory.
+
+If not stated otherwise these files are assumed to be in the current 
+directory. Before the specification is read in, CEC will be re-initialized, 
+e.g. the current specification will be deleted. Specifications saved in 
+variables will not be affected. \comArg{ModuleName} and \comArg{OrderName}
+must be Prolog atoms. \comArg{OrderName} becomes the
+current order name for the specification.\\
+\com{in}{\comArg{ModuleName}\ad\cec{noorder}}
+has the effect that no order specification is consulted.
+The termination ordering for the new
+specification will be initialized to a default value 
+(\kw{neqkns} or \kw{poly1}, depending on the presence of AC-operators).
+Using \comRef{in} only with the parameter \comArg{ModuleName} yields the same
+effect. \comArg{ModuleName} = \kw{user} expects input from terminal.
+(For Quintus-Prolog2.x under EMACS: {\it in} without
+parameter reads from \cec{Scratch.pl}).
+\end{command}
+
+If you want to access files from other directories you will have to specify these
+directories relative to the current directory at the time of invoking Prolog, e.g.
+\cec{in('examples/math/int')}. A more convenient way will be to specify the
+necessary prefix to all files once and for all by\bigskip
+
+\begin{command}[\com{cd}{\comArg{Path}}]
+Changes, as the cd command in UNIX, the directory for all following
+file-related CEC-commands.
+The path is given in form of a Prolog atom, hence don't forget the
+quotes, if the path contains `\kw{/}', `\kw{.}', or `\kw{..}' or other special
+characters.
+
+\comRef{cd} is predeclared as prefix operator. So after execution 
+of \bigskip
+
+\cec{cd 'examples/math'.} \bigskip
+
+\noindent
+the command \cec{in(int)} will read in \cec{examples/math/int.eqn}.
+
+\comRef{cd} without an argument resets the current directory to the one in
+which the CEC-system was initially invoked.
+\end{command}
+
+\begin{command}[\comName{pwd}]
+prints out the current path for I/O-related commands.
+\end{command}
+
+\begin{command}[\com{enrich}{\comArg{ModuleName}\ad\comArg{OrderName}}]
+reads in additional parts of a specification from the files 
+\comArg{ModuleName}\suffix{.eqn} and \comArg{ModuleName}\suffix{.}\comArg{OrderName}\suffix{.eqn}
+after saving the current state for later checks for consistency of the enrichment. 
+These additional parts must form an enrichment (cf. chapter~\ref{enrichment}).
+\comArg{ModuleName} and \comArg{OrderName} can be arbitrary Prolog atoms.
+The \comArg{OrderName} or even both arguments 
+can be omitted, with similar effects as for \comRef{in}.
+%Specify \comArg{ModuleName} = \kw{user} if input from terminal is wanted.
+\end{command}
+
+\subsection{Freezing and Thawing Partially Completed Specifications to/from Files}
+\label{FreezeCommand}
+\label{ThawCommand}
+
+For saving and restoring states of specifications to/from files there exist the 
+commands \comRef{freeze} and \comRef{thaw}.\bigskip
+
+\begin{command}[\com{freeze}{\comArg{ModuleName}\ad\comArg{OrderName}}]
+writes the state of the current specification to the file
+\comArg{ModuleName}.\comArg{OrderName}\suffix{.q2.0}.
+If freeze is called without \comArg{OrderName} the state is written
+to \comArg{ModuleName}\suffix{.q2.0}.
+%the current order name is taken for \comArg{OrderName}. 
+If freeze is called without any argument at all the module name of the current 
+specification is used for \comArg{ModuleName} and the current order name
+is used for \comArg{OrderName}.
+In this case, also a log-file is produced.
+The specification may later be reused by thawing it from this file, cf. the 
+\comRef{thaw}-command.
+The state of CEC remains unchanged by this operation.
+\end{command}
+
+\begin{command}[\com{thaw}{\comArg{ModuleName}\ad\comArg{OrderName}\ad\comArg{SpecificationVariable}}]
+This command is the inverse operation of \comRef{freeze} and restores the specification
+previously frozen in \comArg{ModuleName}\suffix{.}\comArg{OrderName}\suffix{.q2.0}
+to the specification variable \comArg{SpecificationVariable}. The current specification and other variables 
+will not be affected by this operation.
+If \comRef{thaw} is called without \comArg{SpecificationVariable} 
+the current specification is overwritten by the thawed specification. 
+Specifications stored in variables will not be affected by this operation.
+If \comRef{thaw} is used only with argument \comArg{ModuleName} the frozen 
+specification will be taken from the file \comArg{ModuleName}\suffix{.q2.0}.
+\end{command}
+
+\subsection{Storing and Loading of Log-files}
+\label{StorelogCommand}
+\label{LoadlogCommand}
+
+Log-files are used to save the information given from the user during the last
+completion process and to save the definition of the current termination
+ordering. The log-file can be used to replay a completion fully (or partially)
+automatically on ``closely related'' specifications. \bigskip
+
+\begin{command}[\com{storeLog}{\comArg{ModuleName}\ad\comArg{OrderName}}]
+creates the log-file.
+The name of the log-file is 
+\comArg{ModuleName}\suffix{.}\comArg{OrderName}\suffix{.@.ord}.
+It has the format of an order specification file which can be used
+with the \comRef{in}-command or the \comRef{loadLog}-command. 
+If \comRef{storeLog} is used only with argument \comArg{ModuleName}
+the log-file is named \comArg{ModuleName}\suffix{.@.ord},
+if \comRef{storeLog} is used without any argument, the file is
+created as \nt{moduleName}\suffix{.}\nt{orderName}\suffix{.@.ord},
+with names as they are currently associated with the specification.
+\end{command}
+
+\begin{command}[\com{loadLog}{\comArg{ModuleName}\ad\comArg{OrderName}}]
+reads in the file \comArg{ModuleName}\suffix{.}\comArg{OrderName}\suffix{.@.ord}. 
+%This file contains all the answer given during
+%the completion process and the final termination ordering saved using
+%the \comRef{saveLog}-command. 
+If the completion process is started again, % all
+questions whose answers are already contained in 
+\comArg{ModuleName}\suffix{.}\comArg{OrderName}\suffix{.@.ord} 
+will be suppressed. 
+If \comRef{loadLog} is used without the argument \comArg{OrderName} the 
+information will be taken from the file \comArg{ModuleName}\suffix{.@.ord}.
+If \comRef{loadLog} is used without any argument
+the name of the current specification together with the current order name
+will be used.
+%The current order name is the
+%order name of the order specification for the current specification
+%or the current termination ordering if no order specification was used.
+\end{command}
+
+\subsection{Assigning and Retrieving Specifications to/from Specification Variables }
+\label{StoreCommand}
+\label{LoadCommand}
+
+Some operations on specifications like \comRef{combine}, cf. the
+\comRef{combineSpecs}-command, need a way to reference different specifications. In CEC
+this is done by storing specifications to named variables and referencing them
+afterwards by these variable names. Variable names are arbitrary Prolog atoms.\bigskip
+
+\begin{command}[\com{store}{\comArg{ModuleName}\ad\comArg{OrderName}}]
+saves the current specification in a specification variable named
+\comArg{ModuleName}\kw{.}\comArg{OrderName}. If \comRef{store} is used only with
+argument \comArg{ModuleName} the specification is saved in a variable with this name,
+if \comRef{store} is used without any argument, the name is created as 
+\nt{moduleName}\kw{.}\nt{orderName}, with names as they are currently associated 
+with the specification. For later restoring 
+use the command \comArg{load}. The system remains unchanged except for this variable 
+containing afterwards the current specification.
+\end{command}
+
+\begin{command}[\com{load}{\comArg{ModuleName}\ad\comArg{OrderName}}]
+loads the system which is currently the value of the variable
+\comArg{ModuleName}\kw{.}\comArg{OrderName}, cf. the \comRef{store}-command. 
+If \comRef{load} is used only with argument \comArg{ModuleName}, this actual parameter 
+completely specifies the name of the variable.
+Specification variables remain unchanged.
+\comArg{StateName} = \cec{'$initial'} re-initializes the system.
+\end{command}
+

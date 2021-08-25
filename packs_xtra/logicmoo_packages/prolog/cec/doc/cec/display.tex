@@ -1,0 +1,125 @@
+\section{Displaying and Changing the State of a Specification}
+
+\subsection{Displaying the State of a Specification}
+\label{Displaying}
+
+\begin{command}[\comName{moduleName}]
+displays the name of the current specification.
+\end{command}
+
+\begin{command}[\comName{orderName}]
+displays the name of the order specification associated with
+the current specification.
+\end{command}
+
+The state of a specification consists of the current signature, the set of equations
+and rules and of the current definitions for the termination ordering. There are
+several commands to print out this information.\bigskip
+
+\begin{command}[\comName{sig}]
+prints out the signature of the current specification:
+\end{command}
+
+If you are writing an order-sorted specifications there exist
+additional, automatically generated operators which result from the 
+translation into a many-sorted specification:
+For every subsort relation s $<$ s' there will be an injective operator
+with domain s und codomain s', called \verb|$inj-|s'\verb|-|s. If the domain can be
+determined from the context, \verb|$inj-|s'\verb|-|s is abbreviated by s'.
+These additional operators are also shown by the \comRef{sig}-command.\bigskip
+
+\begin{command}[\comName{show}]
+shows the sets of equations, rules and nonoperational equations of the 
+current specification in order-sorted form.
+(Usually there exists more than one many-sorted representation of
+an order-sorted axiom.)
+
+Rules \condRule{C}{\rewRule{l}{r}} which are marked by an asterix 
+\kw{*} have an associated auxiliary rule of form
+\condRule{C}{\rewRule{l+X}{r+X}}
+where $+$ is the AC-operator on top of $l$ and $X$ is a new
+variable of appropriate sort.
+Auxiliary rules are automatically generated when needed during
+completion modulo AC.
+\end{command}
+
+\begin{command}[\comName{showms}]
+shows the sets of equations, rules and nonoperational equations of the 
+current specification in many-sorted form.
+\end{command}
+
+\subsection{Inspecting the Termination Ordering}
+\label{InspecTermination}
+
+\begin{command}[\comName{order}]
+indicates the current termination ordering and asks the user whether he wants to 
+change it.
+\end{command}
+
+\begin{command}[\comName{operators}]
+displays all precedences and stati in \kw{kns} or \kw{neqkns} or
+all polynomial interpretations in \kw{poly}\nt{N} respectively.
+\end{command}
+
+\begin{command}[\comName{interpretation}]
+displays all operator interpretations, provided \kw{poly}\nt{N} is the chosen termination
+ordering and asks the user if he wants to change any. {\em If so all rules will be turned 
+back into equations.}
+\end{command}
+
+
+\subsection{Checking Preregularity and Regularity}
+
+To ensure that the set of order-sorted equations of the specification and
+the set of rewrite rules produced by CEC describe the same equational
+theory, the signature must be {\em preregular} (\refArrow \cite{SNGM87}).
+If in addition the signature is {\em regular} the term algebra is an
+initial algebra in the semantics of \cite{GM87} (and \cite{SNGM87}).
+
+\noindent
+There are commands which check preregularity and regularity:\medskip
+
+\begin{command}[\comName{preregular}]
+succeeds if the current (order-sorted) signature is preregular,
+and fails otherwise.\\
+The preregularity condition is the regularity of 
+\cite{SNGM87}:
+A signature is preregular, iff for every function symbol
+$f$ and every string $w$ of sorts the set
+$$   \{ t \mid \mbox{\ there is a declaration\ } f : w' \rightarrow t 
+\mbox{\ such that\ } w \leq w' \} 
+$$
+is either empty or has a minimal element.
+\end{command}
+
+\begin{command}[\comName{regular}]
+succeeds if the current (order-sorted) signature is regular,
+and fails otherwise.
+The regularity condition is the one of \cite{GM87}:
+A signature is regular, iff for every function symbol
+$f$ and every string $w$ of sorts the set
+$$
+   \{ (w',t) \mid \mbox{\ there is a declaration\ } f : w' \rightarrow t 
+      \mbox{\ such that\ } w \leq w' \}
+$$
+is either empty or has a minimal element.
+\end{command}
+
+\subsection{The UNDO Mechanism}
+
+\begin{command}[\comName{undo}]
+can be entered at the system's top level to reset the system to the state
+before the last command that has caused a state change, if there was
+any. \comRef{undo} can be used repeatedly to undo several steps of state changes.
+It also undoes \comRef{undoUndo}-calls. At the moment, there is no way to backtrack
+from single decisions that have been taken while running the completion
+process.
+\end{command}
+
+\begin{command}[\comName{undoUndo}]
+allows to undo the last \comRef{undo}-command at the system's top level. Repeated use of
+this command undoes sequences of \comRef{undo}-commands. Chains of undo-calls begin at 
+the last user interaction different from an \comRef{undo} or \comRef{undoUndo}.
+\end{command}
+
+

@@ -1,0 +1,55 @@
+order(poly1 for field) using poly1 for commRing.
+setInterpretation('$r'(x,y) : 2 * x + 2 * y
+).
+setInterpretation('$r'(x) : 2 * x
+).
+setInterpretation('*-nonzero-nonzero-nonzero'(x,y) : 2 * x * y
+).
+setInterpretation('*-elem-elem-elem'(x,y) : 2 * x * y
+).
+setInterpretation('$inj-elem-nonzero'(x) : 2 * x
+).
+setInterpretation('1-nonzero' : 2
+).
+setInterpretation('1-elem' : 8
+).
+setInterpretation('1/'(x) : (x^2)
+).
+setInterpretation(1 : 4
+).
+setInterpretation(*(x,y) : 2 * x * y
+).
+setInterpretation(-(x) : 6 * x + 4
+).
+setInterpretation(+(x,y) : x + y + 1
+).
+setInterpretation(0 : 2
+).
+
+constructor('0-elem').
+
+
+
+
+
+
+/* ordering of the literals is ms for
+/*	x:elem,y:elem |- x+y = y+x */
+action(status(ms),'$equation'([],['+-elem-elem-elem'(@'x-elem',@'y-elem')='+-elem-elem-elem'(@'y-elem',@'x-elem')])).
+
+/* ordering of the literals is ms for
+/*	x:elem,y:elem,z:elem |- x+y+z = x+ (y+z) */
+action(status(ms),'$equation'([],['+-elem-elem-elem'('+-elem-elem-elem'(@'x-elem',@'y-elem'),@'z-elem')='+-elem-elem-elem'(@'x-elem','+-elem-elem-elem'(@'y-elem',@'z-elem'))])).
+
+/* ordering of the literals is ms for
+/*	x:elem,y:elem |- x*y = y*x */
+action(status(ms),'$equation'([],['*-elem-elem-elem'(@'x-elem',@'y-elem')='*-elem-elem-elem'(@'y-elem',@'x-elem')])).
+
+/* ordering of the literals is ms for
+/*	x:elem,y:elem,z:elem |- x*y*z = x* (y*z) */
+action(status(ms),'$equation'([],['*-elem-elem-elem'('*-elem-elem-elem'(@'x-elem',@'y-elem'),@'z-elem')='*-elem-elem-elem'(@'x-elem','*-elem-elem-elem'(@'y-elem',@'z-elem'))])).
+
+/* condition number 1 is the selected condition for
+/*	X1:nonzero,X2:nonzero |- X1 = X2 => X1 = X2 */
+action(selectcondition(1),'$equation'(['$inj-elem-nonzero'(@'X1-nonzero')='$inj-elem-nonzero'(@'X2-nonzero')],[@'X1-nonzero'= @'X2-nonzero'])).
+

@@ -1,0 +1,4 @@
+#!/usr/bin/perl -w
+my $tl = 1 + shift @ARGV;
+my $prog = shift @ARGV;
+exec("ulimit -t $tl; $prog @ARGV");

@@ -1,0 +1,511 @@
+(prolog-goal '((tell (:list
+(sb__primconcept *LEXICON* (:list
+             (supers (:list SBONE))))
+(sb__primconcept FSS (:list
+             (supers (:list SBONE))))
+(sb__primconcept POINTING (:list
+             (supers (:list FSS))))
+(sb__primconcept VAGUE-P (:list
+             (supers (:list POINTING))))
+(sb__primconcept STANDARD-P (:list
+             (supers (:list POINTING))))
+(sb__primconcept ENCIRCLING-P (:list
+             (supers (:list POINTING))))
+(sb__primconcept EXACT-P (:list
+             (supers (:list POINTING))))
+(sb__primconcept TIME (:list
+             (supers (:list FSS))))
+(sb__primconcept MOMENT (:list
+             (supers (:list TIME))))
+(sb__primconcept PERIOD (:list
+             (supers (:list TIME))))
+(sb__primconcept INTERVAL (:list
+             (supers (:list TIME))))
+(sb__primconcept YEARLY (:list
+             (supers (:list INTERVAL))))
+(sb__primconcept *JAEHRLICH* (:list
+             (supers (:list YEARLY *LEXICON*))))
+(sb__primconcept WEEKLY (:list
+             (supers (:list INTERVAL))))
+(sb__primconcept *WOECHENTLICH* (:list
+             (supers (:list *LEXICON* WEEKLY))))
+(sb__primconcept DAILY (:list
+             (supers (:list INTERVAL))))
+(sb__defconcept *TAEGLICH* (:list
+            (supers (:list DAILY *LEXICON*))))
+(sb__primconcept MONTHLY (:list
+             (supers (:list INTERVAL))))
+(sb__defconcept *MONAT* (:list
+            (supers (:list MONTHLY *LEXICON*))))
+(sb__primconcept SPEECH-ACT (:list
+             (supers (:list FSS))))
+(sb__primconcept ORDER (:list
+             (supers (:list SPEECH-ACT))))
+(sb__primconcept ASSERTION (:list
+             (supers (:list SPEECH-ACT))))
+(sb__primconcept QUESTION (:list
+             (supers (:list SPEECH-ACT))))
+(sb__primconcept INTERJECTION (:list
+             (supers (:list SPEECH-ACT))))
+(sb__primconcept DETERMINER (:list
+             (supers (:list FSS))))
+(sb__defconcept *D* (:list
+            (supers (:list DETERMINER *LEXICON*))))
+(sb__primconcept INDEFINITE (:list
+             (supers (:list DETERMINER))))
+(sb__defconcept *EIN* (:list
+            (supers (:list INDEFINITE *LEXICON*))))
+(sb__primconcept CARDINAL (:list
+             (supers (:list INDEFINITE))))
+(sb__defconcept *35* (:list
+            (supers (:list CARDINAL *LEXICON*))))
+(sb__primconcept *50* (:list
+             (supers (:list CARDINAL *LEXICON*))))
+(sb__defconcept *FUENFUNDDREISSIG* (:list
+            (supers (:list CARDINAL *LEXICON*))))
+(sb__primconcept INTERROGATIVE (:list
+             (supers (:list DETERMINER))))
+(sb__primconcept DEFINITE (:list
+             (supers (:list DETERMINER))))
+(sb__primconcept DEMONSTRATIVE (:list
+             (supers (:list DEFINITE))))
+(sb__defconcept *DER* (:list
+            (supers (:list DEFINITE *LEXICON*))))
+(sb__defconcept *DIE* (:list
+            (supers (:list DEFINITE *LEXICON*))))
+(sb__primconcept POSSESSIVE (:list(:list
+             (supers (:list DEFINITE)))))
+(sb__defconcept *DEM* (:list
+            (supers (:list *LEXICON* DEFINITE))))
+(sb__defconcept *MEIN* (:list
+            (supers (:list *LEXICON* DETERMINER))))
+(sb__primconcept PROPERTY-FILLER (:list
+             (supers (:list FSS))))
+(sb__primconcept ADJECTIVE-PROPERTY (:list
+             (supers (:list PROPERTY-FILLER))))
+(sb__primconcept TRUTH-VALUE (:list
+             (supers (:list ADJECTIVE-PROPERTY))))
+(sb__defconcept ABSTRACT-THING (:list
+            (supers (:list THING)
+            (nr PRIMELEMROLE (TRUTH-MOD DOMAIN-RANGE (ABSTRACT-THING TRUTH-VALUE NIL)) (1 1 1)))))
+(sb__primconcept NAME (:list
+             (supers (:list ABSTRACT-THING))))
+(sb__defconcept THING (:list
+            (supers (:list PROPERTY-FILLER))
+            (nr (sb__primelemrole DET (domain-range THING DETERMINER NIL)) 1 1 1)
+            (nr (sb__primelemrole DEICTIC-MOD (domain-range THING POINTING NIL)) 1 1 1)
+            (nr (sb__primelemrole NAMED (domain-range THING NAME NIL)) 1 1 1)))
+(sb__defconcept PREDICATE (:list
+            (supers (:list FSS))
+            (nr (sb__primelemrole SUBJECT (domain-range PREDICATE THING NIL)) 1 1 1)
+            (nr (sb__primelemrole PURPOSE (domain-range PREDICATE PREDICATE NIL)) 1 1 1)
+            (nr (sb__primelemrole TIME (domain-range PREDICATE TIME NIL)) 1 1 1)
+            (nr (sb__primelemrole ILLOC (domain-range PREDICATE SPEECH-ACT NIL)) 1 1 1)
+            (nr (sb__primelemrole CAUSE (domain-range PREDICATE PREDICATE NIL)) 1 1 1)
+            (nr (sb__primelemrole RESULT (domain-range PREDICATE THING NIL)) 1 1 1)
+            (nr (sb__primelemrole LOCATION (domain-range PREDICATE THING NIL)) 1 1 1)
+            (necres SUBJECT NEC)))
+(sb__primconcept STATE (:list
+             (supers (:list PREDICATE))
+             (restrict-inh TIME-STATE (restricts TIME (range PERIOD NIL)))))
+(sb__attributes STATE 
+            SUBJECT 
+            (ROLE-TO-CASE NOMINATIV))
+(sb__attributes STATE 
+            LOCATION 
+            (ROLE-TO-CASE (PREP-STEMS IN)))
+(sb__defconcept HUMAN (:list
+            (supers (:list ANIMATE))
+            (nr (sb__primelemrole VOLITION (domain-range HUMAN VOLITIONAL-SQ NIL)) 1 1 1))))
+(sb__defconcept GEOGRAPHICAL-OBJECT (:list
+            (supers (:list INANIMATE))
+            (nr (sb__primelemrole ORIGIN-MOD (domain-range GEOGRAPHICAL-OBJECT ORIGIN NIL)) 1 1 1)))
+(sb__primconcept *WOHN* (:list
+             (supers (:list *LEXICON* STATE))
+             (restrict-inh AGENT (restricts SUBJECT (range HUMAN THING)))
+             (restrict-inh LOCATION-*WOHN* (restricts LOCATION (range GEOGRAPHICAL-OBJECT NIL)))))
+(sb__attributes *WOHN* 
+            AGENT 
+            (ROLE-TO-CASE NOMINATIV) )
+(sb__attributes *WOHN* 
+            LOCATION 
+            (ROLE-TO-CASE (PREP-STEMS IN)) )
+(sb__primconcept QUALITATIVE (:list
+             (supers (:list ADJECTIVE-PROPERTY))))
+(sb__primconcept QUALITY (:list
+             (supers (:list QUALITATIVE))))
+(sb__primconcept COLOUR (:list
+             (supers (:list QUALITY))))
+(sb__defconcept CONCRETE-THING (:list
+            (supers (:list THING))
+            (nr (sb__primelemrole COLOUR-MOD (domain-range CONCRETE-THING COLOUR NIL)) 1 1 1)))
+(sb__primconcept RELATION (:list
+             (supers (:list ADJECTIVE-PROPERTY))))
+(sb__defconcept INDIVIDUAL (:list
+            (supers (:list CONCRETE-THING))
+            (nr (sb__primelemrole RELATIVE-MOD (domain-range INDIVIDUAL RELATION NIL)) 1 1 1)))
+(sb__defconcept MASS-NOUN (:list
+            (supers (:list CONCRETE-THING))))
+(sb__primconcept MATERIAL (:list
+             (supers (:list MASS-NOUN))))
+(sb__defconcept INANIMATE (:list
+            (supers (:list INDIVIDUAL))
+            (nr (sb__primelemrole MATERIAL-MOD (domain-range INANIMATE MATERIAL NIL)) 1 1 1)))
+(sb__primconcept WEIGHT (:list
+             (supers (:list QUALITY))))
+(sb__defconcept TOUCHABLE-OBJECT (:list
+            (supers (:list INANIMATE))
+            (nr (sb__primelemrole WEIGHT-MOD (domain-range TOUCHABLE-OBJECT WEIGHT NIL)) 1 1 1)))
+(sb__defconcept ACTION (:list
+            (supers (:list PREDICATE))
+            (restrict-inh (AGENT RESTRICTS (SUBJECT) RANGE (HUMAN HUMAN)))
+            (nr (sb__primelemrole INSTRUMENT (domain-range ACTION TOUCHABLE-OBJECT NIL)) 1 1 1)
+            (nr (sb__primelemrole CONCERNED (domain-range ACTION THING NIL)) 1 1 1)))
+(sb__primconcept DO (:list
+             (supers (:list ACTION))))
+(sb__attributes DO 
+            RESULT 
+            (ROLE-TO-CASE AKKUSATIV) )
+(sb__attributes DO 
+            AGENT 
+            (ROLE-TO-CASE NOMINATIV) )
+(sb__primconcept *ABSETZ* (:list
+             (supers (:list *LEXICON* DO))))
+(sb__attributes *ABSETZ* 
+            RESULT 
+            (ROLE-TO-CASE AKKUSATIV) )
+(sb__attributes *ABSETZ* 
+            AGENT 
+            (ROLE-TO-CASE NOMINATIV) )
+(sb__primconcept *AUSFUEHR* (:list
+             (supers (:list *LEXICON* DO))))
+(sb__attributes *AUSFUEHR* 
+            AGENT 
+            (ROLE-TO-CASE NOMINATIV) )
+(sb__attributes *AUSFUEHR* 
+            RESULT 
+            (ROLE-TO-CASE AKKUSATIV) )
+(sb__defconcept MOTION (:list
+            (supers (:list ACTION))
+            (nr (sb__primelemrole DESTINATION (domain-range MOTION GEOGRAPHICAL-OBJECT NIL)) 1 1 1)
+            (nr (sb__primelemrole SOURCE (domain-range MOTION GEOGRAPHICAL-OBJECT NIL)) 1 1 1)))
+(sb__attributes MOTION 
+            AGENT 
+            (ROLE-TO-CASE NOMINATIV) )
+(sb__attributes MOTION 
+            LOCATION 
+            (ROLE-TO-CASE DATIV) )
+(sb__defconcept MOTION-BY-MEANS (:list
+            (supers (:list MOTION))
+            (necres (sb__primelemrole MEANS (domain-range MOTION-BY-MEANS TOUCHABLE-OBJECT TOUCHABLE-OBJECT)) NEC)))
+(sb__attributes MOTION-BY-MEANS 
+            DESTINATION 
+            (ROLE-TO-CASE (PREP-STEMS NACH)) )
+(sb__attributes MOTION-BY-MEANS 
+            SOURCE 
+            (ROLE-TO-CASE (PREP-STEMS VON)) )
+(sb__attributes MOTION-BY-MEANS 
+            AGENT 
+            (ROLE-TO-CASE NOMINATIV) )
+(sb__attributes MOTION-BY-MEANS 
+            MEANS 
+            (ROLE-TO-CASE (PREP-STEMS MIT)) )
+(sb__defconcept *FAHR* (:list
+            (supers (:list *LEXICON* MOTION-BY-MEANS))))
+(sb__attributes *FAHR* 
+            SOURCE 
+            (ROLE-TO-CASE (PREP-STEMS VON)) )
+(sb__attributes *FAHR* 
+            AGENT 
+            (ROLE-TO-CASE NOMINATIV) )
+(sb__attributes *FAHR* 
+            DESTINATION 
+            (ROLE-TO-CASE (PREP-STEMS NACH)) )
+(sb__attributes *FAHR* 
+            MEANS 
+            (ROLE-TO-CASE (PREP-STEMS MIT)) )
+(sb__defconcept *GEH* (:list
+            (supers (:list *LEXICON* MOTION))))
+(sb__defconcept *TREFF* (:list
+            (supers (:list *LEXICON* ACTION))))
+(sb__defconcept *WERF* (:list
+            (supers (:list *LEXICON* ACTION))
+            (necres CONCERNED NEC)))
+(sb__defconcept CAUSATIVE (:list
+            (supers (:list ACTION))))
+(sb__defconcept PRODUCTIVE (:list
+            (supers (:list CAUSATIVE))
+            (necres (sb__primelemrole RESULT (domain-range PRODUCTIVE THING THING)) NEC)))
+(sb__defconcept WRITE (:list
+            (supers (:list PRODUCTIVE))
+            (necres (sb__primelemrole CONCERNED (domain-range WRITE THING THING)) NEC)))
+(sb__primconcept CANVAS (:list
+             (supers (:list TOUCHABLE-OBJECT))))
+(sb__defconcept ENTER (:list
+            (supers (:list WRITE))
+            (restrict-inh LOCATION-ENTER (restricts LOCATION (range CANVAS CANVAS)))))
+(sb__defconcept *ARBEIT* (:list
+            (supers (:list *LEXICON* ACTION))))
+(sb__primconcept REPEAT (:list
+             (supers (:list ACTION))))
+(sb__attributes REPEAT 
+            RESULT 
+            (ROLE-TO-CASE AKKUSATIV) )
+(sb__primconcept *WIEDERHOL* (:list
+             (supers (:list REPEAT *LEXICON*))))
+(sb__attributes *WIEDERHOL* 
+            RESULT 
+            (ROLE-TO-CASE AKKUSATIV) )
+(sb__defconcept TRANSACTION (:list
+            (supers (:list ACTION))
+            (nr (sb__primelemrole BENEFICATIVE (domain-range TRANSACTION HUMAN NIL)) 1 1 1)))
+(sb__defconcept *SCHENK* (:list
+            (supers (:list *LEXICON* TRANSACTION))
+            (necres CONCERNED NEC)))
+(sb__attributes *SCHENK* 
+            BENEFICATIVE 
+            (ROLE-TO-CASE DATIV) )
+(sb__primconcept *ZAHL* (:list
+             (supers (:list *LEXICON* TRANSACTION))))
+(sb__defconcept *KAUF* (:list
+            (supers (:list *LEXICON* TRANSACTION))
+            (necres CONCERNED NEC)))
+(sb__attributes *KAUF* 
+            LOCATION 
+            (ROLE-TO-CASE (PREP-STEMS IN)) )
+(sb__attributes *KAUF* 
+            BENEFICATIVE 
+            (ROLE-TO-CASE DATIV) )
+(sb__attributes *KAUF* 
+            RESULT 
+            (ROLE-TO-CASE AKKUSATIV) )
+(sb__attributes *KAUF* 
+            AGENT 
+            (ROLE-TO-CASE NOMINATIV) )
+(sb__primconcept REASON (:list
+             (supers (:list ACTION))))
+(sb__attributes REASON 
+            AGENT 
+            (ROLE-TO-CASE NOMINATIV) )
+(sb__attributes REASON 
+            RESULT 
+            (ROLE-TO-CASE AKKUSATIV) )
+(sb__primconcept *VERURSACH* (:list
+             (supers (:list *LEXICON* REASON))))
+(sb__attributes *VERURSACH* 
+            AGENT 
+            (ROLE-TO-CASE NOMINATIV) )
+(sb__attributes *VERURSACH* 
+            RESULT 
+            (ROLE-TO-CASE AKKUSATIV) )
+(sb__defconcept *UNTERRICHT* (:list
+            (supers (:list PREDICATE *LEXICON*))))
+(sb__primconcept PROPERTY (:list
+             (supers (:list PREDICATE))))
+(sb__primelemrole HAS-PROPERTY 
+              (domain-range PROPERTY PROPERTY-FILLER NIL))
+(sb__attributes PROPERTY 
+            RESULT 
+            (ROLE-TO-CASE PRAEDIKATSNOMINATIV) )
+(sb__attributes PROPERTY 
+            SUBJECT 
+            (ROLE-TO-CASE NOMINATIV) )
+(sb__attributes PROPERTY 
+            HAS-PROPERTY 
+            (ROLE-TO-CASE ADJEKTIVALERGAENZUNG) )
+(sb__defconcept VALUE-PROPERTY (:list
+            (supers (:list PROPERTY))
+            (nr (sb__primelemrole MEASURE (domain-range VALUE-PROPERTY ABSTRACT-THING NIL)) 1 1 1)))
+(sb__defconcept COST (:list
+            (supers (:list VALUE-PROPERTY))
+            (necres (sb__primelemrole MEASURE (domain-range COST ABSTRACT-THING ABSTRACT-THING)) NEC)))
+(sb__attributes COST 
+            MEASURE 
+            (ROLE-TO-CASE AKKUSATIV))
+(sb__attributes COST 
+            SUBJECT 
+            (ROLE-TO-CASE NOMINATIV) )
+(sb__defconcept *KOST* (:list
+            (supers (:list COST *LEXICON*))))
+(sb__attributes *KOST* 
+            SUBJECT 
+            (ROLE-TO-CASE NOMINATIV) )
+(sb__attributes *KOST* 
+            MEASURE 
+            (ROLE-TO-CASE AKKUSATIV) )
+(sb__primconcept DEDUCTE (:list
+             (supers (:list PROPERTY))))
+(sb__primconcept *ABSETZBAR* (:list
+             (supers (:list DEDUCTE *LEXICON*))))
+(sb__primconcept *SEIN* (:list
+             (supers (:list *LEXICON* PROPERTY))))
+(sb__attributes *SEIN* 
+            SUBJECT 
+            (ROLE-TO-CASE NOMINATIV) )
+(sb__attributes *SEIN* 
+            RESULT 
+            (ROLE-TO-CASE PRAEDIKATSNOMINATIV) )
+(sb__primconcept *BESITZEN* (:list
+             (supers (:list *LEXICON* PROPERTY))))
+(sb__attributes *BESITZEN* 
+            SUBJECT 
+            (ROLE-TO-CASE NOMINATIV) )
+(sb__attributes *BESITZEN* 
+            HAS-PROPERTY 
+            (ROLE-TO-CASE ADJEKTIVALERGAENZUNG) )
+(sb__attributes *BESITZEN* 
+            RESULT 
+            (ROLE-TO-CASE AKKUSATIV) )
+(sb__primconcept *HABEN* (:list
+             (supers (:list *LEXICON* PROPERTY))
+             (restrict-inh HAS-PROPERTY-*HABEN* (restricts HAS-PROPERTY (range THING NIL)))))
+(sb__primconcept ORIGIN (:list
+             (supers (:list ADJECTIVE-PROPERTY))))
+(sb__primconcept STATE-Q (:list
+             (supers (:list QUALITATIVE))))
+(sb__primconcept VOLITIONAL-SQ (:list
+             (supers (:list STATE-Q))))
+(sb__primconcept PHYSICAL-SQ (:list
+             (supers (:list STATE-Q))))
+(sb__primconcept *KLEIN* (:list
+             (supers (:list *LEXICON* PHYSICAL-SQ))))
+(sb__primconcept *GROSS* (:list
+             (supers (:list *LEXICON* PHYSICAL-SQ))))
+(sb__primconcept *ROT* (:list
+             (supers (:list COLOUR *LEXICON*))))
+(sb__primconcept WORTH (:list
+             (supers (:list QUALITY))))
+(sb__primconcept VOELKLINGEN (:list
+             (supers (:list NAME))))
+(sb__primconcept *GI* (:list
+             (supers (:list ABSTRACT-THING *LEXICON*))))
+(sb__defconcept INDICATION-OF-QUANTITY (:list
+            (supers (:list ABSTRACT-THING))
+            (restrict-inh QUANTITY (restricts DET (range CARDINAL CARDINAL)))
+            (necres QUANTITY NEC)))
+(sb__defconcept *DM* (:list
+            (supers (:list INDICATION-OF-QUANTITY *LEXICON*))))
+(sb__primconcept PROFESSION (:list
+             (supers (:list ABSTRACT-THING))))
+(sb__primconcept *SCHREINER* (:list
+             (supers (:list PROFESSION *LEXICON*))))
+(sb__primconcept *INFORMATIKER* (:list
+             (supers (:list PROFESSION *LEXICON*))))
+(sb__primconcept ACTION-CONTENT (:list
+             (supers (:list ABSTRACT-THING ACTION))))
+(sb__primconcept MOTION-CONTENT (:list
+             (supers (:list ACTION-CONTENT MOTION))))
+(sb__primconcept MOTION-BY-MEANS-CONTENT (:list
+             (supers (:list MOTION-BY-MEANS ACTION-CONTENT))))
+(sb__primconcept COST (:list
+             (supers (:list ABSTRACT-THING))))
+(sb__primconcept *KOSTEN* (:list
+             (supers (:list *LEXICON* COST))))
+(sb__primconcept *GELD* (:list
+             (supers (:list *LEXICON* COST))))
+(sb__primconcept PROFESSION (:list
+             (supers (:list ABSTRACT-THING))))
+(sb__primconcept *INFORMATIKER* (:list
+             (supers (:list *LEXICON* PROFESSION))))
+(sb__primconcept TAX-ACTION (:list
+             (supers (:list ABSTRACT-THING))))
+(sb__primconcept *STEUERHANDLUNG* (:list
+             (supers (:list *LEXICON* TAX-ACTION))))
+(sb__primconcept NUMBER (:list
+             (supers (:list ABSTRACT-THING))))
+(sb__defconcept *FAHRT* (:list
+            (supers (:list THING *LEXICON*))))
+(sb__defconcept *DAS* (:list
+            (supers (:list THING *LEXICON*))))
+(sb__defconcept ANIMATE (:list
+            (supers (:list INDIVIDUAL))
+            (nr (sb__primelemrole PHYSIS-MOD (domain-range ANIMATE PHYSICAL-SQ NIL)) 1 1 1)))
+(sb__primconcept *FRAU* (:list
+             (supers (:list HUMAN *LEXICON*))))
+(sb__defconcept *MANN* (:list
+            (supers (:list HUMAN *LEXICON*))))
+(sb__attributes *MANN* 
+            PHYSIS-MOD 
+            (ROLE-TO-CASE ADJ) )
+(sb__primconcept *SIE* (:list
+             (supers (:list HUMAN *LEXICON*))))
+(sb__defconcept *JUNGE* (:list
+            (supers (:list HUMAN *LEXICON*))))
+(sb__primconcept *SIE* (:list
+             (supers (:list *LEXICON* HUMAN))))
+(sb__primconcept *PERSON* (:list
+             (supers (:list *LEXICON* HUMAN))))
+(sb__defconcept *KARL* 
+            (supers (:list *LEXICON* HUMAN))))
+(sb__defconcept *ICH* (:list
+            (supers (:list *LEXICON* HUMAN))))
+(sb__defconcept *PETER* (:list
+            (supers (:list *LEXICON* HUMAN))))
+(sb__primconcept PLANT (:list
+             (supers (:list ANIMATE))))
+(sb__defconcept ANIMAL (:list
+            (supers (:list ANIMATE))
+            (nr (sb__primelemrole VOLITION (domain-range ANIMAL VOLITIONAL-SQ NIL)) 1 1 1)))
+(sb__primconcept TOWN (:list
+             (supers (:list GEOGRAPHICAL-OBJECT))))
+(sb__defconcept *VOELKLINGEN* (:list
+            (supers (:list TOWN *LEXICON*))))
+(sb__attributes *VOELKLINGEN* 
+            NAMED 
+            (ANNOTATE-FILLER T) )
+(sb__defconcept *SAARBRUECKEN* (:list
+            (supers (:list TOWN *LEXICON*))))
+(sb__attributes *SAARBRUECKEN* 
+            NAMED 
+            (ANNOTATE-FILLER T) )
+(sb__defconcept *DUDWEILER* (:list
+            (supers (:list TOWN *LEXICON*))))
+(sb__attributes*DUDWEILER* 
+            NAMED 
+            (ANNOTATE-FILLER T) )
+(sb__defconcept *SAARLOUIS* (:list
+            (supers (:list *LEXICON* TOWN))))
+(sb__attributes *SAARLOUIS* 
+            NAMED 
+            (ANNOTATE-FILLER T) )
+(sb__primconcept *BERLIN* (:list
+             (supers (:list *LEXICON* TOWN))))
+(sb__defconcept *WALD* (:list
+            (supers (:list GEOGRAPHICAL-OBJECT *LEXICON*))))
+(sb__defconcept *HIER* (:list
+            (supers (:list GEOGRAPHICAL-OBJECT *LEXICON*))))
+(sb__defconcept *ORT* (:list
+            (supers (:list *LEXICON* GEOGRAPHICAL-OBJECT))))
+(sb__primconcept INFORMATION (:list
+             (supers (:list INANIMATE))))
+(sb__primconcept STRING (:list
+             (supers (:list INFORMATION))))
+(sb__primconcept SYSTEM (:list
+             (supers (:list HUMAN INANIMATE))))
+(sb__defconcept VEHICLE (:list
+            (supers (:list TOUCHABLE-OBJECT))
+            (nr (sb__primelemrole WORTH-MOD (domain-range VEHICLE WORTH NIL)) 1 1 1)))
+(sb__defconcept *FAHRRAD* (:list
+            (supers (:list VEHICLE *LEXICON*))))
+(sb__primconcept BUS (:list
+             (supers (:list VEHICLE))))
+(sb__defconcept *BUS* (:list
+            (supers (:list BUS *LEXICON*))))
+(sb__primconcept *MOTORRAD* (:list
+             (supers (:list VEHICLE *LEXICON*))))
+(sb__primconcept *MOTORRAD* (:list
+             (supers (:list VEHICLE *LEXICON*))))
+(sb__attributes *MOTORRAD* 
+            COLOUR-MOD 
+            (ROLE-TO-CASE ADJ) )
+(sb__defconcept *BUCH* (:list
+            (supers (:list *LEXICON* TOUCHABLE-OBJECT))))
+(sb__primconcept *KOCHBUCH* (:list
+             (supers (:list *LEXICON* TOUCHABLE-OBJECT))))
+(sb__primconcept RESULT (:list
+             (supers (:list TOUCHABLE-OBJECT))))
+(sb__defconcept *AUKTION* (:list
+            (supers (:list *LEXICON* THING))))
+(sb__defconcept *WAS* (:list
+            (supers (:list *LEXICON* THING))))
+))))

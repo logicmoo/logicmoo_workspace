@@ -1,0 +1,128 @@
+order(poly3 for lists) using poly1 for object.
+setInterpretation('$inj-list-nelist'(x) :    [ x + 1 ,
+     x + 1 ,
+     x + 1 ]
+).
+setInterpretation('$inj-object-list'(x) :    [ x + 1 ,
+     x + 1 ,
+     x + 1 ]
+).
+setInterpretation('append-nelist-nelist-nelist'(x,y) :    [ x + y + 1 ,
+     x + y + 1 ,
+     x + y + 1 ]
+).
+setInterpretation('append-nelist-nelist-list'(x,y) :    [ x + y + 3 ,
+     x + y + 1 ,
+     x + y + 1 ]
+).
+setInterpretation('append-nelist-list-nelist'(x,y) :    [ x + y + 2 ,
+     x + y + 1 ,
+     x + y + 1 ]
+).
+setInterpretation('append-list-list-list'(x,y) :    [ x + y + 4 ,
+     x + y + 1 ,
+     x + y + 1 ]
+).
+setInterpretation(append(x,y) :    [ x + y ,
+     x + y ,
+     2 * x + y ]
+).
+setInterpretation(first(x) :    [ 2 * x ,
+     2 * x ,
+     2 * x ]
+).
+setInterpretation(tail(x) :    [ 2 * x ,
+     2 * x ,
+     2 * x ]
+).
+setInterpretation(rev(x) :    [ (x^2) ,
+     2 * x ,
+     2 * x ]
+).
+setInterpretation([] :    [ 2 ,
+     2 ,
+     2 ]
+).
+setInterpretation('.'(x,y) :    [ 3 * x + y + 1 ,
+     x + y ,
+     x + y ]
+).
+setInterpretation('$inj-object-bool'(x) :    [ x + 1 ,
+     x + 1 ,
+     x + 1 ]
+).
+setInterpretation('==-bool-object-object'(x,y) :    [ x + y + 4 ,
+     x + y + 4 ,
+     x + y + 4 ]
+).
+setInterpretation('\==-bool-object-object'(x,y) :    [ x + y + 5 ,
+     x + y + 5 ,
+     x + y + 5 ]
+).
+setInterpretation(==(x,y) :    [ x + y + 4 ,
+     x + y + 4 ,
+     x + y + 4 ]
+).
+setInterpretation(\==(x,y) :    [ x + y + 5 ,
+     x + y + 5 ,
+     x + y + 5 ]
+).
+setInterpretation('false-bool' :    [ 2 ,
+     2 ,
+     2 ]
+).
+setInterpretation('true-bool' :    [ 2 ,
+     2 ,
+     2 ]
+).
+setInterpretation(true :    [ 2 ,
+     2 ,
+     2 ]
+).
+setInterpretation(false :    [ 2 ,
+     2 ,
+     2 ]
+).
+
+constructor('true-bool').
+constructor('false-bool').
+constructor('[]-list').
+constructor('[]-list').
+
+
+
+
+
+
+/* condition number 1 is the selected condition for
+/*	X1:bool,X2:bool |- X1 = X2 => X1 = X2 */
+action(selectcondition(1),'$equation'(['$inj-object-bool'(@'X1-bool')='$inj-object-bool'(@'X2-bool')],[@'X1-bool'= @'X2-bool'])).
+
+/* ordering of the literals is ms for
+/*	x:object,y:object |- x==y = y==x */
+action(status(ms),'$equation'([],['==-bool-object-object'(@'x-object',@'y-object')='==-bool-object-object'(@'y-object',@'x-object')])).
+
+/* ordering of the literals is ms for
+/*	x:object,y:object |- x\==y = y\==x */
+action(status(ms),'$equation'([],['\==-bool-object-object'(@'x-object',@'y-object')='\==-bool-object-object'(@'y-object',@'x-object')])).
+
+/* declare as nonoperational :
+/*	x:object,y:object |- x==y = true => x = y */
+action(orient(n),'$equation'(['==-bool-object-object'(@'x-object',@'y-object')='true-bool'],[@'x-object'= @'y-object'])).
+
+/* condition number 1 is the selected condition for
+/*	x:object,y:object |- x==y = true => x = y */
+action(selectcondition(1),'$equation'(['==-bool-object-object'(@'x-object',@'y-object')='true-bool'],[@'x-object'= @'y-object'])).
+
+/* ordering of the literals is ms for
+/*	x:object,y:object |- x==y = true => x = y */
+action(status(ms),'$equation'(['==-bool-object-object'(@'x-object',@'y-object')='true-bool'],[@'x-object'= @'y-object'])).
+
+/* condition number 1 is the selected condition for
+/*	X1:nelist,X2:nelist |- X1 = X2 => X1 = X2 */
+action(selectcondition(1),'$equation'(['$inj-list-nelist'(@'X1-nelist')='$inj-list-nelist'(@'X2-nelist')],[@'X1-nelist'= @'X2-nelist'])).
+
+/* condition number 1 is the selected condition for
+/*	X1:list,X2:list |- X1 = X2 => X1 = X2 */
+action(selectcondition(1),'$equation'(['$inj-object-list'(@'X1-list')='$inj-object-list'(@'X2-list')],[@'X1-list'= @'X2-list'])).
+

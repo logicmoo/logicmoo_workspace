@@ -1,0 +1,467 @@
+
+
+                      THE SYNTAX OF BACK V5
+
+                       The Back Group (TUB)
+                            June, 1992
+		     (Update: February, 1993)
+
+
+
+The syntax of the new release of the BACK system (version 5)
+differs slightly from the syntax of the previous version.
+First, the most obvious change in the syntax is the unification of 
+TBox and ABox languages. In BACK V4 an object description consisted of a 
+TBox part (a concept) and an ABox part (a specification of role-fillers).
+Since we integrated "fills" as a concept-forming operator, an object can now
+be described by an ordinary concept without need for a special format to 
+specify role-fillers. This enabled us to develop a uniform
+interface-language for the TBox and the ABox.
+With the new syntax we got rid of some anoying redundancies which also 
+were noted by most of you (for instance: what is the right place to 
+specify the cardinality of a filler set in AQL queries).
+Second, we aimed at developing a leaner language by reducing duplicated 
+predicates where a single one would have sufficed. Finally, we also tried 
+to be close to the abstract syntax as is used in many theoretical papers 
+on terminological systems.
+For instance, we gave preference to `:' over "fills".
+
+The following will contain a description of some of the major changes with
+respect to the syntax of 4, and the definition of the new syntax.
+The description leaves a lot of issues unaddressed. If you have any 
+questions related to any part of the following, please feel free to 
+contact any of us. 
+
+
+                        * CONCEPTS *
+
+The concept-forming operators "oneof" and "fills" (:) allow the use of 
+extensional information in the definition of concepts.
+Thus, each instance of a concept has the value  as role-filler for role .
+Each instance of a concept oneof([o1,...,on]) is either o1, or..., or on.
+
+	country         :< anything
+	ec_country      := country and oneof([france,germany,italy,
+					      spain,...])
+	italian_company := company and residence:italy
+
+These constructs can thus be used like attribute sets in BACK V4
+with the important difference that the objects used behave like
+ordinary objects and can have roles on their own, which is not
+possible for attributes.
+We replaced the disjoint restriction by the concept-forming operator "not".
+As you will recall disjointness could only be specified between primitive 
+concepts. Similarily, our negation is limited to primitive concepts also.
+Thus instead of the following modeling in BACK V4
+
+	share                 :< participation
+	quota                 :< participation
+	disjoint(share,quota)
+
+you could write in BACK V5
+
+	share :< participation
+	quota :< participation and not(share)
+
+Only in order to guarantee compatibility we will still accept 
+disjointness-restrictions (it is not part of our official syntax anymore!). 
+Since they are internally handled by revising the definition of one of 
+the disjoint concepts it will be a lot more efficient, however, to use 
+the not instead of the disjointness. 
+The "individual" restriction is not supported anymore.
+Since we now allow the use of constants in TBox concepts,
+we do think there is no more need for having individual concepts.
+Thus the concept "oneof(italy)" is an individual concept comprising
+as sole instance the ABox object "italy".
+The  "or" operator may only be used at the outmost level of ABox queries 
+(or in filler-expressions of ABox queries).
+
+
+                          * ROLES *
+
+BACK V5 allows the definition of roles, whereas in BACK V4 only primitive 
+roles were accepted. We also integrated as newrole-forming operators 
+"comp" for composition of roles, "inv" for inverse roles, and 
+"trans" for the transitive closure of roles.
+The "not" operator behaves like the not operator for
+concepts, i.e., only primitive roles are allowed as arguments.
+
+There is an additional restriction for complex role terms: in ABox queries 
+no role terms involving "comp" or "trans" are allowed (this has to do with 
+our internal treatment of defined roles in the reasoning algorithms as
+it is at the moment).
+
+
+Furthermore, defined roles must have at least one primitive
+component: i.e., defined roles containing only domain and/or range 
+information are not accepted by the system (such roles have
+very bad computational properties and would slow down the 
+performance of the system considerably). However, we allow primitive 
+roles containing only domain and/or range information.
+
+                         * OBJECTS *
+
+As stated above, in V5 descriptions of objects have the same syntactical 
+form as concept definitions. Operators "with" and "andwith" of BACK V4 
+are replaced by the simple "and". 
+As a consequence, filler-expressions consisting of multiple `values'
+must be enclosed in parentheses.
+Cardinality restrictions are now uniquely expressed by means of 
+"atleast" and "atmost"; "card" has been omitted.
+To be consistent with the operators :< and :=, the operator :: will be 
+used for introducing objects (instead of =).
+Furthermore, the "new" operator has been omitted.
+Instead, unknown object names will be forward-introduced by the system,
+as has already been the case in the TBox of BACK V4.
+
+	datamont :: italian_company
+	nsl      :: company and residence:france
+	aims     :: project
+  		    and funded_by:cec
+	 	    and partners:(datamont and ghc and nsl
+	  		     and onera_cert and quinary and tub and upv)
+
+To avoid confusion with the term-forming operator "all" and the 
+term-forming macro "some" (see below), the  subquery operators have
+been changed to "allknown", "someknown", "theknown". Of course, all 
+remarks made above for object descriptions apply similarily for 
+ABox queries.
+
+	R1 =            getall 	 italiancompany 
+	                and 	 inv(partners):(someknown project)
+	R2 = describe   getall   project
+			and      partners:(datamont or nsl)
+	R3 = [self, rf(fundedby)]  
+	     for	getall   project
+			and      partners:(datamont or nsl)
+
+In BACK V4 we provided extra operators to perform set operations on 
+AQL queries (like intersection or union). These are now substituted 
+by and and or applied on the particular queries. For instance, the 
+BACK V4 queries
+
+	R1 = getall c1 intersection getall c2
+	R2 = getall c1 union getall c2
+
+are expressed in BACK V5 as
+
+	R1 = getall c1 and c2
+	R2 = getall c1 or c2
+
+where c1 and c2 may be of arbitrary complexity.
+
+
+                       * MACROS *
+
+There are some concept-forming operators which might be useful in 
+actual modeling but which are equivalent to combinations of other 
+concept terms. These operators can be defined as macros, and we offer 
+a predefined set containing the definitions listed below (the user can 
+define his own macros in an analogous way):
+
+	exactly(N,Role)       *= atleast(N,Role) and atmost(N,Role)
+	some (role,Conc)      *= atleast(1,Role) and range(Conc)
+	some(Role)            *= atleast(1,Role)
+	the(Role,Conc)        *= exactly(1,Role and all(Role,Conc)
+	no(Role,Conc)         *= atmost(0,Role) and range(Conc)
+	no(Role)              *= atmost(0,Role) 
+	atleast(N,Role,Conc)  *= atleast(N,Role and range(Conc))
+	atmost(N,Role,Conc)   *= atmost(N,Role and range(Conc))
+	exactly(N,Role,Conc)  *= exactly(N,Role and range(Conc))
+	rvm_some(Role1,Role2) *= some(Role1 and Role2)
+	rvm_no(Role1,Role2)   *= no(Role1 and Role2)
+
+Note that every variable occuring on the right-hand side of a 
+macro-definition must be bound by an occurrence on the left-hand side.
+
+
+                         * WHAT ELSE *
+In BACK V4 certain types of cyclic definitions were allowed, whereas 
+BACK V5 rejects any cyclic definition. We see one case where cyclic 
+defintions are needed in the modeling process, namely when the cardinality 
+of a role is restricted at the domain of that role.
+Instead of modeling this as:
+
+	name        :< domain(named,thing) and range(string)
+	named thing :< atmost(1,name)
+
+you would now model the role name as a "feature", i.e. 
+a role which is functional:
+
+	name :< domain(named thing) and 
+		range(string) type feature
+
+Note that the effect of declaring a role as a feature
+is simply that all number restrictions for it are unified with
+[0,1]. We do not perform additional reasoning which might be 
+expected for a full fledged feature logic.
+We have unified the set of interaction predicates. For example, 
+instead of having two seperate predicates for reading in TBoxes 
+("tboxread") and ABoxes ("aboxread"), there is now a unique "backread"
+for both purposes. Some of these predicates may have an additional 
+argument to select a particular box.
+We have tried to unify operations for querying TBox and ABox.
+Also, we have clearly distinguished retrieval, which returns some 
+data as a result, from ask operations which are boolean.
+If no Result Variable is provided in retrieval the result is
+printed to the current output stream.
+For ask expressions the operator ?< replaces the TBox operator "subsumes",
+and ?: replaces "isa" of the ABox.
+Examples are:
+
+	backretrieve(R1=defined_as getall company).
+	backretrieve(R2=describe_fully italian_company).
+	backretrieve(describe [c/obj, o1, o2]). %if there is also a concept 'c'
+	backask(italian_company ?< company and residence:italy).
+	backask(nsl ?: company and inv(partners):aims).
+
+			    * STATES *
+We offer several states or flags to guide the system behavior.
+The state ``verbosity'' controls the amount of output produced 
+by the system during run-time. The state ``introduction'' can be set
+to ``forward'' in which case all names in a term which have not
+yet been introduced are ``forward'' introduced as primitive terms.
+If you want to avoid typos, the state ``noforward'' will reject all
+names of concepts or roles which have not been previously introduced.
+
+The ``revision'' state is used to allow/\/forbid revision of 
+concepts and roles. The ``retrieval'' state controls the behavior
+in case of ``wrong'' retrievals: in addition to the error message
+the Prolog Call will either succeed or fail.
+
+			* SYNTAX OVERVIEW *
+
+In the syntax overview we use the following conventions of the 
+extended Backus-Naur Form (EBNF):
+
+ - optional arguments are put into brackets, e.g., [optional];
+ - when brackets are intended as terminal symbols, they are quoted, 
+   e.g., `['list`]';
+ - iteration is indicated by braces, e.g., {,element}*;
+
+Some constructs in the syntax overview are only applicable
+in a restricted way (as described above). We mark this
+by the following signs:
+
+  p argument must be primitive;
+  t operator may only be used in TBox tells and queries,
+    i.e. not in terms used to describe objects;
+  a operator may only be used in ABox expressions,
+    i.e. in "terms used to describe objects;
+  ? operator may only be used in ABox queries,
+    i.e. in "object ?: concept" or in the "getall" part of retrievals;
+  ! operator may only be used in tells;
+  T operator may only be used at the top-most level.
+
+
+-----------------------------------------------------------------------------
+
+			* INTERACTION *
+
+<interaction>      ::= backinit[(<box>)]
+		     | backtell(<tell-expression>)
+		     | backask(<ask-expression> [noibox])
+		     | backstate[(<state>)]
+		     | backretrieve(<retrieval> [noibox])
+		     | backmacro(<macro-definition>)
+		     | backread(<file-NAME>)
+		     | backload(<file-NAME>)
+		     | backwrite(<file-NAME>[,<box>])
+		     | backdump[(<file-NAME>)]
+
+<state>	           ::= verbosity    = silent
+		     | verbosity    = error
+		     | verbosity    = warning
+		     | verbosity    = info
+		     | verbosity    = trace
+		     | introduction = forward
+		     | introduction = noforward
+		     | revision     = true
+		     | revision     = false
+		     | retrieval    = succeed
+		     | retrieval    = fail
+
+<retrieval>        ::= [PROLOG-VAR=] <action> <arguments>
+		     | [PROLOG-VAR=] <generator> <arguments>
+
+<action>           ::= describe
+		     | describe_fully
+		     | defined_as
+		     | introduced_as
+		     | self
+		     | msc
+		     
+<arguments>        ::= <arg-spec>[/<disambig>] 
+		     | getall(<term>)
+
+<arg-spec>	   ::= <entity>
+		     | `['<entity>[/<disambig> {,<entity>[/<disambig>]}*`]'
+
+<generator>	   :: = `['<output-function> {,<output-function>}*`]' for
+
+<output-function>  ::= <action>
+		     | vr(<role-NAME>)
+		     | nr(<role-NAME>)
+		     | rf(<role-NAME>)
+
+
+<disambig>         ::= conc
+		     | obj
+		     | <domain-NAME>^cls
+		     | <domain-NAME>^obj
+
+<macro-definition> ::= <macro> *= <term>
+<macro>		   ::= <macro-NAME>[(PROLOG-VAR{,Prolog-Var}*)]
+
+<box>		   ::= tbox
+		     | ibox
+		     | abox 
+
+
+		* TELL/ASK EXPRESSIONS *
+
+<tell-expression>  ::= <definition>[type<modifier>]	  
+		     | <rule>
+		     | <description>
+		     | <revision>
+		     | <declaration>
+
+<definition>       ::= <term-NAME> := <term>
+		     | <concept-NAME> :< <concept>
+		     | <role-NAME> :< <role>
+
+<rule>		   ::= <concept> => <concept>
+
+<description>	   ::= <obj-ref> :: <concept>
+		     | Prolog-Var :: <concept>
+
+<revision>	   ::= forget(<rule>)
+		     | forget(<description>)
+		     | forget(<obj-ref>)
+		     | redescribe(<description>)
+
+<modifier>	   ::= concept
+		     | role
+		     | feature
+		     | aset
+		     | number
+		     | string
+
+
+<declaration>      ::= <domain-NAME> := attribute_domain
+	 	     | <domain-NAME> := attribute_domain(<attribute-list>)
+
+<ask-expression>   ::= <term> ?< <term>
+		     | <obj-ref> ?: <concept>
+
+
+			* TERMS *
+
+<entity>           ::= <term>
+		     | <value>
+
+<term>		   ::= <conceptual-type>
+		     | <role>
+		     | <macro>
+
+<conceptual-tupe>  ::= <concept>
+		     | <aset>
+		     | <number>
+		     | string
+
+<value>		   ::= <obj-ref>
+		     | <attribute-Number>
+		     | <number-NAME>
+		     | <string-INSTANCE>
+
+<obj-ref>	   ::= <object-NAME>
+		     | uc(INTEGER)			a
+		     | theknown<concept>		a
+
+ 
+			* CONCEPT TERMS *
+
+<concept>          ::= <concept-NAME>
+		     | anything
+		     | nothing
+		     | <concept> and <concept>
+		     | <concept> or <concept>		T
+		     | not(<concept>)			p
+		     | all(<role>,<conceptual-type>)
+		     | atleast(<INTEGER>,<role>)
+		     | atmost(<INTEGER>,<role>)
+		     | oneof(`['<object-NAME>{,<object-NAME>}*`]')
+		     | <role>:<filler-expr>
+
+
+			* ROLE TERMS *
+
+<role>             ::= <role-NAME>
+		     | <role> and <role>		t
+		     | not(<role>)			pt
+		     | domain(<concept>)		t
+		     | range(<conceptual-type>) 	t
+		     | inv(<role>)
+		     | <role> comp <role>		t
+		     | trans(<role>)			t
+
+ 
+		      * ATTRIBUTE SET TERMS *
+
+<aset>		   ::= <aset-NAME>
+		     | <aset> union <aset>
+		     | <aset> intersection <aset>
+		     | <aset> without <aset>
+		     | aset(`['<attribute-list>`]')
+		     | aset(<attribute-spec>,<domain-NAME>)
+
+<attribute-spec>   ::= `['<attribute-list>`]')
+		     | <attribute-NAME>.. <attribute-NAME>
+<attribute-list>   ::= <attribute-NAME>{,attribute-NAME>}*
+
+ 
+			* NUMBER TERMS *
+
+<number>           ::= <number-NAME>
+		     | <number-range>
+		     | <number> intersection <number>
+		     | <PROLOG-NUMBER>
+
+<number-range>     ::= <lower-limit>
+		     | <upper-limit>
+		     | <PROLOG-NUMBER>.. <PROLOG-NUMBER>
+
+<lower-limit>      ::= gt(<PROLOG-NUMBER>)
+		     | ge(<PROLOG-NUMBER>)
+
+<upper-limit>      ::= lt(<PROLOG-NUMBER>)
+		     | le(<PROLOG-NUMBER>)
+
+
+		      * FILLER EXPRESSIONS *
+
+<filler-expr>      ::= <value>
+		     | (<description>)			a!
+		     | close(<filler-expr>)
+		     | someknown(<concept>)		a?
+		     | alknown(<concept>)		a
+		     | (<value> and <filler-expr>)
+		     | (<value> or <filler-expr>)	a?
+		     | <filler-expr>
+
+
+			* MACRO LIBRARY *
+
+<macro-concept>    ::= some(<role>,<conceptual-type>)
+		     | some(<role>)
+		     | the(<role>,<conceptual-type>)
+		     | no((<role>,<conceptual-type>)
+		     | no(<role>)
+		     | exactly(<INTEGER>,<role>)
+		     | atleast(<INTEGER>,<role>,<conceptual-type>)
+		     | atmost(<INTEGER>,<role>,<conceptual-type>)
+		     | exactly(<INTEGER>,<role>,<conceptual-type>)
+		     | rvm_some(<role>,<role>)
+		     | rvm_no(<role>,<role>)
+
+	

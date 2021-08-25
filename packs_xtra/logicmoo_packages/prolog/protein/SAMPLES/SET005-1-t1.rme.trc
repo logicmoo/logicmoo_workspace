@@ -1,0 +1,133 @@
+********************    PROTEIN V2.09   ********************
+
+--------------------    input clauses   --------------------
+
+"Clause " No. 1 : [subset(_49, _50), subset(_50, _49), -> [equal_sets(_50, _49)]]
+"Clause " No. 2 : [equal_sets(_93, _92), -> [subset(_93, _92)]]
+"Clause " No. 3 : [equal_sets(_128, _129), -> [subset(_129, _128)]]
+"Clause " No. 4 : [member(member_of_1_not_of_2(_165, _164), _164), -> [subset(_165, _164)]]
+"Clause " No. 5 : [member(_204, _208), subset(_208, _203), -> [member(_204, _203)]]
+"Clause " No. 6 : [intersection(_247, _257, _252), member(_248, _252), -> [member(_248, _247)]]
+"Clause " No. 7 : [intersection(_303, _293, _298), member(_294, _298), -> [member(_294, _293)]]
+"Clause " No. 8 : [equal_sets(_340, _339), subset(_339, _340), -> [equal_sets(_340, _339)]]
+"Clause " No. 9 : [equal_sets(_387, _382), member(_383, _387), -> [member(_383, _382)]]
+"Clause " No. 10 : [equal_sets(_427, _426), subset(_427, _426), -> [equal_sets(_427, _426)]]
+"Clause " No. 11 : [equal_sets(_469, _474), member(_470, _474), -> [member(_470, _469)]]
+"Clause " No. 12 : [member(member_of_1_not_of_2(_518, _513), _513), member(_514, _518), -> [member(_514, _513)]]
+"Clause " No. 13 : [member(_561, _569), subset(_569, _565), subset(_565, _560), -> [member(_561, _560)]]
+"Clause " No. 14 : [member(_613, _623), subset(_623, _618), intersection(_612, _619, _618), -> [member(_613, _612)]]
+"Clause " No. 15 : [member(_667, _677), subset(_677, _672), intersection(_673, _666, _672), -> [member(_667, _666)]]
+"Clause " No. 16 : [intersection(_725, _734, _729), member(_721, _729), subset(_725, _720), -> [member(_721, _720)]]
+"Clause " No. 17 : [intersection(_780, _790, _785), member(_775, _785), intersection(_774, _781, _780), -> [member(_775, _774)]]
+"Clause " No. 18 : [intersection(_836, _846, _841), member(_831, _841), intersection(_837, _830, _836), -> [member(_831, _830)]]
+"Clause " No. 19 : [intersection(_900, _891, _895), member(_887, _895), subset(_891, _886), -> [member(_887, _886)]]
+"Clause " No. 20 : [intersection(_956, _946, _951), member(_941, _951), intersection(_940, _947, _946), -> [member(_941, _940)]]
+"Clause " No. 21 : [intersection(_1012, _1002, _1007), member(_997, _1007), intersection(_1003, _996, _1002), -> [member(_997, _996)]]
+"Clause " No. 22 : [not_equal_sets(_1052, _1053), subset(_1052, _1053), -> [not_subset(_1053, _1052)]]
+"Clause " No. 23 : [not_equal_sets(_1096, _1095), subset(_1095, _1096), -> [not_subset(_1096, _1095)]]
+"Clause " No. 24 : [not_subset(_1139, _1138), -> [not_equal_sets(_1139, _1138)]]
+"Clause " No. 25 : [not_subset(_1174, _1175), -> [not_equal_sets(_1175, _1174)]]
+"Clause " No. 26 : [not_subset(_1214, _1210), -> [not_member(member_of_1_not_of_2(_1214, _1210), _1210)]]
+"Clause " No. 27 : [not_member(_1250, _1254), subset(_1249, _1254), -> [not_member(_1250, _1249)]]
+"Clause " No. 28 : [not_member(_1299, _1295), member(_1299, _1293), -> [not_intersection(_1295, _1294, _1293)]]
+"Clause " No. 29 : [not_member(_1345, _1340), member(_1345, _1339), -> [not_intersection(_1341, _1340, _1339)]]
+"Clause " No. 30 : [equal_sets(_1394, _1390), member(_1386, _1394), subset(_1390, _1385), -> [member(_1386, _1385)]]
+"Clause " No. 31 : [equal_sets(_1448, _1443), member(_1438, _1448), intersection(_1437, _1444, _1443), -> [member(_1438, _1437)]]
+"Clause " No. 32 : [equal_sets(_1502, _1497), member(_1492, _1502), intersection(_1498, _1491, _1497), -> [member(_1492, _1491)]]
+"Clause " No. 33 : [equal_sets(_1545, _1546), not_equal_sets(_1545, _1546), -> [not_subset(_1546, _1545)]]
+"Clause " No. 34 : [equal_sets(_1588, _1589), not_equal_sets(_1589, _1588), -> [not_subset(_1589, _1588)]]
+"Clause " No. 35 : [equal_sets(_1631, _1633), not_member(_1632, _1633), -> [not_member(_1632, _1631)]]
+"Clause " No. 36 : [equal_sets(_1680, _1684), member(_1676, _1684), subset(_1680, _1675), -> [member(_1676, _1675)]]
+"Clause " No. 37 : [equal_sets(_1733, _1738), member(_1728, _1738), intersection(_1727, _1734, _1733), -> [member(_1728, _1727)]]
+"Clause " No. 38 : [equal_sets(_1787, _1792), member(_1782, _1792), intersection(_1788, _1781, _1787), -> [member(_1782, _1781)]]
+"Clause " No. 39 : [equal_sets(_1836, _1835), not_equal_sets(_1835, _1836), -> [not_subset(_1836, _1835)]]
+"Clause " No. 40 : [equal_sets(_1880, _1878), not_member(_1879, _1880), -> [not_member(_1879, _1878)]]
+"Clause " No. 41 : [member(member_of_1_not_of_2(_1931, _1927), _1927), member(_1923, _1931), subset(_1927, _1922), -> [member(_1923, _1922)]]
+"Clause " No. 42 : [member(member_of_1_not_of_2(_1988, _1983), _1983), member(_1978, _1988), intersection(_1977, _1984, _1983), -> [member(_1978, _1977)]]
+"Clause " No. 43 : [member(member_of_1_not_of_2(_2045, _2040), _2040), member(_2035, _2045), intersection(_2041, _2034, _2040), -> [member(_2035, _2034)]]
+"Clause " No. 44 : [member(member_of_1_not_of_2(_2091, _2092), _2092), not_equal_sets(_2091, _2092), -> [not_subset(_2092, _2091)]]
+"Clause " No. 45 : [member(member_of_1_not_of_2(_2137, _2138), _2138), not_equal_sets(_2138, _2137), -> [not_subset(_2138, _2137)]]
+"Clause " No. 46 : [member(member_of_1_not_of_2(_2183, _2185), _2185), not_member(_2184, _2185), -> [not_member(_2184, _2183)]]
+"Clause " No. 47 : [member(member_of_1_not_of_2(_2235, _2230), _2239), subset(_2239, _2230), member(_2231, _2235), -> [member(_2231, _2230)]]
+"Clause " No. 48 : [member(_2288, _2292), subset(_2292, _2285), not_member(_2288, _2287), -> [not_intersection(_2287, _2286, _2285)]]
+"Clause " No. 49 : [member(_2342, _2346), subset(_2346, _2339), not_member(_2342, _2340), -> [not_intersection(_2341, _2340, _2339)]]
+"Clause " No. 50 : [intersection(_2393, _2410, _2402), member(member_of_1_not_of_2(_2398, _2393), _2402), member(_2394, _2398), -> [member(_2394, _2393)]]
+"Clause " No. 51 : [intersection(_2450, _2462, _2457), member(_2453, _2457), not_member(_2453, _2452), -> [not_intersection(_2452, _2451, _2450)]]
+"Clause " No. 52 : [intersection(_2506, _2518, _2513), member(_2509, _2513), not_member(_2509, _2507), -> [not_intersection(_2508, _2507, _2506)]]
+"Clause " No. 53 : [intersection(_2579, _2562, _2571), member(member_of_1_not_of_2(_2567, _2562), _2571), member(_2563, _2567), -> [member(_2563, _2562)]]
+"Clause " No. 54 : [intersection(_2631, _2619, _2626), member(_2622, _2626), not_member(_2622, _2621), -> [not_intersection(_2621, _2620, _2619)]]
+"Clause " No. 55 : [intersection(_2687, _2675, _2682), member(_2678, _2682), not_member(_2678, _2676), -> [not_intersection(_2677, _2676, _2675)]]
+"Clause " No. 56 : [equal_sets(_2740, _2731), member(member_of_1_not_of_2(_2736, _2731), _2740), member(_2732, _2736), -> [member(_2732, _2731)]]
+"Clause " No. 57 : [equal_sets(_2793, _2786), member(_2789, _2793), not_member(_2789, _2788), -> [not_intersection(_2788, _2787, _2786)]]
+"Clause " No. 58 : [equal_sets(_2847, _2840), member(_2843, _2847), not_member(_2843, _2841), -> [not_intersection(_2842, _2841, _2840)]]
+"Clause " No. 59 : [equal_sets(_2894, _2903), member(member_of_1_not_of_2(_2899, _2894), _2903), member(_2895, _2899), -> [member(_2895, _2894)]]
+"Clause " No. 60 : [equal_sets(_2949, _2956), member(_2952, _2956), not_member(_2952, _2951), -> [not_intersection(_2951, _2950, _2949)]]
+"Clause " No. 61 : [equal_sets(_3003, _3010), member(_3006, _3010), not_member(_3006, _3004), -> [not_intersection(_3005, _3004, _3003)]]
+"Clause " No. 62 : [member(member_of_1_not_of_2(_3066, _3057), _3057), member(member_of_1_not_of_2(_3062, _3057), _3066), member(_3058, _3062), -> [member(_3058, _3057)]]
+"Clause " No. 63 : [member(member_of_1_not_of_2(_3122, _3115), _3115), member(_3118, _3122), not_member(_3118, _3117), -> [not_intersection(_3117, _3116, _3115)]]
+"Clause " No. 64 : [member(member_of_1_not_of_2(_3179, _3172), _3172), member(_3175, _3179), not_member(_3175, _3173), -> [not_intersection(_3174, _3173, _3172)]]
+"Clause " No. 65 : [not_subset(_3229, _3230), subset(_3229, _3230), -> [not_subset(_3230, _3229)]]
+"Clause " No. 66 : [not_subset(_3273, _3272), subset(_3272, _3273), -> [not_subset(_3273, _3272)]]
+"Clause " No. 67 : [not_subset(_3320, _3319), subset(_3315, _3319), -> [not_member(member_of_1_not_of_2(_3320, _3319), _3315)]]
+"Clause " No. 68 : [not_subset(_3371, _3364), member(member_of_1_not_of_2(_3371, _3364), _3362), -> [not_intersection(_3364, _3363, _3362)]]
+"Clause " No. 69 : [not_subset(_3420, _3412), member(member_of_1_not_of_2(_3420, _3412), _3411), -> [not_intersection(_3413, _3412, _3411)]]
+"Clause " No. 70 : [not_member(_3461, _3469), subset(_3465, _3469), subset(_3460, _3465), -> [not_member(_3461, _3460)]]
+"Clause " No. 71 : [not_member(_3518, _3522), subset(_3514, _3522), member(_3518, _3512), -> [not_intersection(_3514, _3513, _3512)]]
+"Clause " No. 72 : [not_member(_3572, _3576), subset(_3567, _3576), member(_3572, _3566), -> [not_intersection(_3568, _3567, _3566)]]
+"Clause " No. 73 : [subset(_3623, _3627), member(member_of_1_not_of_2(_3623, _3627), _3623)]
+"Clause " No. 74 : [member(_3654, _3656), not_intersection(_3653, _3655, _3656), not_member(_3654, _3655), not_member(_3654, _3653)]
+"Clause " No. 75 : [member(h(_3703, _3709, _3708), _3708), intersection(_3703, _3709, _3708), member(h(_3703, _3709, _3708), _3703)]
+"Clause " No. 76 : [member(h(_3756, _3750, _3755), _3755), intersection(_3756, _3750, _3755), member(h(_3756, _3750, _3755), _3750)]
+"Clause " No. 77 : [intersection(_3794, _3800, _3799), not_member(h(_3794, _3800, _3799), _3799), not_member(h(_3794, _3800, _3799), _3800), not_member(h(_3794, _3800, _3799), _3794)]
+"Clause " No. 78 : [intersection(a, b, aIb)]
+"Clause " No. 79 : [intersection(b, c, bIc)]
+"Clause " No. 80 : [intersection(a, bIc, aIbIc)]
+"Query  " No. 81 : [query, not_intersection(aIb, c, aIbIc)]
+"Restart" No. 81 : [restart, not_intersection(aIb, c, aIbIc)]
+
+--------------------        flags       --------------------
+
+protein_flag(system, protein).
+protein_flag(ancestry_rme, off).
+protein_flag(ancs, both).
+protein_flag(answers, one).
+protein_flag(answer_set_handling, on).
+protein_flag(check_flags, [protein_flag(calculus, hyper)]).
+protein_flag(definite_answers, off).
+protein_flag(delayed_rme, off).
+protein_flag(depth_increment, 1).
+protein_flag(dynamic, off).
+protein_flag(factorisation, cut).
+protein_flag(head_behind_prolog, off).
+protein_flag(mmr, off).
+protein_flag(mode, pl1).
+protein_flag(query_anc, ([], [])).
+protein_flag(query_reuse, on).
+protein_flag(reduction, both).
+protein_flag(regularity, delay).
+protein_flag(search, id_tree).
+protein_flag(selection_function, off).
+protein_flag(sorting, costs).
+protein_flag(strict_rme, off).
+protein_flag(th_nonewclauses, off).
+protein_flag(th_reduction, both).
+protein_flag(th_regularity, delay).
+protein_flag(th_sidelit_anc, off).
+protein_flag(translate, all).
+protein_flag(trace, internal).
+protein_flag(calculus, rme).
+
+
+--------------------     statistics     --------------------
+
+Proof Statistics
+----------------
+Proof Time:  2.34 sec
+Proof Depth: 6
+Extension Steps: 18
+Reduction Steps: 18		(incl. 17 with cut)
+Factoring Steps: 1		(incl. 1 with cut)
+Theory Steps:    8
+Inferences:      9729
+
+--------------------      answers       --------------------

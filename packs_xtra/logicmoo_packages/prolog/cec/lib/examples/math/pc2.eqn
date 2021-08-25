@@ -1,0 +1,7 @@
+module pc2 using boolTriv. 
+op p : (formula -> bool).
+op i : (formula*formula -> formula).
+p(x)=true and p(i(x,y))=true => p(y)=true.
+p(i(x,i(y,x)))=true.
+p(i(i(i(x,y),x),x)) = true.
+p(i(i(x,y),i(i(y,z),i(x,z))))=true.

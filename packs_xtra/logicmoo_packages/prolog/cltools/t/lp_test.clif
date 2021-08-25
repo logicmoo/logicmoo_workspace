@@ -1,0 +1,74 @@
+
+(cl-comment 'axioms'
+         (forall (x) (a x))
+         (forall (?x ?y ?z)
+                 (if (and (part_of ?x ?z)
+                          (part_of ?z ?y))
+                     (part_of ?x ?y)))
+)
+(cl-comment 'facts'
+  (part_of a b)
+  (part_of b c)
+  (part_of foo bar t1)
+)
+(cl-comment 'test'
+            (and (a foo)
+                 (= z z)
+                 (part_of a c)))
+
+
+
+(forall (a b)
+ (iff (part_of a b)
+(has_part b a)))
+
+(forall (a b)
+ (if (part_of a b)
+  (and (instance a)(instance b))))
+
+(forall (a)
+ (if (exists (x)
+             (and (foo a x)
+                  (bar a x)
+                  (baz a x)))
+     (foo a)))
+
+
+
+
+(forall (c p)
+        (iff (has_function_in c p)
+             (exists (f t)
+                     (and (has_function c f t)
+                          (realized_by f p)))))
+
+(forall (student course)
+        (if (and (enrolled student course)
+                 (forall (exam)
+                         (if (has_exam course exam)
+                             (passed student exam))))
+            (passed_all_exams_in student course)))
+
+(forall (x)
+        (if (not (foo x))
+            (bar x)))
+
+(forall (p p1)
+        (iff (immediately_preceded_by p p1)
+             (forall (t)
+                     (iff (first_instant_of t p)
+                          (last_instant_of t p1)))))
+
+
+(forall (p p1)
+ (iff (preceded_by p p1)
+      (forall (t t1)
+              (if (and (occurs_at p t)(occurs_at p1 t1))
+                  (earlier_than t1 t)))))
+
+(forall (r s)
+        (iff
+         (relation_disjoint_from r s)
+         (not (exists (x y)
+                      (and (r x y)
+                           (s x y))))))

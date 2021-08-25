@@ -1,0 +1,35 @@
+1. Copy the latest SUMO file translated into Prolog clauses, kif.pl,
+from the folder containing the readKIF.pl file, used to translate the
+SUMO KIF file (kif.txt) into Prolog (kif.pl). The latest kif.pl file
+should replace any previous one.
+
+2. Copy WordNetMappings-Top.txt and WordNetMappings-verbs.txt from
+CVS to get the latest files.
+
+3. Run the PERL translation program wn2assoc3.perl on the annotated
+noun WordNet file:
+
+   perl WN2assoc3.perl WordNetMappings-Top.txt noun > mapped_nouns.pl
+
+4. Run the PERL translation program wn2assoc3.perl on the annotated
+verb WordNet file:
+   
+   perl WN2assoc3.perl WordNetMappings-verbs.txt verb > mapped_verbs.pl
+
+5. Start SWI Prolog.
+
+6. Run load_all to load all WordNet and other files:
+
+   load_all.
+
+7. Now run write_all_lexicon_files/0 to create the the three CELT
+files: one for common nouns, one for proper nouns, and one for verbs.
+
+This took about 15 minutes on my 600 Mhz PC at work on June 25, 2002:
+
+write_all_lexicon_files.
+% 2,132,068 inferences in 307.21 seconds (6940 Lips)
+% 15,557,465 inferences in 474.51 seconds (32786 Lips)
+% 14,393,030 inferences in 67.44 seconds (213429 Lips)
+
+8. Drop copies of these three files into the latest version of CELT.

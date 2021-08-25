@@ -1,0 +1,1369 @@
+\documentclass[titlepage,fleqn]{article}
+
+% for program texts:
+\makeatletter
+
+\newenvironment{prog}{\vspace{0.7ex}\par
+\setlength{\parindent}{0.7cm}
+\obeylines\@vobeyspaces\tt}
+{\vspace{0.7ex}\noindent}
+
+\makeatother
+\newcommand{\iniprog}{\begin{prog}}
+\newcommand{\finprog}{\end{prog}\noindent}
+\newcommand{\pr}[1]{\mbox{\tt #1}}   % program text in normal text
+
+% command title :
+\newcommand{\uptitle}[2]{ 
+{
+\noindent\rule{12.12cm}{.01in}
+\vspace{0.25cm}
+\noindent
+
+{\large\sf #1}
+
+\flushright 
+\vspace{-0.78cm}
+{\large\tt #2}
+\vspace{0.1cm}
+
+\noindent\rule{12.12cm}{.01in}
+\vspace{0.2cm}
+\hspace{-0.25cm}\noindent
+}
+}
+
+\newcommand{\prompt}{\pr{>}}
+
+\pagestyle{plain}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%% BEGIN %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{document} 
+
+\title{UPV-Curry User's Manual}
+
+\author{S. Escobar ~~~~ M. Alpuente ~~~~ S. Lucas\\
+	{\tt\small \{sescobar,alpuente,slucas\}@dsic.upv.es} }
+
+\maketitle
+
+%-------------------------Intro------------------------
+\section{Introduction}
+
+Currently, declarative programming is split into two main fields,
+namely functional programming and logic programming. 
+Functional programming principally
+provides sophisticated abstraction facilities,
+module systems and clean solutions for integrating I/O into declarative
+programming, whereas logic programming allows for 
+computing with partial information and provides built-in search facilities
+which have strong applications for knowledge-based systems and operations
+research.
+Recently, the execution principles of functional logic languages 
+have been refined in order to avoid many non-deterministic choices
+and the implementation of functional as well as logic languages has been
+improved considerably.
+This has demonstrated
+that functional logic languages can be efficiently implemented 
+in a very similar way 
+to (pure) functional or (pure) logic languages.
+
+Curry is a functional logic programming language 
+that combines 
+the best ideas of existing declarative
+languages such as
+Haskell~\cite{HPW92} and SML \cite{MTH90} (functional languages), 
+G\"odel~\cite{HL94} and $\lambda$Prolog~\cite{NM88} (logic languages),
+and ALF~\cite{HanusSchwab91Impl}, 
+    Babel~\cite{KuchenAnastasiadis96} and 
+    TOY~\cite{Caballero_Lopez_Sanchez_Toy_97} (functional logic languages)
+in an elegant, practical,
+comprehensive, and seamless way.
+More specifically, Curry includes 
+higher-order features, a type system,
+a module system, modern evaluation strategies, non-determinism,
+(encapsulated) search, partial data structures, existential variables,
+constraints, and declarative I/O.
+
+UPV-Curry is a novel implementation of Curry which 
+has been developed by the ELP group  
+at the Technical University of Valencia (UPV)
+and is publicly available from the following URL:
+
+\begin{quote}
+\verb_http://www.dsic.upv.es/users/elp/upv-curry/upv-curry.html_
+\end{quote}
+
+This report is organized as follows. 
+Section \ref{summary} summarizes the essentials of UPV-Curry. 
+Section \ref{essentials} introduces the UPV-Curry development system.
+Section \ref{commands} proposes some guidelines for working with 
+the interpreter and different examples.
+Section \ref{differences} points out some
+differences between Curry and UPV-Curry.
+Section \ref{links} summarizes some information sources for Curry
+and UPV-Curry.
+Appendix \ref{grammar} and \ref{prelude} show
+the BNF grammar of UPV-Curry and the standard prelude of built-in data types,
+operators and functions, respectively.
+
+%-------------------------
+\section{Technical summary of the main features}\label{summary}
+
+UPV-Curry provides an almost complete implementation of the Curry language,
+in accordance with its definition of November 23, 1998~\cite{Hanus98Curry}. 
+The main features are:
+\begin{itemize}
+\item Higher order functions (including lambda abstractions and 
+Haskell sections).
+\item Curry constraint solver.
+\item Basic built-in types: Booleans, Integers, 
+Characters, Strings, Lists, and Tuples.
+\item A polymorphic Hindley/Milner type system.
+\item A complete implementation of the monadic I/O declarative model.
+\end{itemize}
+
+\noindent
+The UPV-Curry interpreter is written in SICStus Prolog v3.6 and 
+consists of about 250 Prolog clauses (2700 lines of code).
+This system is based on an interpreter which provides:
+\begin{itemize}
+\item a small self-contained Curry implementation, 
+which constitutes a portable stand-alone SICStus Prolog application.
+\item a read-eval-point loop for displaying the solution
+for each expression which
+is entered as an input to the interpreter.
+\item na\"{\i}ve browsing facilities which are able to obtain the type and 
+the definitional tree (a data structure 
+needed to define the operational model
+of Curry) of each function.
+\item a debugging module, which allows the user to trace 
+the evaluation of goals.
+\end{itemize}
+
+In this report, we assume that
+the reader is acquainted with the syntax and main features of Curry.
+Thus, we will not present an overview of  the language. 
+More details can be found in \cite{Hanus98Curry}.
+
+%-----------------------
+\section{The UPV-Curry environment}\label{essentials}
+
+This section provides the basic concepts about interacting with the
+UPV-Curry system.
+
+UPV-Curry  needs no previous installation. It runs under SICStus Prolog
+v3.x and is entered by simply typing:
+\iniprog
+?- consult('main').
+\finprog
+under the SICStus Prolog interpreter.
+The system can also be entered by typing in a shell command:
+\iniprog
+sicstus -l main
+\finprog
+
+Once the user has started the interpreter, the following startup
+message screen shows up:
+{
+\small
+\iniprog
+***********UPV-Curry interpreter*******************\\
+
+Loading prelude...
+Parsing...
+Checking Types...
+Generating definitional trees...\\
+
+\pagebreak
+Commands:
+   :load "<File>"      - Load Curry file in interpreter [:l]
+   <Expression>        - Evaluate expression
+   :debug <Expression> - Debug expression evaluation    [:d]
+   :deftree <Function> - Show function deftree          [:e]
+   :type <Expression>  - Show expression type           [:t]
+   :cd "<Directory>"   - Change working directory       [:c]
+   :pwd                - Show working directory         [:p]
+   :help               - This help menu                 [:h]
+   :quit               - Exit interpreter               [:q]\\
+
+ :? refers to the short form of each command (only first character)\\
+
+\prompt
+\finprog
+}
+Interaction with the interpreter is done by typing in 
+after the command prompt \pr{\prompt }. 
+Here we can type either a menu command or an evaluable expression.
+We refer to Section \ref{commands} for a description of the
+commands listed above.
+
+\subsection{Expressions}\label{Expressions}
+
+Concerning ground expressions (without variables), 
+UPV-Curry is just like a calculator. 
+For example, if you type
+an arithmetic expression, the corresponding value (if any) is returned.
+\iniprog
+\prompt 1+1
+Solution: [ 2 ] 0 ms
+\prompt 1+2+3+4+5+6+7+8+9+10
+Solution: [ 55 ] 40 ms
+\finprog
+As with interpreters for functional languages, 
+arbitrary (nonarithmetic) ground expressions can be evaluated.
+\iniprog
+\prompt (not True) || False
+Solution: [ False ] 0 ms
+\finprog
+However, whenever non ground expressions are tried, the logic part of Curry 
+becomes apparent since 
+the corresponding substitution is returned.
+\iniprog
+\prompt [1,x] ++ [3,4] =:= [1,2,y,4]
+Solution: [ \{x=2, y=3\} ] 0 ms
+\finprog
+
+\subsection{Programs}
+
+The interpreter provides a set of built-in types, a set of operators and 
+a set of functions
+that allow the user to type in basic expressions. 
+Nevertheless, the user
+may also be generally interested in defining new types, functions and operators 
+to solve certain problems.
+A program contains these new datatypes and functions that must
+be loaded into UPV-Curry in order to make them available to the user.
+
+For example, suppose you have typed in the following program\footnote{
+UPV-Curry does not provide any editing environment.}:
+\iniprog
+data Person = Mary | John | Carla | Peter | Andrew\\
+
+mother :: Person -> Person
+mother eval flex
+mother Peter = Carla
+mother John  = Carla
+mother Carla = Mary
+\finprog
+which is  stored into the file \pr{mother.curry}.
+Here we have a definition of the new datatype \pr{Person} and 
+the definition of
+the function \pr{mother}. 
+After loading the program into UPV-Curry by typing the following command:
+\iniprog
+\prompt :load "Examples/mother.curry"
+\finprog
+you can evaluate the following expressions:
+\iniprog
+\prompt mother Peter
+Solution: [ Carla ] 0 ms
+\prompt mother John
+Solution: [ Carla ] 0 ms
+\prompt mother Carla
+Solution: [ Mary ] 0 ms
+\prompt mother Andrew
+No solution. 0 ms
+\finprog
+
+You can also ask for the evaluation of more complex
+expressions involving variables.
+\iniprog
+\prompt mother x
+Solution: [ \{x=Peter\} Carla ] 0 ms
+Solution: [ \{x=John\} Carla ] 0 ms
+Solution: [ \{x=Carla\} Mary ] 0 ms
+\finprog
+
+\noindent
+Note that computed solutions in Curry have the general form: \linebreak
+\pr{[} \pr{\{}{\em substitution}\pr{\}} {\em value} \pr{]},
+which is simpler for the evaluation of ground expressions
+(\pr{[} {\em value} \pr{]}) and 
+constraints (\pr{[} \pr{\{}substitution\pr{\}} \pr{]}), 
+see Section \ref{Expressions}.
+
+%------------------------
+\section{Starting UPV-Curry}\label{commands}
+
+In UPV-Curry you are able to load
+programs, get help, retrieve information 
+about the program components and exit the interpreter. 
+These actions, and more, are done by using commands which start with a 
+colon `\pr{:}' followed by the name (or only the first letter) of the command itself.
+The commands you can type into the UPV-Curry system are the following:
+
+\pagebreak
+\uptitle{Exit UPV-Curry}{:quit}
+If you are in UPV-Curry, you type the command:
+\iniprog
+\prompt :quit
+\finprog
+to end the UPV-Curry session.
+\vspace{0.8cm}
+
+\uptitle{Help}{:help}
+This command shows the initial UPV-Curry help menu.
+If you type \pr{:help} in the UPV-Curry prompt, the
+screen will show the following text.
+{\small
+\iniprog
+Commands:
+   :load "<File>"      - Load Curry file in interpreter [:l]
+   <Expression>        - Evaluate expression
+   :debug <Expression> - Debug expression evaluation    [:d]
+   :deftree <Function> - Show function deftree          [:e]
+   :type <Expression>  - Show expression type           [:t]
+   :cd "<Directory>"   - Change working directory       [:c]
+   :pwd                - Show working directory         [:p]
+   :help               - This help menu                 [:h]
+   :quit               - Exit interpreter               [:q]\\
+
+ :? refers to the short form of each command (only first character)\\
+
+\prompt
+\finprog}
+
+\uptitle{Current working directory}{:pwd}
+This command presents the current working directory in UPV-Curry.
+The user's programs and text files are loaded using the working directory 
+as the default path. The following is an example of the execution of this
+command:
+\iniprog
+\prompt :pwd
+/users/elp/upv-curry
+\prompt 
+\finprog
+
+\pagebreak
+\uptitle{Change working directory}{:cd "<Path>"}
+This command allows the user to change the working directory to a 
+different one.
+If the user has to load, read or write a file stored in a directory 
+other than the current one, then
+the command \pr{cd} will allow the user to change the current directory.
+The following execution shows how the command \pr{cd} changes the current
+working directory.
+\iniprog
+\prompt :pwd
+/users/elp/upv-curry
+\prompt :cd "Examples"
+\prompt :pwd
+/users/elp/upv-curry/Examples
+\prompt 
+\finprog
+
+\uptitle{Loading a program}{:load "<File>"}
+This command loads the program file ``File'' which must 
+contain a valid Curry program. Loading includes parsing the program text, 
+checking type consistency and generating the definitional trees
+(one per function).
+It is necessary to write the file name between quotes.
+For example, to load the following Curry program stored in the
+file \pr{lists.curry}, 
+which is stored in the current working directory:
+\iniprog
+-- Concatenation of two lists
+append :: [t] -> [t] -> [t]
+append eval flex
+append []     ys = ys
+append (x:xs) ys = x:append xs ys\\
+
+-- Naive reverse of all list elements
+rev :: [t] -> [t]
+rev []     = []
+rev (x:xs) = append (rev xs) [x]\\
+
+-- List membership using concatenation
+member :: t -> [t] -> Bool
+member e xs | append \_ (e:\_) =:= xs = True
+\finprog
+you have to type in the following load command:
+\iniprog
+\prompt :load "lists.curry"
+\finprog
+and the system will show the following text
+indicating that the program file 
+has been correctly loaded:
+\iniprog
+Parsing...
+Checking Types...
+Generating Definitional Trees...append rev member
+\finprog
+
+If the file to be loaded is in another directory, the user can 
+change the working directory with the command \pr{cd}:
+\iniprog
+\prompt :cd "Examples"
+\finprog
+then the current working directory changes: 
+\iniprog 
+\prompt :pwd 
+/users/elp/upv-curry/Examples 
+\finprog 
+and finally you can enter the load command: 
+\iniprog
+\prompt :load "lists.curry"
+Parsing...
+Checking Types...
+Generating Definitional Trees...append rev member
+\finprog
+
+\noindent
+Another option is to specify the path in the load command:
+\iniprog
+\prompt :load "Examples/lists.curry"
+Parsing...
+Checking Types...
+Generating Definitional Trees...append rev member
+\finprog
+
+\uptitle{Show definitional tree}{:deftree <function>}
+This command shows 
+the definitional tree~\cite{Antoy92ALP}
+for
+the function entered. This definitional tree is sent to the output with an
+indentation process that allows the user to quickly understand  the branches of
+the definitional tree.
+
+The following is an example of how to see the definitional tree 
+of the function \pr{append}:
+\iniprog
+\prompt :deftree append
+append:
+branch((append x var2),1,flex) ->
+ rule((append [] x) = x)
+ rule((append (x:var2) var3) = (x:(append var2 var3)))
+\finprog
+
+It is not necessary to take into account these definitional trees and its
+evaluation annotations in order to use UPV-Curry. 
+They are automatically generated and managed by the system.
+We refer the reader to \cite{Hanus98Curry} to
+get more information about the role that definitional trees 
+and evaluation annotations play in
+the operational semantics of Curry.
+
+\pagebreak
+\uptitle{Show type}{:type <expression>}
+ This command shows the type of the expression 
+entered. The expression can be either a function name (to see the 
+complete type of a function) or a function call with partial or complete data
+(showing the appropriate type).
+
+The following example shows how the user can see 
+the type of the function \pr{append}:
+\iniprog
+\prompt :type append
+[var1] -> [var1] -> [var1]
+\finprog
+
+The command \pr{type} accepts any expression, and not just a function name.
+Some examples are:
+\iniprog
+\prompt :type append [x]
+[var1] -> [var1]
+\prompt :type append [1]
+[Int] -> [Int]
+\prompt :type append [1] [2]
+[Int]
+\finprog
+
+\uptitle{Evaluate expression}{<expression>}
+Any expression entered will be evaluated.
+Before the evaluation, the 
+expression is checked for syntactic correctness and type consistency.
+
+The solutions are shown as they are found, showing the substitution (if any), 
+the computed expression (if any) and the time spent (in ms)
+to compute each solution.
+
+Here are some of the functional-like goals which are accepted and evaluated
+by the interpreter for the program \pr{lists.curry}.
+\iniprog
+\prompt append [1,2,3,4,5] [6,7,8,9,0]
+Solution: [ [1,2,3,4,5,6,7,8,9,0] ] 0 ms
+\prompt rev [1,2,3,4,5,6,7,8,9,0]
+Solution: [ [0,9,8,7,6,5,4,3,2,1] ] 140 ms
+\prompt member 1 [1,2,3,4,5,6,7,8,9,0]
+Solution: [ True ] 40 ms
+\prompt
+\finprog
+
+Due to the functional-logic semantics included in UPV-Curry,
+you can also evaluate 
+expressions containing ocurrences of free variables:
+\iniprog
+\prompt member x [1,2,3]
+Solution: [ \{x=1\} True ] 70 ms
+Solution: [ \{x=2\} True ] 30 ms
+Solution: [ \{x=3\} True ] 40 ms
+\prompt
+\finprog
+Or even evaluate constrained goals whose computed solutions 
+not contain a value
+part:
+\iniprog
+\prompt append x y =:= [1,2]
+Solution: [ \{x=[], y=[1,2]\} ] 20 ms
+Solution: [ \{x=[1], y=[2]\} ] 10 ms
+Solution: [ \{x=[1,2], y=[]\} ] 10 ms
+\prompt
+\finprog
+
+The following goals cannot be accepted by UPV-Curry due to syntactic
+or type errors.
+\iniprog
+\prompt John mother Carla
+Syntactic error, incorrect expression found
+\prompt 1+'a'
+Type error, type Char is not correct when expected type Int
+\finprog
+Note that an expression such as:
+\iniprog
+mother James
+\finprog
+that can be interpreted by the user as an error 
+(treating \pr{James} as a constructor not specified in the \pr{People} type), 
+is really treated as a call to
+the function \pr{mother} with the free variable \pr{James}.
+
+The user can press ``\pr{Ctrl+C}'' at any time
+while the evaluation is in process in order to stop the evaluation.
+If pressed, SICStus Prolog
+will show the message \pr{Prolog interruption}. 
+By pressing the \pr{a} key 
+(which raises a SICStus Prolog abort command),
+UPV-Curry is set to manage the Prolog interruption, 
+showing the following message.
+\iniprog
+Curry Debug Control ---
+a - abort
+c - continue without debug
+t - tracing in debug mode
+(any other key) - next evaluation step
+\finprog
+This menu allows the user to either switch between normal and 
+trace mode or to stop the evaluation (see the command \pr{debug}).
+
+\pagebreak
+\uptitle{Evaluate with debugging}{:debug <expression>}
+The user can trace the evaluation process by  using the debug mode.
+In order to do this, the command \pr{debug} must be written before the
+expression to be evaluated:
+\iniprog
+:debug member x [1,2]
+\finprog
+
+After each evaluation step, the system shows the following options:
+\iniprog
+Curry Debug Control ---
+a - abort
+c - continue without debug
+t - tracing in debug mode
+(any other key) - next evaluation step
+\finprog
+and prompts the user to either stop the evaluation process (\pr{a}), 
+continue the evaluation without any pause (\pr{c}), 
+or continue with the next evaluation step (any other key).
+As remarked above, the user can press the "\pr{Ctrl+C}" keys 
+during the evaluation process, enabling 
+the above control options. If the 
+``\pr{t - tracing} \pr{in} \pr{debug mode}'' option is selected
+and the evaluation is not in debug mode,
+the evaluation process changes to debug mode as in the command
+\pr{debug}.
+
+The following sequences illustrate
+the debugging process for the evaluation of the
+expression \pr{member x [1,2]} (the $<$enter$>$ key is pressed in
+response to each '\prompt' prompt):
+{\small
+\begin{verbatim}
+> :debug member x [1,2]  
+-------------------------------------------------------
+[ (member x [1,2]) ]
+-------------------------------------------------------
+Curry Debug Control ---
+a - abort
+c - continue without debug
+t - tracing in debug mode
+(any other key) - next evaluation step
+>  
+-------------------------------------------------------
+[ ((append var9 (x:var11)) =:= [1,2]) \=> True ]
+-------------------------------------------------------
+Curry Debug Control ---
+a - abort
+c - continue without debug
+t - tracing in debug mode
+(any other key) - next evaluation step
+> 
+-------------------------------------------------------
+[ ((append [] (x:var11)) =:= [1,2]) \=> True ]
+[ ((append (var12:var13) (x:var11)) =:= [1,2]) \=> True ]
+-------------------------------------------------------
+Curry Debug Control ---
+a - abort
+c - continue without debug
+t - tracing in debug mode
+(any other key) - next evaluation step
+>
+-------------------------------------------------------
+[ ((x:var11) =:= [1,2]) \=> True ]
+[ ((append (var12:var13) (x:var11)) =:= [1,2]) \=> True ]
+-------------------------------------------------------
+Curry Debug Control ---
+a - abort
+c - continue without debug
+t - tracing in debug mode
+(any other key) - next evaluation step
+>
+-------------------------------------------------------
+[ ((x =:= 1) & (var11 =:= [2])) \=> True ]
+[ ((append (var12:var13) (x:var11)) =:= [1,2]) \=> True ]
+-------------------------------------------------------
+Curry Debug Control ---
+a - abort
+c - continue without debug
+t - tracing in debug mode
+(any other key) - next evaluation step
+>
+-------------------------------------------------------
+[ {x=1} ((success ) & (var11 =:= [2])) \=> True ]
+[ ((append (var12:var13) (x:var11)) =:= [1,2]) \=> True ]
+-------------------------------------------------------
+Curry Debug Control ---
+a - abort
+c - continue without debug
+t - tracing in debug mode
+(any other key) - next evaluation step
+>
+-------------------------------------------------------
+[ {x=1} (var11 =:= [2]) \=> True ]
+[ ((append (var12:var13) (x:var11)) =:= [1,2]) \=> True ]
+-------------------------------------------------------
+Curry Debug Control ---
+a - abort
+c - continue without debug
+t - tracing in debug mode
+(any other key) - next evaluation step
+>
+-------------------------------------------------------
+[ {x=1} ((var12 =:= 2) & (var13 =:= [])) \=> True ]
+[ ((append (var12:var13) (x:var11)) =:= [1,2]) \=> True ]
+-------------------------------------------------------
+Curry Debug Control ---
+a - abort
+c - continue without debug
+t - tracing in debug mode
+(any other key) - next evaluation step
+>
+-------------------------------------------------------
+[ {x=1} ((success ) & (var13 =:= [])) \=> True ]
+[ ((append (var12:var13) (x:var11)) =:= [1,2]) \=> True ]
+-------------------------------------------------------
+Curry Debug Control ---
+a - abort
+c - continue without debug
+t - tracing in debug mode
+(any other key) - next evaluation step
+>
+-------------------------------------------------------
+[ {x=1} (var13 =:= []) \=> True ]
+[ ((append (var12:var13) (x:var11)) =:= [1,2]) \=> True ]
+-------------------------------------------------------
+Curry Debug Control ---
+a - abort
+c - continue without debug
+t - tracing in debug mode
+(any other key) - next evaluation step
+>
+-------------------------------------------------------
+[ {x=1} (success ) \=> True ]
+[ ((append (var12:var13) (x:var11)) =:= [1,2]) \=> True ]
+-------------------------------------------------------
+Curry Debug Control ---
+a - abort
+c - continue without debug
+t - tracing in debug mode
+(any other key) - next evaluation step
+>
+-------------------------------------------------------
+[ {x=1} True ]
+[ ((append (var12:var13) (x:var11)) =:= [1,2]) \=> True ]
+-------------------------------------------------------
+Curry Debug Control ---
+a - abort
+c - continue without debug
+t - tracing in debug mode
+(any other key) - next evaluation step
+> 
+Solution: [ {x=1} True ] 80 ms
+-------------------------------------------------------
+[ ((var12:(append var13 (x:var11))) =:= [1,2]) \=> True ]
+-------------------------------------------------------
+Curry Debug Control ---
+a - abort
+c - continue without debug
+t - tracing in debug mode
+(any other key) - next evaluation step
+>
+-------------------------------------------------------
+[ ((var12 =:= 1) & ((append var13 (x:var11)) =:= [2])) \=> True ]
+-------------------------------------------------------
+Curry Debug Control ---
+a - abort
+c - continue without debug
+t - tracing in debug mode
+(any other key) - next evaluation step
+>
+-------------------------------------------------------
+[ ((success ) & ((append var13 (x:var11)) =:= [2])) \=> True ]
+-------------------------------------------------------
+Curry Debug Control ---
+a - abort
+c - continue without debug
+t - tracing in debug mode
+(any other key) - next evaluation step
+>
+-------------------------------------------------------
+[ ((append var13 (x:var11)) =:= [2]) \=> True ]
+-------------------------------------------------------
+Curry Debug Control ---
+a - abort
+c - continue without debug
+t - tracing in debug mode
+(any other key) - next evaluation step
+> 
+-------------------------------------------------------
+[ ((append [] (x:var11)) =:= [2]) \=> True ]
+[ ((append (var14:var15) (x:var11)) =:= [2]) \=> True ]
+-------------------------------------------------------
+Curry Debug Control ---
+a - abort
+c - continue without debug
+t - tracing in debug mode
+(any other key) - next evaluation step
+>
+-------------------------------------------------------
+[ ((x:var11) =:= [2]) \=> True ]
+[ ((append (var14:var15) (x:var11)) =:= [2]) \=> True ]
+-------------------------------------------------------
+Curry Debug Control ---
+a - abort
+c - continue without debug
+t - tracing in debug mode
+(any other key) - next evaluation step
+>
+-------------------------------------------------------
+[ ((x =:= 2) & (var11 =:= [])) \=> True ]
+[ ((append (var14:var15) (x:var11)) =:= [2]) \=> True ]
+-------------------------------------------------------
+Curry Debug Control ---
+a - abort
+c - continue without debug
+t - tracing in debug mode
+(any other key) - next evaluation step
+>
+-------------------------------------------------------
+[ {x=2} ((success ) & (var11 =:= [])) \=> True ]
+[ ((append (var14:var15) (x:var11)) =:= [2]) \=> True ]
+-------------------------------------------------------
+Curry Debug Control ---
+a - abort
+c - continue without debug
+t - tracing in debug mode
+(any other key) - next evaluation step
+>
+-------------------------------------------------------
+[ {x=2} (var11 =:= []) \=> True ]
+[ ((append (var14:var15) (x:var11)) =:= [2]) \=> True ]
+-------------------------------------------------------
+Curry Debug Control ---
+a - abort
+c - continue without debug
+t - tracing in debug mode
+(any other key) - next evaluation step
+>
+-------------------------------------------------------
+[ {x=2} (success ) \=> True ]
+[ ((append (var14:var15) (x:var11)) =:= [2]) \=> True ]
+-------------------------------------------------------
+Curry Debug Control ---
+a - abort
+c - continue without debug
+t - tracing in debug mode
+(any other key) - next evaluation step
+>
+-------------------------------------------------------
+[ {x=2} True ]
+[ ((append (var14:var15) (x:var11)) =:= [2]) \=> True ]
+-------------------------------------------------------
+Curry Debug Control ---
+a - abort
+c - continue without debug
+t - tracing in debug mode
+(any other key) - next evaluation step
+> 
+Solution: [ {x=2} True ] 70 ms
+-------------------------------------------------------
+[ ((var14:(append var15 (x:var11))) =:= [2]) \=> True ]
+-------------------------------------------------------
+Curry Debug Control ---
+a - abort
+c - continue without debug
+t - tracing in debug mode
+(any other key) - next evaluation step
+> 
+-------------------------------------------------------
+[ ((var14 =:= 2) & ((append var15 (x:var11)) =:= [])) \=> True ]
+-------------------------------------------------------
+Curry Debug Control ---
+a - abort
+c - continue without debug
+t - tracing in debug mode
+(any other key) - next evaluation step
+> 
+-------------------------------------------------------
+[ ((success ) & ((append var15 (x:var11)) =:= [])) \=> True ]
+-------------------------------------------------------
+Curry Debug Control ---
+a - abort
+c - continue without debug
+t - tracing in debug mode
+(any other key) - next evaluation step
+> 
+-------------------------------------------------------
+[ ((append var15 (x:var11)) =:= []) \=> True ]
+-------------------------------------------------------
+Curry Debug Control ---
+a - abort
+c - continue without debug
+t - tracing in debug mode
+(any other key) - next evaluation step
+> 
+-------------------------------------------------------
+[ ((append [] (x:var11)) =:= []) \=> True ]
+[ ((append (var16:var17) (x:var11)) =:= []) \=> True ]
+-------------------------------------------------------
+Curry Debug Control ---
+a - abort
+c - continue without debug
+t - tracing in debug mode
+(any other key) - next evaluation step
+> 
+-------------------------------------------------------
+[ ((x:var11) =:= []) \=> True ]
+[ ((append (var16:var17) (x:var11)) =:= []) \=> True ]
+-------------------------------------------------------
+Curry Debug Control ---
+a - abort
+c - continue without debug
+t - tracing in debug mode
+(any other key) - next evaluation step
+> 
+-------------------------------------------------------
+[ ((append (var16:var17) (x:var11)) =:= []) \=> True ]
+-------------------------------------------------------
+Curry Debug Control ---
+a - abort
+c - continue without debug
+t - tracing in debug mode
+(any other key) - next evaluation step
+> 
+-------------------------------------------------------
+[ ((var16:(append var17 (x:var11))) =:= []) \=> True ]
+-------------------------------------------------------
+Curry Debug Control ---
+a - abort
+c - continue without debug
+t - tracing in debug mode
+(any other key) - next evaluation step
+> 
+\end{verbatim}
+}
+
+As the reader can see, the representation of conditional functions 
+is translated to an internal
+representation using the function symbol \pr{$\backslash$=>}.
+The different states are shown using different text lines,
+owing to multiple instantiations.
+
+\section{Differences between Curry and UPV-Curry}\label{differences}
+
+With regard to the Curry model \cite{Hanus98Curry}, 
+some absences in the UPV implementation are:
+\begin{itemize}
+\item Modules.
+\item Encapsulated search.
+\item Sharing of variables.
+\item \pr{choice} evaluation annotation.
+\item Interfaces to external functions and external constraint solvers.
+\end{itemize}
+
+There exists a known problem with I/O actions,
+which are directly applied instead of the original monadic behaviour.
+Also, only where expressions are allowed in local declarations, while 
+interactions between local function declarations seem to be
+not correctly parsed.
+
+\section{Links to further information}\label{links}
+
+\noindent
+For the latest description of the language Curry, 
+see \cite{Hanus98Curry}.
+More information about the development of the language can be found
+in the URL:
+\begin{quote}
+\verb_http://www-i2.informatik.rwth-aachen.de/~hanus/curry_.
+\end{quote}
+
+\noindent
+For a description of UPV-Curry, see \cite{AEL99}.
+UPV-Curry is free and available at the URL:
+\begin{quote}
+\verb_http://www.dsic.upv.es/users/elp/upv-curry/upv-curry.html_.
+\end{quote}
+
+\noindent
+Suggestions and comments are welcome and can be e-mailed to:
+\begin{quote}
+\verb_sescobar@dsic.upv.es_.
+\end{quote}
+
+\appendix
+
+\section{BNF Grammar}\label{grammar}
+
+The grammar of UPV-Curry  is a subset of the grammar described in
+appendix C of \cite{Hanus98Curry}.
+The auxiliary symbols: {\em TypeConstrID}, {\em TypeVarID}, {\em DataConstrID},
+{\em TypeConstrID}, {\em VariableID}, and {\em FunctionID} are the
+distinct types of identifiers; they are formed with an initial letter followed
+by letters, numbers or the underscore symbol ``\pr{\_}''.
+The auxiliary symbol {\em InfixOpID} is a string of the following symbols:
+``\pr{\~{}!\@\#\$\%\^{}\&*+-=<>?./|:}'' or an identifier $id$
+enclosed within quotes: \verb+`+$id$\verb+`+.
+
+Curry includes different syntactic modes, described in Section
+C.1 of \cite{Hanus98Curry}, to control the differentiation step between
+variables and the rest of the symbols.
+However, UPV-Curry only allows one possibility, the {\em free} mode
+(which is the default Curry mode) 
+that does not constrain the case of identifiers.
+
+\subsection{Layout}
+The Curry language provides the use of layout information to define the
+structure of \pr{where} and \pr{let} blocks (see Section C.2 of
+\cite{Hanus98Curry}).
+The indentation of a symbol is the column number indicating the
+start of this symbol. 
+The indentation of a line is the indentation of its leftmost
+symbol.
+A Curry program is viewed as a declaration list of a
+\pr{where} block inside a module declaration.
+Therefore, each program declaration is an
+element of this declaration list and has to be indented.
+However, although UPV-Curry does not provide for modules,
+each program declaration has to be indented
+(in analogy to Curry).
+Hence, 
+in the UPV-Curry system 
+each program declaration is assumed to occur in column 1,
+whereas end-of-file token is in column 0.
+
+In Curry, declaration lists in \pr{where} and \pr{let} blocks are enclosed
+within curly brackets (\pr{\{} \pr{\}}) and the elements are
+separated by (\pr{;}). 
+Instead of defining these lists using
+curly brackets and semicolons, a Curry programmer should specify
+these lists by indentation.
+After the \pr{where} or \pr{let} keyword, the indentation of the
+first declaration is remembered, and subsequent declarations 
+must have the same indentation as the first declaration. 
+Lines with only whitespaces or an indentation greater than the
+indentation of the first declaration continue the declaration 
+started in the preceeding line. 
+Lines with an indentation less than the
+indentation of the first declaration terminates the entire list.
+
+\newcommand{\as}{\'::=~~}              % operator
+\newcommand{\oR}{$\mid$~}              % or in same line
+\newcommand{\Or}{\\ \>~~$\mid$~~~}     % Or in new line
+\newcommand{\x}[1]{\pr{#1}}            % input string
+\newcommand{\opt}[1]{{\em [}#1$\,${\em ]}} % optional
+\newcommand{\sig}{\\\>}                % next ID
+\newcommand{\nxt}{\\\>~~~~~~}          % new line in same ID
+
+{\em
+\begin{tabbing}
+FunctionDeclaration \= ---------------- \kill \>
+Program \as Block \sig
+Block \as \x{\{} \opt{PragmaDeclarationL\x{;}$\!$}\nxt
+          ~~\opt{FixityDeclarationL\x{;}$\!$}\nxt
+          ~~BlockDeclarationL    \x{\}}
+          \sig
+PragmaDeclarationL \as PragmaDeclaration \opt{\x{;}PragmaDeclarationL} \sig
+PragmaDeclaration \as \x{pragma} PragmaOption \sig
+PragmaOption \as \x{flex} \oR \x{rigid} \oR \x{optmatch} \sig
+FixityDeclarationL \as FixityDeclaration \opt{\x{;}FixityDeclarationL} \sig
+FixityDeclaration \as FixityKeyword Natural InfixOpIDL \sig
+FixityKeyword \as \x{infixc} \oR \x{infixl} \oR \x{infixr} \sig
+Natural \as Digit \opt{Natural} \sig
+Digit \as \x{0} \oR \x{1} \oR \x{2} \oR \x{3} \oR \x{4} \oR \x{5}
+      \oR \x{6} \oR \x{7} \oR \x{8} \oR \x{9} \sig
+InfixOpIDL \as InfixOpID \opt{\x{,}InfixOpIDL} \sig
+BlockDeclararionL \as BlockDeclaration \opt{\x{;}BlockDeclarationL} \sig
+BlockDeclaration \as DataDeclaration 
+                 \oR FunctionDeclaration \sig
+DataDeclaration \as \x{data} TypeDeclaration \sig
+TypeDeclaration \as TypeConstrID \opt{TypeVarIDL} 
+                    \x{=} ConstrDeclarationL \sig
+TypeVarIDL \as TypeVarID \opt{TypeVarIDL} \sig
+ConstrDeclarationL \as ConstrDeclaration
+		 \opt{\x{|}ConstrDeclarationL} \sig
+ConstrDeclaration \as DataConstrID \opt{TypeExprL} \sig
+TypeExprL \as TypeExpr \opt{TypeExprL}  \sig
+TypeExpr \as TypeConstrID \opt{TypeExprL} 
+         \Or TypeVarID 
+         \Or \x{()} \Or \x{(}TypeExprs\x{)} 
+         \Or \x{[}TypeExpr\x{]} 
+         \Or TypeExpr \x{->} TypeExpr 
+         \Or \x{Bool} \oR \x{Int} 
+         \oR \x{Char} \oR \x{String} \sig
+TypeExprs \as TypeExpr \opt{\x{,}TypeExprs}  \sig
+FunctionDeclaration \as \opt{Signature} \opt{EvalAnnot} Equation \sig
+Signature \as FunctionName \x{::} TypeExpr \sig
+FunctionName \as \x{(} InfixOpID \x{)} \Or FunctionID \sig
+EvalAnnot \as FunctionName \x{eval} Annotation \sig
+Annotation \as \x{flex} \oR \x{rigid} \sig
+Equation \as FunLHS \x{=} Expr \opt{\x{where} LocalDefs}
+         \Or FunLHS CondExprs \opt{\x{where} LocalDefs} \sig
+FunLHS \as FunctionName PatternL
+       \Or Pattern InfixOpID Pattern \sig
+Pattern \as VariableID \Or \x{\_}
+        \Or DataConstrID
+        \Or \x{()} \Or \x{(}Patterns\x{)} 
+        \Or \x{(} DataConstrID PatternL \x{)}
+        \Or \x{(} Pattern \x{:} Pattern \x{)}
+        \Or \x{[]} \Or \x{[}Patterns\x{]}
+        \sig
+PatternL \as Pattern \opt{PatternL} \sig
+Patterns \as Pattern \opt{\x{,}Patterns} \sig
+CondExprs \as \x{|} Expr \x{=} Expr \opt{CondExprs} \sig
+Expr \as \x{let} VariableIDL \x{free} \x{in} Expr
+     \Or \x{if} Expr \x{then} Expr \x{else} Expr
+     \Or \verb+\+ PatternL \x{->} Expr
+     \Or Expr InfixOpID Expr
+     \Or FunctExpr
+     \sig
+LocalDefs \as \x{\{} ValueDeclarationL \x{\}} \sig
+ValueDeclarationL \as  ValueDeclaration \opt{\x{;} ValueDeclarationL} \sig
+ValueDeclaration \as FunctionDeclaration \Or PatternDeclaration
+     \Or VariableIDL \x{free} \sig
+PatternDeclaration \as Pattern \x{=} Expr \opt{\x{where} LocalDefs} \sig
+VariableIDL \as VariableID \opt{\x{,}VariableIDL} \sig
+FunctExpr \as \opt{FunctExpr} BasicExpr \sig
+Exprs \as Expr \opt{\x{,}Exprs} \sig
+BasicExpr \as VariableID 
+          \Or \x{()} 
+          \Or \x{(}Expr\x{)}
+          \Or \x{(}Expr\x{,}Exprs\x{)} 
+          \Or \x{[]} \Or \x{[}Exprs\x{]} 
+          \Or Bool \oR Int \oR 
+              Char \oR String \sig
+\end{tabbing}
+}
+
+\section{ Standard Prelude}\label{prelude}
+
+This appendix shows the UPV-Curry prelude which is loaded during the startup.
+This prelude is a subset of the Curry prelude file showed in
+appendix B of \cite{Hanus98Curry}.
+All of the prelude function definitions of Curry
+that use encapsulated search have been dropped.
+These changes were done due to the absence of these features in 
+UPV-Curry.
+
+{\small
+\begin{verbatim}
+{-
+--* Introduces information that cannot be included
+in syntactic analysis, but can help the user.
+-}
+
+-- Infix operators declarations
+
+infixl 9 ., !!
+infixl 7 *, /, `div`, `mod`
+infixl 6 +, -
+infixr 5 ++
+infixc 4 ==, <, >, =<, >=
+infixl 3 &&
+infixl 2 ||
+infixr 1 >>, >>=, =:=
+infixr 0 &, &>
+
+
+-- Constraints
+
+-- Equational constraint
+(=:=) :: a -> a -> Constraint
+
+-- Always solvable constraint
+success :: Constraint
+
+-- Concurrent conjunction of constraints
+(&) :: Constraint -> Constraint -> Constraint
+
+-- Sequential conjunction  of constraints
+(&>) :: Constraint -> Constraint -> Constraint
+c1 &> c2 | c1 = c2
+
+
+-- Some standard combinators:
+
+-- Function composition
+(.)             :: (b -> c) -> (a -> b) -> (a -> c)
+f . g           = \x -> f (g x)
+
+-- Identity
+id              :: a -> a
+id x            = x
+
+curry           :: ((a,b) -> c) -> a -> b -> c
+curry f a b     = f (a,b)
+
+uncurry         :: (a -> b -> c) -> (a,b) -> c
+uncurry f (a,b) = f a b
+
+flip            :: (a -> b -> c) -> b -> a -> c
+flip f x y      = f y x
+
+
+-- Boolean values
+
+data Bool  = True | False
+
+-- Sequential conjunction
+(&&)       :: Bool -> Bool -> Bool
+True  && x = x
+False && _ = False
+
+-- Sequential disjunction
+(||)       :: Bool -> Bool -> Bool
+True  || _ = True
+False || x = x
+
+-- Negation
+not        :: Bool -> Bool
+not True   = False
+not False  = True
+
+-- Otherwise function
+otherwise  :: Bool
+otherwise  = True
+
+
+-- Pairs
+
+--* data (a,b) = (a,b)
+
+fst        :: (a,b) -> a
+fst (x,_)  = x
+
+snd        :: (a,b) -> b
+snd (_,y)  = y
+
+
+-- Unit type
+
+--* data () = ()
+
+
+-- Lists
+
+--* data [a]          = [] | a : [a]
+
+head              :: [a] -> a
+head (x:_)        = x
+
+tail              :: [a] -> [a]
+tail (_:xs)       = xs
+
+-- Concatenation
+(++)              :: [a] -> [a] -> [a]
+[]     ++ ys      = ys
+(x:xs) ++ ys      = x : xs++ys
+
+-- List length
+length            :: [a] -> Int
+length []         = 0
+length (_:xs)     = 1 + length xs
+
+-- List index (subscript) operator, head has index 0
+(!!)              :: [a] -> Int -> a
+(x:_)  !! 0       = x
+(_:xs) !! n | n>0 = xs !! (n-1)
+
+-- Map a function on a list
+map               :: (a->b) -> [a] -> [b]
+map _ []          = []
+map f (x:xs)      = f x : map f xs
+
+-- Accumulate all list elements
+foldr             :: (a->b->b) -> b -> [a] -> b
+foldr _ z []      = z
+foldr f z (x:xs)  = f x (foldr f z xs)
+
+-- Filter elements in a list
+filter            :: (a -> Bool) -> [a] -> [a]
+filter _ []       = []
+filter p (x:xs)   = if p x then x : filter p xs
+                           else filter p xs
+
+-- Join two lists to one list of pairs
+zip               :: [a] -> [b] -> [(a,b)]
+zip []     []     = []
+zip (x:xs) (y:ys) = (x,y) : zip xs ys
+
+-- Concatenate a list of lists into one list
+concat            :: [[a]] -> [a]
+concat l          = foldr (++) [] l
+
+-- Return prefix of length n
+take              :: Int -> [a] -> [a]
+take _ []     = []
+take n (x:xs) = if n==0 then [] else x : take (n-1) xs
+
+-- Return suffix without first n elements
+drop              :: Int -> [a] -> [a]
+drop _ []     = []
+drop n (x:xs) = if n==0 then (x:xs) else drop (n-1) xs
+
+-- Return longest prefix with elements satisfying a predicate
+takeWhile          :: (a -> Bool) -> [a] -> [a]
+takeWhile _ []     = []
+takeWhile p (x:xs) = if p x then x : takeWhile p xs else []
+
+-- Return suffix without takeWhile prefix
+dropWhile          :: (a -> Bool) -> [a] -> [a]
+dropWhile _ []     = []
+dropWhile p (x:xs) = if p x then dropWhile p xs else x:xs
+
+
+-- Conversion functions between characters and their ASCII values
+ord :: Char -> Int
+chr :: Int -> Char
+
+
+-- Convert a term into a printable representation
+
+show :: a -> String
+
+
+-- Types of primitive functions and predicates
+
+(+)  :: Int -> Int -> Int          
+(-)  :: Int -> Int -> Int          
+(*)  :: Int -> Int -> Int          
+div  :: Int -> Int -> Int
+mod  :: Int -> Int -> Int
+(<)  :: Int -> Int -> Bool      
+(>)  :: Int -> Int -> Bool      
+(<=) :: Int -> Int -> Bool      
+(=>) :: Int -> Int -> Bool      
+
+
+-- Monadic IO
+
+--* data IO a -- conceptually: World -> (a,World)
+
+(>>)          :: IO a -> IO b        -> IO b
+(>>=)         :: IO a -> (a -> IO b) -> IO b
+putChar       :: Char -> IO ()
+getChar       :: IO Char
+done          :: IO ()
+return        :: a -> IO a
+readFile      :: String -> IO String
+writeFile     :: String -> String -> IO ()
+
+putStr        :: String -> IO ()
+putStr []     = done
+putStr (c:cs) = putChar c >> putStr cs
+
+putStrLn      :: String -> IO ()
+putStrLn cs   = putStr cs >> putChar '\n'
+
+getLine       :: IO String
+getLine       = getChar >>= \c -> 
+                if c == '\n' then return []
+                             else getLine >>= \cs -> return (c:cs)
+\end{verbatim}
+}
+
+\newcommand{\etalchar}[1]{$^{#1}$}
+\begin{thebibliography}{10}
+
+\bibitem[1]{AEL99}
+M.~Alpuente and S.~Escobar and S.~Lucas.
+\newblock {UPV}-{C}urry: an {I}ncremental {C}urry {I}nterpreter.
+\newblock In J. Pavelka and G. Tel and M. Bartosek editors, {\em Proc. of 26th Seminar on Current Trends in Theory and Practice of Informatics, SOFSEM'99}, pages 327--335. Springer LNCS 1725, November 1999.
+
+\bibitem[2]{Antoy92ALP}
+S.~Antoy.
+\newblock Definitional trees.
+\newblock In {\em editors Proc. of the 3rd International Conference on
+  Algebraic and Logic Programming ALP'92}, pages 143--157. Springer LNCS 632,
+  1992.
+
+\bibitem[3]{Caballero_Lopez_Sanchez_Toy_97}
+R.~Caballero~Rold\'an, F.J. L\'opez~Fraguas, and J.~S\'anchez-Hern\'andez.
+\newblock {U}ser's {M}anual for {T}oy.
+\newblock Technical Report SIP-9757, UCM, 1997.
+
+\bibitem[4]{Hanus98Curry}
+M.~Hanus, S.~Antoy, H.~Kuchen, F.J. L\'opez-Fraguas, and F.~Steiner.
+\newblock Curry {A}n {I}ntegrated {F}unctional {L}ogic {L}anguage ({N}ovember
+  1998).
+\newblock Available at
+  \verb+http://www-i2.informatik.rwth-aachen.de/~hanus/curry+.%, November 1998.
+
+\bibitem[5]{HL94}
+P.~Hill and J.W. Lloyd.
+\newblock {\em The {G}\"odel {P}rogramming {L}anguage}.
+\newblock The MIT Press, Cambridge, MA, 1994.
+
+\bibitem[6]{HPW92}
+P.~Hudak, S.~Peyton-Jones, and P.~Wadler.
+\newblock Report on the {F}unctional {P}rogramming {L}anguage {H}askell: a
+  non--strict, purely functional language.
+\newblock {\em Sigplan Notices}, 27(5), 1992.
+
+\bibitem[7]{HanusSchwab91Impl}
+M.~Hanus and A.~Schwab.
+\newblock The {I}mplementation of the {F}unctional-{L}ogic {L}anguage {ALF}.
+\newblock FB Informatik, Univ. Dortmund, 1991.
+
+\bibitem[8]{KuchenAnastasiadis96}
+H.~Kuchen and J.~Anastasiadis.
+\newblock Higher {O}rder {B}abel: Language and implementation.
+\newblock In {\em editors Proc. 5th International Workshop on Extensions of
+  Logic Programming ELP'96}, pages 193--207. Springer LNAI 1050, 1996.
+
+\bibitem[9]{MTH90}
+R.~Milner, M.~Tofte, and R.~Harper.
+\newblock {\em The Definition of ML}.
+\newblock The MIT Press, 1990.
+
+\bibitem[10]{NM88}
+G.~Nadathur and D.~Miller.
+\newblock An {O}verview of $\lambda${P}rolog.
+\newblock In R.A. Kowalski and K.A. Bowen, editors, {\em Proc. of Fifth Int'l
+  Conf. on Logic Programming ICLP'88}, pages 810--827. The MIT Press,
+  Cambridge, MA, 1988.
+
+\end{thebibliography}
+
+\end{document}

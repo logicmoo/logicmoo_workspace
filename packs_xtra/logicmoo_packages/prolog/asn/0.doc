@@ -1,0 +1,51 @@
+Package:      lang/prolog/code/syntax/asn/
+
+Name:         ASN
+
+Summary:      Prolog abstract syntax notation translator.
+
+Version:      14-NOV-89 (17-JUL-89)
+
+Description: 
+
+   ASN (Abstract Syntax Notation) is a formalism for describing
+   language syntax. Grammars are written as Prolog terms, and compiled
+   into an optimized Definite Clause Grammar.
+
+Requires:     
+
+Ports:        Runs in Edinburgh-compatible Prologs. (The original
+              version used some Quintus-specific predicates, mainly 
+              for I/O. These have been replaced.)
+
+Origin:       src.doc.ic.ac.uk:packages/prolog-pd-software/ (146.169.2.1)
+              as asn.tar.Z
+
+Copying:      
+
+Updated:      
+
+CD-ROM:       Prime Time Freeware for AI, Issue 1-1
+
+Bug Reports:  
+
+Mailing List: 
+
+Author(s):    C.D. Farris and P. Singleton, University of Keele. 
+
+Contact:      
+
+Keywords:     
+
+   Prolog!Code, Prolog!Syntax, Syntax, Authors!Farris,
+   Authors!Singleton, Univ. of Keele, ASN
+
+Contains:    ???
+
+See Also:    
+
+References:   
+
+   C.D. Farris and P. Singleton, "The compilation of metalanguages into
+   Prolog", University Computing 11(2):62-75. [This article includes a
+   listing of the code, which is what makes up this entry.]

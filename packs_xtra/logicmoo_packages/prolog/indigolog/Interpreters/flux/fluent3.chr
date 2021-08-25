@@ -1,0 +1,274 @@
+%%
+%% finite domain constraint solver (Eclipse library)
+%%
+% :- lib(fd).
+:- use_module(library('clp/clpfd')).
+
+%%
+%% constraint handling rules (Eclipse library)
+%%
+:- use_module(library(chr)).
+
+:-  op(700, xfx, ##).
+:-  op(750, fy, #\+).
+:-  op(760, yfx, #/\).
+:-  op(770, yfx, #\/).
+:-  op(780, yfx, #=>).
+:-  op(790, yfx, #<=>).
+:-  op(800, xfx, isd).
+:-  op(400, yfx, ('*`')). 
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%
+%% Preamble
+%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+constraints not_holds/2, not_holds_all/2, duplicate_free/1,
+            or_holds/2, or_holds/3, all_holds/2, all_holds/3, all_not_holds/3,
+            if_then_holds/3, if_then_or_holds/3, if_then_or_holds/4,
+            cancel/2, cancelled/2.
+
+option(check_guard_bindings,off).
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%
+%% Constraint Handling Rules for state constraints
+%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%
+%% Negation Handling
+%%
+
+not_holds(F, [F1|Z]) <=> neq(F, F1), not_holds(F, Z).
+not_holds(_, [])     <=> true.
+
+%%
+%% Freeness of Duplicates
+%%
+
+duplicate_free([F|Z]) <=> not_holds(F,Z), duplicate_free(Z).
+duplicate_free([])    <=> true.
+
+%%
+%% Universal Quantification Handling
+%%
+
+all_holds(F,Z) <=> all_holds(F,(0 #= 0),Z).
+
+all_holds(F,C,[G|Z]) <=> \+ (F=G, call(C)) -> all_holds(F,C,Z) ;
+                         F=..[_|ArgX], G=..[_|ArgY], or_neq(exists,ArgX,ArgY,C1),
+                         all_holds(F,(C #/\ C1),Z).
+
+all_holds(F,C,Z), not_holds(G,Z) ==> copy_fluent(F,C,F1,C1) | F1=G, call(#\+(C1)).
+
+all_holds(F,C,Z), all_not_holds(G,D,Z) <=> copy_fluent(F,C,F1,C1),
+                                           copy_fluent(G,D,G1,D1),
+                                           F1=G1, call(C1 #/\ D1) | false.
+
+all_holds(F,C,Z) \ or_holds(V,Z) <=> member(G,V), copy_fluent(F,C,F1,C1),
+                                     F1=G, \+ call(#\+C1)
+                                     | true.
+
+all_holds(F,C,Z) \ if_then_or_holds(G,V,Z) <=> copy_fluent(F,C,F1,C1),
+                                               F1=G, \+ call(#\+C1)
+                                               | or_holds(V,Z).
+
+all_holds(F,C,Z) \ if_then_or_holds(_,V,Z) <=> member(G,V), copy_fluent(F,C,F1,C1),
+                                               F1=G, \+ call(#\+C1)
+                                               | true.
+
+%%
+%% Universally Quantified Negation Handling
+%%
+
+not_holds_all(F,Z) <=> all_not_holds(F,(0#=0),Z).
+
+all_not_holds(_,_,[]) <=> true.
+
+all_not_holds(F,C,Z) \ not_holds(G,Z) <=>
+   copy_fluent(F,C,F1,C1), F1=G, \+ call(#\+C1) | true.
+
+all_not_holds(F,C,Z) \ or_holds(V,Z) <=>
+   member(G,V,W), copy_fluent(F,C,F1,C1), F1=G, \+ call(#\+C1)
+   | or_holds(W,Z).
+
+all_not_holds(F,C,Z) \ if_then_or_holds(G,_,Z) <=>
+   copy_fluent(F,C,F1,C1), F1=G, \+ call(#\+C1) | true.
+
+all_not_holds(F,C,Z) \ if_then_or_holds(F2,V,Z) <=>
+   member(G,V,W), copy_fluent(F,C,F1,C1), F1=G, \+ call(#\+C1)
+   | if_then_or_holds(F2,W,Z).
+
+all_not_holds(F,C,[G|Z]) <=>
+	(\+ (F=G, call(C)) ->
+		true
+	;
+		copy_fluent((F=G),C,(F1=G1),C1), F1=G1, eq(G,G1,C2), neq_all(F,G,C3),
+		call( C2 #/\ #\+C1  #\/ C3 )
+	), all_not_holds(F,C,Z).
+
+%%
+%% Disjunction Handling
+%%
+
+or_holds([F],Z) <=> F\=eq(_,_), F\=neq(_,_) | holds(F,Z).
+
+or_holds(V,Z)   <=> \+ ( member(F,V), F\=eq(_,_), F\=neq(_,_) )
+                    | or_and_eq(V,D), call(D).
+
+or_holds(V,[])  <=> member(F,V,W), F\=eq(_,_), F\=neq(_,_)
+                    | or_holds(W,[]).
+
+or_holds(V,Z)   <=> member(eq(X,Y),V), or_neq(exists,X,Y,D), \+ call(D) | true.
+
+or_holds(V,Z)   <=> member(neq(X,Y),V), and_eq(X,Y,D), \+ call(D) | true.
+
+or_holds(V,Z)   <=> member(eq(X,Y),V,W), \+ (and_eq(X,Y,D), call(D))
+                    | or_holds(W,Z).
+
+or_holds(V,Z)   <=> member(neq(X,Y),V,W), \+ (or_neq(exists,X,Y,D), call(D))
+                    | or_holds(W,Z).
+
+%%
+%% Disjunction Propagation
+%%
+
+or_holds(V, [F|Z]) <=> or_holds(V, [], [F|Z]).
+
+or_holds([G|V],W,[F|Z]) <=> G==F -> true ;
+                            G\=F -> or_holds(V,[G|W],[F|Z]) ;
+                            G=..[_|ArgX], F=..[_|ArgY],
+                              or_holds(V,[eq(ArgX,ArgY),G|W],[F|Z]).
+
+or_holds([],W,[_|Z]) <=> or_holds(W,Z).
+
+%%
+%% Disjunction Unit Resolution
+%%
+
+not_holds(F,Z)     \ or_holds(V,Z) <=> member(G,V,W), F==G | or_holds(W,Z).
+
+%%
+%% Implication Handling
+%%
+
+if_then_holds(F,G,Z) <=> if_then_or_holds(F,[G],Z).
+
+if_then_or_holds(C,[],Z) <=> not_holds(C,Z).
+
+if_then_or_holds(_,_,[]) <=> true.
+
+if_then_or_holds(_,V,Z)  <=> member(eq(X,Y),V), or_neq(exists,X,Y,D), \+ call(D) | true.
+
+if_then_or_holds(C,V,Z)  <=> member(eq(X,Y),V,W), \+ (and_eq(X,Y,D), call(D))
+                             | if_then_or_holds(C,W,Z).
+
+%%
+%% Implication Propagation
+%%
+
+if_then_or_holds(C,V,[F|Z]) <=> C==F -> or_holds(V,[F|Z]) ;
+                                C\=F -> if_then_or_holds(C,V,[],[F|Z]) ;
+                                C=..[_|ArgX], F=..[_|ArgY],
+                                  or_holds([neq(ArgX,ArgY)|V],[F|Z]),
+                                  if_then_or_holds(C,V,[],[F|Z]).
+
+if_then_or_holds(C,[G|V],W,[F|Z]) <=> G==F -> true ;
+                                      G\=F -> if_then_or_holds(C,V,[G|W],[F|Z]) ;
+                                      G=..[_|ArgX], F=..[_|ArgY],
+                                       if_then_or_holds(C,V,[eq(ArgX,ArgY),G|W],[F|Z]).
+
+if_then_or_holds(C,[],W,[_|Z]) <=> if_then_or_holds(C,W,Z).
+
+%%
+%% Implication Unit Resolution
+%%
+
+not_holds(F,Z)     \ if_then_or_holds(G,_,Z) <=> F==G | true.
+
+not_holds(F,Z)     \ if_then_or_holds(C,V,Z) <=> member(G,V,W), F==G
+                                                 | if_then_or_holds(C,W,Z).
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%
+%% Constraint Handling Rules for cancellation of constraints on a fluent
+%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+cancel(F,Z) \ not_holds(G,Z)          <=> \+ F\=G | true.
+
+cancel(F,Z) \ not_holds_all(G,Z)      <=> \+ F\=G | true.
+
+cancel(F,Z) \ or_holds(V,Z)           <=> member(G,V), \+ F\=G | true.
+
+cancel(F,Z) \ if_then_or_holds(G,_,Z) <=> \+ F\=G | true.
+
+cancel(F,Z) \ if_then_or_holds(_,V,Z) <=> member(G,V), \+ F\=G | true.
+
+cancel(F,Z), cancelled(F,Z) <=> true.
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%
+%% Auxiliary clauses
+%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+eq(Fx, Fy, C) :-
+	functor(Fx, F, M), functor(Fy, G, N),
+	( F=G, M=N -> Fx =.. [_|ArgX], Fy =.. [_|ArgY], and_eq(ArgX, ArgY, C)
+              ; C=(0#\=0)
+	).
+ 
+neq(F, F1)    :- or_neq(exists, F, F1).
+neq(F, F1, C) :- or_neq_c(exists, F, F1, C).
+neq_all(F, F1)    :- or_neq(forall, F, F1).
+neq_all(F, F1, C) :- or_neq_c(forall, F, F1, C).
+
+or_neq(Q, Fx, Fy) :-
+  functor(Fx, F, M), functor(Fy, G, N),
+  ( F=G, M=N -> Fx =.. [_|ArgX], Fy =.. [_|ArgY], or_neq(Q, ArgX, ArgY, D), call(D)
+              ; true ).
+
+or_neq_c(Q, Fx, Fy, C) :-
+  functor(Fx, F, M), functor(Fy, G, N),
+  ( F=G, M=N -> Fx =.. [_|ArgX], Fy =.. [_|ArgY], or_neq(Q, ArgX, ArgY, C)
+              ; C=(0#=0) ).
+
+or_neq(_, [], [], (0#\=0)).
+or_neq(Q, [X|X1], [Y|Y1], D) :-
+  or_neq(Q, X1, Y1, D1),
+  ( Q=forall, var(X), \+ is_domain(X) -> ( binding(X,X1,Y1,YE) -> D=((Y#\=YE)#\/D1) ; D=D1 )
+                                       ; D=((X#\=Y)#\/D1) ).
+
+binding(X,[X1|ArgX],[Y1|ArgY],Y) :-
+   X==X1 -> Y=Y1 ; binding(X,ArgX,ArgY,Y).
+
+and_eq([], [], (0#=0)).
+and_eq([X|X1], [Y|Y1], D) :-
+   and_eq(X1, Y1, D1),
+   D = ((X#=Y)#/\D1).
+
+or_and_eq([], (0#\=0)).
+or_and_eq([E|Eq], (D1#\/D2)) :-
+   ( E=eq(X,Y) -> and_eq(X,Y,D1) ; E=neq(X,Y), or_neq(exists,X,Y,D1) ),
+   or_and_eq(Eq,D2).
+
+inst(G,F) :-
+   \+ ( term_variables(G,X), term_variables(F,Y), bound_free(Y,X,V,W),
+        copy_term_vars(W,F,F1), \+ no_global_bindings(G=F1, V) ).
+
+copy_fluent(F,C,F1,C1) :-
+   term_variables(F,X), bound_free(X,[],_,Y),
+   copy_term_vars(Y,[F,C],[F1,C1]).
+
+bound_free([],X,X,[]).
+bound_free([Y|Ys],X,V,W) :-
+   bound_free(Ys,X,V1,W1), (is_domain(Y) -> V=[Y|V1], W=W1
+                                          ; V=V1, W=[Y|W1]).
+
+member(X, [X|T], T).
+member(X, [H|T], [H|T1]) :- member(X, T, T1).

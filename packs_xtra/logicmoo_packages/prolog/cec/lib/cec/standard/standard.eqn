@@ -1,0 +1,4 @@
+module(standard).
+
+cons true : bool.
+cons false : bool.

@@ -1,0 +1,928 @@
+MIKEREF.2o2
+                   M I K E   R E F E R E N C E   M A N U A L
+                               Part 2 of 2
+
+{Extensions to accompany versions 2.00 and higher... simply append to Part 1}
+
+                        T A B L E   O F   C O N T E N T S
+
+7       FAST FORWARD CHAINING RETE ALGORITHM
+
+8       TRUTH MAINTAINANCE SYSTEM
+8.1      User's view
+8.2      New tracing facilities for the TMS
+8.3      RETE and TMS command summary
+
+9       HYPOTHETICAL WORLDS
+
+10      UNCERTAINTY
+
+11      FORWARD CHAINING RULE SYNTAX ADDENDUM
+
+12      INDEX (updated for all sections to incorporate MIKE v2.00 extensions)
+
+
+7 FAST FORWARD CHAINING RETE ALGORITHM
+======================================
+
+In early versions of MIKE, rules were picked for inclusion in the conflict
+set by checking the left-hand-side conditions of every available rule on
+each cycle of forward chaining. This is a very simple, 'brute force' way
+of picking rules to fire, and tends to be very inefficient, particularly
+for large rule sets.
+
+MIKE 2 contains an implementation of the RETE pattern-matching algorithm. This 
+cuts down the number of rules checked on each cycle by short-listing only 
+those whose left-hand-sides have recently become true due to working memory or 
+frame changes. RETE does this by constantly monitoring all working memory and 
+frame changes, if  such a change causes a rule's left-hand-side to become true 
+then that rule will be added to RETE's short-list. If RETE processing is 
+enabled the forward chainer only checks the short-list for suitable rules on 
+each cycle, hence saving a lot of time. 
+
+The increase in the speed of forward chaining execution is dependent on the
+nature of the knowledge base you are using.  In particular, if you have a 
+large number of rules (> 20) and don't rely extensively on fancy features such 
+as demons, then you will obtain a noticeable speed-up by switching on RETE 
+processing (although there is a one-off delay during rule network 
+compilation).  Conversely, if you have only a few rules, but rely mostly on 
+frame access and demon-triggering, then RETE processing will actually be 
+SLOWER, because the algorithm does a lot of unnecessary work in chasing
+down the demons and creating a short-list of rules which is small to begin 
+with.
+
+In order to function, the RETE processor must first compile all the rules
+and facts into a network, so that it knows which rules to add to (or
+remove from) it's short list when a particular fact becomes true (or
+false). This compilation only needs to be done once per knowledge base
+session, and it is automatically done for you whenever a knowledge base is
+loaded with the 'kb ' command. For this reason you should try to get into
+the habit of using 'kb ' rather than the 'reconsult' alternative when you
+intend to use RETE optimisation. For knowledge bases with large amounts of
+stored frame data (e.g. KIVA.KB) compilation can take some time, so if you
+find this disadvantagous you should disable RETE optimisation (see below).
+
+RETE optimisation is enabled by default, and runs so as to be transparent
+to the user. If, however, you want to change or examine the current RETE
+status the following MIKE commands are available:- 
+
+rete_on   Turns RETE on, also forces a recompilation and automatic
+          update of the RETE network.
+
+rete_off  Turns RETE off, and deletes whole RETE network and data,
+          immediately freeing some memory.
+
+Note that tracing option 9 (show single stepping) will not operate as
+described in section 4.5.3 while RETE optimisation in enabled. This is
+because the relevant information is not available for the tracer to 
+display.
+
+
+8 TRUTH MAINTAINANCE SYSTEM
+===========================
+
+8.1 User's view
+---------------
+
+The Truth Maintenance System (TMS) keeps track of dependencies 
+among working memory assertions.  Derived conclusions stored in working 
+memory can be thought of as a 'house of cards' (they depend on earlier 
+conclusions, which in turn depend on earlier ones, etc.).  Retracting 
+any assertion might cause the house of cards (or part of it) to crumble, 
+or may introduce inconsistencies.  The TMS handles all of the 
+bookkeeping, and resolves inconsistencies automatically wherever 
+possible by providing new justifications for working memory assertions.  
+A 'justification browser' displays the tree of dependencies which 
+support particular conclusions.
+
+The TMS works by monitoring all changes to working memory, and if it traps a 
+change which causes the left-hand-side of a rule true to become true, it will 
+fire that rule, just as the forward chainer would have done. Analogously,
+if a change causes the left-hand-side of a rule to become false when it
+had previously been true, then conclusions which depended upon the firing
+of that rule (assuming all of its left-hand-side elements had previously
+been true) are now retracted.  Changes which result in this manner may 
+recursively trigger additional changes, hence the 'house of cards' metaphor.
+A guided tour of the TMS is given in section 6.7.1.
+
+NOTE ON CHANGE OF FORWARD CHAINING BEHAVIOUR: Pursuing the 'house of cards'
+metaphor, it is crucial to understand that rule processing by the TMS is
+'opportunistic' rather than cycle-based.  By 'cycle-based', we mean the
+style of forward chaining described in section 3, wherein MIKE works
+its way through a 'recognize-act' cycle, one cycle at a time, firing
+a single rule on each cycle of execution.  When you are not using the
+TMS (i.e. during conventional rule processing), this is precisely the
+behaviour triggered by the two commands
+   ?- fc.
+and
+   ?- go.
+In contrast to this cycle-based behaviour, the 'opportunistic' style
+is something more like a chain reaction: you add some element(s) to 
+working memory, which in turn triggers some rule which depends on just that 
+element (those elements) to have all of its left-hand-side conditions 
+satisfied (as if the rule were 'lying in wait' ready to fire).  The triggering 
+of that rule may in turn add more elements to working memory, which may in 
+turn trigger more rules.  So, if you have the TMS enabled, rather than using 
+'fc' or 'go', you would normally use
+   ?- add <wm-element>.
+to start the ball rolling.    
+
+The TMS is optional, but is off by default. The following commands are
+available to allow you to check or alter the status of the TMS:-
+
+tms_on    Turns tms on
+
+tms_off   Turns tms off     
+
+Notes:
+  (a) tms_on does not update working memory or trap contradictions 
+      immediately.  If you wish to force the tms to do this then
+      you should use the command find_wm_elements. Note however, that 
+      it is not advisable to enable or disable the TMS at any time
+      other that when a kb is first loaded, as working memory may be in 
+      a state that the TMS doesn't like, i.e. contradictions and paradoxes
+      may have been introduced from the top level.
+
+  (b) The TMS will only work while RETE is enabled.
+     
+  (c) RETE cannot be disabled while the TMS is enabled.  This is to stop
+      users accidentally disabling the TMS.
+
+This section explains the main features of the truth maintainance system by
+way of example. The knowledge base used is shown below, and is supplied
+with MIKE2 under the filename TMS1.KB.
+
+rule one forward
+     if
+       a &
+       b
+     then c.          /* believe c if a and b are true */
+
+rule two forward
+     if
+       c &
+       --d            /* not d: really means 'd is absent' */
+     then e.          /* believe e if c is true but not d */
+
+The following commands can be used to load the knowledge base:-
+
+?- rete_on.           /* turn RETE on */
+?- tms_on.            /* turn TMS on */
+?- kb 'tms1.kb '.     /* load example */
+
+We can now inspect working memory, add a, and check working memory again
+with the commands below. (Recall the discussion above that processing
+with the TMS is normally triggerred by 'add' rather than 'fc' or 'go').
+
+?- wm.
+yes                   /* nothing there */
+
+?- add a.            
+yes
+
+?- wm.               
+a
+yes
+
+The result is not unexpected: a is in now in working memory. Now
+add b and check the contents of working memory issuing the following
+commands:-
+
+?- add b.            /* this will suddenly trigger rule one */
+yes
+
+?- wm.
+a
+b
+c
+e
+
+yes
+
+
+This time wm reveals that a,b,c and e are working memory. This is because
+the TMS has trapped both of the working memory changes and has noticed that
+a and b are true (in wm), so c is true (by rule one), and so is e (by rule
+two).
+
+You may now use the 'how' command (see section 6.2) to see why each element
+is beleived to be true, or alternatively you can use a new command, justify,
+to draw a 'justification tree' for e, which shows in detail the reasons why
+e is in working memory, for example
+
+?- justify e.
+
+Will produce a diagram similar to this:
+
+e
+|
+|__c
+|  |
+|  |__a
+|  |  |_0       /*  0 = smiley face = 'because you told me so'  */
+|  |
+|  |__b
+|     |_0
+|
+|_--d
+ 
+Note that the diagram actually displayed on the computer screen will look
+slightly better than this, as MIKE draws it using graphics characters which
+are not available in an ASCII text file like this one.
+
+Their are a few important notational conventions used in these trees.  One
+is that user input from the top level is denoted by a smiley face (shown as
+a 0 above). Another is that the conjunction of wm patterns joined by a 
+vertical line (e.g. a and b in this example) must all be true for the 
+conclusion (in this case c) to be true. Discontinuity in these lines 
+represents disjunction.  To demonstrate this, add c to working memory from the 
+top level using the command below.
+
+?- add c. 
+
+Typing 'how c' will now give two justifiations for c ('a&b from rule one'
+and 'top level'). Typing 'justify c' will give the following result:-
+
+?- justify c.
+
+c            /* c is true because ....                 */
+|
+|_a          /*    a is true (which is so because...   */
+| |_0        /*        you told me so)                 */
+|            /*    AND                                 */
+|_b          /*    b is true (which is so because...   */
+  |_0        /*        you told me so)                 */
+             /* ALTERNATIVELY, c is also true because  */
+|_0          /*    you told me so                      */
+
+The disembodied head (shown as a 0 above) at the foot of the tree represents
+the second reason for c appering in working memory.
+
+Note that the justification tree is drawn using standard PC text characters
+only, so it should work on all PC compatables, with all possible displays.
+
+The TMS processes are totally reversible, which means that if b is now
+removed from the top level c and e are subsequently removed by the TMS.
+
+                          
+
+A new operator, the tilda (~), has been added in MIKE 2. This is used to
+represent something that is explicitly NOT true. An illustration of the
+difference between this and -- is shown below.
+
+     c    means c is true (in working memory)
+     --d  means d is not in working memory
+     ~e   means e is not true
+
+Naturally if, for example, both e and ~e are in working memory there is a
+contradication. If the TMS is enabled when such a situation occurs it will
+automatically try to resolve it.
+
+In the current example the contents of working memory is a,b,c and e. A
+contradiction can now be introduced into working memory, and it's effects
+studied, using the commands shown below.
+
+?- add ~e.
+?- wm.
+?- show rules.
+ 
+You will see that working memory now contains a,b,c,d,~e and that a new
+'contadiction resolver' rule has been added. This is a somewhat unexpected
+state of affairs, but it is in fact the TMS's way of resolving conflicts.
+Reference to the justification tree for e shown above reveals that e
+is true if d is not in working memory. When ~e was added to working memory
+the TMS also added d, hence forcing the removal of e and thereby resolving
+the contradiction. Note that the status of d has not significantly changed
+due to this, it has just gone from being absent from working memory (--d) to
+being present, or true (d). It is important to make the distinction between
+this and d changing from being not true (~d) to true (d), which DOES NOT
+happen.
+
+The justification for adding d can be shown by using 'how' or 'justify'. This
+will sum up the contradiction resolver rule generated by the TMS to justify,
+and allow for reversal of, it's actions. A rule similar to the one created in
+our example is shown below.
+
+rule contradiction_resolver_15 forward
+     if
+         a &
+         b &
+         ~e
+     then
+         add d.
+
+It follows that if any one of the foundations (a,b or ~e) of this rule are
+removed from working memory then the rule will become false, and d will
+subsequently be removed from working memory. This is correct, as a,b and ~e
+are the ultimate (top level) reasons why the conflict occured. 
+
+There are some contradictions which the TMS cannot resolve. These are 
+generally
+where nothing can be done to remove a conflicting element or when two
+conflicting wm elements are added from, the top level. By way of example add
+e to working memory 'by hand' using the command shown below (remember that ~e
+has already been added from the top level).
+
+?- add e.
+
+A message will be produced by the TMS alerting you to the fact that both e
+and ~e are in working memory. Removing either of these elements will solve
+the problem. 
+
+Another perculiar situation for the TMS is a paradox, when something is
+inferred to be true (either directly or indirectly) by itself. This situation
+can be demonstrated using the knowledge base below (included as TMS2.KB in the
+MIKE package). The third rule states that b is true if e is true, but as in
+the previous example e is only true if c is true due to a and b being true.
+
+rule one forward
+     if
+       a &
+       b
+     then c.
+
+rule two forward
+     if
+       c &
+       --d
+     then e.
+
+rule three forward
+     if
+       e
+     then b.
+
+This knowledge base can be loaded into MIKE using the commands following
+command (ensure that the TMS is enabled first):-
+
+?- kb 'tms2.kb '.
+
+If a and b are now added to working memory the TMS will add c to working
+memory (from rule one), which will in turn cause e to be added to working
+memory (from rule two). If  tracing option five is enabled all working memory
+changes instigated by the TMS, and by you, will be reported on the screen as
+they happen. This is a useful facility as it eliminates the need to repeatedly
+use the 'wm' command (see section 3.4.3 for details of tracing). The following
+lines demonstrates the tracing and loop detection features of the TMS:-
+
+?- tracing(5).      /* Toggle tracing option five */
+?- add a.           /* Add a to wm */
+?- add b.           /* Add b to wm */
+
+You will notice from the output of the tracer that the addition of e to 
+working memory does not prompt the TMS to add b. This is because the TMS 
+detects that there is a loop, and stops processing (if it did not do this
+MIKE would enter an endless loop). Such paradoxes can are best visualised in
+the relevant justification tree, an example of which is shown below. 
+
+?- justify e.
+
+e
+|
+|__c
+|  |
+|  |__a
+|  |  |_0
+|  |
+|  |__b
+|     |_0
+|   
+|     |_[e]
+|
+|_--d
+
+The two justifications for b are top level (shown as 0) and e. Note that e is
+shown in brackets to represent repetition in the tree, and that it's
+dependants are not shown. This makes loops easier to spot and also keeps the
+tree to a comprehendable size by eliminating unnecessary information.
+
+8.2 New tracing facilities for the TMS
+--------------------------------------
+
+A number of additions have been made to the MIKE tracing facilities to aid
+debugging and analysis of TMS programs, these are detailed below.
+
+The 'how X' command now lists all the reasons (as opposed to just one) why
+the pattern, X, is in working memory.
+
+An entirely new command, 'justify X', has been added which graphically
+displays the hierarchical tree of premises from which the inference, X,
+was drawn. A full explanation of this command is shown in 6.7.1 (TMS: A
+guided tour).
+
+Tracing option five, which is normally used during forward chaining to
+display working memory and frame changes, can be used in TMS mode for the
+same purpose, and will inform the user of any changes that occur in working
+memory. Unlike it's forward chaining conter-part this tracing shows elements
+being removed as well as added to wm, and shows which rule has caused this
+occur.
+
+Note that the TMS only works for working memory elements, and will NOT
+work with frames.
+
+Summary of tracing commands:
+
+how X     This lists all the reasons why the Pattern, X, is in wm.
+
+justify X This draws a justification tree showing how X got into wm.
+
+          This is drawn using text characters only, so it should work on
+          all PC compatables. Several notational conventions used in the
+          trees should be observed, these are:
+        
+          (a) top level user input is denoted by a smiley face.
+          (b) wm elements joined by a vertical line are & patterns.
+          (c) discontinuity in the vertical lines represents disjunction.
+          (d) repeated wm patterns are displayed in square brackets, and
+              their dependants are not shown.
+
+tracing   Tracing option five is normally used during forward chaining
+          to display working memory and frame changes, in TMS mode it is
+          used for the same purpose, and will inform the user of any changes
+          that occur to working memory. Unlike it's forward chaining conter-
+          part this tracing shows elements being removed as well as added.
+
+
+8.3   RETE and TMS command summary
+----------------------------------
+
+The table below summarises the possible situations in which the main RETE
+and TMS commands may be used.
+
+                      _______________________
+                     |         |Status Requrd|   
+                     | Command |_____________|
+                     | entered | Rete | Tms  |
+                     |-----------------------|
+                     |tms_on   | on   |  off |
+                     |tms_off  | on*  |  on  |
+                     |rete_off | on   |  off |
+                     |rete_on  | off  |  off*|
+                      -----------------------
+
+        * these are consequences of other parts of the table.
+
+The TMS and RETE status can be checked using the status command, as shown
+below.
+
+?- status.
+
+/* The status flags shown in the right column are the current settings. */
+ 
+---------------------------------------------------------------------------
+MIKE OPTIONS                     USEFUL COMMANDS               STATUS
+TMS:                             tms_on.        tms_off.       on
+RETE:                            rete_on.       rete_off.      on
+Rules:                           show rules.    describe.      0
+Frames:                          browse.        describe.      0
+Working memory elements:         wm.            cf.            0
+Unertainty calculation method:   certainty.     threshold.     standard
+Currently loaded knowledge base: kb 'filename'.                none
+
+Current conflict resolution strategy (in order) is:
+[refractoriness,recency,specificity,lhsthreshold,cfstrength]
+with a left-hand-side certainty threshold of 0.2000.
+---------------------------------------------------------------------------
+
+9 HYPOTHETICAL WORLDS
+=====================
+
+
+
+
+10 UNCERTAINTY
+==============
+
+?- tms_off.
+yes
+
+
+/* And status is automatically called from 'kb ' */
+
+yes
+?- kb 'cf_test.kb '.
+
+New knowledge base loaded.
+------------------------------------------------------------------------------
+--MIKE OPTIONS                     USEFUL COMMANDS               STATUS
+TMS:                             tms_on.        tms_off.       off
+RETE:                            rete_on.       rete_off.      on
+Rules:                           show rules.    describe.      2
+Frames:                          browse.        describe.      0
+Working memory elements:         wm.            cf.            0
+Unertainty calculation method:   certainty.     threshold.     standard
+Currently loaded knowledge base: kb 'filename'.                cf_test.kb
+
+Current conflict resolution strategy (in order) is:
+[refractoriness,recency,specificity,lhsthreshold,cfstrength]
+with a left-hand-side certainty threshold of 0.2000.
+------------------------------------------------------------------------------
+--Compiling RETE network...
+
+yes
+
+/* example of adding something with a confidence factor (50%) */
+
+?- add a cf 0.4.
+
+yes
+
+/* but you can still add just as before, a default cf of 100% is assigned */
+
+?- add b.
+
+yes
+?- add foo cf 0.3.
+
+yes
+?- add bar.
+
+yes
+
+/* 'wm' works just as before... */
+
+?- wm.
+The current contents of working memory are the following: 
+     a
+     foo
+     bar
+     b
+
+A total of 4 current working memory elements were found.
+
+yes
+
+/* but for a fuller description of the contents of working memory 'cf' is
+   now available */
+
+?- cf.
+The current contents of working memory are the following:
+
+     a cf 0.4000
+     b cf 1.0000
+     foo cf 0.3000
+     bar cf 1.0000
+
+A total of 4 current working memory elements were found.
+
+yes
+
+/* If 'a' is added for a second time, the highest cf is picked as the one
+   to use (in standard mode)... */
+
+?- add a cf 0.5.
+
+yes
+?- cf.
+The current contents of working memory are the following:
+
+     a cf 0.5000
+     b cf 1.0000
+     foo cf 0.3000
+     bar cf 1.0000
+
+A total of 4 current working memory elements were found.
+
+yes.
+
+/* Example of changing the combined antecedent threshold for the
+  'lhsthreshold' conflict resolution filter */
+
+?- threshold.
+Type the required threshold value (0.0 to 1.0) to use during
+conflict resolution, and then a FULL STOP
+==> 0.4.
+
+yes
+
+/* Now check that it's been stored OK.... */
+
+?- status.
+
+------------------------------------------------------------------------------
+--MIKE OPTIONS                     USEFUL COMMANDS               STATUS
+TMS:                             tms_on.        tms_off.       off
+RETE:                            rete_on.       rete_off.      on
+Rules:                           show rules.    describe.      2
+Frames:                          browse.        describe.      0
+Working memory elements:         wm.            cf.            6
+Unertainty calculation method:   certainty.     threshold.     standard
+Currently loaded knowledge base: kb 'filename'.                 cf_test.kb
+
+Current conflict resolution strategy (in order) is:
+[refractoriness,recency,specificity,lhsthreshold,cfstrength]
+with a left-hand-side certainty threshold of 0.4000.
+------------------------------------------------------------------------------
+--
+/*                                             ^
+                                               |
+                                        There it is! */
+
+yes
+
+/* Now start forward chaining with 'go'... */
+
+?- go.
+
+New working memory elements or frame changes are: 
+c
+
+New working memory elements or frame changes are: 
+halt
+
+yes
+
+/*Note that boo is not added, as the combined certainty of the antecedents
+  is 0.3, which is below the threshold of 0.4 (set above).
+  
+  Don't forget 'strategy menu' now gives five options (see status output
+  above), one of which is 'cfstrength'. 'cfstrength' ensures that rules are
+  fired in order of their certainty. If we now remove 'boo' and 'c', lower
+  the LHS threshold to 0.2, and begin forward chaining we get this: */
+
+?- remove boo.
+
+yes
+
+/* Note that you may now remove conclusions of rules, as long as the TMS is
+   switched off */
+
+?- remove c.
+
+yes
+?- threshold(0.2).      /* Alternative (hacker's) way to alter threshold */
+
+yes.
+?- go.
+
+New working memory elements or frame changes are: 
+c
+
+New working memory elements or frame changes are: 
+boo
+
+New working memory elements or frame changes are: 
+halt
+
+yes.
+
+/* Of course, if the combined certainty of the antecedents was higher for
+   'boo' than it was for 'c' then boo would have been added first. 
+
+   The method of certainty calculation used in the example above was the 
+   default one, 'standard'. The calculation method can be altered using
+   the 'certainty' command.... */
+
+?- certainty.
+     1 - Standard
+     2 - Fuzzy   
+     3 - Bayes(ian)
+
+Type the number of the option you would like to use, eg. 1, and then a FULL 
+STOP
+==> bayes.
+
+yes.
+
+/* Note the way that bayes was accepted, even though that is not what you're
+   meant to type, real hackers could have used the command below:
+
+   ?- certainty(bayes).   */
+
+/* Uncertainty factors can be used in all sections of MIKE including TMS,
+   RETE and WORLDS. However, certainty factors may only be used on working 
+   memory elements, and NOT frames!
+
+
+   A summary of the methods of certainty factor combination is shown belows:
+
+
+STANDARD
+--------
+
+The combined CF of a rule's antecedents is the equal to the CF of the
+least certain antecedent.
+
+The CF of the conclusion is the combined antecedent CF (see above)
+multiplied by the CF for the rule.
+
+For multiple additions to working memory the highest cf is used (e.g.
+?- add foo cf 0.4.
+?- add foo cf 0.5.
+?- add foo cf 0.2.
+gives 'foo cf 0.5' in working memory).
+
+
+FUZZY
+-----
+
+The combined CF of a rule's antecedents is the equal to the CF of the
+least certain antecedent.
+
+The CF of the conclusion is just the CF of the rule.
+
+For multiple additions to working memory the highest CF is used.
+
+
+BAYESIAN
+--------
+
+The combined CF of a rule's antecedents is the equal to the product of all
+the antecedent CFs.
+
+The CF of the conclusion is the combined antecedent CF (see above)
+multiplied by the CF for the rule.
+
+For multiple additions to working memory the highest CF used is 
+( (1- 'old CF') * 'New CF' + 'old CF').
+
+*/
+
+10   FORWARD CHAINING RULE SYNTAX ADDENDUM
+==========================================
+
+5.1.2   Legal forward-chaining conditions
+---------------------------------------
+
+The following conditions are allowed:
+
+   <wm-pattern>
+
+   <wm-pattern> cf <certainty-factor>
+
+   <wm-pattern> in_world <world-name>
+
+   <frame-access>
+
+   deduce <wm-pattern>
+
+   deduce <frame-access>
+
+   -- <wm-pattern>
+
+   -- <frame-access>
+
+   <var-or-number> <math-operator> <var-or-number>
+
+   forall(<wm-pattern1>, <wm-pattern2>)
+
+   prolog(<goal>)
+
+   prolog((<goal1>,<goal2>,...,<goaln>))
+
+   <query-template> receives_answer <answer>
+
+5.1.3   Legal forward-chaining actions
+--------------------------------------
+
+The following actions are allowed on the right-hand side of a
+forward-chaining rule:
+
+   add <wm-pattern>
+
+   add <wm-pattern> cf <certainty-factor>
+
+   suppose <wm-pattern>
+
+   suppose <wm-pattern> in_world <world-name>
+
+   suppose <wm-pattern> in_new_child_world_of <world-name>
+  
+   suppose <wm-pattern> in_merged_worlds (<world-name1> & <world-name2> ...)
+
+   unsuppose <wm-pattern>
+
+   unsuppose <wm-pattern> in_world <world-name>
+
+   new_world <world-name>
+
+   <world-name> is_new_child_world_of <world-name>
+
+   announce <announcement-list>
+
+   halt
+
+   note the <slot> of <object> is <filler-or-list-of-fillers>
+
+   note <object> instance_of <class>
+
+   note <class> subclass_of <class>
+
+   query <query-template> receives_answer <answer-template>
+
+   ask_menu(<object>, <relation>, <list>)
+
+   remove <wm-pattern>
+
+   <var> := <math-expression>
+
+   prolog(<goal>)
+
+   prolog((<goal1>,<goal2>,...,<goaln>))
+
+
+
+
+11   I N D E X
+==============
+
+*Items preceded by a '*' are MIKE keywords/commands
+ --------------------------------------------------
+
+ ITEM...................................................SECTION(S)
+ --------------------------------------------------------------------
+
+*-- (negation: 'absent')................................5.1.2
+*& (conjunction within rules)...........................5.1.1
+*?self ('this instance' for inherited demon)............4.3.5, 4.3.6
+*add (put things into working memory)...................3.3.3
+*all X of Y are Z (frame retrieval).....................4.2.1
+*announce (user-supplied printout)......................5.1.3, 6.5
+*ask_menu (multiple-choice user interaction)............5.1.3
+ atom (as working memory pattern or frame type).........5.1.2, 4.3.3
+*backward (keyword specifying backward chaining rule)...5.2.1
+ backward chaining rules................................2,5.2.1,5.2.4
+ Bayes combination rule for calculating uncertainty.....10
+*browse (show frame hierarchy)..........................6.3.2
+*cardinality (slot 'facet').............................4.3.4
+*certainty (sets combination rule as Fuzzy, Bayes, etc).10
+*cf (certainty factor, also shows wm contents)..........10
+*cfstrength (as conflict resolution strategy)...........10
+ class (hierarchy using frames).........................4.1
+ conflict resolution (choosing a winner among several)..5.1.5, 10
+*continue (carry on forward chaining with current wm)...3.3.3
+ daemon.................................................see demon
+*deduce (invoke backward chaining)......................3.3.2
+ demon (procedural attachment to frame).................4.3.5, 4.3.6
+*describe (examine frames and rules)....................3.4.1, 6.4.
+ disjunction ('or' is allowed within rules).............5.1.1
+*ed (prefix operator for invoking 'edit')...............3.2
+*edit (invoke your favourite editor from within MIKE)...3.2
+ editing knowledge bases................................3.2
+*explained_by (user-provided explanations for 'why')....6.2
+ facet (fine-grained slot descriptor)...................4.3
+*fc (initiate forward chaining).........................3.3.1, 5.1.4
+*forall (matching multiple working memory patterns).....5.1.2
+*forward (keyword specifying forward chaining rule).....5.1.1
+ forward chaining rules.................................2,5.1.1,5.1.4
+ frames (structured object representations).............2, 4
+ fuzzy combination rule for calculating uncertainty.....10
+*go (leave working memory alone, initiate fwd chaining).3.3.3
+*how (explanation for conclusions)......................6.2, 8.2
+ history (of rule execution)............................3.4.3
+ if-added method (synonymous with 'change_rule')........4.3.5
+ if-needed method (synonymous with 'access_rule').......4.3.6
+ inheritance (of frame slot:filler descriptions)........4.2.1, 4.3.2
+*inheritance (slot 'facet').............................4.3.2
+ initialise (Prolog predicate to clear up wm)...........3.3.3, 5.1.4
+ inspecting working memory, frames, rules...............3.4
+*instance_of (frame keyword)............................4.1
+ integer (as frame type)................................4.3.3
+*justify (display TMS proof tree).......................8.2, 8.1
+*kb (load new knowledge base)...........................3.1.2
+*lhsthreshold (used as conflict resolution strategy)....10
+ list (as wm pattern or frame type).....................5.1.2, 4.3.3
+ listing (of rules and frames)..........................6.4, 6.3
+*make_value (side-effect within access_rule)............4.3.6
+*note (make frame change)...............................4.2.2, 5.1.3
+ object-oriented programming (by procedural attachment).4.3.5, 4.3.6
+*or (use of disjunction within rules)...................5.1.1
+ part_initialise (Prolog book-keeping predicate)........3.3.3
+ procedural attachment (of code to frame)...............4.3.5, 4.3.6
+ Prolog (and relationship to MIKE)......................2, 3.5, 5.1.2
+*prolog (invoke Prolog within MIKE).....................5.1.2, 5.1.3
+*query (simple user interaction)........................6.1, 5.1.3
+*receives_answer (test for already-asked query).........5.1.2
+ recency (conflict resolution strategy).................2, 5.1.5
+ refractoriness (conflict resolution strategy)..........2, 5.1.5
+*remove (delete working memory element).................5.1.3
+ RETE (algorithm for fast forward chaining).............7
+*rete_off (disable RETE compilation)....................7.1, 8.4
+*rete_on (enable RETE compilation)......................7.1, 8.4
+*rule syntax............................................5.1.1
+*?self ('this instance' for inherited demon)............4.3.5, 4.3.6
+*show (inspect working memory, history, etc)............3.4.3, 6.6
+ slot (structured part of frame)........................4.1, 4.3
+ specificity (conflict resolution strategy).............2, 5.1.5
+*status (of RETE, TMS, KB, etc.)........................8.4
+ standard probabistic combination rule for uncertainty..10
+ string (as wm pattern or announce message).............5.1.2, 6.5
+*subclass_of (frame keyword)............................4.1
+*strategy (alter conflict resolution strategy)..........5.1.5
+*the X of Y is Z (frame retrieval)......................4.2.1
+*threshold (to set min. cf to believe wm pattern).......10
+ TMS (Truth Maintenance System).........................8
+*tms_off (disable Truth Maintenance System).............8.1, 8.4
+*tms_on (enable Truth Maintenance System)...............8.1, 8.4
+*tracing (examing rule execution).......................3.4.3, 3.4.4
+ triggering rule execution..............................5.1.4, 5.2.4
+ Truth Maintenance System (TMS).........................8
+*type (slot 'facet')....................................4.3.3
+ uncertainty............................................10
+ utilities..............................................6
+*value (slot 'facet')...................................4.3.1, 4.3.6
+*why (get explanation for question).....................6.2
+*with (keyword for frame description)...................4.1
+ working memory (repository for assertions).............2
+*wm (print out contents of working memory)..............3.4.1
+

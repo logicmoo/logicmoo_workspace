@@ -1,0 +1,154 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%
+% Output of PROTEIN 
+%    
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+output      :==   intro
+                  comp_start
+                [ comp_stat ]
+                  comp_finish
+	          proof_start
+	        [ search ] result
+                [ proof_stat ]
+	        [ answers ]
+                [ pc_or_models ]
+                  finish
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% At the very beginning PROTEIN introduces itself by intro
+
+intro       :== '\n\n********************    PROTEIN V' 
+                version 
+                '   ********************\n'
+
+% The start of the compilation is documented by comp_start
+
+comp_start :== '\ntranslating ' problem '.....'
+
+% Each dot stands for the completion of one compilation step. 
+
+% If the flag trace is not swiched off the compilation statistics are
+% printed. The Simplification steps are counted if at least one
+% simplification rule exists in the input file.
+
+comp_stat   :== '\n\nStatic Reorderings:  ' number
+                {  \nSimplification Steps:' number }
+
+% The compilation phase ends by comp_finish
+
+comp_finish :== '\n' problem '.tme   translated in ' version 'seconds\n'
+
+% Then the prooving process starts by output proof_start
+
+proof_start :== '\nproving ' problem '...' 
+
+% Dependent of the search strategy one of the following is printed for 
+% a non prolog search strategy
+
+search      :== ( 'tree depth '        | % iterative tree deepening
+                  'inference maximum ' | % iterarive inference deepening
+	          'term depth '        ) % iterative term deepening
+                { number ',' }
+
+% If the prooving process terminates the result is displayed
+
+result      :== '+++ proved +++\n'             | % a proof was found
+                '--- proof not possible ---\n' | % iterative deepening 
+	                                         % ressource increase
+	                                         % no longer
+	                                         % productive 
+                '--- failure ---\n'            | % finite failure on
+                                                 % all proof attempts
+                                                 % applies only if
+                                                 % iterative deepening
+                                                 % is off or no query
+                                                 % or negative clause
+                                                 % was found
+                '--- indefinite ---\n'         | % possible in mode gcwa
+                '--- negation by failure to explain ---\n'    % or wgcwa 
+
+% search and result are printed in the same line !!!
+
+% The result is followed by the proof statistics if the flag 'trace' is not
+% switched off
+
+proof_stat  :==      '\n   Proof Time:              ' time ' sec'
+                   [ '\n   Proof Depth:           ' number ]
+                 [   '\n   Extension Steps:       ' number 
+                   [ '\n   Restart Steps:         ' number ]
+                     '\n   Reduction Steps:       ' number 
+                           [ '(incl.' number ' with cut)' ]
+                     '\n   Factoring Steps:       ' number 
+                           [ '(incl.' number ' with cut)' ]
+                   [ '\n   Simplification Steps:  ' number ]
+                   [ '\n   Theory Steps:          ' number ] ]
+                     '\n   Inferences:          ' number '\n' 
+
+% The proof time and the number of inferences are always printed.
+% The proof depth is displayed in case of iterative tree
+% deepening. The different step numbers are only printed if a
+% proof was found. Restart Steps are printed in case of calculus
+% restart model elimination. The 'incl. number with cut' output for
+% reduction steps is displayed if the value of the flag 'reduction' is
+% 'both' or 'cut'; same for 'factorisation'. The number of
+% simplification and theory steps are printed if at least 
+% one of such a rule is given in the input file.
+
+% If the answer predicate was used in the input file and at least one
+% answer is computed the answers are printed.
+
+answers     :== '\nAnswers\n-------' answer { ; answer }
+                [ '\n   More? (;)' ] % in case of flag answers set to
+                                     % more if der user types ';\n' the
+                                     % displaying process starts at
+                                     % search again 
+
+answer      :== % instantiation of the argument of the answer predicate 
+
+% If flag 'answers' is set to 'all' the display process returns to
+% search until timeout or all possible answers are computed.
+
+% If flag 'mmr' is set to 'gcwa' potential candidates are printed.
+
+pc_or_models:==  '\nno potential candidates for abductive explanations' |  
+                 '\nno model found'                                     |	
+                 ( ( ( '\nPotential Candidates for Abductive '
+                         'Explanations'   
+                       '\n-----------------------------------'
+                         '------------'                        ) |  
+                       '\nModels\n------'                          )
+                       literal { ',\n literal } )
+
+% The proof process ends by printing finish.
+
+finish      :== '\n' problem '.tme   finished in ' version ' seconds\n\nbye\n'
+
+problem     :== % file name of the problem without extension
+version     :== numeral '.' numeral { numeral }
+time        :== numeral '.' numeral 
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% The following displays occur anywhere:
+
+% If flag 'ctest' is set to 'now' or 'store' and the 'gcwa' is
+% computed the consistency test of potential candidates is carried out
+% and documented during the proof process.
+
+ctest       :==   '\n' 
+                [ Block' number ': ' ] 
+                  'testing potential candidate '
+                  literal '... '
+                ( 'proved' | 'failed' )
+
+% If a special situation occurs PROTEIN displays
+
+error       :== '\n' [ 'ERROR: ' | 'WARNING: ' ] string
+
+% After some messages (e.g. errors) or timeout PROTEIN aborts by abort
+
+abort       :== '\naborting...' finish
+
+% '\n' stands for the newline symbol 

@@ -1,0 +1,2 @@
+order poly(1).
+setInterpretation([ true : 3, false : 2 ]).

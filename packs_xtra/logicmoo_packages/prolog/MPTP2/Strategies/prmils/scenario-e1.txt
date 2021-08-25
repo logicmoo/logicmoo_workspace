@@ -1,0 +1,12 @@
+algo = ruby e_wrapper1.rb
+execdir = example_e1
+deterministic = 0
+run_obj = runlength
+overall_obj = mean
+cutoff_time = 1
+cutoff_length = max
+tunerTimeout = 30
+paramfile = example_e/e-params.txt
+outdir = example_e/paramils-out
+instance_file = example_data/eprobs1.txt
+test_instance_file = example_data/eprobs1.txt

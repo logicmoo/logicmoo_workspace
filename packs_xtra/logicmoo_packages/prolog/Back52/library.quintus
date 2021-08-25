@@ -1,0 +1,15 @@
+%% ----------------------------------------------------------------------
+%% The Quintus Library Files used by Back 5.2
+%% ----------------------------------------------------------------------
+:- module(back_quintus,[]).
+
+:- ensure_loaded([ % library(basics),
+               library(ordsets),
+               library(lists),
+	       library(sets),
+	       library(types),
+	       library(bitsets),
+	       library(between),
+	       library(flatten),
+	       library(addportray),
+	       library(printlength)]).

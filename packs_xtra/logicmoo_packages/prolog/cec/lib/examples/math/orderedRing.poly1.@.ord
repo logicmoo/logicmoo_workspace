@@ -1,0 +1,346 @@
+order(poly1 for orderedRing) using poly1 for totalOrder+poly1 for commRing.
+setInterpretation('$neq5'(x1,x2,x3,x4,x5) : 2 * x1 + 2 * x2 + 2 * x3 + 2 * x4 + 2 * x5
+).
+setInterpretation('$neq4'(x1,x2,x3,x4,x5) : 2 * x1 + 2 * x2 + 2 * x3 + 2 * x4 + 2 * x5
+).
+setInterpretation('$r'(x,y) : 2 * x + 2 * y
+).
+setInterpretation('$r'(x) : 2 * x
+).
+setInterpretation('$neq10'(x,y) : 2 * x + 2 * y
+).
+setInterpretation('$neq10'(x1,x2,x3,x4,x5,x6) : 2 * x1 + 2 * x2 + 2 * x3 + 2 * x4 + 2 * x5 + 2 * x6
+).
+setInterpretation('$neq3'(x,y) : 2 * x + 2 * y
+).
+setInterpretation('$neq4'(x,y,z) : 2 * x + 2 * y + 2 * z
+).
+setInterpretation('$neq2'(x,y) : 2 * x + 2 * y
+).
+setInterpretation('$neq3'(x,y,z) : 2 * x + 2 * y + 2 * z
+).
+setInterpretation('$neq3'(x1,x2,x3,x4,x5) : 2 * x1 + 2 * x2 + 2 * x3 + 2 * x4 + 2 * x5
+).
+setInterpretation('$neq2'(x1,x2,x3,x4) : 2 * x1 + 2 * x2 + 2 * x3 + 2 * x4
+).
+setInterpretation(1 : 4
+).
+setInterpretation(*(x,y) : 2 * x * y
+).
+setInterpretation(-(x) : 6 * x + 4
+).
+setInterpretation(+(x,y) : x + y + 1
+).
+setInterpretation(0 : 2
+).
+setInterpretation(=<(x,y) : x + y
+).
+setInterpretation('$neq1'(x1,x2,x3,x4) : 2 * x1 + 2 * x2 + 2 * x3 + 2 * x4
+).
+setInterpretation('$neq2'(x1,x2,x3,x4,x5,x6) : 2 * x1 + 2 * x2 + 2 * x3 + 2 * x4 + 2 * x5 + 2 * x6
+).
+setInterpretation('$neq3'(x1,x2,x3,x4,x5,x6) : 2 * x1 + 2 * x2 + 2 * x3 + 2 * x4 + 2 * x5 + 2 * x6
+).
+setInterpretation('$neq4'(x1,x2,x3,x4,x5,x6) : 2 * x1 + 2 * x2 + 2 * x3 + 2 * x4 + 2 * x5 + 2 * x6
+).
+setInterpretation('$neq5'(x1,x2,x3,x4,x5,x6) : 2 * x1 + 2 * x2 + 2 * x3 + 2 * x4 + 2 * x5 + 2 * x6
+).
+setInterpretation('$neq5'(x1,x2,x3,x4) : 2 * x1 + 2 * x2 + 2 * x3 + 2 * x4
+).
+setInterpretation('$neq1'(x1,x2,x3,x4,x5,x6) : 2 * x1 + 2 * x2 + 2 * x3 + 2 * x4 + 2 * x5 + 2 * x6
+).
+setInterpretation(false : 2
+).
+setInterpretation(true : 2
+).
+
+constructor('true-bool').
+constructor('false-bool').
+constructor('0-elem').
+constructor('1-elem').
+
+
+
+
+
+
+/* declare as nonoperational :
+/*	x=<y = false => y=<x = true */
+action(orient(n),'$equation'(['=<-bool-elem-elem'(@'x-elem',@'y-elem')='false-bool'],['=<-bool-elem-elem'(@'y-elem',@'x-elem')='true-bool'])).
+
+/* condition number 1 is the selected condition for
+/*	x=<y = false => y=<x = true */
+action(selectcondition(1),'$equation'(['=<-bool-elem-elem'(@'x-elem',@'y-elem')='false-bool'],['=<-bool-elem-elem'(@'y-elem',@'x-elem')='true-bool'])).
+
+/* ordering of the literals is [0,1] for
+/*	x=<y = false => y=<x = true */
+action(status([0,1]),'$equation'(['=<-bool-elem-elem'(@'x-elem',@'y-elem')='false-bool'],['=<-bool-elem-elem'(@'y-elem',@'x-elem')='true-bool'])).
+
+/* declare as nonoperational :
+/*	x=<y = true and y=<x = true => x = y */
+action(orient(n),'$equation'(['=<-bool-elem-elem'(@'x-elem',@'y-elem')='true-bool','=<-bool-elem-elem'(@'y-elem',@'x-elem')='true-bool'],[@'x-elem'= @'y-elem'])).
+
+/* condition number 1 is the selected condition for
+/*	x=<y = true and y=<x = true => x = y */
+action(selectcondition(1),'$equation'(['=<-bool-elem-elem'(@'x-elem',@'y-elem')='true-bool','=<-bool-elem-elem'(@'y-elem',@'x-elem')='true-bool'],[@'x-elem'= @'y-elem'])).
+
+/* ordering of the literals is [0,1,2] for
+/*	x=<y = true and y=<x = true => x = y */
+action(status([0,1,2]),'$equation'(['=<-bool-elem-elem'(@'x-elem',@'y-elem')='true-bool','=<-bool-elem-elem'(@'y-elem',@'x-elem')='true-bool'],[@'x-elem'= @'y-elem'])).
+
+/* declare as nonoperational :
+/*	x=<y = true and y=<z = true => x=<z = true */
+action(orient(n),'$equation'(['=<-bool-elem-elem'(@'x-elem',@'y-elem')='true-bool','=<-bool-elem-elem'(@'y-elem',@'z-elem')='true-bool'],['=<-bool-elem-elem'(@'x-elem',@'z-elem')='true-bool'])).
+
+/* condition number 1 is the selected condition for
+/*	x=<y = true and y=<z = true => x=<z = true */
+action(selectcondition(1),'$equation'(['=<-bool-elem-elem'(@'x-elem',@'y-elem')='true-bool','=<-bool-elem-elem'(@'y-elem',@'z-elem')='true-bool'],['=<-bool-elem-elem'(@'x-elem',@'z-elem')='true-bool'])).
+
+/* ordering of the literals is [0,1,2] for
+/*	x=<y = true and y=<z = true => x=<z = true */
+action(status([0,1,2]),'$equation'(['=<-bool-elem-elem'(@'x-elem',@'y-elem')='true-bool','=<-bool-elem-elem'(@'y-elem',@'z-elem')='true-bool'],['=<-bool-elem-elem'(@'x-elem',@'z-elem')='true-bool'])).
+
+/* declare as nonoperational :
+/*	x=<y = true and x=<z = false => y=<z = false */
+action(orient(n),'$equation'(['=<-bool-elem-elem'(@'x-elem',@'y-elem')='true-bool','=<-bool-elem-elem'(@'x-elem',@'z-elem')='false-bool'],['=<-bool-elem-elem'(@'y-elem',@'z-elem')='false-bool'])).
+
+/* condition number 1 is the selected condition for
+/*	x=<y = true and x=<z = false => y=<z = false */
+action(selectcondition(1),'$equation'(['=<-bool-elem-elem'(@'x-elem',@'y-elem')='true-bool','=<-bool-elem-elem'(@'x-elem',@'z-elem')='false-bool'],['=<-bool-elem-elem'(@'y-elem',@'z-elem')='false-bool'])).
+
+/* ordering of the literals is [0,1,2] for
+/*	x=<y = true and x=<z = false => y=<z = false */
+action(status([0,1,2]),'$equation'(['=<-bool-elem-elem'(@'x-elem',@'y-elem')='true-bool','=<-bool-elem-elem'(@'x-elem',@'z-elem')='false-bool'],['=<-bool-elem-elem'(@'y-elem',@'z-elem')='false-bool'])).
+
+/* declare as nonoperational :
+/*	y=<z = true and x=<z = false => x=<y = false */
+action(orient(n),'$equation'(['=<-bool-elem-elem'(@'y-elem',@'z-elem')='true-bool','=<-bool-elem-elem'(@'x-elem',@'z-elem')='false-bool'],['=<-bool-elem-elem'(@'x-elem',@'y-elem')='false-bool'])).
+
+/* condition number 1 is the selected condition for
+/*	y=<z = true and x=<z = false => x=<y = false */
+action(selectcondition(1),'$equation'(['=<-bool-elem-elem'(@'y-elem',@'z-elem')='true-bool','=<-bool-elem-elem'(@'x-elem',@'z-elem')='false-bool'],['=<-bool-elem-elem'(@'x-elem',@'y-elem')='false-bool'])).
+
+/* ordering of the literals is [0,1,2] for
+/*	y=<z = true and x=<z = false => x=<y = false */
+action(status([0,1,2]),'$equation'(['=<-bool-elem-elem'(@'y-elem',@'z-elem')='true-bool','=<-bool-elem-elem'(@'x-elem',@'z-elem')='false-bool'],['=<-bool-elem-elem'(@'x-elem',@'y-elem')='false-bool'])).
+
+/* ordering of the literals is ms for
+/*	x+y = y+x */
+action(status(ms),'$equation'([],['+-elem-elem-elem'(@'x-elem',@'y-elem')='+-elem-elem-elem'(@'y-elem',@'x-elem')])).
+
+/* ordering of the literals is ms for
+/*	x+y+z = x+ (y+z) */
+action(status(ms),'$equation'([],['+-elem-elem-elem'('+-elem-elem-elem'(@'x-elem',@'y-elem'),@'z-elem')='+-elem-elem-elem'(@'x-elem','+-elem-elem-elem'(@'y-elem',@'z-elem'))])).
+
+/* ordering of the literals is ms for
+/*	x*y = y*x */
+action(status(ms),'$equation'([],['*-elem-elem-elem'(@'x-elem',@'y-elem')='*-elem-elem-elem'(@'y-elem',@'x-elem')])).
+
+/* ordering of the literals is ms for
+/*	x*y*z = x* (y*z) */
+action(status(ms),'$equation'([],['*-elem-elem-elem'('*-elem-elem-elem'(@'x-elem',@'y-elem'),@'z-elem')='*-elem-elem-elem'(@'x-elem','*-elem-elem-elem'(@'y-elem',@'z-elem'))])).
+
+/* declare as nonoperational :
+/*	0=<x = true and 0=<y = true => 0=<x*y = true */
+action(orient(n),'$equation'(['=<-bool-elem-elem'('0-elem',@'x-elem')='true-bool','=<-bool-elem-elem'('0-elem',@'y-elem')='true-bool'],['=<-bool-elem-elem'('0-elem','*-elem-elem-elem'(@'x-elem',@'y-elem'))='true-bool'])).
+
+/* condition number 1 is the selected condition for
+/*	0=<x = true and 0=<y = true => 0=<x*y = true */
+action(selectcondition(1),'$equation'(['=<-bool-elem-elem'('0-elem',@'x-elem')='true-bool','=<-bool-elem-elem'('0-elem',@'y-elem')='true-bool'],['=<-bool-elem-elem'('0-elem','*-elem-elem-elem'(@'x-elem',@'y-elem'))='true-bool'])).
+
+/* condition number 1 is the selected condition for
+/*	0=<x = true and 0=<y = true => 0=<x*y = true */
+action(selectcondition(1),'$equation'(['=<-bool-elem-elem'('0-elem',@'x-elem')='true-bool','=<-bool-elem-elem'('0-elem',@'y-elem')='true-bool'],['=<-bool-elem-elem'('0-elem','*-elem-elem-elem'(@'x-elem',@'y-elem'))='true-bool'])).
+
+/* ordering of the literals is [0,1,2] for
+/*	0=<x = true and 0=<y = true => 0=<x*y = true */
+action(status([0,1,2]),'$equation'(['=<-bool-elem-elem'('0-elem',@'x-elem')='true-bool','=<-bool-elem-elem'('0-elem',@'y-elem')='true-bool'],['=<-bool-elem-elem'('0-elem','*-elem-elem-elem'(@'x-elem',@'y-elem'))='true-bool'])).
+
+/* declare as nonoperational :
+/*	x1=<0 = true and y=<z1 = true => x1+y=<z1 = true */
+action(orient(n),'$equation'(['=<-bool-elem-elem'(@'x1-elem','0-elem')='true-bool','=<-bool-elem-elem'(@'y-elem',@'z1-elem')='true-bool'],['=<-bool-elem-elem'('+-elem-elem-elem'(@'x1-elem',@'y-elem'),@'z1-elem')='true-bool'])).
+
+/* condition number 1 is the selected condition for
+/*	x1=<0 = true and y=<z1 = true => x1+y=<z1 = true */
+action(selectcondition(1),'$equation'(['=<-bool-elem-elem'(@'x1-elem','0-elem')='true-bool','=<-bool-elem-elem'(@'y-elem',@'z1-elem')='true-bool'],['=<-bool-elem-elem'('+-elem-elem-elem'(@'x1-elem',@'y-elem'),@'z1-elem')='true-bool'])).
+
+/* condition number 1 is the selected condition for
+/*	x1=<0 = true and y=<z1 = true => x1+y=<z1 = true */
+action(selectcondition(1),'$equation'(['=<-bool-elem-elem'(@'x1-elem','0-elem')='true-bool','=<-bool-elem-elem'(@'y-elem',@'z1-elem')='true-bool'],['=<-bool-elem-elem'('+-elem-elem-elem'(@'x1-elem',@'y-elem'),@'z1-elem')='true-bool'])).
+
+/* declare as nonoperational :
+/*	x1=<0 = true and x1+y=<z1 = false => y=<z1 = false */
+action(orient(n),'$equation'(['=<-bool-elem-elem'(@'x1-elem','0-elem')='true-bool','=<-bool-elem-elem'('+-elem-elem-elem'(@'x1-elem',@'y-elem'),@'z1-elem')='false-bool'],['=<-bool-elem-elem'(@'y-elem',@'z1-elem')='false-bool'])).
+
+/* condition number 1 is the selected condition for
+/*	x1=<0 = true and x1+y=<z1 = false => y=<z1 = false */
+action(selectcondition(1),'$equation'(['=<-bool-elem-elem'(@'x1-elem','0-elem')='true-bool','=<-bool-elem-elem'('+-elem-elem-elem'(@'x1-elem',@'y-elem'),@'z1-elem')='false-bool'],['=<-bool-elem-elem'(@'y-elem',@'z1-elem')='false-bool'])).
+
+/* condition number 1 is the selected condition for
+/*	x1=<0 = true and x1+y=<z1 = false => y=<z1 = false */
+action(selectcondition(1),'$equation'(['=<-bool-elem-elem'(@'x1-elem','0-elem')='true-bool','=<-bool-elem-elem'('+-elem-elem-elem'(@'x1-elem',@'y-elem'),@'z1-elem')='false-bool'],['=<-bool-elem-elem'(@'y-elem',@'z1-elem')='false-bool'])).
+
+/* 0=<y = true and y+x=<z1 = true => x=<z1 = true
+   should be postponed, */
+action(orient(p),'$equation'(['=<-bool-elem-elem'('0-elem',@'y-elem')='true-bool','=<-bool-elem-elem'('+-elem-elem-elem'(@'y-elem',@'x-elem'),@'z1-elem')='true-bool'],['=<-bool-elem-elem'(@'x-elem',@'z1-elem')='true-bool'])).
+
+/* declare as nonoperational :
+/*	0=<y = true and x=<z1 = false => y+x=<z1 = false */
+action(orient(n),'$equation'(['=<-bool-elem-elem'('0-elem',@'y-elem')='true-bool','=<-bool-elem-elem'(@'x-elem',@'z1-elem')='false-bool'],['=<-bool-elem-elem'('+-elem-elem-elem'(@'y-elem',@'x-elem'),@'z1-elem')='false-bool'])).
+
+/* condition number 1 is the selected condition for
+/*	0=<y = true and x=<z1 = false => y+x=<z1 = false */
+action(selectcondition(1),'$equation'(['=<-bool-elem-elem'('0-elem',@'y-elem')='true-bool','=<-bool-elem-elem'(@'x-elem',@'z1-elem')='false-bool'],['=<-bool-elem-elem'('+-elem-elem-elem'(@'y-elem',@'x-elem'),@'z1-elem')='false-bool'])).
+
+/* condition number 1 is the selected condition for
+/*	0=<y = true and x=<z1 = false => y+x=<z1 = false */
+action(selectcondition(1),'$equation'(['=<-bool-elem-elem'('0-elem',@'y-elem')='true-bool','=<-bool-elem-elem'(@'x-elem',@'z1-elem')='false-bool'],['=<-bool-elem-elem'('+-elem-elem-elem'(@'y-elem',@'x-elem'),@'z1-elem')='false-bool'])).
+
+/* declare as nonoperational :
+/*	X1+x = 0 => x = -X1 */
+action(orient(n),'$equation'(['+-elem-elem-elem'(@'X1-elem',@'x-elem')='0-elem'],[@'x-elem'='--elem-elem'(@'X1-elem')])).
+
+/* condition number 1 is the selected condition for
+/*	X1+x = 0 => x = -X1 */
+action(selectcondition(1),'$equation'(['+-elem-elem-elem'(@'X1-elem',@'x-elem')='0-elem'],[@'x-elem'='--elem-elem'(@'X1-elem')])).
+
+/* x=<y = true and y+z=<z1 = true => x+z=<z1 = true
+   should be postponed, */
+action(orient(p),'$equation'(['=<-bool-elem-elem'(@'x-elem',@'y-elem')='true-bool','=<-bool-elem-elem'('+-elem-elem-elem'(@'y-elem',@'z-elem'),@'z1-elem')='true-bool'],['=<-bool-elem-elem'('+-elem-elem-elem'(@'x-elem',@'z-elem'),@'z1-elem')='true-bool'])).
+
+/* declare as nonoperational :
+/*	x=<y = true and x+z=<z1 = false => y+z=<z1 = false */
+action(orient(n),'$equation'(['=<-bool-elem-elem'(@'x-elem',@'y-elem')='true-bool','=<-bool-elem-elem'('+-elem-elem-elem'(@'x-elem',@'z-elem'),@'z1-elem')='false-bool'],['=<-bool-elem-elem'('+-elem-elem-elem'(@'y-elem',@'z-elem'),@'z1-elem')='false-bool'])).
+
+/* condition number 1 is the selected condition for
+/*	x=<y = true and x+z=<z1 = false => y+z=<z1 = false */
+action(selectcondition(1),'$equation'(['=<-bool-elem-elem'(@'x-elem',@'y-elem')='true-bool','=<-bool-elem-elem'('+-elem-elem-elem'(@'x-elem',@'z-elem'),@'z1-elem')='false-bool'],['=<-bool-elem-elem'('+-elem-elem-elem'(@'y-elem',@'z-elem'),@'z1-elem')='false-bool'])).
+
+/* condition number 1 is the selected condition for
+/*	x=<y = true and x+z=<z1 = false => y+z=<z1 = false */
+action(selectcondition(1),'$equation'(['=<-bool-elem-elem'(@'x-elem',@'y-elem')='true-bool','=<-bool-elem-elem'('+-elem-elem-elem'(@'x-elem',@'z-elem'),@'z1-elem')='false-bool'],['=<-bool-elem-elem'('+-elem-elem-elem'(@'y-elem',@'z-elem'),@'z1-elem')='false-bool'])).
+
+/* declare as nonoperational :
+/*	x=<y = true and x1=<y+z = false => x1=<x+z = false */
+action(orient(n),'$equation'(['=<-bool-elem-elem'(@'x-elem',@'y-elem')='true-bool','=<-bool-elem-elem'(@'x1-elem','+-elem-elem-elem'(@'y-elem',@'z-elem'))='false-bool'],['=<-bool-elem-elem'(@'x1-elem','+-elem-elem-elem'(@'x-elem',@'z-elem'))='false-bool'])).
+
+/* condition number 1 is the selected condition for
+/*	x=<y = true and x1=<y+z = false => x1=<x+z = false */
+action(selectcondition(1),'$equation'(['=<-bool-elem-elem'(@'x-elem',@'y-elem')='true-bool','=<-bool-elem-elem'(@'x1-elem','+-elem-elem-elem'(@'y-elem',@'z-elem'))='false-bool'],['=<-bool-elem-elem'(@'x1-elem','+-elem-elem-elem'(@'x-elem',@'z-elem'))='false-bool'])).
+
+/* condition number 1 is the selected condition for
+/*	x=<y = true and x1=<y+z = false => x1=<x+z = false */
+action(selectcondition(1),'$equation'(['=<-bool-elem-elem'(@'x-elem',@'y-elem')='true-bool','=<-bool-elem-elem'(@'x1-elem','+-elem-elem-elem'(@'y-elem',@'z-elem'))='false-bool'],['=<-bool-elem-elem'(@'x1-elem','+-elem-elem-elem'(@'x-elem',@'z-elem'))='false-bool'])).
+
+/* declare as nonoperational :
+/*	x+X1 = X2 => x = X2+ (-X1) */
+action(orient(n),'$equation'(['+-elem-elem-elem'(@'x-elem',@'X1-elem')= @'X2-elem'],[@'x-elem'='+-elem-elem-elem'(@'X2-elem','--elem-elem'(@'X1-elem'))])).
+
+/* condition number 1 is the selected condition for
+/*	x+X1 = X2 => x = X2+ (-X1) */
+action(selectcondition(1),'$equation'(['+-elem-elem-elem'(@'x-elem',@'X1-elem')= @'X2-elem'],[@'x-elem'='+-elem-elem-elem'(@'X2-elem','--elem-elem'(@'X1-elem'))])).
+
+/* declare as nonoperational :
+/*	X2+X3 = X4 => X1+X3 = X4+ (X1+ (-X2)) */
+action(orient(n),'$equation'(['+-elem-elem-elem'(@'X2-elem',@'X3-elem')= @'X4-elem'],['+-elem-elem-elem'(@'X1-elem',@'X3-elem')='+-elem-elem-elem'(@'X4-elem','+-elem-elem-elem'(@'X1-elem','--elem-elem'(@'X2-elem')))])).
+
+/* condition number 1 is the selected condition for
+/*	X2+X3 = X4 => X1+X3 = X4+ (X1+ (-X2)) */
+action(selectcondition(1),'$equation'(['+-elem-elem-elem'(@'X2-elem',@'X3-elem')= @'X4-elem'],['+-elem-elem-elem'(@'X1-elem',@'X3-elem')='+-elem-elem-elem'(@'X4-elem','+-elem-elem-elem'(@'X1-elem','--elem-elem'(@'X2-elem')))])).
+
+/* declare as nonoperational :
+/*	X1=<0 = true and 0=<y = true => y*X1=<0 = true */
+action(orient(n),'$equation'(['=<-bool-elem-elem'(@'X1-elem','0-elem')='true-bool','=<-bool-elem-elem'('0-elem',@'y-elem')='true-bool'],['=<-bool-elem-elem'('*-elem-elem-elem'(@'y-elem',@'X1-elem'),'0-elem')='true-bool'])).
+
+/* condition number 1 is the selected condition for
+/*	X1=<0 = true and 0=<y = true => y*X1=<0 = true */
+action(selectcondition(1),'$equation'(['=<-bool-elem-elem'(@'X1-elem','0-elem')='true-bool','=<-bool-elem-elem'('0-elem',@'y-elem')='true-bool'],['=<-bool-elem-elem'('*-elem-elem-elem'(@'y-elem',@'X1-elem'),'0-elem')='true-bool'])).
+
+/* condition number 1 is the selected condition for
+/*	X1=<0 = true and 0=<y = true => y*X1=<0 = true */
+action(selectcondition(1),'$equation'(['=<-bool-elem-elem'(@'X1-elem','0-elem')='true-bool','=<-bool-elem-elem'('0-elem',@'y-elem')='true-bool'],['=<-bool-elem-elem'('*-elem-elem-elem'(@'y-elem',@'X1-elem'),'0-elem')='true-bool'])).
+
+/* declare as nonoperational :
+/*	0=<X4 = true and y=<z1 = true => y=<z1+X4 = true */
+action(orient(n),'$equation'(['=<-bool-elem-elem'('0-elem',@'X4-elem')='true-bool','=<-bool-elem-elem'(@'y-elem',@'z1-elem')='true-bool'],['=<-bool-elem-elem'(@'y-elem','+-elem-elem-elem'(@'z1-elem',@'X4-elem'))='true-bool'])).
+
+/* condition number 1 is the selected condition for
+/*	0=<X4 = true and y=<z1 = true => y=<z1+X4 = true */
+action(selectcondition(1),'$equation'(['=<-bool-elem-elem'('0-elem',@'X4-elem')='true-bool','=<-bool-elem-elem'(@'y-elem',@'z1-elem')='true-bool'],['=<-bool-elem-elem'(@'y-elem','+-elem-elem-elem'(@'z1-elem',@'X4-elem'))='true-bool'])).
+
+/* condition number 1 is the selected condition for
+/*	0=<X1 = true and y=<z1 = true => y=<z1+X1 = true */
+action(selectcondition(1),'$equation'(['=<-bool-elem-elem'('0-elem',@'X1-elem')='true-bool','=<-bool-elem-elem'(@'y-elem',@'z1-elem')='true-bool'],['=<-bool-elem-elem'(@'y-elem','+-elem-elem-elem'(@'z1-elem',@'X1-elem'))='true-bool'])).
+
+/* declare as nonoperational :
+/*	X1=<X4 = true and 0=<y = true => y*X1=<y*X4 = true */
+action(orient(n),'$equation'(['=<-bool-elem-elem'(@'X1-elem',@'X4-elem')='true-bool','=<-bool-elem-elem'('0-elem',@'y-elem')='true-bool'],['=<-bool-elem-elem'('*-elem-elem-elem'(@'y-elem',@'X1-elem'),'*-elem-elem-elem'(@'y-elem',@'X4-elem'))='true-bool'])).
+
+/* condition number 2 is the selected condition for
+/*	X1=<X4 = true and 0=<y = true => y*X1=<y*X4 = true */
+action(selectcondition(2),'$equation'(['=<-bool-elem-elem'(@'X1-elem',@'X4-elem')='true-bool','=<-bool-elem-elem'('0-elem',@'y-elem')='true-bool'],['=<-bool-elem-elem'('*-elem-elem-elem'(@'y-elem',@'X1-elem'),'*-elem-elem-elem'(@'y-elem',@'X4-elem'))='true-bool'])).
+
+/* condition number 2 is the selected condition for
+/*	X1=<X2 = true and 0=<y = true => y*X1=<y*X2 = true */
+action(selectcondition(2),'$equation'(['=<-bool-elem-elem'(@'X1-elem',@'X2-elem')='true-bool','=<-bool-elem-elem'('0-elem',@'y-elem')='true-bool'],['=<-bool-elem-elem'('*-elem-elem-elem'(@'y-elem',@'X1-elem'),'*-elem-elem-elem'(@'y-elem',@'X2-elem'))='true-bool'])).
+
+/* declare as nonoperational :
+/*	X1=<0 = true and X3=<X2 = true => X2*X1=<X3*X1 = true */
+action(orient(n),'$equation'(['=<-bool-elem-elem'(@'X1-elem','0-elem')='true-bool','=<-bool-elem-elem'(@'X3-elem',@'X2-elem')='true-bool'],['=<-bool-elem-elem'('*-elem-elem-elem'(@'X2-elem',@'X1-elem'),'*-elem-elem-elem'(@'X3-elem',@'X1-elem'))='true-bool'])).
+
+/* condition number 1 is the selected condition for
+/*	X1=<0 = true and X3=<X2 = true => X2*X1=<X3*X1 = true */
+action(selectcondition(1),'$equation'(['=<-bool-elem-elem'(@'X1-elem','0-elem')='true-bool','=<-bool-elem-elem'(@'X3-elem',@'X2-elem')='true-bool'],['=<-bool-elem-elem'('*-elem-elem-elem'(@'X2-elem',@'X1-elem'),'*-elem-elem-elem'(@'X3-elem',@'X1-elem'))='true-bool'])).
+
+/* condition number 1 is the selected condition for
+/*	X1=<0 = true and X3=<X2 = true => X2*X1=<X3*X1 = true */
+action(selectcondition(1),'$equation'(['=<-bool-elem-elem'(@'X1-elem','0-elem')='true-bool','=<-bool-elem-elem'(@'X3-elem',@'X2-elem')='true-bool'],['=<-bool-elem-elem'('*-elem-elem-elem'(@'X2-elem',@'X1-elem'),'*-elem-elem-elem'(@'X3-elem',@'X1-elem'))='true-bool'])).
+
+/* declare as nonoperational :
+/*	X1=<X2 = true and x=<z1 = false => X2+x=<z1+X1 = false */
+action(orient(n),'$equation'(['=<-bool-elem-elem'(@'X1-elem',@'X2-elem')='true-bool','=<-bool-elem-elem'(@'x-elem',@'z1-elem')='false-bool'],['=<-bool-elem-elem'('+-elem-elem-elem'(@'X2-elem',@'x-elem'),'+-elem-elem-elem'(@'z1-elem',@'X1-elem'))='false-bool'])).
+
+/* condition number 1 is the selected condition for
+/*	X1=<X2 = true and x=<z1 = false => X2+x=<z1+X1 = false */
+action(selectcondition(1),'$equation'(['=<-bool-elem-elem'(@'X1-elem',@'X2-elem')='true-bool','=<-bool-elem-elem'(@'x-elem',@'z1-elem')='false-bool'],['=<-bool-elem-elem'('+-elem-elem-elem'(@'X2-elem',@'x-elem'),'+-elem-elem-elem'(@'z1-elem',@'X1-elem'))='false-bool'])).
+
+/* condition number 1 is the selected condition for
+/*	X1=<X2 = true and x=<z1 = false => X2+x=<z1+X1 = false */
+action(selectcondition(1),'$equation'(['=<-bool-elem-elem'(@'X1-elem',@'X2-elem')='true-bool','=<-bool-elem-elem'(@'x-elem',@'z1-elem')='false-bool'],['=<-bool-elem-elem'('+-elem-elem-elem'(@'X2-elem',@'x-elem'),'+-elem-elem-elem'(@'z1-elem',@'X1-elem'))='false-bool'])).
+
+/* declare as nonoperational :
+/*	X1=<X2 = true and y=<z1 = true => y+X1=<z1+X2 = true */
+action(orient(n),'$equation'(['=<-bool-elem-elem'(@'X1-elem',@'X2-elem')='true-bool','=<-bool-elem-elem'(@'y-elem',@'z1-elem')='true-bool'],['=<-bool-elem-elem'('+-elem-elem-elem'(@'y-elem',@'X1-elem'),'+-elem-elem-elem'(@'z1-elem',@'X2-elem'))='true-bool'])).
+
+/* condition number 1 is the selected condition for
+/*	X1=<X2 = true and y=<z1 = true => y+X1=<z1+X2 = true */
+action(selectcondition(1),'$equation'(['=<-bool-elem-elem'(@'X1-elem',@'X2-elem')='true-bool','=<-bool-elem-elem'(@'y-elem',@'z1-elem')='true-bool'],['=<-bool-elem-elem'('+-elem-elem-elem'(@'y-elem',@'X1-elem'),'+-elem-elem-elem'(@'z1-elem',@'X2-elem'))='true-bool'])).
+
+/* condition number 1 is the selected condition for
+/*	X1=<X2 = true and y=<z1 = true => y+X1=<z1+X2 = true */
+action(selectcondition(1),'$equation'(['=<-bool-elem-elem'(@'X1-elem',@'X2-elem')='true-bool','=<-bool-elem-elem'(@'y-elem',@'z1-elem')='true-bool'],['=<-bool-elem-elem'('+-elem-elem-elem'(@'y-elem',@'X1-elem'),'+-elem-elem-elem'(@'z1-elem',@'X2-elem'))='true-bool'])).
+
+/* declare as nonoperational :
+/*	X2=<X1 = true and X2+y1=<z1+X1 = false => y1=<z1 = false */
+action(orient(n),'$equation'(['=<-bool-elem-elem'(@'X2-elem',@'X1-elem')='true-bool','=<-bool-elem-elem'('+-elem-elem-elem'(@'X2-elem',@'y1-elem'),'+-elem-elem-elem'(@'z1-elem',@'X1-elem'))='false-bool'],['=<-bool-elem-elem'(@'y1-elem',@'z1-elem')='false-bool'])).
+
+/* condition number 1 is the selected condition for
+/*	X2=<X1 = true and X2+y1=<z1+X1 = false => y1=<z1 = false */
+action(selectcondition(1),'$equation'(['=<-bool-elem-elem'(@'X2-elem',@'X1-elem')='true-bool','=<-bool-elem-elem'('+-elem-elem-elem'(@'X2-elem',@'y1-elem'),'+-elem-elem-elem'(@'z1-elem',@'X1-elem'))='false-bool'],['=<-bool-elem-elem'(@'y1-elem',@'z1-elem')='false-bool'])).
+
+/* condition number 1 is the selected condition for
+/*	X2=<X1 = true and X2+y1=<z1+X1 = false => y1=<z1 = false */
+action(selectcondition(1),'$equation'(['=<-bool-elem-elem'(@'X2-elem',@'X1-elem')='true-bool','=<-bool-elem-elem'('+-elem-elem-elem'(@'X2-elem',@'y1-elem'),'+-elem-elem-elem'(@'z1-elem',@'X1-elem'))='false-bool'],['=<-bool-elem-elem'(@'y1-elem',@'z1-elem')='false-bool'])).
+
+/* declare as nonoperational :
+/*	X1=<X2 = true and X4=<X3 = true => X4*X2+X3*X1=<X3*X2+X4*X1 = true */
+action(orient(n),'$equation'(['=<-bool-elem-elem'(@'X1-elem',@'X2-elem')='true-bool','=<-bool-elem-elem'(@'X4-elem',@'X3-elem')='true-bool'],['=<-bool-elem-elem'('+-elem-elem-elem'('*-elem-elem-elem'(@'X4-elem',@'X2-elem'),'*-elem-elem-elem'(@'X3-elem',@'X1-elem')),'+-elem-elem-elem'('*-elem-elem-elem'(@'X3-elem',@'X2-elem'),'*-elem-elem-elem'(@'X4-elem',@'X1-elem')))='true-bool'])).
+
+/* condition number 1 is the selected condition for
+/*	X1=<X2 = true and X4=<X3 = true => X4*X2+X3*X1=<X3*X2+X4*X1 = true */
+action(selectcondition(1),'$equation'(['=<-bool-elem-elem'(@'X1-elem',@'X2-elem')='true-bool','=<-bool-elem-elem'(@'X4-elem',@'X3-elem')='true-bool'],['=<-bool-elem-elem'('+-elem-elem-elem'('*-elem-elem-elem'(@'X4-elem',@'X2-elem'),'*-elem-elem-elem'(@'X3-elem',@'X1-elem')),'+-elem-elem-elem'('*-elem-elem-elem'(@'X3-elem',@'X2-elem'),'*-elem-elem-elem'(@'X4-elem',@'X1-elem')))='true-bool'])).
+
+/* condition number 1 is the selected condition for
+/*	X1=<X2 = true and X4=<X3 = true => X4*X2+X3*X1=<X3*X2+X4*X1 = true */
+action(selectcondition(1),'$equation'(['=<-bool-elem-elem'(@'X1-elem',@'X2-elem')='true-bool','=<-bool-elem-elem'(@'X4-elem',@'X3-elem')='true-bool'],['=<-bool-elem-elem'('+-elem-elem-elem'('*-elem-elem-elem'(@'X4-elem',@'X2-elem'),'*-elem-elem-elem'(@'X3-elem',@'X1-elem')),'+-elem-elem-elem'('*-elem-elem-elem'(@'X3-elem',@'X2-elem'),'*-elem-elem-elem'(@'X4-elem',@'X1-elem')))='true-bool'])).
+

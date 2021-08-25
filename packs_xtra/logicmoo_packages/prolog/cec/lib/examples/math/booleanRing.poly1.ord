@@ -1,0 +1,2 @@
+order poly(1) using poly1 for commRing.
+setInterpretation([(not x) : x + 8, ==>(x, y) : 4 * x * y + 4, <=>(x, y) : 4 * x * y, (x ; y) : 4 * x * y]) .

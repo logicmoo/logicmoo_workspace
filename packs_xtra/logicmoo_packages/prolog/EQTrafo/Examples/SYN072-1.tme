@@ -1,0 +1,40 @@
+
+eqtrafo_flag(protein_cost,on).
+eqtrafo_flag(mode,linear).
+
+
+f(h(c(d(H))),j(a(h(K)))) = l(H,K).
+
+% reflexivity, axiom.
+((A= A)).
+
+% symmetry, axiom.
+((B= A)) :- 
+    (A= B).
+
+% transitivity, axiom.
+((A = C)) :- 
+    (A = B), 
+    (B = C).
+
+% big_p_substitutivity1, axiom.
+(big_p(B)) :- 
+    (A = B), 
+    big_p(A).
+
+% clause_1, axiom.
+((A = c) , (A = d)).
+
+% clause_2, axiom.
+(big_p(a)) :- true.
+
+% clause_3, axiom.
+(big_p(b)) :- true.
+
+% clause_4, axiom.
+?- (a = b).
+
+% prove_this, theorem.
+?- big_p(e).
+
+%----------------------------------------------------------------------

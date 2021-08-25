@@ -1,0 +1,21 @@
+ 
+"thaw(+File)."
+
+is the inverse operation of "freeze" and restores the specification previously 
+frozen in "File.q2.0". So "File" must contain the correct <order_suffix>.
+The current specification is overwritten by the thawed specification. 
+Specifications saved in variables will not be affected by this operation.
+
+
+"thaw(+ModuleName, +OrderName)."
+
+restores a previously frozen specification from "ModuleName.OrderName.q2.0".
+The current specification is overwritten by the thawed specification. 
+Specifications saved in variables will not be affected by this operation.
+
+
+"thaw(+ModuleName, +OrderName, +StateName)."
+
+reads in a previously frozen specification from "ModuleName.OrderName.q2.0" and 
+stores it under the name "StateName". The current specifications remains unchanged.
+

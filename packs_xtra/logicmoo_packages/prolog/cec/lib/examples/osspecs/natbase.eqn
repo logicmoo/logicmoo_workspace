@@ -1,0 +1,45 @@
+module natbase using object.
+
+zero < nat .
+posint < nat . nat < object. 
+
+cons 0 : zero .
+op(s, 100, fy) : (nat -> posint) .
+
+var [ n : nat, m : nat, p : posint ].
+
+(0 == p) = false.
+(s n == s m) = (n == m).
+
+(s n \== s m) = (n \== m).
+
+%s n = s m => n = m.
+
+
+
+% Parsing and Pretty-Printing
+% ===========================
+
+parse(0,0).
+parse(I,s(T)):-
+	integer(I),
+	I > 0,
+	!,
+	succ(IM1,I),
+	parse(IM1,T).
+
+
+pretty(T) :-
+	predicate(fromUnary(T,N)),
+	write(N).
+
+
+predicate(fromUnary(X,_)) :-
+	var X,
+	!,
+	fail .
+predicate(fromUnary(0,0)).
+predicate(fromUnary(s(X),N1)) :-
+	predicate(fromUnary(X,N)),
+	N1 is N+1.
+

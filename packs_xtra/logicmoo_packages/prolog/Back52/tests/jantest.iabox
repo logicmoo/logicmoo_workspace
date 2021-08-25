@@ -1,0 +1,195 @@
+:- op(624,xfy,(.)).
+:- op(0,xfy,(.)).
+:- op(624,xfx,(.)).
+:- set_prolog_flag(gvar_nondict_ok,true).
+:- use_module(library(gvar_syntax)).
+:- back.
+
+% LAST EDIT: Mon Jul 13 17:19:22 1992 by Jan Thomsen (madonna!jt) 
+%% ---------------------------------------------------------------------
+%%  test file for testing assertional consequences of implication links
+%% ---------------------------------------------------------------------
+%%                                                 created 22/08/91 (jt)
+
+%% ---------------------------------------------------------------------
+%% terminological component
+
+aiboxtest :-
+	write('*** TEST FILE: jantest.iabox'), nl,
+	backinit,
+	backstate(verbosity = warning),
+	ai_tbox,
+	ai_ibox,
+	aitest(1),
+	nl.
+
+aitest(I) :-
+	ai(I),
+	I1 is I + 1,
+	aitest(I1), !.
+aitest(_).
+
+%% A. Term Definitions
+
+%% --------------------------------------
+%%    TBox
+%% --------------------------------------
+
+ai_tbox :-
+        superp2 :< anything,
+
+     	p1      :< anything,
+     	subp1   :< p1,
+     	p2      :< superp2,
+     	p3      :< anything,
+     	p4      :< p3,
+     	v1      :< anything,
+
+     	r1      :< range(anything),
+     	r2      :< range(anything),
+     	r4      :< range(anything),
+
+     	c1      := atleast(2,r1),
+     	c2      := all(r2,p4),
+     	c3      := all(r1,p4).
+
+%% --------------------------------------
+%%    IBox
+%% --------------------------------------
+
+%% B. Implications
+ai_ibox :- 
+     	p1            => p2,
+     	p2            => p3,
+     	c1            => all(r1,v1),
+     	atleast(1,r1) => atmost(2,r2),
+     	v1            => p4,
+     	c2            => all(r2, atmost(4,r1)), 
+     	all(r1,p4)    => atmost(2,r4),
+     	atmost(2,r4) and all(r1,p4)  =>  all(r1, atleast(4,r2)).
+
+%% --------------------------------------
+%%    ABox
+%% --------------------------------------
+
+%%  A. Concept instances
+
+%% #1 ------------------------ 
+
+ai(1) :-
+     	o1 :: p1,
+     	o1 ?: p2,
+     	o1 ?: p3,
+     	nl, write('+++ test ai1 succeeded. '), !.
+ai(1) :-                                 
+     	nl, write('--- test ai1 failed. ').
+
+%% -- #2 ---------------------
+
+ai(2) :-
+     	o2 :: c1,               %% c1 ::: atleast(2,r1)         
+     	o2 ?: all(r1,v1),             %% c1 => all(r1,v1)
+     	o2 ?: atmost(2,r2),           %% atleast(1,r1) => atmost(2,r2)
+     	nl, write('+++ test ai2 succeeded. '), !.
+ai(2) :-
+     	nl, write('--- test ai2 failed. ').
+
+%% -- #3 ---------------------
+
+ai(3) :-
+     	o3 :: atleast(1,r1),           
+     	o3 ?: atmost(2,r2),        %% atleast(1,r1) => atmost(2,r2)
+     	nl, write('+++ test ai3 succeeded. '), !.
+ai(3) :-
+     	nl, write('--- test ai3 failed. ').
+     
+%% -- #4 ---------------------
+%% (-) 
+ai(4) :-
+     	o4 :: all(r1,p1),             	
+     	o4 ?: all(r1,p2),          %% p1 => p2
+     	o4 ?: all(r1,superp2),     %% p2 :< superp2
+     	o4 ?: all(r1,p3),          %% p2 => p3
+     	nl, write('+++ test ai4 succeeded. '), !.
+ai(4) :-
+     	nl, write('~~~ test ai4 failed. (known incompleteness)').
+                             
+%% -- #5 ---------------------
+%% (-)
+ai(5) :-
+     	o5 :: all(r1,subp1),     %% subp1 :< p1     
+     	o5 ?: all(r1,p2),          %% p1 => p2
+     	o5 ?: all(r1,p3),          %% p2 => p3
+     	nl, write('+++ test ai5 succeeded. '), !.
+ai(5) :-
+     	nl, write('~~~ test ai5 failed. (known incompleteness)').
+
+%% B. Assertion of role-fillers
+
+%% -- #6 ---------------------
+
+ai(6) :-
+     	o7 :: p1 and r1: (o6 :: p3),    
+     	o7 ?: p1 and atleast(1,r1),  
+     	o7 ?: p2,                  %% p1 => p2
+     	o7 ?: p3,                  %% p2 => p3  
+     	o7 ?: atmost(2,r2),        %% atleast(1,r1) => atmost(2,r2)
+     	nl, write('+++ test ai6 succeeded. '), !.
+ai(6) :-
+     	nl, write('--- test ai6 failed. ').
+
+%% -- #7 ---------------------
+
+ai(7) :-
+     	o9 :: c1 and r1: (o8 :: p1),   %% c1 ::: atleast(2,r1)
+     	o9 ?: all(r1,v1),          %% c1 => all(r1,v1)
+     	o9 ?: atmost(2,r2),        %% atleast(1,r1) => atmost(2,r2) 
+     	o8 ?: v1,                  %% c1 => all(r1,v1)
+     	o8 ?: p2 and p4,           %% p1 => p2, p2 => p3, v1 => p4, p4 :< p3
+     	nl, write('+++ test ai7 succeeded. '), !.
+ai(7) :-
+     	nl, write('--- test ai7 failed. ').
+
+%% -- #8 ---------------------
+
+%% Implications fire because of an abstracted value restriction
+ai(8) :-
+     	o12 :: p1 and atmost(2,r2)
+             and r2: (o10 :: p2) and  r2:(o11 :: p2),
+     	o12 ?: all(r2,p2),         %% VR-General.: r2 is closed at o12
+     	o12 ?: p2 and p3,          %% p1 => p2, p2 => p3
+     	o10 ?: p3,                 %% o11 must be as well
+     	o12 ?: all(r2,p2),
+        o12 ?: all(r2,p3),         %% for the same reason
+     	nl, write('+++ test ai8 succeeded. '), !.
+ai(8) :-
+     	nl, write('--- test ai8 failed. ').                              
+
+%% -- #9 ---------------------
+
+ai(9) :-
+     	o15 :: c1 and atmost(2,r1)
+             and r1: (o13 :: p3) and r2:(o14 :: p3),
+                                     %% c1 => all(r1,v1)
+     	o15 ?: atleast(2,r1) and all(r1,p3),
+                                     %% VR and cardinality abstraction
+     	o13 ?: v1,                 %% because of c1; o14 must be as well
+     	o13 ?: p4,                 %% v1 => p4; o14 must be as well
+     	o15 ?: c3,                 %% now c3 := all(r1,p4) abstracted
+     	o15 ?: atmost(2,r4),       %% all(r1, p4) => atmost(2,r4) 
+     	o13 ?: atleast(4,r2),      %% atmost(2,r4) and all(r1,p4) 
+                                     %%      =>  all(r1, atleast(4,r2)).
+                                     %% o14 must be as well
+     	nl, write('+++ test ai9 succeeded. '), !.
+ai(9) :-
+   	nl, write('~~~ test ai9 failed. (known incompleteness)'),
+        nl, !.    
+                             
+
+%% ---------------------------------------------------------------------
+%%  end of file 'alinks'
+
+
+
+
+

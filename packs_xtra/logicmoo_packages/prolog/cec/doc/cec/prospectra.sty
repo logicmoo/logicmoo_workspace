@@ -1,0 +1,118 @@
+% prospectra.sty  27 Dec 88
+% (derived from: titlepage.sty  27 Jan 85)
+%
+% ----- Auxiliary Functions -----
+%
+% `\date' must also set new variable `\@year'.
+\gdef\@year{\number\year}           % Default is today's date
+\def\date#1{\gdef\@date{#1}\gdef\@year{\@selectyear{#1}}}
+%
+% `\prospectrano' sets PROSPECTRA number of the paper
+\gdef\@prospectrano{{\bf ??}}
+\gdef\@@prospectrano{\typeout{Warning: No PROSPECTRA number.}}
+\def\prospectrano#1{\gdef\@prospectrano{#1}\gdef\@@prospectrano{\relax}}
+%
+% `\prospectradist' sets PROSPECTRA distribution specification
+\gdef\@prospectradist{{\bf ??}}
+\gdef\@@prospectradist{\typeout{Warning: No PROSPECTRA distribution specification.}}
+\def\prospectradist#1{\gdef\@prospectradist{#1}\gdef\@@prospectradist{\relax}}
+%
+% `\@selectyear' selects that part of the date that stands after
+% the first comma, or, if it does not contain a comma, the whole date
+\def\@selectyear#1{\@@selectyear#1,#1,\@@endselectyear}
+\def\@@selectyear#1,#2,#3\@@endselectyear{#2}
+%
+% `firstcharupper' changes first character of a word to upper case
+\def\firstcharupper#1{\expandafter\firstch@rupper#1\endfirstch@rupper}
+\def\firstch@rupper#1#2\endfirstch@rupper{\uppercase{#1}#2}
+%
+% --- End Auxiliary Functioms ---
+%
+\def\maketitle{\begin{titlepage}
+% error messages, provided that `\prospectrano' or `\prospectradist'
+% have not been specified
+\@@prospectrano
+\@@prospectradist
+%
+\let\footnotesize\small \let\footnoterule\relax \setcounter{page}{0}
+\null
+\noindent
+PROSPECTRA\\
+an ESPRIT Project\par
+\vskip 60pt \begin{center}
+{\LARGE \@title \par} \vskip 3em {\large \lineskip .75em
+\begin{tabular}[t]{c}\@author 
+\end{tabular}\par
+\vskip 1cm\relax
+\begin{tabular}[t]{c}
+  University of Dortmund\\
+  FB Informatik\\
+  Postfach 500500\\
+  D-4600 Dortmund 50\\
+  Tel. +49 231 7554850\\
+  Telex 822465 unido d
+\end{tabular}\par
+\vskip 1cm\relax
+\ifx\@prospectrano\empty\relax\else
+\begin{tabular}[t]{c}\@prospectrano\end{tabular}\par\fi
+\ifx\@prospectradist\empty\relax\else
+\begin{tabular}[t]{c}Distribution: \@prospectradist\end{tabular}\par\fi
+}
+\vskip 1.5em
+% {\large \@date \par}
+\end{center} \par
+\@thanks
+\vfil
+\null
+\end{titlepage}
+\setcounter{footnote}{0} \def\thanks##1{\relax}
+\begin{titlepage}
+\let\footnotesize\small \let\footnoterule\relax \setcounter{page}{0}
+\null
+\vfill
+{\normalsize \lineskip .75em
+\ifx\@prospectradist\empty\relax\else
+\noindent\begin{tabular}[t]{@{}l}
+\firstcharupper\@prospectradist
+\end{tabular}\par\fi
+\vskip 1.5em\relax
+\noindent\begin{tabular}[t]{@{}l}
+{\copyright} {\@year} by
+\end{tabular}\par
+\vskip 1.5em\relax
+{\def\and{\end{tabular}\newline\begin{tabular}[t]{@{}l}}
+\noindent\begin{tabular}[t]{@{}l}
+\@author\\[1em]
+University of Dortmund
+\end{tabular}}\par
+\vskip 1.5em\relax
+\noindent\begin{tabular}[t]{@{}l}
+in the Project
+\end{tabular}\par
+\noindent\begin{tabbing}
+PRO\=gram development by\\
+   \>SPEC\=ification and\\
+   \>    \>TRAnsformation
+\end{tabbing}\par
+\vskip 1.5em\relax
+\noindent\begin{tabular}[t]{@{}l}
+sponsored by the\\
+Commission of the European Communities\\
+under the\\
+European\\
+Strategic\\
+Programme for\\
+Research and development in\\
+Information\\
+Technology\\[1em]
+Project Ref.\ No.\ 390
+\end{tabular}\par
+}
+\end{titlepage}
+\gdef\@thanks{}\gdef\@author{}\gdef\@title{}\let\maketitle\relax} 
+\def\abstract{\titlepage
+\null\vfil
+\begin{center}
+{\bf Abstract}
+\end{center}}
+\def\endabstract{\par\vfil\null\endtitlepage}

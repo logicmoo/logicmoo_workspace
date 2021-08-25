@@ -1,0 +1,23 @@
+
+Let-expression
+--------------
+
+Let-expressions may be given according to the following syntax:
+
+<let-expression> ::= 'let' <Definitions> 'in' <let-expression>
+<let-expression> ::= <signatureTerm> 
+
+<Definitions>    ::= <Definition> { 'and' <Definition> }
+<Definition>     ::= <Pattern> '=' <let-expression>
+
+<signatureTerm>  ::= <well typed term with variables over the user-specified 
+                      signature>
+<Pattern>        ::= <well typed term with variables build up from
+		      constructors of the user-specified signature>
+
+All terms are written in Prolog notation.
+Each Prolog atom which is not declared as an operator will be taken as a 
+variable:
+
+<variable> ::= <Prolog atom> [ ':' <sortName> ]
+

@@ -1,0 +1,11 @@
+drule must_be_emu(X): lle(X) => emu(X).
+drule must_be_ostrich(X): llo(X) => ostrich(X).
+fact not ( emu(X) and ostrich(X)).
+fact emu(X) => bird(X).
+fact ostrich(X) => bird(X).
+drule birdsfly(X): bird(X) => flies(X).
+drule birdsfeathered(X): bird(X) => feathered(X).
+drule emusdontfly(X): emu(X) => not flies(X).
+drule ostrichesdontfly(X): ostrich(X) => not flies(X).
+drule fliesoairborn(X): flies(X) => airborn(X).
+

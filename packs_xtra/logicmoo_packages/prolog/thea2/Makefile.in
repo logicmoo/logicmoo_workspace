@@ -1,0 +1,182 @@
+################################################################
+# SWI-Prolog `Thea2' package
+################################################################
+
+.SUFFIXES: .tex .dvi .doc .pl
+
+SHELL=@SHELL@
+PLBASE=@PLBASE@
+PLARCH=@PLARCH@
+PL=@PL@
+XPCEBASE=$(PLBASE)/xpce
+PKGDOC=$(PLBASE)/doc/packages
+PCEHOME=../xpce
+LIBDIR=$(PLBASE)/library/thea2
+#EXDIR=$(PKGDOC)/examples/plunit
+DESTDIR=
+
+archive  = thea2-`date "+%Y-%m-%d"`
+
+DOCTOTEX=$(PCEHOME)/bin/doc2tex
+PLTOTEX=$(PCEHOME)/bin/pl2tex
+LATEX=latex
+DOC=plunit
+TEX=$(DOC).tex
+DVI=$(DOC).dvi
+PDF=$(DOC).pdf
+HTML=$(DOC).html
+
+#INSTALL=@INSTALL@
+INSTALL=tools/install-sh
+INSTALL_PROGRAM=@INSTALL_PROGRAM@
+INSTALL_DATA=@INSTALL_DATA@
+
+LIBPL=\
+owl2_basic_reasoner.pl\
+owl2_catalog.pl\
+owl2_classifier.pl\
+owl2_export_rdf.pl\
+owl2_fol.pl\
+owl2_from_rdf.pl\
+owl2_from_rdf_utils.pl\
+owl2_instance_util.pl\
+owl2_io.pl\
+owl2_java_owlapi.pl\
+owl2_manchester_parser.pl\
+owl2_metamodel.pl\
+owl2_model.pl\
+owl2_owllink.pl\
+owl2_plsyn.pl\
+owl2_popl.pl\
+owl2_profiles.pl\
+owl2_reasoner.pl\
+owl2_reasoning_rules.pl\
+owl2_rl_rules.pl\
+owl2_tbox_reasoner.pl\
+owl2_thea1_compat.pl\
+owl2_to_progol.pl\
+owl2_to_prolog_dlp.pl\
+owl2_util.pl\
+owl2_xml.pl\
+owl_parser.pl\
+swrl.pl\
+swrl_rdf_hooks.pl\
+thea.pl
+
+LIBPLRULES=\
+rules/advancedset.pl\
+rules/basicset.pl
+
+LIBALL=		$(LIBPL) $(SUPPORT)
+EXAMPLES=	README
+
+all:		
+		@echo "Nothing to do for this package"
+
+install:	$(LIBPL) $(LIBPLRULES)
+		mkdir -p $(DESTDIR)$(LIBDIR)
+		$(INSTALL_DATA) $(LIBALL) $(DESTDIR)$(LIBDIR)
+		mkdir -p $(DESTDIR)$(LIBDIR)/rules
+		$(INSTALL_DATA) $(LIBPLRULES) $(DESTDIR)$(LIBDIR)/rules
+		$(PL) -f none -g make -t halt
+
+ln-install:	$(LIBPL) $(LIBPLRULES)
+		mkdir -p $(DESTDIR)$(LIBDIR)
+		for f in $(LIBALL); do \
+		    rm -f $(DESTDIR)$(LIBDIR)/$$f; \
+		    ln -s `pwd`/$$f $(DESTDIR)$(LIBDIR); \
+		done
+		mkdir -p $(DESTDIR)$(LIBDIR)/rules
+		for f in $(LIBPLRULES); do \
+		    rm -f $(DESTDIR)$(LIBDIR)/$$f; \
+		    ln -s `pwd`/$$f $(DESTDIR)$(LIBDIR)/rules; \
+		done
+		$(PL) -f none -g make -t halt
+
+rpm-install:	install
+
+pdf-install:	install-examples
+		$(INSTALL_DATA) $(DOC).pdf $(DESTDIR)$(PKGDOC)
+
+html-install:	install-examples
+		$(INSTALL_DATA) $(DOC).html $(DESTDIR)$(PKGDOC)
+
+install-examples::
+		mkdir -p $(DESTDIR)$(EXDIR)
+		(cd examples && $(INSTALL_DATA) $(EXAMPLES) $(DESTDIR)$(EXDIR))
+
+uninstall::
+		rm -f $(LIBDIR)/plunit.pl
+		$(PL) -f none -g make -t halt
+
+check::
+		true
+
+################################################################
+# ISO
+################################################################
+iso/%.pl: %.pl
+	bin/pl-listing $* | egrep -v '^:-.*multifile' > $@
+
+################################################################
+# tests
+################################################################
+
+test: test-owl2_model test-owl2_from_rdf test-swrl
+
+test-%:
+	bin/thea-run-tests $*
+
+alltests: test jpltest
+
+jpltest: test-owl2_java_owlapi
+
+################################################################
+# Documentation
+################################################################
+
+doc:		$(PDF) $(HTML)
+pdf:		$(PDF)
+html:		$(HTML)
+
+$(HTML):	$(TEX)
+		latex2html $(DOC)
+		mv html/index.html $@
+		rmdir html
+
+$(PDF):		$(TEX)
+		../../man/runtex --pdf $(DOC)
+
+$(TEX):		$(DOCTOTEX)
+
+.doc.tex:
+		$(DOCTOTEX) $*.doc > $*.tex
+.pl.tex:
+		$(PLTOTEX) $*.pl > $*.tex
+
+################################################################
+# Distribution
+################################################################
+BRANCH=`git branch 2> /dev/null | sed -e '/^[^*]/d' -e 's/* \(.*\)/\1/'`
+MANIFEST:
+	git ls-tree -r $(BRANCH) | cut -f2 > $@
+
+dist:
+	mkdir -p $(archive) && \
+	( for i in `cat MANIFEST | grep -v .ppt`; do $(INSTALL) -c $$i $(archive)/$$i; done) && \
+	tar czf $(archive).tar.gz $(archive) && \
+	rm -Rf $(archive) && \
+	echo $(archive)
+
+################################################################
+# Clean
+################################################################
+
+clean:
+		rm -f *~ *% config.log
+		rm -f $(TEX)
+		../../man/runtex --clean $(DOC)
+		rm -rf html
+
+distclean:	clean
+		rm -f $(TARGETS) config.cache config.status Makefile

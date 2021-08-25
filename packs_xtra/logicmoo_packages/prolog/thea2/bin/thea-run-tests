@@ -1,0 +1,35 @@
+#!/usr/bin/swipl -L0 -G0 -T0 -q -g main -t halt -s
+
+main :-
+        current_prolog_flag(argv, Arguments),
+        append(_SytemArgs, [--|Args], Arguments), !,
+        set_prolog_flag(verbose,normal),
+        parse_args(Args,Opts),
+        forall(member(rest(F),Opts),
+               use_module(F)),
+        forall(member(rest(F),Opts),
+               load_specific_test_file(F)),
+        set_test_options([silent(false)]),
+        debug(test),
+        debug(rl_rules),
+        debug(owl_exporter),
+        debug(basic_reasoner),
+        %load_test_files([]),
+        (   run_tests
+        ->  halt(0)
+        ;   halt(1)).
+
+load_specific_test_file(F) :-
+        atom_concat(F,'.plt',F2),
+        consult(F2).
+
+
+parse_args([],[]).
+parse_args(Args,[Opt|Opts]) :-
+        parse_arg(Args,Rest,Opt),
+        !,
+        parse_args(Rest,Opts).
+parse_args([A|Args],[rest(A)|Opts]) :-
+        parse_args(Args,Opts).
+
+parse_arg(['--debug',D|L],L,null) :- debug(D).

@@ -1,0 +1,11 @@
+
+trc(query, info(29, query, 9, 1), [
+   trc(even(s(s(a))), info(27, ext, 7, 1), [
+      trc(odd(s(a)), info(27, ext, 6, 2), [
+         trc(not_even(s(a)), info(27, restart, 0, 1), [
+            trc(restart, info(27, query, 9, 1), [
+               trc(even(s(a)), info(26, red, 1, 0), []),
+               trc(lt(a, s(a)), info(27, fact, 5, 1), [])])])])]),
+   trc(lt(a, s(s(a))), info(29, th_start, 4, 1), [
+      trc(lt(s(a), s(s(a))), info(28, th_ext, 5, 1), []),
+      trc(lt(a, s(a)), info(29, fact, 5, 1), [])])]).

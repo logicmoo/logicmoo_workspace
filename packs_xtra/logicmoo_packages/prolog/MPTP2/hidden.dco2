@@ -1,0 +1,1 @@
+fof(antisymmetry_r2_hidden, theorem, (! [A: $true, B: $true] : (r2_hidden(A, B) =>  ~ (r2_hidden(B, A)) ) ) , file(hidden, r2_hidden), [mptp_info(2,[],r,position(0,0),[property(antisymmetry)])]).

@@ -1,0 +1,18 @@
+#!/bin/bash
+# File: dnf2fof  -  Version: 1.0  -  Date: 29 February 2012
+#
+# Require: dnf2fof.pl
+#
+# Purpose: The transformation of MaleCop DNF files into TPTP FOF files for a further usage.
+#
+# Authors: Jiri Vyskocil
+#
+# Usage: cat input | ./dnf2fof > output
+#
+
+cat - > temp_input__$$
+swipl -L0 -G0 -T0 -A0 -g "[dnf2fof], dnf2fof('temp_input__$$','temp_output__$$'), halt."
+rm temp_input__$$ 
+cat temp_output__$$
+rm temp_output__$$
+

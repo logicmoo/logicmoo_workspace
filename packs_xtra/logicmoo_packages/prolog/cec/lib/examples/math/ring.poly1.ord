@@ -1,0 +1,3 @@
+order poly(1)
+	using	'poly1.p' for abelianGroup
+	+	'poly1.t' for monoid.

@@ -1,0 +1,177 @@
+order(poly3 for qsortnat) using poly3 for qsort+poly1_qsort for nat.
+setInterpretation('$neq3'(x1,x2,x3,x4) :    [ 2 * x4 + 2 * x3 + 2 * x2 + 2 * x1 ,
+     2 * x4 + 2 * x3 + 2 * x2 + 2 * x1 ,
+     2 * x4 + 2 * x3 + 2 * x2 + 2 * x1 ]
+).
+setInterpretation('$neq3'(x1,x2,x3,x4,x5,x6) :    [ 2 * x6 + 2 * x5 + 2 * x4 + 2 * x3 + 2 * x2 + 2 * x1 ,
+     2 * x6 + 2 * x5 + 2 * x4 + 2 * x3 + 2 * x2 + 2 * x1 ,
+     2 * x6 + 2 * x5 + 2 * x4 + 2 * x3 + 2 * x2 + 2 * x1 ]
+).
+setInterpretation('$neq1'(x1,x2,x3,x4) :    [ 2 * x4 + 2 * x3 + 2 * x2 + 2 * x1 ,
+     2 * x4 + 2 * x3 + 2 * x2 + 2 * x1 ,
+     2 * x4 + 2 * x3 + 2 * x2 + 2 * x1 ]
+).
+setInterpretation('$neq2'(x1,x2,x3,x4) :    [ 2 * x4 + 2 * x3 + 2 * x2 + 2 * x1 ,
+     2 * x4 + 2 * x3 + 2 * x2 + 2 * x1 ,
+     2 * x4 + 2 * x3 + 2 * x2 + 2 * x1 ]
+).
+setInterpretation('$neq2'(x1,x2,x3,x4,x5,x6) :    [ 2 * x6 + 2 * x5 + 2 * x4 + 2 * x3 + 2 * x2 + 2 * x1 ,
+     2 * x6 + 2 * x5 + 2 * x4 + 2 * x3 + 2 * x2 + 2 * x1 ,
+     2 * x6 + 2 * x5 + 2 * x4 + 2 * x3 + 2 * x2 + 2 * x1 ]
+).
+setInterpretation(s(x) :    [ 8 * x ,
+     8 * x ,
+     8 * x ]
+).
+setInterpretation(0 :    [ 2 ,
+     2 ,
+     2 ]
+).
+setInterpretation(false :    [ 2 ,
+     2 ,
+     2 ]
+).
+setInterpretation(true :    [ 2 ,
+     2 ,
+     2 ]
+).
+setInterpretation(=<(x,y) :    [ x + y + 2 ,
+     x + y + 2 ,
+     x + y + 2 ]
+).
+setInterpretation('$h7_0'(x,y) :    [ x + 3 * y + 1 ,
+     x + y + 1 ,
+     x + y + 1 ]
+).
+setInterpretation('$h6_0'(x,y) :    [ x + 3 * y + 1 ,
+     x + y + 1 ,
+     x + y + 1 ]
+).
+setInterpretation('$h5_0'(x,y) :    [ 2 * x + 3 * y + 1 ,
+     2 * x + 2 * y ,
+     2 * x + 2 * y ]
+).
+setInterpretation(','(x,y) :    [ x + y ,
+     x + y ,
+     x + y ]
+).
+setInterpretation(split(x,y) :    [ x + y + 1 ,
+     x + 2 * y ,
+     x + 2 * y ]
+).
+setInterpretation(sort(x) :    [ 2 * x ,
+     2 * x ,
+     2 * x ]
+).
+setInterpretation('.'(x,y) :    [ 3 * x + y + 1 ,
+     x + y ,
+     x + y ]
+).
+setInterpretation([] :    [ 2 ,
+     2 ,
+     2 ]
+).
+setInterpretation(append(x,y) :    [ x + y ,
+     x + y ,
+     2 * x + y ]
+).
+
+constructor('true-bool').
+constructor('false-bool').
+constructor('[]-list').
+constructor('.-list-nat-list').
+constructor('0-nat').
+
+
+
+
+
+
+/* declare as nonoperational :
+/*	[y=<x] = [x=<y,false] */
+action(orient(n),'$equation'([],[['=<-bool-nat-nat'(@'y-nat',@'x-nat')]=['=<-bool-nat-nat'(@'x-nat',@'y-nat'),'false-bool']])).
+
+/* ordering of the literals is [0,1] for
+/*	x=<y = false => y=<x = true */
+action(status([0,1]),'$equation'(['=<-bool-nat-nat'(@'x-nat',@'y-nat')='false-bool'],['=<-bool-nat-nat'(@'y-nat',@'x-nat')='true-bool'])).
+
+/* declare as nonoperational :
+/*	x=<y = true and y=<x = true => x = y */
+action(orient(n),'$equation'(['=<-bool-nat-nat'(@'x-nat',@'y-nat')='true-bool','=<-bool-nat-nat'(@'y-nat',@'x-nat')='true-bool'],[@'x-nat'= @'y-nat'])).
+
+/* condition number 1 is the selected condition for
+/*	x=<y = true and y=<x = true => x = y */
+action(selectcondition(1),'$equation'(['=<-bool-nat-nat'(@'x-nat',@'y-nat')='true-bool','=<-bool-nat-nat'(@'y-nat',@'x-nat')='true-bool'],[@'x-nat'= @'y-nat'])).
+
+/* ordering of the literals is [0,1,2] for
+/*	x=<y = true and y=<x = true => x = y */
+action(status([0,1,2]),'$equation'(['=<-bool-nat-nat'(@'x-nat',@'y-nat')='true-bool','=<-bool-nat-nat'(@'y-nat',@'x-nat')='true-bool'],[@'x-nat'= @'y-nat'])).
+
+/* declare as nonoperational :
+/*	x=<y = true and y=<z = true => x=<z = true */
+action(orient(n),'$equation'(['=<-bool-nat-nat'(@'x-nat',@'y-nat')='true-bool','=<-bool-nat-nat'(@'y-nat',@'z-nat')='true-bool'],['=<-bool-nat-nat'(@'x-nat',@'z-nat')='true-bool'])).
+
+/* condition number 1 is the selected condition for
+/*	x=<y = true and y=<z = true => x=<z = true */
+action(selectcondition(1),'$equation'(['=<-bool-nat-nat'(@'x-nat',@'y-nat')='true-bool','=<-bool-nat-nat'(@'y-nat',@'z-nat')='true-bool'],['=<-bool-nat-nat'(@'x-nat',@'z-nat')='true-bool'])).
+
+/* ordering of the literals is [0,1,2] for
+/*	x=<y = true and y=<z = true => x=<z = true */
+action(status([0,1,2]),'$equation'(['=<-bool-nat-nat'(@'x-nat',@'y-nat')='true-bool','=<-bool-nat-nat'(@'y-nat',@'z-nat')='true-bool'],['=<-bool-nat-nat'(@'x-nat',@'z-nat')='true-bool'])).
+
+/* split(x,l) = l1,l2 => sort([x|l]) = append(sort(l1),[x|sort(l2)])
+/* should be checked for quasi-reductivity */
+action(orient(c),'$equation'(['split-pair-nat-list'(@'x-nat',@'l-list')=',-pair-list-list'(@'l1-list',@'l2-list')],['sort-list-list'('.-list-nat-list'(@'x-nat',@'l-list'))='append-list-list-list'('sort-list-list'(@'l1-list'),'.-list-nat-list'(@'x-nat','sort-list-list'(@'l2-list')))])).
+
+/* annotation of literals is [l,l] in
+/*	split(x,l) = l1,l2 => sort([x|l]) = append(sort(l1),[x|sort(l2)]) */
+action(annotation([l,l]),'$equation'(['split-pair-nat-list'(@'x-nat',@'l-list')=',-pair-list-list'(@'l1-list',@'l2-list')],['sort-list-list'('.-list-nat-list'(@'x-nat',@'l-list'))='append-list-list-list'('sort-list-list'(@'l1-list'),'.-list-nat-list'(@'x-nat','sort-list-list'(@'l2-list')))])).
+
+/* y=<x = true and split(x,l) = l1,l2 => split(x,[y|l]) = [y|l1],l2
+/* should be checked for quasi-reductivity */
+action(orient(c),'$equation'(['=<-bool-nat-nat'(@'y-nat',@'x-nat')='true-bool','split-pair-nat-list'(@'x-nat',@'l-list')=',-pair-list-list'(@'l1-list',@'l2-list')],['split-pair-nat-list'(@'x-nat','.-list-nat-list'(@'y-nat',@'l-list'))=',-pair-list-list'('.-list-nat-list'(@'y-nat',@'l1-list'),@'l2-list')])).
+
+/* annotation of literals is [l,l,l] in
+/*	y=<x = true and split(x,l) = l1,l2 => split(x,[y|l]) = [y|l1],l2 */
+action(annotation([l,l,l]),'$equation'(['=<-bool-nat-nat'(@'y-nat',@'x-nat')='true-bool','split-pair-nat-list'(@'x-nat',@'l-list')=',-pair-list-list'(@'l1-list',@'l2-list')],['split-pair-nat-list'(@'x-nat','.-list-nat-list'(@'y-nat',@'l-list'))=',-pair-list-list'('.-list-nat-list'(@'y-nat',@'l1-list'),@'l2-list')])).
+
+/* y=<x = false and split(x,l) = l1,l2 => split(x,[y|l]) = l1,[y|l2]
+/* should be checked for quasi-reductivity */
+action(orient(c),'$equation'(['=<-bool-nat-nat'(@'y-nat',@'x-nat')='false-bool','split-pair-nat-list'(@'x-nat',@'l-list')=',-pair-list-list'(@'l1-list',@'l2-list')],['split-pair-nat-list'(@'x-nat','.-list-nat-list'(@'y-nat',@'l-list'))=',-pair-list-list'(@'l1-list','.-list-nat-list'(@'y-nat',@'l2-list'))])).
+
+/* annotation of literals is [l,l,l] in
+/*	y=<x = false and split(x,l) = l1,l2 => split(x,[y|l]) = l1,[y|l2] */
+action(annotation([l,l,l]),'$equation'(['=<-bool-nat-nat'(@'y-nat',@'x-nat')='false-bool','split-pair-nat-list'(@'x-nat',@'l-list')=',-pair-list-list'(@'l1-list',@'l2-list')],['split-pair-nat-list'(@'x-nat','.-list-nat-list'(@'y-nat',@'l-list'))=',-pair-list-list'(@'l1-list','.-list-nat-list'(@'y-nat',@'l2-list'))])).
+
+/* declare as nonoperational :
+/*	l1,l2 = l4,l3 and split(x1,l5) = l1,l2 => append(sort(l1),[x1|sort(l2)]) = append(sort(l4),[x1|sort(l3)]) */
+action(orient(n),'$equation'([',-pair-list-list'(@'l1-list',@'l2-list')=',-pair-list-list'(@'l4-list',@'l3-list'),'split-pair-nat-list'(@'x1-nat',@'l5-list')=',-pair-list-list'(@'l1-list',@'l2-list')],['append-list-list-list'('sort-list-list'(@'l1-list'),'.-list-nat-list'(@'x1-nat','sort-list-list'(@'l2-list')))='append-list-list-list'('sort-list-list'(@'l4-list'),'.-list-nat-list'(@'x1-nat','sort-list-list'(@'l3-list')))])).
+
+/* condition number 1 is the selected condition for
+/*	l1,l2 = l4,l3 and split(x1,l5) = l1,l2 => append(sort(l1),[x1|sort(l2)]) = append(sort(l4),[x1|sort(l3)]) */
+action(selectcondition(1),'$equation'([',-pair-list-list'(@'l1-list',@'l2-list')=',-pair-list-list'(@'l4-list',@'l3-list'),'split-pair-nat-list'(@'x1-nat',@'l5-list')=',-pair-list-list'(@'l1-list',@'l2-list')],['append-list-list-list'('sort-list-list'(@'l1-list'),'.-list-nat-list'(@'x1-nat','sort-list-list'(@'l2-list')))='append-list-list-list'('sort-list-list'(@'l4-list'),'.-list-nat-list'(@'x1-nat','sort-list-list'(@'l3-list')))])).
+
+/* declare as nonoperational :
+/*	l1,l2 = l4,l3 and y1=<x1 = true and split(x1,l5) = l1,l2 => [y1|l1],l2 = [y1|l4],l3 */
+action(orient(n),'$equation'([',-pair-list-list'(@'l1-list',@'l2-list')=',-pair-list-list'(@'l4-list',@'l3-list'),'=<-bool-nat-nat'(@'y1-nat',@'x1-nat')='true-bool','split-pair-nat-list'(@'x1-nat',@'l5-list')=',-pair-list-list'(@'l1-list',@'l2-list')],[',-pair-list-list'('.-list-nat-list'(@'y1-nat',@'l1-list'),@'l2-list')=',-pair-list-list'('.-list-nat-list'(@'y1-nat',@'l4-list'),@'l3-list')])).
+
+/* condition number 1 is the selected condition for
+/*	l1,l2 = l4,l3 and y1=<x1 = true and split(x1,l5) = l1,l2 => [y1|l1],l2 = [y1|l4],l3 */
+action(selectcondition(1),'$equation'([',-pair-list-list'(@'l1-list',@'l2-list')=',-pair-list-list'(@'l4-list',@'l3-list'),'=<-bool-nat-nat'(@'y1-nat',@'x1-nat')='true-bool','split-pair-nat-list'(@'x1-nat',@'l5-list')=',-pair-list-list'(@'l1-list',@'l2-list')],[',-pair-list-list'('.-list-nat-list'(@'y1-nat',@'l1-list'),@'l2-list')=',-pair-list-list'('.-list-nat-list'(@'y1-nat',@'l4-list'),@'l3-list')])).
+
+/* declare as nonoperational :
+/*	l1,l2 = l4,l3 and y1=<x1 = false and split(x1,l5) = l1,l2 => l1,[y1|l2] = l4,[y1|l3] */
+action(orient(n),'$equation'([',-pair-list-list'(@'l1-list',@'l2-list')=',-pair-list-list'(@'l4-list',@'l3-list'),'=<-bool-nat-nat'(@'y1-nat',@'x1-nat')='false-bool','split-pair-nat-list'(@'x1-nat',@'l5-list')=',-pair-list-list'(@'l1-list',@'l2-list')],[',-pair-list-list'(@'l1-list','.-list-nat-list'(@'y1-nat',@'l2-list'))=',-pair-list-list'(@'l4-list','.-list-nat-list'(@'y1-nat',@'l3-list'))])).
+
+/* condition number 1 is the selected condition for
+/*	l1,l2 = l4,l3 and y1=<x1 = false and split(x1,l5) = l1,l2 => l1,[y1|l2] = l4,[y1|l3] */
+action(selectcondition(1),'$equation'([',-pair-list-list'(@'l1-list',@'l2-list')=',-pair-list-list'(@'l4-list',@'l3-list'),'=<-bool-nat-nat'(@'y1-nat',@'x1-nat')='false-bool','split-pair-nat-list'(@'x1-nat',@'l5-list')=',-pair-list-list'(@'l1-list',@'l2-list')],[',-pair-list-list'(@'l1-list','.-list-nat-list'(@'y1-nat',@'l2-list'))=',-pair-list-list'(@'l4-list','.-list-nat-list'(@'y1-nat',@'l3-list'))])).
+
+/* declare as nonoperational :
+/*	n=<m = true and s m=<z = true => s n=<z = true */
+action(orient(n),'$equation'(['=<-bool-nat-nat'(@'n-nat',@'m-nat')='true-bool','=<-bool-nat-nat'('s-nat-nat'(@'m-nat'),@'z-nat')='true-bool'],['=<-bool-nat-nat'('s-nat-nat'(@'n-nat'),@'z-nat')='true-bool'])).
+
+/* condition number 2 is the selected condition for
+/*	n=<m = true and s m=<z = true => s n=<z = true */
+action(selectcondition(2),'$equation'(['=<-bool-nat-nat'(@'n-nat',@'m-nat')='true-bool','=<-bool-nat-nat'('s-nat-nat'(@'m-nat'),@'z-nat')='true-bool'],['=<-bool-nat-nat'('s-nat-nat'(@'n-nat'),@'z-nat')='true-bool'])).
+

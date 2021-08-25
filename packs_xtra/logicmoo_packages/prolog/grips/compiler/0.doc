@@ -1,0 +1,96 @@
+Package:      lang/prolog/code/syntax/compiler/
+
+Name:         GRIPS Compiler
+
+Summary:      Grips/Prolog demonstration mini-compiler.
+
+Version:      11-JAN-91
+
+Description: 
+
+   This is a demonstration compiler, written in a functional language
+   (GRIPS) that can be translated into Prolog.  The GRIPS translator is
+   available separately.
+
+   The compiler takes programs in a (very small) subset of Pascal.  It
+   lexically analyzes them into tokens, parses the token list into a
+   tree, generates code from the tree, fixes up references in the code,
+   and then interprets the code on a stack virtual machine. It displays
+   the output of each stage, and the interpreter displays the machine
+   state as each instruction is obeyed.
+
+   The compiler is written in a functional style, using functions
+   (sometimes represented as sets of domain->codomain pairs) to represent
+   well-known concepts in programming language semantics, such as the
+   store and the environment.  
+
+   Here is an example program that it can compile and run.
+
+       program p;
+
+       label
+           99, 100;
+
+       const
+           five = 5;
+
+       var
+           v : integer;
+           w : integer;
+
+       begin
+           write('Hello.');
+           v := 1;
+           w := 1;
+       99:
+               if v=five then goto 100;
+               v := v + 1;
+               w := w * v;
+               goto 99;
+       100:
+           write('v = ');
+           write(v);
+           write('v! = ');
+           write(w)
+       end.
+
+Requires:     
+
+Ports:        Edinburgh-compatible Prologs.
+
+Origin:       src.doc.ic.ac.uk:packages/prolog-pd-software/ (146.169.2.1)
+              as compiler.tar.Z
+
+Copying:      
+
+Updated:      
+
+CD-ROM:       Prime Time Freeware for AI, Issue 1-1
+
+Bug Reports:  
+
+Mailing List: 
+
+Author(s):    Jocelyn Paine <popx@vax.ox.ac.uk>
+              Department of Experimental Psychology
+              Oxford University
+              South Parks Road
+              Oxford OX1 3UD
+              Tel: (0865) 271444
+              Fax: (0865) 310447
+
+Contact:      
+
+Keywords:     
+
+   Prolog!Code, Prolog!Syntax, Syntax, Grips, Pascal Interpreter in
+   Prolog, Authors!Paine, lex@{\tt lex}, Lexical Analysis, Parsing, Oxford
+
+Contains:    ???
+
+See Also:    
+
+   lang/prolog/code/syntax/grips/
+
+References:   
+

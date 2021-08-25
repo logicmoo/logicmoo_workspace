@@ -1,0 +1,20 @@
+    begin(prospec).
+
+    sorts: (top).
+
+    functions: (c:top
+    ).
+
+    relations: ( a, b 
+    ).
+
+    end(prospec).
+
+    begin(simplify).
+    true -> (a <-> b).
+    end(simplify).
+
+    a.
+
+    ?- b.
+

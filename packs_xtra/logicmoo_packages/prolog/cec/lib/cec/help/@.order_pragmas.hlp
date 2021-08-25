@@ -1,0 +1,38 @@
+
+Pragmas concerning termination ordering
+---------------------------------------
+
+constructor(Op1).
+
+declars Op1 to be a constructor. 
+
+
+equal([[a, b, c, ... ], [g, h, i, ... ], ... ]).
+
+declares  operators to have  equivalent precedences provided kns is the chosen 
+termination ordering. Meaning: a = b = c = ... and g = h = i = ...
+(cf. CEC-command "equal").
+
+
+greater([[a, b, c, ... ], [g, h, i, ... ], ... ]).
+
+adds  ordered pairs  of operators to the precedence provided kns is the chosen
+termination ordering. Meaning: a > b > c > ... and g > h > i > ...
+(cf. CEC-command "greater").
+
+
+status([ Operator1  :  Status1, Operator2  :  Status2 , ...]).
+
+declares  that  Operatori  has  status  Statusi provided  kns  is  the  chosen 
+termination   ordering.   Statusi   can   be  lr  for  left-to-right,  rl  for 
+right-to-left or ms for multiset (cf. CEC-command "status").
+
+
+setInterpretation([ Op1(Args1) : Int1, Op2(Args2) : Int2 ,...]).
+
+Provided that  poly is  the current termination  ordering a new interpretation
+Inti for the operators Opi are added  to the current state. The interpretation
+Inti  is a  polynomial  over  the  variables  in  Argsi  (if order = poly1) or 
+N polynomials, if  order = poly<N>,  N > 1.  The  new  interpretation  must be
+compatible with  all C- or AC-declarations in the current state 
+(cf. CEC-command "setInterpretation").

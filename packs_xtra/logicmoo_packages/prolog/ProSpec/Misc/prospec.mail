@@ -1,0 +1,256 @@
+Received: from hebel.uni-koblenz.de (peter@hebel.uni-koblenz.de [141.26.4.46]) by infko.uni-koblenz.de (8.6.9/8.6.9) with SMTP id KAA26179 for <bthomas@informatik.uni-koblenz.de>; Fri, 3 Nov 1995 10:11:12 +0100
+Message-Id: <199511030911.KAA26179@infko.uni-koblenz.de>
+Received: by hebel.uni-koblenz.de (4.1/KO-2.0)
+	id AA04185; Fri, 3 Nov 95 10:10:18 +0100
+Organization: University of Koblenz, Germany
+From: Peter Baumgartner <peter@infko.uni-koblenz.de>
+To: bthomas@mailhost.uni-koblenz.de
+Subject: Transformation
+Date: Fri, 3 Nov 95 10:10:18 +0100
+
+Hallo Bernd, hier fuer's erste mal die Sortentransformation. 
+Die Daran anschliessende Gleichheitstransformation kommt mit extra
+Post. 
+
+Enjoy!
+
+	Peter
+
+Deklarationsteil:
+-----------------
+
+Sortendeklarationen: 
+  - Liste von Sortennamen, parametrisiert:
+    z.B.	integer		Die Sorte 'integer'
+		list(U)		Die Sorte der Listen ueber sorte U
+		ne_list(U)	Ebenso, aber "ne" -> "non_empty"
+		e_list(U)	Ebenso, aber "e" -> "empty"
+
+
+  - Teilmengenbeziehungen, z.B.
+    ne_list(U) subsort_of list(U).
+     e_list(U) subsort_of list(U).
+
+    als Verband:
+
+		list(U)
+	         / \
+	        /   \
+	e_list(U)  ne_list(U)
+
+
+  Dabei ist wichtig, dass die Sortenhierarchie ein Baum ist, es also
+  keine gemeinsamen Untersorten gibt. Dann naemlich kann das SOrtenreasoning
+  in die Unifikation kodiert werden (s.u.)
+
+Funktionsdeklarationen (und PRaedikatsdeklarationen).
+
+  - z.B.	a: integer			; integer-konstante
+		cons: U, list(U) -> ne_list(U)  ; U ist eine Typvariable
+		nil: e_list(U)
+
+		is_empty: list(U)		; aha, ein Praedikat.
+		'=': U, U			; Dies soll immer
+						; gelten! Gleichheit also
+						; nur zwischen
+						; sortengleichen
+						; Termen definiert
+					
+
+Wir muessen schon annehmen, dass fuer alle Funktions- und
+Praedikatssymbole entsprechende Deklarationen vorhanden sind
+(Gleichheit mal ausgenommen, die kann implizit angenommen werden).
+
+
+Sortendarstellung
+-----------------
+
+Damit kann jede Formel voll durchsortiert werden. Die Frage ist wie
+Sorten dargestellt werden.  Als Prolog Listen naemlich. Sei die
+Sortenhierarchie 
+
+	s1
+	| \
+	|  ...
+	s2  
+        | \
+	|  \
+	s3  ...
+	| \
+	:
+	sn
+		
+
+Die Sorte si wird durch die Prolog-Liste [s1,s2,...,si|Ti]
+dargestellt, wobei Ti eine neue Variable ist. Sortenannotation sei 
+durch `:' dargestellt. 
+
+Falls x eine Variable der Sorte s2 ist,
+darf natuerlich auch jeder Term mit einer Untersorte s2,s3,... von s2 an x
+gebunden werden. Deshalb wird das als
+	
+	x:[s1,s2|T2]
+
+dargestellt, wobei T2 der noch nicht bekannte Pfad zu der Untersorte
+des spaeter zu bindenden Terms ist.
+
+Wie siehts mit den anderen termen aus? Genauso. Die Konstante a3
+sei von der Sorte s3. Das wird dann durch a3:[s1,s2,s3|T3]
+dargsetellt. Warum ne extra variable T3 hier? Wir wissen doch dass a3
+von der Sorte s3 ist? Schon, aber a3 koennte ja auch von einer
+Untersorte sein! Sorten werden ja durch eine Interpretation in Mengen
+abgebildet. Subsorteneigenschaft ist dann Teilmengeneigenschaft,
+z.B. so
+
+	{ a b c }
+          /    \
+	{ a }  { c }
+
+Also, wenn a als Element der Topsorte deklariert ist, kann es durchaus
+noch weiter unten vorkommen! Wie gesagt aber, der Schnitt der
+Untermengen muss leer sein.
+
+
+Aehnlich die Annotation echte Funktionsterme: Sei f deklariert als 
+f:s3 -> s5. Dann ist f(ai:[s1,s2,s3|T3]):[s1,s2,s3,s4,s5|T5] ein
+wohlsortierter Term. 
+  Damit ist dann 
+
+	x:[s1,s2|T2] = ai:[s1,s2,s3|T3]	(*)
+
+ein wohlsortiertes Praedikat, denn die Sortendeklaration von '=' ist
+ja U,U, d.h. links und rechts muessen dieselbe Sorte stehen, und dies
+ist fuer (*)  erfuellbar. Bewiesen werden kann das durch Unifikation
+von X:U = Y:U mit (*), wobei das literal X:U = Y:U direkt aus der
+Sortendeklaration gewonnen wird. Allgemeiner: Bei der Unifikation
+zweier Terme ist bei deren SOrten die groesste untere Schranke zu
+bilden, was hier ja immer die 'kleinere' Sorte ist (falls moeglich).
+
+NegativBeispiel:
+
+	x:[list(U),e_list(U)|S] = y:[list(U),ne_list(U)|T]  (**)
+
+und X:U = Y:U sind nicht unifizierbar, (**) ist somit nicht korrekt
+sortiert. Das ist auch richtig so, denn die Sortenhierarchie ist ja
+vereinbarungsgemaess ein Baum, deshalb kann es eine gemeinsame
+Untersort von e_list und ne_list nicht geben.
+
+Fuer jede total Funktion muss ja die Existenz der Bildpunkte angegeben
+werden; im sortierten Fall sieht das dann so aus. Sei
+
+	g:t1,...,tn -> t
+
+deklariert. Das Existenzaxiom ist dann
+
+	g(X1:t1',...,Xn:tn', sk_g(X1:t1',...,Xn:tn'):t')
+
+wobei 
+	ti' = ti		falls ti eine Sortenvariable ist,
+	ti' = [s1,...,si|Ti]	ti von der Sorte si ist, gemaess der
+				Sortenhierarchie oben, und Ti eine neue
+				Variable ist.
+
+ti' soll SORTENDARSTELLUNG VON ti heissen.
+Fuer t gehts natuerlich genauso.
+
+Fuer 'cons' ergibt sich dann also das Axiom:
+
+	cons(X:U, Y:[list(U)|TY], sk_cons(X:U,Y:[list(U)|TY]):[list(U),
+							       ne_list(U)|T]).
+
+
+
+Du siehst also schon (hoffentlich), wie es laufen soll.
+
+Sortenannotation.
+-----------------
+
+Ich glaube, es ist sinnvoll, eine gegebene Formel voll mit ihrer
+Sorten zu annotieren, und dann erst darauf die
+Gleichheitstransformation anzuwenden. Das trennt die beiden Teile dann
+ziemlich modular auf, in dem Sinne, dass die Entscheidung, welche Sorten
+annotiert werden, von der reinen Gleichheitstransformation getrennt
+werden, die ja damit eigentlich nichts zu tun hat. 
+
+Deshalb sei S eine Funktion, die einen (nicht annotierten) 
+Term mit einer gegenen Sortendarstellung t' (einer gewissen Sorte t)
+annotiert, folgendermassen definiert:
+
+	S(x,t')		  =  x:t'		falls x Variable.
+
+	S(f(u1,...,un),t') =  f(S(u1,t1'),...,S(un,tn')):t'
+
+						falls f deklariert als
+						f:t1,...,tn -> t
+
+						
+Fuer atomare Formel geht's natuerlich aehnlich:
+
+	S(p(u1,...,un)) =  p(S(u1,t1'),...,S(un,tn'))
+
+						falls p deklariert als
+						p:t1,...,tn
+
+
+und fuer Literale und Klauseln durch Homomorphismus wie ueblich.
+
+Ich habe aber  geschwindelt: es ist gar nicht syntaktische Gleichheit
+der Sorten gefordert, sondern Unifikation. Der zweite Fall muss
+deshalb richtigerweise heissen:
+
+	S(f(u1,...,un),t') =  sigma(f(S(u1,dt1'),...,S(un,dtn')):dt')
+
+		falls f deklariert als f:dt1,...,dtn -> dt
+		und sigma ist allgemeinster Unifikator fuer
+		(dt1',...,dtn',dt') und (t1',...,t2',t'), wobei ti' 
+		die Sortenkomponente von S(u1,dt1') ist, also S(u1,dt1')
+		von der Form Term:Ti' ist.
+
+Das definiert sich moeglicherweise komlizierter als es ist. Wenn Du in
+Prolog nur immer schon die Sorten unifizierst, geht alles glatt.
+Sei z.B
+	ta
+	|
+	tb
+Sortenhierarchie, und a:ta und b:tb deklariert; Ferner sei p
+3-stelliges Praedikatensymbol, deklariert als p:U,U,U.
+
+Dann ist das Ergebnis der Sortenannotierung von p(x,a,b):
+
+	S(p(X,a,b)) = p(X:[ta,tb|T],a:[ta,tb|T],b:[ta,tb,T])
+
+Den Ausschlag gibt natuerlich hier tb.
+
+Vorsicht nun: wir sind noch nicht fertig. Sei z.b. nun p:ta,tc
+deklariert und ta und tc unvertraegliche (Top-)Sorten. Die Sortenannotation
+von p(X,X) liefert
+
+	p(X:[ta|T1], X:[tc|T2])
+
+Dies kein wohlsortiertes Atom, denn die beiden Sorten der beiden
+Vorkommen von X sind nicht unifzierbar -> Fehler.
+
+Sei nun p:ta,tb   (tb wieder Untersorte von ta) Die Sortenannotation
+von p(X,X) liefert
+
+	p(X:[ta|T1], X:[ta,tb|T2])
+
+Natuerlich muss auch das erste Vorkommen von X die selbe Sort haben
+wie das zweite Vorkommen, denn es ist ja nur eine
+Variable. Unifikation der Sorten der beiden Vorkommen von X loest das
+Problem: 
+
+	p(X:[ta,tb|T2], X:[ta,tb|T2])
+
+Allgemein, musst Du also nach der Sortenannotation noch mal ueber die
+Klausel drueberflitzen und bei gleichen Variablen deren Sorten
+unifizieren. 
+
+So, das wars nun mit der Sortenannotation.
+
+Jetzt geht's zur Gleichheitstransformation.
+
+
+
+
+

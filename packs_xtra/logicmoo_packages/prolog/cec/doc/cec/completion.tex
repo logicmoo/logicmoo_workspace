@@ -1,0 +1,748 @@
+\section{Completion of Specifications}
+
+\subsection{The Objectives of Completion}
+
+CEC is designed to support the methodology of software specification 
+using modular order-sorted specifications with conditional equations.
+Being considerably more concise and abstract than many-sorted specifications,
+order-sorted specifications even more call for a system that provides
+proof techniques needed for
+\begin{itemize}
+\item checking the consistency of a specification,
+\item proving the correctness of actual specification parameters to
+parametric modules, and
+\item checking, or achieving by transformation, confluence and termination
+as a prerequisite
+for correct operational execution of specifications by (conditional)
+term rewriting.
+\end{itemize}
+The completion procedure in CEC can be seen as both a compiler and a refutation
+proof procedure.
+For the latter, CEC distinguishes between two kinds of operators.
+Operators can be declared
+as {\em constructors} or as regular operators.
+It is assumed that any two constructor terms
+are different in a consistent equational theory.
+If the completion procedure in CEC infers an equation between two
+different constructor terms it will stop and report the inconsistency.
+One application of this is checking the consistency of parameter passing.
+Actual and formal parameter specifications are combined, possibly after
+some renaming of sorts or operators, and then completed.
+If the actual parameter is {\em constructor-complete} and the completion
+process 
+discovers no inconsistency then the actual parameter is correct, i.e.
+the initial algebra of the actual parameter specification is a model of the
+formal one.
+This is exactly the {\em ``proof-by-consistency''} method of inductive theorem
+proving, and in \cite{HH80} it is shown how to incorporate it into
+a completion procedure for the particular case of constructor-complete
+theories. In CEC this method is extended to the conditional case.
+
+
+Unfailing conditional completion
+transforms a finite initial set of conditional 
+equations $E$ into a possibly infinite
+set $E'$ of final conditional equations such that
+\footnotetext[1]{
+\rew{E} denotes conditional rewriting using the equations in $E$ from left to right,
+by \rewRT{E} and \rewSRT{E} we denote the reflexive-transitive and
+the reflexiv-transitive-symmetric closure of \rew{E} respectively.}
+$$\eqrel{*}{E} \ =\  \rewRT{R(E')} \irewRT{R(E')} \ =:\ \nfrel{R(E')},\footnotemark[1]$$
+where $R(E') = \{ \sigma(e)| e \in E' \cup E'^{-1},
+\sigma(e) {\rm\ reductive} \}$\footnote[2]{
+$E'^{-1} = \{ \condEq{C}{\eq{t}{s}} \ |\  \condEq{C}{\eq{s}{t}} \in E'\}$.}.
+This means that, for any two terms
+$t_1$ and $t_2$, $t_1$
+and $t_2$ are equal in the equational theory, iff 
+$t_1$ and $t_2$ have the same normalform with
+respect to $R(E')$. $R(E')$ is the set of all reductive
+instances of the
+equations in $E'$. With the definition of reductivity
+as given below, unfailing completion of unconditional equations
+is just a particular case of the conditional one.
+Rewriting in $R(E')$ means that a redex is always replaced
+by a smaller one. In the case of a conditional equation
+it also means that the condition instance must be smaller
+than the redex, too.
+
+The notion of a reductive conditional equation has originated from
+\cite{Kap84},\cite{Kap85} and \cite{JW86}. 
+A {\em reduction ordering} is a partial ordering on terms that is
+stable under substitution, monotonic and well-founded.
+Given a reduction ordering $>$
+on the term algebra, an equation
+$$ \condEq{\cond{\eq{u_1}{v_1}\condAnd\eq{u_2}{v_2}}
+                {\eq{u_n}{v_n}}}
+          {\eq{s}{t}} $$
+is called {\em reductive}, if $s > t$, $s > u_i$,  and $s > v_i$,
+i.e. if the term on the right side and each term that occurs in the condition
+are smaller than the left side of the equation. 
+In the confluent case, verifying an instance $\eq{u}{v}$ of a condition
+equation then means to check whether or not
+both terms $u$ and $v$ have the same
+normal form. As these terms are smaller than the redex, the applicability
+of a reductive equation is always decidable.
+ 
+The main problem is that $R(E')$ is infinite even for finite $E'$.
+A particularly fortunate case is when all equations in the final
+$E'$ are reductive. As reduction orderings are stable under substitutions,
+$\eq{\rew{R(E')}}{\rew{E'}}$, in this case.
+Unfortunately in almost all cases $E'$ will not be uniformly reductive.
+This is in particular so when the initial $E$ already contains
+nontrivial nonreductive equations.
+Any equation with extra variables is nonreductive.
+Even if the initial equations are reductive, nonreductive ones
+can be generated from these during completion.
+
+\subsection{CEC Completion}
+\label{Completion}
+
+The completion procedure in CEC is based on three
+observations:
+\begin{enumerate}
+\item
+Reductivity can be weakened to what we call {\em quasi-reductivity}.
+\item
+Depending on the completion strategy, $E'$ can be redundant.
+It can contain {\em nonoperational equations}.
+$e \in E'$ is called nonoperational, if $\nfrel{R(E')} = \nfrel{R(E'-\{e\})}$,
+i.e. if $e$ need not be used for computing normal forms.
+\item
+The completion strategy can be tailored so
+that {\em arbitrarily selected equations} with at least one condition become
+nonoperational in the final system.
+\end{enumerate}
+Hence, whenever the reductivity of a conditional equation is
+violated because of the ``size'' of a particular condition, two cases may occur.
+If the equation is quasi-reductive, then it can be handled
+almost as if it was reductive. Otherwise, the equation
+can be classified as ``should become nonoperational''. Then, completion
+computes superpositions on its condition such that
+in the final system the equation is nonoperational indeed. 
+
+Let's now explain the notion of quasi-reductivity more precisely.
+Let
+$$ \condEq{\cond{\eq{u_1}{v_1}\condAnd\eq{u_2}{v_2}}
+                {\eq{u_n}{v_n}}}
+          {\eq{s}{t}} $$
+be a conditional equation, $n\ge 1$. It is called {\em quasi-reductive}
+if
+there exists a sequence $h_i(\xi)$ of context terms,
+such that $s>h_1(u_1)$, $h_i(v_i)\ge h_{i+1}(u_{i+1})$,
+$1\le i < n$, and $h_n(v_n)\ge t$.
+
+Quasi-reductivity is a proper generalization of reductivity.
+If the equation
+$$\condEq{\cond{\eq{u_1}{u_{n+1}}}
+               {\eq{u_n}{u_{2n}}}}
+         {\eq{s}{t}}$$ 
+is reductive, then the equation
+$$
+\condEq{\cond{\eq{u_1}{x_1}\condAnd\eq{u_{n+1}}{x_1}}
+             {\eq{u_n}{x_n}\condAnd\eq{u_{2n}}{x_n}}}
+       {\eq{s}{t}},
+$$
+is quasi-reductive,
+if the $x_i$ are new, pairwise distinct variables.
+Hence, where appropriate we assume that reductive equations are
+identified with quasi-reductive ones in the way just explained.
+
+Quasi-reductive conditional rewriting $\rewqr{E}$
+with quasi-reductive equations $E$
+is defined as classical reductive rewriting with
+conditional equations.
+The only difference is that goal solving for the conditions is restricted to
+{\em oriented goal solving}.
+Hereby a substitution $\sigma$ is a solution to a
+condition equation $\eq{u}{v}$,
+if $u\sigma\rewqrnf{E}v\sigma$, i.e. the right side
+$v$ of the condition matches
+the normal form of the $\sigma$-instance $u\sigma$ of the left side.
+The reductivity requirements for quasi-reductive equations
+now imply that $\rewqr{E}\subset\rew{E}$, i.e. any step
+of quasi-reductive rewriting is at the same time a step of reductive
+rewriting. Moreover, for a quasi-reductive equation and
+any matching substitution $\sigma$ for the left side $s$
+there is at most one extension of $\sigma$ to a directed solution of
+the condition. In addition, $\sigma$ can be constructed deterministically if
+$\rewqr{E}$ is confluent. Altogether we see that $\rewqr{E}$
+is as efficient as rewriting with reductive equations.
+
+To sum up, completion in CEC produces a possibly infinite $E'$ from an initially given $E$
+such that
+$$ E' = R_\infty + N_\infty, $$
+where
+$R_\infty = R_\infty^{red} + R_\infty^{qred}$ is a set of {\em reductive} equations and
+{\em quasi-reductive} equations 
+and $N_\infty$ is a set of {\em nonoperational} equations,
+such that $\rew{R(E')}$ is confluent,
+$$\rewSRT{E} = \nfrel{R(E')}$$
+{\em and}
+$$\rew{R(E')} \subset
+\rewqrRT{R_\infty} \irewqrRT{R_\infty}
+= \rewSRT{E'}.$$
+Hence $\rewqr{R_\infty}$ is confluent too,
+efficiently computable and
+produces the same normal forms as $\rew{R(E')}$.
+%Note that since
+%$\rew{E'} \subset \rew{R(E')}$ but $\rew{E'} \neq \rew{R(E')}$
+%in general, to achieve
+%$$\rew{R(E')} \subset \rewqrRT{R_\infty} \irewqrRT{R_\infty}$$
+%completion must perform sufficiently many paramodulation superpositions
+%on the right sides of the conditions of the equations in $R_\infty^{qred}$.
+
+We will formalize the CEC-completion procedure within the framework of
+an inference system. Since we distinguish between equations, rewrite rules and
+nonoperational equations, the objects of this inference system are tupels 
+$\tripel{E}{R}{N}$, where $E$ is a set of conditional equations,
+$R$ is a set of (quasi-) reductive conditional rewrite rules and $N$ is a
+set of nonoperational equations.
+
+The CEC\--com\-pletion procedure computes (possibly infinite) se\-quen\-ces 
+$$\tripel{E_0}{R_0}{N_0},\ \tripel{E_1}{R_1}{N_1}, \ldots$$ 
+of derivations
+using the in\-fer\-ence rules presented below. The limit of a derivation is the
+tuple $\tripel{E_\infty}{R_\infty}{N_\infty}$. 
+In the following, $P_\tripel{E}{R}{N}\ :\ \eq{s}{t}$ means that $P$ is a proof of
+\eq{s}{t} consisting of applications of equations and rules in \tripel{E}{R}{N}. 
+
+The basic idea behind the completion is that in any new state
+$\tripel{E_i}{R_i}{N_i}$ proofs become simpler w.r.t. 
+a well-founded {\em proof ordering} \PO .
+The simplest proofs of equations are rewrite proofs, cf. \cite{Gan87b}.
+The goal
+ is to construct for each proof 
+$P_\tripel{E_0}{R_0}{N_0}\ :\ \eq{s}{t}$ a rewrite proof 
+$Q_\tripel{E_i}{R_i}{N_i}\ :\ \eq{s}{t}$ at some step $i$,
+yielding 
+$$\rewSRT{E} = \nfrel{R_\infty}$$
+in the limit.
+With this idea in mind we say
+that a conditional equation \condEq{C}{\eq{s}{t}} is {\em trivial} if for all
+proofs $P : \eq{m}{n}$, which apply \condEq{C}{\eq{s}{t}} there exists a proof
+$Q : \eq{m}{n}$ such that $P \PO Q$.
+
+\noindent
+If for some $k$ 
+\begin{itemize}
+\item all critical pairs between rules in $R_k$ and 
+\item all superpositions on some condition of any  equation in $N_k$
+by the rules in $R_k$ 
+\end{itemize}
+have been computed and 
+\begin{itemize}
+\item all equations in $E_k$ and 
+\item all unconditional equations in $N_k$ (except for the AC-axioms)
+\end{itemize}
+have been shown to be trivial then $\tripel{E_k}{R_k}{N_k}$ is complete.
+% for each proof \stateEl{P_\tripel{E_0}{R_0}{N _0}}{\eq{s}{t}} there 
+% exists a rewrite-proof \stateEl{Q_\tripel{E_k}{R_k}{N_k}}{\eq{s}{t}}. 
+Therefore
+the completion procedure either tries to show that an equation
+in $E$ is trivial or it
+transforms the equation into a rewrite rule
+or into a nonoperational equation. 
+
+Unfortunately the property of a conditional equations being trivial is not decidable.
+CEC applies several advanced techniques for detecting the convergence of
+conditional equations cf. \cite{Gan88a}. The CEC-technique of using nonoperational
+equations for elimination will discussed together with
+the inference rule {\em Deleting a trivial equation} below. \bigskip
+
+\begin{CRule}[(cp), Adding a contextual critical pair]
+\deducRule{ E , R \cup \{ \condRule{C}{\rewRule{s}{t}},  
+                       \condRule{D}{\rewRule{l}{r}} \} , N}{
+ E \cup \set{
+\condEq{\applysubst{\sigma}{C} \condAnd \applysubst{\sigma}{D}}{
+\eq{\applysubst{\sigma}{\replace{s}{o}{r}}}{\applysubst{\sigma}{t}}}}, 
+R \cup \set{ \condRule{C}{\rewRule{s}{t}}, \condRule{D}{\rewRule{l}{r}}} , N} 
+\end{CRule}
+
+\noindent
+where $o$ is a nonvariable occurrence in $s$ so that \subterm{s}{o} and $l$ 
+can be unified with the mgu $\sigma$.\bigskip
+
+\begin{CRule}[(superpose (condition)), Adding a condition superposition instance]
+\deducRule{ E , R \cup \set{ \condRule{D}{\rewRule{l}{r}}} , 
+          N  \cup \set{ \condEq{C \condAnd \eq{u}{v}}{\eq{s}{t}}} }
+{E \cup \set{ 
+\condEq{\applysubst{\sigma}{D} \condAnd
+\applysubst{\sigma}{C} \condAnd \applysubst{\sigma}{\replace{(\eq{u}{v})}{o}{r}}}{
+\eq{\applysubst{\sigma}{s}}{\applysubst{\sigma}{t}}}} , 
+ R \cup \set{ \condRule{D}{\rewRule{l}{r}}} , 
+ N \cup \set{ \condEq{C \condAnd \eq{u}{v}}{\eq{s}{t}}} }
+\end{CRule}
+
+where $o$ is a nonvariable occurrence in \eq{u}{v} such 
+that \subterm{(\eq{u}{v})}{o} and $l$ can be unified
+with the mgu $\sigma$. The rewrite rule \condRule{D}{\rewRule{l}{r}} is 
+used for superposition on the condition equation \eq{u}{v} 
+in the nonoperational equation \condEq{C \condAnd \eq{u}{v}}{\eq{s}{t}}. \bigskip
+
+\begin{CRule}[(superpose (reflexivity)), Adding a condition superposition instance]
+\deducRule{ E , R , N \cup \set{\condEq{C \condAnd \eq{u}{v}}{\eq{s}{t}}} }
+        { E \cup \set{\condEq{\applysubst{\sigma}{C}}{
+\eq{\applysubst{\sigma}{s}}{\applysubst{\sigma}{t}}}} , R ,
+          N \cup \set{\condEq{C \condAnd \eq{u}{v}}{\eq{s}{t}}} }
+\end{CRule}
+
+\noindent
+where $u$ and $v$ can be unified with a mgu $\sigma$.\bigskip
+
+\begin{CRule}[(superpose (conclusion)), Adding a superposition instance]
+\deducRule{ E , R \cup \set{ \condRule{D}{\rewRule{l}{r}}} , 
+          N  \cup \set{ \eq{s}{t}}}
+{E \cup \set{ 
+\condEq{\applysubst{\sigma}{D}}{
+\eq{\applysubst{\sigma}{\replace{s}{o}{r}}}{\applysubst{\sigma}{t}}}} , 
+ R \cup \set{ \condRule{D}{\rewRule{l}{r}}} , 
+ N \cup \set{\eq{s}{t}}} 
+where $o$ is a nonvariable occurrence in $s$ so that $\subterm{s}{o}$
+and $l$ can be unified with the mgu $\sigma$.
+\end{CRule}\bigskip
+
+
+\begin{CRule}[(orderEq), Orienting an equation into a reductive rule]
+\deducRule{ E \cup 
+ \set{\condEq{\eq{u_1}{v_1} \condAnd \eq{u_2}{v_2} \condAnd \ldots
+ \condAnd \eq{u_n}{v_n}}{\eq{s}{t}}},
+          R , N }{ E , R \cup 
+ \set{\condRule{\eq{u_1}{v_1} \condAnd \eq{u_2}{v_2} \condAnd \ldots
+ \condAnd \eq{u_n}{v_n}}{\rewRule{s}{t}}} , N }
+
+if $\set{s} \TO> \set{u_1, v_1, u_2, v_2, \ldots, u_n , v_n, t} , n \geq 0 $.
+
+\deducRule{ E \cup \set{\condEq{\eq{u_1}{v_1} \condAnd \eq{u_2}{v_2}
+   \condAnd \ldots \condAnd \eq{u_n}{v_n}}{\eq{s}{t}}},
+  R, N }{ E , R \cup \set{
+\condRule{\eq{u_1}{v_1} \condAnd \eq{u_2}{v_2} \condAnd \ldots
+\condAnd \eq{u_n}{v_n}}{\rewRule{t}{s}}} , N }
+
+if $\set{t} \TO> \set{u_1, v_1, u_2, v_2, \ldots, u_n, v_n, s}, n \geq 0$ .
+\end{CRule} \bigskip
+
+\begin{CRule}[(orderEq), Orienting an equation into a quasi-reductive rule]
+\deducRule{ E \cup 
+ \set{\condEq{\eq{u_1}{v_1} \condAnd \eq{u_2}{v_2} \condAnd \ldots
+ \condAnd \eq{u_n}{v_n}}{\eq{s}{t}}},
+          R , N }{ E , R \cup 
+ \set{\condRule{\eq{u_1}{v_1} \condAnd \eq{u_2}{v_2} \condAnd \ldots
+ \condAnd \eq{u_n}{v_n}}{\rewRule{s}{t}}} , N }
+
+if $\exists h_1(x),\ldots,h_n(x) \in T_\Sigma(X), x \in X, 
+ s \TO> h_1(u_1), h_i(v_i) \geq h_{i+1}(u_{i+1}), 1 \leq i < n,
+ h_n(v_n) \geq t$.
+
+\deducRule{ E \cup \set{\condEq{\eq{u_1}{v_1} \condAnd \eq{u_2}{v_2}
+   \condAnd \ldots \condAnd \eq{u_n}{v_n}}{\eq{s}{t}}},
+  R, N }{ E , R \cup \set{
+\condRule{\eq{u_1}{v_1} \condAnd \eq{u_2}{v_2} \condAnd \ldots
+\condAnd \eq{u_n}{v_n}}{\rewRule{t}{s}}} , N }
+
+if $\exists h_1(x),\ldots,h_n(x) \in T_\Sigma(X), x \in X,  
+ t \TO> h_1(u_1), h_i(v_i) \geq h_{i+1}(u_{i+1}), 1 \leq i < n,
+ h_n(v_n) \geq s$.
+\end{CRule}
+\vspace{1.5ex}
+
+\noindent
+The {\em reductivity} condition is essential to avoid an infinite recursive evaluation of the
+condition when checking the applicability of a conditional rewrite rule.\bigskip
+%As shown in \cite{Gan87b} a much more powerful simplification of
+%equations and rules is possible in the presence of orientable condition equations. 
+%Therefore the system tries to orient condition 
+%equations. However, it is not required that each condition is orientable.\bigskip
+
+\begin{CRule}[(nopEq), Declaring an equation as nonoperational]
+\deducRule{ E \cup \set{\condEq{C}{\eq{s}{t}}}, R, N }
+{ E, R, N \cup \set{\condEq{C}{\eq{s}{t}}} } 
+\end{CRule}
+
+\noindent
+For any nonreductive initial equation the system asks if it should be
+considered as nonoperational. In addition for every conditional equation generated during
+completion by \comRef{cp} or \comRef{superpose} the user is asked to decide as to 
+wether \comRef{orderEq} or \comRef{nopEq} should be applied. It may be the case 
+that a generated conditional equation can be oriented into a reductive rewrite rule, 
+nevertheless is operationally useless, and may in fact cause nontermination 
+of the completion procedure.
+Since it is sufficient to superpose all rewrite rules on just one condition of any
+nonoperational conditional equation, CEC asks the user on which condition superposition should be 
+applied. At this point it is often sensible to select a condition which is a 
+maximal one w.r.t.\ the given reduction ordering. An exception might be the case
+where such conditions contain AC-operators since superposition is then very 
+costly. 
+For unconditional equations only nonreductive equations should be
+declared as nonoperational. In that case all rewrite rules must be superposed
+on both sides of the nonoperational unconditional equation. With this feature
+CEC provides a kind of (semi-)unfailing completion\footnote[1]{If such an equation cannot be eliminated eventually,
+completion fails as CEC does not support rewriting with 
+instances of unorientable equations}. \bigskip
+
+\begin{CRule}[(redEq), Deleting a trivial condition of a conditional equation]
+\deducRule{ E \cup \set{\condEq{C \condAnd \eq{u}{u}}{\eq{s}{t}}}, R, N}
+{ E \cup \set{\condEq{C}{\eq{s}{t}}}, R, N }
+\end{CRule}
+
+\begin{CRule}[(redNopEq), Deleting a trivial condition of a nonoperational conditional equation]
+\deducRule{ E, R, N \cup \set{\condEq{C \condAnd \eq{u}{u}}{\eq{s}{t}}} }
+{ E, R, N \cup \set{\condEq{C}{\eq{s}{t}}} } 
+\end{CRule}
+
+\noindent Orientable condition equations in $C$ may 
+be used as additional rewrite rules for simplification. Technically, simplification
+with oriented condition equations requires the skolemization (replacement of
+variables by new constants) of these 
+equations. 
+$\tilde{s}, \tilde{u}$ denote the skolemized versions of $ s, u $ and
+$\tilde{C} $ the skolemized and oriented subset of $C$.\bigskip
+
+\begin{CRule}[(redEq), Simplifying a condition of a conditional equation]
+\ifdeducRule{ E \cup \set{\condEq{C \condAnd \eq{u}{v}}{\eq{s}{t}}}, R, N }
+{ E \cup \set{\condEq{C \condAnd \eq{w}{v}}{\eq{s}{t}}}, R, N }if{
+\tilde{u} \rewqr{R \cup \tilde{C}} \tilde{w}}
+\end{CRule}
+
+\noindent
+A condition equation may be simplified under the assumption that the remaining condition 
+equations hold true. Again, orientable condition equations may be used as additional
+rewrite rules.\bigskip
+
+\begin{CRule}[(redNopEq), Simplifying a condition of a nonoperational equation]
+\ifdeducRule{ E, R, N \cup \set{\condEq{C \condAnd \eq{u}{v}}{\eq{s}{t}}} }
+{ E \cup \set{\condEq{C \condAnd \eq{w}{v}}{\eq{s}{t}}}, R, N }if{
+\tilde{u} \rewqr{R \cup \tilde{C} } \tilde{w}}
+\end{CRule}
+
+\noindent
+Simplified nonoperational equations are turned back into conventional equations. \bigskip
+
+\begin{CRule}[(redRule), Simplifying the condition of a conditional rewrite rule]
+\ifdeducRule{ E, R \cup \set{\condRule{C \condAnd \eq{u}{v}}{\rewRule{s}{t}}}, N  }
+{ E, R \cup \set{\condRule{C \condAnd \eq{w}{v}}{\rewRule{s}{t}}}, N }if{
+\tilde{u} \rewqr{R \cup \tilde{C}} \tilde{w}}
+\end{CRule}
+
+\begin{CRule}[(redEq), Simplifying the conclusion of a conditional equation]
+\ifdeducRule{ E \cup \set{\condEq{C}{\eq{s}{t}}}, R, N }
+{ E \cup \set{\condEq{C}{\eq{u}{t}}}, R, N }if{\tilde{s} \rewqr{R \cup \tilde{C} } \tilde{u}}
+\end{CRule}
+
+\begin{CRule}[(redNOpEq), Simplifying the conclusion of a nonoperational conditional equation]
+\ifdeducRule{ E, R, N \cup \set{\condEq{C}{\eq{s}{t}}} }
+{ E, R, N \cup \set{\condEq{C}{\eq{u}{t}}} }if{
+\tilde{s} \rewqr{R \cup \tilde{C}} \tilde{u}}
+\end{CRule}
+
+
+\begin{CRule}[(redRule), Simplifying the right hand side of a rule]
+\ifdeducRule{ E, R \cup \set{\condRule{C}{\rewRule{s}{t}}}, N }
+{ E, R \cup \set{\condRule{C}{\rewRule{s}{u}}}, N }if{
+\tilde{t} \rewqr{R \cup \tilde{C} } \tilde{u}}
+\end{CRule}
+
+\begin{CRule}[(redRule), Simplifying the left hand side of a rule]
+\ifdeducRule{ E, R \cup \set{\condRule{C}{\rewRule{s}{t}}} , N }
+{ E \cup \set{\condEq{C}{\eq{u}{t}}}, R, N }if{
+\tilde{s} \rewqr{R \cup \tilde{C} } \tilde{u}}
+\end{CRule}
+
+\noindent
+Rewrite rules with simplified left hand side must be turned back into equations.
+This rule has a further restriction for its application which we do not want to
+mention here.\bigskip
+
+\begin{CRule}[(redEq), Deleting a trivial equation]
+\ifdeducRule{ E \cup \set{\condEq{C}{\eq{s}{t}}}, R, N }
+{ E, R, N }if{\condEq{C}{\eq{s}{t}} \mbox{{\rm \  is\ trivial}}}
+\end{CRule}
+
+\noindent
+Convergent equations may be eliminated. Particularly simple cases of
+($redEq$) are $s \equiv t$ or $ s=t \in C $. Apart from usual
+simplification and subsumption methods, CEC also applies nonoperational
+equations from $N$ for constructing simpler proofs for equations from $E$.
+The principal schema can be sketched as follows. 
+The equation $\condEq{C}{\eq{s}{t}} \in E$ is trivial if the following
+cases apply:
+\begin{enumerate}
+\item
+$s \equiv t$ or $\eq{s}{t} \in C$.
+\item
+\condEq{C}{\eq{s}{t}} is subsumed by another equation from $E$ or $N$
+\item
+\condEq{C}{\eq{s}{t}} can be simplified to a trivial equation.
+\item
+$C$ contains an equation \eq{u}{v} that is not satisfiable for consistent
+specifications. 
+An equation \eq{u}{v} is unsatisfiable if $u$ and $v$ are not identical and
+both consist of constructor operators only\footnote[1]{Note that CEC does 
+not allow rules with constructors at the top of the left sides. Any such
+situation leeds to the failure of the completion}.
+\item
+if \condEq{C \condAnd (\eq{\applysubst{\sigma}{m}}{\applysubst{\sigma}{n}})}{\eq{s}{t}}
+is trivial, where $\condEq{D}{\eq{m}{n}} \in N$, such that $C$ 
+implies \applysubst{\sigma}{D} 
+and additional constraints
+concerning the \PO - relation on the involved proofs are fulfilled
+cf. \cite{Gan87b}.
+We say that \condEq{C}{\eq{s}{t}} is {\it forward chained} using the nonoperational 
+equation \condEq{D}{\eq{m}{n}}. CEC reports every forward chaining of equations and
+the result of the corresponding comparisons on proofs.
+\item
+Similar to 5.\ with backward chaining (resolution) instead of forward chains.
+\end{enumerate}
+
+\subsection{Incremental Termination Orderings}
+\label{TerminationOrderings}
+
+As described above the definition of a appropriate {\em reduction ordering} is 
+fundamental for the completion procedure.
+An important improvement of completion procedures today over the original one
+by Knuth and Bendix 
+\cite{KB69} is the use of {\it incremental termination orderings}. 
+In the original procedure the reduction ordering had to be given
+{\it a priori}. Incremental orderings are orderings where the partial order on terms
+is induced from another partial order on operators or on interpretations of operators
+occurring in terms. If two incomparable terms $t_1$ and $t_2$ shall be ordered,
+one looks for a consistent extension of the current ordering so that
+$t_1  > t_2 $ or $t_2  > t_1 $. Since there are
+usually several different possible extensions of the underlying ordering which all
+induce the desired extension of the term ordering, implementations of these orderings
+ask the user to select one.
+
+Together with the possibility to write an order specification, the user is now
+able to supply some information about the termination ordering right at the
+beginning, to extend this information interactively during the completion process
+and to save the final termination ordering in an order specification again.
+So he avoids to answer the same questions concerning the termination ordering 
+when he tries to complete the specification again.
+
+The default termination ordering used by CEC is \kw{neqkns}, except if the specification
+contains associative and commutative operators. In this case \kw{poly1} is the
+default ordering since termination proofs with \kw{kns} or \kw{neqkns} 
+are invalid in the presence of AC-operators. 
+
+The user can change the termination ordering using the 
+\comRef{oder}-command (\refArrow\ chapter \ref{InspecTermination}).
+
+%\begin{command}[\comName{order}]
+%indicates the current termination ordering and asks the user whether he wants to 
+%change it.
+%When invoked it displays the following: 
+%
+%\begin{screen}
+%The current termination ordering is "neqkns".
+%The following alternative orderings may be selected:
+%
+%recursive path ordering without equality (after Kapur, Narendran,
+%Sivakumar)
+%
+%recursive path ordering (after Kapur, Narendran, Sivakumar)
+%
+%polynomial abstraction with tuplelength N
+%
+%manual ordering
+%
+%"file." for reading from a file
+%
+%"no." for no change
+%   Please answer with neqkns. or kns. or poly<N>. or manual. or
+%file. or no. (Type A. to abort) >
+%\end{screen}
+%
+%If a new ordering is selected and if the previous termination
+%ordering is incompatible with the new ordering, all rules are turned back into
+%equations and the completion must be repeated from the beginning.
+%\end{command}
+
+\subsubsection{KNS and NEQKNS: Recursive Path Orderings}
+\label{kns}
+
+\kw{kns} and \kw{neqkns} are {\it precedence orderings}. That means the partial order on terms is
+induced by a partial order on operators called the {\it precedence}. 
+The precedence ordering \kw{neqkns} forbids that two different operators have the same
+precedence. Initially the
+precedence is empty. Order Specifications may include precedence declarations, cf. 
+chapter~\ref{OrderPragmas}. 
+All constructors are given a precedence less than any nonconstructor operator.
+The precedence ordering is extended during 
+the completion process or using the \comRef{equal} and \comRef{greater}
+commands. The current state of the precedence definitions can be
+displayed using the \comRef{operators} command.
+
+\subsubsection{POLY$<$N$>$: Polynomial Orderings.}
+\label{poly}
+
+The second group of termination orderings available in CEC is \kw{poly}\nt{N}. Here the idea is to
+give {\it polynomial interpretations} to terms in a way that
+\[t_1 > t_2 : \iff I(t_1) > I(t_2). \]
+An m-tuple of integer polynomials $F_i(x_1, \ldots, x_n)$ is associated with
+each $n$-ary operator $f$. The choice of coefficents must ensure {\it monotonicity},
+e.g.
+\[
+I(t_1 ) > I(t_2 )\ \  {\rm implies}\ \  I(f(\ldots, t_1, \ldots)) >
+I(f(\ldots, t_2, \ldots)) \]
+and that terms are mapped into nonnegative integers only; this is the case if all
+coefficients are positive.
+
+The concrete version of this technique as it is implemented CEC is due to \cite{CL86}. Again
+we only need to order the equations to infer the termination property for all
+reductions on terms. 
+Changing to a smaller tuple length {\rm N} can
+make old termination proofs invalid. In that case CEC turns back all rules
+into equations. The default termination ordering in the presence of AC-operators
+is \kw{poly1}.
+
+The difficulty of these termination orderings from a users point of view is how to
+guess the appropriate polynomials such that all equations will be ordered in the
+desired way. It will take some time to become familiar with this technique.\bigskip
+
+Order Specifications may include polynomial interpretations for operators, cf. 
+chapter~\ref{OrderPragmas}. Interpretations are added during the 
+completion process or using the \comRef{setInterpretation} command.
+The current polynomial interpretations can be displayed using the
+\comRef{operators} command or the \comRef{interpretation}-command
+(\refArrow\ chapter \ref{InspecTermination}).
+
+There are two operators which allow to compute the interpretation of a term
+and to compare two interpretations:\bigskip
+
+\begin{command}[\com{polGreater}{\comArg{Interpretation1}\ad\comArg{Interpretation2}}]
+Only useful with ordering \kw{poly}\nt{N}.
+If it succeeds, \comArg{Interpretation1} $>$ \comArg{Interpretation2} holds true
+(if $>$ is the ordering on tuples of polynomials).
+Interpretations (i.e. tupels of polynomials) of terms can be generated
+via \comRef{polynomial}.
+\end{command}
+
+\begin{command}[\com{polynomial}{\comArg{Term}\ad\comArg{Interpretation}}]
+yields the polynomial interpretation of \comArg{Term}. It
+fails, if the ordering is not \kw{poly}\nt{N}. 
+If there are operators in \comArg{Term},
+for which no polynomial interpretation is known, the user is asked for
+such an interpretation (and the given interpretation is stored).
+\end{command}
+
+\subsection{Specifications with Associative and Commutative Operators}
+
+As a commutativity axiom immediately destroys the termination property of a term
+rewriting system, this property cannot be expressed by a term rewrite rule. A well
+known solution to this problem is unification and rewriting modulo associativity and
+commutativity, cf. 
+\cite{Sti81} and \cite{Fag83}. CEC must know the AC-operators of the
+signature. CEC extracts this information from the given set of axioms and treats
+these equations differently, i.e. they will not be oriented into rewrite rules.
+The AC-equations will be added to the set of nonoperational equations, but in contrast
+to other nonoperational equations they are not superposed with rewrite rules to compute 
+coherence pairs. In CEC the extended rule technique is implemented instead,
+cf.\ \cite{PS81} and \cite{JK86b}.
+
+Note that in the presence of AC-operators termination proofs using path orderings
+like \kw{kns} are invalid. But termination proofs with polynomial orderings may
+be possible. Therefore CEC sets the default termination ordering
+to \kw{poly1} if there are AC-operators in a specification. 
+
+
+\subsection{Running the Completion Procedure}
+
+\begin{command}[\comName{c}]
+calls the Knuth-Bendix completion procedure. This executes a fixed strategy of
+applications of the ``completion inference'' predicates \comRef{orderEq}, 
+\comRef{cp}, \comRef{superpose}, \comRef{redRule}, \comRef{redEq} and
+\comRef{redNopEq}.
+\end{command}
+
+\begin{command}[\comName{cResume}]
+restarts the completion procedure after the completion process was
+aborted by answering ``\cec{A.}'' to some query of the system.
+\end{command}
+
+\noindent
+A manual guidance of the process is possible by explicitly calling
+completion inference rules. \bigskip
+
+\begin{command}[\com{orderEq}{\comArg{EquationIndex}}]
+orients equation with index \comArg{EquationIndex}. The predicate fails if equation 
+\comArg{EquationIndex} does
+not exist or if the equation cannot be oriented or turned into a nonoperational
+equation or if the equation is eliminated during reduction.
+\end{command}
+
+\begin{command}[\com{nopEq}{\comArg{EquationIndex}}]
+declares equation with index \comArg{EquationIndex} as nonoperational. 
+The predicate fails if equation \comArg{EquationIndex} does not exist 
+or if the equation is trivial.
+\end{command}
+
+\begin{command}[\com{cp}{\comArg{RuleIndex1}\ad\comArg{RuleIndex2}}]
+computes all critical pairs of rule \comArg{RuleIndex1} on rule 
+\comArg{RuleIndex2}. 
+The predicate fails, if no nontrivial critical pair can be found.
+\end{command}
+
+\begin{command}[\com{superpose}{\comArg{RuleIndex}\ad\comArg{NopEqIndex}\ad\comArg{Literal}\ad\comArg{LiteralSide}}]
+superposes the left-side of the rule \comArg{RuleIndex} on the 
+\comArg{LiteralSide}-side of the
+literal \comArg{Literal} of the nonoperational equation with index 
+\comArg{NopEqIndex}.
+It fails if no nontrivial superpositions can be found, if
+any of the two axioms can be reduced, or if
+superpositions of the specified type need not be computed to achieve 
+fairness.\\
+To denote the \comArg{LiteralSide} \kw{left} and \kw{right} are used. 
+\comArg{NopEqIndex} must be the index of a nonoperational equation.
+Considering superposition with
+\condEq{L_1\condAnd\ldots\condAnd L_n}{L}, 
+we use \kw{conclusion} to denote $L$, and \com{condition}{\comArg{$i$}}
+to denote $L_i$ in \comArg{Literal}.
+\end{command}
+
+\begin{command}[\com{superpose}{\kw{reflexivity}\ad\comArg{NopEqIndex}\ad
+\comArg{Literal}\ad\_}]
+superposes \rewRule{x = x}{true} on the literal \comArg{Literal} of the 
+nonoperational equation with index \comArg{NopEqIndex}.
+It fails if no nontrivial superpositions can be found, if
+any of the two axioms can be reduced, or if
+superpositions of the specified type need not be computed to achieve 
+fairness.
+\end{command}
+
+\begin{command}[\com{redRule}{\comArg{RuleIndex}}]
+reduces rule with index \comArg{RuleIndex}. The predicate fails if rule 
+\comArg{RuleIndex} does not
+exist or if the rule cannot be reduced or if the rule is eliminated during 
+reduction.
+\end{command}
+
+\begin{command}[\com{redEq}{\comArg{EquationIndex}}]
+reduces equation with index \comArg{EquationIndex}. 
+The predicate fails if equation \comArg{EquationIndex} does
+not exist or if the equation cannot be reduced or if the equation is eliminated
+during reduction.
+\end{command}
+ 
+\begin{command}[\com{redNopEq}{\comArg{NopEqIndex}}]
+reduces nonoperational equation with index \comArg{NopEqIndex}. 
+The predicate fails if equation
+\comArg{NopEqIndex} does not exist or if the equation cannot be reduced or if the 
+equation is eliminated during reduction.
+\end{command}
+
+\noindent
+The \comRef{repeat} predicate can be used to execute a predicate repeatedly 
+until no more instances of it can be applied.\bigskip
+
+\begin{command}[\com{repeat}{\comArg{Predicate}}]
+causes repeated backtracking of \comArg{Predicate} until \comArg{Predicate} fails.
+\end{command}
+
+\noindent
+An arbitrary interleaving of manual and automatic completion is supported. Also
+completion --- manual or automatic --- can always safely be restarted after any
+abortion caused by answering ``\cec{A.}'' to some query of the system.
+
+
+
+
+

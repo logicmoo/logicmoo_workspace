@@ -1,0 +1,7 @@
+ 
+"tuplelength."
+
+asks the user to enter the length of the interpretation tuples provided the
+current termination ordering is "poly". The default length is 1. All old
+interpretations are now invalid. Therefore all rules will be turned back
+into equations.

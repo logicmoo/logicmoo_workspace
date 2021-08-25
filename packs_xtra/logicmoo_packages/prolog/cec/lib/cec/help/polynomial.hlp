@@ -1,0 +1,8 @@
+ 
+"polynomial(+Term, -Interpretation)."
+
+yields the polynomial interpretation of "Term". It
+fails, if the ordering is not 'poly<N>'. If there are operators in "Term",
+for which no polynomial interpretation is known, the user is asked for
+such an interpretation (and the given interpretation is stored).
+

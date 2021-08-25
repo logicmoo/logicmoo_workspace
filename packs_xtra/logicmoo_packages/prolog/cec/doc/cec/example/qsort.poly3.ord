@@ -1,0 +1,13 @@
+order poly3 for qsort using pol for lists +
+			    poly1_qsort for totalOrder.
+
+setInterpretation([sort(x)     : [ 2 * x, 2 * x, 2 * x ],
+		   split(x,y)  : [ x + y + 1, x + 2 * y, x + 2 * y ],
+		   (x,y)       : [ x + y, x + y, x + y ]]).
+
+%setInterpretation(['$h10_0'(x,y) : [ 2 * x + 3 * y + 1, 2 * x + 2 * y, 2 * x + 2 * y ],
+%    (for sort quasireductive)
+%		   '$h11_0'(x,y) : [ x + 3 * y + 1, x + y + 1, x + y + 1 ],
+%    (for split quasireductive)
+%		   '$h12_0'(x,y) : [ x + 3 * y + 1, x + y + 1, x + y + 1 ]]).
+%    (for split quasireductive, same as above)

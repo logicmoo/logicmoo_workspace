@@ -1,0 +1,28 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%
+%  FILE      : IndiGolog/Eval/FILES.TXT
+%  Time-stamp: <03/02/22 18:27:09 ssardina>
+%
+%  Author      : Sebastian Sardina
+%  DESCRIPTION : File descriptions of directory
+%  email       : ssardina@cs.toronto.edu
+%  WWW         : www.cs.toronto.edu/~ssardina
+%  TYPE CODE   : <no code>
+%       
+%	c) Sebastian Sardina       Many rights reserved		
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+-----------------------------------------------------------------------------
+	In this directory there are different temporal projectors/evaluators
+-----------------------------------------------------------------------------
+
+	* evalbat.pl 		Basic action theory 
+
+	* evalknow.pl		Knowledge basic action theory
+
+-----------------------------------------------------------------------------
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% EOF: IndiGolog/Eval/FILES.TXT
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+

@@ -1,0 +1,121 @@
+%%% Coded by DFP, March 2007
+%%% %%% %%% %%% %%% %%% %%% %%%
+%%% Problem from no 89 di EATCS, page 183 (by Laurent Rosaz):
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% You are on the road.
+%%% At km 0 is the unique gas station.
+%%% You have N cars (and drivers) and you can fill the N cars at the gas station.
+%%% No supplementary gas recipients are allowed.
+%%% It is allowed at any time to decant gas from one car tank to another.
+%%% A full tank allow a car to drive for a constant distance K.
+%%% You have car number 1 and you can abandon the other cars on the road.
+%%% How far can you go ?
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% For simplicity, let K be both tank capacity
+%%% and the distance you can cross with that fuel.
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% To avoid symmetries, let us allow only refill from higher
+%%% car numbers to lower car numbers
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% Let us assume K even.
+%%% Conjecture: car 1 can cross
+%%% K + log_2(N)*K/2.
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%% Examples:
+
+%%% K = 2 ************************
+%%% N = 2,   5 actions:  YES
+%%% N = 4,  11 actions:  YES
+
+%%% K = 2 ************************
+%%% N = 2,  9 actions:  YES
+%%% N = 4,  11 actions:  YES
+
+cars(4).
+k(2).
+
+car(X) :-
+   cars(N), interval(X,1,N).
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+fluent(tank(X),0,K) :-
+     car(X),k(K).
+fluent(distance(X),0,Max) :-
+   car(X),k(K),cars(N),Max is N*K.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+action(move(X)):-
+   car(X).
+action(refill(X,Y)) :-
+   car(X),car(Y),X>Y.
+action(stop).
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+executable(move(X),[tank(X) gt 0]) :-
+       car(X).
+
+executable(refill(X,Y),[distance(X)  eq distance(Y), tank(X)  gt 0, tank(Y) lt K]) :-
+        action(refill(X,Y)),k(K).
+
+executable(stop,[tank(1) eq 0]).
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+causes(move(X),tank(X) eq tank(X)^(-1) - 1, []):-
+        car(X).
+causes(move(X),distance(X) eq distance(X)^(-1) + 1, []) :-
+        car(X).
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+causes(refill(X,Y), tank(X) eq 0, [ K - tank(Y) geq tank(X) ]):-
+        action(refill(X,Y)),k(K).
+causes(refill(X,Y), tank(Y) eq tank(Y)  + tank(X) ,
+       [K - tank(Y)  geq tank(X) ]):-
+        action(refill(X,Y)),k(K).
+causes(refill(X,Y), tank(Y) eq K, [K - tank(Y)  lt tank(X) ]):-
+        action(refill(X,Y)),k(K).
+causes(refill(X,Y), tank(X) eq tank(X)^(-1) - K + tank(Y)^(-1),
+       [K - tank(Y)  lt tank(X) ]):-
+        action(refill(X,Y)),k(K).
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+causes(stop,tank(1) eq 0,[]).
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+initially(tank(X) eq K) :-
+    k(K), car(X).
+initially(distance(X) eq 0) :-
+    car(X).
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% GOAL
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+goal(distance(1) geq Dist) :-
+    k(K), cars(N),
+    Dist is K + integer((K/2)*(log(N)/log(2))).
+
+action_cost( move(X), 1 ) :-
+   action(move(X)).
+action_cost( refill(X,Y), 3) :-
+    action(refill(X,Y)).
+action_cost( stop, 0) :-
+     action(stop).
+cost_constraint(plan lt 20).
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% I don't see static effects (caused)
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+:-dynamic(causes/2).
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

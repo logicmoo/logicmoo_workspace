@@ -1,0 +1,95 @@
+:-cec_version('q2.0','Version 1.9').
+
+:-dynamic notation/3.
+:-dynamic cont/2.
+:-dynamic hhConstructor/1.
+:-dynamic domainAxiomHasBeenGenerated/1.
+:-dynamic ac_ist_A/1.
+:-dynamic ac_ist_C/1.
+:-dynamic ofType/2.
+:-dynamic reduce/2.
+:-dynamic reduceI/3.
+:-dynamic specialLaw/1.
+:-dynamic tps_state/1.
+:-dynamic kns_gt/2.
+:-dynamic kns_eq/2.
+:-dynamic kns_status/2.
+:-dynamic pretty/1.
+:-dynamic parse/2.
+:-dynamic clauseHasTerm/3.
+:-dynamic mayBeReducible/3.
+:-dynamic predicate/1.
+:-dynamic '$maySuperpose'/7.
+:-dynamic subsort/2.
+:-dynamic inheritanceAxiom/2.
+:-dynamic action/2.
+:-dynamic actionNew/2.
+:-dynamic simplerProofExistsFor/2.
+:-dynamic parameterSort/1.
+:-dynamic generatingMsOps/2.
+:-dynamic unconstrainedSort/1.
+:-dynamic '$equation'/2.
+:-dynamic '$rule'/2.
+:-dynamic '$nonoperational equation'/2.
+:-dynamic absolutelyNonreductive/3.
+:-dynamic auxNarrowRule/3.
+:-dynamic auxRule/3.
+:-dynamic complexityBound/3.
+:-dynamic conclusionOriented/3.
+:-dynamic condOps/3.
+:-dynamic consequentType/3.
+:-dynamic isReductive/3.
+:-dynamic kind/3.
+:-dynamic narrowRule/3.
+:-dynamic opClasses/3.
+:-dynamic opsInFirstCondition/3.
+:-dynamic opsLeft/3.
+:-dynamic opsRight/3.
+:-dynamic origin/3.
+:-dynamic priority/3.
+:-dynamic prologVariant/3.
+:-dynamic redIndexes/3.
+:-dynamic reduceClause/3.
+:-dynamic reducedTag/3.
+:-dynamic rootLeft/3.
+:-dynamic size/3.
+:-dynamic superpositionTerms/3.
+:-dynamic unificationType/3.
+:-dynamic usedForSimplification/3.
+cont(cParameters,no).
+cont(ctr('$equation'),0).
+cont(ctr('$rule'),0).
+cont(ctr('$nonoperational equation'),0).
+cont(completeState,true).
+cont(moduleName,standard).
+cont(orderName,poly3).
+
+hhConstructor('true-bool').
+hhConstructor(true/0).
+hhConstructor('true-bool').
+hhConstructor('false-bool').
+hhConstructor(false/0).
+hhConstructor('false-bool').
+
+true ofType ('true-bool':[bool]).
+false ofType ('false-bool':[bool]).
+
+reduce('false-bool',A) :- 
+        fail,
+        !.
+reduce('true-bool',A) :- 
+        fail,
+        !.
+
+reduceI('false-bool',A,B) :- 
+        fail,
+        !.
+reduceI('true-bool',A,B) :- 
+        fail,
+        !.
+
+tps_state(tps(poly(3),pol_state(3,[pol_op_interpretation(true,0,[[(q(2,1),[])],[(q(2,1),[])],[(q(2,1),[])]]),pol_op_interpretation(false,0,[[(q(2,1),[])],[(q(2,1),[])],[(q(2,1),[])]])],[],[]),kns_state(on,prec(0,[])))).
+
+kns_status('$r',ms).
+kns_status('$r-ms',ms).
+

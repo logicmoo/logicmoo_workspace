@@ -1,0 +1,60 @@
+
+trc(query, info(87369, query, 78, 1), [
+   trc(animal(a_fox), info(72344, th_start, 4, 1), [
+      trc(fox(a_fox), info(72344, th_fact, 12, 1), [])]),
+   trc(animal(a_bird), info(79046, th_start, 6, 1), [
+      trc(bird(a_bird), info(79046, th_fact, 13, 1), [])]),
+   trc(grain(a_grain), info(79047, th_fact, 16, 1), []),
+   trc(eats(a_fox, a_bird), info(81677, ext, 73, 2), [
+      trc(not_eats(a_fox, a_grain), info(81558, restart, 0, 1), [
+         trc(restart, info(81558, query, 78, 1), [
+            trc(animal(a_wolf), info(81039, th_start, 2, 1), [
+               trc(wolf(a_wolf), info(81039, th_fact, 11, 1), [])]),
+            trc(animal(a_fox), info(81106, th_start, 4, 1), [
+               trc(fox(a_fox), info(81106, th_fact, 12, 1), [])]),
+            trc(grain(a_grain), info(81107, th_fact, 16, 1), []),
+            trc(eats(a_wolf, a_fox), info(81557, ext, 73, 2), [
+               trc(not_eats(a_wolf, a_grain), info(81140, th_fact, 46, 1), []),
+               trc(animal(a_wolf), info(81141, factor_cut, 3, 0), []),
+               trc(plant(a_grain), info(81143, th_start, 18, 1), [
+                  trc(grain(a_grain), info(81143, factor_cut, 2, 0), [])]),
+               trc(animal(a_fox), info(81144, factor_cut, 4, 0), []),
+               trc(plant(a_grain), info(81550, th_start, 18, 1), [
+                  trc(grain(a_grain), info(81550, th_fact, 16, 1), [])]),
+               trc(much_smaller(a_fox, a_wolf), info(81556, th_start, 38, 1), [
+                  trc(fox(a_fox), info(81556, th_fact, 12, 1), [])]),
+               trc(eats(a_fox, a_grain), info(81557, red, 1, 0), [])]),
+            trc(eats(a_fox, a_grain), info(81558, red_cut, 1, 0), [])])]),
+      trc(animal(a_fox), info(81559, factor_cut, 3, 0), []),
+      trc(plant(a_grain), info(81561, th_start, 18, 1), [
+         trc(grain(a_grain), info(81561, factor_cut, 2, 0), [])]),
+      trc(animal(a_bird), info(81562, factor_cut, 4, 0), []),
+      trc(plant(caterpillar_food_of(a_caterpillar)), info(81564, ext, 74, 1), [
+         trc(caterpillar(a_caterpillar), info(81564, th_fact, 14, 1), [])]),
+      trc(much_smaller(a_bird, a_fox), info(81569, th_start, 33, 1), [
+         trc(bird(a_bird), info(81569, th_fact, 13, 1), [])]),
+      trc(eats(a_bird, caterpillar_food_of(a_caterpillar)), info(81677, ext, 73, 1), [
+         trc(not_eats(a_bird, a_snail), info(81586, th_fact, 55, 1), []),
+         trc(animal(a_bird), info(81587, factor_cut, 3, 0), []),
+         trc(plant(caterpillar_food_of(a_caterpillar)), info(81588, factor_cut, 3, 0), []),
+         trc(animal(a_snail), info(81594, th_start, 10, 1), [
+            trc(snail(a_snail), info(81594, th_fact, 15, 1), [])]),
+         trc(plant(snail_food_of(a_snail)), info(81638, ext, 76, 1), [
+            trc(snail(a_snail), info(81638, th_fact, 15, 1), [])]),
+         trc(much_smaller(a_snail, a_bird), info(81643, th_start, 28, 1), [
+            trc(snail(a_snail), info(81643, th_fact, 15, 1), [])]),
+         trc(eats(a_snail, snail_food_of(a_snail)), info(81677, ext, 77, 1), [
+            trc(snail(a_snail), info(81677, th_fact, 15, 1), [])])])]),
+   trc(eats(a_bird, a_grain), info(87369, ext, 73, 1), [
+      trc(not_eats(a_bird, a_snail), info(81695, th_fact, 55, 1), []),
+      trc(animal(a_bird), info(81696, factor_cut, 3, 0), []),
+      trc(plant(a_grain), info(81698, th_start, 18, 1), [
+         trc(grain(a_grain), info(81698, factor_cut, 3, 0), [])]),
+      trc(animal(a_snail), info(81704, th_start, 10, 1), [
+         trc(snail(a_snail), info(81704, th_fact, 15, 1), [])]),
+      trc(plant(snail_food_of(a_snail)), info(84539, ext, 76, 1), [
+         trc(snail(a_snail), info(84539, th_fact, 15, 1), [])]),
+      trc(much_smaller(a_snail, a_bird), info(84544, th_start, 28, 1), [
+         trc(snail(a_snail), info(84544, th_fact, 15, 1), [])]),
+      trc(eats(a_snail, snail_food_of(a_snail)), info(87369, ext, 77, 1), [
+         trc(snail(a_snail), info(87369, th_fact, 15, 1), [])])])]).

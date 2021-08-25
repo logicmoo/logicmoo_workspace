@@ -1,0 +1,28 @@
+prolog_pred(var / 1).
+
+% BEGIN_AXIOMS
+% NAME: transitive(p)
+(p(A, C)) :- \+ var(A), p(A, B), p(B, C).
+
+% NAME: transitive(p)
+(p(A, C)) :- var(A),  p(B, C), p(A, B).
+
+% NAME: transitive(q)
+(q(A, C)) :- \+ var(A), q(A, B), q(B, C).
+
+% NAME: transitive(q)
+(q(A, C)) :- var(A), q(B, C), q(A, B).
+
+% NAME: symmetric(q)
+(q(B, A)) :- q(A, B) # 0.
+
+% NAME: all_related(p,q)
+(p(A, B) ; q(A, B)) # 0 .
+
+% NAME: not_total(p)
+-p(a, b).
+
+% NAME: goal
+?- q(c, d).
+% END_AXIOMS
+

@@ -1,0 +1,5 @@
+order poly1 for square using poly1 for int .
+
+setInterpretation([square(i) : 4 * i^2 + 2,
+		   '$h110_0'(x) : x + 1,
+		   '$h111_0'(x) : x + 1]).

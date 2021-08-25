@@ -1,0 +1,21 @@
+create_lexicon
+
+Changed to collect multiple SUMO concepts when a WordNet
+noun or verb maps to more than one concept.
+
+verb_forms
+
+
+noun_types
+
+
+wn2_assoc*.perl
+
+infer_sumo
+
+Changed to handle lists of concepts for first arg in
+is_subclass, is_subclass_or_equal.
+
+mass_vs_count
+
+Added to distinguish between mass and count nouns.

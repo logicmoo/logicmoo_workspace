@@ -1,0 +1,11 @@
+%protein_flag(calculus,rme).
+protein_flag(trace,internal).
+
+% BEGIN_AXIOMS
+% NAME: px_or_pffx
+p(X), p(f(f(X))).
+
+% NAME: goal
+-p(X) ; -p(f(X)).
+% END_AXIOMS
+

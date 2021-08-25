@@ -1,0 +1,257 @@
+
+This file lists the major changes of BACK V5.* with respect to
+previous version of Release V5.
+
+OVERVIEW
+
+ o  Improvements wrt V5.1
+	- port to SWI-Prolog
+	- improved abstraction of atmost(0,R) terms
+	- improved treatment of features
+ o  Improvements wrt V5.0
+	- further unification of retrieval/single pattern 
+	  <projection/tuple-generator> FOR <args>
+	- describe/ describe_fully
+	- dedicated tboxget (upward-compatible with V4)
+	- full support of TBox/IBox/ABox revision
+	- considerable speed-up
+ o  Language Changes
+ 	- changed semantics of i-links
+	- abandoned 'anyrole'
+        - abandoned 'inherent_feature'
+ o  Non-deterministic failures - SOLVED
+ o  Syntax Updates
+ o  Missing
+	- getall <role>
+	- complex role-terms in ABox expressions
+	- persistence of query concs
+	- difference
+
+
+IMPROVEMENTS OVER BACK V5.1
+
+ o 	BACK V5 is now ported to SWI-Prolog. SWI-Prolog is a public 
+domain version implementation of Prolog developed by Jan Wielemaker,
+University of Amsterdam (email-contact: jan@swi.psy.uva.nl). It is
+available via ftp@swi.psy.uva.nl. Consult file Readme.Back52 for 
+installation. 
+
+
+ o	 The abstraction of atmost(0,R) terms has been made more
+complete than in V5.1. An atmost(0,R) term is now abstracted for an
+object x if none of the potential fillers for R can consistently
+become an instance of the range of R or x's value restriction of R.
+The implementation is not complete though; there exist cases in
+which an R-filler would become inconsistent with the range or VR,
+but BACK does not detect this and thus cannot abstract atmost(0,R).
+Also, we haven't yet extended the solution to cope with arbitrary
+atmost(n,R) terms.
+
+
+ o	Feature processing has been improved: Features are classified
+more correctly, and Subroles of features and compositions of features
+are detected to be features too.  Features are now introduced as quasi
+primitive subroles of the specified roleterm (if this is not a feature
+itself).  Note that features defined as 
+	"f := r and domain(atmost(1,r))" 
+are not detected as features.
+
+
+ o The name and the location of the dump file that's automatically created 
+during tbox revision can be set via the variables 'tboxdumpfile' and
+'tboxdumpdir' using the backstate/1 command.
+
+
+ o	There have been minor fixes of errors reported by BACK users.
+
+
+
+IMPROVEMENTS OVER BACK V5.0
+
+  o	The retrieval interface has been further unified.
+There is now a uniform interface to retrieve most of the things that
+you might be interested in:
+
+	backretrieve( VAR = <projection/tuple-generator> FOR <args> ).
+
+The 'VAR =' is optional; without it the result of the retrieval will
+be pretty-printed to the current output stream.
+The <projection/tuple-generator> is a (Prolog-) list that specifies
+which information should go into an output tuple for every of the
+arguments in <args>. We had also called these "output functions"
+or "actions".
+<projection/tuple-generator> contains all the known things like
+self, msc, rf/1. Also defined_as, describe and describe_fully now 
+have to be put into the tuple specification. As new features we also 
+provide nr(<Role>) and vr(<Role>) to ask for NRs and VRs.
+
+Arguments (<args>) are either given explicitly by enumerating
+them in a Prolog-list, or are objects retrieved by a getall query.
+Examples are:
+
+	backretrieve([defined_as, describe] for [father, has_son, peter]).
+	backretrieve([self, msc, rf(r), vr(r)] for getall concept23).
+
+Not all output functions can be applied to all entities. E.g., the msc
+function is not defined for roles. backretrieve will inform 
+you by an appropriate message in the result.
+
+Some of the output functions can be applied directly on arguments.
+These are all those which are atomic/have no argument:
+describe, describe_fully, defined_as, introduced_as, self, msc.
+Example
+	backretrieve(describe paul).
+	backretrieve(defined_as [father, has_son, peter]).
+
+
+  o	describe and describe_fully are supported by V5.1.  In general,
+descriptions obtained by describe should be minimized compared to
+descriptions obtained by describe_fully; this is the case for concepts
+and objects.
+
+For attributes and numbers, describe and describe_fully yield the same
+results; this is intendend. 
+
+At the moment, the implementation of describe for roles does not
+minimize every description as good as it should (which we hope to be
+able to improve in future releases).  As a sideeffect of the weak
+implementation of describe for roles, some roles in concept/object
+descriptions will not be unfolded to the original names. Instead,
+internal role objects will be returned, a description of which then
+may be obtained via backretrieve.  However, if a name has been
+introduced for a role or its inverse, either the role's name or inv(.)
+will be used.
+
+
+  o	There is (again) a dedicated programming interface (PIF)
+accessible via the tboxget predicate. It is upward-compatible with V4,
+has been extended for i-links, and should allow for access to most
+information of interest that is not accessible via backretrieve or backask.
+In the future we may merge tboxget and backretrieve to a single uniform
+interface. 
+
+
+  o	Revision/changeability of a BACK knowledge base is now fully supported.
+This means that you can change any part of the knowledge base (ABox) and
+knowledge base schema (TBox/IBox) at any time, and that you can enter
+information in a mostly arbitrary order (e.g. you can define new concepts,
+roles or i-links after you already have inserted objects).
+
+Two remarks are necessary here: Changing objects (by forget or redescribe)
+is supposed to be nearly as efficient as telling the corresponding information.
+Its implementation should be stable.
+Changing the schema (concepts, roles, i-links) after objects have been
+introduced is NOT SUPPOSED to be EFFICIENT. It should be faster than
+doing a backinit and reading everything anew, but it should be used
+with caution. Remember it is a schema change. Thus we recommend that you
+stay with the standard order TBox-IBox-ABox whereever you can.
+Introducing a new concept is less expensive than introducing a new role,
+and changing the definition of an existing concept/role is supposed
+to be worst.
+
+
+  o	V5.1 is significantly (!) faster than its predecessor; if you
+had installed V5.0.* you will notice immediately. Due to the higher
+expressivity, however, the overall performance of V5.1 is still a bit
+slower than V4.
+
+
+LANGUAGE CHANGES
+
+  o	We have weakened the semantics of i-links: I-links
+are not applied any longer to value-restrictions. Since VRs are
+forward-propagated to fillers, the i-links will be applied on
+the fillers, though (see below).
+The new behavior corresponds to the treatment of i-links in CLASSIC.
+Examples:
+	c1 :< anthing.
+	c2 := all(r,c1).
+	c3 := c1 and atleast(2,s).
+	
+	c1 => c4.
+	
+	c1 ?< c4.   		%% yes
+	c3 ?< c4.   		%% yes
+	\+ c2 ?< all(r,c4).  	%% no: 'c1 => c4' is not applied on the VR
+
+	x1 :: c3.
+	x2 :: c2 and r:x3.
+	x4 :: c2 and atmost(1,r) and r:x5.
+	x6 :: c2.
+
+	x1 ?: c4.		%% yes
+	x3 ?: c4.		%% yes due to forward prop. of VR from x2.
+	x5 ?: c4.		%% yes due to forward prop. of VR from x4
+	\+ x2 ?: c4.		%% no: filler set not closed
+	x4 ?: c4.		%% yes: filler set closed
+	x6 ?: c4.  		%% no: 'c1 => c4' is not applied on the VR
+	
+
+  o	The top-most role 'anyrole' has been abondoned. The reason is
+that 'anyrole' allows semantically much more inferences than we
+planned to handle or could handle efficiently (e.g. it would have been
+possible to express that there could not be more than n instances of a
+concept).  We opted for not making BACK even more incomplete.
+
+Primitive roles now are introduced by giving either their domain and/or
+range explicitly. If a role is introduced as 'r:<domain(anything).'
+the default range(anything) will be enforced for r.
+
+
+  o	The type 'inherent_feature'  has been abondoned. Inherent
+features were meant to be features which always have exactly one role
+filler, in contrast to the type 'feature', which has at most one
+filler. The reason is basically that we have found it difficult to
+handle correctly the implicit disjunction introduced by inherent
+features. 
+
+
+NON-DETERMINISTIC FAILURES - SOLVED
+
+Since Version 5 we observed that in large BACK knowledge bases
+or in our 'alltests' test-suite BACK failed in unexpected situations,
+and that we could not deterministically reproduce these situations.
+
+This problem was due to an error in the way Quintus
+Prolog Version 3.1 was dealing with memory allocation and/or garbage
+collection. The problem has been solved with Quintus Prolog 3.1.3.
+
+
+
+SYNTAX UPDATES
+
+There have been minor changes of the syntax of 5.1 compared to 5.0.*.
+Some of them have been mentioned above. In any case, consult the
+updated version of the file 'Doc.Back51'.
+
+
+
+STILL MISSING
+
+  o	A simple operator for retrieving the extension of a role.
+In BACK V4 there existed something like 'getallrel'. First we planned
+to allow for 'getall <role>' but this did not fit well into the
+unified backretrieve format. If you are interested in getting the 
+extension of a role 'r' ask
+
+	backretrieve([self,rf(r)] for getall anything).
+
+You could improve the query (narrowing down the result set to 
+object that actually have a r-filler) if you provide domain  and range
+of the role:
+	
+	backretrieve([self,rf(r)] for 
+			getall <r-domain> 
+			and r:someknown(<d-range>)).
+
+
+  o	The possibility to use arbitrary role terms in ABox tells and
+queries. The use inv(<role>) is allowed, though, if the range of the
+role is subsumed by anything (as in V4).
+
+  o	Optional persistency of query concepts.
+
+  o	Difference as a backretrieve operator.
+
+
+

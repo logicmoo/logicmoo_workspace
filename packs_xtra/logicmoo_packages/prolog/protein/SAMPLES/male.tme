@@ -1,0 +1,10 @@
+protein_flag(mmr,gcwa). 
+protein_flag(trace,off).
+
+male(X), female(X) :- person(X).
+person(karl).
+person(frieda).
+female(frieda).
+
+% ?- male(karl).
+?- male(frieda).

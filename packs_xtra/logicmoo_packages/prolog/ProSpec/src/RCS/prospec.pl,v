@@ -1,0 +1,1511 @@
+head	1.11;
+access;
+symbols;
+locks; strict;
+comment	@# @;
+
+
+1.11
+date	98.07.30.12.38.14;	author bthomas;	state Exp;
+branches;
+next	1.10;
+
+1.10
+date	98.07.30.12.33.37;	author bthomas;	state Exp;
+branches;
+next	1.9;
+
+1.9
+date	98.04.06.09.50.48;	author bthomas;	state Exp;
+branches;
+next	1.8;
+
+1.8
+date	98.02.10.18.01.01;	author bthomas;	state Exp;
+branches;
+next	1.7;
+
+1.7
+date	98.01.21.15.26.44;	author doro;	state Exp;
+branches;
+next	1.6;
+
+1.6
+date	98.01.21.10.54.04;	author bthomas;	state Exp;
+branches;
+next	1.5;
+
+1.5
+date	98.01.21.10.27.59;	author bthomas;	state Exp;
+branches;
+next	1.4;
+
+1.4
+date	98.01.16.14.48.08;	author bthomas;	state Exp;
+branches;
+next	;
+
+
+desc
+@ProSpec: Sort Annotation for full PL1
+@
+
+
+1.11
+log
+@singleton removed
+@
+text
+@%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% 
+%% ProSPEC extended with pl2tme ( by peter baumgartner )
+%% -------
+
+%% Author: bernd thomas "benno" initial release 28.8.96 =:-] 
+%% E-mail: bthomas@@informatik.uni-koblenz.de
+%% --------------------------------------------------
+%% $Id: prospec.pl,v 1.10 1998/07/30 12:33:37 bthomas Exp bthomas $
+%% $Log: prospec.pl,v $
+%% Revision 1.10  1998/07/30 12:33:37  bthomas
+%% simplify treatment extended
+%%
+%% Revision 1.9  1998/04/06 09:50:48  bthomas
+%% *** empty log message ***
+%%
+%% Revision 1.8  1998/02/10 18:01:01  bthomas
+%% 1) I splitted the orig. file in a few files, to gain more
+%%    modularity
+%% 2) I wrote a complete new skolem treatment, means: the annotation
+%%    of skolem functions is rewritten.
+%% 2.1) during transformation all skolem functions are unified with
+%%      the skolem functions delivered by the nft, this gives us the
+%%      most specific skolem sort annotation whenever I get a skolem
+%%      function in my hands.
+%% 2.2) point 2.1 is not exhausting, because during processing one single
+%%      literal the case may be given that a skolem function is annotated
+%%      by a variable that will be later on instantiieted with a sort path.
+%%      Therefore I have to process the whole set of clauses transformed by
+%%      NFT from one formular has to processed again to collect the REAL most
+%%      specific sort annotation of a skolem function and afterwards this sort
+%%      paths have to be added to every appears of a skolem function. This
+%%      means actually that we have to process the list of transformed terms
+%%      twice.
+%%
+%% Revision 1.7  1998/01/21 15:26:44  doro
+%% nnf of simplification rules optimized, transform for simplification rules corrected
+%%
+%% Revision 1.6  1998/01/21 10:54:04  bthomas
+%% minor bug only syntax error
+%%
+%% Revision 1.5  1998/01/21 10:27:59  bthomas
+%% dependencies for prospec source files added
+%%
+%% Revision 1.4  1998/01/16 14:48:08  bthomas
+%% rewrote the skolemfunction treatment
+%% changed to rcs system previous version w/o rcs was 1.31
+%%
+%% Revision 1.1  1998/01/16 14:43:35  bthomas
+%% Initial revision
+%%
+%% 
+%% ==================== Old - Changes ====================
+%% Changes:
+%% 8.1.98 there were some bugs in the simplifier treatment ...
+%% 21.12.97 before writing out a clause or SR rule, once go through it again
+%%   and unify all variables A:S1 and A:S2 so that S1 and S2 become equal.
+%%   This is a bug fix
+%% 19.11.97 simplifier treatment added Benno =:-]
+%% 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+version_number("$Revision: 1.10 $").
+
+%% ----------------------------------------
+%%  global settings consults etc
+%% ----------------------------------------
+
+% specification op's
+:- op(900,fy,'sorts'),
+   op(900,fy,'subsorts'),
+   op(900,fy,'functions'),
+   op(900,fy,'relations'),
+   op(900,fy,'ignore'),
+   op(900,xfx,'subsort_of'),
+   op(900,xfx,'eqisort_of'),
+   op(900,fy,'partial_functions'),
+   op(900,fy,'constructors'),
+   op(990,xfy,'=>'),
+   op(1040, xfy, '<->'). 
+
+% global flags    
+:- set_flag(print_depth,900),
+   set_flag(occur_check,on),
+   set_error_handler(68,fail/0). % dynamic not asserted, fail
+
+:- [error], [skolem], [hierachy], [spec], [utils].
+
+% nft op's
+:- op(1050,xfy, '<->').
+:- op(1050,xfy, '<-').
+
+% NFT by peter
+:- [pl2tme_pro],
+   [myread].	
+
+% MiK
+user_exit :- halt.
+:- set_interrupt_handler(14, halt/0).
+
+:- dynamic xx_sort/1,
+	   xx_subsort/1,
+	   xx_const/1,
+	   xx_function/1,
+	   xx_relation/1,
+	   xx_typ/2,
+	   xx_proto/2,
+	   xx_ignore/1,
+           xx_skolem/1,
+	   xx_mgu_sk/1,
+	   xx_tterm/1,
+	   xx_tmp_skf/1.
+
+:- lib(lists),
+   lib(strings),
+   lib(numbervars).
+
+spec_type(sorts,xx_sort).
+spec_type(subsorts,xx_subsort).
+spec_type(relations,xx_relation).
+spec_type(functions,xx_function).
+
+% ----------------------------------------
+% predefined specs.
+% args as in xxx.sort file 
+% ----------------------------------------
+
+%  - useful for preds/0 boolean
+
+predef( relations : (false, true) ).
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% main pred:  prospec(+FileName)
+% o expects extender .sort
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+prospec('') :- usage.
+
+prospec(F) :-
+	setval(spec,0),
+	setval(simplifier_mode,false), %D%
+	concat_atoms(F,'.sort',File),
+	concat_atoms(F,'-sort.tme',OFile),
+	pipe(pipein,pipeout),             % communicate with pl2tme_pro
+	clean_up,
+	( \+ exists(File) -> 
+	    error(fileex(File))
+	;
+	 true ),
+	open(File,read,S),
+	open(OFile,write,OUT), 
+	logo,
+	file_header(OUT,File),
+	find_spec(S),
+	( getval(spec,1) ; error(no_spec) ),
+	open(File,read,IN),
+	msg(["\ntransforming "]),
+	read_files(IN,OUT),
+	close(OUT),
+	close(pipein),
+	close(pipeout),
+	msg(["\nresult written to : ",OFile]),
+	clean_up.
+
+ignore_spec(S) :-
+	repeat,
+	read(S,Term),
+	Term == end(prospec), !.
+
+ignore_spec(_) :- !.
+	
+
+% --------------------------------------------------
+% flag treatment
+%
+% query_conversion:
+%   aggressive: in the clauses stemming from a query formula '?- F.'
+%     only the purely negative clauses become queries ('?-'), all others
+%     become input clauses (':-'). This is very incomplete.
+%   conservative: in the clauses stemming from a query formula '?- F.'
+%     all clauses become queries ('?-')
+flag_eval(query_conversion,VALUE) :-
+	setval(query_conversion,VALUE).
+flag_eval(timeout, Seconds) :- alarm(Seconds).
+flag_eval(_,_).
+
+% --------------------------------------------------
+% o because a .sort file may contain includes
+%   we have to handle these file inclusions ...
+% o here we handle all the different flag settings
+% 
+
+%| %%% aggressive: in the clauses stemming from a query formula '?- F.'
+%| %%%   only the purely negative clauses become queries ('?-'), all others
+%| %%%   become input clauses (':-'). This is very incomplete.
+%| %%% conservative: in the clauses stemming from a query formula '?- F.'
+%| %%%   all clauses become queries ('?-')
+
+read_files(S,OUT) :-
+	repeat,
+	myread(S,Term),
+	( Term \== end_of_file ->
+
+	    ( Term = prospec_flag(Flag,Value) ->
+		flag_eval(Flag,Value)
+	    ;
+	        ( Term == begin(prospec) ->
+		  ignore_spec(S)
+	        ;
+
+	         ( Term = read(File) ->
+		     open(File,read,NEWIN),
+		     read_files(NEWIN,OUT)
+	          ;
+		     parse(OUT,Term)
+		 )
+	        )
+	    )
+	;
+	true
+        ),
+	Term == end_of_file, !,
+	close(S),
+	!.
+
+
+% we read the main prospec file and are looking
+% for the begin(prospec) end(prospec) enviorment
+
+
+write_to_file(OUT,SortedTerm) :-
+	 ( SortedTerm = prospec_comment(Comment),
+	   msg(OUT,["\n%% ",Comment])
+         ;
+	   msg(OUT,["\n",SortedTerm,"."])
+         ),
+	 !.
+
+clean_up :-
+	(retract_all(xx_sort(_)) ; true),
+	(retract_all(xx_subsort(_)) ; true),
+	(retract_all(xx_function(_)) ; true),
+	(retract_all(xx_relation(_)) ; true),
+	(retract_all(xx_typ(_,_)) ; true),
+	(retract_all(xx_proto(_,_)) ; true),
+	(retract_all(xx_ignore(_)) ; true).
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%
+% transform a clause ...
+%
+%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% comments are also written
+% important for ilf
+parse(OUT,COMMENT) :-
+	string(COMMENT),
+	writeln(OUT,COMMENT), !.
+
+% ------------------------------
+% special simplifier treatment
+% ------------------------------
+parse(OUT,begin(Simplify)):-
+	( Simplify = simplify(_X) ; Simplify = simplify ),
+	write_to_file(OUT, begin(Simplify)),
+        setval(simplifier_mode,true), !.
+    
+parse(OUT,end(Simplify)) :-
+	( Simplify = simplify(_X) ; Simplify = simplify ),
+	write_to_file(OUT, end(Simplify)),
+        setval(simplifier_mode,false), !.
+
+% ------------------------------
+% ignore foreign flags defined in parser.pl
+% ------------------------------
+parse(OUT,FOREIGN) :-
+	foreign_term(FOREIGN),
+	write_to_file(OUT,FOREIGN), !.
+
+% ------------------------------
+% flags from EQTRAFO, ignore it
+% ------------------------------ 
+parse(OUT,T) :-
+	T = (partial_functions _PF),
+	write_to_file(OUT, T), !.
+
+parse(OUT,T) :-
+	T = (constructors _C),  
+	write_to_file(OUT, T), !.
+
+% ------------------------------
+% now the possible input syntax
+% ------------------------------
+%
+% first transform terms to
+% normal form
+%-------------------------------
+
+parse(OUT,T) :-                % call nft who
+	nft(T),                % puts its nftterms in a pipe 
+        read(pipein,SK),
+	create_skolem_proto(SK),
+	retract_all(xx_mgu_sk([])),
+	assert(xx_mgu_sk([])),
+	retract_all(xx_tterm([])),
+	assert(xx_tterm([])),
+	!,
+	repeat,
+	 read(pipein,NFT),
+	 ( NFT \== end_of_nft ->	     
+	    ( (NFT \= prospec_comment(_X)) ->   
+	        transform(NFT,TT),
+		unify_variables(TT),
+		collect(TT)
+	    ;
+	       write_to_file(OUT,NFT)
+	    )
+	;
+	true 
+        ), 
+	NFT == end_of_nft,
+	xx_tterm(TL),
+	xx_mgu_sk(SF),
+	max_close_skolems(SF,TL,CLAUSES),
+	write_trans_term(OUT,CLAUSES),
+	retract_all(xx_tterm(_)),
+	retract_all(xx_mgu_sk(_)),
+	retract_all(xx_skolem(_)),
+        !.
+
+write_trans_term(_,[]).
+write_trans_term(OUT,[Term|MoreT]) :-
+	write_to_file(OUT,Term),
+	write_trans_term(OUT,MoreT), !.
+
+collect(TT) :-
+	xx_tterm(TL),
+	append(TL,[TT],NTL),
+	retract(xx_tterm(TL)),
+	assert(xx_tterm(NTL)),
+	!.
+	
+%% ----------------------------------------
+%% general syntax transformations ...
+%% ----------------------------------------
+
+
+% simplifier rules
+% condition to use simpl.rule
+
+transform((L -> K),(LT -> KT)) :-
+	getval(simplifier_mode,true),
+	!,
+	transform(L,LT),
+	transform(K,KT),!.
+
+transform((L <-> K),(LT <-> KT)) :-
+	getval(simplifier_mode,true),
+	!,
+	transform(L,LT),
+	transform(K,KT),!.
+
+% a query 
+transform( (?- Query) , (?- TQuery) ) :-
+	transform(Query,TQuery), !.
+
+% a rule where the head consists of more then
+% one literal, (disjunctive rule)  
+transform( ((H1,Hn) :- Body) , (THead :- TBody) ) :-
+         transform( (H1,Hn), THead ),
+	 transform( Body, TBody ), !.
+
+% a rule where the head consists of more then
+% one literal, (disjunctive rule)  
+transform( ((H1;Hn) :- Body) , (THead :- TBody) ) :-
+         transform( (H1;Hn), THead ),
+	 transform( Body, TBody ), !.
+
+% prolog like rule
+transform( (Head :- Body), (THead :- TBody) ) :-
+	trans_term(Head, THead),
+	transform(Body, TBody), !.
+
+% disjunctions
+transform( (Term;MoreTerms), (TTerm;TMoreTerms) ) :-
+	trans_term(Term, TTerm),
+	transform(MoreTerms, TMoreTerms), !.
+
+% conjunctions	
+transform( (Term,MoreTerms), (TTerm,TMoreTerms) ) :-
+	trans_term(Term, TTerm),
+	transform(MoreTerms, TMoreTerms), !.
+	
+transform( Term ,TTerm) :-
+	trans_term(Term,TTerm), !.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%
+%% annotation 
+%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+trans_term(- Term, - TTerm) :-
+	trans_term(Term, TTerm).
+
+trans_term(~ Term, ~ TTerm) :-
+	trans_term(Term, TTerm).
+
+% ignore those terms specified
+trans_term(Term,TTerm) :-
+    check_ignore(Term,TTerm),
+    !.
+
+% treatment of skolem-functions
+trans_term(Term,TTerm) :-
+    check_skolem(Term,TTerm),
+    !.
+
+% const
+trans_term(Term,TTerm) :-
+	Term =.. [Id],
+	( xx_proto(Id,TTerm) -> true
+        ;
+	error(relfc_def(Id:Term))
+        ).
+
+% pred, fct
+trans_term(Term,NTerm) :-
+	Term =.. [Id|Args],
+	xx_proto(Id,Proto),       % first check if it is a spec. term
+        nested(Args,SortedArgs),  % then process its args 
+        TT =.. [Id|SortedArgs],   % build the annotated term
+	
+        % now we have two cases 1) its a func. 2) its a pred.
+	%
+	( Proto = _T : _S  ->
+        % 1) func
+	    NTerm = (TT:_Sort),
+	    ( xx_proto(Id,NTerm) ->
+		true
+%		close_skolem_sorts(NTerm,TTerm)
+	    ;    
+	        error(sortconf(NTerm,Proto))
+	    )
+	;
+        % 2) pred
+	    NTerm = TT, 
+	    ( xx_proto(Id,NTerm) -> 
+		true
+%		close_skolem_sorts(NTerm,TTerm)
+            ;
+	       error(sortconf(NTerm,Proto))
+	    ) 
+        ), !.
+
+trans_term(Term,_) :-
+	Term =.. [Id|_Args],
+	error(relfc_def(Id:Term)).
+
+check_ignore(Term,Term) :-
+	nonvar(Term),
+	!,
+	functor(Term,Functor,_),
+	xx_ignore(IGNORE),
+	member(Functor,IGNORE).
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% check if an argument of a term is a term
+% nested(+FunctorOfTerm,+Args,-NewArgs)
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+nested([],[]).
+
+% ----------------------------------------
+% terms that do must not be annotated
+%
+nested([Arg|MoreArgs],[TTerm|MoreSortedTerms]) :-
+	check_ignore(Arg,TTerm),
+	nested(MoreArgs,MoreSortedTerms).
+
+% ----------------------------------------
+% skolem functions need a special treatment
+%
+nested([Arg|MoreArgs],[TTerm|MoreSortedTerms]) :-
+	check_skolem(Arg,TTerm),
+	nested(MoreArgs,MoreSortedTerms).
+
+% ----------------------------------------
+%
+nested([Arg|MoreArgs],[TTerm|MoreSortedTerms]) :-
+	nonvar(Arg),
+	\+ (Arg = _X : _Sort),
+	trans_term(Arg,TTerm),
+	nested(MoreArgs,MoreSortedTerms).
+
+% ----------------------------------------
+% a function or Var as argument, process it 
+% recursively by calling trans_term again
+%
+nested([Arg:Sort|MoreArgs],[TTerm|MoreSortedTerms]) :-
+	nonvar(Arg),
+	nonvar(Sort),
+	( check_s_o_s(Sort,Hierachy) ->
+	   true
+	 ;
+	  error(sortunknown(Sort))
+        ),
+	trans_term(Arg,TT),
+	TT = Term : TermSort,
+	( (Hierachy = TermSort) ->
+	     TTerm = Term : Hierachy
+        ;
+	     xx_typ(FT,TermSort),
+	     error(sortconf2(Sort,Term,FT))
+        ),
+	nested(MoreArgs,MoreSortedTerms). 
+
+% ----------------------------------------
+%
+nested([Arg:Sort|MoreArgs],[TTerm|MoreSortedTerms]) :-
+	var(Arg),
+	nonvar(Sort),
+
+% hier brauchen wir es um z.B. X:[s1,s|_]
+% nicht weiter zu behandeln, is ja fertig
+% und ist vieleicht durch vorherige unifikation
+% entstanden.
+ 
+	\+ Sort = [_|_],
+	( check_s_o_s(Sort,Hierachy) ->
+	   true
+	 ;
+	   error(sortunknown(Sort))
+        ),
+	TTerm = Arg : Hierachy,
+	nested(MoreArgs,MoreSortedTerms). 
+	
+nested([Arg|MoreArgs],[Arg|MoreSortedTerms]) :-
+	nested(MoreArgs,MoreSortedTerms).
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%  end of prospec.pl
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+@
+
+
+1.10
+log
+@simplify treatment extended
+@
+text
+@d9 1
+a9 1
+%% $Id: prospec.pl,v 1.9 1998/04/06 09:50:48 bthomas Exp bthomas $
+d11 3
+d63 1
+a63 1
+version_number("$Revision: 1.9 $").
+d268 1
+a268 1
+	( Simplify = simplify(X) ; Simplify = simplify ),
+d273 1
+a273 1
+	( Simplify = simplify(X) ; Simplify = simplify ),
+@
+
+
+1.9
+log
+@*** empty log message ***
+@
+text
+@d9 1
+a9 1
+%% $Id: prospec.pl,v 1.8 1998/02/10 18:01:01 bthomas Exp bthomas $
+d11 3
+d60 1
+a60 1
+version_number("$Revision: 1.8 $").
+d264 3
+a266 2
+parse(OUT,begin(simplify)):-
+	write_to_file(OUT, begin(simplify)),
+d269 3
+a271 2
+parse(OUT,end(simplify)) :-
+	write_to_file(OUT, end(simplify)),
+@
+
+
+1.8
+log
+@1) I splitted the orig. file in a few files, to gain more
+   modularity
+2) I wrote a complete new skolem treatment, means: the annotation
+   of skolem functions is rewritten.
+2.1) during transformation all skolem functions are unified with
+     the skolem functions delivered by the nft, this gives us the
+     most specific skolem sort annotation whenever I get a skolem
+     function in my hands.
+2.2) point 2.1 is not exhausting, because during processing one single
+     literal the case may be given that a skolem function is annotated
+     by a variable that will be later on instantiieted with a sort path.
+     Therefore I have to process the whole set of clauses transformed by
+     NFT from one formular has to processed again to collect the REAL most
+     specific sort annotation of a skolem function and afterwards this sort
+     paths have to be added to every appears of a skolem function. This
+     means actually that we have to process the list of transformed terms
+     twice.
+@
+text
+@d9 1
+a9 1
+%% $Id: prospec.pl,v 1.7 1998/01/21 15:26:44 doro Exp bthomas $
+d11 19
+d57 1
+a57 1
+version_number("$Revision: 1.7 $").
+d131 2
+@
+
+
+1.7
+log
+@nnf of simplification rules optimized, transform for simplification rules corrected
+@
+text
+@d9 1
+a9 1
+%% $Id: prospec.pl,v 1.6 1998/01/21 10:54:04 bthomas Exp doro $
+d11 3
+d38 1
+a38 1
+version_number("$Revision: 1.6 $").
+d62 2
+d86 2
+a87 1
+	   xx_tterm/1.
+a107 48
+
+% ----------------------------------------
+% prospec error codes
+% ----------------------------------------
+
+error_code(fileex(File), ["\nERROR: no file named ",File]).
+
+error_code(no_spec, ["\nERROR: no specification found ! "]).
+error_code(double_spec, ["\nERROR: more than one specification found ! "]).
+
+error_code(spec,["\nERROR: specification not correct !"]).
+
+error_code(specstart,['\nERROR: ProSpec expects a specification at the \
+beginning of the file.\nThe specification has the following format:\n\n\
+\tbegin(prospec).\n\n\t\
+% a list of used sorts\n\t\
+sorts : (human,man,woman).\n\n\t\
+% the sorts hierachy \n\t\
+subsorts : (man subsort_of human, woman subsort_of human).\n\n\t\
+% the relations/predicates and the sort of their arguments \n\t\
+relations : ( loves : (man,woman), dead : (human) ).\n\n\t\
+% the functions and the sort of arguments and the result \n\t\
+functions : ( xxx : (man,woman) => human ).\n\n\t\
+% functions or relations that have to be ignored (not sorted) \n\t\
+ignore : ( printf, is ).\n\n\t\
+end(prospec).\n']).
+
+error_code(specend,['\nERROR: specification terminated incorrectly. \
+\nThe specification has to be terminated by: end(prospec).\n']).
+
+error_code(relfc_def(Term),["\nERROR: relation/function not specified \n** ",Term," **"]).
+
+error_code(sortconf(TTerm,Proto),["\nERROR: sorts conflict \n** Input: ",TTerm,"\n** Expected: ",Proto]).
+
+error_code(sortunknown(Sort),["\nERROR: unknown sort ** ",Sort," ** in parameter list"]).
+
+error_code(sortconf2(Sort,Term,FT),["\nERROR: sorts conflict you expect sort ** ",Sort," ** but ** ",Term," ** is of sort ** ",FT," **"]).
+
+error_code(specsort(Sort),["\nERROR: none defined sort in specification ** ",Sort," **\n"]).
+
+error_code(doublesort(Sort),["\nERROR: double definition of subsort ** ",Sort," **\n"]).
+
+error_code(ignore,["\nERROR: in ignore definition\n"]).
+
+error_code(double(Type,Ele),['\nError: ',Type,' double definition of  **  ',Ele,' **']).
+
+% Peter:
+error_code(inconsistent(Var,Sort),["\nERROR: Variable ** ",Var," ** inconsistently sorted by ** ", Sort, " **\n"]).
+a202 19
+find_spec(IN) :-
+	repeat,
+        read(IN,Term),
+	( Term \== end_of_file ->
+	   ( Term == begin(prospec) ->
+		read_spec(IN)
+	    ;
+	    ( Term = read(File) ->
+		open(File,read,NEWIN),
+		find_spec(NEWIN)
+	      ;
+	        true
+	    )
+	  )
+          ;
+	   true ), 
+	( Term == end_of_file ; Term == begin(prospec) ),
+	close(IN),
+	!.
+a203 6
+spec_error(S1,S2) :-
+	close(S1),
+	close(S2),
+	close(pipein),
+	close(pipeout),
+	error(spec).
+a204 1
+
+a212 42
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% read the specification and build 
+% o sorts hierachy (only tree structure !)
+% o prototyps of functions 
+% o prototyps of relations(predicates)
+%
+% prototyp means: sorts annotated terms
+% with variables as arguments
+% -------------------------------------
+% now the bad news:
+% o no other order than the below is allowed  
+% o every spec. keyword must be given even
+%   if it is empty, (e.g. subsorts none.) 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+read_spec(S) :-
+	( getval(spec,0) ; error(double_spec) ),
+	setval(spec,1),
+	msg(["\n\nreading specification "]),
+	repeat,
+	read(S,Term),
+	( Term \== end(prospec) ->
+	    ( Term \= prospec_flag(_,_) ->
+		compile_term(Term)
+	    ;
+	        true
+	    )
+	;
+	  ( Term == end_of_file -> 
+	      error(specend)
+	  ;
+	  true )
+	),
+	Term == end(prospec),
+
+	get_spec,
+	build_hierachy,
+	build_func_prototyps,
+	build_rel_prototyps, !.
+
+read_spec(S,OUT) :- spec_error(S,OUT), !.
+
+d223 3
+d227 2
+a230 1
+%
+a232 1
+
+a239 1
+
+d255 3
+a257 1
+% a flag from EQTRAFO , ignore it 
+a265 1
+
+a268 1
+
+d270 3
+a272 2
+% we first transform terms to normal form
+%
+d274 1
+a274 1
+parse(OUT,T) :-
+d277 2
+a278 1
+        ignore_skolem(SK),
+d280 1
+d282 1
+d299 5
+a303 4
+	write_trans_term(OUT,SF,TL),
+	retract(xx_tterm(_)),
+	retract(xx_mgu_sk(_)),
+        remove_skolem(SK),
+d306 2
+a307 3
+write_trans_term(_,_,[]).
+write_trans_term(OUT,SK,[Term|MoreT]) :-
+	unique_skolem(SK,Term),
+d309 1
+a309 1
+	write_trans_term(OUT,SK,MoreT).
+a317 30
+unique_sf_args(_,[]).
+unique_sf_args(SF,[T|MT]) :-
+	unique_skolem(SF,T),
+	unique_sf_args(SF,MT).
+
+unique_skolem([],_).
+unique_skolem(_,Var:_Sort) :-
+	var(Var).
+
+% this is the place where we really found a skolemfunc
+unique_skolem(SF,Term:Sort) :-
+	Term =.. [_Functor|Arg],
+	( member(Term:Sort,SF); true ),
+	unique_sf_args(SF,Arg).
+   
+unique_skolem(SF,Term) :-
+	Term =.. [_Functor|Arg],
+	unique_sf_args(SF,Arg).
+
+%% we temporaly add the skolem functions to the 
+%% functions that have to be ignored.
+
+ignore_skolem(skf([])).
+ignore_skolem(skf(SF)) :-
+    assert(xx_skolem(SF)).
+
+remove_skolem(skf([])).
+remove_skolem(skf(SF)) :-
+    retract(xx_skolem(SF)).
+
+a321 2
+%% simplifier syntax:
+%% w_1,...,w_n [->|<->] (L_1 [->|=|<->] K_1), ... , (L_n [->|=|<->] K_n)
+d403 1
+a403 1
+trans_term(Term,TTerm) :-
+d405 21
+a425 10
+	nested(Args,SortedArgs),
+	TT =.. [Id|SortedArgs],
+
+        ( NTerm = (TT:_Sort),
+          xx_proto(Id,NTerm),
+          close_skolem_sorts(NTerm,TTerm)
+        ;    
+          NTerm = TT,
+          ( xx_proto(Id,NTerm) -> 
+	      close_skolem_sorts(NTerm,TTerm)
+d427 1
+a427 4
+            ( xx_proto(Id,Proto) ->
+	      error(sortconf(TTerm,Proto))
+            ;
+	      error(relfc_def(Id:Term))
+d429 1
+a429 2
+          ) 
+        ).
+d431 3
+a433 5
+% ----------------------------------------
+% if the term contains skolem functions
+% we have to prevent the skolem function to
+% annotate a open sorts list.
+% ----------------------------------------
+a434 126
+close_skolem_sorts(NTerm,TTerm) :-
+	xx_skolem(SF),
+	close_sf(SF,NTerm,TTerm).
+
+close_skolem_sorts(NTerm,NTerm).
+
+% ..................................................
+% first identify different skolem funcs
+%
+
+close_sf(SF,Term:[Sort|MSort],NTerm:CSort) :-
+	nonvar(Term),
+	Term =.. [Functor|Arg],
+	member(Functor:Sort,SF),
+	!,
+	close_list([Sort|MSort],CSort),
+	( Arg \= [] ->
+	    close_sf_args(SF,Arg,CArg),
+	    NTerm =.. [Functor|CArg],
+	    calc_unique_skolem(NTerm:CSort)
+	;
+	  % nullstellige skolem funcs
+	  NTerm = Functor
+        ).	
+
+close_sf(SF,Term,NTerm:CSort) :-
+	nonvar(Term),
+	Term =.. [Functor|Arg],
+	member(Functor:Sort,SF),
+	!,
+	close_list(Sort,CSort),
+	( Arg \= [] ->
+	    close_sf_args(SF,Arg,CArg),
+	    NTerm =.. [Functor|CArg],
+	    calc_unique_skolem(NTerm:CSort)
+	;
+	  % nullstellige skolem funcs
+	  NTerm = Functor
+        ).
+% ..................................................
+%  now we know that it can be either a predicate
+%  or a function, that may 
+%
+close_sf(SF,Func:Sort,NTerm:Sort) :-
+	nonvar(Func),
+	!,
+	Func =.. [Functor|Arg],
+	( Arg \= [] ->
+	    close_sf_args(SF,Arg,CArg),
+	    NTerm =.. [Functor|CArg]
+	;
+	   NTerm = Func ).
+
+close_sf(SF,Pred,NTerm) :-
+	nonvar(Pred),
+	Pred =.. [Functor|Arg],
+	( Arg \= [] ->
+	    close_sf_args(SF,Arg,CArg),
+	    NTerm =.. [Functor|CArg]
+	;
+	   NTerm = Pred ).
+
+close_sf_args(_,[],[]).
+
+close_sf_args(SF,[Var:S|More],[Var:S|NMore]) :-
+	var(Var),
+	!,
+	close_sf_args(SF,More,NMore).
+
+close_sf_args(SF,[T|MT],[CT|MCT]) :-
+	close_sf(SF,T,CT),
+	close_sf_args(SF,MT,MCT).
+
+
+
+% if the skolemfunc has been used before
+% we collect the most specific skolemfunc
+% by unification (member...)
+calc_unique_skolem(SK) :-
+	xx_mgu_sk(SKOLEMLIST),
+	member(SK,SKOLEMLIST),
+	retract_all(xx_mgu_sk(_)),
+	assert(xx_mgu_sk(SKOLEMLIST)).
+
+% first appearance of the skolemfunc
+% then we append it to the list of skolemfuncs
+calc_unique_skolem(SK) :-
+	xx_mgu_sk(SKOLEMLIST),
+	append(SKOLEMLIST,[SK],NSKOLEMLIST),
+	retract(xx_mgu_sk(SKOLEMLIST)),
+	assert(xx_mgu_sk(NSKOLEMLIST)).
+   
+% --------------------------------------------------
+% Though some terms have to be ignored, as specified
+% we still have to check the correct sort annotation
+% --------------------------------------------------
+
+% a function 
+% 14.1.98: Peter und Benno.
+% Peter 15/1/98: modified for 'sk:sort' entries in SF
+% Alter code:
+%check_skolem(Term:Sort,NTerm:Hierachy) :- 
+%  	nonvar(Term),
+%	!,
+%	Term =.. [Functor|SArgs],
+%	xx_skolem(SKOLEM),
+%	member(Functor,SKOLEM),
+%        check_s_o_s(Sort,Hierachy),
+%        skolem_args(SArgs,NArgs),
+%        NTerm =.. [Functor|NArgs].
+% Neuer code:
+check_skolem(Term,NTerm:Hierachy) :- 
+  	nonvar(Term),
+	!,
+	Term =.. [Functor|SArgs],
+	xx_skolem(SKOLEM),
+	member((Functor:Sort),SKOLEM),
+        check_s_o_s(Sort,Hierachy),
+        skolem_args(SArgs,NArgs),
+        NTerm =.. [Functor|NArgs].
+
+skolem_args([],[]).
+skolem_args([A:S|MoreArgs],[A:Hierachy|SortedArgs]) :-
+    check_s_o_s(S,Hierachy),
+    skolem_args(MoreArgs,SortedArgs).
+
+d444 1
+d449 3
+d456 3
+d463 2
+d471 4
+d493 2
+d517 1
+a517 4
+%% build hierachy of sorts
+%% get the subsort definitions and create open lists
+%% and associate them with the last type of the hierachy
+%% list: xx_typ(boy,[human,man,boy|_]).
+a519 337
+build_hierachy :-
+	( xx_sort(Child), \+ xx_subsort(Child subsort_of _)
+    ;     
+	  xx_subsort(Child subsort_of _Father) ),
+
+	( \+ xx_sort(Child) ->
+	    error(specsort(Child))
+	; 
+	    true 
+        ),
+	get_path(Child,Path),
+%	append(Path,[Child|_],SPath),
+	append(Path, _,SPath),	
+	( xx_typ(Child,_) -> 
+	    error(doublesort(Child))
+	;
+	  true ),
+	assert(xx_typ(Child,SPath)),
+	fail.
+
+build_hierachy.
+
+get_path(Child,Path) :-
+	xx_subsort(Child subsort_of Father),
+	get_path(Father,FPath),
+	append(FPath,[Child],Path), !.
+
+get_path(Child, Path) :-
+	xx_subsort(Child eqisort_of Father),
+	get_path(Father, Path),
+	!.
+
+get_path(X,[X]) :- !.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%
+%% create prototyps of sorted preds,const & functions
+%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+build_rel_prototyps :-
+	xx_relation(Relation),
+	rel_proto(Relation),
+	fail.
+
+build_rel_prototyps.
+
+build_func_prototyps :-
+	xx_function(Relation),
+	func_proto(Relation),
+	fail.
+
+build_func_prototyps.
+
+
+% functions
+func_proto(Functor : Sorts => Sort) :-
+	term_list(Sorts,SortsL),
+	length(SortsL,Le),
+	check_double(Functor:Sorts => Sort,Le),
+	length(EmptyArgs,Le),
+	sorted_args(EmptyArgs,SortsL,ProtoSortArgs),
+	HalfProtoTyp =.. [Functor|ProtoSortArgs],
+	( nonvar(Sort) ->
+	    check_s_o_s(Sort,OpenHierachy),
+	    close_list(OpenHierachy,Hierachy)
+	;
+	    Hierachy = Sort ),
+	ProtoTyp = (HalfProtoTyp : Hierachy),
+	assert(xx_proto(Functor,ProtoTyp)), !.
+
+% const
+func_proto(Functor:Sort) :-
+	( nonvar(Sort),
+	  check_s_o_s(Sort,OpenHierachy),
+          close_list(OpenHierachy,Hierachy)
+        ;
+	  Hierachy = Sort ),
+	 check_double(Functor:Sort,0),
+        assert(xx_proto(Functor,Functor:Hierachy)), !.
+
+% pred
+rel_proto(NullPred) :-
+	\+ ( NullPred =.. [:|_] ),
+	( \+ xx_proto(NullPred,NullPred),
+	  assert(xx_proto(NullPred,NullPred))
+        ;
+	  true ), !.
+		
+rel_proto(Functor:Sorts) :-
+	term_list(Sorts,SortsL),
+	length(SortsL,Le),
+	check_double(Functor:Sorts,Le),
+	length(EmptyArgs,Le),
+	sorted_args(EmptyArgs,SortsL,ProtoSortArgs),
+	ProtoTyp =.. [Functor|ProtoSortArgs],
+	assert(xx_proto(Functor,ProtoTyp)), !.
+
+check_double(Functor:Sorts,Le) :-
+	( xx_proto(Functor,Proto:_Sort)
+        ;
+	  xx_proto(Functor,Proto)
+        ),
+	functor(Proto,Functor,Le),
+	error(double('in specification',Functor:Sorts)).
+
+check_double(_,_).
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% extend the argument of a term with its typ of sort
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+sorted_args([],[],[]).
+sorted_args([Arg|MoreArgs],[SortTyp|MoreSortTyps],[Arg:Hierachy|MoreSorted]) :-
+	( nonvar(SortTyp) -> 
+	   check_s_o_s(SortTyp,Hierachy)
+	;
+	   Hierachy = SortTyp
+        ),
+	sorted_args(MoreArgs,MoreSortTyps,MoreSorted).
+
+sorted_args(_,[S|_],_) :-
+	error(sortunknown(S)).
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% if we have a sort definition which is defined over a sort
+% s and this sort s is explicitly defined, we have to insert
+% the sort hierachy according to s.
+%
+% assume::   liste : list(nat)
+% becomes::  liste : list([integer,nat|_]).
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+check_s_o_s(Sort,[_|_]) :-
+     var(Sort), !.
+
+check_s_o_s(SortTyp,Hierachy) :-
+	SortTyp =.. [SortOver,Sort],
+	nonvar(Sort),
+	xx_typ(Sort,SortHierachy),
+        SortOverSort =.. [SortOver,SortHierachy],
+	xx_typ(SortOverSort,Hierachy).
+
+check_s_o_s(SortTyp,Hierachy) :-
+	xx_typ(SortTyp,Hierachy).
+
+% special case for arguments of skolem function arguments
+% e.g. Y : [s(U)|_]
+check_s_o_s([_SortTyp|_],_H).
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% read the specification and
+% assert them.
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%	
+
+get_spec :-
+
+	sorts Sorts,               % sorts must be given
+	assert_spec(error,xx_sort,Sorts),
+
+        ( subsorts SubSorts,
+ 	  assert_spec(error,xx_subsort,SubSorts) ; true ),
+
+	( functions Functions,
+	  assert_spec(error,xx_function,Functions) ; true ),
+
+	( relations Relations,	  
+          assert_spec(error,xx_relation,Relations) ; true ),
+
+	( ignore Ignore,
+	  assert_spec(error,xx_ignore,Ignore) ; true ),
+
+	get_predefined.
+
+get_spec :-
+	msg(['\nERROR: missing sorts definition.\n At least you need sorts otherwise you do not need ProSpec. =;-]\n']),
+	stop.
+
+get_predefined :-	
+	spec_type(SpecType,XX),
+	predef(T),
+	T =.. [SpecType,Defs],
+	assert_spec(noerror,XX,Defs),
+	false.
+
+get_predefined.
+	
+assert_spec(_,xx_ignore,Definition) :-
+	( Definition =.. [:|Defs] ->
+	    assert(xx_ignore(Defs))
+	  ;
+	    ( Definition = none ->
+	        assert(xx_ignore([]))
+	    ;
+	        error(ignore)
+            )
+        ), 
+	!.
+
+assert_spec(ErrorTyp,SpecType,Definition) :-
+	Definition =.. [:|Defs],
+	memo(ErrorTyp,SpecType,Defs), !.
+
+memo(_,_,[]).
+memo(Error,SpecType, [Ele|Elements] ) :-
+	Term =.. [SpecType,Ele],
+	\+ Term,
+	assert(Term), !,
+	memo(Error,SpecType,Elements).
+
+memo(noerror,Type,[_|More]) :-
+	memo(noerror,Type,More).
+
+memo(error,_,[Ele|_]) :-
+	error(double('in specification',Ele)).
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Utilities
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+close_list([V1],[V1]) :- var(V1), !.
+
+close_list(OpenList,ClosedList) :-
+	length(OpenList,L),
+	!,
+	length(ClosedList,L),
+	ClosedList = OpenList, !.
+
+term_list(U,[U]) :- var(U), !.
+term_list((A,B),[A|More]) :-
+	term_list(B,More), !.
+term_list(A,[A]) :- !.
+
+stop :-
+	clean_up,
+	halt.
+
+msg([]) :- nl,!.
+msg([E|ME]) :-
+	numbervars(E,0,_),
+	write(E),
+	msg(ME), !.
+
+msg(S,[]) :- nl(S),!.
+msg(S,[E|ME]) :-
+	numbervars(E,0,_),
+	write(S,E),
+	msg(S,ME), !.
+
+
+error(Code) :-
+	error_code(Code,Message),
+	msg(Message),
+	halt.
+
+logo :-
+	msg([""]),
+	msg(["\t\t     o-o         "]),
+	msg(["\t\t     |P|rolog &  "]),
+        msg(["\t\t     |R|         "]),
+	msg(["\t\t   1.|O|rder     "]),
+	msg(["\t\t     |S|ort      "]),
+	msg(["\t\t     |P|         "]),
+	msg(["\t\t     |E|xtension "]),
+	msg(["\t\t     |C|         "]),
+	msg(["\t\t     o-o         "]),
+	version_number(VersionNumber),
+        msg(["\n\t\t Version ",VersionNumber]),
+	msg(["\t\t   B.Thomas"]),
+	msg(["\t\t P.Baumgartner"]).
+
+
+file_header(OUT,INPUT) :-
+	msg(OUT,['%% O--------------------------------------O']),
+        msg(OUT,['%% | ProSpec                              |']),
+        msg(OUT,['%% |   bthomas@@informatik.uni-koblenz.de  |']),
+        msg(OUT,['%% |--------------------------------------|']),
+        msg(OUT,['%% | Normal Form Transformator (pl2tme):  |']),
+        msg(OUT,['%% |   peter@@informatik.uni-koblenz.de    |']),
+        msg(OUT,['%% O--------------------------------------O']),
+        msg(OUT,['%% ========================================']),
+        msg(OUT,['%%  input file: ',INPUT]),
+        msg(OUT,['%% ========================================\n']).
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% fun stuff
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+init_blinky :-
+	setval(blinky,99), flush(stdout), !.
+
+stop_blinky :-
+	clean,
+	write(' '),
+	flush(stdout), !.
+
+blinky :-
+	flush(stdout),
+	getval(blinky,V),
+	( V=99, write('-'), setval(blinky,0) ;
+	  V=0 , clean, write('\\'), setval(blinky,1) ;
+	  V=1, clean, write('|'), setval(blinky,2) ;
+	  V=2, clean, write('/'), setval(blinky,3) ;
+	  V=3, clean, write('-'), setval(blinky,0) ), 
+	 flush(stdout), !.
+  
+clean :- write('\b'), !.
+ 
+%% ============================================================
+%%              build the executable
+%% ============================================================
+
+make_exec :-
+	save( 'prospec' ),
+	get_arguments(File ),
+	atom_string(FileName,File),
+	prospec(FileName), !,halt.
+
+get_arguments( File ) :-
+	argc(2),
+	argv(1,File).
+
+get_arguments( _) :-
+	nl,
+	version_number(VersionNumber),
+	write('ProSpec Version '),
+	writeln(VersionNumber),
+	nl,
+	writeln('usage: prospec XXX.sort'),
+	writeln('omit extender .sort'),
+	halt.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%  end of sorten.pl
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+@
+
+
+1.6
+log
+@minor bug only syntax error
+@
+text
+@d9 1
+a9 1
+%% $Id: prospec.pl,v 1.5 1998/01/21 10:27:59 bthomas Exp bthomas $
+d11 3
+d35 1
+a35 1
+version_number("$Revision: 1.5 $").
+d390 1
+a390 1
+	    ( (NFT \= prospec_comment(_X)) ->     	       
+d459 2
+a460 5
+trans_simplifier_body(((L -> K),More),((LT -> KT),TMore)) :-
+	!,
+	transform(L,LT),
+	transform(K,KT),
+	trans_simplifier_body(More,TMore).
+a461 26
+trans_simplifier_body(((L <-> K),More), ((LT <-> KT),TMore)) :-
+	!,
+	transform(L,LT),
+	transform(K,KT),
+	trans_simplifier_body(More,TMore).
+
+trans_simplifier_body((A=B,More), (EQ,TMore)) :-
+	!,
+	transform(A = B,EQ),
+	trans_simplifier_body(More,TMore).
+
+trans_simplifier_body((L -> K),(LT -> KT)) :-
+	!,
+	transform(L,LT),
+	transform(K,KT), !.
+
+trans_simplifier_body((L <-> K), (LT <-> KT)) :-
+	!,
+	transform(L,LT),
+	transform(K,KT), !.
+
+trans_simplifier_body((A=B), EQ) :-
+	!,
+	transform(A = B,EQ), !.
+
+% simplifier rules
+d466 1
+a466 1
+	trans_simplifier_body(K,KT), !.
+d472 1
+a472 1
+	trans_simplifier_body(K,KT), !.
+@
+
+
+1.5
+log
+@dependencies for prospec source files added
+@
+text
+@d9 1
+a9 1
+%% $Id: prospec.pl,v 1.4 1998/01/16 14:48:08 bthomas Exp bthomas $
+d11 3
+d32 1
+a32 1
+version_number("$Revision$").
+d390 1
+a390 1
+		collect(TT),
+@
+
+
+1.4
+log
+@rewrote the skolemfunction treatment
+changed to rcs system previous version w/o rcs was 1.31
+@
+text
+@d9 1
+a9 1
+%% $Id: prospec.pl,v 1.1 1998/01/16 14:43:35 bthomas Exp bthomas $
+d11 4
+d29 1
+a29 1
+version_number("1.4").
+a153 3
+
+%	open('./.prospec_pipe',write,pipeout),
+%	open('./.prospec_pipe',read,pipein),
+d167 1
+a168 1
+	msg(["\ntransforming "]),
+a171 1
+%	delete('./.prospec_pipe'),
+d387 1
+a387 1
+		collect(TT)
+@

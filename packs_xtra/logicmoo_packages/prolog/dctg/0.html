@@ -1,0 +1,116 @@
+<TITLE>Package: lang/prolog/code/syntax/dctg/</TITLE>
+<hr>
+<b>CMU Artificial Intelligence Repository</b><br>
+<tt><A HREF="/afs/cs.cmu.edu/project/ai-repository/ai/html/air.html"><IMG ALIGN=MIDDLE SRC="/afs/cs.cmu.edu/project/ai-repository/ai/html/gif/home.gif" ALT="Home"></A>  <A HREF="/afs/cs.cmu.edu/project/ai-repository/ai/html/rep_info.html"><IMG ALIGN=MIDDLE SRC="/afs/cs.cmu.edu/project/ai-repository/ai/html/gif/info.gif" ALT="INFO"></A>  <A HREF="/afs/cs.cmu.edu/project/ai-repository/ai/html/keys/keysform.html"><IMG ALIGN=MIDDLE SRC="/afs/cs.cmu.edu/project/ai-repository/ai/html/gif/search.gif" ALT="Search"></A>  <A HREF="/afs/cs.cmu.edu/project/ai-repository/ai/html/faqs/top.html"><IMG ALIGN=MIDDLE SRC="/afs/cs.cmu.edu/project/ai-repository/ai/html/gif/faqs.gif" ALT="FAQs"></A>  <A HREF="/afs/cs.cmu.edu/project/ai-repository/ai/0.html"><IMG ALIGN=MIDDLE SRC="/afs/cs.cmu.edu/project/ai-repository/ai/html/gif/top.gif" ALT="Repository Root"></A>  </tt>
+<hr>
+<H2>DCTG: Prolog definite clause translation grammar 
+              translator.</H2>
+<pre>
+<A HREF="./">lang/prolog/code/syntax/dctg/</A>
+</pre>
+<listing>
+Definite Clause Translation Grammars are described in chapter 9 of
+Abramson and Dahl's book "Logic Grammars".  They were devised by
+Abramson to overcome the defects of Definite Clause Grammars, in which
+syntax and semantics are often mixed in a non-modular fashion.  They
+avoid also the problem with the proliferation of unnamed arguments
+that afflicts Definite Clause Grammars.
+
+In a DCTG, the syntax and semantics are separated. Each rule contains
+first a syntactic part, and then an optional semantics, written as one
+or more clauses. An example is given below. See Ambramson and Dahl's
+book for more details.  The code in this package comes from Appendix
+II of the book, with a few minor changes by Jocelyn Paine.
+
+The following example shows how to parse binary numbers with binary
+points (such as 1.1 or 1001.11) when expressed as lists ([1,'.',1] or
+[1,0,0,1,'.',1,1]).
+
+
+    bit ::= [0]
+    <:>
+    bitval( 0, _ ).
+
+    bit ::= [1]
+    <:>
+    bitval( V,Scale ) ::- V is **(2,Scale).
+
+
+    bitstring ::= []
+    <:>
+    length(0)
+    &&
+    value(0,_).
+
+    bitstring ::= bit^^B, bitstring^^B1
+    <:>
+    length( Length ) ::-
+        B1 ^^ length(Length1),
+        Length is Length1 + 1
+    &&
+    value( Value, ScaleB ) ::-
+        B ^^ bitval( VB, ScaleB ),
+        S1 is ScaleB - 1,
+        B1 ^^ value( V1, S1 ),
+        Value is VB + V1.
+
+
+    number ::= bitstring ^^ B, fraction ^^ F
+    <:>
+    value(V) ::-
+        B ^^ length(Length),
+        S is Length-1,
+        B ^^ value( VB, S ),
+        F ^^ fractional_value( VF ),
+        V is VB + VF.
+
+
+    fraction ::= ['.'], bitstring ^^ B
+    <:>
+    fractional_value( V ) ::-
+        S is -1,
+        B ^^ value( V, S ).
+
+    fraction ::= []
+    <:>
+    fractional_value(0).
+
+
+    test( L, V ) :-
+        write( 'LIST ' ), write( L ), nl,
+        number( Tree, L, [] ),
+        Tree ^^ value( V ),
+        write( 'VALUE ' ), write( V ), nl, nl.
+
+    ?- test( [1,'.',1], V ).
+       /*  Should set V to 1.5.  */
+</listing>
+<pre>
+Origin:   
+
+   <A HREF="ftp://src.doc.ic.ac.uk/packages/prolog-pd-software/">src.doc.ic.ac.uk:packages/prolog-pd-software/ (146.169.2.1)</A>
+   as dctg.tar.Z
+</pre>
+<hr>
+<listing>
+Version:      21-JUL-90
+
+Ports:        Edinburgh-compatible Prologs.
+
+CD-ROM:       Prime Time Freeware for AI, Issue 1-1
+
+Author(s):    Harvey Abramson and Veronica Dahl
+
+Keywords:
+
+   Authors!Abramson, Authors!Dahl, Books!Prolog, DCG, DCTG, 
+   Definite Clause Grammar, Definite Clause Translation Grammar, 
+   Prolog!Code, Prolog!Syntax, Syntax
+
+References:
+
+   Harvey Abramson and Veronica Dahl, "Logic Grammars", Springer Verlag, 1989.
+
+</listing><hr>
+<address>Last Web update on Mon Feb 13 10:34:00 1995 <br>
+<A HREF="/afs/cs.cmu.edu/project/ai-repository/ai/html/air.html">AI.Repository@cs.cmu.edu</A></address>

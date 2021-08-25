@@ -1,0 +1,78 @@
+order(poly1 for natbase) using poly1 for object.
+setInterpretation('$inj-nat-zero'(x) : x + 1
+).
+setInterpretation('$inj-nat-posint'(x) : x + 2
+).
+setInterpretation('$inj-object-nat'(x) : x + 2
+).
+setInterpretation('s-posint-nat'(x) : x + 4
+).
+setInterpretation(s(x) : x + 4
+).
+setInterpretation(0 : 2
+).
+setInterpretation('$inj-object-bool'(x) : x + 1
+).
+setInterpretation('==-bool-object-object'(x,y) : x + y + 4
+).
+setInterpretation('\==-bool-object-object'(x,y) : x + y + 5
+).
+setInterpretation(==(x,y) : x + y + 4
+).
+setInterpretation(\==(x,y) : x + y + 5
+).
+setInterpretation('false-bool' : 2
+).
+setInterpretation('true-bool' : 2
+).
+setInterpretation(true : 2
+).
+setInterpretation(false : 2
+).
+
+constructor('true-bool').
+constructor('false-bool').
+constructor('0-zero').
+constructor('0-zero').
+
+
+
+
+
+
+/* condition number 1 is the selected condition for
+/*	X1:bool,X2:bool |- X1 = X2 => X1 = X2 */
+action(selectcondition(1),'$equation'(['$inj-object-bool'(@'X1-bool')='$inj-object-bool'(@'X2-bool')],[@'X1-bool'= @'X2-bool'])).
+
+/* ordering of the literals is ms for
+/*	x:object,y:object |- x==y = y==x */
+action(status(ms),'$equation'([],['==-bool-object-object'(@'x-object',@'y-object')='==-bool-object-object'(@'y-object',@'x-object')])).
+
+/* ordering of the literals is ms for
+/*	x:object,y:object |- x\==y = y\==x */
+action(status(ms),'$equation'([],['\==-bool-object-object'(@'x-object',@'y-object')='\==-bool-object-object'(@'y-object',@'x-object')])).
+
+/* declare as nonoperational :
+/*	x:object,y:object |- x==y = true => x = y */
+action(orient(n),'$equation'(['==-bool-object-object'(@'x-object',@'y-object')='true-bool'],[@'x-object'= @'y-object'])).
+
+/* condition number 1 is the selected condition for
+/*	x:object,y:object |- x==y = true => x = y */
+action(selectcondition(1),'$equation'(['==-bool-object-object'(@'x-object',@'y-object')='true-bool'],[@'x-object'= @'y-object'])).
+
+/* ordering of the literals is ms for
+/*	x:object,y:object |- x==y = true => x = y */
+action(status(ms),'$equation'(['==-bool-object-object'(@'x-object',@'y-object')='true-bool'],[@'x-object'= @'y-object'])).
+
+/* condition number 1 is the selected condition for
+/*	X1:zero,X2:zero |- X1 = X2 => X1 = X2 */
+action(selectcondition(1),'$equation'(['$inj-nat-zero'(@'X1-zero')='$inj-nat-zero'(@'X2-zero')],[@'X1-zero'= @'X2-zero'])).
+
+/* condition number 1 is the selected condition for
+/*	X1:posint,X2:posint |- X1 = X2 => X1 = X2 */
+action(selectcondition(1),'$equation'(['$inj-nat-posint'(@'X1-posint')='$inj-nat-posint'(@'X2-posint')],[@'X1-posint'= @'X2-posint'])).
+
+/* condition number 1 is the selected condition for
+/*	X1:nat,X2:nat |- X1 = X2 => X1 = X2 */
+action(selectcondition(1),'$equation'(['$inj-object-nat'(@'X1-nat')='$inj-object-nat'(@'X2-nat')],[@'X1-nat'= @'X2-nat'])).
+

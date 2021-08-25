@@ -1,0 +1,23 @@
+#!/bin/sh
+PL2TMEHOME=/lab/ki2/AGKI/systems/TME2X
+#PL2TMEHOME=/usr/provers/TME2X
+export PL2TMEHOME
+
+if test foo$1 = foo
+then echo "usage: pl2tptp infile [outfile]"
+     echo "       Omit extension '.pl1' from infile."
+     exit
+fi
+
+infile=$1
+
+if test foo$2 = foo
+then outfile=$infile
+else outfile=$2
+fi
+
+# echo "['$PL2TMEHOME/$PL2TME'], pl2tme('$infile','$outfile'). " | eclipse
+
+eclipse -b $PL2TMEHOME/pl2tme.pl -e "pl2tptp('$infile','$outfile'), halt."
+echo "output written to "$outfile".p"
+

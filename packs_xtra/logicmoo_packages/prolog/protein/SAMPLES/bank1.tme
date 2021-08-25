@@ -1,0 +1,1731 @@
+protein_flag(calculus,rme).
+protein_flag(depth_increment,4). %RME 4
+
+begin(prolog).
+:- set_flag(output_mode,"PQUMV").
+:- lib(fd).
+end(prolog).
+
+prolog_pred(use_module / 1).
+prolog_pred(:: / 2).
+prolog_pred(## / 2).
+prolog_pred(#= / 2).
+prolog_pred(#<= / 2).
+prolog_pred(#< / 2).
+prolog_pred(#> / 2).
+prolog_pred(#>= / 2).
+prolog_pred( \= / 2).
+prolog_pred( \== / 2).
+prolog_pred( = / 2).
+prolog_pred( "-" / 3).
+prolog_pred( "+" / 3).
+prolog_pred(dvar_attribute / 2).
+prolog_pred(nl / 0).
+prolog_pred(is / 2 ).
+prolog_pred( // / 3).
+prolog_pred( * / 3).
+prolog_pred(indomain / 1).
+prolog_pred(show_ambigs / 16).
+prolog_pred(aus_tab / 3).
+prolog_pred(mini / 3).
+prolog_pred(maxi / 3).
+prolog_pred(konst / 3).
+prolog_pred(get_nth / 4).
+prolog_pred(element / 3).
+prolog_pred(tab_land / 1).
+prolog_pred(tabelle_ausland_tab / 1).
+prolog_pred(tabelle_min / 1).
+prolog_pred(tabelle_max / 1).
+prolog_pred(~= / 2).
+prolog_pred(delayed_goals/1).
+prolog_pred(checklist/2).
+prolog_pred((not)/1).
+
+begin(prolog).
+
+tab_land([ch, usa, brd, japan, aus, e, nl, gb, can, briges_europa,briges_bersee]).
+
+tabelle_ausland_tab([tab_2_1, tab_2_2, tab_2_3, tab_2_4, tab_2_5, tab_2_6, tab_2_7, tab_2_8, tab_2_9, tab_2_10, tab_2_11]).
+
+tabelle_min([20, 120, 250, 300, 2962, 3000, 3200, 3333, 4000, 4444,5000, 5333, 5714, 8000, 10000, 13333, 26666]).
+
+tabelle_max([2350, 3150, 3500, 3600, 3650, 3700, 4150, 4650]).
+
+aus_tab(Land,TabListe,Result) :-
+	tab_land(Laender),
+	element(Index,Laender,Land),
+	get_nth(1,Index,TabListe,Result),
+	tabelle_ausland_tab(TabValues),
+	Result::TabValues.
+
+mini(Land,TabListe,Result) :-
+	tab_land(Laender),
+	element(Index,Laender,Land),
+	get_nth(1,Index,TabListe,Result),
+	tabelle_min(TabValues),
+	Result::TabValues.
+
+maxi(Land,TabListe,Result) :-
+	tab_land(Laender),
+	element(Index,Laender,Land),
+	get_nth(1,Index,TabListe,Result),
+	tabelle_max(TabValues),
+	Result::TabValues.
+
+konst(Abschluss,Nummer,Konst) :-
+	Konst::[0..100000]. % ein beliebiger Wert ... ?!?
+
+get_nth(Nr,Index,[Result|_],Result) :- indomain(Index), Index = Nr.
+get_nth(Nr,Index,[_|MoreVar],Result) :-
+	NNr is Nr + 1,
+	get_nth(NNr,Index,MoreVar,Result).
+
+show_ambigs(Abschluss, Wert, AusTab, MinTab, MaxTab, Konstante, Tart, ELa, Wae, BLa, AArt, Ku, VNum, GArt, G1, G2) :-
+ nl,nl,write('=============================='),nl,
+ write('Transactions with following features have an ambigous rate value:'), 
+ nl, write('Following rates are possible:'),
+ (dvar_attribute(Wert,WInt);true),
+ (dvar_attribute(Konstante,KKonst);true),
+ (dvar_attribute(ELa,WEL);true),
+ (dvar_attribute(BLa,WBL);true),
+ (dvar_attribute(Tart,WT);true),
+ (dvar_attribute(AArt,WAA);true),
+ (dvar_attribute(Gart,WGA);true),
+ (dvar_attribute(Ku,WKu);true),
+ (dvar_attribute(Wae,WWa);true),
+ nl,write(G1),nl,write('   or    '), nl, write(G2),nl,
+ write('Features: '),nl,
+ write('Value Typ: '), write(Abschluss), nl,
+ write('Value-Range:'),write(WInt),nl,
+ write('Konstante:'),write(KKonst),nl,
+ write('Emittent Country:'),write(WEL),nl,
+ write('Purse Country:'),write(WBL),nl,
+ write('Transaction Typ:'),write(WT),nl,
+ write('Closing Typ:'),write(WAA),nl,
+ write('Business Typ:'),write(WGA),nl,
+ write('Customer:'),write(WKu),nl,
+ write('Currency:'),write(WWa),nl,
+ write('AusTab:'),write(AusTab),nl, !.
+
+end(prolog).
+
+?- 	% use_module(fd),
+	Wert::[0..1000000],	
+	VNum::[1],
+	Tart::[aktie, obligation, note, schuldschein, fondsanteil, geldmarktpapier, toff, anrecht, kassa_obli_ch_bank],
+	ELa::[ch, usa, brd, japan, aus, e, nl, gb, can, briges_europa, briges_bersee],
+	BLa::[ch, usa, brd, japan, aus, e, nl, gb, can, briges_europa, briges_bersee],
+	AArt::[kauf, verkauf],
+	Wae::[ch, usa, brd, japan, aus, e, nl, gb, can, briges_europa, briges_bersee],
+	Ku::[eigen_ring_mitglied, fremd_ring_mitglied, geschfts_stelle, personal, effekten_hndler, hndler_ausland],
+	GArt::[meta, report, ordre_li],
+
+   % we want to prove that there are at least
+   % two different rates, for ONE transaction 
+  
+  AusTab = [A1,B1,C1,D1,E1,F1,G1,H1,I1,J1,K1],
+  MinTab = [A2,B2,C2,D2,E2,F2,G2,H2,I2,J2,K2],
+  MaxTab = [A3,B3,C3,D3,E3,F3,G3,H3,I3,J3,K3],
+  
+ % GTyp1 #< GTyp2,     % die Bedingung ist zu stark
+                      % aber sonst findet der protein kein beweis ...
+
+% Gebuehr1 ~= Gebuehr2,
+
+  courtage(Gebuehr1, Abschluss, Wert, AusTab, MinTab,MaxTab, Konstante, Tart, ELa, Wae, BLa, AArt, Ku, VNum, GArt, GTyp1),
+
+  courtage(Gebuehr2, Abschluss, Wert, AusTab, MinTab, MaxTab, Konstante, Tart, ELa, Wae, BLa, AArt, Ku, VNum, GArt, GTyp2),
+
+  Gebuehr1 \= Gebuehr2,
+  checklist(indomain,[Wert, Tart, ELa, Wae, BLa, AArt, Ku, VNum, GArt]),
+  
+ (dvar_attribute(Abschluss,WAb);true),
+ (dvar_attribute(Wert,WInt);true),
+ (dvar_attribute(Konstante,KKonst);true),
+ (dvar_attribute(ELa,WEL);true),
+ (dvar_attribute(BLa,WBL);true),
+ (dvar_attribute(Tart,WT);true),
+ (dvar_attribute(AArt,WAA);true),
+ (dvar_attribute(Gart,WGA);true),
+ (dvar_attribute(Ku,WKu);true),
+ (dvar_attribute(Wae,WWa);true),
+
+  show_ambigs(Abschluss, Wert, AusTab, MinTab, MaxTab, Konstante, Tart, ELa, Wae, BLa, AArt, Ku, VNum, GArt, Gebuehr1, Gebuehr2),
+  nl, delayed_goals(Delayed), write(Delayed), nl, 
+  protein_answer([Gebuehr1,Gebuehr2,WAb,AusTab,MinTab,MaxTab,WInt,KKonst,WEL,WBL,WT,WAA,WGA,WKu,WWa]).
+
+% read("conv_preds.pl").
+
+valoren_nummer(A,B) :- B::[1].
+titel_art(A,B) :- B::[aktie, obligation, note, schuldschein, fondsanteil, geldmarktpapier, toff, anrecht, kassa_obli_ch_bank].
+emittent(A,B) :- B::[ch, usa, brd, japan, aus, e, nl, gb, can, briges_europa, briges_bersee].
+brsen_land(A,B) :- B::[ch, usa, brd, japan, aus, e, nl, gb, can, briges_europa, briges_bersee].
+abschluss_art(A,B) :- B::[kauf, verkauf].
+whrung(A,B) :- B::[ch, usa, brd, japan, aus, e, nl, gb, can, briges_europa, briges_bersee].
+kunden_art(A,B) :- B::[eigen_ring_mitglied, fremd_ring_mitglied, geschfts_stelle, personal, effekten_hndler, hndler_ausland].
+geschfts_art(A,B) :- B::[meta, report, ordre_li].
+
+% netto(A) :- A::[netto].
+% brutto(A) :- A::[brutto].
+
+brutto.
+netto.
+
+gilt_ch_tabelle(Abschluss, Wert, AusTab, MinTab, MaxTab, Konstante, Tart, ELa, Wae, BLa, AArt, Ku, VNum, GArt, tab_1_1) :- 
+     VNum #= Nummer,
+     valoren_nummer(Abschluss, VNum),
+     Tart#=aktie,
+     titel_art(Nummer, Tart),
+     ELa#=ch,
+     emittent(Nummer, ELa).
+
+gilt_ch_tabelle(Abschluss, Wert, AusTab, MinTab, MaxTab, Konstante, Tart, ELa, Wae, BLa, AArt, Ku, VNum, GArt, tab_1_2) :- 
+     VNum #= Nummer,
+     valoren_nummer(Abschluss, VNum),
+     Tart#=aktie,
+     titel_art(Nummer, Tart),
+     ELa##ch,
+     emittent(Nummer, ELa).
+
+gilt_ch_tabelle(Abschluss, Wert, AusTab, MinTab, MaxTab, Konstante, Tart, ELa, Wae, BLa, AArt, Ku, VNum, GArt, tab_1_3) :- 
+     VNum #= Nummer,
+     valoren_nummer(Abschluss, VNum),
+     Tart#=obligation,
+     titel_art(Nummer, Tart),
+     Wae#=ch,
+     whrung(Nummer, Wae).
+
+gilt_ch_tabelle(Abschluss, Wert, AusTab, MinTab, MaxTab, Konstante, Tart, ELa, Wae, BLa, AArt, Ku, VNum, GArt, tab_1_4) :- 
+     VNum #= Nummer,
+     valoren_nummer(Abschluss, VNum),
+     Tart#=obligation,
+     titel_art(Nummer, Tart),
+     Wae##ch,
+     whrung(Nummer, Wae).
+
+gilt_ch_tabelle(Abschluss, Wert, AusTab, MinTab, MaxTab, Konstante, Tart, ELa, Wae, BLa, AArt, Ku, VNum, GArt, tab_1_5) :- 
+     Tart#=note,
+     titel_art(Abschluss, Tart),
+     VNum #= Nummer,
+     valoren_nummer(Abschluss, VNum).
+
+gilt_ch_tabelle(Abschluss, Wert, AusTab, MinTab, MaxTab, Konstante, Tart, ELa, Wae, BLa, AArt, Ku, VNum, GArt, tab_1_5) :- 
+     Tart#=schuldschein,
+     titel_art(Abschluss, Tart),
+     VNum #= Nummer,
+     valoren_nummer(Abschluss, VNum).
+
+gilt_ch_tabelle(Abschluss, Wert, AusTab, MinTab, MaxTab, Konstante, Tart, ELa, Wae, BLa, AArt, Ku, VNum, GArt, tab_1_6) :- 
+     VNum #= Nummer,
+     valoren_nummer(Abschluss, VNum),
+     Tart#=fonds_anteil,
+     titel_art(Nummer, Tart).
+
+false :- 
+     -(netto),
+     -(brutto).
+
+false :- 
+     brutto,
+     netto.
+
+gilt_ausland_tabelle(Abschluss, Wert, AusTab, MinTab, MaxTab, Konstante, Tart, ELa, Wae, BLa, AArt, Ku, VNum, GArt, Tab) :- 
+     Land ## ch,
+     aus_tab(Land, AusTab, Tab),
+     BLa #= Land,
+     brsen_land(Abschluss, BLa),
+     VNum #= Nummer,
+     valoren_nummer(Abschluss, VNum),
+     Tart#=aktie,
+     titel_art(Nummer, Tart),
+     Abschluss #= brutto,
+     brutto,
+     Wert#<=250000.
+
+gilt_ausland_tabelle(Abschluss, Wert, AusTab, MinTab, MaxTab, Konstante, Tart, ELa, Wae, BLa, AArt, Ku, VNum, GArt, tab_2_11) :- 
+     BLa##ch,
+     brsen_land(Abschluss, BLa),
+     Abschluss #= brutto,
+     brutto,
+     VNum #= Nummer,
+     valoren_nummer(Abschluss, VNum),
+     Tart#=obligation,
+     titel_art(Abschluss, Tart),
+     Wert#<=250000.
+
+gilt_maximum(Abschluss, Wert, AusTab, MinTab, MaxTab, Konstante, Tart, ELa, Wae, BLa, AArt, Ku, VNum, GArt, Max, Ausl_Komm) :- 
+     Land ## ch,
+     maxi(Land, MaxTab, Max),
+     BLa #= Land,
+     brsen_land(Abschluss, BLa),
+     VNum #= Nummer,
+     valoren_nummer(Abschluss, VNum),
+     Tart#=aktie,
+     titel_art(Nummer, Tart),
+     Abschluss #= brutto,
+     brutto,
+     Wert#>=250000.
+
+gilt_maximum(Abschluss, Wert, AusTab, MinTab, MaxTab, Konstante, Tart, ELa, Wae, BLa, AArt, Ku, VNum, GArt, 2350, Ausl_Komm) :- 
+     BLa##ch,
+     brsen_land(Abschluss, BLa),
+     Abschluss #= brutto,
+     brutto,
+     Wert#>=250000,
+     VNum #= Nummer,
+     valoren_nummer(Abschluss, VNum),
+     Tart#=obligation,
+     titel_art(Nummer, Tart).
+
+-(gilt_minimum(Abschluss, Wert, AusTab, MinTab, MaxTab, Konstante, Tart, ELa, Wae, BLa, AArt, Ku, VNum, GArt, 30, 3750)) :- 
+     Wert#>=3750,
+     AArt#=kauf,
+     abschluss_art(Abschluss, AArt),
+     ELa#=ch,
+     emittent(Nummer, ELa),
+     Tart#=aktie,
+     titel_art(Nummer, Tart),
+     VNum #= Nummer,
+     valoren_nummer(Abschluss, VNum),
+     BLa#=ch,
+     brsen_land(Abschluss, BLa).
+
+gilt_minimum(Abschluss, Wert, AusTab, MinTab, MaxTab, Konstante, Tart, ELa, Wae, BLa, AArt, Ku, VNum, GArt, 30, 3750) :- 
+     Wert#<3750,
+     AArt#=kauf,
+     abschluss_art(Abschluss, AArt),
+     ELa#=ch,
+     emittent(Nummer, ELa),
+     Tart#=aktie,
+     titel_art(Nummer, Tart),
+     VNum #= Nummer,
+     valoren_nummer(Abschluss, VNum),
+     BLa#=ch,
+     brsen_land(Abschluss, BLa).
+
+-(gilt_minimum(Abschluss, Wert, AusTab, MinTab, MaxTab, Konstante, Tart, ELa, Wae, BLa, AArt, Ku, VNum, GArt, 30, 3750)) :- 
+     Wert#>=3750,
+     Wert#>=250,
+     ELa#=ch,
+     emittent(Nummer, ELa),
+     Tart#=aktie,
+     titel_art(Nummer, Tart),
+     VNum #= Nummer,
+     valoren_nummer(Abschluss, VNum),
+     BLa#=ch,
+     brsen_land(Abschluss, BLa).
+
+gilt_minimum(Abschluss, Wert, AusTab, MinTab, MaxTab, Konstante, Tart, ELa, Wae, BLa, AArt, Ku, VNum, GArt, 30, 3750) :- 
+     Wert#<3750,
+     Wert#>=250,
+     ELa#=ch,
+     emittent(Nummer, ELa),
+     Tart#=aktie,
+     titel_art(Nummer, Tart),
+     VNum #= Nummer,
+     valoren_nummer(Abschluss, VNum),
+     BLa#=ch,
+     brsen_land(Abschluss, BLa).
+
+-(gilt_minimum(Abschluss, Wert, AusTab, MinTab, MaxTab, Konstante, Tart, ELa, Wae, BLa, AArt, Ku, VNum, GArt, 30, 3000)) :- 
+     Wert#>=3000,
+     AArt#=kauf,
+     abschluss_art(Abschluss, AArt),
+     ELa##ch,
+     emittent(Nummer, ELa),
+     Tart#=aktie,
+     titel_art(Nummer, Tart),
+     VNum #= Nummer,
+     valoren_nummer(Abschluss, VNum),
+     BLa#=ch,
+     brsen_land(Abschluss, BLa).
+
+gilt_minimum(Abschluss, Wert, AusTab, MinTab, MaxTab, Konstante, Tart, ELa, Wae, BLa, AArt, Ku, VNum, GArt, 30, 3000) :- 
+     Wert#<3000,
+     AArt#=kauf,
+     abschluss_art(Abschluss, AArt),
+     ELa##ch,
+     emittent(Nummer, ELa),
+     Tart#=aktie,
+     titel_art(Nummer, Tart),
+     VNum #= Nummer,
+     valoren_nummer(Abschluss, VNum),
+     BLa#=ch,
+     brsen_land(Abschluss, BLa).
+
+-(gilt_minimum(Abschluss, Wert, AusTab, MinTab, MaxTab, Konstante, Tart, ELa, Wae, BLa, AArt, Ku, VNum, GArt, 30, 3000)) :- 
+     Wert#>=3000,
+     Wert#>=250,
+     ELa##ch,
+     emittent(Nummer, ELa),
+     Tart#=aktie,
+     titel_art(Nummer, Tart),
+     VNum #= Nummer,
+     valoren_nummer(Abschluss, VNum),
+     BLa#=ch,
+     brsen_land(Abschluss, BLa).
+
+gilt_minimum(Abschluss, Wert, AusTab, MinTab, MaxTab, Konstante, Tart, ELa, Wae, BLa, AArt, Ku, VNum, GArt, 30, 3000) :- 
+     Wert#<3000,
+     Wert#>=250,
+     ELa##ch,
+     emittent(Nummer, ELa),
+     Tart#=aktie,
+     titel_art(Nummer, Tart),
+     VNum #= Nummer,
+     valoren_nummer(Abschluss, VNum),
+     BLa#=ch,
+     brsen_land(Abschluss, BLa).
+
+-(gilt_minimum(Abschluss, Wert, AusTab, MinTab, MaxTab, Konstante, Tart, ELa, Wae, BLa, AArt, Ku, VNum, GArt, 30, 5000)) :- 
+     Wert#>=5000,
+     AArt#=kauf,
+     abschluss_art(Abschluss, AArt),
+     Wae#=ch,
+     whrung(Nummer, Wae),
+     Tart#=obligation,
+     titel_art(Nummer, Tart),
+     VNum #= Nummer,
+     valoren_nummer(Abschluss, VNum),
+     BLa#=ch,
+     brsen_land(Abschluss, BLa).
+
+gilt_minimum(Abschluss, Wert, AusTab, MinTab, MaxTab, Konstante, Tart, ELa, Wae, BLa, AArt, Ku, VNum, GArt, 30, 5000) :- 
+     Wert#<5000,
+     AArt#=kauf,
+     abschluss_art(Abschluss, AArt),
+     Wae#=ch,
+     whrung(Nummer, Wae),
+     Tart#=obligation,
+     titel_art(Nummer, Tart),
+     VNum #= Nummer,
+     valoren_nummer(Abschluss, VNum),
+     BLa#=ch,
+     brsen_land(Abschluss, BLa).
+
+-(gilt_minimum(Abschluss, Wert, AusTab, MinTab, MaxTab, Konstante, Tart, ELa, Wae, BLa, AArt, Ku, VNum, GArt, 30, 5000)) :- 
+     Wert#>=5000,
+     Wert#>=250,
+     Wae#=ch,
+     whrung(Nummer, Wae),
+     Tart#=obligation,
+     titel_art(Nummer, Tart),
+     VNum #= Nummer,
+     valoren_nummer(Abschluss, VNum),
+     BLa#=ch,
+     brsen_land(Abschluss, BLa).
+
+gilt_minimum(Abschluss, Wert, AusTab, MinTab, MaxTab, Konstante, Tart, ELa, Wae, BLa, AArt, Ku, VNum, GArt, 30, 5000) :- 
+     Wert#<5000,
+     Wert#>=250,
+     Wae#=ch,
+     whrung(Nummer, Wae),
+     Tart#=obligation,
+     titel_art(Nummer, Tart),
+     VNum #= Nummer,
+     valoren_nummer(Abschluss, VNum),
+     BLa#=ch,
+     brsen_land(Abschluss, BLa).
+
+-(gilt_minimum(Abschluss, Wert, AusTab, MinTab, MaxTab, Konstante, Tart, ELa, Wae, BLa, AArt, Ku, VNum, GArt, 80, 1333)) :- 
+     Wert#>=1333,
+     BLa#=ch,
+     brsen_land(Abschluss, BLa),
+     VNum #= Nummer,
+     valoren_nummer(Abschluss, VNum),
+     Wert#>=250,
+     Tart#=obligation,
+     titel_art(Nummer, Tart),
+     Wae##ch,
+     whrung(Nummer, Wae).
+
+gilt_minimum(Abschluss, Wert, AusTab, MinTab, MaxTab, Konstante, Tart, ELa, Wae, BLa, AArt, Ku, VNum, GArt, 80, 1333) :- 
+     Wert#<1333,
+     BLa#=ch,
+     brsen_land(Abschluss, BLa),
+     VNum #= Nummer,
+     valoren_nummer(Abschluss, VNum),
+     Wert#>=250,
+     Tart#=obligation,
+     titel_art(Nummer, Tart),
+     Wae##ch,
+     whrung(Nummer, Wae).
+
+-(gilt_minimum(Abschluss, Wert, AusTab, MinTab, MaxTab, Konstante, Tart, ELa, Wae, BLa, AArt, Ku, VNum, GArt, 80, 1333)) :- 
+     Wert#>=1333,
+     Abschluss #= netto,
+     netto,
+     VNum #= Nummer,
+     valoren_nummer(Abschluss, VNum),
+     Wert#>=250,
+     Tart#=obligation,
+     titel_art(Nummer, Tart),
+     Wae##ch,
+     whrung(Nummer, Wae).
+
+gilt_minimum(Abschluss, Wert, AusTab, MinTab, MaxTab, Konstante, Tart, ELa, Wae, BLa, AArt, Ku, VNum, GArt, 80, 1333) :- 
+     Wert#<1333,
+     Abschluss #= netto,
+     netto,
+     VNum #= Nummer,
+     valoren_nummer(Abschluss, VNum),
+     Wert#>=250,
+     Tart#=obligation,
+     titel_art(Nummer, Tart),
+     Wae##ch,
+     whrung(Nummer, Wae).
+
+gilt_minimum(Abschluss, Wert, AusTab, MinTab, MaxTab, Konstante, Tart, ELa, Wae, BLa, AArt, Ku, VNum, GArt, 30, 250) :- 
+     BLa#=ch,
+     brsen_land(Abschluss, BLa),
+     VNum #= Nummer,
+     valoren_nummer(Abschluss, VNum),
+     Wert#<250,
+     AArt#=kauf,
+     abschluss_art(Abschluss, AArt),
+     Tart#=obligation,
+     titel_art(Nummer, Tart),
+     Wae##ch,
+     whrung(Nummer, Wae).
+
+-(gilt_minimum(Abschluss, Wert, AusTab, MinTab, MaxTab, Konstante, Tart, ELa, Wae, BLa, AArt, Ku, VNum, GArt, 80, 1333)) :- 
+     Wert#>=1333,
+     Tart#=note,
+     titel_art(Abschluss, Tart),
+     Wert#>=250,
+     VNum #= Nummer,
+     valoren_nummer(Abschluss, VNum).
+
+gilt_minimum(Abschluss, Wert, AusTab, MinTab, MaxTab, Konstante, Tart, ELa, Wae, BLa, AArt, Ku, VNum, GArt, 80, 1333) :- 
+     Wert#<1333,
+     Tart#=note,
+     titel_art(Abschluss, Tart),
+     Wert#>=250,
+     VNum #= Nummer,
+     valoren_nummer(Abschluss, VNum).
+
+-(gilt_minimum(Abschluss, Wert, AusTab, MinTab, MaxTab, Konstante, Tart, ELa, Wae, BLa, AArt, Ku, VNum, GArt, 80, 1333)) :- 
+     Wert#>=1333,
+     Tart#=schuldschein,
+     titel_art(Abschluss, Tart),
+     Wert#>=250,
+     VNum #= Nummer,
+     valoren_nummer(Abschluss, VNum).
+
+gilt_minimum(Abschluss, Wert, AusTab, MinTab, MaxTab, Konstante, Tart, ELa, Wae, BLa, AArt, Ku, VNum, GArt, 80, 1333) :- 
+     Wert#<1333,
+     Tart#=schuldschein,
+     titel_art(Abschluss, Tart),
+     Wert#>=250,
+     VNum #= Nummer,
+     valoren_nummer(Abschluss, VNum).
+
+gilt_minimum(Abschluss, Wert, AusTab, MinTab, MaxTab, Konstante, Tart, ELa, Wae, BLa, AArt, Ku, VNum, GArt, 30, 250) :- 
+     Tart#=note,
+     titel_art(Abschluss, Tart),
+     AArt#=kauf,
+     abschluss_art(Abschluss, AArt),
+     Wert#<250,
+     VNum #= Nummer,
+     valoren_nummer(Abschluss, VNum),
+     BLa#=ch,
+     brsen_land(Abschluss, BLa).
+
+gilt_minimum(Abschluss, Wert, AusTab, MinTab, MaxTab, Konstante, Tart, ELa, Wae, BLa, AArt, Ku, VNum, GArt, 30, 250) :- 
+     Tart#=schuldschein,
+     titel_art(Abschluss, Tart),
+     AArt#=kauf,
+     abschluss_art(Abschluss, AArt),
+     Wert#<250,
+     VNum #= Nummer,
+     valoren_nummer(Abschluss, VNum),
+     BLa#=ch,
+     brsen_land(Abschluss, BLa).
+
+-(gilt_minimum(Abschluss, Wert, AusTab, MinTab, MaxTab, Konstante, Tart, ELa, Wae, BLa, AArt, Ku, VNum, GArt, 10, 3333)) :- 
+     Wert#>=3333,
+     AArt#=kauf,
+     abschluss_art(Abschluss, AArt),
+     Tart#=fonds_anteil,
+     titel_art(Nummer, Tart),
+     VNum #= Nummer,
+     valoren_nummer(Abschluss, VNum),
+     BLa#=ch,
+     brsen_land(Abschluss, BLa).
+
+gilt_minimum(Abschluss, Wert, AusTab, MinTab, MaxTab, Konstante, Tart, ELa, Wae, BLa, AArt, Ku, VNum, GArt, 10, 3333) :- 
+     Wert#<3333,
+     AArt#=kauf,
+     abschluss_art(Abschluss, AArt),
+     Tart#=fonds_anteil,
+     titel_art(Nummer, Tart),
+     VNum #= Nummer,
+     valoren_nummer(Abschluss, VNum),
+     BLa#=ch,
+     brsen_land(Abschluss, BLa).
+
+-(gilt_minimum(Abschluss, Wert, AusTab, MinTab, MaxTab, Konstante, Tart, ELa, Wae, BLa, AArt, Ku, VNum, GArt, 10, 3333)) :- 
+     Wert#>=3333,
+     Wert#>=250,
+     Tart#=fonds_anteil,
+     titel_art(Nummer, Tart),
+     VNum #= Nummer,
+     valoren_nummer(Abschluss, VNum),
+     BLa#=ch,
+     brsen_land(Abschluss, BLa).
+
+gilt_minimum(Abschluss, Wert, AusTab, MinTab, MaxTab, Konstante, Tart, ELa, Wae, BLa, AArt, Ku, VNum, GArt, 10, 3333) :- 
+     Wert#<3333,
+     Wert#>=250,
+     Tart#=fonds_anteil,
+     titel_art(Nummer, Tart),
+     VNum #= Nummer,
+     valoren_nummer(Abschluss, VNum),
+     BLa#=ch,
+     brsen_land(Abschluss, BLa).
+
+gilt_minimum(Abschluss, Wert, AusTab, MinTab, MaxTab, Konstante, Tart, ELa, Wae, BLa, AArt, Ku, VNum, GArt, 10, 250) :- 
+     BLa#=ch,
+     brsen_land(Abschluss, BLa),
+     Wert#<250,
+     Wert#>=20,
+     AArt#=verkauf,
+     abschluss_art(Abschluss, AArt).
+
+gilt_minimum(Abschluss, Wert, AusTab, MinTab, MaxTab, Konstante, Tart, ELa, Wae, BLa, AArt, Ku, VNum, GArt, prozent_wert(50), 20) :- 
+     BLa#=ch,
+     brsen_land(Abschluss, BLa),
+     Wert#<20,
+     AArt#=verkauf,
+     abschluss_art(Abschluss, AArt).
+
+-(gilt_minimum(Abschluss, Wert, AusTab, MinTab, MaxTab, Konstante, Tart, ELa, Wae, BLa, AArt, Ku, VNum, GArt, 80, Min)) :- 
+     mini(Land, MinTab, Min),
+     Wert#>=Min,
+     AArt#=kauf,
+     abschluss_art(Abschluss, AArt),
+     Abschluss #= brutto,
+     brutto,
+     Tart#=aktie,
+     titel_art(Nummer, Tart),
+     VNum #= Nummer,
+     valoren_nummer(Abschluss, VNum),
+     BLa #= Land,
+     brsen_land(Abschluss, BLa).
+
+gilt_minimum(Abschluss, Wert, AusTab, MinTab, MaxTab, Konstante, Tart, ELa, Wae, BLa, AArt, Ku, VNum, GArt, 80, Min) :- 
+     mini(Land, MinTab, Min),
+     Wert#<Min,
+     AArt#=kauf,
+     abschluss_art(Abschluss, AArt),
+     Abschluss #= brutto,
+     brutto,
+     Tart#=aktie,
+     titel_art(Nummer, Tart),
+     VNum #= Nummer,
+     valoren_nummer(Abschluss, VNum),
+     BLa #= Land,
+     brsen_land(Abschluss, BLa).
+
+-(gilt_minimum(Abschluss, Wert, AusTab, MinTab, MaxTab, Konstante, Tart, ELa, Wae, BLa, AArt, Ku, VNum, GArt, 80, Min)) :- 
+     mini(Land, MinTab, Min),
+     Wert#>=Min,
+     Wert#>=250,
+     Abschluss #= brutto,
+     brutto,
+     Tart#=aktie,
+     titel_art(Nummer, Tart),
+     VNum #= Nummer,
+     valoren_nummer(Abschluss, VNum),
+     BLa #= Land,
+     brsen_land(Abschluss, BLa).
+
+gilt_minimum(Abschluss, Wert, AusTab, MinTab, MaxTab, Konstante, Tart, ELa, Wae, BLa, AArt, Ku, VNum, GArt, 80, Min) :- 
+     mini(Land, MinTab, Min),
+     Wert#<Min,
+     Wert#>=250,
+     Abschluss #= brutto,
+     brutto,
+     Tart#=aktie,
+     titel_art(Nummer, Tart),
+     VNum #= Nummer,
+     valoren_nummer(Abschluss, VNum),
+     BLa #= Land,
+     brsen_land(Abschluss, BLa).
+
+-(gilt_minimum(Abschluss, Wert, AusTab, MinTab, MaxTab, Konstante, Tart, ELa, Wae, BLa, AArt, Ku, VNum, GArt, 80, 1000)) :- 
+     Wert#>=1000,
+     AArt#=kauf,
+     abschluss_art(Abschluss, AArt),
+     Abschluss #= netto,
+     netto,
+     Tart#=aktie,
+     titel_art(Nummer, Tart),
+     ELa#=ch,
+     emittent(Nummer, ELa),
+     VNum #= Nummer,
+     valoren_nummer(Abschluss, VNum),
+     BLa##ch,
+     brsen_land(Abschluss, BLa).
+
+gilt_minimum(Abschluss, Wert, AusTab, MinTab, MaxTab, Konstante, Tart, ELa, Wae, BLa, AArt, Ku, VNum, GArt, 80, 1000) :- 
+     Wert#<1000,
+     AArt#=kauf,
+     abschluss_art(Abschluss, AArt),
+     Abschluss #= netto,
+     netto,
+     Tart#=aktie,
+     titel_art(Nummer, Tart),
+     ELa#=ch,
+     emittent(Nummer, ELa),
+     VNum #= Nummer,
+     valoren_nummer(Abschluss, VNum),
+     BLa##ch,
+     brsen_land(Abschluss, BLa).
+
+-(gilt_minimum(Abschluss, Wert, AusTab, MinTab, MaxTab, Konstante, Tart, ELa, Wae, BLa, AArt, Ku, VNum, GArt, 80, 1000)) :- 
+     Wert#>=1000,
+     Wert#>=250,
+     Abschluss #= netto,
+     netto,
+     Tart#=aktie,
+     titel_art(Nummer, Tart),
+     ELa#=ch,
+     emittent(Nummer, ELa),
+     VNum #= Nummer,
+     valoren_nummer(Abschluss, VNum),
+     BLa##ch,
+     brsen_land(Abschluss, BLa).
+
+gilt_minimum(Abschluss, Wert, AusTab, MinTab, MaxTab, Konstante, Tart, ELa, Wae, BLa, AArt, Ku, VNum, GArt, 80, 1000) :- 
+     Wert#<1000,
+     Wert#>=250,
+     Abschluss #= netto,
+     netto,
+     Tart#=aktie,
+     titel_art(Nummer, Tart),
+     ELa#=ch,
+     emittent(Nummer, ELa),
+     VNum #= Nummer,
+     valoren_nummer(Abschluss, VNum),
+     BLa##ch,
+     brsen_land(Abschluss, BLa).
+
+-(gilt_minimum(Abschluss, Wert, AusTab, MinTab, MaxTab, Konstante, Tart, ELa, Wae, BLa, AArt, Ku, VNum, GArt, 80, 8000)) :- 
+     Wert#>=8000,
+     AArt#=kauf,
+     abschluss_art(Abschluss, AArt),
+     Abschluss #= netto,
+     netto,
+     Tart#=aktie,
+     titel_art(Nummer, Tart),
+     ELa##ch,
+     emittent(Nummer, ELa),
+     VNum #= Nummer,
+     valoren_nummer(Abschluss, VNum),
+     BLa##ch,
+     brsen_land(Abschluss, BLa).
+
+gilt_minimum(Abschluss, Wert, AusTab, MinTab, MaxTab, Konstante, Tart, ELa, Wae, BLa, AArt, Ku, VNum, GArt, 80, 8000) :- 
+     Wert#<8000,
+     AArt#=kauf,
+     abschluss_art(Abschluss, AArt),
+     Abschluss #= netto,
+     netto,
+     Tart#=aktie,
+     titel_art(Nummer, Tart),
+     ELa##ch,
+     emittent(Nummer, ELa),
+     VNum #= Nummer,
+     valoren_nummer(Abschluss, VNum),
+     BLa##ch,
+     brsen_land(Abschluss, BLa).
+
+-(gilt_minimum(Abschluss, Wert, AusTab, MinTab, MaxTab, Konstante, Tart, ELa, Wae, BLa, AArt, Ku, VNum, GArt, 80, 8000)) :- 
+     Wert#>=8000,
+     Wert#>=250,
+     Abschluss #= netto,
+     netto,
+     Tart#=aktie,
+     titel_art(Nummer, Tart),
+     ELa##ch,
+     emittent(Nummer, ELa),
+     VNum #= Nummer,
+     valoren_nummer(Abschluss, VNum),
+     BLa##ch,
+     brsen_land(Abschluss, BLa).
+
+gilt_minimum(Abschluss, Wert, AusTab, MinTab, MaxTab, Konstante, Tart, ELa, Wae, BLa, AArt, Ku, VNum, GArt, 80, 8000) :- 
+     Wert#<8000,
+     Wert#>=250,
+     Abschluss #= netto,
+     netto,
+     Tart#=aktie,
+     titel_art(Nummer, Tart),
+     ELa##ch,
+     emittent(Nummer, ELa),
+     VNum #= Nummer,
+     valoren_nummer(Abschluss, VNum),
+     BLa##ch,
+     brsen_land(Abschluss, BLa).
+
+-(gilt_minimum(Abschluss, Wert, AusTab, MinTab, MaxTab, Konstante, Tart, ELa, Wae, BLa, AArt, Ku, VNum, GArt, 80, 5333)) :- 
+     Wert#>=5333,
+     AArt#=kauf,
+     abschluss_art(Abschluss, AArt),
+     Abschluss #= brutto,
+     brutto,
+     Tart#=obligation,
+     titel_art(Nummer, Tart),
+     VNum #= Nummer,
+     valoren_nummer(Abschluss, VNum),
+     BLa##ch,
+     brsen_land(Abschluss, BLa).
+
+gilt_minimum(Abschluss, Wert, AusTab, MinTab, MaxTab, Konstante, Tart, ELa, Wae, BLa, AArt, Ku, VNum, GArt, 80, 5333) :- 
+     Wert#<5333,
+     AArt#=kauf,
+     abschluss_art(Abschluss, AArt),
+     Abschluss #= brutto,
+     brutto,
+     Tart#=obligation,
+     titel_art(Nummer, Tart),
+     VNum #= Nummer,
+     valoren_nummer(Abschluss, VNum),
+     BLa##ch,
+     brsen_land(Abschluss, BLa).
+
+-(gilt_minimum(Abschluss, Wert, AusTab, MinTab, MaxTab, Konstante, Tart, ELa, Wae, BLa, AArt, Ku, VNum, GArt, 80, 5333)) :- 
+     Wert#>=5333,
+     Wert#>=250,
+     Abschluss #= brutto,
+     brutto,
+     Tart#=obligation,
+     titel_art(Nummer, Tart),
+     VNum #= Nummer,
+     valoren_nummer(Abschluss, VNum),
+     BLa##ch,
+     brsen_land(Abschluss, BLa).
+
+gilt_minimum(Abschluss, Wert, AusTab, MinTab, MaxTab, Konstante, Tart, ELa, Wae, BLa, AArt, Ku, VNum, GArt, 80, 5333) :- 
+     Wert#<5333,
+     Wert#>=250,
+     Abschluss #= brutto,
+     brutto,
+     Tart#=obligation,
+     titel_art(Nummer, Tart),
+     VNum #= Nummer,
+     valoren_nummer(Abschluss, VNum),
+     BLa##ch,
+     brsen_land(Abschluss, BLa).
+
+-(gilt_minimum(Abschluss, Wert, AusTab, MinTab, MaxTab, Konstante, Tart, ELa, Wae, BLa, AArt, Ku, VNum, GArt, 80, 1333)) :- 
+     Wert#>=1333,
+     AArt#=kauf,
+     abschluss_art(Abschluss, AArt),
+     Abschluss #= netto,
+     netto,
+     Wae#=ch,
+     whrung(Nummer, Wae),
+     Tart#=obligation,
+     titel_art(Nummer, Tart),
+     VNum #= Nummer,
+     valoren_nummer(Abschluss, VNum),
+     BLa##ch,
+     brsen_land(Abschluss, BLa).
+
+gilt_minimum(Abschluss, Wert, AusTab, MinTab, MaxTab, Konstante, Tart, ELa, Wae, BLa, AArt, Ku, VNum, GArt, 80, 1333) :- 
+     Wert#<1333,
+     AArt#=kauf,
+     abschluss_art(Abschluss, AArt),
+     Abschluss #= netto,
+     netto,
+     Wae#=ch,
+     whrung(Nummer, Wae),
+     Tart#=obligation,
+     titel_art(Nummer, Tart),
+     VNum #= Nummer,
+     valoren_nummer(Abschluss, VNum),
+     BLa##ch,
+     brsen_land(Abschluss, BLa).
+
+-(gilt_minimum(Abschluss, Wert, AusTab, MinTab, MaxTab, Konstante, Tart, ELa, Wae, BLa, AArt, Ku, VNum, GArt, 80, 1333)) :- 
+     Wert#>=1333,
+     Wert#>=250,
+     Abschluss #= netto,
+     netto,
+     Wae#=ch,
+     whrung(Nummer, Wae),
+     Tart#=obligation,
+     titel_art(Nummer, Tart),
+     VNum #= Nummer,
+     valoren_nummer(Abschluss, VNum),
+     BLa##ch,
+     brsen_land(Abschluss, BLa).
+
+gilt_minimum(Abschluss, Wert, AusTab, MinTab, MaxTab, Konstante, Tart, ELa, Wae, BLa, AArt, Ku, VNum, GArt, 80, 1333) :- 
+     Wert#<1333,
+     Wert#>=250,
+     Abschluss #= netto,
+     netto,
+     Wae#=ch,
+     whrung(Nummer, Wae),
+     Tart#=obligation,
+     titel_art(Nummer, Tart),
+     VNum #= Nummer,
+     valoren_nummer(Abschluss, VNum),
+     BLa##ch,
+     brsen_land(Abschluss, BLa).
+
+gilt_minimum(Abschluss, Wert, AusTab, MinTab, MaxTab, Konstante, Tart, ELa, Wae, BLa, AArt, Ku, VNum, GArt, 80, 250) :- 
+     Tart#=note,
+     titel_art(Nummer, Tart),
+     Wert#<250,
+     AArt#=kauf,
+     abschluss_art(Abschluss, AArt),
+     VNum #= Nummer,
+     valoren_nummer(Abschluss, VNum),
+     BLa##ch,
+     brsen_land(Abschluss, BLa).
+
+gilt_minimum(Abschluss, Wert, AusTab, MinTab, MaxTab, Konstante, Tart, ELa, Wae, BLa, AArt, Ku, VNum, GArt, 80, 250) :- 
+     Tart#=schuldschein,
+     titel_art(Nummer, Tart),
+     Wert#<250,
+     AArt#=kauf,
+     abschluss_art(Abschluss, AArt),
+     VNum #= Nummer,
+     valoren_nummer(Abschluss, VNum),
+     BLa##ch,
+     brsen_land(Abschluss, BLa).
+
+-(gilt_minimum(Abschluss, Wert, AusTab, MinTab, MaxTab, Konstante, Tart, ELa, Wae, BLa, AArt, Ku, VNum, GArt, 80, 2666)) :- 
+     Wert#>=2666,
+     BLa##ch,
+     brsen_land(Abschluss, BLa),
+     VNum #= Nummer,
+     valoren_nummer(Abschluss, VNum),
+     Tart#=fonds_anteil,
+     titel_art(Abschluss, Tart),
+     Wert#>=250.
+
+gilt_minimum(Abschluss, Wert, AusTab, MinTab, MaxTab, Konstante, Tart, ELa, Wae, BLa, AArt, Ku, VNum, GArt, 80, 2666) :- 
+     Wert#<2666,
+     BLa##ch,
+     brsen_land(Abschluss, BLa),
+     VNum #= Nummer,
+     valoren_nummer(Abschluss, VNum),
+     Tart#=fonds_anteil,
+     titel_art(Abschluss, Tart),
+     Wert#>=250.
+
+gilt_minimum(Abschluss, Wert, AusTab, MinTab, MaxTab, Konstante, Tart, ELa, Wae, BLa, AArt, Ku, VNum, GArt, 10, 250) :- 
+     BLa##ch,
+     brsen_land(Abschluss, BLa),
+     VNum #= Nummer,
+     valoren_nummer(Abschluss, VNum),
+     Tart#=fonds_anteil,
+     titel_art(Nummer, Tart),
+     Wert#<250,
+     AArt#=kauf,
+     abschluss_art(Abschluss, AArt).
+
+gilt_minimum(Abschluss, Wert, AusTab, MinTab, MaxTab, Konstante, Tart, ELa, Wae, BLa, AArt, Ku, VNum, GArt, 60, 250) :- 
+     BLa##ch,
+     brsen_land(Abschluss, BLa),
+     Wert#<250,
+     Wert#>=120,
+     AArt#=verkauf,
+     abschluss_art(Abschluss, AArt).
+
+gilt_minimum(Abschluss, Wert, AusTab, MinTab, MaxTab, Konstante, Tart, ELa, Wae, BLa, AArt, Ku, VNum, GArt, prozent_wert(50), 120) :- 
+     BLa##ch,
+     brsen_land(Abschluss, BLa),
+     Wert#<120,
+     AArt#=verkauf,
+     abschluss_art(Abschluss, AArt).
+
+-(gilt_retrozession(Abschluss, Wert, AusTab, MinTab, MaxTab, Konstante, Tart, ELa, Wae, BLa, AArt, Ku, VNum, GArt, prozent(100), eigen_ring_mitglied)) :- 
+     Ku##eigen_ring_mitglied,
+     kunden_art(Abschluss, Ku).
+
+gilt_retrozession(Abschluss, Wert, AusTab, MinTab, MaxTab, Konstante, Tart, ELa, Wae, BLa, AArt, Ku, VNum, GArt, prozent(100), eigen_ring_mitglied) :- 
+     Ku#=eigen_ring_mitglied,
+     kunden_art(Abschluss, Ku).
+
+-(gilt_retrozession(Abschluss, Wert, AusTab, MinTab, MaxTab, Konstante, Tart, ELa, Wae, BLa, AArt, Ku, VNum, GArt, prozent(75), fremd_ring_mitglied)) :- 
+     Ku##fremd_ring_mitglied,
+     kunden_art(Abschluss, Ku).
+
+gilt_retrozession(Abschluss, Wert, AusTab, MinTab, MaxTab, Konstante, Tart, ELa, Wae, BLa, AArt, Ku, VNum, GArt, prozent(75), fremd_ring_mitglied) :- 
+     Ku#=fremd_ring_mitglied,
+     kunden_art(Abschluss, Ku).
+
+-(gilt_konstante(Abschluss, Wert, AusTab, MinTab, MaxTab, Konstante, Tart, ELa, Wae, BLa, AArt, Ku, VNum, GArt, 30, geschfts_stelle)) :- 
+     Ku##geschfts_stelle,
+     kunden_art(Abschluss, Ku),
+     BLa#=ch,
+     brsen_land(Abschluss, BLa).
+
+gilt_konstante(Abschluss, Wert, AusTab, MinTab, MaxTab, Konstante, Tart, ELa, Wae, BLa, AArt, Ku, VNum, GArt, 30, geschfts_stelle) :- 
+     Ku#=geschfts_stelle,
+     kunden_art(Abschluss, Ku),
+     BLa#=ch,
+     brsen_land(Abschluss, BLa).
+
+-(gilt_konstante(Abschluss, Wert, AusTab, MinTab, MaxTab, Konstante, Tart, ELa, Wae, BLa, AArt, Ku, VNum, GArt, 80 + Ausl_Komm, geschfts_stelle)) :- 
+     Ku##geschfts_stelle,
+     kunden_art(Abschluss, Ku),
+     BLa##ch,
+     brsen_land(Abschluss, BLa).
+
+gilt_konstante(Abschluss, Wert, AusTab, MinTab, MaxTab, Konstante, Tart, ELa, Wae, BLa, AArt, Ku, VNum, GArt, 80 + Ausl_Komm, geschfts_stelle) :- 
+     Ku#=geschfts_stelle,
+     kunden_art(Abschluss, Ku),
+     BLa##ch,
+     brsen_land(Abschluss, BLa).
+
+-(gilt_retrozession(Abschluss, Wert, AusTab, MinTab, MaxTab, Konstante, Tart, ELa, Wae, BLa, AArt, Ku, VNum, GArt, prozent(75), personal)) :- 
+     Ku##personal,
+     kunden_art(Abschluss, Ku).
+
+gilt_retrozession(Abschluss, Wert, AusTab, MinTab, MaxTab, Konstante, Tart, ELa, Wae, BLa, AArt, Ku, VNum, GArt, prozent(75), personal) :- 
+     Ku#=personal,
+     kunden_art(Abschluss, Ku).
+
+-(gilt_retrozession(Abschluss, Wert, AusTab, MinTab, MaxTab, Konstante, Tart, ELa, Wae, BLa, AArt, Ku, VNum, GArt, prozent(100), effekten_hndler)) :- 
+     Ku##effekten_hndler,
+     kunden_art(Abschluss, Ku),
+     Tart#=note,
+     titel_art(Nummer, Tart),
+     VNum #= Nummer,
+     valoren_nummer(Abschluss, VNum).
+
+gilt_retrozession(Abschluss, Wert, AusTab, MinTab, MaxTab, Konstante, Tart, ELa, Wae, BLa, AArt, Ku, VNum, GArt, prozent(100), effekten_hndler) :- 
+     Ku#=effekten_hndler,
+     kunden_art(Abschluss, Ku),
+     Tart#=note,
+     titel_art(Nummer, Tart),
+     VNum #= Nummer,
+     valoren_nummer(Abschluss, VNum).
+
+-(gilt_retrozession(Abschluss, Wert, AusTab, MinTab, MaxTab, Konstante, Tart, ELa, Wae, BLa, AArt, Ku, VNum, GArt, prozent(100), effekten_hndler)) :- 
+     Ku##effekten_hndler,
+     kunden_art(Abschluss, Ku),
+     Tart#=schuldschein,
+     titel_art(Nummer, Tart),
+     VNum #= Nummer,
+     valoren_nummer(Abschluss, VNum).
+
+gilt_retrozession(Abschluss, Wert, AusTab, MinTab, MaxTab, Konstante, Tart, ELa, Wae, BLa, AArt, Ku, VNum, GArt, prozent(100), effekten_hndler) :- 
+     Ku#=effekten_hndler,
+     kunden_art(Abschluss, Ku),
+     Tart#=schuldschein,
+     titel_art(Nummer, Tart),
+     VNum #= Nummer,
+     valoren_nummer(Abschluss, VNum).
+
+-(gilt_retrozession(Abschluss, Wert, AusTab, MinTab, MaxTab, Konstante, Tart, ELa, Wae, BLa, AArt, Ku, VNum, GArt, prozent(50), effekten_hndler)) :- 
+     Ku##effekten_hndler,
+     kunden_art(Abschluss, Ku),
+     VNum #= Nummer,
+     valoren_nummer(Abschluss, VNum),
+     Tart#=obligation,
+     titel_art(Nummer, Tart),
+     Wae#=ch,
+     whrung(Nummer, Wae).
+
+gilt_retrozession(Abschluss, Wert, AusTab, MinTab, MaxTab, Konstante, Tart, ELa, Wae, BLa, AArt, Ku, VNum, GArt, prozent(50), effekten_hndler) :- 
+     Ku#=effekten_hndler,
+     kunden_art(Abschluss, Ku),
+     VNum #= Nummer,
+     valoren_nummer(Abschluss, VNum),
+     Tart#=obligation,
+     titel_art(Nummer, Tart),
+     Wae#=ch,
+     whrung(Nummer, Wae).
+
+-(gilt_retrozession(Abschluss, Wert, AusTab, MinTab, MaxTab, Konstante, Tart, ELa, Wae, BLa, AArt, Ku, VNum, GArt, prozent(50), effekten_hndler)) :- 
+     Ku##effekten_hndler,
+     kunden_art(Abschluss, Ku),
+     Tart#=aktie,
+     titel_art(Nummer, Tart),
+     Wert#<=25000,
+     VNum #= Nummer,
+     valoren_nummer(Abschluss, VNum).
+
+gilt_retrozession(Abschluss, Wert, AusTab, MinTab, MaxTab, Konstante, Tart, ELa, Wae, BLa, AArt, Ku, VNum, GArt, prozent(50), effekten_hndler) :- 
+     Ku#=effekten_hndler,
+     kunden_art(Abschluss, Ku),
+     Tart#=aktie,
+     titel_art(Nummer, Tart),
+     Wert#<=25000,
+     VNum #= Nummer,
+     valoren_nummer(Abschluss, VNum).
+
+-(gilt_retrozession(Abschluss, Wert, AusTab, MinTab, MaxTab, Konstante, Tart, ELa, Wae, BLa, AArt, Ku, VNum, GArt, prozent(50), effekten_hndler)) :- 
+     Ku##effekten_hndler,
+     kunden_art(Abschluss, Ku),
+     Tart#=fonds_anteil,
+     titel_art(Nummer, Tart),
+     Wert#<=25000,
+     VNum #= Nummer,
+     valoren_nummer(Abschluss, VNum).
+
+gilt_retrozession(Abschluss, Wert, AusTab, MinTab, MaxTab, Konstante, Tart, ELa, Wae, BLa, AArt, Ku, VNum, GArt, prozent(50), effekten_hndler) :- 
+     Ku#=effekten_hndler,
+     kunden_art(Abschluss, Ku),
+     Tart#=fonds_anteil,
+     titel_art(Nummer, Tart),
+     Wert#<=25000,
+     VNum #= Nummer,
+     valoren_nummer(Abschluss, VNum).
+
+-(gilt_retrozession(Abschluss, Wert, AusTab, MinTab, MaxTab, Konstante, Tart, ELa, Wae, BLa, AArt, Ku, VNum, GArt, prozent(75), effekten_hndler)) :- 
+     Ku##effekten_hndler,
+     kunden_art(Abschluss, Ku),
+     Tart#=aktie,
+     titel_art(Nummer, Tart),
+     Wert#>25000,
+     Wert#<=200000,
+     VNum #= Nummer,
+     valoren_nummer(Abschluss, VNum).
+
+gilt_retrozession(Abschluss, Wert, AusTab, MinTab, MaxTab, Konstante, Tart, ELa, Wae, BLa, AArt, Ku, VNum, GArt, prozent(75), effekten_hndler) :- 
+     Ku#=effekten_hndler,
+     kunden_art(Abschluss, Ku),
+     Tart#=aktie,
+     titel_art(Nummer, Tart),
+     Wert#>25000,
+     Wert#<=200000,
+     VNum #= Nummer,
+     valoren_nummer(Abschluss, VNum).
+
+-(gilt_retrozession(Abschluss, Wert, AusTab, MinTab, MaxTab, Konstante, Tart, ELa, Wae, BLa, AArt, Ku, VNum, GArt, prozent(75), effekten_hndler)) :- 
+     Ku##effekten_hndler,
+     kunden_art(Abschluss, Ku),
+     Tart#=fonds_anteil,
+     titel_art(Nummer, Tart),
+     Wert#>25000,
+     Wert#<=200000,
+     VNum #= Nummer,
+     valoren_nummer(Abschluss, VNum).
+
+gilt_retrozession(Abschluss, Wert, AusTab, MinTab, MaxTab, Konstante, Tart, ELa, Wae, BLa, AArt, Ku, VNum, GArt, prozent(75), effekten_hndler) :- 
+     Ku#=effekten_hndler,
+     kunden_art(Abschluss, Ku),
+     Tart#=fonds_anteil,
+     titel_art(Nummer, Tart),
+     Wert#>25000,
+     Wert#<=200000,
+     VNum #= Nummer,
+     valoren_nummer(Abschluss, VNum).
+
+-(gilt_retrozession(Abschluss, Wert, AusTab, MinTab, MaxTab, Konstante, Tart, ELa, Wae, BLa, AArt, Ku, VNum, GArt, frei, effekten_hndler)) :- 
+     Ku##effekten_hndler,
+     kunden_art(Abschluss, Ku),
+     Tart#=aktie,
+     titel_art(Nummer, Tart),
+     Wert#>200000,
+     VNum #= Nummer,
+     valoren_nummer(Abschluss, VNum).
+
+gilt_retrozession(Abschluss, Wert, AusTab, MinTab, MaxTab, Konstante, Tart, ELa, Wae, BLa, AArt, Ku, VNum, GArt, frei, effekten_hndler) :- 
+     Ku#=effekten_hndler,
+     kunden_art(Abschluss, Ku),
+     Tart#=aktie,
+     titel_art(Nummer, Tart),
+     Wert#>200000,
+     VNum #= Nummer,
+     valoren_nummer(Abschluss, VNum).
+
+-(gilt_retrozession(Abschluss, Wert, AusTab, MinTab, MaxTab, Konstante, Tart, ELa, Wae, BLa, AArt, Ku, VNum, GArt, frei, effekten_hndler)) :- 
+     Ku##effekten_hndler,
+     kunden_art(Abschluss, Ku),
+     Tart#=fonds_anteil,
+     titel_art(Nummer, Tart),
+     Wert#>200000,
+     VNum #= Nummer,
+     valoren_nummer(Abschluss, VNum).
+
+gilt_retrozession(Abschluss, Wert, AusTab, MinTab, MaxTab, Konstante, Tart, ELa, Wae, BLa, AArt, Ku, VNum, GArt, frei, effekten_hndler) :- 
+     Ku#=effekten_hndler,
+     kunden_art(Abschluss, Ku),
+     Tart#=fonds_anteil,
+     titel_art(Nummer, Tart),
+     Wert#>200000,
+     VNum #= Nummer,
+     valoren_nummer(Abschluss, VNum).
+
+-(gilt_retrozession(Abschluss, Wert, AusTab, MinTab, MaxTab, Konstante, Tart, ELa, Wae, BLa, AArt, Ku, VNum, GArt, prozent(100), effekten_hndler)) :- 
+     Ku##effekten_hndler,
+     kunden_art(Abschluss, Ku),
+     BLa#=ch,
+     brsen_land(Abschluss, BLa),
+     VNum #= Nummer,
+     valoren_nummer(Abschluss, VNum),
+     Tart#=obligation,
+     titel_art(Nummer, Tart),
+     Wae##ch,
+     whrung(Nummer, Wae).
+
+gilt_retrozession(Abschluss, Wert, AusTab, MinTab, MaxTab, Konstante, Tart, ELa, Wae, BLa, AArt, Ku, VNum, GArt, prozent(100), effekten_hndler) :- 
+     Ku#=effekten_hndler,
+     kunden_art(Abschluss, Ku),
+     BLa#=ch,
+     brsen_land(Abschluss, BLa),
+     VNum #= Nummer,
+     valoren_nummer(Abschluss, VNum),
+     Tart#=obligation,
+     titel_art(Nummer, Tart),
+     Wae##ch,
+     whrung(Nummer, Wae).
+
+-(gilt_konstante(Abschluss, Wert, AusTab, MinTab, MaxTab, Konstante, Tart, ELa, Wae, BLa, AArt, Ku, VNum, GArt, _g348, effekten_hndler)) :- 
+     Ku##effekten_hndler,
+     kunden_art(Abschluss, Ku),
+     BLa##ch,
+     brsen_land(Abschluss, BLa),
+     VNum #= Nummer,
+     valoren_nummer(Abschluss, VNum),
+     Tart#=obligation,
+     titel_art(Nummer, Tart),
+     Wae##ch,
+     whrung(Nummer, Wae).
+
+gilt_konstante(Abschluss, Wert, AusTab, MinTab, MaxTab, Konstante, Tart, ELa, Wae, BLa, AArt, Ku, VNum, GArt, _g338, effekten_hndler) :- 
+     Ku#=effekten_hndler,
+     kunden_art(Abschluss, Ku),
+     BLa##ch,
+     brsen_land(Abschluss, BLa),
+     VNum #= Nummer,
+     valoren_nummer(Abschluss, VNum),
+     Tart#=obligation,
+     titel_art(Nummer, Tart),
+     Wae##ch,
+     whrung(Nummer, Wae).
+
+-(gilt_konstante(Abschluss, Wert, AusTab, MinTab, MaxTab, Konstante, Tart, ELa, Wae, BLa, AArt, Ku, VNum, GArt, 0, hndler_ausland)) :- 
+     Ku##hndler_ausland,
+     kunden_art(Abschluss, Ku).
+
+gilt_konstante(Abschluss, Wert, AusTab, MinTab, MaxTab, Konstante, Tart, ELa, Wae, BLa, AArt, Ku, VNum, GArt, 0, hndler_ausland) :- 
+     Ku#=hndler_ausland,
+     kunden_art(Abschluss, Ku).
+
+gilt_minimum(Abschluss, Wert, AusTab, MinTab, MaxTab, Konstante, Tart, ELa, Wae, BLa, AArt, Ku, VNum, GArt, Minimum, _g346),
+gilt_konstante(Abschluss, Wert, AusTab, MinTab, MaxTab, Konstante, Tart, ELa, Wae, BLa, AArt, Ku, VNum, GArt, _g336, Grund_k),
+-(gilt_ch_tabelle(Abschluss, Wert, AusTab, MinTab, MaxTab, Konstante, Tart, ELa, Wae, BLa, AArt, Ku, VNum, GArt, Tabelle)),
+gilt_retrozession(Abschluss, Wert, AusTab, MinTab, MaxTab, Konstante, Tart, ELa, Wae, BLa, AArt, Ku, VNum, GArt, Retrozession),
+courtage(Geb, Abschluss, Wert, AusTab, MinTab, MaxTab, Konstante, Tart, ELa, Wae, BLa, AArt, Ku, VNum, GArt, 1) :- 
+     Geb = c(Tabelle),
+     BLa#=ch,
+     brsen_land(Abschluss, BLa).
+
+gilt_minimum(Abschluss, Wert, AusTab, MinTab, MaxTab, Konstante, Tart, ELa, Wae, BLa, AArt, Ku, VNum, GArt, Minimum, _g346),
+gilt_konstante(Abschluss, Wert, AusTab, MinTab, MaxTab, Konstante, Tart, ELa, Wae, BLa, AArt, Ku, VNum, GArt, _g336, Grund_k),
+-(gilt_ch_tabelle(Abschluss, Wert, AusTab, MinTab, MaxTab, Konstante, Tart, ELa, Wae, BLa, AArt, Ku, VNum, GArt, Tabelle)),
+gilt_retrozession(Abschluss, Wert, AusTab, MinTab, MaxTab, Konstante, Tart, ELa, Wae, BLa, AArt, Ku, VNum, GArt, Retrozession),
+courtage(Geb, Abschluss, Wert, AusTab, MinTab, MaxTab, Konstante, Tart, ELa, Wae, BLa, AArt, Ku, VNum, GArt, 1) :- 
+     Geb = c(Tabelle),
+     Abschluss #= netto,
+     netto.
+
+gilt_minimum(Abschluss, Wert, AusTab, MinTab, MaxTab, Konstante, Tart, ELa, Wae, BLa, AArt, Ku, VNum, GArt, Minimum, _g340),
+gilt_konstante(Abschluss, Wert, AusTab, MinTab, MaxTab, Konstante, Tart, ELa, Wae, BLa, AArt, Ku, VNum, GArt, _g330, Grund_k),
+-(gilt_ausland_tabelle(Abschluss, Wert, AusTab, MinTab, MaxTab, Konstante, Tart, ELa, Wae, BLa, AArt, Ku, VNum, GArt, Tabelle)),
+gilt_retrozession(Abschluss, Wert, AusTab, MinTab, MaxTab, Konstante, Tart, ELa, Wae, BLa, AArt, Ku, VNum, GArt, Retrozession),
+courtage(Geb, Abschluss, Wert, AusTab, MinTab, MaxTab, Konstante, Tart, ELa, Wae, BLa, AArt, Ku, VNum, GArt, 1) :- 
+     Geb = c(Tabelle).
+
+gilt_minimum(Abschluss, Wert, AusTab, MinTab, MaxTab, Konstante, Tart, ELa, Wae, BLa, AArt, Ku, VNum, GArt, Minimum, _g374),
+-(gilt_ch_tabelle(Abschluss, Wert, AusTab, MinTab, MaxTab, Konstante, Tart, ELa, Wae, BLa, AArt, Ku, VNum, GArt, Tabelle)),
+gilt_konstante(Abschluss, Wert, AusTab, MinTab, MaxTab, Konstante, Tart, ELa, Wae, BLa, AArt, Ku, VNum, GArt, X, Grund_k),
+-(gilt_maximum(Abschluss, Wert, AusTab, MinTab, MaxTab, Konstante, Tart, ELa, Wae, BLa, AArt, Ku, VNum, GArt, _g344, Ausl_Komm)),
+gilt_retrozession(Abschluss, Wert, AusTab, MinTab, MaxTab, Konstante, Tart, ELa, Wae, BLa, AArt, Ku, VNum, GArt, Retrozession),
+courtage(Geb, Abschluss, Wert, AusTab, MinTab, MaxTab, Konstante, Tart, ELa, Wae, BLa, AArt, Ku, VNum, GArt, 3) :- 
+     Geb = max(X, plus(c(Tabelle) , Ausl_Komm)).
+
+-(gilt_minimum(Abschluss, Wert, AusTab, MinTab, MaxTab, Konstante, Tart, ELa, Wae, BLa, AArt, Ku, VNum, GArt, c(Tabelle), _g306)),
+gilt_retrozession(Abschluss, Wert, AusTab, MinTab, MaxTab, Konstante, Tart, ELa, Wae, BLa, AArt, Ku, VNum, GArt, Retrozession),
+courtage(Geb, Abschluss, Wert, AusTab, MinTab, MaxTab, Konstante, Tart, ELa, Wae, BLa, AArt, Ku, VNum, GArt, 1) :- 
+     Geb = c(Tabelle).
+
+-(gilt_ch_tabelle(Abschluss, Wert, AusTab, MinTab, MaxTab, Konstante, Tart, ELa, Wae, BLa, AArt, Ku, VNum, GArt, Tabelle)),
+-(gilt_retrozession(Abschluss, Wert, AusTab, MinTab, MaxTab, Konstante, Tart, ELa, Wae, BLa, AArt, Ku, VNum, GArt, Retrozession)),
+gilt_konstante(Abschluss, Wert, AusTab, MinTab, MaxTab, Konstante, Tart, ELa, Wae, BLa, AArt, Ku, VNum, GArt, _g344, Grund_k),
+gilt_minimum(Abschluss, Wert, AusTab, MinTab, MaxTab, Konstante, Tart, ELa, Wae, BLa, AArt, Ku, VNum, GArt, Minimum, _g330),
+courtage(Geb, Abschluss, Wert, AusTab, MinTab, MaxTab, Konstante, Tart, ELa, Wae, BLa, AArt, Ku, VNum, GArt, 4) :- 
+     Geb = mal(minus(1, Retrozession) , c(Tabelle)),
+     BLa#=ch,
+     brsen_land(Abschluss, BLa).
+
+-(gilt_ch_tabelle(Abschluss, Wert, AusTab, MinTab, MaxTab, Konstante, Tart, ELa, Wae, BLa, AArt, Ku, VNum, GArt, Tabelle)),
+-(gilt_retrozession(Abschluss, Wert, AusTab, MinTab, MaxTab, Konstante, Tart, ELa, Wae, BLa, AArt, Ku, VNum, GArt, Retrozession)),
+gilt_konstante(Abschluss, Wert, AusTab, MinTab, MaxTab, Konstante, Tart, ELa, Wae, BLa, AArt, Ku, VNum, GArt, _g344, Grund_k),
+gilt_minimum(Abschluss, Wert, AusTab, MinTab, MaxTab, Konstante, Tart, ELa, Wae, BLa, AArt, Ku, VNum, GArt, Minimum, _g330),
+courtage(Geb, Abschluss, Wert, AusTab, MinTab, MaxTab, Konstante, Tart, ELa, Wae, BLa, AArt, Ku, VNum, GArt, 4) :- 
+     Geb = mal(minus(1 , Retrozession) , c(Tabelle)),
+     Abschluss #= netto,
+     netto.
+
+gilt_minimum(Abschluss, Wert, AusTab, MinTab, MaxTab, Konstante, Tart, ELa, Wae, BLa, AArt, Ku, VNum, GArt, Minimum, _g382),
+gilt_konstante(Abschluss, Wert, AusTab, MinTab, MaxTab, Konstante, Tart, ELa, Wae, BLa, AArt, Ku, VNum, GArt, _g372, Grund_k),
+-(gilt_ausl_tabelle(Abschluss, Wert, AusTab, MinTab, MaxTab, Konstante, Tart, ELa, Wae, BLa, AArt, Ku, VNum, GArt, Tabelle_ausl)),
+-(gilt_ch_tabelle(Abschluss, Wert, AusTab, MinTab, MaxTab, Konstante, Tart, ELa, Wae, BLa, AArt, Ku, VNum, GArt, Tabelle_ch)),
+-(gilt_retrozession(Abschluss, Wert, AusTab, MinTab, MaxTab, Konstante, Tart, ELa, Wae, BLa, AArt, Ku, VNum, GArt, Retrozession, Kunden_Art)),
+courtage(Geb, Abschluss, Wert, AusTab, MinTab, MaxTab, Konstante, Tart, ELa, Wae, BLa, AArt, Ku, VNum, GArt, 4) :- 
+     Geb = minus(c(Tabelle_ausl) , mal(Retrozession , c(Tabelle_ch))).
+
+-(gilt_ch_tabelle(Abschluss, Wert, AusTab, MinTab, MaxTab, Konstante, Tart, ELa, Wae, BLa, AArt, Ku, VNum, GArt, Tabelle)),
+gilt_minimum(Abschluss, Wert, AusTab, MinTab, MaxTab, Konstante, Tart, ELa, Wae, BLa, AArt, Ku, VNum, GArt, Minimum, _g388),
+gilt_konstante(Abschluss, Wert, AusTab, MinTab, MaxTab, Konstante, Tart, ELa, Wae, BLa, AArt, Ku, VNum, GArt, _g338, Grund_k),
+-(gilt_maximum(Abschluss, Wert, AusTab, MinTab, MaxTab, Konstante, Tart, ELa, Wae, BLa, AArt, Ku, VNum, GArt, _g368, Ausl_Komm)),
+-(gilt_retrozession(Abschluss, Wert, AusTab, MinTab, MaxTab, Konstante, Tart, ELa, Wae, BLa, AArt, Ku, VNum, GArt, Retrozession, Kunden_Art)),
+courtage(Geb, Abschluss, Wert, AusTab, MinTab, MaxTab, Konstante, Tart, ELa, Wae, BLa, AArt, Ku, VNum, GArt, 4) :- 
+     Geb = minus(max(_g338, plus(c(Tabelle) , Ausl_Komm)) , mal(Retrozession , c(Tabelle))).
+
+-(gilt_minimum(Abschluss, Wert, AusTab, MinTab, MaxTab, Konstante, Tart, ELa, Wae, BLa, AArt, Ku, VNum, GArt, Minimum, _g374)),
+gilt_konstante(Abschluss, Wert, AusTab, MinTab, MaxTab, Konstante, Tart, ELa, Wae, BLa, AArt, Ku, VNum, GArt, _g360, Grund_k),
+-(gilt_retrozession(Abschluss, Wert, AusTab, MinTab, MaxTab, Konstante, Tart, ELa, Wae, BLa, AArt, Ku, VNum, GArt, Retrozession)),
+-(gilt_ch_tabelle(Abschluss, Wert, AusTab, MinTab, MaxTab, Konstante, Tart, ELa, Wae, BLa, AArt, Ku, VNum, GArt, Tabelle)),
+courtage(Geb, Abschluss, Wert, AusTab, MinTab, MaxTab, Konstante, Tart, ELa, Wae, BLa, AArt, Ku, VNum, GArt, 4) :- 
+     Geb = mal(minus(1 , Retrozession) , Minimum),
+     BLa#=ch,
+     brsen_land(Abschluss, BLa).
+
+-(gilt_minimum(Abschluss, Wert, AusTab, MinTab, MaxTab, Konstante, Tart, ELa, Wae, BLa, AArt, Ku, VNum, GArt, Minimum, _g376)),
+gilt_konstante(Abschluss, Wert, AusTab, MinTab, MaxTab, Konstante, Tart, ELa, Wae, BLa, AArt, Ku, VNum, GArt, _g362, Grund_k),
+-(gilt_retrozession(Abschluss, Wert, AusTab, MinTab, MaxTab, Konstante, Tart, ELa, Wae, BLa, AArt, Ku, VNum, GArt, Retrozession)),
+-(gilt_ch_tabelle(Abschluss, Wert, AusTab, MinTab, MaxTab, Konstante, Tart, ELa, Wae, BLa, AArt, Ku, VNum, GArt, Tabelle)),
+courtage(Geb, Abschluss, Wert, AusTab, MinTab, MaxTab, Konstante, Tart, ELa, Wae, BLa, AArt, Ku, VNum, GArt, 4) :- 
+     Geb = minus(Minimum , mal(Retrozession , c(Tabelle))),
+     Abschluss #= netto,
+     netto.
+
+gilt_konstante(Abschluss, Wert, AusTab, MinTab, MaxTab, Konstante, Tart, ELa, Wae, BLa, AArt, Ku, VNum, GArt, _g372, Grund_k),
+-(gilt_minimum(Abschluss, Wert, AusTab, MinTab, MaxTab, Konstante, Tart, ELa, Wae, BLa, AArt, Ku, VNum, GArt, Minimum, _g360)),
+-(gilt_retrozession(Abschluss, Wert, AusTab, MinTab, MaxTab, Konstante, Tart, ELa, Wae, BLa, AArt, Ku, VNum, GArt, Retrozession, Kunden_Art)),
+-(gilt_ch_tabelle(Abschluss, Wert, AusTab, MinTab, MaxTab, Konstante, Tart, ELa, Wae, BLa, AArt, Ku, VNum, GArt, Tabelle)),
+courtage(Geb, Abschluss, Wert, AusTab, MinTab, MaxTab, Konstante, Tart, ELa, Wae, BLa, AArt, Ku, VNum, GArt, 4) :- 
+     Geb = minus(Minimum ,mal( Retrozession , c(Tabelle))),
+     Abschluss #= brutto,
+     brutto.
+
+-(gilt_konstante(Abschluss, Wert, AusTab, MinTab, MaxTab, Konstante, Tart, ELa, Wae, BLa, AArt, Ku, VNum, GArt, c(Tabelle), Grund)),
+courtage(Geb, Abschluss, Wert, AusTab, MinTab, MaxTab, Konstante, Tart, ELa, Wae, BLa, AArt, Ku, VNum, GArt, 1) :- 
+     Geb = c(Tabelle).
+
+-(gilt_konstante(Abschluss, Wert, AusTab, MinTab, MaxTab, Konstante, Tart, ELa, Wae, BLa, AArt, Ku, VNum, GArt, _g308, geldmarkt_papier)) :- 
+     Tart##geldmarkt_papier,
+     titel_art(Nummer, Tart),
+     VNum #= Nummer,
+     valoren_nummer(Abschluss, VNum).
+
+gilt_konstante(Abschluss, Wert, AusTab, MinTab, MaxTab, Konstante, Tart, ELa, Wae, BLa, AArt, Ku, VNum, GArt, Konstante, geldmarkt_papier) :- 
+     konst(Abschluss, Nummer, Konstante),
+     Tart#=geldmarkt_papier,
+     titel_art(Nummer, Tart),
+     VNum #= Nummer,
+     valoren_nummer(Abschluss, VNum).
+
+%-(gilt_konstante(Abschluss, Wert, AusTab, MinTab, MaxTab, Konstante, Tart, ELa% , Wae, BLa, AArt, Ku, VNum, GArt, _g316, geldmarkt_papier)) ,
+
+gilt_konstante(Abschluss, Wert, AusTab, MinTab, MaxTab, Konstante, Tart, ELa, Wae, BLa, AArt, Ku, VNum, GArt, Konstante, geldmarkt_papier) :- 
+     konst(Abschluss, Nummer, Konstante),
+     VNum #= Nummer,
+     valoren_nummer(Abschluss, VNum).
+
+-(gilt_konstante(Abschluss, Wert, AusTab, MinTab, MaxTab, Konstante, Tart, ELa, Wae, BLa, AArt, Ku, VNum, GArt, _g308, toff)) :- 
+     Tart##toff,
+     titel_art(Nummer, Tart),
+     VNum #= Nummer,
+     valoren_nummer(Abschluss, VNum).
+
+gilt_konstante(Abschluss, Wert, AusTab, MinTab, MaxTab, Konstante, Tart, ELa, Wae, BLa, AArt, Ku, VNum, GArt, Konstante, toff) :- 
+     konst(Abschluss, Nummer, Konstante),
+     Tart#=toff,
+     titel_art(Nummer, Tart),
+     VNum #= Nummer,
+     valoren_nummer(Abschluss, VNum).
+
+% -(gilt_konstante(Abschluss, Wert, AusTab, MinTab, MaxTab, Konstante, Tart, EL
+% , Wae, BLa, AArt, Ku, VNum, GArt, _g316, toff)),
+
+gilt_konstante(Abschluss, Wert, AusTab, MinTab, MaxTab, Konstante, Tart, ELa, Wae, BLa, AArt, Ku, VNum, GArt, Konstante, toff) :- 
+     konst(Abschluss, Nummer, Konstante),
+     VNum #= Nummer,
+     valoren_nummer(Abschluss, VNum).
+
+-(retrozession(Abschluss, Wert, AusTab, MinTab, MaxTab, Konstante, Tart, ELa, Wae, BLa, AArt, Ku, VNum, GArt, prozent(100), alte_obli)) :- 
+     Rest_Laufzeit#>12,
+     VNum #= Nummer,
+     valoren_nummer(Abschluss, VNum),
+     Tart#=obligation,
+     titel_art(Nummer, Tart).
+
+retrozession(Abschluss, Wert, AusTab, MinTab, MaxTab, Konstante, Tart, ELa, Wae, BLa, AArt, Ku, VNum, GArt, prozent(100), alte_obli) :- 
+     Rest_Laufzeit#<=12,
+     VNum #= Nummer,
+     valoren_nummer(Abschluss, VNum),
+     Tart#=obligation,
+     titel_art(Nummer, Tart).
+
+gilt_ch_tabelle(Abschluss, Wert, AusTab, MinTab, MaxTab, Konstante, Tart, ELa, Wae, BLa, AArt, Ku, VNum, GArt, tab_1_1) :- 
+     VNum #= Nummer,
+     valoren_nummer(Abschluss, VNum),
+     Tart#=anrecht,
+     titel_art(Nummer, Tart),
+     ELa#=ch,
+     emittent(Nummer, ELa).
+
+-(gilt_retrozession(Abschluss, Wert, AusTab, MinTab, MaxTab, Konstante, Tart, ELa, Wae, BLa, AArt, Ku, VNum, GArt, prozent(50), ska)),
+ska_anrecht(Abschluss, Wert, AusTab, MinTab, MaxTab, Konstante, Tart, ELa, Wae, BLa, AArt, Ku, VNum, GArt) :- 
+     VNum #= Nummer,
+     valoren_nummer(Abschluss, VNum),
+     Tart#=anrecht,
+     titel_art(Nummer, Tart).
+
+-(ska_anrecht(Nummer, Wert, AusTab, MinTab, MaxTab, Konstante, Tart, ELa, Wae, BLa, AArt, Ku, VNum, GArt)),
+gilt_retrozession(Abschluss, Wert, AusTab, MinTab, MaxTab, Konstante, Tart, ELa, Wae, BLa, AArt, Ku, VNum, GArt, prozent(50), ska) :- 
+     VNum #= Nummer,
+     valoren_nummer(Abschluss, VNum),
+     Tart#=anrecht,
+     titel_art(Nummer, Tart).
+
+gilt_ch_tabelle(Abschluss, Wert, AusTab, MinTab, MaxTab, Konstante, Tart, ELa, Wae, BLa, AArt, Ku, VNum, GArt, tab_1_2) :- 
+     VNum #= Nummer,
+     valoren_nummer(Abschluss, VNum),
+     Tart#=anrecht,
+     titel_art(Nummer, Tart),
+     ELa##ch,
+     emittent(Nummer, ELa).
+
+gilt_ausland_tabelle(Abschluss, Wert, AusTab, MinTab, MaxTab, Konstante, Tart, ELa, Wae, BLa, AArt, Ku, VNum, GArt, Tab) :- 
+     Land ## ch,
+     aus_tab(Land, AusTab, Tab),
+     BLa #= Land,
+     brsen_land(Abschluss, BLa),
+     VNum #= Nummer,
+     valoren_nummer(Abschluss, VNum),
+     Tart#=anrecht,
+     titel_art(Nummer, Tart),
+     Abschluss #= brutto,
+     brutto,
+     Wert#<=25000.
+
+gilt_maximum(Abschluss, Wert, AusTab, MinTab, MaxTab, Konstante, Tart, ELa, Wae, BLa, AArt, Ku, VNum, GArt, Max, Ausl_Komm) :- 
+     Land ## ch,
+     maxi(Land, MaxTab, Max),
+     BLa #= Land,
+     brsen_land(Abschluss, BLa),
+     VNum #= Nummer,
+     valoren_nummer(Abschluss, VNum),
+     Tart#=anrecht,
+     titel_art(Nummer, Tart),
+     Abschluss #= brutto,
+     brutto,
+     Wert#>=25000.
+
+-(gilt_minimum(Abschluss, Wert, AusTab, MinTab, MaxTab, Konstante, Tart, ELa, Wae, BLa, AArt, Ku, VNum, GArt, 30, 3750)) :- 
+     Wert#>=3750,
+     BLa#=ch,
+     brsen_land(Abschluss, BLa),
+     VNum #= Nummer,
+     valoren_nummer(Abschluss, VNum),
+     Tart#=anrecht,
+     titel_art(Nummer, Tart),
+     ELa#=ch,
+     emittent(Nummer, ELa),
+     Wert#>=300.
+
+gilt_minimum(Abschluss, Wert, AusTab, MinTab, MaxTab, Konstante, Tart, ELa, Wae, BLa, AArt, Ku, VNum, GArt, 30, 3750) :- 
+     Wert#<3750,
+     BLa#=ch,
+     brsen_land(Abschluss, BLa),
+     VNum #= Nummer,
+     valoren_nummer(Abschluss, VNum),
+     Tart#=anrecht,
+     titel_art(Nummer, Tart),
+     ELa#=ch,
+     emittent(Nummer, ELa),
+     Wert#>=300.
+
+-(gilt_minimum(Abschluss, Wert, AusTab, MinTab, MaxTab, Konstante, Tart, ELa, Wae, BLa, AArt, Ku, VNum, GArt, 30, 3000)) :- 
+     Wert#>=3000,
+     BLa#=ch,
+     brsen_land(Abschluss, BLa),
+     VNum #= Nummer,
+     valoren_nummer(Abschluss, VNum),
+     Tart#=anrecht,
+     titel_art(Nummer, Tart),
+     ELa##ch,
+     emittent(Nummer, ELa),
+     Wert#>=300.
+
+gilt_minimum(Abschluss, Wert, AusTab, MinTab, MaxTab, Konstante, Tart, ELa, Wae, BLa, AArt, Ku, VNum, GArt, 30, 3000) :- 
+     Wert#<3000,
+     BLa#=ch,
+     brsen_land(Abschluss, BLa),
+     VNum #= Nummer,
+     valoren_nummer(Abschluss, VNum),
+     Tart#=anrecht,
+     titel_art(Nummer, Tart),
+     ELa##ch,
+     emittent(Nummer, ELa),
+     Wert#>=300.
+
+-(gilt_minimum(Abschluss, Wert, AusTab, MinTab, MaxTab, Konstante, Tart, ELa, Wae, BLa, AArt, Ku, VNum, GArt, 30, Min)) :- 
+     Land ## ch,
+     mini(Land, MinTab, Min),
+     Wert#>=Min,
+     BLa #= Land,
+     brsen_land(Abschluss, BLa),
+     VNum #= Nummer,
+     valoren_nummer(Abschluss, VNum),
+     Tart#=anrecht,
+     titel_art(Nummer, Tart),
+     Abschluss #= brutto,
+     brutto,
+     Wert#>=300.
+
+gilt_minimum(Abschluss, Wert, AusTab, MinTab, MaxTab, Konstante, Tart, ELa, Wae, BLa, AArt, Ku, VNum, GArt, 30, Min) :- 
+     Land ## ch,
+     mini(Land, MinTab, Min),
+     Wert#<Min,
+     BLa #= Land,
+     brsen_land(Abschluss, BLa),
+     VNum #= Nummer,
+     valoren_nummer(Abschluss, VNum),
+     Tart#=anrecht,
+     titel_art(Nummer, Tart),
+     Abschluss #= brutto,
+     brutto,
+     Wert#>=300.
+
+gilt_minimum(Abschluss, Wert, AusTab, MinTab, MaxTab, Konstante, Tart, ELa, Wae, BLa, AArt, Ku, VNum, GArt, prozent_wert(10), 300) :- 
+     AArt#=kauf,
+     abschluss_art(Abschluss, AArt),
+     Wert#<300,
+     Tart#=anrecht,
+     titel_art(Nummer, Tart),
+     VNum #= Nummer,
+     valoren_nummer(Abschluss, VNum).
+
+gilt_minimum(Abschluss, Wert, AusTab, MinTab, MaxTab, Konstante, Tart, ELa, Wae, BLa, AArt, Ku, VNum, GArt, prozent_wert(10), 300) :- 
+     Wert#>=250,
+     Wert#<300,
+     Tart#=anrecht,
+     titel_art(Nummer, Tart),
+     VNum #= Nummer,
+     valoren_nummer(Abschluss, VNum).
+
+-(gilt_konstante(Abschluss, Wert, AusTab, MinTab, MaxTab, Konstante, Tart, ELa, Wae, BLa, AArt, Ku, VNum, GArt, 0, kassa)) :- 
+     Tart##kassa_obli_ch_bank,
+     titel_art(Nummer, Tart),
+     VNum #= Nummer,
+     valoren_nummer(Abschluss, VNum).
+
+gilt_konstante(Abschluss, Wert, AusTab, MinTab, MaxTab, Konstante, Tart, ELa, Wae, BLa, AArt, Ku, VNum, GArt, 0, kassa) :- 
+     Tart#=kassa_obli_ch_bank,
+     titel_art(Nummer, Tart),
+     VNum #= Nummer,
+     valoren_nummer(Abschluss, VNum).
+
+-(retrozession(Abschluss, Wert, AusTab, MinTab, MaxTab, Konstante, Tart, ELa, Wae, BLa, AArt, Ku, VNum, GArt, prozent(100), neue_obli)),
+neu_emission(Abschluss, Wert, AusTab, MinTab, MaxTab, Konstante, Tart, ELa, Wae, BLa, AArt, Ku, VNum, GArt, zeichnung, Tage) :- 
+     VNum #= Nummer,
+     valoren_nummer(Abschluss, VNum),
+     Tart#=obligation,
+     titel_art(Nummer, Tart),
+     BLa#=ch,
+     brsen_land(Abschluss, BLa),
+     AArt#=kauf,
+     abschluss_art(Abschluss, AArt).
+
+-(retrozession(Abschluss, Wert, AusTab, MinTab, MaxTab, Konstante, Tart, ELa, Wae, BLa, AArt, Ku, VNum, GArt, prozent(100), neue_obli)) :- 
+     Tage#>7,
+     VNum #= Nummer,
+     valoren_nummer(Abschluss, VNum),
+     Tart#=obligation,
+     titel_art(Nummer, Tart),
+     BLa#=ch,
+     brsen_land(Abschluss, BLa),
+     AArt#=kauf,
+     abschluss_art(Abschluss, AArt).
+
+-(neu_emission(Abschluss, Wert, AusTab, MinTab, MaxTab, Konstante, Tart, ELa, Wae, BLa, AArt, Ku, VNum, GArt, zeichnung, Tage)),
+retrozession(Abschluss, Wert, AusTab, MinTab, MaxTab, Konstante, Tart, ELa, Wae, BLa, AArt, Ku, VNum, GArt, prozent(100), neue_obli) :- 
+     Tage#<=7,
+     VNum #= Nummer,
+     valoren_nummer(Abschluss, VNum),
+     Tart#=obligation,
+     titel_art(Nummer, Tart),
+     BLa#=ch,
+     brsen_land(Abschluss, BLa),
+     AArt#=kauf,
+     abschluss_art(Abschluss, AArt).
+
+-(gilt_konstante(Abschluss, Wert, AusTab, MinTab, MaxTab, Konstante, Tart, ELa, Wae, BLa, AArt, Ku, VNum, GArt, _g356, neue_obli)),
+neu_emission(Abschluss, Wert, AusTab, MinTab, MaxTab, Konstante, Tart, ELa, Wae, BLa, AArt, Ku, VNum, GArt, zeichnung, Tage) :- 
+     VNum #= Nummer,
+     valoren_nummer(Abschluss, VNum),
+     Tart#=obligation,
+     titel_art(Nummer, Tart),
+     BLa##ch,
+     brsen_land(Abschluss, BLa),
+     AArt#=kauf,
+     abschluss_art(Abschluss, AArt).
+
+-(gilt_konstante(Abschluss, Wert, AusTab, MinTab, MaxTab, Konstante, Tart, ELa, Wae, BLa, AArt, Ku, VNum, GArt, _g354, neue_obli)) :- 
+     Tage#>7,
+     VNum #= Nummer,
+     valoren_nummer(Abschluss, VNum),
+     Tart#=obligation,
+     titel_art(Nummer, Tart),
+     BLa##ch,
+     brsen_land(Abschluss, BLa),
+     AArt#=kauf,
+     abschluss_art(Abschluss, AArt).
+
+-(neu_emission(Abschluss, Wert, AusTab, MinTab, MaxTab, Konstante, Tart, ELa, Wae, BLa, AArt, Ku, VNum, GArt, zeichnung, Tage)),
+gilt_konstante(Abschluss, Wert, AusTab, MinTab, MaxTab, Konstante, Tart, ELa, Wae, BLa, AArt, Ku, VNum, GArt, _g348, neue_obli) :- 
+     Tage#<=7,
+     VNum #= Nummer,
+     valoren_nummer(Abschluss, VNum),
+     Tart#=obligation,
+     titel_art(Nummer, Tart),
+     BLa##ch,
+     brsen_land(Abschluss, BLa),
+     AArt#=kauf,
+     abschluss_art(Abschluss, AArt).
+
+-(retrozession(Abschluss, Wert, AusTab, MinTab, MaxTab, Konstante, Tart, ELa, Wae, BLa, AArt, Ku, VNum, GArt, prozent(100), neue_note)),
+neu_emission(Abschluss, Wert, AusTab, MinTab, MaxTab, Konstante, Tart, ELa, Wae, BLa, AArt, Ku, VNum, GArt, liberierung, 0) :- 
+     VNum #= Nummer,
+     valoren_nummer(Abschluss, VNum),
+     Tart#=note,
+     titel_art(Nummer, Tart),
+     AArt#=kauf,
+     abschluss_art(Abschluss, AArt),
+     BLa#=ch,
+     brsen_land(Abschluss, BLa).
+
+-(neu_emission(Abschluss, Wert, AusTab, MinTab, MaxTab, Konstante, Tart, ELa, Wae, BLa, AArt, Ku, VNum, GArt, liberierung, 0)),
+retrozession(Abschluss, Wert, AusTab, MinTab, MaxTab, Konstante, Tart, ELa, Wae, BLa, AArt, Ku, VNum, GArt, prozent(100), neue_note) :- 
+     VNum #= Nummer,
+     valoren_nummer(Abschluss, VNum),
+     Tart#=note,
+     titel_art(Nummer, Tart),
+     AArt#=kauf,
+     abschluss_art(Abschluss, AArt),
+     BLa#=ch,
+     brsen_land(Abschluss, BLa).
+
+-(gilt_konstante(Abschluss, Wert, AusTab, MinTab, MaxTab, Konstante, Tart, ELa, Wae, BLa, AArt, Ku, VNum, GArt, _g354, neue_note)),
+neu_emission(Abschluss, Wert, AusTab, MinTab, MaxTab, Konstante, Tart, ELa, Wae, BLa, AArt, Ku, VNum, GArt, liberierung, 0) :- 
+     VNum #= Nummer,
+     valoren_nummer(Abschluss, VNum),
+     Tart#=note,
+     titel_art(Nummer, Tart),
+     AArt#=kauf,
+     abschluss_art(Abschluss, AArt),
+     BLa##ch,
+     brsen_land(Abschluss, BLa).
+
+-(neu_emission(Nummer, Wert, AusTab, MinTab, MaxTab, Konstante, Tart, ELa, Wae, BLa, AArt, Ku, VNum, GArt, liberierung, 0)),
+gilt_konstante(Abschluss, Wert, AusTab, MinTab, MaxTab, Konstante, Tart, ELa, Wae, BLa, AArt, Ku, VNum, GArt, _g342, neue_note) :- 
+     VNum #= Nummer,
+     valoren_nummer(Abschluss, VNum),
+     Tart#=note,
+     titel_art(Nummer, Tart),
+     AArt#=kauf,
+     abschluss_art(Abschluss, AArt),
+     BLa##ch,
+     brsen_land(Abschluss, BLa).
+
+-(gilt_konstante(Abschluss, Wert, AusTab, MinTab, MaxTab, Konstante, Tart, ELa, Wae, BLa, AArt, Ku, VNum, GArt, 0, meta)) :- 
+     GArt##meta,
+     geschfts_art(Abschluss, GArt).
+
+gilt_konstante(Abschluss, Wert, AusTab, MinTab, MaxTab, Konstante, Tart, ELa, Wae, BLa, AArt, Ku, VNum, GArt, 0, meta) :- 
+     GArt#=meta,
+     geschfts_art(Abschluss, GArt).
+
+-(gilt_konstante(Abschluss, Wert, AusTab, MinTab, MaxTab, Konstante, Tart, ELa, Wae, BLa, AArt, Ku, VNum, GArt, alt, report)) :- 
+     GArt##report,
+     geschfts_art(Abschluss, GArt),
+     GArt##deport,
+     geschfts_art(Abschluss, GArt).
+
+gilt_konstante(Abschluss, Wert, AusTab, MinTab, MaxTab, Konstante, Tart, ELa, Wae, BLa, AArt, Ku, VNum, GArt, alt, report) :- 
+     GArt#=report,
+     geschfts_art(Abschluss, GArt).
+
+gilt_konstante(Abschluss, Wert, AusTab, MinTab, MaxTab, Konstante, Tart, ELa, Wae, BLa, AArt, Ku, VNum, GArt, alt, report) :- 
+     GArt#=deport,
+     geschfts_art(Abschluss, GArt).
+
+-(retrozession(Abschluss_2, Wert, AusTab, MinTab, MaxTab, Konstante, Tart, ELa, Wae, BLa, AArt, Ku, VNum, GArt, prozent(100), ordre_li)),
+kunde(Abschluss, Wert, AusTab, MinTab, MaxTab, Konstante, Tart, ELa, Wae, BLa, AArt, Ku, VNum, GArt, Kunde) :- 
+     GArt#=ordre_li,
+     geschfts_art(Abschluss_1, GArt),
+     GArt#=ordre_li,
+     geschfts_art(Abschluss_2, GArt),
+     VNum #= Nummer_1,
+     valoren_nummer(Abschluss_1, VNum),
+     VNum #= Nummer_2,
+     valoren_nummer(Abschluss_2, VNum),
+     Tart#=obligation,
+     titel_art(Nummer_1, Tart),
+     Tart#=obligation,
+     titel_art(Nummer_2, Tart),
+     Wert_2#>=5000,
+     Wert_1 #>= Wert_2,
+     Wae #= Land,
+     whrung(Nummer_1, Wae),
+     Wae #= Land,
+     whrung(Nummer_2, Wae).
+
+-(retrozession(Abschluss_2, Wert, AusTab, MinTab, MaxTab, Konstante, Tart, ELa, Wae, BLa, AArt, Ku, VNum, GArt, prozent(100), ordre_li)),
+kunde(Abschluss, Wert, AusTab, MinTab, MaxTab, Konstante, Tart, ELa, Wae, BLa, AArt, Ku, VNum, GArt, Kunde) :- 
+     GArt#=ordre_li,
+     geschfts_art(Abschluss_1, GArt),
+     GArt#=ordre_li,
+     geschfts_art(Abschluss_2, GArt),
+     VNum #= Nummer_1,
+     valoren_nummer(Abschluss_1, VNum),
+     VNum #= Nummer_2,
+     valoren_nummer(Abschluss_2, VNum),
+     Tart#=obligation,
+     titel_art(Nummer_1, Tart),
+     Tart#=obligation,
+     titel_art(Nummer_2, Tart),
+     Wert_2#>=5000,
+     Wert_1 #>= Wert_2,
+     Wae #= Land,
+     whrung(Nummer_1, Wae),
+     Wae #= Land,
+     whrung(Nummer_2, Wae).
+
+-(kunde(Abschluss_1, Wert, AusTab, MinTab, MaxTab, Konstante, Tart, ELa, Wae, BLa, AArt, Ku, VNum, GArt, Kunde)),
+-(kunde(Abschluss_2, Wert, AusTab, MinTab, MaxTab, Konstante, Tart, ELa, Wae, BLa, AArt, Ku, VNum, GArt, Kunde)),
+retrozession(Abschluss, Wert, AusTab, MinTab, MaxTab, Konstante, Tart, ELa, Wae, BLa, AArt, Ku, VNum, GArt, prozent(100), ordre_li) :- 
+     GArt#=ordre_li,
+     geschfts_art(Abschluss_1, GArt),
+     GArt#=ordre_li,
+     geschfts_art(Abschluss_2, GArt),
+     VNum #= Nummer_1,
+     valoren_nummer(Abschluss_1, VNum),
+     VNum #= Nummer_2,
+     valoren_nummer(Abschluss_2, VNum),
+     Tart#=obligation,
+     titel_art(Nummer_1, Tart),
+     Tart#=obligation,
+     titel_art(Nummer_2, Tart),
+     Wert_2#>=5000,
+     Wert_1 #>= Wert_2,
+     Wae #= Land,
+     whrung(Nummer_1, Wae),
+     Wae #= Land,
+     whrung(Nummer_2, Wae).

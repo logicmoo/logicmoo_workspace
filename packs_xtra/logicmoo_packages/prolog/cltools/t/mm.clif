@@ -1,0 +1,8 @@
+(cl-module r1
+(forall (x)(r1 x x))
+)
+(cl-module r2
+(forall (x)(r2 x x))
+)
+
+

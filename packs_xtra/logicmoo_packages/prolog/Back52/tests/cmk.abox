@@ -1,0 +1,757 @@
+
+cmktest :-
+	write('*** TEST FILE: cmk.abox'), nl,
+	cmkInit,
+	cmkABox,
+	nl, !, 
+	cmkIBoxInit,
+	cmkAIBox,
+	nl, !,
+	cmkInit,
+	cmkRevision,
+	nl, !,
+	cmkNullNr,
+	nl, !,
+	cmkThomasConfigurationExample,
+	nl, !.
+
+cmkInit :-
+	(cmkinit ->
+	     cmk_success(cmkinit)
+	;    cmk_fail(cmkinit)).
+
+cmkinit :-
+	backinit,
+	backstate(verbosity = warning),
+	thing :< anything, 
+	c  :< thing,
+	d  :<   thing and not(c),
+					%% disjoint(c,d). 
+	r  :< domain(c) and range(d),
+	s1 :< r and domain(c) and range(d),
+	s2 :< r and domain(c) and range(d),
+	s3 :< s1 and s2, 
+	s5 :=  s4 and domain(c), 
+ 
+	d1 :< d,
+	d2 :< d and not(d1), 
+ 
+	c1 :=   c and all(r, d1),
+	c2 :=   c and all(r, d2),
+	c3 :=   c and atleast(2, r),
+	c4 :=   c and all(s2, d2),
+	c5 :=   c and all(s3, d2) and atleast(1,r), 
+ 
+	cyc :< domain(c) and range(c),
+ 
+	named :< domain(thing) and range(string),
+
+ 	months  := attribute_domain(
+    			[jan, feb, mar, apr, may, jun,
+     			jul, aug, sep, oct, nov, dez]),
+	summer_months  :=      aset(jun..sep,months),
+	days  := 1..31,
+	years  := 0..2100,
+	day  :< range(days),
+
+	month  :< range(months),
+	year  :< range(years),
+	date  :< thing
+   		and atmost(1, day)
+   		and atmost(1, month)
+   		and atmost(1, year),
+	summer_date     :=      date and all(month, summer_months),
+ 
+	country  :< thing,
+	eec_country := country and
+			 oneof([dk, gb, b, irl, d, e, l, p, f, i, nl, gr]),
+	company  :< thing,
+	residence  :< domain(company) and range(country),
+	italian_company := company and residence:i,
+	eec_company := company and all(residence,eec_country),
+
+        project_group :< anything,
+	backmember    := oneof([albrecht,carsten,jan,jochen,mirjam,oli,thomas,uwe]),
+	back          := project_group and all(consists_of, backmember),
+
+	child :< domain(anything) and range(anything),
+	goa := all(child,all(child,a)), %% grandparent of A's.
+	grandchild := child.child,
+	goa1 := all(grandchild,a),
+	female :< anything,
+	father := atleast(1,child) and not(female),
+	mother := atleast(1,child) and female,
+	!.
+
+
+cmkABox :-
+	backinit(abox),
+	cmkABox(0).
+
+cmkABox(N) :-
+	(N == 34 ->
+	     cmk_done(cmkABox)
+	;    N1 is N+1,
+	     cmkABox1(N1),
+	     cmkABox(N1)).
+
+cmkABox1(N) :-  %% Single Test
+	(cmkabox(N) ->
+	     cmk_success(cmkabox(N))
+	;    cmk_fail(cmkabox(N))).
+
+
+
+%% just two very simple tells
+cmkabox(1) :-
+	backtell( _VAR :: c2),
+    	backask(_VAR ?: c),
+	!.
+cmkabox(2) :-
+	backtell(d2obj1 :: d2),
+	backask(d2obj1 ?: d2),
+	\+ backask(d2obj1 ?: d1),
+	!.
+%% Error: Instantiation of disjoint concepts.
+cmkabox(3) :-          %% disjoint inconsistent: d2obj1 isa d2 (cf. a5t2)
+	\+ backtell(d2obj1 :: d1),
+	!.
+cmkabox(4) :-                                        %% NR inconsistent
+	backtell(o3 :: c and atleast(1,r)),
+	\+ backtell(o3 :: c and atmost(0,r)),
+	!.
+%% In the following two examples it is the VR "d1 and d2" which
+%% is incoherent, so the NR of role "r" will be [0,0].
+%% The instantiated concept, however, is coherent!
+cmkabox(5) :-                                %% VR disjoint inconsistent
+	backtell(c1_2obj :: c1 and c2),
+	backask(c1_2obj ?: atmost(0,r)),
+	\+ backask(c1_2obj ?: atleast(1,r)),
+	!.
+cmkabox(6) :-                               %% VR disjoint inconsistent
+	backtell(cd1_d2obj :: c and all(r,d1) and all(r,d2) ),
+	backask(cd1_d2obj ?: atmost(2,r)),
+	!. 
+%% The following Tells are establishing role-fillers and
+%% test related issues like propagating fillers up to
+%% superroles.
+cmkabox('7a') :-
+	backtell(dobj1 :: d),
+	!.
+cmkabox(7) :-                                %% asserting role-fillers
+	cmkabox('7a'),
+	backtell(cobj1 :: c and r:dobj1),
+	backask(cobj1 ?: atleast(1,r)),
+	\+ backask(cobj1 ?: c and atmost(0,r)),
+	!.
+%% propagating role-fillers up:
+%%  s1(cobj2, dobj1) => r(cobj2, dobj1)
+cmkabox(8) :-
+	cmkabox('7a'),
+	backtell(cobj2 :: c and s1:dobj1),
+	backask(cobj2 ?: c and r:dobj1),
+	\+ backask(cobj2 ?: c1),
+	!.
+%% Error: Uppropagation of filler violates NR:
+%% r(CObj, RF), r(CObj, card(0,1))
+%% s1(CObj, dobj1) => r(CObj, dobj1) => r(CObj, card(2,1))
+cmkabox(9) :-
+	cmkabox('7a'),
+	\+ backtell(_CObj :: c and atmost(1,r)
+                      and r: (_RF :: d)
+                      and s1: dobj1),
+	!.
+%% propagating VR to role-filler:
+%%  d(dobj2), c1(c1obj1), r(c1obj1, dobj2) => d1(dobj2)
+cmkabox(10) :-
+	backtell(c1obj1 :: c1 and r: (dobj2 :: d)),
+	backask(dobj2 ?: d1),
+	!.
+
+cmkabox(d1) :-                                  %% three filler of d1
+	backtell(rf1 :: d1),
+	backtell(rf2 :: d1),
+	backtell(rf3 :: d1),
+	!.
+cmkabox(d2) :-                                   %% three filler of d2
+	backtell(rf4 :: d2),
+	backtell(rf5 :: d2),
+	backtell(rf6 :: d2),
+	!.
+%% Abstraction:
+%%  The following tells illustrate the abstraction of better
+%%  MSCs than the one provided in ATL expression.
+%%  (a5td1/a5td2 are introducing the required filler objects).
+ 
+%% abstract C1OBJ as an instance of C1:
+%%  r: close(rf1)
+%%  -> r(C1obj, rf1), r(C1obj, card(1,1))
+%%  => all(r,d1) => all(s1,d1), all(s2,d1)
+cmkabox(11) :-
+	cmkabox(d1),
+	backtell(_C1obj :: c and r: close(rf1) ),
+	backask(_C1obj ?: c1),
+	backask(_C1obj ?: all(s1,d1) and all(s2,d1)),
+	!.
+%% abstract C2OBJ as an instance of C2, C3:
+%%  s1(C2obj, rf4), s1(C2obj, rf5) => s1(C2obj, card(2,2)) => all(s1, d2)
+%%  up-propagation:
+%%  r(C2obj, rf4), r(C2obj, rf5) => r(C2obj, card(2,2)) => c3(C2obj)
+%%  => all(r, d2) => all(s2, d2) => c2(C2obj)
+cmkabox(12) :-
+	cmkabox(d2),
+	backtell(_C2obj :: c and atmost(2,r) and s1: (rf4 and rf5)),
+	backask(_C2obj ?: c2 and c3),
+	!.
+ %% abstract C2OBJ as an instance of C2, C3, (C4):
+%%  s2(C2obj, rf4), s2(C2obj, rf5) => s2(C2obj, card(2,2))
+%%  => all(s2, d2) => c4(C2obj)
+%%  up-propagation:
+%%  r(C2obj, rf4), r(C2obj, rf5) => r(C2obj, card(2,2)) => c3(C2obj)
+%%  => all(r, d2) => all(s1, d2) => c2(C2obj)
+cmkabox(13) :-
+	cmkabox(d2),
+	backtell(_C2obj :: c and atmost(2,r)
+                     and s2: (rf4 and rf5)),
+	backask(_C2obj ?: c4),
+	backask(_C2obj ?: c2 and c3),
+	!.
+%% abstract C5OBJ as an instance of C3, C4, C5:
+%%  (C5obj, rf4):s1, (C5obj, rf5):s2, C5obj:exact(1,s1), C5obj:exact(1,s2)
+%%  up-propgation: ... C5obj:atleast(2,r)
+%%  => C5obj:all(s2, d2) and all(s1,d2) => C5obj:c4
+%%  => C5obj:all(s3,d2) => C5obj:c5
+cmkabox(14) :-
+	cmkabox(d2),
+	backtell(_C5obj :: c 
+                     and s1: close(rf4)
+                     and s2: close(rf5) ),
+	backask(_C5obj ?: c3 and c4 and c5),
+	!.
+
+%% Backward Propagation:
+%%  c1obj3 is re-recognized as an instance of c1obj3 the moment
+%%  the last of its role-fillers (rf8) is told to be a d1.
+cmkabox(d) :-                                        %% two filler of d
+	backtell(rf7 :: d),
+	backtell(rf8 :: d),
+	!.
+cmkabox(15) :-                                   %% abstract: c3(c1obj3)
+	backtell( c1obj3 :: c and atmost(3,r)
+                           and r: (rf1 and rf7 and rf8)),
+	backask(c1obj3 ?: c3),
+	\+ backask(c1obj3 ?: c1),
+	!.
+cmkabox(16) :-                                 %% BackProp but no effect
+	backtell( rf7 :: d1),
+	\+ backask(c1obj3 ?: c1),
+	!.
+cmkabox(17) :-                      %% BackProp: all(r,d1) => c1(c1obj3)
+	backtell( rf8 :: d1),
+	backask(c1obj3 ?: c1),
+	!.
+
+
+%% 'Double' Backward Propagation:
+%% The description of xa is a value restriction at a role of xb and vice versa.
+%% Thus, additional information at xb must be backward propagated to xa, whose 
+%% description can now be further specialized and in turn gets backward 
+%% propagated to xb.
+
+cmkabox(18) :-
+	backtell(ca :< atmost(1,r)),
+	backtell(cb :< atmost(1,s)),
+	backtell(cc :< anything),
+	backtell(cd := all(r,cc)),
+	backtell(ce := all(s,cd)),
+	backtell(xa :: ca and r:xb),	% -> xa :: all(r,description(xb))
+	backtell(xb :: cb and s:xa),	% -> xb :: all(s,description(xa))
+	backtell(xb :: cc),		% -> xa :: all(r,cc) -> xa :: cd
+					% -> xb :: all(s,cd) -> xb :: ce
+	backask(xb ?: ce),
+	!.
+ 
+%% Cyclic role-fillers:
+%%  the role "cyc" is defined with domain and range "c".
+%%  Objects "o1" and "o2" have each other as role-fillers.
+ 
+%% Error: the "embedded" o1 is unknown (aliases are only asserted
+%%  after successful object introduction).
+%% Not an Error in V5 !!
+cmkabox(19) :-                                  %% cyclic role-fillers:
+	backtell(o1 :: c and cyc:
+                 (o2 :: c and cyc: o1)),
+	!.
+%% Propagating atmost(0,cyc) to o2:
+%%  cyc(o2, o1) => cyc(o2, card(1,in))
+%%  + atmost(0,cyc) => cyc(o2, card(1,0))  <-- Error
+cmkabox(20) :-
+	\+ backtell(o1 :: c and all(cyc, atmost(0, cyc))),
+	!.
+%% Propagating atleast(2,r) via o2 to o1.
+cmkabox(21) :-
+	%%            o1            o2       o1
+	%%            |             |        |
+	%%            V             V        V
+	backtell(o1 :: c and all(cyc, all(cyc, atleast(2,r)))),
+	o1 ?: c3,
+	!.
+
+%% Tests for imported Prolog types (Numbers and String) and Asets
+ 
+cmkabox(22) :-
+	backtell(_NamedThing :: thing and named: i_have_a_name),
+	!.
+%% A simple date object
+cmkabox(23) :-
+	backtell( date1 ::
+        	date
+        	and day:   17
+        	and month: feb
+        	and year:  1990),
+	!.
+ 
+%% Typechecking of non-concept instances:
+%%  Unlike instances of generic concepts, instances of
+%%  Number-Ranges and Asets are typechecked
+%%  (because no forward propagation might occur to them-one
+%%  cannot tell a "1" to be a "3"),
+%%  The following examples fail on typechecking.
+cmkabox(24) :-                   %% Incorrect filler for role "days"
+	\+ backtell( _DATE ::
+        	date
+        	and    day: 32
+        	and month: aug
+        	and year: 1990),
+	!.
+cmkabox(25) :-                    %% Incorrect filler for role "month"
+	\+ backtell( _DATE ::
+        	date
+        	and    day: 32
+        	and month: august
+        	and year: 1990),
+	!.
+%% Abstraction on basis of a Aset restricted role.
+%%  (abstract summer_date(date2)).
+cmkabox(26) :-
+	backtell( date2 ::
+        	date
+        	and    day: 5
+        	and month: aug
+        	and year: 1990),
+	backask(date2 ?: summer_date),
+	!.
+
+%% Processing Postponed Assertions
+cmkabox(27) :-
+	X :: anything,
+	backtell(X :: c and cyc: (X :: c1)),
+	X ?: c1,
+	X ?: c,
+	!.
+%% Error: 
+%%  disjoint concepts d1 and d2
+%%  => all(r, d1 and d2) -> atmost(0,r) 
+%%  but c3 := c and atleast(2,r) => X isa nothing.
+cmkabox(28) :-
+	X :: anything,
+	\+ backtell(X :: c1 and cyc: (X :: c2 and cyc: (X::c3))),
+	\+ X ?: c1 and c3 and c2,
+	!.
+%% Error: disjoint concepts c and d
+cmkabox(29) :-
+	X :: anything,
+	\+ backtell(X :: c and cyc: (X :: d)),
+	!.
+%% Error: disjoint concepts c and d
+cmkabox(30) :-
+	X :: anything, Y :: anything,
+	\+ backtell(X :: c and cyc: (Y :: c and cyc: (X :: d))),
+	!.
+cmkabox(31) :-
+	j1 :: atmost(1,child) and child: (k1 :: atmost(1,child) and child: l1),
+	l1 :: a,
+	j1 ?: goa,
+	\+ k1 ?: goa,
+	!.
+cmkabox(32) :-
+	j2 :: child: (k2 :: atmost(1,child) and child: (l2::a)),
+	j2 :: atmost(1,child),
+	j2 ?: goa,
+	\+ k2 ?: goa,
+	!.
+cmkabox(33) :-
+	j3 :: atmost(1,child) 
+              and child: (k3 :: atmost(1,child) 
+                                and child: (l3 :: a)),
+	j3 ?: goa,
+	\+ k2 ?: goa,
+	!.
+cmkabox(34) :- 
+	chris :: child: maxim,
+	\+ chris ?: father,
+	\+ chris ?: mother,
+	chris :: female,
+	chris ?: mother,
+	\+ chris ?: father.
+
+cmkIBoxInit :- cmkiboxinit.
+
+cmkiboxinit :-
+	cmkinit,
+	backtell(c00 := all(r,k)),
+	backtell(c01 => all(r,k)),
+	backtell(d3 :< d),
+	backtell(c6 := s1:cmkY1),
+	backtell(c3 => c1),
+	backtell(c6 => s2:cmkY2),
+	write('+++ cmkiboxinit succeeded'),
+	nl,
+	!.
+cmkiboxinit :-
+	write('--- cmkiboxinit failed'), nl,
+	!, fail.
+
+cmkAIBox :- cmkaibox.
+cmkaibox :-
+	cmkaibox(1),
+	cmkaibox('1a'),
+	cmkaibox(2),
+	cmkaibox(3),
+	cmkaibox(4),
+	cmkaibox(5).	
+
+cmkaibox(1) :-
+	X :: c3,
+	X ?: c3 noibox, X ?: c3,
+	\+ X ?: c1 noibox,
+	X ?: c1,
+	write('+++ abox-ibox test 1 succeeded'),
+	nl,
+	!.
+cmkaibox('1a') :-
+	X1 :: c00,
+	X1 :: r:ox1,
+	ox1 ?: k noibox,
+	ox1 ?: k,
+	_X2 :: c00 and r:ox2,
+	ox2 ?: k noibox,
+	ox2 ?: k,
+	X3 :: c01,
+	X3 :: r:ox3,
+	\+ ox3 ?: k noibox,
+	ox3 ?: k,
+	_X4 :: c01 and r:ox4,
+	\+ ox4 ?: k noibox,
+	ox4 ?: k,
+	write('+++ abox-ibox test 1a succeeded'),
+	nl,
+	!.
+cmkaibox(2) :-
+	y1 :: d,
+	x  :: c and r:y1,
+	y2 :: d and inv(r):x,
+	\+ x ?: c1 noibox, 
+	x ?: c1,
+	y1 ?: d1, \+ y1 ?: d2,
+	y2 ?: d1, \+ y2 ?: d1 noibox,
+	write('+++ abox-ibox test 2 succeeded'),
+	nl,
+	!.
+cmkaibox(3) :-
+	y3 :: d2,
+	\+ x2 :: c3 and r:y3,
+	write('+++ abox-ibox test 3 succeeded'),
+	nl,
+	!.
+cmkaibox(4) :-
+	x3 :: c6,
+	x3 ?: c3,
+	x3 ?: c1,
+	cmkY1 ?: d1, 
+	cmkY2 ?: d1,
+	cmkY1 ?: d noibox,
+	\+ cmkY2 ?: d noibox,
+	backtell(redescribe(x3::c)),
+	\+ x3 ?: c1,
+	\+ x3 ?: c3,
+	\+ cmkY1 ?: d1, 
+	\+ cmkY2 ?: d1, 
+	\+ cmkY1 ?: d noibox,
+	\+ cmkY2 ?: d noibox,
+	write('+++ abox-ibox test 4 succeeded'),
+	nl,
+	!.	
+cmkaibox(5) :-
+	x4 :: c6,
+	cmkY1 ?: d1, cmkY2 ?: d1,
+	x5 :: c6,
+	backtell(redescribe(x4::c)),
+%-cmk- 	backtell(forget(x4)),
+	cmkY1 ?: d1, 
+	cmkY2 ?: d1,
+	cmkY1 ?: d noibox,
+	\+ cmkY2 ?: d noibox,	
+	write('+++ abox-ibox test 5 succeeded'),
+	nl,
+	!.
+cmkaibox(N) :-
+	write('--- abox-ibox test '),
+	write(N),
+	write(' failed'),
+	assert(test(cmk_abox_ibox_test(N), failed)),
+	nl.
+
+cmkRevision :- cmkrevision.
+cmkrevision :-
+	cmkrev(1),
+	cmkrev(2),
+	cmkrev(3),
+	cmkrev(4),
+	cmkrev(5),
+	cmkrev(6).
+
+cmkrev(1) :-
+	y :: d,
+	x :: c1 and r:y,
+	y ?: d1 noibox,
+	backtell(redescribe(x :: c)),
+	\+ x ?: c1 noibox,
+	\+ x ?: atleast(1,r) noibox,
+	\+ y ?: d1 noibox,
+	\+ y ?: d1,
+	write('+++ abox revision test 1 succeeded'),
+	nl,
+	!.
+cmkrev(2) :-
+	z  :: d,
+	x1 :: c1 and r:(y and z),
+	backtell(redescribe(x1 :: c and r:y)),
+	\+ y ?: d1 noibox,
+	\+ z ?: d1 noibox,
+	\+ z ?: atleast(1,inv(r)),
+	write('+++ abox revision test 2 succeeded'),
+	nl,
+	!.
+cmkrev(3) :-
+	x1 :: c1 and r:z,
+	z ?: d1, y ?: d1,
+	backtell(redescribe(x1 :: c1 and r:y)),
+	y ?: d1 noibox,
+	\+ z ?: d1 noibox,
+	write('+++ abox revision test 3 succeeded'),
+	nl,
+	!.
+cmkrev(4) :-
+	foo1 :: inv(r): foo2 and named: 'test',
+	foo2 :: c1 and r: foo1, %% c1 ?< all(r,d1),
+	foo1 ?: d1,
+	backtell(forget(foo1 :: named: 'test')),
+	foo1 ?: d1,
+	write('+++ abox revision test 4 succeeded'),
+	nl,
+	!.
+cmkrev(5) :-
+	%% cmkrev(4), 
+	backtell(c01 => all(r,k)),
+	backtell(redescribe(foo2 :: c01 and r: foo1)),  %% co1 => all(r,k)
+	foo1 :: inv(r): foo2 and named: 'test',
+	foo1 ?: k,
+	backtell(forget(foo1 :: named: 'test')),
+	foo1 ?: inv(r):foo2,
+	foo1 ?: k,
+	write('+++ abox revision test 5 succeeded'),
+	nl,
+	!.
+cmkrev(6) :-
+	%% cmkrev(5), 
+	foo2 ::	all(s4,d1) and s5:foo1,  %% => s4:foo1
+	foo1 :: inv(r): foo2 and named: 'test' and inv(s5):foo2,
+	foo1 ?: k and d1,
+	backtell(forget(foo1 :: inv(r): foo2 and named: 'test')),
+	foo1 ?: k and d1,
+	write('+++ abox revision test 6 succeeded'),
+	nl,
+	!.
+cmkrev(N) :-
+	write('--- abox revision test '),
+	write(N),
+	write(' failed'),
+	assert(test(cmk_abox_revision_test(N), failed)),
+	nl.
+
+
+%% new tests for the atmost(0,R)-Patch of v5.2
+
+cmkNullNr :-
+	cmkNullNr(0).
+
+cmkNullNr(N) :-
+	(N == 3 ->
+	     cmk_done(cmkNullNr)
+	;    N1 is N+1,
+	     cmkNullNr1(N1),
+	     cmkNullNr(N1)).
+
+cmkNullNr1(1) :-
+	N = 1,
+	backinit,
+	c 	:< anything,
+	d1 	:< anything,
+	d2	:< anything and not(d1),
+	r	:< domain(c) and range(anything),
+	s 	:< r,
+	t	:= r and range(d2),
+	%% the objects
+	y1	:: d1,
+	y2	:: d2,
+	x1	:: atmost(1,r) and r:y1,
+	x2	:: atmost(1,r) and r:y2,
+	%% the queries
+	(backretrieve([] = getall atmost(0,s)) ->
+	    cmk_success(cmkNullNr(N,a))
+	;   cmk_fail(cmkNullNr(N,a))),
+	(backretrieve([] = getall atmost(0,s) and all(s,d2)) ->
+	    cmk_success(cmkNullNr(N,b))
+	;   cmk_fail(cmkNullNr(N,b))),
+	(backretrieve([[x1]] = getall atmost(0,t)) ->
+	    cmk_success(cmkNullNr(N,c))
+	;   cmk_fail(cmkNullNr(N,c))),
+	!.
+
+cmkNullNr1(2) :-
+	N = 2, 
+	backinit,
+	c 	:< anything,
+	d1 	:< anything,
+	d2	:< anything and not(d1),
+	r1	:< domain(c) and range(anything),
+	r2	:< domain(c) and range(anything),
+	s 	:= r1 and r2,
+	t	:< r1 and r2 and range(d2),
+	%% the objects
+	y1	:: d1,
+	y2a	:: d2,
+	y2b	:: d2,
+	x1	:: atmost(1,r1) and r1:y1 and atmost(1,r2) and r2:y2b,
+	x2	:: atmost(1,r1) and r1:y2a 
+    			and atmost(1,r2) and r2:y2b and all(s,d1),
+	x3	:: atmost(2,r1) and r1:y2a and r2:y2a and s:y1,
+	%% the queries
+	(x1 ?: atmost(0,s) -> 
+	    cmk_success(cmkNullNr(N,a))
+	;   cmk_known_incompleteness(cmkNullNr(N,a))),
+	    %% would require reasoning-by-case
+        (x1 ?: atmost(0,t) ->
+	    cmk_success(cmkNullNr(N,b))
+	;   cmk_known_incompleteness(cmkNullNr(N,b))),
+	    %% would require reasoning-by-case
+	(x2 ?: atmost(0,s) ->
+	    cmk_success(cmkNullNr(N,c)); cmk_fail(cmkNullNr(N,c))),
+	(x2 ?: atmost(0,t) ->
+	    cmk_success(cmkNullNr(N,d)); cmk_fail(cmkNullNr(N,d))),
+	(x3 ?: atmost(0,t) ->
+	    cmk_fail(cmkNullNr(N,e)); cmk_success(cmkNullNr(N,e))),
+	(x3 ?: atmost(1,t) ->
+	    cmk_success(cmkNullNr(N,f))
+	;   cmk_known_incompleteness(cmkNullNr(N,f))),
+	    %% would require reasoning-by-case
+	!.
+
+cmkNullNr1(3) :- 
+	N = 3, 
+	backinit,
+	c 	:< anything,
+	d1 	:< anything,
+	d2	:< anything and not(d1),
+	r	:< domain(c) and range(anything),
+	s 	:< r,
+	t	:= r and range(d2),
+	c1	:= c and atmost(0,t),
+	%% the objects
+	y1	:: d1,
+	y2	:: d2,
+	x1	:: atmost(1,r) and r:y1,
+	x2	:: atmost(1,r) and r:y2,
+	%% the queries
+	(backretrieve([] = getall atmost(0,s)) ->
+	    cmk_success(cmkNullNr(N,a)) ; cmk_fail(cmkNullNr(N,a))),
+	(backretrieve([] = getall atmost(0,s) and all(s,d2)) ->
+	    cmk_success(cmkNullNr(N,b)) ; cmk_fail(cmkNullNr(N,b))),
+	(backretrieve([[x1]] = getall atmost(0,t)) ->
+	    cmk_success(cmkNullNr(N,c)) ; cmk_fail(cmkNullNr(N,c))),
+	(x1 ?: c1 ->
+	    cmk_success(cmkNullNr(N,d)) ; cmk_fail(cmkNullNr(N,d))),
+	(x2 ?: c1 ->
+	    cmk_fail(cmkNullNr(N,e)) ; cmk_success(cmkNullNr(N,e))),
+	%% revisions
+	backtell(redescribe(y1 :: d2)),
+	(x1 ?: c1 ->
+	    cmk_fail(cmkNullNr(N,f)) ; cmk_success(cmkNullNr(N,f))),
+	backtell(redescribe(y2 :: d1)),
+	(x2 ?: c1 ->
+	    cmk_success(cmkNullNr(N,g)) ; cmk_fail(cmkNullNr(N,g))),
+	!.
+
+cmkNullNr1(N) :- cmk_fail(cmkNullNr(N)).
+
+
+cmkThomasConfigurationExample :-
+	backinit,
+	backread(backmacros),
+	backstate(verbosity = warning),
+	konfiguration :< anything,
+	teile :< anything,
+	leistung :< range(number) type feature,
+	motor 	     :< teile and exactly(1,leistung),
+	motor1 	     := motor and all(leistung,le(1000)),
+	tragkraft :< range(number) type feature,
+	rad          :< teile and not(motor) and exactly(1,tragkraft),
+	rad1	     := rad and all(tragkraft,le(1000)),
+	beladbar_bis :< range(number) type feature,
+	ladeflaeche  :< teile and not(motor) and not(rad) 
+			and exactly(1,beladbar_bis),
+	ladeflaeche1 := ladeflaeche and all(beladbar_bis,le(1000)),
+	some(aufbau,ladeflaeche1) => some(raeder,rad1),
+	some(aufbau,ladeflaeche1) => all(antrieb,motor1), 
+	lkw_konfiguration1 := konfiguration and
+		      exactly(1,antrieb,motor) and
+		      atleast(3,raeder,rad) and
+		      atleast(1,aufbau,ladeflaeche),
+	test1 :: lkw_konfiguration1 and (aufbau : (_X :: ladeflaeche1)),
+	(some(aufbau,ladeflaeche1) ?< some(raeder,rad1) ->
+	     cmk_success(cmkThomasConfigurationExample(1))
+	; cmk_fail(cmkThomasConfigurationExample(1))),
+	(some(aufbau,ladeflaeche1) ?< all(antrieb,motor1) ->
+	     cmk_success(cmkThomasConfigurationExample(2))
+	; cmk_fail(cmkThomasConfigurationExample(2))),
+	(test1 ?: some(aufbau,ladeflaeche1) ->
+	     cmk_success(cmkThomasConfigurationExample(3))
+	; cmk_fail(cmkThomasConfigurationExample(3))),
+	(test1 ?: some(raeder,rad1) ->
+	     cmk_success(cmkThomasConfigurationExample(4))
+	; cmk_fail(cmkThomasConfigurationExample(4))),
+	(test1 ?: all(antrieb,motor1) ->
+	     cmk_success(cmkThomasConfigurationExample(5))
+	; cmk_fail(cmkThomasConfigurationExample(5))),
+	cmk_success(cmkThomasConfigurationExample),
+	!.
+cmkThomasConfigurationExample :- cmk_fail(cmkThomasConfigurationExample).
+
+
+
+%% Util preds
+
+cmk_success(T) :-
+	write('+++ Test '), write(T), write(' succeeded'), nl.
+
+cmk_fail(T) :-
+	write('--- Test '), write(T), write(' failed'), nl,
+	assert(test(T, failed)).
+
+cmk_known_incompleteness(T) :-
+	write('~~~ Test '), write(T), 
+	write(' failed (known incompleteness'), nl.
+
+cmk_done(T) :-
+	write('    Tests of '), write(T), write(' done'), nl.

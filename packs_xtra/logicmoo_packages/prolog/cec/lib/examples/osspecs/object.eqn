@@ -1,0 +1,17 @@
+module object.
+
+bool < object.
+
+op true : bool.
+op false : bool.
+op (\==) : (object * object -> bool) .
+op (==) : (object * object -> bool) .
+
+var [x : object, y: object].
+
+(x \== x) = false .
+(x \== y) = (y \== x) .
+(x == y) = false => (x \== y) = true .
+(x == y) = true => x = y .
+(x == y) = (y == x) .
+(x == x) = true .

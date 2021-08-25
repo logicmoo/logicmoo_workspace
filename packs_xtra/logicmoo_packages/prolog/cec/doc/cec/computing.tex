@@ -1,0 +1,192 @@
+\section{Computing with Completed Specifications}
+
+One may regard the completed specification as a first step towards an operational
+implementation. 
+Terms can be efficiently normalized, identities efficiently proved or disproved.
+Moreover the solutions of equations can be found through narrowing.
+
+\subsection{Normalization of Terms}
+\label{NormCommand}
+
+Computation in specifications is realized by term reduction with the
+rules of the completed specification. The result of such computations are unique
+normal forms. \bigskip
+
+\begin{command}[\com{norm}{\comArg{Expression}}]
+normalizes the input expression \comArg{Expression}. Three kinds of normalization are
+provided:
+\begin{itemize}
+\item
+if \comArg{Expression} is a signature term, the current rules are used to compute the
+normalform of \comArg{Expression}.
+\item
+if \comArg{Expression} has the form \condRule{\comArg{conjunction}}{\comArg{term}} 
+where \comArg{conjunction} is
+a conjunction of equations, CEC will try to orient these equations into
+rules before normalizing \comArg{Term} with the current rules and these oriented
+condition equations.
+\item
+if \comArg{Expression} is a {\em let-expression}, the definitions (which
+are equations between constructor terms and let-expressions) 
+are evaluated first,
+binding variables to the evaluated terms, before normalizing the body
+of the let-expression using the current set of rules. This feature
+should be used in the order-sorted case to avoid typing problems.
+\end{itemize}
+Let-expressions are given according to the following syntax:
+
+\begin{syntax}
+\nt{let-expression} \IS \kw{let} \nt{definitions} \kw{in} \nt{let-expression}\END
+\\
+\nt{definitions}    \IS \nt{definition} \{ \kw{and} \nt{definition} \} \END
+\nt{definition}     \IS \nt{pattern} \kw{=} \nt{let-expression}
+		    \OR \nt{pattern} \kw{=} \nt{signatureTerm} \END
+\\
+\nt{pattern}        \IS $<$ \rm well typed term with variables build up from
+                    \GETON \hspace{2ex} constructors of the user-specified signature$>$
+\end{syntax}
+
+\noindent 
+It is possible to trace the application of all rules or some selected rules:\medskip
+
+\kw{trace:=on}
+
+\noindent enables the trace mechanism.\medskip
+
+\kw{rulesToTrace:=[}\comArg{RuleIndex1}\ad\ldots\ad\comArg{RuleIndexN}\kw{]}
+
+\noindent restricts the trace mechanism to applications of the
+rules \comArg{RuleIndex1},\ldots,\comArg{RuleIndexN}.
+\end{command}
+
+\begin{command}[\com{applyRule}{\comArg{Term}\ad\comArg{RuleIndex}\ad\comArg{ReducedTerm}}]
+attempts to apply the rule with the given index once to the given term.
+Different redexes are tried upon backtracking. If successful, the reduced
+term is computed.
+\end{command}
+
+%\noindent
+%Given the following confluent and Noetherian specification: \bigskip
+%
+%\begin{screen}
+%| ?- {\bf show.}
+%
+%Current equations
+%
+%
+%
+%Current rules:
+%
+%  1  append([],l) -> l
+%  2  append([e|l1], l2) -> [e|append(l1,l2)]
+%  3  rev([]) -> []
+%  4  rev([e|l]) -> append(rev(l),[e])
+%
+%Current nonoperational equations
+%
+%
+%All axioms reduced.
+%All critical pairs computed.
+%All superpositions on nonoperational equations computed.
+%No more equations, the system is complete.
+%yes
+%| ?-
+%\end{screen}
+%
+%\noindent
+%Then we can compute the reverse of a given list by computing it's normal form.
+%
+%\begin{screen}
+%| ?- {\bf norm(rev([a, b, c, d]), NormalForm).}
+%
+%NormalForm = [ d, c, b, a]
+%
+%| ?-
+%\end{screen}
+%
+%\noindent
+%With applyRule we can apply one specific rule to reduce a term:
+%
+%\begin{screen}
+%| ?- {\bf applyRule(rev([a, b, c, d]), 4, ReducedForm).}
+%
+%ReducedForm = append(rev([b, c, d]), [a])
+%
+%| ?- {\bf applyRule(rev([a, b, c, d]), 3, ReducedForm).}
+%
+%no
+%
+%| ?-
+%\end{screen}
+
+\noindent
+To improve the computation of the normal form of a term, one can {\it compile}
+the current set of rewrite rules into compiled Prolog and
+use this compiled set of rewrite rules to normalize given terms.\bigskip
+
+\begin{command}[\comName{compile}]
+compiles the current set of rewrite rules into \comRef{compiled} Prolog.
+The compiled rules are used when calling \comRef{eval}. 
+Later changes to the set of rewrite rules
+have no effect on \comRef{eval} unless a new call to \comRef{compile} is
+performed. The predicate \comRef{norm} always uses the current set of
+rewrite rules.
+\end{command}
+
+\begin{command}[\com{eval}{\comArg{Expression}}]
+computes the normalform of a expression using the most recently compiled set of rewrite
+rules. \comRef{eval} fails, if \comRef{compile} has not been called yet, cf. \comRef{compile}.
+The trace mechanism applies also to \comRef{eval}.
+\end{command}
+
+\subsection{Proving Theorems in the Equational Theory}
+\label{ProveCommand}
+
+If general confluence can be achieved equational theorems become
+decidable, e.g. it is decidable if two terms are equivalent with respect to the
+equations in the specification: simply reduce the two terms to their unique normal
+form and check if they are identical. This can be done using the
+\comRef{prove}-command:\bigskip
+
+\begin{command}[\com{prove}{\comArg{ConditionalEquation}}]
+proves or disproves the conditional equation \comArg{ConditionalEquation} by 
+rewriting the conclusion to normalforms, using the equations in the 
+condition as additional rewrite rules. The method is incomplete for
+nonempty conditions and/or noncanonical systems.
+\end{command}
+
+%In the following example a theorem of the equational theory is proved.
+%
+%\begin{screen}
+%| ?- {\bf prove((append(rev([x, y]), [c, d]) = [y, x, c, d])).}
+%
+%Normal forms are : [y,x,c,d] and [y,x,c,d]
+%yes
+%| ?-
+%\end{screen}
+
+
+\subsection{Solving Equations in the Equational Theory}
+\label{NarrowCommand}
+
+Narrowing can be used to solve equations in an equational theory if a
+canonical set of rewrite rules equivalent to the set of equations  exists.\bigskip
+
+\begin{command}[\com{solve}{\comArg{Goal}\ad\comArg{Solution}}]
+tries to solve \comArg{Goal} and to return an answer-substitution 
+if successful.
+The set of all answer-substitutions can be obtained by backtracking
+(enter '\kw{;}'\nt{return} at the user level). Enter \nt{return} if
+no more solutions are wanted.
+
+\noindent
+Goals are given using the following syntax:
+
+\begin{syntax}
+\nt{Goal} \IS \nt{condition} \nt{equation} 
+          \OR \nt{equation} \{ \kw{and} \nt{equation} \} \END
+\\
+\nt{condition} \IS \nt{equation} \{ \kw{and} \nt{equation} \} \kw{=>} \END
+\nt{equation}  \IS \nt{signatureTerm} \kw{=} \nt{signatureTerm} \END
+\end{syntax}
+\end{command}

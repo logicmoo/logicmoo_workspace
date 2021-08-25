@@ -1,0 +1,20 @@
+module totalOrder using boolTriv.
+op (=<) : (elem * elem -> bool) .
+(x =< x) = true .
+(x =< y) = false => (y =< x) = true . 
+(x =< y) = true and (y =< z) = true => (x =< z) = true .
+(x =< y) = true and (x =< z) = false => (y =< z) = false .
+(y =< z) = true and (x =< z) = false => (x =< y) = false .
+(x =< y) = true and (y =< x) = true => x = y .
+
+/* from the first-order axioms
+
+(b = true) or (b = false) .
+not (true = false) .
+
+(x =< x) = true .
+(x =< y) = true or (y =< x) = true
+(x =< y) = true and (y =< z) = true => (x =< z) = true .
+(x =< y) = true and (y =< x) = true => x = y .
+
+*/

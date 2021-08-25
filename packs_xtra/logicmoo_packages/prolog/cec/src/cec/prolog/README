@@ -1,0 +1,20 @@
+The files in this directory are used to extend the interrupt menu of the cec
+system.  This gives the user the possibility to interrupt a cec completion
+in a controlled manner.
+
+
+For a description of the predicates see "interrupt.pl".
+
+
+In order to load these files do the following:
+
+user@host(1): cc -c interrupt.c
+user@host(2): qprolog
+:- compile(interrupt).
+:- establish_handler.
+
+
+NOTE: Don't forget to adjust the quintus library pathname in "interrupt.c"
+whenever you use these files on another machine.
+Don't forget to change the name of the object file in "interrupt.pl"
+(twice) if you have to rename "interrupt.c" due to name clashes.

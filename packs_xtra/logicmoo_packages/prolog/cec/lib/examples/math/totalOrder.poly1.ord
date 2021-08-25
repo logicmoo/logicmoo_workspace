@@ -1,0 +1,2 @@
+order poly1 for totalOrder using poly1 for boolTriv .
+setInterpretation('=<'(x, y), x + y).

@@ -1,0 +1,934 @@
+:- op(624,xfy,(.)).
+%:- op(0,xfy,(.)).
+:- op(624,xfx,(.)).
+
+% system:term_expansion('$dicts':'.'(H,T,DOT),DOT=..['.',H,T]). 
+% '$dicts':'.'(H,T,DOT):- DOT=..['.',H,T].
+
+
+%% Testfaelle fuer TBox-ABox-Revision
+%% 
+%% geg. eine revision von c; es gibt drei klassen von objekten:
+%%
+%%  CI.   diejenigen, die alle veraenderungen von c mitmachen muessen,
+%%        weil sie direkt oder indirekt c benutzen.
+%%  CII.  diejenigen, die vorher zufaellig als instanzen von c erkannt 
+%%        worden waren, jetzt aber keine mehr sind.
+%%  CIII. diejenigen, die vorher keine instanzen von c waren, aber danach
+%%        als solche erkannt werden muessen.
+%%  
+%%  nur in klasse (CI) bewegen sich auch die objekte mit; es koennen
+%%  inkonsistenzen und abox-revisionen auftreten (d.h. auch nur hier
+%%  hat es sinn den ABox-Revisionsmechanismus anzuwenden); in den klassen 
+%%  (CII) und (CIII) bewegen sich keine objekte; hier ist das problem,
+%%  diejenigen objekte zu finden, deren extensionszugehoerigkeit
+%%  sich durch die revision geaendert hat. In allen drei klassen 
+%%  besteht das zusaetzliche problem, dass nicht nur instanzen von 
+%%  c selbst, sondern auch solche gefunden werden muessen, 
+%%  fuer die all(r,c) abstrahiert wurde/werden kann. Fuer rollen
+%%  gelten die analogen drei klassen, wobei in (RII) rollenfueller-
+%%  beziehungen geloescht werden muessen, in (RIII) neu eingefuehrt.
+%%  Klasse (III) deckt auch die neueinfuehrung von konzepten/rollen
+%%  ab. 
+%%
+%%  Klasse (I) ist in die faelle unterteilt:
+%%    a) x benutzt c direkt/indirekt
+%%    b) x benutzt c, es gibt/gibt nicht von x abhaengige objekte
+
+
+%%  man koennte die betroffenen objekte auch so in 2 klassen einteilen:
+%%    - I:         reference by name
+%%    - II, III:   reference by meaning
+
+%% A. conc revision
+
+%% c wird revidiert
+
+
+revisionstest2 :-
+	write('TEST FILE: jantest.tbox-abox-rev'), nl,
+	revisionstest2(0).
+
+revisionstest2(N1) :-
+     	N is N1 + 1,
+     	N < 38,
+     	tartest(N),
+     	!, revisionstest2(N).
+revisionstest2(_).
+
+
+
+write_succ(T) :-
+	write('+++ tbox-abox-revision test '), write(T), 
+	write(' SUCCEEDED'), nl.
+
+write_fail(T) :-
+	write('--- tbox-abox-revision test '), write(T), 
+	write(' FAILED'), nl.
+
+
+%% Beispielfaelle
+%% --------------
+
+%% (1)  x ist explizit instanz von c; d.h. x muss mitgezogen werden;
+%%      es ist kein weiteres objekt von x abhaengig.
+%%      klasse: CI direkt/kein abhaengiges objekt
+
+tartest(T) :-
+     T == 1, 
+     backinit,  backstate(v=w),
+     p1 :< anything,
+     p2 :< anything,
+     r  :< domain(anything) and range(anything),
+     c := p1 and all(r,p2),
+     
+     x :: c,
+
+     c := p2 and all(r,p2),
+
+     x ?: p2,
+     backretrieve(X = [msc] for x), X = [[[c]]],
+     write_succ(T), !.
+
+
+
+
+%% (2) x benutzt c sonst irgendwie, hier z.b. inform von all(r,c);
+%%      es koennte aber genauso all(r, all(s,c)), all(r and range(c),d),
+%%      etc. sein; x muss mitgezogen werden; es ist kein weiteres objekt 
+%%      von x abhaengig.
+%%      klasse: CI direkt/kein abhaengiges objekt
+
+tartest(T) :-
+     T == 2,
+     backinit, backstate(v=w),
+     p1 :< anything,
+     p2 :< anything,
+     r  :< domain(anything) and range(anything),
+     c  := p1 and all(r,p2),
+     
+     x :: all(r,c),
+
+     c := p2 and all(r,p2),
+
+     x ?: all(r,p2),
+     backretrieve(X = [vr(r)] for x), X = [[c]],
+     write_succ(T), !.
+      
+
+
+%% (3)  x benutzt c, y haengt von x wegen c ab; x muss nachgezogen werden;
+%%      y muss aboxrevidiert werden.
+%%      klasse: CI direkt/abhaengiges objekt
+
+tartest(T) :-
+     T == 3,
+     backinit, backstate(v=w),
+     p1 :< anything,
+     p2 :< anything,
+     r  :< domain(anything) and range(anything),
+     c  := p1 and all(r,p1),
+     
+     x  :: c and r:y,
+
+     c  := p2 and all(r,p2),
+   
+     x ?: p2, y ?: p2,
+     backretrieve(X = [msc] for [x,y]), X = [[[c]],[[p2]]],
+     write_succ(T), !.
+
+
+
+%% (4)   x benutzt c indirekt, indem es d benutzt das mithilfe von c 
+%%       definiert worden ist; x muss mitgezogen werden
+%%       klasse: CI indirekt/kein abhaengiges objekt
+
+tartest(T) :-
+     T == 4,
+     backinit, backstate(v=w),
+     p1 :< anything,
+     p2 :< anything,
+     r  :< domain(anything) and range(anything),
+     c  := p1 and all(r,p1),
+     d  := c and atleast(1,r),
+
+     x :: d,
+
+     c  := p2 and all(r,p2),
+   
+     x ?: p2, 
+     backretrieve(X = [msc] for x), X = [[[d]]],
+     write_succ(T), !.
+
+
+%% (5)   x benutzt c indirekt ueber d, x muss mitgezogen werden;
+%%       y ist von x abhaengig
+%%       klasse: CI indirekt/abhaengiges objekt
+
+tartest(T) :-
+     T == 5,
+     backinit, backstate(v=w),
+     p1 :< anything,
+     p2 :< anything,
+     r  :< domain(anything) and range(anything),
+     c  := p1 and all(r,p1),
+     d  := c and atleast(1,r),
+
+     x :: d and r:y,
+
+     c  := p2 and all(r,p2),
+   
+     x ?: p2, y ?: p2,
+     backretrieve(X = [msc] for [x,y]), X = [[[d]],[[p2]]],
+     write_succ(T), !.
+
+
+
+%% (6) z propagiert (d1 and d2) an y, weswegen x (das ebenfalls
+%%     y als rollenfueller hat) als c1 abstrahiert werden kann; wenn c2
+%%     revidiert wird, muss (a) die propagierung an y revidiert
+%%     werden (b) die abstraktion von x e c1
+%%     Class CI 
+
+tartest(T) :-
+    T == 6, backinit, backstate(v=w),
+    c1  := p and all(r,d1 and d2),
+    c2  := d1 and d2,
+    x   :: p and atmost(1,r) and r:y,
+    z   :: all(r, c2) and r:y,
+    y   ?: c2,
+    x   ?: c1,
+    c2  :< anything,
+    \+  x ?: c1, \+ y ?: p1 and p2,
+    write_succ(T), !.
+
+
+%% (7)  x benutzt c  weder direkt noch indirekt, sondern wird als instanz 
+%%      von c abstrahiert;
+%%      x e c  *vor* revision von c; x faellt durch revision aus der
+%%      extension von c heraus 
+%%      klasse: CII
+    
+tartest(T) :-
+    T == 7, 
+    backinit, backstate(v=w),
+    p1 :< anything,
+    p2 :< anything,
+    p3 :< anything,
+    c  := p1 and p2,
+
+    x  :: p1 and p2,
+
+    c  := p1 and p3,
+
+    \+ x ?: c,
+    write_succ(T), !.
+
+
+%% (8)  x benutzt c  weder direkt noch indirekt, sondern wird als instanz 
+%%      von all(r,c) abstrahiert (jedoch nicht aufgrund von backprop);
+%%      x e all(r,c)  *vor* revision von c; x faellt durch revision aus der
+%%      extension von all(r,c) heraus 
+%%      klasse: CII
+    
+tartest(T) :-
+    T == 8, 
+    backinit, backstate(v=w),
+    p1 :< anything,
+    p2 :< anything,
+    p3 :< anything,
+    r  :< domain(anything) and range(anything),
+    c  := p1 and p2,
+
+    x  :: all(r,p1 and p2),
+    x  ?: all(r,c),    
+
+    c  := p1 and p3,
+
+    \+ x ?: all(r,c),
+     write_succ(T), !.
+
+
+%% (9)  x benutzt c  weder direkt noch indirekt, sondern wird als instanz 
+%%      von all(r,c) abstrahiert (aufgrund von backprop);
+%%      x e all(r,c)  *vor* revision von c; x faellt durch revision aus der
+%%      extension von all(r,c) heraus 
+%%      klasse: CII
+
+tartest(T) :-
+    T == 9, 
+    backinit, backstate(v=w),
+    p1 :< anything,
+    p2 :< anything,
+    p3 :< anything,
+    r  :< domain(anything) and range(anything),
+    c  := p1 and p2,
+
+    x  :: r:close(y),
+    y  :: p1 and p2,
+
+    x  ?: all(r,c),    
+
+    c  := p1 and p3,
+
+    \+ x ?: all(r,c),
+    write_succ(T), !.
+
+
+
+
+%% (10)  x benutzt c  weder direkt noch indirekt, sondern wird als instanz 
+%%      von c abstrahiert;
+%%      x e c  *nach* revision von c; x faellt durch revision in die 
+%%      extension von c 
+%%      klasse: CIII
+    
+tartest(T) :-
+    T == 10, 
+    backinit, backstate(v=w),
+    p1 :< anything,
+    p2 :< anything,
+    p3 :< anything,
+    c  := p1 and p2,
+
+    x  :: p1 and p3,
+    b5sta_check_flag(aboxfilled, abox), 
+    c  := p1 and p3,
+
+    x ?: c,
+    write_succ(T), !.
+    
+
+%% (11) x benutzt c  weder direkt noch indirekt, sondern wird als instanz 
+%%      von all(r,c) abstrahiert (jedoch nicht aufgrund von backprop);
+%%      x e all(r,c)  *nach* revision von c; x faellt durch revision in die
+%%      extension von all(r,c) 
+%%      klasse: CIII
+
+tartest(T) :-
+    T == 11,
+    backinit, backstate(v=w),
+    p1 :< anything,
+    p2 :< anything,
+    p3 :< anything,
+    r  :< domain(anything) and range(anything),
+    c  := p1 and p2,
+
+    x  :: all(r,p1 and p3),
+    
+    c  := p1 and p3,
+
+    x ?: all(r,c),
+    backretrieve(X = [vr(r)] for x), X = [[c]],
+    write_succ(T), !.
+
+
+%% (12) x benutzt c  weder direkt noch indirekt, sondern wird als instanz 
+%%      von all(r,c) abstrahiert (aufgrund von backprop);
+%%      x e all(r,c)  *nach* revision von c; x faellt durch revision in die
+%%      extension von all(r,c)  
+%%      klasse: CIII
+    
+
+tartest(T) :-
+    T == 12,
+    backinit, backstate(v=w),
+    p1 :< anything,
+    p2 :< anything,
+    p3 :< anything,
+    r  :< domain(anything) and range(anything),
+    c  := p1 and p2,
+    c1 := all(r,c),
+    x  :: r:close(y),
+    y  :: p1 and p3,
+
+    c  := p1 and p3,
+
+    x ?: all(r,c),
+    x ?: c1,
+    %% backretrieve(X = [self, msc] for [x, y]), write(X),
+    backretrieve(X = [vr(r)] for x), X = [[c]],
+    write_succ(T), !.
+
+
+
+%% (13) (cmk) 
+
+tartest(T) :-
+    T ==13,
+    backinit, backstate(v=w),
+    p1 :< anything,
+    p2 :< anything,
+    r  :< domain(anything) and range(anything),
+    c1 := p1 and all(r, p1 and p2),
+    c2 :< anything,
+    y  :: p1 and p2,
+    x  :: p1 and atmost(1,r) and r:y,
+    
+    x  ?: c1,
+
+    c2 := p1 and p2,
+    y ?: c2,
+    backretrieve(X = [msc] for y), X = [[[c2]]],
+    write_succ(T), !.
+
+
+%% B. Role Revision
+
+%%  r wird revidiert
+
+%% (14) x benutzt r direkt ohne rollenfueller  
+%%      klasse: RI direkt/kein abhaengiges objekt
+
+
+tartest(T) :-
+    T == 14,
+    backinit, backstate(v=w),
+    p1 :< anything,
+    p2 :< anything,
+    p3 :< anything,
+    r :< range(p1),
+    
+    x :: all(r,p3),
+
+    r :< range(p2),
+
+    x ?: all(r,p3 and p2),
+    write_succ(T), !.
+
+%% (15) x benutzt r direkt mit rollenfueller  
+%%      klasse: RI direkt/abhaengiges objekt
+
+tartest(T) :-
+    T ==15, 
+    backinit, backstate(v=w),
+    p1 :< anything,
+    p2 :< anything,
+    r :< range(p1),
+    
+    x :: r:y,
+
+    r :< range(p2),
+
+    y ?: p2,
+    write_succ(T), !.
+
+
+%% (16) x benutzt r indirekt ohne rollenfueller  
+%%      klasse: RI indirekt/ohne abhaengiges objekt
+
+tartest(T) :-
+    T ==16,
+    backinit, backstate(v=w),
+    p1 :< anything,
+    p2 :< anything,
+    p3 :< anything,
+    p4 :< anything,
+    s  :< domain(anything) and range(anything),
+    r  :< s,
+    
+    x :: all(r,p4),
+
+    s :< range(p3),
+
+    x ?: all(r,p3 and p4),
+    write_succ(T), !.
+
+
+%% (17) x benutzt r indirekt mit rollenfueller  
+%%      klasse: RI indirekt/abhaengiges objekt
+
+tartest(T) :-
+    T == 17,
+    backinit, backstate(v=w),
+    p1 :< anything,
+    p2 :< anything,
+    p3 :< anything,
+    t  :< domain(anything) and range(anything),
+    s  :< t and domain(p1),
+    r  :< s and range(p2),
+    
+    x :: r:y,
+    y ?: p2,
+
+    s :< t and domain(p2) and range(p3),
+
+    x ?: p2, y ?: p3,
+    backretrieve(X = [msc] for [x,y]), X = [[[p2]],[[p2,p3]]],
+    write_succ(T), !.
+
+%% (18) x benutzt r weder direkt noch indirekt; aufgrund von rollen-
+%%      komplettierung wird *vor* revision r:y  zu x hinzugefuegt;
+%%      nach revision von r muss r:y wieder zurueckgezogen werden 
+%%      klasse: RII
+
+tartest(T) :-
+    T == 18,
+    backinit, backstate(v=w),
+    r := r1.r2,
+    
+    x :: r1:w,
+    w :: r2:y,
+
+    x ?: r:y,
+
+    r := trans(r1),
+
+    \+ x ?: r:y, 
+    write_succ(T), !.
+
+
+%% (19) x benutzt r weder direkt noch indirekt; aufgrund von rollen-
+%%      komplettierung wird *nach* revision von r r:y  zu x hinzugefuegt;
+%%      klasse: RIII
+
+tartest(T) :-
+    T == 19,
+    backinit, backstate(v=w),
+    r := trans(r1),
+    r2 :< domain(anything) and range(anything),
+    x :: r1:w,
+    w :: r2:y,
+
+    r := r1.r2,
+
+    x ?: r:y,
+    backretrieve(X = [rf(r)] for x), X = [[[y]]],
+    write_succ(T), !.
+
+%% (20) RIII mit and-role
+tartest(T) :-
+    T == 20,
+    backinit, backstate(v=w),
+    r  :< domain(anything) and range(anything),
+    r1 :< domain(anything) and range(anything),
+    r2 :< domain(anything) and range(anything),
+    x :: r1:y,
+    x :: r2:y,
+
+    r := r1 and r2,
+
+    x ?: r:y,
+    %% backretrieve(X = [rf(r)] for x), X = [[[y]]],
+    write_succ(T), !.
+
+
+%% (21) RIII mit and-role und resultierendem konflikt
+tartest(T) :-
+    T == 21,
+    backinit, backstate(v=w),
+    r  :< domain(anything) and range(anything),
+    r1 :< domain(anything) and range(anything),
+    r2 :< domain(anything) and range(anything),
+    x :: r1:y and atmost(0,r),
+    x :: r2:y,
+
+    r := r1 and r2,
+
+    write_succ(T), !.
+
+
+%% (22) RIII mit inv-role; da inv-roles sowieso neu eingetragen werden
+%% ist nichts zu tun
+tartest(T) :-
+    T == 22,
+    backinit, backstate(v=w),
+    r  :< domain(anything) and range(anything),
+    r1 :< domain(anything) and range(anything),
+    x :: r1:y,
+    r := inv(r1),
+    y ?: r:x,
+    write_succ(T), !.
+
+
+%% (23) RIII mit echter neu-einfuehrung; 
+tartest(T) :-
+    T == 23,
+    backinit, backstate(v=w),
+    r1 :< domain(anything) and range(anything),
+    r2 :< domain(anything) and range(anything),
+    x :: r1:w,
+    w :: r2:y,
+
+    r := r1.r2,
+
+    x ?: r:y,
+    %% backretrieve(X = [rf(r)] for x), X = [[[y]]],
+    write_succ(T), !.
+
+
+%% (24) RIII mit and-role und echter neu-einfuehrung
+tartest(T) :-
+    T == 24,
+    backinit, backstate(v=w),
+    r1 :< domain(anything) and range(anything),
+    r2 :< domain(anything) and range(anything),
+    x :: r1:y,
+    x :: r2:y,
+
+    r := r1 and r2,
+
+    x ?: r:y,
+    backretrieve(X = [rf(r)] for x), X = [[[y]]],
+    write_succ(T), !.
+
+
+
+%% (25) RIII mit and-role und resultierendem konflikt; echte neu-einfuehrung
+tartest(T) :-
+    T == 25,
+    backinit, backstate(v=w),
+    r  :< domain(anything) and range(anything),
+    r1 :< domain(anything) and range(anything),
+    r2 :< domain(anything) and range(anything),
+    x :: r1:y and atmost(0,r),
+    x :: r2:y,
+
+     r := r1 and r2,
+
+    write_succ(T), !.
+
+
+%% tests mit oneof und fills
+
+%% x benutzt c1 direkt, revision von c1 fuehrt zu inkonsistenz von c1;
+%% deshalb sollte (bislang) revision von c1 nicht gelingen.
+%% CI
+tartest(T) :-
+   T == 26,
+   backinit, backstate(v=w),
+   c1 := p and oneof([x,y,z]),
+   x  :: c1,
+   x  ?: c1,
+   c1 := p and oneof([a,b,c]), 
+   write_succ(T), !.
+
+%% CI
+tartest(T) :-
+   T == 27,
+   backinit, backstate(v=w),
+   c1 := p and oneof([x,y,z]),
+   x  :: c1,
+   x  ?: c1,
+   c1 := p and oneof([a,b,x]), 
+   x ?: c1,
+   backretrieve(X = [msc] for x), X = [[[c1]]],
+   write_succ(T), !.
+
+%% CI
+tartest(T) :-
+   T == 28,
+   backinit, backstate(v=w),
+   c1 := p and oneof([x,y,z]),
+   x  :: c1,
+   x  ?: p,
+   c1 := q and oneof([a,b,x]), 
+   \+ x ?: p, x ?: q,
+   write_succ(T), !.
+
+
+%%  x kann vor der revision von c1 als c1 abstrahiert werden, nachher
+%%  jedoch nicht mehr
+%%  Class CII
+tartest(T) :-
+   T == 29,
+   backinit, backstate(v=w),
+   c1 := p and oneof([x,y,z]),
+   x  :: p,
+   x  ?: c1,
+   c1 := p and oneof([a,b,c]),
+   \+ x ?: c1,
+   write_succ(T),   !.
+
+%%  x kann vor der revision von c1 nicht als c1 abstrahiert werden, nachher
+%%  jedoch schon
+%%  Class CIII
+tartest(T) :-
+   T == 30, 
+   backinit, backstate(v=w),
+   c1 := p and oneof([a,b,c]),   
+   a  :: p, a ?: c1,
+   x  :: p,
+   \+ x  ?: c1,
+   c1 := p and oneof([x,y,z]),   
+   x ?: c1 , 
+   write_succ(T), !.
+
+
+%% noch ein paar CIII tests mit echter/unechter neueinfuehrung
+
+%%      x benutzt c  weder direkt noch indirekt, sondern wird als instanz 
+%%      von c abstrahiert;
+%%      x e c  *nach* revision von c; x faellt durch revision in die 
+%%      extension von c 
+%%      klasse: CIII
+    
+tartest(T) :-
+    T == 31, 
+    backinit, backstate(v=w),
+    p1 :< anything,
+    p2 :< anything,
+    p3 :< anything,
+    
+    x  :: p1 and p3,
+
+    c  := p1 and p3,
+
+    x ?: c,
+    %% backretrieve(X = [msc] for x), X = [[[c]]],
+    write_succ(T), !.
+    
+
+%% (32) x benutzt c  weder direkt noch indirekt, sondern wird als instanz 
+%%      von all(r,c) abstrahiert (jedoch nicht aufgrund von backprop);
+%%      x e all(r,c)  *nach* revision von c; x faellt durch revision in die
+%%      extension von all(r,c) 
+%%      klasse: CIII
+
+tartest(T) :-
+    T == 32,
+    backinit, backstate(v=w),
+    p1 :< anything,
+    p2 :< anything,
+    p3 :< anything,
+    r  :< domain(anything) and range(anything),
+    
+    x  :: all(r,p1 and p3),
+    
+    c  := p1 and p3,
+
+    x ?: all(r,c),
+    write_succ(T), !.
+
+
+%% (33) x benutzt c  weder direkt noch indirekt, sondern wird als instanz 
+%%      von all(r,c) abstrahiert (aufgrund von backprop);
+%%      x e all(r,c)  *nach* revision von c; x faellt durch revision in die
+%%      extension von all(r,c)  
+%%      klasse: CIII
+    
+
+tartest(T) :-
+    T == 33,
+    backinit, backstate(v=w),
+    p1 :< anything,
+    p2 :< anything,
+    p3 :< anything,
+    r  :< domain(anything) and range(anything),
+    
+    x  :: r:close(y),
+    y  :: p1 and p3,
+
+    c  := p1 and p3,
+
+    y  ?: c,
+    x  ?: all(r,c),
+    backretrieve(Y = [msc] for y), Y = [[[c]]],
+    %% backretrieve(X = [vr(r)] for x), X = [[c]],  
+         %% even without revision [vr(r)] for x = [[anything]]
+    write_succ(T), !.
+
+
+%% (34) 
+
+tartest(T) :-
+    T ==34,
+    backinit, backstate(v=w),
+    p1 :< anything,
+    p2 :< anything,
+    r  :< domain(anything) and range(anything),
+    c1 := p1 and all(r, p1 and p2),
+    y  :: p1 and p2,
+    x  :: p1 and atmost(1,r) and r:y,
+    
+    x  ?: c1,
+
+    c2 := p1 and p2,
+    y ?: c2,
+    backretrieve(X = [msc] for y), X = [[[c2]]],  
+    write_succ(T), !.
+
+
+%% (35)  (as)
+
+tartest(T) :-    
+    T == 35,
+    backinit, backstate(v=w),
+    thing            :<     anything,
+
+    abnormal         :<     thing,
+    normal           :<     thing,
+
+
+    partOf           :<     domain(thing) and range(thing) type feature,
+
+    temp             :<     domain(thing) and range(number) type feature,
+
+    thing and all(temp, gt(50))  =>  abnormal,
+
+    car1   :: thing,
+    wheel1 :: thing and partOf:car1 and temp:60,
+
+    %TBOX:
+    hasPart          :=     inv(partOf),
+    hasAbnormalPart  :=     hasPart and range(abnormal),
+
+
+    %QUERY:
+
+    backretrieve(X=getall(atleast(1,hasAbnormalPart))), X == [[car1]],
+    write_succ(T), !.
+
+
+%% (36)  (as)
+
+tartest(T) :-    
+    T == 36,
+    backinit, backstate(v=w),
+    thing           :<	anything,
+    partOf          :<	domain(thing) type feature,
+    temp            :<	domain(thing) and range(number) type feature,
+    
+    car1            ::	thing,
+    wheel1	    ::	thing and partOf:car1 and temp:60,
+
+    %%  Later extension of the TBox!
+    hasPart         :=	inv(partOf),
+    abnormalCar     :=	atleast(1,hasPart and range(all(temp, gt(50)))),
+
+
+    car2	    ::	thing,
+    wheel2	    ::	thing and partOf:car2 and temp:60,
+
+
+    backretrieve(X=getall abnormalCar),
+    ( X = [[car1],[car2]] ; X = [[car2],[car1]] ),
+    write_succ(T), !.
+
+
+tartest(T) :-
+	T == 37,
+	backinit, backstate(v=w),
+	
+    	thing           :<	anything,
+    	partOf          :<	domain(thing) type feature,
+    	temp            :<	domain(thing) and range(number) type feature,
+    
+    	car1            ::	thing,
+    	wheel1	    	::	thing and partOf:car1 and temp:60,
+
+	%%  Nachtraegliche Erweiterung der TBox!
+
+        abnormal        :=      all(temp, gt(50)),      
+
+    	hasAbnormalPart :=	inv(partOf) and range(abnormal),
+    	abnormalCar     :=	atleast(1,hasAbnormalPart),
+
+
+    	car2	    	::	thing,
+    	wheel2	    	::	thing and partOf:car2 and temp:60,
+
+        backretrieve(X = getall abnormalCar), X = [[car1], [car2]],
+	write_succ(T), !.
+
+
+%% (38) CIII/ASet
+tartest(38)  :-
+	%% T == 38, /* cmk */
+	backinit,
+	farbe := aset([rot,gelb,blau]),
+	hat_farbe :< range(farbe),
+	
+	o :: hat_farbe: blau and all(hat_farbe, aset([rot,blau])),
+        
+	rb_farbe := aset([rot,blau]),
+
+	o ?: all(hat_farbe,rb_farbe),
+        backretrieve(X = [vr(hat_farbe)] for o),
+        write('[vr(hat_farbe] for o '), write(X), nl, 
+	backretrieve(describe o),
+	write('Steht da ...and all(hat_farbe, rb_farbe)... ??'), nl,nl,
+        %% trace,
+	rb_farbe := aset([rhythm, blues]),
+
+	\+ o ?: all(hat_farbe,rb_farbe),
+        backretrieve(Y = [vr(hat_farbe)] for o),
+        write('[vr(hat_farbe] for o '), write(Y), nl, 
+	backretrieve(describe o),
+	write('Steht da ...and all(hat_farbe, aset([rhythm,blues]))... ??'), 
+	nl,nl,
+
+	rb_farbe := aset([rot,blau]),
+        backretrieve(Z = [vr(hat_farbe)] for o),
+        write('[vr(hat_farbe] for o '), write(Z), nl, 
+	o ?: all(hat_farbe,rb_farbe),
+
+	backretrieve(describe o),
+	write('Steht da ...and all(hat_farbe, rb_farbe)... ??'),
+	nl, nl.
+
+
+
+
+
+
+/* 
+
+tartest(T) :-
+	T == 38,
+	backinit,  
+        p1 :< anything,
+        p2 :< anything,
+	p3 :< anything,
+	r  :< domain(p1),
+
+        
+        x :: p1 and r:y,
+	
+	c := atleast(1,r),
+
+	x ?: c,
+	write_succ(T), !.
+
+
+
+tartest(T) :-
+    T ==37,
+    backinit, backstate(v=i), 
+    p1 :< anything,
+    p2 :< anything,
+    p3 := p1 and p2,
+    
+    p4 :< not(p3).
+    %r  :< domain(anything) and range(anything).
+    
+    %x :: p1 and p2,
+
+    %y :: all(r,p4) and r:x,
+
+    %p3 := p1 and p2.
+    
+
+tartest(T) :-
+    T == 38,
+    backinit, backstate(v=i), 
+
+    p1 :< anything, p2 :< anything, p3 :< anything,
+
+    x :: not(p1),
+    x :: p2 and p3,
+
+    p1 := p2 and p3.
+*/
+
+%% tests mit number, attrs
+
+%% catch failed tests
+
+tartest(T) :-
+   	write_fail(T),
+	assert(test(tbox_abox_revision_test(T), failed)).
+
+
+:- op(625,xfy,(.)).
+

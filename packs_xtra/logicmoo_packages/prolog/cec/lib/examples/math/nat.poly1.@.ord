@@ -1,0 +1,396 @@
+order(poly1 for nat) using poly1 for boolTriv+'poly1.p'for commSemiGroup+'poly1.t'for commSemiGroup+poly1 for equalityAndOrder.
+setInterpretation('$neq5'(x1,x2,x3,x4,x5) : 2 * x1 + 2 * x2 + 2 * x3 + 2 * x4 + 2 * x5
+).
+setInterpretation('$neq4'(x1,x2,x3,x4,x5) : 2 * x1 + 2 * x2 + 2 * x3 + 2 * x4 + 2 * x5
+).
+setInterpretation('$neq3'(x1,x2,x3,x4) : 2 * x1 + 2 * x2 + 2 * x3 + 2 * x4
+).
+setInterpretation('$neq3'(x,y,z) : 2 * x + 2 * y + 2 * z
+).
+setInterpretation('$neq5'(x,y) : 2 * x + 2 * y
+).
+setInterpretation('$neq4'(x,y) : 2 * x + 2 * y
+).
+setInterpretation('$neq3'(x,y) : 2 * x + 2 * y
+).
+setInterpretation('$neq5'(x,y,z) : 2 * x + 2 * y + 2 * z
+).
+setInterpretation('$r'(x1,x2,x3,x4,x5) : 2 * x1 + 2 * x2 + 2 * x3 + 2 * x4 + 2 * x5
+).
+setInterpretation('$r'(x,y,z) : 2 * x + 2 * y + 2 * z
+).
+setInterpretation('$r'(x,y) : 2 * x + 2 * y
+).
+setInterpretation(s(x) : 8 * x
+).
+setInterpretation('$neq2'(x,y,z) : 2 * x + 2 * y + 2 * z
+).
+setInterpretation(>(x,y) : 2 * x * y + 2
+).
+setInterpretation('$r'(x) : 2 * x
+).
+setInterpretation('$r'(x1,x2,x3,x4) : 2 * x1 + 2 * x2 + 2 * x3 + 2 * x4
+).
+setInterpretation('$r'(x1,x2,x3,x4,x5,x6) : 2 * x1 + 2 * x2 + 2 * x3 + 2 * x4 + 2 * x5 + 2 * x6
+).
+setInterpretation('$neq2'(x1,x2,x3,x4) : 2 * x1 + 2 * x2 + 2 * x3 + 2 * x4
+).
+setInterpretation(=<(x,y) : x + y
+).
+setInterpretation('$neq1'(x1,x2,x3,x4) : 2 * x1 + 2 * x2 + 2 * x3 + 2 * x4
+).
+setInterpretation('$neq2'(x1,x2,x3,x4,x5,x6) : 2 * x1 + 2 * x2 + 2 * x3 + 2 * x4 + 2 * x5 + 2 * x6
+).
+setInterpretation('$neq3'(x1,x2,x3,x4,x5,x6) : 2 * x1 + 2 * x2 + 2 * x3 + 2 * x4 + 2 * x5 + 2 * x6
+).
+setInterpretation('$neq4'(x1,x2,x3,x4,x5,x6) : 2 * x1 + 2 * x2 + 2 * x3 + 2 * x4 + 2 * x5 + 2 * x6
+).
+setInterpretation('$neq5'(x1,x2,x3,x4,x5,x6) : 2 * x1 + 2 * x2 + 2 * x3 + 2 * x4 + 2 * x5 + 2 * x6
+).
+setInterpretation('$neq5'(x1,x2,x3,x4) : 2 * x1 + 2 * x2 + 2 * x3 + 2 * x4
+).
+setInterpretation('$neq1'(x1,x2,x3,x4,x5,x6) : 2 * x1 + 2 * x2 + 2 * x3 + 2 * x4 + 2 * x5 + 2 * x6
+).
+setInterpretation(false : 2
+).
+setInterpretation(true : 2
+).
+setInterpretation(==(x,y) : x + y
+).
+setInterpretation(\==(x,y) : 2 * x + 2 * y
+).
+setInterpretation(1 : 4
+).
+setInterpretation(*(x,y) : 2 * x * y
+).
+setInterpretation(+(x,y) : x + y + 1
+).
+setInterpretation(0 : 2
+).
+
+constructor('true-bool').
+constructor('false-bool').
+constructor('0-nat').
+constructor('1-nat').
+
+
+
+
+
+
+/* ordering of the literals is ms for
+/*	x+y = y+x */
+action(status(ms),'$equation'([],['+-nat-nat-nat'(@'x-nat',@'y-nat')='+-nat-nat-nat'(@'y-nat',@'x-nat')])).
+
+/* ordering of the literals is ms for
+/*	x+y+z = x+ (y+z) */
+action(status(ms),'$equation'([],['+-nat-nat-nat'('+-nat-nat-nat'(@'x-nat',@'y-nat'),@'z-nat')='+-nat-nat-nat'(@'x-nat','+-nat-nat-nat'(@'y-nat',@'z-nat'))])).
+
+/* ordering of the literals is ms for
+/*	x*y = y*x */
+action(status(ms),'$equation'([],['*-nat-nat-nat'(@'x-nat',@'y-nat')='*-nat-nat-nat'(@'y-nat',@'x-nat')])).
+
+/* ordering of the literals is ms for
+/*	x*y*z = x* (y*z) */
+action(status(ms),'$equation'([],['*-nat-nat-nat'('*-nat-nat-nat'(@'x-nat',@'y-nat'),@'z-nat')='*-nat-nat-nat'(@'x-nat','*-nat-nat-nat'(@'y-nat',@'z-nat'))])).
+
+/* ordering of the literals is ms for
+/*	n==m = m==n */
+action(status(ms),'$equation'([],['==-bool-nat-nat'(@'n-nat',@'m-nat')='==-bool-nat-nat'(@'m-nat',@'n-nat')])).
+
+/* ordering of the literals is ms for
+/*	n\==m = m\==n */
+action(status(ms),'$equation'([],['\==-bool-nat-nat'(@'n-nat',@'m-nat')='\==-bool-nat-nat'(@'m-nat',@'n-nat')])).
+
+/* declare as nonoperational :
+/*	n==m = true => n = m */
+action(orient(n),'$equation'(['==-bool-nat-nat'(@'n-nat',@'m-nat')='true-bool'],[@'n-nat'= @'m-nat'])).
+
+/* condition number 1 is the selected condition for
+/*	n==m = true => n = m */
+action(selectcondition(1),'$equation'(['==-bool-nat-nat'(@'n-nat',@'m-nat')='true-bool'],[@'n-nat'= @'m-nat'])).
+
+/* ordering of the literals is ms for
+/*	n==m = true => n = m */
+action(status(ms),'$equation'(['==-bool-nat-nat'(@'n-nat',@'m-nat')='true-bool'],[@'n-nat'= @'m-nat'])).
+
+/* declare as nonoperational :
+/*	x=<y = false => y=<x = true */
+action(orient(n),'$equation'(['=<-bool-nat-nat'(@'x-nat',@'y-nat')='false-bool'],['=<-bool-nat-nat'(@'y-nat',@'x-nat')='true-bool'])).
+
+/* condition number 1 is the selected condition for
+/*	x=<y = false => y=<x = true */
+action(selectcondition(1),'$equation'(['=<-bool-nat-nat'(@'x-nat',@'y-nat')='false-bool'],['=<-bool-nat-nat'(@'y-nat',@'x-nat')='true-bool'])).
+
+/* ordering of the literals is [0,1] for
+/*	x=<y = false => y=<x = true */
+action(status([0,1]),'$equation'(['=<-bool-nat-nat'(@'x-nat',@'y-nat')='false-bool'],['=<-bool-nat-nat'(@'y-nat',@'x-nat')='true-bool'])).
+
+/* declare as nonoperational :
+/*	x=<y = true and y=<x = true => x = y */
+action(orient(n),'$equation'(['=<-bool-nat-nat'(@'x-nat',@'y-nat')='true-bool','=<-bool-nat-nat'(@'y-nat',@'x-nat')='true-bool'],[@'x-nat'= @'y-nat'])).
+
+/* condition number 1 is the selected condition for
+/*	x=<y = true and y=<x = true => x = y */
+action(selectcondition(1),'$equation'(['=<-bool-nat-nat'(@'x-nat',@'y-nat')='true-bool','=<-bool-nat-nat'(@'y-nat',@'x-nat')='true-bool'],[@'x-nat'= @'y-nat'])).
+
+/* ordering of the literals is [0,1,2] for
+/*	x=<y = true and y=<x = true => x = y */
+action(status([0,1,2]),'$equation'(['=<-bool-nat-nat'(@'x-nat',@'y-nat')='true-bool','=<-bool-nat-nat'(@'y-nat',@'x-nat')='true-bool'],[@'x-nat'= @'y-nat'])).
+
+/* declare as nonoperational :
+/*	x=<y = true and y=<z = true => x=<z = true */
+action(orient(n),'$equation'(['=<-bool-nat-nat'(@'x-nat',@'y-nat')='true-bool','=<-bool-nat-nat'(@'y-nat',@'z-nat')='true-bool'],['=<-bool-nat-nat'(@'x-nat',@'z-nat')='true-bool'])).
+
+/* condition number 1 is the selected condition for
+/*	x=<y = true and y=<z = true => x=<z = true */
+action(selectcondition(1),'$equation'(['=<-bool-nat-nat'(@'x-nat',@'y-nat')='true-bool','=<-bool-nat-nat'(@'y-nat',@'z-nat')='true-bool'],['=<-bool-nat-nat'(@'x-nat',@'z-nat')='true-bool'])).
+
+/* ordering of the literals is [0,1,2] for
+/*	x=<y = true and y=<z = true => x=<z = true */
+action(status([0,1,2]),'$equation'(['=<-bool-nat-nat'(@'x-nat',@'y-nat')='true-bool','=<-bool-nat-nat'(@'y-nat',@'z-nat')='true-bool'],['=<-bool-nat-nat'(@'x-nat',@'z-nat')='true-bool'])).
+
+/* declare as nonoperational :
+/*	x=<y = true and x=<z = false => y=<z = false */
+action(orient(n),'$equation'(['=<-bool-nat-nat'(@'x-nat',@'y-nat')='true-bool','=<-bool-nat-nat'(@'x-nat',@'z-nat')='false-bool'],['=<-bool-nat-nat'(@'y-nat',@'z-nat')='false-bool'])).
+
+/* condition number 1 is the selected condition for
+/*	x=<y = true and x=<z = false => y=<z = false */
+action(selectcondition(1),'$equation'(['=<-bool-nat-nat'(@'x-nat',@'y-nat')='true-bool','=<-bool-nat-nat'(@'x-nat',@'z-nat')='false-bool'],['=<-bool-nat-nat'(@'y-nat',@'z-nat')='false-bool'])).
+
+/* ordering of the literals is [0,1,2] for
+/*	x=<y = true and x=<z = false => y=<z = false */
+action(status([0,1,2]),'$equation'(['=<-bool-nat-nat'(@'x-nat',@'y-nat')='true-bool','=<-bool-nat-nat'(@'x-nat',@'z-nat')='false-bool'],['=<-bool-nat-nat'(@'y-nat',@'z-nat')='false-bool'])).
+
+/* declare as nonoperational :
+/*	y=<z = true and x=<z = false => x=<y = false */
+action(orient(n),'$equation'(['=<-bool-nat-nat'(@'y-nat',@'z-nat')='true-bool','=<-bool-nat-nat'(@'x-nat',@'z-nat')='false-bool'],['=<-bool-nat-nat'(@'x-nat',@'y-nat')='false-bool'])).
+
+/* condition number 1 is the selected condition for
+/*	y=<z = true and x=<z = false => x=<y = false */
+action(selectcondition(1),'$equation'(['=<-bool-nat-nat'(@'y-nat',@'z-nat')='true-bool','=<-bool-nat-nat'(@'x-nat',@'z-nat')='false-bool'],['=<-bool-nat-nat'(@'x-nat',@'y-nat')='false-bool'])).
+
+/* ordering of the literals is [0,1,2] for
+/*	y=<z = true and x=<z = false => x=<y = false */
+action(status([0,1,2]),'$equation'(['=<-bool-nat-nat'(@'y-nat',@'z-nat')='true-bool','=<-bool-nat-nat'(@'x-nat',@'z-nat')='false-bool'],['=<-bool-nat-nat'(@'x-nat',@'y-nat')='false-bool'])).
+
+/* declare as nonoperational :
+/*	x=<y = true and x>y = true => true = false */
+action(orient(n),'$equation'(['=<-bool-nat-nat'(@'x-nat',@'y-nat')='true-bool','>-bool-nat-nat'(@'x-nat',@'y-nat')='true-bool'],['true-bool'='false-bool'])).
+
+/* condition number 1 is the selected condition for
+/*	x=<y = true and x>y = true => true = false */
+action(selectcondition(1),'$equation'(['=<-bool-nat-nat'(@'x-nat',@'y-nat')='true-bool','>-bool-nat-nat'(@'x-nat',@'y-nat')='true-bool'],['true-bool'='false-bool'])).
+
+/* ordering of the literals is ms for
+/*	x=<y = true and x>y = true => true = false */
+action(status(ms),'$equation'(['=<-bool-nat-nat'(@'x-nat',@'y-nat')='true-bool','>-bool-nat-nat'(@'x-nat',@'y-nat')='true-bool'],['true-bool'='false-bool'])).
+
+/* condition number 1 is the selected condition for
+/*	1=<z = true => 0=<z = true */
+action(selectcondition(1),'$equation'(['=<-bool-nat-nat'('1-nat',@'z-nat')='true-bool'],['=<-bool-nat-nat'('0-nat',@'z-nat')='true-bool'])).
+
+/* declare as nonoperational :
+/*	0=<z = false => 1=<z = false */
+action(orient(n),'$equation'(['=<-bool-nat-nat'('0-nat',@'z-nat')='false-bool'],['=<-bool-nat-nat'('1-nat',@'z-nat')='false-bool'])).
+
+/* condition number 1 is the selected condition for
+/*	0=<z = false => 1=<z = false */
+action(selectcondition(1),'$equation'(['=<-bool-nat-nat'('0-nat',@'z-nat')='false-bool'],['=<-bool-nat-nat'('1-nat',@'z-nat')='false-bool'])).
+
+/* condition number 1 is the selected condition for
+/*	x=<1 = false => x=<0 = false */
+action(selectcondition(1),'$equation'(['=<-bool-nat-nat'(@'x-nat','1-nat')='false-bool'],['=<-bool-nat-nat'(@'x-nat','0-nat')='false-bool'])).
+
+/* declare as nonoperational :
+/*	y=<0 = true => 0 = y */
+action(orient(n),'$equation'(['=<-bool-nat-nat'(@'y-nat','0-nat')='true-bool'],['0-nat'= @'y-nat'])).
+
+/* condition number 1 is the selected condition for
+/*	y=<0 = true => 0 = y */
+action(selectcondition(1),'$equation'(['=<-bool-nat-nat'(@'y-nat','0-nat')='true-bool'],['0-nat'= @'y-nat'])).
+
+/* declare as nonoperational :
+/*	x=<z = false => x=<0 = false */
+action(orient(n),'$equation'(['=<-bool-nat-nat'(@'x-nat',@'z-nat')='false-bool'],['=<-bool-nat-nat'(@'x-nat','0-nat')='false-bool'])).
+
+/* condition number 1 is the selected condition for
+/*	x=<z = false => x=<0 = false */
+action(selectcondition(1),'$equation'(['=<-bool-nat-nat'(@'x-nat',@'z-nat')='false-bool'],['=<-bool-nat-nat'(@'x-nat','0-nat')='false-bool'])).
+
+/* condition number 1 is the selected condition for
+/*	0>y = true => true = false */
+action(selectcondition(1),'$equation'(['>-bool-nat-nat'('0-nat',@'y-nat')='true-bool'],['true-bool'='false-bool'])).
+
+/* declare as nonoperational :
+/*	y1=<0 = true and 0\==y1 = true => true = false */
+action(orient(n),'$equation'(['=<-bool-nat-nat'(@'y1-nat','0-nat')='true-bool','\==-bool-nat-nat'('0-nat',@'y1-nat')='true-bool'],['true-bool'='false-bool'])).
+
+/* condition number 1 is the selected condition for
+/*	y1=<0 = true and 0\==y1 = true => true = false */
+action(selectcondition(1),'$equation'(['=<-bool-nat-nat'(@'y1-nat','0-nat')='true-bool','\==-bool-nat-nat'('0-nat',@'y1-nat')='true-bool'],['true-bool'='false-bool'])).
+
+/* condition number 1 is the selected condition for
+/*	y1=<0 = true and 0\==y1 = true => true = false */
+action(selectcondition(1),'$equation'(['=<-bool-nat-nat'(@'y1-nat','0-nat')='true-bool','\==-bool-nat-nat'('0-nat',@'y1-nat')='true-bool'],['true-bool'='false-bool'])).
+
+/* condition number 1 is the selected condition for
+/*	x+k=<x = true => x+k = x */
+action(selectcondition(1),'$equation'(['=<-bool-nat-nat'('+-nat-nat-nat'(@'x-nat',@'k-nat'),@'x-nat')='true-bool'],['+-nat-nat-nat'(@'x-nat',@'k-nat')= @'x-nat'])).
+
+/* declare as nonoperational :
+/*	x+k=<z = true => x=<z = true */
+action(orient(n),'$equation'(['=<-bool-nat-nat'('+-nat-nat-nat'(@'x-nat',@'k-nat'),@'z-nat')='true-bool'],['=<-bool-nat-nat'(@'x-nat',@'z-nat')='true-bool'])).
+
+/* condition number 1 is the selected condition for
+/*	x+k=<z = true => x=<z = true */
+action(selectcondition(1),'$equation'(['=<-bool-nat-nat'('+-nat-nat-nat'(@'x-nat',@'k-nat'),@'z-nat')='true-bool'],['=<-bool-nat-nat'(@'x-nat',@'z-nat')='true-bool'])).
+
+/* declare as nonoperational :
+/*	n=<m = false => n+m1=<m = false */
+action(orient(n),'$equation'(['=<-bool-nat-nat'(@'n-nat',@'m-nat')='false-bool'],['=<-bool-nat-nat'('+-nat-nat-nat'(@'n-nat',@'m1-nat'),@'m-nat')='false-bool'])).
+
+/* condition number 1 is the selected condition for
+/*	x=<z = false => x+k=<z = false */
+action(selectcondition(1),'$equation'(['=<-bool-nat-nat'(@'x-nat',@'z-nat')='false-bool'],['=<-bool-nat-nat'('+-nat-nat-nat'(@'x-nat',@'k-nat'),@'z-nat')='false-bool'])).
+
+/* declare as nonoperational :
+/*	x=<y+k = false => x=<y = false */
+action(orient(n),'$equation'(['=<-bool-nat-nat'(@'x-nat','+-nat-nat-nat'(@'y-nat',@'k-nat'))='false-bool'],['=<-bool-nat-nat'(@'x-nat',@'y-nat')='false-bool'])).
+
+/* condition number 1 is the selected condition for
+/*	x=<y+k = false => x=<y = false */
+action(selectcondition(1),'$equation'(['=<-bool-nat-nat'(@'x-nat','+-nat-nat-nat'(@'y-nat',@'k-nat'))='false-bool'],['=<-bool-nat-nat'(@'x-nat',@'y-nat')='false-bool'])).
+
+/* condition number 1 is the selected condition for
+/*	x>x+k = true => true = false */
+action(selectcondition(1),'$equation'(['>-bool-nat-nat'(@'x-nat','+-nat-nat-nat'(@'x-nat',@'k-nat'))='true-bool'],['true-bool'='false-bool'])).
+
+/* condition number 1 is the selected condition for
+/*	k=<0 = true => k = 0 */
+action(selectcondition(1),'$equation'(['=<-bool-nat-nat'(@'k-nat','0-nat')='true-bool'],[@'k-nat'='0-nat'])).
+
+/* declare as nonoperational :
+/*	x1=<m = false => x1=<0 = false */
+action(orient(n),'$equation'(['=<-bool-nat-nat'(@'x1-nat',@'m-nat')='false-bool'],['=<-bool-nat-nat'(@'x1-nat','0-nat')='false-bool'])).
+
+/* condition number 1 is the selected condition for
+/*	x1=<k = false => x1=<0 = false */
+action(selectcondition(1),'$equation'(['=<-bool-nat-nat'(@'x1-nat',@'k-nat')='false-bool'],['=<-bool-nat-nat'(@'x1-nat','0-nat')='false-bool'])).
+
+/* declare as nonoperational :
+/*	x1+k=<x1 = true and x1\==x1+k = true => true = false */
+action(orient(n),'$equation'(['=<-bool-nat-nat'('+-nat-nat-nat'(@'x1-nat',@'k-nat'),@'x1-nat')='true-bool','\==-bool-nat-nat'(@'x1-nat','+-nat-nat-nat'(@'x1-nat',@'k-nat'))='true-bool'],['true-bool'='false-bool'])).
+
+/* condition number 1 is the selected condition for
+/*	x1+k=<x1 = true and x1\==x1+k = true => true = false */
+action(selectcondition(1),'$equation'(['=<-bool-nat-nat'('+-nat-nat-nat'(@'x1-nat',@'k-nat'),@'x1-nat')='true-bool','\==-bool-nat-nat'(@'x1-nat','+-nat-nat-nat'(@'x1-nat',@'k-nat'))='true-bool'],['true-bool'='false-bool'])).
+
+/* condition number 1 is the selected condition for
+/*	x1+k=<x1 = true and x1\==x1+k = true => true = false */
+action(selectcondition(1),'$equation'(['=<-bool-nat-nat'('+-nat-nat-nat'(@'x1-nat',@'k-nat'),@'x1-nat')='true-bool','\==-bool-nat-nat'(@'x1-nat','+-nat-nat-nat'(@'x1-nat',@'k-nat'))='true-bool'],['true-bool'='false-bool'])).
+
+/* declare as nonoperational :
+/*	n=<0 = true and n+y>y = true => true = false */
+action(orient(n),'$equation'(['=<-bool-nat-nat'(@'n-nat','0-nat')='true-bool','>-bool-nat-nat'('+-nat-nat-nat'(@'n-nat',@'y-nat'),@'y-nat')='true-bool'],['true-bool'='false-bool'])).
+
+/* condition number 1 is the selected condition for
+/*	n=<0 = true and n+y>y = true => true = false */
+action(selectcondition(1),'$equation'(['=<-bool-nat-nat'(@'n-nat','0-nat')='true-bool','>-bool-nat-nat'('+-nat-nat-nat'(@'n-nat',@'y-nat'),@'y-nat')='true-bool'],['true-bool'='false-bool'])).
+
+/* condition number 1 is the selected condition for
+/*	n=<0 = true and n+y>y = true => true = false */
+action(selectcondition(1),'$equation'(['=<-bool-nat-nat'(@'n-nat','0-nat')='true-bool','>-bool-nat-nat'('+-nat-nat-nat'(@'n-nat',@'y-nat'),@'y-nat')='true-bool'],['true-bool'='false-bool'])).
+
+/* declare as nonoperational :
+/*	k=<0 = true and x1\==x1+k = true => true = false */
+action(orient(n),'$equation'(['=<-bool-nat-nat'(@'k-nat','0-nat')='true-bool','\==-bool-nat-nat'(@'x1-nat','+-nat-nat-nat'(@'x1-nat',@'k-nat'))='true-bool'],['true-bool'='false-bool'])).
+
+/* condition number 1 is the selected condition for
+/*	k=<0 = true and x1\==x1+k = true => true = false */
+action(selectcondition(1),'$equation'(['=<-bool-nat-nat'(@'k-nat','0-nat')='true-bool','\==-bool-nat-nat'(@'x1-nat','+-nat-nat-nat'(@'x1-nat',@'k-nat'))='true-bool'],['true-bool'='false-bool'])).
+
+/* condition number 1 is the selected condition for
+/*	k=<0 = true and x1\==x1+k = true => true = false */
+action(selectcondition(1),'$equation'(['=<-bool-nat-nat'(@'k-nat','0-nat')='true-bool','\==-bool-nat-nat'(@'x1-nat','+-nat-nat-nat'(@'x1-nat',@'k-nat'))='true-bool'],['true-bool'='false-bool'])).
+
+/* declare as nonoperational :
+/*	n=<m = true and m+k=<z = true => n+k=<z = true */
+action(orient(n),'$equation'(['=<-bool-nat-nat'(@'n-nat',@'m-nat')='true-bool','=<-bool-nat-nat'('+-nat-nat-nat'(@'m-nat',@'k-nat'),@'z-nat')='true-bool'],['=<-bool-nat-nat'('+-nat-nat-nat'(@'n-nat',@'k-nat'),@'z-nat')='true-bool'])).
+
+/* condition number 1 is the selected condition for
+/*	n=<m = true and m+k=<z = true => n+k=<z = true */
+action(selectcondition(1),'$equation'(['=<-bool-nat-nat'(@'n-nat',@'m-nat')='true-bool','=<-bool-nat-nat'('+-nat-nat-nat'(@'m-nat',@'k-nat'),@'z-nat')='true-bool'],['=<-bool-nat-nat'('+-nat-nat-nat'(@'n-nat',@'k-nat'),@'z-nat')='true-bool'])).
+
+/* condition number 1 is the selected condition for
+/*	n=<m = true and m+k=<z = true => n+k=<z = true */
+action(selectcondition(1),'$equation'(['=<-bool-nat-nat'(@'n-nat',@'m-nat')='true-bool','=<-bool-nat-nat'('+-nat-nat-nat'(@'m-nat',@'k-nat'),@'z-nat')='true-bool'],['=<-bool-nat-nat'('+-nat-nat-nat'(@'n-nat',@'k-nat'),@'z-nat')='true-bool'])).
+
+/* declare as nonoperational :
+/*	n=<m = true and n+k=<z = false => m+k=<z = false */
+action(orient(n),'$equation'(['=<-bool-nat-nat'(@'n-nat',@'m-nat')='true-bool','=<-bool-nat-nat'('+-nat-nat-nat'(@'n-nat',@'k-nat'),@'z-nat')='false-bool'],['=<-bool-nat-nat'('+-nat-nat-nat'(@'m-nat',@'k-nat'),@'z-nat')='false-bool'])).
+
+/* condition number 1 is the selected condition for
+/*	n=<m = true and n+k=<z = false => m+k=<z = false */
+action(selectcondition(1),'$equation'(['=<-bool-nat-nat'(@'n-nat',@'m-nat')='true-bool','=<-bool-nat-nat'('+-nat-nat-nat'(@'n-nat',@'k-nat'),@'z-nat')='false-bool'],['=<-bool-nat-nat'('+-nat-nat-nat'(@'m-nat',@'k-nat'),@'z-nat')='false-bool'])).
+
+/* condition number 1 is the selected condition for
+/*	n=<m = true and n+k=<z = false => m+k=<z = false */
+action(selectcondition(1),'$equation'(['=<-bool-nat-nat'(@'n-nat',@'m-nat')='true-bool','=<-bool-nat-nat'('+-nat-nat-nat'(@'n-nat',@'k-nat'),@'z-nat')='false-bool'],['=<-bool-nat-nat'('+-nat-nat-nat'(@'m-nat',@'k-nat'),@'z-nat')='false-bool'])).
+
+/* declare as nonoperational :
+/*	n=<m = true and x=<m+k = false => x=<n+k = false */
+action(orient(n),'$equation'(['=<-bool-nat-nat'(@'n-nat',@'m-nat')='true-bool','=<-bool-nat-nat'(@'x-nat','+-nat-nat-nat'(@'m-nat',@'k-nat'))='false-bool'],['=<-bool-nat-nat'(@'x-nat','+-nat-nat-nat'(@'n-nat',@'k-nat'))='false-bool'])).
+
+/* condition number 1 is the selected condition for
+/*	n=<m = true and x=<m+k = false => x=<n+k = false */
+action(selectcondition(1),'$equation'(['=<-bool-nat-nat'(@'n-nat',@'m-nat')='true-bool','=<-bool-nat-nat'(@'x-nat','+-nat-nat-nat'(@'m-nat',@'k-nat'))='false-bool'],['=<-bool-nat-nat'(@'x-nat','+-nat-nat-nat'(@'n-nat',@'k-nat'))='false-bool'])).
+
+/* condition number 1 is the selected condition for
+/*	n=<m = true and x=<m+k = false => x=<n+k = false */
+action(selectcondition(1),'$equation'(['=<-bool-nat-nat'(@'n-nat',@'m-nat')='true-bool','=<-bool-nat-nat'(@'x-nat','+-nat-nat-nat'(@'m-nat',@'k-nat'))='false-bool'],['=<-bool-nat-nat'(@'x-nat','+-nat-nat-nat'(@'n-nat',@'k-nat'))='false-bool'])).
+
+/* declare as nonoperational :
+/*	n=<m = true and n+k>m+k = true => true = false */
+action(orient(n),'$equation'(['=<-bool-nat-nat'(@'n-nat',@'m-nat')='true-bool','>-bool-nat-nat'('+-nat-nat-nat'(@'n-nat',@'k-nat'),'+-nat-nat-nat'(@'m-nat',@'k-nat'))='true-bool'],['true-bool'='false-bool'])).
+
+/* condition number 1 is the selected condition for
+/*	n=<m = true and n+k>m+k = true => true = false */
+action(selectcondition(1),'$equation'(['=<-bool-nat-nat'(@'n-nat',@'m-nat')='true-bool','>-bool-nat-nat'('+-nat-nat-nat'(@'n-nat',@'k-nat'),'+-nat-nat-nat'(@'m-nat',@'k-nat'))='true-bool'],['true-bool'='false-bool'])).
+
+/* condition number 1 is the selected condition for
+/*	n=<m = true and n+k>m+k = true => true = false */
+action(selectcondition(1),'$equation'(['=<-bool-nat-nat'(@'n-nat',@'m-nat')='true-bool','>-bool-nat-nat'('+-nat-nat-nat'(@'n-nat',@'k-nat'),'+-nat-nat-nat'(@'m-nat',@'k-nat'))='true-bool'],['true-bool'='false-bool'])).
+
+/* declare as nonoperational :
+/*	n=<0 = true => n=<k1 = true */
+action(orient(n),'$equation'(['=<-bool-nat-nat'(@'n-nat','0-nat')='true-bool'],['=<-bool-nat-nat'(@'n-nat',@'k1-nat')='true-bool'])).
+
+/* condition number 1 is the selected condition for
+/*	x=<0 = true => x=<z = true */
+action(selectcondition(1),'$equation'(['=<-bool-nat-nat'(@'x-nat','0-nat')='true-bool'],['=<-bool-nat-nat'(@'x-nat',@'z-nat')='true-bool'])).
+
+/* declare as nonoperational :
+/*	k=<0 = true => x+k = x */
+action(orient(n),'$equation'(['=<-bool-nat-nat'(@'k-nat','0-nat')='true-bool'],['+-nat-nat-nat'(@'x-nat',@'k-nat')= @'x-nat'])).
+
+/* condition number 1 is the selected condition for
+/*	k=<0 = true => x+k = x */
+action(selectcondition(1),'$equation'(['=<-bool-nat-nat'(@'k-nat','0-nat')='true-bool'],['+-nat-nat-nat'(@'x-nat',@'k-nat')= @'x-nat'])).
+
+/* condition number 1 is the selected condition for
+/*	X3+X4=<m = true => X4=<m+X2 = true */
+action(selectcondition(1),'$equation'(['=<-bool-nat-nat'('+-nat-nat-nat'(@'X3-nat',@'X4-nat'),@'m-nat')='true-bool'],['=<-bool-nat-nat'(@'X4-nat','+-nat-nat-nat'(@'m-nat',@'X2-nat'))='true-bool'])).
+
+/* condition number 1 is the selected condition for
+/*	X1+x=<m = true => x=<m+k = true */
+action(selectcondition(1),'$equation'(['=<-bool-nat-nat'('+-nat-nat-nat'(@'X1-nat',@'x-nat'),@'m-nat')='true-bool'],['=<-bool-nat-nat'(@'x-nat','+-nat-nat-nat'(@'m-nat',@'k-nat'))='true-bool'])).
+
+/* declare as nonoperational :
+/*	x=<m = true => x=<m+m1 = true */
+action(orient(n),'$equation'(['=<-bool-nat-nat'(@'x-nat',@'m-nat')='true-bool'],['=<-bool-nat-nat'(@'x-nat','+-nat-nat-nat'(@'m-nat',@'m1-nat'))='true-bool'])).
+
+/* condition number 1 is the selected condition for
+/*	n=<m = true => n=<m+k1 = true */
+action(selectcondition(1),'$equation'(['=<-bool-nat-nat'(@'n-nat',@'m-nat')='true-bool'],['=<-bool-nat-nat'(@'n-nat','+-nat-nat-nat'(@'m-nat',@'k1-nat'))='true-bool'])).
+

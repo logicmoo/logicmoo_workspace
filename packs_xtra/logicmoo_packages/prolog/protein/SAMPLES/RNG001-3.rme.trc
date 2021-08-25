@@ -1,0 +1,59 @@
+********************    PROTEIN V2.09   ********************
+
+--------------------    input clauses   --------------------
+
+"Clause " No. 1 : [sum(additive_identity, _53, _53)]
+"Clause " No. 2 : [sum(additive_inverse(_76), _76, additive_identity)]
+"Clause " No. 3 : [sum(_102, _100, _97), not_sum(_102, _101, _99), not_sum(_101, _98, _100), not_sum(_99, _98, _97)]
+"Clause " No. 4 : [sum(_154, _152, _149), not_sum(_151, _153, _154), not_sum(_153, _152, _150), not_sum(_151, _150, _149)]
+"Clause " No. 5 : [product(_209, _208, multiply(_209, _208))]
+"Clause " No. 6 : [sum(_234, _233, _228), not_product(_230, _232, _234), not_product(_230, _231, _233), not_sum(_232, _231, _229), not_product(_230, _229, _228)]
+"Clause " No. 7 : [product(_295, _292, _289), not_product(_295, _294, _291), not_product(_295, _293, _290), not_sum(_294, _293, _292), not_sum(_291, _290, _289)]
+"Query  " No. 8 : [query, not_product(a, additive_identity, additive_identity)]
+"Restart" No. 8 : [restart, not_product(a, additive_identity, additive_identity)]
+
+--------------------        flags       --------------------
+
+protein_flag(system, protein).
+protein_flag(ancestry_rme, off).
+protein_flag(ancs, both).
+protein_flag(answers, one).
+protein_flag(answer_set_handling, on).
+protein_flag(check_flags, [protein_flag(calculus, hyper)]).
+protein_flag(definite_answers, off).
+protein_flag(delayed_rme, off).
+protein_flag(depth_increment, 1).
+protein_flag(dynamic, off).
+protein_flag(factorisation, cut).
+protein_flag(head_behind_prolog, off).
+protein_flag(mmr, off).
+protein_flag(mode, pl1).
+protein_flag(query_anc, ([], [])).
+protein_flag(query_reuse, on).
+protein_flag(reduction, both).
+protein_flag(regularity, delay).
+protein_flag(search, id_tree).
+protein_flag(selection_function, off).
+protein_flag(sorting, costs).
+protein_flag(strict_rme, off).
+protein_flag(th_nonewclauses, off).
+protein_flag(th_reduction, both).
+protein_flag(th_regularity, delay).
+protein_flag(th_sidelit_anc, off).
+protein_flag(translate, all).
+protein_flag(trace, internal).
+protein_flag(calculus, rme).
+
+
+--------------------     statistics     --------------------
+
+Proof Statistics
+----------------
+Proof Time:  0.72 sec
+Proof Depth: 5
+Extension Steps: 27
+Reduction Steps: 0
+Factoring Steps: 1		(incl. 1 with cut)
+Inferences:      3294
+
+--------------------      answers       --------------------

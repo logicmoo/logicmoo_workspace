@@ -1,0 +1,53 @@
+%% O--------------------------------------O
+%% | ProSpec V.1.31:                      |
+%% |   bthomas@informatik.uni-koblenz.de  |
+%% |--------------------------------------|
+%% | Normal Form Transformator (pl2tme):  |
+%% |   peter@informatik.uni-koblenz.de    |
+%% O--------------------------------------O
+%% ========================================
+%%  input file: problem.sort
+%% ========================================
+
+
+%% input formula => forall([L : t_P_List], forall([K : t_P_List], forall([I : t_P_Item], app(cons(I, K), L) = cons(I, app(K, L)))))
+
+app(cons(A : [t_P_Item|B], C : [t_P_List|D]) : [t_P_List], E : [t_P_List|F]) : [t_P_List] = cons(A : [t_P_Item|B], app(C : [t_P_List|D], E : [t_P_List|F]) : [t_P_List]) : [t_P_List].
+
+%% input formula => forall([L : t_P_List], app(nil, L) = L)
+
+app(nil : [t_P_List], A : [t_P_List|B]) : [t_P_List] = A : [t_P_List|B].
+
+%% input formula => forall([L : t_P_List], forall([K : t_P_List], forall([I : t_P_Item], forall([J : t_P_Item], cons(I, L) = cons(J, K) -> I = J & L = K))))
+
+A : [t_P_Item|B] = C : [t_P_Item|D] :- cons(A : [t_P_Item|B], E : [t_P_List|F]) : [t_P_List] = cons(C : [t_P_Item|D], G : [t_P_List|H]) : [t_P_List].
+
+A : [t_P_List|B] = C : [t_P_List|D] :- cons(E : [t_P_Item|F], A : [t_P_List|B]) : [t_P_List] = cons(G : [t_P_Item|H], C : [t_P_List|D]) : [t_P_List].
+
+%% input formula => forall([L : t_P_List], L = nil ; exists([K : t_P_List], exists([I : t_P_Item], L = cons(I, K))))
+
+A : [t_P_List|B] = nil : [t_P_List] ; A : [t_P_List|B] = cons(fsk1(A : [t_P_List|B]) : [t_P_Item], fsk0(A : [t_P_List|B]) : [t_P_List]) : [t_P_List].
+
+%% input formula => forall([L : t_P_List], forall([I : t_P_Item], ~ nil = cons(I, L)))
+
+false :- nil : [t_P_List] = cons(A : [t_P_Item|B], C : [t_P_List|D]) : [t_P_List].
+
+%% query formula => -(forall([_0_6010 : t_P_List], forall([_0_6009 : t_P_List], forall([_0_6011 : t_P_Item], forall([_0_6012 : t_P_List], exists([_0_6014 : t_P_List], exists([_0_6015 : t_P_List], _0_6012 = app(app(_0_6014, cons(_0_6011, nil)), _0_6015))) & forall([_0_6018 : t_P_List], forall([_0_6019 : t_P_List], ~ _0_6010 = app(app(_0_6018, cons(_0_6011, nil)), _0_6019))) ; forall([_0_6013 : t_P_List], ~ _0_6009 = app(app(_0_6012, cons(_0_6011, nil)), _0_6013) ; exists([_0_6016 : t_P_List], exists([_0_6017 : t_P_List], _0_6013 = app(app(_0_6016, cons(_0_6011, nil)), _0_6017))) & forall([_0_6018 : t_P_List], forall([_0_6019 : t_P_List], ~ _0_6010 = app(app(_0_6018, cons(_0_6011, nil)), _0_6019))) ; exists([_0_6018 : t_P_List], exists([_0_6019 : t_P_List], _0_6010 = app(app(_0_6018, cons(_0_6011, nil)), _0_6019))) & forall([_0_6014 : t_P_List], forall([_0_6015 : t_P_List], ~ _0_6012 = app(app(_0_6014, cons(_0_6011, nil)), _0_6015))) & forall([_0_6016 : t_P_List], forall([_0_6017 : t_P_List], ~ _0_6013 = app(app(_0_6016, cons(_0_6011, nil)), _0_6017)))))) ; forall([_0_6027 : t_P_List], ~ _0_6010 = _0_6027 ; forall([_0_6026 : t_P_List], ~ _0_6009 = _0_6026 ; exists([_0_6028 : t_P_Item], exists([_0_6029 : t_P_List], exists([_0_6030 : t_P_List], _0_6026 = app(app(_0_6029, cons(_0_6028, nil)), _0_6030)) & exists([_0_6031 : t_P_List], exists([_0_6032 : t_P_List], _0_6029 = app(app(_0_6031, cons(_0_6028, nil)), _0_6032)))) & exists([_0_6035 : t_P_List], exists([_0_6036 : t_P_List], _0_6027 = app(app(_0_6035, cons(_0_6028, nil)), _0_6036)))) ; exists([_0_6028 : t_P_Item], exists([_0_6029 : t_P_List], exists([_0_6030 : t_P_List], _0_6026 = app(app(_0_6029, cons(_0_6028, nil)), _0_6030) & forall([_0_6033 : t_P_List], forall([_0_6034 : t_P_List], ~ _0_6030 = app(app(_0_6033, cons(_0_6028, nil)), _0_6034)))) & forall([_0_6031 : t_P_List], forall([_0_6032 : t_P_List], ~ _0_6029 = app(app(_0_6031, cons(_0_6028, nil)), _0_6032)))) & forall([_0_6035 : t_P_List], forall([_0_6036 : t_P_List], ~ _0_6027 = app(app(_0_6035, cons(_0_6028, nil)), _0_6036)))) ; exists([_0_6028 : t_P_Item], exists([_0_6029 : t_P_List], exists([_0_6030 : t_P_List], _0_6026 = app(app(_0_6029, cons(_0_6028, nil)), _0_6030) & exists([_0_6033 : t_P_List], exists([_0_6034 : t_P_List], _0_6030 = app(app(_0_6033, cons(_0_6028, nil)), _0_6034))))) & exists([_0_6035 : t_P_List], exists([_0_6036 : t_P_List], _0_6027 = app(app(_0_6035, cons(_0_6028, nil)), _0_6036)))))))))
+
+?- -(fsk2 : [t_P_List] = app(app(fsk6(A : [t_P_List|B], C : [t_P_List|D]) : [t_P_List], cons(fsk4 : [t_P_Item], nil : [t_P_List]) : [t_P_List]) : [t_P_List], fsk7(C : [t_P_List|D], A : [t_P_List|B]) : [t_P_List]) : [t_P_List]), fsk5 : [t_P_List] = app(app(C : [t_P_List|D], cons(fsk4 : [t_P_Item], nil : [t_P_List]) : [t_P_List]) : [t_P_List], A : [t_P_List|B]) : [t_P_List].
+
+fsk3 : [t_P_List] = app(app(fsk5 : [t_P_List], cons(fsk4 : [t_P_Item], nil : [t_P_List]) : [t_P_List]) : [t_P_List], fsk8 : [t_P_List]) : [t_P_List].
+
+?- -(fsk2 : [t_P_List] = app(app(fsk9(A : [t_P_List|B], C : [t_P_List|D]) : [t_P_List], cons(fsk4 : [t_P_Item], nil : [t_P_List]) : [t_P_List]) : [t_P_List], fsk10(C : [t_P_List|D], A : [t_P_List|B]) : [t_P_List]) : [t_P_List]), fsk8 : [t_P_List] = app(app(C : [t_P_List|D], cons(fsk4 : [t_P_Item], nil : [t_P_List]) : [t_P_List]) : [t_P_List], A : [t_P_List|B]) : [t_P_List].
+
+?- -(fsk5 : [t_P_List] = app(app(fsk11(A : [t_P_List|B], C : [t_P_List|D]) : [t_P_List], cons(fsk4 : [t_P_Item], nil : [t_P_List]) : [t_P_List]) : [t_P_List], fsk12(C : [t_P_List|D], A : [t_P_List|B]) : [t_P_List]) : [t_P_List]), -(fsk8 : [t_P_List] = app(app(fsk13(C : [t_P_List|D], A : [t_P_List|B]) : [t_P_List], cons(fsk4 : [t_P_Item], nil : [t_P_List]) : [t_P_List]) : [t_P_List], fsk14(A : [t_P_List|B], C : [t_P_List|D]) : [t_P_List]) : [t_P_List]), fsk2 : [t_P_List] = app(app(C : [t_P_List|D], cons(fsk4 : [t_P_Item], nil : [t_P_List]) : [t_P_List]) : [t_P_List], A : [t_P_List|B]) : [t_P_List].
+
+fsk2 : [t_P_List] = fsk15 : [t_P_List].
+
+fsk3 : [t_P_List] = fsk16 : [t_P_List].
+
+?- fsk16 : [t_P_List] = app(app(A : [t_P_List|B], cons(C : [t_P_Item|D], nil : [t_P_List]) : [t_P_List]) : [t_P_List], E : [t_P_List|F]) : [t_P_List], A : [t_P_List|B] = app(app(G : [t_P_List|H], cons(C : [t_P_Item|D], nil : [t_P_List]) : [t_P_List]) : [t_P_List], I : [t_P_List|J]) : [t_P_List], fsk15 : [t_P_List] = app(app(K : [t_P_List|L], cons(C : [t_P_Item|D], nil : [t_P_List]) : [t_P_List]) : [t_P_List], M : [t_P_List|N]) : [t_P_List].
+
+?- -(A : [t_P_List|B] = app(app(fsk17(A : [t_P_List|B], C : [t_P_List|D], E : [t_P_Item|F]) : [t_P_List], cons(E : [t_P_Item|F], nil : [t_P_List]) : [t_P_List]) : [t_P_List], fsk18(A : [t_P_List|B], C : [t_P_List|D], E : [t_P_Item|F]) : [t_P_List]) : [t_P_List]), -(C : [t_P_List|D] = app(app(fsk19(A : [t_P_List|B], C : [t_P_List|D], E : [t_P_Item|F]) : [t_P_List], cons(E : [t_P_Item|F], nil : [t_P_List]) : [t_P_List]) : [t_P_List], fsk20(A : [t_P_List|B], C : [t_P_List|D], E : [t_P_Item|F]) : [t_P_List]) : [t_P_List]), -(fsk15 : [t_P_List] = app(app(fsk21(A : [t_P_List|B], C : [t_P_List|D], E : [t_P_Item|F]) : [t_P_List], cons(E : [t_P_Item|F], nil : [t_P_List]) : [t_P_List]) : [t_P_List], fsk22(E : [t_P_Item|F], C : [t_P_List|D], A : [t_P_List|B]) : [t_P_List]) : [t_P_List]), fsk16 : [t_P_List] = app(app(C : [t_P_List|D], cons(E : [t_P_Item|F], nil : [t_P_List]) : [t_P_List]) : [t_P_List], A : [t_P_List|B]) : [t_P_List].
+
+?- fsk16 : [t_P_List] = app(app(A : [t_P_List|B], cons(C : [t_P_Item|D], nil : [t_P_List]) : [t_P_List]) : [t_P_List], E : [t_P_List|F]) : [t_P_List], E : [t_P_List|F] = app(app(G : [t_P_List|H], cons(C : [t_P_Item|D], nil : [t_P_List]) : [t_P_List]) : [t_P_List], I : [t_P_List|J]) : [t_P_List], fsk15 : [t_P_List] = app(app(K : [t_P_List|L], cons(C : [t_P_Item|D], nil : [t_P_List]) : [t_P_List]) : [t_P_List], M : [t_P_List|N]) : [t_P_List].

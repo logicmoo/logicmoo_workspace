@@ -1,0 +1,18 @@
+begin(prospec).
+
+sorts: (t_list(U), t_var, t_val, t_pair).
+
+functions: (	cons: (U, t_list(U)) => t_list(U)
+	).
+
+relations: ( '=': (U,U),
+	     p:(t_var,t_val) ).
+
+end(prospec).
+
+%forall(x,exists(y,p(x,y))).
+
+%forall(x:U,forall(y:t_list(U),exists(z:t_list(U),cons(x,y)=z))).
+
+forall(x,forall(y,exists(z,cons(x,y)=z))).
+

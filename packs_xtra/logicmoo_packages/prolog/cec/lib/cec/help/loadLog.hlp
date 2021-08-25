@@ -1,0 +1,27 @@
+
+"loadLog."
+
+reads the file "<module_name>.<order_name>.@.ord", if <module_name> is
+the name of the current specification module and <order_name> is the
+name of the termination ordering that is currently associated with it.
+This file contains all the answers which a user has given during an
+earlier completion of <module> and the final termination ordering
+saved using the "saveLog"-command. If the completion process is
+started again, all question whose answers are already contained in
+"File.@.ord" will be suppressed.
+
+"loadLog(+File)."
+
+reads in the file "File.@.ord". This file contains all the answer
+given during the completion process and the final termination ordering
+saved using the "saveLog"-command. If the completion process is
+started again, all question whose answers are already contained in
+"File.@" will be suppressed.
+
+"loadLog(+ModuleName, +OrderName)."
+
+reads in the file "ModuleName.OrderName.@.ord". This file contains all
+the answers given during the completion process and the final
+termination ordering saved using the "saveLog"-command. If the
+completion process is started again, all questions whose answers are
+already contained in "File.@" will be suppressed.

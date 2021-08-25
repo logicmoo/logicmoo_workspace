@@ -1,0 +1,2 @@
+order poly1 for equalityAndOrder using poly1 for equality + 'poly1' for totalOrder .
+setInterpretation(x > y, 2 * x * y + 2) .

@@ -1,0 +1,36 @@
+
+trc(query, info(1664, query, 10, 1), [
+   trc(p(a, b), info(1664, th_start, 2, 1), [
+      trc(p(d, b), info(1278, th_ext, 8, 1), [
+         trc(not_q(d, b), info(1278, restart, 0, 1), [
+            trc(restart, info(1278, query, 9, 1), [
+               trc(q(c, d), info(1278, th_start, 4, 2), [
+                  trc(q(d, b), info(1132, th_red, 0, 1), []),
+                  trc(q(c, b), info(1278, th_start, 5, 1), [
+                     trc(q(a, c), info(1259, th_ext, 8, 2), [
+                        trc(not_p(a, c), info(1259, restart, 0, 1), [
+                           trc(restart, info(1259, query, 10, 1), [
+                              trc(p(a, b), info(1259, th_start, 2, 1), [
+                                 trc(p(c, b), info(1258, th_ext, 8, 1), [
+                                    trc(not_q(c, b), info(1258, red, 3, 0), [])]),
+                                 trc(p(a, c), info(1259, red, 1, 0), [])])])])]),
+                     trc(q(b, a), info(1278, th_start_1, 7, 1), [
+                        trc(q(a, b), info(1278, ext, 8, 2), [
+                           trc(not_p(a, b), info(1278, red_cut, 6, 0), [])])])])])])])]),
+      trc(p(a, d), info(1664, th_start, 2, 1), [
+         trc(p(c, d), info(1649, th_ext, 8, 1), [
+            trc(not_q(c, d), info(1649, restart, 0, 1), [
+               trc(restart, info(1649, query, 9, 1), [
+                  trc(q(c, d), info(1649, red, 1, 0), [])])])]),
+         trc(p(a, c), info(1664, ext, 8, 1), [
+            trc(not_q(a, c), info(1664, restart, 0, 1), [
+               trc(restart, info(1664, query, 9, 1), [
+                  trc(q(c, d), info(1664, ext, 8, 2), [
+                     trc(not_p(c, d), info(1664, restart, 0, 1), [
+                        trc(restart, info(1664, query, 9, 1), [
+                           trc(q(c, d), info(1664, th_start_1, 7, 1), [
+                              trc(q(d, c), info(1664, th_start, 5, 1), [
+                                 trc(q(a, d), info(1661, th_ext, 8, 2), [
+                                    trc(not_p(a, d), info(1661, red, 7, 0), [])]),
+                                 trc(q(c, a), info(1664, th_start_1, 7, 1), [
+                                    trc(q(a, c), info(1664, red_cut, 2, 0), [])])])])])])])])])])])])]).

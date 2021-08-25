@@ -1,0 +1,1 @@
+order poly1 for semiRing using 'poly1.p' for commSemiGroup + poly1 for monoid .

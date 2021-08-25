@@ -1,0 +1,3 @@
+order poly(1).
+
+setInterpretation('=<'(x, y), x + y + 2).

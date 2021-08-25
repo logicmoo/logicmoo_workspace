@@ -1,0 +1,120 @@
+Package:      lang/prolog/code/syntax/dctg/
+
+Name:         DCTG
+
+Summary:      Prolog definite clause translation grammar translator.
+
+Version:      21-JUL-90
+
+Description: 
+
+   Definite Clause Translation Grammars are described in chapter 9 of
+   Abramson and Dahl's book "Logic Grammars".  They were devised by
+   Abramson to overcome the defects of Definite Clause Grammars, in which
+   syntax and semantics are often mixed in a non-modular fashion.  They
+   avoid also the problem with the proliferation of unnamed arguments
+   that afflicts Definite Clause Grammars.
+
+   In a DCTG, the syntax and semantics are separated. Each rule contains
+   first a syntactic part, and then an optional semantics, written as one
+   or more clauses. An example is given below. See Ambramson and Dahl's
+   book for more details.  The code in this package comes from Appendix
+   II of the book, with a few minor changes by Jocelyn Paine.
+
+   The following example shows how to parse binary numbers with binary
+   points (such as 1.1 or 1001.11) when expressed as lists ([1,'.',1] or
+   [1,0,0,1,'.',1,1]).
+
+
+       bit ::= [0]
+       <:>
+       bitval( 0, _ ).
+
+       bit ::= [1]
+       <:>
+       bitval( V,Scale ) ::- V is **(2,Scale).
+
+
+       bitstring ::= []
+       <:>
+       length(0)
+       &&
+       value(0,_).
+
+       bitstring ::= bit^^B, bitstring^^B1
+       <:>
+       length( Length ) ::-
+           B1 ^^ length(Length1),
+           Length is Length1 + 1
+       &&
+       value( Value, ScaleB ) ::-
+           B ^^ bitval( VB, ScaleB ),
+           S1 is ScaleB - 1,
+           B1 ^^ value( V1, S1 ),
+           Value is VB + V1.
+
+
+       number ::= bitstring ^^ B, fraction ^^ F
+       <:>
+       value(V) ::-
+           B ^^ length(Length),
+           S is Length-1,
+           B ^^ value( VB, S ),
+           F ^^ fractional_value( VF ),
+           V is VB + VF.
+
+
+       fraction ::= ['.'], bitstring ^^ B
+       <:>
+       fractional_value( V ) ::-
+           S is -1,
+           B ^^ value( V, S ).
+
+       fraction ::= []
+       <:>
+       fractional_value(0).
+
+
+       test( L, V ) :-
+           write( 'LIST ' ), write( L ), nl,
+           number( Tree, L, [] ),
+           Tree ^^ value( V ),
+           write( 'VALUE ' ), write( V ), nl, nl.
+
+       ?- test( [1,'.',1], V ).
+          /*  Should set V to 1.5.  */
+
+Requires:     
+
+Ports:        Edinburgh-compatible Prologs.
+
+Origin:       src.doc.ic.ac.uk:packages/prolog-pd-software/ (146.169.2.1)
+              as dctg.tar.Z
+
+Copying:      
+
+Updated:      
+
+CD-ROM:       Prime Time Freeware for AI, Issue 1-1
+
+Bug Reports:  
+
+Mailing List: 
+
+Author(s):    Harvey Abramson and Veronica Dahl
+
+Contact:      
+
+Keywords:     
+
+   Prolog!Code, Prolog!Syntax, Syntax, Authors!Abramson, 
+   Authors!Dahl, DCTG, Definite Clause Translation Grammar, DCG, 
+   Definite Clause Grammar, Books!Prolog
+
+Contains:    ???
+
+See Also:    
+
+References:   
+
+   Harvey Abramson and Veronica Dahl, "Logic Grammars", Springer Verlag, 1989.

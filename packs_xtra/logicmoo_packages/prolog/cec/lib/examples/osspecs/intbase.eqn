@@ -1,0 +1,38 @@
+module intbase using natbase .
+
+int < object.  nat < int .  posint < nzInt .  nzInt < int .
+
+op (-) : (int -> int) .
+op (-) : (nzInt -> nzInt) .
+
+var [i : int, j : int, p : posint, n : nat, m : nat] .
+
+- (0) = 0 .		% caution:  `- 0' will be parsed as `0'
+-(- i) = i .
+%-i = -j => i = j.
+
+(0 == -p) = false.
+(-n == -m) = (n == m).
+(-n == p) = false.
+
+(-n \== -m) = (n \== m).
+
+
+% Parsing and Pretty-Printing
+% ===========================
+
+parse(I,-T) :-
+	integer(I),
+	I < 0,
+	!,
+	I1 is -I,
+	parse(I1,T).
+
+predicate(fromUnary(-I,N1)) :-
+	predicate(fromUnary(I,N)),
+	((N = -(_) ; N = 0) ->
+	    N1 = -(N)
+	    ;
+	    N1 is -N
+	).
+

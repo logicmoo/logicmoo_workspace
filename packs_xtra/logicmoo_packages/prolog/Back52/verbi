@@ -1,0 +1,316 @@
+/*23 - 2 - 1997*/
+/* Regola di inizializzazione */
+init :-componenti,campi,definiscoPrimitive,costruisci. 
+
+/* Definizione dei campi semantici (spaziale,percettivo,esistenziale,possessivo,circostanziale). */
+campi :- camposemantico :< anything,
+         spaziale :< camposemantico,
+         percettivo :<camposemantico,
+         esistenziale :<camposemantico,
+         possessivo :< camposemantico,
+         circostanziale :<camposemantico .
+
+/************************************************************************************************/
+/* Definizione della struttura semantica delle primitive */        
+definiscoPrimitive:-primitive :<anything,
+                     definiscoGo,definiscoStay,definiscoBe,definiscoCause.
+                 
+definiscoGo :-  fromgo:<anything,    /*Path function : origine  */
+                togo:<anything,      /*Path function : destinazione */
+                temago:<anything,    /*Tema agente  */
+                pathgo:<oneof([to,toward,via]),  /* Place function */
+                primgo:< primitive  
+                       and all(from,fromgo) and all(to,togo) and all(path,pathgo)
+                       and all(camposemanticogo,camposemantico)
+                       and all(tema,temago).
+   
+ definiscoStay :- temastay :< anything,        /*Tema agente  */
+                  statostay :< anything,       /*Stato durazionale */
+                  pathstay :< oneof([in,at]),  /* Place function */
+                  primstay :<primitive  
+                       and all(stato,statostay) and all(path,pathstay)
+                       and all(camposemanticostay,camposemantico)
+                       and all(tema,temastay).
+
+definiscoBe :- temabe :< anything,            /*Tema Non agente */
+               placebe :< anything,           /*Stato del tema  */ 
+               pathbe :< oneof([in]),         /* Place function */
+               primbe :<primitive  
+                     and all(place,placebe) and all(path,pathbe)
+                     and all(camposemanticobe,camposemantico)
+                     and all(temaNonAgente,temabe).
+
+
+definiscoCause :- temaCause :< anything,    /*Tema che introduce una primitiva */
+                  primCause :< primitive and all(tema,temaCause)
+                               and all(primitivaIntrodotta,primitive).
+/* Componenti accessorie */                   
+componenti :- giardino:<luogo,
+              conoscenza :< anything,
+              info  :< conoscenza,
+              verbo :< anything.
+
+/************************************************************************************************/
+/* Metodi  per l'interrogazione della BaseDati precedente */
+
+   
+ info_from_go(B,A,E) :- get_luoghi(X),get_man(Z),
+                   member([A],X),
+                   member([B],Z), 
+                   backretrieve(Y=getall(go and locazione:A and  agente:B)),
+                   not(Y=[]),
+                   member([E],Y).
+                   
+
+ info_from_there_be(B,A,E) :-
+                   get_luoghi(X),get_thing(Z),
+                   member([A],X),
+                   member([B],Z), 
+                   backretrieve(Y=getall(there_be and locazione:A and  tema_nonaff:B)),
+                   not(Y=[]),
+                   member([E],Y).
+
+ info_from_take_order(B,C,A,E):-
+                   get_all(X,Y,_),
+                   member([A],X),
+                   member([B],Y),
+                   member([C],Y),
+                   backretrieve(D=getall(take_order and locazione:A and agente:B and goal:C)),
+                   not(D=[]),
+                   member([E],D).
+
+info_from_read(B,C,A,E) :-
+                   get_all(X,Y,Z),
+                   member([A],X),
+                   member([B],Y), 
+                   member([C],Z),
+                   backretrieve(D=getall(read and locazione:A and agente:B and tema_aff:C)),
+                   not(D=[]),
+                   member([E],D).
+
+info_from_begin(B,C,A,E):- 
+                   get_all(X,Y,_),
+                   get_processi(Z),
+                   member([A],X),
+                   member([B],Y),
+                   member([C],Z), 
+                   backretrieve(D=getall(begin and locazione:A and  agente:B and prop:C)),
+                   not(D=[]),
+                   member([E],D).
+
+/************************************************************************************************/
+/*  Regole di utilita' generale */
+/* get_******(X) individua le istanze di un determinato tipo (******). */
+
+get_all(X,Y,Z) :- get_luoghi(X),get_man(Y),get_thing(Z).
+ 
+get_luoghi(X) :- backretrieve(X=getall(luogo)).
+
+get_man(X) :- backretrieve(X=getall(man)).
+
+get_thing(X) :- backretrieve(X=getall(thing)).
+
+get_processi(X) :- backretrieve(X=getall(pr)).
+
+get_stati(X) :- backretrieve(X=getall(st)).
+
+get_eventi(X) :- backretrieve(X=getall(ev)).
+
+get_primgo(X) :- backretrieve(X=getall(primgo)).
+
+get_primbe(X) :- backretrieve(X=getall(primbe)).
+
+get_primstay(X) :- backretrieve(X=getall(primstay)).
+
+get_verbi(X) :- backretrieve(X=getall(verbo)).
+
+get_locazione(C,B) :- get_thing(A),
+                      member([B],A),
+                      backretrieve(C=getall(anything and locaz:B )),  
+                      not(C==[]).
+
+get_verbo(X) :- get_verbi(Y),
+                member([X],Y).
+
+
+/************************************************************************************************/
+/* Costruzione degli Oggetti */
+/* info_from_***(X) ricerca tutte le istanze del verbo ***  .
+   linkverbo   istanzia il ruolo del verbo che mantiene il collegamento con la primitiva inferita. */
+
+costruisci :- genera,fail.
+costruisci.
+
+  /*  frase([john, went, into, a, restaurant]). */
+ genera :- info_from_go(X,Y,K),
+              concatena(cause,K,R),concatena(go,K,S),
+              R::primCause and tema:X and primitivaIntrodotta: 
+                      (S:: primgo and tema:X and from:nil and to:Y 
+                               and camposemanticogo:spaziale ),
+              linkverbo(K,R). 
+
+  /*  frase([there, was, a, table, in, the, corner]). */
+ genera :- info_from_there_be(X,Y,K),
+              concatena(be1,K,R),
+              R:: primbe and temaNonAgente:X and place:Y
+                         and camposemanticobe:spaziale,
+              linkverbo(K,R). 
+
+   /*  frase([the, waiter, took, the, order]). */
+ genera :- info_from_take_order(X,Y,_,K),
+              concatena(cause,K,R),concatena(go,K,S),
+              R::primCause and tema:X and primitivaIntrodotta:
+                       (S::primgo and tema:ordine and from:Y and to:X 
+                               and camposemanticogo:percettivo ),
+              linkverbo(K,R).
+
+  /*  frase([he, began, to, read, his, book]). */
+ genera :- info_from_read(X,Y,_,K),
+              concatena(cause,K,R),concatena(go,K,S),
+              R::primCause and tema:X and primitivaIntrodotta: 
+                      (S :: primgo and tema:info and from:Y and to:X 
+                               and camposemanticogo:percettivo ),
+              linkverbo(K,R).
+
+genera :- nil :: luogo,
+          cinema :: luogo.
+
+
+linkverbo(A,B) :- A::anything and prim:B.
+
+
+/************************************************************************************************/
+/*   Interrogazioni */
+
+ 
+dove_era_prima(Verbo,X) :-get_luoghi(A),
+                          member([C],A),
+                          backretrieve(R=getall(primCause and  inv(prim):Verbo)),
+                          member([S],R),
+                          backretrieve(Z=getall(primgo and tema:X and from:C  
+                                       and camposemanticogo:spaziale and  inv(primitivaIntrodotta):S )),
+                          not(Z=[]),
+                          write(C),nl. 
+
+dove_era_dopo(Verbo,X) :-get_luoghi(A),
+                         member([C],A),
+                         backretrieve(R=getall(primCause and  inv(prim):Verbo)), 
+                         member([S],R),
+                         backretrieve(Z=getall(primgo and tema:X and to:C  
+                                      and camposemanticogo:spaziale and  inv(primitivaIntrodotta):S )),
+                         not(Z=[]),
+                         write(C),nl.
+
+
+
+dove_era(X) :- backretrieve(Z=getall(anything)),
+               member([D],Z),
+               backretrieve(A=getall(anything and parteDi:D)),
+               member([B],A),
+               X==B,
+               write(X),write(' parte di '),write(D).
+
+dove_era(X) :- get_luoghi(B),
+               member([D],B),
+               backretrieve(Y=getall(primbe and temaNonAgente:X and place:D  
+                              and camposemanticobe:spaziale)),
+               not(Y=[]),
+               backretrieve(Z=getall(anything and parteDi:D)),
+               not(Z=[]),
+               member([W],Z),
+               write(X),write(' era nel '),write(W),write(' del '),write(D),nl.
+
+dove_era(X) :-  backretrieve(B=getall(anything)),
+                ( (member([C],B),
+                   backretrieve(Z=getall(primgo and tema:X and to:C  
+                                  and camposemanticogo:spaziale)),
+                   not(Z=[]),
+                     member([W],Z),
+                     backretrieve(Z1=getall(anything and primitivaIntrodotta:W  )),
+                     member([W1],Z1),
+                      backretrieve(G=getall(anything)),
+                      member([Time],G),
+                     backretrieve(H=getall(anything and prim:W1 and time:Time)),
+                     not(H=[]),
+                   write('Dopo '),write(Time),write(' era in '),write(C),nl)
+                 ; 
+                  (member([D],B),
+                   member([E],B), 
+                   backretrieve(T=getall(primgo and tema:X and to:D and from:E  
+                                  and camposemanticogo:percettivo)),
+                   not(T=[]),
+                   write(X),write(' parte da '),write(E),write(' e arriva a '),write(D),nl)
+                  ).
+
+/* */
+qry(X) :-backretrieve(defined_as(X)).
+
+qry1(X) :-backretrieve(describe(X)).
+
+qrya(X) :-backretrieve(describe_fully(X)).
+
+/************************************************************************************************/
+/* Regole per la concatenazione di due identificativi */
+
+concatena(S1,S2,S3) :- name(S1,L1),
+                       name(S2,L2),
+                       name('_',La),
+                       conc(L1,La,Lb),
+                       conc(Lb,L2,L3),
+                       name(S3,L3). 
+
+conc([],Lista,Lista).
+conc([T|Lista1],Lista2,[T|Lista3]):-conc(Lista1,Lista2,Lista3).
+
+
+/************************************************************************************************/
+/* Domande al sistema 
+   
+  IDENTIFICATIVI :
+   id2  = restaurant
+   id3  = john
+   id4  = go
+   id5  = tloc
+   id6  = table
+   id7  = corner
+   id8  = there_be
+   id9  = tloc
+   id10 = waiter
+   id12 = take_order 
+   id13 = tloc
+   id14 = tloc
+   id18 = book
+   id19 = read
+   id20 = tloc
+   id21 = begin
+   id22 = tloc
+   infon27 = there_in
+   infon77 = have 
+
+
+| ?- dove_era(id3).
+Dopo tes(f5_r01) era in id2
+
+yes
+
+| ?- dove_era(id6).
+id6 era nel id7 del id2
+
+yes
+
+| ?- dove_era(id7).
+id7 parte di id2
+yes
+
+" Dove era john prima di entrare nel ristorante. "
+| ?- dove_era_prima(id4,id3).
+nil
+
+" Dove era john dopo essere entrato " 
+| ?- dove_era_dopo(id4,id3).
+id2
+
+yes
+
+
+*/

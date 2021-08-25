@@ -1,0 +1,8 @@
+module field using commRing .
+nonzero < elem .
+op 1 : nonzero .
+op '1/' : (nonzero -> nonzero) .
+op (*) : (nonzero * nonzero -> nonzero) .
+var x : elem, y : elem, z : elem, n : nonzero .
+ n * '1/'(n) = 1 .
+%aldkjfhlajsd

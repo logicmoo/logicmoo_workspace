@@ -1,0 +1,12 @@
+
+trc(query, info(35, query, 8, 1), [
+   trc(protein_answer(on(a, b)), info(24, prolog, 0, 0), []),
+   trc(on(a, b), info(25, fact, 2, 1), []),
+   trc(color(a, green), info(26, fact, 1, 1), []),
+   trc(color(b, blue), info(35, ext, 5, 1), [
+      trc(not_color(b, green), info(35, restart, 0, 1), [
+         trc(restart, info(35, query, 8, 1), [
+            trc(protein_answer(on(b, c)), info(28, prolog, 0, 0), []),
+            trc(on(b, c), info(33, fact, 7, 1), []),
+            trc(color(b, green), info(34, red_cut, 1, 0), []),
+            trc(color(c, blue), info(35, fact, 6, 1), [])])])])]).

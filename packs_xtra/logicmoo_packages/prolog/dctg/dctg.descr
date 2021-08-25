@@ -1,0 +1,99 @@
+             Definite Clause Translation Grammar Translator
+                      Contributed by Jocelyn Paine
+                    Shelved on the 21st of July 1990
+
+
+Definite Clause Translation Grammars are described in chapter 9 of
+"Logic Grammars", by H.Abramson and V.Dahl (Springer 1989). They were
+devised by Abramson to overcome the defects of Definite Clause Grammars,
+in which syntax and semantics are often mixed in a non-modular fashion.
+They avoid also the proliferation of unnamed arguments that aflicts
+Definite Clause Grammars.
+
+In a DCTG, the syntax and semantics are separated. Each rule contains
+first a syntactic part, and then an optional semantics, written as one
+or more clauses. See below for an example, and "Logic Grammars"
+for more details.
+
+Most of the code in this entry comes from Appendix II of "Logic
+Grammars". I have made a few minor changes and added a predicate for
+loading grammars from file.
+
+There follows an example, for parsing binary numbers with binary points
+(such as 1.1 or 1001.11) when expressed as lists ([1,'.',1] or
+[1,0,0,1,'.',1,1]).
+
+
+    bit ::= [0]
+    <:>
+    bitval( 0, _ ).
+
+    bit ::= [1]
+    <:>
+    bitval( V,Scale ) ::- V is **(2,Scale).
+
+
+    bitstring ::= []
+    <:>
+    length(0)
+    &&
+    value(0,_).
+
+    bitstring ::= bit^^B, bitstring^^B1
+    <:>
+    length( Length ) ::-
+        B1 ^^ length(Length1),
+        Length is Length1 + 1
+    &&
+    value( Value, ScaleB ) ::-
+        B ^^ bitval( VB, ScaleB ),
+        S1 is ScaleB - 1,
+        B1 ^^ value( V1, S1 ),
+        Value is VB + V1.
+
+
+    number ::= bitstring ^^ B, fraction ^^ F
+    <:>
+    value(V) ::-
+        B ^^ length(Length),
+        S is Length-1,
+        B ^^ value( VB, S ),
+        F ^^ fractional_value( VF ),
+        V is VB + VF.
+
+
+    fraction ::= ['.'], bitstring ^^ B
+    <:>
+    fractional_value( V ) ::-
+        S is -1,
+        B ^^ value( V, S ).
+
+    fraction ::= []
+    <:>
+    fractional_value(0).
+
+
+    test( L, V ) :-
+        write( 'LIST ' ), write( L ), nl,
+        number( Tree, L, [] ),
+        Tree ^^ value( V ),
+        write( 'VALUE ' ), write( V ), nl, nl.
+
+
+    ?- test( [1,'.',1], V ).
+       /*  Should set V to 1.5.  */
+
+
+SIZE: 9 kilobytes.
+
+
+CHECKED ON EDINBURGH-COMPATIBLE (POPLOG) PROLOG : yes.
+
+
+PORTABILITY : No problems.
+
+
+INTERNAL DOCUMENTATION :
+
+    Almost none. See "Logic Grammars" for the meaning of the predicates
+    and the theory.

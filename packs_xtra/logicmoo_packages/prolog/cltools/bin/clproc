@@ -1,0 +1,13 @@
+#!/bin/sh
+PATH_TO_ME=`dirname $0`;
+if [ -z "$CLTOOLS_PATH" ]; then
+   CLTOOLS_PATH=$PATH_TO_ME/../..;
+fi
+
+SWIPL=swipl
+if [ -z `which swipl` ]; then
+  # default location on OS X
+  SWIPL=/opt/local/bin/swipl;
+fi
+
+$SWIPL -L0 -G0 -T0 -q -p library=$CLTOOLS_PATH  -g main,halt -t halt -s $CLTOOLS_PATH/cltools/cl_cmdline -- "$@"

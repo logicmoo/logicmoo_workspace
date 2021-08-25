@@ -1,0 +1,6 @@
+ 
+"nopEq(?I)."
+
+declares equation with index "I" as nonoperational. The predicate fails
+if equation "I" does not exist or if the equation is not a conditional
+equation or if the equation is eliminated during reduction.

@@ -1,0 +1,1 @@
+order poly2 for natlists using poly1 for nat + poly2 for slists([(elem , nat)], []) .

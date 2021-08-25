@@ -1,0 +1,8 @@
+order poly2 using poly1 for equalityAndOrder + poly2 for lists.
+
+
+setInterpretation([
+		      insert(x,y) : (x ^ 2) * y + 4,
+		      has(x,y)    : 3 * x *  y,
+		      delete(x,y) : (x ^ 2) * (y ^ 2),
+		      ordered(x)  : x^2]).

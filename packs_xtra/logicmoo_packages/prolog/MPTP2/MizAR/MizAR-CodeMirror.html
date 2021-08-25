@@ -1,0 +1,135 @@
+<html>
+  <head>
+    <title>Automated Reasoning for Mizar</title>
+    <script src="CodeMirror/lib/codemirror.js"></script>
+    <link rel="stylesheet" href="CodeMirror/lib/codemirror.css">
+    <script src="CodeMirror/mode/mizar/mizar.js"></script>
+    <link rel="stylesheet" href="CodeMirror/theme/default.css">
+    <link rel="stylesheet" href="CodeMirror/mode/mizar/mizar.css">
+    <style>.CodeMirror {border: 2px inset #dee;}</style>
+  </head>
+
+  <body>
+    <center>
+    <H3 ALIGN=CENTER><FONT COLOR="#0099ff"><FONT SIZE=5 STYLE="font-size: 22pt">
+    <B>Automated Reasoning for Mizar</B>
+    </FONT></FONT></H3>
+    </center>
+
+    <dl>
+<!--       <dt> -->
+<!--         <font size="+1"> -->
+<!--           <strong>Insert a <a href=ftp://mizar.uwb.edu.pl/pub/version/mml/card_1.miz>Mizar article<a/> into the text field<br><br></strong> -->
+<!--         </font> -->
+<!--       </dt>       -->
+      <dd>
+        <FORM METHOD="POST"  ACTION="cgi-bin/MizAR.cgi" enctype="multipart/form-data">
+         <br>
+          <center>
+          <table>
+            <tr>
+	      <TD> <INPUT TYPE="RADIO" NAME="ProblemSource" VALUE="Formula" ID="ProblemSourceRadioButton" CHECKED>Mizar article
+(<a href=mml5.23.1213/mml/card_1.miz>example article</a>)<br/> 
+		<textarea name="Formula" tabindex="3"  rows="8" cols="80" id="FORMULAEProblemTextBox">Insert article here</textarea><TR VALIGN=TOP>
+	      </TD>
+	      <TD> <INPUT TYPE="RADIO" NAME="ProblemSource" VALUE="UPLOAD">Local article file to upload<BR>
+		<input type="file" name="UPLOADProblem"  size="20" /><TR VALIGN=TOP></TD>
+	      <TD> <INPUT TYPE="RADIO" NAME="ProblemSource" VALUE="URL" >URL to fetch article from<BR>
+		<input type="text" name="FormulaURL" tabindex="4"  size="80" /><TR VALIGN=TOP></TD>
+	      <TD> <INPUT TYPE="CHECKBOX" NAME="VocSource" VALUE="UPLOAD">
+		Optional vocabulary file to upload (its name will be kept)<BR>
+		<input type="file" name="VocFile"  size="20" /></TD>
+
+<!--               <td colspan=2> -->
+<!--                 <textarea valign=top NAME="Formula" rows=30 cols=80 wrap=virtual></textarea><br><br> -->
+<!--               </td> -->
+            </tr>
+	    <tr>
+              <td align=top>
+	      Article name (must not be in the current MML):<br>
+                <INPUT TYPE="text" NAME="Name" VALUE="mtest1" SIZE="20">
+              </td>
+            </tr>
+	    <tr>
+	      <TD> <label>MML version:</label>
+		<SELECT NAME="MMLVersion">
+		  <OPTION VALUE="4.100.1011" >4.100.1011</OPTION>
+		  <OPTION VALUE="4.145.1096" >4.145.1096</OPTION>
+		  <OPTION VALUE="4.160.1126" >4.160.1126</OPTION>
+                  <OPTION VALUE="4.174.1136" >4.174.1136</OPTION>
+                  <OPTION VALUE="4.178.1142" >4.178.1142</OPTION>
+		  <OPTION VALUE="4.166.1132" >4.166.1132</OPTION>
+		  <OPTION VALUE="5.0.1155" >5.0.1155</OPTION>
+		  <OPTION VALUE="5.3.1165" >5.3.1165</OPTION>
+<!--		  <OPTION VALUE="5.11.1172" >5.11.1172</OPTION> -->
+<!--		  <OPTION VALUE="5.17.1181" >5.17.1181</OPTION> -->
+		  <OPTION VALUE="5.23.1213" SELECTED>5.23.1213</OPTION>
+                  <OPTION VALUE="4.181.1147" >4.181.1147</OPTION>
+		</SELECT><BR></TD>
+            </tr>
+	    <tr>
+	      <TD> <INPUT TYPE="CHECKBOX" NAME="Verify" VALUE="1" CHECKED>Verify<BR></TD>
+            </tr>
+	    <tr>
+	      <TD> <INPUT TYPE="CHECKBOX" NAME="HTMLize" VALUE="1" CHECKED>HTMLize<BR></TD>
+            </tr>
+	    <tr>
+	      <TD> <label>Parallelization:</label>
+		<SELECT NAME="Parallelize">
+		  <OPTION VALUE="1" SELECTED>None (1 CPU)</OPTION>
+		  <OPTION VALUE="2" >2 CPUs</OPTION>
+		  <OPTION VALUE="3" >3 CPUs</OPTION>
+		  <OPTION VALUE="4" >4 CPUs</OPTION>
+		</SELECT><BR></TD>
+            </tr>
+	    <!-- <tr> -->
+	    <!--   <TD> <INPUT TYPE="CHECKBOX" NAME="AjaxProofs" VALUE="1">Proofs hidden, fetched by AJAX<BR></TD> -->
+            <!-- </tr> -->
+	    <tr>
+	      <TD> <INPUT TYPE="CHECKBOX" NAME="GenATP" VALUE="1" >Generate ATP problems<BR></TD>
+            </tr>
+	    <tr>
+	      <TD> <INPUT TYPE="CHECKBOX" NAME="ARProofs" VALUE="1">Allow ATP calls for hard problems<BR></TD>
+            </tr>
+	    <tr>
+	      <TD> <INPUT TYPE="RADIO" NAME="ProveUnsolved" VALUE="All">Call ATP onload on all Mizar-unsolved (only first 10 are attempted)<BR></TD>
+            </tr>
+	    <tr>
+	      <TD> <INPUT TYPE="RADIO" NAME="ProveUnsolved" VALUE="None" CHECKED>Do not call ATP onload on Mizar-unsolved<BR></TD>
+            </tr>
+	    <tr>
+	      <TD> <INPUT TYPE="RADIO" NAME="ProveUnsolved" VALUE="Positions">Mizar-unsolved positions (10 at most) to call ATP onload (list of line:column numbers like: 23:7,456:3,789:22)<BR>
+		<input type="text" name="Positions" tabindex="4"  size="80" /><TR VALIGN=TOP>
+	      </TD>
+            </tr>
+	    <tr>
+	      <TD> <INPUT TYPE="RADIO" NAME="MODE" VALUE="HTML" CHECKED>HTML mode<BR></TD>
+            </tr>
+	    <tr>
+	      <TD> <INPUT TYPE="RADIO" NAME="MODE" VALUE="TEXT">TEXT mode<BR></TD>
+            </tr>
+
+<!-- 	    <tr> -->
+<!--               <td align=right> -->
+<!-- 	      Lines to prove (comma separated list of lines or line ranges, e.g.: 3-8,34,89-123): -->
+<!--                 <INPUT TYPE="text" NAME="Lines" VALUE="1-10000" SIZE="20"> -->
+<!--               </td> -->
+<!--             </tr> -->
+            <tr>
+              <td align=right>
+                <INPUT TYPE="submit" VALUE="Send">
+                <INPUT TYPE="reset" VALUE="Clear">
+              </td>
+            </tr>
+          </table>
+          </center>
+	  <script>
+	    var editor = CodeMirror.fromTextArea(document.getElementById("FORMULAEProblemTextBox"), {
+	      matchBrackets: true
+	    });
+	  </script>
+        </FORM>
+      </dd>
+    </dl>
+  </body>
+</html>

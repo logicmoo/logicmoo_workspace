@@ -1,0 +1,4 @@
+order(poly(2)).
+
+setInterpretation([false : [2, 2],
+		   true  : [2, 2]]).

@@ -1,0 +1,11 @@
+rw-r--r--  15/159   9057 Jan 11 08:21 1991 code_generate.pl
+rw-r--r--  15/159   2869 Jan 11 08:14 1991 compile.pl
+rw-r--r--  15/159   1719 Jan 12 06:03 1991 compiler.descr
+rw-r--r--  15/159   2353 Jan 11 17:48 1991 compiler.pre
+rw-r--r--  15/159   2247 Jan 11 07:10 1991 lex.pl
+rw-r--r--  15/159    303 Sep 16 09:03 1989 load.pl
+rw-r--r--  15/159   7244 Jan 11 08:29 1991 machine.pl
+rw-r--r--  15/159  13140 Sep 15 18:30 1989 map.pl
+rw-r--r--  15/159   7938 Sep 15 13:09 1989 ordset.pl
+rw-r--r--  15/159   3875 Jan 11 07:56 1991 parser.pl
+rw-r--r--  15/159    313 Jan 11 08:37 1991 program

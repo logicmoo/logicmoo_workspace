@@ -1,0 +1,144 @@
+% SZS start BatchConfiguration
+division.category MZR.MZR
+execution.order unordered
+output.required Assurance
+output.desired Proof
+limit.time.problem.wc 0
+% SZS end BatchConfiguration
+% SZS start BatchIncludes
+include('/home/mptp/big/MZR4Training/Problems/Axioms/MZR001+0.ax').
+include('/home/mptp/big/MZR4Training/Problems/Axioms/MZR001+1.ax').
+include('/home/mptp/big/MZR4Training/Problems/Axioms/MZR001+10.ax').
+include('/home/mptp/big/MZR4Training/Problems/Axioms/MZR001+11.ax').
+include('/home/mptp/big/MZR4Training/Problems/Axioms/MZR001+12.ax').
+include('/home/mptp/big/MZR4Training/Problems/Axioms/MZR001+13.ax').
+include('/home/mptp/big/MZR4Training/Problems/Axioms/MZR001+14.ax').
+include('/home/mptp/big/MZR4Training/Problems/Axioms/MZR001+15.ax').
+include('/home/mptp/big/MZR4Training/Problems/Axioms/MZR001+16.ax').
+include('/home/mptp/big/MZR4Training/Problems/Axioms/MZR001+17.ax').
+include('/home/mptp/big/MZR4Training/Problems/Axioms/MZR001+18.ax').
+include('/home/mptp/big/MZR4Training/Problems/Axioms/MZR001+19.ax').
+include('/home/mptp/big/MZR4Training/Problems/Axioms/MZR001+2.ax').
+include('/home/mptp/big/MZR4Training/Problems/Axioms/MZR001+20.ax').
+include('/home/mptp/big/MZR4Training/Problems/Axioms/MZR001+21.ax').
+include('/home/mptp/big/MZR4Training/Problems/Axioms/MZR001+22.ax').
+include('/home/mptp/big/MZR4Training/Problems/Axioms/MZR001+23.ax').
+include('/home/mptp/big/MZR4Training/Problems/Axioms/MZR001+24.ax').
+include('/home/mptp/big/MZR4Training/Problems/Axioms/MZR001+25.ax').
+include('/home/mptp/big/MZR4Training/Problems/Axioms/MZR001+26.ax').
+include('/home/mptp/big/MZR4Training/Problems/Axioms/MZR001+27.ax').
+include('/home/mptp/big/MZR4Training/Problems/Axioms/MZR001+28.ax').
+include('/home/mptp/big/MZR4Training/Problems/Axioms/MZR001+29.ax').
+include('/home/mptp/big/MZR4Training/Problems/Axioms/MZR001+3.ax').
+include('/home/mptp/big/MZR4Training/Problems/Axioms/MZR001+30.ax').
+include('/home/mptp/big/MZR4Training/Problems/Axioms/MZR001+31.ax').
+include('/home/mptp/big/MZR4Training/Problems/Axioms/MZR001+32.ax').
+include('/home/mptp/big/MZR4Training/Problems/Axioms/MZR001+4.ax').
+include('/home/mptp/big/MZR4Training/Problems/Axioms/MZR001+5.ax').
+include('/home/mptp/big/MZR4Training/Problems/Axioms/MZR001+6.ax').
+include('/home/mptp/big/MZR4Training/Problems/Axioms/MZR001+7.ax').
+include('/home/mptp/big/MZR4Training/Problems/Axioms/MZR001+8.ax').
+include('/home/mptp/big/MZR4Training/Problems/Axioms/MZR001+9.ax').
+% SZS end BatchIncludes
+% SZS start BatchProblems
+/home/mptp/big/MZR4Training/Problems/MZT796+1.p /home/mptp/big/MZR4Training/TstSolutions/MZT796+1
+/home/mptp/big/MZR4Training/Problems/MZT074+1.p /home/mptp/big/MZR4Training/TstSolutions/MZT074+1
+/home/mptp/big/MZR4Training/Problems/MZT113+1.p /home/mptp/big/MZR4Training/TstSolutions/MZT113+1
+/home/mptp/big/MZR4Training/Problems/MZT545+1.p /home/mptp/big/MZR4Training/TstSolutions/MZT545+1
+/home/mptp/big/MZR4Training/Problems/MZT300+1.p /home/mptp/big/MZR4Training/TstSolutions/MZT300+1
+/home/mptp/big/MZR4Training/Problems/MZT260+1.p /home/mptp/big/MZR4Training/TstSolutions/MZT260+1
+/home/mptp/big/MZR4Training/Problems/MZT660+1.p /home/mptp/big/MZR4Training/TstSolutions/MZT660+1
+/home/mptp/big/MZR4Training/Problems/MZT180+1.p /home/mptp/big/MZR4Training/TstSolutions/MZT180+1
+/home/mptp/big/MZR4Training/Problems/MZT535+1.p /home/mptp/big/MZR4Training/TstSolutions/MZT535+1
+/home/mptp/big/MZR4Training/Problems/MZT817+1.p /home/mptp/big/MZR4Training/TstSolutions/MZT817+1
+/home/mptp/big/MZR4Training/Problems/MZT273+1.p /home/mptp/big/MZR4Training/TstSolutions/MZT273+1
+/home/mptp/big/MZR4Training/Problems/MZT788+1.p /home/mptp/big/MZR4Training/TstSolutions/MZT788+1
+/home/mptp/big/MZR4Training/Problems/MZT570+1.p /home/mptp/big/MZR4Training/TstSolutions/MZT570+1
+/home/mptp/big/MZR4Training/Problems/MZT213+1.p /home/mptp/big/MZR4Training/TstSolutions/MZT213+1
+/home/mptp/big/MZR4Training/Problems/MZT058+1.p /home/mptp/big/MZR4Training/TstSolutions/MZT058+1
+/home/mptp/big/MZR4Training/Problems/MZT209+1.p /home/mptp/big/MZR4Training/TstSolutions/MZT209+1
+/home/mptp/big/MZR4Training/Problems/MZT381+1.p /home/mptp/big/MZR4Training/TstSolutions/MZT381+1
+/home/mptp/big/MZR4Training/Problems/MZT701+1.p /home/mptp/big/MZR4Training/TstSolutions/MZT701+1
+/home/mptp/big/MZR4Training/Problems/MZT108+1.p /home/mptp/big/MZR4Training/TstSolutions/MZT108+1
+/home/mptp/big/MZR4Training/Problems/MZT217+1.p /home/mptp/big/MZR4Training/TstSolutions/MZT217+1
+/home/mptp/big/MZR4Training/Problems/MZT957+1.p /home/mptp/big/MZR4Training/TstSolutions/MZT957+1
+/home/mptp/big/MZR4Training/Problems/MZT173+1.p /home/mptp/big/MZR4Training/TstSolutions/MZT173+1
+/home/mptp/big/MZR4Training/Problems/MZT628+1.p /home/mptp/big/MZR4Training/TstSolutions/MZT628+1
+/home/mptp/big/MZR4Training/Problems/MZT793+1.p /home/mptp/big/MZR4Training/TstSolutions/MZT793+1
+/home/mptp/big/MZR4Training/Problems/MZT991+1.p /home/mptp/big/MZR4Training/TstSolutions/MZT991+1
+/home/mptp/big/MZR4Training/Problems/MZT185+1.p /home/mptp/big/MZR4Training/TstSolutions/MZT185+1
+/home/mptp/big/MZR4Training/Problems/MZT137+1.p /home/mptp/big/MZR4Training/TstSolutions/MZT137+1
+/home/mptp/big/MZR4Training/Problems/MZT476+1.p /home/mptp/big/MZR4Training/TstSolutions/MZT476+1
+/home/mptp/big/MZR4Training/Problems/MZT631+1.p /home/mptp/big/MZR4Training/TstSolutions/MZT631+1
+/home/mptp/big/MZR4Training/Problems/MZT509+1.p /home/mptp/big/MZR4Training/TstSolutions/MZT509+1
+/home/mptp/big/MZR4Training/Problems/MZT317+1.p /home/mptp/big/MZR4Training/TstSolutions/MZT317+1
+/home/mptp/big/MZR4Training/Problems/MZT116+1.p /home/mptp/big/MZR4Training/TstSolutions/MZT116+1
+/home/mptp/big/MZR4Training/Problems/MZT599+1.p /home/mptp/big/MZR4Training/TstSolutions/MZT599+1
+/home/mptp/big/MZR4Training/Problems/MZT749+1.p /home/mptp/big/MZR4Training/TstSolutions/MZT749+1
+/home/mptp/big/MZR4Training/Problems/MZT011+1.p /home/mptp/big/MZR4Training/TstSolutions/MZT011+1
+/home/mptp/big/MZR4Training/Problems/MZT275+1.p /home/mptp/big/MZR4Training/TstSolutions/MZT275+1
+/home/mptp/big/MZR4Training/Problems/MZT466+1.p /home/mptp/big/MZR4Training/TstSolutions/MZT466+1
+/home/mptp/big/MZR4Training/Problems/MZT512+1.p /home/mptp/big/MZR4Training/TstSolutions/MZT512+1
+/home/mptp/big/MZR4Training/Problems/MZT482+1.p /home/mptp/big/MZR4Training/TstSolutions/MZT482+1
+/home/mptp/big/MZR4Training/Problems/MZT166+1.p /home/mptp/big/MZR4Training/TstSolutions/MZT166+1
+/home/mptp/big/MZR4Training/Problems/MZT986+1.p /home/mptp/big/MZR4Training/TstSolutions/MZT986+1
+/home/mptp/big/MZR4Training/Problems/MZT016+1.p /home/mptp/big/MZR4Training/TstSolutions/MZT016+1
+/home/mptp/big/MZR4Training/Problems/MZT705+1.p /home/mptp/big/MZR4Training/TstSolutions/MZT705+1
+/home/mptp/big/MZR4Training/Problems/MZT582+1.p /home/mptp/big/MZR4Training/TstSolutions/MZT582+1
+/home/mptp/big/MZR4Training/Problems/MZT528+1.p /home/mptp/big/MZR4Training/TstSolutions/MZT528+1
+/home/mptp/big/MZR4Training/Problems/MZT243+1.p /home/mptp/big/MZR4Training/TstSolutions/MZT243+1
+/home/mptp/big/MZR4Training/Problems/MZT024+1.p /home/mptp/big/MZR4Training/TstSolutions/MZT024+1
+/home/mptp/big/MZR4Training/Problems/MZT946+1.p /home/mptp/big/MZR4Training/TstSolutions/MZT946+1
+/home/mptp/big/MZR4Training/Problems/MZT588+1.p /home/mptp/big/MZR4Training/TstSolutions/MZT588+1
+/home/mptp/big/MZR4Training/Problems/MZT794+1.p /home/mptp/big/MZR4Training/TstSolutions/MZT794+1
+/home/mptp/big/MZR4Training/Problems/MZT005+1.p /home/mptp/big/MZR4Training/TstSolutions/MZT005+1
+/home/mptp/big/MZR4Training/Problems/MZT949+1.p /home/mptp/big/MZR4Training/TstSolutions/MZT949+1
+/home/mptp/big/MZR4Training/Problems/MZT657+1.p /home/mptp/big/MZR4Training/TstSolutions/MZT657+1
+/home/mptp/big/MZR4Training/Problems/MZT483+1.p /home/mptp/big/MZR4Training/TstSolutions/MZT483+1
+/home/mptp/big/MZR4Training/Problems/MZT487+1.p /home/mptp/big/MZR4Training/TstSolutions/MZT487+1
+/home/mptp/big/MZR4Training/Problems/MZT062+1.p /home/mptp/big/MZR4Training/TstSolutions/MZT062+1
+/home/mptp/big/MZR4Training/Problems/MZT299+1.p /home/mptp/big/MZR4Training/TstSolutions/MZT299+1
+/home/mptp/big/MZR4Training/Problems/MZT517+1.p /home/mptp/big/MZR4Training/TstSolutions/MZT517+1
+/home/mptp/big/MZR4Training/Problems/MZT959+1.p /home/mptp/big/MZR4Training/TstSolutions/MZT959+1
+/home/mptp/big/MZR4Training/Problems/MZT078+1.p /home/mptp/big/MZR4Training/TstSolutions/MZT078+1
+/home/mptp/big/MZR4Training/Problems/MZT434+1.p /home/mptp/big/MZR4Training/TstSolutions/MZT434+1
+/home/mptp/big/MZR4Training/Problems/MZT344+1.p /home/mptp/big/MZR4Training/TstSolutions/MZT344+1
+/home/mptp/big/MZR4Training/Problems/MZT211+1.p /home/mptp/big/MZR4Training/TstSolutions/MZT211+1
+/home/mptp/big/MZR4Training/Problems/MZT296+1.p /home/mptp/big/MZR4Training/TstSolutions/MZT296+1
+/home/mptp/big/MZR4Training/Problems/MZT549+1.p /home/mptp/big/MZR4Training/TstSolutions/MZT549+1
+/home/mptp/big/MZR4Training/Problems/MZT850+1.p /home/mptp/big/MZR4Training/TstSolutions/MZT850+1
+/home/mptp/big/MZR4Training/Problems/MZT575+1.p /home/mptp/big/MZR4Training/TstSolutions/MZT575+1
+/home/mptp/big/MZR4Training/Problems/MZT606+1.p /home/mptp/big/MZR4Training/TstSolutions/MZT606+1
+/home/mptp/big/MZR4Training/Problems/MZT724+1.p /home/mptp/big/MZR4Training/TstSolutions/MZT724+1
+/home/mptp/big/MZR4Training/Problems/MZT917+1.p /home/mptp/big/MZR4Training/TstSolutions/MZT917+1
+/home/mptp/big/MZR4Training/Problems/MZT442+1.p /home/mptp/big/MZR4Training/TstSolutions/MZT442+1
+/home/mptp/big/MZR4Training/Problems/MZT460+1.p /home/mptp/big/MZR4Training/TstSolutions/MZT460+1
+/home/mptp/big/MZR4Training/Problems/MZT233+1.p /home/mptp/big/MZR4Training/TstSolutions/MZT233+1
+/home/mptp/big/MZR4Training/Problems/MZT143+1.p /home/mptp/big/MZR4Training/TstSolutions/MZT143+1
+/home/mptp/big/MZR4Training/Problems/MZT079+1.p /home/mptp/big/MZR4Training/TstSolutions/MZT079+1
+/home/mptp/big/MZR4Training/Problems/MZT741+1.p /home/mptp/big/MZR4Training/TstSolutions/MZT741+1
+/home/mptp/big/MZR4Training/Problems/MZT322+1.p /home/mptp/big/MZR4Training/TstSolutions/MZT322+1
+/home/mptp/big/MZR4Training/Problems/MZT636+1.p /home/mptp/big/MZR4Training/TstSolutions/MZT636+1
+/home/mptp/big/MZR4Training/Problems/MZT886+1.p /home/mptp/big/MZR4Training/TstSolutions/MZT886+1
+/home/mptp/big/MZR4Training/Problems/MZT245+1.p /home/mptp/big/MZR4Training/TstSolutions/MZT245+1
+/home/mptp/big/MZR4Training/Problems/MZT849+1.p /home/mptp/big/MZR4Training/TstSolutions/MZT849+1
+/home/mptp/big/MZR4Training/Problems/MZT002+1.p /home/mptp/big/MZR4Training/TstSolutions/MZT002+1
+/home/mptp/big/MZR4Training/Problems/MZT832+1.p /home/mptp/big/MZR4Training/TstSolutions/MZT832+1
+/home/mptp/big/MZR4Training/Problems/MZT429+1.p /home/mptp/big/MZR4Training/TstSolutions/MZT429+1
+/home/mptp/big/MZR4Training/Problems/MZT533+1.p /home/mptp/big/MZR4Training/TstSolutions/MZT533+1
+/home/mptp/big/MZR4Training/Problems/MZT320+1.p /home/mptp/big/MZR4Training/TstSolutions/MZT320+1
+/home/mptp/big/MZR4Training/Problems/MZT670+1.p /home/mptp/big/MZR4Training/TstSolutions/MZT670+1
+/home/mptp/big/MZR4Training/Problems/MZT382+1.p /home/mptp/big/MZR4Training/TstSolutions/MZT382+1
+/home/mptp/big/MZR4Training/Problems/MZT279+1.p /home/mptp/big/MZR4Training/TstSolutions/MZT279+1
+/home/mptp/big/MZR4Training/Problems/MZT518+1.p /home/mptp/big/MZR4Training/TstSolutions/MZT518+1
+/home/mptp/big/MZR4Training/Problems/MZT038+1.p /home/mptp/big/MZR4Training/TstSolutions/MZT038+1
+/home/mptp/big/MZR4Training/Problems/MZT098+1.p /home/mptp/big/MZR4Training/TstSolutions/MZT098+1
+/home/mptp/big/MZR4Training/Problems/MZT085+1.p /home/mptp/big/MZR4Training/TstSolutions/MZT085+1
+/home/mptp/big/MZR4Training/Problems/MZT580+1.p /home/mptp/big/MZR4Training/TstSolutions/MZT580+1
+/home/mptp/big/MZR4Training/Problems/MZT592+1.p /home/mptp/big/MZR4Training/TstSolutions/MZT592+1
+/home/mptp/big/MZR4Training/Problems/MZT240+1.p /home/mptp/big/MZR4Training/TstSolutions/MZT240+1
+/home/mptp/big/MZR4Training/Problems/MZT758+1.p /home/mptp/big/MZR4Training/TstSolutions/MZT758+1
+/home/mptp/big/MZR4Training/Problems/MZT436+1.p /home/mptp/big/MZR4Training/TstSolutions/MZT436+1
+/home/mptp/big/MZR4Training/Problems/MZT625+1.p /home/mptp/big/MZR4Training/TstSolutions/MZT625+1
+/home/mptp/big/MZR4Training/Problems/MZT319+1.p /home/mptp/big/MZR4Training/TstSolutions/MZT319+1
+% SZS end BatchProblems

@@ -1,0 +1,14 @@
+dyn flies(X).
+default mammals_dont_fly(X): not flies(X) <- mammal(X).
+constraint not mammals_dont_fly(X) <- flies(X).
+default bats_fly(X): flies(X) <- bat(X).
+constraint not bats_fly(X) <- not flies(X).
+constraint not mammals_dont_fly(X) <- bat(X).
+default dead_things_dont_fly(X): not flies(X) <- dead(X).
+constraint not dead_things_dont_fly(X) <- flies(X).
+constraint not bats_fly(X) <- dead(X).
+fact mammal(X) <- bat(X).
+fact mammal(bruce).
+fact bat(paul).
+fact bat(dracula).
+fact dead(dracula).

@@ -1,0 +1,43 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%
+%  FILE      : IndiGolog/Env/FILES.TXT
+%  Time-stamp: <03/03/30 12:58:39 ssardina>
+%
+%  Author      : Sebastian Sardina
+%  DESCRIPTION : File descriptions of directory
+%  email       : ssardina@cs.toronto.edu
+%  WWW         : www.cs.toronto.edu/~ssardina
+%  TYPE CODE   : <no code>
+%       
+%	c) Sebastian Sardina       Many rights reserved		
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+-----------------------------------------------------------------------------
+	In this directory there are files for implementing different
+	environments
+-----------------------------------------------------------------------------
+
+control-debug.nqh  		Generic NQC code for the RCX (for debug)
+control.nqh        		Generic NQC code for the RCX
+
+env_gen.pl			General module for device managers
+env_int.pl  			Internet device manager implementation
+env_rcx.pl  			RCX Lego device manager implementation
+env_sim.pl  			Simulation device manager implementation
+
+env_man.pl  			Environment manager implementation
+
+exog.tcl   			TCL/Tk tool for exogenous actions
+
+legorcx.pl  			Prolog independent code for RCX Lego 
+lego_ecl.pl  			ECLIPSE code for RCX Lego
+lego_swi.pl  			SWI code for RCX Lego
+rcx_swi.pl			SWI package file (legorcx + lego_swi)
+rcx_ecl.pl			SWI package file (legorcx + lego_ecl)
+
+-----------------------------------------------------------------------------
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% EOF: IndiGolog/Eval/FILES.TXT
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+

@@ -1,0 +1,57 @@
+********************    PROTEIN V2.09   ********************
+
+--------------------    input clauses   --------------------
+
+"Clause " No. 1 : [element(_50, _51), not_set_equal(_49, _51), not_element(_50, _49)]
+"Clause " No. 2 : [element(_88, _89), not_set_equal(_89, _87), not_element(_88, _87)]
+"Clause " No. 3 : [element(f(_129, _128), _129), element(f(_129, _128), _128), set_equal(_129, _128)]
+"Clause " No. 4 : [set_equal(_168, _172), not_element(f(_168, _172), _172), not_element(f(_168, _172), _168)]
+"Clause " No. 5 : [set_equal(a, b), set_equal(b, a)]
+"Query  " No. 6 : [query, not_set_equal(b, a), not_set_equal(a, b)]
+"Clause " No. 6 : [not_set_equal(b, a), not_set_equal(a, b)]
+
+--------------------        flags       --------------------
+
+protein_flag(system, protein).
+protein_flag(ancestry_rme, off).
+protein_flag(ancs, both).
+protein_flag(answers, one).
+protein_flag(answer_set_handling, on).
+protein_flag(calculus, me).
+protein_flag(check_flags, [protein_flag(calculus, hyper)]).
+protein_flag(definite_answers, off).
+protein_flag(delayed_rme, off).
+protein_flag(depth_increment, 1).
+protein_flag(dynamic, off).
+protein_flag(factorisation, cut).
+protein_flag(head_behind_prolog, off).
+protein_flag(mmr, off).
+protein_flag(mode, pl1).
+protein_flag(query_anc, ([], [])).
+protein_flag(query_reuse, on).
+protein_flag(reduction, both).
+protein_flag(regularity, delay).
+protein_flag(search, id_tree).
+protein_flag(selection_function, off).
+protein_flag(sorting, costs).
+protein_flag(strict_rme, off).
+protein_flag(th_nonewclauses, off).
+protein_flag(th_reduction, both).
+protein_flag(th_regularity, delay).
+protein_flag(th_sidelit_anc, off).
+protein_flag(translate, all).
+protein_flag(trace, internal).
+
+
+--------------------     statistics     --------------------
+
+Proof Statistics
+----------------
+Proof Time:  0.01 sec
+Proof Depth: 4
+Extension Steps: 12
+Reduction Steps: 10		(incl. 10 with cut)
+Factoring Steps: 2		(incl. 2 with cut)
+Inferences:      64
+
+--------------------      answers       --------------------

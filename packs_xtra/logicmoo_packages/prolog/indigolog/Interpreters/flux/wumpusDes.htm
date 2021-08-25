@@ -1,0 +1,177 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<HTML>
+<HEAD>
+<TITLE>FLUX Demos</TITLE>
+<META http-equiv=Content-Type content="text/html; charset=iso-8859-1">
+<META http-equiv=Content-Script-Type content="text/javascript">
+<meta name="verify-v1" content="5hzQhRC40D+O5QdtSCIecNaCms1O32a+UxDZHsOS+Mk=" >
+<LINK rel="stylesheet" type="text/css" media="screen" href="style.css">
+
+<script type="text/javascript" language="JavaScript">
+<!--
+function MM_findObj(n, d) { //v4.0
+  var p,i,x;  if(!d) d=document; if((p=n.indexOf("?"))>0&&parent.frames.length) {
+    d=parent.frames[n.substring(p+1)].document; n=n.substring(0,p);}
+  if(!(x=d[n])&&d.all) x=d.all[n]; for (i=0;!x&&i<d.forms.length;i++) x=d.forms[i][n];
+  for(i=0;!x&&d.layers&&i<d.layers.length;i++) x=MM_findObj(n,d.layers[i].document);
+  if(!x && document.getElementById) x=document.getElementById(n); return x;
+}
+
+function MM_changeProp(objName,theProp,theValue) { //v3.0
+  var obj = MM_findObj(objName);
+  if (obj && (theProp.indexOf("style.")==-1 || obj.style)) eval("obj."+theProp+"='"+theValue+"'");
+}
+
+function MM_preloadImages() { //v3.0
+ var d=document; if(d.images){ if(!d.MM_p) d.MM_p=new Array();
+   var i,j=d.MM_p.length,a=MM_preloadImages.arguments; for(i=0; i<a.length; i++)
+   if (a[i].indexOf("#")!=0){ d.MM_p[j]=new Image; d.MM_p[j++].src=a[i];}}
+}
+
+//-->
+</script>
+
+</HEAD>
+<BODY text="#000000" bgColor="#ffffff" onLoad="MM_preloadImages('images/button_home_f2.png','images/button_home_f4.png','images/button_home_f3.png','images/button_system_f2.png','images/button_system_f4.png','images/button_system_f3.png','images/button_fluxplayer_f2.png','images/button_fluxplayer_f4.png','images/button_fluxplayer_f3.png','images/button_books_f2.png','images/button_books_f4.png','images/button_books_f3.png','images/button_publications_f2.png','images/button_publications_f4.png','images/button_publications_f3.png','images/button_projects_f2.png','images/button_projects_f4.png','images/button_projects_f3.png','images/button_demos_f2.png','images/button_demos_f4.png','images/button_demos_f3.png','images/button_people_f2.png','images/button_people_f4.png','images/button_people_f3.png','images/button_disclaimer_f2.png','images/button_disclaimer_f4.png','images/button_disclaimer_f3.png')">
+<table cellpadding="0" cellspacing="0" border="0" style="width: 100%; text-align: left;">
+<tbody>
+<tr>
+<td style="vertical-align: top; width: 150px; text-align: center;">
+<p id="navtext">
+<img src="images/fluxlogo_119x37.png" alt="FLUX logo" width="119" height="37" align="middle">
+<br><br>
+  <img id="navimage_home" name="button_home" src="images/buttons/button_home.png" alt="home" width="133" height="28" border="0" usemap="#m_button_home"><br>
+  <map name="m_button_home">
+  <area shape="poly" coords="12,1,113,1,122,4,126,10,125,11,122,18,113,21,12,21,4,18,0,11,0,11,4,4,12,1"
+        href="home.htm" alt="home"
+        onMouseOver="MM_changeProp('button_home','src','images/buttons/button_home_f2.png')"
+        onMouseOut="MM_changeProp('button_home','src','images/buttons/button_home.png')">
+  </map>
+  <img id="navimage_system" name="button_system" src="images/buttons/button_system.png" alt="system" width="133" height="28" border="0" usemap="#m_button_system"><br>
+  <map name="m_button_system">
+  <area shape="poly" coords="12,1,113,1,122,4,126,10,125,11,122,18,113,21,12,21,4,18,0,11,0,11,4,4,12,1"
+        href="system.htm" alt="system"
+        onMouseOver="MM_changeProp('button_system','src','images/buttons/button_system_f2.png')"
+        onMouseOut="MM_changeProp('button_system','src','images/buttons/button_system.png')">
+  </map>
+  <img id="navimage_fluxplayer" name="button_fluxplayer" src="images/buttons/button_fluxplayer.png" alt="fluxplayer" width="133" height="28" border="0" usemap="#m_button_fluxplayer"><br>
+  <map name="m_button_fluxplayer">
+  <area shape="poly" coords="12,1,113,1,122,4,126,10,125,11,122,18,113,21,12,21,4,18,0,11,0,11,4,4,12,1"
+        href="fluxplayer.htm" alt="fluxplayer"
+        onMouseOver="MM_changeProp('button_fluxplayer','src','images/buttons/button_fluxplayer_f2.png')"
+        onMouseOut="MM_changeProp('button_fluxplayer','src','images/buttons/button_fluxplayer.png')">
+  </map>
+  <img id="navimage_books" name="button_books" src="images/buttons/button_books.png" alt="books" width="133" height="28" border="0" usemap="#m_button_books"><br>
+  <map name="m_button_books">
+  <area shape="poly" coords="12,1,113,1,122,4,126,10,125,11,122,18,113,21,12,21,4,18,0,11,0,11,4,4,12,1"
+        href="books.htm" alt="books"
+        onMouseOver="MM_changeProp('button_books','src','images/buttons/button_books_f2.png')"
+        onMouseOut="MM_changeProp('button_books','src','images/buttons/button_books.png')">
+  </map>
+  <img id="navimage_publications" name="button_publications" src="images/buttons/button_publications.png" alt="publications" width="133" height="28" border="0" usemap="#m_button_publications"><br>
+  <map name="m_button_publications">
+  <area shape="poly" coords="12,1,113,1,122,4,126,10,125,11,122,18,113,21,12,21,4,18,0,11,0,11,4,4,12,1"
+        href="publications.htm" alt="publications"
+        onMouseOver="MM_changeProp('button_publications','src','images/buttons/button_publications_f2.png')"
+        onMouseOut="MM_changeProp('button_publications','src','images/buttons/button_publications.png')">
+  </map>
+  <img id="navimage_projects" name="button_projects" src="images/buttons/button_projects.png" alt="projects" width="133" height="28" border="0" usemap="#m_button_projects"><br>
+  <map name="m_button_projects">
+  <area shape="poly" coords="12,1,113,1,122,4,126,10,125,11,122,18,113,21,12,21,4,18,0,11,0,11,4,4,12,1"
+        href="projects.htm" alt="projects"
+        onMouseOver="MM_changeProp('button_projects','src','images/buttons/button_projects_f2.png')"
+        onMouseOut="MM_changeProp('button_projects','src','images/buttons/button_projects.png')">
+  </map>
+  <img id="navimage_people" name="button_people" src="images/buttons/button_people.png" alt="people" width="133" height="28" border="0" usemap="#m_button_people"><br>
+  <map name="m_button_people">
+  <area shape="poly" coords="12,1,113,1,122,4,126,10,125,11,122,18,113,21,12,21,4,18,0,11,0,11,4,4,12,1"
+        href="people.htm" alt="people"
+        onMouseOver="MM_changeProp('button_people','src','images/buttons/button_people_f2.png')"
+        onMouseOut="MM_changeProp('button_people','src','images/buttons/button_people.png')">
+  </map>
+  <img id="navimage_demos" name="button_demos" src="images/buttons/button_demos_f3.png" alt="-demos-" width="133" height="28" border="0" usemap="#m_button_demos"><br>
+  <map name="m_button_demos">
+  <area shape="poly" coords="12,1,113,1,122,4,126,10,125,11,122,18,113,21,12,21,4,18,0,11,0,11,4,4,12,1"
+        href="demos.htm" alt="demos"
+        onMouseOver="MM_changeProp('button_demos','src','images/buttons/button_demos_f4.png')"
+        onMouseOut="MM_changeProp('button_demos','src','images/buttons/button_demos_f3.png')">
+  </map>
+  <img id="navimage_talks" name="button_talks" src="images/buttons/button_talks.png" alt="talks" width="133" height="28" border="0" usemap="#m_button_talks"><br>
+  <map name="m_button_talks">
+  <area shape="poly" coords="12,1,113,1,122,4,126,10,125,11,122,18,113,21,12,21,4,18,0,11,0,11,4,4,12,1"
+        href="talks.htm" alt="talks"
+        onMouseOver="MM_changeProp('button_talks','src','images/buttons/button_talks_f2.png')"
+        onMouseOut="MM_changeProp('button_talks','src','images/buttons/button_talks.png')">
+  </map>
+  <img id="navimage_faqs" name="button_faqs" src="images/buttons/button_faqs.png" alt="faqs" width="133" height="28" border="0" usemap="#m_button_faqs"><br>
+  <map name="m_button_faqs">
+  <area shape="poly" coords="12,1,113,1,122,4,126,10,125,11,122,18,113,21,12,21,4,18,0,11,0,11,4,4,12,1"
+        href="faqs.htm" alt="faqs"
+        onMouseOver="MM_changeProp('button_faqs','src','images/buttons/button_faqs_f2.png')"
+        onMouseOut="MM_changeProp('button_faqs','src','images/buttons/button_faqs.png')">
+  </map>
+  <img id="navimage_disclaimer" name="button_disclaimer" src="images/buttons/button_disclaimer.png" alt="disclaimer" width="133" height="28" border="0" usemap="#m_button_disclaimer"><br>
+  <map name="m_button_disclaimer">
+  <area shape="poly" coords="12,1,113,1,122,4,126,10,125,11,122,18,113,21,12,21,4,18,0,11,0,11,4,4,12,1"
+        href="disclaimer.htm" alt="disclaimer"
+        onMouseOver="MM_changeProp('button_disclaimer','src','images/buttons/button_disclaimer_f2.png')"
+        onMouseOut="MM_changeProp('button_disclaimer','src','images/buttons/button_disclaimer.png')">
+  </map>
+<font size="2" face="sans-serif"><br>Last updated:<br>
+Aug 26 2009
+<br><a href="webadmin.htm">Web-Admin</a></font>
+</p>
+<p>
+ <a href="http://validator.w3.org/check?uri=http%3A%2F%2Ffluxagent.org%2FwumpusDes.htm">
+ <img border="0" src="images/valid-html401.png"
+ alt="Valid HTML 4.01!" height="31" width="88"></a>
+</p>
+</td>
+<td style="vertical-align: top;">
+<DIV ID="stdtext">
+<!-- Excerpts taken from
+	http://www.cis.temple.edu/~ingargio/cis587/readings/wumpus.shtml
+ -->
+
+<H2>The Wumpus World - A description</H2>
+
+<P>
+The so-called Wumpus World is a prominent example of the knowledge representation and reasoning community since many years.
+It has been discussed in Russell and Norvig's book <em>Artificial Intelligence</em>.
+</P>
+
+<H3>The rules</H3>
+<P>
+The neighbourhood of a node consists of the four squares north, south, east, west of the given square.
+</P>
+
+<H4>Percepts</H4>
+The percepts of the Wumpus agent are defined as follows:
+<UL>
+	<LI><EM>Stench</EM> is perceived at a square iff the Wumpus is at this square or in its neighbourhood.</LI>
+	<LI><EM>Breeze</EM> is perceived at a square iff a pit is in the neighborhood of this square.</LI>
+	<LI><EM>Glitter</EM> is perceived at a square iff gold is in this square.</LI>
+	<LI><EM>Scream</EM> is perceived in the whole Wumpus World iff the arrow just shot the Wumpus dead.</LI>
+</UL>
+</P>
+
+<H4>Actions</H4>
+An agent can do the following actions (one at a time):
+<UL>
+	<LI>The agent can <EM>Go</EM> forward in the direction it is currently facing, or <EM>Turn</EM> clockwise.</LI>
+	<LI>The agent has a single arrow that it can <em>Shoot</em>. It will go straight in the direction faced by the agent until it hits (and kills) the wumpus, or hits (and is absorbed by) a wall.</LI>
+	<LI>The agent can <em>Grab</em> a portable object at the current square or it can <em>Release</em> an object that it is holding.</LI>
+	<LI>The agent can <EM>Enter</EM> and <EM>Exit</EM> the cave at square (1,1).</LI>
+</UL>
+</P>
+
+<P>
+After entering the cave at square (1,1) the agent faces north initially.
+The agent dies if it is in the same square as the wumpus.
+The objective of the game is to kill the Wumpus, to find and pick up the gold, and to exit the with the gold.
+</P>
+
+</div>
+</td></tr></tbody></table>
+</BODY>
+</HTML>

@@ -1,0 +1,90 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% The gas-diffusion problem:
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%A building contains a number of rooms.
+%%%Each room is connected to (some) other rooms via gates.
+%%%Initially, all gates are closed and some of the
+%%%rooms contain certain amounts of gas
+%%%(the other rooms are assumed to be empty).
+%%%Each gate can be opened or closed.
+%%%When a gate between two rooms is opened
+%%%the gas contained in these rooms flows through the gate.
+%%%The gas diffusion continue until the pressure reaches an equilibrium.
+%%%The only condition to be always satisfied is that a gate in a room can be
+%%%opened only if all other gates are closed.
+%%%The goal is to move a desired quantity of gas in one specified room.
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% Coded by DFP, August 2010
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% The 11 rooms of our instances:
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%   10 9
+%%  11    8
+%%  1 -7- 6
+%%  2     5
+%%    3 4
+%%%% TOPOLOGY description
+
+room(N) :- interval(N,1,11).
+gate(1,2). gate(1,7). gate(1,11).
+gate(2,3). gate(3,4). gate(4,5).
+gate(5,6). gate(6,7). gate(6,8).
+gate(8,9). gate(9,10). gate(10,11).
+
+
+scale(1). %%% ORIGINAL PROBLEM IS WITH: scale(16).
+limit(N):- scale(M), N is 16*M - 1.
+amount(A) :- limit(L),interval(A,0,L).
+
+%%%% FLUENTS
+fluent(contains(N,A)) :- room(N),amount(A).
+fluent(is_open(X,Y))  :- gate(X,Y).
+
+%%%% ACTIONS
+action(open(X,Y))  :- gate(X,Y).
+action(close(X,Y)) :- gate(X,Y).
+
+executable(open(X,Y),L) :-
+     action(open(X,Y)),
+     findall(neg(is_open(X,Z)), gate(X,Z),L1),
+     findall(neg(is_open(Z,X)), gate(Z,X),L2,L1),
+     findall(neg(is_open(Y,Z)), (gate(Y,Z),neq(Z,X)),L3,L2),
+     findall(neg(is_open(Z,Y)), (gate(Z,Y),neq(Z,X)),L,L3).
+
+executable(close(X,Y),[is_open(X,Y)]) :-
+      action(close(X,Y)).
+causes(open(X,Y), contains(Y,NY),
+      [contains(X,OX),contains(Y,OY)]) :-
+      action(open(X,Y)),
+      amount(OX),
+      amount(OY),
+      NY is (OX+OY)//2.
+
+causes(open(X,Y),
+      contains(X,NX),
+      [contains(X,OX),contains(Y,OY)]) :-
+      action(open(X,Y)),
+      amount(OX),
+      amount(OY),
+      NX is (OX+OY)//2.
+
+causes(open(X,Y), is_open(X,Y),[]) :-
+      action(open(X,Y)).
+causes(close(X,Y), neg(is_open(X,Y)),[]) :-
+      action(close(X,Y)).
+
+caused([contains(A,B)],neg(contains(A,C))) :-
+    room(A),amount(B),amount(C),neq(B,C).
+
+%%%% Initial and final states
+
+initially(neg(is_open(X,Y))) :- gate(X,Y).
+initially(contains(10,K)):- scale(N), K is 8*N.
+initially(contains(3,K)):-  scale(N), K is 8*N.
+initially(contains(A,0)) :- room(A), diff(A,3,10).
+
+%%% ADAPTED. It was gt 32 (Instance A1 - solution in 7 steps)
+
+goal(contains(1,K)):- scale(N), K is 3*N.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

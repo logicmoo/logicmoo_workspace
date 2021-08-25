@@ -1,0 +1,2 @@
+order poly1 for implTrans using 'poly1.1' for pc .
+setInterpretation([a : 2, b : 2, c : 2]).

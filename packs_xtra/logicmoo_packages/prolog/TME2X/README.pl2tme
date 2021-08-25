@@ -1,0 +1,100 @@
+Hi!
+
+pl2tme is a little eclipse quick-and-dirty program to convert
+first-order formulae into clausal normal form. Uses rather 
+straightforward algorithm. 
+
+
+The programm is run by invoking the shell script 'pl2tme'.
+After INSTALLATION, call 'pl2tme' to get an idea of how to use.
+For the curious:
+$ pl2tme
+usage: pl2tme [-u] infile [outfile]
+       Omit extension '.pl1' from infile.
+       Usually, pl2tme -u is the thing you want.
+       The -u flag means 'unsorted': dont add dummy sort
+       annotations to variables     
+
+There is a second shell script 'pl2tptp' which converts .pl1 files into TPTP 
+first order files.
+
+SYNTAX (instead of a manual)
+------
+An input file to pl2tme consists of a sequence of TOPLEVELFORMULAs
+
+TOPLEVELFORMULA ::= FO_FORMULA '.'
+	| '?-' FO_FORMULA '.'
+	| CLAUSE '.'
+
+FO_FORMULA ::= forall(VARVECTOR,FO_FORMULA)
+	|   exists(VARVECTOR,FO_FORMULA)
+	|   FO_FORMULA BINOP FO_FORMULA
+	|   UNOP FO_FORMULA
+	|   ATOM
+
+CLAUSE ::= HEAD
+	|  HEAD ':-' BODY
+
+HEAD ::= LITERAL ( ';' LITERAL )* 
+BODY ::= LITERAL ( ',' LITERAL )* 
+
+LITERAL ::= ATOM | '-' ATOM
+
+ATOM	::= "any prolog term which is not a number
+	     in particular 'true' or 'false'"
+VARVECTOR ::= VAR | '[' VAR+ ']'
+VAR	::= "prolog constant, in the sense of the prolog 'atom' predicate"
+	|   "Prolog Variable, i.e. a name starting with a capital letter"
+
+BINOP	::=  '&'		% and
+	|   ';'	| '|' | 'v'   % or
+	|   '<=>' | '<->'	% equivalence
+	|   '=>'  | '<='	% implication
+	|   '->'  | '<-'	% implication
+
+UNOP	::= '-'			% negation
+
+Some remarks:
+Free Prolog-Variables in a TOPLEVELFORMULA will give an undefined
+result, except in case it is a CLAUSE. In this case the free variables
+will be considered universally quantified.
+
+'?-' logically means negation; the difference is that all negative
+clauses coming from '?- FORMULA' will be written in the output file in
+goal-notation, i.e. with a '?-'
+
+The following operator precedences are in effect for disambiguation (a
+lower precedence designates  _stronger_ binding power).
+
+Precedence	Associativity	OPs
+----------------------------------------
+ 500		xf		-
+1050		xfy		<->  <=>
+1050		xfy		<-   <=
+1050		xfy		->   =>
+1000		xfy		&    , 
+1100		xfy		;
+
+
+
+INSTALLATION:
+	- unpack all files into one single directory. Let <DIR> be
+	  that directory. Typically, this directory is called
+	  .../TME2X, because pl2tme shares some code with tme2X
+	  Obviously, you did this already.
+	- Be sure to have a running Eclipse in your $path.
+	- Edit the shell script pl2tme and let PL2TMEHOME at the beginning
+	  point to <DIR>. 
+	- I recommend to make make a symbolic link from <DIR>/pl2tme to 
+	  somewhere in your $path.
+	- Test: call 'pl2tme'. It should give you usage information.
+                call e.g. `pl2tme -u sets' to actually test the
+		conversion.
+
+
+That's it.
+
+In case of trouble ask
+
+	Peter Baumgartner
+	peter@informatik.uni-koblenz.de

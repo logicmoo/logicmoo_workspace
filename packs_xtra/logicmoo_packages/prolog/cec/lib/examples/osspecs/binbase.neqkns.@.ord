@@ -1,0 +1,164 @@
+order(neqkns for binbase) using neqkns for object.
+greater([['$r-ms','$inj-object-bool']]).
+greater([['$r',\== /2]]).
+greater([['$r-ms','\==-bool-object-object']]).
+greater([['\==-bool-object-object','$inj-object-bool']]).
+greater([['$r',== /2]]).
+greater([['$r-ms','==-bool-object-object']]).
+greater([['==-bool-object-object','$inj-object-bool']]).
+greater([['$neq4-ms','$r-ms']]).
+greater([['$neq4','$r']]).
+greater([[\== /2,== /2]]).
+greater([['$r'/_142787,'$inj'/1]]).
+greater([['$r-ms','$inj-bin-even']]).
+greater([['==-bool-object-object','$inj-bin-even']]).
+greater([['\==-bool-object-object','$inj-bin-even']]).
+greater([['$r-ms','$inj-bin-odd']]).
+greater([['==-bool-object-object','$inj-bin-odd']]).
+greater([['\==-bool-object-object','$inj-bin-odd']]).
+greater([['$r-ms','$inj-object-bin']]).
+greater([['==-bool-object-object','$inj-object-bin']]).
+greater([['\==-bool-object-object','$inj-object-bin']]).
+greater([['$r'/_142787,o/1]]).
+greater([['$r-ms','o-even-bin']]).
+greater([['o-even-bin','$inj-object-bool']]).
+greater([['o-even-bin','$inj-bin-even']]).
+greater([['o-even-bin','$inj-bin-odd']]).
+greater([['o-even-bin','$inj-object-bin']]).
+greater([['$r'/_142787,l/1]]).
+greater([['$r-ms','l-odd-bin']]).
+greater([['l-odd-bin','$inj-object-bool']]).
+greater([['l-odd-bin','$inj-bin-even']]).
+greater([['l-odd-bin','$inj-bin-odd']]).
+greater([['l-odd-bin','$inj-object-bin']]).
+greater([['$r'/_142787,< /2]]).
+greater([['$r-ms','<-bool-bin-bin']]).
+greater([['<-bool-bin-bin','$inj-object-bool']]).
+greater([['<-bool-bin-bin','$inj-bin-even']]).
+greater([['<-bool-bin-bin','$inj-bin-odd']]).
+greater([['<-bool-bin-bin','$inj-object-bin']]).
+greater([['$r'/_142787,\== /2]]).
+greater([['$r-ms','o-bin-bin']]).
+greater([['$r-ms','l-bin-bin']]).
+greater([['$r-ms','\==-bool-bin-bin']]).
+greater([['$r-ms','==-bool-bin-bin']]).
+greater([[\== /2,< /2]]).
+greater([['$r'/_142787,(+)/_142790]]).
+greater([['$r-ms','+-bin-bin-bin']]).
+greater([['$r'/_142787,* /_142790]]).
+greater([['$r-ms','*-bin-bin-bin']]).
+greater([['$r'/_142787,(-)/_142790]]).
+greater([['$r-ms','--bin-bin-bin']]).
+greater([[* /_142787,(+)/_142790]]).
+greater([[(+)/_142787,l/1]]).
+greater([[(+)/_142787,o/1]]).
+greater([[(-)/_142787,< /2]]).
+greater([[(-)/_142787,o/1]]).
+greater([[(-)/_142787,l/1]]).
+greater([[l/1,o/1]]).
+status(['$r':ms]).
+status(['$r-ms':ms]).
+status(['$inj-object-bool':ms]).
+status(['==-bool-object-object':ms]).
+status([== :ms]).
+status(['\==-bool-object-object':ms]).
+status([\== :ms]).
+status(['$neq4-ms':lr]).
+status(['$neq4':lr]).
+status(['$inj-bin-even':ms]).
+status(['$inj-bin-odd':ms]).
+status(['$inj-object-bin':ms]).
+status(['$r'/_142787:ms]).
+status([== /2:ms]).
+status([\== /2:ms]).
+status([< /2:ms]).
+status([* /_142787:lr]).
+status([(-)/_142787:rl]).
+status([(+)/_142787:rl]).
+
+constructor('true-bool').
+constructor('false-bool').
+constructor('0-even').
+constructor('1-odd').
+
+
+
+
+
+
+/* ordering of the literals is ms for
+/*	x:object==y:object = y:object==x:object */
+action(status(ms),'$equation'([],['==-bool-object-object'(@'x-object',@'y-object')='==-bool-object-object'(@'y-object',@'x-object')])).
+
+/* ordering of the literals is ms for
+/*	x:object\==y:object = y:object\==x:object */
+action(status(ms),'$equation'([],['\==-bool-object-object'(@'x-object',@'y-object')='\==-bool-object-object'(@'y-object',@'x-object')])).
+
+/* declare as nonoperational :
+/*	x:object==y:object = true => x:object = y:object */
+action(orient(n),'$equation'(['==-bool-object-object'(@'x-object',@'y-object')='true-bool'],[@'x-object'= @'y-object'])).
+
+/* ordering of the literals is [0,1] for
+/*	x:object==y:object = true => x:object = y:object */
+action(status([0,1]),'$equation'(['==-bool-object-object'(@'x-object',@'y-object')='true-bool'],[@'x-object'= @'y-object'])).
+
+/* declare as nonoperational :
+/*	a:bin<0 = true => true = false */
+action(orient(n),'$equation'(['<-bool-bin-bin'(@'a-bin','$inj-bin-even'('0-even'))='true-bool'],['true-bool'='false-bool'])).
+
+/* ordering of the literals is ms for
+/*	a:bin<0 = true => true = false */
+action(status(ms),'$equation'(['<-bool-bin-bin'(@'a-bin','$inj-bin-even'('0-even'))='true-bool'],['true-bool'='false-bool'])).
+
+/* declare as nonoperational :
+/*	a:bin<b:bin = true and b:bin<a:bin = true => true = false */
+action(orient(n),'$equation'(['<-bool-bin-bin'(@'a-bin',@'b-bin')='true-bool','<-bool-bin-bin'(@'b-bin',@'a-bin')='true-bool'],['true-bool'='false-bool'])).
+
+/* condition number 1 is the selected condition for
+/*	a:bin<b:bin = true and b:bin<a:bin = true => true = false */
+action(selectcondition(1),'$equation'(['<-bool-bin-bin'(@'a-bin',@'b-bin')='true-bool','<-bool-bin-bin'(@'b-bin',@'a-bin')='true-bool'],['true-bool'='false-bool'])).
+
+/* ordering of the literals is ms for
+/*	a:bin<b:bin = true and b:bin<a:bin = true => true = false */
+action(status(ms),'$equation'(['<-bool-bin-bin'(@'a-bin',@'b-bin')='true-bool','<-bool-bin-bin'(@'b-bin',@'a-bin')='true-bool'],['true-bool'='false-bool'])).
+
+/* try to orient into a (quasi-)reductive rule :
+/*	0<b:bin = true => 0<(b:bin)l = true */
+action(orient(o),'$equation'(['<-bool-bin-bin'('$inj-bin-even'('0-even'),@'b-bin')='true-bool'],['<-bool-bin-bin'('$inj-bin-even'('0-even'),'$inj-bin-odd'('l-odd-bin'(@'b-bin')))='true-bool'])).
+
+/* try to orient into a (quasi-)reductive rule :
+/*	0<a:bin = true => (a:bin)l<0 = false */
+action(orient(o),'$equation'(['<-bool-bin-bin'('$inj-bin-even'('0-even'),@'a-bin')='true-bool'],['<-bool-bin-bin'('$inj-bin-odd'('l-odd-bin'(@'a-bin')),'$inj-bin-even'('0-even'))='false-bool'])).
+
+/* try to orient into a (quasi-)reductive rule :
+/*	0<a:bin = true => (a:bin)o<1 = false */
+action(orient(o),'$equation'(['<-bool-bin-bin'('$inj-bin-even'('0-even'),@'a-bin')='true-bool'],['<-bool-bin-bin'('$inj-bin-even'('o-even-bin'(@'a-bin')),'$inj-bin-odd'('1-odd'))='false-bool'])).
+
+/* try to orient into a (quasi-)reductive rule :
+/*	0<b:bin = true => 1<(b:bin)o = true */
+action(orient(o),'$equation'(['<-bool-bin-bin'('$inj-bin-even'('0-even'),@'b-bin')='true-bool'],['<-bool-bin-bin'('$inj-bin-odd'('1-odd'),'$inj-bin-even'('o-even-bin'(@'b-bin')))='true-bool'])).
+
+/* declare as nonoperational :
+/*	a:bin==0 = true => (a:bin)o = 0 */
+action(orient(n),'$equation'(['==-bool-object-object'('$inj-object-bin'(@'a-bin'),'$inj-object-bin'('$inj-bin-even'('0-even')))='true-bool'],['o-even-bin'(@'a-bin')='0-even'])).
+
+/* declare as nonoperational :
+/*	a:bin==0 = true => 0 = (a:bin)o */
+action(orient(n),'$equation'(['==-bool-object-object'('$inj-object-bin'(@'a-bin'),'$inj-object-bin'('$inj-bin-even'('0-even')))='true-bool'],['0-even'='o-even-bin'(@'a-bin')])).
+
+/* declare as nonoperational :
+/*	a:bin==0 = true => (a:bin)l = 1 */
+action(orient(n),'$equation'(['==-bool-object-object'('$inj-object-bin'(@'a-bin'),'$inj-object-bin'('$inj-bin-even'('0-even')))='true-bool'],['l-odd-bin'(@'a-bin')='1-odd'])).
+
+/* declare as nonoperational :
+/*	a:bin==0 = true => 1 = (a:bin)l */
+action(orient(n),'$equation'(['==-bool-object-object'('$inj-object-bin'(@'a-bin'),'$inj-object-bin'('$inj-bin-even'('0-even')))='true-bool'],['1-odd'='l-odd-bin'(@'a-bin')])).
+
+/* declare as nonoperational :
+/*	a:bin==b:bin = true => (a:bin)o = (b:bin)o */
+action(orient(n),'$equation'(['==-bool-object-object'('$inj-object-bin'(@'a-bin'),'$inj-object-bin'(@'b-bin'))='true-bool'],['o-even-bin'(@'a-bin')='o-even-bin'(@'b-bin')])).
+
+/* declare as nonoperational :
+/*	a:bin==b:bin = true => (a:bin)l = (b:bin)l */
+action(orient(n),'$equation'(['==-bool-object-object'('$inj-object-bin'(@'a-bin'),'$inj-object-bin'(@'b-bin'))='true-bool'],['l-odd-bin'(@'a-bin')='l-odd-bin'(@'b-bin')])).
+

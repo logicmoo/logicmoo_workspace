@@ -1,0 +1,57 @@
+
+trc(query, info(9729, query, 81, 1), [
+   trc(intersection(aIb, c, aIbIc), info(9729, ext, 77, 1), [
+      trc(member(h(aIb, c, aIbIc), aIbIc), info(1742, ext, 74, 1), [
+         trc(intersection(a, bIc, aIbIc), info(1588, fact, 80, 1), []),
+         trc(member(h(aIb, c, aIbIc), bIc), info(1628, ext, 74, 1), [
+            trc(intersection(b, c, bIc), info(1590, fact, 79, 1), []),
+            trc(member(h(aIb, c, aIbIc), c), info(1597, ext, 76, 3), [
+               trc(not_member(h(aIb, c, aIbIc), aIbIc), info(1596, red_cut, 3, 0), []),
+               trc(not_intersection(aIb, c, aIbIc), info(1597, red_cut, 4, 0), [])]),
+            trc(member(h(aIb, c, aIbIc), b), info(1628, th_start, 29, 1), [
+               trc(member(h(aIb, c, aIbIc), aIb), info(1627, th_ext, 75, 3), [
+                  trc(not_member(h(aIb, c, aIbIc), aIbIc), info(1626, red_cut, 3, 0), []),
+                  trc(not_intersection(aIb, c, aIbIc), info(1627, red_cut, 4, 0), [])]),
+               trc(intersection(a, b, aIb), info(1628, fact, 78, 1), [])])]),
+         trc(member(h(aIb, c, aIbIc), a), info(1742, th_start, 28, 1), [
+            trc(member(h(aIb, c, aIbIc), aIb), info(1741, th_ext, 75, 3), [
+               trc(not_member(h(aIb, c, aIbIc), aIbIc), info(1740, red_cut, 2, 0), []),
+               trc(not_intersection(aIb, c, aIbIc), info(1741, red_cut, 3, 0), [])]),
+            trc(intersection(a, b, aIb), info(1742, fact, 78, 1), [])])]),
+      trc(member(h(aIb, c, aIbIc), c), info(9113, th_start, 28, 1), [
+         trc(member(h(aIb, c, aIbIc), aIbIc), info(8949, th_ext, 74, 1), [
+            trc(intersection(a, bIc, aIbIc), info(8911, fact, 80, 1), []),
+            trc(member(h(aIb, c, aIbIc), bIc), info(8935, th_start, 29, 1), [
+               trc(member(h(aIb, c, aIbIc), aIbIc), info(8934, th_ext, 76, 1), [
+                  trc(not_intersection(aIb, c, aIbIc), info(8933, red_cut, 3, 0), []),
+                  trc(not_member(h(aIb, c, aIbIc), c), info(8934, red_cut, 2, 0), [])]),
+               trc(intersection(a, bIc, aIbIc), info(8935, fact, 80, 1), [])]),
+            trc(member(h(aIb, c, aIbIc), a), info(8949, th_start, 28, 1), [
+               trc(member(h(aIb, c, aIbIc), aIbIc), info(8948, th_ext, 76, 1), [
+                  trc(not_intersection(aIb, c, aIbIc), info(8947, red_cut, 3, 0), []),
+                  trc(not_member(h(aIb, c, aIbIc), c), info(8948, red_cut, 2, 0), [])]),
+               trc(intersection(a, bIc, aIbIc), info(8949, fact, 80, 1), [])])]),
+         trc(intersection(c, aIbIc, aIbIc), info(9113, ext, 77, 1), [
+            trc(member(h(c, aIbIc, aIbIc), aIbIc), info(8971, ext, 76, 1), [
+               trc(not_intersection(c, aIbIc, aIbIc), info(8970, red_cut, 2, 0), []),
+               trc(not_member(h(c, aIbIc, aIbIc), aIbIc), info(8971, red, 1, 0), [])]),
+            trc(member(h(c, aIbIc, aIbIc), aIbIc), info(8972, factor_cut, 1, 0), []),
+            trc(member(h(c, aIbIc, aIbIc), c), info(9113, th_start, 55, 3), [
+               trc(intersection(a, bIc, aIbIc), info(9112, th_ext, 80, 1), []),
+               trc(member(h(c, aIbIc, aIbIc), aIbIc), info(9112, th_ext, 75, 1), [
+                  trc(not_intersection(c, aIbIc, aIbIc), info(9111, red_cut, 2, 0), []),
+                  trc(not_member(h(c, aIbIc, aIbIc), c), info(9112, red_cut, 1, 0), [])]),
+               trc(intersection(b, c, bIc), info(9113, fact, 79, 1), [])])])]),
+      trc(member(h(aIb, c, aIbIc), aIb), info(9729, ext, 74, 1), [
+         trc(intersection(a, b, aIb), info(9115, fact, 78, 1), []),
+         trc(member(h(aIb, c, aIbIc), b), info(9596, th_start, 54, 3), [
+            trc(intersection(a, bIc, aIbIc), info(9595, th_ext, 80, 1), []),
+            trc(member(h(aIb, c, aIbIc), aIbIc), info(9595, th_ext, 75, 1), [
+               trc(not_intersection(aIb, c, aIbIc), info(9594, red_cut, 3, 0), []),
+               trc(not_member(h(aIb, c, aIbIc), aIb), info(9595, red_cut, 2, 0), [])]),
+            trc(intersection(b, c, bIc), info(9596, fact, 79, 1), [])]),
+         trc(member(h(aIb, c, aIbIc), a), info(9729, th_start, 28, 1), [
+            trc(member(h(aIb, c, aIbIc), aIbIc), info(9728, th_ext, 75, 1), [
+               trc(not_intersection(aIb, c, aIbIc), info(9727, red_cut, 3, 0), []),
+               trc(not_member(h(aIb, c, aIbIc), aIb), info(9728, red_cut, 2, 0), [])]),
+            trc(intersection(a, bIc, aIbIc), info(9729, fact, 80, 1), [])])])])]).

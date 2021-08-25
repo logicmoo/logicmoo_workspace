@@ -1,0 +1,83 @@
+constraints not_holds/2, not_holds_all/2, duplicate_free/1,
+            or/2, or/3, cancel/2, cancelled/2.
+
+option(check_guard_bindings,off).
+
+not_holds(F, [F1|Z]) <=> neq(F, F1), not_holds(F, Z).
+not_holds(_, [])     <=> true.
+
+not_holds_all(F, [F1|Z]) <=> neq_all(F, F1), not_holds_all(F, Z).
+not_holds_all(_, [])     <=> true.
+
+not_holds_all(F, Z) \ not_holds(G, Z)     <=> instance(G, F) | true.
+not_holds_all(F, Z) \ not_holds_all(G, Z) <=> instance(G, F) | true.
+
+duplicate_free([F|Z]) <=> not_holds(F,Z), duplicate_free(Z).
+duplicate_free([])    <=> true.
+
+or([eq(X,Y)], Z) <=> and_eq(X, Y, D), call(D).
+or([F], Z)       <=> holds(F, Z).
+
+or(V, Z) <=> \+ ( member(F, V), F\=eq(_,_)) | or_and_eq(V, D), call(D).
+
+or(V, []) <=> member(F, V, W), F\=eq(_,_) | or(W, []).
+
+or(V,Z) <=> member(eq(X,Y),V), or_neq(exists,X,Y,D), \+ call(D) | true.
+or(V,Z) <=> member(eq(X,Y),V,W), \+ (and_eq(X,Y,D), call(D)) | or(W,Z).
+
+not_holds(F, Z) \ or(V, Z) <=> member(G, V, W), F==G | or(W, Z).
+
+not_holds_all(F, Z) \ or(V, Z) <=> member(G, V, W), instance(G, F)
+                                   | or(W, Z).
+
+or(V, [F|Z]) <=> or(V, [], [F|Z]).
+
+or(V, W, [F|Z]) <=> member(F1, V, V1), \+ F\=F1
+                    | ( F1==F -> true ; F1=..[_|ArgX], F=..[_|ArgY],
+                      or(V1, [eq(ArgX,ArgY),F1|W], [F|Z]) ).
+
+or(V, W, [_|Z]) <=> append(V, W, V1), or(V1, Z).
+
+cancel(F, Z) \ not_holds(G, Z) <=> \+ F\=G | cancel(F, Z).
+
+cancel(F, Z) \ or(V, Z) <=> member(G, V), \+ F\=G | cancel(F, Z).
+
+cancel(F, Z), cancelled(F, Z) <=> true.
+
+%%%
+%%% auxiliary clauses
+%%%
+
+:- lib(fd).
+
+neq(F, F1)     :- or_neq(exists, F, F1).
+neq_all(F, F1) :- or_neq(forall, F, F1).
+
+or_neq(Q, Fx, Fy) :-
+  Fx =.. [F|ArgX], Fy =.. [G|ArgY],
+  ( F=G -> or_neq(Q, ArgX, ArgY, D), call(D) ; true ).
+
+or_neq(_, [], [], (0#\=0)).
+or_neq(Q, [X|X1], [Y|Y1], D) :-
+  or_neq(Q, X1, Y1, D1),
+  ( Q=forall, var(X) -> D=D1 ; D=((X#\=Y)#\/D1) ).
+
+and_eq([], [], (0#=0)).
+and_eq([X|X1], [Y|Y1], D) :-
+   and_eq(X1, Y1, D1),
+   D = ((X#=Y)#/\D1).
+
+or_and_eq([], (0#\=0)).
+or_and_eq([eq(X,Y)|Eq], (D1#\/D2)) :-
+   or_and_eq(Eq, D1),
+   and_eq(X, Y, D2).
+
+member(X, [X|T], T).
+member(X, [H|T], [H|T1]) :- member(X, T, T1).
+
+cancel(F, Z1, Z2) :-
+   var(Z1) -> cancel(F, Z1), cancelled(F, Z1), Z2=Z1 ;
+   Z1 = [G|Z],
+   ( F\=G -> cancel(F, Z, Z3), Z2=[G|Z3]
+           ; cancel(F, Z, Z2) ).
+

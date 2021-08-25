@@ -1,0 +1,7 @@
+module ring
+	using	abelianGroup
+		+	monoid.
+
+
+x*(y+z) = x*y + x*z.
+(y+z)*x = y*x + z*x.

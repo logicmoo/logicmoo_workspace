@@ -1,0 +1,44 @@
+%%% BACK Macros
+%%%   Macros may be used to make your definition file more
+%%%   readable. They are defined as you expect. 
+%%%   This file provides the macros mentioned in the syntax of BACK V as of
+%%%   June '92.
+
+backmacro(exactly(N,R) *=
+		atleast(N,R) and atmost(N,R)).
+
+backmacro(some(Role, ValueRestriction) *=
+		atleast(1, Role and range(ValueRestriction))).
+
+backmacro(some(Role) *=
+		atleast(1, Role)).
+
+backmacro(the(Role, ValueRestriction) *=
+		all(Role, ValueRestriction) 
+		and atleast(1, Role)
+		and atmost(1, Role)).
+
+backmacro(no(Role, ValueRestriction) *=
+		atmost(0, Role and range(ValueRestriction))).
+
+backmacro(no(Role) *=
+		atmost(0, Role)).
+
+backmacro(atleast(N, Role, ValueRestriction) *=
+		atleast(N, Role and range(ValueRestriction))).
+
+backmacro(atmost(N, Role, ValueRestriction) *=
+		atmost(N, Role and range(ValueRestriction))).
+
+backmacro(exactly(N,R,C) *=
+		atleast(N,R and range(C))
+		and atmost(N,R and range(C))).
+
+backmacro(rvm_some(Role1,Role2) *=
+		atleast(1,Role1 and Role2)).
+
+backmacro(rvm_no(Role1,Role2) *=
+		atmost(0,Role1 and Role2)).
+
+
+

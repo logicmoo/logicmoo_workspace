@@ -1,0 +1,29 @@
+\begin{thebibliography}{}
+
+\bibitem[\protect\citeauthoryear{Baumgartner and
+  Furbach}{1994}]{Baumgartner:Furbach:PROTEIN:CADE12:94}
+Peter Baumgartner and Ulrich Furbach.
+\newblock {PROTEIN: A {\em PRO\/}ver with a {\em T\/}heory {\em E\/}xtension
+  {\em I\/}nterface}.
+\newblock In A.~Bundy, editor, {\em Automated Deduction -- CADE-12}, volume 814
+  of {\em Lecture Notes in Aritificial Intelligence}, pages 769--773. Springer,
+  1994.
+\newblock Available in the WWW, URL: {\small\tt
+  http://www.uni-koblenz.de/ag-ki/Systems/PROTEIN/}.
+
+\bibitem[\protect\citeauthoryear{Oberschelp}{1989}]{Oberschelp:OrderSortedPred%
+icateLogic:TableauSortedLogics:89}
+Arnold Oberschelp.
+\newblock Order sorted predicate logic.
+\newblock In {\em Sorts and Types in Artificial Intelligence}, volume 418 of
+  {\em Lecture Notes in Aritificial Intelligence}, pages 8--17. Springer, 1989.
+
+\bibitem[\protect\citeauthoryear{Schmitt and
+  Wernecke}{1989}]{Schmitt:Wernecke:TableauSortedLogics:89}
+P.H. Schmitt and W.~Wernecke.
+\newblock Tableau calculus for sorted logics.
+\newblock In {\em Sorts and Types in Artificial Intelligence}, volume 418 of
+  {\em Lecture Notes in Aritificial Intelligence}, pages 49--60. Springer,
+  1989.
+
+\end{thebibliography}

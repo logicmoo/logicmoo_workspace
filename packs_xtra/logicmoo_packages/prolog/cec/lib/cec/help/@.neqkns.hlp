@@ -1,0 +1,8 @@
+
+NEQKNS: a Recursive Path Ordering
+---------------------------------
+
+neqkns is  a precedence  ordering.  That means the  partial order on terms  is 
+induced by  a partial order on operators called the precedence. In contrast to
+KNS, NEQKNS does not allow two operators with the same precedence.
+

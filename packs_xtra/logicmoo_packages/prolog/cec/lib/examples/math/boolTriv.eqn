@@ -1,0 +1,4 @@
+module boolTriv.
+
+cons true : bool.
+cons false : bool.

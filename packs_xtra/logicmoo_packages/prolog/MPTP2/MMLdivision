@@ -1,0 +1,17 @@
+Set Theory: aCARD*,ORDINAL*, FUNCT*, RELAT*,PARTFUN*, ZF_FUND*,ZF_COLLA*,
+General Topology: TOPS_*,TSP_*,YELLOW*, BORSUK*, METRIC*, FINTOPO*,KURATO*,TEX*,TOPGEN*,URYSOHN*,
+Real plane, Euclidian spaces: JORDAN*, JGRAPH*,GOBOARD*,EUCLID*,SPRECT*,TOPREAL*,
+Algebraic Topology: TOPALG*, 
+Linear Algebra: MATRIX* ?, VECTSP*,RLVECT*, 
+Algebra: GROUP*, RING*, LATTICE*, LMOD*, MOD*,HEYTING*,POLYNOM*,ROBBINS*,..., ?
+Universla Algebra: UNIALG*,MS*,OSALG*,CLOSURE*,
+Continuous Lattices: WAYBEL*,...,?
+Geometry: AFF*, PENCIL*,... ?
+Arithmetic/Number theory: INT*,NAT*,REAL*, POLYEQ*, COMPLEX*, FIB_NUM*,QUATERN*,...?
+Calculus (real, complex): FCONT*, FDIFF*, INTEGR*, SINCOS*, SIN_COS*,LIMFUNC*, CF*, COMSEQ*,SEQ*,TAYLOR*,...,?
+Functional analysis: LOPBAN*, LP_SPAC*, LPSPAC*,CSSSPAC*, BHSP*,CONVEX*,RUSUB*,... ?
+Logic,Model theory: ZFMODEL*, FLANG*, LANG*, MODAL*, CONLAT*, CQC*,HILBERT*,SUBSTUT*, ZF_LANG*,ZF_MODEL*,ZFMODEL*,ZF_REFLE*,ZFREFLE*
+Computers, Algorithms: RADIX*, GROEB*, MODELC*,SCM*,SCP*,SFM*,... ?
+Probability and Measure theory: MEASURE*, PROB*,MESFUNC*,...?
+Graph theory, finite structures: GLIB*, FINSEQ*,FINTOPO*,GRAPH*,TREES*,... ?
+Category theory: CAT*, FUNCTOR*, ALTCAT*,ISOCAT*,... ?

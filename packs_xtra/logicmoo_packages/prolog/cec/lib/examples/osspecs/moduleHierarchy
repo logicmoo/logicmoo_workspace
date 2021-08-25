@@ -1,0 +1,14 @@
+['object.poly1',
+'natbase.poly1',
+'intbase.poly1',
+'totalOrder.poly1',
+'orderedIntegers.poly1',
+'intplus.poly1',
+'inttimes.poly1',
+'int.poly1',
+'square.poly1',
+'lists.poly3'
+%,
+% 'qsort.poly3',
+% 'qsortint.poly3'
+].

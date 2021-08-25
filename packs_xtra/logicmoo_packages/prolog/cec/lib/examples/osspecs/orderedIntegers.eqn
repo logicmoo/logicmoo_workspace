@@ -1,0 +1,17 @@
+module orderedIntegers using intbase + totalOrder([(elem,int)],[]).
+
+var [p : posint, k : nat, m : nat] .
+
+(0 =< p) = true .
+(- m =< p) = true .
+(m =< - p) = false .
+(s(m) =< s(k)) = (m =< k) .
+(- k =< - m) = (m =< k).
+
+
+% inductive theorem
+
+(s(m) > s(k)) = (m > k).
+(-k > -m) = (m > k).
+
+% Warning: takes a little while to complete (510 sec. on a Sun 3/260).

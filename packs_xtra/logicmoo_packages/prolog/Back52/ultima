@@ -1,0 +1,27 @@
+
+frase(r05,[he, began, to, read, his, book]).
+
+
+
+fact(infon76, isa, [arg:id18, arg:book], 1, id14, id2).
+fact(infon77, poss, [arg:id18, poss:id3], 1, id14, id2).
+fact(id19, read, [agente:id3, tema_aff:id18], 1, tes(finf1_free_a1), id2).
+fact(infon78, isa, [arg:id19, arg:pr], 1, tes(finf1_free_a1), id2).
+fact(infon79, isa, [arg:id20, arg:tloc], 1, tes(finf1_free_a1), id2).
+fact(infon80, pres, [arg:id20], 1, tes(finf1_free_a1), id2).
+fact(id21, begin, [agente:id3, prop:id19], 1, tes(f3_free_a1), id2).
+fact(infon82, isa, [arg:id21, arg:ev], 1, tes(f3_free_a1), id2).
+fact(infon83, isa, [arg:id22, arg:tloc], 1, tes(f3_free_a1), id2).
+fact(infon84, past, [arg:id22], 1, tes(f3_free_a1), id2).
+
+included(tr(f3_free_a1), id14).
+after(tes(f3_free_a1), tes(f2_free_aq)).
+
+
+
+
+
+
+
+
+

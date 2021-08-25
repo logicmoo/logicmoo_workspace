@@ -1,0 +1,5 @@
+order poly1 for inttimes using poly1 for intplus.
+
+setInterpretation([ x * y : 4 * x * y,
+		    '*-int-int-int'(x,y) : 2 * x * y + 2,
+		    '*-nat-nat-nat'(x,y) : 2 * x * y]).

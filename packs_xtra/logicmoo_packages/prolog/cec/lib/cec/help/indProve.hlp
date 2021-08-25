@@ -1,0 +1,6 @@
+
+"indProve(+Lemma)."
+
+Starts inductive theorem proving for the
+conditional equation or (Prolog-) list of conditional
+equations "Lemma", ->induction.

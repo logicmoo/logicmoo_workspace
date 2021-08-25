@@ -1,0 +1,6 @@
+"cr_prove"
+
+This command takes as argument a clause in list form. This clause may not have
+any negated equality literals. The system will try to prove the theorem to be 
+deducible from the current system of c-rules. This proof process is performed by
+contextual rewriting.

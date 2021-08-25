@@ -1,0 +1,5 @@
+module equalityAndOrder using equality + totalOrder .
+op (>) : (elem * elem -> bool) .
+(x > x) = false .
+(x \== y) = true => (x > y) = (y =< x) .
+(x =< y) = true and  (x > y) = true => true = false .

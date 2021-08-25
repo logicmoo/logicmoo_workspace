@@ -1,0 +1,21 @@
+module(stack).
+
+stack < errStack.
+elem < errElem.
+op push : (errStack * errElem -> errStack).
+op pop  : (errStack -> errStack).
+op top  : (errStack -> errElem).
+cons empty : stack.
+op def  : (errStack -> bool).
+op def  : (errElem -> bool).
+var [s:stack,e:elem].
+
+pop(push(s,e)) = s.
+top(push(s,e)) = e.
+
+def(pop(push(s,e))) = true.
+def(push(s,e)) = true.
+def(top(push(s,e))) = true.
+
+def(s) = true.
+def(e) = true.

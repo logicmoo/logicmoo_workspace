@@ -1,0 +1,26 @@
+How To RUN ACE
+
+1. Edit the filename in load_sigma in ACE_TEST.SWI
+to point to where your copy of the Sigma_Server.P
+file is. Similarly, edit the filenames in 
+
+  load_ontologies_SUMO, to point to the Standard Upper Ontology
+
+  load_ontologies_FINANCE, to point to the Financial Ontology
+
+  load_ontologies_BLOCKS, to point to the Blocks World Ontology.
+
+These ontology files should be in a kbs folder that
+is beneath the folder where sigma_server.P is located.
+
+Use CVS tags to retrieve the proper versions of the SUMO
+and financial ontology (e.g., "Blocks Demo Version 1.0")
+
+1. Load the main ACE file (ACE.SWI)
+into SWI Prolog.
+
+2. Load ACE_TEST.SWI.
+
+3. Run load_sigma_all.
+
+4. Run blocks_suite(yes).

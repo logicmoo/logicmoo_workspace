@@ -1,0 +1,29 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%
+%  FILE      : IndiGolog/Interpreters/FILES.TXT
+%  Time-stamp: <03/02/22 18:35:18 ssardina>
+%
+%  Author      : Sebastian Sardina
+%  DESCRIPTION : File descriptions of directory
+%  email       : ssardina@cs.toronto.edu
+%  WWW         : www.cs.toronto.edu/~ssardina
+%  TYPE CODE   : <no code>
+%       
+%	c) Sebastian Sardina       Many rights reserved		
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+-----------------------------------------------------------------------------
+	In this directory there are different high-level interpreters
+-----------------------------------------------------------------------------
+
+indigolog.pl			Top-level executor (online execution)
+transfinal.pl	       	Implementation for TRANS and FINAL
+			This file is then spit into many transfinal-X.pl for each sublanguage or extension
+wscplan.pl     		Link to the WSCP planner
+
+
+-----------------------------------------------------------------------------
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% EOF: IndiGolog/Interpreters/FILES.TXT
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+

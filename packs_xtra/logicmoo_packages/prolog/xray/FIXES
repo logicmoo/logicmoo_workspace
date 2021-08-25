@@ -1,0 +1,10 @@
+Started on Sat Mar 14, 1998 (a bit late)
+
+- Mar 14, 1998 (TS): fixed bug in model.pl: append_matrix
+                     implemented modelmonitor.pl
+- Mar 15, 1998 (TS): reimplemented proof_printing option
+		     created file xray_config.pl
+                     renamed defaults.pl into xray.pl
+		     added compile time flag: compile_complete_search/0
+                     Remark: Backtracking is possible by calling aquery(P,_,...),
+				where P is the proof to be backtracked upon.

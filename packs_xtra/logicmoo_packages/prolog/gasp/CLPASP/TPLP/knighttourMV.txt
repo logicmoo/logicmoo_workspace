@@ -1,0 +1,85 @@
+%%% %%% %%% %%% %%% %%% %%% %%%
+%%% March 2008. Coded by DFP
+%%% %%% %%% %%% %%% %%% %%% %%%
+%%% Knight Tour (famous) problem
+%%% size(N) => chessboard of size N x N
+%%% Find a Knight tour, starting from (1,1)
+%%% Each action visit a cell. We ask for the
+%%% existence of a self avoiding walk of length M = NxN-1
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+size(3).
+starting(1,1).
+
+%%% N = 4. :-sicsplan(14). YES in ~0, 15 NO.
+%%%          Try with starting(2,2)
+%%% N = 5. :-sicsplan(24). YES in ~30m
+%%% N = 6. :-sicsplan(35).
+
+position(X,Y) :-
+   size(N), interval(X,1,N), interval(Y,1,N).
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+fluent(visited(X,Y),0,1) :-
+     position(X,Y).
+fluent(stay_X,1,N) :-
+     size(N).
+fluent(stay_Y,1,N) :-
+     size(N).
+
+%%%%%%%%%%%%%%%%
+
+action(move(X1,Y1,X2,Y2)):-
+   position(X1,Y1),position(X2,Y2),
+   3 =:= abs(X1-X2) + abs(Y1-Y2),
+   abs(X1-X2) < 3,
+   abs(Y1-Y2) < 3.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+executable(move(X1,Y1,X2,Y2),
+         [stay_X eq X1, stay_Y eq Y1, visited(X2,Y2) eq 0]) :-
+        action(move(X1,Y1,X2,Y2)).
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+causes(move(X1,Y1,X2,Y2), stay_X eq X2, []):-
+        action(move(X1,Y1,X2,Y2)).
+causes(move(X1,Y1,X2,Y2), stay_Y eq Y2, []):-
+        action(move(X1,Y1,X2,Y2)).
+causes(move(X1,Y1,X2,Y2), visited(X2,Y2) eq 1, []):-
+        action(move(X1,Y1,X2,Y2)).
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+:-dynamic(caused/2).
+
+%caused([stay_X eq X, stay_Y eq Y], visited(X,Y) eq 1, []):-
+%        position(X,Y).
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+initially(visited(X,Y) eq 1) :-
+    position(X,Y),
+    starting(X,Y).
+initially(visited(X,Y) eq 0) :-
+    position(X,Y),
+    \+ starting(X,Y).
+initially(stay_X eq X) :-
+    starting(X,_Y).
+initially(stay_Y eq Y) :-
+    starting(_X,Y).
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+goal(0 eq 0). %%% it does not matter...
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+action_cost(move(1,1,3,2),500). %% removes symmetries
+plan_cost(plan leq M) :- size(N), M is N*N-1.
+%time_constraint(visited(X,Y)@(J) geq visited(X,Y)@(I)) :-
+%    position(X,Y), interval(I,1,5), J is I + 1.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

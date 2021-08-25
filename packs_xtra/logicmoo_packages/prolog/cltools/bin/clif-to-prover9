@@ -1,0 +1,35 @@
+#!/usr/bin/swipl -L0 -G0  -T0 -q -g main -t halt -s
+
+:- use_module(library('cltools/cl')).
+:- use_module(library('cltools/cl_io')).
+:- use_module(library('cltools/clif_parser')).
+:- use_module(library('cltools/p9_writer')).
+
+main :-
+        current_prolog_flag(argv, Arguments),
+        append(_SytemArgs, [--|Args], Arguments), !,
+        parse_args(Args,Opts),
+        findall(P,member(rm(P),Opts),Rm),
+        forall(member(rest(F),Opts),
+               (           parse_cltext(F,_,Text,[]),
+                           remove_matching_sentences(Rm,Text,Text2),
+                           serialize_cltext(_,prover9,Text2,Opts))).
+
+parse_args([],[]).
+parse_args(Args,[Opt|Opts]) :-
+        parse_arg(Args,Rest,Opt),
+        !,
+        parse_args(Rest,Opts).
+parse_args([A|Args],[rest(A)|Opts]) :-
+        parse_args(Args,Opts).
+
+parse_arg(['-rm',PA|L],L,rm(Term)) :-
+        concat_atom([P,A],'/',PA),
+        atom_number(A,A2),
+        functor(Term,P,A2).
+parse_arg(['-t',T|L],L,test(T)).
+parse_arg(['--all-tests'|L],L,test(_)).
+
+
+
+

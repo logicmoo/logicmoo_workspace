@@ -1,0 +1,7 @@
+ 
+"prove(+ConditionalEquation)."
+
+proves or disproves the conditional equation by rewriting the
+conclusion to normalforms.
+The method is incomplete for nonempty conditions
+and/or noncanonical systems.

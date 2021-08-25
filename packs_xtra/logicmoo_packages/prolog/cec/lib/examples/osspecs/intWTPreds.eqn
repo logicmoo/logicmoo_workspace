@@ -1,0 +1,111 @@
+module intWTPreds.
+% Effect of translating order-sorted specifications a la
+% Smolka et al. into single-sorted
+% Each sort is considered a subset of a single domain d.
+% Subsets are represented as functions from d to bool
+
+op nzNat : (d -> bool).		% sort nzNat
+op nat : (d -> bool).		% sort nat
+op int : (d -> bool).		% sort int
+op nzInt : (d -> bool). 	% sort nzInt
+op boolean : (d -> bool).	% sort boolean; not to be mixed-up with the
+cons 0 : d.				% 0 : nat
+op s : (d -> d).			% s : nat -> nzNat
+op '-' : (d -> d).			
+op < : (d*d ->d).			% < : int*int -> boolean
+cons tt : d.				% tt : boolean
+cons ff : d.				% ff : boolean
+				% meta-sort bool to represent truth-values
+
+
+% subsort declarations  
+
+nzNat(d) = true =>   nat(d)=true.	% nzNat < nat
+nat(d) = true =>  int(d)=true.		% nat < int
+nzNat(d) = true =>  nzInt(d)=true.	% nzNat < znInt
+nzInt(d) = true =>  int(d)=true.	% nzInt < int
+
+% operator declarations
+
+nat(0) = true.
+
+nat(d)=true => nzNat(s(d))=true.
+
+nat(d)=true => int(-(d))=true.		% - : nat -> int	(*)
+nzNat(d)=true => nzInt(-(d))=true.	% - : nzNat -> nzInt	(*)
+int(d)=true => int(-(d))=true.		% - : int -> int
+nzInt(d)=true => nzInt(-(d))=true.	% - : nzInt -> nzInt
+
+
+int(d1)=true and int(d2)=true => boolean((d1 < d2))=true.
+
+boolean(tt)=true.
+
+boolean(ff)=true.
+
+
+% function definitions
+
+-(0) = 0.       
+int(i)=true => -(-i) = i.
+
+nzNat(n)=true => (0 < n) = tt.
+nzNat(n)=true and nat(m)=true => (-m < n) = tt.
+nat(k)=true and nat(m)=true => (m < -k) = ff.
+nat(k)=true and nat(m)=true => (s(m) < s(k)) = (m < k).
+nat(k)=true and nat(m)=true => (m<k) = ((-k) < (-m)).
+
+/* (One possible) result after completion 
+   ======================================
+
+
+Rules
+
+  1    nzInt(d) = true => int(d) -> true
+  2    nzNat(d) = true => nzInt(d) -> true
+  3    nat(d) = true => int(d) -> true
+  4    nzNat(d) = true => nat(d) -> true
+  5    -(0) -> 0
+  6    boolean(ff) -> true
+  7    boolean(tt) -> true
+  8    nat(0) -> true
+  9    int(i) = true => - (-i) -> i
+ 10    nzNat(n) = true => 0<n -> tt
+ 11    nzInt(d) = true => nzInt(-d) -> true
+ 12    int(d) = true => int(-d) -> true
+ 13    nat(d) = true => nzNat(s(d)) -> true
+ 14    nat(k) = true and nat(m) = true => m< -k -> ff
+ 15    nzNat(n) = true and nat(m) = true => -m<n -> tt
+ 16    int(d1) = true and int(d2) = true => boolean(d1<d2) -> true
+ 17    nat(k) = true and nat(m) = true => -k< -m -> m<k
+ 18    nat(k) = true and nat(m) = true => s(m)<s(k) -> m<k
+ 19    nat(m) = true => m<0 -> ff	% new
+ 20    nat(k) = true => -k<0 -> 0<k	% new
+ 	% the axioms (*) above have been eliminated
+ 
+Nonoperational equations 
+	(irrelevant for the equational theory; generated from superposition
+	 of axioms during completion; some of these are nonreductive,
+         others are reductive, but still irrelevant )
+ 
+  1    nzInt(-i) = true and int(i) = true => nzInt(i) = true
+  2    nzNat(0) = true => tt = ff
+  3    nat(-i) = true and int(i) = true and nat(m) = true => m<i = ff
+  4    nat(-i) = true and int(i) = true and nzNat(n) = true => i<n = tt
+  5    nzNat(-k) = true and nat(k) = true => tt = ff
+  6    nat(-i) = true and int(i) = true => 0< -i = i<0
+  7    nat(-i) = true and int(i) = true and nat(k) = true => -k<i = -i<k
+  8    nat(-i) = true and int(i) = true and nat(m) = true => i< -m = m< -i
+  9    nat(-i) = true and nzNat(i) = true => tt = ff
+ 10    nzNat(-i) = true and int(i) = true => nzInt(i) = true
+ 11    nzNat(-i) = true and nzNat(n) = true and nzInt(i) = true => i<n = tt
+ 12    nzNat(-i) = true and nat(m) = true and nzInt(i) = true => m<i = ff
+ 13    nzNat(-i) = true and nzInt(i) = true => i<0 = tt
+ 14    nzNat(-i) = true and int(i) = true and nat(m) = true => i< -m = m< -i
+ 15    nzNat(-i) = true and int(i) = true and nat(k) = true => -k<i = -i<k
+
+
+67 superpositions have been computed.
+Time used: 136.586  sec.  (17.8.89)
+
+*/

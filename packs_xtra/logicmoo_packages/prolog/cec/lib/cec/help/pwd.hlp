@@ -1,0 +1,4 @@
+ 
+"pwd."
+
+prints out the current path for I/O-related commands.

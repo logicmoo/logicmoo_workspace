@@ -1,0 +1,33 @@
+%% (c) 1992, 1993 by KIT-BACK, TU Berlin. All rights reserved.
+
+%% MicroBack operators
+op(700,xfx,[':=',':<','<<<','===','::','?','==>','<=<','**>','*?']).
+op(500,xfy,['and','androle']).
+op(300,xfy,'comp').
+
+%% BACK V5 operators
+op(800,xfy,['?:','?<','=>']).
+op(600,xf,['noibox']).
+op(500,xfy,['.']).
+op(800,xfy,['atell','ttellprim','ttelldef']).
+
+translate(X androle anyrole,X and anyrole).
+translate(X androle Y,X and Y and anyrole).
+translate((X,Y) ? Z,backask(X ?: fills(Z:Y))).
+translate(X ? Y,backask(X ?: Y)).
+translate(X === Y,[backask(X ?< Y) noibox,backask(Y ?< X) noibox]).
+translate(X <<< Y, backask(X ?< Y) noibox).
+
+translate(X :: Y,backtell(X atell Y)).
+translate((X,Y) atell Z,X atell fills(Z:Y)).
+translate(X :< Y,backtell(X ttellprim Y)).
+translate(X := Y,backtell(X ttelldef Y)).
+
+translate(write(X),true).
+translate(X ==> Y,backtell(X => Y)).
+translate(X <=< Y,backask(X ?< Y)).
+
+translate(X comp Y,X.Y).
+
+translate(getall(X),backretrieve(retrgetall(X))).
+translate(describe(X),backretrieve(retrdescribe(X))).

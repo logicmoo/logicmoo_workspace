@@ -1,0 +1,573 @@
+\section{Listing of all CEC commands}
+\label{commands}
+
+Remember that commands must be followed by a full stop `\user{.}'.\bigskip
+
+\begin{command}[\comName{??}\nt{space}]
+lists the available CEC commands and refers to the \comRef{?}-command for further
+informations.
+\end{command}
+
+\begin{command}[\com{??}{\comArg{Keyword}}]
+Lists only topics which contain \comArg{Keyword} as a substring.
+\comArg{Keyword} must be a Prolog atom, e.g.\ if it contains any special
+characters it must be enclosed in single quotes.
+\end{command}
+
+\begin{command}[\com{?}{\comArg{Function}}]
+prints a short description for the CEC command \comArg{Function}. 
+\comRef{?} is specified as prefix operator.
+\end{command}
+
+\begin{command}[\com{applyRule}{\comArg{Term}\ad\comArg{RuleIndex}\ad\comArg{ReducedTerm}}]
+attempts to apply the rule with the given index once to the given term.
+Different redexes are tried upon backtracking. If successful, the reduced
+term is computed.
+\end{command}
+
+\begin{command}[\comName{c}]
+calls the Knuth-Bendix completion procedure. This executes a fixed strategy
+of applications of the ``completion inference'' predicates \comRef{orderEq}, 
+\comRef{cp}, \comRef{superpose}, \comRef{redRule}, \comRef{redEq} 
+and \comRef{redNOpEq}.
+A manual guidance of the process is possible by explicitly calling these
+predicates. The \comRef{repeat} predicate can be used to execute a predicate 
+repeatedly until no more instances of it can be applied. An arbitrary
+interleaving of manual and automatic completion is supported. Also,
+completion --- manual or automatic --- can always safely be restarted after 
+any abortion caused by answering ``\user{A.}'' to some query of the system.
+The resulting system is not necessarily a reduced system. In the conditional
+case it is anyway not clear what a reduced equation is. On the other hand,
+a user may always call any of the \comRef{red}-predicates after completion
+to force reduction of the axioms. This may, however, lead to an incomplete
+system.
+\end{command}
+
+\begin{command}[cResume]
+restarts the completion procedure after the completion process was 
+aborted by answering ``\user{A.}'' to some query of the system.
+\end{command}
+
+\begin{command}[\com{cd}{\comArg{Path}}]
+Changes, as the cd command in UNIX, the directory for all following
+file-related CEC-commands. It is declared as prefix operator.\\
+The path is given in form of a Prolog-atom, hence don't forget the
+quotes, if the path contains `\kw{/}', `\kw{.}', and `\kw{..}' and 
+other special characters.
+
+\comRef{cd} does not implement file name generation using patterns.
+Hence, `\kw{*}', `\kw{?}' and '\kw{[}' do not receive any special treatment.\\
+Without an argument \comRef{cd} resets the current directory to the one in
+which the CEC-system was invoked initially.
+\end{command}
+
+
+\begin{command}[\com{combineSpecs}{\comArg{StateName1}\ad\comArg{StateName2}\ad\comArg{CombinedSpec}}]
+The specifications  stored (\refArrow \comRef{store}) 
+in specification variables \comArg{StateName1} and \comArg{StateName2}
+will  be combined, if possible, by forming
+the union of the signature, axioms and pragmas.
+If \comArg{CombinedSpec} $\neq$ \cec{user}, the result will be stored in
+\comArg{CombinedSpec}, and the current specification will not be affected.
+Otherwise, the combined specification becomes the new current
+specification.
+\end{command}
+
+\begin{command}[\comName{compile}]
+compiles the current set of rewrite rules into \comRef{compiled} Prolog.
+The compiled rules are used when calling \comRef{eval}. 
+Later changes to the set of rewrite rules
+have no effect on \comRef{eval} unless a new call to \comRef{compile} is
+performed. The predicate \comRef{norm} always uses the current set of
+rewrite rules.
+\end{command}
+ 
+\begin{command}[\com{compileRules}{\comArg{File}}]
+compiles current set of rewrite rules to Prolog and writes the Prolog clauses into
+the file \comArg{File}\suffix{.rules}. \comArg{File}\suffix{.rules} may later be consulted or compiled 
+(cf. \comRef{loadRules}) to produce a new definition of \comRef{eval}, cf. \comRef{compile}.
+\end{command}
+ 
+\begin{command}[\com{cp}{\comArg{RuleIndex1}\ad\comArg{RuleIndex2}}]
+computes all critical pairs of rule \comArg{RuleIndex1} on rule \comArg{RuleIndex2}. 
+The predicate fails, if no nontrivial critical pair can be found.
+\end{command}
+
+\begin{command}[\comName{constructor}]
+asks the user to enter an operator and declares this operator to be
+a constructor, if this is consistent with the current specification.
+\end{command}
+
+% \newpage
+
+\begin{command}[\com{delete}{\comArg{ModuleName}\ad\comArg{OrderName}}]
+deletes the specification variable named
+\comArg{ModuleName}\kw{.}\comArg{OrderName}. If \comRef{delete} is used only
+with argument \comRef{ModuleName}, the specification stored under this name is
+deleted.
+\end{command}
+
+\begin{command}[\com{enrich}{\comArg{ModuleName}\ad\comArg{OrderName}}]
+reads in additional parts of a specification from the files 
+\comArg{ModuleName}\suffix{.eqn} and \comArg{ModuleName}\suffix{.}\comArg{OrderName}\suffix{.eqn}
+after saving the current state for later checks for consistency of the enrichment. 
+These additional parts must form an enrichment (cf. chapter~\ref{enrichment}).
+\comArg{ModuleName} and \comArg{OrderName} can be arbitrary Prolog atoms.
+Leaving out \comArg{OrderName} or even both arguments yields the same
+effect as for \comRef{in}. 
+%Specify \comArg{ModuleName} = \kw{user} if input from terminal is wanted.
+\end{command}
+ 
+
+\begin{command}[\comName{equal}]
+asks the user to enter a list of the following form: 
+\begin{center}
+\kw{[}\kw{[}\comArg{a}\kw{,}\comArg{b}\kw{,}\comArg{c}\kw{,} \ldots \kw{],}
+\kw{[}\comArg{g}\kw{,}\comArg{h}\kw{,}\comArg{i}\kw{,} \ldots \kw{],} \ldots \kw{]}
+\end{center}
+and declares operators to have equivalent precedences 
+--- only allowed for \kw{kns}.\\
+Meaning: \comArg{a} = \comArg{b} = \comArg{c} = \ldots and \comArg{g} = \comArg{h} = \comArg{i} = \ldots.
+\end{command}
+
+
+\begin{command}[\com{eval}{\comArg{Expression}}]
+computes the normalform of a expression using the most recently compiled set of rewrite
+rules. \comRef{eval} fails, if \comRef{compile} has not been called yet, cf. \comRef{compile}.
+The trace mechanism applies also to \comRef{eval}.
+\end{command}
+
+\begin{command}[\comName{forget}]
+forgets the complete undo history.
+\end{command}
+
+
+\begin{command}[\com{freeze}{\comArg{ModuleName}\ad\comArg{OrderName}}]
+writes the state of the current specification to the file
+\comArg{ModuleName}.\comArg{OrderName}\suffix{.q2.0} and
+updates the content of the specification variable
+\comArg{ModuleName}.\comArg{OrderName}.
+If freeze is used without \comArg{OrderName} the state is just written
+to \comArg{ModuleName}\suffix{.q2.0}. 
+If freeze is used without any argument the module name of the current 
+specification is used for \comArg{ModuleName} and the current order name
+is used for \comArg{OrderName}. In the last two cases the specification 
+variable determined by the current module name and the current order name
+will be updated (If current order name is \kw{noorder} the specification
+variable associated with the current module name and the current termination
+ordering will be updated too).
+The specification may later be reused by thawing it from this file, cf. the 
+\comRef{thaw}-command.
+The state of CEC remains unchanged by this operation.
+\end{command}
+
+ 
+\begin{command}[\comName{greater}]
+asks the user to enter a list of the following form: 
+\begin{center}
+\kw{[}\kw{[}\comArg{a}\kw{,}\comArg{b}\kw{,}\comArg{c}\kw{,} \ldots \kw{],}
+\kw{[}\comArg{g}\kw{,}\comArg{h}\kw{,}\comArg{i}\kw{,} \ldots \kw{],} \ldots \kw{]}
+\end{center}
+and adds ordered pairs of operators to the precedence.\\
+Meaning: \comArg{a} $>$ \comArg{b} $>$ \comArg{c} $>$ \ldots and 
+\comArg{g} $>$ \comArg{h} $>$ \comArg{i} $>$ \ldots
+\end{command}
+
+
+\begin{command}[\comName{halt}]
+ends a CEC session.
+\end{command}
+
+
+\begin{command}[\com{in}{\comArg{ModuleName}\ad\comArg{OrderName}}]
+reads in a specification from the file \comArg{ModuleName}\suffix{.eqn}
+and the associated order specification from the file
+\comArg{ModuleName}\suffix{.}\comArg{OrderName}\suffix{.ord}.
+As log-files are ``enriched'' order specifications, any log-file can
+be used as an order file.
+If not stated otherwise these files are assumed to be in the current 
+directory. Before the specification is read in, CEC will be re-initialized, 
+e.g. the current specification will be deleted. Specifications saved in 
+variables will not be affected. \comArg{ModuleName} and \comArg{OrderName}
+must be Prolog atoms. \comArg{OrderName} becomes the
+current order name for the specification.\\
+But \com{in}{\comArg{ModuleName}\ad\cec{noorder}}
+has the effect that no order specification is consulted.
+The termination ordering for the new
+specification will be initialized to a default value 
+(\kw{neqkns} or \kw{poly1}, depending on the presence of AC-operators).
+Using \comRef{in} only with the parameter \comArg{ModuleName} yields the same
+effect. \comArg{ModuleName} = \kw{user} expects input from terminal.
+(For Quintus-Prolog2.x under EMACS: \comRef{in} without
+parameter reads from \cec{Scratch.pl}).
+\end{command}
+
+
+\begin{command}[\comName{interpretation}]
+displays all operator interpretations, provided \kw{poly}\nt{N} is the chosen termination
+ordering and asks the user if he wants to change any. If so all rules will be turned 
+back into equations.
+\end{command}
+
+
+\begin{command}[\com{load}{\comArg{ModuleName}\ad\comArg{OrderName}}]
+loads the system which is currently the value of the variable
+\comArg{ModuleName}\kw{.}\comArg{OrderName}, cf. the \comRef{store}-command. 
+If \comRef{load} is used only with argument \comArg{ModuleName}, this actual parameter 
+completely specifies the name of the variable.
+Specification variables remain unchanged.
+\comArg{StateName} = \cec{'$initial'} re-initializes the system.
+\end{command}
+
+
+\begin{command}[\com{loadLog}{\comArg{ModuleName}\ad\comArg{OrderName}}]
+reads in the file \comArg{ModuleName}\suffix{.}\comArg{OrderName}\suffix{.@.ord}. 
+%This file contains all the answer given during
+%the completion process and the final termination ordering saved using
+%the \comRef{saveLog}-command. 
+If the completion process is started again, % all
+questions whose answers are already contained in 
+\comArg{ModuleName}\suffix{.}\comArg{OrderName}\suffix{.@.ord} 
+will be suppressed. 
+If \comRef{loadLog} is used without the argument \comArg{OrderName} the 
+information will be taken from the file \comArg{ModuleName}\suffix{.@.ord}.
+If \comRef{loadLog} is used without any argument
+the name of the current specification together with the current order name
+will be used.
+%The current order name is the
+%order name of the order specification for the current specification
+%or the current termination ordering if no order specification was used.
+\end{command}
+
+\begin{command}[\com{loadOrder}{\comArg{ModuleName}\ad\comArg{OrderName}}]
+reads in the file \comArg{ModuleName}\suffix{.}\comArg{OrderName}\suffix{.ord}. 
+This file should contain informations concerning the termination ordering.
+If \comRef{loadLog} is used without the argument \comArg{OrderName} the 
+information will be taken from the file \comArg{ModuleName}\suffix{.ord}.
+If \comRef{loadLog} is used without any argument
+the name of the current specification together with the current order name
+will be used.
+\end{command}
+
+\begin{command}[\com{loadRules}{\comArg{File}}]
+compiles the set of rewrite rules which has been stored previously in the file
+\comArg{File}\suffix{.rules}, cf. \comRef{compileRules}.
+\end{command}
+
+\begin{command}[\comName{moduleName}]
+displays the name of the current specification.
+\end{command}
+
+
+\begin{command}[\com{nopEq}{\comArg{EquationIndex}}]
+declares equation with index \comArg{EquationIndex} as nonoperational. 
+The predicate fails if equation \comArg{EquationIndex} does not exist 
+or if the equation is trivial.
+\end{command}
+
+\begin{command}[\com{norm}{\comArg{Expression}}]
+normalizes the input expression \comArg{Expression}.
+See also \comRef{eval}
+\end{command}
+
+
+\begin{command}[\comName{operators}]
+displays all precedences and stati in \kw{kns} or \kw{neqkns} or
+all polynomial interpretations in \kw{poly}\nt{N} respectively.
+\end{command}
+
+\begin{command}[\comName{order}]
+indicates the current termination ordering and asks the user whether he wants to 
+change it.
+If a new ordering is selected and if the previous termination
+ordering is incompatible with the new ordering, all rules are turned back into
+equations and the completion must be repeated from the beginning.
+\end{command}
+
+\begin{command}[\com{orderEq}{\comArg{EquationIndex}}]
+orients equation with index \comArg{EquationIndex}. The predicate fails if equation 
+\comArg{EquationIndex} does
+not exist or if the equation cannot be oriented or turned into a nonoperational
+equation or if the equation is eliminated during reduction.
+\end{command}
+
+\begin{command}[\comName{orderName}]
+displays the name of the order specification associated with
+the current specification.
+\end{command}
+
+\begin{command}[\com{polGreater}{\comArg{Interpretation1}\ad\comArg{Interpretation2}}]
+Only useful with ordering \kw{poly}\nt{N}.
+If it succeeds, \comArg{Interpretation1} $>$ \comArg{Interpretation2} holds true
+(if $>$ is the ordering on tuples of polynomials).
+Interpretations (i.e. tupels of polynomials) of terms can be generated
+via \comRef{polynomial}.
+\end{command}
+
+\begin{command}[\com{polynomial}{\comArg{Term}\ad\comArg{Interpretation}}]
+yields the polynomial interpretation of \comArg{Term}. It
+fails, if the ordering is not \kw{poly}\nt{N}. 
+If there are operators in \comArg{Term},
+for which no polynomial interpretation is known, the user is asked for
+such an interpretation (and the given interpretation is stored).
+\end{command}
+
+
+\begin{command}[\comName{preregular}]
+succeeds if the current (order-sorted) signature is preregular,
+and fails otherwise.
+The preregularity condition is the regularity of 
+Smolka/Nutt/Goguen/Meseguer 87 (\refArrow \cite{SNGM87}).
+\end{command}
+
+
+\begin{command}[\com{prove}{\comArg{ConditionalEquation}}]
+proves or disproves the conditional equation \comArg{ConditionalEquation} by 
+rewriting the conclusion to normalforms, using the equations in the 
+condition as additional rewrite rules. The method is incomplete for
+nonempty conditions and/or noncanonical systems.
+\end{command}
+
+\begin{command}[\comName{pwd}]
+prints out the current path.
+\end{command}
+
+\begin{command}[\com{redEq}{\comArg{EquationIndex}}]
+reduces equation with index \comArg{EquationIndex}. 
+The predicate fails if equation \comArg{EquationIndex} does
+not exist or if the equation cannot be reduced or if the equation is eliminated
+during reduction.
+\end{command}
+
+\begin{command}[\com{redNopEq}{\comArg{NopEqIndex}}]
+reduces nonoperational equation with index \comArg{NopEqIndex}. 
+The predicate fails if equation
+\comArg{NopEqIndex} does not exist or if the equation cannot be reduced or if the 
+equation is eliminated during reduction.
+\end{command}
+ 
+\begin{command}[\com{redRule}{\comArg{RuleIndex}}]
+reduces rule with index \comArg{RuleIndex}. The predicate fails if rule 
+\comArg{RuleIndex} does not
+exist or if the rule cannot be reduced or if the rule is eliminated during 
+reduction.
+\end{command}
+
+\begin{command}[\comName{regular}]
+succeeds if the current (order-sorted) signature is regular,
+and fails otherwise.
+The regularity condition is the one of Goguen/Meseguer 87
+(\refArrow \cite{GM87}).
+\end{command}
+
+\begin{command}[\com{renameSpec}{\kw{[}\comArg{OldSort1} \kw{<-} \comArg{NewSort1}, \ldots , 
+\comArg{OldSortN} \kw{<-} \comArg{NewSortN},\\ \hspace*{6.2em}
+\comArg{OldOperator1} \kw{<-} \comArg{NewOperator1}, \ldots , 
+\comArg{OldOperatorM} \kw{<-} \comArg{NewOperatorM}\/\kw{]}}]
+renames the current specification according to the given lists of sort associations
+and operator associations. Only injective renamings of operators are allowed.
+Sorts may be renamed arbitrarily. Sorts and operators which are not mentioned remain 
+unchanged.
+\end{command}
+
+\begin{command}[\com{repeat}{\comArg{Predicate}}]
+causes repeated backtracking of \comArg{Predicate} until \comArg{Predicate} fails.
+\end{command}
+ 
+\begin{command}[\com{resetOrient}{\comArg{Index}}]
+turns the rule Index back into an equation. If \comRef{resetOrient}
+is used without an argument, all rules are turned back into equations.
+\end{command}
+
+
+\begin{command}[\com{restoreCEC}{\comArg{FileName}}]
+restores the CEC state (prolog state) in \comArg{FileName}. 
+\end{command}
+
+\begin{command}[\com{saveCEC}{\comArg{FileName}}]
+saves the whole CEC state (prolog state) in \comArg{FileName}. The CEC state
+can be used by simply invoking \comArg{FileName} instead of CEC or 
+using the \comRef{restoreCEC}-command.
+If \comRef{saveCEC} is used without argument, the current CEC-name,
+i.e. the actual parameter for the last use of the \comRef{saveCEC}-command,
+is used for \comArg{FileName}. If no current CEC-name is known, the name
+\kw{cec} will be taken (so be careful).
+\end{command}
+
+\begin{command}[\comName{setInterpretation}]
+asks the user to enter a list of the following form:
+\begin{center}
+\kw{[}\comArg{Operator(Arguments)} : \comArg{Interpretation}\kw{,} \ldots\kw{]}
+\end{center}
+Provided \kw{poly}\nt{N} is the current termination ordering a new interpretation
+\comArg{Interpretation} for an operator \comArg{Operator} is added to the current state.
+The interpretation
+may be a polynomial over the variables in \comArg{Arguments} (if
+N = 1) or a list with N polynomials.
+The new interpretation must be compatible
+with all C- or AC-declarations in the current state.
+\end{command}
+
+ 
+\begin{command}[\comName{show}]
+shows the sets of equations, rules and nonoperational equations of the 
+current specification in order-sorted notation.
+(Usually there exists more than one many-sorted representation of
+an order-sorted axiom.)
+
+Rules \condRule{C}{\rewRule{l}{r}} which are marked by an asterix 
+\kw{*} have an associated auxiliary rule of form
+\condRule{C}{\rewRule{l+X}{r+X}}
+where $+$ is the AC-operator on top of $l$ and $X$ is a new
+variable of appropriate sort.
+Auxiliary rules are automatically generated when needed during
+completion modulo AC.
+\end{command}
+ 
+\begin{command}[\com{show}{\comArg{SpecificationVariable}}]
+shows the sets of equations, rules and nonoperational equations 
+of the specification which is stored in the variable 
+\comArg{SpecificationVariable}.
+\end{command}
+
+ 
+\begin{command}[\comName{showCStatus}]
+displays the current completion status.
+\end{command}
+
+\begin{command}[\comName{showms}]
+shows the set of equations, rules and nonoperational equations of the 
+current specification in many-sorted notation.
+\end{command}
+ 
+\begin{command}[\comName{sig}]
+displays the signature of the current specification.
+\end{command}
+
+\begin{command}[\com{solve}{\comArg{Goal}\ad\comArg{Solution}}]
+tries to solve \comArg{Goal} and to return an answer-substitution if
+successful. The set of all answer-substitutions can be obtained by
+backtracking (enter `\user{;}'\nt{return} at the user level). Enter
+\nt{return}, if no more solutions are wanted.
+\end{command}
+
+\begin{command}[\com{sp}{\comArg{Index}\ad\comArg{NopEqIndex}}]
+same as \com{superpose}{\comArg{Index}\ad\comArg{NopEqIndex}\ad\kw{left}\ad\kw{condition(1)}}.
+\end{command}
+
+\begin{command}[\comName{specifications}]
+lists the module and order names of all specifications that are currently
+saved in variables.
+\end{command}
+
+\begin{command}[\comName{status}]
+asks the user to enter a list of the following form:
+\begin{center}
+\kw{[}\comArg{Operator} : \comArg{Status}\kw{,} \ldots \kw{]}
+\end{center}
+and declares that the operators should have the desired stati provided \kw{kns}
+or \kw{neqkns}
+is the type of the current termination ordering. \comArg{Status} can be
+\kw{lr} for {\em left-to-right},
+\kw{rl} for {\em right-to-left} or
+\kw{ms} for {\em multiset}.
+\end{command}
+
+\begin{command}[\com{store}{\comArg{ModuleName}\ad\comArg{OrderName}}]
+saves the current specification in a specification variable named
+\comArg{ModuleName}\kw{.}\comArg{OrderName}. If \comRef{store} is used only with
+argument \comArg{ModuleName} the specification is saved in a variable with this name,
+if \comRef{store} is used without any argument, the name is created as 
+\nt{moduleName}\kw{.}\nt{orderName}, with names as they are currently associated 
+with the specification. For later restoring 
+use the command \comArg{load}. The system remains unchanged except for this variable 
+containing afterwards the current specification.
+\end{command}
+
+\begin{command}[\com{storeLog}{\comArg{ModuleName}\ad\comArg{OrderName}}]
+creates the log-file.
+The name of the log-file is 
+\comArg{ModuleName}\suffix{.}\comArg{OrderName}\suffix{.@.ord}.
+It has the format of an order specification file which can be used
+with the \comRef{in}-command or the \comRef{loadLog}-command. 
+If \comRef{storeLog} is used only with argument \comArg{ModuleName}
+the log-file is named \comArg{ModuleName}\suffix{.@.ord},
+if \comRef{storeLog} is used without any argument, the file is
+created as \nt{moduleName}\suffix{.}\nt{orderName}\suffix{.@.ord}.
+\end{command}
+
+\begin{command}[\com{storeOrder}{\comArg{ModuleName}\ad\comArg{OrderName}}]
+creates a file named
+\comArg{ModuleName}\suffix{.}\comArg{OrderName}\suffix{.ord}.
+It has the format of an order specification file which can be used
+with the \comRef{in}-command or the \comRef{loadOrder}-command. 
+If \comRef{storeOrder} is used only with argument \comArg{ModuleName},
+the name \comArg{ModuleName}\suffix{.ord} is used.
+If the command \comRef{storeOrder} is used without any argument, the file created
+is named \nt{moduleName}\suffix{.}\nt{orderName}\suffix{.ord}.
+\end{command}
+
+\begin{command}[\com{superpose}{\comArg{RuleIndex}\ad\comArg{NopEqIndex}\ad\comArg{Literal}\ad\comArg{LiteralSide}}]
+superposes the left-side of the rule \comArg{RuleIndex} on the 
+\comArg{LiteralSide}-side of the
+literal \comArg{Literal} of the nonoperational equation with index 
+\comArg{NopEqIndex}.
+It fails if no nontrivial superpositions can be found, if
+any of the two axioms can be reduced, or if
+superpositions of the specified type need not be computed to achieve 
+fairness.\\
+To denote the \comArg{LiteralSide} \kw{left} and \kw{right} are used. 
+\comArg{NopEqIndex} must be the index of a nonoperational equation.
+Considering superposition with
+\condEq{L_1\condAnd\ldots\condAnd L_n}{L}, 
+we use \kw{conclusion} to denote $L$, and \com{condition}{\comArg{$i$}}
+to denote $L_i$ in \comArg{Literal}.
+\end{command}
+
+\begin{command}[\com{superpose}{\kw{reflexivity}\ad\comArg{NopEqIndex}\ad
+\comArg{Literal}\ad\_}]
+superposes \rewRule{x = x}{true} on the literal \comArg{Literal} of the 
+nonoperational equation with index \comArg{NopEqIndex}.
+It fails if no nontrivial superpositions can be found, if
+any of the two axioms can be reduced, or if
+superpositions of the specified type need not be computed to achieve 
+fairness.
+\end{command}
+
+\begin{command}[\com{'superpose!'}{\comArg{RuleIndex}\ad\comArg{NopEqIndex}\ad\comArg{Literal}\ad\comArg{LiteralSide}}]
+same effect as \comRef{superpose}, except that the specified superposition
+will be performed in any case, even if not necessary for fairness of
+completion.
+\end{command}
+
+\begin{command}[\com{thaw}{\comArg{ModuleName}\ad\comArg{OrderName}\ad\comArg{SpecificationVariable}}]
+This command is the inverse operation of \comRef{freeze} and restores the specification
+previously frozen in \comArg{ModuleName}\suffix{.}\comArg{OrderName}\suffix{.q2.0}
+under the name \comArg{SpecificationVariable}. The current specification and other variables 
+will be not affected by this operation.
+If \comRef{thaw} is used without argument \comArg{StateName} 
+the current specification is overwritten by the thawed specification. 
+Specifications saved in variables will still not be affected by this operation.
+If \comRef{thaw} is used only with argument \comArg{ModuleName} the frozen 
+specification will be taken from the file \comArg{ModuleName}\suffix{.q2.0}.
+\end{command}
+
+\begin{command}[\comName{undo}]
+can be entered at the system's top level to set the system to the state
+before the last command that has caused a state change, if there was
+any. \comRef{undo} can be used repeatedly to undo several steps of state changes.
+It also undoes \comRef{undoUndo}-calls. At the moment, there is no way to backtrack
+from single decisions that have been taken while running the completion
+process.
+\end{command}
+
+\begin{command}[\comName{undoUndo}]
+allows to undo the last \comRef{undo}-command at the system's top level. Repeated use of
+this command undoes sequences of \comRef{undo}-commands. Chains of undo-calls begin at 
+the last user interaction different from an \comRef{undo} or \comRef{undoUndo}.
+\end{command}
+
+\noindent 
+The CEC-commands \comRef{equal}, \comRef{greater}, \comRef{status}, 
+\comRef{setInterpretation} and \comRef{constructor} can be used as 
+order pragmas, cf. chapter \ref{OrderPragmas}.

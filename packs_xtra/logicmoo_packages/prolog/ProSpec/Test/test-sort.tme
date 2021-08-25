@@ -1,0 +1,17 @@
+%% O--------------------------------------O
+%% | ProSpec                              |
+%% |   bthomas@informatik.uni-koblenz.de  |
+%% |--------------------------------------|
+%% | Normal Form Transformator (pl2tme):  |
+%% |   peter@informatik.uni-koblenz.de    |
+%% O--------------------------------------O
+%% ========================================
+%%  input file: test.sort
+%% ========================================
+
+%forall(x,exists(y,p(x,y))).
+%forall(x:U,forall(y:t_list(U),exists(z:t_list(U),cons(x,y)=z))).
+
+%% input formula => forall([x : _372], forall([y : _383], exists([z : TM], cons(x, y) = z)))
+
+cons(A : B, C : [t_list(B)|D]) : [t_list(B)] = fsk0(C : [t_list(B)|D], A : B) : [t_list(B)].

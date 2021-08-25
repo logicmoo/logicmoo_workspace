@@ -1,0 +1,59 @@
+%--------------------------------------------------------------------------
+% File     : RNG001=XTimesAId-3 : TPTP v1.2.1. Released v1.0.0.
+% Domain   : Ring Theory
+% Problem  : X.additive_identity = additive_identity for any X
+% Version  : [Fleisig, et al., 1974] axioms : Incomplete.
+% English  : 
+
+% Refs     : Fleisig S., Loveland D.W., Smiley A.K., Yarmush D.L. (1974), 
+%            An Implementation of the Model Elimination Proof Procedure, 
+%            Journal of the ACM 21(1), 124-139.
+%          : Wilson G.A. and Minker J. (1976), Resolution, Refinements, 
+%            and Search Strategies: A Comparative Study, IEEE Transactions 
+%            on Computers C-25(8), 782-801.
+% Source   : [SPRFN]
+% Names    : Example 6a [Fleisig, et al., 1974]
+%          : EX6-T? [Wilson & Minker, 1976]
+%          : ex6.lop [SETHEO]
+%          : FEX6T1 [SPRFN]
+%          : FEX6T2 [SPRFN]
+
+% Status   : unsatisfiable
+% Syntax   : Number of clauses    :    8 (   0 non-Horn;   4 unit;   5 RR)
+%            Number of literals   :   22 (   0 equality)
+%            Maximal clause size  :    5
+%            Number of predicates :    2 (   0 propositional; 3-3 arity)
+%            Number of functors   :    4 (   2 constant; 0-2 arity)
+%            Number of variables  :   30 (   0 singleton)
+%            Maximal term depth   :    2
+
+% Comments : 
+%          : tptp2X: -fprotein RNG001-3.p 
+%--------------------------------------------------------------------------
+
+% BEGIN_AXIOMS
+% NAME: neutral(sum)
+sum(additive_identity, X, X).
+
+% NAME: inverse(sum)
+sum(additive_inverse(X), X, additive_identity).
+
+% NAME: associative(sum)
+sum(X, V, W) :- sum(X, Y, U), sum(Y, Z, V), sum(U, Z, W).
+
+% NAME: associative(sum)
+sum(U, Z, W) :- sum(X, Y, U), sum(Y, Z, V), sum(X, V, W).
+
+% NAME: total(product)
+product(X, Y, multiply(X, Y)).
+
+% NAME: distributive(sum,product)
+sum(V1, V2, V4) :- product(X, Y, V1), product(X, Z, V2), sum(Y, Z, V3), product(X, V3, V4).
+
+% NAME: distributive(sum,product)
+product(X, V3, V4) :- product(X, Y, V1), product(X, Z, V2), sum(Y, Z, V3), sum(V1, V2, V4).
+
+% NAME: goal
+?-product(a, additive_identity, additive_identity).
+% END_AXIOMS
+%--------------------------------------------------------------------------

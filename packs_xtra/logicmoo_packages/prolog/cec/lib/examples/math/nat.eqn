@@ -1,0 +1,53 @@
+module nat using
+	boolTriv + commSemiGroup(elem <- nat)
+	+ commSemiGroup(elem <- nat, 0 <- 1, (+) <- (*))
+	+ equalityAndOrder(elem <- nat) .
+op(s, 100, fy) :  (nat -> nat) .
+s n = n + 1 .
+
+(n + k == m + k) = (n == m) .
+(n + 1 == 0) = false .
+
+(n + 1 =< n) = false.
+(n =< n + k) = true .
+(n + k =< m + k) = (n =< m) .
+
+n * 0 = 0 .
+n * (m + k) = n * m + n * k .
+
+
+
+
+
+
+% Parsing and Pretty-Printing
+% ===========================
+
+parse(0,0).
+parse(1,1).
+parse(I,T+1):-
+	integer(I),
+	I > 0,
+	!,
+	succ(IM1,I),
+	parse(IM1,T).
+
+
+pretty(X+1):-
+	predicate(fromUnary(X+1,N)),
+	write(N).
+pretty(1+X):-
+	predicate(fromUnary(X+1,N)),
+	write(N).
+
+
+predicate(fromUnary(X,_)):-
+	var(X),
+	!,
+	fail.
+predicate(fromUnary(0,0)).
+predicate(fromUnary(X+1,N1)):-
+	predicate(fromUnary(X,N)),
+	N1 is N+1.
+
+

@@ -1,0 +1,40 @@
+order(poly1 for equality) using poly1 for boolTriv.
+setInterpretation(==(x,y) : x + y
+).
+setInterpretation(\==(x,y) : 2 * x + 2 * y
+).
+setInterpretation(false : 2
+).
+setInterpretation(true : 2
+).
+
+constructor('true-bool').
+constructor('true-bool').
+constructor('false-bool').
+constructor('false-bool').
+
+
+
+
+
+
+/* ordering of the literals is ms for
+/*	n==m = m==n */
+action(status(ms),'$equation'([],['==-bool-elem-elem'(@'n-elem',@'m-elem')='==-bool-elem-elem'(@'m-elem',@'n-elem')])).
+
+/* ordering of the literals is ms for
+/*	n\==m = m\==n */
+action(status(ms),'$equation'([],['\==-bool-elem-elem'(@'n-elem',@'m-elem')='\==-bool-elem-elem'(@'m-elem',@'n-elem')])).
+
+/* declare as nonoperational :
+/*	n==m = true => n = m */
+action(orient(n),'$equation'(['==-bool-elem-elem'(@'n-elem',@'m-elem')='true-bool'],[@'n-elem'= @'m-elem'])).
+
+/* condition number 1 is the selected condition for
+/*	n==m = true => n = m */
+action(selectcondition(1),'$equation'(['==-bool-elem-elem'(@'n-elem',@'m-elem')='true-bool'],[@'n-elem'= @'m-elem'])).
+
+/* ordering of the literals is ms for
+/*	n==m = true => n = m */
+action(status(ms),'$equation'(['==-bool-elem-elem'(@'n-elem',@'m-elem')='true-bool'],[@'n-elem'= @'m-elem'])).
+

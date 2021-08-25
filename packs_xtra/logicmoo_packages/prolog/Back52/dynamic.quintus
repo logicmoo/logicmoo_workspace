@@ -1,0 +1,74 @@
+% LAST EDIT: Tue Jan 26 10:49:05 1993 by Mirjam Kuehne (anfall!mir) 
+%%%%%%%%%%%%  Braucht der Parser
+
+:- dynamic b5st_ilink_db/2.
+:- dynamic b5st_macro_db/2.
+:- dynamic b5_tbox_dump_file/1.
+:- dynamic b5_tbox_dump_dir/1.
+
+
+%%%%%%%%%%%%
+
+
+
+:-dynamic t5rdb/7.
+
+:-dynamic t5tbox/1.
+
+:-dynamic t5_pure_defs/2.
+
+:-  dynamic t5tbox_domain_prim/2.
+%%%%%%%%%%%%
+%% Hierarchy Cache:
+
+:- dynamic t5hc_conc_hierarchy/4.        
+:- dynamic t5hc_role_hierarchy/4.
+:- dynamic t5hc_term_hierarchy/4.
+:- dynamic t5hc_infimum_hierarchy/3.
+:- dynamic t5hc_subsumption_hierarchy/4.
+:- dynamic t5hc_key/1.
+:- dynamic t5hc_bottom_p/2.
+:- dynamic t5hc_top_p/2.
+
+
+%%%%%%%%%%%%
+%% Dependency-Module:
+
+:- dynamic t5dm_uses_relation/2.
+:- dynamic t5dm_used_by_relation/2.
+:- dynamic t5dm_trans_uses_relation/2.
+:- dynamic t5dm_trans_used_by_relation/2.
+:- dynamic t5dm_obj_used_by_relation/2.
+:- dynamic t5dm_obj_uses_relation/2.
+:- dynamic t5dm_obj_uses_relation_copy/2.
+:- dynamic t5dm_obj_used_by_relation_copy/2.
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%
+
+%% ABox Dynamic Predicates
+
+:- dynamic a5odb/2.
+:- dynamic a5odbtmp/2.
+
+%%%%%%%%%%%%
+%% Indexing-Module:
+
+:- dynamic a5ind_cinst_s/2.              % indexing
+:- dynamic a5ind_cinst_i/2.
+
+:- dynamic depends_on/4.
+
+
+%% IBox
+
+:- dynamic i5db_key/1.
+:- dynamic i5db_ilink/2.
+:- dynamic i5db_conc/4.
+:- dynamic b5_ilink_def/1.
+
+%%%%%%%%%%%%
+%% Description-Module:
+
+:- dynamic b5desc_modus/1.
+:- dynamic b5desc_filter/1.

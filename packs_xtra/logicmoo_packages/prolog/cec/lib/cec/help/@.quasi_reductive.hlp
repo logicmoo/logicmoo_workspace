@@ -1,0 +1,48 @@
+
+Quasi-reductive equations
+=========================
+
+A conditional equation or rule
+
+	u1=v1 and ... and un=vn =>  s=t ,  n>=0,
+
+is  called  quasi-reductive,  iff  after  appropriately  permuting  the 
+conditions and orienting the literals there exist terms ti(X), 1=<i=<n, 
+X a new variable, such that
+
+	s > t1(u1)
+	ti(vi) >= t[i+1](u[i+1]), 1=<i<n,
+	tn(vn) >= t ,
+
+where > is the given  reduction ordering.  The terms ti(X) can be taken 
+over an enriched signature,  if the reduction ordering  can be extended 
+to the enrichment.
+
+In case n=0, simply s>t is required.
+
+In the  CEC-system,  one may ask  the system  to check  an equation for 
+quasi-reductivity (option "c" in the treatment of equations).
+In  this  case,  the  user  is  interactively  asked  to  indicate  the 
+orientation of literals. Possible orientations are
+
+	- "l" or "r" for the consequent
+	- "l", "r", "u" or "s" for any condition literal.
+
+The appropriate ordering  of the conditions and the construction of the 
+terms ti(X) is performed automatically by the system.
+
+Whereas  "l"  and  "r"  indicate  the  orientation  "left-to-right" and
+"right-to-left",  respectively,  "u"  stands  for  "unoriented" and "s"
+for "syntactic". The latter is only allowed for conditions.
+"u"  for a condition  v=w  is as  if the  condition  had been  replaced
+by the  two conditions  v=x, w=x,  x a new variable, both oriented "l".
+"s"  for a  condition  v=w is  as if the condition had been replaced by
+the two conditions  v=x, w=x, x a new variable, both oriented "r".
+
+Operationally,  "l" and "r" restrict   goal  solving  to  oriented goal
+solving, i.e. no superposition on the right and left side, respectively 
+for the  condition.  "u" means  full goal  solving. "s" means that only 
+(syntactic)  unification  will  be  attempted  at  goal  solving  time. 
+Completion  is required  to complete  the system  in a  way that  these 
+restrictions do not affect the overall completeness.
+

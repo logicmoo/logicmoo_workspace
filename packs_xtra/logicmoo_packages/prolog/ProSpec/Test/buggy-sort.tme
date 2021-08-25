@@ -1,0 +1,27 @@
+%% O--------------------------------------O
+%% | ProSpec                              |
+%% |   bthomas@informatik.uni-koblenz.de  |
+%% |--------------------------------------|
+%% | Normal Form Transformator (pl2tme):  |
+%% |   peter@informatik.uni-koblenz.de    |
+%% O--------------------------------------O
+%% ========================================
+%%  input file: ../Test/buggy.sort
+%% ========================================
+
+
+begin(simplify).
+
+%% input formula => true -> a <-> b
+
+true -> a <-> b.
+
+end(simplify).
+
+%% input formula => a
+
+a.
+
+%% query formula => -(b)
+
+?- b.

@@ -1,0 +1,10 @@
+
+target( t4, 1.0, 1.0).
+target( c11, 1.0, 1.0 ).
+target( c41, 1.0, 1.0 ).
+
+target( l311, 1.0, 1.0 ).
+target( l312, 1.0, 1.0 ).
+
+target( st1, 1.0, 1.0 ).
+target( st2, 1.0, 1.0 ).

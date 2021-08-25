@@ -1,0 +1,67 @@
+********************    PROTEIN V2.09   ********************
+
+--------------------    input clauses   --------------------
+
+"Clause " No. 1 : [member(_51, _49), not_member(_51, _50), not_subset(_50, _49)]
+"Clause " No. 2 : [subset(_90, _94), member(member_of_1_not_of_2(_90, _94), _90)]
+"Clause " No. 3 : [subset(_124, _120), not_member(member_of_1_not_of_2(_124, _120), _120)]
+"Clause " No. 4 : [subset(_154, _153), not_equal_sets(_154, _153)]
+"Clause " No. 5 : [subset(_183, _184), not_equal_sets(_184, _183)]
+"Clause " No. 6 : [equal_sets(_214, _213), not_subset(_213, _214), not_subset(_214, _213)]
+"Clause " No. 7 : [member(_251, _253), not_intersection(_253, _252, _250), not_member(_251, _250)]
+"Clause " No. 8 : [member(_291, _292), not_intersection(_293, _292, _290), not_member(_291, _290)]
+"Clause " No. 9 : [member(_331, _333), not_intersection(_330, _332, _333), not_member(_331, _332), not_member(_331, _330)]
+"Clause " No. 10 : [member(h(_380, _386, _385), _385), intersection(_380, _386, _385), member(h(_380, _386, _385), _380)]
+"Clause " No. 11 : [member(h(_433, _427, _432), _432), intersection(_433, _427, _432), member(h(_433, _427, _432), _427)]
+"Clause " No. 12 : [intersection(_471, _477, _476), not_member(h(_471, _477, _476), _476), not_member(h(_471, _477, _476), _477), not_member(h(_471, _477, _476), _471)]
+"Clause " No. 13 : [intersection(a, b, aIb)]
+"Clause " No. 14 : [intersection(b, c, bIc)]
+"Clause " No. 15 : [intersection(a, bIc, aIbIc)]
+"Query  " No. 16 : [query, not_intersection(aIb, c, aIbIc)]
+"Restart" No. 16 : [restart, not_intersection(aIb, c, aIbIc)]
+
+--------------------        flags       --------------------
+
+protein_flag(system, protein).
+protein_flag(ancestry_rme, off).
+protein_flag(ancs, both).
+protein_flag(answers, one).
+protein_flag(answer_set_handling, on).
+protein_flag(check_flags, [protein_flag(calculus, hyper)]).
+protein_flag(definite_answers, off).
+protein_flag(delayed_rme, off).
+protein_flag(depth_increment, 1).
+protein_flag(dynamic, off).
+protein_flag(factorisation, cut).
+protein_flag(head_behind_prolog, off).
+protein_flag(mmr, off).
+protein_flag(mode, pl1).
+protein_flag(query_anc, ([], [])).
+protein_flag(query_reuse, on).
+protein_flag(reduction, both).
+protein_flag(regularity, delay).
+protein_flag(search, id_tree).
+protein_flag(selection_function, off).
+protein_flag(sorting, costs).
+protein_flag(strict_rme, off).
+protein_flag(th_nonewclauses, off).
+protein_flag(th_reduction, both).
+protein_flag(th_regularity, delay).
+protein_flag(th_sidelit_anc, off).
+protein_flag(translate, all).
+protein_flag(trace, internal).
+protein_flag(calculus, rme).
+
+
+--------------------     statistics     --------------------
+
+Proof Statistics
+----------------
+Proof Time:  1.46 sec
+Proof Depth: 6
+Extension Steps: 27
+Reduction Steps: 7		(incl. 7 with cut)
+Factoring Steps: 3		(incl. 3 with cut)
+Inferences:      10196
+
+--------------------      answers       --------------------

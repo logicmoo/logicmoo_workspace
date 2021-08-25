@@ -1,0 +1,22 @@
+
+trc(query, info(60, query, 29, 1), [
+   trc(set_equal(b, a), info(35, ext, 27, 3), [
+      trc(not_element(f(b, a), b), info(32, th_start, 10, 2), [
+         trc(set_equal(a, b), info(31, th_ext, 28, 1), [
+            trc(not_set_equal(b, a), info(31, red_cut, 1, 0), [])]),
+         trc(element(f(b, a), b), info(30, th_red_cut, 0, 0), []),
+         trc(not_set_equal(b, a), info(32, red_cut, 1, 0), [])]),
+      trc(not_element(f(b, a), a), info(35, th_start, 1, 2), [
+         trc(set_equal(a, b), info(34, th_ext, 28, 1), [
+            trc(not_set_equal(b, a), info(34, red_cut, 1, 0), [])]),
+         trc(not_element(f(b, a), b), info(35, factor_cut, 1, 0), [])])]),
+   trc(set_equal(a, b), info(60, ext, 27, 3), [
+      trc(not_element(f(a, b), a), info(57, th_start, 10, 2), [
+         trc(set_equal(b, a), info(56, th_ext, 28, 2), [
+            trc(not_set_equal(a, b), info(56, red_cut, 1, 0), [])]),
+         trc(element(f(a, b), a), info(55, th_red_cut, 0, 0), []),
+         trc(not_set_equal(a, b), info(57, red_cut, 1, 0), [])]),
+      trc(not_element(f(a, b), b), info(60, th_start, 1, 2), [
+         trc(set_equal(b, a), info(59, th_ext, 28, 2), [
+            trc(not_set_equal(a, b), info(59, red_cut, 1, 0), [])]),
+         trc(not_element(f(a, b), a), info(60, factor_cut, 1, 0), [])])])]).

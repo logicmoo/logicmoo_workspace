@@ -1,0 +1,16 @@
+fss                497  README.for.fss
+fss            1076710  fss.env
+fss              19159  fss.lisp
+fss              16847  fss.load.kb
+fss              35917  fss.save.kb
+fss              20413  fss.sb-one
+misc             36155  misc
+motel             2849  INSTALLATION
+motel             1883  README
+motel            45288  ai93.dvi
+motel              370  int.c
+motel              620  int.o
+motel              115  int.pl
+motel           137960  motel.dvi
+motel            17782  motel.lisp
+motel           439935  motel.pl

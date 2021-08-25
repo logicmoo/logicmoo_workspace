@@ -1,0 +1,11 @@
+order poly1 for object.
+
+setInterpretation([true : 2,
+		   false : 2,
+		   'true-bool' : 2,
+		   'false-bool' : 2,
+		   \==(x,y) : x + y + 5,
+		   ==(x,y) : x + y + 4,
+		   '\==-bool-object-object'(x,y) : x + y + 5,
+		   '==-bool-object-object'(x,y) : x + y + 4,
+		   '$inj-object-bool'(x) : x + 1]).

@@ -1,0 +1,6 @@
+ 
+"applyRule(+Term,+RuleIndex,-ReducedTerm)."
+
+attempts  to apply  the rule with the given index to the given term.
+Different redexes are tried upon backtracking. If successful, the reduced
+term is computed. "Term" may be given in external notation.

@@ -1,0 +1,9 @@
+module ccc using commSemiGroup(elem <- type, 0 <- 1,(+) <- (*)).
+op(==>,700,xfy) : (type * type -> type).
+op p:type.
+op q:type.
+op r:type.
+(1 ==> a) = a.
+(a ==> 1) = 1.
+(a ==> b*c) = (a ==>b)*(a ==> c).
+(a ==> (b ==> c)) = (a*b ==> c).

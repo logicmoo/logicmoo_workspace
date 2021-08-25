@@ -1,0 +1,402 @@
+%--------------------------------- HACKS ------------------------------------
+
+\newcommand{\inMath}[1]{\ifmmode{#1}\else${#1}$\fi}
+\newcommand{\bold}[1]{{\bf #1}}
+
+% \joinrel and \relbar for 11pt, used for "linear" \longrightarrow
+\def\joinrel{\mathrel{\mkern-3.3mu}}
+\def\relbar{\mathrel{\raise0.25pt\hbox{$\smash-$}}}
+
+% Macros for preventing pagebreaks:
+% No pagebreak appears between \connect and \disconnect
+% ! The macros must be used in pairs
+\catcode`\@=11
+\def\connect{\global\advance\@beginparpenalty 10000\relax}
+\def\disconnect{\global\advance\@beginparpenalty -10000\relax}
+\catcode`\@=12
+
+%------------------------- MACROS FOR TEXT STYLE -------------------------
+
+% Environment for completion examples
+% The script of an completion examples can be put between \begin{screen} 
+% and \end{screen}. Blanks, carriage return, subscript, superscript, math 
+% shift and parameter character will be typeset as in verbatim. 
+% A frame will be put around the script
+
+\catcode`\@=11
+\def\blank{\ }
+\def\obeyblanks{\catcode`\ \active}
+{\obeyblanks\global\let =\blank}
+
+\def\screen{\def\@halignto{}\@screen}
+
+{\catcode`\^^M=\active % these lines must end with %
+  \gdef\tablines{\catcode`\^^M\active \let^^M\@linecr}%
+  \global\let^^M\par} % this is in case ^^M appears in a \write
+
+\def\@screen{\begin{center}\leavevmode \hbox \bgroup\def\arraystretch{0.6}\def\tabcolsep{1mm}\footnotesize $\@makeother\_\@makeother\^\@makeother\$\@makeother\#\obeyblanks\frenchspacing\let\@acol\@tabacol 
+   \let\@classz\@tabclassz
+   \let\@classiv\@tabclassiv \tt \@noligs
+   \let\\\@linecr\tablines\@array[c]{@{}|p{13cm}|@{}}\hline\@gobblecr\vskip-3pt\@gobblecr}
+
+\def\endscreen{\hline\crcr\egroup\egroup{\catcode`\$=3}$\egroup\normalsize\vspace*{2ex}\pagebreak[0]\end{center}}
+
+\def\@linecr{\cr}
+\catcode`\@=12
+
+% User input 
+% Usage    : \user{#1}
+% Arguments: 	1. User input
+\def\user#1{{\bf #1}}
+
+% Description of an user option
+% Usage    : \userOption{#1}
+% Arguments: 	1. Option
+\def\userOption#1{``{\bf #1}''}
+
+% Parts of a specification
+% works like the verb-macro
+% Usage: \cec{#1}
+\def\doCECspecials{\do\\\do\$\do\&%
+\do\#\do\^\do\^^K\do\_\do\^^A\do\%\do\~}
+\def\cec{\begingroup \catcode``=13  \noligs 
+\tt \let\do\makeother \doCECspecials\frenchspacing\obeyspaces\cecTerm}
+\def\cecTerm#1{#1\endgroup}
+
+% Filename
+% Usage: \file{#1}
+\newcommand{\file}[1]{\kw{#1}}
+
+% Suffix of a file
+% Usage: \suffix{#1}
+\newcommand{\suffix}[1]{\kw{#1}}
+
+% Reference-arrow
+\newcommand{\refArrow}[0]{\mbox{$\rightarrow$}}
+
+
+%-------------------------------- GRAMMARS --------------------------------
+
+\catcode`\@=11
+
+% Environment for grammar descriptions
+% The grammar must be described between \begin{syntax} and \end{syntax}
+
+\def\syntax{\def\@halignto{}\@syntax}
+\def\@syntax{\bigskip\leavevmode \hbox \bgroup $\let\@acol\@tabacol 
+   \let\@classz\@tabclassz
+   \let\@classiv\@tabclassiv \let\\\@tabularcr\@array[c]{lcl}}
+\def\endsyntax{\crcr\egroup\egroup $\egroup\vspace*{2ex}\pagebreak[0]}
+
+% Non-Terminals
+% Usage    : \nt{#1}
+% Arguments: 1. Non-terminal symbol
+\def\nt{\hbox{$<$}\begingroup\rm\catcode`\_=13\def\_{\_}\nonTerminal}
+\def\nonTerminal#1{#1\endgroup\hbox{$>$}}
+
+% Keywords
+% Usage    : \kw{#1}
+% Arguments: 1. Terminal symbol
+
+\def\makeother#1{\catcode`#112\relax}
+
+\def\doKWspecials{\do\ \do\\\do\$\do\&%
+\do\#\do\^\do\^^K\do\_\do\^^A\do\%\do\~}
+
+\def\kw{\begingroup \catcode``=13  \noligs 
+\tt \let\do\makeother \doKWspecials\keyword}
+\def\keyword#1{#1\endgroup}
+
+\begingroup
+\catcode``=13
+\gdef\noligs{\let`=\lquote}
+\endgroup
+
+\def\lquote{{\kern\z@}`}
+\catcode`\@=12
+
+% Definition of a non-terminal
+\def\IS{& ::= &}
+
+% Alternative
+\def\OR{\\ & & \ts}
+
+% End of the definition of a non-terminal
+\def\END{\\}
+
+% Additional symbols on the right hand side of a definition
+\def\AND{\\ & &}
+
+\def\GETON{\\ & &}
+
+% Alternative
+\newcommand{\ts}{\mbox{$\mid$ \hspace{0.15ex}}}
+
+
+%------------------------------- COMMAND DESCRIPTION ---------------------
+% Definition of a command
+% Arguments: 	1. Identifier of the command
+%		2. Arguments of the command
+\newcommand{\com}[2]{\kw{#1(}#2\kw{\hspace{0.1em}\kw{)}}}
+
+% Identifier of the command
+\newcommand{\comName}[1]{\kw{#1}}
+
+% Argument of a command
+% Arguments:	1. Argument of the command
+\newcommand{\comArg}[1]{{\it #1}}
+
+% Trennung between arguments 
+\newcommand{\ad}{\kw{,}\,}
+
+% Reference to an command definition
+\newcommand{\comRef}[1]{\kw{#1}}
+
+% Environment for command descriptions
+\def\command[#1]{\topsep 0pt\connect\noindent #1\list{}{\listparindent 1.5em
+ \itemindent\listparindent
+ \rightmargin\leftmargin \parsep 0pt plus 1pt}\item[]\disconnect\hskip -\parindent}
+\def\endcommand{\endlist\medskip}
+
+
+%--------------------- SUBTERMS AND SUBTERMREPLACEMENT ----------------------
+
+% Subterm
+% Arguments: 	1. Term
+%	     	2. Occurrence
+\newcommand{\subterm}[2]{\inMath{{#1}/{#2}}}
+
+% Subtermreplacement
+% Arguments: 	1. The term in which the replacement takes place
+%		2. Occurrence of the subterm that is to replace
+%		3. Term that will take the place of the old subterm
+\newcommand{\replace}[3]{\inMath{{#1}[{#2} \leftarrow {#3}]}}
+
+
+%------------------------------ SUBSTITUTION ------------------------------
+
+% Variable-Replacement
+% Arguments:	1. Variable
+% 		2. Term
+\newcommand{\varRep}[2]{\inMath{{#1}/{#2}}}
+
+% Composition of variable-replacements
+\newcommand{\repSep}{,}
+
+% Transformation of a composition of variable-replacements into a
+% substitution
+\newcommand{\subst}[1]{\inMath{\{{#1}\}}}
+
+% Set of all substitutions
+\newcommand{\subs}[1]{\inMath{{\rm SUB}_{#1}}}
+
+% Subsumption
+\newcommand{\subsumeq}{\inMath{\leq}}
+
+% Domain-Operator
+\newcommand{\domain}[1]{\inMath{{\cal D}({#1})}}
+
+% Introduced-Operator
+\newcommand{\introd}[1]{\inMath{{\cal I}({#1})}}
+
+% Representation of a substitution as equation-system
+\newcommand{\substeqrep}[1]{\inMath{[{#1}]}}
+
+% Composition of two substitutions
+% Arguments:	1. Substitution that will be applied first
+%		2. Substitution 
+\newcommand{\composesubst}[2]{\inMath{{#2}\circ{#1}}}
+
+% Application of a substitution
+% Arguments:    1. Substitution
+%		2. Argument of application
+\newcommand{\applysubst}[2]{\inMath{{#2}{#1}}}
+
+
+%------------------------- EQUATIONS AND RULES -------------------------
+
+% Equation
+% Arguments:	1. Left side of the equation
+%		2. Right side of the equation
+\newcommand{\eq}[2]{\inMath{{#1} = {#2}}}
+
+% Conditional equation
+% Arguments:	1. Condition
+%		2. Conclusion
+% Examples: \condEq{\eq{a}{b}\condAnd\eq{c}{d}}{\eq{e}{f}}
+%	    \condEq{\cond{\eq{a_1}{b_1}}{\eq{a_n}{b_n}}}{\eq{a}{b}}
+\newcommand{\condEq}[2]{\inMath{{#1} \Rightarrow {#2}}}
+
+% Condition of a conditional equation
+% Arguments:	1. First equation of the condition
+%		2. Last  equation of the condition
+\newcommand{\cond}[2]{\inMath{{#1} \wedge \ldots \wedge {#2}}}
+
+% Rule
+% Arguments:	1. Left  side of the rule
+%		2. Right side of the rule
+\newcommand{\rewRule}[2]{\inMath{{#1} \rightarrow {#2}}}
+
+% Condtional rule
+% Arguments:    1. Condition
+%		2. Conclusion
+% Examples: \condRule{\eq{a}{b}\condAnd\eq{c}{d}}{\rewRule{e}{f}}
+%	    \condEq{\cond{\eq{a_1}{b_1}}{\eq{a_n}{b_n}}}{\rewRule{a}{b}}
+\newcommand{\condRule}[2]{\inMath{{#1} \Rightarrow {#2}}}
+
+\newcommand{\condAnd}{\wedge}
+
+% Left side of a rule with an given index
+\newcommand{\ruleli}[1]{\inMath{l_{#1}}}
+
+% Right side of a rule with an given index
+\newcommand{\ruleri}[1]{\inMath{r_{#1}}}
+
+% Rule of an given index
+\newcommand{\rulei}[1]{\inMath{\ruleli{#1} \rightarrow \ruleri{#1}}}
+
+
+%-------------------------------- REWRITING --------------------------------
+
+\newcommand{\newarrow}[0]{-\hspace{-1.7mm}-\hspace{-2mm}-\hspace{-3mm}\succ}
+\newcommand{\inewarrow}[0]{\prec\hspace{-3.5mm}-\hspace{-2mm}-\hspace{-2mm}-}
+
+% Rewriting-Relations
+% On-step-rewriting with one parameter (e.g. the rewriting system)
+\newcommand{\rewRel}[2]{\inMath{\mathrel{{#1}_{#2}}}}
+\newcommand{\rew}[1]{\rewRel{\longrightarrow}{#1}}
+\newcommand{\irew}[1]{\rewRel{\longleftarrow}{#1}}
+\newcommand{\rewqr}[1]{\rewRel{\newarrow}{#1}}
+\newcommand{\irewqr}[1]{\rewRel{\inewarrow}{#1}}
+
+% Transitive closure of one-step-rewriting with one parameter
+\newcommand{\rewRelT}[2]{\inMath{\mathrel{\stackrel{+}{#1}_{#2}}}}
+\newcommand{\rewT}[1]{\rewRelT{\longrightarrow}{#1}}
+\newcommand{\irewT}[1]{\rewRelT{\longleftarrow}{#1}}
+\newcommand{\rewqrT}[1]{\rewRelT{\newarrow}{#1}}
+\newcommand{\irewqrT}[1]{\rewRelT{\inewarrow}{#1}}
+
+% Reflexive, transitive closure of one-step-rewriting with one parameter
+\newcommand{\rewRelRT}[2]{\inMath{\mathrel{\stackrel{*}{#1}_{#2}}}}
+\newcommand{\rewRT}[1]{\rewRelRT{\longrightarrow}{#1}}
+\newcommand{\irewRT}[1]{\rewRelRT{\longleftarrow}{#1}}
+\newcommand{\rewqrRT}[1]{\rewRelRT{\newarrow}{#1}}
+\newcommand{\irewqrRT}[1]{\rewRelRT{\inewarrow}{#1}}
+
+\newcommand{\rewqrnf}[1]{\multIndRel{\newarrow}{}{nf}{}{#1}}
+\newcommand{\irewqrnf}[1]{\multIndRel{\inewarrow}{}{nf}{}{#1}}
+\newcommand{\nfrelqr}[1]{\rewqrnf{#1}\irewqrnf{#1}}
+
+% Symmetrical, reflexive, transitive closure of one-step-rewriting with
+% one parameter
+\newcommand{\rewSRT}[1]{\inMath{\mathrel{\stackrel{*}{\longleftrightarrow}_{#1}}}}
+
+% Symmetrical closure of one-step-rewriting
+\newcommand{\equ}[1]{\mbox{$\mathrel{\leftrightarrow_{#1}}$}}
+
+% Reflexiv, symmetrical and transitive closure of one-step-rewriting
+\newcommand{\equs}[1]{\mbox{$\mathrel{\stackrel{\ast}{\leftrightarrow}_{#1}}$}}
+
+% Normalform
+\newcommand{\nf}[1]{\inMath{#1\hspace*{-0.2ex}\downarrow}}
+\newcommand{\nfr}[1]{\inMath{#1\hspace*{-0.2ex}\downarrow}}
+\catcode`\@=11
+% "\condsub#1#2" yields "", if #2 is empty, and "#1{#2}" otherwise
+\def\condsub#1#2{\c@ndsubx \c@ndsuba#2\c@ndsubb\c@ndsubc\c@ndsuba\c@ndsubb
+    #1{#2}\c@ndsubc\c@ndsubd}
+\def\c@ndsubx #1\c@ndsuba\c@ndsubb#2\c@ndsubc#3\c@ndsubd{#2}%
+\catcode`\@=12
+\newcommand{\multIndRel}[5]{\mathrel{\vphantom{\mathop{#1}\limits
+    \condsub^{#2}\condsub_{#4}}\smash{\mathop{#1}\limits
+    \condsub^{#2}\condsub_{#4}}\condsub^{#3}\condsub_{#5}}}
+\newcommand{\rewr}[4]{\multIndRel{\longrightarrow}{#1}{#2}{#3}{#4}}
+\newcommand{\irewr}[4]{\multIndRel{\longleftarrow}{#1}{#2}{#3}{#4}}
+\newcommand{\srewr}[4]{\multIndRel{\longleftrightarrow}{#1}{#2}{#3}{#4}}
+\newcommand{\eqrel}[2]{\multIndRel{\longleftrightarrow}{#1}{}{}{#2}}
+\newcommand{\eqv}[4]{\multIndRel{\equiv}{#1}{#2}{#3}{#4}}
+\newcommand{\nfrel}[1]{{\big\downarrow_{#1}}}
+
+%------------------------------- COMPLETION ------------------------------
+
+% Environment for the description of a inference rule for completion
+% Examples: \begin{CRule} ... \end{CRule}
+%	    \begin{CRule}[(cp), Computation of an critical pair] ... \end{CRule}
+\catcode`\@=11
+\def\CRule{\par\@ifnextchar[{\@namedRule}{}}
+\def\@namedRule[#1,#2]{\noindent \makebox[11em][l]{\it #1} {\it #2}}
+\def\endCRule{}
+
+% Deduction Rule with additional condition
+\def\ifdeducRule#1#2if#3{\[ \frac{#1}{#2},\ \ {\rm if\ }#3 \]}
+
+% Simple deduction rule
+\def\deducRule#1#2{\[ \frac{#1}{#2} \]}
+\catcode`\@=12
+
+% Proof ordering
+\newcommand{\PO}{\inMath{>_{\cal P}}}
+
+% Termination ordering
+\def\TO>{>}
+
+% Tripel
+\newcommand{\tripel}[3]{\inMath{(#1,\ #2,\ #3)}}
+
+% 
+\newcommand{\stateEl}[2]{\inMath{#1 : #2}}
+
+
+%------------------------- MATHEMATICAL CONSTRUCTS -------------------------
+
+% Nat
+\newcommand{\Nat}{\mbox{$I\hspace{-0.3em}N$}}
+
+% Int
+\newcommand{\Int}{\mbox{$Z\hspace{-0.5em}Z$}}
+
+% Reals
+\newcommand{\Real}{\mbox{$I\hspace{-0.3em}R$}}
+
+% ... without ...
+\newcommand{\without}[2]{\inMath{{#1} \backslash {#2}}}
+
+% Power set
+\newcommand{\powerset}[1]{\inMath{{\cal P}({#1})}}
+
+% ... and ... are disjoint
+\newcommand{\disjunct}[2]{\inMath{{#1}\cap{#2}=\emptyset}}
+
+% Restriction to ...
+\newcommand{\restrict}[1]{\inMath{|_{#1}}}
+
+% not member of ...
+\newcommand{\nin}{\inMath{{\not \in}}}
+
+% Congruence relation
+% Arguments:	1. Relation
+\newcommand{\congruent}[1]{\mbox{$\,\equiv_{#1}\,$}}
+
+
+% Logical operators
+% Evaluation environment: math mode
+\newcommand{\logand}{\;\wedge\;}
+\newcommand{\logor}{\;\vee\;}
+\newcommand{\implies}{\;\Longrightarrow\;}
+
+% Symbols for definitions
+% Evaluation environment: math mode
+\newcommand{\dfiff}{\;:\Longleftrightarrow\;}
+\newcommand{\dfeq}{\;:=\;}
+
+% Set
+\newcommand{\set}[1]{\inMath{\{{#1}\}}}
+
+% ZF-Set
+% Arguments:	1. Set
+%		2. Predicate
+\newcommand{\predset}[2]{\inMath{\{{#1}\;|\;{#2}\}}}
+
+% QED
+\newcommand{\qed}{\mbox{\kern2em}\hfill\llap{$\Box$}}
+
+\newenvironment{spec}{\vspace{1ex}\par\addtolength{\parindent}{1.0cm}\obeylines\obeyspaces\tt}{\vspace{1ex}}

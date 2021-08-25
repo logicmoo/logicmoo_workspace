@@ -1,0 +1,101 @@
+<HTML>
+<HEAD>
+<TITLE>Declarative approaches to NP-completeness</TITLE>
+</HEAD>
+
+<body 
+background="http://www.dimi.uniud.it/dovier/FOTO/maregrado.jpg" 
+bgcolor="#FFFFFF" 
+text="#000000" 
+link="#222222" 
+vlink="#444444" 
+alink="#888888">
+
+<BODY >
+
+<P>
+
+<P>
+<H2>Some declarative approaches 
+in tackling hard combinatorial problems</H2>
+
+<P>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+<A href="http://www.dimi.uniud.it/dovier/">Agostino Dovier</A>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+<A href="http://www.dipmat.unipg.it/">Andrea Formisano</A>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+<A href="http://www.cs.nmsu.edu/~epontell">Enrico Pontelli</A>
+<P>
+
+<H3>Abstract:</H3>
+<DIV>
+In these pages we present experimental comparisons between declarative
+encodings of various computationally hard problems in both Answer
+Set Programming (ASP) and Constraint Logic Programming (CLP)
+over finite domains.
+The objective is to identify how the solvers in the two domains
+respond to different problems, highlighting strengths and weaknesses
+of their implementations and suggesting criteria for choosing one
+approach versus the other. Ultimately, the work in this research is
+expected to lay the ground for transfer of concepts between the
+two domains.
+
+<P>
+The CLP programs have been designed for execution by
+<A NAME="tex2html4"
+  HREF="http://www.sics.se/isl/sicstuswww/site/index.html">SICStus Prolog 3.11.2</A>
+(using the library <TT>clpfd</TT>)--though the code is
+general enough to be used on different platforms
+ with little syntactic adjustment
+(in some cases, we provide the code usable with
+<A NAME="tex2html5"
+  HREF="http://www.probp.com">BProlog</A>
+or
+<A NAME="tex2html6"
+  HREF="http://pauillac.inria.fr/~diaz/gnu-prolog">GNU-Prolog</A>).
+
+<P>
+The ASP programs have been designed to be
+grounded by
+<A NAME="tex2html7"
+  HREF="http://www.tcs.hut.fi/Software/smodels">lparse</A>
+and processed by <A NAME="tex2html8"
+  HREF="http://www.tcs.hut.fi/Software/smodels">smodels</A>
+(version&nbsp;2.28)
+ or <A NAME="tex2html9"
+  HREF="http://www.cs.utexas.edu/users/tag/cmodels.html">cmodels</A>
+(version&nbsp;3.03).
+The CModels system makes use
+of a SAT solver to compute answer sets--we run all experiments 
+using the default SAT solver, namely mChaff. In some cases
+we also report the results obtained using Simo, Relsat, or zChaff.
+All timings are in  seconds.
+
+<P>
+
+<UL>
+<LI><A NAME="tex2html281"
+  HREF="http://www.di.univaq.it/formisano/CLPASP/node1.html">K-Coloring</A>
+<LI><A NAME="tex2html282"
+  HREF="http://www.di.univaq.it/formisano/CLPASP/node2.html">Hamiltonian circuit</A>
+<LI><A NAME="tex2html283"
+  HREF="http://www.di.univaq.it/formisano/CLPASP/node3.html">Schur numbers</A>
+<LI><A NAME="tex2html284"
+  HREF="http://www.di.univaq.it/formisano/CLPASP/node4.html">Structure prediction (simplified PF-2D)</A>
+<LI><A NAME="tex2html285"
+  HREF="http://www.di.univaq.it/formisano/CLPASP/node5.html">Action Theory</A>
+<LI><A NAME="tex2html286"
+  HREF="http://www.di.univaq.it/formisano/CLPASP/node6.html">Planning (block world) (ad-hoc encodings)</A>
+<LI><A NAME="tex2html287"
+  HREF="http://www.di.univaq.it/formisano/CLPASP/node7.html">Generalized Knapsack</A>
+<LI><A NAME="tex2html288"
+  HREF="http://www.di.univaq.it/formisano/CLPASP/node8.html">Code generation</A>
+</UL>
+
+<HR>
+
+<A href="index.html">BACK</A>
+
+</BODY>
+</HTML>

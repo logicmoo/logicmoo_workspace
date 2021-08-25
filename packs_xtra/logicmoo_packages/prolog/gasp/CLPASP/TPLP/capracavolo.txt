@@ -1,0 +1,77 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% %%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%% GOAT and CABBAGE in B (Boolean Fluents)
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% by Agostino Dovier (may 2007)
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% Trasformed in ASP (plan length 23) it runs in 40s
+%%% In SICStus, :-sicsplan(23) finds sol in 0.15s
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+ogg(goat). ogg(cabbage). ogg(wolf). ogg(man).
+
+riverside(left). riverside(right).
+
+pos(X) :- riverside(X).
+pos(boat).
+
+%%%%%%%%%%%%%%%%%%%%%
+
+fluent(is_in(X,Y)) :- ogg(X), pos(Y).
+fluent(boat_in(Y)) :- riverside(Y).
+fluent(all_alive).
+
+%%%%%%%%%%%%%%%%
+
+action(cross(A,B)) :-  riverside(A),riverside(B), neq(A,B).
+action(boarding(A)) :- ogg(A).
+action(alighting(A)) :- ogg(A).
+
+%%%%%%%%%%%%%%%
+
+executable(cross(A,B),[boat_in(A),is_in(man,boat)]) :-
+       riverside(A),riverside(B), neq(A,B).
+executable(boarding(A),[boat_in(L),is_in(A,L)]) :-
+       ogg(A),riverside(L).
+executable(alighting(A),[is_in(A,boat)]) :-
+       ogg(A).
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+causes(cross(A,B), boat_in(B), []):-
+    riverside(A),riverside(B),neq(A,B).
+causes(boarding(A), is_in(A,boat),[]) :-
+    ogg(A).
+causes(alighting(A), is_in(A,L),[boat_in(L)]) :-
+    ogg(A),riverside(L).
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+initially(boat_in(left)).
+initially(is_in(A,left)) :- ogg(A).
+initially(all_alive).
+
+%%%%%%%%%%%%%%%
+
+goal(is_in(A,right)) :- ogg(A).
+goal( all_alive ).
+
+%%%% Unique position
+
+caused([is_in(Ogg,L1)],neg(is_in(Ogg,L2))) :-
+      ogg(Ogg),pos(L1),pos(L2),neq(L1,L2).
+caused([boat_in(L1)],neg(boat_in(L2))) :-
+      riverside(L1),riverside(L2),neq(L1,L2).
+
+%%%% At most one (plus the man) in boat
+
+caused([is_in(A,boat),is_in(B,boat)],neg(all_alive)) :-
+      ogg(A),ogg(B),diff(A,B,man).
+
+%%% goat and cabbage OR wolf and goat never alone
+
+caused([is_in(wolf,L),is_in(goat,L),neg(is_in(man,L))],neg(all_alive)) :-
+      pos(L).
+caused([is_in(cabbage,L),is_in(goat,L),neg(is_in(man,L))],neg(all_alive)) :-
+      pos(L).
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

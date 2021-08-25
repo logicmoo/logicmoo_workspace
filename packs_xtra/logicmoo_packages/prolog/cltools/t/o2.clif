@@ -1,0 +1,53 @@
+
+
+(forall (?r)
+   (if (transitive ?r)
+        (forall (?x ?y ?z)
+        (if (and (?r ?x ?z)
+                 (?r ?z ?y))
+            (?r ?x ?y)))))
+
+(cl-comment 'axiom'
+(forall (?x ?y ?z)
+  (if (and (part_of ?x ?z)
+           (part_of ?z ?y))
+      (part_of ?x ?y))))
+
+(cl-text axiom:1234
+(forall (?x ?y ?z)
+  (if (and (part_of ?x ?z)
+           (part_of ?z ?y))
+      (part_of ?x ?y))))
+%(cl-imports axiom:1234)
+(cl-imports axiom:1234)
+(cl-text axiom:1234 (a b))
+%(cl-text axiom:1234 (a b)) (cl-imports axiom:1234)
+
+
+(forall ex:romanceNovel ((x man)) (exists ((y woman)) 
+   (and (loves x y) (not (loves y x))) ))
+
+(cl-text text1 (cl-text text2 (a b)) (cl-text text2 (a b)))
+(cl-module m1 (cl-text text2 (a)))
+(cl-module m1 (cl-text text2 (a b)) (cl-text text2 (a b))) % CHECK: should this be permitted?
+(cl-comment "abc" (cl-module m1 (cl-text text2 (a b)) (cl-text text2 (a b))))
+(exists (s Situation) (and (PTim s "20 January 2008") (Dscr s (that p))))
+(istAtTime 1998 (that (Married x y)))
+(forall (x y i)(and
+   (= x (begin (from x y)))
+   (= y (end (from x y)))
+   (= i (from (begin i)(end i)))
+))
+(forall (r p n)
+        (if
+         (and (owl:onProperty r p) 
+              (owl:minCardinality r n)) 
+         (forall (x)(iff 
+                     (r x) 
+                     (exists ((L NOREPEATSLIST))
+                             (and 
+                              (forall (y)(if (member y L)(p x y) ))
+                              (lesseq n (length L))
+                              ))))))
+
+(= abc (intersectionOf a (intersectionOf b c)))

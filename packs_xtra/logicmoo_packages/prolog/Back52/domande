@@ -1,0 +1,107 @@
+   id2  = restaurant
+   id3  = john
+   id10 = waiter
+   id18 = book
+
+
+| ?- chi_prende_l_ordine.
+id10
+
+yes
+
+| ?- chi_ordina.
+id3
+
+yes
+
+| ?- chi_legge.
+id3
+
+yes
+
+| ?- legge(id3).
+
+yes
+| ?- legge(id10).
+
+no
+
+| ?- cosa_legge(id3).
+id18
+
+yes
+| ?-  cosa_legge(id10).
+
+no
+
+| ?- cosa_fa_nel_ristorante(id3).
+id19
+
+yes
+| ?- cosa_fa_nel_ristorante(id10).
+id12
+
+yes
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+" Dove era john prima di entrare nel ristorante. "
+| ?- dove_era_prima(id4,id3).
+nil
+
+yes
+
+" Dove era il cameriere prima di prendere l'ordine "
+| ?- dove_era_prima(id12,id10).
+id2
+
+yes
+
+" Dove era john dopo essere entrato " 
+| ?- dove_era_dopo(id4,id3).
+id2
+
+yes
+
+" Dove era il cameriere dopo aver preso l'ordine "
+| ?- dove_era_dopo(id12,id10).
+id2
+
+yes
+
+| ?- dove_era(id7).
+id2
+
+yes
+| ?-  dove_era(id6).
+id7
+
+yes
+
+| ?- dove_era(id3).
+Dopo era in id2
+
+yes
+
+| ?- dove_era(id10).
+id2
+
+yes
+
+| ?- dove_era(id18).
+id2
+
+yes
+| ?- dove_era(id18).
+id2
+
+yes
+
+| ?- dove_era(id6).
+id7
+
+yes
+
+| ?- dove_era(id7).
+id2
+
+yes

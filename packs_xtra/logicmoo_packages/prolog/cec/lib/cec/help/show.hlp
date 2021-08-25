@@ -1,0 +1,32 @@
+ 
+"show."
+
+displays the sets of axioms and rules of the current specification
+in order-sorted notation.
+(Usually there exists more than one many-sorted representation of
+an order-sorted axiom.)
+
+Rules 
+	C => l -> r
+which are marked by an asterix ``*'' have an associated
+auxiliary rule of form
+	C => l+X -> r+X
+where ``+'' is the AC-operator on top of ``l'' and X is a new
+variable of appropriate sort.
+Auxiliary rules are automatically generated when needed during
+completion modulo AC.
+
+
+
+"show(+StateName)."
+
+displays the sets of axioms and rules of the specification which is stored under
+the name "StateName".
+
+
+"showms."
+
+displays the current specification in a notation half-way between
+many-sorted and order-sorted. The injections are denoted by their
+codomains. Variables are typed. The overloaded operator names
+are used.

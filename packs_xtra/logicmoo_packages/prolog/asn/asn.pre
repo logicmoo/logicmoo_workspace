@@ -1,0 +1,55 @@
+                   ABSTRACT SYNTAX NOTATION TRANSLATOR
+    Contributed by C.D. Farris and P. Singleton, University of Keele
+                    Received on the 25th of July 1989
+                  Shelved on the 14th of November 1989
+
+
+Abstract Syntax Notation is a formalism for describing language syntax.
+Grammars are written as Prolog terms, and compiled into an optimised
+Definite Clause Grammar.
+
+ASN is described in "The compilation of metalanguages into Prolog", by
+C.D. Farris and P. Singleton, University Computing, vol 11, no 2, pp
+62-75. The article includes a listing of the code, which is what makes
+up this entry.
+
+
+This entry comes as the following files:
+    ASN.PL      - the source.
+    IO.PL       - I/O predicates I've written for portability.
+    USEFUL.PL   - other predicates written for portability.
+    ASN.OLD     - the original, Quintus Prolog, version.
+    ASN.PRE     - this file.
+
+
+To run ASN, consult ASN.PL. It consults IO and USEFUL. If using Quintus
+Prolog, you can consult ASN.OLD instead. This consults several Quintus
+libraries. Then call the predicates
+    ?- demo1.
+    ?- demo2.
+    ?- demo3.
+    ?- demo4.
+    ?- demo5.
+    ?- demo6.
+to demonstrate the program.
+
+
+CHECKED ON EDINBURGH-COMPATIBLE (POPLOG) PROLOG : yes.
+
+    The original version used some Quintus-specific predicates, mainly
+    for I/O. I have replaced these by calls to Edinburgh Prolog
+    predicates, defined in IO and USEFUL.
+
+
+PORTABILITY :
+
+    Source includes % comments. There are also some long character lists
+    (i.e. "..." strings) in the demo predicates which span more than one
+    line. How these are denoted will be system-dependent.
+
+
+INTERNAL DOCUMENTATION :
+
+    Each predicate comes with a brief description of its purpose. The
+    theory behind ASN is not described in the program, but you can get
+    it from the original article.

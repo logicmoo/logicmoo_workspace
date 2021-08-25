@@ -1,0 +1,64 @@
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML//EN">
+<html>
+    <head> <title>GASP for GULP</title></head>
+
+<body 
+bgcolor = "#333333"
+text ="#999999"
+link="#CCCCCCC"
+vlink="#DDDDDD"
+alink="#FFFFFF">
+
+
+<H3>Codes related to GASP: a lazy grounding based
+interpreter for ASP</H3>
+
+<UL>
+<LI>SICSTUS Prolog <A href="GASP_2ott08.pl">GASP interpreter</A>
+as described in the paper CILC 2008/LaSh 2008,
+Nov. 2008</LI>
+
+<LI>SICSTUS Prolog <A href="GASP_Fundamenta_29giu09.pl">GASP interpreter</A>
+as described in the paper submitted to Fundamenta Infromatica, Jan. 2009</LI>
+
+
+<LI>A definite program <A href="test0.lp">test0</A></LI>
+<LI>A general, well-founded program <A href="test1.lp">test1</A></LI>
+<LI>A general non well-founded program
+    <A href="test2.lp">test2</A>
+<LI>A marriage problem
+    <A href="test3.lp">test3</A>
+<LI>The N-Queens
+    <A href="test4.lp">test4</A>
+<LI>An ASP encoding the problem of
+Schur numbers <A href="test5.lp">test5</A>
+<LI>A marriage problem with extra predicate
+<A href="test6.lp">test6</A>
+
+<LI>Schur without aggegregates <A href="test7.lp">test7</A></LI>
+
+<LI>A program from ASPeRiX esamples <A href="test8.lp">test8</A>
+
+<LI>A square packing problem: <A href="test9.lp">test9</A>
+</UL>
+
+<B>Use:</B><br>
+Launch SICStus Prolog, compile the GASP interpreter.<br>
+
+Set (if needed) the working directory. Then launch the goal <br>
+
+<TT>:- go('testxxx.lp').</TT> for all (printed) solutions, <br>
+
+<TT>:- go('testxxx.lp',no).</TT> for all (non printed) solutions, <br>
+
+<TT>:- go('testxxx.lp',_,write).</TT> for the first (printed)solution. <br>
+
+<TT>:- go('testxxx.lp',_,no).</TT> for the first (non printed)solution. <br>
+
+tests3-6 needs to comment/uncomment some lines if tested with
+an ASP solver different from GASP.
+
+<hr>
+</body>
+</html>

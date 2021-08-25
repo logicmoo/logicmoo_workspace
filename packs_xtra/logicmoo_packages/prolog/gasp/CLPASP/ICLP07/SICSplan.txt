@@ -1,0 +1,349 @@
+%%% Interpreter for the B language
+%%% Updated October, 2007
+%%% Faster than the ICLP version
+
+:-use_module(library(clpfd)).
+:-use_module(library(lists)).
+%%%:- dynamic(caused/2).
+
+%%% LOAD THE ACTION DESCRIPTION
+
+:-[barrels].
+
+main(N) :-
+   main(N,_,_),!.
+main(_) :-
+    statistics(runtime,[_,Time]),
+    write('No solutions: RunTime: '),write(Time),nl.
+   
+main(N, Actionsocc,States):-                               
+    statistics(_,_),                                       %%%%%%%%%%%%%%%%%%%%%
+    setof(F, fluent(F), Lf), setof(A, action(A), La),      %%% Problem Input %%%
+    setof(F, initially(F), Init), setof(F, goal(F), Goal), %%%%%%%%%%%%%%%%%%%%% 
+    make_states(N,Lf,States),
+    make_action_occurrences(N,La,Actionsocc),
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+    (set_initial(Init,States); %%% A.T. DEBUG
+      write('Inconsistent initial state'),nl,!,fail),
+    write('Initial State:'),nl, States=[S|_],write_state(S),nl,
+    (set_goal(Goal,States); %%% A.T.  DEBUG
+      write('Inconsistent final state'),nl,!,fail), 
+    write('Final State:'),nl, append(_,[Last],States),write_state(Last),
+    !,
+    set_transitions(Actionsocc,States),
+    write('****transitions   set****'),nl,  
+    set_executability(Actionsocc,States),    %%% Faster if here !!!!!!!!
+    write('****executability set****'),nl,  
+    get_all_actions(Actionsocc, AllActions), 
+    length(AllActions,L),
+    write('we label '),write(L),write(' variables'),nl,
+    statistics(runtime,[_,PT]),
+    write('Constraints added in ms: '),write(PT),nl,!,
+    %labelling(AllActions),
+    my_labeling(Actionsocc,States),
+    statistics(runtime,[_,Time]),
+    write('*************************************************************************'),nl,
+    %%% write_state(Last),nl,nl,
+    dump_result(Actionsocc,States),
+    write('Solution found in Time: '),write(Time),nl.
+    
+my_labeling(Actionsocc,States) :-
+     my_labeling(Actionsocc,States,1).
+my_labeling([],_,_) :- !.
+my_labeling([CurrAct | Actions], States,I) :-
+    my_labeling_aux(CurrAct),
+    no_loop(States,I),
+    I1 is I + 1,
+    my_labeling( Actions , States,I1).
+my_labeling_aux([]).
+my_labeling_aux([action(_,A)|R]) :-
+    indomain(A),
+    my_labeling_aux(R).
+    
+%%% no_loop could be replaced by an alldifferent_states global constraint ...
+    
+no_loop(States,A) :-
+    state_select(A,States,StateA),
+    no_loop(A,States,StateA).
+no_loop(0,_,_):-!.
+no_loop(B,States,StateA) :-
+    B1 is B - 1,
+    state_select(B1,States,StateB),
+    StateA \= StateB, %%% ev. \==
+    no_loop(B1,States,StateA).
+       
+state_select(I,States,StateI) :-
+    (nth0(I,States,StateI),!;
+    J is I + 1, nth(J,States,StateI)). 
+
+%%%%%% compatibility: nth in SICStus 3 / nth0 in SICStus 4    
+   
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%    
+%%% The domain of Each Fluent Variable is set to {0,1}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%    
+
+make_states(0,_,[]):-!.
+make_states(N,List,[S|STATES]) :-
+    N1 is N-1, make_states(N1,List,STATES),
+    make_one_state(List,S).
+make_one_state([],[]).
+make_one_state([F|Fluents],[fluent(F,VarF)|VarFluents]) :-
+    make_one_state(Fluents,VarFluents),
+    fd_domain_bool(VarF).
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%    
+%%% The domain of each action (occurrence) variable is set to {0,1}
+%%% In each state transition exactly one action occur (sum constraint)
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+make_action_occurrences(1,_,[]):-!.
+make_action_occurrences(N,List,[Act|ActionsOcc]) :-
+    N1 is N-1, make_action_occurrences(N1,List,ActionsOcc),
+    make_one_action_occurrences(List,Act),
+    get_action_list(Act,AList),
+    fd_only_one(AList).
+make_one_action_occurrences([],[]).
+make_one_action_occurrences([A|Actions],[ action(A,OccA)|OccActions]) :-
+    make_one_action_occurrences(Actions,OccActions),
+    fd_domain_bool(OccA).
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%    
+%%% Initial state info are set here.
+%%% Static causal rules are then applied by "complete_state" and aux
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+set_initial(List,[InitialState|_]) :-
+    set_state(List,InitialState),
+    complete_state(InitialState,InitialState).
+
+complete_state([],_).
+complete_state( [fluent(Fluent,EV)| Fluents],InitialState) :-
+    ( integer(EV), ! ;
+    set_one_static_fluent(Fluent, EV, InitialState) ),
+    complete_state(  Fluents ,InitialState).
+
+set_one_static_fluent(Name, EV, State) :-
+    findall(Po1, caused(Po1,Name), StatPos),
+    static(StatPos, State, PStatPos,EV,p),
+    bool_disj(PStatPos, PosFired),
+    PosFired   #=>    EV,
+    findall(Ne1, caused(Ne1,neg(Name)), StatNeg),
+    static(StatNeg, State, PStatNeg,EV,n),
+    bool_disj(PStatNeg, NegFired),
+    NegFired   #=> #\ EV.  
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%    
+%%% Final state info are set here.
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+set_goal(List,States) :-
+    last(States,FinalState),
+    set_state(List,FinalState).
+set_state([],_).
+set_state([Fluent|Rest],State) :-
+     (Fluent=neg(F),!,member(fluent(F,0),State);
+      member(fluent(Fluent,1),State)),
+     set_state(Rest,State).
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% constraints on transitions are set here. First each tranisition
+%%% is selected. Then every fluent is analyzed and its new value
+%%% is constrained using its previous value and the dynamic and static 
+%%% rules applied in that state transition.
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+set_transitions(_Occurrences,[_States]) :- !.
+set_transitions([O|Occurrences],[S1,S2|Rest]) :-
+%    write('**** Another State ****'),nl,
+    set_transition(O,S1,S2,S1,S2),
+    set_transitions(Occurrences,[S2|Rest]).
+
+set_transition(_Occ,[],[],_,_).
+set_transition(Occ,[fluent(Fluent,IV)|R1],[fluent(Fluent,EV)|R2],FromState,ToState):-
+    set_one_fluent(Fluent,IV,EV,Occ,FromState,ToState),
+    set_transition(Occ, R1, R2,FromState,ToState).
+
+set_one_fluent(Name,IV,EV, Occurrence,FromSt,ToSt) :-
+%    write('Fluent: '),write(Name),nl,
+    findall([X,L],causes(X,Name,L),DynPos),
+    findall([Y,M],causes(Y,neg(Name),M),DynNeg),
+    dynamic(DynPos, Occurrence, FromSt,PFormula,EV,p),
+    dynamic(DynNeg, Occurrence, FromSt,NFormula,EV,n),
+    findall(Po1, caused(Po1,Name), StatPos),
+    findall(Ne1, caused(Ne1,neg(Name)), StatNeg),
+    static(StatPos, ToSt, PStatPos,EV,p),
+    static(StatNeg, ToSt, PStatNeg,EV,n),
+    bool_disj(PFormula,PStatPos,PosFired),
+    bool_disj(NFormula,PStatNeg,NegFired),
+%%% This is the constraint for the new value of the fluent    
+    PosFired * NegFired #= 0, 
+    EV #<=>  PosFired #\/ (#\ NegFired  #/\ IV ). 
+     
+dynamic([],_,_, [],_,_).
+dynamic([[Name,Prec]|Rest],Occurrence, State,[ Flag |PF1],EV,Mode):-
+    member(action(Name,VA),Occurrence),
+    get_precondition_vars(Prec,State,ListPV),
+    length(Prec,NPrec),
+    sum(ListPV, SumPrec),
+    (VA  #/\ (SumPrec #= NPrec)) #<=> Flag, %%%%
+    %%% Redundant (useless in GNU) constraints:
+    %(Mode == p -> EV #>= Flag;           %%% (A)
+    % Mode == n -> EV #=< 1 - Flag),      %%%%%%%%% 
+    dynamic(Rest,Occurrence, State,PF1,EV,Mode).
+
+static([],_,[],_,_).
+static([ Cond | Others], State, [Flag |Fo],EV,Mode) :-
+    get_precondition_vars(Cond,State,List),
+    length(List, NL),
+    sum(List, Result),
+    (Result #= NL) #<=> Flag ,
+    %%% Redundant (useless in GNU) constraints:
+    %(Mode == p -> EV #>= Flag;        %%%% (B)  
+    % Mode == n -> EV #=< 1 - Flag),   %%%%%%%%%%%
+    static(Others,State,Fo,EV,Mode).
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% The executability of each action is then related to the 
+%%% values of the fluents in the previous state. "formula"
+%%% store the disjunction of all executability conditions
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+set_executability(ActionsOcc,States) :-
+    findall([Act,C],executable(Act,C),Conds),
+    group_cond(Conds,GroupedConds),
+    set_executability(ActionsOcc,States,GroupedConds).
+
+set_executability([],[_],_).
+set_executability([ActionsOcc|ARest],[State|States],Conds) :-
+    set_executability_sub(Conds,ActionsOcc,State),
+    set_executability(ARest,States,Conds).
+
+set_executability_sub([],_,_). 
+set_executability_sub([[Act,C]|CA],ActionsOcc,State) :-
+    member(action(Act,VA),ActionsOcc),
+    preconditions_flags(C, State,Flags),
+    bool_disj(Flags,F),
+    VA #=> F,
+    set_executability_sub(CA,ActionsOcc,State).
+
+preconditions_flags([],_,[]).
+preconditions_flags([C|R],State,[Flag|Flags]) :-
+      get_precondition_vars(C,State,Cs),
+      length(Cs,NCs),
+      sum(Cs, SumCs),
+      (NCs #= SumCs)  #<=> Flag,
+      preconditions_flags(R,State,Flags).
+
+%%%%%% AUXILIARY predicates
+
+group_cond([],[]).
+group_cond([[Action,C]|R],[[Action,[C|Cs]]|S]) :-
+     findall(L,(member([Action,L],R)),Cs),
+     filter(Action,R,Others),
+     group_cond(Others,S).
+filter(_,[],[]).
+filter(A,[[A,_]|R],S) :-
+      !, filter(A,R,S).
+filter(A,[C|R],[C|S]) :-
+      !, filter(A,R,S).
+      
+get_precondition_vars([],_,[]).
+get_precondition_vars([P1|Rest],State,[F|LR]) :-
+    get_precondition_vars(Rest,State,LR),
+    (P1 = neg(FluentName),!,
+     member(fluent(FluentName,A),State), F #= 1-A;
+     member(fluent(P1,F),State)).
+get_all_actions([],[]).
+get_all_actions([A|B],List) :-
+    get_action_list(A,List1),
+    get_all_actions(B,List2),
+    append(List1,List2,List).
+get_action_list([],[]).
+get_action_list([action(_,V)|Rest],[V|MRest]) :-
+    get_action_list(Rest,MRest).
+
+%%% END MAIN CODE %%%%%%%
+
+neq(A,B) :- A \== B.
+diff(A,B) :- A \== B.
+diff(A,B,C) :- A \== B, A \== C, C \== B.
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% PRINT
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+dump_result(A,S) :-
+    state_plan(A),
+    nl,nl,
+    dump_result1(A,S).
+
+state_plan([]) :- write('stop.'),nl.
+state_plan([A|As]) :-
+    find_action(A,Name),
+    format("~q -> ",[Name]),
+    state_plan(As).
+
+dump_result1([],[S]) :-
+    write_state(S).
+dump_result1([A|B],[S|Rest]) :-
+    write_state(S),
+    write_action(A),
+    dump_result1(B,Rest).
+
+write_state([]) :- nl.
+write_state([fluent(Name,Value)|Rest]) :-
+    ( fd_var(Value) -> true; %%% format("~q: unknown  ",[Name]);  
+      Value == 1 ->  format("~q  ",[Name]);
+      true ),
+    write_state(Rest).
+
+write_action(A) :-
+    find_action(A,Name),
+    format(" ---->>   ~q ",[Name]),nl.
+
+find_action([],unknown).
+find_action([action(Name,Value)|_], Name) :-
+    Value == 1,!.
+find_action([_|Rest],Name) :-
+    find_action(Rest,Name).
+    
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%    
+
+
+bool_disj(A,C) :-
+  sum(A,B),
+  C #<=> B #> 0.
+    
+bool_disj(A,B,C) :-
+  append(A,B,T),
+  bool_disj(T,C).
+  
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%    
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%    
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%    
+
+%%% VARIANTI DA GNU a SICStus
+
+%%% Cambiato #==> con #=>
+
+%%% TOLTA
+%%% sum([],0). 
+%%% sum([A|B],Res) :- sum(B,Res1), Res #= A + Res1.
+%%% ... fd_labeling(AllActions,[variable_method(ff), value_method(min)])
+
+%%% AGGIUNTE
+
+fd_domain_bool(X) :- X in 0..1.
+sum(X,Res) :- sum(X,#=,Res).
+fd_only_one(X) :- sum(X,#=,1).
+labelling(AllActions) :-
+    labeling([ff,min],AllActions).
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%    
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%    
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%    
+    
+    
+
+

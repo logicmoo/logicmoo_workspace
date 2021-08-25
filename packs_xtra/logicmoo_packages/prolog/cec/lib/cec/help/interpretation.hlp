@@ -1,0 +1,7 @@
+ 
+"interpretation."
+
+displays all operator interpretations, if "poly<I>" is the type
+of the current termination ordering,
+and asks the user if he wants to change any. If so, all
+rules will be turned back into equations.

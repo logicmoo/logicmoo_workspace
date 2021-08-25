@@ -1,0 +1,4 @@
+module abelianGroup using commSemiGroup.
+
+op (-) : (elem -> elem).
+x + (-x) = 0.

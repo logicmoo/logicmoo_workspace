@@ -1,0 +1,247 @@
+order(poly3 for qsort) using poly3 for lists+poly1 for totalOrder.
+setInterpretation('$h26_0'(x,y) :    [ x + 3 * y + 1 ,
+     x + y + 1 ,
+     x + y + 1 ]
+).
+setInterpretation('$h25_0'(x,y) :    [ x + 3 * y + 1 ,
+     x + y + 1 ,
+     x + y + 1 ]
+).
+setInterpretation('$h24_0'(x,y) :    [ 2 * x + 3 * y + 1 ,
+     2 * x + 2 * y ,
+     2 * x + 2 * y ]
+).
+setInterpretation(','(x,y) :    [ x + y ,
+     x + y ,
+     x + y ]
+).
+setInterpretation(split(x,y) :    [ x + y + 1 ,
+     x + 2 * y ,
+     x + 2 * y ]
+).
+setInterpretation(sort(x) :    [ 2 * x ,
+     2 * x ,
+     2 * x ]
+).
+setInterpretation('>-bool-elem-elem'(x,y) :    [ x + y + 6 ,
+     x + y + 6 ,
+     x + y + 6 ]
+).
+setInterpretation('=<-bool-elem-elem'(x,y) :    [ x + y + 5 ,
+     x + y + 5 ,
+     x + y + 5 ]
+).
+setInterpretation(>(x,y) :    [ x + y + 6 ,
+     x + y + 6 ,
+     x + y + 6 ]
+).
+setInterpretation(=<(x,y) :    [ x + y + 5 ,
+     x + y + 5 ,
+     x + y + 5 ]
+).
+setInterpretation('$inj-object-elem'(x) :    [ x + 3 ,
+     x + 3 ,
+     x + 3 ]
+).
+setInterpretation('true-bool' :    [ 2 ,
+     2 ,
+     2 ]
+).
+setInterpretation('false-bool' :    [ 2 ,
+     2 ,
+     2 ]
+).
+setInterpretation(\==(x,y) :    [ x + y + 5 ,
+     x + y + 5 ,
+     x + y + 5 ]
+).
+setInterpretation(==(x,y) :    [ x + y + 4 ,
+     x + y + 4 ,
+     x + y + 4 ]
+).
+setInterpretation('\==-bool-object-object'(x,y) :    [ x + y + 5 ,
+     x + y + 5 ,
+     x + y + 5 ]
+).
+setInterpretation('==-bool-object-object'(x,y) :    [ x + y + 4 ,
+     x + y + 4 ,
+     x + y + 4 ]
+).
+setInterpretation('$inj-object-bool'(x) :    [ x + 1 ,
+     x + 1 ,
+     x + 1 ]
+).
+setInterpretation(true :    [ 2 ,
+     2 ,
+     2 ]
+).
+setInterpretation(false :    [ 2 ,
+     2 ,
+     2 ]
+).
+setInterpretation('$inj-list-nelist'(x) :    [ x + 1 ,
+     x + 1 ,
+     x + 1 ]
+).
+setInterpretation('$inj-object-list'(x) :    [ x + 1 ,
+     x + 1 ,
+     x + 1 ]
+).
+setInterpretation('append-nelist-nelist-nelist'(x,y) :    [ x + y + 1 ,
+     x + y + 1 ,
+     x + y + 1 ]
+).
+setInterpretation('append-nelist-nelist-list'(x,y) :    [ x + y + 3 ,
+     x + y + 1 ,
+     x + y + 1 ]
+).
+setInterpretation('append-nelist-list-nelist'(x,y) :    [ x + y + 2 ,
+     x + y + 1 ,
+     x + y + 1 ]
+).
+setInterpretation('append-list-list-list'(x,y) :    [ x + y + 4 ,
+     x + y + 1 ,
+     x + y + 1 ]
+).
+setInterpretation(append(x,y) :    [ x + y ,
+     x + y ,
+     2 * x + y ]
+).
+setInterpretation(first(x) :    [ 2 * x ,
+     2 * x ,
+     2 * x ]
+).
+setInterpretation(tail(x) :    [ 2 * x ,
+     2 * x ,
+     2 * x ]
+).
+setInterpretation(rev(x) :    [ (x^2) ,
+     2 * x ,
+     2 * x ]
+).
+setInterpretation([] :    [ 2 ,
+     2 ,
+     2 ]
+).
+setInterpretation('.'(x,y) :    [ 3 * x + y + 1 ,
+     x + y ,
+     x + y ]
+).
+
+constructor('true-bool').
+constructor('false-bool').
+constructor('[]-list').
+
+
+
+
+
+
+/* ordering of the literals is ms for
+/*	x:object==y:object = y:object==x:object */
+action(status(ms),'$equation'([],['==-bool-object-object'(@'x-object',@'y-object')='==-bool-object-object'(@'y-object',@'x-object')])).
+
+/* ordering of the literals is ms for
+/*	x:object\==y:object = y:object\==x:object */
+action(status(ms),'$equation'([],['\==-bool-object-object'(@'x-object',@'y-object')='\==-bool-object-object'(@'y-object',@'x-object')])).
+
+/* declare as nonoperational :
+/*	x:object==y:object = true => x:object = y:object */
+action(orient(n),'$equation'(['==-bool-object-object'(@'x-object',@'y-object')='true-bool'],[@'x-object'= @'y-object'])).
+
+/* ordering of the literals is ms for
+/*	x:object==y:object = true => x:object = y:object */
+action(status(ms),'$equation'(['==-bool-object-object'(@'x-object',@'y-object')='true-bool'],[@'x-object'= @'y-object'])).
+
+/* declare as nonoperational :
+/*	[y:elem=<x:elem] = [x:elem=<y:elem,false] */
+action(orient(n),'$equation'([],[['=<-bool-elem-elem'(@'y-elem',@'x-elem')]=['=<-bool-elem-elem'(@'x-elem',@'y-elem'),'false-bool']])).
+
+/* ordering of the literals is [1,0] for
+/*	x:elem=<y:elem = false => y:elem=<x:elem = true */
+action(status([1,0]),'$equation'(['=<-bool-elem-elem'(@'x-elem',@'y-elem')='false-bool'],['=<-bool-elem-elem'(@'y-elem',@'x-elem')='true-bool'])).
+
+/* declare as nonoperational :
+/*	e1:elem=<e2:elem = true and e1:elem>e2:elem = true => true = false */
+action(orient(n),'$equation'(['=<-bool-elem-elem'(@'e1-elem',@'e2-elem')='true-bool','>-bool-elem-elem'(@'e1-elem',@'e2-elem')='true-bool'],['true-bool'='false-bool'])).
+
+/* condition number 1 is the selected condition for
+/*	e1:elem=<e2:elem = true and e1:elem>e2:elem = true => true = false */
+action(selectcondition(1),'$equation'(['=<-bool-elem-elem'(@'e1-elem',@'e2-elem')='true-bool','>-bool-elem-elem'(@'e1-elem',@'e2-elem')='true-bool'],['true-bool'='false-bool'])).
+
+/* ordering of the literals is ms for
+/*	e1:elem=<e2:elem = true and e1:elem>e2:elem = true => true = false */
+action(status(ms),'$equation'(['=<-bool-elem-elem'(@'e1-elem',@'e2-elem')='true-bool','>-bool-elem-elem'(@'e1-elem',@'e2-elem')='true-bool'],['true-bool'='false-bool'])).
+
+/* declare as nonoperational :
+/*	x:elem=<y:elem = true and y:elem=<x:elem = true => x:elem = y:elem */
+action(orient(n),'$equation'(['=<-bool-elem-elem'(@'x-elem',@'y-elem')='true-bool','=<-bool-elem-elem'(@'y-elem',@'x-elem')='true-bool'],[@'x-elem'= @'y-elem'])).
+
+/* condition number 1 is the selected condition for
+/*	x:elem=<y:elem = true and y:elem=<x:elem = true => x:elem = y:elem */
+action(selectcondition(1),'$equation'(['=<-bool-elem-elem'(@'x-elem',@'y-elem')='true-bool','=<-bool-elem-elem'(@'y-elem',@'x-elem')='true-bool'],[@'x-elem'= @'y-elem'])).
+
+/* ordering of the literals is [0,1,2] for
+/*	x:elem=<y:elem = true and y:elem=<x:elem = true => x:elem = y:elem */
+action(status([0,1,2]),'$equation'(['=<-bool-elem-elem'(@'x-elem',@'y-elem')='true-bool','=<-bool-elem-elem'(@'y-elem',@'x-elem')='true-bool'],[@'x-elem'= @'y-elem'])).
+
+/* declare as nonoperational :
+/*	x:elem=<y:elem = true and y:elem=<z:elem = true => x:elem=<z:elem = true */
+action(orient(n),'$equation'(['=<-bool-elem-elem'(@'x-elem',@'y-elem')='true-bool','=<-bool-elem-elem'(@'y-elem',@'z-elem')='true-bool'],['=<-bool-elem-elem'(@'x-elem',@'z-elem')='true-bool'])).
+
+/* condition number 1 is the selected condition for
+/*	x:elem=<y:elem = true and y:elem=<z:elem = true => x:elem=<z:elem = true */
+action(selectcondition(1),'$equation'(['=<-bool-elem-elem'(@'x-elem',@'y-elem')='true-bool','=<-bool-elem-elem'(@'y-elem',@'z-elem')='true-bool'],['=<-bool-elem-elem'(@'x-elem',@'z-elem')='true-bool'])).
+
+/* ordering of the literals is [0,1,2] for
+/*	x:elem=<y:elem = true and y:elem=<z:elem = true => x:elem=<z:elem = true */
+action(status([0,1,2]),'$equation'(['=<-bool-elem-elem'(@'x-elem',@'y-elem')='true-bool','=<-bool-elem-elem'(@'y-elem',@'z-elem')='true-bool'],['=<-bool-elem-elem'(@'x-elem',@'z-elem')='true-bool'])).
+
+/* split(e1:elem,l:list) = l1:list,l2:list => sort(list([e1:elem|l:list])) = list(append(sort(l1:list),[e1:elem|sort(l2:list)]))
+/* should be checked for quasi-reductivity */
+action(orient(c),'$equation'(['split-pair-elem-list'(@'e1-elem',@'l-list')=',-pair-list-list'(@'l1-list',@'l2-list')],['sort-list-list'('$inj-list-nelist'('.-nelist-elem-list'(@'e1-elem',@'l-list')))='$inj-list-nelist'('append-nelist-list-nelist'('sort-list-list'(@'l1-list'),'.-nelist-elem-list'(@'e1-elem','sort-list-list'(@'l2-list'))))])).
+
+/* annotation of literals is [l,l] in
+/*	split(e1:elem,l:list) = l1:list,l2:list => sort(list([e1:elem|l:list])) = list(append(sort(l1:list),[e1:elem|sort(l2:list)])) */
+action(annotation([l,l]),'$equation'(['split-pair-elem-list'(@'e1-elem',@'l-list')=',-pair-list-list'(@'l1-list',@'l2-list')],['sort-list-list'('$inj-list-nelist'('.-nelist-elem-list'(@'e1-elem',@'l-list')))='$inj-list-nelist'('append-nelist-list-nelist'('sort-list-list'(@'l1-list'),'.-nelist-elem-list'(@'e1-elem','sort-list-list'(@'l2-list'))))])).
+
+/* e2:elem=<e1:elem = true and split(e1:elem,l:list) = l1:list,l2:list => split(e1:elem,list([e2:elem|l:list])) = list([e2:elem|l1:list]),l2:list
+/* should be checked for quasi-reductivity */
+action(orient(c),'$equation'(['=<-bool-elem-elem'(@'e2-elem',@'e1-elem')='true-bool','split-pair-elem-list'(@'e1-elem',@'l-list')=',-pair-list-list'(@'l1-list',@'l2-list')],['split-pair-elem-list'(@'e1-elem','$inj-list-nelist'('.-nelist-elem-list'(@'e2-elem',@'l-list')))=',-pair-list-list'('$inj-list-nelist'('.-nelist-elem-list'(@'e2-elem',@'l1-list')),@'l2-list')])).
+
+/* annotation of literals is [l,l,l] in
+/*	e2:elem=<e1:elem = true and split(e1:elem,l:list) = l1:list,l2:list => split(e1:elem,list([e2:elem|l:list])) = list([e2:elem|l1:list]),l2:list */
+action(annotation([l,l,l]),'$equation'(['=<-bool-elem-elem'(@'e2-elem',@'e1-elem')='true-bool','split-pair-elem-list'(@'e1-elem',@'l-list')=',-pair-list-list'(@'l1-list',@'l2-list')],['split-pair-elem-list'(@'e1-elem','$inj-list-nelist'('.-nelist-elem-list'(@'e2-elem',@'l-list')))=',-pair-list-list'('$inj-list-nelist'('.-nelist-elem-list'(@'e2-elem',@'l1-list')),@'l2-list')])).
+
+/* e2:elem>e1:elem = true and split(e1:elem,l:list) = l1:list,l2:list => split(e1:elem,list([e2:elem|l:list])) = l1:list,list([e2:elem|l2:list])
+/* should be checked for quasi-reductivity */
+action(orient(c),'$equation'(['>-bool-elem-elem'(@'e2-elem',@'e1-elem')='true-bool','split-pair-elem-list'(@'e1-elem',@'l-list')=',-pair-list-list'(@'l1-list',@'l2-list')],['split-pair-elem-list'(@'e1-elem','$inj-list-nelist'('.-nelist-elem-list'(@'e2-elem',@'l-list')))=',-pair-list-list'(@'l1-list','$inj-list-nelist'('.-nelist-elem-list'(@'e2-elem',@'l2-list')))])).
+
+/* annotation of literals is [l,l,l] in
+/*	e2:elem>e1:elem = true and split(e1:elem,l:list) = l1:list,l2:list => split(e1:elem,list([e2:elem|l:list])) = l1:list,list([e2:elem|l2:list]) */
+action(annotation([l,l,l]),'$equation'(['>-bool-elem-elem'(@'e2-elem',@'e1-elem')='true-bool','split-pair-elem-list'(@'e1-elem',@'l-list')=',-pair-list-list'(@'l1-list',@'l2-list')],['split-pair-elem-list'(@'e1-elem','$inj-list-nelist'('.-nelist-elem-list'(@'e2-elem',@'l-list')))=',-pair-list-list'(@'l1-list','$inj-list-nelist'('.-nelist-elem-list'(@'e2-elem',@'l2-list')))])).
+
+/* declare as nonoperational :
+/*	l1:list,l2:list = l4:list,l3:list and split(e:elem,l5:list) = l1:list,l2:list => append(sort(l1:list),[e:elem|sort(l2:list)]) = append(sort(l4:list),[e:elem|sort(l3:list)]) */
+action(orient(n),'$equation'([',-pair-list-list'(@'l1-list',@'l2-list')=',-pair-list-list'(@'l4-list',@'l3-list'),'split-pair-elem-list'(@'e-elem',@'l5-list')=',-pair-list-list'(@'l1-list',@'l2-list')],['append-nelist-list-nelist'('sort-list-list'(@'l1-list'),'.-nelist-elem-list'(@'e-elem','sort-list-list'(@'l2-list')))='append-nelist-list-nelist'('sort-list-list'(@'l4-list'),'.-nelist-elem-list'(@'e-elem','sort-list-list'(@'l3-list')))])).
+
+/* condition number 1 is the selected condition for
+/*	l1:list,l2:list = l4:list,l3:list and split(e:elem,l5:list) = l1:list,l2:list => append(sort(l1:list),[e:elem|sort(l2:list)]) = append(sort(l4:list),[e:elem|sort(l3:list)]) */
+action(selectcondition(1),'$equation'([',-pair-list-list'(@'l1-list',@'l2-list')=',-pair-list-list'(@'l4-list',@'l3-list'),'split-pair-elem-list'(@'e-elem',@'l5-list')=',-pair-list-list'(@'l1-list',@'l2-list')],['append-nelist-list-nelist'('sort-list-list'(@'l1-list'),'.-nelist-elem-list'(@'e-elem','sort-list-list'(@'l2-list')))='append-nelist-list-nelist'('sort-list-list'(@'l4-list'),'.-nelist-elem-list'(@'e-elem','sort-list-list'(@'l3-list')))])).
+
+/* declare as nonoperational :
+/*	l1:list,l2:list = l4:list,l3:list and e3:elem=<e:elem = true and split(e:elem,l5:list) = l1:list,l2:list => list([e3:elem|l1:list]),l2:list = list([e3:elem|l4:list]),l3:list */
+action(orient(n),'$equation'([',-pair-list-list'(@'l1-list',@'l2-list')=',-pair-list-list'(@'l4-list',@'l3-list'),'=<-bool-elem-elem'(@'e3-elem',@'e-elem')='true-bool','split-pair-elem-list'(@'e-elem',@'l5-list')=',-pair-list-list'(@'l1-list',@'l2-list')],[',-pair-list-list'('$inj-list-nelist'('.-nelist-elem-list'(@'e3-elem',@'l1-list')),@'l2-list')=',-pair-list-list'('$inj-list-nelist'('.-nelist-elem-list'(@'e3-elem',@'l4-list')),@'l3-list')])).
+
+/* condition number 1 is the selected condition for
+/*	l1:list,l2:list = l4:list,l3:list and e3:elem=<e:elem = true and split(e:elem,l5:list) = l1:list,l2:list => list([e3:elem|l1:list]),l2:list = list([e3:elem|l4:list]),l3:list */
+action(selectcondition(1),'$equation'([',-pair-list-list'(@'l1-list',@'l2-list')=',-pair-list-list'(@'l4-list',@'l3-list'),'=<-bool-elem-elem'(@'e3-elem',@'e-elem')='true-bool','split-pair-elem-list'(@'e-elem',@'l5-list')=',-pair-list-list'(@'l1-list',@'l2-list')],[',-pair-list-list'('$inj-list-nelist'('.-nelist-elem-list'(@'e3-elem',@'l1-list')),@'l2-list')=',-pair-list-list'('$inj-list-nelist'('.-nelist-elem-list'(@'e3-elem',@'l4-list')),@'l3-list')])).
+
+/* declare as nonoperational :
+/*	l1:list,l2:list = l4:list,l3:list and e3:elem>e:elem = true and split(e:elem,l5:list) = l1:list,l2:list => l1:list,list([e3:elem|l2:list]) = l4:list,list([e3:elem|l3:list]) */
+action(orient(n),'$equation'([',-pair-list-list'(@'l1-list',@'l2-list')=',-pair-list-list'(@'l4-list',@'l3-list'),'>-bool-elem-elem'(@'e3-elem',@'e-elem')='true-bool','split-pair-elem-list'(@'e-elem',@'l5-list')=',-pair-list-list'(@'l1-list',@'l2-list')],[',-pair-list-list'(@'l1-list','$inj-list-nelist'('.-nelist-elem-list'(@'e3-elem',@'l2-list')))=',-pair-list-list'(@'l4-list','$inj-list-nelist'('.-nelist-elem-list'(@'e3-elem',@'l3-list')))])).
+
+/* condition number 1 is the selected condition for
+/*	l1:list,l2:list = l4:list,l3:list and e3:elem>e:elem = true and split(e:elem,l5:list) = l1:list,l2:list => l1:list,list([e3:elem|l2:list]) = l4:list,list([e3:elem|l3:list]) */
+action(selectcondition(1),'$equation'([',-pair-list-list'(@'l1-list',@'l2-list')=',-pair-list-list'(@'l4-list',@'l3-list'),'>-bool-elem-elem'(@'e3-elem',@'e-elem')='true-bool','split-pair-elem-list'(@'e-elem',@'l5-list')=',-pair-list-list'(@'l1-list',@'l2-list')],[',-pair-list-list'(@'l1-list','$inj-list-nelist'('.-nelist-elem-list'(@'e3-elem',@'l2-list')))=',-pair-list-list'(@'l4-list','$inj-list-nelist'('.-nelist-elem-list'(@'e3-elem',@'l3-list')))])).
+

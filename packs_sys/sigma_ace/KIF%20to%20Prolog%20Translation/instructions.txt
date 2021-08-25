@@ -1,0 +1,21 @@
+To translate a new version of the SUMO, follow
+these instructions:
+
+1. Download the text file of the latest SUMO.
+Rename this file kif.txt and place in the directory
+from which you are running the readKIF.pl code.
+
+2. Start sWI Prolog and load readKIF into it:
+
+[readKif].
+
+3. Call translate.
+
+translate.
+
+4. Translate returns 'yes' after a minute or two.
+The translated file is 'kif.pl'.
+
+5. Add the style declarations in style_declarations.txt
+at the front of this file, then it is ready to load
+into Prolog.

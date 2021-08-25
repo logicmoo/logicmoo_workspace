@@ -1,0 +1,85 @@
+<TITLE>Package: lang/prolog/code/syntax/grips/</TITLE>
+<hr>
+<b>CMU Artificial Intelligence Repository</b><br>
+<tt><A HREF="/afs/cs.cmu.edu/project/ai-repository/ai/html/air.html"><IMG ALIGN=MIDDLE SRC="/afs/cs.cmu.edu/project/ai-repository/ai/html/gif/home.gif" ALT="Home"></A>  <A HREF="/afs/cs.cmu.edu/project/ai-repository/ai/html/rep_info.html"><IMG ALIGN=MIDDLE SRC="/afs/cs.cmu.edu/project/ai-repository/ai/html/gif/info.gif" ALT="INFO"></A>  <A HREF="/afs/cs.cmu.edu/project/ai-repository/ai/html/keys/keysform.html"><IMG ALIGN=MIDDLE SRC="/afs/cs.cmu.edu/project/ai-repository/ai/html/gif/search.gif" ALT="Search"></A>  <A HREF="/afs/cs.cmu.edu/project/ai-repository/ai/html/faqs/top.html"><IMG ALIGN=MIDDLE SRC="/afs/cs.cmu.edu/project/ai-repository/ai/html/gif/faqs.gif" ALT="FAQs"></A>  <A HREF="/afs/cs.cmu.edu/project/ai-repository/ai/0.html"><IMG ALIGN=MIDDLE SRC="/afs/cs.cmu.edu/project/ai-repository/ai/html/gif/top.gif" ALT="Repository Root"></A>  </tt>
+<hr>
+<H2>GRIPS Translator: GRIPS -- A functional language in Prolog</H2>
+<pre>
+<A HREF="./">lang/prolog/code/syntax/grips/</A>
+</pre>
+<listing>
+GRIPS is a pre-processor for translating a functional version of
+Prolog into Prolog.  By using it, you can eliminate the tedium of
+having to think up variables to pass output from one predicate to the
+input of the next, and of having to flatten nested arithmetic 
+expressions into a sequence of machine-code-like assignments.
+
+Here are two example definitions.
+
+        factorial(N) <- 1 if N =< 0.
+        factorial(N) <- N * factorial(N-1) if N > 0.
+
+        count( [] ) <- 0.
+        count( [_|T] ) <- 1 + count(T).
+
+You can load these by doing 'grips_consult' or 'grips_reconsult' on the
+file they're in. You could then run the interpreter:
+
+        ?- grips.
+        |: do grips_reconsult('test.pl').
+        Done
+        |: factorial(3).
+        Result = 6.
+        |: factorial(factorial(3)).
+        Result = 720.
+        |: count( [a,b,c,d] ).
+        Result = 4.
+        |: 1 + count([a,b,c,d])/factorial(3).
+        Result = 1.66667.
+        |: pr( factorial(3,F) ).
+
+        F = 6
+        More (y/n)? |: y
+        no
+        |:
+
+A simple compiler written in GRIPS is available separately.
+</listing>
+<pre>
+See Also: 
+
+   <A HREF="/afs/cs/project/ai-repository/ai/lang/prolog/code/syntax/compiler/0.html">lang/prolog/code/syntax/compiler/</A>
+</pre>
+<pre>
+Origin:   
+
+   <A HREF="ftp://src.doc.ic.ac.uk/packages/prolog-pd-software/">src.doc.ic.ac.uk:packages/prolog-pd-software/ (146.169.2.1)</A>
+   as grips.tar.Z
+</pre>
+<hr>
+<listing>
+Version:      11-JAN-91
+
+Ports:        Edinburgh-compatible Prologs.
+
+CD-ROM:       Prime Time Freeware for AI, Issue 1-1
+
+Author(s):    Jocelyn Paine <popx@vax.ox.ac.uk>
+              Department of Experimental Psychology
+              Oxford University
+              South Parks Road
+              Oxford OX1 3UD
+              Tel: (0865) 271444
+              Fax: (0865) 310447
+
+Keywords:
+
+   Authors!Paine, Grips, Prolog!Code, Prolog!Syntax, Syntax
+
+References:
+
+   A user guide is included in the distribution.
+
+</listing><hr>
+<address>Last Web update on Mon Feb 13 10:34:00 1995 <br>
+<A HREF="/afs/cs.cmu.edu/project/ai-repository/ai/html/air.html">AI.Repository@cs.cmu.edu</A></address>

@@ -1,0 +1,4433 @@
+% CELT Demo Traces as of 4/29/2002
+% 1. Examples of translating noun phrases: test_parse_np_all.
+% 2. Examples of translating complete sentences: test_parse_sent_all.
+% 3. Examples of translating yes-no and WH-queries.
+% 4. Examples of translating queries entered by user in eng2log.
+
+%------------------------------------------------------------
+% 1. Examples of translating noun phrases: test_parse_np_all.
+%------------------------------------------------------------
+
+?-test_parse_np_all.
+
+Parsed OK:he 
+syn<-> case<-> nominative
+     gender<-> masculine
+     ncat<-> _G391
+     gcat<-> empty
+     det<-> empty
+sem<-> head<-> ?he
+     type<-> Male
+Test passed.
+
+Translation = 
+
+(exists 
+  (?he) 
+  (and 
+    (instance ?he Male)))
+
+Speech Act = Assertion
+
+
+Parsed OK:her 
+syn<-> case<-> accusative
+     gender<-> feminine
+     ncat<-> _G391
+     gcat<-> empty
+     det<-> empty
+sem<-> head<-> ?her
+     type<-> Female
+Test passed.
+
+Translation = 
+
+(exists 
+  (?her) 
+  (and 
+    (instance ?her Female)))
+
+Speech Act = Assertion
+
+
+Parsed OK:the card 
+syn<-> case<-> _G390
+     gender<-> _G392
+     ncat<-> object
+     gcat<-> empty
+     rel<-> _G398
+     det<-> the
+sem<-> head<-> ?card
+     type<-> BankCard
+     mod<-> empty
+     sub<-> empty
+     poss<-> empty
+     of<-> empty
+Test passed.
+
+Translation = 
+
+(exists 
+  (?card) 
+  (and 
+    (instance ?card BankCard)))
+
+Speech Act = Assertion
+
+
+Parsed OK:a new customer 
+syn<-> case<-> _G393
+     gender<-> _G395
+     ncat<-> person
+     gcat<-> empty
+     rel<-> _G401
+     det<-> a
+sem<-> head<-> ?customer
+     type<-> customer
+     mod<-> newness-WN03855074
+     sub<-> empty
+     poss<-> empty
+     of<-> empty
+Test passed.
+
+Translation = 
+
+(exists 
+  (?salesperson ?customer) 
+  (and 
+    (attribute ?customer newness-WN03855074) 
+    (customer ?customer ?salesperson) 
+    (instance ?salesperson CognitiveAgent) 
+    (instance ?customer CognitiveAgent)))
+
+Speech Act = Assertion
+
+
+Parsed OK:the Swiss customer 
+syn<-> case<-> _G393
+     gender<-> _G395
+     ncat<-> person
+     gcat<-> empty
+     rel<-> _G401
+     det<-> the
+sem<-> head<-> ?customer
+     type<-> customer
+     mod<-> Germanism-WN00265812
+     sub<-> empty
+     poss<-> empty
+     of<-> empty
+Test passed.
+
+Translation = 
+
+(exists 
+  (?salesperson ?customer) 
+  (and 
+    (attribute ?customer Germanism-WN00265812) 
+    (customer ?customer ?salesperson) 
+    (instance ?salesperson CognitiveAgent) 
+    (instance ?customer CognitiveAgent)))
+
+Speech Act = Assertion
+
+
+Parsed OK:the customer of the bank 
+syn<-> case<-> _G399
+     gender<-> _G401
+     ncat<-> person
+     gcat<-> empty
+     rel<-> _G407
+     det<-> the
+sem<-> head<-> ?customer
+     type<-> customer
+     mod<-> empty
+     sub<-> empty
+     poss<-> empty
+     of<-> Bank-FinancialOrganization
+Test passed.
+
+Translation = 
+
+(exists 
+  (?salesperson ?customer) 
+  (and 
+    (possesses Bank-FinancialOrganization ?customer) 
+    (customer ?customer ?salesperson) 
+    (instance ?salesperson CognitiveAgent) 
+    (instance ?customer CognitiveAgent)))
+
+Speech Act = Assertion
+
+
+Parsed OK:the valid credit card 
+syn<-> case<-> _G396
+     gender<-> _G398
+     ncat<-> object
+     gcat<-> empty
+     rel<-> _G404
+     det<-> the
+sem<-> head<-> ?credit_card
+     type<-> CreditCard
+     mod<-> validation-WN00099890
+     sub<-> empty
+     poss<-> empty
+     of<-> empty
+Test passed.
+
+Translation = 
+
+(exists 
+  (?credit_card) 
+  (and 
+    (instance ?credit_card CreditCard) 
+    (attribute ?credit_card validation-WN00099890)))
+
+Speech Act = Assertion
+
+
+Parsed OK:the customer Mr Miller 
+syn<-> case<-> _G396
+     gender<-> _G398
+     ncat<-> person
+     gcat<-> empty
+     rel<-> _G404
+     det<-> the
+sem<-> head<-> MrMiller
+     type<-> customer
+     mod<-> empty
+     sub<-> empty
+     poss<-> empty
+     of<-> empty
+Test passed.
+
+Translation = 
+
+(exists 
+  (?salesperson) 
+  (and 
+    (customer MrMiller ?salesperson) 
+    (instance ?salesperson CognitiveAgent) 
+    (instance MrMiller CognitiveAgent)))
+
+Speech Act = Assertion
+
+
+Parsed OK:the customer X 
+syn<-> case<-> _G393
+     gender<-> _G395
+     ncat<-> dynamic_label
+     gcat<-> empty
+     rel<-> _G401
+     det<-> the
+sem<-> head<-> X
+     type<-> customer
+     mod<-> empty
+     sub<-> empty
+     poss<-> empty
+     of<-> empty
+Test passed.
+
+Translation = 
+
+(exists 
+  (?salesperson) 
+  (and 
+    (customer X ?salesperson) 
+    (instance ?salesperson CognitiveAgent) 
+    (instance X CognitiveAgent)))
+
+Speech Act = Assertion
+
+
+Parsed OK:John 
+syn<-> case<-> _G387
+     gender<-> _G389
+     ncat<-> person
+     gcat<-> empty
+     rel<-> _G395
+     det<-> empty
+sem<-> head<-> John-1
+     type<-> Male
+     sub<-> empty
+     poss<-> empty
+     of<-> empty
+Test passed.
+
+Translation = 
+
+(and 
+  (instance John-1 Male))
+
+Speech Act = Assertion
+
+
+Parsed OK:Monday 
+syn<-> case<-> _G387
+     gender<-> _G389
+     ncat<-> time
+     gcat<-> empty
+     rel<-> _G395
+     det<-> empty
+sem<-> head<-> Monday
+     type<-> Day
+     sub<-> empty
+     poss<-> empty
+     of<-> empty
+Test passed.
+
+Translation = 
+
+(and 
+  (instance Monday Day))
+
+Speech Act = Assertion
+
+
+Parsed OK:John ' s card 
+syn<-> case<-> _G396
+     gender<-> _G398
+     ncat<-> object
+     gcat<-> empty
+     rel<-> _G404
+     det<-> empty
+sem<-> head<-> ?card
+     type<-> BankCard
+     sub<-> empty
+     poss<-> John-1
+     of<-> empty
+Test passed.
+
+Translation = 
+
+(exists 
+  (?card) 
+  (and 
+    (instance ?card BankCard) 
+    (possesses John-1 ?card)))
+
+Speech Act = Assertion
+
+
+Parsed OK:the card ' s code 
+syn<-> case<-> _G399
+     gender<-> _G401
+     ncat<-> object
+     gcat<-> empty
+     rel<-> _G407
+     det<-> the
+sem<-> head<-> ?code
+     type<-> Code
+     mod<-> empty
+     sub<-> empty
+     poss<-> BankCard
+     of<-> empty
+Test passed.
+
+Translation = 
+
+(exists 
+  (?code) 
+  (and 
+    (instance ?code Code) 
+    (possesses BankCard ?code)))
+
+Speech Act = Assertion
+
+
+Parsed OK:Monday ' s customer 
+syn<-> case<-> _G396
+     gender<-> _G398
+     ncat<-> person
+     gcat<-> empty
+     rel<-> _G404
+     det<-> empty
+sem<-> head<-> ?customer
+     type<-> customer
+     sub<-> empty
+     poss<-> Monday
+     of<-> empty
+Test passed.
+
+Translation = 
+
+(exists 
+  (?salesperson ?customer) 
+  (and 
+    (possesses Monday ?customer) 
+    (customer ?customer ?salesperson) 
+    (instance ?salesperson CognitiveAgent) 
+    (instance ?customer CognitiveAgent)))
+
+Speech Act = Assertion
+
+
+Parsed OK:John ' s code 
+syn<-> case<-> _G396
+     gender<-> _G398
+     ncat<-> object
+     gcat<-> empty
+     rel<-> _G404
+     det<-> empty
+sem<-> head<-> ?code
+     type<-> Code
+     sub<-> empty
+     poss<-> John-1
+     of<-> empty
+Test passed.
+
+Translation = 
+
+(exists 
+  (?code) 
+  (and 
+    (instance ?code Code) 
+    (possesses John-1 ?code)))
+
+Speech Act = Assertion
+Failed to parse:valid credit card 
+Test passed.
+
+Failed to parse:the Mary 
+Test passed.
+
+Failed to parse:the Swiss 
+Test passed.
+
+Failed to parse:a new 
+Test passed.
+
+Failed to parse:a new customer smith 
+Test passed.
+
+Failed to parse:a new customer mary 
+Test passed.
+
+
+
+Parsed OK:the customer who enters the bank 
+syn<-> case<-> _G402
+     gender<-> _G404
+     ncat<-> person
+     gcat<-> empty
+     rel<-> no
+     det<-> the
+sem<-> head<-> ?customer
+     type<-> customer
+     mod<-> empty
+     sub<-> pred<-> entrance-WN00026402
+          subj<-> head<-> ?who
+                type<-> Human
+          dobj<-> head<-> ?bank
+                type<-> Bank-FinancialOrganization
+                mod<-> empty
+                sub<-> empty
+                poss<-> empty
+                of<-> empty
+          adjs<-> []
+     poss<-> empty
+     of<-> empty
+Test passed.
+
+Translation = 
+
+(exists 
+  (?salesperson ?bank ?who ?event ?customer) 
+  (and 
+    (patient ?event ?bank) 
+    (instance ?bank Bank-FinancialOrganization) 
+    (agent ?event ?who) 
+    (instance ?who Human) 
+    (instance ?event entrance-WN00026402) 
+    (equal ?customer ?who) 
+    (customer ?customer ?salesperson) 
+    (instance ?salesperson CognitiveAgent) 
+    (instance ?customer CognitiveAgent)))
+
+Speech Act = Assertion
+
+
+Parsed OK:a bank that the customer enters 
+syn<-> case<-> _G402
+     gender<-> _G404
+     ncat<-> object
+     gcat<-> empty
+     rel<-> no
+     det<-> a
+sem<-> head<-> ?bank
+     type<-> Bank-FinancialOrganization
+     mod<-> empty
+     sub<-> pred<-> entrance-WN00026402
+          subj<-> head<-> ?customer
+                type<-> customer
+                mod<-> empty
+                sub<-> empty
+                poss<-> empty
+                of<-> empty
+          dobj<-> head<-> ?that
+                type<-> Physical
+          adjs<-> []
+     poss<-> empty
+     of<-> empty
+Test passed.
+
+Translation = 
+
+(exists 
+  (?that ?salesperson ?customer ?event ?bank) 
+  (and 
+    (instance ?bank Bank-FinancialOrganization) 
+    (patient ?event ?that) 
+    (instance ?that Physical) 
+    (agent ?event ?customer) 
+    (instance ?event entrance-WN00026402) 
+    (customer ?customer ?salesperson) 
+    (instance ?salesperson CognitiveAgent) 
+    (instance ?customer CognitiveAgent) 
+    (equal ?bank ?that)))
+
+Speech Act = Assertion
+
+
+Parsed OK:a valid credit card that the customer inserts 
+syn<-> case<-> _G408
+     gender<-> _G410
+     ncat<-> object
+     gcat<-> empty
+     rel<-> no
+     det<-> a
+sem<-> head<-> ?credit_card
+     type<-> CreditCard
+     mod<-> validation-WN00099890
+     sub<-> pred<-> insertion-WN00207301
+          subj<-> head<-> ?customer
+                type<-> customer
+                mod<-> empty
+                sub<-> empty
+                poss<-> empty
+                of<-> empty
+          dobj<-> head<-> ?that
+                type<-> Physical
+          adjs<-> []
+     poss<-> empty
+     of<-> empty
+Test passed.
+
+Translation = 
+
+(exists 
+  (?that ?salesperson ?customer ?event ?credit_card) 
+  (and 
+    (instance ?credit_card CreditCard) 
+    (attribute ?credit_card validation-WN00099890) 
+    (patient ?event ?that) 
+    (instance ?that Physical) 
+    (agent ?event ?customer) 
+    (instance ?event insertion-WN00207301) 
+    (customer ?customer ?salesperson) 
+    (instance ?salesperson CognitiveAgent) 
+    (instance ?customer CognitiveAgent) 
+    (equal ?credit_card ?that)))
+
+Speech Act = Assertion
+
+
+Parsed OK:the Swiss customer who enters the bank 
+syn<-> case<-> _G405
+     gender<-> _G407
+     ncat<-> person
+     gcat<-> empty
+     rel<-> no
+     det<-> the
+sem<-> head<-> ?customer
+     type<-> customer
+     mod<-> Germanism-WN00265812
+     sub<-> pred<-> entrance-WN00026402
+          subj<-> head<-> ?who
+                type<-> Human
+          dobj<-> head<-> ?bank
+                type<-> Bank-FinancialOrganization
+                mod<-> empty
+                sub<-> empty
+                poss<-> empty
+                of<-> empty
+          adjs<-> []
+     poss<-> empty
+     of<-> empty
+Test passed.
+
+Translation = 
+
+(exists 
+  (?salesperson ?bank ?who ?event ?customer) 
+  (and 
+    (attribute ?customer Germanism-WN00265812) 
+    (patient ?event ?bank) 
+    (instance ?bank Bank-FinancialOrganization) 
+    (agent ?event ?who) 
+    (instance ?who Human) 
+    (instance ?event entrance-WN00026402) 
+    (equal ?customer ?who) 
+    (customer ?customer ?salesperson) 
+    (instance ?salesperson CognitiveAgent) 
+    (instance ?customer CognitiveAgent)))
+
+Speech Act = Assertion
+
+
+Parsed OK:a Swiss customer of the bank 
+syn<-> case<-> _G402
+     gender<-> _G404
+     ncat<-> person
+     gcat<-> empty
+     rel<-> _G410
+     det<-> a
+sem<-> head<-> ?customer
+     type<-> customer
+     mod<-> Germanism-WN00265812
+     sub<-> empty
+     poss<-> empty
+     of<-> Bank-FinancialOrganization
+Test passed.
+
+Translation = 
+
+(exists 
+  (?salesperson ?customer) 
+  (and 
+    (attribute ?customer Germanism-WN00265812) 
+    (possesses Bank-FinancialOrganization ?customer) 
+    (customer ?customer ?salesperson) 
+    (instance ?salesperson CognitiveAgent) 
+    (instance ?customer CognitiveAgent)))
+
+Speech Act = Assertion
+
+
+Parsed OK:a customer who is Swiss 
+syn<-> case<-> _G399
+     gender<-> _G401
+     ncat<-> person
+     gcat<-> empty
+     rel<-> no
+     det<-> a
+sem<-> head<-> ?customer
+     type<-> customer
+     mod<-> empty
+     sub<-> mod<-> Germanism-WN00265812
+          pred<-> isa
+          subj<-> head<-> ?who
+                type<-> Human
+     poss<-> empty
+     of<-> empty
+Test passed.
+
+Translation = 
+
+(exists 
+  (?salesperson ?who ?customer) 
+  (and 
+    (instance ?who Human) 
+    (attribute ?who Germanism-WN00265812) 
+    (equal ?customer ?who) 
+    (customer ?customer ?salesperson) 
+    (instance ?salesperson CognitiveAgent) 
+    (instance ?customer CognitiveAgent)))
+
+Speech Act = Assertion
+
+
+Parsed OK:a credit card that is new 
+syn<-> case<-> _G402
+     gender<-> _G404
+     ncat<-> object
+     gcat<-> empty
+     rel<-> no
+     det<-> a
+sem<-> head<-> ?credit_card
+     type<-> CreditCard
+     mod<-> empty
+     sub<-> mod<-> newness-WN03855074
+          pred<-> isa
+          subj<-> head<-> ?that
+                type<-> Physical
+     poss<-> empty
+     of<-> empty
+Test passed.
+
+Translation = 
+
+(exists 
+  (?that ?credit_card) 
+  (and 
+    (instance ?credit_card CreditCard) 
+    (instance ?that Physical) 
+    (attribute ?that newness-WN03855074) 
+    (equal ?credit_card ?that)))
+
+Speech Act = Assertion
+
+
+Parsed OK:a customer that enters the bank 
+syn<-> case<-> _G402
+     gender<-> _G404
+     ncat<-> person
+     gcat<-> empty
+     rel<-> no
+     det<-> a
+sem<-> head<-> ?customer
+     type<-> customer
+     mod<-> empty
+     sub<-> pred<-> entrance-WN00026402
+          subj<-> head<-> ?that
+                type<-> Human
+          dobj<-> head<-> ?bank
+                type<-> Bank-FinancialOrganization
+                mod<-> empty
+                sub<-> empty
+                poss<-> empty
+                of<-> empty
+          adjs<-> []
+     poss<-> empty
+     of<-> empty
+Test passed.
+
+Translation = 
+
+(exists 
+  (?salesperson ?bank ?that ?event ?customer) 
+  (and 
+    (patient ?event ?bank) 
+    (instance ?bank Bank-FinancialOrganization) 
+    (agent ?event ?that) 
+    (instance ?that Human) 
+    (instance ?event entrance-WN00026402) 
+    (equal ?customer ?that) 
+    (customer ?customer ?salesperson) 
+    (instance ?salesperson CognitiveAgent) 
+    (instance ?customer CognitiveAgent)))
+
+Speech Act = Assertion
+
+
+Parsed OK:the customer ' s code that is valid 
+syn<-> case<-> _G408
+     gender<-> _G410
+     ncat<-> object
+     gcat<-> empty
+     rel<-> no
+     det<-> the
+sem<-> head<-> ?code
+     type<-> Code
+     mod<-> empty
+     sub<-> mod<-> validation-WN00099890
+          pred<-> isa
+          subj<-> head<-> ?that
+                type<-> Physical
+     poss<-> customer
+     of<-> empty
+Test passed.
+
+Translation = 
+
+(exists 
+  (?that ?code) 
+  (and 
+    (instance ?code Code) 
+    (possesses customer ?code) 
+    (instance ?that Physical) 
+    (attribute ?that validation-WN00099890) 
+    (equal ?code ?that)))
+
+Speech Act = Assertion
+
+
+Parsed OK:John ' s customer who is Swiss 
+syn<-> case<-> _G405
+     gender<-> _G407
+     ncat<-> person
+     gcat<-> empty
+     rel<-> no
+     det<-> empty
+sem<-> head<-> ?customer
+     type<-> customer
+     sub<-> mod<-> Germanism-WN00265812
+          pred<-> isa
+          subj<-> head<-> ?who
+                type<-> Human
+     poss<-> John-1
+     of<-> empty
+Test passed.
+
+Translation = 
+
+(exists 
+  (?salesperson ?who ?customer) 
+  (and 
+    (possesses John-1 ?customer) 
+    (instance ?who Human) 
+    (attribute ?who Germanism-WN00265812) 
+    (equal ?customer ?who) 
+    (customer ?customer ?salesperson) 
+    (instance ?salesperson CognitiveAgent) 
+    (instance ?customer CognitiveAgent)))
+
+Speech Act = Assertion
+31 tests passed.
+0 tests failed.
+
+
+%------------------------------------------------------------
+% 2. Examples of translating complete sentences: test_parse_sent_all.
+%------------------------------------------------------------
+
+?-test_parse_sent_all.
+
+Parsed OK:John arrives 
+syn<-> act<-> arrive
+     vcat<-> intransitive
+     gcat<-> empty
+     gap<-> empty
+     rel<-> no
+     max<-> 3
+     role<-> assertion
+sem<-> pred<-> arrival-WN00025919
+     subj<-> head<-> John-1
+           type<-> Male
+           sub<-> empty
+           poss<-> empty
+           of<-> empty
+     adjs<-> []
+Test passed.
+
+Translation = 
+
+(exists 
+  (?event) 
+  (and 
+    (instance ?event arrival-WN00025919) 
+    (instance John-1 Male) 
+    (agent ?event John-1)))
+
+Speech Act = Assertion
+
+
+Parsed OK:Mary stays 
+syn<-> act<-> stay
+     vcat<-> intransitive
+     gcat<-> empty
+     gap<-> empty
+     rel<-> no
+     max<-> 3
+     role<-> assertion
+sem<-> pred<-> stay-WN00682063
+     subj<-> head<-> Mary-1
+           type<-> Female
+           sub<-> empty
+           poss<-> empty
+           of<-> empty
+     adjs<-> []
+Test passed.
+
+Translation = 
+
+(exists 
+  (?event) 
+  (and 
+    (instance ?event stay-WN00682063) 
+    (instance Mary-1 Female) 
+    (agent ?event Mary-1)))
+
+Speech Act = Assertion
+
+
+Parsed OK:John is a customer of the bank 
+syn<-> act<-> be
+     vcat<-> copula
+     gcat<-> empty
+     gap<-> empty
+     rel<-> no
+     max<-> 3
+     role<-> assertion
+sem<-> pred<-> isa
+     subj<-> head<-> John-1
+           type<-> Male
+           sub<-> empty
+           poss<-> empty
+           of<-> empty
+     dobj<-> head<-> ?customer
+           type<-> customer
+           mod<-> empty
+           sub<-> empty
+           poss<-> empty
+           of<-> Bank-FinancialOrganization
+Test passed.
+
+Translation = 
+
+(exists 
+  (?salesperson) 
+  (and 
+    (possesses Bank-FinancialOrganization John-1) 
+    (instance John-1 Male) 
+    (customer John-1 ?salesperson) 
+    (instance ?salesperson CognitiveAgent) 
+    (instance John-1 CognitiveAgent)))
+
+Speech Act = Assertion
+
+
+Parsed OK:the customer is at the bank 
+syn<-> act<-> be
+     vcat<-> copula
+     gcat<-> empty
+     gap<-> empty
+     rel<-> no
+     max<-> 3
+     role<-> assertion
+sem<-> pred<-> isa
+     subj<-> head<-> ?customer
+           type<-> customer
+           mod<-> empty
+           sub<-> empty
+           poss<-> empty
+           of<-> empty
+     adjs<-> [prep<->located..aobj<-> (head<-> ?bank..type<->Bank-FinancialOrganization..mod<->empty..sub<->empty..poss<->empty..of<->empty)]
+Test passed.
+
+Translation = 
+
+(exists 
+  (?bank ?salesperson ?customer) 
+  (and 
+    (located ?customer ?bank) 
+    (instance ?bank Bank-FinancialOrganization) 
+    (customer ?customer ?salesperson) 
+    (instance ?salesperson CognitiveAgent) 
+    (instance ?customer CognitiveAgent)))
+
+Speech Act = Assertion
+
+
+Parsed OK:the card is valid 
+syn<-> act<-> be
+     vcat<-> copula
+     gcat<-> empty
+     gap<-> empty
+     rel<-> no
+     max<-> 3
+     role<-> assertion
+sem<-> mod<-> validation-WN00099890
+     pred<-> isa
+     subj<-> head<-> ?card
+           type<-> BankCard
+           mod<-> empty
+           sub<-> empty
+           poss<-> empty
+           of<-> empty
+Test passed.
+
+Translation = 
+
+(exists 
+  (?card) 
+  (and 
+    (attribute ?card validation-WN00099890) 
+    (instance ?card BankCard)))
+
+Speech Act = Assertion
+
+
+Parsed OK:John ' s code is identical to Mary ' s code 
+syn<-> act<-> be
+     vcat<-> copula
+     gcat<-> empty
+     gap<-> empty
+     rel<-> no
+     max<-> 3
+     role<-> assertion
+sem<-> mod<-> _G1963^_G1966^[equal, _G1963, _G1966]
+     pred<-> isa
+     subj<-> head<-> ?code
+           type<-> Code
+           sub<-> empty
+           poss<-> John-1
+           of<-> empty
+     dobj<-> head<-> ?code
+           type<-> Code
+           sub<-> empty
+           poss<-> Mary-1
+           of<-> empty
+Test passed.
+
+Translation = 
+
+(exists 
+  (?code1 ?code) 
+  (and 
+    (equal ?code ?code1) 
+    (instance ?code1 Code) 
+    (possesses Mary-1 ?code1) 
+    (instance ?code Code) 
+    (possesses John-1 ?code)))
+
+Speech Act = Assertion
+
+
+Parsed OK:John ' s card is compatible with the Swiss bank 
+syn<-> act<-> be
+     vcat<-> copula
+     gcat<-> empty
+     gap<-> empty
+     rel<-> no
+     max<-> 3
+     role<-> assertion
+sem<-> mod<-> _G1960^_G1963^[compatible, _G1960, _G1963]
+     pred<-> isa
+     subj<-> head<-> ?card
+           type<-> BankCard
+           sub<-> empty
+           poss<-> John-1
+           of<-> empty
+     dobj<-> head<-> ?bank
+           type<-> Bank-FinancialOrganization
+           mod<-> Germanism-WN00265812
+           sub<-> empty
+           poss<-> empty
+           of<-> empty
+Test passed.
+
+Translation = 
+
+(exists 
+  (?bank ?card) 
+  (and 
+    (compatible ?card ?bank) 
+    (instance ?bank Bank-FinancialOrganization) 
+    (attribute ?bank Germanism-WN00265812) 
+    (instance ?card BankCard) 
+    (possesses John-1 ?card)))
+
+Speech Act = Assertion
+
+
+Parsed OK:John ' s bank is faster than Mary ' s bank 
+syn<-> act<-> be
+     vcat<-> copula
+     gcat<-> empty
+     gap<-> empty
+     rel<-> no
+     max<-> 3
+     role<-> assertion
+sem<-> mod<-> _G1840^_G1843^[greaterThan, [measure, _G1840, speed-WN00212796], [measure, _G1843, speed-WN00212796]]
+     pred<-> isa
+     subj<-> head<-> ?bank
+           type<-> Bank-FinancialOrganization
+           sub<-> empty
+           poss<-> John-1
+           of<-> empty
+     dobj<-> head<-> ?bank
+           type<-> Bank-FinancialOrganization
+           sub<-> empty
+           poss<-> Mary-1
+           of<-> empty
+Test passed.
+
+Translation = 
+
+(exists 
+  (?bank1 ?bank) 
+  (and 
+    (greaterThan 
+      (measure ?bank speed-WN00212796) 
+      (measure ?bank1 speed-WN00212796)) 
+    (instance ?bank1 Bank-FinancialOrganization) 
+    (possesses Mary-1 ?bank1) 
+    (instance ?bank Bank-FinancialOrganization) 
+    (possesses John-1 ?bank)))
+
+Speech Act = Assertion
+
+
+Parsed OK:John ' s card is more expensive than Mary ' s bank 
+syn<-> act<-> be
+     vcat<-> copula
+     gcat<-> empty
+     gap<-> empty
+     rel<-> no
+     max<-> 3
+     role<-> assertion
+sem<-> mod<-> _G1843^_G1846^[greaterThan, [measure, _G1843, expensiveness-WN04009070], [measure, _G1846, expensiveness-WN04009070]]
+     pred<-> isa
+     subj<-> head<-> ?card
+           type<-> BankCard
+           sub<-> empty
+           poss<-> John-1
+           of<-> empty
+     dobj<-> head<-> ?bank
+           type<-> Bank-FinancialOrganization
+           sub<-> empty
+           poss<-> Mary-1
+           of<-> empty
+Test passed.
+
+Translation = 
+
+(exists 
+  (?bank ?card) 
+  (and 
+    (greaterThan 
+      (measure ?card expensiveness-WN04009070) 
+      (measure ?bank expensiveness-WN04009070)) 
+    (instance ?bank Bank-FinancialOrganization) 
+    (possesses Mary-1 ?bank) 
+    (instance ?card BankCard) 
+    (possesses John-1 ?card)))
+
+Speech Act = Assertion
+
+
+Parsed OK:the Swiss customer enters the bank 
+syn<-> act<-> enter
+     vcat<-> transitive
+     gcat<-> empty
+     gap<-> empty
+     rel<-> no
+     max<-> 3
+     role<-> assertion
+sem<-> pred<-> entrance-WN00026402
+     subj<-> head<-> ?customer
+           type<-> customer
+           mod<-> Germanism-WN00265812
+           sub<-> empty
+           poss<-> empty
+           of<-> empty
+     dobj<-> head<-> ?bank
+           type<-> Bank-FinancialOrganization
+           mod<-> empty
+           sub<-> empty
+           poss<-> empty
+           of<-> empty
+     adjs<-> []
+Test passed.
+
+Translation = 
+
+(exists 
+  (?bank ?salesperson ?customer ?event) 
+  (and 
+    (instance ?customer CognitiveAgent) 
+    (instance ?salesperson CognitiveAgent) 
+    (customer ?customer ?salesperson) 
+    (instance ?event entrance-WN00026402) 
+    (attribute ?customer Germanism-WN00265812) 
+    (agent ?event ?customer) 
+    (instance ?bank Bank-FinancialOrganization) 
+    (patient ?event ?bank)))
+
+Speech Act = Assertion
+
+
+Parsed OK:a new customer gives the card to the teller 
+syn<-> act<-> give
+     vcat<-> ditransitive
+     gcat<-> empty
+     gap<-> empty
+     rel<-> no
+     max<-> 3
+     role<-> assertion
+sem<-> pred<-> Giving
+     subj<-> head<-> ?customer
+           type<-> customer
+           mod<-> newness-WN03855074
+           sub<-> empty
+           poss<-> empty
+           of<-> empty
+     dobj<-> head<-> ?card
+           type<-> BankCard
+           mod<-> empty
+           sub<-> empty
+           poss<-> empty
+           of<-> empty
+     iobj<-> head<-> ?teller
+           type<-> Teller
+           mod<-> empty
+           sub<-> empty
+           poss<-> empty
+           of<-> empty
+     adjs<-> []
+Test passed.
+
+Translation = 
+
+(exists 
+  (?teller ?card ?salesperson ?customer ?event) 
+  (and 
+    (instance ?customer CognitiveAgent) 
+    (instance ?salesperson CognitiveAgent) 
+    (customer ?customer ?salesperson) 
+    (instance ?event Giving) 
+    (attribute ?customer newness-WN03855074) 
+    (agent ?event ?customer) 
+    (instance ?card BankCard) 
+    (patient ?event ?card) 
+    (instance ?teller Teller) 
+    (destination ?event ?teller)))
+
+Speech Act = Assertion
+
+
+Parsed OK:John gives the card to Mary 
+syn<-> act<-> give
+     vcat<-> ditransitive
+     gcat<-> empty
+     gap<-> empty
+     rel<-> no
+     max<-> 3
+     role<-> assertion
+sem<-> pred<-> Giving
+     subj<-> head<-> John-1
+           type<-> Male
+           sub<-> empty
+           poss<-> empty
+           of<-> empty
+     dobj<-> head<-> ?card
+           type<-> BankCard
+           mod<-> empty
+           sub<-> empty
+           poss<-> empty
+           of<-> empty
+     iobj<-> head<-> Mary-1
+           type<-> Female
+           sub<-> empty
+           poss<-> empty
+           of<-> empty
+     adjs<-> []
+Test passed.
+
+Translation = 
+
+(exists 
+  (?card ?event) 
+  (and 
+    (instance ?event Giving) 
+    (instance John-1 Male) 
+    (agent ?event John-1) 
+    (instance ?card BankCard) 
+    (patient ?event ?card) 
+    (instance Mary-1 Female) 
+    (destination ?event Mary-1)))
+
+Speech Act = Assertion
+
+
+Parsed OK:she gives the card to Mary 
+syn<-> act<-> give
+     vcat<-> ditransitive
+     gcat<-> empty
+     gap<-> empty
+     rel<-> no
+     max<-> 3
+     role<-> assertion
+sem<-> pred<-> Giving
+     subj<-> head<-> ?she
+           type<-> Female
+     dobj<-> head<-> ?card
+           type<-> BankCard
+           mod<-> empty
+           sub<-> empty
+           poss<-> empty
+           of<-> empty
+     iobj<-> head<-> Mary-1
+           type<-> Female
+           sub<-> empty
+           poss<-> empty
+           of<-> empty
+     adjs<-> []
+Test passed.
+
+Translation = 
+
+(exists 
+  (?card ?she ?event) 
+  (and 
+    (instance ?event Giving) 
+    (instance ?she Female) 
+    (agent ?event ?she) 
+    (instance ?card BankCard) 
+    (patient ?event ?card) 
+    (instance Mary-1 Female) 
+    (destination ?event Mary-1)))
+
+Speech Act = Assertion
+
+
+Parsed OK:Mr Miller is the oldest teller 
+syn<-> act<-> be
+     vcat<-> copula
+     gcat<-> empty
+     gap<-> empty
+     rel<-> no
+     max<-> 3
+     role<-> assertion
+sem<-> pred<-> isa
+     subj<-> head<-> MrMiller
+           type<-> Male
+           sub<-> empty
+           poss<-> empty
+           of<-> empty
+     dobj<-> head<-> ?teller
+           type<-> Teller
+           mod<-> superlative(oldness-WN03854196)
+           sub<-> empty
+           poss<-> empty
+           of<-> empty
+Test passed.
+
+Translation = 
+
+(and 
+  (instance MrMiller Teller) 
+  (forall 
+    (?X) 
+    (implies 
+      (and 
+        (instance ?X Teller) 
+        (not 
+          (equal ?X MrMiller))) 
+      (greaterThan 
+        (measure 
+          (attribute MrMiller oldness-WN03854196)) 
+        (measure 
+          (attribute ?X oldness-WN03854196))))) 
+  (instance MrMiller Male))
+
+Speech Act = Assertion
+
+
+Parsed OK:the oldest customer enters an invalid card 
+syn<-> act<-> enter
+     vcat<-> transitive
+     gcat<-> empty
+     gap<-> empty
+     rel<-> no
+     max<-> 3
+     role<-> assertion
+sem<-> pred<-> entrance-WN00026402
+     subj<-> head<-> ?customer
+           type<-> customer
+           mod<-> superlative(oldness-WN03854196)
+           sub<-> empty
+           poss<-> empty
+           of<-> empty
+     dobj<-> head<-> ?card
+           type<-> BankCard
+           mod<-> incorrectness-WN03838242
+           sub<-> empty
+           poss<-> empty
+           of<-> empty
+     adjs<-> []
+Test passed.
+
+Translation = 
+
+(exists 
+  (?card ?salesperson ?customer ?event) 
+  (and 
+    (instance ?customer CognitiveAgent) 
+    (instance ?salesperson CognitiveAgent) 
+    (customer ?customer ?salesperson) 
+    (instance ?event entrance-WN00026402) 
+    (forall 
+      (?X) 
+      (implies 
+        (and 
+          (instance ?X customer) 
+          (not 
+            (equal ?X ?customer))) 
+        (greaterThan 
+          (measure 
+            (attribute ?customer oldness-WN03854196)) 
+          (measure 
+            (attribute ?X oldness-WN03854196))))) 
+    (agent ?event ?customer) 
+    (attribute ?card incorrectness-WN03838242) 
+    (instance ?card BankCard) 
+    (patient ?event ?card)))
+
+Speech Act = Assertion
+
+
+Parsed OK:Mr Miller enters the bank 
+syn<-> act<-> enter
+     vcat<-> transitive
+     gcat<-> empty
+     gap<-> empty
+     rel<-> no
+     max<-> 3
+     role<-> assertion
+sem<-> pred<-> entrance-WN00026402
+     subj<-> head<-> MrMiller
+           type<-> Male
+           sub<-> empty
+           poss<-> empty
+           of<-> empty
+     dobj<-> head<-> ?bank
+           type<-> Bank-FinancialOrganization
+           mod<-> empty
+           sub<-> empty
+           poss<-> empty
+           of<-> empty
+     adjs<-> []
+Test passed.
+
+Translation = 
+
+(exists 
+  (?bank ?event) 
+  (and 
+    (instance ?event entrance-WN00026402) 
+    (instance MrMiller Male) 
+    (agent ?event MrMiller) 
+    (instance ?bank Bank-FinancialOrganization) 
+    (patient ?event ?bank)))
+
+Speech Act = Assertion
+
+
+Parsed OK:The New York Times is at the bank 
+syn<-> act<-> be
+     vcat<-> copula
+     gcat<-> empty
+     gap<-> empty
+     rel<-> no
+     max<-> 3
+     role<-> assertion
+sem<-> pred<-> isa
+     subj<-> head<-> TheNewYorkTimes
+           type<-> Artifact
+           sub<-> empty
+           poss<-> empty
+           of<-> empty
+     adjs<-> [prep<->located..aobj<-> (head<-> ?bank..type<->Bank-FinancialOrganization..mod<->empty..sub<->empty..poss<->empty..of<->empty)]
+Test passed.
+
+Translation = 
+
+(exists 
+  (?bank) 
+  (and 
+    (located TheNewYorkTimes ?bank) 
+    (instance ?bank Bank-FinancialOrganization) 
+    (instance TheNewYorkTimes Artifact)))
+
+Speech Act = Assertion
+
+
+Parsed OK:John dry cleans the credit card 
+syn<-> act<-> dry_clean
+     vcat<-> transitive
+     gcat<-> empty
+     gap<-> empty
+     rel<-> no
+     max<-> 3
+     role<-> assertion
+sem<-> pred<-> dry_cleaning-WN00161520
+     subj<-> head<-> John-1
+           type<-> Male
+           sub<-> empty
+           poss<-> empty
+           of<-> empty
+     dobj<-> head<-> ?credit_card
+           type<-> CreditCard
+           mod<-> empty
+           sub<-> empty
+           poss<-> empty
+           of<-> empty
+     adjs<-> []
+Test passed.
+
+Translation = 
+
+(exists 
+  (?credit_card ?event) 
+  (and 
+    (instance ?event dry_cleaning-WN00161520) 
+    (instance John-1 Male) 
+    (agent ?event John-1) 
+    (instance ?credit_card CreditCard) 
+    (patient ?event ?credit_card)))
+
+Speech Act = Assertion
+
+
+Parsed OK:the Swiss customer enters the first class bank 
+syn<-> act<-> enter
+     vcat<-> transitive
+     gcat<-> empty
+     gap<-> empty
+     rel<-> no
+     max<-> 3
+     role<-> assertion
+sem<-> pred<-> entrance-WN00026402
+     subj<-> head<-> ?customer
+           type<-> customer
+           mod<-> Germanism-WN00265812
+           sub<-> empty
+           poss<-> empty
+           of<-> empty
+     dobj<-> head<-> ?bank
+           type<-> Bank-FinancialOrganization
+           mod<-> first_class-WN03718753
+           sub<-> empty
+           poss<-> empty
+           of<-> empty
+     adjs<-> []
+Test passed.
+
+Translation = 
+
+(exists 
+  (?bank ?salesperson ?customer ?event) 
+  (and 
+    (instance ?customer CognitiveAgent) 
+    (instance ?salesperson CognitiveAgent) 
+    (customer ?customer ?salesperson) 
+    (instance ?event entrance-WN00026402) 
+    (attribute ?customer Germanism-WN00265812) 
+    (agent ?event ?customer) 
+    (attribute ?bank first_class-WN03718753) 
+    (instance ?bank Bank-FinancialOrganization) 
+    (patient ?event ?bank)))
+
+Speech Act = Assertion
+
+
+Parsed OK:the customer Mr Miller enters the bank 
+syn<-> act<-> enter
+     vcat<-> transitive
+     gcat<-> empty
+     gap<-> empty
+     rel<-> no
+     max<-> 3
+     role<-> assertion
+sem<-> pred<-> entrance-WN00026402
+     subj<-> head<-> MrMiller
+           type<-> customer
+           mod<-> empty
+           sub<-> empty
+           poss<-> empty
+           of<-> empty
+     dobj<-> head<-> ?bank
+           type<-> Bank-FinancialOrganization
+           mod<-> empty
+           sub<-> empty
+           poss<-> empty
+           of<-> empty
+     adjs<-> []
+Test passed.
+
+Translation = 
+
+(exists 
+  (?bank ?salesperson ?event) 
+  (and 
+    (instance MrMiller CognitiveAgent) 
+    (instance ?salesperson CognitiveAgent) 
+    (customer MrMiller ?salesperson) 
+    (instance ?event entrance-WN00026402) 
+    (agent ?event MrMiller) 
+    (instance ?bank Bank-FinancialOrganization) 
+    (patient ?event ?bank)))
+
+Speech Act = Assertion
+
+
+Parsed OK:the customer Mr Miller enters a bank X 
+syn<-> act<-> enter
+     vcat<-> transitive
+     gcat<-> empty
+     gap<-> empty
+     rel<-> no
+     max<-> 3
+     role<-> assertion
+sem<-> pred<-> entrance-WN00026402
+     subj<-> head<-> MrMiller
+           type<-> customer
+           mod<-> empty
+           sub<-> empty
+           poss<-> empty
+           of<-> empty
+     dobj<-> head<-> X
+           type<-> Bank-FinancialOrganization
+           mod<-> empty
+           sub<-> empty
+           poss<-> empty
+           of<-> empty
+     adjs<-> []
+Test passed.
+
+Translation = 
+
+(exists 
+  (?salesperson ?event) 
+  (and 
+    (instance MrMiller CognitiveAgent) 
+    (instance ?salesperson CognitiveAgent) 
+    (customer MrMiller ?salesperson) 
+    (instance ?event entrance-WN00026402) 
+    (agent ?event MrMiller) 
+    (instance X Bank-FinancialOrganization) 
+    (patient ?event X)))
+
+Speech Act = Assertion
+
+
+Parsed OK:John ' s card is at the bank 
+syn<-> act<-> be
+     vcat<-> copula
+     gcat<-> empty
+     gap<-> empty
+     rel<-> no
+     max<-> 3
+     role<-> assertion
+sem<-> pred<-> isa
+     subj<-> head<-> ?card
+           type<-> BankCard
+           sub<-> empty
+           poss<-> John-1
+           of<-> empty
+     adjs<-> [prep<->located..aobj<-> (head<-> ?bank..type<->Bank-FinancialOrganization..mod<->empty..sub<->empty..poss<->empty..of<->empty)]
+Test passed.
+
+Translation = 
+
+(exists 
+  (?bank ?card) 
+  (and 
+    (located ?card ?bank) 
+    (instance ?bank Bank-FinancialOrganization) 
+    (instance ?card BankCard) 
+    (possesses John-1 ?card)))
+
+Speech Act = Assertion
+
+
+Parsed OK:the card ' s code is valid 
+syn<-> act<-> be
+     vcat<-> copula
+     gcat<-> empty
+     gap<-> empty
+     rel<-> no
+     max<-> 3
+     role<-> assertion
+sem<-> mod<-> validation-WN00099890
+     pred<-> isa
+     subj<-> head<-> ?code
+           type<-> Code
+           mod<-> empty
+           sub<-> empty
+           poss<-> BankCard
+           of<-> empty
+Test passed.
+
+Translation = 
+
+(exists 
+  (?code) 
+  (and 
+    (attribute ?code validation-WN00099890) 
+    (instance ?code Code) 
+    (possesses BankCard ?code)))
+
+Speech Act = Assertion
+
+
+Parsed OK:Monday ' s customer arrives punctually 
+syn<-> act<-> arrive
+     vcat<-> intransitive
+     gcat<-> empty
+     gap<-> empty
+     rel<-> no
+     max<-> 3
+     role<-> assertion
+sem<-> pred<-> arrival-WN00025919
+     subj<-> head<-> ?customer
+           type<-> customer
+           sub<-> empty
+           poss<-> Monday
+           of<-> empty
+     adjs<-> [adv<->punctuality-WN03940380]
+Test passed.
+
+Translation = 
+
+(exists 
+  (?salesperson ?customer ?event) 
+  (and 
+    (instance ?customer CognitiveAgent) 
+    (instance ?salesperson CognitiveAgent) 
+    (customer ?customer ?salesperson) 
+    (instance ?event arrival-WN00025919) 
+    (possesses Monday ?customer) 
+    (agent ?event ?customer) 
+    (manner ?event punctuality-WN03940380)))
+
+Speech Act = Assertion
+
+
+Parsed OK:the customer who enters the bank inserts the card 
+syn<-> act<-> insert
+     vcat<-> transitive
+     gcat<-> empty
+     gap<-> empty
+     rel<-> no
+     max<-> 3
+     role<-> assertion
+sem<-> pred<-> insertion-WN00207301
+     subj<-> head<-> ?customer
+           type<-> customer
+           mod<-> empty
+           sub<-> pred<-> entrance-WN00026402
+                subj<-> head<-> ?who
+                      type<-> Human
+                dobj<-> head<-> ?bank
+                      type<-> Bank-FinancialOrganization
+                      mod<-> empty
+                      sub<-> empty
+                      poss<-> empty
+                      of<-> empty
+                adjs<-> []
+           poss<-> empty
+           of<-> empty
+     dobj<-> head<-> ?card
+           type<-> BankCard
+           mod<-> empty
+           sub<-> empty
+           poss<-> empty
+           of<-> empty
+     adjs<-> []
+Test passed.
+
+Translation = 
+
+(exists 
+  (?card ?salesperson ?bank ?who ?event1 ?customer ?event) 
+  (and 
+    (instance ?customer CognitiveAgent) 
+    (instance ?salesperson CognitiveAgent) 
+    (customer ?customer ?salesperson) 
+    (equal ?customer ?who) 
+    (instance ?event1 entrance-WN00026402) 
+    (instance ?who Human) 
+    (agent ?event1 ?who) 
+    (instance ?bank Bank-FinancialOrganization) 
+    (patient ?event1 ?bank) 
+    (instance ?event insertion-WN00207301) 
+    (agent ?event ?customer) 
+    (instance ?card BankCard) 
+    (patient ?event ?card)))
+
+Speech Act = Assertion
+
+
+Parsed OK:a customer who is Swiss inserts the card 
+syn<-> act<-> insert
+     vcat<-> transitive
+     gcat<-> empty
+     gap<-> empty
+     rel<-> no
+     max<-> 3
+     role<-> assertion
+sem<-> pred<-> insertion-WN00207301
+     subj<-> head<-> ?customer
+           type<-> customer
+           mod<-> empty
+           sub<-> mod<-> Germanism-WN00265812
+                pred<-> isa
+                subj<-> head<-> ?who
+                      type<-> Human
+           poss<-> empty
+           of<-> empty
+     dobj<-> head<-> ?card
+           type<-> BankCard
+           mod<-> empty
+           sub<-> empty
+           poss<-> empty
+           of<-> empty
+     adjs<-> []
+Test passed.
+
+Translation = 
+
+(exists 
+  (?card ?salesperson ?who ?customer ?event) 
+  (and 
+    (instance ?customer CognitiveAgent) 
+    (instance ?salesperson CognitiveAgent) 
+    (customer ?customer ?salesperson) 
+    (equal ?customer ?who) 
+    (attribute ?who Germanism-WN00265812) 
+    (instance ?who Human) 
+    (instance ?event insertion-WN00207301) 
+    (agent ?event ?customer) 
+    (instance ?card BankCard) 
+    (patient ?event ?card)))
+
+Speech Act = Assertion
+
+
+Parsed OK:the card which is old is valid 
+syn<-> act<-> be
+     vcat<-> copula
+     gcat<-> empty
+     gap<-> empty
+     rel<-> no
+     max<-> 3
+     role<-> assertion
+sem<-> mod<-> validation-WN00099890
+     pred<-> isa
+     subj<-> head<-> ?card
+           type<-> BankCard
+           mod<-> empty
+           sub<-> mod<-> oldness-WN03854196
+                pred<-> isa
+                subj<-> head<-> ?which
+                      type<-> Physical
+           poss<-> empty
+           of<-> empty
+Test passed.
+
+Translation = 
+
+(exists 
+  (?which ?card) 
+  (and 
+    (attribute ?card validation-WN00099890) 
+    (instance ?card BankCard) 
+    (instance ?which Physical) 
+    (attribute ?which oldness-WN03854196) 
+    (equal ?card ?which)))
+
+Speech Act = Assertion
+
+
+Parsed OK:the card that is old is valid 
+syn<-> act<-> be
+     vcat<-> copula
+     gcat<-> empty
+     gap<-> empty
+     rel<-> no
+     max<-> 3
+     role<-> assertion
+sem<-> mod<-> validation-WN00099890
+     pred<-> isa
+     subj<-> head<-> ?card
+           type<-> BankCard
+           mod<-> empty
+           sub<-> mod<-> oldness-WN03854196
+                pred<-> isa
+                subj<-> head<-> ?that
+                      type<-> Physical
+           poss<-> empty
+           of<-> empty
+Test passed.
+
+Translation = 
+
+(exists 
+  (?that ?card) 
+  (and 
+    (attribute ?card validation-WN00099890) 
+    (instance ?card BankCard) 
+    (instance ?that Physical) 
+    (attribute ?that oldness-WN03854196) 
+    (equal ?card ?that)))
+
+Speech Act = Assertion
+
+
+Parsed OK:a customer inserts a credit card which is old 
+syn<-> act<-> insert
+     vcat<-> transitive
+     gcat<-> empty
+     gap<-> empty
+     rel<-> no
+     max<-> 3
+     role<-> assertion
+sem<-> pred<-> insertion-WN00207301
+     subj<-> head<-> ?customer
+           type<-> customer
+           mod<-> empty
+           sub<-> empty
+           poss<-> empty
+           of<-> empty
+     dobj<-> head<-> ?credit_card
+           type<-> CreditCard
+           mod<-> empty
+           sub<-> mod<-> oldness-WN03854196
+                pred<-> isa
+                subj<-> head<-> ?which
+                      type<-> Physical
+           poss<-> empty
+           of<-> empty
+     adjs<-> []
+Test passed.
+
+Translation = 
+
+(exists 
+  (?which ?credit_card ?salesperson ?customer ?event) 
+  (and 
+    (equal ?credit_card ?which) 
+    (attribute ?which oldness-WN03854196) 
+    (instance ?which Physical) 
+    (instance ?customer CognitiveAgent) 
+    (instance ?salesperson CognitiveAgent) 
+    (customer ?customer ?salesperson) 
+    (instance ?event insertion-WN00207301) 
+    (agent ?event ?customer) 
+    (instance ?credit_card CreditCard) 
+    (patient ?event ?credit_card)))
+
+Speech Act = Assertion
+
+
+Parsed OK:Mr Miller enters the card that the customer inserts 
+syn<-> act<-> enter
+     vcat<-> transitive
+     gcat<-> empty
+     gap<-> empty
+     rel<-> no
+     max<-> 3
+     role<-> assertion
+sem<-> pred<-> entrance-WN00026402
+     subj<-> head<-> MrMiller
+           type<-> Male
+           sub<-> empty
+           poss<-> empty
+           of<-> empty
+     dobj<-> head<-> ?card
+           type<-> BankCard
+           mod<-> empty
+           sub<-> pred<-> insertion-WN00207301
+                subj<-> head<-> ?customer
+                      type<-> customer
+                      mod<-> empty
+                      sub<-> empty
+                      poss<-> empty
+                      of<-> empty
+                dobj<-> head<-> ?that
+                      type<-> Physical
+                adjs<-> []
+           poss<-> empty
+           of<-> empty
+     adjs<-> []
+Test passed.
+
+Translation = 
+
+(exists 
+  (?that ?salesperson ?customer ?event1 ?card ?event) 
+  (and 
+    (equal ?card ?that) 
+    (instance ?customer CognitiveAgent) 
+    (instance ?salesperson CognitiveAgent) 
+    (customer ?customer ?salesperson) 
+    (instance ?event1 insertion-WN00207301) 
+    (agent ?event1 ?customer) 
+    (instance ?that Physical) 
+    (patient ?event1 ?that) 
+    (instance ?event entrance-WN00026402) 
+    (instance MrMiller Male) 
+    (agent ?event MrMiller) 
+    (instance ?card BankCard) 
+    (patient ?event ?card)))
+
+Speech Act = Assertion
+
+
+Parsed OK:Mr Miller enters the card that the customer inserts into the slot 
+syn<-> act<-> enter
+     vcat<-> transitive
+     gcat<-> empty
+     gap<-> empty
+     rel<-> no
+     max<-> 3
+     role<-> assertion
+sem<-> pred<-> entrance-WN00026402
+     subj<-> head<-> MrMiller
+           type<-> Male
+           sub<-> empty
+           poss<-> empty
+           of<-> empty
+     dobj<-> head<-> ?card
+           type<-> BankCard
+           mod<-> empty
+           sub<-> pred<-> insertion-WN00207301
+                subj<-> head<-> ?customer
+                      type<-> customer
+                      mod<-> empty
+                      sub<-> empty
+                      poss<-> empty
+                      of<-> empty
+                dobj<-> head<-> ?that
+                      type<-> Physical
+                adjs<-> []
+           poss<-> empty
+           of<-> empty
+     adjs<-> [prep<->partiallyFills..aobj<-> (head<-> ?slot..type<->ATMSlot..mod<->empty..sub<->empty..poss<->empty..of<->empty)]
+Test passed.
+
+Translation = 
+
+(exists 
+  (?slot ?that ?salesperson ?customer ?event1 ?card ?event) 
+  (and 
+    (equal ?card ?that) 
+    (instance ?customer CognitiveAgent) 
+    (instance ?salesperson CognitiveAgent) 
+    (customer ?customer ?salesperson) 
+    (instance ?event1 insertion-WN00207301) 
+    (agent ?event1 ?customer) 
+    (instance ?that Physical) 
+    (patient ?event1 ?that) 
+    (instance ?event entrance-WN00026402) 
+    (instance MrMiller Male) 
+    (agent ?event MrMiller) 
+    (instance ?card BankCard) 
+    (patient ?event ?card) 
+    (instance ?slot ATMSlot) 
+    (partiallyFills ?event ?slot)))
+
+Speech Act = Assertion
+
+
+Parsed OK:the teller enters the card that the customer gives to him 
+syn<-> act<-> enter
+     vcat<-> transitive
+     gcat<-> empty
+     gap<-> empty
+     rel<-> no
+     max<-> 3
+     role<-> assertion
+sem<-> pred<-> entrance-WN00026402
+     subj<-> head<-> ?teller
+           type<-> Teller
+           mod<-> empty
+           sub<-> empty
+           poss<-> empty
+           of<-> empty
+     dobj<-> head<-> ?card
+           type<-> BankCard
+           mod<-> empty
+           sub<-> pred<-> Giving
+                subj<-> head<-> ?customer
+                      type<-> customer
+                      mod<-> empty
+                      sub<-> empty
+                      poss<-> empty
+                      of<-> empty
+                dobj<-> head<-> ?that
+                      type<-> Physical
+                iobj<-> head<-> ?him
+                      type<-> Male
+                adjs<-> []
+           poss<-> empty
+           of<-> empty
+     adjs<-> []
+Test passed.
+
+Translation = 
+
+(exists 
+  (?him ?that ?salesperson ?customer ?event1 ?card ?teller ?event) 
+  (and 
+    (equal ?card ?that) 
+    (instance ?customer CognitiveAgent) 
+    (instance ?salesperson CognitiveAgent) 
+    (customer ?customer ?salesperson) 
+    (instance ?event1 Giving) 
+    (agent ?event1 ?customer) 
+    (instance ?that Physical) 
+    (patient ?event1 ?that) 
+    (instance ?him Male) 
+    (destination ?event1 ?him) 
+    (instance ?event entrance-WN00026402) 
+    (instance ?teller Teller) 
+    (agent ?event ?teller) 
+    (instance ?card BankCard) 
+    (patient ?event ?card)))
+
+Speech Act = Assertion
+
+
+Parsed OK:John gives the card to the teller who the customer gives the code to 
+syn<-> act<-> give
+     vcat<-> ditransitive
+     gcat<-> empty
+     gap<-> empty
+     rel<-> no
+     max<-> 3
+     role<-> assertion
+sem<-> pred<-> Giving
+     subj<-> head<-> John-1
+           type<-> Male
+           sub<-> empty
+           poss<-> empty
+           of<-> empty
+     dobj<-> head<-> ?card
+           type<-> BankCard
+           mod<-> empty
+           sub<-> empty
+           poss<-> empty
+           of<-> empty
+     iobj<-> head<-> ?teller
+           type<-> Teller
+           mod<-> empty
+           sub<-> pred<-> Giving
+                subj<-> head<-> ?customer
+                      type<-> customer
+                      mod<-> empty
+                      sub<-> empty
+                      poss<-> empty
+                      of<-> empty
+                dobj<-> head<-> ?code
+                      type<-> Code
+                      mod<-> empty
+                      sub<-> empty
+                      poss<-> empty
+                      of<-> empty
+                iobj<-> head<-> ?who
+                      type<-> Human
+                adjs<-> []
+           poss<-> empty
+           of<-> empty
+     adjs<-> []
+Test passed.
+
+Translation = 
+
+(exists 
+  (?who ?code ?salesperson ?customer ?event1 ?teller ?card ?event) 
+  (and 
+    (equal ?teller ?who) 
+    (instance ?customer CognitiveAgent) 
+    (instance ?salesperson CognitiveAgent) 
+    (customer ?customer ?salesperson) 
+    (instance ?event1 Giving) 
+    (agent ?event1 ?customer) 
+    (instance ?code Code) 
+    (patient ?event1 ?code) 
+    (instance ?who Human) 
+    (destination ?event1 ?who) 
+    (instance ?event Giving) 
+    (instance John-1 Male) 
+    (agent ?event John-1) 
+    (instance ?card BankCard) 
+    (patient ?event ?card) 
+    (instance ?teller Teller) 
+    (destination ?event ?teller)))
+
+Speech Act = Assertion
+
+
+Parsed OK:a customer who is old inserts a credit card that is valid 
+syn<-> act<-> insert
+     vcat<-> transitive
+     gcat<-> empty
+     gap<-> empty
+     rel<-> no
+     max<-> 3
+     role<-> assertion
+sem<-> pred<-> insertion-WN00207301
+     subj<-> head<-> ?customer
+           type<-> customer
+           mod<-> empty
+           sub<-> mod<-> oldness-WN03854196
+                pred<-> isa
+                subj<-> head<-> ?who
+                      type<-> Human
+           poss<-> empty
+           of<-> empty
+     dobj<-> head<-> ?credit_card
+           type<-> CreditCard
+           mod<-> empty
+           sub<-> mod<-> validation-WN00099890
+                pred<-> isa
+                subj<-> head<-> ?that
+                      type<-> Physical
+           poss<-> empty
+           of<-> empty
+     adjs<-> []
+Test passed.
+
+Translation = 
+
+(exists 
+  (?that ?credit_card ?salesperson ?who ?customer ?event) 
+  (and 
+    (equal ?credit_card ?that) 
+    (attribute ?that validation-WN00099890) 
+    (instance ?that Physical) 
+    (instance ?customer CognitiveAgent) 
+    (instance ?salesperson CognitiveAgent) 
+    (customer ?customer ?salesperson) 
+    (equal ?customer ?who) 
+    (attribute ?who oldness-WN03854196) 
+    (instance ?who Human) 
+    (instance ?event insertion-WN00207301) 
+    (agent ?event ?customer) 
+    (instance ?credit_card CreditCard) 
+    (patient ?event ?credit_card)))
+
+Speech Act = Assertion
+
+
+Parsed OK:John uses the credit card correctly 
+syn<-> act<-> use
+     vcat<-> transitive
+     gcat<-> empty
+     gap<-> empty
+     rel<-> no
+     max<-> 3
+     role<-> assertion
+sem<-> pred<-> use-WN00605730
+     subj<-> head<-> John-1
+           type<-> Male
+           sub<-> empty
+           poss<-> empty
+           of<-> empty
+     dobj<-> head<-> ?credit_card
+           type<-> CreditCard
+           mod<-> empty
+           sub<-> empty
+           poss<-> empty
+           of<-> empty
+     adjs<-> [adv<->correctness-WN03836923]
+Test passed.
+
+Translation = 
+
+(exists 
+  (?credit_card ?event) 
+  (and 
+    (instance ?event use-WN00605730) 
+    (instance John-1 Male) 
+    (agent ?event John-1) 
+    (instance ?credit_card CreditCard) 
+    (patient ?event ?credit_card) 
+    (manner ?event correctness-WN03836923)))
+
+Speech Act = Assertion
+
+
+Parsed OK:the customer inserts a card slowly 
+syn<-> act<-> insert
+     vcat<-> transitive
+     gcat<-> empty
+     gap<-> empty
+     rel<-> no
+     max<-> 3
+     role<-> assertion
+sem<-> pred<-> insertion-WN00207301
+     subj<-> head<-> ?customer
+           type<-> customer
+           mod<-> empty
+           sub<-> empty
+           poss<-> empty
+           of<-> empty
+     dobj<-> head<-> ?card
+           type<-> BankCard
+           mod<-> empty
+           sub<-> empty
+           poss<-> empty
+           of<-> empty
+     adjs<-> [adv<->slowness-WN03951223]
+Test passed.
+
+Translation = 
+
+(exists 
+  (?card ?salesperson ?customer ?event) 
+  (and 
+    (instance ?customer CognitiveAgent) 
+    (instance ?salesperson CognitiveAgent) 
+    (customer ?customer ?salesperson) 
+    (instance ?event insertion-WN00207301) 
+    (agent ?event ?customer) 
+    (instance ?card BankCard) 
+    (patient ?event ?card) 
+    (manner ?event slowness-WN03951223)))
+
+Speech Act = Assertion
+
+
+Parsed OK:the customer who inserts a card slowly enters a code 
+syn<-> act<-> enter
+     vcat<-> transitive
+     gcat<-> empty
+     gap<-> empty
+     rel<-> no
+     max<-> 3
+     role<-> assertion
+sem<-> pred<-> entrance-WN00026402
+     subj<-> head<-> ?customer
+           type<-> customer
+           mod<-> empty
+           sub<-> pred<-> insertion-WN00207301
+                subj<-> head<-> ?who
+                      type<-> Human
+                dobj<-> head<-> ?card
+                      type<-> BankCard
+                      mod<-> empty
+                      sub<-> empty
+                      poss<-> empty
+                      of<-> empty
+                adjs<-> [adv<->slowness-WN03951223]
+           poss<-> empty
+           of<-> empty
+     dobj<-> head<-> ?code
+           type<-> Code
+           mod<-> empty
+           sub<-> empty
+           poss<-> empty
+           of<-> empty
+     adjs<-> []
+Test passed.
+
+Translation = 
+
+(exists 
+  (?code ?salesperson ?card ?who ?event1 ?customer ?event) 
+  (and 
+    (instance ?customer CognitiveAgent) 
+    (instance ?salesperson CognitiveAgent) 
+    (customer ?customer ?salesperson) 
+    (equal ?customer ?who) 
+    (instance ?event1 insertion-WN00207301) 
+    (instance ?who Human) 
+    (agent ?event1 ?who) 
+    (instance ?card BankCard) 
+    (patient ?event1 ?card) 
+    (manner ?event1 slowness-WN03951223) 
+    (instance ?event entrance-WN00026402) 
+    (agent ?event ?customer) 
+    (instance ?code Code) 
+    (patient ?event ?code)))
+
+Speech Act = Assertion
+
+
+Parsed OK:the train arrives in the station 
+syn<-> act<-> arrive
+     vcat<-> intransitive
+     gcat<-> empty
+     gap<-> empty
+     rel<-> no
+     max<-> 3
+     role<-> assertion
+sem<-> pred<-> arrival-WN00025919
+     subj<-> head<-> ?train
+           type<-> train-WN03528724
+           mod<-> empty
+           sub<-> empty
+           poss<-> empty
+           of<-> empty
+     adjs<-> [prep<->partiallyFills..aobj<-> (head<-> ?station..type<->station-WN03404271..mod<->empty..sub<->empty..poss<->empty..of<->empty)]
+Test passed.
+
+Translation = 
+
+(exists 
+  (?station ?train ?event) 
+  (and 
+    (instance ?event arrival-WN00025919) 
+    (instance ?train train-WN03528724) 
+    (agent ?event ?train) 
+    (instance ?station station-WN03404271) 
+    (partiallyFills ?event ?station)))
+
+Speech Act = Assertion
+
+
+Parsed OK:a customer enters a code manually 
+syn<-> act<-> enter
+     vcat<-> transitive
+     gcat<-> empty
+     gap<-> empty
+     rel<-> no
+     max<-> 3
+     role<-> assertion
+sem<-> pred<-> entrance-WN00026402
+     subj<-> head<-> ?customer
+           type<-> customer
+           mod<-> empty
+           sub<-> empty
+           poss<-> empty
+           of<-> empty
+     dobj<-> head<-> ?code
+           type<-> Code
+           mod<-> empty
+           sub<-> empty
+           poss<-> empty
+           of<-> empty
+     adjs<-> [adv<->manual_labor-WN00410579]
+Test passed.
+
+Translation = 
+
+(exists 
+  (?code ?salesperson ?customer ?event) 
+  (and 
+    (instance ?customer CognitiveAgent) 
+    (instance ?salesperson CognitiveAgent) 
+    (customer ?customer ?salesperson) 
+    (instance ?event entrance-WN00026402) 
+    (agent ?event ?customer) 
+    (instance ?code Code) 
+    (patient ?event ?code) 
+    (manner ?event manual_labor-WN00410579)))
+
+Speech Act = Assertion
+
+
+Parsed OK:a customer arrives on Monday 
+syn<-> act<-> arrive
+     vcat<-> intransitive
+     gcat<-> empty
+     gap<-> empty
+     rel<-> no
+     max<-> 3
+     role<-> assertion
+sem<-> pred<-> arrival-WN00025919
+     subj<-> head<-> ?customer
+           type<-> customer
+           mod<-> empty
+           sub<-> empty
+           poss<-> empty
+           of<-> empty
+     adjs<-> [prep<->located..aobj<-> (head<->Monday..type<->Day..sub<->empty..poss<->empty..of<->empty)]
+Test passed.
+
+Translation = 
+
+(exists 
+  (?salesperson ?customer ?event) 
+  (and 
+    (instance ?customer CognitiveAgent) 
+    (instance ?salesperson CognitiveAgent) 
+    (customer ?customer ?salesperson) 
+    (instance ?event arrival-WN00025919) 
+    (agent ?event ?customer) 
+    (instance Monday Day) 
+    (located ?event Monday)))
+
+Speech Act = Assertion
+
+
+Parsed OK:a customer arrives on the train 
+syn<-> act<-> arrive
+     vcat<-> intransitive
+     gcat<-> empty
+     gap<-> empty
+     rel<-> no
+     max<-> 3
+     role<-> assertion
+sem<-> pred<-> arrival-WN00025919
+     subj<-> head<-> ?customer
+           type<-> customer
+           mod<-> empty
+           sub<-> empty
+           poss<-> empty
+           of<-> empty
+     adjs<-> [prep<->located..aobj<-> (head<-> ?train..type<->train-WN03528724..mod<->empty..sub<->empty..poss<->empty..of<->empty)]
+Test passed.
+
+Translation = 
+
+(exists 
+  (?train ?salesperson ?customer ?event) 
+  (and 
+    (instance ?customer CognitiveAgent) 
+    (instance ?salesperson CognitiveAgent) 
+    (customer ?customer ?salesperson) 
+    (instance ?event arrival-WN00025919) 
+    (agent ?event ?customer) 
+    (instance ?train train-WN03528724) 
+    (located ?event ?train)))
+
+Speech Act = Assertion
+
+
+Parsed OK:a customer arrives on Monday punctually 
+syn<-> act<-> arrive
+     vcat<-> intransitive
+     gcat<-> empty
+     gap<-> empty
+     rel<-> no
+     max<-> 3
+     role<-> assertion
+sem<-> pred<-> arrival-WN00025919
+     subj<-> head<-> ?customer
+           type<-> customer
+           mod<-> empty
+           sub<-> empty
+           poss<-> empty
+           of<-> empty
+     adjs<-> [prep<->located..aobj<-> (head<->Monday..type<->Day..sub<->empty..poss<->empty..of<->empty), adv<->punctuality-WN03940380]
+Test passed.
+
+Translation = 
+
+(exists 
+  (?salesperson ?customer ?event) 
+  (and 
+    (instance ?customer CognitiveAgent) 
+    (instance ?salesperson CognitiveAgent) 
+    (customer ?customer ?salesperson) 
+    (instance ?event arrival-WN00025919) 
+    (agent ?event ?customer) 
+    (instance Monday Day) 
+    (located ?event Monday) 
+    (manner ?event punctuality-WN03940380)))
+
+Speech Act = Assertion
+
+
+Parsed OK:the fast train arrives punctually 
+syn<-> act<-> arrive
+     vcat<-> intransitive
+     gcat<-> empty
+     gap<-> empty
+     rel<-> no
+     max<-> 3
+     role<-> assertion
+sem<-> pred<-> arrival-WN00025919
+     subj<-> head<-> ?train
+           type<-> train-WN03528724
+           mod<-> speed-WN00212796
+           sub<-> empty
+           poss<-> empty
+           of<-> empty
+     adjs<-> [adv<->punctuality-WN03940380]
+Test passed.
+
+Translation = 
+
+(exists 
+  (?train ?event) 
+  (and 
+    (instance ?event arrival-WN00025919) 
+    (attribute ?train speed-WN00212796) 
+    (instance ?train train-WN03528724) 
+    (agent ?event ?train) 
+    (manner ?event punctuality-WN03940380)))
+
+Speech Act = Assertion
+
+
+Parsed OK:the fast train arrives punctually on Monday 
+syn<-> act<-> arrive
+     vcat<-> intransitive
+     gcat<-> empty
+     gap<-> empty
+     rel<-> no
+     max<-> 3
+     role<-> assertion
+sem<-> pred<-> arrival-WN00025919
+     subj<-> head<-> ?train
+           type<-> train-WN03528724
+           mod<-> speed-WN00212796
+           sub<-> empty
+           poss<-> empty
+           of<-> empty
+     adjs<-> [adv<->punctuality-WN03940380, prep<->located..aobj<-> (head<->Monday..type<->Day..sub<->empty..poss<->empty..of<->empty)]
+Test passed.
+
+Translation = 
+
+(exists 
+  (?train ?event) 
+  (and 
+    (instance ?event arrival-WN00025919) 
+    (attribute ?train speed-WN00212796) 
+    (instance ?train train-WN03528724) 
+    (agent ?event ?train) 
+    (manner ?event punctuality-WN03940380) 
+    (instance Monday Day) 
+    (located ?event Monday)))
+
+Speech Act = Assertion
+
+
+Parsed OK:the fast train arrives punctually on Monday in the station 
+syn<-> act<-> arrive
+     vcat<-> intransitive
+     gcat<-> empty
+     gap<-> empty
+     rel<-> no
+     max<-> 3
+     role<-> assertion
+sem<-> pred<-> arrival-WN00025919
+     subj<-> head<-> ?train
+           type<-> train-WN03528724
+           mod<-> speed-WN00212796
+           sub<-> empty
+           poss<-> empty
+           of<-> empty
+     adjs<-> [adv<->punctuality-WN03940380, prep<->located..aobj<-> (head<->Monday..type<->Day..sub<->empty..poss<->empty..of<->empty), prep<->partiallyFills..aobj<-> (head<-> ?station..type<->station-WN03404271..mod<->empty..sub<->empty..poss<->empty..of<->empty)]
+Test passed.
+
+Translation = 
+
+(exists 
+  (?station ?train ?event) 
+  (and 
+    (instance ?event arrival-WN00025919) 
+    (attribute ?train speed-WN00212796) 
+    (instance ?train train-WN03528724) 
+    (agent ?event ?train) 
+    (manner ?event punctuality-WN03940380) 
+    (instance Monday Day) 
+    (located ?event Monday) 
+    (instance ?station station-WN03404271) 
+    (partiallyFills ?event ?station)))
+
+Speech Act = Assertion
+
+
+Parsed OK:John ' s customer inserts a valid card 
+syn<-> act<-> insert
+     vcat<-> transitive
+     gcat<-> empty
+     gap<-> empty
+     rel<-> no
+     max<-> 3
+     role<-> assertion
+sem<-> pred<-> insertion-WN00207301
+     subj<-> head<-> ?customer
+           type<-> customer
+           sub<-> empty
+           poss<-> John-1
+           of<-> empty
+     dobj<-> head<-> ?card
+           type<-> BankCard
+           mod<-> validation-WN00099890
+           sub<-> empty
+           poss<-> empty
+           of<-> empty
+     adjs<-> []
+Test passed.
+
+Translation = 
+
+(exists 
+  (?card ?salesperson ?customer ?event) 
+  (and 
+    (instance ?customer CognitiveAgent) 
+    (instance ?salesperson CognitiveAgent) 
+    (customer ?customer ?salesperson) 
+    (instance ?event insertion-WN00207301) 
+    (possesses John-1 ?customer) 
+    (agent ?event ?customer) 
+    (attribute ?card validation-WN00099890) 
+    (instance ?card BankCard) 
+    (patient ?event ?card)))
+
+Speech Act = Assertion
+
+
+Parsed OK:John ' s customer inserts a valid card manually 
+syn<-> act<-> insert
+     vcat<-> transitive
+     gcat<-> empty
+     gap<-> empty
+     rel<-> no
+     max<-> 3
+     role<-> assertion
+sem<-> pred<-> insertion-WN00207301
+     subj<-> head<-> ?customer
+           type<-> customer
+           sub<-> empty
+           poss<-> John-1
+           of<-> empty
+     dobj<-> head<-> ?card
+           type<-> BankCard
+           mod<-> validation-WN00099890
+           sub<-> empty
+           poss<-> empty
+           of<-> empty
+     adjs<-> [adv<->manual_labor-WN00410579]
+Test passed.
+
+Translation = 
+
+(exists 
+  (?card ?salesperson ?customer ?event) 
+  (and 
+    (instance ?customer CognitiveAgent) 
+    (instance ?salesperson CognitiveAgent) 
+    (customer ?customer ?salesperson) 
+    (instance ?event insertion-WN00207301) 
+    (possesses John-1 ?customer) 
+    (agent ?event ?customer) 
+    (attribute ?card validation-WN00099890) 
+    (instance ?card BankCard) 
+    (patient ?event ?card) 
+    (manner ?event manual_labor-WN00410579)))
+
+Speech Act = Assertion
+
+
+Parsed OK:John ' s customer inserts a valid card manually into a slot X 
+syn<-> act<-> insert
+     vcat<-> transitive
+     gcat<-> empty
+     gap<-> empty
+     rel<-> no
+     max<-> 3
+     role<-> assertion
+sem<-> pred<-> insertion-WN00207301
+     subj<-> head<-> ?customer
+           type<-> customer
+           sub<-> empty
+           poss<-> John-1
+           of<-> empty
+     dobj<-> head<-> ?card
+           type<-> BankCard
+           mod<-> validation-WN00099890
+           sub<-> empty
+           poss<-> empty
+           of<-> empty
+     adjs<-> [adv<->manual_labor-WN00410579, prep<->partiallyFills..aobj<-> (head<->X..type<->ATMSlot..mod<->empty..sub<->empty..poss<->empty..of<->empty)]
+Test passed.
+
+Translation = 
+
+(exists 
+  (?card ?salesperson ?customer ?event) 
+  (and 
+    (instance ?customer CognitiveAgent) 
+    (instance ?salesperson CognitiveAgent) 
+    (customer ?customer ?salesperson) 
+    (instance ?event insertion-WN00207301) 
+    (possesses John-1 ?customer) 
+    (agent ?event ?customer) 
+    (attribute ?card validation-WN00099890) 
+    (instance ?card BankCard) 
+    (patient ?event ?card) 
+    (manner ?event manual_labor-WN00410579) 
+    (instance X ATMSlot) 
+    (partiallyFills ?event X)))
+
+Speech Act = Assertion
+
+
+Parsed OK:John ' s customer inserts a valid card of Mary manually into a slot X 
+syn<-> act<-> insert
+     vcat<-> transitive
+     gcat<-> empty
+     gap<-> empty
+     rel<-> no
+     max<-> 3
+     role<-> assertion
+sem<-> pred<-> insertion-WN00207301
+     subj<-> head<-> ?customer
+           type<-> customer
+           sub<-> empty
+           poss<-> John-1
+           of<-> empty
+     dobj<-> head<-> ?card
+           type<-> BankCard
+           mod<-> validation-WN00099890
+           sub<-> empty
+           poss<-> empty
+           of<-> Mary-1
+     adjs<-> [adv<->manual_labor-WN00410579, prep<->partiallyFills..aobj<-> (head<->X..type<->ATMSlot..mod<->empty..sub<->empty..poss<->empty..of<->empty)]
+Test passed.
+
+Translation = 
+
+(exists 
+  (?card ?salesperson ?customer ?event) 
+  (and 
+    (instance ?customer CognitiveAgent) 
+    (instance ?salesperson CognitiveAgent) 
+    (customer ?customer ?salesperson) 
+    (instance ?event insertion-WN00207301) 
+    (possesses John-1 ?customer) 
+    (agent ?event ?customer) 
+    (possesses Mary-1 ?card) 
+    (attribute ?card validation-WN00099890) 
+    (instance ?card BankCard) 
+    (patient ?event ?card) 
+    (manner ?event manual_labor-WN00410579) 
+    (instance X ATMSlot) 
+    (partiallyFills ?event X)))
+
+Speech Act = Assertion
+
+
+Parsed OK:John ' s customer who is new inserts a valid card of Mary manually into a slot X 
+syn<-> act<-> insert
+     vcat<-> transitive
+     gcat<-> empty
+     gap<-> empty
+     rel<-> no
+     max<-> 3
+     role<-> assertion
+sem<-> pred<-> insertion-WN00207301
+     subj<-> head<-> ?customer
+           type<-> customer
+           sub<-> mod<-> newness-WN03855074
+                pred<-> isa
+                subj<-> head<-> ?who
+                      type<-> Human
+           poss<-> John-1
+           of<-> empty
+     dobj<-> head<-> ?card
+           type<-> BankCard
+           mod<-> validation-WN00099890
+           sub<-> empty
+           poss<-> empty
+           of<-> Mary-1
+     adjs<-> [adv<->manual_labor-WN00410579, prep<->partiallyFills..aobj<-> (head<->X..type<->ATMSlot..mod<->empty..sub<->empty..poss<->empty..of<->empty)]
+Test passed.
+
+Translation = 
+
+(exists 
+  (?card ?salesperson ?who ?customer ?event) 
+  (and 
+    (instance ?customer CognitiveAgent) 
+    (instance ?salesperson CognitiveAgent) 
+    (customer ?customer ?salesperson) 
+    (equal ?customer ?who) 
+    (attribute ?who newness-WN03855074) 
+    (instance ?who Human) 
+    (instance ?event insertion-WN00207301) 
+    (possesses John-1 ?customer) 
+    (agent ?event ?customer) 
+    (possesses Mary-1 ?card) 
+    (attribute ?card validation-WN00099890) 
+    (instance ?card BankCard) 
+    (patient ?event ?card) 
+    (manner ?event manual_labor-WN00410579) 
+    (instance X ATMSlot) 
+    (partiallyFills ?event X)))
+
+Speech Act = Assertion
+Failed to parse:her gives the card to Mary 
+Test passed.
+
+Failed to parse:she gives the card to he 
+Test passed.
+
+Failed to parse:John correctly uses the credit card 
+Test passed.
+
+Failed to parse:the froboz arrives 
+Test passed.
+
+Failed to parse:punctually the fast train arrives on Monday 
+Test passed.
+
+Failed to parse:the red fast train arrives 
+Test passed.
+
+Failed to parse:John ' s bank is the fastest 
+Test passed.
+
+Failed to parse:John ' s bank is the most expensive 
+Test passed.
+
+
+
+Parsed OK:the dog is red 
+syn<-> act<-> be
+     vcat<-> copula
+     gcat<-> empty
+     gap<-> empty
+     rel<-> no
+     max<-> 3
+     role<-> assertion
+sem<-> mod<-> Red
+     pred<-> isa
+     subj<-> head<-> ?dog
+           type<-> Canine
+           mod<-> empty
+           sub<-> empty
+           poss<-> empty
+           of<-> empty
+Test passed.
+
+Translation = 
+
+(exists 
+  (?dog) 
+  (and 
+    (attribute ?dog Red) 
+    (instance ?dog Canine)))
+
+Speech Act = Assertion
+
+
+Parsed OK:John is red 
+syn<-> act<-> be
+     vcat<-> copula
+     gcat<-> empty
+     gap<-> empty
+     rel<-> no
+     max<-> 3
+     role<-> assertion
+sem<-> mod<-> Red
+     pred<-> isa
+     subj<-> head<-> John-1
+           type<-> Male
+           sub<-> empty
+           poss<-> empty
+           of<-> empty
+Test passed.
+
+Translation = 
+
+(and 
+  (attribute John-1 Red) 
+  (instance John-1 Male))
+
+Speech Act = Assertion
+
+
+Parsed OK:John ' s dog is different from Mary ' s dog 
+syn<-> act<-> be
+     vcat<-> copula
+     gcat<-> empty
+     gap<-> empty
+     rel<-> no
+     max<-> 3
+     role<-> assertion
+sem<-> mod<-> _G1960^_G1963^[not, [equal, _G1960, _G1963]]
+     pred<-> isa
+     subj<-> head<-> ?dog
+           type<-> Canine
+           sub<-> empty
+           poss<-> John-1
+           of<-> empty
+     dobj<-> head<-> ?dog
+           type<-> Canine
+           sub<-> empty
+           poss<-> Mary-1
+           of<-> empty
+Test passed.
+
+Translation = 
+
+(exists 
+  (?dog1 ?dog) 
+  (and 
+    (not 
+      (equal ?dog ?dog1)) 
+    (instance ?dog1 Canine) 
+    (possesses Mary-1 ?dog1) 
+    (instance ?dog Canine) 
+    (possesses John-1 ?dog)))
+
+Speech Act = Assertion
+
+
+Parsed OK:John ' s dog is more expensive than Mary ' s dog 
+syn<-> act<-> be
+     vcat<-> copula
+     gcat<-> empty
+     gap<-> empty
+     rel<-> no
+     max<-> 3
+     role<-> assertion
+sem<-> mod<-> _G1840^_G1843^[greaterThan, [measure, _G1840, expensiveness-WN04009070], [measure, _G1843, expensiveness-WN04009070]]
+     pred<-> isa
+     subj<-> head<-> ?dog
+           type<-> Canine
+           sub<-> empty
+           poss<-> John-1
+           of<-> empty
+     dobj<-> head<-> ?dog
+           type<-> Canine
+           sub<-> empty
+           poss<-> Mary-1
+           of<-> empty
+Test passed.
+
+Translation = 
+
+(exists 
+  (?dog1 ?dog) 
+  (and 
+    (greaterThan 
+      (measure ?dog expensiveness-WN04009070) 
+      (measure ?dog1 expensiveness-WN04009070)) 
+    (instance ?dog1 Canine) 
+    (possesses Mary-1 ?dog1) 
+    (instance ?dog Canine) 
+    (possesses John-1 ?dog)))
+
+Speech Act = Assertion
+
+
+Parsed OK:the oldest dog enters the bank 
+syn<-> act<-> enter
+     vcat<-> transitive
+     gcat<-> empty
+     gap<-> empty
+     rel<-> no
+     max<-> 3
+     role<-> assertion
+sem<-> pred<-> entrance-WN00026402
+     subj<-> head<-> ?dog
+           type<-> Canine
+           mod<-> superlative(oldness-WN03854196)
+           sub<-> empty
+           poss<-> empty
+           of<-> empty
+     dobj<-> head<-> ?bank
+           type<-> Bank-FinancialOrganization
+           mod<-> empty
+           sub<-> empty
+           poss<-> empty
+           of<-> empty
+     adjs<-> []
+Test passed.
+
+Translation = 
+
+(exists 
+  (?bank ?dog ?event) 
+  (and 
+    (instance ?event entrance-WN00026402) 
+    (forall 
+      (?X) 
+      (implies 
+        (and 
+          (instance ?X Canine) 
+          (not 
+            (equal ?X ?dog))) 
+        (greaterThan 
+          (measure 
+            (attribute ?dog oldness-WN03854196)) 
+          (measure 
+            (attribute ?X oldness-WN03854196))))) 
+    (instance ?dog Canine) 
+    (agent ?event ?dog) 
+    (instance ?bank Bank-FinancialOrganization) 
+    (patient ?event ?bank)))
+
+Speech Act = Assertion
+
+
+Parsed OK:John ' s dog is the most expensive dog 
+syn<-> act<-> be
+     vcat<-> copula
+     gcat<-> empty
+     gap<-> empty
+     rel<-> no
+     max<-> 3
+     role<-> assertion
+sem<-> pred<-> isa
+     subj<-> head<-> ?dog
+           type<-> Canine
+           sub<-> empty
+           poss<-> John-1
+           of<-> empty
+     dobj<-> head<-> ?dog
+           type<-> Canine
+           mod<-> superlative(expensiveness-WN04009070)
+           sub<-> empty
+           poss<-> empty
+           of<-> empty
+Test passed.
+
+Translation = 
+
+(exists 
+  (?dog) 
+  (and 
+    (instance ?dog Canine) 
+    (forall 
+      (?X) 
+      (implies 
+        (and 
+          (instance ?X Canine) 
+          (not 
+            (equal ?X ?dog))) 
+        (greaterThan 
+          (measure 
+            (attribute ?dog expensiveness-WN04009070)) 
+          (measure 
+            (attribute ?X expensiveness-WN04009070))))) 
+    (instance ?dog Canine) 
+    (possesses John-1 ?dog)))
+
+Speech Act = Assertion
+64 tests passed.
+0 tests failed.
+
+%------------------------------------------------------------
+% 3. Examples of translating yes-no and WH-queries
+%------------------------------------------------------------
+
+% Trace of query parsing and translation
+
+Failed to parse:does Mary give John a book 
+Test passed. % Note: Needs 'Does Mary give a book to John?'
+
+Parsed OK:is the banker rich 
+syn<-> act<-> be
+     vcat<-> copula
+     gcat<-> empty
+     gap<-> empty
+     rel<-> no
+     max<-> 3
+     role<-> query(yes_no)
+     aux<-> no
+     qvars<-> []
+sem<-> mod<-> richness-WN01950464
+     pred<-> isa
+     subj<-> head<-> ?banker
+           type<-> Banker
+           mod<-> empty
+           sub<-> empty
+           poss<-> empty
+           of<-> empty
+Test passed.
+
+Translation = 
+
+(exists 
+  (?banker) 
+  (and 
+    (attribute ?banker richness-WN01950464) 
+    (instance ?banker Banker)))
+
+Speech Act = YES/NO-Query
+
+
+Parsed OK:is the banker a man 
+syn<-> act<-> be
+     vcat<-> copula
+     gcat<-> empty
+     gap<-> empty
+     rel<-> no
+     max<-> 3
+     role<-> query(yes_no)
+     aux<-> no
+     qvars<-> []
+sem<-> pred<-> isa
+     subj<-> head<-> ?banker
+           type<-> Banker
+           mod<-> empty
+           sub<-> empty
+           poss<-> empty
+           of<-> empty
+     dobj<-> head<-> ?man
+           type<-> Man
+           mod<-> empty
+           sub<-> empty
+           poss<-> empty
+           of<-> empty
+Test passed.
+
+Translation = 
+
+(exists 
+  (?banker) 
+  (and 
+    (instance ?banker Man) 
+    (instance ?banker Banker)))
+
+Speech Act = YES/NO-Query
+
+
+Parsed OK:is the dog red 
+syn<-> act<-> be
+     vcat<-> copula
+     gcat<-> empty
+     gap<-> empty
+     rel<-> no
+     max<-> 3
+     role<-> query(yes_no)
+     aux<-> no
+     qvars<-> []
+sem<-> mod<-> Red
+     pred<-> isa
+     subj<-> head<-> ?dog
+           type<-> Canine
+           mod<-> empty
+           sub<-> empty
+           poss<-> empty
+           of<-> empty
+Test passed.
+
+Translation = 
+
+(exists 
+  (?dog) 
+  (and 
+    (attribute ?dog Red) 
+    (instance ?dog Canine)))
+
+Speech Act = YES/NO-Query
+
+
+Parsed OK:is John ' s dog different from Mary ' s dog 
+syn<-> act<-> be
+     vcat<-> copula
+     gcat<-> empty
+     gap<-> empty
+     rel<-> no
+     max<-> 3
+     role<-> query(yes_no)
+     aux<-> no
+     qvars<-> []
+sem<-> mod<-> _G2083^_G2086^[not, [equal, _G2083, _G2086]]
+     pred<-> isa
+     subj<-> head<-> ?dog
+           type<-> Canine
+           sub<-> empty
+           poss<-> John-1
+           of<-> empty
+     dobj<-> head<-> ?dog
+           type<-> Canine
+           sub<-> empty
+           poss<-> Mary-1
+           of<-> empty
+Test passed.
+
+Translation = 
+
+(exists 
+  (?dog1 ?dog) 
+  (and 
+    (not 
+      (equal ?dog ?dog1)) 
+    (instance ?dog1 Canine) 
+    (possesses Mary-1 ?dog1) 
+    (instance ?dog Canine) 
+    (possesses John-1 ?dog)))
+
+Speech Act = YES/NO-Query
+
+
+Parsed OK:is John ' s dog more expensive than Mary ' s dog 
+syn<-> act<-> be
+     vcat<-> copula
+     gcat<-> empty
+     gap<-> empty
+     rel<-> no
+     max<-> 3
+     role<-> query(yes_no)
+     aux<-> no
+     qvars<-> []
+sem<-> mod<-> _G1962^_G1965^[greaterThan, [measure, _G1962, expensiveness-WN04009070], [measure, _G1965, expensiveness-WN04009070]]
+     pred<-> isa
+     subj<-> head<-> ?dog
+           type<-> Canine
+           sub<-> empty
+           poss<-> John-1
+           of<-> empty
+     dobj<-> head<-> ?dog
+           type<-> Canine
+           sub<-> empty
+           poss<-> Mary-1
+           of<-> empty
+Test passed.
+
+Translation = 
+
+(exists 
+  (?dog1 ?dog) 
+  (and 
+    (greaterThan 
+      (measure ?dog expensiveness-WN04009070) 
+      (measure ?dog1 expensiveness-WN04009070)) 
+    (instance ?dog1 Canine) 
+    (possesses Mary-1 ?dog1) 
+    (instance ?dog Canine) 
+    (possesses John-1 ?dog)))
+
+Speech Act = YES/NO-Query
+
+
+Parsed OK:is John ' s dog the most expensive dog 
+syn<-> act<-> be
+     vcat<-> copula
+     gcat<-> empty
+     gap<-> empty
+     rel<-> no
+     max<-> 3
+     role<-> query(yes_no)
+     aux<-> no
+     qvars<-> []
+sem<-> pred<-> isa
+     subj<-> head<-> ?dog
+           type<-> Canine
+           sub<-> empty
+           poss<-> John-1
+           of<-> empty
+     dobj<-> head<-> ?dog
+           type<-> Canine
+           mod<-> superlative(expensiveness-WN04009070)
+           sub<-> empty
+           poss<-> empty
+           of<-> empty
+Test passed.
+
+Translation = 
+
+(exists 
+  (?dog) 
+  (and 
+    (instance ?dog Canine) 
+    (forall 
+      (?X) 
+      (implies 
+        (and 
+          (instance ?X Canine) 
+          (not 
+            (equal ?X ?dog))) 
+        (greaterThan 
+          (measure 
+            (attribute ?dog expensiveness-WN04009070)) 
+          (measure 
+            (attribute ?X expensiveness-WN04009070))))) 
+    (instance ?dog Canine) 
+    (possesses John-1 ?dog)))
+
+Speech Act = YES/NO-Query
+
+
+Parsed OK:does John breathe 
+syn<-> act<-> breathe
+     vcat<-> intransitive
+     gcat<-> empty
+     gap<-> empty
+     rel<-> no
+     max<-> 3
+     role<-> query(yes_no)
+     aux<-> yes
+     qvars<-> []
+sem<-> pred<-> Breathing
+     subj<-> head<-> John-1
+           type<-> Male
+           sub<-> empty
+           poss<-> empty
+           of<-> empty
+     adjs<-> []
+Test passed.
+
+Translation = 
+
+(exists 
+  (?event) 
+  (and 
+    (instance ?event Breathing) 
+    (instance John-1 Male) 
+    (agent ?event John-1)))
+
+Speech Act = YES/NO-Query
+
+
+Parsed OK:does John beat Mr Miller 
+syn<-> act<-> beat
+     vcat<-> transitive
+     gcat<-> empty
+     gap<-> empty
+     rel<-> no
+     max<-> 3
+     role<-> query(yes_no)
+     aux<-> yes
+     qvars<-> []
+sem<-> pred<-> beat-WN00958408
+     subj<-> head<-> John-1
+           type<-> Male
+           sub<-> empty
+           poss<-> empty
+           of<-> empty
+     dobj<-> head<-> MrMiller
+           type<-> Male
+           sub<-> empty
+           poss<-> empty
+           of<-> empty
+     adjs<-> []
+Test passed.
+
+Translation = 
+
+(exists 
+  (?event) 
+  (and 
+    (instance ?event beat-WN00958408) 
+    (instance John-1 Male) 
+    (agent ?event John-1) 
+    (instance MrMiller Male) 
+    (patient ?event MrMiller)))
+
+Speech Act = YES/NO-Query
+
+
+Parsed OK:does Mary give a book to John 
+syn<-> act<-> give
+     vcat<-> ditransitive
+     gcat<-> empty
+     gap<-> empty
+     rel<-> no
+     max<-> 3
+     role<-> query(yes_no)
+     aux<-> yes
+     qvars<-> []
+sem<-> pred<-> Giving
+     subj<-> head<-> Mary-1
+           type<-> Female
+           sub<-> empty
+           poss<-> empty
+           of<-> empty
+     dobj<-> head<-> ?book
+           type<-> Book
+           mod<-> empty
+           sub<-> empty
+           poss<-> empty
+           of<-> empty
+     iobj<-> head<-> John-1
+           type<-> Male
+           sub<-> empty
+           poss<-> empty
+           of<-> empty
+     adjs<-> []
+Test passed.
+
+Translation = 
+
+(exists 
+  (?book ?event) 
+  (and 
+    (instance ?event Giving) 
+    (instance Mary-1 Female) 
+    (agent ?event Mary-1) 
+    (instance ?book Book) 
+    (patient ?event ?book) 
+    (instance John-1 Male) 
+    (destination ?event John-1)))
+
+Speech Act = YES/NO-Query
+
+
+Parsed OK:what is valid 
+syn<-> act<-> be
+     vcat<-> copula
+     gcat<-> empty
+     gap<-> empty
+     rel<-> no
+     max<-> 3
+     role<-> query(wh)
+     aux<-> no
+     qvars<-> [?what]
+sem<-> mod<-> validation-WN00099890
+     pred<-> isa
+     subj<-> head<-> ?what
+           type<-> Physical
+           mod<-> empty
+           sub<-> empty
+           poss<-> empty
+           of<-> empty
+Test passed.
+
+Translation = 
+
+(and 
+  (attribute ?what validation-WN00099890) 
+  (instance ?what Physical))
+
+Speech Act = WH-Query, Find Variables: [?what]
+
+
+Parsed OK:who is the teller 
+syn<-> act<-> be
+     vcat<-> copula
+     gcat<-> empty
+     gap<-> empty
+     rel<-> no
+     max<-> 3
+     role<-> query(wh)
+     aux<-> no
+     qvars<-> [?who]
+sem<-> pred<-> isa
+     subj<-> head<-> ?who
+           type<-> Human
+           mod<-> empty
+           sub<-> empty
+           poss<-> empty
+           of<-> empty
+     dobj<-> head<-> ?teller
+           type<-> Teller
+           mod<-> empty
+           sub<-> empty
+           poss<-> empty
+           of<-> empty
+Test passed.
+
+Translation = 
+
+(and 
+  (instance ?who Teller) 
+  (instance ?who Human))
+
+Speech Act = WH-Query, Find Variables: [?who]
+
+
+Parsed OK:what is in the slot 
+syn<-> act<-> be
+     vcat<-> copula
+     gcat<-> empty
+     gap<-> empty
+     rel<-> no
+     max<-> 3
+     role<-> query(wh)
+     aux<-> no
+     qvars<-> [?what]
+sem<-> pred<-> isa
+     subj<-> head<-> ?what
+           type<-> Physical
+           mod<-> empty
+           sub<-> empty
+           poss<-> empty
+           of<-> empty
+     adjs<-> [prep<->located..aobj<-> (head<-> ?slot..type<->ATMSlot..mod<->empty..sub<->empty..poss<->empty..of<->empty)]
+Test passed.
+
+Translation = 
+
+(exists 
+  (?slot) 
+  (and 
+    (located ?what ?slot) 
+    (instance ?slot ATMSlot) 
+    (instance ?what Physical)))
+
+Speech Act = WH-Query, Find Variables: [?what]
+
+
+Parsed OK:who enters a card 
+syn<-> act<-> enter
+     vcat<-> transitive
+     gcat<-> empty
+     gap<-> empty
+     rel<-> no
+     max<-> 3
+     role<-> query(wh)
+     aux<-> no
+     qvars<-> [?who]
+sem<-> pred<-> entrance-WN00026402
+     subj<-> head<-> ?who
+           type<-> Human
+           mod<-> empty
+           sub<-> empty
+           poss<-> empty
+           of<-> empty
+     dobj<-> head<-> ?card
+           type<-> BankCard
+           mod<-> empty
+           sub<-> empty
+           poss<-> empty
+           of<-> empty
+     adjs<-> []
+Test passed.
+
+Translation = 
+
+(exists 
+  (?card ?event) 
+  (and 
+    (instance ?event entrance-WN00026402) 
+    (instance ?who Human) 
+    (agent ?event ?who) 
+    (instance ?card BankCard) 
+    (patient ?event ?card)))
+
+Speech Act = WH-Query, Find Variables: [?who]
+
+
+Parsed OK:which customer enters a card 
+syn<-> act<-> enter
+     vcat<-> transitive
+     gcat<-> empty
+     gap<-> empty
+     rel<-> no
+     max<-> 3
+     role<-> query(wh)
+     aux<-> no
+     qvars<-> [?customer]
+sem<-> pred<-> entrance-WN00026402
+     subj<-> head<-> ?customer
+           type<-> customer
+           mod<-> empty
+           sub<-> empty
+           poss<-> empty
+           of<-> empty
+     dobj<-> head<-> ?card
+           type<-> BankCard
+           mod<-> empty
+           sub<-> empty
+           poss<-> empty
+           of<-> empty
+     adjs<-> []
+Test passed.
+
+Translation = 
+
+(exists 
+  (?card ?salesperson ?event) 
+  (and 
+    (instance ?customer CognitiveAgent) 
+    (instance ?salesperson CognitiveAgent) 
+    (customer ?customer ?salesperson) 
+    (instance ?event entrance-WN00026402) 
+    (agent ?event ?customer) 
+    (instance ?card BankCard) 
+    (patient ?event ?card)))
+
+Speech Act = WH-Query, Find Variables: [?customer]
+
+
+Parsed OK:who enters what 
+syn<-> act<-> enter
+     vcat<-> transitive
+     gcat<-> empty
+     gap<-> empty
+     rel<-> no
+     max<-> 3
+     role<-> query(wh)
+     aux<-> no
+     qvars<-> [?who]
+sem<-> pred<-> entrance-WN00026402
+     subj<-> head<-> ?who
+           type<-> Human
+           mod<-> empty
+           sub<-> empty
+           poss<-> empty
+           of<-> empty
+     dobj<-> head<-> ?what
+           type<-> Physical
+     adjs<-> []
+Test passed.
+
+Translation = 
+
+(exists 
+  (?what ?event) 
+  (and 
+    (instance ?event entrance-WN00026402) 
+    (instance ?who Human) 
+    (agent ?event ?who) 
+    (instance ?what Physical) 
+    (patient ?event ?what)))
+
+Speech Act = WH-Query, Find Variables: [?who]
+
+
+Parsed OK:who does Mary beat 
+syn<-> act<-> beat
+     vcat<-> transitive
+     gcat<-> empty
+     gap<-> empty
+     max<-> 3
+     role<-> query(wh)
+     aux<-> yes
+     qvars<-> [?who]
+sem<-> pred<-> beat-WN00958408
+     subj<-> head<-> Mary-1
+           type<-> Female
+           sub<-> empty
+           poss<-> empty
+           of<-> empty
+     dobj<-> head<-> ?who
+           type<-> Human
+     adjs<-> []
+Test passed.
+
+Translation = 
+
+(exists 
+  (?event) 
+  (and 
+    (instance ?event beat-WN00958408) 
+    (instance Mary-1 Female) 
+    (agent ?event Mary-1) 
+    (instance ?who Human) 
+    (patient ?event ?who)))
+
+Speech Act = WH-Query, Find Variables: [?who]
+
+
+Parsed OK:what does the dog eat 
+syn<-> act<-> eat
+     vcat<-> transitive
+     gcat<-> empty
+     gap<-> empty
+     max<-> 3
+     role<-> query(wh)
+     aux<-> yes
+     qvars<-> [?what]
+sem<-> pred<-> Eating
+     subj<-> head<-> ?dog
+           type<-> Canine
+           mod<-> empty
+           sub<-> empty
+           poss<-> empty
+           of<-> empty
+     dobj<-> head<-> ?what
+           type<-> Physical
+     adjs<-> []
+Test passed.
+
+Translation = 
+
+(exists 
+  (?dog ?event) 
+  (and 
+    (instance ?event Eating) 
+    (instance ?dog Canine) 
+    (agent ?event ?dog) 
+    (instance ?what Physical) 
+    (patient ?event ?what)))
+
+Speech Act = WH-Query, Find Variables: [?what]
+
+
+Parsed OK:who does John give a card to 
+syn<-> act<-> give
+     vcat<-> ditransitive
+     gcat<-> empty
+     gap<-> empty
+     max<-> 3
+     role<-> query(wh)
+     aux<-> yes
+     qvars<-> [?who]
+sem<-> pred<-> Giving
+     subj<-> head<-> John-1
+           type<-> Male
+           sub<-> empty
+           poss<-> empty
+           of<-> empty
+     dobj<-> head<-> ?card
+           type<-> BankCard
+           mod<-> empty
+           sub<-> empty
+           poss<-> empty
+           of<-> empty
+     iobj<-> head<-> ?who
+           type<-> Human
+     adjs<-> []
+Test passed.
+
+Translation = 
+
+(exists 
+  (?card ?event) 
+  (and 
+    (instance ?event Giving) 
+    (instance John-1 Male) 
+    (agent ?event John-1) 
+    (instance ?card BankCard) 
+    (patient ?event ?card) 
+    (instance ?who Human) 
+    (destination ?event ?who)))
+
+Speech Act = WH-Query, Find Variables: [?who]
+
+
+Parsed OK:what does Mary give to John 
+syn<-> act<-> give
+     vcat<-> ditransitive
+     gcat<-> empty
+     gap<-> empty
+     max<-> 3
+     role<-> query(wh)
+     aux<-> yes
+     qvars<-> [?what]
+sem<-> pred<-> Giving
+     subj<-> head<-> Mary-1
+           type<-> Female
+           sub<-> empty
+           poss<-> empty
+           of<-> empty
+     dobj<-> head<-> ?what
+           type<-> Physical
+     iobj<-> head<-> John-1
+           type<-> Male
+           sub<-> empty
+           poss<-> empty
+           of<-> empty
+     adjs<-> []
+Test passed.
+
+Translation = 
+
+(exists 
+  (?event) 
+  (and 
+    (instance ?event Giving) 
+    (instance Mary-1 Female) 
+    (agent ?event Mary-1) 
+    (instance ?what Physical) 
+    (patient ?event ?what) 
+    (instance John-1 Male) 
+    (destination ?event John-1)))
+
+Speech Act = WH-Query, Find Variables: [?what]
+
+
+Parsed OK:where does John work 
+syn<-> act<-> work
+     vcat<-> intransitive
+     gcat<-> empty
+     gap<-> empty
+     rel<-> no
+     max<-> 3
+     role<-> query(wh)
+     aux<-> yes
+     qvars<-> [where]
+sem<-> pred<-> Works
+     subj<-> head<-> John-1
+           type<-> Male
+           sub<-> empty
+           poss<-> empty
+           of<-> empty
+     adjs<-> []
+Test passed.
+
+Translation = 
+
+(exists 
+  (?event) 
+  (and 
+    (instance ?event Works) 
+    (instance John-1 Male) 
+    (agent ?event John-1)))
+
+Speech Act = WH-Query, Find Variables: [where]
+
+
+Parsed OK:when does the man arrive 
+syn<-> act<-> arrive
+     vcat<-> intransitive
+     gcat<-> empty
+     gap<-> empty
+     rel<-> no
+     max<-> 3
+     role<-> query(wh)
+     aux<-> yes
+     qvars<-> [when]
+sem<-> pred<-> arrival-WN00025919
+     subj<-> head<-> ?man
+           type<-> Man
+           mod<-> empty
+           sub<-> empty
+           poss<-> empty
+           of<-> empty
+     adjs<-> []
+Test passed.
+
+Translation = 
+
+(exists 
+  (?man ?event) 
+  (and 
+    (instance ?event arrival-WN00025919) 
+    (instance ?man Man) 
+    (agent ?event ?man)))
+
+Speech Act = WH-Query, Find Variables: [when]
+
+
+Parsed OK:how does the dog run 
+syn<-> act<-> run
+     vcat<-> intransitive
+     gcat<-> empty
+     gap<-> empty
+     rel<-> no
+     max<-> 3
+     role<-> query(wh)
+     aux<-> yes
+     qvars<-> [how]
+sem<-> pred<-> Runs
+     subj<-> head<-> ?dog
+           type<-> Canine
+           mod<-> empty
+           sub<-> empty
+           poss<-> empty
+           of<-> empty
+     adjs<-> []
+Test passed.
+
+Translation = 
+
+(exists 
+  (?dog ?event) 
+  (and 
+    (instance ?event Runs) 
+    (instance ?dog Canine) 
+    (agent ?event ?dog)))
+
+Speech Act = WH-Query, Find Variables: [how]
+
+
+Parsed OK:since when does the employee work 
+syn<-> act<-> work
+     vcat<-> intransitive
+     gcat<-> empty
+     gap<-> empty
+     rel<-> no
+     max<-> 3
+     role<-> query(wh)
+     aux<-> yes
+     qvars<-> [when]
+sem<-> pred<-> Works
+     subj<-> head<-> ?employee
+           type<-> Corporation
+           mod<-> empty
+           sub<-> empty
+           poss<-> empty
+           of<-> empty
+     adjs<-> []
+Test passed.
+
+Translation = 
+
+(exists 
+  (?employee ?event) 
+  (and 
+    (instance ?event Works) 
+    (instance ?employee Corporation) 
+    (agent ?event ?employee)))
+
+Speech Act = WH-Query, Find Variables: [when]
+
+
+Parsed OK:how long does the train stop 
+syn<-> act<-> stops
+     vcat<-> intransitive
+     gcat<-> empty
+     gap<-> empty
+     rel<-> no
+     max<-> 3
+     role<-> query(wh)
+     aux<-> yes
+     qvars<-> [long]
+sem<-> pred<-> Stops
+     subj<-> head<-> ?train
+           type<-> train-WN03528724
+           mod<-> empty
+           sub<-> empty
+           poss<-> empty
+           of<-> empty
+     adjs<-> []
+Test passed.
+
+Translation = 
+
+(exists 
+  (?train ?event) 
+  (and 
+    (instance ?event Stops) 
+    (instance ?train train-WN03528724) 
+    (agent ?event ?train)))
+
+Speech Act = WH-Query, Find Variables: [long]
+
+
+Parsed OK:how often does the milkman come 
+syn<-> act<-> come
+     vcat<-> intransitive
+     gcat<-> empty
+     gap<-> empty
+     rel<-> no
+     max<-> 3
+     role<-> query(wh)
+     aux<-> yes
+     qvars<-> [often]
+sem<-> pred<-> Comes
+     subj<-> head<-> ?milkman
+           type<-> Milkman
+           mod<-> empty
+           sub<-> empty
+           poss<-> empty
+           of<-> empty
+     adjs<-> []
+Test passed.
+
+Translation = 
+
+(exists 
+  (?milkman ?event) 
+  (and 
+    (instance ?event Comes) 
+    (instance ?milkman Milkman) 
+    (agent ?event ?milkman)))
+
+Speech Act = WH-Query, Find Variables: [often]
+
+
+Parsed OK:with whom does the employee enter the room 
+syn<-> act<-> enter
+     vcat<-> transitive
+     gcat<-> empty
+     gap<-> empty
+     rel<-> no
+     max<-> 3
+     role<-> query(wh)
+     aux<-> yes
+     qvars<-> [whom]
+sem<-> pred<-> entrance-WN00026402
+     subj<-> head<-> ?employee
+           type<-> Corporation
+           mod<-> empty
+           sub<-> empty
+           poss<-> empty
+           of<-> empty
+     dobj<-> head<-> ?room
+           type<-> Room
+           mod<-> empty
+           sub<-> empty
+           poss<-> empty
+           of<-> empty
+     adjs<-> []
+Test passed.
+
+Translation = 
+
+(exists 
+  (?room ?employee ?event) 
+  (and 
+    (instance ?event entrance-WN00026402) 
+    (instance ?employee Corporation) 
+    (agent ?event ?employee) 
+    (instance ?room Room) 
+    (patient ?event ?room)))
+
+Speech Act = WH-Query, Find Variables: [whom]
+
+
+Parsed OK:where does John insert the card into 
+syn<-> act<-> insert
+     vcat<-> transitive
+     gcat<-> empty
+     gap<-> empty
+     rel<-> no
+     max<-> 3
+     role<-> query(wh)
+     aux<-> yes
+     qvars<-> [where]
+sem<-> pred<-> insertion-WN00207301
+     subj<-> head<-> John-1
+           type<-> Male
+           sub<-> empty
+           poss<-> empty
+           of<-> empty
+     dobj<-> head<-> ?card
+           type<-> BankCard
+           mod<-> empty
+           sub<-> empty
+           poss<-> empty
+           of<-> empty
+     adjs<-> []
+Test passed.
+
+Translation = 
+
+(exists 
+  (?card ?event) 
+  (and 
+    (instance ?event insertion-WN00207301) 
+    (instance John-1 Male) 
+    (agent ?event John-1) 
+    (instance ?card BankCard) 
+    (patient ?event ?card)))
+
+Speech Act = WH-Query, Find Variables: [where]
+
+
+Parsed OK:where does the machine move to 
+syn<-> act<-> moves
+     vcat<-> intransitive
+     gcat<-> empty
+     gap<-> empty
+     rel<-> no
+     max<-> 3
+     role<-> query(wh)
+     aux<-> yes
+     qvars<-> [where]
+sem<-> pred<-> Movement
+     subj<-> head<-> ?machine
+           type<-> Artifact
+           mod<-> empty
+           sub<-> empty
+           poss<-> empty
+           of<-> empty
+     adjs<-> []
+Test passed.
+
+Translation = 
+
+(exists 
+  (?machine ?event) 
+  (and 
+    (instance ?event Movement) 
+    (instance ?machine Artifact) 
+    (agent ?event ?machine)))
+
+Speech Act = WH-Query, Find Variables: [where]
+
+
+Parsed OK:where does the train arrive from 
+syn<-> act<-> arrive
+     vcat<-> intransitive
+     gcat<-> empty
+     gap<-> empty
+     rel<-> no
+     max<-> 3
+     role<-> query(wh)
+     aux<-> yes
+     qvars<-> [where]
+sem<-> pred<-> arrival-WN00025919
+     subj<-> head<-> ?train
+           type<-> train-WN03528724
+           mod<-> empty
+           sub<-> empty
+           poss<-> empty
+           of<-> empty
+     adjs<-> []
+Test passed.
+
+Translation = 
+
+(exists 
+  (?train ?event) 
+  (and 
+    (instance ?event arrival-WN00025919) 
+    (instance ?train train-WN03528724) 
+    (agent ?event ?train)))
+
+Speech Act = WH-Query, Find Variables: [where]
+
+
+Parsed OK:from where does the train arrive 
+syn<-> act<-> arrive
+     vcat<-> intransitive
+     gcat<-> empty
+     gap<-> empty
+     rel<-> no
+     max<-> 3
+     role<-> query(wh)
+     aux<-> yes
+     qvars<-> [where]
+sem<-> pred<-> arrival-WN00025919
+     subj<-> head<-> ?train
+           type<-> train-WN03528724
+           mod<-> empty
+           sub<-> empty
+           poss<-> empty
+           of<-> empty
+     adjs<-> []
+Test passed.
+
+Translation = 
+
+(exists 
+  (?train ?event) 
+  (and 
+    (instance ?event arrival-WN00025919) 
+    (instance ?train train-WN03528724) 
+    (agent ?event ?train)))
+
+Speech Act = WH-Query, Find Variables: [where]
+
+
+Parsed OK:with what does John open the door 
+syn<-> act<-> open
+     vcat<-> transitive
+     gcat<-> empty
+     gap<-> empty
+     rel<-> no
+     max<-> 3
+     role<-> query(wh)
+     aux<-> yes
+     qvars<-> [what]
+sem<-> pred<-> Opening
+     subj<-> head<-> John-1
+           type<-> Male
+           sub<-> empty
+           poss<-> empty
+           of<-> empty
+     dobj<-> head<-> ?door
+           type<-> door-WN02588950
+           mod<-> empty
+           sub<-> empty
+           poss<-> empty
+           of<-> empty
+     adjs<-> []
+Test passed.
+
+Translation = 
+
+(exists 
+  (?door ?event) 
+  (and 
+    (instance ?event Opening) 
+    (instance John-1 Male) 
+    (agent ?event John-1) 
+    (instance ?door door-WN02588950) 
+    (patient ?event ?door)))
+
+Speech Act = WH-Query, Find Variables: [what]
+
+
+Parsed OK:what does John open the door with 
+syn<-> act<-> open
+     vcat<-> transitive
+     gcat<-> empty
+     gap<-> empty
+     rel<-> no
+     max<-> 3
+     role<-> query(wh)
+     aux<-> yes
+     qvars<-> [what]
+sem<-> pred<-> Opening
+     subj<-> head<-> John-1
+           type<-> Male
+           sub<-> empty
+           poss<-> empty
+           of<-> empty
+     dobj<-> head<-> ?door
+           type<-> door-WN02588950
+           mod<-> empty
+           sub<-> empty
+           poss<-> empty
+           of<-> empty
+     adjs<-> []
+Test passed.
+
+Translation = 
+
+(exists 
+  (?door ?event) 
+  (and 
+    (instance ?event Opening) 
+    (instance John-1 Male) 
+    (agent ?event John-1) 
+    (instance ?door door-WN02588950) 
+    (patient ?event ?door)))
+
+Speech Act = WH-Query, Find Variables: [what]
+
+
+Parsed OK:who does John enter the room with 
+syn<-> act<-> enter
+     vcat<-> transitive
+     gcat<-> empty
+     gap<-> empty
+     rel<-> no
+     max<-> 3
+     role<-> query(wh)
+     aux<-> yes
+     qvars<-> [who]
+sem<-> pred<-> entrance-WN00026402
+     subj<-> head<-> John-1
+           type<-> Male
+           sub<-> empty
+           poss<-> empty
+           of<-> empty
+     dobj<-> head<-> ?room
+           type<-> Room
+           mod<-> empty
+           sub<-> empty
+           poss<-> empty
+           of<-> empty
+     adjs<-> []
+Test passed.
+
+Translation = 
+
+(exists 
+  (?room ?event) 
+  (and 
+    (instance ?event entrance-WN00026402) 
+    (instance John-1 Male) 
+    (agent ?event John-1) 
+    (instance ?room Room) 
+    (patient ?event ?room)))
+
+Speech Act = WH-Query, Find Variables: [who]
+
+
+Parsed OK:with whom does John enter the room 
+syn<-> act<-> enter
+     vcat<-> transitive
+     gcat<-> empty
+     gap<-> empty
+     rel<-> no
+     max<-> 3
+     role<-> query(wh)
+     aux<-> yes
+     qvars<-> [whom]
+sem<-> pred<-> entrance-WN00026402
+     subj<-> head<-> John-1
+           type<-> Male
+           sub<-> empty
+           poss<-> empty
+           of<-> empty
+     dobj<-> head<-> ?room
+           type<-> Room
+           mod<-> empty
+           sub<-> empty
+           poss<-> empty
+           of<-> empty
+     adjs<-> []
+Test passed.
+
+Translation = 
+
+(exists 
+  (?room ?event) 
+  (and 
+    (instance ?event entrance-WN00026402) 
+    (instance John-1 Male) 
+    (agent ?event John-1) 
+    (instance ?room Room) 
+    (patient ?event ?room)))
+
+Speech Act = WH-Query, Find Variables: [whom]
+35 tests passed.
+0 tests failed.
+
+%------------------------------------------------------------
+% 4. Examples of translating complete sentences entered by user in eng2log.
+%------------------------------------------------------------
+
+1 ?- % load GULP by double-clicking on the SWI IFF GULP file.
+
+2 ?- [startup].
+
+
+
+Parsed query OK:Does the man beat the horse 
+
+syn<-> act<-> beat
+     vcat<-> transitive
+     gcat<-> empty
+     gap<-> empty
+     rel<-> no
+     max<-> 3
+     role<-> query(yes_no)
+     aux<-> yes
+     qvars<-> []
+sem<-> pred<-> beat-WN00958408
+     subj<-> head<-> ?man
+           type<-> Man
+           mod<-> empty
+           sub<-> empty
+           poss<-> empty
+           of<-> empty
+     dobj<-> head<-> ?horse
+           type<-> horse-WN01875414
+           mod<-> empty
+           sub<-> empty
+           poss<-> empty
+           of<-> empty
+     adjs<-> []
+
+Translation to Logic:
+
+(exists 
+  (?horse ?man ?event) 
+  (and 
+    (instance ?event beat-WN00958408) 
+    (instance ?man Man) 
+    (agent ?event ?man) 
+    (instance ?horse horse-WN01875414) 
+    (patient ?event ?horse)))
+
+Speech Act = YES/NO-Query
+
+
+Parsed query OK:What does the horse eat 
+
+syn<-> act<-> eat
+     vcat<-> transitive
+     gcat<-> empty
+     gap<-> empty
+     max<-> 3
+     role<-> query(wh)
+     aux<-> yes
+     qvars<-> [?what]
+sem<-> pred<-> Eating
+     subj<-> head<-> ?horse
+           type<-> horse-WN01875414
+           mod<-> empty
+           sub<-> empty
+           poss<-> empty
+           of<-> empty
+     dobj<-> head<-> ?what
+           type<-> Physical
+     adjs<-> []
+
+Translation to Logic:
+
+(exists 
+  (?horse ?event) 
+  (and 
+    (instance ?event Eating) 
+    (instance ?horse horse-WN01875414) 
+    (agent ?event ?horse) 
+    (instance ?what Physical) 
+    (patient ?event ?what)))
+
+Speech Act = WH-Query, Find Variables: [?what]
+
+
+Parsed query OK:Is John ' s horse faster than Mary ' s horse 
+
+syn<-> act<-> be
+     vcat<-> copula
+     gcat<-> empty
+     gap<-> empty
+     rel<-> no
+     max<-> 3
+     role<-> query(yes_no)
+     aux<-> no
+     qvars<-> []
+sem<-> mod<-> _G3021^_G3024^[greaterThan, [measure, _G3021, speed-WN00212796], [measure, _G3024, speed-WN00212796]]
+     pred<-> isa
+     subj<-> head<-> ?horse
+           type<-> horse-WN01875414
+           sub<-> empty
+           poss<-> John-1
+           of<-> empty
+     dobj<-> head<-> ?horse
+           type<-> horse-WN01875414
+           sub<-> empty
+           poss<-> Mary-1
+           of<-> empty
+
+Translation to Logic:
+
+(exists 
+  (?horse1 ?horse) 
+  (and 
+    (greaterThan 
+      (measure ?horse speed-WN00212796) 
+      (measure ?horse1 speed-WN00212796)) 
+    (instance ?horse1 horse-WN01875414) 
+    (possesses Mary-1 ?horse1) 
+    (instance ?horse horse-WN01875414) 
+    (possesses John-1 ?horse)))
+
+Speech Act = YES/NO-Query
+

@@ -1,0 +1,99 @@
+module binbase using object.
+
+even < bin. odd < bin. bin < object.
+cons 0 : even.
+cons 1 : odd.
+op(o,200,yf) : ( bin -> even ).
+op(l,200,yf) : ( bin -> odd ).
+op <   : ( bin * bin -> bool ).
+var a:bin, b:bin.
+
+0 o = 0.
+0 l = 1.
+
+(a == a) = true.
+(a l == b o) = false.
+(a o == b l) = false.
+(a o == b o) = (a == b).
+(a l == b l) = (a == b).
+
+(a < a) = false.
+(a o < a l) = true.
+(a l < a o) = false.
+(a o < b o) = (a < b).
+(a l < b l) = (a < b).
+
+(a < b) = true => (a o < b l) = true.
+(b < a) = true => (a o < b l) = false.
+(a < b) = true => (a l < b o) = true.
+(b < a) = true => (a l < b o) = false.
+
+(a \== a) = false.
+(a < b) = true => (a \== b) = true.
+(b < a) = true => (a \== b) = true.
+
+% additional constraints to speed-up completion of enrichments (e.g. bin)
+
+(a < 0) = true => true = false.
+(a < b) = true and (b < a) = true => true = false.
+
+
+
+%  ----------------- Parsing and pretty printing ----------------
+
+
+parse(I,T):-
+	integer(I),
+	I>0,
+	!,
+	predicate(toBinary(I,T)).
+pretty(0 o):-
+	write('00'),
+	!.
+pretty(0 l):-
+	write('01'),
+	!.
+pretty(T l):-
+	predicate(fromBinary(T l,N)),
+	!,
+	write(N).
+pretty(T o):-
+	predicate(fromBinary(T o,N)),
+	!,
+	write(N).
+
+predicate(toBinary(X,_)):-
+	var(X),
+	!,
+	fail.
+predicate(toBinary(0,0)):-
+	!.
+predicate(toBinary(1,1)):-
+	!.
+predicate(toBinary(N,T2 l)):-
+	1 is N mod 2 ,
+	!,
+	N2 is N // 2,
+	predicate(toBinary(N2,T2)).
+predicate(toBinary(N,T2 o)):-
+	0 is N mod 2 ,
+	!,
+	N2 is N // 2,
+	predicate(toBinary(N2,T2)).
+
+predicate(fromBinary(0,0)):-
+	!.
+predicate(fromBinary(1,1)):-
+	!.
+predicate(fromBinary(T2 l,N22P1)):-
+	predicate(fromBinary(T2,N2)),
+	!,
+	N22P1 is N2*2 + 1,
+	!.
+predicate(fromBinary(T2 o,N22)):-
+	predicate(fromBinary(T2,N2)),
+	!,
+	N22 is N2*2,
+	!.
+	
+

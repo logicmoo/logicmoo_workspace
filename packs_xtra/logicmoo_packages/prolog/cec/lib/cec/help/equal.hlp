@@ -1,0 +1,8 @@
+ 
+"equal."
+
+asks the user to enter a list of the following form:
+             	[[a, b, c, ... ], [g, h, i, ... ], ... ]
+and declares operators to have equivalent precedences, provided "kns"
+is the current type of the termination ordering.
+Meaning: a = b = c = ... and g = h = i = ...

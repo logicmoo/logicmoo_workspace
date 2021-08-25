@@ -1,0 +1,19 @@
+
+"loadOrder."
+
+reads the file "<module_name>.<order_name>.ord", if <module_name> is
+the name of the current specification module and <order_name> is the
+name of the termination ordering that is currently associated with it.
+This file contains the final termination ordering saved using the
+"storeOrder"-command.
+
+"loadOrder(+File)."
+
+reads in the file "File.ord". This file contains the final termination 
+ordering saved using the "storeOrder"-command.
+
+
+"loadOrder(+ModuleName, +OrderName)."
+
+reads in the file "ModuleName.OrderName.ord". This file contains the 
+final termination ordering saved using the "storeOrder"-command.

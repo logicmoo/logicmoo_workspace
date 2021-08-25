@@ -1,0 +1,122 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%  Langford's number problem     %%%
+%%%  csplib #024 - see www.csplib.org
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%  Coded by Emanuele D'Osualdo  - 
+%%%    Univ. of Udine - Sept 2008
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% Two parameters (kval, max_num):
+%%    kval (# of repetitions of each number)
+%%    max_num (maximum number)
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% Eg  kval=2, max_num=3 => 312132
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% Observe that the leftmost occurrence
+%% of a number I imposes all the other occurrences. 
+%% Eg if sol(X,I) then sol(X+I,I), sol(X+2I,I) etc
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% Call it with :- sicsplan(max_num)
+%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+%% Timings eg with (3,10) => ~30s on 2GHz
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% CONSTANTS
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+kval(3).
+max_num(10).
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% DOMAINS
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+max_pos(N):-max_num(X),kval(K),N is X*K.
+
+pos(X):-
+   max_pos(N),
+   interval(X,1,N).
+
+num(X) :-
+   max_num(N),
+   interval(X,1,N).
+ 
+coeff(X):-
+   kval(K),K1 is K-1,
+   interval(X,0,K1).
+ 
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%       FLUENTS        %%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+fluent(sol(I,N)):-num(N),pos(I).
+fluent(free(I)):-pos(I).
+fluent(avail(N)):-num(N).
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%       ACTIONS        %%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+action(put(I,N)):-
+       num(N),pos(I),max_pos(J),kval(K),
+       I+(K-1)*(N+1) =< J.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%    EXECUTABILITY     %%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+executable(put(I,N),PreCond):-
+   action(put(I,N)),
+   kval(K),buildPrecond(I,K,N,PreCond).
+
+buildPrecond(_,0,N,[avail(N)]):- !, fluent(avail(N)).
+buildPrecond(I,K,N,[free(I)|R]):- fluent(free(I)),
+                                  J is I+N+1, K1 is K-1,
+                                  buildPrecond(J,K1,N,R).
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%     DYNAMIC RULES      %%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+causes(put(I,N),sol(J,N),[]):-
+   coeff(P),
+   action(put(I,N)),
+   fluent(sol(J,N)),
+   J is I+P*(N+1).
+
+
+causes(put(I,N),neg(free(J)),[]):-
+   coeff(P),
+   action(put(I,N)),
+   fluent(free(J)),
+   J is I+P*(N+1).
+
+causes(put(I,N),neg(avail(N)),[]):-
+   action(put(I,N)),
+   fluent(avail(N)).
+   
+causes(put(I,N),avail(M),[]):-
+   action(put(I,N)),
+   fluent(avail(M)),
+   M is N-1.
+   
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%  INITIAL STATE       %%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+initially(free(I)):-pos(I).
+%initially(avail(N)):-num(N).
+initially(avail(N)):-max_num(N).
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%        GOAL          %%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+goal(neg(avail(N))):-num(N).
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%

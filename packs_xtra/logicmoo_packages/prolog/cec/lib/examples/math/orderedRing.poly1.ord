@@ -1,0 +1,1 @@
+order poly1 for orderedRing using poly1 for totalOrder + poly1 for commRing .

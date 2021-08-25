@@ -1,0 +1,59 @@
+%%% Better world problem
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% There are M (max_people) people X in {1,2,...,M}
+%%% Each of them at the beginning owns 2X Euros
+%%% The goal is to obtain an equilibrium situation
+%%% where the main difference between richness is 1
+%%% Person X can donate to another person exactly
+%%% X euros per action.
+%%% No one can remain without money (at any state)
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% Invented and coded by DFP, 2007
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%% With this instance try :-sicsplan(4).
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+max_people(5).
+person(X) :- max_people(N), interval(X,1,N).
+
+%%%%%%%%%%%%%%%%%%%%%
+
+fluent(owns(B),1,M):- person(B),
+     max_people(N),M is N*(N+1).
+
+%%%%%%%%%%%%%%%%
+
+action(gives(X,Y)):-
+       person(X),person(Y),neq(X,Y).
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+executable(gives(X,Y),[owns(X) gt X ]) :-
+        action(gives(X,Y)).
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+causes(gives(X,Y), owns(X) eq owns(X)^(-1) - X, []):-
+        action(gives(X,Y)).
+causes(gives(X,Y), owns(Y) eq owns(Y)^(-1) + X, []) :-
+        action(gives(X,Y)).
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+:-dynamic(caused/2).
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+initially(owns(X) eq  2*X) :-
+    person(X).
+
+%%%%%%%%%%%%%%%
+
+goal(owns(X) leq owns(Y) + 1) :-
+     person(X), person(Y), neq(X,Y).
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

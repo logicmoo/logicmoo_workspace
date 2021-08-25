@@ -1,0 +1,28 @@
+
+Operator Declarations
+---------------------
+
+Operator declarations may be given according to the following syntax:
+
+<operatorDeclaration> ::= <opKind> <opName> : <type> .
+<opKind>  ::= [op | cons]
+<opName>  ::= (<Prolog atom>, <priority>, <fix>)
+            | <Prolog atom>
+            | <Prolog number>
+
+Note that for the first alternative of <opName> there must not be any space
+symbol between a preceding <opKind> and the open parenthesis "(".
+
+<fix>      ::= fx | fy | xfx | xfy | yfx | yfy | xf | yf
+<priority> ::= <number between 1 and 1200>
+<type>     ::= <sortName>
+             | ( <list of sorts> -> sortName )
+<list of sorts> ::= <sortName>
+                  | <list of sorts> * <sortName>
+<sortName> ::= <Prolog atom>
+
+Some examples of operator declarations are the following:
+	cons 0 : nat.
+	cons suc : ( nat -> nat ).
+	op(+, 300, xfy) : ( nat * nat -> nat).
+	op =< : ( nat * nat -> bool ).

@@ -1,0 +1,12 @@
+
+Input Format of Specifications
+------------------------------
+
+Specifications  consist of  sequences of  "operator declarations",  "axioms" 
+and "pragmas".  The operator declarations  and  axioms  may  be  written  in 
+arbitrary order provided that any use of an operator in an axiom is preceded 
+by the  declaration of the  operator.  Pragmas  may redefine  "parsing"  and
+"pretty-printing" of specifications.  Any element of a specification must be 
+terminated  by a full stop "."  followed  by a  white space character.  This 
+syntactic  requirement   follow  from  the  conventions  of  the  underlying 
+Prolog-System.

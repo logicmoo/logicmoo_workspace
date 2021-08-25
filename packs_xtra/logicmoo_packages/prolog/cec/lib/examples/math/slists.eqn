@@ -1,0 +1,22 @@
+module slists using equalityAndOrder + lists .
+op insert : (list * elem -> list) .
+op delete : (list * elem -> list) .
+op has : (list * elem -> bool) .
+op ordered : (list -> bool) .
+insert([], x) = [x] .
+(x =< y) = true => insert([y|ys], x) = [x, y|ys] .
+(x > y) = true => insert([y|ys], x) = [y|insert(ys, x)] .
+ordered([]) = true .
+ordered([x]) = true .
+(x =< y) = true => ordered([x, y|zs]) = ordered([y|zs]) .
+(x > y) = true => ordered([x, y|zs]) = false .
+has([], x) = false .
+has([x|ys], x) = true .
+(y \== x) = true => has([y|ys], x) = has(ys, x) .
+delete([], x) = [] .
+delete([y|ys], y) = ys .
+(y \== x) = true => delete([y|ys], x) = [y|delete(ys, x)] .
+delete(insert(xs, x), x) = xs .
+has(insert(xs, x), x) = true .
+% ordered(insert(xs, x)) = ordered(xs) .    % completion does not terminate with this
+has(xs, x) = false => delete(xs, x) = xs .

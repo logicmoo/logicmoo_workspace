@@ -1,0 +1,16 @@
+ 
+"cd(+RelativePath)."
+
+Changes, as the cd command in UNIX, the directory for all following
+file-related CEC-commands.
+The path is given in  form of a Prolog-atom, hence don't forget the
+quotes, if  the path  contains '/', '.', and '..' and other special
+characters.
+
+This 'cd' does  not implement file name  generation using patterns.
+Hence, '*', '?' and '[' do not receive any special treatment.
+
+"cd" is declared as prefix operator.
+
+"cd."  without an argument  resets the current directory to the one 
+in which the CEC-system was invoked initially.

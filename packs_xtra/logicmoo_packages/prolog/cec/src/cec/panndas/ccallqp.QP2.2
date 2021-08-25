@@ -1,0 +1,409 @@
+/* @(#)ccallqp.pl	6.1 2/27/87 */
+
+/* These Prolog routines allow a C program to call a Prolog servant.  These
+routines are used by the servant to communicate with the C program.  C
+programs can call certain Prolog predicates defined in the servant's
+database.  These predicates must be declared as callable by C by means of
+external/3 facts. The predicates and external facts must be in the user
+module.
+
+Declarations of Prolog routines that can be called by C are as follows:
+
+external(routine_name_for_c,
+	 prolog_predicate_name(parspec1,parspec2,..)).
+
+where the parspec is similar as for the foreign predicate: +integer,
+-integer, +string, -string, +float, -float, +atom, -atom.  (The indication
+that a parameter is a function return is not appropriate for Prolog's side
+of the interface.) For example, +integer means that an integer will be
+supplied by the C program when this predicate is called; -string means that
+the Prolog predicate will generate a string value and return it to the
+calling C program.  */ 
+
+
+/* Module declaration */
+
+:- module(ccallqp,[
+        pan_ServeOff/0,
+	pan_ServeContinue/0,
+        pan_delayGoal/1,
+	save_ipc_servant/1,
+	msg_trace/2,
+        connect_and_serve_xdr/0
+   ]).
+
+/* Need the basic list-processing stuff */
+
+:- use_module(library(basics)).
+
+
+:- dynamic '$external'/5.
+
+/* The sigs routine allows the servant to ignore interrupts. Otherwise,
+interrupts may cause it to terminate prematurely. */
+
+:- ensure_loaded(library(sigs)).
+
+
+/* The xdrsock routines allow Prolog to set up and communicate through
+sockets using the xdr protocol. So load those routines. */
+
+:- ensure_loaded(library(xdrsock)).
+
+
+/************************************************************************/
+/*									*/
+/*		Socket Utilities for Tracing and Errors			*/
+/*									*/
+/************************************************************************/
+
+:- ensure_loaded(library(sockutil)).
+
+
+/************************************************************************/
+/*									*/
+/*			Goal servant for XDR interface			*/
+/*									*/
+/************************************************************************/
+
+
+/* save_ipc_servant(+SavedState) creates a saved state in the file
+SavedState, which can later be used by the C routine QPc_create_servant to
+create a servant for a C program.  */ 
+
+save_ipc_servant(Savedstate) :- externalsok,save_ipc_servant1(Savedstate).
+
+save_ipc_servant1(Savedstate) :-
+	save(Savedstate,1),!,
+	connect_and_serve_xdr.
+save_ipc_servant1(_).
+
+
+/* connect_and_serve_xdr connects to a socket identified on the command line
+and becomes a servant for it, using an xdr tuple-at-a-time protocol.  All
+goals it will serve must be declared external.  */ 
+
+connect_and_serve_xdr :-
+	% sigsign,	% ignore signals as servant
+	unix(argv(Pars)),
+	Pars=[Mach,Nport|_],
+	!, connect_and_serve_xdr_1(Nport,Mach).
+connect_and_serve_xdr :- !.
+
+connect_and_serve_xdr_1(Nport,Mach) :-
+	establish_xdr_client(Nport,Mach,0),
+	!,
+	sendexts,
+	serveloop,!,
+        ( pan_DoNotServe ->
+            nl,
+	    write('type "serve." to continue serving.'),
+	    nl
+	  ; shutdown_xdr_connection
+	).
+connect_and_serve_xdr_1(_,_) :- 
+	write_sock_error(['starting servant: incorrect parameters']),
+	fail.
+
+
+/* externalsok: checks that the external declarations are all legal.  It
+prints an error message and fails if there is a problem.  */ 
+
+externalsok :-
+	bagof(ext(Name,Spec),user:external(Name,xdr,Spec),Externals),
+	(Externals == [] 
+	    ->	write_sock_error(['no external declarations']),fail
+	    ;	chkexts(Externals)).
+
+chkexts([]).
+chkexts([ext(Name,Spec)|Exts]) :-
+	member(ext(Name,_),Exts) -> 
+		write_sock_error(['Duplicate external command:',Name]),
+		fail;
+	(functor(Spec,_,Arity), \+ spec_type(0,Arity,Spec,_)) ->
+		write_sock_error(['Illegal specification:',Spec]),
+		fail;
+	otherwise -> chkexts(Exts).
+
+
+/* sendexts sends the external declarations to the client */
+
+sendexts :-
+	bagof(ext(Name,Spec),user:external(Name,xdr,Spec),Externals),
+	length(Externals,Numext),
+	xdr_putinteger(Numext,1),	% number of definitions
+	sendeachext(Externals,0),
+	xdr_flush.
+
+
+/* sendeachext(Extlist,N) sends each external declaration to the client and
+saves them in $external/5.  N is the number of the first external in the
+list.  */ 
+
+sendeachext([],_).
+sendeachext([ext(Name,Spec)|Exts],N) :-
+	functor(Spec,Pred,Arity),
+	xdr_putinteger(Arity,1),	% arity
+	xdr_putstring(Name,1),		% name
+	spec_type(0,Arity,Spec,Types),
+	name(Stypes,Types),
+	xdr_putstring(Stypes,1),	% types
+	assertz('$external'(N,Pred,Arity,Types,Name)),
+	N1 is N+1,
+	sendeachext(Exts,N1).
+
+
+/* spec_type(N,Arity,Spec,TypeList) converts the arguments of the
+specification into a list of small integers, so it can be sent as a string.
+*/
+
+spec_type(N,N,_,[]).
+spec_type(N,Arity,Spec,[Tn|Tns]) :- !,
+	N1 is N+1,
+	arg(N1,Spec,T),
+	typeton(T,Tn),
+	spec_type(N1,Arity,Spec,Tns).
+
+
+/* typeton(TypeSpec,TypeNum)  associates each type spec with a number */
+
+typeton(+integer,1).
+typeton(+float,2).
+typeton(+atom,3).
+typeton(+string,4).
+typeton(-integer,9).
+typeton(-float,10).
+typeton(-atom,11).
+typeton(-string,12).
+
+/* serveloop: reads and services commands from the socket using the xdr
+protocol */ 
+
+/* EXTENSIONS FOR CEC/PANNDA-S CONNECTION */
+
+:- dynamic pan_DoNotServe/0.
+:- dynamic pan_goalIsDelayed/1.
+
+serveloop :-
+	repeat,
+	( pan_DoNotServe -> 
+	    true
+          ; ( pan_goalIsDelayed(Goal) ->
+	        pan_executeDelayedGoal(Goal)
+	      ; getcommand(Cmd),
+                processtopcmd(Cmd)
+            )
+        ), !.
+
+pan_ServeOn  :-
+  retract(pan_DoNotServe), fail ; true, !.
+pan_ServeOff :-
+  assertz(pan_DoNotServe).
+pan_ServeContinue :-
+  pan_ServeOn,
+  serveloop,
+  !,
+  ( pan_DoNotServe ->
+      nl,
+      write('type "serve." to continue serving.'),
+      nl
+    ; shutdown_xdr_connection
+  ).
+pan_delayGoal(Goal) :- 
+  ( retract(pan_goalIsDelayed(_)), fail ; true ),
+  assertz(pan_goalIsDelayed(Goal)).
+pan_executeDelayedGoal(Goal) :- 
+  ( retract(pan_goalIsDelayed(_)), fail ; true ),
+  !, user:pan_callAndFlush((user:Goal)),
+  !, fail.
+
+
+/* END EXTENSIONS */
+
+
+/* getcommand(-Cmd): reads a command (an integer) from the socket.  This
+should either identify an external predicate, or it should be a special
+command: 
+
+	-1 = next
+	-2 = close
+	-3 = shutdown
+	or a standard command: 
+	-4 = QP_string_from_atom
+	-5 = QP_atom_from_string
+*/ 
+
+getcommand(Cmd) :- 
+	xdr_getinteger(Cmd,1),!,
+	'$msg_trace'(N),
+	(N == on
+	    ->	commnd(Cmd,Cname),!,msg_trace1(['received:',Cname])
+	    ;	true
+	).
+getcommand(-3 /* shutdown */) :-	/* to avoid loop if get fails */
+% PAN	write(user_error,'FATAL ERROR getting command, shutting down.'),
+% PAN	nl(user_error).
+	pan_ServeOff,
+	fail.
+
+
+commnd(-1, next).
+commnd(-2, close).
+commnd(-3, shutdown).
+commnd(-4, 'QP_xstring_from_atom').
+commnd(-5, 'QP_xatom_from_string').
+commnd(N,Cname) :- '$external'(N,_,_,_,Cname).
+
+/* processtopcmd(+Cmd): processes a top-level command.  This is when
+no other goal is still active.  */ 
+
+processtopcmd(Cmd) :-
+	Cmd @< 0 -> topcmd(Cmd);
+	otherwise -> doextcall(Cmd).
+
+
+topcmd(-3 /*shutdown*/ ) :- 	% ack and succeed out to top
+	sendok.
+topcmd(-2 /*close*/ ) :- 	% error, no query to close
+	senderror,fail.
+topcmd(-1 /*next*/ ) :- 	% error, no active query
+	write_sock_error(['No active external call']),
+	senderror.
+topcmd(-4) :- 				% QP_string_from_atom
+	xdr_string_from_atom,fail.
+topcmd(-5) :- 				% QP_atom_from_string
+	xdr_atom_from_string,fail.
+
+
+/* doextcall(+Cmd): reads the input parameters from the socket,
+constructs the goal and calls it. */
+
+doextcall(Cmd) :-
+	getgoal(Cmd,Types,Goal)
+	    ->  msg_trace1(['calling:',Goal]),
+		processextcall(Types,Goal)
+	    ;	write_sock_error(['Illegal external call to:',Cmd]),
+		senderror,
+		fail.
+
+
+/* processextcall(+Types,+Goal) given goal Goal of arity Arity and
+with list of  parameter types (+Types), reads commands from the socket,
+computing and sending answers to Goal as they are requested. */
+
+processextcall(_,_) :- nextcommand,!,fail.
+processextcall(Types,Goal) :-
+	call(user:Goal),		% externals must be in user
+	send_answer(Types,Goal),
+	nextcommand,
+	!,fail.
+processextcall(_,_) :-
+	sendnomore,
+	fail.
+
+
+/* nextcommand reads and processes a command */
+
+nextcommand :- getcommand(Cmd),processcommand(Cmd).
+
+
+/* processcommand(+Cmd) processes a nested command, i.e. a command
+that may ask for another tuple from the current query, or may close the
+query, as well as start up a new nested query. */
+
+processcommand(Cmd) :-
+	Cmd @< 0 -> processpredef(Cmd);
+	/* to allow nested calls: otherwise -> doextcall(Cmd). */
+	otherwise -> write_sock_error(['Nested calls are illegal.']).
+
+processpredef(-1 /*next*/) :- fail.		% simply fail back to get next
+processpredef(-2 /*close*/) :- sendok.		% ack and succeed to cut above
+processpredef(-3 /*shutdown*/) :- senderror.	% error and succeed 
+processpredef(-4) :- xdr_string_from_atom,nextcommand.
+processpredef(-5) :- xdr_atom_from_string,nextcommand.
+
+
+/* getgoal(+Cmd,-Types,-Goal): given a command Cmd, finds the external
+declaration and the Types (returned in Types), reads the input parameters
+from the socket and constructs the goal (returned in Goal).  */ 
+
+getgoal(Cmd,Types,Goal) :-
+	'$external'(Cmd,Pred,Arity,Types,_Name)
+	    ->	functor(Goal,Pred,Arity),
+		get_args(Types,1,Goal)
+	    ;	write_sock_error([Cmd,' is not a legal external.']),
+		fail.
+
+
+/* get_args(+Types,+N,+Goal) reads remaining (N and beyond) input
+parameters from the socket to instantiate the remaining arguments of Goal
+(which is passed in with all arguments as variables).  */ 
+
+get_args([],_,_) :- !.
+get_args([Partype|Partypes],N,Goal) :-
+	getarg(Partype,X),
+	arg(N,Goal,X),
+	N1 is N+1,
+	get_args(Partypes,N1,Goal).
+
+
+/* These are various routines that send certain messages to the calling C
+routine.  */ 
+
+sendnomore :- sendflag(1).
+sendingmore :- xdr_putinteger(0,1).	/* no flush, answer will flush it */
+sendok :- sendflag(0).
+senderror :- sendflag(1).
+
+sendflag(X) :- xdr_putinteger(X,1),xdr_flush.
+
+
+/* send_answer(+Types,+Goal) sends a tuple to the calling C program.  */ 
+
+send_answer(Types,Goal) :-
+	msg_trace1(['send:',Goal]),
+	sendingmore,
+	put_args(Types,1,Goal),
+	xdr_flush.
+
+
+/* It would be nice to combine the get_ and put_args, but since the C
+interface doesn't support bidirectional parameter passing, the distinction
+would have to be made at least there.  So here seems as good as anywhere.
+*/ 
+
+/* put_args(+Types,+N,+Goal) writes the remaining (N and beyond) arguments
+of Goal to the socket.  */ 
+
+put_args([],_,_) :- !.
+put_args([Partype|Partypes],N,Goal) :- 
+	arg(N,Goal,X),
+	putarg(Partype,X),
+	N1 is N+1,
+	put_args(Partypes,N1,Goal).
+
+
+/* getarg(+Pspec,?Val) if Pspec indicates an input argument (1-4), it
+reads it from the socket, using the appropriately typed routine, and returns
+it in Val.  If Pspec indicates an output argument (9-12), it does nothing.  */ 
+
+getarg(Type,X) :- 
+	Type == 1 -> xdr_getinteger(X,1);
+	Type == 2 -> xdr_getfloat(X,1);
+	Type == 3 -> xdr_getatom(X,1);
+	Type == 4 -> xdr_getstring(X,1);
+	otherwise -> true.
+
+
+/* putarg(+Pspec,+Val) if Pspec indicates an output argument (9-12),
+it writes Val to the socket, using the appropriately typed routine.  If
+Pspec indicates an input argument (1-4), it does nothing.  */ 
+
+putarg(Type,X) :- 
+	Type == 9 -> Y is integer(X), xdr_putinteger(Y,1);
+	Type == 10 -> Y is float(X), xdr_putfloat(Y,1);
+	Type == 11 -> xdr_putatom(X,1);
+	Type == 12 -> xdr_putstring(X,1);
+	otherwise -> true.
+
+

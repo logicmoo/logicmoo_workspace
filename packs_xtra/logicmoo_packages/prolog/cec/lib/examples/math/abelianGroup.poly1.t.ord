@@ -1,0 +1,3 @@
+order poly(1) using 'poly1.t' for commSemiGroup.
+
+setInterpretation((-x) : x^2).

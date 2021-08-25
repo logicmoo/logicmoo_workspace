@@ -1,0 +1,286 @@
+% LAST EDIT: Fri Jul 10 13:47:16 1992 by Jan Thomsen (mitropa!jt) 
+
+%% ******************************************************************
+%%
+%% Test file for testing ABox inferences  Version 1.1  Jun 6, 91
+%%
+%% Number of tests: 14
+%% 
+%% Adapted to Back 5.0  Jul 10, 92
+%%
+%% ******************************************************************
+ 
+aboxtest :-
+	write('*** TEST FILE: jantest.abox'), nl,
+	backinit,
+	sample_tbox,
+	backstate(verbosity = warning),
+	atest(1),
+	nl, !.
+ 
+%% sample_tbox
+sample_tbox :-
+        %% ts v=s
+	p1 :< anything,
+	p2 :< anything,
+	p3 :< anything,
+	p4 :< anything,
+	p5 :< anything,
+	p6 :< anything,
+	p7 :< anything and not(p2),
+/*
+ Individual concepts are not allowed in BACK V5.0 
+	p8 :< anything and atmost(1),
+*/ 
+	r1 :< domain(p1),
+	r2 :< domain(anything) and range(anything),
+	r3 :< r2,
+	r4 :< range(anything),
+	r5 :< range(p2),
+	r6 :< r3,
+	r7 :< r2 and range(p5),
+ 
+	c1 := p1 and atleast(2,r4),
+	c2 := p1 and atleast(3,r4),
+	c3 := p2 and atmost(2,r2),
+	c4 := atmost(3,r2),
+	c5 := all(r2,p3),
+	c6 := all(r2,p4) and atmost(1,r2).
+%%   c7 := all(r2,p5) and atmost(1,r2),
+%%   c8 := all(r3,p2),
+%%   c9 := all(r2,p2). 
+ 
+atest(H) :-
+	aboxtest(H),
+	H1 is H + 1,
+	atest(H1), !.
+atest(_).
+ 
+ 
+%% ===================================================================
+ 
+%% Test A1 +
+%%    Domain completion
+%%    r1 :< domain(p1)
+ 
+aboxtest(1) :-
+      o1 :: r1: o2,
+%% expected inferences
+      o1 ?: p1 noibox,
+      write('+++ Test a1 succeeded'),nl, !.
+aboxtest(1) :-
+      write('--- Test a1 failed'),nl, !.
+ 
+%%--------------------------------------------------------------------
+ 
+%% Test A2 +
+%%    Pure terminological domain completion
+%%    r1 :< domain(p1)
+ 
+aboxtest(2) :-
+	o3 :: atleast(1,r1),
+ 
+%% expected inferences
+	o3 ?: p1 noibox ,
+	write('+++ Test a2 succeeded'),nl, !.
+aboxtest(2) :-
+	write('--- Test a2 failed'),nl, !.
+ 
+%%--------------------------------------------------------------------
+ 
+%% Test A3 -
+%%    Role hierarchy information: terminological added descriptions
+%%    r3 :< r2 
+ 
+aboxtest(3) :-
+	o4 :: all(r2,p2),
+	o5 :: atleast(1,r3),
+	o6 :: atmost(1,r2),
+ 
+%% expected inferences
+	o4 ?: all(r3,p2) noibox,
+	%% o5 ?: r2: card(1,in) noibox ,
+	%% o6 ?: r3: card(0,1) noibox ,
+	write('+++ Test a3 succeeded'),nl, !.
+aboxtest(3) :-
+        write('--- Test a3 failed'),nl, !.
+ 
+%%--------------------------------------------------------------------
+ 
+%% Test A4 +
+%%    Role hierarchy information: instantiation of superroles
+%%    r3 :< r2
+%%    role r2 should be instantiated as well
+ 
+aboxtest(4) :- 
+	o7 :: p1 and r3: (o8 :: p2),
+ 
+%%    expected inferences
+        o7 ?: p1 and r2: o8 noibox,
+        o7 ?: p1 and atleast(1,r2) noibox,  
+        write('+++ Test a4 succeeded'),nl, !.
+aboxtest(4) :-
+        write('--- Test a4 failed'),nl, !.
+ 
+%%--------------------------------------------------------------------
+ 
+%% Test A5 +
+%%    Abstraction: role-filler counting
+ 
+aboxtest(5) :-
+	o9 :: p1 and r2: (o10 :: p2)
+                 and r2: (o11 :: p2)
+                 and r2: (o12 :: p2),
+ 
+%%    expected inferences
+        %% o9 ?: p1 and r2: card(3,in),
+        o9 ?: p1 and atleast(3,r2),  %% ok
+        write('+++ Test a5 succeeded'),nl, !.
+aboxtest(5) :-
+        write('--- Test a5 failed'),nl, !.
+ 
+%%--------------------------------------------------------------------
+ 
+%% Test A6 -
+%%    Abstraction: role-filler counting and subroles
+%%    
+ 
+aboxtest(6) :-
+	o13 :: p1 and r2: (o14 :: p2)
+                  and r3: (o15 :: p2)
+                  and r6: (o16 :: p2),
+ 
+%%    expected inferences
+        %% o13 ?: p1 and r2: card(3,in) noibox ,
+        o13 ?: p1 and atleast(3,r2) noibox ,  %% ok
+        write('+++ Test a6 succeeded'),nl, !.
+aboxtest(6) :-
+        write('--- Test a6 failed'),nl, !.
+ 
+%%--------------------------------------------------------------------
+ 
+%% Test A7 +
+%%    Abstraction: role-filler counting
+%%         leads to a better description
+ 
+aboxtest(7) :-
+	o17 :: p1 and r4: (o18 :: p2)
+                  and r4: (o19 :: p2)
+                  and r4: (o20 :: p2),
+ 
+%%    expected inferences
+        o17 ?: c2 noibox,
+        write('+++ Test a7 succeeded'),nl, !.
+aboxtest(7) :-
+        write('--- Test a7 failed'),nl, !.
+ 
+%%--------------------------------------------------------------------
+%% Test A8 +
+%%    Abstraction: role-filler counting;
+%%    Clash: atmost-restriction violated  because c3 :: atmost(2,r2)
+ 
+aboxtest(8) :-
+	o21 :: c3 and r2: (o22 :: p2)
+                  and r3: (o23 :: p2)
+                  and r6: (o24 :: p2),
+ 
+        write('--- Test a8 failed'),nl, !.
+aboxtest(8) :-
+        write('+++ Test a8 succeeded'),nl, !.
+ 
+%%--------------------------------------------------------------------
+ 
+%% Test A9 -
+%%    Abstraction: VR-Generalization
+ 
+aboxtest(9) :-
+	o25 :: c4 and r2: (o26 :: p2)
+                  and r2: (o27 :: p2)
+                  and r2: (o28 :: p2),
+ 
+%%    expected inferences
+        o25 ?: c4 and all(r2,p2) noibox ,  %% ok
+        write('+++ Test a9 succeeded'),nl, !.
+aboxtest(9) :-
+        write('--- Test a9 failed'),nl, !.
+ 
+%%--------------------------------------------------------------------
+ 
+%% Test A10 -
+%%    Abstraction: VR-Generalization and subroles
+ 
+aboxtest(10) :-
+	o29 :: c4 and r2: (o30 :: p2)
+                  and r3: (o31 :: p2)
+                  and r6: (o32 :: p2),
+ 
+%%    expected inferences
+        o29 ?: c4 and all(r2,p2) noibox ,  %% ok
+        write('+++ Test a10 succeeded'),nl, !.
+aboxtest(10) :-
+        write('--- Test a10 failed'),nl, !.
+ 
+%%--------------------------------------------------------------------
+ 
+%% Test A11 +
+%%    Forward propagation: range restriction
+ 
+aboxtest(11) :-
+	o33 :: p1 and r5:o34,
+ 
+%%    expected inferences
+        o34 ?: p2 noibox ,
+        write('+++ Test a11 succeeded'),nl, !.
+aboxtest(11) :-
+        write('--- Test a11 failed'),nl, !.
+ 
+%%--------------------------------------------------------------------
+ 
+%% Test A12 +
+%%    Forward propagation: range restriction
+ 
+aboxtest(12) :-
+        o35 :: c5 and r2:o36,
+ 
+%%    expected inferences
+        o36 ?: p3 noibox,
+        write('+++ Test a12 succeeded'),nl, !.
+aboxtest(12) :-
+        write('--- Test a12 failed'),nl, !.
+ 
+%%--------------------------------------------------------------------
+ 
+%% Test A13 
+%%    Backward propagation
+%%    Note: forward propagation succeeded, backward propagation didn't (4.4)
+ 
+aboxtest(13) :-
+        o37 :: c6 and r2:o38,
+     %% forward propagation
+        o38 ?: p4 noibox,
+     %% second tell concerning o38
+        o39 :: p1 and r7: o38,
+     %%  forward propagation
+        o38 ?: p5 noibox,
+     %% backward propagation  to o37
+        o37 ?: all(r2,p5) and atmost(1,r2) noibox,  %% ok (o37 ?: c7)
+        write('+++ Test a13 succeeded'),nl, !.
+aboxtest(13) :-
+        write('--- Test a13 failed'),nl, !.
+ 
+%%--------------------------------------------------------------------
+/*
+ Individual concepts are not allowed in BACK V5.0 
+%% Test A14 +
+%%    Instantiation of an individual concept
+ 
+aboxtest(14) :-
+        o40 :: p8,
+        o41 :: p8,
+        write('+++ Test a14 failed'),nl, !.
+aboxtest(14) :-
+        write('--- Test a14 succeeded'),nl, !.
+*/
+%%--------------------------------------------------------------------
+
+

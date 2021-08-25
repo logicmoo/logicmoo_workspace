@@ -1,0 +1,6 @@
+(cl-text axiom:00002 
+         (forall (x y z)(if (and (part_of x z) 
+                                 (part_of z y))
+                            (part_of x y))) )
+
+

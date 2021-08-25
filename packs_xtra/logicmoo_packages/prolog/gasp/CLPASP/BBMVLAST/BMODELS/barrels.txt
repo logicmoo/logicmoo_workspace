@@ -1,0 +1,86 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%         Change the value of max_lit:        %%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% By DFP, 2007
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% 8  (=>5, 3) - solution with :-sicsplan(7).
+%%% 12 (=> 7, 5 standard) - solution with :-sicsplan(11).
+%%% 16 (=> 9, 7) - solution with :-sicsplan(15).
+%%% 20 (=> 11, 9) - solution with :-sicsplan(19).
+%%% 24 (=> 13, 11) - solution with :-sicsplan(23).
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+max_lit(20).
+
+liters(X) :-
+  max_lit(N),
+  interval(X,0,N).
+
+barrel(M) :- max_lit(N), M is N//2 - 1.
+barrel(M) :- max_lit(N), M is N//2 + 1.
+barrel(N) :- max_lit(N).
+
+%%%%%%%%%%%%%%%%%%%%%
+
+fluent(contain(B,L)):- barrel(B),liters(L),L =< B.
+
+%%%%%%%%%%%%%%%%
+
+action(pour(X,Y)):-  barrel(X),barrel(Y), neq(X,Y).
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+causes(pour(X,Y), contain(X,0), [contain(X,LX),contain(Y,LY)]):-
+        action(pour(X,Y)),
+        fluent(contain(X,LX)),
+        fluent(contain(Y,LY)),
+        Y-LY >= LX.
+causes(pour(X,Y), contain(Y,LYnew), [contain(X,LX),contain(Y,LY)]):-
+        action(pour(X,Y)),
+        fluent(contain(X,LX)),
+        fluent(contain(Y,LY)),
+        Y-LY >= LX,
+        LYnew is LX + LY.
+causes(pour(X,Y), contain(X,LXnew), [contain(X,LX),contain(Y,LY)]):-
+        action(pour(X,Y)),
+        fluent(contain(X,LX)),
+        fluent(contain(Y,LY)),
+        LX >= Y-LY,
+        LXnew is LX-Y+LY.
+causes(pour(X,Y), contain(Y,Y), [contain(X,LX),contain(Y,LY)]):-
+        action(pour(X,Y)),
+        fluent(contain(X,LX)),
+        fluent(contain(Y,LY)),
+        LX >= Y-LY.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+executable(pour(X,Y),[contain(X,LX),contain(Y,LY)]) :-
+        action(pour(X,Y)),
+        fluent(contain(X,LX)),
+        fluent(contain(Y,LY)),
+        LX > 0,
+        LY < Y.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+caused([ contain(X,LX) ], neg(contain(X,LY)) ) :-
+    fluent(contain(X,LX)),
+    fluent(contain(X,LY)),
+    barrel(X),liters(LX),liters(LY),neq(LX,LY).
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+initially(contain(N,N)) :-
+    max_lit(N).
+initially(contain(M,0)) :-
+    barrel(M), max_lit(N), neq(M,N).
+
+%%%%%%%%%%%%%%%
+
+goal(contain(N,M)) :- max_lit(N), M is N//2.
+goal(contain(P,M)) :- max_lit(N), M is N//2, P is M + 1.
+goal(contain(M,0)) :- max_lit(N), M is N//2 - 1.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

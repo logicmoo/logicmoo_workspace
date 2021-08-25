@@ -1,0 +1,90 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% Hydraulic System Planning # 1
+%%% From ASP 2009 competition
+%%% By Michael Gelfond, Ricardo Morales and Yuanlin Zhang.
+%%% http://dtai.cs.kuleuven.be/events/ASP-competition/Benchmarks/Hydraulic1.shtml
+%%% Instances from
+%%% http://dtai.cs.kuleuven.be/events/ASP-competition/encodings.shtml
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% Coded in BMV/BMAP by DFP, May 2010
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+fluent( open(V) )        :- valve(V).
+fluent( pressurized(O) ) :- junction(O);tank(O);jet(O).
+
+
+action( open_valve(V)) :- valve(V).
+
+executable(open_valve(V), [neg(open(V))]) :-
+     action(open_valve(V)).
+
+causes(open_valve(V), pressurized(B) , [pressurized(X)]) :-
+     action(open_valve(V)), link(X,B,V).
+
+causes(open_valve(V), open(V) , []) :-
+     action(open_valve(V)).
+
+initially(pressurized(A)):- tank(A).
+initially(neg( pressurized(A))):- junction(A);jet(A).
+initially(neg( open(A))):- valve(A).
+
+goal(pressurized(j2)).
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% Difficult instance (61)
+%%% Minimum solution with :-sicsplan(16). (0.7s)
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+tank(t611).
+tank(t612).
+jet(j1).
+jet(j2).
+junction(p00). junction(p01). junction(p02). junction(p03). junction(p04). junction(p05).
+junction(p10). junction(p11). junction(p12). junction(p13). junction(p14). junction(p15).
+junction(p20). junction(p21). junction(p22). junction(p23). junction(p24). junction(p25).
+junction(p30). junction(p31). junction(p32). junction(p33). junction(p34). junction(p35).
+junction(p40). junction(p41). junction(p42). junction(p43). junction(p44). junction(p45).
+junction(p50). junction(p51). junction(p52). junction(p53). junction(p54). junction(p55).
+valve(vt1).  valve(vt2).
+valve(vj1).  valve(vj2).
+valve(a0).  valve(a1).  valve(a2).  valve(a3).  valve(a4).
+valve(b0).  valve(b1).  valve(b2).  valve(b3).  valve(b4). valve(b5).
+valve(c0).  valve(c1).  valve(c2).  valve(c3).  valve(c4).
+valve(d0).  valve(d1).  valve(d2).  valve(d3).  valve(d4). valve(d5).
+valve(e0).  valve(e1).  valve(e2).  valve(e3).  valve(e4).
+valve(f0).  valve(f1).  valve(f2).  valve(f3).  valve(f4). valve(f5).
+valve(g0).  valve(g1).  valve(g2).  valve(g3).  valve(g4).
+valve(h0).  valve(h1).  valve(h2).  valve(h3).  valve(h4). valve(h5).
+valve(i0).  valve(i1).  valve(i2).  valve(i3).  valve(i4).
+valve(j0).  valve(j1).  valve(j2).  valve(j3).  valve(j4). valve(j5).
+valve(k0).  valve(k1).  valve(k2).  valve(k3).  valve(k4).
+numValves(64).
+link(t611, p00, vt1). link(t612, p10, vt2).
+link(p45, j2, vj2). link(p55, j1, vj1).
+link(p00, p10, b0).  link(p10, p20, d0).  link(p20, p30, f0).
+link(p30, p40, h0).  link(p40, p50, j0).
+link(p02, p12, b2).  link(p12, p22, d2).  link(p22, p32, f2).
+link(p32, p42, h2).  link(p42, p52, j2).
+link(p04, p14, b4).  link(p14, p24, d4).  link(p24, p34, f4).
+link(p34, p44, h4).  link(p44, p54, j4).
+link(p51, p41, j1).  link(p41, p31, h1).  link(p31, p21, f1).
+link(p21, p11, d1).  link(p11, p01, b1).
+link(p53, p43, j3).  link(p43, p33, h3).  link(p33, p23, f3).
+link(p23, p13, d3).  link(p13, p03, b3).
+link(p55, p45, j5).  link(p45, p35, h5).  link(p35, p25, f5).
+link(p25, p15, d5).  link(p15, p05, b5).
+link(p10, p11, c0). link(p30, p31, g0). link(p50, p51, k0).
+link(p01, p02, a1). link(p21, p22, e1). link(p41, p42, i1).
+link(p12, p13, c2). link(p32, p33, g2). link(p52, p53, k2).
+link(p03, p04, a3). link(p23, p24, e3). link(p43, p44, i3).
+link(p14, p15, c4). link(p34, p35, g4). link(p54, p55, k4).
+link(p01, p00, a0). link(p21, p20, e0). link(p41, p40, i0).
+link(p12, p11, c1). link(p32, p31, g1). link(p52, p51, k1).
+link(p03, p02, a2). link(p23, p22, e2). link(p43, p42, i2).
+link(p14, p13, c3). link(p34, p33, g3). link(p54, p53, k3).
+link(p05, p04, a4). link(p25, p24, e4). link(p45, p44, i4).
+full(t611).
+full(t612).
+%%%%%%goal(j2).
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

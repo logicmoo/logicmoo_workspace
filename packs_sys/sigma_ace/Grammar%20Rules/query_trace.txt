@@ -1,0 +1,1739 @@
+
+
+****************
+Test 1, parsing: is the banker rich 
+
+Parsed OK:is the banker rich 
+syn<->
+      reply<->[[the, banker], is|rich]
+      rel<->no
+      act<->be
+      vcat<->copula
+      max<->3
+      role<->query(yes_no)
+      qvars<->[]
+      aux<->no
+sem<->
+      mod<->richness-WN01950464
+      subj<->
+             noun<->banker
+             head<->?banker
+             type<->OccupationalRole
+             id<->107100408
+      pred<->isa
+Test passed.
+
+Translation = 
+
+(exists 
+  (?banker) 
+  (and 
+    (attribute ?banker richness-WN01950464) 
+    (instance ?banker OccupationalRole)))
+
+Speech Act = YES/NO-Query
+
+1. Warning: interpreted the meaning of the noun 'banker' as  WordNet word sense #2 of 2 senses, ID 107100408, meaning the person in charge of the bank in a gambling game.  Maps to SUMO 'OccupationalRole'.
+
+
+****************
+Test 2, parsing: is the banker a man 
+
+Parsed OK:is the banker a man 
+syn<->
+      reply<->[the, banker, is, a, man]
+      rel<->no
+      act<->be
+      vcat<->copula
+      max<->3
+      role<->query(yes_no)
+      qvars<->[]
+      aux<->no
+sem<->
+      subj<->
+             noun<->banker
+             head<->?banker
+             type<->OccupationalRole
+             id<->107100408
+      pred<->isa
+      dobj<->
+             noun<->man
+             head<->?man
+             type<->[FullyFormed, Human, Male]
+             id<->107391044
+Test passed.
+
+Translation = 
+
+(exists 
+  (?banker) 
+  (and 
+    (instance ?banker FullyFormed) 
+    (instance ?banker Human) 
+    (instance ?banker Male) 
+    (instance ?banker OccupationalRole)))
+
+Speech Act = YES/NO-Query
+
+1. Warning: interpreted the meaning of the noun 'banker' as  WordNet word sense #2 of 2 senses, ID 107100408, meaning the person in charge of the bank in a gambling game.  Maps to SUMO 'OccupationalRole'.
+
+2. Warning: interpreted the meaning of the noun 'man' as  WordNet word sense #1 of 10 senses, ID 107391044, meaning an adult male person (as opposed to a woman); "there were two women and six men on the bus".  Maps to SUMO '[FullyFormed, Human, Male]'.
+
+
+****************
+Test 3, parsing: is the dog red 
+
+Parsed OK:is the dog red 
+syn<->
+      reply<->[[the, dog], is|red]
+      rel<->no
+      act<->be
+      vcat<->copula
+      max<->3
+      role<->query(yes_no)
+      qvars<->[]
+      aux<->no
+sem<->
+      mod<->Red
+      subj<->
+             noun<->dog
+             head<->?dog
+             type<->Canine
+             id<->101595188
+      pred<->isa
+Test passed.
+
+Translation = 
+
+(exists 
+  (?dog) 
+  (and 
+    (attribute ?dog Red) 
+    (instance ?dog Canine)))
+
+Speech Act = YES/NO-Query
+
+1. Warning: interpreted the meaning of the noun 'dog' as  WordNet word sense #1 of 6 senses, ID 101595188, meaning a member of the genus Canis (probably descended from the common wolf) that has been domesticated by man since prehistoric times; occurs in many breeds; "the dog barked all night".  Maps to SUMO 'Canine'.
+
+
+****************
+Test 4, parsing: is John ' s dog different from Mary ' s dog 
+
+Parsed OK:is John ' s dog different from Mary ' s dog 
+syn<->
+      reply<->[[dog]|_G995]
+      rel<->no
+      act<->be
+      vcat<->copula
+      max<->3
+      role<->query(yes_no)
+      qvars<->[]
+      aux<->no
+sem<->
+      mod<->_G3365^_G3368^[not, [equal, _G3365, _G3368]]
+      subj<->
+             noun<->dog
+             head<->?dog
+             type<->Canine
+             id<->101595188
+             poss<->John-1
+      pred<->isa
+      dobj<->
+             noun<->dog
+             head<->?dog
+             type<->Canine
+             id<->101595188
+             poss<->Mary-1
+Test passed.
+
+Translation = 
+
+(exists 
+  (?dog1 ?dog) 
+  (and 
+    (not 
+      (equal ?dog ?dog1)) 
+    (instance ?dog1 Canine) 
+    (possesses Mary-1 ?dog1) 
+    (instance ?dog Canine) 
+    (possesses John-1 ?dog)))
+
+Speech Act = YES/NO-Query
+
+1. Warning: interpreted the meaning of the noun 'dog' as  WordNet word sense #1 of 6 senses, ID 101595188, meaning a member of the genus Canis (probably descended from the common wolf) that has been domesticated by man since prehistoric times; occurs in many breeds; "the dog barked all night".  Maps to SUMO 'Canine'.
+
+
+****************
+Test 5, parsing: is John ' s dog more expensive than Mary ' s dog 
+
+Parsed OK:is John ' s dog more expensive than Mary ' s dog 
+syn<->
+      reply<->[[dog]|_G998]
+      rel<->no
+      act<->be
+      vcat<->copula
+      max<->3
+      role<->query(yes_no)
+      qvars<->[]
+      aux<->no
+sem<->
+      mod<->_G3112^_G3115^[greaterThan, [measure, _G3112, expensiveness-WN04009070], [measure, _G3115, expensiveness-WN04009070]]
+      subj<->
+             noun<->dog
+             head<->?dog
+             type<->Canine
+             id<->101595188
+             poss<->John-1
+      pred<->isa
+      dobj<->
+             noun<->dog
+             head<->?dog
+             type<->Canine
+             id<->101595188
+             poss<->Mary-1
+Test passed.
+
+Translation = 
+
+(exists 
+  (?dog1 ?dog) 
+  (and 
+    (greaterThan 
+      (measure ?dog expensiveness-WN04009070) 
+      (measure ?dog1 expensiveness-WN04009070)) 
+    (instance ?dog1 Canine) 
+    (possesses Mary-1 ?dog1) 
+    (instance ?dog Canine) 
+    (possesses John-1 ?dog)))
+
+Speech Act = YES/NO-Query
+
+1. Warning: interpreted the meaning of the noun 'dog' as  WordNet word sense #1 of 6 senses, ID 101595188, meaning a member of the genus Canis (probably descended from the common wolf) that has been domesticated by man since prehistoric times; occurs in many breeds; "the dog barked all night".  Maps to SUMO 'Canine'.
+
+
+****************
+Test 6, parsing: is John ' s dog the most expensive dog 
+
+Parsed OK:is John ' s dog the most expensive dog 
+syn<->
+      reply<->[dog, is, the, [most, expensive], dog]
+      rel<->no
+      act<->be
+      vcat<->copula
+      max<->3
+      role<->query(yes_no)
+      qvars<->[]
+      aux<->no
+sem<->
+      subj<->
+             noun<->dog
+             head<->?dog
+             type<->Canine
+             id<->101595188
+             poss<->John-1
+      pred<->isa
+      dobj<->
+             noun<->dog
+             head<->?dog
+             type<->Canine
+             id<->101595188
+             mod<->superlative(expensiveness-WN04009070)
+Test passed.
+
+Translation = 
+
+(exists 
+  (?dog) 
+  (and 
+    (instance ?dog Canine) 
+    (forall 
+      (?X) 
+      (implies 
+        (and 
+          (instance ?X Canine) 
+          (not 
+            (equal ?X ?dog))) 
+        (greaterThan 
+          (measure 
+            (attribute ?dog expensiveness-WN04009070)) 
+          (measure 
+            (attribute ?X expensiveness-WN04009070))))) 
+    (instance ?dog Canine) 
+    (possesses John-1 ?dog)))
+
+Speech Act = YES/NO-Query
+
+1. Warning: interpreted the meaning of the noun 'dog' as  WordNet word sense #1 of 6 senses, ID 101595188, meaning a member of the genus Canis (probably descended from the common wolf) that has been domesticated by man since prehistoric times; occurs in many breeds; "the dog barked all night".  Maps to SUMO 'Canine'.
+
+
+****************
+Test 7, parsing: does John breathe 
+
+Parsed OK:does John breathe 
+syn<->
+      reply<->[John, breathe]
+      rel<->no
+      act<->breathe
+      vcat<->[intransitive, _G2102, _G2105]
+      max<->3
+      role<->query(yes_no)
+      qvars<->[]
+      aux<->yes
+sem<->
+      subj<->
+             noun<->John
+             head<->John-1
+             type<->[Human, Male, FullyFormed]
+      pred<->Breathing
+      adjs<->[]
+Test passed.
+
+Translation = 
+
+(exists 
+  (?event) 
+  (and 
+    (instance ?event Breathing) 
+    (instance John-1 FullyFormed) 
+    (instance John-1 Male) 
+    (instance John-1 Human) 
+    (agent ?event John-1)))
+
+Speech Act = YES/NO-Query
+
+
+****************
+Test 8, parsing: does John beat Mr Miller 
+
+Parsed OK:does John beat Mr Miller 
+syn<->
+      reply<->[John, beat, [Mr, Miller]]
+      rel<->no
+      act<->beat
+      vcat<->[_G2107, transitive, _G2113]
+      max<->3
+      role<->query(yes_no)
+      qvars<->[]
+      aux<->yes
+sem<->
+      subj<->
+             noun<->John
+             head<->John-1
+             type<->[Human, Male, FullyFormed]
+      pred<->Hits
+      dobj<->
+             noun<->[Mr, Miller]
+             head<->MrMiller
+             type<->[Human, Male, FullyFormed]
+      adjs<->[]
+Test passed.
+
+Translation = 
+
+(exists 
+  (?event) 
+  (and 
+    (instance ?event Hits) 
+    (instance John-1 FullyFormed) 
+    (instance John-1 Male) 
+    (instance John-1 Human) 
+    (agent ?event John-1) 
+    (instance MrMiller FullyFormed) 
+    (instance MrMiller Male) 
+    (instance MrMiller Human) 
+    (patient ?event MrMiller)))
+
+Speech Act = YES/NO-Query
+
+
+****************
+Test 9, parsing: does Mary give a book to John 
+
+Parsed OK:does Mary give a book to John 
+syn<->
+      reply<->[Mary, give, [a, book], to, [to, John]]
+      rel<->no
+      act<->give
+      vcat<->[_G2110, _G2113, ditransitive]
+      max<->3
+      role<->query(yes_no)
+      qvars<->[]
+      aux<->yes
+sem<->
+      subj<->
+             noun<->Mary
+             head<->Mary-1
+             type<->[Human, Female, FullyFormed]
+      pred<->Giving
+      dobj<->
+             noun<->book
+             head<->?book
+             type<->Book
+             id<->104831824
+      adjs<->[]
+      iobj<->
+             noun<->John
+             head<->John-1
+             type<->[Human, Male, FullyFormed]
+Test passed.
+
+Translation = 
+
+(exists 
+  (?book ?event) 
+  (and 
+    (instance ?event Giving) 
+    (instance Mary-1 FullyFormed) 
+    (instance Mary-1 Female) 
+    (instance Mary-1 Human) 
+    (agent ?event Mary-1) 
+    (instance ?book Book) 
+    (patient ?event ?book) 
+    (instance John-1 FullyFormed) 
+    (instance John-1 Male) 
+    (instance John-1 Human) 
+    (destination ?event John-1)))
+
+Speech Act = YES/NO-Query
+
+1. Warning: interpreted the meaning of the noun 'book' as  WordNet word sense #1 of 8 senses, ID 104831824, meaning a copy of a written work or composition that has been published (printed on pages bound together); "I am reading a good book on economics".  Maps to SUMO 'Book'.
+
+
+****************
+Test 10, parsing: does Mary give John a book 
+
+Parsed OK:does Mary give John a book 
+syn<->
+      reply<->[Mary, give, [a, book], to, [to|_G3329]]
+      rel<->no
+      act<->give
+      vcat<->[_G2107, _G2110, ditransitive]
+      max<->3
+      role<->query(yes_no)
+      qvars<->[]
+      aux<->yes
+sem<->
+      subj<->
+             noun<->Mary
+             head<->Mary-1
+             type<->[Human, Female, FullyFormed]
+      pred<->Giving
+      dobj<->
+             noun<->book
+             head<->?book
+             type<->Book
+             id<->104831824
+      adjs<->[]
+      iobj<->
+             noun<->John
+             head<->John-1
+             type<->[Human, Male, FullyFormed]
+Test passed.
+
+Translation = 
+
+(exists 
+  (?book ?event) 
+  (and 
+    (instance ?event Giving) 
+    (instance Mary-1 FullyFormed) 
+    (instance Mary-1 Female) 
+    (instance Mary-1 Human) 
+    (agent ?event Mary-1) 
+    (instance ?book Book) 
+    (patient ?event ?book) 
+    (instance John-1 FullyFormed) 
+    (instance John-1 Male) 
+    (instance John-1 Human) 
+    (destination ?event John-1)))
+
+Speech Act = YES/NO-Query
+
+1. Warning: interpreted the meaning of the noun 'book' as  WordNet word sense #1 of 8 senses, ID 104831824, meaning a copy of a written work or composition that has been published (printed on pages bound together); "I am reading a good book on economics".  Maps to SUMO 'Book'.
+
+
+****************
+Test 11, parsing: what is valid 
+
+Parsed OK:what is valid 
+syn<->
+      reply<->[?what, is|valid]
+      rel<->no
+      act<->be
+      vcat<->copula
+      max<->3
+      role<->query(wh)
+      qvars<->[?what]
+      aux<->no
+sem<->
+      mod<->validation-WN00099890
+      subj<->
+             head<->?what
+             type<->Physical
+      pred<->isa
+Test passed.
+
+Translation = 
+
+(and 
+  (attribute ?what validation-WN00099890) 
+  (instance ?what Physical))
+
+Speech Act = WH-Query, Find Variables: [?what]
+
+
+****************
+Test 12, parsing: who is the teller 
+
+Parsed OK:who is the teller 
+syn<->
+      reply<->[?who, be, the, teller]
+      rel<->no
+      act<->be
+      vcat<->[_G1882, transitive, _G1888]
+      max<->3
+      role<->query(wh)
+      qvars<->[?who]
+      aux<->no
+sem<->
+      subj<->
+             head<->?who
+             type<->Human
+      pred<->instance
+      dobj<->
+             noun<->teller
+             head<->?teller
+             type<->OccupationalRole
+             id<->107635368
+      adjs<->[]
+Test passed.
+
+Translation = 
+
+(exists 
+  (?teller ?event) 
+  (and 
+    (instance ?event instance) 
+    (instance ?who Human) 
+    (agent ?event ?who) 
+    (instance ?teller OccupationalRole) 
+    (patient ?event ?teller)))
+
+Speech Act = WH-Query, Find Variables: [?who]
+
+1. Warning: interpreted the meaning of the noun 'teller' as  WordNet word sense #1 of 2 senses, ID 107635368, meaning an official appointed to count the votes (especially in legislative assembly).  Maps to SUMO 'OccupationalRole'.
+
+
+****************
+Test 13, parsing: what is in the slot 
+
+Parsed OK:what is in the slot 
+syn<->
+      reply<->[?what, be]
+      rel<->no
+      act<->be
+      vcat<->[intransitive, _G1886, _G1889]
+      max<->3
+      role<->query(wh)
+      qvars<->[?what]
+      aux<->no
+sem<->
+      subj<->
+             head<->?what
+             type<->Physical
+      pred<->instance
+      adjs<->[prep<->located..aobj<-> (noun<->slot..head<-> ?slot..type<->ATMSlot..id<->103355826..poss<->_G3656..owner<->_G3661..of<->_G3666..of_id<->_G3671..sub<->empty..mod<->empty)]
+Test passed.
+
+Translation = 
+
+(exists 
+  (?slot ?event) 
+  (and 
+    (instance ?event instance) 
+    (instance ?what Physical) 
+    (patient ?event ?what) 
+    (instance ?slot ATMSlot) 
+    (located ?event ?slot)))
+
+Speech Act = WH-Query, Find Variables: [?what]
+
+
+****************
+Test 14, parsing: who enters a card 
+
+Parsed OK:who enters a card 
+syn<->
+      reply<->[?who, enter, a, card]
+      rel<->no
+      act<->enter
+      vcat<->[_G1882, transitive, _G1888]
+      max<->3
+      role<->query(wh)
+      qvars<->[?who]
+      aux<->no
+sem<->
+      subj<->
+             head<->?who
+             type<->Human
+      pred<->Movement
+      dobj<->
+             noun<->card
+             head<->?card
+             type<->BankCard
+             id<->104863407
+      adjs<->[]
+Test passed.
+
+Translation = 
+
+(exists 
+  (?card ?event) 
+  (and 
+    (instance ?event Movement) 
+    (instance ?who Human) 
+    (agent ?event ?who) 
+    (instance ?card BankCard) 
+    (patient ?event ?card)))
+
+Speech Act = WH-Query, Find Variables: [?who]
+
+1. Warning: interpreted the meaning of the noun 'card' as  WordNet word sense #2 of 11 senses, ID 104863407, meaning a card certifying the identity of the bearer; "he had to show his card to get in".  Maps to SUMO 'BankCard'.
+
+
+****************
+Test 15, parsing: which customer enters a card 
+
+Parsed OK:which customer enters a card 
+syn<->
+      reply<->[?customer, enter, a, card]
+      rel<->no
+      act<->enter
+      vcat<->[_G1892, transitive, _G1898]
+      max<->3
+      role<->query(wh)
+      qvars<->[?customer]
+      aux<->no
+sem<->
+      subj<->
+             head<->?customer
+             type<->customer
+      pred<->Movement
+      dobj<->
+             noun<->card
+             head<->?card
+             type<->BankCard
+             id<->104863407
+      adjs<->[]
+Test passed.
+
+Translation = 
+
+(exists 
+  (?card ?salesperson ?event) 
+  (and 
+    (instance ?customer CognitiveAgent) 
+    (instance ?salesperson CognitiveAgent) 
+    (customer ?customer ?salesperson) 
+    (instance ?event Movement) 
+    (agent ?event ?customer) 
+    (instance ?card BankCard) 
+    (patient ?event ?card)))
+
+Speech Act = WH-Query, Find Variables: [?customer]
+
+1. Warning: interpreted the meaning of the noun 'card' as  WordNet word sense #2 of 11 senses, ID 104863407, meaning a card certifying the identity of the bearer; "he had to show his card to get in".  Maps to SUMO 'BankCard'.
+
+
+****************
+Test 16, parsing: who enters what 
+
+Parsed OK:who enters what 
+syn<->
+      reply<->[?who, enter, ?what]
+      rel<->no
+      act<->enter
+      vcat<->[_G1879, transitive, _G1885]
+      max<->3
+      role<->query(wh)
+      qvars<->[?who, ?what]
+      aux<->no
+sem<->
+      subj<->
+             head<->?who
+             type<->Human
+      pred<->Movement
+      dobj<->
+             head<->?what
+             type<->Physical
+      adjs<->[]
+Test passed.
+
+Translation = 
+
+(exists 
+  (?event) 
+  (and 
+    (instance ?event Movement) 
+    (instance ?who Human) 
+    (agent ?event ?who) 
+    (instance ?what Physical) 
+    (patient ?event ?what)))
+
+Speech Act = WH-Query, Find Variables: [?who, ?what]
+
+
+****************
+Test 17, parsing: who does Mary beat 
+
+Parsed OK:who does Mary beat 
+syn<->
+      reply<->[Mary, beat, ?who]
+      act<->beat
+      vcat<->[_G2995, transitive, _G3001]
+      max<->3
+      role<->query(wh)
+      qvars<->[?who]
+      aux<->yes
+sem<->
+      subj<->
+             noun<->Mary
+             head<->Mary-1
+             type<->[Human, Female, FullyFormed]
+      pred<->Hits
+      dobj<->
+             head<->?who
+             type<->Human
+      adjs<->[]
+Test passed.
+
+Translation = 
+
+(exists 
+  (?event) 
+  (and 
+    (instance ?event Hits) 
+    (instance Mary-1 FullyFormed) 
+    (instance Mary-1 Female) 
+    (instance Mary-1 Human) 
+    (agent ?event Mary-1) 
+    (instance ?who Human) 
+    (patient ?event ?who)))
+
+Speech Act = WH-Query, Find Variables: [?who]
+
+
+****************
+Test 18, parsing: what does the dog eat 
+
+Parsed OK:what does the dog eat 
+syn<->
+      reply<->[the, dog, eat, ?what]
+      act<->eat
+      vcat<->[_G3130, transitive, _G3136]
+      max<->3
+      role<->query(wh)
+      qvars<->[?what]
+      aux<->yes
+sem<->
+      subj<->
+             noun<->dog
+             head<->?dog
+             type<->Canine
+             id<->101595188
+      pred<->Eating
+      dobj<->
+             head<->?what
+             type<->Physical
+      adjs<->[]
+Test passed.
+
+Translation = 
+
+(exists 
+  (?dog ?event) 
+  (and 
+    (instance ?event Eating) 
+    (instance ?dog Canine) 
+    (agent ?event ?dog) 
+    (instance ?what Physical) 
+    (patient ?event ?what)))
+
+Speech Act = WH-Query, Find Variables: [?what]
+
+1. Warning: interpreted the meaning of the noun 'dog' as  WordNet word sense #1 of 6 senses, ID 101595188, meaning a member of the genus Canis (probably descended from the common wolf) that has been domesticated by man since prehistoric times; occurs in many breeds; "the dog barked all night".  Maps to SUMO 'Canine'.
+
+
+****************
+Test 19, parsing: who does John give a card to 
+
+Parsed OK:who does John give a card to 
+syn<->
+      reply<->[John, give, a, card, to, ?who]
+      act<->give
+      vcat<->[_G3001, _G3004, ditransitive]
+      max<->3
+      role<->query(wh)
+      qvars<->[?who]
+      aux<->yes
+sem<->
+      subj<->
+             noun<->John
+             head<->John-1
+             type<->[Human, Male, FullyFormed]
+      pred<->Giving
+      dobj<->
+             noun<->card
+             head<->?card
+             type<->BankCard
+             id<->104863407
+      adjs<->[]
+      iobj<->
+             head<->?who
+             type<->Human
+Test passed.
+
+Translation = 
+
+(exists 
+  (?card ?event) 
+  (and 
+    (instance ?event Giving) 
+    (instance John-1 FullyFormed) 
+    (instance John-1 Male) 
+    (instance John-1 Human) 
+    (agent ?event John-1) 
+    (instance ?card BankCard) 
+    (patient ?event ?card) 
+    (instance ?who Human) 
+    (destination ?event ?who)))
+
+Speech Act = WH-Query, Find Variables: [?who]
+
+1. Warning: interpreted the meaning of the noun 'card' as  WordNet word sense #2 of 11 senses, ID 104863407, meaning a card certifying the identity of the bearer; "he had to show his card to get in".  Maps to SUMO 'BankCard'.
+
+
+****************
+Test 20, parsing: what does Mary give to John 
+
+Parsed OK:what does Mary give to John 
+syn<->
+      reply<->[Mary, give, what, to, [to, John]]
+      act<->give
+      vcat<->[_G2998, _G3001, ditransitive]
+      max<->3
+      role<->query(wh)
+      qvars<->[?what]
+      aux<->yes
+sem<->
+      subj<->
+             noun<->Mary
+             head<->Mary-1
+             type<->[Human, Female, FullyFormed]
+      pred<->Giving
+      dobj<->
+             head<->?what
+             type<->Physical
+      adjs<->[]
+      iobj<->
+             noun<->John
+             head<->John-1
+             type<->[Human, Male, FullyFormed]
+Test passed.
+
+Translation = 
+
+(exists 
+  (?event) 
+  (and 
+    (instance ?event Giving) 
+    (instance Mary-1 FullyFormed) 
+    (instance Mary-1 Female) 
+    (instance Mary-1 Human) 
+    (agent ?event Mary-1) 
+    (instance ?what Physical) 
+    (patient ?event ?what) 
+    (instance John-1 FullyFormed) 
+    (instance John-1 Male) 
+    (instance John-1 Human) 
+    (destination ?event John-1)))
+
+Speech Act = WH-Query, Find Variables: [?what]
+
+
+****************
+Test 21, parsing: where does John work 
+
+Parsed OK:where does John work 
+syn<->
+      reply<->[John, work, ?where]
+      rel<->no
+      act<->work
+      vcat<->[intransitive, _G2069, _G2072]
+      max<->3
+      role<->query(wh)
+      qvars<->[?where]
+      aux<->yes
+sem<->
+      subj<->
+             noun<->John
+             head<->John-1
+             type<->[Human, Male, FullyFormed]
+      pred<->Works
+      adjs<->[]
+Test passed.
+
+Translation = 
+
+(exists 
+  (?event) 
+  (and 
+    (instance ?event Works) 
+    (instance John-1 FullyFormed) 
+    (instance John-1 Male) 
+    (instance John-1 Human) 
+    (agent ?event John-1)))
+
+Speech Act = WH-Query, Find Variables: [?where]
+
+
+****************
+Test 22, parsing: when does the man arrive 
+
+Parsed OK:when does the man arrive 
+syn<->
+      reply<->[the, man, arrive, ?when]
+      rel<->no
+      act<->arrive
+      vcat<->[intransitive, _G2213, _G2216]
+      max<->3
+      role<->query(wh)
+      qvars<->[?when]
+      aux<->yes
+sem<->
+      subj<->
+             noun<->man
+             head<->?man
+             type<->[FullyFormed, Human, Male]
+             id<->107391044
+      pred<->Motion
+      adjs<->[]
+Test passed.
+
+Translation = 
+
+(exists 
+  (?man ?event) 
+  (and 
+    (instance ?event Motion) 
+    (instance ?man Male) 
+    (instance ?man Human) 
+    (instance ?man FullyFormed) 
+    (agent ?event ?man)))
+
+Speech Act = WH-Query, Find Variables: [?when]
+
+1. Warning: interpreted the meaning of the noun 'man' as  WordNet word sense #1 of 10 senses, ID 107391044, meaning an adult male person (as opposed to a woman); "there were two women and six men on the bus".  Maps to SUMO '[FullyFormed, Human, Male]'.
+
+
+****************
+Test 23, parsing: how does the dog run 
+
+Parsed OK:how does the dog run 
+syn<->
+      reply<->[the, dog, run, ?how]
+      rel<->no
+      act<->run
+      vcat<->[intransitive, _G2204, _G2207]
+      max<->3
+      role<->query(wh)
+      qvars<->[?how]
+      aux<->yes
+sem<->
+      subj<->
+             noun<->dog
+             head<->?dog
+             type<->Canine
+             id<->101595188
+      pred<->Runs
+      adjs<->[]
+Test passed.
+
+Translation = 
+
+(exists 
+  (?dog ?event) 
+  (and 
+    (instance ?event Runs) 
+    (instance ?dog Canine) 
+    (agent ?event ?dog)))
+
+Speech Act = WH-Query, Find Variables: [?how]
+
+1. Warning: interpreted the meaning of the noun 'dog' as  WordNet word sense #1 of 6 senses, ID 101595188, meaning a member of the genus Canis (probably descended from the common wolf) that has been domesticated by man since prehistoric times; occurs in many breeds; "the dog barked all night".  Maps to SUMO 'Canine'.
+
+
+****************
+Test 24, parsing: since when does the employee work 
+
+Parsed OK:since when does the employee work 
+syn<->
+      reply<->[the, employee, work, since, ?since_when]
+      rel<->no
+      act<->work
+      vcat<->[intransitive, _G2228, _G2231]
+      max<->3
+      role<->query(wh)
+      qvars<->[?since_when]
+      aux<->yes
+sem<->
+      subj<->
+             noun<->employee
+             head<->?employee
+             type<->OccupationalRole
+             id<->107240707
+      pred<->Works
+      adjs<->[]
+Test passed.
+
+Translation = 
+
+(exists 
+  (?employee ?event) 
+  (and 
+    (instance ?event Works) 
+    (instance ?employee OccupationalRole) 
+    (patient ?event ?employee)))
+
+Speech Act = WH-Query, Find Variables: [?since_when]
+
+1. Note: interpreted the noun 'employee' using WordNet synset ID 107240707, meaning a worker who is hired to perform a job.  Maps to SUMO 'OccupationalRole'.
+
+
+****************
+Test 25, parsing: how long does the train stop 
+
+Parsed OK:how long does the train stop 
+syn<->
+      reply<->[the, train, stop, ?how_long]
+      rel<->no
+      act<->stop
+      vcat<->[intransitive, _G2219, _G2222]
+      max<->3
+      role<->query(wh)
+      qvars<->[?how_long]
+      aux<->yes
+sem<->
+      subj<->
+             noun<->train
+             head<->?train
+             type<->TransportationDevice
+             id<->103528724
+      pred<->IntentionalProcess
+      adjs<->[]
+Test passed.
+
+Translation = 
+
+(exists 
+  (?train ?event) 
+  (and 
+    (instance ?event IntentionalProcess) 
+    (instance ?train TransportationDevice) 
+    (patient ?event ?train)))
+
+Speech Act = WH-Query, Find Variables: [?how_long]
+
+1. Warning: interpreted the meaning of the noun 'train' as  WordNet word sense #1 of 6 senses, ID 103528724, meaning a line of railway cars coupled together and drawn by a locomotive; "express trains don't stop at Princeton Junction".  Maps to SUMO 'TransportationDevice'.
+
+
+****************
+Test 26, parsing: how often does the milkman come 
+
+Parsed OK:how often does the milkman come 
+syn<->
+      reply<->[the, milkman, come, ?how_often]
+      rel<->no
+      act<->come
+      vcat<->[intransitive, _G2225, _G2228]
+      max<->3
+      role<->query(wh)
+      qvars<->[?how_often]
+      aux<->yes
+sem<->
+      subj<->
+             noun<->milkman
+             head<->?milkman
+             type<->OccupationalRole
+             id<->107410407
+      pred<->Comes
+      adjs<->[]
+Test passed.
+
+Translation = 
+
+(exists 
+  (?milkman ?event) 
+  (and 
+    (instance ?event Comes) 
+    (instance ?milkman OccupationalRole) 
+    (patient ?event ?milkman)))
+
+Speech Act = WH-Query, Find Variables: [?how_often]
+
+1. Note: interpreted the noun 'milkman' using WordNet synset ID 107410407, meaning someone who delivers milk.  Maps to SUMO 'OccupationalRole'.
+
+
+****************
+Test 27, parsing: with whom does the employee enter the room 
+
+Parsed OK:with whom does the employee enter the room 
+syn<->
+      reply<->[the, employee, enter, the, room, with, ?with_whom]
+      rel<->no
+      act<->enter
+      vcat<->[_G2233, transitive, _G2239]
+      max<->3
+      role<->query(wh)
+      qvars<->[?with_whom]
+      aux<->yes
+sem<->
+      subj<->
+             noun<->employee
+             head<->?employee
+             type<->OccupationalRole
+             id<->107240707
+      pred<->Movement
+      dobj<->
+             noun<->room
+             head<->?room
+             type<->Room
+             id<->103250788
+      adjs<->[]
+Test passed.
+
+Translation = 
+
+(exists 
+  (?room ?employee ?event) 
+  (and 
+    (instance ?event Movement) 
+    (instance ?employee OccupationalRole) 
+    (agent ?event ?employee) 
+    (instance ?room Room) 
+    (patient ?event ?room)))
+
+Speech Act = WH-Query, Find Variables: [?with_whom]
+
+1. Note: interpreted the noun 'employee' using WordNet synset ID 107240707, meaning a worker who is hired to perform a job.  Maps to SUMO 'OccupationalRole'.
+
+2. Warning: interpreted the meaning of the noun 'room' as  WordNet word sense #1 of 4 senses, ID 103250788, meaning an area within a building enclosed by walls and floor and ceiling; "the rooms were very small but they had a nice view".  Maps to SUMO 'Room'.
+
+
+****************
+Test 28, parsing: where does John insert the card into 
+
+Parsed OK:where does John insert the card into 
+syn<->
+      reply<->[John, insert, the, card, into, ?where_into]
+      rel<->no
+      act<->insert
+      vcat<->[_G2080, transitive, _G2086]
+      max<->3
+      role<->query(wh)
+      qvars<->[where]
+      aux<->yes
+sem<->
+      subj<->
+             noun<->John
+             head<->John-1
+             type<->[Human, Male, FullyFormed]
+      pred<->Putting
+      dobj<->
+             noun<->card
+             head<->?card
+             type<->BankCard
+             id<->104863407
+      adjs<->[]
+Test passed.
+
+Translation = 
+
+(exists 
+  (?card ?event) 
+  (and 
+    (instance ?event Putting) 
+    (instance John-1 FullyFormed) 
+    (instance John-1 Male) 
+    (instance John-1 Human) 
+    (agent ?event John-1) 
+    (instance ?card BankCard) 
+    (patient ?event ?card)))
+
+Speech Act = WH-Query, Find Variables: [where]
+
+1. Warning: interpreted the meaning of the noun 'card' as  WordNet word sense #2 of 11 senses, ID 104863407, meaning a card certifying the identity of the bearer; "he had to show his card to get in".  Maps to SUMO 'BankCard'.
+
+
+****************
+Test 29, parsing: where does the machine move to 
+
+Parsed OK:where does the machine move to 
+syn<->
+      reply<->[the, machine, move, to, ?where_to]
+      rel<->no
+      act<->move
+      vcat<->[intransitive, _G2222, _G2225]
+      max<->3
+      role<->query(wh)
+      qvars<->[where]
+      aux<->yes
+sem<->
+      subj<->
+             noun<->machine
+             head<->?machine
+             type<->Machine
+             id<->102949521
+      pred<->BodyMotion
+      adjs<->[]
+Test passed.
+
+Translation = 
+
+(exists 
+  (?machine ?event) 
+  (and 
+    (instance ?event BodyMotion) 
+    (instance ?machine Machine) 
+    (patient ?event ?machine)))
+
+Speech Act = WH-Query, Find Variables: [where]
+
+1. Warning: interpreted the meaning of the noun 'machine' as  WordNet word sense #1 of 6 senses, ID 102949521, meaning any mechanical or electrical device that transmits or modifies energy to perform or assist in the performance of human tasks.  Maps to SUMO 'Machine'.
+
+
+****************
+Test 30, parsing: where does the train arrive from 
+
+Parsed OK:where does the train arrive from 
+syn<->
+      reply<->[the, train, arrive, from, ?where_from]
+      rel<->no
+      act<->arrive
+      vcat<->[intransitive, _G2216, _G2219]
+      max<->3
+      role<->query(wh)
+      qvars<->[where]
+      aux<->yes
+sem<->
+      subj<->
+             noun<->train
+             head<->?train
+             type<->TransportationDevice
+             id<->103528724
+      pred<->Motion
+      adjs<->[]
+Test passed.
+
+Translation = 
+
+(exists 
+  (?train ?event) 
+  (and 
+    (instance ?event Motion) 
+    (instance ?train TransportationDevice) 
+    (patient ?event ?train)))
+
+Speech Act = WH-Query, Find Variables: [where]
+
+1. Warning: interpreted the meaning of the noun 'train' as  WordNet word sense #1 of 6 senses, ID 103528724, meaning a line of railway cars coupled together and drawn by a locomotive; "express trains don't stop at Princeton Junction".  Maps to SUMO 'TransportationDevice'.
+
+
+****************
+Test 31, parsing: from where does the train arrive 
+
+Parsed OK:from where does the train arrive 
+syn<->
+      reply<->[the, train, arrive, from, ?where_from]
+      rel<->no
+      act<->arrive
+      vcat<->[intransitive, _G2219, _G2222]
+      max<->3
+      role<->query(wh)
+      qvars<->[where]
+      aux<->yes
+sem<->
+      subj<->
+             noun<->train
+             head<->?train
+             type<->TransportationDevice
+             id<->103528724
+      pred<->Motion
+      adjs<->[]
+Test passed.
+
+Translation = 
+
+(exists 
+  (?train ?event) 
+  (and 
+    (instance ?event Motion) 
+    (instance ?train TransportationDevice) 
+    (patient ?event ?train)))
+
+Speech Act = WH-Query, Find Variables: [where]
+
+1. Warning: interpreted the meaning of the noun 'train' as  WordNet word sense #1 of 6 senses, ID 103528724, meaning a line of railway cars coupled together and drawn by a locomotive; "express trains don't stop at Princeton Junction".  Maps to SUMO 'TransportationDevice'.
+
+
+****************
+Test 32, parsing: with what does John open the door 
+
+Parsed OK:with what does John open the door 
+syn<->
+      reply<->[John, open, the, door, with, ?what_with]
+      rel<->no
+      act<->open
+      vcat<->[_G2083, transitive, _G2089]
+      max<->3
+      role<->query(wh)
+      qvars<->[what]
+      aux<->yes
+sem<->
+      subj<->
+             noun<->John
+             head<->John-1
+             type<->[Human, Male, FullyFormed]
+      pred<->Opening
+      dobj<->
+             noun<->door
+             head<->?door
+             type<->Artifact
+             id<->102588950
+      adjs<->[]
+Test passed.
+
+Translation = 
+
+(exists 
+  (?door ?event) 
+  (and 
+    (instance ?event Opening) 
+    (instance John-1 FullyFormed) 
+    (instance John-1 Male) 
+    (instance John-1 Human) 
+    (agent ?event John-1) 
+    (instance ?door Artifact) 
+    (patient ?event ?door)))
+
+Speech Act = WH-Query, Find Variables: [what]
+
+1. Warning: interpreted the meaning of the noun 'door' as  WordNet word sense #1 of 6 senses, ID 102588950, meaning a swinging or sliding barrier that will close the entrance to a room or building; "he knocked on the door"; "he slammed the door as he left".  Maps to SUMO 'Artifact'.
+
+
+****************
+Test 33, parsing: what does John open the door with 
+
+Parsed OK:what does John open the door with 
+syn<->
+      reply<->[John, open, the, door, with, ?what_with]
+      rel<->no
+      act<->open
+      vcat<->[_G2080, transitive, _G2086]
+      max<->3
+      role<->query(wh)
+      qvars<->[what]
+      aux<->yes
+sem<->
+      subj<->
+             noun<->John
+             head<->John-1
+             type<->[Human, Male, FullyFormed]
+      pred<->Opening
+      dobj<->
+             noun<->door
+             head<->?door
+             type<->Artifact
+             id<->102588950
+      adjs<->[]
+Test passed.
+
+Translation = 
+
+(exists 
+  (?door ?event) 
+  (and 
+    (instance ?event Opening) 
+    (instance John-1 FullyFormed) 
+    (instance John-1 Male) 
+    (instance John-1 Human) 
+    (agent ?event John-1) 
+    (instance ?door Artifact) 
+    (patient ?event ?door)))
+
+Speech Act = WH-Query, Find Variables: [what]
+
+1. Warning: interpreted the meaning of the noun 'door' as  WordNet word sense #1 of 6 senses, ID 102588950, meaning a swinging or sliding barrier that will close the entrance to a room or building; "he knocked on the door"; "he slammed the door as he left".  Maps to SUMO 'Artifact'.
+
+
+****************
+Test 34, parsing: who does John enter the room with 
+
+Parsed OK:who does John enter the room with 
+syn<->
+      reply<->[John, enter, the, room, with, ?who_with]
+      rel<->no
+      act<->enter
+      vcat<->[_G2080, transitive, _G2086]
+      max<->3
+      role<->query(wh)
+      qvars<->[who]
+      aux<->yes
+sem<->
+      subj<->
+             noun<->John
+             head<->John-1
+             type<->[Human, Male, FullyFormed]
+      pred<->Movement
+      dobj<->
+             noun<->room
+             head<->?room
+             type<->Room
+             id<->103250788
+      adjs<->[]
+Test passed.
+
+Translation = 
+
+(exists 
+  (?room ?event) 
+  (and 
+    (instance ?event Movement) 
+    (instance John-1 FullyFormed) 
+    (instance John-1 Male) 
+    (instance John-1 Human) 
+    (agent ?event John-1) 
+    (instance ?room Room) 
+    (patient ?event ?room)))
+
+Speech Act = WH-Query, Find Variables: [who]
+
+1. Warning: interpreted the meaning of the noun 'room' as  WordNet word sense #1 of 4 senses, ID 103250788, meaning an area within a building enclosed by walls and floor and ceiling; "the rooms were very small but they had a nice view".  Maps to SUMO 'Room'.
+
+
+****************
+Test 35, parsing: with whom does John enter the room 
+
+Parsed OK:with whom does John enter the room 
+syn<->
+      reply<->[John, enter, the, room, with, ?with_whom]
+      rel<->no
+      act<->enter
+      vcat<->[_G2083, transitive, _G2089]
+      max<->3
+      role<->query(wh)
+      qvars<->[?with_whom]
+      aux<->yes
+sem<->
+      subj<->
+             noun<->John
+             head<->John-1
+             type<->[Human, Male, FullyFormed]
+      pred<->Movement
+      dobj<->
+             noun<->room
+             head<->?room
+             type<->Room
+             id<->103250788
+      adjs<->[]
+Test passed.
+
+Translation = 
+
+(exists 
+  (?room ?event) 
+  (and 
+    (instance ?event Movement) 
+    (instance John-1 FullyFormed) 
+    (instance John-1 Male) 
+    (instance John-1 Human) 
+    (agent ?event John-1) 
+    (instance ?room Room) 
+    (patient ?event ?room)))
+
+Speech Act = WH-Query, Find Variables: [?with_whom]
+
+1. Warning: interpreted the meaning of the noun 'room' as  WordNet word sense #1 of 4 senses, ID 103250788, meaning an area within a building enclosed by walls and floor and ceiling; "the rooms were very small but they had a nice view".  Maps to SUMO 'Room'.
+
+
+****************
+Test 36, parsing: until when is the shop open 
+
+Parsed OK:until when is the shop open 
+syn<->
+      reply<->[the, shop, is, open, until, ?until_when]
+      rel<->no
+      act<->be
+      vcat<->copula
+      max<->3
+      role<->query(wh)
+      qvars<->[?until_when]
+      aux<->no
+sem<->
+      subj<->
+             noun<->shop
+             head<->?shop
+             type<->Corporation
+             id<->103325022
+      pred<->isa
+Test passed.
+
+Translation = 
+
+(exists 
+  (?shop) 
+  (and 
+    (instance ?shop Corporation)))
+
+Speech Act = WH-Query, Find Variables: [?until_when]
+
+1. Warning: interpreted the meaning of the noun 'shop' as  WordNet word sense #1 of 2 senses, ID 103325022, meaning a mercantile establishment for the retail sale of goods or services; "he bought it at a shop on Cape Cod".  Maps to SUMO 'Corporation'.
+
+
+****************
+Test 37, parsing: when is the cat hungry 
+
+Parsed OK:when is the cat hungry 
+syn<->
+      reply<->[the, cat, is, hungry, at, ?when]
+      rel<->no
+      act<->be
+      vcat<->copula
+      max<->3
+      role<->query(wh)
+      qvars<->[?when]
+      aux<->no
+sem<->
+      subj<->
+             noun<->cat
+             head<->?cat
+             type<->Feline
+             id<->101630731
+      pred<->isa
+Test passed.
+
+Translation = 
+
+(exists 
+  (?cat) 
+  (and 
+    (instance ?cat Feline)))
+
+Speech Act = WH-Query, Find Variables: [?when]
+
+1. Warning: interpreted the meaning of the noun 'cat' as  WordNet word sense #1 of 6 senses, ID 101630731, meaning feline mammal usually having thick soft fur and being unable to roar; domestic cats; wildcats.  Maps to SUMO 'Feline'.
+
+
+****************
+Test 38, parsing: how long is the cat hungry 
+
+Parsed OK:how long is the cat hungry 
+syn<->
+      reply<->[the, cat, is, hungry]
+      rel<->no
+      act<->be
+      vcat<->copula
+      max<->3
+      role<->query(wh)
+      qvars<->[?how_long]
+      aux<->no
+sem<->
+      subj<->
+             noun<->cat
+             head<->?cat
+             type<->Feline
+             id<->101630731
+      pred<->isa
+Test passed.
+
+Translation = 
+
+(exists 
+  (?cat) 
+  (and 
+    (instance ?cat Feline)))
+
+Speech Act = WH-Query, Find Variables: [?how_long]
+
+1. Warning: interpreted the meaning of the noun 'cat' as  WordNet word sense #1 of 6 senses, ID 101630731, meaning feline mammal usually having thick soft fur and being unable to roar; domestic cats; wildcats.  Maps to SUMO 'Feline'.
+
+
+****************
+Test 39, parsing: how often is the cat hungry 
+
+Parsed OK:how often is the cat hungry 
+syn<->
+      reply<->[the, cat, is, hungry]
+      rel<->no
+      act<->be
+      vcat<->copula
+      max<->3
+      role<->query(wh)
+      qvars<->[?how_often]
+      aux<->no
+sem<->
+      subj<->
+             noun<->cat
+             head<->?cat
+             type<->Feline
+             id<->101630731
+      pred<->isa
+Test passed.
+
+Translation = 
+
+(exists 
+  (?cat) 
+  (and 
+    (instance ?cat Feline)))
+
+Speech Act = WH-Query, Find Variables: [?how_often]
+
+1. Warning: interpreted the meaning of the noun 'cat' as  WordNet word sense #1 of 6 senses, ID 101630731, meaning feline mammal usually having thick soft fur and being unable to roar; domestic cats; wildcats.  Maps to SUMO 'Feline'.
+
+
+****************
+Test 40, parsing: since when is the cat thirsty 
+
+Parsed OK:since when is the cat thirsty 
+syn<->
+      reply<->[the, cat, is, thirsty, since, ?since_when]
+      rel<->no
+      act<->be
+      vcat<->copula
+      max<->3
+      role<->query(wh)
+      qvars<->[?since_when]
+      aux<->no
+sem<->
+      subj<->
+             noun<->cat
+             head<->?cat
+             type<->Feline
+             id<->101630731
+      pred<->isa
+Test passed.
+
+Translation = 
+
+(exists 
+  (?cat) 
+  (and 
+    (instance ?cat Feline)))
+
+Speech Act = WH-Query, Find Variables: [?since_when]
+
+1. Warning: interpreted the meaning of the noun 'cat' as  WordNet word sense #1 of 6 senses, ID 101630731, meaning feline mammal usually having thick soft fur and being unable to roar; domestic cats; wildcats.  Maps to SUMO 'Feline'.
+
+
+****************
+Test 41, parsing: where is John 
+
+Parsed OK:where is John 
+syn<->
+      reply<->[John, is, at, ?where]
+      rel<->no
+      act<->be
+      vcat<->copula
+      max<->3
+      role<->query(wh)
+      qvars<->[?where]
+      aux<->no
+sem<->
+      subj<->
+             noun<->John
+             head<->John-1
+             type<->[Human, Male, FullyFormed]
+      pred<->isa
+Test passed.
+
+Translation = 
+
+(and 
+  (instance John-1 Human) 
+  (instance John-1 Male) 
+  (instance John-1 FullyFormed))
+
+Speech Act = WH-Query, Find Variables: [?where]
+
+
+****************
+Test 42, parsing: when is the party 
+
+Parsed OK:when is the party 
+syn<->
+      reply<->[the, party, is, at, ?when]
+      rel<->no
+      act<->be
+      vcat<->copula
+      max<->3
+      role<->query(wh)
+      qvars<->[?when]
+      aux<->no
+sem<->
+      subj<->
+             noun<->party
+             head<->?party
+             type<->PoliticalOrganization
+             id<->106131180
+      pred<->isa
+Test passed.
+
+Translation = 
+
+(exists 
+  (?party) 
+  (and 
+    (instance ?party PoliticalOrganization)))
+
+Speech Act = WH-Query, Find Variables: [?when]
+
+1. Warning: interpreted the meaning of the noun 'party' as  WordNet word sense #1 of 5 senses, ID 106131180, meaning an organization to gain political power; "in 1992 Perot tried to organize a third party at the national level".  Maps to SUMO 'PoliticalOrganization'.
+
+
+****************
+Test 43, parsing: how is the dog 
+
+Parsed OK:how is the dog 
+syn<->
+      reply<->[the, dog, is, ?how]
+      rel<->no
+      act<->be
+      vcat<->copula
+      max<->3
+      role<->query(wh)
+      qvars<->[?how]
+      aux<->no
+sem<->
+      subj<->
+             noun<->dog
+             head<->?dog
+             type<->Canine
+             id<->101595188
+      pred<->isa
+Test passed.
+
+Translation = 
+
+(exists 
+  (?dog) 
+  (and 
+    (instance ?dog Canine)))
+
+Speech Act = WH-Query, Find Variables: [?how]
+
+1. Warning: interpreted the meaning of the noun 'dog' as  WordNet word sense #1 of 6 senses, ID 101595188, meaning a member of the genus Canis (probably descended from the common wolf) that has been domesticated by man since prehistoric times; occurs in many breeds; "the dog barked all night".  Maps to SUMO 'Canine'.
+
+
+ Passed 43 tests (100.00 %) and failed 0 tests (0.00 %) tests out of 43 tried.
+

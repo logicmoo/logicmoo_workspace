@@ -1,0 +1,13 @@
+frase(r01,[john, went, into, a, restaurant]).
+
+loc(infon3, id1, [arg:main_tloc, arg:tr(f5_r01)]).
+loc(infon4, id2, [arg:main_sloc, arg:restaurant]).
+ind(infon5, id3).
+fact(infon6, inst_of, [ind:id3, class:man], 1, univ, univ).
+fact(infon7, name, [john, id3], 1, univ, univ).
+fact(infon9, isa, [arg:id2, arg:restaurant], 1, id1, id2).
+fact(id4, go, [agente:id3, locat:id2], 1, tes(f5_r01), id2).
+fact(infon10, isa, [arg:id4, arg:ev], 1, tes(f5_r01), id2).
+fact(infon11, isa, [arg:id5, arg:tloc], 1, tes(f5_r01), id2).
+fact(infon12, past, [arg:id5], 1, tes(f5_r01), id2).
+

@@ -1,0 +1,86 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% This is an extension of hydraulic.txt of 2009 ASP competition
+%%% Numeric values are added (instead of Boolean values)
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+fluent(contains(L), 0, Max) :-
+     (node(L);source(L);target(L)),
+     maxcontained(Max).
+
+action( pump_in(P)) :-  pump(P).
+
+
+
+executable( pump_in(P), [contains(A) gt Loss]) :-
+        action(pump_in(P)), link(A,_B,P,Loss).
+
+causes(pump_in(P), contains(A) eq 0, []) :-
+    action(pump_in(P)),
+    link(A,_B,P,_Loss).
+causes(pump_in(P), contains(B) eq (contains(B)^(-1) + contains(A)^(-1) - Loss), []) :-
+    action(pump_in(P)),
+    link(A,B,P,Loss).
+
+initially(contains(A) eq 25) :- source(A).
+initially(contains(A) eq 0) :- (node(A);target(A)).
+
+%goal(contains(target3) gt 30). %%% plan length =
+goal(contains(target2) gt 50).  %%% plan length = 9
+%goal(contains(target1) gt 60). %%% plan length =
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%   INSTANCE    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%maximum available power of a mass of fuel
+
+maxcontained(100).
+dimension(4).
+
+% The value of kappa (geq maxontained) is used for
+% encoding pair of integer numbers
+
+kappa(100).
+xax(X) :- dimension(Dim), D is Dim-1,interval(X,0,D).
+yax(Y) :- dimension(Dim), D is Dim-1,interval(Y,0,D).
+
+
+%target(target1).
+target(target2).
+%target(target3).
+
+source(source1).
+source(source2).
+source(source3).
+
+
+node(N,X,Y) :- xax(X), yax(Y), kappa(K), N is Y + X*K.
+node(N) :- node(N,_,_).
+
+
+link(source1, N, s1n000, 0) :- node(N,0,0).
+link(source2, N, s2n100, 0) :- node(N,1,0).
+link(source3, N, s3n300, 0) :- node(N,3,0).
+
+%link(N, target1, to_t1, 0) :- dimension(Dim), D is Dim-1, node(N,1,D).
+link(N, target2, to_t2, 0) :- dimension(Dim), D is Dim-1, node(N,2,D).
+%link(N, target3, to_t3, 0) :- dimension(Dim), D is Dim-1, node(N,3,D).
+
+link(N1, N2, Pump, Loss) :-
+	dimension(Dim), node(N1,X1,Y1), Y2 is Y1+1,
+	(
+		(node(N2,X1,Y2), Loss is X1)
+		;
+		(X2 is (X1+Dim-1) mod Dim, node(N2,X2,Y2), Loss is X2)
+		;
+		(X2 is (X1+1) mod Dim, node(N2,X2,Y2), Loss is X2)
+	),
+	kappa(K),
+	Pump is  N2 + N1*K*K.
+
+pump(Pump) :- link(_N1, _N2, Pump, _Loss).
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

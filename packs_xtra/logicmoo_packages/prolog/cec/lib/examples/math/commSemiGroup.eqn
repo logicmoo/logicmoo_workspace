@@ -1,0 +1,6 @@
+module commSemiGroup .
+op 0  : elem .
+op (+)  : (elem * elem -> elem) .
+0 + x = x .
+x + y = y + x.
+x + y + z = x + (y + z) .

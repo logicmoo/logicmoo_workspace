@@ -1,0 +1,1861 @@
+<!DOCTYPE Project SYSTEM "http://www.slickedit.com/dtd/vse/10.0/vpj.dtd">
+<Project
+	Version="10.0"
+	VendorName="SlickEdit"
+	WorkingDir=".">
+	<Config
+		Name="Release"
+		OutputFile=""
+		CompilerConfigName="Latest Version">
+		<Menu>
+			<Target
+				Name="Compile"
+				MenuCaption="&amp;Compile"
+				CaptureOutputWith="ProcessBuffer"
+				ShowOnMenu="Never"
+				SaveOption="SaveCurrent"
+				RunFromDir="%rw">
+				<Exec CmdLine='npasm %in -elf -o TeamSPoon @"%lf"'/>
+			</Target>
+			<Target
+				Name="Build"
+				MenuCaption="&amp;Build"
+				CaptureOutputWith="ProcessBuffer"
+				SaveOption="SaveWorkspaceFiles"
+				RunFromDir="%rw">
+				<Exec CmdLine='"%(VSLICKBIN1)vsbuild" make "%w" "%r" -cppmake'/>
+			</Target>
+			<Target
+				Name="Rebuild"
+				MenuCaption="&amp;Rebuild"
+				CaptureOutputWith="ProcessBuffer"
+				ShowOnMenu="Never"
+				SaveOption="SaveWorkspaceFiles"
+				RunFromDir="%rw">
+				<Exec/>
+			</Target>
+			<Target
+				Name="Debug"
+				MenuCaption="&amp;Debug"
+				SaveOption="SaveNone"
+				RunFromDir="%rw">
+				<Exec CmdLine="npscope"/>
+			</Target>
+			<Target
+				Name="Execute"
+				MenuCaption="E&amp;xecute"
+				SaveOption="SaveNone"
+				RunFromDir="%rw">
+				<Exec CmdLine=""/>
+			</Target>
+			<Target
+				Name="Generate Test Case"
+				MenuCaption="&amp;Generate Test Case"
+				CaptureOutputWith="ProcessBuffer"
+				RunFromDir="%rw">
+				<Exec CmdLine='nptest -f "%f"'/>
+			</Target>
+			<Target
+				Name="Profile"
+				MenuCaption="&amp;Profile"
+				RunFromDir="%rw">
+				<Exec CmdLine="npprofile.bat"/>
+			</Target>
+			<Target
+				Name="Syntax Check"
+				MenuCaption="&amp;Syntax Check"
+				CaptureOutputWith="ProcessBuffer"
+				RunFromDir="%rw">
+				<Exec CmdLine='npasm %in "%f"'/>
+			</Target>
+			<Target
+				Name="Link"
+				MenuCaption="&amp;Link"
+				ShowOnMenu="Never"
+				CaptureOutputWith="ProcessBuffer"
+				RunFromDir="%rw"/>
+		</Menu>
+	</Config>
+	<Config
+		Name="Debug"
+		OutputFile=""
+		CompilerConfigName="Latest Version">
+		<Menu>
+			<Target
+				Name="Compile"
+				MenuCaption="&amp;Compile"
+				CaptureOutputWith="ProcessBuffer"
+				ShowOnMenu="Never"
+				SaveOption="SaveCurrent"
+				RunFromDir="%rw">
+				<Exec CmdLine='npasm %in -elf -l -g -o TeamSPoon @"%lf"'/>
+			</Target>
+			<Target
+				Name="Build"
+				MenuCaption="&amp;Build"
+				CaptureOutputWith="ProcessBuffer"
+				SaveOption="SaveWorkspaceFiles"
+				RunFromDir="%rw">
+				<Exec CmdLine='"%(VSLICKBIN1)vsbuild" make "%w" "%r" -cppmake'/>
+			</Target>
+			<Target
+				Name="Rebuild"
+				MenuCaption="&amp;Rebuild"
+				CaptureOutputWith="ProcessBuffer"
+				ShowOnMenu="Never"
+				SaveOption="SaveWorkspaceFiles"
+				RunFromDir="%rw">
+				<Exec/>
+			</Target>
+			<Target
+				Name="Debug"
+				MenuCaption="&amp;Debug"
+				SaveOption="SaveNone"
+				RunFromDir="%rw">
+				<Exec CmdLine="npscope"/>
+			</Target>
+			<Target
+				Name="Execute"
+				MenuCaption="E&amp;xecute"
+				SaveOption="SaveNone"
+				RunFromDir="%rw">
+				<Exec CmdLine=""/>
+			</Target>
+			<Target
+				Name="Generate Test Case"
+				MenuCaption="&amp;Generate Test Case"
+				CaptureOutputWith="ProcessBuffer"
+				RunFromDir="%rw">
+				<Exec CmdLine='nptest -f "%f"'/>
+			</Target>
+			<Target
+				Name="Profile"
+				MenuCaption="&amp;Profile"
+				RunFromDir="%rw">
+				<Exec CmdLine="npprofile.bat"/>
+			</Target>
+			<Target
+				Name="Syntax Check"
+				MenuCaption="&amp;Syntax Check"
+				CaptureOutputWith="ProcessBuffer"
+				RunFromDir="%rw">
+				<Exec CmdLine='npasm %in "%f"'/>
+			</Target>
+			<Target
+				Name="Link"
+				MenuCaption="&amp;Link"
+				ShowOnMenu="Never"
+				CaptureOutputWith="ProcessBuffer"
+				RunFromDir="%rw"/>
+		</Menu>
+	</Config>
+	<CustomFolders>
+		<Folder
+			Name="Source Files"
+			Filters="*.c;*.C;*.cc;*.cpp;*.cp;*.cxx;*.prg;*.pas;*.dpr;*.asm;*.s;*.bas;*.java;*.cs;*.sc;*.e;*.cob;*.html;*.rc;*.tcl;*.py;*.pl">
+		</Folder>
+		<Folder
+			Name="Header Files"
+			Filters="*.h;*.H;*.hh;*.hpp;*.hxx;*.inc;*.sh;*.cpy;*.if">
+		</Folder>
+		<Folder
+			Name="Resource Files"
+			Filters="*.ico;*.cur;*.dlg"/>
+		<Folder
+			Name="Bitmaps"
+			Filters="*.bmp"/>
+		<Folder
+			Name="Other Files"
+			Filters="">
+		</Folder>
+	</CustomFolders>
+	<Files AutoFolders="DirectoryView">
+		<Folder Name="aleph">
+			<Folder Name="doc">
+				<F N="aleph/doc/manual.html"/>
+			</Folder>
+			<Folder Name="prolog">
+				<Folder Name="examples">
+					<Folder Name="abduce">
+						<F N="aleph/prolog/examples/abduce/gp.b"/>
+						<F N="aleph/prolog/examples/abduce/gp.f"/>
+						<F N="aleph/prolog/examples/abduce/gp.n"/>
+						<F N="aleph/prolog/examples/abduce/typescript"/>
+					</Folder>
+					<Folder Name="constraints">
+						<F N="aleph/prolog/examples/constraints/fam.b"/>
+						<F N="aleph/prolog/examples/constraints/typescript"/>
+					</Folder>
+					<Folder Name="features">
+						<F N="aleph/prolog/examples/features/train.b"/>
+						<F N="aleph/prolog/examples/features/train.f"/>
+						<F N="aleph/prolog/examples/features/train.n"/>
+						<F N="aleph/prolog/examples/features/typescript"/>
+					</Folder>
+					<Folder Name="gcws">
+						<F N="aleph/prolog/examples/gcws/cal.b"/>
+						<F N="aleph/prolog/examples/gcws/cal.f"/>
+						<F N="aleph/prolog/examples/gcws/cal.n"/>
+						<F N="aleph/prolog/examples/gcws/typescript"/>
+					</Folder>
+					<Folder Name="good">
+						<F N="aleph/prolog/examples/good/train.b"/>
+						<F N="aleph/prolog/examples/good/train.f"/>
+						<F N="aleph/prolog/examples/good/train.n"/>
+						<F N="aleph/prolog/examples/good/typescript"/>
+					</Folder>
+					<Folder Name="interactive">
+						<F N="aleph/prolog/examples/interactive/animals.b"/>
+						<F N="aleph/prolog/examples/interactive/animals.f"/>
+						<F N="aleph/prolog/examples/interactive/mem.b"/>
+						<F N="aleph/prolog/examples/interactive/typescript"/>
+					</Folder>
+					<Folder Name="modes">
+						<F N="aleph/prolog/examples/modes/train.b"/>
+						<F N="aleph/prolog/examples/modes/train.f"/>
+						<F N="aleph/prolog/examples/modes/train.n"/>
+						<F N="aleph/prolog/examples/modes/typescript"/>
+					</Folder>
+					<Folder Name="numbers">
+						<F N="aleph/prolog/examples/numbers/guess.b"/>
+						<F N="aleph/prolog/examples/numbers/guess.f"/>
+						<F N="aleph/prolog/examples/numbers/guess.n"/>
+						<F N="aleph/prolog/examples/numbers/ineq.b"/>
+						<F N="aleph/prolog/examples/numbers/ineq.f"/>
+						<F N="aleph/prolog/examples/numbers/ineq.n"/>
+						<F N="aleph/prolog/examples/numbers/line.b"/>
+						<F N="aleph/prolog/examples/numbers/line.f"/>
+						<F N="aleph/prolog/examples/numbers/line.n"/>
+						<F N="aleph/prolog/examples/numbers/miline.b"/>
+						<F N="aleph/prolog/examples/numbers/miline.f"/>
+						<F N="aleph/prolog/examples/numbers/miline.n"/>
+						<F N="aleph/prolog/examples/numbers/mut.b"/>
+						<F N="aleph/prolog/examples/numbers/typescript"/>
+					</Folder>
+					<Folder Name="portray">
+						<F N="aleph/prolog/examples/portray/portray_hypothesis.pl"/>
+						<F N="aleph/prolog/examples/portray/portray_literals.pl"/>
+						<F N="aleph/prolog/examples/portray/portray_search.pl"/>
+						<F N="aleph/prolog/examples/portray/train.b"/>
+						<F N="aleph/prolog/examples/portray/train.f"/>
+						<F N="aleph/prolog/examples/portray/train.n"/>
+						<F N="aleph/prolog/examples/portray/typescript"/>
+					</Folder>
+					<Folder Name="posonly">
+						<F N="aleph/prolog/examples/posonly/animals.b"/>
+						<F N="aleph/prolog/examples/posonly/animals.f"/>
+						<F N="aleph/prolog/examples/posonly/typescript"/>
+					</Folder>
+					<Folder Name="recursion">
+						<F N="aleph/prolog/examples/recursion/mem.b"/>
+						<F N="aleph/prolog/examples/recursion/mem.f"/>
+						<F N="aleph/prolog/examples/recursion/mem.n"/>
+						<F N="aleph/prolog/examples/recursion/typescript"/>
+					</Folder>
+					<Folder Name="refine">
+						<F N="aleph/prolog/examples/refine/train.b"/>
+						<F N="aleph/prolog/examples/refine/train.f"/>
+						<F N="aleph/prolog/examples/refine/train.n"/>
+						<F N="aleph/prolog/examples/refine/typescript"/>
+					</Folder>
+					<Folder Name="trains">
+						<F N="aleph/prolog/examples/trains/train.b"/>
+						<F N="aleph/prolog/examples/trains/train.f"/>
+						<F N="aleph/prolog/examples/trains/train.n"/>
+						<F N="aleph/prolog/examples/trains/trains.eps"/>
+						<F N="aleph/prolog/examples/trains/trains.jpg"/>
+						<F N="aleph/prolog/examples/trains/typescript"/>
+					</Folder>
+					<Folder Name="tree">
+						<F N="aleph/prolog/examples/tree/animals.b"/>
+						<F N="aleph/prolog/examples/tree/animals.f"/>
+						<F N="aleph/prolog/examples/tree/typescript"/>
+						<F N="aleph/prolog/examples/tree/weather.b"/>
+						<F N="aleph/prolog/examples/tree/weather.f"/>
+						<F N="aleph/prolog/examples/tree/wedge.b"/>
+						<F N="aleph/prolog/examples/tree/wedge.f"/>
+					</Folder>
+					<F N="aleph/prolog/examples/readme"/>
+				</Folder>
+				<F N="aleph/prolog/aleph.pl"/>
+				<F N="aleph/prolog/aleph.pl.dmiles"/>
+				<F N="aleph/prolog/aleph_orig.pl"/>
+			</Folder>
+			<F N="aleph/pack.pl"/>
+			<F N="aleph/README.md"/>
+		</Folder>
+		<Folder Name="auc">
+			<Folder Name="prolog">
+				<Folder Name="examples">
+					<F N="auc/prolog/examples/exauc.pl"/>
+				</Folder>
+				<F N="auc/prolog/auc.pl"/>
+			</Folder>
+		</Folder>
+		<Folder Name="ccprism">
+			<Folder Name="prolog">
+				<Folder Name="ccprism">
+					<F N="ccprism/prolog/ccprism/autodiff2.pl"/>
+					<F N="ccprism/prolog/ccprism/display.pl"/>
+					<F N="ccprism/prolog/ccprism/effects.pl"/>
+					<F N="ccprism/prolog/ccprism/graph.pl"/>
+					<F N="ccprism/prolog/ccprism/handlers.pl"/>
+					<F N="ccprism/prolog/ccprism/kbest.pl"/>
+					<F N="ccprism/prolog/ccprism/lazymath.pl"/>
+					<F N="ccprism/prolog/ccprism/learn.pl"/>
+					<F N="ccprism/prolog/ccprism/machines.pl"/>
+					<F N="ccprism/prolog/ccprism/macros.pl"/>
+					<F N="ccprism/prolog/ccprism/mcmc.pl"/>
+					<F N="ccprism/prolog/ccprism/switches.pl"/>
+				</Folder>
+				<F N="ccprism/prolog/autodiff2.pl"/>
+				<F N="ccprism/prolog/ccprism.pl"/>
+			</Folder>
+		</Folder>
+		<Folder Name="ciao">
+			<Folder Name="prolog">
+				<Folder Name="dialect">
+					<Folder Name="ciao">
+						<Folder Name="engine">
+							<F N="ciao/prolog/dialect/ciao/engine/attributes.pl"/>
+							<F N="ciao/prolog/dialect/ciao/engine/basic_props.pl"/>
+							<F N="ciao/prolog/dialect/ciao/engine/basiccontrol.pl"/>
+							<F N="ciao/prolog/dialect/ciao/engine/exceptions.pl"/>
+							<F N="ciao/prolog/dialect/ciao/engine/exceptions_db.pl"/>
+							<F N="ciao/prolog/dialect/ciao/engine/hiord_rt.pl"/>
+							<F N="ciao/prolog/dialect/ciao/engine/internals.pl"/>
+							<F N="ciao/prolog/dialect/ciao/engine/io_aux.pl"/>
+						</Folder>
+						<Folder Name="regtypes">
+							<F N="ciao/prolog/dialect/ciao/regtypes/regtypes_tr.pl"/>
+						</Folder>
+						<F N="ciao/prolog/dialect/ciao/aggregates.pl"/>
+						<F N="ciao/prolog/dialect/ciao/assertions.pl"/>
+						<F N="ciao/prolog/dialect/ciao/basicmodes.pl"/>
+						<F N="ciao/prolog/dialect/ciao/classic.pl"/>
+						<F N="ciao/prolog/dialect/ciao/dcg.pl"/>
+						<F N="ciao/prolog/dialect/ciao/file_utils.pl"/>
+						<F N="ciao/prolog/dialect/ciao/format.pl"/>
+						<F N="ciao/prolog/dialect/ciao/freeze.pl"/>
+						<F N="ciao/prolog/dialect/ciao/hiord.pl"/>
+						<F N="ciao/prolog/dialect/ciao/hiordlib.pl"/>
+						<F N="ciao/prolog/dialect/ciao/iso_misc.pl"/>
+						<F N="ciao/prolog/dialect/ciao/isomodes.pl"/>
+						<F N="ciao/prolog/dialect/ciao/lists.pl"/>
+						<F N="ciao/prolog/dialect/ciao/llists.pl"/>
+						<F N="ciao/prolog/dialect/ciao/nativeprops.pl"/>
+						<F N="ciao/prolog/dialect/ciao/nortchecks.pl"/>
+						<F N="ciao/prolog/dialect/ciao/odd.pl"/>
+						<F N="ciao/prolog/dialect/ciao/prolog_flags.pl"/>
+						<F N="ciao/prolog/dialect/ciao/read.pl"/>
+						<F N="ciao/prolog/dialect/ciao/regtypes.pl"/>
+						<F N="ciao/prolog/dialect/ciao/sockets.pl"/>
+						<F N="ciao/prolog/dialect/ciao/sort.pl"/>
+						<F N="ciao/prolog/dialect/ciao/streams.pl"/>
+						<F N="ciao/prolog/dialect/ciao/strings.pl"/>
+						<F N="ciao/prolog/dialect/ciao/system.pl"/>
+						<F N="ciao/prolog/dialect/ciao/terms.pl"/>
+						<F N="ciao/prolog/dialect/ciao/terms_check.pl"/>
+						<F N="ciao/prolog/dialect/ciao/terms_vars.pl"/>
+						<F N="ciao/prolog/dialect/ciao/unittestdecls.pl"/>
+						<F N="ciao/prolog/dialect/ciao/unittestprops.pl"/>
+						<F N="ciao/prolog/dialect/ciao/write.pl"/>
+					</Folder>
+					<F N="ciao/prolog/dialect/ciao.pl"/>
+				</Folder>
+			</Folder>
+			<F N="ciao/pack.pl"/>
+			<F N="ciao/README.md"/>
+		</Folder>
+		<Folder Name="clause_attvars">
+			<F
+				N="clause_attvars/*.*"
+				Recurse="1"
+				Refilter="1"
+				Excludes="e2c/;elFinder/;.HIDE~/;HIDE~/;pldata/;*.qlf;*.class;.git/;~*;*~;~*/;*~/;.svn/;*.*r;*.*o;*.dll;*.exe;*.bak;*.jpg;*.xp*;*.gif;*.b?*"/>
+		</Folder>
+		<Folder Name="daydreamer">
+			<F
+				N="daydreamer/*.*"
+				Recurse="1"
+				Refilter="1"
+				Excludes=""/>
+			<F N="daydreamer/compat.cl"/>
+			<F N="daydreamer/cyc.lisp"/>
+			<F N="daydreamer/d.lisp"/>
+			<F N="daydreamer/d_compile.lisp"/>
+			<F N="daydreamer/daydream.pl"/>
+			<F N="daydreamer/dd.cl"/>
+			<F N="daydreamer/dd_cntrl.cl"/>
+			<F N="daydreamer/dd_compile.cl"/>
+			<F N="daydreamer/dd_epis.cl"/>
+			<F N="daydreamer/dd_gen.cl"/>
+			<F N="daydreamer/dd_get.cl"/>
+			<F N="daydreamer/dd_kb.cl"/>
+			<F N="daydreamer/dd_macros.cl"/>
+			<F N="daydreamer/dd_mutation.cl"/>
+			<F N="daydreamer/dd_night.cl"/>
+			<F N="daydreamer/dd_reversal.cl"/>
+			<F N="daydreamer/dd_ri.cl"/>
+			<F N="daydreamer/dd_rule1.cl"/>
+			<F N="daydreamer/dd_rule2.cl"/>
+			<F N="daydreamer/dd_utils.cl"/>
+			<F N="daydreamer/gate_compile.cl"/>
+			<F N="daydreamer/gate_cx.cl"/>
+			<F N="daydreamer/gate_get.cl"/>
+			<F N="daydreamer/gate_instan.cl"/>
+			<F N="daydreamer/gate_macros.cl"/>
+			<F N="daydreamer/gate_main.cl"/>
+			<F N="daydreamer/gate_obs.cl"/>
+			<F N="daydreamer/gate_prove.cl"/>
+			<F N="daydreamer/gate_read_pr.cl"/>
+			<F N="daydreamer/gate_test.cl"/>
+			<F N="daydreamer/gate_ty.cl"/>
+			<F N="daydreamer/gate_unify.cl"/>
+			<F N="daydreamer/gate_utils.cl"/>
+			<F N="daydreamer/hello_world.cl"/>
+			<F N="daydreamer/ide.lisp"/>
+			<F N="daydreamer/inputemployment1.txt"/>
+			<F N="daydreamer/inputlovers1.txt"/>
+			<F N="daydreamer/inputlovers2.txt"/>
+			<F N="daydreamer/inputlovers3.txt"/>
+			<F N="daydreamer/inputrecovery3.txt"/>
+			<F N="daydreamer/INSTALL"/>
+			<F N="daydreamer/km.lisp"/>
+			<F N="daydreamer/LICENSE"/>
+			<F N="daydreamer/local.lisp"/>
+			<F N="daydreamer/loop.cl"/>
+			<F N="daydreamer/outputhelloworld.txt"/>
+			<F N="daydreamer/outputlovers1.txt"/>
+			<F N="daydreamer/outputtest.txt"/>
+			<F N="daydreamer/README.md"/>
+			<F N="daydreamer/test-suite.km"/>
+			<F N="daydreamer/testj.lisp"/>
+		</Folder>
+		<Folder Name="dictoo">
+			<F
+				N="dictoo/*.*"
+				Recurse="1"
+				Refilter="1"
+				Excludes="e2c/;elFinder/;.HIDE~/;HIDE~/;pldata/;*.qlf;*.class;.git/;~*;*~;~*/;*~/;.svn/;*.*r;*.*o;*.dll;*.exe;*.bak;*.jpg;*.xp*;*.gif;*.b?*"/>
+		</Folder>
+		<Folder Name="each_call_cleanup">
+			<F
+				N="each_call_cleanup/*.*"
+				Recurse="1"
+				Refilter="1"
+				Excludes="e2c/;elFinder/;.HIDE~/;HIDE~/;pldata/;*.qlf;*.class;.git/;~*;*~;~*/;*~/;.svn/;*.*r;*.*o;*.dll;*.exe;*.bak;*.jpg;*.xp*;*.gif;*.b?*"/>
+		</Folder>
+		<Folder Name="eggdrop">
+			<F
+				N="eggdrop/*.*"
+				Recurse="1"
+				Refilter="1"
+				Excludes="e2c/;elFinder/;.HIDE~/;HIDE~/;pldata/;*.qlf;*.class;.git/;~*;*~;~*/;*~/;.svn/;*.*r;*.*o;*.dll;*.exe;*.bak;*.jpg;*.xp*;*.gif;*.b?*"/>
+		</Folder>
+		<Folder Name="file_scope">
+			<F
+				N="file_scope/*.*"
+				Recurse="1"
+				Refilter="1"
+				Excludes="e2c/;elFinder/;.HIDE~/;HIDE~/;pldata/;*.qlf;*.class;.git/;~*;*~;~*/;*~/;.svn/;*.*r;*.*o;*.dll;*.exe;*.bak;*.jpg;*.xp*;*.gif;*.b?*"/>
+		</Folder>
+		<Folder Name="gvar_syntax">
+			<F
+				N="gvar_syntax/*.*"
+				Recurse="1"
+				Refilter="1"
+				Excludes="e2c/;elFinder/;.HIDE~/;HIDE~/;pldata/;*.qlf;*.class;.git/;~*;*~;~*/;*~/;.svn/;*.*r;*.*o;*.dll;*.exe;*.bak;*.jpg;*.xp*;*.gif;*.b?*"/>
+		</Folder>
+		<Folder Name="hilog">
+			<F
+				N="hilog/*.*"
+				Recurse="1"
+				Refilter="1"
+				Excludes="e2c/;elFinder/;.HIDE~/;HIDE~/;pldata/;*.qlf;*.class;.git/;~*;*~;~*/;*~/;.svn/;*.*r;*.*o;*.dll;*.exe;*.bak;*.jpg;*.xp*;*.gif;*.b?*"/>
+		</Folder>
+		<Folder Name="hook_hybrid">
+			<F
+				N="hook_hybrid/*.*"
+				Recurse="1"
+				Refilter="1"
+				Excludes="e2c/;elFinder/;.HIDE~/;HIDE~/;pldata/;*.qlf;*.class;.git/;~*;*~;~*/;*~/;.svn/;*.*r;*.*o;*.dll;*.exe;*.bak;*.jpg;*.xp*;*.gif;*.b?*"/>
+		</Folder>
+		<Folder Name="instant_prolog_docs">
+			<F
+				N="instant_prolog_docs/*.*"
+				Recurse="1"
+				Refilter="1"
+				Excludes="e2c/;elFinder/;.HIDE~/;HIDE~/;pldata/;*.qlf;*.class;.git/;~*;*~;~*/;*~/;.svn/;*.*r;*.*o;*.dll;*.exe;*.bak;*.jpg;*.xp*;*.gif;*.b?*"/>
+		</Folder>
+		<Folder Name="lib_atts">
+			<F
+				N="lib_atts/*.*"
+				Recurse="1"
+				Refilter="1"
+				Excludes="e2c/;elFinder/;.HIDE~/;HIDE~/;pldata/;*.qlf;*.class;.git/;~*;*~;~*/;*~/;.svn/;*.*r;*.*o;*.dll;*.exe;*.bak;*.jpg;*.xp*;*.gif;*.b?*"/>
+		</Folder>
+		<Folder Name="logicmoo_base">
+			<F
+				N="logicmoo_base/*.*"
+				Recurse="1"
+				Refilter="1"
+				Excludes="e2c/;elFinder/;.HIDE~/;HIDE~/;pldata/;*.qlf;*.class;.git/;~*;*~;~*/;*~/;.svn/;*.*r;*.*o;*.dll;*.exe;*.bak;*.jpg;*.xp*;*.gif;*.b?*"/>
+		</Folder>
+		<Folder Name="logicmoo_interps">
+			<F
+				N="logicmoo_interps/*.*"
+				Recurse="1"
+				Refilter="1"
+				Excludes="e2c/;elFinder/;.HIDE~/;HIDE~/;pldata/;*.qlf;*.class;.git/;~*;*~;~*/;*~/;.svn/;*.*r;*.*o;*.dll;*.exe;*.bak;*.jpg;*.xp*;*.gif;*.b?*"/>
+		</Folder>
+		<Folder Name="logicmoo_nlu">
+			<Folder Name="prolog">
+				<Folder Name="AceRules">
+					<Folder Name="engine">
+						<Folder Name="court_interpreter">
+							<F N="logicmoo_nlu/prolog/AceRules/engine/court_interpreter/answerset_generator.pl"/>
+							<F N="logicmoo_nlu/prolog/AceRules/engine/court_interpreter/court_interpreter.pl"/>
+							<F N="logicmoo_nlu/prolog/AceRules/engine/court_interpreter/cycle_checker.pl"/>
+							<F N="logicmoo_nlu/prolog/AceRules/engine/court_interpreter/eliminate_small_cycles.pl"/>
+							<F N="logicmoo_nlu/prolog/AceRules/engine/court_interpreter/transform_naf.pl"/>
+						</Folder>
+						<Folder Name="parser">
+							<F N="logicmoo_nlu/prolog/AceRules/engine/parser/check_grouping.pl"/>
+							<F N="logicmoo_nlu/prolog/AceRules/engine/parser/collect_templates.pl"/>
+							<F N="logicmoo_nlu/prolog/AceRules/engine/parser/condense_drs.pl"/>
+							<F N="logicmoo_nlu/prolog/AceRules/engine/parser/double_implication.pl"/>
+							<F N="logicmoo_nlu/prolog/AceRules/engine/parser/drs_checker.pl"/>
+							<F N="logicmoo_nlu/prolog/AceRules/engine/parser/generate_drs.pl"/>
+							<F N="logicmoo_nlu/prolog/AceRules/engine/parser/group_predicates.pl"/>
+							<F N="logicmoo_nlu/prolog/AceRules/engine/parser/meta_preprocess.pl"/>
+							<F N="logicmoo_nlu/prolog/AceRules/engine/parser/parser.pl"/>
+							<F N="logicmoo_nlu/prolog/AceRules/engine/parser/priority_handler.pl"/>
+							<F N="logicmoo_nlu/prolog/AceRules/engine/parser/rule_creator.pl"/>
+							<F N="logicmoo_nlu/prolog/AceRules/engine/parser/skolemize_drs.pl"/>
+						</Folder>
+						<Folder Name="skolemizer">
+							<F N="logicmoo_nlu/prolog/AceRules/engine/skolemizer/skolemizer.pl"/>
+							<F N="logicmoo_nlu/prolog/AceRules/engine/skolemizer/unskolemizer.pl"/>
+						</Folder>
+						<Folder Name="stable_interpreter">
+							<F N="logicmoo_nlu/prolog/AceRules/engine/stable_interpreter/atom_map.pl"/>
+							<F N="logicmoo_nlu/prolog/AceRules/engine/stable_interpreter/get_stable_models.pl"/>
+							<F N="logicmoo_nlu/prolog/AceRules/engine/stable_interpreter/poor_to_rich.pl"/>
+							<F N="logicmoo_nlu/prolog/AceRules/engine/stable_interpreter/rich_to_poor.pl"/>
+							<F N="logicmoo_nlu/prolog/AceRules/engine/stable_interpreter/stable_checker.pl"/>
+							<F N="logicmoo_nlu/prolog/AceRules/engine/stable_interpreter/stable_interpreter.pl"/>
+						</Folder>
+						<Folder Name="verbalizer">
+							<F N="logicmoo_nlu/prolog/AceRules/engine/verbalizer/attach_var_lists.pl"/>
+							<F N="logicmoo_nlu/prolog/AceRules/engine/verbalizer/clean_propernames.pl"/>
+							<F N="logicmoo_nlu/prolog/AceRules/engine/verbalizer/drs_generator.pl"/>
+							<F N="logicmoo_nlu/prolog/AceRules/engine/verbalizer/expand_drs.pl"/>
+							<F N="logicmoo_nlu/prolog/AceRules/engine/verbalizer/verbalizer.pl"/>
+						</Folder>
+						<Folder Name="webservice">
+							<F N="logicmoo_nlu/prolog/AceRules/engine/webservice/acerules_server.pl"/>
+							<F N="logicmoo_nlu/prolog/AceRules/engine/webservice/get_results.pl"/>
+							<F N="logicmoo_nlu/prolog/AceRules/engine/webservice/soap_utils.pl"/>
+						</Folder>
+						<F N="logicmoo_nlu/prolog/AceRules/engine/acerules_processor.pl"/>
+						<F N="logicmoo_nlu/prolog/AceRules/engine/debug_output.pl"/>
+						<F N="logicmoo_nlu/prolog/AceRules/engine/ground_rules.pl"/>
+						<F N="logicmoo_nlu/prolog/AceRules/engine/list_utils.pl"/>
+						<F N="logicmoo_nlu/prolog/AceRules/engine/logger.pl"/>
+						<F N="logicmoo_nlu/prolog/AceRules/engine/op_defs.pl"/>
+						<F N="logicmoo_nlu/prolog/AceRules/engine/parameters.pl"/>
+						<F N="logicmoo_nlu/prolog/AceRules/engine/rule_ops.pl"/>
+						<F N="logicmoo_nlu/prolog/AceRules/engine/run_acerules.pl"/>
+						<F N="logicmoo_nlu/prolog/AceRules/engine/run_testcases.pl"/>
+						<F N="logicmoo_nlu/prolog/AceRules/engine/simple_rules.pl"/>
+						<F N="logicmoo_nlu/prolog/AceRules/engine/ulex_handler.pl"/>
+						<F N="logicmoo_nlu/prolog/AceRules/engine/utils.pl"/>
+					</Folder>
+				</Folder>
+				<Folder Name="candc">
+					<Folder Name="src">
+						<Folder Name="data">
+							<Folder Name="italian">
+								<Folder Name="prolog">
+									<F N="logicmoo_nlu/prolog/candc/src/data/italian/prolog/binarise.pl"/>
+									<F N="logicmoo_nlu/prolog/candc/src/data/italian/prolog/ccg.pl"/>
+									<F N="logicmoo_nlu/prolog/candc/src/data/italian/prolog/idioms.pl"/>
+									<F N="logicmoo_nlu/prolog/candc/src/data/italian/prolog/pp.pl"/>
+									<F N="logicmoo_nlu/prolog/candc/src/data/italian/prolog/printCCG.pl"/>
+									<F N="logicmoo_nlu/prolog/candc/src/data/italian/prolog/printError.pl"/>
+									<F N="logicmoo_nlu/prolog/candc/src/data/italian/prolog/printTree.pl"/>
+									<F N="logicmoo_nlu/prolog/candc/src/data/italian/prolog/printTUT.pl"/>
+									<F N="logicmoo_nlu/prolog/candc/src/data/italian/prolog/slashes.pl"/>
+									<F N="logicmoo_nlu/prolog/candc/src/data/italian/prolog/tut2ccg.pl"/>
+								</Folder>
+							</Folder>
+							<Folder Name="vpe">
+								<F N="logicmoo_nlu/prolog/candc/src/data/vpe/annotate.pl"/>
+								<F N="logicmoo_nlu/prolog/candc/src/data/vpe/antecedent.pl"/>
+								<F N="logicmoo_nlu/prolog/candc/src/data/vpe/eval.pl"/>
+								<F N="logicmoo_nlu/prolog/candc/src/data/vpe/transform.pl"/>
+								<F N="logicmoo_nlu/prolog/candc/src/data/vpe/type.pl"/>
+							</Folder>
+						</Folder>
+						<Folder Name="prolog">
+							<Folder Name="boxer">
+								<Folder Name="knowledge">
+									<F N="logicmoo_nlu/prolog/candc/src/prolog/boxer/knowledge/amrmfs.pl"/>
+									<F N="logicmoo_nlu/prolog/candc/src/prolog/boxer/knowledge/antecedent.pl"/>
+									<F N="logicmoo_nlu/prolog/candc/src/prolog/boxer/knowledge/dates.pl"/>
+									<F N="logicmoo_nlu/prolog/candc/src/prolog/boxer/knowledge/nationality.pl"/>
+									<F N="logicmoo_nlu/prolog/candc/src/prolog/boxer/knowledge/ne.pl"/>
+									<F N="logicmoo_nlu/prolog/candc/src/prolog/boxer/knowledge/negprefix.pl"/>
+									<F N="logicmoo_nlu/prolog/candc/src/prolog/boxer/knowledge/negsuffix.pl"/>
+									<F N="logicmoo_nlu/prolog/candc/src/prolog/boxer/knowledge/ontology.pl"/>
+									<F N="logicmoo_nlu/prolog/candc/src/prolog/boxer/knowledge/punctuation.pl"/>
+									<F N="logicmoo_nlu/prolog/candc/src/prolog/boxer/knowledge/relations.pl"/>
+									<F N="logicmoo_nlu/prolog/candc/src/prolog/boxer/knowledge/role91.pl"/>
+									<F N="logicmoo_nlu/prolog/candc/src/prolog/boxer/knowledge/roles.pl"/>
+									<F N="logicmoo_nlu/prolog/candc/src/prolog/boxer/knowledge/title.pl"/>
+									<F N="logicmoo_nlu/prolog/candc/src/prolog/boxer/knowledge/verbalization-list-v1.01.pl"/>
+									<F N="logicmoo_nlu/prolog/candc/src/prolog/boxer/knowledge/wiki.pl"/>
+								</Folder>
+								<Folder Name="lex">
+									<F N="logicmoo_nlu/prolog/candc/src/prolog/boxer/lex/determiners.pl"/>
+									<F N="logicmoo_nlu/prolog/candc/src/prolog/boxer/lex/framenet.pl"/>
+									<F N="logicmoo_nlu/prolog/candc/src/prolog/boxer/lex/n.pl"/>
+									<F N="logicmoo_nlu/prolog/candc/src/prolog/boxer/lex/pp.pl"/>
+									<F N="logicmoo_nlu/prolog/candc/src/prolog/boxer/lex/tense.pl"/>
+									<F N="logicmoo_nlu/prolog/candc/src/prolog/boxer/lex/verbnet.pl"/>
+									<F N="logicmoo_nlu/prolog/candc/src/prolog/boxer/lex/verbs.pl"/>
+								</Folder>
+								<F N="logicmoo_nlu/prolog/candc/src/prolog/boxer/alphaConversionDRT.pl"/>
+								<F N="logicmoo_nlu/prolog/candc/src/prolog/boxer/betaConversionDRT.pl"/>
+								<F N="logicmoo_nlu/prolog/candc/src/prolog/boxer/bindingViolation.pl"/>
+								<F N="logicmoo_nlu/prolog/candc/src/prolog/boxer/boxer.pl"/>
+								<F N="logicmoo_nlu/prolog/candc/src/prolog/boxer/categories.pl"/>
+								<F N="logicmoo_nlu/prolog/candc/src/prolog/boxer/ccg2drs.pl"/>
+								<F N="logicmoo_nlu/prolog/candc/src/prolog/boxer/closure.pl"/>
+								<F N="logicmoo_nlu/prolog/candc/src/prolog/boxer/coordination.pl"/>
+								<F N="logicmoo_nlu/prolog/candc/src/prolog/boxer/drs2fdrs.pl"/>
+								<F N="logicmoo_nlu/prolog/candc/src/prolog/boxer/drs2xml.pl"/>
+								<F N="logicmoo_nlu/prolog/candc/src/prolog/boxer/evaluation.pl"/>
+								<F N="logicmoo_nlu/prolog/candc/src/prolog/boxer/freeVarCheck.pl"/>
+								<F N="logicmoo_nlu/prolog/candc/src/prolog/boxer/input.pl"/>
+								<F N="logicmoo_nlu/prolog/candc/src/prolog/boxer/lexicon.pl"/>
+								<F N="logicmoo_nlu/prolog/candc/src/prolog/boxer/mergeDRT.pl"/>
+								<F N="logicmoo_nlu/prolog/candc/src/prolog/boxer/morpha.pl"/>
+								<F N="logicmoo_nlu/prolog/candc/src/prolog/boxer/noncomp.pl"/>
+								<F N="logicmoo_nlu/prolog/candc/src/prolog/boxer/output.pl"/>
+								<F N="logicmoo_nlu/prolog/candc/src/prolog/boxer/ppDrs.pl"/>
+								<F N="logicmoo_nlu/prolog/candc/src/prolog/boxer/presupDRT.pl"/>
+								<F N="logicmoo_nlu/prolog/candc/src/prolog/boxer/printCCG.pl"/>
+								<F N="logicmoo_nlu/prolog/candc/src/prolog/boxer/printDrs.pl"/>
+								<F N="logicmoo_nlu/prolog/candc/src/prolog/boxer/relation.pl"/>
+								<F N="logicmoo_nlu/prolog/candc/src/prolog/boxer/resolveDRT.pl"/>
+								<F N="logicmoo_nlu/prolog/candc/src/prolog/boxer/sdrt.pl"/>
+								<F N="logicmoo_nlu/prolog/candc/src/prolog/boxer/slashes.pl"/>
+								<F N="logicmoo_nlu/prolog/candc/src/prolog/boxer/sortalCheck.pl"/>
+								<F N="logicmoo_nlu/prolog/candc/src/prolog/boxer/string2digit.pl"/>
+								<F N="logicmoo_nlu/prolog/candc/src/prolog/boxer/transform.pl"/>
+								<F N="logicmoo_nlu/prolog/candc/src/prolog/boxer/tuples.pl"/>
+								<F N="logicmoo_nlu/prolog/candc/src/prolog/boxer/typechange.pl"/>
+								<F N="logicmoo_nlu/prolog/candc/src/prolog/boxer/version.pl"/>
+								<F N="logicmoo_nlu/prolog/candc/src/prolog/boxer/vpe.pl"/>
+								<F N="logicmoo_nlu/prolog/candc/src/prolog/boxer/xdrs2html.pl"/>
+								<F N="logicmoo_nlu/prolog/candc/src/prolog/boxer/xdrs2xml.pl"/>
+							</Folder>
+							<Folder Name="lib">
+								<F N="logicmoo_nlu/prolog/candc/src/prolog/lib/abbreviations.pl"/>
+								<F N="logicmoo_nlu/prolog/candc/src/prolog/lib/der.pl"/>
+								<F N="logicmoo_nlu/prolog/candc/src/prolog/lib/der2tex.pl"/>
+								<F N="logicmoo_nlu/prolog/candc/src/prolog/lib/drs2amr.pl"/>
+								<F N="logicmoo_nlu/prolog/candc/src/prolog/lib/drs2fol.pl"/>
+								<F N="logicmoo_nlu/prolog/candc/src/prolog/lib/drs2tacitus.pl"/>
+								<F N="logicmoo_nlu/prolog/candc/src/prolog/lib/drs2tex.pl"/>
+								<F N="logicmoo_nlu/prolog/candc/src/prolog/lib/errors.pl"/>
+								<F N="logicmoo_nlu/prolog/candc/src/prolog/lib/gen-wordnet.pl"/>
+								<F N="logicmoo_nlu/prolog/candc/src/prolog/lib/lex2tex.pl"/>
+								<F N="logicmoo_nlu/prolog/candc/src/prolog/lib/options.pl"/>
+								<F N="logicmoo_nlu/prolog/candc/src/prolog/lib/pdrs2drs.pl"/>
+								<F N="logicmoo_nlu/prolog/candc/src/prolog/lib/semlex.pl"/>
+								<F N="logicmoo_nlu/prolog/candc/src/prolog/lib/verbnet2boxer.pl"/>
+								<F N="logicmoo_nlu/prolog/candc/src/prolog/lib/verbnet2gmb.pl"/>
+								<F N="logicmoo_nlu/prolog/candc/src/prolog/lib/verbnet2patterns.pl"/>
+								<F N="logicmoo_nlu/prolog/candc/src/prolog/lib/verbnet2prolog.pl"/>
+							</Folder>
+							<Folder Name="nutcracker">
+								<F N="logicmoo_nlu/prolog/candc/src/prolog/nutcracker/axioms.pl"/>
+								<F N="logicmoo_nlu/prolog/candc/src/prolog/nutcracker/callInference.pl"/>
+								<F N="logicmoo_nlu/prolog/candc/src/prolog/nutcracker/counting.pl"/>
+								<F N="logicmoo_nlu/prolog/candc/src/prolog/nutcracker/eDRT.pl"/>
+								<F N="logicmoo_nlu/prolog/candc/src/prolog/nutcracker/estimate.pl"/>
+								<F N="logicmoo_nlu/prolog/candc/src/prolog/nutcracker/fol2bliksem.pl"/>
+								<F N="logicmoo_nlu/prolog/candc/src/prolog/nutcracker/fol2otter.pl"/>
+								<F N="logicmoo_nlu/prolog/candc/src/prolog/nutcracker/fol2tptp.pl"/>
+								<F N="logicmoo_nlu/prolog/candc/src/prolog/nutcracker/input.pl"/>
+								<F N="logicmoo_nlu/prolog/candc/src/prolog/nutcracker/interfaceTPandMB.pl"/>
+								<F N="logicmoo_nlu/prolog/candc/src/prolog/nutcracker/miniFrameNet.pl"/>
+								<F N="logicmoo_nlu/prolog/candc/src/prolog/nutcracker/miniWordNet.pl"/>
+								<F N="logicmoo_nlu/prolog/candc/src/prolog/nutcracker/ntokkie.pl"/>
+								<F N="logicmoo_nlu/prolog/candc/src/prolog/nutcracker/nutcracker.pl"/>
+								<F N="logicmoo_nlu/prolog/candc/src/prolog/nutcracker/para.pl"/>
+								<F N="logicmoo_nlu/prolog/candc/src/prolog/nutcracker/startTPandMB.pl"/>
+								<F N="logicmoo_nlu/prolog/candc/src/prolog/nutcracker/tokkie.pl"/>
+								<F N="logicmoo_nlu/prolog/candc/src/prolog/nutcracker/version.pl"/>
+							</Folder>
+						</Folder>
+						<Folder Name="scripts">
+							<Folder Name="ccg">
+								<F N="logicmoo_nlu/prolog/candc/src/scripts/ccg/compare_deps.pl"/>
+								<F N="logicmoo_nlu/prolog/candc/src/scripts/ccg/convert_jdeps.pl"/>
+								<F N="logicmoo_nlu/prolog/candc/src/scripts/ccg/evaluateDeps.pl"/>
+								<F N="logicmoo_nlu/prolog/candc/src/scripts/ccg/evaluateDepsCCGbank.pl"/>
+								<F N="logicmoo_nlu/prolog/candc/src/scripts/ccg/evaluateTagger.pl"/>
+								<F N="logicmoo_nlu/prolog/candc/src/scripts/ccg/evaluateTaggerKbest.pl"/>
+								<F N="logicmoo_nlu/prolog/candc/src/scripts/ccg/merge_rcounts.pl"/>
+								<F N="logicmoo_nlu/prolog/candc/src/scripts/ccg/partial_deps.pl"/>
+							</Folder>
+							<Folder Name="memex">
+								<F N="logicmoo_nlu/prolog/candc/src/scripts/memex/conll2system.pl"/>
+								<F N="logicmoo_nlu/prolog/candc/src/scripts/memex/system2conll.pl"/>
+							</Folder>
+						</Folder>
+					</Folder>
+					<F N="logicmoo_nlu/prolog/candc/copy_parser_boxer.pl"/>
+					<F N="logicmoo_nlu/prolog/candc/parser_boxer.pl"/>
+				</Folder>
+				<Folder Name="CURT">
+					<Folder Name="bb0">
+						<F N="logicmoo_nlu/prolog/CURT/bb0/acceptabilityConstraints.pl"/>
+						<F N="logicmoo_nlu/prolog/CURT/bb0/acDRT.pl"/>
+						<F N="logicmoo_nlu/prolog/CURT/bb0/alphaConversion.pl"/>
+						<F N="logicmoo_nlu/prolog/CURT/bb0/alphaConversion2.pl"/>
+						<F N="logicmoo_nlu/prolog/CURT/bb0/anldp.exe"/>
+						<F N="logicmoo_nlu/prolog/CURT/bb0/auxlib.pl"/>
+						<F N="logicmoo_nlu/prolog/CURT/bb0/babyCurt.pl"/>
+						<F N="logicmoo_nlu/prolog/CURT/bb0/betaConversion.pl"/>
+						<F N="logicmoo_nlu/prolog/CURT/bb0/betaConversion2.pl"/>
+						<F N="logicmoo_nlu/prolog/CURT/bb0/betaConversion3.pl"/>
+						<F N="logicmoo_nlu/prolog/CURT/bb0/betaConversionTestSuite.pl"/>
+						<F N="logicmoo_nlu/prolog/CURT/bb0/bindingDRT.pl"/>
+						<F N="logicmoo_nlu/prolog/CURT/bb0/callInference.pl"/>
+						<F N="logicmoo_nlu/prolog/CURT/bb0/callModelBuilder.pl"/>
+						<F N="logicmoo_nlu/prolog/CURT/bb0/callTheoremProver.pl"/>
+						<F N="logicmoo_nlu/prolog/CURT/bb0/cleverCurt.pl"/>
+						<F N="logicmoo_nlu/prolog/CURT/bb0/clientBliksem.pl"/>
+						<F N="logicmoo_nlu/prolog/CURT/bb0/clientCurt.pl"/>
+						<F N="logicmoo_nlu/prolog/CURT/bb0/clientMace.pl"/>
+						<F N="logicmoo_nlu/prolog/CURT/bb0/clientOtter.pl"/>
+						<F N="logicmoo_nlu/prolog/CURT/bb0/cnf.pl"/>
+						<F N="logicmoo_nlu/prolog/CURT/bb0/cnfTestSuite.pl"/>
+						<F N="logicmoo_nlu/prolog/CURT/bb0/comsemOperators.pl"/>
+						<F N="logicmoo_nlu/prolog/CURT/bb0/comsemPredicates.pl"/>
+						<F N="logicmoo_nlu/prolog/CURT/bb0/cooperStorage.pl"/>
+						<F N="logicmoo_nlu/prolog/CURT/bb0/curtDRT.pl"/>
+						<F N="logicmoo_nlu/prolog/CURT/bb0/curtServer.pl"/>
+						<F N="logicmoo_nlu/prolog/CURT/bb0/discourseGrammar.pl"/>
+						<F N="logicmoo_nlu/prolog/CURT/bb0/discourseTestSuite.pl"/>
+						<F N="logicmoo_nlu/prolog/CURT/bb0/drs2fol.pl"/>
+						<F N="logicmoo_nlu/prolog/CURT/bb0/drsPredicates.pl"/>
+						<F N="logicmoo_nlu/prolog/CURT/bb0/drsTools.pl"/>
+						<F N="logicmoo_nlu/prolog/CURT/bb0/englishGrammar.pl"/>
+						<F N="logicmoo_nlu/prolog/CURT/bb0/englishLexicon.pl"/>
+						<F N="logicmoo_nlu/prolog/CURT/bb0/exampleModels.pl"/>
+						<F N="logicmoo_nlu/prolog/CURT/bb0/experiment1.pl"/>
+						<F N="logicmoo_nlu/prolog/CURT/bb0/experiment2.pl"/>
+						<F N="logicmoo_nlu/prolog/CURT/bb0/experiment3-1.pl"/>
+						<F N="logicmoo_nlu/prolog/CURT/bb0/experiment3.pl"/>
+						<F N="logicmoo_nlu/prolog/CURT/bb0/fol2bliksem.pl"/>
+						<F N="logicmoo_nlu/prolog/CURT/bb0/fol2otter.pl"/>
+						<F N="logicmoo_nlu/prolog/CURT/bb0/folTestSuite.pl"/>
+						<F N="logicmoo_nlu/prolog/CURT/bb0/freeVarTabl.pl"/>
+						<F N="logicmoo_nlu/prolog/CURT/bb0/holeSemantics.pl"/>
+						<F N="logicmoo_nlu/prolog/CURT/bb0/holeSemanticsDRT.pl"/>
+						<F N="logicmoo_nlu/prolog/CURT/bb0/index.html"/>
+						<F N="logicmoo_nlu/prolog/CURT/bb0/index2.pl"/>
+						<F N="logicmoo_nlu/prolog/CURT/bb0/kellerStorage.pl"/>
+						<F N="logicmoo_nlu/prolog/CURT/bb0/knowledgeableCurt.pl"/>
+						<F N="logicmoo_nlu/prolog/CURT/bb0/laconicCurt.pl"/>
+						<F N="logicmoo_nlu/prolog/CURT/bb0/lambda.pl"/>
+						<F N="logicmoo_nlu/prolog/CURT/bb0/lambdaDRT.pl"/>
+						<F N="logicmoo_nlu/prolog/CURT/bb0/MACE.exe"/>
+						<F N="logicmoo_nlu/prolog/CURT/bb0/mainPronounsDRT.pl"/>
+						<F N="logicmoo_nlu/prolog/CURT/bb0/mainPronounsDRTfragment.pl"/>
+						<F N="logicmoo_nlu/prolog/CURT/bb0/mainPronounsDRTtrace.pl"/>
+						<F N="logicmoo_nlu/prolog/CURT/bb0/matchDRT.pl"/>
+						<F N="logicmoo_nlu/prolog/CURT/bb0/modelChecker1.pl"/>
+						<F N="logicmoo_nlu/prolog/CURT/bb0/modelChecker2.pl"/>
+						<F N="logicmoo_nlu/prolog/CURT/bb0/modelCheckerDRT1.pl"/>
+						<F N="logicmoo_nlu/prolog/CURT/bb0/modelCheckerDRT2.pl"/>
+						<F N="logicmoo_nlu/prolog/CURT/bb0/modelCheckerTestSuite.pl"/>
+						<F N="logicmoo_nlu/prolog/CURT/bb0/modelCheckerTestSuiteDRT.pl"/>
+						<F N="logicmoo_nlu/prolog/CURT/bb0/montague.pl"/>
+						<F N="logicmoo_nlu/prolog/CURT/bb0/otter-in"/>
+						<F N="logicmoo_nlu/prolog/CURT/bb0/otter-out"/>
+						<F N="logicmoo_nlu/prolog/CURT/bb0/otter.exe"/>
+						<F N="logicmoo_nlu/prolog/CURT/bb0/pluggingAlgorithm.pl"/>
+						<F N="logicmoo_nlu/prolog/CURT/bb0/presupDRT.pl"/>
+						<F N="logicmoo_nlu/prolog/CURT/bb0/presupScoreDRT.pl"/>
+						<F N="logicmoo_nlu/prolog/CURT/bb0/printDrs.pl"/>
+						<F N="logicmoo_nlu/prolog/CURT/bb0/propResolution.pl"/>
+						<F N="logicmoo_nlu/prolog/CURT/bb0/propTableaux.pl"/>
+						<F N="logicmoo_nlu/prolog/CURT/bb0/propTableaux2.pl"/>
+						<F N="logicmoo_nlu/prolog/CURT/bb0/propTestSuite.pl"/>
+						<F N="logicmoo_nlu/prolog/CURT/bb0/readLine.pl"/>
+						<F N="logicmoo_nlu/prolog/CURT/bb0/resolvePresup.pl"/>
+						<F N="logicmoo_nlu/prolog/CURT/bb0/resolvePresupScore.pl"/>
+						<F N="logicmoo_nlu/prolog/CURT/bb0/semOntology.pl"/>
+						<F N="logicmoo_nlu/prolog/CURT/bb0/semOntology1.pl"/>
+						<F N="logicmoo_nlu/prolog/CURT/bb0/sensitiveCurt.pl"/>
+						<F N="logicmoo_nlu/prolog/CURT/bb0/sentenceTestSuite.pl"/>
+						<F N="logicmoo_nlu/prolog/CURT/bb0/startClientCurt.pl"/>
+						<F N="logicmoo_nlu/prolog/CURT/bb0/superCurt.pl"/>
+						<F N="logicmoo_nlu/prolog/CURT/bb0/threadingDRT.pl"/>
+						<F N="logicmoo_nlu/prolog/CURT/bb0/threadingDRT1.pl"/>
+						<F N="logicmoo_nlu/prolog/CURT/bb0/usrPredicates.pl"/>
+					</Folder>
+				</Folder>
+			</Folder>
+		</Folder>
+		<Folder Name="logicmoo_packages">
+			<Folder Name="prolog">
+				<F N="logicmoo_packages/prolog/scheme_on_prolog.pl"/>
+			</Folder>
+			<F
+				N="logicmoo_packages/*.*"
+				Recurse="1"
+				Refilter="1"
+				Excludes="e2c/;elFinder/;.HIDE~/;HIDE~/;pldata/;*.qlf;*.class;.git/;~*;*~;~*/;*~/;.svn/;*.*r;*.*o;*.dll;*.exe;*.bak;*.jpg;*.xp*;*.gif;*.b?*"/>
+		</Folder>
+		<Folder Name="logicmoo_planner">
+			<Folder Name="prolog">
+				<Folder Name="logicmoo">
+					<Folder Name="planner">
+						<Folder Name="fsaplanner">
+							<F N="logicmoo_planner/prolog/logicmoo/planner/fsaplanner/airport.pl"/>
+							<F N="logicmoo_planner/prolog/logicmoo/planner/fsaplanner/arith.pl"/>
+							<F N="logicmoo_planner/prolog/logicmoo/planner/fsaplanner/bars.pl"/>
+							<F N="logicmoo_planner/prolog/logicmoo/planner/fsaplanner/bintree.pl"/>
+							<F N="logicmoo_planner/prolog/logicmoo/planner/fsaplanner/blocks.pl"/>
+							<F N="logicmoo_planner/prolog/logicmoo/planner/fsaplanner/fact.pl"/>
+							<F N="logicmoo_planner/prolog/logicmoo/planner/fsaplanner/fixedegg.pl"/>
+							<F N="logicmoo_planner/prolog/logicmoo/planner/fsaplanner/fsaplanner.pl"/>
+							<F N="logicmoo_planner/prolog/logicmoo/planner/fsaplanner/HINTS"/>
+							<F N="logicmoo_planner/prolog/logicmoo/planner/fsaplanner/HISTORY"/>
+							<F N="logicmoo_planner/prolog/logicmoo/planner/fsaplanner/ktrue.pl"/>
+							<F N="logicmoo_planner/prolog/logicmoo/planner/fsaplanner/README"/>
+							<F N="logicmoo_planner/prolog/logicmoo/planner/fsaplanner/safe.pl"/>
+							<F N="logicmoo_planner/prolog/logicmoo/planner/fsaplanner/simchop.pl"/>
+							<F N="logicmoo_planner/prolog/logicmoo/planner/fsaplanner/simport.pl"/>
+							<F N="logicmoo_planner/prolog/logicmoo/planner/fsaplanner/treechop.pl"/>
+							<F N="logicmoo_planner/prolog/logicmoo/planner/fsaplanner/TUTORIAL"/>
+							<F N="logicmoo_planner/prolog/logicmoo/planner/fsaplanner/variegg.pl"/>
+						</Folder>
+						<Folder Name="Rakiduam07">
+							<Folder Name="continuos">
+								<F N="logicmoo_planner/prolog/logicmoo/planner/Rakiduam07/continuos/continuous_pop.pl"/>
+								<F N="logicmoo_planner/prolog/logicmoo/planner/Rakiduam07/continuos/goalgen.pl"/>
+								<F N="logicmoo_planner/prolog/logicmoo/planner/Rakiduam07/continuos/index.html"/>
+								<F N="logicmoo_planner/prolog/logicmoo/planner/Rakiduam07/continuos/pop.pl"/>
+								<F N="logicmoo_planner/prolog/logicmoo/planner/Rakiduam07/continuos/soccer_strips.pl"/>
+							</Folder>
+							<Folder Name="socket_udp">
+								<F N="logicmoo_planner/prolog/logicmoo/planner/Rakiduam07/socket_udp/clienteudp.pl"/>
+								<F N="logicmoo_planner/prolog/logicmoo/planner/Rakiduam07/socket_udp/config.xml"/>
+								<F N="logicmoo_planner/prolog/logicmoo/planner/Rakiduam07/socket_udp/index.html"/>
+								<F N="logicmoo_planner/prolog/logicmoo/planner/Rakiduam07/socket_udp/socket_udp.pl"/>
+								<F N="logicmoo_planner/prolog/logicmoo/planner/Rakiduam07/socket_udp/socket_udp_c.c"/>
+								<F N="logicmoo_planner/prolog/logicmoo/planner/Rakiduam07/socket_udp/socket_udp_user.pl"/>
+							</Folder>
+							<F N="logicmoo_planner/prolog/logicmoo/planner/Rakiduam07/actions.pl"/>
+							<F N="logicmoo_planner/prolog/logicmoo/planner/Rakiduam07/amarillo.pl"/>
+							<F N="logicmoo_planner/prolog/logicmoo/planner/Rakiduam07/ambiente.pl"/>
+							<F N="logicmoo_planner/prolog/logicmoo/planner/Rakiduam07/azul.pl"/>
+							<F N="logicmoo_planner/prolog/logicmoo/planner/Rakiduam07/command_server.pl"/>
+							<F N="logicmoo_planner/prolog/logicmoo/planner/Rakiduam07/config.xml"/>
+							<F N="logicmoo_planner/prolog/logicmoo/planner/Rakiduam07/config_sim.xml"/>
+							<F N="logicmoo_planner/prolog/logicmoo/planner/Rakiduam07/configuration.pl"/>
+							<F N="logicmoo_planner/prolog/logicmoo/planner/Rakiduam07/doraemon_tokenizer.pl"/>
+							<F N="logicmoo_planner/prolog/logicmoo/planner/Rakiduam07/estrategia.pl"/>
+							<F N="logicmoo_planner/prolog/logicmoo/planner/Rakiduam07/field.pl"/>
+							<F N="logicmoo_planner/prolog/logicmoo/planner/Rakiduam07/field_grid.pl"/>
+							<F N="logicmoo_planner/prolog/logicmoo/planner/Rakiduam07/index.html"/>
+							<F N="logicmoo_planner/prolog/logicmoo/planner/Rakiduam07/logger.pl"/>
+							<F N="logicmoo_planner/prolog/logicmoo/planner/Rakiduam07/navegacion.pl"/>
+							<F N="logicmoo_planner/prolog/logicmoo/planner/Rakiduam07/notas"/>
+							<F N="logicmoo_planner/prolog/logicmoo/planner/Rakiduam07/perceptions.pl"/>
+							<F N="logicmoo_planner/prolog/logicmoo/planner/Rakiduam07/primitivas.pl"/>
+							<F N="logicmoo_planner/prolog/logicmoo/planner/Rakiduam07/principal.pl"/>
+							<F N="logicmoo_planner/prolog/logicmoo/planner/Rakiduam07/sim_command_server.pl"/>
+							<F N="logicmoo_planner/prolog/logicmoo/planner/Rakiduam07/sim_video_server.pl"/>
+							<F N="logicmoo_planner/prolog/logicmoo/planner/Rakiduam07/sim_video_server_linux.pl"/>
+							<F N="logicmoo_planner/prolog/logicmoo/planner/Rakiduam07/sim_video_server_tcp.pl"/>
+							<F N="logicmoo_planner/prolog/logicmoo/planner/Rakiduam07/TODO"/>
+							<F N="logicmoo_planner/prolog/logicmoo/planner/Rakiduam07/trigonometry.pl"/>
+							<F N="logicmoo_planner/prolog/logicmoo/planner/Rakiduam07/video_parser.pl"/>
+						</Folder>
+						<Folder Name="teps">
+							<Folder Name="foTranslator">
+								<Folder Name="domains">
+									<Folder Name="robot">
+										<F N="logicmoo_planner/prolog/logicmoo/planner/teps/foTranslator/domains/robot/p1.pl"/>
+										<F N="logicmoo_planner/prolog/logicmoo/planner/teps/foTranslator/domains/robot/p2.pl"/>
+										<F N="logicmoo_planner/prolog/logicmoo/planner/teps/foTranslator/domains/robot/p3.pl"/>
+										<F N="logicmoo_planner/prolog/logicmoo/planner/teps/foTranslator/domains/robot/README"/>
+										<F N="logicmoo_planner/prolog/logicmoo/planner/teps/foTranslator/domains/robot/robot.pl"/>
+										<F N="logicmoo_planner/prolog/logicmoo/planner/teps/foTranslator/domains/robot/robot_init1.pl"/>
+									</Folder>
+									<Folder Name="zenotravel">
+										<F N="logicmoo_planner/prolog/logicmoo/planner/teps/foTranslator/domains/zenotravel/initial1.pl"/>
+										<F N="logicmoo_planner/prolog/logicmoo/planner/teps/foTranslator/domains/zenotravel/p1.pl"/>
+										<F N="logicmoo_planner/prolog/logicmoo/planner/teps/foTranslator/domains/zenotravel/p12a.pl"/>
+										<F N="logicmoo_planner/prolog/logicmoo/planner/teps/foTranslator/domains/zenotravel/p14.pl"/>
+										<F N="logicmoo_planner/prolog/logicmoo/planner/teps/foTranslator/domains/zenotravel/p15a.pl"/>
+										<F N="logicmoo_planner/prolog/logicmoo/planner/teps/foTranslator/domains/zenotravel/p15b.pl"/>
+										<F N="logicmoo_planner/prolog/logicmoo/planner/teps/foTranslator/domains/zenotravel/p6.pl"/>
+										<F N="logicmoo_planner/prolog/logicmoo/planner/teps/foTranslator/domains/zenotravel/zenotravel.pl"/>
+									</Folder>
+								</Folder>
+								<F N="logicmoo_planner/prolog/logicmoo/planner/teps/foTranslator/genaut.pl"/>
+								<F N="logicmoo_planner/prolog/logicmoo/planner/teps/foTranslator/LICENSE"/>
+								<F N="logicmoo_planner/prolog/logicmoo/planner/teps/foTranslator/README"/>
+								<F N="logicmoo_planner/prolog/logicmoo/planner/teps/foTranslator/regress.pl"/>
+								<F N="logicmoo_planner/prolog/logicmoo/planner/teps/foTranslator/topddl.pl"/>
+								<F N="logicmoo_planner/prolog/logicmoo/planner/teps/foTranslator/verbosity.pl"/>
+							</Folder>
+							<Folder Name="propTranslator">
+								<Folder Name="domains">
+									<Folder Name="robot">
+										<F N="logicmoo_planner/prolog/logicmoo/planner/teps/propTranslator/domains/robot/p1.pl"/>
+										<F N="logicmoo_planner/prolog/logicmoo/planner/teps/propTranslator/domains/robot/p1_dp.pddl"/>
+										<F N="logicmoo_planner/prolog/logicmoo/planner/teps/propTranslator/domains/robot/p2.pl"/>
+										<F N="logicmoo_planner/prolog/logicmoo/planner/teps/propTranslator/domains/robot/p3.pl"/>
+										<F N="logicmoo_planner/prolog/logicmoo/planner/teps/propTranslator/domains/robot/robot.pl"/>
+										<F N="logicmoo_planner/prolog/logicmoo/planner/teps/propTranslator/domains/robot/robot_init1.pl"/>
+										<F N="logicmoo_planner/prolog/logicmoo/planner/teps/propTranslator/domains/robot/robot_p1_dp.pddl"/>
+									</Folder>
+								</Folder>
+								<F N="logicmoo_planner/prolog/logicmoo/planner/teps/propTranslator/genaut.pl"/>
+								<F N="logicmoo_planner/prolog/logicmoo/planner/teps/propTranslator/LICENSE"/>
+								<F N="logicmoo_planner/prolog/logicmoo/planner/teps/propTranslator/README"/>
+								<F N="logicmoo_planner/prolog/logicmoo/planner/teps/propTranslator/regress.pl"/>
+								<F N="logicmoo_planner/prolog/logicmoo/planner/teps/propTranslator/topddl.pl"/>
+								<F N="logicmoo_planner/prolog/logicmoo/planner/teps/propTranslator/verbosity.pl"/>
+							</Folder>
+							<Folder Name="test_suites">
+								<Folder Name="tlplan-files">
+									<Folder Name="Logistics">
+										<F N="logicmoo_planner/prolog/logicmoo/planner/teps/test_suites/tlplan-files/Logistics/logisticsproblems.tlp"/>
+										<F N="logicmoo_planner/prolog/logicmoo/planner/teps/test_suites/tlplan-files/Logistics/logisticsworld.tlp"/>
+										<F N="logicmoo_planner/prolog/logicmoo/planner/teps/test_suites/tlplan-files/Logistics/runlogistics.tlp"/>
+									</Folder>
+									<Folder Name="Robot">
+										<F N="logicmoo_planner/prolog/logicmoo/planner/teps/test_suites/tlplan-files/Robot/.soln"/>
+										<F N="logicmoo_planner/prolog/logicmoo/planner/teps/test_suites/tlplan-files/Robot/roomproblems.tlp"/>
+										<F N="logicmoo_planner/prolog/logicmoo/planner/teps/test_suites/tlplan-files/Robot/roomproblems2.tlp"/>
+										<F N="logicmoo_planner/prolog/logicmoo/planner/teps/test_suites/tlplan-files/Robot/roomsproblems2.tlp"/>
+										<F N="logicmoo_planner/prolog/logicmoo/planner/teps/test_suites/tlplan-files/Robot/roomworld.tlp"/>
+										<F N="logicmoo_planner/prolog/logicmoo/planner/teps/test_suites/tlplan-files/Robot/runroom.tlp"/>
+										<F N="logicmoo_planner/prolog/logicmoo/planner/teps/test_suites/tlplan-files/Robot/runroom2.tlp"/>
+										<F N="logicmoo_planner/prolog/logicmoo/planner/teps/test_suites/tlplan-files/Robot/tlplan.log"/>
+									</Folder>
+									<Folder Name="ZenoTravel">
+										<F N="logicmoo_planner/prolog/logicmoo/planner/teps/test_suites/tlplan-files/ZenoTravel/runzeon.pl"/>
+										<F N="logicmoo_planner/prolog/logicmoo/planner/teps/test_suites/tlplan-files/ZenoTravel/zeonproblems.tlp"/>
+										<F N="logicmoo_planner/prolog/logicmoo/planner/teps/test_suites/tlplan-files/ZenoTravel/zeonworld.tlp"/>
+									</Folder>
+								</Folder>
+								<Folder Name="translator-files">
+									<Folder Name="Logistics">
+										<F N="logicmoo_planner/prolog/logicmoo/planner/teps/test_suites/translator-files/Logistics/extract_results.sh"/>
+										<F N="logicmoo_planner/prolog/logicmoo/planner/teps/test_suites/translator-files/Logistics/initial1.pl"/>
+										<F N="logicmoo_planner/prolog/logicmoo/planner/teps/test_suites/translator-files/Logistics/logistics.pl"/>
+										<F N="logicmoo_planner/prolog/logicmoo/planner/teps/test_suites/translator-files/Logistics/logistics_p10_dp.pddl"/>
+										<F N="logicmoo_planner/prolog/logicmoo/planner/teps/test_suites/translator-files/Logistics/logistics_p11_dp.pddl"/>
+										<F N="logicmoo_planner/prolog/logicmoo/planner/teps/test_suites/translator-files/Logistics/logistics_p12_dp.pddl"/>
+										<F N="logicmoo_planner/prolog/logicmoo/planner/teps/test_suites/translator-files/Logistics/logistics_p12a_dp.pddl"/>
+										<F N="logicmoo_planner/prolog/logicmoo/planner/teps/test_suites/translator-files/Logistics/logistics_p13_dp.pddl"/>
+										<F N="logicmoo_planner/prolog/logicmoo/planner/teps/test_suites/translator-files/Logistics/logistics_p14_dp.pddl"/>
+										<F N="logicmoo_planner/prolog/logicmoo/planner/teps/test_suites/translator-files/Logistics/logistics_p15_dp.pddl"/>
+										<F N="logicmoo_planner/prolog/logicmoo/planner/teps/test_suites/translator-files/Logistics/logistics_p16_dp.pddl"/>
+										<F N="logicmoo_planner/prolog/logicmoo/planner/teps/test_suites/translator-files/Logistics/logistics_p17_dp.pddl"/>
+										<F N="logicmoo_planner/prolog/logicmoo/planner/teps/test_suites/translator-files/Logistics/logistics_p18_dp.pddl"/>
+										<F N="logicmoo_planner/prolog/logicmoo/planner/teps/test_suites/translator-files/Logistics/logistics_p19_dp.pddl"/>
+										<F N="logicmoo_planner/prolog/logicmoo/planner/teps/test_suites/translator-files/Logistics/logistics_p1_dp.pddl"/>
+										<F N="logicmoo_planner/prolog/logicmoo/planner/teps/test_suites/translator-files/Logistics/logistics_p2_dp.pddl"/>
+										<F N="logicmoo_planner/prolog/logicmoo/planner/teps/test_suites/translator-files/Logistics/logistics_p3_dp.pddl"/>
+										<F N="logicmoo_planner/prolog/logicmoo/planner/teps/test_suites/translator-files/Logistics/logistics_p4_dp.pddl"/>
+										<F N="logicmoo_planner/prolog/logicmoo/planner/teps/test_suites/translator-files/Logistics/logistics_p5_dp.pddl"/>
+										<F N="logicmoo_planner/prolog/logicmoo/planner/teps/test_suites/translator-files/Logistics/logistics_p6_dp.pddl"/>
+										<F N="logicmoo_planner/prolog/logicmoo/planner/teps/test_suites/translator-files/Logistics/logistics_p6a_dp.pddl"/>
+										<F N="logicmoo_planner/prolog/logicmoo/planner/teps/test_suites/translator-files/Logistics/logistics_p6b_dp.pddl"/>
+										<F N="logicmoo_planner/prolog/logicmoo/planner/teps/test_suites/translator-files/Logistics/logistics_p7_dp.pddl"/>
+										<F N="logicmoo_planner/prolog/logicmoo/planner/teps/test_suites/translator-files/Logistics/logistics_p7a_dp.pddl"/>
+										<F N="logicmoo_planner/prolog/logicmoo/planner/teps/test_suites/translator-files/Logistics/logistics_p8_dp.pddl"/>
+										<F N="logicmoo_planner/prolog/logicmoo/planner/teps/test_suites/translator-files/Logistics/logistics_p9_dp.pddl"/>
+										<F N="logicmoo_planner/prolog/logicmoo/planner/teps/test_suites/translator-files/Logistics/p1.pl"/>
+										<F N="logicmoo_planner/prolog/logicmoo/planner/teps/test_suites/translator-files/Logistics/p10.pl"/>
+										<F N="logicmoo_planner/prolog/logicmoo/planner/teps/test_suites/translator-files/Logistics/p10_dp.pddl"/>
+										<F N="logicmoo_planner/prolog/logicmoo/planner/teps/test_suites/translator-files/Logistics/p10_err.txt"/>
+										<F N="logicmoo_planner/prolog/logicmoo/planner/teps/test_suites/translator-files/Logistics/p10_out.txt"/>
+										<F N="logicmoo_planner/prolog/logicmoo/planner/teps/test_suites/translator-files/Logistics/p11.pl"/>
+										<F N="logicmoo_planner/prolog/logicmoo/planner/teps/test_suites/translator-files/Logistics/p11_dp.pddl"/>
+										<F N="logicmoo_planner/prolog/logicmoo/planner/teps/test_suites/translator-files/Logistics/p11_err.txt"/>
+										<F N="logicmoo_planner/prolog/logicmoo/planner/teps/test_suites/translator-files/Logistics/p11_out.txt"/>
+										<F N="logicmoo_planner/prolog/logicmoo/planner/teps/test_suites/translator-files/Logistics/p12.pl"/>
+										<F N="logicmoo_planner/prolog/logicmoo/planner/teps/test_suites/translator-files/Logistics/p12_dp.pddl"/>
+										<F N="logicmoo_planner/prolog/logicmoo/planner/teps/test_suites/translator-files/Logistics/p12_err.txt"/>
+										<F N="logicmoo_planner/prolog/logicmoo/planner/teps/test_suites/translator-files/Logistics/p12_out.txt"/>
+										<F N="logicmoo_planner/prolog/logicmoo/planner/teps/test_suites/translator-files/Logistics/p12a"/>
+										<F N="logicmoo_planner/prolog/logicmoo/planner/teps/test_suites/translator-files/Logistics/p12a.pl"/>
+										<F N="logicmoo_planner/prolog/logicmoo/planner/teps/test_suites/translator-files/Logistics/p12a_dp.pddl"/>
+										<F N="logicmoo_planner/prolog/logicmoo/planner/teps/test_suites/translator-files/Logistics/p12a_err.txt"/>
+										<F N="logicmoo_planner/prolog/logicmoo/planner/teps/test_suites/translator-files/Logistics/p12a_out.txt"/>
+										<F N="logicmoo_planner/prolog/logicmoo/planner/teps/test_suites/translator-files/Logistics/p13.pl"/>
+										<F N="logicmoo_planner/prolog/logicmoo/planner/teps/test_suites/translator-files/Logistics/p13_dp.pddl"/>
+										<F N="logicmoo_planner/prolog/logicmoo/planner/teps/test_suites/translator-files/Logistics/p13_err.txt"/>
+										<F N="logicmoo_planner/prolog/logicmoo/planner/teps/test_suites/translator-files/Logistics/p13_out.txt"/>
+										<F N="logicmoo_planner/prolog/logicmoo/planner/teps/test_suites/translator-files/Logistics/p14.pl"/>
+										<F N="logicmoo_planner/prolog/logicmoo/planner/teps/test_suites/translator-files/Logistics/p14_dp.pddl"/>
+										<F N="logicmoo_planner/prolog/logicmoo/planner/teps/test_suites/translator-files/Logistics/p14_err.txt"/>
+										<F N="logicmoo_planner/prolog/logicmoo/planner/teps/test_suites/translator-files/Logistics/p14_out.txt"/>
+										<F N="logicmoo_planner/prolog/logicmoo/planner/teps/test_suites/translator-files/Logistics/p15.pl"/>
+										<F N="logicmoo_planner/prolog/logicmoo/planner/teps/test_suites/translator-files/Logistics/p15_dp.pddl"/>
+										<F N="logicmoo_planner/prolog/logicmoo/planner/teps/test_suites/translator-files/Logistics/p15_err.txt"/>
+										<F N="logicmoo_planner/prolog/logicmoo/planner/teps/test_suites/translator-files/Logistics/p15_out.txt"/>
+										<F N="logicmoo_planner/prolog/logicmoo/planner/teps/test_suites/translator-files/Logistics/p16.pl"/>
+										<F N="logicmoo_planner/prolog/logicmoo/planner/teps/test_suites/translator-files/Logistics/p16_dp.pddl"/>
+										<F N="logicmoo_planner/prolog/logicmoo/planner/teps/test_suites/translator-files/Logistics/p16_err.txt"/>
+										<F N="logicmoo_planner/prolog/logicmoo/planner/teps/test_suites/translator-files/Logistics/p16_out.txt"/>
+										<F N="logicmoo_planner/prolog/logicmoo/planner/teps/test_suites/translator-files/Logistics/p17.pl"/>
+										<F N="logicmoo_planner/prolog/logicmoo/planner/teps/test_suites/translator-files/Logistics/p17_dp.pddl"/>
+										<F N="logicmoo_planner/prolog/logicmoo/planner/teps/test_suites/translator-files/Logistics/p17_err.txt"/>
+										<F N="logicmoo_planner/prolog/logicmoo/planner/teps/test_suites/translator-files/Logistics/p17_out.txt"/>
+										<F N="logicmoo_planner/prolog/logicmoo/planner/teps/test_suites/translator-files/Logistics/p18.pl"/>
+										<F N="logicmoo_planner/prolog/logicmoo/planner/teps/test_suites/translator-files/Logistics/p18_dp.pddl"/>
+										<F N="logicmoo_planner/prolog/logicmoo/planner/teps/test_suites/translator-files/Logistics/p18_err.txt"/>
+										<F N="logicmoo_planner/prolog/logicmoo/planner/teps/test_suites/translator-files/Logistics/p18_out.txt"/>
+										<F N="logicmoo_planner/prolog/logicmoo/planner/teps/test_suites/translator-files/Logistics/p19.pl"/>
+										<F N="logicmoo_planner/prolog/logicmoo/planner/teps/test_suites/translator-files/Logistics/p19_dp.pddl"/>
+										<F N="logicmoo_planner/prolog/logicmoo/planner/teps/test_suites/translator-files/Logistics/p19_err.txt"/>
+										<F N="logicmoo_planner/prolog/logicmoo/planner/teps/test_suites/translator-files/Logistics/p19_out.txt"/>
+										<F N="logicmoo_planner/prolog/logicmoo/planner/teps/test_suites/translator-files/Logistics/p1_dp.pddl"/>
+										<F N="logicmoo_planner/prolog/logicmoo/planner/teps/test_suites/translator-files/Logistics/p1_err.txt"/>
+										<F N="logicmoo_planner/prolog/logicmoo/planner/teps/test_suites/translator-files/Logistics/p1_out.txt"/>
+										<F N="logicmoo_planner/prolog/logicmoo/planner/teps/test_suites/translator-files/Logistics/p2.pl"/>
+										<F N="logicmoo_planner/prolog/logicmoo/planner/teps/test_suites/translator-files/Logistics/p2_dp.pddl"/>
+										<F N="logicmoo_planner/prolog/logicmoo/planner/teps/test_suites/translator-files/Logistics/p2_err.txt"/>
+										<F N="logicmoo_planner/prolog/logicmoo/planner/teps/test_suites/translator-files/Logistics/p2_out.txt"/>
+										<F N="logicmoo_planner/prolog/logicmoo/planner/teps/test_suites/translator-files/Logistics/p3.pl"/>
+										<F N="logicmoo_planner/prolog/logicmoo/planner/teps/test_suites/translator-files/Logistics/p3_dp.pddl"/>
+										<F N="logicmoo_planner/prolog/logicmoo/planner/teps/test_suites/translator-files/Logistics/p3_err.txt"/>
+										<F N="logicmoo_planner/prolog/logicmoo/planner/teps/test_suites/translator-files/Logistics/p3_out.txt"/>
+										<F N="logicmoo_planner/prolog/logicmoo/planner/teps/test_suites/translator-files/Logistics/p4.pl"/>
+										<F N="logicmoo_planner/prolog/logicmoo/planner/teps/test_suites/translator-files/Logistics/p4_dp.pddl"/>
+										<F N="logicmoo_planner/prolog/logicmoo/planner/teps/test_suites/translator-files/Logistics/p4_err.txt"/>
+										<F N="logicmoo_planner/prolog/logicmoo/planner/teps/test_suites/translator-files/Logistics/p4_out.txt"/>
+										<F N="logicmoo_planner/prolog/logicmoo/planner/teps/test_suites/translator-files/Logistics/p5.pl"/>
+										<F N="logicmoo_planner/prolog/logicmoo/planner/teps/test_suites/translator-files/Logistics/p5_dp.pddl"/>
+										<F N="logicmoo_planner/prolog/logicmoo/planner/teps/test_suites/translator-files/Logistics/p5_err.txt"/>
+										<F N="logicmoo_planner/prolog/logicmoo/planner/teps/test_suites/translator-files/Logistics/p5_out.txt"/>
+										<F N="logicmoo_planner/prolog/logicmoo/planner/teps/test_suites/translator-files/Logistics/p6.pl"/>
+										<F N="logicmoo_planner/prolog/logicmoo/planner/teps/test_suites/translator-files/Logistics/p6_dp.pddl"/>
+										<F N="logicmoo_planner/prolog/logicmoo/planner/teps/test_suites/translator-files/Logistics/p6_err.txt"/>
+										<F N="logicmoo_planner/prolog/logicmoo/planner/teps/test_suites/translator-files/Logistics/p6_out.txt"/>
+										<F N="logicmoo_planner/prolog/logicmoo/planner/teps/test_suites/translator-files/Logistics/p6a.pl"/>
+										<F N="logicmoo_planner/prolog/logicmoo/planner/teps/test_suites/translator-files/Logistics/p6a_dp.pddl"/>
+										<F N="logicmoo_planner/prolog/logicmoo/planner/teps/test_suites/translator-files/Logistics/p6a_err.txt"/>
+										<F N="logicmoo_planner/prolog/logicmoo/planner/teps/test_suites/translator-files/Logistics/p6a_out.txt"/>
+										<F N="logicmoo_planner/prolog/logicmoo/planner/teps/test_suites/translator-files/Logistics/p6b.pl"/>
+										<F N="logicmoo_planner/prolog/logicmoo/planner/teps/test_suites/translator-files/Logistics/p6b_dp.pddl"/>
+										<F N="logicmoo_planner/prolog/logicmoo/planner/teps/test_suites/translator-files/Logistics/p6b_err.txt"/>
+										<F N="logicmoo_planner/prolog/logicmoo/planner/teps/test_suites/translator-files/Logistics/p6b_out.txt"/>
+										<F N="logicmoo_planner/prolog/logicmoo/planner/teps/test_suites/translator-files/Logistics/p7.pl"/>
+										<F N="logicmoo_planner/prolog/logicmoo/planner/teps/test_suites/translator-files/Logistics/p7_dp.pddl"/>
+										<F N="logicmoo_planner/prolog/logicmoo/planner/teps/test_suites/translator-files/Logistics/p7_err.txt"/>
+										<F N="logicmoo_planner/prolog/logicmoo/planner/teps/test_suites/translator-files/Logistics/p7_out.txt"/>
+										<F N="logicmoo_planner/prolog/logicmoo/planner/teps/test_suites/translator-files/Logistics/p7a.pl"/>
+										<F N="logicmoo_planner/prolog/logicmoo/planner/teps/test_suites/translator-files/Logistics/p7a_dp.pddl"/>
+										<F N="logicmoo_planner/prolog/logicmoo/planner/teps/test_suites/translator-files/Logistics/p7a_err.txt"/>
+										<F N="logicmoo_planner/prolog/logicmoo/planner/teps/test_suites/translator-files/Logistics/p7a_out.txt"/>
+										<F N="logicmoo_planner/prolog/logicmoo/planner/teps/test_suites/translator-files/Logistics/p8.pl"/>
+										<F N="logicmoo_planner/prolog/logicmoo/planner/teps/test_suites/translator-files/Logistics/p8_dp.pddl"/>
+										<F N="logicmoo_planner/prolog/logicmoo/planner/teps/test_suites/translator-files/Logistics/p8_err.txt"/>
+										<F N="logicmoo_planner/prolog/logicmoo/planner/teps/test_suites/translator-files/Logistics/p8_out.txt"/>
+										<F N="logicmoo_planner/prolog/logicmoo/planner/teps/test_suites/translator-files/Logistics/p9.pl"/>
+										<F N="logicmoo_planner/prolog/logicmoo/planner/teps/test_suites/translator-files/Logistics/p9_dp.pddl"/>
+										<F N="logicmoo_planner/prolog/logicmoo/planner/teps/test_suites/translator-files/Logistics/p9_err.txt"/>
+										<F N="logicmoo_planner/prolog/logicmoo/planner/teps/test_suites/translator-files/Logistics/p9_out.txt"/>
+										<F N="logicmoo_planner/prolog/logicmoo/planner/teps/test_suites/translator-files/Logistics/plgen.sh"/>
+										<F N="logicmoo_planner/prolog/logicmoo/planner/teps/test_suites/translator-files/Logistics/problems.pl"/>
+										<F N="logicmoo_planner/prolog/logicmoo/planner/teps/test_suites/translator-files/Logistics/run_all.sh"/>
+									</Folder>
+									<Folder Name="Robot">
+										<F N="logicmoo_planner/prolog/logicmoo/planner/teps/test_suites/translator-files/Robot/initial1.pl"/>
+										<F N="logicmoo_planner/prolog/logicmoo/planner/teps/test_suites/translator-files/Robot/initial2.pl"/>
+										<F N="logicmoo_planner/prolog/logicmoo/planner/teps/test_suites/translator-files/Robot/p0.pl"/>
+										<F N="logicmoo_planner/prolog/logicmoo/planner/teps/test_suites/translator-files/Robot/p0_cr.pddl"/>
+										<F N="logicmoo_planner/prolog/logicmoo/planner/teps/test_suites/translator-files/Robot/p0_dp.pddl"/>
+										<F N="logicmoo_planner/prolog/logicmoo/planner/teps/test_suites/translator-files/Robot/p1.pddl"/>
+										<F N="logicmoo_planner/prolog/logicmoo/planner/teps/test_suites/translator-files/Robot/p1.pl"/>
+										<F N="logicmoo_planner/prolog/logicmoo/planner/teps/test_suites/translator-files/Robot/p1_cr.pddl"/>
+										<F N="logicmoo_planner/prolog/logicmoo/planner/teps/test_suites/translator-files/Robot/p1_dp.pddl"/>
+										<F N="logicmoo_planner/prolog/logicmoo/planner/teps/test_suites/translator-files/Robot/p2.pddl"/>
+										<F N="logicmoo_planner/prolog/logicmoo/planner/teps/test_suites/translator-files/Robot/p2.pl"/>
+										<F N="logicmoo_planner/prolog/logicmoo/planner/teps/test_suites/translator-files/Robot/p2_cr.pddl"/>
+										<F N="logicmoo_planner/prolog/logicmoo/planner/teps/test_suites/translator-files/Robot/p2_dp.pddl"/>
+										<F N="logicmoo_planner/prolog/logicmoo/planner/teps/test_suites/translator-files/Robot/p3.pl"/>
+										<F N="logicmoo_planner/prolog/logicmoo/planner/teps/test_suites/translator-files/Robot/p3_cr.pddl"/>
+										<F N="logicmoo_planner/prolog/logicmoo/planner/teps/test_suites/translator-files/Robot/p3_dp.pddl"/>
+										<F N="logicmoo_planner/prolog/logicmoo/planner/teps/test_suites/translator-files/Robot/p4.pl"/>
+										<F N="logicmoo_planner/prolog/logicmoo/planner/teps/test_suites/translator-files/Robot/p4_cr.pddl"/>
+										<F N="logicmoo_planner/prolog/logicmoo/planner/teps/test_suites/translator-files/Robot/p4_dp.pddl"/>
+										<F N="logicmoo_planner/prolog/logicmoo/planner/teps/test_suites/translator-files/Robot/p5.pl"/>
+										<F N="logicmoo_planner/prolog/logicmoo/planner/teps/test_suites/translator-files/Robot/p5_cr.pddl"/>
+										<F N="logicmoo_planner/prolog/logicmoo/planner/teps/test_suites/translator-files/Robot/p5_dp.pddl"/>
+										<F N="logicmoo_planner/prolog/logicmoo/planner/teps/test_suites/translator-files/Robot/p6.pl"/>
+										<F N="logicmoo_planner/prolog/logicmoo/planner/teps/test_suites/translator-files/Robot/p6_cr.pddl"/>
+										<F N="logicmoo_planner/prolog/logicmoo/planner/teps/test_suites/translator-files/Robot/p6_dp.pddl"/>
+										<F N="logicmoo_planner/prolog/logicmoo/planner/teps/test_suites/translator-files/Robot/p7.pl"/>
+										<F N="logicmoo_planner/prolog/logicmoo/planner/teps/test_suites/translator-files/Robot/p7_cr.pddl"/>
+										<F N="logicmoo_planner/prolog/logicmoo/planner/teps/test_suites/translator-files/Robot/p7_dp.pddl"/>
+										<F N="logicmoo_planner/prolog/logicmoo/planner/teps/test_suites/translator-files/Robot/p8"/>
+										<F N="logicmoo_planner/prolog/logicmoo/planner/teps/test_suites/translator-files/Robot/p8.pl"/>
+										<F N="logicmoo_planner/prolog/logicmoo/planner/teps/test_suites/translator-files/Robot/p8_cr.pddl"/>
+										<F N="logicmoo_planner/prolog/logicmoo/planner/teps/test_suites/translator-files/Robot/p8_dp.pddl"/>
+										<F N="logicmoo_planner/prolog/logicmoo/planner/teps/test_suites/translator-files/Robot/p9.pl"/>
+										<F N="logicmoo_planner/prolog/logicmoo/planner/teps/test_suites/translator-files/Robot/p9_cr.pddl"/>
+										<F N="logicmoo_planner/prolog/logicmoo/planner/teps/test_suites/translator-files/Robot/pkt.pl"/>
+										<F N="logicmoo_planner/prolog/logicmoo/planner/teps/test_suites/translator-files/Robot/pkt0.pl"/>
+										<F N="logicmoo_planner/prolog/logicmoo/planner/teps/test_suites/translator-files/Robot/pkt0_cr.pddl"/>
+										<F N="logicmoo_planner/prolog/logicmoo/planner/teps/test_suites/translator-files/Robot/pkt0_dp.pddl"/>
+										<F N="logicmoo_planner/prolog/logicmoo/planner/teps/test_suites/translator-files/Robot/pkt1.pl"/>
+										<F N="logicmoo_planner/prolog/logicmoo/planner/teps/test_suites/translator-files/Robot/pkt10.pl"/>
+										<F N="logicmoo_planner/prolog/logicmoo/planner/teps/test_suites/translator-files/Robot/pkt10_cr.pddl"/>
+										<F N="logicmoo_planner/prolog/logicmoo/planner/teps/test_suites/translator-files/Robot/pkt10_dp.pddl"/>
+										<F N="logicmoo_planner/prolog/logicmoo/planner/teps/test_suites/translator-files/Robot/pkt11.pl"/>
+										<F N="logicmoo_planner/prolog/logicmoo/planner/teps/test_suites/translator-files/Robot/pkt11_cr.pddl"/>
+										<F N="logicmoo_planner/prolog/logicmoo/planner/teps/test_suites/translator-files/Robot/pkt11_dp.pddl"/>
+										<F N="logicmoo_planner/prolog/logicmoo/planner/teps/test_suites/translator-files/Robot/pkt12.pl"/>
+										<F N="logicmoo_planner/prolog/logicmoo/planner/teps/test_suites/translator-files/Robot/pkt12_cr.pddl"/>
+										<F N="logicmoo_planner/prolog/logicmoo/planner/teps/test_suites/translator-files/Robot/pkt12_dp.pddl"/>
+										<F N="logicmoo_planner/prolog/logicmoo/planner/teps/test_suites/translator-files/Robot/pkt13.pl"/>
+										<F N="logicmoo_planner/prolog/logicmoo/planner/teps/test_suites/translator-files/Robot/pkt13_cr.pddl"/>
+										<F N="logicmoo_planner/prolog/logicmoo/planner/teps/test_suites/translator-files/Robot/pkt13_dp.pddl"/>
+										<F N="logicmoo_planner/prolog/logicmoo/planner/teps/test_suites/translator-files/Robot/pkt14.pl"/>
+										<F N="logicmoo_planner/prolog/logicmoo/planner/teps/test_suites/translator-files/Robot/pkt14_cr.pddl"/>
+										<F N="logicmoo_planner/prolog/logicmoo/planner/teps/test_suites/translator-files/Robot/pkt14_dp.pddl"/>
+										<F N="logicmoo_planner/prolog/logicmoo/planner/teps/test_suites/translator-files/Robot/pkt1_cr.pddl"/>
+										<F N="logicmoo_planner/prolog/logicmoo/planner/teps/test_suites/translator-files/Robot/pkt1_dp.pddl"/>
+										<F N="logicmoo_planner/prolog/logicmoo/planner/teps/test_suites/translator-files/Robot/pkt2.pl"/>
+										<F N="logicmoo_planner/prolog/logicmoo/planner/teps/test_suites/translator-files/Robot/pkt2_cr.pddl"/>
+										<F N="logicmoo_planner/prolog/logicmoo/planner/teps/test_suites/translator-files/Robot/pkt2_dp.pddl"/>
+										<F N="logicmoo_planner/prolog/logicmoo/planner/teps/test_suites/translator-files/Robot/pkt3.pl"/>
+										<F N="logicmoo_planner/prolog/logicmoo/planner/teps/test_suites/translator-files/Robot/pkt3_cr.pddl"/>
+										<F N="logicmoo_planner/prolog/logicmoo/planner/teps/test_suites/translator-files/Robot/pkt3_dp.pddl"/>
+										<F N="logicmoo_planner/prolog/logicmoo/planner/teps/test_suites/translator-files/Robot/pkt4.pl"/>
+										<F N="logicmoo_planner/prolog/logicmoo/planner/teps/test_suites/translator-files/Robot/pkt4_cr.pddl"/>
+										<F N="logicmoo_planner/prolog/logicmoo/planner/teps/test_suites/translator-files/Robot/pkt4_dp.pddl"/>
+										<F N="logicmoo_planner/prolog/logicmoo/planner/teps/test_suites/translator-files/Robot/pkt5.pl"/>
+										<F N="logicmoo_planner/prolog/logicmoo/planner/teps/test_suites/translator-files/Robot/pkt5_cr.pddl"/>
+										<F N="logicmoo_planner/prolog/logicmoo/planner/teps/test_suites/translator-files/Robot/pkt5_dp.pddl"/>
+										<F N="logicmoo_planner/prolog/logicmoo/planner/teps/test_suites/translator-files/Robot/pkt6.pl"/>
+										<F N="logicmoo_planner/prolog/logicmoo/planner/teps/test_suites/translator-files/Robot/pkt6_cr.pddl"/>
+										<F N="logicmoo_planner/prolog/logicmoo/planner/teps/test_suites/translator-files/Robot/pkt6_dp.pddl"/>
+										<F N="logicmoo_planner/prolog/logicmoo/planner/teps/test_suites/translator-files/Robot/pkt7.pl"/>
+										<F N="logicmoo_planner/prolog/logicmoo/planner/teps/test_suites/translator-files/Robot/pkt7_cr.pddl"/>
+										<F N="logicmoo_planner/prolog/logicmoo/planner/teps/test_suites/translator-files/Robot/pkt7_dp.pddl"/>
+										<F N="logicmoo_planner/prolog/logicmoo/planner/teps/test_suites/translator-files/Robot/pkt8.pl"/>
+										<F N="logicmoo_planner/prolog/logicmoo/planner/teps/test_suites/translator-files/Robot/pkt8_cr.pddl"/>
+										<F N="logicmoo_planner/prolog/logicmoo/planner/teps/test_suites/translator-files/Robot/pkt8_dp.pddl"/>
+										<F N="logicmoo_planner/prolog/logicmoo/planner/teps/test_suites/translator-files/Robot/pkt9.p"/>
+										<F N="logicmoo_planner/prolog/logicmoo/planner/teps/test_suites/translator-files/Robot/pkt9.pl"/>
+										<F N="logicmoo_planner/prolog/logicmoo/planner/teps/test_suites/translator-files/Robot/pkt9_cr.pddl"/>
+										<F N="logicmoo_planner/prolog/logicmoo/planner/teps/test_suites/translator-files/Robot/pkt9_dp.pddl"/>
+										<F N="logicmoo_planner/prolog/logicmoo/planner/teps/test_suites/translator-files/Robot/pkt_initial.pl"/>
+										<F N="logicmoo_planner/prolog/logicmoo/planner/teps/test_suites/translator-files/Robot/problems_paper_icaps.pl"/>
+										<F N="logicmoo_planner/prolog/logicmoo/planner/teps/test_suites/translator-files/Robot/q0.pl"/>
+										<F N="logicmoo_planner/prolog/logicmoo/planner/teps/test_suites/translator-files/Robot/q0_cr.pddl"/>
+										<F N="logicmoo_planner/prolog/logicmoo/planner/teps/test_suites/translator-files/Robot/q0_dp.pddl"/>
+										<F N="logicmoo_planner/prolog/logicmoo/planner/teps/test_suites/translator-files/Robot/q1.pl"/>
+										<F N="logicmoo_planner/prolog/logicmoo/planner/teps/test_suites/translator-files/Robot/q1_cr.pddl"/>
+										<F N="logicmoo_planner/prolog/logicmoo/planner/teps/test_suites/translator-files/Robot/q1_dp.pddl"/>
+										<F N="logicmoo_planner/prolog/logicmoo/planner/teps/test_suites/translator-files/Robot/q2.pl"/>
+										<F N="logicmoo_planner/prolog/logicmoo/planner/teps/test_suites/translator-files/Robot/q2_cr.pddl"/>
+										<F N="logicmoo_planner/prolog/logicmoo/planner/teps/test_suites/translator-files/Robot/q2_dp.pddl"/>
+										<F N="logicmoo_planner/prolog/logicmoo/planner/teps/test_suites/translator-files/Robot/q3.pl"/>
+										<F N="logicmoo_planner/prolog/logicmoo/planner/teps/test_suites/translator-files/Robot/q3_cr.pddl"/>
+										<F N="logicmoo_planner/prolog/logicmoo/planner/teps/test_suites/translator-files/Robot/q3_dp.pddl"/>
+										<F N="logicmoo_planner/prolog/logicmoo/planner/teps/test_suites/translator-files/Robot/q4.pl"/>
+										<F N="logicmoo_planner/prolog/logicmoo/planner/teps/test_suites/translator-files/Robot/q4_cr.pddl"/>
+										<F N="logicmoo_planner/prolog/logicmoo/planner/teps/test_suites/translator-files/Robot/q4_dp.pddl"/>
+										<F N="logicmoo_planner/prolog/logicmoo/planner/teps/test_suites/translator-files/Robot/q5.pl"/>
+										<F N="logicmoo_planner/prolog/logicmoo/planner/teps/test_suites/translator-files/Robot/q54.pl"/>
+										<F N="logicmoo_planner/prolog/logicmoo/planner/teps/test_suites/translator-files/Robot/q54_cr.pddl"/>
+										<F N="logicmoo_planner/prolog/logicmoo/planner/teps/test_suites/translator-files/Robot/q54_dp.pddl"/>
+										<F N="logicmoo_planner/prolog/logicmoo/planner/teps/test_suites/translator-files/Robot/q55.pl"/>
+										<F N="logicmoo_planner/prolog/logicmoo/planner/teps/test_suites/translator-files/Robot/q55_cr.pddl"/>
+										<F N="logicmoo_planner/prolog/logicmoo/planner/teps/test_suites/translator-files/Robot/q55_dp.pddl"/>
+										<F N="logicmoo_planner/prolog/logicmoo/planner/teps/test_suites/translator-files/Robot/q5_cr.pddl"/>
+										<F N="logicmoo_planner/prolog/logicmoo/planner/teps/test_suites/translator-files/Robot/q5_dp.pddl"/>
+										<F N="logicmoo_planner/prolog/logicmoo/planner/teps/test_suites/translator-files/Robot/q6.pl"/>
+										<F N="logicmoo_planner/prolog/logicmoo/planner/teps/test_suites/translator-files/Robot/q64.pl"/>
+										<F N="logicmoo_planner/prolog/logicmoo/planner/teps/test_suites/translator-files/Robot/q64_cr.pddl"/>
+										<F N="logicmoo_planner/prolog/logicmoo/planner/teps/test_suites/translator-files/Robot/q65.pl"/>
+										<F N="logicmoo_planner/prolog/logicmoo/planner/teps/test_suites/translator-files/Robot/q65_cr.pddl"/>
+										<F N="logicmoo_planner/prolog/logicmoo/planner/teps/test_suites/translator-files/Robot/q6_cr.pddl"/>
+										<F N="logicmoo_planner/prolog/logicmoo/planner/teps/test_suites/translator-files/Robot/q6_dp.pddl"/>
+										<F N="logicmoo_planner/prolog/logicmoo/planner/teps/test_suites/translator-files/Robot/q7.pl"/>
+										<F N="logicmoo_planner/prolog/logicmoo/planner/teps/test_suites/translator-files/Robot/q7_cr.pddl"/>
+										<F N="logicmoo_planner/prolog/logicmoo/planner/teps/test_suites/translator-files/Robot/q7_dp.pddl"/>
+										<F N="logicmoo_planner/prolog/logicmoo/planner/teps/test_suites/translator-files/Robot/rooms.pl"/>
+										<F N="logicmoo_planner/prolog/logicmoo/planner/teps/test_suites/translator-files/Robot/rooms_p0_cr.pddl"/>
+										<F N="logicmoo_planner/prolog/logicmoo/planner/teps/test_suites/translator-files/Robot/rooms_p0_dp.pddl"/>
+										<F N="logicmoo_planner/prolog/logicmoo/planner/teps/test_suites/translator-files/Robot/rooms_p1.pddl"/>
+										<F N="logicmoo_planner/prolog/logicmoo/planner/teps/test_suites/translator-files/Robot/rooms_p1_cr.pddl"/>
+										<F N="logicmoo_planner/prolog/logicmoo/planner/teps/test_suites/translator-files/Robot/rooms_p1_dp.pddl"/>
+										<F N="logicmoo_planner/prolog/logicmoo/planner/teps/test_suites/translator-files/Robot/rooms_p2.pddl"/>
+										<F N="logicmoo_planner/prolog/logicmoo/planner/teps/test_suites/translator-files/Robot/rooms_p2_cr.pddl"/>
+										<F N="logicmoo_planner/prolog/logicmoo/planner/teps/test_suites/translator-files/Robot/rooms_p2_dp.pddl"/>
+										<F N="logicmoo_planner/prolog/logicmoo/planner/teps/test_suites/translator-files/Robot/rooms_p3_cr.pddl"/>
+										<F N="logicmoo_planner/prolog/logicmoo/planner/teps/test_suites/translator-files/Robot/rooms_p3_dp.pddl"/>
+										<F N="logicmoo_planner/prolog/logicmoo/planner/teps/test_suites/translator-files/Robot/rooms_p4_cr.pddl"/>
+										<F N="logicmoo_planner/prolog/logicmoo/planner/teps/test_suites/translator-files/Robot/rooms_p4_dp.pddl"/>
+										<F N="logicmoo_planner/prolog/logicmoo/planner/teps/test_suites/translator-files/Robot/rooms_p5_cr.pddl"/>
+										<F N="logicmoo_planner/prolog/logicmoo/planner/teps/test_suites/translator-files/Robot/rooms_p5_dp.pddl"/>
+										<F N="logicmoo_planner/prolog/logicmoo/planner/teps/test_suites/translator-files/Robot/rooms_p6_cr.pddl"/>
+										<F N="logicmoo_planner/prolog/logicmoo/planner/teps/test_suites/translator-files/Robot/rooms_p6_dp.pddl"/>
+										<F N="logicmoo_planner/prolog/logicmoo/planner/teps/test_suites/translator-files/Robot/rooms_p7_cr.pddl"/>
+										<F N="logicmoo_planner/prolog/logicmoo/planner/teps/test_suites/translator-files/Robot/rooms_p7_dp.pddl"/>
+										<F N="logicmoo_planner/prolog/logicmoo/planner/teps/test_suites/translator-files/Robot/rooms_p8_cr.pddl"/>
+										<F N="logicmoo_planner/prolog/logicmoo/planner/teps/test_suites/translator-files/Robot/rooms_p8_dp.pddl"/>
+										<F N="logicmoo_planner/prolog/logicmoo/planner/teps/test_suites/translator-files/Robot/rooms_p9_cr.pddl"/>
+										<F N="logicmoo_planner/prolog/logicmoo/planner/teps/test_suites/translator-files/Robot/rooms_pkt0_cr.pddl"/>
+										<F N="logicmoo_planner/prolog/logicmoo/planner/teps/test_suites/translator-files/Robot/rooms_pkt0_dp.pddl"/>
+										<F N="logicmoo_planner/prolog/logicmoo/planner/teps/test_suites/translator-files/Robot/rooms_pkt10_cr.pddl"/>
+										<F N="logicmoo_planner/prolog/logicmoo/planner/teps/test_suites/translator-files/Robot/rooms_pkt10_dp.pddl"/>
+										<F N="logicmoo_planner/prolog/logicmoo/planner/teps/test_suites/translator-files/Robot/rooms_pkt11_cr.pddl"/>
+										<F N="logicmoo_planner/prolog/logicmoo/planner/teps/test_suites/translator-files/Robot/rooms_pkt11_dp.pddl"/>
+										<F N="logicmoo_planner/prolog/logicmoo/planner/teps/test_suites/translator-files/Robot/rooms_pkt12_cr.pddl"/>
+										<F N="logicmoo_planner/prolog/logicmoo/planner/teps/test_suites/translator-files/Robot/rooms_pkt12_dp.pddl"/>
+										<F N="logicmoo_planner/prolog/logicmoo/planner/teps/test_suites/translator-files/Robot/rooms_pkt13_cr.pddl"/>
+										<F N="logicmoo_planner/prolog/logicmoo/planner/teps/test_suites/translator-files/Robot/rooms_pkt13_dp.pddl"/>
+										<F N="logicmoo_planner/prolog/logicmoo/planner/teps/test_suites/translator-files/Robot/rooms_pkt14_cr.pddl"/>
+										<F N="logicmoo_planner/prolog/logicmoo/planner/teps/test_suites/translator-files/Robot/rooms_pkt14_dp.pddl"/>
+										<F N="logicmoo_planner/prolog/logicmoo/planner/teps/test_suites/translator-files/Robot/rooms_pkt1_cr.pddl"/>
+										<F N="logicmoo_planner/prolog/logicmoo/planner/teps/test_suites/translator-files/Robot/rooms_pkt1_dp.pddl"/>
+										<F N="logicmoo_planner/prolog/logicmoo/planner/teps/test_suites/translator-files/Robot/rooms_pkt2_cr.pddl"/>
+										<F N="logicmoo_planner/prolog/logicmoo/planner/teps/test_suites/translator-files/Robot/rooms_pkt2_dp.pddl"/>
+										<F N="logicmoo_planner/prolog/logicmoo/planner/teps/test_suites/translator-files/Robot/rooms_pkt3_cr.pddl"/>
+										<F N="logicmoo_planner/prolog/logicmoo/planner/teps/test_suites/translator-files/Robot/rooms_pkt3_dp.pddl"/>
+										<F N="logicmoo_planner/prolog/logicmoo/planner/teps/test_suites/translator-files/Robot/rooms_pkt4_cr.pddl"/>
+										<F N="logicmoo_planner/prolog/logicmoo/planner/teps/test_suites/translator-files/Robot/rooms_pkt4_dp.pddl"/>
+										<F N="logicmoo_planner/prolog/logicmoo/planner/teps/test_suites/translator-files/Robot/rooms_pkt5_cr.pddl"/>
+										<F N="logicmoo_planner/prolog/logicmoo/planner/teps/test_suites/translator-files/Robot/rooms_pkt5_dp.pddl"/>
+										<F N="logicmoo_planner/prolog/logicmoo/planner/teps/test_suites/translator-files/Robot/rooms_pkt6_cr.pddl"/>
+										<F N="logicmoo_planner/prolog/logicmoo/planner/teps/test_suites/translator-files/Robot/rooms_pkt6_dp.pddl"/>
+										<F N="logicmoo_planner/prolog/logicmoo/planner/teps/test_suites/translator-files/Robot/rooms_pkt7_cr.pddl"/>
+										<F N="logicmoo_planner/prolog/logicmoo/planner/teps/test_suites/translator-files/Robot/rooms_pkt7_dp.pddl"/>
+										<F N="logicmoo_planner/prolog/logicmoo/planner/teps/test_suites/translator-files/Robot/rooms_pkt8_cr.pddl"/>
+										<F N="logicmoo_planner/prolog/logicmoo/planner/teps/test_suites/translator-files/Robot/rooms_pkt8_dp.pddl"/>
+										<F N="logicmoo_planner/prolog/logicmoo/planner/teps/test_suites/translator-files/Robot/rooms_pkt9_cr.pddl"/>
+										<F N="logicmoo_planner/prolog/logicmoo/planner/teps/test_suites/translator-files/Robot/rooms_pkt9_dp.pddl"/>
+										<F N="logicmoo_planner/prolog/logicmoo/planner/teps/test_suites/translator-files/Robot/rooms_q0_cr.pddl"/>
+										<F N="logicmoo_planner/prolog/logicmoo/planner/teps/test_suites/translator-files/Robot/rooms_q0_dp.pddl"/>
+										<F N="logicmoo_planner/prolog/logicmoo/planner/teps/test_suites/translator-files/Robot/rooms_q1_cr.pddl"/>
+										<F N="logicmoo_planner/prolog/logicmoo/planner/teps/test_suites/translator-files/Robot/rooms_q1_dp.pddl"/>
+										<F N="logicmoo_planner/prolog/logicmoo/planner/teps/test_suites/translator-files/Robot/rooms_q2_cr.pddl"/>
+										<F N="logicmoo_planner/prolog/logicmoo/planner/teps/test_suites/translator-files/Robot/rooms_q2_dp.pddl"/>
+										<F N="logicmoo_planner/prolog/logicmoo/planner/teps/test_suites/translator-files/Robot/rooms_q3_cr.pddl"/>
+										<F N="logicmoo_planner/prolog/logicmoo/planner/teps/test_suites/translator-files/Robot/rooms_q3_dp.pddl"/>
+										<F N="logicmoo_planner/prolog/logicmoo/planner/teps/test_suites/translator-files/Robot/rooms_q4_cr.pddl"/>
+										<F N="logicmoo_planner/prolog/logicmoo/planner/teps/test_suites/translator-files/Robot/rooms_q4_dp.pddl"/>
+										<F N="logicmoo_planner/prolog/logicmoo/planner/teps/test_suites/translator-files/Robot/rooms_q54_cr.pddl"/>
+										<F N="logicmoo_planner/prolog/logicmoo/planner/teps/test_suites/translator-files/Robot/rooms_q54_dp.pddl"/>
+										<F N="logicmoo_planner/prolog/logicmoo/planner/teps/test_suites/translator-files/Robot/rooms_q55_cr.pddl"/>
+										<F N="logicmoo_planner/prolog/logicmoo/planner/teps/test_suites/translator-files/Robot/rooms_q55_dp.pddl"/>
+										<F N="logicmoo_planner/prolog/logicmoo/planner/teps/test_suites/translator-files/Robot/rooms_q5_cr.pddl"/>
+										<F N="logicmoo_planner/prolog/logicmoo/planner/teps/test_suites/translator-files/Robot/rooms_q5_dp.pddl"/>
+										<F N="logicmoo_planner/prolog/logicmoo/planner/teps/test_suites/translator-files/Robot/rooms_q64_cr.pddl"/>
+										<F N="logicmoo_planner/prolog/logicmoo/planner/teps/test_suites/translator-files/Robot/rooms_q65_cr.pddl"/>
+										<F N="logicmoo_planner/prolog/logicmoo/planner/teps/test_suites/translator-files/Robot/rooms_q6_cr.pddl"/>
+										<F N="logicmoo_planner/prolog/logicmoo/planner/teps/test_suites/translator-files/Robot/rooms_q6_dp.pddl"/>
+										<F N="logicmoo_planner/prolog/logicmoo/planner/teps/test_suites/translator-files/Robot/rooms_q7_cr.pddl"/>
+										<F N="logicmoo_planner/prolog/logicmoo/planner/teps/test_suites/translator-files/Robot/rooms_q7_dp.pddl"/>
+									</Folder>
+									<Folder Name="ZenoTravel">
+										<F N="logicmoo_planner/prolog/logicmoo/planner/teps/test_suites/translator-files/ZenoTravel/all"/>
+										<F N="logicmoo_planner/prolog/logicmoo/planner/teps/test_suites/translator-files/ZenoTravel/extract_results.sh"/>
+										<F N="logicmoo_planner/prolog/logicmoo/planner/teps/test_suites/translator-files/ZenoTravel/initial1.pl"/>
+										<F N="logicmoo_planner/prolog/logicmoo/planner/teps/test_suites/translator-files/ZenoTravel/p1.pl"/>
+										<F N="logicmoo_planner/prolog/logicmoo/planner/teps/test_suites/translator-files/ZenoTravel/p10.pl"/>
+										<F N="logicmoo_planner/prolog/logicmoo/planner/teps/test_suites/translator-files/ZenoTravel/p10_dp.pddl"/>
+										<F N="logicmoo_planner/prolog/logicmoo/planner/teps/test_suites/translator-files/ZenoTravel/p10_err.txt"/>
+										<F N="logicmoo_planner/prolog/logicmoo/planner/teps/test_suites/translator-files/ZenoTravel/p10_out.txt"/>
+										<F N="logicmoo_planner/prolog/logicmoo/planner/teps/test_suites/translator-files/ZenoTravel/p11.pl"/>
+										<F N="logicmoo_planner/prolog/logicmoo/planner/teps/test_suites/translator-files/ZenoTravel/p11_dp.pddl"/>
+										<F N="logicmoo_planner/prolog/logicmoo/planner/teps/test_suites/translator-files/ZenoTravel/p11_err.txt"/>
+										<F N="logicmoo_planner/prolog/logicmoo/planner/teps/test_suites/translator-files/ZenoTravel/p11_out.txt"/>
+										<F N="logicmoo_planner/prolog/logicmoo/planner/teps/test_suites/translator-files/ZenoTravel/p11a.pl"/>
+										<F N="logicmoo_planner/prolog/logicmoo/planner/teps/test_suites/translator-files/ZenoTravel/p11a_dp.pddl"/>
+										<F N="logicmoo_planner/prolog/logicmoo/planner/teps/test_suites/translator-files/ZenoTravel/p11a_err.txt"/>
+										<F N="logicmoo_planner/prolog/logicmoo/planner/teps/test_suites/translator-files/ZenoTravel/p11a_out.txt"/>
+										<F N="logicmoo_planner/prolog/logicmoo/planner/teps/test_suites/translator-files/ZenoTravel/p12.pl"/>
+										<F N="logicmoo_planner/prolog/logicmoo/planner/teps/test_suites/translator-files/ZenoTravel/p12_dp.pddl"/>
+										<F N="logicmoo_planner/prolog/logicmoo/planner/teps/test_suites/translator-files/ZenoTravel/p12_err.txt"/>
+										<F N="logicmoo_planner/prolog/logicmoo/planner/teps/test_suites/translator-files/ZenoTravel/p12_out.txt"/>
+										<F N="logicmoo_planner/prolog/logicmoo/planner/teps/test_suites/translator-files/ZenoTravel/p12a.pl"/>
+										<F N="logicmoo_planner/prolog/logicmoo/planner/teps/test_suites/translator-files/ZenoTravel/p12a_dp.pddl"/>
+										<F N="logicmoo_planner/prolog/logicmoo/planner/teps/test_suites/translator-files/ZenoTravel/p12a_err.txt"/>
+										<F N="logicmoo_planner/prolog/logicmoo/planner/teps/test_suites/translator-files/ZenoTravel/p12a_out.txt"/>
+										<F N="logicmoo_planner/prolog/logicmoo/planner/teps/test_suites/translator-files/ZenoTravel/p13.pl"/>
+										<F N="logicmoo_planner/prolog/logicmoo/planner/teps/test_suites/translator-files/ZenoTravel/p13_dp.pddl"/>
+										<F N="logicmoo_planner/prolog/logicmoo/planner/teps/test_suites/translator-files/ZenoTravel/p13_err.txt"/>
+										<F N="logicmoo_planner/prolog/logicmoo/planner/teps/test_suites/translator-files/ZenoTravel/p13_out.txt"/>
+										<F N="logicmoo_planner/prolog/logicmoo/planner/teps/test_suites/translator-files/ZenoTravel/p13a.pl"/>
+										<F N="logicmoo_planner/prolog/logicmoo/planner/teps/test_suites/translator-files/ZenoTravel/p13a_dp.pddl"/>
+										<F N="logicmoo_planner/prolog/logicmoo/planner/teps/test_suites/translator-files/ZenoTravel/p13a_err.txt"/>
+										<F N="logicmoo_planner/prolog/logicmoo/planner/teps/test_suites/translator-files/ZenoTravel/p13a_out.txt"/>
+										<F N="logicmoo_planner/prolog/logicmoo/planner/teps/test_suites/translator-files/ZenoTravel/p14.pl"/>
+										<F N="logicmoo_planner/prolog/logicmoo/planner/teps/test_suites/translator-files/ZenoTravel/p14_dp.pddl"/>
+										<F N="logicmoo_planner/prolog/logicmoo/planner/teps/test_suites/translator-files/ZenoTravel/p14_err.txt"/>
+										<F N="logicmoo_planner/prolog/logicmoo/planner/teps/test_suites/translator-files/ZenoTravel/p14_out.txt"/>
+										<F N="logicmoo_planner/prolog/logicmoo/planner/teps/test_suites/translator-files/ZenoTravel/p14a.pl"/>
+										<F N="logicmoo_planner/prolog/logicmoo/planner/teps/test_suites/translator-files/ZenoTravel/p14a_dp.pddl"/>
+										<F N="logicmoo_planner/prolog/logicmoo/planner/teps/test_suites/translator-files/ZenoTravel/p14a_err.txt"/>
+										<F N="logicmoo_planner/prolog/logicmoo/planner/teps/test_suites/translator-files/ZenoTravel/p14a_out.txt"/>
+										<F N="logicmoo_planner/prolog/logicmoo/planner/teps/test_suites/translator-files/ZenoTravel/p14b.pl"/>
+										<F N="logicmoo_planner/prolog/logicmoo/planner/teps/test_suites/translator-files/ZenoTravel/p14b_dp.pddl"/>
+										<F N="logicmoo_planner/prolog/logicmoo/planner/teps/test_suites/translator-files/ZenoTravel/p14b_err.txt"/>
+										<F N="logicmoo_planner/prolog/logicmoo/planner/teps/test_suites/translator-files/ZenoTravel/p14b_out.txt"/>
+										<F N="logicmoo_planner/prolog/logicmoo/planner/teps/test_suites/translator-files/ZenoTravel/p14c.pl"/>
+										<F N="logicmoo_planner/prolog/logicmoo/planner/teps/test_suites/translator-files/ZenoTravel/p14c_dp.pddl"/>
+										<F N="logicmoo_planner/prolog/logicmoo/planner/teps/test_suites/translator-files/ZenoTravel/p14c_err.txt"/>
+										<F N="logicmoo_planner/prolog/logicmoo/planner/teps/test_suites/translator-files/ZenoTravel/p14c_out.txt"/>
+										<F N="logicmoo_planner/prolog/logicmoo/planner/teps/test_suites/translator-files/ZenoTravel/p15.pl"/>
+										<F N="logicmoo_planner/prolog/logicmoo/planner/teps/test_suites/translator-files/ZenoTravel/p15_dp.pddl"/>
+										<F N="logicmoo_planner/prolog/logicmoo/planner/teps/test_suites/translator-files/ZenoTravel/p15_err.txt"/>
+										<F N="logicmoo_planner/prolog/logicmoo/planner/teps/test_suites/translator-files/ZenoTravel/p15_out.txt"/>
+										<F N="logicmoo_planner/prolog/logicmoo/planner/teps/test_suites/translator-files/ZenoTravel/p15a.pl"/>
+										<F N="logicmoo_planner/prolog/logicmoo/planner/teps/test_suites/translator-files/ZenoTravel/p15a_dp.pddl"/>
+										<F N="logicmoo_planner/prolog/logicmoo/planner/teps/test_suites/translator-files/ZenoTravel/p15a_err.txt"/>
+										<F N="logicmoo_planner/prolog/logicmoo/planner/teps/test_suites/translator-files/ZenoTravel/p15a_out.txt"/>
+										<F N="logicmoo_planner/prolog/logicmoo/planner/teps/test_suites/translator-files/ZenoTravel/p15b.pl"/>
+										<F N="logicmoo_planner/prolog/logicmoo/planner/teps/test_suites/translator-files/ZenoTravel/p15b_dp.pddl"/>
+										<F N="logicmoo_planner/prolog/logicmoo/planner/teps/test_suites/translator-files/ZenoTravel/p15b_err.txt"/>
+										<F N="logicmoo_planner/prolog/logicmoo/planner/teps/test_suites/translator-files/ZenoTravel/p15b_out.txt"/>
+										<F N="logicmoo_planner/prolog/logicmoo/planner/teps/test_suites/translator-files/ZenoTravel/p16.pl"/>
+										<F N="logicmoo_planner/prolog/logicmoo/planner/teps/test_suites/translator-files/ZenoTravel/p16_dp.pddl"/>
+										<F N="logicmoo_planner/prolog/logicmoo/planner/teps/test_suites/translator-files/ZenoTravel/p16_err.txt"/>
+										<F N="logicmoo_planner/prolog/logicmoo/planner/teps/test_suites/translator-files/ZenoTravel/p16_out.txt"/>
+										<F N="logicmoo_planner/prolog/logicmoo/planner/teps/test_suites/translator-files/ZenoTravel/p17.pl"/>
+										<F N="logicmoo_planner/prolog/logicmoo/planner/teps/test_suites/translator-files/ZenoTravel/p17_dp.pddl"/>
+										<F N="logicmoo_planner/prolog/logicmoo/planner/teps/test_suites/translator-files/ZenoTravel/p17_err.txt"/>
+										<F N="logicmoo_planner/prolog/logicmoo/planner/teps/test_suites/translator-files/ZenoTravel/p17_out.txt"/>
+										<F N="logicmoo_planner/prolog/logicmoo/planner/teps/test_suites/translator-files/ZenoTravel/p18.pl"/>
+										<F N="logicmoo_planner/prolog/logicmoo/planner/teps/test_suites/translator-files/ZenoTravel/p18_dp.pddl"/>
+										<F N="logicmoo_planner/prolog/logicmoo/planner/teps/test_suites/translator-files/ZenoTravel/p18_err.txt"/>
+										<F N="logicmoo_planner/prolog/logicmoo/planner/teps/test_suites/translator-files/ZenoTravel/p18_out.txt"/>
+										<F N="logicmoo_planner/prolog/logicmoo/planner/teps/test_suites/translator-files/ZenoTravel/p18a.pl"/>
+										<F N="logicmoo_planner/prolog/logicmoo/planner/teps/test_suites/translator-files/ZenoTravel/p18a_dp.pddl"/>
+										<F N="logicmoo_planner/prolog/logicmoo/planner/teps/test_suites/translator-files/ZenoTravel/p18a_err.txt"/>
+										<F N="logicmoo_planner/prolog/logicmoo/planner/teps/test_suites/translator-files/ZenoTravel/p18a_out.txt"/>
+										<F N="logicmoo_planner/prolog/logicmoo/planner/teps/test_suites/translator-files/ZenoTravel/p19.pl"/>
+										<F N="logicmoo_planner/prolog/logicmoo/planner/teps/test_suites/translator-files/ZenoTravel/p19_dp.pddl"/>
+										<F N="logicmoo_planner/prolog/logicmoo/planner/teps/test_suites/translator-files/ZenoTravel/p19_err.txt"/>
+										<F N="logicmoo_planner/prolog/logicmoo/planner/teps/test_suites/translator-files/ZenoTravel/p19_out.txt"/>
+										<F N="logicmoo_planner/prolog/logicmoo/planner/teps/test_suites/translator-files/ZenoTravel/p1_dp.pddl"/>
+										<F N="logicmoo_planner/prolog/logicmoo/planner/teps/test_suites/translator-files/ZenoTravel/p1_err.txt"/>
+										<F N="logicmoo_planner/prolog/logicmoo/planner/teps/test_suites/translator-files/ZenoTravel/p1_out.txt"/>
+										<F N="logicmoo_planner/prolog/logicmoo/planner/teps/test_suites/translator-files/ZenoTravel/p2.pl"/>
+										<F N="logicmoo_planner/prolog/logicmoo/planner/teps/test_suites/translator-files/ZenoTravel/p2_dp.pddl"/>
+										<F N="logicmoo_planner/prolog/logicmoo/planner/teps/test_suites/translator-files/ZenoTravel/p2_err.txt"/>
+										<F N="logicmoo_planner/prolog/logicmoo/planner/teps/test_suites/translator-files/ZenoTravel/p2_out.txt"/>
+										<F N="logicmoo_planner/prolog/logicmoo/planner/teps/test_suites/translator-files/ZenoTravel/p3.pl"/>
+										<F N="logicmoo_planner/prolog/logicmoo/planner/teps/test_suites/translator-files/ZenoTravel/p3_dp.pddl"/>
+										<F N="logicmoo_planner/prolog/logicmoo/planner/teps/test_suites/translator-files/ZenoTravel/p3_err.txt"/>
+										<F N="logicmoo_planner/prolog/logicmoo/planner/teps/test_suites/translator-files/ZenoTravel/p3_out.txt"/>
+										<F N="logicmoo_planner/prolog/logicmoo/planner/teps/test_suites/translator-files/ZenoTravel/p4.pl"/>
+										<F N="logicmoo_planner/prolog/logicmoo/planner/teps/test_suites/translator-files/ZenoTravel/p4_dp.pddl"/>
+										<F N="logicmoo_planner/prolog/logicmoo/planner/teps/test_suites/translator-files/ZenoTravel/p4_err.txt"/>
+										<F N="logicmoo_planner/prolog/logicmoo/planner/teps/test_suites/translator-files/ZenoTravel/p4_out.txt"/>
+										<F N="logicmoo_planner/prolog/logicmoo/planner/teps/test_suites/translator-files/ZenoTravel/p5.pl"/>
+										<F N="logicmoo_planner/prolog/logicmoo/planner/teps/test_suites/translator-files/ZenoTravel/p5_dp.pddl"/>
+										<F N="logicmoo_planner/prolog/logicmoo/planner/teps/test_suites/translator-files/ZenoTravel/p5_err.txt"/>
+										<F N="logicmoo_planner/prolog/logicmoo/planner/teps/test_suites/translator-files/ZenoTravel/p5_out.txt"/>
+										<F N="logicmoo_planner/prolog/logicmoo/planner/teps/test_suites/translator-files/ZenoTravel/p6.pl"/>
+										<F N="logicmoo_planner/prolog/logicmoo/planner/teps/test_suites/translator-files/ZenoTravel/p6_dp.pddl"/>
+										<F N="logicmoo_planner/prolog/logicmoo/planner/teps/test_suites/translator-files/ZenoTravel/p6_err.txt"/>
+										<F N="logicmoo_planner/prolog/logicmoo/planner/teps/test_suites/translator-files/ZenoTravel/p6_out.txt"/>
+										<F N="logicmoo_planner/prolog/logicmoo/planner/teps/test_suites/translator-files/ZenoTravel/p7.pl"/>
+										<F N="logicmoo_planner/prolog/logicmoo/planner/teps/test_suites/translator-files/ZenoTravel/p7_dp.pddl"/>
+										<F N="logicmoo_planner/prolog/logicmoo/planner/teps/test_suites/translator-files/ZenoTravel/p7_err.txt"/>
+										<F N="logicmoo_planner/prolog/logicmoo/planner/teps/test_suites/translator-files/ZenoTravel/p7_out.txt"/>
+										<F N="logicmoo_planner/prolog/logicmoo/planner/teps/test_suites/translator-files/ZenoTravel/p8.pl"/>
+										<F N="logicmoo_planner/prolog/logicmoo/planner/teps/test_suites/translator-files/ZenoTravel/p8_dp.pddl"/>
+										<F N="logicmoo_planner/prolog/logicmoo/planner/teps/test_suites/translator-files/ZenoTravel/p8_err.txt"/>
+										<F N="logicmoo_planner/prolog/logicmoo/planner/teps/test_suites/translator-files/ZenoTravel/p8_out.txt"/>
+										<F N="logicmoo_planner/prolog/logicmoo/planner/teps/test_suites/translator-files/ZenoTravel/p9.pl"/>
+										<F N="logicmoo_planner/prolog/logicmoo/planner/teps/test_suites/translator-files/ZenoTravel/p9_dp.pddl"/>
+										<F N="logicmoo_planner/prolog/logicmoo/planner/teps/test_suites/translator-files/ZenoTravel/p9_err.txt"/>
+										<F N="logicmoo_planner/prolog/logicmoo/planner/teps/test_suites/translator-files/ZenoTravel/p9_out.txt"/>
+										<F N="logicmoo_planner/prolog/logicmoo/planner/teps/test_suites/translator-files/ZenoTravel/plgen.sh"/>
+										<F N="logicmoo_planner/prolog/logicmoo/planner/teps/test_suites/translator-files/ZenoTravel/problems.pl"/>
+										<F N="logicmoo_planner/prolog/logicmoo/planner/teps/test_suites/translator-files/ZenoTravel/run_all.sh"/>
+										<F N="logicmoo_planner/prolog/logicmoo/planner/teps/test_suites/translator-files/ZenoTravel/zeon.pl"/>
+										<F N="logicmoo_planner/prolog/logicmoo/planner/teps/test_suites/translator-files/ZenoTravel/zeon_p10_dp.pddl"/>
+										<F N="logicmoo_planner/prolog/logicmoo/planner/teps/test_suites/translator-files/ZenoTravel/zeon_p11_dp.pddl"/>
+										<F N="logicmoo_planner/prolog/logicmoo/planner/teps/test_suites/translator-files/ZenoTravel/zeon_p11a_dp.pddl"/>
+										<F N="logicmoo_planner/prolog/logicmoo/planner/teps/test_suites/translator-files/ZenoTravel/zeon_p12_dp.pddl"/>
+										<F N="logicmoo_planner/prolog/logicmoo/planner/teps/test_suites/translator-files/ZenoTravel/zeon_p12a_dp.pddl"/>
+										<F N="logicmoo_planner/prolog/logicmoo/planner/teps/test_suites/translator-files/ZenoTravel/zeon_p13_dp.pddl"/>
+										<F N="logicmoo_planner/prolog/logicmoo/planner/teps/test_suites/translator-files/ZenoTravel/zeon_p13a_dp.pddl"/>
+										<F N="logicmoo_planner/prolog/logicmoo/planner/teps/test_suites/translator-files/ZenoTravel/zeon_p14_dp.pddl"/>
+										<F N="logicmoo_planner/prolog/logicmoo/planner/teps/test_suites/translator-files/ZenoTravel/zeon_p14a_dp.pddl"/>
+										<F N="logicmoo_planner/prolog/logicmoo/planner/teps/test_suites/translator-files/ZenoTravel/zeon_p14b_dp.pddl"/>
+										<F N="logicmoo_planner/prolog/logicmoo/planner/teps/test_suites/translator-files/ZenoTravel/zeon_p14c_dp.pddl"/>
+										<F N="logicmoo_planner/prolog/logicmoo/planner/teps/test_suites/translator-files/ZenoTravel/zeon_p15_dp.pddl"/>
+										<F N="logicmoo_planner/prolog/logicmoo/planner/teps/test_suites/translator-files/ZenoTravel/zeon_p15a_dp.pddl"/>
+										<F N="logicmoo_planner/prolog/logicmoo/planner/teps/test_suites/translator-files/ZenoTravel/zeon_p15b_dp.pddl"/>
+										<F N="logicmoo_planner/prolog/logicmoo/planner/teps/test_suites/translator-files/ZenoTravel/zeon_p16_dp.pddl"/>
+										<F N="logicmoo_planner/prolog/logicmoo/planner/teps/test_suites/translator-files/ZenoTravel/zeon_p17_dp.pddl"/>
+										<F N="logicmoo_planner/prolog/logicmoo/planner/teps/test_suites/translator-files/ZenoTravel/zeon_p18_dp.pddl"/>
+										<F N="logicmoo_planner/prolog/logicmoo/planner/teps/test_suites/translator-files/ZenoTravel/zeon_p18a_dp.pddl"/>
+										<F N="logicmoo_planner/prolog/logicmoo/planner/teps/test_suites/translator-files/ZenoTravel/zeon_p19_dp.pddl"/>
+										<F N="logicmoo_planner/prolog/logicmoo/planner/teps/test_suites/translator-files/ZenoTravel/zeon_p1_dp.pddl"/>
+										<F N="logicmoo_planner/prolog/logicmoo/planner/teps/test_suites/translator-files/ZenoTravel/zeon_p2_dp.pddl"/>
+										<F N="logicmoo_planner/prolog/logicmoo/planner/teps/test_suites/translator-files/ZenoTravel/zeon_p3_dp.pddl"/>
+										<F N="logicmoo_planner/prolog/logicmoo/planner/teps/test_suites/translator-files/ZenoTravel/zeon_p4_dp.pddl"/>
+										<F N="logicmoo_planner/prolog/logicmoo/planner/teps/test_suites/translator-files/ZenoTravel/zeon_p5_dp.pddl"/>
+										<F N="logicmoo_planner/prolog/logicmoo/planner/teps/test_suites/translator-files/ZenoTravel/zeon_p6_dp.pddl"/>
+										<F N="logicmoo_planner/prolog/logicmoo/planner/teps/test_suites/translator-files/ZenoTravel/zeon_p7_dp.pddl"/>
+										<F N="logicmoo_planner/prolog/logicmoo/planner/teps/test_suites/translator-files/ZenoTravel/zeon_p8_dp.pddl"/>
+										<F N="logicmoo_planner/prolog/logicmoo/planner/teps/test_suites/translator-files/ZenoTravel/zeon_p9_dp.pddl"/>
+									</Folder>
+									<F N="logicmoo_planner/prolog/logicmoo/planner/teps/test_suites/translator-files/exps.xls"/>
+									<F N="logicmoo_planner/prolog/logicmoo/planner/teps/test_suites/translator-files/README"/>
+								</Folder>
+							</Folder>
+						</Folder>
+						<Folder Name="tesis">
+							<Folder Name="Tesis">
+								<F N="logicmoo_planner/prolog/logicmoo/planner/tesis/Tesis/abstractingles.txt"/>
+							</Folder>
+							<F N="logicmoo_planner/prolog/logicmoo/planner/tesis/bkw.pl"/>
+							<F N="logicmoo_planner/prolog/logicmoo/planner/tesis/bkwdp.pl"/>
+							<F N="logicmoo_planner/prolog/logicmoo/planner/tesis/bkwup.pl"/>
+							<F N="logicmoo_planner/prolog/logicmoo/planner/tesis/bkwup10.pl"/>
+							<F N="logicmoo_planner/prolog/logicmoo/planner/tesis/blockworld_pddl.pl"/>
+							<F N="logicmoo_planner/prolog/logicmoo/planner/tesis/Codes.txt"/>
+							<F N="logicmoo_planner/prolog/logicmoo/planner/tesis/domain.pddl"/>
+							<F N="logicmoo_planner/prolog/logicmoo/planner/tesis/domain.pl"/>
+							<F N="logicmoo_planner/prolog/logicmoo/planner/tesis/domain2.pddl"/>
+							<F N="logicmoo_planner/prolog/logicmoo/planner/tesis/ejemploTesisUP.pl"/>
+							<F N="logicmoo_planner/prolog/logicmoo/planner/tesis/forall.pddl"/>
+							<F N="logicmoo_planner/prolog/logicmoo/planner/tesis/forall1.pl"/>
+							<F N="logicmoo_planner/prolog/logicmoo/planner/tesis/logis.pddl"/>
+							<F N="logicmoo_planner/prolog/logicmoo/planner/tesis/logis.pl"/>
+							<F N="logicmoo_planner/prolog/logicmoo/planner/tesis/module_lists.pl"/>
+							<F N="logicmoo_planner/prolog/logicmoo/planner/tesis/Notes.txt"/>
+							<F N="logicmoo_planner/prolog/logicmoo/planner/tesis/pddl_domain.pl"/>
+							<F N="logicmoo_planner/prolog/logicmoo/planner/tesis/pddl_problem.pl"/>
+							<F N="logicmoo_planner/prolog/logicmoo/planner/tesis/pddltostrips.pl"/>
+							<F N="logicmoo_planner/prolog/logicmoo/planner/tesis/pddltostrips_tr.pl"/>
+							<F N="logicmoo_planner/prolog/logicmoo/planner/tesis/pop.pl"/>
+							<F N="logicmoo_planner/prolog/logicmoo/planner/tesis/prob001-log-easy.pddl"/>
+							<F N="logicmoo_planner/prolog/logicmoo/planner/tesis/problem.pddl"/>
+							<F N="logicmoo_planner/prolog/logicmoo/planner/tesis/problem.pl"/>
+							<F N="logicmoo_planner/prolog/logicmoo/planner/tesis/problem2.pddl"/>
+							<F N="logicmoo_planner/prolog/logicmoo/planner/tesis/prueba_strips.pl"/>
+							<F N="logicmoo_planner/prolog/logicmoo/planner/tesis/read_write.pl"/>
+							<F N="logicmoo_planner/prolog/logicmoo/planner/tesis/readFile2.pl"/>
+							<F N="logicmoo_planner/prolog/logicmoo/planner/tesis/test_validate_input.pl"/>
+							<F N="logicmoo_planner/prolog/logicmoo/planner/tesis/toDNF.pl"/>
+							<F N="logicmoo_planner/prolog/logicmoo/planner/tesis/tokenizer.pl"/>
+							<F N="logicmoo_planner/prolog/logicmoo/planner/tesis/universal_preconditions.pl"/>
+							<F N="logicmoo_planner/prolog/logicmoo/planner/tesis/wumpus_pddl.pl"/>
+						</Folder>
+					</Folder>
+				</Folder>
+			</Folder>
+		</Folder>
+		<Folder Name="logicmoo_utils">
+			<F
+				N="logicmoo_utils/*.*"
+				Recurse="1"
+				Refilter="1"
+				Excludes="e2c/;elFinder/;.HIDE~/;HIDE~/;pldata/;*.qlf;*.class;.git/;~*;*~;~*/;*~/;.svn/;*.*r;*.*o;*.dll;*.exe;*.bak;*.jpg;*.xp*;*.gif;*.b?*"/>
+		</Folder>
+		<Folder Name="loop_check">
+			<F
+				N="loop_check/*.*"
+				Recurse="1"
+				Refilter="1"
+				Excludes="e2c/;elFinder/;.HIDE~/;HIDE~/;pldata/;*.qlf;*.class;.git/;~*;*~;~*/;*~/;.svn/;*.*r;*.*o;*.dll;*.exe;*.bak;*.jpg;*.xp*;*.gif;*.b?*"/>
+		</Folder>
+		<Folder Name="lps_corner">
+			<Folder Name="Wei-engine">
+				<F N="lps_corner/Wei-engine/db.P"/>
+				<F N="lps_corner/Wei-engine/interpreter.P"/>
+			</Folder>
+		</Folder>
+		<Folder Name="multimodal_dcg">
+			<F
+				N="multimodal_dcg/*.*"
+				Recurse="1"
+				Refilter="1"
+				Excludes="e2c/;elFinder/;.HIDE~/;HIDE~/;pldata/;*.qlf;*.class;.git/;~*;*~;~*/;*~/;.svn/;*.*r;*.*o;*.dll;*.exe;*.bak;*.jpg;*.xp*;*.gif;*.b?*"/>
+		</Folder>
+		<Folder Name="multivar">
+			<F
+				N="multivar/*.*"
+				Recurse="1"
+				Refilter="1"
+				Excludes="e2c/;elFinder/;.HIDE~/;HIDE~/;pldata/;*.qlf;*.class;.git/;~*;*~;~*/;*~/;.svn/;*.*r;*.*o;*.dll;*.exe;*.bak;*.jpg;*.xp*;*.gif;*.b?*"/>
+		</Folder>
+		<Folder Name="must_trace">
+			<F
+				N="must_trace/*.*"
+				Recurse="1"
+				Refilter="1"
+				Excludes="e2c/;elFinder/;.HIDE~/;HIDE~/;pldata/;*.qlf;*.class;.git/;~*;*~;~*/;*~/;.svn/;*.*r;*.*o;*.dll;*.exe;*.bak;*.jpg;*.xp*;*.gif;*.b?*"/>
+		</Folder>
+		<Folder Name="no_repeats">
+			<F
+				N="no_repeats/*.*"
+				Recurse="1"
+				Refilter="1"
+				Excludes="e2c/;elFinder/;.HIDE~/;HIDE~/;pldata/;*.qlf;*.class;.git/;~*;*~;~*/;*~/;.svn/;*.*r;*.*o;*.dll;*.exe;*.bak;*.jpg;*.xp*;*.gif;*.b?*"/>
+		</Folder>
+		<Folder Name="pfc">
+			<Folder Name="prolog">
+				<Folder Name="pfc2.0">
+					<F N="pfc/prolog/pfc2.0/mpred_header.pro"/>
+				</Folder>
+			</Folder>
+			<F
+				N="pfc/*.*"
+				Recurse="1"
+				Refilter="1"
+				Excludes="e2c/;elFinder/;.HIDE~/;HIDE~/;pldata/;*.qlf;*.class;.git/;~*;*~;~*/;*~/;.svn/;*.*r;*.*o;*.dll;*.exe;*.bak;*.jpg;*.xp*;*.gif;*.b?*"/>
+		</Folder>
+		<Folder Name="predicate_streams">
+			<F
+				N="predicate_streams/*.*"
+				Recurse="1"
+				Refilter="1"
+				Excludes="e2c/;elFinder/;.HIDE~/;HIDE~/;pldata/;*.qlf;*.class;.git/;~*;*~;~*/;*~/;.svn/;*.*r;*.*o;*.dll;*.exe;*.bak;*.jpg;*.xp*;*.gif;*.b?*"/>
+		</Folder>
+		<Folder Name="prologmud">
+			<Folder Name="hMUD">
+				<Folder Name="bridge">
+					<F N="prologmud/hMUD/bridge/AnsiToHtml.hx"/>
+					<F N="prologmud/hMUD/bridge/compile.hxml"/>
+					<F N="prologmud/hMUD/bridge/hmud-bridge.swf"/>
+					<F N="prologmud/hMUD/bridge/HMUD_Bridge.hx"/>
+				</Folder>
+				<Folder Name="flashpolicyd_v0.6">
+					<Folder Name="Perl_xinetd">
+						<F N="prologmud/hMUD/flashpolicyd_v0.6/Perl_xinetd/flashpolicyd.xinet"/>
+						<F N="prologmud/hMUD/flashpolicyd_v0.6/Perl_xinetd/in.flashpolicyd.pl"/>
+						<F N="prologmud/hMUD/flashpolicyd_v0.6/Perl_xinetd/install.sh"/>
+					</Folder>
+					<Folder Name="Python_init">
+						<F N="prologmud/hMUD/flashpolicyd_v0.6/Python_init/flashpolicyd.init"/>
+						<F N="prologmud/hMUD/flashpolicyd_v0.6/Python_init/flashpolicyd.py"/>
+						<F N="prologmud/hMUD/flashpolicyd_v0.6/Python_init/install.sh"/>
+					</Folder>
+					<Folder Name="Python_xinetd">
+						<F N="prologmud/hMUD/flashpolicyd_v0.6/Python_xinetd/flashpolicyd.xinet"/>
+						<F N="prologmud/hMUD/flashpolicyd_v0.6/Python_xinetd/in.flashpolicyd.py"/>
+						<F N="prologmud/hMUD/flashpolicyd_v0.6/Python_xinetd/install.sh"/>
+					</Folder>
+					<Folder Name="Standalone">
+						<F N="prologmud/hMUD/flashpolicyd_v0.6/Standalone/flashpolicyd.pl"/>
+						<F N="prologmud/hMUD/flashpolicyd_v0.6/Standalone/flashpolicyd.py"/>
+					</Folder>
+					<F N="prologmud/hMUD/flashpolicyd_v0.6/flashpolicy.xml"/>
+					<F N="prologmud/hMUD/flashpolicyd_v0.6/README.txt"/>
+				</Folder>
+				<Folder Name="swfobject">
+					<Folder Name="src">
+						<F N="prologmud/hMUD/swfobject/src/expressInstall.as"/>
+						<F N="prologmud/hMUD/swfobject/src/expressInstall.fla"/>
+						<F N="prologmud/hMUD/swfobject/src/swfobject.js"/>
+					</Folder>
+					<F N="prologmud/hMUD/swfobject/expressInstall.swf"/>
+					<F N="prologmud/hMUD/swfobject/index.html"/>
+					<F N="prologmud/hMUD/swfobject/index_dynamic.html"/>
+					<F N="prologmud/hMUD/swfobject/swfobject.js"/>
+					<F N="prologmud/hMUD/swfobject/test.swf"/>
+				</Folder>
+				<F N="prologmud/hMUD/browser-detect.js"/>
+				<F N="prologmud/hMUD/Button-icon-off.gif"/>
+				<F N="prologmud/hMUD/Button-icon.gif"/>
+				<F N="prologmud/hMUD/client.js"/>
+				<F N="prologmud/hMUD/config.js"/>
+				<F N="prologmud/hMUD/cookies.js"/>
+				<F N="prologmud/hMUD/favicon.ico"/>
+				<F N="prologmud/hMUD/guide.js"/>
+				<F N="prologmud/hMUD/hmud.html"/>
+				<F N="prologmud/hMUD/index.html"/>
+				<F N="prologmud/hMUD/INSTALL"/>
+				<F N="prologmud/hMUD/LICENSE"/>
+				<F N="prologmud/hMUD/messages.en.js"/>
+				<F N="prologmud/hMUD/messages.js"/>
+				<F N="prologmud/hMUD/messages.pt.js"/>
+				<F N="prologmud/hMUD/policyd"/>
+				<F N="prologmud/hMUD/README"/>
+				<F N="prologmud/hMUD/Rune-icon.gif"/>
+				<F N="prologmud/hMUD/TODO"/>
+				<F N="prologmud/hMUD/Treasure-icon.gif"/>
+				<F N="prologmud/hMUD/ui.js"/>
+			</Folder>
+			<Folder Name="prolog">
+				<Folder Name="prologmud">
+					<Folder Name="actions">
+						<F N="prologmud/prolog/prologmud/actions/actions_conf.pfc.pl"/>
+						<F N="prologmud/prolog/prologmud/actions/actions_db.pfc.pl"/>
+						<F N="prologmud/prolog/prologmud/actions/any.pfc.pl"/>
+						<F N="prologmud/prolog/prologmud/actions/as_agent.pfc.pl"/>
+						<F N="prologmud/prolog/prologmud/actions/attack.pfc.pl"/>
+						<F N="prologmud/prolog/prologmud/actions/chat.pfc.pl"/>
+						<F N="prologmud/prolog/prologmud/actions/climb.pfc.pl"/>
+						<F N="prologmud/prolog/prologmud/actions/create.pfc.pl"/>
+						<F N="prologmud/prolog/prologmud/actions/drink.pfc.pl"/>
+						<F N="prologmud/prolog/prologmud/actions/drop.pfc.pl"/>
+						<F N="prologmud/prolog/prologmud/actions/eat.pfc.pl"/>
+						<F N="prologmud/prolog/prologmud/actions/get_set.pfc.pl"/>
+						<F N="prologmud/prolog/prologmud/actions/help.pfc.pl"/>
+						<F N="prologmud/prolog/prologmud/actions/inventory.pfc.pl"/>
+						<F N="prologmud/prolog/prologmud/actions/kiss.pfc.pl"/>
+						<F N="prologmud/prolog/prologmud/actions/logon.pfc.pl"/>
+						<F N="prologmud/prolog/prologmud/actions/look.pfc.pl"/>
+						<F N="prologmud/prolog/prologmud/actions/move.pfc.pl"/>
+						<F N="prologmud/prolog/prologmud/actions/planner.pfc.pl"/>
+						<F N="prologmud/prolog/prologmud/actions/push.pfc.pl"/>
+						<F N="prologmud/prolog/prologmud/actions/put_at.pfc.pl"/>
+						<F N="prologmud/prolog/prologmud/actions/scansrc.pfc.pl"/>
+						<F N="prologmud/prolog/prologmud/actions/showdebug.pfc.pl"/>
+						<F N="prologmud/prolog/prologmud/actions/sit.pfc.pl"/>
+						<F N="prologmud/prolog/prologmud/actions/stats.pfc.pl"/>
+						<F N="prologmud/prolog/prologmud/actions/take.pfc.pl"/>
+						<F N="prologmud/prolog/prologmud/actions/teleport.pfc.pl"/>
+						<F N="prologmud/prolog/prologmud/actions/use.pfc.pl"/>
+						<F N="prologmud/prolog/prologmud/actions/where.pfc.pl"/>
+					</Folder>
+					<Folder Name="mobs">
+						<Folder Name="affordance">
+							<F N="prologmud/prolog/prologmud/mobs/affordance/improve.pfc.pl"/>
+							<F N="prologmud/prolog/prologmud/mobs/affordance/simbots.pfc.pl"/>
+						</Folder>
+						<F N="prologmud/prolog/prologmud/mobs/explorer.pfc.pl"/>
+						<F N="prologmud/prolog/prologmud/mobs/mobs_conf.pfc.pl"/>
+						<F N="prologmud/prolog/prologmud/mobs/monster.pfc.pl"/>
+						<F N="prologmud/prolog/prologmud/mobs/pddl_agent.pfc.pl"/>
+						<F N="prologmud/prolog/prologmud/mobs/predator.pfc.pl"/>
+						<F N="prologmud/prolog/prologmud/mobs/prey.pfc.pl"/>
+						<F N="prologmud/prolog/prologmud/mobs/vacuum.pfc.pl"/>
+					</Folder>
+					<Folder Name="objs">
+						<F N="prologmud/prolog/prologmud/objs/basic_objs.pfc.pl"/>
+					</Folder>
+					<Folder Name="parsing">
+						<F N="prologmud/prolog/prologmud/parsing/parser_imperative.pl"/>
+						<F N="prologmud/prolog/prologmud/parsing/simple_decl_parser.pl"/>
+					</Folder>
+					<Folder Name="server">
+						<F N="prologmud/prolog/prologmud/server/mud_http_hmud.pl"/>
+						<F N="prologmud/prolog/prologmud/server/mud_irc.pl"/>
+						<F N="prologmud/prolog/prologmud/server/mud_telnet.pl"/>
+						<F N="prologmud/prolog/prologmud/server/mud_testing.pl"/>
+					</Folder>
+					<Folder Name="vworld">
+						<F N="prologmud/prolog/prologmud/vworld/world.pfc.pl"/>
+						<F N="prologmud/prolog/prologmud/vworld/world_2d.pfc.pl"/>
+						<F N="prologmud/prolog/prologmud/vworld/world_agent.pfc.pl"/>
+						<F N="prologmud/prolog/prologmud/vworld/world_effects.pfc.pl"/>
+						<F N="prologmud/prolog/prologmud/vworld/world_events.pfc.pl"/>
+						<F N="prologmud/prolog/prologmud/vworld/world_npc.pfc.pl"/>
+						<F N="prologmud/prolog/prologmud/vworld/world_text.pfc.pl"/>
+						<F N="prologmud/prolog/prologmud/vworld/world_text_output.pfc.pl"/>
+					</Folder>
+					<F N="prologmud/prolog/prologmud/mud_builtin.pfc.pl"/>
+					<F N="prologmud/prolog/prologmud/mud_footer.pl"/>
+					<F N="prologmud/prolog/prologmud/mud_header.pl"/>
+					<F N="prologmud/prolog/prologmud/mud_loader.pl"/>
+					<F N="prologmud/prolog/prologmud/mud_startup.pl"/>
+				</Folder>
+				<Folder Name="prologmud_web">
+					<Folder Name="src_assets">
+						<F N="prologmud/prolog/prologmud_web/src_assets/README.txt"/>
+					</Folder>
+					<Folder Name="src_webui">
+						<Folder Name="assetsources">
+							<F N="prologmud/prolog/prologmud_web/src_webui/assetsources/favicon.png"/>
+							<F N="prologmud/prolog/prologmud_web/src_webui/assetsources/favicon.psd"/>
+						</Folder>
+						<Folder Name="http">
+							<Folder Name="web">
+								<Folder Name="css">
+									<F N="prologmud/prolog/prologmud_web/src_webui/http/web/css/mudconsole.css"/>
+								</Folder>
+								<Folder Name="icons">
+									<F N="prologmud/prolog/prologmud_web/src_webui/http/web/icons/favicon.ico"/>
+									<F N="prologmud/prolog/prologmud_web/src_webui/http/web/icons/foo.png"/>
+								</Folder>
+								<Folder Name="js">
+									<F N="prologmud/prolog/prologmud_web/src_webui/http/web/js/jquery-1.7.1.js"/>
+									<F N="prologmud/prolog/prologmud_web/src_webui/http/web/js/jquery.form.js"/>
+									<F N="prologmud/prolog/prologmud_web/src_webui/http/web/js/mudconsole.js"/>
+								</Folder>
+							</Folder>
+							<F N="prologmud/prolog/prologmud_web/src_webui/http/user_page.pl"/>
+						</Folder>
+						<Folder Name="model">
+							<F N="prologmud/prolog/prologmud_web/src_webui/model/substance.pl"/>
+						</Folder>
+						<Folder Name="mudconsole">
+							<F N="prologmud/prolog/prologmud_web/src_webui/mudconsole/mudconsole.pl"/>
+							<F N="prologmud/prolog/prologmud_web/src_webui/mudconsole/mudconsolestart.pl"/>
+						</Folder>
+						<F N="prologmud/prolog/prologmud_web/src_webui/cliopatria_binding.pl"/>
+						<F N="prologmud/prolog/prologmud_web/src_webui/launchcliopatria.pl"/>
+						<F N="prologmud/prolog/prologmud_web/src_webui/testwebconsole.pl"/>
+					</Folder>
+				</Folder>
+			</Folder>
+			<Folder Name="t">
+				<F N="prologmud/t/sanity_tests.pl"/>
+			</Folder>
+			<F N="prologmud/.gitignore"/>
+			<F N="prologmud/.gitmodules"/>
+			<F N="prologmud/LICENSE.md"/>
+			<F N="prologmud/pack.pl"/>
+			<F N="prologmud/PrologMUD.vpj"/>
+			<F N="prologmud/README.md"/>
+		</Folder>
+		<Folder Name="prologmud_samples">
+			<Folder Name="prolog">
+				<Folder Name="prologmud_sample_games">
+					<F N="prologmud_samples/prolog/prologmud_sample_games/__ontologyportal_sumo_domainEnglishFormat_kif.tmp"/>
+					<F N="prologmud_samples/prolog/prologmud_sample_games/__ontologyportal_sumo_english_format_kif.tmp"/>
+					<F N="prologmud_samples/prolog/prologmud_sample_games/__ontologyportal_sumo_Merge_kif.tmp"/>
+					<F N="prologmud_samples/prolog/prologmud_sample_games/__ontologyportal_sumo_Mid-level-ontology_kif.tmp"/>
+					<F N="prologmud_samples/prolog/prologmud_sample_games/__ontologyportal_sumo_Translations_relations-en_txt.tmp"/>
+					<F N="prologmud_samples/prolog/prologmud_sample_games/clio_swish_test.sh"/>
+					<F N="prologmud_samples/prolog/prologmud_sample_games/commitpush.sh"/>
+					<F N="prologmud_samples/prolog/prologmud_sample_games/init_mud_server.pl"/>
+					<F N="prologmud_samples/prolog/prologmud_sample_games/Run_Loop.sh"/>
+					<F N="prologmud_samples/prolog/prologmud_sample_games/run_mud_server.pl"/>
+					<F N="prologmud_samples/prolog/prologmud_sample_games/sanity_pfc_modules.plt"/>
+					<F N="prologmud_samples/prolog/prologmud_sample_games/startGame.sh"/>
+					<F N="prologmud_samples/prolog/prologmud_sample_games/test_release.pl"/>
+				</Folder>
+			</Folder>
+		</Folder>
+		<Folder Name="s_expression">
+			<F
+				N="s_expression/*.*"
+				Recurse="1"
+				Refilter="1"
+				Excludes="e2c/;elFinder/;.HIDE~/;HIDE~/;pldata/;*.qlf;*.class;.git/;~*;*~;~*/;*~/;.svn/;*.*r;*.*o;*.dll;*.exe;*.bak;*.jpg;*.xp*;*.gif;*.b?*"/>
+		</Folder>
+		<Folder Name="subclause_expansion">
+			<F
+				N="subclause_expansion/*.*"
+				Recurse="1"
+				Refilter="1"
+				Excludes="e2c/;elFinder/;.HIDE~/;HIDE~/;pldata/;*.qlf;*.class;.git/;~*;*~;~*/;*~/;.svn/;*.*r;*.*o;*.dll;*.exe;*.bak;*.jpg;*.xp*;*.gif;*.b?*"/>
+		</Folder>
+		<Folder Name="tabling_dra">
+			<Folder Name="prolog">
+				<F N="tabling_dra/prolog/assert_db_dra.pl"/>
+				<F N="tabling_dra/prolog/dra.pl"/>
+				<F N="tabling_dra/prolog/record_db_dra.pl"/>
+			</Folder>
+			<Folder Name="t">
+				<Folder Name="examples">
+					<Folder Name="LTL">
+						<F N="tabling_dra/t/examples/LTL/bwd_future_and_fail.tlp"/>
+						<F N="tabling_dra/t/examples/LTL/bwd_future_and_fail_v.pl"/>
+						<F N="tabling_dra/t/examples/LTL/bwd_next_global.tlp"/>
+						<F N="tabling_dra/t/examples/LTL/bwd_next_global_v.pl"/>
+						<F N="tabling_dra/t/examples/LTL/bwd_once_bitten.tlp"/>
+						<F N="tabling_dra/t/examples/LTL/bwd_once_bitten_v.pl"/>
+						<F N="tabling_dra/t/examples/LTL/coind_example.pl"/>
+						<F N="tabling_dra/t/examples/LTL/coind_example.tlp"/>
+						<F N="tabling_dra/t/examples/LTL/coind_example_v.pl"/>
+						<F N="tabling_dra/t/examples/LTL/consistency_checker.pl"/>
+						<F N="tabling_dra/t/examples/LTL/errors.pl"/>
+						<F N="tabling_dra/t/examples/LTL/errors.tlp"/>
+						<F N="tabling_dra/t/examples/LTL/example.pl"/>
+						<F N="tabling_dra/t/examples/LTL/example.tlp"/>
+						<F N="tabling_dra/t/examples/LTL/example2.pl"/>
+						<F N="tabling_dra/t/examples/LTL/example2.tlp"/>
+						<F N="tabling_dra/t/examples/LTL/example2_v.pl"/>
+						<F N="tabling_dra/t/examples/LTL/example3.pl"/>
+						<F N="tabling_dra/t/examples/LTL/example3.tlp"/>
+						<F N="tabling_dra/t/examples/LTL/example3_v.pl"/>
+						<F N="tabling_dra/t/examples/LTL/example4.pl"/>
+						<F N="tabling_dra/t/examples/LTL/example4.tlp"/>
+						<F N="tabling_dra/t/examples/LTL/example4_v.pl"/>
+						<F N="tabling_dra/t/examples/LTL/example_v.pl"/>
+						<F N="tabling_dra/t/examples/LTL/looping_prefix.pl"/>
+						<F N="tabling_dra/t/examples/LTL/microwave.pl"/>
+						<F N="tabling_dra/t/examples/LTL/microwave.tlp"/>
+						<F N="tabling_dra/t/examples/LTL/microwave2.tlp"/>
+						<F N="tabling_dra/t/examples/LTL/microwave_v.pl"/>
+						<F N="tabling_dra/t/examples/LTL/normalize.pl"/>
+						<F N="tabling_dra/t/examples/LTL/operators.pl"/>
+						<F N="tabling_dra/t/examples/LTL/partition_graph.pl"/>
+						<F N="tabling_dra/t/examples/LTL/README"/>
+						<F N="tabling_dra/t/examples/LTL/simple.tlp"/>
+						<F N="tabling_dra/t/examples/LTL/small_example.pl"/>
+						<F N="tabling_dra/t/examples/LTL/small_example.tlp"/>
+						<F N="tabling_dra/t/examples/LTL/small_example_v.pl"/>
+						<F N="tabling_dra/t/examples/LTL/two_loops.tlp"/>
+						<F N="tabling_dra/t/examples/LTL/v.pl"/>
+						<F N="tabling_dra/t/examples/LTL/verifier.clp"/>
+						<F N="tabling_dra/t/examples/LTL/verifier.tlp"/>
+						<F N="tabling_dra/t/examples/LTL/verifier2.tlp"/>
+					</Folder>
+				</Folder>
+			</Folder>
+		</Folder>
+		<Folder Name="with_open_options">
+			<F
+				N="with_open_options/*.*"
+				Recurse="1"
+				Refilter="1"
+				Excludes="e2c/;elFinder/;.HIDE~/;HIDE~/;pldata/;*.qlf;*.class;.git/;~*;*~;~*/;*~/;.svn/;*.*r;*.*o;*.dll;*.exe;*.bak;*.jpg;*.xp*;*.gif;*.b?*"/>
+		</Folder>
+		<Folder Name="with_thread_local">
+			<F
+				N="with_thread_local/*.*"
+				Recurse="1"
+				Refilter="1"
+				Excludes="e2c/;elFinder/;.HIDE~/;HIDE~/;pldata/;*.qlf;*.class;.git/;~*;*~;~*/;*~/;.svn/;*.*r;*.*o;*.dll;*.exe;*.bak;*.jpg;*.xp*;*.gif;*.b?*"/>
+		</Folder>
+		<Folder Name="xlisting">
+			<F
+				N="xlisting/*.*"
+				Recurse="1"
+				Refilter="1"
+				Excludes="e2c/;elFinder/;.HIDE~/;HIDE~/;pldata/;*.qlf;*.class;.git/;~*;*~;~*/;*~/;.svn/;*.*r;*.*o;*.dll;*.exe;*.bak;*.jpg;*.xp*;*.gif;*.b?*"/>
+		</Folder>
+		<Folder Name="xlisting_web">
+			<F
+				N="xlisting_web/*.*"
+				Recurse="1"
+				Refilter="1"
+				Excludes="e2c/;elFinder/;.HIDE~/;HIDE~/;pldata/;*.qlf;*.class;.git/;~*;*~;~*/;*~/;.svn/;*.*r;*.*o;*.dll;*.exe;*.bak;*.jpg;*.xp*;*.gif;*.b?*"/>
+		</Folder>
+		<F N="aliases.sh"/>
+		<F N="bump_packs.sh"/>
+		<F N="file_hybrid_01a.pfc"/>
+		<F N="mutlvar_example.pl.odd"/>
+		<F N="project_files.pl"/>
+		<F N="rsync.sh"/>
+		<F N="sortme.txt"/>
+		<F N="swish.vpj"/>
+	</Files>
+</Project>

@@ -1,0 +1,6 @@
+module monoid .
+op 1  : elem .
+op *  : (elem * elem -> elem) .
+1 * x = x .
+x * 1 = x .
+(x * y) * z = x * (y * z) .

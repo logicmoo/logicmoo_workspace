@@ -1,0 +1,20 @@
+ 
+"in(+File)."
+
+reads in a specification from the file "File.eqn". If not stated otherwise
+this file is assumed to be in the current directory. Before the
+specification is read in, CEC will be re-initialized, e.g. the current
+specification will be deleted. Specifications saved in variables will not be
+affected. "File" must be an arbitrary Prolog atom. Specify "File" = "user"
+if input from terminal is wanted. The termination order for the new
+specification will be initialized to a default value (neqkns or poly1,
+depending on the presence of AC-operators).
+
+
+"in(+ModuleName,+OrderName)."
+
+reads in a specification from the file "ModuleName.eqn" and the definition
+of an associated termination order from the file "ModuleName.OrderName.ord".
+The order file may also contain other pragmas, cf. "storeLog", "loadLod".
+"in(File,noorder)" is equivalent to "in(File)".
+Otherwise the effect is the same as for in/1.

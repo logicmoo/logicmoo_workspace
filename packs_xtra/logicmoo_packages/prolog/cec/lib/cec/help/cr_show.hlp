@@ -1,0 +1,4 @@
+"cr_show"
+
+Shows the current system of c-rules. In each c-rule, first the reductive rules 
+are displayed and below the complementary contexts.

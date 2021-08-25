@@ -1,0 +1,1 @@
+ --definitional-cnf=24 --tstp-format --simul-paramod --forward-context-sr --destructive-er-aggressive --destructive-er --prefer-initial-clauses -tLPO4 -Ginvfreqconstmin -F1 --delete-bad-limit=150000000 -WSelectNewComplexAHP -H'(1*FIFOWeight(ConstPrio),2*FIFOWeight(PreferProcessed),8*ConjectureRelativeSymbolWeight(ConstPrio,0.1, 100, 100, 100, 100, 1.5, 1.5, 1.5))' 

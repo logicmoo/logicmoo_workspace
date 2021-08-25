@@ -1,0 +1,51 @@
+
+% vertices
+number(0..9).
+a.
+
+'1'{s(N):number(N)}'1':-a.
+'1'{e(N):number(N)}'1':-a.
+'1'{n(N):number(N)}'1':-a.
+'1'{d(N):number(N)}'1':-a.
+'1'{m(N):number(N)}'1':-a.
+'1'{o(N):number(N)}'1':-a.
+'1'{r(N):number(N)}'1':-a.
+'1'{y(N):number(N)}'1':-a.
+
+:-s(0).
+:-m(0).
+
+goal(0):-s(S),e(E),n(N),d(D),m(M),o(O),r(R),y(Y),
+ (1000*S+100*E+10*N+D + 1000*M+100*O+10*R+E)
+         = (10000*M+1000*O+100*N+10*E+Y).
+
+:-s(N),e(N),number(N).
+:-s(N),n(N),number(N).
+:-s(N),d(N),number(N).
+:-s(N),m(N),number(N).
+:-s(N),o(N),number(N).
+:-s(N),r(N),number(N).
+:-s(N),y(N),number(N).
+:-e(N),n(N),number(N).
+:-e(N),d(N),number(N).
+:-e(N),m(N),number(N).
+:-e(N),o(N),number(N).
+:-e(N),r(N),number(N).
+:-e(N),y(N),number(N).
+:-n(N),d(N),number(N).
+:-n(N),m(N),number(N).
+:-n(N),o(N),number(N).
+:-n(N),r(N),number(N).
+:-n(N),y(N),number(N).
+:-d(N),m(N),number(N).
+:-d(N),o(N),number(N).
+:-d(N),r(N),number(N).
+:-d(N),y(N),number(N).
+:-m(N),o(N),number(N).
+:-m(N),r(N),number(N).
+:-m(N),y(N),number(N).
+:-o(N),r(N),number(N).
+:-o(N),y(N),number(N).
+:-r(N),y(N),number(N).
+
+:-not goal(0).

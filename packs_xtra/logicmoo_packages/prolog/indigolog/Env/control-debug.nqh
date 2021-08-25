@@ -1,0 +1,270 @@
+/***************************************************************************
+/*
+/* FILE: Main/control.nqh
+/*
+/* Generic NQC code for Legolog
+/*
+/* WRITTEN BY: Maurice Pagnucco and Hector J. Levesque
+/* REVISED: June 15, 2000
+/* TESTED: nqc 2.1 r1
+/*
+/***************************************************************************
+/*                            June 15, 2000
+/*
+/* This software was developed by the Cognitive Robotics Group under the
+/* direction of Hector Levesque and Ray Reiter.
+/*
+/*       Do not distribute without permission.
+/*       Include this notice in any copy made.
+/*
+/*
+/*        Copyright (c) 2000 by The University of Toronto,
+/*                       Toronto, Ontario, Canada.
+/*
+/*                         All Rights Reserved
+/*
+/* Permission to use, copy, and modify, this software and its
+/* documentation for non-commercial research purpose is hereby granted
+/* without fee, provided that the above copyright notice appears in all
+/* copies and that both the copyright notice and this permission notice
+/* appear in supporting documentation, and that the name of The University
+/* of Toronto not be used in advertising or publicity pertaining to
+/* distribution of the software without specific, written prior
+/* permission.  The University of Toronto makes no representations about
+/* the suitability of this software for any purpose.  It is provided "as
+/* is" without express or implied warranty.
+/*
+/* THE UNIVERSITY OF TORONTO DISCLAIMS ALL WARRANTIES WITH REGARD TO THIS
+/* SOFTWARE, INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY AND
+/* FITNESS, IN NO EVENT SHALL THE UNIVERSITY OF TORONTO BE LIABLE FOR ANY
+/* SPECIAL, INDIRECT OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER
+/* RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF
+/* CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN
+/* CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
+/*
+/***************************************************************************
+/*
+/* This file contains the application independent NQC code. It is
+/* an endless event loop that monitors for incoming messages from
+/* Golog requesting the execution of an action or querying the occurrence
+/* of exogenous events on the RCX. It provides functions for sending messages
+/* to and receiving messages from the RCX. In addition, the following
+/* constants and functions must be supplied elsewhere.
+/*
+/* It is assumed that the user will define the following constants
+/*   in an application dependent include file (e.g., delivery.nqh):
+/* -- ACTION_MESG_LOW: base message number for transmitting actions
+/* -- VALUE_MESG_LOW: base message number for transmitting values
+/* -- ACTION_MESG_BASE: of form 2^n - we send actions n bits at a time
+/* -- VALUE_MESG_BASE: similarly for values
+/*
+/* It is assumed that the user will supply the following functions in an
+/*   application dependent file (e.g., delivery.nqc):
+/* -- void initialize(): perform any necessary initialization of RCX
+/*      e.g., define input/output types, display sensor values,
+/*      start exogenous action monitors, etc.
+/* -- void startBehaviour(int behNum): start action corresponding to behNum.
+/*      This number must correspond to that in an application dependent
+/*      Golog file (e.g., delivery.pl) defined using predicate actionNum/2
+/* -- void stopAllBehaviours(): terminate all currently running behaviour tasks.
+/*      Can reset variables here too
+/* -- void panicAction(): action to take when RCX status becomes PANIC i.e.,
+/*      when Prolog is not accepting transmissions
+/* Plus tasks, functions, subroutines for the behaviours.
+/*
+/***************************************************************************/
+
+
+/***************************************************************************/
+/* CONSTANTS
+/***************************************************************************/
+
+// Define RCX status
+
+#define ABORT 1
+#define PANIC 2
+#define OK    3
+
+// Define any specific message numbers
+
+#define RCX_PANIC_MESSAGE    80
+#define RCX_ABORT_MESSAGE    81
+#define RCX_CONTINUE_MESSAGE 82
+#define RCX_EXOG_REQ_MESSAGE 83
+#define RCX_NO_EXOG_MESSAGE  84
+#define RCX_DELAY_MESSAGE    85
+
+// Define message types
+
+#define ACTION   1
+#define VALUE    2
+#define EXOG_REQ 3
+#define UNKNOWN  4
+
+// Define status for sending messages
+
+#define SUCCESS 1
+#define TRYING  2
+#define FAILURE 3
+
+// Define other constants
+
+#define NO_EXOG_ACTION    -1
+
+#define WAIT_AMOUNT       100  // Wait time before checking for return message
+#define MAX_SEND_ATTEMPTS 5
+
+// Global variables
+
+int status = OK;
+int exogAction = NO_EXOG_ACTION;
+int sensorVal = 0;
+int debug = 0;
+
+/***************************************************************************/
+/* CONSTANTS
+/***************************************************************************/
+
+// main: The main event loop
+task main()
+{
+    int number, type;
+
+    SetTxPower(TX_POWER_HI);
+    ClearMessage();                      // Clear any residual messages.
+
+    while(true) {
+//            receiveNumber(number, type);
+//            if (type == EXOG_REQ) {
+		PlayTone(1000, 5);
+                sendByte(84);
+	        Wait(300);
+//	    }
+    }
+}
+
+// receiveNumber: We only worry about receiving action messages for now
+void receiveNumber(int &number, int &mesgType)
+{
+    int temp, recvresult, exponent = ACTION_MESG_BASE;
+
+    number = 0;
+
+    receiveByte(recvresult);
+    if (recvresult == RCX_ABORT_MESSAGE) {
+        status = ABORT;
+        mesgType = UNKNOWN; // Return type not important in this case
+    } else if (recvresult == RCX_EXOG_REQ_MESSAGE) {
+        mesgType = EXOG_REQ;
+    } else if (recvresult >= ACTION_MESG_LOW &&           // Valid action range
+               recvresult <= (ACTION_MESG_LOW +  (2 * ACTION_MESG_BASE) - 1)) {
+        mesgType = ACTION;
+
+        // Extract information content
+        mod(recvresult - ACTION_MESG_LOW, ACTION_MESG_BASE, number);
+
+        // Continue extraction until we get final fragment
+        while (recvresult < ACTION_MESG_LOW ||
+                 recvresult >= (ACTION_MESG_LOW + ACTION_MESG_BASE)) {
+            sendByte(RCX_CONTINUE_MESSAGE);
+            receiveByte(recvresult); // Get next part of message
+
+            if (recvresult >= ACTION_MESG_LOW &&
+            recvresult <= (ACTION_MESG_LOW +  (2 * ACTION_MESG_BASE) - 1)) {
+                mod(recvresult - ACTION_MESG_LOW, ACTION_MESG_BASE, temp);
+                number += temp * exponent;
+                exponent *= ACTION_MESG_BASE;
+            }
+        }
+    } else mesgType = UNKNOWN;
+}
+
+// receiveByte: Receive a single message; returns 0 if there is none
+void receiveByte(int &result)
+{
+    result = Message(); // Will be 0 if no message is there
+    ClearMessage();
+}
+
+// sendNumber: Send a number by dividing into parts
+void sendNumber(int number, int mesgType)
+{
+    int mesg, returnval, mesgLow, mesgBase, sendNumStatus = TRYING;
+    int rslt, sendAttempts, sendByteStatus;
+
+    // Set parameters
+    if (mesgType == ACTION) {
+        mesgLow = ACTION_MESG_LOW;
+        mesgBase = ACTION_MESG_BASE;
+    } else {
+        mesgLow = VALUE_MESG_LOW;
+        mesgBase = VALUE_MESG_BASE;
+    }
+    // Determine mesg parts and send them
+    while (sendNumStatus == TRYING) {
+        if (number < mesgBase) { // Final part of message to send
+            mesg = number + mesgLow;
+            sendByte(mesg);
+            sendNumStatus = SUCCESS; // No need to wait for acknowledgement
+        } else {
+            mod(number, mesgBase, mesg);
+            mesg += mesgLow + mesgBase;
+
+            // Send mesg number until response is received
+            sendByteStatus = TRYING;
+            sendAttempts = 0;
+            while (sendByteStatus == TRYING && sendAttempts < MAX_SEND_ATTEMPTS) {
+                sendByte(mesg);
+                receiveByte(rslt);
+                if (rslt == RCX_CONTINUE_MESSAGE) { // Ack received
+                    sendByteStatus = SUCCESS;
+                } else if (rslt == RCX_ABORT_MESSAGE) {
+                    sendByteStatus = FAILURE;
+                    sendNumStatus = FAILURE;
+                    status = ABORT;
+                } // Otherwise ignore it
+                sendAttempts++;
+            }
+
+            if (sendAttempts >= MAX_SEND_ATTEMPTS) { // Prolog not responding
+                status = PANIC;
+                sendNumStatus = FAILURE;
+            } else
+                number /= mesgBase;
+        }
+    }
+}
+
+// sendByte: Send a single message
+void sendByte(int mesg)
+{
+    SendMessage(mesg);
+    Wait(WAIT_AMOUNT);
+}
+
+// debugAction:
+void debugAction(int st)
+{
+    Wait(WAIT_AMOUNT);
+
+    if (st == OK)
+        PlayTone(OK * 400, 1);
+    else if (st == PANIC)
+        PlayTone(PANIC * 400, 1);
+    else if (st == ABORT)
+        PlayTone(ABORT * 400, 1);
+}
+
+// mod: A mod operator
+void mod(int x, int y, int &modulus)
+{
+    int tmp;
+
+    tmp = x/y;
+    tmp *= y;
+    modulus = x - tmp;
+}
+
+/***************************************************************************
+/* EOF: Main/control.nqh
+/***************************************************************************/

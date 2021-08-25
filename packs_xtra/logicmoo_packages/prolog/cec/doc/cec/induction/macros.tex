@@ -1,0 +1,256 @@
+%----------------------------------------------------------------------
+% Macros
+
+% Theorems with roman font
+% To declare a theorem-environment using roman font style just say
+% \newtheorem{NAME}{TEXT}[COUNTER]
+% \def\NAME{\Thm{NAME}{TEXT}}
+% or
+% \newtheorem{NAME}[OLDNAME]{TEXT}
+% \def\NAME{\Thm{OLDNAME}{TEXT}}
+\catcode`\@=11
+\def\Thm#1#2#3{\refstepcounter
+{#2}\@ifnextchar[{\@Ythm{#1}{#2}{#3}}{\@Xthm{#1}{#2}{#3}}}
+\def\@Xthm#1#2#3{\@Begintheorem{#1}{#3}{\csname the#2\endcsname}\ignorespaces}
+\def\@Ythm#1#2#3[#4]{\@Opargbegintheorem{#1}{#3}{\csname
+       the#2\endcsname}{#4}\ignorespaces}
+\def\@Begintheorem#1#2#3{\trivlist \item[\hskip \labelsep{\bf #2\ #3}]#1}
+\def\@Opargbegintheorem#1#2#3#4{\trivlist
+      \item[\hskip \labelsep{\bf #2\ #3\ (#4)}]#1}
+\catcode`\@=12
+
+%---------- layout ----------
+
+\newcommand{\nl}{\hfill\\}
+
+%\def\definitionname{Definition}
+%\def\theoremname{Theorem}
+%\def\propositionname{Proposition}
+%\def\corollaryname{Corollary}
+%\def\lemmaname{Lemma}
+%\def\conjecturename{Conjecture}
+%\def\remarkname{Remark}
+%\def\examplename{Example}
+%\def\proofname{Proof}
+
+\def\definitionname{Definition}%
+\def\theoremname{Satz}%
+\def\propositionname{Proposition}%
+\def\corollaryname{Korollar}%
+\def\lemmaname{Lemma}%
+\def\conjecturename{Vermutung}%
+\def\remarkname{Bemerkung}%
+\def\examplename{Beispiel}%
+\def\proofname{Beweis}%
+
+\newtheorem{definition}{}
+  \def\definition{\Thm{\rm}{definition}{\definitionname}}
+\newtheorem{theorem}[definition]{\theoremname}
+  \def\theorem{\Thm{\it}{definition}{\theoremname}}
+\newtheorem{proposition}[definition]{\propositionname}
+  \def\proposition{\Thm{\it}{definition}{\propositionname}}
+\newtheorem{corollary}[definition]{\corollaryname}
+  \def\corollary{\Thm{\it}{definition}{\corollaryname}}
+\newtheorem{lemma}[definition]{\lemmaname}
+  \def\lemma{\Thm{\it}{definition}{\lemmaname}}
+\newtheorem{conjecture}[definition]{\conjecturename}
+  \def\conjecture{\Thm{\it}{definition}{\conjecturename}}
+\newtheorem{remark}[definition]{\remarkname}
+  \def\remark{\Thm{\rm}{definition}{\remarkname}}
+\newtheorem{example}[definition]{\examplename}
+  \def\example{\Thm{\rm}{definition}{\examplename}}
+\newenvironment{proof}{\smallskip{\em \proofname:}}{\hfill\(\Box\)\\\smallskip}
+
+%---------- internal ----------
+\newcommand{\inMath}[1]{\relax\ifmmode{#1}\else${#1}$\fi}
+
+%---------- math ----------
+
+% decl : name * type -> declaration
+\newcommand{\decl}[2]{\inMath{{#1}:{#2}}}
+
+% fun : domain * codomain -> function type
+\newcommand{\fun}[2]{\inMath{{#1}\rightarrow{#2}}}
+
+% fundecl : function name * domain * codomain -> function declaration
+\newcommand{\fundecl}[3]{\decl{#1}{\fun{#2}{#3}}}
+
+% argpos : underscore to indicate argument positions for infix etc.
+\newcommand{\argpos}{\underline{\ }}
+
+
+\newcommand{\implies}{\;\Rightarrow\;}
+\newcommand{\dfeq}{\;:=\;}
+\newcommand{\dfiff}{\;\:\Longleftrightarrow\;}
+
+% eset : elements -> enumerated set
+\newcommand{\eset}[1]{\inMath{\{{#1}\}}}
+
+% pset : variable * predicate -> set
+\newcommand{\pset}[2]{\inMath{\{{#1}|{#2}\}}}
+
+% family : element of family * variable in set -> family
+\newcommand{\family}[2]{\inMath{({#1})_{#2}}}
+
+% union of sets
+\newcommand{\union}[2]{\inMath{{#1}\,\cup\,{#2}}}
+
+% intersection of sets
+\newcommand{\intersection}[2]{\inMath{{#1}\,\cap\,{#2}}}
+
+% difference of sets
+\newcommand{\difference}[2]{\inMath{{#1}\backslash{#2}}}
+
+% disjointness of sets
+\newcommand{\disjoint}[2]{\inMath{\intersection{#1}{#2}=\emptyset}}
+
+
+% card : set -> its cardinality
+\newcommand{\card}[1]{\inMath{|{#1}|}}
+
+\newcommand{\tuple}[1]{\inMath{\langle{#1}\rangle}}
+% pair : sth * sth -> pair
+\newcommand{\pair}[2]{\tuple{{#1},{#2}}}
+% triple : sth * sth * sth -> triple
+\newcommand{\triple}[3]{\tuple{{#1},{#2},{#3}}}
+
+% index * from * to -> from =< index =< to
+\newcommand{\inrange}[3]{\inMath{{#1}={#2}\ldots{#3}}}
+
+%---------- categories ----------
+
+% Obj : collection of objects in a category
+% Mor : collection of morphisms in a category
+\newcommand{\Obj}{{\rm Obj}}
+\newcommand{\Mor}{{\rm Mor}}
+
+% ObjOf : category -> collection of objects in category
+% MorOf : category -> collection of morphisms in category
+\newcommand{\ObjOf}[1]{{\Obj\;{#1}}}
+\newcommand{\MorOf}[1]{{\Mor\;{#1}}}
+
+% dom : morphism -> its domain
+% cod : morphism -> its codomain
+% id : object -> identity morphism
+% comp : morphism * morphism -> composition of morphisms
+\newcommand{\id}[1]{\inMath{\dot{#1}}}
+\newcommand{\dom}[1]{\inMath{{#1}^{-}}}
+\newcommand{\cod}[1]{\inMath{{#1}^{+}}}
+\newcommand{\comp}[2]{\inMath{{#1};{#2}}}
+
+\newcommand{\Cat}{\mbox{\rm CAT}}
+\newcommand{\Set}{\mbox{\rm SET}}
+\newcommand{\dual}[1]{\inMath{{#1}^{\rm op}}}
+
+%---------- signatures ----------
+
+\newcommand{\emptysig}{\inMath{\emptyset}}
+
+\newcommand{\opdecl}[3]{\fundecl{#1}{#2}{#3}}
+\newcommand{\preddecl}[2]{\decl{#1}{#2}}
+\newcommand{\vardecl}[2]{\decl{#1}{#2}}
+\newcommand{\sigtermdecl}[3]{\inMath{{#2}:_{#1}{#3}}}
+\newcommand{\termdecl}[2]{\sigtermdecl{}{#1}{#2}}
+
+\newcommand{\Sign}{\inMath{\rm SIGN}}
+\newcommand{\EqSign}{\inMath{\rm EQSIGN}}
+
+\newcommand{\Spec}{\inMath{\rm SPEC}}
+
+\newcommand{\sort}[1]{{\it {#1}}}
+\newcommand{\pred}[1]{{\it {#1}}}
+
+\newcommand{\varsOf}[1]{{\it var({#1})}}
+
+%---------- structures ----------
+
+\newcommand{\AlgOf}[1]{\inMath{\rm {#1}\mbox{-}ALG}}
+\newcommand{\StructOf}[1]{\inMath{\rm {#1}\mbox{-}STRUCT}}
+
+\newcommand{\reduct}[1]{\inMath{\bar{#1}}}
+
+\newcommand{\T}[1]{\inMath{T_{#1}}}
+\newcommand{\TSig}{\T{\Sigma}}
+\newcommand{\TSigX}{\T{\Sigma(X)}}
+\newcommand{\TSigY}{\T{\Sigma(Y)}}
+
+\newcommand{\Atoms}[1]{\inMath{At_{#1}}}
+
+\newcommand{\HerbStruct}[2]{\inMath{HS({#1},{#2})}}
+
+\newcommand{\evalAss}[1]{\inMath{{#1}^{\#}}}
+\newcommand{\evalGnd}[1]{\inMath{\#_{#1}}}
+
+%---------- specifications ----------
+
+\newcommand{\eq}{\approx}
+\newcommand{\eqS}{\dot{\approx}}
+\newcommand{\clause}[2]{\inMath{{#1}\rightarrow{#2}}}
+\newcommand{\vclause}[3]{\inMath{\forall{#1}.{#2}\rightarrow{#3}}}
+\newcommand{\vuclause}[2]{\inMath{\forall{#1}.{#2}}}
+
+%---------- models ----------
+
+\newcommand{\InitOf}[1]{\inMath{{\cal I}({#1})}}
+
+%---------- theories ----------
+
+\newcommand{\ThOf}[1]{\inMath{{\rm Th}({#1})}}
+\newcommand{\IThOf}[1]{\inMath{{\rm ITh}({#1})}}
+
+\newcommand{\entails}{\inMath{\;\models\;}}
+\newcommand{\indEntails}{\inMath{\;\models_I\;}}
+
+%---------- terms ----------
+
+\newcommand{\subterm}[2]{\inMath{{#1}/{#2}}}
+
+%---------- rewriting ----------
+
+\newcommand{\rew}{\rightarrow}
+\newcommand{\rewR}{\stackrel{\epsilon}{\rightarrow}}
+\newcommand{\rewT}{\stackrel{+}{\rightarrow}}
+\newcommand{\rewRT}{\stackrel{*}{\rightarrow}}
+\newcommand{\rewI}{\leftarrow}
+\newcommand{\rewIR}{\stackrel{\epsilon}{\leftarrow}}
+\newcommand{\rewIT}{\stackrel{+}{\leftarrow}}
+\newcommand{\rewIRT}{\stackrel{*}{\leftarrow}}
+\newcommand{\rewS}{\leftrightarrow}
+\newcommand{\rewSR}{\stackrel{\epsilon}{\leftrightarrow}}
+\newcommand{\rewST}{\stackrel{+}{\leftrightarrow}}
+\newcommand{\rewSRT}{\stackrel{*}{\leftrightarrow}}
+
+\newcommand{\rewG}{\diamondsuit}
+\newcommand{\rewGRT}{\stackrel{*}{\diamondsuit}}
+
+\newcommand{\rewD}{\downarrow}
+
+%---------- proof ----------
+
+\newcommand{\ProofsOf}[1]{{\rm Proofs}({#1})}
+\newcommand{\trans}{\inMath{\vdash}}
+
+\newcommand{\Proofs}{\inMath{{\cal P}}}
+\newcommand{\iProofs}{\inMath{\Proofs_i}}
+\newcommand{\diProofs}{\inMath{\Proofs_d}}
+
+\newcommand{\proofGT}{\succ^P}
+\newcommand{\proofGE}{\succeq^P}
+\newcommand{\proofLT}{\prec^P}
+\newcommand{\proofLE}{\preceq^P}
+
+\newcommand{\cplGT}{\succ^c}
+\newcommand{\cplGE}{\succeq^c}
+\newcommand{\cplLT}{\prec^c}
+\newcommand{\cplLE}{\preceq^c}
+
+%---------- type predicates ----------
+
+\newcommand{\tp}[1]{\inMath{\mbox{\it is-}{#1}}}
+\newcommand{\tc}[1]{\inMath{{\it tc}({#1})}}
+\newcommand{\TC}[1]{\inMath{{\it TC}({#1})}}
+\newcommand{\TS}{\inMath{\it TS}}
+\newcommand{\TF}[1]{\inMath{{\TS_{#1}}}}
+
+% end of macros
+%----------------------------------------------------------------------

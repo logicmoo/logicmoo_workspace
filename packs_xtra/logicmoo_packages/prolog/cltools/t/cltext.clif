@@ -1,0 +1,15 @@
+(cl-text foo
+(cl-text axiom:1234
+(forall (?x ?y ?z)
+  (if (and (part_of ?x ?z)
+           (part_of ?z ?y))
+      (part_of ?x ?y))))
+
+(cl-text axiom:4567
+(forall (?x ?y ?z)
+  (if (and (part_of ?x ?z)
+           (part_of ?z ?y))
+      (part_of ?x ?y))))
+
+
+)

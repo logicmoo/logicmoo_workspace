@@ -1,0 +1,5 @@
+module pc using boolTriv. 
+op p : (formula -> bool).
+op i : (formula*formula -> formula).
+p(x)=true and p(i(x,y))=true => p(y)=true.
+p(i(i(i(x,y),z),i(i(z,x),i(u,x)))) = true.

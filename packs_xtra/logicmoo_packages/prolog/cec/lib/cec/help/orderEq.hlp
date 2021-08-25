@@ -1,0 +1,7 @@
+ 
+"orderEq(?I)."
+
+orients equation with index "I". The predicate fails if equation "I"
+does not exist or if the equation cannot be oriented or turned into
+a nonoperational equation or if the equation is eliminated during
+reduction.

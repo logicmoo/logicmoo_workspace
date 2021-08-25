@@ -1,0 +1,31 @@
+
+Order Base Declaration
+----------------------
+
+A order specification is an enrichment of a order base module:
+
+<order_base> ::= 'using' '(' <order_expression> ')'
+
+<order_expression> ::=    <order_name> 'for' <specification_name> 
+			| <order_expression> '+' <order_expression> 
+
+<order_name> ::=   'noorder'
+		 | <Prolog atom beside 'noorder'>
+
+The  order  base  determines  the termination orderings for the direct
+imports of a specification. If some <order_name> beside 'noorder' is 
+associated with  <specification_name> the system will look for the file
+        <specification_name>.<order_name>.q2.0 (Quintus 2.x versions)
+in the current directory (-> cd, pwd).
+If no such files are present the system looks for a file
+	<specification_name>.eqn
+with the text of the specification module according to the syntax of
+<specification> to be read in and for a file
+	<specification_name>.<order_name>.ord
+which contains pragmas concerning the termination ordering.
+If the the <order_name> associated with <specification_name> is 
+'noorder' or there is no <order_name> associated with <specification_name> 
+the system looks only for a file 
+	<specification_name>.eqn
+in the current directory (-> cd, pwd).
+

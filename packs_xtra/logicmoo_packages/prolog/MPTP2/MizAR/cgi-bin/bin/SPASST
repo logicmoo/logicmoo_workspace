@@ -1,0 +1,3 @@
+#!/bin/csh
+@ ll = $#argv - 1;
+/home/mptp/public_html/cgi-bin/bin/tptp4X -x -f dfg $argv[$#argv] | /home/mptp/public_html/cgi-bin/bin/SPASS -Stdin $argv[1-$ll]

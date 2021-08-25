@@ -1,0 +1,57 @@
+module int using orderedRing(elem <- int). 
+(1 =< 0) = false.		% from the first-order axiom   not (1=0).
+
+% Warning: takes a little while to complete.
+% 590 sec. on a Sun 3/260
+% 198 superpositions with pragma file 'poly1.@'
+
+
+
+
+
+
+% --------------------------------------------------------
+% ------------- Parsing and Pretty-Printing ------------------
+parse(0,0).
+parse(1,1).
+parse(I,T+1):-
+	integer(I),
+	I > 0,
+	!,
+	IM1 is I-1,
+	parse(IM1,T).
+parse(-1,-(1)).
+parse(I,-(T+1)):-
+	integer(I),
+	I < 0,
+	!,
+	J is -I,
+	IM1 is -I-1,
+	parse(IM1,T).
+
+
+pretty(X+1):-
+	predicate(fromUnary(X+1,N)),
+	write(N).
+pretty(1+X):-
+	predicate(fromUnary(X+1,N)),
+	write(N).
+pretty(-X):-
+	predicate(fromUnary(X,N)),
+	write('-'),
+	write(N).
+
+
+predicate(fromUnary(X,_)):-
+	var(X),
+	!,
+	fail.
+predicate(fromUnary(0,0)).
+predicate(fromUnary(1,1)).
+predicate(fromUnary(X+1,N1)):-
+	predicate(fromUnary(X,N)),
+	N1 is N+1.
+predicate(fromUnary(X+ -(1),N1)):-
+	predicate(fromUnary(X,N)),
+	N1 is N-1.
+

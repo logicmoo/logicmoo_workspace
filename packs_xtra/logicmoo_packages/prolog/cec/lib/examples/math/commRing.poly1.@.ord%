@@ -1,0 +1,39 @@
+order(poly1 for commRing) using 'poly1.p'for abelianGroup+'poly1.t'for commSemiGroup.
+setInterpretation(1 : 4
+).
+setInterpretation(*(x,y) : 2 * x * y
+).
+setInterpretation(true : 2
+).
+setInterpretation(false : 2
+).
+setInterpretation(-(x) : 6 * x + 4
+).
+setInterpretation(+(x,y) : x + y + 1
+).
+setInterpretation(0 : 2
+).
+
+constructor('0-elem').
+
+
+
+
+
+
+/* ordering of the literals is ms for
+/*	x+y = y+x */
+action(status(ms),'$equation'([],['+-elem-elem-elem'(@'x-elem',@'y-elem')='+-elem-elem-elem'(@'y-elem',@'x-elem')])).
+
+/* ordering of the literals is ms for
+/*	x+y+z = x+ (y+z) */
+action(status(ms),'$equation'([],['+-elem-elem-elem'('+-elem-elem-elem'(@'x-elem',@'y-elem'),@'z-elem')='+-elem-elem-elem'(@'x-elem','+-elem-elem-elem'(@'y-elem',@'z-elem'))])).
+
+/* ordering of the literals is ms for
+/*	x*y = y*x */
+action(status(ms),'$equation'([],['*-elem-elem-elem'(@'x-elem',@'y-elem')='*-elem-elem-elem'(@'y-elem',@'x-elem')])).
+
+/* ordering of the literals is ms for
+/*	x*y*z = x* (y*z) */
+action(status(ms),'$equation'([],['*-elem-elem-elem'('*-elem-elem-elem'(@'x-elem',@'y-elem'),@'z-elem')='*-elem-elem-elem'(@'x-elem','*-elem-elem-elem'(@'y-elem',@'z-elem'))])).
+

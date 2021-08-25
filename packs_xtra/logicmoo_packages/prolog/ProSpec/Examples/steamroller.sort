@@ -1,0 +1,68 @@
+
+begin(prospec).
+
+sorts : (animal, plant, wolfes, foxes, birds, caterp, snail, grain, 
+	 being).
+
+subsorts: (wolfes subsort_of animal,
+	   foxes subsort_of animal,
+	   birds subsort_of animal, 
+	   caterp subsort_of animal, 
+	   snail subsort_of animal, 
+	   grain subsort_of plant,
+	   animal subsort_of being,
+	   plant subsort_of being
+).
+
+functions: (
+	fr : U => U,
+	cp: caterp => plant,
+	cg: snail => grain,
+	h: (animal, animal) => grain
+).
+
+relations: (
+        eats: (animal, being),
+	m: (animal, animal),
+	caterpp: caterp,
+	animalp: animal,
+	birdp: birds,
+	snailp: snail,
+	foxp: foxes,
+	wolfp: wolfes,
+	grainp: grain,
+	plantp: plant
+).
+
+end(prospec).
+
+
+eats(X, Y:plant)   :-  -eats(X,fr(Z)), m(Z,X) , eats(Z,U:plant).
+
+m(X:caterp,Y:birds).
+m(X:snail,Y:birds).
+m(X:birds,Y:foxes).
+m(X:foxes,Y:wolfes).
+
+% redundant:
+eats(X:birds,Y:caterp).
+
+% implizit!
+%plantp(cp(X)).
+eats(X:caterp, cp(X)).
+
+%% subsort!!:
+%%plantp(cg(X)).
+eats(X:snail,cg(X)).
+
+%% redundant:!!
+-eats(X:wolfes,Y:foxes).
+-eats(X:wolfes,Y:grain).
+-eats(X:birds,Y:snail).
+% grainp:
+%grainp(h(X,Y)).
+-eats(X,Y:animal) , -eats(Y,h(X,Y)).
+
+
+
+

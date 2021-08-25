@@ -1,0 +1,9 @@
+module lists.
+
+cons []   : list .
+cons '.'  : (elem * list -> list).
+op append : (list * list -> list).
+
+append([], l) = l.
+append([e | l1], l2) = [e | append(l1, l2)].
+

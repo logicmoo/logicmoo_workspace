@@ -1,0 +1,70 @@
+MFILES	= $(MIZFILES)
+MMLLAR  = $(MFILES)/mml.lar
+MMLLAR100  = $(MFILES)/mml.lar.100
+MIZ100     = $(shell cat $(MMLLAR100))
+STANDARDMIZ     = $(shell cat $(MMLLAR))
+SHMIZ = $(shell shuffle < $(MMLLAR))
+
+XSLTPROC = xsltproc.1.1.15
+XML2HTML = /home/urban/xsltxt/xsl4mizar/miz.xsl
+ADDABS = /home/urban/xsltxt/xsl4mizar/addabsrefs.xsl
+ACCOM = $(MFILES)/bin/accom 
+VERIFIER = $(MFILES)/bin/verifier
+EXPORTER = $(MFILES)/bin/exporter
+VERIFIER.BFEX = $(MFILES)/bin/verifier.bfex
+MIZPL = /home/urban/xsltxt/xsl4mizar/mizpl.xsl
+
+%.acc: %.miz
+	$(ACCOM) $* > $*.acc 
+
+%.exp: %.acc
+	$(EXPORTER) -q   $* >$*.exp  
+
+%.dco1: %.dco
+	$(XSLTPROC)  --param aname \'$(shell echo $*|tr 'a-z' 'A-Z')\' $(ADDABS) $*.dco > $*.dco1;
+
+%.dco2: %.dco1
+	$(XSLTPROC) --param mml 1 $(MIZPL)  $*.dco1 > $*.dco2
+
+%.xml: %.acc
+	$(VERIFIER.BFEX) -q   $*  
+	perl -i -e 'local $$/;$$_=<>; if(m/((.|[\n])*?)<PolyEval/) { print $$1; while(m/(<PolyEval((.|[\n])*?)<\/PolyEval>)/g) { if(!(exists $$h{$$1})) { print $$1; $$h{$$1} = (); }} print "</ByExplanations>";} else {print $$_}' $*.bex
+
+# ##TODO: the .err1 files are produced by removing the numerical requirement declarations,
+#         and running accom and verifier - this should tell where the requirements are needed
+%.bex1: %.bex %.err1
+	cat $*.bex| perl -e '$$k=shift; open(E,"$$k.err1"); while($$_=<E>) {($$l,$$c)=$$_=~m/([0-9]+) ([0-9]+) [0-9]+.*/; $$h{"$$l:$$c"} = (); } local $$/;$$_=<>; if(m/((.|[\n])*?)<PolyEval/) { print $$1; while(m/(<PolyEval line=.([0-9]+). col=.([0-9]+).((.|[\n])*?)<\/PolyEval>)/g) { if((exists $$h{"$$2:$$3"})) { print $$1; }} print "</ByExplanations>";} else { print $$_; }' $* > $*.bex1
+
+%.xml1: %.xml
+	$(XSLTPROC) $(ADDABS)  $*.xml > $*.xml1 
+
+%.xml2: %.xml1
+	$(XSLTPROC) $(MIZPL)  $*.xml1 > $*.xml2
+
+%.html: %.xml1
+	$(XSLTPROC) --param linking \'s\' --param proof_links \'1\' $(XML2HTML)  $*.xml1 > $*.html 
+
+%.htmla1: %.xml1
+	$(XSLTPROC) --param linking \'s\' --param ajax_proofs \'1\' --param titles \'1\' --param colored \'1\' --param proof_links \'1\' $(XML2HTML)  $*.xml1 > $*.htmla1 
+
+%.htmla2: %.xml1
+	$(XSLTPROC) --param ajax_proofs \'2\' --param proof_links \'1\' $(XML2HTML)  $*.xml1 > $*.htmla2 
+
+%.htmla3: %.xml1
+	$(XSLTPROC) --param linking \'q\' --param generate_items \'1\' --param titles \'1\' --param colored \'1\' $(XML2HTML)  $*.xml1 > $*.htmla3
+
+
+# all: xboole.html
+allhtml: $(addsuffix .html, $(SHMIZ))
+allhtmla1: $(addsuffix .htmla1, $(SHMIZ))
+allhtmla2: $(addsuffix .htmla2, $(SHMIZ))
+allhtmla3: $(addsuffix .htmla3, $(SHMIZ))
+html100: $(addsuffix .html, $(MIZ100))
+allacc: $(addsuffix .acc, $(STANDARDMIZ))
+allxml: $(addsuffix .xml, $(STANDARDMIZ))
+allxml1: $(addsuffix .xml1, $(SHMIZ))
+allxml2: $(addsuffix .xml2, $(SHMIZ))
+allbex1: $(addsuffix .bex1, $(STANDARDMIZ))
+allexp: $(addsuffix .exp, $(STANDARDMIZ))
+alldco1: $(addsuffix 1, $(shell ls *.dco))
+alldco2: $(addsuffix 2, $(shell ls *.dco))

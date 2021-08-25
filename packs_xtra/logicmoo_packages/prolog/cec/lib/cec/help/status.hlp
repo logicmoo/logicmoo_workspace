@@ -1,0 +1,8 @@
+ 
+"status."
+
+asks the user to enter a list of the following form:
+		[Operator : Status, ...]
+and declares the operators to have the desired status provided "kns"
+is the type of the current termination ordering. "Status" can be
+"lr" for left-to-right, "rl" for right-to-left, or "ms" for multiset.

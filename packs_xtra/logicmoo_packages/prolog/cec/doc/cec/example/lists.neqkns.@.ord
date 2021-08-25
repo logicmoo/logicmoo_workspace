@@ -1,0 +1,16 @@
+order(neqkns for lists).
+greater([['$r',append]]).
+greater([['$r-ms','append-list-list-list']]).
+status(['$r':ms]).
+status(['$r-ms':ms]).
+
+constructor('true-bool').
+constructor('false-bool').
+constructor('[]-list').
+constructor('.-list-elem-list').
+
+
+
+
+
+

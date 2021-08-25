@@ -1,0 +1,2 @@
+order poly1 for ccc using 'poly1.p' for commSemiGroup .
+setInterpretation( '==>'(x, y)   : 2*x*y).

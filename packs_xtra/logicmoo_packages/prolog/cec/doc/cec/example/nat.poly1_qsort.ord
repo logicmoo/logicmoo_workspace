@@ -1,0 +1,7 @@
+order poly1 for nat using
+	'poly1_qsort' for totalOrder([(elem , nat)],[]) .
+
+
+setInterpretation(0 : 2).
+setInterpretation(s(x) : 8 * x).
+constructor('0-nat').

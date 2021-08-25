@@ -1,0 +1,7 @@
+for filename in $2/*.pl
+do
+	if fgrep -l "$1" $filename
+	then 
+		fgrep -h "$1" $filename
+	fi
+done

@@ -1,0 +1,202 @@
+order(neqkns for inttimes) using neqkns for intplus.
+greater([['$r-ms','$inj-object-bool']]).
+greater([['$r',\==]]).
+greater([['$r-ms','\==-bool-object-object']]).
+greater([['\==-bool-object-object','$inj-object-bool']]).
+greater([['$r',==]]).
+greater([['$r-ms','==-bool-object-object']]).
+greater([['==-bool-object-object','$inj-object-bool']]).
+greater([[\==,==]]).
+greater([['$r-ms','$inj-nat-zero']]).
+greater([['==-bool-object-object','$inj-nat-zero']]).
+greater([['\==-bool-object-object','$inj-nat-zero']]).
+greater([['$r-ms','$inj-nat-posint']]).
+greater([['==-bool-object-object','$inj-nat-posint']]).
+greater([['\==-bool-object-object','$inj-nat-posint']]).
+greater([['$r-ms','$inj-object-nat']]).
+greater([['==-bool-object-object','$inj-object-nat']]).
+greater([['\==-bool-object-object','$inj-object-nat']]).
+greater([['$r',s]]).
+greater([['$r-ms','s-posint-nat']]).
+greater([['s-posint-nat','$inj-object-bool']]).
+greater([['s-posint-nat','$inj-nat-zero']]).
+greater([['s-posint-nat','$inj-nat-posint']]).
+greater([['s-posint-nat','$inj-object-nat']]).
+greater([['$r-ms','$inj-object-int']]).
+greater([['==-bool-object-object','$inj-object-int']]).
+greater([['\==-bool-object-object','$inj-object-int']]).
+greater([['s-posint-nat','$inj-object-int']]).
+greater([['$r-ms','$inj-int-nat']]).
+greater([['$inj-object-nat','$inj-int-nat']]).
+greater([['==-bool-object-object','$inj-int-nat']]).
+greater([['\==-bool-object-object','$inj-int-nat']]).
+greater([['s-posint-nat','$inj-int-nat']]).
+greater([['$r-ms','$inj-nzInt-posint']]).
+greater([['==-bool-object-object','$inj-nzInt-posint']]).
+greater([['\==-bool-object-object','$inj-nzInt-posint']]).
+greater([['s-posint-nat','$inj-nzInt-posint']]).
+greater([['$r-ms','$inj-int-nzInt']]).
+greater([['==-bool-object-object','$inj-int-nzInt']]).
+greater([['\==-bool-object-object','$inj-int-nzInt']]).
+greater([['s-posint-nat','$inj-int-nzInt']]).
+greater([['$r',-]]).
+greater([['$r-ms','--int-int']]).
+greater([['--int-int','$inj-object-bool']]).
+greater([['--int-int','$inj-nat-zero']]).
+greater([['--int-int','$inj-nat-posint']]).
+greater([['--int-int','$inj-object-nat']]).
+greater([['--int-int','$inj-object-int']]).
+greater([['--int-int','$inj-int-nat']]).
+greater([['--int-int','$inj-nzInt-posint']]).
+greater([['--int-int','$inj-int-nzInt']]).
+greater([['$r-ms','--nzInt-nzInt']]).
+greater([['--nzInt-nzInt','$inj-object-bool']]).
+greater([['--nzInt-nzInt','$inj-nat-zero']]).
+greater([['--nzInt-nzInt','$inj-nat-posint']]).
+greater([['--nzInt-nzInt','$inj-object-nat']]).
+greater([['--nzInt-nzInt','$inj-object-int']]).
+greater([['--nzInt-nzInt','$inj-int-nat']]).
+greater([['--nzInt-nzInt','$inj-nzInt-posint']]).
+greater([['--nzInt-nzInt','$inj-int-nzInt']]).
+greater([['--int-int','--nzInt-nzInt']]).
+greater([['$inj-object-int','$inj-object-nat']]).
+greater([['$inj-nat-posint','$inj-int-nzInt']]).
+greater([['$inj-nat-posint','$inj-nzInt-posint']]).
+greater([['$inj-object-int','$inj-nat-posint']]).
+greater([['$r',+]]).
+greater([['$r-ms','+-int-int-int']]).
+greater([['+-int-int-int','$inj-object-bool']]).
+greater([['+-int-int-int','$inj-nat-zero']]).
+greater([['+-int-int-int','$inj-nat-posint']]).
+greater([['+-int-int-int','$inj-object-nat']]).
+greater([['+-int-int-int','$inj-object-int']]).
+greater([['+-int-int-int','$inj-int-nat']]).
+greater([['+-int-int-int','$inj-nzInt-posint']]).
+greater([['+-int-int-int','$inj-int-nzInt']]).
+greater([['$r-ms','+-nat-nat-nat']]).
+greater([['+-nat-nat-nat','$inj-object-bool']]).
+greater([['+-nat-nat-nat','$inj-nat-zero']]).
+greater([['+-nat-nat-nat','$inj-nat-posint']]).
+greater([['+-nat-nat-nat','$inj-object-nat']]).
+greater([['+-nat-nat-nat','$inj-object-int']]).
+greater([['+-nat-nat-nat','$inj-int-nat']]).
+greater([['+-nat-nat-nat','$inj-nzInt-posint']]).
+greater([['+-nat-nat-nat','$inj-int-nzInt']]).
+greater([['$r-ms','+-posint-posint-posint']]).
+greater([['+-posint-posint-posint','$inj-object-bool']]).
+greater([['+-posint-posint-posint','$inj-nat-zero']]).
+greater([['+-posint-posint-posint','$inj-nat-posint']]).
+greater([['+-posint-posint-posint','$inj-object-nat']]).
+greater([['+-posint-posint-posint','$inj-object-int']]).
+greater([['+-posint-posint-posint','$inj-int-nat']]).
+greater([['+-posint-posint-posint','$inj-nzInt-posint']]).
+greater([['+-posint-posint-posint','$inj-int-nzInt']]).
+greater([['$r-ms','+-posint-posint-nat']]).
+greater([['+-posint-posint-nat','$inj-object-bool']]).
+greater([['+-posint-posint-nat','$inj-nat-zero']]).
+greater([['+-posint-posint-nat','$inj-nat-posint']]).
+greater([['+-posint-posint-nat','$inj-object-nat']]).
+greater([['+-posint-posint-nat','$inj-object-int']]).
+greater([['+-posint-posint-nat','$inj-int-nat']]).
+greater([['+-posint-posint-nat','$inj-nzInt-posint']]).
+greater([['+-posint-posint-nat','$inj-int-nzInt']]).
+greater([['$r-ms','+-posint-nat-posint']]).
+greater([['+-posint-nat-posint','$inj-object-bool']]).
+greater([['+-posint-nat-posint','$inj-nat-zero']]).
+greater([['+-posint-nat-posint','$inj-nat-posint']]).
+greater([['+-posint-nat-posint','$inj-object-nat']]).
+greater([['+-posint-nat-posint','$inj-object-int']]).
+greater([['+-posint-nat-posint','$inj-int-nat']]).
+greater([['+-posint-nat-posint','$inj-nzInt-posint']]).
+greater([['+-posint-nat-posint','$inj-int-nzInt']]).
+greater([['+-int-int-int','+-nat-nat-nat']]).
+greater([['+-nat-nat-nat','+-posint-nat-posint']]).
+greater([['+-posint-posint-nat','+-posint-nat-posint']]).
+greater([['+-nat-nat-nat','+-posint-posint-nat']]).
+greater([['+-posint-nat-posint','+-posint-posint-posint']]).
+greater([[+,s]]).
+greater([[+,-]]).
+greater([['+-posint-posint-nat','+-posint-posint-posint']]).
+greater([['$r',*]]).
+greater([['$r-ms','*-int-int-int']]).
+greater([['*-int-int-int','$inj-object-bool']]).
+greater([['*-int-int-int','$inj-nat-zero']]).
+greater([['*-int-int-int','$inj-nat-posint']]).
+greater([['*-int-int-int','$inj-object-nat']]).
+greater([['*-int-int-int','$inj-object-int']]).
+greater([['*-int-int-int','$inj-int-nat']]).
+greater([['*-int-int-int','$inj-nzInt-posint']]).
+greater([['*-int-int-int','$inj-int-nzInt']]).
+greater([['$r-ms','*-nat-nat-nat']]).
+greater([['*-nat-nat-nat','$inj-object-bool']]).
+greater([['*-nat-nat-nat','$inj-nat-zero']]).
+greater([['*-nat-nat-nat','$inj-nat-posint']]).
+greater([['*-nat-nat-nat','$inj-object-nat']]).
+greater([['*-nat-nat-nat','$inj-object-int']]).
+greater([['*-nat-nat-nat','$inj-int-nat']]).
+greater([['*-nat-nat-nat','$inj-nzInt-posint']]).
+greater([['*-nat-nat-nat','$inj-int-nzInt']]).
+greater([['*-int-int-int','*-nat-nat-nat']]).
+greater([[*,-]]).
+greater([[*,+]]).
+status(['$r':ms]).
+status(['$r-ms':ms]).
+status(['$inj-object-bool':ms]).
+status(['==-bool-object-object':ms]).
+status([== :ms]).
+status(['\==-bool-object-object':ms]).
+status([\== :ms]).
+status(['$inj-nat-zero':ms]).
+status(['$inj-nat-posint':ms]).
+status(['$inj-object-nat':ms]).
+status(['$inj-object-int':ms]).
+status(['$inj-int-nat':ms]).
+status(['$inj-nzInt-posint':ms]).
+status(['$inj-int-nzInt':ms]).
+status([+ :rl]).
+
+constructor('true-bool').
+constructor('false-bool').
+constructor('0-zero').
+
+
+
+
+
+
+/* ordering of the literals is ms for
+/*	x:object==y:object = y:object==x:object */
+action(status(ms),'$equation'([],['==-bool-object-object'(@'x-object',@'y-object')='==-bool-object-object'(@'y-object',@'x-object')])).
+
+/* ordering of the literals is ms for
+/*	x:object\==y:object = y:object\==x:object */
+action(status(ms),'$equation'([],['\==-bool-object-object'(@'x-object',@'y-object')='\==-bool-object-object'(@'y-object',@'x-object')])).
+
+/* declare as nonoperational :
+/*	x:object==y:object = true => x:object = y:object */
+action(orient(n),'$equation'(['==-bool-object-object'(@'x-object',@'y-object')='true-bool'],[@'x-object'= @'y-object'])).
+
+/* ordering of the literals is ms for
+/*	x:object==y:object = true => x:object = y:object */
+action(status(ms),'$equation'(['==-bool-object-object'(@'x-object',@'y-object')='true-bool'],[@'x-object'= @'y-object'])).
+
+/* declare as nonoperational :
+/*	object(n:nat)==object(m:nat) = true => s (n:nat) = s (m:nat) */
+action(orient(n),'$equation'(['==-bool-object-object'('$inj-object-nat'(@'n-nat'),'$inj-object-nat'(@'m-nat'))='true-bool'],['s-posint-nat'(@'n-nat')='s-posint-nat'(@'m-nat')])).
+
+/* declare as nonoperational :
+/*	object(A:nat) = object(B:int) => int(A:nat) = B:int */
+action(orient(n),'$equation'(['$inj-object-nat'(@'A-nat')='$inj-object-int'(@'B-int')],['$inj-int-nat'(@'A-nat')= @'B-int'])).
+
+/* declare as nonoperational :
+/*	int(nzInt(A:posint)) = int(B:nat) => nat(A:posint) = B:nat */
+action(orient(n),'$equation'(['$inj-int-nzInt'('$inj-nzInt-posint'(@'A-posint'))='$inj-int-nat'(@'B-nat')],['$inj-nat-posint'(@'A-posint')= @'B-nat'])).
+
+/* declare as nonoperational :
+/*	object(n:nat)==object(nat(0)) = true => object(-int(n:nat)) = object(nat(0)) */
+action(orient(n),'$equation'(['==-bool-object-object'('$inj-object-nat'(@'n-nat'),'$inj-object-nat'('$inj-nat-zero'('0-zero')))='true-bool'],['$inj-object-int'('--int-int'('$inj-int-nat'(@'n-nat')))='$inj-object-nat'('$inj-nat-zero'('0-zero'))])).
+
+/* declare as nonoperational :
+/*	object(n:nat)==object(m:nat) = true => -int(n:nat) = -int(m:nat) */
+action(orient(n),'$equation'(['==-bool-object-object'('$inj-object-nat'(@'n-nat'),'$inj-object-nat'(@'m-nat'))='true-bool'],['--int-int'('$inj-int-nat'(@'n-nat'))='--int-int'('$inj-int-nat'(@'m-nat'))])).
+

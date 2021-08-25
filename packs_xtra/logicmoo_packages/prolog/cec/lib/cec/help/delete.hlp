@@ -1,0 +1,4 @@
+ 
+"delete(+StateName)."
+
+deletes the specification stored under the name "StateName".

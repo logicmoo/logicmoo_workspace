@@ -1,0 +1,5 @@
+module implTrans using pc. 
+op a : formula.
+op b : formula.
+op c : formula.
+p(i(i(a,b),i(i(b,c),i(a,c))))=false.

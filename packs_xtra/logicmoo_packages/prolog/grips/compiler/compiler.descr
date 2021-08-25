@@ -1,0 +1,60 @@
+                GRIPS/PROLOG DEMONSTRATION MINI-COMPILER
+            Contributed by Jocelyn Paine, Oxford University.
+                   Shelved on the 11th of January 1991
+
+
+This  is a  demonstration  compiler, written  in  a functional  language
+(GRIPS)  that can  be translated  into Prolog.  The GRIPS  translator is
+available as another library entry.
+
+The  compiler takes  programs in  a (very  small) subset  of Pascal.  It
+lexically analyses them into tokens, parses  the token list into a tree,
+generates code from the tree, fixes  up references in the code, and then
+interprets the code  on a stack virtual machine. It  displays the output
+of each  stage, and the interpreter  displays the machine state  as each
+instruction is obeyed.
+
+The  compiler  is  written  in   a  functional  style,  using  functions
+(sometimes represented  as sets of domain->codomain  pairs) to represent
+well-known concepts in programming language semantics, such as the store
+and the environment.  I wrote it to explain in  his own idiom, compiling
+to a mathematician starting a computer science M.Sc.
+
+Here is an example program that it can compile and run.
+
+    program p;
+
+    label
+        99, 100;
+
+    const
+        five = 5;
+
+    var
+        v : integer;
+        w : integer;
+
+    begin
+        write('Hello.');
+        v := 1;
+        w := 1;
+    99:
+            if v=five then goto 100;
+            v := v + 1;
+            w := w * v;
+            goto 99;
+    100:
+        write('v = ');
+        write(v);
+        write('v! = ');
+        write(w)
+    end.
+
+
+SIZE : 55 kilobytes.
+
+CHECKED ON EDINBURGH-COMPATIBLE (POPLOG) PROLOG : yes.
+
+PORTABILITY : should be no problems.
+
+INTERNAL DOCUMENTATION : as program comments.

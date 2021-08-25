@@ -1,0 +1,15 @@
+module intplus using intbase .
+
+op (+) : (int * int -> int) .
+op (+) : (nat * nat -> nat) .
+op (+) : (posint * posint -> posint) .
+op (+) : (posint * nat -> posint) .
+op (+) : (nat * posint -> posint) .
+
+var [k : nat, m : nat, i : int, j : int] .
+
+i + 0 = i .
+0 + i = i .
+k + s(m) = s(k + m) .
+- s(k) + s(m) = - k + m .
+i + (- j) = - (- i + j) .

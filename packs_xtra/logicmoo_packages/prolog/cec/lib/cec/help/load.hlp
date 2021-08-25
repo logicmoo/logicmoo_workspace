@@ -1,0 +1,6 @@
+ 
+"load(+StateName)."
+
+loads the new current specification from the variable "StateName",
+cf. "store".  Specification variables remain unchanged.
+"StateName" = "$initial" re-initializes the system.

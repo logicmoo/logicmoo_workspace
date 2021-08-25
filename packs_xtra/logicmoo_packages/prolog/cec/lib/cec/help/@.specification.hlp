@@ -1,0 +1,51 @@
+
+Specifications
+--------------
+
+Specifications  consist of an optional  ->base declaration and an enrichment.
+An  enrichment  defines  (parts of)  a  ->signature,  ->axioms  and ->pragmas
+(including the clauses for parse/2 and pretty/1 (->parse_and_pretty)).
+The subsort, operator and variable declarations and the axioms may be written
+in  arbitrary  order  provided that any  use of  an operator  in an  axiom is 
+preceded by the declaration of the operator.
+In the  order-sorted  case the types of all  variables must  be declared to
+avoid an arbitrary typing of axioms.
+
+Pragmas may redefine parsing and pretty-printing of specifications
+(pragmas concerning the termination ordering are also allowed, but 
+ should be collected in an order specification).
+ 
+Any element of a specification must be terminated by a full stop "." followed 
+by a  white space character.  This syntactic  requirement  follows  from  the 
+conventions of the underlying Prolog-System.
+
+The  syntax  is given  in EBNF  with {} for  repetitions  and [] for options.
+The terminal symbols are the quoted ones.
+
+<specification> ::= 'module' '(' <specification_name> ')'
+	 	    [ <base> ] <full stop> 
+		    <enrichment>
+
+<enrichment> ::= { <subsortDeclaration> <full stop> }
+		 { <operatorDeclaration> <full stop> }
+		 [ <variableDeclarations> <full stop> ]
+		 { <axiom> <full stop> }
+		 { <pragma> <full stop> }
+		 [ <clauses for parse and pretty> ]
+
+<specification_name> ::= <Prolog atom>
+
+<full stop> ::= '.' <white space> 
+<white space> ::= '\t' | '\n' | ' '
+
+The semantics of a <specification> is the specification which is obtained by 
+enriching  the specified base module  by the constituents of the enrichment. 
+There is no implicit assumption about consistency or sufficient-completeness 
+of this enrichment.
+
+If no base  is specified,  the  base module  'standard'  is  taken  from the 
+current  directory  (thaw-file 'standard.q2.0').  If no module  standard  is 
+found   in  the   current   directory,  the   module   'standard'  from  the 
+CEC-distribution is used.
+The latter simply declares the sort 'bool' and the two constructor constants
+'true' and 'false' of sort 'bool'.

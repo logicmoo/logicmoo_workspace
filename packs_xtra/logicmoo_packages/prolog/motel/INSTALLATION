@@ -1,0 +1,78 @@
+			INSTALLING MOTEL
+			================
+
+The MOTEL distribution contains one compressed tar file, which
+includes the MOTEL system. To install the sytem execute the following 
+steps:
+
+1. Uncompress the compressed tar file
+
+prompt(1)% uncompress motel.tar.Z
+
+2. Extract the source file and documentation file from the tar file
+
+prompt(2)% tar xvf motel.tar
+
+This results in the files 	
+README      ---	brief description how the system can be used
+int.c       --- Part of the interface between Lucid Common Lisp and Sicstus Prolog
+int.o       --- Part of the interface between Lucid Common Lisp and Sicstus Prolog
+int.pl	    --- Prolog code of the interface between Lucid Common Lisp and Sicstus Prolog
+motel.lisp  ---	Lisp   code of the interface between Lucid Common Lisp and Sicstus Prolog
+motel.pl    ---	MOTEL source code	
+motel.dvi   --- MOTEL user manual 
+nh.dvi      --- Introduction to modal terminological logics
+
+After starting your PROLOG system you have to consult the source file.
+
+prompt(3)% sicstus
+SICStus 2.1 #5: Tue Jul 21 16:16:49 MET DST 1992
+| ?- consult(motel).
+consulting motel.pl...
+motel.pl consulted, 5600 msec 329168 bytes
+
+yes
+| ?-
+
+Now you can work with the MOTEL system as described in the user manual.
+
+To use the interface between Lucid Common Lisp and SICStus Prolog, you 
+have to modify the file motel.lisp. At the beginning it contains two
+setq-commands:
+
+(setq *consult-motel-string* "['/usr/local/motel/motel.pl'].")
+(setq *prolog-executable* "/usr/local/sicstus2.1/sicstus")
+(setq *int_dot_pl* "/HG/hiwis/timm/lucid/int.pl")
+
+You should replace `/usr/local/motel/motel.pl` with the filename
+of your installation of the motel.pl file. Furthermore you should
+replace `/usr/local/sicstus2.1/sicstus` with the filename of you
+PROLOG system. The variable `*int_dot_pl*` contains the location 
+of the file `int.pl` included in the distribution
+
+Now you can load this file after you have started Lucid Common Lisp:
+
+prompt(4)% lucid
+;;; Lucid Common Lisp/SPARC
+;;; Application Environment Version 4.0.0, 6 July 1990
+;;; Copyright (C) 1985, 1986, 1987, 1988, 1989, 1990, 1991 by Lucid, Inc.
+;;; All Rights Reserved
+;;;
+;;; This software product contains confidential and trade secret information
+;;; belonging to Lucid, Inc.  It may not be copied for any reason other than
+;;; for archival and backup purposes.
+;;;
+;;; Lucid and Lucid Common Lisp are trademarks of Lucid, Inc.  Other brand
+;;; or product names are trademarks or registered trademarks of their
+;;; respective holders.
+
+> (load "motel.lisp")
+;;; Loading source file "motel.lisp"
+;;; Warning: File "motel.lisp" does not begin with IN-PACKAGE.
+    Loading into package "USER"
+#P"/usr/local/motel/src/motel/motel.lisp"
+> 
+
+Then you are able to work with the interface between Lucid Lisp and
+SICSTUS Prolog as described the appendix of the MOTEL user manual.
+

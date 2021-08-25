@@ -1,0 +1,8 @@
+order poly1 for intplus using poly1 for intbase.
+
+setInterpretation([ x + y                         : x + 3 * y,
+		    '+-int-int-int'(x,y)          : x + y + 8,
+		    '+-nat-nat-nat'(x,y)          : x + y + 7,
+		    '+-posint-posint-nat'(x,y)    : x + y + 6,
+		    '+-posint-nat-posint'(x,y)    : x + y + 5,
+		    '+-posint-posint-posint'(x,y) : x + y + 4]).

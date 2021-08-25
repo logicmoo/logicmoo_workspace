@@ -1,0 +1,11 @@
+ 
+"order."
+
+indicates the current type of termination ordering and asks the user to
+change it to any of the following:
+
+	     "neqkns", "kns", "poly<N>", "manual",
+
+where <N> is a natural number denoting the tuple length of the interpretation.
+Another possibility at this point is to read the ordering from a file.
+In this case the option "file" should be chosen.

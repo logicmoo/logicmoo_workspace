@@ -1,0 +1,97 @@
+master_size(24).
+square(0..5).
+position(0..23).
+size(0,16).
+size(1,8).
+size(2,8).
+size(3,8).
+size(4,8).
+size(5,8).
+
+%master_size(112).
+%square(0..20).
+%position(0..111).
+%size(20,2).
+%size(19,4).
+%size(18,6).
+%size(17,7).
+%size(16,8).
+%size(15,9).
+%size(14,11).
+%size(13,15).
+%size(12,16).
+%size(11,17).
+%size(10,18).
+%size(9,19).
+%size(8,24).
+%size(7,25).
+%size(6,27).
+%size(5,29).
+%size(4,33).
+%size(3,35).
+%size(2,37).
+%size(1,42).
+%size(0,50).
+
+%master_size(8).
+%square(0..3).
+%position(0..7).
+%size(0,4).
+%size(1,4).
+%size(2,4).
+%size(3,4).
+
+%master_size(45).
+%square(0..5).
+%position(0..44).
+%size(0,30).
+%size(1,15).
+%size(2,15).
+%size(3,15).
+%size(4,15).
+%size(5,15).
+
+
+%master_size(6).
+%square(0..5).
+%position(0..5).
+%size(0,4).
+%size(1,2).
+%size(2,2).
+%size(3,2).
+%size(4,2).
+%size(5,2).
+
+%master_size(4).
+%square(0..1).
+%position(0..3).
+%size(0,2).
+%size(1,2).
+
+
+pos(X,Y):-position(X),position(Y).
+
+'1'{place(Square,X,Y):pos(X,Y)}'1':-square(Square).
+
+%non overlap
+:-place(Sq1,X1,Y1),place(Sq2,X2,Y2),
+  square(Sq1),square(Sq2),
+%  position(X1),position(Y1),
+%  position(X2),position(Y2),
+  Sq1 neq Sq2, size(Sq1,Size1),size(Sq2,Size2),
+  X2+Size2>X1, X2<X1+Size1,
+  Y2+Size2>Y1, Y2<Y1+Size1.
+  
+%contained in the main square
+:-place(S,X,Y),square(S),
+position(X),position(Y),
+  size(S,Size),
+  master_size(MS),
+  X+Size>MS.
+
+:-place(S,X,Y),square(S),
+position(X),position(Y),
+  size(S,Size),
+  master_size(MS),
+  Y+Size>MS.
+  

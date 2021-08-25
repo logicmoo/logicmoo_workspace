@@ -1,0 +1,285 @@
+
+iarevisionstest :-
+	write('TEST FILE: jantest.ibox-abox-rev'), nl,
+	iarevisionstest(0).
+
+iarevisionstest(N1) :-
+     	N is N1 + 1,
+     	N < 14, 
+        iartest(N),
+     	!, iarevisionstest(N).
+iarevisionstest(_).
+
+
+
+write_succ_ia(T) :-
+	write('+++ ibox-abox-revision test '), write(T), 
+	write(' SUCCEEDED'), nl.
+
+write_fail_ia(T) :-
+	write('--- ibox-abox-revision test '), write(T), 
+	write(' FAILED'), nl.
+	
+
+
+%% forget ilinks 
+
+
+iartest(T) :-
+	T == 1, 
+	nl, write('*** Testing removal of i-links'), nl,
+	backinit,
+	p1 :< anything,
+        p2 :< anything,
+        p1 => p2,
+        
+        x :: p1,
+        x ?: p2,
+	\+ x ?: p2 noibox, 
+        
+        backtell(forget(p1 => p2)),
+
+        \+ x ?: p2,
+        write_succ_ia(T), !.
+        
+iartest(T) :-
+	T == 2, 
+	backinit,
+	p1 :< anything,
+        p2 :< anything,
+	r  :< domain(p1),
+        p1 => p2,
+	atleast(1,r) => p2,  %% keep 2nd i-link when 1st is deleted
+        
+        x :: p1,
+        x ?: p2,
+        
+        backtell(forget(p1 => p2)),
+
+        \+ x ?: p2,
+        write_succ_ia(T), !.
+
+
+iartest(T) :-
+	T == 3,
+	backinit,  
+        p1 :< anything,
+        p2 :< anything,
+	r  :< domain(p1),
+ 
+        p1 => p2,
+	atleast(1,r) => p2, 
+
+        x :: p1 and r:y,
+	x ?: p2,
+
+	backtell(forget(p1 => p2)),
+
+	x ?: p2,
+	write_succ_ia(T), !.
+
+
+iartest(T) :-
+	T == 4,
+	backinit,  
+        p1 :< anything,
+        p2 :< anything,
+	p3 :< anything,
+	r  :< domain(p1),
+ 
+        c1 := atleast(1,r),
+        c1 => p3,
+	atleast(1,r) => p2, 
+
+        x :: p1 and r:y,
+	x ?: c1 noibox,
+	x ?: p2 and p3,
+
+	backtell(forget(c1 => p3)),
+
+	x ?: p2,
+	x ?: c1 noibox,
+	write_succ_ia(T), !.
+	
+
+
+%% new ilinks
+
+iartest(T) :-
+	T == 5, 
+	nl, write('*** Testing later addition of i-links'), nl,
+	backinit,
+	p1 :< anything,
+        p2 :< anything,
+                
+        x :: p1,
+        \+ x ?: p2,
+	        
+        p1 => p2,
+
+        x ?: p2,
+        write_succ_ia(T), !.
+
+
+iartest(T) :-
+	T == 6,
+	backinit,  
+        p1 :< anything,
+        p2 :< anything,
+	p3 :< anything,
+	r  :< domain(p1),
+
+        
+        x :: p1 and r:y,
+	
+	atleast(1,r) => p3,
+
+	x ?: p3,
+	write_succ_ia(T), !.
+
+
+iartest(T) :-
+	T == 7,
+	backinit,  
+        p1 :< anything,
+        p2 :< anything,
+	p3 :< anything,
+	r  :< domain(p1),
+        
+        x :: p1 and r:y,
+	
+	r:y  => r:z,
+
+	x ?: atleast(2,r),
+	write_succ_ia(T), !.
+
+iartest(T) :-
+	T == 8,
+	backinit,  
+        p1 :< anything,
+        p2 :< anything,
+	p3 :< anything,
+	r  :< domain(p1),
+	r1 := inv(r),
+	
+        x :: p1 and r:y,
+	
+	oneof([x,y,z]) => r:z,
+
+	z ?: atleast(3,r1),
+	write_succ_ia(T), !.
+
+
+iartest(T) :-
+	T == 9,
+	backinit, 
+	p1 :< anything,
+        p2 :< anything,
+	p3 :< anything,
+	r  :< domain(p1),
+
+        atleast(1,r) => p2,
+        
+	x :: p1 and r:y,
+	x ?: p2,
+
+	p2 => p3,
+
+	x ?: p3,
+	write_succ_ia(T), !.
+
+
+%% TBox-IBox-ABox-Revision
+
+iartest(T) :-
+	T == 10,
+	nl, write('*** Testing combined TBox-IBox-ABox-Revision'), nl,
+	backinit,
+	p1 :< anything,
+        p2 :< anything,
+	p3 :< anything,
+	r  :< range(anything),
+	c1 := p1 and p2,
+	
+
+	c1 =>  p3,
+        x  ::  c1,
+	x  ?:  p3,
+	c1 :=  p1 and all(r,p2),  %% TBox Revision
+
+        x  ?:  p3,                %% I-Supers muessen erhalten bleiben
+
+        write_succ_ia(T), !.
+
+iartest(T) :-
+	T == 11,
+	backinit,
+	p1 :< anything,
+        p2 :< anything,
+	p3 :< anything,
+	r  :< range(anything),
+	c1 := p1 and p2,
+	
+
+	p1 and p2  =>  p3,
+        x  ::  c1,
+	x  ?:  p3,
+	c1 :=  p1 and all(r,p2),  %% TBox Revision
+
+        \+ x  ?:  p3,             %% I-Link nicht mehr anwendbar
+
+        write_succ_ia(T), !.
+
+
+iartest(T) :-
+	T == 12,
+	backinit,
+	p1 :< anything,
+        p2 :< anything,
+	p3 :< anything,
+	r  :< range(anything),
+	c1 := p1 and p2,
+
+	c1  =>  p3,
+        x  ::  p1 and r:close(y),
+	y  ::  p2,
+	\+ x  ?:  p3,
+	c1 :=  p1 and all(r,p2),  %% TBox Revision
+
+        x  ?:  p3,                %% I-Link jetzt anwendbar
+
+        write_succ_ia(T), !.
+
+
+iartest(T) :-
+	T == 13,
+	backinit,
+	p1 :< anything,
+        p2 :< anything,
+	p3 :< anything,
+	p4 :< anything,
+	r  :< range(anything),
+	c1 := p1 and p2,
+
+	c1  =>  p3,
+	
+        x  ::  p1 and r:close(y),
+	y  ::  p2,
+	z  ::  p1 and p2,
+	\+ x  ?:  p3,
+	z  ?:  p3,
+	
+	c1 :=  p1 and all(r,p2),  %% TBox Revision
+
+        x  ?:  p3,                %% I-Link jetzt anwendbar
+        \+ z  ?:  p3,              %% I-Link nicht mehr anwendbar
+        
+        write_succ_ia(T), !.
+
+
+%%% catch failed tests
+
+
+iartest(T) :-
+	write_fail_ia(T),
+	assert(test(ibox_abox_revision_test(T), failed)).

@@ -1,0 +1,306 @@
+%--------------------------------------------------------------------------
+% File     : No information
+% Domain   : No information
+% Problem  : /tmp/dfg2tme_2.19230
+% Version  : No information
+% English  : No information
+
+% Refs     : No information
+% Source   : No information
+% Names    : No information
+
+% Status   : unknown
+% Rating   : ?
+% Syntax   : Number of clauses    :   60 (  21 non-Horn;  16 unit;  60 RR)
+%            Number of literals   :  160 (   4 equality)
+%            Maximal clause size  :   30 (   2 average)
+%            Number of predicates :   22 (   1 propositional; 0-2 arity)
+%            Number of functors   :   16 (  16 constant; 0-0 arity)
+%            Number of variables  :   16 (   0 singleton)
+%            Maximal term depth   :    1 (   1 average)
+
+% Comments : No information
+%          : tptp2X -f protein dfg2tme_3.p 
+%--------------------------------------------------------------------------
+
+% clause1, conjecture.
+city(skc31).
+
+% clause2, conjecture.
+event(skc30).
+
+% clause3, conjecture.
+lonely(skc29).
+
+% clause4, conjecture.
+chevy(skc28).
+
+% clause5, conjecture.
+seat(skc27).
+
+% clause6, conjecture.
+front(skc26).
+
+% clause7, conjecture.
+fellow(skc25).
+
+% clause8, conjecture.
+young(skc24).
+
+% clause9, conjecture.
+city(skc23).
+
+% clause10, conjecture.
+event(skc22).
+
+% clause11, conjecture.
+lonely(skc21).
+
+% clause12, conjecture.
+chevy(skc20).
+
+% clause13, conjecture.
+front(skc19).
+
+% clause14, conjecture.
+seat(skc18).
+
+% clause15, conjecture.
+fellow(skc17).
+
+% clause16, conjecture.
+young(skc16).
+
+% clause17, conjecture.
+ssSkC0; 
+old(skc28).
+
+% clause18, conjecture.
+ssSkC0; 
+dirty(skc28).
+
+% clause19, conjecture.
+ssSkC0; 
+white(skc28).
+
+% clause20, conjecture.
+ssSkC0; 
+car(skc28).
+
+% clause21, conjecture.
+ssSkC0; 
+street(skc29).
+
+% clause22, conjecture.
+ssSkC0; 
+way(skc29).
+
+% clause23, conjecture.
+ssSkC0; 
+hollywood(skc31).
+
+% clause24, conjecture.
+ssSkC0; 
+fellow(skc24).
+
+% clause25, conjecture.
+ssSkC0; 
+man(skc24).
+
+% clause26, conjecture.
+ssSkC0; 
+front(skc27).
+
+% clause27, conjecture.
+ssSkC0; 
+furniture(skc27).
+
+% clause28, conjecture.
+ssSkC0; 
+young(skc25).
+
+% clause29, conjecture.
+ssSkC0; 
+man(skc25).
+
+% clause30, conjecture.
+ssSkC0; 
+seat(skc26).
+
+% clause31, conjecture.
+ssSkC0; 
+furniture(skc26).
+
+% clause32, conjecture.
+old(skc20) :- 
+    ssSkC0.
+
+% clause33, conjecture.
+dirty(skc20) :- 
+    ssSkC0.
+
+% clause34, conjecture.
+white(skc20) :- 
+    ssSkC0.
+
+% clause35, conjecture.
+car(skc20) :- 
+    ssSkC0.
+
+% clause36, conjecture.
+street(skc21) :- 
+    ssSkC0.
+
+% clause37, conjecture.
+way(skc21) :- 
+    ssSkC0.
+
+% clause38, conjecture.
+hollywood(skc23) :- 
+    ssSkC0.
+
+% clause39, conjecture.
+seat(skc19) :- 
+    ssSkC0.
+
+% clause40, conjecture.
+furniture(skc19) :- 
+    ssSkC0.
+
+% clause41, conjecture.
+fellow(skc16) :- 
+    ssSkC0.
+
+% clause42, conjecture.
+man(skc16) :- 
+    ssSkC0.
+
+% clause43, conjecture.
+front(skc18) :- 
+    ssSkC0.
+
+% clause44, conjecture.
+furniture(skc18) :- 
+    ssSkC0.
+
+% clause45, conjecture.
+young(skc17) :- 
+    ssSkC0.
+
+% clause46, conjecture.
+man(skc17) :- 
+    ssSkC0.
+
+% clause47, conjecture.
+ssSkC0; 
+from(skc30, skc29).
+
+% clause48, conjecture.
+ssSkC0; 
+dummy(skc30, skc28).
+
+% clause49, conjecture.
+ssSkC0; 
+in(skc30, skc31).
+
+% clause50, conjecture.
+ssSkC0; 
+in(skc24, skc27).
+
+% clause51, conjecture.
+ssSkC0; 
+in(skc25, skc26).
+
+% clause52, conjecture.
+from(skc22, skc21) :- 
+    ssSkC0.
+
+% clause53, conjecture.
+dummy(skc22, skc20) :- 
+    ssSkC0.
+
+% clause54, conjecture.
+in(skc22, skc23) :- 
+    ssSkC0.
+
+% clause55, conjecture.
+in(skc16, skc19) :- 
+    ssSkC0.
+
+% clause56, conjecture.
+in(skc17, skc18) :- 
+    ssSkC0.
+
+% clause57, conjecture.
+ssSkC0 :- 
+    (skc24 = skc25).
+
+% clause58, conjecture.
+false :- (skc16 = skc17), 
+    ssSkC0.
+
+% clause59, conjecture.
+ssSkC0; 
+(X1 = Z) :- 
+    old(U), 
+    dirty(U), 
+    white(U), 
+    car(U), 
+    chevy(U), 
+    street(V), 
+    way(V), 
+    lonely(V), 
+    from(W, V), 
+    dummy(W, U), 
+    event(W), 
+    hollywood(X), 
+    city(X), 
+    in(W, X), 
+    seat(Y), 
+    furniture(Y), 
+    front(Y), 
+    in(Z, Y), 
+    fellow(Z), 
+    man(Z), 
+    young(Z), 
+    in(X1, X2), 
+    front(X2), 
+    furniture(X2), 
+    seat(X2), 
+    young(X1), 
+    man(X1), 
+    fellow(X1).
+
+% clause60, conjecture.
+(X1 = Y) :- 
+    old(U), 
+    dirty(U), 
+    white(U), 
+    car(U), 
+    chevy(U), 
+    street(V), 
+    way(V), 
+    lonely(V), 
+    from(W, V), 
+    dummy(W, U), 
+    event(W), 
+    hollywood(X), 
+    city(X), 
+    in(W, X), 
+    fellow(Y), 
+    man(Y), 
+    young(Y), 
+    in(Y, Z), 
+    front(Z), 
+    furniture(Z), 
+    seat(Z), 
+    young(X1), 
+    man(X1), 
+    fellow(X1), 
+    seat(X2), 
+    furniture(X2), 
+    front(X2), 
+    in(X1, X2), 
+    ssSkC0.
+
+%--------------------------------------------------------------------------

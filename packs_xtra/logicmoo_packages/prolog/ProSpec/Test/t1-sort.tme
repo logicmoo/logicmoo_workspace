@@ -1,0 +1,30 @@
+%% O--------------------------------------O
+%% | ProSpec V.1.31:                      |
+%% |   bthomas@informatik.uni-koblenz.de  |
+%% |--------------------------------------|
+%% | Normal Form Transformator (pl2tme):  |
+%% |   peter@informatik.uni-koblenz.de    |
+%% O--------------------------------------O
+%% ========================================
+%%  input file: t1.sort
+%% ========================================
+
+
+begin(simplify).
+
+%% input formula => forall([Y : _381, X : _387], true -> neq(X, Y) <-> ~ X = Y)
+
+true -> neq(A : B, C : B) <-> A : B = C : B.
+%forall([ X ],forall([ Y  ], true -> (neq(X,Y) <-> ~ (X = Y)))).
+
+end(simplify).
+%?- neq(a,b) <-> ~ a=b.
+
+%% query formula => -(forall([x : TM, y : TM], neq(x, y)) ; forall([x : TM, y : TM], neq(y, x)))
+
+?- neq(fsk0 : [A], fsk1 : [A]).
+
+?- neq(fsk3 : [A], fsk2 : [A]).
+%forall([ X ],forall([ Y  ], true -> (neq(X,Y) <-> ~ (X = Y)))).
+%forall([ X : t_P_List ],forall([ Y : t_P_List ],
+%   true -> (neq(X,Y) <-> ~ X = Y))).

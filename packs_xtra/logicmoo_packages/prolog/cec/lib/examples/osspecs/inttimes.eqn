@@ -1,0 +1,12 @@
+module inttimes using intplus.
+
+op * : (int * int -> int).
+op * : (nat * nat -> nat).
+
+var [i:int, j:int, m:nat].
+
+i * 0 = 0.
+0 * i = 0.
+i * s(m) = i * m + i.
+i * (-j) = -(i * j).
+(-i) * j = -(i * j).

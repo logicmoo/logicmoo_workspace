@@ -1,0 +1,46 @@
+ 
+"setInterpretation."
+
+asks the user to enter a list of the following form:
+		[Operator(Arguments) : ITerm, ... ]
+If "poly<N>" is the current termination ordering, a new interpretation
+(described by "ITerm") for an operator "Operator" is added to the
+current state. "ITerm" may be an expression over the variables in
+"Arguments", that can be evaluated to a list with "N" polynomials.
+The new interpretation must be compatible with all C- or AC-declarations
+in the current state. "ITerm" may contain the variables, non-negative
+integers, the arithmetic operations +, * and ^, all operators of the
+current signature and lists of length "N". The expression is evaluated by
+using the polynomial interpretation of the encountered operators which
+are not +, *, ^ , '.' (for lists) and not integers (if the signature contains
+any of these as defined operators, e.g. +, you have to use ip(...+...) to get
+their interpretation). If an operator with unknown interpretation is
+encountered, the user is asked for one (so the order of definitions
+is significant ; for [op1 : 2, op2 : op1] the user is not asked for an
+interpretation, but for [op1 : op2, op2 : 2] the user is asked for an
+interpretation of 'op2', because it is used before it's declaration).
+Single polynomials are automatically expanded to whole interpretations 
+(that means tuples) by copying the polynomial (especially for N=1
+a single polynomial "P" is always considered as  the '1'-tuple "[P]"). 
+If a whole interpretation (a tuple of polynomials) is found when
+calculating the n-th component of an interpreting tuple, the interpretation
+is automatically projected to it's n-th component. If the "K"-th component
+of the interpretation of "I" is wanted, use "ip(I,K)".
+
+Examples : (order significant)			yielding :
+
+ g(x,y) : [2*x*y, x+y], 			[2*x*y, x+y]
+      i : [2,3],				[2,3]
+      c : 7,  					[7,7] (conversion to tuple)
+   n(x) : g(i,x), 				[4*x, x+3]
+ f(x,y) : [g(x,y), n(x)+y],			[2*x*y,x+y+3] 
+	% (g(x,y) is projected to its first, n(x)+y to it's second component)
+ h(x,y) : [ip(g(x,y),2), ip(g(x,y),1)],		[x+y, 2*x*y]
+ k(x,y) : g(x,y)*3,				[6*x*y, 3*x+3*y]
+ l(x,y) : g(x,y)*[2,x],				[4*x*y, x^2+x*y]
+    x+y : x^2*y,				[x^2*y, x^2*y]
+   m(x) : ip(x+i)				[2*x^2, 3*x^2]
+	% without 'ip' you get [x+2, x+3]
+ 
+
+

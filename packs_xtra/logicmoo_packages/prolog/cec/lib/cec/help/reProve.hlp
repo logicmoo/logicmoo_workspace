@@ -1,0 +1,18 @@
+
+"reProve(+LemmaNumbers)."
+
+"LemmaNumbers" is a Prolog-list of terms of form
+r(I) or n(I). Any element should denote a previously
+proven lemma, now stored as a rule I or a nonoperational equation
+I, respectively. The inductive proofs via ->indProve of
+these lemmas using the previously given induction schemes
+are repeated in the current specification. The purpose of
+this command is to again prove those lemmas which remain
+true in an enriched specification.
+
+The proofs proceed in the given order in "LemmaNumbers."
+In any case, all lemmas are removed before the new proofs
+are performed. In particular, "reProve([])" simply removes
+all lemmas from the system. ->undo restores the state before
+"reProve" in case something goes wrong.
+

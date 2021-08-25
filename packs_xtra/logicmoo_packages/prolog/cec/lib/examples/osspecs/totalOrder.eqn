@@ -1,0 +1,17 @@
+module totalOrder using object.
+
+elem < object.
+
+op (=<) : (elem * elem -> bool) .
+op (>)  : (elem * elem -> bool) .
+
+var [e1 : elem, e2 : elem, e3: elem].
+
+(e1 =< e1) = true .
+(e1 =< e2) = false => (e2 =< e1) = true .
+(e1 =< e2) = true and (e2 =< e3) = true => (e1 =< e3) = true .
+(e1 =< e2) = true and (e2 =< e1) = true => e1 = e2 .
+(e1 > e1) = false .
+(e1 \== e2) = true => (e1 > e2) = (e2 =< e1) .
+
+(e1 =< e2) = true and (e1 > e2) = true => true = false.

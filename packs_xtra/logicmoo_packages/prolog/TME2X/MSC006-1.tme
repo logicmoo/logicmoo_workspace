@@ -1,0 +1,32 @@
+
+initial_interpretation([p(a,b),q(b,c)]).
+
+
+?- p(a, b).
+
+false :- q(c, d).
+
+
+
+% q_symmetry, hypothesis.
+q(B, A) :- 
+    q(A, B).
+% q_transitivity, hypothesis.
+(q(A, C)) :- 
+    q(A, B), 
+    q(B, C).
+
+
+% p_transitivity, hypothesis.
+p(A, C) :- 
+    p(A, B), 
+    p(B, C).
+
+
+% all_related, hypothesis.
+ (p(A, B);  q(A, B)) :- true.
+
+
+%----------------------------------------------------------------------
+
+

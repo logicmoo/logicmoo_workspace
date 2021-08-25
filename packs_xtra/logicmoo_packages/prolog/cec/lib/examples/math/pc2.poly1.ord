@@ -1,0 +1,4 @@
+order poly1 for pc2 using poly1 for boolTriv .
+
+setInterpretation(i(x,y)		: x + y).
+setInterpretation(p(x)		: 2*x).

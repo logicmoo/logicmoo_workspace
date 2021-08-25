@@ -1,0 +1,19 @@
+order(neqkns for group).
+greater([['$r'/_2180308,* /2]]).
+greater([['$r-ms','*-g-g-g']]).
+greater([['$r'/_2180308,i/1]]).
+greater([['$r-ms','i-g-g']]).
+greater([[i/1,* /2]]).
+status(['$r':ms]).
+status(['$r-ms':ms]).
+status(['$r'/_2180308:ms]).
+status([* /2:rl]).
+
+constructor('e-g').
+constructor('e-g').
+
+
+
+
+
+

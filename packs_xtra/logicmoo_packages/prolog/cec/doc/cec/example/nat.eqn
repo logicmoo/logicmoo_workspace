@@ -1,0 +1,37 @@
+module nat using totalOrder(elem <- nat).
+
+op 0 : nat.
+op(s, 100, fy) :  (nat -> nat) .
+
+(0 =< n ) = true.
+(s n =< 0) = false .
+(s n =< s m) = (n =< m).
+
+% Parsing and Pretty-Printing
+% ===========================
+
+parse(0,0).
+parse(I,s(T)):-
+	integer(I),
+	I > 0,
+	!,
+	IM1 is I-1,
+	parse(IM1,T).
+
+
+pretty(s(X)):-
+	predicate(fromUnary(s(X),N)),
+	write(N).
+
+
+predicate(fromUnary(X,_)):-
+	var(X),
+	!,
+	fail.
+predicate(fromUnary(0,0)).
+predicate(fromUnary(s(X),N1)):-
+	predicate(fromUnary(X,N)),
+	N1 is N+1.
+
+
+

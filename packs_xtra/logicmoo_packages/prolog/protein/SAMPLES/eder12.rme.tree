@@ -1,0 +1,20 @@
+
+trc(query, info(102, query, 2, 1), [
+   trc(p(_3988), info(91, ext, 1, 1), [
+      trc(not_p(f(f(_3988))), info(91, restart, 0, 1), [
+         trc(restart, info(91, query, 2, 1), [
+            trc(p(f(f(_3988))), info(83, red, 1, 0), []),
+            trc(p(f(f(f(_3988)))), info(91, ext, 1, 2), [
+               trc(not_p(f(_3988)), info(91, restart, 0, 1), [
+                  trc(restart, info(91, query, 2, 1), [
+                     trc(p(f(_3988)), info(90, red, 1, 0), []),
+                     trc(p(f(f(_3988))), info(91, red_cut, 2, 0), [])])])])])])]),
+   trc(p(f(_3988)), info(102, ext, 1, 1), [
+      trc(not_p(f(f(f(_3988)))), info(102, restart, 0, 1), [
+         trc(restart, info(102, query, 2, 1), [
+            trc(p(f(f(f(_3988)))), info(94, red, 1, 0), []),
+            trc(p(f(f(f(f(_3988))))), info(102, ext, 1, 2), [
+               trc(not_p(f(f(_3988))), info(102, restart, 0, 1), [
+                  trc(restart, info(102, query, 2, 1), [
+                     trc(p(f(f(_3988))), info(101, red, 1, 0), []),
+                     trc(p(f(f(f(_3988)))), info(102, red_cut, 2, 0), [])])])])])])])]).

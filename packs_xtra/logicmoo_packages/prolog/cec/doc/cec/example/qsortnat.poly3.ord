@@ -1,0 +1,2 @@
+order poly3 for qsortnat using poly3 for qsort([(elem , nat)],[]) +
+			       poly1_qsort for nat.

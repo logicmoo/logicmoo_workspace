@@ -1,0 +1,13 @@
+module booleanRing
+   using commRing(elem <- bool, 1 <- true, 0 <- false).
+op (not) : (bool -> bool) .
+op (;) : (bool * bool -> bool) .
+op(<=>, 650, xfy) : (bool * bool -> bool) .
+op(==>, 600, xfy) : (bool * bool -> bool) .
+(x ; y) = x * y + x + y .
+(x ==> y) = x * y + x + true .
+(x <=> y) = x + y + true .
+(not x) = x + true .
+
+x + x = false .
+x * x = x .

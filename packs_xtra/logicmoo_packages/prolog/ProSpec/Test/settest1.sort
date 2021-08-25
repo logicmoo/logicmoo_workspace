@@ -1,0 +1,33 @@
+protein_flag(sim_static,uncond_del).
+protein_flag(timeout,600).
+
+begin(prospec).
+
+sorts: (set, class).
+subsorts: (set subsort_of class).
+
+functions: ( 
+	singleton_set: (set) => set,
+	my_skolem_set: set
+	).
+
+relations: ( in: (set, class),
+             newpred: (set, set, set),
+	     '=': (U,U)
+	).
+
+end(prospec).
+
+
+begin(simplify).
+forall([x:set,y:set], 
+	singleton_set(x) = singleton_set(y) <-> x=y).
+forall([x:set], 
+	singleton_set(x) = singleton_set(x) <-> true).
+end(simplify).
+
+forall([y:set,z:set], 
+	((y=z) <-> forall(u:set,(in(u,y) <-> in(u,z))))).
+
+?- (forall([x], singleton_set(x) = singleton_set(x) <- x=x)).
+

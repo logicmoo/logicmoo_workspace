@@ -1,0 +1,101 @@
+<html><head>
+<meta http-equiv="content-type" content="text/html; charset=ISO-8859-1">
+
+
+<title>Codes for Readers of TPLP 2010 paper</title>
+</head>
+<body text="#444444" 
+  vlink= "#777777" 
+  alink= "#777777" 
+   link= "#777777"
+bgcolor= "#EEEEEE"  >
+<basefont size="4">
+<font face="helvetica">
+
+<h2>Codes for Readers of TPLP 2010 paper</h2>
+
+<hr size="1" align="left">
+
+<ul>
+
+<li>All codes are currently in SICStus Prolog 4 (but they run in
+SICStus 3, as well). 
+You can download the interpreter for free (for one month)
+from <A href="http://www.sics.se/sicstus">here</A>.
+The codes can be ported in other clp(fd) Prolog systems with few work.
+We are happy to do this for you if you ask us by email. 
+
+<li>All the files are saved in <tt>.txt</tt> format
+to avoid a bad interpretation of Prolog files as Pearl 
+files by some web browsers.
+They can be downloaded as a unique zip file 
+<A href="material.zip">here</A>.
+</li>
+
+<li>This 
+<a href="translator.txt">
+SICStus Prolog code</A> transforms a B-action description 
+into an ASP code.  
+Consult/compile it.  
+Then launch the goal <tt>:- main( FILENAME , PLAN LENGTH )</tt>. <br>
+It saves a file <tt>trdfp_FILENAME </tt> that can be executed by ASP
+solvers (eg <tt>lparse trdfp_FILENAME | smodels 1</tt>) <br>
+No need to suggest of checking the working directories.
+
+
+</li><li>SICStus Prolog clp(FD)
+<a href="SICSplan.txt">Interpreter of the B language</a>.
+Consult/compile it (if compiled it will run faster).
+You can add a line <tt>:-[FileName].</tt> at the beginning of the file
+to compile it together with the action description you wish to run.
+  In case no static causal laws are used in <tt>FileName</tt>, 
+  uncomment the
+line <tt>:- dynamic(caused/2).</tt> at the beginning of the
+file. Here there are some
+examples of action descriptions. Problems (5)-(8) have 
+been coded by students of the course 
+<A href="http://www.dimi.uniud.it/dovier/DID/LNC/prog.html">Linguaggi di Nuova Concezione</A> 
+at the University of Udine.
+<ol>
+<li>The three <a href="barrels.txt">barrels</a>, parametric on 
+barrel sizes</li>
+<li>A 3 x 3 <a href="puzzle.txt">puzzle</a></li>
+<li>A <a href="orderedBlocks.txt">Blocks world</a> Problem </li>
+<li>The <A href="capracavolo.txt">Goat, Cabbage, and Wolf</A> problem.</LI>
+<li>The <A href="peg_solitaire.txt">Peg Solitaire</A> problem.</li>
+<li>The <A href="langford.txt">Langford Numbers</A> problem. </li>
+<LI>The <A href="traffic_jam.txt">Traffic Jam</A> problem 
+(trolleys in a mine)
+<LI>A game of <A href="game_light.txt">Light Switching</A>
+
+</ol>
+
+</li><li><a href="SICSplanMV09.txt">Interpreter of the B-MV-FD language</a>.
+Same comments as the previous point. There are more comments at the beginning
+of the file to comment/uncomment in case you do not need some features.
+Here there are some examples:
+<ol>
+<li>The three <a href="barrelsMV.txt">barrels</a></li>
+<li>A 3 x 3 <a href="puzzleMV.txt">puzzle</a></li>
+<li>The  <a href="PF.txt">Protein Folding</a> Problem </li>
+<li>A <a href="comunMV.txt">better world</a></li>
+<LI>The <A href="gas_diffusion.txt">gas diffusion</A> problem</LI>
+<LI>A test using <A href="fibonacciMV.txt">Fibonacci</A> numbers</LI>
+<LI>The <A href="knighttourMV.txt">Knight tour </A> problem</LI>
+<LI>A problem of <A href="autoMV.txt">Cars and Fuel</A></LI>
+</ol>
+</li>
+
+<li>To use the B and BMV interpreters, after you consulted/compiled 
+them together with the desired action theory, call the goal
+<tt>:- sicsplan(N)</tt>, where <tt>N</tt> is the length of the
+plan.
+
+</ul>
+
+Have fun with our programs and examples. 
+Agostino Dovier, Andrea Formisano, and Enrico Pontelli.
+<hr size="1" align="left">
+</font>
+</body>
+</html>

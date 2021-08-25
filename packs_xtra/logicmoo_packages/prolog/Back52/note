@@ -1,0 +1,35 @@
+verdi> grep multifile *pl
+abox.pl::- multifile b5dump_these_predicates/1.
+abox.pl::-multifile(b5dump_these_predicates/1).
+abox.pl::- multifile b5dump_these_predicates/1.
+btl.pl::- multifile b5dump_these_predicates/1.
+btl.pl::- multifile b5dump_these_predicates/1.
+tbox1.pl::- multifile b5dump_these_predicates/1.
+tbox1.pl::- multifile b5dump_these_predicates/1.
+tbox1.pl::- multifile b5dump_these_predicates/1.
+tbox1.pl::- multifile b5dump_these_predicates/1.
+tbox2.pl::- multifile b5dump_these_predicates/1.
+tbox2.pl::- multifile b5dump_these_predicates/1.
+tbox2.pl::-multifile(b5dump_these_predicates/1).
+tbox2.pl::-multifile(b5dump_these_predicates/1).
+
+
+   412  8  Call: b5par_display_action_results([describe],[desc(prodotto and oneof([p1]))]) ? 
+   413  9  Call: b5par_display_action_results1(desc(prodotto and oneof([p1])),describe) ? 
+   414  10  Call: tab(2) ? s
+   414  10  Exit: tab(2) ?   s
+{Option not applicable at this port}
+   414  10  Exit: tab(2) ? 
+   415  10  Call: writeq(describe) ? s
+   415  10  Exit: writeq(describe) ? describe
+   416  10  Call: b5par_position_result(describe,_23246) ? s
+   416  10  Fail: b5par_position_result(describe,_23246) ? r
+   416  10  Call: b5par_position_result(describe,_23246) ? 
+   417  11  Call: print_length(user:writeq(describe),_23957) ? s
+   417  11  Fail: print_length(user:writeq(describe),_23957) ? r
+   417  11  Call: print_length(user:writeq(describe),_23957) ? 
+   418  12  Call: open_null_stream(_24126) ? s
+   418  12  Exit: open_null_stream('$stream'(896566,4)) ? 
+   419  12  Call: print_length:'print length'(user:writeq(describe),user,'$stream'(896566,4)) ? 
+   420  13  Call: print_length:'print length'(writeq(describe),user,'$stream'(896566,4)) ?  
+   421  14  Call: writeq('$stream'(896566,4),describe) ? s

@@ -1,0 +1,17 @@
+ 
+"enrich(+File)."
+
+reads in an enrichment of the current specification from the file
+"File.eqn". An enrichment may contain new operator, subsort, and
+variable declarations, as well as new axioms and pragmas.
+For the syntax of enrichments, cf.  ->specification.
+An enrichment must in particular not contain a (new) base declaration.
+
+"File" can be an arbitrary Prolog atom. Specify
+"File" = "user" if input from terminal is wanted.
+
+
+"enrich(+ModuleName,+OrderName)."
+
+reads in an enrichment of the current specification from the file
+"ModuleName.eqn" and an order specification from file "ModuleName.OrderName.ord". 

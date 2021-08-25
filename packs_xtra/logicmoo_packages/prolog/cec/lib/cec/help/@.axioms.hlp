@@ -1,0 +1,24 @@
+
+Axioms
+------
+
+Axioms may be given according to the following syntax:
+
+<axiom> ::= <conditionalEquation>
+<conditionalEquation> ::= [ <condition> ] <equation>
+
+<condition> ::=  <equation> { 'and' <equation> } '=>'
+<equation> ::= <signatureTerm> '=' <signatureTerm>
+
+<signatureTerm> ::= <well typed term with variables over the current
+                     signature>
+
+All terms are written in Prolog notation.
+Each  Prolog atom  which is not declared as an  operator will be taken as a 
+variable:
+
+<variable> ::= <Prolog atom> [ ':' <sortName> ]
+
+In the presence of subsort declarations, a variable must either be declared
+(cf. -> ordersorted)  or explicitly typed  upon its first occurrence in any 
+axioms. An explicitly typed variable takes the form <Prolog atom> : <sortName>.

@@ -1,0 +1,5 @@
+ 
+"setTrace(-Mode,-Toggle)."
+
+sets trace to mode "Mode". "Toggle" = on/off. To obtain information about
+meaningful modes type "traceModes".

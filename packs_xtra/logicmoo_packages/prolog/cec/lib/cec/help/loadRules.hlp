@@ -1,0 +1,5 @@
+ 
+"loadRules(-File)."
+
+compiles the set of rewrite rules which has been stored previously in
+the file "File.rules", cf. "compileRules".

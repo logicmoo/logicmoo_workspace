@@ -1,0 +1,64 @@
+********************    PROTEIN V2.09   ********************
+
+--------------------    input clauses   --------------------
+
+"Clause " No. 1 : [color(a, green)]
+"Clause " No. 2 : [on(a, b)]
+"Clause " No. 3 : [color(d, green)]
+"Clause " No. 4 : [on(d, b)]
+"Clause " No. 5 : [color(b, blue), color(b, green)]
+"Clause " No. 6 : [color(c, blue)]
+"Clause " No. 7 : [on(b, c)]
+"Query  " No. 8 : [query, not_protein_prolog(protein_answer(on(_204, _203))), not_on(_204, _203), not_color(_204, green), not_color(_203, blue)]
+"Restart" No. 8 : [restart, not_protein_prolog(protein_answer(on(_204, _203))), not_on(_204, _203), not_color(_204, green), not_color(_203, blue)]
+
+--------------------        flags       --------------------
+
+protein_flag(system, protein).
+protein_flag(ancestry_rme, off).
+protein_flag(ancs, both).
+protein_flag(answer_set_handling, on).
+protein_flag(check_flags, [protein_flag(calculus, hyper)]).
+protein_flag(definite_answers, off).
+protein_flag(delayed_rme, off).
+protein_flag(depth_increment, 1).
+protein_flag(dynamic, off).
+protein_flag(factorisation, cut).
+protein_flag(head_behind_prolog, off).
+protein_flag(mmr, off).
+protein_flag(mode, pl1).
+protein_flag(query_anc, ([], [])).
+protein_flag(query_reuse, on).
+protein_flag(reduction, both).
+protein_flag(regularity, delay).
+protein_flag(search, id_tree).
+protein_flag(selection_function, off).
+protein_flag(sorting, costs).
+protein_flag(strict_rme, off).
+protein_flag(th_nonewclauses, off).
+protein_flag(th_reduction, both).
+protein_flag(th_regularity, delay).
+protein_flag(th_sidelit_anc, off).
+protein_flag(translate, all).
+protein_flag(trace, internal).
+protein_flag(calculus, rme).
+protein_flag(answers, more).
+
+
+--------------------     statistics     --------------------
+
+Proof Statistics
+----------------
+Proof Time:  0.01 sec
+Proof Depth: 4
+Extension Steps: 5
+Restart Steps:   1
+Reduction Steps: 1		(incl. 1 with cut)
+Factoring Steps: 0
+Inferences:      35
+
+--------------------      answers       --------------------
+
+Answers
+-------
+on(a, b) ; on(b, c)

@@ -1,0 +1,93 @@
+%% tests for pure ABox revision
+
+arevisionstest :-
+	write('TEST FILE: jantest.abox-revision'), nl,
+	cmkinit,
+	revisionstest1(0).
+
+revisionstest1(N1) :-
+     	N is N1 + 1,
+     	N < 8,
+     	artest(N),
+     	!, revisionstest1(N).
+revisionstest1(_).
+
+
+write_succ_ar(T) :-
+	write('+++ abox-revision test '), write(T), 
+	write(' SUCCEEDED'), nl.
+
+write_fail_ar(T) :-
+	write('--- abox-revision test '), write(T), 
+	write(' FAILED'), nl. 
+
+
+artest(T) :-
+	T == 1,
+	o1 :: d,
+	o1 ?: d,
+	backtell(forget(o1 :: d)),
+        \+ o1 ?: d,
+	write_succ_ar(T), !.
+
+
+artest(T) :-
+	T == 2,
+	o2 :: c1 and c2,
+	o2 ?: c1,
+	backtell(forget(o2 :: c1)),
+        \+ o2 ?: c1,
+	o2 ?: c2,
+	write_succ_ar(T), !.
+
+
+
+artest(T) :-
+	T == 3,
+	o3 :: d1 and all(r, d1),
+	o3 ?: d1,
+	backtell(forget(o3 :: d1)),
+        \+ o3 ?: d1,
+	o3 ?: all(r,d1),
+	backtell(forget(o3 :: all(r,d1))),
+	\+ o3 ?: all(r,d1),
+	write_succ_ar(T), !.
+
+artest(T) :-
+	T == 4,
+	o4 :: r:o5,
+        backtell(forget(o5)),
+	\+ o4 ?: r:o5,
+	write_succ_ar(T), !.
+
+artest(T) :-
+	T == 5,
+	r1 := inv(r),
+	o6 :: r:o7,
+        o6 :: r:o8,
+	o7 ?: r1:o6,
+	o8 ?: r1:o6,
+	\+ backtell(forget(o7 :: r1:o6)),
+        backtell(forget(o6)),
+	\+ o7 ?: r1:o6,
+	\+ o8 ?: r1:o6,
+	write_succ_ar(T), !.
+
+
+artest(T) :-
+	T == 6,
+	backtell(forget(irl)),
+	irl ?: anything,
+	write_succ_ar(T), !.
+
+
+artest(T) :-
+	T == 7,
+	\+ backtell(forget(heinz)),
+	write_succ_ar(T), !.
+
+
+artest(T) :-
+	write_fail_ar(T),
+	assert(test(jt_abox_revision_test(T), failed)).
+

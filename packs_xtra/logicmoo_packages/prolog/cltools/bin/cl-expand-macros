@@ -1,0 +1,37 @@
+#!/usr/bin/swipl -L0 -G0 -T0 -q -g main -t halt -s
+
+:- use_module(library('cltools/cl')).
+:- use_module(library('cltools/cl_io')).
+:- use_module(library('cltools/clif_parser')).
+
+main :-
+        current_prolog_flag(argv, Arguments),
+        append(_SytemArgs, [--|Args], Arguments), !,
+        parse_args(Args,Opts),
+        (   member(fmt(Fmt),Opts)
+        ->  true
+        ;   Fmt=clif),
+        %member(macro(F),Opts),
+        %parse_cltext(F,MacroText),
+        findall(S,
+               (   member(macro(F),Opts),
+                   parse_cltext(F,MT),
+                   text_sentence(MT,S)),
+               Ss),
+        MacroText=cltext(Ss),
+        forall(member(rest(Arg),Opts),
+               (   parse_cltext(Arg,Text),
+                   macro_expand(Text,MacroText,Text2),
+                   serialize_cltext(_,Fmt,Text2,[]))).
+
+parse_args([],[]).
+parse_args(Args,[Opt|Opts]) :-
+        parse_arg(Args,Rest,Opt),
+        !,
+        parse_args(Rest,Opts).
+parse_args([A|Args],[rest(A)|Opts]) :-
+        parse_args(Args,Opts).
+
+parse_arg(['--to',Fmt|L],L,fmt(Fmt)).
+parse_arg(['-m',MacroFile|L],L,macro(MacroFile)).
+

@@ -1,0 +1,63 @@
+%%% 28 NOVEMBRE 2006
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% There are M (max_people) people X in {1,2,...,M}
+%%% Each of them at the beginning owns 2X Euros
+%%% The goal is to obtain an equilibrium situation
+%%% where the main difference between richness is 1
+%%% Person X can donate to another person exactly
+%%% X euros per action.
+%%% No one can remain without money (at any state)
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+max_people(5).
+
+person(X) :- max_people(N), interval(X,1,N).
+
+
+%%%%%%%%%%%%%%%%%%%%%
+
+fluent(possiede(B),1,M):- person(B),
+     max_people(N),M is N*(N+1).
+
+%%%%%%%%%%%%%%%%
+
+action(regala(X,Y)):-
+       person(X),person(Y),neq(X,Y).
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+executable(regala(X,Y),[possiede(X) gt X ]) :-
+        action(regala(X,Y)).
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+causes(regala(X,Y), possiede(X) eq possiede(X)^(-1) - X, []):-
+        action(regala(X,Y)).
+causes(regala(X,Y), possiede(Y) eq possiede(Y)^(-1) + X, []) :-
+        action(regala(X,Y)).
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+:- dynamic(caused/2).
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+initially(possiede(X) eq  2*X) :-
+    person(X).
+
+%%%%%%%%%%%%%%%
+
+goal(possiede(X) leq possiede(Y) + 1) :-
+     person(X), person(Y), neq(X,Y).
+
+always(possiede(1)+possiede(2)+possiede(3)+possiede(4)+possiede(5) eq 30).
+
+%cross_constraint(possiede(1) @ 2 eq 7).
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

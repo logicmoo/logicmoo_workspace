@@ -1,0 +1,31 @@
+module lists using object.
+
+% elem < nelist .
+nelist < list . list < object.
+
+cons []   : list .
+op '.'    : (elem * list -> nelist) .
+op tail   : (nelist -> list) .
+op first  : (nelist -> elem) .
+op append : (list * list -> list) .
+op append : (nelist * list -> nelist) .
+op append : (list * nelist -> nelist) .
+op append : (nelist * nelist -> nelist) .
+op rev    : (list -> list) .
+
+var [e : elem, l : list, nel : nelist, l1 : list] .
+
+% e = [e] .
+
+first([e|l]) = e .
+% first(e) = e .
+
+tail([e|l]) = l .
+% tail(e) = [] .
+
+% append(e, nel) = [e|nel] .
+append([], l) = l .
+append([e|l], l1) = [e|append(l, l1)] .
+
+rev([]) = [] .
+rev([e|l]) = append(rev(l), [e]) .

@@ -1,0 +1,89 @@
+
+%% Linear completed theory set005_1_t1.th:
+%% Completed used following flags:
+%%
+%%             Flag I Value
+%% -----------------+-------
+%%        max_level I 3
+%%       term_depth I 0
+%%       term_width I 4
+%%      id_maxdepth I 5
+%%       redundancy I strong_at_end
+%%     all_red_test I at_end
+%%     prefer_short I true
+%%     use_anc_lits I true
+%%         minerase I 2
+
+
+subset(Set1_7220, Set2_7221), subset(Set2_7221, Set1_7220) -> equal_sets(Set2_7221, Set1_7220). %%   1/L: 1/W:  0/initial(input)
+equal_sets(Subset_7225, Superset_7226) -> subset(Subset_7225, Superset_7226). %%   2/L: 1/W:  0/initial(input)
+equal_sets(Superset_7230, Subset_7231) -> subset(Subset_7231, Superset_7230). %%   3/L: 1/W:  0/initial(input)
+member(member_of_1_not_of_2(Subset_7238, Superset_7239), Superset_7239) -> subset(Subset_7238, Superset_7239). %%   4/L: 1/W:  0/initial(input)
+member(Element_7240, Subset_7241), subset(Subset_7241, Superset_7247) -> member(Element_7240, Superset_7247). %%   5/L: 1/W:  0/initial(input)
+intersection(Set1_7246, Set2_7247, Intersection_7248), member(Element_7254, Intersection_7248) -> member(Element_7254, Set1_7246). %%   6/L: 1/W:  0/initial(input)
+intersection(Set1_7251, Set2_7252, Intersection_7253), member(Element_7259, Intersection_7253) -> member(Element_7259, Set2_7252). %%   7/L: 1/W:  0/initial(input)
+equal_sets(Subset_7286, Superset_7287), subset(Superset_7287, Subset_7286) -> equal_sets(Subset_7286, Superset_7287). %%  14/L: 2/W:497/deduce(2, 1)
+equal_sets(Subset_7291, Superset_7292), member(Element_7298, Subset_7291) -> member(Element_7298, Superset_7292). %%  15/L: 2/W:496/deduce(2, 5)
+equal_sets(Superset_7301, Subset_7302), subset(Superset_7301, Subset_7302) -> equal_sets(Superset_7301, Subset_7302). %%  17/L: 2/W:494/deduce(3, 1)
+equal_sets(Superset_7306, Subset_7307), member(Element_7313, Subset_7307) -> member(Element_7313, Superset_7306). %%  18/L: 2/W:493/deduce(3, 5)
+member(member_of_1_not_of_2(Subset_7319, Superset_7320), Superset_7320), member(Element_7326, Subset_7319) -> member(Element_7326, Superset_7320). %%  20/L: 2/W:491/deduce(4, 5)
+member(Element_7326, Subset_7327), subset(Subset_7327, Superset_7333), subset(Superset_7333, Superset_7339) -> member(Element_7326, Superset_7339). %%  22/L: 2/W:489/deduce(5, 5)
+member(Element_7331, Subset_7332), subset(Subset_7332, Superset_7338), intersection(Set1_7345, Set2_7346, Superset_7338) -> member(Element_7331, Set1_7345). %%  23/L: 2/W:488/deduce(5, 6)
+member(Element_7336, Subset_7337), subset(Subset_7337, Superset_7343), intersection(Set1_7350, Set2_7351, Superset_7343) -> member(Element_7336, Set2_7351). %%  24/L: 2/W:487/deduce(5, 7)
+intersection(Set1_7347, Set2_7348, Intersection_7349), member(Element_7355, Intersection_7349), subset(Set1_7347, Superset_7361) -> member(Element_7355, Superset_7361). %%  26/L: 2/W:485/deduce(6, 5)
+intersection(Set1_7352, Set2_7353, Intersection_7354), member(Element_7360, Intersection_7354), intersection(Set1_7367, Set2_7368, Set1_7352) -> member(Element_7360, Set1_7367). %%  27/L: 2/W:484/deduce(6, 6)
+intersection(Set1_7357, Set2_7358, Intersection_7359), member(Element_7365, Intersection_7359), intersection(Set1_7372, Set2_7373, Set1_7357) -> member(Element_7365, Set2_7373). %%  28/L: 2/W:483/deduce(6, 7)
+intersection(Set1_7367, Set2_7368, Intersection_7369), member(Element_7375, Intersection_7369), subset(Set2_7368, Superset_7381) -> member(Element_7375, Superset_7381). %%  30/L: 2/W:481/deduce(7, 5)
+intersection(Set1_7372, Set2_7373, Intersection_7374), member(Element_7380, Intersection_7374), intersection(Set1_7387, Set2_7388, Set2_7373) -> member(Element_7380, Set1_7387). %%  31/L: 2/W:480/deduce(7, 6)
+intersection(Set1_7377, Set2_7378, Intersection_7379), member(Element_7385, Intersection_7379), intersection(Set1_7392, Set2_7393, Set2_7378) -> member(Element_7385, Set2_7393). %%  32/L: 2/W:479/deduce(7, 7)
+~ equal_sets(Set2_7390, Set1_7391), subset(Set2_7390, Set1_7391) -> ~ subset(Set1_7391, Set2_7390). %%  34/L: 2/W:477/contra(1 / 1)
+~ equal_sets(Set2_7395, Set1_7396), subset(Set1_7396, Set2_7395) -> ~ subset(Set2_7395, Set1_7396). %%  35/L: 2/W:476/contra(1 / 2)
+~ subset(Subset_7400, Superset_7401) -> ~ equal_sets(Subset_7400, Superset_7401). %%  36/L: 2/W:475/contra(2 / 1)
+~ subset(Subset_7405, Superset_7406) -> ~ equal_sets(Superset_7406, Subset_7405). %%  37/L: 2/W:474/contra(3 / 1)
+~ subset(Subset_7410, Superset_7411) -> ~ member(member_of_1_not_of_2(Subset_7410, Superset_7411), Superset_7411). %%  38/L: 2/W:473/contra(4 / 1)
+~ member(Element_7415, Superset_7416), subset(Subset_7422, Superset_7416) -> ~ member(Element_7415, Subset_7422). %%  39/L: 2/W:472/contra(5 / 1)
+~ member(Element_7425, Set1_7426), member(Element_7425, Intersection_7432) -> ~ intersection(Set1_7426, Set2_7441, Intersection_7432). %%  41/L: 2/W:470/contra(6 / 1)
+~ member(Element_7435, Set2_7436), member(Element_7435, Intersection_7442) -> ~ intersection(Set1_7451, Set2_7436, Intersection_7442). %%  43/L: 2/W:468/contra(7 / 1)
+equal_sets(Subset_7436, Superset_7437), member(Element_7443, Subset_7436), subset(Superset_7437, Superset_7449) -> member(Element_7443, Superset_7449). %%  44/L: 3/W:466/deduce(2, 22)
+equal_sets(Subset_7441, Superset_7442), member(Element_7448, Subset_7441), intersection(Set1_7455, Set2_7456, Superset_7442) -> member(Element_7448, Set1_7455). %%  45/L: 3/W:465/deduce(2, 23)
+equal_sets(Subset_7446, Superset_7447), member(Element_7453, Subset_7446), intersection(Set1_7460, Set2_7461, Superset_7447) -> member(Element_7453, Set2_7461). %%  46/L: 3/W:464/deduce(2, 24)
+equal_sets(Subset_7451, Superset_7452), ~ equal_sets(Subset_7451, Superset_7452) -> ~ subset(Superset_7452, Subset_7451). %%  47/L: 3/W:463/deduce(2, 34)
+equal_sets(Subset_7456, Superset_7457), ~ equal_sets(Superset_7457, Subset_7456) -> ~ subset(Superset_7457, Subset_7456). %%  48/L: 3/W:462/deduce(2, 35)
+equal_sets(Subset_7461, Superset_7462), ~ member(Element_7470, Superset_7462) -> ~ member(Element_7470, Subset_7461). %%  49/L: 3/W:461/deduce(2, 39)
+equal_sets(Superset_7466, Subset_7467), member(Element_7473, Subset_7467), subset(Superset_7466, Superset_7479) -> member(Element_7473, Superset_7479). %%  50/L: 3/W:460/deduce(3, 22)
+equal_sets(Superset_7471, Subset_7472), member(Element_7478, Subset_7472), intersection(Set1_7485, Set2_7486, Superset_7471) -> member(Element_7478, Set1_7485). %%  51/L: 3/W:459/deduce(3, 23)
+equal_sets(Superset_7476, Subset_7477), member(Element_7483, Subset_7477), intersection(Set1_7490, Set2_7491, Superset_7476) -> member(Element_7483, Set2_7491). %%  52/L: 3/W:458/deduce(3, 24)
+equal_sets(Superset_7481, Subset_7482), ~ equal_sets(Subset_7482, Superset_7481) -> ~ subset(Superset_7481, Subset_7482). %%  53/L: 3/W:457/deduce(3, 34)
+equal_sets(Superset_7486, Subset_7487), ~ member(Element_7495, Superset_7486) -> ~ member(Element_7495, Subset_7487). %%  54/L: 3/W:456/deduce(3, 39)
+member(member_of_1_not_of_2(Subset_7494, Superset_7495), Superset_7495), member(Element_7501, Subset_7494), subset(Superset_7495, Superset_7507) -> member(Element_7501, Superset_7507). %%  55/L: 3/W:455/deduce(4, 22)
+member(member_of_1_not_of_2(Subset_7499, Superset_7500), Superset_7500), member(Element_7506, Subset_7499), intersection(Set1_7513, Set2_7514, Superset_7500) -> member(Element_7506, Set1_7513). %%  56/L: 3/W:454/deduce(4, 23)
+member(member_of_1_not_of_2(Subset_7504, Superset_7505), Superset_7505), member(Element_7511, Subset_7504), intersection(Set1_7518, Set2_7519, Superset_7505) -> member(Element_7511, Set2_7519). %%  57/L: 3/W:453/deduce(4, 24)
+member(member_of_1_not_of_2(Subset_7509, Superset_7510), Superset_7510), ~ equal_sets(Subset_7509, Superset_7510) -> ~ subset(Superset_7510, Subset_7509). %%  58/L: 3/W:452/deduce(4, 34)
+member(member_of_1_not_of_2(Subset_7514, Superset_7515), Superset_7515), ~ equal_sets(Superset_7515, Subset_7514) -> ~ subset(Superset_7515, Subset_7514). %%  59/L: 3/W:451/deduce(4, 35)
+member(member_of_1_not_of_2(Subset_7519, Superset_7520), Superset_7520), ~ member(Element_7528, Superset_7520) -> ~ member(Element_7528, Subset_7519). %%  60/L: 3/W:450/deduce(4, 39)
+member(member_of_1_not_of_2(Subset_7524, Superset_7525), Subset_7526), subset(Subset_7526, Superset_7525), member(Element_7537, Subset_7524) -> member(Element_7537, Superset_7525). %%  61/L: 3/W:449/deduce(5, 20)
+member(Element_7526, Subset_7527), subset(Subset_7527, Superset_7533), ~ member(Element_7526, Set1_7541) -> ~ intersection(Set1_7541, Set2_7550, Superset_7533). %%  62/L: 3/W:448/deduce(5, 41)
+member(Element_7531, Subset_7532), subset(Subset_7532, Superset_7538), ~ member(Element_7531, Set2_7546) -> ~ intersection(Set1_7555, Set2_7546, Superset_7538). %%  63/L: 3/W:447/deduce(5, 43)
+intersection(Set1_7537, Set2_7538, Intersection_7539), member(member_of_1_not_of_2(Subset_7548, Set1_7537), Intersection_7539), member(Element_7554, Subset_7548) -> member(Element_7554, Set1_7537). %%  64/L: 3/W:446/deduce(6, 20)
+intersection(Set1_7542, Set2_7543, Intersection_7544), member(Element_7550, Intersection_7544), ~ member(Element_7550, Set1_7558) -> ~ intersection(Set1_7558, Set2_7567, Set1_7542). %%  65/L: 3/W:445/deduce(6, 41)
+intersection(Set1_7547, Set2_7548, Intersection_7549), member(Element_7555, Intersection_7549), ~ member(Element_7555, Set2_7563) -> ~ intersection(Set1_7572, Set2_7563, Set1_7547). %%  66/L: 3/W:444/deduce(6, 43)
+intersection(Set1_7552, Set2_7553, Intersection_7554), member(member_of_1_not_of_2(Subset_7563, Set2_7553), Intersection_7554), member(Element_7569, Subset_7563) -> member(Element_7569, Set2_7553). %%  67/L: 3/W:443/deduce(7, 20)
+intersection(Set1_7557, Set2_7558, Intersection_7559), member(Element_7565, Intersection_7559), ~ member(Element_7565, Set1_7573) -> ~ intersection(Set1_7573, Set2_7582, Set2_7558). %%  68/L: 3/W:442/deduce(7, 41)
+intersection(Set1_7562, Set2_7563, Intersection_7564), member(Element_7570, Intersection_7564), ~ member(Element_7570, Set2_7578) -> ~ intersection(Set1_7587, Set2_7578, Set2_7563). %%  69/L: 3/W:441/deduce(7, 43)
+equal_sets(Subset_7566, Superset_7567), member(member_of_1_not_of_2(Subset_7576, Superset_7567), Subset_7566), member(Element_7582, Subset_7576) -> member(Element_7582, Superset_7567). %%  70/L: 3/W:440/deduce(15, 20)
+equal_sets(Subset_7571, Superset_7572), member(Element_7578, Subset_7571), ~ member(Element_7578, Set1_7586) -> ~ intersection(Set1_7586, Set2_7595, Superset_7572). %%  71/L: 3/W:439/deduce(15, 41)
+equal_sets(Subset_7576, Superset_7577), member(Element_7583, Subset_7576), ~ member(Element_7583, Set2_7591) -> ~ intersection(Set1_7600, Set2_7591, Superset_7577). %%  72/L: 3/W:438/deduce(15, 43)
+equal_sets(Superset_7581, Subset_7582), member(member_of_1_not_of_2(Subset_7591, Superset_7581), Subset_7582), member(Element_7597, Subset_7591) -> member(Element_7597, Superset_7581). %%  73/L: 3/W:437/deduce(18, 20)
+equal_sets(Superset_7586, Subset_7587), member(Element_7593, Subset_7587), ~ member(Element_7593, Set1_7601) -> ~ intersection(Set1_7601, Set2_7610, Superset_7586). %%  74/L: 3/W:436/deduce(18, 41)
+equal_sets(Superset_7591, Subset_7592), member(Element_7598, Subset_7592), ~ member(Element_7598, Set2_7606) -> ~ intersection(Set1_7615, Set2_7606, Superset_7591). %%  75/L: 3/W:435/deduce(18, 43)
+member(member_of_1_not_of_2(Subset_7599, Superset_7600), Superset_7600), member(member_of_1_not_of_2(Subset_7609, Superset_7600), Subset_7599), member(Element_7615, Subset_7609) -> member(Element_7615, Superset_7600). %%  76/L: 3/W:434/deduce(20, 20)
+member(member_of_1_not_of_2(Subset_7604, Superset_7605), Superset_7605), member(Element_7611, Subset_7604), ~ member(Element_7611, Set1_7619) -> ~ intersection(Set1_7619, Set2_7628, Superset_7605). %%  77/L: 3/W:433/deduce(20, 41)
+member(member_of_1_not_of_2(Subset_7609, Superset_7610), Superset_7610), member(Element_7616, Subset_7609), ~ member(Element_7616, Set2_7624) -> ~ intersection(Set1_7633, Set2_7624, Superset_7610). %%  78/L: 3/W:432/deduce(20, 43)
+~ subset(Subset_7613, Superset_7614), subset(Subset_7613, Superset_7614) -> ~ subset(Superset_7614, Subset_7613). %%  79/L: 3/W:431/deduce(36, 34)
+~ subset(Subset_7618, Superset_7619), subset(Superset_7619, Subset_7618) -> ~ subset(Subset_7618, Superset_7619). %%  80/L: 3/W:430/deduce(36, 35)
+~ subset(Subset_7623, Superset_7624), subset(Subset_7630, Superset_7624) -> ~ member(member_of_1_not_of_2(Subset_7623, Superset_7624), Subset_7630). %%  81/L: 3/W:429/deduce(38, 39)
+~ subset(Subset_7628, Superset_7629), member(member_of_1_not_of_2(Subset_7628, Superset_7629), Intersection_7638) -> ~ intersection(Superset_7629, Set2_7647, Intersection_7638). %%  82/L: 3/W:428/deduce(38, 41)
+~ subset(Subset_7633, Superset_7634), member(member_of_1_not_of_2(Subset_7633, Superset_7634), Intersection_7643) -> ~ intersection(Set1_7652, Superset_7634, Intersection_7643). %%  83/L: 3/W:427/deduce(38, 43)
+~ member(Element_7638, Superset_7639), subset(Subset_7645, Superset_7639), subset(Subset_7651, Subset_7645) -> ~ member(Element_7638, Subset_7651). %%  84/L: 3/W:426/deduce(39, 39)
+~ member(Element_7643, Superset_7644), subset(Subset_7650, Superset_7644), member(Element_7643, Intersection_7656) -> ~ intersection(Subset_7650, Set2_7665, Intersection_7656). %%  85/L: 3/W:425/deduce(39, 41)
+~ member(Element_7648, Superset_7649), subset(Subset_7655, Superset_7649), member(Element_7648, Intersection_7661) -> ~ intersection(Set1_7670, Subset_7655, Intersection_7661). %%  86/L: 3/W:424/deduce(39, 43)

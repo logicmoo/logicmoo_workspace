@@ -1,0 +1,21 @@
+#  AxFilterType      type;
+#   GeneralityMeasure gen_measure;
+#   double            benevolence;
+#   long              generosity;
+#   long              max_recursion_depth;
+#   long long         max_set_size;
+#   double            max_set_fraction;   
+
+
+# eprover1.6tst2  -s -R --cpu-limit=3 --print-statistics --tstp-in --sine='GSinE(CountFormulas, nohypos, 5.000000, 9223372036854775807, 4, 20000, 1.000000)' -tAuto -xAuto MZT999+1.p
+# gf500_gu_R04_F100_L20000 = GSinE(CountFormulas, nohypos, 5.000000, 9223372036854775807, 4, 20000, 1.000000
+
+
+hyp { nohypos, hypos } [hypos]
+benevolence { 1.2, 1.3, 1.4, 1.5, 1.6, 1.8, 2, 2.5, 3, 3.5, 4, 5, 6, 8, 10 } [1.2] 
+# generosity {9223372036854775807 } [9223372036854775807]
+depth { 1, 2, 3, 4, 5, 6, 8, 10, 2147483647 } [2147483647]
+size  { 20, 30, 40, 50, 60, 70, 80, 90, 100, 120, 140, 160, 180, 200, 300, 400, 500, 20000} [20000]
+fraction { 1.0 } [1.0]
+
+

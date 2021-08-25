@@ -1,0 +1,23 @@
+
+Computing with Completed Specifications
+---------------------------------------
+
+One may  regard  the  completed  specification  as a  first  step  towards  an
+operational  implementation.   It  is  possible  to  study  the  behaviour  of
+operations  of a  specification  by  executing them  on examples.  Computation
+as specified  by the  specification  is realized by  term reduction  using the
+rules of  the  completed specification.  The result  of such  computations are
+unique  normal forms (cf. the CEC-command "norm"). To speed-up the computation
+of  normal forms,  one  may  compile  the  current  set of rewrite rules  into 
+compiled Prolog  (cf. the CEC-command "compile")  and use this compiled set of
+rewrite rules for normalization (cf. CEC-command "eval").
+
+In the completed  specification  it is decidable whether  or not two terms are
+equivalent  in the equational theory of the specification (cf. the CEC-command
+"prove").
+
+More complex  is the  problem of  finding  a substitution that makes two terms 
+equivalent  with  respect  to  the  equations  of  the  specification.  If the 
+specification  is complete,  an narrowing-algorithm  can be  used to  find and
+enumerate such answer-substitutions (cf. CEC-command "narrow").
+

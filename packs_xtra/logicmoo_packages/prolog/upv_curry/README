@@ -1,0 +1,28 @@
+This archive contains the UPV-Curry system,
+a novel Curry implementation developed at the 
+Technical University of Valencia (UPV).
+
+It may (at least on 7/14/2015) be found at http://users.dsic.upv.es/grupos/elp/upv-curry/upv-curry.html)
+
+Here you can find the following files:
+
+*.pl:                 The source code of the UPV-Curry interpreter.
+            
+prelude.curry         The UPV-Curry prelude file, which contains
+                      the main data types and function declarations.
+
+upv-curry_manual.tex: The LaTeX source for the UPV-Curry User's Manual.
+            
+README:               This help file.
+
+examples:             A subdirectory containing several Curry programs
+                      which show the syntax and main features of the 
+                      language Curry.
+
+This interpreter requires SICStus Prolog v3.x and it needs no
+previous installation. You must load the "main.pl" source file to 
+start the interpreter.
+
+You can use the system as described in the "UPV-Curry User's Manual".
+
+Please send comments/bugs to sescobar@dsic.upv.es

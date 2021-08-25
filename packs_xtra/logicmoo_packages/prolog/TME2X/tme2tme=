@@ -1,0 +1,2 @@
+sed "s/equal(/=(/g" $1.tme > $2=.tme
+

@@ -1,0 +1,242 @@
+%%%%%%%%%%%%%%%%%%%%%%%
+%% Domain Trucks
+%%%%%%%%%%%%%%%%%%%%%%%
+%% Encoded in B by DFP, June 2010
+%% Adapted from International Planning Competition IPC-5
+%%% http://zeus.ing.unibs.it/ipc-5/
+%%%%%%%%%%%%%%%%%%%%%%%
+%% INSTANCE DESCRIPTION (p01 from IPC-5)
+%%%%%%%%%%%%%%%%%%%%%%%
+%%% With this instance, launch :-sicsplan(13).
+%%%%%%%%%%%%%%%%%%%%%%%
+
+
+%% types
+truck(truck1).
+
+%% packages
+package(package1). package(package2). package(package3).
+
+%% locations
+location(l1). location(l2). location(l3).
+
+%% time
+tim(T) :- interval(T,0,6).
+
+%% truckarea
+truckarea(a1). truckarea(a2).
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% Domain specification
+
+%% types
+locatable(X) :- truck(X).
+locatable(X) :- package(X).
+
+object(X) :- truckarea(X).
+object(X) :- tim(X).
+object(X) :- location(X).
+object(X) :- locatable(X).
+
+%% fluents
+fluent(at(X,Y)) :- locatable(X), location(Y).
+fluent(in(X,Y,Z)) :- package(X), truck(Y), truckarea(Z).
+fluent(free(X,Y)) :- truckarea(X), truck(Y).
+fluent(time_now(X)) :- tim(X).
+fluent(delivered(X,Y,Z)) :- package(X), location(Y), tim(Z).
+fluent(at_destination(X,Y)) :- package(X), location(Y).
+
+%fluent(connected(X,Y)) :- location(X), location(Y).
+%fluent(closer(X,Y)) :- truckarea(X), truckarea(Y).
+
+%% actions
+action(load(P,T,A1,L)) :- package(P), truck(T), truckarea(A1), location(L).
+action(unload(P,T,A1,L)) :- package(P), truck(T), truckarea(A1), location(L).
+action(drive(T,From,To,T1,T2)) :- truck(T), location(From), location(To), tim(T1), tim(T2).
+action(deliver(P,L, T1, T2)) :- package(P), location(L), tim(T1), tim(T2).
+
+%% executability conditions
+executable(load(P,T,A1,L),
+           [at(T,L), at(P,L), free(A1,T)|Rest]) :-
+      action(load(P,T,A1,L)), for_all1(T,A1,Rest).
+executable(unload(P,T,A1,L), [at(T,L), in(P,T,A1) | Rest]) :-
+      action(unload(P,T,A1,L)), for_all2(T,A1,Rest).
+executable(drive(T,From,To,T1,T2), [at(T,From),
+time_now(T1)]) :-
+action(drive(T,From,To,T1,T2)),
+location(From),location(To),connected(From,To),
+tim(T1), tim(T2), next(T1,T2).
+
+executable(deliver(P,L,T1,T2),
+[at(P,L), time_now(T1)]) :-
+action(deliver(P,L,T1,T2)), tim(T1), tim(T2), T1 =< T2.
+
+for_all1(T,A1,Rest) :-
+	findall(free(A2,T),  closer(A2,A1), Rest).
+	
+for_all2(T,A1,Rest) :-
+	findall(free(A2,T),  closer(A2,A1), Rest).
+
+%% dynamic causal laws
+causes(load(P,T,A1,L), neg(at(P,L)),    []) :- action(load(P,T,A1,L)).
+causes(load(P,T,A1,L), neg(free(A1,T)), [])	:- action(load(P,T,A1,L)).
+causes(load(P,T,A1,L), in(P,T,A1)     , []):- action(load(P,T,A1,L)).
+
+causes(unload(P,T,A1,L), neg(in(P,T,A1)), []) :- action(unload(P,T,A1,L)).
+causes(unload(P,T,A1,L), free(A1,T), []) :- action(unload(P,T,A1,L)).
+causes(unload(P,T,A1,L), at(P,L), [])  :- action(unload(P,T,A1,L)).
+
+causes(drive(T,From,To,T1,T2), neg(at(T,From)), []) :- action(drive(T,From,To,T1,T2)).
+causes(drive(T,From,To,T1,T2), neg(time_now(T1)), [])  :- action(drive(T,From,To,T1,T2)).
+causes(drive(T,From,To,T1,T2), time_now(T2), []) :- action(drive(T,From,To,T1,T2)).
+causes(drive(T,From,To,T1,T2), at(T,To), []) :- action(drive(T,From,To,T1,T2)).
+
+causes(deliver(P,L,T1,T2), neg(at(P,L)), []) :- action(deliver(P,L,T1,T2)).
+causes(deliver(P,L,T1,T2), delivered(P,L,T2), []) :- action(deliver(P,L,T1,T2)).
+causes(deliver(P,L,T1,T2), at_destination(P,L), []) :- action(deliver(P,L,T1,T2)).
+
+%%%%%%%%
+
+next(T1,T2) :- tim(T1), tim(T2), T2 is T1 + 1.
+
+closer(a1,a2). %%% Closer mi sembra fluente che non cambia.
+
+
+%initially(closer( a1, a2)).
+%initially(neg(closer(a1,a1))).
+%initially(neg(closer(a2,a1))).
+%initially(neg(closer(a2,a2))).
+
+connected( l1 ,l2).  %%% connected non cambia
+connected( l1 ,l3).
+connected( l2 ,l1).
+connected( l2 ,l3).
+connected( l3 ,l1).
+connected( l3 ,l2).
+
+%initially(connected( l1 ,l2)).
+%initially(connected( l1 ,l3)).
+%initially(connected( l2, l1)).
+%initially(connected( l2, l3)).
+%initially(connected( l3, l1)).
+%initially(connected( l3, l2)).
+%initially(neg(connected(l1,l1))).
+%initially(neg(connected(l2,l2))).
+%initially(neg(connected(l3,l3))).
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%% goal description
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+goal(delivered(package1,l3,3)).
+goal(at_destination(package2,l1)).
+goal(delivered(package3,l1,6)).
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%  INITIAL STATE DESCRIPTION
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+initially(at(truck1, l3)).
+initially(free(a1, truck1)).
+initially(free(a2, truck1)).
+initially(at( package1, l2)).
+initially(at( package2, l2)).
+initially(at( package3, l2)).
+initially(time_now(0)).
+%%% Completion (can be done using static)
+initially(neg(at(truck1,l1))).
+initially(neg(at(truck1,l2))).
+initially(neg(at(package1,l1))).
+initially(neg(at(package1,l3))).
+initially(neg(at(package2,l1))).
+initially(neg(at(package2,l3))).
+initially(neg(at(package3,l1))).
+initially(neg(at(package3,l3))).
+initially(neg(in(package1,truck1,a1))).
+initially(neg(in(package1,truck1,a2))).
+initially(neg(in(package2,truck1,a1))).
+initially(neg(in(package2,truck1,a2))).
+initially(neg(in(package3,truck1,a1))).
+initially(neg(in(package3,truck1,a2))).
+initially(neg(time_now(1))).
+initially(neg(time_now(2))).
+initially(neg(time_now(3))).
+initially(neg(time_now(4))).
+initially(neg(time_now(5))).
+initially(neg(time_now(6))).
+initially(neg(delivered(package1,l1,0))).
+initially(neg(delivered(package1,l1,1))).
+initially(neg(delivered(package1,l1,2))).
+initially(neg(delivered(package1,l1,3))).
+initially(neg(delivered(package1,l1,4))).
+initially(neg(delivered(package1,l1,5))).
+initially(neg(delivered(package1,l1,6))).
+initially(neg(delivered(package1,l2,0))).
+initially(neg(delivered(package1,l2,1))).
+initially(neg(delivered(package1,l2,2))).
+initially(neg(delivered(package1,l2,3))).
+initially(neg(delivered(package1,l2,4))).
+initially(neg(delivered(package1,l2,5))).
+initially(neg(delivered(package1,l2,6))).
+initially(neg(delivered(package1,l3,0))).
+initially(neg(delivered(package1,l3,1))).
+initially(neg(delivered(package1,l3,2))).
+initially(neg(delivered(package1,l3,3))).
+initially(neg(delivered(package1,l3,4))).
+initially(neg(delivered(package1,l3,5))).
+initially(neg(delivered(package1,l3,6))).
+initially(neg(delivered(package2,l1,0))).
+initially(neg(delivered(package2,l1,1))).
+initially(neg(delivered(package2,l1,2))).
+initially(neg(delivered(package2,l1,3))).
+initially(neg(delivered(package2,l1,4))).
+initially(neg(delivered(package2,l1,5))).
+initially(neg(delivered(package2,l1,6))).
+initially(neg(delivered(package2,l2,0))).
+initially(neg(delivered(package2,l2,1))).
+initially(neg(delivered(package2,l2,2))).
+initially(neg(delivered(package2,l2,3))).
+initially(neg(delivered(package2,l2,4))).
+initially(neg(delivered(package2,l2,5))).
+initially(neg(delivered(package2,l2,6))).
+initially(neg(delivered(package2,l3,0))).
+initially(neg(delivered(package2,l3,1))).
+initially(neg(delivered(package2,l3,2))).
+initially(neg(delivered(package2,l3,3))).
+initially(neg(delivered(package2,l3,4))).
+initially(neg(delivered(package2,l3,5))).
+initially(neg(delivered(package2,l3,6))).
+initially(neg(delivered(package3,l1,0))).
+initially(neg(delivered(package3,l1,1))).
+initially(neg(delivered(package3,l1,2))).
+initially(neg(delivered(package3,l1,3))).
+initially(neg(delivered(package3,l1,4))).
+initially(neg(delivered(package3,l1,5))).
+initially(neg(delivered(package3,l1,6))).
+initially(neg(delivered(package3,l2,0))).
+initially(neg(delivered(package3,l2,1))).
+initially(neg(delivered(package3,l2,2))).
+initially(neg(delivered(package3,l2,3))).
+initially(neg(delivered(package3,l2,4))).
+initially(neg(delivered(package3,l2,5))).
+initially(neg(delivered(package3,l2,6))).
+initially(neg(delivered(package3,l3,0))).
+initially(neg(delivered(package3,l3,1))).
+initially(neg(delivered(package3,l3,2))).
+initially(neg(delivered(package3,l3,3))).
+initially(neg(delivered(package3,l3,4))).
+initially(neg(delivered(package3,l3,5))).
+initially(neg(delivered(package3,l3,6))).
+initially(neg(at_destination(package1,l1))).
+initially(neg(at_destination(package1,l2))).
+initially(neg(at_destination(package1,l3))).
+initially(neg(at_destination(package2,l1))).
+initially(neg(at_destination(package2,l2))).
+initially(neg(at_destination(package2,l3))).
+initially(neg(at_destination(package3,l1))).
+initially(neg(at_destination(package3,l2))).
+initially(neg(at_destination(package3,l3))).
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

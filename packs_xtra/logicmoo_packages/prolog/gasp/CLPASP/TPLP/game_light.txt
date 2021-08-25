@@ -1,0 +1,150 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% The Game of Lights
+%%% is a game on a squared chessboard
+%%% Each cell is a lamp that can be either off or on.
+%%% The action is the switch of a cell.
+%%% The effect is to invert the value of that cell and
+%%% of its neighbours (left, right, up, down)
+%%% Border cells have less neighbours
+
+%%% Example (press on 1)
+%%%  0 0 0      0 1 0
+%%%  0 1 0   => 1 0 1
+%%%  0 0 0      0 1 0
+
+%%% The objective is to switch all the cells off 
+%%% with the further constraint that
+%%% each cell can be switched at most once.
+
+%%% The instance above admits a solution of length 5
+%%% 0 0 0    0 0 0    0 0 1    0 1 1    1 1*1    0 0 0
+%%% 0 1 0 => 0 0 0*=> 0 1*1 => 1*0 0 => 0 1 0 => 0 0 0
+%%% 0 0*0    1 1 1    1 1 0    1 0 0    0 0 0    0 0 0
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% Coded by Giorgio Bacci (Univ. of Udine) March 2008
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+size(3).
+
+light(X):-
+   size(N),
+   N2 is N*N,
+   interval(X,1,N2).
+
+%% Right neighbour
+neighbour(X,Y):-
+    light(X),light(Y),
+    size(N),
+    X mod N =\= 0,
+    Y =:= X+1.
+%% Left neighbour
+neighbour(X,Y):-
+    light(X),light(Y),
+    size(N),
+    X mod N =\= 1,
+    Y =:= X-1.
+%% Down neighbour
+neighbour(X,Y):-
+    size(N),
+    light(X),light(Y),
+    Y =:= X+N.
+%% Up neighbour
+neighbour(X,Y):-
+    size(N),
+    light(X),light(Y),
+    Y =:= X-N.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% Action Theory
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+fluent(is_on(X)):- light(X).
+fluent(pressed(X)):- light(X).
+
+action(press(X)):- light(X).
+
+executable(press(X),[neg(pressed(X))]):-
+    light(X).
+%executable(press(X),[is_on(X), neg(pressed(X))]):-
+%    light(X).
+%executable(press(X),[is_on(Y), neg(pressed(X))]):-
+%    light(X), light(Y),
+%    neighbour(X,Y).
+
+causes(press(X),neg(is_on(X)),[is_on(X)]):- light(X).
+causes(press(X),is_on(X),[neg(is_on(X))]):- light(X).
+causes(press(X),neg(is_on(Y)),[is_on(Y)]):- light(X), light(Y),
+    neighbour(X,Y).
+causes(press(X),is_on(Y),[neg(is_on(Y))]):- light(X), light(Y),
+    neighbour(X,Y).
+
+causes(press(X), pressed(X), []):- light(X).
+
+initially(neg(pressed(X))):- light(X).
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+initially(is_on(5)).
+initially(neg(is_on(X))) :-
+    light(X), neq(X,5).
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+goal(neg(is_on(X))):- light(X).
+
+%%%%%%%%% OTHER INSTANCES TO PLAY WITH
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% one step configuration
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%initially(is_on(1)). initially(is_on(2)).
+%initially(is_on(M)):- size(N), M is N+1, light(M).
+%initially(neg(is_on(X))):- light(X), size(N),
+%    neq(X,1), neq(X,2), X =\= N+1.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% diagonal configuration
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%initially(is_on(X)):- size(N), light(X), X mod (N+1) =:= 1.
+%initially(neg(is_on(X))):- size(N), light(X), X mod (N+1) =\= 1.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% cross configuration
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%initially(is_on(X)):- size(N), light(X),
+%    X mod (N+1) =:= 1.
+%initially(is_on(X)):- size(N), light(X), light(Y),
+%    X =:= Y + N-1, X < N*N, X mod (N-1) =:= 1.
+%initially(neg(is_on(X))):- size(N), light(X),
+%    (light(Y), X mod (N+1) =\= 1, X =:= Y + N-1, X < N*N, X mod (N-1) =\= 1
+%    ;
+%    X>1, X<N).
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% ''only one on'' configuration
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%initially(is_on(1)).
+%initially(neg(is_on(X))):- light(X), neq(X,1).
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% ''only size on'' configuration
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%initially(is_on(N)):- size(N).
+%initially(neg(is_on(X))):- light(X), size(N), neq(X,N).
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% verticals configuration
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%initially(is_on(X)):- size(N), light(X), X mod N =:= 0.
+%initially(is_on(X)):- size(N), light(X), X mod N =:= 1.
+%initially(neg(is_on(X))):- size(N), light(X), X mod N =\= 0, X mod N =\= 1.
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

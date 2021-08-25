@@ -1,0 +1,103 @@
+order(neqkns for totalOrder) using neqkns for object.
+greater([['$r-ms','$inj-object-bool']]).
+greater([['$r',\==]]).
+greater([['$r-ms','\==-bool-object-object']]).
+greater([['\==-bool-object-object','$inj-object-bool']]).
+greater([['$r',==]]).
+greater([['$r-ms','==-bool-object-object']]).
+greater([['==-bool-object-object','$inj-object-bool']]).
+greater([[\==,==]]).
+greater([['$r-ms','$inj-object-elem']]).
+greater([['==-bool-object-object','$inj-object-elem']]).
+greater([['\==-bool-object-object','$inj-object-elem']]).
+greater([['$r',=<]]).
+greater([['$r-ms','=<-bool-elem-elem']]).
+greater([['=<-bool-elem-elem','$inj-object-bool']]).
+greater([['=<-bool-elem-elem','$inj-object-elem']]).
+greater([['$r',>]]).
+greater([['$r-ms','>-bool-elem-elem']]).
+greater([['>-bool-elem-elem','$inj-object-bool']]).
+greater([['>-bool-elem-elem','$inj-object-elem']]).
+greater([['$neq6-ms','$r-ms']]).
+greater([['$neq6','$r']]).
+greater([[>,=<]]).
+greater([[>,\==]]).
+greater([['$neq7-ms','$r-ms']]).
+greater([['$neq7','$r']]).
+greater([['$neq8-ms','$r-ms']]).
+greater([['$neq8','$r']]).
+status(['$r':ms]).
+status(['$r-ms':ms]).
+status(['$inj-object-bool':ms]).
+status(['==-bool-object-object':ms]).
+status([== :ms]).
+status(['\==-bool-object-object':ms]).
+status([\== :ms]).
+status(['$inj-object-elem':ms]).
+status(['$neq6-ms':lr]).
+status(['$neq6':lr]).
+status(['$neq7-ms':lr]).
+status(['$neq7':lr]).
+status(['$neq8-ms':lr]).
+status(['$neq8':lr]).
+
+constructor('true-bool').
+constructor('false-bool').
+
+
+
+
+
+
+/* ordering of the literals is ms for
+/*	x:object==y:object = y:object==x:object */
+action(status(ms),'$equation'([],['==-bool-object-object'(@'x-object',@'y-object')='==-bool-object-object'(@'y-object',@'x-object')])).
+
+/* ordering of the literals is ms for
+/*	x:object\==y:object = y:object\==x:object */
+action(status(ms),'$equation'([],['\==-bool-object-object'(@'x-object',@'y-object')='\==-bool-object-object'(@'y-object',@'x-object')])).
+
+/* declare as nonoperational :
+/*	x:object==y:object = true => x:object = y:object */
+action(orient(n),'$equation'(['==-bool-object-object'(@'x-object',@'y-object')='true-bool'],[@'x-object'= @'y-object'])).
+
+/* ordering of the literals is ms for
+/*	x:object==y:object = true => x:object = y:object */
+action(status(ms),'$equation'(['==-bool-object-object'(@'x-object',@'y-object')='true-bool'],[@'x-object'= @'y-object'])).
+
+/* declare as nonoperational :
+/*	[y:elem=<x:elem] = [x:elem=<y:elem,false] */
+action(orient(n),'$equation'([],[['=<-bool-elem-elem'(@'y-elem',@'x-elem')]=['=<-bool-elem-elem'(@'x-elem',@'y-elem'),'false-bool']])).
+
+/* ordering of the literals is [1,0] for
+/*	x:elem=<y:elem = false => y:elem=<x:elem = true */
+action(status([1,0]),'$equation'(['=<-bool-elem-elem'(@'x-elem',@'y-elem')='false-bool'],['=<-bool-elem-elem'(@'y-elem',@'x-elem')='true-bool'])).
+
+/* e1:elem=<e2:elem = true and e1:elem>e2:elem = true => true = false
+   should be postponed, */
+action(orient(p),'$equation'(['=<-bool-elem-elem'(@'e1-elem',@'e2-elem')='true-bool','>-bool-elem-elem'(@'e1-elem',@'e2-elem')='true-bool'],['true-bool'='false-bool'])).
+
+/* declare as nonoperational :
+/*	x:elem=<y:elem = true and y:elem=<x:elem = true => x:elem = y:elem */
+action(orient(n),'$equation'(['=<-bool-elem-elem'(@'x-elem',@'y-elem')='true-bool','=<-bool-elem-elem'(@'y-elem',@'x-elem')='true-bool'],[@'x-elem'= @'y-elem'])).
+
+/* condition number 1 is the selected condition for
+/*	x:elem=<y:elem = true and y:elem=<x:elem = true => x:elem = y:elem */
+action(selectcondition(1),'$equation'(['=<-bool-elem-elem'(@'x-elem',@'y-elem')='true-bool','=<-bool-elem-elem'(@'y-elem',@'x-elem')='true-bool'],[@'x-elem'= @'y-elem'])).
+
+/* ordering of the literals is [0,1,2] for
+/*	x:elem=<y:elem = true and y:elem=<x:elem = true => x:elem = y:elem */
+action(status([0,1,2]),'$equation'(['=<-bool-elem-elem'(@'x-elem',@'y-elem')='true-bool','=<-bool-elem-elem'(@'y-elem',@'x-elem')='true-bool'],[@'x-elem'= @'y-elem'])).
+
+/* declare as nonoperational :
+/*	x:elem=<y:elem = true and y:elem=<z:elem = true => x:elem=<z:elem = true */
+action(orient(n),'$equation'(['=<-bool-elem-elem'(@'x-elem',@'y-elem')='true-bool','=<-bool-elem-elem'(@'y-elem',@'z-elem')='true-bool'],['=<-bool-elem-elem'(@'x-elem',@'z-elem')='true-bool'])).
+
+/* condition number 1 is the selected condition for
+/*	x:elem=<y:elem = true and y:elem=<z:elem = true => x:elem=<z:elem = true */
+action(selectcondition(1),'$equation'(['=<-bool-elem-elem'(@'x-elem',@'y-elem')='true-bool','=<-bool-elem-elem'(@'y-elem',@'z-elem')='true-bool'],['=<-bool-elem-elem'(@'x-elem',@'z-elem')='true-bool'])).
+
+/* ordering of the literals is [0,1,2] for
+/*	x:elem=<y:elem = true and y:elem=<z:elem = true => x:elem=<z:elem = true */
+action(status([0,1,2]),'$equation'(['=<-bool-elem-elem'(@'x-elem',@'y-elem')='true-bool','=<-bool-elem-elem'(@'y-elem',@'z-elem')='true-bool'],['=<-bool-elem-elem'(@'x-elem',@'z-elem')='true-bool'])).
+

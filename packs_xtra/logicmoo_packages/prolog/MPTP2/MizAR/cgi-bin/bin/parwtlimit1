@@ -1,0 +1,132 @@
+#!/usr/bin/perl -w
+
+# parallelizes vampire with four different extensions, the biggest is run with -sd 1
+
+use strict;
+my $tl = shift @ARGV;
+my $tl1 = 4 + $tl;
+my $aname = shift @ARGV;
+my $filestem = shift @ARGV;
+my $mmlversion = shift @ARGV;   # needed for minimization
+my $Bindir = shift @ARGV;
+my $MMLAxs = shift @ARGV;
+# my $vampire_params_sd  = shift @ARGV;  
+
+# @predictors =
+# ("$Bindir/knn 40 00sym0eq3 deps.a15 96 #z3
+# $Bindir/nbayes 00sym0eq3 deps.a15 0.000001 0 128 #epar3
+# $Bindir/knn 80 00symdeq3 deps.m15 1024 #vam30
+# $Bindir/geo 1 0.9999 00sym0eq3 deps.a15 64 #vam30
+# $Bindir/geo 1 0.9 00sym0eq3 deps.a15 256 #vam30 and epar3
+# $Bindir/knn 200 00symdeq3 deps.a15 1024 #vam30
+# $Bindir/comb \"./nbayes syms0eq deps.a15 0.00001 0.001 2048\" 0.5 \"./knn 40 syms0eq deps.a15 2048\" 2048 30 #vam30 "
+# );
+
+my @smallextensions = ('', '.big0', '.big1'); 
+my $bigext = '.big';
+my $vampire_params_sd = " -ss included -sd "; # the -d sine param without a number
+
+my @childs = ();
+
+{
+#    print("ulimit -t $tl1; $prog $vampire_params2 $filestem$ext > $filestem$ext.eout1 & ");
+
+    for my $ext (@smallextensions)
+    {
+	push(@childs, "ulimit -t $tl1; $Bindir/vampire_3.0 --mode casc -t $tl --proof tptp --output_axiom_names on $filestem$ext > $filestem$ext.eout1  ");
+    }
+
+    push(@childs, "ulimit -t $tl1; $Bindir/vampire_3.0 --mode casc -t $tl --proof tptp --output_axiom_names on $vampire_params_sd 1 $filestem$bigext > $filestem$bigext.eout1  ");
+
+# the learning methods start here
+
+    push(@childs, "ulimit -t $tl1; cat $filestem.sym0.conjecture | $Bindir/knn 40 $filestem.0eq $filestem.atp15 96 $filestem.seq | $Bindir/mkproblem.pl $aname $filestem $MMLAxs > $filestem.p0; cat $filestem.conjecture >> $filestem.p0; $Bindir/runepar2.pl $tl 0 $filestem.p0 2 1 1 new_mzt_small  > $filestem.outp0  ");
+    push(@childs, "ulimit -t $tl1; cat $filestem.sym0.conjecture | $Bindir/nbayes $filestem.0eq $filestem.atp15 0.000001 0 128 $filestem.seq | $Bindir/mkproblem.pl  $aname $filestem $MMLAxs > $filestem.p1; cat $filestem.conjecture >> $filestem.p1; $Bindir/runepar2.pl $tl 0 $filestem.p1 2 1 1 new_mzt_small  > $filestem.outp1  ");
+    push(@childs, "ulimit -t $tl1; cat $filestem.symd.conjecture | $Bindir/knn 80 $filestem.deq $filestem.miz15 1024 $filestem.seq | $Bindir/mkproblem.pl  $aname $filestem $MMLAxs > $filestem.p2; cat $filestem.conjecture >> $filestem.p2; $Bindir/vampire_3.0 --mode casc -t $tl --proof tptp --output_axiom_names on $filestem.p2 > $filestem.outp2  ");
+    push(@childs, "ulimit -t $tl1; cat $filestem.sym0.conjecture | $Bindir/geo 1 0.9999 $filestem.0eq $filestem.atp15 64 $filestem.seq | $Bindir/mkproblem.pl  $aname $filestem $MMLAxs > $filestem.p3; cat $filestem.conjecture >> $filestem.p3; $Bindir/vampire_3.0 --mode casc -t $tl --proof tptp --output_axiom_names on $filestem.p3 > $filestem.outp3  ");
+    push(@childs, "ulimit -t $tl1; cat $filestem.sym0.conjecture | $Bindir/geo 1 0.9 $filestem.0eq $filestem.atp15 256 $filestem.seq | $Bindir/mkproblem.pl  $aname $filestem $MMLAxs > $filestem.p4; cat $filestem.conjecture >> $filestem.p4; cp $filestem.p4 $filestem.p5; $Bindir/vampire_3.0 --mode casc -t $tl --proof tptp --output_axiom_names on $filestem.p4 > $filestem.outp4 & $Bindir/runepar2.pl $tl 0 $filestem.p5 2 1 1 new_mzt_small  > $filestem.outp5  ");
+    push(@childs, "ulimit -t $tl1; cat $filestem.symd.conjecture | $Bindir/knn 200 $filestem.deq $filestem.atp15 1024 $filestem.seq | $Bindir/mkproblem.pl  $aname $filestem $MMLAxs > $filestem.p6; cat $filestem.conjecture >> $filestem.p6; $Bindir/vampire_3.0 --mode casc -t $tl --proof tptp --output_axiom_names on $filestem.p6 > $filestem.outp6  ");
+#    push(@childs, "ulimit -t $tl1; cat $filestem.sym0.conjecture | $Bindir/comb \"$Bindir/nbayes $filestem.0eq $filestem.atp15 0.00001 0.001 2048 $filestem.seq \" 0.5 \"$Bindir/knn 40 $filestem.0eq $filestem.atp15 2048 $filestem.seq \" 2048 30 $filestem.seq | $Bindir/mkproblem.pl  $aname $filestem $MMLAxs > $filestem.p7; cat $filestem.conjecture >> $filestem.p7; vampire_3.0 --mode casc -t $tl --proof tptp --output_axiom_names on $filestem.p7 > $filestem.outp7  ");
+}
+
+my @pids = ();
+foreach my $strat (@childs)
+{
+
+	my $pid = fork();
+	if ($pid) 
+	{
+	    # parent
+	    push(@pids, $pid);
+	} 
+	elsif ($pid == 0) 
+	{
+	    # child, if successful, creates the proof
+	    exec($strat);
+	    exit(0);
+	} 
+	else 
+	{
+	    die "couldn’t fork: $!\n";
+	}
+}
+
+
+my $num = $tl1+1;
+while($num > 0)
+{
+    $num = $num - 2;
+    sleep(2);
+
+    foreach my $ext (@smallextensions, $bigext)
+    {
+	my $exit_code = system('grep', '-q', '\\bfile(',  "$filestem$ext.eout1");
+	if(0 == $exit_code)
+	{
+	    my $ext0 = $ext;
+	    open(F1,"$filestem$ext.eout1");
+	    while(<F1>) 
+	    {
+		if(m/.*\bfile\([^\),]+, *([a-z0-9A-Z_]+) *\)/)
+		{
+		    `grep -h "^fof.$1," /home/mptp/public_html/mml$mmlversion/mptp/00allmmlax  $filestem$ext >> $filestem.small `; }
+	    }
+	    close(F1);
+	    system("ulimit -t $tl; $Bindir/vampire_3.0 --mode casc -t $tl --proof tptp --output_axiom_names on $filestem.small > $filestem.small.eout1");
+	    my $exit_code1 = system('grep', '-q', '\\bfile(',  "$filestem.small.eout1");
+	    $ext0 = '.small' if(0 == $exit_code1);
+
+	    `grep 'SZS status' $filestem$ext0.eout1 |tail -n1 > $filestem.status`;
+	    exec('grep', '\\bfile(',  "$filestem$ext0.eout1");
+	    exit 0;
+	}
+    }
+
+
+    foreach my $ext (0 .. 6)
+    {
+	my $exit_code = system('grep', '-q', '\\bfile(',  "$filestem.outp$ext");
+	if(0 == $exit_code)
+	{
+	    my $ext0 = ".outp$ext";
+	    open(F1,"$filestem.outp$ext");
+	    while(<F1>) 
+	    {
+		if(m/.*\bfile\([^\),]+, *([a-z0-9A-Z_]+) *\)/)
+		{
+		    `grep -h "^fof.$1," /home/mptp/public_html/mml$mmlversion/mptp/00allmmlax  $filestem.p$ext >> $filestem.small `; }
+	    }
+	    close(F1);
+	    system("ulimit -t $tl; $Bindir/vampire_3.0 --mode casc -t $tl --proof tptp --output_axiom_names on $filestem.small > $filestem.small.eout1");
+	    my $exit_code1 = system('grep', '-q', '\\bfile(',  "$filestem.small.eout1");
+	    $ext0 = '.small.eout1' if(0 == $exit_code1);
+
+	    `grep 'SZS status' $filestem$ext0 |tail -n1 > $filestem.status`;
+	    exec('grep', '\\bfile(',  "$filestem$ext0");
+	    exit 0;
+	}
+    }
+}
+
+`grep 'SZS status' $filestem.outp2 |tail -n1 > $filestem.status`;
+

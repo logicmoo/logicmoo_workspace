@@ -1,0 +1,7 @@
+module natB .
+posnat < nat .
+op(s, 100, fy) : (nat -> posnat) .
+op(p, 100, fy) : (posnat -> nat) .
+var [n : nat, k : posnat] .
+p s n = n .
+s p k = k .

@@ -1,0 +1,32 @@
+\section{Introduction}
+
+This manual describes the use of CEC,
+a system for conditional equational completion. We assume familiarity
+with well known notions in the term rewriting area e.g.
+{\it
+signature, term over a signature,
+(conditional) term rewrite rule, applicability of a rewrite rule, 
+\ldots}, cf. e.g. \cite{HO80}, \cite{Kap84}. The concepts are discussed only as far as
+necessary to allow a meaningful interaction with the system. Theoretical
+foundations of the concepts implemented in CEC are not discussed. 
+Hints to the literature will be given whenever such concepts are introduced.
+
+CEC can be used under Quintus-Prolog2.x.
+An installation guide for CEC is to be found in the appendix of this manual.
+
+
+There are some CEC-specific notions used throughout this manual. The input to 
+CEC is called a 
+{\it specification}. Also any later state of the initial
+specification is called a specification. To distinguish the specification
+which will be completed when invoking the completion procedure from any other
+specification CEC presently knows about, this specification is called the 
+{\it current specification}.
+
+CEC includes a help-function. Type 
+``\user{??}\nt{space}\user{.}'' to obtain a 
+list of all available CEC-commands and type
+``\user{?}\nt{FunctionName}\user{.}''
+or ``\user{?(}\nt{FunctionName}\user{).}'' to 
+get a short description for
+CEC-command with the name {\it FunctionName}.

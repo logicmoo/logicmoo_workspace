@@ -1,0 +1,1385 @@
+% Sorts and axioms of the WAM-Specification
+
+begin(prospec).
+
+sorts : ( codelist, fatherfun, pairnodenode, decglseqfun, pairnodedecgoallist, nodelist, candsfun, pairnodenodelist, cllfun, pairnodecode, decgoal, decgoallist, subfun, pairnodesubst, nodeset, stopmodesort, substorfail, modesort, bfun, pairstatestate, stateset, sdecgoal, sdecgoallist, sdecglseqfun, pairstatesdecgoallist, scllfun, pairstatecode, substitution, ssubfun, pairstatesubst, program, clauseornull, code, nat, literal, predicate, litlist, clausesort, nodesort, statenodefun, pairstatenode, statesort, statelist ).
+
+functions : (
+ cnil : codelist, 
+ nnil : nodelist, 
+ dnil : decgoallist, 
+ jemp : nodeset, 
+ root : nodesort, 
+ success : stopmodesort, 
+ failure : stopmodesort, 
+ run : stopmodesort, 
+ fail : substorfail, 
+ select : modesort, 
+ call : modesort, 
+ jemps : stateset, 
+ bottom : statesort, 
+ sdnil : sdecgoallist, 
+ jempsu : substitution, 
+ null : clauseornull, 
+ undefcode : code, 
+ jzer : nat, 
+ cut : literal, 
+ lnil : litlist, 
+ snil : statelist, 
+ jaddcl : (code, codelist) => codelist, 
+ ccar : (codelist) => code, 
+ ccdr : (codelist) => codelist, 
+ procdef : (predicate, program) => codelist, 
+ clau : (code) => clausesort, 
+ cfather : (nodesort) => fatherfun, 
+ jexpf : (fatherfun, nodesort) => nodesort, 
+ jaddf : (fatherfun, pairnodenode) => fatherfun, 
+ jslaf : (nodesort, nodesort) => pairnodenode, 
+ cdecglseq : (decgoallist) => decglseqfun, 
+ jexpd : (decglseqfun, nodesort) => decgoallist, 
+ jaddd : (decglseqfun, pairnodedecgoallist) => decglseqfun, 
+ jslad : (nodesort, decgoallist) => pairnodedecgoallist, 
+ jaddnl : (nodesort, nodelist) => nodelist, 
+ ncar : (nodelist) => nodesort, 
+ ncdr : (nodelist) => nodelist, 
+ ccands : (nodelist) => candsfun, 
+ jexpn : (candsfun, nodesort) => nodelist, 
+ jaddn : (candsfun, pairnodenodelist) => candsfun, 
+ jslan : (nodesort, nodelist) => pairnodenodelist, 
+ ccll : (code) => cllfun, 
+ jexpc : (cllfun, nodesort) => code, 
+ jaddc : (cllfun, pairnodecode) => cllfun, 
+ jslac : (nodesort, code) => pairnodecode, 
+ mkdecgoal : (litlist, nodesort) => decgoal, 
+ jdot1 : (decgoal) => litlist, 
+ jdot2 : (decgoal) => nodesort, 
+ jadddl : (decgoal, decgoallist) => decgoallist, 
+ dcar : (decgoallist) => decgoal, 
+ dcdr : (decgoallist) => decgoallist, 
+ subres : (decgoallist, substitution) => decgoallist, 
+ csub : (substitution) => subfun, 
+ jexpu : (subfun, nodesort) => substitution, 
+ jaddu : (subfun, pairnodesubst) => subfun, 
+ jslau : (nodesort, substitution) => pairnodesubst, 
+ jaddns : (nodeset, nodesort) => nodeset, 
+ jsubns : (nodeset, nodesort) => nodeset, 
+ new : (nodeset) => nodesort, 
+ oksubst : (substitution) => substorfail, 
+ subst : (substorfail) => substitution, 
+ unifypred : (predicate, predicate) => substorfail, 
+ jexpli : (substitution, literal) => literal, 
+ jexpll : (substitution, litlist) => litlist, 
+ ssubres : (sdecgoallist, substitution) => sdecgoallist, 
+ cb : (statesort) => bfun, 
+ jexpb : (bfun, statesort) => statesort, 
+ jaddb : (bfun, pairstatestate) => bfun, 
+ jslab : (statesort, statesort) => pairstatestate, 
+ jadds : (stateset, statesort) => stateset, 
+ jsubs : (stateset, statesort) => stateset, 
+ snew : (stateset) => statesort, 
+ mksdecgoal : (litlist, statesort) => sdecgoal, 
+ jdots1 : (sdecgoal) => litlist, 
+ jdots2 : (sdecgoal) => statesort, 
+ jaddsdl : (sdecgoal, sdecgoallist) => sdecgoallist, 
+ sdcar : (sdecgoallist) => sdecgoal, 
+ sdcdr : (sdecgoallist) => sdecgoallist, 
+ csdecglseq : (sdecgoallist) => sdecglseqfun, 
+ jexpsd : (sdecglseqfun, statesort) => sdecgoallist, 
+ jaddsd : (sdecglseqfun, pairstatesdecgoallist) => sdecglseqfun, 
+ jslasd : (statesort, sdecgoallist) => pairstatesdecgoallist, 
+ cscll : (code) => scllfun, 
+ jexpsc : (scllfun, statesort) => code, 
+ jaddsc : (scllfun, pairstatecode) => scllfun, 
+ jslasc : (statesort, code) => pairstatecode, 
+ o : (substitution, substitution) => substitution, 
+ cssub : (substitution) => ssubfun, 
+ jexpsu : (ssubfun, statesort) => substitution, 
+ jaddsu : (ssubfun, pairstatesubst) => ssubfun, 
+ jslasu : (statesort, substitution) => pairstatesubst, 
+ sprocdef : (predicate, program) => code, 
+ okclause : (clausesort) => clauseornull, 
+ clause : (clauseornull) => clausesort, 
+ next : (code) => code, 
+ sclau : (code) => clauseornull, 
+ jsuc : (nat) => nat, 
+ jpre : (nat) => nat, 
+ jadd : (nat, nat) => nat, 
+ jsub : (nat, nat) => nat, 
+ jmul : (nat, nat) => nat, 
+ mklit : (predicate) => literal, 
+ pred : (literal) => predicate, 
+ jaddll : (literal, litlist) => litlist, 
+ lcar : (litlist) => literal, 
+ lcdr : (litlist) => litlist, 
+ mkclause : (predicate, litlist) => clausesort, 
+ hd : (clausesort) => predicate, 
+ bdy : (clausesort) => litlist, 
+ ren : (clausesort, nat) => clausesort, 
+ cf : (nodesort) => statenodefun, 
+ jexp : (statenodefun, statesort) => nodesort, 
+ jaddjadd : (statenodefun, pairstatenode) => statenodefun, 
+ jsla : (statesort, nodesort) => pairstatenode, 
+ jaddsl : (statesort, statelist) => statelist, 
+ scar : (statelist) => statesort, 
+ scdr : (statelist) => statelist, 
+ fd : (statenodefun, sdecgoallist) => decgoallist, 
+ fs : (statenodefun, stateset) => nodeset, 
+ clls : (code) => codelist, 
+ mapcll : (cllfun, nodelist) => codelist, 
+ from : (statelist, statesort) => statelist
+).
+
+relations : (
+ '=' : (U, U),
+ jlsjlsc : (codelist, codelist ),
+ jlsjlsn : (nodelist, nodelist ),
+ jlsjlsd : (decgoallist, decgoallist ),
+ inn : (nodesort, nodeset ),
+ ins : (statesort, stateset ),
+ jlsjlssd : (sdecgoallist, sdecgoallist ),
+ jls : (nat, nat ),
+ jle : (nat, nat ),
+ predp : (literal ),
+ jlsjlsl : (litlist, litlist ),
+ jlsjlss : (statelist, statelist ),
+ every : (fatherfun, nodelist, nodesort ),
+ innl : (nodesort, nodelist ),
+ insl : (statesort, statelist ),
+ cutptsin : (sdecgoallist, statelist ),
+ nodups : (nodelist )
+).
+
+end(prospec).
+
+% list_codelist_ax_1
+forall([X_col, X_co], (ccar(jaddcl(X_co :code, X_col :codelist)) = X_co :code)).
+
+% list_codelist_ax_2
+forall([X_co, X_col], (ccdr(jaddcl(X_co :code, X_col :codelist)) = X_col :codelist)).
+
+% list_codelist_ax_3
+forall([X_co, X_co0, X_col, X_col0], ((jaddcl(X_co :code, X_col :codelist) = jaddcl(X_co0 :code, X_col0 :codelist)) <-> ((X_co :code = X_co0 :code), (X_col :codelist = X_col0 :codelist)))).
+
+% list_codelist_ax_4
+forall([X_co, X_col], - ((cnil = jaddcl(X_co :code, X_col :codelist)))).
+
+% list_codelist_ax_5
+forall([X_col], ((X_col :codelist = cnil); (X_col :codelist = jaddcl(ccar(X_col :codelist), ccdr(X_col :codelist))))).
+
+% list_codelist_ax_6
+forall([X_col], - (jlsjlsc(X_col :codelist, X_col :codelist))).
+
+% list_codelist_ax_7
+forall([X_col, X_col0, X_col1], ((jlsjlsc(X_col0 :codelist, X_col :codelist), jlsjlsc(X_col :codelist, X_col1 :codelist)) -> jlsjlsc(X_col0 :codelist, X_col1 :codelist))).
+
+% list_codelist_ax_8
+forall([X_col], - (jlsjlsc(X_col :codelist, cnil))).
+
+% list_codelist_ax_9
+forall([X_co, X_col, X_col0], (jlsjlsc(X_col :codelist, jaddcl(X_co :code, X_col0 :codelist)) <-> ((X_col :codelist = X_col0 :codelist); jlsjlsc(X_col :codelist, X_col0 :codelist)))).
+
+% list_codelist_lem_02
+forall([X_co, X_col], jlsjlsc(X_col :codelist, jaddcl(X_co :code, X_col :codelist))).
+
+% list_codelist_lem_03
+forall([X_co, X_col], - (jlsjlsc(jaddcl(X_co :code, X_col :codelist), X_col :codelist))).
+
+% list_codelist_lem_1
+forall([X_col], (jlsjlsc(ccdr(X_col :codelist), X_col :codelist) <-> - ((X_col :codelist = cnil)))).
+
+% list_codelist_lem_2
+forall([X_co, X_col], jlsjlsc(cnil, jaddcl(X_co :code, X_col :codelist))).
+
+% list_codelist_lem_3
+forall([X_col], ((X_col :codelist = ccdr(X_col :codelist)) -> (X_col :codelist = cnil))).
+
+% list_codelist_lem_4
+forall([X_co, X_col], (((X_col :codelist = jaddcl(X_co :code, cnil)), - ((ccdr(X_col :codelist) = cnil))) <-> false)).
+
+% list_codelist_lem_5
+forall([X_col, X_col0], ((- ((X_col :codelist = jaddcl(ccar(X_col :codelist), X_col0 :codelist))), - ((X_col :codelist = cnil))) -> - ((ccdr(X_col :codelist) = X_col0 :codelist)))).
+
+% list_codelist_lem_6
+forall([X_col, X_co], ((- ((X_col :codelist = jaddcl(X_co :code, ccdr(X_col :codelist)))), - ((X_col :codelist = cnil))) -> - ((ccar(X_col :codelist) = X_co :code)))).
+
+% list_codelist_lem_7
+forall([X_col, X_col0], (((X_col :codelist = jaddcl(ccar(X_col :codelist), X_col0 :codelist)), - ((X_col :codelist = cnil))) -> (ccdr(X_col :codelist) = X_col0 :codelist))).
+
+% list_codelist_lem_8
+forall([X_col, X_co], (((X_col :codelist = jaddcl(X_co :code, ccdr(X_col :codelist))), - ((X_col :codelist = cnil))) -> (ccar(X_col :codelist) = X_co :code))).
+
+% list_codelist_lem_9
+forall([X_col], ((jaddcl(ccar(X_col :codelist), ccdr(X_col :codelist)) = X_col :codelist); (X_col :codelist = cnil))).
+
+% list_nodelist_ax_1
+forall([X_nol, X_no], (ncar(jaddnl(X_no :nodesort, X_nol :nodelist)) = X_no :nodesort)).
+
+% list_nodelist_ax_2
+forall([X_no, X_nol], (ncdr(jaddnl(X_no :nodesort, X_nol :nodelist)) = X_nol :nodelist)).
+
+% list_nodelist_ax_3
+forall([X_no, X_no0, X_nol, X_nol0], ((jaddnl(X_no :nodesort, X_nol :nodelist) = jaddnl(X_no0 :nodesort, X_nol0 :nodelist)) <-> ((X_no :nodesort = X_no0 :nodesort), (X_nol :nodelist = X_nol0 :nodelist)))).
+
+% list_nodelist_ax_4
+forall([X_no, X_nol], - ((nnil = jaddnl(X_no :nodesort, X_nol :nodelist)))).
+
+% list_nodelist_ax_5
+forall([X_nol], ((X_nol :nodelist = nnil); (X_nol :nodelist = jaddnl(ncar(X_nol :nodelist), ncdr(X_nol :nodelist))))).
+
+% list_nodelist_ax_6
+forall([X_nol], - (jlsjlsn(X_nol :nodelist, X_nol :nodelist))).
+
+% list_nodelist_ax_7
+forall([X_nol, X_nol0, X_nol1], ((jlsjlsn(X_nol0 :nodelist, X_nol :nodelist), jlsjlsn(X_nol :nodelist, X_nol1 :nodelist)) -> jlsjlsn(X_nol0 :nodelist, X_nol1 :nodelist))).
+
+% list_nodelist_ax_8
+forall([X_nol], - (jlsjlsn(X_nol :nodelist, nnil))).
+
+% list_nodelist_ax_9
+forall([X_no, X_nol, X_nol0], (jlsjlsn(X_nol :nodelist, jaddnl(X_no :nodesort, X_nol0 :nodelist)) <-> ((X_nol :nodelist = X_nol0 :nodelist); jlsjlsn(X_nol :nodelist, X_nol0 :nodelist)))).
+
+% list_nodelist_lem_02
+forall([X_no, X_nol], jlsjlsn(X_nol :nodelist, jaddnl(X_no :nodesort, X_nol :nodelist))).
+
+% list_nodelist_lem_03
+forall([X_no, X_nol], - (jlsjlsn(jaddnl(X_no :nodesort, X_nol :nodelist), X_nol :nodelist))).
+
+% list_nodelist_lem_1
+forall([X_nol], (jlsjlsn(ncdr(X_nol :nodelist), X_nol :nodelist) <-> - ((X_nol :nodelist = nnil)))).
+
+% list_nodelist_lem_2
+forall([X_no, X_nol], jlsjlsn(nnil, jaddnl(X_no :nodesort, X_nol :nodelist))).
+
+% list_nodelist_lem_3
+forall([X_nol], ((X_nol :nodelist = ncdr(X_nol :nodelist)) -> (X_nol :nodelist = nnil))).
+
+% list_nodelist_lem_4
+forall([X_no, X_nol], (((X_nol :nodelist = jaddnl(X_no :nodesort, nnil)), - ((ncdr(X_nol :nodelist) = nnil))) <-> false)).
+
+% list_nodelist_lem_5
+forall([X_nol, X_nol0], ((- ((X_nol :nodelist = jaddnl(ncar(X_nol :nodelist), X_nol0 :nodelist))), - ((X_nol :nodelist = nnil))) -> - ((ncdr(X_nol :nodelist) = X_nol0 :nodelist)))).
+
+% list_nodelist_lem_6
+forall([X_nol, X_no], ((- ((X_nol :nodelist = jaddnl(X_no :nodesort, ncdr(X_nol :nodelist)))), - ((X_nol :nodelist = nnil))) -> - ((ncar(X_nol :nodelist) = X_no :nodesort)))).
+
+% list_nodelist_lem_7
+forall([X_nol, X_nol0], (((X_nol :nodelist = jaddnl(ncar(X_nol :nodelist), X_nol0 :nodelist)), - ((X_nol :nodelist = nnil))) -> (ncdr(X_nol :nodelist) = X_nol0 :nodelist))).
+
+% list_nodelist_lem_8
+forall([X_nol, X_no], (((X_nol :nodelist = jaddnl(X_no :nodesort, ncdr(X_nol :nodelist))), - ((X_nol :nodelist = nnil))) -> (ncar(X_nol :nodelist) = X_no :nodesort))).
+
+% list_nodelist_lem_9
+forall([X_nol], ((jaddnl(ncar(X_nol :nodelist), ncdr(X_nol :nodelist)) = X_nol :nodelist); (X_nol :nodelist = nnil))).
+
+% list_decgoallist_ax_1
+forall([X_dgl, X_dg], (dcar(jadddl(X_dg :decgoal, X_dgl :decgoallist)) = X_dg :decgoal)).
+
+% list_decgoallist_ax_2
+forall([X_dg, X_dgl], (dcdr(jadddl(X_dg :decgoal, X_dgl :decgoallist)) = X_dgl :decgoallist)).
+
+% list_decgoallist_ax_3
+forall([X_dg, X_dg0, X_dgl, X_dgl0], ((jadddl(X_dg :decgoal, X_dgl :decgoallist) = jadddl(X_dg0 :decgoal, X_dgl0 :decgoallist)) <-> ((X_dg :decgoal = X_dg0 :decgoal), (X_dgl :decgoallist = X_dgl0 :decgoallist)))).
+
+% list_decgoallist_ax_4
+forall([X_dg, X_dgl], - ((dnil = jadddl(X_dg :decgoal, X_dgl :decgoallist)))).
+
+% list_decgoallist_ax_5
+forall([X_dgl], ((X_dgl :decgoallist = dnil); (X_dgl :decgoallist = jadddl(dcar(X_dgl :decgoallist), dcdr(X_dgl :decgoallist))))).
+
+% list_decgoallist_ax_6
+forall([X_dgl], - (jlsjlsd(X_dgl :decgoallist, X_dgl :decgoallist))).
+
+% list_decgoallist_ax_7
+forall([X_dgl, X_dgl0, X_dgl1], ((jlsjlsd(X_dgl0 :decgoallist, X_dgl :decgoallist), jlsjlsd(X_dgl :decgoallist, X_dgl1 :decgoallist)) -> jlsjlsd(X_dgl0 :decgoallist, X_dgl1 :decgoallist))).
+
+% list_decgoallist_ax_8
+forall([X_dgl], - (jlsjlsd(X_dgl :decgoallist, dnil))).
+
+% list_decgoallist_ax_9
+forall([X_dg, X_dgl, X_dgl0], (jlsjlsd(X_dgl :decgoallist, jadddl(X_dg :decgoal, X_dgl0 :decgoallist)) <-> ((X_dgl :decgoallist = X_dgl0 :decgoallist); jlsjlsd(X_dgl :decgoallist, X_dgl0 :decgoallist)))).
+
+% list_decgoallist_lem_02
+forall([X_dg, X_dgl], jlsjlsd(X_dgl :decgoallist, jadddl(X_dg :decgoal, X_dgl :decgoallist))).
+
+% list_decgoallist_lem_03
+forall([X_dg, X_dgl], - (jlsjlsd(jadddl(X_dg :decgoal, X_dgl :decgoallist), X_dgl :decgoallist))).
+
+% list_decgoallist_lem_1
+forall([X_dgl], (jlsjlsd(dcdr(X_dgl :decgoallist), X_dgl :decgoallist) <-> - ((X_dgl :decgoallist = dnil)))).
+
+% list_decgoallist_lem_2
+forall([X_dg, X_dgl], jlsjlsd(dnil, jadddl(X_dg :decgoal, X_dgl :decgoallist))).
+
+% list_decgoallist_lem_3
+forall([X_dgl], ((X_dgl :decgoallist = dcdr(X_dgl :decgoallist)) -> (X_dgl :decgoallist = dnil))).
+
+% list_decgoallist_lem_4
+forall([X_dg, X_dgl], (((X_dgl :decgoallist = jadddl(X_dg :decgoal, dnil)), - ((dcdr(X_dgl :decgoallist) = dnil))) <-> false)).
+
+% list_decgoallist_lem_5
+forall([X_dgl, X_dgl0], ((- ((X_dgl :decgoallist = jadddl(dcar(X_dgl :decgoallist), X_dgl0 :decgoallist))), - ((X_dgl :decgoallist = dnil))) -> - ((dcdr(X_dgl :decgoallist) = X_dgl0 :decgoallist)))).
+
+% list_decgoallist_lem_6
+forall([X_dgl, X_dg], ((- ((X_dgl :decgoallist = jadddl(X_dg :decgoal, dcdr(X_dgl :decgoallist)))), - ((X_dgl :decgoallist = dnil))) -> - ((dcar(X_dgl :decgoallist) = X_dg :decgoal)))).
+
+% list_decgoallist_lem_7
+forall([X_dgl, X_dgl0], (((X_dgl :decgoallist = jadddl(dcar(X_dgl :decgoallist), X_dgl0 :decgoallist)), - ((X_dgl :decgoallist = dnil))) -> (dcdr(X_dgl :decgoallist) = X_dgl0 :decgoallist))).
+
+% list_decgoallist_lem_8
+forall([X_dgl, X_dg], (((X_dgl :decgoallist = jadddl(X_dg :decgoal, dcdr(X_dgl :decgoallist))), - ((X_dgl :decgoallist = dnil))) -> (dcar(X_dgl :decgoallist) = X_dg :decgoal))).
+
+% list_decgoallist_lem_9
+forall([X_dgl], ((jadddl(dcar(X_dgl :decgoallist), dcdr(X_dgl :decgoallist)) = X_dgl :decgoallist); (X_dgl :decgoallist = dnil))).
+
+% list_sdecgoallist_ax_1
+forall([X_sdgl, X_sdg], (sdcar(jaddsdl(X_sdg :sdecgoal, X_sdgl :sdecgoallist)) = X_sdg :sdecgoal)).
+
+% list_sdecgoallist_ax_2
+forall([X_sdg, X_sdgl], (sdcdr(jaddsdl(X_sdg :sdecgoal, X_sdgl :sdecgoallist)) = X_sdgl :sdecgoallist)).
+
+% list_sdecgoallist_ax_3
+forall([X_sdg, X_sdg0, X_sdgl, X_sdgl0], ((jaddsdl(X_sdg :sdecgoal, X_sdgl :sdecgoallist) = jaddsdl(X_sdg0 :sdecgoal, X_sdgl0 :sdecgoallist)) <-> ((X_sdg :sdecgoal = X_sdg0 :sdecgoal), (X_sdgl :sdecgoallist = X_sdgl0 :sdecgoallist)))).
+
+% list_sdecgoallist_ax_4
+forall([X_sdg, X_sdgl], - ((sdnil = jaddsdl(X_sdg :sdecgoal, X_sdgl :sdecgoallist)))).
+
+% list_sdecgoallist_ax_5
+forall([X_sdgl], ((X_sdgl :sdecgoallist = sdnil); (X_sdgl :sdecgoallist = jaddsdl(sdcar(X_sdgl :sdecgoallist), sdcdr(X_sdgl :sdecgoallist))))).
+
+% list_sdecgoallist_ax_6
+forall([X_sdgl], - (jlsjlssd(X_sdgl :sdecgoallist, X_sdgl :sdecgoallist))).
+
+% list_sdecgoallist_ax_7
+forall([X_sdgl, X_sdgl0, X_sdgl1], ((jlsjlssd(X_sdgl0 :sdecgoallist, X_sdgl :sdecgoallist), jlsjlssd(X_sdgl :sdecgoallist, X_sdgl1 :sdecgoallist)) -> jlsjlssd(X_sdgl0 :sdecgoallist, X_sdgl1 :sdecgoallist))).
+
+% list_sdecgoallist_ax_8
+forall([X_sdgl], - (jlsjlssd(X_sdgl :sdecgoallist, sdnil))).
+
+% list_sdecgoallist_ax_9
+forall([X_sdg, X_sdgl, X_sdgl0], (jlsjlssd(X_sdgl :sdecgoallist, jaddsdl(X_sdg :sdecgoal, X_sdgl0 :sdecgoallist)) <-> ((X_sdgl :sdecgoallist = X_sdgl0 :sdecgoallist); jlsjlssd(X_sdgl :sdecgoallist, X_sdgl0 :sdecgoallist)))).
+
+% list_sdecgoallist_lem_02
+forall([X_sdg, X_sdgl], jlsjlssd(X_sdgl :sdecgoallist, jaddsdl(X_sdg :sdecgoal, X_sdgl :sdecgoallist))).
+
+% list_sdecgoallist_lem_03
+forall([X_sdg, X_sdgl], - (jlsjlssd(jaddsdl(X_sdg :sdecgoal, X_sdgl :sdecgoallist), X_sdgl :sdecgoallist))).
+
+% list_sdecgoallist_lem_1
+forall([X_sdgl], (jlsjlssd(sdcdr(X_sdgl :sdecgoallist), X_sdgl :sdecgoallist) <-> - ((X_sdgl :sdecgoallist = sdnil)))).
+
+% list_sdecgoallist_lem_2
+forall([X_sdg, X_sdgl], jlsjlssd(sdnil, jaddsdl(X_sdg :sdecgoal, X_sdgl :sdecgoallist))).
+
+% list_sdecgoallist_lem_3
+forall([X_sdgl], ((X_sdgl :sdecgoallist = sdcdr(X_sdgl :sdecgoallist)) -> (X_sdgl :sdecgoallist = sdnil))).
+
+% list_sdecgoallist_lem_4
+forall([X_sdg, X_sdgl], (((X_sdgl :sdecgoallist = jaddsdl(X_sdg :sdecgoal, sdnil)), - ((sdcdr(X_sdgl :sdecgoallist) = sdnil))) <-> false)).
+
+% list_sdecgoallist_lem_5
+forall([X_sdgl, X_sdgl0], ((- ((X_sdgl :sdecgoallist = jaddsdl(sdcar(X_sdgl :sdecgoallist), X_sdgl0 :sdecgoallist))), - ((X_sdgl :sdecgoallist = sdnil))) -> - ((sdcdr(X_sdgl :sdecgoallist) = X_sdgl0 :sdecgoallist)))).
+
+% list_sdecgoallist_lem_6
+forall([X_sdgl, X_sdg], ((- ((X_sdgl :sdecgoallist = jaddsdl(X_sdg :sdecgoal, sdcdr(X_sdgl :sdecgoallist)))), - ((X_sdgl :sdecgoallist = sdnil))) -> - ((sdcar(X_sdgl :sdecgoallist) = X_sdg :sdecgoal)))).
+
+% list_sdecgoallist_lem_7
+forall([X_sdgl, X_sdgl0], (((X_sdgl :sdecgoallist = jaddsdl(sdcar(X_sdgl :sdecgoallist), X_sdgl0 :sdecgoallist)), - ((X_sdgl :sdecgoallist = sdnil))) -> (sdcdr(X_sdgl :sdecgoallist) = X_sdgl0 :sdecgoallist))).
+
+% list_sdecgoallist_lem_8
+forall([X_sdgl, X_sdg], (((X_sdgl :sdecgoallist = jaddsdl(X_sdg :sdecgoal, sdcdr(X_sdgl :sdecgoallist))), - ((X_sdgl :sdecgoallist = sdnil))) -> (sdcar(X_sdgl :sdecgoallist) = X_sdg :sdecgoal))).
+
+% list_sdecgoallist_lem_9
+forall([X_sdgl], ((jaddsdl(sdcar(X_sdgl :sdecgoallist), sdcdr(X_sdgl :sdecgoallist)) = X_sdgl :sdecgoallist); (X_sdgl :sdecgoallist = sdnil))).
+
+% list_litlist_ax_1
+forall([X_ll, X_lit], (lcar(jaddll(X_lit :literal, X_ll :litlist)) = X_lit :literal)).
+
+% list_litlist_ax_2
+forall([X_lit, X_ll], (lcdr(jaddll(X_lit :literal, X_ll :litlist)) = X_ll :litlist)).
+
+% list_litlist_ax_3
+forall([X_lit, X_lit0, X_ll, X_ll0], ((jaddll(X_lit :literal, X_ll :litlist) = jaddll(X_lit0 :literal, X_ll0 :litlist)) <-> ((X_lit :literal = X_lit0 :literal), (X_ll :litlist = X_ll0 :litlist)))).
+
+% list_litlist_ax_4
+forall([X_lit, X_ll], - ((lnil = jaddll(X_lit :literal, X_ll :litlist)))).
+
+% list_litlist_ax_5
+forall([X_ll], ((X_ll :litlist = lnil); (X_ll :litlist = jaddll(lcar(X_ll :litlist), lcdr(X_ll :litlist))))).
+
+% list_litlist_ax_6
+forall([X_ll], - (jlsjlsl(X_ll :litlist, X_ll :litlist))).
+
+% list_litlist_ax_7
+forall([X_ll, X_ll0, X_ll1], ((jlsjlsl(X_ll0 :litlist, X_ll :litlist), jlsjlsl(X_ll :litlist, X_ll1 :litlist)) -> jlsjlsl(X_ll0 :litlist, X_ll1 :litlist))).
+
+% list_litlist_ax_8
+forall([X_ll], - (jlsjlsl(X_ll :litlist, lnil))).
+
+% list_litlist_ax_9
+forall([X_lit, X_ll, X_ll0], (jlsjlsl(X_ll :litlist, jaddll(X_lit :literal, X_ll0 :litlist)) <-> ((X_ll :litlist = X_ll0 :litlist); jlsjlsl(X_ll :litlist, X_ll0 :litlist)))).
+
+% list_litlist_lem_02
+forall([X_lit, X_ll], jlsjlsl(X_ll :litlist, jaddll(X_lit :literal, X_ll :litlist))).
+
+% list_litlist_lem_03
+forall([X_lit, X_ll], - (jlsjlsl(jaddll(X_lit :literal, X_ll :litlist), X_ll :litlist))).
+
+% list_litlist_lem_1
+forall([X_ll], (jlsjlsl(lcdr(X_ll :litlist), X_ll :litlist) <-> - ((X_ll :litlist = lnil)))).
+
+% list_litlist_lem_2
+forall([X_lit, X_ll], jlsjlsl(lnil, jaddll(X_lit :literal, X_ll :litlist))).
+
+% list_litlist_lem_3
+forall([X_ll], ((X_ll :litlist = lcdr(X_ll :litlist)) -> (X_ll :litlist = lnil))).
+
+% list_litlist_lem_4
+forall([X_lit, X_ll], (((X_ll :litlist = jaddll(X_lit :literal, lnil)), - ((lcdr(X_ll :litlist) = lnil))) <-> false)).
+
+% list_litlist_lem_5
+forall([X_ll, X_ll0], ((- ((X_ll :litlist = jaddll(lcar(X_ll :litlist), X_ll0 :litlist))), - ((X_ll :litlist = lnil))) -> - ((lcdr(X_ll :litlist) = X_ll0 :litlist)))).
+
+% list_litlist_lem_6
+forall([X_ll, X_lit], ((- ((X_ll :litlist = jaddll(X_lit :literal, lcdr(X_ll :litlist)))), - ((X_ll :litlist = lnil))) -> - ((lcar(X_ll :litlist) = X_lit :literal)))).
+
+% list_litlist_lem_7
+forall([X_ll, X_ll0], (((X_ll :litlist = jaddll(lcar(X_ll :litlist), X_ll0 :litlist)), - ((X_ll :litlist = lnil))) -> (lcdr(X_ll :litlist) = X_ll0 :litlist))).
+
+% list_litlist_lem_8
+forall([X_ll, X_lit], (((X_ll :litlist = jaddll(X_lit :literal, lcdr(X_ll :litlist))), - ((X_ll :litlist = lnil))) -> (lcar(X_ll :litlist) = X_lit :literal))).
+
+% list_litlist_lem_9
+forall([X_ll], ((jaddll(lcar(X_ll :litlist), lcdr(X_ll :litlist)) = X_ll :litlist); (X_ll :litlist = lnil))).
+
+% list_statelist_ax_1
+forall([X_stl, X_st], (scar(jaddsl(X_st :statesort, X_stl :statelist)) = X_st :statesort)).
+
+% list_statelist_ax_2
+forall([X_st, X_stl], (scdr(jaddsl(X_st :statesort, X_stl :statelist)) = X_stl :statelist)).
+
+% list_statelist_ax_3
+forall([X_st, X_st0, X_stl, X_stl0], ((jaddsl(X_st :statesort, X_stl :statelist) = jaddsl(X_st0 :statesort, X_stl0 :statelist)) <-> ((X_st :statesort = X_st0 :statesort), (X_stl :statelist = X_stl0 :statelist)))).
+
+% list_statelist_ax_4
+forall([X_st, X_stl], - ((snil = jaddsl(X_st :statesort, X_stl :statelist)))).
+
+% list_statelist_ax_5
+forall([X_stl], ((X_stl :statelist = snil); (X_stl :statelist = jaddsl(scar(X_stl :statelist), scdr(X_stl :statelist))))).
+
+% list_statelist_ax_6
+forall([X_stl], - (jlsjlss(X_stl :statelist, X_stl :statelist))).
+
+% list_statelist_ax_7
+forall([X_stl, X_stl0, X_stl1], ((jlsjlss(X_stl0 :statelist, X_stl :statelist), jlsjlss(X_stl :statelist, X_stl1 :statelist)) -> jlsjlss(X_stl0 :statelist, X_stl1 :statelist))).
+
+% list_statelist_ax_8
+forall([X_stl], - (jlsjlss(X_stl :statelist, snil))).
+
+% list_statelist_ax_9
+forall([X_st, X_stl, X_stl0], (jlsjlss(X_stl :statelist, jaddsl(X_st :statesort, X_stl0 :statelist)) <-> ((X_stl :statelist = X_stl0 :statelist); jlsjlss(X_stl :statelist, X_stl0 :statelist)))).
+
+% list_statelist_lem_02
+forall([X_st, X_stl], jlsjlss(X_stl :statelist, jaddsl(X_st :statesort, X_stl :statelist))).
+
+% list_statelist_lem_03
+forall([X_st, X_stl], - (jlsjlss(jaddsl(X_st :statesort, X_stl :statelist), X_stl :statelist))).
+
+% list_statelist_lem_1
+forall([X_stl], (jlsjlss(scdr(X_stl :statelist), X_stl :statelist) <-> - ((X_stl :statelist = snil)))).
+
+% list_statelist_lem_2
+forall([X_st, X_stl], jlsjlss(snil, jaddsl(X_st :statesort, X_stl :statelist))).
+
+% list_statelist_lem_3
+forall([X_stl], ((X_stl :statelist = scdr(X_stl :statelist)) -> (X_stl :statelist = snil))).
+
+% list_statelist_lem_4
+forall([X_st, X_stl], (((X_stl :statelist = jaddsl(X_st :statesort, snil)), - ((scdr(X_stl :statelist) = snil))) <-> false)).
+
+% list_statelist_lem_5
+forall([X_stl, X_stl0], ((- ((X_stl :statelist = jaddsl(scar(X_stl :statelist), X_stl0 :statelist))), - ((X_stl :statelist = snil))) -> - ((scdr(X_stl :statelist) = X_stl0 :statelist)))).
+
+% list_statelist_lem_6
+forall([X_stl, X_st], ((- ((X_stl :statelist = jaddsl(X_st :statesort, scdr(X_stl :statelist)))), - ((X_stl :statelist = snil))) -> - ((scar(X_stl :statelist) = X_st :statesort)))).
+
+% list_statelist_lem_7
+forall([X_stl, X_stl0], (((X_stl :statelist = jaddsl(scar(X_stl :statelist), X_stl0 :statelist)), - ((X_stl :statelist = snil))) -> (scdr(X_stl :statelist) = X_stl0 :statelist))).
+
+% list_statelist_lem_8
+forall([X_stl, X_st], (((X_stl :statelist = jaddsl(X_st :statesort, scdr(X_stl :statelist))), - ((X_stl :statelist = snil))) -> (scar(X_stl :statelist) = X_st :statesort))).
+
+% list_statelist_lem_9
+forall([X_stl], ((jaddsl(scar(X_stl :statelist), scdr(X_stl :statelist)) = X_stl :statelist); (X_stl :statelist = snil))).
+
+% finitefun_father_ax_1
+forall([X_no, X_no0], (jexpf(cfather(X_no0 :nodesort), X_no :nodesort) = X_no0 :nodesort)).
+
+% finitefun_father_ax_2
+forall([X_father, X_no, X_no0], (jexpf(jaddf(X_father :fatherfun, jslaf(X_no :nodesort, X_no0 :nodesort)), X_no :nodesort) = X_no0 :nodesort)).
+
+% finitefun_father_ax_3
+forall([X_no, X_no0, X_father, X_no1], (- ((X_no :nodesort = X_no1 :nodesort)) -> (jexpf(jaddf(X_father :fatherfun, jslaf(X_no :nodesort, X_no0 :nodesort)), X_no1 :nodesort) = jexpf(X_father :fatherfun, X_no1 :nodesort)))).
+
+% finitefun_father_lem_1
+forall([X_no, X_father, X_no0, X_no1], ((jexpf(jaddf(X_father :fatherfun, jslaf(X_no0 :nodesort, X_no :nodesort)), X_no1 :nodesort) = jexpf(X_father :fatherfun, X_no1 :nodesort)); (X_no0 :nodesort = X_no1 :nodesort))).
+
+% finitefun_decglseq_ax_1
+forall([X_no, X_dg1], (jexpd(cdecglseq(X_dg1 :decgoallist), X_no :nodesort) = X_dg1 :decgoallist)).
+
+% finitefun_decglseq_ax_2
+forall([X_decglseq, X_no, X_dg1], (jexpd(jaddd(X_decglseq :decglseqfun, jslad(X_no :nodesort, X_dg1 :decgoallist)), X_no :nodesort) = X_dg1 :decgoallist)).
+
+% finitefun_decglseq_ax_3
+forall([X_no, X_dg1, X_decglseq, X_no0], (- ((X_no :nodesort = X_no0 :nodesort)) -> (jexpd(jaddd(X_decglseq :decglseqfun, jslad(X_no :nodesort, X_dg1 :decgoallist)), X_no0 :nodesort) = jexpd(X_decglseq :decglseqfun, X_no0 :nodesort)))).
+
+% finitefun_decglseq_lem_1
+forall([X_dg1, X_decglseq, X_no, X_no0], ((jexpd(jaddd(X_decglseq :decglseqfun, jslad(X_no :nodesort, X_dg1 :decgoallist)), X_no0 :nodesort) = jexpd(X_decglseq :decglseqfun, X_no0 :nodesort)); (X_no :nodesort = X_no0 :nodesort))).
+
+% finitefun_cands_ax_1
+forall([X_no, X_nl], (jexpn(ccands(X_nl :nodelist), X_no :nodesort) = X_nl :nodelist)).
+
+% finitefun_cands_ax_2
+forall([X_cands, X_no, X_nl], (jexpn(jaddn(X_cands :candsfun, jslan(X_no :nodesort, X_nl :nodelist)), X_no :nodesort) = X_nl :nodelist)).
+
+% finitefun_cands_ax_3
+forall([X_no, X_nl, X_cands, X_no0], (- ((X_no :nodesort = X_no0 :nodesort)) -> (jexpn(jaddn(X_cands :candsfun, jslan(X_no :nodesort, X_nl :nodelist)), X_no0 :nodesort) = jexpn(X_cands :candsfun, X_no0 :nodesort)))).
+
+% finitefun_cands_lem_1
+forall([X_nl, X_cands, X_no, X_no0], ((jexpn(jaddn(X_cands :candsfun, jslan(X_no :nodesort, X_nl :nodelist)), X_no0 :nodesort) = jexpn(X_cands :candsfun, X_no0 :nodesort)); (X_no :nodesort = X_no0 :nodesort))).
+
+% finitefun_cll_ax_1
+forall([X_no, X_co], (jexpc(ccll(X_co :code), X_no :nodesort) = X_co :code)).
+
+% finitefun_cll_ax_2
+forall([X_cll, X_no, X_co], (jexpc(jaddc(X_cll :cllfun, jslac(X_no :nodesort, X_co :code)), X_no :nodesort) = X_co :code)).
+
+% finitefun_cll_ax_3
+forall([X_no, X_co, X_cll, X_no0], (- ((X_no :nodesort = X_no0 :nodesort)) -> (jexpc(jaddc(X_cll :cllfun, jslac(X_no :nodesort, X_co :code)), X_no0 :nodesort) = jexpc(X_cll :cllfun, X_no0 :nodesort)))).
+
+% finitefun_cll_lem_1
+forall([X_co, X_cll, X_no, X_no0], ((jexpc(jaddc(X_cll :cllfun, jslac(X_no :nodesort, X_co :code)), X_no0 :nodesort) = jexpc(X_cll :cllfun, X_no0 :nodesort)); (X_no :nodesort = X_no0 :nodesort))).
+
+% finitefun_sub_ax_1
+forall([X_no, X_su], (jexpu(csub(X_su :substitution), X_no :nodesort) = X_su :substitution)).
+
+% finitefun_sub_ax_2
+forall([X_sub, X_no, X_su], (jexpu(jaddu(X_sub :subfun, jslau(X_no :nodesort, X_su :substitution)), X_no :nodesort) = X_su :substitution)).
+
+% finitefun_sub_ax_3
+forall([X_no, X_su, X_sub, X_no0], (- ((X_no :nodesort = X_no0 :nodesort)) -> (jexpu(jaddu(X_sub :subfun, jslau(X_no :nodesort, X_su :substitution)), X_no0 :nodesort) = jexpu(X_sub :subfun, X_no0 :nodesort)))).
+
+% finitefun_sub_lem_1
+forall([X_su, X_sub, X_no, X_no0], ((jexpu(jaddu(X_sub :subfun, jslau(X_no :nodesort, X_su :substitution)), X_no0 :nodesort) = jexpu(X_sub :subfun, X_no0 :nodesort)); (X_no :nodesort = X_no0 :nodesort))).
+
+% finitefun_b_ax_1
+forall([X_st, X_st0], (jexpb(cb(X_st0 :statesort), X_st :statesort) = X_st0 :statesort)).
+
+% finitefun_b_ax_2
+forall([X_b, X_st, X_st0], (jexpb(jaddb(X_b :bfun, jslab(X_st :statesort, X_st0 :statesort)), X_st :statesort) = X_st0 :statesort)).
+
+% finitefun_b_ax_3
+forall([X_st, X_st0, X_b, X_st1], (- ((X_st :statesort = X_st1 :statesort)) -> (jexpb(jaddb(X_b :bfun, jslab(X_st :statesort, X_st0 :statesort)), X_st1 :statesort) = jexpb(X_b :bfun, X_st1 :statesort)))).
+
+% finitefun_b_lem_1
+forall([X_st, X_b, X_st0, X_st1], ((jexpb(jaddb(X_b :bfun, jslab(X_st0 :statesort, X_st :statesort)), X_st1 :statesort) = jexpb(X_b :bfun, X_st1 :statesort)); (X_st0 :statesort = X_st1 :statesort))).
+
+% finitefun_sdecglseq_ax_1
+forall([X_st, X_sdg1], (jexpsd(csdecglseq(X_sdg1 :sdecgoallist), X_st :statesort) = X_sdg1 :sdecgoallist)).
+
+% finitefun_sdecglseq_ax_2
+forall([X_sdecglseq, X_st, X_sdg1], (jexpsd(jaddsd(X_sdecglseq :sdecglseqfun, jslasd(X_st :statesort, X_sdg1 :sdecgoallist)), X_st :statesort) = X_sdg1 :sdecgoallist)).
+
+% finitefun_sdecglseq_ax_3
+forall([X_st, X_sdg1, X_sdecglseq, X_st0], (- ((X_st :statesort = X_st0 :statesort)) -> (jexpsd(jaddsd(X_sdecglseq :sdecglseqfun, jslasd(X_st :statesort, X_sdg1 :sdecgoallist)), X_st0 :statesort) = jexpsd(X_sdecglseq :sdecglseqfun, X_st0 :statesort)))).
+
+% finitefun_sdecglseq_lem_1
+forall([X_sdg1, X_sdecglseq, X_st, X_st0], ((jexpsd(jaddsd(X_sdecglseq :sdecglseqfun, jslasd(X_st :statesort, X_sdg1 :sdecgoallist)), X_st0 :statesort) = jexpsd(X_sdecglseq :sdecglseqfun, X_st0 :statesort)); (X_st :statesort = X_st0 :statesort))).
+
+% finitefun_scll_ax_1
+forall([X_st, X_co], (jexpsc(cscll(X_co :code), X_st :statesort) = X_co :code)).
+
+% finitefun_scll_ax_2
+forall([X_scll, X_st, X_co], (jexpsc(jaddsc(X_scll :scllfun, jslasc(X_st :statesort, X_co :code)), X_st :statesort) = X_co :code)).
+
+% finitefun_scll_ax_3
+forall([X_st, X_co, X_scll, X_st0], (- ((X_st :statesort = X_st0 :statesort)) -> (jexpsc(jaddsc(X_scll :scllfun, jslasc(X_st :statesort, X_co :code)), X_st0 :statesort) = jexpsc(X_scll :scllfun, X_st0 :statesort)))).
+
+% finitefun_scll_lem_1
+forall([X_co, X_scll, X_st, X_st0], ((jexpsc(jaddsc(X_scll :scllfun, jslasc(X_st :statesort, X_co :code)), X_st0 :statesort) = jexpsc(X_scll :scllfun, X_st0 :statesort)); (X_st :statesort = X_st0 :statesort))).
+
+% finitefun_ssub_ax_1
+forall([X_st, X_su], (jexpsu(cssub(X_su :substitution), X_st :statesort) = X_su :substitution)).
+
+% finitefun_ssub_ax_2
+forall([X_ssub, X_st, X_su], (jexpsu(jaddsu(X_ssub :ssubfun, jslasu(X_st :statesort, X_su :substitution)), X_st :statesort) = X_su :substitution)).
+
+% finitefun_ssub_ax_3
+forall([X_st, X_su, X_ssub, X_st0], (- ((X_st :statesort = X_st0 :statesort)) -> (jexpsu(jaddsu(X_ssub :ssubfun, jslasu(X_st :statesort, X_su :substitution)), X_st0 :statesort) = jexpsu(X_ssub :ssubfun, X_st0 :statesort)))).
+
+% finitefun_ssub_lem_1
+forall([X_su, X_ssub, X_st, X_st0], ((jexpsu(jaddsu(X_ssub :ssubfun, jslasu(X_st :statesort, X_su :substitution)), X_st0 :statesort) = jexpsu(X_ssub :ssubfun, X_st0 :statesort)); (X_st :statesort = X_st0 :statesort))).
+
+% finitefun_F_ax_1
+forall([X_st, X_no], (jexp(cf(X_no :nodesort), X_st :statesort) = X_no :nodesort)).
+
+% finitefun_F_ax_2
+forall([X_f, X_st, X_no], (jexp(jaddjadd(X_f :statenodefun, jsla(X_st :statesort, X_no :nodesort)), X_st :statesort) = X_no :nodesort)).
+
+% finitefun_F_ax_3
+forall([X_st, X_no, X_f, X_st0], (- ((X_st :statesort = X_st0 :statesort)) -> (jexp(jaddjadd(X_f :statenodefun, jsla(X_st :statesort, X_no :nodesort)), X_st0 :statesort) = jexp(X_f :statenodefun, X_st0 :statesort)))).
+
+% finitefun_F_lem_1
+forall([X_no, X_f, X_st, X_st0], ((jexp(jaddjadd(X_f :statenodefun, jsla(X_st :statesort, X_no :nodesort)), X_st0 :statesort) = jexp(X_f :statenodefun, X_st0 :statesort)); (X_st :statesort = X_st0 :statesort))).
+
+% pair_decgoal_ax_1
+forall([X_no, X_ll], (jdot1(mkdecgoal(X_ll :litlist, X_no :nodesort)) = X_ll :litlist)).
+
+% pair_decgoal_ax_2
+forall([X_ll, X_no], (jdot2(mkdecgoal(X_ll :litlist, X_no :nodesort)) = X_no :nodesort)).
+
+% pair_decgoal_ax_3
+forall([X_ll, X_ll0, X_no, X_no0], ((mkdecgoal(X_ll :litlist, X_no :nodesort) = mkdecgoal(X_ll0 :litlist, X_no0 :nodesort)) <-> ((X_ll :litlist = X_ll0 :litlist), (X_no :nodesort = X_no0 :nodesort)))).
+
+% pair_decgoal_ax_4
+forall([X_dg], (mkdecgoal(jdot1(X_dg :decgoal), jdot2(X_dg :decgoal)) = X_dg :decgoal)).
+
+% pair_decgoal_lem_1
+forall([X_dg, X_no], ((X_dg :decgoal = mkdecgoal(jdot1(X_dg :decgoal), X_no :nodesort)) <-> (jdot2(X_dg :decgoal) = X_no :nodesort))).
+
+% pair_decgoal_lem_2
+forall([X_dg, X_ll], ((X_dg :decgoal = mkdecgoal(X_ll :litlist, jdot2(X_dg :decgoal))) <-> (jdot1(X_dg :decgoal) = X_ll :litlist))).
+
+% pair_sdecgoal_ax_1
+forall([X_st, X_ll], (jdots1(mksdecgoal(X_ll :litlist, X_st :statesort)) = X_ll :litlist)).
+
+% pair_sdecgoal_ax_2
+forall([X_ll, X_st], (jdots2(mksdecgoal(X_ll :litlist, X_st :statesort)) = X_st :statesort)).
+
+% pair_sdecgoal_ax_3
+forall([X_ll, X_ll0, X_st, X_st0], ((mksdecgoal(X_ll :litlist, X_st :statesort) = mksdecgoal(X_ll0 :litlist, X_st0 :statesort)) <-> ((X_ll :litlist = X_ll0 :litlist), (X_st :statesort = X_st0 :statesort)))).
+
+% pair_sdecgoal_ax_4
+forall([X_sdg], (mksdecgoal(jdots1(X_sdg :sdecgoal), jdots2(X_sdg :sdecgoal)) = X_sdg :sdecgoal)).
+
+% pair_sdecgoal_lem_1
+forall([X_sdg, X_st], ((X_sdg :sdecgoal = mksdecgoal(jdots1(X_sdg :sdecgoal), X_st :statesort)) <-> (jdots2(X_sdg :sdecgoal) = X_st :statesort))).
+
+% pair_sdecgoal_lem_2
+forall([X_sdg, X_ll], ((X_sdg :sdecgoal = mksdecgoal(X_ll :litlist, jdots2(X_sdg :sdecgoal))) <-> (jdots1(X_sdg :sdecgoal) = X_ll :litlist))).
+
+% pair_clause_ax_1
+forall([X_ll, X_pr], (hd(mkclause(X_pr :predicate, X_ll :litlist)) = X_pr :predicate)).
+
+% pair_clause_ax_2
+forall([X_pr, X_ll], (bdy(mkclause(X_pr :predicate, X_ll :litlist)) = X_ll :litlist)).
+
+% pair_clause_ax_3
+forall([X_pr, X_pr0, X_ll, X_ll0], ((mkclause(X_pr :predicate, X_ll :litlist) = mkclause(X_pr0 :predicate, X_ll0 :litlist)) <-> ((X_pr :predicate = X_pr0 :predicate), (X_ll :litlist = X_ll0 :litlist)))).
+
+% pair_clause_ax_4
+forall([X_cl], (mkclause(hd(X_cl :clausesort), bdy(X_cl :clausesort)) = X_cl :clausesort)).
+
+% pair_clause_lem_1
+forall([X_cl, X_ll], ((X_cl :clausesort = mkclause(hd(X_cl :clausesort), X_ll :litlist)) <-> (bdy(X_cl :clausesort) = X_ll :litlist))).
+
+% pair_clause_lem_2
+forall([X_cl, X_pr], ((X_cl :clausesort = mkclause(X_pr :predicate, bdy(X_cl :clausesort))) <-> (hd(X_cl :clausesort) = X_pr :predicate))).
+
+% natbasic1_ax_1
+forall([X_n], (jpre(jsuc(X_n :nat)) = X_n :nat)).
+
+% natbasic1_ax_2
+forall([X_n, X_n0], ((jsuc(X_n :nat) = jsuc(X_n0 :nat)) <-> (X_n :nat = X_n0 :nat))).
+
+% natbasic1_ax_3
+forall([X_n], - ((jzer = jsuc(X_n :nat)))).
+
+% natbasic1_ax_4
+forall([X_n], ((X_n :nat = jzer); (X_n :nat = jsuc(jpre(X_n :nat))))).
+
+% natbasic1_ax_5
+forall([X_n], - (jls(X_n :nat, X_n :nat))).
+
+% natbasic1_ax_6
+forall([X_n0, X_n, X_n1], ((jls(X_n :nat, X_n0 :nat), jls(X_n0 :nat, X_n1 :nat)) -> jls(X_n :nat, X_n1 :nat))).
+
+% natbasic1_ax_7
+forall([X_n], - (jls(X_n :nat, jzer))).
+
+% natbasic1_ax_8
+forall([X_n0, X_n], (jls(X_n0 :nat, jsuc(X_n :nat)) <-> ((X_n0 :nat = X_n :nat); jls(X_n0 :nat, X_n :nat)))).
+
+% natbasic1_lem_1
+forall([X_n], (jls(jzer, X_n :nat) <-> - ((X_n :nat = jzer)))).
+
+% natbasic1_lem_2
+forall([X_m], (((jpre(X_m :nat) = jzer), - ((X_m :nat = jsuc(jzer)))) -> (X_m :nat = jzer))).
+
+% natbasic1_lem_3
+forall([X_m], (((jpre(X_m :nat) = jzer), - ((X_m :nat = jzer))) -> (X_m :nat = jsuc(jzer)))).
+
+% natbasic1_lem_4
+forall([X_m1, X_m2], (jls(jsuc(X_m1 :nat), jsuc(X_m2 :nat)) <-> jls(X_m1 :nat, X_m2 :nat))).
+
+% natbasic1_lem_5
+forall([X_m, X_n], ((- ((jpre(X_m :nat) = X_n :nat)), - ((X_m :nat = jzer))) -> - ((X_m :nat = jsuc(X_n :nat))))).
+
+% natbasic1_lem_6
+forall([X_m, X_n], (((jpre(X_m :nat) = X_n :nat), - ((X_m :nat = jzer))) -> (X_m :nat = jsuc(X_n :nat)))).
+
+% natbasic1_lem_7
+forall([X_n], (- ((jsuc(jpre(X_n :nat)) = X_n :nat)) -> (X_n :nat = jzer))).
+
+% natbasic1_lem_8
+forall([X_n], - ((X_n :nat = jsuc(X_n :nat)))).
+
+% natbasic1_lem_9
+forall([X_n], - (jls(jsuc(jsuc(X_n :nat)), X_n :nat))).
+
+% natbasic1_lem_10
+forall([X_n], - (jls(jsuc(X_n :nat), X_n :nat))).
+
+% natbasic1_lem_11
+forall([X_n], (jls(jpre(X_n :nat), X_n :nat) <-> - ((X_n :nat = jzer)))).
+
+% natbasic1_lem_12
+forall([X_n], ((jsuc(jpre(X_n :nat)) = X_n :nat) <-> - ((X_n :nat = jzer)))).
+
+% natbasic1_lem_13
+forall([X_n, X_m], (jls(X_m :nat, jsuc(X_n :nat)) <-> - (jls(X_n :nat, X_m :nat)))).
+
+% natbasic1_lem_14
+forall([X_n, X_m], (jls(jsuc(X_m :nat), X_n :nat) -> (jls(X_m :nat, X_n :nat), - ((X_n :nat = jsuc(X_m :nat)))))).
+
+% natbasic1_lem_15
+forall([X_n, X_m], ((- (jls(jsuc(X_m :nat), X_n :nat)), jls(X_m :nat, X_n :nat)) <-> (X_n :nat = jsuc(X_m :nat)))).
+
+% natbasic1_lem_16
+forall([X_m, X_n], ((- (jls(jsuc(X_m :nat), X_n :nat)), - ((X_n :nat = jsuc(X_m :nat)))) <-> - (jls(X_m :nat, X_n :nat)))).
+
+% natbasic1_lem_17
+forall([X_m, X_n], ((jls(X_m :nat, jpre(X_n :nat)), - ((X_n :nat = jzer))) -> jls(jsuc(X_m :nat), X_n :nat))).
+
+% natbasic1_lem_18
+forall([X_m, X_n], (- (jls(X_m :nat, jpre(X_n :nat))) -> - (jls(jsuc(X_m :nat), X_n :nat)))).
+
+% natbasic1_lem_19
+forall([X_m, X_n], (jls(jpre(X_m :nat), X_n :nat) -> (- (jls(X_n :nat, X_m :nat)), - ((X_n :nat = jzer))))).
+
+% natbasic1_lem_20
+forall([X_n, X_m], ((- (jls(jpre(X_m :nat), X_n :nat)), - ((X_m :nat = jzer))) -> jls(X_n :nat, X_m :nat))).
+
+% natbasic1_lem_21
+forall([X_n, X_m], ((- (jls(jpre(X_m :nat), X_n :nat)), - (jls(X_n :nat, X_m :nat))) -> (X_m :nat = jzer))).
+
+% natbasic1_lem_22
+forall([X_n, X_m], ((- (jls(jpre(X_m :nat), X_n :nat)), jls(X_m :nat, X_n :nat)) -> (X_m :nat = jzer))).
+
+% natbasic1_lem_23
+forall([X_n], ((jsuc(jpre(X_n :nat)) = X_n :nat); (X_n :nat = jzer))).
+
+% natbasic1_lem_24
+forall([X_k], ((((jpre(jpre(X_k :nat)) = jzer), - ((X_k :nat = jzer))), - ((X_k :nat = jsuc(jzer)))) -> (X_k :nat = jsuc(jsuc(jzer))))).
+
+% natbasic1_lem_26
+forall([X_n], (- (jls(jzer, X_n :nat)) -> (X_n :nat = jzer))).
+
+% natbasic1_lem_27
+forall([X_n], (- (jls(jsuc(jzer), X_n :nat)) -> ((X_n :nat = jzer); (X_n :nat = jsuc(jzer))))).
+
+% natbasic1_lem_25
+forall([X_n], (jls(X_n :nat, jpre(X_n :nat)) -> (X_n :nat = jzer))).
+
+% natbasic1_lem_28
+forall([X_k, X_n, X_m], ((- (jls(jpre(X_m :nat), X_n :nat)), jls(X_k :nat, X_m :nat)) -> jls(X_n :nat, X_m :nat))).
+
+% natbasic1_lem_29
+forall([X_n], ((jpre(X_n :nat) = X_n :nat) -> (X_n :nat = jzer))).
+
+% natbasic1_lem_30
+forall([X_n], - ((jsuc(jsuc(X_n :nat)) = X_n :nat))).
+
+% natbasic2_ax_1
+forall([X_n], (jadd(X_n :nat, jzer) = X_n :nat)).
+
+% natbasic2_ax_2
+forall([X_m, X_n], (jadd(X_m :nat, jsuc(X_n :nat)) = jsuc(jadd(X_m :nat, X_n :nat)))).
+
+% natbasic2_ax_3
+forall([X_n0, X_n], ((jls(X_n :nat, X_n0 :nat); (X_n :nat = X_n0 :nat)); jls(X_n0 :nat, X_n :nat))).
+
+% natbasic2_lem_1
+forall([X_n], (jadd(jzer, X_n :nat) = X_n :nat)).
+
+% natbasic2_lem_2
+forall([X_m, X_n], (jadd(jsuc(X_m :nat), X_n :nat) = jsuc(jadd(X_m :nat, X_n :nat)))).
+
+% natbasic2_lem_3
+forall([X_m, X_n], ((jadd(X_m :nat, jpre(X_n :nat)) = jpre(jadd(X_m :nat, X_n :nat))); (X_n :nat = jzer))).
+
+% natbasic2_lem_4
+forall([X_n, X_m], ((jadd(jpre(X_m :nat), X_n :nat) = jpre(jadd(X_m :nat, X_n :nat))); (X_m :nat = jzer))).
+
+% natbasic2_lem_5
+forall([X_i, X_m, X_n], (jls(jadd(X_i :nat, X_m :nat), jadd(X_i :nat, X_n :nat)) <-> jls(X_m :nat, X_n :nat))).
+
+% natbasic2_lem_6
+forall([X_k, X_m, X_n], (jls(jadd(X_m :nat, X_k :nat), jadd(X_n :nat, X_k :nat)) <-> jls(X_m :nat, X_n :nat))).
+
+% natbasic2_lem_7
+forall([X_m, X_n, X_k], ((jadd(X_m :nat, X_n :nat) = jadd(X_m :nat, X_k :nat)) <-> (X_n :nat = X_k :nat))).
+
+% natbasic2_lem_8
+forall([X_k, X_m, X_n], ((jadd(X_m :nat, X_k :nat) = jadd(X_n :nat, X_k :nat)) <-> (X_m :nat = X_n :nat))).
+
+% natbasic2_lem_9
+forall([X_n, X_k, X_m], ((jadd(X_k :nat, X_n :nat) = jadd(X_n :nat, X_m :nat)) <-> (X_k :nat = X_m :nat))).
+
+% natbasic2_lem_10
+forall([X_n, X_m], ((X_n :nat = jadd(X_m :nat, X_n :nat)) <-> (X_m :nat = jzer))).
+
+% natbasic2_lem_11
+forall([X_m, X_n], ((jadd(X_m :nat, X_n :nat) = jzer) -> ((X_m :nat = jzer), (X_n :nat = jzer)))).
+
+% natbasic2_lem_12
+forall([X_n, X_i], - (jls(jadd(X_i :nat, X_n :nat), X_i :nat))).
+
+% natbasic2_lem_13
+forall([X_n, X_i], - (jls(jadd(X_n :nat, X_i :nat), X_i :nat))).
+
+% natbasic2_lem_15
+forall([X_i, X_n], ((jadd(X_i :nat, X_n :nat) = X_i :nat) <-> (X_n :nat = jzer))).
+
+% natbasic2_lem_16
+forall([X_m, X_n], (jls(X_m :nat, jadd(X_n :nat, X_m :nat)) <-> - ((X_n :nat = jzer)))).
+
+% natbasic2_lem_17
+forall([X_m, X_n], (jls(X_m :nat, jadd(X_m :nat, X_n :nat)) <-> - ((X_n :nat = jzer)))).
+
+% natbasic2_lem_18
+forall([X_n, X_k, X_m], ((- (jls(jpre(jadd(X_k :nat, X_m :nat)), X_n :nat)), - ((X_k :nat = jzer))) -> jls(X_n :nat, jadd(X_k :nat, X_m :nat)))).
+
+% natbasic2_lem_19
+forall([X_n, X_k, X_m], ((- (jls(jpre(jadd(X_k :nat, X_m :nat)), X_n :nat)), - ((X_m :nat = jzer))) -> jls(X_n :nat, jadd(X_k :nat, X_m :nat)))).
+
+% natbasic2_lem_20
+forall([X_n, X_k, X_m], ((- (jls(X_k :nat, jadd(X_m :nat, X_n :nat))), jls(X_k :nat, X_m :nat)) <-> false)).
+
+% natbasic2_lem_21
+forall([X_m, X_k, X_n], ((- (jls(X_k :nat, jadd(X_m :nat, X_n :nat))), jls(X_k :nat, X_n :nat)) <-> false)).
+
+% natbasic2_com
+forall([X_n, X_m], (jadd(X_m :nat, X_n :nat) = jadd(X_n :nat, X_m :nat))).
+
+% natbasic2_ass
+forall([X_m, X_n, X_k], (jadd(jadd(X_m :nat, X_n :nat), X_k :nat) = jadd(X_m :nat, jadd(X_n :nat, X_k :nat)))).
+
+% natbasic2_lem_14
+forall([X_k, X_m, X_n], ((- (jls(X_m :nat, jadd(X_n :nat, X_k :nat))), jls(X_m :nat, X_n :nat)) <-> false)).
+
+% natbasic2_lem_22
+forall([X_m, X_n, X_k], ((jadd(X_n :nat, X_m :nat) = jsuc(jadd(X_k :nat, X_m :nat))) <-> (X_n :nat = jsuc(X_k :nat)))).
+
+% natbasic2_lem_23
+forall([X_m, X_n, X_k], ((jadd(X_m :nat, X_n :nat) = jsuc(jadd(X_k :nat, X_m :nat))) <-> (X_n :nat = jsuc(X_k :nat)))).
+
+% natbasic2_lem_24
+forall([X_m, X_n, X_k], ((jadd(X_n :nat, X_m :nat) = jsuc(jsuc(jadd(X_k :nat, X_m :nat)))) <-> (X_n :nat = jsuc(jsuc(X_k :nat))))).
+
+% natbasic2_lem_25
+forall([X_m, X_n, X_k], ((jadd(X_m :nat, X_n :nat) = jsuc(jsuc(jadd(X_k :nat, X_m :nat)))) <-> (X_n :nat = jsuc(jsuc(X_k :nat))))).
+
+% natbasic2_lem_26
+forall([X_m, X_n, X_k], ((jadd(X_n :nat, X_m :nat) = jsuc(jadd(X_m :nat, X_k :nat))) <-> (X_n :nat = jsuc(X_k :nat)))).
+
+% natbasic2_lem_27
+forall([X_m, X_n, X_k], ((jadd(X_m :nat, X_n :nat) = jsuc(jadd(X_m :nat, X_k :nat))) <-> (X_n :nat = jsuc(X_k :nat)))).
+
+% natbasic2_lem_28
+forall([X_m, X_n, X_k], ((jadd(X_n :nat, X_m :nat) = jsuc(jsuc(jadd(X_m :nat, X_k :nat)))) <-> (X_n :nat = jsuc(jsuc(X_k :nat))))).
+
+% natbasic2_lem_29
+forall([X_m, X_n, X_k], ((jadd(X_m :nat, X_n :nat) = jsuc(jsuc(jadd(X_m :nat, X_k :nat)))) <-> (X_n :nat = jsuc(jsuc(X_k :nat))))).
+
+% nat_ax_1
+forall([X_m], (jsub(X_m :nat, jzer) = X_m :nat)).
+
+% nat_ax_2
+forall([X_m, X_n], (jsub(X_m :nat, jsuc(X_n :nat)) = jpre(jsub(X_m :nat, X_n :nat)))).
+
+% nat_ax_3
+forall([X_m], (jmul(X_m :nat, jzer) = jzer)).
+
+% nat_ax_4
+forall([X_n, X_m], (jmul(X_m :nat, jsuc(X_n :nat)) = jadd(jmul(X_m :nat, X_n :nat), X_m :nat))).
+
+% nat_ax_5
+forall([X_m, X_n], (jle(X_m :nat, X_n :nat) <-> (jls(X_m :nat, X_n :nat); (X_m :nat = X_n :nat)))).
+
+% nat_lem_1
+forall([X_m2, X_m1], (jle(X_m1 :nat, X_m2 :nat) <-> - (jls(X_m2 :nat, X_m1 :nat)))).
+
+% nat_lem_10
+forall([X_m, X_n1, X_n], ((jadd(jsub(X_n :nat, X_n1 :nat), X_m :nat) = jsub(jadd(X_n :nat, X_m :nat), X_n1 :nat)); - (jls(X_n1 :nat, X_n :nat)))).
+
+% nat_lem_11
+forall([X_m, X_n, X_n1], (jsub(X_m :nat, jadd(X_n :nat, X_n1 :nat)) = jsub(jsub(X_m :nat, X_n :nat), X_n1 :nat))).
+
+% nat_lem_12
+forall([X_n, X_m], ((jadd(X_m :nat, jsub(X_n :nat, X_m :nat)) = X_n :nat); jls(X_n :nat, X_m :nat))).
+
+% nat_lem_13
+forall([X_n, X_m], ((jadd(jsub(X_n :nat, X_m :nat), X_m :nat) = X_n :nat); jls(X_n :nat, X_m :nat))).
+
+% nat_lem_14
+forall([X_m, X_n], ((jsub(jsuc(X_n :nat), jsub(jpre(X_n :nat), X_m :nat)) = jsuc(jsuc(X_m :nat))); - (jls(X_m :nat, X_n :nat)))).
+
+% nat_lem_15
+forall([X_m, X_n], ((jsub(jsuc(X_n :nat), jpre(jsub(X_n :nat, X_m :nat))) = jsuc(jsuc(X_m :nat))); - (jls(X_m :nat, X_n :nat)))).
+
+% nat_lem_16
+forall([X_n, X_m], ((jsub(jsuc(X_n :nat), jsub(X_n :nat, X_m :nat)) = jsuc(X_m :nat)); jls(X_n :nat, X_m :nat))).
+
+% nat_lem_17
+forall([X_n, X_m], (jsub(jadd(X_m :nat, X_n :nat), X_n :nat) = X_m :nat)).
+
+% nat_lem_18
+forall([X_n, X_m], ((jsub(jsuc(X_n :nat), X_m :nat) = jsuc(jsub(X_n :nat, X_m :nat))); jls(X_n :nat, X_m :nat))).
+
+% nat_lem_19
+forall([X_m, X_n], ((jsub(jsuc(X_n :nat), X_m :nat) = jsuc(jsub(X_n :nat, X_m :nat))); - (jls(X_m :nat, X_n :nat)))).
+
+% nat_lem_2
+forall([X_n], (jsub(X_n :nat, X_n :nat) = jzer)).
+
+% nat_lem_20
+forall([X_m, X_n], ((jsub(X_n :nat, X_m :nat) = jzer) -> - (jls(X_m :nat, X_n :nat)))).
+
+% nat_lem_21
+forall([X_m, X_n1, X_n], ((jls(X_m :nat, jsub(X_n :nat, X_n1 :nat)), jls(X_n1 :nat, X_n :nat)) -> jls(jadd(X_m :nat, X_n1 :nat), X_n :nat))).
+
+% nat_lem_22
+forall([X_m, X_n1, X_n], ((jls(X_m :nat, jsub(X_n :nat, X_n1 :nat)), - (jls(X_n :nat, X_n1 :nat))) -> jls(jadd(X_m :nat, X_n1 :nat), X_n :nat))).
+
+% nat_lem_23
+forall([X_m, X_n1, X_n], ((- (jls(X_m :nat, jsub(X_n :nat, X_n1 :nat))), jls(X_n1 :nat, X_n :nat)) -> - (jls(jadd(X_m :nat, X_n1 :nat), X_n :nat)))).
+
+% nat_lem_24
+forall([X_m, X_n1, X_n], ((- (jls(X_m :nat, jsub(X_n :nat, X_n1 :nat))), - (jls(X_n :nat, X_n1 :nat))) -> - (jls(jadd(X_m :nat, X_n1 :nat), X_n :nat)))).
+
+% nat_lem_25
+forall([X_m, X_n, X_n1], ((jls(jsub(X_m :nat, X_n1 :nat), X_n :nat), - (jls(X_m :nat, X_n1 :nat))) -> jls(X_m :nat, jadd(X_n :nat, X_n1 :nat)))).
+
+% nat_lem_26
+forall([X_m, X_n, X_n1], ((- (jls(jsub(X_m :nat, X_n1 :nat), X_n :nat)), - (jls(X_m :nat, X_n1 :nat))) -> - (jls(X_m :nat, jadd(X_n :nat, X_n1 :nat))))).
+
+% nat_lem_27
+forall([X_m, X_k, X_n], ((jls(jsub(X_m :nat, X_n :nat), jsub(X_m :nat, X_k :nat)), jls(X_k :nat, X_m :nat)) -> jls(X_k :nat, X_n :nat))).
+
+% nat_lem_28
+forall([X_m, X_k, X_n], (((- (jls(jsub(X_m :nat, X_n :nat), jsub(X_m :nat, X_k :nat))), - (jls(X_m :nat, X_n :nat))), - (jls(X_m :nat, X_k :nat))) -> - (jls(X_k :nat, X_n :nat)))).
+
+% nat_lem_29
+forall([X_i, X_j, X_n], ((jls(jsub(X_i :nat, X_j :nat), X_n :nat), - (jls(X_i :nat, X_j :nat))) -> jls(X_i :nat, jadd(X_j :nat, X_n :nat)))).
+
+% nat_lem_3
+forall([X_m, X_n], (jsub(jpre(X_m :nat), X_n :nat) = jpre(jsub(X_m :nat, X_n :nat)))).
+
+% nat_lem_30
+forall([X_i, X_j, X_n], ((- (jls(jsub(X_i :nat, X_j :nat), X_n :nat)), - (jls(X_i :nat, X_j :nat))) -> - (jls(X_i :nat, jadd(X_j :nat, X_n :nat))))).
+
+% nat_lem_31
+forall([X_n, X_k], ((jadd(X_n :nat, jsub(jmul(X_k :nat, X_n :nat), X_n :nat)) = jmul(X_k :nat, X_n :nat)); (X_k :nat = jzer))).
+
+% nat_lem_32
+forall([X_m, X_n], ((jadd(jpre(jsub(X_n :nat, X_m :nat)), X_m :nat) = jpre(X_n :nat)); - (jls(X_m :nat, X_n :nat)))).
+
+% nat_lem_33
+forall([X_m, X_k, X_n], (jls(jadd(jmul(X_m :nat, X_n :nat), X_k :nat), X_n :nat) <-> ((X_m :nat = jzer), jls(X_k :nat, X_n :nat)))).
+
+% nat_lem_34
+forall([X_n, X_m, X_k], (((- (jls(X_n :nat, jadd(jmul(X_m :nat, X_n :nat), X_k :nat))), - ((X_m :nat = jzer))), - ((X_n :nat = jzer))) -> ((X_m :nat = jsuc(jzer)), (X_k :nat = jzer)))).
+
+% nat_lem_35
+forall([X_m, X_n], (((jsub(X_m :nat, jpre(X_n :nat)) = jsuc(jsub(X_m :nat, X_n :nat))); jls(X_m :nat, X_n :nat)); (X_n :nat = jzer))).
+
+% nat_lem_36
+forall([X_m, X_n], (((jsub(X_m :nat, jpre(X_n :nat)) = jsuc(jsub(X_m :nat, X_n :nat))); - (jls(X_n :nat, X_m :nat))); (X_n :nat = jzer))).
+
+% nat_lem_37
+forall([X_n, X_m], ((jsub(X_n :nat, jsub(X_n :nat, X_m :nat)) = X_m :nat); jls(X_n :nat, X_m :nat))).
+
+% nat_lem_38
+forall([X_m, X_n], ((jsub(X_n :nat, jsub(X_n :nat, X_m :nat)) = X_m :nat); - (jls(X_m :nat, X_n :nat)))).
+
+% nat_lem_39
+forall([X_n, X_m], (jls(X_n :nat, jsub(X_n :nat, X_m :nat)) -> jls(X_n :nat, X_m :nat))).
+
+% nat_lem_4
+forall([X_n], (jmul(jzer, X_n :nat) = jzer)).
+
+% nat_lem_40
+forall([X_m, X_n], (jsub(jadd(X_m :nat, X_n :nat), X_m :nat) = X_n :nat)).
+
+% nat_lem_41
+forall([X_m, X_k, X_n], (((- (jls(jsub(X_m :nat, X_n :nat), jsub(X_m :nat, X_k :nat))), - (jls(X_m :nat, X_n :nat))), jls(X_k :nat, X_m :nat)) -> - (jls(X_k :nat, X_n :nat)))).
+
+% nat_lem_42
+forall([X_m, X_k, X_n], (((- (jls(jsub(X_m :nat, X_n :nat), jsub(X_m :nat, X_k :nat))), jls(X_n :nat, X_m :nat)), - (jls(X_m :nat, X_k :nat))) -> - (jls(X_k :nat, X_n :nat)))).
+
+% nat_lem_43
+forall([X_m, X_k, X_n], (((- (jls(jsub(X_m :nat, X_n :nat), jsub(X_m :nat, X_k :nat))), jls(X_n :nat, X_m :nat)), jls(X_k :nat, X_m :nat)) -> - (jls(X_k :nat, X_n :nat)))).
+
+% nat_lem_44
+forall([X_m, X_k, X_n], (((jls(jsub(X_m :nat, X_n :nat), jsub(X_m :nat, X_k :nat)), - (jls(X_m :nat, X_n :nat))), - (jls(X_m :nat, X_k :nat))) -> jls(X_k :nat, X_n :nat))).
+
+% nat_lem_45
+forall([X_m, X_k, X_n], (((jls(jsub(X_m :nat, X_n :nat), jsub(X_m :nat, X_k :nat)), - (jls(X_m :nat, X_n :nat))), jls(X_k :nat, X_m :nat)) -> jls(X_k :nat, X_n :nat))).
+
+% nat_lem_46
+forall([X_m, X_k, X_n], (((jls(jsub(X_m :nat, X_n :nat), jsub(X_m :nat, X_k :nat)), jls(X_n :nat, X_m :nat)), - (jls(X_m :nat, X_k :nat))) -> jls(X_k :nat, X_n :nat))).
+
+% nat_lem_47
+forall([X_m, X_k, X_n], (((jls(jsub(X_m :nat, X_n :nat), jsub(X_m :nat, X_k :nat)), jls(X_n :nat, X_m :nat)), jls(X_k :nat, X_m :nat)) -> jls(X_k :nat, X_n :nat))).
+
+% nat_lem_48
+forall([X_m, X_k, X_n], (((X_m :nat = jsub(X_n :nat, X_k :nat)), - (jls(X_n :nat, X_k :nat))) -> (jadd(X_m :nat, X_k :nat) = X_n :nat))).
+
+% nat_lem_49
+forall([X_n], (jsub(jsuc(X_n :nat), X_n :nat) = jsuc(jzer))).
+
+% nat_lem_5
+forall([X_m, X_n], (jmul(jsuc(X_m :nat), X_n :nat) = jadd(X_n :nat, jmul(X_m :nat, X_n :nat)))).
+
+% nat_lem_50
+forall([X_n, X_m], (jsub(jsuc(jadd(X_m :nat, X_n :nat)), X_n :nat) = jsuc(X_m :nat))).
+
+% nat_lem_51
+forall([X_m, X_n], (jsub(jsuc(jadd(X_m :nat, X_n :nat)), X_m :nat) = jsuc(X_n :nat))).
+
+% nat_lem_52
+forall([X_k, X_n, X_m], (((jpre(jsub(X_m :nat, X_n :nat)) = X_k :nat), jls(X_n :nat, X_m :nat)) <-> ((jsub(X_m :nat, X_n :nat) = jsuc(X_k :nat)), jls(X_n :nat, X_m :nat)))).
+
+% nat_lem_53
+forall([X_m, X_k, X_n], (((jsub(X_m :nat, X_n :nat) = X_k :nat), - (jls(X_m :nat, X_n :nat))) <-> (X_m :nat = jadd(X_k :nat, X_n :nat)))).
+
+% nat_lem_54
+forall([X_m, X_n, X_k], (((jsub(X_m :nat, X_n :nat) = X_k :nat), jls(X_n :nat, X_m :nat)) <-> ((X_m :nat = jadd(X_k :nat, X_n :nat)), - ((X_k :nat = jzer))))).
+
+% nat_lem_55
+forall([X_n, X_k, X_m], ((jls(jmul(X_k :nat, X_n :nat), jmul(X_m :nat, X_n :nat)), - ((X_n :nat = jzer))) -> jls(X_k :nat, X_m :nat))).
+
+% nat_lem_56
+forall([X_n, X_k, X_m], ((- (jls(jmul(X_k :nat, X_n :nat), jmul(X_m :nat, X_n :nat))), - ((X_n :nat = jzer))) -> - (jls(X_k :nat, X_m :nat)))).
+
+% nat_lem_57
+forall([X_m, X_n], (jmul(jsuc(X_m :nat), X_n :nat) = jadd(jmul(X_m :nat, X_n :nat), X_n :nat))).
+
+% nat_lem_6
+forall([X_n, X_m], ((jmul(jpre(X_m :nat), X_n :nat) = jsub(jmul(X_m :nat, X_n :nat), X_n :nat)); (X_m :nat = jzer))).
+
+% nat_lem_7
+forall([X_m, X_n, X_k], (jmul(jadd(X_m :nat, X_n :nat), X_k :nat) = jadd(jmul(X_m :nat, X_k :nat), jmul(X_n :nat, X_k :nat)))).
+
+% nat_lem_8
+forall([X_m, X_k, X_n], (jmul(X_k :nat, jadd(X_m :nat, X_n :nat)) = jadd(jmul(X_k :nat, X_m :nat), jmul(X_k :nat, X_n :nat)))).
+
+% nat_lem_9
+forall([X_m, X_n, X_n1], ((jadd(jsub(X_n :nat, X_n1 :nat), X_m :nat) = jsub(jadd(X_n :nat, X_m :nat), X_n1 :nat)); jls(X_n :nat, X_n1 :nat))).
+
+% lit_ax_1
+forall([X_pr], (pred(mklit(X_pr :predicate)) = X_pr :predicate)).
+
+% lit_ax_2
+forall([X_pr], predp(mklit(X_pr :predicate))).
+
+% lit_ax_3
+- (predp(cut)).
+
+% lit_ax_4
+forall([X_pr, X_pr0], ((mklit(X_pr :predicate) = mklit(X_pr0 :predicate)) <-> (X_pr :predicate = X_pr0 :predicate))).
+
+% lit_ax_5
+forall([X_pr], - ((mklit(X_pr :predicate) = cut))).
+
+% lit_ax_6
+forall([X_lit], ((X_lit :literal = mklit(pred(X_lit :literal))); (X_lit :literal = cut))).
+
+% clauseornull_ax_1
+forall([X_cl], (clause(okclause(X_cl :clausesort)) = X_cl :clausesort)).
+
+% clauseornull_ax_2
+forall([X_cl, X_cl0], ((okclause(X_cl :clausesort) = okclause(X_cl0 :clausesort)) <-> (X_cl :clausesort = X_cl0 :clausesort))).
+
+% clauseornull_ax_3
+forall([X_cl], - ((okclause(X_cl :clausesort) = null))).
+
+% clauseornull_ax_4
+forall([X_cln], ((X_cln :clauseornull = okclause(clause(X_cln :clauseornull))); (X_cln :clauseornull = null))).
+
+% subst_ax_1
+forall([X_su, X_su1, X_su2], (o(o(X_su :substitution, X_su1 :substitution), X_su2 :substitution) = o(X_su :substitution, o(X_su1 :substitution, X_su2 :substitution)))).
+
+% subst_ax_2
+forall([X_su], (o(X_su :substitution, jempsu) = X_su :substitution)).
+
+% subst_ax_3
+forall([X_su], (o(jempsu, X_su :substitution) = X_su :substitution)).
+
+% set_nodeset_ax_1
+forall([X_no], - (inn(X_no :nodesort, jemp))).
+
+% set_nodeset_ax_2
+forall([X_no, X_no0, X_ns], (inn(X_no0 :nodesort, jaddns(X_ns :nodeset, X_no :nodesort)) <-> ((X_no0 :nodesort = X_no :nodesort); inn(X_no0 :nodesort, X_ns :nodeset)))).
+
+% set_nodeset_ax_3
+forall([X_no, X_no0, X_ns], (inn(X_no0 :nodesort, jsubns(X_ns :nodeset, X_no :nodesort)) <-> (- ((X_no0 :nodesort = X_no :nodesort)), inn(X_no0 :nodesort, X_ns :nodeset)))).
+
+% set_nodeset_ax_4
+forall([X_ns, X_ns0], ((X_ns :nodeset = X_ns0 :nodeset) <-> forall([X_no], (inn(X_no :nodesort, X_ns :nodeset) <-> inn(X_no :nodesort, X_ns0 :nodeset))))).
+
+% set_nodeset_lem_1
+forall([X_no, X_no0], (inn(X_no :nodesort, jaddns(jemp, X_no0 :nodesort)) <-> (X_no :nodesort = X_no0 :nodesort))).
+
+% set_nodeset_lem_10
+forall([X_ns, X_no], - (inn(X_no :nodesort, jsubns(X_ns :nodeset, X_no :nodesort)))).
+
+% set_nodeset_lem_11
+forall([X_no, X_no0, X_ns], (inn(X_no0 :nodesort, jsubns(X_ns :nodeset, X_no :nodesort)) -> (- ((X_no0 :nodesort = X_no :nodesort)), inn(X_no0 :nodesort, X_ns :nodeset)))).
+
+% set_nodeset_lem_12
+forall([X_no, X_no0, X_ns], ((- (inn(X_no0 :nodesort, jsubns(X_ns :nodeset, X_no :nodesort))), - ((X_no0 :nodesort = X_no :nodesort))) -> - (inn(X_no0 :nodesort, X_ns :nodeset)))).
+
+% set_nodeset_lem_13
+forall([X_ns, X_no], (jaddns(jsubns(X_ns :nodeset, X_no :nodesort), X_no :nodesort) = jaddns(X_ns :nodeset, X_no :nodesort))).
+
+% set_nodeset_lem_14
+forall([X_no], (jsubns(jemp, X_no :nodesort) = jemp)).
+
+% set_nodeset_lem_15
+forall([X_ns, X_no], (jsubns(jaddns(X_ns :nodeset, X_no :nodesort), X_no :nodesort) = jsubns(X_ns :nodeset, X_no :nodesort))).
+
+% set_nodeset_lem_17
+forall([X_ns, X_no, X_no0], ((jsubns(jaddns(X_ns :nodeset, X_no :nodesort), X_no0 :nodesort) = jaddns(jsubns(X_ns :nodeset, X_no0 :nodesort), X_no :nodesort)); (X_no :nodesort = X_no0 :nodesort))).
+
+% set_nodeset_lem_2
+forall([X_no, X_ns], ((jaddns(X_ns :nodeset, X_no :nodesort) = X_ns :nodeset); - (inn(X_no :nodesort, X_ns :nodeset)))).
+
+% set_nodeset_lem_3
+forall([X_no, X_ns], ((jsubns(X_ns :nodeset, X_no :nodesort) = X_ns :nodeset); inn(X_no :nodesort, X_ns :nodeset))).
+
+% set_nodeset_lem_4
+forall([X_ns, X_no], (jaddns(jaddns(X_ns :nodeset, X_no :nodesort), X_no :nodesort) = jaddns(X_ns :nodeset, X_no :nodesort))).
+
+% set_nodeset_lem_5
+forall([X_ns, X_no, X_no0], ((- (inn(X_no :nodesort, jsubns(X_ns :nodeset, X_no0 :nodesort))), inn(X_no :nodesort, X_ns :nodeset)) -> (X_no :nodesort = X_no0 :nodesort))).
+
+% set_nodeset_lem_6
+forall([X_ns, X_no, X_no0], ((inn(X_no :nodesort, jaddns(X_ns :nodeset, X_no0 :nodesort)), - (inn(X_no :nodesort, X_ns :nodeset))) -> (X_no :nodesort = X_no0 :nodesort))).
+
+% set_nodeset_lem_7
+forall([X_ns, X_no], inn(X_no :nodesort, jaddns(X_ns :nodeset, X_no :nodesort))).
+
+% set_nodeset_lem_8
+forall([X_no, X_no0, X_ns], (- (inn(X_no0 :nodesort, jaddns(X_ns :nodeset, X_no :nodesort))) -> (- ((X_no0 :nodesort = X_no :nodesort)), - (inn(X_no0 :nodesort, X_ns :nodeset))))).
+
+% set_nodeset_lem_9
+forall([X_no, X_no0, X_ns], ((inn(X_no0 :nodesort, jaddns(X_ns :nodeset, X_no :nodesort)), - ((X_no0 :nodesort = X_no :nodesort))) -> inn(X_no0 :nodesort, X_ns :nodeset))).
+
+% set_stateset_ax_1
+forall([X_st], - (ins(X_st :statesort, jemps))).
+
+% set_stateset_ax_2
+forall([X_st, X_st0, X_s], (ins(X_st0 :statesort, jadds(X_s :stateset, X_st :statesort)) <-> ((X_st0 :statesort = X_st :statesort); ins(X_st0 :statesort, X_s :stateset)))).
+
+% set_stateset_ax_3
+forall([X_st, X_st0, X_s], (ins(X_st0 :statesort, jsubs(X_s :stateset, X_st :statesort)) <-> (- ((X_st0 :statesort = X_st :statesort)), ins(X_st0 :statesort, X_s :stateset)))).
+
+% set_stateset_ax_4
+forall([X_s, X_s0], ((X_s :stateset = X_s0 :stateset) <-> forall([X_st], (ins(X_st :statesort, X_s :stateset) <-> ins(X_st :statesort, X_s0 :stateset))))).
+
+% set_stateset_lem_1
+forall([X_st, X_st0], (ins(X_st :statesort, jadds(jemps, X_st0 :statesort)) <-> (X_st :statesort = X_st0 :statesort))).
+
+% set_stateset_lem_10
+forall([X_s, X_st], - (ins(X_st :statesort, jsubs(X_s :stateset, X_st :statesort)))).
+
+% set_stateset_lem_11
+forall([X_st, X_st0, X_s], (ins(X_st0 :statesort, jsubs(X_s :stateset, X_st :statesort)) -> (- ((X_st0 :statesort = X_st :statesort)), ins(X_st0 :statesort, X_s :stateset)))).
+
+% set_stateset_lem_12
+forall([X_st, X_st0, X_s], ((- (ins(X_st0 :statesort, jsubs(X_s :stateset, X_st :statesort))), - ((X_st0 :statesort = X_st :statesort))) -> - (ins(X_st0 :statesort, X_s :stateset)))).
+
+% set_stateset_lem_13
+forall([X_s, X_st], (jadds(jsubs(X_s :stateset, X_st :statesort), X_st :statesort) = jadds(X_s :stateset, X_st :statesort))).
+
+% set_stateset_lem_14
+forall([X_st], (jsubs(jemps, X_st :statesort) = jemps)).
+
+% set_stateset_lem_15
+forall([X_s, X_st], (jsubs(jadds(X_s :stateset, X_st :statesort), X_st :statesort) = jsubs(X_s :stateset, X_st :statesort))).
+
+% set_stateset_lem_17
+forall([X_s, X_st, X_st0], ((jsubs(jadds(X_s :stateset, X_st :statesort), X_st0 :statesort) = jadds(jsubs(X_s :stateset, X_st0 :statesort), X_st :statesort)); (X_st :statesort = X_st0 :statesort))).
+
+% set_stateset_lem_2
+forall([X_st, X_s], ((jadds(X_s :stateset, X_st :statesort) = X_s :stateset); - (ins(X_st :statesort, X_s :stateset)))).
+
+% set_stateset_lem_3
+forall([X_st, X_s], ((jsubs(X_s :stateset, X_st :statesort) = X_s :stateset); ins(X_st :statesort, X_s :stateset))).
+
+% set_stateset_lem_4
+forall([X_s, X_st], (jadds(jadds(X_s :stateset, X_st :statesort), X_st :statesort) = jadds(X_s :stateset, X_st :statesort))).
+
+% set_stateset_lem_5
+forall([X_s, X_st, X_st0], ((- (ins(X_st :statesort, jsubs(X_s :stateset, X_st0 :statesort))), ins(X_st :statesort, X_s :stateset)) -> (X_st :statesort = X_st0 :statesort))).
+
+% set_stateset_lem_6
+forall([X_s, X_st, X_st0], ((ins(X_st :statesort, jadds(X_s :stateset, X_st0 :statesort)), - (ins(X_st :statesort, X_s :stateset))) -> (X_st :statesort = X_st0 :statesort))).
+
+% set_stateset_lem_7
+forall([X_s, X_st], ins(X_st :statesort, jadds(X_s :stateset, X_st :statesort))).
+
+% set_stateset_lem_8
+forall([X_st, X_st0, X_s], (- (ins(X_st0 :statesort, jadds(X_s :stateset, X_st :statesort))) -> (- ((X_st0 :statesort = X_st :statesort)), - (ins(X_st0 :statesort, X_s :stateset))))).
+
+% set_stateset_lem_9
+forall([X_st, X_st0, X_s], ((ins(X_st0 :statesort, jadds(X_s :stateset, X_st :statesort)), - ((X_st0 :statesort = X_st :statesort))) -> ins(X_st0 :statesort, X_s :stateset))).
+
+% enrstateset_ax_1
+forall([X_s], - (ins(snew(X_s :stateset), X_s :stateset))).
+
+% enrstateset_ax_2
+(snew(jemps) = bottom).
+
+% enrstateset_lem_1
+forall([X_st, X_s], (ins(X_st :statesort, jadds(X_s :stateset, snew(X_s :stateset))) <-> (ins(X_st :statesort, X_s :stateset); (X_st :statesort = snew(X_s :stateset))))).
+
+% substlitlist_ax_1
+forall([X_su], (jexpll(X_su :substitution, lnil) = lnil)).
+
+% substlitlist_ax_2
+forall([X_lit, X_su, X_ll], (jexpll(X_su :substitution, jaddll(X_lit :literal, X_ll :litlist)) = jaddll(jexpli(X_su :substitution, X_lit :literal), jexpll(X_su :substitution, X_ll :litlist)))).
+
+% ssubres_ax_01
+forall([X_su], (ssubres(sdnil, X_su :substitution) = sdnil)).
+
+% ssubres_ax_02
+forall([X_ll, X_st, X_sdgl, X_su], (ssubres(jaddsdl(mksdecgoal(X_ll :litlist, X_st :statesort), X_sdgl :sdecgoallist), X_su :substitution) = jaddsdl(mksdecgoal(jexpll(X_su :substitution, X_ll :litlist), X_st :statesort), ssubres(X_sdgl :sdecgoallist, X_su :substitution)))).
+
+% ssubres_lem_01
+forall([X_sdg, X_sdgl, X_su], (ssubres(jaddsdl(X_sdg :sdecgoal, X_sdgl :sdecgoallist), X_su :substitution) = jaddsdl(mksdecgoal(jexpll(X_su :substitution, jdots1(X_sdg :sdecgoal)), jdots2(X_sdg :sdecgoal)), ssubres(X_sdgl :sdecgoallist, X_su :substitution)))).
+
+% mode_ax_1
+- ((select = call)).
+
+% mode_ax_2
+forall([X_mode], ((X_mode :modesort = select); (X_mode :modesort = call))).
+
+% substorfail_ax_1
+forall([X_su], (subst(oksubst(X_su :substitution)) = X_su :substitution)).
+
+% substorfail_ax_2
+forall([X_su, X_su0], ((oksubst(X_su :substitution) = oksubst(X_su0 :substitution)) <-> (X_su :substitution = X_su0 :substitution))).
+
+% substorfail_ax_3
+forall([X_su], - ((oksubst(X_su :substitution) = fail))).
+
+% substorfail_ax_4
+forall([X_ssu], ((X_ssu :substorfail = oksubst(subst(X_ssu :substorfail))); (X_ssu :substorfail = fail))).
+
+% stopmode_ax_1
+- ((failure = run)).
+
+% stopmode_ax_2
+- ((success = run)).
+
+% stopmode_ax_3
+- ((success = failure)).
+
+% stopmode_ax_4
+forall([X_stop], ((X_stop :stopmodesort = success); ((X_stop :stopmodesort = failure); (X_stop :stopmodesort = run)))).
+
+% enrnodeset_ax_1
+forall([X_ns], - (inn(new(X_ns :nodeset), X_ns :nodeset))).
+
+% enrnodeset_ax_2
+(new(jemp) = root).
+
+% subres_ax_01
+forall([X_su], (subres(dnil, X_su :substitution) = dnil)).
+
+% subres_ax_02
+forall([X_ll, X_no, X_dgl, X_su], (subres(jadddl(mkdecgoal(X_ll :litlist, X_no :nodesort), X_dgl :decgoallist), X_su :substitution) = jadddl(mkdecgoal(jexpll(X_su :substitution, X_ll :litlist), X_no :nodesort), subres(X_dgl :decgoallist, X_su :substitution)))).
+
+% subres_lem_01
+forall([X_dg, X_dgl, X_su], (subres(jadddl(X_dg :decgoal, X_dgl :decgoallist), X_su :substitution) = jadddl(mkdecgoal(jexpll(X_su :substitution, jdot1(X_dg :decgoal)), jdot2(X_dg :decgoal)), subres(X_dgl :decgoallist, X_su :substitution)))).
+
+% wam12_ax_01
+forall([X_no], - (innl(X_no :nodesort, nnil))).
+
+% wam12_ax_02
+forall([X_no1, X_no, X_nol], (innl(X_no :nodesort, jaddnl(X_no1 :nodesort, X_nol :nodelist)) <-> ((X_no :nodesort = X_no1 :nodesort); innl(X_no :nodesort, X_nol :nodelist)))).
+
+% wam12_ax_03
+forall([X_st], - (insl(X_st :statesort, snil))).
+
+% wam12_ax_04
+forall([X_st1, X_st, X_stl], (insl(X_st :statesort, jaddsl(X_st1 :statesort, X_stl :statelist)) <-> ((X_st :statesort = X_st1 :statesort); insl(X_st :statesort, X_stl :statelist)))).
+
+% wam12_ax_05
+forall([X_stl], cutptsin(sdnil, X_stl :statelist)).
+
+% wam12_ax_06
+forall([X_ll, X_sdgl, X_stl, X_st], (cutptsin(jaddsdl(mksdecgoal(X_ll :litlist, X_st :statesort), X_sdgl :sdecgoallist), X_stl :statelist) <-> (((X_st :statesort = bottom); insl(X_st :statesort, X_stl :statelist)), cutptsin(X_sdgl :sdecgoallist, from(X_stl :statelist, X_st :statesort))))).
+
+% wam12_ax_07
+forall([X_co], (- ((sclau(X_co :code) = null)) -> (clause(sclau(X_co :code)) = clau(X_co :code)))).
+
+% wam12_ax_08
+forall([X_st], (from(snil, X_st :statesort) = snil)).
+
+% wam12_ax_09
+nodups(nnil).
+
+% wam12_ax_1
+forall([X_f], (fd(X_f :statenodefun, sdnil) = dnil)).
+
+% wam12_ax_10
+forall([X_father, X_no], every(X_father :fatherfun, nnil, X_no :nodesort)).
+
+% wam12_ax_11
+forall([X_no1, X_father, X_nol, X_no], (every(X_father :fatherfun, jaddnl(X_no1 :nodesort, X_nol :nodelist), X_no :nodesort) <-> ((jexpf(X_father :fatherfun, X_no1 :nodesort) = X_no :nodesort), every(X_father :fatherfun, X_nol :nodelist, X_no :nodesort)))).
+
+% wam12_ax_12
+forall([X_no, X_nol], (nodups(jaddnl(X_no :nodesort, X_nol :nodelist)) <-> (- (innl(X_no :nodesort, X_nol :nodelist)), nodups(X_nol :nodelist)))).
+
+% wam12_ax_13
+forall([X_st, X_stl], (from(jaddsl(X_st :statesort, X_stl :statelist), X_st :statesort) = jaddsl(X_st :statesort, X_stl :statelist))).
+
+% wam12_ax_14
+forall([X_st1, X_stl, X_st], (- ((X_st1 :statesort = X_st :statesort)) -> (from(jaddsl(X_st1 :statesort, X_stl :statelist), X_st :statesort) = from(X_stl :statelist, X_st :statesort)))).
+
+% wam12_ax_2
+forall([X_ll, X_st, X_f, X_sdgl], (fd(X_f :statenodefun, jaddsdl(mksdecgoal(X_ll :litlist, X_st :statesort), X_sdgl :sdecgoallist)) = jadddl(mkdecgoal(X_ll :litlist, jexp(X_f :statenodefun, X_st :statesort)), fd(X_f :statenodefun, X_sdgl :sdecgoallist)))).
+
+% wam12_ax_3
+forall([X_f], (fs(X_f :statenodefun, jemps) = jemp)).
+
+% wam12_ax_4
+forall([X_s, X_f, X_st], (fs(X_f :statenodefun, jadds(X_s :stateset, X_st :statesort)) = jaddns(fs(X_f :statenodefun, X_s :stateset), jexp(X_f :statenodefun, X_st :statesort)))).
+
+% wam12_ax_5
+forall([X_co], ((sclau(X_co :code) = null) -> (clls(X_co :code) = cnil))).
+
+% wam12_ax_6
+forall([X_co], (- ((sclau(X_co :code) = null)) -> (clls(X_co :code) = jaddcl(X_co :code, clls(next(X_co :code)))))).
+
+% wam12_ax_7
+forall([X_pr, X_db], (clls(sprocdef(X_pr :predicate, X_db :program)) = procdef(X_pr :predicate, X_db :program))).
+
+% wam12_ax_8
+forall([X_cll], (mapcll(X_cll :cllfun, nnil) = cnil)).
+
+% wam12_ax_9
+forall([X_no, X_cll, X_nol], (mapcll(X_cll :cllfun, jaddnl(X_no :nodesort, X_nol :nodelist)) = jaddcl(jexpc(X_cll :cllfun, X_no :nodesort), mapcll(X_cll :cllfun, X_nol :nodelist)))).

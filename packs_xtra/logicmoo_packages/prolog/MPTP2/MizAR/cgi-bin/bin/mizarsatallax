@@ -1,0 +1,2 @@
+#!/bin/bash
+/home/chad/big/satallax/satallax -parsingoffset 0.2 -M /home/chad/big/satallax/modes -E /home/chad/big/E/PROVER/eprover -P /home/chad/big/satallax/picosat-936/picomus -p hocore -t $1 $2

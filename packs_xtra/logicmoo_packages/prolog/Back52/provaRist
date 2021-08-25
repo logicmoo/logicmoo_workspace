@@ -1,0 +1,92 @@
+
+inizio :- backinit,set, persone, rist, int, eventi.
+
+set :-
+nomi_propri := aset([john,mary]),
+masfem := aset([maschio,femmina]),
+pol:= 0..1.
+
+persone :- persona :< anything,
+           ha_nome :< domain(persona) and range(nomi_propri) ,
+           sesso :< domain(persona) and range(masfem).
+
+cameriere:- cameriere :< persona,
+            lavora_in :< domain(cameriere) and range(ristorante).
+ 
+due_pers :- p1 :: persona and ha_nome: john  and sesso: maschio,
+            p2 :: persona and ha_nome: mary and sesso: femmina.
+
+rist :- luogo :< anything,
+        ristorante :< luogo.
+
+int :- intervallo :< anything.
+              
+eventi:- evento :< anything,
+         tloc :< domain(evento) and range(intervallo),
+         polarita :< domain(evento) and range(pol),
+         go :< evento ,
+         agente :< domain(go) and range(persona),
+         locat :< domain(go) and range(luogo).
+
+/* john entra nel ristorante */
+
+entra:- 
+   id3 :: persona and ha_nome: john  and sesso: maschio,
+   id2 :: ristorante,
+   tes :: intervallo,
+   id4 :: go and agente: id3 and locat: id2 and tloc: tes and polarita:1.
+          
+
+
+chi(X) :-  backretrieve(getall(X)).
+chi(X,Y):-  backretrieve(X=getall(Y)).    
+
+descrivi(X) :- backretrieve(describe X).
+
+cerca(X) :- 
+ backretrieve(getall(persona and ha_nome:X)).
+
+/* domanda complessa */
+
+nel_rist:- backretrieve(X=getall(ristorante)),   % cerca un ristorante
+            write(X),nl,member([R1],X),
+% qualsiasi cosa con ruolo 'locat'     
+           backretrieve(Y=getall(anything and locat : R1)), 
+           nl,write(Y),nl,
+            Y=[[Y1]],
+            % prendi il concetto piu' specifico e la descizione
+           backretrieve(Z=[msc,describe] for Y1), 
+           nl, write(Z),nl. 
+/*
+
+yes
+| ?- luogo :< anything.
+
+yes
+| ?- ristorante :< luogo.
+
+yes
+| ?- angolo :< luogo.
+
+yes
+| ?- parte_di :< domain(luogo) and range(angolo).
+
+yes
+| ?- r1 :: ristorante.
+
+yes
+| ?- a1 :: angolo.
+
+yes
+| ?- a1 :< parte_di :r1.
+
+yes
+| ?- a2 :: angolo.
+
+*/
+
+
+
+
+
+

@@ -1,0 +1,40 @@
+
+begin(prospec).
+
+sorts:(
+  top
+).
+
+functions: (
+  a:top,
+  b:top
+).
+
+relations: (
+  true ,
+  '='	: ( X_5526 , X_5526 ),
+  neq	: ( A , A )
+).
+
+end(prospec).
+
+/* Axioms */
+
+/* ItemNeqDef */
+%forall([ X : t_P_Item ],forall([ Y : t_P_Item ],neq(X,Y) <-> ~ X = Y)).
+
+/* ListNeqDef */
+%forall([ X : t_P_List ],forall([ Y : t_P_List ],neq(X,Y) <-> ~ X = Y)).
+
+begin(simplify).
+true -> (neq(X,Y) <-> ~ X = Y).
+%forall([ X ],forall([ Y  ], true -> (neq(X,Y) <-> ~ (X = Y)))).
+end(simplify).
+
+%?- neq(a,b) <-> ~ a=b.
+
+?- forall([x,y],neq(x,y)) ; forall([x,y],neq(y,x)).
+
+%forall([ X ],forall([ Y  ], true -> (neq(X,Y) <-> ~ (X = Y)))).
+%forall([ X : t_P_List ],forall([ Y : t_P_List ],
+%   true -> (neq(X,Y) <-> ~ X = Y))).

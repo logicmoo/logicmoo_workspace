@@ -1,0 +1,672 @@
+                                                         
+\section{Input Format of Specifications}
+
+Specifications consist of a {\em specification name}, an optional 
+{\em base declaration} and an {\em enrichment}. Additionally an
+{\em order and action specification} can be supplied to support the completion
+process. Of course it is possible to have more than one order specification
+associated with a specification.
+
+\begin{syntax}
+\nt{specification} \IS  \kw{module} \nt{specificationName}
+                   \AND [ \nt{base} ] \nt{full stop} 
+                   \AND \nt{enrichment} 
+\end{syntax}
+
+\noindent
+The name declaration has the format:
+
+\begin{syntax}
+\nt{specificationName}  \IS \nt{Prolog atom} \END
+\end{syntax}
+
+\noindent
+The specification name is used to denote the specification.
+If the specification is stored in a file,
+the file should be named \nt{specificationName}\suffix{.eqn}.
+
+The base declaration allows to import other specifications as
+modules. The imported modules
+again form a module called {\em base module}.  An enrichment defines (parts
+of) a {\em signature}, {\em axioms} and {\em pragmas}. The base module
+together with the enrichment forms the current specification.  
+% Pragmas may be added in order to speed up the completion process, e.g. the 
+% choice of a termination ordering and declarations for that ordering. This 
+% is to avoid unnecessary computations of suggestions and unwanted user interaction.
+Pragmas may redefine ``parsing'' and ``pretty-printing'' of specifications.
+Any element of a specification must be terminated by a full stop 
+which is a ``.''
+followed by a white space.  This syntactic requirement follows from the
+conventions of the underlying Prolog-System. {\em Comments} also
+follow Prolog syntax, e.g.\ anything in a line after a \kw{%} or
+all text between \kw{/*} and \kw{*/} is a comment.
+For those who are unfamiliar with Prolog the syntax of a Prolog atom is provided:
+
+\begin{syntax}
+\nt{Prolog atom} 	 \IS \nt{textual atom} \ts \nt{symbol atom} \END
+\nt{textual atom}        \IS \nt{lower case letter} \{ \nt{letter} \ts \kw{_} \ts \nt{digit} \} 
+                         \OR \kw{'} \{\nt{letter} \ts \nt{digit} \ts \nt{symbol} \ts \nt{white space} \ts \kw{''} \} \kw{'} 
+			 \OR \_ \END
+%                         \GETON \hspace*{0.2ex} \ts \kw{'} \{\nt{letter} \ts \nt{digit} \ts \nt{symbol} \} \kw{'}\\
+\nt{symbol atom}         \IS \nt{symbol} \{ \nt{symbol} \} \ts \kw{[}\,\kw{]} \END
+\nt{full stop} 	         \IS \kw{.} \nt{white space} \END
+\nt{white space} 	 \IS \kw{\t} \ts \kw{\n} \ts \nt{blank} \END
+\\
+\nt{Prolog number} 	 \IS \nt{integer} \ts \nt{floating-point number} \END
+\end{syntax}
+
+\noindent
+(The syntax is given in EBNF with \{\} for repetitions and [ ] for options.
+The terminal symbols are in bold face font style.)
+
+We distinguish between {\em many-sorted} and {\em order-sorted} specifications:
+A specification is called an {\em order-sorted specification}, if the
+base module or the enrichment includes a {\em subsort declaration}. 
+Otherwise it is called {\em many-sorted}.
+
+\subsection{Base}
+\label{base}
+
+The base has the form
+
+\begin{syntax}
+\nt{base} \IS \kw{using} \nt{moduleExpression}
+\end{syntax}
+
+The \nt{moduleExpression} describes which modules should be imported and
+how certain sorts and operators should be renamed to fit in the 
+importing specification.
+
+\begin{syntax}
+\nt{moduleExpression} \IS \nt{specificationName} 
+ 			\OR \nt{moduleExpression} \kw{+} \nt{moduleExpression}
+			\OR \nt{specificationName} \kw{(} \nt{AssociationList} \kw{)} \END
+\\
+\nt{AssociationList} \IS \nt{Association} \{ \kw{,} \nt{Association} \} \END
+\nt{Association}         \IS \nt{sortAssociation}
+			 \OR \nt{operatorAssociation} \END
+\\
+\nt{sortAssociation}      \IS \nt{sortName} \kw{<-} \nt{sortName} \END
+\nt{sortName} 		   \IS \nt{Prolog atom} \END
+\\
+\nt{operatorAssociation}   \IS \nt{simpleOpName} \kw{<-} \nt{simpleOpName} \END
+\nt{simpleOpName}          \IS \nt{Prolog atom} \ts \nt{Prolog number} \END
+\end{syntax}
+
+The semantics of the `\kw{+}'-operation  is union of specifications
+(signature, axioms, termination ordering).
+The union fails, if the termination orderings cannot be combined
+with the heuristics in CEC
+(e.g.\ different interpretations are given for the same operator).
+
+In the third case the given specification morphism is applied to a 
+module expression.
+For the operator renaming injectivity is required. Noninjective
+operator renamings must be simulated using auxiliary operators
+and equations.
+
+All  specifications which are refered to by their \nt{specificationName}  
+in the base of a 
+specification are called {\em direct imports} of this specification.
+
+
+If no base is specified, the module `\file{standard}' is
+taken from its specification variable, if present. Otherwise it is taken from
+the current directory (thaw file `\file{standard.q2.0}').
+If no module standard is found in the current directory,
+the module `\file{standard}' from the CEC-distribution is used.
+The latter simply declares the sort \cec{bool} and the two constructor
+constants \cec{true} and \cec{false} of sort \cec{bool}.
+
+The evaluation of the base depends on the presence and the contents of
+an {\em order specification} (cf. chapter \ref{OrderSpecification}).
+
+%The base of a specification is evaluated whenever this specification
+%is consulted using the \comRef{in}-command. If the \comRef{in}-command also specifies
+%an \nt{orderName} of an orderSpecification, this order specification is
+%also consulted. The order specification determines which files must
+%be consulted to find the specifications of the direct antecedents.
+%If some <orderName> beside `noorder' is associated with the 
+%<specificationName> of a direct import, the system tries to thaw 
+%a frozen state of a specification (\refArrow \comRef{freeze}) from a file name
+%   <specificationName>.<orderName>.q2.0    (Quintus 2.x versions)
+%in the current directory (\refArrow \comRef{cd}, \comRef{pwd}).
+%If no such files are present the system looks for a file
+%	<specificationName>.eqn
+%with the text of the specification module according to the syntax of
+%<specification> to be read in and for a file
+%	<specificationName>.<orderName>.ord
+%which contains pragmas concerning the termination ordering.
+%If the the <orderName> associated with <specificationName> is 
+%'noorder' or there is no <orderName> associated with <specificationName> 
+%the system looks only for a file 
+%	<specificationName>.eqn
+%in the current directory (\refArrow \comRef{cd}, \comRef{pwd}).
+
+\subsection{Enrichment}
+\label{enrichment}
+
+An enrichment consists of {\em subsort declarations},
+{\em operator declarations}, {\em variable declarations}, 
+{\em axioms} and {\em clauses for parsing and pretty printing}:
+
+\begin{syntax}
+\nt{enrichment} \IS \{ \nt{subsortDeclaration} \}
+ \AND \{\nt{operatorDeclaration} \} 
+ \AND [ \nt{variableDeclarations} ] 
+ \AND \{ \nt{axiom} \} 
+% \AND \{ \nt{pragma} \} 
+ \AND [ \nt{clauses for parse and pretty} ]
+\end{syntax}
+
+The semantics of a \nt{specification} is the specification
+which is obtained by enriching the specified base module
+by the constituents of the enrichment. There is no implicit
+assumption about consistency or sufficient-completeness of this
+enrichment.
+
+\subsubsection{Subsort Declarations}
+\label{subsortdecl}
+
+In order-sorted specifications subsort declarations are given 
+with regard to the following syntax: 
+
+\begin{syntax}
+\nt{subsortDeclaration} \IS \nt{sortName} \kw{<} \nt{sortName} \nt{full stop} \END
+\nt{sortName}           \IS \nt{Prolog atom}
+\end{syntax}
+
+\subsubsection{Operator Declarations}
+\label{operators}
+
+Operator declarations define the {\em signature} of a specification. 
+An operator is characterized by its name, which is a Prolog atom, and
+its arity.
+In addition it is 
+possible to declare the {\em constructor} property of an operator. The system
+makes use of this information when doing {\em termination proofs} and
+{\em consistency checks}. It is not allowed to orient an equation into a rule
+such that the top of the left side is a constructor.
+Operator declarations may be given according to the following syntax: 
+
+\begin{syntax}
+\nt{operatorDeclaration} \IS \nt{opKind} \nt{opName} \kw{:} \nt{arity} \nt{full stop}\END
+\nt{opKind} \IS \kw{op} \ts \kw{cons} \END
+\nt{opName} \IS \kw{(} \nt{Prolog atom}\kw{,} \nt{priority}\kw{,} \nt{fix} \kw{)}
+ \OR \nt{Prolog atom}
+ \OR \nt{Prolog number}
+\end{syntax}
+
+\noindent
+{\em Note that for the first alternative of \nt{opName} there must not be
+ any \nt{white space}
+between a preceding \nt{opKind} and the open parenthesis ``\kw{(}''. }
+
+\begin{syntax}
+\nt{priority} \IS \nt{{\em number from 1 to 1200}} \END
+\nt{fix} \IS \kw{fx} \ts \kw{fy} \ts \kw{xfx} \ts \kw{xfy} 
+              \ts \kw{yfx} \ts \kw{xf} \ts \kw{yf} \END
+\nt{arity} \IS \nt{resultSort} 
+ 	  \OR \kw{(} \nt{ argumentSorts} \kw{->} \nt{resultSort} \kw{)} \END
+\nt{argumentSorts} \IS \nt{sortName} \{ \kw{*} \nt{sortName} \} \END
+\nt{resultSort}    \IS \nt{sortName}\END
+\nt{sortName}      \IS \nt{Prolog atom} \END
+\end{syntax}
+
+As CEC is embedded in a Prolog environment it inherits all facilities of term
+notation offered there, e.g.\ the definition of {\em infix, prefix} 
+or {\em  postfix} operators. 
+
+Each infix, prefix or postfix operator has a {\em precedence}, which is a
+number from 1 to 1200. The precedence is used to disambiguate expressions in
+which the structure of the term is not made explicit through the use
+of parentheses.  The general rule is that the operator with the {\em highest}
+precedence is the principal functor. 
+
+%Thus if \cec{+} has a higher precedence than ``\cec{/}'', then \bigskip
+%
+%\cec{a+b/c   a+(b/c)} \bigskip
+%
+%\noindent
+%are equivalent and denote the term \cec{+(a,/(b,c))}.
+%Note that the infix form of the term \cec{/(+(a,b),c)}
+%must be written with explicit brackets\bigskip
+%
+%\cec{(a+b)/c}  .\bigskip
+%
+%
+If there are two operators in the expression having the same highest 
+precedence,
+the ambiguity must be resolved from the {\em fixes} of the operators. 
+The possible fixes for an infix operator are \bigskip
+
+\cec{xfx   xfy   yfx}  . \bigskip
+
+Operators of fix ``\cec{xfx}'' are not associative: it is required 
+that both arguments of the operator must be subexpressions of 
+{\em lower} precedence than the operator itself, i.e. their principal 
+functors must be of lower precedence, unless the subexpression is
+written in parentheses (which gives it zero precedence).
+Operators of fix ``\cec{xfy}'' are right-associative:
+only the first subexpression must be of lower precedence; the second 
+subexpression can be of the {\em same} precedence as the main
+operator; and vice versa for an operator of fix ``\cec{yfx}''.
+
+%For example, if the operators ``\cec{+}'' and ``\cec{-}'' both have fix 
+%``\cec{yfx}'' and are
+%of the same precedence, then the expression\bigskip
+%
+%\cec{a-b+c}\bigskip
+%
+%\noindent
+%is valid, and means\bigskip
+%
+%\cec{(a-b)+c} \hspace{2em}     i.e.  \cec{+(-(a,b),c)}.\bigskip
+%
+%\noindent
+%Note that the expression would be invalid if the 
+%operators have fix ``\cec{xfx}'', and would mean\bigskip
+%
+%\cec{a - (b+c)} \hspace{2em}    i.e. \cec{-(a , +(b , c))}\bigskip
+%
+%\noindent
+%if both operators have fix ``\cec{xfy}''.
+%
+\noindent
+The possible fixes for a prefix operator are\bigskip
+
+\cec{fx     fy} \bigskip
+
+\noindent
+and for a postfix operator they are\bigskip
+
+\cec{xf     yf} .\bigskip
+
+The meaning of the fixes should be clear by analogy with those for infix operators.
+%As an example, if ``\cec{not}'' were declared as a prefix operator of fix 
+%``\cec{fy}'', then \bigskip
+%
+%\cec{not not P} \bigskip
+%
+%\noindent
+%would be a permissible way to write \cec{not(not(P))}. 
+%If the fix were ``\cec{fx}'',
+%the preceding expression would not be legal, although\bigskip
+%
+%\cec{not P}\bigskip
+%
+%\noindent
+%would still be a permissible form for \cec{not(P)}.
+
+It is possible to have more than one operator of the same name, as long as they are
+of different kinds, i.e. infix, prefix or postfix. An operator of any kind may be
+redefined by a new declaration of the same kind, except of some operators
+listed in appendix \ref{PredefinedOperators}.
+
+\noindent Examples of operator declarations are: \bigskip
+
+\cec{cons 0 : nat.}\bigskip
+
+\cec{cons(suc,100,fy) : (nat -> nat).}\hfill \bigskip
+
+\cec{op + : (nat * nat -> nat).}\bigskip 
+
+\cec{op =< : (nat * nat -> bool).}\bigskip
+
+\noindent 
+Note that in the last declaration the infix notation
+\cec{op(=<,700,xfx)} will be inherited from Prolog. 
+
+Overloading of operators is allowed. They will however be renamed internally.
+
+\noindent
+The following syntax restrictions serve to remove potential ambiguities associated with
+prefix operators.
+\begin{itemize}
+\item
+In a term written in standard syntax, the principal functor and its following 
+``\kw{(}'' must {\em not} be separated by any blankspace. Thus
+\begin{quotation}
+\cec{point (X, Y, Z)} \medskip
+\end{quotation}
+is invalid syntax.
+\item
+If the argument of a prefix operator starts with a ``\cec{(}'', this ``\cec{(}'' 
+must be separated from the operator by at least one space or other
+non-printable character. Thus 
+\begin{quotation}
+\cec{:-(p ; q), r.}\medskip
+\end{quotation}
+(where ``\cec{:-}'' is the prefix operator) is invalid syntax, and must be written as
+\begin{quotation}
+\cec{:- (p ; q), r.}\medskip
+\end{quotation}
+\item
+If a prefix operator is written without an argument, as an ordinary atom, the atom is
+treated as an expression of the same precedence as the prefix operator, and must
+therefore be written in parentheses where necessary. 
+Thus the parentheses are necessary for \cec{-} in 
+\begin{quotation}
+\cec{op (-) : (nat * nat -> nat).}
+\end{quotation}
+\end{itemize}
+For further details you may have to
+look at the Quintus-Prolog user manual. 
+
+\subsubsection{Variable Declarations}
+\label{vardecl}
+
+Each Prolog atom in the specification which is not declared as an 
+operator will be taken as a variable. To declare the sort of
+a variable you only have to add the sortname to the variablename:
+
+\begin{syntax}
+\nt{variable} \IS \nt{Prolog atom} [ \kw{:} \nt{sortName} ]
+\end{syntax}
+
+In many-sorted specifications without overloading it is not required to
+attach a sort to a variable explicitly: A simple type inference mechanism is
+used to find the correct sort for the variable. In many-sorted specifications
+with overloading this type inference need not produce the desired typing. 
+Then it is helpful to define the sorts of variables explicitly.
+In order-sorted specifications it is usually not possible to deduce
+the sort of a variable. In this case all variables
+must be explicitly typed. This can be done by adding
+the sort name as described above or by declaring the variable in the
+variable declaration part: 
+
+\begin{syntax}
+\nt{variableDeclarations} \IS \kw{var} 
+ \nt{variableDecl} \{ \kw{,} \nt{variableDecl} \} \nt{full stop} \END
+\nt{variableDecl} \IS \nt{Prolog atom} \kw{:} \nt{sortName}
+\end{syntax}
+
+The scope of a variable declaration is not bound to the module it is
+contained in, e.g.\ the variable declarations in a base module are
+inherited by the current specification, if not redeclared.
+
+\subsubsection{Axioms}
+\label{axioms}
+
+CEC includes a completion procedure for conditional (and unconditional)
+equations. Equations are of the form:
+
+\begin{syntax}
+\nt{axiom} \IS \nt{unconditionalEquation} \nt{full stop}
+           \OR  \nt{conditionalEquation} \nt{full stop} \END
+\nt{unconditionalEquation} \IS \nt{equation} \END
+\nt{conditionalEquation}   \IS \nt{condition} \nt{equation} \END
+\nt{condition} \IS \nt{equation} \{ \kw{and} \nt{equation} \} \kw{=>}\END
+\\
+\nt{equation} \IS \nt{signatureTerm} \kw{=} \nt{signatureTerm} \END
+\\
+\nt{signatureTerm} \IS $<$well typed term with variables
+		   \GETON \hspace{1ex} over the user-specified signature$>$
+\end{syntax}
+
+\noindent Thus \bigskip
+
+\cec{isChar(c) = true => isLine([c | l]) = isLine(l).} \bigskip
+
+\noindent and\bigskip
+
+\cec{isSpace(c) = true => isLine([c | l]) = isLine(l).}\bigskip
+
+\noindent
+are valid conditional equations in a many-sorted specification as well as\bigskip
+
+\cec{isChar(c) = true and isLine(l) = true => isLine([c | l]) = true.}\bigskip
+
+\noindent
+where \cec{c} and \cec{l} are variables.\\
+In an order-sorted specification the variables must be declared 
+in the variable declaration part:\bigskip
+
+\cec{var c : char, l : string.} \bigskip
+
+\noindent
+or else the sort must be attached  to each occurrence of a variable:\bigskip
+
+\cec{isChar(c:char) = true => isLine([c:char | l:string]) = isLine(l:string).} \bigskip
+
+\noindent
+Unconditional equations are treated as conditional equations with an empty condition.
+
+
+\subsubsection{Clauses for Parse and Pretty}
+\label{ParseAndPretty}
+
+\noindent
+The definition of a predicate {\em parse} allows the user to define his
+own term notation. If parse fails, standard Prolog term notation is assumed.\bigskip
+
+\begin{command}[\com{parse}{\comArg{Term}\ad\comArg{ParsedTerm}}]
+should map the \comArg{Term} to its standard representation \comArg{ParsedTerm} as 
+assumed by the system. This representation is the usual Prolog
+representation formed from the operator symbols in the signature. The auxiliary
+operator '@' is used to denote variables in the term (The term must not
+contain any Prolog variables!).\bigskip
+
+
+Example:\smallskip
+\begin{tabbing}
+12345\=12345\=eee\kill
+\> Specification of integer with operators \cec{s} (successor) and 
+\cec{p} (predecessor):\\
+\\
+\> \> \cec{parse(0,0).}\\
+\> \> \cec{parse(I,s(T)) :- integer(I), I > 0, !, IM1 is I-1, parse(IM1,T).}\\
+\> \> \cec{parse(I,p(T)) :- integer(I), I < 0, !, I1 is I+1, parse(I1,T).}\\
+\\
+\> \cec{parse(5, ParsedTerm)} yields \cec{ParsedTerm = s(s(s(s(s(0)))))}.
+\end{tabbing}
+\end{command}
+
+\begin{command}[\com{pretty}{\comArg{Term}}]
+Upon pretty printing of terms the system tries to call 
+\com{pretty}{\comArg{Term}} (for each subterm). If this succeeds, 
+the system assumes that the (sub-)term has been
+printed. Otherwise, \com{print}{\comArg{Term}} is called.\bigskip
+
+Example:\smallskip
+\begin{tabbing}
+12345\=12345\=eeee\kill
+\> Specification of integer with operators \cec{s} (successor) and 
+\cec{p} (predecessor):\\
+\\
+\> \> \cec{pretty(s(X)) :- predicate(fromUnary(s(X),N)), write(N).}\\
+\> \> \cec{pretty(p(X)) :- predicate(fromUnary(p(X),N)), write(N).} \\
+\\
+\> \cec{pretty(s(s(s(s(s(0))))))} prints out {\tt 5}.
+\end{tabbing}
+\end{command}
+
+\noindent
+One may define arbitrary auxiliary predicates (i.e \comRef{fromUnary})
+for the definition of \comRef{parse} or \comRef{pretty}. 
+To prevent name clashes with internal CEC predicates
+you have to enclose their definitions and calls in $predicate(\ldots)$. \bigskip
+
+Example:\smallskip
+\begin{tabbing}
+12345\=12345\=eee\kill
+\> Specification of integer with operators \cec{s} (successor) and 
+\cec{p} (predecessor):\\
+\\
+\> \> \cec{predicate(fromUnary(X,_)) :- var(X), !, fail.}\\
+\> \> \cec{predicate(fromUnary(0,0)).}\\
+\> \> \cec{predicate(fromUnary(s(X),N1)) :- predicate(fromUnary(X,N)), N1 is N+1.}\\
+\> \> \cec{predicate(fromUnary(p(X),N1)) :- predicate(fromUnary(X,N)), N1 is N-1.}
+\end{tabbing}
+
+If the current specification is a combination of several specifications, the clauses for \comRef{parse},
+\comRef{pretty}, and \comRef{predicate} will be put together in
+{\em arbitrary order}. Note that upon renaming of specifications parse and
+pretty might no longer work for the renamed signature.
+
+\subsection{Specification of Termination Orderings}
+\label{OrderSpecification}
+
+\noindent
+While running the completion process you are interactively asked for additional
+information, mainly
+concerning the construction of the termination ordering for the given
+specification. The system supports this process by making suggestions for precedence
+extensions (path orderings). In many cases you will know a 
+priori many of these properties. 
+Then you can supply a corresponding {\em order specification} for your
+initial specification to avoid unnecessary computations of suggestions 
+and to reduce the number of CEC-questions.\bigskip
+
+\begin{syntax}
+\nt{orderSpecification} \IS \kw{order} \nt{orderType} \kw{for} \nt{specificationName} 
+			 \AND [ \nt{orderBase} ] 
+			 \AND [ \nt{orderPragmas} ] \END
+\\
+\nt{orderType} \IS  \kw{kns}
+		\OR \kw{neqkns} 
+		\OR \kw{poly}\nt{natural number}
+		\OR \kw{manual}
+\end{syntax}
+
+\noindent
+The order specification determines the termination ordering to be used for 
+\nt{specificationName}, the order names for its direct imports (\refArrow
+\ref{orderBase}) and gives precedence declarations for the operators of the
+specification (if the termination ordering is \kw{kns} or \kw{neqkns}) or
+polynomial interpretations (if the termination ordering is \kw{poly}\nt{N})
+(\refArrow \ref{OrderPragmas}).
+
+Available types of orderings are
+\begin{itemize}
+\item \kw{kns} \\
+This ordering is a recursive path ordering based on the recursive comparison of paths
+according to the definitions in \cite{KNS85}.
+\item \kw{neqkns} \\
+This ordering is a restriction of the kns ordering:
+Different operators cannot have the same precedence.
+\item \kw{poly}\nt{N}\\
+Here, terms are given polynomial interpretations over +, * where
+coefficients are natural numbers.
+The order of terms is reduced to comparing polynomials in the order on natural
+numbers (\cite{CL86}).
+\item \kw{manual}\\
+This is not a termination ordering because the user is asked to decide the
+orientation of the rules manually. Therefore the termination and confluence of the
+final rewrite system cannot be guaranteed
+\footnote[1]{In CEC it is even more dangerous to switch to manual mode, as
+the termination order is lifted internally to an ordering of proofs in
+equational logic. The latter is used for elimination of conditional 
+equations. This effect is completely outside of the user's control.}.
+\end{itemize}
+
+\noindent You should write order specifications which belong to the
+specification \nt{specificationName} in a file named 
+
+\hbox to \hsize{\hfill
+\nt{specificationName}\kw{.}\nt{orderName}\suffix{.ord}, \hfill} 
+\noindent where \nt{orderName} can be any Prolog atom.
+\nt{orderName} is then the {\em current order name} of the specification
+\nt{specificationName}. If no order specification is supplied, the current
+order name is the actual termination ordering, which is \kw{neqkns} or
+\kw{poly}\nt{N} depending on the presence of AC-operators. 
+The termination ordering can be changed using the \comRef{order}-command.  Of
+course it is also possible to have more than one order specification for a
+single specification, simply distinguished by different order names.
+
+
+
+\subsubsection{Order Base}
+\label{orderBase}
+
+\noindent
+An order specification is an enrichment of an {\em order base definition}:
+
+\begin{syntax}
+\nt{orderBase} \IS \kw{using} \kw{(} \nt{orderExpression} \kw{)} \nt{full stop} \END
+\\
+\nt{orderExpression} \IS  \nt{orderName} \kw{for} \nt{specificationName} 
+		      \OR  \nt{orderExpression} \kw{+} \nt{orderExpression} \END
+\\
+\nt{orderName} \IS \kw{noorder}
+		\OR \nt{Prolog atom except \kw{noorder}}
+\end{syntax}
+
+For an explanation of the interpretation of the order base refer to the description of the
+\comRef{in}-command (\refArrow chapter \ref{InCommand}).
+\subsubsection{Order Pragmas}
+\label{OrderPragmas}
+
+\begin{command}[\com{constructor}{\comArg{OpName}}]
+declares operator \comArg{OpName} to be a constructor operator. 
+For order-sorted specifications also 
+the many-sorted disambiguated operators are allowed for \comArg{OpName}.
+\end{command}
+
+\noindent
+{\bf CEC Pragmas concering the termination orderings KNS and NEQKNS:}\bigskip
+
+\begin{command}[\com{equal}{\kw{[}\kw{[}\comArg{a}\kw{,}\comArg{b}\kw{,}\comArg{c}\kw{,}\ldots\kw{]}, 
+\kw{[}\comArg{g}\kw{,}\comArg{h}\kw{,}\comArg{i}\kw{,} \ldots \kw{],} \ldots \kw{]}}\kw{.}]
+declares operators to have equivalent precedences (only allowed for \kw{kns}).\\
+Meaning: \comArg{a} = \comArg{b} = \comArg{c} = \ldots and 
+\comArg{g} = \comArg{h} = \comArg{i} = \ldots
+\end{command}
+
+\begin{command}[\com{greater}{\kw{[}\kw{[}\comArg{a}\kw{,}\comArg{b}\kw{,}\comArg{c}\kw{,} \ldots \kw{],}
+\kw{[}\comArg{g}\kw{,}\comArg{h}\kw{,}\comArg{i}\kw{,} \ldots \kw{],} \ldots \kw{]}}\kw{.}]
+adds ordered pairs of operators to the precedence.\\
+Meaning: \comArg{a} $>$ \comArg{b} $>$ \comArg{c} $>$ \ldots 
+and \comArg{g} $>$ \comArg{h} $>$ \comArg{i} $>$ \ldots
+\end{command}
+
+\begin{command}[\com{status}{\kw{[}\comArg{Operator} : \comArg{Status}\kw{,} \ldots \kw{]}}\kw{.}]
+declares that \comArg{Operator} has status \comArg{Status} provided 
+\kw{kns} or \kw{neqkns} is the chosen termination ordering.\\
+\comArg{Status} can be
+\kw{lr} for {\em left-to-right}, \kw{rl} for {\em right-to-left} or
+\kw{ms} for {\em multiset}.
+\end{command}
+
+\noindent
+{\bf CEC Pragmas concerning the termination ordering POLY$<$N$>$:}\bigskip
+
+\begin{command}[\com{setInterpretation}{\kw{[}\comArg{Operator(Arguments)} : \comArg{Interpretation}\kw{,} \ldots\kw{]}}\kw{.}]
+Provided that \kw{poly}\nt{N} is the current termination ordering a new interpretation
+\comArg{Interpretation} for an operator \comArg{Operator} is added to the current state. The interpretation
+\comArg{Interpretation} must be a polynomial over the variables in 
+\comArg{Arguments} (if N = 1) or a list with 
+ N such polynomials. Commutative and associative-commutative operators
+require interpretations of a particular kind.
+An example: \bigskip
+
+\cec{setInterpretation(['=='(x, y) : x + y]).}\bigskip
+
+\noindent
+For more detailed explanations concerning termination proofs based on polynomial 
+interpretations see below. Initially operators have no interpretations.
+\end{command}
+
+These CEC-pragmas should not be used interactively while CEC is running. Use the
+corresponding CEC-commands  \comRef{constructor}, \comRef{equal}, \comRef{greater}, \comRef{status}
+or \comRef{setInterpretation} without parameters which 
+request their input interactively.\bigskip
+
+
+\subsection{Syntax and Type Errors}
+
+When reading in a specification two kinds of errors may occur:
+\begin{itemize}
+\item
+The Prolog parser detects a syntax error at the level of Prolog terms. 
+\item
+The CEC-parser finds a syntax error.
+\item
+The type checker detects a type inconsistency or is unable to infer a type for some
+term because of missing operator definitions.
+\end{itemize}
+
+\noindent
+In this case the specifications is rejected and CEC sets back to its
+state before reading.
+

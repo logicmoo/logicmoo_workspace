@@ -1,0 +1,12 @@
+algo = ruby sine_wrapper.rb
+execdir = example_sine
+deterministic = 0
+run_obj = runlength
+overall_obj = mean
+cutoff_time = 2
+cutoff_length = max
+tunerTimeout = 30
+paramfile = example_sine/sine-params.txt
+outdir = example_sine/paramils-out
+instance_file = example_data/sineprobs1.txt
+test_instance_file = example_data/sineprobs1.txt

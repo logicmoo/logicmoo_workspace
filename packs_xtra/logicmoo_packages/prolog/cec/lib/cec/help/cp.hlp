@@ -1,0 +1,8 @@
+ 
+"cp(?RuleIndex1,?RuleIndex2)."
+
+computes all critical pairs of rule "RuleIndex1" on rule "RuleIndex2".
+The predicate fails, if no nontrivial critical pair can be found.
+
+Equivalent to
+"superpose(RuleIndex1,left,rule,RuleIndex2,conclusion,left)."

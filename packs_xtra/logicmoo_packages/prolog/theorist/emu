@@ -1,0 +1,5 @@
+dyn runs(X).
+fact emu(polly) or ostrich(polly).
+default emus_run(X) : runs(X) <- emu(X).
+default ostrich_runs(X) : runs(X) <- ostrich(X).
+

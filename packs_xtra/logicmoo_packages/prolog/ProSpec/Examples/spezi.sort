@@ -1,0 +1,87 @@
+%% Sample problem from program verification.
+%% needs the following tools:
+%% prospec - a normal form and sort transfomer
+%% eqtrafo - an equality transformer
+%% protein - a theorem prover
+%%
+%% usage:
+%% prospec spezi
+%% eqtrafo spezi-sort
+%% protein spezi-sort-eqt
+
+
+% prospec_flag(query_conversion,aggressive).
+
+begin(prospec).
+
+sorts: (t_list(U), t_var, t_val, t_pair).
+
+functions: (	cons: (U, t_list(U)) => t_list(U),
+		car: t_list(U) => U,
+		cdr: t_list(U) => t_list(U),
+		mk_pair: (t_var, t_val) => t_pair,
+		sel_var: t_pair => t_var,
+		sel_val: t_pair => t_val,
+		env: t_list(t_pair),
+		update: (t_list(t_pair), t_var, t_val) => t_list(t_pair),
+		look_up: (t_list(t_pair), t_var) => t_val	).
+
+relations: ( '=': (U,U) ).
+
+end(prospec).
+
+% this is for EQTrafo
+% --------------------
+partial_functions: (car, cdr, look_up, sel_var, sel_val).
+constructors: (mk_pair, cons).
+
+%axiom a1;  
+forall([x1, v1], sel_var(mk_pair(x1,v1))=x1).
+
+%axiom a2;  
+forall([x2, v2], sel_val(mk_pair(x2,v2))=v2).
+
+%axiom a3;  
+forall([x3, v3], car(cons(x3,v3))=x3).
+
+%axiom a4;  
+forall([x4, v4], cdr(cons(x4,v4))=v4).
+
+%axiom a5;  
+forall([x5, v5], ((-(sel_var(car(x5))=v5) -> 
+	             look_up(x5,v5)=look_up(cdr(x5),v5)) ,
+                 (( sel_var(car(x5))=v5)  -> 
+		     look_up(x5,v5)=sel_val(car(x5)))
+              )).
+
+%axiom a7;  
+forall([x7, y7, z7], update(x7,y7,z7)=cons(mk_pair(y7,z7),x7)).
+
+
+%neg. theorem t1; 
+%?- forall([w, x, v], look_up(update(w,x,v),x)=v).
+
+%neg. theorem t2; 
+% WARNING: t2 can (intentionally!) be proved only if look_up is assumed to
+% be a total function, ie. delete look_up from list of partial_functions above
+%?-forall([w, x, x8, v],
+%	 (-(x=x8) -> (look_up(update(w,x,v),x8) = look_up(w,x8)))).
+
+%neg. theorem t3; 
+?- forall([w, x, x8, x9, v, v8], (
+        (-(x=x8) , -(x=x9) , x8=x9) ->
+        look_up(update(update(w,x,v),x8,v8),x9) =
+        look_up(update(update(w,x8,v8),x,v),x9))).
+
+%neg. theorem t4; 
+%?- forall([w, x, x8, x9, v, v8], (
+%       (-(x=x8) , x=x9 , -(x8=x9)) ->
+%       look_up(update(update(w,x,v),x8,v8),x9) =
+%       look_up(update(update(w,x8,v8),x,v),x9))).
+
+%neg. theorem t5; 
+% cannot be proven by PROTEIN in a short time :-(
+%?- forall([w, x, x8, x9, v, v8], (
+%       ( -(x=x9) , -(x8=x9)) ->
+%       look_up(update(w,x,v),x9) =
+%       look_up(update(w,x8,v8),x9))).

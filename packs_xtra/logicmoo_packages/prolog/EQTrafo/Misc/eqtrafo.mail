@@ -1,0 +1,193 @@
+Received: from hebel.uni-koblenz.de (peter@hebel.uni-koblenz.de [141.26.4.46]) by infko.uni-koblenz.de (8.6.9/8.6.9) with SMTP id SAA20835 for <bthomas@informatik.uni-koblenz.de>; Fri, 3 Nov 1995 18:43:57 +0100
+Message-Id: <199511031743.SAA20835@infko.uni-koblenz.de>
+Received: by hebel.uni-koblenz.de (4.1/KO-2.0)
+	id AA07783; Fri, 3 Nov 95 18:43:02 +0100
+Organization: University of Koblenz, Germany
+From: Peter Baumgartner <peter@infko.uni-koblenz.de>
+To: bthomas@mailhost.uni-koblenz.de
+Subject: Gleichheitstransformation
+Date: Fri, 3 Nov 95 18:43:02 +0100
+
+Hallo Bernd, hier der fehlende Rest:
+
+Gleichheitstransformation
+-------------------------
+
+Ich definiere ein paar Transformationen; die ersten arbeiten noch auf
+nicht mit Sorten annotierten Klauseln. Die Transformationen musst Du
+in dieser Reihenfolge anwenden:
+
+1. Variablen-Ungleichungen
+--------------------------
+
+Ersetze jede Klausel der Form
+
+	C \/ -(X=Y)	(X,Y Variablen)
+
+durch 
+
+	sigma(C)
+
+wobei Sigma allgemeinster Unifikator von X und Y ist.
+
+
+Das kannst Du ja leicht dadurch erreichen, dass Du jedes negative
+Gleichheitsliteral -(X=Y) zwischen Variablen mit Z=Z unifizierst, und
+dann wegwirfst.
+
+Diese Transformation ist solange wie moeglich anzuwenden. Terminieren
+muss das natuerlich, weil in jedem Schritt ein Literal verschwindet.
+Am Ende gibt es keine negativen Gleichungsliterale mehr.
+
+
+2. Symmetrie-Transformation 
+---------------------------
+
+Fuege zu jede Klausel der Form
+
+	s=t \/ C
+
+wobei s und t beliebige Terme sind und C die Restklausel ist, noch die
+Symmetrische Variante zur Klauselmenge dazu, also
+
+	t=s \/ C
+
+Hier muss man natuerlich aufpassen, dass man nicht in eine Schleife
+laeuft. 
+
+Vielleich*t hilft's die Transformation funktional zu beschreiben: Die
+gewuenschte Transformation 'Sym', die eine Klauselmenge in die
+gewuenschte Form bringt ist so definiert:
+
+Sym({}) = {}
+Sym({C} u S) = Sym-Clauses(C) u Sym(S)	; 'u' soll hier disjunkte
+					;  Mengenvereinigung bedeuten
+
+wobei (Klauseldarstellung als Prolog-Listen]
+
+Sym-Clauses([])		 = {}	; leere Klausel
+
+;; positives Gleichungsliteral S=T:
+Sym-Clauses([S=T | Rest]) = insert((S=T), Sym-Clauses(Rest))  u
+			    insert((T=S), Sym-Clauses(Rest))
+
+;; sonstiges anderes Literal L:
+Sym-Clauses([L   | Rest]) = insert(L, Sym-Clauses(Rest))
+				
+
+wobei insert ein Literal am Anfang jeder Klausel einer gegebenen
+Klauselmenge einsetzt, also
+
+insert(L, {}) = {}
+insert(L, {C} u S) = { [L|C] } u insert(L, S).
+
+Das Prolog-Programm siehst Du ja jetzt sofort (Da waerst Du natuerlich
+auch alleine drauf gekommen, aber mir hat's Spass gemacht das
+hinzuschreiben). 
+
+3. Sortenannotation
+-------------------
+
+so wie in der ersten Mail beschrieben. 
+
+
+4. Gleichheitstransformation
+----------------------------
+
+Ersetze jede Klausel der Form (es ist ja jetzt alles voll
+durchsortiert; ich verwende wieder die Schreibweise t statt t' und
+meine immer die SortenDARSTELLUNG und nicht den SortenNAMEN):
+
+	f(s1:t1,...,sn:tn):t = sn+1:t \/ C
+
+(links und rechst muss ja wegen der Deklaration '=':U,U dieselbe Sorte
+stehen) 
+
+durch 
+
+	f(s1:t1,...,sn:tn,sn+1:t) \/ C
+
+'f' ist also jetzt ein Praedikatssymbol geworden.
+
+DIes war der schoene Fall. Der haessliche Fall:
+
+Ersetze jede Klausel der Form
+
+	x:t = s:t  \/ C		(x ist eine Variable)
+
+durch 
+
+	tpos(x:t,s:t) \/ C		('tpos' ist das bisherige 't')
+
+Nicht vergessen, am Ende (nach allen transformationen)
+noch fuer jedes funktionssymbol 
+
+	f:t1,...,tn -> t
+
+noch die Klausel
+
+	f(X1:t1,...,Xn:tn,FX:t) :- t(X:t,FX:t), f(X1:t1,...,Xn:tn,X:t).
+
+dazuzunehmen.
+
+Die negativen Gleichungen mussen auch behandelt werden:
+Der erste Fall geht genau wie oben: Ersetze jede Klausel
+
+	-(f(s1:t1,...,sn:tn):t = sn+1:t) \/ C
+		oder
+	-(sn+1:t = f(s1:t1,...,sn:tn):t) \/ C
+
+(links und rechst muss ja wegen der Deklaration '=':U,U dieselbe Sorte
+stehen) 
+
+durch 
+
+	-f(s1:t1,...,sn:tn,sn+1:t) \/ C
+
+
+Die dabei anzuwendende transformation 'fun-rel' wird weiter unten auch
+noch gebraucht, und kann so definiert werden:
+
+fun-rel(f(s1:t1,...,sn:tn):t = sn+1:t) =
+	f(s1:t1,...,sn:tn,sn+1:t).
+
+
+DIes war der schoene Fall. Den haesslichen Fall (BEIDE Seiten sind
+Variablen) kann es ja nach der ersten Transformation nicht mehr geben,
+und ist damit gar nicht so haesslich!
+
+So, damit haben wir jetzt eine sortenannotierte Klauselmenge, in der
+kein Gleichheitsliteral mehr vorkommt.
+
+
+5. Term-Pullout:
+----------------
+Jetzt muessen alle nicht-variablen Unterterme rausgezogen werden:
+pullout. Pullout nimmt ein literal und liefert eine KLausel:
+
+
+pullout((-)p(s1:t1,...,sn:tn)) = 
+	(-)p(x1:t1,...,xn:tn) \/ pullout(-fun-rel(s1:t1 = x1:t1))
+					:
+					:
+			      \/ pullout(-fun-rel(sn:tn = xn:tn))
+
+wobei die xi neue Variablen sind.
+Das war wieder etwas geschwindelt, sehe ich gerade, weil das pull-out
+ja nicht gemacht werden soll (und auch gar nicht definiert ist), falls
+si eine Variable ist. In diesem Fall also kein pull-out
+
+Nun das pullout auf Klauseln:
+
+pullout_cl([]) = []	; leere Klausel
+pullout_cl(L|R) = append(pullout(L),pullout_cl(R)).
+
+So das war's - fertig.
+
+
+Ist doch ne ganze Menge geworden. Viel Spass damit jedenfalls wuenscht
+
+	Peter
+
+P.S: Vorschlaege/Kritik -> welcome.
+

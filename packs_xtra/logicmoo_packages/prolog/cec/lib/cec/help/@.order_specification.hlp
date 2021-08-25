@@ -1,0 +1,27 @@
+
+Order Specification Declaration
+-------------------------------
+
+<order_specification> ::= 'order' '(' <simple_order_expression> ')' 
+			  [ <order_base> ] <full stop>
+			  [ <order_Pragmas> ]
+
+<simple_order_expression> ::=     <ordering>
+				| <ordering> 'for' <specification_name>
+
+<ordering> ::=    'kns' 
+		| 'neqkns' 
+		| <A Prolog atom consisting of 'poly' followed by any number>
+		| 'manual'
+
+<full stop> ::= '.' <white space> 
+<white space> ::= '\t' | '\n' | ' '
+
+
+Any specification "File".eqn can be supplemented by an order specification
+contained in a file "File.order_name".ord. The order specification determines
+the termination ordering used for "File" and the order base (cf.  order base)
+determines the termination ordering of its direct imports. It gives
+precedence declarations for the operators of the specification (if the
+termination ordering is kns or neqkns) or polynomial interpretations (if the
+termination ordering is poly<N>).

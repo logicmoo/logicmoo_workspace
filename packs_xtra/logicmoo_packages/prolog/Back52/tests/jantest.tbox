@@ -1,0 +1,732 @@
+:- op(624,xfy,(.)).
+:- op(0,xfy,(.)).
+:- op(624,xfx,(.)).
+:- set_prolog_flag(gvar_nondict_ok,true).
+:- use_module(library(gvar_syntax)).
+:- back.
+/****   BACK V4.3   released on  25/01/91      ******/
+/****   JANTEST  PROLOG                      ******/
+ 
+%% ******************************************************************
+%%
+%% Test file for testing tbox inferences  Version 1.5  Jan 25, 91
+%%
+%% Number of tests: 28
+%%
+%%                                             J.Thomsen
+%%
+%% ******************************************************************
+%%
+%% Abbreviations used in the following test cases:
+%%
+%%    VR = Value Restriction
+%%    NR = Number Restriction
+%%    RP = Restriction Propagation
+%%    DR = Domain Restriction
+%%    RR = Range Restriction
+%%    IC = Individual Concept
+%%    CO = Combination
+%%
+%% ******************************************************************
+%%
+%%  OKP:  Habe alle ttbox* durch tbox* ersetzt und in meinem Parser
+%%        bereitgestellt !!     
+%%                                             4.2.92
+%% ****************************************************************** 
+jantest :-
+	write('*** TEST FILE: jantest.tbox'), nl,
+	backinit,
+        tboxtest1(0),
+	nl.
+ 
+tboxtest1(N1) :-
+	N is N1 + 1,
+     	N < 27,
+     	tboxtest(N),
+     	!, tboxtest1(N).
+tboxtest1(_).
+
+write_succ_tbox(T) :-
+	write('+++ tbox test '), write(T), 
+	write(' succeeded'), nl.
+
+write_fail_tbox(T) :-
+	T = 25, !,
+	write('~~~ tbox test '), write(T), 
+	write(' failed'), 
+	write(' (known incompleteness)'), nl.
+write_fail_tbox(T) :-
+	write('--- tbox test '), write(T), 
+	write(' failed'), nl,
+	assert(test(tbox_test(T), failed)).
+
+
+
+%% ===================================================================
+ 
+%% Test VR1     / 1
+%%   Normalisation of value restrictions;
+%%   case 1.1: restrictions are explicitly disjoint
+%%   concepts c1 and c2 have disjoint VRs p1 and p2;
+%%   this causes c3 to have an incoherent VR
+ 
+tboxtest(T) :-
+    T == 1,
+    backinit,
+    backtell(r1   :<   domain(anything) and range(anything)),
+    backtell(r2   :<   domain(anything) and range(anything)),
+ 
+    backtell(p1   :<   anything and not(p2)),
+    %backtell(p2   :<   anything),
+    %backtell(disjoint(p1, p2)),
+    backtell(no   :=   atleast(1,r2)  and atmost(0,r2)),
+ 
+    backtell(c1   :=   all(r1, p1)),
+    backtell(c2   :=   all(r1, p2)),
+    backtell(c3   :=   c1 and c2),
+    backtell(c4   :=   c3 and atleast(1,r1)),
+ 
+%% expected inferences:
+    backask(subsumes(all(r1,no), c3)),
+    backask(subsumes(atmost(0,r1), c3)),
+    backask(incoherent(c4),noibox),
+    write_succ_tbox(T), !.
+ 
+%%--------------------------------------------------------------------
+ 
+%% Test VR2    / 2
+%%   Normalisation of value restrictions;
+%%   case 1.2: same as before, but restrictions are implicitly disjoint
+ 
+tboxtest(T) :-
+	T == 2,
+    backinit,
+ 
+    backtell(r1   :<   domain(anything) and range(anything)),
+    backtell(r2   :<   domain(anything) and range(anything)),
+    backtell(r3   :<   domain(anything) and range(anything)),
+ 
+    backtell(p1   :<   atleast(1,r3)),
+    backtell(p2   :<   atmost(0,r3)),
+    backtell(no   :=   atleast(1,r2) and atmost(0,r2)),
+ 
+    backtell(c1   :=   all(r1, p1)),
+    backtell(c2   :=   all(r1, p2)),
+    backtell(c3   :=   c1 and c2),
+    backtell(c4   :=   c3 and atleast(1,r1)),
+ 
+%% expected inferences:
+    backask(subsumes(all(r1,no), c3)),
+    backask(subsumes(atmost(0,r1), c3)),
+    backask(incoherent(c4)),
+	write_succ_tbox(T), !.
+ 
+%%--------------------------------------------------------------------
+ 
+%% Test VR3    / 3
+%%   Normalisation of value restrictions;
+%%   case 2.1: p2 is explicitly subsumed by p1,
+%%   therefore c3 should inherit p2 as VR
+ 
+tboxtest(T) :-
+	T == 3,
+    backinit,
+ 
+    backtell(  r    :<   domain(anything) and range(anything)),
+ 
+    backtell(  p1   :<   anything),
+    backtell(  p2   :<   p1),
+ 
+    backtell(  c1   :=   all(r, p1)),
+    backtell(  c2   :=   all(r, p2)),
+    backtell(  c3   :=   c1 and c2),
+ 
+%% expected inferences:
+    backask(   subsumes(c2, c3)),
+	write_succ_tbox(T), !.
+ 
+%%--------------------------------------------------------------------
+ 
+%% Test VR4    / 4
+%%   Normalisation of value restrictions;
+%%   case 2.2: p2 is implicitly subsumed by p1,
+ 
+tboxtest(T) :-
+	T == 4,
+    backinit, 
+ 
+    backtell(  r    :<   domain(anything) and range(anything)),
+ 
+    backtell(  p1   :<   atleast(1,r)),
+    backtell(  p2   :<   atleast(2,r)),
+ 
+    backtell(  c1   :=   all(r, p1)),
+    backtell(  c2   :=   all(r, p2)),
+    backtell(  c3   :=   c1 and c2),
+ 
+%% expected inferences:
+    backask(   subsumes(c2, c3)),
+	write_succ_tbox(T), !.
+ 
+%%====================================================================
+ 
+%% Test NR1    / 5
+%%   Normalisation of number restrictions
+%%   here c3 should inherit the maximal minimum
+%%   and minimal maximum
+ 
+tboxtest(T) :-
+ 	T == 5,
+     backinit,
+ 
+     backtell(  r    :<   domain(anything) and range(anything)),
+ 
+     backtell(  c1   :=   atleast(1,r) and atmost(3,r)),
+     backtell(  c2   :=   atleast(2,r) and atmost(4,r)),
+     backtell(  c3   :=   c1 and c2),
+ 
+%% expected inferences:
+     backask(   subsumes(atleast(2,r) and atmost(3,r), c3)),
+	write_succ_tbox(T), !.
+ 
+%%--------------------------------------------------------------------
+ 
+%% Test NR2    / 6
+%%   Normalisation of number restrictions
+%%   Here c3 is expected to be incoherent because of contradictory
+%%   number restrictions
+%%   (of course, this is already used in the former terminologies)
+ 
+tboxtest(T) :-
+	T == 6,
+     backinit,
+ 
+     backtell(  r    :<   domain(anything) and range(anything)),
+ 
+     backtell(  c1   :=   atleast(1,r) and atmost(2,r)),
+     backtell(  c2   :=   atleast(3,r) and atmost(4,r)),
+     backtell(  c3   :=   c1 and c2),
+ 
+%% expected inferences:
+     backask(   disjoint(c1, c2)),
+     backask(   incoherent(c3)),
+	write_succ_tbox(T), !.	
+ 
+%%====================================================================
+ 
+%% Test RP1  / 7
+%%   Propagation of atmost and value restrictions to subroles
+ 
+tboxtest(T) :-
+	T == 7,
+     backinit,
+ 
+     backtell(  r1   :<   domain(anything) and range(anything)),
+     backtell(  r2   :<   r1),
+ 
+     backtell(  p1   :<   anything),
+ 
+     backtell(  c1   :=   atmost(2, r1)),
+     backtell(  c2   :=   all(r1, p1)),
+ 
+%% expected inferences:
+     backask(   subsumes(atmost(2,r2), c1)),
+     backask(   subsumes(all(r2, p1), c2)),
+	 write_succ_tbox(T), !.
+
+%%--------------------------------------------------------------------
+ 
+%% Test RP2  / 8
+%%   Propagation of atleast restrictions to superroles
+ 
+tboxtest(T) :-
+	T == 8,
+     backinit,
+ 
+     backtell(  r1   :<   domain(anything) and range(anything)),
+     backtell(  r2   :<   r1),
+ 
+     backtell(  c1   :=   atleast(1, r2)),
+ 
+%% expected inferences:
+     backask(   subsumes(atleast(1,r1), c1)),
+	write_succ_tbox(T), !.
+ 
+%%--------------------------------------------------------------------
+ 
+%% Test RP3  / 9    CURRENTLY FAILS!!
+%%   Propagation of NR/VR restrictions to superroles and subroles ;
+%%   here propagation is tested in a deeper role hierarchy
+ 
+tboxtest(T) :-
+	T == 9,
+     backinit,
+ 
+     backtell(  r1   :<   domain(anything) and range(anything)),
+     backtell(  r2   :<   r1),
+     backtell(  r3   :<   r2),
+     backtell(  r4   :<   r3),
+ 
+     backtell(  p1   :<   anything),
+ 
+     backtell(  c1   :=   atleast(2, r4)),
+     backtell(  c2   :=   atmost(3, r1)),
+     backtell(  c3   :=   all(r2, p1)),
+ 
+%% expected inferences: (among others)
+     backask(   subsumes(atleast(2,r1), c1)),
+     backask(   subsumes(atmost(3,r4),c2)),
+     backask(   subsumes(all(r4,p1),c3)),
+	write_succ_tbox(T), !.
+ 
+%%====================================================================
+ 
+%% Test DR1   / 10
+%%   Inheritage of role domain restrictions
+%%   case 1.1: explicitly disjoint domain restrictions
+ 
+tboxtest(T) :-
+	T == 10,
+     backinit,
+ 
+     backtell(  p1   :<   anything and not(p2)),
+     %backtell(  p2   :<   anything),
+     %backtell(  disjoint(p1, p2)),
+     backtell( r :< range(anything)),
+     backtell(  no   :=   atleast(1,r)  and atmost(0,r)),
+ 
+     backtell(  r1   :<   domain(p1)),
+     backtell(  r2   :<   domain(p2)),
+     backtell(  r3   :<   r1 and r2),
+ 
+     backtell(  c1   :=   atleast(1,r3)),
+ 
+%% expected inferences:
+%%     backask(   subsumes(domain(no), r3)),%% no role subsumption check!
+%%     FFS: maybe only with defined roles
+     backask(   incoherent(c1)),
+     write_succ_tbox(T), !.
+ 
+%%--------------------------------------------------------------------
+ 
+%% Test DR2   / 11
+%%   case 1.20: implicitly disjoint domain restrictions
+ 
+tboxtest(T) :-
+	T == 11,
+     backinit,
+ 
+     backtell(  r1   :<   domain(anything) and range(anything)),
+ 
+     backtell(  p1   :<   atleast(1,r1)),
+     backtell(  p2   :<   atmost(0,r1)),
+     backtell(  no   :=   p1 and p2),
+ 
+     backtell(  r2   :<   domain(p1)),
+     backtell(  r3   :<   domain(p2)),
+     backtell(  r4   :<   r2 and r3),
+ 
+     backtell(  c3   :=   atleast(1,r4)),
+ 
+%% expected inferences:
+%%     backask(   subsumes(domain(no), r4)),
+     backask(        incoherent(c3)),
+	write_succ_tbox(T), !.
+ 
+%%--------------------------------------------------------------------
+ 
+%% Test DR3   / 12
+%%   case 1.21: implicitly disjoint domain restriction
+%%   inherited by c4
+ 
+tboxtest(T) :-
+	T == 12,
+     backinit,
+ 
+     backtell(  r1   :<   domain(anything) and range(anything)),
+ 
+     backtell(  c1   :=   atleast(1,r1)),
+     backtell(  c2   :=   atmost(0,r1)),       %% --> disjoint(c1,c2)
+ 
+     backtell(  r2   :<   domain(c2)),         %% --> c1 < atmost(0,r2)
+ 
+     backtell(  c3   :=   atleast(1,r2)),      %% --> disjoint(c3,c1)
+                                               %% --> c3 < c2
+     backtell(  c4   :=   c1 and c3),          %% --> incoherent(c4)
+ 
+%% expected inferences:
+     backask(   disjoint(c1,c3)),
+     backask(   incoherent(c4)),
+%    backask(   subsumes(atmost(0,r2),c1)),        %% fies!?
+	write_succ_tbox(T), !.
+ 
+%%--------------------------------------------------------------------
+ 
+%% Test DR4   / 13
+%%   case 2.10: concept subsumed by role domain
+ 
+tboxtest(T) :-
+	T == 13,
+     backinit,
+ 
+     backtell(  p1   :<   anything),
+     backtell(  r    :<   domain(p1)),
+     backtell(  c1   :<   atleast(1,r)),
+ 
+%% expected inferences:
+     backask(   subsumes(p1, c1)),
+     write_succ_tbox(T), !.
+ 
+%%--------------------------------------------------------------------
+ 
+%% Test DR5   / 14
+%%   case 2.11: concept subsumed by role domain, depth 2
+ 
+tboxtest(T) :-
+	T == 14,
+     backinit,
+ 
+     backtell(  p1   :<   anything),
+     backtell(  r1   :<   domain(p1)),
+     backtell(  c1   :=   atleast(1,r1)),      %% c1 < p1
+     backtell(  r2   :<   domain(c1)),
+     backtell(  c2   :=   atleast(1,r2)),      %% c2 < c1 <p1
+ 
+%% expected inferences:
+     backask(   subsumes(p1, c1)),
+     backask(   subsumes(p1, c2)),
+	write_succ_tbox(T), !.
+
+%%--------------------------------------------------------------------
+ 
+%% Test DR6   / 15
+%%   case 2.2: 2.10 expanded by disjoint domain restrictions
+ 
+tboxtest(T) :-
+	T == 15,
+     backinit,
+ 
+     backtell(  p1   :<   anything and not(p2)),
+     %backtell(  p2   :<   anything),
+     %backtell(  disjoint(p1,p2)),
+ 
+     backtell(  r1   :<   domain(p1)),
+     backtell(  r2   :<   domain(p2)),
+ 
+     backtell(  c1   :=   atleast(1,r1)),
+     backtell(  c2   :=   atleast(1,r2)),
+ 
+     backtell(  c3   :=   c1 and c2),
+ 
+%% expected inferences:
+%     write('Warning: dr6 includes some fies questions!'),
+%     backask(   subsumes(atmost(0,r1),c2)),  %% fies!?
+%     backask(   subsumes(atmost(0,r2),c1)),  %% fies!?
+     backask(   disjoint(c1,c2)),
+     backask(   disjoint(c1,p2)),
+     backask(   disjoint(c2,p1)),
+     backask(   incoherent(c3)),
+	write_succ_tbox(T), !.
+ 
+%%--------------------------------------------------------------------
+ 
+%% Test DR7   / 18
+%%   case 2.3: a similar case
+ 
+tboxtest(T) :-
+	T == 16,
+     backinit,
+ 
+     backtell(  p1   :<   anything and not(p2)),
+     %backtell(  p2   :<   anything),
+     backtell(  p3   :<   anything),
+     %backtell(  disjoint(p1, p2)),
+ 
+     backtell(  r1   :<   domain(p1)),
+     backtell(  r2   :<   domain(anything) and range(anything)),
+ 
+     backtell(  c1   :=   atleast(1,r1)),          %% c1 < p1
+     backtell(  c2   :=   c1 and p2),              %% c2 incoherent
+     backtell(  c3   :=   p2 and all(r2, p3)),     %% c3 has no r1
+ 
+%% expected inferences:
+     backask(   subsumes(p1, c1)),
+     backask(   incoherent(c2)),
+%     write('test dr87 so far succeeded,'),
+%     write('  but now two other fies questions'),
+%     backask(   subsumes(atmost(0,r1), p2)),  %% fies!?
+%     backask(   subsumes(atmost(0,r1), c3)),  %% erst recht fies!?
+	write_succ_tbox(T), !.
+ 
+%%--------------------------------------------------------------------
+ 
+%% Test DR8   / 19
+%%   case 2.4: same as 2.3, but domains implicitly disjoint
+ 
+tboxtest(T) :-
+	T == 17,
+     backinit,
+     backtell(  r1   :<   domain(anything) and range(anything)),
+     backtell(  p1   :<   atleast(2, r1)),
+     backtell(  p2   :<   atmost(1, r1)),
+     backtell(  p3   :<   anything),
+ 
+     backtell(  r2   :<   domain(p1)),
+ 
+     backtell(  c1   :=   atleast(1,r2)),
+     backtell(  c2   :=   c1 and p2),
+     backtell(  c3   :=   p2 and all(r2, p3)),
+ 
+%% expected inferences:
+     backask(   subsumes(p1, c1)),
+     backask(   incoherent(c2)),
+%     write('Warning: as fies as dr7'),
+%    backask(   subsumes(atmost(0,r2), c3)),
+%    backask(   subsumes(atmost(0,r2), p2)),
+	write_succ_tbox(T), !.
+ 
+%%====================================================================
+ 
+%% Test RR1   / 18
+%%   Testing normalisation of role range restrictions
+%%   case1: general
+ 
+tboxtest(T) :-
+	T == 18,
+     backinit,
+ 
+     backtell(  p1   :<   anything),
+     backtell(  p2   :<   anything),
+     backtell(  r1   :<   range(p1)),
+     backtell(  c1   :=   all(r1,p2)),
+ 
+%% expected inferences:
+     backask(   subsumes(all(r1, p1 and p2), c1)),
+	write_succ_tbox(T), !.
+ 
+%%--------------------------------------------------------------------
+ 
+%% Test RR2   / 19
+%%   Testing normalisation of role range restrictions
+%%   Range restriction in combination with number restriction
+ 
+tboxtest(T) :-
+	T ==19,
+     backinit,
+ 
+     backtell(  p1   :<   anything),
+     backtell(  r1   :<   range(p1)),
+     backtell(  c1   :=   atleast(1,r1)),
+ 
+%% expected inferences:
+     backask(   subsumes(all(r1, p1), c1)),
+ 	write_succ_tbox(T), !.
+
+%%--------------------------------------------------------------------
+ 
+%% Test RR3  / 20
+%%   case2.1: role range explicitly disjoint from VR
+ 
+tboxtest(T) :-
+	T == 20,
+     backinit,
+ 
+     backtell(  p1   :<   anything and not(p2)),
+     %backtell(  p2   :<   anything),
+     %backtell(  disjoint(p1, p2)),
+ 
+     backtell(  r    :<   range(p1)),
+ 
+     backtell(  no   :=   atleast(1,r)  and atmost(0,r)),
+     backtell(  c1   :=   all(r, p2)),
+ 
+%% expected inferences:
+     backask(   subsumes(all(r, no), c1)),
+     backask(   subsumes(atmost(0,r),c1)),
+ 	write_succ_tbox(T), !.
+
+%%--------------------------------------------------------------------
+ 
+%% Test RR4  / 21
+%%   case2.2: role range implicitly disjoint from VR
+ 
+tboxtest(T) :-
+	T == 21,
+     backinit,
+ 
+     backtell(  r1   :<   domain(anything) and range(anything)),
+ 
+     backtell(  p1   :<   atleast(2,r1)),
+     backtell(  p2   :<   atmost(1,r1)),
+     backtell(  no   :=   p1 and p2),
+     backtell(  r2   :<   range(p2)),
+ 
+     backtell(  c1   :=   all(r2,p2)),
+ 
+%% expected inferences:
+     backask(   subsumes(c1, all(r2, no))),
+     backask(   subsumes(c1, atmost(0,r2))),
+ 	write_succ_tbox(T), !.
+
+%%--------------------------------------------------------------------
+ 
+%% Test RR5  / 22
+%%   case3.10: explicit subsumption between role range and VR
+ 
+tboxtest(T) :-
+	T == 22,
+     backinit,
+ 
+     backtell(  p1   :<   anything),
+     backtell(  p2   :<   p1),
+     backtell(  r    :<   range(p2)),
+     backtell(  c1   :=   all(r,p1)),
+ 
+%% expected inferences:
+     backask(   subsumes(all(r, p2), c1)),
+	write_succ_tbox(T), !.
+ 
+%%--------------------------------------------------------------------
+ 
+%% Test RR6  / 23
+%%   case3.11: 3.10 with extended concept hierarchy
+ 
+tboxtest(T) :-
+	T == 23,
+     backinit,
+ 
+     backtell(  p1   :<   anything),
+     backtell(  p2   :<   p1),
+     backtell(  p3   :<   p2),
+     backtell(  p4   :<   p3),
+     backtell(  r    :<   range(p2)),
+     backtell(  c1   :=   all(r,p3)),
+     backtell(  c2   :=   all(r,p4)),
+ 
+%% expected inferences:
+     backask(   subsumes(c1, c2)),
+	write_succ_tbox(T), !. 
+
+%%--------------------------------------------------------------------
+ 
+%% Test RR7  / 24
+%%   case3.20: implicit subsumption between role range and VR
+ 
+tboxtest(T) :-
+	T == 24,
+     backinit,
+ 
+     backtell(  r1   :<   domain(anything) and range(anything)),
+ 
+     backtell(  p1   :<   atleast(2,r1)),
+     backtell(  p2   :<   atleast(4,r1)),
+ 
+     backtell(  r2   :<   range(p2)),
+ 
+     backtell(  c1   :=   all(r2,p1)),
+ 
+%% expected inferences:
+     backask(   subsumes(all(r2, p2), c1)),
+	write_succ_tbox(T), !.
+ 
+%%--------------------------------------------------------------------
+ 
+%% Test RR8  / 25
+%%   case3.30: normalization of two disjoint role ranges
+%%   subroles with disjoint ranges in number restrictions
+%%   Note: this one is exactly the terminology which shows
+%%   the incompleteness of the BACK classifier
+%%   (cf. BACK89, p.71f)
+ 
+tboxtest(T) :-
+	T == 25,
+     backinit,
+ 
+     backtell(  p1   :<   anything),
+     backtell(  p2   :<   not(p1)),
+ 
+     backtell(  r1   :<   domain(anything)),
+     backtell(  r2   :<   r1 and range(p1)),
+     backtell(  r3   :<   r1 and range(p2)),
+ 
+     backtell(  c1   :=   atleast(1,r2) and atleast(1,r3)),
+     backtell(  c2   :=   c1 and atmost(1,r1)),
+ 
+%% expected inferences:
+     backask(   subsumes(atleast(2,r1),c1)),
+     backask(   incoherent(c2)),
+	write_succ_tbox(T), !.
+ 
+%% ===================================================================
+ 
+%% Test CO1  /26
+%%   combination of domain and range restriction
+tboxtest(T) :-
+	T == 26,
+     backinit,
+     backtell(  p1 :< anything),
+     backtell(  p2 :< anything),
+ 
+     backtell(  r1 :< domain(p1)),
+     backtell(  c1 := atleast(1,r1)),                 %% --> c1 < p1
+     backtell(  r2 :< range(c1)),
+     backtell(  c2 := all(r2,p2)),
+%% expected inferences:
+     backask(   subsumes(all(r2,p2 and p1),c2)),
+	write_succ_tbox(T), !.
+
+%% catch failed tests
+
+tboxtest(N) :-
+	write_fail_tbox(N).
+
+
+/*
+%% The following tests are not performed
+ 
+%% ===================================================================
+ 
+%% Test IC1  /26
+%%   Testing propagation of individual restrictions
+ 
+tboxtest(T) :-
+    backinit,
+ 
+     backtell(  r    :<   domain(anything) and range(anything)),
+     backtell(  p1   :<   anything),
+     backtell(  individual(p1)),
+     backtell(  c1   :=   all(r, p1)),
+ 
+%% expected inferences:
+     backask(   subsumes(atmost(1,r), c1)),
+     write('+++ test ic1 succeeded'), !.
+tboxtest(ic1) :-
+     write('--- test ic1 failed'), !.
+ 
+%%--------------------------------------------------------------------
+ 
+%% Test IC2  /27
+%%   individual concept as role range
+tboxtest(ic2) :-
+     backinit,
+ 
+     backtell(  p1   :<   anything),
+     backtell(  p2   :<   p1),
+     backtell(  individual(p2)),
+ 
+     backtell(  r    :<   range(p2)),
+ 
+     backtell(  c1   :=   all(r, p2)),
+     backtell(  c2   :=   all(r, p1)),
+     backtell(  c3   :=   atleast(2, r)),
+ 
+ 
+%% expected inferences:
+     backask(   incoherent(c3)),
+     backask(   subsumes(atmost(1,r), c1)),
+     backask(   subsumes(atmost(1,r), c2)),
+     write('+++ test ic2 succeeded'), !.
+tboxtest(ic2) :-
+     write('--- test ic2 failed'), !.
+*/ 
+/************** JANTEST  PROLOG   ends here *********/

@@ -1,0 +1,9 @@
+module(group).
+
+cons e : g.
+op *   : ( g * g -> g ).
+op i   : ( g -> g ).
+x * e = x.
+x * i(x) = e.
+x * (y * z) = (x * y) * z.
+

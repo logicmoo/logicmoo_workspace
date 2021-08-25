@@ -1,0 +1,1 @@
+time for i in `cat ~/00Systems1`; do time ./ExtractSystemResults -u machine $i >~/TSTPRes/$i; done

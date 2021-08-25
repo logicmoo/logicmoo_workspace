@@ -1,0 +1,36 @@
+Translation Rules for ACE / CELT Version 2. b.
+
+Simple Sentences and queries: Syntax and Semantics Only, No Paraphrases.
+
+Log--
+
+Feb--March 2002
+
+Fixed possessives to return proper semantics
+Separated out tools code into a new file
+Added WordNet translations
+Separated out semantics code into a new file
+Decided not to maintain generation for all code as too difficult to maintain
+Added eng2log/1 interface for testing sentences via direct type-in
+Added eng2log/2 web interface
+Added lambda expressions (e.g., X^Y^[equal,X,Y] ) for two-place adjectives, etc.
+   See Covington's book X^Y^[equal,X,Y] used as short hand for lambda(X,lambda(Y,[equal,X,Y]))
+Added copula sentences semantics for comparatives, two-place adjectives, and superlatives
+Added possessives entry for eng2log (e.g., "John's dog enters the bank.").
+
+April 2002
+
+Added YES/NO and WH-queries.
+
+May 2002
+
+Added WH-queries with adverbial prepositions
+and fixed code produced in sentences for 
+adverbial prepositions.
+
+Fixed eng2log/5 to support server with JSP pages.
+
+Sept-Oct 2002
+
+Added replies to queries and ATP interface. Also
+morphological rules and preprocessing.

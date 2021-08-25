@@ -1,0 +1,2833 @@
+MIKEREF.1o2
+                   M I K E   R E F E R E N C E   M A N U A L
+                               Part 1 of 2
+
+(Unformatted ASCII document, to accompany MIKE V1.50 and higher, 24-OCT-90)
+
+This reference manual is aimed more at practitioners than at
+beginners (we cannot afford to give away our 'study pack', too!)  For
+full tutorial guidance concerning MIKE, see the address below for our
+'study pack'.
+
+>>>>>THE STUDY PACK HAS ALL OF THE TUTORIAL TEXT + 180 MIN. VHS VIDEO <<<<<<
+>>>>> + 60 MIN. AUDIO CASSETTE                                        <<<<<<
+
+
+                            *************
+                               M I K E
+                            *************
+               Micro Interpreter for Knowledge Engineering
+                  {written in Edinburgh-syntax Prolog}
+
+MIKE: Copyright (c) 1989, 1990 The Open University (U.K.)
+Prolog-2: Copyright (c) 1990 Expert Systems Ltd. (U.K.)
+
+MIKE is intended for educational purposes, and may not
+be sold as or incorporated in a commercial product without
+written permission from: The Copyrights Officer, Open University,
+Milton Keynes MK7 6AA, U.K.
+
+The Open University accepts no responsibility for any legal or other
+consequences which may arise directly or indirectly as a result of the
+use of all or parts of the contents of this program.
+
+This software accompanies Open University Study Pack PD624, 'KNOWLEDGE
+ENGINEERING'.  Complete sets of study pack materials may be obtained from:
+
+                      Learning Materials Sales Office
+                      The Open University
+                      P.O. Box 188
+                      Milton Keynes MK7 6DH, U.K.
+
+                      Tel: [+44] 908 653338
+                      Fax: [+44] 908 653744
+
+>>>>>THE STUDY PACK HAS ALL OF THE TUTORIAL TEXT + 180 MIN. VHS VIDEO <<<<<<
+>>>>> + 60 MIN. AUDIO CASSETTE                                        <<<<<<
+
+
+
+
+                        T A B L E   O F   C O N T E N T S
+
+1       NOTATION
+
+2       MIKE ARCHITECTURE AND PHILOSOPHY
+
+3       MIKE PROGRAM DEVELOPMENT CYCLE
+ 3.1     Loading MIKE and knowledge bases
+  3.1.1     Starting up MIKE
+  3.1.2     Loading knowledge bases
+ 3.2     Editing
+ 3.3     Running
+  3.3.1     Triggering forward chaining
+  3.3.2     Triggering backward chaining
+  3.3.3     Seeding working memory before triggering rules
+  3.3.4     Demons
+ 3.4     Inspecting, tracing and debugging
+  3.4.1     Inspecting data
+  3.4.2     Interrogating conclusions
+  3.4.3     Tracing rule execution and working memory changes
+  3.4.4     Tracing Prolog execution
+ 3.5     The relationships among MIKE, Prolog, and MS-DOS
+
+4       FRAMES
+ 4.1     Simple frame syntax
+ 4.2     Accessing and modifying frames at run-time
+  4.2.1     Frame access
+  4.2.2     Frame modification
+ 4.3     Enhanced frames using slot facets
+  4.3.1     value: <filler-or-list-of-fillers>
+  4.3.2     inheritance: <inheritance-type>
+  4.3.3     type: <class-or-list-of-specific-choices>
+  4.3.4     cardinality: <integer-or-range>
+  4.3.5     change_rule: <change_rule-code>
+  4.3.6     access_rule: <access_rule-code>
+
+5       RULES
+ 5.1     Forward chaining
+  5.1.1     Rule syntax
+  5.1.2     Legal forward-chaining conditions
+  5.1.3     Legal forward-chaining actions
+  5.1.4     Triggering forward chaining
+  5.1.5     Conflict resolution
+ 5.2     Backward chaining
+  5.2.1     Rule syntax
+  5.2.2     Legal backward-chaining conditions
+  5.2.3     Legal backward-chaining conclusions
+  5.2.4     Triggering backward chaining
+
+6       SPECIAL UTILITIES
+ 6.1     User-interaction via 'query'
+ 6.2     Explanation and justification
+ 6.3     Looking at frames
+  6.3.1     'describe' and 'show'
+  6.3.2     Hierarchical frame browsing with 'browse'
+ 6.4     Listing rules
+ 6.5     announce [a, b, c]
+ 6.6     Showing the contents of working memory
+
+[Sections 7 - 12 are found in MIKEREF.2o2, but are listed here
+for convenience]
+
+7       FAST FORWARD CHAINING RETE ALGORITHM
+
+8       TRUTH MAINTAINANCE SYSTEM
+8.1      User's view
+8.2      New tracing facilities for the TMS
+8.3      RETE and TMS command summary
+
+9       HYPOTHETICAL WORLDS
+
+10      UNCERTAINTY
+
+11      FORWARD CHAINING RULE SYNTAX ADDENDUM
+
+12      INDEX (updated for all sections to incorporate MIKE v2.00 extensions)
+
+
+
+
+1   NOTATION
+============
+
+In the text below we use angle-brackets to indicate generic
+categories, e.g. <filename>. We use ellipses dots (...) to mean 'more
+of the same', and italic subscript numbers and letters (e.g. 1, n) to
+indicate arbitrary examples from within a potentially lengthy
+sequence. The MS-DOS prompt A> , the Prolog prompt ?- , and the MIKE
+user-input prompt ==> are  output by the computer, and are NOT meant
+to be typed by you. When we refer to the 'top level', we mean the
+moment when the Prolog interpreter has issued a ?- prompt, and is
+waiting for input.
+
+Because MIKE is implemented in Prolog, it shares syntax conventions
+with Prolog. There are two fundamental consequences of this:
+
+    *   Inputs typed by you in response to Prolog prompts and MIKE
+prompts must be terminated by a full stop (i.e. a 'period' or '.').
+
+    *   Variables are signified by words beginning with upper case
+letters, such as X, Num, and THIS. Case is significant, so that NUM
+and Num refer to two different variables. The symbol _ on its own
+(the underscore character) is also known as the 'anonymous' or 'don't
+care' variable.
+
+We use the word 'operator' below to refer both to MIKE keywords which
+act analogously to commands or actions in other programming
+languages, and also to Prolog infix operators (much like the
+mathematical operators '+' and '-'), which is in fact precisely how
+MIKE operators are implemented.
+
+2   MIKE ARCHITECTURE AND PHILOSOPHY
+====================================
+
+MIKE is entirely implemented in Prolog. It has four main components:
+the top level, working memory, frame memory and rule memory. We now
+describe these in turn.
+
+Top level: this is the 'prompt' to which the user types input to
+initiate MIKE processing. In fact, the MIKE top level is the Prolog
+top level, so the MIKE prompt is simply the Prolog prompt, namely ?-.
+The difference between the two, conceptually, is just that several
+pre-defined 'operators' in Prolog, such as add and deduce, are used
+to initiate MIKE processing.
+
+Working memory (frequently called wm for convenience): this is a
+temporary repository for arbitrary items called 'working memory
+elements', which are either atoms, integers, strings, lists, or
+compound Prolog terms (predicate+argument combinations) such as
+loves(john, mary). The contents of working memory grows and shrinks
+during processing as elements are added and removed using the MIKE
+operators add and remove. Typically, before each new 'run' working
+memory is re-initialised, i.e. all of its elements are removed and
+the atom start is added to it as processing begins. Processing is
+normally initiated by the operator fc (which stands for 'forward
+chaining'), described in Section 3.3.
+
+Frame memory: this is a permanent (though modifiable) repository for
+structured object representations. Objects can be one of two types:
+instances or classes (in fact a given object can be both an instance
+and a class, if required). The former refers to unique individuals,
+such as fred_smith and car_54, while the latter refers to generic
+categories such as person and respiratory_disease. Each object is
+characterized by sequences of slots and fillers, which can be thought
+of as attribute/value combinations, as in the following example:
+
+fred_smith instance_of person with
+   age: 49,
+   birthday: [29, november],
+   weight: 160,
+   occupations: [teacher, lifeguard, parent].
+
+Frame memory contents can be accessed directly from rules, using the
+<frame-access> syntax, which is either the form
+   the <slot> of <object> is <variable-or-filler>
+or alternatively the form
+   all <slot> of <object> are <variable-or-list-of-fillers>.
+Frame objects are normally created using a text editor, and then
+loaded into Prolog (and hence into MIKE). However, they may also be
+modified directly within rules, or even from the top level, using the
+operator note. Thus, given the frame above, the interaction shown
+next illustrates first a direct modification of the frame, and then a
+simple accessing of the frame, both from the top level:
+
+?- note the age of fred_smith is 50.
+
+yes
+
+?- the age of fred_smith is What.
+
+What = 50
+
+Rule memory: this is a permanent (though modifiable) repository for
+rules. Rules can be one of two types: forward chaining or backward
+chaining. Forward-chaining rules are characterized by a sequence of
+conditions, which access either the current working memory or the
+permanent frame memory, and a sequence of actions, which usually add
+or remove elements from working memory using the operators add and
+remove, or possibly alter the frame memory using the operator note.
+Normally, it is the altered contents of working memory which results
+in the triggering of yet another forward chaining rule, until the
+special action halt is invoked by one of the rules (or until no
+applicable rules can be found). Backward-chaining rules have a
+sequence of conditions just like those of forward-chaining rules, but
+rather than having actions to be performed, they have just a single
+conclusion, which is a pattern to be 'deduced'. Deductions are not
+stored (either in working memory or frame memory), but rather simply
+succeed or fail.
+
+Having defined frames and rules in a text file and loaded them in
+(typically using reconsult('<filename>') or kb '<filename>', as
+described in Section 3), the user initiates processing in MIKE either
+by invoking forward chaining (typically using fc) or else by invoking
+backward chaining using the operator deduce, as described in Section
+3.3. Additional processing can be initiated by demons, which are
+actions associated directly with specific slots in a frame object.
+Demons can be invoked either when slots are accessed (e.g. when
+retrieving, say, the age of fred is What), or else when slots are
+changed (e.g. when performing, say, note the age of fred is 50), and
+typically demons cause other slots to be altered as well. If demons
+cause other demons to be invoked, such processing terminates only
+when there are no more demons invoked. Backward chaining terminates
+when a conclusion has been deduced successfully, or alternatively
+when it fails. Forward chaining terminates when the special action
+halt is invoked by one of the rules, or alternatively when no
+applicable rules can be found.
+
+When there are several rules which are applicable at any moment
+during forward chaining, a conflict resolution strategy is applied to
+choose a single winner. Three conflict resolution strategies are used
+in MIKE:
+
+    *   refractoriness: rules are said to have a 'refractory' period,
+which means that once a given rule fires (with specific
+'instantiations' or matches for its variables) then that same rule
+will be disallowed for subsequent firing, given the same specific
+'instantiations' or matches for its variables.
+
+    *   recency: all other things being equal, rules which apply to
+the most recently added working memory elements are chosen in
+preference to those which apply to older working memory elements.
+
+    *   specificity: all other things being equal, rules which have
+more conditions on the left-hand side are chosen in preference to
+those with fewer conditions, because they are regarded as being more
+'specific' or 'precise'.
+
+The conflict resolution strategies are themselves arranged in a
+default priority order, namely (1) refractoriness, (2) recency, and
+(3) specificity, but this ordering may be changed by the user, either
+permanently or dynamically during the execution of a rule, as
+described in Section 5.1.5.
+
+3   MIKE PROGRAM DEVELOPMENT CYCLE
+==================================
+
+=============================  S U M M A R Y  ================================
+This example assumes you are using the knowledge base 'flu.kb', though
+of course any other will do in its place. Steps 5,6,8,9,10,11,12 are optional.
+         STEP                             WHAT TO DO
+1. CREATE/EDIT KNOWLEDGE BASE    (use your own editor, or SIDEKICK, etc.)
+2. INVOKE PROLOG                 C> prolog
+3. LOAD MIKE                     ?- consult('mike.pl').
+4. LOAD KNOWLEDGE BASE           ?- kb 'flu.kb'.
+5. EXAMINE KNOWLEDGE BASE        ?- browse.        ?- show rules.
+6. CHOOSE TRACING OPTIONS        ?- tracing.
+7. INVOKE FORWARD CHAINING       ?- fc.
+8. INSPECT WORKING MEMORY        ?- show wm.
+9. STUDY EXECUTION HISTORY       ?- show history.
+10.ASK FOR EXPLANATIONS          ?- how [bert,has,hay_fever].
+11.RE-EDIT & SAVE KNOWLEDGE BASE ?- edit('flu.kb'). /* or use SIDEKICK, etc.*/
+12.GOTO 4
+========================  E N D   O F   S U M M A R Y  =======================
+
+3.1   Loading MIKE and knowledge bases
+--------------------------------------
+
+3.1.1  Starting up MIKE
+-----------------------
+
+Having made a back-up copy of the course disc, type the following to
+the operating system prompt:
+
+A>prolog
+
+If you are using a hard disc (drive 'C'), and have copied all the
+PD624 files onto a directory called, say, 'ou', you would issue the
+following command:
+
+A> c:\ou\prolog
+
+Following the prolog prompt, load MIKE by typing the following:
+
+?- consult('mike.pl').
+
+=====================================================================
+FOR mike.pl WE RECOMMEND THAT YOU USE consult (INDEED IT IS MANDATORY
+IF THE FILE mike_mod.prm IS ON YOUR DISC).  FOR LOADING OTHER FILES,
+WE RECOMMEND THAT YOU USE reconsult OR kb AS DESCRIBED IN SECTION
+3.1.2.
+=====================================================================
+
+It is your responsibility to ensure that you use the correct
+pathnames. Remember, too, to check that the pathnames in the file
+'mike.pl' are also correct for your particular system. Once again, if
+you are using a hard disc (drive 'C'), and have copied all the PD624
+files onto a directory called, say, OU, you would type in the
+following instead:
+
+?- consult('c:\ou\mike.pl').
+
+An equivalent way to type the above in Prolog is as follows:
+
+?- ['c:\ou\mike.pl'].
+
+3.1.2  Loading knowledge bases
+------------------------------
+
+'reconsult' allows you read in new knowledge bases (indeed any Prolog
+program) in a way which supersedes older and normally obsolete
+program definitions. The Prolog primitive 'reconsult' loads in the
+specified file, and (most importantly) causes old definitions of
+Prolog 'procedures' with the same names as those being currently
+loaded to be overwritten. We strongly recommend that you always use
+one of the following forms to load files:
+
+    ?- reconsult('<pathname>').
+
+or
+
+    ?- kb '<pathname>'.
+
+'kb' is a MIKE-specific command which takes one argument, namely
+the pathname of a file which you want to load into the MIKE
+environment.  This pathname must be correct, otherwise an error message
+will result if the file is not found.
+<pathname> is the name and location of the file you wish to load.
+Note that this pathname must always be in quotes (i.e. ' ').  The first
+hing that kb does is to redefine the rules and frames according to the
+definitions in the file that you are loading.  It has the same effect
+as the command reconsult which is described and used in the course text.
+kb can be used in place of reconsult in the course if you so choose.
+The additional advantage that kb has is that it shows you the exact
+state of play once you have loaded the knowledge base.  kb tells you how many
+rules, frames and working memory elements (if any) you haved just loaded
+and additionally shows you the current conflict resolution strategies.
+A hypothetical example illustrating the loading of a
+MIKE knowledge base from a hard disc directory is given below.
+
+>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+
+?- kb 'c:\mike\examples\trialkb.pl'.
+
+New knowledge base loaded.
+------------------------------------------------------------------
+8 frame(s), 3 rule(s), 0 working memory element(s).
+
+The current conflict resolution priority list (in order) is:
+     [refractoriness,recency,specificity]
+------------------------------------------------------------------
+<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+
+You can inspect the knowledge base further using ?- browse. (section
+6.3.2); ?- wm. (section 6.6); and ?- show rules. (section 6.4).  The
+conflict resolution strategy can be changed using ?- strategy menu.
+(section 5.1.5).
+
+3.2   Editing
+-------------
+
+N.B. YOU ARE STRONGLY ADVISED TO HAVE ALL OF THE FRAMES AND RULES FOR
+A GIVEN PROBLEM DOMAIN STORED TOGETHER IN A SINGLE FILE. MOREOVER THE
+RULES MUST BE STORED CONTIGUOUSLY, AND LIKEWISE FOR THE FRAMES (I.E
+THEY MUST NOT BE INTERTWINED IN THE FILE).
+
+If you are running your own version of Prolog, it may
+be supplied with an integrated editor, or it may support easy access
+to an independent editor such as EMACS, Vi, Borland's Sidekick, etc.
+In the case of Prolog-2 Public Domain, files may be edited directly
+using your own favourite PC editor, such as E, EMACS, or WordStar.
+To do this, you must first ensure that the file EDIT.BAT
+is set up to invoke your eitor. Here is what the supplied version looks like:
+
+     @ECHO OFF
+     E %1
+
+The '%1' is a parameter which is used automatically to pass through
+(from Prolog to MS-DOS) the name of the file you wish to edit, and
+E is the command to invoke a resident text editor E.COM (you might want
+to use WS to invoke WordStar, or EMACS to invoke EMACS, etc.).
+
+Given that your EDIT.BAT file is set up correctly, you may then
+invoke your favourite editor on your desired file directly from
+within Prolog, simply by typing either edit('<filename>') or ed
+'<filename>' to the Prolog prompt, as in the following three
+examples:
+
+?- edit('flu.kb').
+
+?- edit('c:\ou\flu.kb').
+
+?- ed 'flu.kb'.
+
+When you exit from your editing session, your file Prolog will
+then automatically reconsult the just-edited file, so that any new
+definitions you have provided will overwrite any old definitions.
+
+{N.B. THE FILE AUTO.PRO INCLUDES AN ALTERNATIVE VARIANT, CALLED qedit, WHICH
+DOES NOT AUTOMATICALLY RECONSULT YOUR FILE}
+
+There are two variants of 'edit' and one variant of 'ed' for your use :
+
+edit/1  (i.e. edit with just one argument)
+   ?- edit('ex2-3.pl').
+
+works in the usual manner except that it allocates itself 128K of disc
+space to run (e.g. enough for the editor E.COM). It is therefore important
+that this amount of space is available on the disc in your default ('home')
+drive when using floppy drive machines.
+
+edit/2  (i.e. edit with two arguments)
+   ?- edit('ex2-3.pl', AMOUNT).
+
+works in the usual manner except that you allocate it an AMOUNT of
+disc space as its second argument.  For instance, to run some editors,
+256000 bytes might be required, therefore AMOUNT = 256000, so you would
+have to enter:
+
+   ?- edit('ex2-3.pl', 256000).
+
+We have defined a 'shortcut' in the file MIKE.INI which handles this for
+you using the prefix operator 'ed'.  This enables you to type in:
+
+   ?- ed 'ex2-3.pl'.
+
+and it automatically allocates 128000 bytes of disc space.  Feel free
+to edit the file MIKE.INI if you want to change the definition of 'ed'
+to suit your own taste, to accomodate larger editors, etc.
+
+It is important that the amount of space you allocate for your editor is
+available on the disc in your default ('home') drive when using floppy drive
+machines. edit/2 is particularly useful for finding out the quantity of
+memory required to run your selected editor.  If you do not allocate enough
+memory you will be warned
+
+   Insufficient memory
+
+followed by the message :
+
+   Press any key to return to Prolog
+
+{WARNING: IN THIS CASE YOU MAY HAVE TO DELETE THE SPURIOUS FILE:  VMEM.V$  }
+
+By starting with a large AMOUNT of memory and working down the optimum space
+allocation for your particular text editor can be ascertained.
+
+THE TECHNIQUE FOR SETTING UP A 'WORK' DISC FOR USE ON SINGLE OR DUAL
+FLOPPY DRIVE MACHINES IS DESCRIBED IN THE FILE INSTALL.DOC.
+
+The reason you should have your whole knowledge base in one file is
+that all rules, for example, are stored under the definition of the
+Prolog prefix operator called rule, so overwriting this definition
+could be drastic if you store your rules in separate files (i.e. only
+the most recently-loaded file will be 'active', while former
+definitions which you had thought would be active will not be!).
+Frames are stored analogously, except that because of the extensive
+use of Prolog infix operators, all MIKE frames are stored under the
+definition of the infix operator called with.
+
+3.3   Running
+-------------
+
+3.3.1   Triggering forward chaining
+-----------------------------------
+
+The top level command fc ('forward chaining') does the following
+three things:
+
+1   erases all of working memory
+
+2   deposits the atom 'start' into working memory
+
+3   begins forward chaining.
+
+Here is how it is invoked:
+
+?- fc.
+
+Because Prolog is the underlying implementation language, you must
+always terminate entries with a full stop (i.e. a 'period' or '.').
+In actual fact, the three steps (1)-(3) above are manipulable
+separately by the user, as described in Section 3.1.2. To give you
+some idea, here is the actual internal definition of 'fc' in Prolog:
+
+fc:-
+   initialise,       /* cleans up working memory */
+   add start,        /* puts the atom start into wm */
+   go.               /* launches processing */
+
+{See section 3.3.3 for the distinctions among 'fc', 'go', and
+'continue'.}
+
+3.3.2   Triggering backward chaining
+----------------------------------
+
+Backward chaining is initiated by deduce, used either at the top
+level or on the left-hand side of a forward-chaining rule. The syntax
+of deduce is one of the following:
+
+deduce <wm-pattern>
+
+deduce <frame-access>
+
+<wm-pattern> stands for 'working memory pattern', which may be any of
+the following:
+
+    *   an atom, such as hi_there
+
+    *   a string, such as 'it is raining'
+
+    *   a list, such as [once, upon, a, time]
+
+    *   a compound, or bracketed, term, such as goal(refine)
+
+<frame-access> is one of the following, which are ways of accessing
+'long-term memory' or 'frame' elements:
+
+   the <slot> of <object> is <filler>
+
+   the <slot> of <object> <math-operator> <number>
+
+   all <slot> of <object> are <list-of-fillers>
+
+   <object> instance_of <class>
+
+   <class> subclass_of <class>
+
+The details of the above forms are discussed in Section 4.2.1.
+
+The conclusion of a backward chaining rule can be 'deduced' or
+'proved', but bear in mind that the deduction simply 'succeeds', and
+the thing which is deduced is not itself added into working memory or
+frame memory. An example of backward-chaining invocation, along with
+the all-important notion of 'seeding working memory', is described in
+Section 3.3.3.
+
+3.3.3   Seeding working memory before triggering rules
+------------------------------------------------------
+{This section describes the distinctions among 'fc', 'go', and
+'continue'.}
+
+Suppose that we have already defined (and loaded in, using reconsult)
+the following two rules:
+
+rule demo forward
+   if
+      start &
+      deduce 'it is going to rain today'
+   then
+      announce ['I am not going out today'] &
+      halt.
+
+rule conclude_rain backward
+   if
+      'the barometric pressure is rising' &
+      'the western sky is cloudy'
+   then
+      'it is going to rain today'.
+            /* conclusion (NOT added to wm!!) */
+
+The following interactions illustrate the sort of problem you might
+encounter when trying to trigger backward chaining, first directly at
+the top level, and then indirectly, within the forward-chaining rule
+(this time round both attempts will fail, but we'll remedy that
+immediately):
+
+?- deduce 'it is going to rain today'.
+
+no
+
+?- fc.
+
+No applicable rules.
+
+Production system halted.
+
+yes               /* always succeeds */
+
+In neither interaction was it possible to deduce that it is going to
+rain today, because the appropriate elements (namely 'the barometric
+pressure is rising' and 'the western sky is cloudy') were both
+missing from working memory. What is necessary here is to 'seed'
+working memory, which we can do using the MIKE operator add, as
+illustrated next:
+
+?- add 'the barometric pressure is rising'.
+
+yes
+
+?- add 'the western sky is cloudy'.
+
+yes
+
+?- deduce 'it is going to rain today'.
+
+yes
+
+Now observe the next interaction carefully.
+
+?- fc.
+
+No applicable rules.
+
+Production system halted.
+
+yes
+
+In the final interaction above, we were still doomed to failure
+because fc first cleans up working memory (as described in Section
+4.3.1). In such cases, we need to 'seed' working memory with all of
+the necessary elements (including start, which is needed for rule
+demo to fire). At this point, in fact, we would have to re-add the
+items which were cleaned up when we used fc. Here is what a fresh
+interaction would look like:
+
+?- add 'the barometric pressure is rising'.
+
+yes
+
+?- add 'the western sky is cloudy'.
+
+yes
+
+?- add start.            /* single atom, no string quotes needed */
+
+yes
+
+?- go.                   /* alternative way to begin */
+
+I am not going out today./* this time, it works! */
+
+Production system halted.
+
+yes
+
+Notice that the final interaction above relied on the use of go
+rather than fc. If you re-read Section 3.3.1, you'll see that go is
+simply one of the three actions that fc invokes anyway. Since we have
+'seeded' working memory ourselves in the above example, we don't want
+to use fc, which would stubbornly clean up working memory for us once
+again, so instead we rely on the use of go to launch processing
+directly.
+
+The difference between 'fc' and 'go' is that the former cleans up
+working memory, adds the symbol 'start' to working memory, and then
+runs the rule interpreter, whereas the latter simply runs
+the rule interpreter.  In fact, to have a successful run of the
+rule interpreter, there are some other internal
+flags that need to be reset in addition to simply clearing working memory.
+Most of the time, we believe that users WANT these hidden flags to
+be reset, although there are some exceptional cases in you which you
+may want the flags to be left alone.
+We have therefore added another command, called 'continue', to make
+this flag-clearing behaviour more explicit:
+
+'initialise' cleans up BOTH working memory AND all internal flags;
+'part_initialise' cleans up ONLY the internal flags, leaving WM alone;
+    It also leaves intact explanations relevant to answering queries such
+    as ?- how [john, loves, mary].
+    in case you added [john, loves, mary] to working memory directly
+    from the top level, using ?- add [john,loves,mary].
+'continue' leaves the internal flags alone, and carries on running the
+    rule interpreter from whatever state it was previously in (i.e.
+    a just-fired rule will not fire again if you use 'continue', because
+    the flags that enable refractoriness to work will still be set).
+'go' leaves WM alone, but cleans up the internal flags (i.e. it invokes
+    'part_initialise'), and then freshly runs the rule interpreter using
+    the current working memory.
+'fc' cleans up everything (using 'initialise'), adds 'start' to working
+    memory, and then freshly runs the rule interpreter with just 'start'
+    in working memory.
+
+3.3.4   Demons
+--------------
+
+Demons are of two types, change_rule and access_rule. The former are
+triggered when a frame object is changed at run time by the operator
+note, e.g. note the age of fred is 50. The latter are triggered when
+a frame object is accessed (e.g. when retrieving, say, the age of
+fred is What). We mention them in this section for completeness,
+because they are a separate type of processing, but their full
+description is best left to Sections 4.3.5 and 4.3.6.
+
+3.4   Inspecting, tracing and debugging
+---------------------------------------
+
+3.4.1   Inspecting data
+-----------------------
+
+The contents of working memory can be examined directly from top
+level using the operator wm, as follows:
+
+?- wm.
+
+Frame objects or rules can be examined directly from top level using
+the operator describe, as follows:
+
+?- describe fred_smith.
+
+A HIERARCHICAL FRAME BROWSING UTILITY IS DESCRIBED IN SECTION 6.3.2
+
+3.4.2   Interrogating conclusions
+---------------------------------
+
+The operators why and how and can be used to examine why particular
+questions were asked, or how particular conclusions (including
+intermediate ones) were reached during processing. The former is
+normally used in response to the ==> prompt to ask MIKE why it is
+asking you a particular question. Here are is an example of the use
+of how, the example is derived from Chapter 2:
+
+?- how 'tea has brewed'
+
+tea has brewed was concluded in makingTea_BrewingTea from
+
+   teabag in cup & boiling water in cup.
+
+3.4.3   Tracing rule execution and working memory changes
+---------------------------------------------------------
+
+You can invoke a menu of MIKE trace options in the following manner
+from top level:
+
+?- tracing.
+
+What you will see at this point is a menu of options, to which you
+can respond by typing in the numbers of the options you want to
+change (be sure to separate the options with a comma, and terminate
+your entry with a full stop). You can exit without altering the
+settings by typing quit. The options, when selected, simply 'toggle'
+between being 'enabled' (switched on) and being 'disabled' (switched
+off). The menu itself informs you of the current state of each
+option, both before you make your choice(s) and afterwards as well.
+Here are the available options, along with a brief explanation for
+each.
+
+    *   show conflict set: lets you see all of the rules which are
+applicable (i.e. whose left-hand side conditions are all satisfied)
+at any given cycle of the rule interpreter
+
+    *   show refractoriness: lets you see all of the rules which are
+applicable after the conflict resolution strategy 'refractoriness'
+has been applied (i.e. after those rules which have already fired
+with the identical instantiation have been weeded out).
+
+    *   show recency: lets you see all of the rules which are
+applicable after the conflict resolution strategy 'recency' has been
+applied (i.e. after those rules whose firing depend upon 'older'
+working memory elements have been weeded out).
+
+    *   show specificity: lets you see all of the rules which are
+applicable after the conflict resolution strategy 'specificity' has
+been applied (i.e. after those rules which have fewer left-hand side
+conditions have been weeded out).
+
+    *   show new working memory elements or frame changes: displays
+elements which have just been added to working memory and new frame
+changes i.e. those which occur following the use of note as the
+result of the right-hand side actions of a just-executed rule.
+
+    *   show chosen rule: displays the ultimate winner of the
+conflict resolution 'battle', just at the moment before its right-
+hand side actions are executed.
+
+    *   show backward chaining: displays a backward-chaining rule at
+the moment it is invoked, i.e. when the conclusion part has been
+matched, just before any of the left-hand side conditions are tested.
+Bear in mind that the outcome of backward chaining (i.e. whether it
+succeeds or fails) is not necessarily shown, unless the next option
+is enabled.
+
+    *   show outcome of backward chaining: lets you know whether the
+left-hand side conditions of a backward-chaining rule have all
+succeeded, or whether there has been (some unspecified) failure of
+one of the conditions instead.
+
+    *   show single stepping: lets you see the fine-grained details
+of the interpreter execution. The option comes with on-line help -
+type 'h' or '?' for more details on the single-steppers prompt which
+you will get during subsequent interpreter cycles.
+
+    * show history: lets you see the coarse-grained details of
+interpreter execution for the just-completed run of forward chaining.
+The symbols at the top indicate the number of the 'cycle' of
+execution, abbreviated in the form '....:....1....:....2...etc' so
+that cycle 10 is numbered '1', cycle 20 is numbered '2', and so on.
+The symbols along the left indicate which rule was involved.  A '+'
+means that the rule was a 'candidate' for execution (i.e. entered the
+'conflict set'), although it wasn't selected, whereas a '*' means
+that the rule actually 'fired' (i.e. entered the 'conflict set' and
+was selected.
+
+3.4.4   Tracing Prolog execution
+--------------------------------
+
+Typing the Prolog goal  trace at the top level will cause internal
+tracing of Prolog execution to be switched on. Tracing follows the
+standard call/exit/fail/redo sequence of Prolog. Available options
+vary from system to system, but most will give extra information
+about the options if you type either h. or ? to the tracer prompt.
+
+3.5   The relationships among MIKE, Prolog, and the operating system
+--------------------------------------------------------------------
+
+Since the top level of MIKE and Prolog are one and the same, any
+Prolog program can be invoked from the top level. In general, you may
+find it expedient to include one or two simple Prolog programs at the
+end of your knowledge base. We advise you to follow the style of the
+sample programs enclosed on the course disc, which place the relevant
+Prolog programs at the very end of the relevant file. Interspersing
+your own Prolog programs among MIKE frames and rules will invariably
+cause problems, for reasons indicated at the beginning of Section 3.2
+
+Prolog programs can be invoked directly from within MIKE rules by
+using one of the following two special forms:
+
+prolog(<goal>)
+
+prolog((<goal1>, <goal2>, ..., <goaln>))
+
+<goal> signifies an ordinary Prolog procedure invocation, which is
+typically a goal to be proved. The first form is used for simple
+cases, such as prolog(write('hi there')). The second form is used to
+specify a conjunction of goals, wherein commas are used to separate
+the goals, and all of the specified goals must succeed in order for
+the entire conjunction to succeed. A simple example would be
+prolog((write('hi there'), nl, write('goodbye'), nl)). Bearing in
+mind that nl is the Prolog primitive which displays a 'new line'
+(carriage-return), this conjunction of goals, when invoked, would
+result in the following display on your screen:
+
+hi there
+
+goodbye
+
+The double-brackets are necessary, because the outer set of brackets
+surrounds the single argument to the predicate prolog, while the
+inner set of brackets 'bundles together' the entire conjunction, so
+that it in turn is regarded as a single argument, rather than a
+series of separate arguments.
+
+Prolog will always try to access files from you current 'home'
+directory. You can specify precise pathnames, if necessary, whenever
+you refer to a file, e.g. reconsult('c:\ou\demo.pl'). Operating
+system commands may be issued directly from Prolog, using the
+primitive 'system' with one argument, as in the following two
+examples:
+
+?- system(dir).                 /* THIS IS DIALECT-DEPENDENT!! */
+
+?- system('type b:mike.pl').    /* THIS IS DIALECT-DEPENDENT!! */
+
+
+
+4   FRAMES
+==========
+
+4.1   Simple frame syntax
+-------------------------
+
+In ordinary cases, especially when you are using MIKE for the first
+time, you will be able to use the simple frame syntax discussed in
+this section. More sophisticated possibilities are described in
+Section 4.3.
+
+Frames are the basic data structure for describing objects in MIKE.
+Objects are representations of arbitrary entities in the world, which
+may be thought of as having certain properties. MIKE objects are
+either instances (unique objects, such as j_h_kahney), or classes
+(collections or categories of other objects, such as person).
+Properties of objects are represented by '<slot>:<filler> pairs', as
+shown in the examples later on. The simple syntax for frames is as
+follows:
+
+<object> <instance-or-subclass-of> <class> with
+   <slot1>: <filler-or-list-of-fillers1>,
+   <slot2>: <filler-or-list-of-fillers2>,
+   ...
+   <slotn>: <filler-or-list-of-fillersn>.
+
+A frame must have at least one <slot>:<filler> pair.
+
+<object>, <class>, and <slot> can be any legal atom, i.e. a single
+alphanumeric character sequence beginning with a lower-case letter,
+possibly including one or more underscore characters, e.g. fred,
+car_27, north_american_mammals. <filler-or-list-of-fillers> can be
+any legal atom, integer, or list (of atoms and integers), e.g. tall,
+27, [hamburger, meat, potatoes], [27, 35, 41].
+
+<instance-or-subclass-of> is one of the two pre-defined infix
+operators instance_of or subclass_of.
+
+For example:
+
+man subclass_of person with
+   sex: male.
+
+tom instance_of man with
+   age: 34,
+   hobbies: [skiing, photography].
+
+=====================================================================
+N.B. TOP-LEVEL CLASSES (E.G. person IN THE ABOVE EXAMPLE) DO NOT
+THEMSELVES REQUIRE A DEFINITION! THEY ARE REALLY JUST PLACE-HOLDERS.
+=====================================================================
+
+An object in MIKE may only be used once as the name of a frame, i.e.
+it can not be both a subclass of one thing, and an instance of
+another thing, nor can it be a subclass of several things, nor can it
+be an instance of several things.. If you really wanted a MIKE object
+to be both an instance of one thing and a subclass of something else,
+you should make up two different object names, and provide a suitable
+slot to link them together. Here is an example, which uses the string
+'the word PERSON' as the name of one of the objects, and the slots
+vocabulary_item and name_for to provide cross-indexing links between
+relevant objects:
+
+person subclass_of animate_things with
+   species: 'homo sapiens',
+   vocabulary_item: 'the word PERSON'
+   number_of_legs: 2.
+
+'the word PERSON' instance_of english_word with
+   number_of_letters: 6,
+   first_letter: p,
+   last_letter: n,
+   other_letters: [e, r, s, o],
+   name_for: person.
+
+The behaviour of objects which are subclasses (or instances) of more
+than one thing is indeterminate.
+
+Because MIKE frame notation makes extensive use of Prolog 'infix
+operators' such as with, instance_of, ':' (colon), and even ', '
+(comma), the true internal representation of tom given the above
+frame definition would in fact be the following:
+
+with(instance_of(tom, man),
+   ','(':'(age, 34),
+       ':'(hobbies, [skiing, photography)
+      )).
+
+The preceding example highlights why, if any of your punctuation,
+keywords, or bracketing is incorrect, you will get a Prolog syntax
+error message when you reconsult your file.
+
+4.2   Accessing and modifying frames at run-time
+------------------------------------------------
+
+4.2.1   Frame access
+--------------------
+
+There are just five ways to access frames, and any of these may occur
+either on the left-hand side of a rule or directly at the top level:
+
+   the <slot> of <object> is <filler>
+
+   the <slot> of <object> <math-operator> <number>
+
+   all <slot> of <object> are <list-of-fillers>
+
+   <object> instance_of <class>
+
+   <class> subclass_of <class>
+
+<math-operator> may be '>', or '<', and is used for performing simple
+arithmetic comparisons, as illustrated in a moment. <number> may be
+either an integer or a floating-point number. In some dialects of
+Prolog, arithmetic is limited to integers. If you are using your own
+Prolog, consult the relevant section of the manual to find out
+details of the mathematical operators.
+
+Variables may be used in place of <filler> or <list-of-fillers> (or
+indeed anywhere within <list-of-fillers>) in the first two cases, or
+in place of either <object> or <class> in the last two cases. We
+strongly advise you not to use a variable in place of <slot> in the
+first two cases, although it is technically legal, because the whole
+database will be searched for a solution, and this can lead to
+significant impairment of rule execution speed. For the first three
+cases above (beginning with 'the' or 'all'), <object> must always be
+the name of an object and never a variable.
+
+Suppose, as in Section 4.1, that the following two frames have been
+defined and loaded into MIKE:
+
+man subclass_of person with
+   sex: male.
+
+tom instance_of man with
+   age: 34,
+   hobbies: [skiing, photography].
+
+Below, we present some examples of how the frames can be accessed
+from the top level (access from within rules would be identical).
+Explanations are provided in the accompanying comments on the right.
+Note also that, as the last two cases demonstrate, the value for an
+all operation is order sensitive.
+
+?- the age of tom is X.
+
+X = 34                           /* simple direct access */
+
+?- the age of tom > 15.
+
+yes                              /* mathematical operator */
+
+?- the sex of tom is What.
+
+What = male                      /* inherited from class man */
+
+?- X instance_of man.
+
+X = tom                          /* simple retrieval */
+
+?- man subclass_of C.
+
+C = person                       /* simple retrieval */
+
+?- all hobbies of tom are What.
+
+What = [skiing, photography]     /* direct access of all solutions */
+
+?- the hobbies of tom is skiing. /* poor English, but lets us... */
+
+yes                              /* ...access any one solution */
+
+?- the hobbies of tom is photography
+
+yes                              /* as above */
+
+?- all hobbies of tom are [X, photography].
+
+X = skiing                      /* access all, matching variables */
+
+?- all hobbies of tom are [photography, X].
+
+no                              /* order of match is wrong */
+
+4.2.2   Frame modification
+--------------------------
+
+Frame modification can be performed either directly from the top
+level, or else on the right-hand side of a forward-chaining rule,
+using one of the following two forms:
+
+note the <slot> of <object> is <filler-or-list-of-fillers>
+
+note (<object> <instance-or-subclass-of> <class> with
+      <slot1>: <filler-or-list-of-fillers1>,
+      ...
+      <slotn>: <filler-or-list-of-fillersn>).
+
+WARNING: THE SPACE AND THE '(' AFTER NOTE ARE ESSENTIAL.  THE ')' AND
+FULL STOP AT THE END ARE ALSO ESSENTIAL.
+
+<object>, <class>, and <slot> can be any legal atom, i.e. a single
+alphanumeric character sequence beginning with a lower-case letter,
+possibly including one or more underscore characters, e.g. fred,
+car_27, north_american_mammals. <filler-or-list-of-fillers> can be
+any legal atom, integer, or list (of atoms and integers), e.g. tall,
+27, [hamburger, meat, potatoes], [27, 35, 41].
+
+The second form of note, which is used to store new objects in frame
+memory at run-time, requires you to include at least one
+<slot>:<filler> pair. The first form of note is used to modify (or
+indeed create new) slots of an existing object. Such modification is
+destructive, i.e. it completely overwrites whatever was in the
+specified slot beforehand. Because the first form accepts <filler-or-
+list-of-fillers>, it is not necessary to cater for the use of all as
+in Section 4.2.1. In other words, when there are multiple fillers,
+they can be placed directly in the slot using the form note the
+<slot> of <object> is <filler-or-list-of-fillers>. The following
+interactions assume that we begin with an empty frame memory, and
+then create a frame for joseph in a style comparable to that for tom
+presented in Section 4.2.1:
+
+?- note joseph instance_of person with
+   age: 38,
+   hobbies: [swimming, tennis].
+
+yes
+
+?- the age of joseph is X.
+
+X = 38
+
+?- note the age of joseph is 49.      /* destructive change */
+
+yes
+
+?- the age of joseph is X.
+
+X = 49
+
+?- all hobbies of joseph are What.
+
+What = [swimming, tennis]
+
+?- note the hobbies of joseph is [music, badminton].
+/* destructive change */
+
+yes
+
+?- all hobbies of joseph are What.
+
+What = [music, badminton].      /* old values have gone*/
+
+If you need to augment the fillers in a slot, rather than
+destructively changing them, you need to resort to the use of
+Prolog's append.  Below is an example of a rule which augments the
+fillers in a slot.
+
+rule augment_fillers forward
+   if
+      all hobbies of joseph are H1 &
+      all hobbies of mary are H2 &
+      prolog(append(H1, H2, NewHobbies)) &
+                         /* NewHobbies will be combined list */
+   then
+      note the hobbies of joseph is NewHobbies &
+      note the hobbies of mary is NewHobbies &
+      halt.        /* to avoid looping on this rule! */
+
+The preceding example may, of course, result in duplicate items on
+the combined list NewHobbies. It would be up to you to supply
+alternatives to append, such as union, intersection, etc., depending
+upon your needs. For convenience, some of these are supplied in the
+file 'util.pl'.
+
+4.3   Enhanced frames using slot facets
+---------------------------------------
+
+=====================================================================
+N.B. WE STRONGLY RECOMMEND THAT YOU TRY THE EXAMPLES IN THIS SECTION.
+THE RELEVANT FRAMES ARE PROVIDED IN THE FILE 'frame.kb'.
+=====================================================================
+
+Frame slots can have not only simple 'fillers', as in Section 4.1,
+but also facet-filler combinations, wherein each facet specifies more
+finely some particular characteristic of a slot, such as its value,
+its type, or what kind of inheritance behaviour it should have. To
+take full advantage of MIKE's frame representation capabilities, you
+can use the following (extended) syntax for frames:
+
+<object> <instance-or-subclass-of> <class> with
+   <slot1>:    [<facet-filler-pair1a>,
+                <facet-filler-pair1b>,
+                ...
+                <facet-filler-pair1n>],
+   <slot2>:    ...,
+   ...
+   <slotn>:    [<facet-filler-pairna>,
+                <facet-filler-pairnb>,
+                ...
+                <facet-filler-pairnn].
+
+As before, <object>, <class>, and <slot> can be any legal atom, i.e.
+a single alphanumeric character sequence beginning with a lower-case
+letter, possibly including one or more underscore characters, e.g.
+fred, car_27, north_american_mammals. A frame must have at least one
+<slot>:<filler> pair.
+
+<instance-or-subclass-of> is one of the two pre-defined infix
+operators instance_of or subclass_of.
+
+<facet-filler-pair> can be one of the following six legal
+combinations:
+
+   value: <filler-or-list-of-fillers>
+
+   inheritance: <inheritance-type>
+
+   type: <class-or-list-of-specific-choices>
+
+   cardinality: <integer-or-range>
+
+   change_rule: <change_rule-code>
+
+   access_rule: <access_rule-code>
+
+=====================================================================
+IF YOU USE THIS EXTENDED SYNTAX, PLEASE REMEMBER THAT THE value FACET
+IS ITSELF OBLIGATORY, WHILE ALL OF THE OTHERS ARE OPTIONAL. MOREOVER,
+THE value FACET MUST ALWAYS BE THE FIRST FACET SPECIFIED, WHEREAS THE
+ORDERING OF THE OTHERS IS ARBITRARY. THESE SIX FACET-FILLER-PAIR
+COMBINATIONS ARE DESCRIBED IN TURN BELOW.
+=====================================================================
+
+4.3.1   value: <filler-or-list-of-fillers>
+------------------------------------------
+
+This is the basic repository for the ordinary fillers referred to in
+section 4.1. Internally, you can think of fillers as being stored
+specifically within the value facet.
+
+<filler-or-list-of-fillers> can be any legal atom, integer, or list
+(of atoms and integers), e.g. tall, 27, [hamburger, meat, potatoes],
+[27, 35, 41].
+
+The following two frame representations have the identical meaning to
+MIKE:
+
+tom instance_of man with   /* version 1 */
+   age: 34,
+   hobbies: [skiing, photography].
+
+tom instance_of man with   /* version 2 */
+   age: [value: 34],
+   hobbies: [value: [skiing, photography]].
+
+MIKE can distinguish between square list brackets which enclose a
+collection of values, such as [skiing, photography], and square list
+brackets which enclose a collection of facet-filler pairs, because of
+the all-important use of the infix operator ':'.
+
+4.3.2   inheritance: <inheritance-type>
+---------------------------------------
+
+   <inheritance-type> can be any of the following:
+
+   supersede
+
+   merge
+
+   unknown
+
+   []
+
+The first type (supersede) is the default, and is therefore what gets
+used in case unknown (or its equivalent empty list [ ]) appears in
+the inheritance facet, or indeed even if the inheritance facet is
+omitted altogether. In fact, if only the simple form of frame
+notation is used, as in Section 4.1, the default inheritance-type,
+supersede, is also used. This means that values lower down in the
+frame hierarchy are used in absolute preference to any which occur
+higher up in the hierarchy. This is precisely the way in which you
+would normally want to deal with special cases, or exceptions, as in
+the following three frames (the first is in simple syntax, the second
+is in extended syntax, although they have comparable internal
+representations):
+
+bird subclass_of animals with
+   can_fly: yes
+
+ostrich subclass_of bird with
+   can_fly:
+      [value: no,
+       inheritance: supersede],
+            /* simply 'can_fly: no' would be equivalent */
+
+canary subclass_of bird with
+   colour: yellow.
+
+The above frames would account for the following (correct)
+interactions:
+
+?- the can_fly of ostrich is X.
+
+X = no
+
+?- the can_fly of canary is X.
+
+X = yes
+
+The second inheritance type, merge, is what you need to specify in
+case you want an object to exhibit the combined attributes obtained
+by merging its own with those of its superordinate category, which in
+turn will merge with those of the category above it, and so on, all
+the way to the highest level class at which this slot is specified.
+For instance, although the filler in the can_fly slot in the
+preceding example supersedes (by default) fillers in comparable slots
+in objects higher up the chain, we may want a slot such as eats to
+exhibit merged fillers. The next three frames, and the subsequent
+interaction, illustrate this.
+
+bird subclass_of animals with
+   can_fly: yes,
+   eats:
+      [value: [worms, seeds],
+       inheritance: merge].
+
+ostrich subclass_of bird with
+   can_fly: no,
+   eats:
+      [value: [slugs, snails], /* list is always ok as value */
+       inheritance: merge].
+
+canary subclass_of bird with
+   colour: yellow,
+   eats:
+      [value: sainsbury_bird_food,    /* single atom ok, too */
+       inheritance: merge].
+
+Given the above frames, we could have the following interactions:
+
+?- the can_fly of ostrich is X.
+
+X = no           /* default supersede */
+
+?- the eats of canary is worms.
+
+yes            /* because of inheritance: merge */
+
+?- all eats of canary are What.
+
+What = [sainsbury_bird_food, worms, seeds] /* fully-merged list */
+
+?- all eats of ostrich are What.
+
+What = [slugs, snails, worms, seeds]   /* fully-merged list */
+
+?- all can_fly of ostrich are What.
+
+What = no         /* default supersede ends lookup */
+
+If you specify conflicting inheritance for a slot somewhere in a
+subclass_of hierarchy, the meaning is indeterminate. To get the right
+behaviour from inheritance: merge, you need to specify the facet
+consistently all the way up the hierarchy in which it is used. As
+soon as inheritance: supersede is encountered when moving up the
+hierarchy (or indeed if unspecified inheritance, which defaults to
+supersede, is encountered), merging ends.
+
+4.3.3   type: <class-or-list-of-specific-choices>
+-------------------------------------------------
+
+In certain cases we may choose to restrict the type or category of
+object which fills a particular slot. The facet we refer to as type
+does the job.
+
+<class-or-list-of-specific-choices> can be the name of a MIKE class,
+such as person, or else a list of simple (atomic) alternatives, such
+as [on, off], or else one of the following pre-defined (Prolog)
+types:
+
+   integer
+
+   atom
+
+   list
+
+In all cases, the value facet of a slot is checked to see whether its
+filler (or list of fillers) belong(s) to the MIKE class or Prolog
+type in question, or whether it is precisely one of the specified
+list of alternatives. In the case of a MIKE class, it is sufficient
+for the filler in question to lie anywhere along the chain of
+instance_of or subclass_of links connecting an object to the required
+class.  In the case of a Prolog type, a simple test is performed to
+see whether the filler in question is indeed of the required type.
+Finally, if the required type is a list of simple (atomic)
+alternatives, such as [on, off], the filler in question is checked to
+see if it is one of items on that list. When lists of fillers are
+involved, as in the filler [slugs, worms] for the slot eats, every
+filler on the list should satisfy the type specification, where one
+is provided.
+
+Such type checking, however, is only done when note is invoked at
+run-time, and even then only a warning message is printed out for the
+user's convenience. In other words, type checking does not occur when
+files are loaded using reconsult, nor does it ever cause rules or any
+other type of execution to fail. This is largely an efficiency
+consideration, but even so the warning messages themselves are very
+handy for trapping unorthodox changes to the frame representation
+which are caused by a possibly 'buggy' rule.
+
+To illustrate the use of the type facet, consider an extended
+specification of the two frames used in Section 4.1. It might make
+more sense to store all type restrictions at the class level rather
+than have one of them at the instance level, but the example is meant
+to show that you can store such restrictions in either place.
+
+man subclass_of person with
+   sex:
+      [value: male,
+       type: [male, female]].   /* must be one of these two */
+
+tom instance_of man with
+   age:
+      [value: 34,
+       type: integer],          /* must belong to that class */
+   hobbies: [skiing, photography].
+
+Given the two frames just presented, we could have the following
+interaction:
+
+?- note the age of tom is old.
+
+Warning: 'old' violates the 'type' facet of 'tom' for slot 'age',
+which specifies
+   type: integer
+(but proceeding anyway)
+
+yes
+
+?- note the sex of tom is neuter.
+
+Warning: 'neuter' violates the 'type' facet of 'man' for slot 'sex',
+which specifies
+   type: [male, female]
+(but proceeding anyway)
+yes
+
+?- the sex of tom is X
+
+X = neuter
+
+?- the age of tom is old.
+
+yes
+
+In the second of the just-presented interactions, notice that the
+type restriction has been inherited from class man, and so a warning
+message is still generated for an attempt to modify tom, which is an
+instance_of man. Following the warning message, the frame is
+nevertheless changed. It is the user's responsibility to attend to
+the warning message, and to change the frame back again (possibly by
+re-loading the original file or else by using note) if necessary.
+
+If you specify conflicting types for a slot somewhere in a
+subclass_of hierarchy, the meaning is indeterminate. Only the lowest-
+level type restriction is applied, and used as the basis for warning
+messages.
+
+4.3.4   cardinality: <integer-or-range>
+---------------------------------------
+
+The cardinality facet is analogous to the type facet, in that it is
+optional and, even when specified, only provides warning messages
+whenever note is used at run-time (as opposed to checking the frames
+stored in your files when they are loaded). It is used to specify how
+many fillers a slot can have. <integer-or-range> can either be an
+integer, such as 1, or a range specified by two integers with a
+hyphen in between, such as 1-3 or 2-5. In the latter case, it means
+that the slot in question must have either 2, 3, 4, or 5 fillers in
+its value facet (i.e. a list of length 2, 3, 4, or 5). Here is an
+example:
+
+bird subclass_of animals with
+   can_fly:
+      [value: yes,      /* default is yes */
+       type: [yes, no], /* but must be either yes or no */
+       cardinality: 1], /* and only 1 alternative allowed */
+   eats:
+      [value: [worms, seeds],
+       inheritance: merge,
+       cardinality: 1-5]./* max of 5 edible things allowed */
+
+ostrich subclass_of bird with
+   can_fly: no,
+   eats:
+      [value: [slugs, snails], /* list is always ok as value */
+       inheritance: merge].
+
+canary subclass_of bird with
+   colour: yellow,
+   eats :
+      [value: sainsbury_bird_food, /* single atom is ok, too */
+       inheritance: merge].
+
+In the case of the eats slot, notice that we specified a cardinality
+of 1-5, meaning that the list of items to be used as the filler (of
+the value facet) should not contain more than five items. On the
+other hand, we have also specified inheritance: merge for this facet.
+What happens if all the merged fillers, when working our way up the
+hierarchy, amount to a list of more than five items?  The answer is
+that this is fine, because the cardinality restriction only applies
+locally to a given object's filler, not to the collection of fillers
+which might result at run-time when inheritance: merge is applied.
+Given the three frames just specified, here is the sort of
+interaction we could have:
+
+?- note tweetie instance_of canary.
+
+yes   /* perfectly legal use of note */
+
+?- note tweetie eats [dog_food, cat_food, chicken, fish, liver,
+hot_dogs].
+
+Warning: '[dog_food, cat_food, chicken, fish, liver, hot_dogs]'
+violates the
+
+'cardinality' facet of 'bird' for slot 'eats', which specifies
+   cardinality: 1-5
+(but proceeding anyway)
+
+yes
+
+If you specify conflicting cardinality for a slot somewhere in a
+subclass_of hierarchy, the meaning is indeterminate. Only the lowest-
+level cardinality restriction is applied, and used as the basis for
+warning messages.
+
+4.3.5   change_rule: <change_rule-code>
+---------------------------------------
+
+A slot can have MIKE program code associated it. The associated code,
+which we refer to as a 'demon', can be invoked at either of two
+possible moments: (1) the code can be invoked when the slot in
+question is changed by the use of note at run-time, in which case we
+call the code a 'change_rule', or (2) the code can be invoked when
+the slot in question is accessed by one of the techniques described
+in Section 4.2 (e.g. the age of mike is X), in which case we call the
+code an 'access_rule' demon.
+
+change_rule demons behave and look like 'anonymous' forward-chaining
+rules, and access_rule demons behave and look like 'anonymous'
+backward-chaining rules. That is, they follow the appropriate if ...
+then ... syntax of forward- and backward-chaining rules,
+respectively, but omit the rule <rule-name> <direction>. When you
+change the filler of a slot using the operator note, MIKE will look
+to see if you have a change_rule that should be invoked as a result
+of this change. A change_rule can be present in a facet form just
+like a type or cardinality declaration; or it can be inherited from
+the chain of instance_of or subclass_of links. A critical extra
+feature is the use of the object name ?self. ?self means the name of
+the original object is substituted in the demon wherever it is found
+in the hierarchy. For example, let us consider the three frames
+below.
+
+person subclass_of animate_things with
+   husband :
+      [value : X,       /* ¬ this variable is crucial!!! */
+       change_rule :    /* when some person marries... */
+         (if            /* if they have a child */
+            the child of ?self is Kid
+         then
+            note the step_father of Kid is X)].
+                        /* inform child of new stepfather X */
+
+jane instance_of person with
+   child : [jackie],
+   husband : joe.
+
+jackie instance_of person with
+   father : joe.
+
+The class 'person' contains a change_rule demon for the husband slot.
+If a demon is found the rule is executed in the normal way. All ?self
+references are read as being the originating object, so that in this
+case ?self is replaced by jane. The pre-conditions are first checked.
+If they should fail, an error message results, warning you about the
+failure of the demon, and providing the name of the slot and object
+whose update caused it to be invoked. If successful, the right-hand-
+side is executed in the normal way. Legal left-hand side and right-
+hand side elements are as for normal forward-chaining rules. For
+example, suppose that we wish to say that jane remarried:
+
+?- note the husband of jane is fred.
+
+yes.
+
+?- describe jane.
+
+jane instance_of person with
+   child : [jackie],
+   husband : fred.   /* was joe */
+
+yes.
+
+?- describe jackie.
+
+jackie instance_of person with
+   father : joe,
+   step_father : fred.   /* added by change_rule demon */
+
+yes.
+
+The note causes the frame jane to be updated. However, the class of
+persons has a change_rule demon which jane now inherits. As a result
+of this demon, the slot step_father is created for the frame jackie,
+and given the value fred. Notice that demons are stored wherever
+possible at the class level; technically this is not strictly
+necessary for change_rules, but is better style and it avoids
+potential redundancy, caused by duplication of demons.
+
+A special feature which change_rules have that is not shared by their
+forward-chaining counterparts is the ability to have a rule with a
+left-hand-side that will always succeed; that is a rule with no pre-
+conditions, only consequents. To achieve this, we use the special
+atom true, as illustrated by the following frame:
+
+person  subclass_of animate_things with
+   wife :
+      [value : [],
+       change_rule :
+         (if
+            true
+          then
+            note the marital_status of ?self is married)
+      ].
+
+joe instance_of person with
+   marital_status : single.
+
+Here the demon will always update the marital_status slot so that it
+is filled by married, each time that a new wife is noted, with the
+following results:
+
+?- note the wife of joe is jane.
+
+yes.
+
+?- describe joe.
+
+joe instance_of person with
+   wife : jane,
+   marital_status : married.
+
+yes.
+
+4.3.6   access_rule: <access_rule-code>
+---------------------------------------
+
+access_rule is similar in action to change_rule except that the rules
+themselves are backward chaining. That is, if they are invoked they
+try to prove a value for the slot. access_rules are triggered when
+MIKE is unable to find a particular slot value, but instead uses the
+access_rule to find a value if it needs to. They follow the normal
+backward-chaining conventions regarding what they can have on their
+right-and left-hand sides, but additionally, like change_rule demons,
+acess_rules can only have ?self object substitution and may have
+left-hand sides that contain the atom true and always succeed. Like
+other backward-chaining rules they can have only one item on their
+right-hand side. Normally, the right-hand sides are deduced, but do
+not side-effect frame memory. However, there is an exception in the
+case of demons. The right-hand side can consist of the key word
+make_value followed by the value that is going to be destructively
+assigned to the slot. For example, consider the following frames
+about tanks.
+
+tank subclass_of vessel with
+   volume :
+      [value : unknown,
+       access_rule :
+         (if
+            the height of ?self is Height &
+            the width of ?self is Width &
+            the depth of ?self is Depth &
+            prolog(Volume is Height * Weight * Depth)
+         then
+            make_value Volume)].
+
+small_tank instance_of tank with
+   height : 10,
+   width  : 10,
+   depth  : 10.
+
+tall_tank instance_of tank with
+   height : 20,
+   width  : 10,
+   depth  : 10.
+
+Although we do not have an explicit slot for volume, we can inherit a
+method for calculating the value from the class level if now we ask
+about the volume of either small_tank or tall_tank, as the following
+demonstrates. Because make_value has been used, the frames themselves
+are updated to contain this new value.
+
+?- the volume of small_tank is What.
+
+What = 1000
+
+yes.
+
+?- the volume of tall_tank is What.
+
+What = 2000
+
+yes.
+
+?- describe small_tank.
+
+small_tank instance_of tank with
+   height : 10,
+   width  : 10,
+   depth  : 10,
+   volume : 1000.
+
+yes.
+
+?- describe tall_tank.
+
+tall_tank instance_of tank with
+   height : 20,
+   width  : 10,
+   depth  : 10,
+   volume : 2000.
+
+In contrast, if instead we only wished to find a value and not update
+the frame, we have to type a standard rule on the right-hand side.
+Below is a modified version of the tank frame (which we'll call
+tank2) that demonstrates how such a demon would look.
+
+tank2 subclass_of vessel with
+   volume :
+      [value : unknown,
+       access_rule :
+         (if
+            the height of ?self is Height &
+            the width of ?self is Width &
+            the depth of ?self is Depth &
+            prolog(Volume is Height * Weight * Depth)
+         then
+            the volume of ?self is Volume)].
+
+small_tank2 instance_of tank2 with
+   height : 10,
+   width  : 10,
+   depth  : 10.
+
+tall_tank2 instance_of tank2 with
+   height : 20,
+   width  : 10,
+   depth  : 10.
+
+
+Invoking this new demon would now have the following effect:
+
+?- the volume of small_tank2 is What.
+
+What = 1000
+
+yes.
+
+?- the volume of tall_tank2 is What.
+
+What = 2000
+
+yes.
+
+?- describe small_tank2
+
+  small_tank2 instance_of tank2 with
+   height : 10,
+   width : 10,
+   depth : 10.
+
+?- describe tall_tank2.
+
+  tall_tank2 instance_of tank2 with
+   height : 20,
+   width : 10,
+   depth : 10.
+
+5   RULES
+=========
+
+5.1   Forward chaining
+----------------------
+
+5.1.1   Rule syntax
+-------------------
+
+Forward-chaining rules are specified according to the following
+format:
+
+rule <rule-name> forward
+   if
+      <condition1> &
+      <condition2> &
+      ...
+      <conditionn>
+   then
+      <action1> &
+      <action2> &
+      ...
+      <actionn>.
+
+<rule-name> may be any legal atom. A forward chaining rule must have
+at least one condition and one action, though more of each are also
+allowed. The details of these are specified in Sections 5.1.2 and
+5.1.3, respectively.
+
+====================================================================
+RULES MAY ALSO CONTAIN DISJUNCTIONS ('or') IN THE LEFT HAND SIDES.
+====================================================================
+
+This is done by separating the two sides of the disjunction by or,
+for example:
+
+rule example forward
+   if             /* premises are */
+      a & b       /* a and b */
+   or             /* OR */
+      c & d       /* c and d */
+   then
+      halt.       /* then halt interpreter */
+
+The rule reads in English, 'if a and b are true or if c and d are
+true then halt'. Note that the or effectively produces two left-hand
+sides to a rule either of which may be true. It does not mean that
+'if a and d and either b or c are true then halt'. In order to make
+the rule read like that you must limit the scope of the or by hand by
+explicitly showing its scope by brackets, e.g.
+
+rule another_example forward
+   if               /* premises are */
+      a &           /* a */
+      (b or c) &    /* either b or c */
+      d             /* and d */
+   then
+      halt.         /* then halt interpreter */
+
+5.1.2   Legal forward-chaining conditions
+---------------------------------------
+
+The following conditions are allowed:
+
+   <wm-pattern>
+
+   <frame-access>
+
+   deduce <wm-pattern>
+
+   deduce <frame-access>
+
+   -- <wm-pattern>
+
+   -- <frame-access>
+
+   <var-or-number> <math-operator> <var-or-number>
+
+   forall(<wm-pattern1>, <wm-pattern2>)
+
+   prolog(<goal>)
+
+   prolog((<goal1>,<goal2>,...,<goaln>))
+
+   <query-template> receives_answer <answer>
+
+<wm-pattern> stands for 'working memory pattern', which may be any of
+the following:
+
+    *   an atom, such as hi_there
+
+    *   a string, such as 'it is raining'
+
+    *   a list, such as [once, upon, a, time]
+
+    *   a compound, or bracketed, term, such as goal(refine)
+
+<frame-access> is one of the following, which refer to 'long-term
+memory' or 'frame' elements, as discussed in Section 4.2.1:
+
+   the <slot> of <object> is <filler>
+
+   the <slot> of <object> <math-operator> <var-or-number>
+
+   all <slot> of <object> are <list-of-fillers>
+
+   <object> instance_of <class>
+
+   <class> subclass_of <class>
+
+<math-operator> may be '>', or '<', and is used for performing simple
+arithmetic comparisons, as illustrated in a moment.
+
+<var-or-number> may be either an integer or a floating-point number
+(or a variable which is already instantiated to an integer or
+floating-point number), e.g. 27 or 34.69. However note that some
+dialects of Prolog do not support floating-point arithmetic, and
+perform only integer division.
+
+Variables may be used in place of <filler> or <list-of-fillers> (or
+indeed anywhere within <list-of-fillers>) in the first two cases, or
+in place of either <object> or <class> in the last two cases. We
+strongly advise you not to use a variable in place of <slot> in the
+first two cases, although it is technically legal, because the whole
+database will be searched for a solution, and this can lead to
+significant impairment of rule execution speed. The name of the
+<object> should never be a variable.
+
+deduce triggers backward chaining in an attempt to match and prove
+the specified pattern, as discussed in Section 5.2.
+
+-- (double-hyphen) is the negation operator in MIKE. -- <wm-pattern>
+means that the specified pattern is not present in working memory. --
+<frame-access> means that the specified frame pattern can not be
+located in frame memory, and also that it can not be found indirectly
+using 'inheritance' to search up instance_of and subclass_of links.
+
+forall(<wm-pattern1>, <wm-pattern2>) tests whether all of the variables
+which match working memory within <wm-pattern1> also match working memory
+within <wm-pattern2>.  For instance, suppose working memory contains
+the following patterns:
+
+   [john, likes, mary]
+   [john, likes, sue]
+   [john, likes, betty]
+   [bill, likes, mary]
+   [bill, likes, betty]
+   [bill, likes, sue]
+
+The following rule succeeds with the above working memory:
+
+  rule demo forward
+   if
+     forall([john, likes, X], [bill, likes, X])
+   then
+     announce ['bill likes all the people that john likes'].
+
+If we typed in ?- remove [bill, likes, sue].
+Then the above rule demo would fail
+
+{Notice that forall uses Prolog-style syntax.  This is to avoid
+unnecessary proliferation of hard-to-remember key words!}
+
+Prolog programs can be invoked directly from within MIKE rules by
+using one of the following two special forms:
+
+   prolog(<goal>)
+
+   prolog((<goal1>,<goal2>,...,<goaln>))
+
+prolog <goal> signifies an ordinary Prolog procedure invocation,
+which is typically a goal to be proved. The first form is used for
+simple cases, such as prolog(write('hi there')). The second form is
+used to specify a conjunction of goals, wherein commas are used to
+separate the goals, and all of the specified goals must succeed in
+order for the entire conjunction to succeed. A simple example would
+be prolog((write('hi there'), nl, write('goodbye'), nl)). Bearing in
+mind that nl is the Prolog primitive which displays a 'new line'
+(carriage-return), this conjunction of goals, when invoked, would
+result in the following display on your screen:
+
+hi there
+
+goodbye
+
+The double-brackets are necessary, because the outer set of brackets
+surrounds the single argument to the predicate prolog, while the
+inner set of brackets 'bundles together' the entire conjunction, so
+that it in turn is regarded as a single argument, rather than a
+series of separate arguments.
+
+<query_template> receives_answer <answer> . Here <answer> is either a
+variable which will be instantiated to the user's  response or a term
+that must match the answer the user types in.
+
+5.1.3   Legal forward-chaining actions
+--------------------------------------
+
+The following actions are allowed on the right-hand side of a
+forward-chaining rule:
+
+   add <wm-pattern>
+
+   announce <announcement-list>
+
+   halt
+
+   note the <slot> of <object> is <filler-or-list-of-fillers>
+
+   note <object> instance_of <class>
+
+   note <class> subclass_of <class>
+
+   query <query-template> receives_answer <answer-template>
+
+   ask_menu(<object>, <relation>, <list>)
+
+   remove <wm-pattern>
+
+   <var> := <math-expression>
+
+   prolog(<goal>)
+
+   prolog((<goal1>,<goal2>,...,<goaln>))
+
+
+Here is a summary of what the actions do:
+
+add <wm-pattern> stores the specified pattern in working memory
+
+announce <announcement-list>.
+The contents of the list are printed out to the user's screen. The
+list can also contain formatting information to allow for flexibility
+and easy customization of output text. The following three sets of
+instructions are understood in an announcement-list
+
+    *   <string>    A string to be printed, for example 'hi there'.
+
+    *   nl          This will produce a new line.
+
+    *   t/<Number>  Here, Number is the number of tabs to print.
+
+halt is placed in working memory and causes the rule interpreter to
+halt at the end of the current cycle. It is the usual method of
+terminating the interpreter cycle.
+
+note the <slot> of <object> is <filler-or-list-of-fillers>.
+The <filler-or-list-of-fillers> filler for the <slot> of <object> is
+placed in frame memory. note is destructive: it will automatically
+overwrite the previous contents of the slot or create a slot if one
+does not already exist. Its effects are permanent and are not undone
+after each interpreter run.
+
+note (<object> <instance-or-subclass-of> <class> with
+      <slot1>: <filler-or-list-of-fillers1>,
+      ...
+      <slotn>: <filler-or-list-of-fillersn>).
+
+WARNING: THE SPACE AND THE '(' AFTER NOTE ARE ESSENTIAL.  THE ')' AND
+FULL STOP AT THE END ARE ALSO ESSENTIAL.
+
+The full frame form can be used to record the contents of a new
+frame. The object can be either an instance or subclass of a given
+class. At least one slot:filler combination must be present in the
+body; otherwise an error will result.
+
+query <query-template> receives_answer <answer-template>. Interactive
+questions to the user can occur either on the left-hand side of
+backward-chaining rules, or else on the right-hand side of any
+forward-chaining rule. They take the following generic form:
+
+<query-template> can be one of the following:
+
+(a)   a quoted string, such as 'What is your name?'
+
+(b)   a list, possibly including variables, such as [please, perform,
+test, T, on, the, patient]. The list will be printed on one line with
+a space between each item on the list.
+
+(c)   a frame-access pattern, such as the age of fred is 49
+
+(d)   a short-frame-access specifier, such as the age of fred
+
+<answer-template> must be a variable (like X or What) in forward
+chaining. Other options are available but can only be used for
+backward-chaining queries.
+
+Here are some examples:
+
+1   query  the age of fred receives_answer A
+
+2   query  'What ailments does fred show?' receives_answer N
+
+3   query  [please, enter, the, outcome, of, the, X, test]
+receives_answer OUTCOME
+
+
+ask_menu(<object>, <relation>, <list>)  displays a numbered menu of
+all the items in <list> and prompts the user to type in number(s).
+For example, suppose the following rule is stored:
+
+     rule a forward
+      if
+        diagnosing &
+        [current_patient, P]
+      then
+        ask_menu(P,exhibits_symptom,[sneezing,coughing,headache,spots]).
+
+During execution of the above rule, the following menu will appear:
+
+*******************************************
+      1   -   sneezing
+      2   -   coughing
+      3   -   headache
+      4   -   spots
+Chose the items from the menu by typing the
+corresponding number(s).  Separate numbers with commas, e.g.
+1,3,5.
+REMEMBER to use a FULL STOP ('.') at the end
+Please type in a number(s) separated by commas.
+==>
+
+The end-user types in the numbers (1,2,3,4, or some combination, in
+this case) and the corresponding list elements are then stored
+in working memory as a triple: [Object, Relation, Choice]
+for each numbered Choice which was presented in the List.
+e.g.     [john, exhibits_symptom, sneezing]
+An example of its use may be found in the file FLU2.KB
+It is the user's responsibility to use 'announce' in order to
+print out more informative information PRIOR to the invocation
+of 'ask_menu'.
+
+{Notice that ask_menu uses Prolog-style syntax.  This is to avoid
+unnecessary proliferation of hard-to-remember key words!}
+
+
+
+remove <wm-pattern> removes the <wm-pattern> from working memory.
+
+
+<var> := <math-expression> enables you to perform ordinary arithmetic
+calculation and variable assignment, as in the following
+example:
+
+   rule combined_age forward
+     if
+       the name of current_patient is P &
+       the age of P is Age &
+       the spouse of P is Spouse &
+       the age of Spouse is Age_of_Spouse
+     then
+       Total := Spouse + Age_of_Spouse &   /* arithmetic assignment */
+       announce ['The combined ages of ',P,' and ',Spouse,' are ',Total]
+
+
+prolog(<goal>)hands the goal over to Prolog to prove. Note that if
+the goal is not a legal Prolog goal a Prolog error will result.
+
+prolog((<goal1>,<goal2>,...,<goaln>))  Multiple goals can be handed
+to Prolog nested inside an extra set of matching parentheses. They
+must each be separated by a comma. The goals will be executed in
+left-to-right order, i.e. starting first with <goal1> and finishing
+with <goaln>. All the goals must be legal Prolog, otherwise a Prolog
+error will result.
+
+strategy <list>  Changes the current conflict resolution strategy to
+be the items in <list>. Note that the ordering of the items in the
+list specifies the order in which the conflict strategies will be
+applied. The de facto standard list would look like [refractoriness,
+recency, specificity]. The effects of changing the conflict
+resolution strategy are permanent. The new strategy is used not only
+on all further interpreter cycles, but also on subsequent invocations
+of the interpreter until such time as the strategy is again changed
+by the user. There is no limit on the number of times the strategy
+can be changed. However, each time MIKE is loaded, the de facto
+standard is restored.
+
+strategy menu  is a variation on the above, which invokes a menu and
+requires the user to select from the menu the strategies and the
+ordering that the user wishes to employ.
+
+5.1.4   Triggering forward chaining
+-----------------------------------
+
+For convenience (depending upon your own personal style of browsing
+through this reference manual), this section duplicates the text
+presented in Section 3.3.1. The operator fc ('forward chaining') does
+the following three things:
+
+1   erases all of working memory
+
+2   deposits the atom 'start' into working memory
+
+3   begins forward chaining.
+
+Here is how it is invoked:
+
+?- fc.
+
+Because Prolog is the underlying implementation language, you must
+always terminate entries with a full stop (i.e. a 'period' or '.').
+In actual fact, the three steps (1)-(3) above are manipulable
+separately by the user, as described in Section 3.1.2. To give you
+some idea, here is the actual internal definition of 'fc' in Prolog:
+
+fc:-
+   initialise,     /* cleans up working memory */
+   add start,      /* puts the atom start into wm */
+   go.             /* launches processing */
+
+5.1.5   Conflict resolution
+---------------------------
+
+As outlined in Section 2, because several rules may be applicable at
+any given moment during forward chaining, a conflict resolution
+strategy is applied to choose a single winner. Three conflict
+resolution strategies are used in MIKE:
+
+    *   refractoriness: rules are said to have a 'refractory' period,
+which means that once a given rule fires (with specific
+'instantiations' or matches for its variables) then that same rule
+will be given lowest priority for subsequent firing, given the same
+specific 'instantiations' or matches for its variables.
+
+    *   recency:  all other things being equal, rules which apply to
+the most recently added working memory elements are chosen in
+preference to those which apply to older working memory elements.
+
+    *   specificity: all other things being equal, rules which have
+more conditions on the left-hand side are chosen in preference to
+those with fewer conditions, because they are regarded as being more
+'specific' or 'precise'.
+
+The conflict resolution strategies are themselves arranged in a
+default priority order, namely (1) refractoriness, (2) recency, and
+(3) specificity. These may be changed in two ways. Firstly, at the
+top level you can type in
+
+?- strategy menu.
+
+You will then be prompted with a menu of items (this is the same as
+strategy menu in the left-hand side of forward-chaining rules), which
+will allow you to change the priority order by simply entering the
+corresponding numbers (separated by a comma and terminated by a full
+stop). A second way to change conflict resolution is by using the
+operator strategy on the right hand-side of a forward-chaining MIKE
+rule. Here is an example:
+
+rule init forward
+   if
+      start
+   then
+      remove start &
+      strategy [refractoriness, recency] &
+      add 'it is cloudy today'.
+
+The above rule changes conflict resolution to have refractoriness as
+the highest priority strategy, followed by recency.
+
+This new prioritization stays in effect until it is changed back by
+the user (or until the entire MIKE system is re-loaded, in which case
+the original default is reinstated).
+
+5.2   Backward chaining
+-----------------------
+
+5.2.1   Rule syntax
+-------------------
+
+Backward-chaining rules are specified according to the following
+format:
+
+rule <rule-name> backward
+   if
+      <condition1> &
+      <condition2> &
+      ...
+      <conditionn>
+   then
+      <conclusion>.
+
+A backward-chaining rule may have one or more conditions (you need at
+least one), but only one conclusion. The details of these are
+specified in Sections 5.2.2 and 5.2.3, respectively. Please remember
+that the conclusion itself may be said to be 'deduced' or 'proved',
+thereby allowing the rule to succeed, but the conclusion is not
+therefore added into working memory nor into frame memory.
+
+As in forward chaining rules, left-hand sides can contain
+disjunctions (i.e. or as well as and). See Section 5.1.1 for details,
+and a discussion of how or is scoped.
+
+5.2.2   Legal backward-chaining conditions
+------------------------------------------
+
+   <wm-pattern>
+
+   <frame-access>
+
+   deduce <wm-pattern>
+
+   -- <wm-pattern>
+
+   -- <frame-access>
+
+   <var-or-number> <math-operator> <var-or-number>
+
+   forall(<wm-pattern1>, <wm-pattern2>)
+
+   prolog(<goal>)
+
+   prolog((<goal1>,<goal2>,...,<goaln>))
+
+   query <query-template> receives_answer <answer-template>
+
+These conditions are the same as those for forward chaining specified
+in Section 5.1.2, with the addition of the last one involving query.
+The behaviour of query is itself described in Section 6.1.
+
+5.2.3   Legal backward-chaining conclusions
+-------------------------------------------
+
+Only a single conclusion is allowed following the keyword then in a
+backward chaining rule. The conclusion may be any of the following:
+
+    *   an atom, such as hi_there
+
+    *   a string, such as 'it is raining'
+
+    *   a list, such as [once, upon, a, time]
+
+    *   a compound, or bracketed, term, such as goal(refine)
+
+    *   <frame-access> pattern
+
+If the conditions (left-hand side) of a backward-chaining rule all
+succeed, then we say that the conclusion is 'deduced' or 'proved',
+but the conclusion is not itself added into working memory or into
+frame memory.
+
+5.2.4   Triggering backward chaining
+------------------------------------
+
+For convenience and ease of access to the MIKE user, this brief
+section replicates the text presented in Section 3.3.2. Backward
+chaining is initiated by deduce, used either at the top level or on
+the left-hand side of a forward-chaining rule. The syntax of deduce
+is one of the following:
+
+deduce <wm-pattern>
+
+deduce <frame-access>
+
+<wm-pattern> stands for 'working memory pattern', which may be any of
+the following:
+
+    *   an atom, such as hi_there
+
+    *   a string, such as 'it is raining'
+
+    *   a list, such as [once, upon, a, time]
+
+    *   a compound, or bracketed, term, such as goal(refine)
+
+<frame-access> is one of the following, which are ways of accessing
+'long-term memory' or 'frame' elements:
+
+   the <slot> of <object> is <filler>
+
+   the <slot> of <object> <math-operator> <number>
+
+   all <slot> of <object> are <list-of-fillers>
+
+   <object> instance_of <class>
+
+   <class> subclass_of <class>
+
+The details of the above forms are discussed in Section 4.2.1.
+
+The conclusion of a backward-chaining rule can be 'deduced' or
+'proved', but bear in mind that the deduction simply 'succeeds', and
+the thing which is deduced is not itself added into working memory or
+frame memory. An example of backward-chaining invocation, along with
+the all-important notion of 'seeding working memory', is described in
+Section 3.3.3.
+
+6   SPECIAL UTILITIES
+=====================
+
+6.1   User-interaction via 'query'
+----------------------------------
+
+{Also see the discussion of 'ask_menu' in Section 5.1.3}
+
+Interactive questions to the user can occur either on the left-hand
+side of backward-chaining rules, or else on the right-hand side of
+any forward-chaining rule. They take the following generic form:
+
+query <question-template> receives-answer <answer-template>
+
+<question-template> can be one of the following:
+
+(a)   a quoted string, such as 'What is your name?'
+
+(b)   a list, possibly including variables, such as [please, perform,
+test, T, on, the, patient]
+
+(c)   a frame-access pattern, such as the age of fred is 49
+
+(d)   a short-frame-access specifier, such as the age of fred
+
+<answer-template> can be one of the following:
+
+(a)   yes
+
+(b)   no
+
+(c)   any legal Prolog variable, such as X or WHAT
+
+(d)   any legal Prolog variable-free term, which is treated as an
+arbitrary constant, including atoms such as joe, integers such 49,
+and lists such as [cheese, bread, eggs]
+
+Here are some examples:
+
+1   query  the age of fred receives_answer A
+
+2   query  the age of fred is 49 receives_answer yes
+
+3   query  'What ailments does fred show?' receives_answer N
+
+4   query  [please, enter, the, outcome, of, the, X, test]
+receives_answer OUTCOME
+
+5   query  'Are you happy today?' receives_answer no.
+
+The first example above, results in a new frame entry in the database
+following the user's response. If the user types in, say, 38, in
+response to the query 'What is the age of fred?', then MIKE will
+automatically perform the equivalent of note the age of fred is 38.
+The fifth example above illustrates a case in which the successful
+firing of a rule depends upon the user answering 'no' to a question.
+
+Although query may be used on the left-hand side of backward-chaining
+rules or on the right-hand side of forward-chaining ones, in forward
+chaining the answer template MUST be an unbound variable, e.g. X or
+What.
+
+If you specify the answer to a question as either yes or no, then
+MIKE will  insist that the user answers either yes or no to that
+query.
+
+Answers to queries are placed either in frame memory or the current
+database, as appropriate. They are also stored as receives_answer in
+the following format
+
+<question template> receives_answer <answer>
+
+Question answers can be accessed in this form as premises to both
+forward- and backward-chaining rules.
+
+Within the query prompt you can also ask for how or why information -
+consult Section 6.2 for details. Typing tracing to the query prompt
+brings up the tracing menu, allowing the user to change tracing
+options before returning to the query prompt.
+
+6.2   Explanation and justification
+-----------------------------------
+
+How and why questions can be answered by the following:
+
+how <wm-pattern or frame-pattern>
+
+why <wm-pattern or frame-pattern>
+
+Both can be posed either at the top level or to the prompt of a MIKE
+query. Consider the following:
+
+rule produce_shortlist forward
+   if
+      start
+   then
+      remove start &
+      query the name of candidate receives_answer X &
+      add investigating.
+
+rule investigate_candidate forward
+   if
+      investigating &      /* a candidate is shortlisted */
+      the name of the candidate is Candidate   &
+                       /* for some arbitrary job if they */
+      deduce sufficient_qualifications(Candidate)
+                                /* have the correct qualifications */
+      then
+      ask_to_come_to_interview(Candidate).
+
+To provide canned text answers to 'why' questions, MIKE uses an
+operator called explained_by. It takes the following form:
+
+<question-template> explained_by <text-list>.
+
+<question-template> can be one of the following:
+
+1   a quoted string, such as 'What is your name?'
+
+2   a list, possibly including variables, such as [please, perform,
+test, T, on, the, patient]
+
+3   a frame-access pattern, such as the age of fred is 49
+
+4   a short-frame-access specifier, such as the age of fred
+
+<text-list> is a list composed of atoms (including possibly
+variables) and strings, which in fact are passed along to the
+operator announce for displaying the given canned text to the user.
+The special list element nl is used to cause a 'new line' (carriage
+return) to be displayed, thereby allowing you to do a limited amount
+of formatting of output for the end-user.
+
+Here is an example of explained_by forms relevant to the rules just
+presented:
+
+the name of candidate explained_by ['In order to carry out the
+investigation, we first need', nl, 'to determine the name of the
+candidate', nl, 'in order to determine whether s/he has the correct
+qualifications to be', nl, 'shortlisted'].
+
+An example would be:
+
+?- fc.
+
+What is the name of candidate?
+
+==> why.
+
+In order to carry out the investigation, we first need
+
+to determine the name of the candidate
+
+in order to determine whether s/he has the correct qualification to
+be shortlisted.
+
+==> fred
+
+...
+
+How questions can be asked of any item that is added or noted on the
+right-hand side of a particular rule during an interpreter cycle.
+Such justifications are recorded automatically for you by MIKE. You
+can ask for a justification either to a MIKE query prompt or at the
+top level by typing how <pattern>, where <pattern> is any legal
+pattern to either note or add. Note that justifications are cleaned
+up at the beginning of each new run of MIKE so the inference history
+is only available either for the last run of the interpreter, or, if
+how is asked from the query prompt, only for the current interpreter
+run. Using the above example, we can ask for a justification of the
+inference that ask_to_come_to_interview(fred) as follows:
+
+?- how ask_to_come_to_interview(fred).
+
+ask_to_come_to_interview(fred) was concluded in investigate_candidate
+from investigating & the name of the candidate is fred & deduce
+sufficient_qualifications(fred).
+
+The answer tells us in which rule and upon what premises the
+inference was drawn.
+
+6.3   Looking at frames
+-----------------------
+
+6.3.1  'describe' and 'show'
+----------------------------
+
+Frame objects can be examined directly from the top level using the
+operator describe, as follows:
+
+?- describe fred_smith.
+
+fred_smith instance_of person with
+   age: 49,
+   birthday: [29,november],
+   weight: 160,
+   occupations: [teacher, lifeguard, parent].
+
+yes.
+
+To see the names of all frames, you can type show frames:
+
+?- show frames.
+
+fred_smith.
+
+john_smith.
+
+ian_jones.
+
+yes.
+
+
+6.3.2  Hierarchical frame browsing with 'browse'
+------------------------------------------------
+
+The version of MIKE supplied on this disc includes a hierarchical
+frame browsing utility.  This will show the structure of your defined
+frames, indicating, by indentation, instance_of and subclass_of links that
+hold between them.  There are two forms to this command.  The first,
+browse/0, shows an exhaustive list of all frames in the system.  The
+second, browse/1, allows you to specify an argument that is the root
+node for the part of the frame hierarchy that you wish to display.
+
+Using browse/0 and the frame hierarchy from the file 'ch5-3.pl', the
+following is an example of the command in action
+
+>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+?- browse.
+
+disease
+  respiratory_tract_disease
+    upper_rtd
+      hay_fever
+      laryngitis
+      common_cold
+      influenza
+    lower_rtd
+      pneumonia
+        bacterial_pneumonia
+          staphylococcal_pneumonia
+        non_bacterial_pneumonia
+      bronchiectasis
+      lung_abscess
+person
+  patient
+    adam
+    bob
+    carol
+    donna
+    earl
+yes
+
+?- browse(patient).
+patient
+  adam
+  bob
+  carol
+  donna
+  earl
+yes
+
+<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+
+
+6.4   Listing rules
+-------------------
+
+In order to find out what rules are currently loaded use the in-built
+Prolog command listing as follows:
+
+?- listing(rule). /* SOME DIALECTS WILL REQUIRE ?- listing((rule)) */
+
+rule demo forward
+   if
+      start &
+      deduce 'it is going to rain today'
+   then
+      announce ['I am not going out today'] &
+      halt.
+
+rule conclude_rain backward
+   if
+      'the barometric pressure is rising' &
+      'the western sky is cloudy'
+   then
+      'it is going to rain today'.
+
+yes.
+
+Alternatively, if you wish only to see the names of the rules you can
+type show rules:
+
+?- show rules.
+
+demo
+
+conclude_rain backward
+
+yes.
+
+To see just a single rule, you can ask to describe it like a frame:
+
+?- describe conclude_rain.
+
+rule conclude_rain backward
+   if
+      'the barometric pressure is rising' &
+      'the western sky is cloudy'
+   then
+      'it is going to rain today'.
+
+yes.
+
+6.5   announce [a, b, c]
+------------------------
+
+The contents of the list are printed out to the user's screen. The
+list can also contain formatting information to allow for flexibility
+and easy customization of output text. The following three sets of
+instructions are understood in an announcement-list
+
+    *   <string>
+
+    *   nl
+
+    *   t/<Number>
+
+Strings are printed out on the user's screen. nl prints a new line
+out on the user's screen. Tabs can be inserted by typing t/Number
+where number is the required number of tabs. For example:
+
+?-announce ['this is a table',nl,t/12,'- item one.',nl,t/12,'- item
+two.',nl,t/12,'item three.',nl,nl, 'this is the end of the table.'].
+
+this is a table
+
+            - item one.
+
+            - item two.
+
+            - item three.
+
+this is the end of the table.
+
+yes.
+
+6.6   Showing the contents of working memory
+--------------------------------------------
+
+The contents of working memory can be examined directly from the top
+level using the operator wm, as follows:
+
+?- wm.
+
+The current contents of working memory are
+
+the following :
+
+   start
+
+   sugar required
+
+   milk required
+
+   teacup is empty
+
+   kettle is full
+
+   kettle is plugged in
+
+   kettle is switched on
+
+A total of 7 current working memory elements were found.
+
+yes
+
+7   I N D E X
+=============
+
+*Items preceded by a '*' are MIKE keywords/commands
+ --------------------------------------------------
+
+ ITEM...................................................SECTION(S)
+ --------------------------------------------------------------------
+
+*-- (negation: 'absent')................................5.1.2
+*& (conjunction within rules)...........................5.1.1
+*?self ('this instance' for inherited demon)............4.3.5, 4.3.6
+*add (put things into working memory)...................3.3.3
+*all X of Y are Z (frame retrieval).....................4.2.1
+*announce (user-supplied printout)......................5.1.3, 6.5
+*ask_menu (multiple-choice user interaction)............5.1.3
+ atom (as working memory pattern or frame type).........5.1.2, 4.3.3
+*backward (keyword specifying backward chaining rule)...5.2.1
+ backward chaining rules................................2,5.2.1,5.2.4
+*browse (show frame hierarchy)..........................6.3.2
+*cardinality (slot 'facet').............................4.3.4
+ class (hierarchy using frames).........................4.1
+ conflict resolution (choosing a winner among several)..5.1.5
+*continue (carry on forward chaining with current wm)...3.3.3
+ daemon.................................................see demon
+*deduce (invoke backward chaining)......................3.3.2
+ demon (procedural attachment to frame).................4.3.5, 4.3.6
+*describe (examine frames and rules)....................3.4.1, 6.4.
+ disjunction ('or' is allowed within rules).............5.1.1
+*ed (prefix operator for invoking 'edit')...............3.2
+*edit (invoke your favourite editor from within MIKE)...3.2
+ editing knowledge bases................................3.2
+*explained_by (user-provided explanations for 'why')....6.2
+ facet (fine-grained slot descriptor)...................4.3
+*fc (initiate forward chaining).........................3.3.1, 5.1.4
+*forall (matching multiple working memory patterns).....5.1.2
+*forward (keyword specifying forward chaining rule).....5.1.1
+ forward chaining rules.................................2,5.1.1,5.1.4
+ frames (structured object representations).............2, 4
+*go (leave working memory alone, initiate fwd chaining).3.3.3
+*how (explanation for conclusions)......................6.2
+ history (of rule execution)............................3.4.3
+ if-added method (synonymous with 'change_rule')........4.3.5
+ if-needed method (synonymous with 'access_rule').......4.3.6
+ inheritance (of frame slot:filler descriptions)........4.2.1, 4.3.2
+*inheritance (slot 'facet').............................4.3.2
+ initialise (Prolog predicate to clear up wm)...........3.3.3, 5.1.4
+ inspecting working memory, frames, rules...............3.4
+*instance_of (frame keyword)............................4.1
+ integer (as frame type)................................4.3.3
+*kb (load new knowledge base)...........................3.1.2
+ list (as wm pattern or frame type).....................5.1.2, 4.3.3
+ listing (of rules and frames)..........................6.4, 6.3
+*make_value (side-effect within access_rule)............4.3.6
+*note (make frame change)...............................4.2.2, 5.1.3
+ object-oriented programming (by procedural attachment).4.3.5, 4.3.6
+*or (use of disjunction within rules)...................5.1.1
+ part_initialise (Prolog book-keeping predicate)........3.3.3
+ procedural attachment (of code to frame)...............4.3.5, 4.3.6
+ Prolog (and relationship to MIKE)......................2, 3.5, 5.1.2
+*prolog (invoke Prolog within MIKE).....................5.1.2, 5.1.3
+*query (simple user interaction)........................6.1, 5.1.3
+*receives_answer (test for already-asked query).........5.1.2
+ recency (conflict resolution strategy).................2, 5.1.5
+ refractoriness (conflict resolution strategy)..........2, 5.1.5
+*remove (delete working memory element).................5.1.3
+*rule syntax............................................5.1.1
+*?self ('this instance' for inherited demon)............4.3.5, 4.3.6
+*show (inspect working memory, history, etc)............3.4.3, 6.6
+ slot (structured part of frame)........................4.1, 4.3
+ specificity (conflict resolution strategy).............2, 5.1.5
+ string (as wm pattern or announce message).............5.1.2, 6.5
+*subclass_of (frame keyword)............................4.1
+*strategy (alter conflict resolution strategy)..........5.1.5
+*the X of Y is Z (frame retrieval)......................4.2.1
+*tracing (examing rule execution).......................3.4.3, 3.4.4
+ triggering rule execution..............................5.1.4, 5.2.4
+*type (slot 'facet')....................................4.3.3
+ utilities..............................................6
+*value (slot 'facet')...................................4.3.1, 4.3.6
+*why (get explanation for question).....................6.2
+*with (keyword for frame description)...................4.1
+ working memory (repository for assertions).............2
+*wm (print out contents of working memory)..............3.4.1
+
+

@@ -1,0 +1,35 @@
+#!/bin/sh
+PL2TMEHOME=/lab/ki2/AGKI/systems/TME2X
+#PL2TMEHOME=/usr/provers/TME2X
+export PL2TMEHOME
+
+if test foo$1 = foo
+then echo "usage: pl2tme [-u] infile [outfile]"
+     echo "       Omit extension '.pl1' from infile."
+     echo "       Usually, pl2tme -u is the thing you want."
+     echo "       The -u flag means 'unsorted': dont add dummy sort"
+     echo "       annotations to variables"
+     exit
+fi
+
+if test $1 = "-u"
+then PL2TME=pl2tme.pl
+    shift
+elif test $1 = "-m"
+then PL2TME=pl2tmemeta.pl
+    shift
+else PL2TME=pl2tmesorted.pl
+fi
+
+infile=$1
+
+if test foo$2 = foo
+then outfile=$infile
+else outfile=$2
+fi
+
+# echo "['$PL2TMEHOME/$PL2TME'], pl2tme('$infile','$outfile'). " | eclipse
+
+eclipse -b $PL2TMEHOME/$PL2TME -e "pl2tme('$infile','$outfile'), halt."
+echo "output written to "$outfile".tme"
+

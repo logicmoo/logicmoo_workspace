@@ -1,0 +1,120 @@
+%--------------------------------------------------------------------------
+% File     : SET005=IntscAssc-1 : TPTP v1.2.0. Released v1.0.0.
+% Domain   : Set Theory
+% Problem  : Associativity of set intersection
+% Version  : [Lawrence & Starkey, 1974] axioms.
+% English  : 
+
+% Refs     : Lawrence J.D., Starkey J.D. (1974), Experimental tests 
+%            of resolution based theorem-proving strategies, Technical 
+%            Report, Computer Science Department, Washington State 
+%            University, Pullman, Washington.
+%          : Wilson G.A. and Minker J. (1976), Resolution, Refinements, 
+%            and Search Strategies: A Comparative Study, IEEE Transactions 
+%            on Computers C-25(8), 782-801.
+% Source   : [SPRFN]
+% Names    : ls108 [Lawrence & Starkey, 1974]
+%          : ls108 [Wilson & Minker, 1976]
+
+% Status   : unsatisfiable
+% Syntax   : Number of clauses           :   16 (   3 non-Horn)(   4 unit)
+%            Number of literals          :   38 (   0 equality)
+%            Maximal clause size         :    4
+%            Number of predicate symbols :    4 (   0 propositional)
+%            Number of function symbols  :    8 (   6 constant)
+%            Number of variables         :   34 (   2 singleton)
+%            Maximal term depth          :    2
+
+% Comments : 
+%          : tptp2X: -fprotein SET005-1.p
+%--------------------------------------------------------------------------
+
+begin(theory).
+% NAME: 'set theory'
+read("SET005-1-t1.lc").
+% NAME_END
+end(theory).
+
+% BEGIN_AXIOMS
+% subsets_axiom1, axiom.
+% NAME: 'subset axiom 1'
+subset(Subset, Superset); member(member_of_1_not_of_2(Subset, Superset), Subset).
+
+% member_of_both_is_member_of_intersection, axiom.
+% NAME: 'membership axiom 3'
+member(Element, Intersection) :- intersection(Set1, Set2, Intersection), member(Element, Set2), member(Element, Set1).
+
+% intersection_axiom1, axiom.
+% NAME: 'intersection axiom 1'
+member(h(Set1, Set2, Intersection), Intersection); intersection(Set1, Set2, Intersection); member(h(Set1, Set2, Intersection), Set1).
+
+% intersection_axiom2, axiom.
+% NAME: 'intersection axiom 2'
+member(h(Set1, Set2, Intersection), Intersection); intersection(Set1, Set2, Intersection); member(h(Set1, Set2, Intersection), Set2).
+
+% intersection_axiom3, axiom.
+% NAME: 'intersection axiom 3'
+intersection(Set1, Set2, Intersection) :- member(h(Set1, Set2, Intersection), Intersection), member(h(Set1, Set2, Intersection), Set2), member(h(Set1, Set2, Intersection), Set1).
+
+% a_intersection_b, axiom.
+% NAME: intersects(a,b)
+intersection(a, b, aIb).
+
+% b_intersection_c, axiom.
+% NAME: intersects(b,c)
+intersection(b, c, bIc).
+
+% a_intersection_bIc, axiom.
+% NAME: intersects(a,'the intersection of b and c')
+intersection(a, bIc, aIbIc).
+
+% prove_aIb_intersection_c_is_aIbIc, conjecture.
+% NAME: goal
+false :- intersection(aIb, c, aIbIc).
+% END_AXIOMS
+%--------------------------------------------------------------------------
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,111 @@
+%--------------------------------------------------------------------------
+% File     : RNG007=BoolInv-4 : TPTP v1.2.1. Released v1.0.0.
+% Domain   : Ring Theory
+% Problem  : In Boolean rings, X is its own inverse
+% Version  : [Peterson & Stickel,1981] (equality) axioms.
+%            Theorem formulation : Equality.
+% English  : Given a ring in which for all x, x * x = x, prove that for 
+%            all x, x + x = additive_identity
+
+% Refs     : Peterson G.E., Stickel M.E. (1981), Complete Sets of
+%            Reductions for Some Equational Theories, Journal of the ACM
+%            28(2), 233-264.
+% Source   : [ANL]
+% Names    : lemma.ver2.in [ANL]
+
+% Status   : unsatisfiable
+% Syntax   : Number of clauses    :   24 (   0 non-Horn;  17 unit;   5 RR)
+%            Number of literals   :   32 (  32 equality)
+%            Maximal clause size  :    3
+%            Number of predicates :    1 (   0 propositional; 2-2 arity)
+%            Number of functors   :    5 (   2 constant; 0-2 arity)
+%            Number of variables  :   46 (   2 singleton)
+%            Maximal term depth   :    3
+
+% Comments : 
+%          : tptp2X: -fprotein RNG007-4.p 
+%--------------------------------------------------------------------------
+
+eqtrafo_flag(output,ilf).
+
+% reflexivity, axiom.
+(X = X).
+
+% symmetry, axiom.
+(Y = X) :- 
+    (X = Y).
+
+% transitivity, axiom.
+(X = Z) :- 
+    (X = Y), 
+    (Y = Z).
+
+% left_identity, axiom.
+(add(additive_identity, X) = X).
+
+% left_additive_inverse, axiom.
+(add(additive_inverse(X), X) = additive_identity).
+
+% distribute1, axiom.
+(multiply(X, add(Y, Z)) = add(multiply(X, Y), multiply(X, Z))).
+
+% distribute2, axiom.
+(multiply(add(X, Y), Z) = add(multiply(X, Z), multiply(Y, Z))).
+
+% additive_inverse_identity, axiom.
+(additive_inverse(additive_identity) = additive_identity).
+
+% additive_inverse_additive_inverse, axiom.
+(additive_inverse(additive_inverse(X)) = X).
+
+% multiply_additive_id1, axiom.
+(multiply(X, additive_identity) = additive_identity).
+
+% multiply_additive_id2, axiom.
+(multiply(additive_identity, X) = additive_identity).
+
+% distribute_additive_inverse, axiom.
+(additive_inverse(add(X, Y)) = add(additive_inverse(X), additive_inverse(Y))).
+
+% multiply_additive_inverse1, axiom.
+(multiply(X, additive_inverse(Y)) = additive_inverse(multiply(X, Y))).
+
+% multiply_additive_inverse2, axiom.
+(multiply(additive_inverse(X), Y) = additive_inverse(multiply(X, Y))).
+
+% associative_addition, axiom.
+(add(add(X, Y), Z) = add(X, add(Y, Z))).
+
+% commutative_addition, axiom.
+(add(X, Y) = add(Y, X)).
+
+% associative_multiplication, axiom.
+(multiply(multiply(X, Y), Z) = multiply(X, multiply(Y, Z))).
+
+% add_substitution1, axiom.
+(add(A, C) = add(B, C)) :- 
+    (A = B).
+
+% add_substitution2, axiom.
+(add(F, D) = add(F, E)) :- 
+    (D = E).
+
+% additive_inverse_substitution1, axiom.
+(additive_inverse(G) = additive_inverse(H)) :- 
+    (G = H).
+
+% multiply_substitution1, axiom.
+(multiply(I, K) = multiply(J, K)) :- 
+    (I = J).
+
+% multiply_substitution2, axiom.
+(multiply(N, L) = multiply(N, M)) :- 
+    (L = M).
+
+% boolean_ring, hypothesis.
+(multiply(X, X) = X).
+
+% prove_inverse, conjecture.
+false :- (add(a, a) = additive_identity).
+
+%--------------------------------------------------------------------------

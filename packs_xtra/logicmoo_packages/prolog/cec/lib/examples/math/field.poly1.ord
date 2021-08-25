@@ -1,0 +1,7 @@
+order poly(1) using poly1 for commRing .
+setInterpretation('1/'(x) : x ^ 2) .
+setInterpretation('1-elem' : 8) .
+setInterpretation('1-nonzero' : 2) .
+setInterpretation('$inj-elem-nonzero'(x) : 2 * x) .
+setInterpretation('*-elem-elem-elem'(x, y) : 2 * x * y) .
+setInterpretation('*-nonzero-nonzero-nonzero'(x, y) : 2 * x * y) .

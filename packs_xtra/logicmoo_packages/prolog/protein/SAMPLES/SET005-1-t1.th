@@ -1,0 +1,35 @@
+:- lc_flag(max_level, 3).
+:- lc_flag(term_width, 4).
+
+% subsets_are_set_equal_sets, axiom.
+equal_sets(Set2, Set1) :- 
+    subset(Set1, Set2), 
+    subset(Set2, Set1).
+
+% set_equal_sets_are_subsets1, axiom.
+subset(Subset, Superset) :- 
+    equal_sets(Subset, Superset).
+
+% set_equal_sets_are_subsets2, axiom.
+subset(Subset, Superset) :- 
+    equal_sets(Superset, Subset).
+
+% subsets_axiom2, axiom.
+subset(Subset, Superset) :- 
+    member(member_of_1_not_of_2(Subset, Superset), Superset).
+
+% membership_in_subsets, axiom.
+member(Element, Superset) :- 
+    member(Element, Subset), 
+    subset(Subset, Superset).
+
+% member_of_intersection_is_member_of_set1, axiom.
+member(Element, Set1) :- 
+    intersection(Set1, Set2, Intersection), 
+    member(Element, Intersection).
+
+% member_of_intersection_is_member_of_set2, axiom.
+member(Element, Set2) :- 
+    intersection(Set1, Set2, Intersection), 
+    member(Element, Intersection).
+

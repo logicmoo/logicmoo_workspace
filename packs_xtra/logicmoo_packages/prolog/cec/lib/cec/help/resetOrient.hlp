@@ -1,0 +1,9 @@
+ 
+"resetOrient."
+
+turns all rules back into equations.
+
+
+"resetOrient(?I)."
+
+turns rule I back into an equation.

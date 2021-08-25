@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ResponseMessage xmlns="http://www.owllink.org/owllink#"
+                 xmlns:owl="http://www.w3.org/2002/07/owl#">
+  <KB kb="http://owllink.org/examples/KB_3"/>
+  <SyntaxError error="No valid OWLlink KBRequest request: LoadOntology"/>
+  <OK/>
+</ResponseMessage>

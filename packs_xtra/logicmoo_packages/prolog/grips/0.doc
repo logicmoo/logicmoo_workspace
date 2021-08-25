@@ -1,0 +1,88 @@
+Package:      lang/prolog/code/syntax/grips/
+
+Name:         GRIPS Translator
+
+Summary:      GRIPS -- A functional language in Prolog
+
+Version:      11-JAN-91
+
+Description: 
+
+   GRIPS is a pre-processor for translating a functional version of
+   Prolog into Prolog.  By using it, you can eliminate the tedium of
+   having to think up variables to pass output from one predicate to the
+   input of the next, and of having to flatten nested arithmetic 
+   expressions into a sequence of machine-code-like assignments.
+
+   Here are two example definitions.
+
+           factorial(N) <- 1 if N =< 0.
+           factorial(N) <- N * factorial(N-1) if N > 0.
+
+           count( [] ) <- 0.
+           count( [_|T] ) <- 1 + count(T).
+
+   You can load these by doing 'grips_consult' or 'grips_reconsult' on the
+   file they're in. You could then run the interpreter:
+
+           ?- grips.
+           |: do grips_reconsult('test.pl').
+           Done
+           |: factorial(3).
+           Result = 6.
+           |: factorial(factorial(3)).
+           Result = 720.
+           |: count( [a,b,c,d] ).
+           Result = 4.
+           |: 1 + count([a,b,c,d])/factorial(3).
+           Result = 1.66667.
+           |: pr( factorial(3,F) ).
+
+           F = 6
+           More (y/n)? |: y
+           no
+           |:
+
+   A simple compiler written in GRIPS is available separately.
+
+Requires:     
+
+Ports:        Edinburgh-compatible Prologs.
+
+Origin:       src.doc.ic.ac.uk:packages/prolog-pd-software/ (146.169.2.1)
+              as grips.tar.Z
+
+Copying:      
+
+Updated:      
+
+CD-ROM:       Prime Time Freeware for AI, Issue 1-1
+
+Bug Reports:  
+
+Mailing List: 
+
+Author(s):    Jocelyn Paine <popx@vax.ox.ac.uk>
+              Department of Experimental Psychology
+              Oxford University
+              South Parks Road
+              Oxford OX1 3UD
+              Tel: (0865) 271444
+              Fax: (0865) 310447
+
+Contact:      
+
+Keywords:     
+
+   Prolog!Code, Prolog!Syntax, Syntax, Grips, Authors!Paine
+
+Contains:    ???
+
+See Also:    
+
+   lang/prolog/code/syntax/compiler/
+
+References:   
+
+   A user guide is included in the distribution.
+

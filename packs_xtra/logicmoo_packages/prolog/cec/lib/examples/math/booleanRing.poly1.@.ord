@@ -1,0 +1,48 @@
+order(poly1 for booleanRing) using poly1 for commRing.
+setInterpretation('$r'(x,y) : 2 * x + 2 * y
+).
+setInterpretation('$r'(x) : 2 * x
+).
+setInterpretation(not(x) : x + 8
+).
+setInterpretation(==>(x,y) : 4 * x * y + 4
+).
+setInterpretation(<=>(x,y) : 4 * x * y
+).
+setInterpretation(;(x,y) : 4 * x * y
+).
+setInterpretation(true : 4
+).
+setInterpretation(false : 2
+).
+setInterpretation(*(x,y) : 2 * x * y
+).
+setInterpretation(-(x) : 6 * x + 4
+).
+setInterpretation(+(x,y) : x + y + 1
+).
+
+constructor('false-bool').
+constructor('true-bool').
+
+
+
+
+
+
+/* ordering of the literals is ms for
+/*	x+y = y+x */
+action(status(ms),'$equation'([],['+-bool-bool-bool'(@'x-bool',@'y-bool')='+-bool-bool-bool'(@'y-bool',@'x-bool')])).
+
+/* ordering of the literals is ms for
+/*	x+y+z = x+ (y+z) */
+action(status(ms),'$equation'([],['+-bool-bool-bool'('+-bool-bool-bool'(@'x-bool',@'y-bool'),@'z-bool')='+-bool-bool-bool'(@'x-bool','+-bool-bool-bool'(@'y-bool',@'z-bool'))])).
+
+/* ordering of the literals is ms for
+/*	x*y = y*x */
+action(status(ms),'$equation'([],['*-bool-bool-bool'(@'x-bool',@'y-bool')='*-bool-bool-bool'(@'y-bool',@'x-bool')])).
+
+/* ordering of the literals is ms for
+/*	x*y*z = x* (y*z) */
+action(status(ms),'$equation'([],['*-bool-bool-bool'('*-bool-bool-bool'(@'x-bool',@'y-bool'),@'z-bool')='*-bool-bool-bool'(@'x-bool','*-bool-bool-bool'(@'y-bool',@'z-bool'))])).
+

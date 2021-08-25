@@ -1,0 +1,7 @@
+.cm-s-default span.cm-comment                {color: red; font-style: italic;}
+.cm-s-default span.cm-keyword-mizar-main     {color: teal; font-weight: bold;}
+.cm-s-default span.cm-keyword-mizar-formula  {color: aqua;}
+.cm-s-default span.cm-keyword-mizar-block    {color: fuchsia; font-weight: bold;}
+.cm-s-default span.cm-keyword-mizar-skeleton {color: olive; font-weight: bold;}
+.cm-s-default span.cm-keyword-mizar-normal   {color: olive;}
+.cm-s-default span.cm-mizar-by               {color: green;}

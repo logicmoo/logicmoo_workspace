@@ -1,0 +1,82 @@
+********************    PROTEIN V2.09   ********************
+
+--------------------    input clauses   --------------------
+
+"Clause " No. 1 : [set_equal(_54, _49), element(_50, _54), -> [element(_50, _49)]]
+"Clause " No. 2 : [set_equal(_93, _98), element(_94, _98), -> [element(_94, _93)]]
+"Clause " No. 3 : [element(f(_138, _137), _137), element(f(_138, _137), _138), -> [set_equal(_138, _137)]]
+"Clause " No. 4 : [set_equal(_195, _191), element(_187, _195), set_equal(_191, _186), -> [element(_187, _186)]]
+"Clause " No. 5 : [set_equal(_247, _243), element(_239, _247), set_equal(_238, _243), -> [element(_239, _238)]]
+"Clause " No. 6 : [set_equal(_301, _290), element(f(_291, _290), _301), element(f(_291, _290), _291), -> [set_equal(_291, _290)]]
+"Clause " No. 7 : [set_equal(_358, _348), element(f(_348, _347), _358), element(f(_348, _347), _347), -> [set_equal(_348, _347)]]
+"Clause " No. 8 : [set_equal(_409, _413), element(_405, _413), set_equal(_409, _404), -> [element(_405, _404)]]
+"Clause " No. 9 : [set_equal(_461, _465), element(_457, _465), set_equal(_456, _461), -> [element(_457, _456)]]
+"Clause " No. 10 : [set_equal(_508, _519), element(f(_509, _508), _519), element(f(_509, _508), _509), -> [set_equal(_509, _508)]]
+"Clause " No. 11 : [set_equal(_566, _576), element(f(_566, _565), _576), element(f(_566, _565), _565), -> [set_equal(_566, _565)]]
+"Clause " No. 12 : [element(f(_627, _622), _622), element(f(_627, _622), _627), element(_623, _627), -> [element(_623, _622)]]
+"Clause " No. 13 : [element(f(_679, _684), _684), element(f(_679, _684), _679), element(_680, _684), -> [element(_680, _679)]]
+"Clause " No. 14 : [not_element(_741, _736), element(_741, _737), -> [not_set_equal(_737, _736)]]
+"Clause " No. 15 : [not_element(_785, _781), element(_785, _780), -> [not_set_equal(_781, _780)]]
+"Clause " No. 16 : [not_set_equal(_828, _824), element(f(_828, _824), _828), -> [not_element(f(_828, _824), _824)]]
+"Clause " No. 17 : [set_equal(_879, _874), element(_875, _879), not_element(_875, _873), -> [not_set_equal(_874, _873)]]
+"Clause " No. 18 : [set_equal(_931, _925), element(_927, _931), not_element(_927, _926), -> [not_set_equal(_926, _925)]]
+"Clause " No. 19 : [set_equal(_985, _981), element(f(_981, _977), _985), not_set_equal(_981, _977), -> [not_element(f(_981, _977), _977)]]
+"Clause " No. 20 : [set_equal(_1035, _1040), element(_1036, _1040), not_element(_1036, _1034), -> [not_set_equal(_1035, _1034)]]
+"Clause " No. 21 : [set_equal(_1086, _1092), element(_1088, _1092), not_element(_1088, _1087), -> [not_set_equal(_1087, _1086)]]
+"Clause " No. 22 : [set_equal(_1142, _1146), element(f(_1142, _1138), _1146), not_set_equal(_1142, _1138), -> [not_element(f(_1142, _1138), _1138)]]
+"Clause " No. 23 : [not_element(_1209, _1195), element(_1209, _1199), element(f(_1199, _1195), _1199), -> [not_element(f(_1199, _1195), _1195)]]
+"Clause " No. 24 : [not_element(_1266, _1256), element(_1266, _1252), element(f(_1256, _1252), _1256), -> [not_element(f(_1256, _1252), _1252)]]
+"Clause " No. 25 : [not_set_equal(_1317, _1309), element(f(_1317, _1309), _1317), element(f(_1317, _1309), _1310), -> [not_set_equal(_1310, _1309)]]
+"Clause " No. 26 : [not_set_equal(_1374, _1367), element(f(_1374, _1367), _1374), element(f(_1374, _1367), _1366), -> [not_set_equal(_1367, _1366)]]
+"Clause " No. 27 : [element(f(_1427, _1426), _1427), element(f(_1427, _1426), _1426), set_equal(_1427, _1426)]
+"Clause " No. 28 : [set_equal(a, b), set_equal(b, a)]
+"Query  " No. 29 : [query, not_set_equal(b, a), not_set_equal(a, b)]
+"Restart" No. 29 : [restart, not_set_equal(b, a), not_set_equal(a, b)]
+
+--------------------        flags       --------------------
+
+protein_flag(system, protein).
+protein_flag(ancestry_rme, off).
+protein_flag(ancs, both).
+protein_flag(answers, one).
+protein_flag(answer_set_handling, on).
+protein_flag(check_flags, [protein_flag(calculus, hyper)]).
+protein_flag(definite_answers, off).
+protein_flag(delayed_rme, off).
+protein_flag(depth_increment, 1).
+protein_flag(dynamic, off).
+protein_flag(factorisation, cut).
+protein_flag(head_behind_prolog, off).
+protein_flag(mmr, off).
+protein_flag(mode, pl1).
+protein_flag(query_anc, ([], [])).
+protein_flag(query_reuse, on).
+protein_flag(reduction, both).
+protein_flag(regularity, delay).
+protein_flag(search, id_tree).
+protein_flag(selection_function, off).
+protein_flag(sorting, costs).
+protein_flag(strict_rme, off).
+protein_flag(th_nonewclauses, off).
+protein_flag(th_reduction, both).
+protein_flag(th_regularity, delay).
+protein_flag(th_sidelit_anc, off).
+protein_flag(translate, all).
+protein_flag(trace, internal).
+protein_flag(calculus, rme).
+
+
+--------------------     statistics     --------------------
+
+Proof Statistics
+----------------
+Proof Time:  0.02 sec
+Proof Depth: 6
+Extension Steps: 5
+Restart Steps:   4
+Reduction Steps: 7		(incl. 7 with cut)
+Factoring Steps: 3		(incl. 3 with cut)
+Theory Steps:    4
+Inferences:      109
+
+--------------------      answers       --------------------

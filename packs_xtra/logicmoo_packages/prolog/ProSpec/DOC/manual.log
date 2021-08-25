@@ -1,0 +1,156 @@
+This is TeX, Version 3.14159 (C version 6.1) (format=latex 97.3.16)  26 JUL 1997 18:10
+**\nonstopmode\input{manual.tex}
+(manual.tex (/usr/local/lib/teTeX/texmf/tex/latex/koma-script/scrartcl.cls
+Document Class: scrartcl 1996/11/09 v2.4h LaTeX2e KOMA document class
+(/usr/local/lib/teTeX/texmf/tex/latex/base/fleqn.clo
+File: fleqn.clo 1996/07/26 v1.1b Standard LaTeX option (flush left equations)
+\mathindent=\dimen102
+)
+(/usr/local/lib/teTeX/texmf/tex/latex/base/size11.clo
+File: size11.clo 1996/10/31 v1.3u Standard LaTeX file (size option)
+)
+(/usr/local/lib/teTeX/texmf/tex/latex/koma-script/typearea.sty
+Package: typearea 1996/11/09 v2.4h LaTeX2e KOMA package
+
+Package: typearea, Copyright (C) Frank Neukam, 1992-1994 
+                   Copyright (C) Markus Kohm, 1994-1996
+\ta@bcor=\dimen103
+\ta@div=\count79
+\ta@hblk=\dimen104
+\ta@vblk=\dimen105
+\ta@temp=\dimen106
+Package typearea Info: These are the values describing the layout:
+(typearea)             DIV  = 10
+(typearea)             BCOR = 0.0pt
+(typearea)             \paperwidth      = 597.50787pt
+(typearea)              \textwidth      = 418.25554pt
+(typearea)              \evensidemargin = 17.35617pt
+(typearea)              \oddsidemargin = 17.35617pt
+(typearea)             \paperheight     = 845.04684pt
+(typearea)              \textheight     = 595.80026pt
+(typearea)              \topmargin      = -24.16531pt
+(typearea)              \headheight     = 16.0pt
+(typearea)              \headsep        = 20.40001pt
+(typearea)              \topskip        = 11.0pt
+(typearea)              \textheight     = 595.80026pt
+(typearea)              \footskip       = 47.60002pt
+(typearea)              on input line 340.
+)
+\c@part=\count80
+\c@section=\count81
+\c@subsection=\count82
+\c@subsubsection=\count83
+\c@paragraph=\count84
+\c@subparagraph=\count85
+\c@figure=\count86
+\c@table=\count87
+\abovecaptionskip=\skip41
+\belowcaptionskip=\skip42
+\bibindent=\dimen107
+\sc@temp=\dimen108
+) (/home/peter/LATEX2E/goodies.sty
+Package: goodies 1997/03/20 v1.00 `goodies' package (Peter Baumgartner)
+\backup=\dimen109
+\everytext=\toks14
+\everyendtext=\toks15
+)
+(/usr/local/lib/teTeX/texmf/tex/latex/tools/xspace.sty
+Package: xspace 1996/12/06 v1.05 Space after command names (DPC)
+)
+(/home/peter/GROUP/named.sty) (/home/peter/LATEX2E/mathti.sty
+\symtextit=\mathgroup4
+LaTeX Font Info:    Overwriting symbol font `textit' in version `bold'
+(Font)                  OT1/cmr/m/it --> OT1/cmr/bx/it on input line 3.
+)
+(/home/peter/LATEX2E/theorems.sty
+Package: theorems 1997/06/20 v1.00 `theorems' package (Peter Baumgartner)
+
+(/usr/local/lib/teTeX/texmf/tex/latex/tools/theorem.sty
+Package: theorem 1995/11/23 v2.2c Theorem extension package (FMi)
+\theorem@style=\toks16
+\theorem@bodyfont=\toks17
+\theorempreskipamount=\skip43
+\theorempostskipamount=\skip44
+
+(/usr/local/lib/teTeX/texmf/tex/latex/tools/thp.sty
+File: thp.sty 1995/11/23 v2.2c Theorem extension package (FMi)
+))
+\c@theorem=\count88
+
+(/usr/local/lib/teTeX/texmf/tex/latex/tools/thb.sty
+File: thb.sty 1995/11/23 v2.2c Theorem extension package (FMi)
+)) (manual.aux)
+LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 15.
+LaTeX Font Info:    ... okay on input line 15.
+LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 15.
+LaTeX Font Info:    ... okay on input line 15.
+LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 15.
+LaTeX Font Info:    ... okay on input line 15.
+LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 15.
+LaTeX Font Info:    ... okay on input line 15.
+LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 15.
+LaTeX Font Info:    ... okay on input line 15.
+LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 15.
+LaTeX Font Info:    ... okay on input line 15.
+LaTeX Font Info:    External font `cmex10' loaded for size
+(Font)              <14.4> on input line 29.
+LaTeX Font Info:    External font `cmex10' loaded for size
+(Font)              <7> on input line 29.
+LaTeX Font Info:    Try loading font information for OMS+cmtt on input line 29.
+
+LaTeX Font Info:    No file OMScmtt.fd. on input line 29.
+
+
+LaTeX Font Warning: Font shape `OMS/cmtt/m/n' undefined
+(Font)              using `OMS/cmsy/m/n' instead
+(Font)              for symbol `textbraceleft' on input line 29.
+
+[1
+
+
+]
+LaTeX Font Info:    External font `cmex10' loaded for size
+(Font)              <10.95> on input line 74.
+LaTeX Font Info:    External font `cmex10' loaded for size
+(Font)              <8> on input line 74.
+LaTeX Font Info:    External font `cmex10' loaded for size
+(Font)              <6> on input line 74.
+LaTeX Font Info:    External font `cmex10' loaded for size
+(Font)              <5> on input line 102.
+
+Overfull \hbox (5.43715pt too wide) detected at line 110
+$ []$ 
+ []
+
+
+LaTeX Warning: Citation `Beierle' on page 2 undefined on input line 132.
+
+[2]
+
+LaTeX Warning: Citation `Beierle' on page 3 undefined on input line 161.
+
+LaTeX Font Info:    External font `cmex10' loaded for size
+(Font)              <9> on input line 197.
+[3] (manual.bbl
+Underfull \hbox (badness 1286) in paragraph at lines 5--13
+\OT1/cmr/m/n/10.95 TEIN: A \OT1/cmr/m/it/10.95 PRO\OT1/cmr/m/n/10.95 ver with a
+ \OT1/cmr/m/it/10.95 T\OT1/cmr/m/n/10.95 heory \OT1/cmr/m/it/10.95 E\OT1/cmr/m/
+n/10.95 xtension \OT1/cmr/m/it/10.95 I\OT1/cmr/m/n/10.95 nterface.  In A. Bundy
+, ed-i-
+ []
+
+) [4] (manual.aux)
+
+LaTeX Font Warning: Some font shapes were not available, defaults substituted.
+
+ ) 
+Here is how much of TeX's memory you used:
+ 656 strings out of 10908
+ 7013 string characters out of 72083
+ 54262 words of memory out of 262141
+ 3519 multiletter control sequences out of 9500
+ 16066 words of font info for 55 fonts, out of 150000 for 255
+ 14 hyphenation exceptions out of 607
+ 24i,8n,25p,217b,382s stack positions out of 300i,40n,60p,3000b,4000s
+
+Output written on manual.dvi (4 pages, 13892 bytes).

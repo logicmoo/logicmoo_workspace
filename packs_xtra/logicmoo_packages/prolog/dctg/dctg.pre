@@ -1,0 +1,56 @@
+             Definite Clause Translation Grammar Translator
+                      Contributed by Jocelyn Paine
+                    Shelved on the 21st of July 1990
+
+
+This entry comes as three files:
+    DCTG.PRE    - this file.
+    DCTG.PL     - the translator itself.
+    DCTGTEST.PL - a test program.
+
+
+Definite Clause Translation Grammars are described in chapter 9 of
+"Logic Grammars", by H.Abramson and V.Dahl (Springer 1989). They were
+devised by Abramson to overcome the defects of Definite Clause Grammars,
+in which syntax and semantics are often mixed in a non-modular fashion.
+They avoid also the proliferation of unnamed arguments that aflicts
+Definite Clause Grammars.
+
+In a DCTG, the syntax and semantics are separated. Each rule contains
+first a syntactic part, and then an optional semantics, written as one
+or more clauses. See DCTGTEST.PL for an example, and "Logic Grammars"
+for more details.
+
+Most of the code in this entry comes from Appendix II of "Logic
+Grammars". I have made a few changes:
+
+1.  I use the operator && to separate semantic clauses. Abramson used
+    comma, and so needed an extra layer of brackets to separate them.
+
+2.  The form
+        Attribute from X
+    is an abbreviation for
+        Attribute(V) ::- X^^Attribute(V)
+
+3.  There is a predicate "dctg_reconsult" for loading grammars from
+    file.                   
+
+
+To run the software, consult DCTG.PL, use it to load the grammar in
+DCTGTEST.PL, and then call 'go' for a demonstration:
+    ?- [ -'dctg.pl' ].
+    dctg_reconsult( 'dctgtest.pl' ).
+    go.
+
+
+
+CHECKED ON EDINBURGH-COMPATIBLE (POPLOG) PROLOG : yes.
+
+
+PORTABILITY : No problems.
+
+
+INTERNAL DOCUMENTATION :
+
+    Only dctg_reconsult is documented in the code. See "Logic Grammars"
+    for the meaning of the other predicates, and the theory.

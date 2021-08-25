@@ -1,0 +1,4 @@
+order poly1 .
+setInterpretation([
+	x*y   : (x^2)*y,
+	1         : 4]).

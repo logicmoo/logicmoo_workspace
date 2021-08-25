@@ -1,0 +1,1 @@
+order neqkns for orderedIntegers using neqkns for intbase + neqkns for totalOrder([(elem , int)], []) .

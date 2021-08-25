@@ -1,0 +1,33 @@
+ 
+"c."
+
+calls  the  completion  procedure.   This  executes  a  fixed  strategy  of 
+applications  of the   completion inference   predicates  "orderEq",  "cp",
+"superpose",  "redRule",  "redEq", and "redNOpEq". A manual guidance of the
+process  is possible  by explicitly  calling these predicates. The "repeat"
+predicate can  be used  to execute  a predicate  repeatedly  until  no more
+instances  of it  can be  applied.  An arbitrary interleaving of manual and
+automatic completion is supported.
+
+Completion - manual or automatic -
+can always safely be restarted  after any abortion caused by answering "A."
+to some query of the system. 
+Also, interrupting the process by typing ^C makes a specific action
+menu available. It has the additional entry ``quit completion''
+which can be invoked by entering ``q''. This will cause the completion
+process to abort at the next consistent state, from which it can be
+safely restarted by ``cResume.''
+
+Note that the system does  not necessarily produce a reduced system. In the 
+conditional case it is anyway not  clear what a reduced equation is. On the 
+other  hand,  a user may  always  call any  of  the  "red"-predicates after 
+completion to force  reduction of the axioms. This may, however, lead to an 
+incomplete system.
+
+
+
+"cf."
+
+like "c." with an additional storing and freezing of the
+completed specification.
+

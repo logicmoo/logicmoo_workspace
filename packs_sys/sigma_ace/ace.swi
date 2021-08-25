@@ -1,0 +1,1319 @@
+%======================================================================
+
+/*
+This is a simple Structured-English to logic conversion program.
+Copyright (c) 2001, Teknowledge Corp.
+Authors: Adam Pease and William Murray
+Date begun: May 1, 2001
+Written in SWI-prolog
+
+To load into SWI Prolog:
+
+  consult('c:/projects/swi_prolog/my_code/ace').
+
+The grammar is as follows:
+
+                      sentence
+                    /         \
+                  SNP|Q         VP
+                 /    \      /     \
+               Det   N|PN    V   NP|SNP
+                                 / | \
+                               Det M N|PN
+                               
+where:
+  S = sentence
+  SNP = simple noun phrase
+  NP = noun phrase                               
+  Det = determiner
+  N = noun
+  V = verb
+  VP = verb phrase
+  PN = proper noun
+  M = modifier
+  Q = query word
+  VC = verb, copula
+
+Current Grammar Rules:
+
+S --> Q, VP
+S --> SNP, VP
+S --> NP, VP	% added for Blocks World
+
+S --> There, is, NP % added for Blocks World, for sentences like 'there is an orange block on the table'
+S --> No, NP, VP % added for Blocks World, for sentences like 'no pyramid supports a block'
+
+SNP --> Det, N
+SNP --> N
+SNP --> PN
+NP --> Det, N, OP.
+NP --> Det, M, N, OP.
+NP --> N, OP.
+NP --> PN, OP.
+VP --> V, NP.
+VP --> V, SNP.
+VP --> VC, NP.
+VP --> VC, SNP.
+VP --> VC, modifier % added for Blocks World
+VP --> VC, PP % added for Blocks World	
+
+OP --> Prep % OP stands for optional prepositional phrase
+OP --> []   % OP stands for optional prepositional phrase	
+
+PP --> Prep, NP % added for Blocks World	
+
+*/
+
+:- style_check(-singleton).
+:- style_check(-discontiguous).
+
+%======================================================================
+% This is the main entry point into the program.  It calls the other
+% routines to convert the sentence to a parse tree, then convert the
+% parse tree to logic, clean up the result, and print it. See also the
+% "testme" routine below which provides some examples.
+
+% eng2log(+Sentence,-KIF,-KindOfSentence)
+% Sentence is a string input, all lowercase, at present,
+%    e.g., "a block is green."
+% KIF is the string output of the resulting KIF translation,
+%    e.g., "(exists (?G203) (instance ?G203 Block) (attribute ?203 GreenColor))"
+% KindOfSentence is 'query' if the string ends with a '?', otherwise 'sentence'.
+% RunFlag is a flag for whether to actually try the query or assertion, either 'yes' or 'no'.
+%    Use 'no' just to test the ACE translation; use 'yes' to tie into Sigma.
+
+eng2log(Sentence,RunFlag) :-                           
+  write(Sentence),nl,nl,
+  sentenceToList(Sentence,List,KindOfSentence), % convert Sentence, a string, to list and note kind of sentence
+  !,                                            % if parse fails do not back up past here
+  sentence(Parse,List,[]),                      % parse sentence list with DCG rules
+  write(Parse), nl,                             % show the parse
+  !,                                            % if parse succeeds but logic fails do not back up and parse again
+  tologic(Parse,Formula1),                      % convert parse tree to logic
+  pprint2(Formula1),nl,nl,write('-->'),nl,      % show formula prior to fixing existentials
+  fixExistentials(Formula1,Formula2),           % add existentials for skolem vars
+  fixIsThereQueries(Parse,Formula2,Formula3),   % but remove the existential for the subject of an is there query
+  pprint2(Formula3),                            % show formula with corrected existentials
+  !,                                            % if runFlag is no do not back up past here
+  (RunFlag=yes->                                % if RunFlag is yes then...
+   (listToKIF(Formula3,no,KIF),                 % convert to KIF string for read-in to Sigma
+    write_KIF(KIF),       
+    !,                                          % if Sigma assert or query fails do not back up past here
+   (KindOfSentence=sentence->                   % now depending on type of sentence do either assert or query
+        test_KIF_assert(KIF);
+        test_KIF_query(KIF)));
+      true).                                    % eng2log still succeeds even if run flag is 'no'
+
+write_KIF(KIF) :-
+	nl,nl,write('----------------------------------'),nl,
+	nl, write('KIF <-- '),write(KIF),nl.
+
+% added for blocks world...fixIsThereQueries
+
+% fixIsThereQueries(+Sentence,+Formula1,-Formula2)
+% drops the existential for the query variable in an "Is there...?" sentence.
+% Currently drops the first variable as this will be the object searched for.
+fixIsThereQueries(s(q(is_there),NP1,pp(prep(PREPOSITION),NP2)),[exists, [QUERY_VARIABLE], Formula],Formula) :- !.
+fixIsThereQueries(s(q(is_there),NP),[exists, [QUERY_VARIABLE], Formula],Formula) :- !.
+fixIsThereQueries(ALL_ELSE,Formula,Formula).
+
+
+% sentenceToList(+Sentence,-List,-KindOfSentence)
+%   Sentence is a sentence like "a block is green" or a query like "is there a green block?"
+%   List is a list representation of the sentence
+%   KindOfSentence is either 'sentence' or 'query'
+
+% Converts a string sentence delimited with spaces into a list
+% Example: sentenceToList("Hello there Adam",X) succeeds with
+% X = [hello, there, adam].
+
+sentenceToList(Sentence,List,KindOfSentence) :- % turn the sentence into a list of chars
+  string_to_list(Sentence,Ascii),
+  asciiToTokens(Ascii,[],[],List,KindOfSentence).
+  
+% asciiToTokens(Sentence,Token,Lin,Result,KindOfSentence)
+%  Sentence is the remainder of the sentence string to be converted
+%  Token is the current token being constructed
+%  Lin is the list constructed so far
+%  Result if the final output
+%  KindOfSentence if 'query' if end of sentence is a '?'; 'sentence' if end is a '.', and 'unknown' otherwise.
+
+% if the list characters and the current token are empty, stop.
+asciiToTokens([],[],Result,Result,unknown).
+
+% if the list of characters is empty, just add the current token to the list
+asciiToTokens(Sentence,Token,Lin,Result,KindOfSentence) :-
+  end_of_sentence(Sentence,KindOfSentence),
+  string_to_list(TokenString,Token),
+  string_to_atom(TokenString,TokenAtom),
+  append(Lin,[TokenAtom],Result).
+             
+% if the next character is not a space, add it to the current token
+asciiToTokens([H|T],Token,Lin,Lout,KindOfSentence) :-
+  not(word_delimiter(H)),
+  append(Token,[H],Result),
+  asciiToTokens(T,Result,Lin,Lout,KindOfSentence).
+  
+% if the next character is a space, add the current token to the list
+asciiToTokens([H|T],Token,Lin,Lout,KindOfSentence) :-
+  word_delimiter(H),
+  string_to_list(TokenString,Token),
+  string_to_atom(TokenString,TokenAtom),
+  append(Lin,[TokenAtom],Result),
+  asciiToTokens(T,[],Result,Lout,KindOfSentence).
+
+end_of_sentence([46],sentence).                    % period
+end_of_sentence([63],query).                       % question mark
+end_of_sentence([33],imperative).                  % exclamation point, note: imperatives not handled in ACE.
+end_of_sentence([],  sentence).                    % let sentence be the default sentence type
+                      
+word_delimiter(32).                       % space
+word_delimiter(44).                       % comma
+word_delimiter(58).                       % colon
+word_delimiter(59).                       % semicolon
+word_delimiter(34).                       % quote
+
+%======================================================================
+% The section is a DCG definition that serves to parse English
+% input into parts of speech and a parse tree.  This handles the
+% syntax portion of syntax-semantics-pragmatics
+
+% WRM: changed ';' below to ',' as that was intended.
+% WRM: dropped anon variables for tense and gender in verb and noun
+%      phrases as they were not being used at present.
+
+sentence(s(Q,VP))                    --> query_word(Q),
+                                         verb_phrase(VP,Num),
+                                         {compatible(Q,VP)}.
+
+% added for blocks world for queries like 'is there a block on the cone'
+sentence(s(Q,NP))                    --> is_there(Q),
+	                                 noun_phrase(NP,Num).
+
+sentence(s(NP,VP))                   --> simple_noun_phrase(NP,Num), 
+                                         verb_phrase(VP,Num).
+                                        
+% added for Blocks World, for sentences like 'the orange block supports the blue block'
+sentence(s(NP,VP))                   --> noun_phrase(NP,Num), 
+                                         verb_phrase(VP,Num).
+
+% added for Blocks World, for sentences like 'there is an orange block on the table'
+sentence(s(ThereIs,NP))             --> there_is(ThereIs),
+	                              noun_phrase(NP,Num).
+
+% simple noun phrases cannot have modifiers
+simple_noun_phrase(np(D,N),P)    --> determiner(P,QT,D), noun(P,N).
+simple_noun_phrase(np(N),plural) --> noun(plural,N).
+simple_noun_phrase(np(PN),P)     --> proper_noun(PN).
+
+% ordinary noun phrases can optionally have modifiers
+noun_phrase(np(D,N),P)           --> determiner(P,QT,D), noun(P,N).              % the large cat
+noun_phrase(np(D,M,N),P)         --> determiner(P,QT,D), modifier(M), noun(P,N). % a red dog
+noun_phrase(np(N),plural)        --> noun(plural,N).  % dogs
+noun_phrase(np(PN),P)            --> proper_noun(PN). % hamlet of the house
+
+% including prepositional attachments in this version of ACE-- !
+noun_phrase(np(D,N,PP),P)           --> determiner(P,QT,D), noun(P,N), prepositional_phrase(PP). % the large cat on the mat
+noun_phrase(np(D,M,N,PP),P)         --> determiner(P,QT,D), modifier(M), noun(P,N), prepositional_phrase(PP). % a red dog in the room
+noun_phrase(np(N,PP),plural)        --> noun(plural,N), prepositional_phrase(PP).  % dogs in the yard
+noun_phrase(np(PN,PP),P)            --> proper_noun(PN), prepositional_phrase(PP). % hamlet of the house
+
+verb_phrase(vp(V,NP),P)          --> verb(V,P,T), noun_phrase(NP,_).
+verb_phrase(vp(V,NP),P)          --> verb(V,P,T), simple_noun_phrase(NP,_).
+
+verb_phrase(vp(V,NP),P)          --> copula(P,V), noun_phrase(NP,P).
+verb_phrase(vp(V,NP),P)          --> copula(P,V), simple_noun_phrase(NP,P).
+
+% added for Blocks World, 'Every pyramid is green' ...
+verb_phrase(vp(V,modifier(Modifier)),P)   --> copula(P,V), modifier(Modifier).
+
+% added for Blocks World, for sentences like 'a large pyramid is on the red block'
+verb_phrase(vp(V,NP),P)          --> copula(P,V), prepositional_phrase(NP).
+
+%determiner(P,QT,D)--
+% P is plurality, either singular or plural.
+% QT is quantifier, either univ or exist.
+% D is the determiner phrase itself.
+determiner(_,exist,dt(the)) --> [the].
+determiner(singular,exist,dt(a)) --> [a].
+determiner(singular,exist,dt(an)) --> [an].
+determiner(plural,exist,dt(many)) --> [many].
+determiner(singular,univ,dt(every)) --> [every].
+determiner(plural,univ,dt(all)) --> [all].
+
+% added for Blocks World, for sentences like 'no orange block is on the table'
+determiner(singular,exist,(dt(no))) --> [no].
+
+
+%modifiers (Note: removed 'Big' and 'Large' as only 'larger' is defined in the SUMO)
+modifier(m(iron)) --> [iron].
+modifier(m(wooden)) --> [wooden].
+modifier(m(concrete)) --> [concrete].
+
+% added for blocks world...new modifiers
+modifier(m(blue)) --> [blue].
+modifier(m(green)) --> [green].
+modifier(m(orange)) --> [orange].
+modifier(m(red)) --> [red].
+modifier(m(yellow)) --> [yellow].
+modifier(m(large)) --> [large].
+
+% added for blocks world...handling prepositional phrases
+prepositional_phrase(pp(Preposition,NounPhrase)) --> preposition(Preposition), noun_phrase(NounPhrase,Plurality).
+
+% added for blocks world...some prepositions
+preposition(prep(on)) --> [on].
+preposition(prep(on)) --> [under].
+preposition(prep(on)) --> [inside].
+preposition(prep(on)) --> [near].
+
+%noun(P,N)--
+% P is plurality, either singular or plural.
+% N is the noun phrase itself.
+noun(singular,n(president)) --> [president].
+noun(plural,n(presidents)) --> [presidents].
+noun(singular,n(cat)) --> [cat].
+noun(plural,n(cats)) --> [cats].
+noun(singular,n(animal)) --> [animal].
+noun(plural,n(animals)) --> [animals].
+noun(singular,n(person)) --> [person].
+noun(plural,n(people)) --> [people].
+noun(singular,n(hammer)) --> [hammer].
+noun(plural,n(hammers)) --> [hammers].
+
+% added for blocks world...
+noun(singular,n(object)) --> [object].
+noun(plural,n(objects)) --> [objects].
+
+noun(singular,n(block)) --> [block].
+noun(plural,n(blocks)) --> [blocks].
+
+noun(singular,n(pyramid)) --> [pyramid].
+noun(plural,n(pyramids)) --> [pyramids].
+
+noun(singular,n(tower)) --> [tower].
+noun(plural,n(tower)) --> [towers].
+
+noun(singular,n(cone)) --> [cone].
+noun(plural,n(cone)) --> [cones].
+
+noun(singular,n(table)) --> [table]. % table should only occur as singular in Blocks world
+
+%verb(V,P,T)--
+% V is the verb phrase itself.
+% P is plurality, either singular or plural.
+% T is the tense, which must be present for now.
+verb(v(sees),singular,present) --> [sees].
+verb(v(see),plural,present) --> [see].
+verb(v(writes),singular,present) --> [writes].
+verb(v(write),plural,present) --> [write].
+verb(v(has),singular,present) --> [has].
+verb(v(have),plural,present) --> [have].
+verb(v(eats),singular,present) --> [eats].
+verb(v(eat),plural,present) --> [eat].
+verb(v(uses),singular,present) --> [uses].
+verb(v(use),plural,present) --> [use].
+verb(v(likes),singular,present) --> [likes].
+verb(v(like),plural,present) --> [like].
+
+% added for blocks world...
+verb(v(supports),singular,present) --> [supports].
+verb(v(support),plural,present) --> [support].
+
+%WH-queries
+% query_word(Q)--
+% Q is the query word construction.
+query_word(q(who)) --> [who].
+query_word(q(what)) --> [what].
+
+% added for blocks world for queries like 'is there a block on the cone'
+is_there(q(is_there)) --> [is,there].
+                                                                         
+%Copula forms of BE
+% copula(P,C)--
+% P is plurality, either singular or plural.
+% C is the phrase with the copula form of BE itself.
+copula(singular,c(is)) --> [is].
+copula(plural,c(are)) --> [are].
+
+% added for Blocks World, for sentences like 'there is an orange block on the table'
+there_is(assert(there_is)) --> [there, is].
+
+%Proper nouns
+% proper_noun(PN)--
+% PN is any atom.
+
+% WRM: changed test from atomic(PN) to name(PN) be more specific.
+% also deleted ';' in [Pn];{name(PN)} to ',' as that was intended.
+
+proper_noun(pn(PN)) --> [PN], {name(PN)}.   
+
+%Names
+name(bill).
+name(george).
+name(hamlet).
+name(fido).
+
+% WRM: fixed expressions below to match as intended.
+
+% checks compatibility for queries like 'who hit george?' and 'what hit george?'
+compatible(Q,VP) :-                        % checks whether the query word is 
+  VP = vp(V,NP),                           % compatible with the verb phrase
+  NP = np(pn(N)),                          % WRM: changed NP = pn(N) to NP = np(pn(N))
+  (Q = q(who); Q = q(what)).
+
+% checks compatibility for queries like 'who hit the president?'
+% and 'what eats the cat?'
+compatible(Q,VP) :-                        % checks whether the query word is 
+  VP = vp(V,NP),                           % compatible with the verb phrase
+  NP = np(dt(Det),n(Class)),               % WRM: added for noun phrases like 'the president'
+  (Q = q(who); Q = q(what)).
+  
+% checks compatibility for queries like 'what is george?'
+compatible(Q,VP) :-
+  VP = vp(V,NP),
+  NP = np(pn(N)),                          % WRM: changed NP = pn(N) to NP = np(pn(N))
+  V = c(_C),
+  Q = q(what).
+
+%======================================================================
+% This second main section handles the conversion of a parse tree
+% into a logic representation.  This handles the
+% semantics portion of syntax-semnatics-pragmatics
+
+% tologic(+Parsetree,-Formula).
+% The first parameter matches the parse tree. 
+% The second parameter is the logical form.
+
+% for all queries, e.g., 'who sees hamlet?'...
+tologic(s(Q,VP),T) :-
+  tl_query_word(Q,QW),
+  tl_verb_phrase(_P,_Quant,VP,T,_Subj,Q).
+
+% added for blocks world...
+
+% for "is there" queries, e.g., 'is there a green object on the block'
+tologic(s(Q,NP),Formula) :-
+	Q = q(is_there),!,
+	tl_noun_phrase(_P,_Quant,NP,Formula,Subj,_Type).
+
+% for sentences like 'no pyramid supports a block'
+tologic(s(NP,VP), [not, [and, SubjectFormula, DirectObjectFormula]]) :-
+	NP = np(dt(no),n(KindOfObject)),!,
+	tl_noun_phrase(singular,exist,NP,SubjectFormula,Subject,_TypeOfObject), 
+	tl_verb_phrase(Plurality,Quant,VP,DirectObjectFormula,Subject,x). % the x means that there is no element q(_) in the parse tree
+
+% for sentences like 'a large pyramid is on the red block'
+tologic(s(NP1,VP),[and, SubjectFormula, DirectObjectFormula, [Relation, Subject1, Subject2]]) :- 
+	VP = vp(c(V),pp(prep(Relation),NP2)),!,
+	tl_noun_phrase(SubjectPlurality,SubjectQuantifier,NP1,SubjectFormula,Subject1,TypeOfSubject),
+	tl_noun_phrase(ObjectPlurality,ObjectQuantifier,NP2,DirectObjectFormula,Subject2,TypeOfDirectObject).
+
+% for sentences like 'every president is a person'...
+tologic(s(NP,VP),[and,H,T]) :- 
+  tl_simple_noun_phrase(P,exist,NP,H,Subj,_Obj), 
+  tl_verb_phrase(P,exist,VP,T,Subj,x),   % the x means that there is no element q(_) in the parse tree
+  nonvar(H).
+
+% for sentences like 'all cats are animals'...
+tologic(s(NP,VP),[implies,H,T]) :- 
+  tl_simple_noun_phrase(P,univ,NP,H,Subj,_Obj), 
+  tl_verb_phrase(P,univ,VP,T,Subj,x),    % the x means that there is no element q(_) in the parse tree
+  nonvar(H).
+
+% for sentences like 'the cat eats the president'
+tologic(s(NP,VP),T) :- 
+  tl_simple_noun_phrase(P,_Quant,NP,H,Subj,_Obj), 
+  tl_verb_phrase(P,_Quant,VP,T,Subj,x),  % the x means that there is no element q(_) in the parse tree
+  var(H).                                % if the NP is a proper noun 
+
+% for sentences like 'the orange block supports the green block'
+tologic(s(NP,VP),[implies, H, T]) :- 
+  tl_noun_phrase(P,_Quant,NP,H,Subj,_Obj), 
+  tl_verb_phrase(P,_Quant,VP,T,Subj,x).  % the x means that there is no element q(_) in the parse tree
+
+% for sentences like 'there is a red block on the table'
+tologic(s(assert(there_is),NP),Formula) :-
+  tl_noun_phrase(singular,exist,NP,Formula,_Subj,_Obj).
+
+% end additions here for blocks world.
+
+%---------------------- Noun Phrases ---------------------
+
+% tl_simple_noun_phrase(+Plurality, +Quantifier, +NounPhrase, -Formula, ?Subject, -TypeOfObject)--
+% tl_noun_phrase(+Plurality, +Quantifier, +NounPhrase, -Formula, ?Subject, -TypeOfObject)--
+
+% Plurality--The first parameter is whether the NP is singular or plural.
+% Quantifier--The second is whether existential or universal quantification is called for based
+%    on the form of the determiner.
+% NounPhrase--The third parameter is the form of the portion of the parse tree that must match.
+% Formula--The fourth is the logical formula.
+% Subject--The fifth is the subject of the sentence which can be either a variable that
+%    is bound to a type or an identifier denoting a proper noun. 
+% TypeOfObject--The sixth is type of the object.
+
+% Note: the subject may be needed in translating a direct object noun phrase that is an event where
+% the subject must be referred to also. In a noun phrase in the subject this variable is bound rather
+% accessed as it may be in a direct object noun phrase.
+
+%--------     where the determiner requires an existential quantifier
+
+% for noun phrases like 'bill'...
+tl_simple_noun_phrase(singular,exist,np(NP),_Formula,Noun,_Type) :- 
+  tl_proper_noun(NP,Noun).
+
+% for noun phrases like 'a cat'...
+tl_simple_noun_phrase(P,exist,np(D,N),Formula,skf(NounVar),Type) :- 
+  tl_determiner(P,exist,D,skf(NounVar)), 
+  tl_noun(P,N,Root,Formula,skf(NounVar),Type).
+
+% for noun phrases like 'the table'...
+tl_noun_phrase(P,exist,np(D,N),Formula,skf(NounVar),Type) :- 
+  tl_determiner(P,exist,D,skf(NounVar)), 
+  tl_noun(P,N,Root,Formula,skf(NounVar),Type).
+
+% for noun phrases like 'a hungry cat'...
+tl_noun_phrase(P,exist,np(D,M,N),[and,ModFormula,Formula],skf(NounVar),Type) :- 
+  tl_determiner(P,exist,D,skf(NounVar)), 
+  tl_modifier(M,ModFormula,skf(NounVar)), 
+  tl_noun(P,N,Root,Formula,skf(NounVar),Type).
+
+% for noun phrases like 'many hungry cats'...
+tl_noun_phrase(plural,exist,np(NP),Formula,skf(NounVar),_Type) :- 
+  tl_noun(plural,NP,Root,Formula,skf(NounVar),_Type).
+
+% added for blocks world, to handle prepositions as noun phrase modifiers:
+
+% for noun phrases like 'the block on the table'...
+tl_noun_phrase(P,exist,np(D,N,PP),[and, Formula, PrepObjectFormula, [Relation, skf(NounVar), PrepObject]],
+	       skf(NounVar),Type) :- 
+  PP = pp(prep(Relation),NP_of_PP),
+  tl_determiner(P,exist,D,skf(NounVar)), 
+  tl_noun(P,N,Root,Formula,skf(NounVar),Type),
+  tl_noun_phrase(ObjectPlurality,ObjectQuantifier,NP_of_PP,PrepObjectFormula,PrepObject,TypeOfPrepObject).
+
+% for noun phrases like 'a hungry cat on the table'...
+tl_noun_phrase(P,exist,np(D,M,N,PP),[and,ModFormula,NounFormula,PrepObjectFormula,[Relation,skf(NounVar),PrepObject]],
+	       skf(NounVar),Type) :- 
+  PP = pp(prep(Relation),NP_of_PP),
+  tl_determiner(P,exist,D,skf(NounVar)), 
+  tl_modifier(M,ModFormula,skf(NounVar)), 
+  tl_noun(P,N,Root,NounFormula,skf(NounVar),Type),
+  tl_noun_phrase(ObjectPlurality,ObjectQuantifier,NP_of_PP,PrepObjectFormula,PrepObject,TypeOfPrepObject).
+
+% for noun phrases like 'blocks on the table'
+tl_noun_phrase(plural,exist,np(N, PP),
+	       [and, Formula, skf(NounVar), PrepObjectFormula, [Relation, skf(NounVar), PrepObject]], _Type) :- 
+  PP = pp(prep(Relation),NP_of_PP),
+  tl_noun(plural,N ,Root,Formula,skf(NounVar),_Type),
+  tl_noun_phrase(ObjectPlurality,ObjectQuantifier,NP_of_PP,PrepObjectFormula,PrepObject,TypeOfPrepObject).  
+
+%--------       where the determiner forces a universal quantifier
+
+% for noun phrases like 'every cat'...
+tl_simple_noun_phrase(Plurality,univ,np(D,N),Formula,NounVar,Type) :- 
+  tl_determiner(Plurality,univ,D,skf(NounVar)), 
+  tl_noun(Plurality,N,Root,_,_,_),
+  tl_noun(singular,Singular_NP,Root,Formula,NounVar,Type).     % force the singular form of the noun
+
+% for noun phrases like 'every large cat'...
+tl_noun_phrase(Plurality,univ,np(D,M,N),[and,T1,Formula],NounVar,Type) :- 
+  tl_determiner(Plurality,univ,D,skf(NounVar)), 
+  tl_modifier(M,T1,skf(NounVar)), 
+  tl_noun(Plurality,N,Root,_,_,_),  
+  tl_noun(singular,Singular_NP,Root,Formula,NounVar,Type).     % force the singular form of the noun
+
+% for noun phrases like 'all cats'...
+tl_noun_phrase(plural,univ,np(Plural_NP),Formula,NounVar,Type) :- 
+  tl_noun(plural,Plural_NP,Root,_,_,_),
+  tl_noun(singular,Singular_NP,Root,Formula,NounVar,Type).     % force the singular form of the noun
+
+%--------
+  
+% for noun phrases like 'bill'...
+tl_noun_phrase(singular,_Quant,np(NP),_Formula,Noun,_Type) :- 
+  tl_proper_noun(NP,Noun).
+
+%---------------------- Verb Phrases ---------------------
+% tl_verb_phrase(+Plurality,+Quantifier,+VerbPhrase,-Formula,+Subject,+QueryForm)--
+% Plurality--First parameter is whether the subject is singular or plural.
+% Quantifier--Second param is the kind of quantifier, either exist or univ.
+% VerbPhrase--Third param is the verb phrase portion of the parse tree.
+% Formula--Fourth param is the logical form result.
+% Subject--Fifth param is the subject of the sentence.
+% QueryForm--Sixth param is the query form if present
+
+%------------------          queries with a copula
+
+% for queries like 'who is bill?'
+tl_verb_phrase(P,Quant,vp(V,NP),[instance,N,X],Subj,q(_Q)) :-
+  tl_copula(P,V,H,Subj,Obj),
+  NP = np(pn(N)).
+ 
+% for queries like 'what is the red insignia?'
+tl_verb_phrase(P,Quant,vp(V,NP),[instance,X,Type],Subj,q(_Q)) :-
+  tl_copula(P,V,H,Subj,Type),
+  tl_noun_phrase(_Number,Quant,NP,_,_,Type).
+
+
+% for queries like 'where is the president?'
+tl_verb_phrase(P,Quant,vp(V,NP),[instance,X,Type],Subj,q(_Q)) :-
+  tl_copula(P,V,H,Subj,Type),
+  tl_simple_noun_phrase(_Number,Quant,NP,_,_,Type).
+
+%--------                    queries with other verbs
+% For verbs that are not a copula form of be, such as hit, writes, eats,
+% etc, derive the logical formula H from the verb translation to logic,
+% tl_verb. Satisfying tl_verb binds H, which is the logical formula.
+
+% for queries like 'who sees hamlet?'
+tl_verb_phrase(P,Quant,vp(V,NP),H,Subj,q(_Q)) :-
+  NP = np(pn(N)),
+  tl_verb(P,V,H,Subj,N).
+ 
+% for queries like 'who sees the mangy dog?'
+tl_verb_phrase(P,Quant,vp(V,NP),H,Subj,q(_Q)) :-
+  tl_verb(P,V,H,Subj,Type),
+  tl_noun_phrase(_Number,Quant,NP,_,_,Type).
+
+% for queries like 'who sees the cat?'
+tl_verb_phrase(P,Quant,vp(V,NP),H,Subj,q(_Q)) :-
+  tl_verb(P,V,H,Subj,Type),
+  tl_simple_noun_phrase(_Number,Quant,NP,_,_,Type).
+
+%--------                    non-queries
+
+% for verb phrases like 'sees the large dog'
+tl_verb_phrase(P,Quant,vp(V,NP),[and,H,T],Subj,_Q) :- 
+  tl_noun_phrase(_Number,Quant,NP,T,Obj,Type),
+  tl_verb(P,V,H,Subj,Obj), 
+  nonvar(Type).                                
+  
+% for verb phrases like 'sees bill'
+tl_verb_phrase(P,Quant,vp(V,NP),H,Subj,_Q) :- 
+  tl_noun_phrase(_Number,Quant,NP,T,Obj,Type),
+  tl_verb(P,V,H,Subj,Obj), 
+  var(Type).                                  % if the NP is a proper noun
+  
+% for verb phrases like 'sees the dog'
+tl_verb_phrase(P,Quant,vp(V,NP),[and,H,T],Subj,_Q) :- 
+  tl_simple_noun_phrase(_Number,Quant,NP,T,Obj,Type),
+  tl_verb(P,V,H,Subj,Obj), 
+  nonvar(Type).
+
+% for verb phrases like 'sees a Republican' ??
+tl_verb_phrase(P,Quant,vp(V,NP),H,Subj,_Q) :- 
+  tl_simple_noun_phrase(_Number,Quant,NP,T,Obj,Type),
+  tl_verb(P,V,H,Subj,Obj), 
+  var(Type).                                  % if the NP is a proper noun
+
+%------------------ non-query verb phrases with a copula
+
+% WRM: bug fix 1, changed anonymous vars _ to tl_noun_phrase
+% and in tl_simple_noun_phrase (5th parameter) to Subj so vars in noun and verb
+% phrase will be the same, i.e., logic will be like:
+% (implies (instance ?g00003 cat) (instance ?g00003 animal))
+% instead of different vars. Used to be like:
+% (implies (instance ?g00003 cat) (instance ?g23009 animal))
+
+% for verb phrases like 'is a large dog' or 'are large dogs'
+tl_verb_phrase(P,exist,vp(V,NP),[instance,Subj,Type],Subj,_Q) :- 
+  tl_copula(P,V,H,_,_), 
+  tl_noun_phrase(_Number,Quant,NP,_,Subj,Type). %WRM: changed "_" to "Subj"
+  
+% for verb phrases like 'is a dog' or 'are dogs'
+tl_verb_phrase(P,exist,vp(V,NP),[instance,Subj,Type],Subj,_Q) :- 
+  tl_copula(P,V,H,_,_), 
+  tl_simple_noun_phrase(_Number,Quant,NP,_,Subj,Type). %WRM: changed "_" to "Subj"
+       
+% for verb phrases like 'are large cats' ??
+tl_verb_phrase(P,univ,vp(V,NP),F,Subj,_Q) :- 
+  tl_copula(P,V,H,_,_), 
+  tl_noun_phrase(_Number,univ,NP,F,Subj,Type). %WRM: changed "_" to "Subj"
+  
+% for verb phrases like 'is a cat' ??
+tl_verb_phrase(P,univ,vp(V,NP),F,Subj,_Q) :- 
+  tl_copula(P,V,H,_,_), 
+  tl_simple_noun_phrase(_Number,univ,NP,F,Subj,Type). %WRM: changed "_" to "Subj"
+
+% end of changes in bug fix 1, "_" to "Subj" in 4 clauses above.
+
+% added for Blocks World, for copula verb phrases like 'is green' in 'every pyramid is green'
+% or 'is wooden' in 'all blocks are wooden'
+tl_verb_phrase(P,univ,vp(V,modifier(m(ModifierTerm))),ModFormula,Subject,_Q) :- 
+  tl_copula(P,V,H,_,_),
+  tl_modifier(m(ModifierTerm),ModFormula,Subject).
+
+%------------------
+% tl_determiner(Plurality, Quantification, DeterminerPhrase, LambdaVar)
+% Plurality--First parameter is whether the subject is singular or plural.
+% Quantifier--Second param is the kind of quantifier, either exist or univ.
+% DeterminerPhrase--Third param is the determiner phrase itself (e.g., dt(every) ).
+% LambdaVar--the lambda variable, not instantiated in tl_determiner.
+
+tl_determiner(_,exist,dt(the),VAR).
+tl_determiner(singular,exist,dt(a),VAR).
+tl_determiner(singular,univ,dt(a),VAR).
+tl_determiner(plural,exist,dt(many),VAR).
+tl_determiner(singular,univ,dt(every),VAR).
+tl_determiner(plural,univ,dt(all),VAR).
+
+% added for blocks world...
+tl_determiner(singular,exist,dt(no),VAR). % for sentences like 'no pyramid supports a block'
+tl_determiner(singular,exist,dt(an),VAR). % for sentences like 'an orange pyramid is on the table'
+
+%------------------
+% tl_modifier(Modifier,Formula,LambdaVar)--
+% First param is the modifier phrase (e.g., m(big) ).
+% Second param is formula where LambdaVar is treated as
+%    if it were a lambda variable.
+% Third param is the variable to be used as a lambda variable.
+
+tl_modifier(m(iron),[material,'BlocksWorldIron',VAR],VAR).
+tl_modifier(m(wooden),[material,'BlocksWorldWood',VAR],VAR).
+tl_modifier(m(concrete),[material,'BlocksWorldConcrete',VAR],VAR).
+
+% added for blocks world...
+tl_modifier(m(Color),[attribute,VAR,SigmaColorConcept],VAR) :-
+	memberchk(Color,[red,green,blue,yellow,orange]),
+	convert_to_capitalized(Color,SigmaColorConcept).  % e.g., converts 'red' to 'Red'
+
+% To convert an atom (e.g., 'red') to capitalized (e.g., 'Red')
+% e.g., call convert(red,X).
+
+convert_to_capitalized(In,Capitalized) :- atom_chars(In,[FirstChar|RestChars]),
+	char_type(FirstChar,lower(CapitalizedChar)),
+	atom_chars(Capitalized,[CapitalizedChar|RestChars]).
+
+%------------------
+% tl_noun(Plurality, NounPhrase, SigmaTerm, Formula, LambdaVar, Type)
+% Plurality--First parameter is whether the subject is singular or plural.
+% NounPhrase--Second parameter is the noun phrase consisting of the noun alone, (e.g., n(cat)).
+% SigmaTerm--is the root or stem Sigma term this word maps to, e.g., hammer maps to hammer-theTool.
+% Formula--is either of the form (instance VAR CLASS), e.g., (instance VAR cat)), or
+%          (equals VAR (mobFn CLASS)), e.g., (equals VAR (mobFn cat)). I.e., "a cat" vs "the cats".
+
+% nouns 'person' and 'people'
+tl_noun(singular,n(person),'Person',[instance,VAR,'Person'],VAR,'Person').
+tl_noun(plural,n(people),'Person',[equals,VAR,[mobFn,'Person']],VAR,[mobFn,'Person']).
+
+% nouns 'animal' and 'animals'
+tl_noun(singular,n(animal),'Animal',[instance,VAR,'Animal'],VAR,'Animal').
+tl_noun(plural,n(animals),'Animal',[equals,VAR,[mobFn,'Animal']],VAR,[mobFn,'Animal']).
+
+% nouns 'president' and 'presidents'
+tl_noun(singular,n(president),'President',[instance,VAR,'President'],VAR,'President').
+tl_noun(plural,n(presidents),'President',[equals,VAR,[mobFn,'President']],VAR,[mobFn,'President']).
+
+% nouns 'cat' and 'cats'
+tl_noun(singular,n(cat),'Cat',[instance,VAR,'Cat'],VAR,'Cat').
+tl_noun(plural,n(cats),'Cat',[equals,VAR,[mobFn,'Cat']],VAR,[mobFn,'Cat']).
+
+% nouns 'hammer' and 'hammers'
+tl_noun(singular,n(hammer),'HammerTheTool',[instance,VAR,'HammerTheTool'],VAR,'HammerTheTool').
+tl_noun(plural,n(hammers),'HammerTheTool',[equals,VAR,[mobFn,'HammerTheTool']],VAR,[mobFn,'HammerTheTool']).
+
+% added for blocks world...
+
+% nouns 'object' and 'objects'
+tl_noun(singular,n(object),'Object',[instance,VAR,'Object'],VAR,'Object').
+tl_noun(plural,n(objects),'Object',[equals,VAR,[mobFn,'Object']],VAR,[mobFn,'Object']).
+
+% nouns 'block' and 'blocks'
+tl_noun(singular,n(block),'Block',[instance,VAR,'Block'],VAR,'Block').
+tl_noun(plural,n(blocks),'Block',[equals,VAR,[mobFn,'Block']],VAR,[mobFn,'Block']).
+ 
+% nouns 'pyramid' and 'pyramids'
+tl_noun(singular,n(pyramid),'Pyramid',[instance,VAR,'Pyramid'],VAR,'Pyramid').
+tl_noun(plural,n(pyramids),'Pyramid',[equals,VAR,[mobFn,'Pyramid']],VAR,[mobFn,'Pyramid']).
+
+% nouns 'tower' and 'towers'
+tl_noun(singular,n(tower),'Tower',[instance,VAR,'Tower'],VAR,'Tower').
+tl_noun(plural,n(towers),'Tower',[equals,VAR,[mobFn,'Tower']],VAR,[mobFn,'Tower']).
+
+% nouns 'cone' and 'cones'
+tl_noun(singular,n(cone),'Cone',[instance,VAR,'Cone'],VAR,'Cone').
+tl_noun(plural,n(cones),'Cone',[equals,VAR,[mobFn,'Cone']],VAR,[mobFn,'Cone']).
+
+% noun 'table'
+tl_noun(singular,n(table),'Table',[instance,VAR,'Table'],VAR,'Table').
+
+% WRM: TO DO, provide separate lexicon kb, then use that for both parsing and to logic rules (e.g., tl_noun).
+% Currently have to add a DCG rule and a tl_noun relation for each new word.
+
+%------------------
+
+% any symbol can be a proper noun at present
+tl_proper_noun(pn(PN),PN) :- atomic(PN).
+
+%------------------
+
+% copula verbs 'is' and 'are'
+tl_copula(singular,c(is),_,_,_).
+tl_copula(plural,c(are),_,_,_).
+
+%------------------
+%tl_verb(Plurality,VerbPhrase, Formula,Subject,Object)--
+% Plurality--First parameter is whether the subject is singular or plural.
+% VerbPhrase--Second param is simple verb phrase consisting just of the verb.
+% Formula--Third param is the logical formula.
+% Subject--Fourth param is the subject of the verb phrase.
+% Object--Fifth param is the object of the verb phrase.
+
+% verbs 'sees' and 'see'
+tl_verb(singular,v(sees),[and, 
+                           [instance, skf(X), 'Perception'], 
+                           [experiencer,skf(X),Subj],
+                           [patient,skf(X),Obj]],Subj,Obj).
+tl_verb(plural,v(see),[and, 
+                           [instance, skf(X), 'Perception'], 
+                           [experiencer,skf(X),Subj],
+                           [patient,skf(X),Obj]],Subj,Obj).
+
+% verbs 'writes' and 'write'
+tl_verb(singular,v(writes),[authors,Subj,Obj],Subj,Obj).
+tl_verb(plural,v(write),[authors,Subj,Obj],Subj,Obj).
+
+% verbs 'uses' and 'use'
+tl_verb(singular,v(uses),[uses,Subj,Obj],Subj,Obj).
+tl_verb(plural,v(use),[use,Subj,Obj],Subj,Obj).
+
+% verbs 'has' and 'have'
+tl_verb(singular,v(has),[possesses,Subj,Obj],Subj,Obj).
+tl_verb(plural,v(have),[possesses,Subj,Obj],Subj,Obj).
+
+% verbs 'eats' and 'eat'
+tl_verb(singular,v(eats),[and, 
+                           [instance, skf(X), 'Eating'], 
+                           [agent,skf(X),Subj],
+                           [resource,skf(X),Obj]],Subj,Obj).
+tl_verb(plural,v(eat),[and, 
+                           [instance, skf(X), 'Eating'], 
+                           [agent,skf(X),Subj],
+                           [resource,skf(X),Obj]],Subj,Obj).
+
+% added for blocks world...
+
+% verbs 'supports' and 'support'
+tl_verb(singular,v(supports),[on, Subj, Obj], Subj, Obj).
+tl_verb(plural,v(support),[on, Subj, Obj], Subj, Obj).
+
+
+%------------------
+
+% query words 'who', and 'what'
+tl_query_word(q(who),who).
+tl_query_word(q(what),what).
+
+% added for blocks world...
+tl_query_word(q(is_there),is_there).
+
+%======================================================================
+% makes sure that every variable which is supposed to be existentially
+% quantified is within the scope of its quantifier.
+
+% fixExistentials(+Formula,-Revised)
+
+fixExistentials(Formula,FixedFormula):-
+	collect_SKFs(Formula,SKF_EditPaths), % Collect all edit paths to each SKF expression
+	perform_SKF_subs(Formula,FormulaWSubs) ,  % Substitute Sigma var names like '?G1234' in place of Prolog vars like _G1234
+	find_insertion_points(SKF_EditPaths,InsertionPaths), % Determine longest common prefix of each edit path for an SKF expression
+	insert_existentials(FormulaWSubs,InsertionPaths,FixedFormula). % Then add the existentials
+
+% putAlist(+Key,+Value,+Alist,-UpdatedAlist) associates Key with the value Value
+% in the updated association list. If there is already one or more values associated
+% with the Key then the new value is added to the others. The key should not be a variable.
+
+% Example: putAlist(color,red,[[size.large],[color,blue]],[[size,large],[color,blue,red]]).
+
+putAlist(Key,Value,[],[[Key,Value]]):-nonvar(Key),!.
+putAlist(Key,Value,[[Key|Values]|Rest],[[Key,Value|Values]|Rest]):-!.
+putAlist(Key,Value,[[OtherKey|Values]|Rest],[[OtherKey|Values]|Updated]):-
+	Key \== OtherKey, !, putAlist(Key,Value,Rest,Updated).
+
+% getAlist(+Key,-Value,+Alist) fetches the Values for Key in the Alist
+% or fails if there is no such association. The key should not be a variable.
+
+getAlist(Key,Value,[[Key|Value]|_Rest]) :- nonvar(Key),!.
+getAlist(Key,Value,[[OtherKey|_]|Rest]) :-
+	Key \== OtherKey,!,getAlist(Key,Value,Rest).
+
+% anon_to_atom(+Var,-Atom) converts an anonymous variable such as
+% _G12546 to an atom ?G12546 suitable for use as a Sigma (not Prolog) var.
+% Courtesy Doug Miles.
+
+anon_to_atom(Var,Atom):-
+        term_to_atom(Var,SubAtom),
+        atom_codes(SubAtom,[95|CODES]), % 95 = '_'
+        atom_codes(Atom,[63|CODES]). % 63 = '?'
+
+/* collect_SKFs(+Formula,-Editlist) traverses Formula, a logical
+formula, and constructs an alist (association list) between SKF
+expressions and the paths taken to reach them. EditList indicates the
+path taken by a structure editor to get to a list containing the SKF
+expression.  Editlist is an Alist.  */
+
+% collect_SKFs(+Formula,-SKF_EditPathsFinal)
+% check the formula for SKF var expressions
+collect_SKFs(Formula,SKF_EditPathsFinal) :-
+	collect_SKFs_in_term(Formula,[],1,[],SKF_EditPathsFinal).
+
+% collect_SKFs_in_term(+Formula,+EditToHere,+TermIndex,+SKF_EditPaths,-SKF_EditPathsFinal)
+% see if there is an SKF expression in the current term, if not decompose it.
+collect_SKFs_in_term(Term,_Edit,_TermIndex,SKF_EditPaths,SKF_EditPaths) :-
+	atom(Term),!.
+collect_SKFs_in_term(Term,Edit,TermIndex,SKF_EditPaths,SKF_EditPathsFinal) :-
+	collectSKFvars(Term,SKF_vars), % collect vars in skf(VAR) expressions but fail this clause if there are none
+	SKF_vars \== [], !,
+	append(Edit,[TermIndex],ThisEditPath),
+	update_SKF_paths(SKF_vars,ThisEditPath,SKF_EditPaths,SKF_EditPathsFinal).
+collect_SKFs_in_term(Term,Edit,TermIndex,SKF_EditPaths,SKF_EditPathsFinal) :-
+	proper_list(Term),!,
+	append(Edit,[TermIndex],Edits),
+	collect_SKFs_in_list(Term,Edits,1,SKF_EditPaths,SKF_EditPathsFinal).
+collect_SKFs_in_term(Term,_Edit,_TermIndex,SKF_EditPaths,SKF_EditPaths) :-
+	(compound(Term);var(Term)),!.
+
+% collectSKFvars(+Term,-SKF_vars)
+% collects all vars in expressions like skf(VAR) at the top-level of Term.
+
+% example: collectSKFvars([performedBy, skf(_G9803), skf(_G9743)],[_G9803,_G9743]).
+
+collectSKFvars([],[]) :- !.
+
+collectSKFvars(X,[]) :- atom(X), !.
+
+collectSKFvars(X,[]) :- var(X), !.
+
+collectSKFvars([Head|Tail],Rest) :-
+	var(Head),!,
+	collectSKFvars(Tail,Rest).
+
+collectSKFvars([skf(VarName)|Tail],[VarName|Rest]) :-
+	!,collectSKFvars(Tail,Rest).
+
+collectSKFvars([Head|Tail],Rest) :-
+	collectSKFvars(Tail,Rest).
+
+% update_SKF_paths(+SKF_Vars,+ThisEditPath,+SKF_EditPaths,-SKF_EditPathsFinal)
+% for each var in SKF_Vars update the SKF edit paths, finally
+% returning SKF_EditPathsFinal.
+
+update_SKF_paths([],_,SKF_EditPaths,SKF_EditPaths).
+update_SKF_paths([Prolog_Variable|Tail],ThisEditPath,SKF_EditPaths,SKF_EditPathsFinal):-
+	var(Prolog_Variable),
+	anon_to_atom(Prolog_Variable,Sigma_Variable), % change from var like _G12546 to atom key like ?G12546 
+	putAlist(Sigma_Variable,ThisEditPath,SKF_EditPaths,SKF_EditPathsRevised),
+	update_SKF_paths(Tail,ThisEditPath,SKF_EditPathsRevised,SKF_EditPathsFinal).
+
+% collect_SKFs_in_list(+Formula,+EditToHere,+TermIndex,+SKF_EditPaths,-SKF_EditPathsFinal)
+% recursively decompose each expression in the term looking for SKF var expressions.
+collect_SKFs_in_list([],_Edit,_TermIndex,SKF_EditPaths,SKF_EditPaths).
+collect_SKFs_in_list([Head|Tail],Edit,TermIndex,SKF_EditPaths,SKF_EditPathsFinal) :-
+	collect_SKFs_in_term(Head,Edit,TermIndex,SKF_EditPaths,SKF_EditPathsAlmostFinal),
+	NextTermIndex is TermIndex + 1,
+	collect_SKFs_in_list(Tail,Edit,NextTermIndex,SKF_EditPathsAlmostFinal,SKF_EditPathsFinal).
+
+% perform_SKF_subs(+Formula,-RevisedFormula)
+% substitutes all expressions like skf(_G23657) with expressions like ?G23657
+
+% example: perform_SKF_subs([implies, [instance, skf(X), cat], [instance, skf(X), animal]],Sub).
+
+perform_SKF_subs(skf(Var),Sigma_Variable_Name):-
+	var(Var),
+	anon_to_atom(Var,Sigma_Variable_Name). % change from var like _G12546 to atom key like ?G12546 
+
+perform_SKF_subs(Term,Term):-ground(Term);var(Term).
+
+perform_SKF_subs([Head|Tail],[RevisedHead|RevisedTail]):-
+	perform_SKF_subs(Head,RevisedHead),
+	perform_SKF_subs(Tail,RevisedTail).
+
+perform_SKF_subs(Term,Term):-compound(Term).
+
+% find_insertion_points(+SKF_EditPaths,-Insertion_Paths),
+
+% Examples:
+% find_insertion_points([['?G12524', [1, 3, 2], [1, 3, 3], [1, 3, 4]]],[['?G12525',1,3]]).
+
+% find_insertion_points([['?G9743',[1,2],[1,3,2,3]], ['?G9803',[1, 3, 2, 2],[1,3,2,3],[1,3,2,4]], ['?G9770', [1,3,2,4], [1,3,3]],
+%                       [['?G9743',1], ['?G9803', 1, 3, 2], ['?G9770', 1,3]]]),
+
+find_insertion_points([],[]).
+find_insertion_points([[SigmaVarName|EditPaths]|OtherSigmaVars],[[SigmaVarName|LongestSharedPrefix]|OthersFixed]):-
+	longest_shared_prefix(EditPaths,LongestSharedPrefix),
+	find_insertion_points(OtherSigmaVars,OthersFixed).
+
+% longest_shared_prefix(+Paths,-Longest) determines the path
+% to the insertion point of the existential given all the edit paths
+% that led to the occurrence of a particular skolem expression. That
+% path is the longest shared prefix of all the edit path lists.
+
+% Example: longest_shared_prefix([[1, 3, 2], [1, 3, 3], [1, 3, 4]], Longest)
+% succeeds with Longest = [1, 3]
+
+% Example: longest_shared_prefix([[1,2],[1,3,2,3]],Longest)		 
+% succeeds with Longest = [1]
+
+% longest_shared_prefix([[1, 3, 2, 2],[1,3,2,3],[1,3,2,4]],Longest)
+% succeeds with Longest = [1,3,2]
+
+longest_shared_prefix([OnlyPath],OnlyPath).
+
+longest_shared_prefix([FirstPath|RestPaths],Longest) :-
+	longest_shared_prefix_aux(RestPaths,FirstPath,Longest).
+
+% longest_shared_prefix_aux(+Paths,+SoFar,-Longest)
+
+longest_shared_prefix_aux([],Longest,Longest).
+
+longest_shared_prefix_aux([FirstPath|Rest],SoFar,Longest) :-
+	longest_prefix(FirstPath,SoFar,NewLongest),
+	longest_shared_prefix_aux(Rest,NewLongest,Longest).
+
+% longest_prefix(+FirstPath,+SecondPath,-LeastCommon)
+% determines the longest prefix common to both lists.
+
+% example: longest_prefix([1,4,3,7],[1,4,3,9,10],[1,4,3]).
+
+longest_prefix(FirstPath,SecondPath,LeastCommon) :-
+	longest_prefix_aux(FirstPath,SecondPath,[],LeastCommon).
+
+% longest_prefix_aux(+FirstPath,+SecondPath,+InCommonSoFar,-LeastCommon)
+
+longest_prefix_aux([],_,SoFar,SoFar) :- !.
+
+longest_prefix_aux(_,[],SoFar,SoFar) :- !.
+
+longest_prefix_aux([First|Rest],[First|Others],SoFar,[First|FinalForRest]) :-
+	!,longest_prefix_aux(Rest,Others,SoFar,FinalForRest).
+
+longest_prefix_aux([First|Rest],[Different|Others],SoFar,SoFar).
+
+% insert_existentials(+FormulaWSubs,+EditPaths,-FinalFormula).
+
+/* Example 1:
+
+R1
+   = [implies, [instance, ?G12472, cat],
+               [and, [instance, ?G12524, perceptionEvent],
+		     [experiencer, ?G12524, ?G12472],
+		     [theme, ?G12524, hamlet]]].
+
+
+insert_existentials(R1, [[?G12524, 1, 3]],FinalFormula)
+		   
+succeeds with
+  FinalFormula= [implies, [instance, ?G12472, cat],
+		          [exists, [?G12524],
+			           [and,
+				       [instance, ?G12524, perceptionEvent],
+				       [experiencer, ?G12524, ?G12472],
+		                       [theme, ?G12524, hamlet]]].
+
+*/
+
+insert_existentials(Formula,EditPaths,FinalFormula) :-
+	insert_existentials_in_term(Formula,1,[],EditPaths,FinalFormula).
+
+% insert_existentials_tracking_path(+Term,+Index,+EditPathSoFar,+EditPaths,-RevisedTerm)
+
+insert_existentials_tracking_path(AtomicTerm,_Index,_EditPathSoFar,_EditPaths,AtomicTerm) :-
+	atom(AtomicTerm).
+
+insert_existentials_tracking_path([Head|Tail],Index,EditPathSoFar,EditPaths,[RevisedHead|RevisedTail]) :-
+	insert_existentials_in_term(Head,Index,EditPathSoFar,EditPaths,RevisedHead),
+	NewIndex is Index + 1,
+	insert_existentials_tracking_path(Tail,NewIndex,EditPathSoFar,EditPaths,RevisedTail).
+
+insert_existentials_tracking_path(CompoundTerm,_Index,_EditPathSoFar,_EditPaths,CompoundTerm) :-
+	compound(CompoundTerm).
+
+% insert an existential if there are any edit paths consistent with
+% the current term. Recursively edit the term regardless.
+
+% insert_existentials_in_term(+Term,+Index,+CurrentEditPath,+EditPaths,-EditedTerm)
+
+insert_existentials_in_term(Term,Index,CurrentEditPath,EditPaths,WrappedTerm) :-
+	append(CurrentEditPath,[Index],NewEditPath),
+	find_matching_edit_path(NewEditPath,EditPaths,SigmaVariableNames),!, % Does at least one edit path match the current path?
+	insert_existentials_tracking_path(Term,1,NewEditPath,EditPaths,RecursivelyChangedTerm),
+	wrap_existentials_around(RecursivelyChangedTerm,SigmaVariableNames,WrappedTerm).
+
+insert_existentials_in_term(Term,Index,CurrentEditPath,EditPaths,EditedTerm) :-
+	append(CurrentEditPath,[Index],NewEditPath),
+	insert_existentials_tracking_path(Term,1,NewEditPath,EditPaths,EditedTerm).
+
+% wrap_existentials_around(+Term,+SigmaVariableNames,-WrappedTerm)
+
+% example: wrap_existentials_around([implies, x, y], ['?G12345','?G56789'],X)
+% succeeds with X = [exists, ['?G12345'], exists, ['?G56789'], [implies, x, y]]).
+
+wrap_existentials_around(Term,[],Term):-!.
+
+wrap_existentials_around(Term,[FirstVar|RestVars],[exists, [FirstVar], OtherWrapping]):-
+	wrap_existentials_around(Term,RestVars,OtherWrapping).
+
+% find_matching_edit_path(+PathSoFar,+EditPaths,-SigmaVariableName)
+% PathSoFar is the edit path to here, e.g., [1, 3]
+% EditPaths looks like [['?G2354', 1, 4], ['?G1117', 1, 3], ['?G2311', 2, 3, 1, 1]]
+% Succeeds if there is an edit path where an existential with the Sigma var name
+% found should be inserted precisely at this point, otherwise fails. Returns a list
+% of Sigma var names (usually just one) that need existentials added at this point.
+% If there are none this predicate fails rather than returning an empty list.
+
+find_matching_edit_path(PathSoFar,EditPaths,SigmaVariableNames) :-
+	bagof(SigmaVariableName,getprop(SigmaVariableName,PathSoFar,EditPaths),SigmaVariableNames).
+
+% getprop(+Key,?Value,+PropList) fetches the Value for Key in the PropList
+% or fails if there is no such association. It can succeed more than once if
+% there are multiple entries for the key.
+
+% Example: getprop(color,[red],[[color,red]]).
+% Example: getprop('?G1117', [1,3], [['?G2354', 1, 4], ['?G1117', 1, 3], ['?G2311', 2, 3, 1, 1]]).
+% Example: getprop('?G1117', X, [['?G2354', 1, 4], ['?G1117', 1, 3], ['?G2311', 2, 3, 1, 1],['?G1117', a, b]])
+% succeeds with X = [1,3] and then again with X = [a,b].
+
+getprop(Key,Value,[[Key|Value]|_Rest]).
+getprop(Key,Value,[[OtherKey|_]|Rest]) :- getprop(Key,Value,Rest).
+
+%======================================================================
+% This section handles pretty printing a logical formula
+%pprint2(Formula)--
+%  Formula--is a list representing a formula (e.g., [exists, X, cat]).
+% The formula is printed out as if a Sigma term: (exists ?G302 cat), in
+% a LISP-like format.
+
+pprint2(F) :- sformat(S,'~w',[F]), string_to_list(S,L), interior(L,0).
+
+% interior(+Formula,+Indent) prints out the formula at the current level
+% of indentation.
+interior(F,Indent) :-
+  F=[].
+  
+% handle strings like ", b, c ..."
+interior([H|T],Indent) :-           % don't print commas
+  H = 44,
+  interior(T,Indent).
+  
+% handle strings like "[_G234, b, c..."
+interior([H|T],Indent) :-           % convert left bracket to left paren (and _ to ? in vars)
+  H = 91,                           % 91 is left bracket
+  NewIndent is Indent + 2,
+  T = [H2|T2],
+  H2 = 95,                          % 95 is underscore
+  nl,
+  writespaces(Indent),
+  write('('),
+  interior([63|T2],NewIndent).      % 63 is question mark
+
+% handle strings like "[a, b, c ..."
+interior([H|T],Indent) :-           % convert left bracket to left paren
+  H = 91,                           % 91 is left bracket
+  NewIndent is Indent + 2,
+  nl,
+  writespaces(Indent),
+  write('('),
+  interior(T,NewIndent).
+
+% handle strings like "], a, b..."
+interior([H|T],Indent) :-           % convert right bracket to right paren
+  H = 93,                           % 93 is right bracket
+  NewIndent is Indent - 2,
+  write(')'),  
+  interior(T,NewIndent).
+
+% handle strings like  " _G201..."
+interior([H|T],Indent) :-           % replace underscores at the beginning of variable names with a question mark
+  H = 32,
+  T = [H2|T2],
+  H2 = 95,                          % 95 is underscore
+  put(H),
+  interior([63|T2],Indent).         % 63 is question mark
+
+% handle all other strings, e.g., "a, b..."
+interior([H|T],Indent) :-
+  put(H),
+  interior(T,Indent).
+  
+%------------------
+% writespaces(+N) indents over N spaces.
+
+writespaces(Indent) :-
+  Indent = 0.
+  
+writespaces(Indent) :-
+  Indent > 0, write(' '), NewIndent is Indent - 1, writespaces(NewIndent).
+
+% listToKIF(+Formula,+PrettyPrint,-KIF)
+% takes a KIF formula in standard Prolog list notation, and then writes
+% out a KIF string, suitable for reading in by a LISP reader, in KIF.
+% Note: Code adapted from pprint2. If PrettyPrint is yes then indenting
+% spaces and carriage returns are included for a string that can be
+% displayed nicely. If PrettyPrint is no they are not, for input that
+% is more compact and that is acceptable to the Sigma API, which currently
+% doesn't take newlines in input.
+
+%  Formula--is a list representing a formula (e.g., [exists, [X], [instance, X, cat]]).
+%  KIF--The formula is returned suitably for Sigma input: "(exists (?G302) (instance ?G302 cat))"
+
+listToKIF(Formula,PrettyPrint,KIF) :- sformat(FormulaString,'~w',[Formula]),
+	string_to_list(FormulaString,FormulaListOfChars),
+	interior(FormulaListOfChars,PrettyPrint,0,[],KIF).
+
+% interior(+Formula,+Indent,-KIF_so_far,-KIF) prints out the formula at the current level
+% of indentation, adds the formula's printout to KIF_so_far, and ultimately returns the
+% complete formula as KIF. KIF_so_far and KIF are both lists of ASCII characters.
+interior([],PrettyPrint,Indent,KIF_so_far,KIF_so_far) :- !.
+  
+% handle strings like ", b, c ..."
+interior([H|T],PrettyPrint,Indent,KIF_so_far,KIF) :-           % don't print commas
+  H = 44,
+  interior(T,PrettyPrint,Indent,KIF_so_far,KIF).
+  
+% handle strings like "[_G234, b, c..."
+ % convert left bracket to left paren (and _ to ? in vars)
+interior([H|T],PrettyPrint,Indent,KIF_so_far,KIF) :-          
+  H = 91,                              % 91 is left bracket
+  NewIndent is Indent + 2,
+  T = [H2|T2],
+  H2 = 95,                             % 95 is underscore
+ % add new line to KIF output so far if generating a string for pretty printing...
+  ( (PrettyPrint = yes) -> sformat(New_KIF,"~s~n",[KIF_so_far]); 
+                           sformat(New_KIF,"~s",[KIF_so_far])
+  ),
+  writespaces(Indent,PrettyPrint,New_KIF,Padded_KIF),
+  sformat(Final_KIF,"~s(",[Padded_KIF]), % add ( to end of KIF so far
+  interior([63|T2],PrettyPrint,NewIndent,Final_KIF,KIF).        % 63 is question mark
+
+% handle strings like "[a, b, c ..."
+% convert left bracket to left paren
+interior([H|T],PrettyPrint,Indent,KIF_so_far,KIF) :-
+  H = 91,                           % 91 is left bracket
+  NewIndent is Indent + 2,
+  % add new line to KIF output so far if generating a string for pretty printing...
+  ( (PrettyPrint = yes) -> sformat(New_KIF,"~s~n",[KIF_so_far]); 
+                           sformat(New_KIF,"~s",[KIF_so_far])
+  ),
+  writespaces(Indent,PrettyPrint,New_KIF,Padded_KIF),
+  sformat(Final_KIF,"~s(",[Padded_KIF]), % add ( to end of KIF so far
+  interior(T,PrettyPrint,NewIndent,Final_KIF,KIF).
+
+% handle strings like "], a, b..."
+% convert right bracket to right paren
+interior([H|T],PrettyPrint,Indent,KIF_so_far,KIF) :-
+  H = 93,                           % 93 is right bracket
+  NewIndent is Indent - 2,
+  sformat(Final_KIF,"~w)",[KIF_so_far]), % add ) to end of KIF so far
+  interior(T,PrettyPrint,NewIndent,Final_KIF,KIF).
+
+% handle strings like " _G201..."
+% replace underscores at the beginning of variable names with a question mark
+interior([H|T],PrettyPrint,Indent,KIF_so_far,KIF) :-
+  H = 32,
+  T = [H2|T2],
+  H2 = 95,                                 % 95 is underscore
+  sformat(Final_KIF,"~s~c",[KIF_so_far,H]), % add H to end of KIF so far
+  interior([63|T2],PrettyPrint,Indent,Final_KIF,KIF).  % 63 is question mark
+
+% handle all other strings, e.g., "a, b..."
+interior([H|T],PrettyPrint,Indent,KIF_so_far,KIF) :-
+  sformat(Final_KIF,"~s~c",[KIF_so_far,H]), % add H to end of KIF so far
+  interior(T,PrettyPrint,Indent,Final_KIF,KIF).
+  
+%------------------
+% writespaces(+N,+PrettyPrint,+Input,-Output) adds N spaces to the end of the
+% input string Input producing the output string Output if PrettyPrint is yes,
+% otherwise it just adds one space if N > 0.
+
+writespaces(Indent,PrettyPrint,Input,Input) :-
+  Indent = 0.
+  
+writespaces(Indent,yes,Input,Output) :-
+  Indent > 0,
+  sformat(Padded,"~s~c",[Input,32]),  % 32 is space
+  NewIndent is Indent - 1,
+  writespaces(NewIndent,yes,Padded,Output).
+
+writespaces(Indent,no,Input,PlusOneSpace) :-
+  Indent > 0,
+  sformat(PlusOneSpace,"~s~c",[Input,32]).  % 32 is space
+
+%======================================================================
+% This section tests the performance of the program.
+
+% Note that at present uppercase letters are not handled so all sentences
+% should be lowercase, as in the examples below.
+
+testme :-
+  write('========================================'),nl,
+  write('Restricted English to logic translation.'),nl,
+  write('========================================'),nl,
+  eng2log('fido is a president'),nl,nl,!,
+  write('----------------------------------'),nl,
+  eng2log('the president has a cat'),nl,nl,!,
+  write('----------------------------------'),nl,
+  eng2log('the president has a wooden cat'),nl,nl,!,
+  write('----------------------------------'),nl,
+  eng2log('the president writes hamlet'),nl,nl,!,
+  write('----------------------------------'),nl,
+  eng2log('the president has many cats'),nl,nl,!,
+  write('----------------------------------'),nl,
+  eng2log('bill eats george'),nl,nl,!,
+  write('----------------------------------'),nl,
+  eng2log('the president sees hamlet'),nl,nl,!,
+  write('----------------------------------'),nl,
+  eng2log('bill uses the hammer'),nl,nl,!,
+  write('----------------------------------'),nl,
+  eng2log('who is the president?'),nl,nl,!,
+  write('----------------------------------'),nl,
+  eng2log('what eats the cat?'),nl,nl,!,
+  write('----------------------------------'),nl,
+  eng2log('all cats are animals'),nl,nl,!,
+  write('----------------------------------'),nl,
+  eng2log('every president is a person'),nl,nl,!,
+  write('----------------------------------'),nl,
+  eng2log('who sees hamlet?'),nl,nl,!,
+  write('----------------------------------'),nl,
+  eng2log('who is bill?'), nl,nl,!,
+  write('----------------------------------'),nl,
+  eng2log('the cat eats the president'),nl,nl,!.
+  
+%======================================================================
+
+% Examples of proper translation from the parse tree to logic
+ 
+% S = s(np(dt(the), n(cats)), vp(v(have), np(dt(a), n(president))))
+% (thereExists ?X 
+%   (and 
+%     (instance ?X President) 
+%     (possesses (MobFn Cat) ?X)))
+
+% S = s(np(dt(the), n(cat)), vp(v(has), np(dt(a), m(big), n(president))))
+% (thereExists ?X 
+%   (thereExists ?Y
+%     (and 
+%       (instance ?X President) 
+%       (instance ?Y Cat)
+%       (size ?X Big) 
+%       (possesses ?Y ?X))))
+
+
+%======================================================================
+
+%======================================================================
+% This section tests the performance of the extensions to handle the
+% Blocks World.
+
+test_blocks :-
+  write('========================================'),nl,
+  write('Restricted English to logic translation.'),nl,
+  write('========================================'),nl,
+  eng2log('every pyramid is green'),nl,nl,!,
+  write('----------------------------------'),nl,
+  eng2log('the orange block supports a green block'),nl,nl,!,
+  write('----------------------------------'),nl,nl,!,
+  eng2log('a wooden pyramid is on the red block'),nl,nl,!,
+  write('----------------------------------'),nl,nl.
+
+

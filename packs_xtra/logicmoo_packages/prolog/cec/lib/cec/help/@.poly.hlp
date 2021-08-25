@@ -1,0 +1,28 @@
+
+POLY: a Polynomial Ordering
+---------------------------
+
+PolyI, I >= 1, defines a reduction ordering by
+
+t1 > t2 : < = > I(t1 )  >  I(t2 ).
+
+I  is  defined  by  associating  an  integer polynomial  F(x1 , ... , xn ) of 
+degree n  with each n-ary operator f.  The choice of coefficents  must ensure
+monotonicity, e.g.
+
+I(t1 ) > I(t2 ) implies I(f("...", t1 ,"...")) > I(f("...", t2 ,"..."))
+
+and that terms are mapped into nonnegative integers only; this is the case if
+all coefficients are positive.
+
+The concrete version of this technique as it is used in CEC is due to [CL86].
+In this version  operators are interpreted  by k-tuples of polynomials, where
+the dimension k must be fixed throughout a given specification.
+A  later  change of  the dimension in general makes  old  termination  proofs  
+invalid.  In  that  case CEC  turns back all rules into equations. Default is
+the dimension 1.
+
+The difficulty of this termination ordering from a users point of view is how
+to guess the appropriate polynomials  such that all equations will be ordered
+in the  desired way.  It will  take some  time to  become familiar  with this
+technique.

@@ -1,0 +1,212 @@
+%% (c) 1992, 1993 by KIT-BACK, TU Berlin. All rights reserved.
+%% --------------------------------------------------------------------
+%%
+%%  Load BACK V 5.2  for SWI-Prolog
+%%  
+%%  To load BACK into SWI-Prolog consult this file and  
+%%  call 'back/0'.        
+%% 
+%% -------------------------------------------------------------------
+
+
+%
+% bianchi - modifiche per l'uso con SICStus
+%                                             5/6/96
+%
+%      - modifiche a questo file 
+%      - modifiche per la direttiva multifile (vedi oltre)
+%        
+%      - modifiche al file './libraries/printlength.pl
+%
+%      - modofiche al file './libraies/sets.pl
+%            da qualche parte si aspetta che ci sia il
+%            predicato sets:memberchk/2 e non basta che
+%            sia definito in nel modulo user: 
+%            (in realta' nel modulo sets: dovrebbe essere
+%              importato questo predicato dal modulo basics:
+%             ma la libreria non viene aperta ).
+%          
+%
+%  viene asserito che_prolog('SICS') per riconoscere il SIXTUS
+%
+
+che_prolog('SICS').
+                      
+:- op(1150, fx, [(mode), (public)]).
+
+
+
+:- dynamic b5st_class_db/4.
+:- dynamic t5tbox_anything_prim_key/1.
+:- dynamic t5tbox_nothing_key/1.
+:- dynamic b5st_instance_db/4.
+:- dynamic b5inst/6.
+:- dynamic i5db_conc/5.
+:- dynamic a5odb/2.
+
+
+
+/* bianchi eliminate le direttive multifile da:
+    abox.pl, tbox1.pl, tbox2.pl, btl.pl 
+   e inserita qui. Il SICStus prevede che la direttiva
+   multifile sia usata una volta sola altrimenti ricomincia il consul  */
+
+:- multifile b5dump_these_predicates/1.
+
+
+
+:- assert(library_directory('./libraries')).
+
+% bianchi carica library.quintus
+% ensure_loaded non funziona perche' usa un nome sbagliato.
+% carico direttamente 'library.quintus'
+% che fa caricare le librerie del quintus (dalla dir "libraries")
+
+:- prolog_flag(redefine_warnings,_,off).
+:- ['library.quintus'].
+:- prolog_flag(redefine_warnings,_,on).
+
+% :- ensure_loaded(library(quintus)).
+
+
+/* bianchi - style_check non definito nel SIXTUS  
+       si puo' usare redefine_warnings che e' un toggle ON/OFF  */
+
+style_check :- prolog_flag(redefine_warnings,_,on).
+no_style_check :- prolog_flag(redefine_warnings,_,off).
+
+/*
+no_style_check :- 
+	style_check([-singleton,-atom,-dollar,-discontiguous,-string]).
+
+style_check :- 
+	style_check([+singleton,+atom,-dollar,+discontiguous,-string]).
+*/
+
+
+
+%%% ----------------------------------------------------------------------
+
+% TH These predicates are Quintus specific, but not yet included in
+%    the library Quintus.pl of SWI. Unfortunately, they 
+%    1) do not perfectly resemble the semantics of those predicates in 
+%       Quintus 
+%    2) they are not yet exhaustively tested !
+
+on_exception(_,Goal,_) :-
+	call(Goal).
+
+/* bianchi - read_clause non esiste nel SICSTUS
+             read_term dovrebbe esserci indagare?????? */ 
+
+%read_term(Stream,_,Term) :-
+%	read_clause(Stream,Term). 
+
+read_term(Stream,_,Term) :-
+	read(Stream,Term). 
+ 
+compound(X) :-
+	nonvar(X),
+	functor(X,_,A), A > 0.
+	
+atom_chars(Atom,String) :-
+	name(Atom,String).
+
+number_chars(Number,String) :-
+	name(Number,String).
+
+load_files([]) :-
+	!.
+load_files([File|Files]) :-
+	!, 
+	load_files(File),
+	load_files(Files).
+load_files(File) :-
+	see(File),
+	repeat,
+	read(Term),
+        ( Term == end_of_file, !, seen
+        ; assert(Term), fail ).
+
+save_predicates(FunctorList,File) :-
+	tell(File),
+	( member(Name/Arity,FunctorList),
+	  functor(Head,Name,Arity),
+	  clause(Head,Body),
+	  writeq((Head :- Body)), write('.'), nl,
+	  fail 
+        ; told ),
+	!.
+
+
+
+
+%%% ----------------------------------------------------------------------
+
+
+back :-				%% compile BACK
+	no_style_check,
+        compile_preliminaries,
+        compile_tbox,
+        compile_abox,
+        compile_patches,
+	msg_back_loaded,
+	style_check,
+        backinit,
+	backread(backmacros).
+
+%%
+%% ----------------------------------------
+%%
+
+compile_preliminaries :-
+	msg_loading_prels,
+	['dynamic.quintus'],
+	['library.quintus'],
+        ['backops.pl'],
+	['util.pl'].
+
+
+compile_tbox :-
+        msg_loading_tbox,
+        ['tbox1.pl'],
+        ['tbox2.pl'],
+        ['btl.pl'].
+        
+  
+compile_abox :-
+        msg_loading_abox,
+        ['abox.pl'].
+
+compile_patches :-
+        msg_loading_patches,
+	['back.patch'].
+
+%% BACK Test Environment
+
+backtest :-
+        load_testfiles,
+        start_testing.
+
+load_testfiles :- 
+	['tests/alltests'].
+
+start_testing :-
+	alltests,
+	!.
+
+msg_loading_prels :-
+	write(' *** BACK: Loading preliminaries ...'), nl.
+msg_loading_tbox :-
+        write(' *** BACK: Loading TBox V 5.2 ...'), nl.
+msg_loading_abox :-
+        write(' *** BACK: Loading ABox V 5.2 ...'), nl.
+msg_loading_patches :-
+        write(' *** BACK: Loading Patches ...'), nl.
+msg_back_loaded :-
+        write(' *** BACK: BACK System V 5.2 Loaded.'), nl.
+
+
+
+
+

@@ -1,0 +1,100 @@
+MFILES	= $(MIZFILES)
+MMLLAR  = $(MFILES)/mml.lar
+MMLLAR100  = $(MFILES)/mml.lar.100
+MIZ100     = $(shell cat $(MMLLAR100))
+STANDARDMIZ     = $(shell cat $(MMLLAR))
+# start the randomized processing with scpqsort - it is by far slowest
+SHMIZ = scpqsort $(filter-out scpqsort, $(shell sort -R < $(MMLLAR)))
+
+XSL4MIZAR =/home/urban/gr/xsl4mizar
+MPTP2 =/home/urban/gr/MPTP2
+XSLTPROC = xsltproc
+XML2HTML = $(XSL4MIZAR)/miz.xsl
+ADDABS = $(XSL4MIZAR)/addabsrefs.xsl
+ACCOM = $(MFILES)/bin/accom 
+VERIFIER = $(MFILES)/bin/verifier
+EXPORTER = $(MFILES)/bin/exporter
+VERIFIER.BFEX = $(MFILES)/bin/verifier.bfex
+MIZPL = $(XSL4MIZAR)/mizpl.xsl
+EVL2PL = $(XSL4MIZAR)/evl2pl.xsl
+MKXMLHEAD = $(XSL4MIZAR)/mkxmlhead.pl
+MKCOMMENTS = $(XSL4MIZAR)/MizComments.pl
+DBENV2 = $(MPTP2)/dbenv2.pl
+MK_DERIVED = $(MPTP2)/mk_derived.pl
+
+%.acc: %.miz
+	$(ACCOM) $* > $*.acc 
+
+%.exp: %.acc
+	$(EXPORTER) -q   $* >$*.exp  
+
+# no longer needed - dco2 and others made from  xml2
+#%.dco1: %.dco
+#	$(XSLTPROC)  --param aname \'$(shell echo $*|tr 'a-z' 'A-Z')\' $(ADDABS) $*.dco > $*.dco1;
+
+#%.dco2: %.dco1
+#	$(XSLTPROC) --param mml 1 $(MIZPL)  $*.dco1 > $*.dco2
+
+%.xml: %.acc
+	$(VERIFIER.BFEX) -q   $*  
+	perl -i -e 'local $$/;$$_=<>; if(m/((.|[\n])*?)<PolyEval/) { print $$1; while(m/(<PolyEval((.|[\n])*?)<\/PolyEval>)/g) { if(!(exists $$h{$$1})) { print $$1; $$h{$$1} = (); }} print "</ByExplanations>";} else {print $$_}' $*.bex
+
+# ##TODO: the .err1 files are produced by removing the numerical requirement declarations,
+#         and running accom and verifier - this should tell where the requirements are needed
+%.bex1: %.bex %.err1
+	cat $*.bex| perl -e '$$k=shift; open(E,"$$k.err1"); while($$_=<E>) {($$l,$$c)=$$_=~m/([0-9]+) ([0-9]+) [0-9]+.*/; $$h{"$$l:$$c"} = (); } local $$/;$$_=<>; if(m/((.|[\n])*?)<PolyEval/) { print $$1; while(m/(<PolyEval line=.([0-9]+). col=.([0-9]+).((.|[\n])*?)<\/PolyEval>)/g) { if((exists $$h{"$$2:$$3"})) { print $$1; }} print "</ByExplanations>";} else { print $$_; }' $* > $*.bex1
+
+%.xml1: %.xml
+	$(XSLTPROC) $(ADDABS)  $*.xml > $*.xml1 
+
+%.xml2: %.xml1
+	$(XSLTPROC) $(MIZPL)  $*.xml1 > $*.xml2
+
+# this produces also dcl2,lem2,sch2 and the2
+%.dco2: %.xml2
+	$(MK_DERIVED) $*
+
+%.html: %.xml1
+	$(XSLTPROC) --param linking \'s\' --param proof_links \'1\' $(XML2HTML)  $*.xml1 > $*.html 
+
+%.hdr: %.miz
+	$(MKXMLHEAD) $*.miz > $*.hdr
+
+%.cmt: %.miz
+	$(MKCOMMENTS) $*.miz > $*.cmt
+
+%.evl1: %.acc
+	$(XSLTPROC) $(EVL2PL) $*.evl > $*.evl1
+
+%.evl2: %.evl1
+	$(DBENV2) $* > $*.evl2
+
+%.htmla1: %.xml1 %.hdr %.cmt
+	$(XSLTPROC) --param mk_comments 1 --param mk_header 1 --param linking \'s\' --param mizhtml \'\' --param ajax_proofs \'1\' --param titles \'1\' --param colored \'1\' --param proof_links \'1\' $(XML2HTML)  $*.xml1 > $*.htmla1 
+
+%.htmla2: %.xml1
+	$(XSLTPROC) --param ajax_proofs \'2\' --param proof_links \'1\' $(XML2HTML)  $*.xml1 > $*.htmla2 
+
+%.htmla3: %.xml1
+	$(XSLTPROC) --param linking \'q\' --param generate_items \'1\' --param titles \'1\' --param colored \'1\' $(XML2HTML)  $*.xml1 > $*.htmla3
+
+
+# all: xboole.html
+allhtml: $(addsuffix .html, $(SHMIZ))
+allhtmla1: $(addsuffix .htmla1, $(SHMIZ))
+allhtmla2: $(addsuffix .htmla2, $(SHMIZ))
+allhtmla3: $(addsuffix .htmla3, $(SHMIZ))
+html100: $(addsuffix .html, $(MIZ100))
+allacc: $(addsuffix .acc, $(STANDARDMIZ))
+allxml: $(addsuffix .xml, $(STANDARDMIZ))
+allxml1: $(addsuffix .xml1, $(SHMIZ))
+allxml2: $(addsuffix .xml2, $(SHMIZ))
+allbex1: $(addsuffix .bex1, $(STANDARDMIZ))
+allexp: $(addsuffix .exp, $(STANDARDMIZ))
+#alldco1: $(addsuffix 1, $(shell ls *.dco))
+#alldco2: $(addsuffix 2, $(shell ls *.dco))
+alldco2: $(addsuffix .dco2, $(STANDARDMIZ))
+allhdr: $(addsuffix .hdr, $(STANDARDMIZ))
+allcmt: $(addsuffix .cmt, $(STANDARDMIZ))
+allevl1: $(addsuffix .evl1, $(SHMIZ))
+allevl2: $(addsuffix .evl2, $(SHMIZ))

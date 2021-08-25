@@ -1,0 +1,75 @@
+%% (c) 1992, 1993 by KIT-BACK, TU Berlin. All rights reserved.
+%% --------------------------------------------------------------------
+%%
+%%  Load BACK V 5.2  for Quintus Prolog
+%%  
+%%  To load BACK into Quintus Prolog consult this file and  
+%%  call 'back/0'.        
+%% 
+%% -------------------------------------------------------------------
+
+:- no_style_check(all).
+
+back :-				%% compile BACK
+        compile_preliminaries,
+        compile_tbox,
+        compile_abox,
+        compile_patches,
+	msg_back_loaded,
+        backinit,
+	backread(backmacros),
+	style_check(all).
+
+%%
+%% ----------------------------------------
+%%
+
+compile_preliminaries :-
+	msg_loading_prels,
+	['dynamic.quintus'],
+	['library.quintus'],
+        ['backops.pl'],
+	['util.pl'].
+
+
+compile_tbox :-
+        msg_loading_tbox,
+        ['tbox1.pl'],
+        ['tbox2.pl'],
+        ['btl.pl'].
+        
+  
+compile_abox :-
+        msg_loading_abox,
+        ['abox.pl'].
+
+compile_patches :-
+        msg_loading_patches,
+	['back.patch'].
+
+
+
+%% BACK Test Environment
+
+backtest :-
+        load_testfiles,
+        start_testing.
+
+load_testfiles :- 
+	['tests/alltests'].
+
+start_testing :-
+	alltests,
+	!.
+
+
+msg_loading_prels :-
+	write(' *** BACK: Loading preliminaries ...'), nl.
+msg_loading_tbox :-
+        write(' *** BACK: Loading TBox V 5.2 ...'), nl.
+msg_loading_abox :-
+        write(' *** BACK: Loading ABox V 5.2 ...'), nl.
+msg_loading_patches :-
+        write(' *** BACK: Loading Patches ...'), nl.
+msg_back_loaded :-
+        write(' *** BACK: BACK System V 5.2 Loaded.'), nl.

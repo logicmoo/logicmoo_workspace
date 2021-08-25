@@ -1,0 +1,5 @@
+ 
+"redRule(?I)."
+
+reduces rule with index "I". The predicate fails if rule "I" does not
+exist or if the rule cannot be reduced.

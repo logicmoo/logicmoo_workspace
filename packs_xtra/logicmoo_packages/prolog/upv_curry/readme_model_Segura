@@ -1,0 +1,29 @@
+This archive contains a simulation of the ecological behaviour
+of the Segura river which is developed in Curry.
+
+We notice that the declarative model requires a Curry 
+implementation including the Float type and the usual float 
+arithmetic operators. This is not provided in our basic 
+implementation "UPV-Curry" of the language. Hence, we have 
+included here an slightly modified version of the UPV-Curry 
+system which incorporates the above extension and is able
+to execute the ecological simulation.
+
+Here you can find the following files:
+
+model_Segura.cur:     The declarative model of the Segura river.
+
+upv-curry_float.pl:   The source code of the extended UPV-Curry interpreter.
+            
+prelude_float:              The extended UPV-Curry prelude file, which contains
+                      the main data types and function declarations.
+
+readme_modal_Segura:               This help file.
+
+The UPV-Curry interpreter requires SICStus Prolog v3.x and it needs no
+previous installation. 
+
+You can use the UPV-Curry system as described in the 
+"UPV-Curry User's Manual" available at "http://www.dsic.upv.es/elp/soft.html".
+
+Please send comments/bugs to sescobar@dsic.upv.es

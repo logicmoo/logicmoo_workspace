@@ -1,0 +1,20 @@
+order(neqkns for natB).
+greater([['$r-ms','$inj-nat-posnat']]).
+greater([['$r',s]]).
+greater([['$r-ms','s-posnat-nat']]).
+greater([['s-posnat-nat','$inj-nat-posnat']]).
+greater([['$r',p]]).
+greater([['$r-ms','p-nat-posnat']]).
+greater([['p-nat-posnat','$inj-nat-posnat']]).
+status(['$r':ms]).
+status(['$r-ms':ms]).
+status(['$inj-nat-posnat':ms]).
+
+constructor('true-bool').
+constructor('false-bool').
+
+
+
+
+
+

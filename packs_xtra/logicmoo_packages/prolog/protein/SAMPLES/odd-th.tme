@@ -1,0 +1,23 @@
+%% Diese beiden Klauseln ('lt' - less than) wurden durch die
+%% nachfolgenden Theorie-Inferenzregeln ersetzt:
+% ~lt(X,X).
+% lt(X,Z) :- lt(X,Y), lt(Y,Z).
+
+begin(theory).
+
+% +++ linear completion of axiomset : irref +++
+lt(B, A) -> ~ lt(A, B).
+lt(A, A) -> false.
+
+% +++ linear completion of axiomset : trans +++
+lt(A, B), lt(B, C) -> lt(A, C).
+~ lt(A, C), lt(B, C) -> ~ lt(A, B).
+
+end(theory).
+
+lt(X, s(X)).
+even(X) ; odd(X).
+even(s(X)) :- odd(X).
+odd(s(X)) :- even(X).
+
+?- even(X), lt(a, X).

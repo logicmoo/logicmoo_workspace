@@ -1,0 +1,190 @@
+CEC supports a method of inductive theorem proving for
+conditional equations invoked by ->indProve.
+
+1. indProve takes a list Hs of hypotheses H as argument
+   for which an inductive proof is sought.
+
+2. indProve may only be called if the current specification E
+   is complete.
+
+3. Before the inductive proof is started, E is enriched by
+   domain predicates is-s, for any sort s, and conditional equations
+         is-s1(x1) and ... and is-sn(xn) => is-s(f(x1,...,xn)),
+   for any operator f : (s1,...,sn -> s). Let ED be the enriched
+   theory. Clearly, is-s(t) is in the equational theory Th(ED) of
+   ED if and only if t is a ground term of the current signature
+   (not containing a domain predicate). ED is then completed.
+
+   Note that by declaring a domain equation for some operator f
+   as nonoperational, completion of ED, if it terminates successfully,
+   will have proved the sufficient completeness of the definition
+   of f in terms of the other operators. To prove the sufficient
+   completeness of as many f as possible in this way can be
+   important for the success of subsequent inductive  proofs.
+
+4. If H is a conditional equation of form C => s=t, let us call
+	is-s1(x1) and ... and is-sk(xk) and C => s=t
+   where var(H) = {x1,...,xk}, resulting from H by adding
+   domain conditions for every variable, the ground version H_G of
+   of H.
+
+5. The hypotheses in Hs are inductive theorems in E, if
+   and only if adding to ED the ground versions of these hypotheses
+   does not change the equational theory, that is,
+        Th(ED) = Th(ED union {H_G | H in Hs}).
+   To put it differenly, the equations in Hs are inductive theorems of E
+   if and only if their ground versions are (non-inductive) theorems of ED.
+
+   To prove the latter property, the H_G are added to ED as nonoperational
+   equations and completion is started. If completion terminates without
+   having generated a new rule, the proof is done. Hence, whenever
+   a new conditional equation is generated during this completion
+   process, it will be declared as nonoperational automatically.
+   The user is asked to select the condition on which to superpose.
+   This will usually correspond to the selection of an induction variable.
+   The set of hypotheses is not a set of inductive theorems if and
+   only if this completion strategy generates some nontrivial unconditional
+   equation. Hence this strategy is refutationally complete.
+
+   
+6. Example:
+
+Let
+
+module nat.
+cons 0 : nat.
+cons s : (nat -> nat).
+op (+) : (nat*nat -> nat).
+
+n +0 = n.
+n + s(m) = s(n+m).
+
+be the current specification, which is obviously complete.
+It follows the logfile of an inductive proof of the commutativity
+of +.
+
+
+| ?- indProve(n+m=m+n).
+
+completing system with domain equations ...
+
+new rule   3    is-bool(true) .
+
+new rule   4    is-bool(false) .
+
+new rule   5    is-nat(0) .
+
+new rule   6    is-nat(X1) => is-nat(s(X1)) .
+
+Consider the equation
+	is-nat(X1) and is-nat(X2) => is-nat(X1+X2).
+The following actions may be taken:
+o. for attempting to orient into a (quasi-)reductive rule
+p. for postpone
+n. for considering equation as nonoperational
+   Please answer with o. or p. or n. (Type A. to abort) >n.
+% *** declaring this domain axiom as nonoperational forces CEC
+%     to prove the sufficient completeness of ``+''.
+%     For constructors, the domain axioms are automatically
+%     oriented into rules (rules 3, 4, 5, and 6 above).
+
+
+Which of the condition equations in
+	is-nat(X1) and is-nat(X2) 
+should be selected for superposition?
+Please enter index from 1 to 2 (A. to abort). > 2.
+% *** this is the selection of the induction variable for the suffcient-
+%     completeness proof
+
+The equation is-nat(X1) and is-nat(X2) => is-nat(X1+X2) 
+will be considered as nonoperational.
+
+...
+
+3 superpositions have been computed.
+Time used: 2.58298 sec.
+% *** the domain axioms have been completed, the sufficient-completeness
+%     of the definition of ``+'' has been proved.
+
+
+starting inductive completion ...
+
+Consider the equation
+	is-nat(n) and is-nat(m) => n+m = m+n.
+Which of the condition equations in
+	is-nat(n) and is-nat(m) 
+should be selected for superposition?
+Please enter index from 1 to 2 (A. to abort). > 1.
+% *** this is the selection of the induction variable
+Consider the equation
+	is-nat(n) and is-nat(m) => n+m = m+n.
+In which order should the literals of the equation be
+inspected when comparing proofs that use this equation?
+Please enter ms (for multiset ordering) or a permutation of [0 .. 2]
+(0 stands for the consequent, i>0 for the ith condition). > ms.
+% *** usually irrelevant
+
+The equation is-nat(n) and is-nat(m) => n+m = m+n 
+will be considered as nonoperational.
+
+...
+
+% *** a non-redundant equation has been generated, representing
+%     an auxiliary inductive lemma which has to be proved in
+%     parallel:
+Consider the equation
+	is-nat(X1) and is-nat(m) => s(X1)+m = s(m+X1).
+Which of the condition equations in
+	is-nat(X1) and is-nat(m) 
+should be selected for superposition?
+Please enter index from 1 to 2 (A. to abort). > 2.
+% *** one usually selects a variable for induction that is
+%     at the same an induction variable in the inductive
+%     definition (of ``+'').
+
+...
+
+6 superpositions have been computed.
+Time used: 10.483 sec.
+
+
+% *** success message:
+
+	n+m = m+n
+is an inductive theorem.
+yes
+| ?- show.
+
+Current equations
+
+
+
+Current rules
+
+  1    n+0 = n
+  2    n+s(m) = s(n+m)
+  3    is-bool(true)
+  4    is-bool(false)
+  5    is-nat(0)
+  6    is-nat(X1) => is-nat(s(X1))
+
+
+Current nonoperational equations
+
+  1    is-nat(s(X1)) => is-nat(X1)
+  2    is-nat(X2) and is-nat(X1) => is-nat(X1+X2)
+  3    is-nat(n) and is-nat(m) => n+m = m+n
+  4    is-nat(m) => 0+m = m
+  5    is-nat(m) and is-nat(X1) => s(X1)+m = s(m+X1)
+
+All axioms reduced.
+All superpositions computed.
+No more equations, the system is
+complete.
+
+% *** the nonoperational equations 4 and 5
+%     represent the inductive theorems
+%           0+m = m
+% and   s(X1)+m = s(m+X1)
+%     which have been generated during the inductive proof
+%     of 3.

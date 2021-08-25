@@ -1,0 +1,12 @@
+order(poly1 for monoid).
+setInterpretation(1 : 4
+).
+setInterpretation(*(x,y) : (x^2) * y
+).
+
+
+
+
+
+
+

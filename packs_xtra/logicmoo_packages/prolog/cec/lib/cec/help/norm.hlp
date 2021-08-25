@@ -1,0 +1,31 @@
+ 
+"norm(+Term, -NormalForm)."
+
+normalizes the input term "Term". Three kinds of normalization are
+provided:
+- if "Term" is a simple term, the current rules are used to compute the
+  normalform of "Term".
+- if "Term" has the form "(conjunction => term)", where "conjunction" is
+  a conjunction of equations, CEC will try to orient these equations into
+  rules before normalizing "Term" with the current rules and these oriented
+  condition equations.
+- if "Term" is a ->let-expression, the Definitions are evaluated first,
+  binding variables to the evaluated terms, before normalizing the body
+  of the let-expression using the current set of rules. This feature
+  should be used in the order-sorted case to avoid typing problems.
+  Example:
+
+	let s=pop(push(push(s1,e1),e2)) in pop(s),
+  		where s a variable of sort "nonemptyStack",
+
+  can be evaluated successfully, as the normalform of
+  "pop(push(push(s1,e1),e2))" is in fact of sort  "nonemptyStack".
+  To simply write "pop(pop(push(push(s1,e1),e2)))" is not allowed,
+  as this term is not well-typed. Upon binding s to a normalform,
+  a type check is performed and, in case of a type clash, an abortion
+  with "type error" occurs.
+
+See also "eval".
+
+"trace:=on, norm(Term,NormalForm)"
+additionally prints out a trace of rule applications.

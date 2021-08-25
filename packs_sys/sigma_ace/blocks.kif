@@ -1,0 +1,144 @@
+;;Non-Blocks World Examples (e.g., 'the president has a cat').
+
+(subclass President Position)
+
+(subclass Cat Animal)
+
+(subclass Dog Animal)
+
+(instance George Human)
+
+(instance Bill Human)
+
+(instance Fido Dog)
+
+(instance HammerTheTool Artifact)
+
+;;Blocks World Extensions
+
+;;Our blocks world has only blocks, cones, pyramids, and the table.
+
+(subclass Block Artifact)
+
+(subclass Cone Artifact)
+
+(subclass Pyramid Artifact)
+
+(subclass Table Artifact)
+
+;;We use orange as a color, so first define complementary colors...
+
+(subclass ComplementaryColor ColorProperty)
+(disjointDecomposition ComplementaryColor Orange Green Purple)
+(documentation ComplementaryColor "A color formed by mixing two
+primary colors.")
+
+(instance Orange ComplementaryColor)
+(documentation Orange "The &%Attribute of being orange in color.")
+
+(instance Green ComplementaryColor)
+(documentation Orange "The &%Attribute of being green in color.")
+
+(instance Purple ComplementaryColor)
+(documentation Orange "The &%Attribute of being purple in color.")
+
+;;We also allow blocks world objects to be made of iron, concrete, or wood
+;;to provide some more modifiers other than just colors...
+
+(subclass Iron Substance)
+
+(subclass Concrete Substance)
+
+(subclass Wood Substance)
+
+(instance BlocksWorldIron Iron)
+
+(instance BlocksWorldWood Wood)
+
+(instance BlocksWorldConcrete Concrete)
+
+;;In particular, the following unique objects exist...
+
+(instance RedBlock1 Block)
+
+(instance TheTable1 Table)
+
+(on RedBlock1 TheTable1)
+
+(instance LargePyramid1 Pyramid)
+
+(material BlocksWorldIron LargePyramid1)
+
+(instance BlueCone1 Cone)
+
+(material BlocksWorldConcrete BlueCone1)
+
+(instance OrangeBlock1 Block)
+
+(attribute RedBlock1 Red)
+
+(attribute OrangeBlock1 Orange)
+
+(attribute BlueCone1 Blue)
+
+(instance TowerBlockBase Block)
+
+(instance TowerBlockMiddle Block)
+
+(instance TowerBlockTop Block)
+
+(instance Tower1 Tower)
+
+(member TowerBlockBase Tower1)
+
+(member TowerBlockMiddle Tower1)
+
+(member TowerBlockUpper Tower1)
+
+(on TowerBlockBase TheTable1)
+
+(instance TowerBlockUpper Clear)
+
+;;Define "clear" to mean that nothing is on top of an object.
+
+(=> (instance ?OBJECT Clear)
+    (not (exists (?OTHER)
+		 (on ?OTHER ?OBJECT))))
+
+;;Define a tower as a collection of at least three objects,
+;;each on top of another object in the tower, or the table.
+
+(subclass Tower Collection)
+
+;;All objects in the tower are Blocks world objects: Blocks, Pyramids, or Cones
+(=> (instance ?TOWER Tower)
+    (=> (member ?OBJ ?TOWER)
+        (or (instance ?OBJ Block)
+            (instance ?OBJ Pyramid)
+            (instance ?OBJ Cone))))
+
+;;Each object in a tower is on top of either the table or another object in the tower
+(=> (instance ?TOWER Tower)
+    (forall (?OBJ)
+       (=> (member ?OBJ ?TOWER)
+	   (exists (?OTHER)
+		   (and (on ?OBJ ?OTHER)
+			(or (instance ?OTHER Table)
+			    (member ?OTHER ?TOWER)))))))
+
+;;There are at least three objects in the tower
+
+(=> (instance ?TOWER Tower)
+    (exists (?OBJ1 ?OBJ2 ?OBJ3)
+	    (and (member ?OBJ1 ?TOWER)
+		 (member ?OBJ2 ?TOWER)
+		 (member ?OBJ3 ?TOWER)
+		 (not (equal ?OBJ1 ?OBJ2))
+		 (not (equal ?OBJ2 ?OBJ3))
+		 (not (equal ?OBJ1 ?OBJ3)))))
+
+;;Note that we should be able to deduce that TowerBlockMiddle is on TowerBlockBase
+;;and TowerBlockUpper is on TowerBlockMiddle since the base is on the table and the
+;;top block is clear.
+
+

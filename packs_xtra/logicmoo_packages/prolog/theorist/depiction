@@ -1,0 +1,77 @@
+dyn chain(X).
+dyn region(X).
+dyn tee(X,Y,Z).
+dyn bounds(X,Y).
+dyn interior(X,Y).
+dyn exterior(X,Y).
+dyn chi(X,Y).
+dyn open(X,N).
+dyn closed(X).
+
+% we first allow one to write the building blocks of explanations
+% land(X) means that the object X in the image depicts land in scene, etc
+default land(X).
+default water(X).
+default road(X).
+default river(X).
+default shore(X).
+
+default joins(X,Y,E).
+default cross(X,Y).
+default beside(X,Y).
+default mouth(L,R,E).
+default source(R,X).
+default loop(X).
+default inside(X,Y).
+default outside(X,Y).
+
+% the following give the mappings between image and scene
+fact beside(X,Y) => bounds(X,Y).
+fact joins(X,Y,E) => tee(X,Y,E).
+fact mouth(X,Y,E) => tee(X,Y,E).
+fact cross(X,Y) => chi(X,Y).
+fact source(X,N) => open(X,N).
+fact loop(X) => closed(X).
+fact inside(X,Y) => interior(X,Y).
+fact outside(X,Y) => exterior(X,Y).
+
+fact land(X) or water(X) => area(X).
+fact river(X) or road(X) or shore(X) => linear(X).
+
+fact area(X) => region(X).
+fact linear(X) => chain(X).
+
+% the following gives domain constraints
+
+fact river(X) and river(Y) => not cross(X,Y).
+fact shore(X) or shore(Y) => not cross(X,Y).
+fact river(R) and mouth(L,R,0) => not mouth(L2,R,1).
+fact river(R) and road(Y) and joins(R,Y,N) => start(R,N).
+fact source(X,Y) => start(X,Y).
+fact river(R) and start(R,0) => not start(R,1).
+fact river(R) and (river(L) or shore(L)) => not joins(R,L,N).
+fact road(X) or road(Y) => not mouth(X,Y,N).
+fact shore(X) => not source(X,N) and not joins(X,A,N).
+fact shore(X) and river(A) => not joins(A,X,N).
+fact river(X) => not loop(X).
+fact shore(X) and inside(X,Y) and outside(X,Z) =>
+   (land(Y) => not land(Z)) and (water(Z) => not water(Y)).
+fact beside(X,Y) and (road(X) or river(X)) => not water(Y).
+
+% an example query is
+/*  explain chain(c1),chain(c2),region(r1),region(r2),tee(c2,c1,1),
+   bounds(c2,r2), bounds(c1,r1), bounds(c1,r2), interior(c1,r1),
+   exterior(c1,r2) ,open(c2,0),closed(c1).
+*/
+/* expl((  chain(c1), open(c1,0), open(c1,1), region(r1), bounds(c1,r1),
+        chain(c2), tee(c2,c1,0), bounds(c2,r1),
+        chain(c3), open(c3,1), tee(c2,c3,1), bounds(c3,r1),
+        region(r2), bounds(c3,r2),
+        chain(c4), open(c4,0), chi(c3,c4), chi(c4,c3),
+        bounds(c4,r1), bounds(c4,r2),
+        chain(c5), closed(c5), tee(c4,c5,1), tee(c3,c5,0), bounds(c5,r1),
+        bounds(c5,r2), exterior(c5,r1), exterior(c5,r2),
+        region(r3), bounds(c5,r3), interior(c5,r3),
+        chain(c6), closed(c6), bounds(c6,r3), exterior(c6,r3),
+        region(r4), bounds(c6,r4), interior(c6,r4)),[],D,A).
+*/

@@ -1,0 +1,9 @@
+ 
+"compile."
+
+compiles the current set of rewrite rules into (compiled) Prolog. The 
+compiled  rules  are  used  when  calling  "eval(+Term,-NormalForm)."
+Later changes to the set of  rewrite rules  have no effect on  "eval" 
+until a new call to "compile" is executed.
+
+The predicate "norm" always  uses the current set of rewrite rules.

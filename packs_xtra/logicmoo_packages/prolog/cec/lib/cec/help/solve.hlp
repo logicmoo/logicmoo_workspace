@@ -1,0 +1,19 @@
+
+"solve(+Goal, -Solution)."
+
+tries to solve "Goal" and to return an answer-substitution if successful.
+The set of all answer-substitutions can be obtained by backtracking
+(enter ';'<return> at the user level). Enter <return>, if
+no more solutions are wanted.
+
+Goals are given using the following syntax:
+
+<Goal> ::= <conditionalGoal>
+<conditionalGoal> ::=   <condition> <equation>
+		      | <equation> { 'and' <equation> }
+
+<condition> ::= <equation> { 'and' <equation> } '=>'
+<equation>  ::= <signatureTerm> '=' <signatureTerm>
+
+<signatureTerm> ::= <well typed term with variables over the current 
+                     signature>

@@ -1,0 +1,66 @@
+Package:      areas/kr/systems/kl_one/motel/
+
+Name:         MOTEL
+
+Summary:      Modal KL-ONE
+
+Version:      10-AUG-93
+
+Description: 
+              
+   MOTEL is a logic-based knowledge representation language of the KL-ONE
+   family.  It contains as a kernel the ALC language which is a decidable
+   sublanguage of first-order predicate logic.
+
+   Whereas ALC is a single-agent knowledge representation language, i.e.
+   ALC is only able to represent general world knowledge or the knowledge
+   of one agent about the world, MOTEL is a multi-agent knowledge
+   representation system. The MOTEL language allows modal contexts and
+   modal concept forming operators which allow to represent and reason
+   about the believes and wishes of multiple agents. Furthermore it is
+   possible to represent defaults and stereotypes.
+
+   Beside the basic reasoning facilities for consistency checking,
+   classification, and realization, MOTEL provides an abductive inference
+   mechanism.  Furthermore it is able to give explanations for its
+   inferences.
+
+Requires:     Prolog
+
+Ports:        Runs in SWI-Prolog (Version 1.6.17 June 1993), 
+              Quintus Prolog Release 3.1.1, or SICStus 2.1.
+
+Origin:       mpi-sb.mpg.de:/pub/tools/motel.tar.Z [139.19.1.1]
+
+Copying:      
+
+Updated:      
+
+CD-ROM:       Prime Time Freeware for AI, Issue 1-1
+
+Bug Reports:  
+
+Mailing List: 
+
+Author(s):    
+
+Contact:      Ullrich Hustadt <hustadt@mpi-sb.mpg.de>
+              Max-Planck-Institut f"ur Informatik
+              Geb"aude 44, Im Stadtwald
+              66123 Saarbr"ucken, Germany
+              
+              Tel: +49 681 302 5431
+              fax: +49 681 302 5401
+
+Keywords:     
+
+   Knowledge Representation, KL-ONE, Prolog!Code, MOTEL, KRIS, ALC,
+   Modal Logic, Stereotypes, Default Reasoning, Abduction,
+   Authors!Hustadt, Reasoning!Default Reasoning
+
+Contains:    ???
+
+See Also:    
+
+References:   
+

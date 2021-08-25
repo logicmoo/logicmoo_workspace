@@ -1,0 +1,2 @@
+#!/usr/bin/perl -w
+exec("ulimit -S -t 100; bin/clausefilter.old @ARGV");

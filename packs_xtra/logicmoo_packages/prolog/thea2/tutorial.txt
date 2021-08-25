@@ -1,0 +1,54 @@
+Real sessions
+
+[liao@machine]swipl
+Welcome to SWI-Prolog (Multi-threaded, 64 bits, Version 6.6.6)
+Copyright (c) 1990-2013 University of Amsterdam, VU Amsterdam
+SWI-Prolog comes with ABSOLUTELY NO WARRANTY. This is free software,
+and you are welcome to redistribute it under certain conditions.
+Please visit http://www.swi-prolog.org for details.
+
+For help, use ?- help(Topic). or ?- apropos(Word).
+
+?- assert(library_directory('/home/liao/workspace/thea.git')).
+true.
+
+?- use_module(library(owl2_io)).
+%    library(pairs) compiled into pairs 0.00 sec, 22 clauses
+%   library(lists) compiled into lists 0.01 sec, 122 clauses
+%  library(debug) compiled into prolog_debug 0.01 sec, 180 clauses
+%  owl2_model compiled into owl2_model 0.01 sec, 343 clauses
+% library(owl2_io) compiled into owl2_io 0.03 sec, 582 clauses
+true.
+
+?- load_axioms('testfiles/pizza.owl').
+%     library(option) compiled into swi_option 0.00 sec, 32 clauses
+%    library(sgml) compiled into sgml 0.01 sec, 243 clauses
+%      library(quintus) compiled into quintus 0.00 sec, 54 clauses
+%     rewrite compiled into rewrite 0.00 sec, 81 clauses
+%     library(uri) compiled into uri 0.00 sec, 36 clauses
+%     library(record) compiled into record 0.00 sec, 69 clauses
+%    rdf_parser compiled into rdf_parser 0.01 sec, 341 clauses
+%     library(gensym) compiled into gensym 0.00 sec, 9 clauses
+%    rdf_triple compiled into rdf_triple 0.00 sec, 84 clauses
+%   library(rdf) compiled into rdf 0.03 sec, 742 clauses
+%    library(assoc) compiled into assoc 0.00 sec, 103 clauses
+%   library(sgml_write) compiled into sgml_write 0.01 sec, 265 clauses
+%   library(thread) compiled into thread 0.00 sec, 52 clauses
+%    library(filesex) compiled into files_ex 0.00 sec, 32 clauses
+%   library(semweb/rdf_cache) compiled into rdf_cache 0.00 sec, 73 clauses
+%  library(semweb/rdf_db) compiled into rdf_db 0.06 sec, 1,740 clauses
+%   library(broadcast) compiled into broadcast 0.00 sec, 13 clauses
+%  library(semweb/rdf_edit) compiled into rdf_edit 0.01 sec, 169 clauses
+%  library(semweb/rdfs) compiled into rdfs 0.00 sec, 59 clauses
+%   library(utf8) compiled into utf8 0.00 sec, 9 clauses
+%  library(url) compiled into url 0.01 sec, 325 clauses
+%   library(readutil) compiled into read_util 0.00 sec, 39 clauses
+%   library(socket) compiled into socket 0.00 sec, 27 clauses
+%   library(base64) compiled into base64 0.00 sec, 77 clauses
+%  library(http/http_open) compiled into http_open 0.01 sec, 310 clauses
+% library(thea2/owl2_from_rdf) compiled into owl2_from_rdf 0.11 sec, 2,813 clauses
+% Parsed "pizza.owl" in 0.01 sec; 552 triples
+true.
+
+?- 
+

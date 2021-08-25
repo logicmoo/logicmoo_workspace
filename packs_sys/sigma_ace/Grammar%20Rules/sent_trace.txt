@@ -1,0 +1,4236 @@
+
+
+****************
+Test 1, parsing: John owns a dog 
+
+Parsed OK:John owns a dog 
+syn<->
+      rel<->no
+      act<->own
+      vcat<->[_G1955, transitive, _G1961]
+      max<->3
+      role<->assertion
+sem<->
+      id<->201509295
+      subj<->
+             noun<->John
+             head<->John-1
+             type<->[Human, Male, FullyFormed]
+      pred<->possesses
+      dobj<->
+             noun<->dog
+             head<->?dog
+             type<->Canine
+             id<->101595188
+      adjs<->[]
+Test passed.
+
+Translation = 
+
+(exists 
+  (?dog) 
+  (and 
+    (instance ?dog Canine) 
+    (instance John-1 Human) 
+    (instance John-1 Male) 
+    (instance John-1 FullyFormed) 
+    (possesses John-1 ?dog)))
+
+Speech Act = Assertion
+
+1. Note: interpreted the verb 'own' using WordNet synset ID 201509295, meaning have ownership or possession of; "He owns three houses in Florida"; "How many cars does she have?".  Maps to SUMO 'possesses'.
+
+2. Warning: interpreted the meaning of the noun 'dog' as  WordNet word sense #1 of 6 senses, ID 101595188, meaning a member of the genus Canis (probably descended from the common wolf) that has been domesticated by man since prehistoric times; occurs in many breeds; "the dog barked all night".  Maps to SUMO 'Canine'.
+
+
+****************
+Test 2, parsing: John arrives 
+
+Parsed OK:John arrives 
+syn<->
+      rel<->no
+      act<->arrive
+      vcat<->[intransitive, _G1950, _G1953]
+      max<->3
+      role<->assertion
+sem<->
+      id<->201368651
+      subj<->
+             noun<->John
+             head<->John-1
+             type<->[Human, Male, FullyFormed]
+      pred<->Motion
+      adjs<->[]
+Test passed.
+
+Translation = 
+
+(exists 
+  (?event) 
+  (and 
+    (instance ?event Motion) 
+    (instance John-1 FullyFormed) 
+    (instance John-1 Male) 
+    (instance John-1 Human) 
+    (agent ?event John-1)))
+
+Speech Act = Assertion
+
+1. Warning: interpreted the meaning of the verb 'arrive' as  WordNet word sense #1 of 2 senses, ID 201368651, meaning reach a destination; arrive by movement or by making progress; "She arrived home at 7 o'clock"; "He got into college"; "She didn't get to Chicago until after midnight".  Maps to SUMO 'Motion'.
+
+
+****************
+Test 3, parsing: Mary stays 
+
+Parsed OK:Mary stays 
+syn<->
+      rel<->no
+      act<->stay
+      vcat<->[intransitive, _G1950, _G1953]
+      max<->3
+      role<->assertion
+sem<->
+      id<->200078446
+      subj<->
+             noun<->Mary
+             head<->Mary-1
+             type<->[Human, Female, FullyFormed]
+      pred<->Motion
+      adjs<->[]
+Test passed.
+
+Translation = 
+
+(exists 
+  (?event) 
+  (and 
+    (instance ?event Motion) 
+    (instance Mary-1 FullyFormed) 
+    (instance Mary-1 Female) 
+    (instance Mary-1 Human) 
+    (agent ?event Mary-1)))
+
+Speech Act = Assertion
+
+1. Warning: interpreted the meaning of the verb 'stay' as  WordNet word sense #1 of 11 senses, ID 200078446, meaning stay the same; remain in a certain state; "The dress remained wet after repeated attempts to dry it"; "rest assured"; "stay alone"; "He remained unmoved by her tears"; "The bad weather continued for another week".  Maps to SUMO 'Motion'.
+
+
+****************
+Test 4, parsing: John is a customer of the bank 
+
+Parsed OK:John is a customer of the bank 
+syn<->
+      rel<->no
+      act<->be
+      vcat<->[_G1964, transitive, _G1970]
+      max<->3
+      role<->assertion
+sem<->
+      id<->201775973
+      subj<->
+             noun<->John
+             head<->John-1
+             type<->[Human, Male, FullyFormed]
+      pred<->instance
+      dobj<->
+             noun<->customer
+             head<->?customer
+             type<->customer
+             id<->107197309
+             of<->Bank-FinancialOrganization
+             of_id<->106227059
+      adjs<->[]
+Test passed.
+
+Translation = 
+
+(exists 
+  (?salesperson ?customer ?event) 
+  (and 
+    (instance ?customer CognitiveAgent) 
+    (instance ?salesperson CognitiveAgent) 
+    (customer ?customer ?salesperson) 
+    (instance ?event instance) 
+    (instance John-1 FullyFormed) 
+    (instance John-1 Male) 
+    (instance John-1 Human) 
+    (agent ?event John-1) 
+    (possesses Bank-FinancialOrganization ?customer) 
+    (patient ?event ?customer)))
+
+Speech Act = Assertion
+
+1. Warning: interpreted the meaning of the verb 'be' as  WordNet word sense #1 of 12 senses, ID 201775973, meaning have the quality of being; (copula, used with an adjective or a predicate noun); "John is rich"; "This is not a good answer".  Maps to SUMO 'instance'.
+
+2. Note: interpreted the noun 'customer' using WordNet synset ID 107197309, meaning someone who pays for goods or services.  Maps to SUMO 'customer'.
+
+
+****************
+Test 5, parsing: the customer is at the bank 
+
+Parsed OK:the customer is at the bank 
+syn<->
+      rel<->no
+      act<->be
+      vcat<->[intransitive, _G2109, _G2112]
+      max<->3
+      role<->assertion
+sem<->
+      id<->201775973
+      subj<->
+             noun<->customer
+             head<->?customer
+             type<->customer
+             id<->107197309
+      pred<->instance
+      adjs<->[prep<->located..aobj<-> (noun<->bank..head<-> ?bank..type<->Bank-FinancialOrganization..id<->106227059..poss<->_G3841..owner<->_G3846..of<->_G3851..of_id<->_G3856..sub<->empty..mod<->empty)]
+Test passed.
+
+Translation = 
+
+(exists 
+  (?bank ?salesperson ?customer ?event) 
+  (and 
+    (instance ?customer CognitiveAgent) 
+    (instance ?salesperson CognitiveAgent) 
+    (customer ?customer ?salesperson) 
+    (instance ?event instance) 
+    (patient ?event ?customer) 
+    (instance ?bank Bank-FinancialOrganization) 
+    (located ?event ?bank)))
+
+Speech Act = Assertion
+
+1. Warning: interpreted the meaning of the verb 'be' as  WordNet word sense #1 of 12 senses, ID 201775973, meaning have the quality of being; (copula, used with an adjective or a predicate noun); "John is rich"; "This is not a good answer".  Maps to SUMO 'instance'.
+
+2. Note: interpreted the noun 'customer' using WordNet synset ID 107197309, meaning someone who pays for goods or services.  Maps to SUMO 'customer'.
+
+
+****************
+Test 6, parsing: the card is valid 
+
+Parsed OK:the card is valid 
+syn<->
+      rel<->no
+      act<->be
+      vcat<->copula
+      max<->3
+      role<->assertion
+sem<->
+      mod<->validation-WN00099890
+      subj<->
+             noun<->card
+             head<->?card
+             type<->BankCard
+             id<->104863407
+      pred<->isa
+Test passed.
+
+Translation = 
+
+(exists 
+  (?card) 
+  (and 
+    (attribute ?card validation-WN00099890) 
+    (instance ?card BankCard)))
+
+Speech Act = Assertion
+
+1. Warning: interpreted the meaning of the noun 'card' as  WordNet word sense #2 of 11 senses, ID 104863407, meaning a card certifying the identity of the bearer; "he had to show his card to get in".  Maps to SUMO 'BankCard'.
+
+
+****************
+Test 7, parsing: John ' s code is identical to Mary ' s code 
+
+Parsed OK:John ' s code is identical to Mary ' s code 
+syn<->
+      rel<->no
+      act<->be
+      vcat<->copula
+      max<->3
+      role<->assertion
+sem<->
+      mod<->_G2972^_G2975^[equal, _G2972, _G2975]
+      subj<->
+             noun<->code
+             head<->?code
+             type<->Text
+             id<->104790774
+             poss<->John-1
+      pred<->isa
+      dobj<->
+             noun<->code
+             head<->?code
+             type<->Text
+             id<->104790774
+             poss<->Mary-1
+Test passed.
+
+Translation = 
+
+(exists 
+  (?code1 ?code) 
+  (and 
+    (equal ?code ?code1) 
+    (instance ?code1 Text) 
+    (possesses Mary-1 ?code1) 
+    (instance ?code Text) 
+    (possesses John-1 ?code)))
+
+Speech Act = Assertion
+
+1. Warning: interpreted the meaning of the noun 'code' as  WordNet word sense #2 of 3 senses, ID 104790774, meaning a coding system used for transmitting messages requiring brevity or secrecy.  Maps to SUMO 'Text'.
+
+
+****************
+Test 8, parsing: John ' s card is compatible with the Swiss bank 
+
+Parsed OK:John ' s card is compatible with the Swiss bank 
+syn<->
+      rel<->no
+      act<->be
+      vcat<->copula
+      max<->3
+      role<->assertion
+sem<->
+      mod<->_G2969^_G2972^[compatible, _G2969, _G2972]
+      subj<->
+             noun<->card
+             head<->?card
+             type<->BankCard
+             id<->104863407
+             poss<->John-1
+      pred<->isa
+      dobj<->
+             noun<->bank
+             head<->?bank
+             type<->Bank-FinancialOrganization
+             id<->106227059
+             mod<->Germanism-WN00265812
+Test passed.
+
+Translation = 
+
+(exists 
+  (?bank ?card) 
+  (and 
+    (compatible ?card ?bank) 
+    (instance ?bank Bank-FinancialOrganization) 
+    (attribute ?bank Germanism-WN00265812) 
+    (instance ?card BankCard) 
+    (possesses John-1 ?card)))
+
+Speech Act = Assertion
+
+1. Warning: interpreted the meaning of the noun 'card' as  WordNet word sense #2 of 11 senses, ID 104863407, meaning a card certifying the identity of the bearer; "he had to show his card to get in".  Maps to SUMO 'BankCard'.
+
+2. Warning: interpreted the meaning of the noun 'bank' as  WordNet word sense #1 of 10 senses, ID 106227059, meaning a financial institution that accepts deposits and channels the money into lending activities; "he cashed a check at the bank"; "that bank holds the mortgage on my home".  Maps to SUMO 'Bank-FinancialOrganization'.
+
+
+****************
+Test 9, parsing: John ' s bank is faster than Mary ' s bank 
+
+Parsed OK:John ' s bank is faster than Mary ' s bank 
+syn<->
+      rel<->no
+      act<->be
+      vcat<->copula
+      max<->3
+      role<->assertion
+sem<->
+      mod<->_G2753^_G2756^[greaterThan, [measure, _G2753, speed-WN00212796], [measure, _G2756, speed-WN00212796]]
+      subj<->
+             noun<->bank
+             head<->?bank
+             type<->Bank-FinancialOrganization
+             id<->106227059
+             poss<->John-1
+      pred<->isa
+      dobj<->
+             noun<->bank
+             head<->?bank
+             type<->Bank-FinancialOrganization
+             id<->106227059
+             poss<->Mary-1
+Test passed.
+
+Translation = 
+
+(exists 
+  (?bank1 ?bank) 
+  (and 
+    (greaterThan 
+      (measure ?bank speed-WN00212796) 
+      (measure ?bank1 speed-WN00212796)) 
+    (instance ?bank1 Bank-FinancialOrganization) 
+    (possesses Mary-1 ?bank1) 
+    (instance ?bank Bank-FinancialOrganization) 
+    (possesses John-1 ?bank)))
+
+Speech Act = Assertion
+
+1. Warning: interpreted the meaning of the noun 'bank' as  WordNet word sense #1 of 10 senses, ID 106227059, meaning a financial institution that accepts deposits and channels the money into lending activities; "he cashed a check at the bank"; "that bank holds the mortgage on my home".  Maps to SUMO 'Bank-FinancialOrganization'.
+
+
+****************
+Test 10, parsing: John ' s card is more expensive than Mary ' s bank 
+
+Parsed OK:John ' s card is more expensive than Mary ' s bank 
+syn<->
+      rel<->no
+      act<->be
+      vcat<->copula
+      max<->3
+      role<->assertion
+sem<->
+      mod<->_G2756^_G2759^[greaterThan, [measure, _G2756, expensiveness-WN04009070], [measure, _G2759, expensiveness-WN04009070]]
+      subj<->
+             noun<->card
+             head<->?card
+             type<->BankCard
+             id<->104863407
+             poss<->John-1
+      pred<->isa
+      dobj<->
+             noun<->bank
+             head<->?bank
+             type<->Bank-FinancialOrganization
+             id<->106227059
+             poss<->Mary-1
+Test passed.
+
+Translation = 
+
+(exists 
+  (?bank ?card) 
+  (and 
+    (greaterThan 
+      (measure ?card expensiveness-WN04009070) 
+      (measure ?bank expensiveness-WN04009070)) 
+    (instance ?bank Bank-FinancialOrganization) 
+    (possesses Mary-1 ?bank) 
+    (instance ?card BankCard) 
+    (possesses John-1 ?card)))
+
+Speech Act = Assertion
+
+1. Warning: interpreted the meaning of the noun 'card' as  WordNet word sense #2 of 11 senses, ID 104863407, meaning a card certifying the identity of the bearer; "he had to show his card to get in".  Maps to SUMO 'BankCard'.
+
+2. Warning: interpreted the meaning of the noun 'bank' as  WordNet word sense #1 of 10 senses, ID 106227059, meaning a financial institution that accepts deposits and channels the money into lending activities; "he cashed a check at the bank"; "that bank holds the mortgage on my home".  Maps to SUMO 'Bank-FinancialOrganization'.
+
+
+****************
+Test 11, parsing: the Swiss customer enters the bank 
+
+Parsed OK:the Swiss customer enters the bank 
+syn<->
+      rel<->no
+      act<->enter
+      vcat<->[_G2367, transitive, _G2373]
+      max<->3
+      role<->assertion
+sem<->
+      id<->201376901
+      subj<->
+             noun<->customer
+             head<->?customer
+             type<->customer
+             id<->107197309
+             mod<->Germanism-WN00265812
+      pred<->Movement
+      dobj<->
+             noun<->bank
+             head<->?bank
+             type<->Bank-FinancialOrganization
+             id<->106227059
+      adjs<->[]
+Test passed.
+
+Translation = 
+
+(exists 
+  (?bank ?salesperson ?customer ?event) 
+  (and 
+    (instance ?customer CognitiveAgent) 
+    (instance ?salesperson CognitiveAgent) 
+    (customer ?customer ?salesperson) 
+    (instance ?event Movement) 
+    (attribute ?customer Germanism-WN00265812) 
+    (agent ?event ?customer) 
+    (instance ?bank Bank-FinancialOrganization) 
+    (patient ?event ?bank)))
+
+Speech Act = Assertion
+
+1. Warning: interpreted the meaning of the verb 'enter' as  WordNet word sense #1 of 8 senses, ID 201376901, meaning to come or go into: "the ship entered an area of shallow marshes..".  Maps to SUMO 'Movement'.
+
+2. Note: interpreted the noun 'customer' using WordNet synset ID 107197309, meaning someone who pays for goods or services.  Maps to SUMO 'customer'.
+
+3. Warning: interpreted the meaning of the noun 'bank' as  WordNet word sense #1 of 10 senses, ID 106227059, meaning a financial institution that accepts deposits and channels the money into lending activities; "he cashed a check at the bank"; "that bank holds the mortgage on my home".  Maps to SUMO 'Bank-FinancialOrganization'.
+
+
+****************
+Test 12, parsing: a new customer gives the card to the teller 
+
+Parsed OK:a new customer gives the card to the teller 
+syn<->
+      rel<->no
+      act<->give
+      vcat<->[_G2373, _G2376, ditransitive]
+      max<->3
+      role<->assertion
+sem<->
+      id<->201583087
+      subj<->
+             noun<->customer
+             head<->?customer
+             type<->customer
+             id<->107197309
+             mod<->newness-WN03855074
+      pred<->Giving
+      dobj<->
+             noun<->card
+             head<->?card
+             type<->BankCard
+             id<->104863407
+      adjs<->[]
+      iobj<->
+             noun<->teller
+             head<->?teller
+             type<->OccupationalRole
+             id<->107635368
+Test passed.
+
+Translation = 
+
+(exists 
+  (?teller ?card ?salesperson ?customer ?event) 
+  (and 
+    (instance ?customer CognitiveAgent) 
+    (instance ?salesperson CognitiveAgent) 
+    (customer ?customer ?salesperson) 
+    (instance ?event Giving) 
+    (attribute ?customer newness-WN03855074) 
+    (agent ?event ?customer) 
+    (instance ?card BankCard) 
+    (patient ?event ?card) 
+    (instance ?teller OccupationalRole) 
+    (destination ?event ?teller)))
+
+Speech Act = Assertion
+
+1. Warning: interpreted the meaning of the verb 'give' as  WordNet word sense #1 of 45 senses, ID 201583087, meaning cause to have, in the abstract sense or physical sense: "She gave him a black eye"; "The draft gave me a cold".  Maps to SUMO 'Giving'.
+
+2. Note: interpreted the noun 'customer' using WordNet synset ID 107197309, meaning someone who pays for goods or services.  Maps to SUMO 'customer'.
+
+3. Warning: interpreted the meaning of the noun 'card' as  WordNet word sense #2 of 11 senses, ID 104863407, meaning a card certifying the identity of the bearer; "he had to show his card to get in".  Maps to SUMO 'BankCard'.
+
+4. Warning: interpreted the meaning of the noun 'teller' as  WordNet word sense #1 of 2 senses, ID 107635368, meaning an official appointed to count the votes (especially in legislative assembly).  Maps to SUMO 'OccupationalRole'.
+
+
+****************
+Test 13, parsing: John gives the card to Mary 
+
+Parsed OK:John gives the card to Mary 
+syn<->
+      rel<->no
+      act<->give
+      vcat<->[_G1958, _G1961, ditransitive]
+      max<->3
+      role<->assertion
+sem<->
+      id<->201583087
+      subj<->
+             noun<->John
+             head<->John-1
+             type<->[Human, Male, FullyFormed]
+      pred<->Giving
+      dobj<->
+             noun<->card
+             head<->?card
+             type<->BankCard
+             id<->104863407
+      adjs<->[]
+      iobj<->
+             noun<->Mary
+             head<->Mary-1
+             type<->[Human, Female, FullyFormed]
+Test passed.
+
+Translation = 
+
+(exists 
+  (?card ?event) 
+  (and 
+    (instance ?event Giving) 
+    (instance John-1 FullyFormed) 
+    (instance John-1 Male) 
+    (instance John-1 Human) 
+    (agent ?event John-1) 
+    (instance ?card BankCard) 
+    (patient ?event ?card) 
+    (instance Mary-1 FullyFormed) 
+    (instance Mary-1 Female) 
+    (instance Mary-1 Human) 
+    (destination ?event Mary-1)))
+
+Speech Act = Assertion
+
+1. Warning: interpreted the meaning of the verb 'give' as  WordNet word sense #1 of 45 senses, ID 201583087, meaning cause to have, in the abstract sense or physical sense: "She gave him a black eye"; "The draft gave me a cold".  Maps to SUMO 'Giving'.
+
+2. Warning: interpreted the meaning of the noun 'card' as  WordNet word sense #2 of 11 senses, ID 104863407, meaning a card certifying the identity of the bearer; "he had to show his card to get in".  Maps to SUMO 'BankCard'.
+
+
+****************
+Test 14, parsing: she gives the card to Mary 
+
+Parsed OK:she gives the card to Mary 
+syn<->
+      rel<->no
+      act<->give
+      vcat<->[_G1763, _G1766, ditransitive]
+      max<->3
+      role<->assertion
+sem<->
+      id<->201583087
+      subj<->
+             noun<->she
+             head<->?she
+             type<->[CognitiveAgent, Female]
+      pred<->Giving
+      dobj<->
+             noun<->card
+             head<->?card
+             type<->BankCard
+             id<->104863407
+      adjs<->[]
+      iobj<->
+             noun<->Mary
+             head<->Mary-1
+             type<->[Human, Female, FullyFormed]
+Test passed.
+
+Translation = 
+
+(exists 
+  (?card ?she ?event) 
+  (and 
+    (instance ?event Giving) 
+    (instance ?she Female) 
+    (instance ?she CognitiveAgent) 
+    (agent ?event ?she) 
+    (instance ?card BankCard) 
+    (patient ?event ?card) 
+    (instance Mary-1 FullyFormed) 
+    (instance Mary-1 Female) 
+    (instance Mary-1 Human) 
+    (destination ?event Mary-1)))
+
+Speech Act = Assertion
+
+1. Warning: interpreted the meaning of the verb 'give' as  WordNet word sense #1 of 45 senses, ID 201583087, meaning cause to have, in the abstract sense or physical sense: "She gave him a black eye"; "The draft gave me a cold".  Maps to SUMO 'Giving'.
+
+2. Warning: interpreted the meaning of the noun 'card' as  WordNet word sense #2 of 11 senses, ID 104863407, meaning a card certifying the identity of the bearer; "he had to show his card to get in".  Maps to SUMO 'BankCard'.
+
+
+****************
+Test 15, parsing: a new customer gives the teller the card 
+
+Parsed OK:a new customer gives the teller the card 
+syn<->
+      rel<->no
+      act<->give
+      vcat<->[_G2370, _G2373, ditransitive]
+      max<->3
+      role<->assertion
+sem<->
+      id<->201583087
+      subj<->
+             noun<->customer
+             head<->?customer
+             type<->customer
+             id<->107197309
+             mod<->newness-WN03855074
+      pred<->Giving
+      dobj<->
+             noun<->card
+             head<->?card
+             type<->BankCard
+             id<->104863407
+      adjs<->[]
+      iobj<->
+             noun<->teller
+             head<->?teller
+             type<->OccupationalRole
+             id<->107635368
+Test passed.
+
+Translation = 
+
+(exists 
+  (?teller ?card ?salesperson ?customer ?event) 
+  (and 
+    (instance ?customer CognitiveAgent) 
+    (instance ?salesperson CognitiveAgent) 
+    (customer ?customer ?salesperson) 
+    (instance ?event Giving) 
+    (attribute ?customer newness-WN03855074) 
+    (agent ?event ?customer) 
+    (instance ?card BankCard) 
+    (patient ?event ?card) 
+    (instance ?teller OccupationalRole) 
+    (destination ?event ?teller)))
+
+Speech Act = Assertion
+
+1. Warning: interpreted the meaning of the verb 'give' as  WordNet word sense #1 of 45 senses, ID 201583087, meaning cause to have, in the abstract sense or physical sense: "She gave him a black eye"; "The draft gave me a cold".  Maps to SUMO 'Giving'.
+
+2. Note: interpreted the noun 'customer' using WordNet synset ID 107197309, meaning someone who pays for goods or services.  Maps to SUMO 'customer'.
+
+3. Warning: interpreted the meaning of the noun 'card' as  WordNet word sense #2 of 11 senses, ID 104863407, meaning a card certifying the identity of the bearer; "he had to show his card to get in".  Maps to SUMO 'BankCard'.
+
+4. Warning: interpreted the meaning of the noun 'teller' as  WordNet word sense #1 of 2 senses, ID 107635368, meaning an official appointed to count the votes (especially in legislative assembly).  Maps to SUMO 'OccupationalRole'.
+
+
+****************
+Test 16, parsing: John gives Mary the card 
+
+Parsed OK:John gives Mary the card 
+syn<->
+      rel<->no
+      act<->give
+      vcat<->[_G1955, _G1958, ditransitive]
+      max<->3
+      role<->assertion
+sem<->
+      id<->201583087
+      subj<->
+             noun<->John
+             head<->John-1
+             type<->[Human, Male, FullyFormed]
+      pred<->Giving
+      dobj<->
+             noun<->card
+             head<->?card
+             type<->BankCard
+             id<->104863407
+      adjs<->[]
+      iobj<->
+             noun<->Mary
+             head<->Mary-1
+             type<->[Human, Female, FullyFormed]
+Test passed.
+
+Translation = 
+
+(exists 
+  (?card ?event) 
+  (and 
+    (instance ?event Giving) 
+    (instance John-1 FullyFormed) 
+    (instance John-1 Male) 
+    (instance John-1 Human) 
+    (agent ?event John-1) 
+    (instance ?card BankCard) 
+    (patient ?event ?card) 
+    (instance Mary-1 FullyFormed) 
+    (instance Mary-1 Female) 
+    (instance Mary-1 Human) 
+    (destination ?event Mary-1)))
+
+Speech Act = Assertion
+
+1. Warning: interpreted the meaning of the verb 'give' as  WordNet word sense #1 of 45 senses, ID 201583087, meaning cause to have, in the abstract sense or physical sense: "She gave him a black eye"; "The draft gave me a cold".  Maps to SUMO 'Giving'.
+
+2. Warning: interpreted the meaning of the noun 'card' as  WordNet word sense #2 of 11 senses, ID 104863407, meaning a card certifying the identity of the bearer; "he had to show his card to get in".  Maps to SUMO 'BankCard'.
+
+
+****************
+Test 17, parsing: Mr Miller is the oldest teller 
+
+Parsed OK:Mr Miller is the oldest teller 
+syn<->
+      rel<->no
+      act<->be
+      vcat<->[_G1976, transitive, _G1982]
+      max<->3
+      role<->assertion
+sem<->
+      id<->201775973
+      subj<->
+             noun<->[Mr, Miller]
+             head<->MrMiller
+             type<->[Human, Male, FullyFormed]
+      pred<->instance
+      dobj<->
+             noun<->teller
+             head<->?teller
+             type<->OccupationalRole
+             id<->107635368
+             mod<->superlative(oldness-WN03854196)
+      adjs<->[]
+Test passed.
+
+Translation = 
+
+(exists 
+  (?teller ?event) 
+  (and 
+    (instance ?event instance) 
+    (instance MrMiller FullyFormed) 
+    (instance MrMiller Male) 
+    (instance MrMiller Human) 
+    (agent ?event MrMiller) 
+    (forall 
+      (?X) 
+      (implies 
+        (and 
+          (instance ?X OccupationalRole) 
+          (not 
+            (equal ?X ?teller))) 
+        (greaterThan 
+          (measure 
+            (attribute ?teller oldness-WN03854196)) 
+          (measure 
+            (attribute ?X oldness-WN03854196))))) 
+    (instance ?teller OccupationalRole) 
+    (patient ?event ?teller)))
+
+Speech Act = Assertion
+
+1. Warning: interpreted the meaning of the verb 'be' as  WordNet word sense #1 of 12 senses, ID 201775973, meaning have the quality of being; (copula, used with an adjective or a predicate noun); "John is rich"; "This is not a good answer".  Maps to SUMO 'instance'.
+
+2. Warning: interpreted the meaning of the noun 'teller' as  WordNet word sense #1 of 2 senses, ID 107635368, meaning an official appointed to count the votes (especially in legislative assembly).  Maps to SUMO 'OccupationalRole'.
+
+
+****************
+Test 18, parsing: the oldest customer enters an invalid card 
+
+Parsed OK:the oldest customer enters an invalid card 
+syn<->
+      rel<->no
+      act<->enter
+      vcat<->[_G2375, transitive, _G2381]
+      max<->3
+      role<->assertion
+sem<->
+      id<->201376901
+      subj<->
+             noun<->customer
+             head<->?customer
+             type<->customer
+             id<->107197309
+             mod<->superlative(oldness-WN03854196)
+      pred<->Movement
+      dobj<->
+             noun<->card
+             head<->?card
+             type<->BankCard
+             id<->104863407
+             mod<->incorrectness-WN03838242
+      adjs<->[]
+Test passed.
+
+Translation = 
+
+(exists 
+  (?card ?salesperson ?customer ?event) 
+  (and 
+    (instance ?customer CognitiveAgent) 
+    (instance ?salesperson CognitiveAgent) 
+    (customer ?customer ?salesperson) 
+    (instance ?event Movement) 
+    (forall 
+      (?X) 
+      (implies 
+        (and 
+          (instance ?X customer) 
+          (not 
+            (equal ?X ?customer))) 
+        (greaterThan 
+          (measure 
+            (attribute ?customer oldness-WN03854196)) 
+          (measure 
+            (attribute ?X oldness-WN03854196))))) 
+    (agent ?event ?customer) 
+    (attribute ?card incorrectness-WN03838242) 
+    (instance ?card BankCard) 
+    (patient ?event ?card)))
+
+Speech Act = Assertion
+
+1. Warning: interpreted the meaning of the verb 'enter' as  WordNet word sense #1 of 8 senses, ID 201376901, meaning to come or go into: "the ship entered an area of shallow marshes..".  Maps to SUMO 'Movement'.
+
+2. Note: interpreted the noun 'customer' using WordNet synset ID 107197309, meaning someone who pays for goods or services.  Maps to SUMO 'customer'.
+
+3. Warning: interpreted the meaning of the noun 'card' as  WordNet word sense #2 of 11 senses, ID 104863407, meaning a card certifying the identity of the bearer; "he had to show his card to get in".  Maps to SUMO 'BankCard'.
+
+
+****************
+Test 19, parsing: Mr Miller enters the bank 
+
+Parsed OK:Mr Miller enters the bank 
+syn<->
+      rel<->no
+      act<->enter
+      vcat<->[_G1973, transitive, _G1979]
+      max<->3
+      role<->assertion
+sem<->
+      id<->201376901
+      subj<->
+             noun<->[Mr, Miller]
+             head<->MrMiller
+             type<->[Human, Male, FullyFormed]
+      pred<->Movement
+      dobj<->
+             noun<->bank
+             head<->?bank
+             type<->Bank-FinancialOrganization
+             id<->106227059
+      adjs<->[]
+Test passed.
+
+Translation = 
+
+(exists 
+  (?bank ?event) 
+  (and 
+    (instance ?event Movement) 
+    (instance MrMiller FullyFormed) 
+    (instance MrMiller Male) 
+    (instance MrMiller Human) 
+    (agent ?event MrMiller) 
+    (instance ?bank Bank-FinancialOrganization) 
+    (patient ?event ?bank)))
+
+Speech Act = Assertion
+
+1. Warning: interpreted the meaning of the verb 'enter' as  WordNet word sense #1 of 8 senses, ID 201376901, meaning to come or go into: "the ship entered an area of shallow marshes..".  Maps to SUMO 'Movement'.
+
+2. Warning: interpreted the meaning of the noun 'bank' as  WordNet word sense #1 of 10 senses, ID 106227059, meaning a financial institution that accepts deposits and channels the money into lending activities; "he cashed a check at the bank"; "that bank holds the mortgage on my home".  Maps to SUMO 'Bank-FinancialOrganization'.
+
+
+****************
+Test 20, parsing: The New York Times is at the bank 
+
+Parsed OK:The New York Times is at the bank 
+syn<->
+      rel<->no
+      act<->be
+      vcat<->[intransitive, _G1983, _G1986]
+      max<->3
+      role<->assertion
+sem<->
+      id<->201775973
+      subj<->
+             noun<->[The, New, York, Times]
+             head<->TheNewYorkTimes
+             type<->Artifact
+      pred<->instance
+      adjs<->[prep<->located..aobj<-> (noun<->bank..head<-> ?bank..type<->Bank-FinancialOrganization..id<->106227059..poss<->_G3715..owner<->_G3720..of<->_G3725..of_id<->_G3730..sub<->empty..mod<->empty)]
+Test passed.
+
+Translation = 
+
+(exists 
+  (?bank ?event) 
+  (and 
+    (instance ?event instance) 
+    (instance TheNewYorkTimes Artifact) 
+    (patient ?event TheNewYorkTimes) 
+    (instance ?bank Bank-FinancialOrganization) 
+    (located ?event ?bank)))
+
+Speech Act = Assertion
+
+1. Warning: interpreted the meaning of the verb 'be' as  WordNet word sense #1 of 12 senses, ID 201775973, meaning have the quality of being; (copula, used with an adjective or a predicate noun); "John is rich"; "This is not a good answer".  Maps to SUMO 'instance'.
+
+
+****************
+Test 21, parsing: John dry cleans the credit card 
+
+Parsed OK:John dry cleans the credit card 
+syn<->
+      rel<->no
+      act<->[dry, clean]
+      vcat<->[_G1961, transitive, _G1967]
+      max<->3
+      role<->assertion
+sem<->
+      id<->201056234
+      subj<->
+             noun<->John
+             head<->John-1
+             type<->[Human, Male, FullyFormed]
+      pred<->Cleaning
+      dobj<->
+             noun<->[credit, card]
+             head<->?credit_card
+             type<->CreditCard
+             id<->109633105
+      adjs<->[]
+Test passed.
+
+Translation = 
+
+(exists 
+  (?credit_card ?event) 
+  (and 
+    (instance ?event Cleaning) 
+    (instance John-1 FullyFormed) 
+    (instance John-1 Male) 
+    (instance John-1 Human) 
+    (agent ?event John-1) 
+    (instance ?credit_card CreditCard) 
+    (patient ?event ?credit_card)))
+
+Speech Act = Assertion
+
+1. Note: interpreted the verb '[dry, clean]' using WordNet synset ID 201056234, meaning clean with chemical agents.  Maps to SUMO 'Cleaning'.
+
+2. Note: interpreted the noun '[credit, card]' using WordNet synset ID 109633105, meaning a card (usually plastic) that assures a seller that the person using it has a satisfactory credit rating and that the issuer will see to it that the seller receives payment for the merchandise delivered.  Maps to SUMO 'CreditCard'.
+
+
+****************
+Test 22, parsing: the Swiss customer enters the first class bank 
+
+Parsed OK:the Swiss customer enters the first class bank 
+syn<->
+      rel<->no
+      act<->enter
+      vcat<->[_G2373, transitive, _G2379]
+      max<->3
+      role<->assertion
+sem<->
+      id<->201376901
+      subj<->
+             noun<->customer
+             head<->?customer
+             type<->customer
+             id<->107197309
+             mod<->Germanism-WN00265812
+      pred<->Movement
+      dobj<->
+             noun<->bank
+             head<->?bank
+             type<->Bank-FinancialOrganization
+             id<->106227059
+             mod<->first_class-WN03718753
+      adjs<->[]
+Test passed.
+
+Translation = 
+
+(exists 
+  (?bank ?salesperson ?customer ?event) 
+  (and 
+    (instance ?customer CognitiveAgent) 
+    (instance ?salesperson CognitiveAgent) 
+    (customer ?customer ?salesperson) 
+    (instance ?event Movement) 
+    (attribute ?customer Germanism-WN00265812) 
+    (agent ?event ?customer) 
+    (attribute ?bank first_class-WN03718753) 
+    (instance ?bank Bank-FinancialOrganization) 
+    (patient ?event ?bank)))
+
+Speech Act = Assertion
+
+1. Warning: interpreted the meaning of the verb 'enter' as  WordNet word sense #1 of 8 senses, ID 201376901, meaning to come or go into: "the ship entered an area of shallow marshes..".  Maps to SUMO 'Movement'.
+
+2. Note: interpreted the noun 'customer' using WordNet synset ID 107197309, meaning someone who pays for goods or services.  Maps to SUMO 'customer'.
+
+3. Warning: interpreted the meaning of the noun 'bank' as  WordNet word sense #1 of 10 senses, ID 106227059, meaning a financial institution that accepts deposits and channels the money into lending activities; "he cashed a check at the bank"; "that bank holds the mortgage on my home".  Maps to SUMO 'Bank-FinancialOrganization'.
+
+
+****************
+Test 23, parsing: the customer Mr Miller enters the bank 
+
+Parsed OK:the customer Mr Miller enters the bank 
+syn<->
+      rel<->no
+      act<->enter
+      vcat<->[_G2495, transitive, _G2501]
+      max<->3
+      role<->assertion
+sem<->
+      id<->201376901
+      subj<->
+             head<->MrMiller
+             type<->customer
+      pred<->Movement
+      dobj<->
+             noun<->bank
+             head<->?bank
+             type<->Bank-FinancialOrganization
+             id<->106227059
+      adjs<->[]
+Test passed.
+
+Translation = 
+
+(exists 
+  (?bank ?salesperson ?event) 
+  (and 
+    (instance MrMiller CognitiveAgent) 
+    (instance ?salesperson CognitiveAgent) 
+    (customer MrMiller ?salesperson) 
+    (instance ?event Movement) 
+    (agent ?event MrMiller) 
+    (instance ?bank Bank-FinancialOrganization) 
+    (patient ?event ?bank)))
+
+Speech Act = Assertion
+
+1. Warning: interpreted the meaning of the verb 'enter' as  WordNet word sense #1 of 8 senses, ID 201376901, meaning to come or go into: "the ship entered an area of shallow marshes..".  Maps to SUMO 'Movement'.
+
+2. Warning: interpreted the meaning of the noun 'bank' as  WordNet word sense #1 of 10 senses, ID 106227059, meaning a financial institution that accepts deposits and channels the money into lending activities; "he cashed a check at the bank"; "that bank holds the mortgage on my home".  Maps to SUMO 'Bank-FinancialOrganization'.
+
+
+****************
+Test 24, parsing: the customer Mr Miller enters a bank X 
+
+Parsed OK:the customer Mr Miller enters a bank X 
+syn<->
+      rel<->no
+      act<->enter
+      vcat<->[_G2498, transitive, _G2504]
+      max<->3
+      role<->assertion
+sem<->
+      id<->201376901
+      subj<->
+             head<->MrMiller
+             type<->customer
+      pred<->Movement
+      dobj<->
+             head<->X
+             type<->Bank-FinancialOrganization
+      adjs<->[]
+Test passed.
+
+Translation = 
+
+(exists 
+  (?salesperson ?event) 
+  (and 
+    (instance MrMiller CognitiveAgent) 
+    (instance ?salesperson CognitiveAgent) 
+    (customer MrMiller ?salesperson) 
+    (instance ?event Movement) 
+    (agent ?event MrMiller) 
+    (instance X Bank-FinancialOrganization) 
+    (patient ?event X)))
+
+Speech Act = Assertion
+
+1. Warning: interpreted the meaning of the verb 'enter' as  WordNet word sense #1 of 8 senses, ID 201376901, meaning to come or go into: "the ship entered an area of shallow marshes..".  Maps to SUMO 'Movement'.
+
+
+****************
+Test 25, parsing: John ' s card is at the bank 
+
+Parsed OK:John ' s card is at the bank 
+syn<->
+      rel<->no
+      act<->be
+      vcat<->[intransitive, _G2418, _G2421]
+      max<->3
+      role<->assertion
+sem<->
+      id<->201775973
+      subj<->
+             noun<->card
+             head<->?card
+             type<->BankCard
+             id<->104863407
+             poss<->John-1
+      pred<->instance
+      adjs<->[prep<->located..aobj<-> (noun<->bank..head<-> ?bank..type<->Bank-FinancialOrganization..id<->106227059..poss<->_G4150..owner<->_G4155..of<->_G4160..of_id<->_G4165..sub<->empty..mod<->empty)]
+Test passed.
+
+Translation = 
+
+(exists 
+  (?bank ?card ?event) 
+  (and 
+    (instance ?event instance) 
+    (possesses John-1 ?card) 
+    (instance ?card BankCard) 
+    (patient ?event ?card) 
+    (instance ?bank Bank-FinancialOrganization) 
+    (located ?event ?bank)))
+
+Speech Act = Assertion
+
+1. Warning: interpreted the meaning of the verb 'be' as  WordNet word sense #1 of 12 senses, ID 201775973, meaning have the quality of being; (copula, used with an adjective or a predicate noun); "John is rich"; "This is not a good answer".  Maps to SUMO 'instance'.
+
+2. Warning: interpreted the meaning of the noun 'card' as  WordNet word sense #2 of 11 senses, ID 104863407, meaning a card certifying the identity of the bearer; "he had to show his card to get in".  Maps to SUMO 'BankCard'.
+
+
+****************
+Test 26, parsing: the card ' s code is valid 
+
+Parsed OK:the card ' s code is valid 
+syn<->
+      rel<->no
+      act<->be
+      vcat<->copula
+      max<->3
+      role<->assertion
+sem<->
+      mod<->validation-WN00099890
+      subj<->
+             noun<->code
+             head<->?code
+             type<->Text
+             id<->104790774
+             poss<->?card
+             owner<->104863407
+      pred<->isa
+Test passed.
+
+Translation = 
+
+(exists 
+  (?code) 
+  (and 
+    (attribute ?code validation-WN00099890) 
+    (instance ?code Text) 
+    (possesses ?card ?code)))
+
+Speech Act = Assertion
+
+1. Warning: interpreted the meaning of the noun 'code' as  WordNet word sense #2 of 3 senses, ID 104790774, meaning a coding system used for transmitting messages requiring brevity or secrecy.  Maps to SUMO 'Text'.
+
+
+****************
+Test 27, parsing: Monday ' s customer arrives punctually 
+
+Parsed OK:Monday ' s customer arrives punctually 
+syn<->
+      rel<->no
+      act<->arrive
+      vcat<->[intransitive, _G2418, _G2421]
+      max<->3
+      role<->assertion
+sem<->
+      id<->201368651
+      subj<->
+             noun<->customer
+             head<->?customer
+             type<->customer
+             id<->107197309
+             poss<->Monday
+             owner<->110882888
+      pred<->Motion
+      adjs<->[adv<->punctuality-WN03940380]
+Test passed.
+
+Translation = 
+
+(exists 
+  (?salesperson ?customer ?event) 
+  (and 
+    (instance ?customer CognitiveAgent) 
+    (instance ?salesperson CognitiveAgent) 
+    (customer ?customer ?salesperson) 
+    (instance ?event Motion) 
+    (possesses Monday ?customer) 
+    (patient ?event ?customer) 
+    (manner ?event punctuality-WN03940380)))
+
+Speech Act = Assertion
+
+1. Warning: interpreted the meaning of the verb 'arrive' as  WordNet word sense #1 of 2 senses, ID 201368651, meaning reach a destination; arrive by movement or by making progress; "She arrived home at 7 o'clock"; "He got into college"; "She didn't get to Chicago until after midnight".  Maps to SUMO 'Motion'.
+
+2. Note: interpreted the noun 'customer' using WordNet synset ID 107197309, meaning someone who pays for goods or services.  Maps to SUMO 'customer'.
+
+
+****************
+Test 28, parsing: the customer who enters the bank inserts the card 
+
+Parsed OK:the customer who enters the bank inserts the card 
+syn<->
+      rel<->no
+      act<->insert
+      vcat<->[_G5316, transitive, _G5322]
+      max<->3
+      role<->assertion
+sem<->
+      id<->200974668
+      subj<->
+             noun<->customer
+             head<->?customer
+             type<->customer
+             id<->107197309
+             sub<->
+                   id<->201376901
+                   subj<->
+                          head<->?who
+                          type<->Human
+                   pred<->Movement
+                   dobj<->
+                          noun<->bank
+                          head<->?bank
+                          type<->Bank-FinancialOrganization
+                          id<->106227059
+                   adjs<->[]
+      pred<->Putting
+      dobj<->
+             noun<->card
+             head<->?card
+             type<->BankCard
+             id<->104863407
+      adjs<->[]
+Test passed.
+
+Translation = 
+
+(exists 
+  (?card ?salesperson ?bank ?who ?event1 ?customer ?event) 
+  (and 
+    (instance ?customer CognitiveAgent) 
+    (instance ?salesperson CognitiveAgent) 
+    (customer ?customer ?salesperson) 
+    (equal ?customer ?who) 
+    (instance ?event1 Movement) 
+    (instance ?who Human) 
+    (agent ?event1 ?who) 
+    (instance ?bank Bank-FinancialOrganization) 
+    (patient ?event1 ?bank) 
+    (instance ?event Putting) 
+    (agent ?event ?customer) 
+    (instance ?card BankCard) 
+    (patient ?event ?card)))
+
+Speech Act = Assertion
+
+1. Warning: interpreted the meaning of the verb 'insert' as  WordNet word sense #1 of 4 senses, ID 200974668, meaning put or introduce into the body of something; "insert a picture into the text".  Maps to SUMO 'Putting'.
+
+2. Note: interpreted the noun 'customer' using WordNet synset ID 107197309, meaning someone who pays for goods or services.  Maps to SUMO 'customer'.
+
+3. Warning: interpreted the meaning of the noun 'card' as  WordNet word sense #2 of 11 senses, ID 104863407, meaning a card certifying the identity of the bearer; "he had to show his card to get in".  Maps to SUMO 'BankCard'.
+
+
+****************
+Test 29, parsing: a customer who is Swiss inserts the card 
+
+Parsed OK:a customer who is Swiss inserts the card 
+syn<->
+      rel<->no
+      act<->insert
+      vcat<->[_G5172, transitive, _G5178]
+      max<->3
+      role<->assertion
+sem<->
+      id<->200974668
+      subj<->
+             noun<->customer
+             head<->?customer
+             type<->customer
+             id<->107197309
+             sub<->
+                   id<->201775973
+                   subj<->
+                          head<->?who
+                          type<->Human
+                   pred<->instance
+                   dobj<->
+                          noun<->Swiss
+                          head<->Swiss
+                          type<->EthnicGroup
+                          id<->107039396
+                   adjs<->[]
+      pred<->Putting
+      dobj<->
+             noun<->card
+             head<->?card
+             type<->BankCard
+             id<->104863407
+      adjs<->[]
+Test passed.
+
+Translation = 
+
+(exists 
+  (?card ?salesperson ?who ?event1 ?customer ?event) 
+  (and 
+    (instance ?customer CognitiveAgent) 
+    (instance ?salesperson CognitiveAgent) 
+    (customer ?customer ?salesperson) 
+    (equal ?customer ?who) 
+    (instance ?event1 instance) 
+    (instance ?who Human) 
+    (agent ?event1 ?who) 
+    (instance Swiss EthnicGroup) 
+    (patient ?event1 Swiss) 
+    (instance ?event Putting) 
+    (agent ?event ?customer) 
+    (instance ?card BankCard) 
+    (patient ?event ?card)))
+
+Speech Act = Assertion
+
+1. Warning: interpreted the meaning of the verb 'insert' as  WordNet word sense #1 of 4 senses, ID 200974668, meaning put or introduce into the body of something; "insert a picture into the text".  Maps to SUMO 'Putting'.
+
+2. Note: interpreted the noun 'customer' using WordNet synset ID 107197309, meaning someone who pays for goods or services.  Maps to SUMO 'customer'.
+
+3. Warning: interpreted the meaning of the noun 'card' as  WordNet word sense #2 of 11 senses, ID 104863407, meaning a card certifying the identity of the bearer; "he had to show his card to get in".  Maps to SUMO 'BankCard'.
+
+
+****************
+Test 30, parsing: the card which is old is valid 
+
+Parsed OK:the card which is old is valid 
+syn<->
+      rel<->no
+      act<->be
+      vcat<->copula
+      max<->3
+      role<->assertion
+sem<->
+      mod<->validation-WN00099890
+      subj<->
+             noun<->card
+             head<->?card
+             type<->BankCard
+             id<->104863407
+             sub<->
+                   mod<->oldness-WN03854196
+                   subj<->
+                          head<->?which
+                          type<->Physical
+                   pred<->isa
+      pred<->isa
+Test passed.
+
+Translation = 
+
+(exists 
+  (?which ?card) 
+  (and 
+    (attribute ?card validation-WN00099890) 
+    (instance ?card BankCard) 
+    (instance ?which Physical) 
+    (attribute ?which oldness-WN03854196) 
+    (equal ?card ?which)))
+
+Speech Act = Assertion
+
+1. Warning: interpreted the meaning of the noun 'card' as  WordNet word sense #2 of 11 senses, ID 104863407, meaning a card certifying the identity of the bearer; "he had to show his card to get in".  Maps to SUMO 'BankCard'.
+
+
+****************
+Test 31, parsing: the card that is old is valid 
+
+Parsed OK:the card that is old is valid 
+syn<->
+      rel<->no
+      act<->be
+      vcat<->copula
+      max<->3
+      role<->assertion
+sem<->
+      mod<->validation-WN00099890
+      subj<->
+             noun<->card
+             head<->?card
+             type<->BankCard
+             id<->104863407
+             sub<->
+                   mod<->oldness-WN03854196
+                   subj<->
+                          head<->?that
+                          type<->Physical
+                   pred<->isa
+      pred<->isa
+Test passed.
+
+Translation = 
+
+(exists 
+  (?that ?card) 
+  (and 
+    (attribute ?card validation-WN00099890) 
+    (instance ?card BankCard) 
+    (instance ?that Physical) 
+    (attribute ?that oldness-WN03854196) 
+    (equal ?card ?that)))
+
+Speech Act = Assertion
+
+1. Warning: interpreted the meaning of the noun 'card' as  WordNet word sense #2 of 11 senses, ID 104863407, meaning a card certifying the identity of the bearer; "he had to show his card to get in".  Maps to SUMO 'BankCard'.
+
+
+****************
+Test 32, parsing: a customer inserts a credit card which is old 
+
+Parsed OK:a customer inserts a credit card which is old 
+syn<->
+      rel<->no
+      act<->insert
+      vcat<->[_G2117, transitive, _G2123]
+      max<->3
+      role<->assertion
+sem<->
+      id<->200974668
+      subj<->
+             noun<->customer
+             head<->?customer
+             type<->customer
+             id<->107197309
+      pred<->Putting
+      dobj<->
+             noun<->[credit, card]
+             head<->?credit_card
+             type<->CreditCard
+             id<->109633105
+             sub<->
+                   mod<->oldness-WN03854196
+                   subj<->
+                          head<->?which
+                          type<->Physical
+                   pred<->isa
+      adjs<->[]
+Test passed.
+
+Translation = 
+
+(exists 
+  (?which ?credit_card ?salesperson ?customer ?event) 
+  (and 
+    (equal ?credit_card ?which) 
+    (attribute ?which oldness-WN03854196) 
+    (instance ?which Physical) 
+    (instance ?customer CognitiveAgent) 
+    (instance ?salesperson CognitiveAgent) 
+    (customer ?customer ?salesperson) 
+    (instance ?event Putting) 
+    (agent ?event ?customer) 
+    (instance ?credit_card CreditCard) 
+    (patient ?event ?credit_card)))
+
+Speech Act = Assertion
+
+1. Warning: interpreted the meaning of the verb 'insert' as  WordNet word sense #1 of 4 senses, ID 200974668, meaning put or introduce into the body of something; "insert a picture into the text".  Maps to SUMO 'Putting'.
+
+2. Note: interpreted the noun 'customer' using WordNet synset ID 107197309, meaning someone who pays for goods or services.  Maps to SUMO 'customer'.
+
+3. Note: interpreted the noun '[credit, card]' using WordNet synset ID 109633105, meaning a card (usually plastic) that assures a seller that the person using it has a satisfactory credit rating and that the issuer will see to it that the seller receives payment for the merchandise delivered.  Maps to SUMO 'CreditCard'.
+
+
+****************
+Test 33, parsing: Mr Miller enters the card that the customer inserts 
+
+Parsed OK:Mr Miller enters the card that the customer inserts 
+syn<->
+      rel<->no
+      act<->enter
+      vcat<->[_G1985, transitive, _G1991]
+      max<->3
+      role<->assertion
+sem<->
+      id<->201376901
+      subj<->
+             noun<->[Mr, Miller]
+             head<->MrMiller
+             type<->[Human, Male, FullyFormed]
+      pred<->Movement
+      dobj<->
+             noun<->card
+             head<->?card
+             type<->BankCard
+             id<->104863407
+             sub<->
+                   id<->200974668
+                   subj<->
+                          noun<->customer
+                          head<->?customer
+                          type<->customer
+                          id<->107197309
+                   pred<->Putting
+                   dobj<->
+                          head<->?that
+                          type<->Physical
+                   adjs<->[]
+      adjs<->[]
+Test passed.
+
+Translation = 
+
+(exists 
+  (?that ?salesperson ?customer ?event1 ?card ?event) 
+  (and 
+    (equal ?card ?that) 
+    (instance ?customer CognitiveAgent) 
+    (instance ?salesperson CognitiveAgent) 
+    (customer ?customer ?salesperson) 
+    (instance ?event1 Putting) 
+    (agent ?event1 ?customer) 
+    (instance ?that Physical) 
+    (patient ?event1 ?that) 
+    (instance ?event Movement) 
+    (instance MrMiller FullyFormed) 
+    (instance MrMiller Male) 
+    (instance MrMiller Human) 
+    (agent ?event MrMiller) 
+    (instance ?card BankCard) 
+    (patient ?event ?card)))
+
+Speech Act = Assertion
+
+1. Warning: interpreted the meaning of the verb 'enter' as  WordNet word sense #1 of 8 senses, ID 201376901, meaning to come or go into: "the ship entered an area of shallow marshes..".  Maps to SUMO 'Movement'.
+
+2. Warning: interpreted the meaning of the noun 'card' as  WordNet word sense #2 of 11 senses, ID 104863407, meaning a card certifying the identity of the bearer; "he had to show his card to get in".  Maps to SUMO 'BankCard'.
+
+
+****************
+Test 34, parsing: Mr Miller enters the card that the customer inserts into the slot 
+
+Parsed OK:Mr Miller enters the card that the customer inserts into the slot 
+syn<->
+      rel<->no
+      act<->enter
+      vcat<->[_G1994, transitive, _G2000]
+      max<->3
+      role<->assertion
+sem<->
+      id<->201376901
+      subj<->
+             noun<->[Mr, Miller]
+             head<->MrMiller
+             type<->[Human, Male, FullyFormed]
+      pred<->Movement
+      dobj<->
+             noun<->card
+             head<->?card
+             type<->BankCard
+             id<->104863407
+             sub<->
+                   id<->200974668
+                   subj<->
+                          noun<->customer
+                          head<->?customer
+                          type<->customer
+                          id<->107197309
+                   pred<->Putting
+                   dobj<->
+                          head<->?that
+                          type<->Physical
+                   adjs<->[]
+      adjs<->[prep<->located..aobj<-> (noun<->slot..head<-> ?slot..type<->ATMSlot..id<->103355826..poss<->_G8037..owner<->_G8042..of<->_G8047..of_id<->_G8052..sub<->empty..mod<->empty)]
+Test passed.
+
+Translation = 
+
+(exists 
+  (?slot ?that ?salesperson ?customer ?event1 ?card ?event) 
+  (and 
+    (equal ?card ?that) 
+    (instance ?customer CognitiveAgent) 
+    (instance ?salesperson CognitiveAgent) 
+    (customer ?customer ?salesperson) 
+    (instance ?event1 Putting) 
+    (agent ?event1 ?customer) 
+    (instance ?that Physical) 
+    (patient ?event1 ?that) 
+    (instance ?event Movement) 
+    (instance MrMiller FullyFormed) 
+    (instance MrMiller Male) 
+    (instance MrMiller Human) 
+    (agent ?event MrMiller) 
+    (instance ?card BankCard) 
+    (patient ?event ?card) 
+    (instance ?slot ATMSlot) 
+    (located ?event ?slot)))
+
+Speech Act = Assertion
+
+1. Warning: interpreted the meaning of the verb 'enter' as  WordNet word sense #1 of 8 senses, ID 201376901, meaning to come or go into: "the ship entered an area of shallow marshes..".  Maps to SUMO 'Movement'.
+
+2. Warning: interpreted the meaning of the noun 'card' as  WordNet word sense #2 of 11 senses, ID 104863407, meaning a card certifying the identity of the bearer; "he had to show his card to get in".  Maps to SUMO 'BankCard'.
+
+
+****************
+Test 35, parsing: John gives the card to the teller who gives the code to the customer 
+
+Parsed OK:John gives the card to the teller who gives the code to the customer 
+syn<->
+      rel<->no
+      act<->give
+      vcat<->[_G1982, _G1985, ditransitive]
+      max<->3
+      role<->assertion
+sem<->
+      id<->201583087
+      subj<->
+             noun<->John
+             head<->John-1
+             type<->[Human, Male, FullyFormed]
+      pred<->Giving
+      dobj<->
+             noun<->card
+             head<->?card
+             type<->BankCard
+             id<->104863407
+      adjs<->[]
+      iobj<->
+             noun<->teller
+             head<->?teller
+             type<->OccupationalRole
+             id<->107635368
+             sub<->
+                   id<->201583087
+                   subj<->
+                          head<->?who
+                          type<->Human
+                   pred<->Giving
+                   dobj<->
+                          noun<->code
+                          head<->?code
+                          type<->Text
+                          id<->104790774
+                   adjs<->[]
+                   iobj<->
+                          noun<->customer
+                          head<->?customer
+                          type<->customer
+                          id<->107197309
+Test passed.
+
+Translation = 
+
+(exists 
+  (?salesperson ?customer ?code ?who ?event1 ?teller ?card ?event) 
+  (and 
+    (equal ?teller ?who) 
+    (instance ?customer CognitiveAgent) 
+    (instance ?salesperson CognitiveAgent) 
+    (customer ?customer ?salesperson) 
+    (instance ?event1 Giving) 
+    (instance ?who Human) 
+    (agent ?event1 ?who) 
+    (instance ?code Text) 
+    (patient ?event1 ?code) 
+    (destination ?event1 ?customer) 
+    (instance ?event Giving) 
+    (instance John-1 FullyFormed) 
+    (instance John-1 Male) 
+    (instance John-1 Human) 
+    (agent ?event John-1) 
+    (instance ?card BankCard) 
+    (patient ?event ?card) 
+    (instance ?teller OccupationalRole) 
+    (destination ?event ?teller)))
+
+Speech Act = Assertion
+
+1. Warning: interpreted the meaning of the verb 'give' as  WordNet word sense #1 of 45 senses, ID 201583087, meaning cause to have, in the abstract sense or physical sense: "She gave him a black eye"; "The draft gave me a cold".  Maps to SUMO 'Giving'.
+
+2. Warning: interpreted the meaning of the noun 'card' as  WordNet word sense #2 of 11 senses, ID 104863407, meaning a card certifying the identity of the bearer; "he had to show his card to get in".  Maps to SUMO 'BankCard'.
+
+3. Warning: interpreted the meaning of the noun 'teller' as  WordNet word sense #1 of 2 senses, ID 107635368, meaning an official appointed to count the votes (especially in legislative assembly).  Maps to SUMO 'OccupationalRole'.
+
+
+****************
+Test 36, parsing: John gives the card to the teller who gives the customer the code 
+
+Parsed OK:John gives the card to the teller who gives the customer the code 
+syn<->
+      rel<->no
+      act<->give
+      vcat<->[_G1979, _G1982, ditransitive]
+      max<->3
+      role<->assertion
+sem<->
+      id<->201583087
+      subj<->
+             noun<->John
+             head<->John-1
+             type<->[Human, Male, FullyFormed]
+      pred<->Giving
+      dobj<->
+             noun<->card
+             head<->?card
+             type<->BankCard
+             id<->104863407
+      adjs<->[]
+      iobj<->
+             noun<->teller
+             head<->?teller
+             type<->OccupationalRole
+             id<->107635368
+             sub<->
+                   id<->201583087
+                   subj<->
+                          head<->?who
+                          type<->Human
+                   pred<->Giving
+                   dobj<->
+                          noun<->code
+                          head<->?code
+                          type<->Text
+                          id<->104790774
+                   adjs<->[]
+                   iobj<->
+                          noun<->customer
+                          head<->?customer
+                          type<->customer
+                          id<->107197309
+Test passed.
+
+Translation = 
+
+(exists 
+  (?salesperson ?customer ?code ?who ?event1 ?teller ?card ?event) 
+  (and 
+    (equal ?teller ?who) 
+    (instance ?customer CognitiveAgent) 
+    (instance ?salesperson CognitiveAgent) 
+    (customer ?customer ?salesperson) 
+    (instance ?event1 Giving) 
+    (instance ?who Human) 
+    (agent ?event1 ?who) 
+    (instance ?code Text) 
+    (patient ?event1 ?code) 
+    (destination ?event1 ?customer) 
+    (instance ?event Giving) 
+    (instance John-1 FullyFormed) 
+    (instance John-1 Male) 
+    (instance John-1 Human) 
+    (agent ?event John-1) 
+    (instance ?card BankCard) 
+    (patient ?event ?card) 
+    (instance ?teller OccupationalRole) 
+    (destination ?event ?teller)))
+
+Speech Act = Assertion
+
+1. Warning: interpreted the meaning of the verb 'give' as  WordNet word sense #1 of 45 senses, ID 201583087, meaning cause to have, in the abstract sense or physical sense: "She gave him a black eye"; "The draft gave me a cold".  Maps to SUMO 'Giving'.
+
+2. Warning: interpreted the meaning of the noun 'card' as  WordNet word sense #2 of 11 senses, ID 104863407, meaning a card certifying the identity of the bearer; "he had to show his card to get in".  Maps to SUMO 'BankCard'.
+
+3. Warning: interpreted the meaning of the noun 'teller' as  WordNet word sense #1 of 2 senses, ID 107635368, meaning an official appointed to count the votes (especially in legislative assembly).  Maps to SUMO 'OccupationalRole'.
+
+
+****************
+Test 37, parsing: the teller enters the card that the customer gives to him 
+
+Parsed OK:the teller enters the card that the customer gives to him 
+syn<->
+      rel<->no
+      act<->enter
+      vcat<->[_G2117, transitive, _G2123]
+      max<->3
+      role<->assertion
+sem<->
+      id<->201376901
+      subj<->
+             noun<->teller
+             head<->?teller
+             type<->OccupationalRole
+             id<->107635368
+      pred<->Movement
+      dobj<->
+             noun<->card
+             head<->?card
+             type<->BankCard
+             id<->104863407
+             sub<->
+                   id<->201583087
+                   subj<->
+                          noun<->customer
+                          head<->?customer
+                          type<->customer
+                          id<->107197309
+                   pred<->Giving
+                   dobj<->
+                          head<->?that
+                          type<->Physical
+                   adjs<->[]
+                   iobj<->
+                          noun<->him
+                          head<->?him
+                          type<->[CognitiveAgent, Male]
+      adjs<->[]
+Test passed.
+
+Translation = 
+
+(exists 
+  (?him ?that ?salesperson ?customer ?event1 ?card ?teller ?event) 
+  (and 
+    (equal ?card ?that) 
+    (instance ?customer CognitiveAgent) 
+    (instance ?salesperson CognitiveAgent) 
+    (customer ?customer ?salesperson) 
+    (instance ?event1 Giving) 
+    (agent ?event1 ?customer) 
+    (instance ?that Physical) 
+    (patient ?event1 ?that) 
+    (instance ?him Male) 
+    (instance ?him CognitiveAgent) 
+    (destination ?event1 ?him) 
+    (instance ?event Movement) 
+    (instance ?teller OccupationalRole) 
+    (agent ?event ?teller) 
+    (instance ?card BankCard) 
+    (patient ?event ?card)))
+
+Speech Act = Assertion
+
+1. Warning: interpreted the meaning of the verb 'enter' as  WordNet word sense #1 of 8 senses, ID 201376901, meaning to come or go into: "the ship entered an area of shallow marshes..".  Maps to SUMO 'Movement'.
+
+2. Warning: interpreted the meaning of the noun 'teller' as  WordNet word sense #1 of 2 senses, ID 107635368, meaning an official appointed to count the votes (especially in legislative assembly).  Maps to SUMO 'OccupationalRole'.
+
+3. Warning: interpreted the meaning of the noun 'card' as  WordNet word sense #2 of 11 senses, ID 104863407, meaning a card certifying the identity of the bearer; "he had to show his card to get in".  Maps to SUMO 'BankCard'.
+
+
+****************
+Test 38, parsing: the teller enters the card that the customer gives him 
+
+Parsed OK:the teller enters the card that the customer gives him 
+syn<->
+      rel<->no
+      act<->enter
+      vcat<->[_G2114, transitive, _G2120]
+      max<->3
+      role<->assertion
+sem<->
+      id<->201376901
+      subj<->
+             noun<->teller
+             head<->?teller
+             type<->OccupationalRole
+             id<->107635368
+      pred<->Movement
+      dobj<->
+             noun<->card
+             head<->?card
+             type<->BankCard
+             id<->104863407
+             sub<->
+                   id<->201583087
+                   subj<->
+                          noun<->customer
+                          head<->?customer
+                          type<->customer
+                          id<->107197309
+                   pred<->Giving
+                   dobj<->
+                          head<->?that
+                          type<->Physical
+                   adjs<->[]
+                   iobj<->
+                          noun<->him
+                          head<->?him
+                          type<->[CognitiveAgent, Male]
+      adjs<->[]
+Test passed.
+
+Translation = 
+
+(exists 
+  (?him ?that ?salesperson ?customer ?event1 ?card ?teller ?event) 
+  (and 
+    (equal ?card ?that) 
+    (instance ?customer CognitiveAgent) 
+    (instance ?salesperson CognitiveAgent) 
+    (customer ?customer ?salesperson) 
+    (instance ?event1 Giving) 
+    (agent ?event1 ?customer) 
+    (instance ?that Physical) 
+    (patient ?event1 ?that) 
+    (instance ?him Male) 
+    (instance ?him CognitiveAgent) 
+    (destination ?event1 ?him) 
+    (instance ?event Movement) 
+    (instance ?teller OccupationalRole) 
+    (agent ?event ?teller) 
+    (instance ?card BankCard) 
+    (patient ?event ?card)))
+
+Speech Act = Assertion
+
+1. Warning: interpreted the meaning of the verb 'enter' as  WordNet word sense #1 of 8 senses, ID 201376901, meaning to come or go into: "the ship entered an area of shallow marshes..".  Maps to SUMO 'Movement'.
+
+2. Warning: interpreted the meaning of the noun 'teller' as  WordNet word sense #1 of 2 senses, ID 107635368, meaning an official appointed to count the votes (especially in legislative assembly).  Maps to SUMO 'OccupationalRole'.
+
+3. Warning: interpreted the meaning of the noun 'card' as  WordNet word sense #2 of 11 senses, ID 104863407, meaning a card certifying the identity of the bearer; "he had to show his card to get in".  Maps to SUMO 'BankCard'.
+
+
+****************
+Test 39, parsing: John gives the card to the teller who the customer gives the code to 
+
+Parsed OK:John gives the card to the teller who the customer gives the code to 
+syn<->
+      rel<->no
+      act<->give
+      vcat<->[_G1982, _G1985, ditransitive]
+      max<->3
+      role<->assertion
+sem<->
+      id<->201583087
+      subj<->
+             noun<->John
+             head<->John-1
+             type<->[Human, Male, FullyFormed]
+      pred<->Giving
+      dobj<->
+             noun<->card
+             head<->?card
+             type<->BankCard
+             id<->104863407
+      adjs<->[]
+      iobj<->
+             noun<->teller
+             head<->?teller
+             type<->OccupationalRole
+             id<->107635368
+             sub<->
+                   id<->201583087
+                   subj<->
+                          noun<->customer
+                          head<->?customer
+                          type<->customer
+                          id<->107197309
+                   pred<->Giving
+                   dobj<->
+                          noun<->code
+                          head<->?code
+                          type<->Text
+                          id<->104790774
+                   adjs<->[]
+                   iobj<->
+                          head<->?who
+                          type<->Human
+Test passed.
+
+Translation = 
+
+(exists 
+  (?who ?code ?salesperson ?customer ?event1 ?teller ?card ?event) 
+  (and 
+    (equal ?teller ?who) 
+    (instance ?customer CognitiveAgent) 
+    (instance ?salesperson CognitiveAgent) 
+    (customer ?customer ?salesperson) 
+    (instance ?event1 Giving) 
+    (agent ?event1 ?customer) 
+    (instance ?code Text) 
+    (patient ?event1 ?code) 
+    (instance ?who Human) 
+    (destination ?event1 ?who) 
+    (instance ?event Giving) 
+    (instance John-1 FullyFormed) 
+    (instance John-1 Male) 
+    (instance John-1 Human) 
+    (agent ?event John-1) 
+    (instance ?card BankCard) 
+    (patient ?event ?card) 
+    (instance ?teller OccupationalRole) 
+    (destination ?event ?teller)))
+
+Speech Act = Assertion
+
+1. Warning: interpreted the meaning of the verb 'give' as  WordNet word sense #1 of 45 senses, ID 201583087, meaning cause to have, in the abstract sense or physical sense: "She gave him a black eye"; "The draft gave me a cold".  Maps to SUMO 'Giving'.
+
+2. Warning: interpreted the meaning of the noun 'card' as  WordNet word sense #2 of 11 senses, ID 104863407, meaning a card certifying the identity of the bearer; "he had to show his card to get in".  Maps to SUMO 'BankCard'.
+
+3. Warning: interpreted the meaning of the noun 'teller' as  WordNet word sense #1 of 2 senses, ID 107635368, meaning an official appointed to count the votes (especially in legislative assembly).  Maps to SUMO 'OccupationalRole'.
+
+
+****************
+Test 40, parsing: John gives the card to the teller who gives the customer the code 
+
+Parsed OK:John gives the card to the teller who gives the customer the code 
+syn<->
+      rel<->no
+      act<->give
+      vcat<->[_G1979, _G1982, ditransitive]
+      max<->3
+      role<->assertion
+sem<->
+      id<->201583087
+      subj<->
+             noun<->John
+             head<->John-1
+             type<->[Human, Male, FullyFormed]
+      pred<->Giving
+      dobj<->
+             noun<->card
+             head<->?card
+             type<->BankCard
+             id<->104863407
+      adjs<->[]
+      iobj<->
+             noun<->teller
+             head<->?teller
+             type<->OccupationalRole
+             id<->107635368
+             sub<->
+                   id<->201583087
+                   subj<->
+                          head<->?who
+                          type<->Human
+                   pred<->Giving
+                   dobj<->
+                          noun<->code
+                          head<->?code
+                          type<->Text
+                          id<->104790774
+                   adjs<->[]
+                   iobj<->
+                          noun<->customer
+                          head<->?customer
+                          type<->customer
+                          id<->107197309
+Test passed.
+
+Translation = 
+
+(exists 
+  (?salesperson ?customer ?code ?who ?event1 ?teller ?card ?event) 
+  (and 
+    (equal ?teller ?who) 
+    (instance ?customer CognitiveAgent) 
+    (instance ?salesperson CognitiveAgent) 
+    (customer ?customer ?salesperson) 
+    (instance ?event1 Giving) 
+    (instance ?who Human) 
+    (agent ?event1 ?who) 
+    (instance ?code Text) 
+    (patient ?event1 ?code) 
+    (destination ?event1 ?customer) 
+    (instance ?event Giving) 
+    (instance John-1 FullyFormed) 
+    (instance John-1 Male) 
+    (instance John-1 Human) 
+    (agent ?event John-1) 
+    (instance ?card BankCard) 
+    (patient ?event ?card) 
+    (instance ?teller OccupationalRole) 
+    (destination ?event ?teller)))
+
+Speech Act = Assertion
+
+1. Warning: interpreted the meaning of the verb 'give' as  WordNet word sense #1 of 45 senses, ID 201583087, meaning cause to have, in the abstract sense or physical sense: "She gave him a black eye"; "The draft gave me a cold".  Maps to SUMO 'Giving'.
+
+2. Warning: interpreted the meaning of the noun 'card' as  WordNet word sense #2 of 11 senses, ID 104863407, meaning a card certifying the identity of the bearer; "he had to show his card to get in".  Maps to SUMO 'BankCard'.
+
+3. Warning: interpreted the meaning of the noun 'teller' as  WordNet word sense #1 of 2 senses, ID 107635368, meaning an official appointed to count the votes (especially in legislative assembly).  Maps to SUMO 'OccupationalRole'.
+
+
+****************
+Test 41, parsing: a customer who is old inserts a credit card that is valid 
+
+Parsed OK:a customer who is old inserts a credit card that is valid 
+syn<->
+      rel<->no
+      act<->insert
+      vcat<->[_G4336, transitive, _G4342]
+      max<->3
+      role<->assertion
+sem<->
+      id<->200974668
+      subj<->
+             noun<->customer
+             head<->?customer
+             type<->customer
+             id<->107197309
+             sub<->
+                   mod<->oldness-WN03854196
+                   subj<->
+                          head<->?who
+                          type<->Human
+                   pred<->isa
+      pred<->Putting
+      dobj<->
+             noun<->[credit, card]
+             head<->?credit_card
+             type<->CreditCard
+             id<->109633105
+             sub<->
+                   mod<->validation-WN00099890
+                   subj<->
+                          head<->?that
+                          type<->Physical
+                   pred<->isa
+      adjs<->[]
+Test passed.
+
+Translation = 
+
+(exists 
+  (?that ?credit_card ?salesperson ?who ?customer ?event) 
+  (and 
+    (equal ?credit_card ?that) 
+    (attribute ?that validation-WN00099890) 
+    (instance ?that Physical) 
+    (instance ?customer CognitiveAgent) 
+    (instance ?salesperson CognitiveAgent) 
+    (customer ?customer ?salesperson) 
+    (equal ?customer ?who) 
+    (attribute ?who oldness-WN03854196) 
+    (instance ?who Human) 
+    (instance ?event Putting) 
+    (agent ?event ?customer) 
+    (instance ?credit_card CreditCard) 
+    (patient ?event ?credit_card)))
+
+Speech Act = Assertion
+
+1. Warning: interpreted the meaning of the verb 'insert' as  WordNet word sense #1 of 4 senses, ID 200974668, meaning put or introduce into the body of something; "insert a picture into the text".  Maps to SUMO 'Putting'.
+
+2. Note: interpreted the noun 'customer' using WordNet synset ID 107197309, meaning someone who pays for goods or services.  Maps to SUMO 'customer'.
+
+3. Note: interpreted the noun '[credit, card]' using WordNet synset ID 109633105, meaning a card (usually plastic) that assures a seller that the person using it has a satisfactory credit rating and that the issuer will see to it that the seller receives payment for the merchandise delivered.  Maps to SUMO 'CreditCard'.
+
+
+****************
+Test 42, parsing: John uses the credit card correctly 
+
+Parsed OK:John uses the credit card correctly 
+syn<->
+      rel<->no
+      act<->use
+      vcat<->[_G1961, transitive, _G1967]
+      max<->3
+      role<->assertion
+sem<->
+      id<->200788109
+      subj<->
+             noun<->John
+             head<->John-1
+             type<->[Human, Male, FullyFormed]
+      pred<->Applies
+      dobj<->
+             noun<->[credit, card]
+             head<->?credit_card
+             type<->CreditCard
+             id<->109633105
+      adjs<->[adv<->correctness-WN03836923]
+Test passed.
+
+Translation = 
+
+(exists 
+  (?credit_card ?event) 
+  (and 
+    (instance ?event Applies) 
+    (instance John-1 FullyFormed) 
+    (instance John-1 Male) 
+    (instance John-1 Human) 
+    (agent ?event John-1) 
+    (instance ?credit_card CreditCard) 
+    (patient ?event ?credit_card) 
+    (manner ?event correctness-WN03836923)))
+
+Speech Act = Assertion
+
+1. Warning: interpreted the meaning of the verb 'use' as  WordNet word sense #1 of 6 senses, ID 200788109, meaning put into service; make work; make use of of employ for a particular purpose: "use your head!" "I can't make use of this tool"; "Apply a magnetic field here"; "This thinking was applied to many projects"; "How do you utilize this tool?"; "I apply this rule to get good results".  Maps to SUMO 'Applies'.
+
+2. Note: interpreted the noun '[credit, card]' using WordNet synset ID 109633105, meaning a card (usually plastic) that assures a seller that the person using it has a satisfactory credit rating and that the issuer will see to it that the seller receives payment for the merchandise delivered.  Maps to SUMO 'CreditCard'.
+
+
+****************
+Test 43, parsing: the customer inserts a card slowly 
+
+Parsed OK:the customer inserts a card slowly 
+syn<->
+      rel<->no
+      act<->insert
+      vcat<->[_G2108, transitive, _G2114]
+      max<->3
+      role<->assertion
+sem<->
+      id<->200974668
+      subj<->
+             noun<->customer
+             head<->?customer
+             type<->customer
+             id<->107197309
+      pred<->Putting
+      dobj<->
+             noun<->card
+             head<->?card
+             type<->BankCard
+             id<->104863407
+      adjs<->[adv<->slowness-WN03951223]
+Test passed.
+
+Translation = 
+
+(exists 
+  (?card ?salesperson ?customer ?event) 
+  (and 
+    (instance ?customer CognitiveAgent) 
+    (instance ?salesperson CognitiveAgent) 
+    (customer ?customer ?salesperson) 
+    (instance ?event Putting) 
+    (agent ?event ?customer) 
+    (instance ?card BankCard) 
+    (patient ?event ?card) 
+    (manner ?event slowness-WN03951223)))
+
+Speech Act = Assertion
+
+1. Warning: interpreted the meaning of the verb 'insert' as  WordNet word sense #1 of 4 senses, ID 200974668, meaning put or introduce into the body of something; "insert a picture into the text".  Maps to SUMO 'Putting'.
+
+2. Note: interpreted the noun 'customer' using WordNet synset ID 107197309, meaning someone who pays for goods or services.  Maps to SUMO 'customer'.
+
+3. Warning: interpreted the meaning of the noun 'card' as  WordNet word sense #2 of 11 senses, ID 104863407, meaning a card certifying the identity of the bearer; "he had to show his card to get in".  Maps to SUMO 'BankCard'.
+
+
+****************
+Test 44, parsing: the customer who inserts a card slowly enters a code 
+
+Parsed OK:the customer who inserts a card slowly enters a code 
+syn<->
+      rel<->no
+      act<->enter
+      vcat<->[_G5733, transitive, _G5739]
+      max<->3
+      role<->assertion
+sem<->
+      id<->201376901
+      subj<->
+             noun<->customer
+             head<->?customer
+             type<->customer
+             id<->107197309
+             sub<->
+                   id<->200974668
+                   subj<->
+                          head<->?who
+                          type<->Human
+                   pred<->Putting
+                   dobj<->
+                          noun<->card
+                          head<->?card
+                          type<->BankCard
+                          id<->104863407
+                   adjs<->[adv<->slowness-WN03951223]
+      pred<->Movement
+      dobj<->
+             noun<->code
+             head<->?code
+             type<->Text
+             id<->104790774
+      adjs<->[]
+Test passed.
+
+Translation = 
+
+(exists 
+  (?code ?salesperson ?card ?who ?event1 ?customer ?event) 
+  (and 
+    (instance ?customer CognitiveAgent) 
+    (instance ?salesperson CognitiveAgent) 
+    (customer ?customer ?salesperson) 
+    (equal ?customer ?who) 
+    (instance ?event1 Putting) 
+    (instance ?who Human) 
+    (agent ?event1 ?who) 
+    (instance ?card BankCard) 
+    (patient ?event1 ?card) 
+    (manner ?event1 slowness-WN03951223) 
+    (instance ?event Movement) 
+    (agent ?event ?customer) 
+    (instance ?code Text) 
+    (patient ?event ?code)))
+
+Speech Act = Assertion
+
+1. Warning: interpreted the meaning of the verb 'enter' as  WordNet word sense #1 of 8 senses, ID 201376901, meaning to come or go into: "the ship entered an area of shallow marshes..".  Maps to SUMO 'Movement'.
+
+2. Note: interpreted the noun 'customer' using WordNet synset ID 107197309, meaning someone who pays for goods or services.  Maps to SUMO 'customer'.
+
+3. Warning: interpreted the meaning of the noun 'code' as  WordNet word sense #2 of 3 senses, ID 104790774, meaning a coding system used for transmitting messages requiring brevity or secrecy.  Maps to SUMO 'Text'.
+
+
+****************
+Test 45, parsing: the train arrives in the station 
+
+Parsed OK:the train arrives in the station 
+syn<->
+      rel<->no
+      act<->arrive
+      vcat<->[intransitive, _G2100, _G2103]
+      max<->3
+      role<->assertion
+sem<->
+      id<->201368651
+      subj<->
+             noun<->train
+             head<->?train
+             type<->TransportationDevice
+             id<->103528724
+      pred<->Motion
+      adjs<->[prep<->located..aobj<-> (noun<->station..head<-> ?station..type<->Building..id<->103209448..poss<->_G3832..owner<->_G3837..of<->_G3842..of_id<->_G3847..sub<->empty..mod<->empty)]
+Test passed.
+
+Translation = 
+
+(exists 
+  (?station ?train ?event) 
+  (and 
+    (instance ?event Motion) 
+    (instance ?train TransportationDevice) 
+    (patient ?event ?train) 
+    (instance ?station Building) 
+    (located ?event ?station)))
+
+Speech Act = Assertion
+
+1. Warning: interpreted the meaning of the verb 'arrive' as  WordNet word sense #1 of 2 senses, ID 201368651, meaning reach a destination; arrive by movement or by making progress; "She arrived home at 7 o'clock"; "He got into college"; "She didn't get to Chicago until after midnight".  Maps to SUMO 'Motion'.
+
+2. Warning: interpreted the meaning of the noun 'train' as  WordNet word sense #1 of 6 senses, ID 103528724, meaning a line of railway cars coupled together and drawn by a locomotive; "express trains don't stop at Princeton Junction".  Maps to SUMO 'TransportationDevice'.
+
+
+****************
+Test 46, parsing: a customer enters a code manually 
+
+Parsed OK:a customer enters a code manually 
+syn<->
+      rel<->no
+      act<->enter
+      vcat<->[_G2108, transitive, _G2114]
+      max<->3
+      role<->assertion
+sem<->
+      id<->201376901
+      subj<->
+             noun<->customer
+             head<->?customer
+             type<->customer
+             id<->107197309
+      pred<->Movement
+      dobj<->
+             noun<->code
+             head<->?code
+             type<->Text
+             id<->104790774
+      adjs<->[adv<->manual_labor-WN00410579]
+Test passed.
+
+Translation = 
+
+(exists 
+  (?code ?salesperson ?customer ?event) 
+  (and 
+    (instance ?customer CognitiveAgent) 
+    (instance ?salesperson CognitiveAgent) 
+    (customer ?customer ?salesperson) 
+    (instance ?event Movement) 
+    (agent ?event ?customer) 
+    (instance ?code Text) 
+    (patient ?event ?code) 
+    (manner ?event manual_labor-WN00410579)))
+
+Speech Act = Assertion
+
+1. Warning: interpreted the meaning of the verb 'enter' as  WordNet word sense #1 of 8 senses, ID 201376901, meaning to come or go into: "the ship entered an area of shallow marshes..".  Maps to SUMO 'Movement'.
+
+2. Note: interpreted the noun 'customer' using WordNet synset ID 107197309, meaning someone who pays for goods or services.  Maps to SUMO 'customer'.
+
+3. Warning: interpreted the meaning of the noun 'code' as  WordNet word sense #2 of 3 senses, ID 104790774, meaning a coding system used for transmitting messages requiring brevity or secrecy.  Maps to SUMO 'Text'.
+
+
+****************
+Test 47, parsing: a customer arrives on Monday 
+
+Parsed OK:a customer arrives on Monday 
+syn<->
+      rel<->no
+      act<->arrive
+      vcat<->[intransitive, _G2106, _G2109]
+      max<->3
+      role<->assertion
+sem<->
+      id<->201368651
+      subj<->
+             noun<->customer
+             head<->?customer
+             type<->customer
+             id<->107197309
+      pred<->Motion
+      adjs<->[prep<->overlapsTemporally..aobj<-> (noun<->Monday..head<->Monday..type<->Day..id<->110882888..poss<->_G3841..owner<->_G3846..of<->_G3851..of_id<->_G3856..sub<->empty)]
+Test passed.
+
+Translation = 
+
+(exists 
+  (?salesperson ?customer ?event) 
+  (and 
+    (instance ?customer CognitiveAgent) 
+    (instance ?salesperson CognitiveAgent) 
+    (customer ?customer ?salesperson) 
+    (instance ?event Motion) 
+    (patient ?event ?customer) 
+    (instance Monday Day) 
+    (overlapsTemporally ?event Monday)))
+
+Speech Act = Assertion
+
+1. Warning: interpreted the meaning of the verb 'arrive' as  WordNet word sense #1 of 2 senses, ID 201368651, meaning reach a destination; arrive by movement or by making progress; "She arrived home at 7 o'clock"; "He got into college"; "She didn't get to Chicago until after midnight".  Maps to SUMO 'Motion'.
+
+2. Note: interpreted the noun 'customer' using WordNet synset ID 107197309, meaning someone who pays for goods or services.  Maps to SUMO 'customer'.
+
+
+****************
+Test 48, parsing: a customer arrives on the train 
+
+Parsed OK:a customer arrives on the train 
+syn<->
+      rel<->no
+      act<->arrive
+      vcat<->[intransitive, _G2109, _G2112]
+      max<->3
+      role<->assertion
+sem<->
+      id<->201368651
+      subj<->
+             noun<->customer
+             head<->?customer
+             type<->customer
+             id<->107197309
+      pred<->Motion
+      adjs<->[prep<->_G3448^_G3451^[orientation, _G3448, _G3451, On]..aobj<-> (noun<->train..head<-> ?train..type<->TransportationDevice..id<->103528724..poss<->_G3859..owner<->_G3864..of<->_G3869..of_id<->_G3874..sub<->empty..mod<->empty)]
+Test passed.
+
+Translation = 
+
+(exists 
+  (?train ?salesperson ?customer ?event) 
+  (and 
+    (instance ?customer CognitiveAgent) 
+    (instance ?salesperson CognitiveAgent) 
+    (customer ?customer ?salesperson) 
+    (instance ?event Motion) 
+    (patient ?event ?customer) 
+    (instance ?train TransportationDevice) 
+    (orientation ?event ?train On)))
+
+Speech Act = Assertion
+
+1. Warning: interpreted the meaning of the verb 'arrive' as  WordNet word sense #1 of 2 senses, ID 201368651, meaning reach a destination; arrive by movement or by making progress; "She arrived home at 7 o'clock"; "He got into college"; "She didn't get to Chicago until after midnight".  Maps to SUMO 'Motion'.
+
+2. Note: interpreted the noun 'customer' using WordNet synset ID 107197309, meaning someone who pays for goods or services.  Maps to SUMO 'customer'.
+
+
+****************
+Test 49, parsing: a customer arrives on Monday punctually 
+
+Parsed OK:a customer arrives on Monday punctually 
+syn<->
+      rel<->no
+      act<->arrive
+      vcat<->[intransitive, _G2109, _G2112]
+      max<->3
+      role<->assertion
+sem<->
+      id<->201368651
+      subj<->
+             noun<->customer
+             head<->?customer
+             type<->customer
+             id<->107197309
+      pred<->Motion
+      adjs<->[prep<->overlapsTemporally..aobj<-> (noun<->Monday..head<->Monday..type<->Day..id<->110882888..poss<->_G3844..owner<->_G3849..of<->_G3854..of_id<->_G3859..sub<->empty), adv<->punctuality-WN03940380]
+Test passed.
+
+Translation = 
+
+(exists 
+  (?salesperson ?customer ?event) 
+  (and 
+    (instance ?customer CognitiveAgent) 
+    (instance ?salesperson CognitiveAgent) 
+    (customer ?customer ?salesperson) 
+    (instance ?event Motion) 
+    (patient ?event ?customer) 
+    (instance Monday Day) 
+    (overlapsTemporally ?event Monday) 
+    (manner ?event punctuality-WN03940380)))
+
+Speech Act = Assertion
+
+1. Warning: interpreted the meaning of the verb 'arrive' as  WordNet word sense #1 of 2 senses, ID 201368651, meaning reach a destination; arrive by movement or by making progress; "She arrived home at 7 o'clock"; "He got into college"; "She didn't get to Chicago until after midnight".  Maps to SUMO 'Motion'.
+
+2. Note: interpreted the noun 'customer' using WordNet synset ID 107197309, meaning someone who pays for goods or services.  Maps to SUMO 'customer'.
+
+
+****************
+Test 50, parsing: the fast train arrives punctually 
+
+Parsed OK:the fast train arrives punctually 
+syn<->
+      rel<->no
+      act<->arrive
+      vcat<->[intransitive, _G2356, _G2359]
+      max<->3
+      role<->assertion
+sem<->
+      id<->201368651
+      subj<->
+             noun<->train
+             head<->?train
+             type<->TransportationDevice
+             id<->103528724
+             mod<->speed-WN00212796
+      pred<->Motion
+      adjs<->[adv<->punctuality-WN03940380]
+Test passed.
+
+Translation = 
+
+(exists 
+  (?train ?event) 
+  (and 
+    (instance ?event Motion) 
+    (attribute ?train speed-WN00212796) 
+    (instance ?train TransportationDevice) 
+    (patient ?event ?train) 
+    (manner ?event punctuality-WN03940380)))
+
+Speech Act = Assertion
+
+1. Warning: interpreted the meaning of the verb 'arrive' as  WordNet word sense #1 of 2 senses, ID 201368651, meaning reach a destination; arrive by movement or by making progress; "She arrived home at 7 o'clock"; "He got into college"; "She didn't get to Chicago until after midnight".  Maps to SUMO 'Motion'.
+
+2. Warning: interpreted the meaning of the noun 'train' as  WordNet word sense #1 of 6 senses, ID 103528724, meaning a line of railway cars coupled together and drawn by a locomotive; "express trains don't stop at Princeton Junction".  Maps to SUMO 'TransportationDevice'.
+
+
+****************
+Test 51, parsing: the fast train arrives punctually on Monday 
+
+Parsed OK:the fast train arrives punctually on Monday 
+syn<->
+      rel<->no
+      act<->arrive
+      vcat<->[intransitive, _G2362, _G2365]
+      max<->3
+      role<->assertion
+sem<->
+      id<->201368651
+      subj<->
+             noun<->train
+             head<->?train
+             type<->TransportationDevice
+             id<->103528724
+             mod<->speed-WN00212796
+      pred<->Motion
+      adjs<->[adv<->punctuality-WN03940380, prep<->overlapsTemporally..aobj<-> (noun<->Monday..head<->Monday..type<->Day..id<->110882888..poss<->_G4511..owner<->_G4516..of<->_G4521..of_id<->_G4526..sub<->empty)]
+Test passed.
+
+Translation = 
+
+(exists 
+  (?train ?event) 
+  (and 
+    (instance ?event Motion) 
+    (attribute ?train speed-WN00212796) 
+    (instance ?train TransportationDevice) 
+    (patient ?event ?train) 
+    (manner ?event punctuality-WN03940380) 
+    (instance Monday Day) 
+    (overlapsTemporally ?event Monday)))
+
+Speech Act = Assertion
+
+1. Warning: interpreted the meaning of the verb 'arrive' as  WordNet word sense #1 of 2 senses, ID 201368651, meaning reach a destination; arrive by movement or by making progress; "She arrived home at 7 o'clock"; "He got into college"; "She didn't get to Chicago until after midnight".  Maps to SUMO 'Motion'.
+
+2. Warning: interpreted the meaning of the noun 'train' as  WordNet word sense #1 of 6 senses, ID 103528724, meaning a line of railway cars coupled together and drawn by a locomotive; "express trains don't stop at Princeton Junction".  Maps to SUMO 'TransportationDevice'.
+
+
+****************
+Test 52, parsing: the fast train arrives punctually on Monday in the station 
+
+Parsed OK:the fast train arrives punctually on Monday in the station 
+syn<->
+      rel<->no
+      act<->arrive
+      vcat<->[intransitive, _G2371, _G2374]
+      max<->3
+      role<->assertion
+sem<->
+      id<->201368651
+      subj<->
+             noun<->train
+             head<->?train
+             type<->TransportationDevice
+             id<->103528724
+             mod<->speed-WN00212796
+      pred<->Motion
+      adjs<->[adv<->punctuality-WN03940380, prep<->overlapsTemporally..aobj<-> (noun<->Monday..head<->Monday..type<->Day..id<->110882888..poss<->_G4520..owner<->_G4525..of<->_G4530..of_id<->_G4535..sub<->empty), prep<->located..aobj<-> (noun<->station..head<-> ?station..type<->Building..id<->103209448..poss<->_G6042..owner<->_G6047..of<->_G6052..of_id<->_G6057..sub<->empty..mod<->empty)]
+Test passed.
+
+Translation = 
+
+(exists 
+  (?station ?train ?event) 
+  (and 
+    (instance ?event Motion) 
+    (attribute ?train speed-WN00212796) 
+    (instance ?train TransportationDevice) 
+    (patient ?event ?train) 
+    (manner ?event punctuality-WN03940380) 
+    (instance Monday Day) 
+    (overlapsTemporally ?event Monday) 
+    (instance ?station Building) 
+    (located ?event ?station)))
+
+Speech Act = Assertion
+
+1. Warning: interpreted the meaning of the verb 'arrive' as  WordNet word sense #1 of 2 senses, ID 201368651, meaning reach a destination; arrive by movement or by making progress; "She arrived home at 7 o'clock"; "He got into college"; "She didn't get to Chicago until after midnight".  Maps to SUMO 'Motion'.
+
+2. Warning: interpreted the meaning of the noun 'train' as  WordNet word sense #1 of 6 senses, ID 103528724, meaning a line of railway cars coupled together and drawn by a locomotive; "express trains don't stop at Princeton Junction".  Maps to SUMO 'TransportationDevice'.
+
+
+****************
+Test 53, parsing: John ' s customer inserts a valid card 
+
+Parsed OK:John ' s customer inserts a valid card 
+syn<->
+      rel<->no
+      act<->insert
+      vcat<->[_G2429, transitive, _G2435]
+      max<->3
+      role<->assertion
+sem<->
+      id<->200974668
+      subj<->
+             noun<->customer
+             head<->?customer
+             type<->customer
+             id<->107197309
+             poss<->John-1
+      pred<->Putting
+      dobj<->
+             noun<->card
+             head<->?card
+             type<->BankCard
+             id<->104863407
+             mod<->validation-WN00099890
+      adjs<->[]
+Test passed.
+
+Translation = 
+
+(exists 
+  (?card ?salesperson ?customer ?event) 
+  (and 
+    (instance ?customer CognitiveAgent) 
+    (instance ?salesperson CognitiveAgent) 
+    (customer ?customer ?salesperson) 
+    (instance ?event Putting) 
+    (possesses John-1 ?customer) 
+    (agent ?event ?customer) 
+    (attribute ?card validation-WN00099890) 
+    (instance ?card BankCard) 
+    (patient ?event ?card)))
+
+Speech Act = Assertion
+
+1. Warning: interpreted the meaning of the verb 'insert' as  WordNet word sense #1 of 4 senses, ID 200974668, meaning put or introduce into the body of something; "insert a picture into the text".  Maps to SUMO 'Putting'.
+
+2. Note: interpreted the noun 'customer' using WordNet synset ID 107197309, meaning someone who pays for goods or services.  Maps to SUMO 'customer'.
+
+3. Warning: interpreted the meaning of the noun 'card' as  WordNet word sense #2 of 11 senses, ID 104863407, meaning a card certifying the identity of the bearer; "he had to show his card to get in".  Maps to SUMO 'BankCard'.
+
+
+****************
+Test 54, parsing: John ' s customer inserts a valid card manually 
+
+Parsed OK:John ' s customer inserts a valid card manually 
+syn<->
+      rel<->no
+      act<->insert
+      vcat<->[_G2432, transitive, _G2438]
+      max<->3
+      role<->assertion
+sem<->
+      id<->200974668
+      subj<->
+             noun<->customer
+             head<->?customer
+             type<->customer
+             id<->107197309
+             poss<->John-1
+      pred<->Putting
+      dobj<->
+             noun<->card
+             head<->?card
+             type<->BankCard
+             id<->104863407
+             mod<->validation-WN00099890
+      adjs<->[adv<->manual_labor-WN00410579]
+Test passed.
+
+Translation = 
+
+(exists 
+  (?card ?salesperson ?customer ?event) 
+  (and 
+    (instance ?customer CognitiveAgent) 
+    (instance ?salesperson CognitiveAgent) 
+    (customer ?customer ?salesperson) 
+    (instance ?event Putting) 
+    (possesses John-1 ?customer) 
+    (agent ?event ?customer) 
+    (attribute ?card validation-WN00099890) 
+    (instance ?card BankCard) 
+    (patient ?event ?card) 
+    (manner ?event manual_labor-WN00410579)))
+
+Speech Act = Assertion
+
+1. Warning: interpreted the meaning of the verb 'insert' as  WordNet word sense #1 of 4 senses, ID 200974668, meaning put or introduce into the body of something; "insert a picture into the text".  Maps to SUMO 'Putting'.
+
+2. Note: interpreted the noun 'customer' using WordNet synset ID 107197309, meaning someone who pays for goods or services.  Maps to SUMO 'customer'.
+
+3. Warning: interpreted the meaning of the noun 'card' as  WordNet word sense #2 of 11 senses, ID 104863407, meaning a card certifying the identity of the bearer; "he had to show his card to get in".  Maps to SUMO 'BankCard'.
+
+
+****************
+Test 55, parsing: John ' s customer inserts a valid card manually into a slot X 
+
+Parsed OK:John ' s customer inserts a valid card manually into a slot X 
+syn<->
+      rel<->no
+      act<->insert
+      vcat<->[_G2444, transitive, _G2450]
+      max<->3
+      role<->assertion
+sem<->
+      id<->200974668
+      subj<->
+             noun<->customer
+             head<->?customer
+             type<->customer
+             id<->107197309
+             poss<->John-1
+      pred<->Putting
+      dobj<->
+             noun<->card
+             head<->?card
+             type<->BankCard
+             id<->104863407
+             mod<->validation-WN00099890
+      adjs<->[adv<->manual_labor-WN00410579, prep<->located..aobj<-> (noun<->_G5915..head<->X..type<->ATMSlot..id<->_G5936..poss<->_G5941..owner<->_G5946..of<->_G5951..of_id<->_G5956..sub<->empty..mod<->empty)]
+Test passed.
+
+Translation = 
+
+(exists 
+  (?card ?salesperson ?customer ?event) 
+  (and 
+    (instance ?customer CognitiveAgent) 
+    (instance ?salesperson CognitiveAgent) 
+    (customer ?customer ?salesperson) 
+    (instance ?event Putting) 
+    (possesses John-1 ?customer) 
+    (agent ?event ?customer) 
+    (attribute ?card validation-WN00099890) 
+    (instance ?card BankCard) 
+    (patient ?event ?card) 
+    (manner ?event manual_labor-WN00410579) 
+    (instance X ATMSlot) 
+    (located ?event X)))
+
+Speech Act = Assertion
+
+1. Warning: interpreted the meaning of the verb 'insert' as  WordNet word sense #1 of 4 senses, ID 200974668, meaning put or introduce into the body of something; "insert a picture into the text".  Maps to SUMO 'Putting'.
+
+2. Note: interpreted the noun 'customer' using WordNet synset ID 107197309, meaning someone who pays for goods or services.  Maps to SUMO 'customer'.
+
+3. Warning: interpreted the meaning of the noun 'card' as  WordNet word sense #2 of 11 senses, ID 104863407, meaning a card certifying the identity of the bearer; "he had to show his card to get in".  Maps to SUMO 'BankCard'.
+
+
+****************
+Test 56, parsing: John ' s customer inserts a valid card of Mary manually into a slot X 
+
+Parsed OK:John ' s customer inserts a valid card of Mary manually into a slot X 
+syn<->
+      rel<->no
+      act<->insert
+      vcat<->[_G2450, transitive, _G2456]
+      max<->3
+      role<->assertion
+sem<->
+      id<->200974668
+      subj<->
+             noun<->customer
+             head<->?customer
+             type<->customer
+             id<->107197309
+             poss<->John-1
+      pred<->Putting
+      dobj<->
+             noun<->card
+             head<->?card
+             type<->BankCard
+             id<->104863407
+             of<->[Human, Female, FullyFormed]
+             mod<->validation-WN00099890
+      adjs<->[adv<->manual_labor-WN00410579, prep<->located..aobj<-> (noun<->_G6220..head<->X..type<->ATMSlot..id<->_G6241..poss<->_G6246..owner<->_G6251..of<->_G6256..of_id<->_G6261..sub<->empty..mod<->empty)]
+Test passed.
+
+Translation = 
+
+(exists 
+  (?card ?salesperson ?customer ?event) 
+  (and 
+    (instance ?customer CognitiveAgent) 
+    (instance ?salesperson CognitiveAgent) 
+    (customer ?customer ?salesperson) 
+    (instance ?event Putting) 
+    (possesses John-1 ?customer) 
+    (agent ?event ?customer) 
+    (possesses 
+      (Human Female FullyFormed) ?card) 
+    (attribute ?card validation-WN00099890) 
+    (instance ?card BankCard) 
+    (patient ?event ?card) 
+    (manner ?event manual_labor-WN00410579) 
+    (instance X ATMSlot) 
+    (located ?event X)))
+
+Speech Act = Assertion
+
+1. Warning: interpreted the meaning of the verb 'insert' as  WordNet word sense #1 of 4 senses, ID 200974668, meaning put or introduce into the body of something; "insert a picture into the text".  Maps to SUMO 'Putting'.
+
+2. Note: interpreted the noun 'customer' using WordNet synset ID 107197309, meaning someone who pays for goods or services.  Maps to SUMO 'customer'.
+
+3. Warning: interpreted the meaning of the noun 'card' as  WordNet word sense #2 of 11 senses, ID 104863407, meaning a card certifying the identity of the bearer; "he had to show his card to get in".  Maps to SUMO 'BankCard'.
+
+
+****************
+Test 57, parsing: John ' s customer who is new inserts a valid card of Mary manually into a slot X 
+
+Parsed OK:John ' s customer who is new inserts a valid card of Mary manually into a slot X 
+syn<->
+      rel<->no
+      act<->insert
+      vcat<->[_G4669, transitive, _G4675]
+      max<->3
+      role<->assertion
+sem<->
+      id<->200974668
+      subj<->
+             noun<->customer
+             head<->?customer
+             type<->customer
+             id<->107197309
+             poss<->John-1
+             sub<->
+                   mod<->newness-WN03855074
+                   subj<->
+                          head<->?who
+                          type<->Human
+                   pred<->isa
+      pred<->Putting
+      dobj<->
+             noun<->card
+             head<->?card
+             type<->BankCard
+             id<->104863407
+             of<->[Human, Female, FullyFormed]
+             mod<->validation-WN00099890
+      adjs<->[adv<->manual_labor-WN00410579, prep<->located..aobj<-> (noun<->_G8439..head<->X..type<->ATMSlot..id<->_G8460..poss<->_G8465..owner<->_G8470..of<->_G8475..of_id<->_G8480..sub<->empty..mod<->empty)]
+Test passed.
+
+Translation = 
+
+(exists 
+  (?card ?salesperson ?who ?customer ?event) 
+  (and 
+    (instance ?customer CognitiveAgent) 
+    (instance ?salesperson CognitiveAgent) 
+    (customer ?customer ?salesperson) 
+    (equal ?customer ?who) 
+    (attribute ?who newness-WN03855074) 
+    (instance ?who Human) 
+    (instance ?event Putting) 
+    (possesses John-1 ?customer) 
+    (agent ?event ?customer) 
+    (possesses 
+      (Human Female FullyFormed) ?card) 
+    (attribute ?card validation-WN00099890) 
+    (instance ?card BankCard) 
+    (patient ?event ?card) 
+    (manner ?event manual_labor-WN00410579) 
+    (instance X ATMSlot) 
+    (located ?event X)))
+
+Speech Act = Assertion
+
+1. Warning: interpreted the meaning of the verb 'insert' as  WordNet word sense #1 of 4 senses, ID 200974668, meaning put or introduce into the body of something; "insert a picture into the text".  Maps to SUMO 'Putting'.
+
+2. Note: interpreted the noun 'customer' using WordNet synset ID 107197309, meaning someone who pays for goods or services.  Maps to SUMO 'customer'.
+
+3. Warning: interpreted the meaning of the noun 'card' as  WordNet word sense #2 of 11 senses, ID 104863407, meaning a card certifying the identity of the bearer; "he had to show his card to get in".  Maps to SUMO 'BankCard'.
+
+
+****************
+Test 58, parsing: her gives the card to Mary 
+Failed to parse: her gives the card to Mary 
+Test passed.
+
+
+
+****************
+Test 59, parsing: she gives the card to he 
+Failed to parse: she gives the card to he 
+Test passed.
+
+
+
+****************
+Test 60, parsing: John correctly uses the credit card 
+Failed to parse: John correctly uses the credit card 
+Test passed.
+
+
+
+****************
+Test 61, parsing: the froboz arrives 
+Failed to parse: the froboz arrives 
+Test passed.
+
+
+
+****************
+Test 62, parsing: punctually the fast train arrives on Monday 
+Failed to parse: punctually the fast train arrives on Monday 
+Test passed.
+
+
+
+****************
+Test 63, parsing: the red fast train arrives 
+Failed to parse: the red fast train arrives 
+Test passed.
+
+
+
+****************
+Test 64, parsing: John ' s bank is the fastest 
+Failed to parse: John ' s bank is the fastest 
+Test passed.
+
+
+
+****************
+Test 65, parsing: John ' s bank is the most expensive 
+Failed to parse: John ' s bank is the most expensive 
+Test passed.
+
+
+
+****************
+Test 66, parsing: the dog is red 
+
+Parsed OK:the dog is red 
+syn<->
+      rel<->no
+      act<->be
+      vcat<->copula
+      max<->3
+      role<->assertion
+sem<->
+      mod<->Red
+      subj<->
+             noun<->dog
+             head<->?dog
+             type<->Canine
+             id<->101595188
+      pred<->isa
+Test passed.
+
+Translation = 
+
+(exists 
+  (?dog) 
+  (and 
+    (attribute ?dog Red) 
+    (instance ?dog Canine)))
+
+Speech Act = Assertion
+
+1. Warning: interpreted the meaning of the noun 'dog' as  WordNet word sense #1 of 6 senses, ID 101595188, meaning a member of the genus Canis (probably descended from the common wolf) that has been domesticated by man since prehistoric times; occurs in many breeds; "the dog barked all night".  Maps to SUMO 'Canine'.
+
+
+****************
+Test 67, parsing: John is red 
+
+Parsed OK:John is red 
+syn<->
+      rel<->no
+      act<->be
+      vcat<->copula
+      max<->3
+      role<->assertion
+sem<->
+      mod<->Red
+      subj<->
+             noun<->John
+             head<->John-1
+             type<->[Human, Male, FullyFormed]
+      pred<->isa
+Test passed.
+
+Translation = 
+
+(and 
+  (attribute John-1 Red) 
+  (instance John-1 Human) 
+  (instance John-1 Male) 
+  (instance John-1 FullyFormed))
+
+Speech Act = Assertion
+
+
+****************
+Test 68, parsing: John ' s dog is different from Mary ' s dog 
+
+Parsed OK:John ' s dog is different from Mary ' s dog 
+syn<->
+      rel<->no
+      act<->be
+      vcat<->copula
+      max<->3
+      role<->assertion
+sem<->
+      mod<->_G2969^_G2972^[not, [equal, _G2969, _G2972]]
+      subj<->
+             noun<->dog
+             head<->?dog
+             type<->Canine
+             id<->101595188
+             poss<->John-1
+      pred<->isa
+      dobj<->
+             noun<->dog
+             head<->?dog
+             type<->Canine
+             id<->101595188
+             poss<->Mary-1
+Test passed.
+
+Translation = 
+
+(exists 
+  (?dog1 ?dog) 
+  (and 
+    (not 
+      (equal ?dog ?dog1)) 
+    (instance ?dog1 Canine) 
+    (possesses Mary-1 ?dog1) 
+    (instance ?dog Canine) 
+    (possesses John-1 ?dog)))
+
+Speech Act = Assertion
+
+1. Warning: interpreted the meaning of the noun 'dog' as  WordNet word sense #1 of 6 senses, ID 101595188, meaning a member of the genus Canis (probably descended from the common wolf) that has been domesticated by man since prehistoric times; occurs in many breeds; "the dog barked all night".  Maps to SUMO 'Canine'.
+
+
+****************
+Test 69, parsing: John ' s dog is more expensive than Mary ' s dog 
+
+Parsed OK:John ' s dog is more expensive than Mary ' s dog 
+syn<->
+      rel<->no
+      act<->be
+      vcat<->copula
+      max<->3
+      role<->assertion
+sem<->
+      mod<->_G2753^_G2756^[greaterThan, [measure, _G2753, expensiveness-WN04009070], [measure, _G2756, expensiveness-WN04009070]]
+      subj<->
+             noun<->dog
+             head<->?dog
+             type<->Canine
+             id<->101595188
+             poss<->John-1
+      pred<->isa
+      dobj<->
+             noun<->dog
+             head<->?dog
+             type<->Canine
+             id<->101595188
+             poss<->Mary-1
+Test passed.
+
+Translation = 
+
+(exists 
+  (?dog1 ?dog) 
+  (and 
+    (greaterThan 
+      (measure ?dog expensiveness-WN04009070) 
+      (measure ?dog1 expensiveness-WN04009070)) 
+    (instance ?dog1 Canine) 
+    (possesses Mary-1 ?dog1) 
+    (instance ?dog Canine) 
+    (possesses John-1 ?dog)))
+
+Speech Act = Assertion
+
+1. Warning: interpreted the meaning of the noun 'dog' as  WordNet word sense #1 of 6 senses, ID 101595188, meaning a member of the genus Canis (probably descended from the common wolf) that has been domesticated by man since prehistoric times; occurs in many breeds; "the dog barked all night".  Maps to SUMO 'Canine'.
+
+
+****************
+Test 70, parsing: the oldest dog enters the bank 
+
+Parsed OK:the oldest dog enters the bank 
+syn<->
+      rel<->no
+      act<->enter
+      vcat<->[_G2357, transitive, _G2363]
+      max<->3
+      role<->assertion
+sem<->
+      id<->201376901
+      subj<->
+             noun<->dog
+             head<->?dog
+             type<->Canine
+             id<->101595188
+             mod<->superlative(oldness-WN03854196)
+      pred<->Movement
+      dobj<->
+             noun<->bank
+             head<->?bank
+             type<->Bank-FinancialOrganization
+             id<->106227059
+      adjs<->[]
+Test passed.
+
+Translation = 
+
+(exists 
+  (?bank ?dog ?event) 
+  (and 
+    (instance ?event Movement) 
+    (forall 
+      (?X) 
+      (implies 
+        (and 
+          (instance ?X Canine) 
+          (not 
+            (equal ?X ?dog))) 
+        (greaterThan 
+          (measure 
+            (attribute ?dog oldness-WN03854196)) 
+          (measure 
+            (attribute ?X oldness-WN03854196))))) 
+    (instance ?dog Canine) 
+    (agent ?event ?dog) 
+    (instance ?bank Bank-FinancialOrganization) 
+    (patient ?event ?bank)))
+
+Speech Act = Assertion
+
+1. Warning: interpreted the meaning of the verb 'enter' as  WordNet word sense #1 of 8 senses, ID 201376901, meaning to come or go into: "the ship entered an area of shallow marshes..".  Maps to SUMO 'Movement'.
+
+2. Warning: interpreted the meaning of the noun 'dog' as  WordNet word sense #1 of 6 senses, ID 101595188, meaning a member of the genus Canis (probably descended from the common wolf) that has been domesticated by man since prehistoric times; occurs in many breeds; "the dog barked all night".  Maps to SUMO 'Canine'.
+
+3. Warning: interpreted the meaning of the noun 'bank' as  WordNet word sense #1 of 10 senses, ID 106227059, meaning a financial institution that accepts deposits and channels the money into lending activities; "he cashed a check at the bank"; "that bank holds the mortgage on my home".  Maps to SUMO 'Bank-FinancialOrganization'.
+
+
+****************
+Test 71, parsing: John ' s dog is the most expensive dog 
+
+Parsed OK:John ' s dog is the most expensive dog 
+syn<->
+      rel<->no
+      act<->be
+      vcat<->[_G2417, transitive, _G2423]
+      max<->3
+      role<->assertion
+sem<->
+      id<->201775973
+      subj<->
+             noun<->dog
+             head<->?dog
+             type<->Canine
+             id<->101595188
+             poss<->John-1
+      pred<->instance
+      dobj<->
+             noun<->dog
+             head<->?dog
+             type<->Canine
+             id<->101595188
+             mod<->superlative(expensiveness-WN04009070)
+      adjs<->[]
+Test passed.
+
+Translation = 
+
+(exists 
+  (?dog1 ?dog ?event) 
+  (and 
+    (instance ?event instance) 
+    (possesses John-1 ?dog) 
+    (instance ?dog Canine) 
+    (agent ?event ?dog) 
+    (forall 
+      (?X) 
+      (implies 
+        (and 
+          (instance ?X Canine) 
+          (not 
+            (equal ?X ?dog1))) 
+        (greaterThan 
+          (measure 
+            (attribute ?dog1 expensiveness-WN04009070)) 
+          (measure 
+            (attribute ?X expensiveness-WN04009070))))) 
+    (instance ?dog1 Canine) 
+    (patient ?event ?dog1)))
+
+Speech Act = Assertion
+
+1. Warning: interpreted the meaning of the verb 'be' as  WordNet word sense #1 of 12 senses, ID 201775973, meaning have the quality of being; (copula, used with an adjective or a predicate noun); "John is rich"; "This is not a good answer".  Maps to SUMO 'instance'.
+
+2. Warning: interpreted the meaning of the noun 'dog' as  WordNet word sense #1 of 6 senses, ID 101595188, meaning a member of the genus Canis (probably descended from the common wolf) that has been domesticated by man since prehistoric times; occurs in many breeds; "the dog barked all night".  Maps to SUMO 'Canine'.
+
+
+****************
+Test 72, parsing: the visitor arrives at midnight 
+
+Parsed OK:the visitor arrives at midnight 
+syn<->
+      rel<->no
+      act<->arrive
+      vcat<->[intransitive, _G2103, _G2106]
+      max<->3
+      role<->assertion
+sem<->
+      id<->201368651
+      subj<->
+             noun<->visitor
+             head<->?visitor
+             type<->SocialRole
+             id<->107668613
+      pred<->Motion
+      adjs<->[prep<->overlapsTemporally..aobj<-> (noun<->midnight..head<->TimeMeasure..type<->TimeMeasure..id<->110887026..poss<->_G3838..owner<->_G3843..of<->_G3848..of_id<->_G3853..sub<->empty)]
+Test passed.
+
+Translation = 
+
+(exists 
+  (?visitor ?event) 
+  (and 
+    (instance ?event Motion) 
+    (instance ?visitor SocialRole) 
+    (patient ?event ?visitor) 
+    (instance TimeMeasure TimeMeasure) 
+    (overlapsTemporally ?event TimeMeasure)))
+
+Speech Act = Assertion
+
+1. Warning: interpreted the meaning of the verb 'arrive' as  WordNet word sense #1 of 2 senses, ID 201368651, meaning reach a destination; arrive by movement or by making progress; "She arrived home at 7 o'clock"; "He got into college"; "She didn't get to Chicago until after midnight".  Maps to SUMO 'Motion'.
+
+2. Note: interpreted the noun 'visitor' using WordNet synset ID 107668613, meaning someone who visits.  Maps to SUMO 'SocialRole'.
+
+
+****************
+Test 73, parsing: the visitor arrives at the station 
+
+Parsed OK:the visitor arrives at the station 
+syn<->
+      rel<->no
+      act<->arrive
+      vcat<->[intransitive, _G2106, _G2109]
+      max<->3
+      role<->assertion
+sem<->
+      id<->201368651
+      subj<->
+             noun<->visitor
+             head<->?visitor
+             type<->SocialRole
+             id<->107668613
+      pred<->Motion
+      adjs<->[prep<->located..aobj<-> (noun<->station..head<-> ?station..type<->Building..id<->103209448..poss<->_G3838..owner<->_G3843..of<->_G3848..of_id<->_G3853..sub<->empty..mod<->empty)]
+Test passed.
+
+Translation = 
+
+(exists 
+  (?station ?visitor ?event) 
+  (and 
+    (instance ?event Motion) 
+    (instance ?visitor SocialRole) 
+    (patient ?event ?visitor) 
+    (instance ?station Building) 
+    (located ?event ?station)))
+
+Speech Act = Assertion
+
+1. Warning: interpreted the meaning of the verb 'arrive' as  WordNet word sense #1 of 2 senses, ID 201368651, meaning reach a destination; arrive by movement or by making progress; "She arrived home at 7 o'clock"; "He got into college"; "She didn't get to Chicago until after midnight".  Maps to SUMO 'Motion'.
+
+2. Note: interpreted the noun 'visitor' using WordNet synset ID 107668613, meaning someone who visits.  Maps to SUMO 'SocialRole'.
+
+
+****************
+Test 74, parsing: the train arrives on Monday 
+
+Parsed OK:the train arrives on Monday 
+syn<->
+      rel<->no
+      act<->arrive
+      vcat<->[intransitive, _G2097, _G2100]
+      max<->3
+      role<->assertion
+sem<->
+      id<->201368651
+      subj<->
+             noun<->train
+             head<->?train
+             type<->TransportationDevice
+             id<->103528724
+      pred<->Motion
+      adjs<->[prep<->overlapsTemporally..aobj<-> (noun<->Monday..head<->Monday..type<->Day..id<->110882888..poss<->_G3832..owner<->_G3837..of<->_G3842..of_id<->_G3847..sub<->empty)]
+Test passed.
+
+Translation = 
+
+(exists 
+  (?train ?event) 
+  (and 
+    (instance ?event Motion) 
+    (instance ?train TransportationDevice) 
+    (patient ?event ?train) 
+    (instance Monday Day) 
+    (overlapsTemporally ?event Monday)))
+
+Speech Act = Assertion
+
+1. Warning: interpreted the meaning of the verb 'arrive' as  WordNet word sense #1 of 2 senses, ID 201368651, meaning reach a destination; arrive by movement or by making progress; "She arrived home at 7 o'clock"; "He got into college"; "She didn't get to Chicago until after midnight".  Maps to SUMO 'Motion'.
+
+2. Warning: interpreted the meaning of the noun 'train' as  WordNet word sense #1 of 6 senses, ID 103528724, meaning a line of railway cars coupled together and drawn by a locomotive; "express trains don't stop at Princeton Junction".  Maps to SUMO 'TransportationDevice'.
+
+
+****************
+Test 75, parsing: the boat floats on the water 
+
+Parsed OK:the boat floats on the water 
+syn<->
+      rel<->no
+      act<->float
+      vcat<->[intransitive, _G2097, _G2100]
+      max<->3
+      role<->assertion
+sem<->
+      id<->201298374
+      subj<->
+             noun<->boat
+             head<->?boat
+             type<->TransportationDevice
+             id<->102304226
+      pred<->Floats
+      adjs<->[prep<->_G3436^_G3439^[orientation, _G3436, _G3439, On]..aobj<-> (noun<->water..head<-> ?water..type<->Water..id<->110650211..poss<->_G3847..owner<->_G3852..of<->_G3857..of_id<->_G3862..sub<->empty..mod<->empty)]
+Test passed.
+
+Translation = 
+
+(exists 
+  (?water ?boat ?event) 
+  (and 
+    (instance ?event Floats) 
+    (instance ?boat TransportationDevice) 
+    (patient ?event ?boat) 
+    (instance ?water Water) 
+    (orientation ?event ?water On)))
+
+Speech Act = Assertion
+
+1. Warning: interpreted the meaning of the verb 'float' as  WordNet word sense #1 of 4 senses, ID 201298374, meaning be in motion due to some air current; "The leaves were blowing in the wind"; "the boat drifted on the lake".  Maps to SUMO 'Floats'.
+
+2. Warning: interpreted the meaning of the noun 'boat' as  WordNet word sense #1 of 2 senses, ID 102304226, meaning a small vessel for travel on water.  Maps to SUMO 'TransportationDevice'.
+
+
+****************
+Test 76, parsing: the farmer sees John ' s dog 
+
+Parsed OK:the farmer sees John ' s dog 
+syn<->
+      rel<->no
+      act<->see
+      vcat<->[_G2105, transitive, _G2111]
+      max<->3
+      role<->assertion
+sem<->
+      id<->201456984
+      subj<->
+             noun<->farmer
+             head<->?farmer
+             type<->OccupationalRole
+             id<->107256794
+      pred<->Seeing
+      dobj<->
+             noun<->dog
+             head<->?dog
+             type<->Canine
+             id<->101595188
+             poss<->John-1
+      adjs<->[]
+Test passed.
+
+Translation = 
+
+(exists 
+  (?dog ?farmer ?event) 
+  (and 
+    (instance ?event Seeing) 
+    (instance ?farmer OccupationalRole) 
+    (experiencer ?event ?farmer) 
+    (possesses John-1 ?dog) 
+    (instance ?dog Canine) 
+    (patient ?event ?dog)))
+
+Speech Act = Assertion
+
+1. Warning: interpreted the meaning of the verb 'see' as  WordNet word sense #1 of 21 senses, ID 201456984, meaning perceive by sight; "You have to be a good observer to see all the details"; "Can you see the bird in that tree?".  Maps to SUMO 'Seeing'.
+
+2. Note: interpreted the noun 'farmer' using WordNet synset ID 107256794, meaning a person who operates a farm.  Maps to SUMO 'OccupationalRole'.
+
+3. Warning: interpreted the meaning of the noun 'dog' as  WordNet word sense #1 of 6 senses, ID 101595188, meaning a member of the genus Canis (probably descended from the common wolf) that has been domesticated by man since prehistoric times; occurs in many breeds; "the dog barked all night".  Maps to SUMO 'Canine'.
+
+
+****************
+Test 77, parsing: the banker pokes John ' s nose 
+
+Parsed OK:the banker pokes John ' s nose 
+syn<->
+      rel<->no
+      act<->poke
+      vcat<->[_G2105, transitive, _G2111]
+      max<->3
+      role<->assertion
+sem<->
+      id<->200976184
+      subj<->
+             noun<->banker
+             head<->?banker
+             type<->OccupationalRole
+             id<->107100408
+      pred<->Motion
+      dobj<->
+             noun<->nose
+             head<->?nose
+             type<->Organ
+             id<->104338406
+             poss<->John-1
+      adjs<->[]
+Test passed.
+
+Translation = 
+
+(exists 
+  (?nose ?banker ?event) 
+  (and 
+    (instance ?event Motion) 
+    (instance ?banker OccupationalRole) 
+    (agent ?event ?banker) 
+    (part ?nose John-1) 
+    (instance ?nose Organ) 
+    (patient ?event ?nose)))
+
+Speech Act = Assertion
+
+1. Warning: interpreted the meaning of the verb 'poke' as  WordNet word sense #3 of 5 senses, ID 200976184, meaning stir by poking; "poke the embers in the fireplace".  Maps to SUMO 'Motion'.
+
+2. Warning: interpreted the meaning of the noun 'banker' as  WordNet word sense #2 of 2 senses, ID 107100408, meaning the person in charge of the bank in a gambling game.  Maps to SUMO 'OccupationalRole'.
+
+3. Warning: interpreted the meaning of the noun 'nose' as  WordNet word sense #1 of 7 senses, ID 104338406, meaning the organ of smell and entrance to the respiratory tract; the prominent part of the face of man or other mammals; "he has a cold in the nose".  Maps to SUMO 'Organ'.
+
+
+****************
+Test 78, parsing: the thief kills John ' s father 
+
+Parsed OK:the thief kills John ' s father 
+syn<->
+      rel<->no
+      act<->kill
+      vcat<->[_G2102, transitive, _G2108]
+      max<->3
+      role<->assertion
+sem<->
+      id<->200903723
+      subj<->
+             noun<->thief
+             head<->?thief
+             type<->OccupationalRole
+             id<->107639852
+      pred<->Killing
+      dobj<->
+             noun<->father
+             head<->?father
+             type<->father
+             id<->107258194
+             poss<->John-1
+      adjs<->[]
+Test passed.
+
+Translation = 
+
+(exists 
+  (?father ?thief ?event) 
+  (and 
+    (instance ?event Killing) 
+    (instance ?thief OccupationalRole) 
+    (agent ?event ?thief) 
+    (father ?father John-1) 
+    (instance ?father father) 
+    (patient ?event ?father)))
+
+Speech Act = Assertion
+
+1. Warning: interpreted the meaning of the verb 'kill' as  WordNet word sense #1 of 14 senses, ID 200903723, meaning cause to die; put to death; "This man has killed several people when he tried to rob a bank".  Maps to SUMO 'Killing'.
+
+2. Note: interpreted the noun 'thief' using WordNet synset ID 107639852, meaning a criminal who takes property belong to someone else with the intention of keeping it.  Maps to SUMO 'OccupationalRole'.
+
+3. Warning: interpreted the meaning of the noun 'father' as  WordNet word sense #1 of 4 senses, ID 107258194, meaning a male parent (also used as a term of address to your father); "his father was born in Atlanta".  Maps to SUMO 'father'.
+
+
+****************
+Test 79, parsing: the captain of the ship throws the cannon into the sea 
+
+Parsed OK:the captain of the ship throws the cannon into the sea 
+syn<->
+      rel<->no
+      act<->throw
+      vcat<->[_G2484, transitive, _G2490]
+      max<->3
+      role<->assertion
+sem<->
+      id<->201036035
+      subj<->
+             noun<->captain
+             head<->?captain
+             type<->OccupationalRole
+             id<->107138749
+             of<->TransportationDevice
+             of_id<->103318070
+      pred<->Impelling
+      dobj<->
+             noun<->cannon
+             head<->?cannon
+             type<->Weapon
+             id<->102376667
+      adjs<->[prep<->located..aobj<-> (noun<->sea..head<-> ?sea..type<->[SaltWaterArea, StaticWaterArea]..id<->106781925..poss<->_G5314..owner<->_G5319..of<->_G5324..of_id<->_G5329..sub<->empty..mod<->empty)]
+Test passed.
+
+Translation = 
+
+(exists 
+  (?sea ?cannon ?captain ?event) 
+  (and 
+    (instance ?event Impelling) 
+    (exists 
+      (?ship) 
+      (and 
+        (instance ?ship TransportationDevice) 
+        (possesses ?captain ?ship))) 
+    (instance ?captain OccupationalRole) 
+    (agent ?event ?captain) 
+    (instance ?cannon Weapon) 
+    (patient ?event ?cannon) 
+    (instance ?sea StaticWaterArea) 
+    (instance ?sea SaltWaterArea) 
+    (located ?event ?sea)))
+
+Speech Act = Assertion
+
+1. Warning: interpreted the meaning of the verb 'throw' as  WordNet word sense #1 of 15 senses, ID 201036035, meaning project through the air; "throw a frisbee".  Maps to SUMO 'Impelling'.
+
+2. Warning: interpreted the meaning of the noun 'captain' as  WordNet word sense #1 of 7 senses, ID 107138749, meaning an officer holding a rank below a major but above a lieutenant.  Maps to SUMO 'OccupationalRole'.
+
+3. Warning: interpreted the meaning of the noun 'cannon' as  WordNet word sense #1 of 5 senses, ID 102376667, meaning a large gun that is usually on wheels.  Maps to SUMO 'Weapon'.
+
+
+****************
+Test 80, parsing: John ' s swimming triggers Mary ' s distress 
+
+Parsed OK:John ' s swimming triggers Mary ' s distress 
+syn<->
+      rel<->no
+      act<->trigger
+      vcat<->[_G2432, transitive, _G2438]
+      max<->3
+      role<->assertion
+sem<->
+      id<->200771236
+      subj<->
+             noun<->swimming
+             head<->?swimming
+             type<->Swimming
+             id<->100279937
+             poss<->John-1
+      pred<->IntentionalProcess
+      dobj<->
+             noun<->distress
+             head<->?distress
+             type<->EmotionalState
+             id<->105572909
+             poss<->Mary-1
+      adjs<->[]
+Test passed.
+
+Translation = 
+
+(exists 
+  (?distress ?swimming ?event) 
+  (and 
+    (instance ?event IntentionalProcess) 
+    (exists 
+      (?Process) 
+      (and 
+        (instance ?Process ?swimming) 
+        (patient ?Process John-1))) 
+    (instance ?swimming Swimming) 
+    (agent ?event ?swimming) 
+    (property Mary-1 ?distress) 
+    (instance ?distress EmotionalState) 
+    (patient ?event ?distress)))
+
+Speech Act = Assertion
+
+1. Warning: interpreted the meaning of the verb 'trigger' as  WordNet word sense #2 of 3 senses, ID 200771236, meaning pull the trigger on; "Trigger a weapon".  Maps to SUMO 'IntentionalProcess'.
+
+2. Note: interpreted the noun 'swimming' using WordNet synset ID 100279937, meaning the act of swimming.  Maps to SUMO 'Swimming'.
+
+3. Warning: interpreted the meaning of the noun 'distress' as  WordNet word sense #1 of 4 senses, ID 105572909, meaning psychological suffering; "the death of his wife caused him great distress".  Maps to SUMO 'EmotionalState'.
+
+
+****************
+Test 81, parsing: Jane ' s height amazes John 
+
+Parsed OK:Jane ' s height amazes John 
+syn<->
+      rel<->no
+      act<->amaze
+      vcat<->[_G2417, transitive, _G2423]
+      max<->3
+      role<->assertion
+sem<->
+      id<->200491471
+      subj<->
+             noun<->height
+             head<->?height
+             type<->LengthMeasure
+             id<->104002199
+             poss<->Jane-1
+      pred<->IntentionalPsychologicalProcess
+      dobj<->
+             noun<->John
+             head<->John-1
+             type<->[Human, Male, FullyFormed]
+      adjs<->[]
+Test passed.
+
+Translation = 
+
+(exists 
+  (?height ?event) 
+  (and 
+    (instance ?event IntentionalPsychologicalProcess) 
+    (possesses Jane-1 ?height) 
+    (instance ?height LengthMeasure) 
+    (agent ?event ?height) 
+    (instance John-1 FullyFormed) 
+    (instance John-1 Male) 
+    (instance John-1 Human) 
+    (patient ?event John-1)))
+
+Speech Act = Assertion
+
+1. Warning: interpreted the meaning of the verb 'amaze' as  WordNet word sense #1 of 2 senses, ID 200491471, meaning cause to be amazed.  Maps to SUMO 'IntentionalPsychologicalProcess'.
+
+2. Warning: interpreted the meaning of the noun 'height' as  WordNet word sense #1 of 4 senses, ID 104002199, meaning the vertical dimension of extension; distance from the base of something to the top.  Maps to SUMO 'LengthMeasure'.
+
+
+****************
+Test 82, parsing: the airplane flies to the airport 
+
+Parsed OK:the airplane flies to the airport 
+syn<->
+      rel<->no
+      act<->fly
+      vcat<->[intransitive, _G2109, _G2112]
+      max<->3
+      role<->assertion
+sem<->
+      id<->201322256
+      subj<->
+             noun<->airplane
+             head<->?airplane
+             type<->TransportationDevice
+             id<->102174460
+      pred<->Motion
+      adjs<->[prep<->located..aobj<-> (noun<->airport..head<-> ?airport..type<->StationaryArtifact..id<->102175180..poss<->_G3841..owner<->_G3846..of<->_G3851..of_id<->_G3856..sub<->empty..mod<->empty)]
+Test passed.
+
+Translation = 
+
+(exists 
+  (?airport ?airplane ?event) 
+  (and 
+    (instance ?event Motion) 
+    (instance ?airplane TransportationDevice) 
+    (patient ?event ?airplane) 
+    (instance ?airport StationaryArtifact) 
+    (located ?event ?airport)))
+
+Speech Act = Assertion
+
+1. Warning: interpreted the meaning of the verb 'fly' as  WordNet word sense #1 of 14 senses, ID 201322256, meaning travel through the air; be airborne; "Man cannot fly".  Maps to SUMO 'Motion'.
+
+2. Note: interpreted the noun 'airplane' using WordNet synset ID 102174460, meaning an aircraft that has fixed a wing and is powered by propellers or jets; "the flight was delayed due to trouble with the airplane".  Maps to SUMO 'TransportationDevice'.
+
+
+****************
+Test 83, parsing: John enters the bank with Sarah 
+
+Parsed OK:John enters the bank with Sarah 
+syn<->
+      rel<->no
+      act<->enter
+      vcat<->[_G1961, transitive, _G1967]
+      max<->3
+      role<->assertion
+sem<->
+      id<->201376901
+      subj<->
+             noun<->John
+             head<->John-1
+             type<->[Human, Male, FullyFormed]
+      pred<->Movement
+      dobj<->
+             noun<->bank
+             head<->?bank
+             type<->Bank-FinancialOrganization
+             id<->106227059
+      adjs<->[prep<->_G4392^_G4395^[agent, _G4392, _G4395]..aobj<-> (noun<->Sarah..head<->Sarah-1..type<->[Human, Female, FullyFormed]..id<->empty..poss<->_G4803..owner<->_G4808..of<->_G4813..of_id<->_G4818..sub<->empty)]
+Test passed.
+
+Translation = 
+
+(exists 
+  (?bank ?event) 
+  (and 
+    (instance ?event Movement) 
+    (instance John-1 FullyFormed) 
+    (instance John-1 Male) 
+    (instance John-1 Human) 
+    (agent ?event John-1) 
+    (instance ?bank Bank-FinancialOrganization) 
+    (patient ?event ?bank) 
+    (instance Sarah-1 FullyFormed) 
+    (instance Sarah-1 Female) 
+    (instance Sarah-1 Human) 
+    (agent ?event Sarah-1)))
+
+Speech Act = Assertion
+
+1. Warning: interpreted the meaning of the verb 'enter' as  WordNet word sense #1 of 8 senses, ID 201376901, meaning to come or go into: "the ship entered an area of shallow marshes..".  Maps to SUMO 'Movement'.
+
+2. Warning: interpreted the meaning of the noun 'bank' as  WordNet word sense #1 of 10 senses, ID 106227059, meaning a financial institution that accepts deposits and channels the money into lending activities; "he cashed a check at the bank"; "that bank holds the mortgage on my home".  Maps to SUMO 'Bank-FinancialOrganization'.
+
+
+****************
+Test 84, parsing: Karla falls below the branch 
+
+Parsed OK:Karla falls below the branch 
+syn<->
+      rel<->no
+      act<->fall
+      vcat<->[intransitive, _G1959, _G1962]
+      max<->3
+      role<->assertion
+sem<->
+      id<->201342394
+      subj<->
+             noun<->Karla
+             head<->Karla-1
+             type<->[Human, Female, FullyFormed]
+      pred<->Motion
+      adjs<->[prep<->_G3298^_G3301^[orientation, _G3298, _G3301, Below]..aobj<-> (noun<->branch..head<-> ?branch..type<->OrganizationUnit..id<->106212528..poss<->_G3709..owner<->_G3714..of<->_G3719..of_id<->_G3724..sub<->empty..mod<->empty)]
+Test passed.
+
+Translation = 
+
+(exists 
+  (?branch ?event) 
+  (and 
+    (instance ?event Motion) 
+    (instance Karla-1 FullyFormed) 
+    (instance Karla-1 Female) 
+    (instance Karla-1 Human) 
+    (agent ?event Karla-1) 
+    (instance ?branch OrganizationUnit) 
+    (orientation ?event ?branch Below)))
+
+Speech Act = Assertion
+
+1. Warning: interpreted the meaning of the verb 'fall' as  WordNet word sense #1 of 32 senses, ID 201342394, meaning descend in free fall under the influence of gravity; "The branch fell from the tree"; "The unfortunate hiker fell into a crevasse".  Maps to SUMO 'Motion'.
+
+
+****************
+Test 85, parsing: he drives toward the bridge 
+
+Parsed OK:he drives toward the bridge 
+syn<->
+      rel<->no
+      act<->drive
+      vcat<->[intransitive, _G1761, _G1764]
+      max<->3
+      role<->assertion
+sem<->
+      id<->201317106
+      subj<->
+             noun<->he
+             head<->?he
+             type<->[CognitiveAgent, Male]
+      pred<->Transportation
+      adjs<->[prep<->_G3100^_G3103^[direction, _G3100, _G3103]..aobj<-> (noun<->bridge..head<-> ?bridge..type<->StationaryArtifact..id<->102336596..poss<->_G3508..owner<->_G3513..of<->_G3518..of_id<->_G3523..sub<->empty..mod<->empty)]
+Test passed.
+
+Translation = 
+
+(exists 
+  (?bridge ?he ?event) 
+  (and 
+    (instance ?event Transportation) 
+    (instance ?he Male) 
+    (instance ?he CognitiveAgent) 
+    (agent ?event ?he) 
+    (instance ?bridge StationaryArtifact) 
+    (direction ?event ?bridge)))
+
+Speech Act = Assertion
+
+1. Warning: interpreted the meaning of the verb 'drive' as  WordNet word sense #2 of 20 senses, ID 201317106, meaning travel in a vehicle.  Maps to SUMO 'Transportation'.
+
+
+****************
+Test 86, parsing: the spy gives money to the thief 
+
+Parsed OK:the spy gives money to the thief 
+syn<->
+      rel<->no
+      act<->give
+      vcat<->[_G2093, _G2096, ditransitive]
+      max<->3
+      role<->assertion
+sem<->
+      id<->201583087
+      subj<->
+             noun<->spy
+             head<->?spy
+             type<->OccupationalRole
+             id<->107603319
+      pred<->Giving
+      dobj<->
+             noun<->money
+             head<->?money
+             type<->CurrencyMeasure
+             id<->109639711
+      adjs<->[]
+      iobj<->
+             noun<->thief
+             head<->?thief
+             type<->OccupationalRole
+             id<->107639852
+Test passed.
+
+Translation = 
+
+(exists 
+  (?thief ?money ?spy ?event) 
+  (and 
+    (instance ?event Giving) 
+    (instance ?spy OccupationalRole) 
+    (agent ?event ?spy) 
+    (instance ?money CurrencyMeasure) 
+    (patient ?event ?money) 
+    (instance ?thief OccupationalRole) 
+    (destination ?event ?thief)))
+
+Speech Act = Assertion
+
+1. Warning: interpreted the meaning of the verb 'give' as  WordNet word sense #1 of 45 senses, ID 201583087, meaning cause to have, in the abstract sense or physical sense: "She gave him a black eye"; "The draft gave me a cold".  Maps to SUMO 'Giving'.
+
+2. Note: interpreted the noun 'spy' using WordNet synset ID 107603319, meaning a secret agent hired by a state to obtain (military) information about its enemies.  Maps to SUMO 'OccupationalRole'.
+
+3. Warning: interpreted the meaning of the noun 'money' as  WordNet word sense #1 of 3 senses, ID 109639711, meaning the most common medium of exchange; functions as legal tender; "we tried to collect the money he owed us".  Maps to SUMO 'CurrencyMeasure'.
+
+4. Note: interpreted the noun 'thief' using WordNet synset ID 107639852, meaning a criminal who takes property belong to someone else with the intention of keeping it.  Maps to SUMO 'OccupationalRole'.
+
+
+****************
+Test 87, parsing: money talks 
+
+Parsed OK:money talks 
+syn<->
+      rel<->no
+      act<->talk
+      vcat<->[intransitive, _G2079, _G2082]
+      max<->3
+      role<->assertion
+sem<->
+      id<->200651246
+      subj<->
+             noun<->money
+             head<->?money
+             type<->CurrencyMeasure
+             id<->109639711
+      pred<->Communication
+      adjs<->[]
+Test passed.
+
+Translation = 
+
+(exists 
+  (?money ?event) 
+  (and 
+    (instance ?event Communication) 
+    (instance ?money CurrencyMeasure) 
+    (patient ?event ?money)))
+
+Speech Act = Assertion
+
+1. Warning: interpreted the meaning of the verb 'talk' as  WordNet word sense #1 of 6 senses, ID 200651246, meaning exchange thoughts; talk with; "We often talk business"; also used metaphorically: "Actions talk louder than words".  Maps to SUMO 'Communication'.
+
+2. Warning: interpreted the meaning of the noun 'money' as  WordNet word sense #1 of 3 senses, ID 109639711, meaning the most common medium of exchange; functions as legal tender; "we tried to collect the money he owed us".  Maps to SUMO 'CurrencyMeasure'.
+
+
+****************
+Test 88, parsing: boy talks 
+Failed to parse: boy talks 
+Test passed.
+
+
+
+****************
+Test 89, parsing: the boy talks 
+
+Parsed OK:the boy talks 
+syn<->
+      rel<->no
+      act<->talk
+      vcat<->[intransitive, _G2091, _G2094]
+      max<->3
+      role<->assertion
+sem<->
+      id<->200651246
+      subj<->
+             noun<->boy
+             head<->?boy
+             type<->[Human, Male]
+             id<->107123422
+      pred<->Communication
+      adjs<->[]
+Test passed.
+
+Translation = 
+
+(exists 
+  (?boy ?event) 
+  (and 
+    (instance ?event Communication) 
+    (instance ?boy Male) 
+    (instance ?boy Human) 
+    (agent ?event ?boy)))
+
+Speech Act = Assertion
+
+1. Warning: interpreted the meaning of the verb 'talk' as  WordNet word sense #1 of 6 senses, ID 200651246, meaning exchange thoughts; talk with; "We often talk business"; also used metaphorically: "Actions talk louder than words".  Maps to SUMO 'Communication'.
+
+2. Warning: interpreted the meaning of the noun 'boy' as  WordNet word sense #2 of 4 senses, ID 107123422, meaning a friendly informal reference to a grown man; "he likes to play golf with the boys".  Maps to SUMO '[Human, Male]'.
+
+
+****************
+Test 90, parsing: the waiter pours soup into the bowl 
+
+Parsed OK:the waiter pours soup into the bowl 
+syn<->
+      rel<->no
+      act<->pour
+      vcat<->[_G2105, transitive, _G2111]
+      max<->3
+      role<->assertion
+sem<->
+      id<->201416151
+      subj<->
+             noun<->waiter
+             head<->?waiter
+             type<->OccupationalRole
+             id<->107671545
+      pred<->Transfer
+      dobj<->
+             noun<->soup
+             head<->?soup
+             type<->Food
+             id<->105638174
+      adjs<->[prep<->located..aobj<-> (noun<->bowl..head<-> ?bowl..type<->Artifact..id<->102322151..poss<->_G4920..owner<->_G4925..of<->_G4930..of_id<->_G4935..sub<->empty..mod<->empty)]
+Test passed.
+
+Translation = 
+
+(exists 
+  (?bowl ?soup ?waiter ?event) 
+  (and 
+    (instance ?event Transfer) 
+    (instance ?waiter OccupationalRole) 
+    (agent ?event ?waiter) 
+    (instance ?soup Food) 
+    (patient ?event ?soup) 
+    (instance ?bowl Artifact) 
+    (located ?event ?bowl)))
+
+Speech Act = Assertion
+
+1. Warning: interpreted the meaning of the verb 'pour' as  WordNet word sense #1 of 6 senses, ID 201416151, meaning cause to run; of liquids.  Maps to SUMO 'Transfer'.
+
+2. Warning: interpreted the meaning of the noun 'waiter' as  WordNet word sense #1 of 2 senses, ID 107671545, meaning a person whose occupation is to serve at table (as in a restaurant).  Maps to SUMO 'OccupationalRole'.
+
+3. Warning: interpreted the meaning of the noun 'soup' as  WordNet word sense #1 of 3 senses, ID 105638174, meaning liquid food especially of meat or fish or vegetable stock often containing pieces of solid food.  Maps to SUMO 'Food'.
+
+
+****************
+Test 91, parsing: he travels to Sudan 
+
+Parsed OK:he travels to Sudan 
+syn<->
+      rel<->no
+      act<->travel
+      vcat<->[intransitive, _G1758, _G1761]
+      max<->3
+      role<->assertion
+sem<->
+      id<->201253107
+      subj<->
+             noun<->he
+             head<->?he
+             type<->[CognitiveAgent, Male]
+      pred<->Motion
+      adjs<->[prep<->located..aobj<-> (noun<->Sudan..head<->Sudan..type<->Nation..id<->106585975..poss<->_G3493..owner<->_G3498..of<->_G3503..of_id<->_G3508..sub<->empty)]
+Test passed.
+
+Translation = 
+
+(exists 
+  (?he ?event) 
+  (and 
+    (instance ?event Motion) 
+    (instance ?he Male) 
+    (instance ?he CognitiveAgent) 
+    (agent ?event ?he) 
+    (instance Sudan Nation) 
+    (located ?event Sudan)))
+
+Speech Act = Assertion
+
+1. Warning: interpreted the meaning of the verb 'travel' as  WordNet word sense #1 of 5 senses, ID 201253107, meaning change location; move, travel, or proceed; "How fast does your new car go?" "We travelled from Rome to Naples by bus"; "The policemen went from door to door looking for the suspect";"The soldiers moved towards the city in an attempt to take it before night fell".  Maps to SUMO 'Motion'.
+
+
+****************
+Test 92, parsing: he travels to the Sudan 
+
+Parsed OK:he travels to the Sudan 
+syn<->
+      rel<->no
+      act<->travel
+      vcat<->[intransitive, _G1761, _G1764]
+      max<->3
+      role<->assertion
+sem<->
+      id<->201253107
+      subj<->
+             noun<->he
+             head<->?he
+             type<->[CognitiveAgent, Male]
+      pred<->Motion
+      adjs<->[prep<->located..aobj<-> (noun<->Sudan..head<->Sudan..type<->Nation..id<->106585975..poss<->_G3496..owner<->_G3501..of<->_G3506..of_id<->_G3511..sub<->empty)]
+Test passed.
+
+Translation = 
+
+(exists 
+  (?he ?event) 
+  (and 
+    (instance ?event Motion) 
+    (instance ?he Male) 
+    (instance ?he CognitiveAgent) 
+    (agent ?event ?he) 
+    (instance Sudan Nation) 
+    (located ?event Sudan)))
+
+Speech Act = Assertion
+
+1. Warning: interpreted the meaning of the verb 'travel' as  WordNet word sense #1 of 5 senses, ID 201253107, meaning change location; move, travel, or proceed; "How fast does your new car go?" "We travelled from Rome to Naples by bus"; "The policemen went from door to door looking for the suspect";"The soldiers moved towards the city in an attempt to take it before night fell".  Maps to SUMO 'Motion'.
+
+
+****************
+Test 93, parsing: John is a new employee who works for Mary and starts on Tuesday and works in Los Angeles and reports to law 
+
+Parsed OK:John is a new employee who works for Mary and starts on Tuesday and works in Los Angeles and reports to law 
+syn<->
+      rel<->no
+      act<->be
+      vcat<->relation
+      max<->3
+      role<->assertion
+sem<->
+      subj<->
+             noun<->John
+             head<->John-1
+             type<->[Human, Male, FullyFormed]
+      specs<->[pair(spec(keywords([works, for]), attribute([supervisor]), type(Human)), syn<-> (det<->empty..case<->_G2220..gender<->_G2225..ncat<->person..gcat<->empty..reply<->[Mary]..rel<->_G2263)..sem<-> (noun<->Mary..head<->Mary-1..type<->[Human, Female, FullyFormed]..id<->empty..poss<->_G2331..owner<->_G2336..of<->_G2341..of_id<->_G2346..sub<->empty)), pair(spec(keywords([starts, on]), attribute([start, date]), type(Time)), syn<-> (det<->empty..case<->_G2848..gender<->_G2853..ncat<->time..gcat<->empty..reply<->[Tuesday]..rel<->_G2891)..sem<-> (noun<->Tuesday..head<->Tuesday..type<->Day..id<->110883014..poss<->_G2959..owner<->_G2964..of<->_G2969..of_id<->_G2974..sub<->empty)), pair(spec(keywords([works, in]), attribute([office]), type(Place)), syn<-> (det<->empty..case<->_G3470..gender<->_G3475..ncat<->object..gcat<->empty..reply<->[[Los, Angeles]]..rel<->_G3513)..sem<-> (noun<->[Los, Angeles]..head<->Los_Angeles..type<->City..id<->106602755..poss<->_G3581..owner<->_G3586..of<->_G3591..of_id<->_G3596..sub<->empty)), pair(spec(keywords([reports, to]), attribute([department]), type(Organization)), syn<-> (det<->empty..case<->_G4107..gender<->_G4112..ncat<->object..gcat<->empty..reply<->[law]..rel<->_G4147)..sem<-> (noun<->law..head<-> ?law..type<->Law..id<->106243906..poss<->_G4215..owner<->_G4220..of<->_G4225..of_id<->_G4230..sub<->empty..mod<->empty))]
+      pred<->employee
+Test passed.
+
+Translation = 
+
+(employee Mary-1 Tuesday Los_Angeles law)
+
+Speech Act = Assertion
+
+
+****************
+Test 94, parsing: Mission 1 is a new air mission that has a primary target Target A and second target Target B and refuels at Location 5 and mission type combat air patrol 
+
+Parsed OK:Mission 1 is a new air mission that has a primary target Target A and second target Target B and refuels at Location 5 and mission type combat air patrol 
+syn<->
+      rel<->no
+      act<->be
+      vcat<->relation
+      max<->3
+      role<->assertion
+sem<->
+      subj<->
+             noun<->[Mission, 1]
+             head<->Mission_1
+             type<->OrganizationalProcess
+      specs<->[pair(spec(keywords([has, a, primary, target]), attribute([first, target]), type(ATOTarget)), syn<-> (det<->empty..case<->_G2354..gender<->_G2359..ncat<->object..gcat<->empty..reply<->[[Target, A]]..rel<->_G2397)..sem<-> (noun<->[Target, A]..head<->Target_A..type<->Object..id<->empty..poss<->_G2465..owner<->_G2470..of<->_G2475..of_id<->_G2480..sub<->empty)), pair(spec(keywords([has, a, secondary, target]), attribute([second, target]), type(ATOTarget)), syn<-> (det<->empty..case<->_G3040..gender<->_G3045..ncat<->object..gcat<->empty..reply<->[[Target, B]]..rel<->_G3083)..sem<-> (noun<->[Target, B]..head<->Target_B..type<->Object..id<->empty..poss<->_G3151..owner<->_G3156..of<->_G3161..of_id<->_G3166..sub<->empty)), pair(spec(keywords([refuels, at]), attribute([refueling, point]), type(Place)), syn<-> (det<->empty..case<->_G3726..gender<->_G3731..ncat<->object..gcat<->empty..reply<->[[Location, 5]]..rel<->_G3769)..sem<-> (noun<->[Location, 5]..head<->Loc_5..type<->Region..id<->empty..poss<->_G3837..owner<->_G3842..of<->_G3847..of_id<->_G3852..sub<->empty)), pair(spec(keywords([has, type]), attribute([mission, type]), type(ATOMissionType)), syn<-> (det<->empty..case<->_G4412..gender<->_G4417..ncat<->object..gcat<->empty..reply<->[[combat, air, patrol]]..rel<->_G4452)..sem<-> (noun<->[combat, air, patrol]..head<-> ?combat_air_patrol..type<->OccupationalRole..id<->empty..poss<->_G4520..owner<->_G4525..of<->_G4530..of_id<->_G4535..sub<->empty..mod<->empty))]
+      pred<->ato_mission
+Test passed.
+
+Translation = 
+Could not find a value for argument with keywords [[has, a, waypoint, at]] and attribute words [[waypoint]].
+
+(ato_mission Target_A Target_B Loc_5 empty combat_air_patrol)
+
+Speech Act = Assertion
+
+
+ Passed 94 tests (100.00 %) and failed 0 tests (0.00 %) tests out of 94 tried.
+

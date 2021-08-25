@@ -1,0 +1,21 @@
+
+trc(query, info(1234, query, 22, 1), [
+   trc(product(a, additive_identity, additive_identity), info(1234, ext, 21, 1), [
+      trc(product(a, additive_identity, multiply(a, additive_identity)), info(677, fact, 19, 1), []),
+      trc(product(a, additive_identity, multiply(a, additive_identity)), info(678, fact, 19, 1), []),
+      trc(sum(additive_identity, additive_identity, additive_identity), info(679, fact, 17, 1), []),
+      trc(sum(multiply(a, additive_identity), multiply(a, additive_identity), additive_identity), info(1234, th_start, 16, 1), [
+         trc(sum(multiply(a, additive_identity), multiply(a, additive_identity), multiply(a, additive_identity)), info(1213, th_ext, 20, 1), [
+            trc(product(a, additive_identity, multiply(a, additive_identity)), info(1210, fact, 19, 1), []),
+            trc(product(a, additive_identity, multiply(a, additive_identity)), info(1211, fact, 19, 1), []),
+            trc(sum(additive_identity, additive_identity, additive_identity), info(1212, fact, 17, 1), []),
+            trc(product(a, additive_identity, multiply(a, additive_identity)), info(1213, fact, 19, 1), [])]),
+         trc(sum(additive_inverse(multiply(a, additive_identity)), multiply(a, additive_identity), additive_identity), info(1209, th_ext, 18, 1), []),
+         trc(sum(additive_inverse(multiply(a, additive_identity)), multiply(a, additive_identity), multiply(a, additive_identity)), info(1234, th_start, 15, 1), [
+            trc(sum(multiply(a, additive_identity), multiply(a, additive_identity), multiply(a, additive_identity)), info(1233, th_ext, 20, 1), [
+               trc(product(a, additive_identity, multiply(a, additive_identity)), info(1230, fact, 19, 1), []),
+               trc(product(a, additive_identity, multiply(a, additive_identity)), info(1231, fact, 19, 1), []),
+               trc(sum(additive_identity, additive_identity, additive_identity), info(1232, fact, 17, 1), []),
+               trc(product(a, additive_identity, multiply(a, additive_identity)), info(1233, factor_cut, 2, 0), [])]),
+            trc(sum(additive_identity, multiply(a, additive_identity), multiply(a, additive_identity)), info(1229, th_ext, 17, 1), []),
+            trc(sum(additive_inverse(multiply(a, additive_identity)), multiply(a, additive_identity), additive_identity), info(1234, fact, 18, 1), [])])])])]).

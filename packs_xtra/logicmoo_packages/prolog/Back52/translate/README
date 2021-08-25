@@ -1,0 +1,26 @@
+
+We provide a small tool to help you reusing old domains written in BACK V4 syn-
+tax. We provide facilities to translate files readable for BACK V4 or for
+MicroBack into Back V5 syntax.
+Additionally you will be able to define your own translationrules. This mecha-
+nism is explained in detail in the file "b5tf.pl". 
+
+To use the tool you have to consult the file "translate/translate.pl".
+
+With "v42v5(V4-filename,V5(new)-filename)" you will get a file, which is prob-
+ably readable for BACK V50 with "backread(V5(new)-filename)".
+We new 2 cases, where our translation is not sufficient:
+ 
+- conjunktions and disjunktions of rolefillers have to be put into brackets.
+  e.g "o is_a c with r : o1 and o2 and o3" will be translated in
+        "o :: c and (r: o1 and o2 and o3)" . This has to be changed in
+           "o :: c and (r:(o1 and o2 and o3))"
+ 
+- aboxtells like "o :: c1 and (r1: X :: c2) and r2 : X" handled correctly in
+  BACK V4, although they were syntactically forbidden,  are not longer allowed.
+
+Comments as well as the readability of complex terms get completely lost within
+the translation process.
+
+mb2v5(MB-filename,V5-filename) is the same for MicroBack and V5. Note that
+defaults cannot be read with BACK V50.

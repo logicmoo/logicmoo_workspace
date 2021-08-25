@@ -1,0 +1,14 @@
+0.2
+
+
+HISTORY:
+
+2008-04-18: v0.2
+Used by DELTIO final prototype.
+Includes prodlr component for using ILP to learn fuzzy DL descriptions.
+
+2007-07-11: v0.1
+Used by DELTIO first prototype.
+Resolution seems to be working properly.
+
+

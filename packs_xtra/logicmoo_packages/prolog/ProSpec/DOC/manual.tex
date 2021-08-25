@@ -1,0 +1,249 @@
+\documentclass[fleqn]{scrartcl}
+
+%{{{ Packages and such
+\usepackage{goodies}
+\usepackage{xspace}
+\usepackage{named}
+\usepackage{mathti}
+\usepackage{theorems}
+
+\newcommand{\prospec}{\textsf{ProSpec}\xspace}
+\newcommand{\eqtrafo}{\textsf{EQTrafo}\xspace}
+\newcommand{\sort}{\textsc{Sort}\xspace}
+%}}}
+
+\begin{document}
+%{{{ Title
+\bibliographystyle{named}
+
+\title{The \prospec and \eqtrafo User's Manual}
+\author{Peter Baumgartner and Bernd Thomas\\
+Universit{\"a}t Koblenz-Landau\\
+Rheinau 1\\
+56075 Koblenz\\[2ex]
+\texttt{\normalsize \{peter,bthomas\}@informatik.uni-koblenz.de}}
+\date{Draft of \today}
+
+\maketitle
+%}}}
+
+\section{Introduction}
+\label{sec:Introduction}
+%{{{ Introduction text
+This document describes two tools developed at the AI Group at the
+University of Koblenz. Both are intended  as frontends to be used in
+conjunction with classical, first order clause logic theorem provers
+(such as PROTEIN \cite{Baumgartner:Furbach:PROTEIN:CADE12:94}). 
+\begin{description}
+\item[\prospec:] \prospec takes as input a file consisting of a {\em sort
+  declaration\/} and some {\em well-sorted formulas\/} (not neccessarily
+  clauses), possibly containing the equality predicate. The output is 
+  a set of unsorted clauses with equality. In brief, \prospec
+  transforms sorted logic with equality into unsorted logic with
+  equality in a semantics preserving way.
+
+
+\item[\eqtrafo:] \eqtrafo takes as input a file consisting of clauses,
+  possibly containing the equality predicate. The output is a set of
+  clauses not containing the equality predicate. In brief \eqtrafo
+  transforms clause logic with equality into clause logic without
+  equality in a semantics preserving way.
+\end{description}
+Hence, typically a sorted specification with equality is proved using the
+command sequence \prospec --- \eqtrafo --- Protein.
+%}}}
+
+
+
+\section{\protect{\prospec}}
+\label{sec:Prospec}
+%{{{ Introductory text
+We will first describe the semantics of the transformation; the
+subsequent \prospec user's guide will describe the concrete syntax and
+how to run the program. 
+%}}}
+
+\subsection{Syntax and Semantics of the Transformation}
+\label{sec:ProspecSemantics}
+%{{{ Text
+By  a {\em sorted
+  specification\/} we mean a pair consisting of a {\em sort declaration\/}
+  and a set of {\em well-sorted sorted formulas\/}.
+
+Following standard terminology, a {\em sort declaration\/} for a signature
+$\Sigma$ consists of 
+\begin{itemize}
+\item a set $\sort$ of symbols, called {\em sorts\/}, 
+\item a mapping $s:Var \mapsto \sort$ which maps each variable of
+  $\Sigma$ to a sort, 
+\item a set of {\em term declarations\/} of the form $t \in S$, where $S \in
+\sort$, 
+\item a set of {\em predicate declarations\/} of the form
+$P : S_1 \times \cdots \times S_n$, where $P$ is an
+$n$-ary predicate symbol and $S_i \in \sort$,
+\item and a set of {\em subsort declarations\/} of the form $S_1
+  \sqsubseteq S_2$ where $S_1,S_2 \in \sort$.
+\end{itemize}
+For instance, using the convention that a variable $x$ with sort
+$s$ (i.e. $s(x) = S$) is displayed as $x_S$, a valid term
+declaration is $succ(succ(x_{Even})) \in Even$ (provided $Even \in
+\sort$). An example for a subsort declaration would be $Nat
+\sqsubseteq Integer$.
+
+Although these notions all are standard, we gave them here in order to
+formulate  restrictions apply in our case:
+\begin{itemize}
+\item The sort hierarchie must be a tree: whenever $S \sqsubseteq
+   S_1$ and $S \sqsubseteq S_2$ then $S_1 = S_2$. 
+\item For every $n-ary$ predicate symbol $P$ there is exactly one
+  predicate declaration
+  \begin{displaymath}
+    P : S_1 \times \cdots \times S_n\quad \text{where $S_i
+      \in \sort$, for $1 \leq i \leq n$.}
+  \end{displaymath}
+\item For every $n-ary$ function symbol $f$ there is exactly one
+  term declaration
+  \begin{displaymath}
+    f(x^1_{S_1},\ldots,x^n_{S_n}) \in S \quad\text{where  $S,\,S_i
+      \in \sort$, $x_i \neq x_j$, for $1
+      \leq i,j \leq n$ and $i \neq j$.}
+  \end{displaymath}
+This is also noted as
+\begin{displaymath}
+  f: S_1 \times \cdots \times S_n \mapsto S
+\end{displaymath}
+This restriction is also called the {\em elementary\/} restriction of sorted
+signatures, and the term declarations are also called {\em function
+declarations\/}. 
+\end{itemize}
+By a {\em declaration\/} we mean either a predicate declaration or a
+function declaration. The tree-restriction and the restrictions posed
+in the declarations are quite severe. Nethertheless they turned out to
+be useful in practice. 
+
+The restrictions stated so far are precisely the same as in
+\cite{Schmitt:Wernecke:TableauSortedLogics:89}. The reasons is that
+our \prospec transformation coincides with the predicative encoding of
+sorts of Schmitt and Wernecke, and hence has to make the same
+assumptions about the sort declarations.
+ 
+However, we want to be more general and allow
+{\em polymorphism\/} in our declarations (again, this is standard,
+see~\cite{Beierle}). 
+The idea is to  allow a {\em variable\/}
+in place where a {\em sort\/} is required. These {\em sort variables\/} are
+taken from a set disjoint to the object variables. Further, we would
+like to have declarations of the form $cons: U \times list(U) \mapsto
+list(U)$. This motivates the following definition of a {\em sort\/}
+\begin{definition}[Polymorphic Sorts]
+Let $\cal B \neq \emptyset$  be a set of symbols, called {\em basic sorts\/}, let $\cal U$
+be a set of variables, called {\em sort variables\/}, and let $\cal F$
+be a set of function symbols 
+of given arity, called {\em sort functions\/}. 
+The set \sort is the smallest set consisting of sorts, where a sort
+is defined inductively as follows:
+\begin{itemize}
+\item Every basic sort $B \in {\cal B}$ is a sort.
+\item Every variable $U \in {\cal U}$ is a sort.
+\item If $S_1,\ldots,S_n$ are sorts, then $F(S_1,\ldots,S_n)$ is a sort,
+  where $F \in {\cal F}$.
+\end{itemize}
+\end{definition}
+
+When taking this modified definition of \sort, the restrictions on
+sort declarations posed above can remain unchanged, except 
+that the following  restricion on subsort declarations has to be made:
+\begin{description}
+\item Every  {\em subsort declaration\/} is of the form $S_1
+  \sqsubseteq S_2$ where $S_1,S_2 \in {\cal B}$.
+\end{description}
+With this restriction, the transitive closure of ``$\sqsubseteq$''
+can be extended to a partial order on \sort (see~\cite{Beierle}).
+
+Now, equality is declared as follows: ${} = {} : U \times U$, where
+$U \in {\cal U}$. Notice that this is an ``unusual'' declaration of
+equality, since it permits equations only on terms of the {\em same\/}
+sort (the ``usual'' declaration would be ${} = {} : t \times t$
+where $t$ is a basic sort and is the least upper bound of all basic
+sorts). This restriction is motivated by the equality transformation
+\eqtrafo, which is complete for this declaration only.
+
+A further consequence of this declaration concerns semantics: for
+interpretations it has
+to be required that different sorts are mapped to domains which do not
+have any elements in common. 
+
+{\large\bf STOP 2.6.97}
+
+% 
+% Let $D[U_1,\ldots,U_n]$ denote
+% a declarion containing exactly the different sort variables
+% $U_1,\ldots,U_n$. By $D[U_1,\ldots,U_{i-1},S_i,U_{i+1},\ldots,U_n]$ we mean
+% the declaration which is obtained from  $D[U_1,\ldots,U_n]$ by replacing
+% all occurrences of $U_i$ by $S_i \in \sort$. 
+
+
+It has to be clarified what a {\em well-sorted formula\/} is. In brief,
+one has to take care when building formulas that all terms and atoms
+obey the sort declarations: whenever according to the declaration part
+a term of sort $S$ is expected, then only a term of sort $S$ or
+subsort of $S$ may be used.  
+Since this is completely standard we
+will not repeat the definition here (See
+e.g.~\cite{Oberschelp:OrderSortedPredicateLogic:TableauSortedLogics:89}).
+The only thing to note is that our restrictions imply that each term
+gets a {\em unique\/} sort\footnote{Our sorted signatures are
+  {\em subterm-closed\/}: every subterm of a well-sorted term is
+  well-sorted as well.}
+
+With respect to  semantics, one has to use {\em sorted
+interpretations\/}. Again, this is standard. The only thing to mention
+here is that a sorted interpretation $\cal I$ maps each sort $S \in \sort$ to a
+{\em non-empty\/} domain ${\cal I}(S)$. 
+
+\prospec transforms a well-sorted specification $\Phi_S$ into an unsorted
+clause set $\Phi$ in such a way that the semantics of the sorts is
+preserved. Such transformations are well-known in the literature and
+are referred to as {\em sort relativations\/}. Relativations are expected to
+satisfy the following property:
+\begin{description}
+\item[Sort theorem:] $\Phi_S$ is satisfiable with some sort
+  interpretation if and only if $\Phi$ is satisfiable in some unsorted
+  interpretation.
+\end{description}
+Since the relativation carried out by \prospec satisfies the sort
+theorem, we thus have a semantics for sorted specifications, by simply
+taking the semantics of the relativised version.
+
+Designing a sort relativation is a tradeoff between {\em expressibility\/}
+and {\em efficiency\/}. In \prospec we decided to have rather severe
+restrictions on sort declarations, which, on the other hand, allow for
+a very simple transformation. Further, and more important, the
+relativised clause set can 
+be treated very efficiently, because all the reasoning stemming from
+the sort information is carried out by {\em ordinary\/} unification. 
+For instance, we do not allow the declaration that different sorts
+have a {\em common\/} subsort, because this would either need a
+non-standard unification algorithm or a much more complex
+transformation. 
+%}}}
+
+\subsection{\prospec User's Guide}
+\label{sec:ProspecUsersGuide}
+%{{{ Text
+%}}}
+
+
+
+
+
+\bibliography{/home/peter/TEX/peter,/home/peter/TEX/logic}
+\end{document}
+
+%%% Local Variables: 
+%%% folded-file: t
+%%% mode: latex
+%%% TeX-master: t
+%%% TeX-parse-self: t
+%%% TeX-auto-save: t
+%%% End: 

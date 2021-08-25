@@ -1,0 +1,1007 @@
+
+
+****************
+Test 1, parsing: he 
+
+Parsed OK:he 
+syn<->
+      case<->nominative
+      gender<->masculine
+      reply<->[syn<-> (case<->nominative..gender<->masculine)..sem<-> (noun<->he..head<-> ?he..type<->[CognitiveAgent, Male])]
+sem<->
+      noun<->he
+      head<->?he
+      type<->[CognitiveAgent, Male]
+Test passed.
+
+Translation = 
+
+(exists 
+  (?he) 
+  (and 
+    (instance ?he CognitiveAgent) 
+    (instance ?he Male)))
+
+Speech Act = Assertion
+
+
+****************
+Test 2, parsing: her 
+
+Parsed OK:her 
+syn<->
+      case<->accusative
+      gender<->feminine
+      reply<->[syn<-> (case<->accusative..gender<->feminine)..sem<-> (noun<->her..head<-> ?her..type<->[CognitiveAgent, Female])]
+sem<->
+      noun<->her
+      head<->?her
+      type<->[CognitiveAgent, Female]
+Test passed.
+
+Translation = 
+
+(exists 
+  (?her) 
+  (and 
+    (instance ?her CognitiveAgent) 
+    (instance ?her Female)))
+
+Speech Act = Assertion
+
+
+****************
+Test 3, parsing: the card 
+
+Parsed OK:the card 
+syn<->
+      det<->the
+      ncat<->object
+      reply<->[the, card]
+sem<->
+      noun<->card
+      head<->?card
+      type<->BankCard
+      id<->104863407
+Test passed.
+
+Translation = 
+
+(exists 
+  (?card) 
+  (and 
+    (instance ?card BankCard)))
+
+Speech Act = Assertion
+
+1. Warning: interpreted the meaning of the noun 'card' as  WordNet word sense #2 of 11 senses, ID 104863407, meaning a card certifying the identity of the bearer; "he had to show his card to get in".  Maps to SUMO 'BankCard'.
+
+
+****************
+Test 4, parsing: a new customer 
+
+Parsed OK:a new customer 
+syn<->
+      det<->a
+      ncat<->person
+      reply<->[a, new, customer]
+sem<->
+      noun<->customer
+      head<->?customer
+      type<->customer
+      id<->107197309
+      mod<->newness-WN03855074
+Test passed.
+
+Translation = 
+
+(exists 
+  (?salesperson ?customer) 
+  (and 
+    (attribute ?customer newness-WN03855074) 
+    (customer ?customer ?salesperson) 
+    (instance ?salesperson CognitiveAgent) 
+    (instance ?customer CognitiveAgent)))
+
+Speech Act = Assertion
+
+1. Note: interpreted the noun 'customer' using WordNet synset ID 107197309, meaning someone who pays for goods or services.  Maps to SUMO 'customer'.
+
+
+****************
+Test 5, parsing: the Swiss customer 
+
+Parsed OK:the Swiss customer 
+syn<->
+      det<->the
+      ncat<->person
+      reply<->[the, Swiss, customer]
+sem<->
+      noun<->customer
+      head<->?customer
+      type<->customer
+      id<->107197309
+      mod<->Germanism-WN00265812
+Test passed.
+
+Translation = 
+
+(exists 
+  (?salesperson ?customer) 
+  (and 
+    (attribute ?customer Germanism-WN00265812) 
+    (customer ?customer ?salesperson) 
+    (instance ?salesperson CognitiveAgent) 
+    (instance ?customer CognitiveAgent)))
+
+Speech Act = Assertion
+
+1. Note: interpreted the noun 'customer' using WordNet synset ID 107197309, meaning someone who pays for goods or services.  Maps to SUMO 'customer'.
+
+
+****************
+Test 6, parsing: the customer of the bank 
+
+Parsed OK:the customer of the bank 
+syn<->
+      det<->the
+      ncat<->person
+      reply<->[the, customer]
+sem<->
+      noun<->customer
+      head<->?customer
+      type<->customer
+      id<->107197309
+      of<->Bank-FinancialOrganization
+      of_id<->106227059
+Test passed.
+
+Translation = 
+
+(exists 
+  (?salesperson ?customer) 
+  (and 
+    (possesses Bank-FinancialOrganization ?customer) 
+    (customer ?customer ?salesperson) 
+    (instance ?salesperson CognitiveAgent) 
+    (instance ?customer CognitiveAgent)))
+
+Speech Act = Assertion
+
+1. Note: interpreted the noun 'customer' using WordNet synset ID 107197309, meaning someone who pays for goods or services.  Maps to SUMO 'customer'.
+
+
+****************
+Test 7, parsing: the valid credit card 
+
+Parsed OK:the valid credit card 
+syn<->
+      det<->the
+      ncat<->object
+      reply<->[the, valid, [credit, card]]
+sem<->
+      noun<->[credit, card]
+      head<->?credit_card
+      type<->CreditCard
+      id<->109633105
+      mod<->validation-WN00099890
+Test passed.
+
+Translation = 
+
+(exists 
+  (?credit_card) 
+  (and 
+    (instance ?credit_card CreditCard) 
+    (attribute ?credit_card validation-WN00099890)))
+
+Speech Act = Assertion
+
+1. Note: interpreted the noun '[credit, card]' using WordNet synset ID 109633105, meaning a card (usually plastic) that assures a seller that the person using it has a satisfactory credit rating and that the issuer will see to it that the seller receives payment for the merchandise delivered.  Maps to SUMO 'CreditCard'.
+
+
+****************
+Test 8, parsing: the customer Mr Miller 
+
+Parsed OK:the customer Mr Miller 
+syn<->
+      det<->the
+      ncat<->person
+      reply<->[the, _G599]
+sem<->
+      head<->MrMiller
+      type<->customer
+Test passed.
+
+Translation = 
+
+(exists 
+  (?salesperson) 
+  (and 
+    (customer MrMiller ?salesperson) 
+    (instance ?salesperson CognitiveAgent) 
+    (instance MrMiller CognitiveAgent)))
+
+Speech Act = Assertion
+
+
+****************
+Test 9, parsing: the customer X 
+
+Parsed OK:the customer X 
+syn<->
+      det<->the
+      ncat<->person
+      reply<->[the, _G596]
+sem<->
+      head<->X
+      type<->customer
+Test passed.
+
+Translation = 
+
+(exists 
+  (?salesperson) 
+  (and 
+    (customer X ?salesperson) 
+    (instance ?salesperson CognitiveAgent) 
+    (instance X CognitiveAgent)))
+
+Speech Act = Assertion
+
+
+****************
+Test 10, parsing: John 
+
+Parsed OK:John 
+syn<->
+      ncat<->person
+      reply<->[John]
+sem<->
+      noun<->John
+      head<->John-1
+      type<->[Human, Male, FullyFormed]
+Test passed.
+
+Translation = 
+
+(and 
+  (instance John-1 Human) 
+  (instance John-1 Male) 
+  (instance John-1 FullyFormed))
+
+Speech Act = Assertion
+
+
+****************
+Test 11, parsing: Monday 
+
+Parsed OK:Monday 
+syn<->
+      ncat<->time
+      reply<->[Monday]
+sem<->
+      noun<->Monday
+      head<->Monday
+      type<->Day
+      id<->110882888
+Test passed.
+
+Translation = 
+
+(and 
+  (instance Monday Day))
+
+Speech Act = Assertion
+
+1. Note: interpreted the noun 'Monday' using WordNet synset ID 110882888, meaning the second day of the week; the first working day.  Maps to SUMO 'Day'.
+
+
+****************
+Test 12, parsing: John ' s card 
+
+Parsed OK:John ' s card 
+syn<->
+      reply<->[card]
+sem<->
+      noun<->card
+      head<->?card
+      type<->BankCard
+      id<->104863407
+      poss<->John-1
+Test passed.
+
+Translation = 
+
+(exists 
+  (?card) 
+  (and 
+    (instance ?card BankCard) 
+    (possesses John-1 ?card)))
+
+Speech Act = Assertion
+
+1. Warning: interpreted the meaning of the noun 'card' as  WordNet word sense #2 of 11 senses, ID 104863407, meaning a card certifying the identity of the bearer; "he had to show his card to get in".  Maps to SUMO 'BankCard'.
+
+
+****************
+Test 13, parsing: the card ' s code 
+
+Parsed OK:the card ' s code 
+syn<->
+      det<->the
+      reply<->[the, code]
+sem<->
+      noun<->code
+      head<->?code
+      type<->Text
+      id<->104790774
+      poss<->?card
+      owner<->104863407
+Test passed.
+
+Translation = 
+
+(exists 
+  (?code) 
+  (and 
+    (instance ?code Text) 
+    (possesses ?card ?code)))
+
+Speech Act = Assertion
+
+1. Warning: interpreted the meaning of the noun 'code' as  WordNet word sense #2 of 3 senses, ID 104790774, meaning a coding system used for transmitting messages requiring brevity or secrecy.  Maps to SUMO 'Text'.
+
+
+****************
+Test 14, parsing: Monday ' s customer 
+
+Parsed OK:Monday ' s customer 
+syn<->
+      reply<->[customer]
+sem<->
+      noun<->customer
+      head<->?customer
+      type<->customer
+      id<->107197309
+      poss<->Monday
+      owner<->110882888
+Test passed.
+
+Translation = 
+
+(exists 
+  (?salesperson ?customer) 
+  (and 
+    (possesses Monday ?customer) 
+    (customer ?customer ?salesperson) 
+    (instance ?salesperson CognitiveAgent) 
+    (instance ?customer CognitiveAgent)))
+
+Speech Act = Assertion
+
+1. Note: interpreted the noun 'customer' using WordNet synset ID 107197309, meaning someone who pays for goods or services.  Maps to SUMO 'customer'.
+
+
+****************
+Test 15, parsing: John ' s code 
+
+Parsed OK:John ' s code 
+syn<->
+      reply<->[code]
+sem<->
+      noun<->code
+      head<->?code
+      type<->Text
+      id<->104790774
+      poss<->John-1
+Test passed.
+
+Translation = 
+
+(exists 
+  (?code) 
+  (and 
+    (instance ?code Text) 
+    (possesses John-1 ?code)))
+
+Speech Act = Assertion
+
+1. Warning: interpreted the meaning of the noun 'code' as  WordNet word sense #2 of 3 senses, ID 104790774, meaning a coding system used for transmitting messages requiring brevity or secrecy.  Maps to SUMO 'Text'.
+
+
+****************
+Test 16, parsing: valid credit card 
+Failed to parse: valid credit card 
+Test passed.
+
+
+
+****************
+Test 17, parsing: the Swiss 
+
+Parsed OK:the Swiss 
+syn<->
+      ncat<->object
+      reply<->[Swiss]
+sem<->
+      noun<->Swiss
+      head<->Swiss
+      type<->EthnicGroup
+      id<->107039396
+Test passed.
+
+Translation = 
+
+(and 
+  (instance Swiss EthnicGroup))
+
+Speech Act = Assertion
+
+1. Note: interpreted the noun 'Swiss' using WordNet synset ID 107039396, meaning the people of Switzerland.  Maps to SUMO 'EthnicGroup'.
+
+
+****************
+Test 18, parsing: a new 
+Failed to parse: a new 
+Test passed.
+
+
+
+****************
+Test 19, parsing: a new customer smith 
+Failed to parse: a new customer smith 
+Test passed.
+
+
+
+****************
+Test 20, parsing: a new customer mary 
+Failed to parse: a new customer mary 
+Test passed.
+
+
+
+****************
+Test 21, parsing: the customer who enters the bank 
+
+Parsed OK:the customer who enters the bank 
+syn<->
+      det<->the
+      ncat<->person
+      reply<->[the, customer]
+      rel<->no
+sem<->
+      noun<->customer
+      head<->?customer
+      type<->customer
+      id<->107197309
+      sub<->
+            id<->201376901
+            subj<->
+                   head<->?who
+                   type<->Human
+            pred<->Movement
+            dobj<->
+                   noun<->bank
+                   head<->?bank
+                   type<->Bank-FinancialOrganization
+                   id<->106227059
+            adjs<->[]
+Test passed.
+
+Translation = 
+
+(exists 
+  (?salesperson ?bank ?who ?event ?customer) 
+  (and 
+    (patient ?event ?bank) 
+    (instance ?bank Bank-FinancialOrganization) 
+    (agent ?event ?who) 
+    (instance ?who Human) 
+    (instance ?event Movement) 
+    (equal ?customer ?who) 
+    (customer ?customer ?salesperson) 
+    (instance ?salesperson CognitiveAgent) 
+    (instance ?customer CognitiveAgent)))
+
+Speech Act = Assertion
+
+1. Note: interpreted the noun 'customer' using WordNet synset ID 107197309, meaning someone who pays for goods or services.  Maps to SUMO 'customer'.
+
+
+****************
+Test 22, parsing: a bank that the customer enters 
+
+Parsed OK:a bank that the customer enters 
+syn<->
+      det<->a
+      ncat<->object
+      reply<->[a, bank]
+      rel<->no
+sem<->
+      noun<->bank
+      head<->?bank
+      type<->Bank-FinancialOrganization
+      id<->106227059
+      sub<->
+            id<->201376901
+            subj<->
+                   noun<->customer
+                   head<->?customer
+                   type<->customer
+                   id<->107197309
+            pred<->Movement
+            dobj<->
+                   head<->?that
+                   type<->Physical
+            adjs<->[]
+Test passed.
+
+Translation = 
+
+(exists 
+  (?that ?salesperson ?customer ?event ?bank) 
+  (and 
+    (instance ?bank Bank-FinancialOrganization) 
+    (patient ?event ?that) 
+    (instance ?that Physical) 
+    (agent ?event ?customer) 
+    (instance ?event Movement) 
+    (customer ?customer ?salesperson) 
+    (instance ?salesperson CognitiveAgent) 
+    (instance ?customer CognitiveAgent) 
+    (equal ?bank ?that)))
+
+Speech Act = Assertion
+
+1. Warning: interpreted the meaning of the noun 'bank' as  WordNet word sense #1 of 10 senses, ID 106227059, meaning a financial institution that accepts deposits and channels the money into lending activities; "he cashed a check at the bank"; "that bank holds the mortgage on my home".  Maps to SUMO 'Bank-FinancialOrganization'.
+
+
+****************
+Test 23, parsing: a valid credit card that the customer inserts 
+
+Parsed OK:a valid credit card that the customer inserts 
+syn<->
+      det<->a
+      ncat<->object
+      reply<->[a, valid, [credit, card]]
+      rel<->no
+sem<->
+      noun<->[credit, card]
+      head<->?credit_card
+      type<->CreditCard
+      id<->109633105
+      sub<->
+            id<->200974668
+            subj<->
+                   noun<->customer
+                   head<->?customer
+                   type<->customer
+                   id<->107197309
+            pred<->Putting
+            dobj<->
+                   head<->?that
+                   type<->Physical
+            adjs<->[]
+      mod<->validation-WN00099890
+Test passed.
+
+Translation = 
+
+(exists 
+  (?that ?salesperson ?customer ?event ?credit_card) 
+  (and 
+    (instance ?credit_card CreditCard) 
+    (attribute ?credit_card validation-WN00099890) 
+    (patient ?event ?that) 
+    (instance ?that Physical) 
+    (agent ?event ?customer) 
+    (instance ?event Putting) 
+    (customer ?customer ?salesperson) 
+    (instance ?salesperson CognitiveAgent) 
+    (instance ?customer CognitiveAgent) 
+    (equal ?credit_card ?that)))
+
+Speech Act = Assertion
+
+1. Note: interpreted the noun '[credit, card]' using WordNet synset ID 109633105, meaning a card (usually plastic) that assures a seller that the person using it has a satisfactory credit rating and that the issuer will see to it that the seller receives payment for the merchandise delivered.  Maps to SUMO 'CreditCard'.
+
+
+****************
+Test 24, parsing: the Swiss customer who enters the bank 
+
+Parsed OK:the Swiss customer who enters the bank 
+syn<->
+      det<->the
+      ncat<->person
+      reply<->[the, Swiss, customer]
+      rel<->no
+sem<->
+      noun<->customer
+      head<->?customer
+      type<->customer
+      id<->107197309
+      sub<->
+            id<->201376901
+            subj<->
+                   head<->?who
+                   type<->Human
+            pred<->Movement
+            dobj<->
+                   noun<->bank
+                   head<->?bank
+                   type<->Bank-FinancialOrganization
+                   id<->106227059
+            adjs<->[]
+      mod<->Germanism-WN00265812
+Test passed.
+
+Translation = 
+
+(exists 
+  (?salesperson ?bank ?who ?event ?customer) 
+  (and 
+    (attribute ?customer Germanism-WN00265812) 
+    (patient ?event ?bank) 
+    (instance ?bank Bank-FinancialOrganization) 
+    (agent ?event ?who) 
+    (instance ?who Human) 
+    (instance ?event Movement) 
+    (equal ?customer ?who) 
+    (customer ?customer ?salesperson) 
+    (instance ?salesperson CognitiveAgent) 
+    (instance ?customer CognitiveAgent)))
+
+Speech Act = Assertion
+
+1. Note: interpreted the noun 'customer' using WordNet synset ID 107197309, meaning someone who pays for goods or services.  Maps to SUMO 'customer'.
+
+
+****************
+Test 25, parsing: a Swiss customer of the bank 
+
+Parsed OK:a Swiss customer of the bank 
+syn<->
+      det<->a
+      ncat<->person
+      reply<->[a, Swiss, customer]
+sem<->
+      noun<->customer
+      head<->?customer
+      type<->customer
+      id<->107197309
+      of<->Bank-FinancialOrganization
+      of_id<->106227059
+      mod<->Germanism-WN00265812
+Test passed.
+
+Translation = 
+
+(exists 
+  (?salesperson ?customer) 
+  (and 
+    (attribute ?customer Germanism-WN00265812) 
+    (possesses Bank-FinancialOrganization ?customer) 
+    (customer ?customer ?salesperson) 
+    (instance ?salesperson CognitiveAgent) 
+    (instance ?customer CognitiveAgent)))
+
+Speech Act = Assertion
+
+1. Note: interpreted the noun 'customer' using WordNet synset ID 107197309, meaning someone who pays for goods or services.  Maps to SUMO 'customer'.
+
+
+****************
+Test 26, parsing: a customer who is Swiss 
+
+Parsed OK:a customer who is Swiss 
+syn<->
+      det<->a
+      ncat<->person
+      reply<->[a, customer]
+      rel<->no
+sem<->
+      noun<->customer
+      head<->?customer
+      type<->customer
+      id<->107197309
+      sub<->
+            id<->201775973
+            subj<->
+                   head<->?who
+                   type<->Human
+            pred<->instance
+            dobj<->
+                   noun<->Swiss
+                   head<->Swiss
+                   type<->EthnicGroup
+                   id<->107039396
+            adjs<->[]
+Test passed.
+
+Translation = 
+
+(exists 
+  (?salesperson ?who ?event ?customer) 
+  (and 
+    (patient ?event Swiss) 
+    (instance Swiss EthnicGroup) 
+    (agent ?event ?who) 
+    (instance ?who Human) 
+    (instance ?event instance) 
+    (equal ?customer ?who) 
+    (customer ?customer ?salesperson) 
+    (instance ?salesperson CognitiveAgent) 
+    (instance ?customer CognitiveAgent)))
+
+Speech Act = Assertion
+
+1. Note: interpreted the noun 'customer' using WordNet synset ID 107197309, meaning someone who pays for goods or services.  Maps to SUMO 'customer'.
+
+
+****************
+Test 27, parsing: a credit card that is new 
+
+Parsed OK:a credit card that is new 
+syn<->
+      det<->a
+      ncat<->object
+      reply<->[a, [credit, card]]
+      rel<->no
+sem<->
+      noun<->[credit, card]
+      head<->?credit_card
+      type<->CreditCard
+      id<->109633105
+      sub<->
+            mod<->newness-WN03855074
+            subj<->
+                   head<->?that
+                   type<->Physical
+            pred<->isa
+Test passed.
+
+Translation = 
+
+(exists 
+  (?that ?credit_card) 
+  (and 
+    (instance ?credit_card CreditCard) 
+    (instance ?that Physical) 
+    (attribute ?that newness-WN03855074) 
+    (equal ?credit_card ?that)))
+
+Speech Act = Assertion
+
+1. Note: interpreted the noun '[credit, card]' using WordNet synset ID 109633105, meaning a card (usually plastic) that assures a seller that the person using it has a satisfactory credit rating and that the issuer will see to it that the seller receives payment for the merchandise delivered.  Maps to SUMO 'CreditCard'.
+
+
+****************
+Test 28, parsing: a customer that enters the bank 
+
+Parsed OK:a customer that enters the bank 
+syn<->
+      det<->a
+      ncat<->person
+      reply<->[a, customer]
+      rel<->no
+sem<->
+      noun<->customer
+      head<->?customer
+      type<->customer
+      id<->107197309
+      sub<->
+            id<->201376901
+            subj<->
+                   head<->?that
+                   type<->Human
+            pred<->Movement
+            dobj<->
+                   noun<->bank
+                   head<->?bank
+                   type<->Bank-FinancialOrganization
+                   id<->106227059
+            adjs<->[]
+Test passed.
+
+Translation = 
+
+(exists 
+  (?salesperson ?bank ?that ?event ?customer) 
+  (and 
+    (patient ?event ?bank) 
+    (instance ?bank Bank-FinancialOrganization) 
+    (agent ?event ?that) 
+    (instance ?that Human) 
+    (instance ?event Movement) 
+    (equal ?customer ?that) 
+    (customer ?customer ?salesperson) 
+    (instance ?salesperson CognitiveAgent) 
+    (instance ?customer CognitiveAgent)))
+
+Speech Act = Assertion
+
+1. Note: interpreted the noun 'customer' using WordNet synset ID 107197309, meaning someone who pays for goods or services.  Maps to SUMO 'customer'.
+
+
+****************
+Test 29, parsing: the customer ' s code that is valid 
+
+Parsed OK:the customer ' s code that is valid 
+syn<->
+      det<->the
+      ncat<->person
+      reply<->[the, code]
+      rel<->no
+sem<->
+      noun<->code
+      head<->?code
+      type<->Text
+      id<->104790774
+      poss<->?customer
+      owner<->107197309
+      sub<->
+            mod<->validation-WN00099890
+            subj<->
+                   head<->?that
+                   type<->Human
+            pred<->isa
+Test passed.
+
+Translation = 
+
+(exists 
+  (?that ?code) 
+  (and 
+    (instance ?code Text) 
+    (possesses ?customer ?code) 
+    (instance ?that Human) 
+    (attribute ?that validation-WN00099890) 
+    (equal ?code ?that)))
+
+Speech Act = Assertion
+
+1. Warning: interpreted the meaning of the noun 'code' as  WordNet word sense #2 of 3 senses, ID 104790774, meaning a coding system used for transmitting messages requiring brevity or secrecy.  Maps to SUMO 'Text'.
+
+
+****************
+Test 30, parsing: the man ' s suit which is old 
+
+Parsed OK:the man ' s suit which is old 
+syn<->
+      det<->the
+      ncat<->object
+      reply<->[the, suit]
+      rel<->no
+sem<->
+      noun<->suit
+      head<->?suit
+      type<->Clothing
+      id<->103438739
+      poss<->?man
+      owner<->107391044
+      sub<->
+            mod<->oldness-WN03854196
+            subj<->
+                   head<->?which
+                   type<->Physical
+            pred<->isa
+Test passed.
+
+Translation = 
+
+(exists 
+  (?which ?suit) 
+  (and 
+    (instance ?suit Clothing) 
+    (possesses ?man ?suit) 
+    (instance ?which Physical) 
+    (attribute ?which oldness-WN03854196) 
+    (equal ?suit ?which)))
+
+Speech Act = Assertion
+
+1. Warning: interpreted the meaning of the noun 'suit' as  WordNet word sense #1 of 5 senses, ID 103438739, meaning a set of garments for outerwear all of the same fabric and color; "they buried him in his best suit".  Maps to SUMO 'Clothing'.
+
+
+****************
+Test 31, parsing: the man ' s suit that is cotton 
+
+Parsed OK:the man ' s suit that is cotton 
+syn<->
+      det<->the
+      ncat<->person
+      reply<->[the, suit]
+      rel<->no
+sem<->
+      noun<->suit
+      head<->?suit
+      type<->Clothing
+      id<->103438739
+      poss<->?man
+      owner<->107391044
+      sub<->
+            id<->201775973
+            subj<->
+                   head<->?that
+                   type<->Human
+            pred<->instance
+            dobj<->
+                   noun<->cotton
+                   head<->?cotton
+                   type<->BodySubstance
+                   id<->110665909
+            adjs<->[]
+Test passed.
+
+Translation = 
+
+(exists 
+  (?cotton ?that ?event ?suit) 
+  (and 
+    (instance ?suit Clothing) 
+    (possesses ?man ?suit) 
+    (patient ?event ?cotton) 
+    (instance ?cotton BodySubstance) 
+    (agent ?event ?that) 
+    (instance ?that Human) 
+    (instance ?event instance) 
+    (equal ?suit ?that)))
+
+Speech Act = Assertion
+
+1. Warning: interpreted the meaning of the noun 'suit' as  WordNet word sense #1 of 5 senses, ID 103438739, meaning a set of garments for outerwear all of the same fabric and color; "they buried him in his best suit".  Maps to SUMO 'Clothing'.
+
+
+****************
+Test 32, parsing: John ' s customer who is Swiss 
+
+Parsed OK:John ' s customer who is Swiss 
+syn<->
+      ncat<->person
+      reply<->[customer]
+      rel<->no
+sem<->
+      noun<->customer
+      head<->?customer
+      type<->customer
+      id<->107197309
+      poss<->John-1
+      sub<->
+            id<->201775973
+            subj<->
+                   head<->?who
+                   type<->Human
+            pred<->instance
+            dobj<->
+                   noun<->Swiss
+                   head<->Swiss
+                   type<->EthnicGroup
+                   id<->107039396
+            adjs<->[]
+Test passed.
+
+Translation = 
+
+(exists 
+  (?salesperson ?who ?event ?customer) 
+  (and 
+    (possesses John-1 ?customer) 
+    (patient ?event Swiss) 
+    (instance Swiss EthnicGroup) 
+    (agent ?event ?who) 
+    (instance ?who Human) 
+    (instance ?event instance) 
+    (equal ?customer ?who) 
+    (customer ?customer ?salesperson) 
+    (instance ?salesperson CognitiveAgent) 
+    (instance ?customer CognitiveAgent)))
+
+Speech Act = Assertion
+
+1. Note: interpreted the noun 'customer' using WordNet synset ID 107197309, meaning someone who pays for goods or services.  Maps to SUMO 'customer'.
+
+
+ Passed 32 tests (100.00 %) and failed 0 tests (0.00 %) tests out of 32 tried.
+

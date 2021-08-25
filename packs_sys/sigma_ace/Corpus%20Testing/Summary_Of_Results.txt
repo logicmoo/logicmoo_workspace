@@ -1,0 +1,29 @@
+--------------------------------------
+
+Date: Sept 1 - 2, 2002
+Version: CELT Version 1.50
+
+Open Mind Corpus
+Attempted to parse 396,127 corpus lines.
+Parsed 6,856 lines ( 1.73076 %) and failed to parse 389,271 lines ( 98.2692 %).
+
+Brown Corpus
+Attempted to parse 51,763 corpus lines.
+Parsed 56 lines ( 0.108185 %) and failed to parse 51,707 lines ( 99.8918 %).
+ 
+--------------------------------------
+
+Date: Oct 5, 2002
+Version: CELT Version 1.60
+
+Open Mind Corpus
+Attempted to parse 120,053 corpus lines.
+Parsed 2,771 lines ( 2.30815 %) and failed to parse 117,281 lines ( 97.6919 %).
+
+Improvement from 1.73076% to 2.30815% (+ 33.36%)
+
+Attempted to parse 51,763 corpus lines.
+Parsed 633 lines ( 1.22288 %) and failed to parse 51,130 lines ( 98.7771 %).
+
+Improvement from 0.108185% to 1.22288% (+ 10.30%)
+

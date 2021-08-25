@@ -1,0 +1,30 @@
+prolog_pred(sym_unify / 4).
+
+begin(prolog).
+sym_unify(A,B,B,A).
+end(prolog).
+
+begin(theory).
+% NAME: symmetric(q)
+% THEORY: [q(Y, X) :- q(X, Y)]
+~q(A, B), q(C,D) -> false | sym_unify(A,B,C,D).
+% NAME_END
+end(theory).
+
+% BEGIN_AXIOMS
+% NAME: transitive(p)
+p(A, C) :- p(A, B), p(B, C).
+
+% NAME: transitive(q)
+q(A, C) :- q(A, B), q(B, C).
+
+% NAME: all_related(p,q)
+p(A, B) ; q(A, B).
+
+% NAME: not_total(p)
+-p(a, b).
+
+% NAME: goal
+?- q(c, d).
+% END_AXIOMS
+

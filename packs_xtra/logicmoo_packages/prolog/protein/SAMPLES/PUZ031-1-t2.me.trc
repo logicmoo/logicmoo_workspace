@@ -1,0 +1,98 @@
+********************    PROTEIN V2.09   ********************
+
+--------------------    input clauses   --------------------
+
+"Clause " No. 1 : [wolf(_49), -> [animal(_49)]]
+"Clause " No. 2 : [not_animal(_82), -> [not_wolf(_82)]]
+"Clause " No. 3 : [fox(_115), -> [animal(_115)]]
+"Clause " No. 4 : [not_animal(_148), -> [not_fox(_148)]]
+"Clause " No. 5 : [bird(_181), -> [animal(_181)]]
+"Clause " No. 6 : [not_animal(_214), -> [not_bird(_214)]]
+"Clause " No. 7 : [snail(_247), -> [animal(_247)]]
+"Clause " No. 8 : [not_animal(_280), -> [not_snail(_280)]]
+"Clause " No. 9 : [not_wolf(a_wolf), -> false]
+"Clause " No. 10 : [not_fox(a_fox), -> false]
+"Clause " No. 11 : [not_bird(a_bird), -> false]
+"Clause " No. 12 : [not_snail(a_snail), -> false]
+"Clause " No. 13 : [not_grain(a_grain), -> false]
+"Clause " No. 14 : [grain(_443), -> [plant(_443)]]
+"Clause " No. 15 : [not_plant(_476), -> [not_grain(_476)]]
+"Clause " No. 16 : [snail(_510), bird(_509), -> [much_smaller(_510, _509)]]
+"Clause " No. 17 : [snail(_550), -> [much_smaller(_550, a_bird)]]
+"Clause " No. 18 : [bird(_584), -> [much_smaller(a_snail, _584)]]
+"Clause " No. 19 : [not_much_smaller(_618, _621), bird(_621), -> [not_snail(_618)]]
+"Clause " No. 20 : [not_much_smaller(_659, a_bird), -> [not_snail(_659)]]
+"Clause " No. 21 : [bird(_694), fox(_693), -> [much_smaller(_694, _693)]]
+"Clause " No. 22 : [bird(_734), -> [much_smaller(_734, a_fox)]]
+"Clause " No. 23 : [fox(_768), -> [much_smaller(a_bird, _768)]]
+"Clause " No. 24 : [not_much_smaller(_802, _805), fox(_805), -> [not_bird(_802)]]
+"Clause " No. 25 : [not_much_smaller(_843, a_fox), -> [not_bird(_843)]]
+"Clause " No. 26 : [fox(_878), wolf(_877), -> [much_smaller(_878, _877)]]
+"Clause " No. 27 : [fox(_918), -> [much_smaller(_918, a_wolf)]]
+"Clause " No. 28 : [wolf(_952), -> [much_smaller(a_fox, _952)]]
+"Clause " No. 29 : [not_much_smaller(_986, _989), wolf(_989), -> [not_fox(_986)]]
+"Clause " No. 30 : [not_much_smaller(_1027, a_wolf), -> [not_fox(_1027)]]
+"Clause " No. 31 : [wolf(_1065), fox(_1064), eats(_1065, _1064), -> false]
+"Clause " No. 32 : [fox(_1105), eats(a_wolf, _1105), -> false]
+"Clause " No. 33 : [wolf(_1139), eats(_1139, a_fox), -> false]
+"Clause " No. 34 : [eats(a_wolf, a_fox), -> false]
+"Clause " No. 35 : [wolf(_1201), grain(_1200), eats(_1201, _1200), -> false]
+"Clause " No. 36 : [grain(_1241), eats(a_wolf, _1241), -> false]
+"Clause " No. 37 : [wolf(_1275), eats(_1275, a_grain), -> false]
+"Clause " No. 38 : [eats(a_wolf, a_grain), -> false]
+"Clause " No. 39 : [bird(_1337), snail(_1336), eats(_1337, _1336), -> false]
+"Clause " No. 40 : [snail(_1377), eats(a_bird, _1377), -> false]
+"Clause " No. 41 : [bird(_1411), eats(_1411, a_snail), -> false]
+"Clause " No. 42 : [eats(a_bird, a_snail), -> false]
+"Clause " No. 43 : [eats(_1471, _1472), eats(_1471, _1470), not_animal(_1471), not_plant(_1472), not_animal(_1470), not_plant(_1469), not_much_smaller(_1470, _1471), not_eats(_1470, _1469)]
+"Clause " No. 44 : [plant(snail_food_of(_1539)), not_snail(_1539)]
+"Clause " No. 45 : [eats(_1568, snail_food_of(_1568)), not_snail(_1568)]
+"Query  " No. 46 : [query, not_animal(_1600), not_animal(_1599), not_grain(_1598), not_eats(_1600, _1599), not_eats(_1599, _1598)]
+"Clause " No. 46 : [not_animal(_1600), not_animal(_1599), not_grain(_1598), not_eats(_1600, _1599), not_eats(_1599, _1598)]
+
+--------------------        flags       --------------------
+
+protein_flag(system, protein).
+protein_flag(ancestry_rme, off).
+protein_flag(ancs, both).
+protein_flag(answers, one).
+protein_flag(answer_set_handling, on).
+protein_flag(calculus, me).
+protein_flag(check_flags, [protein_flag(calculus, hyper)]).
+protein_flag(definite_answers, off).
+protein_flag(delayed_rme, off).
+protein_flag(depth_increment, 1).
+protein_flag(dynamic, off).
+protein_flag(factorisation, cut).
+protein_flag(head_behind_prolog, off).
+protein_flag(mmr, off).
+protein_flag(mode, pl1).
+protein_flag(query_anc, ([], [])).
+protein_flag(query_reuse, on).
+protein_flag(reduction, both).
+protein_flag(regularity, delay).
+protein_flag(search, id_tree).
+protein_flag(selection_function, off).
+protein_flag(sorting, costs).
+protein_flag(strict_rme, off).
+protein_flag(th_nonewclauses, off).
+protein_flag(th_reduction, both).
+protein_flag(th_regularity, delay).
+protein_flag(th_sidelit_anc, off).
+protein_flag(translate, all).
+protein_flag(trace, internal).
+
+
+--------------------     statistics     --------------------
+
+Proof Statistics
+----------------
+Proof Time:  4.17 sec
+Proof Depth: 5
+Extension Steps: 11
+Reduction Steps: 0
+Factoring Steps: 8		(incl. 8 with cut)
+Theory Steps:    32
+Inferences:      30133
+
+--------------------      answers       --------------------

@@ -1,0 +1,2 @@
+module idempotentRing using ring. 
+x * x = x.

@@ -1,0 +1,30 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%
+%  FILE      : IndiGolog/lib/FILES.TXT
+%  Time-stamp: <03/02/22 18:24:43 ssardina>
+%
+%  Author      : Sebastian Sardina
+%  DESCRIPTION : File descriptions of directory
+%  email       : ssardina@cs.toronto.edu
+%  WWW         : www.cs.toronto.edu/~ssardina
+%  TYPE CODE   : <no code>
+%       
+%	c) Sebastian Sardina       Many rights reserved		
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+-----------------------------------------------------------------------------
+	In this directory there are different kind of libraries
+-----------------------------------------------------------------------------
+
+common.pl		Common tools
+eclipse_swi.pl		Eclipse compatibility library for SWI Prolog
+internet.pl		Utilities to work with the internet
+statdebug.pl		Statistics utilities
+streampool.pl		Stream pool library for SWI Prolog
+systemvar.pl		Library of constants
+tools_ecl.pl		Tools for Eclipse Prolog (includes common.pl)
+tools_swi.pl		Tools for SWI Prolog (includes common.pl)
+-----------------------------------------------------------------------------
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% EOF: IndiGolog/lib/FILES.TXT
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

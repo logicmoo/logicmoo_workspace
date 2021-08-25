@@ -1,0 +1,30 @@
+********************    PROTEIN V2.26   ********************
+
+--------------------    input clauses   --------------------
+
+Clause   No.   1 : [p(A, B), not_p(A, C), not_p(C, B)]
+Clause   No.   2 : [q(A, B), not_q(A, C), not_q(C, B)]
+Clause   No.   3 : [q(A, B), not_q(B, A)]
+Clause   No.   4 : [p(A, B), q(A, B)]
+Query    No.   6 : [query, not_q(c, d)]
+Restart  No.   5 : [restart, not_p(a, b)]
+Restart  No.   6 : [restart, not_q(c, d)]
+
+--------------------------- flags --------------------------
+
+calculus - rme
+trace - internal
+
+------------------------ statistics ------------------------
+
+   Static Reorderings:        0
+
+   Proof Time:               17.8 sec
+   Proof Depth:              10
+   Extension Steps:          19
+   Restart Steps:             4
+   Reduction Steps:           6 (incl.   3 with cut)
+   Factoring Steps:           0 (incl.   0 with cut)
+   Inferences:           129386
+
+------------------------- answers --------------------------

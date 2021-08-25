@@ -1,0 +1,58 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%
+% Syntax of the input files of PROTEIN 
+%    
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+input_file  :== { sentence '.' }
+
+sentence    :== ( clause | th_rule ) { '#' costs } |
+                sim_rule                           |
+                'prolog_pred(' pred '/' arity ')'  | % Prolog predicate 
+                                                     % declaration
+                'protein_flag(' flag ',' value ')' | % Flag
+                'read('' file '')'                 | % Including Files 
+                'begin(' environment ')'           | % Start of an environment 
+                'end(' environment ')'               % End of an environment
+
+clause      :== [ head ] ':-' body    |
+                head [ '<-' [ body ]] |
+                '?-' body               % query
+
+th_rule     :== body '->' body [ '|' prolog_predicate ]
+                % theory inference rules must be nested in a theory
+                % environment
+
+sim_rule    :== { body '->' } atom '=' atom |
+                { body '->' } literal { ( '->' | '<->' ) '(' head ')' }
+                % simplification rules must be nested in a simplify environment
+
+head        :== literal { ( ',' | ';' ) literal }
+
+body        :== literal { ',' literal }
+
+literal     :== ( { '-' | '~' } atom ) | 'true' | 'false' | 
+                answer_predicate | prolog_predicate
+                % prolog_predicates must be declared to be prolog_pred.
+
+answer_predicate :== % the predicate protein_answer/1
+
+atom        :== % An atom is a term in Prolog sysntax. Terms you should not
+                % use are listed in section 3.1.1 of the documentation. 
+
+costs       :== number { ',' number }
+
+flag        :== % Flags and values are listed in Table 1 of the documentation 
+value       :== 
+
+environment :== 'theory'   |                             % Theory
+	        'simplify' [ '(' 'm' | 'c' | 'n' ')' ] | % Simplification
+                'prolog'   |                             % Prolog code
+
+file        :== filename with extension
+
+Use '%' for line comments and '/*' ... '*/' to comment regions.
+Some comment standards are described in Section 3.1.8 of the documentation.
+
+Note: In case of syntax errors try the use of additional '(' ')'.
+            

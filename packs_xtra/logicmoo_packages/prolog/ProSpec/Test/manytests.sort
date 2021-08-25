@@ -1,0 +1,34 @@
+begin(prospec).
+
+sorts: (t_list(U), el, set, top).
+
+functions: (	     
+	union:(set,set) => set,
+	cons: (U, t_list(U)) => t_list(U)
+	).
+
+relations: ( '=': (U,U),
+	     in:(el,set),
+	     p:(top,top) ).
+
+end(prospec).
+
+%% geht:
+%%forall(x,exists(y,p(x,y))).
+%%forall(x:top,exists(y:top,p(x,y))).
+
+%% geht NICHT:
+forall(x,forall(y,exists(z,cons(x,y)=z))).
+
+%% geht:
+%%forall([y:set,z:set], ((y=z) <-> forall(u:el,(in(u,y) <-> in(u,z))))).
+
+%% geht NICHT:
+%%forall([y,z], ((y=z) <-> forall(u,(in(u,y) <-> in(u,z))))).
+
+%% geht:
+%%forall(x:U,forall(y:t_list(U),exists(z:t_list(U),cons(x,y)=z))).
+
+%% geht NICHT:
+%%forall(x,forall(y,exists(z,cons(x,y)=z))).
+

@@ -1,0 +1,266 @@
+\documentstyle[german]{article}
+
+\input{layout}
+\input{macros}
+\newcommand{\cand}{\wedge}
+
+\begin{document}
+
+\section{Induktionsbeweise mit CEC}
+
+\subsection{Spezifikationserweiterung}
+
+Um Induktionsbeweise f"uhren zu k"onnen, wird die Spezifikation erweitert.
+\begin{itemize}
+\item F"ur jede Sorte $s$ wird ein Typpr"adikat\footnote{
+      Pr"adikate werden hier als Operatoren kodiert, d.h.\ ein Pr"adikat
+      \preddecl{\pi}{s_1 \times \ldots \times s_n} wird als Operator
+      \opdecl{\pi}{s_1 \times \ldots \times s_n}{\sort{pred}} kodiert, und
+      ein Atom \( \pi(t_1,\ldots,t_n) \) wird zu der Gleichung
+      \( \pi(t_1,\ldots,tn) = \pred{true} \),
+      wobei \sort{pred} eine neue Sorte und 
+      \opdecl{\pred{true}}{}{\sort{pred}} ein neuer Operator ist.
+      }
+      \( \preddecl{\tp{s}}{s} \),
+\item f"ur jede Untersortenbeziehung\footnote{
+      Im CEC wird diese Gleichung f"ur die Injektion
+      erzeugt, die bei der "Ubersetzung der Untersortenbeziehung 
+      in eine many-sorted Spezifikation entsteht.
+      }
+      $s'<s$ wird eine bedingte Gleichung
+      \[ \clause{\tp{s'}(x)}{\tp{s}(x)} \]
+      und
+\item f"ur jeden Operator \opdecl{\omega}{s_1 \times \ldots \times s_n}{s}
+      wird eine Typgleichung
+      \[ \clause{\tp{s_1}(x_1) \cand \ldots \cand \tp{s_n}(x_n)}
+                {\tp{s}(\omega(x_1,\ldots,x_n))}
+      \]
+\end{itemize}
+hinzugef"ugt.
+
+Diese Erweiterung hat die folgenden Eigenschaften:
+\begin{itemize}
+\item Die Erweiterung ist persistent, d.h.\ die G"ultigkeit von Gleichungen
+      in der alten Spezifikation wird nicht ver"andert, und
+\item \( \tp{s}(t) \) ist genau dann beweisbar, wenn $t$ zu einem Grundterm 
+      "aquivalent ist.
+\end{itemize}
+
+
+\subsection{Basissignatur}
+
+In der Spezifikation mu"s eine Teilsignatur angegeben werden, genannt
+Basissignatur, so da"s es zu jedem Grundterm in der urspr"unglichen
+Signatur einen "aquivalenten Grundterm in der Basissignatur gibt. F"ur
+das erzeugte TES mu"s sogar gelten, da"s sich jeder Grundterm auf einen
+Basisgrundterm reduzieren l"a"st, also m"ussen alle Grundnormalformen
+Basisterme sein.
+
+Die Basissignatur wird mit Hilfe von Deklarationen der Form
+\[\rm
+\begin{array}{l@{\;:==\;}l}
+<declaration> & <sort> {\tt generatedBy} <operator>,\ldots,<operator>
+\end{array}
+\]
+angegeben.
+
+Es mu"s zu jeder Sorte eine Obersorte geben, die eine Deklaration
+besitzt.
+\[\rm s \quad{\tt generatedBy}\; \ldots, Op, \ldots \]
+bedeutet, da"s alle Operatordeklarationen f"ur $Op$ mit einer Zielsorte,
+die Untersorte von $s$ ist, in der Basissignatur enthalten sind.
+Im order-sorted Fall kann eine Signatur mehrere Deklarationen f"ur einen
+Operator enthalten. Es ist hier m"oglich, f"ur einen Operator nur einen Teil
+dieser Deklarationen in der Basissignatur zu haben.
+
+Daraus ergibt sich f"ur den reinen many-sorted Fall, da"s es zu jeder
+Sorte genau eine solche Deklaration geben mu"s, und die Operatoren in
+der Basissignatur sind dann genau die in den Deklarationen aufgef"uhrten.
+
+\medskip
+{\bf Beispiel:}
+\begin{verse}\tt
+stack generatedBy empty, push.       \\
+                                     \hfill\\
+nestack < stack.                     \\
+                                     \hfill\\
+op empty : stack.                    \\
+op push : (elem * stack -> nestack). \\
+op top : (nestack -> stack).
+\end{verse}
+Die Basissignatur sieht dann so aus:
+\begin{verse}\tt
+nestack < stack.                     \\
+                                     \hfill\\
+op empty : stack.                    \\
+op push : (elem * stack -> nestack). \\
+\end{verse}
+
+F"ur das erzeugte TES wird gefordert, da"s sich jeder Grundterm auf
+einen Basisgrundterm reduzieren l"a"st.
+Da"s die Forderung erf"ullt wird, wird bei der Vervollst"andigung durch
+eine spezielle Strategie garantiert. Es werden nur Typgleichungen der
+Form
+\[ \clause{\tp{s_1}(x_1) \cand \ldots \cand \tp{s_n}(x_n)}
+          {\tp{s}(\omega(x_1,\ldots,x_n))} \]
+zu Regeln orientiert, deren Operatoren $\omega$ in der Basissignatur
+liegen. Alle anderen Typgleichungen werden nichtoperational. 
+
+{\em Beachte:}
+\( \tp{s}(\omega(x_1,\ldots,x_n)) \)
+ist ein order-sorted Term. In der many-sorted Form k"onnen noch
+Injektionen oberhalb von $\omega$ stehen.
+
+
+\subsection{Induktive Beweise}
+
+Sei \clause{\Gamma}{\varphi} eine bedingte Gleichung, und
+\varsOf{\clause{\Gamma}{\varphi}}=\eset{x_1,\ldots,x_n}
+Definiere
+\[ \tau(\clause{\Gamma}{\varphi}) 
+   \dfeq \clause{\tp{s_1}(x_1) \cand \ldots \cand \tp{s_n}(x_n) \cand \Gamma}
+                {\varphi}
+\]
+
+Eine bedingte Gleichung $C$ ist genau dann im initialen Modell g"ultig,
+wenn $\tau(C)$ im freien Modell g"ultig ist.
+
+{\em Beachte:}
+$C$ ist nicht notwendig in allen minimalen Modellen g"ultig.
+
+Eine bedingte Gleichung $C$ ist genau dann im freien Modell \T{D(X)} einer
+Spezifikation $D$ g"ultig, wenn sich die deduktive Theorie\footnote{
+Die deduktive Theorie einer Menge von bedingten Gleichungen ist die Menge der
+{\em unbedingten} Gleichungen, die sich daraus ableiten lassen.
+}
+von $E$ durch Hinzuf"ugen von $C$ nicht "andert, formal
+
+\[ \T{D(X)} \models C  \iff  \ThOf{E}=\ThOf{\union{D}{\eset{C}}} \]
+
+{\em Beachte:}
+$C$ ist dann nicht notwendig in allen Modellen g"ultig.
+
+Die Bedingung
+\( \ThOf{E}=\ThOf{\union{D}{\eset{C}}} \)
+l"a"st sich mit Hilfe von CEC wie folgt nachweisen:
+\begin{itemize}
+\item $E$ vervollst"andigen. Dann ist \ThOf{E} durch Rewriting entscheidbar.
+\item $C$ als neue Gleichung hinzuf"ugen.
+\item vervollst"andigen, dabei werden alle bedingten Gleichungen nichtoperational
+      gemacht. Treten dabei keine neuen unbedingten Gleichungen auf, so gilt
+      \( \ThOf{E}=\ThOf{\union{D}{\eset{C}}} \),
+      da weiterhin die gleichen Regeln vorhanden sind.
+\item Tritt eine neue unbedingte Gleichung $\varphi$ auf, die nicht durch
+      Rewriting eliminiert werden kann, so gilt
+      \( \ThOf{E} \neq \ThOf{\union{D}{\eset{C}}} \),
+      denn \( \varphi \in \ThOf{\union{E}{\eset{C}}} \),
+      aber \( \varphi \not\in \ThOf{E} \).
+\end{itemize}
+Das Verfahren ist refutationsvollst"andig. Angenommen die
+Vervollst"andigung terminiert nicht. Dann ist die Menge der
+persistenten Regeln $R$ ein vollst"andiges TES f"ur \union{E}{\eset{C}},
+$R$ "andert sich aber nicht, daher gilt
+\( \ThOf{E}=\ThOf{\union{D}{\eset{C}}} \).
+
+
+\subsection{Bedienung}
+
+Um induktive Beweise mit dem CEC-System zu f"uhren sind folgende Schritte
+notwendig.
+\begin{enumerate}
+\item {\em Deklarationen f"ur Basissignatur in der Spezifikation erg"anzen}.
+
+\item {\em Spezifikationserweiterung einschalten}.\hfill\\
+      Dazu das Prolog-Goal
+      \begin{verse}
+         {\tt domainConstraints:==on.}
+      \end{verse}
+      auswerten.
+\item {\em Spezifikation einlesen}.\hfill\\
+      Dabei wird die Spezifikation automatisch um Typisierungsinformationen
+      erweitert.
+
+\item {\em Vervollst"andigen}.\hfill\\
+      Die Gleichungen der urspr"unglichen Spezifikation k"onnen wie zuvor
+      behandelt werden. Die Typgleichungen werden entsprechend der in der
+      Spezifikation angegebenen Basissignatur behandelt. Der Benutzer mu"s
+      bei nichtoperationalen Gleichungen nur noch die Bedingung zum Super-
+      positionieren ausw"ahlen. Ist die Basissignatur nicht korrekt gew"ahlt,
+      tritt eine unbedingte Gleichung auf, die nichtoperational gemacht
+      werden mu"s. Das System ist dann nicht vollst"andig.\footnote{
+      Zur Zeit wird das nicht deutlich angezeigt.}
+
+\item {\em Beweisen}.\hfill\\
+      Es k"onnen mehrere bedingte Gleichungen simultan bewiesen werden.
+      Die Kommandos lauten:
+      \begin{verse}
+        {\tt prove([ $E_1$, $\ldots$, $E_n$]).} \\
+        {\tt prove($E$).}
+      \end{verse}
+      \( E_1, \ldots, E_n,E \) sind bedingte Gleichungen. 
+      F"ur jede Gleichung $E$ wird \( \tau(E) \) zur Spezifikation hinzugef"ugt,
+      dann wird die Vervollst"andigung gestartet.
+      Alle bedingten Gleichungen werden automatisch nichtoperational,
+      der Benutzer mu"s nur noch die Bedingung zum Superpositionieren w"ahlen.
+      Die Wahl einer Bedingung
+        \( \tp{s}(x) \)
+      kann man als Wahl von $x$ als Induktionsvariable betrachten.
+      \begin{itemize}
+      \item Tritt eine unbedingte Gleichung auf, ist dies ein Fehlschlag, die
+            Gleichungen gelten im initialen Modell nicht.
+      \item Terminiert die Vervollst"andigung, sind die Gleichungen
+            \( \tau(E) \) im freien Modell g"ultig. Sie bleiben als 
+            nichtoperationale Gleichungen erhalten und werden bei weiteren
+            Beweisen als Lemmata benutzt.
+      \end{itemize}
+\end{enumerate}
+
+
+\subsection{Spezifikationen aus mehreren Modulen}
+
+Es ist erlaubt, Spezifikationen wie bisher zu erweitern
+oder zu kombinieren.
+Beim Erweitern darf die Basisspezifikation
+nur um solche Operatoren erweitert werden, deren Zielsorte nicht in
+der urspr"unglichen Spezifikation liegt.
+Dadurch wird erzwungen, da"s die Erweiterung der Spezifikation
+hinreichend vollst"andig ist.
+Beim Kombinieren m"ussen die Deklarationen bez"uglich der
+Basissignatur zueinander passen, d.h.\ solche Operatoren, deren
+Zielsorte in beiden Signaturen enthalten ist, m"ussen entweder in
+beiden Basissignaturen oder in keiner enthalten sein.
+
+Induktive Beweise d"urfen erst in der endg"ultigen Spezifikation gef"uhrt
+werden. Sonst besteht die M"oglichkeit, da"s die bein Beweisen hinzugef"ugten
+nichtoperationalen Gleichungen beim vervollst"andigen der Erweiterung
+neue Regeln erzeugen, die die Gleichungstheorie ver"andern.
+
+\medskip
+{\bf Beispiel:} Vervollst"andige
+\begin{verse}\tt
+module test1.            \\
+                         \hfill\\
+nat generatedBy 0,s.     \\
+op 0 : nat.              \\
+op s : (nat -> nat).     \\
+\end{verse}
+
+Beweise die Injektivit"at von {\tt s} im initialen Modell
+\begin{verse}\tt
+prove(s(x)=s(y)=>x=y).
+\end{verse}
+
+Nun vervollst"andige
+\begin{verse}\tt
+module test2 using test1. \\
+                          \hfill\\
+s(s(x))=s(x).             \\
+\end{verse}
+
+Dann wird die neue Gleichung
+\begin{verse}\tt
+s(x)=x
+\end{verse}
+erzeugt, obwohl sie nicht in {\tt test2} gilt.
+
+\end{document}

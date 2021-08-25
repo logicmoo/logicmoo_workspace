@@ -1,0 +1,56 @@
+===========================================================================
+November 4, 2008
+===========================================================================
+
+- A few fixes performed for Stefano Valentini
+	- Change data to be sent not quoted, so that terms can be sent (common.pl)
+	- Fixed bug with closing of sockets; some remainde opened.
+			- This was because close/1 was not macro expanded to eclipse_close/1
+				when used within catch_succ/2
+
+===========================================================================
+March 4, 2008
+===========================================================================
+
+- Added construct atomic(E) to execute E atomically.
+	- if E can make one step, E is put forward as the 1st program to do
+	Obs: if E cannot later advance, the whole program fails!
+	
+- Introduced mfinal/2 and mtrans/4 in transfinal.pl as the top-level
+	meta-level versions of final/2 and trans/4. Now, indigolog.pl uses
+	these meta-level versions. These meta-level versions allow now to
+	manipulate transitions in a more expressive way. As of now, it is
+	only used to accommodate the new construct atomic(E) by moving
+	E as the head of the whole program. 
+
+
+===========================================================================
+February 21, 2008
+===========================================================================
+
+- Added two other construct for concurrency: 
+	(suggested by Andrea & Stefano, from Rome)
+	
+		* rconc(L) : generalizes rconc(E1,E2) to list of programs L
+		* itconc(L): concurrency by iterating on programs in list L
+		
+- Resolved clash between built-in list select/3 and eclipse compatibility
+select/3 predicate for waiting for data on streams. 
+The eclipse version has been renamed to stream_select/3.
+		
+
+
+===========================================================================
+December 19, 2007
+===========================================================================
+
+- Added predicate executable_path(A,P) in lib/system_var.pl which indicates
+the path to different softwares (e.g. swi, xterm). It is used in
+Env/dev_managers.pl to define device managers.
+
+
+
+
+===========================================================================
+EOF: Changelog.txt
+===========================================================================

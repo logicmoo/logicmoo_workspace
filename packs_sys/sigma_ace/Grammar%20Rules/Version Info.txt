@@ -1,0 +1,4 @@
+CELT Version 2(b), Release 1.60. Started September 16, 2002. Entered into CVS on October 4, 2002.
+
+% Copyright © 2002 Teknowledge Corporation
+% This software released under the GNU Public License <http://www.gnu.org/copyleft/gpl.html>.

@@ -1,0 +1,4 @@
+order poly1 for int using poly1 for orderedRing.
+
+constructor(1).
+constructor(0).

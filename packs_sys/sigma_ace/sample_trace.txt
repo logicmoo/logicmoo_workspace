@@ -1,0 +1,440 @@
+----------------------------------
+all blocks are wooden.
+
+s(np(dt(all), n(blocks)), vp(c(are), modifier(m(wooden))))
+
+(implies 
+  (instance ?G636 Block) 
+  (material BlocksWorldWood ?G636))
+
+-->
+
+(implies 
+  (instance ?G1016 Block) 
+  (material BlocksWorldWood ?G1016))
+
+----------------------------------
+
+KIF <-- (implies  (instance ?G1016 Block)  (material BlocksWorldWood ?G1016))
+
+
+----------------------------------
+[Paused, hit a carriage return to continue]----------------------------------
+is there a wooden object on the table?
+
+s(q(is_there), np(dt(a), m(wooden), n(object), pp(prep(on), np(dt(the), n((table))))))
+
+(and 
+  (material BlocksWorldWood skf(_G8125)) 
+  (instance skf(_G8125) Object) 
+  (instance skf(_G8161) Table) 
+  (on skf(_G8125) skf(_G8161)))
+
+-->
+
+(exists 
+  (?G8161) 
+  (and 
+    (material BlocksWorldWood ?G8125) 
+    (instance ?G8125 Object) 
+    (instance ?G8161 Table) 
+    (on ?G8125 ?G8161)))
+
+----------------------------------
+
+KIF <-- (exists  (?G8161)  (and  (material BlocksWorldWood ?G8125)  (instance ?G8125 Object)  (instance ?G8161 Table)  (on ?G8125 ?G8161)))
+
+
+Result = none 
+
+Proof:
+Unproven
+
+
+----------------------------------
+[Paused, hit a carriage return to continue]----------------------------------
+there is a red block on the table.
+
+s(assert(there_is), np(dt(a), m(red), n(block), pp(prep(on), np(dt(the), n((table))))))
+
+(and 
+  (attribute skf(_G16340) Red) 
+  (instance skf(_G16340) Block) 
+  (instance skf(_G16405) Table) 
+  (on skf(_G16340) skf(_G16405)))
+
+-->
+
+(exists 
+  (?G16340) 
+  (exists 
+    (?G16405) 
+    (and 
+      (attribute ?G16340 Red) 
+      (instance ?G16340 Block) 
+      (instance ?G16405 Table) 
+      (on ?G16340 ?G16405))))
+
+----------------------------------
+
+KIF <-- (exists  (?G16340)  (exists  (?G16405)  (and  (attribute ?G16340 Red)  (instance ?G16340 Block)  (instance ?G16405 Table)  (on ?G16340 ?G16405))))
+
+
+----------------------------------
+[Paused, hit a carriage return to continue]----------------------------------
+is there a red block on the table?
+
+s(q(is_there), np(dt(a), m(red), n(block), pp(prep(on), np(dt(the), n((table))))))
+
+(and 
+  (attribute skf(_G37376) Red) 
+  (instance skf(_G37376) Block) 
+  (instance skf(_G37441) Table) 
+  (on skf(_G37376) skf(_G37441)))
+
+-->
+
+(exists 
+  (?G37441) 
+  (and 
+    (attribute ?G37376 Red) 
+    (instance ?G37376 Block) 
+    (instance ?G37441 Table) 
+    (on ?G37376 ?G37441)))
+
+----------------------------------
+
+KIF <-- (exists  (?G37441)  (and  (attribute ?G37376 Red)  (instance ?G37376 Block)  (instance ?G37441 Table)  (on ?G37376 ?G37441)))
+
+
+G37376 = RedBlock1 
+
+Proof:
+
+      (assertion 549471 
+         (attribute RedBlock1 Red)) 
+
+      (assertion 549463 
+         (instance RedBlock1 Block)) 
+
+      (assertion 549464 
+         (instance TheTable1 Table)) 
+
+      (assertion 549465 
+         (on RedBlock1 TheTable1))
+
+
+Result = true 
+
+Proof:
+
+      (found 1)
+
+
+----------------------------------
+[Paused, hit a carriage return to continue]----------------------------------
+all pyramids are green.
+
+s(np(dt(all), n(pyramids)), vp(c(are), modifier(m(green))))
+
+(implies 
+  (instance ?G410 Pyramid) 
+  (attribute ?G410 Green))
+
+-->
+
+(implies 
+  (instance ?G803 Pyramid) 
+  (attribute ?G803 Green))
+
+----------------------------------
+
+KIF <-- (implies  (instance ?G803 Pyramid)  (attribute ?G803 Green))
+
+
+----------------------------------
+[Paused, hit a carriage return to continue]----------------------------------
+is there a green object?
+
+s(q(is_there), np(dt(a), m(green), n(object)))
+
+(and 
+  (attribute skf(_G7027) Green) 
+  (instance skf(_G7027) Object))
+
+-->
+
+(and 
+  (attribute ?G7027 Green) 
+  (instance ?G7027 Object))
+
+----------------------------------
+
+KIF <-- (and  (attribute ?G7027 Green)  (instance ?G7027 Object))
+
+
+G7027 = LargePyramid1 
+
+Proof:
+
+      (assertion 549488 
+         (=> 
+            (instance LargePyramid1 Pyramid) 
+            (attribute LargePyramid1 Green))) 
+
+      (assertion 549466 
+         (instance LargePyramid1 Pyramid)) 
+
+      (assertion 549446 
+         (subclass Pyramid Artifact)) 
+
+      (assertion 548486 
+         (subclass Artifact CorpuscularObject)) 
+
+      (assertion 546015 
+         (subclass CorpuscularObject SelfConnectedObject)) 
+
+      (assertion 545984 
+         (subclass SelfConnectedObject Object)) 
+
+      (assertion 546258 
+         (=> 
+            (instance subclass TransitiveRelation) 
+            (forall (Object ?INST2 Pyramid) 
+               (=> 
+                  (and 
+                     (holds subclass Pyramid ?INST2) 
+                     (holds subclass ?INST2 Object)) 
+                  (holds subclass Pyramid Object))))) 
+
+      (assertion 549466 
+         (instance LargePyramid1 Pyramid))
+
+
+Result = true 
+
+Proof:
+
+      (found 1)
+
+
+----------------------------------
+[Paused, hit a carriage return to continue]----------------------------------
+is there a green object on a block?
+
+s(q(is_there), np(dt(a), m(green), n(object), pp(prep(on), np(dt(a), n(block)))))
+
+(and 
+  (attribute skf(_G10492) Green) 
+  (instance skf(_G10492) Object) 
+  (instance skf(_G10563) Block) 
+  (on skf(_G10492) skf(_G10563)))
+
+-->
+
+(exists 
+  (?G10563) 
+  (and 
+    (attribute ?G10492 Green) 
+    (instance ?G10492 Object) 
+    (instance ?G10563 Block) 
+    (on ?G10492 ?G10563)))
+
+----------------------------------
+
+KIF <-- (exists  (?G10563)  (and  (attribute ?G10492 Green)  (instance ?G10492 Object)  (instance ?G10563 Block)  (on ?G10492 ?G10563)))
+
+
+Result = none 
+
+Proof:
+Unproven
+
+
+----------------------------------
+[Paused, hit a carriage return to continue]----------------------------------
+no pyramid supports a block.
+
+s(np(dt(no), n(pyramid)), vp(v(supports), np(dt(a), n(block))))
+
+(not 
+  (and 
+    (instance skf(_G18523) Pyramid) 
+    (and 
+      (on skf(_G18523) skf(_G18547)) 
+      (instance skf(_G18547) Block))))
+
+-->
+
+(not 
+  (exists 
+    (?G18523) 
+    (and 
+      (instance ?G18523 Pyramid) 
+      (exists 
+        (?G18547) 
+        (and 
+          (on ?G18523 ?G18547) 
+          (instance ?G18547 Block))))))
+
+----------------------------------
+
+KIF <-- (not  (exists  (?G18523)  (and  (instance ?G18523 Pyramid)  (exists  (?G18547)  (and  (on ?G18523 ?G18547)  (instance ?G18547 Block))))))
+
+
+----------------------------------
+[Paused, hit a carriage return to continue]----------------------------------
+there is a blue cone on the table.
+
+s(assert(there_is), np(dt(a), m(blue), n(cone), pp(prep(on), np(dt(the), n((table))))))
+
+(and 
+  (attribute skf(_G36588) Blue) 
+  (instance skf(_G36588) Cone) 
+  (instance skf(_G36656) Table) 
+  (on skf(_G36588) skf(_G36656)))
+
+-->
+
+(exists 
+  (?G36588) 
+  (exists 
+    (?G36656) 
+    (and 
+      (attribute ?G36588 Blue) 
+      (instance ?G36588 Cone) 
+      (instance ?G36656 Table) 
+      (on ?G36588 ?G36656))))
+
+----------------------------------
+
+KIF <-- (exists  (?G36588)  (exists  (?G36656)  (and  (attribute ?G36588 Blue)  (instance ?G36588 Cone)  (instance ?G36656 Table)  (on ?G36588 ?G36656))))
+
+
+----------------------------------
+[Paused, hit a carriage return to continue]----------------------------------
+is there a block on the cone?
+
+s(q(is_there), np(dt(a), n(block), pp(prep(on), np(dt(the), n(cone)))))
+
+(and 
+  (instance skf(_G3421) Block) 
+  (instance skf(_G3446) Cone) 
+  (on skf(_G3421) skf(_G3446)))
+
+-->
+
+(exists 
+  (?G3446) 
+  (and 
+    (instance ?G3421 Block) 
+    (instance ?G3446 Cone) 
+    (on ?G3421 ?G3446)))
+
+----------------------------------
+
+KIF <-- (exists  (?G3446)  (and  (instance ?G3421 Block)  (instance ?G3446 Cone)  (on ?G3421 ?G3446)))
+
+
+Result = none 
+
+Proof:
+Unproven
+
+
+----------------------------------
+[Paused, hit a carriage return to continue]----------------------------------
+there is an orange block on the table.
+
+s(assert(there_is), np(dt(an), m(orange), n(block), pp(prep(on), np(dt(the), n((table))))))
+
+(and 
+  (attribute skf(_G9177) Orange) 
+  (instance skf(_G9177) Block) 
+  (instance skf(_G9251) Table) 
+  (on skf(_G9177) skf(_G9251)))
+
+-->
+
+(exists 
+  (?G9177) 
+  (exists 
+    (?G9251) 
+    (and 
+      (attribute ?G9177 Orange) 
+      (instance ?G9177 Block) 
+      (instance ?G9251 Table) 
+      (on ?G9177 ?G9251))))
+
+----------------------------------
+
+KIF <-- (exists  (?G9177)  (exists  (?G9251)  (and  (attribute ?G9177 Orange)  (instance ?G9177 Block)  (instance ?G9251 Table)  (on ?G9177 ?G9251))))
+
+
+----------------------------------
+[Paused, hit a carriage return to continue]----------------------------------
+is there a tower?
+
+s(q(is_there), np(dt(a), n(tower)))
+
+(instance skf(_G29238) Tower)
+
+-->
+
+(instance ?G29238 Tower)
+
+----------------------------------
+
+KIF <-- (instance ?G29238 Tower)
+
+
+G29238 = Tower1 
+
+Proof:
+
+      (assertion 549477 
+         (instance Tower1 Tower))
+
+
+Result = true 
+
+Proof:
+
+      (found 1)
+
+
+----------------------------------
+[Paused, hit a carriage return to continue]----------------------------------
+is there a tower?
+
+s(q(is_there), np(dt(a), n(tower)))
+
+(instance skf(_G30599) Tower)
+
+-->
+
+(instance ?G30599 Tower)
+
+----------------------------------
+
+KIF <-- (instance ?G30599 Tower)
+
+
+G30599 = Tower1 
+
+Proof:
+
+      (assertion 549477 
+         (instance Tower1 Tower))
+
+
+Result = true 
+
+Proof:
+
+      (found 1)
+
+
+----------------------------------
+[Paused, hit a carriage return to continue]
+Blocks World Test Suite Completed!

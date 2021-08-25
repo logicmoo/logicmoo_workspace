@@ -1,0 +1,9 @@
+order poly1 for intbase using poly1 for natbase.
+
+setInterpretation([ -x 			   : x + 5,
+		    '--int-int'(x)         : x + 5,
+		    '--nzInt-nzInt'(x)     : x + 4,
+		    '$inj-object-int'(x)   : x + 3,
+		    '$inj-int-nat'(x)      : x + 1,
+		    '$inj-nzInt-posint'(x) : x + 1,
+		    '$inj-int-nzInt'(x)    : x + 1]).

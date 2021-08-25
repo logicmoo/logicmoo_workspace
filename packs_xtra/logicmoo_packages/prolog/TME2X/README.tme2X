@@ -1,0 +1,95 @@
+Hi!
+
+TME2X is a little program to convert PROTEIN input files into one of 
+the formats 
+
+	ores		;; M. Kuehns famous LISP prover
+	setheo		;; Even more famous SETHEO prover
+	satchmo		;; Maybe even more famous SATCHMO prover
+	otter		;; Most famous OTTER prover
+	spass		;; C. Weidenbachs also very famous
+			;; superposition prover with sorts
+	tmedomain	;; Converts to domain restricted form, similar
+			;; as is needed for satchmo
+	tmeequax	;; add equality axioms to tme input files
+	tme=		;; dumb replacement of 'equal' by '=', needed
+			;; for Benno's equality transformation
+	                ;; programm (which is suspected to become famous).
+	tmeeqax		;; add equality axioms
+	renamed		;; build in 'semantics' into the clause set
+			;; by renaming the predicates according to an 
+			;; initial interpretation.
+			;; SEE BELOW FOR WHAT THIS MEANS
+
+        ....            ;; and some more. Invoke tme2X without argumemts
+	                ;; to see more options
+
+The programm is run by invoking the shell script 'tme2X'.
+After INSTALLATION, call 'tme2X' to get an idea of how to use.
+
+INSTALLATION:
+	- unpack all files into one single directory. Let <DIR> be
+	  that directory. Obviously, you did this already.
+	- Be sure to have a running Eclipse in your $path.
+	- Edit the shell script tme2X and let TME2XHOME at the beginning
+	  point to <DIR>. 
+	- I recommend to make make a symbolic link from <DIR>/tme2X to 
+	  somewhere in your $path.
+	- Test: call 'tme2X'. Ot should give you usage information.
+                call e.g. 'tme2X setheo MSC006-1' to actually test the
+		conversion.
+
+
+That's it.
+
+The 'renamed' transformation
+----------------------------
+
+This transforms FILE.tme into FILE-renamed.tme .
+FILE.tme should include a line like
+
+	initial_interpretation([p(a,b),q(b,c)]).
+
+where the elements of the list are ground atoms.
+The clauses in FILE.tme are renamed according to this initial 
+interpretation. For instance (see MSC006-1.tme, which is included in 
+the package)
+
+% q_symmetry, hypothesis.
+q(B, A) :- 
+    q(A, B).
+
+becomes
+
+% q_symmetry, hypothesis.
+false :- neg_q(b, c), q(c, b).
+
+q(c, b); neg_q(b, c).
+
+q(B, A) :- 
+	unequal(q(B, A), q(b, c)), 
+	q(A, B), 
+	unequal(q(A, B), 
+	q(b, c)).
+
+What happens here: 
+
+for every clause H :- B and every atom L in 
+H \cup B  see if L unifies with an atom A from the initial interpretation; 
+If so, let \sigma be the MGU, and (1) move L to the other side of the 
+implication as neg_L and add (H :- B)\sigma to the clause; 
+(2) replace H :- L by H :- L, unequal(A,L) (this is the complementary case). 
+
+Thus, your prover should build-in the 'unequal' predicate, which means
+'non-unifiability'. 
+
+The transformation obviously preserves (un)satisfiability but can lead 
+to exponential growth of the clause set; on the other hand, the set of ground 
+isntances of the transformed set which satisfies the constraints is _exactly_
+the same as the set of ground instances of the original clause set.
+
+
+In case of trouble ask
+
+	Peter Baumgartner
+	peter@informatik.uni-koblenz.de

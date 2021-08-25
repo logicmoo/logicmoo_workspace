@@ -1,0 +1,66 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% The three barrels in B^{MV}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%         Change the value of max_lit:        %%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% 8  (=>5, 3) - 7 actions
+%%% 12 (=> 7, 5 standard) - 11 actions
+%%% 16 (=> 9, 7) - 15 actions
+%%% 20 (=> 11, 9)
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% Coded by DFP, 2007
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+max_lit(12).
+
+barrel(M) :- max_lit(N), M is N//2 - 1.
+barrel(M) :- max_lit(N), M is N//2 + 1.
+barrel(N) :- max_lit(N).
+
+%%%%%%%%%%%%%%%%%%%%%
+
+fluent(contains(B),0,B):- barrel(B).
+
+%%%%%%%%%%%%%%%%
+
+action(pour(X,Y)):-  barrel(X),barrel(Y), neq(X,Y).
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+causes(pour(X,Y), contains(X) eq 0,
+        [ Y - contains(Y) geq contains(X)]):-
+        action(pour(X,Y)).
+causes(pour(X,Y), contains(Y) eq contains(Y)^(-1) + contains(X)^(-1),
+        [Y - contains(Y) geq contains(X)]):-
+        action(pour(X,Y)).
+causes(pour(X,Y), contains(Y) eq Y,
+        [Y - contains(Y) lt contains(X)]):-
+        action(pour(X,Y)).
+causes(pour(X,Y), contains(X) eq contains(X)^(-1) - Y + contains(Y)^(-1),
+        [Y - contains(Y) lt contains(X)]):-
+        action(pour(X,Y)).
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+executable(pour(X,Y),[contains(X) gt 0, contains(Y) lt Y ]) :-
+        action(pour(X,Y)).
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+caused([], contains(B) eq B - contains(B1) - contains(B2)) :-
+     max_lit(B), B1 is B//2-1, B2 is B//2+1.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+initially(contains(N) eq  N) :-
+    max_lit(N).
+
+%%%%%%%%%%%%%%%
+
+goal(contains(N) eq M) :- max_lit(N), M is N//2.
+goal(contains(P) eq M) :- max_lit(N), M is N//2, P is M + 1.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+action_cost(pour(X,Y), X ) :- action(pour(X,Y)).
+cost_constraint(plan leq 170).

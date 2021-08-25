@@ -1,0 +1,71 @@
+order(poly1 for sets) using poly1 for equality+poly1 for boolTriv+'poly1.p'for commSemiGroup.
+setInterpretation(delete(x,y) : 2 * x * y
+).
+setInterpretation(member(x,y) : 2 * x * y
+).
+setInterpretation(++(x,y) : x + y + 1
+).
+setInterpretation(0 : 2
+).
+setInterpretation(false : 2
+).
+setInterpretation(true : 2
+).
+setInterpretation(==(x,y) : x + y
+).
+setInterpretation(\==(x,y) : 2 * x + 2 * y
+).
+
+constructor('true-bool').
+constructor('false-bool').
+constructor('0-set').
+
+
+
+
+
+
+/* ordering of the literals is ms for
+/*	m:elem,n:elem |- n==m = m==n */
+action(status(ms),'$equation'([],['==-bool-elem-elem'(@'n-elem',@'m-elem')='==-bool-elem-elem'(@'m-elem',@'n-elem')])).
+
+/* ordering of the literals is ms for
+/*	m:elem,n:elem |- n\==m = m\==n */
+action(status(ms),'$equation'([],['\==-bool-elem-elem'(@'n-elem',@'m-elem')='\==-bool-elem-elem'(@'m-elem',@'n-elem')])).
+
+/* declare as nonoperational :
+/*	m:elem,n:elem |- n==m = true => n = m */
+action(orient(n),'$equation'(['==-bool-elem-elem'(@'n-elem',@'m-elem')='true-bool'],[@'n-elem'= @'m-elem'])).
+
+/* condition number 1 is the selected condition for
+/*	m:elem,n:elem |- n==m = true => n = m */
+action(selectcondition(1),'$equation'(['==-bool-elem-elem'(@'n-elem',@'m-elem')='true-bool'],[@'n-elem'= @'m-elem'])).
+
+/* ordering of the literals is ms for
+/*	m:elem,n:elem |- n==m = true => n = m */
+action(status(ms),'$equation'(['==-bool-elem-elem'(@'n-elem',@'m-elem')='true-bool'],[@'n-elem'= @'m-elem'])).
+
+/* ordering of the literals is ms for
+/*	x:set,y:set |- x++y = y++x */
+action(status(ms),'$equation'([],['++-set-set-set'(@'x-set',@'y-set')='++-set-set-set'(@'y-set',@'x-set')])).
+
+/* ordering of the literals is ms for
+/*	x:set,y:set,z:set |- x++y++z = x++ (y++z) */
+action(status(ms),'$equation'([],['++-set-set-set'('++-set-set-set'(@'x-set',@'y-set'),@'z-set')='++-set-set-set'(@'x-set','++-set-set-set'(@'y-set',@'z-set'))])).
+
+/* condition number 1 is the selected condition for
+/*	X1:elem,X2:elem |- X1 = X2 => X1 = X2 */
+action(selectcondition(1),'$equation'(['$inj-set-elem'(@'X1-elem')='$inj-set-elem'(@'X2-elem')],[@'X1-elem'= @'X2-elem'])).
+
+/* declare as nonoperational :
+/*	e:elem,s:set,t:set |- member(e,s++t) = false => member(e,s) = false */
+action(orient(n),'$equation'(['member-bool-elem-set'(@'e-elem','++-set-set-set'(@'s-set',@'t-set'))='false-bool'],['member-bool-elem-set'(@'e-elem',@'s-set')='false-bool'])).
+
+/* condition number 1 is the selected condition for
+/*	e:elem,s:set,t:set |- member(e,s++t) = false => member(e,s) = false */
+action(selectcondition(1),'$equation'(['member-bool-elem-set'(@'e-elem','++-set-set-set'(@'s-set',@'t-set'))='false-bool'],['member-bool-elem-set'(@'e-elem',@'s-set')='false-bool'])).
+
+/* ordering of the literals is ms for
+/*	e:elem,s:set,t:set |- member(e,s++t) = false => member(e,s) = false */
+action(status(ms),'$equation'(['member-bool-elem-set'(@'e-elem','++-set-set-set'(@'s-set',@'t-set'))='false-bool'],['member-bool-elem-set'(@'e-elem',@'s-set')='false-bool'])).
+

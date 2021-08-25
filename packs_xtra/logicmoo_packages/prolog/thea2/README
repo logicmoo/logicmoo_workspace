@@ -1,0 +1,183 @@
+---+ Thea2 : Prolog Modules for OWL2
+
+A collection of modules for parsing and manipulating OWL2 ontologies
+in Prolog. It is developed with SWI-Prolog in mind, but the goal is to
+maximize portability with other prologs, such as Yap and XSB.
+
+This documentation is intended to be read via pldoc
+
+---++ Installation
+
+See INSTALL.txt
+
+You can bypass installation and use the 'thea' script directly. See
+below.
+
+---++ Overview
+
+The module owl2_io.pl provides a means of loading and saving OWL2
+axioms in a prolog model using predicates such as load_axioms/3 and
+save_axioms/3. For example =|load_axioms('pizza.owl').|=
+
+The model is documented in owl2_model.pl, and is based on Structural
+Specification and Functional-Style Syntax for OWL2
+(http://www.w3.org/TR/owl2-syntax). Predicate names such as
+subClassOf2/, equivalent_to/2 and class/1 can be used to query an
+in-memory prolog database.
+
+For example:
+
+==
+:- use_module(library(thea2/owl2_io)).
+:- use_module(library(thea2/owl2_model)).
+
+show_superclasses(OntFile,Class) :-
+        load_axioms(OntFile),
+        forall(subClassOf(Class,Super),
+               writeln(Super)).
+==
+
+The database can be manipulated via assert_axiom/2 and
+retract_axiom/2. For more advanced OWL pattern matching and
+replacement, see owl2_popl.pl
+
+The Semantic Web Rule Language (SWRL) is also supported via swrl.pl
+
+A number of different reasoners can be used - the module
+owl2_reasoner.pl provides predicates such as reasoner_ask/2, which can
+be used to query over an entailed knowledge base. A variety of
+reasoners can be plugged in, both native prolog and non-prolog (the
+latter accessed seamlessly via either owl2_owllink.pl or
+owl2_java_owlapi.pl).
+
+---++ Command Line Usage
+
+The script "thea" in the bin directory should work from anywhere, with
+no installation of thea modules required.
+
+Type
+
+==
+thea --help
+==
+
+for full instructions. Many complex operations can be chained on the
+command line.
+
+See also the other wrapper scripts in the bin directory
+
+See Command_Line_Usage.txt for more details
+
+---++ Further Reading
+
+ * Cookbook.txt - a collection of recipes for various tasks
+ * Reasoning_using_Thea.txt - how to use reasoners
+
+See also the apps/ directory for example applications.
+
+---++ Module Manifest
+
+ * owl2_io.pl -- reading/writing OWL from different sources, including:
+  * owl2_from_rdf.pl -- requires library(semweb)
+  * owl2_export_rdf.pl -- requires library(semweb)
+  * owl2_xml.pl -- support for OWL-XML
+  * owl2_manchester_paser.pl -- incomplete support for Manchester syntax
+  * owl2_plsyn.pl -- infix prolog syntax for OWL
+ * owl2_model.pl -- definition of prolog predicates used to embed OWL
+ * swrl.pl
+  * swrl_rdf_hooks.pl -- allows SWRL to be parsed by owl2_from_rdf.pl
+ * owl2_reasoner.pl -- pluggable reasoner framework
+  * owl2_rl_rules.pl
+  * owl2_graph_reasoner.pl
+ * owl2_java_owlapi.pl (requires JPL)
+ * owl2_owllink.pl
+ * owl2_util.pl -- misc utilities
+ * owl2_popl.pl -- prolog ontology processing language
+ * owl2_metamodel.pl -- information about OWL axiom types
+
+---++ Reasoning support
+
+The DLP subset of OWL2-DL can be translated to logic programs using a
+transormation defined by Grosof. See owl2_to_prolog_dlp.pl
+
+The resulting programs can be used with Prologs such as Yap and
+XSB. There are also hooks for answer set programming and disjunctive
+datalog systems such as DLV.
+
+There is also a very partial TBox reasoner in owl2_reasoner.pl, and an
+ad-hoc reasoner in owl2_basic_reasoner.pl that can be used with a
+non-tabled prolog such as SWI; however, this gives incomplete results.
+
+The DIG interface from Thea1 has yet to be converted. However, as we
+now have OWLLink support, and DIG is being retired in favor of OWLLink.
+
+You can also use java reasoners via the OWLAPI bridge. See
+owl2_owlapi_java.pl
+
+For more information see Reasoning_using_Thea.txt
+
+---++ Relationship to SWI-Prolog SemWeb Library
+
+Currently we use rdf_db.pl to translate from OWL RDF-XML to OWL
+axioms. This 'consumes' the triples in the RDF database. Eventually we
+would like a dynamic view over an RDF database, although this will be
+difficult due to the non-monotonic nature of the mapping between RDF
+and OWL.
+
+---+++ On namespaces
+
+Currently all IRIs are treated as Prolog atoms. This makes for
+slightly verbose axioms, especially if long URLs are used.
+
+One possible future option is to use the semweb library and
+rdf_register_ns/2 to allow for convenient specification of namespaces
+using a QName-like mechanism. This is not currently
+implemented. Comments welcome.
+
+One possibility is to simply rewrite the ontology using more compact
+atoms. Even though the OWL spec dictates that well-formed IRIs should
+be used, Thea allows you to use any unique atom to identify an
+entity. See remove_namespaces/0 in owl2_util.pl for details. Of course,
+care must be taken when doing this.
+
+---++ Prolog Compatibility
+
+The goal is to keep the core ISO compliant and usable across prolog
+systems but this is difficult due to the different implementations of
+modules in different Prolog engines. We develop for SWI-Prolog and are
+aiming for full support for Yap in the near future.
+
+See the iso/ directory for a dynamically generated version of some
+Thea modules, stripped of module declarations. This is usable in
+no-module systems like GNU Prolog and systems with incompatible module
+syntax such as XSB. Only a subset of Thea functionality will be
+available here, as SWI/Yap specific libraries are used for RDF, XML
+and Java interaction.
+
+---++ Sample Applications
+
+See the apps/ director
+
+---+++ Web interface
+
+There is the beginnings of a primitive web front end:
+
+* apps/webthea/webthea.pl
+
+---+++ Obol - label parsing and generation
+
+* apps/labelgen/labelgen.pl
+
+---+++ MIREOT - selective migration of referenced classes into an ontology
+
+* apps/mireot/mireot.pl
+
+---++ Authors
+
+This module is a continuation of Thea1, developed by VV.
+
+Some of the code was developed by CJM
+
+Contributions from:
+
+* Martin Güther

@@ -1,0 +1,23 @@
+module sets using
+	equality + boolTriv + 
+	commSemiGroup(elem <- set, (+) <- (++)) .
+op(++, 500, yfx) : (set * set -> set) .
+op member : (elem * set -> bool) .
+op delete : (set * elem -> set) .
+elem < set .
+var [s : set, t : set, r : set, e : elem, f : elem] .
+s ++ s = s .
+
+member(e, 0) = false .
+member(e, e) = true.
+(e == f) = false 		=> member(e,f) = false.
+member(e, s) = true => member(e, s ++ t) = true .
+member(e, s) = false and member(e, t) = false => member(e, s ++ t) = false .
+member(e, s ++ t) = false 						 => member(e, s) = false .
+
+delete(0, e) = 0 .
+delete(e, e) = 0 .
+(e == f) = false => delete(e, f) = e .
+delete(s ++ t, e) = delete(s, e) ++ delete(t, e) .
+
+% Warning: will take a little while to complete (450 sec. on a Sun 3/260).

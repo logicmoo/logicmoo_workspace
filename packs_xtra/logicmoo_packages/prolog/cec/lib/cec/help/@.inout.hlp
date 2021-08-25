@@ -1,0 +1,14 @@
+
+Input and Output of Specifications
+----------------------------------
+
+CEC has a number  of different I/O-commands.  There are  two commands ("in" and
+"enrich")  for reading  in original  specifications  from a  file, two commands 
+("freeze", "thaw") for saving and  restoring partially completed specifications
+to/from files,  and two commands ("store" and "load")  for saving and restoring 
+specifications to/from internal  variables. Also, the commands  for  saving and
+restoring the whole prolog state, "save" and "restore", can be used. But notice
+that  saving of CEC states (prolog states) usually  generates very large files.
+Conventions concerning  the allowed file  and variable  names are those  of the
+underlying prolog system. Reading specifications from standard input (keyboard,
+terminal) is possible by using the predefined file name "user".

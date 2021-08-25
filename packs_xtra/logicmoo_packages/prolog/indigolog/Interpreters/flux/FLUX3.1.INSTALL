@@ -1,0 +1,17 @@
+Installation
+============
+
+The file 'flux.pl' contains the FLUX kernel.  The file 'fluent.chr'
+contains the constraint handling rules for FLUX.  Put both files in a
+directory, where ECLiPSe Prolog can find them.  Hence, either copy both
+files in the same directory as where your application program resides,
+or set the search path appropriately using the environment variable
+ECLIPSELIBRARYPATH.
+
+Then start eclipse and load 'flux.pl' before you use the FLUX system in
+your program.
+
+Mind that the command ":- chr('fluent')." produces the file 'fluent.pl',
+hence make sure it can be written.
+
+Happy FLUX'ing.

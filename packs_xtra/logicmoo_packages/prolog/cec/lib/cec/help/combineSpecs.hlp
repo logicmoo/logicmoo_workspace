@@ -1,0 +1,11 @@
+ 
+"combineSpecs(+StateName1, +StateName2, +CombinedSpec)."
+
+The specifications  stored (-> store) in specification variables
+"StateName1" and "StateName2" will  be combined, if possible, by forming
+the union of the signature, axioms and pragmas.
+If "CombinedSpec" =\= 'user', the result will be stored in
+"CombinedSpec", and the current specification will not be affected.
+Otherwise, the combined specification becomes the new current
+specification.
+

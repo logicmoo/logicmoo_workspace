@@ -1,0 +1,6 @@
+(forall (x t)
+        (if (and (exists_at x t)
+                 (forall (z)
+                         (if (overlaps z x t)
+                             (overlaps y x t))))
+            (part_of x y t)))

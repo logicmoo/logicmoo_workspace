@@ -1,0 +1,6 @@
+order poly1 for totalOrder using poly1 for object.
+
+setInterpretation([=<(x,y) : x + y + 5,
+		   >(x,y)  : x + y + 6,
+		   '=<-bool-elem-elem'(x,y) : x + y + 5,
+		   '>-bool-elem-elem'(x,y) : x + y + 6]).

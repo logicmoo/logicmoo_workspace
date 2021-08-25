@@ -1,0 +1,35 @@
+
+trc(query, info(129386, query, 6, 1), [
+   trc(q(c, d), info(129386, ext, 2, 1), [
+      trc(q(c, b), info(129305, ext, 3, 1), [
+         trc(q(b, c), info(129305, ext, 2, 1), [
+            trc(q(b, a), info(129294, ext, 3, 1), [
+               trc(q(a, b), info(129294, ext, 4, 2), [
+                  trc(not_p(a, b), info(129294, restart, 0, 1), [
+                     trc(restart, info(129294, query, 5, 1), [
+                        trc(p(a, b), info(129294, red, 1, 0), [])])])])]),
+            trc(q(a, c), info(129305, ext, 3, 1), [
+               trc(q(c, a), info(129305, ext, 4, 2), [
+                  trc(not_p(c, a), info(129305, restart, 0, 1), [
+                     trc(restart, info(129305, query, 5, 1), [
+                        trc(p(a, b), info(129305, ext, 1, 1), [
+                           trc(p(a, c), info(129303, ext, 4, 1), [
+                              trc(not_q(a, c), info(129303, red, 5, 0), [])]),
+                           trc(p(c, b), info(129305, ext, 4, 1), [
+                              trc(not_q(c, b), info(129305, red_cut, 7, 0), [])])])])])])])])]),
+      trc(q(b, d), info(129386, ext, 3, 1), [
+         trc(q(d, b), info(129386, ext, 2, 1), [
+            trc(q(d, a), info(129380, ext, 3, 1), [
+               trc(q(a, d), info(129380, ext, 4, 2), [
+                  trc(not_p(a, d), info(129380, restart, 0, 1), [
+                     trc(restart, info(129380, query, 5, 1), [
+                        trc(p(a, b), info(129380, ext, 1, 1), [
+                           trc(p(a, d), info(129378, red, 1, 0), []),
+                           trc(p(d, b), info(129380, ext, 4, 1), [
+                              trc(not_q(d, b), info(129380, red_cut, 6, 0), [])])])])])])]),
+            trc(q(a, b), info(129386, ext, 3, 1), [
+               trc(q(b, a), info(129386, ext, 4, 2), [
+                  trc(not_p(b, a), info(129386, restart, 0, 1), [
+                     trc(restart, info(129386, query, 5, 1), [
+                        trc(p(a, b), info(129386, ext, 4, 1), [
+                           trc(not_q(a, b), info(129386, red_cut, 4, 0), [])])])])])])])])])]).

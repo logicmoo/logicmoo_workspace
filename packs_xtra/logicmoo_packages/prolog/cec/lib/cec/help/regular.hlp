@@ -1,0 +1,11 @@
+
+"regular."
+
+succeeds if the current (order-sorted) signature is regular,
+and fails otherwise.
+The regularity condition is the one of Goguen/Meseguer 87.
+
+A signature is regular, iff for every function symbol
+f and every string w of sorts the set
+   { (w',t) | there is a declaration f:w' -> t such that w=<w' }
+is either empty or has a minimal element.

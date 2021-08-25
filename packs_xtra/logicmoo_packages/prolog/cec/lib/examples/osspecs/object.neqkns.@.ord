@@ -1,0 +1,45 @@
+order(neqkns for object).
+greater([['$r-ms','$inj-object-bool']]).
+greater([['$r',\== /2]]).
+greater([['$r-ms','\==-bool-object-object']]).
+greater([['\==-bool-object-object','$inj-object-bool']]).
+greater([['$r',== /2]]).
+greater([['$r-ms','==-bool-object-object']]).
+greater([['==-bool-object-object','$inj-object-bool']]).
+greater([['$neq4-ms','$r-ms']]).
+greater([['$neq4','$r']]).
+greater([[\== /2,== /2]]).
+status(['$r':ms]).
+status(['$r-ms':ms]).
+status(['$inj-object-bool':ms]).
+status(['==-bool-object-object':ms]).
+status([== :ms]).
+status(['\==-bool-object-object':ms]).
+status([\== :ms]).
+status(['$neq4-ms':lr]).
+status(['$neq4':lr]).
+
+constructor('true-bool').
+constructor('false-bool').
+
+
+
+
+
+
+/* ordering of the literals is ms for
+/*	x:object==y:object = y:object==x:object */
+action(status(ms),'$equation'([],['==-bool-object-object'(@'x-object',@'y-object')='==-bool-object-object'(@'y-object',@'x-object')])).
+
+/* ordering of the literals is ms for
+/*	x:object\==y:object = y:object\==x:object */
+action(status(ms),'$equation'([],['\==-bool-object-object'(@'x-object',@'y-object')='\==-bool-object-object'(@'y-object',@'x-object')])).
+
+/* declare as nonoperational :
+/*	x:object==y:object = true => x:object = y:object */
+action(orient(n),'$equation'(['==-bool-object-object'(@'x-object',@'y-object')='true-bool'],[@'x-object'= @'y-object'])).
+
+/* ordering of the literals is [0,1] for
+/*	x:object==y:object = true => x:object = y:object */
+action(status([0,1]),'$equation'(['==-bool-object-object'(@'x-object',@'y-object')='true-bool'],[@'x-object'= @'y-object'])).
+

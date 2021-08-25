@@ -1,0 +1,8 @@
+module totalOrder.
+
+op (=<) : (elem * elem -> bool) .
+
+(x =< x) = true .
+(x =< y) = false => (y =< x) = true .
+(x =< y) = true and (y =< z) = true => (x =< z) = true .
+(x =< y) = true and (y =< x) = true => x = y .

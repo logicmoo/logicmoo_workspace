@@ -1,0 +1,5 @@
+ 
+"init."
+
+resets all definitions in the current ordering and turns all rules back into
+equations.

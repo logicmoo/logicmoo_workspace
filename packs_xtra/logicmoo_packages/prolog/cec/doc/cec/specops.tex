@@ -1,0 +1,66 @@
+\section{Operations on Specifications}
+\label{OperationsOnSpecifications}
+
+The specification building operators \kw{+} and \kw{rename} in 
+module expressions can also be invoked interactively.
+%As CEC is planned to be an experimental system for specification (program) development
+%it offers several operations for combining specifications. The operations include the
+%renaming of operator and sort names as well as the union of two specifications.
+
+With these primitive operations more complex ones, such as passing actual parameters to
+specification modules can be derived, cf. chapter \ref{exampleSession}.
+%The parameter passing is
+%demonstrated by the example of sorted lists over an arbitrary ordered set, that is
+%replaced by the set of natural numbers \\
+%(\refArrow file \file{cec/KBMANUAL/combining\_example} in this distribution).
+
+\subsection{Renaming of Operator and Sort Names}
+
+\begin{command}[\com{renameSpec}{\kw{[}\comArg{OldSort1} \kw{<-} \comArg{NewSort1}, \ldots , 
+\comArg{OldSortN} \kw{<-} \comArg{NewSortN},\\ \hspace*{6.2em}
+\comArg{OldOperator1} \kw{<-} \comArg{NewOperator1}, \ldots , 
+\comArg{OldOperatorM} \kw{<-} \comArg{NewOperatorM}\/\kw{]}}]
+renames the current specification according to the given lists of sort associations
+and operator associations. Only injective renamings of operators are allowed.
+Sorts may be renamed arbitrarily. Sorts and operators which are not mentioned remain 
+unchanged.
+\end{command}
+
+%The system tries to carry over the  previous termination proof to the renamed
+%specification. This is not always possible, as the collapsing of previously distinct
+%operator symbols might not be compatible with precedences or abstract interpretations.
+%In such a case, all rules will be turned back into equations.
+
+
+\subsection{Combining of Specifications}
+
+The combine operator forms the union of two specifications if they can be combined, 
+that is if their termination orderings can proved to be compatible. If so, the two orderings
+are combined. \cec{kns} and \cec{poly}\nt{N} are assumed to be incompatible.\bigskip
+
+\begin{command}[\com{combineSpecs}{\comArg{StateName1}\ad\comArg{StateName2}\ad\comArg{CombinedSpec}}]
+The specifications  stored (\refArrow \comRef{store}) 
+in specification variables \comArg{StateName1} and \comArg{StateName2}
+will  be combined, if possible, by forming
+the union of the signature, axioms and pragmas.
+If \comArg{CombinedSpec} $\neq$ \cec{user}, the result will be stored in
+\comArg{CombinedSpec}, and the current specification will not be affected.
+Otherwise, the combined specification becomes the new current
+specification.
+\comRef{combineSpecs} requires the compatibility of the termination
+orderings of the involved specifications:
+\begin{itemize}
+\item
+Termination orderings of the same type may be combinable, also \kw{kns} together with
+\kw{neqkns}, yields \kw{kns} for the combined specification.
+In the case of \kw{kns} and \kw{neqkns} 
+the combination fails if the operator precedences are contradictory,
+e.g.\ $f > g$ in the first specification but $g \geq f$ in the second 
+specifcation. Also, different stati for operators are not compatible.
+\item
+\kw{poly}\nt{N} and \kw{poly}\nt{M} can be combined 
+into \kw{poly}\nt{N} if $N \geq M$. In addition, operators 
+which occur in both operand specifications must have
+the same interpretation polynomials in the first M components.
+\end{itemize}
+\end{command}

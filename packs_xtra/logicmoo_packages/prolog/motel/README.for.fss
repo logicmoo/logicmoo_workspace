@@ -1,0 +1,15 @@
+The following files are contained in fss.tar:
+- fss.sb-one
+  This is the originial fss file for SB-ONE
+- fss.lisp
+  This is a file that can be loaded in Lucid Lisp. It load the
+  interface to the MOTEL system, starts the MOTEL system, and
+  sends the knowledge base fss to MOTEL.
+- fss.load.kb
+  This is the translation of fss.sb-one into MOTEL syntax.
+- fss.save.kb
+  This is what you get if you save the knowledge base fss.
+- fss.env
+  This is what you get if you save the environment fssEnv.
+
+

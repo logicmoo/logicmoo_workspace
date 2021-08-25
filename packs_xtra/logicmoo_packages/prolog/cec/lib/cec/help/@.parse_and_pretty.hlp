@@ -1,0 +1,59 @@
+
+Clauses for parse/2 and pretty/1
+--------------------------------
+
+The definition  of a predicate parse/2  allows the user to define its own term
+notation. If parse/2 fails, standard Prolog term notation is assumed.
+parse(Term, ParsedTerm)  should map  the Term to  its standard  representation
+ParsedTerm  as assumed by the system.  This representation is the usual Prolog
+representation  formed  from  the  operator  symbols  in  the  signature.  The 
+auxiliary operator  '@/1' is used  to denote variables  in the term. (The term 
+must not contain any Prolog variables!)
+
+Upon pretty printing of terms  the system tries to call pretty(Term) (for each
+subterm).  If this succeeds,  the system assumes  that the (sub-)term has been
+printed. Otherwise, print(Term) is called.
+
+If auxiliary predicates for the definition of parse or pretty are needed these
+can be given as facts of the predicate 'predicate'.
+
+If a  specification  is combined  from several parts,  the clauses  for parse,
+pretty,  and predicate of the specification parts are put together.  Note that
+upon renaming of specifications parse and pretty  might no longer work as they
+should.
+
+Example (to and from decimal notation of natural numbers):
+
+parse(0,0).
+parse(I,s(T)) :-
+        integer(I), I > 0, !, succ(IM1,I), parse(IM1,T).
+parse(I,p(T)) :-
+        integer(I), I < 0, !, succ(I,I1), parse(I1,T).
+
+pretty(s(X)) :-
+        predicate(fromUnary(s(X),N)), write(N).
+pretty(p(X)) :-
+        predicate(fromUnary(p(X),N)), write(N).
+
+predicate(fromUnary(X,_)) :-
+        var(X), !, fail.
+predicate(fromUnary(0,0)).
+predicate(fromUnary(s(X),N1)) :-
+        predicate(fromUnary(X,N)), N1 is N+1.
+predicate(fromUnary(p(X),N1)) :-
+        predicate(fromUnary(X,N)), N1 is N-1.
+
+
+
+****  WARNING: ****
+
+	1. If calls to  parse or pretty do not terminate,
+	   the system does not  terminate when reading or
+	   printing terms!
+	2. The order of  the clauses of  parse and pretty
+	   should be irrelevant as the system may permute
+	   it upon combining parts of specifications!
+
+	In case of  nontermination of  parse  or  pretty  one 
+	can execute "abolish(parse/2)" or "abolish(pretty/1)"
+	to delete the corresponding clauses.

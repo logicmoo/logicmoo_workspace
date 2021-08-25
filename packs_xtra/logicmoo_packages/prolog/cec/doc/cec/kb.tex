@@ -1,0 +1,150 @@
+\documentstyle[11pt,prospectra,openbib]{article}
+%\documentstyle[11pt,prospectra,openbib,adbgerman]{article}
+
+\include{layout}
+\include{macros}
+
+\begin{document}
+
+\title{
+{\bf CEC}\\
+A System to Support Modular Order-Sorted Specifications
+with Conditional Equations\\
+User Manual (Version 1.5)}
+\author{
+Hubert Bertling\\
+Harald Ganzinger\\
+Renate Sch\"afers}
+
+\prospectrano{M.1.3--R--18.0}
+\prospectradist{public}
+
+\maketitle
+
+\begin{abstract}
+{\bf CEC} is a rewrite rule laboratory for order-sorted specifications
+with conditional equations. The major module of CEC is a powerful
+completion procedure for conditional equations. This manual describes its 
+use assuming the user to be familiar with basic notions in
+conditional term rewriting.
+\end{abstract}
+
+\setcounter{page}{1}
+\pagenumbering{roman}
+\tableofcontents
+
+\newpage
+
+\setcounter{page}{1}
+\pagenumbering{arabic}
+
+
+\input{intro}   % --.4.89
+\input{example}
+\input{syntax}   % --.4.89
+\input{inout}   % 2.5.89
+\input{display}  % 16.3.89
+\input{specops}   % 2.5.89
+\input{completion}  % 16.3.89
+\input{computing}   % 2.5.89
+
+\input{commands} % 15.3.89
+
+
+\newpage
+
+\bibliography{lit}
+\bibliographystyle{mhshort}
+\newpage
+
+\appendix
+\section{PREDEFINED OPERATORS OF CEC}
+\label{PredefinedOperators}
+\begin{center}
+\begin{tabular}{|lrrcc|} \hline
+CEC operators & priority & fix & reserved & changable \\ \hline
+\cec{=>} & 950 & xfx & + & - \\
+\cec{=} & 700 & xfx & + & - \\
+\cec{:} & 600 & xfy & + & - \\
+\cec{and} & 850 & fy & + & - \\
+\cec{@} & 50 & fx & + & - \\ \hline
+\cec{->} & 1050 & xfy & - & - \\ 
+\cec{cons}, \cec{op} & 950 & fx & - & - \\
+\cec{in} & 935 & xfy & - & - \\
+\cec{let} & 910 & fy & - & - \\
+\cec{var} & 1100 & fx & - & - \\
+\cec{<} & 700 & xfx & - & - \\
+\cec{using} & 600 & xfx & - & - \\
+\cec{module}, \cec{order} & 500 & fx & - & - \\
+\cec{+} & 500 & yfx & - & - \\
+\cec{for} & 400 & xfx & - & - \\
+\cec{*} & 400 & yfx & - & - \\ \hline
+\cec{:-}, \cec{-->} & 1200 & xfx & - & + \\
+\cec{:-}, \cec{?-}  & 1200 & fx  & - & + \\
+\cec{public}, \cec{multifile}, \cec{mode}, \cec{meta_predicate}, \cec{dynamic} & 1150 & fx & - & + \\
+\cec{;}             & 1100 & xfy & - & + \\
+\cec{,}             & 1000 & xfy & - & + \\
+\cec{spy}, \cec{nospy}, \cec{\+} & 900 & fy & - & + \\
+\cec{not} & 900 & fx & - & + \\
+\cec{is}, \cec{=..}, \cec{==}, \cec{\==}, 
+\cec{@<}, \cec{@>}, \cec{@=<}, \cec{@>=}, \cec{=:=}, \cec{=\=},
+\cec{>}, \cec{=<}, \cec{>=} & 700 & xfx & - & + \\
+\cec{-}, \cec{/\}, \cec{\/} & 500 & yfx & - & + \\
+\cec{|} & 500 & xfy & - & + \\
+\cec{-} & 500 & fx & - & + \\
+\cec{/}, \cec{//}, \cec{<<}, \cec{>>} & 400 & yfx & - & + \\
+\cec{mod} & 300 & xfx & - & + \\
+\cec{^} & 200 & xfy & - & + \\ 
+\cec{?} & 200 & fx & - & + \\
+\hline
+\end{tabular}
+\end{center}
+
+If an operator is {\em reserved}, it cannot me used in any signature. If 
+an operator is not {\em changable}, it can be used in a signature, but 
+its priority and fix may not be changed. 
+
+\section{INSTALLATION OF CEC}
+The CEC distribution tape contains one tar file, which
+includes the CEC-System. The size of the CEC sources is about 763 kbytes, the whole system needs
+about  7657 kbytes.
+To install CEC execute the following steps:\bigskip
+
+\noindent
+Create a directory ``\cec{cec}'' where you want to file in CEC, 
+and use the tar-command to read the tar file.
+
+\noindent
+Then change to the directory ``\cec{cec/obj/cec}'' and correct
+the value of environment variables\bigskip
+
+\cec{PROSPECTRA}
+
+\cec{QPROLOG}\bigskip
+
+\noindent
+in the file ``\cec{Makefile}'' before calling\bigskip
+
+{\bf make cec}\bigskip
+
+\noindent
+After successful creation of a executable \cec{cec} call\bigskip
+
+{\bf make clean}
+
+{\bf make install}\bigskip
+
+\noindent
+to complete the installation of CEC.\bigskip
+
+\noindent
+The executable file is located in the directory ``\cec{cec/bin}'' and
+you can work with CEC as specified in the user manual, e.g. \bigskip
+
+\verb+| ?-+ {\bf cd 'demo/cec/math'.}
+
+\verb+| ?-+ {\bf in(abelianGroup,poly1).}
+
+\verb+| ?-+ {\bf c.}
+
+\end{document}

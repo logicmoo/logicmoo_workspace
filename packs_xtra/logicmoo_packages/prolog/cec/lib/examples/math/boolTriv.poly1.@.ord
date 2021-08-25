@@ -1,0 +1,16 @@
+order(poly1 for boolTriv).
+setInterpretation(false : 2
+).
+setInterpretation(true : 2
+).
+
+constructor('true-bool').
+constructor('true-bool').
+constructor('false-bool').
+constructor('false-bool').
+
+
+
+
+
+

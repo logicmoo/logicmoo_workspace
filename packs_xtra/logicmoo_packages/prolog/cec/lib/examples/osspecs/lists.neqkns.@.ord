@@ -1,0 +1,106 @@
+order(neqkns for lists).
+greater([['$r-ms','$inj-object-bool']]).
+greater([['$r',\==]]).
+greater([['$r-ms','\==-bool-object-object']]).
+greater([['\==-bool-object-object','$inj-object-bool']]).
+greater([['$r',==]]).
+greater([['$r-ms','==-bool-object-object']]).
+greater([['==-bool-object-object','$inj-object-bool']]).
+greater([['$r-ms','$inj-list-nelist']]).
+greater([['==-bool-object-object','$inj-list-nelist']]).
+greater([['\==-bool-object-object','$inj-list-nelist']]).
+greater([['$r-ms','$inj-object-list']]).
+greater([['==-bool-object-object','$inj-object-list']]).
+greater([['\==-bool-object-object','$inj-object-list']]).
+greater([['$r','.']]).
+greater([['$r-ms','.-nelist-elem-list']]).
+greater([['.-nelist-elem-list','$inj-object-bool']]).
+greater([['.-nelist-elem-list','$inj-list-nelist']]).
+greater([['.-nelist-elem-list','$inj-object-list']]).
+greater([['$r',tail]]).
+greater([['$r-ms','tail-list-nelist']]).
+greater([['tail-list-nelist','$inj-object-bool']]).
+greater([['tail-list-nelist','$inj-list-nelist']]).
+greater([['tail-list-nelist','$inj-object-list']]).
+greater([['$r',first]]).
+greater([['$r-ms','first-elem-nelist']]).
+greater([['first-elem-nelist','$inj-object-bool']]).
+greater([['first-elem-nelist','$inj-list-nelist']]).
+greater([['first-elem-nelist','$inj-object-list']]).
+greater([['$r',append]]).
+greater([['$r-ms','append-list-list-list']]).
+greater([['append-list-list-list','$inj-object-bool']]).
+greater([['append-list-list-list','$inj-list-nelist']]).
+greater([['append-list-list-list','$inj-object-list']]).
+greater([['$r-ms','append-nelist-nelist-list']]).
+greater([['append-nelist-nelist-list','$inj-object-bool']]).
+greater([['append-nelist-nelist-list','$inj-list-nelist']]).
+greater([['append-nelist-nelist-list','$inj-object-list']]).
+greater([['$r-ms','append-nelist-list-nelist']]).
+greater([['append-nelist-list-nelist','$inj-object-bool']]).
+greater([['append-nelist-list-nelist','$inj-list-nelist']]).
+greater([['append-nelist-list-nelist','$inj-object-list']]).
+greater([['$r-ms','append-nelist-nelist-nelist']]).
+greater([['append-nelist-nelist-nelist','$inj-object-bool']]).
+greater([['append-nelist-nelist-nelist','$inj-list-nelist']]).
+greater([['append-nelist-nelist-nelist','$inj-object-list']]).
+greater([['$r',rev]]).
+greater([['$r-ms','rev-list-list']]).
+greater([['rev-list-list','$inj-object-bool']]).
+greater([['rev-list-list','$inj-list-nelist']]).
+greater([['rev-list-list','$inj-object-list']]).
+greater([['$r-ms','$inj-nelist-elem']]).
+greater([['==-bool-object-object','$inj-nelist-elem']]).
+greater([['\==-bool-object-object','$inj-nelist-elem']]).
+greater([['.-nelist-elem-list','$inj-nelist-elem']]).
+greater([['tail-list-nelist','$inj-nelist-elem']]).
+greater([['first-elem-nelist','$inj-nelist-elem']]).
+greater([['append-list-list-list','$inj-nelist-elem']]).
+greater([['append-nelist-nelist-list','$inj-nelist-elem']]).
+greater([['append-nelist-list-nelist','$inj-nelist-elem']]).
+greater([['append-nelist-nelist-nelist','$inj-nelist-elem']]).
+greater([['rev-list-list','$inj-nelist-elem']]).
+greater([['append-list-list-list','append-nelist-list-nelist']]).
+greater([['append-nelist-nelist-list','append-nelist-list-nelist']]).
+greater([['append-list-list-list','append-nelist-nelist-list']]).
+greater([['append-nelist-list-nelist','append-nelist-nelist-nelist']]).
+greater([[append,'.']]).
+greater([[rev,append]]).
+greater([[\==,==]]).
+greater([['append-nelist-nelist-list','append-nelist-nelist-nelist']]).
+status(['$r':ms]).
+status(['$r-ms':ms]).
+status(['$inj-object-bool':ms]).
+status(['==-bool-object-object':ms]).
+status([== :ms]).
+status(['\==-bool-object-object':ms]).
+status([\== :ms]).
+status(['$inj-list-nelist':ms]).
+status(['$inj-object-list':ms]).
+status(['$inj-nelist-elem':ms]).
+
+constructor('true-bool').
+constructor('false-bool').
+constructor('[]-list').
+
+
+
+
+
+
+/* ordering of the literals is ms for
+/*	x:object==y:object = y:object==x:object */
+action(status(ms),'$equation'([],['==-bool-object-object'(@'x-object',@'y-object')='==-bool-object-object'(@'y-object',@'x-object')])).
+
+/* ordering of the literals is ms for
+/*	x:object\==y:object = y:object\==x:object */
+action(status(ms),'$equation'([],['\==-bool-object-object'(@'x-object',@'y-object')='\==-bool-object-object'(@'y-object',@'x-object')])).
+
+/* declare as nonoperational :
+/*	x:object==y:object = true => x:object = y:object */
+action(orient(n),'$equation'(['==-bool-object-object'(@'x-object',@'y-object')='true-bool'],[@'x-object'= @'y-object'])).
+
+/* ordering of the literals is ms for
+/*	x:object==y:object = true => x:object = y:object */
+action(status(ms),'$equation'(['==-bool-object-object'(@'x-object',@'y-object')='true-bool'],[@'x-object'= @'y-object'])).
+

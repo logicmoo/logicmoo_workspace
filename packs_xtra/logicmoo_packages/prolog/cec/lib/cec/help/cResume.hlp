@@ -1,0 +1,5 @@
+
+"cResume."
+
+restarts the completion procedure after the completion process was
+aborted by answering "A." to some query of the system.

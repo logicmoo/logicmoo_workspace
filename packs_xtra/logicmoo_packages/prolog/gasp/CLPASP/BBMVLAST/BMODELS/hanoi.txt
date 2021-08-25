@@ -1,0 +1,121 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% problem "hanoi"
+%%% From ASP competition 2009
+%%% http://dtai.cs.kuleuven.be/events/ASP-competition/Benchmarks/TowerHanoi.shtml
+%%% By Gayathri Namasivayam, Miroslaw Truszczynski and Giorgio Terracina
+%%% Encoded in B by DFP, June 2010
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% Instances from here:
+%%% http://dtai.cs.kuleuven.be/events/ASP-competition/encodings.shtml
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%% Input format from website (example)
+%%% The first three disks are the pegs.
+%%% Therefore we added predicate "movabledisk"
+%%% on(X,Y) means that Y is on X (read in reverse order)
+
+% steps(3).
+% time(0). time(1). time(2). time(3).
+% disk(1). disk(2). disk(3). disk(4). disk(5). disk(6).
+% on0(1,4). on0(2,5). on0(5,6).
+% ongoal(3,4). ongoal(4,5). ongoal(1,6).
+
+movabledisk(Y) :- disk(Y), Y > 3.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%% Fluents
+
+fluent(on(X,Y)) :-  disk(X), movabledisk(Y), X < Y.
+fluent(clear(X)) :- disk(X).
+
+%%%%%
+
+action(move(X,Y)):- movabledisk(X), disk(Y), X > Y.
+
+%%%%%
+
+executable(move(X,Y),[clear(X),clear(Y)]) :-
+        action(move(X,Y)).
+
+causes(move(X,Y),clear(Z),[on(Z,X)]):-
+       action(move(X,Y)), fluent(on(Z,X)).
+causes(move(X,Y),on(Y,X),[]):- action(move(X,Y)).
+
+%%%%%% Static Laws
+
+caused([on(Y,X)],neg(on(Z,X))) :-
+       fluent(on(Y,X)), fluent(on(Z,X)), diff(Y,Z).
+caused([on(Y,X)],neg(clear(Y))) :- fluent(on(Y,X)).
+caused([clear(X)],neg(on(X,Y))) :- fluent(on(X,Y)).
+
+%% initial and final state automatically retrieved from input
+
+initially(on(X,Y)) :- on0(X,Y).
+initially(clear(X)) :- disk(X), \+ on0(X,_).
+goal(on(X,Y)) :- ongoal(X,Y).
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% INSTANCE msg_towers-hanoi.30_7
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+steps(30).
+time(0).
+time(1).
+time(2).
+time(3).
+time(4).
+time(5).
+time(6).
+time(7).
+time(8).
+time(9).
+time(10).
+time(11).
+time(12).
+time(13).
+time(14).
+time(15).
+time(16).
+time(17).
+time(18).
+time(19).
+time(20).
+time(21).
+time(22).
+time(23).
+time(24).
+time(25).
+time(26).
+time(27).
+time(28).
+time(29).
+time(30).
+
+disk(1).
+disk(2).
+disk(3).
+disk(4).
+disk(5).
+disk(6).
+disk(7).
+disk(8).
+disk(9).
+disk(10).
+
+on0(1,4).
+on0(4,5).
+on0(5,6).
+on0(2,7).
+on0(7,8).
+on0(8,9).
+on0(9,10).
+
+ongoal(1,4).
+ongoal(4,7).
+ongoal(7,8).
+ongoal(2,5).
+ongoal(5,10).
+ongoal(3,6).
+ongoal(6,9).
+
+%%%%%%%%%%

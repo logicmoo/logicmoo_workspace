@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ResponseMessage xmlns="http://www.owllink.org/owllink#"
+                 xmlns:owl="http://www.w3.org/2002/07/owl#">
+  <KB kb="http://owllink.org/examples/KB_1"/>
+  <ClassHierarchy>
+    <ClassSynset>
+      <owl:Class abbreviatedIRI="owl:Nothing"/>
+    </ClassSynset>
+  </ClassHierarchy>
+  <KBError error="KB http://owllink.org/examples/KB_2 already exists, request denied"/>
+  <OK/>
+  <KBError error="KB http://owllink.org/examples/KB_3 already exists, request denied"/>
+  <OK/>
+  <KB kb="http://owllink.org/examples/KB_4"/>
+  <OK/>
+  <ClassHierarchy>
+    <ClassSynset>
+      <owl:Class abbreviatedIRI="owl:Nothing"/>
+    </ClassSynset>
+    <ClassSubClassesPair>
+      <ClassSynset>
+        <owl:Class abbreviatedIRI="owl:Thing"/>
+      </ClassSynset>
+      <SubClassSynsets>
+        <ClassSynset>
+          <owl:Class IRI="B"/>
+        </ClassSynset>
+      </SubClassSynsets>
+    </ClassSubClassesPair>
+    <ClassSubClassesPair>
+      <ClassSynset>
+        <owl:Class IRI="B"/>
+      </ClassSynset>
+      <SubClassSynsets>
+        <ClassSynset>
+          <owl:Class IRI="A"/>
+        </ClassSynset>
+      </SubClassSynsets>
+    </ClassSubClassesPair>
+  </ClassHierarchy>
+  <ClassHierarchy>
+    <ClassSynset>
+      <owl:Class abbreviatedIRI="owl:Nothing"/>
+    </ClassSynset>
+    <ClassSubClassesPair>
+      <ClassSynset>
+        <owl:Class abbreviatedIRI="owl:Thing"/>
+      </ClassSynset>
+      <SubClassSynsets>
+        <ClassSynset>
+          <owl:Class abbreviatedIRI="test::ClassA"/>
+        </ClassSynset>
+        <ClassSynset>
+          <owl:Class IRI="A"/>
+        </ClassSynset>
+      </SubClassSynsets>
+    </ClassSubClassesPair>
+    <ClassSubClassesPair>
+      <ClassSynset>
+        <owl:Class abbreviatedIRI="test::ClassA"/>
+      </ClassSynset>
+      <SubClassSynsets>
+        <ClassSynset>
+          <owl:Class abbreviatedIRI="ont::ClassA"/>
+        </ClassSynset>
+      </SubClassSynsets>
+    </ClassSubClassesPair>
+    <ClassSubClassesPair>
+      <ClassSynset>
+        <owl:Class IRI="A"/>
+      </ClassSynset>
+      <SubClassSynsets>
+        <ClassSynset>
+          <owl:Class IRI="D"/>
+        </ClassSynset>
+        <ClassSynset>
+          <owl:Class IRI="B"/>
+        </ClassSynset>
+      </SubClassSynsets>
+    </ClassSubClassesPair>
+  </ClassHierarchy>
+  <ClassHierarchy>
+    <ClassSynset>
+      <owl:Class abbreviatedIRI="owl:Nothing"/>
+    </ClassSynset>
+    <ClassSubClassesPair>
+      <ClassSynset>
+        <owl:Class abbreviatedIRI="owl:Thing"/>
+        <owl:Class IRI="A"/>
+      </ClassSynset>
+      <SubClassSynsets>
+        <ClassSynset>
+          <owl:Class abbreviatedIRI="owl:NoThing"/>
+          <owl:Class IRI="C"/>
+        </ClassSynset>
+      </SubClassSynsets>
+    </ClassSubClassesPair>
+    <ClassSubClassesPair>
+      <ClassSynset>
+        <owl:Class abbreviatedIRI="owl:NoThing"/>
+        <owl:Class IRI="C"/>
+      </ClassSynset>
+      <SubClassSynsets>
+        <ClassSynset>
+          <owl:Class IRI="B"/>
+        </ClassSynset>
+      </SubClassSynsets>
+    </ClassSubClassesPair>
+  </ClassHierarchy>
+  <OK/>
+  <OK/>
+  <OK/>
+  <OK/>
+</ResponseMessage>

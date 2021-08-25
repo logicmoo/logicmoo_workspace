@@ -1,0 +1,58 @@
+ILF-SERV
+
+ILF_STATE
+# general settings
+# Format: Key Value
+
+proof_title "A non-obvious problem"
+# proof_author ""
+# abstract ""
+# pre_text ""
+# post_text ""
+
+END_ILF_STATE
+
+SIGNATURE
+# Prolog operator declarations
+# Format: Operator Associativity Precedence(0-1200)
+
+END_SIGNATURE
+
+TEXOP
+# declarations for the LaTeX output
+# Format: Type(struct,op) Precedence(0-1200) Declared :- Declaration
+
+# general interest:
+struct _ p :- "\\sigma".
+struct _ q :- "\\rho".
+struct _ sum :- "$ addition $".
+struct _ product :- "$ multiplication $".
+struct _ transitive(X) :- "$ the transitivity of $",z(X).
+struct _ symmetric(X) :- "$ the symmetry of $",z(X).
+struct _ associative(X) :- "$ the associativity of $",z(X).
+struct _ distributive(X,Y) :- "$ the distributivity of $",z(X),"$ and $",z(Y).
+struct _ neutral(X) :- "$ the identity with respect to $",z(X).
+struct _ inverse(X) :- "$ the existence of inverse elements with respect to $",
+                       z(X).
+struct _ total(X) :- "$ the totality of $",z(X).
+struct _ not_total(X) :- z(X), "$ is not total $".
+struct _ all_related(X,Y) :- "$ any two things are either related in the $",
+                              z(X),"$ or in the $", z(Y),"$ manner $".
+struct _ transitive_symmetric(X) :- 
+	"$ the transitivity and symmetry of $",z(X).
+
+# steamroller
+struct _ isa(X,Y) :- z(X), "$ is a $", z(Y).
+struct _ existsa(X,Y) :- z(X), "$ named $", z(Y).
+
+# set theory
+struct _ set_equal :- "$ the equality of sets $".
+struct _ intersects(X,Y) :- z(X), "$ intersects $", z(Y).
+
+END_TEXOP
+
+SYSTEM protein
+
+# input file
+FILE .tree
+END_FILE 

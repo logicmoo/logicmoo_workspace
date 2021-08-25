@@ -1,0 +1,83 @@
+:- lc_flag(max_level, 3).
+
+% wolf_is_an_animal, axiom.
+animal(X) :- 
+    wolf(X).
+
+% fox_is_an_animal, axiom.
+animal(X) :- 
+    fox(X).
+
+% bird_is_an_animal, axiom.
+animal(X) :- 
+    bird(X).
+
+% caterpillar_is_an_animal, axiom.
+animal(X) :- 
+    caterpillar(X).
+
+% snail_is_an_animal, axiom.
+animal(X) :- 
+    snail(X).
+
+% there_is_a_wolf, axiom.
+wolf(a_wolf).
+
+% there_is_a_fox, axiom.
+fox(a_fox).
+
+% there_is_a_bird, axiom.
+bird(a_bird).
+
+% there_is_a_caterpillar, axiom.
+caterpillar(a_caterpillar).
+
+% there_is_a_snail, axiom.
+snail(a_snail).
+
+% there_is_a_grain, axiom.
+grain(a_grain).
+
+% grain_is_a_plant, axiom.
+plant(X) :- 
+    grain(X).
+
+% caterpillar_smaller_than_bird, axiom.
+much_smaller(Catapillar, Bird) :- 
+    caterpillar(Catapillar), 
+    bird(Bird).
+
+% snail_smaller_than_bird, axiom.
+much_smaller(Snail, Bird) :- 
+    snail(Snail), 
+    bird(Bird).
+
+% bird_smaller_than_fox, axiom.
+much_smaller(Bird, Fox) :- 
+    bird(Bird), 
+    fox(Fox).
+
+% fox_smaller_than_wolf, axiom.
+much_smaller(Fox, Wolf) :- 
+    fox(Fox), 
+    wolf(Wolf).
+
+% wolf_dont_eat_fox, axiom.
+false :- wolf(Wolf), 
+    fox(Fox), 
+    eats(Wolf, Fox).
+
+% wolf_dont_eat_grain, axiom.
+false :- wolf(Wolf), 
+    grain(Grain), 
+    eats(Wolf, Grain).
+
+% bird_eats_caterpillar, axiom.
+eats(Bird, Catapillar) :- 
+    bird(Bird), 
+    caterpillar(Catapillar).
+
+% bird_dont_eat_snail, axiom.
+false :- bird(Bird), 
+    snail(Snail), 
+    eats(Bird, Snail).

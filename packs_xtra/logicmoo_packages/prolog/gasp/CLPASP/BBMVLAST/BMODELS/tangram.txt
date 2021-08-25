@@ -1,0 +1,403 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%% The game "TANGRAM" represented as an
+%%%% action description in the language B
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%% by DFP, JULY 28th 2010 / updated January 15th 2011
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% Goal :-sicsplan(7).
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% Eg with figure 2 (big square)
+%%% Constraints in ~75s, solution in .6s
+%%% with figure 1 (big triangle)
+%%% Constraints in ~73s, solution in 1s
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%% The instance (figure) to be obtained is set here
+%%% See code below for figure coordinates
+
+instance(1). %%% intance 1 .. 8
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% 7 blocks for Tangram
+%%% Blocks description: One point is in (0,0).
+%%% The block is described using the other points
+%%% size_block(<ID>, <SIDES>, POINT2, POINT3, ...).
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+blk(X):- interval(X,1,7).
+
+size_block(1,3, 4,0,2,2). %%% Large triangle
+size_block(2,3, 4,0,2,2). %%% Large triangle
+size_block(3,3, 2,0,0,2). %%% Medium triangle
+size_block(4,3, 2,0,1,1). %%% Small triangle
+size_block(5,3, 2,0,1,1). %%% Small triangle
+size_block(6,4, 1,-1, 2,0,1,1). %%% Square
+size_block(7,4, 1,1,1,3,0,2).   %%% Trapezium
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% The board is xboard x yborad
+%%% There are 4 triangles in a 1 x 1 square
+%%% Eight angles are available (multiply by 45)
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+xboard(8).   yboard(6).
+
+point(X,Y):-
+   xboard(Xsize),  yboard(Ysize),
+   interval(X,0,Xsize),
+   interval(Y,0,Ysize).
+
+triangles(T) :-
+   xboard(Xsize),  yboard(Ysize),
+   N is Xsize*Ysize*4-1,
+   interval(T,0,N).
+
+angle(X) :- interval(X,0,7).
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%
+%  ACTION DESCRIPTION
+%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%% neg triangle(X) means free,
+%%% triangle(X) means covered by (at least) one block
+%%% toomany(X) means covered by more than one block
+%%% (used to block inconsistencies)
+
+fluent(triangle_covered(X)) :-      triangles(X).
+fluent(toomany(X)) :- triangles(X).
+fluent(placed(X)) :-     blk(X).
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+action(put(B,X,Y,ANG)) :-
+    blk(B),
+    point(X,Y), angle(ANG),
+    instance(INST),
+    block_in_figure(B,X,Y,ANG,INST).
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% The blocks are inserted in order (avoid symmetries)
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+executable(put(1,X,Y,ANG),[neg(placed(1))]) :-
+   action(put(1,X,Y,ANG)).
+executable(put(B,X,Y,ANG),[neg(placed(B)), placed(B1)]) :-
+   action(put(B,X,Y,ANG)),
+   B > 1, B1 is B - 1.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+causes(put(B,X,Y,ANG), placed(B),[]) :-
+   action(put(B,X,Y,ANG)).
+
+causes(put(B,X,Y,ANG), triangle_covered(T),[]) :-
+   action(put(B,X,Y,ANG)),
+   triangles(T),
+   triangle_in_blk(B,X,Y,ANG,T).
+
+causes(put(B,X,Y,ANG), toomany(T),[triangle_covered(T)]) :-
+   action(put(B,X,Y,ANG)),
+   triangles(T),
+   triangle_in_blk(B,X,Y,ANG,T).
+
+%%%% Initial State %%%
+
+initially(neg(triangle_covered(T))) :-
+   triangles(T).
+initially(neg(toomany(T))) :-
+   triangles(T).
+initially(neg(placed(B))) :-
+  blk(B).
+
+%%%% Final State %%%
+
+goal(placed(B)) :-
+   blk(B).
+goal(neg(toomany(T))) :-
+   triangles(T).
+goal(triangle_covered(T)) :-
+   triangles(T),
+   triangle_in_figure(T).
+goal(neg(triangle_covered(T))) :-
+   triangles(T),
+   \+ triangle_in_figure(T).
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%    END of the ACTION DESCRIPTION     %%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%  AUXILIARY PREDICATES    %%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%%% epsilon is introduced to recover approximation
+%%%% errors introduced, eg, by trigonometric functions
+
+epsilon(0.01).
+
+%%%%
+
+triangle_in_blk(B,X,Y,ANG,T) :-
+   triangle_vertices(T,X1,Y1,X2,Y2,X3,Y3),
+   in_picture(B,X,Y,ANG,X1,Y1),
+   in_picture(B,X,Y,ANG,X2,Y2),
+   in_picture(B,X,Y,ANG,X3,Y3).
+
+triangle_vertices(T,X1,Y1,X2,Y2,X3,Y3) :-
+    xboard(Xsize),
+    J is T // (Xsize*4),
+    I is (T mod (Xsize*4)) // 4,
+    P is T mod 4,
+    (P = 0 -> ( X1 = I, Y1 = J,
+                X2 = I, Y2 is J+1);
+     P = 1 -> ( X1 = I, Y1 = J,
+                X2 is I+1, Y2 = J);
+     P = 2 -> ( X1 is I+1,  Y1 = J,
+                X2 is I+1,  Y2 is J+1);
+     P = 3 -> ( X1 = I,    Y1 is J+1,
+                X2 is I+1, Y2 is J+1)),
+     X3 is I+0.5, Y3 is J+0.5.
+
+%%%%%% (X4,Y4) is inside the block B
+%%%%%% if placed in X0,Y0 with angle ANG
+%%%%%% Internally, values can be float
+
+in_picture(B,X0,Y0,ANG,X4,Y4) :-
+    size_block(B,3,X1,Y1,X2,Y2),
+    shift_rotate(X0,Y0,X1,Y1,ANG,X1n,Y1n),
+    shift_rotate(X0,Y0,X2,Y2,ANG,X2n,Y2n),
+    internal(X4,Y4,X0,Y0,X1n,Y1n,X2n,Y2n).
+
+in_picture(B,X0,Y0,ANG,X4,Y4) :-
+    size_block(B,4,X1,Y1,X2,Y2,X3,Y3),
+    shift_rotate(X0,Y0,X1,Y1,ANG,X1n,Y1n),
+    shift_rotate(X0,Y0,X2,Y2,ANG,X2n,Y2n),
+    shift_rotate(X0,Y0,X3,Y3,ANG,X3n,Y3n),
+    internal(X4,Y4,X0,Y0,X1n,Y1n,X2n,Y2n,X3n,Y3n).
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% internal of a quadrilaterer is split in two parts
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+internal(X4,Y4,X0,Y0,X1n,Y1n,X2n,Y2n,_X3n,_Y3n) :-
+     internal(X4,Y4,X0,Y0,X1n,Y1n,X2n,Y2n).
+internal(X4,Y4,X0,Y0,_X1n,_Y1n,X2n,Y2n,X3n,Y3n) :-
+     internal(X4,Y4,X0,Y0,X2n,Y2n,X3n,Y3n).
+internal(X,Y,X0,Y0,X1,Y1,X2,Y2):-
+    same_side_bis(X,Y,X0,Y0,X1,Y1,X2,Y2),
+    same_side_bis(X,Y,X1,Y1,X2,Y2,X0,Y0),
+    same_side_bis(X,Y,X2,Y2,X0,Y0,X1,Y1).
+
+%%% same_side (_bis)
+%%% Test if (X0,Y0) and (X1,Y1) are in the same half-space
+%%% identified by the vector V(A,B)
+
+same_side_bis(X0,Y0, X1,Y1, XA,YA, XB,YB) :-
+    DX0 is XB-XA,    DY0 is YB-YA, %%% vector V(A,B)
+    DX1 is X1-XA,    DY1 is Y1-YA, %%% vector V(A,P1)
+    DX2 is X0-XA,    DY2 is Y0-YA, %%% vector V(A,P0)
+    CZ is DX0*DY1 - DX1*DY0, %%% cross_product [DX0,DY0,0], [DX1,DY1,0]
+    DZ is DX0*DY2 - DX2*DY0, %%% cross_product [DX0,DY0,0], [DX2,DY2,0]
+    epsilon(Eps),
+    CZ*DZ >= -Eps. %%% same_side of the vector - dot product
+
+%%% block_in_figure(B,X,Y,ANG,INST)
+%%% all points of the block B, if placed in
+%%% (X,Y) with angle ANG are inside the figure INST.
+%%% Slow, but called once in the constraint stage.
+
+block_in_figure(B,X0,Y0,ANG,INST) :-
+    size_block(B,3,X1,Y1,X2,Y2),
+    shift_rotate(X0,Y0,X1,Y1,ANG,X1n,Y1n),
+    shift_rotate(X0,Y0,X2,Y2,ANG,X2n,Y2n),
+    point_in_fig(INST,X0,Y0),
+    almost_integer(X0,Y0),      %%% almost_integer is added
+    point_in_fig(INST,X1n,Y1n), %%% to avoid rotations that "cut"
+    almost_integer(X1n,Y1n),    %%% triangles (new!)
+    point_in_fig(INST,X2n,Y2n),
+    almost_integer(X2n,Y2n).
+
+block_in_figure(B,X0,Y0,ANG,INST) :-
+    size_block(B,4,X1,Y1,X2,Y2,X3,Y3),
+    shift_rotate(X0,Y0,X1,Y1,ANG,X1n,Y1n),
+    shift_rotate(X0,Y0,X2,Y2,ANG,X2n,Y2n),
+    shift_rotate(X0,Y0,X3,Y3,ANG,X3n,Y3n),
+    point_in_fig(INST,X0,Y0),
+    almost_integer(X0,Y0),
+    point_in_fig(INST,X1n,Y1n),
+    almost_integer(X1n,Y1n),
+    point_in_fig(INST,X2n,Y2n),
+    almost_integer(X2n,Y2n),
+    point_in_fig(INST,X3n,Y3n),
+    almost_integer(X3n,Y3n).
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+almost_integer(X,Y) :-
+    epsilon(Eps),
+    abs(X-round(X))+abs(Y-round(Y)) < Eps.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+shift_rotate(X0,Y0,X1,Y1,ANG,X1n,Y1n) :-
+    Cos is cos(ANG*0.7853981633974484), %%% 45^o
+    Sin is sin(ANG*0.7853981633974484), %%% 45^o
+    X1n  is X1*Cos - Y1*Sin + X0,
+    Y1n  is Y1*Cos + X1*Sin + Y0.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%   INSTANCES        %%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+triangle_in_figure(T) :-
+    instance(INST),
+    triangle_vertices(T,X1,Y1,X2,Y2,X3,Y3),
+    point_in_fig(INST,X1,Y1),
+    point_in_fig(INST,X2,Y2),
+    point_in_fig(INST,X3,Y3).
+
+%%% 1=Triangle: sides(3). coord(1,0,0). coord(2,8,0). coord(3,4,4).
+point_in_fig(1,X,Y) :-
+    epsilon(Eps),
+    X >= -Eps, X =< 8+Eps,
+    Y >= -Eps, Y =< 6+Eps,
+    (X =< 4, Y =< X+Eps;
+     X > 4, Y =< 8-X+Eps).
+
+%%% 2=Square: sides(4). coord(1,0,0). coord(2,4,0). coord(3,4,4).
+%%%           coord(4,0,4).
+point_in_fig(2,X,Y) :-
+    epsilon(Eps),
+    X >= -Eps, X =< 8+Eps,
+    Y >= -Eps, Y =< 6+Eps,
+    X =<4+Eps, Y =< 4+Eps.
+
+%%% 3=rectangle: sides(4). coord(1,2,0). coord(2,6,4). coord(3,4,6).
+%%%              coord(4,0,2).
+point_in_fig(3,X,Y) :-
+    epsilon(Eps),
+    X >= -Eps, X =< 8+Eps,
+    Y >= -Eps, Y =< 6+Eps,
+   (X =< 2, Y =< 2+X+Eps, Y >= 2-X-Eps;
+    X > 2, X=< 4, Y =< 2+X+Eps, Y >= -2+X-Eps;
+    X > 4, X =< 6, Y >= -2+X-Eps, Y =< 10 - X + Eps).
+
+%%% 4=Trapezium: sides(4). coord(1,0,0). coord(2,4,0). coord(3,6,2).
+%%%                        coord(4,6,6).
+point_in_fig(4,X,Y) :-
+    epsilon(Eps),
+    X >= -Eps, X =< 8+Eps,
+    Y >= -Eps, Y =< 6+Eps,
+   (X =< 4, Y =< X+Eps;
+    X > 4, X =< 6, Y =< X+Eps, Y >= -4+X-Eps).
+
+%%% 5=Circus: sides(5). coord(1,1,0). coord(2,5,4). coord(3,4,5).
+%%%           coord(4,0,5). coord(5,0,1).
+point_in_fig(5,X,Y) :-
+    epsilon(Eps),
+    X >= -Eps, X =< 8+Eps,
+    Y >= -Eps, Y =< 6+Eps,
+   (X =< 1, Y =< 5+Eps, Y >= 1-X-Eps;
+    X > 1, X =< 4, Y =< 5+Eps, Y >= -1+X-Eps;
+    X > 4, X =< 5, Y >= -1 + X-Eps, Y =< 9-X+Eps).
+
+%%% 6=House: sides(6). coord(1,3,0). coord(2,5,2). coord(3,5,4).
+%%%          coord(4,4,5). coord(5,2,5). coord(6,0,2).
+point_in_fig(6,X,Y) :-
+    epsilon(Eps),
+    X >= -Eps, X =< 8+Eps,
+    Y >= -Eps, Y =< 6+Eps,
+   (X =< 2, Y =< 3+X+Eps, Y >= 3-X-Eps;
+    X > 2, X =< 3, Y =< 5+Eps, Y >= 3-X-Eps;
+    X > 3, X =< 4, Y =< 5+Eps, Y >= -3+X-Eps ;
+    X > 4, X =< 5, Y >= -3+X-Eps, Y =< 9-X+Eps).
+
+%%% 7=Hexagon 1: sides(6). coord(1,2,0). coord(2,4,0). coord(3,6,2).
+%%%              coord(4,4,4). coord(5,2,4). coord(6,0,2).
+
+point_in_fig(7,X,Y) :-
+    epsilon(Eps),
+    X >= -Eps, X =< 8+Eps,
+    Y >= -Eps, Y =< 6+Eps,
+   (X =< 2, Y =< 2+X+Eps, Y >= 2-X-Eps;
+    X > 2, X =< 4, Y =< 4+Eps;
+    X > 4, X =< 6, Y =< 8-X+Eps, Y >= -4+X-Eps).
+
+%%% 8=Hexagon 2: sides(6). coord(1,0,0). coord(2,2,0). coord(3,5,3).
+%%%              coord(4,5,5). coord(5,3,5). coord(6,0,2).
+point_in_fig(8,X,Y) :-
+    epsilon(Eps),
+    X >= -Eps, X =< 8+Eps,
+    Y >= -Eps, Y =< 6+Eps,
+   (X =< 2, Y =< 2+X+Eps ;
+    X > 2, X =< 3, Y =< 2+X+Eps, Y >= -2+X-Eps;
+    X > 3, X =< 5, Y =< 5+Eps, Y >= -2+X-Eps).
+
+
+
+%%% 9=Reactangle Trapezium: sides(4). coord(1,0,0). coord(2,4,0). 
+%%%              coord(3,4,6). coord(4,0,2).
+point_in_fig(9,X,Y) :-
+    epsilon(Eps),
+    X >= -Eps, X =< 4+Eps,
+    Y >= -Eps, Y =< 6+Eps,    
+    Y =< 2+X+Eps.
+
+%%% 10=Box: sides(6). coord(1,0,1). coord(2,1,0). coord(3,5,0).
+%%%              coord(4,7,2). coord(5,6,3). coord(6,2,3).
+point_in_fig(10,X,Y) :-
+    epsilon(Eps),
+    X >= -Eps, X =< 8+Eps,
+    Y >= -Eps, Y =< 3+Eps,    
+   (X =< 1, Y =< 1+X+Eps, Y >= 1-X-Eps ;
+    X > 1, X =< 2, Y =< 1+X+Eps ;
+    X > 2, X =< 5;
+    X>5, X =< 6, Y >= -5+X-Eps;
+    X>6, X =< 7, Y >= -5+X-Eps, Y=< 9-X+Eps).
+
+%%% 11=Cannon: sides(4). coord(1,0,3). coord(2,3,0). coord(3,7,0).
+%%%              coord(4,2,5).
+point_in_fig(11,X,Y) :-
+    epsilon(Eps),
+    X >= -Eps, X =< 8+Eps,
+    Y >= -Eps, Y =< 6+Eps,    
+   (X =< 2, Y =< 3+X+Eps, Y >= 3-X-Eps ;
+    X > 2, X =< 3, Y =< 7-X+Eps, Y >= 3-X-Eps;
+    X > 3, X =< 7, Y =< 7-X+Eps).
+
+%%% 12=Strange: sides(5). coord(1,0,0). coord(2,6,0). coord(3,7,1).
+%%%              coord(4,7,3). coord(5,3,3).
+point_in_fig(12,X,Y) :-
+    epsilon(Eps),
+    X >= -Eps, X =< 8+Eps,
+    Y >= -Eps, Y =< 6+Eps,    
+   (X =< 3, Y =< X+Eps ;
+    X > 3, X =< 6, Y =< 3+Eps ;
+    X > 6, X =< 7, Y =< 3+Eps, Y >= -6+X-Eps).
+
+%%% 13=Parallelogram: sides(4). coord(1,4,0). coord(2,8,0). coord(3,4,4).
+%%%              coord(4,0,4).
+point_in_fig(13,X,Y) :-
+    epsilon(Eps),
+    X >= -Eps, X =< 8+Eps,
+    Y >= -Eps, Y =< 6+Eps,    
+   (X =< 4, Y =< 4+Eps, Y >= 4-X-Eps ;
+    X > 4, X =< 8, Y =< 8-X+Eps).
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%      END OF THE ENCODING        %%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

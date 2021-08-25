@@ -1,0 +1,306 @@
+% ====================================================================================================
+%   CELT_server.P  
+%	
+%   A Simple MT Prolog Server 
+%
+%   Query: call_as(user1, call_with_time_limit(eng2log(+EngSentence, -ParseTree, -LogicExpr, -Act), 300))
+%
+% ====================================================================================================	
+
+:-dynamic(socket_in/1).
+:-dynamic(socket_out/1).
+:-dynamic(serve_connection).
+
+:-assert(prolog_file_type('P', prolog)). 	
+
+:- style_check(-singleton).
+:- style_check(-discontiguous).
+% :- style_check(-atom).
+% :- style_check(-string).
+
+
+:- use_module(library(shell)).      
+:- use_module(library(shlib)).        
+:- use_module(library(url)).        
+:- use_module(library(quintus)).        
+
+
+swi_server(Port):- 
+	current_prolog_flag(arch,'i386-win32'),!,
+	tcp_socket(ServerSocket),
+	ignore(tcp_setopt(ServerSocket, reuseaddr)),
+	please_tcp_bind(ServerSocket, Port),
+	tcp_listen(ServerSocket, 655),
+	repeat,
+	tcp_open_socket(ServerSocket, AcceptFd, _Useless),
+	tcp_accept(AcceptFd, ClientSocket, _PeerIP), 
+	work_on_client_socket('main',ClientSocket),
+	fail.
+	
+
+swi_server(Port):- 
+	thread_create(swi_server_thread(Port),_,[]).
+
+
+please_tcp_bind(ServerSocket, Port):-
+	catch((tcp_bind(ServerSocket, Port),format('~nOS gave me port ~w. ~n',[Port])),error(E,_),(format('~nWaiting for OS to release port ~w. ~n(sleeping 4 secs becasue "~w")~n',[Port,E]),sleep(4),please_tcp_bind(ServerSocket, Port))).
+
+swi_server_thread(Port):-
+	tcp_socket(ServerSocket),
+	please_tcp_bind(ServerSocket, Port),
+	tcp_listen(ServerSocket, 655),
+	repeat,
+	once(work_on_server_socket(ServerSocket)),
+	fail.
+	
+
+win32_dispatch(AcceptFd) :-   % Non Multitasking Version (waiting for check-ins from Jan for win32 Mt)
+	sleep(0.1),
+	tcp_accept(AcceptFd, Socket, _PeerIP),
+	writeq(_PeerIP),nl,
+	handle_the_socket(Socket,In, Out),
+	!,
+	win32_dispatch(AcceptFd).
+
+
+	
+work_on_server_socket(ServerSocket):-
+	tcp_open_socket(ServerSocket, AcceptFd, _Useless),
+	tcp_accept(AcceptFd, ClientSocket, _PeerIP), 
+	work_on_client_socket_mt(ClientSocket).
+
+work_on_client_socket_mt(ClientSocket):-
+     	threads,
+	thread_create((
+		thread_self(Self),
+		mutex_create(Id),
+		mutex_lock(Id),!,
+		with_mutex(Id,work_on_client_socket(Self,ClientSocket)),
+		mutex_unlock_all,
+		thread_exit(complete)
+	),_,[detached(true)]).
+
+
+work_on_client_socket_single(ClientSocket):-
+	work_on_client_socket(single,ClientSocket).
+
+work_on_client_socket(Self,ClientSocket):-
+	tcp_open_socket(ClientSocket, In, Out),!,
+	format(user_error,'% thread="~w" input="~w" output="~w" ~n',[Self,In,Out]),
+	flush_output(user_error),
+	handle_the_socket(ClientSocket,In, Out).
+
+handle_the_socket(ClientSocket,In, Out):-
+%	thread_self(ID),
+	retractall(socket_in(_)),
+	retractall(socket_out(_)),
+	asserta(socket_in(In)),
+	asserta(socket_out(Out)),
+	catch(service_telnet_request(In,Out),E,writeq(service_one_client(E))),
+		ignore((
+			catch(flush_output(Out),_,true),
+			catch(tcp_close_socket(ClientSocket),_,true)
+		)).
+
+service_telnet_request(In,Out):-
+	catch(thread_self(Self),_,true),
+	format(Out,'<?xml version="1.0" encoding="ISO-8859-1"?>~n<answer thread="~w">~n',[Self]),flush_output(Out),
+         once(( catch(read_term(In,CMD,[variable_names(Vars)]),_,(format(Out,'<badinput/>~n',[]),flush_output(Out))))),
+	invoke_cmd(Out,CMD,Vars,_),        
+	format(Out,'</answer>~n',[]),
+	catch(flush_output(Out),_,true).
+
+invoke_cmd(Out,CMD,Vars,_):-
+%%%	append('reorder.pl'), write_ln(CMD), told,
+	writeq( ((cmd=CMD, vars=Vars) )), nl,flush_output,
+	nonvar(CMD),
+	statistics(cputime,Start),
+	flush_output(Out),
+	catch(invoke_cmd2(Out,CMD,Vars,Start),_,true),!.
+	
+invoke_cmd(Out,CMD,Vars,_):-!.
+
+invoke_cmd2(Out,CMD,Vars,_):-
+	tell(Out),
+	retractall(answer_yes),
+	catch(CMD,Err,(format('<error description="~w"/>',[Err]),!,fail)),
+	assert(answer_yes),
+	write_swi_vars_proc(Out,Vars),
+	fail.
+
+invoke_cmd(Out,_,_):-   
+      (answer_yes -> (retractall(answer_yes),format(Out,'<yes/>~n',[])) 
+                   ;	format(Out,'<no/>~n',[])),!. 
+
+write_swi_vars_proc(Out,[]):-!.
+write_swi_vars_proc(Out,Vars):-
+	write(Out,'<result>'),
+	catch(thread_self(Self),_,true),
+%%%	((retract(success(Self, CMD)), !, format(Out,'<var name="companion">~q</var>',[CMD])) | true),
+      write_swi_vars(Out,Vars),
+      format(Out,'</result>~n',[]).
+                              
+write_swi_vars(Out,[]):-!.
+write_swi_vars(Out,[Term|REST]):-  !,Term=..[_,N,V], nonvar(V),    % add nonvar(V) to prevent output of vars.
+	format(Out,'<var name="~w">~q</var>',[N,V]),
+	write_swi_vars(Out,REST).
+
+
+/*  Original   
+invoke_cmd(Out,CMD,Vars,_):-
+%%%
+	append('reorder.pl'), write_ln(CMD), told,
+	writeq( ((cmd=CMD, vars=Vars) )), nl,flush_output,
+	nonvar(CMD),
+	statistics(cputime,Start),
+	flush_output(Out),
+	catch(invoke_cmd2(Out,CMD,Vars,Start),_,true),!.
+	
+invoke_cmd(Out,CMD,Vars,_):-!.
+
+invoke_cmd2(Out,CMD,Vars,_):-
+         tell(Out),
+         retractall(answer_yes),
+         catch(CMD,Err,(format('<error description="~w"/>',[Err]),!,fail)),
+         assert(answer_yes),
+         write_swi_vars_proc(Out,Vars),
+         fail.
+
+invoke_cmd(Out,_,_):-   
+         (answer_yes -> 
+                           (retractall(answer_yes),format(Out,'<yes/>~n',[])) 
+                           ;
+                           format(Out,'<no/>~n',[])),!. 
+
+
+write_swi_vars_proc(Out,[]):-!.
+write_swi_vars_proc(Out,Vars):-
+            write(Out,'<result>'),
+            write_swi_vars(Out,Vars),
+            format(Out,'</result>~n',[]).
+                              
+write_swi_vars(Out,[]):-!.
+write_swi_vars(Out,[Term|REST]):-  !,Term=..[_,N,V], nonvar(V),    % add nonvar(V) to prevent output of vars.
+         format(Out,'<var name="~w">~q</var>',[N,V]),
+         write_swi_vars(Out,REST).
+*/
+/*
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+invoke_cmd(Out,CMD,Vars,_):-
+%%%
+	append('reorder.pl'), write_ln(CMD), told,
+	writeq( ((cmd=CMD, vars=Vars) )), nl,flush_output,
+	nonvar(CMD),
+	statistics(cputime,Start),
+	flush_output(Out),
+	catch(invoke_cmd3(Self, Out,CMD,Vars,Start),_,true),!.
+
+invoke_cmd(Out,CMD,Vars,_):-!.
+
+invoke_cmd3(Self,Out,CMD,Vars, _):-
+      tell(Out),
+      retract_all(answer_yes(Self)),
+      catch(CMD,Err,(fmtprint('<error description="~w"/>',[Err]),!,fail)),
+      assert(answer_yes(Self)),
+      write_swi_vars_proc(Out,CMD,Vars),
+      fail.
+
+invoke_cmd3(Self,Out,_,_, _):-   
+         (retract(answer_yes(Self)) -> 
+                fmtprint(Out,'<yes/>\n',[]) 
+                 ;
+                fmtprint(Out,'<no/>\n',[])),!. 
+
+write_swi_vars_proc(Out,CMD,[]):-!.
+write_swi_vars_proc(Out,CMD,Vars):-
+         write(Out,'<result>'),
+%%%	   format('<var name="companion">~q</var>',[CMD]),
+         write_swi_vars(Out,Vars),
+         format(Out,'</result>\n',[]).
+                              
+write_swi_vars(Out,[]):-!.
+write_swi_vars(Out,[Term|REST]):-  !,Term=..[_,N,V], nonvar(V),
+         fmtprint(Out,'<var name="~w">~q</var>',[N,V]),
+         write_swi_vars(Out,REST).
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+*/
+
+call_as(UserToken,initialize):-term_to_atom(UserToken,ModuleName),assert(ModuleName:usertoken(UserToken)),assert(user:username(UserToken)),!.
+call_as(UserToken,load_file(Filename)):-term_to_atom(UserToken,ModuleName),ModuleName:ensure_loaded(Filename),!.
+call_as(UserToken,terminate):-term_to_atom(UserToken,ModuleName),terminate_the(ModuleName),!,retract(user:username(ModuleName)).
+call_as(UserToken,Goal):-term_to_atom(UserToken,ModuleName),ModuleName:Goal.
+
+call_all(Goal):-
+	user:username(UserToken),
+	once(call_as(UserToken,Goal)),fail.
+call_all(Goal):-!.
+
+terminate_modules(UserContraint):-
+	user:username(UserContraint),
+	once(call_as(UserToken,terminate)),fail.
+terminate_modules(UserContraint):-!.
+
+terminate_the(ModuleName):-
+	current_predicate(_,ModuleName:Q),
+	functor(Q,F,A),
+	ModuleName:abolish(F/A),
+	fail.
+	
+terminate_the(ModuleName):-!.
+	
+
+serve_me:-repeat,once(serve_connection),retract(is_leaving).
+goodbye:-assert(is_leaving).
+
+serve_connection:-
+	 (socket_in(In)),			      
+	 (socket_out(Out)),
+        service_telnet_request(In,Out).
+
+% ==============================	
+% Sending a File back to server
+% ==============================	
+insert_file_to_stream(O,Filename):-
+	safe_file_open(Filename,'r',Input),
+	putchar_stdout(O,Input).
+
+putchar_stdout(O,Input):-at_end_of_stream(Input),close(Input),!.
+putchar_stdout(O,Input):-get0(Input,Char),put(O,Char),!,putchar_stdout(O,Input).
+
+
+:- module_transparent call_with_time_limit/2. 
+% Max time in seconds 
+call_with_time_limit(Goal, MaxTime) :- 
+	thread_self(Target), 
+	thread_create( 
+      	(( 
+            	sleeper(MaxTime), 
+			catch(ignore(thread_signal(Target,throw(giveup))),_,true), 
+			thread_exit(completed) 
+            )),Timer,[detached(true)]), 
+  	retractall(timer_thread(Target,_)), 
+      asserta(timer_thread(Target,Timer)),
+	catch(Goal, E, (E=giveup;throw(E))),
+	((E==giveup,!);true).
+
+call_with_time_limit(_, _) :- 
+      retract(timer_thread(Target,Timer)), 	
+	catch(ignore(thread_signal(Timer,thread_exit(iWasDoneFirst))),_,true), 
+      fail.  
+
+/*
+sleeper(Time):-
+	SnoozeTime is Time/60,
+	snooze(60,SnoozeTime).
+*/
+
+sleeper(Time):-
+	WakeupTimes is integer(Time/5),
+	snooze(WakeupTimes, 5).
+
+snooze(0,_).
+snooze(Restless,SnoozeTime):-
+	sleep(SnoozeTime),
+	NeedMoreSleep is Restless -1,
+	snooze(NeedMoreSleep,SnoozeTime).
+

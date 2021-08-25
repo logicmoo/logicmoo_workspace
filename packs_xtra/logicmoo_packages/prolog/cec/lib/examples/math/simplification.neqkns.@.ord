@@ -1,0 +1,311 @@
+order(neqkns for simplification).
+greater([['$r'/_2411,p/1]]).
+greater([['$r-ms','p-bool-formula']]).
+greater([['$r'/_2411,i/2]]).
+greater([['$r-ms','i-formula-formula-formula']]).
+greater([['$r'/_2411,a/0]]).
+greater([['$r-ms','a-formula']]).
+greater([['$r'/_2411,b/0]]).
+greater([['$r-ms','b-formula']]).
+status(['$r':ms]).
+status(['$r-ms':ms]).
+status([i/2:ms]).
+
+constructor('true-bool').
+constructor('true-bool').
+constructor('false-bool').
+constructor('false-bool').
+
+
+
+
+
+
+/* declare as nonoperational :
+/*	p(x) = true and p(i(x,y)) = true => p(y) = true */
+action(orient(n),'$equation'(['p-bool-formula'(@'x-formula')='true-bool','p-bool-formula'('i-formula-formula-formula'(@'x-formula',@'y-formula'))='true-bool'],['p-bool-formula'(@'y-formula')='true-bool'])).
+
+/* condition number 2 is the selected condition for
+/*	p(x) = true and p(i(x,y)) = true => p(y) = true */
+action(selectcondition(2),'$equation'(['p-bool-formula'(@'x-formula')='true-bool','p-bool-formula'('i-formula-formula-formula'(@'x-formula',@'y-formula'))='true-bool'],['p-bool-formula'(@'y-formula')='true-bool'])).
+
+/* ordering of the literals is ms for
+/*	p(x) = true and p(i(x,y)) = true => p(y) = true */
+action(status(ms),'$equation'(['p-bool-formula'(@'x-formula')='true-bool','p-bool-formula'('i-formula-formula-formula'(@'x-formula',@'y-formula'))='true-bool'],['p-bool-formula'(@'y-formula')='true-bool'])).
+
+/* declare as nonoperational :
+/*	p(i(i(x,y),z)) = true => p(i(i(z,x),i(u,x))) = true */
+action(orient(n),'$equation'(['p-bool-formula'('i-formula-formula-formula'('i-formula-formula-formula'(@'x-formula',@'y-formula'),@'z-formula'))='true-bool'],['p-bool-formula'('i-formula-formula-formula'('i-formula-formula-formula'(@'z-formula',@'x-formula'),'i-formula-formula-formula'(@'u-formula',@'x-formula')))='true-bool'])).
+
+/* condition number 1 is the selected condition for
+/*	p(i(i(x,y),z)) = true => p(i(i(z,x),i(u,x))) = true */
+action(selectcondition(1),'$equation'(['p-bool-formula'('i-formula-formula-formula'('i-formula-formula-formula'(@'x-formula',@'y-formula'),@'z-formula'))='true-bool'],['p-bool-formula'('i-formula-formula-formula'('i-formula-formula-formula'(@'z-formula',@'x-formula'),'i-formula-formula-formula'(@'u-formula',@'x-formula')))='true-bool'])).
+
+/* declare as nonoperational :
+/*	p(i(i(i(y1,x),i(u,x)),i(x,y))) = true => p(i(u1,i(x,y))) = true */
+action(orient(n),'$equation'(['p-bool-formula'('i-formula-formula-formula'('i-formula-formula-formula'('i-formula-formula-formula'(@'y1-formula',@'x-formula'),'i-formula-formula-formula'(@'u-formula',@'x-formula')),'i-formula-formula-formula'(@'x-formula',@'y-formula')))='true-bool'],['p-bool-formula'('i-formula-formula-formula'(@'u1-formula','i-formula-formula-formula'(@'x-formula',@'y-formula')))='true-bool'])).
+
+/* condition number 1 is the selected condition for
+/*	p(i(i(i(y1,x),i(u,x)),i(x,y))) = true => p(i(u1,i(x,y))) = true */
+action(selectcondition(1),'$equation'(['p-bool-formula'('i-formula-formula-formula'('i-formula-formula-formula'('i-formula-formula-formula'(@'y1-formula',@'x-formula'),'i-formula-formula-formula'(@'u-formula',@'x-formula')),'i-formula-formula-formula'(@'x-formula',@'y-formula')))='true-bool'],['p-bool-formula'('i-formula-formula-formula'(@'u1-formula','i-formula-formula-formula'(@'x-formula',@'y-formula')))='true-bool'])).
+
+/* declare as nonoperational :
+/*	p(x) = true => p(i(i(u,u2),i(u2,i(u,u2)))) = true */
+action(orient(n),'$equation'(['p-bool-formula'(@'x-formula')='true-bool'],['p-bool-formula'('i-formula-formula-formula'('i-formula-formula-formula'(@'u-formula',@'u2-formula'),'i-formula-formula-formula'(@'u2-formula','i-formula-formula-formula'(@'u-formula',@'u2-formula'))))='true-bool'])).
+
+/* condition number 1 is the selected condition for
+/*	p(x) = true => p(i(i(u,u2),i(u2,i(u,u2)))) = true */
+action(selectcondition(1),'$equation'(['p-bool-formula'(@'x-formula')='true-bool'],['p-bool-formula'('i-formula-formula-formula'('i-formula-formula-formula'(@'u-formula',@'u2-formula'),'i-formula-formula-formula'(@'u2-formula','i-formula-formula-formula'(@'u-formula',@'u2-formula'))))='true-bool'])).
+
+/* try to orient into a (quasi-)reductive rule :
+/*	p(i(u4,u1)) = true => p(i(u1,i(u4,u1))) = true */
+action(orient(o),'$equation'(['p-bool-formula'('i-formula-formula-formula'(@'u4-formula',@'u1-formula'))='true-bool'],['p-bool-formula'('i-formula-formula-formula'(@'u1-formula','i-formula-formula-formula'(@'u4-formula',@'u1-formula')))='true-bool'])).
+
+/* condition number 1 is the selected condition for
+/*	p(i(b,a)) = true => true = false */
+action(selectcondition(1),'$equation'(['p-bool-formula'('i-formula-formula-formula'('b-formula','a-formula'))='true-bool'],['true-bool'='false-bool'])).
+
+/* try to orient into a (quasi-)reductive rule :
+/*	p(i(u4,i(x,y))) = true => p(i(i(i(u4,i(x,y)),x),i(u,x))) = true */
+action(orient(o),'$equation'(['p-bool-formula'('i-formula-formula-formula'(@'u4-formula','i-formula-formula-formula'(@'x-formula',@'y-formula')))='true-bool'],['p-bool-formula'('i-formula-formula-formula'('i-formula-formula-formula'('i-formula-formula-formula'(@'u4-formula','i-formula-formula-formula'(@'x-formula',@'y-formula')),@'x-formula'),'i-formula-formula-formula'(@'u-formula',@'x-formula')))='true-bool'])).
+
+/* try to orient into a (quasi-)reductive rule :
+/*	p(i(x,i(i(y1,x),i(u,x)))) = true => p(i(u2,i(x,i(i(y1,x),i(u,x))))) = true */
+action(orient(o),'$equation'(['p-bool-formula'('i-formula-formula-formula'(@'x-formula','i-formula-formula-formula'('i-formula-formula-formula'(@'y1-formula',@'x-formula'),'i-formula-formula-formula'(@'u-formula',@'x-formula'))))='true-bool'],['p-bool-formula'('i-formula-formula-formula'(@'u2-formula','i-formula-formula-formula'(@'x-formula','i-formula-formula-formula'('i-formula-formula-formula'(@'y1-formula',@'x-formula'),'i-formula-formula-formula'(@'u-formula',@'x-formula')))))='true-bool'])).
+
+/* try to orient into a (quasi-)reductive rule :
+/*	p(i(u4,i(x,y))) = true and p(i(i(u4,i(x,y)),x)) = true => p(i(u,x)) = true */
+action(orient(o),'$equation'(['p-bool-formula'('i-formula-formula-formula'(@'u4-formula','i-formula-formula-formula'(@'x-formula',@'y-formula')))='true-bool','p-bool-formula'('i-formula-formula-formula'('i-formula-formula-formula'(@'u4-formula','i-formula-formula-formula'(@'x-formula',@'y-formula')),@'x-formula'))='true-bool'],['p-bool-formula'('i-formula-formula-formula'(@'u-formula',@'x-formula'))='true-bool'])).
+
+/* declare as nonoperational :
+/*	p(i(u4,i(x,y))) = true and p(i(i(u4,i(x,y)),x)) = true => p(i(u,x)) = true */
+action(orient(n),'$equation'(['p-bool-formula'('i-formula-formula-formula'(@'u4-formula','i-formula-formula-formula'(@'x-formula',@'y-formula')))='true-bool','p-bool-formula'('i-formula-formula-formula'('i-formula-formula-formula'(@'u4-formula','i-formula-formula-formula'(@'x-formula',@'y-formula')),@'x-formula'))='true-bool'],['p-bool-formula'('i-formula-formula-formula'(@'u-formula',@'x-formula'))='true-bool'])).
+
+/* condition number 2 is the selected condition for
+/*	p(i(u4,i(x,y))) = true and p(i(i(u4,i(x,y)),x)) = true => p(i(u,x)) = true */
+action(selectcondition(2),'$equation'(['p-bool-formula'('i-formula-formula-formula'(@'u4-formula','i-formula-formula-formula'(@'x-formula',@'y-formula')))='true-bool','p-bool-formula'('i-formula-formula-formula'('i-formula-formula-formula'(@'u4-formula','i-formula-formula-formula'(@'x-formula',@'y-formula')),@'x-formula'))='true-bool'],['p-bool-formula'('i-formula-formula-formula'(@'u-formula',@'x-formula'))='true-bool'])).
+
+/* declare as nonoperational :
+/*	p(i(i(y,i(x,y)),x)) = true => p(i(u,x)) = true */
+action(orient(n),'$equation'(['p-bool-formula'('i-formula-formula-formula'('i-formula-formula-formula'(@'y-formula','i-formula-formula-formula'(@'x-formula',@'y-formula')),@'x-formula'))='true-bool'],['p-bool-formula'('i-formula-formula-formula'(@'u-formula',@'x-formula'))='true-bool'])).
+
+/* condition number 1 is the selected condition for
+/*	p(i(i(y,i(x,y)),x)) = true => p(i(u,x)) = true */
+action(selectcondition(1),'$equation'(['p-bool-formula'('i-formula-formula-formula'('i-formula-formula-formula'(@'y-formula','i-formula-formula-formula'(@'x-formula',@'y-formula')),@'x-formula'))='true-bool'],['p-bool-formula'('i-formula-formula-formula'(@'u-formula',@'x-formula'))='true-bool'])).
+
+/* declare as nonoperational :
+/*	p(i(x,i(i(y1,x),i(u,x)))) = true => p(i(i(i(x,i(i(y1,x),i(u,x))),x1),i(u1,x1))) = true */
+action(orient(n),'$equation'(['p-bool-formula'('i-formula-formula-formula'(@'x-formula','i-formula-formula-formula'('i-formula-formula-formula'(@'y1-formula',@'x-formula'),'i-formula-formula-formula'(@'u-formula',@'x-formula'))))='true-bool'],['p-bool-formula'('i-formula-formula-formula'('i-formula-formula-formula'('i-formula-formula-formula'(@'x-formula','i-formula-formula-formula'('i-formula-formula-formula'(@'y1-formula',@'x-formula'),'i-formula-formula-formula'(@'u-formula',@'x-formula'))),@'x1-formula'),'i-formula-formula-formula'(@'u1-formula',@'x1-formula')))='true-bool'])).
+
+/* condition number 1 is the selected condition for
+/*	p(i(x,i(i(y1,x),i(u,x)))) = true => p(i(i(i(x,i(i(y1,x),i(u,x))),x1),i(u1,x1))) = true */
+action(selectcondition(1),'$equation'(['p-bool-formula'('i-formula-formula-formula'(@'x-formula','i-formula-formula-formula'('i-formula-formula-formula'(@'y1-formula',@'x-formula'),'i-formula-formula-formula'(@'u-formula',@'x-formula'))))='true-bool'],['p-bool-formula'('i-formula-formula-formula'('i-formula-formula-formula'('i-formula-formula-formula'(@'x-formula','i-formula-formula-formula'('i-formula-formula-formula'(@'y1-formula',@'x-formula'),'i-formula-formula-formula'(@'u-formula',@'x-formula'))),@'x1-formula'),'i-formula-formula-formula'(@'u1-formula',@'x1-formula')))='true-bool'])).
+
+/* declare as nonoperational :
+/*	p(i(u4,i(y1,y))) = true => p(i(i(i(u,y1),i(u4,i(y1,y))),i(u1,i(u4,i(y1,y))))) = true */
+action(orient(n),'$equation'(['p-bool-formula'('i-formula-formula-formula'(@'u4-formula','i-formula-formula-formula'(@'y1-formula',@'y-formula')))='true-bool'],['p-bool-formula'('i-formula-formula-formula'('i-formula-formula-formula'('i-formula-formula-formula'(@'u-formula',@'y1-formula'),'i-formula-formula-formula'(@'u4-formula','i-formula-formula-formula'(@'y1-formula',@'y-formula'))),'i-formula-formula-formula'(@'u1-formula','i-formula-formula-formula'(@'u4-formula','i-formula-formula-formula'(@'y1-formula',@'y-formula')))))='true-bool'])).
+
+/* condition number 1 is the selected condition for
+/*	p(i(u4,i(y1,y))) = true => p(i(i(i(u,y1),i(u4,i(y1,y))),i(u1,i(u4,i(y1,y))))) = true */
+action(selectcondition(1),'$equation'(['p-bool-formula'('i-formula-formula-formula'(@'u4-formula','i-formula-formula-formula'(@'y1-formula',@'y-formula')))='true-bool'],['p-bool-formula'('i-formula-formula-formula'('i-formula-formula-formula'('i-formula-formula-formula'(@'u-formula',@'y1-formula'),'i-formula-formula-formula'(@'u4-formula','i-formula-formula-formula'(@'y1-formula',@'y-formula'))),'i-formula-formula-formula'(@'u1-formula','i-formula-formula-formula'(@'u4-formula','i-formula-formula-formula'(@'y1-formula',@'y-formula')))))='true-bool'])).
+
+/* declare as nonoperational :
+/*	p(i(i(i(u,u2),i(u2,i(u,u2))),x)) = true => p(i(u1,x)) = true */
+action(orient(n),'$equation'(['p-bool-formula'('i-formula-formula-formula'('i-formula-formula-formula'('i-formula-formula-formula'(@'u-formula',@'u2-formula'),'i-formula-formula-formula'(@'u2-formula','i-formula-formula-formula'(@'u-formula',@'u2-formula'))),@'x-formula'))='true-bool'],['p-bool-formula'('i-formula-formula-formula'(@'u1-formula',@'x-formula'))='true-bool'])).
+
+/* condition number 1 is the selected condition for
+/*	p(i(i(i(u,u2),i(u2,i(u,u2))),x)) = true => p(i(u1,x)) = true */
+action(selectcondition(1),'$equation'(['p-bool-formula'('i-formula-formula-formula'('i-formula-formula-formula'('i-formula-formula-formula'(@'u-formula',@'u2-formula'),'i-formula-formula-formula'(@'u2-formula','i-formula-formula-formula'(@'u-formula',@'u2-formula'))),@'x-formula'))='true-bool'],['p-bool-formula'('i-formula-formula-formula'(@'u1-formula',@'x-formula'))='true-bool'])).
+
+/* try to orient into a (quasi-)reductive rule :
+/*	p(i(i(u,y1),i(y,i(y1,y)))) = true => p(i(u1,i(y,i(y1,y)))) = true */
+action(orient(o),'$equation'(['p-bool-formula'('i-formula-formula-formula'('i-formula-formula-formula'(@'u-formula',@'y1-formula'),'i-formula-formula-formula'(@'y-formula','i-formula-formula-formula'(@'y1-formula',@'y-formula'))))='true-bool'],['p-bool-formula'('i-formula-formula-formula'(@'u1-formula','i-formula-formula-formula'(@'y-formula','i-formula-formula-formula'(@'y1-formula',@'y-formula'))))='true-bool'])).
+
+/* declare as nonoperational :
+/*	p(i(i(u,y1),i(y,i(y1,y)))) = true => p(i(u1,i(y,i(y1,y)))) = true */
+action(orient(n),'$equation'(['p-bool-formula'('i-formula-formula-formula'('i-formula-formula-formula'(@'u-formula',@'y1-formula'),'i-formula-formula-formula'(@'y-formula','i-formula-formula-formula'(@'y1-formula',@'y-formula'))))='true-bool'],['p-bool-formula'('i-formula-formula-formula'(@'u1-formula','i-formula-formula-formula'(@'y-formula','i-formula-formula-formula'(@'y1-formula',@'y-formula'))))='true-bool'])).
+
+/* condition number 1 is the selected condition for
+/*	p(i(i(u,y1),i(y,i(y1,y)))) = true => p(i(u1,i(y,i(y1,y)))) = true */
+action(selectcondition(1),'$equation'(['p-bool-formula'('i-formula-formula-formula'('i-formula-formula-formula'(@'u-formula',@'y1-formula'),'i-formula-formula-formula'(@'y-formula','i-formula-formula-formula'(@'y1-formula',@'y-formula'))))='true-bool'],['p-bool-formula'('i-formula-formula-formula'(@'u1-formula','i-formula-formula-formula'(@'y-formula','i-formula-formula-formula'(@'y1-formula',@'y-formula'))))='true-bool'])).
+
+/* declare as nonoperational :
+/*	p(x) = true => p(i(y,i(y,y))) = true */
+action(orient(n),'$equation'(['p-bool-formula'(@'x-formula')='true-bool'],['p-bool-formula'('i-formula-formula-formula'(@'y-formula','i-formula-formula-formula'(@'y-formula',@'y-formula')))='true-bool'])).
+
+/* condition number 1 is the selected condition for
+/*	p(x) = true => p(i(y,i(y,y))) = true */
+action(selectcondition(1),'$equation'(['p-bool-formula'(@'x-formula')='true-bool'],['p-bool-formula'('i-formula-formula-formula'(@'y-formula','i-formula-formula-formula'(@'y-formula',@'y-formula')))='true-bool'])).
+
+/* declare as nonoperational :
+/*	p(x) = true => p(i(x,x)) = true */
+action(orient(n),'$equation'(['p-bool-formula'(@'x-formula')='true-bool'],['p-bool-formula'('i-formula-formula-formula'(@'x-formula',@'x-formula'))='true-bool'])).
+
+/* condition number 1 is the selected condition for
+/*	p(x) = true => p(i(x,x)) = true */
+action(selectcondition(1),'$equation'(['p-bool-formula'(@'x-formula')='true-bool'],['p-bool-formula'('i-formula-formula-formula'(@'x-formula',@'x-formula'))='true-bool'])).
+
+/* try to orient into a (quasi-)reductive rule :
+/*	p(i(u4,u1)) = true => p(i(i(u1,i(u4,u1)),i(u1,i(u4,u1)))) = true */
+action(orient(o),'$equation'(['p-bool-formula'('i-formula-formula-formula'(@'u4-formula',@'u1-formula'))='true-bool'],['p-bool-formula'('i-formula-formula-formula'('i-formula-formula-formula'(@'u1-formula','i-formula-formula-formula'(@'u4-formula',@'u1-formula')),'i-formula-formula-formula'(@'u1-formula','i-formula-formula-formula'(@'u4-formula',@'u1-formula'))))='true-bool'])).
+
+/* declare as nonoperational :
+/*	p(i(i(y,i(y,y)),x)) = true => p(i(u,x)) = true */
+action(orient(n),'$equation'(['p-bool-formula'('i-formula-formula-formula'('i-formula-formula-formula'(@'y-formula','i-formula-formula-formula'(@'y-formula',@'y-formula')),@'x-formula'))='true-bool'],['p-bool-formula'('i-formula-formula-formula'(@'u-formula',@'x-formula'))='true-bool'])).
+
+/* condition number 1 is the selected condition for
+/*	p(i(i(y,i(y,y)),x)) = true => p(i(u,x)) = true */
+action(selectcondition(1),'$equation'(['p-bool-formula'('i-formula-formula-formula'('i-formula-formula-formula'(@'y-formula','i-formula-formula-formula'(@'y-formula',@'y-formula')),@'x-formula'))='true-bool'],['p-bool-formula'('i-formula-formula-formula'(@'u-formula',@'x-formula'))='true-bool'])).
+
+/* try to orient into a (quasi-)reductive rule :
+/*	p(i(u4,x)) = true => p(i(i(i(x,i(u4,x)),x),i(u,x))) = true */
+action(orient(o),'$equation'(['p-bool-formula'('i-formula-formula-formula'(@'u4-formula',@'x-formula'))='true-bool'],['p-bool-formula'('i-formula-formula-formula'('i-formula-formula-formula'('i-formula-formula-formula'(@'x-formula','i-formula-formula-formula'(@'u4-formula',@'x-formula')),@'x-formula'),'i-formula-formula-formula'(@'u-formula',@'x-formula')))='true-bool'])).
+
+/* declare as nonoperational :
+/*	p(x) = true => p(i(i(y1,y1),i(u2,i(y1,y1)))) = true */
+action(orient(n),'$equation'(['p-bool-formula'(@'x-formula')='true-bool'],['p-bool-formula'('i-formula-formula-formula'('i-formula-formula-formula'(@'y1-formula',@'y1-formula'),'i-formula-formula-formula'(@'u2-formula','i-formula-formula-formula'(@'y1-formula',@'y1-formula'))))='true-bool'])).
+
+/* condition number 1 is the selected condition for
+/*	p(x) = true => p(i(i(y1,y1),i(u2,i(y1,y1)))) = true */
+action(selectcondition(1),'$equation'(['p-bool-formula'(@'x-formula')='true-bool'],['p-bool-formula'('i-formula-formula-formula'('i-formula-formula-formula'(@'y1-formula',@'y1-formula'),'i-formula-formula-formula'(@'u2-formula','i-formula-formula-formula'(@'y1-formula',@'y1-formula'))))='true-bool'])).
+
+/* declare as nonoperational :
+/*	p(i(y,y)) = true => p(i(u2,i(y,y))) = true */
+action(orient(n),'$equation'(['p-bool-formula'('i-formula-formula-formula'(@'y-formula',@'y-formula'))='true-bool'],['p-bool-formula'('i-formula-formula-formula'(@'u2-formula','i-formula-formula-formula'(@'y-formula',@'y-formula')))='true-bool'])).
+
+/* condition number 1 is the selected condition for
+/*	p(i(y,y)) = true => p(i(u2,i(y,y))) = true */
+action(selectcondition(1),'$equation'(['p-bool-formula'('i-formula-formula-formula'(@'y-formula',@'y-formula'))='true-bool'],['p-bool-formula'('i-formula-formula-formula'(@'u2-formula','i-formula-formula-formula'(@'y-formula',@'y-formula')))='true-bool'])).
+
+/* declare as nonoperational :
+/*	p(i(u4,x)) = true and p(i(i(x,i(u4,x)),x)) = true => p(i(u,x)) = true */
+action(orient(n),'$equation'(['p-bool-formula'('i-formula-formula-formula'(@'u4-formula',@'x-formula'))='true-bool','p-bool-formula'('i-formula-formula-formula'('i-formula-formula-formula'(@'x-formula','i-formula-formula-formula'(@'u4-formula',@'x-formula')),@'x-formula'))='true-bool'],['p-bool-formula'('i-formula-formula-formula'(@'u-formula',@'x-formula'))='true-bool'])).
+
+/* condition number 2 is the selected condition for
+/*	p(i(u4,x)) = true and p(i(i(x,i(u4,x)),x)) = true => p(i(u,x)) = true */
+action(selectcondition(2),'$equation'(['p-bool-formula'('i-formula-formula-formula'(@'u4-formula',@'x-formula'))='true-bool','p-bool-formula'('i-formula-formula-formula'('i-formula-formula-formula'(@'x-formula','i-formula-formula-formula'(@'u4-formula',@'x-formula')),@'x-formula'))='true-bool'],['p-bool-formula'('i-formula-formula-formula'(@'u-formula',@'x-formula'))='true-bool'])).
+
+/* declare as nonoperational :
+/*	p(i(i(u2,i(y1,y1)),y1)) = true => p(i(u,y1)) = true */
+action(orient(n),'$equation'(['p-bool-formula'('i-formula-formula-formula'('i-formula-formula-formula'(@'u2-formula','i-formula-formula-formula'(@'y1-formula',@'y1-formula')),@'y1-formula'))='true-bool'],['p-bool-formula'('i-formula-formula-formula'(@'u-formula',@'y1-formula'))='true-bool'])).
+
+/* condition number 1 is the selected condition for
+/*	p(i(i(u2,i(y1,y1)),y1)) = true => p(i(u,y1)) = true */
+action(selectcondition(1),'$equation'(['p-bool-formula'('i-formula-formula-formula'('i-formula-formula-formula'(@'u2-formula','i-formula-formula-formula'(@'y1-formula',@'y1-formula')),@'y1-formula'))='true-bool'],['p-bool-formula'('i-formula-formula-formula'(@'u-formula',@'y1-formula'))='true-bool'])).
+
+/* declare as nonoperational :
+/*	p(x1) = true => p(i(x,i(i(u,x),i(u,x)))) = true */
+action(orient(n),'$equation'(['p-bool-formula'(@'x1-formula')='true-bool'],['p-bool-formula'('i-formula-formula-formula'(@'x-formula','i-formula-formula-formula'('i-formula-formula-formula'(@'u-formula',@'x-formula'),'i-formula-formula-formula'(@'u-formula',@'x-formula'))))='true-bool'])).
+
+/* condition number 1 is the selected condition for
+/*	p(x1) = true => p(i(x,i(i(u,x),i(u,x)))) = true */
+action(selectcondition(1),'$equation'(['p-bool-formula'(@'x1-formula')='true-bool'],['p-bool-formula'('i-formula-formula-formula'(@'x-formula','i-formula-formula-formula'('i-formula-formula-formula'(@'u-formula',@'x-formula'),'i-formula-formula-formula'(@'u-formula',@'x-formula'))))='true-bool'])).
+
+/* declare as nonoperational :
+/*	p(x1) = true => p(i(i(u,x1),i(u,x1))) = true */
+action(orient(n),'$equation'(['p-bool-formula'(@'x1-formula')='true-bool'],['p-bool-formula'('i-formula-formula-formula'('i-formula-formula-formula'(@'u-formula',@'x1-formula'),'i-formula-formula-formula'(@'u-formula',@'x1-formula')))='true-bool'])).
+
+/* condition number 1 is the selected condition for
+/*	p(x1) = true => p(i(i(u,x1),i(u,x1))) = true */
+action(selectcondition(1),'$equation'(['p-bool-formula'(@'x1-formula')='true-bool'],['p-bool-formula'('i-formula-formula-formula'('i-formula-formula-formula'(@'u-formula',@'x1-formula'),'i-formula-formula-formula'(@'u-formula',@'x1-formula')))='true-bool'])).
+
+/* declare as nonoperational :
+/*	p(i(i(u1,i(x,y)),i(i(y1,x),i(u,x)))) = true => p(i(u2,i(i(y1,x),i(u,x)))) = true */
+action(orient(n),'$equation'(['p-bool-formula'('i-formula-formula-formula'('i-formula-formula-formula'(@'u1-formula','i-formula-formula-formula'(@'x-formula',@'y-formula')),'i-formula-formula-formula'('i-formula-formula-formula'(@'y1-formula',@'x-formula'),'i-formula-formula-formula'(@'u-formula',@'x-formula'))))='true-bool'],['p-bool-formula'('i-formula-formula-formula'(@'u2-formula','i-formula-formula-formula'('i-formula-formula-formula'(@'y1-formula',@'x-formula'),'i-formula-formula-formula'(@'u-formula',@'x-formula'))))='true-bool'])).
+
+/* condition number 1 is the selected condition for
+/*	p(i(i(u1,i(x,y)),i(i(y1,x),i(u,x)))) = true => p(i(u2,i(i(y1,x),i(u,x)))) = true */
+action(selectcondition(1),'$equation'(['p-bool-formula'('i-formula-formula-formula'('i-formula-formula-formula'(@'u1-formula','i-formula-formula-formula'(@'x-formula',@'y-formula')),'i-formula-formula-formula'('i-formula-formula-formula'(@'y1-formula',@'x-formula'),'i-formula-formula-formula'(@'u-formula',@'x-formula'))))='true-bool'],['p-bool-formula'('i-formula-formula-formula'(@'u2-formula','i-formula-formula-formula'('i-formula-formula-formula'(@'y1-formula',@'x-formula'),'i-formula-formula-formula'(@'u-formula',@'x-formula'))))='true-bool'])).
+
+/* declare as nonoperational :
+/*	p(x) = true => p(i(i(i(x1,y2),x1),i(u3,x1))) = true */
+action(orient(n),'$equation'(['p-bool-formula'(@'x-formula')='true-bool'],['p-bool-formula'('i-formula-formula-formula'('i-formula-formula-formula'('i-formula-formula-formula'(@'x1-formula',@'y2-formula'),@'x1-formula'),'i-formula-formula-formula'(@'u3-formula',@'x1-formula')))='true-bool'])).
+
+/* condition number 1 is the selected condition for
+/*	p(x) = true => p(i(i(i(x1,y2),x1),i(u3,x1))) = true */
+action(selectcondition(1),'$equation'(['p-bool-formula'(@'x-formula')='true-bool'],['p-bool-formula'('i-formula-formula-formula'('i-formula-formula-formula'('i-formula-formula-formula'(@'x1-formula',@'y2-formula'),@'x1-formula'),'i-formula-formula-formula'(@'u3-formula',@'x1-formula')))='true-bool'])).
+
+/* declare as nonoperational :
+/*	p(i(i(x1,y2),x1)) = true => p(i(u3,x1)) = true */
+action(orient(n),'$equation'(['p-bool-formula'('i-formula-formula-formula'('i-formula-formula-formula'(@'x1-formula',@'y2-formula'),@'x1-formula'))='true-bool'],['p-bool-formula'('i-formula-formula-formula'(@'u3-formula',@'x1-formula'))='true-bool'])).
+
+/* condition number 1 is the selected condition for
+/*	p(i(i(x1,y2),x1)) = true => p(i(u3,x1)) = true */
+action(selectcondition(1),'$equation'(['p-bool-formula'('i-formula-formula-formula'('i-formula-formula-formula'(@'x1-formula',@'y2-formula'),@'x1-formula'))='true-bool'],['p-bool-formula'('i-formula-formula-formula'(@'u3-formula',@'x1-formula'))='true-bool'])).
+
+/* declare as nonoperational :
+/*	p(x) = true => p(i(y,y)) = true */
+action(orient(n),'$equation'(['p-bool-formula'(@'x-formula')='true-bool'],['p-bool-formula'('i-formula-formula-formula'(@'y-formula',@'y-formula'))='true-bool'])).
+
+/* condition number 1 is the selected condition for
+/*	p(x) = true => p(i(y,y)) = true */
+action(selectcondition(1),'$equation'(['p-bool-formula'(@'x-formula')='true-bool'],['p-bool-formula'('i-formula-formula-formula'(@'y-formula',@'y-formula'))='true-bool'])).
+
+/* declare as nonoperational :
+/*	p(i(i(y,y),x)) = true => p(i(u1,x)) = true */
+action(orient(n),'$equation'(['p-bool-formula'('i-formula-formula-formula'('i-formula-formula-formula'(@'y-formula',@'y-formula'),@'x-formula'))='true-bool'],['p-bool-formula'('i-formula-formula-formula'(@'u1-formula',@'x-formula'))='true-bool'])).
+
+/* condition number 1 is the selected condition for
+/*	p(i(i(y,y),x)) = true => p(i(u1,x)) = true */
+action(selectcondition(1),'$equation'(['p-bool-formula'('i-formula-formula-formula'('i-formula-formula-formula'(@'y-formula',@'y-formula'),@'x-formula'))='true-bool'],['p-bool-formula'('i-formula-formula-formula'(@'u1-formula',@'x-formula'))='true-bool'])).
+
+/* declare as nonoperational :
+/*	p(x1) = true => p(i(x,i(u,x))) = true */
+action(orient(n),'$equation'(['p-bool-formula'(@'x1-formula')='true-bool'],['p-bool-formula'('i-formula-formula-formula'(@'x-formula','i-formula-formula-formula'(@'u-formula',@'x-formula')))='true-bool'])).
+
+/* condition number 1 is the selected condition for
+/*	p(x1) = true => p(i(x,i(u,x))) = true */
+action(selectcondition(1),'$equation'(['p-bool-formula'(@'x1-formula')='true-bool'],['p-bool-formula'('i-formula-formula-formula'(@'x-formula','i-formula-formula-formula'(@'u-formula',@'x-formula')))='true-bool'])).
+
+/* true = false
+   should be postponed, */
+action(orient(p),'$equation'([],[true=false])).
+
+/* try to orient into a (quasi-)reductive rule :
+/*	p(x1) = true => p(i(u,x1)) = true */
+action(orient(o),'$equation'(['p-bool-formula'(@'x1-formula')='true-bool'],['p-bool-formula'('i-formula-formula-formula'(@'u-formula',@'x1-formula'))='true-bool'])).
+
+/* condition number 1 is the selected condition for
+/*	p(a) = true => true = false */
+action(selectcondition(1),'$equation'(['p-bool-formula'('a-formula')='true-bool'],['true-bool'='false-bool'])).
+
+/* try to orient into a (quasi-)reductive rule :
+/*	p(z) = true => p(i(i(z,x),i(u1,x))) = true */
+action(orient(o),'$equation'(['p-bool-formula'(@'z-formula')='true-bool'],['p-bool-formula'('i-formula-formula-formula'('i-formula-formula-formula'(@'z-formula',@'x-formula'),'i-formula-formula-formula'(@'u1-formula',@'x-formula')))='true-bool'])).
+
+/* declare as nonoperational :
+/*	p(i(i(u,i(x1,y)),x1)) = true => p(i(u1,x1)) = true */
+action(orient(n),'$equation'(['p-bool-formula'('i-formula-formula-formula'('i-formula-formula-formula'(@'u-formula','i-formula-formula-formula'(@'x1-formula',@'y-formula')),@'x1-formula'))='true-bool'],['p-bool-formula'('i-formula-formula-formula'(@'u1-formula',@'x1-formula'))='true-bool'])).
+
+/* condition number 1 is the selected condition for
+/*	p(i(i(u,i(x1,y)),x1)) = true => p(i(u1,x1)) = true */
+action(selectcondition(1),'$equation'(['p-bool-formula'('i-formula-formula-formula'('i-formula-formula-formula'(@'u-formula','i-formula-formula-formula'(@'x1-formula',@'y-formula')),@'x1-formula'))='true-bool'],['p-bool-formula'('i-formula-formula-formula'(@'u1-formula',@'x1-formula'))='true-bool'])).
+
+/* declare as nonoperational :
+/*	p(x) = true => p(i(x1,i(i(y1,x1),i(u2,x1)))) = true */
+action(orient(n),'$equation'(['p-bool-formula'(@'x-formula')='true-bool'],['p-bool-formula'('i-formula-formula-formula'(@'x1-formula','i-formula-formula-formula'('i-formula-formula-formula'(@'y1-formula',@'x1-formula'),'i-formula-formula-formula'(@'u2-formula',@'x1-formula'))))='true-bool'])).
+
+/* condition number 1 is the selected condition for
+/*	p(x) = true => p(i(x1,i(i(y1,x1),i(u2,x1)))) = true */
+action(selectcondition(1),'$equation'(['p-bool-formula'(@'x-formula')='true-bool'],['p-bool-formula'('i-formula-formula-formula'(@'x1-formula','i-formula-formula-formula'('i-formula-formula-formula'(@'y1-formula',@'x1-formula'),'i-formula-formula-formula'(@'u2-formula',@'x1-formula'))))='true-bool'])).
+
+/* true = false
+   should be postponed, */
+action(orient(p),'$equation'([],[true=false])).
+
+/* declare as nonoperational :
+/*	p(i(i(u3,y),i(y,y2))) = true => p(i(u,i(y,y2))) = true */
+action(orient(n),'$equation'(['p-bool-formula'('i-formula-formula-formula'('i-formula-formula-formula'(@'u3-formula',@'y-formula'),'i-formula-formula-formula'(@'y-formula',@'y2-formula')))='true-bool'],['p-bool-formula'('i-formula-formula-formula'(@'u-formula','i-formula-formula-formula'(@'y-formula',@'y2-formula')))='true-bool'])).
+
+/* condition number 1 is the selected condition for
+/*	p(i(i(u3,y),i(y,y2))) = true => p(i(u,i(y,y2))) = true */
+action(selectcondition(1),'$equation'(['p-bool-formula'('i-formula-formula-formula'('i-formula-formula-formula'(@'u3-formula',@'y-formula'),'i-formula-formula-formula'(@'y-formula',@'y2-formula')))='true-bool'],['p-bool-formula'('i-formula-formula-formula'(@'u-formula','i-formula-formula-formula'(@'y-formula',@'y2-formula')))='true-bool'])).
+
+/* declare as nonoperational :
+/*	p(i(i(u1,y1),i(u,i(y1,y)))) = true => p(i(u2,i(u,i(y1,y)))) = true */
+action(orient(n),'$equation'(['p-bool-formula'('i-formula-formula-formula'('i-formula-formula-formula'(@'u1-formula',@'y1-formula'),'i-formula-formula-formula'(@'u-formula','i-formula-formula-formula'(@'y1-formula',@'y-formula'))))='true-bool'],['p-bool-formula'('i-formula-formula-formula'(@'u2-formula','i-formula-formula-formula'(@'u-formula','i-formula-formula-formula'(@'y1-formula',@'y-formula'))))='true-bool'])).
+
+/* condition number 1 is the selected condition for
+/*	p(i(i(u1,y1),i(u,i(y1,y)))) = true => p(i(u2,i(u,i(y1,y)))) = true */
+action(selectcondition(1),'$equation'(['p-bool-formula'('i-formula-formula-formula'('i-formula-formula-formula'(@'u1-formula',@'y1-formula'),'i-formula-formula-formula'(@'u-formula','i-formula-formula-formula'(@'y1-formula',@'y-formula'))))='true-bool'],['p-bool-formula'('i-formula-formula-formula'(@'u2-formula','i-formula-formula-formula'(@'u-formula','i-formula-formula-formula'(@'y1-formula',@'y-formula'))))='true-bool'])).
+

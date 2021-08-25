@@ -1,0 +1,6 @@
+ 
+"compileRules(+File)."
+
+compiles  the current set of  rewrite rules  to Prolog and writes the
+Prolog clauses  into file  "File.rules".  "File.rules"  may later  be
+compiled to produce a new definition of "eval", cf. "loadRules".

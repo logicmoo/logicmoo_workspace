@@ -1,0 +1,62 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%         Change the value of max_lit:        %%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% 8  (=>5, 3) - solution with 8 states (7 actions)
+%%% 12 (=> 7, 5 standard) - solution with 12 states 
+%%% 16 (=> 9, 7) - solution with 16 states
+%%% 20 (=> 11, 9)
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+max_lit(16).  
+
+botte(M) :- max_lit(N), M is N//2 - 1.
+botte(M) :- max_lit(N), M is N//2 + 1.
+botte(N) :- max_lit(N).
+
+%%%%%%%%%%%%%%%%%%%%%
+
+fluent(contiene(B),0,B):- botte(B).
+
+%%%%%%%%%%%%%%%%
+
+action(versa(X,Y)):-  botte(X),botte(Y), neq(X,Y). 
+ 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+causes(versa(X,Y), contiene(X) eq 0, 
+        [ Y - contiene(Y) geq contiene(X)]):-
+        action(versa(X,Y)).
+causes(versa(X,Y), contiene(Y) eq contiene(Y)^(-1) + contiene(X)^(-1),
+        [Y - contiene(Y) geq contiene(X)]):-
+        action(versa(X,Y)).
+causes(versa(X,Y), contiene(Y) eq Y, 
+        [Y - contiene(Y) lt contiene(X)]):-
+        action(versa(X,Y)).
+causes(versa(X,Y), contiene(X) eq contiene(X)^(-1) - Y + contiene(Y)^(-1), 
+        [Y - contiene(Y) lt contiene(X)]):-
+        action(versa(X,Y)).
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+executable(versa(X,Y),[contiene(X) gt 0, contiene(Y) lt Y ]) :-  
+        action(versa(X,Y)).
+     
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+caused([], contiene(B) eq B - contiene(B1) - contiene(B2)) :-
+     max_lit(B), B1 is B//2-1, B2 is B//2+1.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%         
+
+initially(contiene(N) eq  N) :-
+    max_lit(N).
+
+%%%%%%%%%%%%%%%
+
+goal(contiene(N) eq M) :- max_lit(N), M is N//2.
+goal(contiene(P) eq M) :- max_lit(N), M is N//2, P is M + 1.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%         
+
+action_cost(versa(X,Y), X ) :- action(versa(X,Y)). 
+plan_cost(plan leq 170).

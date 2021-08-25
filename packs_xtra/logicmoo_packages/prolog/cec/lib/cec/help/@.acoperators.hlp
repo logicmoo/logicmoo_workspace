@@ -1,0 +1,15 @@
+
+Specifications with Associative and Commutative Operators
+---------------------------------------------------------
+
+As  a commutativity axiom  immediately  destroys the  termination property of a 
+term rewriting system,  this property  cannot be  expressed by  a  term rewrite
+rule. A  well  known  solution to  this problem  is unification  and  rewriting 
+modulo  associativity and  commutativity,  cf. [Sti81]  and [Fag83].  CEC knows 
+about the AC-operators of the signature. CEC extracts this information from the 
+given set of axioms and treats permutative equations in a specific way. This is
+indicated by including them into the set of nonoperational equations.
+Note  that  in the  presence  of AC-operators  termination  proofs  using  path 
+orderings  like "kns"  are invalid.  But  termination  proofs  with  polynomial
+interpretations may  be possible.  Therefore CEC  sets the default  termination 
+ordering to "poly" if there are AC-operators in a specification.

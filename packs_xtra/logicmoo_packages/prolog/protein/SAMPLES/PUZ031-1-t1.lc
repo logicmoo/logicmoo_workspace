@@ -1,0 +1,89 @@
+
+%% Linear completed theory PUZ031-1-t1.th:
+%% Completed used following flags:
+%%
+%%             Flag I Value
+%% -----------------+-------
+%%        max_level I 3
+%%       term_depth I 0
+%%       term_width I 0
+%%      id_maxdepth I 5
+%%       redundancy I strong_at_end
+%%     all_red_test I at_end
+%%     prefer_short I true
+%%     use_anc_lits I true
+%%         minerase I 2
+
+
+               wolf(X_5729) -> animal(X_5729). %%   1/L: 1/W:  0/initial(input)
+                fox(X_5734) -> animal(X_5734). %%   2/L: 1/W:  0/initial(input)
+               bird(X_5739) -> animal(X_5739). %%   3/L: 1/W:  0/initial(input)
+        caterpillar(X_5744) -> animal(X_5744). %%   4/L: 1/W:  0/initial(input)
+              snail(X_5749) -> animal(X_5749). %%   5/L: 1/W:  0/initial(input)
+                      ~ wolf(a_wolf) -> false. %%   6/L: 1/W:  0/initial(input)
+                        ~ fox(a_fox) -> false. %%   7/L: 1/W:  0/initial(input)
+                      ~ bird(a_bird) -> false. %%   8/L: 1/W:  0/initial(input)
+        ~ caterpillar(a_caterpillar) -> false. %%   9/L: 1/W:  0/initial(input)
+                    ~ snail(a_snail) -> false. %%  10/L: 1/W:  0/initial(input)
+                    ~ grain(a_grain) -> false. %%  11/L: 1/W:  0/initial(input)
+               grain(X_5784) -> plant(X_5784). %%  12/L: 1/W:  0/initial(input)
+caterpillar(Catapillar_5789), bird(Bird_5794) -> much_smaller(Catapillar_5789, Bird_5794). %%  13/L: 1/W:  0/initial(input)
+snail(Snail_5794), bird(Bird_5799) -> much_smaller(Snail_5794, Bird_5799). %%  14/L: 1/W:  0/initial(input)
+bird(Bird_5799), fox(Fox_5804) -> much_smaller(Bird_5799, Fox_5804). %%  15/L: 1/W:  0/initial(input)
+fox(Fox_5804), wolf(Wolf_5809) -> much_smaller(Fox_5804, Wolf_5809). %%  16/L: 1/W:  0/initial(input)
+wolf(Wolf_5809), fox(Fox_5814), eats(Wolf_5809, Fox_5814) -> false. %%  17/L: 1/W:  0/initial(input)
+wolf(Wolf_5814), grain(Grain_5819), eats(Wolf_5814, Grain_5819) -> false. %%  18/L: 1/W:  0/initial(input)
+bird(Bird_5819), caterpillar(Catapillar_5824) -> eats(Bird_5819, Catapillar_5824). %%  19/L: 1/W:  0/initial(input)
+bird(Bird_5824), snail(Snail_5829), eats(Bird_5824, Snail_5829) -> false. %%  20/L: 1/W:  0/initial(input)
+fox(Fox_5910) -> much_smaller(Fox_5910, a_wolf). %%  37/L: 2/W:499/unit2(16, 6)
+fox(Fox_5915), eats(a_wolf, Fox_5915) -> false. %%  38/L: 2/W:498/unit2(17, 6)
+grain(Grain_5920), eats(a_wolf, Grain_5920) -> false. %%  39/L: 2/W:497/unit2(18, 6)
+bird(Bird_5925) -> much_smaller(Bird_5925, a_fox). %%  40/L: 2/W:496/unit2(15, 7)
+wolf(Wolf_5930) -> much_smaller(a_fox, Wolf_5930). %%  41/L: 2/W:495/unit2(16, 7)
+wolf(Wolf_5935), eats(Wolf_5935, a_fox) -> false. %%  42/L: 2/W:494/unit2(17, 7)
+caterpillar(Catapillar_5940) -> much_smaller(Catapillar_5940, a_bird). %%  43/L: 2/W:493/unit2(13, 8)
+snail(Snail_5945) -> much_smaller(Snail_5945, a_bird). %%  44/L: 2/W:492/unit2(14, 8)
+fox(Fox_5950) -> much_smaller(a_bird, Fox_5950). %%  45/L: 2/W:491/unit2(15, 8)
+caterpillar(Catapillar_5955) -> eats(a_bird, Catapillar_5955). %%  46/L: 2/W:490/unit2(19, 8)
+snail(Snail_5960), eats(a_bird, Snail_5960) -> false. %%  47/L: 2/W:489/unit2(20, 8)
+bird(Bird_5965) -> much_smaller(a_caterpillar, Bird_5965). %%  48/L: 2/W:488/unit2(13, 9)
+bird(Bird_5970) -> eats(Bird_5970, a_caterpillar). %%  49/L: 2/W:487/unit2(19, 9)
+bird(Bird_5975) -> much_smaller(a_snail, Bird_5975). %%  50/L: 2/W:486/unit2(14, 10)
+bird(Bird_5980), eats(Bird_5980, a_snail) -> false. %%  51/L: 2/W:485/unit2(20, 10)
+wolf(Wolf_5985), eats(Wolf_5985, a_grain) -> false. %%  52/L: 2/W:484/unit2(18, 11)
+bird(Bird_6040), caterpillar(Catapillar_6045), wolf(Bird_6040), fox(Catapillar_6045) -> false. %%  63/L: 2/W:473/deduce(19, 17)
+bird(Bird_6045), caterpillar(Catapillar_6050), wolf(Bird_6045), grain(Catapillar_6050) -> false. %%  64/L: 2/W:472/deduce(19, 18)
+           ~ animal(X_6064) -> ~ wolf(X_6064). %%  67/L: 2/W:469/contra(1 / 1)
+            ~ animal(X_6069) -> ~ fox(X_6069). %%  68/L: 2/W:468/contra(2 / 1)
+           ~ animal(X_6074) -> ~ bird(X_6074). %%  69/L: 2/W:467/contra(3 / 1)
+    ~ animal(X_6079) -> ~ caterpillar(X_6079). %%  70/L: 2/W:466/contra(4 / 1)
+          ~ animal(X_6084) -> ~ snail(X_6084). %%  71/L: 2/W:465/contra(5 / 1)
+           ~ plant(X_6089) -> ~ grain(X_6089). %%  72/L: 2/W:464/contra(12 / 1)
+~ much_smaller(Catapillar_6095, Bird_6096), bird(Bird_6096) -> ~ caterpillar(Catapillar_6095). %%  73/L: 2/W:463/contra(13 / 1)
+~ much_smaller(Snail_6105, Bird_6106), bird(Bird_6106) -> ~ snail(Snail_6105). %%  75/L: 2/W:461/contra(14 / 1)
+~ much_smaller(Bird_6115, Fox_6116), fox(Fox_6116) -> ~ bird(Bird_6115). %%  77/L: 2/W:459/contra(15 / 1)
+~ much_smaller(Fox_6125, Wolf_6126), wolf(Wolf_6126) -> ~ fox(Fox_6125). %%  79/L: 2/W:457/contra(16 / 1)
+~ eats(Bird_6140, Catapillar_6141), bird(Bird_6140) -> ~ caterpillar(Catapillar_6141). %%  82/L: 2/W:454/contra(19 / 2)
+                 eats(a_wolf, a_fox) -> false. %%  88/L: 3/W:500/unit2(42, 6)
+               eats(a_wolf, a_grain) -> false. %%  89/L: 3/W:500/unit2(52, 6)
+bird(a_wolf), caterpillar(Catapillar_6179), fox(Catapillar_6179) -> false. %%  90/L: 3/W:453/unit2(63, 6)
+bird(a_wolf), caterpillar(Catapillar_6184), grain(Catapillar_6184) -> false. %%  91/L: 3/W:452/unit2(64, 6)
+~ much_smaller(Fox_6188, a_wolf) -> ~ fox(Fox_6188). %%  92/L: 3/W:451/unit2(79, 6)
+bird(Bird_6190), caterpillar(a_fox), wolf(Bird_6190) -> false. %%  93/L: 3/W:450/unit2(63, 7)
+~ much_smaller(Bird_6198, a_fox) -> ~ bird(Bird_6198). %%  94/L: 3/W:449/unit2(77, 7)
+               eats(a_bird, a_snail) -> false. %%  95/L: 3/W:500/unit2(51, 8)
+caterpillar(Catapillar_6205), wolf(a_bird), fox(Catapillar_6205) -> false. %%  96/L: 3/W:448/unit2(63, 8)
+caterpillar(Catapillar_6210), wolf(a_bird), grain(Catapillar_6210) -> false. %%  97/L: 3/W:447/unit2(64, 8)
+~ much_smaller(Catapillar_6223, a_bird) -> ~ caterpillar(Catapillar_6223). %%  99/L: 3/W:445/unit2(73, 8)
+~ much_smaller(Snail_6228, a_bird) -> ~ snail(Snail_6228). %% 100/L: 3/W:444/unit2(75, 8)
+~ eats(a_bird, Catapillar_6233) -> ~ caterpillar(Catapillar_6233). %% 101/L: 3/W:443/unit2(82, 8)
+bird(Bird_6235), wolf(Bird_6235), fox(a_caterpillar) -> false. %% 102/L: 3/W:442/unit2(63, 9)
+bird(Bird_6240), wolf(Bird_6240), grain(a_caterpillar) -> false. %% 103/L: 3/W:441/unit2(64, 9)
+bird(Bird_6245), bird(Bird_6245), snail(a_caterpillar) -> false. %% 104/L: 3/W:440/unit2(65, 9)
+bird(Bird_6250), caterpillar(a_grain), wolf(Bird_6250) -> false. %% 105/L: 3/W:439/unit2(64, 11)
+    caterpillar(a_fox), wolf(a_bird) -> false. %% 106/L: 3/W:438/deduce(46, 42)
+caterpillar(Catapillar_6260), snail(Catapillar_6260) -> false. %% 107/L: 3/W:437/deduce(46, 47)
+  caterpillar(a_grain), wolf(a_bird) -> false. %% 108/L: 3/W:436/deduce(46, 52)
+    bird(a_wolf), fox(a_caterpillar) -> false. %% 109/L: 3/W:435/deduce(49, 38)
+  bird(a_wolf), grain(a_caterpillar) -> false. %% 110/L: 3/W:434/deduce(49, 39)
+  bird(a_bird), snail(a_caterpillar) -> false. %% 111/L: 3/W:433/deduce(49, 47)

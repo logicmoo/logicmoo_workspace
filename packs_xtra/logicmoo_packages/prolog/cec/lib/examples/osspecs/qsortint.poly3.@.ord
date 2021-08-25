@@ -1,0 +1,492 @@
+order(poly3 for qsortint) using poly3 for qsort+poly1 for int.
+setInterpretation('$neq8-ms'(x,y,z) :    [ 2 * x + 2 * y + 2 * z ,
+     2 * x + 2 * y + 2 * z ,
+     2 * x + 2 * y + 2 * z ]
+).
+setInterpretation('$neq8-ms'(x1,x2,x3,x4) :    [ 2 * x1 + 2 * x2 + 2 * x3 + 2 * x4 ,
+     2 * x1 + 2 * x2 + 2 * x3 + 2 * x4 ,
+     2 * x1 + 2 * x2 + 2 * x3 + 2 * x4 ]
+).
+setInterpretation('$neq8'(x1,x2,x3,x4) :    [ 2 * x1 + 2 * x2 + 2 * x3 + 2 * x4 ,
+     2 * x1 + 2 * x2 + 2 * x3 + 2 * x4 ,
+     2 * x1 + 2 * x2 + 2 * x3 + 2 * x4 ]
+).
+setInterpretation('$neq7'(x,y) :    [ 2 * x + 2 * y ,
+     2 * x + 2 * y ,
+     2 * x + 2 * y ]
+).
+setInterpretation('$neq8-ms'(x,y) :    [ 2 * x + 2 * y ,
+     2 * x + 2 * y ,
+     2 * x + 2 * y ]
+).
+setInterpretation('$neq8'(x,y) :    [ 2 * x + 2 * y ,
+     2 * x + 2 * y ,
+     2 * x + 2 * y ]
+).
+setInterpretation('$neq8'(x,y,z) :    [ 2 * x + 2 * y + 2 * z ,
+     2 * x + 2 * y + 2 * z ,
+     2 * x + 2 * y + 2 * z ]
+).
+setInterpretation('$neq8'(x1,x2,x3,x4,x5,x6) :    [ 2 * x1 + 2 * x2 + 2 * x3 + 2 * x4 + 2 * x5 + 2 * x6 ,
+     2 * x1 + 2 * x2 + 2 * x3 + 2 * x4 + 2 * x5 + 2 * x6 ,
+     2 * x1 + 2 * x2 + 2 * x3 + 2 * x4 + 2 * x5 + 2 * x6 ]
+).
+setInterpretation('$neq7'(x1,x2,x3,x4,x5,x6) :    [ 2 * x1 + 2 * x2 + 2 * x3 + 2 * x4 + 2 * x5 + 2 * x6 ,
+     2 * x1 + 2 * x2 + 2 * x3 + 2 * x4 + 2 * x5 + 2 * x6 ,
+     2 * x1 + 2 * x2 + 2 * x3 + 2 * x4 + 2 * x5 + 2 * x6 ]
+).
+setInterpretation('$neq6'(x1,x2,x3,x4) :    [ 2 * x1 + 2 * x2 + 2 * x3 + 2 * x4 ,
+     2 * x1 + 2 * x2 + 2 * x3 + 2 * x4 ,
+     2 * x1 + 2 * x2 + 2 * x3 + 2 * x4 ]
+).
+setInterpretation('$neq9'(x1,x2,x3,x4,x5,x6) :    [ 2 * x1 + 2 * x2 + 2 * x3 + 2 * x4 + 2 * x5 + 2 * x6 ,
+     2 * x1 + 2 * x2 + 2 * x3 + 2 * x4 + 2 * x5 + 2 * x6 ,
+     2 * x1 + 2 * x2 + 2 * x3 + 2 * x4 + 2 * x5 + 2 * x6 ]
+).
+setInterpretation('$neq9'(x,y,z) :    [ 2 * x + 2 * y + 2 * z ,
+     2 * x + 2 * y + 2 * z ,
+     2 * x + 2 * y + 2 * z ]
+).
+setInterpretation('$neq9'(x,y) :    [ 2 * x + 2 * y ,
+     2 * x + 2 * y ,
+     2 * x + 2 * y ]
+).
+setInterpretation('$neq9-ms'(x,y) :    [ 2 * x + 2 * y ,
+     2 * x + 2 * y ,
+     2 * x + 2 * y ]
+).
+setInterpretation('$neq9'(x1,x2,x3,x4) :    [ 2 * x1 + 2 * x2 + 2 * x3 + 2 * x4 ,
+     2 * x1 + 2 * x2 + 2 * x3 + 2 * x4 ,
+     2 * x1 + 2 * x2 + 2 * x3 + 2 * x4 ]
+).
+setInterpretation('$neq9-ms'(x1,x2,x3,x4) :    [ 2 * x1 + 2 * x2 + 2 * x3 + 2 * x4 ,
+     2 * x1 + 2 * x2 + 2 * x3 + 2 * x4 ,
+     2 * x1 + 2 * x2 + 2 * x3 + 2 * x4 ]
+).
+setInterpretation('$inj-object-int'(x) :    [ x + 3 ,
+     x + 3 ,
+     x + 3 ]
+).
+setInterpretation('=<-bool-int-int'(x,y) :    [ x + y + 5 ,
+     x + y + 5 ,
+     x + y + 5 ]
+).
+setInterpretation('>-bool-int-int'(x,y) :    [ x + y + 6 ,
+     x + y + 6 ,
+     x + y + 6 ]
+).
+setInterpretation(>(x,y) :    [ x + y + 6 ,
+     x + y + 6 ,
+     x + y + 6 ]
+).
+setInterpretation(=<(x,y) :    [ x + y + 5 ,
+     x + y + 5 ,
+     x + y + 5 ]
+).
+setInterpretation('true-bool' :    [ 2 ,
+     2 ,
+     2 ]
+).
+setInterpretation('false-bool' :    [ 2 ,
+     2 ,
+     2 ]
+).
+setInterpretation(\==(x,y) :    [ x + y + 5 ,
+     x + y + 5 ,
+     x + y + 5 ]
+).
+setInterpretation(==(x,y) :    [ x + y + 4 ,
+     x + y + 4 ,
+     x + y + 4 ]
+).
+setInterpretation('\==-bool-object-object'(x,y) :    [ x + y + 5 ,
+     x + y + 5 ,
+     x + y + 5 ]
+).
+setInterpretation('==-bool-object-object'(x,y) :    [ x + y + 4 ,
+     x + y + 4 ,
+     x + y + 4 ]
+).
+setInterpretation('$inj-object-bool'(x) :    [ x + 1 ,
+     x + 1 ,
+     x + 1 ]
+).
+setInterpretation(true :    [ 2 ,
+     2 ,
+     2 ]
+).
+setInterpretation(false :    [ 2 ,
+     2 ,
+     2 ]
+).
+setInterpretation(-(x) :    [ x + 5 ,
+     x + 5 ,
+     x + 5 ]
+).
+setInterpretation('--int-int'(x) :    [ x + 5 ,
+     x + 5 ,
+     x + 5 ]
+).
+setInterpretation('--nzInt-nzInt'(x) :    [ x + 4 ,
+     x + 4 ,
+     x + 4 ]
+).
+setInterpretation('$inj-int-nat'(x) :    [ x + 1 ,
+     x + 1 ,
+     x + 1 ]
+).
+setInterpretation('$inj-nzInt-posint'(x) :    [ x + 1 ,
+     x + 1 ,
+     x + 1 ]
+).
+setInterpretation('$inj-int-nzInt'(x) :    [ x + 1 ,
+     x + 1 ,
+     x + 1 ]
+).
+setInterpretation('$inj-nat-zero'(x) :    [ x + 1 ,
+     x + 1 ,
+     x + 1 ]
+).
+setInterpretation('$inj-nat-posint'(x) :    [ x + 2 ,
+     x + 2 ,
+     x + 2 ]
+).
+setInterpretation('$inj-object-nat'(x) :    [ x + 2 ,
+     x + 2 ,
+     x + 2 ]
+).
+setInterpretation('s-posint-nat'(x) :    [ x + 4 ,
+     x + 4 ,
+     x + 4 ]
+).
+setInterpretation(s(x) :    [ x + 4 ,
+     x + 4 ,
+     x + 4 ]
+).
+setInterpretation(0 :    [ 2 ,
+     2 ,
+     2 ]
+).
+setInterpretation('*-nat-nat-nat'(x,y) :    [ 2 * x * y ,
+     2 * x * y ,
+     2 * x * y ]
+).
+setInterpretation('*-int-int-int'(x,y) :    [ 2 * x * y + 2 ,
+     2 * x * y + 2 ,
+     2 * x * y + 2 ]
+).
+setInterpretation(*(x,y) :    [ 4 * x * y ,
+     4 * x * y ,
+     4 * x * y ]
+).
+setInterpretation('+-posint-posint-posint'(x,y) :    [ x + y + 4 ,
+     x + y + 4 ,
+     x + y + 4 ]
+).
+setInterpretation('+-posint-nat-posint'(x,y) :    [ x + y + 5 ,
+     x + y + 5 ,
+     x + y + 5 ]
+).
+setInterpretation('+-posint-posint-nat'(x,y) :    [ x + y + 6 ,
+     x + y + 6 ,
+     x + y + 6 ]
+).
+setInterpretation('+-nat-nat-nat'(x,y) :    [ x + y + 7 ,
+     x + y + 7 ,
+     x + y + 7 ]
+).
+setInterpretation('+-int-int-int'(x,y) :    [ x + y + 8 ,
+     x + y + 8 ,
+     x + y + 8 ]
+).
+setInterpretation(+(x,y) :    [ x + 3 * y ,
+     x + 3 * y ,
+     x + 3 * y ]
+).
+setInterpretation(sort(x) :    [ 2 * x ,
+     2 * x ,
+     2 * x ]
+).
+setInterpretation(split(x,y) :    [ x + y + 1 ,
+     x + 2 * y ,
+     x + 2 * y ]
+).
+setInterpretation(','(x,y) :    [ x + y ,
+     x + y ,
+     x + y ]
+).
+setInterpretation('$h24_0'(x,y) :    [ 2 * x + 3 * y + 1 ,
+     2 * x + 2 * y ,
+     2 * x + 2 * y ]
+).
+setInterpretation('$h25_0'(x,y) :    [ x + 3 * y + 1 ,
+     x + y + 1 ,
+     x + y + 1 ]
+).
+setInterpretation('$h26_0'(x,y) :    [ x + 3 * y + 1 ,
+     x + y + 1 ,
+     x + y + 1 ]
+).
+setInterpretation('$inj-list-nelist'(x) :    [ x + 1 ,
+     x + 1 ,
+     x + 1 ]
+).
+setInterpretation('$inj-object-list'(x) :    [ x + 1 ,
+     x + 1 ,
+     x + 1 ]
+).
+setInterpretation('append-nelist-nelist-nelist'(x,y) :    [ x + y + 1 ,
+     x + y + 1 ,
+     x + y + 1 ]
+).
+setInterpretation('append-nelist-nelist-list'(x,y) :    [ x + y + 3 ,
+     x + y + 1 ,
+     x + y + 1 ]
+).
+setInterpretation('append-nelist-list-nelist'(x,y) :    [ x + y + 2 ,
+     x + y + 1 ,
+     x + y + 1 ]
+).
+setInterpretation('append-list-list-list'(x,y) :    [ x + y + 4 ,
+     x + y + 1 ,
+     x + y + 1 ]
+).
+setInterpretation(append(x,y) :    [ x + y ,
+     x + y ,
+     2 * x + y ]
+).
+setInterpretation(first(x) :    [ 2 * x ,
+     2 * x ,
+     2 * x ]
+).
+setInterpretation(tail(x) :    [ 2 * x ,
+     2 * x ,
+     2 * x ]
+).
+setInterpretation(rev(x) :    [ (x^2) ,
+     2 * x ,
+     2 * x ]
+).
+setInterpretation([] :    [ 2 ,
+     2 ,
+     2 ]
+).
+setInterpretation('.'(x,y) :    [ 3 * x + y + 1 ,
+     x + y ,
+     x + y ]
+).
+
+constructor('true-bool').
+constructor('false-bool').
+constructor('[]-list').
+constructor('0-zero').
+
+
+
+
+
+
+/* ordering of the literals is ms for
+/*	x:object==y:object = y:object==x:object */
+action(status(ms),'$equation'([],['==-bool-object-object'(@'x-object',@'y-object')='==-bool-object-object'(@'y-object',@'x-object')])).
+
+/* ordering of the literals is ms for
+/*	x:object\==y:object = y:object\==x:object */
+action(status(ms),'$equation'([],['\==-bool-object-object'(@'x-object',@'y-object')='\==-bool-object-object'(@'y-object',@'x-object')])).
+
+/* declare as nonoperational :
+/*	x:object==y:object = true => x:object = y:object */
+action(orient(n),'$equation'(['==-bool-object-object'(@'x-object',@'y-object')='true-bool'],[@'x-object'= @'y-object'])).
+
+/* ordering of the literals is ms for
+/*	x:object==y:object = true => x:object = y:object */
+action(status(ms),'$equation'(['==-bool-object-object'(@'x-object',@'y-object')='true-bool'],[@'x-object'= @'y-object'])).
+
+/* declare as nonoperational :
+/*	[y:int=<x:int] = [x:int=<y:int,false] */
+action(orient(n),'$equation'([],[['=<-bool-int-int'(@'y-int',@'x-int')]=['=<-bool-int-int'(@'x-int',@'y-int'),'false-bool']])).
+
+/* ordering of the literals is [1,0] for
+/*	x:int=<y:int = false => y:int=<x:int = true */
+action(status([1,0]),'$equation'(['=<-bool-int-int'(@'x-int',@'y-int')='false-bool'],['=<-bool-int-int'(@'y-int',@'x-int')='true-bool'])).
+
+/* declare as nonoperational :
+/*	e1:int=<e2:int = true and e1:int>e2:int = true => true = false */
+action(orient(n),'$equation'(['=<-bool-int-int'(@'e1-int',@'e2-int')='true-bool','>-bool-int-int'(@'e1-int',@'e2-int')='true-bool'],['true-bool'='false-bool'])).
+
+/* condition number 1 is the selected condition for
+/*	e1:int=<e2:int = true and e1:int>e2:int = true => true = false */
+action(selectcondition(1),'$equation'(['=<-bool-int-int'(@'e1-int',@'e2-int')='true-bool','>-bool-int-int'(@'e1-int',@'e2-int')='true-bool'],['true-bool'='false-bool'])).
+
+/* ordering of the literals is ms for
+/*	e1:int=<e2:int = true and e1:int>e2:int = true => true = false */
+action(status(ms),'$equation'(['=<-bool-int-int'(@'e1-int',@'e2-int')='true-bool','>-bool-int-int'(@'e1-int',@'e2-int')='true-bool'],['true-bool'='false-bool'])).
+
+/* declare as nonoperational :
+/*	x:int=<y:int = true and y:int=<x:int = true => x:int = y:int */
+action(orient(n),'$equation'(['=<-bool-int-int'(@'x-int',@'y-int')='true-bool','=<-bool-int-int'(@'y-int',@'x-int')='true-bool'],[@'x-int'= @'y-int'])).
+
+/* condition number 1 is the selected condition for
+/*	x:int=<y:int = true and y:int=<x:int = true => x:int = y:int */
+action(selectcondition(1),'$equation'(['=<-bool-int-int'(@'x-int',@'y-int')='true-bool','=<-bool-int-int'(@'y-int',@'x-int')='true-bool'],[@'x-int'= @'y-int'])).
+
+/* ordering of the literals is [0,1,2] for
+/*	x:int=<y:int = true and y:int=<x:int = true => x:int = y:int */
+action(status([0,1,2]),'$equation'(['=<-bool-int-int'(@'x-int',@'y-int')='true-bool','=<-bool-int-int'(@'y-int',@'x-int')='true-bool'],[@'x-int'= @'y-int'])).
+
+/* declare as nonoperational :
+/*	x:int=<y:int = true and y:int=<z:int = true => x:int=<z:int = true */
+action(orient(n),'$equation'(['=<-bool-int-int'(@'x-int',@'y-int')='true-bool','=<-bool-int-int'(@'y-int',@'z-int')='true-bool'],['=<-bool-int-int'(@'x-int',@'z-int')='true-bool'])).
+
+/* condition number 1 is the selected condition for
+/*	x:int=<y:int = true and y:int=<z:int = true => x:int=<z:int = true */
+action(selectcondition(1),'$equation'(['=<-bool-int-int'(@'x-int',@'y-int')='true-bool','=<-bool-int-int'(@'y-int',@'z-int')='true-bool'],['=<-bool-int-int'(@'x-int',@'z-int')='true-bool'])).
+
+/* ordering of the literals is [0,1,2] for
+/*	x:int=<y:int = true and y:int=<z:int = true => x:int=<z:int = true */
+action(status([0,1,2]),'$equation'(['=<-bool-int-int'(@'x-int',@'y-int')='true-bool','=<-bool-int-int'(@'y-int',@'z-int')='true-bool'],['=<-bool-int-int'(@'x-int',@'z-int')='true-bool'])).
+
+/* split(e1:int,l:list) = l1:list,l2:list => sort(list([e1:int|l:list])) = list(append(sort(l1:list),[e1:int|sort(l2:list)]))
+/* should be checked for quasi-reductivity */
+action(orient(c),'$equation'(['split-pair-int-list'(@'e1-int',@'l-list')=',-pair-list-list'(@'l1-list',@'l2-list')],['sort-list-list'('$inj-list-nelist'('.-nelist-int-list'(@'e1-int',@'l-list')))='$inj-list-nelist'('append-nelist-list-nelist'('sort-list-list'(@'l1-list'),'.-nelist-int-list'(@'e1-int','sort-list-list'(@'l2-list'))))])).
+
+/* annotation of literals is [l,l] in
+/*	split(e1:int,l:list) = l1:list,l2:list => sort(list([e1:int|l:list])) = list(append(sort(l1:list),[e1:int|sort(l2:list)])) */
+action(annotation([l,l]),'$equation'(['split-pair-int-list'(@'e1-int',@'l-list')=',-pair-list-list'(@'l1-list',@'l2-list')],['sort-list-list'('$inj-list-nelist'('.-nelist-int-list'(@'e1-int',@'l-list')))='$inj-list-nelist'('append-nelist-list-nelist'('sort-list-list'(@'l1-list'),'.-nelist-int-list'(@'e1-int','sort-list-list'(@'l2-list'))))])).
+
+/* e2:int=<e1:int = true and split(e1:int,l:list) = l1:list,l2:list => split(e1:int,list([e2:int|l:list])) = list([e2:int|l1:list]),l2:list
+/* should be checked for quasi-reductivity */
+action(orient(c),'$equation'(['=<-bool-int-int'(@'e2-int',@'e1-int')='true-bool','split-pair-int-list'(@'e1-int',@'l-list')=',-pair-list-list'(@'l1-list',@'l2-list')],['split-pair-int-list'(@'e1-int','$inj-list-nelist'('.-nelist-int-list'(@'e2-int',@'l-list')))=',-pair-list-list'('$inj-list-nelist'('.-nelist-int-list'(@'e2-int',@'l1-list')),@'l2-list')])).
+
+/* annotation of literals is [l,l,l] in
+/*	e2:int=<e1:int = true and split(e1:int,l:list) = l1:list,l2:list => split(e1:int,list([e2:int|l:list])) = list([e2:int|l1:list]),l2:list */
+action(annotation([l,l,l]),'$equation'(['=<-bool-int-int'(@'e2-int',@'e1-int')='true-bool','split-pair-int-list'(@'e1-int',@'l-list')=',-pair-list-list'(@'l1-list',@'l2-list')],['split-pair-int-list'(@'e1-int','$inj-list-nelist'('.-nelist-int-list'(@'e2-int',@'l-list')))=',-pair-list-list'('$inj-list-nelist'('.-nelist-int-list'(@'e2-int',@'l1-list')),@'l2-list')])).
+
+/* e2:int>e1:int = true and split(e1:int,l:list) = l1:list,l2:list => split(e1:int,list([e2:int|l:list])) = l1:list,list([e2:int|l2:list])
+/* should be checked for quasi-reductivity */
+action(orient(c),'$equation'(['>-bool-int-int'(@'e2-int',@'e1-int')='true-bool','split-pair-int-list'(@'e1-int',@'l-list')=',-pair-list-list'(@'l1-list',@'l2-list')],['split-pair-int-list'(@'e1-int','$inj-list-nelist'('.-nelist-int-list'(@'e2-int',@'l-list')))=',-pair-list-list'(@'l1-list','$inj-list-nelist'('.-nelist-int-list'(@'e2-int',@'l2-list')))])).
+
+/* annotation of literals is [l,l,l] in
+/*	e2:int>e1:int = true and split(e1:int,l:list) = l1:list,l2:list => split(e1:int,list([e2:int|l:list])) = l1:list,list([e2:int|l2:list]) */
+action(annotation([l,l,l]),'$equation'(['>-bool-int-int'(@'e2-int',@'e1-int')='true-bool','split-pair-int-list'(@'e1-int',@'l-list')=',-pair-list-list'(@'l1-list',@'l2-list')],['split-pair-int-list'(@'e1-int','$inj-list-nelist'('.-nelist-int-list'(@'e2-int',@'l-list')))=',-pair-list-list'(@'l1-list','$inj-list-nelist'('.-nelist-int-list'(@'e2-int',@'l2-list')))])).
+
+/* declare as nonoperational :
+/*	l1:list,l2:list = l4:list,l3:list and split(e:int,l5:list) = l1:list,l2:list => append(sort(l1:list),[e:int|sort(l2:list)]) = append(sort(l4:list),[e:int|sort(l3:list)]) */
+action(orient(n),'$equation'([',-pair-list-list'(@'l1-list',@'l2-list')=',-pair-list-list'(@'l4-list',@'l3-list'),'split-pair-int-list'(@'e-int',@'l5-list')=',-pair-list-list'(@'l1-list',@'l2-list')],['append-nelist-list-nelist'('sort-list-list'(@'l1-list'),'.-nelist-int-list'(@'e-int','sort-list-list'(@'l2-list')))='append-nelist-list-nelist'('sort-list-list'(@'l4-list'),'.-nelist-int-list'(@'e-int','sort-list-list'(@'l3-list')))])).
+
+/* condition number 1 is the selected condition for
+/*	l1:list,l2:list = l4:list,l3:list and split(e:int,l5:list) = l1:list,l2:list => append(sort(l1:list),[e:int|sort(l2:list)]) = append(sort(l4:list),[e:int|sort(l3:list)]) */
+action(selectcondition(1),'$equation'([',-pair-list-list'(@'l1-list',@'l2-list')=',-pair-list-list'(@'l4-list',@'l3-list'),'split-pair-int-list'(@'e-int',@'l5-list')=',-pair-list-list'(@'l1-list',@'l2-list')],['append-nelist-list-nelist'('sort-list-list'(@'l1-list'),'.-nelist-int-list'(@'e-int','sort-list-list'(@'l2-list')))='append-nelist-list-nelist'('sort-list-list'(@'l4-list'),'.-nelist-int-list'(@'e-int','sort-list-list'(@'l3-list')))])).
+
+/* declare as nonoperational :
+/*	l1:list,l2:list = l4:list,l3:list and e3:int=<e:int = true and split(e:int,l5:list) = l1:list,l2:list => list([e3:int|l1:list]),l2:list = list([e3:int|l4:list]),l3:list */
+action(orient(n),'$equation'([',-pair-list-list'(@'l1-list',@'l2-list')=',-pair-list-list'(@'l4-list',@'l3-list'),'=<-bool-int-int'(@'e3-int',@'e-int')='true-bool','split-pair-int-list'(@'e-int',@'l5-list')=',-pair-list-list'(@'l1-list',@'l2-list')],[',-pair-list-list'('$inj-list-nelist'('.-nelist-int-list'(@'e3-int',@'l1-list')),@'l2-list')=',-pair-list-list'('$inj-list-nelist'('.-nelist-int-list'(@'e3-int',@'l4-list')),@'l3-list')])).
+
+/* condition number 1 is the selected condition for
+/*	l1:list,l2:list = l4:list,l3:list and e3:int=<e:int = true and split(e:int,l5:list) = l1:list,l2:list => list([e3:int|l1:list]),l2:list = list([e3:int|l4:list]),l3:list */
+action(selectcondition(1),'$equation'([',-pair-list-list'(@'l1-list',@'l2-list')=',-pair-list-list'(@'l4-list',@'l3-list'),'=<-bool-int-int'(@'e3-int',@'e-int')='true-bool','split-pair-int-list'(@'e-int',@'l5-list')=',-pair-list-list'(@'l1-list',@'l2-list')],[',-pair-list-list'('$inj-list-nelist'('.-nelist-int-list'(@'e3-int',@'l1-list')),@'l2-list')=',-pair-list-list'('$inj-list-nelist'('.-nelist-int-list'(@'e3-int',@'l4-list')),@'l3-list')])).
+
+/* declare as nonoperational :
+/*	l1:list,l2:list = l4:list,l3:list and e3:int>e:int = true and split(e:int,l5:list) = l1:list,l2:list => l1:list,list([e3:int|l2:list]) = l4:list,list([e3:int|l3:list]) */
+action(orient(n),'$equation'([',-pair-list-list'(@'l1-list',@'l2-list')=',-pair-list-list'(@'l4-list',@'l3-list'),'>-bool-int-int'(@'e3-int',@'e-int')='true-bool','split-pair-int-list'(@'e-int',@'l5-list')=',-pair-list-list'(@'l1-list',@'l2-list')],[',-pair-list-list'(@'l1-list','$inj-list-nelist'('.-nelist-int-list'(@'e3-int',@'l2-list')))=',-pair-list-list'(@'l4-list','$inj-list-nelist'('.-nelist-int-list'(@'e3-int',@'l3-list')))])).
+
+/* condition number 1 is the selected condition for
+/*	l1:list,l2:list = l4:list,l3:list and e3:int>e:int = true and split(e:int,l5:list) = l1:list,l2:list => l1:list,list([e3:int|l2:list]) = l4:list,list([e3:int|l3:list]) */
+action(selectcondition(1),'$equation'([',-pair-list-list'(@'l1-list',@'l2-list')=',-pair-list-list'(@'l4-list',@'l3-list'),'>-bool-int-int'(@'e3-int',@'e-int')='true-bool','split-pair-int-list'(@'e-int',@'l5-list')=',-pair-list-list'(@'l1-list',@'l2-list')],[',-pair-list-list'(@'l1-list','$inj-list-nelist'('.-nelist-int-list'(@'e3-int',@'l2-list')))=',-pair-list-list'(@'l4-list','$inj-list-nelist'('.-nelist-int-list'(@'e3-int',@'l3-list')))])).
+
+/* declare as nonoperational :
+/*	object(A:nat) = object(B:int) => int(A:nat) = B:int */
+action(orient(n),'$equation'(['$inj-object-nat'(@'A-nat')='$inj-object-int'(@'B-int')],['$inj-int-nat'(@'A-nat')= @'B-int'])).
+
+/* declare as nonoperational :
+/*	int(nzInt(A:posint)) = int(B:nat) => nat(A:posint) = B:nat */
+action(orient(n),'$equation'(['$inj-int-nzInt'('$inj-nzInt-posint'(@'A-posint'))='$inj-int-nat'(@'B-nat')],['$inj-nat-posint'(@'A-posint')= @'B-nat'])).
+
+/* declare as nonoperational :
+/*	int(nzInt(n:posint))=<z:int = true => int(nat(0))=<z:int = true */
+action(orient(n),'$equation'(['=<-bool-int-int'('$inj-int-nzInt'('$inj-nzInt-posint'(@'n-posint')),@'z-int')='true-bool'],['=<-bool-int-int'('$inj-int-nat'('$inj-nat-zero'('0-zero')),@'z-int')='true-bool'])).
+
+/* declare as nonoperational :
+/*	int(nat(0))=<int(k:nat) = true and int(nat(0))=<z:int = true => -int(k:nat)=<z:int = true */
+action(orient(n),'$equation'(['=<-bool-int-int'('$inj-int-nat'('$inj-nat-zero'('0-zero')),'$inj-int-nat'(@'k-nat'))='true-bool','=<-bool-int-int'('$inj-int-nat'('$inj-nat-zero'('0-zero')),@'z-int')='true-bool'],['=<-bool-int-int'('--int-int'('$inj-int-nat'(@'k-nat')),@'z-int')='true-bool'])).
+
+/* condition number 1 is the selected condition for
+/*	int(nat(0))=<int(k:nat) = true and int(nat(0))=<z:int = true => -int(k:nat)=<z:int = true */
+action(selectcondition(1),'$equation'(['=<-bool-int-int'('$inj-int-nat'('$inj-nat-zero'('0-zero')),'$inj-int-nat'(@'k-nat'))='true-bool','=<-bool-int-int'('$inj-int-nat'('$inj-nat-zero'('0-zero')),@'z-int')='true-bool'],['=<-bool-int-int'('--int-int'('$inj-int-nat'(@'k-nat')),@'z-int')='true-bool'])).
+
+/* declare as nonoperational :
+/*	int(nat(0))=<z:int = true => int(-nzInt(A:posint))=<z:int = true */
+action(orient(n),'$equation'(['=<-bool-int-int'('$inj-int-nat'('$inj-nat-zero'('0-zero')),@'z-int')='true-bool'],['=<-bool-int-int'('$inj-int-nzInt'('--nzInt-nzInt'('$inj-nzInt-posint'(@'A-posint'))),@'z-int')='true-bool'])).
+
+/* declare as nonoperational :
+/*	int(m:nat)=<int(nat(0)) = true and int(nat(0))=<int(m:nat) = true => int(nat(0)) = -int(m:nat) */
+action(orient(n),'$equation'(['=<-bool-int-int'('$inj-int-nat'(@'m-nat'),'$inj-int-nat'('$inj-nat-zero'('0-zero')))='true-bool','=<-bool-int-int'('$inj-int-nat'('$inj-nat-zero'('0-zero')),'$inj-int-nat'(@'m-nat'))='true-bool'],['$inj-int-nat'('$inj-nat-zero'('0-zero'))='--int-int'('$inj-int-nat'(@'m-nat'))])).
+
+/* condition number 1 is the selected condition for
+/*	int(m:nat)=<int(nat(0)) = true and int(nat(0))=<int(m:nat) = true => int(nat(0)) = -int(m:nat) */
+action(selectcondition(1),'$equation'(['=<-bool-int-int'('$inj-int-nat'(@'m-nat'),'$inj-int-nat'('$inj-nat-zero'('0-zero')))='true-bool','=<-bool-int-int'('$inj-int-nat'('$inj-nat-zero'('0-zero')),'$inj-int-nat'(@'m-nat'))='true-bool'],['$inj-int-nat'('$inj-nat-zero'('0-zero'))='--int-int'('$inj-int-nat'(@'m-nat'))])).
+
+/* declare as nonoperational :
+/*	int(m:nat)=<int(nat(0)) = true and -int(m:nat)=<z:int = true => int(nat(0))=<z:int = true */
+action(orient(n),'$equation'(['=<-bool-int-int'('$inj-int-nat'(@'m-nat'),'$inj-int-nat'('$inj-nat-zero'('0-zero')))='true-bool','=<-bool-int-int'('--int-int'('$inj-int-nat'(@'m-nat')),@'z-int')='true-bool'],['=<-bool-int-int'('$inj-int-nat'('$inj-nat-zero'('0-zero')),@'z-int')='true-bool'])).
+
+/* condition number 1 is the selected condition for
+/*	int(m:nat)=<int(nat(0)) = true and -int(m:nat)=<z:int = true => int(nat(0))=<z:int = true */
+action(selectcondition(1),'$equation'(['=<-bool-int-int'('$inj-int-nat'(@'m-nat'),'$inj-int-nat'('$inj-nat-zero'('0-zero')))='true-bool','=<-bool-int-int'('--int-int'('$inj-int-nat'(@'m-nat')),@'z-int')='true-bool'],['=<-bool-int-int'('$inj-int-nat'('$inj-nat-zero'('0-zero')),@'z-int')='true-bool'])).
+
+/* declare as nonoperational :
+/*	int(m:nat)=<int(nat(0)) = true => int(m:nat)=<int(nzInt(A:posint)) = true */
+action(orient(n),'$equation'(['=<-bool-int-int'('$inj-int-nat'(@'m-nat'),'$inj-int-nat'('$inj-nat-zero'('0-zero')))='true-bool'],['=<-bool-int-int'('$inj-int-nat'(@'m-nat'),'$inj-int-nzInt'('$inj-nzInt-posint'(@'A-posint')))='true-bool'])).
+
+/* declare as nonoperational :
+/*	int(nzInt(n:posint))=<z:int = true => -int(m:nat)=<z:int = true */
+action(orient(n),'$equation'(['=<-bool-int-int'('$inj-int-nzInt'('$inj-nzInt-posint'(@'n-posint')),@'z-int')='true-bool'],['=<-bool-int-int'('--int-int'('$inj-int-nat'(@'m-nat')),@'z-int')='true-bool'])).
+
+/* declare as nonoperational :
+/*	int(m:nat)=<int(k:nat) = true and -int(m:nat)=<z:int = true => -int(k:nat)=<z:int = true */
+action(orient(n),'$equation'(['=<-bool-int-int'('$inj-int-nat'(@'m-nat'),'$inj-int-nat'(@'k-nat'))='true-bool','=<-bool-int-int'('--int-int'('$inj-int-nat'(@'m-nat')),@'z-int')='true-bool'],['=<-bool-int-int'('--int-int'('$inj-int-nat'(@'k-nat')),@'z-int')='true-bool'])).
+
+/* condition number 1 is the selected condition for
+/*	int(m:nat)=<int(k:nat) = true and -int(m:nat)=<z:int = true => -int(k:nat)=<z:int = true */
+action(selectcondition(1),'$equation'(['=<-bool-int-int'('$inj-int-nat'(@'m-nat'),'$inj-int-nat'(@'k-nat'))='true-bool','=<-bool-int-int'('--int-int'('$inj-int-nat'(@'m-nat')),@'z-int')='true-bool'],['=<-bool-int-int'('--int-int'('$inj-int-nat'(@'k-nat')),@'z-int')='true-bool'])).
+
+/* declare as nonoperational :
+/*	int(m:nat)=<int(nzInt(A:posint)) = true and -int(m:nat)=<z:int = true => int(-nzInt(A:posint))=<z:int = true */
+action(orient(n),'$equation'(['=<-bool-int-int'('$inj-int-nat'(@'m-nat'),'$inj-int-nzInt'('$inj-nzInt-posint'(@'A-posint')))='true-bool','=<-bool-int-int'('--int-int'('$inj-int-nat'(@'m-nat')),@'z-int')='true-bool'],['=<-bool-int-int'('$inj-int-nzInt'('--nzInt-nzInt'('$inj-nzInt-posint'(@'A-posint'))),@'z-int')='true-bool'])).
+
+/* condition number 1 is the selected condition for
+/*	int(m:nat)=<int(nzInt(A:posint)) = true and -int(m:nat)=<z:int = true => int(-nzInt(A:posint))=<z:int = true */
+action(selectcondition(1),'$equation'(['=<-bool-int-int'('$inj-int-nat'(@'m-nat'),'$inj-int-nzInt'('$inj-nzInt-posint'(@'A-posint')))='true-bool','=<-bool-int-int'('--int-int'('$inj-int-nat'(@'m-nat')),@'z-int')='true-bool'],['=<-bool-int-int'('$inj-int-nzInt'('--nzInt-nzInt'('$inj-nzInt-posint'(@'A-posint'))),@'z-int')='true-bool'])).
+
+/* declare as nonoperational :
+/*	int(nzInt(A:posint))=<int(k:nat) = true and int(-nzInt(A:posint))=<z:int = true => -int(k:nat)=<z:int = true */
+action(orient(n),'$equation'(['=<-bool-int-int'('$inj-int-nzInt'('$inj-nzInt-posint'(@'A-posint')),'$inj-int-nat'(@'k-nat'))='true-bool','=<-bool-int-int'('$inj-int-nzInt'('--nzInt-nzInt'('$inj-nzInt-posint'(@'A-posint'))),@'z-int')='true-bool'],['=<-bool-int-int'('--int-int'('$inj-int-nat'(@'k-nat')),@'z-int')='true-bool'])).
+
+/* condition number 2 is the selected condition for
+/*	int(nzInt(A:posint))=<int(k:nat) = true and int(-nzInt(A:posint))=<z:int = true => -int(k:nat)=<z:int = true */
+action(selectcondition(2),'$equation'(['=<-bool-int-int'('$inj-int-nzInt'('$inj-nzInt-posint'(@'A-posint')),'$inj-int-nat'(@'k-nat'))='true-bool','=<-bool-int-int'('$inj-int-nzInt'('--nzInt-nzInt'('$inj-nzInt-posint'(@'A-posint'))),@'z-int')='true-bool'],['=<-bool-int-int'('--int-int'('$inj-int-nat'(@'k-nat')),@'z-int')='true-bool'])).
+
+/* declare as nonoperational :
+/*	int(nzInt(A:posint))=<int(nzInt(A1:posint)) = true and int(-nzInt(A:posint))=<z:int = true => int(-nzInt(A1:posint))=<z:int = true */
+action(orient(n),'$equation'(['=<-bool-int-int'('$inj-int-nzInt'('$inj-nzInt-posint'(@'A-posint')),'$inj-int-nzInt'('$inj-nzInt-posint'(@'A1-posint')))='true-bool','=<-bool-int-int'('$inj-int-nzInt'('--nzInt-nzInt'('$inj-nzInt-posint'(@'A-posint'))),@'z-int')='true-bool'],['=<-bool-int-int'('$inj-int-nzInt'('--nzInt-nzInt'('$inj-nzInt-posint'(@'A1-posint'))),@'z-int')='true-bool'])).
+
+/* condition number 2 is the selected condition for
+/*	int(nzInt(A:posint))=<int(nzInt(A1:posint)) = true and int(-nzInt(A:posint))=<z:int = true => int(-nzInt(A1:posint))=<z:int = true */
+action(selectcondition(2),'$equation'(['=<-bool-int-int'('$inj-int-nzInt'('$inj-nzInt-posint'(@'A-posint')),'$inj-int-nzInt'('$inj-nzInt-posint'(@'A1-posint')))='true-bool','=<-bool-int-int'('$inj-int-nzInt'('--nzInt-nzInt'('$inj-nzInt-posint'(@'A-posint'))),@'z-int')='true-bool'],['=<-bool-int-int'('$inj-int-nzInt'('--nzInt-nzInt'('$inj-nzInt-posint'(@'A1-posint'))),@'z-int')='true-bool'])).
+
+/* declare as nonoperational :
+/*	int(m:nat)=<z:int = true => int(-nzInt(n:posint))=<z:int = true */
+action(orient(n),'$equation'(['=<-bool-int-int'('$inj-int-nat'(@'m-nat'),@'z-int')='true-bool'],['=<-bool-int-int'('$inj-int-nzInt'('--nzInt-nzInt'('$inj-nzInt-posint'(@'n-posint'))),@'z-int')='true-bool'])).
+
+/* declare as nonoperational :
+/*	int(nzInt(A:posint))=<int(k:nat) = true => -int(k:nat)=<int(m:nat) = true */
+action(orient(n),'$equation'(['=<-bool-int-int'('$inj-int-nzInt'('$inj-nzInt-posint'(@'A-posint')),'$inj-int-nat'(@'k-nat'))='true-bool'],['=<-bool-int-int'('--int-int'('$inj-int-nat'(@'k-nat')),'$inj-int-nat'(@'m-nat'))='true-bool'])).
+
+/* declare as nonoperational :
+/*	int(m:nat)=<int(k:nat) = true and int(nzInt(s (k:nat)))=<z:int = true => int(nzInt(s (m:nat)))=<z:int = true */
+action(orient(n),'$equation'(['=<-bool-int-int'('$inj-int-nat'(@'m-nat'),'$inj-int-nat'(@'k-nat'))='true-bool','=<-bool-int-int'('$inj-int-nzInt'('$inj-nzInt-posint'('s-posint-nat'(@'k-nat'))),@'z-int')='true-bool'],['=<-bool-int-int'('$inj-int-nzInt'('$inj-nzInt-posint'('s-posint-nat'(@'m-nat'))),@'z-int')='true-bool'])).
+
+/* condition number 2 is the selected condition for
+/*	int(m:nat)=<int(k:nat) = true and int(nzInt(s (k:nat)))=<z:int = true => int(nzInt(s (m:nat)))=<z:int = true */
+action(selectcondition(2),'$equation'(['=<-bool-int-int'('$inj-int-nat'(@'m-nat'),'$inj-int-nat'(@'k-nat'))='true-bool','=<-bool-int-int'('$inj-int-nzInt'('$inj-nzInt-posint'('s-posint-nat'(@'k-nat'))),@'z-int')='true-bool'],['=<-bool-int-int'('$inj-int-nzInt'('$inj-nzInt-posint'('s-posint-nat'(@'m-nat'))),@'z-int')='true-bool'])).
+

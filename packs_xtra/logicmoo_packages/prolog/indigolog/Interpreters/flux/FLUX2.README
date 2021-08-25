@@ -1,0 +1,323 @@
+General Information
+===================
+
+FLUX is a high-level programming system for cognitive agents of all
+kinds, including autonomous robots. Cognitive agents control themselves
+using an internal model of their environment. The FLUX kernel system
+endows agents with the general cognitive ability to reason about their
+actions and sensor data they acquire. FLUX agents are also able to plan
+ahead their actions in order to achieve specific goals. FLUX allows to
+implement complex strategies with concise and modular agent programs. An
+efficient constraint logic program, the FLUX system scales up well to
+domains which require large states and long action sequences.
+
+FLUX is an implementation of the Fluent Calculus. A versatile action
+representation formalism, this calculus provides a basic solution to
+the classical frame problem using the concept of state update axioms.
+
+The official FLUX project page is www.fluxagent.org
+
+This library is free software according to the GNU Library General Public
+License (GPL) 2. Please see the COPYING file for details.
+
+
+Requirements
+============
+
+For running and using the FLUX files, SICStus Prolog (SICStus
+Constraint Logic Programming System) is required, Copyright
+SICS AB. It can be obtained from SICS at
+http://www.sics.se/isl/sicstuswww/site/index.html
+Versions 3.11.1 has been used successfully.
+
+
+Installation
+============
+
+See the file 'INSTALL'
+
+
+Usage
+=====
+
+Please consult the journal paper [1] for an introduction to the
+Fluent Calculus and the FLUX programming method, which is available
+at www.fluxagent.org -> Publications.  You may also find the examples
+useful that are available at our website, too.
+
+In the following, a run of the Wumpus World is shown.
+
+SICStus 3.11.1 (x86-win32-nt-4): Mon Feb 23 08:47:42 WEST 2004
+| ?- :-
+     consult('D:/Prolog/Sicstus/wumpus.pl').
+% consulting d:/prolog/sicstus/wumpus.pl...
+%  consulting d:/prolog/sicstus/flux.pl...
+%   loading c:/programme/sicstus prolog 3.11.1/library/terms.po...
+%   module terms imported into user
+%    loading c:/programme/sicstus prolog 3.11.1/library/assoc.po...
+%    module assoc imported into terms
+%     loading c:/programme/sicstus prolog 3.11.1/library/lists.po...
+%     module lists imported into assoc
+%     loaded c:/programme/sicstus prolog 3.11.1/library/lists.po in module lists, 0 msec 11360 bytes
+%    loaded c:/programme/sicstus prolog 3.11.1/library/assoc.po in module assoc, 0 msec 22840 bytes
+%   loaded c:/programme/sicstus prolog 3.11.1/library/terms.po in module terms, 10 msec 30968 bytes
+%   module lists imported into user
+%   loading c:/programme/sicstus prolog 3.11.1/library/clpfd.po...
+%   module clpfd imported into user
+%    loading c:/programme/sicstus prolog 3.11.1/library/atts.po...
+%    module attributes imported into clpfd
+%     module lists imported into attributes
+%    loaded c:/programme/sicstus prolog 3.11.1/library/atts.po in module attributes, 0 msec 13396 bytes
+%    module assoc imported into clpfd
+%    module lists imported into clpfd
+%    loading c:/programme/sicstus prolog 3.11.1/library/ordsets.po...
+%    module ordsets imported into clpfd
+%    loaded c:/programme/sicstus prolog 3.11.1/library/ordsets.po in module ordsets, 0 msec 12320 bytes
+%    loading c:/programme/sicstus prolog 3.11.1/library/ugraphs.po...
+%    module ugraphs imported into clpfd
+%     module ordsets imported into ugraphs
+%     module lists imported into ugraphs
+%     module assoc imported into ugraphs
+%     loading c:/programme/sicstus prolog 3.11.1/library/random.po...
+%     module random imported into ugraphs
+%      module assoc imported into random
+%      loading foreign resource c:/programme/sicstus prolog 3.11.1/library/x86-win32-nt-4/random.dll in module random
+%     loaded c:/programme/sicstus prolog 3.11.1/library/random.po in module random, 0 msec 5904 bytes
+%    loaded c:/programme/sicstus prolog 3.11.1/library/ugraphs.po in module ugraphs, 0 msec 47208 bytes
+%    loading foreign resource c:/programme/sicstus prolog 3.11.1/library/x86-win32-nt-4/clpfd.dll in module clpfd
+%   loaded c:/programme/sicstus prolog 3.11.1/library/clpfd.po in module clpfd, 30 msec 433364 bytes
+%   loading c:/programme/sicstus prolog 3.11.1/library/chr.po...
+%   module chr imported into user
+%    module getval imported into chr
+%    module lists imported into chr
+%    module terms imported into chr
+%    module assoc imported into chr
+%    module sbag imported into chr
+%    module chrcmp imported into chr
+%    module getval imported into chrcmp
+%    module matching imported into chrcmp
+%    module assoc imported into matching
+%    module concat imported into chrcmp
+%    module terms imported into chrcmp
+%    module lists imported into chrcmp
+%    module ordsets imported into chrcmp
+%    module attributes imported into chr
+%    loading foreign resource c:/programme/sicstus prolog 3.11.1/library/x86-win32-nt-4/chr.dll in module chr
+%   loaded c:/programme/sicstus prolog 3.11.1/library/chr.po in module chr, 40 msec 167656 bytes
+%   consulting d:/prolog/sicstus/fluent.pl...
+% CHR compiling constraint not_holds/2
+% CHR compiling constraint not_holds_all/2
+% CHR compiling constraint duplicate_free/1
+% CHR compiling constraint or_holds/2
+% CHR compiling constraint or_holds/3
+% CHR compiling constraint cancel/2
+% CHR compiling constraint cancelled/2
+%    module attributes imported into user
+%   consulted d:/prolog/sicstus/fluent.pl in module user, 30 msec 60440 bytes
+%  consulted d:/prolog/sicstus/flux.pl in module user, 140 msec 707956 bytes
+%  consulting d:/prolog/sicstus/wumpus_simulator.pl...
+%  consulted d:/prolog/sicstus/wumpus_simulator.pl in module user, 10 msec 3448 bytes
+% consulted d:/prolog/sicstus/wumpus.pl in module user, 160 msec 728444 bytes
+| ?- main.
+enter
+go
+turn
+turn
+go
+turn
+turn
+turn
+go
+shoot
+turn
+turn
+turn
+go
+go
+turn
+turn
+go
+turn
+turn
+turn
+go
+turn
+go
+turn
+turn
+turn
+go
+turn
+turn
+turn
+go
+go
+turn
+turn
+go
+turn
+turn
+turn
+go
+turn
+turn
+turn
+go
+go
+go
+turn
+turn
+turn
+go
+turn
+turn
+turn
+go
+grab
+go
+go
+go
+turn
+go
+go
+go
+exit
+duplicate_free(_A),
+not_holds(pit(4,3),_A),
+not_holds(pit(4,5),_A),
+not_holds(pit(3,4),_A),
+not_holds(pit(5,4),_A),
+not_holds(gold(4,5),_A),
+not_holds(pit(4,4),_A),
+not_holds(pit(4,6),_A),
+not_holds(pit(3,5),_A),
+not_holds(pit(5,5),_A),
+not_holds(gold(5,5),_A),
+not_holds(pit(5,4),_A),
+not_holds(pit(5,6),_A),
+not_holds(pit(4,5),_A),
+not_holds(pit(6,5),_A),
+not_holds(gold(5,4),_A),
+not_holds(pit(5,3),_A),
+not_holds(pit(5,5),_A),
+not_holds(pit(4,4),_A),
+not_holds(pit(6,4),_A),
+not_holds(gold(5,3),_A),
+not_holds(pit(5,2),_A),
+not_holds(pit(5,4),_A),
+not_holds(pit(4,3),_A),
+not_holds(pit(6,3),_A),
+not_holds(gold(5,2),_A),
+not_holds(pit(5,1),_A),
+not_holds(pit(5,3),_A),
+not_holds(pit(4,2),_A),
+not_holds(pit(6,2),_A),
+not_holds(gold(4,2),_A),
+not_holds(pit(4,1),_A),
+not_holds(pit(4,3),_A),
+not_holds(pit(3,2),_A),
+not_holds(pit(5,2),_A),
+not_holds(gold(4,3),_A),
+not_holds(gold(4,2),_A),
+not_holds(pit(4,1),_A),
+not_holds(pit(4,3),_A),
+not_holds(pit(3,2),_A),
+not_holds(pit(5,2),_A),
+not_holds(gold(4,1),_A),
+not_holds(pit(4,0),_A),
+not_holds(pit(3,3),_A),
+not_holds(dead,_A),
+not_holds(pit(1,1),_A),
+not_holds(has(2),_A),
+not_holds(pit(2,1),_A),
+not_holds(pit(0,1),_A),
+not_holds(pit(1,2),_A),
+not_holds(pit(1,0),_A),
+not_holds(gold(1,1),_A),
+not_holds(gold(1,2),_A),
+not_holds(pit(2,1),_A),
+not_holds(pit(0,1),_A),
+not_holds(pit(1,2),_A),
+not_holds(pit(1,0),_A),
+not_holds(gold(1,1),_A),
+not_holds(pit(3,1),_A),
+not_holds(pit(1,1),_A),
+not_holds(pit(2,2),_A),
+not_holds(pit(2,0),_A),
+not_holds(gold(2,1),_A),
+not_holds(pit(3,2),_A),
+not_holds(pit(1,2),_A),
+not_holds(pit(2,3),_A),
+not_holds(pit(2,1),_A),
+not_holds(gold(2,2),_A),
+not_holds(gold(2,3),_A),
+not_holds(pit(3,2),_A),
+not_holds(pit(1,2),_A),
+not_holds(pit(2,3),_A),
+not_holds(pit(2,1),_A),
+not_holds(gold(2,2),_A),
+not_holds(gold(3,2),_A),
+not_holds(pit(4,1),_A),
+not_holds(pit(2,1),_A),
+not_holds(pit(3,2),_A),
+not_holds(pit(3,0),_A),
+not_holds(gold(3,1),_A),
+not_holds(pit(5,1),_A),
+not_holds(pit(3,1),_A),
+not_holds(pit(4,2),_A),
+not_holds_all(wumpus(_B,_C),_A),
+not_holds_all(pit(_D,0),_A),
+not_holds_all(pit(_E,6),_A),
+not_holds_all(pit(0,_F),_A),
+not_holds_all(pit(6,_G),_A),
+not_holds_all(at(_H,_I),_A),
+not_holds_all(facing(_J),_A),
+not_holds(gold(4,4),_A),
+or_holds([pit(1,3),pit(0,2)],_A),
+not_holds(has(1),_A),
+not_holds(gold(4,3),_A),
+not_holds(pit(5,2),_A),
+not_holds(pit(3,2),_A),
+not_holds(pit(4,3),_A),
+not_holds(pit(4,1),_A),
+not_holds(gold(4,2),_A),
+not_holds(pit(5,1),_A),
+not_holds(pit(3,1),_A),
+not_holds(pit(4,2),_A),
+not_holds(pit(4,0),_A),
+not_holds(gold(4,1),_A),
+not_holds(pit(4,1),_A),
+not_holds(pit(2,1),_A),
+not_holds(pit(3,2),_A),
+not_holds(pit(3,0),_A),
+not_holds(gold(3,1),_A),
+not_holds(pit(3,1),_A),
+not_holds(pit(1,1),_A),
+not_holds(pit(2,2),_A),
+not_holds(pit(2,0),_A),
+not_holds(gold(2,1),_A),
+not_holds(pit(2,1),_A),
+not_holds(pit(0,1),_A),
+not_holds(pit(1,2),_A),
+not_holds(pit(1,0),_A),
+not_holds(gold(1,1),_A) ? 
+yes
+| ?- halt.
+
+
+Note that the list of constraints shown after the performance of the
+actions is not free of duplicates.
+
+
+Contact
+=======
+
+You are welcome to send comments, suggestions and feedback to the
+addresses given at our website www.fluxagent.org
+
+
+Literature
+==========
+
+[1]  M. Thielscher.  FLUX: A Logic Programming Method for Reasoning
+Agents.  Theory And Practice of Logic Programming.  2004.

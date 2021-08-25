@@ -1,0 +1,43 @@
+order poly1 for pc using poly1 for boolTriv.
+
+setInterpretation(i(x,y)		: 2*x + y).
+setInterpretation(p(x)		: x + 1).
+
+:- smallTerm:==200.
+:- nonEqLogic:==true.
+:- abolish(act/3).
+
+act(orient(n),'$equation'([_,_],_),true).
+act(status(ms),'$equation'([_,_],_),true).
+act(selectcondition(1),'$equation'([C1,C2],[D]),
+  (	vars(C1,V1),
+	vars(C2,V2),
+	vars(D,V),
+	intersect(V1,V,I1),
+	intersect(V1,V2,I2),
+	I1=[],
+	I2=[] ) ).
+act(selectcondition(2),'$equation'([C1,C2],[D]),
+  (	vars(C1,V1),
+	vars(C2,V2),
+	vars(D,V),
+	intersect(V2,V,I2),
+	intersect(V1,V2,I1),
+	I1=[],
+	I2=[] ) ).
+act(selectcondition(1),'$equation'([C1,C2],_),
+   ( termInfo(C1,(_,S1)),
+	termInfo(C2,(_,S2)),
+	S1>=S2 ) ).
+act(selectcondition(2),'$equation'([C1,C2],_),
+  (  termInfo(C1,(_,S1)),
+	termInfo(C2,(_,S2)),
+	S1<S2 )).
+act(orient(O),'$equation'([T1=S1],[T2=S2]),
+  (  greaterInRedOrderNoExt(T2,T1),
+	(	clauseSize(([T1=S1],[T2=S2]),S),
+		cont1(smallTerm,N),
+		S<N	-> 
+		O=o
+	;	O=n) ) ).
+

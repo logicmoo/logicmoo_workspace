@@ -1,0 +1,53 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%
+%  FILE      	: install.txt
+%  DATE	     	: January 2007
+%  AUTHOR 	: Sebastian Sardina & Stavros Vassos 
+%  EMAIL        : {ssardina,stavros}@cs.toronto.edu
+%  WWW    	: www.cs.toronto.edu/~ssardina www.cs.toronto.edu/cogrobo
+%  DESCRIPTION	: top-level install.txt file
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+To run the IndiGolog architecture, you need to do the following:
+
+1. Change the file lib/systemvar.pl to set your particular paths to
+ some executables that may be used, such as SWI Prolog, ECLIPSE Prolog,
+ xterm, etc. For example, SWI Prolog executable is assumed to be '/usr/bin/pl' 
+ but it can be changed by modifying the executable_path/2 predicate in
+ lib/systemvar.pl file.
+
+2. TCP/IP is used for most applications (though not the Elevator-Vanilla).
+   For SWI Prolog, make sure it is compiled with TCP/IP support. (This means
+   that the library CLIB must be installed).
+
+3. Extract indigolog-linux-vvv.tar.gz to some path <mypath> 
+       cd <mypath>
+       tar -xzf indigolog-linux-vvv.tar.gz
+   where vvv is the version of Indigolog being installed. 
+
+4. Set an environment variable PATH_INDIGOLOG to <mypath>/indigolog-linux-vvv
+   For example, if <mypath> is /home/ssardina/code/ then in bash you do this:
+       export PATH_INDIGOLOG=/home/ssardina/code/indigolog-linux-vvv
+
+5. Set the right options for predicate executable_path/2 in file lib/systemvar.pl
+so that IndiGolog knows where certain programs are (e.g., xterm)
+
+
+
+For some applications, you will also need to do the following:
+
+1. Install Tcl/Tk and the 'wish' executable.  (This is used by the simulator
+   environment to enter exogenous actions.)
+
+2. Install a Java Runtime Environment (JRE) on your system.  Make sure that
+   'java' invokes the Java application launcher.  Also, note that JRE1.5 from
+   SUN is known to work, while the GNU Java Compiler (GJC) is reported to fail
+   when executing the script at step 5.  (This is used in the Wumpus example.)
+
+3. If the application uses ECLIPSE Prolog (e.g., Wumpus-FLUX), the environment
+   variable ECLIPSELIBRARYPATH should be set to $PATH_INDIGOLOG/lib.
+   This is where ECLIPSE will look for user libraries.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% EOF: install.txt
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

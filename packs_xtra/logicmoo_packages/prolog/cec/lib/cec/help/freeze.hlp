@@ -1,0 +1,31 @@
+
+"freeze."
+
+writes  the  state of the current  specification module to the  file 
+"<module_name>.<order_name>.q2.0" and updates the content of the 
+specification variable "<module_name>.<order_name>".
+<order_name> is  the current order name or the current termination 
+ordering in the case the current order name is "noorder".
+In the later case we update the content of "<module_name>.noorder"
+too.
+The frozen state may later be reused by thawing it from  this  file, 
+cf. "thaw". The state of the current specification is unchanged by 
+this operation.
+
+
+"freeze(+File)."
+
+writes   the   state   of  the  current  specification to the  file 
+"File.q2.0". Updates the content of the specification variable 
+"<module_name>.<order_name>" taking the current module name and the
+current order name for the names. If the current order name is "noorder"
+the specification variable "<module_name>.<current_order>" is updated
+too, where <current_order> is the name of the current termination
+ordering.
+
+"freeze(+ModuleName,+OrderName)."
+
+writes   the   state   of  the  current  specification to the  file 
+"ModuleName.OrderName.q2.0" and updates the content of specification 
+variable "ModuleName.OrderName". Again if OrderName is "noorder" we
+update "ModuleName.<current_order>" too.

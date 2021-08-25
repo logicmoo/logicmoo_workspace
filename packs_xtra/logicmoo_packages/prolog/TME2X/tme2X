@@ -1,0 +1,22 @@
+#!/bin/sh
+TME2XHOME=/lab/ki2/AGKI/systems/TME2X
+#TME2XHOME=/usr/provers/TME2X
+export TME2XHOME
+outputformat=$1
+infile=$2
+if test foo$infile = foo
+then echo "usage: tme2X format infile [outfile]"
+  echo "  where 'format' is one of [ores|semantics|setheo|renamed|thsetheo|satchmo|tmedomain|tmeclean|spass|tme=|tmeeqax|otter|tptp|sp]"
+  echo "  'format' specifies the target prover format the PROTEIN file 'infile'.tme "
+  echo "  is converted to."
+  echo "  If 'outfile' is omitted then an appropriate name is derived from 'infile'."
+    echo "  The extensions should be omitted from both 'infile' and 'outfile'."
+      exit
+fi
+if test foo$3 = foo
+then outfile=$infile
+else outfile=$3
+fi
+eclipse -b $TME2XHOME/tme2X.pl -e "tme2X('$outputformat','$infile','$outfile'), halt."
+#
+

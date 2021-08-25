@@ -1,0 +1,131 @@
+********************    PROTEIN V2.09   ********************
+
+--------------------    input clauses   --------------------
+
+"Clause " No. 1 : [wolf(_49), -> [animal(_49)]]
+"Clause " No. 2 : [not_animal(_82), -> [not_wolf(_82)]]
+"Clause " No. 3 : [fox(_115), -> [animal(_115)]]
+"Clause " No. 4 : [not_animal(_148), -> [not_fox(_148)]]
+"Clause " No. 5 : [bird(_181), -> [animal(_181)]]
+"Clause " No. 6 : [not_animal(_214), -> [not_bird(_214)]]
+"Clause " No. 7 : [caterpillar(_247), -> [animal(_247)]]
+"Clause " No. 8 : [not_animal(_280), -> [not_caterpillar(_280)]]
+"Clause " No. 9 : [snail(_313), -> [animal(_313)]]
+"Clause " No. 10 : [not_animal(_346), -> [not_snail(_346)]]
+"Clause " No. 11 : [not_wolf(a_wolf), -> false]
+"Clause " No. 12 : [not_fox(a_fox), -> false]
+"Clause " No. 13 : [not_bird(a_bird), -> false]
+"Clause " No. 14 : [not_caterpillar(a_caterpillar), -> false]
+"Clause " No. 15 : [not_snail(a_snail), -> false]
+"Clause " No. 16 : [not_grain(a_grain), -> false]
+"Clause " No. 17 : [grain(_535), -> [plant(_535)]]
+"Clause " No. 18 : [not_plant(_568), -> [not_grain(_568)]]
+"Clause " No. 19 : [caterpillar(_602), bird(_601), -> [much_smaller(_602, _601)]]
+"Clause " No. 20 : [caterpillar(_642), -> [much_smaller(_642, a_bird)]]
+"Clause " No. 21 : [bird(_676), -> [much_smaller(a_caterpillar, _676)]]
+"Clause " No. 22 : [not_much_smaller(_710, _713), bird(_713), -> [not_caterpillar(_710)]]
+"Clause " No. 23 : [not_much_smaller(_751, a_bird), -> [not_caterpillar(_751)]]
+"Clause " No. 24 : [snail(_786), bird(_785), -> [much_smaller(_786, _785)]]
+"Clause " No. 25 : [snail(_826), -> [much_smaller(_826, a_bird)]]
+"Clause " No. 26 : [bird(_860), -> [much_smaller(a_snail, _860)]]
+"Clause " No. 27 : [not_much_smaller(_894, _897), bird(_897), -> [not_snail(_894)]]
+"Clause " No. 28 : [not_much_smaller(_935, a_bird), -> [not_snail(_935)]]
+"Clause " No. 29 : [bird(_970), fox(_969), -> [much_smaller(_970, _969)]]
+"Clause " No. 30 : [bird(_1010), -> [much_smaller(_1010, a_fox)]]
+"Clause " No. 31 : [fox(_1044), -> [much_smaller(a_bird, _1044)]]
+"Clause " No. 32 : [not_much_smaller(_1078, _1081), fox(_1081), -> [not_bird(_1078)]]
+"Clause " No. 33 : [not_much_smaller(_1119, a_fox), -> [not_bird(_1119)]]
+"Clause " No. 34 : [fox(_1154), wolf(_1153), -> [much_smaller(_1154, _1153)]]
+"Clause " No. 35 : [fox(_1194), -> [much_smaller(_1194, a_wolf)]]
+"Clause " No. 36 : [wolf(_1228), -> [much_smaller(a_fox, _1228)]]
+"Clause " No. 37 : [not_much_smaller(_1262, _1265), wolf(_1265), -> [not_fox(_1262)]]
+"Clause " No. 38 : [not_much_smaller(_1303, a_wolf), -> [not_fox(_1303)]]
+"Clause " No. 39 : [wolf(_1341), fox(_1340), eats(_1341, _1340), -> false]
+"Clause " No. 40 : [fox(_1381), eats(a_wolf, _1381), -> false]
+"Clause " No. 41 : [wolf(_1415), eats(_1415, a_fox), -> false]
+"Clause " No. 42 : [eats(a_wolf, a_fox), -> false]
+"Clause " No. 43 : [wolf(_1477), grain(_1476), eats(_1477, _1476), -> false]
+"Clause " No. 44 : [grain(_1517), eats(a_wolf, _1517), -> false]
+"Clause " No. 45 : [wolf(_1551), eats(_1551, a_grain), -> false]
+"Clause " No. 46 : [eats(a_wolf, a_grain), -> false]
+"Clause " No. 47 : [bird(_1610), caterpillar(_1609), -> [eats(_1610, _1609)]]
+"Clause " No. 48 : [caterpillar(_1650), -> [eats(a_bird, _1650)]]
+"Clause " No. 49 : [bird(_1684), -> [eats(_1684, a_caterpillar)]]
+"Clause " No. 50 : [not_eats(_1721, _1718), bird(_1721), -> [not_caterpillar(_1718)]]
+"Clause " No. 51 : [not_eats(a_bird, _1759), -> [not_caterpillar(_1759)]]
+"Clause " No. 52 : [bird(_1797), snail(_1796), eats(_1797, _1796), -> false]
+"Clause " No. 53 : [snail(_1837), eats(a_bird, _1837), -> false]
+"Clause " No. 54 : [bird(_1871), eats(_1871, a_snail), -> false]
+"Clause " No. 55 : [eats(a_bird, a_snail), -> false]
+"Clause " No. 56 : [bird(_1934), caterpillar(_1931), wolf(_1934), fox(_1931), -> false]
+"Clause " No. 57 : [bird(_1980), caterpillar(_1977), wolf(_1980), grain(_1977), -> false]
+"Clause " No. 58 : [bird(a_wolf), caterpillar(_2023), fox(_2023), -> false]
+"Clause " No. 59 : [bird(a_wolf), caterpillar(_2062), grain(_2062), -> false]
+"Clause " No. 60 : [bird(_2101), caterpillar(a_fox), wolf(_2101), -> false]
+"Clause " No. 61 : [caterpillar(_2140), wolf(a_bird), fox(_2140), -> false]
+"Clause " No. 62 : [caterpillar(_2179), wolf(a_bird), grain(_2179), -> false]
+"Clause " No. 63 : [bird(_2220), wolf(_2220), fox(a_caterpillar), -> false]
+"Clause " No. 64 : [bird(_2259), wolf(_2259), grain(a_caterpillar), -> false]
+"Clause " No. 65 : [bird(_2298), bird(_2298), snail(a_caterpillar), -> false]
+"Clause " No. 66 : [bird(_2335), caterpillar(a_grain), wolf(_2335), -> false]
+"Clause " No. 67 : [caterpillar(a_fox), wolf(a_bird), -> false]
+"Clause " No. 68 : [caterpillar(_2406), snail(_2406), -> false]
+"Clause " No. 69 : [caterpillar(a_grain), wolf(a_bird), -> false]
+"Clause " No. 70 : [bird(a_wolf), fox(a_caterpillar), -> false]
+"Clause " No. 71 : [bird(a_wolf), grain(a_caterpillar), -> false]
+"Clause " No. 72 : [bird(a_bird), snail(a_caterpillar), -> false]
+"Clause " No. 73 : [eats(_2567, _2568), eats(_2567, _2566), not_animal(_2567), not_plant(_2568), not_animal(_2566), not_plant(_2565), not_much_smaller(_2566, _2567), not_eats(_2566, _2565)]
+"Clause " No. 74 : [plant(caterpillar_food_of(_2635)), not_caterpillar(_2635)]
+"Clause " No. 75 : [eats(_2664, caterpillar_food_of(_2664)), not_caterpillar(_2664)]
+"Clause " No. 76 : [plant(snail_food_of(_2694)), not_snail(_2694)]
+"Clause " No. 77 : [eats(_2723, snail_food_of(_2723)), not_snail(_2723)]
+"Query  " No. 78 : [query, not_animal(_2755), not_animal(_2754), not_grain(_2753), not_eats(_2755, _2754), not_eats(_2754, _2753)]
+"Restart" No. 78 : [restart, not_animal(_2755), not_animal(_2754), not_grain(_2753), not_eats(_2755, _2754), not_eats(_2754, _2753)]
+
+--------------------        flags       --------------------
+
+protein_flag(system, protein).
+protein_flag(ancestry_rme, off).
+protein_flag(ancs, both).
+protein_flag(answers, one).
+protein_flag(answer_set_handling, on).
+protein_flag(check_flags, [protein_flag(calculus, hyper)]).
+protein_flag(definite_answers, off).
+protein_flag(delayed_rme, off).
+protein_flag(depth_increment, 1).
+protein_flag(dynamic, off).
+protein_flag(factorisation, cut).
+protein_flag(head_behind_prolog, off).
+protein_flag(mmr, off).
+protein_flag(mode, pl1).
+protein_flag(query_anc, ([], [])).
+protein_flag(query_reuse, on).
+protein_flag(reduction, both).
+protein_flag(regularity, delay).
+protein_flag(search, id_tree).
+protein_flag(selection_function, off).
+protein_flag(sorting, costs).
+protein_flag(strict_rme, off).
+protein_flag(th_nonewclauses, off).
+protein_flag(th_reduction, both).
+protein_flag(th_regularity, delay).
+protein_flag(th_sidelit_anc, off).
+protein_flag(translate, all).
+protein_flag(trace, internal).
+protein_flag(calculus, rme).
+
+
+--------------------     statistics     --------------------
+
+Proof Statistics
+----------------
+Proof Time:  10.0 sec
+Proof Depth: 7
+Extension Steps: 9
+Restart Steps:   1
+Reduction Steps: 2		(incl. 1 with cut)
+Factoring Steps: 10		(incl. 10 with cut)
+Theory Steps:    35
+Inferences:      87369
+
+--------------------      answers       --------------------

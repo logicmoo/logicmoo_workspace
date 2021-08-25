@@ -1,0 +1,23 @@
+
+********************    PROTEIN V2.26   ********************
+
+translating MSC006-1.....
+
+   Static Reorderings:        0
+
+MSC006-1.tme   translated in 0.36 seconds
+
+proving MSC006-1...
+tree depth 1,2,3,4,5,6,7,8,9,10,+++ proved +++
+
+   Proof Time:               17.8 sec
+   Proof Depth:              10
+   Extension Steps:          19
+   Restart Steps:             4
+   Reduction Steps:           6 (incl.   3 with cut)
+   Factoring Steps:           0 (incl.   0 with cut)
+   Inferences:           129386
+
+MSC006-1.tme   finished in 18.22 seconds
+
+bye

@@ -1,0 +1,11 @@
+compiler          9057  code_generate.pl
+compiler          2869  compile.pl
+compiler          1719  compiler.descr
+compiler          2353  compiler.pre
+compiler          2247  lex.pl
+compiler           303  load.pl
+compiler          7244  machine.pl
+compiler         13140  map.pl
+compiler          7938  ordset.pl
+compiler          3875  parser.pl
+compiler           313  program

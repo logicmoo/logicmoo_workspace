@@ -1,0 +1,19 @@
+
+KNS: a Recursive Path Ordering
+---------------------------------
+
+kns is  a precedence ordering.  That means that the partial order on terms is 
+induced by a partial order  on  operators  called  the precedence.  Initially 
+this  precedence  is  empty,  if  no  order  specification  is  given for the 
+specification.  Order  specifications  may  include  precedence declarations. 
+All constructors are given a precedence less than any nonconstructor. Any two 
+constructors are unrelated in precedence.
+
+To prove the termination of rewrite rules, sometimes a property called status
+is required. Four status values are possible. The default value is undefined.
+The others are multiset (ms), left-to-right (lr), and right-to-left (rl).
+Roughly speaking,  when an  operator  has  multiset status, all its arguments
+are  given   equal  weight   in  the   ordering,  whereas  left-to-right  and
+right-to-left are lexicographical stati.  That  means that, the arguments are 
+compared in a  lexicographical order from left to right or from right to left
+respectively.

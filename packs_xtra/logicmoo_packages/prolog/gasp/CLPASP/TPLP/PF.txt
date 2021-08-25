@@ -1,0 +1,119 @@
+%%% %%% %%% %%% %%% %%% %%% %%% %%% %%% %%% %%% %%%
+%%% HP-2 dimensional protein folding
+%%% see submitted paper for description
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% Reified constraints are used in goal cost
+%%% The goal cost guides the plan
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% Coded by DFP, 2007
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%% with N = 10, try :-sicsplan(8) => YES and :-sicsplan(7) => NO
+
+length(10). %%% N
+amino(A) :-
+   length(N),
+   interval(A,1,N).
+direction(clock).
+direction(anticlock).
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+fluent(x(A),1,M) :-
+   length(N), M is 2*N, amino(A).
+
+fluent(y(A),1,M) :-
+   length(N), M is 2*N, amino(A).
+
+fluent(type(A),0,1) :-
+   amino(A).
+
+fluent(saw,0,1).
+
+%%%%%%%%%%%%%%%%
+
+action(pivot(A,DIR)):-
+   length(N), amino(A),1<A,A<N,
+   direction(DIR).
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+executable(pivot(A,DIR),[]) :-
+    action(pivot(A,DIR)).
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+causes(pivot(A,clock), x(B) eq x(A)^(-1) + y(B)^(-1) - y(A)^(-1),[]):-
+        action(pivot(A,clock)),amino(B),B > A.
+causes(pivot(A,clock), y(B) eq y(A)^(-1) + x(A)^(-1) - x(B)^(-1),[]):-
+        action(pivot(A,clock)),amino(B),B > A.
+
+causes(pivot(A,anticlock), x(B) eq x(A)^(-1) - y(B)^(-1) + y(A)^(-1),[]):-
+        action(pivot(A,anticlock)),amino(B),B > A.
+causes(pivot(A,anticlock), y(B) eq y(A)^(-1) - x(A)^(-1) + x(B)^(-1),[]):-
+        action(pivot(A,anticlock)),amino(B),B > A.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+caused([x(A) eq x(B), y(A) eq y(B)],saw eq 0) :-
+         amino(A),amino(B),A<B.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% initially the protein is a vertical line
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+initially(saw eq 1).
+initially(x(A) eq  N) :-
+    length(N), amino(A).
+initially(y(A) eq  Y) :-
+    length(N), amino(A),Y is N+A-1.
+
+%%% input hpphpphpphpph ...
+
+initially(type(X) eq 1) :-
+    amino(X),
+    X mod 3 =:= 1.
+initially(type(X) eq 0) :-
+    amino(X),
+    X mod 3 =\= 1.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+state_cost(  FE ) :-
+    length(N),
+    aux_cost(1,4,N,FE).
+aux_cost(I,_J,N,0) :-
+    I > N - 3,!.
+aux_cost(I,J,N,FE) :-
+    J > N,!,
+    I1 is I + 1,
+    J1 is I1 + 3,
+    aux_cost(I1,J1,N,FE).
+aux_cost(I,J,N,
+    FE1 + type(I)*type(J)*rei( abs(x(I)-x(J)) + abs(y(I)-y(J)) eq 1 )
+    ) :-
+    J1 is J + 2,
+    aux_cost(I,J1,N,FE1).
+
+cost_constraint(goal geq 4).
+
+plan_cost(plan gt 0).
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+goal(saw eq 1).
+
+%%% Invariants (case N=10)
+
+always(x(1) eq 10).
+always(y(1) eq 10).
+
+always(x(2) eq 10).
+always(y(2) eq 11).
+
+%%% Little help or Aiutino :)
+
+holds(x(3) eq 11,1).   holds(y(3) eq 11,1).
+holds(x(4) eq 11,2).   holds(y(4) eq 10,2).
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

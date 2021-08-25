@@ -1,0 +1,8 @@
+
+"polGreater(+Interpretation1, +Interpretation2)."
+
+Only useful with ordering "poly<N>".
+If it succeeds, "Interpretation1" > "Interpretation2" holds true
+(if > is the ordering on tuples of polynomials).
+Interpretations (i.e. tupels of polynomials) of terms can be generated
+via "polynomial(+Term, -Interpretation)".

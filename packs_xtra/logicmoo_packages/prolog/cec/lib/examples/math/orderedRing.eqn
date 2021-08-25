@@ -1,0 +1,7 @@
+module orderedRing using totalOrder + commRing. 
+(x + z =< y + z) = (x =< y).
+(0 =< x) = true and (0 =< y) = true => (0 =< x*y) = true.
+
+% Warning: takes a little while to complete.
+% 730 sec. on a Sun 3/260 ( 375 sec. on Sun 4)
+% 385 superpositions with pragma file 'poly1.@'.

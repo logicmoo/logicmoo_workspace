@@ -1,0 +1,195 @@
+% Documentation for...
+% fixExistentials(+Formula,-Revised)
+
+/* How fixExistentials works...
+
+We use the following algorithm:
+
+1. Recursively descend down each path of the expression, remembering
+parent nodes traversed (by position in case there might be duplicates
+at the same level) to get to leaf nodes . For each SKF expression
+record all the different paths taken to get to it.
+
+Note: there is no searching for SKF expressions inside compound terms
+such as foo(bar(color,red,skf(_G12333))) at present.
+
+2. Also determine a ?variable to replace occurrences of the SKF expression,
+and now make this substitution.
+
+3. Now for each SKF expression determine the highest common ancestor
+as the longest path common to all paths collected for that SKF expression.
+
+4. Now walk the the original expression again. When the lowest common ancestor
+of an SKF node is reached wrap the expression with (exists (?variable) ...).
+Start with the smallest edit path first (i.e., highest level change) and then
+descend down the expression.
+
+collect_SKFs(+Formula,-Editlist) traverses Formula, a logical formula, and constructs
+an alist (association list) between SKF expressions and the paths taken to reach
+them. EditList indicates the path taken by a structure editor to get to a list containing
+the SKF expression. Editlist is an Alist.
+
+Let F1 =
+(implies
+   (instance-of ?G12472 cat)
+   (and
+     (instance-of skf(_G12524) perceptionEvent)
+     (experiencer skf(_G12524) ?G12472)
+     (theme skf(_G12524) hamlet)))
+
+and let F2 =
+(and
+   (instance-of skf(_G9743) cat)
+   (and
+     (and
+       (instance-of skf(_G9803) eatingEvent)
+       (performedBy skf(_G9803) skf(_G9743))
+       (objectActedOn skf(_G9803) skf(_G9770)))
+     (instance-of skf(_G9770) president)))
+
+be two test cases (printed here in LISP format). In standard
+Prolog list format,
+
+F1 = [implies, [instance-of, ?G12472, cat],
+               [and, [instance-of, skf(_G12524), perceptionEvent],
+		     [experiencer, skf(_G12524), ?G12472],
+		     [theme, skf(_G12524), hamlet]]].
+
+F2 = [and, [instance-of, skf(_G9743), cat],
+           [and, [and, [instance-of, skf(_G9803), eatingEvent],
+		       [performedBy, skf(_G9803), skf(_G9743)],
+		       [objectActedOn, skf(_G9803), skf(_G9770)]],
+	         [instance-of, skf(_G9770), president]]].
+
+
+collect_SKFs(F1,Alist) succeeds with
+Editlist = [[?G12524, [1, 3, 2], [1, 3, 3], [1, 3, 4]]]].
+
+collect_SKFs(F2,Alist) succeeds with
+Editlist = [[?G9743,[1,2],[1,3,2,3]],
+	    [?G9803,[1, 3, 2, 2],[1,3,2,3],[1,3,2,4]],
+	    [?G9770, [1,3,2,4], [1,3,3]]]
+
+Note we need alist-processing code to support the above. 
+
+Next we need perform_SKF_subs to perform the actual substitutions of
+expressions like skf(_23458) with (Sigma) variable names like ?23458.
+
+Next, perform_SKF_subs substitutes each SKF expression with its
+replacement variable. At this point the structure of the formulas
+is unchanged as the existentials have not yet been added.
+
+perform_SKF_subs(+Formula,-RevisedFormula)
+
+Example 1.
+perform_SKF_subs(F1,RevisedFormula)
+
+RevisedFormula
+   = [implies, [instance-of, ?G12472, cat],
+               [and, [instance-of, ?G12524, perceptionEvent],
+		     [experiencer, ?G12524, ?G12472],
+		     [theme, ?G12524, hamlet]]].
+		      
+Note: Call this R1 in the examples below.
+
+Example 2.
+perform_SKF_subs(F2,RevisedFormula)
+
+RevisedFormula
+   = [and, [instance-of, ?G9743, cat],
+           [and, [and, [instance-of, ?G9803, eatingEvent],
+		       [performedBy, ?G9803, ?G9743],
+		       [objectActedOn, ?G9803), ?G9770]],
+	         [instance-of, ?G9770, president]]].
+		      
+Note: Call this R2 in the examples below.
+
+The final step is to edit the term to add the existential expressions as appropriate.
+That step is performed by insert_existentials. But first we must determine precisely
+where to add each existential.
+
+That job is performed by find_insertion_points(SKF_EditPaths,Insertion_Paths),
+which in turn calls longest_shared_prefix to determine the longest shared
+prefix for each set of edit paths to an SKF expression. find_insertion_points
+gathers the results into a form like this:
+
+[['?G13457', 1, 3],['?G12229', 2, 4, 1]]
+
+indicating for each Sigma var name where an existential should be wrapped,
+where [1] means around the outermost expression, [1, 2], would mean the
+second subexpression in the formula, which must be a list, etc.
+
+longest_shared_prefix(+Edits,-LongestSharedEditPath) determines the path to the
+insertion point of the existential given and all the edit paths that
+led to the occurrence of a particular skolem expression. That is the
+longest shared prefix of the edit paths.
+
+Example 1:
+
+longest_shared_prefix([[[1, 3, 2], [1, 3, 3], [1, 3, 4]],
+		 LongestSharedEditPath]
+
+succeeds with LongestSharedEditPath = [1, 3]
+
+
+Example 2:
+
+longest_shared_prefix([[[1,2],[1,3,2,3]],
+		 LongestSharedEditPath]		 
+succeeds with LongestSharedEditPath = [1]
+
+Example 3:
+
+longest_shared_prefix([[[1, 3, 2, 2],[1,3,2,3],[1,3,2,4]],
+		 LongestSharedEditPath]
+		 
+succeeds with LongestSharedEditPath = [1,3,2]
+
+Example 4:
+
+longest_shared_prefix([[[1,3,2,4], [1,3,3]]]
+	       LongestSharedEditPath]
+succeeds with LongestSharedEditPath = [1,3]
+
+Finally the edits to insert the existentials are performed
+by insert_existentials(+FormulaWSubs,+OrderedEditPaths,-FinalFormula).
+
+Example 1.
+insert_existentials(R1, [[?G12524, 1, 3]],FinalFormula)
+		   
+succeeds with
+  FinalFormula= [implies, [instance-of, ?G12472, cat],
+		          [exists, [?G12524],
+			           [and,
+				       [instance-of, ?G12524, perceptionEvent],
+				       [experiencer, ?G12524, ?G12472],
+		                       [theme, ?G12524, hamlet]]].
+
+Example 2.
+insert_existentials(R2,[[?G9743,1],[?G9770,1,3],[?G9803,1,3,2]],
+		   FinalFormula)
+succeeds with
+  FinalFormula = [exists, [?G9743],
+		    [and,
+		       [instance-of, ?G9743, cat],
+		       [exists, [?G9770],
+			   [and,
+			       [exists, [?G9803],
+				   [and, [instance-of, ?G9803, eatingEvent],
+				         [performedBy, ?G9803, ?G9743],
+				         [objectActedOn, ?G9803, ?G9770)]],
+			       [instance-of, ?G9770, president]]].
+
+
+Note that insert_existentials acts on multiple SKF substitutions,
+ordered by increasing path length for the insertion of the
+existentials.
+
+Support Utilities
+
+ For association lists--
+
+ putAlist(+Key,+Value,+Alist,-UpdatedAlist)
+ getAlist(+Key,-Value,+Alist)
+
+*/

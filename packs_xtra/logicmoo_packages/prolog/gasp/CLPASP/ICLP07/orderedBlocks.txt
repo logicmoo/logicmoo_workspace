@@ -1,0 +1,98 @@
+%%% November 29th 2006
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% Blocks action theory
+%%% Given a stack of blocks in 1..N (in any order)
+%%% build a stack of ordered blocks (1 on the floor)
+%%% Two auxiliary towers are admitted
+%%% modified NOVEMBER 29TH 2006
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% The number of blocks N is max_blk
+%%%%%%%%%%%%%%%%%%%%%%
+
+%% con input fissato a [N,1,2,...,N-1] abbiamo:
+%% N = 4 => 7 stati, 0.016 s
+%% N = 5 => 9 stati in 0.219 s
+%% N = 6 => 11 stati in 2.469 s
+%% N = 7 => 13 stati in 49.547 s
+%% N = 8 => 15 stati in 1065.563 s
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+max_blk(8).  
+
+blk(X) :-
+   max_blk(N),
+   interval(X,1,N).
+ 
+interval(A,A,_).
+interval(X,A,B) :-
+  A < B, C is A + 1,
+  interval(X,C,B).
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+fluent(on_table(X)):- blk(X).
+fluent(clear(X)):- blk(X).
+fluent(on(X,Y)):- blk(X), blk(Y), neq(X,Y).
+fluent(space_on_table).
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+action(move(X,Y)):- blk(X), blk(Y), neq(X,Y).
+action(to_table(X)):- blk(X).
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+causes(move(X,Y),clear(Z),[on(X,Z)]):- blk(X), blk(Y), blk(Z),
+       action(move(X,Y)),neq(X,Z),neq(Y,Z).
+causes(move(X,Y),on(X,Y),[]):- blk(X), blk(Y), action(move(X,Y)).
+
+causes(move(X,Y),space_on_table,[on_table(X)]):- blk(X), blk(Y),
+       action(move(X,Y)).
+
+causes(to_table(X),on_table(X),[]):- blk(X), action(to_table(X)).
+causes(to_table(X),clear(Y),[on(X,Y)]):- blk(X), blk(Y),
+       neq(X,Y), action(to_table(X)).
+causes(to_table(X),neg(space_on_table),[on_table(Y),on_table(Z)]):-
+       blk(X), blk(Y), blk(Z), diff(X,Y,Z),
+       action(to_table(X)).
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+executable(move(X,Y),[clear(X),clear(Y)]) :- blk(X), blk(Y),
+       action(move(X,Y)).
+executable(to_table(X),[clear(X),neg(on_table(X)),space_on_table]):-
+       blk(X), action(to_table(X)).
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+caused([on(X,Y)],neg(on(Z,Y))) :- blk(X), blk(Y), blk(Z), 
+      diff(X,Y,Z).
+caused([on(X,Y)],neg(on(X,Z))) :- blk(X), blk(Y), blk(Z), 
+      diff(X,Y,Z).
+caused([on(X,Y)],neg(clear(Y))) :- blk(X), blk(Y), neq(X,Y).
+caused([clear(Y)],neg(on(X,Y))) :- blk(X), blk(Y), neq(X,Y).
+caused([on(X,Y)],neg(on_table(X))) :- blk(X), blk(Y), neq(X,Y).
+caused([on_table(X)],neg(on(X,Y))) :- blk(X), blk(Y), neq(X,Y).
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+initially(space_on_table).
+initially(on_table(N)) :- max_blk(N).
+initially(on(X,Y)):-  blk(X),max_blk(N), X > 1, X < N,Y is X - 1.
+initially(on(1,N)):- max_blk(N).
+initially(neg(clear(X))) :-  blk(X), max_blk(N), X =\= N -1. 
+initially(clear(M)) :-  max_blk(N), M is N -1. 
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+goal(on(X,Y)) :- blk(X), blk(Y), max_blk(N),X =< N, Y is X - 1.
+goal(on_table(1)).
+goal(space_on_table).
+goal(clear(N)) :-  max_blk(N). 
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+

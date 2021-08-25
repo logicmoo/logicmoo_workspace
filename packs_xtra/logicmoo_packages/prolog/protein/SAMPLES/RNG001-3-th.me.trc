@@ -1,0 +1,74 @@
+********************    PROTEIN V2.09   ********************
+
+--------------------    input clauses   --------------------
+
+"Clause " No. 1 : [sum(_51, _62, _57), sum(_62, _56, _50), sum(_57, _56, _49), -> [sum(_51, _50, _49)]]
+"Clause " No. 2 : [sum(_115, _120, _109), sum(_120, _108, _114), sum(_115, _114, _107), -> [sum(_109, _108, _107)]]
+"Clause " No. 3 : [sum(_167, _189, _184), sum(_189, _183, _178), sum(_184, _183, _173), sum(_178, _172, _166), sum(_173, _172, _165), -> [sum(_167, _166, _165)]]
+"Clause " No. 4 : [sum(_255, _266, _261), sum(_266, _260, _249), sum(_261, _260, _243), sum(_244, _255, _250), sum(_250, _249, _242), -> [sum(_244, _243, _242)]]
+"Clause " No. 5 : [sum(_332, _343, _338), sum(_343, _337, _326), sum(_338, _337, _319), sum(_321, _327, _332), sum(_327, _326, _320), -> [sum(_321, _320, _319)]]
+"Clause " No. 6 : [sum(_404, _420, _415), sum(_420, _414, _409), sum(_415, _414, _398), sum(_409, _397, _403), sum(_404, _403, _396), -> [sum(_398, _397, _396)]]
+"Clause " No. 7 : [sum(_486, _497, _492), sum(_497, _491, _474), sum(_492, _491, _480), sum(_481, _486, _475), sum(_481, _480, _473), -> [sum(_475, _474, _473)]]
+"Clause " No. 8 : [sum(_563, _574, _569), sum(_574, _568, _557), sum(_569, _568, _550), sum(_563, _558, _552), sum(_558, _551, _557), -> [sum(_552, _551, _550)]]
+"Clause " No. 9 : [sum(_646, _651, _629), sum(_651, _640, _645), sum(_646, _645, _635), sum(_640, _634, _628), sum(_635, _634, _627), -> [sum(_629, _628, _627)]]
+"Clause " No. 10 : [sum(_723, _728, _717), sum(_728, _711, _722), sum(_723, _722, _705), sum(_706, _717, _712), sum(_712, _711, _704), -> [sum(_706, _705, _704)]]
+"Clause " No. 11 : [sum(_800, _805, _794), sum(_805, _788, _799), sum(_800, _799, _781), sum(_783, _789, _794), sum(_789, _788, _782), -> [sum(_783, _782, _781)]]
+"Clause " No. 12 : [sum(_877, _882, _866), sum(_882, _871, _876), sum(_877, _876, _860), sum(_871, _859, _865), sum(_866, _865, _858), -> [sum(_860, _859, _858)]]
+"Clause " No. 13 : [sum(_954, _959, _948), sum(_959, _936, _953), sum(_954, _953, _942), sum(_943, _948, _937), sum(_943, _942, _935), -> [sum(_937, _936, _935)]]
+"Clause " No. 14 : [sum(_1031, _1036, _1025), sum(_1036, _1019, _1030), sum(_1031, _1030, _1012), sum(_1025, _1020, _1014), sum(_1020, _1013, _1019), -> [sum(_1014, _1013, _1012)]]
+"Clause " No. 15 : [not_sum(_1091, _1102, _1096), sum(_1090, _1097, _1102), sum(_1089, _1097, _1096), -> [not_sum(_1091, _1090, _1089)]]
+"Clause " No. 16 : [not_sum(_1147, _1160, _1154), sum(_1148, _1160, _1155), sum(_1149, _1155, _1154), -> [not_sum(_1149, _1148, _1147)]]
+"Clause " No. 17 : [sum(additive_identity, _1209, _1209)]
+"Clause " No. 18 : [sum(additive_inverse(_1232), _1232, additive_identity)]
+"Clause " No. 19 : [product(_1261, _1260, multiply(_1261, _1260))]
+"Clause " No. 20 : [sum(_1286, _1285, _1280), not_product(_1282, _1284, _1286), not_product(_1282, _1283, _1285), not_sum(_1284, _1283, _1281), not_product(_1282, _1281, _1280)]
+"Clause " No. 21 : [product(_1347, _1344, _1341), not_product(_1347, _1346, _1343), not_product(_1347, _1345, _1342), not_sum(_1346, _1345, _1344), not_sum(_1343, _1342, _1341)]
+"Query  " No. 22 : [query, not_product(a, additive_identity, additive_identity)]
+"Clause " No. 22 : [not_product(a, additive_identity, additive_identity)]
+
+--------------------        flags       --------------------
+
+protein_flag(system, protein).
+protein_flag(ancestry_rme, off).
+protein_flag(ancs, both).
+protein_flag(answers, one).
+protein_flag(answer_set_handling, on).
+protein_flag(calculus, me).
+protein_flag(check_flags, [protein_flag(calculus, hyper)]).
+protein_flag(definite_answers, off).
+protein_flag(delayed_rme, off).
+protein_flag(depth_increment, 1).
+protein_flag(dynamic, off).
+protein_flag(factorisation, cut).
+protein_flag(head_behind_prolog, off).
+protein_flag(mmr, off).
+protein_flag(mode, pl1).
+protein_flag(query_anc, ([], [])).
+protein_flag(query_reuse, on).
+protein_flag(reduction, both).
+protein_flag(regularity, delay).
+protein_flag(search, id_tree).
+protein_flag(selection_function, off).
+protein_flag(sorting, costs).
+protein_flag(strict_rme, off).
+protein_flag(th_nonewclauses, off).
+protein_flag(th_reduction, both).
+protein_flag(th_regularity, delay).
+protein_flag(th_sidelit_anc, off).
+protein_flag(translate, all).
+protein_flag(trace, internal).
+
+
+--------------------     statistics     --------------------
+
+Proof Statistics
+----------------
+Proof Time:  0.3 sec
+Proof Depth: 5
+Extension Steps: 12
+Reduction Steps: 0
+Factoring Steps: 1		(incl. 1 with cut)
+Theory Steps:    2
+Inferences:      1234
+
+--------------------      answers       --------------------

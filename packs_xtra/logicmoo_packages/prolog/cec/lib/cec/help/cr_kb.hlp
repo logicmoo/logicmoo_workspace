@@ -1,0 +1,28 @@
+
+"cr_kb."
+
+ Calls  the  contextual or clausal completion  procedure. The axioms loaded
+into the system are translated into clauses (disjunctions of literals) with
+at most one equality literal which must be positive. If there is no 
+translation into this language, the cr_kb procedure will stop saying so.
+The completion procedure consists of a fair application of the following
+inference rules:
+
+a) Orienting an axiom. This is done by orienting the equality literal (if any),
+considering the rest of the literals as condition and checking for reductivity.
+If there is no equality literal, then the set of maximal literals of the clause
+is used as left hand side, true as right hand side and the rest of them as 
+condition. The rules obtained that have the same left hand side are grouped 
+together into c-rules. These c-rules contain also the set of complementary
+conditions with respect to the rules they contain. 
+
+b) computing contextual and resolution critical pairs between two c-rules.
+
+c) simplifying axioms and c-rules.
+
+d) deleting the trivial axiom "true". 
+
+Orientation is performed by using the current ordering.
+Completion can always safely be restarted  after any 
+abortion caused by answering "A." to some query of the system.
+

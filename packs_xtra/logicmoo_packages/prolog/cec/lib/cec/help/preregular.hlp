@@ -1,0 +1,12 @@
+
+"preregular."
+
+succeeds if the current (order-sorted) signature is preregular,
+and fails otherwise.
+
+A signature is preregular, iff for every function symbol
+f and every string w of sorts the set
+   { t | there is a declaration f:w' -> t such that w=<w' }
+is either empty or has a minimal element.
+
+The preregularity condition is the regularity of Smolka/Nutt/Goguen/Meseguer 87.

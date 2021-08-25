@@ -1,0 +1,9 @@
+module equality using boolTriv.
+op (\==) : (elem * elem -> bool) .
+op (==) : (elem * elem -> bool) .
+(x \== x) = false .
+(n \== m) = (m \== n) .
+(n == m) = false => (n \== m) = true .
+(n == m) = true => n = m .
+(n == m) = (m == n) .
+(n == n) = true .

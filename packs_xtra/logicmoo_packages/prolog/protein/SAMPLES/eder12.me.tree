@@ -1,0 +1,12 @@
+
+trc(query, info(38, query, 2, 1), [
+   trc(p(_3867), info(30, ext, 1, 1), [
+      trc(not_p(f(f(_3867))), info(30, ext, 2, 1), [
+         trc(p(f(f(f(_3867)))), info(30, ext, 1, 2), [
+            trc(not_p(f(_3867)), info(30, ext, 2, 1), [
+               trc(p(f(f(_3867))), info(30, red_cut, 2, 0), [])])])])]),
+   trc(p(f(_3867)), info(38, ext, 1, 1), [
+      trc(not_p(f(f(f(_3867)))), info(38, ext, 2, 1), [
+         trc(p(f(f(f(f(_3867))))), info(38, ext, 1, 2), [
+            trc(not_p(f(f(_3867))), info(38, ext, 2, 1), [
+               trc(p(f(f(f(_3867)))), info(38, red_cut, 2, 0), [])])])])])]).

@@ -1,0 +1,10 @@
+order poly1 for nat using
+	poly1 for boolTriv
+	+ 'poly1.p' for commSemiGroup([(elem , nat)], [])
+	+ 'poly1.t' for commSemiGroup([(elem , nat)], [(0 , 1), ((+) , (*))])
+	+ 'poly1' for equalityAndOrder([(elem , nat)], []) .
+
+
+setInterpretation(s(x) : 8 * x).
+constructor('0-nat').
+constructor('1-nat').

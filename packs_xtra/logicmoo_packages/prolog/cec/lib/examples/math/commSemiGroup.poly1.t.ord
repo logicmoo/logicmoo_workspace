@@ -1,0 +1,5 @@
+order poly(1).
+
+setInterpretation([
+	'+'(x,y)   : 2*x*y,
+	 0         : 4]).

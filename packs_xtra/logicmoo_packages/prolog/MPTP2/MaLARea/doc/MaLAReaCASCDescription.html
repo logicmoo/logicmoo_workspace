@@ -1,0 +1,71 @@
+<HR><!------------------------------------------------------------------------>
+<H2>MaLARea 0.3</H2>
+J. Urban<BR>
+Charles University in Prague, Czech Republic<BR>
+
+<H3>Architecture</H3>
+
+MaLARea 0.3 [Urb07, USPV08] is a metasystem for ATP in large theories
+where symbol and formula names are used consistently.
+It uses several deductive systems (now E,SPASS,Paradox,Mace),
+as well as complementary AI techniques like machine learning 
+(the SNoW system) based on symbol-based similarity, model-based
+similarity, term-based similarity, and obviously previous
+successful proofs.
+
+<H3>Strategies</H3>
+
+The basic strategy is to run ATPs on problems, then use the machine learner
+to learn axiom relevance for conjectures from solutions, and use
+the most relevant axioms for next ATP attempts. This is iterated,
+using different timelimits and axiom limits. Various features
+are used for learning, and the learning is complemented by other criteria
+like model-based reasoning, symbol and term-based similarity, etc.
+
+<H3>Implementation</H3>
+
+The metasystem is implemented in ca. 2500 lines of Perl. It uses
+many external programs - the above mentioned ATPs and machine learner,
+TPTP utilities, LADR utilities for work with models, and some standard
+Unix tools.
+
+MaLARea is available at
+<PRE>
+    <A HREF="http://kti.ms.mff.cuni.cz/cgi-bin/viewcvs.cgi/MPTP2/MaLARea/">http://kti.ms.mff.cuni.cz/cgi-bin/viewcvs.cgi/MPTP2/MaLARea/</A></PRE>
+
+The metasystem's Perl code is released under GPL2.
+
+<H3>Expected Competition Performance</H3>
+
+Thanks to machine learning, MaLARea is strongest on batches 
+of many related problems with many redundant axioms where
+some of the problems are easy to solve and can be used for 
+learning the axiom relevance. MaLARea is not very good
+when all problems are too difficult (nothing to learn from),
+or the problems (are few and) have nothing in common. Some of 
+its techniques (selection by symbol and term-based similarity, 
+model-based reasoning) could however make it even there slightly
+stronger than standard ATPs. MaLARea has a very good performance
+on the MPTP Challenge, which is a predecessor of the LTB division.
+
+<H3>References</H3>
+<DL>
+<DT> Urb07
+<DD> Urban J. (2007), 
+<A HREF="http://ftp.informatik.rwth-aachen.de/Publications/CEUR-WS/Vol-257/05_Urban.pdf"><STRONG>MaLARea: a Metasystem for Automated Reasoning in Large Theories.</STRONG></A>,
+In Sutcliffe G., Urban J., Schulz S.,
+<EM>Proceedings of the CADE-21 Workshop on
+Empirically Successful Automated Reasoning in Large Theories</EM>
+(Bremen, Germany),
+CEUR Workshop Proceedings,.
+<DT> USPV08
+<DD> Urban J., Sutcliffe G., Pudlak P., Vyskocil J. (2007),
+     <A HREF="http://kti.mff.cuni.cz/~urban/MaLAReaSG1.pdf"><STRONG>MaLARea SG1: Machine Learner for Automated Reasoning with Semantic Guidance</STRONG></A>,
+     In Baumgartner P., Armando A., Gilles D.,
+<EM>Proceedings of the 4th International Joint Conference on Automated Reasoning</EM>
+(Sydney, Australia),
+Lecture Notes in Artificial Intelligence (To appear).
+</DL>
+<P>
+
+<HR><!------------------------------------------------------------------------>

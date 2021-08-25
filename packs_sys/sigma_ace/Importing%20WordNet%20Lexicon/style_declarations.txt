@@ -1,0 +1,5 @@
+% Style declarations for KIF.pl files
+
+:- style_check(-singleton).      % no singletons warnings
+:- style_check(-discontiguous).  % allows more creative predicate placement
+:- style_check(-atom).           % allows strings more than 5 lines long

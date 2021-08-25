@@ -1,0 +1,6 @@
+Correspondences Between Official CVS File 
+Versions and Local Versions on Holland--WRM
+
+ace.swi <-----> ACE29.pl
+ace_test.swi <-----> ACE_TEST13.pl
+blocks.kif <-----> blocks5.kif

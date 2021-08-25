@@ -1,0 +1,165 @@
+order(neqkns for intWTPreds).
+greater([['$r',nzNat]]).
+greater([['$r-ms','nzNat-bool-d']]).
+greater([['$r',nat]]).
+greater([['$r-ms','nat-bool-d']]).
+greater([['$r',int]]).
+greater([['$r-ms','int-bool-d']]).
+greater([['$r',nzInt]]).
+greater([['$r-ms','nzInt-bool-d']]).
+greater([['$r',boolean]]).
+greater([['$r-ms','boolean-bool-d']]).
+greater([['$r',s]]).
+greater([['$r-ms','s-d-d']]).
+greater([['$r',-]]).
+greater([['$r-ms','--d-d']]).
+greater([['$r',<]]).
+greater([['$r-ms','<-d-d-d']]).
+greater([[nat,nzNat]]).
+greater([[int,nat]]).
+greater([[nzInt,nzNat]]).
+greater([[int,nzInt]]).
+greater([[s,nat]]).
+greater([[<,nzNat]]).
+greater([[-,int]]).
+greater([[<,int]]).
+greater([[<,-]]).
+status(['$r':ms]).
+status(['$r-ms':ms]).
+status([< :ms]).
+
+constructor('true-bool').
+constructor('false-bool').
+constructor('0-d').
+constructor('tt-d').
+constructor('ff-d').
+
+
+
+
+
+
+/* declare as nonoperational :
+/*	int(i) = true and nzInt(-i) = true => nzInt(i) = true */
+action(orient(n),'$equation'(['int-bool-d'(@'i-d')='true-bool','nzInt-bool-d'('--d-d'(@'i-d'))='true-bool'],['nzInt-bool-d'(@'i-d')='true-bool'])).
+
+/* condition number 2 is the selected condition for
+/*	int(i) = true and nzInt(-i) = true => nzInt(i) = true */
+action(selectcondition(2),'$equation'(['int-bool-d'(@'i-d')='true-bool','nzInt-bool-d'('--d-d'(@'i-d'))='true-bool'],['nzInt-bool-d'(@'i-d')='true-bool'])).
+
+/* try to orient into a (quasi-)reductive rule :
+/*	nat(m) = true => m<0 = ff */
+action(orient(o),'$equation'(['nat-bool-d'(@'m-d')='true-bool'],['<-d-d-d'(@'m-d','0-d')='ff-d'])).
+
+/* declare as nonoperational :
+/*	nzNat(0) = true => ff = tt */
+action(orient(n),'$equation'(['nzNat-bool-d'('0-d')='true-bool'],['ff-d'='tt-d'])).
+
+/* declare as nonoperational :
+/*	nat(k) = true and nzNat(-k) = true => ff = tt */
+action(orient(n),'$equation'(['nat-bool-d'(@'k-d')='true-bool','nzNat-bool-d'('--d-d'(@'k-d'))='true-bool'],['ff-d'='tt-d'])).
+
+/* condition number 2 is the selected condition for
+/*	nat(k) = true and nzNat(-k) = true => ff = tt */
+action(selectcondition(2),'$equation'(['nat-bool-d'(@'k-d')='true-bool','nzNat-bool-d'('--d-d'(@'k-d'))='true-bool'],['ff-d'='tt-d'])).
+
+/* declare as nonoperational :
+/*	int(i) = true and nat(-i) = true and nzNat(n) = true => i<n = tt */
+action(orient(n),'$equation'(['int-bool-d'(@'i-d')='true-bool','nat-bool-d'('--d-d'(@'i-d'))='true-bool','nzNat-bool-d'(@'n-d')='true-bool'],['<-d-d-d'(@'i-d',@'n-d')='tt-d'])).
+
+/* condition number 2 is the selected condition for
+/*	int(i) = true and nat(-i) = true and nzNat(n) = true => i<n = tt */
+action(selectcondition(2),'$equation'(['int-bool-d'(@'i-d')='true-bool','nat-bool-d'('--d-d'(@'i-d'))='true-bool','nzNat-bool-d'(@'n-d')='true-bool'],['<-d-d-d'(@'i-d',@'n-d')='tt-d'])).
+
+/* declare as nonoperational :
+/*	int(i) = true and nat(m) = true and nat(-i) = true => m<i = ff */
+action(orient(n),'$equation'(['int-bool-d'(@'i-d')='true-bool','nat-bool-d'(@'m-d')='true-bool','nat-bool-d'('--d-d'(@'i-d'))='true-bool'],['<-d-d-d'(@'m-d',@'i-d')='ff-d'])).
+
+/* condition number 3 is the selected condition for
+/*	int(i) = true and nat(m) = true and nat(-i) = true => m<i = ff */
+action(selectcondition(3),'$equation'(['int-bool-d'(@'i-d')='true-bool','nat-bool-d'(@'m-d')='true-bool','nat-bool-d'('--d-d'(@'i-d'))='true-bool'],['<-d-d-d'(@'m-d',@'i-d')='ff-d'])).
+
+/* try to orient into a (quasi-)reductive rule :
+/*	nat(k) = true => -k<0 = 0<k */
+action(orient(o),'$equation'(['nat-bool-d'(@'k-d')='true-bool'],['<-d-d-d'('--d-d'(@'k-d'),'0-d')='<-d-d-d'('0-d',@'k-d')])).
+
+/* declare as nonoperational :
+/*	int(i) = true and nat(-i) = true => i<0 = 0< -i */
+action(orient(n),'$equation'(['int-bool-d'(@'i-d')='true-bool','nat-bool-d'('--d-d'(@'i-d'))='true-bool'],['<-d-d-d'(@'i-d','0-d')='<-d-d-d'('0-d','--d-d'(@'i-d'))])).
+
+/* condition number 2 is the selected condition for
+/*	int(i) = true and nat(-i) = true => i<0 = 0< -i */
+action(selectcondition(2),'$equation'(['int-bool-d'(@'i-d')='true-bool','nat-bool-d'('--d-d'(@'i-d'))='true-bool'],['<-d-d-d'(@'i-d','0-d')='<-d-d-d'('0-d','--d-d'(@'i-d'))])).
+
+/* declare as nonoperational :
+/*	int(i) = true and nat(k) = true and nat(-i) = true => -k<i = -i<k */
+action(orient(n),'$equation'(['int-bool-d'(@'i-d')='true-bool','nat-bool-d'(@'k-d')='true-bool','nat-bool-d'('--d-d'(@'i-d'))='true-bool'],['<-d-d-d'('--d-d'(@'k-d'),@'i-d')='<-d-d-d'('--d-d'(@'i-d'),@'k-d')])).
+
+/* condition number 3 is the selected condition for
+/*	int(i) = true and nat(k) = true and nat(-i) = true => -k<i = -i<k */
+action(selectcondition(3),'$equation'(['int-bool-d'(@'i-d')='true-bool','nat-bool-d'(@'k-d')='true-bool','nat-bool-d'('--d-d'(@'i-d'))='true-bool'],['<-d-d-d'('--d-d'(@'k-d'),@'i-d')='<-d-d-d'('--d-d'(@'i-d'),@'k-d')])).
+
+/* declare as nonoperational :
+/*	int(i) = true and nat(m) = true and nat(-i) = true => i< -m = m< -i */
+action(orient(n),'$equation'(['int-bool-d'(@'i-d')='true-bool','nat-bool-d'(@'m-d')='true-bool','nat-bool-d'('--d-d'(@'i-d'))='true-bool'],['<-d-d-d'(@'i-d','--d-d'(@'m-d'))='<-d-d-d'(@'m-d','--d-d'(@'i-d'))])).
+
+/* condition number 3 is the selected condition for
+/*	int(i) = true and nat(m) = true and nat(-i) = true => i< -m = m< -i */
+action(selectcondition(3),'$equation'(['int-bool-d'(@'i-d')='true-bool','nat-bool-d'(@'m-d')='true-bool','nat-bool-d'('--d-d'(@'i-d'))='true-bool'],['<-d-d-d'(@'i-d','--d-d'(@'m-d'))='<-d-d-d'(@'m-d','--d-d'(@'i-d'))])).
+
+/* declare as nonoperational :
+/*	int(i) = true and nzNat(n) = true and nzNat(-i) = true => i<n = tt */
+action(orient(n),'$equation'(['int-bool-d'(@'i-d')='true-bool','nzNat-bool-d'(@'n-d')='true-bool','nzNat-bool-d'('--d-d'(@'i-d'))='true-bool'],['<-d-d-d'(@'i-d',@'n-d')='tt-d'])).
+
+/* condition number 3 is the selected condition for
+/*	int(i) = true and nzNat(n) = true and nzNat(-i) = true => i<n = tt */
+action(selectcondition(3),'$equation'(['int-bool-d'(@'i-d')='true-bool','nzNat-bool-d'(@'n-d')='true-bool','nzNat-bool-d'('--d-d'(@'i-d'))='true-bool'],['<-d-d-d'(@'i-d',@'n-d')='tt-d'])).
+
+/* declare as nonoperational :
+/*	int(i) = true and nat(m) = true and nzNat(-i) = true => m<i = ff */
+action(orient(n),'$equation'(['int-bool-d'(@'i-d')='true-bool','nat-bool-d'(@'m-d')='true-bool','nzNat-bool-d'('--d-d'(@'i-d'))='true-bool'],['<-d-d-d'(@'m-d',@'i-d')='ff-d'])).
+
+/* condition number 3 is the selected condition for
+/*	int(i) = true and nat(m) = true and nzNat(-i) = true => m<i = ff */
+action(selectcondition(3),'$equation'(['int-bool-d'(@'i-d')='true-bool','nat-bool-d'(@'m-d')='true-bool','nzNat-bool-d'('--d-d'(@'i-d'))='true-bool'],['<-d-d-d'(@'m-d',@'i-d')='ff-d'])).
+
+/* declare as nonoperational :
+/*	int(i) = true and nzNat(-i) = true => tt = i<0 */
+action(orient(n),'$equation'(['int-bool-d'(@'i-d')='true-bool','nzNat-bool-d'('--d-d'(@'i-d'))='true-bool'],['tt-d'='<-d-d-d'(@'i-d','0-d')])).
+
+/* condition number 2 is the selected condition for
+/*	int(i) = true and nzNat(-i) = true => tt = i<0 */
+action(selectcondition(2),'$equation'(['int-bool-d'(@'i-d')='true-bool','nzNat-bool-d'('--d-d'(@'i-d'))='true-bool'],['tt-d'='<-d-d-d'(@'i-d','0-d')])).
+
+/* declare as nonoperational :
+/*	int(i) = true and nat(k) = true and nzNat(-i) = true => -k<i = -i<k */
+action(orient(n),'$equation'(['int-bool-d'(@'i-d')='true-bool','nat-bool-d'(@'k-d')='true-bool','nzNat-bool-d'('--d-d'(@'i-d'))='true-bool'],['<-d-d-d'('--d-d'(@'k-d'),@'i-d')='<-d-d-d'('--d-d'(@'i-d'),@'k-d')])).
+
+/* condition number 3 is the selected condition for
+/*	int(i) = true and nat(k) = true and nzNat(-i) = true => -k<i = -i<k */
+action(selectcondition(3),'$equation'(['int-bool-d'(@'i-d')='true-bool','nat-bool-d'(@'k-d')='true-bool','nzNat-bool-d'('--d-d'(@'i-d'))='true-bool'],['<-d-d-d'('--d-d'(@'k-d'),@'i-d')='<-d-d-d'('--d-d'(@'i-d'),@'k-d')])).
+
+/* declare as nonoperational :
+/*	int(i) = true and nat(m) = true and nzNat(-i) = true => i< -m = m< -i */
+action(orient(n),'$equation'(['int-bool-d'(@'i-d')='true-bool','nat-bool-d'(@'m-d')='true-bool','nzNat-bool-d'('--d-d'(@'i-d'))='true-bool'],['<-d-d-d'(@'i-d','--d-d'(@'m-d'))='<-d-d-d'(@'m-d','--d-d'(@'i-d'))])).
+
+/* condition number 3 is the selected condition for
+/*	int(i) = true and nat(m) = true and nzNat(-i) = true => i< -m = m< -i */
+action(selectcondition(3),'$equation'(['int-bool-d'(@'i-d')='true-bool','nat-bool-d'(@'m-d')='true-bool','nzNat-bool-d'('--d-d'(@'i-d'))='true-bool'],['<-d-d-d'(@'i-d','--d-d'(@'m-d'))='<-d-d-d'(@'m-d','--d-d'(@'i-d'))])).
+
+/* declare as nonoperational :
+/*	int(i) = true and nzNat(-i) = true => nzInt(i) = true */
+action(orient(n),'$equation'(['int-bool-d'(@'i-d')='true-bool','nzNat-bool-d'('--d-d'(@'i-d'))='true-bool'],['nzInt-bool-d'(@'i-d')='true-bool'])).
+
+/* condition number 2 is the selected condition for
+/*	int(i) = true and nzNat(-i) = true => nzInt(i) = true */
+action(selectcondition(2),'$equation'(['int-bool-d'(@'i-d')='true-bool','nzNat-bool-d'('--d-d'(@'i-d'))='true-bool'],['nzInt-bool-d'(@'i-d')='true-bool'])).
+
+/* declare as nonoperational :
+/*	nat(-i) = true and nzNat(i) = true => ff = tt */
+action(orient(n),'$equation'(['nat-bool-d'('--d-d'(@'i-d'))='true-bool','nzNat-bool-d'(@'i-d')='true-bool'],['ff-d'='tt-d'])).
+
+/* condition number 1 is the selected condition for
+/*	nat(-i) = true and nzNat(i) = true => ff = tt */
+action(selectcondition(1),'$equation'(['nat-bool-d'('--d-d'(@'i-d'))='true-bool','nzNat-bool-d'(@'i-d')='true-bool'],['ff-d'='tt-d'])).
+

@@ -1,0 +1,35 @@
+ALL     = $(shell cat 00all)
+
+XSLTPROC = xsltproc 
+XTSTP2DLI = /home/urban/xsltxt/tstp2dli.xsl
+TPTP2XML = TPTP2XML
+DLI2HTML = dli2html.pl
+MMLQ =http:\/\/mmlquery.mizar.org\/cgi-bin\/mmlquery\/meaning?
+EXTRACTRES=    perl -e 'while(<>) {if(m/Proof object ends here/) { $$i=0; } if($$i==1) { print $$_;} if(m/Proof object starts here/) { $$i=1; }}' 
+
+%.rsorted: %
+	prophet -p $* | SortByUsefulInfoField relevance -d -- | tptp4X -u machine -- > $*.rsorted
+
+
+
+%.res: %.done
+	$(EXTRACTRES) $*.done > $*.res
+
+%.xml: %.res
+	$(TPTP2XML) $*.res > $*.xml
+
+%.dli: %.xml
+	$(XSLTPROC) $(XTSTP2DLI)  $*.xml > $*.dli
+
+%.html: %.dli
+	$(DLI2HTML)  $*.dli | sed -e 's/meaning[?]/$(MMLQ)/g' > $*.html 
+
+
+
+allhtml: $(addsuffix .html, $(ALL))
+
+allxml: $(addsuffix .xml, $(ALL))
+
+alldli: $(addsuffix .dli, $(ALL))
+
+allres: $(addsuffix .res, $(ALL))

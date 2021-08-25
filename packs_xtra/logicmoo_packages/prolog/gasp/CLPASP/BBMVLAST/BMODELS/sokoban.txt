@@ -1,0 +1,299 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% SOKOBAN in B
+%%% By AD and AF, June 8th 2011
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%       FLUENTS           %%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% Each location
+%%% - is free or
+%%% - contains a box B.
+%%%   The name of the box is not important
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+fluent(free(L)) :-
+   location(L).
+fluent(box_in(L)) :-
+   location(L).
+fluent(sokoban_in(L)) :-
+   location(L).
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% Each location CAN be reached by the sokoban
+%%% This fluent is introduced for the instantaneous
+%%% move of the sokoban, but it introduces complexity.
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+fluent(reachable(A)) :-
+    location(A).
+
+%% ADDITION - extended syntax February 2012
+
+non_inertial(reachable(A)) :- location(A).
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%       ACTIONS           %%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+%%% You can push a block from "From" to "To"
+%%% in the direction D if the two locations
+%%% are "topologically" connected in that direction
+%%% There must be room for the sokoban the cell before
+%%% During execution the position of some boxes can
+%%% exclude path feasible
+
+action(push(From,D,To)) :-
+   location(From), location(To),
+   step(_Sokoban,D,From),
+   %neq(From,To),
+   %direction(D),
+   straight_connection(From,To,D,_).
+
+%%% The action is executable if a block is in location "From",
+%%% (*) the block PushPlace at the back of location "From" is currently reachable
+%%% by the sokoban,  and
+%%% all other locations between From and To cannot contain a box,
+%%% i.e. they are free or the sokoban is there (but he/she is moving)
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% Constraint (*) needed the constraint-encoding of (dynamic)
+%%% reachability. This is done with static laws!
+%%% WE REALLY CAN'T SEE HOW TO THIS WITHOUT STATIC LAWS
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+executable(push(From,D,To),[reachable(PushPlace), box_in(From) | NoBoxes ]) :-
+   action(push(From,D,To)),
+   step(PushPlace,D,From),
+   straight_connection(From,To,D,[From|PATH]),
+   empty_path(PATH, NoBoxes ).
+
+empty_path([],[]).
+empty_path([L|R],[neg(box_in(L))|S]) :-
+      empty_path(R,S).
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% EFFECTS OF A PUSH MOVE
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%% In all cases the box ends in To
+
+causes(push(From,D,To), box_in(To) ,[]) :-
+   action(push(From,D,To)).
+
+%%% And the box is no longer in From
+
+causes(push(From,D,To), neg(box_in(From)) ,[]) :-
+   action(push(From,D,To)).
+
+%%% The sokoban ends in the cell previous to To
+
+causes(push(From,D,To),sokoban_in(S),[]) :-
+   action(push(From,D,To)),
+   step(S,D,To).
+
+%%% We would like also to express if "From" is now free
+
+causes(push(From,D,To),free(From),[]) :-
+   action(push(From,D,To)),
+   \+ step(From,D,To).
+
+%%% Similarly, we would like to express when the
+%%% previous sokoban's cell is now free
+
+causes(push(From,D,To),free(S),[sokoban_in(S)]) :-
+   action(push(From,D,To)),
+   location(S),
+   neq(S,To),
+   \+ step(S,D,To).
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%      STATIC LAWS        %%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%% STATIC LAWS FOR REACHABILITY
+%%% Here the CLP(FD) interpreter is not always correct
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+caused([sokoban_in(A)],reachable(A)) :-
+    location(A).
+
+caused([reachable(B),free(C)],reachable(C)) :-
+    location(B),location(C),
+    step(B,D,C),direction(D).
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% PLUS THE BASIC STATIC LAWS
+%%% concerning the Boolean fluents
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+caused([free(L)],neg(box_in(L))) :-
+    location(L).
+
+caused([free(L)],neg(sokoban_in(L))) :-
+    location(L).
+
+%%%%
+
+caused([sokoban_in(L)],neg(free(L))) :-
+    location(L).
+
+caused([sokoban_in(L)],neg(box(L))) :-
+    location(L).
+
+caused([sokoban_in(L1)],neg(sokoban_in(L2))) :-
+    location(L1),
+    location(L2),
+    neq(L1,L2).
+
+%%%%
+
+caused([box_in(L)],neg(free(L))) :-
+    location(L).
+
+caused([box_in(L)],neg(sokoban_in(L))) :-
+    location(L).
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%% INITIAL STATE AND GOAL     %%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+initially(box_in(L)) :- location(L), box(L).
+initially(neg(box_in(L))) :- location(L), \+ box(L).
+
+initially(sokoban_in(L)) :- location(L), sokoban(L).
+initially(neg(sokoban_in(L))) :-  location(L), \+ sokoban(L).
+
+initially(free(L)) :- location(L), \+ box(L), \+ sokoban(L).
+initially(neg(free(L))) :- location(L), box(L).
+initially(neg(free(L))) :- location(L), sokoban(L).
+
+
+initially(reachable(A)) :- location(A), sokoban(A).
+
+initially(reachable(L)) :-
+    location(L),
+    sokoban(S),
+    reach_path(S,L,[S]).
+initially(neg(reachable(L))) :-
+    location(L),
+    \+ initially(reachable(L)).
+
+goal(box_in(L)) :- location(L), solution(L).
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% AUXILIARY PREDICATES
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+reach_path(From,From,_).
+reach_path(From,To,Visited) :-
+    step(From,_,Int),
+    \+ member(Int,Visited),
+    \+ box(Int),
+    reach_path(Int,To,[Int|Visited]).
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% AUXILIARY PREDICATES
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+%%% findall/sort are used to remove duplicates
+location(Loc) :-
+   findall(L,(top(L,_); top(_,L); right(L,_); right(_,L)),LLocs),
+   sort(LLocs,Locs),
+   member(Loc,Locs).
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+             direction(up).
+direction(left).        direction(right).
+             direction(down).
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+straight_connection(From,From,_D,[From]).
+straight_connection(From,To,D,[From|Rest]) :-
+    step(From,D,Int),
+    straight_connection(Int,To,D,Rest).
+
+step(From,right,To) :- right(From,To).
+step(From,left,To) :-  right(To,From).
+step(From,up,To) :-    top(From,To).
+step(From,down,To) :-  top(To,From).
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%% ASP Example Instance 20 (minimum plan length 11)
+%%% From: https://www.mat.unical.it/aspcomp2011/FinalProblemDescriptions/SokobanDecision
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+top(col4row7,col4row6). top(col4row6,col4row5).
+right(col4row5,col5row5). top(col5row5,col5row4).
+top(col5row4,col5row3). top(col5row3,col5row2).
+top(col5row2,col5row1). top(col4row2,col4row1).
+top(col4row3,col4row2). right(col4row3,col5row3).
+top(col3row3,col3row2). top(col3row2,col3row1).
+right(col3row1,col4row1). right(col3row2,col4row2).
+top(col3row4,col3row3). top(col3row5,col3row4).
+top(col3row6,col3row5). top(col3row7,col3row6).
+right(col3row7,col4row7). right(col3row6,col4row6).
+right(col3row5,col4row5). right(col2row5,col3row5).
+top(col1row5,col1row4). top(col1row4,col1row3).
+right(col1row3,col2row3). right(col2row3,col3row3).
+right(col1row5,col2row5). right(col3row3,col4row3).
+right(col4row2,col5row2). right(col4row1,col5row1).
+right(col5row2,col6row2). top(col6row3,col6row2).
+right(col6row3,col7row3). top(col7row4,col7row3).
+top(col7row5,col7row4). right(col6row5,col7row5).
+right(col5row3,col6row3). top(col5row6,col5row5).
+top(col5row7,col5row6). right(col5row5,col6row5).
+right(col4row6,col5row6). right(col4row7,col5row7).
+
+%%%
+box(col4row5). box(col5row5). box(col4row3). box(col3row2).
+box(col3row5). box(col6row3). sokoban(col4row7).
+%%%
+solution(col5row5).
+solution(col5row4). solution(col5row3). solution(col3row3).
+solution(col3row4). solution(col3row5).
+step(1). step(2). step(3). step(4). step(5). step(6). step(7).
+step(8). step(9). step(10). step(11). step(12). step(13).
+step(14). step(15). step(16). step(17). step(18). step(19).
+step(20). next(1,2). next(2,3). next(3,4). next(4,5).
+next(5,6). next(6,7). next(7,8). next(8,9). next(9,10).
+next(10,11). next(11,12). next(12,13). next(13,14).
+next(14,15). next(15,16). next(16,17). next(17,18).
+next(18,19). next(19,20).
+
+%%%%%%%%%%%%%%%%%%%%%

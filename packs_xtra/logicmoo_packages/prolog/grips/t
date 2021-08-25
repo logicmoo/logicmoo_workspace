@@ -1,0 +1,16 @@
+    factorial(N) <- 1 if N =< 0.
+    factorial(N) <- N * factorial(N-1) if N > 0.
+
+    double( N ) <- N*2.
+
+    quadruple( N ) <- double( double(N) ).
+
+    append( [], L ) <- L.
+    append( [H|T], L ) <- [ H | append(T,L) ].
+
+    count( L ) <- 0 if L = [].
+    count( [H|T] ) <- 1 + count( T ).
+
+    converse does write_list(reply_to(readline('?'))) and converse.
+
+    divides_by_4( N ) if ( N/2 rem 2 ) = 0.

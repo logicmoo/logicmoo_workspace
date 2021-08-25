@@ -1,0 +1,23 @@
+order(poly1 for ccc) using 'poly1.p'for commSemiGroup.
+setInterpretation(==>(x,y) : 2 * x * y
+).
+setInterpretation(1 : 2
+).
+setInterpretation(*(x,y) : x + y + 1
+).
+
+constructor('1-type').
+
+
+
+
+
+
+/* ordering of the literals is ms for
+/*	x*y = y*x */
+action(status(ms),'$equation'([],['*-type-type-type'(@'x-type',@'y-type')='*-type-type-type'(@'y-type',@'x-type')])).
+
+/* ordering of the literals is ms for
+/*	x*y*z = x* (y*z) */
+action(status(ms),'$equation'([],['*-type-type-type'('*-type-type-type'(@'x-type',@'y-type'),@'z-type')='*-type-type-type'(@'x-type','*-type-type-type'(@'y-type',@'z-type'))])).
+

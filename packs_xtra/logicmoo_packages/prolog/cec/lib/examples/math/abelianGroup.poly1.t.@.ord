@@ -1,0 +1,26 @@
+order(poly1 for abelianGroup) using 'poly1.t'for commSemiGroup.
+setInterpretation(-(x) : (x^2)
+).
+setInterpretation('$r'(x) : 2 * x
+).
+setInterpretation('$r'(x,y) : 2 * x + 2 * y
+).
+setInterpretation(+(x,y) : 2 * x * y
+).
+setInterpretation(0 : 4
+).
+
+
+
+
+
+
+
+/* ordering of the literals is ms for
+/*	x+y = y+x */
+action(status(ms),'$equation'([],['+-elem-elem-elem'(@'x-elem',@'y-elem')='+-elem-elem-elem'(@'y-elem',@'x-elem')])).
+
+/* ordering of the literals is ms for
+/*	x+y+z = x+ (y+z) */
+action(status(ms),'$equation'([],['+-elem-elem-elem'('+-elem-elem-elem'(@'x-elem',@'y-elem'),@'z-elem')='+-elem-elem-elem'(@'x-elem','+-elem-elem-elem'(@'y-elem',@'z-elem'))])).
+

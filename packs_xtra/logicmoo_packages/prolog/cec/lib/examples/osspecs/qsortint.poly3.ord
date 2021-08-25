@@ -1,0 +1,2 @@
+order poly3 for qsortint using poly3 for qsort([(elem , int)],[]) +
+			       poly1 for int.

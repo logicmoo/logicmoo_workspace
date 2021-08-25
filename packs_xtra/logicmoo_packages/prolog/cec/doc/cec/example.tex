@@ -1,0 +1,683 @@
+\section{An Example Session}
+\label{exampleSession}
+
+To provide a first impression of  the capabilities of the CEC-System, we
+describe the development of a quicksort algorithm on lists of
+natural numbers.
+
+\subsection{The Specification of Quicksort}
+
+Specifications can be written and completed in a {\em modular}
+way. CEC can combine completed specifications without 
+repeating previous work. The hierarchy of modules for the
+specification of quicksort on lists of natural numbers is given
+in the following diagram:
+
+\begin{picture}(450,100)
+\put(50,0){\makebox(400,100){}}
+\put(205,85){\makebox(0,0){{\tt qsortnat}}}
+\put(200,80){\vector(-2,-1){45}}
+\put(200,80){\vector(2,-1){45}}
+
+\put(150,50){\makebox(0,0){{\tt nat}}}
+
+\put(257,50){\makebox(0,0){{\tt qsort}}}
+\put(255,45){\vector(-3,-2){30}}
+\put(255,45){\vector(3,-2){30}}
+
+\put(215,20){\makebox(0,0){{\tt totalOrder}}}
+
+\put(300,20){\makebox(0,0){{\tt lists}}}
+\end{picture}
+
+\noindent
+The module \cec{qsort} --- saved in a file named \cec{qsort.eqn} ---
+describes the quicksort algorithm:
+\begin{spec}
+module qsort using lists + totalOrder.
+
+op sort  : (list -> list).
+op split : (elem * list -> pair).
+cons (',') : (list * list -> pair).
+
+sort([]) = [].
+split(x, l) = (l1 , l2) => sort([x|l]) = append(sort(l1), [x|sort(l2)]).
+
+split(x, []) = ([] , []).
+(y =< x) = true and split(x, l) = (l1,l2) => split(x, [y|l]) = ([y|l1],l2).
+(y =< x) = false and split(x, l) = (l1,l2) => split(x, [y|l]) = (l1,[y|l2]).
+\end{spec}
+
+Complex specifications can be constructed from modules by the 
+elementary operations {\em combination}, {\em enrichment} and {\em renaming}
+(\refArrow chapter \ref{OperationsOnSpecifications}).
+The combine operator (\cec{+}) forms the union of two specifications and
+the rename operator (\cec{<-}) allows to renaming sorts and operators.
+Any specification in CEC is the enrichment of a possibly empty base
+specification (``{\tt using} $<$base$>$'') by new vocabulary and axioms.
+The module \cec{qsort} is based on \cec{lists} 
+and \cec{totalOrder}. Here \cec{lists} is the imported module
+\begin{spec}
+module lists.
+
+cons []   : list .
+cons '.'  : (elem * list -> list).
+op append : (list * list -> list).
+
+append([], l) = l.
+append([e | l1], l2) = [e | append(l1, l2)].
+\end{spec}
+
+We use the constructor \cec{[]} to denote the empty list and 
+the constructor `\cec{.}' for adding an element to a list
+(This is exactly the way how lists are constructed in Prolog and we can
+use the usual Prolog notation for lists in which \cec{[e|l]} is
+a synonym for \cec{(e '.' l)}). 
+Additionally we have defined an 
+operator \cec{append} for the concatenation of two lists and described 
+its behaviour through two equations.
+
+\cec{totalOrder} plays the r$\hat{o}$le of a formal parameter
+of \cec{qsort}:
+\begin{spec}
+module totalOrder.
+
+op (=<) : (elem * elem -> bool) .
+
+(x =< x) = true .
+(x =< y) = false => (y =< x) = true .
+(x =< y) = true and (y =< z) = true => (x =< z) = true .
+(x =< y) = true and (y =< x) = true => x = y .
+\end{spec}
+
+It describes a usable approximation of the usual first-order axioms
+for total orders in a Horn clause setting.
+An actual parameter candidate for \cec{totalOrder} is
+the following specification of natural numbers:
+\begin{spec}
+module nat using totalOrder(elem <- nat).
+
+cons 0 : nat.
+cons(s, 100, fy) :  (nat -> nat).
+
+(0 =< n ) = true.
+(s n =< 0) = false .
+(s n =< s m) = (n =< m).
+\end{spec}
+
+Computing with the above specification one has to write the numbers
+$n$ as \cec{s}$^n$\cec{0} which is a tedious work. In CEC it is possible to provide different external
+representations for the terms of a specification by specifying
+the translations from the external to the internal
+and from the internal to the external representation 
+(\refArrow chapter \ref{ParseAndPretty}).
+
+The instantiation of the formal parameter of \cec{qsort} with
+nat yields \cec{qsortnat}:
+\begin{spec}
+module qsortnat using qsort(elem <- nat) + nat.
+\end{spec}
+
+The modules \cec{qsort} and \cec{nat} are combined after
+renaming the sort \cec{elem} of \cec{qsort} into \cec{nat}.
+The completion of \cec{qsortnat} will check the consistency of the axioms 
+for \cec{=<} in the actual parameter \cec{nat} and in the formal
+parameter \cec{totalOrder}. The latter proves the correctness
+of the actual parameter in cases where the actual parameter is
+constructor-complete. \cec{nat} is constructor-complete.
+
+\subsection{Order Specifications}
+
+In CEC the following termination orderings are available:
+\begin{itemize}
+\item
+Two  {\em precedence orderings} \kw{kns} and \kw{neqkns}, according to 
+Kapur et. al \cite{KNS85} (\refArrow chapter \ref{kns}).
+%They are based on the recursive comparison of paths occurring
+%in the terms to be compared. This order is induced by a partial
+%order on operators called the {\it precedence}. The precedence ordering
+%\kw{neqkns} forbids that two different operators have the same precedence.
+%All constructors are given a precedence less than any nonconstructor operator.
+\item
+The method of {\it polynomial interpretations}
+where \[t_1 > t_2 : \iff I(t_1) > I(t_2). \]
+if $I(t)$ is the polynomial or tuple of polynomials associated with
+it.
+The concrete version of this technique as it is used in CEC is due to 
+\cite{CL86} (\refArrow chapter \ref{poly}).
+\kw{poly}\nt{N} stands for polynomial interpretations with 
+tuplelength $N$.
+\end{itemize}
+The precedence declarations or polynomial interpretations
+for the operators of a specification are given interactively
+during the completion process or in a {\em order specification}
+associated with the specification
+(\refArrow chapter \ref{OrderSpecification}).
+%The order specification determines the termination ordering to be used for 
+%\nt{specificationName}, the order names for its direct imports
+%and gives precedence declarations for the operators of the
+%specification (if the termination ordering is \kw{kns} or \kw{neqkns}) or
+%polynomial interpretations (if the termination ordering is \kw{poly}\nt{N}).
+
+For example, the order specification for the module \cec{lists}
+may have the following form:
+
+\begin{spec}
+order poly3 for lists.
+
+setInterpretation(['[]'        : [2, 2, 2],
+                   '.'(x,y)    : [3 * x + y + 1, x + y, x + y],
+                   append(x,y) : [x + y, x + y, 2 * x + y]]).
+\end{spec}
+
+In this case, polynomial interpretations with tuple length 3
+have been chosen. If this information is stored in the file \cec{lists.pol.ord},
+\cec{pol} is called the {\em order name} of this order specification.
+
+\subsection{Reading and Displaying}
+
+We want to demonstrate how CEC handles this specification. 
+First, we read in the specification of \cec{lists} using
+the \comRef{in}-command (\refArrow chapter \ref{InCommand})
+with two arguments, the name of the module and the order name
+(\refArrow chapter \ref{orderBase}):
+
+\begin{screen}
+| ?- in(lists,pol).
+[collecting garbage...]
+[evaluating base of lists.eqn with lists.pol.ord...]
+ [thawing standard.poly3.q2.0 into user...]
+ [storing to standard.poly3]
+[reading body of lists.eqn and lists.pol.ord...]
+[analyzing axioms...]
+[collecting garbage...]
+
+Time used: 3.634 sec.
+\end{screen}
+
+\noindent
+We can use the \comRef{sig}-command to display the signature:
+
+\begin{screen}
+| ?- sig.
+
+Signature :
+
+cons true       : bool.
+cons false      : bool.
+cons []	: list.
+cons .  : (elem * list -> list).
+op append       : (list * list -> list).
+\end{screen}
+
+The boolean constants \cec{true} and \cec{false} are imported
+from the \cec{standard}-module, which is automatically imported into 
+every specification. The fact that \cec{true} and \cec{false}
+are constructors implies that any equation, explicitly given in
+a specification or derived through completion, equating these
+constants is forbidden.
+As expected, we also see our two constructors \cec{[]} and
+`\cec{.}' and the operator \cec{append}.
+
+The \comRef{show}-command can be used to display the 
+set of equations and rules (\refArrow chapter \ref{Displaying}):
+
+\begin{screen}
+| ?- show.
+
+Current equations
+
+  1    append([],l) = l
+  2    append([e|l1],l2) = [e|append(l1,l2)]
+
+Current rules
+
+Current nonoperational equations
+
+All axioms reduced.
+All superpositions computed.
+The set of equations is not empty.
+\end{screen}
+
+\noindent
+The information about the polynomial interpretations can be made
+visible using the \comRef{interpretation}-command. If \cec{kns}
+or \cec{neqkns} is used, this can be achieved by the
+\comRef{operators}-command (\refArrow chapter \ref{InspecTermination}).
+
+Every consulted specification is saved in a special {\em specification
+variable}. The user can restore an older state of his system
+using the \comRef{load}-command (\refArrow chapter \ref{LoadCommand})
+or can update the content of the variable using the \comRef{store}-command
+(\refArrow chapter \ref{StoreCommand}). 
+Whenever a specification is to be imported, the CEC system uses the content
+of the corresponding specification variable, if this specification variable 
+exists. So it increases one's speed, if the completion process of a hierarchical
+specification follows the tree structure from its leaves to its root, 
+storing every participating specification after successful completion.
+We assume that attention is paid to this advice for our example.
+Information about the current specification variables
+can be retrieved using the \comRef{specifications}-command.
+
+It is also possible to save a system externally using the 
+\comRef{freeze}-command (\refArrow chapter \ref{FreezeCommand}).
+To restore a externally saved system use the \comRef{thaw}-command
+(\refArrow chapter \ref{ThawCommand}).
+
+\subsection{Completion}
+We now apply the completion procedure (\refArrow chapter
+\ref{Completion}) to our example.
+
+\subsubsection{Completing {\tt lists}}
+
+The completion process --- started with the \comRef{c}-command ---
+is able to orient the two equations of \cec{lists}
+without requesting any additional information:
+
+\begin{screen}
+| ?- c.
+
+new rule   1    append([],l) = l .
+
+new rule   2    append([e|l1],l2) = [e|append(l1,l2)] .
+
+[4 superpositions yet to be considered.]
+
+0 superpositions have been computed.
+Time used: 0.883011 sec.
+\end{screen}
+
+\noindent
+The system is complete, and has the following rules, displayed 
+by the \comRef{show}-command:
+
+\begin{screen}
+| ?- show.
+
+Current equations
+
+Current rules
+
+  1    append([],l) = l
+  2    append([e|l1],l2) = [e|append(l1,l2)]
+
+Current nonoperational equations
+
+All axioms reduced.
+All superpositions computed.
+No more equations, the system is complete.
+\end{screen}
+
+
+\subsubsection{Completing {\tt totalOrder}}
+
+An important feature is that CEC does not require to transform all
+equations into rewrite rules. This can be demonstrated during the
+completion of \cec{totalOrder}.
+
+After orienting the first equation into a rewrite rule, 
+the system discovers that it is unable to orient the second 
+equation:
+
+\begin{screen}
+Checking reductivity constraints for rule
+        x=<y = false => y=<x = true:
+The current ordering fails to prove
+[y=<x]  >  [x=<y,false].
+At this point you may take any of the the following actions:
+a. for assume to be proved
+c. for checking quasi-reductivity of the equation
+p. for postpone
+n. for considering the equation as nonoperational
+   Please answer with a. or c. or p. or n. (Type A. to abort) > \user{n.}
+\end{screen}
+
+\noindent
+We want to consider this equation as nonoperational
+(\refArrow chapter \ref{Completion}), so we answer with \user{n.}.
+
+Nonoperational equations become useless for the equational theory and, hence,
+in fact nonoperational, if they are superposed on at least one of their
+conditions by all rewrite rules. This yields new conditional equations. 
+What concerns the equational theory, the new equations together have 
+the same power as the original equation. 
+However, they may have better operational properties than the
+equation they have been generated from.
+Equations that cannot be oriented into a reductive rule must
+either be eliminated eventually or considered nonoperational.
+
+Checking the convergence of conditional equations requires to compare different
+applications of equations and rewrite rules. The comparison of equation application is performed
+by comparing the literals of the equation instance. The {\em status} of an equation 
+determines the order in which the literals of the equation should be
+inspected. The status $ms$ means that the literals are compared as a multiset.
+Instead of $ms$ the user can choose an arbitrary sequence of the literals
+by entering a permutation of [0 .. n] where n is the number of conditions
+(\refArrow \cite{Gan88a}). 
+
+We want to use $ms$ here:
+
+\begin{screen}
+In which order should the literals of the equation be
+inspected when comparing proofs that use this equation?
+Please enter ms (for multiset ordering) or a permutation of [0 .. 1]
+(0 stands for the consequent, i>0 for the ith condition). > \user{ms.}
+\end{screen}
+
+\noindent
+The other two nonreductive equations are handled in the same way and we get the 
+following complete system:
+
+\begin{screen}
+| ?- \user{show.}
+
+Current equations
+
+Current rules
+
+  1    x=<x = true
+
+Current nonoperational equations
+
+  1    x=<y = false => y=<x = true
+  2    x=<y = true and y=<x = true => x = y
+  3    x=<y = true and y=<z = true => x=<z = true
+
+All axioms reduced.
+All superpositions computed.
+No more equations, the system is complete.
+\end{screen}
+
+In this case, superposing the only rule \cec{x =< x = true} on the first
+condition of the nonoperational equations does not generate any nontrivial
+(nonconvergent) consequences.
+
+\subsubsection{Completing {\tt qsort}}
+
+The next step is the completion of the \cec{qsort} specification.
+The completion procedure is able to orient the first and third 
+equation of our specification, but fails to orient the second one.
+
+\begin{screen}
+| ?- c.
+
+new rule   9    sort([]) = [] .
+
+new rule  10    split(x,[]) = [],[] .
+The equation
+        split(x,l) = l1,l2 => sort([x|l]) = append(sort(l1),[x|sort(l2)])
+is not reductive.
+\end{screen}
+
+\noindent
+This is due to the presence of the {\em extra variables} \cec{l1} and \cec{l2}
+in the condition of the equation.
+
+Equations with extra variables in the condition or in the right side of
+the consequence are usually not admitted as rewrite rules. 
+Fortunately some of these equations belong to the class of what we call
+{\em quasi-reductive rules} (\refArrow chapter \ref{Completion}). 
+CEC is able to prove the remaining equations 2, 4
+and 5 of the module \cec{qsort} to be quasi-reductive.
+Quasi-reductive rules are a generalization
+of reductive conditional rewrite rules and the associated rewrite
+process is similarly efficient.
+It specifies e.g. for the second equation the replacement
+of \cec{sort([x|l])} by the term \cec{append(sort(l1), [x|sort(l2)])} 
+if the normalform of \cec{split(x, l)} matches \cec{(l1,l2)}.
+After this match the extra variables \cec{l1} and \cec{l2} are instantiated to
+terms which include only variables of the left hand side.
+In quasi-reductive rules, conditions are oriented, too. To solve an instance
+of a condition equation means to rewrite its left side into an instance of the
+right side.
+
+\begin{screen}
+Do you want a check for quasi-reductivity?
+c. for check
+n. for considering the equation as nonoperational
+p. for postpone
+   Please answer with c. or n. or p. (Type A. to abort) >\user{c.}
+\end{screen}
+
+\noindent
+To orient an equation into a quasi-reductive rule, we must first indicate the 
+desired orientation of the equations in the condition and the conclusion. 
+In this example, the equation in the condition
+and the conclusion should be oriented from left to right (literal annotation
+``\user{l}'').
+
+\begin{screen}
+Enter annotations of literals in
+	split(x,l) = l1,l2 => sort([x|l]) = append(sort(l1),[x|sort(l2)])
+	: \user{[l,l].}
+\end{screen}
+
+\noindent
+Now CEC attemps to prove the quasi-reductivity of the equation according to the
+definition in chapter \ref{Completion}. This involves giving  polynomial
+interpretations to some auxiliary operators.
+Here we must give an appropriate interpretation for \cec{$h5_0}:
+
+\begin{screen}
+Checking reductivity constraint:
+Consider the terms
+        $h5_0((l1,l2),x)
+and
+        append(sort(l1),[x|sort(l2)])
+
+There is no interpretation of operator '$h5_0' with arity 2
+The default interpretation is :
+   [ 2 * x * y ,
+     2 * x * y ,
+     2 * x * y ]
+Do you want to change it ? (if so type 'y') \user{y}
+Do you want to change it component for component ? (if so type 'y') \user{n}
+Type in the new interpretation tuple
+[ $h5_0 ] (x,y) = \user{[2*x+3*y+1,2*x+2*y,2*x+2*y].}
+Resulting interpretation for Operator '$h5_0' with arity 2 :
+   [ 2 * x + 3 * y + 1 ,
+     2 * x + 2 * y ,
+     2 * x + 2 * y ]
+Do you accept it ? (if not, type 'n') \user{y}
+\end{screen}
+
+\noindent
+Now the proof of the quasi-reductivity of the equation is completed:
+
+\begin{screen}
+new rule  11    split(x,l) = l1,l2 => sort([x|l]) = 
+                                      append(sort(l1),[x|sort(l2)]) .
+\end{screen}
+
+\noindent
+In the same way the equations
+
+\cec{y=<x = true and split(x,l) = (l1,l2) => split(x,[y|l]) = ([y|l1],l2)}
+
+\noindent
+and 
+
+\cec{y=<x = false and split(x,l) = (l1,l2) => split(x,[y|l]) = (l1,[y|l2])}
+
+\noindent
+can be oriented into quasi-reductive rules.
+
+For the quicksort specification three nontrivial superposition instances are
+computed. For any nontrivial equation with at least one condition that is
+generated during completion, CEC will ask the user what to do with it. In the
+example we decide to declare these consequences as ``nonoperational''.
+
+\begin{screen}
+instance   6    l1,l2 = l4,l3 and split(x1,l5) = l1,l2 => 
+                                     append(sort(l1),[x1|sort(l2)]) = 
+                                     append(sort(l4),[x1|sort(l3)])
+of        6    split(x,l) = l1,l2 => sort([x|l]) = 
+                                     append(sort(l1),[x|sort(l2)])
+by superposing
+          6    split(x,l) = l1,l2 => sort([x|l]) = 
+                                     append(sort(l1),[x|sort(l2)]) 
+on the left side.
+
+Consider the equation
+        l1,l2 = l4,l3 and split(x1,l5) = l1,l2 => 
+                                     append(sort(l1),[x1|sort(l2)]) = 
+                                     append(sort(l4),[x1|sort(l3)]).
+The following actions may be taken:
+o. for attempting to orient into a (quasi-)reductive rule
+p. for postpone
+n. for considering equation as nonoperational
+   Please answer with o. or p. or n. (Type A. to abort) >\user{n.}
+\end{screen}
+
+As mentioned before it is sufficient to superpose all rewrite rules
+on just one condition of a nonoperational conditional equation. So
+CEC asks the user on which condition superposition should be
+applied. 
+We will choose the first equation of the condition, since we know it
+will generate no nontrivial superpositions:
+
+\begin{screen}
+Which of the condition equations in
+        l1,l2 = l4,l3 and split(x1,l5) = l1,l2 
+should be selected for superposition?
+Please enter index from 1 to 2. > \user{1.}
+
+The equation l1,l2 = l4,l3 and split(x1,l5) = l1,l2 => 
+                                          append(sort(l1),[x1|sort(l2)]) = 
+                                          append(sort(l4),[x1|sort(l3)]) 
+will be considered as nonoperational.
+\end{screen}
+
+\subsubsection{Completing {\tt nat}}
+
+The completion of the \cec{nat} specification is straightforward using
+the following order specification:
+
+\begin{spec}
+order poly1 for nat. 
+
+setInterpretation([0 : 2,
+                   s(x) : 8 * x]).
+\end{spec}
+
+\subsubsection{Combining {\tt qsort} and {\tt nat}}
+
+We now want to combine the \cec{nat} specification with the 
+\cec{qsort} specification.
+
+\begin{screen}
+| ?- store.
+yes
+| ?- load(qsort,poly3).
+\end{screen}
+
+\noindent
+The \comRef{store}-command saves the completed {\tt nat} specification
+into its {\em specification variable}.
+The \comRef{load}-command loads the completed {\tt qsort} specification
+from its specification variable.
+
+\begin{screen}
+| ?- renameSpec(elem <- nat).
+yes
+| ?- sig.
+
+Signature :
+
+cons [] : list.
+cons .  : (nat * list -> list).
+op append       : (list * list -> list).
+cons true       : bool.
+cons false      : bool.
+op =<   : (nat * nat -> bool).
+op sort	: (list -> list).
+op split        : (nat * list -> pair).
+cons ,    : (list * list -> pair).
+yes
+| ?- store(qsortnatSpec).
+yes
+\end{screen}
+
+\noindent
+Now we combine the two specifications and make the result 
+to the current specification:
+
+\begin{screen}
+| ?- combineSpecs(qsortnatSpec,'nat.poly1_qsort',user).
+yes
+\end{screen}
+
+\noindent
+Because \cec{totalOrder} is a formal parameter for \cec{qsort},
+completion now checks the consistency of the axioms for
+\cec{=<} in the actual parameter \cec{nat} and in the formal
+parameter \cec{totalOrder}.
+The completion process will not do unnecessary work again. 
+For the above example the completion process
+will only compute overlaps between axioms
+of the renamed module \cec{qsort} and axioms of the module \cec{nat}
+but it will not recompute overlaps between axioms of one of these
+modules.
+
+If two constructor terms are shown to be equal then the specification
+is inconsistent. In our case the system is completed without any user 
+interaction, no inconsistency showing up.
+
+\subsection{Computing in Completed Specifications}
+
+Computation in specifications is realized by term reduction with the
+rules of the completed specification. The result of such computations are unique
+normal forms (\refArrow chapter \ref{NormCommand}):
+
+\begin{screen}
+| ?- norm(sort([5,3,6,1])).
+The normalform of sort([5,3,6,1]) is [1,3,5,6] .
+\end{screen}
+
+\noindent
+If confluence can be achieved and if all rules are reductive equational theorems 
+become decidable, e.g. it is decidable if two terms are equivalent with respect to the
+equations in the specification (\refArrow chapter \ref{ProveCommand}):
+
+\begin{screen}
+| ?- prove(sort([5,3]) = [3,5]).
+Normal forms are: [3,5] and [3,5]
+yes
+\end{screen}
+
+\noindent 
+Conditional narrowing (\refArrow chapter \ref{NarrowCommand}) can then be used to solve 
+equations.
+
+\begin{screen}
+| ?- solve(sort([1,x]) = [x,1],U).
+
+Time used: 7.43298 sec.
+
+U = {x-nat/0} ;
+
+Time used: 7.91595 sec.
+
+U = {x-nat/1} ;
+
+no
+\end{screen}
+
+\noindent
+Here we proved that the only substitutions for \cec{x} such that
+\cec{sort([1,x])} is equal to \cec{[x,1]} are \cec{0} and \cec{1}.
+
+\subsection{Saving the CEC System}
+
+The whole state of the CEC system can be saved using the
+\comRef{saveCEC}-command. 
+
+\begin{screen}
+| ?- saveCEC('qsortCEC').
+[ Prolog state saved into /home/helga/cec/cec/qsortCEC ]
+\end{screen}
+
+Using \cec{qsortCEC} instead of CEC offers the possibility to have
+the complete hierarchy of our \cec{qsort} example present, without
+wasting time to reconsult the necessary frozen states of all the
+specification used for this example.

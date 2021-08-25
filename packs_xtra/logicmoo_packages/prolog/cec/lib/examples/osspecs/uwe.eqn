@@ -1,0 +1,16 @@
+s3 < s1.
+s3 < s2.
+s1 < s0.
+s2 < s0.
+op a : s1.
+op b : s2.
+op c : s3.
+op f : (s1 -> s0).
+op f : (s2 -> s0).
+op f : (s3 -> s0).
+
+
+
+a = b.
+f(a) = a.
+f(b) = c.

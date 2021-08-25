@@ -1,0 +1,10 @@
+module kleeneAlgebra using semiRing + boolTriv. 
+op(^*,100,yf)  : (elem -> elem).
+op =<  :  (elem*elem -> bool).
+1 + a * a^* = a^* .
+1 + a^* * a = a^* .
+
+b + a*x + x = x => a^* * b + x = x.
+b + x*a + x = x => b * a^* + x = x.
+
+

@@ -1,0 +1,24 @@
+order(neqkns for natWTPreds).
+greater([['$r',nat]]).
+greater([['$r-ms','nat-unit-d']]).
+greater([['$r',posnat]]).
+greater([['$r-ms','posnat-unit-d']]).
+greater([['$r',s]]).
+greater([['$r-ms','s-d-d']]).
+greater([['$r',p]]).
+greater([['$r-ms','p-d-d']]).
+greater([[nat,posnat]]).
+greater([[s,nat]]).
+status(['$r':ms]).
+status(['$r-ms':ms]).
+
+constructor('true-bool').
+constructor('false-bool').
+constructor('tt-unit').
+constructor('0-d').
+
+
+
+
+
+

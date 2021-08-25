@@ -1,0 +1,961 @@
+1 ?- DEBUG 0: Debug level set to  3
+DEBUG 0: ** System debug level set to  3
+DEBUG 0: ** Wait-at-action disabled
+2 ?- DEBUG 0: Starting ENVIRONMENT MANAGER...
+ DEBUG 2: (EM) 1 - Resetting the number of actions...
+DEBUG 1: (EM) 2 - Openinig server-input socket...
+DEBUG 1: (EM) 3 - Loading different devices...
+ DEBUG 2: (EM) Devices to load:  simulator
+DEBUG 1: (EM) Device  simulator  initialized at:  ip(127, 0, 1, 1)/unknown
+ DEBUG 2: (EM) 4 - Start EM cycle...
+DEBUG 0: ENVIRONMENT MANAGER was started successfully.
+DEBUG 0: Starting PROJECTOR...
+DEBUG 0: PROJECTOR was started successfully.
+DEBUG 0: Starting to execute the main program
+ DEBUG 2: Waiting for exogenous action to happen
+
+=========> EXOGENOUS EVENT:: Exog. Action * photoLost(1, loc(0, 1)) * occurred
+Monitor
+IS IT RELEVANT?
+IS IT RELEVANT?
+Relevant
+DEBUG 1: Sending nonsensing action * adaptStart * for execution
+ DEBUG 2: (EM) Start to execute the following action:  1, adaptStart, simulator, adaptStart
+  DEBUG 3: (EM) Action  1  sent to device  simulator  - Waiting for sensing outcome to arrive
+ DEBUG 2: (EM) Action * 1, adaptStart, simulator, adaptStart * completed with outcome:  ok
+>>>>>>>>>>>> ACTION EVENT:: Action * adaptStart, 1 * COMPLETED SUCCESSFULLY
+about to adapt
+IS IT RELEVANT?
+ ITERATION = 1  AT(1) = loc(0, 0) TASK = go INPUT = loc(0, 0) SERVICE = 1
+IS IT RELEVANT?
+ ITERATION = 1  AT(1) = loc(0, 0) TASK = go INPUT = loc(0, 1) SERVICE = 1
+IS IT RELEVANT?
+ ITERATION = 1  AT(1) = loc(0, 0) TASK = go INPUT = loc(0, 2) SERVICE = 1
+IS IT RELEVANT?
+ ITERATION = 1  AT(1) = loc(0, 0) TASK = go INPUT = loc(1, 0) SERVICE = 1
+IS IT RELEVANT?
+ ITERATION = 1  AT(1) = loc(0, 0) TASK = go INPUT = loc(1, 1) SERVICE = 1
+IS IT RELEVANT?
+ ITERATION = 1  AT(1) = loc(0, 0) TASK = go INPUT = loc(1, 2) SERVICE = 1
+IS IT RELEVANT?
+ ITERATION = 1  AT(1) = loc(0, 0) TASK = go INPUT = loc(2, 0) SERVICE = 1
+IS IT RELEVANT?
+ ITERATION = 1  AT(1) = loc(0, 0) TASK = go INPUT = loc(2, 1) SERVICE = 1
+IS IT RELEVANT?
+ ITERATION = 1  AT(1) = loc(0, 0) TASK = go INPUT = loc(2, 2) SERVICE = 1
+IS IT RELEVANT?
+ ITERATION = 1  AT(1) = loc(0, 0) TASK = takephoto INPUT = [loc(0, 0), 0] SERVICE = 1
+IS IT RELEVANT?
+ ITERATION = 1  AT(1) = loc(0, 0) TASK = takephoto INPUT = [loc(0, 1), 0] SERVICE = 1
+IS IT RELEVANT?
+ ITERATION = 1  AT(1) = loc(0, 0) TASK = takephoto INPUT = [loc(0, 2), 0] SERVICE = 1
+IS IT RELEVANT?
+ ITERATION = 1  AT(1) = loc(0, 0) TASK = takephoto INPUT = [loc(1, 0), 0] SERVICE = 1
+IS IT RELEVANT?
+ ITERATION = 1  AT(1) = loc(0, 0) TASK = takephoto INPUT = [loc(1, 1), 0] SERVICE = 1
+IS IT RELEVANT?
+ ITERATION = 1  AT(1) = loc(0, 0) TASK = takephoto INPUT = [loc(1, 2), 0] SERVICE = 1
+IS IT RELEVANT?
+ ITERATION = 1  AT(1) = loc(0, 0) TASK = takephoto INPUT = [loc(2, 0), 0] SERVICE = 1
+IS IT RELEVANT?
+ ITERATION = 1  AT(1) = loc(0, 0) TASK = takephoto INPUT = [loc(2, 1), 0] SERVICE = 1
+IS IT RELEVANT?
+ ITERATION = 1  AT(1) = loc(0, 0) TASK = takephoto INPUT = [loc(2, 2), 0] SERVICE = 1
+IS IT RELEVANT?
+ ITERATION = 1  AT(1) = loc(0, 0) TASK = takephoto INPUT = [loc(0, 0), 1] SERVICE = 1
+IS IT RELEVANT?
+ ITERATION = 1  AT(1) = loc(0, 0) TASK = takephoto INPUT = [loc(0, 1), 1] SERVICE = 1
+IS IT RELEVANT?
+ ITERATION = 1  AT(1) = loc(0, 0) TASK = takephoto INPUT = [loc(0, 2), 1] SERVICE = 1
+IS IT RELEVANT?
+ ITERATION = 1  AT(1) = loc(0, 0) TASK = takephoto INPUT = [loc(1, 0), 1] SERVICE = 1
+IS IT RELEVANT?
+ ITERATION = 1  AT(1) = loc(0, 0) TASK = takephoto INPUT = [loc(1, 1), 1] SERVICE = 1
+IS IT RELEVANT?
+ ITERATION = 1  AT(1) = loc(0, 0) TASK = takephoto INPUT = [loc(1, 2), 1] SERVICE = 1
+IS IT RELEVANT?
+ ITERATION = 1  AT(1) = loc(0, 0) TASK = takephoto INPUT = [loc(2, 0), 1] SERVICE = 1
+IS IT RELEVANT?
+ ITERATION = 1  AT(1) = loc(0, 0) TASK = takephoto INPUT = [loc(2, 1), 1] SERVICE = 1
+IS IT RELEVANT?
+ ITERATION = 1  AT(1) = loc(0, 0) TASK = takephoto INPUT = [loc(2, 2), 1] SERVICE = 1
+IS IT RELEVANT?
+ ITERATION = 1  AT(1) = loc(0, 0) TASK = takephoto INPUT = [loc(0, 0), 2] SERVICE = 1
+IS IT RELEVANT?
+ ITERATION = 1  AT(1) = loc(0, 0) TASK = takephoto INPUT = [loc(0, 1), 2] SERVICE = 1
+IS IT RELEVANT?
+ ITERATION = 1  AT(1) = loc(0, 0) TASK = takephoto INPUT = [loc(0, 2), 2] SERVICE = 1
+IS IT RELEVANT?
+ ITERATION = 1  AT(1) = loc(0, 0) TASK = takephoto INPUT = [loc(1, 0), 2] SERVICE = 1
+IS IT RELEVANT?
+ ITERATION = 1  AT(1) = loc(0, 0) TASK = takephoto INPUT = [loc(1, 1), 2] SERVICE = 1
+IS IT RELEVANT?
+ ITERATION = 1  AT(1) = loc(0, 0) TASK = takephoto INPUT = [loc(1, 2), 2] SERVICE = 1
+IS IT RELEVANT?
+ ITERATION = 1  AT(1) = loc(0, 0) TASK = takephoto INPUT = [loc(2, 0), 2] SERVICE = 1
+IS IT RELEVANT?
+ ITERATION = 1  AT(1) = loc(0, 0) TASK = takephoto INPUT = [loc(2, 1), 2] SERVICE = 1
+IS IT RELEVANT?
+ ITERATION = 1  AT(1) = loc(0, 0) TASK = takephoto INPUT = [loc(2, 2), 2] SERVICE = 1
+IS IT RELEVANT?
+ ITERATION = 2  AT(1) = loc(0, 0) TASK = go INPUT = loc(0, 0) SERVICE = 1
+ ITERATION = 1  AT(1) = loc(0, 0) TASK = go INPUT = loc(0, 0) SERVICE = 1
+IS IT RELEVANT?
+ ITERATION = 1  AT(1) = loc(0, 0) TASK = go INPUT = loc(0, 1) SERVICE = 1
+IS IT RELEVANT?
+ ITERATION = 1  AT(1) = loc(0, 0) TASK = go INPUT = loc(0, 2) SERVICE = 1
+IS IT RELEVANT?
+ ITERATION = 1  AT(1) = loc(0, 0) TASK = go INPUT = loc(1, 0) SERVICE = 1
+IS IT RELEVANT?
+ ITERATION = 1  AT(1) = loc(0, 0) TASK = go INPUT = loc(1, 1) SERVICE = 1
+IS IT RELEVANT?
+ ITERATION = 1  AT(1) = loc(0, 0) TASK = go INPUT = loc(1, 2) SERVICE = 1
+IS IT RELEVANT?
+ ITERATION = 1  AT(1) = loc(0, 0) TASK = go INPUT = loc(2, 0) SERVICE = 1
+IS IT RELEVANT?
+ ITERATION = 1  AT(1) = loc(0, 0) TASK = go INPUT = loc(2, 1) SERVICE = 1
+IS IT RELEVANT?
+ ITERATION = 1  AT(1) = loc(0, 0) TASK = go INPUT = loc(2, 2) SERVICE = 1
+IS IT RELEVANT?
+ ITERATION = 1  AT(1) = loc(0, 0) TASK = takephoto INPUT = [loc(0, 0), 0] SERVICE = 1
+IS IT RELEVANT?
+ ITERATION = 1  AT(1) = loc(0, 0) TASK = takephoto INPUT = [loc(0, 1), 0] SERVICE = 1
+IS IT RELEVANT?
+ ITERATION = 1  AT(1) = loc(0, 0) TASK = takephoto INPUT = [loc(0, 2), 0] SERVICE = 1
+IS IT RELEVANT?
+ ITERATION = 1  AT(1) = loc(0, 0) TASK = takephoto INPUT = [loc(1, 0), 0] SERVICE = 1
+IS IT RELEVANT?
+ ITERATION = 1  AT(1) = loc(0, 0) TASK = takephoto INPUT = [loc(1, 1), 0] SERVICE = 1
+IS IT RELEVANT?
+ ITERATION = 1  AT(1) = loc(0, 0) TASK = takephoto INPUT = [loc(1, 2), 0] SERVICE = 1
+IS IT RELEVANT?
+ ITERATION = 1  AT(1) = loc(0, 0) TASK = takephoto INPUT = [loc(2, 0), 0] SERVICE = 1
+IS IT RELEVANT?
+ ITERATION = 1  AT(1) = loc(0, 0) TASK = takephoto INPUT = [loc(2, 1), 0] SERVICE = 1
+IS IT RELEVANT?
+ ITERATION = 1  AT(1) = loc(0, 0) TASK = takephoto INPUT = [loc(2, 2), 0] SERVICE = 1
+IS IT RELEVANT?
+ ITERATION = 1  AT(1) = loc(0, 0) TASK = takephoto INPUT = [loc(0, 0), 1] SERVICE = 1
+IS IT RELEVANT?
+ ITERATION = 1  AT(1) = loc(0, 0) TASK = takephoto INPUT = [loc(0, 1), 1] SERVICE = 1
+IS IT RELEVANT?
+ ITERATION = 1  AT(1) = loc(0, 0) TASK = takephoto INPUT = [loc(0, 2), 1] SERVICE = 1
+IS IT RELEVANT?
+ ITERATION = 1  AT(1) = loc(0, 0) TASK = takephoto INPUT = [loc(1, 0), 1] SERVICE = 1
+IS IT RELEVANT?
+ ITERATION = 1  AT(1) = loc(0, 0) TASK = takephoto INPUT = [loc(1, 1), 1] SERVICE = 1
+IS IT RELEVANT?
+ ITERATION = 1  AT(1) = loc(0, 0) TASK = takephoto INPUT = [loc(1, 2), 1] SERVICE = 1
+IS IT RELEVANT?
+ ITERATION = 1  AT(1) = loc(0, 0) TASK = takephoto INPUT = [loc(2, 0), 1] SERVICE = 1
+IS IT RELEVANT?
+ ITERATION = 1  AT(1) = loc(0, 0) TASK = takephoto INPUT = [loc(2, 1), 1] SERVICE = 1
+IS IT RELEVANT?
+ ITERATION = 1  AT(1) = loc(0, 0) TASK = takephoto INPUT = [loc(2, 2), 1] SERVICE = 1
+IS IT RELEVANT?
+ ITERATION = 1  AT(1) = loc(0, 0) TASK = takephoto INPUT = [loc(0, 0), 2] SERVICE = 1
+IS IT RELEVANT?
+ ITERATION = 1  AT(1) = loc(0, 0) TASK = takephoto INPUT = [loc(0, 1), 2] SERVICE = 1
+IS IT RELEVANT?
+ ITERATION = 1  AT(1) = loc(0, 0) TASK = takephoto INPUT = [loc(0, 2), 2] SERVICE = 1
+IS IT RELEVANT?
+ ITERATION = 1  AT(1) = loc(0, 0) TASK = takephoto INPUT = [loc(1, 0), 2] SERVICE = 1
+IS IT RELEVANT?
+ ITERATION = 1  AT(1) = loc(0, 0) TASK = takephoto INPUT = [loc(1, 1), 2] SERVICE = 1
+IS IT RELEVANT?
+ ITERATION = 1  AT(1) = loc(0, 0) TASK = takephoto INPUT = [loc(1, 2), 2] SERVICE = 1
+IS IT RELEVANT?
+ ITERATION = 1  AT(1) = loc(0, 0) TASK = takephoto INPUT = [loc(2, 0), 2] SERVICE = 1
+IS IT RELEVANT?
+ ITERATION = 1  AT(1) = loc(0, 0) TASK = takephoto INPUT = [loc(2, 1), 2] SERVICE = 1
+IS IT RELEVANT?
+ ITERATION = 1  AT(1) = loc(0, 0) TASK = takephoto INPUT = [loc(2, 2), 2] SERVICE = 1
+IS IT RELEVANT?
+ ITERATION = 2  AT(1) = loc(0, 0) TASK = go INPUT = loc(0, 1) SERVICE = 1
+ ITERATION = 1  AT(1) = loc(0, 1) TASK = go INPUT = loc(0, 0) SERVICE = 1
+IS IT RELEVANT?
+ ITERATION = 1  AT(1) = loc(0, 1) TASK = go INPUT = loc(0, 1) SERVICE = 1
+IS IT RELEVANT?
+ ITERATION = 1  AT(1) = loc(0, 1) TASK = go INPUT = loc(0, 2) SERVICE = 1
+IS IT RELEVANT?
+ ITERATION = 1  AT(1) = loc(0, 1) TASK = go INPUT = loc(1, 0) SERVICE = 1
+IS IT RELEVANT?
+ ITERATION = 1  AT(1) = loc(0, 1) TASK = go INPUT = loc(1, 1) SERVICE = 1
+IS IT RELEVANT?
+ ITERATION = 1  AT(1) = loc(0, 1) TASK = go INPUT = loc(1, 2) SERVICE = 1
+IS IT RELEVANT?
+ ITERATION = 1  AT(1) = loc(0, 1) TASK = go INPUT = loc(2, 0) SERVICE = 1
+IS IT RELEVANT?
+ ITERATION = 1  AT(1) = loc(0, 1) TASK = go INPUT = loc(2, 1) SERVICE = 1
+IS IT RELEVANT?
+ ITERATION = 1  AT(1) = loc(0, 1) TASK = go INPUT = loc(2, 2) SERVICE = 1
+IS IT RELEVANT?
+ ITERATION = 1  AT(1) = loc(0, 1) TASK = takephoto INPUT = [loc(0, 0), 0] SERVICE = 1
+IS IT RELEVANT?
+ ITERATION = 1  AT(1) = loc(0, 1) TASK = takephoto INPUT = [loc(0, 1), 0] SERVICE = 1
+IS IT RELEVANT?
+ ITERATION = 1  AT(1) = loc(0, 1) TASK = takephoto INPUT = [loc(0, 2), 0] SERVICE = 1
+IS IT RELEVANT?
+ ITERATION = 1  AT(1) = loc(0, 1) TASK = takephoto INPUT = [loc(1, 0), 0] SERVICE = 1
+IS IT RELEVANT?
+ ITERATION = 1  AT(1) = loc(0, 1) TASK = takephoto INPUT = [loc(1, 1), 0] SERVICE = 1
+IS IT RELEVANT?
+ ITERATION = 1  AT(1) = loc(0, 1) TASK = takephoto INPUT = [loc(1, 2), 0] SERVICE = 1
+IS IT RELEVANT?
+ ITERATION = 1  AT(1) = loc(0, 1) TASK = takephoto INPUT = [loc(2, 0), 0] SERVICE = 1
+IS IT RELEVANT?
+ ITERATION = 1  AT(1) = loc(0, 1) TASK = takephoto INPUT = [loc(2, 1), 0] SERVICE = 1
+IS IT RELEVANT?
+ ITERATION = 1  AT(1) = loc(0, 1) TASK = takephoto INPUT = [loc(2, 2), 0] SERVICE = 1
+IS IT RELEVANT?
+ ITERATION = 1  AT(1) = loc(0, 1) TASK = takephoto INPUT = [loc(0, 0), 1] SERVICE = 1
+IS IT RELEVANT?
+ ITERATION = 1  AT(1) = loc(0, 1) TASK = takephoto INPUT = [loc(0, 1), 1] SERVICE = 1
+IS IT RELEVANT?
+ ITERATION = 1  AT(1) = loc(0, 1) TASK = takephoto INPUT = [loc(0, 2), 1] SERVICE = 1
+IS IT RELEVANT?
+ ITERATION = 1  AT(1) = loc(0, 1) TASK = takephoto INPUT = [loc(1, 0), 1] SERVICE = 1
+IS IT RELEVANT?
+ ITERATION = 1  AT(1) = loc(0, 1) TASK = takephoto INPUT = [loc(1, 1), 1] SERVICE = 1
+IS IT RELEVANT?
+ ITERATION = 1  AT(1) = loc(0, 1) TASK = takephoto INPUT = [loc(1, 2), 1] SERVICE = 1
+IS IT RELEVANT?
+ ITERATION = 1  AT(1) = loc(0, 1) TASK = takephoto INPUT = [loc(2, 0), 1] SERVICE = 1
+IS IT RELEVANT?
+ ITERATION = 1  AT(1) = loc(0, 1) TASK = takephoto INPUT = [loc(2, 1), 1] SERVICE = 1
+IS IT RELEVANT?
+ ITERATION = 1  AT(1) = loc(0, 1) TASK = takephoto INPUT = [loc(2, 2), 1] SERVICE = 1
+IS IT RELEVANT?
+ ITERATION = 1  AT(1) = loc(0, 1) TASK = takephoto INPUT = [loc(0, 0), 2] SERVICE = 1
+IS IT RELEVANT?
+ ITERATION = 1  AT(1) = loc(0, 1) TASK = takephoto INPUT = [loc(0, 1), 2] SERVICE = 1
+IS IT RELEVANT?
+ ITERATION = 1  AT(1) = loc(0, 1) TASK = takephoto INPUT = [loc(0, 2), 2] SERVICE = 1
+IS IT RELEVANT?
+ ITERATION = 1  AT(1) = loc(0, 1) TASK = takephoto INPUT = [loc(1, 0), 2] SERVICE = 1
+IS IT RELEVANT?
+ ITERATION = 1  AT(1) = loc(0, 1) TASK = takephoto INPUT = [loc(1, 1), 2] SERVICE = 1
+IS IT RELEVANT?
+ ITERATION = 1  AT(1) = loc(0, 1) TASK = takephoto INPUT = [loc(1, 2), 2] SERVICE = 1
+IS IT RELEVANT?
+ ITERATION = 1  AT(1) = loc(0, 1) TASK = takephoto INPUT = [loc(2, 0), 2] SERVICE = 1
+IS IT RELEVANT?
+ ITERATION = 1  AT(1) = loc(0, 1) TASK = takephoto INPUT = [loc(2, 1), 2] SERVICE = 1
+IS IT RELEVANT?
+ ITERATION = 1  AT(1) = loc(0, 1) TASK = takephoto INPUT = [loc(2, 2), 2] SERVICE = 1
+IS IT RELEVANT?
+ ITERATION = 2  AT(1) = loc(0, 0) TASK = go INPUT = loc(0, 2) SERVICE = 1
+ ITERATION = 1  AT(1) = loc(0, 2) TASK = go INPUT = loc(0, 0) SERVICE = 1
+IS IT RELEVANT?
+ ITERATION = 1  AT(1) = loc(0, 2) TASK = go INPUT = loc(0, 1) SERVICE = 1
+IS IT RELEVANT?
+ ITERATION = 1  AT(1) = loc(0, 2) TASK = go INPUT = loc(0, 2) SERVICE = 1
+IS IT RELEVANT?
+ ITERATION = 1  AT(1) = loc(0, 2) TASK = go INPUT = loc(1, 0) SERVICE = 1
+IS IT RELEVANT?
+ ITERATION = 1  AT(1) = loc(0, 2) TASK = go INPUT = loc(1, 1) SERVICE = 1
+IS IT RELEVANT?
+ ITERATION = 1  AT(1) = loc(0, 2) TASK = go INPUT = loc(1, 2) SERVICE = 1
+IS IT RELEVANT?
+ ITERATION = 1  AT(1) = loc(0, 2) TASK = go INPUT = loc(2, 0) SERVICE = 1
+IS IT RELEVANT?
+ ITERATION = 1  AT(1) = loc(0, 2) TASK = go INPUT = loc(2, 1) SERVICE = 1
+IS IT RELEVANT?
+ ITERATION = 1  AT(1) = loc(0, 2) TASK = go INPUT = loc(2, 2) SERVICE = 1
+IS IT RELEVANT?
+ ITERATION = 1  AT(1) = loc(0, 2) TASK = takephoto INPUT = [loc(0, 0), 0] SERVICE = 1
+IS IT RELEVANT?
+ ITERATION = 1  AT(1) = loc(0, 2) TASK = takephoto INPUT = [loc(0, 1), 0] SERVICE = 1
+IS IT RELEVANT?
+ ITERATION = 1  AT(1) = loc(0, 2) TASK = takephoto INPUT = [loc(0, 2), 0] SERVICE = 1
+IS IT RELEVANT?
+ ITERATION = 1  AT(1) = loc(0, 2) TASK = takephoto INPUT = [loc(1, 0), 0] SERVICE = 1
+IS IT RELEVANT?
+ ITERATION = 1  AT(1) = loc(0, 2) TASK = takephoto INPUT = [loc(1, 1), 0] SERVICE = 1
+IS IT RELEVANT?
+ ITERATION = 1  AT(1) = loc(0, 2) TASK = takephoto INPUT = [loc(1, 2), 0] SERVICE = 1
+IS IT RELEVANT?
+ ITERATION = 1  AT(1) = loc(0, 2) TASK = takephoto INPUT = [loc(2, 0), 0] SERVICE = 1
+IS IT RELEVANT?
+ ITERATION = 1  AT(1) = loc(0, 2) TASK = takephoto INPUT = [loc(2, 1), 0] SERVICE = 1
+IS IT RELEVANT?
+ ITERATION = 1  AT(1) = loc(0, 2) TASK = takephoto INPUT = [loc(2, 2), 0] SERVICE = 1
+IS IT RELEVANT?
+ ITERATION = 1  AT(1) = loc(0, 2) TASK = takephoto INPUT = [loc(0, 0), 1] SERVICE = 1
+IS IT RELEVANT?
+ ITERATION = 1  AT(1) = loc(0, 2) TASK = takephoto INPUT = [loc(0, 1), 1] SERVICE = 1
+IS IT RELEVANT?
+ ITERATION = 1  AT(1) = loc(0, 2) TASK = takephoto INPUT = [loc(0, 2), 1] SERVICE = 1
+IS IT RELEVANT?
+ ITERATION = 1  AT(1) = loc(0, 2) TASK = takephoto INPUT = [loc(1, 0), 1] SERVICE = 1
+IS IT RELEVANT?
+ ITERATION = 1  AT(1) = loc(0, 2) TASK = takephoto INPUT = [loc(1, 1), 1] SERVICE = 1
+IS IT RELEVANT?
+ ITERATION = 1  AT(1) = loc(0, 2) TASK = takephoto INPUT = [loc(1, 2), 1] SERVICE = 1
+IS IT RELEVANT?
+ ITERATION = 1  AT(1) = loc(0, 2) TASK = takephoto INPUT = [loc(2, 0), 1] SERVICE = 1
+IS IT RELEVANT?
+ ITERATION = 1  AT(1) = loc(0, 2) TASK = takephoto INPUT = [loc(2, 1), 1] SERVICE = 1
+IS IT RELEVANT?
+ ITERATION = 1  AT(1) = loc(0, 2) TASK = takephoto INPUT = [loc(2, 2), 1] SERVICE = 1
+IS IT RELEVANT?
+ ITERATION = 1  AT(1) = loc(0, 2) TASK = takephoto INPUT = [loc(0, 0), 2] SERVICE = 1
+IS IT RELEVANT?
+ ITERATION = 1  AT(1) = loc(0, 2) TASK = takephoto INPUT = [loc(0, 1), 2] SERVICE = 1
+IS IT RELEVANT?
+ ITERATION = 1  AT(1) = loc(0, 2) TASK = takephoto INPUT = [loc(0, 2), 2] SERVICE = 1
+IS IT RELEVANT?
+ ITERATION = 1  AT(1) = loc(0, 2) TASK = takephoto INPUT = [loc(1, 0), 2] SERVICE = 1
+IS IT RELEVANT?
+ ITERATION = 1  AT(1) = loc(0, 2) TASK = takephoto INPUT = [loc(1, 1), 2] SERVICE = 1
+IS IT RELEVANT?
+ ITERATION = 1  AT(1) = loc(0, 2) TASK = takephoto INPUT = [loc(1, 2), 2] SERVICE = 1
+IS IT RELEVANT?
+ ITERATION = 1  AT(1) = loc(0, 2) TASK = takephoto INPUT = [loc(2, 0), 2] SERVICE = 1
+IS IT RELEVANT?
+ ITERATION = 1  AT(1) = loc(0, 2) TASK = takephoto INPUT = [loc(2, 1), 2] SERVICE = 1
+IS IT RELEVANT?
+ ITERATION = 1  AT(1) = loc(0, 2) TASK = takephoto INPUT = [loc(2, 2), 2] SERVICE = 1
+IS IT RELEVANT?
+ ITERATION = 2  AT(1) = loc(0, 0) TASK = go INPUT = loc(1, 0) SERVICE = 1
+ ITERATION = 1  AT(1) = loc(1, 0) TASK = go INPUT = loc(0, 0) SERVICE = 1
+IS IT RELEVANT?
+ ITERATION = 1  AT(1) = loc(1, 0) TASK = go INPUT = loc(0, 1) SERVICE = 1
+IS IT RELEVANT?
+ ITERATION = 1  AT(1) = loc(1, 0) TASK = go INPUT = loc(0, 2) SERVICE = 1
+IS IT RELEVANT?
+ ITERATION = 1  AT(1) = loc(1, 0) TASK = go INPUT = loc(1, 0) SERVICE = 1
+IS IT RELEVANT?
+ ITERATION = 1  AT(1) = loc(1, 0) TASK = go INPUT = loc(1, 1) SERVICE = 1
+IS IT RELEVANT?
+ ITERATION = 1  AT(1) = loc(1, 0) TASK = go INPUT = loc(1, 2) SERVICE = 1
+IS IT RELEVANT?
+ ITERATION = 1  AT(1) = loc(1, 0) TASK = go INPUT = loc(2, 0) SERVICE = 1
+IS IT RELEVANT?
+ ITERATION = 1  AT(1) = loc(1, 0) TASK = go INPUT = loc(2, 1) SERVICE = 1
+IS IT RELEVANT?
+ ITERATION = 1  AT(1) = loc(1, 0) TASK = go INPUT = loc(2, 2) SERVICE = 1
+IS IT RELEVANT?
+ ITERATION = 1  AT(1) = loc(1, 0) TASK = takephoto INPUT = [loc(0, 0), 0] SERVICE = 1
+IS IT RELEVANT?
+ ITERATION = 1  AT(1) = loc(1, 0) TASK = takephoto INPUT = [loc(0, 1), 0] SERVICE = 1
+IS IT RELEVANT?
+ ITERATION = 1  AT(1) = loc(1, 0) TASK = takephoto INPUT = [loc(0, 2), 0] SERVICE = 1
+IS IT RELEVANT?
+ ITERATION = 1  AT(1) = loc(1, 0) TASK = takephoto INPUT = [loc(1, 0), 0] SERVICE = 1
+IS IT RELEVANT?
+ ITERATION = 1  AT(1) = loc(1, 0) TASK = takephoto INPUT = [loc(1, 1), 0] SERVICE = 1
+IS IT RELEVANT?
+ ITERATION = 1  AT(1) = loc(1, 0) TASK = takephoto INPUT = [loc(1, 2), 0] SERVICE = 1
+IS IT RELEVANT?
+ ITERATION = 1  AT(1) = loc(1, 0) TASK = takephoto INPUT = [loc(2, 0), 0] SERVICE = 1
+IS IT RELEVANT?
+ ITERATION = 1  AT(1) = loc(1, 0) TASK = takephoto INPUT = [loc(2, 1), 0] SERVICE = 1
+IS IT RELEVANT?
+ ITERATION = 1  AT(1) = loc(1, 0) TASK = takephoto INPUT = [loc(2, 2), 0] SERVICE = 1
+IS IT RELEVANT?
+ ITERATION = 1  AT(1) = loc(1, 0) TASK = takephoto INPUT = [loc(0, 0), 1] SERVICE = 1
+IS IT RELEVANT?
+ ITERATION = 1  AT(1) = loc(1, 0) TASK = takephoto INPUT = [loc(0, 1), 1] SERVICE = 1
+IS IT RELEVANT?
+ ITERATION = 1  AT(1) = loc(1, 0) TASK = takephoto INPUT = [loc(0, 2), 1] SERVICE = 1
+IS IT RELEVANT?
+ ITERATION = 1  AT(1) = loc(1, 0) TASK = takephoto INPUT = [loc(1, 0), 1] SERVICE = 1
+IS IT RELEVANT?
+ ITERATION = 1  AT(1) = loc(1, 0) TASK = takephoto INPUT = [loc(1, 1), 1] SERVICE = 1
+IS IT RELEVANT?
+ ITERATION = 1  AT(1) = loc(1, 0) TASK = takephoto INPUT = [loc(1, 2), 1] SERVICE = 1
+IS IT RELEVANT?
+ ITERATION = 1  AT(1) = loc(1, 0) TASK = takephoto INPUT = [loc(2, 0), 1] SERVICE = 1
+IS IT RELEVANT?
+ ITERATION = 1  AT(1) = loc(1, 0) TASK = takephoto INPUT = [loc(2, 1), 1] SERVICE = 1
+IS IT RELEVANT?
+ ITERATION = 1  AT(1) = loc(1, 0) TASK = takephoto INPUT = [loc(2, 2), 1] SERVICE = 1
+IS IT RELEVANT?
+ ITERATION = 1  AT(1) = loc(1, 0) TASK = takephoto INPUT = [loc(0, 0), 2] SERVICE = 1
+IS IT RELEVANT?
+ ITERATION = 1  AT(1) = loc(1, 0) TASK = takephoto INPUT = [loc(0, 1), 2] SERVICE = 1
+IS IT RELEVANT?
+ ITERATION = 1  AT(1) = loc(1, 0) TASK = takephoto INPUT = [loc(0, 2), 2] SERVICE = 1
+IS IT RELEVANT?
+ ITERATION = 1  AT(1) = loc(1, 0) TASK = takephoto INPUT = [loc(1, 0), 2] SERVICE = 1
+IS IT RELEVANT?
+ ITERATION = 1  AT(1) = loc(1, 0) TASK = takephoto INPUT = [loc(1, 1), 2] SERVICE = 1
+IS IT RELEVANT?
+ ITERATION = 1  AT(1) = loc(1, 0) TASK = takephoto INPUT = [loc(1, 2), 2] SERVICE = 1
+IS IT RELEVANT?
+ ITERATION = 1  AT(1) = loc(1, 0) TASK = takephoto INPUT = [loc(2, 0), 2] SERVICE = 1
+IS IT RELEVANT?
+ ITERATION = 1  AT(1) = loc(1, 0) TASK = takephoto INPUT = [loc(2, 1), 2] SERVICE = 1
+IS IT RELEVANT?
+ ITERATION = 1  AT(1) = loc(1, 0) TASK = takephoto INPUT = [loc(2, 2), 2] SERVICE = 1
+IS IT RELEVANT?
+ ITERATION = 2  AT(1) = loc(0, 0) TASK = go INPUT = loc(1, 1) SERVICE = 1
+ ITERATION = 1  AT(1) = loc(1, 1) TASK = go INPUT = loc(0, 0) SERVICE = 1
+IS IT RELEVANT?
+ ITERATION = 1  AT(1) = loc(1, 1) TASK = go INPUT = loc(0, 1) SERVICE = 1
+IS IT RELEVANT?
+ ITERATION = 1  AT(1) = loc(1, 1) TASK = go INPUT = loc(0, 2) SERVICE = 1
+IS IT RELEVANT?
+ ITERATION = 1  AT(1) = loc(1, 1) TASK = go INPUT = loc(1, 0) SERVICE = 1
+IS IT RELEVANT?
+ ITERATION = 1  AT(1) = loc(1, 1) TASK = go INPUT = loc(1, 1) SERVICE = 1
+IS IT RELEVANT?
+ ITERATION = 1  AT(1) = loc(1, 1) TASK = go INPUT = loc(1, 2) SERVICE = 1
+IS IT RELEVANT?
+ ITERATION = 1  AT(1) = loc(1, 1) TASK = go INPUT = loc(2, 0) SERVICE = 1
+IS IT RELEVANT?
+ ITERATION = 1  AT(1) = loc(1, 1) TASK = go INPUT = loc(2, 1) SERVICE = 1
+IS IT RELEVANT?
+ ITERATION = 1  AT(1) = loc(1, 1) TASK = go INPUT = loc(2, 2) SERVICE = 1
+IS IT RELEVANT?
+ ITERATION = 1  AT(1) = loc(1, 1) TASK = takephoto INPUT = [loc(0, 0), 0] SERVICE = 1
+IS IT RELEVANT?
+ ITERATION = 1  AT(1) = loc(1, 1) TASK = takephoto INPUT = [loc(0, 1), 0] SERVICE = 1
+IS IT RELEVANT?
+ ITERATION = 1  AT(1) = loc(1, 1) TASK = takephoto INPUT = [loc(0, 2), 0] SERVICE = 1
+IS IT RELEVANT?
+ ITERATION = 1  AT(1) = loc(1, 1) TASK = takephoto INPUT = [loc(1, 0), 0] SERVICE = 1
+IS IT RELEVANT?
+ ITERATION = 1  AT(1) = loc(1, 1) TASK = takephoto INPUT = [loc(1, 1), 0] SERVICE = 1
+IS IT RELEVANT?
+ ITERATION = 1  AT(1) = loc(1, 1) TASK = takephoto INPUT = [loc(1, 2), 0] SERVICE = 1
+IS IT RELEVANT?
+ ITERATION = 1  AT(1) = loc(1, 1) TASK = takephoto INPUT = [loc(2, 0), 0] SERVICE = 1
+IS IT RELEVANT?
+ ITERATION = 1  AT(1) = loc(1, 1) TASK = takephoto INPUT = [loc(2, 1), 0] SERVICE = 1
+IS IT RELEVANT?
+ ITERATION = 1  AT(1) = loc(1, 1) TASK = takephoto INPUT = [loc(2, 2), 0] SERVICE = 1
+IS IT RELEVANT?
+ ITERATION = 1  AT(1) = loc(1, 1) TASK = takephoto INPUT = [loc(0, 0), 1] SERVICE = 1
+IS IT RELEVANT?
+ ITERATION = 1  AT(1) = loc(1, 1) TASK = takephoto INPUT = [loc(0, 1), 1] SERVICE = 1
+IS IT RELEVANT?
+ ITERATION = 1  AT(1) = loc(1, 1) TASK = takephoto INPUT = [loc(0, 2), 1] SERVICE = 1
+IS IT RELEVANT?
+ ITERATION = 1  AT(1) = loc(1, 1) TASK = takephoto INPUT = [loc(1, 0), 1] SERVICE = 1
+IS IT RELEVANT?
+ ITERATION = 1  AT(1) = loc(1, 1) TASK = takephoto INPUT = [loc(1, 1), 1] SERVICE = 1
+IS IT RELEVANT?
+ ITERATION = 1  AT(1) = loc(1, 1) TASK = takephoto INPUT = [loc(1, 2), 1] SERVICE = 1
+IS IT RELEVANT?
+ ITERATION = 1  AT(1) = loc(1, 1) TASK = takephoto INPUT = [loc(2, 0), 1] SERVICE = 1
+IS IT RELEVANT?
+ ITERATION = 1  AT(1) = loc(1, 1) TASK = takephoto INPUT = [loc(2, 1), 1] SERVICE = 1
+IS IT RELEVANT?
+ ITERATION = 1  AT(1) = loc(1, 1) TASK = takephoto INPUT = [loc(2, 2), 1] SERVICE = 1
+IS IT RELEVANT?
+ ITERATION = 1  AT(1) = loc(1, 1) TASK = takephoto INPUT = [loc(0, 0), 2] SERVICE = 1
+IS IT RELEVANT?
+ ITERATION = 1  AT(1) = loc(1, 1) TASK = takephoto INPUT = [loc(0, 1), 2] SERVICE = 1
+IS IT RELEVANT?
+ ITERATION = 1  AT(1) = loc(1, 1) TASK = takephoto INPUT = [loc(0, 2), 2] SERVICE = 1
+IS IT RELEVANT?
+ ITERATION = 1  AT(1) = loc(1, 1) TASK = takephoto INPUT = [loc(1, 0), 2] SERVICE = 1
+IS IT RELEVANT?
+ ITERATION = 1  AT(1) = loc(1, 1) TASK = takephoto INPUT = [loc(1, 1), 2] SERVICE = 1
+IS IT RELEVANT?
+ ITERATION = 1  AT(1) = loc(1, 1) TASK = takephoto INPUT = [loc(1, 2), 2] SERVICE = 1
+IS IT RELEVANT?
+ ITERATION = 1  AT(1) = loc(1, 1) TASK = takephoto INPUT = [loc(2, 0), 2] SERVICE = 1
+IS IT RELEVANT?
+ ITERATION = 1  AT(1) = loc(1, 1) TASK = takephoto INPUT = [loc(2, 1), 2] SERVICE = 1
+IS IT RELEVANT?
+ ITERATION = 1  AT(1) = loc(1, 1) TASK = takephoto INPUT = [loc(2, 2), 2] SERVICE = 1
+IS IT RELEVANT?
+ ITERATION = 2  AT(1) = loc(0, 0) TASK = go INPUT = loc(1, 2) SERVICE = 1
+ ITERATION = 1  AT(1) = loc(1, 2) TASK = go INPUT = loc(0, 0) SERVICE = 1
+IS IT RELEVANT?
+ ITERATION = 1  AT(1) = loc(1, 2) TASK = go INPUT = loc(0, 1) SERVICE = 1
+IS IT RELEVANT?
+ ITERATION = 1  AT(1) = loc(1, 2) TASK = go INPUT = loc(0, 2) SERVICE = 1
+IS IT RELEVANT?
+ ITERATION = 1  AT(1) = loc(1, 2) TASK = go INPUT = loc(1, 0) SERVICE = 1
+IS IT RELEVANT?
+ ITERATION = 1  AT(1) = loc(1, 2) TASK = go INPUT = loc(1, 1) SERVICE = 1
+IS IT RELEVANT?
+ ITERATION = 1  AT(1) = loc(1, 2) TASK = go INPUT = loc(1, 2) SERVICE = 1
+IS IT RELEVANT?
+ ITERATION = 1  AT(1) = loc(1, 2) TASK = go INPUT = loc(2, 0) SERVICE = 1
+IS IT RELEVANT?
+ ITERATION = 1  AT(1) = loc(1, 2) TASK = go INPUT = loc(2, 1) SERVICE = 1
+IS IT RELEVANT?
+ ITERATION = 1  AT(1) = loc(1, 2) TASK = go INPUT = loc(2, 2) SERVICE = 1
+IS IT RELEVANT?
+ ITERATION = 1  AT(1) = loc(1, 2) TASK = takephoto INPUT = [loc(0, 0), 0] SERVICE = 1
+IS IT RELEVANT?
+ ITERATION = 1  AT(1) = loc(1, 2) TASK = takephoto INPUT = [loc(0, 1), 0] SERVICE = 1
+IS IT RELEVANT?
+ ITERATION = 1  AT(1) = loc(1, 2) TASK = takephoto INPUT = [loc(0, 2), 0] SERVICE = 1
+IS IT RELEVANT?
+ ITERATION = 1  AT(1) = loc(1, 2) TASK = takephoto INPUT = [loc(1, 0), 0] SERVICE = 1
+IS IT RELEVANT?
+ ITERATION = 1  AT(1) = loc(1, 2) TASK = takephoto INPUT = [loc(1, 1), 0] SERVICE = 1
+IS IT RELEVANT?
+ ITERATION = 1  AT(1) = loc(1, 2) TASK = takephoto INPUT = [loc(1, 2), 0] SERVICE = 1
+IS IT RELEVANT?
+ ITERATION = 1  AT(1) = loc(1, 2) TASK = takephoto INPUT = [loc(2, 0), 0] SERVICE = 1
+IS IT RELEVANT?
+ ITERATION = 1  AT(1) = loc(1, 2) TASK = takephoto INPUT = [loc(2, 1), 0] SERVICE = 1
+IS IT RELEVANT?
+ ITERATION = 1  AT(1) = loc(1, 2) TASK = takephoto INPUT = [loc(2, 2), 0] SERVICE = 1
+IS IT RELEVANT?
+ ITERATION = 1  AT(1) = loc(1, 2) TASK = takephoto INPUT = [loc(0, 0), 1] SERVICE = 1
+IS IT RELEVANT?
+ ITERATION = 1  AT(1) = loc(1, 2) TASK = takephoto INPUT = [loc(0, 1), 1] SERVICE = 1
+IS IT RELEVANT?
+ ITERATION = 1  AT(1) = loc(1, 2) TASK = takephoto INPUT = [loc(0, 2), 1] SERVICE = 1
+IS IT RELEVANT?
+ ITERATION = 1  AT(1) = loc(1, 2) TASK = takephoto INPUT = [loc(1, 0), 1] SERVICE = 1
+IS IT RELEVANT?
+ ITERATION = 1  AT(1) = loc(1, 2) TASK = takephoto INPUT = [loc(1, 1), 1] SERVICE = 1
+IS IT RELEVANT?
+ ITERATION = 1  AT(1) = loc(1, 2) TASK = takephoto INPUT = [loc(1, 2), 1] SERVICE = 1
+IS IT RELEVANT?
+ ITERATION = 1  AT(1) = loc(1, 2) TASK = takephoto INPUT = [loc(2, 0), 1] SERVICE = 1
+IS IT RELEVANT?
+ ITERATION = 1  AT(1) = loc(1, 2) TASK = takephoto INPUT = [loc(2, 1), 1] SERVICE = 1
+IS IT RELEVANT?
+ ITERATION = 1  AT(1) = loc(1, 2) TASK = takephoto INPUT = [loc(2, 2), 1] SERVICE = 1
+IS IT RELEVANT?
+ ITERATION = 1  AT(1) = loc(1, 2) TASK = takephoto INPUT = [loc(0, 0), 2] SERVICE = 1
+IS IT RELEVANT?
+ ITERATION = 1  AT(1) = loc(1, 2) TASK = takephoto INPUT = [loc(0, 1), 2] SERVICE = 1
+IS IT RELEVANT?
+ ITERATION = 1  AT(1) = loc(1, 2) TASK = takephoto INPUT = [loc(0, 2), 2] SERVICE = 1
+IS IT RELEVANT?
+ ITERATION = 1  AT(1) = loc(1, 2) TASK = takephoto INPUT = [loc(1, 0), 2] SERVICE = 1
+IS IT RELEVANT?
+ ITERATION = 1  AT(1) = loc(1, 2) TASK = takephoto INPUT = [loc(1, 1), 2] SERVICE = 1
+IS IT RELEVANT?
+ ITERATION = 1  AT(1) = loc(1, 2) TASK = takephoto INPUT = [loc(1, 2), 2] SERVICE = 1
+IS IT RELEVANT?
+ ITERATION = 1  AT(1) = loc(1, 2) TASK = takephoto INPUT = [loc(2, 0), 2] SERVICE = 1
+IS IT RELEVANT?
+ ITERATION = 1  AT(1) = loc(1, 2) TASK = takephoto INPUT = [loc(2, 1), 2] SERVICE = 1
+IS IT RELEVANT?
+ ITERATION = 1  AT(1) = loc(1, 2) TASK = takephoto INPUT = [loc(2, 2), 2] SERVICE = 1
+IS IT RELEVANT?
+ ITERATION = 2  AT(1) = loc(0, 0) TASK = go INPUT = loc(2, 0) SERVICE = 1
+ ITERATION = 1  AT(1) = loc(2, 0) TASK = go INPUT = loc(0, 0) SERVICE = 1
+IS IT RELEVANT?
+ ITERATION = 1  AT(1) = loc(2, 0) TASK = go INPUT = loc(0, 1) SERVICE = 1
+IS IT RELEVANT?
+ ITERATION = 1  AT(1) = loc(2, 0) TASK = go INPUT = loc(0, 2) SERVICE = 1
+IS IT RELEVANT?
+ ITERATION = 1  AT(1) = loc(2, 0) TASK = go INPUT = loc(1, 0) SERVICE = 1
+IS IT RELEVANT?
+ ITERATION = 1  AT(1) = loc(2, 0) TASK = go INPUT = loc(1, 1) SERVICE = 1
+IS IT RELEVANT?
+ ITERATION = 1  AT(1) = loc(2, 0) TASK = go INPUT = loc(1, 2) SERVICE = 1
+IS IT RELEVANT?
+ ITERATION = 1  AT(1) = loc(2, 0) TASK = go INPUT = loc(2, 0) SERVICE = 1
+IS IT RELEVANT?
+ ITERATION = 1  AT(1) = loc(2, 0) TASK = go INPUT = loc(2, 1) SERVICE = 1
+IS IT RELEVANT?
+ ITERATION = 1  AT(1) = loc(2, 0) TASK = go INPUT = loc(2, 2) SERVICE = 1
+IS IT RELEVANT?
+ ITERATION = 1  AT(1) = loc(2, 0) TASK = takephoto INPUT = [loc(0, 0), 0] SERVICE = 1
+IS IT RELEVANT?
+ ITERATION = 1  AT(1) = loc(2, 0) TASK = takephoto INPUT = [loc(0, 1), 0] SERVICE = 1
+IS IT RELEVANT?
+ ITERATION = 1  AT(1) = loc(2, 0) TASK = takephoto INPUT = [loc(0, 2), 0] SERVICE = 1
+IS IT RELEVANT?
+ ITERATION = 1  AT(1) = loc(2, 0) TASK = takephoto INPUT = [loc(1, 0), 0] SERVICE = 1
+IS IT RELEVANT?
+ ITERATION = 1  AT(1) = loc(2, 0) TASK = takephoto INPUT = [loc(1, 1), 0] SERVICE = 1
+IS IT RELEVANT?
+ ITERATION = 1  AT(1) = loc(2, 0) TASK = takephoto INPUT = [loc(1, 2), 0] SERVICE = 1
+IS IT RELEVANT?
+ ITERATION = 1  AT(1) = loc(2, 0) TASK = takephoto INPUT = [loc(2, 0), 0] SERVICE = 1
+IS IT RELEVANT?
+ ITERATION = 1  AT(1) = loc(2, 0) TASK = takephoto INPUT = [loc(2, 1), 0] SERVICE = 1
+IS IT RELEVANT?
+ ITERATION = 1  AT(1) = loc(2, 0) TASK = takephoto INPUT = [loc(2, 2), 0] SERVICE = 1
+IS IT RELEVANT?
+ ITERATION = 1  AT(1) = loc(2, 0) TASK = takephoto INPUT = [loc(0, 0), 1] SERVICE = 1
+IS IT RELEVANT?
+ ITERATION = 1  AT(1) = loc(2, 0) TASK = takephoto INPUT = [loc(0, 1), 1] SERVICE = 1
+IS IT RELEVANT?
+ ITERATION = 1  AT(1) = loc(2, 0) TASK = takephoto INPUT = [loc(0, 2), 1] SERVICE = 1
+IS IT RELEVANT?
+ ITERATION = 1  AT(1) = loc(2, 0) TASK = takephoto INPUT = [loc(1, 0), 1] SERVICE = 1
+IS IT RELEVANT?
+ ITERATION = 1  AT(1) = loc(2, 0) TASK = takephoto INPUT = [loc(1, 1), 1] SERVICE = 1
+IS IT RELEVANT?
+ ITERATION = 1  AT(1) = loc(2, 0) TASK = takephoto INPUT = [loc(1, 2), 1] SERVICE = 1
+IS IT RELEVANT?
+ ITERATION = 1  AT(1) = loc(2, 0) TASK = takephoto INPUT = [loc(2, 0), 1] SERVICE = 1
+IS IT RELEVANT?
+ ITERATION = 1  AT(1) = loc(2, 0) TASK = takephoto INPUT = [loc(2, 1), 1] SERVICE = 1
+IS IT RELEVANT?
+ ITERATION = 1  AT(1) = loc(2, 0) TASK = takephoto INPUT = [loc(2, 2), 1] SERVICE = 1
+IS IT RELEVANT?
+ ITERATION = 1  AT(1) = loc(2, 0) TASK = takephoto INPUT = [loc(0, 0), 2] SERVICE = 1
+IS IT RELEVANT?
+ ITERATION = 1  AT(1) = loc(2, 0) TASK = takephoto INPUT = [loc(0, 1), 2] SERVICE = 1
+IS IT RELEVANT?
+ ITERATION = 1  AT(1) = loc(2, 0) TASK = takephoto INPUT = [loc(0, 2), 2] SERVICE = 1
+IS IT RELEVANT?
+ ITERATION = 1  AT(1) = loc(2, 0) TASK = takephoto INPUT = [loc(1, 0), 2] SERVICE = 1
+IS IT RELEVANT?
+ ITERATION = 1  AT(1) = loc(2, 0) TASK = takephoto INPUT = [loc(1, 1), 2] SERVICE = 1
+IS IT RELEVANT?
+ ITERATION = 1  AT(1) = loc(2, 0) TASK = takephoto INPUT = [loc(1, 2), 2] SERVICE = 1
+IS IT RELEVANT?
+ ITERATION = 1  AT(1) = loc(2, 0) TASK = takephoto INPUT = [loc(2, 0), 2] SERVICE = 1
+IS IT RELEVANT?
+ ITERATION = 1  AT(1) = loc(2, 0) TASK = takephoto INPUT = [loc(2, 1), 2] SERVICE = 1
+IS IT RELEVANT?
+ ITERATION = 1  AT(1) = loc(2, 0) TASK = takephoto INPUT = [loc(2, 2), 2] SERVICE = 1
+IS IT RELEVANT?
+ ITERATION = 2  AT(1) = loc(0, 0) TASK = go INPUT = loc(2, 1) SERVICE = 1
+ ITERATION = 1  AT(1) = loc(2, 1) TASK = go INPUT = loc(0, 0) SERVICE = 1
+IS IT RELEVANT?
+ ITERATION = 1  AT(1) = loc(2, 1) TASK = go INPUT = loc(0, 1) SERVICE = 1
+IS IT RELEVANT?
+ ITERATION = 1  AT(1) = loc(2, 1) TASK = go INPUT = loc(0, 2) SERVICE = 1
+IS IT RELEVANT?
+ ITERATION = 1  AT(1) = loc(2, 1) TASK = go INPUT = loc(1, 0) SERVICE = 1
+IS IT RELEVANT?
+ ITERATION = 1  AT(1) = loc(2, 1) TASK = go INPUT = loc(1, 1) SERVICE = 1
+IS IT RELEVANT?
+ ITERATION = 1  AT(1) = loc(2, 1) TASK = go INPUT = loc(1, 2) SERVICE = 1
+IS IT RELEVANT?
+ ITERATION = 1  AT(1) = loc(2, 1) TASK = go INPUT = loc(2, 0) SERVICE = 1
+IS IT RELEVANT?
+ ITERATION = 1  AT(1) = loc(2, 1) TASK = go INPUT = loc(2, 1) SERVICE = 1
+IS IT RELEVANT?
+ ITERATION = 1  AT(1) = loc(2, 1) TASK = go INPUT = loc(2, 2) SERVICE = 1
+IS IT RELEVANT?
+ ITERATION = 1  AT(1) = loc(2, 1) TASK = takephoto INPUT = [loc(0, 0), 0] SERVICE = 1
+IS IT RELEVANT?
+ ITERATION = 1  AT(1) = loc(2, 1) TASK = takephoto INPUT = [loc(0, 1), 0] SERVICE = 1
+IS IT RELEVANT?
+ ITERATION = 1  AT(1) = loc(2, 1) TASK = takephoto INPUT = [loc(0, 2), 0] SERVICE = 1
+IS IT RELEVANT?
+ ITERATION = 1  AT(1) = loc(2, 1) TASK = takephoto INPUT = [loc(1, 0), 0] SERVICE = 1
+IS IT RELEVANT?
+ ITERATION = 1  AT(1) = loc(2, 1) TASK = takephoto INPUT = [loc(1, 1), 0] SERVICE = 1
+IS IT RELEVANT?
+ ITERATION = 1  AT(1) = loc(2, 1) TASK = takephoto INPUT = [loc(1, 2), 0] SERVICE = 1
+IS IT RELEVANT?
+ ITERATION = 1  AT(1) = loc(2, 1) TASK = takephoto INPUT = [loc(2, 0), 0] SERVICE = 1
+IS IT RELEVANT?
+ ITERATION = 1  AT(1) = loc(2, 1) TASK = takephoto INPUT = [loc(2, 1), 0] SERVICE = 1
+IS IT RELEVANT?
+ ITERATION = 1  AT(1) = loc(2, 1) TASK = takephoto INPUT = [loc(2, 2), 0] SERVICE = 1
+IS IT RELEVANT?
+ ITERATION = 1  AT(1) = loc(2, 1) TASK = takephoto INPUT = [loc(0, 0), 1] SERVICE = 1
+IS IT RELEVANT?
+ ITERATION = 1  AT(1) = loc(2, 1) TASK = takephoto INPUT = [loc(0, 1), 1] SERVICE = 1
+IS IT RELEVANT?
+ ITERATION = 1  AT(1) = loc(2, 1) TASK = takephoto INPUT = [loc(0, 2), 1] SERVICE = 1
+IS IT RELEVANT?
+ ITERATION = 1  AT(1) = loc(2, 1) TASK = takephoto INPUT = [loc(1, 0), 1] SERVICE = 1
+IS IT RELEVANT?
+ ITERATION = 1  AT(1) = loc(2, 1) TASK = takephoto INPUT = [loc(1, 1), 1] SERVICE = 1
+IS IT RELEVANT?
+ ITERATION = 1  AT(1) = loc(2, 1) TASK = takephoto INPUT = [loc(1, 2), 1] SERVICE = 1
+IS IT RELEVANT?
+ ITERATION = 1  AT(1) = loc(2, 1) TASK = takephoto INPUT = [loc(2, 0), 1] SERVICE = 1
+IS IT RELEVANT?
+ ITERATION = 1  AT(1) = loc(2, 1) TASK = takephoto INPUT = [loc(2, 1), 1] SERVICE = 1
+IS IT RELEVANT?
+ ITERATION = 1  AT(1) = loc(2, 1) TASK = takephoto INPUT = [loc(2, 2), 1] SERVICE = 1
+IS IT RELEVANT?
+ ITERATION = 1  AT(1) = loc(2, 1) TASK = takephoto INPUT = [loc(0, 0), 2] SERVICE = 1
+IS IT RELEVANT?
+ ITERATION = 1  AT(1) = loc(2, 1) TASK = takephoto INPUT = [loc(0, 1), 2] SERVICE = 1
+IS IT RELEVANT?
+ ITERATION = 1  AT(1) = loc(2, 1) TASK = takephoto INPUT = [loc(0, 2), 2] SERVICE = 1
+IS IT RELEVANT?
+ ITERATION = 1  AT(1) = loc(2, 1) TASK = takephoto INPUT = [loc(1, 0), 2] SERVICE = 1
+IS IT RELEVANT?
+ ITERATION = 1  AT(1) = loc(2, 1) TASK = takephoto INPUT = [loc(1, 1), 2] SERVICE = 1
+IS IT RELEVANT?
+ ITERATION = 1  AT(1) = loc(2, 1) TASK = takephoto INPUT = [loc(1, 2), 2] SERVICE = 1
+IS IT RELEVANT?
+ ITERATION = 1  AT(1) = loc(2, 1) TASK = takephoto INPUT = [loc(2, 0), 2] SERVICE = 1
+IS IT RELEVANT?
+ ITERATION = 1  AT(1) = loc(2, 1) TASK = takephoto INPUT = [loc(2, 1), 2] SERVICE = 1
+IS IT RELEVANT?
+ ITERATION = 1  AT(1) = loc(2, 1) TASK = takephoto INPUT = [loc(2, 2), 2] SERVICE = 1
+IS IT RELEVANT?
+ ITERATION = 2  AT(1) = loc(0, 0) TASK = go INPUT = loc(2, 2) SERVICE = 1
+ ITERATION = 1  AT(1) = loc(2, 2) TASK = go INPUT = loc(0, 0) SERVICE = 1
+IS IT RELEVANT?
+ ITERATION = 1  AT(1) = loc(2, 2) TASK = go INPUT = loc(0, 1) SERVICE = 1
+IS IT RELEVANT?
+ ITERATION = 1  AT(1) = loc(2, 2) TASK = go INPUT = loc(0, 2) SERVICE = 1
+IS IT RELEVANT?
+ ITERATION = 1  AT(1) = loc(2, 2) TASK = go INPUT = loc(1, 0) SERVICE = 1
+IS IT RELEVANT?
+ ITERATION = 1  AT(1) = loc(2, 2) TASK = go INPUT = loc(1, 1) SERVICE = 1
+IS IT RELEVANT?
+ ITERATION = 1  AT(1) = loc(2, 2) TASK = go INPUT = loc(1, 2) SERVICE = 1
+IS IT RELEVANT?
+ ITERATION = 1  AT(1) = loc(2, 2) TASK = go INPUT = loc(2, 0) SERVICE = 1
+IS IT RELEVANT?
+ ITERATION = 1  AT(1) = loc(2, 2) TASK = go INPUT = loc(2, 1) SERVICE = 1
+IS IT RELEVANT?
+ ITERATION = 1  AT(1) = loc(2, 2) TASK = go INPUT = loc(2, 2) SERVICE = 1
+IS IT RELEVANT?
+ ITERATION = 1  AT(1) = loc(2, 2) TASK = takephoto INPUT = [loc(0, 0), 0] SERVICE = 1
+IS IT RELEVANT?
+ ITERATION = 1  AT(1) = loc(2, 2) TASK = takephoto INPUT = [loc(0, 1), 0] SERVICE = 1
+IS IT RELEVANT?
+ ITERATION = 1  AT(1) = loc(2, 2) TASK = takephoto INPUT = [loc(0, 2), 0] SERVICE = 1
+IS IT RELEVANT?
+ ITERATION = 1  AT(1) = loc(2, 2) TASK = takephoto INPUT = [loc(1, 0), 0] SERVICE = 1
+IS IT RELEVANT?
+ ITERATION = 1  AT(1) = loc(2, 2) TASK = takephoto INPUT = [loc(1, 1), 0] SERVICE = 1
+IS IT RELEVANT?
+ ITERATION = 1  AT(1) = loc(2, 2) TASK = takephoto INPUT = [loc(1, 2), 0] SERVICE = 1
+IS IT RELEVANT?
+ ITERATION = 1  AT(1) = loc(2, 2) TASK = takephoto INPUT = [loc(2, 0), 0] SERVICE = 1
+IS IT RELEVANT?
+ ITERATION = 1  AT(1) = loc(2, 2) TASK = takephoto INPUT = [loc(2, 1), 0] SERVICE = 1
+IS IT RELEVANT?
+ ITERATION = 1  AT(1) = loc(2, 2) TASK = takephoto INPUT = [loc(2, 2), 0] SERVICE = 1
+IS IT RELEVANT?
+ ITERATION = 1  AT(1) = loc(2, 2) TASK = takephoto INPUT = [loc(0, 0), 1] SERVICE = 1
+IS IT RELEVANT?
+ ITERATION = 1  AT(1) = loc(2, 2) TASK = takephoto INPUT = [loc(0, 1), 1] SERVICE = 1
+IS IT RELEVANT?
+ ITERATION = 1  AT(1) = loc(2, 2) TASK = takephoto INPUT = [loc(0, 2), 1] SERVICE = 1
+IS IT RELEVANT?
+ ITERATION = 1  AT(1) = loc(2, 2) TASK = takephoto INPUT = [loc(1, 0), 1] SERVICE = 1
+IS IT RELEVANT?
+ ITERATION = 1  AT(1) = loc(2, 2) TASK = takephoto INPUT = [loc(1, 1), 1] SERVICE = 1
+IS IT RELEVANT?
+ ITERATION = 1  AT(1) = loc(2, 2) TASK = takephoto INPUT = [loc(1, 2), 1] SERVICE = 1
+IS IT RELEVANT?
+ ITERATION = 1  AT(1) = loc(2, 2) TASK = takephoto INPUT = [loc(2, 0), 1] SERVICE = 1
+IS IT RELEVANT?
+ ITERATION = 1  AT(1) = loc(2, 2) TASK = takephoto INPUT = [loc(2, 1), 1] SERVICE = 1
+IS IT RELEVANT?
+ ITERATION = 1  AT(1) = loc(2, 2) TASK = takephoto INPUT = [loc(2, 2), 1] SERVICE = 1
+IS IT RELEVANT?
+ ITERATION = 1  AT(1) = loc(2, 2) TASK = takephoto INPUT = [loc(0, 0), 2] SERVICE = 1
+IS IT RELEVANT?
+ ITERATION = 1  AT(1) = loc(2, 2) TASK = takephoto INPUT = [loc(0, 1), 2] SERVICE = 1
+IS IT RELEVANT?
+ ITERATION = 1  AT(1) = loc(2, 2) TASK = takephoto INPUT = [loc(0, 2), 2] SERVICE = 1
+IS IT RELEVANT?
+ ITERATION = 1  AT(1) = loc(2, 2) TASK = takephoto INPUT = [loc(1, 0), 2] SERVICE = 1
+IS IT RELEVANT?
+ ITERATION = 1  AT(1) = loc(2, 2) TASK = takephoto INPUT = [loc(1, 1), 2] SERVICE = 1
+IS IT RELEVANT?
+ ITERATION = 1  AT(1) = loc(2, 2) TASK = takephoto INPUT = [loc(1, 2), 2] SERVICE = 1
+IS IT RELEVANT?
+ ITERATION = 1  AT(1) = loc(2, 2) TASK = takephoto INPUT = [loc(2, 0), 2] SERVICE = 1
+IS IT RELEVANT?
+ ITERATION = 1  AT(1) = loc(2, 2) TASK = takephoto INPUT = [loc(2, 1), 2] SERVICE = 1
+IS IT RELEVANT?
+ ITERATION = 1  AT(1) = loc(2, 2) TASK = takephoto INPUT = [loc(2, 2), 2] SERVICE = 1
+IS IT RELEVANT?
+ ITERATION = 2  AT(1) = loc(0, 0) TASK = takephoto INPUT = [loc(0, 0), 0] SERVICE = 1
+ ITERATION = 1  AT(1) = loc(0, 0) TASK = go INPUT = loc(0, 0) SERVICE = 1
+IS IT RELEVANT?
+ ITERATION = 1  AT(1) = loc(0, 0) TASK = go INPUT = loc(0, 1) SERVICE = 1
+IS IT RELEVANT?
+ ITERATION = 1  AT(1) = loc(0, 0) TASK = go INPUT = loc(0, 2) SERVICE = 1
+IS IT RELEVANT?
+ ITERATION = 1  AT(1) = loc(0, 0) TASK = go INPUT = loc(1, 0) SERVICE = 1
+IS IT RELEVANT?
+ ITERATION = 1  AT(1) = loc(0, 0) TASK = go INPUT = loc(1, 1) SERVICE = 1
+IS IT RELEVANT?
+ ITERATION = 1  AT(1) = loc(0, 0) TASK = go INPUT = loc(1, 2) SERVICE = 1
+IS IT RELEVANT?
+ ITERATION = 1  AT(1) = loc(0, 0) TASK = go INPUT = loc(2, 0) SERVICE = 1
+IS IT RELEVANT?
+ ITERATION = 1  AT(1) = loc(0, 0) TASK = go INPUT = loc(2, 1) SERVICE = 1
+IS IT RELEVANT?
+ ITERATION = 1  AT(1) = loc(0, 0) TASK = go INPUT = loc(2, 2) SERVICE = 1
+IS IT RELEVANT?
+ ITERATION = 1  AT(1) = loc(0, 0) TASK = takephoto INPUT = [loc(0, 0), 0] SERVICE = 1
+IS IT RELEVANT?
+ ITERATION = 1  AT(1) = loc(0, 0) TASK = takephoto INPUT = [loc(0, 1), 0] SERVICE = 1
+IS IT RELEVANT?
+ ITERATION = 1  AT(1) = loc(0, 0) TASK = takephoto INPUT = [loc(0, 2), 0] SERVICE = 1
+IS IT RELEVANT?
+ ITERATION = 1  AT(1) = loc(0, 0) TASK = takephoto INPUT = [loc(1, 0), 0] SERVICE = 1
+IS IT RELEVANT?
+ ITERATION = 1  AT(1) = loc(0, 0) TASK = takephoto INPUT = [loc(1, 1), 0] SERVICE = 1
+IS IT RELEVANT?
+ ITERATION = 1  AT(1) = loc(0, 0) TASK = takephoto INPUT = [loc(1, 2), 0] SERVICE = 1
+IS IT RELEVANT?
+ ITERATION = 1  AT(1) = loc(0, 0) TASK = takephoto INPUT = [loc(2, 0), 0] SERVICE = 1
+IS IT RELEVANT?
+ ITERATION = 1  AT(1) = loc(0, 0) TASK = takephoto INPUT = [loc(2, 1), 0] SERVICE = 1
+IS IT RELEVANT?
+ ITERATION = 1  AT(1) = loc(0, 0) TASK = takephoto INPUT = [loc(2, 2), 0] SERVICE = 1
+IS IT RELEVANT?
+ ITERATION = 1  AT(1) = loc(0, 0) TASK = takephoto INPUT = [loc(0, 0), 1] SERVICE = 1
+IS IT RELEVANT?
+ ITERATION = 1  AT(1) = loc(0, 0) TASK = takephoto INPUT = [loc(0, 1), 1] SERVICE = 1
+IS IT RELEVANT?
+ ITERATION = 1  AT(1) = loc(0, 0) TASK = takephoto INPUT = [loc(0, 2), 1] SERVICE = 1
+IS IT RELEVANT?
+ ITERATION = 1  AT(1) = loc(0, 0) TASK = takephoto INPUT = [loc(1, 0), 1] SERVICE = 1
+IS IT RELEVANT?
+ ITERATION = 1  AT(1) = loc(0, 0) TASK = takephoto INPUT = [loc(1, 1), 1] SERVICE = 1
+IS IT RELEVANT?
+ ITERATION = 1  AT(1) = loc(0, 0) TASK = takephoto INPUT = [loc(1, 2), 1] SERVICE = 1
+IS IT RELEVANT?
+ ITERATION = 1  AT(1) = loc(0, 0) TASK = takephoto INPUT = [loc(2, 0), 1] SERVICE = 1
+IS IT RELEVANT?
+ ITERATION = 1  AT(1) = loc(0, 0) TASK = takephoto INPUT = [loc(2, 1), 1] SERVICE = 1
+IS IT RELEVANT?
+ ITERATION = 1  AT(1) = loc(0, 0) TASK = takephoto INPUT = [loc(2, 2), 1] SERVICE = 1
+IS IT RELEVANT?
+ ITERATION = 1  AT(1) = loc(0, 0) TASK = takephoto INPUT = [loc(0, 0), 2] SERVICE = 1
+IS IT RELEVANT?
+ ITERATION = 1  AT(1) = loc(0, 0) TASK = takephoto INPUT = [loc(0, 1), 2] SERVICE = 1
+IS IT RELEVANT?
+ ITERATION = 1  AT(1) = loc(0, 0) TASK = takephoto INPUT = [loc(0, 2), 2] SERVICE = 1
+IS IT RELEVANT?
+ ITERATION = 1  AT(1) = loc(0, 0) TASK = takephoto INPUT = [loc(1, 0), 2] SERVICE = 1
+IS IT RELEVANT?
+ ITERATION = 1  AT(1) = loc(0, 0) TASK = takephoto INPUT = [loc(1, 1), 2] SERVICE = 1
+IS IT RELEVANT?
+ ITERATION = 1  AT(1) = loc(0, 0) TASK = takephoto INPUT = [loc(1, 2), 2] SERVICE = 1
+IS IT RELEVANT?
+ ITERATION = 1  AT(1) = loc(0, 0) TASK = takephoto INPUT = [loc(2, 0), 2] SERVICE = 1
+IS IT RELEVANT?
+ ITERATION = 1  AT(1) = loc(0, 0) TASK = takephoto INPUT = [loc(2, 1), 2] SERVICE = 1
+IS IT RELEVANT?
+ ITERATION = 1  AT(1) = loc(0, 0) TASK = takephoto INPUT = [loc(2, 2), 2] SERVICE = 1
+IS IT RELEVANT?
+ ITERATION = 2  AT(1) = loc(0, 0) TASK = takephoto INPUT = [loc(0, 1), 0] SERVICE = 1
+ ITERATION = 1  AT(1) = loc(0, 0) TASK = go INPUT = loc(0, 0) SERVICE = 1
+IS IT RELEVANT?
+ ITERATION = 1  AT(1) = loc(0, 0) TASK = go INPUT = loc(0, 1) SERVICE = 1
+IS IT RELEVANT?
+ ITERATION = 1  AT(1) = loc(0, 0) TASK = go INPUT = loc(0, 2) SERVICE = 1
+IS IT RELEVANT?
+ ITERATION = 1  AT(1) = loc(0, 0) TASK = go INPUT = loc(1, 0) SERVICE = 1
+IS IT RELEVANT?
+ ITERATION = 1  AT(1) = loc(0, 0) TASK = go INPUT = loc(1, 1) SERVICE = 1
+IS IT RELEVANT?
+ ITERATION = 1  AT(1) = loc(0, 0) TASK = go INPUT = loc(1, 2) SERVICE = 1
+IS IT RELEVANT?
+ ITERATION = 1  AT(1) = loc(0, 0) TASK = go INPUT = loc(2, 0) SERVICE = 1
+IS IT RELEVANT?
+ ITERATION = 1  AT(1) = loc(0, 0) TASK = go INPUT = loc(2, 1) SERVICE = 1
+IS IT RELEVANT?
+ ITERATION = 1  AT(1) = loc(0, 0) TASK = go INPUT = loc(2, 2) SERVICE = 1
+IS IT RELEVANT?
+ ITERATION = 1  AT(1) = loc(0, 0) TASK = takephoto INPUT = [loc(0, 0), 0] SERVICE = 1
+IS IT RELEVANT?
+ ITERATION = 1  AT(1) = loc(0, 0) TASK = takephoto INPUT = [loc(0, 1), 0] SERVICE = 1
+IS IT RELEVANT?
+ ITERATION = 1  AT(1) = loc(0, 0) TASK = takephoto INPUT = [loc(0, 2), 0] SERVICE = 1
+IS IT RELEVANT?
+ ITERATION = 1  AT(1) = loc(0, 0) TASK = takephoto INPUT = [loc(1, 0), 0] SERVICE = 1
+IS IT RELEVANT?
+ ITERATION = 1  AT(1) = loc(0, 0) TASK = takephoto INPUT = [loc(1, 1), 0] SERVICE = 1
+IS IT RELEVANT?
+ ITERATION = 1  AT(1) = loc(0, 0) TASK = takephoto INPUT = [loc(1, 2), 0] SERVICE = 1
+IS IT RELEVANT?
+ ITERATION = 1  AT(1) = loc(0, 0) TASK = takephoto INPUT = [loc(2, 0), 0] SERVICE = 1
+IS IT RELEVANT?
+ ITERATION = 1  AT(1) = loc(0, 0) TASK = takephoto INPUT = [loc(2, 1), 0] SERVICE = 1
+IS IT RELEVANT?
+ ITERATION = 1  AT(1) = loc(0, 0) TASK = takephoto INPUT = [loc(2, 2), 0] SERVICE = 1
+IS IT RELEVANT?
+ ITERATION = 1  AT(1) = loc(0, 0) TASK = takephoto INPUT = [loc(0, 0), 1] SERVICE = 1
+IS IT RELEVANT?
+ ITERATION = 1  AT(1) = loc(0, 0) TASK = takephoto INPUT = [loc(0, 1), 1] SERVICE = 1
+IS IT RELEVANT?
+ ITERATION = 1  AT(1) = loc(0, 0) TASK = takephoto INPUT = [loc(0, 2), 1] SERVICE = 1
+IS IT RELEVANT?
+ ITERATION = 1  AT(1) = loc(0, 0) TASK = takephoto INPUT = [loc(1, 0), 1] SERVICE = 1
+IS IT RELEVANT?
+ ITERATION = 1  AT(1) = loc(0, 0) TASK = takephoto INPUT = [loc(1, 1), 1] SERVICE = 1
+IS IT RELEVANT?
+ ITERATION = 1  AT(1) = loc(0, 0) TASK = takephoto INPUT = [loc(1, 2), 1] SERVICE = 1
+IS IT RELEVANT?
+ ITERATION = 1  AT(1) = loc(0, 0) TASK = takephoto INPUT = [loc(2, 0), 1] SERVICE = 1
+IS IT RELEVANT?
+ ITERATION = 1  AT(1) = loc(0, 0) TASK = takephoto INPUT = [loc(2, 1), 1] SERVICE = 1
+IS IT RELEVANT?
+ ITERATION = 1  AT(1) = loc(0, 0) TASK = takephoto INPUT = [loc(2, 2), 1] SERVICE = 1
+IS IT RELEVANT?
+ ITERATION = 1  AT(1) = loc(0, 0) TASK = takephoto INPUT = [loc(0, 0), 2] SERVICE = 1
+IS IT RELEVANT?
+ ITERATION = 1  AT(1) = loc(0, 0) TASK = takephoto INPUT = [loc(0, 1), 2] SERVICE = 1
+IS IT RELEVANT?
+ ITERATION = 1  AT(1) = loc(0, 0) TASK = takephoto INPUT = [loc(0, 2), 2] SERVICE = 1
+IS IT RELEVANT?
+ ITERATION = 1  AT(1) = loc(0, 0) TASK = takephoto INPUT = [loc(1, 0), 2] SERVICE = 1
+IS IT RELEVANT?
+ ITERATION = 1  AT(1) = loc(0, 0) TASK = takephoto INPUT = [loc(1, 1), 2] SERVICE = 1
+IS IT RELEVANT?
+ ITERATION = 1  AT(1) = loc(0, 0) TASK = takephoto INPUT = [loc(1, 2), 2] SERVICE = 1
+IS IT RELEVANT?
+ ITERATION = 1  AT(1) = loc(0, 0) TASK = takephoto INPUT = [loc(2, 0), 2] SERVICE = 1
+IS IT RELEVANT?
+ ITERATION = 1  AT(1) = loc(0, 0) TASK = takephoto INPUT = [loc(2, 1), 2] SERVICE = 1
+IS IT RELEVANT?
+ ITERATION = 1  AT(1) = loc(0, 0) TASK = takephoto INPUT = [loc(2, 2), 2] SERVICE = 1
+IS IT RELEVANT?
+ ITERATION = 2  AT(1) = loc(0, 0) TASK = takephoto INPUT = [loc(0, 2), 0] SERVICE = 1
+ ITERATION = 1  AT(1) = loc(0, 0) TASK = go INPUT = loc(0, 0) SERVICE = 1
+IS IT RELEVANT?
+ ITERATION = 1  AT(1) = loc(0, 0) TASK = go INPUT = loc(0, 1) SERVICE = 1
+IS IT RELEVANT?
+ ITERATION = 1  AT(1) = loc(0, 0) TASK = go INPUT = loc(0, 2) SERVICE = 1
+IS IT RELEVANT?
+ ITERATION = 1  AT(1) = loc(0, 0) TASK = go INPUT = loc(1, 0) SERVICE = 1
+IS IT RELEVANT?
+ ITERATION = 1  AT(1) = loc(0, 0) TASK = go INPUT = loc(1, 1) SERVICE = 1
+IS IT RELEVANT?
+ ITERATION = 1  AT(1) = loc(0, 0) TASK = go INPUT = loc(1, 2) SERVICE = 1
+IS IT RELEVANT?
+ ITERATION = 1  AT(1) = loc(0, 0) TASK = go INPUT = loc(2, 0) SERVICE = 1
+IS IT RELEVANT?
+ ITERATION = 1  AT(1) = loc(0, 0) TASK = go INPUT = loc(2, 1) SERVICE = 1
+IS IT RELEVANT?
+ ITERATION = 1  AT(1) = loc(0, 0) TASK = go INPUT = loc(2, 2) SERVICE = 1
+IS IT RELEVANT?
+ ITERATION = 1  AT(1) = loc(0, 0) TASK = takephoto INPUT = [loc(0, 0), 0] SERVICE = 1
+IS IT RELEVANT?
+ ITERATION = 1  AT(1) = loc(0, 0) TASK = takephoto INPUT = [loc(0, 1), 0] SERVICE = 1
+IS IT RELEVANT?
+ ITERATION = 1  AT(1) = loc(0, 0) TASK = takephoto INPUT = [loc(0, 2), 0] SERVICE = 1
+IS IT RELEVANT?
+ ITERATION = 1  AT(1) = loc(0, 0) TASK = takephoto INPUT = [loc(1, 0), 0] SERVICE = 1
+IS IT RELEVANT?
+ ITERATION = 1  AT(1) = loc(0, 0) TASK = takephoto INPUT = [loc(1, 1), 0] SERVICE = 1
+IS IT RELEVANT?
+ DEBUG 2: (EM) Device  simulator  has reported termination!
+  DEBUG 3: (EM) Environment * simulator * deleted!  - Waiting result:  12145, free
+ ITERATION = 1  AT(1) = loc(0, 0) TASK = takephoto INPUT = [loc(1, 2), 0] SERVICE = 1
+IS IT RELEVANT?
+
+
+now(H),holds(neg(relevant),[assign([workitem(go,id_30,loc(1,0))],1),readyToStart(go,id_30,1),start(go,id_30,1,loc(1,0)),finishedTask(go,id_30,1,loc(1,0)),ackTaskCompletion(go,id_30,1),release([workitem(go,id_30,loc(1,0))],1)|H]).
+
+[adaptStart, photoLost(1, loc(0, 1))]
+
+
+some(srvc,and(service(srvc),and(hasConnection_prev(srvc),neg(hasConnection(srvc)))))
+some(loc,and(location(loc),neg(photoBuild_prev(loc)=photoBuild(loc)))
+
+
+
+
+
+Y=1, holds(photoBuild(loc(0,1))=V,[release([workitem(takephoto, id_30,[loc(0,1),Y])], 1), ackTaskCompletion(takephoto, id_30, 1),finishedTask(takephoto, id_30, 1, [loc(0,1),Y]), start(takephoto, id_30,1, [loc(0,1),Y]), readyToStart(takephoto, id_30, 1),assign([workitem(takephoto, id_30, [loc(0,1),Y])],1),release([workitem(go, id_30, loc(0,1))], 1), ackTaskCompletion(go,id_30, 1), finishedTask(go, id_30, 1, loc(0,1)), start(go, id_30, 1,loc(0,1)), readyToStart(go, id_30, 1), assign([workitem(go, id_30,loc(0,1))], 1), adaptStart, photoLost(1, loc(0, 1))]).
+
+
+
+
+[ assumptions([ 	[ assign([workitem(T,D,_I)],N), readyToStart(T,D,N) ],[ start(T,D,N,I), finishedTask(T,D,N,I) ])]
+
+
+
+
+

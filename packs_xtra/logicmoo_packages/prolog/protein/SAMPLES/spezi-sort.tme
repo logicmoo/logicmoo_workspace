@@ -1,0 +1,49 @@
+%% O--------------------------------------O
+%% | ProSpec V.1.1:                       |
+%% |   bthomas@informatik.uni-koblenz.de  |
+%% |--------------------------------------|
+%% | Normal Form Transformator (pl2tme):  |
+%% |   peter@informatik.uni-koblenz.de    |
+%% O--------------------------------------O
+%% ========================================
+%%  input file: spezi.sort
+%% ========================================
+
+
+partial_functions :(car, cdr, look_up, sel_var, sel_val).
+
+%% input formula => forall([x1 : _449, v1 : _455], sel_var(mk_pair(x1, v1)) = x1)
+
+sel_var(mk_pair(A : [t_var], B : [t_val|C]) : [t_pair]) : [t_var] = A : [t_var].
+
+%% input formula => forall([x2 : _449, v2 : _455], sel_val(mk_pair(x2, v2)) = v2)
+
+sel_val(mk_pair(A : [t_var|B], C : [t_val]) : [t_pair]) : [t_val] = C : [t_val].
+
+%% input formula => forall([x3 : _449, v3 : _455], car(cons(x3, v3)) = x3)
+
+car(cons(A : B, C : [t_list(B)|D]) : [t_list(B)]) : B = A : B.
+
+%% input formula => forall([x4 : _449, v4 : _455], cdr(cons(x4, v4)) = v4)
+
+cdr(cons(A : B, C : [t_list(B)]) : [t_list(B)]) : [t_list(B)] = C : [t_list(B)].
+
+%% input formula => forall([x5 : _487, v5 : _493], ((-(sel_var(car(x5)) = v5) -> look_up(x5, v5) = look_up(cdr(x5), v5)), (sel_var(car(x5)) = v5 -> look_up(x5, v5) = sel_val(car(x5)))))
+
+sel_var(car(A : [t_list([t_pair|B])|C]) : [t_pair|B]) : [t_var] = D : [t_var] ; look_up(A : [t_list([t_pair|B])|C], D : [t_var]) : [t_val] = look_up(cdr(A : [t_list([t_pair|B])|C]) : [t_list([t_pair|B])], D : [t_var]) : [t_val].
+
+look_up(A : [t_list([t_pair|B])|C], D : [t_var]) : [t_val] = sel_val(car(A : [t_list([t_pair|B])|C]) : [t_pair|B]) : [t_val] :- sel_var(car(A : [t_list([t_pair|B])|C]) : [t_pair|B]) : [t_var] = D : [t_var].
+
+%% input formula => forall([x7 : _456, y7 : _462, z7 : _468], update(x7, y7, z7) = cons(mk_pair(y7, z7), x7))
+
+update(A : [t_list([t_pair])|B], C : [t_var|D], E : [t_val|F]) : [t_list([t_pair])] = cons(mk_pair(C : [t_var|D], E : [t_val|F]) : [t_pair], A : [t_list([t_pair])|B]) : [t_list([t_pair])].
+
+%% query formula => -(forall([w : _503, x : _509, x8 : _515, x9 : _521, v : _527, v8 : _533], (-(x = x8), -(x = x9), x8 = x9) -> look_up(update(update(w, x, v), x8, v8), x9) = look_up(update(update(w, x8, v8), x, v), x9)))
+
+?- fsk1 : [t_var] = fsk2 : [t_var].
+
+?- fsk1 : [t_var] = fsk3 : [t_var].
+
+fsk2 : [t_var] = fsk3 : [t_var].
+
+?- look_up(update(update(fsk0 : [t_list([t_pair|A])], fsk1 : [t_var], fsk4 : [t_val]) : [t_list([t_pair|B])], fsk2 : [t_var], fsk5 : [t_val]) : [t_list([t_pair|C])], fsk3 : [t_var]) : [t_val] = look_up(update(update(fsk0 : [t_list([t_pair|A])], fsk2 : [t_var], fsk5 : [t_val]) : [t_list([t_pair|D])], fsk1 : [t_var], fsk4 : [t_val]) : [t_list([t_pair|E])], fsk3 : [t_var]) : [t_val].

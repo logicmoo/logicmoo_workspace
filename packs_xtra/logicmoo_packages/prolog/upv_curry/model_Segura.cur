@@ -1,0 +1,398 @@
+-- Modelo Declarativo del Segura
+
+infixr 9 `less`
+
+---------------------------------------
+--- Definiciones generales
+---------------------------------------
+data Time = tm Int Int Int -- hora/minutos/segundos
+data Date = dt Int Int Int -- dia/mes/anyo
+data DateTime = dtime Time Date
+---------------------------------------
+
+-- funcion `less` para comparar fechas (dates)
+(dtime (tm h1 mi1 s1) (dt d1 m1 y1)) `less` (dtime (tm h2 mi2 s2) (dt d2 m2 y2)) =
+   if y1<y2 then True
+   else if m1<m2 then True
+        else if d1<d2 then True
+             else if h1<h2 then True
+                  else if mi1<mi2 then True else s1<s2
+
+---------------------------------------
+-- Indice de calidad medio.
+---------------------------------------
+icm fosfatos dbo5 o2 =
+   if fosfatos < 0.4  && dbo5 < 3.5   && o2 > 10.0 then ("Maxima",10) else 
+   if fosfatos < 0.4  && dbo5 < 4.0   && o2 > 8.5  then ("Maxima",9)  else 
+   if fosfatos < 0.4  && dbo5 < 4.0   && o2 > 8.0  then ("Buena",8)   else 
+   if fosfatos < 1.5  && dbo5 < 11.0  && o2 > 8.0  then ("Buena",7)   else 
+   if fosfatos < 3.5  && dbo5 < 30.0  && o2 > 3.0  then ("Media",6)   else 
+   if fosfatos < 3.5  && dbo5 < 30.0  && o2 > 3.0  then ("Media",5)   else 
+   if fosfatos < 3.5  && dbo5 < 30.0  && o2 > 2.5  then ("Baja",4)    else 
+   if fosfatos < 5.0  && dbo5 < 50.0  && o2 > 2.0  then ("Baja",3)    else 
+   if fosfatos < 5.0  && dbo5 < 50.0  && o2 > 2.0  then ("Minima",2)  else 
+   if fosfatos < 15.0 && dbo5 < 110.0 && o2 >= 0.0 then ("Minima",1) 
+                                                   else ("Minima",0)
+
+-- informacion adicional al indice de calidad
+organismos 10 = "Plecoptera, Epeorus o Rhithrogena"
+organismos  9 = "Hidropsyche o Potamanthus luteus"
+organismos  8 = "Ephemeroptera (excepto Baetidae y Caenidae)"
+organismos  7 = "Echinogammarus"
+organismos  6 = "Odonata o Diptera (excepto Chironomus y Psychodidae)"
+organismos  5 = "Ephemeroptera (Baetidae y Caenidae)"
+organismos  4 = "Asellidae, Physella acuta o Potamopyrgus jenkinsi"
+organismos  3 = "Psychodidae y Chironomus"
+organismos  2 = "Tubificidae"
+organismos  1 = "Sin vida macroscopica"
+
+{------------------------------------------------------------------
+                          Modelo del Rio
+ ------------------------------------------------------------------}
+
+-- Tramos
+data Tramo = trA | trB | trC | trD | trE | trF | trG | trH | 
+             trI | trJ | trK | trL 
+
+strTramo trA = "Cabecera"
+strTramo trB = "Cenajo a Almadenes"
+strTramo trC = "Cieza a Abarán"
+strTramo trD = "Blanca"
+strTramo trE = "Blanca a Alguazas"
+strTramo trF = "Alguazas"
+strTramo trG = "Molina a Alcantarilla"
+strTramo trH = "Murcia"
+strTramo trI = "Murcia a Orihuela"
+strTramo trJ = "Orihuela"
+strTramo trK = "Orihuela a Rojales"
+strTramo trL = "Guardamar"
+
+---------------------------------------
+-- Tipo de datos del modelo del rio
+---------------------------------------
+data Rio = 
+  Cini |                        -- estado sin vertidos 
+  Cpantano Tramo DateTime Rio | -- trasvase de agua de un pantano
+  Criego   Tramo DateTime Rio | -- disminucion del caudal por riego
+  Cfrutas  Tramo DateTime Rio | -- vertido empresa de frutas o verduras
+  Curbanas Tramo DateTime Rio | -- vertido de aguas urbanas
+  Crefri   Tramo DateTime Rio   -- vertido de industrias de refrigeracion
+
+---------------------------------------------
+-- Calculo del icm a partir de un estado dado
+---------------------------------------------
+obt_datos tramo date Cini = (0.0,0.0,11.0,caudal tramo)
+obt_datos tramo date (Cpantano tramo2 date2 s) |
+  (_f,_d,_o,_c) =:= obt_datos tramo date s =
+        if tramo==tramo2 && (date2 `less` date)
+        then ((_f+3.5)/2.0,(_d+30.0)/2.0,_o,_c*2.0)
+        else (_f,_d,_o,_c)
+obt_datos tramo date (Criego tramo2 date2 s) |
+  (_f,_d,_o,_c) =:= obt_datos tramo date s =
+        if tramo==tramo2 && (date2 `less` date)
+        then (_f,_d,_o,_c*0.8)
+        else (_f,_d,_o,_c)
+obt_datos tramo date (Cfrutas tramo2 date2 s) |
+  (_f,_d,_o,_c) =:= obt_datos tramo date s =
+        if tramo==tramo2 && (date2 `less` date)
+        then (_f+5.0,_d,_o,_c)
+        else (_f,_d,_o,_c)
+obt_datos tramo date (Curbanas tramo2 date2 s) |
+  (_f,_d,_o,_c) =:= obt_datos tramo date s =
+        if tramo==tramo2 && (date2 `less` date)
+        then (_f,_d,_o-2.0,_c)
+        else (_f,_d,_o,_c)
+obt_datos tramo date (Crefri tramo2 date2 s) |
+  (_f,_d,_o,_c) =:= obt_datos tramo date s =
+        if tramo==tramo2 && (date2 `less` date)
+        then (_f,_d,_o-1.0,_c)
+        else (_f,_d,_o,_c)
+
+-- auxiliar para caudal
+caudal trA = 282.0
+caudal trB = 433.0
+caudal trC = 725.0
+caudal trD = 734.0
+caudal trE = 741.0
+caudal trF = 759.0
+caudal trG = 760.0
+caudal trH = 790.0
+caudal trI = 854.0
+caudal trJ = 854.0
+caudal trK = 854.0
+caudal trL = 871.0
+
+-- funciones de insercion (mantienen la ordenacion por fechas)
+pantano tramo date Cini = Cpantano tramo date Cini
+pantano tramo date (Cpantano tramo2 date2 s) = 
+        if (date2 `less` date)
+        then Cpantano tramo date (Cpantano tramo2 date2 s)
+        else Cpantano tramo2 date2 (pantano tramo date s) 
+pantano tramo date (Criego tramo2 date2 s) = 
+        if (date2 `less` date)
+        then Cpantano tramo date (Criego tramo2 date2 s)
+        else Criego tramo2 date2 (pantano tramo date s) 
+pantano tramo date (Cfrutas tramo2 date2 s) = 
+        if (date2 `less` date)
+        then Cpantano tramo date (Cfrutas tramo2 date2 s)
+        else Cfrutas tramo2 date2 (pantano tramo date s) 
+pantano tramo date (Curbanas tramo2 date2 s) = 
+        if (date2 `less` date)
+        then Cpantano tramo date (Curbanas tramo2 date2 s)
+        else Curbanas tramo2 date2 (pantano tramo date s) 
+pantano tramo date (Crefri tramo2 date2 s) = 
+        if (date2 `less` date)
+        then Cpantano tramo date (Crefri tramo2 date2 s)
+        else Crefri tramo2 date2 (pantano tramo date s) 
+
+riego tramo date Cini = Criego tramo date Cini
+riego tramo date (Cpantano tramo2 date2 s) = 
+        if (date2 `less` date)
+        then Criego tramo date (Cpantano tramo2 date2 s)
+        else Cpantano tramo2 date2 (riego tramo date s) 
+riego tramo date (Criego tramo2 date2 s) = 
+        if (date2 `less` date)
+        then Criego tramo date (Criego tramo2 date2 s)
+        else Criego tramo2 date2 (riego tramo date s) 
+riego tramo date (Cfrutas tramo2 date2 s) = 
+        if (date2 `less` date)
+        then Criego tramo date (Cfrutas tramo2 date2 s)
+        else Cfrutas tramo2 date2 (riego tramo date s) 
+riego tramo date (Curbanas tramo2 date2 s) = 
+        if (date2 `less` date)
+        then Criego tramo date (Curbanas tramo2 date2 s)
+        else Curbanas tramo2 date2 (riego tramo date s) 
+riego tramo date (Crefri tramo2 date2 s) = 
+        if (date2 `less` date)
+        then Criego tramo date (Crefri tramo2 date2 s)
+        else Crefri tramo2 date2 (riego tramo date s) 
+
+frutas tramo date Cini = Cfrutas tramo date Cini
+frutas tramo date (Cpantano tramo2 date2 s) = 
+        if (date2 `less` date)
+        then Cfrutas tramo date (Cpantano tramo2 date2 s)
+        else Cpantano tramo2 date2 (frutas tramo date s) 
+frutas tramo date (Criego tramo2 date2 s) = 
+        if (date2 `less` date)
+        then Cfrutas tramo date (Criego tramo2 date2 s)
+        else Criego tramo2 date2 (frutas tramo date s) 
+frutas tramo date (Cfrutas tramo2 date2 s) = 
+        if (date2 `less` date)
+        then Cfrutas tramo date (Cfrutas tramo2 date2 s)
+        else Cfrutas tramo2 date2 (frutas tramo date s) 
+frutas tramo date (Curbanas tramo2 date2 s) = 
+        if (date2 `less` date)
+        then Cfrutas tramo date (Curbanas tramo2 date2 s)
+        else Curbanas tramo2 date2 (frutas tramo date s) 
+frutas tramo date (Crefri tramo2 date2 s) = 
+        if (date2 `less` date)
+        then Cfrutas tramo date (Crefri tramo2 date2 s)
+        else Crefri tramo2 date2 (frutas tramo date s) 
+
+urbanas tramo date Cini = Curbanas tramo date Cini
+urbanas tramo date (Cpantano tramo2 date2 s) = 
+        if (date2 `less` date)
+        then Curbanas tramo date (Cpantano tramo2 date2 s)
+        else Cpantano tramo2 date2 (urbanas tramo date s) 
+urbanas tramo date (Criego tramo2 date2 s) = 
+        if (date2 `less` date)
+        then Curbanas tramo date (Criego tramo2 date2 s)
+        else Criego tramo2 date2 (urbanas tramo date s) 
+urbanas tramo date (Cfrutas tramo2 date2 s) = 
+        if (date2 `less` date)
+        then Curbanas tramo date (Cfrutas tramo2 date2 s)
+        else Cfrutas tramo2 date2 (urbanas tramo date s) 
+urbanas tramo date (Curbanas tramo2 date2 s) = 
+        if (date2 `less` date)
+        then Curbanas tramo date (Curbanas tramo2 date2 s)
+        else Curbanas tramo2 date2 (urbanas tramo date s) 
+urbanas tramo date (Crefri tramo2 date2 s) = 
+        if (date2 `less` date)
+        then Curbanas tramo date (Crefri tramo2 date2 s)
+        else Crefri tramo2 date2 (urbanas tramo date s) 
+
+refri tramo date Cini = Crefri tramo date Cini
+refri tramo date (Cpantano tramo2 date2 s) = 
+        if (date2 `less` date)
+        then Crefri tramo date (Cpantano tramo2 date2 s)
+        else Cpantano tramo2 date2 (refri tramo date s) 
+refri tramo date (Criego tramo2 date2 s) = 
+        if (date2 `less` date)
+        then Crefri tramo date (Criego tramo2 date2 s)
+        else Criego tramo2 date2 (refri tramo date s) 
+refri tramo date (Cfrutas tramo2 date2 s) = 
+        if (date2 `less` date)
+        then Crefri tramo date (Cfrutas tramo2 date2 s)
+        else Cfrutas tramo2 date2 (refri tramo date s) 
+refri tramo date (Curbanas tramo2 date2 s) = 
+        if (date2 `less` date)
+        then Crefri tramo date (Curbanas tramo2 date2 s)
+        else Curbanas tramo2 date2 (refri tramo date s) 
+refri tramo date (Crefri tramo2 date2 s) = 
+        if (date2 `less` date)
+        then Crefri tramo date (Crefri tramo2 date2 s)
+        else Crefri tramo2 date2 (refri tramo date s) 
+
+---------------------------------------------
+-- Menu
+---------------------------------------------
+menu = menu1 Cini
+
+menu1 state = 
+  putStrLn "" >>
+  putStrLn "Menu - Modelo cuenca hidrografica" >> 
+  putStrLn "p - trasvase de agua del pantano" >>
+  putStrLn "r - riego incontrolado con agua del rio" >>
+  putStrLn "f - vertido de aguas sin depurar de una empresa de frutas" >>
+  putStrLn "u - vertido de aguas urbanas sin depurar" >>
+  putStrLn "e - vertido de aguas calientes de refrigeracion de industrias" >>
+  putStrLn "i - ver indice calidad mixto" >>
+  putStrLn "v - ver valores: Fosfatos DBO5 Oxigeno Caudal" >>
+  putStrLn "x - salir" >>
+  putChar '?' >> getLine >>=
+ (\str ->
+   if str=="P" || str=="p" 
+   then askTramo _tramo >> 
+        askDateTime _date >>
+        menu1 (pantano _tramo _date state)
+   else 
+   if str=="R" || str=="r" 
+   then askTramo _tramo >> 
+        askDateTime _date >> 
+        menu1 (riego _tramo _date state)
+   else 
+   if str=="F" || str=="f" 
+   then askTramo _tramo >> 
+        askDateTime _date >> 
+        menu1 (frutas _tramo _date state)
+   else 
+   if str=="U" || str=="u" 
+   then askTramo _tramo >> 
+        askDateTime _date >>
+        menu1 (urbanas _tramo _date state)
+   else 
+   if str=="E" || str=="e" 
+   then askTramo _tramo >> 
+        askDateTime _date >> 
+        menu1 (refri _tramo _date state)
+   else 
+   if str=="I" || str=="i" 
+   then askTramo _tramo >> 
+        askDateTime _date >>
+        check_icm _tramo _date state >> menu1 state
+   else 
+   if str=="V" || str=="v" 
+   then askTramo _tramo >> 
+        askDateTime _date >>
+        show_state _tramo _date state >> menu1 state
+   else 
+   if str=="X" || str=="x"
+   then done
+   else putStrLn "Opcion no valida" >> menu1 state )
+
+show_state tramo date state 
+ | (_fosfatos,_dbo5,_o2,_caudal) =:= obt_datos tramo date state = 
+  putStr "Fosfatos:" >> putStr (show _fosfatos) >> 
+  putStr " DBO5:"    >> putStr (show _dbo5)     >> 
+  putStr " Oxigeno:" >> putStr (show _o2)       >> 
+  putStr " Caudal:"  >> putStr (show _caudal)   >>
+  putStrLn ""
+
+check_icm tramo date state | 
+ (_f,_d,_o,_c) =:= obt_datos tramo date state &
+ (_Texto,_ICM) =:= icm _f _d _o =
+   if (_c/(caudal tramo)) <= 0.01
+   then putStrLn "Caudal a 1%, no se puede calcular ICM"
+   else putStr "Calidad: " >> putStrLn _Texto >> 
+        putStr "Indice Calidad Mixto: " >> putStr (show _ICM) >>  putStrLn "" >>
+        putStr "Organismos Indicadores: " >> putStrLn (organismos _ICM)
+
+---------------------------------------------
+-- auxiliares para manejo de estados
+---------------------------------------------
+askTramo t = putStr "Tramo A - " >> putStrLn (strTramo trA) >>
+             putStr "Tramo B - " >> putStrLn (strTramo trB) >>
+             putStr "Tramo C - " >> putStrLn (strTramo trC) >>
+             putStr "Tramo D - " >> putStrLn (strTramo trD) >>
+             putStr "Tramo E - " >> putStrLn (strTramo trE) >>
+             putStr "Tramo F - " >> putStrLn (strTramo trF) >>
+             putStr "Tramo G - " >> putStrLn (strTramo trG) >>
+             putStr "Tramo H - " >> putStrLn (strTramo trH) >>
+             putStr "Tramo I - " >> putStrLn (strTramo trI) >>
+             putStr "Tramo J - " >> putStrLn (strTramo trJ) >>
+             putStr "Tramo K - " >> putStrLn (strTramo trK) >>
+             putStr "Tramo L - " >> putStrLn (strTramo trL) >>
+             putStr "Elige tramo?" >> getLine >>= askTramo1 t
+
+-- es necesario que no sea una func lambda para poder instanciar al tramo
+askTramo1 x c | 
+   (if (c=="a") || (c=="A") then trA else
+     if (c=="b") || (c=="B") then trB else
+      if (c=="c") || (c=="C") then trC else
+       if (c=="d") || (c=="D") then trD else
+        if (c=="e") || (c=="E") then trE else
+         if (c=="f") || (c=="F") then trF else
+          if (c=="g") || (c=="G") then trG else
+           if (c=="h") || (c=="H") then trH else
+            if (c=="i") || (c=="I") then trI else
+             if (c=="j") || (c=="J") then trJ else
+              if (c=="k") || (c=="K") then trK else
+               if (c=="l") || (c=="L") then trL else 
+                 askTramo2 ) =:= x = done
+
+-- es necesario que sea una func para poder usar la forma condicional
+askTramo2 | _io=:=askTramo _t = _t
+
+------------------------------------------------------
+-- auxiliares para manejo de enteros, reales y fechas
+------------------------------------------------------
+askInt i = putStr "(entero)? " >> getLine >>= askInt2 i
+askInt2 i s | i =:= str2int s 0 = done
+
+askFloat f = putStr "(real)? " >> getLine >>= askFloat2 f
+askFloat2 f s | f =:= str2float s = done
+
+askDate d s | d =:= str2date s = done
+askTime t s | t =:= str2time s = done
+
+askDateTime eval flex
+askDateTime (dtime t d) = 
+       putStr "(hh:mm:ss)? " >> (getLine >>= askTime t) >>
+       putStr "(dd/mm/yy)? " >> getLine >>= askDate d
+
+-- string to integer
+str2int [c] n = (n*10) + ((ord c)-(ord '0'))
+str2int (c1:c2:cs) n = str2int (c2:cs) ((n*10) + ((ord c1)-(ord '0')))
+
+-- string to float
+str2float s 
+  | (_i,_r) =:= findSym '.' s "" "" = 
+        if _r==[]
+        then (float (str2int _i 0))
+        else (float (str2int _i 0))+(str2float2 _r 0.1)
+
+str2float2 [] _ = 0.0
+str2float2 (x:xs) Mult = 
+        (float ((ord x)-(ord '0')))*Mult 
+          + 
+        (str2float2 xs (Mult*0.1))
+
+
+-- split string by a symbol character
+findSym sym [] xs ys = (xs,ys)
+findSym sym (c:cs) xs ys = 
+        if c==sym 
+        then (xs,ys++cs)
+        else findSym sym cs (xs++[c]) ys
+
+-- string to date
+str2date str 
+ | findSym '/' str [] [] =:= (_day,_rest) &
+   findSym '/' _rest [] [] =:= (_month,_year)
+ = dt (str2int _day 0) (str2int _month 0) (str2int _year 0)
+
+-- string to time
+str2time str 
+ | findSym ':' str [] [] =:= (_hour,_rest) & 
+   findSym ':' _rest [] [] =:= (_min,_sec)
+ = tm (str2int _hour 0) (str2int _min 0) (str2int _sec 0)

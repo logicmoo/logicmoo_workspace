@@ -1,0 +1,9 @@
+order poly1 for pc using poly1 for boolTriv .
+
+setInterpretation(i(x,y)		: x + y).
+setInterpretation(p(x)		: 2*x).
+
+:- smallTerm:==200.
+:- nonEqLogic:==true.
+:- abolish(act/2).
+:- assert(resolutionDepth(1)).

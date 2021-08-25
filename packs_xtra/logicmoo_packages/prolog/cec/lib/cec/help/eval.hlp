@@ -1,0 +1,6 @@
+ 
+"eval(+Term,-NormalForm)."
+
+computes the normal form of a term using the most recently compiled set of
+rewrite rules.  "eval"  fails,  if  compile  has not been called yet,  cf.
+"compile".

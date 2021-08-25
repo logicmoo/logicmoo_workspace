@@ -1,0 +1,5 @@
+ 
+"redNOpEq(?I)."
+
+reduces nonoperational equation with index "I". The predicate fails if
+equation "I" does not exist or if the equation cannot be reduced.

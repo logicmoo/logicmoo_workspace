@@ -1,0 +1,17 @@
+
+//a
+//b
+//c
+
+(foo "a b c")
+
+(v "0.1")
+(transitive part_of)
+(reflexive part_of)
+(transitive has_part)
+(reflexive has_part)
+
+(comment "foo bar"
+         (symmetric adjacent_to))
+(holds_temporally adjacent_to)
+

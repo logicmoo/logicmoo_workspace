@@ -1,0 +1,49 @@
+% SZS start BatchConfiguration
+division.category MZR.MZR
+execution.order unordered
+output.required Assurance
+output.desired Proof
+limit.time.problem.wc 0
+% SZS end BatchConfiguration
+% SZS start BatchIncludes
+include('/home/mptp/big/MZR4Training/Problems/Axioms/MZR001+0.ax').
+include('/home/mptp/big/MZR4Training/Problems/Axioms/MZR001+1.ax').
+include('/home/mptp/big/MZR4Training/Problems/Axioms/MZR001+10.ax').
+include('/home/mptp/big/MZR4Training/Problems/Axioms/MZR001+11.ax').
+include('/home/mptp/big/MZR4Training/Problems/Axioms/MZR001+12.ax').
+include('/home/mptp/big/MZR4Training/Problems/Axioms/MZR001+13.ax').
+include('/home/mptp/big/MZR4Training/Problems/Axioms/MZR001+14.ax').
+include('/home/mptp/big/MZR4Training/Problems/Axioms/MZR001+15.ax').
+include('/home/mptp/big/MZR4Training/Problems/Axioms/MZR001+16.ax').
+include('/home/mptp/big/MZR4Training/Problems/Axioms/MZR001+17.ax').
+include('/home/mptp/big/MZR4Training/Problems/Axioms/MZR001+18.ax').
+include('/home/mptp/big/MZR4Training/Problems/Axioms/MZR001+19.ax').
+include('/home/mptp/big/MZR4Training/Problems/Axioms/MZR001+2.ax').
+include('/home/mptp/big/MZR4Training/Problems/Axioms/MZR001+20.ax').
+include('/home/mptp/big/MZR4Training/Problems/Axioms/MZR001+21.ax').
+include('/home/mptp/big/MZR4Training/Problems/Axioms/MZR001+22.ax').
+include('/home/mptp/big/MZR4Training/Problems/Axioms/MZR001+23.ax').
+include('/home/mptp/big/MZR4Training/Problems/Axioms/MZR001+24.ax').
+include('/home/mptp/big/MZR4Training/Problems/Axioms/MZR001+25.ax').
+include('/home/mptp/big/MZR4Training/Problems/Axioms/MZR001+26.ax').
+include('/home/mptp/big/MZR4Training/Problems/Axioms/MZR001+27.ax').
+include('/home/mptp/big/MZR4Training/Problems/Axioms/MZR001+28.ax').
+include('/home/mptp/big/MZR4Training/Problems/Axioms/MZR001+29.ax').
+include('/home/mptp/big/MZR4Training/Problems/Axioms/MZR001+3.ax').
+include('/home/mptp/big/MZR4Training/Problems/Axioms/MZR001+30.ax').
+include('/home/mptp/big/MZR4Training/Problems/Axioms/MZR001+31.ax').
+include('/home/mptp/big/MZR4Training/Problems/Axioms/MZR001+32.ax').
+include('/home/mptp/big/MZR4Training/Problems/Axioms/MZR001+4.ax').
+include('/home/mptp/big/MZR4Training/Problems/Axioms/MZR001+5.ax').
+include('/home/mptp/big/MZR4Training/Problems/Axioms/MZR001+6.ax').
+include('/home/mptp/big/MZR4Training/Problems/Axioms/MZR001+7.ax').
+include('/home/mptp/big/MZR4Training/Problems/Axioms/MZR001+8.ax').
+include('/home/mptp/big/MZR4Training/Problems/Axioms/MZR001+9.ax').
+% SZS end BatchIncludes
+% SZS start BatchProblems
+/home/mptp/big/MZR4Training/Problems/MZT000+1.p /home/mptp/big/MZR4Training/TstSolutions/MZT000+1
+/home/mptp/big/MZR4Training/Problems/MZT001+1.p /home/mptp/big/MZR4Training/TstSolutions/MZT001+1
+/home/mptp/big/MZR4Training/Problems/MZT002+1.p /home/mptp/big/MZR4Training/TstSolutions/MZT002+1
+/home/mptp/big/MZR4Training/Problems/MZT003+1.p /home/mptp/big/MZR4Training/TstSolutions/MZT003+1
+/home/mptp/big/MZR4Training/Problems/MZT004+1.p /home/mptp/big/MZR4Training/TstSolutions/MZT004+1
+% SZS end BatchProblems

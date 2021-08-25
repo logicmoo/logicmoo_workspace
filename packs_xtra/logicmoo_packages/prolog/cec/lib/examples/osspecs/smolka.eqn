@@ -1,0 +1,12 @@
+module(smolka).
+
+op a : s1.
+op b : s1.
+op d : s2.
+op f : (s1 -> s2).
+s1 < s2.
+
+
+a=d.
+b=d.
+

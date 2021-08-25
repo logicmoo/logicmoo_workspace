@@ -1,0 +1,19 @@
+
+Subsort Declarations
+--------------------
+
+Subsort declarations may be given according to the following syntax:
+
+<subsortDeclaration> ::= <sortName> '<' <sortName>
+<sortName> ::= <Prolog atom>
+
+
+Variable Declarations
+---------------------
+
+In the order-sorted case all variables which appear in axioms must be
+declared in the variables declaration part:
+
+<variableDeclarations> ::= 'var' '[' <variableDecl> { ',' <variableDecl> } ']'
+
+<variableDecl> ::= <variable> ':' <sortName>

@@ -1,0 +1,25 @@
+prolog_pred('~='/2).
+prolog_pred(','/2).
+
+begin(theory).
+% NAME: 'transitivity theory'
+p(A, B), p(B, C) -> p(A, C) | A ~= B, B ~= C.
+q(A, B), q(B, C) -> q(A, C) | A ~= B, B ~= C. 
+q(A, B) -> q(B, A) | A ~= B. 
+~ p(A, B), p(C, B) -> ~ p(A, C) | B ~= C. 
+~ q(A, B) -> ~ q(B, A) | B ~= A. 
+q(A, B), ~ q(C, A) -> ~ q(C, B) | A ~= B. 
+~ q(A, B), q(C, A) -> ~ q(B, C). 
+% NAME_END
+end(theory).
+
+% BEGIN_AXIOMS
+% NAME: all_related(p,q)
+(p(A, B); q(A, B)).
+
+% NAME: not_total(p)
+-p(a, b).
+
+% NAME: goal
+?- q(c, d).
+% END_AXIOMS

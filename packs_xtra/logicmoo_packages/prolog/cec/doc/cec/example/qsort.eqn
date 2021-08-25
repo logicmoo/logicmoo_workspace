@@ -1,0 +1,13 @@
+module qsort using lists + totalOrder .
+
+op sort  : (list -> list) .
+op split : (elem * list -> pair) .
+cons (',')   : (list * list -> pair) .
+
+sort([]) = [] .
+split(x, l) = (l1 , l2) => sort([x|l]) = append(sort(l1), [x|sort(l2)]) .
+
+split(x, []) = ([] , []) .
+(y =< x) = true and split(x, l) = (l1 , l2) => split(x, [y|l]) = ([y|l1] , l2) .
+(y =< x)  = false and split(x, l) = (l1 , l2) => split(x, [y|l]) = (l1 , [y|l2]) .
+

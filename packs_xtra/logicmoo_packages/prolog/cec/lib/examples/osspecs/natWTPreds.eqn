@@ -1,0 +1,13 @@
+module natWTPreds .
+cons tt : unit .
+op nat : (d -> unit) .
+op posnat : (d -> unit) .
+op s : (d -> d) .
+op p : (d -> d) .
+cons 0 : d .
+posnat(k) = tt => nat(k) = tt .
+nat(0) = tt .
+nat(n) = tt => posnat(s(n)) = tt .
+posnat(k) = tt => nat(p(k)) = tt .
+nat(n) = tt => p(s(n)) = n .
+posnat(k) = tt => s(p(k)) = k .

@@ -1,0 +1,77 @@
+%% (c) 1992, 1993 by KIT-BACK, TU Berlin. All rights reserved.
+%% BACK V4 operators:
+op(800,xfy,[':=',':<','->']).
+op(600,fx,['new','describe']).
+op(600,xfy,['for','isa']).
+op(580,yfx,['without']).
+op(580,xfy,['intersection','union']).
+op(570,fx,['getall','getallrel','some','all','the']).
+op(570,xfy,['.']).
+op(560,xfy,['with']).
+op(555,xfy,['andwith']).
+op(552,fx,['inv']).
+op(550,xfy,[':']).
+op(500,xfy,['or']).
+op(400,xfy,['and']).
+op(400,yfx,['..']).
+op(350,fx,['lt','gt','le','ge']).
+
+%% BACK V5 operators  ???
+
+op(800,xfy,['::','?:','?<','=>']).
+op(600,xf,['noibox']).
+
+translate(aboxinit,backinit(abox)).
+translate(iboxinit,backinit(ibox)).
+
+translate(tboxtell(X),backtell(X)).
+translate(aboxtell(X),backtell(X)).
+translate(iboxtell(X),backtell(X)).
+
+translate(tboxask(X),backask(X) noibox).
+translate(iboxask(X),backask(X)).
+translate(aboxask(X isa Y),backask(X isa Y)).
+translate(aboxask(X),backretrieve(X)).
+
+translate(tboxwrite(X),backwrite(X)).
+translate(aboxwrite(X),backwrite(X)).
+
+translate(tboxread(X),backread(X)).
+translate(aboxread(X),backread(X)).
+
+translate(tboxdump(X),backdump(X)).
+translate(aboxdump(X),backdump(X)).
+
+translate(tboxload(X),backload(X)).
+translate(aboxload(X),backload(X)).
+
+
+translate(tboxstate(verbosity = X),backstate(verbosity = X)).
+translate(aboxstate(verbosity = X),backstate(verbosity = X)).
+translate(tboxstate(X),true).
+translate(aboxstate(X),true).
+%% classify etc. ???
+
+
+
+
+translate(new X = Y,X :: Y).
+translate(X = Y,X :: Y).
+translate(X with Y,X and Y).
+translate(X andwith Y,X and Y).
+translate(X:Y,X:(Y)).
+translate(X -> Y,X => Y).
+
+%translate(inv X,inv(X)).
+translate(aset(X,attributes),aset(X)).
+translate(subsumes(X,Y),Y ?< X).
+translate(equivalent(X,Y),[X ?< Y,Y ?< X]).
+translate(incoherent(X),X ?< nothing).
+translate(disjoint(X,Y),X and Y ?< nothing).
+translate(X isa Y,X ?: Y).
+translate(all(X),allknown(X)).
+translate(some(X),someknown(X)).
+translate(the(X),theknown(X)).
+
+
+

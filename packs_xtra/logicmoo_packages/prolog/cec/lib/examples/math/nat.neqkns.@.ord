@@ -1,0 +1,17 @@
+order(neqkns for nat).
+greater([['$r'/_2998,(+)/2]]).
+greater([['$r-ms','+-nat-nat-nat']]).
+greater([['$r'/_2998,* /2]]).
+greater([['$r-ms','*-nat-nat-nat']]).
+greater([[* /2,(+)/2]]).
+status(['$r':ms]).
+status(['$r-ms':ms]).
+
+constructor('0-nat').
+constructor('s-nat-nat').
+
+
+
+
+
+

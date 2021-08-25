@@ -1,0 +1,10 @@
+#!/bin/sh
+
+export DISPLAY=10.0.0.2:0.0
+
+../swi/bin/pl-mt  -G100m -T50m -A50m -L0 -f sigma_swiprolog.pl -g "cons."
+
+
+
+
+

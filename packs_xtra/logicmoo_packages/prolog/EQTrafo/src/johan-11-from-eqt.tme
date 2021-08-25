@@ -1,0 +1,547 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% EQuality TRAnsFOrmation
+%% -----------------------
+%%
+%% Input: johan-11-from.tme
+%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%--------------------------------------------------------------------------
+% File     : No information
+% Domain   : No information
+% Problem  : /tmp/dfg2tme_2.19230
+% Version  : No information
+% English  : No information
+% Refs     : No information
+% Source   : No information
+% Names    : No information
+% Status   : unknown
+% Rating   : ?
+% Syntax   : Number of clauses    :   60 (  21 non-Horn;  16 unit;  60 RR)
+%            Number of literals   :  160 (   4 equality)
+%            Maximal clause size  :   30 (   2 average)
+%            Number of predicates :   22 (   1 propositional; 0-2 arity)
+%            Number of functors   :   16 (  16 constant; 0-0 arity)
+%            Number of variables  :   16 (   0 singleton)
+%            Maximal term depth   :    1 (   1 average)
+% Comments : No information
+%          : tptp2X -f protein dfg2tme_3.p 
+%--------------------------------------------------------------------------
+% clause1, conjecture.
+
+city(_509) :- 
+	 skc31(_509).
+
+% clause2, conjecture.
+
+event(_509) :- 
+	 skc30(_509).
+
+% clause3, conjecture.
+
+lonely(_509) :- 
+	 skc29(_509).
+
+% clause4, conjecture.
+
+chevy(_509) :- 
+	 skc28(_509).
+
+% clause5, conjecture.
+
+seat(_509) :- 
+	 skc27(_509).
+
+% clause6, conjecture.
+
+front(_509) :- 
+	 skc26(_509).
+
+% clause7, conjecture.
+
+fellow(_509) :- 
+	 skc25(_509).
+
+% clause8, conjecture.
+
+young(_509) :- 
+	 skc24(_509).
+
+% clause9, conjecture.
+
+city(_509) :- 
+	 skc23(_509).
+
+% clause10, conjecture.
+
+event(_509) :- 
+	 skc22(_509).
+
+% clause11, conjecture.
+
+lonely(_509) :- 
+	 skc21(_509).
+
+% clause12, conjecture.
+
+chevy(_509) :- 
+	 skc20(_509).
+
+% clause13, conjecture.
+
+front(_509) :- 
+	 skc19(_509).
+
+% clause14, conjecture.
+
+seat(_509) :- 
+	 skc18(_509).
+
+% clause15, conjecture.
+
+fellow(_509) :- 
+	 skc17(_509).
+
+% clause16, conjecture.
+
+young(_509) :- 
+	 skc16(_509).
+
+% clause17, conjecture.
+
+ssSkC0; 
+old(_549) :- 
+	 skc28(_549).
+
+% clause18, conjecture.
+
+ssSkC0; 
+dirty(_549) :- 
+	 skc28(_549).
+
+% clause19, conjecture.
+
+ssSkC0; 
+white(_549) :- 
+	 skc28(_549).
+
+% clause20, conjecture.
+
+ssSkC0; 
+car(_549) :- 
+	 skc28(_549).
+
+% clause21, conjecture.
+
+ssSkC0; 
+street(_549) :- 
+	 skc29(_549).
+
+% clause22, conjecture.
+
+ssSkC0; 
+way(_549) :- 
+	 skc29(_549).
+
+% clause23, conjecture.
+
+ssSkC0; 
+hollywood(_549) :- 
+	 skc31(_549).
+
+% clause24, conjecture.
+
+ssSkC0; 
+fellow(_549) :- 
+	 skc24(_549).
+
+% clause25, conjecture.
+
+ssSkC0; 
+man(_549) :- 
+	 skc24(_549).
+
+% clause26, conjecture.
+
+ssSkC0; 
+front(_549) :- 
+	 skc27(_549).
+
+% clause27, conjecture.
+
+ssSkC0; 
+furniture(_549) :- 
+	 skc27(_549).
+
+% clause28, conjecture.
+
+ssSkC0; 
+young(_549) :- 
+	 skc25(_549).
+
+% clause29, conjecture.
+
+ssSkC0; 
+man(_549) :- 
+	 skc25(_549).
+
+% clause30, conjecture.
+
+ssSkC0; 
+seat(_549) :- 
+	 skc26(_549).
+
+% clause31, conjecture.
+
+ssSkC0; 
+furniture(_549) :- 
+	 skc26(_549).
+
+% clause32, conjecture.
+
+old(_538) :- 
+	 skc20(_538),
+	 ssSkC0.
+
+% clause33, conjecture.
+
+dirty(_538) :- 
+	 skc20(_538),
+	 ssSkC0.
+
+% clause34, conjecture.
+
+white(_538) :- 
+	 skc20(_538),
+	 ssSkC0.
+
+% clause35, conjecture.
+
+car(_538) :- 
+	 skc20(_538),
+	 ssSkC0.
+
+% clause36, conjecture.
+
+street(_538) :- 
+	 skc21(_538),
+	 ssSkC0.
+
+% clause37, conjecture.
+
+way(_538) :- 
+	 skc21(_538),
+	 ssSkC0.
+
+% clause38, conjecture.
+
+hollywood(_538) :- 
+	 skc23(_538),
+	 ssSkC0.
+
+% clause39, conjecture.
+
+seat(_538) :- 
+	 skc19(_538),
+	 ssSkC0.
+
+% clause40, conjecture.
+
+furniture(_538) :- 
+	 skc19(_538),
+	 ssSkC0.
+
+% clause41, conjecture.
+
+fellow(_538) :- 
+	 skc16(_538),
+	 ssSkC0.
+
+% clause42, conjecture.
+
+man(_538) :- 
+	 skc16(_538),
+	 ssSkC0.
+
+% clause43, conjecture.
+
+front(_538) :- 
+	 skc18(_538),
+	 ssSkC0.
+
+% clause44, conjecture.
+
+furniture(_538) :- 
+	 skc18(_538),
+	 ssSkC0.
+
+% clause45, conjecture.
+
+young(_538) :- 
+	 skc17(_538),
+	 ssSkC0.
+
+% clause46, conjecture.
+
+man(_538) :- 
+	 skc17(_538),
+	 ssSkC0.
+
+% clause47, conjecture.
+
+ssSkC0; 
+from(_553, _557) :- 
+	 skc30(_553),
+	 skc29(_557).
+
+% clause48, conjecture.
+
+ssSkC0; 
+dummy(_553, _557) :- 
+	 skc30(_553),
+	 skc28(_557).
+
+% clause49, conjecture.
+
+ssSkC0; 
+in(_553, _557) :- 
+	 skc30(_553),
+	 skc31(_557).
+
+% clause50, conjecture.
+
+ssSkC0; 
+in(_553, _557) :- 
+	 skc24(_553),
+	 skc27(_557).
+
+% clause51, conjecture.
+
+ssSkC0; 
+in(_553, _557) :- 
+	 skc25(_553),
+	 skc26(_557).
+
+% clause52, conjecture.
+
+from(_542, _546) :- 
+	 skc22(_542),
+	 skc21(_546),
+	 ssSkC0.
+
+% clause53, conjecture.
+
+dummy(_542, _546) :- 
+	 skc22(_542),
+	 skc20(_546),
+	 ssSkC0.
+
+% clause54, conjecture.
+
+in(_542, _546) :- 
+	 skc22(_542),
+	 skc23(_546),
+	 ssSkC0.
+
+% clause55, conjecture.
+
+in(_542, _546) :- 
+	 skc16(_542),
+	 skc19(_546),
+	 ssSkC0.
+
+% clause56, conjecture.
+
+in(_542, _546) :- 
+	 skc17(_542),
+	 skc18(_546),
+	 ssSkC0.
+
+% clause57, conjecture.
+
+ssSkC0 :- 
+	 skc24(_584),
+	 skc25(_584).
+
+% clause58, conjecture.
+
+false :- 
+	 skc16(_613),
+	 skc17(_613),
+	 ssSkC0.
+
+% clause59, conjecture.
+
+ssSkC0; 
+tpos(X1_3934, Z_3935) :- 
+	 old(U_3942),
+	 dirty(U_3942),
+	 white(U_3942),
+	 car(U_3942),
+	 chevy(U_3942),
+	 street(V_3973),
+	 way(V_3973),
+	 lonely(V_3973),
+	 from(W_3993, V_3973),
+	 dummy(W_3993, U_3942),
+	 event(W_3993),
+	 hollywood(X_4013),
+	 city(X_4013),
+	 in(W_3993, X_4013),
+	 seat(Y_4033),
+	 furniture(Y_4033),
+	 front(Y_4033),
+	 in(Z_3935, Y_4033),
+	 fellow(Z_3935),
+	 man(Z_3935),
+	 young(Z_3935),
+	 in(X1_3934, X2_4078),
+	 front(X2_4078),
+	 furniture(X2_4078),
+	 seat(X2_4078),
+	 young(X1_3934),
+	 man(X1_3934),
+	 fellow(X1_3934).
+
+ssSkC0; 
+tpos(Z_4126, X1_4127) :- 
+	 old(U_4134),
+	 dirty(U_4134),
+	 white(U_4134),
+	 car(U_4134),
+	 chevy(U_4134),
+	 street(V_4165),
+	 way(V_4165),
+	 lonely(V_4165),
+	 from(W_4185, V_4165),
+	 dummy(W_4185, U_4134),
+	 event(W_4185),
+	 hollywood(X_4205),
+	 city(X_4205),
+	 in(W_4185, X_4205),
+	 seat(Y_4225),
+	 furniture(Y_4225),
+	 front(Y_4225),
+	 in(Z_4126, Y_4225),
+	 fellow(Z_4126),
+	 man(Z_4126),
+	 young(Z_4126),
+	 in(X1_4127, X2_4270),
+	 front(X2_4270),
+	 furniture(X2_4270),
+	 seat(X2_4270),
+	 young(X1_4127),
+	 man(X1_4127),
+	 fellow(X1_4127).
+
+% clause60, conjecture.
+
+tpos(Y_3937, X1_3938) :- 
+	 old(U_3945),
+	 dirty(U_3945),
+	 white(U_3945),
+	 car(U_3945),
+	 chevy(U_3945),
+	 street(V_3976),
+	 way(V_3976),
+	 lonely(V_3976),
+	 from(W_3996, V_3976),
+	 dummy(W_3996, U_3945),
+	 event(W_3996),
+	 hollywood(X_4016),
+	 city(X_4016),
+	 in(W_3996, X_4016),
+	 fellow(Y_3937),
+	 man(Y_3937),
+	 young(Y_3937),
+	 in(Y_3937, Z_4055),
+	 front(Z_4055),
+	 furniture(Z_4055),
+	 seat(Z_4055),
+	 young(X1_3938),
+	 man(X1_3938),
+	 fellow(X1_3938),
+	 seat(X2_4098),
+	 furniture(X2_4098),
+	 front(X2_4098),
+	 in(X1_3938, X2_4098),
+	 ssSkC0.
+
+tpos(X1_4127, Y_4128) :- 
+	 old(U_4135),
+	 dirty(U_4135),
+	 white(U_4135),
+	 car(U_4135),
+	 chevy(U_4135),
+	 street(V_4166),
+	 way(V_4166),
+	 lonely(V_4166),
+	 from(W_4186, V_4166),
+	 dummy(W_4186, U_4135),
+	 event(W_4186),
+	 hollywood(X_4206),
+	 city(X_4206),
+	 in(W_4186, X_4206),
+	 fellow(Y_4128),
+	 man(Y_4128),
+	 young(Y_4128),
+	 in(Y_4128, Z_4245),
+	 front(Z_4245),
+	 furniture(Z_4245),
+	 seat(Z_4245),
+	 young(X1_4127),
+	 man(X1_4127),
+	 fellow(X1_4127),
+	 seat(X2_4288),
+	 furniture(X2_4288),
+	 front(X2_4288),
+	 in(X1_4127, X2_4288),
+	 ssSkC0.
+
+%--------------------------------------------------------------------------
+skc31(skc31).
+skc30(skc30).
+skc29(skc29).
+skc28(skc28).
+skc27(skc27).
+skc26(skc26).
+skc25(skc25).
+skc24(skc24).
+skc23(skc23).
+skc22(skc22).
+skc21(skc21).
+skc20(skc20).
+skc19(skc19).
+skc18(skc18).
+skc17(skc17).
+skc16(skc16).
+skc31(FX_482) :- tpos(X_483, FX_482), skc31(X_483).
+skc30(FX_482) :- tpos(X_483, FX_482), skc30(X_483).
+skc29(FX_482) :- tpos(X_483, FX_482), skc29(X_483).
+skc28(FX_482) :- tpos(X_483, FX_482), skc28(X_483).
+skc27(FX_482) :- tpos(X_483, FX_482), skc27(X_483).
+skc26(FX_482) :- tpos(X_483, FX_482), skc26(X_483).
+skc25(FX_482) :- tpos(X_483, FX_482), skc25(X_483).
+skc24(FX_482) :- tpos(X_483, FX_482), skc24(X_483).
+skc23(FX_482) :- tpos(X_483, FX_482), skc23(X_483).
+skc22(FX_482) :- tpos(X_483, FX_482), skc22(X_483).
+skc21(FX_482) :- tpos(X_483, FX_482), skc21(X_483).
+skc20(FX_482) :- tpos(X_483, FX_482), skc20(X_483).
+skc19(FX_482) :- tpos(X_483, FX_482), skc19(X_483).
+skc18(FX_482) :- tpos(X_483, FX_482), skc18(X_483).
+skc17(FX_482) :- tpos(X_483, FX_482), skc17(X_483).
+skc16(FX_481) :- tpos(X_482, FX_481), skc16(X_482).
+
+
+%%%%%%%%% EQTrafo Statistics %%%%%%%%%%%%%%%%
+%% flags: [mode = exp, output = pretty, protein_cost = off]
+%% partial functions: 
+%% constructor mode:
+%% 	noscan
+%% top function symbols: 
+%% 	[skc17, 0]
+%% 	[skc16, 0]
+%% 	[skc25, 0]
+%% 	[skc24, 0]
+%% input clauses: 60
+%% output clauses: 94
+%%%%%%%%%%%%%%%%%%%%%%%% come back soon =:-]

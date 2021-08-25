@@ -1,0 +1,52 @@
+%--------------------------------------------------------------------------
+% File     : SET047=EqSymm-5 : TPTP v1.2.1. Released v1.0.0.
+% Domain   : Set Theory
+% Problem  : Set equality is symmetric
+% Version  : 
+% English  : Define set equality as having exactly the same members. Prove 
+%            set equality is symmetric.
+
+% Refs     : De Champeaux D. (1979), Sub-problem Finder and Instance 
+%            Checker: Two cooperating preprocessors for theorem provers, 
+%            Proceedings of the 6th International Joint Conference 
+%            on Artificial Intelligence, 191-196.
+%          : Pelletier F.J. (1986), Seventy-Five Problems for Testing 
+%            Automatic Theorem Provers, Journal of Automated Reasoning 
+%            2(2), 191-216.
+% Source   : [Pelletier, 1986]
+% Names    : Pelletier 43 [Pelletier, 1986]
+%          : p43.in [ANL]
+
+% Status   : unsatisfiable
+% Syntax   : Number of clauses    :    6 (   2 non-Horn;   0 unit;   5 RR)
+%            Number of literals   :   16 (   0 equality)
+%            Maximal clause size  :    3
+%            Number of predicates :    2 (   0 propositional; 2-2 arity)
+%            Number of functors   :    3 (   2 constant; 0-2 arity)
+%            Number of variables  :   10 (   0 singleton)
+%            Maximal term depth   :    2
+
+% Comments : 
+%          : tptp2X: -fprotein SET047-5.p 
+%--------------------------------------------------------------------------
+
+% BEGIN_AXIOMS
+% NAME: 'element substitution 1'
+element(Z, Y) :- set_equal(X, Y), element(Z, X).
+
+% NAME: 'element substitution 2'
+element(Z, X) :- set_equal(X, Y), element(Z, Y).
+
+% NAME: 'set axiom 3'
+element(f(X, Y), X); element(f(X, Y), Y); set_equal(X, Y).
+
+% NAME: 'set axiom 4'
+set_equal(X, Y) :- element(f(X, Y), Y), element(f(X, Y), X).
+
+% NAME: symmetry(set_equal)
+set_equal(a, b); set_equal(b, a).
+
+% NAME: goal
+?- set_equal(b, a), set_equal(a, b).
+% END_AXIOMS
+%--------------------------------------------------------------------------

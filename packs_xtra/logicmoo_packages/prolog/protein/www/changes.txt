@@ -1,0 +1,150 @@
+V2.33
+- Flag translate=plain_theory loescht jetzt nicht mehr Query-Klauseln.
+V2.32
+- Beschraenkung des Rewriting auf Regeln mit bestimmter Hoechtlaenge
+  in der Bedingung. Flag max_rew_cond.
+- Fuer das dynamische Rewriting flache Version. Dier Argumente werden
+  nicht in der vollen Tiefe getestet.
+V2.31 6072
+- Flexiblere Moeglichkeiten der Simplifizierungsumgebung. Mit einem
+  Argument kann das sim_dynamic Flag fuer diese Umgebung gesetzt
+  werden. Bsp.: begin(simplify(n)). ... end(simplify(n)). setzt auf
+  fuer die umgebenen Regeln sim_dynamic auf nocut. c setzt auf cut und
+  m auf mixed. 
+- weiterer Bug bei forced failures behoben
+V2.30
+- Fehler bei forced failures behoben.
+- Simplifizierungsregeln werden besser unterscheidbat in das .trc-File 
+  geschrieben. Konjunktiv verknuepfte Literale erhalten extra
+  Listenklammer, false und true werden explizit angegeben.
+- Fehler bei Flag ancs behoben. Probleme bei both_dj und pos_dj behoben.
+- Fehler bei delayed RME behoben.
+V2.29
+- Syntax von Simplifizierungsregeln an KIV angepasst
+- Forces failures werden gezaehlt, da sonst Simplifikationen mit fail
+  unter den Tisch fallen.
+- Simplifikationszeit wird angegeben
+V2.28
+- Subsumtionscheck bei Klauseln gleicher Klauselnummer
+V2.27 5868
+- Optimierung der statischen Simplifikation
+- doppelte Literale einer Klausel loeschen
+- Klauseln mit kontraeren Literalen loeschen
+- Reordering der Literale einer Klauseln auf der Klauselebene
+- Klauseln mit Prologaufrufen werden nicht reordert
+- mit protein_zarg/1 Zugriff aus dem tme File auf die Zusatzargumente
+  der Litearale
+V2.26
+- Anfaenge der dynamischen Simplifizierung
+- Moeglichkeit eines Timeout durch Flag timeout
+V2.25 5778 lines
+- Protokollierung der statischen Simplifikation
+- Einfuehrung verschiedener Modi durch Flag static_sim
+V2.24 5701 lines inklusiv der 2 Baumuebersetzungstools
+- statische Simplifikation
+- Statisches Reordering auch bei Theorien
+- Geaenderte Ausgabe auf den Bildschirm mit Translate-Statistik
+- Loeschen von Doppelten aus Literallisten
+- Warning falls true in einer disjunktiven und false in einer
+  konjunktiven Literalliste
+- Hyper repariert durch Fehlerbehebung in lit_strip 
+- numbervars beim Rausschreiben der Klauseln in das trc File
+V2.23
+- statisches Subgoalreordering, erste Variante
+V2.22
+- Ancestry-Restarts werden analog zu Reduktion und Faktorisierung im
+  Beweisbaumterm markiert. Das heisst die Ancesterliste wird bis zum
+  verwandten Literal durchgezaehlt und diese Nummer gespeichert.
+V2.21
+- t_header_prolog umbenannt.
+V2.20
+- Intern werden Klauseln, Funktoren und Preds als Prologfakten und
+  nicht mehr als Listen verwaltet. Die Funktoren werden in einem
+  neuen Modul t_fnc verwaltet.
+- Die Attributstruktur entfaellt. 
+- Prologcode aus dem tme-File wird in ein File t_header_prolog.pl
+  geschrieben und nicht mehr in einer Liste
+  verwaltet. t_header_prolog wird wie die anderen Headers in das
+  generierte Prologfile kopiert. 
+- Wegen oben neues Modul t_add, indem die Preds ergaenzt werden. Das
+  Ergaenzen geschieht jetzt direkt nachdem die Preds erzeugt
+  werden. Dadurch entfaellt das mehrfache Durchsuchen der Preds.
+  Die Praedikate werden nach Header und dann bei Flag sorting costs
+  auch nach Kosten und Prioritaet sortiert. Die Prioritaet kann jedem
+  Predtyp zugeordnet werden analog der Kosten. Als Defaultwert wurde
+  die bisherige Sortierung angenommen.
+- neues Flag out_stream, mit dem die Ausgabe von PROTEIN umgeleitet
+  werden kann.
+- Die Aufrufe werden in einen Block gebettet. Bei Abbruch und
+  out_stream user wird eclipse beendet, ansonsten wird nur der Block
+  verlassen. 
+- In den Preds verwandte Prologbefehle werden nicht mehr deklariert
+  als prolog_lit, sondern mit p_call geklammert. Damit entfallen die
+  Umbenennungen und die Deklaration vieler Prologbefehle.
+- Mit numbervars ansehlichere Variablennamen im Ausgabeprologfile
+- Die Uebersetzung des internen Traceterms fuer xptree und tview
+  ausgelagert bisher nur in protein2xptree
+- Restartvariante mit ecp eingefuehrt
+- delayed_rme gibt es jetzt in einer cut und einer nocut Varaiante.
+- Blocknummern werden in einem Zusatzargument mitgefuehrt
+- Bei Theorieinferenzregeln, bei denen der Body aus genau einem
+  Literal besteht, sind die Defaultkosten 1,0 statt 1,1. Dafuer wurde
+  ein neuer Typ th_start_1 eingefuehrt.
+- Die Versionsnummer wird ausgegeben, wenn PROTEIN ohne Argument
+  aufgerufen wurde.
+- Die Header werden in dem Verzeichnis $PROTEINHEADER gesucht. Das
+  Verzeichnis von PROTEIN muss dafuer nicht mehr im Pfad stehen.
+V2.14
+- Die Konsistenztests fuer potential candidates for abductive
+  explanations koennen jetzt auf vier Arten ausgefuehrt werden, bestimmt
+  durch das Flag ctest. Bei den drei neuen Arten wird Michas Hyper
+  aufgerufen. Dafuer braucht man die zusaetzliche Variable $HYPERHOME.
+V2.13 - 5337 lines
+- Links von Bloecken bei gcwa die durch Faktorisierung entstehen
+  werden jetzt beachtet.
+V2.12
+- protein2protop-Schnittstelle ausgelagert.
+V2.11 (ILF-Version)
+- scanner_flag/2 und lc_flag/2 werden ueberlesen.
+- Es werden keine Fenster mehr automatisch aufgemacht.
+- Statt "<- a." ist jetzt "a <-." zulaessig, aber weiterhin ":- a."
+  aber nicht "a :-.". 
+V2.10
+- Gesamtlaufzeitmessung ergaenzt.
+- ME als Defaulteinstellung bei den Konsistenztests fuer die potential
+  candidates fuer aes. Die Warnung, falls die Kalkuelangabe fehlt, entfaellt.
+- Die Blocknummer eines Ancestorliterals wird jetzt auch mit
+  p_unifiable_n_count/3 berechnet. Die alte Version war inkorrekt.
+- Der Index wurde auch fuer th_red und th_red_cut in den Beweisterm
+  eingebaut. 
+V2.09
+- Die Testpraedikate wurden um Indizes erweitert, das bei den
+  Reduktions und Faktorisierungsschritten den Partner in der Liste
+  abzaehlt. Diese Information wurde in den Beweisterm eingebaut.
+V2.08
+- Umbenennung von Praedikaten, die per default als Prologpraedikat
+  deklariert sind.
+- Reparatur von ARME.
+V2.07 
+- Abbruch bei Berechnung der Kosten bei Uninstanziierungen
+- Zeitmessung geaendert.
+V2.06 - 5558 lines
+- Modelle berechnen: protein_flag( mmr, model)
+V2.05 - 5502 lines
+- Ground-Hyper-Tableaux ausgelagert. Damit entfaellt Flag domain.
+- Fehler im th_red-Test fuer ancs-Flag ungleich both behoben.
+- ERROR, falls Variablen als Literale benutzt werden.
+- WARNING, falls als Prolog deklarierte Literale benutzt werden.
+V2.04 - 5597 lines
+- member ist nicht mehr automatisch als prolog_pred deklariert 
+- Formatangabe im printf korrigiert. 
+V2.03
+- Faktorisierung bei mmr, gcwa ausgeschaltet. 
+V2.02
+- protein_prolog-Praedikat wurde bei der Verwendung von Theorien nicht
+  generiert. 
+- Alle Beweisterme bis auf tview werden in die Datei mit Endung .tree 
+  geschrieben. 
+V2.01 -            - KI96 version     
+V1.00 - 4684 lines - Happening version 
+V0.10 - 5049 lines - Katrin's version  
