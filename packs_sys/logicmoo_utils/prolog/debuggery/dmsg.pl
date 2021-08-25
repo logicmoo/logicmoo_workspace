@@ -1287,7 +1287,7 @@ wdmsgl(With,X):- (must((wdmsgl('',With,X)))),!.
 
 wdmsgl(NAME,With,CNF):- is_ftVar(CNF),!,call(With,NAME=CNF).
 wdmsgl(_,With,(C:-CNF)):- call(With,(C :-CNF)),!.
-wdmsgl(_,With,'==>'(CNF,C)):- call(With,(C :- (fwc, CNF))),!.
+%wdmsgl(_,With,'==>'(CNF,C)):- call(With,(C :- (fwc, CNF))),!.
 wdmsgl(_,With,(NAME=CNF)):- wdmsgl(NAME,With,CNF),!.
 wdmsgl(NAME,With,CNF):- is_list(CNF),must_maplist_det(wdmsgl(NAME,With),CNF),!.
 wdmsgl('',With,(C:-CNF)):- call(With,(C :-CNF)),!.

@@ -867,6 +867,9 @@ make_bodies((H;B),T,Ths,(ProveH;ProveB),(ExH;ExB)) :-
    make_bodies(H,T,Ths,ProveH,ExH),
    make_bodies(B,T,Ths,ProveB,ExB).
 
+make_bodies(n(nesc(A)), T, [Ths,Anc,Ans], ProveA, ExA) :-
+  make_bodies(n('t'(A)), T, [Ths,Anc,Ans], ProveA, ExA).
+
 make_bodies(n(A), T, [Ths,Anc,Ans], ProveA, ExA) :-
    !,
    new_lit("proven_not_", A, [T,Anc], ProveA),
@@ -1232,7 +1235,7 @@ the appropriate Prolog definition.
 declare_prolog(G) :-
    new_lit("ex_",G, [ths(T,T,D,D), _, ans(A,A)], ExG),
    prolog_cl(thr,(ExG :- G)),
-   new_lit("proven_",G,[_,_],PrG),
+   new_lit("proVen_",G,[_,_],PrG),
    prolog_cl(proven,(PrG :- G)).
 
 
@@ -1962,8 +1965,8 @@ dyn(G):-
    ExL is NA + 3,
    format(':- dynamic ~a/~d.~n',[ExNR,ExL]),
    format(':- dynamic ~a/~d.~n',[ExR,ExL]),
-   add_prefix("proven_not_",R,PrNR),
-   add_prefix("proven_",R,PrR),
+   add_prefix("prove_not_",R,PrNR),
+   add_prefix("prove_",R,PrR),
    PrL is NA + 2,
    format(':- dynamic ~a/~d.~n',[PrNR,PrL]),
    format(':- dynamic ~a/~d.~n',[PrR,PrL]).

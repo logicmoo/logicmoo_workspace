@@ -1826,7 +1826,7 @@ cm_pbl([], _, 0).
 cm_pre_body_length_ignore_literal(L, _) :-
 	( L = ~A -> true ; A = L ),
 	functor(A, F, _),
-	name(F, [0'$|_]),
+	name(F, [0'$|_]), %'
 	!.
 cm_pre_body_length_ignore_literal(~(_=X), Os) :-
 	var(X),

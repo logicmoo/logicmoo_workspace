@@ -33,8 +33,6 @@
 :- mpred_trace_all.
 :- mpred_trace_exec.
 instance(livesAt,'FunctionalBinaryPredicate').
-:- listing([clif,modal_clif]).
-:- break.
 
 % thus implies
 arity(livesAt,2).
@@ -47,32 +45,38 @@ arity(drinks,2).
 domain(drinks,1,human).
 domain(drinks,2,beverage_class).
 
-
 % =================================================================================
 % Note these two assertions are implicit to the system and have no side effect
 % =================================================================================
 
 % all objects in the universe that do drink coffee, may drink coffee
-all(X, if(drinks(X, coffee),possible(drinks(X, coffee)))).
+all(X, if(drinks(X, coffee),poss(drinks(X, coffee)))).
 
 % for any objects in the universe that live in the green house must obvously have that as a possibility
-all(X, if(livesAt(X, green_house),possible(livesAt(X, green_house)))).
+all(X, if(livesAt(X, green_house),poss(livesAt(X, green_house)))).
 
+all(X, if(livesAt(X, Y),poss(livesAt(X, Y)))).
+
+all(X, all(Y, all(Z, if((livesAt(X,Y),livesAt(X,Z)),equals(Y,Z))))).
 % =================================================================================
 % Some facts about the world
 % =================================================================================
 
 livesAt(joe,red_house).
 
-:- break.
+:- listing([clif,modal_clif]).
 
-:- must(~possible(livesAt(joe,green_house))).
+:- kif_compile.
 
-:- printAll(mpred_why(~possible(livesAt(joe,green_house)),_Why)).
+:- printAll(mpred_why(~poss(livesAt(joe,green_house)),_Why)).
 
-~possible(drinks(bob,coffee)).
+%:- break.
 
-~possible(livesAt(fred,green_house)).
+%:- must(~poss(livesAt(joe,green_house))).
+
+~poss(drinks(bob,coffee)).
+
+~poss(livesAt(fred,green_house)).
 
 % =================================================================================
 % But given the above: 
@@ -84,10 +88,12 @@ livesAt(joe,red_house).
 % =================================================================================
 exists(X, livesAt(X, green_house) & drinks(X, coffee)).
 
+:- break.
+
 % Does anyone live at the green house? (Should be one right?)
 :- mpred_test(livesAt(_X,green_house)).
 
 % Can anyone live at the green house? (Should be everyone but the one listed above?)
-:- mpred_test(~possible(livesAt(_X,green_house))).
+:- mpred_test(~poss(livesAt(_X,green_house))).
 
 

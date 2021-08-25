@@ -978,7 +978,6 @@ add_cond_list_val(_Pred,Pred,X,FreeVars):- P=..[Pred,X,FreeVars],add_cond(X,P).
 
 
 :- meta_predicate never_cond(?,*).
-never_cond(Var,nesc(b_d(_,nesc,poss), ~ P )):- !, ensure_cond(Var,poss(P)).
 never_cond(Var,nesc(~ P )):- !, ensure_cond(Var,poss(P)).
 never_cond(Var,(~ P )):- !, ensure_cond(Var,poss(P)).
 never_cond(NonVar,Closure):- nonvar(NonVar),!, \+ call_e_tru(NonVar,Closure).
@@ -1077,8 +1076,9 @@ add_cond3(Var,Dom1,Prop):- as_constraint_for(Var,Prop,Constraint),
 
 map_one_or_list(Call2,ArgOrL):- is_list(ArgOrL)->maplist(Call2,ArgOrL);call(Call2,ArgOrL).
 
-has_cond(Var,Prop):- obtain_conds(Var,Doms),map_one_or_list(has_cond(Doms,Var),Prop).
-has_cond(Doms,Var,Prop):- must_be(nonvar,Doms),as_constraint_for(Var,Prop,C),member(C,Doms).
+has_cond(Var,Prop):- obtain_conds(Var,Doms),nonvar(Doms),map_one_or_list(has_cond(Doms,Var),Prop).
+has_cond(Doms,Var,Prop):- must_be(nonvar,Doms),
+ as_constraint_for(Var,Prop,C),member(C,Doms).
 
 rem_cond(Var,Prop):- obtain_conds(Var,Doms),map_one_or_list(rem_cond(Doms,Var),Prop).
 rem_cond(Doms,Var,Prop):- as_constraint_for(Var,Prop,C),select(C,Doms,NewDoms),mtc_put_attr(Var,iza,NewDoms).

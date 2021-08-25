@@ -158,7 +158,9 @@ proven_not_neg(H):- compound(H), H=..[F,A,B], proven_tru(poss_t(F,A,B)),!.
 proven_not_neg(H):- \+ proven_neg(H), \+ call_u(~ H).
 
 :- kb_shared(baseKB:proven_not_poss/1).
-proven_not_poss(H):- proven_not_nesc(H).
+proven_not_poss(H):- proven_not_t(H).
+
+proven_not_t(H):- proven_neg(H).
 
 
 %:- kb_shared(baseKB:proven_tru/1).

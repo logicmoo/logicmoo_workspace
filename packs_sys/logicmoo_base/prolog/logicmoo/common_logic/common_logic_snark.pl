@@ -158,7 +158,7 @@ kif_optionally_eee(Default,Name,Jiggler,KIF,JIGGLED):-
      ((means_false_kif(ShouldDo), \+ Default==always) 
        -> KIF=JIGGLED 
        ; ((locally_tl(kif_option(Name,ShouldDo), must(w_o_c(call(Jiggler,KIF,JIGGLED)))),
-          if_debugging2(Name, (KIF \=@= JIGGLED -> sdmsg(Name=(KIF==>JIGGLED)); true))))),!.
+          if_debugging2(Name, (KIF \=@= JIGGLED -> sdmsg(Name=(in(KIF)==>out(Name,JIGGLED))); true))))),!.
 
 :- fixup_exports.
 
@@ -587,13 +587,10 @@ adjust_kif0(_,A,A):- leave_as_is_logically(A),!.
 
 adjust_kif0(KB,not(Kif),(KifO)):- !,adjust_kif0(KB, ~(Kif),KifO).
 % adjust_kif0(KB,\+(Kif),(KifO)):- !,adjust_kif0(KB, naf(Kif),KifO).
-adjust_kif0(KB,nesc(N,Kif),nesc(N,KifO)):- !,adjust_kif0(KB,Kif,KifO).
-adjust_kif0(KB,poss(N,Kif),poss(N,KifO)):- !,adjust_kif0(KB,Kif,KifO).
+adjust_kif0(KB,nesc(Kif),nesc(KifO)):- !,adjust_kif0(KB,Kif,KifO).
+adjust_kif0(KB,poss(Kif),poss(KifO)):- !,adjust_kif0(KB,Kif,KifO).
 adjust_kif0(KB, ~(Kif),    ~(KifO)):- !,adjust_kif0(KB,Kif,KifO).
-adjust_kif0(KB, ~(KB2,Kif), KifO):- KB2==KB,!,adjust_kif0(KB,~(Kif),KifO).
 adjust_kif0(KB,t(Kif),t(KifO)):- !,adjust_kif0(KB,Kif,KifO).
-adjust_kif0(KB,poss(Kif),  poss(b_d(KB,nesc,poss),KifO)):- !,adjust_kif0(KB,Kif,KifO).
-adjust_kif0(KB,nesc(Kif),  nesc(b_d(KB,nesc,poss),KifO)):- !,adjust_kif0(KB,Kif,KifO).
 
 adjust_kif0(KB,exists(L,Expr),               ExprO):-L==[],!,adjust_kif0(KB,Expr,ExprO).
 adjust_kif0(KB,exists(V,Expr),               ExprO):-atom(V),svar_fixvarname(V,L),subst(Expr,V,'$VAR'(L),ExprM),!,adjust_kif0(KB,exists('$VAR'(L),ExprM),ExprO).
@@ -857,6 +854,14 @@ kif_to_boxlog(Wff,Out,Why):- must(Wff\=(_:-_)), w_o_c(kif_to_boxlog(Wff,'$VAR'('
 must_det_here(G):- w_o_c(must_det(G)).
 
 
+show_boxlog(O):- is_list(O),!,maplist(show_boxlog,O).
+show_boxlog(O):- format('~N~n'),wdmsg(O),format('~N~n').
+kif_to_boxlog(Kif):-
+ kif_to_boxlog(Kif,O),!,
+ format("============================================"),
+ show_boxlog(O),
+ format("============================================"),!.
+
 %% kif_to_boxlog( +Fml, ?KB, +Why, -Datalog) is det.
 %
 % Knowledge Interchange Format Converted To Datalog.
@@ -892,8 +897,10 @@ kif_to_boxlog_attvars(WffIn0,KB0,Why0,RealOUT):-
    must_be_unqualified(WffIn0),
    unnumbervars_with_names(WffIn0:KB0:Why0,WffIn:KB:Why),
    check_is_kb(KB),
-   kif_optionally_e(true,as_dlog,WffIn,DLOGKIF),!,
-   guess_varnames(DLOGKIF),
+   kif_optionally_e(true,as_dlog,WffIn,DLOGKIFV),!,
+   guess_varnames(DLOGKIFV),
+   get_varname_list(Vs),
+   numbervars_using_vs(DLOGKIFV,DLOGKIF,Vs),
    sdmsg(kif=(DLOGKIF)),
    kif_optionally_e(false,existentialize_objs,DLOGKIF,EXTOBJ),
    kif_optionally_e(false,existentialize_rels,EXTOBJ,EXT),
@@ -929,7 +936,7 @@ kif_to_boxlog_theorist(_FullQuant,Why,KB,UnQ,RealOUT):-
    must(must_be_unqualified(THIN)),
    % unless_ignore(THIN\==UnQ, sdmsg(tlog_nnf_in=THIN)),
    kif_optionally_e(always,tlog_nnf(even),THIN,RULIFY),
-   unless_ignore(THIN\== ~ RULIFY,kif_optionally_e(always,as_dlog,RULIFY,_)),
+   %unless_ignore(THIN\== ~ RULIFY,kif_optionally_e(always,as_dlog,RULIFY,_)),
    % trace,
    once((rulify(constraint,RULIFY,SideEffectsList),SideEffectsList\==[])),!,
    kif_optionally_e(true,list_to_set,SideEffectsList,SetList),
@@ -1010,14 +1017,7 @@ to_tlog(MD,KB,[H|T],[HH|TT]):- !, to_tlog(MD,KB,H,HH),to_tlog(MD,KB,T,TT).
 
 
 to_tlog(MD,KB, quant(Q,X,F1), quant(Q,X,F2)):- !, to_tlog(MD,KB,F1,F2).
-to_tlog(MD,KB, nesc(b_d(KB2,X,_),F), HH):- atom(X),KB\=KB2,XF =..[X,KB2,F],!,to_tlog(MD,KB2,XF, HH).
-to_tlog(MD,KB, poss(b_d(KB2,_,X),F), HH):- atom(X),KB\=KB2,XF =..[X,KB2,F],!,to_tlog(MD,KB2,XF, HH).
-to_tlog(MD,KB, nesc(b_d(KB,X,_),F),   HH):- atom(X), XF =..[X,F], !,to_tlog(MD,KB,XF, HH).
-to_tlog(MD,KB, poss(b_d(KB,_,X),F),   HH):- atom(X), XF =..[X,F], !,to_tlog(MD,KB,XF, HH).
-to_tlog(MD,KB, nesc(_,F),   HH):- XF =..[nesc,F], !,to_tlog(MD,KB,XF, HH).
-to_tlog(MD,KB, poss(_,F),   HH):- XF =..[poss,F], !,to_tlog(MD,KB,XF, HH).
-
-
+to_tlog(_,KB, poss(F),  poss( HH)):-!, to_tlog(poss,KB,F, HH).
 to_tlog(_,KB, poss(F),  poss( HH)):-!, to_tlog(poss,KB,F, HH).
 
 to_tlog(MD,KB,(X ; Y),(Xp v Yp)) :- !, to_tlog(MD,KB,X,Xp), to_tlog(MD,KB,Y,Yp),!.
@@ -1026,7 +1026,6 @@ to_tlog(MD,KB,H,HH ):- H=..[F|ARGS],tlog_is_sentence_functor(F),!,must_maplist_d
 to_tlog(MD,KB, ~(XF),  n(HH)):- !,to_tlog(MD,KB,XF, HH).
 to_tlog(MD,KB, n(XF),  n(HH)):- !,to_tlog(MD,KB,XF, HH).
 to_tlog(MD,KB, neg(XF),  n(HH)):- !,to_tlog(MD,KB,XF, HH).
-to_tlog(MD,KB, nesc(_,XF),(HH)):- !,to_tlog(MD,KB,XF, HH).
 to_tlog(MD,KB, nesc(XF),(HH)):- !,to_tlog(MD,KB,XF, HH).
 
 to_tlog(MD,KB,H,HH ):- H=..[F|ARGS],is_quantifier(F),!,
@@ -1129,6 +1128,8 @@ from_tlog( proven_t(F,A,B),  (t(F,A,B))):- var(F),!.
 from_tlog(H,HH):- H=..[F,ARG],is_holds_functor(F),is_ftVar(ARG)->HH=H,!.
 % from_tlog(H,HH):- H=..[F|ARGS],tlog_is_sentence_functor(F),!,must_maplist_det(from_tlog,ARGS,ARGSO),!,HH=..[F|ARGSO].
 % from_tlog(H,HH):- H=..[F|ARGS],must_maplist_det(from_tlog,ARGS,ARGSO),must(from_tlog_lit(F,ARGSO,HH)).
+
+from_tlog(H,H):-!.
 from_tlog(H,HH):- H=..[F|ARGS],from_tlog_lit(F,ARGS,HH),!.
 
 add_modal(t,HH,HH).
@@ -1136,21 +1137,21 @@ add_modal(MD,HH,HHH):- HHH=..[MD,HH].
 
 from_tlog_lit(F,ARGSO,HHH):- F==u,HHH=..[F|ARGSO],!.
 from_tlog_lit(F,ARGSO,HHH):- \+ is_holds_functor(F),!,HHH=..[F|ARGSO],!.
-from_tlog_lit(F,ARGSO,HHH):- get_holds_unwrapper(F,MD,W),!,XF=..[W|ARGSO],into_mpred_form(XF,HH),from_tlog(HH,HHHH),add_modal(MD,HHHH,HHH).
+%from_tlog_lit(F,ARGSO,HHH):- get_holds_unwrapper(F,MD,W),!,XF=..[W|ARGSO],into_mpred_form(XF,HH),from_tlog(HH,HHHH),add_modal(MD,HHHH,HHH).
 from_tlog_lit(F,ARGSO,HHH):- XF=..[F|ARGSO],into_mpred_form(XF,HHH).
 
-get_holds_unwrapper(F,t,t):- current_outer_modal_t(F).
-get_holds_unwrapper(FIn,MD,F):- modal_prefix(MDF,MD),atom_concat(MDF,F,FIn).
+%get_holds_unwrapper(F,t,t):- current_outer_modal_t(F).
+%get_holds_unwrapper(FIn,MD,F):- modal_prefix(MDF,MD),atom_concat(MDF,F,FIn).
 
 
-modal_prefix(proven_,t).
+/*modal_prefix(proven_,t).
 modal_prefix(holds_,t).
 modal_prefix(not_,~).
 modal_prefix(possible_,poss).
 modal_prefix(poss_,poss).
 modal_prefix(unknown_,unknown).
 modal_prefix(false_,~).
-
+*/
 % PrologMUD is created to correct the mistakes we made in the projects i worked on that we forgot the funding was to create the platform/OS to run Roger Schank''s outlined software and not Doug Lenat''s software. 
 % Additionally to allow it to be taken for granted by current scientists whom were unaware of the breakthroughs we made in those projects due to the fact we where affaid competetors would take our future grant money.
 

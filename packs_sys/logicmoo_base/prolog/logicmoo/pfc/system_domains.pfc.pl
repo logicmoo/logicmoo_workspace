@@ -13,7 +13,7 @@ feature_setting(assume_wff, true).
 
 % set false so make_wff/1 will be noticed (default is true)
 feature_setting(make_wff,true)==> (feature_setting(add_admitted_arguments,true), feature_setting(assume_wff, false)).
-feature_setting(add_admitted_arguments,true) ==> 
+feature_setting(add_admitted_arguments,true)/fail ==> 
  ( (P/(compound(P),\+is_ftVar(P)) ==> 
   {with_current_why(P,ignore(\+ addAdmittedArguments(P)))})).
 

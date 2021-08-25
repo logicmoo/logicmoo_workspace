@@ -887,8 +887,6 @@ fair_equality_3rd(SkV,X,(A,B),[AA,BB]):-!,fair_equality_3rd(SkV,X,A,AA),fair_equ
 fair_equality_3rd(SkV,X,~(A),AA=false):- !,fair_equality_lit(SkV,X,A,AA).
 fair_equality_3rd(SkV,X,poss(A),AA=poss):- !,fair_equality_lit(SkV,X,A,AA).
 fair_equality_3rd(SkV,X,nesc(A),AA=true):- !,fair_equality_lit(SkV,X,A,AA).
-fair_equality_3rd(SkV,X,poss(_,A),AA=poss):- !,fair_equality_lit(SkV,X,A,AA).
-fair_equality_3rd(SkV,X,nesc(_,A),AA=true):- !,fair_equality_lit(SkV,X,A,AA).
 fair_equality_3rd(SkV,X,(A),AA=true):- !,fair_equality_lit(SkV,X,A,AA).
 fair_equality_3rd(_SkV,_X,A,A):-!.
 fair_equality_3rd(SkV,X,(A),AA):-fair_equality_3rd(SkV,X,nesc(A),AA).
