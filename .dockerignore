@@ -6,6 +6,7 @@
 ./.gitmodules
 ./.kateproject
 ./.profile
+./Unity
 ./.swiplrc
 ./.viminfo
 ./.bash_history
@@ -29,6 +30,8 @@
 ./docker-compose.yml
 #./docker/
 ./docs/
+./test_results/
+./old_logicmoo_workspace/*
 ./eclipse-workspace/
 ./etc/
 ./etc/profile.d/

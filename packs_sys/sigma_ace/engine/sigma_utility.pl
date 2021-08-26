@@ -235,7 +235,7 @@ global_increment(Name):-flag(Name,N,N+1).
 
 %global_get(Name,Value):- flag(Name,Value,Value).
 
-copy_term(Term,TermCopy,CopyOfVars):-copy_term(Term,TermCopy),
+copy_term33(Term,TermCopy,CopyOfVars):-copy_term(Term,TermCopy),
                getPrologVars(TermCopy,CopyOfVars,_,_).
 
 
@@ -460,9 +460,9 @@ consult_as_dynamic(FilenameLocal):-
 % Substitution based on ==
 % ===================================================================
 
-% Usage: subst(+Fml,+X,+Sk,?FmlSk)
+% Usage: ok_subst(+Fml,+X,+Sk,?FmlSk)
 
-subst(A,B,C,D):-notrace(nd_subst(A,B,C,D)),!.
+ok_subst(A,B,C,D):-notrace(nd_subst(A,B,C,D)),!.
 
 nd_subst(  Var, VarS,SUB,SUB ) :- Var==VarS,!.
 nd_subst(        P, X,Sk,        P1 ) :- functor(P,_,N),nd_subst1( X, Sk, P, N, P1 ).
@@ -513,7 +513,7 @@ freeze_vars(Fml,Frozen,MeltKey):-
 	
 melt_vars(Frozen,[]=[],Frozen):- !.
 melt_vars(Frozen,[OV|OL]=[FV|VL],Thawed):-
-	subst(Frozen,FV,OV,Thawing),
+	ok_subst(Frozen,FV,OV,Thawing),
 	melt_vars(Thawing,OL=VL,Thawed),!.
 
 setarg_vars(Frozen,[]=[],Frozen):- !.
@@ -667,8 +667,8 @@ min(X,Y,Min) :-
 		Min = Y.
 
 
-nop.
-nop(_).
+nop_ok.
+nop_ok(_).
 
 conjoin(A,B,C) :-
 	A == true ->

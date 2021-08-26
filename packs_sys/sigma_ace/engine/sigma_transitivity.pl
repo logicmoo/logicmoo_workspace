@@ -236,4 +236,4 @@ isAxiomInKB(_):-!. %TODO
 
 
 
-:-eraseTransitiveClosureCache.
+:- eraseTransitiveClosureCache.

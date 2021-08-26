@@ -1904,7 +1904,7 @@ subsumed_ans1(d(T,V),List) :-
 variantchk(G,[G1|_]) :- variant(G,G1), !.
 variantchk(G,[_|L]) :- variantchk(G,L).
 
-variant(A, B) :-
+ok_variant(A, B) :-
     A == B
      ->    true
      ;     subsumes_chk(A, B),

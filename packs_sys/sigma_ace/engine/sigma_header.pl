@@ -146,4 +146,3 @@
 :- op(400,fy,necessary).  % Necessity
 
 
-

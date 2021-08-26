@@ -1,3 +1,7 @@
+
+end_of_file.
+
+
 'intensional-subclass'(_G18216, _G18222)and (isa(_G18228, _G18216)=>isa(_G18228, _G18222)).
 
 'intensional-subclass'(_G18435, _G18441)and (instance(_G18447, _G18435)=>instance(_G18447, _G18441)).
@@ -467,7 +471,7 @@ chain_mode(_G21459, must_be_bound_before_call(must_be_bound_before_call, must_be
 'surface-macro'(['RoundClosestFn', _G16901], [floor, _G16901, 0.5]).
 
 'surface-macro'([<, =, _G16892, _G16886], [=>, _G16886, _G16892]).
-
+/*
 'Arity'(_G16533, 1)and isa(_G16533, 'Function').
 
 'Arity'(_G16554, 1)and isa(_G16554, 'Predicate').
@@ -483,6 +487,7 @@ chain_mode(_G21459, must_be_bound_before_call(must_be_bound_before_call, must_be
 'Arity'(_G16533, 5)and isa(_G16533, 'Function').
 
 'Arity'(_G16554, 5)and isa(_G16554, 'Predicate').
+*/
 
 genMt(_G15583, _G15589).
 
@@ -508,11 +513,13 @@ subquery(_G15886, _G15892).
 
 'surface-quantifier'(relationExistsMinAll).
 
+/*
 isa(_G15492, 'Individgual').
 
 skolemize(_G15339).
 
 skolemize(_G15339).
+*/
 
 'surface-macro'([followingIntervalType, _G18018, _G18024], ['subsequent-ordinal', _G18018, _G18024]).
 

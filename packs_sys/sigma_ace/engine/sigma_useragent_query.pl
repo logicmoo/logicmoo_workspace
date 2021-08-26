@@ -62,7 +62,7 @@ writeAnswersUserAgent(searchfailed, ['Summary'=Logic|_G4695], final_answer(possi
 % ===========================================================
 % Write Answers
 % ===========================================================
-:-dynamic(show_all_proofs).
+:-dynamic(show_all_proofs/0).
 
 
 /*

@@ -4,16 +4,17 @@ ace_to_surface(CHARS,Formula):-
          fixExistentials(F,SKIF),!,
          getSigmaTermFromSurface(SKIF,Formula).
 
+dynamic_p(P):- functor(P,F,A),dynamic(F/A).
 
-:-dynamic(known_property_value(Property,Value)). % like known_property_value(size,big)
-:-dynamic(known_proper_noun(ProperNoun,LogicalThing)). %like known_proper_noun('Superman','TheManOfSteel')
-:-dynamic(known_noun(Word,PlurSing)). %like known_noun(apple,snglr)
-:-dynamic(known_verb_to_predicate(Verb,Tense,SingPlur,LogicalPredicate)). %like known_verb_to_predicate(kissed,past,snglr,kiss)
-:-dynamic(known_query_word(WhWhat,LogicalWhWhat)). %known_query_word(how,methodUsed)
-:-dynamic(known_copula(IS_BE,PlurSing)).
-:-dynamic(known_class(EnglishCol,Tense,LogicalClass)).
-:-dynamic(known_determiner(Tense,LogicalQuant,Quantifier)).
-:-dynamic(known_verb_frame(Verb,Tense,SingPlur,Frame_with_Subj_and_Obj,Subj,Obj)).
+:-dynamic_p(known_property_value(Property,Value)). % like known_property_value(size,big)
+:-dynamic_p(known_proper_noun(ProperNoun,LogicalThing)). %like known_proper_noun('Superman','TheManOfSteel')
+:-dynamic_p(known_noun(Word,PlurSing)). %like known_noun(apple,snglr)
+:-dynamic_p(known_verb_to_predicate(Verb,Tense,SingPlur,LogicalPredicate)). %like known_verb_to_predicate(kissed,past,snglr,kiss)
+:-dynamic_p(known_query_word(WhWhat,LogicalWhWhat)). %known_query_word(how,methodUsed)
+:-dynamic_p(known_copula(IS_BE,PlurSing)).
+:-dynamic_p(known_class(EnglishCol,Tense,LogicalClass)).
+:-dynamic_p(known_determiner(Tense,LogicalQuant,Quantifier)).
+:-dynamic_p(known_verb_frame(Verb,Tense,SingPlur,Frame_with_Subj_and_Obj,Subj,Obj)).
 
 
 known_verb_to_predicate(LogicalPredicate,present,SingPlur,LogicalPredicate):-nonvar(LogicalPredicate),quick_search('Q'(LogicalPredicate,_,_)).

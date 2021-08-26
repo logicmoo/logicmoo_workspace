@@ -158,7 +158,7 @@ canonicalizeSigmaKBHTML(KB):-
 canonicalizeSigmaKBHTML(KB):-!.
 
 
-:-dynamic(canonicalizerWarnings(KB,_,_)).
+:-dynamic(canonicalizerWarnings/3).
 
 clearCanonicalizerWarnings(KB):-retractall(canonicalizerWarnings(KB,_,_)),!.
 

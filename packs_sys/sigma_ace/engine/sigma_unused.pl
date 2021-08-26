@@ -5646,7 +5646,7 @@ add_kb_context_p(HB,DynStat,_,_,Var,Var):-var(Var),!.
 add_kb_context_p(HB,DynStat,_,_,'$VAR'(N),'$VAR'(N)):-!.
 
 add_kb_context_p(b,DynStat,KB,Ctx,not('equal'(T1,T2)),( T1 \== T2 )):-!. 
-add_kb_context_p(h,DynStat,KB,Ctx,not('equal'(T1,T2)),nop):-!. 
+add_kb_context_p(h,DynStat,KB,Ctx,not('equal'(T1,T2)),nop_ok):-!. 
 
 add_kb_context_p(HB,DynStat,KB,Ctx, ':-'(A) , ':-'(AA)):-  !,
             add_kb_context_p(HB,DynStat,KB,Ctx,A,AA).
@@ -7024,7 +7024,7 @@ skolem2( F, X, FreeV, FmlSk) :-
 	entity_gen(Entity),   % Create a new 'symbolic name'
    close_freeVars(FreeV,CloseFreeV),   %XSB leaves the tail of the varaibles.. open.. we must close it
 	Sk = ['AssignmentFn',Entity,CloseFreeV],  %Construct the SK-Term
-   subst( F, X, Sk, FmlSk ).   % Replace the Skolems Var with the Term
+   ok_subst( F, X, Sk, FmlSk ).   % Replace the Skolems Var with the Term
 
 
 conv_pred(_C,[Pred|ARGS],[browser_only,[Pred|ARGS]]):-member(Pred,[
@@ -7474,7 +7474,7 @@ putin(X,[Y|L],[Y|L1]) :- putin(X,L,L1).
 	entity_gen(Entity),
    close_freeVars(FreeV,CloseFreeV),
 	Sk =..['AssignmentFn',Entity,CloseFreeV],
-   subst( F, X, Sk, FmlSk ).
+   ok_subst( F, X, Sk, FmlSk ).
 
 close_freeVars(XX,X):-
                  append(X,[_],XX).
@@ -7498,15 +7498,15 @@ skolemize(Fml,X,FreeV,FmlSk):-
 
 %%% Substitution
 
-% Usage: subst(+Fml,+X,+Sk,?FmlSk)
+% Usage: ok_subst(+Fml,+X,+Sk,?FmlSk)
 
-subst( forAll(Y,P), X,Sk, forAll(Y,P1) ) :- !, subst( P,X,Sk,P1 ).
-subst(  exists(Y,P), X,Sk,  exists(Y,P1) ) :- !, subst( P,X,Sk,P1 ).
-subst(    P and Q, X,Sk,   P1 and Q1 ) :- !, subst( P,X,Sk,P1 ),
-                                         subst( Q,X,Sk,Q1 ).
-subst(    P or Q, X,Sk,   P1 or Q1 ) :- !, subst( P,X,Sk,P1 ),
-                                         subst( Q,X,Sk,Q1 ).
-subst(        P, X,Sk,        P1 ) :- functor(P,_,N),
+ok_subst( forAll(Y,P), X,Sk, forAll(Y,P1) ) :- !, ok_subst( P,X,Sk,P1 ).
+ok_subst(  exists(Y,P), X,Sk,  exists(Y,P1) ) :- !, ok_subst( P,X,Sk,P1 ).
+ok_subst(    P and Q, X,Sk,   P1 and Q1 ) :- !, ok_subst( P,X,Sk,P1 ),
+                                         ok_subst( Q,X,Sk,Q1 ).
+ok_subst(    P or Q, X,Sk,   P1 or Q1 ) :- !, ok_subst( P,X,Sk,P1 ),
+                                         ok_subst( Q,X,Sk,Q1 ).
+ok_subst(        P, X,Sk,        P1 ) :- functor(P,_,N),
                                       subst1( X, Sk, P, N, P1 ).
 
 subst1( _,  _, P, 0, P  ).
@@ -7516,7 +7516,7 @@ subst1( X, Sk, P, N, P1 ) :- N > 0, P =..[F|Args], subst2( X, Sk, Args, ArgS ),
 subst2( _,  _, [], [] ).
 subst2( X, Sk, [A|As], [Sk|AS] ) :- X == A, !, subst2( X, Sk, As, AS).
 subst2( X, Sk, [A|As], [A|AS]  ) :- var(A), !, subst2( X, Sk, As, AS).
-subst2( X, Sk, [A|As], [Ap|AS] ) :- subst( A,X,Sk,Ap ),
+subst2( X, Sk, [A|As], [Ap|AS] ) :- ok_subst( A,X,Sk,Ap ),
                                     subst2( X, Sk, As, AS).
 
 /********************************  The End ***********************************/
@@ -8697,19 +8697,19 @@ skolemize(Fml,X,FreeV,FmlSk):-
 % VARIABLES MAYBE EITHER PROLOG VARIABLES OR TERMS
 
 skolem( F, X, FreeV, FmlSk) :- gensym( f, Fun ), Sk =..[Fun|FreeV],
-                                subst( F, X, Sk, FmlSk ).
+                                ok_subst( F, X, Sk, FmlSk ).
 
 %%% Substitution
 
-% Usage: subst(+Fml,+X,+Sk,?FmlSk)
+% Usage: ok_subst(+Fml,+X,+Sk,?FmlSk)
 
-subst( forAll(Y,P), X,Sk, forAll(Y,P1) ) :- !, subst( P,X,Sk,P1 ).
-subst(  exists(Y,P), X,Sk,  exists(Y,P1) ) :- !, subst( P,X,Sk,P1 ).
-subst(    P  and  Q, X,Sk,   P1  and  Q1 ) :- !, subst( P,X,Sk,P1 ),
-                                         subst( Q,X,Sk,Q1 ).
-subst(    P or Q, X,Sk,   P1 or Q1 ) :- !, subst( P,X,Sk,P1 ),
-                                         subst( Q,X,Sk,Q1 ).
-subst(        P, X,Sk,        P1 ) :- functor(P,_,N),
+ok_subst( forAll(Y,P), X,Sk, forAll(Y,P1) ) :- !, ok_subst( P,X,Sk,P1 ).
+ok_subst(  exists(Y,P), X,Sk,  exists(Y,P1) ) :- !, ok_subst( P,X,Sk,P1 ).
+ok_subst(    P  and  Q, X,Sk,   P1  and  Q1 ) :- !, ok_subst( P,X,Sk,P1 ),
+                                         ok_subst( Q,X,Sk,Q1 ).
+ok_subst(    P or Q, X,Sk,   P1 or Q1 ) :- !, ok_subst( P,X,Sk,P1 ),
+                                         ok_subst( Q,X,Sk,Q1 ).
+ok_subst(        P, X,Sk,        P1 ) :- functor(P,_,N),
                                       subst1( X, Sk, P, N, P1 ).
 
 subst1( _,  _, P, 0, P  ).
@@ -8719,7 +8719,7 @@ subst1( X, Sk, P, N, P1 ) :- N > 0, P =..[F|Args], subst2( X, Sk, Args, ArgS ),
 subst2( _,  _, [], [] ).
 subst2( X, Sk, [A|As], [Sk|AS] ) :- X == A, !, subst2( X, Sk, As, AS).
 subst2( X, Sk, [A|As], [A|AS]  ) :- var(A), !, subst2( X, Sk, As, AS).
-subst2( X, Sk, [A|As], [Ap|AS] ) :- subst( A,X,Sk,Ap ),
+subst2( X, Sk, [A|As], [Ap|AS] ) :- ok_subst( A,X,Sk,Ap ),
                                     subst2( X, Sk, As, AS).
 
 /********************************  The End ***********************************/
@@ -8921,8 +8921,8 @@ clean_head(Var,Var):-isSlot(Var),!.
 clean_head(not(consistent(A)),not(A)):-!.
 clean_head(A,A):-!.
 
-pclauses_to_assertions([],nop):-!.
-pclauses_to_assertions([cl([],[])],nop):-!.
+pclauses_to_assertions([],nop_ok):-!.
+pclauses_to_assertions([cl([],[])],nop_ok):-!.
 pclauses_to_assertions([cl([A],[])],(A:-true)):-!.
 pclauses_to_assertions([cl([A],PLIST)],(A:-Prolog)):-!,conv(PLIST,Prolog),!.
 pclauses_to_assertions([CL|LIST],(C,PL)):-!,
@@ -9245,7 +9245,7 @@ make_rule(NewVar,A,u(NewVar,A,Domain),_,Domain):-numbervars(NewVar).
 
 
 in_ant(A,true):-!,fail.
-in_ant(A,Ante):-subst(Ante,A,'zzskFn'(_),Res),!,not(Ante=Res).	
+in_ant(A,Ante):-ok_subst(Ante,A,'zzskFn'(_),Res),!,not(Ante=Res).	
 
 
 % ================================================================

@@ -142,7 +142,7 @@ unnumbervars(Numbered,Unnumbered):-
 
 recopy_each_var(Unnumbered,[],Unnumbered).
 recopy_each_var(Numbered,[V|List],Unnumbered):-
-	subst(Numbered,V,_NewVar,M),   % Defined in sigma_utility.pl
+	ok_subst(Numbered,V,_NewVar,M),   % Defined in sigma_utility.pl
 	recopy_each_var(M,List,Unnumbered),!.
 		
 % http://www.swi.plsy.uva.nl/projects/SWI-Prolog/Manual/sec-3.21.html#term_to_atom/2

@@ -39,7 +39,7 @@ dont_trace_search :-                    % disables search progress reports
         retract(trace_search_progress_pred(_)),
         fail.
 dont_trace_search :-
-        assert(trace_search_progress_pred(nop)).
+        assert(trace_search_progress_pred(nop_ok)).
 
 
 
@@ -371,7 +371,7 @@ pttp_configuration :-
 	(count_inferences_pred(true) ->
 	    format('PTTP counts no inferences.');
 	    format('PTTP counts inferences!')),
-        (trace_search_progress_pred(nop) ->
+        (trace_search_progress_pred(nop_ok) ->
 	    format('PTTP does not trace search progress.');
 	    format('PTTP traces search progress!')),
 	(compile_proof_printing ->

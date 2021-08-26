@@ -22,19 +22,19 @@ setFunctionFlags([dom(V,D)|MoreFlags],Axiom,[dom(V,D)|NewFlags],NewVars,OTerm):-
 		setFunctionFlags(MoreFlags,Axiom,NewFlags,NewVars,OTerm),!.
 
 setFunctionFlags([fun(Caller,ArgN,F,Term)|MoreFlagsIn],Axiom,NewFlags,NewVars,OTerm):-
-	subst(Axiom,Term,NewVar,MAxiom),
+	ok_subst(Axiom,Term,NewVar,MAxiom),
 	Axiom==MAxiom, !,% Function Gone Already (Do nothing)
 	%writeq(notfound(fun(Caller,ArgN,F,Term),Axiom)),nl,
 	setFunctionFlags(MoreFlagsIn,MAxiom,NewFlags,NewVars,OTerm),!.
 
 setFunctionFlags([fun(Caller,ArgN,F,Term)|MoreFlagsIn],Axiom,[dom(NewVar,[Caller:ArgN,F:range])|NewFlags],[NewVar|NewVars],OTerm):-
 	pvar_gen(NewVar),
-	subst(Axiom,Term,NewVar,MAxiom),
+	ok_subst(Axiom,Term,NewVar,MAxiom),
 	%writeq(found(fun(Caller,ArgN,F,Term),Axiom)),nl,
 	Term =.. TermL,
 	append(TermL,[NewVar],FunctionL),!,
 	Holds=..[holds|FunctionL],
-	%subst(MoreFlagsIn,Term,NewVar,MoreFlags),
+	%ok_subst(MoreFlagsIn,Term,NewVar,MoreFlags),
 	setFunctionFlags(MoreFlagsIn,(Holds) => MAxiom,NewFlags,NewVars,OTerm),!.
 
 setFunctionFlags([NF|MoreFlags],Axiom,[NF|NewFlags],NewVars,OTerm):-  %Skip Over flags
@@ -221,7 +221,7 @@ get_job_sent(Original,Holds,In,Tasks):-
 					get_job_sent_holds_args(Original,Holds,Pred,Args,In,Tasks).
 				
 				% (holds equals ?? ??) Rewrite ( equals ?? ??)
-				get_job_sent_holds(Original,Holds,equals,[A,B],[subst(Holds,equals(A,B)),restart]):-!.      		
+				get_job_sent_holds(Original,Holds,equals,[A,B],[ok_subst(Holds,equals(A,B)),restart]):-!.      		
 					
 				% (holds someFn A ) 
 				get_job_sent_holds(Original,Term,FnA,Args,In,Tasks):-
@@ -237,7 +237,7 @@ get_job_sent(Original,Holds,In,Tasks):-
 			%get_job_sent_term_fn(Original,Term,Funct,N,Node,In,[addconstraint()]):-isSlot()
 			get_job_sent_term_fn(Original,Term,Funct,N,Node,In,In):-not(compound(Node)),!.
 			get_job_sent_term_fn(Original,Term,Funct,N,Node,In,In):-is_list(Node),!.
-			get_job_sent_term_fn(Original,Term,Funct,N,Node,[subst(Node,NewVar),addprecond(NTerm),domain(NTerm)]):-
+			get_job_sent_term_fn(Original,Term,Funct,N,Node,[ok_subst(Node,NewVar),addprecond(NTerm),domain(NTerm)]):-
 					fn_to_holds(Node,[T|ErmL],NewVar,NTerm),
 					hlPredicateAttribute(T,'Function'),!.
 			get_job_sent_term_fn(Original,Term,Funct,Node,In,In):-!.	
@@ -270,13 +270,13 @@ get_job_sent(Original,Holds,In,Tasks):-
 					get_job_sent(Original,Args,In,Tasks),!.
 						
 				% (AssignmentFn ?? ?Args)
-				get_job_sent_AssignmentFn(Original,Holds,Funct,Args,[subst(Holds,FNTerm),addprocond(Holds),restart]):-
+				get_job_sent_AssignmentFn(Original,Holds,Funct,Args,[ok_subst(Holds,FNTerm),addprocond(Holds),restart]):-
 					is_a_var(Funct),
 					append([holds,Funct|Args],[NewVar],HoldsL),
 					Predicate =.. PredicateL,!.
 				
 				% (AssignmentFn Fn ?Args)
-				get_job_sent_AssignmentFn(Original,Holds,Funct,Args,[subst(Holds,NewVar),addcons(Holds),restart]):-
+				get_job_sent_AssignmentFn(Original,Holds,Funct,Args,[ok_subst(Holds,NewVar),addcons(Holds),restart]):-
 					hlPredicateAttribute(Funct,'Function'),
 					append([holds,Funct|Args],[NewVar],HoldsL),
 					Predicate =.. PredicateL,!.
@@ -291,7 +291,7 @@ get_job_sent(Original,Holds,In,Tasks):-
 				get_job_sent(Original,Args,In,Tasks),!.
 			
 			% (FnA ?Args)
-			get_job_sent_function(Original,Holds,FnA,Args,[subst(Holds,NewVar),addprecond(FHolds),restart]):-
+			get_job_sent_function(Original,Holds,FnA,Args,[ok_subst(Holds,NewVar),addprecond(FHolds),restart]):-
 				fn_to_holds(Holds,NewVar,FHolds),!.
 
 
@@ -304,7 +304,7 @@ get_job_sent(Original,Holds,In,Tasks):-
 				get_equals_job(Original,Holds,A,B,[delete(Holds)]):-A==B,!.
 				
 				% (equals ?A ?B) 
-				get_equals_job(Original,Holds,A,B,[delete(Holds),subst(A,B)]):-
+				get_equals_job(Original,Holds,A,B,[delete(Holds),ok_subst(A,B)]):-
 					isSlot(A),isSlot(B),!.
 				
 				% (equals (FnA (FnA ?X)) ??)
@@ -319,17 +319,17 @@ get_job_sent(Original,Holds,In,Tasks):-
 					get_job_sent_equal_fns(Original,Holds,A,FnA,ArgsA,B,FnB,ArgsB,In,Tasks),!.
 				
 				% (equals (FnA ?X) (FnB ?Y))
-				get_job_sent_equal_fns(Original,Holds,A,FnA,ArgsA,B,FnB,ArgsB,[delete(Holds),subst(A,NV),subst(B,NV),addcons(AH <=> BH)]):-
+				get_job_sent_equal_fns(Original,Holds,A,FnA,ArgsA,B,FnB,ArgsB,[delete(Holds),ok_subst(A,NV),ok_subst(B,NV),addcons(AH <=> BH)]):-
 					fn_to_holds(B,NV,AH),
 					fn_to_holds(A,NV,BH),!.
 					
 				% (equals (FnA ??) ?B)
-				get_equals_job(Original,Holds,A,B,[delete(Holds),subst(A,B),addprecond(AH)]):-
+				get_equals_job(Original,Holds,A,B,[delete(Holds),ok_subst(A,B),addprecond(AH)]):-
 					isEntityFunction(A,FnA,ArgsA),isSlot(B),
 					fn_to_holds(A,B,AH),!.
 					
 				% (equals ?A (FnB ?X))
-				get_equals_job(Original,Holds,A,B,[delete(Holds),subst(B,A),addprecond(BH)]):-
+				get_equals_job(Original,Holds,A,B,[delete(Holds),ok_subst(B,A),addprecond(BH)]):-
 					isEntityFunction(B,FnB,ArgsB),isSlot(A),
 					fn_to_holds(B,A,BH),!.
 
@@ -350,7 +350,7 @@ no_sub_job(Original,Args):-notrace((not(get_job_sent(Original,Args,_)))),!.
 % ===========================================================
 not_a_function(F):-not(hlPredicateAttribute(F,'Function')).
 
-not_part_of(Term,Original):-subst(Original,Term,foo,Changed),!,Original==Changed.
+not_part_of(Term,Original):-ok_subst(Original,Term,foo,Changed),!,Original==Changed.
 
 
 do_job_until_done(Tasks,Original,Done):-
@@ -371,10 +371,10 @@ do_job([Task|List],Original,Start,Done):-
 	do_job(Task,Original,Start,Lunch),
 	do_job(List,Original,Lunch,Done),!.
 	
-do_job(subst(This,That),Original,Start,Done):-subst(Start,This,That,Done),!.
-do_job(replace(This,That),Original,Start,Done):-subst(Start,This,That,Done),!.
-do_job(delete(That),Original,Start,Done):-!,do_job(subst(That,true),Original,Start,Done),!.
-do_job(delete(That),Original,Start,Done):-!,do_job(subst(That,true),Original,Start,Done),!.
+do_job(ok_subst(This,That),Original,Start,Done):-ok_subst(Start,This,That,Done),!.
+do_job(replace(This,That),Original,Start,Done):-ok_subst(Start,This,That,Done),!.
+do_job(delete(That),Original,Start,Done):-!,do_job(ok_subst(That,true),Original,Start,Done),!.
+do_job(delete(That),Original,Start,Done):-!,do_job(ok_subst(That,true),Original,Start,Done),!.
 do_job(addprecond(That),Original,Start,Done):-
 	do_job(delete(That,true),Original,Start,Mid),
 	do_job(simplify,Original,entails(That,Mid),Done).
@@ -395,7 +395,7 @@ do_job(funct,Original,Found,Out):-
 	Out\==Original,!.
 do_job(funct,Original,Found,(Holds=>Out)):-
 	fn_to_holds(Found,NewVar,Holds),
-	subst(Original,Found,NewVar,Out),!.
+	ok_subst(Original,Found,NewVar,Out),!.
 do_job(funct,Original,Found,Original).	
 
 fn_to_holds(Term,[T|ErmL],NewVar,Holds):-

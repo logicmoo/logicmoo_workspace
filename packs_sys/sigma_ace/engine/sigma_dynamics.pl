@@ -243,27 +243,50 @@
 %  ;Rule.ExternalTrackingNumber   
 %  ;Rule.CompliedForm   
 %  ;Rule.Certainty   
-%                                                   (  =>          (macro-script  (?Atom) ?Proposition)          (instance ?Atom macro-atom)  )  
-'macro-script'(_G17106, _G17112)=>instance(_G17106, 'macro-atom').
+%             
+:- multifile('macro-script'/2).
+:- dynamic('macro-script'/2).
+:- public('macro-script'/2).
+
+% :- expects_dialect(pfc).
+
+:- multifile(((=>)/2)).
+:- dynamic(((=>)/2)).
+
+ain_ms(P=>Q):- !, ain_ms(Q:-P).
+ain_ms(Q):- wdmsg(ain(Q)).
+
+:- maplist(ain_ms, [
+%     (  =>          (macro-script  (?Atom) ?Proposition)          (instance ?Atom macro-atom)  )  
+'macro-script'(Atom, Prop) => instance(Atom, 'macro-atom'),
 
 %     (  =>          (macro-script  (?Atom ?1 ?2) ?Proposition)          (instance ?Atom macro-atom)  )  
-'macro-script'(holds(_G17003, _G16991, _G16997), _G17009)=>instance(_G17003, 'macro-atom').
+'macro-script'(holds(Prop, _G16991, _G16997), _G17009)=>instance(Prop, 'macro-atom'),
 
 %     (  =>          (macro-script  (?Atom ?1 ?2 ?3) ?Proposition)          (instance ?Atom macro-atom)  )  
-'macro-script'(holds(_G17247, _G17229, _G17235, _G17241), _G17253)=>instance(_G17247, 'macro-atom').
+'macro-script'(holds(Prop, _G17229, _G17235, _G17241), _G17253)=>instance(Prop, 'macro-atom'),
 
 %     (  =>          (macro-script  (?Atom ?1 ?2 ?3 ?4) ?Proposition)          (instance ?Atom macro-atom)  )  
-'macro-script'(holds(_G17491, _G17467, _G17473, _G17479, _G17485), _G17497)=>instance(_G17491, 'macro-atom').
+'macro-script'(holds(Atom, _G17467, _G17473, _G17479, _G17485), _G17497)=>instance(Atom, 'macro-atom')]).
 
-%                                                                                                                                         (macro-script   (context-create ?Context-atom)          (and-then                  (assert  resources-kb (instance ?Context-atom  context-atom ) )                   (retractAllProlog  resources-kb  (context-state ?Context-atom  ?? ) )                   (assert  resources-kb  (context-state ?Context-atom  context-state-unloaded))           )  )  
-'macro-script'('context-create'(_G24939), 'and-then'(assert('resources-kb', instance(_G24939, 'context-atom')), retractAllProlog('resources-kb', 'context-state'(_G24939, _G24951)), assert('resources-kb', 'context-state'(_G24939, 'context-state-unloaded')))).
+%                
+:- maplist(ain_ms, 
+ [                                                                                                                        
+% (macro-script   (context-create ?Context-atom)          (and-then                  (assert  resources-kb (instance ?Context-atom  context-atom ) )                   (retractAllProlog  resources-kb  (context-state ?Context-atom  ?? ) )                   (assert  resources-kb  (context-state ?Context-atom  context-state-unloaded))           )  )  
+'macro-script'('context-create'(_G24939), 
+  'and-then'(assert('resources-kb', instance(_G24939, 'context-atom')), 
+     retractAllProlog('resources-kb', 'context-state'(_G24939, _G24951)), 
+     assert('resources-kb', 'context-state'(_G24939, 'context-state-unloaded')))),
 
 %           (macro-script           (use-kr ?Context-atom ?Resource-Path)            (and-then                  (context-create ?Context-atom)                  (file-resource-create ?Resource-Path)          )  )  
-'macro-script'('use-kr'(_G18925, _G18931), 'and-then'('context-create'(_G18925), 'file-resource-create'(_G18931))).
+'macro-script'('use-kr'(_G18925, _G18931), 
+  'and-then'('context-create'(_G18925), 'file-resource-create'(_G18931))),
 
 %                           (macro-script           (file-resource-create ?Resource-name ?Resource-path)                  (assert  resources-kb  (instance FileName  source-file-path))                   (assert  resources-kb  (context-exists-in-file NewContext-atom  FileName))   )  
-'macro-script'('file-resource-create'(_G20745, _G20751), assert('resources-kb', instance('FileName', 'source-file-path')), assert('resources-kb', 'context-exists-in-file'('NewContext-atom', 'FileName'))).
-
+'macro-script'('file-resource-create'(_G20745, _G20751), assert('resources-kb', 
+     instance('FileName', 'source-file-path')), 
+   assert('resources-kb', 'context-exists-in-file'('NewContext-atom', 'FileName')))
+  ]).
 %           
 end_of_file.
 

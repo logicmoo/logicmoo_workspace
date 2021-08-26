@@ -248,7 +248,7 @@ unnumbervars(X,Y):-
 
 recopy_each_var(X,[],X).
 recopy_each_var(X,[V|List],Y):-
-	subst(X,V,NewVar,O),
+	ok_subst(X,V,NewVar,O),
 	recopy_each_var(O,List,Y),!.
 	
 	

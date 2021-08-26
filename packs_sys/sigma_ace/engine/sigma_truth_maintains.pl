@@ -306,7 +306,7 @@ unused_clause((not(equal(_,_)) :- _ )).
 unused_clause((not(same(_,_)) :- _ )).
 unused_clause((_ :- not(equal(_,_))  )).
 unused_clause(true).
-unused_clause(nop).
+unused_clause(nop_ok).
 unused_clause(surf).
 %unused_clause((equal(_,_):-_)).
 %unused_clause((not(equal(_,_)):-_)).

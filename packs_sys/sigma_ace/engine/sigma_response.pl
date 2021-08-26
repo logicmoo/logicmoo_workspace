@@ -57,6 +57,8 @@ writeModePush(Push):-!.
 
 writeModePop(Pop):-!.
 
+writeDebug(T):- dmsg(T),!.
+
 writeDebug(T):-!,
 	notrace((
 	if_prolog(swi,
@@ -71,7 +73,7 @@ writeDebug(T):-!,
 indent_e(X):- catch((X < 2),_,true),write(' '),!.
 indent_e(X):-XX is X -1,!,write(' '), indent_e(XX).
 
-
+writeDebug(C,T):- dmsg(C,T),!.
 writeDebug(C,T):-!,
 	notrace((
 	writeFmt('<font size=+1 color=~w>',[C]),

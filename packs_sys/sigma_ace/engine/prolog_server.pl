@@ -7,7 +7,7 @@ end_of_file.
 
 :-dynamic(socket_in/1).
 :-dynamic(socket_out/1).
-:-dynamic(serve_connection).
+:-dynamic(serve_connection/0).
 
 :-assert(prolog_file_type('P', prolog)). 	
 

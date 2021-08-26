@@ -96,7 +96,7 @@ do_tokens([bye]):- abort.
 %do_chars([116,109|Number]):-catch((number_codes(Value,Number),set_tm_level(Value)),_,show_tm_level).
 do_tokens([prolog]):- writeFmt('Type ""cons"" to return to Logic Engine.\n ',[]),abort.
 do_tokens([can,X]):-canonicalizeSigmaKBHTML('Merge',X).
-do_tokens([can,X]):-canonicalizeSigmaKBHTML('Merge',X).
+%do_tokens([can,X]):-canonicalizeSigmaKBHTML('Merge',X).
 do_tokens([can]):-do_tokens([can,'ToplevelContext']).
 do_tokens(L):-P=..L,once(P),!.
 do_tokens(X):-writeFmt('could not parse: ~q.\n',[X]).

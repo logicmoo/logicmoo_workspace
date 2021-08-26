@@ -3,6 +3,8 @@
 % This File is the bootstrap for the Sigma Infence engine For SWI-Prolog
 % So first is loads the proper files and then starts up the system
 % ===================================================================
+:- multifile(rdf_rewrite:arity/2).
+:- dynamic(rdf_rewrite:arity/2).
 
 :-use_module(library(system)).
 :-use_module(library(shlib)).
@@ -18,7 +20,7 @@
 :- use_module(library(quintus)).        
 :- use_module(library(qsave)).        
     
-
+:- ensure_loaded(sigma_server).
 %:- use_module(library(backcomp)).        
 
 
@@ -113,8 +115,9 @@ retractAllProlog(X):-retractall(X).
 % Each prolog has a specific way it could unnumber the result of a numbervars
 % TODO find optimal solution
 
+:- if( \+ current_predicate(unnumbervars/2)).
 unnumbervars(X,Y):-term_to_atom(X,A),atom_to_term(A,Y,_).
-
+:- endif.
 
 % Prolog specific code choices
 if_prolog(swi,G):-call(G).  % Run B-Prolog Specifics

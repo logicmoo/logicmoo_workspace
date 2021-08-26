@@ -16,6 +16,8 @@
  op(300,fx,'~'),
  op(300,fx,'-').
 
+:- use_module(library(sigma_ace)).
+
 /** <module> MODULE LOGICMOO CLIF / logicmoo_plarkc
 Logicmoo CLIF - Base Libraries that extend Prolog to support Dynamic Epistemic Logic (DEL) with Constraints.
 This special module hooks into the logicmoo engine allow clif syntax to be recocogized via our CycL/KIF handlers 

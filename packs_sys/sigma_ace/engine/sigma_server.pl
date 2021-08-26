@@ -5,7 +5,8 @@
 
 %:- assert(user:prolog_file_type('P', prolog)). 	
 
-:-dynamic(serve_connection).
+:-use_module(library(logicmoo_utils)).
+:-dynamic(serve_connection/0).
 
 
 :- style_check(-singleton).

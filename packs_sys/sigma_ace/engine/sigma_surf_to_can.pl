@@ -86,7 +86,8 @@
 % getQueryClauses/3
 % ======================================================================
 
-ttsurf:-tsurf((=>(instance(A, 'Transaction'), 
+ttsurf:-tsurf(
+ (=>(instance(A, 'Transaction'), 
 	exists(B, exists(C, exists(D, exists(E, exists(F, exists(G, 
 		and(instance(E, 'Giving'), and(instance(D, 'Giving'), and(subProcess(E, A), and(subProcess(D, A), and(agent(E, G), and(agent(D, F), and(patient(E, C), 
 			and(patient(D, B), and(destination(E, F), and(destination(D, G), 
@@ -132,7 +133,7 @@ getQueryClauses(KB,Ctx,Prop,NConjAssertsClauses,KRVars,AllFlags):-
 canonicalizeProposition(KB,Ctx,Prop,CNF,DNF,ConjAssertsClauses,KRVars,AllFlags):- 
 	close_list(KRVars),!,                  
 	%writeObject(Prop,KRVars),
-	numbervars(Prop:KRVars:KB:Ctx),
+	numbervars(Prop:KRVars:KB:Ctx,999,_),
 	logOnFailure(getModeledPredicates(Prop,FmlInOpen)),!,
 	%writeObject('<hr>getModeledPredicates: \n',KRVars),
 	%writeObject(FmlInOpen,KRVars),
@@ -193,7 +194,7 @@ ifThenElse(_,_,E):- E,!.
 ground_unused_vars([],KRVars,SKG,SKG):-!.
 ground_unused_vars([V1|Ante],KRVars,SK,SKG):-!,
 	toMarkUp(kif,V1,KRVars,VN),
-	subst(SK,V1,VN,SKGM),
+	ok_subst(SK,V1,VN,SKGM),
 	ground_unused_vars(Ante,KRVars,SKGM,SKG).
 	
 add_ante([],Together,NewAnte,NewAnte):-!.
@@ -262,7 +263,7 @@ skolemIfRequired(AllFlags,AnteVars,KRVars,,NewCons):-
 			subtract(AnteVars,ConsVars,UnusedVars),       
 			logOnFailure(ground_unused_vars(UnusedVars,KRVars,'$existential'(VarName,not(Formula)),Grounded),
 			logOnFailure(putDomainInSkolem(Var,AllFlags,Grounded,SKGD)),
-			subst(not(Cons),Var,SKGD,NConsM),!,
+			ok_subst(not(Cons),Var,SKGD,NConsM),!,
 			skolemIfRequired(AllFlags,Ante,KRVars,NConsM,Flags,NewCons).
     			
 skolemIfRequired(AllFlags,Ante,KRVars,Cons,[replaceConsVar(Var,'$existential'(VarName,Formula))|Flags],NewCons):-
@@ -274,7 +275,7 @@ skolemIfRequired(AllFlags,Ante,KRVars,Cons,[replaceConsVar(Var,'$existential'(Va
 				subtract(AnteVars,ConsVars,UnusedVars),       
 				logOnFailure(ground_unused_vars(UnusedVars,KRVars,'$existential'(VarName,Formula),Grounded)),
 				logOnFailure(putDomainInSkolem(Var,AllFlags,Grounded,SKGD)),
-				subst(Cons,Var,SKGD,NConsM),!,
+				ok_subst(Cons,Var,SKGD,NConsM),!,
 				skolemIfRequired(AllFlags,Ante,KRVars,NConsM,Flags,NewCons).
 
 skolemIfRequired(AllFlags,Ante,KRVars,not(Cons),[replaceConsVar(Var,functional(VarName,not(Formula)))|Flags],NewCons):-
@@ -282,7 +283,7 @@ skolemIfRequired(AllFlags,Ante,KRVars,not(Cons),[replaceConsVar(Var,functional(V
 				subtract(AnteVars,ConsVars,UnusedVars),       
 				logOnFailure(ground_unused_vars(UnusedVars,KRVars,functional(VarName,not(Formula)),Grounded)),
 				logOnFailure(putDomainInSkolem(Var,AllFlags,Grounded,SKGD)),
-				subst(not(Cons),Var,SKGD,NConsM),!,
+				ok_subst(not(Cons),Var,SKGD,NConsM),!,
 				skolemIfRequired(AllFlags,Ante,KRVars,NConsM,Flags,NewCons).
      			
 */
@@ -293,7 +294,7 @@ skolemIfRequired(AllFlags,AnteVars,KRVars,Cons,[replaceConsVar(Var,functional(Va
 				subtract(AnteVars,ConsVars,UnusedVars),       
 				logOnFailure(ground_unused_vars(UnusedVars,KRVars,functional(VarName,Formula),Grounded)),
 				logOnFailure(putDomainInSkolem(Var,AllFlags,Grounded,SKGD)),
-				subst(Cons,Var,SKGD,NConsM),!,
+				ok_subst(Cons,Var,SKGD,NConsM),!,
 				skolemIfRequired(AllFlags,Ante,KRVars,NConsM,Flags,NewCons).
 								
 skolemIfRequired(AllFlags,AnteVars,KRVars,Cons,[_|Flags],NewCons):-!,
@@ -416,7 +417,7 @@ getNegationForm(Caller,ArgN,KB,Ctx,KRVars,[forall(X)|PreQ],forall(X,Fml),UFreeV,
 
 getNegationForm(Caller,ArgN,KB,Ctx,KRVars,[replaceConsVar(X,'$existential'(Repl,SKF))|PreQ],exists(X,Fml),UFreeV, NNF,Paths) :- !,
 	 toMarkUp(kif,X,KRVars,Repl),
-	 subst( Fml, X, (Repl), SKF),!,
+	 ok_subst( Fml, X, (Repl), SKF),!,
 	getNegationForm(Caller,ArgN,KB,Ctx,KRVars,PreQ,Fml,UFreeV,NNF,Paths).	
 	
 /*

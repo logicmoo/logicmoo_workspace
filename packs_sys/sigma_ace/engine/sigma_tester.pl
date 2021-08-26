@@ -401,7 +401,7 @@ dump_table:-
 % ========================================================================================
 :-dynamic(query_time/1).
 
-:-dynamic(debug_tests).
+:-dynamic(debug_tests/0).
 
 testTQFileWriteHTML(FileName,User,TimeRequired,Result,Title,Mods):-debug_tests,!,
 	 file_base_name(FileName,FileBaseName),
@@ -802,64 +802,63 @@ kifnnf_pnnf(Term,KRVars,PTerm):-!,
 
 
 
-ts1:- tsurf(equal(X30, Y30)=>forall(Z30, attribute(X30, Z30)<=>attribute(Y30, Z30)),['THING1'=X30, 'THING2'=Y30, 'ATTR'=Z30]).
+ts(1):- tsurf(equal(X30, Y30)=>forall(Z30, attribute(X30, Z30)<=>attribute(Y30, Z30)),['THING1'=X30, 'THING2'=Y30, 'ATTR'=Z30]).
 
-ts2:- tsurf(equal('AbstractionFn'(T1), U1)
+ts(2):- tsurf(equal('AbstractionFn'(T1), U1)
 	<=>forall(V1, instance(V1, T1)
 		<=>attribute(V1, U1)),['CLASS'=T1, 'ATTR'=U1, 'INST'=V1]).
 
-ts3:- tsurf((equal('MaxFn'(T27, U27), V27)=>equal(V27, T27)and greaterThan(T27, U27)or equal(V27, U27)and greaterThan(U27, T27)or equal(V27, T27)and equal(V27, U27)),['NUMBER1'=T27, 'NUMBER2'=U27, 'NUMBER'=V27]).
+ts(3):- tsurf((equal('MaxFn'(T27, U27), V27)=>equal(V27, T27)and greaterThan(T27, U27)or equal(V27, U27)and greaterThan(U27, T27)or equal(V27, T27)and equal(V27, U27)),['NUMBER1'=T27, 'NUMBER2'=U27, 'NUMBER'=V27]).
 
-ts4:- tsurf(identityElement(S9, T9)=>forall(U9, instance(U9, 'DomainFn'(S9))=>equal('AssignmentFn'(S9, T9, U9), U9)), ['FUNCTION'=S9, 'ID'=T9, 'INST'=U9]).
+ts(4):- tsurf(identityElement(S9, T9)=>forall(U9, instance(U9, 'DomainFn'(S9))=>equal('AssignmentFn'(S9, T9, U9), U9)), ['FUNCTION'=S9, 'ID'=T9, 'INST'=U9]).
 
-ts5:- tsurf(instance(Z12, 'Integer')=>equal(Z12, 'PredecessorFn'('SuccessorFn'(Z12))),['INT'=Z12]).
+ts(5):- tsurf(instance(Z12, 'Integer')=>equal(Z12, 'PredecessorFn'('SuccessorFn'(Z12))),['INT'=Z12]).
 
-ts6:- tsurf(inverse(N24, O24)=>forall(P24, forall(Q24, holds(N24, Q24, P24)<=>holds(O24, P24, Q24))),['REL1'=N24, 'REL2'=O24, 'INST1'=Q24, 'INST2'=P24]).
+ts(6):- tsurf(inverse(N24, O24)=>forall(P24, forall(Q24, holds(N24, Q24, P24)<=>holds(O24, P24, Q24))),['REL1'=N24, 'REL2'=O24, 'INST1'=Q24, 'INST2'=P24]).
 
-ts7:- tsurf(instance(H34, 'RangeFn'(I34))<=>exists(J34, holds(I34, J34, H34)),['INST1'=H34, 'REL'=I34, 'INST2'=J34]).
+ts(7):- tsurf(instance(H34, 'RangeFn'(I34))<=>exists(J34, holds(I34, J34, H34)),['INST1'=H34, 'REL'=I34, 'INST2'=J34]).
 
-ts8:- tsurf((instance(A, 'ClassOfFn'(A))=>instance('ClassOfFn'(A),'Class')),['INST'=A]).
+ts(8):- tsurf((instance(A, 'ClassOfFn'(A))=>instance('ClassOfFn'(A),'Class')),['INST'=A]).
 
-ts9:- tsurf((instance(A, 'Person') and attribute(A,'Male') => member(A,'ElksClubOrg')),['INST'=A]).
+ts(9):- tsurf((instance(A, 'Person') and attribute(A,'Male') => member(A,'ElksClubOrg')),['INST'=A]).
 
-ts10:- tsurf((instance(A, 'Male')  => member(A,'ElksClubOrg')),['INST'=A]).
+ts(10):- tsurf((instance(A, 'Male')  => member(A,'ElksClubOrg')),['INST'=A]).
+
+:- discontiguous(tsurf/1).
 
 
+tsurf(t10):-tsurf( equal('PlusFn'(A,B),C), [ 'PHYS' =A , 'PHYS1' = B, 'PHYS2' = C |_]).
+tsurf(t10a):-tsurf( equal('PlusFn'(A,A),'MultFn'(A,2)), [ 'Number' =A|_]).
 
-
-tsurf10:-tsurf( equal('PlusFn'(A,B),C), [ 'PHYS' =A , 'PHYS1' = B, 'PHYS2' = C |_]).
-tsurf10a:-tsurf( equal('PlusFn'(A,A),'MultFn'(A,2)), [ 'Number' =A|_]).
-
-tsurf15:-tsurf(
+tsurf(t15):-tsurf(
 	forall(X10, forall(Y10, forall(Z10, forall(A11, forall(B11, 
 		not exists(X10, exists(Y10, instance(Y10, 'CutSetFn'(Z10))
 			and instance(X10, 'MinimalCutSetFn'(Z10))and pathLength(Y10, A11)
-			and pathLength(X10, B11)and lessThan(A11, B11)))))))),
-		 
+			and pathLength(X10, B11)and lessThan(A11, B11)))))))),		 
 	['PATH1'=Y10, 'PATH2'=X10, 'GRAPH'=Z10, 'NUMBER1'=A11, 'NUMBER2'=B11|C11]). 
 
 
-sct:-tsurf(=>(and(instance(A, C), subclass(C, B)), instance(A, B)),['PATH1'=B, 'PATH2'=C, 'GRAPH'=A|_]).
+tsurf(sct):-tsurf(=>(and(instance(A, C), subclass(C, B)), instance(A, B)),['PATH1'=B, 'PATH2'=C, 'GRAPH'=A|_]).
 
 
-tsurf1:-tsurf(forall(A,p(A)),['ADVERT'=A|_]),!.
-tsurf2:-tsurf(exists(A,p(A)),['ADVERT'=A|_]),!.
-tsurf3:-tsurf(exists(A,p(A)),['ADVERT'=A|_]),!.
-tsurf4:-tsurf(=>(instance(A, 'Advertisement'),  selling(A)),['ADVERT'=A|D]).
+tsurf(t1):-tsurf(forall(A,p(A)),['ADVERT'=A|_]),!.
+tsurf(t2):-tsurf(exists(A,p(A)),['ADVERT'=A|_]),!.
+tsurf(t3):-tsurf(exists(A,p(A)),['ADVERT'=A|_]),!.
+tsurf(t4):-tsurf(=>(instance(A, 'Advertisement'),  selling(A)),['ADVERT'=A|D]).
 
-tsurf5:-tsurf(
+tsurf(t5):-tsurf(
 	=>(
 		instance(A, 'Advertisement'),
 		 exists(B, selling(A,B))
 		 ),['ADVERT'=A, 'OBJ'=B, 'SALE'=C|D]).
 
 
-tsurf11:-tsurf(=>(attribute(A, 'NuclearSuperPower'), exists(B, exists(C, exists(D, exists(E, and(superficialPart(E, A), and(superficialPart(D, A), and(attribute(E, C), and(attribute(D, B), and(instance(C, 'ColorProperty'), and(instance(B, 'ColorProperty'), not(equal(C, B))))))))))))), ['OBJ'=A, 'PART1'=E, 'PART2'=D, 'COLOR1'=C, 'COLOR2'=B|F]),!.
+tsurf(t11):-tsurf(=>(attribute(A, 'NuclearSuperPower'), exists(B, exists(C, exists(D, exists(E, and(superficialPart(E, A), and(superficialPart(D, A), and(attribute(E, C), and(attribute(D, B), and(instance(C, 'ColorProperty'), and(instance(B, 'ColorProperty'), not(equal(C, B))))))))))))), ['OBJ'=A, 'PART1'=E, 'PART2'=D, 'COLOR1'=C, 'COLOR2'=B|F]),!.
 
 
 
 
-tsurf6:-tsurf(
+tsurf(t6):-tsurf(
 
 	(
 	=>(
@@ -868,7 +867,7 @@ tsurf6:-tsurf(
 		exists(B, and(refers(A, B), 
 		hasPurpose(A, exists(C, and(instance(C, 'Selling') ,patient(C, B))))))))),['ADVERT'=A, 'OBJ'=B, 'SALE'=C|D]).
 
-tsurf6b:-tsurf(
+tsurf(t6b):-tsurf(
 
 	(
 	=>(
@@ -877,7 +876,7 @@ tsurf6b:-tsurf(
 		exists(B, and(refers(A, B), 
 		hasPurpose(A, exists(C, or(instance(C, 'Selling') ,patient(C, B))))))))),['ADVERT'=A, 'OBJ'=B, 'SALE'=C|D]).
 
-tsurf6a:-tsurf(
+tsurf(t6a):-tsurf(
 
 	(
 	=>(
@@ -886,7 +885,7 @@ tsurf6a:-tsurf(
 		exists(B, and(refers(A, B), 
 		hasPurpose(A, exists(C, and(instance(C, 'Selling') ,patient(C, B, sueFn(C)))))))))),['ADVERT'=A, 'OBJ'=B, 'SALE'=C|D]).
 
-tsurf6bi:-tsurf(
+tsurf(t6bi):-tsurf(
 
 	(
 	<=>(
@@ -895,7 +894,7 @@ tsurf6bi:-tsurf(
 		exists(B, and(refers(A, B), 
 		hasPurpose(A, exists(C, and(instance(C, 'Selling') ,patient(C, B, sueFn(C)))))))))),['ADVERT'=A, 'OBJ'=B, 'SALE'=C|D]).
 
-tsurf6c:-tsurf(
+tsurf(t6c):-tsurf(
 
 	(
 	=>(
@@ -904,22 +903,42 @@ tsurf6c:-tsurf(
 		exists(B, and(refers(A, B), 
 		hasPurpose(A, exists(C, =>(instance(C, 'Selling') ,patient(C, B, sueFn(C)))))))))),['ADVERT'=A, 'OBJ'=B, 'SALE'=C|D]).
 
-tsurf7:-tsurf(o,D).
+tsurf(7):-tsurf(o,D).
 
-tsurf8:-tsurf(A,['PHYS'=A|D]).                                
+tsurf(8):-tsurf(A,['PHYS'=A|D]).                                
 
-tsurf9:-tsurf(<=>(instance(A, 'Physical'), exists(B, exists(C, and(located(A, C), time(A, B))))), ['PHYS'=A, 'LOC'=C, 'TIME'=B|D]).
+tsurf(9):-tsurf(<=>(instance(A, 'Physical'), exists(B, exists(C, and(located(A, C), time(A, B))))), ['PHYS'=A, 'LOC'=C, 'TIME'=B|D]).
 
-tsurf9a:-tsurf(=>(instance(A, 'Physical'), exists(B, exists(C, and(located(A, C), time(A, B))))), ['PHYS'=A, 'LOC'=C, 'TIME'=B|D]).
+tsurf(t9a):-tsurf(=>(instance(A, 'Physical'), exists(B, exists(C, and(located(A, C), time(A, B))))), ['PHYS'=A, 'LOC'=C, 'TIME'=B|D]).
 
 
 %tsurf(Surface,Vars):-tam(Surface,Vars),!.
 
-    
+
+show_tsurf(O):- is_list(O),!,maplist(show_tsurf,O).
+show_tsurf(and(X,Y)):- show_tsurf(X),show_tsurf(Y).
+show_tsurf(O):- format('~N~n'),f_pprint(O),format('~N~n').
+
+f_pprint(X):- guess_pretty(X), wdmsg(X).
+
+%f_pprint(X):- guess_pretty(X), pterm_to_sterm(X,S), f_print((S), [], _R).
+%:- use_module(library(wamcl_runtime)).
+%:- current_prolog_flag(os_argv,X),member('-t',X)-> true; set_prolog_flag(toplevel_goal,prolog).
+:- use_module(library(logicmoo_clif)).
+
+tsurf(Clause):- compound(Clause),
+  guess_pretty(Clause),
+  get_varname_list(KRVars),
+  tsurf(Clause,KRVars).
 tsurf(Clause,KRVars):-
+ format("% ============================================"),
+  guess_pretty(Clause),
+  f_pprint(Clause),
 	getAssertionClauses('KB','Ctx',Clause,Out,KRVars,FlagsL),!,
-	subst(FlagsL,'.',*,Flags),!,
-	writeq_conj(Out),nl,nl.
+	ok_subst(FlagsL,'.',*,Flags),!,
+  format("% ============================================"),
+ show_tsurf(Out),
+ format("% ============================================"),!.
 	%writeTranslation(Clause).
 		       /*
 	writeObject('$spacer',KRVars),
@@ -932,6 +951,7 @@ tsurf(Clause,KRVars):-
 	writeObject_conj(Out,KRVars),!.
 			 */
 
+writeq_conj(A):- !, show_tsurf(A).
 writeq_conj(and(Out1,Out2)):-
 	writeq_conj(Out1),
 	writeq_conj(Out2).
@@ -970,8 +990,7 @@ writeSentenceBlock([Clause|Clauses]) :-
 	writeClauseBlock(Clause),
 	write(' AND'), nl,
 	writeSentenceBlock(Clauses).
-writeSentenceBlock([]) :-
-	write('TRUE'), nl.
+writeSentenceBlock([]) :- write('TRUE'), nl.
 
 
 writeClauseBlock(clause(PosAtoms, NegAtoms)) :-
@@ -1085,7 +1104,6 @@ c_lit((C1),[C1]):-!.
 
 c_lit(not(C1),[C1]):-!.
 c_lit(C1,[not(C1)]):-!.
-
 
 
 

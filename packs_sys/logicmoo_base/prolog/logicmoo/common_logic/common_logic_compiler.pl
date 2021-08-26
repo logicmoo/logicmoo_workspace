@@ -1422,6 +1422,7 @@ cf(_Original,Why,KB,PNF, FlattenedOUT):-
   pfc_for_print_right(PFCPreview,PrintPFCPreview),dmsg(preview:-PrintPFCPreview))),!,
   extract_conditions(PFCPreview,Conds), dmsg(conds= (Conds=>PFCPreview)))))).
 
+
 into_cf(KB,PNF,FlattenedOUT):- 
   cf(PNF,cuz(PNF),KB,PNF, FlattenedOUT).
 
