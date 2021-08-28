@@ -65,7 +65,7 @@ props((/\),ftSentenceOp,tLogicalConjunction).
 
 
 % Source http://www.iflscience.com/editors-blog/solving-einsteins-riddle
-
+:- expects_dialect(clif).
 
 % Helper functional constraints
 % 
@@ -136,7 +136,6 @@ leftof(HA, HB) ==> (house(HA) , house(HB)).
 
 
 %= There are five houses in a row.
-:- rtrace.
 exists(H1,exists(H2,exists(H3,exists(H4,exists(H5,
   leftof(H1, H2) /\ leftof(H2, H3) /\ leftof(H3, H4) /\ leftof(H4, H5)))))).
 % SANITY count the persons (shouild be 5)

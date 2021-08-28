@@ -62,6 +62,7 @@ never_assert_u(boxlog((lives(A, _):-neighbor(A, _))),singletons).
 props((/\),ftSentenceOp,tLogicalConjunction).
 
 % Source http://www.iflscience.com/editors-blog/solving-einsteins-riddle
+:- expects_dialect(clif).
 
 %= There are five houses in a row.
 exists(H1,exists(H2,exists(H3,exists(H4,exists(H5,
