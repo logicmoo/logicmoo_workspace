@@ -156,11 +156,11 @@ clif_to_modal_clif(In,THINOUT):-
    kif_optionally_e(true,ensure_quantifiers,EXT,OuterQuantKIF),
    check_is_kb(KB),
    %kif_optionally_e(true,un_quant3(KB),OuterQuantKIF,NormalOuterQuantKIF),
-   kif_optionally_e(always,rejiggle_quants(KB),OuterQuantKIF,FullQuant),   
+   kif_optionally_e(always,correct_special_quantifiers(KB),OuterQuantKIF,FullQuant),   
   b_setval('$nnf_outermost',FullQuant),
    kif_optionally_e(true,qualify_modality,FullQuant,ModalKIF),
    kif_optionally_e(true,adjust_kif(KB),ModalKIF,ModalKBKIFM),
-   kif_optionally_e(true,rejiggle_quants(KB),ModalKBKIFM,ModalKBKIF),   
+   kif_optionally_e(true,correct_special_quantifiers(KB),ModalKBKIFM,ModalKBKIF),   
    kif_optionally_e(false,removeQ_3(KB),ModalKBKIF,UnQ),   
    current_outer_modal_t(HOLDS_T),
    % true cause poss loss

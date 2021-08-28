@@ -12,7 +12,7 @@
 %  PFC is a language extension for prolog.. there is so much that can be done in this language extension to Prolog
 %
 
-% exists(X, lives(X, green) & drinks(X, coffee)).
+% exists(X, lives(X, green_house) & drinks(X, coffee)).
 
 :- listing(vn:attr_unify_hook/2).
 

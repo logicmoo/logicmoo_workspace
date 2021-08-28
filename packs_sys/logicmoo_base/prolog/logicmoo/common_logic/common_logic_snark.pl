@@ -968,9 +968,9 @@ nnf_default(and(Fml1 , Fml2), AND):-
   \+ (compound(Fml1), functor(Fml1,F,2), member(F,[and,or,(=>),not,possible,necessary])),
   AND = and('=>'(possible(Fml2),Fml1), '=>'(possible(Fml1),Fml2)).
 
-%final_nnf(O,O):-!.
 %final_nnf(O,OO):-nnf('?KB',O,M),O\=@=M,!,final_nnf(M,OO).
 
+% final_nnf(O,O):-!.
 final_nnf(A,A):- is_ftVar(A),!.
 final_nnf(A==>B,AA==>BB):-!,final_nnf(A,AA),final_nnf(B,BB).
 final_nnf(O,OO):- once((adjust_kif(_,O,O1),nonegate(_,O1,M))),O\=@=M,!,final_nnf(M,OO).
@@ -1018,7 +1018,7 @@ kif_to_boxlog_attvars(_Original,HB,KB,Why,FlattenedO):- compound(HB),HB=(HEAD:- 
 kif_to_boxlog_attvars(Original,WffIn0,KB0,Why0,RealOUT):-    
    unnumbervars_with_names(WffIn0:KB0:Why0,WffIn:KB:Why),
    check_is_kb(KB),
-   clif_to_modal_clif(WffIn,ModalKBKIF),
+   clif_to_modal_clif(WffIn,ModalKBKIF),   
    % save_wid(Why,kif,DLOGKIF),
    % save_wid(Why,pkif,FullQuant),   
    kif_to_boxlog_attvars2(Original,ModalKBKIF,KB,Why,RealOUT).   
@@ -1540,6 +1540,7 @@ kif_add([H|T]):- !,kif_add(H),kif_add(T).
 
 kif_add(WffIn):- kif_hook(WffIn),!,
   test_boxlog(WffIn),
+  add_history(kif_to_boxlog(WffIn)),
   show_call(ain(clif(WffIn))). 
 
 kif_add(WffIn):- show_call(ain(clif(WffIn))),!.

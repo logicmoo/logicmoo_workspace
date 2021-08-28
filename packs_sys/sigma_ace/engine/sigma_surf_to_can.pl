@@ -215,7 +215,7 @@ do_flag(pre(Var,Call),Together,Ante,AnteMid):-
 do_flag(_,Together,AnteMid,AnteMid):-!.
 
 
-add_skolems_to_body([],Ante,Cons,ConVars,Ante):-!.
+add_skolems_to_body([],Ante,_Cons,_ConVars,Ante):-!.
 
 add_skolems_to_body([replaceConsVar(Var,'$existential'(VarName,not(Formula)))|Flags],Ante,Cons,ConVars,NewAnte):-!,
 	ifThenElse( 

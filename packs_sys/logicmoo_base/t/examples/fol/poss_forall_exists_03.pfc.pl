@@ -46,7 +46,7 @@ domain(drinks,2,beverage_class).
 all(X, if(drinks(X, coffee),possible(drinks(X, coffee)))).
 
 % for any objects in the universe that live in the green house must obvously have that as a possibility
-all(X, if(livesAt(X, green),possible(livesAt(X, green)))).
+all(X, if(livesAt(X, green_house),possible(livesAt(X, green_house)))).
 
 % =================================================================================
 % Some facts about the world
@@ -63,7 +63,7 @@ livesAt(joe,red_house).
 %
 %   Only things that possibly can drink coffee live in the green house?
 %  
-%   Only currently individuals whom are not living in the red house live in the green?
+%   Only currently individuals whom are not living in the red house live in the green_house?
 %
 % =================================================================================
 exists(X, livesAt(X, green_house) & drinks(X, coffee)).

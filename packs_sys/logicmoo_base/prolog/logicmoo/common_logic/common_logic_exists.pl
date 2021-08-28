@@ -745,7 +745,7 @@ man(X):- context_module(M), inherit_above(M, man(X)).
 
 /*
 
-  rejiggle_quants( +FmlIn, -FmlOut, [options...]).
+  moveInwardQuants( +FmlIn, -FmlOut, [options...]).
 
 
       converts terms like...
@@ -765,7 +765,7 @@ man(X):- context_module(M), inherit_above(M, man(X)).
 % Quanitifier Expansions
 % =================================
 
-rejiggle_quants(KB,In,Out2):-
+correct_special_quantifiers(KB,In,Out2):-
   expandQuants(KB,In,Mid1),
   kif_optionally_e(false,moveInwardQuants([],elim(all),KB),Mid1,Mid2),
   un_quant3(KB,Mid2,Out),

@@ -83,7 +83,7 @@ livesAt(joe,red_house).
 %
 %   Only things that possibly can drink coffee live in the green house?
 %  
-%   Only currently individuals whom are not living in the red house live in the green?
+%   Only currently individuals whom are not living in the red house live in the green_house?
 %
 % =================================================================================
 exists(X, livesAt(X, green_house) & drinks(X, coffee)).

@@ -89,7 +89,7 @@
 ; The Spaniard owns the dog					#3
 ; ============================================================
 ;; NOTE this file uses purposely overuses instance/2 for performance testing
-(exists (?m1 ?pet) (iff (and (instance ?m1 tHuman) (natOrigin ?m1 iSpain))  (and (caresFor ?m1 ?pet) (instance ?pet tDog))))
+(exists (?m1 ?keeps_as_pet) (iff (and (instance ?m1 tHuman) (natOrigin ?m1 iSpain))  (and (caresFor ?m1 ?keeps_as_pet) (instance ?keeps_as_pet tDog))))
 
 ; ============================================================
 ; All coffee is drunk in the green house
@@ -273,23 +273,23 @@
   , H1 = h(_,nvg,_,_,_ ), Hs = [H1|_]        % 10
  
   , maplist( flip(member,Hs),
-       [ h(red,eng,_,_,_)                    %  2
+       [ h(red_house,eng,_,_,_)                    %  2
        , h(_,swe,dog,_,_)                    %  3
        , h(_,dan,_,tea,_)                    %  4
-       , h(green,_,_,coffe,_)                %  6
+       , h(green_house,_,_,coffe,_)                %  6
        , h(_,_,birds,_,pm)                   %  7
-       , h(yellow,_,_,_,dh)                  %  8
+       , h(yellow_house,_,_,_,dh)                  %  8
        , h(_,_,_,beer,bm)                    % 13
        , h(_,ger,_,_,pri)                    % 14
        ])
  
-  , infix([ h(green,_,_,_,_)
-          , h(white,_,_,_,_) ], Hs)          %  5
+  , infix([ h(green_house,_,_,_,_)
+          , h(white_house,_,_,_,_) ], Hs)          %  5
  
   , maplist( flip(nextto,Hs),
       [ [h(_,_,_,_,bl   ), h(_,_,cats,_,_)]  % 11
       , [h(_,_,horse,_,_), h(_,_,_,_,dh  )]  % 12
-      , [h(_,nvg,_,_,_  ), h(blue,_,_,_,_)]  % 15
+      , [h(_,nvg,_,_,_  ), h(blue_house,_,_,_,_)]  % 15
       , [h(_,_,_,water,_), h(_,_,_,_,bl  )]  % 16
       ])
      member(h(_,X,zebra,_,_), Hs),

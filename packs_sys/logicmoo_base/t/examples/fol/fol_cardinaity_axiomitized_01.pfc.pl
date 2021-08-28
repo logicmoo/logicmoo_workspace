@@ -148,9 +148,9 @@ equal_papers_v1(paper1,paper2) <->
 :- expects_dialect(pfc).
 
 
-house(red).
-house(blue).
-% house(green).
+house(red_house).
+house(blue_house).
+% house(green_house).
 
 :- must((existing_count(X,house(X),EC),EC==2)).
 
@@ -177,8 +177,8 @@ exists_count(3, A, house(A)).
 
 need_plugs(1, A, house(A)).
 
-house(red).
-house(blue).
+house(red_house).
+house(blue_house).
 house(skFn(1, house(_))).
 
 */

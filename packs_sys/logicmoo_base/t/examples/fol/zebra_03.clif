@@ -75,7 +75,7 @@
 (fact "person3" "Nationality" "Dane")
 (fact "person3" "Drinks" "tea")
 
-;; 4. The green house is just to the left of the white one.
+;; 4. The green house is just to the left of the white_house one.
 (left-of "green house" "white house")
 
 ;; 5. The owner of the green house drinks coffee.
@@ -185,11 +185,11 @@
 (is-a "Blend" "tobacco")
 (is-a "Blue Master" "tobacco")
 
-(is-a "fish" "pet")
-(is-a "dogs" "pet")
-(is-a "birds" "pet")
-(is-a "cats" "pet")
-(is-a "horses" "pet")
+(is-a "fish" "keeps_as_pet")
+(is-a "dogs" "keeps_as_pet")
+(is-a "birds" "keeps_as_pet")
+(is-a "cats" "keeps_as_pet")
+(is-a "horses" "keeps_as_pet")
 
 (is-a "Englishman" "citizenship")
 (is-a "Swede" "citizenship")

@@ -71,7 +71,7 @@ domain(drinks,2,beverage_class).
 all(X, if(drinks(X, coffee),possible(drinks(X, coffee)))).
 
 % for any objects in the universe that live in the green house must obvously have that as a possibility
-all(X, if(livesAt(X, green),possible(livesAt(X, green)))).
+all(X, if(livesAt(X, green_house),possible(livesAt(X, green_house)))).
 
 % =================================================================================
 % But given the above: 

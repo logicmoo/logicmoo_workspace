@@ -243,10 +243,10 @@ Updated for compliance: November 4, 2013</dc:date>
         <owl:equivalentClass>
             <owl:Class>
                 <owl:oneOf rdf:parseType="Collection">
-                    <rdf:Description rdf:about="&einsteins_riddle;green"/>
-                    <rdf:Description rdf:about="&einsteins_riddle;red"/>
-                    <rdf:Description rdf:about="&einsteins_riddle;blue"/>
-                    <rdf:Description rdf:about="&einsteins_riddle;yellow"/>
+                    <rdf:Description rdf:about="&einsteins_riddle;green_house"/>
+                    <rdf:Description rdf:about="&einsteins_riddle;red_house"/>
+                    <rdf:Description rdf:about="&einsteins_riddle;blue_house"/>
+                    <rdf:Description rdf:about="&einsteins_riddle;yellow_house"/>
                     <rdf:Description rdf:about="&einsteins_riddle;ivory"/>
                 </owl:oneOf>
             </owl:Class>
@@ -530,7 +530,7 @@ Updated for compliance: November 4, 2013</dc:date>
                 <owl:someValuesFrom>
                     <owl:Restriction>
                         <owl:onProperty rdf:resource="&einsteins_riddle;has_color"/>
-                        <owl:hasValue rdf:resource="&einsteins_riddle;red"/>
+                        <owl:hasValue rdf:resource="&einsteins_riddle;red_house"/>
                     </owl:Restriction>
                 </owl:someValuesFrom>
             </owl:Restriction>
@@ -547,7 +547,7 @@ Updated for compliance: November 4, 2013</dc:date>
                 <owl:someValuesFrom>
                     <owl:Restriction>
                         <owl:onProperty rdf:resource="&einsteins_riddle;has_color"/>
-                        <owl:hasValue rdf:resource="&einsteins_riddle;red"/>
+                        <owl:hasValue rdf:resource="&einsteins_riddle;red_house"/>
                     </owl:Restriction>
                 </owl:someValuesFrom>
             </owl:Restriction>
@@ -589,7 +589,7 @@ Updated for compliance: November 4, 2013</dc:date>
                         <owl:someValuesFrom>
                             <owl:Restriction>
                                 <owl:onProperty rdf:resource="&einsteins_riddle;has_color"/>
-                                <owl:hasValue rdf:resource="&einsteins_riddle;yellow"/>
+                                <owl:hasValue rdf:resource="&einsteins_riddle;yellow_house"/>
                             </owl:Restriction>
                         </owl:someValuesFrom>
                     </owl:Restriction>
@@ -676,7 +676,7 @@ Updated for compliance: November 4, 2013</dc:date>
                         <owl:someValuesFrom>
                             <owl:Restriction>
                                 <owl:onProperty rdf:resource="&einsteins_riddle;has_color"/>
-                                <owl:hasValue rdf:resource="&einsteins_riddle;yellow"/>
+                                <owl:hasValue rdf:resource="&einsteins_riddle;yellow_house"/>
                             </owl:Restriction>
                         </owl:someValuesFrom>
                     </owl:Restriction>
@@ -811,7 +811,7 @@ Updated for compliance: November 4, 2013</dc:date>
                                 <owl:someValuesFrom>
                                     <owl:Restriction>
                                         <owl:onProperty rdf:resource="&einsteins_riddle;has_color"/>
-                                        <owl:hasValue rdf:resource="&einsteins_riddle;blue"/>
+                                        <owl:hasValue rdf:resource="&einsteins_riddle;blue_house"/>
                                     </owl:Restriction>
                                 </owl:someValuesFrom>
                             </owl:Restriction>
@@ -824,7 +824,7 @@ Updated for compliance: November 4, 2013</dc:date>
                                 <owl:someValuesFrom>
                                     <owl:Restriction>
                                         <owl:onProperty rdf:resource="&einsteins_riddle;has_color"/>
-                                        <owl:hasValue rdf:resource="&einsteins_riddle;blue"/>
+                                        <owl:hasValue rdf:resource="&einsteins_riddle;blue_house"/>
                                     </owl:Restriction>
                                 </owl:someValuesFrom>
                             </owl:Restriction>
@@ -858,7 +858,7 @@ Updated for compliance: November 4, 2013</dc:date>
                                 <owl:someValuesFrom>
                                     <owl:Restriction>
                                         <owl:onProperty rdf:resource="&einsteins_riddle;has_color"/>
-                                        <owl:hasValue rdf:resource="&einsteins_riddle;blue"/>
+                                        <owl:hasValue rdf:resource="&einsteins_riddle;blue_house"/>
                                     </owl:Restriction>
                                 </owl:someValuesFrom>
                             </owl:Restriction>
@@ -871,7 +871,7 @@ Updated for compliance: November 4, 2013</dc:date>
                                 <owl:someValuesFrom>
                                     <owl:Restriction>
                                         <owl:onProperty rdf:resource="&einsteins_riddle;has_color"/>
-                                        <owl:hasValue rdf:resource="&einsteins_riddle;blue"/>
+                                        <owl:hasValue rdf:resource="&einsteins_riddle;blue_house"/>
                                     </owl:Restriction>
                                 </owl:someValuesFrom>
                             </owl:Restriction>
@@ -968,9 +968,9 @@ Updated for compliance: November 4, 2013</dc:date>
     
 
 
-    <!-- http://persons.iis.nsk.su/files/persons/pages/einsteins_riddle.owl#blue -->
+    <!-- http://persons.iis.nsk.su/files/persons/pages/einsteins_riddle.owl#blue_house -->
 
-    <owl:Thing rdf:about="&einsteins_riddle;blue">
+    <owl:Thing rdf:about="&einsteins_riddle;blue_house">
         <rdf:type rdf:resource="&owl;NamedIndividual"/>
     </owl:Thing>
     
@@ -993,7 +993,7 @@ Updated for compliance: November 4, 2013</dc:date>
                         <owl:someValuesFrom>
                             <owl:Restriction>
                                 <owl:onProperty rdf:resource="&einsteins_riddle;has_color"/>
-                                <owl:hasValue rdf:resource="&einsteins_riddle;green"/>
+                                <owl:hasValue rdf:resource="&einsteins_riddle;green_house"/>
                             </owl:Restriction>
                         </owl:someValuesFrom>
                     </owl:Restriction>
@@ -1019,7 +1019,7 @@ Updated for compliance: November 4, 2013</dc:date>
                         <owl:someValuesFrom>
                             <owl:Restriction>
                                 <owl:onProperty rdf:resource="&einsteins_riddle;has_color"/>
-                                <owl:hasValue rdf:resource="&einsteins_riddle;green"/>
+                                <owl:hasValue rdf:resource="&einsteins_riddle;green_house"/>
                             </owl:Restriction>
                         </owl:someValuesFrom>
                     </owl:Restriction>
@@ -1046,9 +1046,9 @@ Updated for compliance: November 4, 2013</dc:date>
     
 
 
-    <!-- http://persons.iis.nsk.su/files/persons/pages/einsteins_riddle.owl#green -->
+    <!-- http://persons.iis.nsk.su/files/persons/pages/einsteins_riddle.owl#green_house -->
 
-    <owl:Thing rdf:about="&einsteins_riddle;green">
+    <owl:Thing rdf:about="&einsteins_riddle;green_house">
         <rdf:type rdf:resource="&owl;NamedIndividual"/>
         <rdf:type>
             <owl:Restriction>
@@ -1074,7 +1074,7 @@ Updated for compliance: November 4, 2013</dc:date>
     </owl:Thing>
     <owl:Axiom>
         <rdfs:comment rdf:datatype="&xsd;string">6. The green house is immediately to the right of the ivory house.</rdfs:comment>
-        <owl:annotatedSource rdf:resource="&einsteins_riddle;green"/>
+        <owl:annotatedSource rdf:resource="&einsteins_riddle;green_house"/>
         <owl:annotatedProperty rdf:resource="&rdf;type"/>
         <owl:annotatedTarget>
             <owl:Restriction>
@@ -1228,9 +1228,9 @@ Updated for compliance: November 4, 2013</dc:date>
     
 
 
-    <!-- http://persons.iis.nsk.su/files/persons/pages/einsteins_riddle.owl#red -->
+    <!-- http://persons.iis.nsk.su/files/persons/pages/einsteins_riddle.owl#red_house -->
 
-    <owl:Thing rdf:about="&einsteins_riddle;red">
+    <owl:Thing rdf:about="&einsteins_riddle;red_house">
         <rdf:type rdf:resource="&owl;NamedIndividual"/>
     </owl:Thing>
     
@@ -1260,9 +1260,9 @@ Updated for compliance: November 4, 2013</dc:date>
     
 
 
-    <!-- http://persons.iis.nsk.su/files/persons/pages/einsteins_riddle.owl#yellow -->
+    <!-- http://persons.iis.nsk.su/files/persons/pages/einsteins_riddle.owl#yellow_house -->
 
-    <owl:Thing rdf:about="&einsteins_riddle;yellow">
+    <owl:Thing rdf:about="&einsteins_riddle;yellow_house">
         <rdf:type rdf:resource="&owl;NamedIndividual"/>
     </owl:Thing>
     
@@ -1297,11 +1297,11 @@ Updated for compliance: November 4, 2013</dc:date>
             <rdf:Description rdf:about="&einsteins_riddle;Parliaments"/>
             <rdf:Description rdf:about="&einsteins_riddle;Spaniard"/>
             <rdf:Description rdf:about="&einsteins_riddle;Ukrainian"/>
-            <rdf:Description rdf:about="&einsteins_riddle;blue"/>
+            <rdf:Description rdf:about="&einsteins_riddle;blue_house"/>
             <rdf:Description rdf:about="&einsteins_riddle;coffee"/>
             <rdf:Description rdf:about="&einsteins_riddle;dog"/>
             <rdf:Description rdf:about="&einsteins_riddle;fox"/>
-            <rdf:Description rdf:about="&einsteins_riddle;green"/>
+            <rdf:Description rdf:about="&einsteins_riddle;green_house"/>
             <rdf:Description rdf:about="&einsteins_riddle;horse"/>
             <rdf:Description rdf:about="&einsteins_riddle;house-1"/>
             <rdf:Description rdf:about="&einsteins_riddle;house-2"/>
@@ -1311,11 +1311,11 @@ Updated for compliance: November 4, 2013</dc:date>
             <rdf:Description rdf:about="&einsteins_riddle;ivory"/>
             <rdf:Description rdf:about="&einsteins_riddle;milk"/>
             <rdf:Description rdf:about="&einsteins_riddle;orange_juice"/>
-            <rdf:Description rdf:about="&einsteins_riddle;red"/>
+            <rdf:Description rdf:about="&einsteins_riddle;red_house"/>
             <rdf:Description rdf:about="&einsteins_riddle;snails"/>
             <rdf:Description rdf:about="&einsteins_riddle;tea"/>
             <rdf:Description rdf:about="&einsteins_riddle;water"/>
-            <rdf:Description rdf:about="&einsteins_riddle;yellow"/>
+            <rdf:Description rdf:about="&einsteins_riddle;yellow_house"/>
             <rdf:Description rdf:about="&einsteins_riddle;zebra"/>
         </owl:distinctMembers>
     </rdf:Description>

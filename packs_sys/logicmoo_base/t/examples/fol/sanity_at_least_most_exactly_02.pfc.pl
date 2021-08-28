@@ -973,13 +973,13 @@ File W:\home\prologmud_server\lib\swipl\pack\logicmoo_base\t\examples\fol\tiny_k
 File W:\home\prologmud_server\lib\swipl\pack\logicmoo_base\t\examples\pfc\pfc_sanity.pl.txt
   298 1:atLeastOneParent(X,Y) :- (motherOf(Z,X), motherOf(Z,Y) ; fatherOf(W,X), fatherOf(W,Y) ).
   299 1:atLeastTwoParents(X,Y) :- (motherOf(Z,X), motherOf(Z,Y) , fatherOf(W,X), fatherOf(W,Y) ).
-  300 21:stepSibling(X,Y) :- atLeastOneParent(X,Y), \+atLeastTwoParents(X,Y), \+pet(X), \+pet(Y), X \= Y.
-  300 46:stepSibling(X,Y) :- atLeastOneParent(X,Y), \+atLeastTwoParents(X,Y), \+pet(X), \+pet(Y), X \= Y.
+  300 21:stepSibling(X,Y) :- atLeastOneParent(X,Y), \+atLeastTwoParents(X,Y), \+keeps_as_pet(X), \+keeps_as_pet(Y), X \= Y.
+  300 46:stepSibling(X,Y) :- atLeastOneParent(X,Y), \+atLeastTwoParents(X,Y), \+keeps_as_pet(X), \+keeps_as_pet(Y), X \= Y.
 File W:\home\prologmud_server\lib\swipl\pack\logicmoo_base\t\examples\pfc\pfc_test1.pl.txt
   182 1:atLeastOneParent(X,Y) :- (motherOf(Z,X), motherOf(Z,Y) ; fatherOf(W,X), fatherOf(W,Y) ).
   183 1:atLeastTwoParents(X,Y) :- (motherOf(Z,X), motherOf(Z,Y) , fatherOf(W,X), fatherOf(W,Y) ).
-  184 21:stepSibling(X,Y) :- atLeastOneParent(X,Y), \+atLeastTwoParents(X,Y), \+pet(X), \+pet(Y), X \= Y.
-  184 46:stepSibling(X,Y) :- atLeastOneParent(X,Y), \+atLeastTwoParents(X,Y), \+pet(X), \+pet(Y), X \= Y.
+  184 21:stepSibling(X,Y) :- atLeastOneParent(X,Y), \+atLeastTwoParents(X,Y), \+keeps_as_pet(X), \+keeps_as_pet(Y), X \= Y.
+  184 46:stepSibling(X,Y) :- atLeastOneParent(X,Y), \+atLeastTwoParents(X,Y), \+keeps_as_pet(X), \+keeps_as_pet(Y), X \= Y.
 File W:\home\prologmud_server\lib\swipl\pack\logicmoo_packages\prolog\Back52\abox.pl
   942 11:a5obj_add_atleast(X,Obj,Min,Role,N_Obj) :- 
   944 18:        b5nf_add_atleast(NF,Min,Role,N_NF).

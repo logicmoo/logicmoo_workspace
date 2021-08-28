@@ -1184,7 +1184,7 @@ corrected_modal_recurse0(_, INOUT,  INOUT):- !.
 %
 % Corrected Modal.
 %
-corrected_modal(KB,I,O):- expandQuants(KB,I,M)->I\=@=M,rejiggle_quants(KB,M,O).
+corrected_modal(KB,I,O):- expandQuants(KB,I,M)->I\=@=M,correct_special_quantifiers(KB,M,O).
 corrected_modal(KB,IN,OUTM):-
   corrected_modal0(KB,IN,M),!,must(corrected_modal_recurse0(KB,M,OUT)),!,OUT=OUTM.
 
