@@ -103,3 +103,10 @@ clif_op_decls((
 
 :- autoload_all.
 
+system:term_expansion(I,FP,_,FPO):-  I\==end_of_file,
+ notrace((
+   prolog_load_context(file,File), sub_atom(File,_,_,_,'.clif'),
+   prolog_load_context(stream, Stream), stream_property(Stream,file_name(File)),
+   nonvar(FP),FPO=FP)),
+   once(kif_io),fail.
+

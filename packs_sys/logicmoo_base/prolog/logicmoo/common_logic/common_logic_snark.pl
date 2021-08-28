@@ -848,7 +848,7 @@ unnumbervars_with_names(Term,CTerm):- break,
    b_implode_varnames0(CNamedVars))),!.
 
 
-unnumbervars_with_names(Term,CTerm):-
+unnumbervars_with_names1(Term,CTerm):-
   must_det_l((
    source_variables_l(NamedVars),
    copy_term(Term:NamedVars,CTerm:CNamedVars),
@@ -954,7 +954,8 @@ kif_to_boxlog(HB,KB,Why,FlattenedO):-
   sumo_to_pdkb(HB,HB00)->
   sumo_to_pdkb(KB,KB00)->
   sumo_to_pdkb(Why,Why00)->
-  unnumbervars_with_names((HB00,KB00,Why00),(HB0,KB0,Why0)),!,
+  pretty_numbervars_ground((HB00,KB00,Why00),(HB0,KB0,Why0)),!,
+  =((HB00,KB00,Why00),(HB0,KB0,Why0)),!,
   with_no_kif_var_coroutines(must(kif_to_boxlog_attvars(HB,HB0,KB0,Why0,FlattenedO))),!.
 
 :- meta_predicate(unless_ignore(*,*)).
@@ -1016,7 +1017,7 @@ kif_to_boxlog_attvars(_Original,HB,KB,Why,FlattenedO):- compound(HB),HB=(HEAD:- 
    finish_clausify([cl(HEADL,BODYL)],KB,Why,FlattenedO))),!.
 
 kif_to_boxlog_attvars(Original,WffIn0,KB0,Why0,RealOUT):-    
-   unnumbervars_with_names(WffIn0:KB0:Why0,WffIn:KB:Why),
+   imploded_copyvars(WffIn0:KB0:Why0,WffIn:KB:Why),
    check_is_kb(KB),
    clif_to_modal_clif(WffIn,ModalKBKIF),   
    % save_wid(Why,kif,DLOGKIF),
@@ -1028,10 +1029,13 @@ kif_to_boxlog_attvars(Original,Clause,KB,Why,RealOUT):-
 
 kif_to_boxlog_attvars2(_Original,Clause,KB,Why,RealOUT):-
   flag(skolem_count,_,0),
-  kif_optionally_e(true,as_sigma,Clause,Clause0),
-  get_varname_list(KRVars),
-  guess_pretty(KRVars+Clause0),
-	sigma_ace:getAssertionClauses(KB,Why,Clause0,Out0,KRVars,FlagsL),!,
+  kif_optionally_e(true,as_sigma,Clause,CTerm),
+  %unnumbervars_with_names_best2(Clause0,CTerm),
+  %Clause0=CTerm,
+ % get_varname_list(KRVars),
+  % copy_term(KRVars+CTerm,Copy,_),
+  in_cmt((write('kif_to_boxlog_attvars2 = '),display(CTerm))),
+	sigma_ace:getAssertionClauses(KB,Why,CTerm,Out0,[],FlagsL),!,
   kif_optionally_e(true,as_dlog,Out0,Out00),
 	subst(FlagsL,'.','&',Flags),
   entails_to_boxlog(KB,Why,Flags,Out00,RealOUT),!.

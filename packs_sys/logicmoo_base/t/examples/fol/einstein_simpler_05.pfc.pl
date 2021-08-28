@@ -147,8 +147,6 @@ exists(X,exists(Y,smokes(X, blends) /\ neighbor(X,Y) /\ drinks(Y, water))).
 trait(drinks). trait(smokes). trait(keeps_as_pet).
 trait(position). % we add position 
 
-:- break.
-
 :- if(true).  % No HiLog
 
 all(P,

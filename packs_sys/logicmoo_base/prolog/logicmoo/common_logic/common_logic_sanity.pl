@@ -107,7 +107,8 @@ test_defunctionalize(I):-defunctionalize(I, O), sdmsg(O).
 sdmsg(Form):-
    if_defined(demodal_sents(_KB, Form, Out), Form=Out),
    % if_defined(local_pterm_to_sterm(OutM, Out), OutM=Out),
-   must(wdmsgl(dmsg, Out)).
+   guess_pretty(Form),
+   must(in_cmt(wdmsgl(wdmsg, Out))).
 
 sdmsgf(Form):-
    if_defined(demodal_sents(_KB, Form, Out), Form=Out),

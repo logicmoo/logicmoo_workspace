@@ -282,26 +282,25 @@ pretty_numbervars_g(Term, TermO):- (ground(Term);current_prolog_flag(no_pretty,t
 %pretty_numbervars(Term, TermO):- copy_term(Term,TermO,_),guess_pretty(Term),Term=@=TermO,Term=TermO,!.
 
 
+pretty_numbervars(TermIn, TermOut):- pretty_numbervars_ground(TermIn, TermOut),!.
 
-pretty_numbervars(Term0, TermO):- pretty_numbervars_ground(Term0, TermO),!.
-
-pretty_numbervars_ground(Term0, TermO):- pretty_numbervars_g(Term0, TermO),!.
-pretty_numbervars_ground(Term0, TermO):-  % the new 
+pretty_numbervars_ground(TermIn, TermOut):- pretty_numbervars_g(TermIn, TermOut),!.
+pretty_numbervars_ground(TermIn, TermOut):-  % the new 
  quietly((
-   term_varnames(Term0,Vs0,_),
-   replace_variables(Vs0,Term0,Term),
+   term_varnames(TermIn,Vs0,_),
+   replace_variables(Vs0,TermIn,Term),
    guess_pretty(Term),
    term_varnames(Term,Vs,_),   
-   copy_term(Term+Vs,TermO+Vs2, _),
+   copy_term(Term+Vs,TermOut+Vs2, _),
    notrace(implode_varnames_pred(to_var_dollar, Vs2)))),!.
 
-pretty_numbervars_unground(Term0, TermO):- pretty_numbervars_g(Term0, TermO),!.
-pretty_numbervars_unground(Term0, TermO):-  % the old
+pretty_numbervars_unground(TermIn, TermOut):- pretty_numbervars_g(TermIn, TermOut),!.
+pretty_numbervars_unground(TermIn, TermOut):-  % the old
  quietly((
-  duplicate_term(Term0,Term),
+  duplicate_term(TermIn,Term),
   guess_pretty(Term),
   source_variables_lwv(Term,Vs),   
-  copy_term(Term+Vs,TermO+Vs2, _),
+  copy_term(Term+Vs,TermOut+Vs2, _),
   notrace(implode_varnames_pred(to_var_dollar, Vs2)))),!.
 
 replace_variables(_,Term,TermO):- ground(Term),!,duplicate_term(Term,TermO).

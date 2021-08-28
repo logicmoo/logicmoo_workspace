@@ -1,6 +1,7 @@
 #!/usr/bin/env swipl
-:- if(use_module(library(logicmoo_utils))). :-endif.
+:- if(use_module(library(logicmoo_utils))). :- endif.
 :- include(test_header).
+:- kif_io.
 ;; Module - Test Puzzle in CLIF for SWI-Prolog
 ;; Maintainer: Douglas Miles
 ;; Load with  ?- load_clif(pack(logicmoo_base/t/examples/fol/'exactly_01.clif'))
@@ -9,11 +10,7 @@
 (set-kif-option :assume-wff)
 (kif-mode tell)
 
-(call-prolog #|
-
 :- dbreq(retractall(clif(_))).
-
-|#)
 
 (domain hasName 1 tAgent)
 (domain hasName 2 tName)
@@ -71,3 +68,7 @@ And at least 5 houses.
 
 
 ")
+
+:- listing(clif).
+
+

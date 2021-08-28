@@ -969,11 +969,15 @@ source_variables_l(AllS):-
  quietly((
   (prolog_load_context(variable_names,Vs1);Vs1=[]),
   (get_varname_list(Vs2);Vs2=[]),
-  quietly(catch((parent_goal('$toplevel':'$execute_goal2'(_, Vs3),_);Vs3=[]),E,(writeq(E),Vs3=[]))),
+  uexecute_goal_vs(Vs3),
   ignore(Vs3=[]),
-  append(Vs1,Vs2,Vs12),append(Vs12,Vs3,All),!,list_to_set(All,AllS),
+  append([Vs1,Vs2,Vs3],All),list_to_set(All,AllS),
   set_varname_list( AllS))).
 
+uexecute_goal_vs(Vs):- uexecute_goal_vs0(Vs),!.
+uexecute_goal_vs([]).
+uexecute_goal_vs0(Vs):- notrace(catch(parent_goal('$toplevel':'$execute_goal2'(_,Vs,_)),_,fail)).
+uexecute_goal_vs0(Vs):- notrace(catch(parent_goal('$toplevel':'$execute_goal2'(_,Vs)),_,fail)).
 
 
 %=

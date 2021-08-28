@@ -145,11 +145,13 @@ fully_expand_kif_0k(['ListFn'|ROW],ROW).
 
 
 clif_to_modal_clif(In,THINOUT):-
-   sumo_to_pdkb(In,WffIn),
+   pretty_numbervars_ground(In,In0),
+   % In=In0,
+   sumo_to_pdkb(In0,WffIn),
    must_be_unqualified(WffIn),
    KB = '$KB',
    kif_optionally_e(true,as_dlog,WffIn,DLOGKIF),!,
-   guess_varnames(DLOGKIF),
+   % in_cmt((write('dlog= ' ),display(DLOGKIF))),
    if_debugging2(kif,sdmsg(kif=(DLOGKIF))),
    kif_optionally_e(false,existentialize_objs,DLOGKIF,EXTOBJ),
    kif_optionally_e(false,existentialize_rels,EXTOBJ,EXT),

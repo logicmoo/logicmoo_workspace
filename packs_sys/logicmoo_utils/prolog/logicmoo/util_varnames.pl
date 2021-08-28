@@ -287,7 +287,8 @@ get_var_name(T,VN,_Vs):- term_to_atom(T,VN).
 
 
 
-grab_vn_varnames(Msg,Vs2):- term_attvars(Msg,AttVars),
+grab_vn_varnames(Msg,Vs2):-
+  term_attvars(Msg,AttVars),
   %append(AttVars,Vars,AllVars),
   sort(AttVars,AllVarS),
   grab_each_vn_varname(AllVarS,Vs2).
@@ -295,7 +296,6 @@ grab_each_vn_varname([],[]):-!.
 grab_each_vn_varname([AttV|AttVS],Vs2):-
     grab_each_vn_varname(AttVS,VsMid),!,
      (get_attr(AttV, vn, Name) -> Vs2 = [Name=AttV|VsMid] ; VsMid=       Vs2),!.
-
 
 get_var_name_or_fake(T,VN):- get_var_name(T,VN),!.
 get_var_name_or_fake(T,VN):- term_to_atom(T,VN).
@@ -308,20 +308,22 @@ get_var_name(V,N):- notrace(get_var_name0(V,N)),!.
 
 variable_name(Var, Name) :- must(var(Var)),(get_attr(Var, vn, Name);var_property(Var,name(Name));get_attr(Var, varnames, Name)),!.
 
-get_var_name0(Var,Name):- nonvar(Name),!,must(get_var_name0(Var, NameO)),!,Name=NameO.
 get_var_name0(Var,Name):- nonvar(Var),!,get_var_name1(Var,Name),!.
+get_var_name0(Var,Name):- nonvar(Name),!,must(get_var_name0(Var, NameO)),!,Name=NameO.
 get_var_name0(Var,Name):- var_property(Var,name(Name)),!.
 get_var_name0(Var,Name):- get_attr(Var, vn, Name),!.
 get_var_name0(Var,Name):- nb_current('$variable_names', Vs),varname_of(Vs,Var,Name),!.
 get_var_name0(Var,Name):- get_attr(Var, varnames, Name),!.
 get_var_name0(Var,Name):- nb_current('$old_variable_names', Vs),varname_of(Vs,Var,Name),!.
 get_var_name0(Var,Name):- get_varname_list(Vs),varname_of(Vs,Var,Name),!.
-get_var_name0(Var,Name):- notrace(catch(parent_goal('$toplevel':'$execute_goal2'(_, Vs),_),_,fail)),varname_of(Vs,Var,Name).
+get_var_name0(Var,Name):- execute_goal_vs(Vs),varname_of(Vs,Var,Name).
 
 % get_var_name0(Var,Name):- attvar(Var),get_varname_list(Vs),format(atom(Name),'~W',[Var, [variable_names(Vs)]]).
 
 varname_of(Vs,Var,Name):- compound(Vs), Vs=[NV|VsL],  ((compound(NV) , (NV=(N=V)),atomic(N), V==Var,!,N=Name) ; varname_of(VsL,Var,Name)).
 
+get_var_name1(Var,Name):- var(Var),!,get_var_name0(Var,Name).
+get_var_name1(Var,Name):- nonvar(Name),!,must(get_var_name1(Var, NameO)),!,Name=NameO.
 get_var_name1('$VAR'(Name),Name):- atom(Name),!.
 get_var_name1('$VAR'(Int),Name):- integer(Int),format(atom(A),"~w",['$VAR'(Int)]),!,A=Name.
 get_var_name1('$VAR'(Var),Name):- (var(Var)->get_var_name0(Var,Name);Name=Var),!.
@@ -330,9 +332,7 @@ get_var_name1('aVar'(Att3),Name):- !, get_var_name1(Att3,Name).
 get_var_name1('aVar'(Name,Att3),Value):- !, get_var_name1('$VAR'(Name),Value); get_var_name1('aVar'(Att3),Value).
 get_var_name1(att(vn,Name,_),Name):- !.
 get_var_name1(att(_,_,Rest),Name):- Rest\==[],get_var_name1(Rest,Name).
-get_var_name1(Var,Name):- get_attr(Var, vn, Name),!. % ground(Name),!.
 get_var_name1(Var,Name):- catch(call(call,oo_get_attr(Var, vn, Name)),_,fail),!. % ground(Name),!.
-get_var_name1(Var,Name):- nb_current('$variable_names', Vs),varname_of(Vs,Var,Name),!.
 
 
 term_varnames(Msg,Vs,Unnamed):- 
@@ -364,15 +364,20 @@ member_open(C, [B|A]) :-  (nonvar(B),B=C) ; (nonvar(A),member_open(C, A)).
 %
 % Source Variables Lwv.
 %
-source_variables_lwv(Msg,AllS):-
+source_variables_lwv(Msg,AllVs):-
   (prolog_load_context(variable_names,Vs1);Vs1=[]),
    grab_vn_varnames(Msg,Vs2),
-   notrace(catch((parent_goal('$toplevel':'$execute_goal2'(_, Vs3),_);Vs3=[]),_,Vs3=[])),
-   ignore(Vs3=[]),
-   append([Vs3,Vs2,Vs1],All),!,list_to_set(All,AllS),!.
+   execute_goal_vs(Vs3),
+   append([Vs3,Vs2,Vs1],All),!,list_to_set(All,AllVs),!.
    % set_varname_list( AllS).
 source_variables_lwv(_Msg,[]):-!.
 
+
+
+execute_goal_vs(Vs):- execute_goal_vs0(Vs),!.
+execute_goal_vs([]).
+execute_goal_vs0(Vs):- notrace(catch(parent_goal('$toplevel':'$execute_goal2'(_,Vs,_)),_,fail)).
+execute_goal_vs0(Vs):- notrace(catch(parent_goal('$toplevel':'$execute_goal2'(_,Vs)),_,fail)).
 
 %:- public ((attr_unify_hook/2,attr_portray_hook/2)).
 % :- public portray_attvar/1.
@@ -1102,7 +1107,7 @@ renumbervars(How,Term,Named):-
 source_variables_lv(AllS):-
   (prolog_load_context(variable_names,Vs1);Vs1=[]),
   (get_varname_list(Vs2);Vs2=[]),
-  % quietly(catch((parent_goal('$toplevel':'$execute_goal2'(_, Vs3),_);Vs3=[]),E,(writeq(E),Vs3=[]))),
+  %    execute_goal_vs(Vs3),
   ignore(Vs3=[]),
   append(Vs1,Vs2,Vs12),append(Vs12,Vs3,All),!,list_to_set(All,AllS),
   set_varname_list( AllS).
@@ -1248,16 +1253,14 @@ imploded_copyvars(C,CT):-vmust((source_variables(Vs),copy_term(C-Vs,CT-VVs),b_im
 %
 source_variables(Vs):- 
  (prolog_load_context(variable_names,Vs2);Vs2=[]),
- (parent_goal('$toplevel':'$execute_goal2'(_, Vs1),_);Vs1=[]),
+ execute_goal_vs(Vs1),
  append(Vs1,Vs2,Vs3),list_to_set(Vs3,Vs),
  (Vs\==Vs2 -> b_setval('$variable_names',Vs) ; true).
 
 source_variables0(Vs):- 
  (prolog_load_context(variable_names,Vs2);Vs2=[]),
- (parent_goal('$toplevel':'$execute_goal2'(_, Vs1),_);Vs1=[]),
+ execute_goal_vs(Vs1),
  append(Vs1,Vs2,Vs3),list_to_set(Vs3,Vs).
- 
-
 
 
 % snumbervars(Term,Functor,Start,End,List):-vmust(( vmust(var(End);number(End)),snumbervars4(Term,Start,End,[functor_name(Functor)|List]))),check_varnames(Term).
