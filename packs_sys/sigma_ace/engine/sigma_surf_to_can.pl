@@ -133,7 +133,7 @@ getQueryClauses(KB,Ctx,Prop,NConjAssertsClauses,KRVars,AllFlags):-
 canonicalizeProposition(KB,Ctx,Prop,CNF,DNF,ConjAssertsClauses,KRVars,AllFlags):- 
 	close_list(KRVars),!,                  
 	%writeObject(Prop,KRVars),
-	numbervars(Prop:KRVars:KB:Ctx,999,_),
+	sigma_numbervars(Prop:KRVars:KB:Ctx,666,_),
 	logOnFailure(getModeledPredicates(Prop,FmlInOpen)),!,
 	%writeObject('<hr>getModeledPredicates: \n',KRVars),
 	%writeObject(FmlInOpen,KRVars),
@@ -220,7 +220,7 @@ add_skolems_to_body([],Ante,Cons,ConVars,Ante):-!.
 add_skolems_to_body([replaceConsVar(Var,'$existential'(VarName,not(Formula)))|Flags],Ante,Cons,ConVars,NewAnte):-!,
 	ifThenElse( 
 		(functor(Cons,not,_),member(Var,ConVars)),
-		conjoin_kr(Ante,'$existential'(Var,VarName,not(Formula)),NewAnteM),
+    (subst(Formula,VarName,Var,VFormula),conjoin_kr(Ante,'$existential'(Var,1,not(VFormula)),NewAnteM)),
 		Ante=NewAnteM),
 	getPrologVars(NewAnteM:Cons,NewConstVars,_,_),
 	add_skolems_to_body(Flags,NewAnteM,Cons,NewConstVars,NewAnte).
@@ -228,7 +228,7 @@ add_skolems_to_body([replaceConsVar(Var,'$existential'(VarName,not(Formula)))|Fl
 add_skolems_to_body([replaceConsVar(Var,'$existential'(VarName,Formula))|Flags],Ante,Cons,ConVars,NewAnte):-!,
 	ifThenElse( 
 		(not(functor(Cons,not,_)),member(Var,ConVars)),
-		conjoin_kr(Ante,'$existential'(Var,VarName,Formula),NewAnteM),
+    (subst(Formula,VarName,Var,VFormula),conjoin_kr(Ante,'$existential'(Var,1,VFormula),NewAnteM)),
 		Ante=NewAnteM),
 	getPrologVars(NewAnteM:Cons,NewConstVars,_,_),
 	add_skolems_to_body(Flags,NewAnteM,Cons,NewConstVars,NewAnte).
@@ -338,6 +338,12 @@ putDomainsTogether(V,Flags,[domainV(V,FUnivListO)|Flags]):-
 % UFreeV:      List of free variables in Fml.
 % Paths:      Number of disjunctive paths in Fml.
 
+do_nnf_default(Fml,Fml3):- common_logic_snark:(nnf_default(Fml,Fml2),as_sigma(Fml2,Fml3)).
+
+getNegationForm(Caller,ArgN,KB,Ctx,KRVars,PreQ,Fml,UFreeV,Out,N):- 
+  do_nnf_default(Fml,Fml3), 
+  getNegationForm(Caller,ArgN,KB,Ctx,KRVars,PreQ,Fml3,UFreeV,Out,N).
+
 % Variable as Formula collect its caller
 getNegationForm(Caller,ArgN,KB,Ctx,KRVars,[dom(Var,[Caller:ArgN]) ],Var,UFreeV,Var,1):- isSlot(Var),!.
 
@@ -367,7 +373,6 @@ getNegationForm(Caller,ArgN,KB,Ctx,KRVars,[],equal(A,B),UFreeV,equal(A,B),1):-is
 getNegationForm(Caller,ArgN,KB,Ctx,KRVars,PreQ,equal(A,Fml),UFreeV,Out,N):-isSlot(A),!,
 	getNegationForm(Caller,ArgN,KB,Ctx,KRVars,PreQ,equal(Fml,A),UFreeV,Out,N),!.
 	
-       						       
 /*
 getNegationForm(Caller,ArgN,KB,Ctx,KRVars,[dom(X,[F1:Range1,F2:Range2])|PreQ],equal(Fml1,Fml2),UFreeV,Result,2):-
 	Fml1=..[holds,F1|Args1],hlPredicateAttribute(F1,'Function'),
@@ -432,7 +437,11 @@ getNegationForm(Caller,ArgN,KB,Ctx,KRVars,[post(Var,eval(Result,Var)),replaceCon
 	PResult=..[F|PArgsO],!,
 	Result=..[F|ArgsO],!.
 */
-	
+
+getNegationForm(Caller,ArgN,KB,Ctx,KRVars,PreQ,A and B,UFreeV,NNF,Paths) :- 
+  do_nnf_default((A and B), AND),
+  getNegationForm(Caller,ArgN,KB,Ctx,KRVars,PreQ,AND,UFreeV,NNF,Paths).
+
 getNegationForm(Caller,ArgN,KB,Ctx,KRVars,PreQ,A and B,UFreeV,NNF,Paths) :- !,
 	getNegationForm(Caller,ArgN,KB,Ctx,KRVars,PreQ1,A,UFreeV,NNF1,Paths1),
 	getNegationForm(Caller,ArgN,KB,Ctx,KRVars,PreQ2,B,UFreeV,NNF2,Paths2),
@@ -502,7 +511,8 @@ getNegationForm(Caller,ArgN,KB,Ctx,KRVars,[dom(F,[holds:1])|PreQ],(Term),UVars,(
 % Strip Not Holds and Loop over 
 getNegationForm(Caller,ArgN,KB,Ctx,KRVars,PreQ,(Term),UVars,(Result),N):- 
 	Term=..[holds,F|Args],
-	NTerm=..[F|Args], 
+  nonvar(F),
+	append_termlist(F,Args,NTerm), 
 	getNegationForm(Caller,ArgN,KB,Ctx,KRVars,PreQ,NTerm,UVars,Result,N),!.
  
 
@@ -516,7 +526,7 @@ getNegationForm(Caller,ArgN,KB,Ctx,KRVars,[dom(F,['AssignmentFn':1])|PreQ],(Term
 % Strip Not Holds and Loop over 
 getNegationForm(Caller,ArgN,KB,Ctx,KRVars,PreQ,(Term),UVars,(Result),N):- 
 	Term=..['AssignmentFn',F|Args],
-	NTerm=..[F|Args], 
+  append_termlist(F,Args,NTerm),
 	getNegationForm(Caller,ArgN,KB,Ctx,KRVars,PreQ,NTerm,UVars,Result,N),!.
  
 
@@ -781,7 +791,7 @@ replace_in_clause(T1,[],[T1],[],[]):-!.
 replace_in_clause(T1,[T2|Clause],PutFront,NewClause,Generalized):-
 	not(functor(T1,common,_)),
 	not(functor(T2,common,_)),
-	once(notrace(compareVariant(T1,T2,GT,Cost1,Cost2))),
+	once(sigma_notrace(compareVariant(T1,T2,GT,Cost1,Cost2))),
 		compare(Dif,Cost1,Cost2),
 		apply_mgu(Dif,Cost1,Cost2,T1,T2,GT,PutFront,Clause,NewClause,Generalized),!.
 

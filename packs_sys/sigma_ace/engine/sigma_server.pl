@@ -8,6 +8,7 @@
 :-use_module(library(logicmoo_utils)).
 :-dynamic(serve_connection/0).
 
+sigma_notrace(G):- once(G).
 
 :- style_check(-singleton).
 :- style_check(-discontiguous).
@@ -76,7 +77,7 @@ please_tcp_bind(ServerSocket, Port):-
 	flush_output,
 	writeSTDERR('cs.\nSigma server started on port ~w. \n\nYes\n?- ',[Port]),flush_output),
 	error(E,_),
-	(writeSTDERR('\nWaiting for OS to release port ~w. \n(sleeping 4 secs becasue "~w")\n',[Port,E]),
+	(nop(writeSTDERR('\nWaiting for OS to release port ~w. \n(sleeping 4 secs becasue "~w")\n',[Port,E])),
 	sleep(4),
 	please_tcp_bind(ServerSocket, Port))),!.
 	
@@ -87,7 +88,7 @@ writeSavedPrompt:-flush_output.
 writeOverwritten:-isConsoleOverwritten,!.
 writeOverwritten:-assert(isConsoleOverwritten).
 
-cleanOldThreads:-notrace(cleanOldThreadsTracable).
+cleanOldThreads:-sigma_notrace(cleanOldThreadsTracable).
 
 cleanOldThreadsTracable:-
 	saveUserInput,
@@ -152,7 +153,7 @@ xmlExitTags:-thread_self(Self),retract(xmlCurrentOpenTags(Self,A)),writeFmtServe
 xmlExitTags.
        
 writeSTDERR(F):-writeSTDERR('~q',[F]).
-writeSTDERR(F,A):-notrace((
+writeSTDERR(F,A):-sigma_notrace((
 	format(user_error,F,A),
 	nl(user_error),
 	flush_output(user_error))).

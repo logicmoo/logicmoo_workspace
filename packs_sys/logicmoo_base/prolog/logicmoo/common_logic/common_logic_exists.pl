@@ -771,26 +771,46 @@ rejiggle_quants(KB,In,Out2):-
   un_quant3(KB,Mid2,Out),
   Out2 = Out.
 
+% expandQuants(KB,X,_):- dmsg(expandQuants(KB,X,_)),fail.
+expandQuants(_,X,X):- is_ftVar(X),!.
 expandQuants(_,Fml,Fml):- is_leave_alone(Fml),!.
 expandQuants(_,[],[]):- !.
 expandQuants(KB,[A|B],[AO|BO]):- expandQuants(KB,A,AO),expandQuants(KB,B,BO),!.
-
-expandQuants(KB,all(XL,NNF),FmlO):- is_list(XL),
+%expandQuants(KB,PAB,FmlO):- PAB=..[F|AB], must_maplist_det(expandQuants(KB),AB,ABO), FmlO=..[F|ABO].
+expandQuants(KB,exactly(N,X,NNF),FmlO):- expandQuants(KB,quant(exactly(N),X,NNF),FmlO).
+expandQuants(KB,atleast(N,X,NNF),FmlO):- expandQuants(KB,quant(atleast(N),X,NNF),FmlO).
+expandQuants(KB,atmost(N,X,NNF),FmlO):- expandQuants(KB,quant(atmost(N),X,NNF),FmlO).
+expandQuants(KB,exists(X,NNF),FmlO):- expandQuants(KB,quant(atleast(1),X,NNF),FmlO).
+expandQuants(KB,all(X,NNF),FmlO):- expandQuants(KB,quant(all(),X,NNF),FmlO).
+expandQuants(KB,exists(X,NNF),FmlO):- expandQuants(KB,quant(exists(),X,NNF),FmlO).
+expandQuants(KB,some(X,NNF),FmlO):- expandQuants(KB,quant(exactly(1),X,NNF),FmlO).
+expandQuants(KB,the(X,NNF),FmlO):- expandQuants(KB,quant(exactly(1),X,NNF),FmlO).
+%expandQuants(KB,quant(exactly(0),X,NNF),FmlO):- expandQuants(KB,~exists(X,NNF),FmlO).
+%expandQuants(KB,quant(atmost(0),X,NNF),FmlO):- expandQuants(KB,quant(exactly(0),X,NNF),FmlO).
+/*expandQuants(KB,all(XL,NNF),FmlO):- is_list(XL),
     (get_quantifier_isa(XL,X,Col) -> 
       expandQuants(KB,all(X,isa(X,Col) => NNF),FmlO);
       (XL=[X|MORE],!,
       (MORE==[] -> 
             expandQuants(KB,all(X,NNF),FmlO);
             expandQuants(KB,all(X,all(MORE,NNF)),FmlO)))).
+*/
+% Actual Var
+expandQuants(KB,quant(Quant,V,Expr),quant(Quant,V,ExprO)):-is_ftVar(V),!,expandQuants(KB,Expr,ExprO).
+% No more
+expandQuants(KB,quant(_Quant,L,Expr),ExprO):-L==[],!,expandQuants(KB,Expr,ExprO).
+% List of One
+expandQuants(KB,quant(Quant,[V],Expr),ExprO):- \+ is_list(V),!,expandQuants(KB,quant(Quant,V,Expr),ExprO).
+% Atom Name
+expandQuants(KB,quant(Quant,V,Expr),ExprO):-atom(V),!,svar_fixvarname(V,L),subst(Expr,V,'$VAR'(L),ExprM),!,
+  expandQuants(KB,quant(Quant,'$VAR'(L),ExprM),ExprO).
 
-expandQuants(KB,exactly(N,X,NNF),FmlO):- expandQuants(KB,quant(exactly(N),X,NNF),FmlO).
-expandQuants(KB,atleast(N,X,NNF),FmlO):- expandQuants(KB,quant(atleast(N),X,NNF),FmlO).
-expandQuants(KB,atmost(N,X,NNF),FmlO):- expandQuants(KB,quant(atmost(N),X,NNF),FmlO).
-expandQuants(KB,exists(X,NNF),FmlO):- expandQuants(KB,quant(atleast(1),X,NNF),FmlO).
-expandQuants(KB,some(X,NNF),FmlO):- expandQuants(KB,quant(exactly(1),X,NNF),FmlO).
-expandQuants(KB,quant(exactly(0),X,NNF),FmlO):- expandQuants(KB,~exists(X,NNF),FmlO).
-expandQuants(KB,quant(atmost(0),X,NNF),FmlO):- expandQuants(KB,quant(exactly(0),X,NNF),FmlO).
-
+% Name and Types
+expandQuants(KB,quant(Quant,[[Var|Types]],Expr),ExprO):- nonvar(Types),!,
+  prepend_isas(Quant,Expr,Var,Types,IsaExpr), 
+  expandQuants(KB,quant(Quant,Var,IsaExpr),ExprO).
+% List Of
+expandQuants(KB,quant(Quant,[L|List],Expr),ExprO):-is_list(List),expandQuants(KB,quant(Quant,[L],quant(Quant,List,Expr)),ExprO).
 
 expandQuants(KB,quant(Quant,XL,NNF),FmlO):- is_list(XL),
     (get_quantifier_isa(XL,X,Col) -> 
@@ -800,14 +820,22 @@ expandQuants(KB,quant(Quant,XL,NNF),FmlO):- is_list(XL),
             expandQuants(KB,quant(Quant,X,NNF),FmlO);
             expandQuants(KB,quant(Quant,X,quant(Quant,MORE,NNF)),FmlO)))).
 
+expandQuants(KB,quant(Quant,V,Expr),quant(Quant,V,ExprO)):- !,expandQuants(KB,Expr,ExprO).
+
 expandQuants(KB,PAB,FmlO):- PAB=..[F|AB], must_maplist_det(expandQuants(KB),AB,ABO), FmlO=..[F|ABO].
 
-un_quant3(_,Fml,Fml):- is_leave_alone(Fml),!.
-un_quant3(KB,all(X,NNF),all(X,FmlO)):- !,un_quant3(KB,NNF,FmlO).
-un_quant3(KB,exists(X,NNF),exists(X,FmlO)):- !,un_quant3(KB,NNF,FmlO).
+un_quant3(_,Fml,FmlO):- is_leave_alone(Fml),!,Fml=FmlO.
+%un_quant3(KB,all(X,NNF),all(X,FmlO)):- !,un_quant3(KB,NNF,FmlO).
+%un_quant3(KB,exists(X,NNF),exists(X,FmlO)):- !,un_quant3(KB,NNF,FmlO).
+un_quant3(KB,quant(exactly(0),X,NNF),FmlO):- un_quant3(KB,~exists(X,NNF),FmlO).
+un_quant3(KB,quant(atmost(0),X,NNF),FmlO):- un_quant3(KB,quant(exactly(0),X,NNF),FmlO).
+un_quant3(KB,quant(all(),X,NNF),all(X,FmlO)):- !,un_quant3(KB,NNF,FmlO).
+un_quant3(KB,quant(_,Nil,NNF),FmlO):- Nil==[],!,un_quant3(KB,NNF,FmlO).
+un_quant3(KB,quant(exists(),X,NNF),exists(X,FmlO)):- !,un_quant3(KB,NNF,FmlO).
 un_quant3(KB,quant(atleast(1),X,NNF),exists(X,FmlO)):- !,un_quant3(KB,NNF,FmlO).
 un_quant3(KB,quant(isa(K),X,NNF),FmlO):- un_quant3(KB,NNF,NNFO),un_quant3(KB,isa(X,K) & NNFO,FmlO).
-un_quant3(KB,quant(Quant,X,NNF),quant(Quant,X,FmlO)):- un_quant3(KB,NNF,FmlO).
+%un_quant3(KB,quant(Quant,X,NNF),FmlO):- append_termlist(Quant,[X,NNF],TODO), un_quant3(KB,TODO,FmlO).
+%un_quant3(KB,quant(Quant,X,NNF),quant(Quant,X,FmlO)):- un_quant3(KB,NNF,FmlO).
 % un_quant3(KB,quant(Quant,X,NNF),FmlO):- un_quant3(KB,NNF,NNFO),Quant=..[Q|AUNT],append([Q|AUNT],[X,NNFO],STERM),FmlO=..STERM.
 un_quant3(KB,PAB,FmlO):- PAB=..[F|AB], must_maplist_det(un_quant3(KB),AB,ABO), FmlO=..[F|ABO].
 

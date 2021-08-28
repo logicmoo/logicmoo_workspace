@@ -11,7 +11,7 @@
           op(400,yfx,'&'),  
           op(500,yfx,'v'),*/
             atom_compat/3,
-            axiom_lhs_to_rhs/3,
+            logical_reductions/2,
             b_d_p/2,
             boxRule/3,
             cf_to_flattened_clauses/4,
@@ -48,7 +48,7 @@
             is_sent_op_modality/1,
             logical_neg/3,
             logical_pos/3,
-            logically_matches/3,
+            logically_matches/2,
             make_1_cl/4,
             make_clause_from_set/3,
             make_clause_set/3,
@@ -82,7 +82,6 @@
             
             simplify_atom/2,
             simplify_cheap/2,
-            simplify_cheap_must/2,
 
             % nnf_args/5,
        nnf_args/8,
@@ -259,6 +258,43 @@ TBE ::= always(TBE) | eventually(TBE) | until(TBE,TBE) |
  op(300,fx,'~'),
  op(300,fx,'-'))).
 
+/* ============================================
+ forall( Animal_Chordata,
+   ( instance(Animal_Chordata,'Animal-Chordata') =>
+     exists( Has_And_Heart,
+       and(instance(Has_And_Heart,'Heart'),has(Animal_Chordata,Has_And_Heart)))))
+ ============================================ */
+
+% A) "if hearts dont exist presently than neigther do animals"
+%
+%  entails(not(instance(M38,'Heart')),not(instance(L38,'Animal-Chordata')))
+
+% B) "if nothing has anything than there are no animals animals "
+%
+%  entails(not(has(L38,M38)),not(instance(L38,'Animal-Chordata')))
+
+
+% C) Makes up a skolem heart constrained to be haved by the animal
+%
+%   entails(
+%     and( instance(L38,'Animal-Chordata'),
+%      '$existential'( M38,
+%        Has_Heart6,
+%        and(instance(Has_Heart6,'Heart'),has(L38,Has_Heart6)))),
+%   instance(M38,'Heart'))
+
+
+% D) Makes up a skolem thing has by someiotng with the properties of a heart 
+%
+%   entails(
+%    and( instance(L38,'Animal-Chordata'),
+%      '$existential'( M38,
+%        Has_Heart6,
+%        and(instance(Has_Heart6,'Heart'),has(L38,Has_Heart6)))),
+%    has(L38,M38))
+
+% ============================================
+
 
 
 % :- use_module(logicmoo(pttp/dbase_i_mpred_pttp_testing)). 
@@ -300,7 +336,8 @@ TBE ::= always(TBE) | eventually(TBE) | until(TBE,TBE) |
 
 
 :- create_prolog_flag(logicmoo_propagation, modal,[keep(true)]).   % vs "unit"
-:- create_prolog_flag(logicmoo_modality,late,[keep(true)]).
+:- create_prolog_flag(logicmoo_modality,none,[keep(true)]).
+%:- create_prolog_flag(logicmoo_modality,late,[keep(true)]).
 
 :- thread_local(t_l:using_feature/1).
 is_using_feature(Feature):- t_l:using_feature(Feature).
@@ -398,15 +435,15 @@ get_quantifier_isa([X,Col],X,Col):-var(X),nonvar(Col).
 %
 % Logically Matches.
 %
-logically_matches(_KB,_A,_B):-!,fail.
-logically_matches(KB,A,B):-nonvar(KB),!,logically_matches(_KB,A,B).
-logically_matches(_,A,B):- (var(A);var(B)),!,A=B.
-logically_matches(KB,all(_,A),B):-!,logically_matches(KB,A,B).
-logically_matches(KB,B,all(_,A)):-!,logically_matches(KB,A,B).
-logically_matches(KB,exists(V,A),exists(V,B)):-!,logically_matches(KB,A,B).
-logically_matches(KB,[A],B):-!,logically_matches(KB,B,A).
-logically_matches(KB,A,B):- once(corrected_modal_recurse(KB,A,AM)),A\=@=AM,!,logically_matches(KB,B,AM).
-logically_matches(_,A,A).
+
+%logically_matches(_KB,_A,_B):-!,fail.
+logically_matches(A,B):- (var(A);var(B)),!,A=B.
+logically_matches(all(_,A),B):-!,logically_matches(A,B).
+logically_matches(B,all(_,A)):-!,logically_matches(A,B).
+logically_matches(exists(V,A),exists(V,B)):-!,logically_matches(A,B).
+logically_matches([A],B):-!,logically_matches(B,A).
+logically_matches(A,B):- once(corrected_modal_recurse(_KB,A,AM)),A\=@=AM,logically_matches(B,AM),!.
+logically_matches(A,A).
 
 
 is_leave_alone(P):- \+ compound_gt(P, 0),!.
@@ -433,7 +470,7 @@ move_inward_sent_op(nesc). move_inward_sent_op(poss).
 
 
 :- discontiguous(nnf1/5).
-:- discontiguous(axiom_lhs_to_rhs/3).
+:- discontiguous(logical_reductions/2).
 
 discovered_var(_Fml,_Slots).
 discovered_term_slots(_Fml,_Slots).
@@ -475,10 +512,10 @@ nnf1(_KB,~(Lit),FreeV,~(Lit),1):- is_ftVar(Lit),!, %push_cond(Lit,ftSentence),
 % =================================
 % "Already Horn clauses?"
 % =================================
-nnf1(KB,(Q :- P),FreeV,(Q :- PP),Paths):- nnf1(KB,P,FreeV,PP,Paths),!.
+
+nnf1(_,'$existential'(V,N,Q),_FreeV,'$existential'(V,N,Q),0).
 
 nnf1(KB,(Q :- P),FreeV,Lit,N):- nnf1(KB,~(Q) => ~(ante(P)),FreeV,Lit,N).
-
 
 
 % Skipped Args
@@ -499,18 +536,19 @@ nnf1(KB,Fin,FreeV,NNF,Paths):- corrected_modal(KB,Fin,F)-> Fin \=@= F,!,nnf1(KB,
 nnf1(KB,NNF,NewVars,NNF2,Paths):- 
   nnf_ex(KB,NNF,NewVars,NNF2,Paths),!.
 
+
 /*
 nnf1(KB,'tColOfCollectionSubsetFn'(Col,'tSetOfTheSetOfFn'(Var,Formulas)),FreeV,Var,2):- is_ftVar(Var), \+ is_ftVar(Col),
   nnf(KB,all(Var,isa(Var,Col)&Formulas),FreeV,SubForms,_),   
    asserta(added_constraints(KB,Var,SubForms)).
 */
     
+% not disabled
 % Simplification
-nnf1(KB,~(nesc(~(F))),FreeV,BOX,Paths):- nonvar(F),!,
-   nnf1(KB,poss(F),FreeV,BOX,Paths).
-
-nnf1(KB,~(poss(~(F))),FreeV,BOX,Paths):- nonvar(F),!,
-   nnf1(KB,nesc(F),FreeV,BOX,Paths).
+nnf1(KB,Fin,FreeV,DIA,Paths):-  
+  once(simplify_cheap(Fin,F2)),
+  Fin\=@=F2,
+  nnf(KB,F2,FreeV,DIA,Paths).
 
 nnf1(KB,~(nesc(F)),FreeV,BOX,Paths):- nonvar(F),!,
    nnf1(KB,poss(~(F)),FreeV,BOX,Paths).
@@ -550,18 +588,43 @@ nnf1(KB, ~( Fml),FreeV,NNF,Paths):- nonvar(Fml),
 	),!,
        nnf(KB,Fml1,FreeV,NNF,Paths).
 
-%% axiom_lhs_to_rhs( ?KB, :LHS, :RHS) is det.
+%% logical_reductions( ?KB, :LHS, :RHS) is det.
 %
 % Axiom Left-hand-side Converted To Right-hand-side.
 %
 
-axiom_lhs_to_rhs(_KB, poss(beliefs(A,~(F1))),~(nesc(knows(A,F1)))).
-axiom_lhs_to_rhs(_KB, all(Vs,poss(A & B)) ,  ~(exists(Vs,nesc(A & B)))):- is_ftVar(Vs),!.
+logical_reductions(poss(beliefs(A,~(F1))),~(nesc(knows(A,F1)))).
+logical_reductions(all(Vs,poss(A & B)) ,  ~(exists(Vs,nesc(A & B)))):- is_ftVar(Vs).
+logical_reductions(nesc(poss(A)), poss(A)):- set_is_lit(A). 
+logical_reductions(poss(poss(A)), poss(A)):- set_is_lit(A). 
+logical_reductions(nesc(nesc(A)), nesc(A)):- set_is_lit(A). 
+logical_reductions(poss(nesc(A)), poss(A)):- set_is_lit(A). 
+logical_reductions( ~( nesc(  ~(  F))),poss(F)).
+logical_reductions( ~( poss(  ~(  F))),nesc(F)).
+logical_reductions(poss(nesc(IN)),poss(IN)).
+logical_reductions(poss(poss(IN)),poss(IN)).
+logical_reductions(nesc(poss(IN)),poss(IN)).
+logical_reductions(nesc(nesc(IN)),nesc(IN)).
 
-% disabled
-nnf1(KB,Fin,FreeV,DIA,Paths):-  fail,  copy_term(Fin,Fml),axiom_lhs_to_rhs(KB,F1,F2) , 
- \+ \+ (numbervars(Fin,0,_,[attvar(bind)]),logically_matches(KB,Fin,F1)),
-  show_success(nnf,(nop(Fml),logically_matches(KB,Fin,F1))),show_call(why,nnf(KB,F2,FreeV,DIA,Paths)).
+logical_reductions(poss(~nesc(IN)),poss(~IN)).
+logical_reductions(poss(~poss(IN)),poss(~IN)).
+logical_reductions(nesc(~poss(IN)),~poss(IN)).
+logical_reductions(nesc(~nesc(IN)),~nesc(IN)).
+logical_reductions(~poss(nesc(IN)),~poss(IN)).
+logical_reductions(~poss(poss(IN)),~poss(IN)).
+logical_reductions(nesc(A & B), nesc(A) & nesc(B)).
+logical_reductions(poss(A v B), poss(A) v poss(B)).
+ 
+simplify_cheap(FmlIn,FmlIn):- leave_as_is_logically(FmlIn),!.
+simplify_cheap(FmlIn,FmlOut):-
+ copy_term(FmlIn,Fml,_),copy_term(Fml,FmlC),logical_reductions(F1,FmlOut), 
+ =(Fml,F1), FmlC=@=Fml,Fml=FmlIn,!.
+simplify_cheap(FmlIn,FmlOut):- compound(FmlIn), 
+  compound_name_arguments(FmlIn,F,FmlInRGS),
+  maplist(simplify_cheap,FmlInRGS,FmlInRGSO),!,
+  compound_name_arguments(FmlOut,F,FmlInRGSO).
+simplify_cheap(FmlIn,FmlIn).
+
 
 %   poss(beliefs(A,~(F1))) ->  poss(~(knows(A,F1))) ->  ~(nesc(knows(A,F1)))
 
@@ -569,7 +632,7 @@ nnf1(KB,cir(F),FreeV,CIR,Paths):-
       nnf(KB,F,FreeV,NNF,Paths), 
       cirRule(KB,cir(NNF), CIR),!.
 
-% % axiom_lhs_to_rhs(KB,poss(- (- LIT)),poss(LIT)):-set_is_lit(LIT).
+% % logical_reductions(KB,poss(- (- LIT)),poss(LIT)):-set_is_lit(LIT).
 :- style_check(+singleton).
 
 % =================================
@@ -627,7 +690,7 @@ nnf1(KB,~(cir(Future)),FreeV,NNF,Paths):-
    nnf(KB,cir(~(Future)),FreeV,NNF,Paths),!.
 
 % A until B means it B starts after the ending of A
-axiom_lhs_to_rhs(_KB,startsAfterEndingOf(B,A),until(A,B)):- set_is_lit(A),set_is_lit(B),!.
+logical_reductions(_KB,startsAfterEndingOf(B,A),until(A,B)):- set_is_lit(A),set_is_lit(B).
 
 nnf1(KB,until(A,B),FreeV,NNF,Paths):-  set_is_lit(A),set_is_lit(B),!,
       nnf(KB,A,FreeV,NNF1,Paths1),
@@ -636,6 +699,13 @@ nnf1(KB,until(A,B),FreeV,NNF,Paths):-  set_is_lit(A),set_is_lit(B),!,
         set_is_lit(NNF1),
         set_is_lit(NNF2),
 	NNF = until(NNF1, NNF2).
+
+nnf1(KB,(==>(A,B)),FreeV,NNF,Paths):-  
+      nnf(KB,nesc(A),FreeV,NNF1,Paths1),
+      nnf(KB,nesc(B),FreeV,NNF2,Paths2),
+	Paths is Paths1 + Paths2,
+	NNF = (==>(NNF1, NNF2)).
+
 
 nnf1(KB,holdsIn(TIMESPAN,TRUTH),FreeV,NNF,Paths):-  
   nnf(KB,occuring(TIMESPAN) => TRUTH,FreeV,NNF,Paths).
@@ -1048,10 +1118,11 @@ leave_as_is_logically0(LIST):- is_list(LIST),!, maplist(leave_as_is_logically0,L
 :- kb_global(baseKB:workflow_holder_queue/1).
 leave_as_is_logically_fa(meta_argtypes,1).
 leave_as_is_logically_fa(skolem,_).
+leave_as_is_logically_fa('$existential',_).
 leave_as_is_logically_fa({},1).
 leave_as_is_logically_fa(onSpawn,1).
 leave_as_is_logically_fa(F,1):-clause_b(workflow_holder_queue(F)),!.
-leave_as_is_logically_fa(F,A):-mpred_database_term(F,A,Type),Type\=fact(_),Type\=rule,!.
+leave_as_is_logically_fa(F,A):-mpred_database_term(F,A,syntaxic(Type)),Type\=fact(_),Type\=rule(_),!.
 
 %= 	 	 
 
@@ -1257,41 +1328,8 @@ dnf1(_KB,DNF,                  DNF ).
 %
 % Simplify Cheap.
 %
-simplify_cheap(IN,OUT):-nonvar(OUT),!,simplify_cheap(IN,M),!,OUT=M.
-simplify_cheap(IN,IN):- leave_as_is_logically(IN),!.
-simplify_cheap(IN,IN):- var_or_atomic(IN),!.
-% simplify_cheap(nesc(OUT),OUT):- !,nonvar(OUT),is_modal(OUT,BDT),!.
-% simplify_cheap(poss( poss( F)),  poss( F)):-nonvar(F),!.
 
-simplify_cheap( ~( poss(  ~(  F))), OUT):-nonvar(F),!, simplify_cheap_must(nesc(F),OUT).
-simplify_cheap( ~( nesc(  ~(  F))), OUT):-nonvar(F),!, simplify_cheap_must(poss(F),OUT).
-simplify_cheap( ~( poss(  (  F))), OUT):-nonvar(F),!, simplify_cheap_must(nesc(~(F)),OUT).
-simplify_cheap( ~( nesc(  (  F))), OUT):-nonvar(F),!, simplify_cheap_must(poss(~(F)),OUT).
-simplify_cheap(poss(IN),OUT):- var_or_atomic(IN),!,poss(IN)=OUT.
-simplify_cheap(nesc(IN),OUT):- var_or_atomic(IN),!,nesc(IN)=OUT.
 
-simplify_cheap(poss(nesc(IN)),OUT):- simplify_cheap_must(poss(IN),OUT).
-simplify_cheap(poss(poss(IN)),OUT):- simplify_cheap_must(poss(IN),OUT).
-simplify_cheap(nesc(poss(IN)),OUT):- simplify_cheap_must(poss(IN),OUT).
-simplify_cheap(nesc(nesc(IN)),OUT):- simplify_cheap_must(nesc(IN),OUT).
-%simplify_cheap( ~(  ~( IN)),OUT):- simplify_cheap_must(IN,OUT).
-%simplify_cheap( ~(  poss( poss( F))),  ~( F)):-nonvar(F),!.
-%simplify_cheap(poss( poss( F)),  poss( F)):-nonvar(F),!.
-%simplify_cheap( ~( poss(_,  ~(  F))), F):-nonvar(F),!.
-%simplify_cheap(IN,-OUT):- IN =  ~( poss(OUT)), is_modal(OUT,BDT),!.
-%simplify_cheap(IN,-OUT):- IN =  ~( nesc(OUT)), \+is_modal(OUT,BDT),!.
-simplify_cheap(INOUT,INOUT).
- 
-%= 	 	 
-
-%% simplify_cheap_must( ?IN, ?IN) is det.
-%
-% Simplify Cheap Must Be Successfull.
-%
-simplify_cheap_must(IN,IN):- var_or_atomic(IN),!.
-simplify_cheap_must(IN,IN):- leave_as_is_logically(IN),!.
-simplify_cheap_must(IN,OUT):- simplify_cheap(IN,OUT),!.
-simplify_cheap_must(IN,IN).
 
 
 %=
@@ -1374,7 +1412,14 @@ pfn4(_KB,          PNF, _,       PNF ).
 
 :- meta_predicate if_debugging2(*,0).
 % if_debugging2(_,_):- !.
+if_debugging2(Name,G):- debugging(logicmoo(Name),TF),!,ignore((TF=true,call(G))).
+if_debugging2(_,_):- debugging(logicmoo(clif),false),!.
 if_debugging2(_,G):- call(G).
+
+:- nodebug(logicmoo(as_dlog)).
+:- nodebug(logicmoo(as_sigma)).
+
+
 %=%  Clausal Form (CF) : assumes Fml in PNF and
 %                                 each quantified variable is unique
 
@@ -1915,7 +1960,7 @@ mpred_quf_0(In,In).
 %
 % Nonegate.
 %
-nonegate(_KB,IO,IO):-!.
+%nonegate(_KB,IO,IO):-!.
 nonegate(KB,List,OutZ):- is_list(List),must_maplist_det(nonegate(KB),List,OutZ),!.
 nonegate(KB,Fml,OutZ):- simplify_cheap(Fml,Fml2)-> Fml \=@= Fml2,nonegate(KB,Fml2,OutZ),!.
 nonegate(KB,Fml,OutZ):- must((unbuiltin_negate(KB,Fml,Out),!,defunctionalize(Out,OutY),!,must(mpred_quf(OutY,OutZ)))),!.

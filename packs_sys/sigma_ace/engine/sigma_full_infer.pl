@@ -20,10 +20,35 @@
 % ======================================================
 % QUERY PROC POSITIVE/NEGATIVE
 % ======================================================
-tkq1:-agentQuery("(isa Joe ?Class)",'ToplevelContext','Merge','Dmiles',U,R,P).
-tkq2:-agentQuery("(isa on Relation)",'ToplevelContext','Merge','Dmiles',U,R,P).
+tkq1:-agentQuery("(isa Joe ?Class)").
+tkq2:-agentQuery("(isa on Relation)").
 
-agentQuery(KIFCharsIn,FmlInOpen,Vars,Ctx,KB,User,UResultsSoFar,Result,ProofOut,Status):-
+agentQueryF(KIFCharsIn):-
+ forall(agentQuery(KIFCharsIn,UResultsSoFar,Result,Proof),
+   wdmsg(UResultsSoFar->Result-->Proof)).
+
+
+agentQueryF(KIFCharsIn,UResultsSoFar,Result,Proof):-
+  agentQueryF(KIFCharsIn,'ToplevelContext','Merge','TheAgent',UResultsSoFar,Result,Proof).
+
+agentQueryF(KIFCharsIn,Ctx,KB,User,UResultsSoFar,Result,Proof):-
+	agentQueryF(KIFCharsIn,Ctx,KB,User,UResultsSoFar,Result,Proof,Status),
+	(Status = done(_) -> ! ; true).
+	
+:- with_no_output(use_module(library(wamcl_runtime))).
+
+ask_parse_queryF(TermIn,FmlInOpen,Vars):- compound(TermIn), \+ is_list(TermIn), FmlInOpen = TermIn, get_clause_vars(FmlInOpen,Vars).
+ask_parse_queryF(KIFCharsIn,FmlInOpen,Vars):- isCharCodelist(KIFCharsIn), string_clean(KIFCharsIn,KIFChars),
+	logOnFailure(ask_parse_chars(KIFChars,FmlInOpen,Vars)),!.
+ask_parse_queryF(KIFCharsIn,FmlInOpen,Vars):-
+	logOnFailure(input_to_forms(KIFCharsIn,FmlInOpen,Vars)).
+		
+agentQueryF(KIFIn,Ctx,KB,User,UResultsSoFar,Result,Proof,Status):-	
+	logOnFailure(ask_parse_query(KIFIn,FmlInOpen,Vars)),!,
+	agentQueryFull(KIFIn,FmlInOpen,Vars,Ctx,KB,User,UResultsSoFar,Result,Proof,Status).
+			
+
+agentQueryFull(KIFCharsIn,FmlInOpen,Vars,Ctx,KB,User,UResultsSoFar,Result,ProofOut,Status):-
 	TN = User, % Tracks query based on 'User'
 	destroyTN(KB,TN,_Ctx),	% Removes previous Query
 	getOpenVariablesWFF(FmlInOpen,Vars,ChaseVars),
@@ -134,7 +159,7 @@ sigmaCache('~instance'(v('Abstract', A, ['Class'|B]), v('Abstract', 'Class', ['C
 %ensureKey(Literal,Proto,HashKey,Depth,HashKey):-nonvar(HashKey),!.
 %ensureKey(Literal,Proto,HashKey,Depth,HashKey):-nonvar(Proto),!,hash_term(Proto,HashKey).
 ensureKey(Literal,Proto,HashKey,Depth,HashKey):-
-	copy_term(Literal,Proto),numbervars(Proto,'$',0,Depth),hash_term(Proto,HashKey),!.
+	copy_term(Literal,Proto),sigma_numbervars(Proto,'$',0,Depth),hash_term(Proto,HashKey),!.
 
 % inferGoal(Todo,VarsIn,Ctx,KB, AccumulatedOut).
 inferGoal(Todo,VarsIn,Ctx,KB, AccumulatedOut):-
@@ -419,7 +444,7 @@ agentQueryEach(FmlInOpen,UQuery,UVars,Ctx,KB,User,UA, UVars,bullet(FmlInOpen) * 
 	is_unique(UQuery,UA),
 	should_cut(RA,UA,Deductions,Answers,Result). %UA>0.
 	
-is_unique(UQuery,UA):-copy_term(UQuery,Copy),numbervars(Copy,'$VAR',0,_),!,is_unique2(Copy,UA),!.
+is_unique(UQuery,UA):-copy_term(UQuery,Copy),sigma_numbervars(Copy,0,_),!,is_unique2(Copy,UA),!.
 is_unique2(Copy,-1):-t_answer_found(Copy),writeDebug(used(Copy)),!.
 is_unique2(Copy,UA):-asserta(t_answer_found(Copy)),flag('UAnswers',UA,UA+1),!.
 

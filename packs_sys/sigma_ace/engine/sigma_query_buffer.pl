@@ -56,12 +56,12 @@ createQueryResponseBuffer_proc(FmlInOpen,Ctx,TrackingAtom,KB,User,Vars):-!.
 addToResultBuffer(UResultsSoFar,Result,Proof,Status):-var(Proof),!,fail.
 
 addToResultBuffer(UResultsSoFar,Result,Proof,done(How)):-
-	numbervars((UResultsSoFar,Result,Proof,Status),'$VAR',0,_),
+	sigma_numbervars((UResultsSoFar,Result,Proof,Status),0,_),
 	assert(queryBuffer_db(UResultsSoFar,Result,Proof,done(How))),
 	assert(final_answer(How)),!.	%Finalize on done/1.
 	
 addToResultBuffer(UResultsSoFar,Result,Proof,Status):-
-	once((numbervars((UResultsSoFar,Result,Proof,Status),'$VAR',0,_),
+	once((sigma_numbervars((UResultsSoFar,Result,Proof,Status),0,_),
 	assert(queryBuffer_db(UResultsSoFar,Result,Proof,Status)))),
 	fail.
 

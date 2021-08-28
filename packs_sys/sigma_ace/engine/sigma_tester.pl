@@ -693,7 +693,7 @@ show_relations:-!.
 mk_length(R,A,P):-
 	getArity(R,A),!,
 	length(L,A),
-	numbervars(L,'$VAR',0,_),
+	sigma_numbervars(L,0,_),
 	P=..[R|L].
 
 getArity(R,A):-
@@ -932,12 +932,13 @@ tsurf(Clause):- compound(Clause),
   tsurf(Clause,KRVars).
 tsurf(Clause,KRVars):-
  format("% ============================================"),
-  guess_pretty(Clause),
+  guess_pretty(KRVars+Clause),
   f_pprint(Clause),
 	getAssertionClauses('KB','Ctx',Clause,Out,KRVars,FlagsL),!,
-	ok_subst(FlagsL,'.',*,Flags),!,
+	ok_subst(FlagsL,'.',*, Flags),!,
   format("% ============================================"),
- show_tsurf(Out),
+  show_tsurf(Out),
+  show_tsurf(flags=Flags),
  format("% ============================================"),!.
 	%writeTranslation(Clause).
 		       /*
@@ -994,8 +995,8 @@ writeSentenceBlock([]) :- write('TRUE'), nl.
 
 
 writeClauseBlock(clause(PosAtoms, NegAtoms)) :-
-	numbervars(PosAtoms, 0, N),
-	numbervars(NegAtoms, N, _),
+	sigma_numbervars(PosAtoms, 0, N),
+	sigma_numbervars(NegAtoms, N, _),
 	writeClauseBlock(PosAtoms, ' v '),
 	write(' <- '),
 	writeClauseBlock(NegAtoms, ' & '),

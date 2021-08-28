@@ -44,8 +44,8 @@
 % ==========================================================
 %writeDebug(T):-!.  writeDebug(C,T):-!.
  
-%writeDebug(T):-notrace(isSigmaOption(opt_debug=off)),!.
-%writeDebug(C,T):-notrace(isSigmaOption(opt_debug=off)),!.
+%writeDebug(T):-sigma_notrace(isSigmaOption(opt_debug=off)),!.
+%writeDebug(C,T):-sigma_notrace(isSigmaOption(opt_debug=off)),!.
 
 ttc(X):-thread_signal(X,trace).
 ttc2:-thread_signal(2,trace).
@@ -60,7 +60,7 @@ writeModePop(Pop):-!.
 writeDebug(T):- dmsg(T),!.
 
 writeDebug(T):-!,
-	notrace((
+	sigma_notrace((
 	if_prolog(swi,
 		(prolog_current_frame(Frame),
 		prolog_frame_attribute(Frame,level,Depth),!,
@@ -75,7 +75,7 @@ indent_e(X):-XX is X -1,!,write(' '), indent_e(XX).
 
 writeDebug(C,T):- dmsg(C,T),!.
 writeDebug(C,T):-!,
-	notrace((
+	sigma_notrace((
 	writeFmt('<font size=+1 color=~w>',[C]),
 	writeDebug(T),
         writeFmt('</font>',[]))),!.
@@ -111,7 +111,7 @@ sendNote(X).
 sendNote(To,From,Subj,Message):-sendNote(To,From,Subj,Message,_).
 
 sendNote(To,From,Subj,Message,Vars):-
-	not(not((numbervars((To,From,Subj,Message,Vars)),
+	not(not((sigma_numbervars((To,From,Subj,Message,Vars)),
 	%writeDebug(sendNote(To,From,Subj,Message,Vars)),
 	catch(sendNote_1(To,From,Subj,Message,Vars),E,
 	writeFmt('send note ~w ~w \n <HR>',[E,sendNote(To,From,Subj,Message,Vars)]))))).
@@ -370,7 +370,7 @@ setSigmaOption(N):-atomic(N),!,setSigmaOption_thread(N,true).
 	
 setSigmaOption(Name,Value):-setSigmaOption_thread(Name,Value).
 setSigmaOption_thread(Name,Value):-
-	notrace((thread_self(Thread),
+	sigma_notrace((thread_self(Thread),
 	retractall('$SigmaOption'(Thread,Name,_)),
 	asserta('$SigmaOption'(Thread,Name,Value)),!)).
 
@@ -379,7 +379,7 @@ unsetSigmaOption(Name=Value):-nonvar(Name),
 	unsetSigmaOption_thread(Name,Value).
 unsetSigmaOption(Name):-nonvar(Name),
 	unsetSigmaOption_thread(Name,_).
-unsetSigmaOption(Name):-notrace(retractall('$SigmaOption'(Thread,Name,Value))).
+unsetSigmaOption(Name):-sigma_notrace(retractall('$SigmaOption'(Thread,Name,Value))).
 
 
 unsetSigmaOption_thread(Name):-
@@ -403,7 +403,7 @@ isSigmaOption(Name):-!,isSigmaOption(Name,true).
 isSigmaOption(Name,Value):-getSigmaOption_thread(Name,Value).
 
 getSigmaOption_thread(Name,Value):-
-	notrace((thread_self(Thread),
+	sigma_notrace((thread_self(Thread),
 	'$SigmaOption'(Thread,Name,Value))),!.
 
 

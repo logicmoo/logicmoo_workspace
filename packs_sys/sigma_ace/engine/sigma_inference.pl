@@ -20,7 +20,9 @@ agentInference(FmlInOpen,Literal,VarsRequested,Ctx,KB,User,PA, VarsRequested,fou
 
 agentInference(FmlInOpen,NLiteral,VarsRequested,Ctx,KB,User,PA, VarsRequested,found(NA),done(false:NA)):-%trace,
 	flag('$UAnswers',PA,PA),PA<1,
-	(NLiteral=..[TopFunctor|Args],(atom_concat('~',FN,TopFunctor);atom_concat('~',TopFunctor,FN))),!,Literal=..[FN|Args],
+	(NLiteral=..[TopFunctor|Args],(atom(TopFunctor),(atom_concat('~',FN,TopFunctor);atom_concat('~',TopFunctor,FN)))),
+  !,
+  Literal=..[FN|Args],
 	writeDebug(red,'Stage 4 - Negative ':not(FmlInOpen)),
 	sigmaInferenceCallTopN(VarsRequested,Literal),
 	flag('$UAnswers',UA,UA+1),
@@ -64,7 +66,7 @@ sigmaInferenceLiteral(Depth,PreviousVarSeek,'~equal'(CPos1,CPos2)):-!,
 	not(sigmaInferenceLiteral(Depth,PreviousVarSeek,equal(CPos1,CPos2))).
 
 sigmaInferenceLiteral(Depth,PreviousVarSeek,'~instance'(O,'$Class'(Base))):-!,
-				ground(O),O=..[T,A,ToB],not((member(Base,ToB));atom_concat('$',Base,T)),!.
+				ground(O),O=..[T,A,ToB], \+ ((member(Base,ToB));atom_concat('$',Base,T)),!.
 
 sigmaInferenceLiteral(Depth,PreviousVarSeek,'$existential'(X,Y,Formula)):-!,ignore(unify_with_occurs_check(X,Y)),!.
 
@@ -151,7 +153,7 @@ ensureProtoRef(TopFunctor,GoalPrototype,Goal,PrototypeRef,NumVars):-
 	% ExAction: Create GoalPrototype and Next Create PrototypeRef
 	% ---------------------------------------------------------------------------------------- 
 	(       copy_term(Goal,GoalPrototype),
-		numbervars(GoalPrototype,'$VAR',1,NumVars),
+		sigma_numbervars(GoalPrototype,1,NumVars),
 		% ----------------------------------------------------------------------------------------
 		% Condition: Ref Already Known
 		% ----------------------------------------------------------------------------------------
@@ -939,7 +941,7 @@ inferDepthBoundGoal(Literal,KB,Ctx,P,Bm,O):-
 	(inferInCurrentModel(KB,_Ctx,P,Literal,O);
 			(sigmaCache(Literal,Body,TN:KRVars:_,KB,_Ctx,_),
 			((length(KRVars,Goal),(Goal<Bm))),
-			not((memberchk(TN:KRVars,P),numbervars(Literal,'$VAR',0,_),isDeducedOrKnownEitherWay(Literal,_))),
+			not((memberchk(TN:KRVars,P),sigma_numbervars(Literal,0,_),isDeducedOrKnownEitherWay(Literal,_))),
 			writeDebug(inferUsageOfRule(Body,Bm,TN,KRVars,P,Literal)),
 			inferUsageOfRule(KB,Ctx,TN,KRVars,P,Literal,Body,Bm,O))).
 			% Was Asserted
@@ -1037,7 +1039,7 @@ inferGoal(KB,Ctx,ProofIn,MaxVars,\+ Literal,ProofIn):-!,not(inferGoal(KB,Ctx,[ne
 
 
 	
-inferGoal(KB,Ctx,ProofIn,MaxVars,'$existential'(v(_,TopFunctor,_),A,TopFunctor),_):-!,ignore(V=TopFunctor). %,numbervars(TopFunctor,'skolem',0,_),!.
+inferGoal(KB,Ctx,ProofIn,MaxVars,'$existential'(v(_,TopFunctor,_),A,TopFunctor),_):-!,ignore(V=TopFunctor). %,sigma_numbervars(TopFunctor,'skolem',0,_),!.
 
 /*
 inferGoal(KB,Ctx,ProofIn,MaxVars,Literal,ProofOut):-
@@ -1312,7 +1314,7 @@ inferGoal(KB,Ctx,[Consumer|ProofIn],MaxVars,g(RealLiteral,ImportantVars),ProofOu
 	ignore(MaxVars=PVars),NMaxVars is MaxVars - 1,
 	ensureKey(RealLiteral,CallLiteral,Depth,HashKey),	
 	sigmaCache(RealLiteral,guard(RFVH,FVH,Body,CLID,KRVars,RuleVars,UnivLiteral,BodyUniv,BodySelfConnected,Shared,PrivLiteral,FakeLiteral),Key,KB,Ctx,TN),
-	copy_term(Body,BodyInstanceCopy),numbervars(BodyInstanceCopy,'$',0,NBodyVarsLeft),
+	copy_term(Body,BodyInstanceCopy),sigma_numbervars(BodyInstanceCopy,'$',0,NBodyVarsLeft),
 	compare(CmpPrevious,PVars,NBodyVarsLeft),
 	writeq(sigmaCacheCall(RealLiteral,CallLiteral,CmpPrevious,MaxVars,PVars,NBodyVarsLeft)),nl,
 	sigmaCacheCall(CmpPrevious,[Consumer|ProofIn],MaxVars,PVars,NBodyVarsLeft,
@@ -1324,7 +1326,7 @@ inferGoal(KB,Ctx,[Consumer|ProofIn],MaxVars,g(RealLiteral,ImportantVars),ProofOu
 ensureKey(Literal,Key,Depth,HashKey):-
 	copy_term(Literal,Proto),
 	unwrapPatterns(Proto,Key),
-	numbervars(Key,'$',0,Depth),
+	sigma_numbervars(Key,'$',0,Depth),
 	hash_term(Key,HashKey),!.
 
 unwrapPatterns(Term,OTerm):-
@@ -1418,12 +1420,12 @@ sigmaCacheCall(_,Previous,MaxVars,PVars,NBodyVarsLeft,
 	erase(Ref),%trace,
 
 	%copy_term(RFVH,Session),
-	%numbervars(Session,'$',0,_),
+	%sigma_numbervars(Session,'$',0,_),
 	
 %	=(RFVH,FVH), %unifies list of 'real' prolog variables
 %        not(recorded(TN,RuleVars,Ref)),
  %       copy_term(RuleVars,Session),
-	%numbervars(FVH,'$VAR',0,_),
+	%sigma_numbervars(FVH,0,_),
   %      recorda(TN,Session,Ref),
 
 

@@ -43,7 +43,7 @@ This special module hooks into the logicmoo engine allow clif syntax to be recoc
 
 :- user:use_module(library(logicmoo_common)).
 
-:- if((exists_source(library(wam_cl/sreader)))).
+:- if((exists_source(library(wam_cl/sreader)), \+ current_module(wmclrt))).
 :- use_module(library(wam_cl/sreader)).
 :- endif.
 

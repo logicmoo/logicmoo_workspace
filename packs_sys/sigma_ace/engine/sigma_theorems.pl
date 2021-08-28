@@ -5,7 +5,7 @@
 % ============================================
 
 % Free Formulas are never 
-isTheorem(T,V):-notrace(isTheoremTrue(T,V)).
+isTheorem(T,V):-sigma_notrace(isTheoremTrue(T,V)).
 isTheoremTrue(V,FreeV):-isSlot(V),!,fail.
 isTheoremTrue(V,FreeV):-isReducedToTrue(V),!.
 

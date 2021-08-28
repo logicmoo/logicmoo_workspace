@@ -415,6 +415,7 @@ save_results:-
  forall(j_u:junit_prop(testsuite,file,File), 
     (with_output_to(string(Text),show_junit_suite_xml(File)),
      save_to_junit_file(File,Text))).
+save_results:- wdmsg(unused(save_results)).
 
 show_junit_suite_xml(File):- 
   format('<?xml version="1.0" encoding="utf-8"?>~n'),

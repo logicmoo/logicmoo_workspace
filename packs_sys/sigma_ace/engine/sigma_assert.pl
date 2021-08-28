@@ -295,7 +295,7 @@ tam(Surface,entails(OAnte,OConsq),Flags,Vars,KB,Ctx,TN,Author,Result):-!,
 		unnumbervars(
 				(NConsq,AnteListS,Vars,KB,Ctx,surf(KB,TN,CLID,Vars)),
 				(UNConsq,UAnteListS,UVars,UKB,UCtx,UProof)),
-		numbervars((UNConsq,UAnteListS,UVars,UKB,UCtx,UProof),'$VAR',0,_),% trace,
+		sigma_numbervars((UNConsq,UAnteListS,UVars,UKB,UCtx,UProof),0,_),% trace,
 	length(AnteListS,Cost),
 		format('~q.~n',['2'(UNConsq,UAnteListS,Cost,UVars,UKB,UCtx,UProof)]),!.
 		
@@ -316,7 +316,7 @@ tam(Surface,OConsq,Flags,Vars,KB,Ctx,TN,Author,Result):-!,
 	logOnFailure(once(putAttributeStructures(Surface,Rule,KB,Flags,OConsq,Consq))),!,
 	convertListNotNeg([Consq],[NConsq]),
 	unnumbervars((NConsq,Ctx,surf(KB,TN,CLID,Vars)),(UConsq,UCtx,UProof)),
-	numbervars((UConsq,UCtx,UProof),'$VAR',0,_),!,
+	sigma_numbervars((UConsq,UCtx,UProof),0,_),!,
 	format('~q.~n',['1'(UConsq,KB,UCtx,UProof)]).
 	
 	
@@ -370,24 +370,24 @@ assertAll(InKB):-isClaused(InKB),!.
 assertAll(T):-catch(asserta(T),E,format('~n% prolog warning ~w ~n',[E])),!. 
 
 isClaused(InKB):-
-	notrace(not(not((numbervars(InKB,'$VAR',0,_),!,isClausedG(InKB))))),!.
+	sigma_notrace(not(not((sigma_numbervars(InKB,0,_),!,isClausedG(InKB))))),!.
 	
 isClausedG(sigmaCache(C,A,ProofID:KRVars:KR,KB,Ctx,TN)):-
 	clause(sigmaCache(C,A,_:_:_,KB,_,_),true,OldID),
 	clause(sigmaCache(OC,OA,_,_,_,_),true,OldID),
-	numbervars(OC:OA,'$VAR',0,_),
+	sigma_numbervars(OC:OA,0,_),
 	C:A==OC:OA,!,ifInteractive(write(',')),!.
 
 isClausedG(sigmaCache(C,ProofID:KRVars:KR,KB,Ctx,TN)):-
 	clause(sigmaCache(C,_:_:_,KB,_,_),true,OldID),
 	clause(sigmaCache(OC,_,_,_,_),true,OldID),
-	numbervars(OC,'$VAR',0,_),
+	sigma_numbervars(OC,0,_),
 	C==OC,!,ifInteractive(write(',')),!.
 
 isClausedG(sigmaCache(_:_,C,KB,_,_)):-
 	clause(sigmaCache(_:_,C,KB,_,_),true,OldID),
 	clause(sigmaCache(_:_,OC,KB,_,_),true,OldID),
-	numbervars(OC,'$VAR',0,_),
+	sigma_numbervars(OC,0,_),
 	C==OC,!,ifInteractive(write(',')),!.
 
 isClausedG(InKB:-B):-isClausedG(InKB,B),!.
@@ -396,7 +396,7 @@ isClausedG(InKB):-isClausedG(InKB,true),!.
 isClausedG(C,A):-
 	clause(C,A,OldID),
 	clause(OC,OA,OldID),
-	numbervars(OC:OA,'$VAR',0,_),
+	sigma_numbervars(OC:OA,0,_),
 	C:A==OC:OA,!.
 	
 		
@@ -404,7 +404,7 @@ countAssertions(C:-A,N):-countAssertions(C,A,N).
 countAssertions(C,N):-countAssertions(C,true,N).	
 
 countAssertions(C,A,N):-
-       % numbervars(C:A,'$VAR',0,_),
+       % sigma_numbervars(C:A,0,_),
 	flag(clauses_count,_,0),
 	clause(C,A,ID),
 	flag(clauses_count,X,X+1),fail.

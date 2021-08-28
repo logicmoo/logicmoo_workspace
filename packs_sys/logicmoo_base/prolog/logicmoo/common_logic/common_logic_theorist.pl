@@ -2417,7 +2417,7 @@ IJCAI-87, Milan, Italy.
 \end{document}
 */
 
-tnumbervars(Term, N, M):- numbervars(Term, N, M).
+tnumbervars(Term, N, M):- numbervars(Term, N, M, [attvar(skip)]).
 /*
 tnumbervars(Term, N, Nplus1) :-
   var(Term), !,

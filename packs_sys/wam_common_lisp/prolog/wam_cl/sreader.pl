@@ -1,4 +1,4 @@
-:- if(\+ current_module(sxpr_reader)).
+f:- if(\+ current_module(sxpr_reader)).
 :- module(s3xpr,[
   codelist_to_forms/2,
   svar_fixvarname/2,
@@ -119,7 +119,7 @@ with_all_rest_info(Pred1):-
  forall(clause(t_l:s_reader_info(O2),_,Ref),
   (zalwayz(once(call(Pred1,O2))),erase(Ref))),!.
 
-parse_sexpr_untyped(I,O):- notrace((parse_sexpr(I,M))),!,quietly_sreader((to_untyped(M,O))),!.
+parse_sexpr_untyped(I,O):- quietly((parse_sexpr(I,M))),!,quietly_sreader((to_untyped(M,O))),!.
 
 read_pending_whitespace(In):- repeat, peek_char(In,Code),
    (( \+ char_type(Code,space), \+ char_type(Code,white))-> ! ; (get_char(In,_),fail)).
@@ -198,13 +198,13 @@ with_kifvars(Goal):-
 % Parse S-expression.
 %
 
-parse_sexpr(S, Expr) :- notrace(parse_meta_term(file_sexpr_with_comments, S, Expr)),!.
+parse_sexpr(S, Expr) :- quietly(parse_meta_term(file_sexpr_with_comments, S, Expr)),!.
 
 %% parse_sexpr_ascii( +Codes, -Expr) is det.
 %
 % Parse S-expression Codes.
 %
-parse_sexpr_ascii(S, Expr) :- notrace(parse_meta_ascii(file_sexpr_with_comments, S,Expr)),!.
+parse_sexpr_ascii(S, Expr) :- quietly(parse_meta_ascii(file_sexpr_with_comments, S,Expr)),!.
 
 
 parse_sexpr_ascii_as_list(Text, Expr) :- txt_to_codes(Text,DCodes),
@@ -223,7 +223,7 @@ parse_sexpr_string(S,Expr):-
 %
 % Parse S-expression from a Stream
 %
-parse_sexpr_stream(S,Expr):- notrace(parse_meta_stream(file_sexpr_with_comments,S,Expr)),!.
+parse_sexpr_stream(S,Expr):- quietly(parse_meta_stream(file_sexpr_with_comments,S,Expr)),!.
 
 :- export('//'(file_sexpr,1)).
 :- export('//'(sexpr,1)).
@@ -239,6 +239,7 @@ intern_and_eval(UTC,'$intern_and_eval'(UTC)).
 %file_sexpr_with_comments(O) --> [], {clause(t_l:s_reader_info(O),_,Ref),erase(Ref)},!.
 file_sexpr_with_comments(end_of_file) --> file_eof,!.
 file_sexpr_with_comments(O) --> one_blank,!,file_sexpr_with_comments(O),!.  % WANT? 
+file_sexpr_with_comments(end_of_file) --> `:EOF`,!.
 file_sexpr_with_comments(C)                 --> dcg_peek(`#|`),!,zalwayz(comment_expr(C)),swhite,!.
 file_sexpr_with_comments(C)                 --> dcg_peek(`;`),!, zalwayz(comment_expr(C)),swhite,!.
 file_sexpr_with_comments(Out) --> {kif_ok}, prolog_expr_next, prolog_readable_term(Out), !.
@@ -247,9 +248,13 @@ file_sexpr_with_comments(Out,S,E):- expr_with_text(Out,file_sexpr(O),O,S,E),!.
 
 prolog_expr_next--> dcg_peek(`:-`).
 prolog_expr_next--> dcg_peek(read_string_until(S,(eol;`.`))),{atom_contains(S,':-')}.
+prolog_expr_next--> dcg_peek(`.{`).
+
+prolog_readable_term(Expr) -->  `.`,prolog_readable_term(Read), {arg(1,Read,Expr),!}.
 prolog_readable_term(Expr,S,E):- 
-  catch((read_term_from_codes(S,Expr,[subterm_positions(FromTo),cycles(true), % module(baseKB),
-   double_quotes(string),comments(CMT), variable_names(Vars)]),implode_threse_vars(Vars),
+  catch((read_term_from_codes(S,Expr,[subterm_positions(FromTo),cycles(true), module(baseKB),
+   double_quotes(string),
+   comments(CMT), variable_names(Vars)]),implode_threse_vars(Vars),
    arg(2,FromTo,To), length(TermCodes,To),
    append(TermCodes,Remaining,S),
    `.`=[Dot],(Remaining=[Dot|E]/*;Remaining=E*/),!,
@@ -386,8 +391,9 @@ sexpr(X,H,T):- zalwayz(sexpr0(X),H,M),zalwayz(swhite,M,T), nop(if_debugging(srea
 
 sexpr0(L)                      --> sblank,!,sexpr(L),!.
 sexpr0(L)                      --> `(`, !, swhite, zalwayz(sexpr_list(L)),!, swhite.
-sexpr0((Expr))                 --> {fail}, `{`, !, read_string_until(S,`}.`),!, swhite,
-  {read_term_from_codes(S,Expr,[cycles(true),module(baseKB),double_quotes(string),variable_names(Vars)]),implode_threse_vars(Vars)}.
+sexpr0((Expr))                 -->  `.{`, read_string_until(S,`}.`), swhite,
+  {prolog_readable_term(Expr,S,_)}.
+
 
 sexpr0(['#'(quote),E])             --> `'`, !, sexpr(E).
 sexpr0(['#'(backquote),E])         --> ````, !, sexpr(E).
@@ -797,7 +803,7 @@ find_from_name(Str,Code):-string_codes(Str,Chars),lisp_code_name_extra(Code,Char
 find_from_name(Str,Code):-lisp_code_name(Code,Str).
 find_from_name(Str,Code):-string_chars(Str,Chars),lisp_code_name(Code,Chars).
 
-make_lisp_character(I,O):-notrace(to_char(I,O)).
+make_lisp_character(I,O):-quietly(to_char(I,O)).
 
 f_code_char(CH,CC):- zalwayz(to_char(CH,CC)),!.
 f_name_char(Name,CC):- zalwayz((def_to_prolog_string(Name,CH),name_to_charcode(CH,Code),to_char(Code,CC))).

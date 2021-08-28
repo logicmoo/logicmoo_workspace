@@ -193,7 +193,7 @@ recanonicalizeTN(KB,TN):-
 	ifInteractive((writeFmt('\nCompiling ~w surface clauses in ~w\n',[Total,KB]),writePercentAndTimeReset)),
 	ignore((sigmaCache(Surface,CAN,Flags,Vars,KB,Ctx,TN,Author,Result),  
 	once((
-	%	numbervars((Surface,CAN,Flags,Vars,KB,Ctx,TN,Author,Result),'$VAR',0,_),!,
+	%	sigma_numbervars((Surface,CAN,Flags,Vars,KB,Ctx,TN,Author,Result),0,_),!,
 		canonicalizeClause(Surface,CAN,Flags,Vars,KB,Ctx,TN,Author,Result,AssertList),
 		assertAll(AssertList),
 	        ifInteractive((
@@ -208,10 +208,10 @@ recanonicalizeTN(KB,TN):-
 		writeFmt('\n100% complete.  Examined ~w internal lemma structures for ~w. Facts:~w  Rules:~w  \n',[ProofID,KB,Facts,Rules]))),!.
 	
 writePercentAndTimeReset:-
-	notrace((flag('$last_written_percent',_,1),getCputime(Now),!,flag('$cputime_percent_start',_,Now))).
+	sigma_notrace((flag('$last_written_percent',_,1),getCputime(Now),!,flag('$cputime_percent_start',_,Now))).
 	
 writePercentAndTime(Format,SoFar,Total,Steps):-
-        notrace((
+        sigma_notrace((
 		flag('$last_written_percent',LastPercent,LastPercent),
 	        NewPercent is (SoFar/Total * 100),
 		NextPercent is LastPercent + Steps, 
@@ -309,7 +309,7 @@ canonicalizeLemme(Surface,Rule,Cons,Ante,NewAnteR,Flags,KRVars,KB,Ctx,TN,Author,
 	selectSign(EntailedHead,Sign),!,
 	copy_term(EntailedHead,USeed),
 	convertNegations(lit,USeed,ProtoType,_),
-	numbervars(ProtoType,'$',0,_),
+	sigma_numbervars(ProtoType,'$',0,_),
 	selectBestRuleMatrix(Sign,HeadSlots,Flags,KRVars,EntailedHead,ConditionalBody,Matrix),!,
 	flag(clause_id,CLID,CLID+1),
 	setSigmaOption(putAttributeStructures,Surface:Rule:CLID:Flags:KRVars:KB:Ctx:TN),!,
@@ -368,7 +368,7 @@ createFunctionalClauses(Rule,[C|More],Clauses):-!,
 /*
 createFunctionalClauses(Rule,C:-A,[C:-Body]):-
 	getMostGeneralSubsumption(C,A,TF,UnsignedC,Variant),Variant=[_|_],!,
-	%copy_term(Variant,Copy),numbervars(Copy,'$',0,_),
+	%copy_term(Variant,Copy),sigma_numbervars(Copy,'$',0,_),
        %  nl,writeq(Rule),nl,writeq(Variant),nl,nl,
 	Body=..[TF,A,Variant].
 */
@@ -401,7 +401,7 @@ getMostGeneralSubsumptionI(X, Term,Variant) :-
 	
 % =============================================================
 
-nonWrappedCan([holdsDuring,entails,'include-context',instance,query,'$existential',false,true,domain,equal,subclass,subrelation,disjointDecomposition]).
+nonWrappedCan([holdsDuring,entails,'include-context',instance,query,'$existential',false,[],'$VAR','$',true,domain,equal,subclass,subrelation,disjointDecomposition]).
 
 % =============================================================
 
@@ -451,18 +451,18 @@ mapOnConj(Goal,LogAnte,ConditionalBody):-!,
 % =============================================================
 
 convertBodyToHolds(LogAnte,ConditionalBody):-!,
-	notrace((convertNegations(not,LogAnte,NottedLogAnte,_),
+	((convertNegations(not,LogAnte,NottedLogAnte,_),
 	nonWrappedCan(Nowrap),
 	convertToHolds([holds|Nowrap],NottedLogAnte,ConditionalBody))).
 
 convertToHolds(Flags,Mid,Term):-
-	%notrace
+	%sigma_notrace
 	(mapOnConj(convertToHoldsProp(Flags),Mid,Term)),!.
 	
 convertToHoldsProp(Flags,(Term),(Term)):-isSlot(Term),!.
 convertToHoldsProp(Flags,not(Mid),not(Term)):-!,convertToHolds(Flags,Mid,Term).
 convertToHoldsProp(Flags,Mid,'$eval'(Term)):-Mid=..[F|Args],atom(F),atom_concat(_,'Fn',F),!,Term=..[F|Args].
-convertToHoldsProp(Flags,(Term),(Term)):-functor(Term,F,_),atom_concat('$',_,F),!.
+convertToHoldsProp(Flags,(Term),(Term)):-functor(Term,F,_),atom(F),atom_concat('$',_,F),!.
 
 convertToHoldsProp(Flags,Mid,(Term)):-Mid=..[holds,F|Args],atom(F),atom_concat(_,'Fn',F),!,Term=..[function,F|Args].
 convertToHoldsProp([_|Flags],Mid,Term):-Mid	=..[F|Args],memberchk(F,Flags),!,Term=..[F|Args].
@@ -474,7 +474,7 @@ convertToHoldsProp([Wrap|_],Term,Term):-!.
 % =============================================================
 
 containsSkolems(Flags,EntailedHeadLiteral):-
-	notrace((getPrologVars(EntailedHeadLiteral,Vars,_,_),!,member(Each,Vars),member(replaceConsVar(Each,_),Flags),!)).
+	sigma_notrace((getPrologVars(EntailedHeadLiteral,Vars,_,_),!,member(Each,Vars),member(replaceConsVar(Each,_),Flags),!)).
 
 	
 selectBestRuleMatrix(Sign,HeadSlots,Flags,_,EntailedHead,[],[EntailedHead:-guarded_(EntailedHead)]):-!.
@@ -984,19 +984,19 @@ selectBestRuleMatrix(Sign,HeadSlots,Flags,KRVars,entails(Body,Head),[Head:-unopt
 notSkolemFlags(Flags):-not(member(replaceConsVar(_,_),Flags)).
 
 splitNegations(List,Pos,Neg):-
-	notrace((prologPartitionList(List,Item,isNegation(Item),NegT,PosT),!,NegT=Neg,PosT=Pos)).
+	sigma_notrace((prologPartitionList(List,Item,isNegation(Item),NegT,PosT),!,NegT=Neg,PosT=Pos)).
 	
 sharedVars(Item1,Item2):-
-	notrace((sharedVars(Item1,Item2,SharedVars,Item1Only,Item2Only),!,SharedVars=[_|_])).
+	sigma_notrace((sharedVars(Item1,Item2,SharedVars,Item1Only,Item2Only),!,SharedVars=[_|_])).
 	
 sharedVars(Item1,Item2,SharedVars):-
-	notrace((sharedVars(Item1,Item2,SharedVars,Item1Only,Item2Only),!)).
+	sigma_notrace((sharedVars(Item1,Item2,SharedVars,Item1Only,Item2Only),!)).
 	
 sharedVars(Item1,Item2,SharedVars,Item1Only,Item2Only):-
-	notrace((getPrologVars(Item1,V1s,_,_),getPrologVars(Item2,V2s,_,_),!,
+	sigma_notrace((getPrologVars(Item1,V1s,_,_),getPrologVars(Item2,V2s,_,_),!,
 	set_partition(V1s,V2s,Item1Only,Item2Only,SharedVars),!)).
 
-isNegation(Item):-notrace((isSlot(Item);(Item=not(V),nonvar(V));(functor(Item,F,A),atom_concat(~,_,F)))).
+isNegation(Item):-sigma_notrace((isSlot(Item);(Item=not(V),nonvar(V));(functor(Item,F,A),(atom(F),atom_concat(~,_,F))))).
 	
 
 
@@ -1069,7 +1069,7 @@ convertListNotNeg(not(Var),holds('TruthFn',Var,'False')):-isSlot(Var),!.
 convertListNotNeg([],[]):-!.
 convertListNotNeg([not(X)|Y],[ (~ X)|YY]):-inferType(F,negationByFailure),!,convertListNotNeg(Y,YY).
 convertListNotNeg([not(X)|Y],[ (XX)|YY]):- not(isSlot(X)),!,
-		X=..[F|Args],!, atom_concat('~',F,FN),
+		X=..[F|Args],!, atom(F),atom_concat('~',F,FN),
 		XX=..[FN|Args],!,convertListNotNeg(Y,YY).
 convertListNotNeg([(X)|Y],[(X)|YY]):-!,convertListNotNeg(Y,YY).
 
@@ -1137,12 +1137,12 @@ convertNegations(Other,PTerm,PTerm,Cons):-
 convertNegations(Neg,\+(In),Out,Bare):-!,convertNegations(Neg,not(In),Out,Bare).
 convertNegations(Neg,'~'(In),Out,Bare):-!,convertNegations(Neg,not(In),Out,Bare).
 convertNegations(Neg,In,Out,Bare):-
-	In=..[NegF|Args],atom_concat('~',Pos,NegF),
+	In=..[NegF|Args],atom(NegF),atom_concat('~',Pos,NegF),
 	Mid=..[Pos|Args],!,convertNegations(Neg,not(Mid),Out,Bare).
 
 convertNegations(lit,not(PTerm),Lit,PTerm):-
 	PTerm=..[Pos|Args],
-	atom_concat('~',Pos,F),!,
+	atom(Pos),atom_concat('~',Pos,F),!,
 	Lit=..[F|Args].
 convertNegations(Neg,not(Cons), Term,Cons):-
 	Term=..[Neg,Cons].	

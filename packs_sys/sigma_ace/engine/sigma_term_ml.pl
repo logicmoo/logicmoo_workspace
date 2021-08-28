@@ -57,7 +57,7 @@ toMarkUp(java,Var,VS,Chars):-!,catch(toMarkUp(html,Var,VS,Chars),_,true),!.
 toMarkUp(L,T,V,Chars):-!,
 	ignore(catch(/*notrace*/((
 	copy_term((T,V),(CT,CV)),
-	numbervars((CT,CV),'$VAR',0,_),%trace,
+	sigma_numbervars((CT,CV),0,_),%trace,
 	toMarkUp_lang(L,CT,CV,Chars))),_,true)),!.
 
 % VARIABLES
@@ -133,7 +133,7 @@ close_list_var([M|Ms],[M|Ls]):-!,
 	
 getTermlFormula(L,Term,Vars,Chars):-
 	Term=..[F,A|Args],
-	atom_concat('$',_,F), !,
+	atom(F),atom_concat('$',_,F), !,
 	getTermlFormula(L,write_dollar(F,[A|Args]),Vars,Chars).
  
 

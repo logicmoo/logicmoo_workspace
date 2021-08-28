@@ -35,7 +35,7 @@
 */
 /*
 
- exists(X, lives(X, green) /\ drinks(X, coffee)).
+ exists(X, lives(X, green_house) /\ drinks(X, coffee)).
 
   
 
@@ -89,8 +89,8 @@ exists([P1,I1,I2,P2,H1,H2],
 
 % Other facts:
 % 
-%= 1. The Brit lives in the red house. 
-lives(englishman, red).
+%= 1. The Brit lives in the red_house house. 
+lives(englishman, red_house).
 
 
 % forward chain these into houses
@@ -103,17 +103,17 @@ pet(swede, dogs).
 %= 3. The Dane drinks tea. 
 drinks(dane, tea).
 
-%= 4. The green house is on the immediate left of the white house. 
-leftof(green, white).
+%= 4. The green_house house is on the immediate left of the white_house house. 
+leftof(green_house, white_house).
 
-%= 5. The green house's owner drinks coffee. 
-exists(X, lives(X, green) /\ drinks(X, coffee)).
+%= 5. The green_house house's owner drinks coffee. 
+exists(X, lives(X, green_house) /\ drinks(X, coffee)).
 
 %= 6. The owner who smokes Pall Mall rears birds. 
 exists(X, smokes(X, pallmalls) /\ pet(X, birds)).
 
-%= 7. The owner of the yellow house smokes Dunhill. 
-exists(X, lives(X, yellow) /\ smokes(X, dunhills)).
+%= 7. The owner of the yellow_house house smokes Dunhill. 
+exists(X, lives(X, yellow_house) /\ smokes(X, dunhills)).
 
 %= 8. The owner living in the center house drinks milk. 
 exists(X, position(X, 3) /\ drinks(X, milk)).
@@ -133,8 +133,8 @@ exists(X, smokes(X, bluemasters) /\ drinks(X, bier)).
 %= 13. The German smokes Prince. 
 smokes(german, prince).
 
-%= 14. The Norwegian lives next to the blue house. 
-exists(X, neighbor(norwegian, X) /\ lives(X, blue)).
+%= 14. The Norwegian lives next to the blue_house house. 
+exists(X, neighbor(norwegian, X) /\ lives(X, blue_house)).
 
 %= 15. The owner who smokes Blends lives next to the one who drinks water. 
 exists(X,exists(Y,smokes(X, blends) /\ neighbor(X,Y) /\ drinks(Y, water))).
@@ -190,7 +190,7 @@ different(HA,HB) <- different_insts(_HCLASS, HA,HB).
 
 %= no two houses are the same color
 % five different colors
-house(red). house(green). house(white). house(yellow). house(blue).
+house(red_house). house(green_house). house(white_house). house(yellow_house). house(blue_house).
 
 :- listing(house).
 

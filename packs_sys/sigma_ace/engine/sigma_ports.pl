@@ -35,7 +35,7 @@ guard(Functor,RealHead:Head,RFVH:FVH,Body,TN,CID,KRVars,RuleVars,UnivHead,BodyUn
  	%ground(UnivHead), % Makes sure this is valid
 	unify_with_occurs_check(RFVH,FVH), %unifies list of 'real' prolog variables
 	copy_term(KRVars,Session),
-	numbervars(Session,'$VAR',0,_),
+	sigma_numbervars(Session,0,_),
 	recorda(TN,Session,Ref),
      %   recorda(Functor,RealHead,FRef),
 	%stepQualifier(Ref,Functor,RealHead:Head,RFVH:FVH,Body,TN,CID,KRVars,RuleVars,UnivHead,BodyUniv,BodySelfConnected,RealShared,Qualifier),
@@ -95,7 +95,7 @@ guard(Functor,RealHead:Head,RFVH:FVH,Body,TN,CID,KRVars,RuleVars,UnivHead,BodyUn
  	%ground(UnivHead), % Makes sure this is valid
 	unify_with_occurs_check(RFVH,FVH), %unifies list of 'real' prolog variables
 	copy_term(KRVars,Session),
-	numbervars(Session,'$VAR',0,_),
+	sigma_numbervars(Session,0,_),
 	recorda(TN,Session,Ref),
      %   recorda(Functor,RealHead,FRef),
 	%stepQualifier(Ref,Functor,RealHead:Head,RFVH:FVH,Body,TN,CID,KRVars,RuleVars,UnivHead,BodyUniv,BodySelfConnected,RealShared,Qualifier),
@@ -608,7 +608,7 @@ inference_module(
 	
 mkArgsAtom(Arity,ArgsAtom):-
 	length(Arglist,Arity),
-	numbervars(Arglist,'$VAR',0,_),	  
+	sigma_numbervars(Arglist,0,_),	  
 	term_to_atom(Arglist,ArgListAtom),
 	atom_codes(ArgListAtom,[_|ArgListAtomCodesRight]),
 	append(ArgListAtomCodes,[93],ArgListAtomCodesRight),
@@ -696,7 +696,7 @@ make_head_t(true,SUMOPred,N,Cons):-
 
 make_head_t(false,SUMOPred,N,Cons):-
 		length(Args,N),
-		atom_concat('~',SUMOPred,SUMOPredN),
+		atom(SUMOPred),atom_concat('~',SUMOPred,SUMOPredN),
 		Cons=..[SUMOPredN|Args],!.
 
 	
@@ -716,7 +716,7 @@ make_pred_data(Stream,Functor,KB,SUMOPred,Arity,N,Module,Debug,ArgsAtom):-
 	make_head_t(true,SUMOPred,Arity,Cons),
 	sigmaCache(Cons, Precon, KB,Ctx, TID),
 	write_rulenum(Stream,TID),
-	numbervars((Cons, Precon, KB,Ctx, TID,Vars),'$VAR',15,_),	
+	sigma_numbervars((Cons, Precon, KB,Ctx, TID,Vars),15,_),	
 	submit_ado_cache(Stream,SUMOPred,Cons, Precon, KB,Ctx, TID,Vars),fail.
 
 % False GAFS       
@@ -724,7 +724,7 @@ make_pred_data(Stream,Functor,KB,SUMOPred,Arity,N,Module,Debug,ArgsAtom):-
 	make_head_t(false,SUMOPred,Arity,Cons),
 	sigmaCache(Cons, Precon, KB,Ctx, TID),
 	write_rulenum(Stream,TID),
-	numbervars((Cons, Precon, KB,Ctx, TID,Vars),'$VAR',15,_),	
+	sigma_numbervars((Cons, Precon, KB,Ctx, TID,Vars),15,_),	
 	submit_ado_cache(Stream,SUMOPred,Cons, Precon, KB,Ctx, TID,Vars),fail.
 
 % True then Fasle Rules
@@ -732,7 +732,7 @@ make_pred_data(Stream,Functor,KB,SUMOPred,Arity,N,Module,Debug,ArgsAtom):- %trac
 	getrule(SUMOPred,Arity,Cons,Precond, KB,Ctx, TID,Vars), %trace,
         write_rulenum(Stream,TID),
 	close_list(Vars),
-	numbervars((Stream,SUMOPred,Cons,Precond, KB,Ctx, TID,Vars),'$VAR',15,_),
+	sigma_numbervars((Stream,SUMOPred,Cons,Precond, KB,Ctx, TID,Vars),15,_),
 	submit_ado_cache(Stream,SUMOPred,Cons,Precond, KB,Ctx, TID,Vars),fail.
 
        % toMarkUp(kif,DispProof,Vars,PrettyForm),
@@ -760,7 +760,7 @@ submit_ado_cache(Stream,SUMOPred,Cons, [], KB,Ctx, TID,Vars):-
 % With antecedents flags
 submit_ado_cache(Stream,SUMOPred,Cons,Ante, KB,Ctx, TID,Vars):- 
 	Cons=..[_|Arguments],
-	numbervars(SubCtx),
+	sigma_numbervars(SubCtx),
 	append(Arguments,[Ctx,ProofIn,[proof_line(TID,VarsRef)|ProofOut]],Args),
 	create_head('bk_',KB,SUMOPred,true,Args,PrologHead),
 	format(Stream,'~n ~q :- \n',[PrologHead]),!,

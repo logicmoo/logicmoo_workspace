@@ -122,7 +122,7 @@ get_r_relation(R,Logic):-
 mk_length(R,A,P):-
 	getArity(R,A),!,
 	length(L,A),
-	numbervars(L,'$VAR',0,_),
+	sigma_numbervars(L,0,_),
 	P=..[R|L].
 
 getArity(R,A):-

@@ -193,14 +193,14 @@ prologSLGCall( Call,Body):-
 
 
 
-resetTableFlags:-notrace(resetTableFlags2).
+resetTableFlags:-sigma_notrace(resetTableFlags2).
 		
 resetTableFlags2:-
 	current_flag(X),
-	(compound(X) ;(atomic(X),not(atom_concat('$',_,X)))),flag(X,_,0),fail.
+	(compound(X) ;(atom(X),not(atom_concat('$',_,X)))),flag(X,_,0),fail.
 resetTableFlags2:-
 	current_key(X),
-		(compound(X) ;(atomic(X),not(atom_concat('$',_,X)))),recorded(X,_,Y),erase(Y),fail.
+		(compound(X) ;(atom(X),not(atom_concat('$',_,X)))),recorded(X,_,Y),erase(Y),fail.
 resetTableFlags2:-!.
 	
 
@@ -933,7 +933,7 @@ neg_edge(Clause,Ggoal,Tab0,Tab,S0,S,Dfn0,Dfn,Dep0,Dep,TP0,TP) :-
 	nonvar(N),
 	not(recorded(N,N)) ->
 		(copy_term(N,NC),
-		numbervars(NC),
+		sigma_numbervars(NC),
 		recorda(N,NC)) ; fail ))
 	),
     Node = (Ggoal : Clause),
@@ -1880,12 +1880,12 @@ lit_to_call( /*neg*/ \+ G,G).
 lit_to_call(Gcall-_,Gcall).
 
 not_subsumed_ans(Ans,Lanss0) :-
-     not((numbervars(Ans,0,_),subsumed_ans1(Ans,Lanss0))).
+     not((sigma_numbervars(Ans,0,_),subsumed_ans1(Ans,Lanss0))).
 
 % succeed if answer is subsumed by any in list1 or 2.
 subsumed_ans(Tv,List1,List2) :- 
     not((
-      numbervars(Tv,0,_),
+      sigma_numbervars(Tv,0,_),
       not(subsumed_ans1(Tv,List1)),
       not(subsumed_ans1(Tv,List2))
       )).
@@ -1912,11 +1912,11 @@ ok_variant(A, B) :-
            A = B.
 /*
 subsumes_chk(General, Specific) :-
-         not(  (    numbervars(Specific, 0, _),
+         not(  (    sigma_numbervars(Specific, 0, _),
                  not( General = Specific)
          )).
 */
-stableGround(O,C) :- stableGround(O) -> C = O ; copy_term(O,C), numbervars(C,0,_).
+stableGround(O,C) :- stableGround(O) -> C = O ; copy_term(O,C), sigma_numbervars(C,0,_).
 
 
 subsetchk([],_).

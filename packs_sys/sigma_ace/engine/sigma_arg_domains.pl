@@ -43,6 +43,10 @@ Examples:
 % putAttributeStructures: Has Two Phases
 % ===============================================
 	
+putAttributeStructures(_Surface,Rule,KB, Flags,Formula,SlotStructure):-
+  putAttributeStructures(KB,Anontate,Flags,Formula,SlotStructure).
+
+%                              Ctx,Flags,Matrix,EmbededArgs
 putAttributeStructures(KB,Anontate,Flags,Formula,SlotStructure):-
 		putPropositionAttributes(KB,Anontate,Flags,'=>',1,Formula,SlotStructure),!.
 
@@ -126,6 +130,7 @@ putPropositionAttributesFunctor(KB,Anontate,Flags,Caller,ArgN,Funct,[ArgIn|B],OT
 
 % Functors That we dont touch Any Arguments
 putPropositionAttributesFunctor(KB,Anontate,Flags,Caller,ArgN,Funct,Args,OTerm):-
+  atom(Funct),
 	(atom_concat('$',_,Funct);memberchk(Funct,['v','$existential','include-context'])),!,
 	OTerm=..[Funct|Args],!.
 
@@ -256,16 +261,16 @@ getPutBestConstraintAttribute(Caller,ArgN,KB,Anontate,Var,Domains,SlotStructure)
 
 % getClassFromWrap(Slot,Class).
 
-getClassFromWrap(ArgIn,'Entity'):-isPrologVar(ArgIN),!.
+getClassFromWrap(ArgIn,'Entity'):-isVarProlog(ArgIN),!.
 getClassFromWrap('$Class'(ArgIn),'Class'):-!.
 getClassFromWrap(Slot,Class):-
-	functor(Slot,F,A),atom_concat('$',_,F),
+	functor(Slot,F,A),atom(F),atom_concat('$',_,F),
 	arg(2,Slot,ClassesTerm),!,
 	getClassBottemFromTerm(ClassesTerm,Class).
 	
 getClassBottemFromTerm(ClassesTerm,ClassO):-
 	ClassesTerm=..[Class,Var], 
-	(isPrologVar(Var) -> 
+	(isVarProlog(Var) -> 
 		ClassO = Class ;
 		getClassBottemFromTerm(Var,ClassO)),!.
 	
@@ -349,7 +354,7 @@ applyAttributeStructureToEntity(Caller,ArgN,ArgV,[Class],'$IdentityFn'(ArgV,Slot
 	Slot=..[Class,_],localCanonicalizerNotice('Specialized for rule',domain(Caller,ArgN,Class)),!.
 	
 applyAttributeStructureToEntity(Caller,ArgN,ArgV,[Base,Class|Remainder],Slot):-!,
-	atom_concat('$',Class,DClass),
+	atom(Class),atom_concat('$',Class,DClass),
 	Slot=..[DClass,ArgV,Classes],
 	makeClassNodeF(Remainder,Classes),!.
 
@@ -378,7 +383,7 @@ inferClassForDomainV(Pred:N,Class):-inferSurface(domain(Pred,N,Class),_,_,_),!.
 inferClassForDomainV(Pred:range,Class):-inferSurface(range(Pred,Class),_,_,_),!.
 
 inferClassForDomainV(Pred:N,Class):-
-		inferSurfaceDomainVector(Arity,Pred,VectS,Agent,KB,Anontate,_),
+		inferSurfaceDomainVector(Arity,Pred,VectS,Agent,KB,/*_Anontate,*/_Proof),
 		nth1(N,VectS,Class),!.
 
 inferClassForDomainV(Pred:N,Class):-inferSurface(range(Pred,Class),_,_,_),!.

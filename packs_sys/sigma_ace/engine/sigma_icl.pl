@@ -1062,7 +1062,7 @@ subset([H|T],L) :-
 \index{makeground}
 \begin{verbatim} */
 makeground(T) :-
-   numbervars(T,0,_).
+   sigma_numbervars(T,0,_).
 /* \end{verbatim}
 
 $repvar(X,X1,T,T1)$ replaces each occurrence of $X$ in $T$ by $X1$ forming $T1$.

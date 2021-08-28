@@ -186,7 +186,7 @@ term_to_atomlist(Term,AtomList):-!,
 % tests to see if Varables are shared between two Terms
 % ===================================================================
 
-getSharedVariables(Left,Right):-copy_term((Left,Right),(VLP,VRP)),numbervars((VLP,VRP)),
+getSharedVariables(Left,Right):-copy_term((Left,Right),(VLP,VRP)),sigma_numbervars((VLP,VRP)),
             term_to_atomlist(VLP,VLPP),term_to_atomlist(VRP,VRPP),
              member('$VAR'(N),VLPP),member('$VAR'(N),VRPP).
                                           
@@ -292,7 +292,7 @@ do_to_conjuncts(Var,Var2,G):- (var(Var);var(Var2   );var(G)),!.
 
 
 
-do_to_conjuncts(V,(A,B),G):- !, %numbervars((A,B)),
+do_to_conjuncts(V,(A,B),G):- !, %sigma_numbervars((A,B)),
          ignore(once(do_to_conjuncts(V,A,G))),
          ignore(once(do_to_conjuncts(V,B,G))).
 
@@ -462,7 +462,7 @@ consult_as_dynamic(FilenameLocal):-
 
 % Usage: ok_subst(+Fml,+X,+Sk,?FmlSk)
 
-ok_subst(A,B,C,D):-notrace(nd_subst(A,B,C,D)),!.
+ok_subst(A,B,C,D):-sigma_notrace(nd_subst(A,B,C,D)),!.
 
 nd_subst(  Var, VarS,SUB,SUB ) :- Var==VarS,!.
 nd_subst(        P, X,Sk,        P1 ) :- functor(P,_,N),nd_subst1( X, Sk, P, N, P1 ).
@@ -509,7 +509,7 @@ call_frozen(Goal):-
 freeze_vars(Fml,Frozen,MeltKey):-
 	copy_term(Fml,Frozen),
 	crossref_vars(Fml,Frozen,MeltKey),
-	numbervars(Frozen),!.
+	sigma_numbervars(Frozen),!.
 	
 melt_vars(Frozen,[]=[],Frozen):- !.
 melt_vars(Frozen,[OV|OL]=[FV|VL],Thawed):-
@@ -541,10 +541,10 @@ crossref_vars(Fml,Frozen,FmlVars = FrozenVars):-
 % Usage: repl(+Fml,+X,+Sk,?FmlSk)
 
 replc(Fml,X,Sk,FmlSk):-
-	notrace(repl(Fml,X,Sk,FmlSk)),!.
+	sigma_notrace(repl(Fml,X,Sk,FmlSk)),!.
 /*
 	copy_term(Fml,FmlX),
-	numbervars(FmlX),
+	sigma_numbervars(FmlX),
 	repl(FmlX,X,Sk,FmlSk),!.
 */	
 		
@@ -729,19 +729,19 @@ in_pl_db((IH:-IB)):-!,
 	renumbervars((IH:-IB),(H:-B)),!, 
 	clause(H,B,CLDEX),
 	clause(RH,RBody,CLDEX),
-	numbervars((RH,RBody),'Test',0,_),numbervars((H,Body),'Test',0,_),
+	sigma_numbervars((RH,RBody),'Test',0,_),sigma_numbervars((H,Body),'Test',0,_),
 	(RH,RBody)==(H,Body),!.
 
 in_pl_db(IH):-!,
 	renumbervars((IH),(H)),!,
 	clause(H,true,CLDEX),
 	clause(RH,true,CLDEX),
-	numbervars((RH),'Test',0,_),numbervars((H),'Test',0,_),
+	sigma_numbervars((RH),'Test',0,_),sigma_numbervars((H),'Test',0,_),
 	(RH)==(H),!.
 	
 renumbervars(N,U):-
 	unnumbervars(N,U),
-	numbervars(U,'Test',0,_),!.
+	sigma_numbervars(U,'Test',0,_),!.
 
 retract_ref(0):-!.
 retract_ref((X,Y)):-!,
@@ -764,14 +764,14 @@ retract_conj((IH:-IB),(IH:-IB)):-!,
 	renumbervars((IH:-IB),(H:-B)),!, 
 	clause(H,B,CLDEX),
 	clause(RH,RBody,CLDEX),
-	numbervars((RH,RBody),'Test',0,_),numbervars((H,Body),'Test',0,_),
+	sigma_numbervars((RH,RBody),'Test',0,_),sigma_numbervars((H,Body),'Test',0,_),
 	(RH,RBody)==(H,Body),erase(CLDEX).
 
 retract_conj((IH),(IH)):-!,
 	renumbervars((IH),(H)),!, 
 	clause(H,B,CLDEX),
 	clause(RH,RBody,CLDEX),
-	numbervars((RH),'Test',0,_),numbervars((H),'Test',0,_),
+	sigma_numbervars((RH),'Test',0,_),sigma_numbervars((H),'Test',0,_),
 	(RH)==(H),erase(CLDEX).
 
 retract_conj((IH),true):-!.

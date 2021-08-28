@@ -39,12 +39,12 @@ getTruthCheckResults(AskTell,Driver,Surface,CAN,Flags,Ctx,TN,KB,Vars,Author,on):
 % Normalize the Forms and make appropiate checks
 getTruthCheckResults(tell,Driver,Surface,CAN,Flags,Ctx,TN,KB,Vars,Author,Result):-
 	unnumbervars((Surface,CAN,Flags,Ctx,TN,KB,Vars,Author),(USurface,UCAN,UFlags,UCtx,UTN,UKB,UVars,UAuthor)),
-	numbervars((USurface,UCAN,UFlags,UCtx,UTN,UKB,UVars,UAuthor),'$VAR',0,_),
+	sigma_numbervars((USurface,UCAN,UFlags,UCtx,UTN,UKB,UVars,UAuthor),0,_),
 	getTruthCheckResults_tell(Driver,USurface,UCAN,UFlags,UCtx,UTN,UKB,UVars,UAuthor,Result),!.
 
 getTruthCheckResults(Ask,Driver,Surface,CAN,Flags,Ctx,TN,KB,Vars,Author,Result):- !,
 	unnumbervars((Surface,CAN,Flags,Ctx,TN,KB,Vars,Author),(USurface,UCAN,UFlags,UCtx,UTN,UKB,UVars,UAuthor)),
-	numbervars((USurface,UCAN,UFlags,UCtx,UTN,UKB,UVars,UAuthor),'$VAR',0,_),
+	sigma_numbervars((USurface,UCAN,UFlags,UCtx,UTN,UKB,UVars,UAuthor),0,_),
 	getTruthCheckResults_ask(Driver,USurface,UCAN,UFlags,UCtx,UTN,UKB,UVars,UAuthor,Result),!.
 
 % ===================================================================
@@ -211,7 +211,7 @@ getTruthCheckResults_can(Driver,wfs,CAN,Ctx,TN,KB,Vars,Author,notice('Currently 
 
 % Normalize the Wfs to check Redudant
 getTruthCheckResults_can(Driver,wfs,CAN,Ctx,TN,KB,Vars,Author,R):-
-	catch(unnumbervars(CAN,RFormula),_,fail),numbervars(RFormula,'$VAR',0,_),
+	catch(unnumbervars(CAN,RFormula),_,fail),sigma_numbervars(RFormula,0,_),
 	getTruthCheckResults_can_redundant(CAN,Action,Driver,wfs,RFormula,Ctx,TN,KB,Vars,Author,R),!.
 
 % Wfs is Redundant and On?

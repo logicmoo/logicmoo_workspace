@@ -1012,6 +1012,7 @@ do_renames_expansion(Sent,SentM):- if_defined(do_renames(Sent,SentM),=(Sent,Sent
 maybe_correctArgsIsa(_ ,SentO,SentO):-!.
 maybe_correctArgsIsa(Op,SentM,SentO):- locally_tl(infMustArgIsa,correctArgsIsa(Op,SentM,SentO)),!.
 
+fully_expand_clause(_,Sent,SentO):- var(Sent),!,SentO=Sent.
 fully_expand_clause(Op,':-'(Sent),Out):-!,fully_expand_goal(Op,Sent,SentO),!,must(Out=':-'(SentO)).
 fully_expand_clause(Op,Sent,SentO):- sanity(is_ftNonvar(Op)),sanity(var(SentO)),var(Sent),!,Sent=SentO.
 fully_expand_clause(Op,'==>'(Sent),(SentO)):-!,fully_expand_clause(Op,Sent,SentO),!.

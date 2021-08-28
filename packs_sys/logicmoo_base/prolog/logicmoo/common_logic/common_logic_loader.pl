@@ -33,7 +33,7 @@
 :- thread_local(t_l:kif_reader_mode/1).
 :- asserta_if_new(t_l:kif_reader_mode(lisp)).
 
-:- if(exists_source(library(wam_cl/sreader))).
+:- if((exists_source(library(wam_cl/sreader)),\+ current_module(wmclrt))).
 :- use_module(library(wam_cl/sreader)).
 :- endif.
 
@@ -48,13 +48,15 @@ kif_input(In):-prolog_load_context(stream,In),!.
 kif_input(In):-current_input(In).
 
 load_clif(Stream):- \+ compound(Stream), is_stream(Stream),!,
-  with_kif_translation(Stream,kif_process_once).  
+  with_kif_translation(Stream,kif_process_once).
+
 load_clif(File):- 
   zotrace(absolute_file_name(File,Found,[extensions(['','.clif','.ikl','.kif','.lisp','.lbase','.pfc','.pl']),access(read),expand(true),solutions(all)])),
   exists_file(Found),!,
   % with_lisp_translation_cached(Found, = , nop).
   file_name_extension(_,Ext,Found), 
   with_ext_translation(Found, Ext, kif_process_once).
+
 load_clif(File):- trace_or_throw(missing(load_clif(File))).
 
 with_ext_translation(Found,pl, Process):- !,process_script_file(Found,Process). % treated as prolog code in S-Exprs
@@ -64,6 +66,7 @@ with_ext_translation(Found,_, Process):- with_kif_translation(Found, Process).
 with_kif_translation(Found, Process):- with_kif_ok(with_lisp_translation(Found, Process)).
 
 kif_process_once(P):-must(once(kif_process(P))).
+
 must_kif_process(P):-must(once(kif_process(P))).
 must_kif_process_after_rename(Sent):-  if_defined(sumo_to_pdkb(Sent,SentM),=(Sent,SentM)),must_kif_process(SentM).
 
@@ -114,7 +117,6 @@ kif_process(_,'include'(String)):- !, load_clif(String).
 kif_process(_,'dmsg'(String)):-!, dmsg(String).
 kif_process(_,'wdmsg'(String)):-!, wdmsg(String).
 kif_process(_,'kif-mode'(Mode)):- set_kif_mode(Mode).
-kif_process(_,'kif_mode'(Mode)):- set_kif_mode(Mode).
 kif_process(_,end_of_file):- !,signal_eof(kif_process),!.
 kif_process(_,_:EOF):- EOF == end_of_file,!,signal_eof(kif_process),!.
 kif_process(_,'set-kif-option'(ModeIn)):-!,get_atom_or_kw(ModeIn,Mode), dmsg('set-kif-option'(Mode)),set_kif_option(Mode).
@@ -135,18 +137,22 @@ kif_process(_,':-'(Call)):- !, kif_process(call,Call).
 kif_process(_,'?-'(Goal)):- !, kif_process(ask,Goal).
 kif_process(_,'ask'(Wff)):- !, kif_process(ask,Wff).
 kif_process(_,'tell'(Wff)):- !, kif_process(tell,Wff).
-
-kif_process(call,Was):- Was\=(_:_),!,prolog_load_context(module,Prev),kif_process(call,Prev:Was).
-
 kif_process(_,From:prolog):- !, with_umt(From,prolog),!.
 
+kif_process(call,Was):- Was\=(_:_),!,prolog_load_context(module,Prev),kif_process(call,Prev:Was).
 kif_process(call,Into:module(To,Exports)):- !,
-  prolog_load_context(module,From),
+  '$current_typein_module'(TIM),
+  call_on_eof('$set_typein_module'(TIM)),
+  '$set_typein_module'(To),
+  '$current_source_module'(CSM),
+  call_on_eof('$set_source_module'(CSM)),
   '$set_source_module'(To),
-  maplist(To:export,Exports),
+  prolog_load_context(module,From),
+  show_call(maplist(To:export,Exports)),
+  % maplist(TIM:import,Exports),
+  maplist(CSM:import,Exports),
   maplist(From:import,Exports),
-  maplist(Into:import,Exports),
-  call_on_eof(kif_process,'$set_source_module'(From)).
+  maplist(Into:import,Exports),!.
 
 kif_process(_,Atom):- atom(Atom),current_predicate(Atom/0),!,kif_process(call_u,Atom).
 kif_process(_,Atom):- atom(Atom),current_predicate(Atom/1),fail,!,set_kif_mode(Atom).

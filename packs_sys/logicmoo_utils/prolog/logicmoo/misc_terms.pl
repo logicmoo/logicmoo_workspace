@@ -414,11 +414,25 @@ list_to_conjuncts(_,V,V):- var(V),!.
 list_to_conjuncts(_,[],true):-!.
 list_to_conjuncts(_,V,V):-not(compound(V)),!.
 list_to_conjuncts(OP,[H],HH):-list_to_conjuncts(OP,H,HH),!.
+
+list_to_conjuncts(OP,[H|T],Body):- current_op(_,yfx,OP),!,
+    list_to_conjuncts_yfx(OP,H,T,Body).
+
 list_to_conjuncts(OP,[H|T],Body):-!,
     list_to_conjuncts(OP,H,HH),
     list_to_conjuncts(OP,T,TT),
     conjoin_op(OP,HH,TT,Body),!.
 list_to_conjuncts(_,H,H).
+
+
+list_to_conjuncts_yfx(_,H,[],H):-!.
+list_to_conjuncts_yfx(OP,Ac,[H|T],Body):- !,
+   conjoin_op(OP,Ac,H,MBody),
+   list_to_conjuncts_yxf(OP,MBody,T,Body).
+list_to_conjuncts_yfx(OP,Ac,T,Body):-
+   conjoin_op(OP,Ac,T,Body).
+
+
 
 
 %= 	 	 
@@ -449,7 +463,8 @@ conjoin(A,B,(A,B)).
 conjoin_op(_,TRUE,X,X) :- TRUE==true, !.
 conjoin_op(_,X,X,TRUE) :- TRUE==true, !.
 conjoin_op(_,X,Y,Z) :- X==Y,Z=X,!.
-conjoin_op(OP,C1,C2,C):-C =..[OP,C1,C2].
+conjoin_op(OP,C1,C2,C):- current_op(_,yfx,OP),functor(OP,C2,2),C =..[OP,C2,C1],!.
+conjoin_op(OP,C1,C2,C):- C =..[OP,C1,C2].
 
 % =================================================================================
 % Utils

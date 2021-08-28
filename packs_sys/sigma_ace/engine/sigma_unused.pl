@@ -1269,7 +1269,7 @@ match_virtual_bottom(Clause,SoFar,SLits):-
 	copy_term(Clause,CClause),
 	split_clause(CClause,CHead,CBody),
 	example_saturated(CHead),
-	numbervars(CBody,0,_),
+	sigma_numbervars(CBody,0,_),
 	match_body_modes(true,CBody),
 	match_bot_lits(ProgolClause,SoFar,Lits),
 	quicksort(ascending,Lits,SLits).
@@ -3769,7 +3769,7 @@ pp_dclause((H:-B),Pretty):-
         !,
         %copy((H:-B),(Head:-Body)),
 	copy_term((H:-B),(Head:-Body)),
-        numbervars((Head:-Body),0,_),
+        sigma_numbervars((Head:-Body),0,_),
         progol_portray(Pretty,Head),
         (Pretty = true ->
                 write(' if:');
@@ -3781,7 +3781,7 @@ pp_dclause((H:-B),Pretty):-
 pp_dclause((Lit),Pretty):-
         %copy(Lit,Lit1),
 	copy_term(Lit,Lit1),
-        numbervars(Lit1,0,_),
+        sigma_numbervars(Lit1,0,_),
         progol_portray(Pretty,Lit1),
         write('.'), nl.
  
@@ -3795,7 +3795,7 @@ pp_dlist(Clause):-
 pp_dlist(Clause,Pretty):-
         %copy(Clause,[Head1|Body1]),
 	copy_term(Clause,[Head1|Body1]),
-        numbervars([Head1|Body1],0,_),
+        sigma_numbervars([Head1|Body1],0,_),
         progol_portray(Pretty,Head1),
         (Body1 = [] ->
                 print('.'), nl;
@@ -4535,12 +4535,12 @@ skolemize((Head:-Body),SHead,SBody,SkolemVars):-
 	!,
 	%copy((Head:-Body),(SHead:-Body1)),
 	copy_term((Head:-Body),(SHead:-Body1)),
-	numbervars((SHead:-Body1),0,SkolemVars),
+	sigma_numbervars((SHead:-Body1),0,SkolemVars),
 	goals_to_list(Body1,SBody).
 skolemize(UnitClause,Lit,[],SkolemVars):-
 	%copy(UnitClause,Lit),
 	copy_term(UnitClause,Lit),
-	numbervars(Lit,0,SkolemVars).
+	sigma_numbervars(Lit,0,SkolemVars).
 skolemize(UnitClause,Lit):-
 	skolemize(UnitClause,Lit,[],_).
 
@@ -5160,7 +5160,7 @@ show(prior):-
 	p_message('refinement priors'),
 	beta(Refine,A,B),
 	%copy(Refine,Refine1),
-	%numbervars(Refine1,0,_),
+	%sigma_numbervars(Refine1,0,_),
 	%write(beta(Refine1,A,B)), write('.'), nl,
 	portray_clause(beta(Refine,A,B)),
 	fail.
@@ -5169,7 +5169,7 @@ show(posterior):-
 	recorded(refine,beta(R,A,B),_),
 	recorded(refine,refine_id(Refine,R),_),
 	%copy(Refine,Refine1),
-	%numbervars(Refine1,0,_),
+	%sigma_numbervars(Refine1,0,_),
 	%write(beta(Refine1,A,B)), write('.'), nl,
 	portray_clause(beta(Refine,A,B)),
 	fail.
@@ -5456,7 +5456,7 @@ restorehyp.
 
 show1(Area,Pred):-
         recorded(Area,Pred,_),
-        %copy(Pred,Pred1), numbervars(Pred1,0,_),
+        %copy(Pred,Pred1), sigma_numbervars(Pred1,0,_),
         %write(Pred1), write('.'), nl,
 	portray_clause(Pred),
         fail.
@@ -8362,7 +8362,7 @@ write_xml_vars_call(V):-var(V),
 
 write_xml_vars_call(V):-
          fmt_write("<Result>",_),
-         numbervars(V),!,
+         sigma_numbervars(V),!,
          write_xml_vars_call1(V),
          fmt_write("</Result>",_).
 
@@ -8387,7 +8387,7 @@ write_kif_vars_call(V):-var(V),
 
 write_kif_vars_call(V):-
          fmt_write("<Result>",_),
-         numbervars(V),!,
+         sigma_numbervars(V),!,
          write_kif_vars_call1(V),
          fmt_write("</Result>",_).
 
@@ -8733,7 +8733,7 @@ list_to_atom_nc([H|T],A):-list_to_atom_nc(T,R),atom_concat(H,R,A).
 
 delete_log([],[]):-!.
 delete_log([A|B],C):-
-	member(A,[and,or,=>,exists,',','$VAR',holds,<=>,not,forAll,(':-'),',',';','instance',equal,equal,'subclass']),!,
+	member(A,[and,or,=>,exists,',',holds,<=>,not,forAll,(':-'),',',';','instance',equal,equal,'subclass']),!,
 	delete_log(B,C).  
 delete_log([A|B],C):-number(A),
 	delete_log(B,C).         
@@ -9237,11 +9237,11 @@ add_f2(P,N,[A|RGS],Ante,[NA|NCons],FAnte):-
 	NN is N+1,
 	logOnFailure(add_f2(P,NN,RGS,NAnte,NCons,FAnte)).
 
-make_rule(NewVar,A,true,Ante,_):-isVar_or_skolem(A),in_ant(A,Ante),NewVar=A,numbervars(NewVar),!.
-make_rule(NewVar,A,t_instance(A,Domain),_,Domain):-isVar_or_skolem(A),NewVar=A,numbervars(NewVar),!.
+make_rule(NewVar,A,true,Ante,_):-isVar_or_skolem(A),in_ant(A,Ante),NewVar=A,sigma_numbervars(NewVar),!.
+make_rule(NewVar,A,t_instance(A,Domain),_,Domain):-isVar_or_skolem(A),NewVar=A,sigma_numbervars(NewVar),!.
 make_rule(NewVar,A,true,_,Domain):-atom(A),NewVar=A,!.
 make_rule(NewVar,A,true,_,Domain):- Domain=='Relation',NewVar=A,!.
-make_rule(NewVar,A,u(NewVar,A,Domain),_,Domain):-numbervars(NewVar).
+make_rule(NewVar,A,u(NewVar,A,Domain),_,Domain):-sigma_numbervars(NewVar).
 
 
 in_ant(A,true):-!,fail.

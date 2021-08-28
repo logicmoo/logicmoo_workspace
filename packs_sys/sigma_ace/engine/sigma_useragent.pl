@@ -186,10 +186,10 @@ write_out_kif_tn(Assertion_Chars,comment(_),Vars,Ctx,KB,Author):-
 	 writeFmt('Syntax Error: Unmatched parentheses in  "~s"\n',[Assertion_Chars]).
 write_out_kif_tn(Assertion_Chars,NEWFORM,Vars,Ctx,KB,Author):-
 	copy_term((NEWFORM),(CNF)),
-	numbervars(CNF,'$VAR',0,_),
+	sigma_numbervars(CNF,0,_),
 	sigmaCache(PredR,surface,CNF, _, KB,Ctx, TN, Author, O),
 	sigmaCache(PredR,surface,OF, _, KB,Ctx, TN, Author, O),
-	numbervars(OF,'$VAR',0,_),
+	sigma_numbervars(OF,0,_),
 	OF == CNF,!,
 	writeFmt('~w\n',[TN]),!.
 write_out_kif_tn(Assertion_Chars,NEWFORM,Vars,Ctx,KB,Author):-

@@ -56,7 +56,10 @@
 
 :- set_module(class(library)).
 :- use_module(library(file_scope)).
+
+:- if((exists_source(library(wam_cl/sreader)), \+ current_module(wmclrt))).
 :- use_module(library(wam_cl/sreader)).
+:- endif.
 
 :- absolute_file_name(library('../ext/pldata/'),Dir,[file_type(directory)]),
    asserta_new(user:file_search_path(pldata,Dir)).

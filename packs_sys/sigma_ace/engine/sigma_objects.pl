@@ -4,27 +4,27 @@
 isNonVar(Denotation):-not(isSlot(Denotation)).
 
 % Is var means to Sigma this is a Slot
-isSlot(Denotation):-notrace((isVarProlog(Denotation);isVarObject(Denotation))),!.
+isSlot(Denotation):-sigma_notrace((isVarProlog(Denotation);isVarObject(Denotation))),!.
 
 isSlot(Denotation,Denotation):- isVarProlog(Denotation),!.
 isSlot(Denotation,PrologVar):- isVarObject(Denotation,PrologVar),!.
 
 isHiddenSlot(Term):-fail.
 
-isVarProlog(A):-notrace((var(A);A='$VAR'(_))).
+isVarProlog(A):-sigma_notrace((var(A);A='$VAR'(_))).
 
-isVarObject(Denotation):-notrace((
+isVarObject(Denotation):-sigma_notrace((
 		  isObject(Denotation,BaseType),
 		  arg(1,Denotation,Value),!,isSlot(Value))).
 
-isVarObject(Denotation,Value):-notrace((
+isVarObject(Denotation,Value):-sigma_notrace((
 		  isObject(Denotation,BaseType),
 		  arg(1,Denotation,Value),!,isSlot(Value))).
 	
 isObject(Denotation,BaseType):-
-	notrace(((atom(BaseType) ->
-		  (atom_concat('$',BaseType,F),functor(Denotation,F,2));
-		  (functor(Denotation,F,2),atom_concat('$',BaseType,F))
+	sigma_notrace(((atom(BaseType) ->
+		  (atom(F),atom_concat('$',BaseType,F),functor(Denotation,F,2));
+		  (functor(Denotation,F,2),atom(F),atom_concat('$',BaseType,F))
 		 ),!)).
 
 isQualifiableAsClass(Atom):-atom(Atom),!.
@@ -103,7 +103,7 @@ isEntityFunction(Term,FnT,ArgsT):-Term=..[FnT|ArgsT],hlPredicateAttribute(FnT,'F
 % ===================================================================
 
 getPrologVars(Term, Vars, Singletons, Multiples) :-
-    notrace((getPrologVars(Term, VarList, []),
+    sigma_notrace((getPrologVars(Term, VarList, []),
     close_list(VarList),
     keysort(VarList, KeyList),
     split_key_list(KeyList, Vars, Singletons, Multiples))).
@@ -131,7 +131,7 @@ getPrologVars(I, N, Term, V0, V) :-
 % ===================================================================
 
 getAllPrologVars(Term, Vars, Singletons, Multiples) :-
-    notrace((getAllPrologVars(Term, VarList, []),
+    sigma_notrace((getAllPrologVars(Term, VarList, []),
     close_list(VarList),
     keysort(VarList, KeyList),
     split_key_list(KeyList, Vars, Singletons, Multiples))).
@@ -154,7 +154,7 @@ getAllPrologVars(I, N, Term, V0, V) :-
 % ===================================================================
 
 getSlots(Term, Vars, Singletons, Multiples) :-
-    notrace((getSlots(Term, VarList, []),
+    sigma_notrace((getSlots(Term, VarList, []),
     close_list(VarList),
     keysort(VarList, KeyList),
     split_key_list(KeyList, Vars, Singletons, Multiples))).
@@ -185,7 +185,7 @@ getSlots(I, N, Term, V0, V) :-
 % ===================================================================
 
 getConstants(Types,Term, Vars, Singletons, Multiples) :-
-    notrace((getConstants(Types,Term, VarList, []),
+    sigma_notrace((getConstants(Types,Term, VarList, []),
     close_list(VarList),
     keysort(VarList, KeyList),
     split_key_list(KeyList, Vars, Singletons, Multiples))).

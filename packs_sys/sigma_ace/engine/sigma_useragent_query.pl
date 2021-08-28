@@ -31,7 +31,7 @@ writeUserAgentBuffer:-!.
 % Send to debugger
 % ===========================================================
 writeAnswersUserAgent(UResultsSoFar,Result,InProof,Status):-
-	notrace((once(writeDebug(writeAnswersUserAgent(UResultsSoFar,Result,InProof,Status))),fail)).
+	sigma_notrace((once(writeDebug(writeAnswersUserAgent(UResultsSoFar,Result,InProof,Status))),fail)).
 	
 % ===========================================================
 % Hide certain returns

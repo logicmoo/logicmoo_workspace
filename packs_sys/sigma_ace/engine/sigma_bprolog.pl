@@ -34,9 +34,9 @@ convert_time(_,'Now is the time (TODO Get from B-Prolog)').
 
 convert_time(T,1,2,3,4,5,6,7).
 
-% http://www.swi.plsy.uva.nl/projects/SWI-Prolog/Manual/sec-3.20.html#numbervars/4
+% http://www.swi.plsy.uva.nl/projects/SWI-Prolog/Manual/sec-3.20.html#sigma_numbervars/4
 
-numbervars(X,_,Y,Z):-numbervars(X,Y,Z).
+sigma_numbervars(X,_,Y,Z):-sigma_numbervars(X,Y,Z).
   
 % http://www.swi.plsy.uva.nl/projects/SWI-Prolog/Manual/sec-3.28.html#arithmetic_function/1
 
@@ -133,7 +133,7 @@ subtract([Head|Tail], L2, L3) :-
 subtract([Head|Tail1], L2, [Head|Tail3]) :-
         subtract(Tail1, L2, Tail3).
 
-% Each prolog has a specific way it could unnumber the result of a numbervars
+% Each prolog has a specific way it could unnumber the result of a sigma_numbervars
 % TODO find optimal solution
 
 unnumbervars(Numbered,Unnumbered):-

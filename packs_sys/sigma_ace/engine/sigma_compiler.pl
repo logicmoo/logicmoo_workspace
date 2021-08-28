@@ -137,7 +137,7 @@ sigma_assertKIF2(Axiom,Tracking,Context,KB,KBName):-
 	sigma_assertKIF_slow(Axiom,Tracking,Context,KB,KBName),!.
 
 sigma_assertKIF2(Axiom,Tracking,Context,KB,KBName):-
-        numbervars(Surface,'$VAR',1,_),!,
+        sigma_numbervars(Surface,1,_),!,
 	getAssertionClauses(KB,Ctx,Axiom,Clauses,_,Flags),!,
 	write_surf_axioms(Axiom,Clauses).
 
@@ -149,7 +149,7 @@ write_surf_axioms(Surface,CL):-!,
 	flag(pred_num,_,0),
 	retractall(predicate_table(_,_)),!,
 	unnumbervars(Surface:CL,OSurface:OCL),	!,
-	numbervars(OSurface:OCL,'$VAR',0,_),
+	sigma_numbervars(OSurface:OCL,0,_),
 	make_template(OCL,Template),!,
 	show_template(OSurface,OCL,Template),!.
 
@@ -1240,7 +1240,7 @@ writeKnowledgeBase(KBName) :-
 writeall(Head) :-
 	clause(Head,Body),   
 	once((
-		numbervars((Head,Body),'$VAR',0,_),
+		sigma_numbervars((Head,Body),0,_),
 		cmp_format('~q.\n',[((Head :- Body))]))),
 	fail.
 writeall(_) :- !.
@@ -1249,7 +1249,7 @@ writeall(KB,Pred/Arity) :-
 	constructHead(KB,Pred/Arity,Head),
 	clause(Head,Body),
 	once((
-		numbervars((Head,Body),'$VAR',0,_),
+		sigma_numbervars((Head,Body),0,_),
 		cmp_format('~q.\n',[((Head :- Body))]))),
 	fail.
 writeall(_,_) :- !.
@@ -11489,7 +11489,7 @@ modClReplaceVarWithAtom([_-New|T],C,M) :-
 genconstant(M,V,N) :-
 	N is M+1,
 	atom_codes(M,N1),
-	atom_codes(V,[0's|N1]).
+	atom_codes(V,[0's|N1]). %'
 
 modRemoveTaut([],[]) :-
 	!.

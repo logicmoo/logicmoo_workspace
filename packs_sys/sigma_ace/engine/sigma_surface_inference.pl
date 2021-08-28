@@ -128,8 +128,9 @@ inferSurface_easy(disjoint(A,B),KB,Ctx,  Proof * incode(holds(disjoint,A,B),Comp
 % Normal Forwardchains
 % ================================================
 
-inferSurface(valence(Predicate,N),KB,Ctx,Proof):-!,
-	inferValence(KB,Ctx,Predicate,N,Proof),!.
+inferSurface(valence(Predicate,N),KB,Ctx,Proof):- 
+ ( nonvar(Predicate) ->! ; true),
+	inferValence(KB,Ctx,Predicate,N,Proof).
 
 inferSurface(Fact,KB,Ctx,Proof):-
 	inferSurface_easy(Fact,KB,Ctx,Proof).
@@ -186,7 +187,7 @@ inferSurface(instance(R,C),KB,Ctx, (P1*P2*P3)):-
 	inferSurface(instance(P,C),KB,Ctx, P3).
 
 
-:-retractall(sigmaCache(KB,_Ctx,completed_table(_))).
+:-retractall(sigmaCache(_KB,_Ctx,completed_table(_))).
 
 
 inferSurface(disjoint(A,B), P1 * P2 * P3 ):-

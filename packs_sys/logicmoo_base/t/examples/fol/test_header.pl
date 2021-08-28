@@ -40,7 +40,7 @@
 :- prolog_load_context(source,File),!,
    ignore((((sub_atom(File,_,_,_,'.pfc')
    -> (sanity(is_pfc_file),set_prolog_flag(is_pfc_file_dialect,true))
-   ; sanity( \+ is_pfc_file)),set_prolog_flag(is_pfc_file_dialect,false)))),!.
+   ; nop((sanity( \+ is_pfc_file),set_prolog_flag(is_pfc_file_dialect,false))))))),!.
 
 %:- set_prolog_flag(debug, true).
 %:- set_prolog_flag(gc, false).
@@ -75,24 +75,31 @@ system:goal_expansion(I,P,O,PO):- junit_goal_expansion(I,O),P=PO.
 :- if((current_prolog_flag(test_module,Module)->module(Module);true)). :- endif.
 
 
-:- use_module(library(logicmoo_clif)).
+:- dmsg(this_test_is_now_loading(:- use_module(library(logicmoo_clif)))).
+:- % with_no_output
+ (use_module(library(logicmoo_clif))).
 :- dmsg(this_test_might_need(:- use_module(library(logicmoo_plarkc)))).
 
+clif_op_decls((
+ op(1199,fx,('==>')),
+ op(1190,xfx,('::::')),
+ op(1180,xfx,('==>')),
+ op(1170,xfx,('<==>')),
+ op(1160,xfx,('<-')),
+ op(1150,xfx,('=>')),
+ op(1140,xfx,('<=')),
+ op(1130,xfx,'<=>'),
+ op(1120,xfx,'<->'),
+% op(1100,fx,('nesc')),
+ op(600,yfx,('&')),
+ op(600,yfx,('v')),
+ op(350,xfx,('xor')),
+ op(300,fx,('-')),
+ op(300,fx,('~')))).
 
-:- op(1199,fx,('==>')).
-:- op(1190,xfx,('::::')).
-:- op(1180,xfx,('==>')).
-:- op(1170,xfx,'<==>').
-:- op(1160,xfx,('<-')).
-:- op(1150,xfx,'=>').
-:- op(1140,xfx,'<=').
-:- op(1130,xfx,'<=>').
-%:- op(1100,fx,('nesc')).
-:- op(300,fx,'-').
-:- op(300,fx,'~').
-:- op(600,yfx,'&').
-:- op(600,yfx,'v').
-:- op(1075,xfx,'<-').
-:- op(350,xfx,'xor').
+:- clif_op_decls(OPS),call(OPS).
+:- clif_op_decls(OPS),call(baseKB:OPS).
 
+
+:- autoload_all.
 

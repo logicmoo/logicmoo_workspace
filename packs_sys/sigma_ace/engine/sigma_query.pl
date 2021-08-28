@@ -3,24 +3,34 @@
 % ===============================================================
 :-include('sigma_header.pl').
       
-tkq1:-agentQuery("(isa Joe ?Class)",'ToplevelContext','Merge','Dmiles',U,R,P).
-tkq2:-agentQuery("(isa on Relation)",'ToplevelContext','Merge','Dmiles',U,R,P).
+tkq1:-agentQuery("(isa Joe ?Class)").
+tkq2:-agentQuery("(isa on Relation)").
 
+agentQuery(KIFCharsIn):-
+ forall(agentQuery(KIFCharsIn,UResultsSoFar,Result,Proof),
+   wdmsg(UResultsSoFar->Result-->Proof)).
+
+
+agentQuery(KIFCharsIn,UResultsSoFar,Result,Proof):-
+  agentQuery(KIFCharsIn,'ToplevelContext','Merge','TheAgent',UResultsSoFar,Result,Proof).
 
 agentQuery(KIFCharsIn,Ctx,KB,User,UResultsSoFar,Result,Proof):-
 	agentQuery(KIFCharsIn,Ctx,KB,User,UResultsSoFar,Result,Proof,Status),
 	(Status = done(_) -> ! ; true).
 
+:- with_no_output(use_module(library(wamcl_runtime))).
 
-agentQuery(KIFCharsIn,Ctx,KB,User,UResultsSoFar,Result,Proof,Status):-
-	isCharCodelist(KIFCharsIn),!,
-	string_clean(KIFCharsIn,KIFChars),
-	logOnFailure(ask_parse_chars(KIFChars,FmlInOpen,Vars)),!,
-	agentQuery(KIFCharsIn,FmlInOpen,Vars,Ctx,KB,User,UResultsSoFar,Result,Proof,Status).
-	
-	
-agentQuery(KIFCharsIn,FmlInOpen,Vars,Ctx,KB,User,UResultsSoFar,Result,Proof,Status):-
-	notrace((
+ask_parse_query(TermIn,FmlInOpen,Vars):- compound(TermIn), \+ is_list(TermIn), FmlInOpen = TermIn, get_clause_vars(FmlInOpen,Vars).
+ask_parse_query(KIFCharsIn,FmlInOpen,Vars):- isCharCodelist(KIFCharsIn), string_clean(KIFCharsIn,KIFChars),
+	logOnFailure(ask_parse_chars(KIFChars,FmlInOpen,Vars)),!.
+ask_parse_query(KIFCharsIn,FmlInOpen,Vars):-
+	logOnFailure(input_to_forms(KIFCharsIn,FmlInOpen,Vars)).
+
+agentQuery(KIFIn,Ctx,KB,User,UResultsSoFar,Result,Proof,Status):-	
+	logOnFailure(ask_parse_query(KIFIn,FmlInOpen,Vars)),!,
+	agentQuery(KIFIn,FmlInOpen,Vars,Ctx,KB,User,UResultsSoFar,Result,Proof,Status).
+
+reset_query_results:-
 	retractAllProlog(answer_found(_)),
 	retractAllProlog(t_answer_found(_)),
 	retractAllProlog(tabled_f(_)),
@@ -31,17 +41,21 @@ agentQuery(KIFCharsIn,FmlInOpen,Vars,Ctx,KB,User,UResultsSoFar,Result,Proof,Stat
 	retractAllProlog(tabled_t(_)),
 	retractAllProlog(table_g(_)),
 	retractAllProlog(proving(_)),
+  flag('$Returned Answers',_,0),
+  flag('$UAnswers',_,0),
+  !.
+
+agentQuery(KIFCharsIn,FmlInOpen,Vars,Ctx,KB,User,UResultsSoFar,Result,Proof,Status):-
+  once(reset_query_results),
 	getDefaultKB(QKB),!,ignore((KB=QKB)),!,
 	get_default_query_context(QCTX),!,ignore((Ctx=QCTX)),!,
 	logOnFailure(ensureSigmaKB(KB,Ctx)),!,
-	flag('$Returned Answers',_,0),
-	flag('$UAnswers',_,0))),
 	TN = User, % Tracks query based on 'User'
 	destroyTN(KB,TN,_Ctx),	% Removes previous Query
 	getOpenVariablesWFF(FmlInOpen,Vars,ChaseVars),
 	getPrologVars(ChaseVars,QVars,_,_),
 	QueryPrototype=..[query|QVars],
-	notrace((not(not((
+	((\+ (\+ ((
 		getAssertionClauses(KB,Ctx,'<=>'(FmlInOpen,QueryPrototype),CAN,Vars,Flags),
 		assert(sigmaCache(FmlInOpen,CAN,Flags,Vars,KB,Ctx,TN,User,Result)),!,
 		(recanonicalizeTN(KB,TN)),    % Compile Inference
@@ -141,7 +155,7 @@ isVarClosedWFF(Va,neg(Open)):-!,
 
 
 getQueryDefaults(UQuery,OAnswers,BackchainsMax,Deductions):-
-	notrace((
+	once((
         (getSigmaOption(opt_backchains_max=BackchainsMax)),
         (getSigmaOption(opt_deductions_max=Deductions)),!,
         ignore((ground(UQuery) -> Answers=1 ; Answers=PAnswers)),
@@ -149,7 +163,7 @@ getQueryDefaults(UQuery,OAnswers,BackchainsMax,Deductions):-
 	ignore(BackchainsMax=30),ignore(Answers=60),OAnswers is Answers,!)).
 
 set_quit_time(Num):-
-	notrace((
+	once((
 	(getSigmaOption(opt_timeout=QuitTime)),!,ignore(QuitTime=5),!,
 	retractAllProlog(cpuend(_)),    
 	getCputime(Now),

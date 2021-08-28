@@ -191,7 +191,7 @@ save_each_clause_in_buffer(KnowledgeBase,Context,(PRO,LOG)):-!,
 		save_each_clause_in_buffer(KnowledgeBase,Context,LOG).
 
 save_each_clause_in_buffer(KnowledgeBase,Context,PROLOG):-
-		not(not((numbervars(((KnowledgeBase,Context,PROLOG)),'$VAR',0,_),assert_if_new(storage_buffer(KnowledgeBase,Context,PROLOG))))).
+		not(not((sigma_numbervars(((KnowledgeBase,Context,PROLOG)),0,_),assert_if_new(storage_buffer(KnowledgeBase,Context,PROLOG))))).
 
 assert_if_new(X):-X,!.
 assert_if_new(X):-!,assert(X).

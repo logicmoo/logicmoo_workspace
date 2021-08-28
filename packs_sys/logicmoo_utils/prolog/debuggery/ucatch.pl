@@ -418,6 +418,39 @@ with_current_io(Goal):-
   current_input(IN),current_output(OUT),get_thread_current_error(Err),
   scce_orig(set_prolog_IO(IN,OUT,Err),Goal,set_prolog_IO(IN,OUT,Err)).
 
+:- thread_local(t_l:hide_dmsg/0).
+
+with_no_output(Goal):-
+ locally_tl(hide_dmsg,
+  with_output_to(string(_), 
+     with_some_output_to(main_error,
+      current_output,
+       with_user_error_to(current_output,
+        locally_tl(thread_local_error_stream(current_output),
+         with_user_output_to(current_output, 
+          with_dmsg_to_main(Goal))))))).
+
+with_user_error_to(Where,Goal):-
+  with_some_output_to(user_error,Where,Goal).
+
+with_user_output_to(Where,Goal):-
+  with_some_output_to(user_output,Where,Goal).
+
+into_stream_alias(Some,Alias):- into_stream(Some,S),stream_property(S,alias(Alias)),!.
+into_stream_alias(Some,Some).
+
+with_some_output_to(SomeAlias,Where,Goal):- 
+   into_stream_alias(SomeAlias,Alias), 
+   with_alias_output_to(Alias,Where,Goal).
+
+with_alias_output_to(Alias,Where,Goal):- 
+   stream_property(ErrWas,alias(Alias)),
+   new_memory_file(MF), open_memory_file(MF,write,Stream),
+   scce_orig(set_stream(Stream,alias(Alias)),Goal,set_stream(ErrWas,alias(Alias))),
+   close(Stream),
+   memory_file_to_string(MF,Data),
+   with_output_to(Where,write(Data)).
+
 
 
 with_dmsg_to_main(Goal):-

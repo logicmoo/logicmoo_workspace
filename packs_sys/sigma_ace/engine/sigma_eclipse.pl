@@ -122,7 +122,7 @@ get_time(6667).
 convert_time(T,'Now is the time').
 convert_time(T,1,2,3,4,5,6,7).
 
-numbervars(X,_,Y,Z):-numbervars(X,Y,Z).
+sigma_numbervars(X,_,Y,Z):-sigma_numbervars(X,Y,Z).
 
 
 :-setSigmaOptionDefaults.

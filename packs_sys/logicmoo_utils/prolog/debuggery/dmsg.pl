@@ -277,8 +277,13 @@ wldmsg_1(List):- is_list(List),!,maplist(wldmsg_1,List).
 wldmsg_1(Info):- compound(Info),compound_name_arguments(Info,F,[A]),!,wldmsg_1(F=A).
 wldmsg_1(Info):- compound(Info),compound_name_arguments(Info,(-),[F,A]),!,wldmsg_1(F=A).
 wldmsg_1(Info):- 
-  stream_property(O,file_no(1)),flush_output(O),smart_format(O,'~N',[]),flush_output(O),
+  get_real_user_output(O),flush_output(O),smart_format(O,'~N',[]),flush_output(O),
   wldmsg_2(Info),!.
+
+
+get_real_user_output(O):-stream_property(O,file_no(1)).
+get_real_user_error(O):-stream_property(O,file_no(2)).
+
 
 same_streams(X,Y):- dzotrace((into_stream(X,XX),into_stream(Y,YY),!,XX==YY)).
 
@@ -288,6 +293,8 @@ into_stream_0(Atom,XX):- atom(Atom),stream_property(X,alias(Atom)),!,X =XX.
 into_stream_0(S,XX):- atomic(S),is_stream(S),!,S = XX.
 into_stream_0(S,XX):- stream_property(X,file_name(F)),F==S,!,X=XX.
 
+:- volatile(t_l:thread_local_error_stream/1).
+wldmsg_2(Info):- t_l:thread_local_error_stream(Err), output_to_x(Err,Info).
 wldmsg_2(Info):- same_streams(current_output,file_no(1)), stream_property(X,file_no(1)), !, output_to_x(X,Info).
 wldmsg_2(Info):- same_streams(current_output,file_no(2)), stream_property(X,file_no(2)), !, output_to_x(X,Info).
 wldmsg_2(Info):- output_to_x(current_output,Info), stream_property(X,file_no(2)), !, output_to_x(X,Info).
@@ -1183,12 +1190,15 @@ color_line(C,N):-
 
 :- create_prolog_flag(retry_undefined,none,[type(term),keep(true)]).
 
+
+:- thread_local(t_l:hide_dmsg/0).
 %= 	 	 
 
 %% dmsg( ?C) is det.
 %
 % (debug)message.
 %
+dmsg(_):- t_l:hide_dmsg, \+ tlbugger:no_slow_io, !.
 dmsg(C):- dzotrace((tlbugger:no_slow_io,!,stream_property(X,file_no(2)),writeln(X,dmsg(C)))).
 dmsg(V):- likely_folded(quietly((locally(set_prolog_flag(retry_undefined,none), if_defined_local(dmsg0(V),logicmoo_util_catch:ddmsg(V)))))),!.
 %dmsg(F,A):- dzotrace((tlbugger:no_slow_io,on_x_fail(smart_format(atom(S),F,A))->writeln(dmsg(S));writeln(dmsg_fail(F,A)))),!.
@@ -1215,7 +1225,13 @@ transform_mesg(F,A,fmt0(F,A)).
 
 %with_output_to_main_error(G):- !,call(G).
 
+with_output_to_main_error(G):- 
+  t_l:thread_local_error_stream(Where),!,
+  with_output_to(Where,G).
 with_output_to_main_error(G):-
+  with_output_to_real_main_error(G).
+
+with_output_to_real_main_error(G):-
   set_prolog_flag(occurs_check,false),
   stream_property(Err,file_no(2)),!,
   with_output_to(Err,G).
@@ -1244,7 +1260,6 @@ wdmsg(_):- notrace((current_prolog_flag(debug_level,0),current_prolog_flag(dmsg_
 wdmsg(X):- likely_folded(wdmsg_goal(fmt(X),dmsg(X))).
 
 likely_folded(X):- dis_pp(bfly)->pretty_clauses:with_folding_depth(1,X);call(X).
-
 
 wdmsg_goal(G,G2):-  
   quietly((ignore((with_all_dmsg(G2),  
@@ -2119,7 +2134,7 @@ cls:- ignore(catch(system:shell(cls,0),_,fail)).
 :- ignore((source_location(S,_),prolog_load_context(module,M),module_property(M,class(library)),
  forall(source_file(M:H,S),
  ignore((cfunctor(H,F,A),
-  ignore(((\+ atom_concat('$',_,F),(export(F/A) , current_predicate(system:F/A)->true; system:import(M:F/A))))),
+  ignore(((atom(F),\+ atom_concat('$',_,F),(export(F/A) , current_predicate(system:F/A)->true; system:import(M:F/A))))),
   ignore(((\+ predicate_property(M:H,transparent), module_transparent(M:F/A), \+ atom_concat('__aux',_,F),debug(modules,'~N:- module_transparent((~q)/~q).~n',[F,A]))))))))).
 
 :- '$hide'(wdmsg/1).
