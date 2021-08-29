@@ -47,14 +47,17 @@ write_eng(A & B):- write_eng([paren(A),'and ~n%   ',paren(B)]).
 write_eng(A v B):- write_eng([paren(A),'or ',paren(B)]).
 write_eng(rule(~P)):- write_eng(['% it is false that ',P]).
 write_eng(rule(poss(P))):-  write_eng(['% it is possible that ',P]).
+write_eng(rule(poss(~P))):-  write_eng(['% it is possiblly FALSE that ',P]).
+write_eng(rule(nesc(P))):-  write_eng(['% it is necessarily true that ',P]).
+write_eng(rule(nesc(~P))):-  write_eng(['% it is necessarily FALSE that ',P]).
 write_eng(rule(P)):- write_eng(['% ',P]).
 
 write_eng(~poss(P)):-  write_eng(['it is NOT possible that ',paren(P)]).
-write_eng(~nesc(P)):-  write_eng(['it is not nessicarily true that ',paren(P)]).
+write_eng(~nesc(P)):-  write_eng(['it is not necessarily true that ',paren(P)]).
 write_eng(poss(~P)):-   write_eng([paren(P),'is possibly false ']).
-write_eng(nesc(~P)):-   write_eng([paren(P),'is nessicarily false ']).
+write_eng(nesc(~P)):-   write_eng([paren(P),'is necessarily false ']).
 write_eng(poss(P)):-   write_eng([paren(P),'is possible ']).
-write_eng(nesc(P)):-   write_eng([paren(P),'is nessicarily true ']).
+write_eng(nesc(P)):-   write_eng([paren(P),'is necessarily true ']).
 
 write_eng('$VAR'(P)):- !,write('?'),write(P), write(' '),!.
 write_eng(fact(P)):- !, write_fact(P).
@@ -134,10 +137,10 @@ end_of_file.
 
 ----------------------------------------
 % Whenever:
-%   " ?House1 is leftof ?House2 " is nessicarily true and
-%   " ?House1 is a house " is nessicarily false
+%   " ?House1 is leftof ?House2 " is necessarily true and
+%   " ?House1 is a house " is necessarily false
 % It's Proof that:
-%   " ?House2 is a house " is nessicarily false
+%   " ?House2 is a house " is necessarily false
 
 ( nesc(leftof(House1,House2))&nesc(~house(House1)) ==>
   nesc( ~( house(House2))))
@@ -147,10 +150,10 @@ end_of_file.
 
 ----------------------------------------
 % Whenever:
-%   " ?House1 is leftof ?House2 " is nessicarily true and
-%   " ?House2 is a house " is nessicarily false
+%   " ?House1 is leftof ?House2 " is necessarily true and
+%   " ?House2 is a house " is necessarily false
 % It's Proof that:
-%   " ?House1 is a house " is nessicarily false
+%   " ?House1 is a house " is necessarily false
 
 ( nesc(leftof(House1,House2))&nesc(~house(House2)) ==>
   nesc( ~( house(House1))))
@@ -160,10 +163,10 @@ end_of_file.
 
 ----------------------------------------
 % Whenever:
-%   " ?House1 is leftof ?House2 " is nessicarily true and
+%   " ?House1 is leftof ?House2 " is necessarily true and
 %   " ?House1 is a house " is possible
 % It's Proof that:
-%   " ?House2 is a house " is nessicarily true
+%   " ?House2 is a house " is necessarily true
 
 nesc(leftof(House1,House2))&poss(house(House1))==>nesc(house(House2))
 
@@ -172,10 +175,10 @@ nesc(leftof(House1,House2))&poss(house(House1))==>nesc(house(House2))
 
 ----------------------------------------
 % Whenever:
-%   " ?House1 is leftof ?House2 " is nessicarily true and
+%   " ?House1 is leftof ?House2 " is necessarily true and
 %   " ?House2 is a house " is possible
 % It's Proof that:
-%   " ?House1 is a house " is nessicarily true
+%   " ?House1 is a house " is necessarily true
 
 nesc(leftof(House1,House2))&poss(house(House2))==>nesc(house(House1))
 
@@ -185,9 +188,9 @@ nesc(leftof(House1,House2))&poss(house(House2))==>nesc(house(House1))
 ----------------------------------------
 % Whenever:
 %   " ?House1 is a house " is possible and
-%   " ?House2 is a house " is nessicarily false
+%   " ?House2 is a house " is necessarily false
 % It's Proof that:
-%   " ?House1 is leftof ?House2 " is nessicarily false
+%   " ?House1 is leftof ?House2 " is necessarily false
 
 ( poss(house(House1))&nesc(~house(House2)) ==>
   nesc( ~( leftof(House1,House2))))
@@ -198,9 +201,9 @@ nesc(leftof(House1,House2))&poss(house(House2))==>nesc(house(House1))
 ----------------------------------------
 % Whenever:
 %   " ?House2 is a house " is possible and
-%   " ?House1 is a house " is nessicarily false
+%   " ?House1 is a house " is necessarily false
 % It's Proof that:
-%   " ?House1 is leftof ?House2 " is nessicarily false
+%   " ?House1 is leftof ?House2 " is necessarily false
 
 ( poss(house(House2))&nesc(~house(House1)) ==>
   nesc( ~( leftof(House1,House2))))
@@ -217,7 +220,7 @@ nesc(leftof(House1,House2))&poss(house(House2))==>nesc(house(House1))
 %   " ?House1 is leftof ?House2 " then it is
 % Implied that:
 %   " ?House1 is a house " and
-%   " ?House2 is a house " ) is nessicarily true
+%   " ?House2 is a house " ) is necessarily true
 
 ?- kif_to_boxlog( nesc((leftof(House1,House2)=>house(House1)&house(House2))) ).
 
@@ -230,7 +233,7 @@ nesc(leftof(House1,House2))&poss(house(House2))==>nesc(house(House1))
 
 ----------------------------------------
 % Whenever:
-%   " ?House1 is a house " is nessicarily true and
+%   " ?House1 is a house " is necessarily true and
 %   " ?House2 is a house " is possibly false
 % It's Proof that:
 %   " ?House1 is leftof ?House2 " is possibly false
@@ -243,7 +246,7 @@ nesc(leftof(House1,House2))&poss(house(House2))==>nesc(house(House1))
 
 ----------------------------------------
 % Whenever:
-%   " ?House2 is a house " is nessicarily true and
+%   " ?House2 is a house " is necessarily true and
 %   " ?House1 is a house " is possibly false
 % It's Proof that:
 %   " ?House1 is leftof ?House2 " is possibly false
@@ -256,10 +259,10 @@ nesc(leftof(House1,House2))&poss(house(House2))==>nesc(house(House1))
 
 ----------------------------------------
 % Whenever:
-%   " ?House1 is leftof ?House2 " is nessicarily true and
-%   " ?House1 is a house " is nessicarily true
+%   " ?House1 is leftof ?House2 " is necessarily true and
+%   " ?House1 is a house " is necessarily true
 % It's Proof that:
-%   " ?House2 is a house " is nessicarily true
+%   " ?House2 is a house " is necessarily true
 
 nesc(leftof(House1,House2))&nesc(house(House1))==>nesc(house(House2))
 
@@ -268,10 +271,10 @@ nesc(leftof(House1,House2))&nesc(house(House1))==>nesc(house(House2))
 
 ----------------------------------------
 % Whenever:
-%   " ?House1 is leftof ?House2 " is nessicarily true and
-%   " ?House2 is a house " is nessicarily true
+%   " ?House1 is leftof ?House2 " is necessarily true and
+%   " ?House2 is a house " is necessarily true
 % It's Proof that:
-%   " ?House1 is a house " is nessicarily true
+%   " ?House1 is a house " is necessarily true
 
 nesc(leftof(House1,House2))&nesc(house(House2))==>nesc(house(House1))
 
@@ -280,7 +283,7 @@ nesc(leftof(House1,House2))&nesc(house(House2))==>nesc(house(House1))
 
 ----------------------------------------
 % Whenever:
-%   " ?House1 is leftof ?House2 " is nessicarily true and
+%   " ?House1 is leftof ?House2 " is necessarily true and
 %   " ?House1 is a house " is possibly false
 % It's Proof that:
 %   " ?House2 is a house " is possibly false
@@ -293,7 +296,7 @@ nesc(leftof(House1,House2))&nesc(house(House2))==>nesc(house(House1))
 
 ----------------------------------------
 % Whenever:
-%   " ?House1 is leftof ?House2 " is nessicarily true and
+%   " ?House1 is leftof ?House2 " is necessarily true and
 %   " ?House2 is a house " is possibly false
 % It's Proof that:
 %   " ?House1 is a house " is possibly false
@@ -326,9 +329,9 @@ nesc(leftof(House1,House2))&nesc(house(House2))==>nesc(house(House1))
 
 ----------------------------------------
 % Whenever:
-%   " ?House1 is leftof ?House2 " is nessicarily false
+%   " ?House1 is leftof ?House2 " is necessarily false
 % It's Proof that:
-%   " ?House1 is a house " is nessicarily false or " ?House2 is a house "
+%   " ?House1 is a house " is necessarily false or " ?House2 is a house "
 
 nesc(~leftof(House1,House2))==>nesc(~house(House1))v house(House2)
 
@@ -337,9 +340,9 @@ nesc(~leftof(House1,House2))==>nesc(~house(House1))v house(House2)
 
 ----------------------------------------
 % Whenever:
-%   " ?House1 is leftof ?House2 " is nessicarily false
+%   " ?House1 is leftof ?House2 " is necessarily false
 % It's Proof that:
-%   " ?House2 is a house " is nessicarily false or " ?House1 is a house "
+%   " ?House2 is a house " is necessarily false or " ?House1 is a house "
 
 nesc(~leftof(House1,House2))==>nesc(~house(House2))v house(House1)
 
@@ -351,7 +354,7 @@ nesc(~leftof(House1,House2))==>nesc(~house(House2))v house(House1)
 %   ( " ?House1 is a house " is possible and
 %   ?House2 is a house is false ) is possible
 % It's Proof that:
-%   " ?House1 is leftof ?House2 " is nessicarily true
+%   " ?House1 is leftof ?House2 " is necessarily true
 
 poss(poss(house(House1))& ~house(House2))==>nesc(leftof(House1,House2))
 
@@ -363,7 +366,7 @@ poss(poss(house(House1))& ~house(House2))==>nesc(leftof(House1,House2))
 %   ( " ?House2 is a house " is possible and
 %   ?House1 is a house is false ) is possible
 % It's Proof that:
-%   " ?House1 is leftof ?House2 " is nessicarily true
+%   " ?House1 is leftof ?House2 " is necessarily true
 
 poss(poss(house(House2))& ~house(House1))==>nesc(leftof(House1,House2))
 
@@ -372,10 +375,10 @@ poss(poss(house(House2))& ~house(House1))==>nesc(leftof(House1,House2))
 
 ----------------------------------------
 % Whenever:
-%   " ?House1 is a house " is nessicarily true and
-%   " ?House2 is a house " is nessicarily true
+%   " ?House1 is a house " is necessarily true and
+%   " ?House2 is a house " is necessarily true
 % It's Proof that:
-%   " ?House1 is leftof ?House2 " is nessicarily false
+%   " ?House1 is leftof ?House2 " is necessarily false
 
 nesc(house(House1))&nesc(house(House2))==>nesc(~leftof(House1,House2))
 
@@ -385,9 +388,9 @@ nesc(house(House1))&nesc(house(House2))==>nesc(~leftof(House1,House2))
 ----------------------------------------
 % Whenever:
 %   " ?House1 is leftof ?House2 " is possible and
-%   " ?House1 is a house " is nessicarily true
+%   " ?House1 is a house " is necessarily true
 % It's Proof that:
-%   " ?House2 is a house " is nessicarily false
+%   " ?House2 is a house " is necessarily false
 
 poss(leftof(House1,House2))&nesc(house(House1))==>nesc(~house(House2))
 
@@ -397,9 +400,9 @@ poss(leftof(House1,House2))&nesc(house(House1))==>nesc(~house(House2))
 ----------------------------------------
 % Whenever:
 %   " ?House1 is leftof ?House2 " is possible and
-%   " ?House2 is a house " is nessicarily true
+%   " ?House2 is a house " is necessarily true
 % It's Proof that:
-%   " ?House1 is a house " is nessicarily false
+%   " ?House1 is a house " is necessarily false
 
 poss(leftof(House1,House2))&nesc(house(House2))==>nesc(~house(House1))
 
@@ -428,10 +431,10 @@ poss(leftof(House1,House2))&nesc(house(House2))==>nesc(~house(House1))
 
 ----------------------------------------
 % Whenever:
-%   " ?House1 is leftof ?House2 " is nessicarily true and
+%   " ?House1 is leftof ?House2 " is necessarily true and
 %   ( ( ( " ?House2 is a house " is possible or " ?House1 is a house " is possible ) and
 %   ( ?House1 is a house is false or " ?House1 is a house " is possible ) ) and
-%   " ?House1 is a house is , ?House2 is a house " is nessicarily false )
+%   " ?House1 is a house is , ?House2 is a house " is necessarily false )
 % It's Proof that:
 %   " ?House2 is a house " is possibly false
 
@@ -446,10 +449,10 @@ poss(leftof(House1,House2))&nesc(house(House2))==>nesc(~house(House1))
 
 ----------------------------------------
 % Whenever:
-%   " ?House1 is leftof ?House2 " is nessicarily true and
+%   " ?House1 is leftof ?House2 " is necessarily true and
 %   ( ( ( " ?House2 is a house " is possible or " ?House1 is a house " is possible ) and
 %   ( ?House1 is a house is false or " ?House1 is a house " is possible ) ) and
-%   " ?House1 is a house is , ?House2 is a house " is nessicarily false )
+%   " ?House1 is a house is , ?House2 is a house " is necessarily false )
 % It's Proof that:
 %   " ?House2 is a house " is possible
 
@@ -464,10 +467,10 @@ poss(leftof(House1,House2))&nesc(house(House2))==>nesc(~house(House1))
 
 ----------------------------------------
 % Whenever:
-%   " ?House1 is leftof ?House2 " is nessicarily true and
+%   " ?House1 is leftof ?House2 " is necessarily true and
 %   ( ( " ?House2 is a house " is possible or " ?House1 is a house " is possible ) and
 %   ( ( " ?House2 is a house " is possible or ?House2 is a house is false ) and
-%   " ?House1 is a house is , ?House2 is a house " is nessicarily false ) )
+%   " ?House1 is a house is , ?House2 is a house " is necessarily false ) )
 % It's Proof that:
 %   " ?House1 is a house " is possible
 
@@ -482,10 +485,10 @@ poss(leftof(House1,House2))&nesc(house(House2))==>nesc(~house(House1))
 
 ----------------------------------------
 % Whenever:
-%   " ?House1 is leftof ?House2 " is nessicarily true and
+%   " ?House1 is leftof ?House2 " is necessarily true and
 %   ( ( " ?House2 is a house " is possible or " ?House1 is a house " is possible ) and
 %   ( ( " ?House2 is a house " is possible or ?House2 is a house is false ) and
-%   " ?House1 is a house is , ?House2 is a house " is nessicarily false ) )
+%   " ?House1 is a house is , ?House2 is a house " is necessarily false ) )
 % It's Proof that:
 %   " ?House1 is a house " is possibly false
 
@@ -500,10 +503,10 @@ poss(leftof(House1,House2))&nesc(house(House2))==>nesc(~house(House1))
 
 ----------------------------------------
 % Whenever:
-%   " ?House1 is leftof ?House2 " is nessicarily true and
+%   " ?House1 is leftof ?House2 " is necessarily true and
 %   ( ( ?House1 is a house is false or " ?House1 is a house " is possible ) and
 %   ( ( " ?House2 is a house " is possible or ?House2 is a house is false ) and
-%   " ?House1 is a house is , ?House2 is a house " is nessicarily false ) )
+%   " ?House1 is a house is , ?House2 is a house " is necessarily false ) )
 % It's Proof that:
 %   " ?House2 is a house " is possibly false
 
@@ -518,10 +521,10 @@ poss(leftof(House1,House2))&nesc(house(House2))==>nesc(~house(House1))
 
 ----------------------------------------
 % Whenever:
-%   " ?House1 is leftof ?House2 " is nessicarily true and
+%   " ?House1 is leftof ?House2 " is necessarily true and
 %   ( ( ?House1 is a house is false or " ?House1 is a house " is possible ) and
 %   ( ( " ?House2 is a house " is possible or ?House2 is a house is false ) and
-%   " ?House1 is a house is , ?House2 is a house " is nessicarily false ) )
+%   " ?House1 is a house is , ?House2 is a house " is necessarily false ) )
 % It's Proof that:
 %   " ?House1 is a house " is possibly false
 
@@ -539,7 +542,7 @@ poss(leftof(House1,House2))&nesc(house(House2))==>nesc(~house(House1))
 %   ( ( " ?House2 is a house " is possible or " ?House1 is a house " is possible ) and
 %   ( ?House1 is a house is false or " ?House1 is a house " is possible ) ) and
 %   ( ( " ?House2 is a house " is possible or ?House2 is a house is false ) and
-%   " ?House1 is a house is , ?House2 is a house " is nessicarily false )
+%   " ?House1 is a house is , ?House2 is a house " is necessarily false )
 % It's Proof that:
 %   " ?House1 is leftof ?House2 " is possibly false
 
@@ -554,7 +557,7 @@ poss(leftof(House1,House2))&nesc(house(House2))==>nesc(~house(House1))
 
 ----------------------------------------
 % Whenever:
-%   " ?House1 is leftof ?House2 " is nessicarily true and
+%   " ?House1 is leftof ?House2 " is necessarily true and
 %   ( ( ( " ?House2 is a house " is possible or " ?House1 is a house " is possible ) and
 %   ( ?House1 is a house is false or " ?House1 is a house " is possible ) ) and
 %   ( " ?House2 is a house " is possible or ?House2 is a house is false ) )
@@ -572,7 +575,7 @@ poss(leftof(House1,House2))&nesc(house(House2))==>nesc(~house(House1))
 
 ----------------------------------------
 % Whenever:
-%   " ?House1 is leftof ?House2 " is nessicarily true and
+%   " ?House1 is leftof ?House2 " is necessarily true and
 %   ( ( ( " ?House2 is a house " is possible or " ?House1 is a house " is possible ) and
 %   ( ?House1 is a house is false or " ?House1 is a house " is possible ) ) and
 %   ( " ?House2 is a house " is possible or ?House2 is a house is false ) )
@@ -606,8 +609,8 @@ poss(leftof(House1,House2))&nesc(house(House2))==>nesc(~house(House1))
 
 ----------------------------------------
 % Whenever:
-%   ( ( ( " ?House1 is a house " or ?House1 is leftof ?House2 is false ) is nessicarily true ) and
-%   ( ( " ?House2 is a house " or ?House1 is leftof ?House2 is false ) is nessicarily true ) ) and
+%   ( ( ( " ?House1 is a house " or ?House1 is leftof ?House2 is false ) is necessarily true ) and
+%   ( ( " ?House2 is a house " or ?House1 is leftof ?House2 is false ) is necessarily true ) ) and
 %   ( ( " ?House1 is leftof ?House2 " is possible or ( ( ( " ?House2 is a house " is possible and
 %   ?House1 is a house is false ) is possible ) or ( ( " ?House1 is a house " is possible and
 %   ?House2 is a house is false ) is possible ) ) ) and
@@ -638,8 +641,8 @@ poss(leftof(House1,House2))&nesc(house(House2))==>nesc(~house(House1))
 
 ----------------------------------------
 % Whenever:
-%   ( ( ( " ?House1 is a house " or ?House1 is leftof ?House2 is false ) is nessicarily true ) and
-%   ( ( " ?House2 is a house " or ?House1 is leftof ?House2 is false ) is nessicarily true ) ) and
+%   ( ( ( " ?House1 is a house " or ?House1 is leftof ?House2 is false ) is necessarily true ) and
+%   ( ( " ?House2 is a house " or ?House1 is leftof ?House2 is false ) is necessarily true ) ) and
 %   ( ( " ?House1 is leftof ?House2 " is possible or ( ( ( " ?House2 is a house " is possible and
 %   ?House1 is a house is false ) is possible ) or ( ( " ?House1 is a house " is possible and
 %   ?House2 is a house is false ) is possible ) ) ) and
@@ -671,7 +674,7 @@ poss(leftof(House1,House2))&nesc(house(House2))==>nesc(~house(House1))
 ----------------------------------------
 % Whenever:
 %   ( ( " ?House1 is leftof ?House2 " is possible or ?House1 is leftof ?House2 is false ) and
-%   ( ( " ?House1 is a house " or ?House1 is leftof ?House2 is false ) is nessicarily true ) ) and
+%   ( ( " ?House1 is a house " or ?House1 is leftof ?House2 is false ) is necessarily true ) ) and
 %   ( ( " ?House1 is leftof ?House2 " is possible or ( ( ( " ?House2 is a house " is possible and
 %   ?House1 is a house is false ) is possible ) or ( ( " ?House1 is a house " is possible and
 %   ?House2 is a house is false ) is possible ) ) ) and
@@ -703,7 +706,7 @@ poss(leftof(House1,House2))&nesc(house(House2))==>nesc(~house(House1))
 ----------------------------------------
 % Whenever:
 %   ( ( " ?House1 is leftof ?House2 " is possible or ?House1 is leftof ?House2 is false ) and
-%   ( ( " ?House1 is a house " or ?House1 is leftof ?House2 is false ) is nessicarily true ) ) and
+%   ( ( " ?House1 is a house " or ?House1 is leftof ?House2 is false ) is necessarily true ) ) and
 %   ( ( " ?House1 is leftof ?House2 " is possible or ( ( ( " ?House2 is a house " is possible and
 %   ?House1 is a house is false ) is possible ) or ( ( " ?House1 is a house " is possible and
 %   ?House2 is a house is false ) is possible ) ) ) and
@@ -735,7 +738,7 @@ poss(leftof(House1,House2))&nesc(house(House2))==>nesc(~house(House1))
 ----------------------------------------
 % Whenever:
 %   ( ( " ?House1 is leftof ?House2 " is possible or ?House1 is leftof ?House2 is false ) and
-%   ( ( " ?House2 is a house " or ?House1 is leftof ?House2 is false ) is nessicarily true ) ) and
+%   ( ( " ?House2 is a house " or ?House1 is leftof ?House2 is false ) is necessarily true ) ) and
 %   ( ( " ?House1 is leftof ?House2 " is possible or ( ( ( " ?House2 is a house " is possible and
 %   ?House1 is a house is false ) is possible ) or ( ( " ?House1 is a house " is possible and
 %   ?House2 is a house is false ) is possible ) ) ) and
@@ -767,7 +770,7 @@ poss(leftof(House1,House2))&nesc(house(House2))==>nesc(~house(House1))
 ----------------------------------------
 % Whenever:
 %   ( ( " ?House1 is leftof ?House2 " is possible or ?House1 is leftof ?House2 is false ) and
-%   ( ( " ?House2 is a house " or ?House1 is leftof ?House2 is false ) is nessicarily true ) ) and
+%   ( ( " ?House2 is a house " or ?House1 is leftof ?House2 is false ) is necessarily true ) ) and
 %   ( ( " ?House1 is leftof ?House2 " is possible or ( ( ( " ?House2 is a house " is possible and
 %   ?House1 is a house is false ) is possible ) or ( ( " ?House1 is a house " is possible and
 %   ?House2 is a house is false ) is possible ) ) ) and
@@ -799,8 +802,8 @@ poss(leftof(House1,House2))&nesc(house(House2))==>nesc(~house(House1))
 ----------------------------------------
 % Whenever:
 %   ( ( " ?House1 is leftof ?House2 " is possible or ?House1 is leftof ?House2 is false ) and
-%   ( ( ( " ?House1 is a house " or ?House1 is leftof ?House2 is false ) is nessicarily true ) and
-%   ( ( " ?House2 is a house " or ?House1 is leftof ?House2 is false ) is nessicarily true ) ) ) and
+%   ( ( ( " ?House1 is a house " or ?House1 is leftof ?House2 is false ) is necessarily true ) and
+%   ( ( " ?House2 is a house " or ?House1 is leftof ?House2 is false ) is necessarily true ) ) ) and
 %   ( ( " ?House1 is a house " or ( ( ( " ?House2 is a house " is possible and
 %   ?House1 is a house is false ) is possible ) or ( ( " ?House1 is a house " is possible and
 %   ?House2 is a house is false ) is possible ) ) ) and
@@ -827,8 +830,8 @@ poss(leftof(House1,House2))&nesc(house(House2))==>nesc(~house(House1))
 ----------------------------------------
 % Whenever:
 %   ( ( " ?House1 is leftof ?House2 " is possible or ?House1 is leftof ?House2 is false ) and
-%   ( ( ( " ?House1 is a house " or ?House1 is leftof ?House2 is false ) is nessicarily true ) and
-%   ( ( " ?House2 is a house " or ?House1 is leftof ?House2 is false ) is nessicarily true ) ) ) and
+%   ( ( ( " ?House1 is a house " or ?House1 is leftof ?House2 is false ) is necessarily true ) and
+%   ( ( " ?House2 is a house " or ?House1 is leftof ?House2 is false ) is necessarily true ) ) ) and
 %   ( ( " ?House1 is a house " or ( ( ( " ?House2 is a house " is possible and
 %   ?House1 is a house is false ) is possible ) or ( ( " ?House1 is a house " is possible and
 %   ?House2 is a house is false ) is possible ) ) ) and
@@ -855,8 +858,8 @@ poss(leftof(House1,House2))&nesc(house(House2))==>nesc(~house(House1))
 ----------------------------------------
 % Whenever:
 %   ( ( " ?House1 is leftof ?House2 " is possible or ?House1 is leftof ?House2 is false ) and
-%   ( ( ( " ?House1 is a house " or ?House1 is leftof ?House2 is false ) is nessicarily true ) and
-%   ( ( " ?House2 is a house " or ?House1 is leftof ?House2 is false ) is nessicarily true ) ) ) and
+%   ( ( ( " ?House1 is a house " or ?House1 is leftof ?House2 is false ) is necessarily true ) and
+%   ( ( " ?House2 is a house " or ?House1 is leftof ?House2 is false ) is necessarily true ) ) ) and
 %   ( ( " ?House1 is a house " or ( ( ( " ?House2 is a house " is possible and
 %   ?House1 is a house is false ) is possible ) or ( ( " ?House1 is a house " is possible and
 %   ?House2 is a house is false ) is possible ) ) ) and
@@ -883,8 +886,8 @@ poss(leftof(House1,House2))&nesc(house(House2))==>nesc(~house(House1))
 ----------------------------------------
 % Whenever:
 %   ( ( " ?House1 is leftof ?House2 " is possible or ?House1 is leftof ?House2 is false ) and
-%   ( ( ( " ?House1 is a house " or ?House1 is leftof ?House2 is false ) is nessicarily true ) and
-%   ( ( " ?House2 is a house " or ?House1 is leftof ?House2 is false ) is nessicarily true ) ) ) and
+%   ( ( ( " ?House1 is a house " or ?House1 is leftof ?House2 is false ) is necessarily true ) and
+%   ( ( " ?House2 is a house " or ?House1 is leftof ?House2 is false ) is necessarily true ) ) ) and
 %   ( ( " ?House1 is leftof ?House2 " is possible or ( ( ( " ?House2 is a house " is possible and
 %   ?House1 is a house is false ) is possible ) or ( ( " ?House1 is a house " is possible and
 %   ?House2 is a house is false ) is possible ) ) ) and
@@ -911,8 +914,8 @@ poss(leftof(House1,House2))&nesc(house(House2))==>nesc(~house(House1))
 ----------------------------------------
 % Whenever:
 %   ( ( " ?House1 is leftof ?House2 " is possible or ?House1 is leftof ?House2 is false ) and
-%   ( ( ( " ?House1 is a house " or ?House1 is leftof ?House2 is false ) is nessicarily true ) and
-%   ( ( " ?House2 is a house " or ?House1 is leftof ?House2 is false ) is nessicarily true ) ) ) and
+%   ( ( ( " ?House1 is a house " or ?House1 is leftof ?House2 is false ) is necessarily true ) and
+%   ( ( " ?House2 is a house " or ?House1 is leftof ?House2 is false ) is necessarily true ) ) ) and
 %   ( ( " ?House1 is leftof ?House2 " is possible or ( ( ( " ?House2 is a house " is possible and
 %   ?House1 is a house is false ) is possible ) or ( ( " ?House1 is a house " is possible and
 %   ?House2 is a house is false ) is possible ) ) ) and
@@ -939,8 +942,8 @@ poss(leftof(House1,House2))&nesc(house(House2))==>nesc(~house(House1))
 ----------------------------------------
 % Whenever:
 %   ( ( " ?House1 is leftof ?House2 " is possible or ?House1 is leftof ?House2 is false ) and
-%   ( ( ( " ?House1 is a house " or ?House1 is leftof ?House2 is false ) is nessicarily true ) and
-%   ( ( " ?House2 is a house " or ?House1 is leftof ?House2 is false ) is nessicarily true ) ) ) and
+%   ( ( ( " ?House1 is a house " or ?House1 is leftof ?House2 is false ) is necessarily true ) and
+%   ( ( " ?House2 is a house " or ?House1 is leftof ?House2 is false ) is necessarily true ) ) ) and
 %   ( ( " ?House1 is leftof ?House2 " is possible or ( ( ( " ?House2 is a house " is possible and
 %   ?House1 is a house is false ) is possible ) or ( ( " ?House1 is a house " is possible and
 %   ?House2 is a house is false ) is possible ) ) ) and
@@ -967,8 +970,8 @@ poss(leftof(House1,House2))&nesc(house(House2))==>nesc(~house(House1))
 ----------------------------------------
 % Whenever:
 %   ( ( " ?House1 is leftof ?House2 " is possible or ?House1 is leftof ?House2 is false ) and
-%   ( ( ( " ?House1 is a house " or ?House1 is leftof ?House2 is false ) is nessicarily true ) and
-%   ( ( " ?House2 is a house " or ?House1 is leftof ?House2 is false ) is nessicarily true ) ) ) and
+%   ( ( ( " ?House1 is a house " or ?House1 is leftof ?House2 is false ) is necessarily true ) and
+%   ( ( " ?House2 is a house " or ?House1 is leftof ?House2 is false ) is necessarily true ) ) ) and
 %   ( ( " ?House1 is leftof ?House2 " is possible or ( ( ( " ?House2 is a house " is possible and
 %   ?House1 is a house is false ) is possible ) or ( ( " ?House1 is a house " is possible and
 %   ?House2 is a house is false ) is possible ) ) ) and
@@ -995,8 +998,8 @@ poss(leftof(House1,House2))&nesc(house(House2))==>nesc(~house(House1))
 ----------------------------------------
 % Whenever:
 %   ( ( " ?House1 is leftof ?House2 " is possible or ?House1 is leftof ?House2 is false ) and
-%   ( ( ( " ?House1 is a house " or ?House1 is leftof ?House2 is false ) is nessicarily true ) and
-%   ( ( " ?House2 is a house " or ?House1 is leftof ?House2 is false ) is nessicarily true ) ) ) and
+%   ( ( ( " ?House1 is a house " or ?House1 is leftof ?House2 is false ) is necessarily true ) and
+%   ( ( " ?House2 is a house " or ?House1 is leftof ?House2 is false ) is necessarily true ) ) ) and
 %   ( ( " ?House1 is leftof ?House2 " is possible or ( ( ( " ?House2 is a house " is possible and
 %   ?House1 is a house is false ) is possible ) or ( ( " ?House1 is a house " is possible and
 %   ?House2 is a house is false ) is possible ) ) ) and
@@ -1023,8 +1026,8 @@ poss(leftof(House1,House2))&nesc(house(House2))==>nesc(~house(House1))
 ----------------------------------------
 % Whenever:
 %   ( ( " ?House1 is leftof ?House2 " is possible or ?House1 is leftof ?House2 is false ) and
-%   ( ( ( " ?House1 is a house " or ?House1 is leftof ?House2 is false ) is nessicarily true ) and
-%   ( ( " ?House2 is a house " or ?House1 is leftof ?House2 is false ) is nessicarily true ) ) ) and
+%   ( ( ( " ?House1 is a house " or ?House1 is leftof ?House2 is false ) is necessarily true ) and
+%   ( ( " ?House2 is a house " or ?House1 is leftof ?House2 is false ) is necessarily true ) ) ) and
 %   ( ( " ?House1 is leftof ?House2 " is possible or ( ( ( " ?House2 is a house " is possible and
 %   ?House1 is a house is false ) is possible ) or ( ( " ?House1 is a house " is possible and
 %   ?House2 is a house is false ) is possible ) ) ) and
@@ -1077,7 +1080,7 @@ fact_1
 
 
 =======================================================
-% " fact_1 " is nessicarily true
+% " fact_1 " is necessarily true
 
 ?- kif_to_boxlog( nesc(fact_1) ).
 
@@ -1089,7 +1092,7 @@ fact_1
 
 
 ----------------------------------------
-% " fact_1 " is nessicarily true
+% " fact_1 " is necessarily true
 
 nesc(fact_1)
 
@@ -1189,9 +1192,9 @@ poss( ~fact_1)
 
 ----------------------------------------
 % Whenever:
-%   " fact_1 " is nessicarily true
+%   " fact_1 " is necessarily true
 % It's Proof that:
-%   " result_1 " is nessicarily true
+%   " result_1 " is necessarily true
 
 nesc(fact_1)==>nesc(result_1)
 
@@ -1200,9 +1203,9 @@ nesc(fact_1)==>nesc(result_1)
 
 ----------------------------------------
 % Whenever:
-%   " result_1 " is nessicarily false
+%   " result_1 " is necessarily false
 % It's Proof that:
-%   " fact_1 " is nessicarily false
+%   " fact_1 " is necessarily false
 
 nesc(~result_1)==>nesc(~fact_1)
 
@@ -1217,7 +1220,7 @@ nesc(~result_1)==>nesc(~fact_1)
 % ( If:
 %   " fact_1 " then it is
 % Implied that:
-%   " result_1 " ) is nessicarily true
+%   " result_1 " ) is necessarily true
 
 ?- kif_to_boxlog( nesc((fact_1=>result_1)) ).
 
@@ -1230,9 +1233,9 @@ nesc(~result_1)==>nesc(~fact_1)
 
 ----------------------------------------
 % Whenever:
-%   " fact_1 " is nessicarily true
+%   " fact_1 " is necessarily true
 % It's Proof that:
-%   " result_1 " is nessicarily true
+%   " result_1 " is necessarily true
 
 nesc(fact_1)==>nesc(result_1)
 
@@ -1271,9 +1274,9 @@ poss(~result_1)==>poss(~fact_1)
 
 ----------------------------------------
 % Whenever:
-%   " result_1 " is nessicarily true
+%   " result_1 " is necessarily true
 % It's Proof that:
-%   " fact_1 " is nessicarily false
+%   " fact_1 " is necessarily false
 
 nesc(result_1)==>nesc(~fact_1)
 
@@ -1282,9 +1285,9 @@ nesc(result_1)==>nesc(~fact_1)
 
 ----------------------------------------
 % Whenever:
-%   " fact_1 " is nessicarily false
+%   " fact_1 " is necessarily false
 % It's Proof that:
-%   " result_1 " is nessicarily true
+%   " result_1 " is necessarily true
 
 nesc(~fact_1)==>nesc(result_1)
 
@@ -1295,7 +1298,7 @@ nesc(~fact_1)==>nesc(result_1)
 % Whenever:
 %   " fact_1 " is possible
 % It's Proof that:
-%   " result_1 " is nessicarily false
+%   " result_1 " is necessarily false
 
 poss(fact_1)==>nesc(~result_1)
 
@@ -1306,7 +1309,7 @@ poss(fact_1)==>nesc(~result_1)
 % Whenever:
 %   " result_1 " is possibly false
 % It's Proof that:
-%   " fact_1 " is nessicarily true
+%   " fact_1 " is necessarily true
 
 poss(~result_1)==>nesc(fact_1)
 
@@ -1334,7 +1337,7 @@ poss(~result_1)==>nesc(fact_1)
 
 ----------------------------------------
 % Whenever:
-%   " fact_1 " is nessicarily true
+%   " fact_1 " is necessarily true
 % It's Proof that:
 %   " result_1 " is possible
 
@@ -1345,7 +1348,7 @@ nesc(fact_1)==>poss(result_1)
 
 ----------------------------------------
 % Whenever:
-%   " result_1 " is nessicarily false
+%   " result_1 " is necessarily false
 % It's Proof that:
 %   " fact_1 " is possibly false
 
@@ -1372,7 +1375,7 @@ nesc(~result_1)==>poss(~fact_1)
 
 ----------------------------------------
 % Whenever:
-%   ( ( fact_1 is false or " result_1 " ) is nessicarily true ) and
+%   ( ( fact_1 is false or " result_1 " ) is necessarily true ) and
 %   ( ( " result_1 " is possibly false or " fact_1 " is possible ) and
 %   ( fact_1 is false or " fact_1 " is possible ) )
 % It's Proof that:
@@ -1385,7 +1388,7 @@ nesc(~fact_1 v result_1)&(poss(~result_1)v poss(fact_1)&(~fact_1 v poss(fact_1))
 
 ----------------------------------------
 % Whenever:
-%   ( ( fact_1 is false or " result_1 " ) is nessicarily true ) and
+%   ( ( fact_1 is false or " result_1 " ) is necessarily true ) and
 %   ( ( " result_1 " is possibly false or " fact_1 " is possible ) and
 %   ( fact_1 is false or " fact_1 " is possible ) )
 % It's Proof that:
@@ -1426,7 +1429,7 @@ poss(~result_1)v result_1&(poss(~result_1)v poss(fact_1)&(~fact_1 v poss(fact_1)
 % Whenever:
 %   ( " result_1 " is possibly false or " fact_1 " is possible ) and
 %   ( ( " result_1 " is possibly false or " result_1 " ) and
-%   ( ( fact_1 is false or " result_1 " ) is nessicarily true ) )
+%   ( ( fact_1 is false or " result_1 " ) is necessarily true ) )
 % It's Proof that:
 %   " fact_1 " is possible
 
@@ -1439,7 +1442,7 @@ poss(~result_1)v poss(fact_1)&(poss(~result_1)v result_1&nesc(~fact_1 v result_1
 % Whenever:
 %   ( " result_1 " is possibly false or " fact_1 " is possible ) and
 %   ( ( " result_1 " is possibly false or " result_1 " ) and
-%   ( ( fact_1 is false or " result_1 " ) is nessicarily true ) )
+%   ( ( fact_1 is false or " result_1 " ) is necessarily true ) )
 % It's Proof that:
 %   " fact_1 " is possibly false
 
@@ -1452,7 +1455,7 @@ poss(~result_1)v poss(fact_1)&(poss(~result_1)v result_1&nesc(~fact_1 v result_1
 % Whenever:
 %   ( fact_1 is false or " fact_1 " is possible ) and
 %   ( ( " result_1 " is possibly false or " result_1 " ) and
-%   ( ( fact_1 is false or " result_1 " ) is nessicarily true ) )
+%   ( ( fact_1 is false or " result_1 " ) is necessarily true ) )
 % It's Proof that:
 %   " result_1 " is possible
 
@@ -1465,7 +1468,7 @@ poss(~result_1)v poss(fact_1)&(poss(~result_1)v result_1&nesc(~fact_1 v result_1
 % Whenever:
 %   ( fact_1 is false or " fact_1 " is possible ) and
 %   ( ( " result_1 " is possibly false or " result_1 " ) and
-%   ( ( fact_1 is false or " result_1 " ) is nessicarily true ) )
+%   ( ( fact_1 is false or " result_1 " ) is necessarily true ) )
 % It's Proof that:
 %   " fact_1 " is possibly false
 
@@ -1496,10 +1499,10 @@ poss(~result_1)v poss(fact_1)&(poss(~result_1)v result_1&nesc(~fact_1 v result_1
 
 ----------------------------------------
 % Whenever:
-%   " fact_1 " is nessicarily true and
-%   " fact_2 " is nessicarily true
+%   " fact_1 " is necessarily true and
+%   " fact_2 " is necessarily true
 % It's Proof that:
-%   " result_1 " is nessicarily true
+%   " result_1 " is necessarily true
 
 nesc(fact_1)&nesc(fact_2)==>nesc(result_1)
 
@@ -1508,10 +1511,10 @@ nesc(fact_1)&nesc(fact_2)==>nesc(result_1)
 
 ----------------------------------------
 % Whenever:
-%   " result_1 " is nessicarily false and
-%   " fact_1 " is nessicarily true
+%   " result_1 " is necessarily false and
+%   " fact_1 " is necessarily true
 % It's Proof that:
-%   " fact_2 " is nessicarily false
+%   " fact_2 " is necessarily false
 
 nesc(~result_1)&nesc(fact_1)==>nesc(~fact_2)
 
@@ -1520,10 +1523,10 @@ nesc(~result_1)&nesc(fact_1)==>nesc(~fact_2)
 
 ----------------------------------------
 % Whenever:
-%   " result_1 " is nessicarily false and
-%   " fact_2 " is nessicarily true
+%   " result_1 " is necessarily false and
+%   " fact_2 " is necessarily true
 % It's Proof that:
-%   " fact_1 " is nessicarily false
+%   " fact_1 " is necessarily false
 
 nesc(~result_1)&nesc(fact_2)==>nesc(~fact_1)
 
@@ -1539,7 +1542,7 @@ nesc(~result_1)&nesc(fact_2)==>nesc(~fact_1)
 %   " fact_1 " and
 %   " fact_2 " then it is
 % Implied that:
-%   " result_1 " ) is nessicarily true
+%   " result_1 " ) is necessarily true
 
 ?- kif_to_boxlog( nesc((fact_1&fact_2=>result_1)) ).
 
@@ -1552,10 +1555,10 @@ nesc(~result_1)&nesc(fact_2)==>nesc(~fact_1)
 
 ----------------------------------------
 % Whenever:
-%   " fact_1 " is nessicarily true and
-%   " fact_2 " is nessicarily true
+%   " fact_1 " is necessarily true and
+%   " fact_2 " is necessarily true
 % It's Proof that:
-%   " result_1 " is nessicarily true
+%   " result_1 " is necessarily true
 
 nesc(fact_1)&nesc(fact_2)==>nesc(result_1)
 
@@ -1565,7 +1568,7 @@ nesc(fact_1)&nesc(fact_2)==>nesc(result_1)
 ----------------------------------------
 % Whenever:
 %   " result_1 " is possibly false and
-%   " fact_1 " is nessicarily true
+%   " fact_1 " is necessarily true
 % It's Proof that:
 %   " fact_2 " is possibly false
 
@@ -1577,7 +1580,7 @@ poss(~result_1)&nesc(fact_1)==>poss(~fact_2)
 ----------------------------------------
 % Whenever:
 %   " result_1 " is possibly false and
-%   " fact_2 " is nessicarily true
+%   " fact_2 " is necessarily true
 % It's Proof that:
 %   " fact_1 " is possibly false
 
@@ -1608,9 +1611,9 @@ poss(~result_1)&nesc(fact_2)==>poss(~fact_1)
 
 ----------------------------------------
 % Whenever:
-%   " fact_1 " is nessicarily false
+%   " fact_1 " is necessarily false
 % It's Proof that:
-%   " fact_2 " is nessicarily false
+%   " fact_2 " is necessarily false
 
 nesc(~fact_1)==>nesc(~fact_2)
 
@@ -1619,9 +1622,9 @@ nesc(~fact_1)==>nesc(~fact_2)
 
 ----------------------------------------
 % Whenever:
-%   " fact_2 " is nessicarily false
+%   " fact_2 " is necessarily false
 % It's Proof that:
-%   " fact_1 " is nessicarily false
+%   " fact_1 " is necessarily false
 
 nesc(~fact_2)==>nesc(~fact_1)
 
@@ -1632,7 +1635,7 @@ nesc(~fact_2)==>nesc(~fact_1)
 % Whenever:
 %   " fact_1 " is possible
 % It's Proof that:
-%   " fact_2 " is nessicarily true
+%   " fact_2 " is necessarily true
 
 poss(fact_1)==>nesc(fact_2)
 
@@ -1643,7 +1646,7 @@ poss(fact_1)==>nesc(fact_2)
 % Whenever:
 %   " fact_2 " is possible
 % It's Proof that:
-%   " fact_1 " is nessicarily true
+%   " fact_1 " is necessarily true
 
 poss(fact_2)==>nesc(fact_1)
 
@@ -1680,8 +1683,8 @@ poss(fact_2)==>nesc(fact_1)
 
 ----------------------------------------
 % Whenever:
-%   " fact_1 " is nessicarily true and
-%   " fact_2 " is nessicarily true
+%   " fact_1 " is necessarily true and
+%   " fact_2 " is necessarily true
 % It's Proof that:
 %   " result_1 " is possible
 
@@ -1692,8 +1695,8 @@ nesc(fact_1)&nesc(fact_2)==>poss(result_1)
 
 ----------------------------------------
 % Whenever:
-%   " result_1 " is nessicarily false and
-%   " fact_1 " is nessicarily true
+%   " result_1 " is necessarily false and
+%   " fact_1 " is necessarily true
 % It's Proof that:
 %   " fact_2 " is possibly false
 
@@ -1704,8 +1707,8 @@ nesc(~result_1)&nesc(fact_1)==>poss(~fact_2)
 
 ----------------------------------------
 % Whenever:
-%   " result_1 " is nessicarily false and
-%   " fact_2 " is nessicarily true
+%   " result_1 " is necessarily false and
+%   " fact_2 " is necessarily true
 % It's Proof that:
 %   " fact_1 " is possibly false
 
@@ -1732,7 +1735,7 @@ nesc(~result_1)&nesc(fact_2)==>poss(~fact_1)
 
 ----------------------------------------
 % Whenever:
-%   ( ( " result_1 " or ( fact_1 is false or fact_2 is false ) ) is nessicarily true ) and
+%   ( ( " result_1 " or ( fact_1 is false or fact_2 is false ) ) is necessarily true ) and
 %   ( ( " result_1 " or ( " fact_2 " is possible or " fact_1 " is possible ) ) and
 %   ( " result_1 " or ( fact_1 is false or " fact_1 " is possible ) ) )
 % It's Proof that:
@@ -1754,7 +1757,7 @@ nesc(~result_1)&nesc(fact_2)==>poss(~fact_1)
 
 ----------------------------------------
 % Whenever:
-%   ( ( " result_1 " or ( fact_1 is false or fact_2 is false ) ) is nessicarily true ) and
+%   ( ( " result_1 " or ( fact_1 is false or fact_2 is false ) ) is necessarily true ) and
 %   ( ( " result_1 " or ( " fact_2 " is possible or " fact_1 " is possible ) ) and
 %   ( " result_1 " or ( fact_1 is false or " fact_1 " is possible ) ) )
 % It's Proof that:
@@ -1776,7 +1779,7 @@ nesc(~result_1)&nesc(fact_2)==>poss(~fact_1)
 
 ----------------------------------------
 % Whenever:
-%   ( ( " result_1 " or ( fact_1 is false or fact_2 is false ) ) is nessicarily true ) and
+%   ( ( " result_1 " or ( fact_1 is false or fact_2 is false ) ) is necessarily true ) and
 %   ( ( " result_1 " or ( " fact_2 " is possible or " fact_1 " is possible ) ) and
 %   ( " result_1 " or ( fact_1 is false or " fact_1 " is possible ) ) )
 % It's Proof that:
@@ -1800,7 +1803,7 @@ nesc(~result_1)&nesc(fact_2)==>poss(~fact_1)
 % Whenever:
 %   ( " result_1 " or ( " fact_2 " is possible or " fact_1 " is possible ) ) and
 %   ( ( " result_1 " or ( " fact_2 " is possible or fact_2 is false ) ) and
-%   ( ( " result_1 " or ( fact_1 is false or fact_2 is false ) ) is nessicarily true ) )
+%   ( ( " result_1 " or ( fact_1 is false or fact_2 is false ) ) is necessarily true ) )
 % It's Proof that:
 %   " result_1 " is possibly false
 
@@ -1822,7 +1825,7 @@ nesc(~result_1)&nesc(fact_2)==>poss(~fact_1)
 % Whenever:
 %   ( " result_1 " or ( " fact_2 " is possible or " fact_1 " is possible ) ) and
 %   ( ( " result_1 " or ( " fact_2 " is possible or fact_2 is false ) ) and
-%   ( ( " result_1 " or ( fact_1 is false or fact_2 is false ) ) is nessicarily true ) )
+%   ( ( " result_1 " or ( fact_1 is false or fact_2 is false ) ) is necessarily true ) )
 % It's Proof that:
 %   " fact_1 " is possible
 
@@ -1844,7 +1847,7 @@ nesc(~result_1)&nesc(fact_2)==>poss(~fact_1)
 % Whenever:
 %   ( " result_1 " or ( " fact_2 " is possible or " fact_1 " is possible ) ) and
 %   ( ( " result_1 " or ( " fact_2 " is possible or fact_2 is false ) ) and
-%   ( ( " result_1 " or ( fact_1 is false or fact_2 is false ) ) is nessicarily true ) )
+%   ( ( " result_1 " or ( fact_1 is false or fact_2 is false ) ) is necessarily true ) )
 % It's Proof that:
 %   " fact_1 " is possibly false
 
@@ -1932,7 +1935,7 @@ nesc(~result_1)&nesc(fact_2)==>poss(~fact_1)
 % Whenever:
 %   ( " result_1 " or ( fact_1 is false or " fact_1 " is possible ) ) and
 %   ( ( " result_1 " or ( " fact_2 " is possible or fact_2 is false ) ) and
-%   ( ( " result_1 " or ( fact_1 is false or fact_2 is false ) ) is nessicarily true ) )
+%   ( ( " result_1 " or ( fact_1 is false or fact_2 is false ) ) is necessarily true ) )
 % It's Proof that:
 %   " result_1 " is possibly false
 
@@ -1954,7 +1957,7 @@ nesc(~result_1)&nesc(fact_2)==>poss(~fact_1)
 % Whenever:
 %   ( " result_1 " or ( fact_1 is false or " fact_1 " is possible ) ) and
 %   ( ( " result_1 " or ( " fact_2 " is possible or fact_2 is false ) ) and
-%   ( ( " result_1 " or ( fact_1 is false or fact_2 is false ) ) is nessicarily true ) )
+%   ( ( " result_1 " or ( fact_1 is false or fact_2 is false ) ) is necessarily true ) )
 % It's Proof that:
 %   " fact_2 " is possibly false
 
@@ -1976,7 +1979,7 @@ nesc(~result_1)&nesc(fact_2)==>poss(~fact_1)
 % Whenever:
 %   ( " result_1 " or ( fact_1 is false or " fact_1 " is possible ) ) and
 %   ( ( " result_1 " or ( " fact_2 " is possible or fact_2 is false ) ) and
-%   ( ( " result_1 " or ( fact_1 is false or fact_2 is false ) ) is nessicarily true ) )
+%   ( ( " result_1 " or ( fact_1 is false or fact_2 is false ) ) is necessarily true ) )
 % It's Proof that:
 %   " fact_1 " is possibly false
 
@@ -2015,10 +2018,10 @@ nesc(~result_1)&nesc(fact_2)==>poss(~fact_1)
 
 ----------------------------------------
 % Whenever:
-%   " result_1 " is nessicarily false and
-%   " fact_1 " is nessicarily true
+%   " result_1 " is necessarily false and
+%   " fact_1 " is necessarily true
 % It's Proof that:
-%   " fact_2 " is nessicarily true
+%   " fact_2 " is necessarily true
 
 nesc(~result_1)&nesc(fact_1)==>nesc(fact_2)
 
@@ -2027,10 +2030,10 @@ nesc(~result_1)&nesc(fact_1)==>nesc(fact_2)
 
 ----------------------------------------
 % Whenever:
-%   " result_1 " is nessicarily false and
-%   " fact_2 " is nessicarily true
+%   " result_1 " is necessarily false and
+%   " fact_2 " is necessarily true
 % It's Proof that:
-%   " fact_1 " is nessicarily true
+%   " fact_1 " is necessarily true
 
 nesc(~result_1)&nesc(fact_2)==>nesc(fact_1)
 
@@ -2039,10 +2042,10 @@ nesc(~result_1)&nesc(fact_2)==>nesc(fact_1)
 
 ----------------------------------------
 % Whenever:
-%   " result_1 " is nessicarily false and
+%   " result_1 " is necessarily false and
 %   " fact_1 " is possibly false
 % It's Proof that:
-%   " fact_2 " is nessicarily false
+%   " fact_2 " is necessarily false
 
 nesc(~result_1)&poss(~fact_1)==>nesc(~fact_2)
 
@@ -2051,10 +2054,10 @@ nesc(~result_1)&poss(~fact_1)==>nesc(~fact_2)
 
 ----------------------------------------
 % Whenever:
-%   " result_1 " is nessicarily false and
+%   " result_1 " is necessarily false and
 %   " fact_2 " is possibly false
 % It's Proof that:
-%   " fact_1 " is nessicarily false
+%   " fact_1 " is necessarily false
 
 nesc(~result_1)&poss(~fact_2)==>nesc(~fact_1)
 
@@ -2064,9 +2067,9 @@ nesc(~result_1)&poss(~fact_2)==>nesc(~fact_1)
 ----------------------------------------
 % Whenever:
 %   " fact_1 " is possibly false and
-%   " fact_2 " is nessicarily true
+%   " fact_2 " is necessarily true
 % It's Proof that:
-%   " result_1 " is nessicarily true
+%   " result_1 " is necessarily true
 
 poss(~fact_1)&nesc(fact_2)==>nesc(result_1)
 
@@ -2076,9 +2079,9 @@ poss(~fact_1)&nesc(fact_2)==>nesc(result_1)
 ----------------------------------------
 % Whenever:
 %   " fact_2 " is possibly false and
-%   " fact_1 " is nessicarily true
+%   " fact_1 " is necessarily true
 % It's Proof that:
-%   " result_1 " is nessicarily true
+%   " result_1 " is necessarily true
 
 poss(~fact_2)&nesc(fact_1)==>nesc(result_1)
 
@@ -2093,7 +2096,7 @@ poss(~fact_2)&nesc(fact_1)==>nesc(result_1)
 % ( If:
 %   " fact_1 " or " fact_2 " then it is
 % Implied that:
-%   " result_1 " ) is nessicarily true
+%   " result_1 " ) is necessarily true
 
 ?- kif_to_boxlog( nesc((fact_1 v fact_2=>result_1)) ).
 
@@ -2107,9 +2110,9 @@ poss(~fact_2)&nesc(fact_1)==>nesc(result_1)
 ----------------------------------------
 % Whenever:
 %   " fact_1 " is possibly false and
-%   " fact_2 " is nessicarily true
+%   " fact_2 " is necessarily true
 % It's Proof that:
-%   " result_1 " is nessicarily true
+%   " result_1 " is necessarily true
 
 poss(~fact_1)&nesc(fact_2)==>nesc(result_1)
 
@@ -2119,9 +2122,9 @@ poss(~fact_1)&nesc(fact_2)==>nesc(result_1)
 ----------------------------------------
 % Whenever:
 %   " fact_2 " is possibly false and
-%   " fact_1 " is nessicarily true
+%   " fact_1 " is necessarily true
 % It's Proof that:
-%   " result_1 " is nessicarily true
+%   " result_1 " is necessarily true
 
 poss(~fact_2)&nesc(fact_1)==>nesc(result_1)
 
@@ -2131,9 +2134,9 @@ poss(~fact_2)&nesc(fact_1)==>nesc(result_1)
 ----------------------------------------
 % Whenever:
 %   " result_1 " is possibly false and
-%   " fact_1 " is nessicarily true
+%   " fact_1 " is necessarily true
 % It's Proof that:
-%   " fact_2 " is nessicarily true
+%   " fact_2 " is necessarily true
 
 poss(~result_1)&nesc(fact_1)==>nesc(fact_2)
 
@@ -2143,9 +2146,9 @@ poss(~result_1)&nesc(fact_1)==>nesc(fact_2)
 ----------------------------------------
 % Whenever:
 %   " result_1 " is possibly false and
-%   " fact_2 " is nessicarily true
+%   " fact_2 " is necessarily true
 % It's Proof that:
-%   " fact_1 " is nessicarily true
+%   " fact_1 " is necessarily true
 
 poss(~result_1)&nesc(fact_2)==>nesc(fact_1)
 
@@ -2197,9 +2200,9 @@ poss(~result_1)&poss(~fact_2)==>poss(~fact_1)
 
 ----------------------------------------
 % Whenever:
-%   " fact_1 " is nessicarily false
+%   " fact_1 " is necessarily false
 % It's Proof that:
-%   " fact_2 " is nessicarily true
+%   " fact_2 " is necessarily true
 
 nesc(~fact_1)==>nesc(fact_2)
 
@@ -2208,9 +2211,9 @@ nesc(~fact_1)==>nesc(fact_2)
 
 ----------------------------------------
 % Whenever:
-%   " fact_2 " is nessicarily false
+%   " fact_2 " is necessarily false
 % It's Proof that:
-%   " fact_1 " is nessicarily true
+%   " fact_1 " is necessarily true
 
 nesc(~fact_2)==>nesc(fact_1)
 
@@ -2246,8 +2249,8 @@ nesc(~fact_2)==>nesc(fact_1)
 
 ----------------------------------------
 % Whenever:
-%   " result_1 " is nessicarily false and
-%   ( ( ( " fact_1 " or " fact_2 " ) is nessicarily true ) and
+%   " result_1 " is necessarily false and
+%   ( ( ( " fact_1 " or " fact_2 " ) is necessarily true ) and
 %   ( ( " fact_2 " is possibly false or " fact_1 " is possibly false ) and
 %   ( " fact_1 " or " fact_1 " is possibly false ) ) )
 % It's Proof that:
@@ -2264,8 +2267,8 @@ nesc(~fact_2)==>nesc(fact_1)
 
 ----------------------------------------
 % Whenever:
-%   " result_1 " is nessicarily false and
-%   ( ( ( " fact_1 " or " fact_2 " ) is nessicarily true ) and
+%   " result_1 " is necessarily false and
+%   ( ( ( " fact_1 " or " fact_2 " ) is necessarily true ) and
 %   ( ( " fact_2 " is possibly false or " fact_1 " is possibly false ) and
 %   ( " fact_1 " or " fact_1 " is possibly false ) ) )
 % It's Proof that:
@@ -2282,10 +2285,10 @@ nesc(~fact_2)==>nesc(fact_1)
 
 ----------------------------------------
 % Whenever:
-%   " result_1 " is nessicarily false and
+%   " result_1 " is necessarily false and
 %   ( ( " fact_1 " or " fact_1 " is possibly false ) and
 %   ( ( " fact_2 " is possibly false or " fact_2 " ) and
-%   ( ( " fact_1 " or " fact_2 " ) is nessicarily true ) ) )
+%   ( ( " fact_1 " or " fact_2 " ) is necessarily true ) ) )
 % It's Proof that:
 %   " fact_2 " is possible
 
@@ -2296,10 +2299,10 @@ nesc(~result_1)&(fact_1 v poss(~fact_1)&(poss(~fact_2)v fact_2&nesc(fact_1 v fac
 
 ----------------------------------------
 % Whenever:
-%   " result_1 " is nessicarily false and
+%   " result_1 " is necessarily false and
 %   ( ( " fact_1 " or " fact_1 " is possibly false ) and
 %   ( ( " fact_2 " is possibly false or " fact_2 " ) and
-%   ( ( " fact_1 " or " fact_2 " ) is nessicarily true ) ) )
+%   ( ( " fact_1 " or " fact_2 " ) is necessarily true ) ) )
 % It's Proof that:
 %   " fact_1 " is possible
 
@@ -2310,7 +2313,7 @@ nesc(~result_1)&(fact_1 v poss(~fact_1)&(poss(~fact_2)v fact_2&nesc(fact_1 v fac
 
 ----------------------------------------
 % Whenever:
-%   " result_1 " is nessicarily false and
+%   " result_1 " is necessarily false and
 %   ( ( " fact_2 " is possibly false or " fact_2 " ) and
 %   ( ( " fact_2 " is possibly false or " fact_1 " is possibly false ) and
 %   ( " fact_1 " or " fact_1 " is possibly false ) ) )
@@ -2328,7 +2331,7 @@ nesc(~result_1)&(fact_1 v poss(~fact_1)&(poss(~fact_2)v fact_2&nesc(fact_1 v fac
 
 ----------------------------------------
 % Whenever:
-%   " result_1 " is nessicarily false and
+%   " result_1 " is necessarily false and
 %   ( ( " fact_2 " is possibly false or " fact_2 " ) and
 %   ( ( " fact_2 " is possibly false or " fact_1 " is possibly false ) and
 %   ( " fact_1 " or " fact_1 " is possibly false ) ) )
@@ -2346,10 +2349,10 @@ nesc(~result_1)&(fact_1 v poss(~fact_1)&(poss(~fact_2)v fact_2&nesc(fact_1 v fac
 
 ----------------------------------------
 % Whenever:
-%   " result_1 " is nessicarily false and
+%   " result_1 " is necessarily false and
 %   ( ( " fact_2 " is possibly false or " fact_1 " is possibly false ) and
 %   ( ( " fact_2 " is possibly false or " fact_2 " ) and
-%   ( ( " fact_1 " or " fact_2 " ) is nessicarily true ) ) )
+%   ( ( " fact_1 " or " fact_2 " ) is necessarily true ) ) )
 % It's Proof that:
 %   " fact_1 " is possibly false
 
@@ -2364,10 +2367,10 @@ nesc(~result_1)&(fact_1 v poss(~fact_1)&(poss(~fact_2)v fact_2&nesc(fact_1 v fac
 
 ----------------------------------------
 % Whenever:
-%   " result_1 " is nessicarily false and
+%   " result_1 " is necessarily false and
 %   ( ( " fact_2 " is possibly false or " fact_1 " is possibly false ) and
 %   ( ( " fact_2 " is possibly false or " fact_2 " ) and
-%   ( ( " fact_1 " or " fact_2 " ) is nessicarily true ) ) )
+%   ( ( " fact_1 " or " fact_2 " ) is necessarily true ) ) )
 % It's Proof that:
 %   " fact_1 " is possible
 
@@ -2385,7 +2388,7 @@ nesc(~result_1)&(fact_1 v poss(~fact_1)&(poss(~fact_2)v fact_2&nesc(fact_1 v fac
 %   ( ( " fact_2 " is possibly false or " fact_1 " is possibly false ) and
 %   ( " fact_1 " or " fact_1 " is possibly false ) ) and
 %   ( ( " fact_2 " is possibly false or " fact_2 " ) and
-%   ( ( " fact_1 " or " fact_2 " ) is nessicarily true ) )
+%   ( ( " fact_1 " or " fact_2 " ) is necessarily true ) )
 % It's Proof that:
 %   " result_1 " is possible
 
@@ -2416,7 +2419,7 @@ nesc(~result_1)&(fact_1 v poss(~fact_1)&(poss(~fact_2)v fact_2&nesc(fact_1 v fac
 
 ----------------------------------------
 % Whenever:
-%   " result_1 " is nessicarily true
+%   " result_1 " is necessarily true
 % It's Proof that:
 %   " result_1 " is possibly false
 
@@ -2427,7 +2430,7 @@ nesc(result_1)==>poss(~result_1)
 
 ----------------------------------------
 % Whenever:
-%   " fact_1 " is nessicarily false
+%   " fact_1 " is necessarily false
 % It's Proof that:
 %   " result_1 " is possibly false
 
@@ -2438,7 +2441,7 @@ nesc(~fact_1)==>poss(~result_1)
 
 ----------------------------------------
 % Whenever:
-%   " result_1 " is nessicarily true
+%   " result_1 " is necessarily true
 % It's Proof that:
 %   " fact_2 " is possible
 
@@ -2449,7 +2452,7 @@ nesc(result_1)==>poss(fact_2)
 
 ----------------------------------------
 % Whenever:
-%   " fact_1 " is nessicarily false
+%   " fact_1 " is necessarily false
 % It's Proof that:
 %   " fact_2 " is possible
 
@@ -2460,7 +2463,7 @@ nesc(~fact_1)==>poss(fact_2)
 
 ----------------------------------------
 % Whenever:
-%   " result_1 " is nessicarily true
+%   " result_1 " is necessarily true
 % It's Proof that:
 %   " result_1 " is possibly false
 
@@ -2471,7 +2474,7 @@ nesc(result_1)==>poss(~result_1)
 
 ----------------------------------------
 % Whenever:
-%   " fact_2 " is nessicarily false
+%   " fact_2 " is necessarily false
 % It's Proof that:
 %   " result_1 " is possibly false
 
@@ -2482,7 +2485,7 @@ nesc(~fact_2)==>poss(~result_1)
 
 ----------------------------------------
 % Whenever:
-%   " result_1 " is nessicarily true
+%   " result_1 " is necessarily true
 % It's Proof that:
 %   " fact_1 " is possible
 
@@ -2493,7 +2496,7 @@ nesc(result_1)==>poss(fact_1)
 
 ----------------------------------------
 % Whenever:
-%   " fact_2 " is nessicarily false
+%   " fact_2 " is necessarily false
 % It's Proof that:
 %   " fact_1 " is possible
 
