@@ -985,17 +985,20 @@ final_nnf(O,OO):- once((nnf(KB,O,O1),adjust_kif(KB,O1,O2),simplify_all(KB,O2,OO)
 %final_nnf(O,OO):-as_sigma(O,E), sigma_ace:getNegationForm(toplevel,0,'?KB','?Ctx',_KRVars,_Flags,E,_,OM,_),as_dlog(OM,OO).
 final_nnf(O,O).
 
-entails_to_boxlog(KB,Why,Flags,List,RealOUT):- is_list(List),!,
-  entails_to_boxlog(KB,Why,Flags,List,ListL), append(ListL,RealOUT).
-entails_to_boxlog(KB,Why,Flags,A,[RealOUT]):- leave_as_is_logically(A),
+entails_to_boxlog(KB,Why,Flags,List,RealOUT):-
+  entails_to_boxlog(0,KB,Why,Flags,List,RealOUT).
+entails_to_boxlog(N,KB,Why,Flags,List,RealOUT):- is_list(List),!,
+  entails_to_boxlog(N,KB,Why,Flags,List,ListL), append(ListL,RealOUT).
+entails_to_boxlog(_,KB,Why,Flags,A,[RealOUT]):- leave_as_is_logically(A),
   RealOUT = kb_why_flags_assert(KB,Why,Flags,A).
-entails_to_boxlog(KB,Why,Flags,(A & B),RealOUT):-
-  entails_to_boxlog(KB,Why,Flags,A,AL),
-  entails_to_boxlog(KB,Why,Flags,B,BL),
+entails_to_boxlog(N,KB,Why,Flags,(A & B),RealOUT):-
+  entails_to_boxlog(N,KB,Why,Flags,A,AL),
+  entails_to_boxlog(N,KB,Why,Flags,B,BL),
   append(AL,BL,RealOUT),!.
-entails_to_boxlog(KB,Why,Flags,A,RealOUT):-
-  final_nnf(A,OUT),A\=@=OUT,!, entails_to_boxlog(KB,Why,Flags,OUT,RealOUT).
-entails_to_boxlog(KB,Why,Flags,A,[RealOUT]):-  
+entails_to_boxlog(N,KB,Why,Flags,A,[RealOUT]):- N<5,
+  final_nnf(A,OUT), A\=@=OUT,!, N2 is N +1,
+  entails_to_boxlog(N2,KB,Why,Flags,OUT,RealOUT).
+entails_to_boxlog(_,KB,Why,Flags,A,[RealOUT]):-  
   RealOUT = kb_why_flags_assert(KB,Why,Flags,A).
 
 show_boxlog(O):- is_ftVar(O), !, show_boxlog(ftVar(O)).
@@ -1008,7 +1011,7 @@ show_boxlog(kb_why_flags_assert(KB,Why,_Flags,O)):-
    %show_boxlog(O).
    setup_call_cleanup(system:push_operators(baseKB:[op(1000,yfx,'&')],Undo),show_boxlog(O),system:pop_operators(Undo)).
   
-show_boxlog(O):- subst_each(O,['&'='/\\','v'='\\/'],OO), format('~N~n'), wdmsg(OO),format('~N~n').
+show_boxlog(O):- subst_each(O,['& '='/\\','v '='\\/'],OO), format('~N~n'), print_tree(OO),format('~N~n').
 
 show_boxlog:- forall(call_u(boxlog(O)),show_boxlog(O)).
 
