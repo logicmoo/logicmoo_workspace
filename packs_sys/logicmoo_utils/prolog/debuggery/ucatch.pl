@@ -972,7 +972,7 @@ source_variables_l(AllS):-
   uexecute_goal_vs(Vs3),
   ignore(Vs3=[]),
   append([Vs1,Vs2,Vs3],All),list_to_set(All,AllS),
-  set_varname_list( AllS))).
+  set_varname_list(AllS))).
 
 uexecute_goal_vs(Vs):- uexecute_goal_vs0(Vs),!.
 uexecute_goal_vs([]).

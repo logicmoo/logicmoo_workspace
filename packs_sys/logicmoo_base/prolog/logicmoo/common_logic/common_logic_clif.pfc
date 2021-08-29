@@ -64,9 +64,9 @@ workflow_holder_queue(Atom) ==>
 % {kif_hook_skel(CLIF),functor(CLIF,F,A),kb_shared(F/A)} ==> 
 (CLIF/is_kif_clause(CLIF) ==> clif( CLIF)).
 
-%compile_modal_clif ==> 
+compile_clif ==> 
 (clif(CLIF) ==> ({delistify_last_arg(CLIF,clif_to_modal_clif,ModalClif)},modal_clif(ModalClif))).
-(secret,compile_clif) ==> 
+compile_clif ==> 
 (modal_clif(CLIF) ==> ({delistify_last_arg(CLIF,kif_to_boxlog,BOXLOG)},boxlog(BOXLOG))).
 % %% compile_clif ==> 
 %(clif(CLIF)/ (\+ is_kif_clause(CLIF)) ==> ({delistify_last_arg(CLIF,kif_to_boxlog,BOXLOG)},boxlog(BOXLOG))).

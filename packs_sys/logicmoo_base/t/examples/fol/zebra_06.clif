@@ -156,8 +156,8 @@
 
 ;; ---------------------------------------------------------------
 ;; By-process-of-elimination facts
-;; If person doesn't live in one of the four houses, they must live in
-;; the fifth. Likewsie, if person doesn't smoke/drink/keep one of the four,
+;; If person doesn''t live in one of the four houses, they must live in
+;; the fifth. Likewsie, if person doesn''t smoke/drink/keep one of the four,
 ;; they must have the fifth.
 
 (define (is-a x y)
@@ -292,7 +292,7 @@
 ;; not written to predispose the problem into a 5x5 solution grid
 ;; (although this is what they eventually must lead to). In other
 ;; words, there is no effort made to make this the most "efficient"
-;; possible set of rules; instead, they're the most "natural" or
+;; possible set of rules; instead, they''re the most "natural" or
 ;; "common-sense-like" for this task.
 
 (use-modules (srfi srfi-1))
@@ -395,7 +395,7 @@
 		(AndLink
 			(clause VN "$predicate" VN "$person_a" VN "$attribute")
 			(clause PN "IsSamePerson" VN "$person_a" VN "$person_b")
-			;; Don't deduce thigs we already know...
+			;; Don''t deduce thigs we already know...
 			;; i.e. this not link is identical to conclusion, below.
 			(AbsentLink
 				(clause VN "$predicate" VN "$person_b" VN "$attribute")
@@ -409,8 +409,8 @@
 ;; ---------------------------------------------------------------------
 ;; Transitive-not deduction rule.
 ;;
-;; If attribute X doesn't hold for person A, and person A is same as person B
-;; then attribute X also doesn't hold for person B.
+;; If attribute X doesn''t hold for person A, and person A is same as person B
+;; then attribute X also doesn''t hold for person B.
 ;;
 ;; Very similar to above
 (define (transitive-not-rule)
@@ -426,7 +426,7 @@
 		(AndLink
 			(not-clause VN "$predicate" VN "$person_a" VN "$attribute")
 			(clause PN "IsSamePerson" VN "$person_a" VN "$person_b")
-			;; Don't deduce thigs we already know...
+			;; Don''t deduce thigs we already know...
 			;; i.e. this not link is identical to conclusion, below.
 			(AbsentLink
 				(not-clause VN "$predicate" VN "$person_b" VN "$attribute")
@@ -477,7 +477,7 @@
 					(VN "$attr_e")
 				)
 			)
-			;; Don't deduce thigs we already know...
+			;; Don''t deduce thigs we already know...
 			;; i.e. this not link is identical to conclusion, below.
 			;(AbsentLink
 			;	(clause VN "$predicate" VN "$person" VN "$attr_e")
@@ -514,7 +514,7 @@
 			(clause VN "$predicate_common" VN "$person_b" VN "$attribute_comm_b")
 			(differ VN "$attribute_comm_a" VN "$attribute_comm_b")
 			(clause VN "$predicate_exclusive" VN "$person_a" VN "$attribute_excl")
-			;; Don't deduce thigs we already know...
+			;; Don''t deduce thigs we already know...
 			;; i.e. this not link is identical to conclusion, below.
 			;(AbsentLink
 			;	(not-clause VN "$predicate_exclusive" VN "$person_b" VN "$attribute_excl")
@@ -529,7 +529,7 @@
 ;; ---------------------------------------------------------------------
 ;; neighbor-not-attr rule.
 ;; If some attribute holds true for a person, it cannot hold for the
-;; person's neighbor.
+;; person''s neighbor.
 
 (define (neighbor-not-attr-rule)
 	(BindLink
@@ -544,7 +544,7 @@
 		(AndLink
 			(clause VN "$predicate" VN "$person_a" VN "$attribute")
 			(clause PN "Neighbor" VN "$person_a" VN "$person_b")
-			;; Don't deduce thigs we already know...
+			;; Don''t deduce thigs we already know...
 			;; i.e. this not link is identical to conclusion, below.
 			(AbsentLink
 				(not-clause VN "$predicate" VN "$person_b" VN "$attribute")
@@ -580,7 +580,7 @@
 			(clause PN "Neighbor" VN "$person_a" VN "$person_b")
 			;; and the next house is one over
 			(clause PN "Successor" VN "$addr_a" VN "$addr_b")
-			;; and we don't already know the conclusion
+			;; and we don''t already know the conclusion
 			(AbsentLink
 				(clause PN "Address" VN "$person_b" VN "$addr_b")
 			)
@@ -668,7 +668,7 @@
 			(clause PN "LivesIn"     VN "$person" VN "$house")
 			(clause PN "Address"     VN "$person" VN "$addr")
 
-			;; Don't report a fact we already know.
+			;; Don''t report a fact we already know.
 			(AbsentLink
      		(OrderedLink
 					(VN "$nationality")
@@ -680,7 +680,7 @@
 				)
 			)
 		)
-		;; implicand -- We're just going to use a plain-old ordered
+		;; implicand -- We''re just going to use a plain-old ordered
 		;; link here to report the results. Why not ...
      (OrderedLink
 			(VN "$nationality")

@@ -231,6 +231,14 @@ pfc_zip_prop_arg(size,   2).
 pfc_zip_prop_arg(time,   5).
 pfc_zip_prop_arg(offset, 6).
 
+:- if(current_prolog_flag(pfc_version,3.0)).
+pfc_lib_name(library('pfc3.0/pfc_3_0_full')).
+:- else.
+pfc_lib_name(library('pfc2.0/pfc_2_0_includes')).
+:- endif.
+
+
+:- if(false).
 :- volatile(user:resource/2).
 :- asserta(user:resource(app/pfc_res, pfc_res(.))).
 :- asserta(user:file_search_path(pfc_res, 'res://app/pfc_res')).
@@ -239,13 +247,6 @@ pfc_zip_prop_arg(offset, 6).
 %%      prolog_clause:open_source(+File, -Stream) is semidet.
 %
 %       Open PFC non-file sources.
-
-:- if(current_prolog_flag(pfc_version,3.0)).
-pfc_lib_name(library('pfc3.0/pfc_3_0_full')).
-:- else.
-pfc_lib_name(library('pfc2.0/pfc_2_0_includes')).
-:- endif.
-
 :- multifile prolog_clause:open_source/2.
 
 prolog_clause:open_source(pfc_res(Module), Stream) :-
@@ -261,6 +262,8 @@ prolog_clause:open_source(PfcInclFile, Stream) :-
         atom_concat('res://app/pfc_res/', Module, PfcInclFile), !,
         pfc_incl_module_source(Module, Source),
         open_string(Source, Stream).
+:- endif.
+
 
 pfc_incl_module_source(Module, Source):-
   pfc_lib_name(LibName),

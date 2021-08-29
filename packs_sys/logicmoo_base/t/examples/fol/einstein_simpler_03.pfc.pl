@@ -62,7 +62,7 @@ never_assert_u(boxlog((lives(A, _):-neighbor(A, _))),singletons).
 % add this to our vocab
 props((/\),ftSentenceOp,tLogicalConjunction).
 
-
+:- set_kif_mode(tell).
 
 % Source http://www.iflscience.com/editors-blog/solving-einsteins-riddle
 :- expects_dialect(clif).
@@ -188,13 +188,13 @@ same_repr(HA,HB) <- quotedIsa(HA, QCLASS) /\ quotedIsa(HB, QCLASS).
 different_insts(HCLASS,HA,HB) <- {dif:dif(HA , HB)} /\ isa(HA, HCLASS) /\ same_repr(HA,HB) /\ isa(HB, HCLASS).
 
 % different is when two terms of the same class using the same representation
-different(HA,HB) <- different_insts(_HCLASS, HA,HB).
+different(HA,HB) :- different_insts(_HCLASS, HA,HB).
 
 %= no two houses are the same color
 % five different colors
 house(red_house). house(green_house). house(white_house). house(yellow_house). house(blue_house).
 
-:- listing(house).
+:- listing(clif/1).
 
 /* 
  other examples might be...

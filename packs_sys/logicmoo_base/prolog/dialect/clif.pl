@@ -98,7 +98,8 @@ clif_dialect_ge(style_check(Style),
 */
 clif_dialect_ge(expects_dialect(Dialect), clif_expects_dialect(Dialect)):- !.
 
-clif_dialect_te(I,clif(I)):- I \= ( :- _ ).
+:- module_transparent(clif_dialect_te/2).
+clif_dialect_te(I, O):- kif_process_expansion(I,O),!.
 clif_dialect_te(I,O):- \+ compound(I),!,as_pfc_expansion(I,O).
 clif_dialect_te('=>'(A,B),clif(O)):- I='implies'(A,B), ((fail,as_pfc_expansion(I,O)) -> true ; O=I),!.
 clif_dialect_te(I,O):- as_pfc_expansion(I,O).
@@ -350,8 +351,4 @@ system:term_expansion(MIn, _Out):-
    (MIn==In->prolog_load_context(module, M);MM=M),
    term_expansion_clif_eof(M),
    fail.
-
-      
-      
-
 

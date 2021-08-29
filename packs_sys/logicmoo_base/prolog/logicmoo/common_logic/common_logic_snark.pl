@@ -839,7 +839,7 @@ write_list([]).
 
 % unnumbervars_with_names(X,X):-!.
 % unnumbervars_with_names(Term,CTerm):- ground(Term),!,dupe_term(Term,CTerm).
-unnumbervars_with_names(Term,CTerm):- show_failure(quietly(unnumbervars(Term,CTerm))),!.
+% unnumbervars_with_names(Term,CTerm):- show_failure(quietly(unnumbervars(Term,CTerm))),!.
 
 unnumbervars_with_names(Term,CTerm):- break,
  must_det_l((
@@ -935,6 +935,7 @@ must_det_here(G):- w_o_c(must_det(G)).
 
 
 kif_to_boxlog(Kif):-
+ update_changed_files,
  kif_to_boxlog(Kif,O),!,
  format("============================================"),
  show_boxlog(O),
@@ -954,8 +955,7 @@ kif_to_boxlog(HB,KB,Why,FlattenedO):-
   sumo_to_pdkb(HB,HB00)->
   sumo_to_pdkb(KB,KB00)->
   sumo_to_pdkb(Why,Why00)->
-  pretty_numbervars_ground((HB00,KB00,Why00),(HB0,KB0,Why0)),!,
-  =((HB00,KB00,Why00),(HB0,KB0,Why0)),!,
+  pretty_numbervars_ground((HB00,KB00,Why00),(HB0,KB0,Why0)),
   with_no_kif_var_coroutines(must(kif_to_boxlog_attvars(HB,HB0,KB0,Why0,FlattenedO))),!.
 
 :- meta_predicate(unless_ignore(*,*)).
@@ -963,18 +963,24 @@ unless_ignore(A,B):- call(A)->B;true.
 
 
 nnf_default(Fml,_):- \+ compound(Fml), !, fail.
-nnf_default(default(Fml), possible(Fml) => Fml).
-nnf_default(default1(Fml), Fml => necessary(Fml)).
+nnf_default( default(Fml), Fml).
+nnf_default(default1(Fml), possible(Fml) => Fml).
+nnf_default(default2(Fml), Fml => necessary(Fml)).
+nnf_default(default3(Fml), possible(Fml) => necessary(Fml)).
+nnf_default(default4(Fml), Fml => possible(Fml)).
+
 nnf_default(and(Fml1 , Fml2), AND):-
   \+ (compound(Fml1), functor(Fml1,F,2), member(F,[and,or,(=>),not,possible,necessary])),
   AND = and('=>'(possible(Fml2),Fml1), '=>'(possible(Fml1),Fml2)).
 
 %final_nnf(O,OO):-nnf('?KB',O,M),O\=@=M,!,final_nnf(M,OO).
 
+simplify_all(KB,Fml,OutZ):- simplify_cheap(post,Fml,Fml2), (Fml \=@= Fml2 -> simplify_all(KB,Fml2,OutZ); Fml2=OutZ).
+
 % final_nnf(O,O):-!.
-final_nnf(A,A):- is_ftVar(A),!.
-final_nnf(A==>B,AA==>BB):-!,final_nnf(A,AA),final_nnf(B,BB).
-final_nnf(O,OO):- once((adjust_kif(_,O,O1),nonegate(_,O1,M))),O\=@=M,!,final_nnf(M,OO).
+final_nnf(A,A):- is_ftVar(A);leave_as_is_logically(A),!.
+%final_nnf(A==>B,AA==>BB):-!,final_nnf(A,AA),final_nnf(B,BB).
+final_nnf(O,OO):- once((nnf(KB,O,O1),adjust_kif(KB,O1,O2),simplify_all(KB,O2,OO))), !. % O\=@=M,!,final_nnf(M,OO).
 %final_nnf(A==>B,AA==>BB):-!,final_nnf(nesc(A),AA),final_nnf(nesc(B),BB).
 %final_nnf(O,OO):-as_sigma(O,E), sigma_ace:getNegationForm(toplevel,0,'?KB','?Ctx',_KRVars,_Flags,E,_,OM,_),as_dlog(OM,OO).
 final_nnf(O,O).
@@ -987,9 +993,10 @@ entails_to_boxlog(KB,Why,Flags,(A & B),RealOUT):-
   entails_to_boxlog(KB,Why,Flags,A,AL),
   entails_to_boxlog(KB,Why,Flags,B,BL),
   append(AL,BL,RealOUT),!.
-entails_to_boxlog(KB,Why,Flags,A,[RealOUT]):-
-  final_nnf(A,OUT),!,
-  RealOUT = kb_why_flags_assert(KB,Why,Flags,OUT).
+entails_to_boxlog(KB,Why,Flags,A,RealOUT):-
+  final_nnf(A,OUT),A\=@=OUT,!, entails_to_boxlog(KB,Why,Flags,OUT,RealOUT).
+entails_to_boxlog(KB,Why,Flags,A,[RealOUT]):-  
+  RealOUT = kb_why_flags_assert(KB,Why,Flags,A).
 
 show_boxlog(O):- is_ftVar(O), !, show_boxlog(ftVar(O)).
 show_boxlog([X|Y]):- show_boxlog(X), ignore((Y \==[], format('~N%  AND~n'),show_boxlog(Y))).
@@ -997,11 +1004,11 @@ show_boxlog(O):- is_list(O),!,maplist(show_boxlog,O).
 show_boxlog(and(X,Y)):- show_boxlog(X),format('~N%  AND~n'),show_boxlog(Y).
 show_boxlog('&'(X,Y)):- show_boxlog(X),format('~N%  AND~n'),show_boxlog(Y).
 show_boxlog(kb_why_flags_assert(KB,Why,_Flags,O)):-
-   wdmsg(kb_y_________________________________________________________f(KB,Why)),!,
+   nop(wdmsg(kb_y_________________________________________________________f(KB,Why))),!,
    %show_boxlog(O).
-   setup_call_cleanup(push_operators([op(1000,yfx,'&')],Undo),show_boxlog(O),pop_operators(Undo)).
+   setup_call_cleanup(system:push_operators(baseKB:[op(1000,yfx,'&')],Undo),show_boxlog(O),system:pop_operators(Undo)).
   
-show_boxlog(O):- subst_each(O,['&'=',','v'=';'],OO), format('~N~n'), wdmsg(OO),format('~N~n').
+show_boxlog(O):- subst_each(O,['&'='/\\','v'='\\/'],OO), format('~N~n'), wdmsg(OO),format('~N~n').
 
 show_boxlog:- forall(call_u(boxlog(O)),show_boxlog(O)).
 
@@ -1017,7 +1024,7 @@ kif_to_boxlog_attvars(_Original,HB,KB,Why,FlattenedO):- compound(HB),HB=(HEAD:- 
    finish_clausify([cl(HEADL,BODYL)],KB,Why,FlattenedO))),!.
 
 kif_to_boxlog_attvars(Original,WffIn0,KB0,Why0,RealOUT):-    
-   imploded_copyvars(WffIn0:KB0:Why0,WffIn:KB:Why),
+   pretty_numbervars_ground(WffIn0:KB0:Why0,WffIn:KB:Why),
    check_is_kb(KB),
    clif_to_modal_clif(WffIn,ModalKBKIF),   
    % save_wid(Why,kif,DLOGKIF),
@@ -1533,21 +1540,27 @@ kif_add(InS):-
   input_to_forms(string(InS),Wff,Vs),
   nop(b_implode_varnames0(Vs)),
   local_sterm_to_pterm(Wff,Wff0))),
-  InS \== Wff0,
+  InS \=@= Wff0,
   kif_add(Wff0),!.
-kif_add(Goal0):-  call_unwrap(Goal0,Goal),!,kif_add(Goal).
+
+kif_add(Goal0):-  call_unwrap(Goal0,Goal),Goal0\=@=Goal,!,kif_add(Goal).
 kif_add([]).
 kif_add([H|T]):- !,kif_add(H),kif_add(T).
-%kif_add((H <- B)):- !, ain((H <- B)).
-%kif_add((H :- B)):- !, ain((H :- B)).
-%kif_add((P ==> Q)):- !, ain((P ==> Q)). 
-
+kif_add((H <- B)):- !, ain((H <- B)).
+kif_add((H :- B)):- !, ain((H :- B)).
+kif_add((P ==> Q)):- !, ain((P ==> Q)). 
+%kif_add(Call):- kif_to_callable(Call,Prolog),is_static_predicate(Prolog),!,kif_process(call_u,Prolog).
 kif_add(WffIn):- kif_hook(WffIn),!,
-  test_boxlog(WffIn),
-  add_history(kif_to_boxlog(WffIn)),
-  show_call(ain(clif(WffIn))). 
+  kif_add2(WffIn),
+  test_boxlog(WffIn).
+kif_add(WffIn):- kif_add2(WffIn).
 
-kif_add(WffIn):- show_call(ain(clif(WffIn))),!.
+
+kif_add2(WffIn):- 
+ add_history(kif_to_boxlog(WffIn)),
+ show_call(ain(clif(WffIn))),!,
+ kif_to_boxlog(WffIn).
+
 % unnumbervars_with_names(WffIn,Wff),
 %kif_add(WffIn):- show_call(ain(clif(WffIn))),!.
 

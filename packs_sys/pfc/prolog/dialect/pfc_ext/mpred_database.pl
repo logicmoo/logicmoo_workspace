@@ -771,7 +771,8 @@ ain_minfo(How,(A:-INFOC)):- is_ftNonvar(INFOC), get_bc_clause(A,AA,INFOCC),A=AA,
 ain_minfo(How,'$bt'(H,_)):-!,get_bc_clause(H,Post),attvar_op(How,Post).
 ain_minfo(How,'$nt'(H,Test,Body)):-!,attvar_op(How,(H:-fail,'$nt'(H,Test,Body))).
 ain_minfo(How,'$pt'(MZ,H,Body)):-!,attvar_op(How,(H:-fail,'$pt'(MZ,H,Body))).
-ain_minfo(How,(A0:-INFOC0)):- mpred_is_info(INFOC0), copy_term_and_varnames((A0:-INFOC0),(A:-INFOC)),!,must((mpred_rewrap_h(A,AA),imploded_copyvars((AA:-INFOC),ALLINFO), attvar_op(How,(ALLINFO)))),!.
+ain_minfo(How,(A0:-INFOC0)):- mpred_is_info(INFOC0), copy_term_and_varnames((A0:-INFOC0),(A:-INFOC)),!,must((mpred_rewrap_h(A,AA),
+ imploded_copyvars((AA:-INFOC),ALLINFO), attvar_op(How,(ALLINFO)))),!.
 %ain_minfo(How,G):-mpred_trace_msg(skipped_add_meta_facts(How,G)).
 ain_minfo(_,_).
 

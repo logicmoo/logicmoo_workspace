@@ -912,8 +912,8 @@ i(section(2,'13.7','sec:findappfile'),"Finding Application files",swi_man_manual
 i(section(2,'12.6','sec:findhome'),"The Prolog‘home' directory",swi_man_manual('findhome.html'),manual,3515).
 i(section(2,'2.12','sec:flags'),"Environment Control (Prolog flags)",swi_man_manual('flags.html'),manual,3519).
 i(/(current_prolog_flag,2),"The predicate current_prolog_flag/2 defines an interface to installation features: options compiled in, version, home, etc.",swi_man_manual('flags.html'),manual,4323).
-i(/(set_prolog_flag,2),"Define a new Prolog flag or change its value.",swi_man_manual('flags.html'),manual,91887).
-i(/(create_prolog_flag,3),"Create a new Prolog flag.",swi_man_manual('flags.html'),manual,93518).
+i(/(set_prolog_flag,2),"Define a new Prolog flag or change its value.",swi_man_manual('flags.html'),manual,92299).
+i(/(create_prolog_flag,3),"Create a new Prolog flag.",swi_man_manual('flags.html'),manual,93930).
 i(section(2,'4.31','sec:forall2'),"Forall",swi_man_manual('forall2.html'),manual,3523).
 i(/(forall,2),"For all alternative bindings of Cond, Action can be proven.",swi_man_manual('forall2.html'),manual,3687).
 i(section(1,'12','sec:foreign'),"Foreign Language Interface",swi_man_manual('foreign.html'),manual,3537).
@@ -2765,10 +2765,10 @@ i(section(2,'10','sec:sgml-unsupported'),"Unsupported SGML features",swi_man_pac
 i(section(2,'11','sec:sgml-acknowledgements'),"Acknowledgements",swi_man_packages('sgml.html'),packages,108135).
 i(section(0,'0','packages/readline.html'),"SWI-Prolog binding to GNU readline",swi_man_packages('readline.html'),packages,2786).
 i(section(2,'1','sec:readline'),"library(readline): GNU readline interface",swi_man_packages('readline.html'),packages,3542).
-i(/(rl_read_init_file,1),"Read a GNU readline config file.",swi_man_packages('readline.html'),packages,4460).
-i(/(rl_add_history,1),"Add a line to the history.",swi_man_packages('readline.html'),packages,4705).
-i(/(rl_write_history,1),"Save the history to File.",swi_man_packages('readline.html'),packages,4896).
-i(/(rl_read_history,1),"Read a saved history from File.",swi_man_packages('readline.html'),packages,5212).
+i(/(rl_read_init_file,1),"Read a GNU readline config file.",swi_man_packages('readline.html'),packages,4466).
+i(/(rl_add_history,1),"Add a line to the history.",swi_man_packages('readline.html'),packages,4711).
+i(/(rl_write_history,1),"Save the history to File.",swi_man_packages('readline.html'),packages,4902).
+i(/(rl_read_history,1),"Read a saved history from File.",swi_man_packages('readline.html'),packages,5218).
 i(section(0,'0','packages/rdf2pl.html'),"SWI-Prolog RDF parser",swi_man_packages('rdf2pl.html'),packages,2772).
 i(section(2,'1','sec:rdfxml-intro'),"Introduction",swi_man_packages('rdf2pl.html'),packages,5024).
 i(section(2,'2','sec:rdfxml-parser'),"Parsing RDF in Prolog",swi_man_packages('rdf2pl.html'),packages,6685).
@@ -3178,11 +3178,11 @@ i(/(turtle_pn_local,1),"True if Atom is a valid Turtle PN_LOCAL name.",swi_man_p
 i(/(turtle_write_quoted_string,2),"Same as turtle_write_quoted_string(Out, Value, false), writing a string with only a single \".",swi_man_packages('semweb.html'),packages,169145).
 i(/(turtle_write_uri,2),"Write a URI as <...>",swi_man_packages('semweb.html'),packages,169513).
 i(/('rdf_db:rdf_load_stream',3),"(Turtle clauses)",swi_man_packages('semweb.html'),packages,169729).
-i(/(rdf_save_ntriples,2),"Save RDF using ntriples format.",swi_man_packages('semweb.html'),packages,169984).
-i(/(rdf_save_canonical_trig,2),"Save triples in a canonical format.",swi_man_packages('semweb.html'),packages,170294).
-i(/(rdf_save_trig,2),"Save multiple RDF graphs into a TriG file.",swi_man_packages('semweb.html'),packages,170626).
-i(/(rdf_save_canonical_turtle,2),"Save triples in a canonical format.",swi_man_packages('semweb.html'),packages,171310).
-i(/(rdf_save_turtle,2),"Save an RDF graph as Turtle.",swi_man_packages('semweb.html'),packages,172157).
+i(/(rdf_save_turtle,2),"Save an RDF graph as Turtle.",swi_man_packages('semweb.html'),packages,169984).
+i(/(rdf_save_ntriples,2),"Save RDF using ntriples format.",swi_man_packages('semweb.html'),packages,174311).
+i(/(rdf_save_canonical_trig,2),"Save triples in a canonical format.",swi_man_packages('semweb.html'),packages,174621).
+i(/(rdf_save_trig,2),"Save multiple RDF graphs into a TriG file.",swi_man_packages('semweb.html'),packages,174953).
+i(/(rdf_save_canonical_turtle,2),"Save triples in a canonical format.",swi_man_packages('semweb.html'),packages,175637).
 i(section(2,'6','sec:rdfntriples'),"library(semweb/rdf_ntriples): Process files in the RDF N-Triples format",swi_man_packages('semweb.html'),packages,176494).
 i(/(read_ntriple,2),"Read the next triple from Stream as Triple.",swi_man_packages('semweb.html'),packages,177543).
 i(/(read_nquad,2),"Read the next quad from Stream as Quad.",swi_man_packages('semweb.html'),packages,178285).

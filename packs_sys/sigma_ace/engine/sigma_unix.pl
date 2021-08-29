@@ -11,6 +11,7 @@
 :- use_module(library(url)).        
 :- use_module(library(quintus)).        
 %:-ensure_loaded(alarm).
+:- volatile(tty_in/1).
 
       
 :-use_module(library(threadutil)).        

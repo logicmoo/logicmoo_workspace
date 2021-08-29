@@ -81,7 +81,7 @@
             
             
             simplify_atom/2,
-            simplify_cheap/2,
+            simplify_cheap/3,
 
             % nnf_args/5,
        nnf_args/8,
@@ -367,8 +367,8 @@ to_nesc(_KB,X,nesc(X)).
 % Negated Normal Form.
 %
 nnf(KB,FmlNV,NNF):-
-  must(quietly(unnumbervars_with_names((KB,FmlNV),(KB0,FmlNV0)))),
-   must( \+ contains_dvar(KB0:FmlNV0)),
+  must(quietly(=((KB,FmlNV),(KB0,FmlNV0)))),
+  % must( \+ contains_dvar(KB0:FmlNV0)),
    nnf0(KB0,FmlNV0,NNF),!.
 
 %= 	 	 
@@ -546,7 +546,7 @@ nnf1(KB,'tColOfCollectionSubsetFn'(Col,'tSetOfTheSetOfFn'(Var,Formulas)),FreeV,V
 % not disabled
 % Simplification
 nnf1(KB,Fin,FreeV,DIA,Paths):-  
-  once(simplify_cheap(Fin,F2)),
+  once(simplify_cheap(nnf,Fin,F2)),
   Fin\=@=F2,
   nnf(KB,F2,FreeV,DIA,Paths).
 
@@ -588,42 +588,53 @@ nnf1(KB, ~( Fml),FreeV,NNF,Paths):- nonvar(Fml),
 	),!,
        nnf(KB,Fml1,FreeV,NNF,Paths).
 
-%% logical_reductions( ?KB, :LHS, :RHS) is det.
+%% logical_reductions(nnf,  ?KB, :LHS, :RHS) is det.
 %
 % Axiom Left-hand-side Converted To Right-hand-side.
 %
 
-logical_reductions(poss(beliefs(A,~(F1))),~(nesc(knows(A,F1)))).
-logical_reductions(all(Vs,poss(A & B)) ,  ~(exists(Vs,nesc(A & B)))):- is_ftVar(Vs).
-logical_reductions(nesc(poss(A)), poss(A)):- set_is_lit(A). 
-logical_reductions(poss(poss(A)), poss(A)):- set_is_lit(A). 
-logical_reductions(nesc(nesc(A)), nesc(A)):- set_is_lit(A). 
-logical_reductions(poss(nesc(A)), poss(A)):- set_is_lit(A). 
-logical_reductions( ~( nesc(  ~(  F))),poss(F)).
-logical_reductions( ~( poss(  ~(  F))),nesc(F)).
-logical_reductions(poss(nesc(IN)),poss(IN)).
-logical_reductions(poss(poss(IN)),poss(IN)).
-logical_reductions(nesc(poss(IN)),poss(IN)).
-logical_reductions(nesc(nesc(IN)),nesc(IN)).
+logical_reductions(nnf, poss(beliefs(A,~(F1))),~(nesc(knows(A,F1)))).
+logical_reductions(nnf, all(Vs,poss(A & B)) ,  ~(exists(Vs,nesc(A & B)))):- is_ftVar(Vs).
+logical_reductions(nnf, nesc(poss(A)), poss(A)):- set_is_lit(A). 
+logical_reductions(nnf, poss(poss(A)), poss(A)):- set_is_lit(A). 
+logical_reductions(nnf, nesc(nesc(A)), nesc(A)):- set_is_lit(A). 
+logical_reductions(nnf, poss(nesc(A)), poss(A)):- set_is_lit(A). 
+logical_reductions(nnf,  ~( nesc(  ~(  F))),poss(F)).
+logical_reductions(nnf,  ~( poss(  ~(  F))),nesc(F)).
+logical_reductions(nnf, poss(nesc(IN)),poss(IN)).
+logical_reductions(nnf, poss(poss(IN)),poss(IN)).
+logical_reductions(nnf, nesc(poss(IN)),poss(IN)).
+logical_reductions(nnf, nesc(nesc(IN)),nesc(IN)).
 
-logical_reductions(poss(~nesc(IN)),poss(~IN)).
-logical_reductions(poss(~poss(IN)),poss(~IN)).
-logical_reductions(nesc(~poss(IN)),~poss(IN)).
-logical_reductions(nesc(~nesc(IN)),~nesc(IN)).
-logical_reductions(~poss(nesc(IN)),~poss(IN)).
-logical_reductions(~poss(poss(IN)),~poss(IN)).
-logical_reductions(nesc(A & B), nesc(A) & nesc(B)).
-logical_reductions(poss(A v B), poss(A) v poss(B)).
+logical_reductions(nnf, poss(~nesc(IN)),poss(~IN)).
+logical_reductions(nnf, poss(~poss(IN)),poss(~IN)).
+logical_reductions(nnf, nesc(~poss(IN)),~poss(IN)).
+logical_reductions(nnf, nesc(~nesc(IN)),~nesc(IN)).
+logical_reductions(nnf, ~poss(nesc(IN)),~poss(IN)).
+logical_reductions(nnf, ~poss(poss(IN)),~poss(IN)).
+
+logical_reductions(post, I,O):- logical_reductions(nnf, I,O).
+logical_reductions(post, nesc(A & B), nesc(A) & nesc(B)).
+logical_reductions(post, poss(A v B), poss(A) v poss(B)).
+logical_reductions(post, H1 ==> poss(A & B), H1 ==> (poss(A) & poss(B))).
+logical_reductions(post, nesc( poss((H2)) v poss((H1))), poss((H2)) v poss((H1))).
+logical_reductions(post, nesc( ~(H1) v ~(H2)), nesc( ~ (H1 , H2))).
+logical_reductions(post,  A==>(B & C),(A==>B)&(A==>C) ).
+logical_reductions(post, (nesc((A v B)) ==>C), (nesc(A)==>C)&(nesc(B)==>C)).
+logical_reductions(post, ((A v B) ==>C), (A==>C)&(B==>C)).
+%logical_reductions(post, nesc( H1)==> A, H1==> A).
+%logical_reductions(post, H1==> nesc(A), H1==> A).
+logical_reductions(post, nesc( H1), H1):- contains_modal(H1),!.
+
  
-simplify_cheap(FmlIn,FmlIn):- leave_as_is_logically(FmlIn),!.
-simplify_cheap(FmlIn,FmlOut):-
- copy_term(FmlIn,Fml,_),copy_term(Fml,FmlC),logical_reductions(F1,FmlOut), 
- =(Fml,F1), FmlC=@=Fml,Fml=FmlIn,!.
-simplify_cheap(FmlIn,FmlOut):- compound(FmlIn), 
+simplify_cheap(_When,FmlIn,FmlIn):- ( \+ compound(FmlIn) ; leave_as_is_logically(FmlIn)),!.
+simplify_cheap(When,FmlIn,FmlOut):- copy_term(FmlIn,Fml,_),
+  logical_reductions(When, Fml,FmlOut), 
+  FmlIn=@=Fml, FmlIn=Fml,FmlIn\=@=FmlOut,!.
+simplify_cheap(When,FmlIn,FmlOut):- 
   compound_name_arguments(FmlIn,F,FmlInRGS),
-  maplist(simplify_cheap,FmlInRGS,FmlInRGSO),!,
+  maplist(simplify_cheap(When),FmlInRGS,FmlInRGSO),!,
   compound_name_arguments(FmlOut,F,FmlInRGSO).
-simplify_cheap(FmlIn,FmlIn).
 
 
 %   poss(beliefs(A,~(F1))) ->  poss(~(knows(A,F1))) ->  ~(nesc(knows(A,F1)))
@@ -632,7 +643,7 @@ nnf1(KB,cir(F),FreeV,CIR,Paths):-
       nnf(KB,F,FreeV,NNF,Paths), 
       cirRule(KB,cir(NNF), CIR),!.
 
-% % logical_reductions(KB,poss(- (- LIT)),poss(LIT)):-set_is_lit(LIT).
+% % logical_reductions(nnf, KB,poss(- (- LIT)),poss(LIT)):-set_is_lit(LIT).
 :- style_check(+singleton).
 
 % =================================
@@ -690,7 +701,7 @@ nnf1(KB,~(cir(Future)),FreeV,NNF,Paths):-
    nnf(KB,cir(~(Future)),FreeV,NNF,Paths),!.
 
 % A until B means it B starts after the ending of A
-logical_reductions(_KB,startsAfterEndingOf(B,A),until(A,B)):- set_is_lit(A),set_is_lit(B).
+logical_reductions(nnf, _KB,startsAfterEndingOf(B,A),until(A,B)):- set_is_lit(A),set_is_lit(B).
 
 nnf1(KB,until(A,B),FreeV,NNF,Paths):-  set_is_lit(A),set_is_lit(B),!,
       nnf(KB,A,FreeV,NNF1,Paths1),
@@ -871,7 +882,7 @@ nnf1(KB,Fml,FreeV,FmlO,N):-
 nnf1(_KB,PreCond,FreeV,PreCond,1):- is_precond_like(PreCond), !,no_freev(FreeV).
 
 
-% nnf(KB, IN,FreeV,OUT,Paths):- simplify_cheap(IN,MID),IN\=@=MID,nnf(KB, MID,FreeV,OUT,Paths).
+% nnf(KB, IN,FreeV,OUT,Paths):- simplify_cheap(When,IN,MID),IN\=@=MID,nnf(KB, MID,FreeV,OUT,Paths).
 % nnf(_KB , IN,[],OUT,1):- mnf(IN,OUT),IN\=OUT,!.
 
 nnf1(KB,Fml,FreeV,FmlO,N):- must((nonegate(KB,Fml,FmlM),nnf_lit(KB,FmlM,FreeV,FmlO,N))).
@@ -1324,7 +1335,7 @@ dnf1(_KB,DNF,                  DNF ).
 
 %= 	 	 
 
-%% simplify_cheap( :TermIN, ?IN) is det.
+%% simplify_cheap(When, :TermIN, ?IN) is det.
 %
 % Simplify Cheap.
 %
@@ -1366,7 +1377,7 @@ pfn4(_, [],  _,           []):- !.
 pfn4(KB, IN,  _,              OUT):- is_list(IN),!, must_maplist_det(pfn4(KB),IN,OUT).
 
 %pfn4(KB, IN, FreeV,              OUT):- once(mnf(IN,MID)),IN\=@=MID, pfn4(KB,MID,FreeV,OUT).
-%pfn4(KB, IN, FreeV,              OUT):- simplify_cheap(IN,MID), pfn4(KB,MID,FreeV,OUT).
+%pfn4(KB, IN, FreeV,              OUT):- simplify_cheap(When,IN,MID), pfn4(KB,MID,FreeV,OUT).
 
 pfn4(KB,   nesc(F),Vs,   nesc(PNF)):- !, pfn4(KB,F,Vs, PNF),!.
 
@@ -1546,7 +1557,7 @@ removeQ_LC(KB, MID,FreeV,OUT):-loop_check(removeQ(KB, MID,FreeV,OUT)).
 removeQ(_,Var,_ ,Var):- leave_as_is_logically(Var),!.
 
 % removeQ(KB, H, Vars, HH ):- convertAndCall(as_dlog,removeQ(KB,H, Vars, HH )).
-removeQ(KB, IN,FreeV,OUT):-  once(simplify_cheap(IN,MID)), IN\=@=MID, removeQ_LC(KB, MID,FreeV,OUT),!.
+removeQ(KB, IN,FreeV,OUT):-  once(simplify_cheap(post,IN,MID)), IN\=@=MID, removeQ_LC(KB, MID,FreeV,OUT),!.
 
 removeQ(KB,  ~( NN),Vars, XF):- nonvar(NN),NN= ~( F), invert_modal(KB,F,FI),!, removeQ(KB,  FI,Vars, XF) .
 removeQ(KB, all(X,F),Vars, HH):- !,  removeQ(KB,F,[X|Vars], RQ0),RQ0=HH.
@@ -1776,7 +1787,7 @@ putin(X,[Y|L],[Y|L1]):- putin(X,L,L1).
 %
 % Simplify Atom.
 %
-simplify_atom(H,SH):-simplify_cheap(H,SH),!.
+simplify_atom(H,SH):-simplify_cheap(nnf,H,SH),!.
 simplify_atom(H,H).
 
 
@@ -1962,7 +1973,7 @@ mpred_quf_0(In,In).
 %
 %nonegate(_KB,IO,IO):-!.
 nonegate(KB,List,OutZ):- is_list(List),must_maplist_det(nonegate(KB),List,OutZ),!.
-nonegate(KB,Fml,OutZ):- simplify_cheap(Fml,Fml2)-> Fml \=@= Fml2,nonegate(KB,Fml2,OutZ),!.
+nonegate(KB,Fml,OutZ):- simplify_cheap(nnf,Fml,Fml2)-> Fml \=@= Fml2,nonegate(KB,Fml2,OutZ),!.
 nonegate(KB,Fml,OutZ):- must((unbuiltin_negate(KB,Fml,Out),!,defunctionalize(Out,OutY),!,must(mpred_quf(OutY,OutZ)))),!.
 
 

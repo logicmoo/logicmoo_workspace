@@ -67,6 +67,18 @@ with_kif_translation(Found, Process):- with_kif_ok(with_lisp_translation(Found, 
 
 kif_process_once(P):-must(once(kif_process(P))).
 
+:- module_transparent(kif_process_expansion/2).
+kif_process_expansion(I, ( :- must_kif_process(I))):- I \= ( :- _ ), prolog_load_context(dialect,clif).
+kif_process_expansion(I,O):- \+ compound(I),!,as_pfc_expansion(I,O).
+kif_process_expansion('=>'(A,B),clif(O)):- I='implies'(A,B), ((fail,as_pfc_expansion(I,O)) -> true ; O=I),!.
+kif_process_expansion((P,WithImply),clif(O)):- tucks_implies(P,WithImply,I), I= ('=>'(_,_)), ((fail,as_pfc_expansion(I,O)) -> true ; O=I),!.
+kif_process_expansion(I,O):- as_pfc_expansion(I,O).
+
+tucks_implies(_, NonCompound, _):- \+ compound(NonCompound),!, fail.
+tucks_implies(P,(Q, Compound), WithImply):- tucks_implies((P,Q), Compound, WithImply).
+%tucks_implies(P,(Q, Compound), WithImply):- compound(Compound), Compound = '=>'(A,B), !.
+tucks_implies(P, '=>'(A,B), '=>'((P,A),B)):-!.
+
 must_kif_process(P):-must(once(kif_process(P))).
 must_kif_process_after_rename(Sent):-  if_defined(sumo_to_pdkb(Sent,SentM),=(Sent,SentM)),must_kif_process(SentM).
 
@@ -93,14 +105,15 @@ set_kif_mode(ModeIn):- ignore((atom(ModeIn),
   fmtl(t_l:kif_action_mode(Mode)))),!.
 
 
-
+kif_to_callable(M:P,M:Prolog):- !, call_u(kif_to_callable(P,Prolog)).
 kif_to_callable(':-'(In),Prolog):- !, kif_to_callable(In,Prolog).
+kif_to_callable('?-'(In),Prolog):- !, kif_to_callable(In,Prolog).
 kif_to_callable('$STRING'(In),Prolog):- !, kif_to_callable(In,Prolog).
 kif_to_callable(In,Prolog):- string(In),kif_read_prolog(In,Wff,_Vs),!, kif_to_callable(Wff,Prolog).
-kif_to_callable(Wff,Prolog):- 
-  strip_module(Wff,M,WffS),
+kif_to_callable(Wff,Prolog):- strip_module(Wff,M,WffS), is_list(WffS),!, 
   sexpr_sterm_to_pterm(WffS,WffP),
-  adjust_kif(M,WffP,Prolog).
+  adjust_kif(M,WffP,PrologP),
+  kif_to_callable(PrologP,Prolog).
 
 %% kif_process( ?Other, :GoalWff) is det.
 %
@@ -157,7 +170,6 @@ kif_process(call,Into:module(To,Exports)):- !,
 kif_process(_,Atom):- atom(Atom),current_predicate(Atom/0),!,kif_process(call_u,Atom).
 kif_process(_,Atom):- atom(Atom),current_predicate(Atom/1),fail,!,set_kif_mode(Atom).
 kif_process(call,Call):- kif_to_callable(Call,Prolog),!,kif_process(call_u,Prolog).
-kif_process(tell,Call):- kif_to_callable(Call,Prolog),is_static_predicate(Prolog),!,kif_process(call_u,Prolog).
 kif_process(tell,Wff):- !,kif_process(kif_add,Wff).
 kif_process(ask,Wff):- !,kif_process(kif_ask,Wff).
 kif_process(Other,Wff):- wdmsg(error(missing_kif_process(Other,Wff))),fail.

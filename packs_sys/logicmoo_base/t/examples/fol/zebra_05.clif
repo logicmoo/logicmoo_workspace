@@ -89,7 +89,9 @@
 ; The Spaniard owns the dog					#3
 ; ============================================================
 ;; NOTE this file uses purposely overuses instance/2 for performance testing
-(exists (?m1 ?keeps_as_pet) (iff (and (instance ?m1 tHuman) (natOrigin ?m1 iSpain))  (and (caresFor ?m1 ?keeps_as_pet) (instance ?keeps_as_pet tDog))))
+(exists (?m1 ?keeps-as-pet) 
+  (iff (and (instance ?m1 tHuman) (natOrigin ?m1 iSpain))  
+       (and (caresFor ?m1 ?keeps-as-pet) (instance ?keeps-as-pet tDog))))
 
 ; ============================================================
 ; All coffee is drunk in the green house
@@ -198,16 +200,14 @@
 ; (forall (?h1)
 ;   (if (instance ?h1 tHouse)(exists (c1) (colorOf ?h1 ?c1))))
 
-; we'll use old way though
+; we''ll use old way though
 (forall ((?h1 tHouse))
  (exists (c1) (colorOf ?h1 ?c1)))
-
 
 
 (forall (?h1 ?h2)
  (if (and (instance ?h1 tRiddleHouse) (instance ?h2 tRiddleHouse) (colorOf ?h1 ?c1) (different ?h1 ?h2))
   (and (colorOf ?h2 ?c2) (different ?c1 ?c2))))
-
 
 
 ; ============================================================
@@ -249,25 +249,31 @@
 ; ============================================================
 
 (forall (?m1 ?m2)
- (if (and (instance ?m1 tHuman) (instance ?m2 tHuman) (different ?m1 ?m2))
+ (if 
+  (and (instance ?m1 tHuman) (instance ?m2 tHuman) (different ?m1 ?m2))
   (and (smokesBrand ?m1 ?b1) (smokesBrand ?m2 ?b2) (different ?b1 ?b2))))
 
 (forall ((?h1 tRiddleHouse))
  (exists (?b1)
   (if (livesIn ?m1 ?h1)  (smokesBrand ?m1 ?b1))))
 
-(sanity-test (and (caresFor ?Who ?Animal) (instance ?Animal tZebra)) '(?? ??))
+(sanity-test (and (caresFor ?Who ?Animal) (instance ?Animal tZebra)) '(?? ??))         
+
+;; '''
 
 
 
-;; PROGRAM B
+;; PROGRAM A
 
 (comment ?? #|
 
-
-
+ 
+flip(F,X,Y) :- call(F,Y,X). 
+ 
+infix(Xs,Ys) :- append(Xs,_,Zs) , append(_,Zs,Ys).
+nextto(P,Xs) :- permutation(P,R), infix(R,Xs).
+ 
 :-
-
     Hs = [_,_,_,_,_]                         %  1
   , H3 = h(_,_,_,milk,_), Hs = [_,_,H3,_,_]  %  9
   , H1 = h(_,nvg,_,_,_ ), Hs = [H1|_]        % 10
@@ -296,28 +302,25 @@
  % debug  findall(_, (member(H,Hs), write(H), nl), _), nl,
    write('the one who keeps zebra: '), write(X), nl.
  
- 
-flip(F,X,Y) :- call(F,Y,X). 
- 
-infix(Xs,Ys) :- append(Xs,_,Zs) , append(_,Zs,Ys).
-nextto(P,Xs) :- permutation(P,R), infix(R,Xs).
- 
- 
- :- findall(_, (zebra(_), nl), _), halt.
 
-|#)
+% :- findall(_, (zebra(_), nl), _), halt.
+
+|# )
+
 (dmsg "Zebra.clif loaded")
 
 ;; How what is the minimum/right number of logical steps to transform PROGRAM A to PROGRAM B?
 
-;; PROGRAM B runs in 34 microseconds
-
 ;; PROGRAM A in SNARK can take 5 seconds!
 
-;; Can we transform PROGRAM A to B in 4 seconds?!  If so,  we have done something usefull?
-;; Can this technology be reused?
+;; PROGRAM B runs in 34 microseconds
 
+;; Can we transform PROGRAM A to B in 4 seconds?  
+;; If so,  we have done something usefull?
+;; Can this be reused on other programs?
 
 ;; http://tinyurl.com/prodcos1-pdf
 ;; https://arxiv.org/pdf/1601.00691.pdf
 ;; https://github.com/naturalog/partsolve/blob/master/paper.pdf
+
+

@@ -123,15 +123,10 @@ test_boxlog(P):- source_location(_, _), !, nl, nl, b_implode_varnames(P), test_b
 
 
 add_boxlog_history(P0):-
-  (nb_current('$variable_names', Vs0)->true;Vs0=[]),
-  copy_term(P0+Vs0, P+Vs),
-  \+ \+
-  ((b_setval('$variable_names', Vs),
-  b_implode_varnames0(Vs),
-  b_implode_varnames(P),
-  guess_varnames(P),
+  must_det_l((
+  pretty_numbervars_ground(P0,P),
   with_output_to(string(S),
-    write_term(P, [numbervars(true), variable_names(Vs), character_escapes(true), ignore_ops(false), quoted(true), fullstop(true)])),
+    write_term(P, [numbervars(true), character_escapes(true), ignore_ops(false), quoted(true), fullstop(true)])),
    stream_property(In, file_no(0)),
    prolog:history(In, add(S)))), !.
 
@@ -143,20 +138,15 @@ test_boxlogq(P):- test_boxlog([+qualify], P), !.
 
 :- export(test_boxlog/2).
 % test_boxlog_m(P, BoxLog):-logicmoo_motel:kif_to_motelog(P, BoxLog), !.
-test_boxlog(KV, P):-
+test_boxlog(KV, P0):-
  locally_tl(kif_option_list(KV), (
-  %mmake,
-  % ignore(source_location(_, _) -> add_boxlog_history(test_boxlog(KV, P)) ; true),
+  %mmake, % ignore(source_location(_, _) -> add_boxlog_history(test_boxlog(KV, P)) ; true),
  \+ \+
  must_det_l((
-  (nb_current('$variable_names', Vs)->b_implode_varnames0(Vs);true),
-  dmsg(:- test_boxlog(P)),
-  b_implode_varnames(P),
-  guess_varnames(P),
+  pretty_numbervars_ground(P0,P),
   kif_optionally_e(never, ain, clif(P)),
   kif_to_boxlog(P, O),
-  guess_varnames(O), flush_output,
-  kif_optionally_e(true, sdmsgf, O), flush_output,
+  kif_optionally_e(true, show_boxlog, O), flush_output,
   kif_optionally(false, assert_to_boxlog, O),
   kif_optionally(false, print_boxlog_to_pfc, O))))), !.
 
@@ -172,11 +162,10 @@ print_boxlog_to_pfc(O):-
 
 assert_boxlog(G):- ain(boxlog(G)).
 
-test_boxlog_88(P):-
+test_boxlog_88(P0):-
  \+ \+
  must_det_l((
-  (nb_current('$variable_names', Vs)->b_implode_varnames0(Vs);true),
-  b_implode_varnames(P), flush_output,
+  pretty_numbervars_ground(P0,P),
   dmsg(:- test_boxlog(P)),
   with_assert_buffer(with_chaining(ain(P)), Buffer),
   undo_buffer(Buffer),
@@ -188,11 +177,11 @@ test_boxlog_88(P):-
 test_pfc(P):- mmake, must_det(test_pfc0(P)), !.
 test_pfcq(P):- mmake, locally_tl(qualify_modally, must_det(test_pfc0(P))), !.
 
-test_pfc0(P):-
+test_pfc0(P0):-
  \+ \+
  must_det_l((
-  (nb_current('$variable_names', Vs)->b_implode_varnames0(Vs);true),
-  b_implode_varnames(P), flush_output,
+  pretty_numbervars_ground(P0,P),
+  flush_output,
   dmsg(:- test_pfc(P)),
   kif_to_pfc(P, O),
   sdmsgf(O), flush_output)).
@@ -277,8 +266,8 @@ test_assert(A):-
 
 do_subtest(List):- must_maplist(call, List).
 
-add_test(Name, Assert):-
-  b_implode_varnames(Name+Assert),
+add_test(Name0, Assert0):-
+  pretty_numbervars_ground(Name0+Assert0,Name+Assert),
   assert(is_test(Name)),
    dbanner, dmsg(test_boxlog(Name)), dbanner,
   test_boxlog(Assert),

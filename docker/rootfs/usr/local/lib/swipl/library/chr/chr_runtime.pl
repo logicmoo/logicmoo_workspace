@@ -136,6 +136,7 @@
 
 %% SWI begin
 :- set_prolog_flag(generate_debug_info, false).
+:- use_module(library(modules), [current_temporary_module/1]).
 %% SWI end
 
 :- meta_predicate
@@ -231,7 +232,7 @@ current_chr_constraint(Mod:Constraint) :-
 	chr:'$chr_module'(Module).
 :- if(current_prolog_flag(dialect, swi)).
 'chr module'(Module) :-
-	module_property(Module, class(temporary)),
+	current_temporary_module(Module),
 	current_predicate(Module:'$chr_initialization'/0),
 	\+ predicate_property(Module:'$chr_initialization', imported_from(_)).
 :- endif.

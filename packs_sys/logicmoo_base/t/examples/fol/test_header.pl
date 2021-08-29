@@ -80,6 +80,8 @@ system:goal_expansion(I,P,O,PO):- junit_goal_expansion(I,O),P=PO.
  (use_module(library(logicmoo_clif))).
 :- dmsg(this_test_might_need(:- use_module(library(logicmoo_plarkc)))).
 
+:- prolog_autoload:autoload_all.
+
 clif_op_decls((
  op(1199,fx,('==>')),
  op(1190,xfx,('::::')),
@@ -99,9 +101,6 @@ clif_op_decls((
 
 :- clif_op_decls(OPS),call(OPS).
 :- clif_op_decls(OPS),call(baseKB:OPS).
-
-
-:- autoload_all.
 
 system:term_expansion(I,FP,_,FPO):-  I\==end_of_file,
  notrace((

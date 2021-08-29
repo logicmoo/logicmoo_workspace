@@ -1244,7 +1244,7 @@ b_implode_varnames0(_).
 %
 % Imploded Copyvars.
 %
-imploded_copyvars(C,CT):-vmust((source_variables(Vs),copy_term(C-Vs,CT-VVs),b_implode_varnames0(VVs))),!.
+imploded_copyvars(C,CT):-vmust((source_variables_l(Vs),copy_term(C-Vs,CT-VVs,_),b_implode_varnames0(VVs))),!.
 
 
 %% source_variables( ?Vs) is semidet.
