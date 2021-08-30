@@ -50,7 +50,7 @@
 :- set_module(class(development)).
 :- '$set_source_module'(baseKB).
 :- expects_dialect(pfc).
-%:- use_module(library(pfc)).
+%:- expects_dialect(pfc).
 %:- set_fileAssertMt(baseKB).
 
 %:- if(current_predicate(rdf_rewrite:arity/2)).

@@ -11,7 +11,6 @@
 % ==============================================
 % [Required] Load the Logicmoo User System
 % ==============================================
-:- ensure_loaded(library(logicmoo_lib)).
 
 
 :- multifile(baseKB:cycBetween/3).
@@ -20,6 +19,7 @@
 :- system:import(baseKB:cycBetween/3).
 
 :- system:reexport(library(logicmoo_clif)).
+:- ensure_loaded(library(logicmoo_lib)).
 
 %:- set_fileAssertMt(baseKB).
 

@@ -1423,7 +1423,7 @@ pt1(_FS,Tab,T) :-
   Pri >= 400,
   pred_juncts_to_list(OP,T,List), List=[H,R,E|ST], REST = [R,E|ST],!,
   prefix_spaces(Tab),pl_span_goal('functor', (
-    pformat('( '), pformat('  '),print_tree_no_nl(H),pformat('  '), pformat(OP))),
+    pformat('( '), pformat(''),print_tree_no_nl(H),pformat('  '), pformat(OP))),
     pformat_e_args(REST, (
        pt_list_juncts(Tab+2,OP,REST))), 
    pformat(')'),!.   

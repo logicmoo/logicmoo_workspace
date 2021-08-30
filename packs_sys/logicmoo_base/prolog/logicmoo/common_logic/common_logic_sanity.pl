@@ -35,6 +35,7 @@
  op(300, fx, '~'),
  op(300, fx, '-'))).
 
+:- ensure_loaded(common_logic_utils).
 :- ensure_loaded(library(logicmoo_clif)).
 
 %:- use_module(library(script_files)).
@@ -134,13 +135,13 @@ add_boxlog_history(P0):-
 test_boxlog(P):- test_boxlog([], P).
 
 
-test_boxlogq(P):- test_boxlog([+qualify], P), !.
+test_boxlogq(P):- test_boxlog([+qualify_modality=full], P), !.
 
 :- export(test_boxlog/2).
 % test_boxlog_m(P, BoxLog):-logicmoo_motel:kif_to_motelog(P, BoxLog), !.
 test_boxlog(KV, P0):-
  locally_tl(kif_option_list(KV), (
-  %mmake, % ignore(source_location(_, _) -> add_boxlog_history(test_boxlog(KV, P)) ; true),
+  %update_changed_files, % ignore(source_location(_, _) -> add_boxlog_history(test_boxlog(KV, P)) ; true),
  \+ \+
  must_det_l((
   pretty_numbervars_ground(P0,P),
@@ -174,8 +175,8 @@ test_boxlog_88(P0):-
 
 
 :- export(test_pfc/1).
-test_pfc(P):- mmake, must_det(test_pfc0(P)), !.
-test_pfcq(P):- mmake, locally_tl(qualify_modally, must_det(test_pfc0(P))), !.
+test_pfc(P):- update_changed_files, must_det(test_pfc0(P)), !.
+test_pfcq(P):- update_changed_files, locally_tl(kif_option(qualify_modality,full), must_det(test_pfc0(P))), !.
 
 test_pfc0(P0):-
  \+ \+
@@ -272,7 +273,7 @@ add_test(Name0, Assert0):-
    dbanner, dmsg(test_boxlog(Name)), dbanner,
   test_boxlog(Assert),
    dbanner, dmsg(completed_test_boxlog(Name)), dbanner,
-   assert(( Name:- mmake, dbanner, dmsg(running_test(Name)), dbanner,
+   assert(( Name:- update_changed_files, dbanner, dmsg(running_test(Name)), dbanner,
       test_assert(Assert),
       dbanner, dmsg(completed_running_test(Name)), dbanner)).
 

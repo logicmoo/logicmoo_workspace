@@ -1040,18 +1040,20 @@ default_history_file(File):-
             (print_message(warning, E),fail)),!.
  
 :- set_prolog_flag(history, 5000).
+
+carelessly(G):- ignore(notrace(catch(G,E,(dmsg(E),!,fail)))).
 add_history0(_):- notrace(app_argv('--no-history')),!.
-add_history0(A):- 
-   prolog_history(enable), 
+add_history0(A):-
+   carelessly(prolog_history:prolog_history(enable)),
    current_input(S),
    forall(retract('$history':'$history'(_,A)),true),
-                  prolog:history(S,add(A)),
+                  carelessly(prolog:history(S,add(A))),
                   ignore((
                      stream_property(UI,file_no(0)),
                      ( \+ same_streams(S,UI)),
                         forall(retract('$history':'$history'(_,A)),true),
-                        prolog:history(user_input,add(A)))),!,
-   ignore((default_history_file(File),prolog:history(_, save(File)))).
+                        carelessly(prolog:history(user_input,add(A))))),!,
+   carelessly((default_history_file(File),prolog:history(user_input, save(File)))).
 
 
 

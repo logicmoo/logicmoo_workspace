@@ -1,6 +1,6 @@
 
 % :- module(kb,[]).
-% :- use_module(library(pfc)).
+% :- expects_dialect(pfc).
 % :- include(test_header).
 % :- set_prolog_flag(write_attributes,portray).
 
@@ -305,7 +305,7 @@ test_count(Goal,N):-
 :- make_identity(isNamed).
 :- make_type(loves/2).
 
-:- make.
+:- update_changed_files.
 
 
 f1:- assert_ex(male("Johnathan")).

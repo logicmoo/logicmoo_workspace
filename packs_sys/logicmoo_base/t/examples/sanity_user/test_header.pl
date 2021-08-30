@@ -47,7 +47,7 @@ test_header_include.
 
 :- use_module(library(pfc_lib)).
 %:- if(( \+ current_module(pfc_lib) )).
-:- use_module(library(pfc)).
+:- expects_dialect(pfc).
 %:- endif.
 
 

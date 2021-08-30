@@ -25,6 +25,7 @@
 :- meta_predicate(if_changed(2,+,-)).
 :- meta_predicate(map_each_subterm(2,+,-)).
 
+:- ensure_loaded(common_logic_utils).
 
 delay_rule_eval(InOut,_Wrap,InOut):-ground(InOut),!.
 delay_rule_eval(In,Wrap,WIn):- WIn=..[Wrap,In].
@@ -146,7 +147,7 @@ fully_expand_kif_0k(['ListFn'|ROW],ROW).
 
 clif_to_modal_clif(In,THINOUT):-   
    pretty_numbervars_ground(In,In0),
-   add_history(kif_to_boxlog(In)),
+   add_history(kif_to_boxlog(In0)),
    % In=In0,
    sumo_to_pdkb(In0,WffIn),
    must_be_unqualified(WffIn),
@@ -160,7 +161,7 @@ clif_to_modal_clif(In,THINOUT):-
    %kif_optionally_e(true,un_quant3(KB),OuterQuantKIF,NormalOuterQuantKIF),
    kif_optionally_e(always,correct_special_quantifiers(KB),OuterQuantKIF,FullQuant),   
   b_setval('$nnf_outermost',FullQuant),
-   kif_optionally_e(true,qualify_modality,FullQuant,ModalKIF),
+   kif_optionally_e(none,qualify_modality,FullQuant,ModalKIF),
    kif_optionally_e(true,adjust_kif(KB),ModalKIF,ModalKBKIFM),
    kif_optionally_e(true,correct_special_quantifiers(KB),ModalKBKIFM,ModalKBKIF),   
    kif_optionally_e(false,removeQ_3(KB),ModalKBKIF,UnQ),   

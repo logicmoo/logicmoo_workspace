@@ -336,8 +336,8 @@ TBE ::= always(TBE) | eventually(TBE) | until(TBE,TBE) |
 
 
 :- create_prolog_flag(logicmoo_propagation, modal,[keep(true)]).   % vs "unit"
-:- create_prolog_flag(logicmoo_modality,none,[keep(true)]).
-%:- create_prolog_flag(logicmoo_modality,late,[keep(true)]).
+:- create_prolog_flag(qualify_modality,false,[keep(true)]).
+%:- create_prolog_flag(qualify_modality,late,[keep(true)]).
 
 :- thread_local(t_l:using_feature/1).
 is_using_feature(Feature):- t_l:using_feature(Feature).
@@ -622,6 +622,22 @@ logical_reductions(post, nesc( ~(H1) v ~(H2)), nesc( ~ (H1 , H2))).
 logical_reductions(post,  A==>(B & C),(A==>B)&(A==>C) ).
 logical_reductions(post, (nesc((A v B)) ==>C), (nesc(A)==>C)&(nesc(B)==>C)).
 logical_reductions(post, ((A v B) ==>C), (A==>C)&(B==>C)).
+
+logical_reductions(post, (A==>nesc(B v C)),
+   (((poss(~C) & A)==>nesc(B)) 
+  & ((poss(~B) & A)==>nesc(C)))).
+
+logical_reductions(post, (A==> (B v C)),
+   (((poss(~C) & A)==>B) 
+  & ((poss(~B) & A)==>C))).
+
+logical_reductions(post, (A==>poss(B v C)),
+   (((nesc(~C) & A)==>poss(B)) 
+  & ((nesc(~B) & A)==>poss(C)))).
+
+
+% (Head:-Body), (~nesc(Head)=> ~nesc(Body))
+
 %logical_reductions(post, nesc( H1)==> A, H1==> A).
 %logical_reductions(post, H1==> nesc(A), H1==> A).
 logical_reductions(post, nesc( H1), H1):- contains_modal(H1),!.

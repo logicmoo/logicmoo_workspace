@@ -41,6 +41,9 @@
 :- meta_predicate call_l2r(2,?,?).
 
 
+:- ensure_loaded(common_logic_utils).
+
+
 :- use_module(library('logicmoo/common_logic/common_logic_boxlog.pl')).
 :- use_module(library('logicmoo_pttp')).
 
@@ -76,8 +79,7 @@
 
 
 :- module_transparent(( are_clauses_entailed/1,
-            is_prolog_entailed/1,
-            delistify_last_arg/3)).
+            is_prolog_entailed/1)).
 
 :- meta_predicate
    % common_logic_snark
@@ -93,89 +95,6 @@
 
 %:- meta_predicate '__aux_maplist/2_map_each_clause+1'(*,1).
 %:- meta_predicate '__aux_maplist/3_map_each_clause+1'(*,*,2).
-
-
-
-:- thread_local(t_l:kif_option/2).
-:- thread_local(t_l:kif_option_list/1).
-
-means_false_kif(Value):- Value == none ; Value == fail; Value == []; Value == false; Value == no ; Value=todo.
-
-
-use_kif_option(_Jiggler,never):-!,fail.
-use_kif_option(_Jiggler,always):-!.
-use_kif_option(Jiggler,_Default):- foption_to_name(Jiggler,Name), kif_option_value(Name,Value),!, \+ means_false_kif(Value),
-     (compound(Jiggler) -> arg(1,Jiggler,Value) ; true).
-use_kif_option(_Jiggler,Default):- \+ means_false_kif(Default).
-
-as_local_kv(-Key,Key,false):-!.
-as_local_kv(+Key,Key,true):-!.
-as_local_kv(Key,Key,true):- atom(Key),!.
-as_local_kv(KeyValue,_Key,_):- \+ compound(KeyValue),!,fail.
-as_local_kv(KeyValue,Key,Value):- KeyValue=..[Key,Value].
-as_local_kv(KeyValue,Key,Value):- KeyValue=..[_,Key,Value].
-
-set_kif_option(Name+Name2):- !,set_kif_option(Name),set_kif_option(+Name2).
-set_kif_option(Name-Name2):- !,set_kif_option(Name),set_kif_option(-Name2).
-set_kif_option(List):- is_list(List),!,maplist(set_kif_option,List).
-set_kif_option(+Name):- !, set_kif_option(Name,true).
-set_kif_option(-Name):- !, set_kif_option(Name,false).
-set_kif_option(N=V):- !, set_kif_option(N,V).
-set_kif_option(N:V):- !, set_kif_option(N,V).
-set_kif_option(Name):- !, set_kif_option(Name,true).
-
-
-set_kif_option(Name,Value):- assert_setting01(t_l:kif_option(Name,Value)),!.
-
-kif_option_value(Name,Value):- zotrace(kif_option_value0(Name,Value)).
-
-kif_option_value0(Name,Value):- Value==none,!,(kif_option_value(Name,ValueReally)->ValueReally==Value;true).
-kif_option_value0(Name,Value):- t_l:kif_option_list(Dict),atom(Name),
-   (is_dict(Dict) -> (get_dict(Key,Dict,Value),atom(Name),atom(Key),atom_concat(Key,_,Name));
-    true -> ((member(KeyValue,Dict),as_local_kv(KeyValue,Key,Value),(atom_concat(Key,_,Name);atom_concat(_,Key,Name))))),!.
-kif_option_value0(Name,Value):- t_l:kif_option(Name,Value),!.
-kif_option_value0(Name,Value):- atom(Name),current_prolog_flag(Name,Value),!.
-kif_option_value0(Name,Value):- clause_b(feature_setting(Name,Value)),!.
-
-foption_to_name(Name,Name):- \+ compound(Name),!.
-foption_to_name(_:Jiggler,Name):- !,foption_to_name(Jiggler,Name).
-foption_to_name(adapt_to_arity_2(Jiggler),Name):-!,foption_to_name(Jiggler,Name).
-foption_to_name(Jiggler,Name):-functor(Jiggler,Name,_).
-
-:- meta_predicate adapt_to_arity_2(1,?,?).
-adapt_to_arity_2(Pred1,A,O):- call(Pred1,A),A=O.
-
-:- meta_predicate kif_optionally(+,1,?).
-kif_optionally(YN,Pred1,Arg):- kif_optionally(YN,adapt_to_arity_2(Pred1),Arg,_).
-
-:- meta_predicate kif_optionally(+,2,?,?).
-%kif_optionally(_,_,JIGGLED,JIGGLED):- JIGGLED==[],!. 
-kif_optionally(Default,Jiggler,KIF,JIGGLED):- \+ is_list(KIF),!,kif_optionally_e(Default,Jiggler,KIF,JIGGLED).
-%kif_optionally(never,_,JIGGLED,JIGGLED):-!.
-%kif_optionally(always,Jiggler,KIF,JIGGLED):-  must_maplist_det(Jiggler,KIF,JIGGLED),!.
-kif_optionally(Default,Jiggler,KIF,JIGGLED):- must_maplist_det(kif_optionally_e(Default,Jiggler),KIF,JIGGLED),!.
-
-:- meta_predicate kif_optionally_e(+,1,?).
-kif_optionally_e(YN,Pred1,Arg):- kif_optionally_e(YN,adapt_to_arity_2(Pred1),Arg,_).
-
-:- meta_predicate kif_optionally_e(+,2,?,?).
-kif_optionally_e(Default,Jiggler,KIF,JIGGLED):- 
-   foption_to_name(Jiggler,Name), !,
-  must(kif_optionally_ee(Default,Name,Jiggler,KIF,JIGGLED)),!.
-
-kif_optionally_ee(Default,Name,Jiggler,KIF,JIGGLO):- 
-  kif_optionally_eee(Default,Name,Jiggler,KIF,JIGGLED),
-  (JIGGLED\=nesc(nesc(_))->JIGGLO=JIGGLED
-   ; (dumpST,break,rtrace(kif_optionally_eee(Default,Name,Jiggler,KIF,JIGGLO)),break)).
-
-kif_optionally_eee( never ,_  ,_,JIGGLED,JIGGLED):-!.
-kif_optionally_eee(Default,Name,Jiggler,KIF,JIGGLED):-
-     (kif_option_value(Name,ShouldDo)-> true ; ShouldDo = Default),
-     ((means_false_kif(ShouldDo), \+ Default==always) 
-       -> KIF=JIGGLED 
-       ; ((locally_tl(kif_option(Name,ShouldDo), must(w_o_c(call(Jiggler,KIF,JIGGLED)))),
-          if_debugging2(Name, (KIF \=@= JIGGLED -> sdmsg(Name=JIGGLED); true))))),!.
-          %if_debugging2(Name, (KIF \=@= JIGGLED -> sdmsg(Name=(in(KIF)==>out(Name,JIGGLED))); true))))),!.
 
 :- fixup_exports.
 
@@ -280,6 +199,10 @@ any_to_pfc0((H:-B),PrologO):- must((show_failure(why,boxlog_to_pfc((H:-B),Prolog
 % Ieee Standard Common Logic Interchange Format Version Converted To Prolog.
 %
 kif_to_pfc(B,A):-  must(map_each_clause(kif_to_pfc0,B,A)).
+kif_to_pfc(K):-
+  kif_to_pfc(K,A),
+  show_boxlog(A).
+ 
 
 kif_to_pfc0(CLIF,Prolog):- 
    sanity(is_kif_clause(CLIF)),
@@ -907,59 +830,92 @@ get_1_var_name(Var,[_|NamedVars],Name):- get_1_var_name(Var,NamedVars,Name).
 call_l2r(P,X,Y):- var(X) -> freeze(X,call_l2r(P,X,Y)) ; (call(P,X,Z),Y=Z).
 
 
-%% kif_to_boxlog( ?Wff, ?Out) is det.
-%
-% Knowledge Interchange Format Converted To Datalog.
-%
-%====== kif_to_boxlog(+Wff,-NormalClauses):-
-:- public(kif_to_boxlog/2).
-
-%% kif_to_boxlog( +Fml, -Datalog) is det.
-%
-% Knowledge Interchange Format Converted To Datalog.
-%
-kif_to_boxlog(Wff,Out):- Wff\=(_:-_), why_to_id(rule,Wff,Why),!,must(kif_to_boxlog(Wff,Out,Why)),!.
-% kif_to_boxlog(Wff,Out):- loop_check(kif_to_boxlog(Wff,Out),Out=looped_kb(Wff)). % kif_to_boxlog('=>'(WffIn,enables(Rule)),'$VAR'('MT2'),complete,Out1), % kif_to_boxlog('=>'(enabled(Rule),WffIn),'$VAR'('KB'),complete,Out).
-
-%% kif_to_boxlog( +Fml, +Why, -Datalog) is det.
-%
-% Knowledge Interchange Format Converted To Datalog.
-%
-:- export(kif_to_boxlog/3).
-kif_to_boxlog(Wff,Out,Why):- must(Wff\=(_:-_)), w_o_c(kif_to_boxlog(Wff,'$VAR'('KB'),Why,Out)),!.
-
 must_det_here(G):- w_o_c(must_det(G)).
 
 
 
 
 
-kif_to_boxlog(Kif):-
- update_changed_files,
- kif_to_boxlog(Kif,O),!,
- format("============================================"),
- show_boxlog(O),
- format("============================================"),!.
-
-
-%% kif_to_boxlog( +Fml, ?KB, +Why, -Datalog) is det.
-%
-% Knowledge Interchange Format Converted To Datalog.
-%
-:- export(kif_to_boxlog/4).
-kif_to_boxlog(I,KB,Why,Datalog):- % trace,
-  convert_if_kif_string( I, PTerm),
-  kif_to_boxlog(PTerm,KB,Why,Datalog), !.
-
-kif_to_boxlog(HB,KB,Why,FlattenedO):- 
-  sumo_to_pdkb(HB,HB00)->
-  sumo_to_pdkb(KB,KB00)->
-  sumo_to_pdkb(Why,Why00)->
-  pretty_numbervars_ground((HB00,KB00,Why00),(HB0,KB0,Why0)),
-  with_no_kif_var_coroutines(must(kif_to_boxlog_attvars(HB,HB0,KB0,Why0,FlattenedO))),!.
-
 :- meta_predicate(unless_ignore(*,*)).
 unless_ignore(A,B):- call(A)->B;true.
+
+
+local_pretty_numbervars_ground(P,X):-
+  pretty_numbervars_unground(P,X),
+  guess_pretty(X).
+
+no_kb_why_flags_assert([X],Y):-!,no_kb_why_flags_assert(X,Y).
+no_kb_why_flags_assert(kb_why_flags_assert(_,_,_,X),X).
+no_kb_why_flags_assert(X,X).
+
+
+:- meta_predicate(in_box(:)).
+write_eng(X):- in_cmt(in_box((wots(S,write_eng(0,X)),write(S)))).
+
+in_box(G):-
+  format("~N~n%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%~n"),ttyflush,
+  ignore(G),ttyflush,
+  format("~N~n%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%~n"),ttyflush,
+  !.
+
+is_lit_fact(P):- contains_modal(P),!,fail.
+is_lit_fact(P):- is_lit_atom(P).
+
+% Our Modal Ops are arity 1
+no_junctions(P):- \+ compound(P).
+no_junctions(P):- P=..[_,A],!,no_junctions(A).
+no_junctions(P):- is_lit_atom(P),!.
+
+write_eng(_,X):- var(X),!,writeq(var(X)), write(' ').
+write_eng(_,'$VAR'(P)):- !,write('?'), write(P), write(' '),!.
+write_eng(L,X):- is_list(X), !, maplist(write_eng(L),X).
+
+write_eng(L,quote(P)):- !, write('" '),write_eng(L,P),write('" ').
+write_eng(L,paren(P)):- is_lit_fact(P),!, write_eng(L,quote(P)).
+write_eng(L,paren(P)):- no_junctions(P),!, write_eng(L,P).
+write_eng(L,paren(P)):- !, write('('),write_eng(L,P),write(')').
+write_eng(_,q(X)):- writeq(X),write(' ').
+
+% rules are 0
+write_eng(0,~poss(P)):-  write_eng(1,['it is impossible that ',paren(P)]).
+write_eng(0,~nesc(P)):-  write_eng(1,['it is NOT necessarily true that ',paren(P)]).
+write_eng(0,~P):- write_eng(1,[' it is false that ',P]).
+write_eng(0,poss(~P)):-  write_eng(1,[' it is possiblly FALSE that ',P]).
+write_eng(0,nesc(~P)):-  write_eng(1,[' it is necessarily FALSE that ',P]).
+write_eng(0,poss(P)):-  write_eng(1,[' it is possible that ',P]).
+write_eng(0,nesc(P)):-  write_eng(1,[' it is necessarily true that ',P]).
+write_eng(0,P):- write_eng(1,[' ',P]).
+
+
+write_eng(L,all(V,P)):-   write_eng(L,['~n For all ',V,'~n   ',paren(P)]).
+write_eng(L,exists(V,P)):-   write_eng(L,['~n There exists ',V,'~n   ',paren(P)]).
+write_eng(L,'$existential'(V,_,P)):- write_eng(L,[' by default ',V,q(P)]).
+
+write_eng(L,poss(~P)):-   write_eng(L,[paren(P),'is possibly false ']).
+write_eng(L,nesc(~P)):-   write_eng(L,[paren(P),'is necessarily false ']).
+write_eng(L,poss( P)):-   write_eng(L,[paren(P),'is possible ']).
+write_eng(L,nesc( P)):-   write_eng(L,[paren(P),'is necessarily true ']).
+write_eng(L,~poss( P)):-   write_eng(L,[paren(P),'is impossible ']).
+write_eng(L,~nesc( P)):-   write_eng(L,[paren(P),'is NOT necessarily true ']).
+
+write_eng(L,A => B):- !, write_eng(L,['If: ~n   ',A,'then it is~n Implied that:~n   ',B]).
+write_eng(L,A ==>B):- !, write_eng(L,['Whenever: ~n   ',A,'~n It\'s Proof that:~n   ',B]).
+write_eng(L,A & B):- write_eng(L,[paren(A),' and ~n   ',paren(B)]).
+write_eng(L,A v B):- write_eng(L,[paren(A),' or ',paren(B)]).
+
+
+write_eng(_,X):- atom(X), atom_contains(X,' '), format(X),!.
+
+% fact/1 is 9
+write_eng(_,fact(P)):- !, write_eng(9,P).
+
+% facts are 9
+write_eng(9,X):- X=..[F,A,B],!,write_eng(9,[A,F,B]).
+write_eng(9,X):- X=..[F,A],!,write_eng(9,[A,'isa',F]).
+write_eng(9,X):- writeq(X),write(' ').
+
+write_eng(_,~P):- write_eng(9,[paren(P),' is false']).
+write_eng(_, P):- write_eng(9, P).
 
 
 nnf_default(Fml,_):- \+ compound(Fml), !, fail.
@@ -1011,9 +967,76 @@ show_boxlog(kb_why_flags_assert(KB,Why,_Flags,O)):-
    %show_boxlog(O).
    setup_call_cleanup(system:push_operators(baseKB:[op(1000,yfx,'&')],Undo),show_boxlog(O),system:pop_operators(Undo)).
   
-show_boxlog(O):- subst_each(O,['& '='/\\','v '='\\/'],OO), format('~N~n'), print_tree(OO),format('~N~n').
+show_boxlog(O):- write_eng(O), subst_each(O,['& '='/\\','v '='\\/'],OO), format('~N~n'), print_tree(OO),format('.~N~n').
 
 show_boxlog:- forall(call_u(boxlog(O)),show_boxlog(O)).
+
+%% kif_to_boxlog( ?Wff is det.
+%
+% Knowledge Interchange Format Converted To Datalog.
+%
+kif_to_boxlog(P):-
+  update_changed_files,
+  local_pretty_numbervars_ground(P,X),
+  format('~N~n~n~n~n=======================================================~n'),  
+  display(X),
+  format("~N============================================~n"),
+  format('~n~n?- kif_to_boxlog( ~q ).\n\n',[(X)]),ttyflush,
+  
+   
+   format('~n~n% In English: ',[]),
+   write_eng(X),
+
+   %with_no_output
+   kif_to_boxlog(X,E),flatten([E],EF),
+   maplist(no_kb_why_flags_assert,EF,S),sort(S,O),
+
+   length(O,L),
+   in_box((format('% Results in the following ~w entailment(s): ~n',[L]),
+           call(maplist,writeqln,O))),
+
+   show_boxlog(O),
+   format("============================================"),!.
+
+writeqln(O):- writeq(O),writeln('.').
+
+%% kif_to_boxlog( ?Wff, ?Out) is det.
+%
+% Knowledge Interchange Format Converted To Datalog.
+%
+%====== kif_to_boxlog(+Wff,-NormalClauses):-
+:- public(kif_to_boxlog/2).
+
+%% kif_to_boxlog( +Fml, -Datalog) is det.
+%
+% Knowledge Interchange Format Converted To Datalog.
+%
+kif_to_boxlog(Wff,Out):- Wff\=(_:-_), why_to_id(rule,Wff,Why),!,must(kif_to_boxlog(Wff,Out,Why)),!.
+% kif_to_boxlog(Wff,Out):- loop_check(kif_to_boxlog(Wff,Out),Out=looped_kb(Wff)). % kif_to_boxlog('=>'(WffIn,enables(Rule)),'$VAR'('MT2'),complete,Out1), % kif_to_boxlog('=>'(enabled(Rule),WffIn),'$VAR'('KB'),complete,Out).
+
+%% kif_to_boxlog( +Fml, +Why, -Datalog) is det.
+%
+% Knowledge Interchange Format Converted To Datalog.
+%
+:- export(kif_to_boxlog/3).
+kif_to_boxlog(Wff,Out,Why):- must(Wff\=(_:-_)), w_o_c(kif_to_boxlog(Wff,'$VAR'('KB'),Why,Out)),!.
+
+%% kif_to_boxlog( +Fml, ?KB, +Why, -Datalog) is det.
+%
+% Knowledge Interchange Format Converted To Datalog.
+%
+:- export(kif_to_boxlog/4).
+kif_to_boxlog(I,KB,Why,Datalog):- % trace,
+  convert_if_kif_string( I, PTerm),
+  kif_to_boxlog(PTerm,KB,Why,Datalog), !.
+
+kif_to_boxlog(HB,KB,Why,FlattenedO):- 
+  sumo_to_pdkb(HB,HB00)->
+  sumo_to_pdkb(KB,KB00)->
+  sumo_to_pdkb(Why,Why00)->
+  pretty_numbervars_ground((HB00,KB00,Why00),(HB0,KB0,Why0)),
+  with_no_kif_var_coroutines(must(kif_to_boxlog_attvars(HB,HB0,KB0,Why0,FlattenedO))),!.
+
 
 kif_to_boxlog_attvars(Original,kif(HB),KB,Why,FlattenedO):-!,kif_to_boxlog_attvars(Original,HB,KB,Why,FlattenedO).
 kif_to_boxlog_attvars(Original,clif(HB),KB,Why,FlattenedO):-!,kif_to_boxlog_attvars(Original,HB,KB,Why,FlattenedO).
@@ -1083,7 +1106,7 @@ kif_to_boxlog_theorist(_FullQuant,Why,KB,UnQ,RealOUT):-
    %unless_ignore(THIN\== ~ RULIFY,kif_optionally_e(always,as_dlog,RULIFY,_)),
    % trace,
    once((rulify(constraint,RULIFY,SideEffectsList),SideEffectsList\==[])),!,
-   kif_optionally_e(true,list_to_set,SideEffectsList,SetList),
+   kif_optionally_e(always,list_to_set,SideEffectsList,SetList),
    kif_optionally_e(always,finish_clausify(KB,Why),SetList,RealOUT),!.
 
 tlog_nnf(Even,THIN,RULIFY):- th_nnf(THIN,Even,RULIFY).
@@ -1560,7 +1583,8 @@ kif_add(WffIn):- kif_add2(WffIn).
 
 
 kif_add2(WffIn):- 
- add_history(kif_to_boxlog(WffIn)),
+ pretty_numbervars_ground(WffIn,WffIn0),
+ add_history(kif_to_boxlog(WffIn0)),
  show_call(ain(clif(WffIn))),!,
  kif_to_boxlog(WffIn).
 

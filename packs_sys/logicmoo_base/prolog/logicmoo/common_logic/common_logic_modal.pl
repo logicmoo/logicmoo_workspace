@@ -1,5 +1,7 @@
 :- module(common_logic_modalization,[qualify_nesc/2]).
 
+:- ensure_loaded(common_logic_utils).
+
 :-  system:((
  op(1199,fx,('==>')), 
  op(1190,xfx,('::::')),
@@ -38,11 +40,10 @@
 
 
 
-:- create_prolog_flag(logicmoo_modality,none,[keep(true)]).
+:- create_prolog_flag(qualify_modality,false,[keep(true)]).
 
-:- thread_local(t_l:qualify_modally/0).
 %% qualify_modality( ?P, ?Q) is det.
-qualify_modality(OuterQuantKIF,OuterQuantKIF):- current_prolog_flag(logicmoo_modality,none),!.
+qualify_modality(OuterQuantKIF,OuterQuantKIF):- kif_option_value( qualify_modality,false),!.
 qualify_modality(PQ,PQO):- qualify_nesc(PQ,PQO).
 
 
@@ -53,7 +54,6 @@ qualify_modality(PQ,PQO):- qualify_nesc(PQ,PQO).
 %  Q = (poss(P)=>P).
 %
 
-% qualify_nesc(OuterQuantKIF,OuterQuantKIF):- \+ t_l:qualify_modally,!.
 qualify_nesc(OuterQuantKIF,OuterQuantKIF):- var(OuterQuantKIF),!.
 qualify_nesc(IN,OUT):-is_list(IN),must_maplist_det(qualify_nesc,IN,OUT),!.
 qualify_nesc(OuterQuantKIF,OuterQuantKIF):- leave_as_is(OuterQuantKIF),!.
@@ -62,19 +62,19 @@ qualify_nesc(PQ,PQO):- PQ=..[F|Q],is_quantifier(F),append(LQ,[RQ],Q),qualify_nes
 % qualify_nesc(P<=>Q,PQ & QP):- !,qualify_nesc(P=>Q,PQ),qualify_nesc(Q=>P,QP).
 
 % full modality
-qualify_nesc(P,(poss(P)=>nesc(P))):- current_prolog_flag(logicmoo_modality,full), !.
+qualify_nesc(P,(poss(P)=>nesc(P))):- kif_option_value( qualify_modality,full), !.
 
 % late modality
-qualify_nesc(P,nesc(P)):- current_prolog_flag(logicmoo_modality,late), !.
+qualify_nesc(P,nesc(P)):- kif_option_value( qualify_modality,late), !.
 
 
 % part modality
-qualify_nesc( ~(IN), ~(poss(IN))):- current_prolog_flag(logicmoo_modality,part), !.
+qualify_nesc( ~(IN), ~(poss(IN))):- kif_option_value( qualify_modality,part), !.
 %qualify_nesc(P<=>Q,((nesc(P)<=>nesc(Q)) & (poss(P)<=>poss(Q)))):-!.
-qualify_nesc(P=>Q,((poss(Q)&nesc(P))=>nesc(Q))):-  current_prolog_flag(logicmoo_modality,part), !.
+qualify_nesc(P=>Q,((poss(Q)&nesc(P))=>nesc(Q))):-  kif_option_value( qualify_modality,part), !.
 %qualify_nesc(P=>Q,((nesc(P)=>nesc(Q)) & (poss(P)=>poss(Q)))):-!.
 %qualify_nesc(P,(~nesc(P)=>nesc(P))):- \+ \+ (P = (_ & _) ; P = (_ v _)).
-qualify_nesc(P,nesc(P)):- \+ current_prolog_flag(logicmoo_modality,full), !.
+qualify_nesc(P,nesc(P)):- \+ kif_option_value( qualify_modality,full), !.
 
 % fallback
 qualify_nesc(P,nesc(P)):- !.
@@ -176,7 +176,7 @@ identical_refl(X,Y):- =<>=(X,Y),!.
 
 
 
-undess_head(H,H):- current_prolog_flag(logicmoo_propagation, modal),!.
+undess_head(H,H):- kif_option_value( logicmoo_propagation, modal),!.
 
 undess_head((H:-B),(HH:-B)):-!,undess_head(H,HH).
 undess_head(proven_nesc(H),H):- !.
@@ -523,9 +523,9 @@ demodal_body(_KB, _Head, ( H *-> G ) , G):- H =<>= true, unusual_body.
 demodal_body(_KB,_Head, poss(poss( G)), poss(G)):- nonvar(G),!.
 demodal_body(KB,Head,[H|T],[HH|TT]):- !, must(( demodal_body(KB,Head,H,HH),demodal_body(KB,Head,T,TT))),!.
 demodal_body(KB,Head,(H;T),(HH;TT)):- !, must(( demodal_body(KB,Head,H,HH),demodal_body(KB,Head,T,TT))),!.
-demodal_body(KB,Head,(H,T),(HH,TT)):- current_prolog_flag(logicmoo_propagation, modal),
+demodal_body(KB,Head,(H,T),(HH,TT)):- kif_option_value( logicmoo_propagation, modal),
    T\=(_,_),!, must(( demodal_body(KB,Head,H,HH),demodal_body(KB,Head,T,TT))),!.
-% demodal_body(_KB,_Head, (G), (G)):- current_prolog_flag(logicmoo_propagation, modal),!.
+% demodal_body(_KB,_Head, (G), (G)):- kif_option_value( logicmoo_propagation, modal),!.
 demodal_body(KB,Head,H,HH ):- H=..[F|ARGS],!,must_maplist_det(demodal_body(KB,Head),ARGS,ARGSO),!,HH=..[F|ARGSO].
 :- endif.
 

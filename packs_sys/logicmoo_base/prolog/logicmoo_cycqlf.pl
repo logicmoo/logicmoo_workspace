@@ -7,6 +7,8 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 :- use_module(library(logicmoo_packs)).
+:- reexport(library('logicmoo/common_logic/common_logic_utils.pl')).
+
 /*
 
 :- use_module(library(prolog_pack)).

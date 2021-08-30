@@ -1,6 +1,6 @@
 %:- set_module(class(development)).
 :- '$set_source_module'(baseKB).
-:- use_module(library(pfc)).
+:- expects_dialect(pfc).
 
 
 :- sanity(ttRelationType(prologMultiValued)).

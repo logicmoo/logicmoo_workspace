@@ -1030,7 +1030,7 @@ nnf_ex(KB,quant(atleast(N),X,Fml),FreeV,NNF,Paths):- fail, N==1, !,
 nnf_ex(KB, ~ quant(atleast(N),X,Fml), FreeV,NNF,Paths):- NN is N - 1,
    nnf_ex_nnf(KB,quant(atmost(NN),X,Fml),FreeV,NNF,Paths).
 
-nnf_ex(KB,quant(atleast(N),X,Fml),FreeV,NNF1,Paths):-  use_kif_option(skolem(nnf),true), !,
+nnf_ex(KB,quant(atleast(N),X,Fml),FreeV,NNF1,Paths):-  use_kif_option(skolem_in_nnf,true), !,
  must_det_l((
     % add_cond(X,extensional(X)),
     term_slots(KB+FreeV+Fml,SSlots),list_to_set(SSlots,Slots),
@@ -1072,7 +1072,7 @@ nnf_ex(KB,~quant(atmost(0),X,Fml),FreeV,NNF,Paths):-  !,
 nnf_ex(KB,quant(atmost(0),X,Fml),FreeV,NNF,Paths):-  !,
   nnf_ex_nnf(KB,all(X,~(Fml)),FreeV,NNF,Paths).
 
-nnf_ex(KB,quant(atmost(N),X,Fml),FreeV,NNF1,Paths):-  use_kif_option(skolem(nnf),true), !,
+nnf_ex(KB,quant(atmost(N),X,Fml),FreeV,NNF1,Paths):-  use_kif_option(skolem_in_nnf,true), !,
  must_det_l((
     % add_cond(X,extensional(X)),
     term_slots(KB+FreeV+Fml,SSlots),list_to_set(SSlots,Slots),
@@ -1142,7 +1142,7 @@ nnf_ex(KB,quant(exactly(N),X,Fml),FreeV,NNF,Paths):- !,
 
 
 nnf_ex(KB,quant(exactly(N),X,Fml),FreeV,NNF1,Paths):- fail,
- use_kif_option(skolem(nnf),true), !,
+ use_kif_option(skolem_in_nnf,true), !,
  must_det_l((
     % add_cond(X,extensional(X)),
     term_slots(KB+FreeV+Fml,SSlots),list_to_set(SSlots,Slots),

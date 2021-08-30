@@ -6,7 +6,7 @@ isNonVar(Denotation):-not(isSlot(Denotation)).
 % Is var means to Sigma this is a Slot
 isSlot(Denotation):-sigma_notrace((isVarProlog(Denotation);isVarObject(Denotation))),!.
 
-isSlot(Denotation,Denotation):- isVarProlog(Denotation),!.
+isSlot(Denotation,Denotation2):- isVarProlog(Denotation),!,Denotation2=Denotation.
 isSlot(Denotation,PrologVar):- isVarObject(Denotation,PrologVar),!.
 
 isHiddenSlot(Term):-fail.

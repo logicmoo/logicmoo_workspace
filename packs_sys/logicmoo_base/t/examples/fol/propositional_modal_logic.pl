@@ -5,114 +5,45 @@
 :- endif.
 :- endif.
 
-show_xamples:- show_xample(write_each).
-
-local_pretty_numbervars_ground(P,X):-
-   pretty_numbervars_ground(P,X),
-  guess_pretty(X).
-
-kif_to_boxlogx(P):-
-  local_pretty_numbervars_ground(P,X),
-  format('~n~n~n~n~n=======================================================~n'),
-  write_eng(rule(X)),
-  % format('~n~n'),display(X),
-  format('~n~n?- kif_to_boxlog( ~q ).\n\n',[(X)]),ttyflush,
-  ignore((   
-   %with_no_output
-   (kif_to_boxlog(X,O)),
-   length(O,L),
-   format('~n~n% Results in the following ~w entailment(s): ~n~n',[L]),
-   sort(O,OO),ttyflush,!,maplist(write_each,OO))).
-
-dkif_to_boxlog:- cls,show_xample(kif_to_boxlogx),ah.
-
-write_each(X):- is_list(X), !, maplist(write_each,X).
-write_each(kb_why_flags_assert(_,_,_,X)):-!,write_each(X).
-write_each(X):- ttyflush,nl,in_block((write_eng(rule(X)),nl,show_boxlog((X)))),nl,nl,ttyflush.
-
-in_block(G):-
-  writeln("----------------------------------------"),ttyflush,
-  ignore(G),ttyflush,
-  format("~N----------------------------------------"),ttyflush,!.
-
-write_eng_s(X):- is_list(X), !, write('['), maplist(write_eng,X), write(']').
-write_eng_s(X):- write_eng(X).
-
-write_eng(X):- is_list(X), !, maplist(write_eng,X).
-write_eng(X):- var(X),!,writeq(var(X)), write(' ').
-write_eng(X):- atom(X), atom_contains(X,' '), format(X),!.
-write_eng(A=>B):- !, write_eng(['If: ~n%   ',A,'then it is~n% Implied that:~n%   ',B]).
-write_eng(A==>B):- !, write_eng(['Whenever: ~n%   ',A,'~n% It\'s Proof that:~n%   ',B]).
-write_eng(A & B):- write_eng([paren(A),'and ~n%   ',paren(B)]).
-write_eng(A v B):- write_eng([paren(A),'or ',paren(B)]).
-write_eng(rule(~P)):- write_eng(['% it is false that ',P]).
-write_eng(rule(poss(P))):-  write_eng(['% it is possible that ',P]).
-write_eng(rule(poss(~P))):-  write_eng(['% it is possiblly FALSE that ',P]).
-write_eng(rule(nesc(P))):-  write_eng(['% it is necessarily true that ',P]).
-write_eng(rule(nesc(~P))):-  write_eng(['% it is necessarily FALSE that ',P]).
-write_eng(rule(P)):- write_eng(['% ',P]).
-
-write_eng(~poss(P)):-  write_eng(['it is NOT possible that ',paren(P)]).
-write_eng(~nesc(P)):-  write_eng(['it is not necessarily true that ',paren(P)]).
-write_eng(poss(~P)):-   write_eng([paren(P),'is possibly false ']).
-write_eng(nesc(~P)):-   write_eng([paren(P),'is necessarily false ']).
-write_eng(poss(P)):-   write_eng([paren(P),'is possible ']).
-write_eng(nesc(P)):-   write_eng([paren(P),'is necessarily true ']).
-
-write_eng('$VAR'(P)):- !,write('?'),write(P), write(' '),!.
-write_eng(fact(P)):- !, write_fact(P).
-write_eng(paren(P)):- is_lit_fact(P),!, write_qfact(P).
-write_eng(paren(P)):- no_connectives(P),!, write_eng(P).
-write_eng(paren(P)):- !, write_eng(['( ',P,') ']).
-write_eng(~P):- write_fact([paren(P),' is false']).
-write_eng(P):- write_qfact(P).
-
-is_lit_fact(P):- contains_modal(P),!,fail.
-is_lit_fact(P):- is_lit_atom(P).
-
-no_connectives(P):- is_lit_fact(P),!.
-no_connectives(P):- \+ compound(P).
-no_connectives(P):- P=..[_,A],!,no_connectives(A).
-
-write_qfact(P):- write_fact(['"',P,'"']).
-
-write_fact(X):- \+ compound(X),!, write(X),write(' ').
-write_fact('$VAR'(X)):- !,write('?'),write(X), write(' '),!.
-write_fact(X):- is_list(X), !, maplist(write_fact,X). 
-write_fact(X):- X=..[F,A,B],!,write_fact([A,'is',F,B]).
-write_fact(X):- X=..[F,A],!,write_fact([A,'is a',F]).
-write_fact(X):- writeq(X),write(' ').
-
-%f_n_r(F,N,R):- R=..[F,N],!.
-
-f_n_r(F,N,R):- atomic_list_concat([F,'_',N],R).
+f_n_r(F,N,R):- number(N), atomic_list_concat([F,'_',N],R),!.
+f_n_r(F,N,R):- R=..[F,N],!.
 
 xamplen(F,N,R):- N=<1,!,f_n_r(F,N,R).
 xamplen(F,N,O+R):- Nm1 is  N -1,f_n_r(F,N,R),xamplen(F,Nm1,O),!.
 
 xample(F,O,L,U):- between(L,U,N),xamplen(F,N,R),(N=1->O=R;(subst(R,+,&,O);subst(R,+,v,O))).
 
-xampl((leftof(H1, H2) => house(H1) & house(H2))).
+do_xampl(P1,F):- 
+   local_pretty_numbervars_ground(F,E),
+   call(P1,(E)),      
+   call(P1,poss(E)),
+   call(P1, ~E),
+   call(P1,nesc(E)),
+   %call(P1,poss(~E)),
+   !.
+
+show_xample(P1):- update_changed_files,!, forall(xampl(X), do_xampl(P1,X)),ah.
+
+xampl((leftof('$VAR'('H1'), '$VAR'('H2')) => house('$VAR'('H1')) & house('$VAR'('H2')))).
 xampl(F):- xample(fact,F,1,1).
 xampl(F => R):- xample(result,R,1,1),xample(fact,F,1,2).
+xampl((all('$VAR'('P1'), exists('$VAR'('H2'), person('$VAR'('P1')) => has('$VAR'('P1'),'$VAR'('H2')))))).
+xampl(all(P1,exists([ [H2,heart]],(person(P1)=>has(P1,H2))))).
+xampl((~poss(a) v nesc(a))).
+
 %xampl(F):- xample(fact,F,2,3).
 %xampl(F => R):- xample(result,R,2,2),xample(fact,F,1,2).
 %xampl(F & R):- xample(left,F),xample(right,R).
 %xampl(F v R):- xample(left,F),xample(right,R).
 
-do_xampl(P1,F):- 
-   local_pretty_numbervars_ground(F,E),
-   call(P1,(E)),
-   call(P1,nesc(E)),
-   call(P1, ~E),
-   call(P1,poss(E)),
-   call(P1,poss(~E)),
-   !.
 
-show_xample(P1):- update_changed_files,!, forall(xampl(X), do_xampl(P1,X)).
+show_xamples:- show_xample(show_boxlog).
+
+kif_to_boxlogd:- cls,update_changed_files,show_xample(kif_to_boxlog).
+
+ah:- add_history(update_changed_files),add_history(show_xamples),add_history(kif_to_boxlogd).
 
 :-   show_xamples.
-ah:- add_history(update_changed_files),add_history(show_xamples),add_history(dkif_to_boxlog).
 
 end_of_file.
 
@@ -121,15 +52,15 @@ end_of_file.
 
 =======================================================
 % If:
-%   " ?House1 is leftof ?House2 " then it is
+%   " ?H1 is leftof ?H2 " then it is
 % Implied that:
-%   " ?House1 is a house " and
-%   " ?House2 is a house "
+%   " ?H1 is a house " and
+%   " ?H2 is a house "
 
-?- kif_to_boxlog( leftof(House1,House2)=>house(House1)&house(House2) ).
+?- kif_to_boxlog( leftof(H1,H2)=>house(H1)&house(H2) ).
 
-% kifm = leftof(House1,House2)=>house(House1)&house(House2).
-% kif_to_boxlog_attvars2 = =>(leftof('$VAR'('House1'),'$VAR'('House2')),and(house('$VAR'('House1')),house('$VAR'('House2'))))
+% kifm = leftof(H1,H2)=>house(H1)&house(H2).
+% kif_to_boxlog_attvars2 = =>(leftof('$VAR'('H1'),'$VAR'('H2')),and(house('$VAR'('H1')),house('$VAR'('H2'))))
 
 
 % Results in the following 6 entailment(s):
@@ -137,76 +68,76 @@ end_of_file.
 
 ----------------------------------------
 % Whenever:
-%   " ?House1 is leftof ?House2 " is necessarily true and
-%   " ?House1 is a house " is necessarily false
+%   " ?H1 is leftof ?H2 " is necessarily true and
+%   " ?H1 is a house " is necessarily false
 % It's Proof that:
-%   " ?House2 is a house " is necessarily false
+%   " ?H2 is a house " is necessarily false
 
-( nesc(leftof(House1,House2))&nesc(~house(House1)) ==>
-  nesc( ~( house(House2))))
+( nesc(leftof(H1,H2))&nesc(~house(H1)) ==>
+  nesc( ~( house(H2))))
 
 ----------------------------------------
 
 
 ----------------------------------------
 % Whenever:
-%   " ?House1 is leftof ?House2 " is necessarily true and
-%   " ?House2 is a house " is necessarily false
+%   " ?H1 is leftof ?H2 " is necessarily true and
+%   " ?H2 is a house " is necessarily false
 % It's Proof that:
-%   " ?House1 is a house " is necessarily false
+%   " ?H1 is a house " is necessarily false
 
-( nesc(leftof(House1,House2))&nesc(~house(House2)) ==>
-  nesc( ~( house(House1))))
+( nesc(leftof(H1,H2))&nesc(~house(H2)) ==>
+  nesc( ~( house(H1))))
 
 ----------------------------------------
 
 
 ----------------------------------------
 % Whenever:
-%   " ?House1 is leftof ?House2 " is necessarily true and
-%   " ?House1 is a house " is possible
+%   " ?H1 is leftof ?H2 " is necessarily true and
+%   " ?H1 is a house " is possible
 % It's Proof that:
-%   " ?House2 is a house " is necessarily true
+%   " ?H2 is a house " is necessarily true
 
-nesc(leftof(House1,House2))&poss(house(House1))==>nesc(house(House2))
+nesc(leftof(H1,H2))&poss(house(H1))==>nesc(house(H2))
 
 ----------------------------------------
 
 
 ----------------------------------------
 % Whenever:
-%   " ?House1 is leftof ?House2 " is necessarily true and
-%   " ?House2 is a house " is possible
+%   " ?H1 is leftof ?H2 " is necessarily true and
+%   " ?H2 is a house " is possible
 % It's Proof that:
-%   " ?House1 is a house " is necessarily true
+%   " ?H1 is a house " is necessarily true
 
-nesc(leftof(House1,House2))&poss(house(House2))==>nesc(house(House1))
+nesc(leftof(H1,H2))&poss(house(H2))==>nesc(house(H1))
 
 ----------------------------------------
 
 
 ----------------------------------------
 % Whenever:
-%   " ?House1 is a house " is possible and
-%   " ?House2 is a house " is necessarily false
+%   " ?H1 is a house " is possible and
+%   " ?H2 is a house " is necessarily false
 % It's Proof that:
-%   " ?House1 is leftof ?House2 " is necessarily false
+%   " ?H1 is leftof ?H2 " is necessarily false
 
-( poss(house(House1))&nesc(~house(House2)) ==>
-  nesc( ~( leftof(House1,House2))))
+( poss(house(H1))&nesc(~house(H2)) ==>
+  nesc( ~( leftof(H1,H2))))
 
 ----------------------------------------
 
 
 ----------------------------------------
 % Whenever:
-%   " ?House2 is a house " is possible and
-%   " ?House1 is a house " is necessarily false
+%   " ?H2 is a house " is possible and
+%   " ?H1 is a house " is necessarily false
 % It's Proof that:
-%   " ?House1 is leftof ?House2 " is necessarily false
+%   " ?H1 is leftof ?H2 " is necessarily false
 
-( poss(house(House2))&nesc(~house(House1)) ==>
-  nesc( ~( leftof(House1,House2))))
+( poss(house(H2))&nesc(~house(H1)) ==>
+  nesc( ~( leftof(H1,H2))))
 
 ----------------------------------------
 
@@ -217,15 +148,15 @@ nesc(leftof(House1,House2))&poss(house(House2))==>nesc(house(House1))
 
 =======================================================
 % ( If:
-%   " ?House1 is leftof ?House2 " then it is
+%   " ?H1 is leftof ?H2 " then it is
 % Implied that:
-%   " ?House1 is a house " and
-%   " ?House2 is a house " ) is necessarily true
+%   " ?H1 is a house " and
+%   " ?H2 is a house " ) is necessarily true
 
-?- kif_to_boxlog( nesc((leftof(House1,House2)=>house(House1)&house(House2))) ).
+?- kif_to_boxlog( nesc((leftof(H1,H2)=>house(H1)&house(H2))) ).
 
-% kifm = nesc( leftof(House1,House2)=>house(House1)&house(House2)).
-% kif_to_boxlog_attvars2 = necessary(=>(leftof('$VAR'('House1'),'$VAR'('House2')),and(house('$VAR'('House1')),house('$VAR'('House2')))))
+% kifm = nesc( leftof(H1,H2)=>house(H1)&house(H2)).
+% kif_to_boxlog_attvars2 = necessary(=>(leftof('$VAR'('H1'),'$VAR'('H2')),and(house('$VAR'('H1')),house('$VAR'('H2')))))
 
 
 % Results in the following 6 entailment(s):
@@ -233,76 +164,76 @@ nesc(leftof(House1,House2))&poss(house(House2))==>nesc(house(House1))
 
 ----------------------------------------
 % Whenever:
-%   " ?House1 is a house " is necessarily true and
-%   " ?House2 is a house " is possibly false
+%   " ?H1 is a house " is necessarily true and
+%   " ?H2 is a house " is possibly false
 % It's Proof that:
-%   " ?House1 is leftof ?House2 " is possibly false
+%   " ?H1 is leftof ?H2 " is possibly false
 
-( nesc(house(House1))&poss(~house(House2)) ==>
-  poss( ~( leftof(House1,House2))))
+( nesc(house(H1))&poss(~house(H2)) ==>
+  poss( ~( leftof(H1,H2))))
 
 ----------------------------------------
 
 
 ----------------------------------------
 % Whenever:
-%   " ?House2 is a house " is necessarily true and
-%   " ?House1 is a house " is possibly false
+%   " ?H2 is a house " is necessarily true and
+%   " ?H1 is a house " is possibly false
 % It's Proof that:
-%   " ?House1 is leftof ?House2 " is possibly false
+%   " ?H1 is leftof ?H2 " is possibly false
 
-( nesc(house(House2))&poss(~house(House1)) ==>
-  poss( ~( leftof(House1,House2))))
+( nesc(house(H2))&poss(~house(H1)) ==>
+  poss( ~( leftof(H1,H2))))
 
 ----------------------------------------
 
 
 ----------------------------------------
 % Whenever:
-%   " ?House1 is leftof ?House2 " is necessarily true and
-%   " ?House1 is a house " is necessarily true
+%   " ?H1 is leftof ?H2 " is necessarily true and
+%   " ?H1 is a house " is necessarily true
 % It's Proof that:
-%   " ?House2 is a house " is necessarily true
+%   " ?H2 is a house " is necessarily true
 
-nesc(leftof(House1,House2))&nesc(house(House1))==>nesc(house(House2))
+nesc(leftof(H1,H2))&nesc(house(H1))==>nesc(house(H2))
 
 ----------------------------------------
 
 
 ----------------------------------------
 % Whenever:
-%   " ?House1 is leftof ?House2 " is necessarily true and
-%   " ?House2 is a house " is necessarily true
+%   " ?H1 is leftof ?H2 " is necessarily true and
+%   " ?H2 is a house " is necessarily true
 % It's Proof that:
-%   " ?House1 is a house " is necessarily true
+%   " ?H1 is a house " is necessarily true
 
-nesc(leftof(House1,House2))&nesc(house(House2))==>nesc(house(House1))
+nesc(leftof(H1,H2))&nesc(house(H2))==>nesc(house(H1))
 
 ----------------------------------------
 
 
 ----------------------------------------
 % Whenever:
-%   " ?House1 is leftof ?House2 " is necessarily true and
-%   " ?House1 is a house " is possibly false
+%   " ?H1 is leftof ?H2 " is necessarily true and
+%   " ?H1 is a house " is possibly false
 % It's Proof that:
-%   " ?House2 is a house " is possibly false
+%   " ?H2 is a house " is possibly false
 
-( nesc(leftof(House1,House2))&poss(~house(House1)) ==>
-  poss( ~( house(House2))))
+( nesc(leftof(H1,H2))&poss(~house(H1)) ==>
+  poss( ~( house(H2))))
 
 ----------------------------------------
 
 
 ----------------------------------------
 % Whenever:
-%   " ?House1 is leftof ?House2 " is necessarily true and
-%   " ?House2 is a house " is possibly false
+%   " ?H1 is leftof ?H2 " is necessarily true and
+%   " ?H2 is a house " is possibly false
 % It's Proof that:
-%   " ?House1 is a house " is possibly false
+%   " ?H1 is a house " is possibly false
 
-( nesc(leftof(House1,House2))&poss(~house(House2)) ==>
-  poss( ~( house(House1))))
+( nesc(leftof(H1,H2))&poss(~house(H2)) ==>
+  poss( ~( house(H1))))
 
 ----------------------------------------
 
@@ -313,15 +244,15 @@ nesc(leftof(House1,House2))&nesc(house(House2))==>nesc(house(House1))
 
 =======================================================
 % it is false that If:
-%   " ?House1 is leftof ?House2 " then it is
+%   " ?H1 is leftof ?H2 " then it is
 % Implied that:
-%   " ?House1 is a house " and
-%   " ?House2 is a house "
+%   " ?H1 is a house " and
+%   " ?H2 is a house "
 
-?- kif_to_boxlog( ~ (leftof(House1,House2)=>house(House1)&house(House2)) ).
+?- kif_to_boxlog( ~ (leftof(H1,H2)=>house(H1)&house(H2)) ).
 
-% kifm = ~( leftof(House1,House2)=>house(House1)&house(House2)).
-% kif_to_boxlog_attvars2 = not(=>(leftof('$VAR'('House1'),'$VAR'('House2')),and(house('$VAR'('House1')),house('$VAR'('House2')))))
+% kifm = ~( leftof(H1,H2)=>house(H1)&house(H2)).
+% kif_to_boxlog_attvars2 = not(=>(leftof('$VAR'('H1'),'$VAR'('H2')),and(house('$VAR'('H1')),house('$VAR'('H2')))))
 
 
 % Results in the following 7 entailment(s):
@@ -329,82 +260,82 @@ nesc(leftof(House1,House2))&nesc(house(House2))==>nesc(house(House1))
 
 ----------------------------------------
 % Whenever:
-%   " ?House1 is leftof ?House2 " is necessarily false
+%   " ?H1 is leftof ?H2 " is necessarily false
 % It's Proof that:
-%   " ?House1 is a house " is necessarily false or " ?House2 is a house "
+%   " ?H1 is a house " is necessarily false or " ?H2 is a house "
 
-nesc(~leftof(House1,House2))==>nesc(~house(House1))v house(House2)
+nesc(~leftof(H1,H2))==>nesc(~house(H1))v house(H2)
 
 ----------------------------------------
 
 
 ----------------------------------------
 % Whenever:
-%   " ?House1 is leftof ?House2 " is necessarily false
+%   " ?H1 is leftof ?H2 " is necessarily false
 % It's Proof that:
-%   " ?House2 is a house " is necessarily false or " ?House1 is a house "
+%   " ?H2 is a house " is necessarily false or " ?H1 is a house "
 
-nesc(~leftof(House1,House2))==>nesc(~house(House2))v house(House1)
+nesc(~leftof(H1,H2))==>nesc(~house(H2))v house(H1)
 
 ----------------------------------------
 
 
 ----------------------------------------
 % Whenever:
-%   ( " ?House1 is a house " is possible and
-%   ?House2 is a house is false ) is possible
+%   ( " ?H1 is a house " is possible and
+%   ?H2 is a house is false ) is possible
 % It's Proof that:
-%   " ?House1 is leftof ?House2 " is necessarily true
+%   " ?H1 is leftof ?H2 " is necessarily true
 
-poss(poss(house(House1))& ~house(House2))==>nesc(leftof(House1,House2))
+poss(poss(house(H1))& ~house(H2))==>nesc(leftof(H1,H2))
 
 ----------------------------------------
 
 
 ----------------------------------------
 % Whenever:
-%   ( " ?House2 is a house " is possible and
-%   ?House1 is a house is false ) is possible
+%   ( " ?H2 is a house " is possible and
+%   ?H1 is a house is false ) is possible
 % It's Proof that:
-%   " ?House1 is leftof ?House2 " is necessarily true
+%   " ?H1 is leftof ?H2 " is necessarily true
 
-poss(poss(house(House2))& ~house(House1))==>nesc(leftof(House1,House2))
+poss(poss(house(H2))& ~house(H1))==>nesc(leftof(H1,H2))
 
 ----------------------------------------
 
 
 ----------------------------------------
 % Whenever:
-%   " ?House1 is a house " is necessarily true and
-%   " ?House2 is a house " is necessarily true
+%   " ?H1 is a house " is necessarily true and
+%   " ?H2 is a house " is necessarily true
 % It's Proof that:
-%   " ?House1 is leftof ?House2 " is necessarily false
+%   " ?H1 is leftof ?H2 " is necessarily false
 
-nesc(house(House1))&nesc(house(House2))==>nesc(~leftof(House1,House2))
+nesc(house(H1))&nesc(house(H2))==>nesc(~leftof(H1,H2))
 
 ----------------------------------------
 
 
 ----------------------------------------
 % Whenever:
-%   " ?House1 is leftof ?House2 " is possible and
-%   " ?House1 is a house " is necessarily true
+%   " ?H1 is leftof ?H2 " is possible and
+%   " ?H1 is a house " is necessarily true
 % It's Proof that:
-%   " ?House2 is a house " is necessarily false
+%   " ?H2 is a house " is necessarily false
 
-poss(leftof(House1,House2))&nesc(house(House1))==>nesc(~house(House2))
+poss(leftof(H1,H2))&nesc(house(H1))==>nesc(~house(H2))
 
 ----------------------------------------
 
 
 ----------------------------------------
 % Whenever:
-%   " ?House1 is leftof ?House2 " is possible and
-%   " ?House2 is a house " is necessarily true
+%   " ?H1 is leftof ?H2 " is possible and
+%   " ?H2 is a house " is necessarily true
 % It's Proof that:
-%   " ?House1 is a house " is necessarily false
+%   " ?H1 is a house " is necessarily false
 
-poss(leftof(House1,House2))&nesc(house(House2))==>nesc(~house(House1))
+poss(leftof(H1,H2))&nesc(house(H2))==>nesc(~house(H1))
 
 ----------------------------------------
 
@@ -415,15 +346,15 @@ poss(leftof(House1,House2))&nesc(house(House2))==>nesc(~house(House1))
 
 =======================================================
 % it is possible that If:
-%   " ?House1 is leftof ?House2 " then it is
+%   " ?H1 is leftof ?H2 " then it is
 % Implied that:
-%   " ?House1 is a house " and
-%   " ?House2 is a house "
+%   " ?H1 is a house " and
+%   " ?H2 is a house "
 
-?- kif_to_boxlog( poss((leftof(House1,House2)=>house(House1)&house(House2))) ).
+?- kif_to_boxlog( poss((leftof(H1,H2)=>house(H1)&house(H2))) ).
 
-% kifm = poss( leftof(House1,House2)=>house(House1)&house(House2)).
-% kif_to_boxlog_attvars2 = possible(=>(leftof('$VAR'('House1'),'$VAR'('House2')),and(house('$VAR'('House1')),house('$VAR'('House2')))))
+% kifm = poss( leftof(H1,H2)=>house(H1)&house(H2)).
+% kif_to_boxlog_attvars2 = possible(=>(leftof('$VAR'('H1'),'$VAR'('H2')),and(house('$VAR'('H1')),house('$VAR'('H2')))))
 
 
 % Results in the following 5 entailment(s):
@@ -431,162 +362,162 @@ poss(leftof(House1,House2))&nesc(house(House2))==>nesc(~house(House1))
 
 ----------------------------------------
 % Whenever:
-%   " ?House1 is leftof ?House2 " is necessarily true and
-%   ( ( ( " ?House2 is a house " is possible or " ?House1 is a house " is possible ) and
-%   ( ?House1 is a house is false or " ?House1 is a house " is possible ) ) and
-%   " ?House1 is a house is , ?House2 is a house " is necessarily false )
+%   " ?H1 is leftof ?H2 " is necessarily true and
+%   ( ( ( " ?H2 is a house " is possible or " ?H1 is a house " is possible ) and
+%   ( ?H1 is a house is false or " ?H1 is a house " is possible ) ) and
+%   " ?H1 is a house is , ?H2 is a house " is necessarily false )
 % It's Proof that:
-%   " ?House2 is a house " is possibly false
+%   " ?H2 is a house " is possibly false
 
-( (   nesc( leftof(House1,House2))  &
-    poss(house(House2))v poss(house(House1)) &
-    ~house(House1)v poss(house(House1)) &
-    nesc( ~( house(House1),house(House2)))) ==>
-  poss( ~( house(House2))))
+( (   nesc( leftof(H1,H2))  &
+    poss(house(H2))v poss(house(H1)) &
+    ~house(H1)v poss(house(H1)) &
+    nesc( ~( house(H1),house(H2)))) ==>
+  poss( ~( house(H2))))
 
 ----------------------------------------
 
 
 ----------------------------------------
 % Whenever:
-%   " ?House1 is leftof ?House2 " is necessarily true and
-%   ( ( ( " ?House2 is a house " is possible or " ?House1 is a house " is possible ) and
-%   ( ?House1 is a house is false or " ?House1 is a house " is possible ) ) and
-%   " ?House1 is a house is , ?House2 is a house " is necessarily false )
+%   " ?H1 is leftof ?H2 " is necessarily true and
+%   ( ( ( " ?H2 is a house " is possible or " ?H1 is a house " is possible ) and
+%   ( ?H1 is a house is false or " ?H1 is a house " is possible ) ) and
+%   " ?H1 is a house is , ?H2 is a house " is necessarily false )
 % It's Proof that:
-%   " ?House2 is a house " is possible
+%   " ?H2 is a house " is possible
 
-( (   nesc( leftof(House1,House2))  &
-    poss(house(House2))v poss(house(House1)) &
-    ~house(House1)v poss(house(House1)) &
-    nesc( ~( house(House1),house(House2)))) ==>
-  poss( house(House2)))
+( (   nesc( leftof(H1,H2))  &
+    poss(house(H2))v poss(house(H1)) &
+    ~house(H1)v poss(house(H1)) &
+    nesc( ~( house(H1),house(H2)))) ==>
+  poss( house(H2)))
 
 ----------------------------------------
 
 
 ----------------------------------------
 % Whenever:
-%   " ?House1 is leftof ?House2 " is necessarily true and
-%   ( ( " ?House2 is a house " is possible or " ?House1 is a house " is possible ) and
-%   ( ( " ?House2 is a house " is possible or ?House2 is a house is false ) and
-%   " ?House1 is a house is , ?House2 is a house " is necessarily false ) )
+%   " ?H1 is leftof ?H2 " is necessarily true and
+%   ( ( " ?H2 is a house " is possible or " ?H1 is a house " is possible ) and
+%   ( ( " ?H2 is a house " is possible or ?H2 is a house is false ) and
+%   " ?H1 is a house is , ?H2 is a house " is necessarily false ) )
 % It's Proof that:
-%   " ?House1 is a house " is possible
+%   " ?H1 is a house " is possible
 
-( (   nesc( leftof(House1,House2))  &
-    poss(house(House2))v poss(house(House1)) &
-    poss(house(House2))v~house(House2) &
-    nesc( ~( house(House1),house(House2)))) ==>
-  poss( house(House1)))
+( (   nesc( leftof(H1,H2))  &
+    poss(house(H2))v poss(house(H1)) &
+    poss(house(H2))v~house(H2) &
+    nesc( ~( house(H1),house(H2)))) ==>
+  poss( house(H1)))
 
 ----------------------------------------
 
 
 ----------------------------------------
 % Whenever:
-%   " ?House1 is leftof ?House2 " is necessarily true and
-%   ( ( " ?House2 is a house " is possible or " ?House1 is a house " is possible ) and
-%   ( ( " ?House2 is a house " is possible or ?House2 is a house is false ) and
-%   " ?House1 is a house is , ?House2 is a house " is necessarily false ) )
+%   " ?H1 is leftof ?H2 " is necessarily true and
+%   ( ( " ?H2 is a house " is possible or " ?H1 is a house " is possible ) and
+%   ( ( " ?H2 is a house " is possible or ?H2 is a house is false ) and
+%   " ?H1 is a house is , ?H2 is a house " is necessarily false ) )
 % It's Proof that:
-%   " ?House1 is a house " is possibly false
+%   " ?H1 is a house " is possibly false
 
-( (   nesc( leftof(House1,House2))  &
-    poss(house(House2))v poss(house(House1)) &
-    poss(house(House2))v~house(House2) &
-    nesc( ~( house(House1),house(House2)))) ==>
-  poss( ~( house(House1))))
+( (   nesc( leftof(H1,H2))  &
+    poss(house(H2))v poss(house(H1)) &
+    poss(house(H2))v~house(H2) &
+    nesc( ~( house(H1),house(H2)))) ==>
+  poss( ~( house(H1))))
 
 ----------------------------------------
 
 
 ----------------------------------------
 % Whenever:
-%   " ?House1 is leftof ?House2 " is necessarily true and
-%   ( ( ?House1 is a house is false or " ?House1 is a house " is possible ) and
-%   ( ( " ?House2 is a house " is possible or ?House2 is a house is false ) and
-%   " ?House1 is a house is , ?House2 is a house " is necessarily false ) )
+%   " ?H1 is leftof ?H2 " is necessarily true and
+%   ( ( ?H1 is a house is false or " ?H1 is a house " is possible ) and
+%   ( ( " ?H2 is a house " is possible or ?H2 is a house is false ) and
+%   " ?H1 is a house is , ?H2 is a house " is necessarily false ) )
 % It's Proof that:
-%   " ?House2 is a house " is possibly false
+%   " ?H2 is a house " is possibly false
 
-( (   nesc( leftof(House1,House2))  &
-    ~house(House1)v poss(house(House1)) &
-    poss(house(House2))v~house(House2) &
-    nesc( ~( house(House1),house(House2)))) ==>
-  poss( ~( house(House2))))
+( (   nesc( leftof(H1,H2))  &
+    ~house(H1)v poss(house(H1)) &
+    poss(house(H2))v~house(H2) &
+    nesc( ~( house(H1),house(H2)))) ==>
+  poss( ~( house(H2))))
 
 ----------------------------------------
 
 
 ----------------------------------------
 % Whenever:
-%   " ?House1 is leftof ?House2 " is necessarily true and
-%   ( ( ?House1 is a house is false or " ?House1 is a house " is possible ) and
-%   ( ( " ?House2 is a house " is possible or ?House2 is a house is false ) and
-%   " ?House1 is a house is , ?House2 is a house " is necessarily false ) )
+%   " ?H1 is leftof ?H2 " is necessarily true and
+%   ( ( ?H1 is a house is false or " ?H1 is a house " is possible ) and
+%   ( ( " ?H2 is a house " is possible or ?H2 is a house is false ) and
+%   " ?H1 is a house is , ?H2 is a house " is necessarily false ) )
 % It's Proof that:
-%   " ?House1 is a house " is possibly false
+%   " ?H1 is a house " is possibly false
 
-( (   nesc( leftof(House1,House2))  &
-    ~house(House1)v poss(house(House1)) &
-    poss(house(House2))v~house(House2) &
-    nesc( ~( house(House1),house(House2)))) ==>
-  poss( ~( house(House1))))
+( (   nesc( leftof(H1,H2))  &
+    ~house(H1)v poss(house(H1)) &
+    poss(house(H2))v~house(H2) &
+    nesc( ~( house(H1),house(H2)))) ==>
+  poss( ~( house(H1))))
 
 ----------------------------------------
 
 
 ----------------------------------------
 % Whenever:
-%   ( ( " ?House2 is a house " is possible or " ?House1 is a house " is possible ) and
-%   ( ?House1 is a house is false or " ?House1 is a house " is possible ) ) and
-%   ( ( " ?House2 is a house " is possible or ?House2 is a house is false ) and
-%   " ?House1 is a house is , ?House2 is a house " is necessarily false )
+%   ( ( " ?H2 is a house " is possible or " ?H1 is a house " is possible ) and
+%   ( ?H1 is a house is false or " ?H1 is a house " is possible ) ) and
+%   ( ( " ?H2 is a house " is possible or ?H2 is a house is false ) and
+%   " ?H1 is a house is , ?H2 is a house " is necessarily false )
 % It's Proof that:
-%   " ?House1 is leftof ?House2 " is possibly false
+%   " ?H1 is leftof ?H2 " is possibly false
 
-( (   poss(house(House2))v poss(house(House1))  &
-    ~house(House1)v poss(house(House1)) &
-    poss(house(House2))v~house(House2) &
-    nesc( ~( house(House1),house(House2)))) ==>
-  poss( ~( leftof(House1,House2))))
+( (   poss(house(H2))v poss(house(H1))  &
+    ~house(H1)v poss(house(H1)) &
+    poss(house(H2))v~house(H2) &
+    nesc( ~( house(H1),house(H2)))) ==>
+  poss( ~( leftof(H1,H2))))
 
 ----------------------------------------
 
 
 ----------------------------------------
 % Whenever:
-%   " ?House1 is leftof ?House2 " is necessarily true and
-%   ( ( ( " ?House2 is a house " is possible or " ?House1 is a house " is possible ) and
-%   ( ?House1 is a house is false or " ?House1 is a house " is possible ) ) and
-%   ( " ?House2 is a house " is possible or ?House2 is a house is false ) )
+%   " ?H1 is leftof ?H2 " is necessarily true and
+%   ( ( ( " ?H2 is a house " is possible or " ?H1 is a house " is possible ) and
+%   ( ?H1 is a house is false or " ?H1 is a house " is possible ) ) and
+%   ( " ?H2 is a house " is possible or ?H2 is a house is false ) )
 % It's Proof that:
-%   " ?House1 is a house " is possible
+%   " ?H1 is a house " is possible
 
-( (   nesc( leftof(House1,House2))  &
-    poss(house(House2))v poss(house(House1)) &
-    ~house(House1)v poss(house(House1)) &
-    poss(house(House2))v~house(House2)) ==>
-  poss( house(House1)))
+( (   nesc( leftof(H1,H2))  &
+    poss(house(H2))v poss(house(H1)) &
+    ~house(H1)v poss(house(H1)) &
+    poss(house(H2))v~house(H2)) ==>
+  poss( house(H1)))
 
 ----------------------------------------
 
 
 ----------------------------------------
 % Whenever:
-%   " ?House1 is leftof ?House2 " is necessarily true and
-%   ( ( ( " ?House2 is a house " is possible or " ?House1 is a house " is possible ) and
-%   ( ?House1 is a house is false or " ?House1 is a house " is possible ) ) and
-%   ( " ?House2 is a house " is possible or ?House2 is a house is false ) )
+%   " ?H1 is leftof ?H2 " is necessarily true and
+%   ( ( ( " ?H2 is a house " is possible or " ?H1 is a house " is possible ) and
+%   ( ?H1 is a house is false or " ?H1 is a house " is possible ) ) and
+%   ( " ?H2 is a house " is possible or ?H2 is a house is false ) )
 % It's Proof that:
-%   " ?House2 is a house " is possible
+%   " ?H2 is a house " is possible
 
-( (   nesc( leftof(House1,House2))  &
-    poss(house(House2))v poss(house(House1)) &
-    ~house(House1)v poss(house(House1)) &
-    poss(house(House2))v~house(House2)) ==>
-  poss( house(House2)))
+( (   nesc( leftof(H1,H2))  &
+    poss(house(H2))v poss(house(H1)) &
+    ~house(H1)v poss(house(H1)) &
+    poss(house(H2))v~house(H2)) ==>
+  poss( house(H2)))
 
 ----------------------------------------
 
@@ -596,12 +527,12 @@ poss(leftof(House1,House2))&nesc(house(House2))==>nesc(~house(House1))
 
 
 =======================================================
-% it is possible that ?House1 is leftof ?House2 is => ?House1 is a house is & ?House2 is a house is false
+% it is possible that ?H1 is leftof ?H2 is => ?H1 is a house is & ?H2 is a house is false
 
-?- kif_to_boxlog( poss(~ (leftof(House1,House2)=>house(House1)&house(House2))) ).
+?- kif_to_boxlog( poss(~ (leftof(H1,H2)=>house(H1)&house(H2))) ).
 
-% kifm = poss( ~( leftof(House1,House2)=>house(House1)&house(House2))).
-% kif_to_boxlog_attvars2 = possible(not(=>(leftof('$VAR'('House1'),'$VAR'('House2')),and(house('$VAR'('House1')),house('$VAR'('House2'))))))
+% kifm = poss( ~( leftof(H1,H2)=>house(H1)&house(H2))).
+% kif_to_boxlog_attvars2 = possible(not(=>(leftof('$VAR'('H1'),'$VAR'('H2')),and(house('$VAR'('H1')),house('$VAR'('H2'))))))
 
 
 % Results in the following 6 entailment(s):
@@ -609,444 +540,444 @@ poss(leftof(House1,House2))&nesc(house(House2))==>nesc(~house(House1))
 
 ----------------------------------------
 % Whenever:
-%   ( ( ( " ?House1 is a house " or ?House1 is leftof ?House2 is false ) is necessarily true ) and
-%   ( ( " ?House2 is a house " or ?House1 is leftof ?House2 is false ) is necessarily true ) ) and
-%   ( ( " ?House1 is leftof ?House2 " is possible or ( ( ( " ?House2 is a house " is possible and
-%   ?House1 is a house is false ) is possible ) or ( ( " ?House1 is a house " is possible and
-%   ?House2 is a house is false ) is possible ) ) ) and
-%   ( ( " ?House1 is a house " or ( ( ( " ?House2 is a house " is possible and
-%   ?House1 is a house is false ) is possible ) or ( ( " ?House1 is a house " is possible and
-%   ?House2 is a house is false ) is possible ) ) ) and
-%   ( " ?House2 is a house " or ( ( ( " ?House2 is a house " is possible and
-%   ?House1 is a house is false ) is possible ) or ( ( " ?House1 is a house " is possible and
-%   ?House2 is a house is false ) is possible ) ) ) ) )
+%   ( ( ( " ?H1 is a house " or ?H1 is leftof ?H2 is false ) is necessarily true ) and
+%   ( ( " ?H2 is a house " or ?H1 is leftof ?H2 is false ) is necessarily true ) ) and
+%   ( ( " ?H1 is leftof ?H2 " is possible or ( ( ( " ?H2 is a house " is possible and
+%   ?H1 is a house is false ) is possible ) or ( ( " ?H1 is a house " is possible and
+%   ?H2 is a house is false ) is possible ) ) ) and
+%   ( ( " ?H1 is a house " or ( ( ( " ?H2 is a house " is possible and
+%   ?H1 is a house is false ) is possible ) or ( ( " ?H1 is a house " is possible and
+%   ?H2 is a house is false ) is possible ) ) ) and
+%   ( " ?H2 is a house " or ( ( ( " ?H2 is a house " is possible and
+%   ?H1 is a house is false ) is possible ) or ( ( " ?H1 is a house " is possible and
+%   ?H2 is a house is false ) is possible ) ) ) ) )
 % It's Proof that:
-%   " ?House1 is leftof ?House2 " is possibly false
+%   " ?H1 is leftof ?H2 " is possibly false
 
-( (   nesc( house(House1)v~leftof(House1,House2))  &
-    nesc( house(House2)v~leftof(House1,House2)) &
-    (   poss( leftof(House1,House2))  v
-      poss( poss(house(House2))& ~house(House1)) v
-      poss( poss(house(House1))& ~house(House2))) &
-    (   house(House1)  v
-      poss( poss(house(House2))& ~house(House1)) v
-      poss( poss(house(House1))& ~house(House2))) &
-    (   house(House2)  v
-      poss( poss(house(House2))& ~house(House1)) v
-      poss( poss(house(House1))& ~house(House2)))) ==>
-  poss( ~( leftof(House1,House2))))
+( (   nesc( house(H1)v~leftof(H1,H2))  &
+    nesc( house(H2)v~leftof(H1,H2)) &
+    (   poss( leftof(H1,H2))  v
+      poss( poss(house(H2))& ~house(H1)) v
+      poss( poss(house(H1))& ~house(H2))) &
+    (   house(H1)  v
+      poss( poss(house(H2))& ~house(H1)) v
+      poss( poss(house(H1))& ~house(H2))) &
+    (   house(H2)  v
+      poss( poss(house(H2))& ~house(H1)) v
+      poss( poss(house(H1))& ~house(H2)))) ==>
+  poss( ~( leftof(H1,H2))))
 
 ----------------------------------------
 
 
 ----------------------------------------
 % Whenever:
-%   ( ( ( " ?House1 is a house " or ?House1 is leftof ?House2 is false ) is necessarily true ) and
-%   ( ( " ?House2 is a house " or ?House1 is leftof ?House2 is false ) is necessarily true ) ) and
-%   ( ( " ?House1 is leftof ?House2 " is possible or ( ( ( " ?House2 is a house " is possible and
-%   ?House1 is a house is false ) is possible ) or ( ( " ?House1 is a house " is possible and
-%   ?House2 is a house is false ) is possible ) ) ) and
-%   ( ( " ?House1 is a house " or ( ( ( " ?House2 is a house " is possible and
-%   ?House1 is a house is false ) is possible ) or ( ( " ?House1 is a house " is possible and
-%   ?House2 is a house is false ) is possible ) ) ) and
-%   ( " ?House2 is a house " or ( ( ( " ?House2 is a house " is possible and
-%   ?House1 is a house is false ) is possible ) or ( ( " ?House1 is a house " is possible and
-%   ?House2 is a house is false ) is possible ) ) ) ) )
+%   ( ( ( " ?H1 is a house " or ?H1 is leftof ?H2 is false ) is necessarily true ) and
+%   ( ( " ?H2 is a house " or ?H1 is leftof ?H2 is false ) is necessarily true ) ) and
+%   ( ( " ?H1 is leftof ?H2 " is possible or ( ( ( " ?H2 is a house " is possible and
+%   ?H1 is a house is false ) is possible ) or ( ( " ?H1 is a house " is possible and
+%   ?H2 is a house is false ) is possible ) ) ) and
+%   ( ( " ?H1 is a house " or ( ( ( " ?H2 is a house " is possible and
+%   ?H1 is a house is false ) is possible ) or ( ( " ?H1 is a house " is possible and
+%   ?H2 is a house is false ) is possible ) ) ) and
+%   ( " ?H2 is a house " or ( ( ( " ?H2 is a house " is possible and
+%   ?H1 is a house is false ) is possible ) or ( ( " ?H1 is a house " is possible and
+%   ?H2 is a house is false ) is possible ) ) ) ) )
 % It's Proof that:
-%   " ?House1 is leftof ?House2 " is possible
+%   " ?H1 is leftof ?H2 " is possible
 
-( (   nesc( house(House1)v~leftof(House1,House2))  &
-    nesc( house(House2)v~leftof(House1,House2)) &
-    (   poss( leftof(House1,House2))  v
-      poss( poss(house(House2))& ~house(House1)) v
-      poss( poss(house(House1))& ~house(House2))) &
-    (   house(House1)  v
-      poss( poss(house(House2))& ~house(House1)) v
-      poss( poss(house(House1))& ~house(House2))) &
-    (   house(House2)  v
-      poss( poss(house(House2))& ~house(House1)) v
-      poss( poss(house(House1))& ~house(House2)))) ==>
-  poss( leftof(House1,House2)))
+( (   nesc( house(H1)v~leftof(H1,H2))  &
+    nesc( house(H2)v~leftof(H1,H2)) &
+    (   poss( leftof(H1,H2))  v
+      poss( poss(house(H2))& ~house(H1)) v
+      poss( poss(house(H1))& ~house(H2))) &
+    (   house(H1)  v
+      poss( poss(house(H2))& ~house(H1)) v
+      poss( poss(house(H1))& ~house(H2))) &
+    (   house(H2)  v
+      poss( poss(house(H2))& ~house(H1)) v
+      poss( poss(house(H1))& ~house(H2)))) ==>
+  poss( leftof(H1,H2)))
 
 ----------------------------------------
 
 
 ----------------------------------------
 % Whenever:
-%   ( ( " ?House1 is leftof ?House2 " is possible or ?House1 is leftof ?House2 is false ) and
-%   ( ( " ?House1 is a house " or ?House1 is leftof ?House2 is false ) is necessarily true ) ) and
-%   ( ( " ?House1 is leftof ?House2 " is possible or ( ( ( " ?House2 is a house " is possible and
-%   ?House1 is a house is false ) is possible ) or ( ( " ?House1 is a house " is possible and
-%   ?House2 is a house is false ) is possible ) ) ) and
-%   ( ( " ?House1 is a house " or ( ( ( " ?House2 is a house " is possible and
-%   ?House1 is a house is false ) is possible ) or ( ( " ?House1 is a house " is possible and
-%   ?House2 is a house is false ) is possible ) ) ) and
-%   ( " ?House2 is a house " or ( ( ( " ?House2 is a house " is possible and
-%   ?House1 is a house is false ) is possible ) or ( ( " ?House1 is a house " is possible and
-%   ?House2 is a house is false ) is possible ) ) ) ) )
+%   ( ( " ?H1 is leftof ?H2 " is possible or ?H1 is leftof ?H2 is false ) and
+%   ( ( " ?H1 is a house " or ?H1 is leftof ?H2 is false ) is necessarily true ) ) and
+%   ( ( " ?H1 is leftof ?H2 " is possible or ( ( ( " ?H2 is a house " is possible and
+%   ?H1 is a house is false ) is possible ) or ( ( " ?H1 is a house " is possible and
+%   ?H2 is a house is false ) is possible ) ) ) and
+%   ( ( " ?H1 is a house " or ( ( ( " ?H2 is a house " is possible and
+%   ?H1 is a house is false ) is possible ) or ( ( " ?H1 is a house " is possible and
+%   ?H2 is a house is false ) is possible ) ) ) and
+%   ( " ?H2 is a house " or ( ( ( " ?H2 is a house " is possible and
+%   ?H1 is a house is false ) is possible ) or ( ( " ?H1 is a house " is possible and
+%   ?H2 is a house is false ) is possible ) ) ) ) )
 % It's Proof that:
-%   " ?House2 is a house " is possibly false
+%   " ?H2 is a house " is possibly false
 
-( (   poss(leftof(House1,House2))v~leftof(House1,House2)  &
-    nesc( house(House1)v~leftof(House1,House2)) &
-    (   poss( leftof(House1,House2))  v
-      poss( poss(house(House2))& ~house(House1)) v
-      poss( poss(house(House1))& ~house(House2))) &
-    (   house(House1)  v
-      poss( poss(house(House2))& ~house(House1)) v
-      poss( poss(house(House1))& ~house(House2))) &
-    (   house(House2)  v
-      poss( poss(house(House2))& ~house(House1)) v
-      poss( poss(house(House1))& ~house(House2)))) ==>
-  poss( ~( house(House2))))
+( (   poss(leftof(H1,H2))v~leftof(H1,H2)  &
+    nesc( house(H1)v~leftof(H1,H2)) &
+    (   poss( leftof(H1,H2))  v
+      poss( poss(house(H2))& ~house(H1)) v
+      poss( poss(house(H1))& ~house(H2))) &
+    (   house(H1)  v
+      poss( poss(house(H2))& ~house(H1)) v
+      poss( poss(house(H1))& ~house(H2))) &
+    (   house(H2)  v
+      poss( poss(house(H2))& ~house(H1)) v
+      poss( poss(house(H1))& ~house(H2)))) ==>
+  poss( ~( house(H2))))
 
 ----------------------------------------
 
 
 ----------------------------------------
 % Whenever:
-%   ( ( " ?House1 is leftof ?House2 " is possible or ?House1 is leftof ?House2 is false ) and
-%   ( ( " ?House1 is a house " or ?House1 is leftof ?House2 is false ) is necessarily true ) ) and
-%   ( ( " ?House1 is leftof ?House2 " is possible or ( ( ( " ?House2 is a house " is possible and
-%   ?House1 is a house is false ) is possible ) or ( ( " ?House1 is a house " is possible and
-%   ?House2 is a house is false ) is possible ) ) ) and
-%   ( ( " ?House1 is a house " or ( ( ( " ?House2 is a house " is possible and
-%   ?House1 is a house is false ) is possible ) or ( ( " ?House1 is a house " is possible and
-%   ?House2 is a house is false ) is possible ) ) ) and
-%   ( " ?House2 is a house " or ( ( ( " ?House2 is a house " is possible and
-%   ?House1 is a house is false ) is possible ) or ( ( " ?House1 is a house " is possible and
-%   ?House2 is a house is false ) is possible ) ) ) ) )
+%   ( ( " ?H1 is leftof ?H2 " is possible or ?H1 is leftof ?H2 is false ) and
+%   ( ( " ?H1 is a house " or ?H1 is leftof ?H2 is false ) is necessarily true ) ) and
+%   ( ( " ?H1 is leftof ?H2 " is possible or ( ( ( " ?H2 is a house " is possible and
+%   ?H1 is a house is false ) is possible ) or ( ( " ?H1 is a house " is possible and
+%   ?H2 is a house is false ) is possible ) ) ) and
+%   ( ( " ?H1 is a house " or ( ( ( " ?H2 is a house " is possible and
+%   ?H1 is a house is false ) is possible ) or ( ( " ?H1 is a house " is possible and
+%   ?H2 is a house is false ) is possible ) ) ) and
+%   ( " ?H2 is a house " or ( ( ( " ?H2 is a house " is possible and
+%   ?H1 is a house is false ) is possible ) or ( ( " ?H1 is a house " is possible and
+%   ?H2 is a house is false ) is possible ) ) ) ) )
 % It's Proof that:
-%   " ?House1 is leftof ?House2 " is possible
+%   " ?H1 is leftof ?H2 " is possible
 
-( (   poss(leftof(House1,House2))v~leftof(House1,House2)  &
-    nesc( house(House1)v~leftof(House1,House2)) &
-    (   poss( leftof(House1,House2))  v
-      poss( poss(house(House2))& ~house(House1)) v
-      poss( poss(house(House1))& ~house(House2))) &
-    (   house(House1)  v
-      poss( poss(house(House2))& ~house(House1)) v
-      poss( poss(house(House1))& ~house(House2))) &
-    (   house(House2)  v
-      poss( poss(house(House2))& ~house(House1)) v
-      poss( poss(house(House1))& ~house(House2)))) ==>
-  poss( leftof(House1,House2)))
+( (   poss(leftof(H1,H2))v~leftof(H1,H2)  &
+    nesc( house(H1)v~leftof(H1,H2)) &
+    (   poss( leftof(H1,H2))  v
+      poss( poss(house(H2))& ~house(H1)) v
+      poss( poss(house(H1))& ~house(H2))) &
+    (   house(H1)  v
+      poss( poss(house(H2))& ~house(H1)) v
+      poss( poss(house(H1))& ~house(H2))) &
+    (   house(H2)  v
+      poss( poss(house(H2))& ~house(H1)) v
+      poss( poss(house(H1))& ~house(H2)))) ==>
+  poss( leftof(H1,H2)))
 
 ----------------------------------------
 
 
 ----------------------------------------
 % Whenever:
-%   ( ( " ?House1 is leftof ?House2 " is possible or ?House1 is leftof ?House2 is false ) and
-%   ( ( " ?House2 is a house " or ?House1 is leftof ?House2 is false ) is necessarily true ) ) and
-%   ( ( " ?House1 is leftof ?House2 " is possible or ( ( ( " ?House2 is a house " is possible and
-%   ?House1 is a house is false ) is possible ) or ( ( " ?House1 is a house " is possible and
-%   ?House2 is a house is false ) is possible ) ) ) and
-%   ( ( " ?House1 is a house " or ( ( ( " ?House2 is a house " is possible and
-%   ?House1 is a house is false ) is possible ) or ( ( " ?House1 is a house " is possible and
-%   ?House2 is a house is false ) is possible ) ) ) and
-%   ( " ?House2 is a house " or ( ( ( " ?House2 is a house " is possible and
-%   ?House1 is a house is false ) is possible ) or ( ( " ?House1 is a house " is possible and
-%   ?House2 is a house is false ) is possible ) ) ) ) )
+%   ( ( " ?H1 is leftof ?H2 " is possible or ?H1 is leftof ?H2 is false ) and
+%   ( ( " ?H2 is a house " or ?H1 is leftof ?H2 is false ) is necessarily true ) ) and
+%   ( ( " ?H1 is leftof ?H2 " is possible or ( ( ( " ?H2 is a house " is possible and
+%   ?H1 is a house is false ) is possible ) or ( ( " ?H1 is a house " is possible and
+%   ?H2 is a house is false ) is possible ) ) ) and
+%   ( ( " ?H1 is a house " or ( ( ( " ?H2 is a house " is possible and
+%   ?H1 is a house is false ) is possible ) or ( ( " ?H1 is a house " is possible and
+%   ?H2 is a house is false ) is possible ) ) ) and
+%   ( " ?H2 is a house " or ( ( ( " ?H2 is a house " is possible and
+%   ?H1 is a house is false ) is possible ) or ( ( " ?H1 is a house " is possible and
+%   ?H2 is a house is false ) is possible ) ) ) ) )
 % It's Proof that:
-%   " ?House1 is a house " is possibly false
+%   " ?H1 is a house " is possibly false
 
-( (   poss(leftof(House1,House2))v~leftof(House1,House2)  &
-    nesc( house(House2)v~leftof(House1,House2)) &
-    (   poss( leftof(House1,House2))  v
-      poss( poss(house(House2))& ~house(House1)) v
-      poss( poss(house(House1))& ~house(House2))) &
-    (   house(House1)  v
-      poss( poss(house(House2))& ~house(House1)) v
-      poss( poss(house(House1))& ~house(House2))) &
-    (   house(House2)  v
-      poss( poss(house(House2))& ~house(House1)) v
-      poss( poss(house(House1))& ~house(House2)))) ==>
-  poss( ~( house(House1))))
+( (   poss(leftof(H1,H2))v~leftof(H1,H2)  &
+    nesc( house(H2)v~leftof(H1,H2)) &
+    (   poss( leftof(H1,H2))  v
+      poss( poss(house(H2))& ~house(H1)) v
+      poss( poss(house(H1))& ~house(H2))) &
+    (   house(H1)  v
+      poss( poss(house(H2))& ~house(H1)) v
+      poss( poss(house(H1))& ~house(H2))) &
+    (   house(H2)  v
+      poss( poss(house(H2))& ~house(H1)) v
+      poss( poss(house(H1))& ~house(H2)))) ==>
+  poss( ~( house(H1))))
 
 ----------------------------------------
 
 
 ----------------------------------------
 % Whenever:
-%   ( ( " ?House1 is leftof ?House2 " is possible or ?House1 is leftof ?House2 is false ) and
-%   ( ( " ?House2 is a house " or ?House1 is leftof ?House2 is false ) is necessarily true ) ) and
-%   ( ( " ?House1 is leftof ?House2 " is possible or ( ( ( " ?House2 is a house " is possible and
-%   ?House1 is a house is false ) is possible ) or ( ( " ?House1 is a house " is possible and
-%   ?House2 is a house is false ) is possible ) ) ) and
-%   ( ( " ?House1 is a house " or ( ( ( " ?House2 is a house " is possible and
-%   ?House1 is a house is false ) is possible ) or ( ( " ?House1 is a house " is possible and
-%   ?House2 is a house is false ) is possible ) ) ) and
-%   ( " ?House2 is a house " or ( ( ( " ?House2 is a house " is possible and
-%   ?House1 is a house is false ) is possible ) or ( ( " ?House1 is a house " is possible and
-%   ?House2 is a house is false ) is possible ) ) ) ) )
+%   ( ( " ?H1 is leftof ?H2 " is possible or ?H1 is leftof ?H2 is false ) and
+%   ( ( " ?H2 is a house " or ?H1 is leftof ?H2 is false ) is necessarily true ) ) and
+%   ( ( " ?H1 is leftof ?H2 " is possible or ( ( ( " ?H2 is a house " is possible and
+%   ?H1 is a house is false ) is possible ) or ( ( " ?H1 is a house " is possible and
+%   ?H2 is a house is false ) is possible ) ) ) and
+%   ( ( " ?H1 is a house " or ( ( ( " ?H2 is a house " is possible and
+%   ?H1 is a house is false ) is possible ) or ( ( " ?H1 is a house " is possible and
+%   ?H2 is a house is false ) is possible ) ) ) and
+%   ( " ?H2 is a house " or ( ( ( " ?H2 is a house " is possible and
+%   ?H1 is a house is false ) is possible ) or ( ( " ?H1 is a house " is possible and
+%   ?H2 is a house is false ) is possible ) ) ) ) )
 % It's Proof that:
-%   " ?House1 is leftof ?House2 " is possible
+%   " ?H1 is leftof ?H2 " is possible
 
-( (   poss(leftof(House1,House2))v~leftof(House1,House2)  &
-    nesc( house(House2)v~leftof(House1,House2)) &
-    (   poss( leftof(House1,House2))  v
-      poss( poss(house(House2))& ~house(House1)) v
-      poss( poss(house(House1))& ~house(House2))) &
-    (   house(House1)  v
-      poss( poss(house(House2))& ~house(House1)) v
-      poss( poss(house(House1))& ~house(House2))) &
-    (   house(House2)  v
-      poss( poss(house(House2))& ~house(House1)) v
-      poss( poss(house(House1))& ~house(House2)))) ==>
-  poss( leftof(House1,House2)))
+( (   poss(leftof(H1,H2))v~leftof(H1,H2)  &
+    nesc( house(H2)v~leftof(H1,H2)) &
+    (   poss( leftof(H1,H2))  v
+      poss( poss(house(H2))& ~house(H1)) v
+      poss( poss(house(H1))& ~house(H2))) &
+    (   house(H1)  v
+      poss( poss(house(H2))& ~house(H1)) v
+      poss( poss(house(H1))& ~house(H2))) &
+    (   house(H2)  v
+      poss( poss(house(H2))& ~house(H1)) v
+      poss( poss(house(H1))& ~house(H2)))) ==>
+  poss( leftof(H1,H2)))
 
 ----------------------------------------
 
 
 ----------------------------------------
 % Whenever:
-%   ( ( " ?House1 is leftof ?House2 " is possible or ?House1 is leftof ?House2 is false ) and
-%   ( ( ( " ?House1 is a house " or ?House1 is leftof ?House2 is false ) is necessarily true ) and
-%   ( ( " ?House2 is a house " or ?House1 is leftof ?House2 is false ) is necessarily true ) ) ) and
-%   ( ( " ?House1 is a house " or ( ( ( " ?House2 is a house " is possible and
-%   ?House1 is a house is false ) is possible ) or ( ( " ?House1 is a house " is possible and
-%   ?House2 is a house is false ) is possible ) ) ) and
-%   ( " ?House2 is a house " or ( ( ( " ?House2 is a house " is possible and
-%   ?House1 is a house is false ) is possible ) or ( ( " ?House1 is a house " is possible and
-%   ?House2 is a house is false ) is possible ) ) ) )
+%   ( ( " ?H1 is leftof ?H2 " is possible or ?H1 is leftof ?H2 is false ) and
+%   ( ( ( " ?H1 is a house " or ?H1 is leftof ?H2 is false ) is necessarily true ) and
+%   ( ( " ?H2 is a house " or ?H1 is leftof ?H2 is false ) is necessarily true ) ) ) and
+%   ( ( " ?H1 is a house " or ( ( ( " ?H2 is a house " is possible and
+%   ?H1 is a house is false ) is possible ) or ( ( " ?H1 is a house " is possible and
+%   ?H2 is a house is false ) is possible ) ) ) and
+%   ( " ?H2 is a house " or ( ( ( " ?H2 is a house " is possible and
+%   ?H1 is a house is false ) is possible ) or ( ( " ?H1 is a house " is possible and
+%   ?H2 is a house is false ) is possible ) ) ) )
 % It's Proof that:
-%   " ?House1 is leftof ?House2 " is possibly false
+%   " ?H1 is leftof ?H2 " is possibly false
 
-( (   poss(leftof(House1,House2))v~leftof(House1,House2)  &
-    nesc( house(House1)v~leftof(House1,House2)) &
-    nesc( house(House2)v~leftof(House1,House2)) &
-    (   house(House1)  v
-      poss( poss(house(House2))& ~house(House1)) v
-      poss( poss(house(House1))& ~house(House2))) &
-    (   house(House2)  v
-      poss( poss(house(House2))& ~house(House1)) v
-      poss( poss(house(House1))& ~house(House2)))) ==>
-  poss( ~( leftof(House1,House2))))
+( (   poss(leftof(H1,H2))v~leftof(H1,H2)  &
+    nesc( house(H1)v~leftof(H1,H2)) &
+    nesc( house(H2)v~leftof(H1,H2)) &
+    (   house(H1)  v
+      poss( poss(house(H2))& ~house(H1)) v
+      poss( poss(house(H1))& ~house(H2))) &
+    (   house(H2)  v
+      poss( poss(house(H2))& ~house(H1)) v
+      poss( poss(house(H1))& ~house(H2)))) ==>
+  poss( ~( leftof(H1,H2))))
 
 ----------------------------------------
 
 
 ----------------------------------------
 % Whenever:
-%   ( ( " ?House1 is leftof ?House2 " is possible or ?House1 is leftof ?House2 is false ) and
-%   ( ( ( " ?House1 is a house " or ?House1 is leftof ?House2 is false ) is necessarily true ) and
-%   ( ( " ?House2 is a house " or ?House1 is leftof ?House2 is false ) is necessarily true ) ) ) and
-%   ( ( " ?House1 is a house " or ( ( ( " ?House2 is a house " is possible and
-%   ?House1 is a house is false ) is possible ) or ( ( " ?House1 is a house " is possible and
-%   ?House2 is a house is false ) is possible ) ) ) and
-%   ( " ?House2 is a house " or ( ( ( " ?House2 is a house " is possible and
-%   ?House1 is a house is false ) is possible ) or ( ( " ?House1 is a house " is possible and
-%   ?House2 is a house is false ) is possible ) ) ) )
+%   ( ( " ?H1 is leftof ?H2 " is possible or ?H1 is leftof ?H2 is false ) and
+%   ( ( ( " ?H1 is a house " or ?H1 is leftof ?H2 is false ) is necessarily true ) and
+%   ( ( " ?H2 is a house " or ?H1 is leftof ?H2 is false ) is necessarily true ) ) ) and
+%   ( ( " ?H1 is a house " or ( ( ( " ?H2 is a house " is possible and
+%   ?H1 is a house is false ) is possible ) or ( ( " ?H1 is a house " is possible and
+%   ?H2 is a house is false ) is possible ) ) ) and
+%   ( " ?H2 is a house " or ( ( ( " ?H2 is a house " is possible and
+%   ?H1 is a house is false ) is possible ) or ( ( " ?H1 is a house " is possible and
+%   ?H2 is a house is false ) is possible ) ) ) )
 % It's Proof that:
-%   " ?House2 is a house " is possibly false or " ?House1 is a house " is possible
+%   " ?H2 is a house " is possibly false or " ?H1 is a house " is possible
 
-( (   poss(leftof(House1,House2))v~leftof(House1,House2)  &
-    nesc( house(House1)v~leftof(House1,House2)) &
-    nesc( house(House2)v~leftof(House1,House2)) &
-    (   house(House1)  v
-      poss( poss(house(House2))& ~house(House1)) v
-      poss( poss(house(House1))& ~house(House2))) &
-    (   house(House2)  v
-      poss( poss(house(House2))& ~house(House1)) v
-      poss( poss(house(House1))& ~house(House2)))) ==>
-  poss(~house(House2))v poss(house(House1)))
+( (   poss(leftof(H1,H2))v~leftof(H1,H2)  &
+    nesc( house(H1)v~leftof(H1,H2)) &
+    nesc( house(H2)v~leftof(H1,H2)) &
+    (   house(H1)  v
+      poss( poss(house(H2))& ~house(H1)) v
+      poss( poss(house(H1))& ~house(H2))) &
+    (   house(H2)  v
+      poss( poss(house(H2))& ~house(H1)) v
+      poss( poss(house(H1))& ~house(H2)))) ==>
+  poss(~house(H2))v poss(house(H1)))
 
 ----------------------------------------
 
 
 ----------------------------------------
 % Whenever:
-%   ( ( " ?House1 is leftof ?House2 " is possible or ?House1 is leftof ?House2 is false ) and
-%   ( ( ( " ?House1 is a house " or ?House1 is leftof ?House2 is false ) is necessarily true ) and
-%   ( ( " ?House2 is a house " or ?House1 is leftof ?House2 is false ) is necessarily true ) ) ) and
-%   ( ( " ?House1 is a house " or ( ( ( " ?House2 is a house " is possible and
-%   ?House1 is a house is false ) is possible ) or ( ( " ?House1 is a house " is possible and
-%   ?House2 is a house is false ) is possible ) ) ) and
-%   ( " ?House2 is a house " or ( ( ( " ?House2 is a house " is possible and
-%   ?House1 is a house is false ) is possible ) or ( ( " ?House1 is a house " is possible and
-%   ?House2 is a house is false ) is possible ) ) ) )
+%   ( ( " ?H1 is leftof ?H2 " is possible or ?H1 is leftof ?H2 is false ) and
+%   ( ( ( " ?H1 is a house " or ?H1 is leftof ?H2 is false ) is necessarily true ) and
+%   ( ( " ?H2 is a house " or ?H1 is leftof ?H2 is false ) is necessarily true ) ) ) and
+%   ( ( " ?H1 is a house " or ( ( ( " ?H2 is a house " is possible and
+%   ?H1 is a house is false ) is possible ) or ( ( " ?H1 is a house " is possible and
+%   ?H2 is a house is false ) is possible ) ) ) and
+%   ( " ?H2 is a house " or ( ( ( " ?H2 is a house " is possible and
+%   ?H1 is a house is false ) is possible ) or ( ( " ?H1 is a house " is possible and
+%   ?H2 is a house is false ) is possible ) ) ) )
 % It's Proof that:
-%   " ?House1 is a house " is possibly false or " ?House2 is a house " is possible
+%   " ?H1 is a house " is possibly false or " ?H2 is a house " is possible
 
-( (   poss(leftof(House1,House2))v~leftof(House1,House2)  &
-    nesc( house(House1)v~leftof(House1,House2)) &
-    nesc( house(House2)v~leftof(House1,House2)) &
-    (   house(House1)  v
-      poss( poss(house(House2))& ~house(House1)) v
-      poss( poss(house(House1))& ~house(House2))) &
-    (   house(House2)  v
-      poss( poss(house(House2))& ~house(House1)) v
-      poss( poss(house(House1))& ~house(House2)))) ==>
-  poss(~house(House1))v poss(house(House2)))
+( (   poss(leftof(H1,H2))v~leftof(H1,H2)  &
+    nesc( house(H1)v~leftof(H1,H2)) &
+    nesc( house(H2)v~leftof(H1,H2)) &
+    (   house(H1)  v
+      poss( poss(house(H2))& ~house(H1)) v
+      poss( poss(house(H1))& ~house(H2))) &
+    (   house(H2)  v
+      poss( poss(house(H2))& ~house(H1)) v
+      poss( poss(house(H1))& ~house(H2)))) ==>
+  poss(~house(H1))v poss(house(H2)))
 
 ----------------------------------------
 
 
 ----------------------------------------
 % Whenever:
-%   ( ( " ?House1 is leftof ?House2 " is possible or ?House1 is leftof ?House2 is false ) and
-%   ( ( ( " ?House1 is a house " or ?House1 is leftof ?House2 is false ) is necessarily true ) and
-%   ( ( " ?House2 is a house " or ?House1 is leftof ?House2 is false ) is necessarily true ) ) ) and
-%   ( ( " ?House1 is leftof ?House2 " is possible or ( ( ( " ?House2 is a house " is possible and
-%   ?House1 is a house is false ) is possible ) or ( ( " ?House1 is a house " is possible and
-%   ?House2 is a house is false ) is possible ) ) ) and
-%   ( " ?House1 is a house " or ( ( ( " ?House2 is a house " is possible and
-%   ?House1 is a house is false ) is possible ) or ( ( " ?House1 is a house " is possible and
-%   ?House2 is a house is false ) is possible ) ) ) )
+%   ( ( " ?H1 is leftof ?H2 " is possible or ?H1 is leftof ?H2 is false ) and
+%   ( ( ( " ?H1 is a house " or ?H1 is leftof ?H2 is false ) is necessarily true ) and
+%   ( ( " ?H2 is a house " or ?H1 is leftof ?H2 is false ) is necessarily true ) ) ) and
+%   ( ( " ?H1 is leftof ?H2 " is possible or ( ( ( " ?H2 is a house " is possible and
+%   ?H1 is a house is false ) is possible ) or ( ( " ?H1 is a house " is possible and
+%   ?H2 is a house is false ) is possible ) ) ) and
+%   ( " ?H1 is a house " or ( ( ( " ?H2 is a house " is possible and
+%   ?H1 is a house is false ) is possible ) or ( ( " ?H1 is a house " is possible and
+%   ?H2 is a house is false ) is possible ) ) ) )
 % It's Proof that:
-%   " ?House2 is a house " is possibly false
+%   " ?H2 is a house " is possibly false
 
-( (   poss(leftof(House1,House2))v~leftof(House1,House2)  &
-    nesc( house(House1)v~leftof(House1,House2)) &
-    nesc( house(House2)v~leftof(House1,House2)) &
-    (   poss( leftof(House1,House2))  v
-      poss( poss(house(House2))& ~house(House1)) v
-      poss( poss(house(House1))& ~house(House2))) &
-    (   house(House1)  v
-      poss( poss(house(House2))& ~house(House1)) v
-      poss( poss(house(House1))& ~house(House2)))) ==>
-  poss( ~( house(House2))))
+( (   poss(leftof(H1,H2))v~leftof(H1,H2)  &
+    nesc( house(H1)v~leftof(H1,H2)) &
+    nesc( house(H2)v~leftof(H1,H2)) &
+    (   poss( leftof(H1,H2))  v
+      poss( poss(house(H2))& ~house(H1)) v
+      poss( poss(house(H1))& ~house(H2))) &
+    (   house(H1)  v
+      poss( poss(house(H2))& ~house(H1)) v
+      poss( poss(house(H1))& ~house(H2)))) ==>
+  poss( ~( house(H2))))
 
 ----------------------------------------
 
 
 ----------------------------------------
 % Whenever:
-%   ( ( " ?House1 is leftof ?House2 " is possible or ?House1 is leftof ?House2 is false ) and
-%   ( ( ( " ?House1 is a house " or ?House1 is leftof ?House2 is false ) is necessarily true ) and
-%   ( ( " ?House2 is a house " or ?House1 is leftof ?House2 is false ) is necessarily true ) ) ) and
-%   ( ( " ?House1 is leftof ?House2 " is possible or ( ( ( " ?House2 is a house " is possible and
-%   ?House1 is a house is false ) is possible ) or ( ( " ?House1 is a house " is possible and
-%   ?House2 is a house is false ) is possible ) ) ) and
-%   ( " ?House1 is a house " or ( ( ( " ?House2 is a house " is possible and
-%   ?House1 is a house is false ) is possible ) or ( ( " ?House1 is a house " is possible and
-%   ?House2 is a house is false ) is possible ) ) ) )
+%   ( ( " ?H1 is leftof ?H2 " is possible or ?H1 is leftof ?H2 is false ) and
+%   ( ( ( " ?H1 is a house " or ?H1 is leftof ?H2 is false ) is necessarily true ) and
+%   ( ( " ?H2 is a house " or ?H1 is leftof ?H2 is false ) is necessarily true ) ) ) and
+%   ( ( " ?H1 is leftof ?H2 " is possible or ( ( ( " ?H2 is a house " is possible and
+%   ?H1 is a house is false ) is possible ) or ( ( " ?H1 is a house " is possible and
+%   ?H2 is a house is false ) is possible ) ) ) and
+%   ( " ?H1 is a house " or ( ( ( " ?H2 is a house " is possible and
+%   ?H1 is a house is false ) is possible ) or ( ( " ?H1 is a house " is possible and
+%   ?H2 is a house is false ) is possible ) ) ) )
 % It's Proof that:
-%   " ?House2 is a house " is possibly false or " ?House1 is a house " is possible
+%   " ?H2 is a house " is possibly false or " ?H1 is a house " is possible
 
-( (   poss(leftof(House1,House2))v~leftof(House1,House2)  &
-    nesc( house(House1)v~leftof(House1,House2)) &
-    nesc( house(House2)v~leftof(House1,House2)) &
-    (   poss( leftof(House1,House2))  v
-      poss( poss(house(House2))& ~house(House1)) v
-      poss( poss(house(House1))& ~house(House2))) &
-    (   house(House1)  v
-      poss( poss(house(House2))& ~house(House1)) v
-      poss( poss(house(House1))& ~house(House2)))) ==>
-  poss(~house(House2))v poss(house(House1)))
+( (   poss(leftof(H1,H2))v~leftof(H1,H2)  &
+    nesc( house(H1)v~leftof(H1,H2)) &
+    nesc( house(H2)v~leftof(H1,H2)) &
+    (   poss( leftof(H1,H2))  v
+      poss( poss(house(H2))& ~house(H1)) v
+      poss( poss(house(H1))& ~house(H2))) &
+    (   house(H1)  v
+      poss( poss(house(H2))& ~house(H1)) v
+      poss( poss(house(H1))& ~house(H2)))) ==>
+  poss(~house(H2))v poss(house(H1)))
 
 ----------------------------------------
 
 
 ----------------------------------------
 % Whenever:
-%   ( ( " ?House1 is leftof ?House2 " is possible or ?House1 is leftof ?House2 is false ) and
-%   ( ( ( " ?House1 is a house " or ?House1 is leftof ?House2 is false ) is necessarily true ) and
-%   ( ( " ?House2 is a house " or ?House1 is leftof ?House2 is false ) is necessarily true ) ) ) and
-%   ( ( " ?House1 is leftof ?House2 " is possible or ( ( ( " ?House2 is a house " is possible and
-%   ?House1 is a house is false ) is possible ) or ( ( " ?House1 is a house " is possible and
-%   ?House2 is a house is false ) is possible ) ) ) and
-%   ( " ?House1 is a house " or ( ( ( " ?House2 is a house " is possible and
-%   ?House1 is a house is false ) is possible ) or ( ( " ?House1 is a house " is possible and
-%   ?House2 is a house is false ) is possible ) ) ) )
+%   ( ( " ?H1 is leftof ?H2 " is possible or ?H1 is leftof ?H2 is false ) and
+%   ( ( ( " ?H1 is a house " or ?H1 is leftof ?H2 is false ) is necessarily true ) and
+%   ( ( " ?H2 is a house " or ?H1 is leftof ?H2 is false ) is necessarily true ) ) ) and
+%   ( ( " ?H1 is leftof ?H2 " is possible or ( ( ( " ?H2 is a house " is possible and
+%   ?H1 is a house is false ) is possible ) or ( ( " ?H1 is a house " is possible and
+%   ?H2 is a house is false ) is possible ) ) ) and
+%   ( " ?H1 is a house " or ( ( ( " ?H2 is a house " is possible and
+%   ?H1 is a house is false ) is possible ) or ( ( " ?H1 is a house " is possible and
+%   ?H2 is a house is false ) is possible ) ) ) )
 % It's Proof that:
-%   " ?House1 is a house " is possibly false or " ?House2 is a house " is possible
+%   " ?H1 is a house " is possibly false or " ?H2 is a house " is possible
 
-( (   poss(leftof(House1,House2))v~leftof(House1,House2)  &
-    nesc( house(House1)v~leftof(House1,House2)) &
-    nesc( house(House2)v~leftof(House1,House2)) &
-    (   poss( leftof(House1,House2))  v
-      poss( poss(house(House2))& ~house(House1)) v
-      poss( poss(house(House1))& ~house(House2))) &
-    (   house(House1)  v
-      poss( poss(house(House2))& ~house(House1)) v
-      poss( poss(house(House1))& ~house(House2)))) ==>
-  poss(~house(House1))v poss(house(House2)))
+( (   poss(leftof(H1,H2))v~leftof(H1,H2)  &
+    nesc( house(H1)v~leftof(H1,H2)) &
+    nesc( house(H2)v~leftof(H1,H2)) &
+    (   poss( leftof(H1,H2))  v
+      poss( poss(house(H2))& ~house(H1)) v
+      poss( poss(house(H1))& ~house(H2))) &
+    (   house(H1)  v
+      poss( poss(house(H2))& ~house(H1)) v
+      poss( poss(house(H1))& ~house(H2)))) ==>
+  poss(~house(H1))v poss(house(H2)))
 
 ----------------------------------------
 
 
 ----------------------------------------
 % Whenever:
-%   ( ( " ?House1 is leftof ?House2 " is possible or ?House1 is leftof ?House2 is false ) and
-%   ( ( ( " ?House1 is a house " or ?House1 is leftof ?House2 is false ) is necessarily true ) and
-%   ( ( " ?House2 is a house " or ?House1 is leftof ?House2 is false ) is necessarily true ) ) ) and
-%   ( ( " ?House1 is leftof ?House2 " is possible or ( ( ( " ?House2 is a house " is possible and
-%   ?House1 is a house is false ) is possible ) or ( ( " ?House1 is a house " is possible and
-%   ?House2 is a house is false ) is possible ) ) ) and
-%   ( " ?House2 is a house " or ( ( ( " ?House2 is a house " is possible and
-%   ?House1 is a house is false ) is possible ) or ( ( " ?House1 is a house " is possible and
-%   ?House2 is a house is false ) is possible ) ) ) )
+%   ( ( " ?H1 is leftof ?H2 " is possible or ?H1 is leftof ?H2 is false ) and
+%   ( ( ( " ?H1 is a house " or ?H1 is leftof ?H2 is false ) is necessarily true ) and
+%   ( ( " ?H2 is a house " or ?H1 is leftof ?H2 is false ) is necessarily true ) ) ) and
+%   ( ( " ?H1 is leftof ?H2 " is possible or ( ( ( " ?H2 is a house " is possible and
+%   ?H1 is a house is false ) is possible ) or ( ( " ?H1 is a house " is possible and
+%   ?H2 is a house is false ) is possible ) ) ) and
+%   ( " ?H2 is a house " or ( ( ( " ?H2 is a house " is possible and
+%   ?H1 is a house is false ) is possible ) or ( ( " ?H1 is a house " is possible and
+%   ?H2 is a house is false ) is possible ) ) ) )
 % It's Proof that:
-%   " ?House1 is a house " is possibly false
+%   " ?H1 is a house " is possibly false
 
-( (   poss(leftof(House1,House2))v~leftof(House1,House2)  &
-    nesc( house(House1)v~leftof(House1,House2)) &
-    nesc( house(House2)v~leftof(House1,House2)) &
-    (   poss( leftof(House1,House2))  v
-      poss( poss(house(House2))& ~house(House1)) v
-      poss( poss(house(House1))& ~house(House2))) &
-    (   house(House2)  v
-      poss( poss(house(House2))& ~house(House1)) v
-      poss( poss(house(House1))& ~house(House2)))) ==>
-  poss( ~( house(House1))))
+( (   poss(leftof(H1,H2))v~leftof(H1,H2)  &
+    nesc( house(H1)v~leftof(H1,H2)) &
+    nesc( house(H2)v~leftof(H1,H2)) &
+    (   poss( leftof(H1,H2))  v
+      poss( poss(house(H2))& ~house(H1)) v
+      poss( poss(house(H1))& ~house(H2))) &
+    (   house(H2)  v
+      poss( poss(house(H2))& ~house(H1)) v
+      poss( poss(house(H1))& ~house(H2)))) ==>
+  poss( ~( house(H1))))
 
 ----------------------------------------
 
 
 ----------------------------------------
 % Whenever:
-%   ( ( " ?House1 is leftof ?House2 " is possible or ?House1 is leftof ?House2 is false ) and
-%   ( ( ( " ?House1 is a house " or ?House1 is leftof ?House2 is false ) is necessarily true ) and
-%   ( ( " ?House2 is a house " or ?House1 is leftof ?House2 is false ) is necessarily true ) ) ) and
-%   ( ( " ?House1 is leftof ?House2 " is possible or ( ( ( " ?House2 is a house " is possible and
-%   ?House1 is a house is false ) is possible ) or ( ( " ?House1 is a house " is possible and
-%   ?House2 is a house is false ) is possible ) ) ) and
-%   ( " ?House2 is a house " or ( ( ( " ?House2 is a house " is possible and
-%   ?House1 is a house is false ) is possible ) or ( ( " ?House1 is a house " is possible and
-%   ?House2 is a house is false ) is possible ) ) ) )
+%   ( ( " ?H1 is leftof ?H2 " is possible or ?H1 is leftof ?H2 is false ) and
+%   ( ( ( " ?H1 is a house " or ?H1 is leftof ?H2 is false ) is necessarily true ) and
+%   ( ( " ?H2 is a house " or ?H1 is leftof ?H2 is false ) is necessarily true ) ) ) and
+%   ( ( " ?H1 is leftof ?H2 " is possible or ( ( ( " ?H2 is a house " is possible and
+%   ?H1 is a house is false ) is possible ) or ( ( " ?H1 is a house " is possible and
+%   ?H2 is a house is false ) is possible ) ) ) and
+%   ( " ?H2 is a house " or ( ( ( " ?H2 is a house " is possible and
+%   ?H1 is a house is false ) is possible ) or ( ( " ?H1 is a house " is possible and
+%   ?H2 is a house is false ) is possible ) ) ) )
 % It's Proof that:
-%   " ?House2 is a house " is possibly false or " ?House1 is a house " is possible
+%   " ?H2 is a house " is possibly false or " ?H1 is a house " is possible
 
-( (   poss(leftof(House1,House2))v~leftof(House1,House2)  &
-    nesc( house(House1)v~leftof(House1,House2)) &
-    nesc( house(House2)v~leftof(House1,House2)) &
-    (   poss( leftof(House1,House2))  v
-      poss( poss(house(House2))& ~house(House1)) v
-      poss( poss(house(House1))& ~house(House2))) &
-    (   house(House2)  v
-      poss( poss(house(House2))& ~house(House1)) v
-      poss( poss(house(House1))& ~house(House2)))) ==>
-  poss(~house(House2))v poss(house(House1)))
+( (   poss(leftof(H1,H2))v~leftof(H1,H2)  &
+    nesc( house(H1)v~leftof(H1,H2)) &
+    nesc( house(H2)v~leftof(H1,H2)) &
+    (   poss( leftof(H1,H2))  v
+      poss( poss(house(H2))& ~house(H1)) v
+      poss( poss(house(H1))& ~house(H2))) &
+    (   house(H2)  v
+      poss( poss(house(H2))& ~house(H1)) v
+      poss( poss(house(H1))& ~house(H2)))) ==>
+  poss(~house(H2))v poss(house(H1)))
 
 ----------------------------------------
 
 
 ----------------------------------------
 % Whenever:
-%   ( ( " ?House1 is leftof ?House2 " is possible or ?House1 is leftof ?House2 is false ) and
-%   ( ( ( " ?House1 is a house " or ?House1 is leftof ?House2 is false ) is necessarily true ) and
-%   ( ( " ?House2 is a house " or ?House1 is leftof ?House2 is false ) is necessarily true ) ) ) and
-%   ( ( " ?House1 is leftof ?House2 " is possible or ( ( ( " ?House2 is a house " is possible and
-%   ?House1 is a house is false ) is possible ) or ( ( " ?House1 is a house " is possible and
-%   ?House2 is a house is false ) is possible ) ) ) and
-%   ( " ?House2 is a house " or ( ( ( " ?House2 is a house " is possible and
-%   ?House1 is a house is false ) is possible ) or ( ( " ?House1 is a house " is possible and
-%   ?House2 is a house is false ) is possible ) ) ) )
+%   ( ( " ?H1 is leftof ?H2 " is possible or ?H1 is leftof ?H2 is false ) and
+%   ( ( ( " ?H1 is a house " or ?H1 is leftof ?H2 is false ) is necessarily true ) and
+%   ( ( " ?H2 is a house " or ?H1 is leftof ?H2 is false ) is necessarily true ) ) ) and
+%   ( ( " ?H1 is leftof ?H2 " is possible or ( ( ( " ?H2 is a house " is possible and
+%   ?H1 is a house is false ) is possible ) or ( ( " ?H1 is a house " is possible and
+%   ?H2 is a house is false ) is possible ) ) ) and
+%   ( " ?H2 is a house " or ( ( ( " ?H2 is a house " is possible and
+%   ?H1 is a house is false ) is possible ) or ( ( " ?H1 is a house " is possible and
+%   ?H2 is a house is false ) is possible ) ) ) )
 % It's Proof that:
-%   " ?House1 is a house " is possibly false or " ?House2 is a house " is possible
+%   " ?H1 is a house " is possibly false or " ?H2 is a house " is possible
 
-( (   poss(leftof(House1,House2))v~leftof(House1,House2)  &
-    nesc( house(House1)v~leftof(House1,House2)) &
-    nesc( house(House2)v~leftof(House1,House2)) &
-    (   poss( leftof(House1,House2))  v
-      poss( poss(house(House2))& ~house(House1)) v
-      poss( poss(house(House1))& ~house(House2))) &
-    (   house(House2)  v
-      poss( poss(house(House2))& ~house(House1)) v
-      poss( poss(house(House1))& ~house(House2)))) ==>
-  poss(~house(House1))v poss(house(House2)))
+( (   poss(leftof(H1,H2))v~leftof(H1,H2)  &
+    nesc( house(H1)v~leftof(H1,H2)) &
+    nesc( house(H2)v~leftof(H1,H2)) &
+    (   poss( leftof(H1,H2))  v
+      poss( poss(house(H2))& ~house(H1)) v
+      poss( poss(house(H1))& ~house(H2))) &
+    (   house(H2)  v
+      poss( poss(house(H2))& ~house(H1)) v
+      poss( poss(house(H1))& ~house(H2)))) ==>
+  poss(~house(H1))v poss(house(H2)))
 
 ----------------------------------------
 

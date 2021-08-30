@@ -16,8 +16,8 @@
 % Turn off modal extensions (default was full)
 
 %:- rtrace.
-:- set_kif_option(qualify_modality,none).
-:- must(kif_option_value(qualify_modality,none)).
+:- set_kif_option(qualify_modality,false).
+:- must(kif_option_value(qualify_modality,false)).
 %:- break.
 
 

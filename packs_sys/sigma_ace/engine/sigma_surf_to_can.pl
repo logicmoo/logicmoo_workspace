@@ -887,7 +887,7 @@ toClauseFormAll(Disj,Clf) :-
         getConsequentList(Disj,Cons), 
         toClauseForm_proc(Disj,Cons,Clf). %, write_clause_with_number(Clf,TN1).
 
-getConsequentList(A,A) :-isSlot(A),!.
+getConsequentList(A,[A]) :-isSlot(A),!.
 
 getConsequentList(Fml,Clf) :-
         Fml = entails(B,A) ->     % contrapositives not made if in Clause Form (i.g. built from "if")
@@ -913,7 +913,7 @@ toClauseForm_proc(Disj,[Con|RestCons],Clf) :-
 toClauseForm_proc(_,[],true).
 
 	
-getAntecedantForConsequent(Cons,Fml,Ante):-(isSlot(Cons);isSlot(Fml)),!,Ante=true.
+getAntecedantForConsequent(Cons,Fml,Ante):-once(var(Cons),isSlot(Cons);isSlot(Fml)),!,Ante=true.
 getAntecedantForConsequent(Cons,Fml,Ante) :-
         Fml = entails(B,A) ->
                 getAntecedantForConsequent(Cons,A,A1),

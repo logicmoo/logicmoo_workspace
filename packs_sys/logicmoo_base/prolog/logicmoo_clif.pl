@@ -16,6 +16,8 @@
  op(300,fx,'~'),
  op(300,fx,'-').
 
+:- reexport(library('logicmoo/common_logic/common_logic_utils.pl')).
+
 :- use_module(library(sigma_ace)).
 
 /** <module> MODULE LOGICMOO CLIF / logicmoo_plarkc
@@ -62,7 +64,6 @@ This special module hooks into the logicmoo engine allow clif syntax to be recoc
 % :- add_library_search_path('./logicmoo/common_logic/',[ 'common_*.pl']).
 
 
-:- reexport(library('logicmoo/common_logic/common_logic_utils.pl')).
 :- reexport(library('logicmoo/common_logic/common_logic_boxlog.pl')).
 :- reexport(library('logicmoo/common_logic/common_logic_modal.pl')).
 :- reexport(library('logicmoo/common_logic/common_logic_exists.pl')).
