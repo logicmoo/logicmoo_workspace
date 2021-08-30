@@ -161,7 +161,7 @@ clif_to_modal_clif(In,THINOUT):-
    %kif_optionally_e(true,un_quant3(KB),OuterQuantKIF,NormalOuterQuantKIF),
    kif_optionally_e(always,correct_special_quantifiers(KB),OuterQuantKIF,FullQuant),   
   b_setval('$nnf_outermost',FullQuant),
-   kif_optionally_e(none,qualify_modality,FullQuant,ModalKIF),
+   kif_optionally_e(false,qualify_modality,FullQuant,ModalKIF),
    kif_optionally_e(true,adjust_kif(KB),ModalKIF,ModalKBKIFM),
    kif_optionally_e(true,correct_special_quantifiers(KB),ModalKBKIFM,ModalKBKIF),   
    kif_optionally_e(false,removeQ_3(KB),ModalKBKIF,UnQ),   
