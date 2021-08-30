@@ -18,7 +18,7 @@ cd /opt/logicmoo_workspace
 (Copies the git repo where things can be edited for development purposes. while running in Docker)
 ```bash
 cd /opt
-git clone https://logicmoo.org/gitlab/logicmoo/logicmoo_workspace.git
+git clone --recurse-submodules https://logicmoo.org/gitlab/logicmoo/logicmoo_workspace.git
 cd logicmoo_workspace
 ./runFromDocker.sh
 ```
