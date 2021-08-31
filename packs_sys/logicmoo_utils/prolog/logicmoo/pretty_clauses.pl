@@ -305,7 +305,7 @@ prolog_pprint(Term, Options):- \+ ground(Term),
 % prolog_pprint_0(Term, Options):- memberchk(portray(true), Options), \+ is_list(Term), \+ memberchk(portray_goal(_), Options), print_tree(Term, Options), !.
 prolog_pprint_0(Term, Options):- \+ memberchk(right_margin(_), Options), !, prolog_pprint_0(Term, [right_margin(0)|Options]).
 prolog_pprint_0(Term, Options):- \+ memberchk(portray(_), Options), !, prolog_pprint_0(Term, [portray(true)|Options]).
-prolog_pprint_0(Term, Options):- 
+prolog_pprint_0(Term, Options):- %fail,
   mort((guess_pretty(Term), pretty_clauses:pprint_tree(Term, [output(current_output)|Options]))).
 
 prolog_pretty_pprint_tree(A,Options):- 
@@ -2865,4 +2865,6 @@ primitive_class(Class, _, _, Class).
 %:- fixup_exports.
 :- multifile(user:portray/1).
 :- dynamic(user:portray/1).
-user:portray(Term):- notrace(pc_portray(Term)),!.
+user:portray(Term):- 
+  %fail, 
+  notrace(pc_portray(Term)),!.

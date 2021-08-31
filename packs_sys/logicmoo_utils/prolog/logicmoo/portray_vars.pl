@@ -278,6 +278,7 @@ prologcase_name0(String,ProposedName):-
 atom_trim_prefix(Root,Prefix,Result):- atom_concat_w_blobs(Prefix,Result,Root) -> true ; Result=Root.
 atom_trim_suffix(Root,Suffix,Result):- atom_concat_w_blobs(Result,Suffix,Root) -> true ; Result=Root.
 
+% pretty_numbervars_g(T,T):-!.
 pretty_numbervars_g(Term, TermO):- (ground(Term);current_prolog_flag(no_pretty,true)),!,duplicate_term(Term,TermO).
 %pretty_numbervars(Term, TermO):- copy_term(Term,TermO,_),guess_pretty(Term),Term=@=TermO,Term=TermO,!.
 
@@ -287,8 +288,10 @@ pretty_numbervars(TermIn, TermOut):- pretty_numbervars_ground(TermIn, TermOut),!
 pretty_numbervars_ground(TermIn, TermOut):- pretty_numbervars_g(TermIn, TermOut),!.
 pretty_numbervars_ground(TermIn, TermOut):-  % the new 
  quietly((
+   copy_term(TermIn,Together,_),
    term_varnames(TermIn,Vs0,_),
    replace_variables(Vs0,TermIn,Term),
+   Together=Term,
    guess_pretty(Term),
    term_varnames(Term,Vs,_),   
    copy_term(Term+Vs,TermOut+Vs2, _),
@@ -297,9 +300,11 @@ pretty_numbervars_ground(TermIn, TermOut):-  % the new
 pretty_numbervars_unground(TermIn, TermOut):- pretty_numbervars_g(TermIn, TermOut),!.
 pretty_numbervars_unground(TermIn, TermOut):-  % the old
  quietly((
+  copy_term(TermIn,Together,_),
   duplicate_term(TermIn,Term),
   guess_pretty(Term),
-  source_variables_lwv(Term,Vs),   
+  source_variables_lwv(Term,Vs),
+  Together=Term,
   copy_term(Term+Vs,TermOut+Vs2, _),
   notrace(implode_varnames_pred(to_var_dollar, Vs2)))),!.
 
@@ -845,7 +850,7 @@ portray_pretty_numbervars(Term):-
 
 user:portray(Term):- \+ tracing,
   % \+ current_prolog_flag(debug, true),
-  fail,
+  % fail,
   portray_pretty_numbervars(Term),!.
 
 

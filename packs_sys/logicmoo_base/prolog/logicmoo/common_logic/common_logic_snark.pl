@@ -760,7 +760,7 @@ write_list([]).
 % Numbervars Using Names.
 %
 
-% unnumbervars_with_names(X,X):-!.
+unnumbervars_with_names(X,X):-!.
 % unnumbervars_with_names(Term,CTerm):- ground(Term),!,dupe_term(Term,CTerm).
 % unnumbervars_with_names(Term,CTerm):- show_failure(quietly(unnumbervars(Term,CTerm))),!.
 

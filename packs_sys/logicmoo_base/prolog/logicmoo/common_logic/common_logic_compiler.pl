@@ -588,7 +588,7 @@ nnf1(KB, ~( Fml),FreeV,NNF,Paths):- nonvar(Fml),
 	),!,
        nnf(KB,Fml1,FreeV,NNF,Paths).
 
-%% logical_reductions(nnf,  ?KB, :LHS, :RHS) is det.
+%% logical_reductions(+Phase,  ?KB, :LHS, :RHS) is det.
 %
 % Axiom Left-hand-side Converted To Right-hand-side.
 %
