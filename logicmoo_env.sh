@@ -53,7 +53,7 @@ if [[ -z "${LOGICMOO_WS}" ]]; then
       WS_MAYBE="$(cd "$(dirname "${BASH_SOURCE[0]}")"; pwd -P)"
       if [[ -d "${WS_MAYBE}/packs_sys" ]]; then
          export LOGICMOO_WS=$WS_MAYBE
-      if
+      fi
    fi
 
    if [[ -z "${LOGICMOO_WS}" ]]; then
