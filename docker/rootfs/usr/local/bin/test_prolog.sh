@@ -1,5 +1,22 @@
 #!/bin/bash
 
+
+parent-find() {
+  local file="$1"
+  local dir="$(realpath $2)"
+  # echo parent-find "$file" "$(dirname "$dir")"
+  test -e "$dir/$file" && echo "$dir" && return 0
+  [ '/' = "$dir" ] && return 1
+  parent-find "$file" "$(dirname "$dir")"
+}
+
+export PACK_DIR=$(parent-find "pack.pl" .  )
+PACK_DIR=$(basename $PACK_DIR)
+
+echo "<!-- PACK_DIR=$PACK_DIR -->"
+
+[ -z "$JUNIT_PACKAGE" ] && export JUNIT_PACKAGE="$PACK_DIR.$(basename `realpath .. | sed -e 's|/[^.]/|/|g' `).$(basename `realpath .`)"
+
 SWIPL=swipl
 if [ -z `which swipl` ]; then
     # default locations on OS X
@@ -32,7 +49,6 @@ if [ "$1" == "-k" ]; then
   runtime_testing=5
   shift
 fi
-
 
 [ -z "${TESTING_TEMP}" ] && export TESTING_TEMP=$(mktemp -d -t logicmoo_testing-$(date +%Y-%m-%d-%H-%M-%S)-XXXXXXXXXX)
 
@@ -101,7 +117,12 @@ for ele2 in "${listOfNames[@]}"
 	  while [ $retry == 1 ]
 	   do
 	    retry=0
-        export RunTestFile=Run_TestFile.$(echo "${PWD}/${ele}" | sed -e "s/[.]/_/g" -e "s|/|_|g")
+        export FILENAME=${ele}
+        export JUNIT_SHORTCLASS=`echo "${FILENAME^^}" | cut -d'.' -f1`
+        export JUNIT_SUITE=$JUNIT_PACKAGE.$(echo "${JUNIT_SHORTCLASS^^}" | sed -e "s/_[0-9]//g" -e "s/[0-9]//g" )
+        export JUNIT_CLASSNAME=$JUNIT_PACKAGE.$JUNIT_SHORTCLASS
+        export FileTestCase="${JUNIT_SUITE} run $JUNIT_SHORTCLASS ( $FILENAME )"
+        INFO "FileTestCase=$FileTestCase"
 		  [[ "$ele" == *".ansi" ]] && continue
         [[ "$ele" == *".html" ]] && continue
         [[ "$ele" == *".xml" ]] && continue
@@ -126,16 +147,15 @@ for ele2 in "${listOfNames[@]}"
         totalTime=$(($endTime-$startTime));        
         ####JECHO "]]></system-out>"
 
-        classname=$(echo `pwd` | sed -e 's|/|.|g')
         if [ $exitcode -eq $good_exit ]; then
 			[ "${next_cls}" == 1 ] && cls && next_cls=0			
-         JECHO "<testcase name=\"$RunTestFile\" classname='$classname' time='$totalTime'>"         
+         JECHO "<testcase name=\"$FileTestCase\" package='$JUNIT_PACKAGE' classname='$JUNIT_CLASSNAME' time='$totalTime'>"         
          JECHO "<system-out><![CDATA[$(cat $TEE_FILE2)]]></system-out>\n"
          JECHO "</testcase>"
          INFO "SUCCESS: $0 ${keep_going} ${ele} (returned ${exitcode})"
 			continue
 	     fi
-        JECHO "<testcase name=\"$RunTestFile\" classname='$classname' time='$totalTime'>"
+        JECHO "<testcase name=\"$FileTestCase\" package='$JUNIT_PACKAGE' classname='$JUNIT_CLASSNAME' time='$totalTime'>"
         JECHO " <failure message='FAILED: $0 ${keep_going} ${ele} (returned ${exitcode})'>"
            JECHO "<system-err><![CDATA[$(cat $TEE_FILE2)]]></system-err>\n"
         JECHO " </failure></testcase>"

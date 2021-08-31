@@ -14,7 +14,7 @@
 :- module(with_no_x,[ with_no_x/1]).
 :- meta_predicate with_no_x(0).
 
-:- thread_local(tlbugger:show_must_go_on/1).
+:- thread_local(tlbugger:show_must_go_on/0).
 % WAS OFF  :- system:use_module(library(gui_tracer)).
 
 %% with_no_x( :Goal) is nondet.

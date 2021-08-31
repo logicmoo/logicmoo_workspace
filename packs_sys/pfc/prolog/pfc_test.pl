@@ -196,7 +196,7 @@ add_test_info(Type,Info):- ignore(((get_current_testcase(Testcase), add_test_inf
 
 get_current_testcase(Testcase):- t_l:mpred_current_testcase(Testcase),!.
 
-get_current_testcase(Testcase):- getenv('RunTestSuite',Testcase), add_test_info(testsuite,testcase,Testcase),!.
+get_current_testcase(Testcase):- getenv('FileTestCase',Testcase), add_test_info(testsuite,testcase,Testcase),!.
 get_current_testcase(Testcase):- "suiteTestcase"=Testcase, add_test_info(testsuite,testcase,Testcase),!.
 % get_current_testcase(Testcase):- j_u:junit_prop(testsuite,file,Testcase).
 
@@ -276,7 +276,7 @@ junit_term_expansion((:- I),O):- !, junit_dirrective_expansion(I,M), (is_list(M)
 
 junit_dirrective_expansion(I,O):- junit_expansion(junit_dirrective_exp,I,O).
 junit_dirrective_exp( I , O ) :- junit_goal_exp(I,O), I\=@=O. 
-junit_dirrective_exp( listing(X), dmsg(listing(X)) ):- getenv(keep_going,'-k'). 
+junit_dirrective_exp( listing(X), dmsg(listing(X)) ):- keep_going. 
 junit_dirrective_exp( \+ X, mpred_test( \+ X ) ).
 junit_dirrective_exp( X, X  ):- predicate_property(X,static).
 junit_dirrective_exp( X, X  ):- predicate_property(X,built_in).
@@ -291,9 +291,9 @@ junit_expansion(P,M:I,M:O):- !, junit_expansion(P,I,O).
 junit_expansion(P,I,O):-call(P,I,O).
 
 junit_goal_expansion(I,O):- junit_expansion(junit_goal_exp,I,O).
-junit_goal_exp( break, dmsg(break) ):- getenv(keep_going,'-k'). 
-junit_goal_exp( cls, dmsg(cls) ):- getenv(keep_going,'-k'). 
-junit_goal_exp( rtrace, dmsg(rtrace) ):- getenv(keep_going,'-k'). 
+junit_goal_exp( break, dmsg(break) ):- keep_going. 
+junit_goal_exp( cls, dmsg(cls) ):- keep_going. 
+junit_goal_exp( rtrace, dmsg(rtrace) ):- keep_going. 
 
 
 
@@ -321,7 +321,7 @@ test_completed_exit(_):- once((listing(j_u:junit_prop(_,warn,_)),
                                listing(j_u:junit_prop(_,warning,_)),
                                listing(j_u:junit_prop(_,error,_)))),fail.
 
-test_completed_exit(N):- getenv(keep_going,'-k'),!, halt(N).
+test_completed_exit(N):- keep_going,!, halt(N).
 test_completed_exit(N):- (debugging-> true ; halt(N)).
 
 test_completed_exit_maybe(_):- j_u:junit_prop(_,error,_), test_completed_exit(9).
@@ -347,7 +347,7 @@ test_completed_exit_maybe(N):- test_completed_exit(N).
   <!-- testsuite can appear multiple times, if contained in a testsuites element.
        It can also be the root element. -->
   <testsuite name=""      <!-- Full (class) name of the test for non-aggregated testsuite documents.
-                               Class name without the package for aggregated testsuites documents. Required -->
+                               ShortClass name without the package for aggregated testsuites documents. Required -->
          tests="#"     <!-- The total number of tests in the suite, required. -->
          disabled="#"  <!-- the total number of disabled tests in the suite. optional -->
              errors="#"    <!-- The total number of tests in the suite that errored. An errored test is one that had an unanticipated problem,
@@ -428,7 +428,8 @@ show_junit_suite_xml(File):-
   format('</testsuites>\n',[]).
 
 show_junit_suite(File):- 
-   format("  <testsuite name=\"~w\">\n", [File]),
+   (getenv('JUNIT_SUITE',SuiteName);SuiteName=File),!,
+   format("  <testsuite name=\"~w\">\n", [SuiteName]),
    findall(Name,j_u:junit_prop(testsuite,testcase,Name),L),list_to_set(L,S),
     maplist(show_junit_testcase(File),S),
    format("  </testsuite>\n", []).
@@ -438,7 +439,8 @@ save_single_testcase(Name):-
   (format('<?xml version="1.0" encoding="utf-8"?>~n'),
    j_u:junit_prop(testsuite,file,File),
    format("  <testsuites>\n", []),
-   format("  <testsuite name=\"~w\">\n", [File]),
+   (getenv('JUNIT_SUITE',SuiteName);SuiteName=File),!,
+   format("  <testsuite name=\"~w\">\n", [SuiteName]),
    show_junit_testcase(File,Name),
    format("  </testsuite>\n", []),
    format(" </testsuites>\n", []))),
@@ -511,9 +513,11 @@ suite_to_package(Suite,Package):- shorten_and_clean_name(Suite,Suite0),
 
 show_junit_testcase(Suite,Testcase):- 
  j_u:junit_prop(Testcase,goal,Goal),
- suite_to_package(Suite,Classname),
- classname_to_package(Classname,Package,Class),
- sformat(DisplayName,'~w@~w: ~p',[Class,Testcase, Goal]),
+ (getenv('JUNIT_CLASSNAME',Classname)-> true ; suite_to_package(Suite,Classname)),
+ (getenv('JUNIT_PACKAGE',Package) -> true ; classname_to_package(Classname,Package,ShortClass)),
+ ignore((getenv('JUNIT_SHORTCLASS',ShortClass))),
+ (nonvar(ShortClass)-> true; atom_concat(Package,ShortClass,Classname)),
+ sformat(DisplayName,'~w@~w: ~p',[ShortClass,Testcase,Goal]),
  escape_attribute(DisplayName,EDisplayName),
  ignore((
  format('

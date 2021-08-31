@@ -147,6 +147,16 @@
           ]).
 
 
+:- thread_local tlbugger:show_must_go_on/0.
+
+keep_going:- notrace(keep_going0).
+
+keep_going0:- getenv(keep_going,'-k').
+keep_going0:- non_user_console.
+keep_going0:- tlbugger:show_must_go_on.
+keep_going0:- current_prolog_flag(runtime_must,keep_going),!.
+keep_going0:- prolog_flag(debug_on_error,true), !, fail.
+
 
 % % % OFF :- system:use_module((dmsg)).
 % % % OFF :- system:use_module(library(must_sanity)).
@@ -173,6 +183,8 @@ hide_non_user_console:-current_input(In),stream_property(In,tty(true)),!,fail.
 hide_non_user_console:-current_prolog_flag(debug_threads,true),!,fail.
 hide_non_user_console:-current_input(In),stream_property(In, close_on_abort(true)).
 hide_non_user_console:-current_input(In),stream_property(In, close_on_exec(true)).
+
+
 
 
 /*
@@ -1031,10 +1043,10 @@ ensure_compute_file_link(S,S).
 maybe_compute_file_link(S,O):- atom(S),!, lmconf:http_file_stem(F,R),atomic_list_concat([_,A],F,S),!,atom_concat(R,A,O).
 maybe_compute_file_link(S:L,O):- integer(L),!,maybe_compute_file_link(S,F),format(atom(O),'~w#L~w',[F,L]).
 
-public_file_link(S,O):-maybe_compute_file_link(S,M),into_link(S,M,O).
+public_file_link(S,O):- maybe_compute_file_link(S,M),into_link(S,M,O).
 public_file_link(MG,MG).
 
-into_link(_,M,O):- format(atom(O),'* ~w',[M]),!.
+into_link(_,M,O):- format(atom(O),'* ~w ',[M]),!.
 into_link(S,M,O):- format(atom(O),'<pre><a href="~w">~q</a></pre>',[M,S]).
 
 :-export( as_clause_no_m/3).
@@ -1872,9 +1884,6 @@ is_release:- zotrace((\+ flag_call(runtime_debug == true) , \+ (1 is random(4)))
 :- export(not_is_release/0).
 not_is_release:- \+ is_release.
 
-
-
-:- thread_local tlbugger:show_must_go_on/0.
 
 %=
 

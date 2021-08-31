@@ -7,7 +7,7 @@
 :- set_prolog_flag(must_debug,0).
 :- set_prolog_flag(must_speed,0).
 
-:- set_prolog_flag(must_type,keep_going).
+:- set_prolog_flag(runtime_must,keep_going).
 
 test(0):- must(\+ fail).
 

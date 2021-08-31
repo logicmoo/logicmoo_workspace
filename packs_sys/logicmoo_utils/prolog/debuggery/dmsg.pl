@@ -192,7 +192,7 @@ use_html_styles0 :- current_predicate(is_butterfly_console/0), (inside_bfly_html
 % Sgr Code Whenever Off.
 %
 
-dis_pp(ansi):- getenv(keep_going,'-k'),!.
+dis_pp(ansi):- keep_going,!.
 dis_pp(PP):- current_predicate(in_pp/1), in_pp(PP).
 
 using_style(Out,Ctrl,Goal,How):- 

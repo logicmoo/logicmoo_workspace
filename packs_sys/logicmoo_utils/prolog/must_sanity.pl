@@ -28,6 +28,7 @@ This module includes predicate utilities that allows program to detect unwanted 
 @license LGPL
 */
 
+
 :- meta_predicate
         must(*),
         must_once(*),
@@ -63,6 +64,8 @@ This module includes predicate utilities that allows program to detect unwanted 
 
 must(Goal):- (Goal*->true;must_0(Goal)).
 must_0(Goal):- quietly(get_must(Goal,MGoal))-> call(MGoal).
+
+
 
 :- meta_predicate(deterministic_tf(0,-)).
 deterministic_tf(G, F) :-
@@ -125,7 +128,7 @@ get_must(Goal,CGoal):- (skipWrapper ; tlbugger:skipMust),!,CGoal = Goal.
 get_must(M:Goal,M:CGoal):- must_be(nonvar,Goal),!,get_must(Goal,CGoal).
 get_must(quietly(Goal),quietly(CGoal)):- current_prolog_flag(runtime_safety,3), !, get_must(Goal,CGoal).
 get_must(quietly(Goal),CGoal):- !,get_must((quietly(Goal)*->true;Goal),CGoal).
-get_must(Goal,CGoal):- (tlbugger:show_must_go_on),!,CGoal=must_keep_going(Goal).
+get_must(Goal,CGoal):- keep_going,!,CGoal=must_keep_going(Goal).
 get_must(Goal,CGoal):- hide_non_user_console,!,get_must_type(rtrace,Goal,CGoal).
 get_must(Goal,CGoal):- current_prolog_flag(runtime_must,How), How \== none, !, get_must_type(How,Goal,CGoal).
 get_must(Goal,CGoal):- current_prolog_flag(runtime_debug,2), !, 
@@ -162,6 +165,7 @@ must_keep_going(Goal):-
             *-> true ;
               xnotrace(dumpST_error(sHOW_MUST_go_on_failed_F__A__I__L_(Goal))),ignore(rtrace(Goal)),badfood(Goal)))).
 
+
 :- '$hide'(get_must/2).
 
 
@@ -185,8 +189,7 @@ sanity(Goal):- \+ ( nb_current('$inprint_message', Messages), Messages\==[] ),
    !,
    (1 is random(10)-> must(Goal) ; true).
 sanity(Goal):- quietly(Goal),!.
-sanity(Goal):- tlbugger:show_must_go_on,!,dmsg(show_failure(sanity,Goal)).
-sanity(Goal):- getenv(keep_going,'-k'),!,dmsg(insane(Goal)=getenv(keep_going,'-k')),fail.
+sanity(Goal):- keep_going,!,dmsg(failed_sanity(Goal)=keep_going),fail.
 sanity(_):- break, dumpST,fail.
 sanity(Goal):- setup_call_cleanup(wdmsg(begin_FAIL_in(Goal)),rtrace(Goal),wdmsg(end_FAIL_in(Goal))),!,dtrace(assertion(Goal)).
 

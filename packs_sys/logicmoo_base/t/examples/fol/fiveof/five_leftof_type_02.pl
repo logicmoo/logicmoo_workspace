@@ -40,24 +40,24 @@ leftof(H1, H2) => house(H1) & house(H2).
 :- interactive_test(listing(nesc)).
 
 % ensure our rule worked
-:- pfc_test(nesc(house(h1))).
+:- mpred_test(nesc(house(h1))).
 
 % ensure we are being nice
-:- pfc_test(poss(house(false_positive))).
+:- mpred_test(poss(house(false_positive))).
 % but not "too" nice
-:- pfc_test(\+ nesc(house(false_positive))).
+:- mpred_test(\+ nesc(house(false_positive))).
 
 % lets invalidate at least one pair
 ~poss(house(h2)).
 
 % if the above took effect
-:- pfc_test(\+ nesc(house(h2))).
+:- mpred_test(\+ nesc(house(h2))).
 
 % we did invalidate the pair ?
-:- pfc_test(\+ nesc(house(h1))).
+:- mpred_test(\+ nesc(house(h1))).
 
 % @TODO not sure what we want to invalidate the rest ?
-:- pfc_test(ignore(\+ nesc(house(h5)))).
+:- mpred_test(ignore(\+ nesc(house(h5)))).
 
 :- interactive_test(listing(nesc)).
 

@@ -763,7 +763,7 @@ test_for_release_problems(File):-
 %
 if_interactive(Goal):-if_interactive(Goal,true),!.
 
-if_interactive(_Goal,Else):- getenv(keep_going,'-k'), !,
+if_interactive(_Goal,Else):- keep_going, !,
    terminal_ansi_goal(current_output,[fg(red)],(format("~n(NOT INTERACTIVE (~q))~n",[Else]))),!,
    terminal_ansi_goal(current_output,[fg(yellow)],(call(Else))).
 
