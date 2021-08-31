@@ -37,15 +37,36 @@ export -f pathmunge
 
 if [[ -z "${LOGICMOO_WS}" ]]; then
  WS_MAYBE="$(cd "$(dirname "${BASH_SOURCE[0]}")"; pwd -P)"
-
  if [[ -d "${WS_MAYBE}/packs_sys" ]]; then
   export LOGICMOO_WS=$WS_MAYBE
- else
-  export LOGICMOO_WS=/opt/logicmoo_workspace
  fi
+fi
 
- $ECHO "#* Set logicmoo workspace"
- $ECHO "#* LOGICMOO_WS=$LOGICMOO_WS"
+if [[ -z "${LOGICMOO_WS}" ]]; then
+
+   WS_MAYBE="$(cd "$(dirname "${BASH_SOURCE[0]}")"; pwd -P)"
+   if [[ -d "${WS_MAYBE}/packs_sys" ]]; then
+      export LOGICMOO_WS=$WS_MAYBE
+   fi
+
+   if [[ -z "${LOGICMOO_WS}" ]]; then
+    WS_MAYBE="$(find . -type d -name logicmoo_workspace -print0 |
+       xargs -r -0 ls -1 -t |
+       head -1)"
+    if [[ -d "${WS_MAYBE}/packs_sys" ]]; then
+       export LOGICMOO_WS=$WS_MAYBE
+    fi
+   fi
+   
+   if [[ -z "${LOGICMOO_WS}" ]]; then
+      WS_MAYBE=/opt/logicmoo_workspace
+      if [[ -d "${WS_MAYBE}/packs_sys" ]]; then
+         export LOGICMOO_WS=$WS_MAYBE
+      fi
+   fi
+
+   $ECHO "#* Set logicmoo workspace"
+   $ECHO "#* LOGICMOO_WS=$LOGICMOO_WS"
 
 fi
 
