@@ -28,7 +28,7 @@ cd logicmoo_workspace
 mkdir -p /opt/logicmoo/.git
 rsync -chaPlz -vv --progress rsync://logicmoo.org:12000/git /opt/logicmoo/.git
 cd /opt/logicmoo/
-git pull --recurse-submodule
+git pull --recurse-submodules
 ./INSTALL.md
 ./StartLogicmoo.sh
 ```
