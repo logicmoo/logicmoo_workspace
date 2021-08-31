@@ -30,7 +30,9 @@ This module extends the LPS engine to run PPDL files.
 */
 %:- use_module(library(logicmoo_lps)).
 :- use_module(library(ec_planner/ec_lps_convert)).
+:- if((exists_source(library(wam_cl/sreader)), \+ current_module(wmclrt))).
 :- use_module(library(wam_cl/sreader)).
+:- endif.
 :- use_module(library(hyhtn_pddl/rsasak_pddl_parser)).
 % system:pddl_current_domain(X):- wdmsg(pddl_current_domain(X)),fail.
 %:- user:use_module(library('pddl_planner/pddl_planner_dmiles')).

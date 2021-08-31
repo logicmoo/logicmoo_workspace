@@ -103,7 +103,9 @@ get_param_types0(Df,[H|T],[H|Ps],[K|Ks]):-  must(atom(H)),use_default(Df,H,K),
 fix_wordcase(Word,WordC):-upcase_atom(Word,UC),UC=Word,!,downcase_atom(Word,WordC).
 fix_wordcase(Word,Word).
 
+:- if((exists_source(library(wam_cl/sreader)), \+ current_module(wmclrt))).
 :- use_module(library(wam_cl/sreader)).
+:- endif.
 %
 %read_file(+File, -List).
 %

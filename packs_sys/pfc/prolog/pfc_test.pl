@@ -317,10 +317,14 @@ test_completed_exit(7):- halt(7). % Passed
 test_completed_exit(4):- halt(4). % Aborted by User
 test_completed_exit(5):- halt(5). % Aborted by System
 
+test_completed_exit(_):- once((listing(j_u:junit_prop(_,warn,_)),
+                               listing(j_u:junit_prop(_,warning,_)),
+                               listing(j_u:junit_prop(_,error,_)))),fail.
+
 test_completed_exit(N):- getenv(keep_going,'-k'),!, halt(N).
 test_completed_exit(N):- (debugging-> true ; halt(N)).
 
-test_completed_exit_maybe(_):- j_u:junit_prop(_,error,_),test_completed_exit(9).
+test_completed_exit_maybe(_):- j_u:junit_prop(_,error,_), test_completed_exit(9).
 test_completed_exit_maybe(_):- j_u:junit_prop(_,warning,_),test_completed_exit(3).
 test_completed_exit_maybe(_):- j_u:junit_prop(_,warn,_),test_completed_exit(3).
 test_completed_exit_maybe(N):- test_completed_exit(N).

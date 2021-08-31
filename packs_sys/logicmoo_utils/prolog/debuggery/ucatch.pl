@@ -420,6 +420,7 @@ with_current_io(Goal):-
 
 :- thread_local(t_l:hide_dmsg/0).
 
+% with_no_output(Goal):- !, Goal.
 with_no_output(Goal):-
  locally_tl(hide_dmsg,
   with_output_to(string(_), 

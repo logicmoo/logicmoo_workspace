@@ -38,7 +38,7 @@ echo "<!-- "
 #npm install -g junit-viewer
 (junit-viewer --results=$junitCombined --save=$TEST_STEM_PATH-junit-viewer.html &> $TEST_STEM_PATH-junit-viewer.debug.html )  ; /bin/true
 #npm install -g xunit-viewer
-(xunit-viewer --results $junitCombined -o $TEST_STEM_PATH-xunit-viewer.html )  ; /bin/true
+#(xunit-viewer --results $junitCombined -o $TEST_STEM_PATH-xunit-viewer.html )  ; /bin/true
 #pip3 install junit2html
 (junit2html $junitCombined $TEST_STEM_PATH-junitCombined.html) ; /bin/true
 echo "TEST_STEM_PATH=${TEST_STEM_PATH}"

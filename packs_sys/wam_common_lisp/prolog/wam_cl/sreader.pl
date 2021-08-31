@@ -1,4 +1,4 @@
-f:- if(\+ current_module(sxpr_reader)).
+:- if(\+ current_module(sxpr_reader)).
 :- module(s3xpr,[
   codelist_to_forms/2,
   svar_fixvarname/2,

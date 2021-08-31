@@ -145,8 +145,8 @@ system:iRR7_test:-
 % KIF READER SANITY TESTS
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-:- if(exists_source(library(wam_cl/sreader))).
-:- system:use_module(library(wam_cl/sreader)).
+:- if((exists_source(library(wam_cl/sreader)), \+ current_module(wmclrt))).
+:- use_module(library(wam_cl/sreader)).
 :- endif.
 
 show_kif(Str):- 
