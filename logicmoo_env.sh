@@ -44,20 +44,18 @@ fi
 
 if [[ -z "${LOGICMOO_WS}" ]]; then
 
-   WS_MAYBE="$(cd "$(dirname "${BASH_SOURCE[0]}")"; pwd -P)"
-   if [[ -d "${WS_MAYBE}/packs_sys" ]]; then
-      export LOGICMOO_WS=$WS_MAYBE
-   fi
-
-   if [[ -z "${LOGICMOO_WS}" ]]; then
-    WS_MAYBE="$(find . -type d -name logicmoo_workspace -print0 |
-       xargs -r -0 ls -1 -t |
-       head -1)"
+    WS_MAYBE=`find . -mindepth 1 -maxdepth 10 -type d -name logicmoo_workspace -printf "%T@\t%p\0" | sort -z -n | cut -z -f2- | tail -z -n1 | xargs -0 realpath`
     if [[ -d "${WS_MAYBE}/packs_sys" ]]; then
        export LOGICMOO_WS=$WS_MAYBE
     fi
+
+   if [[ -z "${LOGICMOO_WS}" ]]; then
+      WS_MAYBE="$(cd "$(dirname "${BASH_SOURCE[0]}")"; pwd -P)"
+      if [[ -d "${WS_MAYBE}/packs_sys" ]]; then
+         export LOGICMOO_WS=$WS_MAYBE
+      if
    fi
-   
+
    if [[ -z "${LOGICMOO_WS}" ]]; then
       WS_MAYBE=/opt/logicmoo_workspace
       if [[ -d "${WS_MAYBE}/packs_sys" ]]; then
@@ -149,6 +147,7 @@ else
    echo "#* Attempting: ln -s $LOGICMOO_WS/prologmud_server/ ~/.local/share/swi-prolog/pack"
    mkdir -p ~/.local/share/swi-prolog
    ln -s $LOGICMOO_WS/prologmud_server/.local/share/swi-prolog/pack/ ~/.local/share/swi-prolog/pack
+   ls ~/.local/share/swi-prolog/pack/
 fi
 
 export LIBJVM
