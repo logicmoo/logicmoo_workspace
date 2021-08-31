@@ -78,9 +78,9 @@ compile_clif==>
 % {sanity(is_entailed_u(CLIF))}
 
 compile_boxlog ==> 
-% (boxlog(BOXLOG),{delistify_last_arg(BOXLOG,boxlog_to_pfc,PROLOG),must_be_unqualified(PROLOG)} ==> pfclog(PROLOG)).
+(boxlog(BOXLOG),{delistify_last_arg(BOXLOG,boxlog_to_pfc,PROLOG),must_be_unqualified(PROLOG)} ==> pfclog(PROLOG)).
 % (boxlog(BOXLOG),{delistify_last_arg(BOXLOG,boxlog_to_prolog,PROLOG),must_be_unqualified(PROLOG)} ==> PROLOG).
-(boxlog(BOXLOG)  ==> BOXLOG).
+% (boxlog(BOXLOG)  ==> BOXLOG).
 % {sanity(are_clauses_entailed(BOXLOG))}
 
 %compilerDirective(compile_pfclog).

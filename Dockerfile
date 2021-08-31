@@ -157,6 +157,9 @@ MAINTAINER RUN apt-get update && apt-get install -y --allow-unauthenticated \
  npm \
  && npm install -g typescript
 
+RUN apt-get update && apt-get install -y --allow-unauthenticated \
+  libtinfo5 libtinfo6
+
 #CMD $LOGICMOO_WS/StartLogicmoo.sh
 #ENTRYPOINT ["/startup_logicmoo.sh"]
 ENTRYPOINT ["/startup.sh"]

@@ -9,13 +9,56 @@
 % Revised At: $Date: 2002/06/27 14:13:20 $
 % =============================================
 %
-:- expects_dialect(clif).
-:- set_prolog_flag(gc,false).
-  
+
+
 % There are five houses in a row.
+:- module(baseKB).
 
-exists(H1,exists(H2,exists(H3,exists(H4,exists(H5,
- (leftof(H1, H2) & leftof(H2, H3) & leftof(H3, H4) & leftof(H4, H5))))))).
+% makes the KB monotonic
+:- set_kif_option(qualify_modality,simple_nesc).
 
+leftof(h1, h2).
+leftof(h2, h3).
+leftof(h3, h4).
+leftof(h4, h5).
+
+% this should cause h1-h5 to become houses
+leftof(H1, H2) => house(H1) & house(H2).
+
+:- kif_compile.
+
+% intractive_test/1 means only run if interactive
+:- interactive_test(listing(pfclog)).
+
+% mpred_test/1 each become a Junit test that must succeed
+:- mpred_test(pfclog_compile).
+
+:- mpred_test(pfclog_uncompile).
+% This is the real test we care about here
+:- interactive_test(pfclog_recompile).
+
+:- interactive_test(listing(nesc)).
+
+% ensure our rule worked
+:- pfc_test(nesc(house(h1))).
+
+% ensure we are being nice
+:- pfc_test(poss(house(false_positive))).
+% but not "too" nice
+:- pfc_test(\+ nesc(house(false_positive))).
+
+% lets invalidate at least one pair
+~poss(house(h2)).
+
+% if the above took effect
+:- pfc_test(\+ nesc(house(h2))).
+
+% we did invalidate the pair ?
+:- pfc_test(\+ nesc(house(h1))).
+
+% @TODO not sure what we want to invalidate the rest ?
+:- pfc_test(ignore(\+ nesc(house(h5)))).
+
+:- interactive_test(listing(nesc)).
 
 

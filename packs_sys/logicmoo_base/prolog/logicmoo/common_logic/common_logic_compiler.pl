@@ -336,8 +336,8 @@ TBE ::= always(TBE) | eventually(TBE) | until(TBE,TBE) |
 
 
 :- create_prolog_flag(logicmoo_propagation, modal,[keep(true)]).   % vs "unit"
-:- create_prolog_flag(qualify_modality,false,[keep(true)]).
-%:- create_prolog_flag(qualify_modality,late,[keep(true)]).
+:- create_prolog_flag(qualify_modality,simple_nesc,[keep(true)]).
+%:- create_prolog_flag(qualify_modality,simple_nesc,[keep(true)]).
 
 :- thread_local(t_l:using_feature/1).
 is_using_feature(Feature):- t_l:using_feature(Feature).

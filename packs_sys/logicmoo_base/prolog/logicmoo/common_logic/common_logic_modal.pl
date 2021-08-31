@@ -40,10 +40,10 @@
 
 
 
-:- create_prolog_flag(qualify_modality,false,[keep(true)]).
+:- create_prolog_flag(qualify_modality,simple_nesc,[keep(true)]).
 
 %% qualify_modality( ?P, ?Q) is det.
-qualify_modality(OuterQuantKIF,OuterQuantKIF):- kif_option_value( qualify_modality,false),!.
+qualify_modality(PQ,PQ):- kif_option_value( qualify_modality,false),!.
 qualify_modality(PQ,PQO):- qualify_nesc(PQ,PQO).
 
 
@@ -54,19 +54,18 @@ qualify_modality(PQ,PQO):- qualify_nesc(PQ,PQO).
 %  Q = (poss(P)=>P).
 %
 
-qualify_nesc(OuterQuantKIF,OuterQuantKIF):- var(OuterQuantKIF),!.
+qualify_nesc(PQ,PQ):- var(PQ),!.
 qualify_nesc(IN,OUT):-is_list(IN),must_maplist_det(qualify_nesc,IN,OUT),!.
-qualify_nesc(OuterQuantKIF,OuterQuantKIF):- leave_as_is(OuterQuantKIF),!.
-qualify_nesc(OuterQuantKIF,OuterQuantKIF):- contains_modal(OuterQuantKIF),!.
-qualify_nesc(PQ,PQO):- PQ=..[F|Q],is_quantifier(F),append(LQ,[RQ],Q),qualify_nesc(RQ,RQQ),append(LQ,[RQQ],QQ),PQO=..[F|QQ],!.
+qualify_nesc(PQ,PQ):- compound(PQ),leave_as_is(PQ),!.
+qualify_nesc(PQ,PQ):- contains_modal(PQ),!.
+qualify_nesc(PQ,PQO):- compound(PQ), PQ=..[F|Q],is_quantifier(F),append(LQ,[RQ],Q),qualify_nesc(RQ,RQQ),append(LQ,[RQQ],QQ),PQO=..[F|QQ],!.
 % qualify_nesc(P<=>Q,PQ & QP):- !,qualify_nesc(P=>Q,PQ),qualify_nesc(Q=>P,QP).
 
 % full modality
 qualify_nesc(P,(poss(P)=>nesc(P))):- kif_option_value( qualify_modality,full), !.
 
-% late modality
-qualify_nesc(P,nesc(P)):- kif_option_value( qualify_modality,late), !.
-
+% simple_nesc modality
+qualify_nesc(P,nesc(P)):- kif_option_value( qualify_modality,simple_nesc), !.
 
 % part modality
 qualify_nesc( ~(IN), ~(poss(IN))):- kif_option_value( qualify_modality,part), !.
@@ -88,7 +87,7 @@ qualify_nesc(IN,poss(IN)):- IN=..[F|_],should_be_poss(F),!.
 qualify_nesc(Wff,(poss(Wff) => nesc(Wff))):- quietly(var_or_atomic(Var)),!.
 qualify_nesc(Wff,(poss(Wff) => nesc(Wff))):- leave_as_is_logically(Wff),!.
 qualify_nesc(Q,(PQ & Q)):-  weaken_to_poss(Q,PQ),!.
-qualify_nesc(OuterQuantKIF,OuterQuantKIF):-!.
+qualify_nesc(PQ,PQ):-!.
 % qualify_nesc(IN,OUT):-IN=..[F|INL],logical_functor_pttp(F),!,must_maplist_det(qualify_nesc,INL,OUTL),OUT=..[F|OUTL].
 */
 
@@ -99,15 +98,15 @@ qualify_nesc(OuterQuantKIF,OuterQuantKIF):-!.
 %
 
 add_nesc(IN,OUT):-is_list(IN),must_maplist_det(add_nesc,IN,OUT),!.
-add_nesc(OuterQuantKIF,OuterQuantKIF):- is_ftVar(OuterQuantKIF),!.
-add_nesc(OuterQuantKIF,OuterQuantKIF):-leave_as_is(OuterQuantKIF),!.
-add_nesc(OuterQuantKIF,OuterQuantKIF):-contains_modal(OuterQuantKIF),!.
+add_nesc(PQ,PQ):- is_ftVar(PQ),!.
+add_nesc(PQ,PQ):-leave_as_is(PQ),!.
+add_nesc(PQ,PQ):-contains_modal(PQ),!.
 add_nesc( ~(IN), nesc(~(IN))).
 add_nesc(IN,OUT):-IN=..[F|INL],logical_functor_pttp(F),!,must_maplist_det(add_nesc,INL,OUTL),OUT=..[F|OUTL].
 add_nesc(IN,nesc(IN)).
 /*
-add_nesc(nesc(OuterQuantKIF),nesc(OuterQuantKIF)):-!.
-add_nesc(poss(OuterQuantKIF),poss(OuterQuantKIF)):-!.
+add_nesc(nesc(PQ),nesc(PQ)):-!.
+add_nesc(poss(PQ),poss(PQ)):-!.
 add_nesc(P<=>Q,O):-!,add_nesc(((P=>Q) & (Q=>P)),O).
 add_nesc(PQ,PQO):- PQ=..[F|Q],is_quantifier(F),append(LQ,[RQ],Q),add_nesc(RQ,RQQ),append(LQ,[RQQ],QQ),PQO=..[F|QQ],!.
 add_nesc(IN,poss(IN)):-IN=..[F|_],should_be_poss(F),!.
@@ -115,7 +114,7 @@ add_nesc(P=>Q,((PP & P & QP) =>Q)):-  weaken_to_poss(P,PP),weaken_to_poss(Q,QP).
 
 add_nesc(Q,(PQ & Q)):-  weaken_to_poss(Q,PQ),!.
 add_nesc((P & Q),(PQ & (P & Q))):-  weaken_to_poss(P & Q,PQ),!.
-add_nesc(OuterQuantKIF,OuterQuantKIF):-!.
+add_nesc(PQ,PQ):-!.
 */
 
 
@@ -135,7 +134,7 @@ add_poss_to( ~(_PreCond),Wff6667, Wff6667).
 add_poss_to(PreCond,Wff6667, (poss(PreCond)=>Wff6667)).
 
 
-% weaken_to_poss(OuterQuantKIF,OuterQuantKIF):-!.
+% weaken_to_poss(PQ,PQ):-!.
 % weaken_to_poss(X,X):-!.
                             
 
@@ -150,7 +149,7 @@ weaken_to_poss(nesc(PQ),poss(PQ)):-!.
 weaken_to_poss(INL,OUTC):-is_list(INL),must_maplist_det(weaken_to_poss,INL,OUTL),
   F='&',OUT=..[F|OUTL],correct_arities(F,OUT,OUTC).
 %weaken_to_poss(PQ,PQO):- PQ=..[F,V,Q],is_quantifier(F),weaken_to_poss(Q,QQ),PQO=..[F,V,QQ],!.
-weaken_to_poss(OuterQuantKIF,poss(OuterQuantKIF)):- leave_as_is_logically(OuterQuantKIF),!.
+weaken_to_poss(PQ,poss(PQ)):- leave_as_is_logically(PQ),!.
 weaken_to_poss( ~(IN), poss(~(IN))):-!.
 weaken_to_poss(IN,OUT):-IN=..[F|INL],logical_functor_pttp(F),!,must_maplist_det(weaken_to_poss,INL,OUTL),OUT=..[F|OUTL].
 weaken_to_poss(IN,poss(IN)).

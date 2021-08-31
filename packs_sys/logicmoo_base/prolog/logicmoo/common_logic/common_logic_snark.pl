@@ -934,7 +934,7 @@ nnf_default(and(Fml1 , Fml2), AND):-
 simplify_all(KB,Fml,OutZ):- simplify_cheap(post,Fml,Fml2), (Fml \=@= Fml2 -> simplify_all(KB,Fml2,OutZ); Fml2=OutZ).
 
 % final_nnf(O,O):-!.
-final_nnf(A,A):- is_ftVar(A);leave_as_is_logically(A),!.
+final_nnf(A,A):- (is_ftVar(A);leave_as_is_logically(A)),!.
 %final_nnf(A==>B,AA==>BB):-!,final_nnf(A,AA),final_nnf(B,BB).
 final_nnf(O,OO):- once((nnf(KB,O,O1),adjust_kif(KB,O1,O2),simplify_all(KB,O2,OO))), !. % O\=@=M,!,final_nnf(M,OO).
 %final_nnf(A==>B,AA==>BB):-!,final_nnf(nesc(A),AA),final_nnf(nesc(B),BB).
@@ -946,16 +946,16 @@ entails_to_boxlog(KB,Why,Flags,List,RealOUT):-
 entails_to_boxlog(N,KB,Why,Flags,List,RealOUT):- is_list(List),!,
   entails_to_boxlog(N,KB,Why,Flags,List,ListL), append(ListL,RealOUT).
 entails_to_boxlog(_,KB,Why,Flags,A,[RealOUT]):- leave_as_is_logically(A),
-  RealOUT = kb_why_flags_assert(KB,Why,Flags,A).
+  RealOUT = A, nop(kb_why_flags_assert(KB,Why,Flags,A)).
 entails_to_boxlog(N,KB,Why,Flags,(A & B),RealOUT):-
   entails_to_boxlog(N,KB,Why,Flags,A,AL),
   entails_to_boxlog(N,KB,Why,Flags,B,BL),
   append(AL,BL,RealOUT),!.
-entails_to_boxlog(N,KB,Why,Flags,A,[RealOUT]):- N<5,
-  final_nnf(A,OUT), A\=@=OUT,!, N2 is N +1,
+entails_to_boxlog(N,KB,Why,Flags,A,RealOUT):- N<5,
+  once(final_nnf(A,OUT)), A\=@=OUT,!, N2 is N +1,
   entails_to_boxlog(N2,KB,Why,Flags,OUT,RealOUT).
 entails_to_boxlog(_,KB,Why,Flags,A,[RealOUT]):-  
-  RealOUT = kb_why_flags_assert(KB,Why,Flags,A).
+  RealOUT = A, nop(kb_why_flags_assert(KB,Why,Flags,A)).
 
 show_boxlog(O):- is_ftVar(O), !, show_boxlog(ftVar(O)).
 show_boxlog([X|Y]):- show_boxlog(X), ignore((Y \==[], format('~N%  AND~n'),show_boxlog(Y))).

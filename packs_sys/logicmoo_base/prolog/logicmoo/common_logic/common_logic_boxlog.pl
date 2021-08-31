@@ -260,7 +260,8 @@ boxlog_to_pfc(H0,H0):- \+ compound(H0),!.
 boxlog_to_pfc(H0,H0):- is_ftVar(H0),!.
 boxlog_to_pfc([H|T],[HH|TT]):- !,boxlog_to_pfc(H,HH),boxlog_to_pfc(T,TT).
 boxlog_to_pfc(kb_why_flags_assert(_,_,_Flags,B),PFC):- boxlog_to_pfc(B,PFC).
-boxlog_to_pfc((H,T),(HH,TT)):- !,boxlog_to_pfc(H,HH),boxlog_to_pfc(T,TT).
+boxlog_to_pfc((H&T),(HH,TT)):- !,boxlog_to_pfc(H,HH),boxlog_to_pfc(T,TT).
+boxlog_to_pfc((H v T),(HH;TT)):- !,boxlog_to_pfc(H,HH),boxlog_to_pfc(T,TT).
 boxlog_to_pfc('$unused'(P),'$unused'(P)):-!.
 boxlog_to_pfc( ('$unused'(H) :- B), ('$unused'(H) :- B)):-!.
 boxlog_to_pfc(H0,PFCO):-
@@ -272,9 +273,11 @@ boxlog_to_pfc(H0,PFCO):-
   subst(OUTPUT,('not'),('~'),PFCO).
 
 
-boxlog_to_pfc_pass_1(TYPE,HB,OUTPUTM):-
+boxlog_to_pfc_pass_1(TYPE,HB,OUTPUT):-
   expand_to_hb(HB,H,B),
-  boxlog_to_pfc_pass_2(TYPE,(H:-B),OUTPUTM),!.
+  boxlog_to_pfc_pass_2(TYPE,(H:-B),OUTPUTM),!,
+  boxlog_to_pfc_pass_4(OUTPUTM,OUTPUT).
+
 
 %% boxlog_to_pfc_pass_2( ?TYPE, :TermH, ?OUTPUT) is semidet.
 %
@@ -568,9 +571,9 @@ did_use_hack(X):-dmsg(did_use_hack(X)).
 %
 boxlog_to_pfc_pass_4(IN,OUT):-quietly(leave_as_is(IN)),!,IN=OUT.
 boxlog_to_pfc_pass_4(H, HH):-is_list(H),!,must_maplist(boxlog_to_pfc_pass_4,H,HH).
-boxlog_to_pfc_pass_4(IN,OUT):-once(demodal_sents('$VAR'('KB'),IN,MID)),IN\=@=MID,!,boxlog_to_pfc_pass_4(MID,OUT).
+%boxlog_to_pfc_pass_4(IN,OUT):-once(demodal_sents('$VAR'('KB'),IN,MID)),IN\=@=MID,!,boxlog_to_pfc_pass_4(MID,OUT).
 boxlog_to_pfc_pass_4(IN,OUT):-once(subst_except(IN,not,~,MID)),IN\=@=MID,!,boxlog_to_pfc_pass_4(MID,OUT).
-boxlog_to_pfc_pass_4(IN,OUT):-once(subst_except(IN,poss,possible_t,MID)),IN\=@=MID,!,boxlog_to_pfc_pass_4(MID,OUT).
+%boxlog_to_pfc_pass_4(IN,OUT):-once(subst_except(IN,poss,possible_t,MID)),IN\=@=MID,!,boxlog_to_pfc_pass_4(MID,OUT).
 
 boxlog_to_pfc_pass_4((V:- TRUE),VE):- is_src_true(TRUE),boxlog_to_pfc_pass_4(V,VE),!.
 boxlog_to_pfc_pass_4((H:- B),(HH:- BB)):- !,boxlog_to_pfc_pass_4(H,HH),boxlog_to_pfc_pass_4(B,BB).
@@ -580,8 +583,7 @@ boxlog_to_pfc_pass_4((H , B),(HH , BB)):- !,boxlog_to_pfc_pass_4(H,HH),boxlog_to
 boxlog_to_pfc_pass_4((H ; B),(HH ; BB)):- !,boxlog_to_pfc_pass_4(H,HH),boxlog_to_pfc_pass_4(B,BB).
 boxlog_to_pfc_pass_4(H,O):- H=..[N,nesc(F)],kb_nlit(_,N),nonvar(F),!,HH=..[N,F],boxlog_to_pfc_pass_4(HH,O).
 
-boxlog_to_pfc_pass_4(IN,OUT):-demodal_sents(_KB,IN,M),IN\=@=M,!,boxlog_to_pfc_pass_4(M,OUT).
-
+% boxlog_to_pfc_pass_4(IN,OUT):-demodal_sents(_KB,IN,M),IN\=@=M,!,boxlog_to_pfc_pass_4(M,OUT).
 
 boxlog_to_pfc_pass_4( H, HH):- H=..[F|ARGS],!,boxlog_to_pfc_pass_4(ARGS,ARGSO),!,HH=..[F|ARGSO].
 boxlog_to_pfc_pass_4(BL,PTTP):- baseKB:as_prolog_hook(BL,PTTP).

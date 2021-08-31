@@ -240,7 +240,7 @@ end_of_file.
 % ==============================================================
 
 % Turn modal extensions to partial
-:- set_prolog_flag(logicmoo_modality,part).
+:- set_prolog_flag(logicmoo_modality,simple_nesc).
 
 
 % ==============================================================

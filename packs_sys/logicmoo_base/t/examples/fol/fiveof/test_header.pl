@@ -13,8 +13,14 @@
 
 %:- if(qsave_program(foo,[])). :-endif.
 
+:- if(set_prolog_flag(runtime_testing_module,baseKB)).
+:- if(set_prolog_flag(test_module,baseKB)).
 :- include('../test_header').
+:- endif.
+:- endif.
 
+
+interactive_test(G):- add_history(G), fmt(?-(G)), call(G).
 
 :- set_prolog_flag(gc,true).
 

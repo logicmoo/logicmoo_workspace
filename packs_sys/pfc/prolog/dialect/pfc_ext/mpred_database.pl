@@ -1920,10 +1920,10 @@ repropagate(P):-  quietly(repropagate_0(P)).
 repropagate_0(P):-  notrace(is_ftVar(P)),!.
 repropagate_0(USER:P):- USER==user,!,repropagate_0(P).
 repropagate_0(==>P):- !,repropagate_0(P).
+repropagate_0(F):- atom(F),!,repropagate_atom(F).
 repropagate_0(P):-  meta_wrapper_rule(P),!,call_u(repropagate_meta_wrapper(P)).
 repropagate_0(F/A):- is_ftNameArity(F,A),!,functor(P,F,A),!,repropagate_0(P).
 repropagate_0(F/A):- atom(F),is_ftVar(A),!,repropagate_atom(F).
-repropagate_0(F):- atom(F),!,repropagate_atom(F).
 repropagate_0(P0):- p0_to_mp(P0,P),
      \+ predicate_property(P,_),catch('$find_predicate'(P0,PP),_,fail),PP\=[],!,
      forall(member(M:F/A,PP),must((functor(Q,F,A),repropagate_0(M:Q)))).
@@ -1932,12 +1932,14 @@ repropagate_0(P):- repropagate_meta_wrapper(P).
 
 predicates_from_atom(Mt,F,P):- var(Mt),!,
   ((guess_pos_assert_to(Mt),Mt:current_predicate(F,M:P0)) *-> ((Mt==M)->P=P0;P=M:P0) ; 
-    ('$find_predicate'(F,PP),member(Mt:F/A,PP),functor(P0,F,A),P=Mt:P0)).
+    ('$find_predicate'(F,PP),member(Mt:F/A,PP),functor(P0,F,A),P=Mt:P0)),
+  current_predicate(_,Mt:P).
 
 predicates_from_atom(Mt,F,P):- 
     (Mt:current_predicate(F,M:P0)*->true;
       (catch('$find_predicate'(F,PP),_,fail),PP\=[],member(Mt:F/A,PP),accessable_mt(Mt,M),functor(P0,F,A))),
-      ((Mt==M)->P=P0;P=M:P0).
+      ((Mt==M)->P=P0;P=M:P0),
+  current_predicate(_,Mt:P).
 
 accessable_mt(Mt,M):- M=Mt.
 accessable_mt(Mt,M):- clause_b(genlMt(Mt,M)).
