@@ -253,7 +253,7 @@ rl_goal_expansion(Goal, Pos) :-
     ->Flag == 1
     ; true
     ),
-    b_getval('$term', Term),
+    nb_current('$term', Term),
     memberchk(Term, [(:-_), []]),
     \+ clause(declaration_pos(Goal, _, _, _, _, _, _), _),
     \+ skip_record_decl(Goal),
