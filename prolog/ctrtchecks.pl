@@ -336,10 +336,10 @@ tabled_valid_prop(T, M, F, A) :-
           )
         )).
 
-type_cond_part_check_mult(inco, Cond, Part, Check, Mult) :-
-    type_inco_part_check_mult(Cond, Part, Check, Mult).
-type_cond_part_check_mult(cond, Cond, Part, Check, Mult) :-
-    type_cond_part_check_mult(Cond, Part, Check, Mult).
+type_cond_part_check_mult(inco, PType, Part, Check, Mult) :-
+    type_inco_part_check_mult(PType, Part, Check, Mult).
+type_cond_part_check_mult(cond, PType, Part, Check, Mult) :-
+    type_cond_part_check_mult(PType, Part, Check, Mult).
 
 type_inco_part_check_mult(calls,   call, instan, call).
 type_inco_part_check_mult(calls,   comp, compat, call).
