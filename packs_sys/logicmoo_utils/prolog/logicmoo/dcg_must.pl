@@ -12,6 +12,12 @@
 :- module(dcg_must,[
 	 dcg_peek/3]).
 
+/** <module>Utility LOGICMOO_DCG_MUST
+	Allows you to debug DCGs easier. 
+- @author Douglas R. Miles
+- @license LGPL 
+*/
+
 :- set_module(class(library)).
 
 :- use_module(library(logicmoo_common)).
