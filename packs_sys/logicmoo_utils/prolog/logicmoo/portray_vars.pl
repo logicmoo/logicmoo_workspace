@@ -7,6 +7,7 @@
   %guess_varnames/2,
   toProperCamelAtom/2,
   simpler_textname/2,simpler_textname/3]).
+
 /** <module> Utility LOGICMOO PORTRAY VARS
 	Automatically names  variables based off how they are used in code.
 - @author Douglas R. Miles
