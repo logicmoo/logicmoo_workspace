@@ -43,6 +43,9 @@
 /** <module>Utility LOGICMOO EACH CALL
 Before a clause does a redo it allows code to be called. To execute between calls during backtracking. Allows us to put code before and after a clause. 
 
+Utility LOGICMOO_EACH_CALL_CLEANUP
+	Works together with Each Call to allow code before and after a clause for backtracking. 
+
 - @author Douglas R. Miles
 - @license LGPL 
 
