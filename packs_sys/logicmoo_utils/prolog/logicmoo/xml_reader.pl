@@ -1,4 +1,10 @@
 :- module(xml_reader,[]).
+/** <module> Utility LOGICMOO XML READER
+Allows you to read xml files from prolog. 
+
+- @author Douglas R. Miles
+- @license LGPL 
+*/
 
 atrace:-trace.
 useCateID:- fail.
