@@ -21,7 +21,14 @@
           is_term_expanding_in_file/2,
           system_expanded_attvars/2]).
 
-:- set_module(class(library)).
+
+/** <module> Utility LOGICMOO ATTVAR SERIALIZER
+This module works with Utility LOGICMOO ATTVAR READER to allows us to keep attributed variables and files inside the prolog database.
+
+- @author Douglas R. Miles
+- @license LGPL 
+*/:- set_module(class(library)).
+
 
 :- module_transparent((deserialize_attvars/2,deserialize_attvars/3,
           serialize_attvars_now/2,
