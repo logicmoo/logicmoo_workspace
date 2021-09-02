@@ -40,9 +40,9 @@
       trusted_redo_call_cleanup/3      % +Setup, +Goal, +Cleanup
     ]).
 
-/** <module>Utility LOGICMOO EACH CALL CLEANUP
-Call Setup Goal Cleanup *Each* Iteration
-	Works together with Each Call to allow code before and after a clause for backtracking. 
+/** <module>Utility LOGICMOO EACH CALL
+Before a clause does a redo it allows code to be called. To execute between calls during backtracking. Allows us to put code before and after a clause. 
+
 - @author Douglas R. Miles
 - @license LGPL 
 
