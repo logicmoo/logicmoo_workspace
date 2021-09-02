@@ -2249,9 +2249,11 @@ sub_compound_of(I,Of):- compound(I),compound(Of),compound_name_arity(I,IN,IA),co
    (IA\==OA ; IN\==ON),!,fail.  
 sub_compound_of(I,Of):- \+ \+ (numbervars(I,99,_,[attvar(bind)]),I=Of ), I = Of.
 
+
 fixed_negations(I,O):- notrace(( compound(I), with_some_vars_locked(I,fix_negations(I,O))))->I\=@=O.
 
 fix_negations(P0,P0):- not_ftCompound(P0),!.
+fix_negations(MTP,S):- maybe_fix_varnumbering(MTP,NewMTP),!,fix_negations(NewMTP,S).
 fix_negations(~(P0),~(P0)):- not_ftCompound(P0),!.
 fix_negations(\+(P0),\+(P0)):- not_ftCompound(P0),!.
 fix_negations(\+ \+ (P0), (P0)):- not_ftCompound(P0),!.

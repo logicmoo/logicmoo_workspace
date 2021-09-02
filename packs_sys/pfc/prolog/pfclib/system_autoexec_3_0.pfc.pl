@@ -639,6 +639,7 @@ never_retract_u(X):- cwc, loop_check(never_retract_u(X,_)).
 
 
 ==> breakOnWarnings.
+/*
 P/pfc_positive_fact(P) ==> \+ ~P.
 :- break.
 (~P)/pfc_positive_fact(P) ==> (\+ P, nesc(~P)).
@@ -646,7 +647,7 @@ P/pfc_positive_fact(P) ==> \+ ~P.
 (nesc(P) /pfc_positive_fact(P) ==>  ( P, (~P ==> \+ ~P))).
 
 nesc(P)==>P.
-
+*/
 % % preventedWhen(P,{Cond})==> (((P:- awc,Cond,!,fail))).
 preventedWhen(P,Cond)==> (((P/pfc_positive_fact(P),Cond)==> nesc(~P))).
 % preventedWhen(P,Cond)==> ((((~P) <- Cond))).

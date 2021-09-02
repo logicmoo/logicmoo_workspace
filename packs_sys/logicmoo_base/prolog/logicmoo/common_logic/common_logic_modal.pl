@@ -40,7 +40,7 @@
 
 
 
-:- create_prolog_flag(qualify_modality,simple_nesc,[keep(true)]).
+%:- create_prolog_flag(qualify_modality,false,[keep(true)]).
 
 %% qualify_modality( ?P, ?Q) is det.
 qualify_modality(PQ,PQ):- kif_option_value( qualify_modality,false),!.
@@ -61,11 +61,12 @@ qualify_nesc(PQ,PQ):- contains_modal(PQ),!.
 qualify_nesc(PQ,PQO):- compound(PQ), PQ=..[F|Q],is_quantifier(F),append(LQ,[RQ],Q),qualify_nesc(RQ,RQQ),append(LQ,[RQQ],QQ),PQO=..[F|QQ],!.
 % qualify_nesc(P<=>Q,PQ & QP):- !,qualify_nesc(P=>Q,PQ),qualify_nesc(Q=>P,QP).
 
-% full modality
-qualify_nesc(P,(poss(P)=>nesc(P))):- kif_option_value( qualify_modality,full), !.
-
+qualify_nesc(P=>Q,P=>Q):- kif_option_value( qualify_modality,simple_nesc), !.
 % simple_nesc modality
 qualify_nesc(P,nesc(P)):- kif_option_value( qualify_modality,simple_nesc), !.
+
+% full modality
+qualify_nesc(P,(poss(P)=>nesc(P))):- kif_option_value( qualify_modality,full), !.
 
 % part modality
 qualify_nesc( ~(IN), ~(poss(IN))):- kif_option_value( qualify_modality,part), !.

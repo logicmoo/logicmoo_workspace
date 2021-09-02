@@ -184,7 +184,7 @@ do_compile_1file_to_stream(_Keys,File0,Stream):-
 
 :-style_check(-discontiguous).
 :-style_check(-singleton).
-:-use_module(library(wamcl_runtime)).
+:-use_module(library(wamclrt)).
 
 ',[Name,File,PWD,EpochS]),
   with_output_to(Stream,statistics),

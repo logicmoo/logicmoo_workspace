@@ -107,7 +107,8 @@ user:prolog_load_file(Spec, Options):- maybe_load_clif_file(Spec, Options),!.
 
 %:- kif_compile.
 
+%:-system:use_module(library(make)).
 
+:- add_history(use_module(library(logicmoo_clif))).
 
-
-   
+:- add_history(qsave_program(clif,[class(development),toplevel(prolog),goal(true)])).

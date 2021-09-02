@@ -191,11 +191,24 @@ subtract_eq([X|Xs],Ys,[X|T],Intersect) :-   subtract_eq(Xs,Ys,T,Intersect).
 modal_functor((poss)).
 modal_functor((nesc)).
 modal_functor((falsify)).
-modal_functor((~)).
+%modal_functor((~)).
 
+% chainable_literal(P,_):- is_ftVar(P),!,fail.
+chainable_literal(P,_):- \+ ground(P),!,fail.
+chainable_literal('$VAR'(_),_):- !, fail.
+chainable_literal( \+ _ ,_):- !,fail.
+chainable_literal(~P,~G):- !, chainable_literal(P,G).
+chainable_literal(P,P):- non_modal_positive(P),!.
+:- export(chainable_literal/2).
+:- system:import(chainable_literal/2).
+:- system:export(chainable_literal/2).
+
+check_non_modal_positive(P):- !, non_modal_positive(P).
+check_non_modal_positive(P):- \+ non_modal_positive(P),!,dumpST,break.
+check_non_modal_positive(_).
 
 non_modal_positive(P):- atomic(P),!.
-non_modal_positive(P):- compound(P),functor(P,F,_), \+ modal_functor(F).
+non_modal_positive(P):- compound(P),functor(P,F,_), F\=='$VAR', F\=='\\+', F\=='~', \+ modal_functor(F).
 :- export(non_modal_positive/1).
 :- system:import(non_modal_positive/1).
 :- system:export(non_modal_positive/1).
@@ -232,9 +245,9 @@ falsify_lc(M,P):-loop_check(falsify(M, P)),groundoid(P).
 :- system:export(falsify/1).
 
 %:- baseKB:ain((proven_tru(P):- (proven_tru_0(P),groundoid(P)))).
-:- baseKB:ain(((poss(P)) :- (non_modal_positive(P),(falsify(poss(~P));nesc(P)),groundoid(P)))).
-:- baseKB:ain(((poss(P)) :- (nesc(P)))).
-:- baseKB:ain(((poss(~P)) :- (non_modal_positive(P),(falsify(poss(P));falsify(P)),groundoid(P)))).
+%:- baseKB:ain(((poss(P)) :- (non_modal_positive(P),(falsify(poss(~P));nesc(P)),groundoid(P)))).
+%:- baseKB:ain(((poss(P)) :- (nesc(P)))).
+%:- baseKB:ain(((poss(~P)) :- (non_modal_positive(P),(falsify(poss(P));falsify(P)),groundoid(P)))).
 
 functor_skell(P0,P0):- var(P0),!.
 functor_skell(P0,_):- \+ compound(P0),!.

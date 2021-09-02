@@ -542,6 +542,7 @@ unnumbervars_and_save(X,YO):-
 %
 % Unnumbervars And Save.
 %
+
 unnumbervars4(Var,Vs,Vs,Var):- \+ compound(Var), !.
 unnumbervars4(Var,Vs,Vs,Var):- compound_name_arity(Var,_,0), !.
 unnumbervars4((I,TermIn),VsIn,NewVs,(O,TermOut)):- !,unnumbervars4(I,VsIn,VsM,O),unnumbervars4(TermIn,VsM,NewVs,TermOut).
@@ -554,7 +555,25 @@ unnumbervars4(PTermIn,VsIn,NewVs,PTermOut):- compound_name_arguments(PTermIn,F,T
   compound_name_arguments(PTermOut,F,TermOut).
    
 
- 
+maybe_fix_varnumbering(MTP,NewMTP):- ground(MTP), sformat(S,'~q',[(MTP)]),
+ notrace(catch( atom_to_term(S,(NewMTP),Vs),E,(writeq(S->E),fail))), \+ ground(NewMTP),
+  (prolog_load_context(variable_names,SVs);SVs=[]),!,
+   align_variables(Vs,SVs,ExtraVs),
+   append(SVs,ExtraVs,NewVs),
+   put_variable_names(NewVs).
+
+fix_varnumbering(MTP,NewMTP):- maybe_fix_varnumbering(MTP,NewMTP),!.
+fix_varnumbering(MTP,NewMTP):- MTP=NewMTP.
+
+
+align_variables([],_,[]):- !.
+align_variables([N=V|Vs],SVs,ExtraVs):- 
+  member([SN=SV],SVs),N==SN,V=SV,!,
+  align_variables(Vs,SVs,ExtraVs).
+align_variables([NV|Vs],SVs,[NV|ExtraVs]):- 
+  align_variables(Vs,SVs,ExtraVs).
+
+
 
 /*
 

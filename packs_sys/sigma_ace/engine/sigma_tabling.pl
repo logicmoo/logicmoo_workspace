@@ -10,12 +10,29 @@
 :- was_style_check(-atom).
 :- was_style_check(-string).
 
+:- export(isPrologCurrently/1).
+:- export(member_anss/2).
+:- export(prologCall/1).
+:- export(wfs_all/2).
+:- export((<---)/2).
+:- dynamic(isPrologCurrently/1).
+:- dynamic(member_anss/2).
+:- dynamic(prologCall/1).
+:- dynamic(wfs_all/2).
+:- dynamic((<---)/2).
+:- multifile(isPrologCurrently/1).
+:- multifile(member_anss/2).
+:- multifile(prologCall/1).
+:- multifile(wfs_all/2).
+:- multifile((<---)/2).
+
 
 :- op(1200,fx,  ::-).         /* operator for integrity constraints */
 
-:- op(1200,xfx,<--).
+:- op(1200,xfx,<----).
 %:- op(1150,fx,[(tabled),(prolog),(default)]).
-:- op(900,xfx,<-).
+:- op(900,xfx,<---).
+:- op(900,xfx,<---).
 
 :- dynamic slg_expanding/0.
 :- dynamic wfs_trace/0.
@@ -139,6 +156,7 @@ surf(KB,TN,CID,Vars):-
 	
 
 /* isPrologCurrently(Call) :  Call is a Prolog subgoal */
+
 isPrologCurrently(Call) :-!, fail, %TODO
 	 not(number(Call)),
 	functor(Call,P,A),
@@ -330,7 +348,7 @@ xnotrace :- retractallLogged(wfs_trace).
 
 
 slg_built_in(slg(_)).
-slg_built_in(_<-_).
+slg_built_in(_<---_).
 slg_built_in(slgall(_,_)).
 slg_built_in(slgall(_,_,_,_)).
 slg_built_in(emptytable(_)).
@@ -356,15 +374,15 @@ wfs_error(Msg,Term) :-
    one by one.
 */
 slg(Call) :-
-	Call<-[].
+	Call<---[].
 	
 
-/* Call<-Cons : 
+/* Call<---Cons : 
    It returns all true or undefined answers of Call one by one. In
    case of a true answer, Cons = []. For an undefined answer,
    Cons is a list of delayed literals.
 */
-Call<-Cons :-
+Call<---Cons :-
         ( isPrologCurrently(Call) ->
           prologCall(Call),
           Cons = []
@@ -1737,7 +1755,7 @@ attach([],L,L).
 attach([d(H,B)|R],[X|L0],L) :-
     ( B == [] ->
       X = H
-    ; X = (H <- B)
+    ; X = (H <--- B)
     ),
     attach(R,L0,L).
 
@@ -4398,17 +4416,17 @@ theta_iteration(Belief_Interpretations, Round, Residual_Prog, Result) :-
 % Eample of acceptable syntax:
 % ---------------------------
 %	goto_australia v goto_europe.
-%	happy <- goto_australia.
-%	happy <- goto_europe.
-%	bankrupt <- goto_australia & goto_europe.
-%	prudent <- not(goto_australia & goto_europe).
-%	disappointed <- not(goto_australia) & not(goto_europe).
+%	happy <--- goto_australia.
+%	happy <--- goto_europe.
+%	bankrupt <--- goto_australia & goto_europe.
+%	prudent <--- not(goto_australia & goto_europe).
+%	disappointed <--- not(goto_australia) & not(goto_europe).
 
 %------------------------------------------------------------------------------
 % Operators:
 %------------------------------------------------------------------------------
 
-:-  op(1200, xfx, '<-').
+:-  op(1200, xfx, '<---').
 
 %:- op(990, xfy, 'v').
 
@@ -4477,7 +4495,7 @@ parse(Input_Line, _, _) :-
 % parse_line(+Input_Line,-List_of_Head_Atoms,-List_of_Body_Literals):
 %------------------------------------------------------------------------------
 
-parse_line((Input_Head <- Input_Body), Head, Body) :-
+parse_line((Input_Head <--- Input_Body), Head, Body) :-
 	!,
 	parse_head(Input_Head, Head),
 	parse_body(Input_Body, Body).
@@ -4605,12 +4623,12 @@ print_program([]).
 
 print_program([rule(Head,Obj_Body,Bel_Body)|Rest]) :-
 	list_append(Obj_Body, Bel_Body, Body),
-	write('	'), % <- This is a TAB
+	write('	'), % <--- This is a TAB
 	print_head(Head),
 	(Body=[] ->
 		true
 	;
-		write(' <- '),
+		write(' <--- '),
 		print_body(Body)),
 	write('.'),
 	nl,
@@ -4623,12 +4641,12 @@ print_program([rule(Head,Obj_Body,Bel_Body)|Rest]) :-
 print_cond_facts([]).
 
 print_cond_facts([cond_fact(Head,Cond)|Rest]) :-
-	write('	'), % <- This is a TAB
+	write('	'), % <--- This is a TAB
 	print_head(Head),
 	(Cond=[] ->
 		true
 	;
-		write(' <- '),
+		write(' <--- '),
 		print_body(Cond)),
 	write('.'),
 	nl,
@@ -4906,7 +4924,7 @@ print_belief_ints([Bel_Int|More]) :-
 
 print_bel_int(bel_int(True_Beliefs,False_Beliefs)) :-
 	list_merge(True_Beliefs, False_Beliefs, All_Beliefs),
-	write('	'), % <- this is a TAB
+	write('	'), % <--- this is a TAB
 	print_bel_int(All_Beliefs, True_Beliefs).
 
 print_bel_int([], _) :-
@@ -5119,8 +5137,8 @@ static_resolve([BodyAtom|Body], Disjunctions, New_Dis) :-
 % For instance, if the residual program is
 %	p v q.				cond_fact([p,q], []).
 %	q v r.				cond_fact([q,r], []).
-%	s v t <- not(p).		cond_fact([s,t], [not([p])]).
-%	t <- not(r).			cond_fact([t], [not([r])]).
+%	s v t <--- not(p).		cond_fact([s,t], [not([p])]).
+%	t <--- not(r).			cond_fact([t], [not([r])]).
 % and the belief interpretations are
 %	not(p):TRUE   not(r):TRUE   	bel_int([not([p]),not([r])], [])
 %	not(p):FALSE  not(r):FALSE  	bel_int([], [not([p]),not([r])])
@@ -5667,8 +5685,8 @@ put_in_args(A0,A,Head,NewHead) :-
 
   Besides Prolog clauses, we allow general clauses where the body is a 
   universal disjunction of literals. Such clauses are specified in the form
-         Head <-- Body.
-  (Maybe <-- can be viewed as "All".) The head must be an atom of a tabled
+         Head <---- Body.
+  (Maybe <---- can be viewed as "All".) The head must be an atom of a tabled
   predicate : the body should be a disjunction of literals (separated by ';')
   : should not contain cut. The head must be stableGround whenever it is called. 
   All variables in the body that do not occur in the head are universally 
@@ -5699,7 +5717,7 @@ slg_term_expansion((H-->B),NewClause) :- !,
 	retractallLogged(slg_expanding),
 	slg_term_expansion(Clause,NewClause).
 
-slg_term_expansion((Head <-- Body),Clauses) :- !,
+slg_term_expansion((Head <---- Body),Clauses) :- !,
 	functor(Head,P,A),
 	Pred = P/A,
 	( isDeclTabled(P,A) ->
@@ -5707,13 +5725,13 @@ slg_term_expansion((Head <-- Body),Clauses) :- !,
 	; isDeclProlog(Pred) ->
 	  write('Error :  Prolog predicate '), write(Pred),
 	  write(' in clauses with universal disjunction.'),nl,
-	  write('       Clause ignored :  '), write((Head <-- Body)), nl,
+	  write('       Clause ignored :  '), write((Head <---- Body)), nl,
 	  Clauses = []
 	; getDefaultDecl(Default),
 	  ( Default == (prolog) ->
 	    write('Error :  Prolog predicate '), write(Pred),
 	    write(' in clauses with universal disjunction.'),nl,
-	    write('       Clause ignored :  '), write((Head <-- Body)), nl,
+	    write('       Clause ignored :  '), write((Head <---- Body)), nl,
 	    Clauses = []
 	  ; addDeclTabled(P,A),
 	    addHasTable(P,A),

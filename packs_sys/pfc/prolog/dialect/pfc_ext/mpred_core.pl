@@ -1249,7 +1249,6 @@ is_code_module0(M):- module_property(M,class(library)).
 is_code_module0(M):- module_property(M,class(user)).
 %call_mp(user, P1 ):- !,  call_mp(baseKB,P1).
 
-
 mpred_ain(MTP,S):- quietly(is_ftVarq(MTP)),!,trace_or_throw(var_mpred_ain(MTP,S)).
 mpred_ain(MTP,S):- mpred_ain_cm(MTP,P,AM,SM),
   mpred_ain_now4(SM,AM,P,S).
@@ -2048,7 +2047,8 @@ mpred_ain_trigger_reprop(PT,Support):- PT = '$pt'(_MZ,Trigger,Body), !,
    forall(mpred_eval_lhs_full(Body,(Trigger,Tcopy)),true)).
 
 
-mpred_ain_trigger_reprop('$nt'(Trigger,Test,Body),Support):- NT = '$nt'(TriggerCopy,Test,Body),!,
+mpred_ain_trigger_reprop('$nt'(Trigger,Test,Body),Support):- 
+  NT = '$nt'(TriggerCopy,Test,Body),!,
   copy_term_vn(Trigger,TriggerCopy),  
   mpred_mark_as_confirmed(Support,Trigger,pfcNegTrigger),
   mpred_trace_msg('~N~n\tAdding negative~n\t\ttrigger: ~p~n\t\ttest: ~p~n\t\tbody: ~p~n\t Support: ~p~n',[Trigger,Test,Body,Support]),
@@ -2071,7 +2071,7 @@ mpred_ain_trigger_reprop(BT,Support):- BT = '$bt'(Trigger,Body),!,
   mpred_bt_pt_combine(Trigger,Body,Support).
 
 mpred_ain_trigger_reprop(X,Support):-
-  mpred_warn("Unrecognized trigger to mpred_ain_trigger_reprop: ~p\n~~p~n",[X,Support]).
+  mpred_warn("Unrecognized trigger to mpred_ain_trigger_reprop: ~p \n ~p~n",[X,Support]).
 
 
 mpred_bt_pt_combine(Head,Body,Support):-

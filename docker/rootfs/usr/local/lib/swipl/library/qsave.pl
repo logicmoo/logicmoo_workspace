@@ -683,6 +683,7 @@ save_predicate(P, SaveClass) :-
     ->  true
     ;   save_attributes(P),
         \+ predicate_property(P, (volatile)),
+        writeln(P),
         (   nth_clause(P, _, Ref),
             feedback('.', []),
             '$qlf_assert_clause'(Ref, SaveClass),

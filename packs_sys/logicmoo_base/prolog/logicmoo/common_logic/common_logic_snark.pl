@@ -760,16 +760,17 @@ write_list([]).
 % Numbervars Using Names.
 %
 
-unnumbervars_with_names(X,X):-!.
+%unnumbervars_with_names(X,X):-!.
 % unnumbervars_with_names(Term,CTerm):- ground(Term),!,dupe_term(Term,CTerm).
-% unnumbervars_with_names(Term,CTerm):- show_failure(quietly(unnumbervars(Term,CTerm))),!.
 
+/*
 unnumbervars_with_names(Term,CTerm):- break,
  must_det_l((
    source_variables_l(NamedVars),
    copy_term(Term:NamedVars,CTerm:CNamedVars),
    b_implode_varnames0(CNamedVars))),!.
-
+*/
+unnumbervars_with_names(Term,CTerm):-   show_failure(quietly(unnumbervars(Term,CTerm))),!.
 
 unnumbervars_with_names1(Term,CTerm):-
   must_det_l((

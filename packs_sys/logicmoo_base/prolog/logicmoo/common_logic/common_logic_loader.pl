@@ -67,12 +67,18 @@ with_kif_translation(Found, Process):- with_kif_ok(with_lisp_translation(Found, 
 
 kif_process_once(P):-must(once(kif_process(P))).
 
+:- use_module(library(pfc_lib)).
 :- module_transparent(kif_process_expansion/2).
 kif_process_expansion(I, ( :- must_kif_process(I))):- I \= ( :- _ ), prolog_load_context(dialect,clif).
-kif_process_expansion(I,O):- \+ compound(I),!,as_pfc_expansion(I,O).
-kif_process_expansion('=>'(A,B),clif(O)):- I='implies'(A,B), ((fail,as_pfc_expansion(I,O)) -> true ; O=I),!.
-kif_process_expansion((P,WithImply),clif(O)):- tucks_implies(P,WithImply,I), I= ('=>'(_,_)), ((fail,as_pfc_expansion(I,O)) -> true ; O=I),!.
-kif_process_expansion(I,O):- as_pfc_expansion(I,O).
+kif_process_expansion(I,O):- \+ compound(I),!,loader_as_pfc_expansion(I,O).
+kif_process_expansion('=>'(A,B),clif(O)):- I='implies'(A,B), ((fail,loader_as_pfc_expansion(I,O)) -> true ; O=I),!.
+kif_process_expansion((P,WithImply),clif(O)):- tucks_implies(P,WithImply,I), I= ('=>'(_,_)), ((fail,loader_as_pfc_expansion(I,O)) -> true ; O=I),!.
+kif_process_expansion(I,O):- loader_as_pfc_expansion(I,O).
+
+loader_as_pfc_expansion(I,O):-  
+ setup_call_cleanup(current_prolog_flag(emulated_dialect,Was),
+  (set_prolog_flag(emulated_dialect,pfc),
+   pfc_lib:base_clause_expansion(I,O)),set_prolog_flag(emulated_dialect,Was)).
 
 tucks_implies(_, NonCompound, _):- \+ compound(NonCompound),!, fail.
 tucks_implies(P,(Q, Compound), WithImply):- tucks_implies((P,Q), Compound, WithImply).

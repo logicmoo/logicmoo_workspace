@@ -130,9 +130,16 @@ for ele2 in "${listOfNames[@]}"
         if [[ "$ele" == *".sh" && -x "$ele" ]]; then
          CMD="./${ele}"
         else
+         SWIPL=swipl
+           if [[ -x swipl-lm ]]; then
+              SWIPL=swipl-lm
+           fi
+           if [[ -x ./swipl-lm ]]; then
+              SWIPL=./swipl-lm
+           fi
    		#// Runs the test -f .swiplrc
-         #CMD="swipl -g 'set_prolog_flag(runtime_testing,${runtime_testing})' -g \"thread_create(['${ele}'],Id),thread_join(Id),$on_complete\" "
-         CMD="swipl -g 'set_prolog_flag(runtime_testing,${runtime_testing})' -g \"(['${ele}'])\" -g \"$on_complete\" "
+         #//CMD="swipl -g 'set_prolog_flag(runtime_testing,${runtime_testing})' -g \"thread_create(['${ele}'],Id),thread_join(Id),$on_complete\" "
+         CMD="$SWIPL -g 'set_prolog_flag(runtime_testing,${runtime_testing})' -g \"(['${ele}'])\" -g \"$on_complete\" "
         fi
 
         export TEE_FILE=$TESTING_TEMP/CMD_LAST.ansi

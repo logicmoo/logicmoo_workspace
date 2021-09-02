@@ -12,43 +12,17 @@
 test_e2c(X,[ape(Y)]):- ape_test(Y,X).
 test_e2c(X,[owlswrl(Y)]):- current_predicate(test_owlswrl/2),call(call,test_owlswrl(Y,X)), \+ clause(ape_test(Y,X),true).
 
+:- discontiguous(ape_test/2).
 
 test_e2c([
-  nlu_assert("The baby cries."),
-  nlu_assert(
-    ["She looks at it.",
-     "She talks to it."]),
-
-  nlu_ask_answer(
-   "How many agents are here?",
-   'At least one.', [infer_unique_objects]),
-
-  nlu_ask_answer(
-    'Did it cry?',
-    'It did if the baby was it.',
-    [it]).
-
-  nlu_ask_answer(
-    'What is "it"?',
-    'Unknown.',
-    [false_positives]),
-
+  nlu_assert( ["The baby cries.", "She looks at it.","She talks to it."]),
+  nlu_ask_answer("How many agents are here?",'At least one.', [infer_unique_objects]),
+  nlu_ask_answer('Did it cry?','It did if the baby was it.',[it]),
+  nlu_ask_answer('What is "it"?','Unknown.',[false_positives]),
   nlu_assert("The baby is it."),
-
-  nlu_ask_answer(
-   "How many agents are here?",
-   'At least two.',[infer_unique_objects]),
-
-  nlu_ask_answer(
-    'Did it cry?',
-    'yes.',
-    [it]).
-
-  nlu_ask_answer(
-    'What is "it"?',
-    'The baby.',
-    [learned,it]),
-  ]).
+  nlu_ask_answer("How many agents are here?",'At least two.',[infer_unique_objects]),
+  nlu_ask_answer('Did it cry?','yes.',[it]),
+  nlu_ask_answer('What is "it"?', 'The baby.', [learned,it]) ]).
 
 
 ape_test(13, 'Every man likes at least 3 things.').

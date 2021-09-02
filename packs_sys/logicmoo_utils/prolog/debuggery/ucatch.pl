@@ -1028,10 +1028,10 @@ get_source_location(get_source_location_unknown).
 % :- ensure_loaded(hook_database).
 
 :- dynamic(lmconf:http_file_stem/2).
-lmconf:http_file_stem('~',"https://logicmoo.org:2082/gitlab/logicmoo/prologmud_server/-/tree/master").
 lmconf:http_file_stem('lib/swipl',"https://logicmoo.org:2082/gitlab/logicmoo/logicmoo_workspace/-/tree/master/docker/rootfs/usr/local/lib/swipl").
+lmconf:http_file_stem('swi-prolog/pack',"https://logicmoo.org:2082/gitlab/logicmoo/logicmoo_workspace/-/blob/master/packs_sys").
 lmconf:http_file_stem(logicmoo_workspace,"https://logicmoo.org:2082/gitlab/logicmoo/logicmoo_workspace/-/blob/master").
-lmconf:http_file_stem(logicmoo_utils,"https://logicmoo.org:2082/gitlab/logicmoo/logicmoo_workspace/-/blob/master/packs_sys/logicmoo_utils").
+lmconf:http_file_stem('~',"https://logicmoo.org:2082/gitlab/logicmoo/prologmud_server/-/tree/master").
 
 :- export(ensure_compute_file_link/2).
 :- export(public_file_link/2).

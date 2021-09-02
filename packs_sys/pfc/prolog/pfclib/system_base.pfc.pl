@@ -635,15 +635,16 @@ never_retract_u(X):- cwc, loop_check(never_retract_u(X,_)).
 %:- break.
 
 % :- rtrace.
-
+/*
 P/mpred_positive_fact(P) ==> \+ ~P.
-(~P)/mpred_positive_fact(P) ==> (\+ P, nesc(~P)).
-(nesc(~P)/mpred_positive_fact(P)) ==> (~P, (P ==> \+ P)).
+(NP)/(nonvar(NP),NP = ~P, mpred_positive_fact(P)) ==> (\+ P, nesc(~P)).
+(nesc(NP)/(nonvar(NP),NP = ~P, mpred_positive_fact(P))) ==> (~P, (P ==> \+ P)).
 %:- rtrace.
 (nesc(P) /mpred_positive_fact(P) ==>  ( P, (~P ==> \+ ~P))).
 %:- break.
 
 nesc(P)==>P.
+*/
 
 % % preventedWhen(P,{Cond})==> (((P:- awc,Cond,!,fail))).
 preventedWhen(P,Cond)==> (((P/mpred_positive_fact(P),Cond)==> nesc(~P))).

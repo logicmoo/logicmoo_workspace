@@ -18,7 +18,8 @@ agentQuery(KIFCharsIn,Ctx,KB,User,UResultsSoFar,Result,Proof):-
 	agentQuery(KIFCharsIn,Ctx,KB,User,UResultsSoFar,Result,Proof,Status),
 	(Status = done(_) -> ! ; true).
 
-:- with_no_output(use_module(library(wamcl_runtime))).
+:- set_prolog_flag(wamcl_verbose,[]).
+:- use_module(library(wamclrt)).
 
 ask_parse_query(TermIn,FmlInOpen,Vars):- compound(TermIn), \+ is_list(TermIn), FmlInOpen = TermIn, get_clause_vars(FmlInOpen,Vars).
 ask_parse_query(KIFCharsIn,FmlInOpen,Vars):- isCharCodelist(KIFCharsIn), string_clean(KIFCharsIn,KIFChars),

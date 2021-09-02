@@ -774,7 +774,7 @@ out_o_s_l_2(F,L):-
       (is_outputing_to_file -> 
         (format('~N~q.~n', [:- was_s_l(F,L)]), 
            with_output_to(user_error,(public_file_link(F:L,FL),color_format_maybe([fg(green)], '~N% FRom ~w~n', [FL]),ttyflush)))
-         ; (public_file_link(F:L,FL),color_format_maybe([fg(green)], '~N% FroM ~w~n', [FL]),ttyflush)),!.
+         ; nop((public_file_link(F:L,FL),color_format_maybe([fg(green)], '~N% FroM ~w~n', [FL]),ttyflush))),!.
 
 :- export(was_s_l/2).
 was_s_l(B,L):- retractall(ec_reader:o_s_l(_,_)),asserta(ec_reader:o_s_l(B,L)), out_o_s_l_2(B,L).

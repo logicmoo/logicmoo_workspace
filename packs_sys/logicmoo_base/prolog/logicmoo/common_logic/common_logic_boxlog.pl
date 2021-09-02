@@ -128,7 +128,8 @@ Per-Litteral features
  op(300,fx,'~'),
  op(300,fx,'-'))).
 
-%= 	 	 
+%= 
+
 
 %% is_units_h( ?A) is semidet.
 %

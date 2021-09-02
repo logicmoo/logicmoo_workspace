@@ -48,8 +48,11 @@ sigma_server_message_hook(trace_mode(on),B,Lines):-
 	set_output(user_output),
 	thread_at_exit(thread_signal(main,set_input(Stream))).
 */
-:-current_input(Stream),assert(tty_in(Stream)).
-:-current_output(Stream),assert(tty_out(Stream)).
+:- volatile(tty_in/1).
+:- volatile(tty_out/1).
+save_tty_streams:-current_input(Stream),assert(tty_in(Stream)),current_output(StreamO),assert(tty_out(StreamO)).
+:- initialization(save_tty_streams,now).
+:- initialization(save_tty_streams,restore_state).
 
 :-dynamic(cpuend/1).
 

@@ -12,30 +12,29 @@
 
 :- module(baseKB).
 :- process_script_file.
+:- dynamic house/1.
 
 :- kif_compile.
 
 % makes the KB monotonic
-:- set_kif_option(qualify_modality,simple_nesc).
+:- set_kif_option(qualify_modality,false).
 
 % There are five houses in a row.
-nesc(leftof(h1, h2)).
+leftof(h1, h2).
 leftof(h2, h3).
 leftof(h3, h4).
 leftof(h4, h5).
 
-% makes the KB non-monotonic
-:- set_kif_option(qualify_modality,false).
+% uncomment the next line and this will fail the test
+% :- set_kif_option(qualify_modality,simple_nesc).
 % this should cause h1-h5 to become houses
 leftof(H1, H2) => house(H1) & house(H2).
 
 % intractive_test/1 means only run if interactive
 :- interactive_test(listing(kif_show)).
 
-% mpred_test/1 each become a Junit test that must succeed
-:- mpred_test(listing(nesc)).
-
 % ensure our rule worked
+% mpred_test/1 each become a Junit test that must succeed
 :- mpred_test((house(h1))).
 :- mpred_test((house(h2))).
 :- mpred_test((house(h3))).
@@ -47,3 +46,4 @@ leftof(H1, H2) => house(H1) & house(H2).
 % but not "too" nice
 :- mpred_test(\+ nesc(house(false_positive))).
 
+:- listing([house/1,nesc/1]).

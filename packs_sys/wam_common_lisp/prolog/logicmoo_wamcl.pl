@@ -2,5 +2,5 @@
 
 :- module(logicmoo_wamcl,[]).
 
-:- reexport(library(wamcl_runtime)).
+:- reexport(library(wamclrt)).
 

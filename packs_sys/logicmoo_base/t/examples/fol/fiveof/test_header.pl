@@ -20,7 +20,7 @@
 :- endif.
 
 
-interactive_test(G):- add_history(G), fmt(?-(G)), call(G).
+interactive_test(G):- add_history(G), fmt("?- ~q.",[G]), nop(mpred_why(G)).
 
 :- set_prolog_flag(gc,true).
 

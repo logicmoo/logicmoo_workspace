@@ -32,6 +32,7 @@ was_indexed(_).
 :-dynamic(isKeepAlive/1).
 :-dynamic(isConsoleOverwritten/0).
 :-dynamic(sigmaThreadCreate_data/5).
+:-volatile(sigmaThreadCreate_data/5).
 
 
 createPrologServer(Port) :-
@@ -41,10 +42,15 @@ win32:-
 	setSigmaOption(client=html),
 	xmlPrologServer(5001).
 
+:- dynamic(sigma_tmp:sigma_server_socket/1).
+:- volatile(sigma_tmp:sigma_server_socket/1).
+tcp_close_socket_sigma:- ignore((sigma_tmp:sigma_server_socket(Socket), catch(tcp_close_socket(Socket),_,true))).
+
 xmlPrologServer(Port):-
 	tcp_socket(ServerSocket),
         catch(ignore(tcp_setopt(ServerSocket, reuseaddr)),_,true),
-	at_halt(tcp_close_socket(ServerSocket)),
+  assert(sigma_tmp:sigma_server_socket(ServerSocket)),
+	at_halt(tcp_close_socket_sigma),
 	please_tcp_bind(ServerSocket, Port),
 	tcp_listen(ServerSocket, 655),
 	repeat,

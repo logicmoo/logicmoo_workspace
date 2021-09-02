@@ -68,7 +68,7 @@
 :- endif.
 
 :- if(app_argv('--wamcl');app_argv('--lispsock')).
-:- user:use_module(library(wamcl_runtime)).
+:- user:use_module(library(wamclrt)).
 :- endif.
 
 %:- if(app_argv('--lispsock 3301')).

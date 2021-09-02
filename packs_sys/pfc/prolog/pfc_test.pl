@@ -49,7 +49,7 @@ test_red_lined(Failed):- notrace((
 
 %mpred_test(G):- notrace(mpred_test0(G)) -> true ; with_no_breaks(with_mpred_trace_exec(must(mpred_test_fok(G)))),!.
 mpred_test(_):- notrace((compiling; current_prolog_flag(xref,true))),!.
-mpred_test(G):- notrace(mpred_test_fok(G)).
+mpred_test(G):- mpred_test_fok(G).
 
 
 :- if(false).
@@ -85,12 +85,13 @@ mpred_test_fok_2(Testcase, G):-
   add_test_info(Testcase,time,Elapsed),
   TestResult=..[Type|Info],add_test_info(Testcase,Type,Info),
   add_test_info(Testcase,result,Type))),
- must_det_l((getenv('TEE_FILE',Tee),
+ ignore((getenv('TEE_FILE',Tee),
+ must_det_l((
    read_file_to_string(Tee,Str,[]),
    add_test_info(Testcase,out,Str),
    save_single_testcase(Testcase),
    sformat(Exec,'cat /dev/null > ~w',[Tee]),
-   shell(Exec))).
+   shell(Exec))))).
 
 mpred_test_fok_4(\+ G, TestResult, Elapsed):- !,
  must_det_l((
@@ -125,7 +126,7 @@ catch_timeout(P):- catch(call_with_time_limit(30,w_o_c(P)),E,wdmsg(P->E)).
 generate_test_name(baseKB:G,Testcase):- nonvar(G), !, generate_test_name(G,Testcase).
 generate_test_name(\+ G, Name):- nonvar(G), !, generate_test_name(G,Name1), sformat(Name,'\naf ~w',[Name1]).
 generate_test_name(call_u(G), Name):- nonvar(G), !, generate_test_name(G,Name).
-generate_test_name(G,Name):- callable(G), (source_location(_,L); (_='',L='')), 
+generate_test_name(G,Name):- callable(G), (source_location(_,L); (_='',L=0)), 
   sformat(Name1,'Line_~4d',[L]),!,replace_in_string(['_0.'='_'],Name1,Name2), generate_test_name(Name2,Name).
 generate_test_name(SName,RSName):- atomic(SName),shorten_and_clean_name(SName,RSName),!.
 generate_test_name(G,G).

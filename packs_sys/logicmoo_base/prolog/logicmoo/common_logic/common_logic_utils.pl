@@ -40,6 +40,7 @@ is_kif_clause(R):- is_clif(R),!.
 %
 % Knowledge Interchange Format Hook.
 %
+:- use_module(library(pfc_lib)).
 kif_hook(C):- not_ftCompound(C),!,fail.
 kif_hook(_H :- _):-  !,fail.
 kif_hook(_H <- _):-  !,fail.

@@ -35,7 +35,7 @@
 
 
 %:- use_module(library(logicmoo_nlu)).
-%:- ensure_loaded(library(wamcl_runtime)).
+%:- ensure_loaded(library(wamclrt)).
 
 %:- dynamic(baseKB:installed_converter/4).
 %:- rtrace.
