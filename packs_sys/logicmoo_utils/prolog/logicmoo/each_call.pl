@@ -3,7 +3,7 @@
     Author:        Douglas R. Miles, ...
     E-mail:        logicmoo@gmail.com
     WWW:           http://www.logicmoo.org
-    Copyright (c)  2016-2017, LogicMOO Basic Tools
+    Copyright (c)  2016,2017,2021, LogicMOO Basic Tools
     All rights reserved.
 
     Redistribution and use in source and binary forms, with or without
@@ -40,9 +40,11 @@
       trusted_redo_call_cleanup/3      % +Setup, +Goal, +Cleanup
     ]).
 
-/** <module> Each call cleanup
-
+/** <module>Utility LOGICMOO EACH CALL CLEANUP
 Call Setup Goal Cleanup *Each* Iteration
+	Works together with Each Call to allow code before and after a clause for backtracking. 
+- @author Douglas R. Miles
+- @license LGPL 
 
 @see  https://groups.google.com/forum/#!searchin/comp.lang.prolog/redo_call_cleanup%7Csort:relevance/comp.lang.prolog/frH_4RzMAHg/2bBub5t6AwAJ
 
