@@ -280,16 +280,21 @@ lar :- % set_prolog_flag(dmsg_level,never),
 
 :- before_boot(use_baseKB).
 :- during_boot(use_baseKB).
-:- during_boot(ain(tSourceData(iWorldData8))).
+:- during_boot(baseKB:ain(tSourceData(iWorldData8))).
 
 start_runtime_mud:- 
    use_baseKB,
-   baseKB:(
    baseKB:ain(isLoaded(iWorldData8)),
-   dmsg(call(listing(baseKB:feature_test))),
-   dmsg(call(listing(baseKB:sanity_test))),
-   dmsg(call(listing(baseKB:regression_test))),
-   baseKB:with_mpred_trace_exec(ain(isRuntime))).
+   with_mpred_trace_exec(baseKB:ain(isRuntime)),
+   show_lm_tests.
+
+
+show_lm_tests:-
+  dmsg(call(listing(baseKB:feature_test))),
+  dmsg(call(listing(baseKB:sanity_test))),
+  dmsg(call(listing(baseKB:regression_test))),
+  !.
+
 
 :- after_boot(start_runtime_mud).
 
