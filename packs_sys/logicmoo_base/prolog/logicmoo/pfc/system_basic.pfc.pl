@@ -418,6 +418,8 @@ typeGenls(ttIndividualType,tIndividual).
 typeGenls(ttTypeFacet,tCol).
 typeGenls(ttValueType,vtValue).
 
+:- kb_shared(tRegion/1).
+
 typeGenls(ttSpatialType,tSpatialThing).
 typeGenls(ttAgentType,tAgent).
 typeGenls(ttObjectType,tObj).

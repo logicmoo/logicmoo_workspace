@@ -431,10 +431,12 @@ erase_clause(H,B):-
 at_current_Y(_S,Goal):- maybe_notrace(Goal).
 
 :- meta_predicate(maybe_notrace(0)).
-maybe_notrace(Goal):- tracing -> (debug,maybe_one(quietly(Goal), rtrace(Goal))) ; maybe_one(enotrace(Goal),rtrace(Goal)).
+maybe_notrace(Goal):- tracing 
+ -> (debug,maybe_one(quietly(Goal), rtrace(Goal))) 
+ ; maybe_one(enotrace(Goal),rtrace(Goal)).
 
 :- meta_predicate(maybe_one(0,0)).
-maybe_one(Goal,Else):- catch(call(Goal),_,fail)*-> true ; Else.
+maybe_one(Goal,Else):- catch(call(Goal),E,(dumpST,writeln(E),fail))*-> true ; (wdmsg(maybe_one(Goal,Else)),Else).
 /*maybe_one(Goal,Else):-   
   (catch(Goal,E1,(wdmsg(error_maybe_zotrace(E1,Goal)),Else)) 
    -> ! 

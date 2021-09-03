@@ -283,9 +283,13 @@ lar :- % set_prolog_flag(dmsg_level,never),
 :- during_boot(baseKB:ain(tSourceData(iWorldData8))).
 
 start_runtime_mud:- 
+   forall(tCol(X),call(baseKB:kb_shared,X/1)),
+   forall(tSet(X),call(baseKB:kb_shared,X/1)),
+   %forall(tCol(X),call(baseKB:make_as_dynamic,X/1)),
+   %forall(tSet(X),call(baseKB:make_as_dynamic,X/1)),
    use_baseKB,
-   baseKB:ain(isLoaded(iWorldData8)),
-   with_mpred_trace_exec(baseKB:ain(isRuntime)),
+   notrace(baseKB:ain(isLoaded(iWorldData8))),
+   notrace(with_mpred_trace_exec(baseKB:ain(isRuntime))),
    show_lm_tests.
 
 

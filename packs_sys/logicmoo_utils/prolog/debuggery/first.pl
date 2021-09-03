@@ -119,6 +119,14 @@ set_pred_attrs(MP,List):- maplist(set_pred_attrs(MP),List).
 :- thread_local(tlbugger:ifHideTrace/0).% WAS OFF  :- system:reexport(library(logicmoo/util_varnames)).
 % % % OFF :- system:use_module(library(lists)).
 
+:- export(reset_IO/0).
+reset_IO:-
+ stream_property(In,file_no(0)),stream_property(Out,file_no(1)),stream_property(Err,file_no(2)),
+  set_stream(In,alias(user_input)),set_stream(Out,alias(user_output)),set_stream(Err,alias(user_error)),
+  set_stream(In,alias(current_input)),set_stream(Out,alias(current_output)),set_stream(Err,alias(current_error)),
+  set_system_IO(In,Out,Err),
+  set_prolog_IO(In,Out,Err).
+
 
 :- export(cnas/3).
 
