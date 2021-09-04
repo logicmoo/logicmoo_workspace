@@ -134,18 +134,19 @@ for ele2 in "${listOfNames[@]}"
         if [[ "$ele" == *".sh" && -x "$ele" ]]; then
          CMD="./${ele}"
         else
-           if [[ -x pfc ]]; then
+           if type pfc > /dev/null 2>&1; then
               SWIPL=pfc
            fi
-           if [[ -x clif ]]; then
+           if type clif > /dev/null 2>&1; then
               SWIPL=clif
            fi
-           if [[ -x ./swipl-junit ]]; then
+           if type ./swipl-junit > /dev/null 2>&1; then
               SWIPL=./swipl-junit
            fi
-   		#// Runs the test -f .swiplrc
-         #//CMD="swipl -g 'set_prolog_flag(runtime_testing,${runtime_testing})' -g \"thread_create(['${ele}'],Id),thread_join(Id),$test_completed\" "
-         CMD="$SWIPL -g 'set_prolog_flag(runtime_testing,${runtime_testing})' -g \"(['${ele}'])\" -g \"$test_completed\" "
+      		#// Runs the test -f .swiplrc
+            #//CMD="swipl -g 'set_prolog_flag(runtime_testing,${runtime_testing})' -g \"thread_create(['${ele}'],Id),thread_join(Id),$test_completed\" "
+            CMD="$SWIPL -g 'set_prolog_flag(runtime_testing,${runtime_testing})' -g \"(['${ele}'])\" -g \"$test_completed\" "
+            INFO "CMD=$CMD"
         fi
 
         export TEE_FILE=$TESTING_TEMP/CMD_LAST.ansi
