@@ -51,6 +51,7 @@ if [ "$1" == "-k" ]; then
 fi
 
 [ -z "${TESTING_TEMP}" ] && export TESTING_TEMP=$(mktemp -d -t logicmoo_testing-$(date +%Y-%m-%d-%H-%M-%S)-XXXXXXXXXX)
+TESTING_TEMP=$(expr substr "${TESTING_TEMP}" 1 100)
 
 #// For test_prolog  (no args)
  declare -a listOfNames=(
@@ -90,17 +91,20 @@ export GLOB="$*"
 [ -z "$GLOB" ] && GLOB="*_01.*"
 
 [ -z "${TEST_STEM}" ] && TEST_STEM=Report-$(echo "${GLOB}-Units" | sed -e "s/[*]/vSTARv/g" -e "s/[?]/vQUESTv/g" -e "s/[.]/vDOTv/g" -e "s/[^a-Z0-9_]/-/g" -e "s/--/-/g" -e "s/-/-/g"  -e "s/--/-/g" )
+TEST_STEM=$(expr substr "${TEST_STEM}" 1 110)
 
 REPORT_STEM=$(echo "$TEST_STEM-${PWD}" | sed -e "s/[*]/vSTARv/g" -e "s/[?]/vQUESTv/g" -e "s/[.]/vDOTv/g" -e "s/[^a-Z0-9_]/-/g" -e "s/--/-/g" -e "s/_/-/g"  -e "s/--/-/g" )
+REPORT_STEM=$(expr substr "${REPORT_STEM}" 1 120)
 
 JUNIT_TESTS_GLOBBED="${TESTING_TEMP}/${REPORT_STEM}-glob"
-
+JUNIT_TESTS_GLOBBED=$(expr substr "${JUNIT_TESTS_GLOBBED}" 1 130)
+echo "<!-- JUNIT_TESTS_GLOBBED=${JUNIT_TESTS_GLOBBED} -->"
 echo "" > $JUNIT_TESTS_GLOBBED
 function JECHO {
  (echo -e "${*}\n") >> $JUNIT_TESTS_GLOBBED
 }
 function INFO {
- JECHO "<!-- ${*} -->"
+   JECHO "<!-- ${*} -->"
  echo -e "${*}\n"
 }
 
