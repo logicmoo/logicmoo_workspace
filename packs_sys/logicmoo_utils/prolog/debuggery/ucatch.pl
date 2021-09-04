@@ -1037,13 +1037,13 @@ lmconf:http_file_stem('~',"https://logicmoo.org:2082/gitlab/logicmoo/prologmud_s
 :- export(public_file_link/2).
 :- export(maybe_compute_file_link/2).
 
-ensure_compute_file_link(S,URL):- maybe_compute_file_link(S,URL),!.
+ensure_compute_file_link(S,URL):- \+ ( nb_current('$inprint_message', Messages), Messages\==[] ), maybe_compute_file_link(S,URL),!.
 ensure_compute_file_link(S,S).
 
 maybe_compute_file_link(S,O):- atom(S),!, lmconf:http_file_stem(F,R),atomic_list_concat([_,A],F,S),!,atom_concat(R,A,O).
 maybe_compute_file_link(S:L,O):- integer(L),!,maybe_compute_file_link(S,F),format(atom(O),'~w#L~w',[F,L]).
 
-public_file_link(S,O):- maybe_compute_file_link(S,M),into_link(S,M,O).
+public_file_link(S,O):-   \+ ( nb_current('$inprint_message', Messages), Messages\==[] ), maybe_compute_file_link(S,M),into_link(S,M,O).
 public_file_link(MG,MG).
 
 into_link(_,M,O):- format(atom(O),'* ~w ',[M]),!.

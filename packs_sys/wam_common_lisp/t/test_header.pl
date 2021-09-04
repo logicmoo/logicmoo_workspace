@@ -1,201 +1,90 @@
+% This file is mostly all inside if/endifs so it doesnt interfere with `module/2`
 
-:- use_module(library(wamcl)).
 
-:- if(current_prolog_flag(test_header,_)).
+:- if( \+ current_module(logicmoo_clif)).
 
+
+% Load Editline/Readline
+:- if( \+ current_module(prolog_history)).
+:- if((ignore(exists_source(library(editline))->use_module(library(editline))
+       ;(exists_source(library(readline)),use_module(library(readline)))),
+   '$toplevel':setup_history)). :- endif.
+:- endif.
+
+% Load SWI Utils
+:- if(( \+ exists_source(library(logicmoo_utils)), 
+   prolog_load_context(directory,X),absolute_file_name('../../../..',O,[relative_to(X),file_type(directory)]), attach_packs(O))).  
+:- endif.
+:- if(use_module(library(logicmoo_utils))). :-endif.
+
+% Load PFC
+:- if(set_prolog_flag(pfc_version,v(2,0,0))). :- endif.
+:- if(ensure_loaded(library(pfc_lib))). :-endif.
+
+% Load CLIF
+:- if((use_module(library(logicmoo_clif)))). :-endif.
+
+:- endif. % \+ current_module(logicmoo_clif)
+
+:- if(assert_if_new((clifops:clif_op_decls((
+ op(1199,fx,('==>')), op(1190,xfx,('::::')), op(1180,xfx,('==>')), op(1170,xfx,('<==>')), op(1160,xfx,('<-')),
+ op(1150,xfx,('=>')), op(1140,xfx,('<=')), op(1130,xfx,'<=>'),
+ op(1120,xfx,'<->'),
+ op(600,yfx,('&')), op(600,yfx,('v')),op(350,xfx,('xor')), op(300,fx,('-')),
+ op(300,fx,('~'))))))).   :- endif.
+
+
+:- if((prolog_load_context(source,S),format(user_error,'~N~q,~n',[running(S)]))). :- endif.
+:- if(( \+ current_prolog_flag(test_module,_),set_prolog_flag(test_module,baseKB),assert(baseKB:this_is_baseKB))). :- endif.
+:- if(( \+ current_prolog_flag(test_typein_module,_), set_prolog_flag(test_typein_module,baseKB))). :- endif.
+
+:- if(current_prolog_flag(loaded_test_header,_)). 
 :- wdmsg(reload_of_test_header).
-
 :- mpred_reset.
-
 :- else.
+:- if(( \+ current_prolog_flag(loaded_test_header,_),set_prolog_flag(loaded_test_header,loaded))).  :- endif.
 
-% runtype: default = pfc
-:- if(current_prolog_flag(runtime_testing_module,_)->true;
-  set_prolog_flag(runtime_testing_module,test_header)).
+:- if(prolog_load_context(module,user)).
+:- if(( \+ current_prolog_flag(test_module,user), \+ current_prolog_flag(test_module,baseKB))).
+% writes a temp header file and include/1s it
+:- if(( tmp_file(swi, Dir), make_directory(Dir),working_directory(OLD,Dir),asserta(t_l:old_pwd(OLD,Dir)),current_prolog_flag(test_module,Module),open('module_header.pl',write,OS),
+  format(OS,'\n:- module(~q,[test_header_include/0]).\n test_header_include. ',[Module]),close(OS))). :- endif.
+:- include('module_header.pl').
+:- retract(t_l:old_pwd(OLD,Delete)),working_directory(_,OLD),delete_directory_and_contents(Delete).
+:- endif.
+:- endif. % prolog_load_context(module,user)
+:- endif. % current_prolog_flag(loaded_test_header,_)
+
+:- if((current_prolog_flag(test_module,Module), '$set_source_module'(Module))). :- endif.
+:- if((current_prolog_flag(test_module,Module), clifops:clif_op_decls(OPS), call(Module:OPS))). :- endif.
+
+:- if((prolog_load_context(source,File),!,
+   ignore((((sub_atom(File,_,_,_,'.pfc')
+   -> (sanity(is_pfc_file),set_prolog_flag(is_pfc_file_dialect,true))
+   ; nop((sanity( \+ is_pfc_file),set_prolog_flag(is_pfc_file_dialect,false))))))))).  
 :- endif.
 
-:- if(( \+ current_prolog_flag(test_header,_),set_prolog_flag(test_header,loaded))).
-
-
-:- if((prolog_load_context(module,user), \+ current_module(pfc_lib))).
-
-:- thread_local(t_l:each_file_term/1).
-
-:- if( exists_source(library(logicmoo_clif)) -> true ;
- ((dynamic(user:file_search_path/2),multifile(user:file_search_path/2),
-  absolute_file_name('../../prolog',Dir),asserta(user:file_search_path(library,Dir))))).
+:- if((
+ %set_prolog_flag(debug, true),
+ %set_prolog_flag(gc, false),
+ %set_prolog_flag(runtime_speed,0), % 0 = dont care
+ set_prolog_flag(runtime_speed, 0), % 1 = default
+ set_prolog_flag(runtime_debug, 3), % 2 = important but dont sacrifice other features for it
+ set_prolog_flag(runtime_safety, 3),  % 3 = very important
+ set_prolog_flag(unsafe_speedups, false),
+ set_prolog_flag(logicmoo_message_hook,dumpst),
+ %mpred_trace_exec,
+ true)).
 :- endif.
 
-% runtype: default = pfc
-:- if(current_prolog_flag(runtime_testing_module,_)->true;
-  set_prolog_flag(runtime_testing_module,test_header)).
-:- endif.
+% :- if(('$current_source_module'(W), '$set_typein_module'(W))). :- endif.
+:- if((current_prolog_flag(test_typein_module,Module), '$set_typein_module'(Module), module(Module))). :- endif.
+:- if((current_prolog_flag(test_typein_module,Module), clifops:clif_op_decls(OPS), call(Module:OPS))). :- endif.
 
-:- if(( \+ current_prolog_flag(test_header,_),set_prolog_flag(test_header,loaded))).
-
-
-
-
-:- if((prolog_load_context(module,user), \+ current_module(pfc_lib))).
-:- module(header_sane,[test_header_include/0]).
-:- endif.
-
-test_header_include.
-
-:- endif.
-%:- set_prolog_flag(runtime_speed,0). % 0 = dont care
-:- set_prolog_flag(runtime_speed, 0). % 1 = default
-:- set_prolog_flag(runtime_debug, 3). % 2 = important but dont sacrifice other features for it
-:- set_prolog_flag(runtime_safety, 3).  % 3 = very important
-:- set_prolog_flag(unsafe_speedups, false).
-:- set_prolog_flag(logicmoo_message_hook,break).
-
-
-:- endif.
-
-
-
-%:- set_prolog_flag(debug, true).
-%:- set_prolog_flag(gc, false).
-
-:- '$current_source_module'(W), '$set_typein_module'(W).
-
-:- set_prolog_flag(nonet,true).
-:- set_prolog_flag(run_network,false).
-:- set_prolog_flag(load_network,false).
-
-
-
-%:- set_prolog_flag(runtime_speed,0). % 0 = dont care
-:- set_prolog_flag(runtime_speed, 0). % 1 = default
-:- set_prolog_flag(runtime_debug, 3). % 2 = important but dont sacrifice other features for it
-:- set_prolog_flag(runtime_safety, 3).  % 3 = very important
-:- set_prolog_flag(unsafe_speedups, false).
-
-% :- dynamic(ttExpressionType/1).
-
-:- set_prolog_flag(runtime_debug, 0). 
-
-
-
-
-dir_from(Rel,Y):-
-    ((getenv('LOGICMOO_WS',Dir);
-     prolog_load_context(directory,Dir);
-     '~/logicmoo_workspace'=Dir;
-     '/home/dmiles/logicmoo_workspace/'=Dir)),
-    absolute_file_name(Rel,Y,[relative_to(Dir),file_type(directory),file_errors(fail)]),
-    exists_directory(Y),!.
-add_pack_path(Rel):-
-   dir_from(Rel,Y),
-   (( \+ user:file_search_path(pack,Y)) ->asserta(user:file_search_path(pack,Y));true).
-:- add_pack_path(packs_sys).
-:- add_pack_path(packs_usr).
-:- add_pack_path(packs_web).
-:- add_pack_path(packs_xtra).
-:- initialization(attach_packs,now).
-:- if(exists_source(library(editline))).
-:- use_module(library(editline)).
-:- else.
-:- if(exists_source(library(readline))).
-:- use_module(library(readline)).
-:- endif.
-:- endif.
-
-:-  '$toplevel':setup_history.
-:- set_prolog_flag(os_argv,[swipl, '-f', '/dev/null','--nonet','--unsafe','--']).
-
-
-:- ensure_loaded(library(script_files)).
-:- if(( \+ current_module(pfc_lib) )).
-:- use_module(library(pfc)).
-%:- prolog_load_context(source,File),(atom_contains(File,'.pfc')-> sanity(is_pfc_file) ; must_not_be_pfc_file).
-:- endif.
-
-:- ensure_loaded(library(pfc_test)).
-
-
-:- kb_global(baseKB:ttExpressionType/1).
-
-:- sanity((defaultAssertMt(Mt1),fileAssertMt(Mt2),source_module(Mt3))),sanity((Mt1==Mt2,Mt2==Mt3)).
-
-% logicmoo_clif should maybe load from logicmoo_user
-%:- use_module(library(logicmoo_user)).
-:- use_module(library(script_files)).
-:- set_prolog_flag(runtime_debug, 3). 
-
-
-:- fav_debug.
-:- set_prolog_flag(gc, true).
-
-:- endif.
-
-
-:-
- op(1199,fx,('==>')), 
- op(1190,xfx,('::::')),
- op(1180,xfx,('==>')),
- op(1170,xfx,'<==>'),  
- op(1160,xfx,('<-')),
- op(1150,xfx,'=>'),
- op(1140,xfx,'<='),
- op(1130,xfx,'<=>'), 
- op(600,yfx,'&'), 
- op(600,yfx,'v'),
- op(350,xfx,'xor'),
- op(300,fx,'~'),
- op(300,fx,'-').
-
-:- fixup_exports.
-
-end_of_file.
-
-
-:-
- op(1199,fx,('==>')), 
- op(1190,xfx,('::::')),
- op(1180,xfx,('==>')),
- op(1170,xfx,'<==>'),  
- op(1160,xfx,('<-')),
- op(1150,xfx,'=>'),
- op(1140,xfx,'<='),
- op(1130,xfx,'<=>'), 
- op(600,yfx,'&'), 
- op(600,yfx,'v'),
- op(350,xfx,'xor'),
- op(300,fx,'~'),
- op(300,fx,'-').
-
-:- sanity((defaultAssertMt(Mt1),fileAssertMt(Mt2),source_module(Mt3))),sanity((Mt1==Mt2,Mt1==Mt3)).
-
-
-
-%:- ensure_loaded(library('logicmoo_clif')).
-%:- ensure_loaded(library('logicmoo/common_logic/common_logic_loader.pl')).
-:- assert(t_l:each_file_term(must_kif_process_after_rename)).
-
-:- prolog_load_context(source,File),((atom_contains(File,'.pfc');atom_contains(File,'.clif'))-> sanity(is_pfc_file) ; must_not_be_pfc_file).
-
-
-:- if(is_pfc_file).
-
-%:- mpred_trace_exec.
-
-:- else. % is_pfc_file
-
-
-%:- mpred_trace_exec.
-
-:- endif. % is_pfc_file
-
-:- endif. % current_prolog_flag(test_header,_).
-
-%:- cls.
-
-:- '$current_source_module'(M),install_retry_undefined(M,kbi_define).
-
-% :- set_prolog_IO(user_input,user_output,user_error).
-
+:- if((ensure_loaded(library(pfc_test)))). :- endif.
+:- if((prolog_load_context(source,Src),set_prolog_flag(test_src,Src))). :- endif.
+:- if((prolog_load_context(source,Src),add_test_info(testsuite,file,Src))). :- endif.
+:- if(at_halt(system:halt_junit)). :- endif.
 
 :- if((prolog_load_context(source,File),(atom_contains(File,'.clif')))).
 

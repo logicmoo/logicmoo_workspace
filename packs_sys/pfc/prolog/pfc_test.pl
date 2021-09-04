@@ -597,6 +597,9 @@ message_hook_handle(T,Type,Term):-
 :- system:import(junit_term_expansion/2).
 :- system:import(junit_goal_expansion/2).
 
+:- dynamic message_hook/3.
+:- multifile message_hook/3.
+:- module_transparent message_hook/3.
 user:message_hook(T,Type,Term):- 
    Type \== silent, Type \== debug, Type \== informational,
    current_prolog_flag(logicmoo_message_hook,Was),Was\==none,
