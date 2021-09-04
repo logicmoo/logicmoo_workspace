@@ -2,6 +2,8 @@
 
 source ./logicmoo_env.sh -v
 
+swipl -g "[library(logicmoo_clif)]" -t halt
+
 WAS_PWD=$PWD
 
 unset TESTING_TEMP

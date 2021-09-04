@@ -87,4 +87,8 @@
 :- if(at_halt(system:halt_junit)). :- endif.
 
 :- if((dmsg(this_test_might_need(:- use_module(library(logicmoo_plarkc)))))).  :- endif.
-
+:- if(current_prolog_flag(is_pfc_file_dialect,true)).
+:- expects_dialect(pfc).
+:- else.
+:- if((dmsg(this_test_might_need(:- expects_dialect(pfc))))).  :- endif.
+:- endif.

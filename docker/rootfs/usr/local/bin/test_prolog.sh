@@ -136,7 +136,9 @@ for ele2 in "${listOfNames[@]}"
            if [[ -x clif ]]; then
               SWIPL=clif
            fi
-
+           if [[ -x ./swipl-junit ]]; then
+              SWIPL=./swipl-junit
+           fi
    		#// Runs the test -f .swiplrc
          #//CMD="swipl -g 'set_prolog_flag(runtime_testing,${runtime_testing})' -g \"thread_create(['${ele}'],Id),thread_join(Id),$test_completed\" "
          CMD="$SWIPL -g 'set_prolog_flag(runtime_testing,${runtime_testing})' -g \"(['${ele}'])\" -g \"$test_completed\" "

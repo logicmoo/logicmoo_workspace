@@ -917,7 +917,18 @@ export_most(M:F/A):-
 :- meta_predicate baseKB:t(6,?,?,?,?,?,?).
 :- meta_predicate baseKB:t(7,?,?,?,?,?,?,?).
 
+:- if(exists_source(library(filesex))).
+:- use_module(library(filesex)).
+:- endif.
 
+qsave_pfc:-
+  getenv('LOGICMOO_WS',Dir),
+  directory_file_path(Dir,'bin/pfc',Path),
+  writeln(qsave_pfc=Path),
+  qsave_program(Path,[class(development),toplevel(prolog),goal(true)]).
+
+
+:- autoload_all.
 
 
 
@@ -962,3 +973,7 @@ system:term_expansion(I,PI,O,PO):-
 :- set_prolog_flag(pfc_booted,true).
 
 %:- endif.
+
+:- fixup_exports.
+
+:- qsave_pfc.

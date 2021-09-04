@@ -1,6 +1,6 @@
 
 %  was_module(nd_01,[]).
-
+% :- if(rtrace). :-endif.
 :- include(test_header).
 
 % :- use_listing_vars.

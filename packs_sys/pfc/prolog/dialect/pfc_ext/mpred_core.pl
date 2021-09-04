@@ -191,6 +191,7 @@ push_current_choice/1,
 :- set_module(class(library)).
 :- endif.
 
+:- meta_predicate(nr_lc_ex(:)).
 nr_lc_ex(G):- no_repeats(loop_check(G,trace_or_throw(looped(G)))).
 
 %:- use_module(mpred_kb_ops).
@@ -228,45 +229,45 @@ remove_PFC(P) :- mpred_remove(P).
 
 %:- include(library(pfc_test)).
 :- meta_predicate
-      %call_mp(+,*,+),
-      call_u(*),
-      call_u_mp_lc(*,*,*,*),
+      %call_mp(+,:,+),
+      call_u(:),
+      call_u_mp_lc(:,:,:,:),
       call_u_no_bc(+),
       clause_asserted_u(+),
-      clause_u(*),
-      clause_u(*,*,-),
-      clause_u(*,-),
-      each_E(*,+,+),
-      fc_eval_action(*,*),
+      clause_u(:),
+      clause_u(:,:,-),
+      clause_u(:,-),
+      each_E(:,+,+),
+      fc_eval_action(:,:),
       fix_mp(+,+,-,-),
-      %foreach(*,?),
-      %lookup_kb(?,*),
-      %lookup_kb(?,*,?),
-      quietly(*),
-      ain_expanded(*),
-      mpred_add(*),
-      mpred_ain(*),
+      %foreach(:,?),
+      %lookup_kb(?,:),
+      %lookup_kb(?,:,?),
+      quietly(:),
+      ain_expanded(:),
+      mpred_add(:),
+      mpred_ain(:),
       %mpred_BC_CACHE(+,+),
       %mpred_BC_CACHE0(+,+),
-      mpred_call_no_bc0(*),
-      mpred_fact_mp(?,*),      
-      mpred_METACALL(*,+),
-      mpred_METACALL(*,-,+), % 1,-,+
+      mpred_call_no_bc0(:),
+      mpred_fact_mp(?,:),      
+      mpred_METACALL(:,+),
+      mpred_METACALL(:,-,+), % 1,-,+
       
-      % pfcl_do(*), % not all arg1s are callable
+      % pfcl_do(:), % not all arg1s are callable
       retract_u0(+),
-      with_no_breaks(*),
+      with_no_breaks(:),
       with_umt(+,+),
-      brake(*),
-      with_no_mpred_trace_exec(*),
-      with_mpred_trace_exec(*),
-      with_fc_mode(+,*).
+      brake(:),
+      with_no_mpred_trace_exec(:),
+      with_mpred_trace_exec(:),
+      with_fc_mode(+,:).
       
 
-:- meta_predicate mpred_retract_i_or_warn(*).
-:- meta_predicate mpred_retract_i_or_warn_1(*).
-:- meta_predicate not_not_ignore_quietly_ex(*).
-:- meta_predicate must_notrace_pfc(*).
+:- meta_predicate mpred_retract_i_or_warn(:).
+:- meta_predicate mpred_retract_i_or_warn_1(:).
+:- meta_predicate not_not_ignore_quietly_ex(:).
+:- meta_predicate must_notrace_pfc(:).
 :- multifile(baseKB:safe_wrap/4).
 :- dynamic(baseKB:safe_wrap/4).
 
@@ -289,7 +290,7 @@ must_notrace_pfc(G):- must_ex((G)).
    IN=f2(N,A),OUT=f2(N,B),copy_term_vn(IN,OUT),
   asserta_u(IN),clause_asserted_u(OUT),!. % ,nl,writeq(A=@=B).
 */
-:- meta_predicate with_each_item(*,+,+).
+:- meta_predicate with_each_item(:,+,+).
 %% with_each_item(:P2,+EleList,+ArgList) is nondet.
 %
 % Call apply(P,[Ele|ArgList]) on each Ele(ment) in the EleList.
@@ -560,7 +561,7 @@ is_user_fact(P):-get_first_user_reason(P,UU),is_user_reason(UU).
 
 
 get_first_real_user_reason(P,UU):- nonvar(P), UU=(F,T),
-  quietly((  ((((lookup_spft(P,F,T))),is_user_reason(UU))*-> true;
+  notrace((  ((((lookup_spft(P,F,T))),is_user_reason(UU))*-> true;
     ((((lookup_spft(P,F,T))), \+ is_user_reason(UU))*-> (!,fail) ; fail)))).
 
 get_first_user_reason(P,(F,T)):-
@@ -1983,6 +1984,9 @@ remove_selection(P):-
   % must_ex(mpred_retract_i(que(P,_))),
   mpred_remove_supports_quietly(que(P,_)),
   !.
+remove_selection(P):-
+  format("~Nmpred_:get_next_fact - selected fact not on Queue: ~p", [P]),fail.
+remove_selection(P):- !,throw(remove_selection(P)).
 remove_selection(P):-
   brake(format("~Nmpred_:get_next_fact - selected fact not on Queue: ~p",
                [P])).

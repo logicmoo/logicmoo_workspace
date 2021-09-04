@@ -480,12 +480,17 @@ clean_away_ansi(DirtyText,DirtyText).
 
 save_to_junit_file(Name,DirtyText):-
  clean_away_ansi(DirtyText,Text),
- must_det_l(( 
-  getenv('TEST_STEM_PATH',Dir),
+  getenv('TEST_STEM_PATH',Dir),!,
+  must_det_l(( 
   atomic_list_concat([Dir,'-',Name,'_junit.xml'],Full), 
     open(Full, write, _, [alias(junit)]),
       format(junit,'~w',Text), 
       close(junit))).
+save_to_junit_file(Name,DirtyText):- 
+  clean_away_ansi(DirtyText,Text),
+   format('<Test name="~w">',[Name]),
+   format('~w',Text),!,
+   format('<!-- ~w--></Test>',[Name]).
 
 save_junit_results_single:-
   % $TESTING_TEMP

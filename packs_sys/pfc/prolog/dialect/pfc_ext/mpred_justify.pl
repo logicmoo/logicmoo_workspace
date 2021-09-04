@@ -296,7 +296,7 @@ lookup_spft_match_first(A,B,C):- nonvar(A),!,
 lookup_spft_match_first(A,B,C):- lookup_spft(A,B,C).
 
 
-lookup_spft(A,B,C):- !, get_mz(MZ), lookup_u('$spft'(MZ,A,B,C)).
+lookup_spft(A,B,C):- !, get_mz(MZ), MZ:lookup_u('$spft'(MZ,A,B,C)).
 % cutted above
 /*
 lookup_spft(A,B,C):- nonvar(A),!,lookup_spft_p(A,B,C).

@@ -1,3 +1,7 @@
+:- module(pfc, [pfc_pop_dialect/2, pfc_expects_dialect/1, expecting_pfc_dialect/0, 
+   pfc_debug/1, pfc_expects_dialect/4,dialect_input_stream_pfc/1]).
+
+
 /** <module> PFC Compatibility module
 
 This  module  provides  compatibility  to   PFC  through  the  directive
@@ -30,8 +34,6 @@ expects_dialect/1:
 
 */
 
-:- module(pfc, [pfc_pop_dialect/2, pfc_expects_dialect/1, expecting_pfc_dialect/0, 
-   pfc_debug/1, pfc_expects_dialect/4,dialect_input_stream_pfc/1]).
 % :- asserta(swish:is_a_module).
 
 :- autoload(library(operators)).
@@ -263,7 +265,7 @@ pfc_expects_dialect(pfc,Source,Was,M):-
    M:use_module(library(dialect/pfc)),
   (  ((false, \+ (current_prolog_flag(pfc_version,v(2,0,_))))) -> 
       (M:ensure_loaded(library('../t/vlibs/pfc_1_8_full')),M:decl_module(M));
-      (set_prolog_flag(pfc_version,v(2,0,0)),M:use_module(library(pfc_lib)))),
+      (set_prolog_flag(pfc_version,v(2,0,0)),ignore((\+ current_module(pfc_lib), fail, M:use_module(library(pfc_lib)))))),
    % dynamic(Was:'=-=>'/2),
    pfc_operators(M, Ops),
    push_operators(M:Ops, Undo),
