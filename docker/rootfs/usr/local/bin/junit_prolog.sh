@@ -9,8 +9,10 @@ export TESTING_TEMP
 export GLOB="$*"
 # [ -z "$GLOB" ] && GLOB="*_01.*"
 export TEST_STEM=Report-$(echo "${GLOB}-Units" | sed -e "s/[*]/vSTARv/g" -e "s/[?]/vQUESTv/g" -e "s/[.]/vDOTv/g" -e "s/[^a-Z0-9_]/-/g" -e "s/--/-/g" -e "s/-/-/g"  -e "s/--/-/g" )
+TEST_STEM=$(expr substr "${TEST_STEM}" 1 110)
 echo "<!-- TEST_STEM=${TEST_STEM} -->"
 export TEST_STEM_PATH=$TESTING_TEMP/$TEST_STEM
+TEST_STEM_PATH=$(expr substr "${TEST_STEM_PATH}" 1 130)
 echo "<!-- TEST_STEM_PATH=${TEST_STEM_PATH} -->"
 
 

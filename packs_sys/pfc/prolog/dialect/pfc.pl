@@ -1,4 +1,5 @@
-:- module(pfc, [pfc_pop_dialect/2, pfc_expects_dialect/1, expecting_pfc_dialect/0, 
+:- if(set_prolog_flag(loading_pfc_dialect,true)). :- endif.
+:- module(pfc_dialect, [pfc_pop_dialect/2, pfc_expects_dialect/1, expecting_pfc_dialect/0, 
    pfc_debug/1, pfc_expects_dialect/4,dialect_input_stream_pfc/1]).
 
 
@@ -75,8 +76,8 @@ pfc_state:-!,
   show_all_debug_pfc(predicate_property(G,number_of_clauses(_))),
   M = user, show_all_debug_pfc((OP)).
 
-:- export(pfc:pfc_state/0).
-:- system:import(pfc:pfc_state/0).
+:- export(pfc_dialect:pfc_state/0).
+:- system:import(pfc_dialect:pfc_state/0).
 
 
 
@@ -92,7 +93,7 @@ pfc_dialect_expansion(expects_dialect(Dialect), pfc_expects_dialect(Dialect)):-!
 pfc_expects_dialect(Dialect):-  
  prolog_load_context(module, M),  
  notrace((
-  pfc:(prolog_load_context(dialect, Was),
+  pfc_dialect:(prolog_load_context(dialect, Was),
   dialect_input_stream_pfc(Source),
   pfc_debug(pfc_expects_dialect(Dialect,Source,Was,M))))),
   pfc_expects_dialect(Dialect,Source,Was,M),
@@ -211,14 +212,14 @@ calc_load_module_pfc(M):-
      pengine_self(M),
      '$current_source_module'(M),
      '$current_typein_module'(M),
-     pfc:pfc_program_module(M),
+     pfc_dialect:pfc_program_module(M),
      strip_module(_,M,_),
      context_module(M),
      source_location(M,_)]),
     call(Call),
     pfc_debug(calc_load_module_pfc(Call)),
     \+ likely_reserved_module(M)).
-calc_load_module_pfc(M):- M==baseKB. % pfc:pfc_program_module(M).
+calc_load_module_pfc(M):- M==baseKB. % pfc_dialect:pfc_program_module(M).
 
 likely_reserved_module(M):- M=user; 
   module_property(M,P), member(P,[class(library),class(system),exported_operators([_|_]),exports([_|_])]).
@@ -231,8 +232,8 @@ likely_reserved_module(M):- M=user;
 
 
 :- system:module_transparent(prolog_dialect:expects_dialect/1). 
-:- system:module_transparent(pfc:setup_dialect/0). 
-pfc:setup_dialect:- pfc_expects_dialect(pfc).
+:- system:module_transparent(pfc_dialect:setup_dialect/0). 
+pfc_dialect:setup_dialect:- pfc_expects_dialect(pfc).
    
 
 pfc_operators(M,[
@@ -247,8 +248,8 @@ pfc_operators(M,[
 
 other_dialect(Dialect):- Dialect\==pfc.
 
-:- system:module_transparent(pfc:pfc_expects_dialect/4).
-:- system:import(pfc:pfc_expects_dialect/4).
+:- system:module_transparent(pfc_dialect:pfc_expects_dialect/4).
+:- system:import(pfc_dialect:pfc_expects_dialect/4).
 pfc_expects_dialect(SWI,Source,_,M):- other_dialect(SWI),!,pfc_pop_dialect(Source,M), expects_dialect(SWI).
 %pfc_expects_dialect(SWI,_,Bin,_):- other_dialect(SWI),other_dialect(Bin),!, expects_dialect(SWI).
 pfc_expects_dialect(WAS,_,WAS,_):- !. % expects_dialect(WAS).
@@ -258,11 +259,11 @@ pfc_expects_dialect(Next,StreamNow,Was,M):- pfctmp:module_dialect_pfc(Next,Strea
    retract(pfctmp:module_dialect_pfc(Next,StreamBefore,Was,M,Undo)),
    asserta(pfctmp:module_dialect_pfc(Next,StreamNow,Was,M,Undo)),!.
 
-:- system:module_transparent(pfc:pfc_expects_dialect/1).
-:- system:import(pfc:pfc_expects_dialect/1).
+:- system:module_transparent(pfc_dialect:pfc_expects_dialect/1).
+:- system:import(pfc_dialect:pfc_expects_dialect/1).
 pfc_expects_dialect(pfc,Source,Was,M):-
    %notrace(M:ensure_loaded(library(pfc_lib))),
-   M:use_module(library(dialect/pfc)),
+   % M:use_module(library(dialect/pfc)),
   (  ((false, \+ (current_prolog_flag(pfc_version,v(2,0,_))))) -> 
       (M:ensure_loaded(library('../t/vlibs/pfc_1_8_full')),M:decl_module(M));
       (set_prolog_flag(pfc_version,v(2,0,0)),ignore((\+ current_module(pfc_lib), fail, M:use_module(library(pfc_lib)))))),
@@ -275,8 +276,8 @@ pfc_expects_dialect(pfc,Source,Was,M):-
 
 dialect_input_stream_pfc(Source):- prolog_load_context(source,Source)->true; Source = user_input.
 
-:- system:module_transparent(pfc:pfc_pop_dialect/2).
-:- system:import(pfc:pfc_pop_dialect/2).
+:- system:module_transparent(pfc_dialect:pfc_pop_dialect/2).
+:- system:import(pfc_dialect:pfc_pop_dialect/2).
 pfc_pop_dialect(Source,M):-
     retract(pfctmp:module_dialect_pfc(pfc,Source,Was,M,Undo)),!,
     %print_message(warning, format('~q', [warn_pop_pfc_dialect_fallback(Source,M->Was)])),
@@ -298,8 +299,8 @@ pfc_pop_dialect(Source,M):-
 
 
 prolog:alternate_syntax(pfc, M,
-                        pfc:push_pfc_operators(M),
-                        pfc:pop_pfc_operators(M)).
+                        pfc_dialect:push_pfc_operators(M),
+                        pfc_dialect:pop_pfc_operators(M)).
 
 
 /* - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -334,7 +335,5 @@ system:term_expansion(MIn, _Out):-
    term_expansion_pfc_eof(M),
    fail.
 
-      
-      
-
+:- if(set_prolog_flag(loading_pfc_dialect,false)). :- endif.
 

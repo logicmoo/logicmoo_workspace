@@ -135,13 +135,13 @@ for ele2 in "${listOfNames[@]}"
          CMD="./${ele}"
         else
            if type pfc > /dev/null 2>&1; then
-              SWIPL=pfc
+             SWIPL=pfc
            fi
            if type clif > /dev/null 2>&1; then
-              SWIPL=clif
+             SWIPL=clif
            fi
            if type ./swipl-junit > /dev/null 2>&1; then
-              SWIPL=./swipl-junit
+             SWIPL=./swipl-junit
            fi
       		#// Runs the test -f .swiplrc
             #//CMD="swipl -g 'set_prolog_flag(runtime_testing,${runtime_testing})' -g \"thread_create(['${ele}'],Id),thread_join(Id),$test_completed\" "

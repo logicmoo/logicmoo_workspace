@@ -483,6 +483,7 @@ save_to_junit_file(Name,DirtyText):-
   getenv('TEST_STEM_PATH',Dir),!,
   must_det_l(( 
   atomic_list_concat([Dir,'-',Name,'_junit.xml'],Full), 
+  format('~N% saving_junit: ~w~n',[Full]),
     open(Full, write, _, [alias(junit)]),
       format(junit,'~w',Text), 
       close(junit))).
