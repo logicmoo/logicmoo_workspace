@@ -13,12 +13,8 @@
 
 interactive_test(G):- add_history(G), fmt("?- ~q.",[G]), nop(mpred_why(G)).
 
-:- set_prolog_flag(gc,true).
-
-%:- if(qsave:qsave_program(bar,[])). :-endif.
-
-%:- break.
-
+:- if(set_prolog_flag(gc,true)). :-endif.
 :- if(set_prolog_flag(gc,false)). :-endif.
+
 :- expects_dialect(clif).
 
