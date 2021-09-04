@@ -1,4 +1,10 @@
 :- module(toplevel_variable_names, []).
+/** <module> Utility LOGICMOO TOPLEVEL VARIABLE NAMES
+	Allows manipulation of variables that were used in the query. 
+- @author Douglas R. Miles
+- @license LGPL 
+*/
+
 :- set_module(class(library)).
 
 

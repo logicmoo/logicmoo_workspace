@@ -1,4 +1,11 @@
 :- module(attvar_reader, [read_attvars/1,read_attvars/0,install_attvar_expander/1,uninstall_attvar_expander/1]).
+
+/** <module> Utility LOGICMOO_ATTVAR_READER
+This module works with Utility LOGICMOO_ATTVAR_SERIALIZER to allows us to keep attributed variables and files inside the prolog database.
+
+- @author Douglas R. Miles
+- @license LGPL 
+*/
 :- set_module(class(library)).
 /*  Logicmoo Debug Tools
 % ===================================================================

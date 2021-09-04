@@ -3,7 +3,7 @@
 % File '$FILENAME.pl'
 % Purpose: An Implementation in SWI-Prolog of certain debugging tools
 % Maintainer: Douglas Miles
-% Contact: $Author: dmiles $@users.sourceforge.net ;
+% Contact: $Author: dmiles logicmoo@gmail.com ;
 % Version: '$FILENAME.pl' 1.0.0
 % Revision: $Revision: 1.1 $
 % Revised At:  $Date: 2002/07/11 21:57:28 $
@@ -104,6 +104,13 @@
             xlisting/0,
             xlisting_inner/3
     ]).
+
+/** <module> Utility LOGICMOO XLISTING CONSOLE
+Cross references predicates from the command line. 
+
+- @author Douglas R. Miles
+- @license LGPL 
+*/
 
 :- dynamic((xlisting:'$exported_op'/3)).
 

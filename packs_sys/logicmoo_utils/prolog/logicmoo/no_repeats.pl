@@ -29,6 +29,12 @@
             no_repeats_var/1
 %            loop_check_nr/1
           ]).
+
+/** <module> Utility LOGICMOO NO REPEATS
+	No repeats allows each indiv answer returned by prolog to be unique. Removes duplicate answers. 
+- @author Douglas R. Miles
+- @license LGPL 
+*/
 :- meta_predicate
         memberchk_pred(2, ?, ?),
         memberchk_pred_rev(2, ?, ?),

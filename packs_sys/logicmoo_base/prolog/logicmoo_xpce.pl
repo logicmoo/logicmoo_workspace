@@ -2,8 +2,10 @@
 
 :- set_prolog_flag(generate_debug_info, true).
 
-/** <module> Associate XPCE with SWI-Prolog
 
+/** <module> Associate XPCE with SWI-Prolog Utility LOGICMOO XPCE
+
+Loads swi-prolog reference libraries. 
 This  file  initialises  XPCE,  the  SWI-Prolog   native  GUI.  XPCE  is
 initialised only if it is detected.
 
@@ -11,7 +13,11 @@ The source-location of this file  is packages/xpce/swipl/swipl-rc. It is
 installed as <plbase>/<exe-base>.rc, where   <exe-base> is =|swipl-win|=
 to associate with the SWI-Prolog gui  application on Windows and =swipl=
 on Unix/X11 platforms.
+
+- @author Douglas R. Miles
+- @license LGPL 
 */
+
 
 :- op(200, fy,  user:(@)).
 :- op(250, yfx, user:(?)).
