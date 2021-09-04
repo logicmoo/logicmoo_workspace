@@ -19,7 +19,7 @@
 
 vtActionTemplate(actPush(vtDirection)).
 
-agent_call_command(Agent,actPush(Dir)):-once(actPush(Agent,Dir)).
+baseKB:agent_call_command(Agent,actPush(Dir)):-once(actPush(Agent,Dir)).
 
 % Push a box
 % Nothing to push... agent moves and takes a little damage.

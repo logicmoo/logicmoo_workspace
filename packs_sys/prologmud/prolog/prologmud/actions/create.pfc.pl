@@ -36,7 +36,7 @@ rez_to_inventory(Agent,NameOrType,NewObj):-
 
 action_info(actRez(isOneOf([tCol,ftID,ftTerm])),"Rezes a new subclass of 'item' or clone of tObj of some NameOrType into mudStowing inventory").
 
-agent_call_command(Agent,actRez(NameOrType)):- nonvar(NameOrType),
+baseKB:agent_call_command(Agent,actRez(NameOrType)):- nonvar(NameOrType),
         must(find_and_call(rez_to_inventory(Agent,NameOrType,NewObj))),
         fmt([rezed,NameOrType,NewObj]).
 
@@ -45,7 +45,7 @@ agent_call_command(Agent,actRez(NameOrType)):- nonvar(NameOrType),
 % ====================================================
 action_info(actCreate(ftListFn(ftTerm)), "Rezes a new 'tSpatialThing' or creates a new 'col' of some NameOrType and if it's an 'item' it will put in mudStowing inventory").
 
-agent_call_command(Agent,actCreate(SWhat)):- with_all_dmsg(must_det(create_new_object(Agent,SWhat))).
+baseKB:agent_call_command(Agent,actCreate(SWhat)):- with_all_dmsg(must_det(create_new_object(Agent,SWhat))).
 
 ==> prologHybrid(authorWas(ftTerm,ftTerm)).
 :- dynamic(current_pronoun/3).

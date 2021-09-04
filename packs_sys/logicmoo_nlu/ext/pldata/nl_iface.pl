@@ -1,11 +1,12 @@
 :- module(nl_iface, []).
 
-:- use_module(library(logicmoo_common)).
-
-:- prolog_load_context(file, File),
-   absolute_file_name('.', X, [relative_to(File), file_type(directory)]),
+:- multifile(user:file_search_path/2).
+:- dynamic(user:file_search_path/2).
+:- prolog_load_context(directory, X),
    (user:file_search_path(nldata, X)-> true ; asserta(user:file_search_path(nldata, X))),
    (user:file_search_path(pldata, X)-> true ; asserta(user:file_search_path(pldata, X))).
+
+:- use_module(library(logicmoo_common)).
 
 
 :- export(qcompile_external/1).

@@ -118,16 +118,15 @@ O = [[that, love], [to, sally], [did, give], [from, _Player_1]] ;
 
 */
 call_residue_vars(Goal):- 
-  call_residue_vars(Goal,Vs),
-  copy_term(Vs,_,Goals),maplist(call,Goals).
+  call_residue_vars(Goal,VsGoals),
+  copy_term(VsGoals,_,Goals),maplist(call,Goals).
 
 
 eng2flogic(Sentence):-
   make,
   call_residue_vars((eng2flogic(Sentence, FrameOut), !,
   print_reply_colored(FrameOut))),
-
-  remove_term_attr_type(Vs, ['varnames', 'vn']).
+  remove_term_attr_type(FrameOut+Sentence, ['varnames', 'vn']).
 
 
 eng2flogic(Sentence, FrameOutR):-

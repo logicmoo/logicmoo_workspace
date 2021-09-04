@@ -37,18 +37,18 @@ actSetsPosture(Action,PostureState) ==>
 action_info(A,I):-action_info_prefered(A,I).
 
 % Become PostureState on Something.
-agent_call_command(Agent,actOnto(Where,PostureState)):-
+baseKB:agent_call_command(Agent,actOnto(Where,PostureState)):-
         fmt('agent ~w is now ~wing on ~w',[Agent,PostureState,Where]),
         padd(Agent,mudStance(PostureState)),
         padd(Agent,localityOfObject(Where)),
 	call_update_charge(Agent,PostureState).
 
 % PostureState Action Direct
-agent_call_command(Agent,Action):- callable(Action),
+baseKB:agent_call_command(Agent,Action):- callable(Action),
      functor(Action,Act,_),
      actSetsPosture(Act,PostureState),
      (compound(Action)->arg(1,Action,Where);Where=vHere),
-     agent_call_command(Agent,actOnto(Where,PostureState)).
+     baseKB:agent_call_command(Agent,actOnto(Where,PostureState)).
 
 
 update_charge(Agent,PostureState) :- vtPosture(PostureState), padd(Agent,mudEnergy(+ -1)).

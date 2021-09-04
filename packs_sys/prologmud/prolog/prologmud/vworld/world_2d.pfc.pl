@@ -136,12 +136,12 @@ is_location(Obj):-var(Obj),!,fail.
 is_location(xyzFn(_,_,_,_)):-!.
 is_location(Obj):-!,isa(Obj,tRegion),!.
 
-locationToRegion(Obj,RegionIn):-locationToRegion_0(Obj,Region)->sanity((nonvar(Region),tRegion(Region))),!,RegionIn=Region.
+locationToRegion(Obj,RegionIn):-locationToRegion_0(Obj,Region)->nop(sanity((nonvar(Region),tRegion(Region)))),!,RegionIn=Region.
 
 locationToRegion_0(Obj,Obj):-var(Obj),dmsg(warn(var_locationToRegion(Obj,Obj))),!.
 locationToRegion_0(xyzFn(Region,_,_,_),Region2):-nonvar(Region),!,locationToRegion_0(Region,Region2).
 locationToRegion_0(Obj,Obj):-nonvar(Obj),!,isa(Obj,tRegion),!.
-locationToRegion_0(Obj,Region):-nonvar(Obj),must(localityOfObject(Obj,Location)),!,
+locationToRegion_0(Obj,Region):-nonvar(Obj),localityOfObject(Obj,Location),!,
   locationToRegion_0(Location,Region).
 locationToRegion_0(Obj,Obj):-dmsg(warn(locationToRegion(Obj,Obj))),!.
 
@@ -364,12 +364,16 @@ create_random_fact(t(localityOfObject,Obj,Region)) :- !, nonvar(Obj),not_asserte
 create_random_fact(t(Other,Obj,Default)) :- nonvar(Obj),argIsa(Other,2,Type),random_instance_no_throw(Type,Default,ground(Default)),!.
 
 
+my_rnd_member(ELE,[LOC]):-nonvar(LOC),!,ELE=LOC.
+my_rnd_member(LOC,LOCS):- length(LOCS,Len),Len>0,random_permutation(LOCS,LOCS2),!,member(LOC,LOCS2).
+
+
 %  suggest random values
-hooked_random_instance(vtDirection,Dir,Test) :- my_random_member(Dir,[vNorth,vSouth,vEast,vWest,vNE,vNW,vSE,vSW]),Test,!.
+hooked_random_instance(vtDirection,Dir,Test) :- my_rnd_member(Dir,[vNorth,vSouth,vEast,vWest,vNE,vNW,vSE,vSW]),Test,!.
 hooked_random_instance(ftInt,3,Test):-call(Test),dmsg(random_instance(ftInt,3,Test)),dmsg(hooked_random_instance(ftInt,3,Test)),!,fail.
 
-
-random_region(LOC):- var(LOC),findall(O,isa(O,tRegion),LOCS),my_random_member(LOC,LOCS).
+random_region(LOC):- nonvar(LOC),!.
+random_region(LOC):- var(LOC),findall(O,isa(O,tRegion),LOCS),list_to_set(LOCS,Set),my_rnd_member(LOC,Set).
 
 
 random_xyzFn(LOC):-

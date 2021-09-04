@@ -41,7 +41,7 @@ exitcode=$good_exit
 
 runtime_testing=4
 export next_cls=0
-export on_complete=test_completed
+export test_completed=test_completed
 
 
 if [ "$1" == "-k" ]; then
@@ -74,8 +74,8 @@ then
    listOfNames=( "$@" )
    if [ $# -eq 1 ]
    then
-      [ -z "${OUTER_TEE}" ] && echo "<!-- on_complete=true -->"
-      on_complete=test_completed
+      [ -z "${OUTER_TEE}" ] && echo "<!-- test_completed=true -->"
+      test_completed=test_completed
    else
       echo -e "" # [ -z "${OUTER_TEE}" ] && echo "<!--" && cls && echo -e "\n-->"
    fi
@@ -130,16 +130,16 @@ for ele2 in "${listOfNames[@]}"
         if [[ "$ele" == *".sh" && -x "$ele" ]]; then
          CMD="./${ele}"
         else
-         SWIPL=swipl
-           if [[ -x swipl-lm ]]; then
-              SWIPL=swipl-lm
+          # if [[ -x swipl-lm ]]; then
+          #    SWIPL=swipl-lm
+          # fi
+           if [[ -x clif ]]; then
+              SWIPL=clif
            fi
-           if [[ -x ./swipl-lm ]]; then
-              SWIPL=./swipl-lm
-           fi
+
    		#// Runs the test -f .swiplrc
-         #//CMD="swipl -g 'set_prolog_flag(runtime_testing,${runtime_testing})' -g \"thread_create(['${ele}'],Id),thread_join(Id),$on_complete\" "
-         CMD="$SWIPL -g 'set_prolog_flag(runtime_testing,${runtime_testing})' -g \"(['${ele}'])\" -g \"$on_complete\" "
+         #//CMD="swipl -g 'set_prolog_flag(runtime_testing,${runtime_testing})' -g \"thread_create(['${ele}'],Id),thread_join(Id),$test_completed\" "
+         CMD="$SWIPL -g 'set_prolog_flag(runtime_testing,${runtime_testing})' -g \"(['${ele}'])\" -g \"$test_completed\" "
         fi
 
         export TEE_FILE=$TESTING_TEMP/CMD_LAST.ansi
@@ -169,9 +169,9 @@ for ele2 in "${listOfNames[@]}"
 
         next_cls=0
 
-      [ "$on_complete" == 'on_complete' ] && [ $exitcode -ne 7 ] && INFO "FAILED: $0 ${keep_going} ${ele} (returned ${exitcode})"
+      [ "$test_completed" == 'test_completed' ] && [ $exitcode -ne 7 ] && INFO "FAILED: $0 ${keep_going} ${ele} (returned ${exitcode})"
       [ $exitcode -eq 7 ] && INFO "SUCCESS: $0 ${keep_going} ${ele} (returned ${exitcode})"
-      [ $exitcode -eq 0 ] && [ "$on_complete" == 'true' ] && INFO "SUCCESS: $0 ${keep_going} ${ele} (returned ${exitcode})"
+      [ $exitcode -eq 0 ] && [ "$test_completed" == 'true' ] && INFO "SUCCESS: $0 ${keep_going} ${ele} (returned ${exitcode})"
       [ $exitcode -eq 6 ] && retry=1 && continue
 
 
@@ -209,7 +209,7 @@ for ele2 in "${listOfNames[@]}"
 
       INFO "ans=$ans"
 
-      [ "$ans" == '' ] && [ $exitcode -eq 0 ] && [ "$on_complete" == 'true' ]  && retry=1 && continue
+      [ "$ans" == '' ] && [ $exitcode -eq 0 ] && [ "$test_completed" == 'true' ]  && retry=1 && continue
 
       [ "$ans" == '' ] && [ $exitcode -eq 7 ] && retry=1 && cls && continue  # 7 + enter
 

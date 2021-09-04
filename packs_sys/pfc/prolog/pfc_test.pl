@@ -264,14 +264,21 @@ outer_junit(G):- nop(G).
 
 :- multifile prolog:message//1, user:message_hook/3.
 
-halt_junit:- j_u:junit_prop(system,shown_testing_complete,true),!.
-halt_junit:- asserta(j_u:junit_prop(system,shown_testing_complete,true)),!,
+system:halt_junit:- j_u:junit_prop(system,halted_junit,true),!.
+system:halt_junit:- asserta(j_u:junit_prop(system,halted_junit,true)),!,
   % list_test_results,
-  save_results.
+  save_junit_results.
 
+junit_term_expansion(I,_):-
+ notrace((
+    I==end_of_file,   
+    current_prolog_flag(test_src,Src),
+    source_location(Src,_),
+    current_prolog_flag(test_completed,Goal))),
+    ignore(Goal),fail.
 junit_term_expansion(_ , _ ):- prolog_load_context(file,SF), \+ j_u:junit_prop(testsuite,file,SF),!,fail.
 junit_term_expansion(Var , _ ):- var(Var),!,fail.
-junit_term_expansion( (end_of_file), [] ):- !, halt_junit, fail.
+junit_term_expansion( (end_of_file), [] ):- !, system:halt_junit, fail.
 junit_term_expansion(M:I,M:O):- !, junit_term_expansion(I,O).
 junit_term_expansion((:- I),O):- !, junit_dirrective_expansion(I,M), (is_list(M) -> O=M ; O=(:-M)).
 
@@ -298,21 +305,6 @@ junit_goal_exp( rtrace, dmsg(rtrace) ):- keep_going.
 
 
 
-:- export(junit_term_expansion/2).
-:- system:import(pfc_test:junit_term_expansion/2).
-:- export(junit_goal_expansion/2).
-:- system:import(pfc_test:junit_goal_expansion/2).
-
-
-
-:- at_halt(halt_junit).
-
-
-system:test_repl:-  assertz(system:junit_prop(need_retake,warn,need_retake)).
-system:test_completed:- halt_junit,test_completed_exit_maybe(7).
-system:test_retake:- halt_junit,test_completed_exit_maybe(3).
-
-
 test_completed_exit(N):- dmsg_pretty(test_completed_exit(N)),fail.
 test_completed_exit(7):- halt(7). % Passed
 test_completed_exit(4):- halt(4). % Aborted by User
@@ -330,6 +322,10 @@ test_completed_exit_maybe(_):- j_u:junit_prop(_,warning,_),test_completed_exit(3
 test_completed_exit_maybe(_):- j_u:junit_prop(_,warn,_),test_completed_exit(3).
 test_completed_exit_maybe(N):- test_completed_exit(N).
 
+
+system:test_repl:-  assertz(system:junit_prop(need_retake,warn,need_retake)).
+system:test_completed:- system:halt_junit,test_completed_exit_maybe(7).
+system:test_retake:- system:halt_junit,test_completed_exit_maybe(3).
 
 /* 
 <?xml version="1.0" encoding="UTF-8"?>
@@ -416,11 +412,11 @@ test_completed_exit_maybe(N):- test_completed_exit(N).
   </testsuite>
 </testsuites>
   */
-save_results:-
+save_junit_results:-
  forall(j_u:junit_prop(testsuite,file,File), 
     (with_output_to(string(Text),show_junit_suite_xml(File)),
      save_to_junit_file(File,Text))).
-save_results:- wdmsg(unused(save_results)).
+save_junit_results:- wdmsg(unused(save_junit_results)).
 
 show_junit_suite_xml(File):- 
   format('<?xml version="1.0" encoding="utf-8"?>~n'),
@@ -491,14 +487,14 @@ save_to_junit_file(Name,DirtyText):-
       format(junit,'~w',Text), 
       close(junit))).
 
-save_results_single:-
+save_junit_results_single:-
   % $TESTING_TEMP
   getenv('TESTING_TEMP',Dir),
   directory_file_path(Dir,'junit_single.ansi',Full),!,
   tell(Full),
   show_all_junit_suites,
   told.
-save_results_single.
+save_junit_results_single.
 
 
 good_type(passed).
@@ -584,13 +580,23 @@ message_hook_handle(T,Type,Term):-
   ((current_prolog_flag(runtime_debug, N),N>2) -> true ; source_location(_,_)),
   memberchk(Type,[error,warning]),once(inform_message_hook(T,Type,Term)),fail.
 
+:- if( \+ current_prolog_flag(test_completed,_)).
+:- if(set_prolog_flag(test_completed,test_completed)). :- endif.
+:- endif.
+% :- if((current_prolog_flag(test_completed,TC),writeln(test_completed=TC))). :-endif.
+
 :- if(current_predicate(fixup_exports/0)).
 :- fixup_exports.
 :- endif.
+
+:- system:import(junit_term_expansion/2).
+:- system:import(junit_goal_expansion/2).
 
 user:message_hook(T,Type,Term):- 
    Type \== silent, Type \== debug, Type \== informational,
    current_prolog_flag(logicmoo_message_hook,Was),Was\==none,
    once(message_hook_handle(T,Type,Term)),!.
 
-
+system:term_expansion(I,P,O,PO):- notrace((nonvar(P), junit_term_expansion(I,O))),P=PO.
+system:goal_expansion(I,P,O,PO):- notrace((nonvar(P), junit_goal_expansion(I,O))),P=PO.
+  

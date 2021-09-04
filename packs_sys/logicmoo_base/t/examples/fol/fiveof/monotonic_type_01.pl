@@ -1,4 +1,7 @@
+#!/usr/bin/env clif
+
 :- include(test_header).
+
 % =============================================
 % File 'mpred_builtin.pfc'
 % Purpose: Agent Reactivity for SWI-Prolog
@@ -11,7 +14,8 @@
 %
 
 :- module(baseKB).
-:- process_script_file.
+
+:- expects_dialect(clif).
 
 :- kif_compile.
 

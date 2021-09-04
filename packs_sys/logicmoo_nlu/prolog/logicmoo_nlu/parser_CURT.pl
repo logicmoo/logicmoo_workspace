@@ -23,8 +23,8 @@
 % ===========================================================
 type_action_info(human_player, curt80(list(term)), "Development test CURT Text for a human.  Usage: CURT80 Cant i see the blue backpack?").
 
-agent_call_command(_Gent, curt80([])):- curt80.
-agent_call_command(_Gent, curt80(StringM)):- curt80(StringM).
+baseKB:agent_call_command(_Gent, curt80([])):- curt80.
+baseKB:agent_call_command(_Gent, curt80(StringM)):- curt80(StringM).
 
 
 % ===========================================================

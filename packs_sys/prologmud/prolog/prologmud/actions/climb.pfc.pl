@@ -27,7 +27,7 @@ vtActionTemplate(actClimb(vtDirection)).
 %:-stop_rtrace.
 
 
-agent_call_command(Agent,actClimb(Dir)):- once(actClimb(Agent,Dir)).
+baseKB:agent_call_command(Agent,actClimb(Dir)):- once(actClimb(Agent,Dir)).
 
 % Climb - If there is nothing there to climb, move to location plus take some damage and loose charge 
 actClimb(Agent,Dir) :-	

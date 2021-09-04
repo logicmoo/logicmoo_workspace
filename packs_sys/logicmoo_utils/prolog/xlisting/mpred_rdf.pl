@@ -136,8 +136,8 @@ mpred_online:semweb_startup:- n3_parse('http://raw.github.com/knowrob/knowrob/ma
 :- rdf_register_prefix(skosxl,  'http://www.w3.org/2008/05/skos-xl#',[force(true)]).
 :- rdf_register_prefix(knowrob_objects, 'http://ias.cs.tum.edu/baseKB/knowrob_objects.owl#',[force(true)]).
 :- rdf_register_prefix(knowrob, 'http://ias.cs.tum.edu/baseKB/knowrob.owl#',[force(true)]).
-:- rdf_register_prefix(mud,'http://prologmoo.com/onto/mud.owl#',[force(true)]).
-:- rdf_register_ns(mud,'http://prologmoo.com/downloads/mud.ttl#',[force(true)]).
+:- rdf_register_prefix(mud,'http://logicmoo.org/onto/mud.owl#',[force(true)]).
+:- rdf_register_ns(mud,'http://logicmoo.org/downloads/mud.ttl#',[force(true)]).
 
 
 :- public(rdf/3).

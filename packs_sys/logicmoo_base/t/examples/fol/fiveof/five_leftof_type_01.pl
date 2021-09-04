@@ -1,4 +1,5 @@
-:- include(test_header).
+#!/usr/bin/env clif
+
 % =============================================
 % File 'mpred_builtin.pfc'
 % Purpose: Agent Reactivity for SWI-Prolog
@@ -10,8 +11,10 @@
 % =============================================
 %
 
-:- module(baseKB).
-:- process_script_file.
+:- include(test_header).
+
+:- expects_dialect(clif).
+
 
 :- kif_compile.
 
@@ -27,6 +30,8 @@ leftof(h4, h5).
 % makes the KB non-monotonic
 :- set_kif_option(qualify_modality,false).
 % this should cause h1-h5 to become houses
+
+
 leftof(H1, H2) => house(H1) & house(H2).
 
 % intractive_test/1 means only run if interactive

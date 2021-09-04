@@ -106,13 +106,13 @@ action_verb_useable(actStow,tStowAble,mudStowing,mudPossess,mudWielding).
    must_maplist(name_text_now,[ActUse,Wieldable,Possessing,NowWielding,Unstowed],List),
    sformat(String,'~w a ~w that you ~w so it will be ~w and not be ~w afterwards.',List)).
 
-agent_call_command(Agent,Syntax) :- 
+baseKB:agent_call_command(Agent,Syntax) :- 
     call_u((action_verb_useable(ActUse,_Wieldable,_NowWielding,_Possessing,_Unstowed),Syntax=..[ActUse,Obj])),
-    agent_call_command_use(Agent,ActUse,Obj),!.
+    baseKB:agent_call_command_use(Agent,ActUse,Obj),!.
 
  
 % Successfully use something
-agent_call_command_use(Agent,ActUse,Obj) :- 
+baseKB:agent_call_command_use(Agent,ActUse,Obj) :- 
   must_det_l([
 	once((nearest_reachable_object(Agent,Obj))),
 	nop((ignore(props(Obj,mudWeight<2)),
@@ -121,7 +121,7 @@ agent_call_command_use(Agent,ActUse,Obj) :-
 	call_update_charge(Agent,ActUse)]).
 
 % Unsuccessfully use something
-agent_call_command_use(Agent,ActUse,_Obj) :- 
+baseKB:agent_call_command_use(Agent,ActUse,_Obj) :- 
 	call_update_charge(Agent,ActUse),
 	add_cmdfailure(Agent,ActUse).
 

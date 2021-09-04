@@ -40,7 +40,7 @@ guess_verb_template(Action):-
          
 
 % Use something
-agent_call_command(Agent,ACT) :-
+baseKB:agent_call_command(Agent,ACT) :-
    call((action_rules(Agent,VERB,SENT,_StateRules),safe_univ(ACT,[VERB|SENT]))),
    
       action_requires_states(Agent,[VERB|SENT],REQS),

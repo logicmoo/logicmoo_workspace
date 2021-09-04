@@ -13,7 +13,7 @@
 
 :- include(prologmud(mud_header)).
 /*
-:-swi_module(world_agent, [ agent_call_unparsed/1, agent_call_unparsed/2,  agent_call_command_now/2 ]).
+:-swi_module(world_agent, [ agent_call_unparsed/1, agent_call_unparsed/2,  baseKB:agent_call_command_now/2 ]).
 
 
 tAgent - Players and Bot Bodies
@@ -99,7 +99,7 @@ with_session(ID,CALL):-locally(t_l:session_id(ID),CALL).
 
 
 % =====================================================================================================================
-% agent_call_unparsed --> agent_call_words --> agent_call_command_now
+% agent_call_unparsed --> agent_call_words --> baseKB:agent_call_command_now
 % =====================================================================================================================
 
 agent_call_unparsed(C):-foc_current_agent(A),!,agent_call_unparsed(A,C).
@@ -137,10 +137,10 @@ agent_call_words(Agent,[VERB|ARGS]):-
   %sanity(freeze(CMD,sanity(callable(CMD)))),
 
       must(on_x_debug(parse_agent_text_command_checked(Agent,VERB,ARGS,NewAgent,CMD))),
-      must_ac(agent_call_command_now(NewAgent,CMD)),!.
+      must_ac(baseKB:agent_call_command_now(NewAgent,CMD)),!.
 
-agent_call_words(A,[CMD]):- !, must_ac(agent_call_command_now(A,CMD)),!.
-agent_call_words(A,CMD):- must_ac(agent_call_command_now(A,CMD)),!.
+agent_call_words(A,[CMD]):- !, must_ac(baseKB:agent_call_command_now(A,CMD)),!.
+agent_call_words(A,CMD):- must_ac(baseKB:agent_call_command_now(A,CMD)),!.
 
 :-export(where_atloc/2).
 where_atloc(Agent,Where):-mudAtLoc(Agent,Where).
@@ -150,34 +150,34 @@ where_atloc(Agent,'OffStage'):-fail,nonvar(Agent).
 
 
 % All Actions must be called from here!
-agent_call_command_now(Agent,CMD  ):- var(CMD),!,trace_or_throw(var_agent_call_command_now(Agent,CMD)).
-agent_call_command_now(Agent,Text ):- text_to_string_safe(Text,String)->show_call(loop_check(agent_call_unparsed(Agent,String))),!.
-agent_call_command_now(Agent,CMD  ):- subst(CMD,isSelfAgent,Agent,NewCMD),CMD\=@=NewCMD,!,agent_call_command_now(Agent,NewCMD).
-agent_call_command_now(Agent,Words):- is_list(Words),maplist(check_word,Words),loop_check(agent_call_words(Agent,Words)).
-agent_call_command_now(Agent,CMD  ):- correctCommand(Agent,CMD,NewCMD),CMD\=@=NewCMD,!,agent_call_command_now(Agent,NewCMD).
-agent_call_command_now(Agent,CMD  ):- \+ where_atloc(Agent,_),!, agent_call_command_now_2(Agent,CMD),!.
-agent_call_command_now(Agent,CMD  ):- where_atloc(Agent,Where),
+baseKB:agent_call_command_now(Agent,CMD  ):- var(CMD),!,trace_or_throw(var_baseKB:agent_call_command_now(Agent,CMD)).
+baseKB:agent_call_command_now(Agent,Text ):- text_to_string_safe(Text,String)->show_call(loop_check(agent_call_unparsed(Agent,String))),!.
+baseKB:agent_call_command_now(Agent,CMD  ):- subst(CMD,isSelfAgent,Agent,NewCMD),CMD\=@=NewCMD,!,baseKB:agent_call_command_now(Agent,NewCMD).
+baseKB:agent_call_command_now(Agent,Words):- is_list(Words),maplist(check_word,Words),loop_check(agent_call_words(Agent,Words)).
+baseKB:agent_call_command_now(Agent,CMD  ):- correctCommand(Agent,CMD,NewCMD),CMD\=@=NewCMD,!,baseKB:agent_call_command_now(Agent,NewCMD).
+baseKB:agent_call_command_now(Agent,CMD  ):- \+ where_atloc(Agent,_),!, baseKB:agent_call_command_now_2(Agent,CMD),!.
+baseKB:agent_call_command_now(Agent,CMD  ):- where_atloc(Agent,Where),
    % start event
    must(raise_location_event(Where,actNotice(reciever,begin(Agent,CMD)))),
-   (call(on_x_debug(agent_call_command_now_2(Agent,CMD)) ->
+   (call(on_x_debug(baseKB:agent_call_command_now_2(Agent,CMD)) ->
    % event done
      send_command_completed_message(Agent,Where,done,CMD);
    % event fail
      send_command_completed_message(Agent,Where,failed,CMD))),!.
 
-agent_call_command_now_2(Agent,CMD):- loop_check((agent_call_command_now_3(Agent,CMD)),dmsg(looped(agent_call_command_now_2(Agent,CMD)))).
-agent_call_command_now_3(Agent,CMD):-
+baseKB:agent_call_command_now_2(Agent,CMD):- loop_check((baseKB:agent_call_command_now_3(Agent,CMD)),dmsg(looped(baseKB:agent_call_command_now_2(Agent,CMD)))).
+baseKB:agent_call_command_now_3(Agent,CMD):-
    with_agent(Agent,
      locally(t_l:side_effect_ok,
      locally(t_l:agent_current_action(Agent,CMD),
   ((
-  % call_no_cuts(agent_call_command(Agent,CMD))
-    find_and_call(agent_call_command(Agent,CMD))
-     *->true;agent_call_command_all_fallback(Agent,CMD)))))),
+  % call_no_cuts(baseKB:agent_call_command(Agent,CMD))
+    find_and_call(baseKB:agent_call_command(Agent,CMD))
+     *->true;baseKB:agent_call_command_all_fallback(Agent,CMD)))))),
   padd(Agent,mudLastCommand(CMD)).
 
-agent_call_command_all_fallback(Agent,CMD):- if_defined(agent_call_command_fallback(Agent,CMD)),!.
-agent_call_command_all_fallback(_Agent,CMD):- fail, nop(xlisting(CMD)).
+baseKB:agent_call_command_all_fallback(Agent,CMD):- if_defined(baseKB:agent_call_command_fallback(Agent,CMD)),!.
+baseKB:agent_call_command_all_fallback(_Agent,CMD):- fail, nop(xlisting(CMD)).
 
 :-export(send_command_completed_message/4).
 send_command_completed_message(Agent,Where,Done,CMD):-
@@ -286,6 +286,7 @@ guess_session_ids(In):-thread_self(ID),call(call,thread_util:has_console(ID,In,_
 :-export(my_random_member/2).
 my_random_member(ELE,[LOC]):-nonvar(LOC),!,ELE=LOC.
 my_random_member(LOC,LOCS):- must_det((length(LOCS,Len),Len>0)),random_permutation(LOCS,LOCS2),!,member(LOC,LOCS2).
+:-system:import(my_random_member/2).
 
 :-meta_predicate(random_instance_no_throw(+,-,0)).
 random_instance_no_throw(Type,Value,Test):- random_instance_no_throw0(Type,Value,Test).
@@ -312,7 +313,7 @@ random_instance_no_throw0(Type,Value,Test):- compound(Type),get_functor(Type,F,A
                            must((maplist(random_instance_no_throw,ArgTypes,ValueArgs,_),Test)).
 
 random_instance_no_throw0(Type,Value,Test):-
-   must(( findall(V,isa(V,Type),Possibles),Possibles\==[])),!,must((my_random_member(Value,Possibles),Test)).
+   must(( findall(V,isa(V,Type),Possibles),Possibles\==[])),!,((my_random_member(Value,Possibles),Test)).
 
 
 get_dettached_npc(P):- random_instance_no_throw(tAgent,P, \+ isa(P,tHumanControlled)).

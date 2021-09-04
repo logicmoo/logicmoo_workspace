@@ -138,7 +138,7 @@ is_in_egg:- \+ thread_self(main),  \+ thread_self(swipl), !.
 %
 % My Wdmsg.
 %
-my_wdmsg(Msg):- ignore(quietly(my_wdmsg0(Msg))),!.
+my_wdmsg(Msg):- ignore(quietly(eggdrop:my_wdmsg0(Msg))),!.
 
 :- dynamic(lmcache:real_user_output/1).
 :- volatile(lmcache:real_user_output/1).
@@ -157,7 +157,7 @@ my_wdmsg(S,Msg):- format(S,'~N% ~q.~n',[Msg]),flush_output_safe(S),!.
 :- dynamic(lmconf:chat_isWith/3).
 :- thread_local(t_l:disable_px/0).
 
-egg_to_string(A,S):- quietly(egg_to_string0(A,S)).
+egg_to_string(A,S):- quietly(eggdrop:egg_to_string0(A,S)).
 egg_to_string0(A,S):- var(A),!,trace_or_throw(var_egg_to_string(A,S)).
 egg_to_string0(A,S):- on_x_fail(text_to_string(A,S)),!.
 egg_to_string0([A],S):- on_x_fail(atom_string(A,S)),!.
@@ -409,7 +409,7 @@ consultation_thread(CtrlNick,Port):-
         % nop(quietly(update_changed_files_eggdrop)),
          once(read_line_to_codes(IN,Text)),
          Text\==end_of_file,
-         once(quietly(consultation_codes(CtrlNick,Port,Text))),
+         once(quietly(eggdrop:consultation_codes(CtrlNick,Port,Text))),
          fail.
 
 join_chans:- maplist(join,['##prolog','#ai','##narrative-ai','#logicmoo']).
@@ -572,7 +572,7 @@ irc_receive(USER,HOSTMASK,UHANDLE,DEST,MESSAGE):-
        t_l:default_user(USER),
        t_l:session_id(ID),
        t_l:current_irc_receive(USER, HOSTMASK,UHANDLE,DEST,MESSAGE)],
-        with_rl((eggdrop_bind_user_streams, quietly(ignore(once(ircEvent(DEST,USER,MESSAGE)))))))))),!.
+        with_rl((eggdrop_bind_user_streams, quietly(ignore(once(eggdrop:ircEvent(DEST,USER,MESSAGE)))))))))),!.
 
 
 
@@ -814,7 +814,7 @@ trim_text(Text,TextO):- trim_text(Text,ltrim(","," ",":"),rtrim(","," ",":"),Tex
 :-multifile(irc_cmd:irc_invoke_fallback/4).
 :-dynamic(irc_cmd:irc_invoke_fallback/4).
 
-irc_cmd:irc_invoke_bot(Channel,Agent, Modality,W1):- quietly(irc_cmd_invoke_bot(Channel,Agent, Modality,W1)).
+irc_cmd:irc_invoke_bot(Channel,Agent, Modality,W1):- quietly(eggdrop:irc_cmd_invoke_bot(Channel,Agent, Modality,W1)).
 
 % attention (notice the fail to disable)
 irc_cmd_invoke_bot(Channel,Agent, Modality,W1):- member(Sep,[" ",".",","]), string_concat(W2,Sep,W1),!,irc_cmd_invoke_bot(Channel,Agent, Modality,W2).
@@ -1961,7 +1961,7 @@ read_each_term_egg(S,CMD,Vs):-
 :- module_transparent(read_egg_term_0/4).
 
 read_egg_term( SourceModule,String,CMD0,Vs0):-
-  quietly(read_egg_term_0( SourceModule,String,CMD0,Vs0)).
+  quietly(eggdrop:read_egg_term_0( SourceModule,String,CMD0,Vs0)).
 
 read_egg_term_0( SourceModule,String,CMD0,Vs0):- string(String),!,
    split_string(String,""," \r\n\t",[SString]),

@@ -18,7 +18,7 @@
 
 :- reexport(library('logicmoo/common_logic/common_logic_utils.pl')).
 
-:- use_module(library(sigma_ace)).
+:- reexport(library(sigma_ace)).
 
 /** <module> MODULE LOGICMOO CLIF / logicmoo_plarkc
 Logicmoo CLIF - Base Libraries that extend Prolog to support Dynamic Epistemic Logic (DEL) with Constraints.
@@ -95,14 +95,6 @@ maybe_load_clif_file(Spec, Options):-
   exists_file(Found),!,
   really_load_clif_file(Found, Options).
 
-:- fixup_exports.
-
-:- dynamic user:prolog_load_file/2.
-:- multifile user:prolog_load_file/2.
-%:- use_module(library(logicmoo_common)).
-user:prolog_load_file(Spec, Options):- maybe_load_clif_file(Spec, Options),!.
-
-
 :- baseKB:ensure_loaded(baseKB:library('logicmoo/common_logic/common_logic_clif.pfc')).
 
 %:- kif_compile.
@@ -111,4 +103,20 @@ user:prolog_load_file(Spec, Options):- maybe_load_clif_file(Spec, Options),!.
 
 :- add_history(use_module(library(logicmoo_clif))).
 
-:- add_history(qsave_program(clif,[class(development),toplevel(prolog),goal(true)])).
+qsave_clif:-
+  getenv('LOGICMOO_WS',Dir),
+  directory_file_path(Dir,'bin/clif',Path),
+  writeln(qsave_clif=Path),
+  qsave_program(Path,[class(development),toplevel(prolog),goal(true)]).
+
+:- add_history(qsave_clif).
+
+:- dynamic user:prolog_load_file/2.
+:- multifile user:prolog_load_file/2.
+%:- use_module(library(logicmoo_common)).
+user:prolog_load_file(Spec, Options):- maybe_load_clif_file(Spec, Options),!.
+
+:- fixup_exports.
+
+:- qsave_clif.
+

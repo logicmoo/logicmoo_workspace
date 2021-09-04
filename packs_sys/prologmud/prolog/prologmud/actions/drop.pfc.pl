@@ -19,7 +19,7 @@
 
 action_info(actDrop(isOneOf([tDropAble,tNearestReachableItem,tObj,ftID])),"Drop an item").
 
-agent_call_command(Agent,actDrop(Obj)):- once(actDrop(Agent,Obj)).
+baseKB:agent_call_command(Agent,actDrop(Obj)):- once(actDrop(Agent,Obj)).
 
 % Drop something
 actDrop(Agent,Obj) :-

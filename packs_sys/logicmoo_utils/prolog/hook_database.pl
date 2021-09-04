@@ -433,12 +433,12 @@ assert_setting(M:P):-functor(P,_,A),dupe_term(P,DP),setarg(A,DP,_),system:retrac
 :- meta_predicate assert_setting_if_missing(:).
 assert_setting_if_missing(M:P):-functor(P,_,A),dupe_term(P,DP),setarg(A,DP,_),(system:clause(M:DP,_)->true;system:asserta(M:P)).
 
-:- meta_predicate assert_if_new(*).
 
 %% assert_if_new( ?X) is semidet.
 %
 % Assert If New.
 %
+:- meta_predicate assert_if_new(:).
 assert_if_new(X):-mpred_op_prolog(pain,X).
 :- meta_predicate asserta_if_new(*).
 
@@ -448,8 +448,8 @@ assert_if_new(X):-mpred_op_prolog(pain,X).
 %
 % Asserta If New.
 %
+:- meta_predicate assertz_if_new(:).
 asserta_if_new(X):-mpred_op_prolog(paina,X).
-:- meta_predicate assertz_if_new(*).
 
 %= 	 	 
 
@@ -457,9 +457,9 @@ asserta_if_new(X):-mpred_op_prolog(paina,X).
 %
 % Assertz If New.
 %
+:- meta_predicate asserta_new(:).
 assertz_if_new(X):-mpred_op_prolog(painz,X).
 
-:- meta_predicate asserta_new(*).
 
 %= 	 	 
 

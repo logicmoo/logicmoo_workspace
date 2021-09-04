@@ -7,18 +7,9 @@
 % Revision: $Revision: 1.9 $
 % Revised At: $Date: 2002/06/27 14:13:20 $
 % =============================================
-:- if(use_module(library(logicmoo_utils))). :- endif.
-:- if(autoload_all). :-endif.
-:- if(use_module(library(qsave))). :-endif.
+% 
 
-%:- if(qsave_program(foo,[])). :-endif.
-
-:- if(set_prolog_flag(runtime_testing_module,baseKB)).
-:- if(set_prolog_flag(test_module,baseKB)).
 :- include('../test_header').
-:- endif.
-:- endif.
-
 
 interactive_test(G):- add_history(G), fmt("?- ~q.",[G]), nop(mpred_why(G)).
 

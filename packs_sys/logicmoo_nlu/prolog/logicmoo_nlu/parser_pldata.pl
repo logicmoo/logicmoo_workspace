@@ -13,7 +13,7 @@ llf(P):- ensure_loaded(P).
 get_it:- 
  time(ignore((absolute_file_name(library(el_holds/'el_assertions.pl.qlf'),AFN),   
   (exists_file(AFN)->true;(
-    (absolute_file_name(library(el_holds),AFND),sformat( S, 'curl --compressed http://prologmoo.com/devel/LogicmooDeveloperFramework/PrologMUD/pack/pldata_larkc/prolog/el_holds/el_assertions.pl.qlf > ~w/el_assertions.pl.qlf',[AFND]),
+    (absolute_file_name(library(el_holds),AFND),sformat( S, 'curl --compressed http://logicmoo.org/devel/LogicmooDeveloperFramework/PrologMUD/pack/pldata_larkc/prolog/el_holds/el_assertions.pl.qlf > ~w/el_assertions.pl.qlf',[AFND]),
     shell(S))))))).
 
 

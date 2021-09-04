@@ -1,7 +1,7 @@
 /*  Part of SWI-Prolog
     Author:        Douglas R. Miles, Jan Wielemaker
     E-mail:        logicmoo@gmail.com, jan@swi-prolog.org
-    WWW:           http://www.swi-prolog.org http://www.prologmoo.com
+    WWW:           http://www.swi-prolog.org http://www.logicmoo.org
     Copyright (C): 2015, University of Amsterdam
                                     VU University Amsterdam
     This program is free software; you can redistribute it and/or

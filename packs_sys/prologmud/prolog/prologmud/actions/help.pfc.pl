@@ -57,7 +57,7 @@ first_pl(PL,PL).
 
 :- kb_shared(action_info_db/3).
 
-action_info_db(TEMPL,INFO,WAS):- (PRED=agent_call_command(_,WAS);PRED=agent_text_command(_,_,_,WAS)) ,
+action_info_db(TEMPL,INFO,WAS):- (PRED=baseKB:agent_call_command(_,WAS);PRED=agent_text_command(_,_,_,WAS)) ,
    clause(PRED,BODY,REF),clause_property(REF,file(S)),
    (ground(WAS)->true;once(( ignore((nop(S=S),first_pl(BODY,PL),ignore(catch(((true;quietly(PL)),!),_,true)))),ground(WAS)))),
    
@@ -87,8 +87,8 @@ nvfmt(XX):-copy_term(XX,X),numbervars(X,0,_,[attvar(bind),singletons(true)]),fmt
 
 % Help - A command to tell an agent all the possible commands
 actHelp:- commands_list(ListS),forall(member(E,ListS),show_templ_doc(E)).
-agent_call_command(_Agent,actHelp) :- actHelp.
-agent_call_command(_Agent,actHelp(Str)) :-actHelp(Str).
+baseKB:agent_call_command(_Agent,actHelp) :- actHelp.
+baseKB:agent_call_command(_Agent,actHelp(Str)) :-actHelp(Str).
 
 actHelp(Str):-commands_list(ListS),forall(member(E,ListS),write_doc_if_contains(Str,E)).
 

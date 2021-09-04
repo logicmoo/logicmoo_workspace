@@ -18,11 +18,19 @@
 
 */
 
-:- module(talkdb, [getPos/4, talk_db/1]).
+:- module(talkdb, [getPos/4, 
+   talk_db/1,talk_db/2,talk_db/3,talk_db/6,
+   talk_db0/1,talk_db0/2,talk_db0/3,talk_db0/6]).
 
+:- use_module(nl_iface).
 :- style_check(-(discontiguous)).
 
-decl_talk_db_data(F/A):-dynamic(F/A),multifile(F/A),export(F/A).
+decl_talk_db_data(F/A):-
+  decl_talk_db_data0(F/A),
+  atom_concat(F,'0',F0),
+  decl_talk_db_data0(F0/A).
+
+decl_talk_db_data0(F/A):-dynamic(F/A),multifile(F/A),export(F/A).
 
 :- decl_talk_db_data(talk_db/1).
 :- decl_talk_db_data(talk_db/2).
@@ -30,6 +38,34 @@ decl_talk_db_data(F/A):-dynamic(F/A),multifile(F/A),export(F/A).
 :- decl_talk_db_data(talk_db/4).
 :- decl_talk_db_data(talk_db/5).
 :- decl_talk_db_data(talk_db/6).
+
+
+show_num_clauses(F/A):- 
+ (functor(P,F,A),
+  predicate_property(P, number_of_clauses(C)))->format(' ~w~t ~t ',[F/A=C]);
+  format(' ~w~t ',[F/A='(none)']).
+
+show_size_left(Message):-
+   format('% ~w~t ~t',[Message]),
+   show_num_clauses(talk_db/2),
+   show_num_clauses(talk_db/3),
+   show_num_clauses(talk_db/4),
+   show_num_clauses(talk_db/5),
+   show_num_clauses(talk_db/6),
+   nl.
+
+%:- show_size_left("Including talk_db.nldata").
+%:- include('talk_db.nldata').
+:- absolute_file_name(pldata('talk_db.nldata'),
+        File, [access(read)]),
+   setup_call_cleanup(
+    open(File, read, In),
+    (set_stream(In, encoding(iso_latin_1)),
+     repeat,
+     read(In, P),
+     (P= (:- (G)) -> call(G) ; assertz_if_new(talkdb:P)),
+     P==end_of_file),
+    close(In)).
 
 
 /*
@@ -142,15 +178,6 @@ talk_db_pos(String,POSVV,POS,F,0):- !, talk_db(F,String), (F=POSVV -> POS=F ; (P
 talk_db_pos(String,POSVV,POS,F,N):- nonvar(String),!, length(List,N),Search=[_|List],C=..[talk_db,F|Search],nth0(AT,Search,String,_),C,getPos(AT,F,POSVV,POS).
 talk_db_pos(String,POSVV,POS,F,N):- length(List,N),Search=[_|List],C=..[talk_db,F|Search],C,nth0(AT,Search,String,_),getPos(AT,F,POSVV,POS).
 
-show_num_clauses(F/A):- (functor(P,F,A),predicate_property(P, number_of_clauses(C)))->format(' ~w~t ~t ',[F/A=C]);format(' ~w~t ',[F/A='(none)']).
-show_size_left(Message):-
-   format('% ~w~t ~t',[Message]),
-   show_num_clauses(talk_db/2),
-   show_num_clauses(talk_db/3),
-   show_num_clauses(talk_db/4),
-   show_num_clauses(talk_db/5),
-   show_num_clauses(talk_db/6),
-   nl.
 
 use_new_morefile:- fail.
 
@@ -174,11 +201,12 @@ fill_in_blanks(_Base,[]).
 
 % was talk_db([F, A|List]):- talk_db_argsIsa(F, N_Minus1, _), length(List, N_Minus1), apply(talk_db, [F, A|List]).
 % talk_db([F,A|List]):- talk_db_argsIsa(F,N,_), length(List,N),apply(talk_db,[F,A|List]).
-talk_db(X):- quietly(talk_db0(X)).
+talk_db(X):- quietly(talkdb:talk_db0(X)).
+
   talk_db0([F,A|List]):- between(0,4,N), length(List,N), apply(talk_db,[F,A|List]).
 
 talk_db(Ditransitive, Jacket,Jackets,Jacketed,Jacketing,Jacketen):-
-  quietly(talk_db0(Ditransitive, Jacket,Jackets,Jacketed,Jacketing,Jacketen)).
+  quietly(talkdb:talk_db0(Ditransitive, Jacket,Jackets,Jacketed,Jacketing,Jacketen)).
 
   talk_db0(VerbType,Jacket,Jackets,Jacketed,Jacketing,Jacketed):- nonvar(Jacket), \+ parser_chat80:plt,
     talk_db(noun_or_verb,Jackets,Jacketing,Jacket),
@@ -195,12 +223,12 @@ talk_db(Ditransitive, Jacket,Jackets,Jacketed,Jacketing,Jacketen):-
               check_marker(v('dv','v'),[Jacket,Jackets,Jacketed,Jacketing]).
 
 
-talk_db(Type,A):- quietly(talk_db0(Type,A)).
+talk_db(Type,A):- quietly(talkdb:talk_db0(Type,A)).
   talk_db0(adj,Word):- check_marker('jj',[Word]).
   talk_db0(adv,Word):- check_marker('av',[Word]).
   talk_db0(Type,A):- atom(A), concat_atom_safe([Type,_],':', A).
 
-talk_db(Type,A,B):- quietly(talk_db0(Type,A,B)).
+talk_db(Type,A,B):- quietly(talkdb:talk_db0(Type,A,B)).
   talk_db0(noun1,Sing,Plural):- check_marker(v('n','cn'),[Sing,Plural]).
   talk_db0(noun2,Sing,Sing):- check_marker(v('n','mn'),[Sing]).
   talk_db0(Type,A,B):- check_marker(Type,[A,B]).
@@ -211,22 +239,6 @@ talk_db(Type,A,B):- quietly(talk_db0(Type,A,B)).
 
 talk_db(Type,A,B,C):- check_marker(Type,[A,B,C]).
 talk_db(Type,A,B,D,C):- check_marker(Type,[A,B,C,D]).
-
-
-
-:- show_size_left("Including talk_db.nldata").
-%:- include('talk_db.nldata').
-:- absolute_file_name(pldata('talk_db.nldata'),
-        File, [access(read)]),
-   setup_call_cleanup(
-    open(File, read, In),
-    (set_stream(In, encoding(iso_latin_1)),
-     repeat,
-     read(In, P),
-     (P= (:- (G)) -> call(G) ; talkdb:assertz_if_new(P)),
-     P==end_of_file),
-    close(In)).
-
 
 
 %kill_talk_db_bad_verbs:-!.
@@ -339,7 +351,8 @@ save_to_file(Name,Belongs,F):-
 
 % :- forall((S=adv,talkdb:talk_db(S,X)), ignore((show_success((S=S,retract(talkdb:talk_db(adj,X))))))).
 
-:- fixup_exports. 
+:- fixup_exports.
+
 :- fixup_exports_system.%  system:re export(talk_db).
 
 % =================================
@@ -533,3 +546,5 @@ talk_db(transitive, twitter, twitters, twittered, twittering, twittered).
 talk_db(verb, abray).
 
 */
+
+

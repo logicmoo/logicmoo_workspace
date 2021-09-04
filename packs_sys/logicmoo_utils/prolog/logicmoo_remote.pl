@@ -9,7 +9,7 @@
     Author:        Douglas R. Miles
     Maintainers:   logicmoo
     E-mail:        logicmoo@gmail.com
-    WWW:           http://www.prologmoo.com
+    WWW:           http://www.logicmoo.org
     SCM:           https://github.com/logicmoo/PrologMUD/tree/master/pack/logicmoo_base
     Copyleft:      1999-2015, LogicMOO Prolog Extensions
     License:       Lesser GNU Public License

@@ -318,8 +318,8 @@ baseKB:feature_test:- chat80_tests.
 :- set_prolog_flag(expect_pfc_file, some_preds).
 ==>type_action_info(tHumanControlled, actChat80(ftListFn(ftTerm)), "Development test CHAT-80 Text for a human.  Usage: CHAT80 Cant i see the blue backpack?").
 
-==>agent_call_command(_Gent, actChat80([])):- chat80.
-==>agent_call_command(_Gent, actChat80(StringM)):- chat80(StringM).
+==>baseKB:agent_call_command(_Gent, actChat80([])):- chat80.
+==>baseKB:agent_call_command(_Gent, actChat80(StringM)):- chat80(StringM).
 :- set_prolog_flag(expect_pfc_file, never).
 
 % ===========================================================

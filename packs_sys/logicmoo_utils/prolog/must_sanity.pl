@@ -30,13 +30,13 @@ This module includes predicate utilities that allows program to detect unwanted 
 
 
 :- meta_predicate
-        must(*),
-        must_once(*),
-        must_det(*),
+        must(:),
+        must_once(:),
+        must_det(:),
         nop(*),
-        sanity(*),
+        sanity(:),
         %must_or_rtrace_mep(M,E,*),
-        scce_orig(*,*,*).
+        scce_orig(:,:,:).
 
 :- set_module(class(library)).
 % % % OFF :- system:use_module(library(logicmoo_utils_all)).
@@ -62,12 +62,12 @@ This module includes predicate utilities that allows program to detect unwanted 
 % Must Be Successfull.
 %
 
-must(Goal):- (Goal*->true;must_0(Goal)).
+must(M:Goal):- (M:Goal*->true;must_0(M:Goal)).
 must_0(Goal):- quietly(get_must(Goal,MGoal))-> call(MGoal).
 
 
 
-:- meta_predicate(deterministic_tf(0,-)).
+:- meta_predicate(deterministic_tf(:,-)).
 deterministic_tf(G, F) :-
    G,
    deterministic(F),
@@ -76,7 +76,7 @@ deterministic_tf(G, F) :-
 :- meta_predicate(was_cut(+)).
 was_cut(Cut):- nonvar(Cut), strip_module(Cut,_,(!)).
 
-:- meta_predicate(mor_event(*)).
+:- meta_predicate(mor_event(:)).
 
 handle_mor_event(e(M,E,Err,G)):- !, call_cleanup(handle_mor_event(e(Err,G)),wdmsg(mor_e(M,E,Err,G))).
 handle_mor_event(f(M,E,G)):- !, call_cleanup(handle_mor_event(f(G)),wdmsg(mor_f(M,E,G))).
@@ -107,9 +107,9 @@ mor_list_to_disj(_,[X],X):-!.
 mor_list_to_disj(L,[A|B],(A;BB)):- mor_list_to_disj(L,B,BB).
 mor_list_to_disj(End,[],End):-!.
 
-:- meta_predicate(must_or_rtrace(0)).
+:- meta_predicate(must_or_rtrace(:)).
 
-must_or_rtrace(G):- tracing,!,G.
+must_or_rtrace(G):- tracing,!,call(G).
 must_or_rtrace((G1,Cut)):- was_cut(Cut),!,must_or_rtrace(G1),!.
 must_or_rtrace((G1,Cut,G2)):- was_cut(Cut),!,must_or_rtrace(G1),!,must_or_rtrace(G2).
 must_or_rtrace((G1,G2)):- !,( catch(G1,Ex,mor_event(e(Ex,G1)))*->must_or_rtrace(G2);mor_event(f(G1))).
@@ -125,7 +125,7 @@ must_or_rtrace(G):- catch(G,Ex,mor_event(e(Ex,G)))*-> true; mor_event(f(G)).
 %
 
 get_must(Goal,CGoal):- (skipWrapper ; tlbugger:skipMust),!,CGoal = Goal.
-get_must(M:Goal,M:CGoal):- must_be(nonvar,Goal),!,get_must(Goal,CGoal).
+%get_must(M:Goal,M:CGoal):- must_be(nonvar,Goal),!,get_must(Goal,CGoal).
 get_must(quietly(Goal),quietly(CGoal)):- current_prolog_flag(runtime_safety,3), !, get_must(Goal,CGoal).
 get_must(quietly(Goal),CGoal):- !,get_must((quietly(Goal)*->true;Goal),CGoal).
 get_must(Goal,CGoal):- keep_going,!,CGoal=must_keep_going(Goal).
@@ -180,18 +180,17 @@ xnotrace(G):- call(G).
 %
 
 sanity(_):- notrace(current_prolog_flag(runtime_safety,0)),!.
-% sanity(_):-!.
+sanity(_):-!.
 sanity(Goal):- \+ ( nb_current('$inprint_message', Messages), Messages\==[] ),
    \+ tracing,
    \+ current_prolog_flag(runtime_safety,3),
    \+ current_prolog_flag(runtime_debug,0),
    (current_prolog_flag(runtime_speed,S),S>1),
-   !,
-   (1 is random(10)-> must(Goal) ; true).
-sanity(Goal):- quietly(Goal),!.
+   !, (1 is random(10)-> must(Goal) ; true).
+sanity(Goal):- (current_prolog_flag(debug,true)->quietly(Goal);nop(Goal)),!.
 sanity(Goal):- keep_going,!,dmsg(failed_sanity(Goal)=keep_going),fail.
-sanity(_):- break, dumpST,fail.
-sanity(Goal):- setup_call_cleanup(wdmsg(begin_FAIL_in(Goal)),rtrace(Goal),wdmsg(end_FAIL_in(Goal))),!,dtrace(assertion(Goal)).
+sanity(_):- dumpST,break,fail.
+sanity(Goal):- ignore(setup_call_cleanup(wdmsg(begin_FAIL_in(Goal)),rtrace(Goal),wdmsg(end_FAIL_in(Goal)))),!,dtrace(assertion(Goal)).
 
 %! must_once(:Goal) is det.
 %

@@ -67,8 +67,11 @@ with_kif_translation(Found, Process):- with_kif_ok(with_lisp_translation(Found, 
 
 kif_process_once(P):-must(once(kif_process(P))).
 
+% clif(X).
 :- use_module(library(pfc_lib)).
 :- module_transparent(kif_process_expansion/2).
+% kif_process_expansion( I,  _):- dmsg(kif_process_expansion( I)),fail.
+kif_process_expansion(:- I, :- O):- !, fail, I=O.
 kif_process_expansion(I, ( :- must_kif_process(I))):- I \= ( :- _ ), prolog_load_context(dialect,clif).
 kif_process_expansion(I,O):- \+ compound(I),!,loader_as_pfc_expansion(I,O).
 kif_process_expansion('=>'(A,B),clif(O)):- I='implies'(A,B), ((fail,loader_as_pfc_expansion(I,O)) -> true ; O=I),!.
@@ -237,4 +240,11 @@ kif_io(In,Out):-
 
 
 :- fixup_exports.
+
+system:term_expansion(I,FP,_,FPO):-  I\==end_of_file,
+ notrace((
+   prolog_load_context(file,File), sub_atom(File,_,_,_,'.clif'),
+   prolog_load_context(stream, Stream), stream_property(Stream,file_name(File)),
+   nonvar(FP),FPO=FP)),
+   once(kif_io),fail.
 

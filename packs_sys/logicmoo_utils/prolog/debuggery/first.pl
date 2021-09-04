@@ -122,10 +122,18 @@ set_pred_attrs(MP,List):- maplist(set_pred_attrs(MP),List).
 :- export(reset_IO/0).
 reset_IO:-
  stream_property(In,file_no(0)),stream_property(Out,file_no(1)),stream_property(Err,file_no(2)),
-  set_stream(In,alias(user_input)),set_stream(Out,alias(user_output)),set_stream(Err,alias(user_error)),
+  set_stream(In,buffer(line)),set_stream(Out,buffer(false)),set_stream(Err,buffer(false)),
   set_stream(In,alias(current_input)),set_stream(Out,alias(current_output)),set_stream(Err,alias(current_error)),
+  set_stream(current_input,buffer(line)),set_stream(current_output,buffer(false)),set_stream(current_error,buffer(false)),
+  set_stream(In,alias(user_input)),set_stream(Out,alias(user_output)),set_stream(Err,alias(user_error)),
+  set_stream(user_input,buffer(line)),set_stream(user_output,buffer(false)),set_stream(user_error,buffer(false)),
+  set_output(Out),
   set_system_IO(In,Out,Err),
-  set_prolog_IO(In,Out,Err).
+  set_prolog_IO(In,Out,Err),
+  writeln(Out,Out),
+  writeln(user_output,user_output),
+  wdmsg(reset_IO),
+  writeln(user_error,user_error).
 
 
 :- export(cnas/3).

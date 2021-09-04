@@ -27,7 +27,7 @@ vtActionTemplate(actAttack(vtDirection)).
 
 
 
-agent_call_command(Agent,actAttack(Dir)):- once(actAttack(Agent,Dir)).
+baseKB:agent_call_command(Agent,actAttack(Dir)):- once(actAttack(Agent,Dir)).
 
 % Attack
 % Successful Attack

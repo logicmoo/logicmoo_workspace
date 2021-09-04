@@ -43,19 +43,19 @@
 :-thread_local(t_l:was_gui_tracer/1).
 :-thread_local(t_l:wastracer/1).
 
-:- 'meta_predicate'(call_call(0)).
+:- 'meta_predicate'(call_call(:)).
 call_call(G):-call(G).
 
 
 :- meta_predicate
-   rtrace(0),
-   restore_trace(0),
-   on_x_debug(0),
-   on_f_rtrace(0),  
+   rtrace(:),
+   restore_trace(:),
+   on_x_debug(:),
+   on_f_rtrace(:),  
    
-   rtrace_break(0),
-   quietly(*),
-   ftrace(0).
+   rtrace_break(:),
+   quietly(:),
+   ftrace(:).
 
 %! on_f_rtrace( :Goal) is det.
 %
@@ -214,8 +214,8 @@ quietly3(Goal):- \+ tracing -> Goal ;
   (trace,!,notrace(fail)))).
 
 % version 4 
-quietly(Goal):- \+ tracing -> Goal ;
-  (get_trace_reset(W), scce_orig(notrace(visible(-all)),Goal,W)).
+quietly(M:Goal):- \+ tracing -> M:Goal ;
+  (get_trace_reset(W), scce_orig(notrace(visible(-all)),M:Goal,W)).
 
 
 % :- 'totally_hide'(rtrace:quietly/1).

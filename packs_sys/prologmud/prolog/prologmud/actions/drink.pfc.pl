@@ -17,7 +17,7 @@ action_info(actDrink(tDrinkAble),"Drink a Drinkable Item").
 % Drink something held
 % Check to make sure it's in the agents possession... 
 % if it is, process it's worth, then destroy it
-agent_call_command(Agent,actDrink(Obj)) :-
+baseKB:agent_call_command(Agent,actDrink(Obj)) :-
 	mudPossess(Agent,Obj),
 	do_act_affect(Agent,actDrink,Obj),
 	clr(mudPossess(Agent,Obj)),

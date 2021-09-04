@@ -5,7 +5,7 @@
 
     Author:        Douglas R. Miles
     E-mail:        logicmoo@gmail.com
-    WWW:           http://www.swi-prolog.org http://www.prologmoo.com
+    WWW:           http://www.swi-prolog.org http://www.logicmoo.org
     Copyright (C): 2015, University of Amsterdam
                                     VU University Amsterdam
 

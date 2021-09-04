@@ -1378,7 +1378,8 @@ mmake:- thread_signal(main,catch(((ignore(update_changed_files), ignore(if_defin
 %
 % Update Changed Files.
 %
-update_changed_files:-!,thread_signal(main,update_changed_files0).
+update_changed_files:- thread_self(main),!,update_changed_files1.
+update_changed_files:- !,thread_signal(main,update_changed_files0).
 
 %= 	 	 
 
@@ -1396,8 +1397,7 @@ update_changed_files0 :- get_main_error_stream(Err),!,with_output_to(Err,update_
 %
 update_changed_files1 :- 
  locally(set_prolog_flag(verbose_load,true),
-   with_no_dmsg(make:((
-        
+   with_no_dmsg(make:((        
         '$update_library_index',
     findall(File, make:modified_file(File), Reload0),
     list_to_set(Reload0, Reload),

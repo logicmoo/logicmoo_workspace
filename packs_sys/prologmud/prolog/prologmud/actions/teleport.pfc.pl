@@ -25,7 +25,7 @@ action_info(actTeleport(isOptional(isAnd([tObj,isNot(tRegion)]),isSelfAgent),isO
 text_actverb(tp,actTeleport).
 
 %targeted
-agent_call_command(_Agent,actTeleport(Other,_TO,Where)):-
+baseKB:agent_call_command(_Agent,actTeleport(Other,_TO,Where)):-
    coerce(Other,tObj,Target),
    coerce(Where,tRegion,Location),
    detatch_object(Target),

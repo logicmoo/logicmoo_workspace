@@ -35,7 +35,7 @@ mudCanSense(_Agent,visual,InList,InList,[]).
 
 
 action_info(actExamine(tItem), "view details of item (see also @ftListFn)").
-agent_call_command(_Gent,actExamine(SObj)):- xlisting(SObj).
+baseKB:agent_call_command(_Gent,actExamine(SObj)):- xlisting(SObj).
 
 visibleTo(Agent,Agent).
 visibleTo(Agent,Obj):-mudPossess(Agent,Obj).
@@ -57,15 +57,15 @@ action_info(actLook(isOptional(txtPrepSpatial,"at"),tObj),"look [in|at|on|under|
 %action_info(look(obj), "Look at a speficific item").
 %action_info(look_at(isOptional(call(visibleTo(vHere,value)),call(visibleTo(vHere,value)))), "Look at a speficific item").
 
-agent_call_command(Agent,actLook):- look_as(Agent),!.
-agent_call_command(Agent,actLook('here')):- look_as(Agent),!.
-agent_call_command(Agent,actLook(_,'here')):- look_as(Agent),!.
-agent_call_command(Agent,actLook(DirS,'self')):- coerce(DirS,vtDirection,Dir),!,
+baseKB:agent_call_command(Agent,actLook):- look_as(Agent),!.
+baseKB:agent_call_command(Agent,actLook('here')):- look_as(Agent),!.
+baseKB:agent_call_command(Agent,actLook(_,'here')):- look_as(Agent),!.
+baseKB:agent_call_command(Agent,actLook(DirS,'self')):- coerce(DirS,vtDirection,Dir),!,
    view_dirs(Agent,[[Dir,vHere],[Dir,Dir],[Dir,Dir,vAdjacent]],Percepts),
-   forall_member(P,Percepts,agent_call_command_now(Agent,actExamine(P))).
-agent_call_command(Agent,actLook(_Dir,SObj)):-
+   forall_member(P,Percepts,baseKB:agent_call_command_now(Agent,actExamine(P))).
+baseKB:agent_call_command(Agent,actLook(_Dir,SObj)):-
    objects_match_for_agent(Agent,SObj,tObj,Percepts),
-   forall_member(P,Percepts,agent_call_command_now(Agent,actExamine(P))).
+   forall_member(P,Percepts,baseKB:agent_call_command_now(Agent,actExamine(P))).
 
 :-export(look_as/1).
 look_as(Agent):- mudAtLoc(Agent,LOC),cmdLook(Agent,LOC),!.

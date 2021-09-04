@@ -15,7 +15,7 @@
 %:-pfc_untrace.
 %:-pfc_no_spy_all.
 
-use_baseKB :- '$set_typein_module'(baseKB),'$set_source_module'(baseKB),module(baseKB).
+use_baseKB :- '$set_typein_module'(baseKB),'$set_source_module'(baseKB),module(baseKB),ignore(notrace(update_changed_files)).
 :- use_baseKB.
 
 % ==============================================
@@ -280,9 +280,12 @@ lar :- % set_prolog_flag(dmsg_level,never),
 
 :- before_boot(use_baseKB).
 :- during_boot(use_baseKB).
+:- after_boot(use_baseKB).
+
 :- during_boot(baseKB:ain(tSourceData(iWorldData8))).
 
 start_runtime_mud:- 
+   update_changed_files,
    forall(tCol(X),call(baseKB:kb_shared,X/1)),
    forall(tSet(X),call(baseKB:kb_shared,X/1)),
    %forall(tCol(X),call(baseKB:make_as_dynamic,X/1)),

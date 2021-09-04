@@ -97,6 +97,7 @@ clif_dialect_ge(style_check(Style),
 	      clif_style_check(Style)).
 */
 clif_dialect_ge(expects_dialect(Dialect), clif_expects_dialect(Dialect)):- !.
+clif_dialect_ge(I,O):- clif_dialect_te(( :- I),( :- O)).
 
 :- module_transparent(clif_dialect_te/2).
 clif_dialect_te(I, O):- kif_process_expansion(I,O),!.
@@ -109,11 +110,13 @@ as_pfc_expansion(I,O):-
   (set_prolog_flag(emulated_dialect,pfc),
    pfc_lib:base_clause_expansion(I,O)),set_prolog_flag(emulated_dialect,Was)).
 
-
+:- system:module_transparent(clif_dialect:clif_expects_dialect/1).
+:- system:import(clif_dialect:clif_expects_dialect/1).
+clif_expects_dialect(Dialect):- current_prolog_flag(emulated_dialect,Was),Was==Dialect,!.
 clif_expects_dialect(Dialect):-  
  prolog_load_context(module, M),  
- notrace((
-  clif_dialect:(prolog_load_context(dialect, Was),
+ notrace((clif_dialect:(
+  prolog_load_context(dialect, Was),
   dialect_input_stream_clif(Source),
   clif_debug(clif_expects_dialect(Dialect,Source,Was,M))))),
   clif_expects_dialect(Dialect,Source,Was,M),
@@ -243,12 +246,21 @@ likely_reserved_module(M):- M=user;
 clif_dialect:setup_dialect:- clif_expects_dialect(clif).
    
 
-clif_operators(M,[              
-op(500,fx, M: ('~')),
-op(1050,xfx,M: ('=>')),
-op(1050,xfx,M: ('<=>')),
-op(1050,xfx,M: ('<=')),
-op(1150,xfx,M: ('::::'))]).
+clif_operators(M,[ 
+ op(1199,fx,M:('==>')),
+ op(1190,xfx,M:('::::')),
+ op(1180,xfx,M:('==>')),
+ op(1170,xfx,M:('<==>')),
+ op(1160,xfx,M:('<-')),
+ op(1150,xfx,M:('=>')),
+ op(1140,xfx,M:('<=')),
+ op(1130,xfx,M:('<=>')),
+ op(1120,xfx,M:('<->')),
+ op(600,yfx,M:('&')),
+ op(600,yfx,M:('v')),
+ op(350,xfx,M:('xor')),
+ op(300,fx,M:('-')),
+ op(300,fx,M:('~'))]).
 
 other_dialect(Dialect):- Dialect\==clif.
 
@@ -256,27 +268,23 @@ other_dialect(Dialect):- Dialect\==clif.
 :- system:import(clif_dialect:clif_expects_dialect/4).
 clif_expects_dialect(SWI,Source,_,M):- other_dialect(SWI),!,clif_pop_dialect(Source,M), expects_dialect(SWI).
 %clif_expects_dialect(SWI,_,Bin,_):- other_dialect(SWI),other_dialect(Bin),!, expects_dialect(SWI).
-clif_expects_dialect(WAS,_,WAS,_):- !. % expects_dialect(WAS).
-clif_expects_dialect(Next,Source,Was,M):- cliftmp:module_dialect_clif(Next,Source,Was,M,_Undo), !.
-clif_expects_dialect(Next,StreamNow,Was,M):- cliftmp:module_dialect_clif(Next,StreamBefore,Was,M,_Undo),
+%clif_expects_dialect(WAS,_,WAS,_):- WAS==clif, 
+%clif_expects_dialect(WAS,_,WAS,_):- !. % expects_dialect(WAS).
+%clif_expects_dialect(Next,Source,Was,M):- cliftmp:module_dialect_clif(Next,Source,Was,M,_Undo), !.
+clif_expects_dialect(Next,StreamNow,Was,M):- 
+   cliftmp:module_dialect_clif(Next,StreamBefore,Was,M,_Undo),
    StreamNow \== StreamBefore,!,
-   retract(cliftmp:module_dialect_clif(Next,StreamBefore,Was,M,Undo)),
+   retract(cliftmp:module_dialect_clif(Next,StreamBefore,Was,M,Undo)),   
    asserta(cliftmp:module_dialect_clif(Next,StreamNow,Was,M,Undo)),!.
-
-:- system:module_transparent(clif_dialect:clif_expects_dialect/1).
-:- system:import(clif_dialect:clif_expects_dialect/1).
 clif_expects_dialect(clif,Source,Was,M):-
    %notrace(M:ensure_loaded(library(clif_lib))),
-   M:use_module(library(dialect/clif)),
-  (  ((false, \+ (current_prolog_flag(clif_version,v(2,0,_))))) -> 
-      (M:ensure_loaded(library('../t/vlibs/clif_1_8_full')),M:decl_module(M));
-      (set_prolog_flag(clif_version,v(2,0,0)),M:use_module(library(logicmoo_clif)))),
-   % dynamic(Was:'=-=>'/2),
+   %ignore(retract(cliftmp:module_dialect_clif(Dialect,Source,_,_,_))), 
+   M:use_module(library(dialect/clif)),  
+   M:use_module(library(logicmoo_clif)),
    clif_operators(M, Ops),
    push_operators(M:Ops, Undo),
-   %ignore(retract(cliftmp:module_dialect_clif(Dialect,Source,_,_,_))), 
    asserta(cliftmp:module_dialect_clif(clif,Source,Was,M,Undo)),!.
-  
+
 
 dialect_input_stream_clif(Source):- prolog_load_context(source,Source)->true; Source = user_input.
 
@@ -339,6 +347,7 @@ system:term_expansion(In, P, Out, PO) :-
 term_expansion_clif_eof(M):-   
    prolog_load_context(dialect, clif),
    prolog_load_context(file, Source),
+   cliftmp:module_dialect_clif(clif,Source,_,M,_Undo),
    clif_pop_dialect(Source,M),!.
 
 :- multifile(system:term_expansion/2).

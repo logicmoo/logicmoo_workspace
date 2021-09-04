@@ -46,9 +46,6 @@ is_leave_alone_msg(parserm).
 % is_leave_alone_msg(F):- is_db_prop(F,_,_),!,fail.
 is_leave_alone_msg(A):-on_x_fail((sub_atom(A,_,1,0,S),atom_number(S,_))),!.
 
-:- discontiguous(baseKB:mudTermAnglify/2).
-
-prologDynamic(mudTermAnglify/2).
 prologBuiltin(term_anglify_args/6).
 prologBuiltin(term_anglify_last/2).
 :-export(term_anglify_args/6).
@@ -61,21 +58,25 @@ term_anglify_last(Head,English):-compound(Head),
    Head=..[F|ARGS],
    term_anglify_args(Head,F,A,ARGS,prologSingleValued,English).
 
-mudTermAnglify(A,B):-local_term_anglify(A,B).
+:- discontiguous(baseKB:mudTermAnglify/2).
+prologDynamic(baseKB:mudTermAnglify/2).
+baseKB:mudTermAnglify(A,B):-mudTermAnglify0(A,B).
 
-mudTermAnglify(Head,EnglishO):- compound(Head), 
+mudTermAnglify0(A,B):-local_term_anglify(A,B).
+
+mudTermAnglify0(Head,EnglishO):- compound(Head), 
    Head=..[F|ARGS],mpred_prop(F,_,Info),
    member(Info,[prologSingleValued,predArgMulti(_)]),   
    term_anglify_args(Head,F,1,ARGS,Info,English),eng_fully_expand(English,EnglishO),!.
 
-mudTermAnglify(verbFn(isa),[is,a]):-!.
-mudTermAnglify(verbFn(F),[is|UL]):-not(string_lower(F,F)),unCamelCase(F,U),atomics_to_string(UL,"_",U).
-mudTermAnglify(verbFn(F),[is,F]):-atom_concat(_,'ing',F).
-mudTermAnglify(verbFn(F),[F,is]).
+mudTermAnglify0(verbFn(isa),[is,a]):-!.
+mudTermAnglify0(verbFn(F),[is|UL]):-not(string_lower(F,F)),unCamelCase(F,U),atomics_to_string(UL,"_",U).
+mudTermAnglify0(verbFn(F),[is,F]):-atom_concat(_,'ing',F).
+mudTermAnglify0(verbFn(F),[F,is]).
 % term_anglify(ftCallable(Term),String):-term_to_atom(Term,Atom),any_to_string(Atom,String).
-mudTermAnglify(determinerString(Obj,Text),[posNP(Obj),is,uses,ftString(Text),as,a,determiner]).
-mudTermAnglify(nameString(Obj,Text),[posNP(Obj),is,refered,to,as,ftString(Text)]).
-mudTermAnglify(mudTermAnglify(Term,Text),[ftCallable(Term),is,converted,to,english,using,ftCallable(Text)]).
+mudTermAnglify0(determinerString(Obj,Text),[posNP(Obj),is,uses,ftString(Text),as,a,determiner]).
+mudTermAnglify0(nameString(Obj,Text),[posNP(Obj),is,refered,to,as,ftString(Text)]).
+mudTermAnglify0(mudTermAnglify(Term,Text),[ftCallable(Term),is,converted,to,english,using,ftCallable(Text)]).
 
 
 

@@ -555,9 +555,9 @@ mudEquals(X,Y):-equals_call(X,Y).
 
 %:- set_fileAssertMt(baseKB).
 
-:- kb_shared(agent_call_command/2).
-:- export(agent_call_command/2).
-:- system:import(agent_call_command/2).
+:- kb_shared(baseKB:agent_call_command/2).
+:- export(baseKB:agent_call_command/2).
+:- system:import(baseKB:agent_call_command/2).
 
 
 :- kb_global(baseKB:decided_not_was_isa/2).

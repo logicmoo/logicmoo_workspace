@@ -20,8 +20,8 @@
 % Dec 13, 2035
 % Douglas Miles
 */
-:- multifile baseKB:agent_action_queue/3.
-:- dynamic baseKB:agent_action_queue/3.
+:- multifile(baseKB:agent_action_queue/3).
+:- dynamic(baseKB:agent_action_queue/3).
 
 :- thread_local(t_l:disable_px/0).
 :- retractall(t_l:disable_px).
@@ -30,8 +30,8 @@
 
 
 /*
-:- dynamic   lmcache:session_io/4, lmcache:session_agent/2, lmcache:agent_session/2,   telnet_fmt_shown/3,   agent_action_queue/3.
-:- dynamic lmcache:session_io/4, lmcache:session_agent/2, lmcache:agent_session/2,   telnet_fmt_shown/3,   agent_action_queue/3.
+:- dynamic   lmcache:session_io/4, lmcache:session_agent/2, lmcache:agent_session/2,   telnet_fmt_shown/3,   agent_action_queue/3).
+:- dynamic lmcache:session_io/4, lmcache:session_agent/2, lmcache:agent_session/2,   telnet_fmt_shown/3,   agent_action_queue/3).
 
 */
 %:- '$set_source_module'(baseKB).
@@ -45,8 +45,8 @@
 
 listing_break(G):- cwc, listing(G),break.
 
-:- dynamic(agent_call_command/2).
-:- import(agent_call_command/2).
+:- dynamic(baseKB:agent_call_command/2).
+:- import(baseKB:agent_call_command/2).
 
 % :- mpred_core:import(baseKB:ttExpressionType/1).
 
@@ -110,12 +110,11 @@ listing_break(G):- cwc, listing(G),break.
 :- discontiguous(  disabled/1).
 :- kb_shared(  enabled/1).
 :- discontiguous(  enabled/1).
-:- kb_shared   was_enabled/1.
+:- kb_shared(was_enabled/1).
 :- discontiguous(  was_enabled/1).
-:- kb_shared   listing_mpred_hook/1.
+:- kb_shared(listing_mpred_hook/1).
 
-
-:- kb_shared   genls/2.
+:- kb_shared(genls/2).
 :- kb_shared(  isa/2).
 
 :- style_check((-(singleton))).
@@ -134,76 +133,76 @@ listing_break(G):- cwc, listing(G),break.
 :- set_prolog_flag(generate_debug_info, true).
 
 % these do not get defined!?
-% :- kb_shared user_db:assert_user/2, user_db:grant_openid_server/2, user_db:retractall_grant_openid_server/2, user_db:retractall_user/2, user_db:assert_grant_openid_server/2.
+% :- kb_shared( user_db:assert_user/2, user_db:grant_openid_server/2, user_db:retractall_grant_openid_server/2, user_db:retractall_user/2, user_db:assert_grant_openid_server/2).
 
 % :- kb_shared(mpred_online:semweb_startup/0).
 % :- break.
 :- kb_shared(  tChannel/1).
 
 
-:- kb_shared pfcManageHybrids/0.
-:- kb_shared   defnSufficient/2.
-% :- kb_shared   lmcache:loaded_external_kbs/1.
-%:- kb_shared t_l:infMustArgIsa/0.
-:- thread_local t_l:repl_to_string/2.
-:- thread_local t_l:repl_writer/2.
+:- kb_shared( pfcManageHybrids/0).
+:- kb_shared(   defnSufficient/2).
+% :- kb_shared(   lmcache:loaded_external_kbs/1).
+%:- kb_shared( t_l:infMustArgIsa/0).
+:- thread_local(t_l:repl_to_string/2).
+:- thread_local(t_l:repl_writer/2).
 :- thread_local(t_l:into_form_code/0).
-% :- thread_local t_l:current_local_why/2.
+% :- thread_local t_l:current_local_why/2).
 % :- break.
-:- kb_shared   loading_module_h/1.
-:- kb_shared   registered_module_type/2.
-:- kb_shared   must_compile_special_clause_file/1.
+:- kb_shared(   loading_module_h/1).
+:- kb_shared(   registered_module_type/2).
+:- kb_shared(   must_compile_special_clause_file/1).
 
 % HOOKS
-:- kb_shared   decl_coerce/3.
-:- kb_shared   listen_to_ops/2.
-:- kb_shared   deduce_facts/2.
-:- kb_shared   default_type_props/3.
-:- kb_shared   fact_always_true/1.
-:- kb_shared   fact_is_false/2.
-:- kb_shared   fact_maybe_deduced/1.
-:- kb_shared   never_assert_u/2.
-:- kb_shared   impl_coerce_hook/3.
+:- kb_shared(   decl_coerce/3).
+:- kb_shared(   listen_to_ops/2).
+:- kb_shared(   deduce_facts/2).
+:- kb_shared(   default_type_props/3).
+:- kb_shared(   fact_always_true/1).
+:- kb_shared(   fact_is_false/2).
+:- kb_shared(   fact_maybe_deduced/1).
+:- kb_shared(   never_assert_u/2).
+:- kb_shared(   impl_coerce_hook/3).
 
-:- kb_shared   create_random_fact/1.
-% :- kb_shared   local_term_anglify/2.
-% :- kb_shared   term_anglify_last/2.
-% :- kb_shared   term_anglify_np/3.
-% :- kb_shared   term_anglify_np_last/3.
+:- kb_shared(   create_random_fact/1).
+% :- kb_shared(   local_term_anglify/2).
+% :- kb_shared(   term_anglify_last/2).
+% :- kb_shared(   term_anglify_np/3).
+% :- kb_shared(   term_anglify_np_last/3).
 
-% :- kb_shared   hooked_random_instance/3.
+% :- kb_shared(   hooked_random_instance/3).
 
-:- kb_shared   now_unused/1.
-:- kb_shared   provide_mpred_read_attributes/3.
-:- kb_shared   provide_mpred_setup/4.
-:- kb_shared   provide_mpred_clauses/3.
-:- kb_shared   provide_mpred_op/2.
-:- kb_shared   provide_mpred_write_attributes/2.
+:- kb_shared(   now_unused/1).
+:- kb_shared(   provide_mpred_read_attributes/3).
+:- kb_shared(   provide_mpred_setup/4).
+:- kb_shared(   provide_mpred_clauses/3).
+:- kb_shared(   provide_mpred_op/2).
+:- kb_shared(   provide_mpred_write_attributes/2).
 
 % DYN HOOKS
-% :- kb_shared   is_never_type/1.
+% :- kb_shared(   is_never_type/1).
 
 % DYN FOR CODE
-:- dynamic lmcache:after_mpred_load/0.
-:- thread_local use_cyc_database/0.
-:- kb_shared use_cyc_database/0.
+:- dynamic(lmcache:after_mpred_load/0).
+:- thread_local(use_cyc_database/0).
+:- kb_shared( use_cyc_database/0).
 
-:- kb_shared   fact_is_false/2.
+:- kb_shared(   fact_is_false/2).
 % :- kb_shared(kbp_t_list_prehook/2).
 
 
 % DYN KB
-:- kb_shared   only_if_pttp/0.
-:- kb_shared   use_kif/2.
-% :- kb_shared   is_mpred_prop/2.
-%:- kb_shared   hasInstance_dyn/2.
-%:- kb_shared   arity/2.
+:- kb_shared(   only_if_pttp/0).
+:- kb_shared(   use_kif/2).
+% :- kb_shared(   is_mpred_prop/2).
+%:- kb_shared(   hasInstance_dyn/2).
+%:- kb_shared(   arity/2).
 /*
-%:- kb_shared   mpred_prop/3.
-:- kb_shared   '<=>'/2.
-% :- kb_shared   ruleForward/2.
-:- kb_shared   ruleRewrite/2.
-% :- kb_shared   ruleBackward/2.
+%:- kb_shared(   mpred_prop/3).
+:- kb_shared(   '<=>'/2).
+% :- kb_shared(   ruleForward/2).
+:- kb_shared(   ruleRewrite/2).
+% :- kb_shared(   ruleBackward/2).
 
 % :-must((  mpred_prop(t,_,prologHybrid))).
 
@@ -230,7 +229,7 @@ listing_break(G):- cwc, listing(G),break.
 :- kb_global(baseKB:   check_permanence/4).
 
 
-% predicateConventionMt(agent_call_command,baseKB).
+% predicateConventionMt(baseKB:agent_call_command,baseKB).
 
 % :- ensure_loaded('logicmoo/pfc/autoexec.pfc').
 
@@ -243,8 +242,8 @@ listing_break(G):- cwc, listing(G),break.
 :- op(1100,fx,('==>')).
 :- op(1150,xfx,('::::')).
 
-:- dynamic(mudTermAnglify/2).
-:- discontiguous(mudTermAnglify/2).
+:- dynamic(baseKB:mudTermAnglify/2).
+:- discontiguous(baseKB:mudTermAnglify/2).
 
 tWorld(iWorld7).
 
@@ -403,7 +402,7 @@ tPathway(PATH):- cwc, PATH=@=apathFn(iOfficeRoom7, vNorth),trace_or_throw(error(
 % (disjointWith(C1,P2) <- (genls(C1,P1), {dif:dif(C1,P1)}, disjointWith(P1,P2))).
 
 % :- rtrace.
-completelyAssertedCollection(Complete)==> {must(\+ ttExpressionType(Complete))}.
+completelyAssertedCollection(Complete)==> {must( baseKB: ( \+ ttExpressionType(Complete)))}.
 
 
 ==> tSourceCode(iSourceCode7,comment("PrologMUD Server code")).
@@ -533,9 +532,9 @@ prologIsFlag(tThinking(tAgent)).
 
 singleValuedHybrid(F)==>(singleValued(F),prologHybrid(F)).
 
-
+:- dynamic(isa/2).
 :- dynamic(mudDescription/2).
-:- dynamic((tItem/1, tRegion/1, instVerbOverride/3,mudNamed/2, determinerString/2, mudKeyword/2 ,descriptionHere/2, mudToHitArmorClass0/2, tThinking/1, tDeleted/1, mudWeight/2, mudPermanence/3, act_term/2, mudAgentTurnnum/2, mudAtLoc/2, mudEnergy/2, mudHealth/2, mudDescription/2, mudFacing/2, mudCmdFailure/2, mudSpd/2, typeGrid/3, mudHeight/2, mudMemory/2, isa/2, pathName/3, mudPossess/2, mudScore/2, mudStm/2, mudStr/2, wearsClothing/2)).
+:- dynamic((tItem/1, tRegion/1, instVerbOverride/3,mudNamed/2, determinerString/2, mudKeyword/2 ,descriptionHere/2, mudToHitArmorClass0/2, tThinking/1, tDeleted/1, mudWeight/2, mudPermanence/3, act_term/2, mudAgentTurnnum/2, mudAtLoc/2, mudEnergy/2, mudHealth/2, mudDescription/2, mudFacing/2, mudCmdFailure/2, mudSpd/2, typeGrid/3, mudHeight/2, mudMemory/2, pathName/3, mudPossess/2, mudScore/2, mudStm/2, mudStr/2, wearsClothing/2)).
 :- dynamic((mudArmorLevel/2, mudLevelOf/2, mudToHitArmorClass0/2, mudBareHandDamage/2,
    chargeCapacity/2, mudEnergy/2, tCol/1, tAgent/1, tItem/1, tRegion/1, instVerbOverride/3,
    mudNamed/2, determinerString/2, mudKeyword/2 ,descriptionHere/2, tThinking/1, mudWeight/2,
@@ -692,7 +691,7 @@ tCol(vtBasicDir).
 % :- break.
 tCol(vtDirection).
 tCol(vtVerb).
-:- dynamic stat_total/2.
+:- dynamic(stat_total/2).
 :- dynamic(spawn_rate/2).
 tCol(mobMonster).
 %prologDynamic(action_info(vtActionTemplate,ftText)).
@@ -811,7 +810,7 @@ genls(ttTypeByAction,tCol).
 ttTypeByAction(C),isa(I,C),{\+ is_in_world(I)} ==> \+ isa(I,C).
 
 /*
-% Produces actEat(String):- current_agent(Agent),agent_call_command(Agent,actEat(String)).
+% Produces actEat(String):- current_agent(Agent),baseKB:agent_call_command(Agent,actEat(String)).
 ((vtActionTemplate(Compound)/(compound(Compound), 
     \+ current_predicate(_,Compound),
     arg(1,Compound,TC),
@@ -821,10 +820,10 @@ ttTypeByAction(C),isa(I,C),{\+ is_in_world(I)} ==> \+ isa(I,C).
   ==> 
    ( (Skel 
        :- 
-       current_agent(Agent),agent_call_command(Agent,Skel)),
-    {nop((asserta_if_new((agent_call_command(Agent,Skel) 
+       current_agent(Agent),baseKB:agent_call_command(Agent,Skel)),
+    {nop((asserta_if_new((baseKB:agent_call_command(Agent,Skel) 
        :- agent_coerce_for(mudPossess,TC,Agent,String,Obj),!,
-          agent_call_command(Agent,Skel)))))})).
+          baseKB:agent_call_command(Agent,Skel)))))})).
 */
 
 

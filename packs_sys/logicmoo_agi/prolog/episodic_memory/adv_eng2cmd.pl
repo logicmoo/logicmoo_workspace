@@ -162,7 +162,7 @@ parseFrame(e2l, [current_subject(vSpeaker)]).
 
 eng2log(Agent, Words, Logic, Mem):- reframed_call( eng2logic, Agent, Words, Logic, Mem).
 
-eng2cmd(Agent, Prolog, Logic, _Mem):- \+ is_list(Prolog),callable(Prolog),current_predicate(_,Prolog),Logic=call(Prolog),!.
+eng2cmd(_Agent, Prolog, Logic, _Mem):- \+ is_list(Prolog),callable(Prolog),current_predicate(_,Prolog),Logic=call(Prolog),!.
 eng2cmd(Agent, Words, Logic, Mem):- reframed_call( eng2action, Agent, Words, Logic, Mem).
 
 eng2log(Term, Logic)  :- eng2logic(Term, Logic).

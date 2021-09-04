@@ -30,7 +30,7 @@ text_actverb(display,actPut).
 text_actverb(stow,actPut).
 
 %targeted
-agent_call_command(Agent,actPut(Other,Prep,Where)):-actPut(Agent,Other,Prep,Where).
+baseKB:agent_call_command(Agent,actPut(Other,Prep,Where)):-actPut(Agent,Other,Prep,Where).
 
 
 actPut(Agent,Other,_Prep,Where):-

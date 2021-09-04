@@ -234,14 +234,14 @@ pfc:setup_dialect:- pfc_expects_dialect(pfc).
    
 
 pfc_operators(M,[
-op(300,fy,(M:'-')),
-%op(1200,xfx,(M:('=-=>'))),              
-op(500,fx, M: ('~')),
-op(1050,xfx,M: ('==>')),
-op(1050,xfx,M: ('<==>')),
-op(1050,xfx,M: ('<-')),
-op(1100,fx,M: ('==>')),
-op(1150,xfx,M: ('::::'))]).
+ op(1199,fx,M:('==>')),
+ op(1190,xfx,M:('::::')),
+ op(1180,xfx,M:('==>')),
+ op(1170,xfx,M:('<==>')),
+ op(1160,xfx,M:('<-')),
+ op(1120,xfx,M:('<->')),
+ op(300,fx,M:('-')),
+ op(300,fx,M:('~'))]).
 
 other_dialect(Dialect):- Dialect\==pfc.
 

@@ -40,6 +40,7 @@ start(Args) :-
 
 
 % stdio server
+stdio_server:-!.
 
 stdio_server :-
     current_input(In),

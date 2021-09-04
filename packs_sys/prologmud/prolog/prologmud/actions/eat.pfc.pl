@@ -33,13 +33,13 @@ agent_coerce_for(Pred,_TC,Agent,String,Obj):-
 
 
 % Eat something held
-agent_call_command(Agent,actEat(String)) :- 
+baseKB:agent_call_command(Agent,actEat(String)) :- 
       agent_coerce_for(mudPossess,tEatAble,Agent,String,Obj),!,
-      agent_call_command(Agent,actEat(Obj)).
+      baseKB:agent_call_command(Agent,actEat(Obj)).
 
 % Check to make sure it's in the agents possession... 
 % if it is, process it's worth, then destroy it
-agent_call_command(Agent,actEat(Obj)) :-
+baseKB:agent_call_command(Agent,actEat(Obj)) :-
   ((must_det((
 	mudPossess(Agent,Obj),
 	must((do_act_affect(Agent,actEat,Obj))),

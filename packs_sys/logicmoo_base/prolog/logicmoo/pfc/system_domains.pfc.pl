@@ -183,7 +183,7 @@ rtArgsVerbatum(functor_module).
 ==>argsIsa(isEach(predProxyRetract,predProxyAssert,predProxyQuery,genlInverse),tPred).
 argsIsa(disjointWith,tCol).
 argQuotedIsa(ftFormFn,ftTerm).
-argQuotedIsa(mudTermAnglify,ftTerm).
+%argQuotedIsa(mudTermAnglify,ftTerm).
 argsIsa(genls,tCol).
 argsIsa(subFormat,ttExpressionType).
 
