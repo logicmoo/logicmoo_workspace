@@ -551,8 +551,8 @@ virtualize_ereq_plz_move_dmiles(prologPTTP,1).
 virtualize_ereq_plz_move_dmiles(use_ideep_swi,0).
 virtualize_ereq_plz_move_dmiles(meta_argtypes,1).
 virtualize_ereq_plz_move_dmiles(coerce_hook,_).
-virtualize_ereq_plz_move_dmiles(agent_text_command,_).
-virtualize_ereq_plz_move_dmiles(agent_command,_).
+virtualize_ereq_plz_move_dmiles(baseKB:agent_text_command,_).
+virtualize_ereq_plz_move_dmiles(baseKB:agent_command,_).
 virtualize_ereq_plz_move_dmiles(isa,2).
 virtualize_ereq_plz_move_dmiles(genls,2).
 virtualize_ereq_plz_move_dmiles(nameString,2).

@@ -23,7 +23,7 @@
 % :- register_module_type (mtCommand).
 
 genls(tFood,tEatAble).
-action_info(actEat(tEatAble),"nourish oneself").
+baseKB:action_info(actEat(tEatAble),"nourish oneself").
 
 
 agent_coerce_for(Pred,_TC,Agent,String,Obj):-

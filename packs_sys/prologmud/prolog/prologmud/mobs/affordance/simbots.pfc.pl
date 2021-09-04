@@ -544,7 +544,7 @@ args_match_types(Templ,Templ):-!.
 args_match_types(Obj,Type):-!,isa(Obj,Type).
 
 % hook for toplevel pass 1
-agent_command(Agent,Templ):- on_x_debug(agent_command_affordance(Agent,Templ)).
+baseKB:agent_command(Agent,Templ):- on_x_debug(agent_command_affordance(Agent,Templ)).
 
 % hook for toplevel pass last
 agent_command_fallback(Agent,TemplIn):-agent_command_simbots_real(Agent,TemplIn).
@@ -579,14 +579,14 @@ verb_desc_or_else(ActVerb,Types,verb_desc(ActVerb,Types)):-nonvar(ActVerb),nonva
 
 agent_command_affordance(Agent,Templ):- simbots_templates(Templ), (fmt(agent_command_simbots_real_3(Agent,Templ)),fail).
 
-==> action_info(actDo(vtVerb,ftListFn(ftTerm)),"reinterps a action").
+==> baseKB:action_info(actDo(vtVerb,ftListFn(ftTerm)),"reinterps a action").
 agent_command_affordance(Agent,actDo(A)):-CMD=..[A],!,agent_command_affordance(Agent,CMD).
 agent_command_affordance(Agent,actDo(A,B)):-CMD=..[A,B],!,agent_command_affordance(Agent,CMD).
 agent_command_affordance(Agent,actDo(A,B,C)):- CMD=..[A,B,C],!,agent_command_affordance(Agent,CMD).
 agent_command_affordance(Agent,actDo(A,B,C,D)):- CMD=..[A,B,C,D],!,agent_command_affordance(Agent,CMD).
 agent_command_affordance(Agent,actDo(A,B,C,D,E)):- CMD=..[A,B,C,D,E],!,agent_command_affordance(Agent,CMD).
 
-==> action_info(actTextcmd(ftString),"reinterps a term as text").
+==> baseKB:action_info(actTextcmd(ftString),"reinterps a term as text").
 agent_command_affordance(Agent,actTextcmd(A)):-sformat(CMD,'~w',[A]),!,do_agent_action(Agent,CMD).
 agent_command_affordance(Agent,actTextcmd(A,B)):-sformat(CMD,'~w ~w',[A,B]),!,do_agent_action(Agent,CMD).
 agent_command_affordance(Agent,actTextcmd(A,B,C)):-sformat(CMD,'~w ~w ~w',[A,B,C]),!,do_agent_action(Agent,CMD).
@@ -628,15 +628,15 @@ genls(tBathTub,tFurniture).
 genls(tFurniture,tUseAble).
 genls(tFurniture,tObj).
 
-text_actverb("observe",actUse).
-text_actverb("operate",actUse).
+baseKB:text_actverb("observe",actUse).
+baseKB:text_actverb("operate",actUse).
 
 simbots_t_v_o(Templ,V,O):- any_to_atom(V,A),Templ=..[A,O].
 :- export(simbots_t_v_o/3).
 
 
-==> (action_info(Templ,DESC):-verb_desc(V,O,DESC),simbots_t_v_o(Templ,V,O)).
-==> (action_info(Templ,text([verb_for_type,V,O,DOC])):- no_repeats([V,O],verb_affordance(V,O,_,_,_)),simbots_t_v_o(Templ,V,O), 
+==> (baseKB:action_info(Templ,DESC):-verb_desc(V,O,DESC),simbots_t_v_o(Templ,V,O)).
+==> (baseKB:action_info(Templ,text([verb_for_type,V,O,DOC])):- no_repeats([V,O],verb_affordance(V,O,_,_,_)),simbots_t_v_o(Templ,V,O), 
                   findall(pir(P,I,R),((verb_affordance(V, O,P,I,R))),DOC)).
 
 simbots_templates(Templ):-no_repeats(simbots_templates0(Templ)).

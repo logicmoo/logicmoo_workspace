@@ -50,7 +50,7 @@ remove_undef_search:- ((
  assert((check:list_undefined(A):- ignore(A=[]),scansrc_list_undefined(A))))).
 */
 
-action_info(actScansrc,"Scan for sourcecode modifed on filesystem and logicmoo. NOTE: only new files with this mask (src_incoming/*/?*.pl) are picked up on").
+baseKB:action_info(actScansrc,"Scan for sourcecode modifed on filesystem and logicmoo. NOTE: only new files with this mask (src_incoming/*/?*.pl) are picked up on").
 baseKB:agent_call_command(Agent,actScansrc):-  once('@'(agent_call_safely(Agent,actScansrc),'user')).
 
 :-export(actScansrc/0).

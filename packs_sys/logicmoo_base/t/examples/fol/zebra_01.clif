@@ -63,14 +63,14 @@
 {((lives(PA, HA) & (leftof(HA, HB) v leftof(HB, HA)) & lives(PB, HB)) <=> neighbor(PA,PB))}.
 
 (meta_argtypes (lives person house))
-(meta_argtypes (keeps_as_pet person animal))
+(meta_argtypes (keeps-as-pet person animal))
 (meta_argtypes (position person int))
 (meta_argtypes (smokes person brand))
 (meta_argtypes (drinks person beverage))
 (meta_argtypes (leftof house house))
 
 
-(trait drinks) (trait smokes) (trait keeps_as_pet)
+(trait drinks) (trait smokes) (trait keeps-as-pet)
 (trait position) ; we add position 
 
 (all (?P ?Trait) 
@@ -93,7 +93,7 @@
 {leftof(HA, HB) ==> (house(HA) , house(HB))}.
 
 ;;  2. The Swede keeps dogs as pets. 
-(keeps_as_pet swede  dogs)
+(keeps-as-pet swede  dogs)
 
 ;;  3. The Dane drinks tea. 
 (drinks dane  tea)
@@ -105,7 +105,7 @@
 (exists  (X) (&  (lives X  green_house)   (drinks X  coffee)))
 
 ;;  6. The owner who smokes Pall Mall rears birds. 
-(exists  (X) (&  (smokes X  pallmalls)   (keeps_as_pet X  birds)))
+(exists  (X) (&  (smokes X  pallmalls)   (keeps-as-pet X  birds)))
 
 ;;  7. The owner of the yellow house smokes Dunhill. 
 (exists  (X) (&  (lives X  yellow_house)   (smokes X  dunhill)))
@@ -117,10 +117,10 @@
 (position norwegian  1)
 
 ;;  10. The owner who smokes Blends lives next to the one who keeps cats. 
-(exists (X) (exists (Y) (& (& (smokes X  blends)   (neighbor X  Y))   (keeps_as_pet Y  cat))))
+(exists (X) (exists (Y) (& (& (smokes X  blends)   (neighbor X  Y))   (keeps-as-pet Y  cat))))
 
 ;;  11. The owner who keeps the horse lives next to the one who smokes Dunhill. 
-(exists (X) (exists (Y) (& (&   (keeps_as_pet X  horses)   (neighbor X  Y))   (smokes Y  dunhill))))
+(exists (X) (exists (Y) (& (&   (keeps-as-pet X  horses)   (neighbor X  Y))   (smokes Y  dunhill))))
 
 ;;  12. The owner who smokes Bluemasters drinks beer. 
 (exists  (X) (& (smokes X  bluemasters)   (drinks X  bier)))
@@ -137,9 +137,9 @@
 
 
 ;;  The five owners drinks a certain type of beverage  smokes a certain brand of
-;;  cigar and keep a certain keeps_as_pet. 
+;;  cigar and keep a certain keeps-as-pet. 
 
-(trait drinks) (trait smokes) (trait keeps_as_pet)
+(trait drinks) (trait smokes) (trait keeps-as-pet)
 (trait position) ; we add position 
 
 (all (?P ?Trait) 

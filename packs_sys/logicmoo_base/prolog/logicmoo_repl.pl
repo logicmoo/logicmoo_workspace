@@ -118,8 +118,8 @@ decl_kb_shared_tests:-
         baseKB:regression_test/0,
         baseKB:sanity_test/0,
         baseKB:agent_call_command/2,
-        action_info/2,
-        type_action_info/3)).
+        baseKB:action_info/2,
+        baseKB:type_action_info/3)).
 
 :- decl_kb_shared_tests.
 

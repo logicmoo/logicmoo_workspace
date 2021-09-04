@@ -1109,7 +1109,7 @@ checked_clause_count((_ <- _)).
 checked_clause_count((_ ==> _)).
 checked_clause_count((_ <==> _)).
 %checked_clause_count('$spft'(_,_,_,ax)).
-checked_clause_count(agent_command(_,_)).
+checked_clause_count(baseKB:agent_command(_,_)).
 checked_clause_count(how_virtualize_file(_,_,_)).
 
 

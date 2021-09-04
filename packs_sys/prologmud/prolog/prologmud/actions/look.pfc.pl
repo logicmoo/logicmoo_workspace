@@ -34,7 +34,7 @@
 mudCanSense(_Agent,visual,InList,InList,[]).
 
 
-action_info(actExamine(tItem), "view details of item (see also @ftListFn)").
+baseKB:action_info(actExamine(tItem), "view details of item (see also @ftListFn)").
 baseKB:agent_call_command(_Gent,actExamine(SObj)):- xlisting(SObj).
 
 visibleTo(Agent,Agent).
@@ -50,12 +50,12 @@ impl_coerce_hook([SDir,of],txtPrepOf,vDirFn(Dir)):-impl_coerce_hook(SDir,vtDirec
 
 ==> vtVerb(actLook).
 
-action_info(actLook, "generalized look in region").
-action_info(actLook(isOptionalStr('in'),isOptionalStr('here')), "generalized look in region").
-action_info(actLook(txtPrepOf,isOptionalStr("self")), "Look in a direction (TODO: look north of vHere)").
-action_info(actLook(isOptional(txtPrepSpatial,"at"),tObj),"look [in|at|on|under|at] somewhere").
-%action_info(look(obj), "Look at a speficific item").
-%action_info(look_at(isOptional(call(visibleTo(vHere,value)),call(visibleTo(vHere,value)))), "Look at a speficific item").
+baseKB:action_info(actLook, "generalized look in region").
+baseKB:action_info(actLook(isOptionalStr('in'),isOptionalStr('here')), "generalized look in region").
+baseKB:action_info(actLook(txtPrepOf,isOptionalStr("self")), "Look in a direction (TODO: look north of vHere)").
+baseKB:action_info(actLook(isOptional(txtPrepSpatial,"at"),tObj),"look [in|at|on|under|at] somewhere").
+%baseKB:action_info(look(obj), "Look at a speficific item").
+%baseKB:action_info(look_at(isOptional(call(visibleTo(vHere,value)),call(visibleTo(vHere,value)))), "Look at a speficific item").
 
 baseKB:agent_call_command(Agent,actLook):- look_as(Agent),!.
 baseKB:agent_call_command(Agent,actLook('here')):- look_as(Agent),!.

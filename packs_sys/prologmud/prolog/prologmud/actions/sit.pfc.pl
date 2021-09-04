@@ -34,7 +34,7 @@ actSetsPosture(Action,PostureState) ==>
 actSetsPosture(Action,PostureState) ==> 
   action_info_prefered(Action,txtConcatFn("sets agent's stance to ",PostureState)).
 
-action_info(A,I):-action_info_prefered(A,I).
+baseKB:action_info(A,I):-action_info_prefered(A,I).
 
 % Become PostureState on Something.
 baseKB:agent_call_command(Agent,actOnto(Where,PostureState)):-

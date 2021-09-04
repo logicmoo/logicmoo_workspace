@@ -19,16 +19,16 @@
 % :- register_module_type (mtCommand).
 
 % where 
-agent_text_command(Agent,["where",BE,X],Agent,actWhere(X)):-memberchk(BE,[is,are,be,were]).
-agent_text_command(Agent,["where_is",X],Agent,actWhere(X)).
-action_info(actWhere(ftTerm),"Tells where something is").
+baseKB:agent_text_command(Agent,["where",BE,X],Agent,actWhere(X)):-memberchk(BE,[is,are,be,were]).
+baseKB:agent_text_command(Agent,["where_is",X],Agent,actWhere(X)).
+baseKB:action_info(actWhere(ftTerm),"Tells where something is").
 baseKB:agent_call_command(_Agent,actWhere(SObj)) :-
     forall(
      (mudAtLoc(Obj,LOC), match_object(SObj,Obj)),
         fmt(cmdresult(actWhere,mudAtLoc(Obj,LOC)))).
 
 
-action_info(actWho(isOptional(tAgent,isMissing)),"Lists who is online (where they are at least)").
+baseKB:action_info(actWho(isOptional(tAgent,isMissing)),"Lists who is online (where they are at least)").
 
 baseKB:agent_call_command(_Gent,actWho(W)) :- must(mud_cmd_who(W)),!.
 baseKB:agent_call_command(_Gent,actWho) :- must(mud_cmd_who(_W)),!.

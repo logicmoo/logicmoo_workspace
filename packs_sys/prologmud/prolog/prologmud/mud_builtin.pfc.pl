@@ -694,9 +694,9 @@ tCol(vtVerb).
 :- dynamic(stat_total/2).
 :- dynamic(spawn_rate/2).
 tCol(mobMonster).
-%prologDynamic(action_info(vtActionTemplate,ftText)).
-prologDynamic(agent_command(tAgent,ftAction)).
-:- ain(prologSideEffects(agent_command(tAgent,ftAction))).
+%prologDynamic(baseKB:action_info(vtActionTemplate,ftText)).
+prologDynamic(baseKB:agent_command(tAgent,ftAction)).
+:- ain(prologSideEffects(baseKB:agent_command(tAgent,ftAction))).
 %prologBuiltin(member(ftTerm,ftTerm)).
 prologDynamic(mud_test(ftTerm,ftCallable)).
 prologDynamic(use_action_templates(ftTerm)).
@@ -738,7 +738,7 @@ prologMultiValued(mudCmdFailure(tAgent,ftAction)).
 ==> tPred(isEach(tAgent/1, mudEnergy/2,mudHealth/2, mudAtLoc/2, failure/2, typeGrid/3, gridValue/4, isa/2, tItem/1, mudMemory/2, pathName/3, mudPossess/2, tRegion/1, mudScore/2, mudStm/2, mudFacing/2, localityOfObject/2, tThinking/1, mudWearing/2, mudFacing/2, mudHeight/2, act_term/2, nameString/2, mudDescription/2, pathDirLeadsTo/3, mudAgentTurnnum/2)).
 prologHybrid(mudToHitArmorClass0 / 2).
 prologHybrid(mudAtLoc/2).
-prologBuiltin((agent_command/2)).
+prologBuiltin((baseKB:agent_command/2)).
 ==> prologHybrid(isEach(argIsa/3, formatted_resultIsa/2, typeHasGlyph/2, inRegion/2, 
   mudContains/2, isa/2, mudLabelTypeProps/3, mudMemory/2, mudPossess/2, mudStowing/2, 
   genls/2, mudToHitArmorClass0/2, pddlSomethingIsa/2, resultIsa/2,  
@@ -761,7 +761,7 @@ prologHybrid(instVerbOverride(ftTerm,ftAction,ftAction)).
 %isa(mudMaxHitPoints,prologHybrid).
 isa(vtDirection,ttValueType).
 
-prologMultiValued(agent_text_command(tAgent,ftText,tAgent,ftAction)).
+prologMultiValued(baseKB:agent_text_command(tAgent,ftText,tAgent,ftAction)).
 
 formatted_resultIsa(apathFn(tRegion,vtDirection),tPathway).
 
@@ -890,7 +890,7 @@ meta_argtypes(mudWearing(tAgent,tWearAble)).
 meta_argtypes(pathName(tRegion,vtDirection,ftString)).
 meta_argtypes(resultIsa(tFunction,tCol)).
 meta_argtypes(wasSuccess(tAgent,vtActionTemplate,ftBoolean)).
-meta_argtypes(type_action_info(tCol,vtActionTemplate,ftText)).
+meta_argtypes(baseKB:type_action_info(tCol,vtActionTemplate,ftText)).
 %NEXT TODO predTypeMax(mudEnergy,tObj,130).
 %NEXT TODO predTypeMax(mudHealth,tObj,500).
 
@@ -1182,7 +1182,7 @@ nonvar_must_be(V,G):- (var(V);G),!.
 pfc_slow((mudKeyword(Type,Str),tCol(Type),isa(I,Type)/(atom(I),ftID(I)) ==> mudKeyword(I,Str))).
 
 
-action_info(C,_)==>vtActionTemplate(C).
+baseKB:action_info(C,_)==>vtActionTemplate(C).
 
 completelyAssertedCollection(cachedPredicate).
 

@@ -64,7 +64,7 @@ prey_idea(Agent,Act) :- move_or_sit_memory_idea(Agent,Act,[tNut]).
 
 vtActionTemplate(actSpawn(tCol)).
 
-agent_command(_Agent,actSpawn(mobPrey)):-actSpawnPrey.
+baseKB:agent_command(_Agent,actSpawn(mobPrey)):-actSpawnPrey.
 
 actSpawnPrey :-
 	% maybe(10),

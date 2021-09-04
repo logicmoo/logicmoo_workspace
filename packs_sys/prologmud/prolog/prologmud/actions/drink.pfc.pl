@@ -12,7 +12,7 @@
 
 % :- register_module_type (mtCommand).
 
-action_info(actDrink(tDrinkAble),"Drink a Drinkable Item").
+baseKB:action_info(actDrink(tDrinkAble),"Drink a Drinkable Item").
 
 % Drink something held
 % Check to make sure it's in the agents possession... 

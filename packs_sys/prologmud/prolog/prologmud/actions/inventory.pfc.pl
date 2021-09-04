@@ -69,7 +69,7 @@ destroy_clause(Obj,H,B,R):-
 destroy_clause(Obj,H,B,R):- wdmsg(misssed_destroy_clause(Obj,H,B,R)).
    
 
-action_info(actInventory(isOptional(tAgent,isSelfAgent)), "Examine an inventory").
+baseKB:action_info(actInventory(isOptional(tAgent,isSelfAgent)), "Examine an inventory").
 
 baseKB:agent_call_command(Agent,actInventory(Who)):- show_inventory(Agent,Who).
 baseKB:agent_call_command(Agent,actInventory):- show_inventory(Agent,Agent).

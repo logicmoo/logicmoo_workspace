@@ -32,23 +32,23 @@ to_on_off(FLAG,ON,OFF,ON_OFF):- t_f(_,FLAG) -> ON_OFF=OFF; ON_OFF=ON.
 show_dmsg_values:- listing(tlbugger:dmsg_match/2),current_prolog_flag(opt_debug,ON_OFF),fmt(current_prolog_flag(opt_debug,ON_OFF)),debugging.
 
 % dmsg/show/hide
-action_info(actDMsg(isOptional(vtOnOff,isValueMissing)),"set the dmsg flag to on/off").
+baseKB:action_info(actDMsg(isOptional(vtOnOff,isValueMissing)),"set the dmsg flag to on/off").
 baseKB:agent_call_command(_Agent,actDMsg(isValueMissing)):- !, show_dmsg_values.
 baseKB:agent_call_command(_Agent,actDMsg(ON_OFF)):- !, (ON_OFF==vOff->FLAG=false;FLAG=true),set_show_dmsg(FLAG).
 
 set_show_dmsg(FLAG):- set_prolog_flag(debug,FLAG),set_bugger_flag(opt_debug,FLAG),fmt(current_prolog_flag(opt_debug,FLAG)).
 
-action_info(actShow(isOptional(ftProlog,isValueMissing)),"show messages of col").
+baseKB:action_info(actShow(isOptional(ftProlog,isValueMissing)),"show messages of col").
 baseKB:agent_call_command(_Agent,actShow(A)):-!, (A==isValueMissing -> (set_show_dmsg(true),show_dmsg_values) ; (bugger:dmsg_show(A),prolog_debug:debug(A))).
 
-action_info(actHide(isOptional(ftProlog,isValueMissing)),"hide messages of col").
+baseKB:action_info(actHide(isOptional(ftProlog,isValueMissing)),"hide messages of col").
 baseKB:agent_call_command(_Agent,actHide(A)):-!, A==isValueMissing -> (set_show_dmsg(false),show_dmsg_values) ; (bugger:dmsg_hide(A),prolog_debug:nodebug(A)).
 
 % ===========================================================
 % DEBUG/NODEBUG command
 % ===========================================================
-text_actverb(debug,actShow).
-text_actverb(nodebug,actHide).
+baseKB:text_actverb(debug,actShow).
+baseKB:text_actverb(nodebug,actHide).
 
 
 :- include(prologmud(mud_footer)).

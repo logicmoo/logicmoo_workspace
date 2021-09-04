@@ -15,9 +15,9 @@ socialCommand(Say,SocialVerb,chat(isOptional(vtVerb,SocialVerb),isOptional(tChan
 
 vtSocialVerb(SocialVerb):-member(SocialVerb,[actSay,actWhisper,actEmote,actTell,actAsk,actShout,actGossup]).
 
-action_info(Say,ftText("invokes",Does)):- socialCommand(Say,_SocialVerb,Does).
+baseKB:action_info(Say,ftText("invokes",Does)):- socialCommand(Say,_SocialVerb,Does).
 
-agent_text_command(Agent,[Say|What],Agent,CMD):-
+baseKB:agent_text_command(Agent,[Say|What],Agent,CMD):-
    agent_text_command_chat(Agent,[Say|What],Agent,CMD).
 
 agent_text_command_chat(Agent,[Say|What],Agent,CMD):- nonvar(Say),nonvar(What),!,

@@ -13,7 +13,7 @@ isa(tHumanControlled,ttAgentType).
 
 :- kb_global(baseKB:type_action_info/3).
 
-type_action_info(tHumanControlled,actHelp(isOptional(ftString,"")), "shows this help").
+baseKB:type_action_info(tHumanControlled,actHelp(isOptional(ftString,"")), "shows this help").
 
 
 :-export(get_all_templates/1).
@@ -27,24 +27,24 @@ get_all_templates0(Templ):-get_good_templates(Templ).
 get_all_templates0(Templ):-get_bad_templates(Templ),not(get_good_templates(Templ)).
 
 get_good_templates(Templ):- isa(Templ,vtActionTemplate),good_template(Templ).
-% get_good_templates(Templ):- no_repeats_old((action_info(Templ,_),good_template(Templ))).
+% get_good_templates(Templ):- no_repeats_old((baseKB:action_info(Templ,_),good_template(Templ))).
 
 
-get_bad_templates(Templ):- no_repeats_old((action_info(Templ,_),not(good_template(Templ)))).
+get_bad_templates(Templ):- no_repeats_old((baseKB:action_info(Templ,_),not(good_template(Templ)))).
 
 
-:- sanity((fully_expand_real(foo,action_info(TEMPL, txtConcatFn(_Text,"does: ",do(_A2,TEMPL))),O),dmsg(O))).
+:- sanity((fully_expand_real(foo,baseKB:action_info(TEMPL, txtConcatFn(_Text,"does: ",do(_A2,TEMPL))),O),dmsg(O))).
 
 % :- mpred_core:import(baseKB:get_agent_text_command_0/4).
 
 /*
 ==> ((({between(1,5,L),length(Text,L),
      get_agent_text_command(_A,Text,A2,Goal),(ground(Goal)->TEMPL=Goal;TEMPL=Text)}==>
-         action_info(TEMPL, txtConcatFn(Text,"does: ",do(A2,TEMPL)))))).
+         baseKB:action_info(TEMPL, txtConcatFn(Text,"does: ",do(A2,TEMPL)))))).
 */
 
 (action_rules(_Agent,Verb,[Obj|Objs],List),{atomic(Verb),safe_univ(Syntax,[Verb,Obj|Objs])} ==> 
-         action_info(Syntax, txtConcatFn(["makes","happen"|List]))).
+         baseKB:action_info(Syntax, txtConcatFn(["makes","happen"|List]))).
 
 
 to_param_doc(TEMPL,["Prolog", "looks", "like", ":",TEMPL]):-!.
@@ -57,15 +57,15 @@ first_pl(PL,PL).
 
 :- kb_shared(action_info_db/3).
 
-action_info_db(TEMPL,INFO,WAS):- (PRED=baseKB:agent_call_command(_,WAS);PRED=agent_text_command(_,_,_,WAS)) ,
+action_info_db(TEMPL,INFO,WAS):- (PRED=baseKB:agent_call_command(_,WAS);PRED=baseKB:agent_text_command(_,_,_,WAS)) ,
    clause(PRED,BODY,REF),clause_property(REF,file(S)),
    (ground(WAS)->true;once(( ignore((nop(S=S),first_pl(BODY,PL),ignore(catch(((true;quietly(PL)),!),_,true)))),ground(WAS)))),
    
     (TEMPL=@=WAS -> ((clause_property(REF,line_count(LC)),INFO=line(LC:S))) ;  (not(not(TEMPL=WAS)) -> INFO=file(S) ; fail)).
 
 % :-trace.
-action_info_db(TEMPL,S,WAS) ==> if_missing(action_info(TEMPL,_Help), action_info(TEMPL,txtConcatFn(S,contains,WAS))).
-% action_info(TEMPL,txtConcatFn(S,contains,WAS)) <= action_info_db(TEMPL,S,WAS),{not_asserted(action_info(TEMPL,_Help))}.
+action_info_db(TEMPL,S,WAS) ==> if_missing(baseKB:action_info(TEMPL,_Help), baseKB:action_info(TEMPL,txtConcatFn(S,contains,WAS))).
+% baseKB:action_info(TEMPL,txtConcatFn(S,contains,WAS)) <= action_info_db(TEMPL,S,WAS),{not_asserted(baseKB:action_info(TEMPL,_Help))}.
 
 
 commands_list(ListS):- findall(Templ,get_all_templates(Templ),List),predsort(alpha_shorter_1,List,ListS).
@@ -78,8 +78,8 @@ alpha_shorter_1(OrderO, P1,P2):-functor_h(P1,F1,A1),functor_h(P2,F2,A2),compare(
   (compare(OrderA,A1,A2), (OrderA \== '=' -> OrderO=OrderA ; compare(OrderO,P1,P2)))).
 
 
-show_templ_doc(TEMPL):-findall(DOC,action_info(TEMPL,DOC),DOCL),nvfmt(TEMPL=DOCL).
-show_templ_doc_all(TEMPL):-findall(DOC,action_info(TEMPL,DOC),DOCL),nvfmt(TEMPL=DOCL).
+show_templ_doc(TEMPL):-findall(DOC,baseKB:action_info(TEMPL,DOC),DOCL),nvfmt(TEMPL=DOCL).
+show_templ_doc_all(TEMPL):-findall(DOC,baseKB:action_info(TEMPL,DOC),DOCL),nvfmt(TEMPL=DOCL).
 
 nvfmt([XX]):-!,nvfmt(XX).
 nvfmt(XX=[YY]):-!,nvfmt(XX=YY).
@@ -102,8 +102,8 @@ write_doc_if_contains(Must,E):-ignore((with_output_to(string(Str),show_templ_doc
 
 impl_coerce_hook(Text,vtVerb,Inst):- isa(Inst,vtVerb),name_text(Inst,Text).
 
-%agent_text_command(Agent,[Who],Agent,Cmd):- nonvar(Who), get_all_templates(Syntax),Syntax=..[Who,isOptional(_,Default)],Cmd=..[Who,Default].
-%agent_text_command(Agent,[Who,Type],Agent,Cmd):- get_all_templates(Syntax),nonvar(Who),Syntax=..[Who,isOptional(Type,_)],Cmd=..[Who,Type].
+%baseKB:agent_text_command(Agent,[Who],Agent,Cmd):- nonvar(Who), get_all_templates(Syntax),Syntax=..[Who,isOptional(_,Default)],Cmd=..[Who,Default].
+%baseKB:agent_text_command(Agent,[Who,Type],Agent,Cmd):- get_all_templates(Syntax),nonvar(Who),Syntax=..[Who,isOptional(Type,_)],Cmd=..[Who,Type].
 
 :- include(prologmud(mud_footer)).
 
@@ -111,11 +111,11 @@ impl_coerce_hook(Text,vtVerb,Inst):- isa(Inst,vtVerb),name_text(Inst,Text).
 
 :- kb_shared(baseKB:actParse/2).
 
-(type_action_info(_,TEMPL,Help) ==> action_info(TEMPL,Help)).
+(baseKB:type_action_info(_,TEMPL,Help) ==> baseKB:action_info(TEMPL,Help)).
 
-(action_info(TEMPL,_Help) ==> vtActionTemplate(TEMPL)).
+(baseKB:action_info(TEMPL,_Help) ==> vtActionTemplate(TEMPL)).
 
-vtActionTemplate(TEMPL), \+ action_info(TEMPL,_)  ==> ({to_param_doc(TEMPL,S)},action_info(TEMPL,S)).
+vtActionTemplate(TEMPL), \+ baseKB:action_info(TEMPL,_)  ==> ({to_param_doc(TEMPL,S)},baseKB:action_info(TEMPL,S)).
 
 
 

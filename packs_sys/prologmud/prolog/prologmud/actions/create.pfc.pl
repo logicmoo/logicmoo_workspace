@@ -34,7 +34,7 @@ rez_to_inventory(Agent,NameOrType,NewObj):-
    call_u(mudPossess(Agent,NewObj))))).
 
 
-action_info(actRez(isOneOf([tCol,ftID,ftTerm])),"Rezes a new subclass of 'item' or clone of tObj of some NameOrType into mudStowing inventory").
+baseKB:action_info(actRez(isOneOf([tCol,ftID,ftTerm])),"Rezes a new subclass of 'item' or clone of tObj of some NameOrType into mudStowing inventory").
 
 baseKB:agent_call_command(Agent,actRez(NameOrType)):- nonvar(NameOrType),
         must(find_and_call(rez_to_inventory(Agent,NameOrType,NewObj))),
@@ -43,7 +43,7 @@ baseKB:agent_call_command(Agent,actRez(NameOrType)):- nonvar(NameOrType),
 % ====================================================
 % object/col creation
 % ====================================================
-action_info(actCreate(ftListFn(ftTerm)), "Rezes a new 'tSpatialThing' or creates a new 'col' of some NameOrType and if it's an 'item' it will put in mudStowing inventory").
+baseKB:action_info(actCreate(ftListFn(ftTerm)), "Rezes a new 'tSpatialThing' or creates a new 'col' of some NameOrType and if it's an 'item' it will put in mudStowing inventory").
 
 baseKB:agent_call_command(Agent,actCreate(SWhat)):- with_all_dmsg(must_det(create_new_object(Agent,SWhat))).
 

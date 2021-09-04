@@ -278,7 +278,7 @@ mudKeyword(isSelfRegion,"here").
 mudKeyword(tThing,"object").
 
 ==>
- type_action_info(tHumanControlled,
+ baseKB:type_action_info(tHumanControlled,
    actAddText(isOptional(tTemporalThing,isThis),ftText),
      "Development add some Text to a room.  Usage: addtext a sofa is in here").
 

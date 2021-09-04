@@ -2341,7 +2341,7 @@ exact_args_f(txtConcatFn).
 exact_args_f(dif).
 
 exact_args_f(maplist).
-exact_args_f(action_info).
+exact_args_f(baseKB:action_info).
 exact_args_f(never_retract_u).
 exact_args_f(install_converter).
 exact_args_f(installed_converter).

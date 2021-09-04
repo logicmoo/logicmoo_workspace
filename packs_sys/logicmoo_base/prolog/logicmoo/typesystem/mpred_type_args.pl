@@ -394,7 +394,7 @@ correctArgsIsa0(_,G,GG):- get_functor(G,F),functor_no_correct(F),!,must_equals(G
 correctArgsIsa0(Op,A,RESULTC):-A=..[PRED|ARGS],correctArgsIsa00(Op,[PRED|ARGS],RESULT), list_to_callform(RESULT,t,RESULTC).
 
 functor_no_correct(F):-lookup_u(functorDeclares(F)).
-functor_no_correct(agent_text_command).
+functor_no_correct(baseKB:agent_text_command).
 
 
 :- was_export(correctArgsIsa/4).

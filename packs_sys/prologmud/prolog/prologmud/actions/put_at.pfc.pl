@@ -20,14 +20,14 @@
 % :- register_module_type (mtCommand).
 
 % actPut
-action_info(actPut(tCarryAble,txtPrepSpatial,tPutTargetAble),"actPut [obj] [onto|inside] [somewhere]").
+baseKB:action_info(actPut(tCarryAble,txtPrepSpatial,tPutTargetAble),"actPut [obj] [onto|inside] [somewhere]").
 
-text_actverb(T,V):-vtVerb(V),name_text_cached(V,T).
-text_actverb(set,actPut).
-text_actverb(place,actPut).
-text_actverb(hide,actPut).
-text_actverb(display,actPut).
-text_actverb(stow,actPut).
+baseKB:text_actverb(T,V):-vtVerb(V),name_text_cached(V,T).
+baseKB:text_actverb(set,actPut).
+baseKB:text_actverb(place,actPut).
+baseKB:text_actverb(hide,actPut).
+baseKB:text_actverb(display,actPut).
+baseKB:text_actverb(stow,actPut).
 
 %targeted
 baseKB:agent_call_command(Agent,actPut(Other,Prep,Where)):-actPut(Agent,Other,Prep,Where).

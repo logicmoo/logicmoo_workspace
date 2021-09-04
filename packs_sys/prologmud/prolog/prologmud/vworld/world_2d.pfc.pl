@@ -320,7 +320,7 @@ put_in_world(Obj):- random_xyzFn(LOC),ain(mudAtLoc(Obj,LOC)),
 
 
 /*
-% :-export decl_database_hook/2.  action_info
+% :-export decl_database_hook/2.  baseKB:action_info
 :-export(deduce_facts/2).
 :-export(create_random_fact/1).
 :-export( hooked_random_instance/3).

@@ -17,7 +17,7 @@
 
 % orderedBy(tDropAble,tNearestReachableItem).
 
-action_info(actDrop(isOneOf([tDropAble,tNearestReachableItem,tObj,ftID])),"Drop an item").
+baseKB:action_info(actDrop(isOneOf([tDropAble,tNearestReachableItem,tObj,ftID])),"Drop an item").
 
 baseKB:agent_call_command(Agent,actDrop(Obj)):- once(actDrop(Agent,Obj)).
 
@@ -38,7 +38,7 @@ actDrop(Agent,_) :-
 % Record keeping
 update_charge(Agent,actDrop) :- ain(mudEnergy(Agent, + -1)).
 
-agent_text_command(Agent,["drop",X],Agent,actDrop(parseForFn(tDroppable,X))).
+baseKB:agent_text_command(Agent,["drop",X],Agent,actDrop(parseForFn(tDroppable,X))).
 
 %:-must_det(show_call(get_agent_text_command(agent1,[drop,item1],_R,_CMD))).
 

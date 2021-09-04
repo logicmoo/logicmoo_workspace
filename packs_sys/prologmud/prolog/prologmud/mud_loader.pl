@@ -615,7 +615,7 @@ prolog:make_hook(after, []):- once(rescan_disk_files),fail.
 :-create_agent(explorer(2),[]).
 */
 
-:- ain((agent_text_command(Agent,["run",Term], Agent,actProlog(Term)):- ignore(Term=someCode))).
+:- ain((baseKB:agent_text_command(Agent,["run",Term], Agent,actProlog(Term)):- ignore(Term=someCode))).
 
 %:-forall(make_tabled_perm(get_all_templates(TEMPL)),dmsg(TEMPL)).
 %:-forall(make_tabled_perm(grab_argsIsa(F,Types)),dmsg(grab_argsIsa(F,Types))).

@@ -99,7 +99,7 @@ action_verb_useable(actStow,tStowAble,mudStowing,mudPossess,mudWielding).
 :- baseKB:import(logicmoo_util_strings:convert_to_cycString/2).
 
 
-==>(action_info(Syntax,String):-
+==>(baseKB:action_info(Syntax,String):-
  no_repeats([Syntax],(
   call_u(action_verb_useable(ActUse,Wieldable,NowWielding,Possessing,Unstowed)),
   Syntax=..[ActUse,isAnd([tNearestReachableItem,call(Possessing,isSelfAgent,isThis),Wieldable])])),

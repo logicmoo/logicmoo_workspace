@@ -164,7 +164,7 @@ update_value/3
 /*
 add_arg_parts_of_speech/4,
 agent_action_queue/3,
-agent_text_command/4,
+baseKB:agent_text_command/4,
 
 telnet_fmt_shown/3,
 term_anglify_last/2,
@@ -347,7 +347,7 @@ holds_t/8,
 fact_always_true/1
 add_arg_parts_of_speech/4,
 agent_action_queue/3,
-agent_text_command/4,
+baseKB:agent_text_command/4,
 argIsa_call_or_undressed/4,
 create_random_fact/1,
 deduce_facts/2,

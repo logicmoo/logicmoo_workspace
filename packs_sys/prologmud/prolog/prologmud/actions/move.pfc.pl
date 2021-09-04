@@ -20,15 +20,15 @@
 % :- expects_dialect(mudcode).
 
 
-agent_text_command(Agent,[DirSS],Agent,OUT):-nonvar(DirSS), to_case_breaks(DirSS,[xti(DirS,_),
+baseKB:agent_text_command(Agent,[DirSS],Agent,OUT):-nonvar(DirSS), to_case_breaks(DirSS,[xti(DirS,_),
    xti(Dist,digit)]),show_call(coerce(DirS,vtDirection,Dir)),OUT=actMove(Dist,Dir).
-agent_text_command(Agent,[DirSS],Agent,OUT):-nonvar(DirSS), show_call(coerce(DirSS,vtDirection,Dir)),OUT=actMove(Dir).
+baseKB:agent_text_command(Agent,[DirSS],Agent,OUT):-nonvar(DirSS), show_call(coerce(DirSS,vtDirection,Dir)),OUT=actMove(Dir).
 
 baseKB:agent_call_command(Agnt,Cmd):- compound(Cmd),functor(Cmd,actMove,_),!,must(move_command(Agnt,Cmd)).
 
-action_info(actMove(isOptional(ftNumber,1),vtDirection),"Move [1] south % distance in direction").
+baseKB:action_info(actMove(isOptional(ftNumber,1),vtDirection),"Move [1] south % distance in direction").
 
-text_actverb("go",actMove).
+baseKB:text_actverb("go",actMove).
 
 /*
 % dir###

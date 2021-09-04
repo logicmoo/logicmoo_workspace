@@ -50,14 +50,14 @@
 run_mud_tests:-
   forall(baseKB:mud_test(Name,Test),run_mud_test(Name,Test)).
 
-action_info(actTests,"run run_mud_tests").
+baseKB:action_info(actTests,"run run_mud_tests").
 
-agent_command(_Agent,actTests) :- scan_updates, run_mud_tests.
+baseKB:agent_command(_Agent,actTests) :- scan_updates, run_mud_tests.
 
 
-action_info(actTest(ftTerm),"run tests containing term").
+baseKB:action_info(actTest(ftTerm),"run tests containing term").
 
-agent_command(Agent,actTest(Obj)):-foc_current_agent(Agent),run_mud_test(Obj).
+baseKB:agent_command(Agent,actTest(Obj)):-foc_current_agent(Agent),run_mud_test(Obj).
 
 
 test_name(String):-fmt(start_moo_test(mudNamed(String))),asserta(t_l:was_test_name(String)).

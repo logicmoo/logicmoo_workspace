@@ -145,7 +145,7 @@ argIsa(must,1,ftCallable).
 
 
 
-% argIsa(baseKB:agent_text_command,_,ftTerm).
+% argIsa(agent_text_command,_,ftTerm).
 
 
 argIsa('<=>',_,ftTerm).

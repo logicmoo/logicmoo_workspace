@@ -10,7 +10,7 @@
 
 % :- register_module_type (mtCommand).
 
-action_info('actAs'(tAgent,ftVerbAction), "actAs <agent> <command>").
+baseKB:action_info('actAs'(tAgent,ftVerbAction), "actAs <agent> <command>").
 baseKB:agent_call_command(_Agent,'actAs'(OtherAgent,Command)):- do_agent_action(OtherAgent,Command).
 
 :- include(prologmud(mud_footer)).

@@ -88,18 +88,18 @@ command_actIdea(Who,IdeaSO):- (var(Who)->current_agent(Who);true),
   (IdeaS=[_,_|_]->delete_eq(IdeaS,actLook,IdeaSO);IdeaSO=IdeaS),
   (IdeaSO==[]->dmsg(noidea(actIdea(Who)));true).
 
-action_info(actNpcTimer(ftInt),"sets how often to let NPCs run").
+baseKB:action_info(actNpcTimer(ftInt),"sets how often to let NPCs run").
 
-action_info(actTock,"Makes All NPCs do something brilliant").
-action_info(actTick(tAgent),"Makes some agent do something brilliant").
-action_info(actTick,"Makes *your* agent do something brilliant").
+baseKB:action_info(actTock,"Makes All NPCs do something brilliant").
+baseKB:action_info(actTick(tAgent),"Makes some agent do something brilliant").
+baseKB:action_info(actTick,"Makes *your* agent do something brilliant").
 
-action_info(actIdea(isOptional(tAgent,isSelfAgent)),"Makes some agent (or self) think of something brilliant").
-action_info(actProlog(ftCallable),"Call a ftCallable").
+baseKB:action_info(actIdea(isOptional(tAgent,isSelfAgent)),"Makes some agent (or self) think of something brilliant").
+baseKB:action_info(actProlog(ftCallable),"Call a ftCallable").
 
-agent_text_command(Agent,["prolog",X],Agent,actProlog(X)):-ignore(X=ftCallable).
-agent_text_command(Agent,["prolog"],Agent,actProlog(prolog_repl)).
-% agent_text_command(Agent,["tlocals"],Agent,actProlog(tlocals)).
+baseKB:agent_text_command(Agent,["prolog",X],Agent,actProlog(X)):-ignore(X=ftCallable).
+baseKB:agent_text_command(Agent,["prolog"],Agent,actProlog(prolog_repl)).
+% baseKB:agent_text_command(Agent,["tlocals"],Agent,actProlog(tlocals)).
 
 :-export(warnOnError/1).
 :-module_transparent(warnOnError/1).

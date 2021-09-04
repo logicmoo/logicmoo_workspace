@@ -16,9 +16,9 @@ frotCommand(Kiss,FrotVerb,frot(isOptional(vtVerb,FrotVerb),isOptional(tAgent,vHe
 
 vtFrotVerb(FrotVerb):-member(FrotVerb,[actKiss,actHug,actRub,actFrottage]).
 
-action_info(Kiss,ftText("invokes",Does)):- frotCommand(Kiss,_FrotVerb,Does).
+baseKB:action_info(Kiss,ftText("invokes",Does)):- frotCommand(Kiss,_FrotVerb,Does).
 
-agent_text_command(Agent,[Kiss|What],Agent,CMD):-
+baseKB:agent_text_command(Agent,[Kiss|What],Agent,CMD):-
    agent_text_command_frot(Agent,[Kiss|What],Agent,CMD).
 
 agent_text_command_frot(Agent,[Kiss|What],Agent,CMD):- nonvar(Kiss),nonvar(What),!,
