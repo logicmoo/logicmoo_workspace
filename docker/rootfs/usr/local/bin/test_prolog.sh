@@ -96,8 +96,8 @@ TEST_STEM=$(expr substr "${TEST_STEM}" 1 110)
 REPORT_STEM=$(echo "$TEST_STEM-${PWD}" | sed -e "s/[*]/vSTARv/g" -e "s/[?]/vQUESTv/g" -e "s/[.]/vDOTv/g" -e "s/[^a-Z0-9_]/-/g" -e "s/--/-/g" -e "s/_/-/g"  -e "s/--/-/g" )
 REPORT_STEM=$(expr substr "${REPORT_STEM}" 1 120)
 
-JUNIT_TESTS_GLOBBED="${TESTING_TEMP}/${REPORT_STEM}-glob"
-JUNIT_TESTS_GLOBBED=$(expr substr "${JUNIT_TESTS_GLOBBED}" 1 130)
+JUNIT_TESTS_GLOBBED="${TESTING_TEMP}/${REPORT_STEM}"
+JUNIT_TESTS_GLOBBED=$(expr substr "${JUNIT_TESTS_GLOBBED}" 1 130)-glob
 echo "<!-- JUNIT_TESTS_GLOBBED=${JUNIT_TESTS_GLOBBED} -->"
 echo "" > $JUNIT_TESTS_GLOBBED
 function JECHO {
@@ -134,9 +134,9 @@ for ele2 in "${listOfNames[@]}"
         if [[ "$ele" == *".sh" && -x "$ele" ]]; then
          CMD="./${ele}"
         else
-          # if [[ -x swipl-lm ]]; then
-          #    SWIPL=swipl-lm
-          # fi
+           if [[ -x pfc ]]; then
+              SWIPL=pfc
+           fi
            if [[ -x clif ]]; then
               SWIPL=clif
            fi
