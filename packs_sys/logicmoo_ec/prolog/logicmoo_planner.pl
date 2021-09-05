@@ -238,11 +238,11 @@ pddl_test_unit(monkey) :- planner_solve_files(pddl('hakank-pddl/monkey-domain.pd
 :- flag(time_used,_,0).
 :- flag(time_used_other,_,0).
 
-:- if(gethostname(c3po);gethostname(ubuntu);gethostname(titan)).
+%:- if(gethostname(c3po);gethostname(ubuntu);gethostname(titan)).
 % :- debug,(must(test_blocks)).
 % :- test_all(5). % should be 7
 % :- test_all(7).
-:- endif.
+%:- endif.
 %:- show_call(flag(time_used_other,W,W)).
 %:- show_call(flag(time_used,W,W)).
 

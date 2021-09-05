@@ -589,6 +589,9 @@ index((memory_file_line_position), 4, memory_file, memfile).
 index((utf8_position_memory_file), 3, memory_file, memfile).
 index((in_temporary_module), 3, modules, modules).
 index((current_temporary_module), 1, modules, modules).
+index((mqi_start), 0, mqi, mqi).
+index((mqi_start), 1, mqi, mqi).
+index((mqi_stop), 1, mqi, mqi).
 index((nb_rb_insert), 3, nb_rbtrees, nb_rbtrees).
 index((nb_rb_get_node), 3, nb_rbtrees, nb_rbtrees).
 index((nb_rb_node_value), 2, nb_rbtrees, nb_rbtrees).

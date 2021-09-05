@@ -51,7 +51,7 @@
 %:- use_module(parser_chat80, [plt/0, print_tree/1]).
 
 :- use_module(library(logicmoo_nlu/parser_sharing)).
-:- use_module(library(pfc_lib)).
+%:- use_module(library(pfc_lib)).
 :- set_prolog_flag(expect_pfc_file, never).
 
 :- absolute_file_name('../../ext/', Dir, [file_type(directory)]),
@@ -316,6 +316,7 @@ baseKB:feature_test:- chat80_tests.
 % CHAT80 command
 % ===========================================================
 :- set_prolog_flag(expect_pfc_file, some_preds).
+
 ==>baseKB:type_action_info(tHumanControlled, actChat80(ftListFn(ftTerm)), "Development test CHAT-80 Text for a human.  Usage: CHAT80 Cant i see the blue backpack?").
 
 ==>baseKB:agent_call_command(_Gent, actChat80([])):- chat80.

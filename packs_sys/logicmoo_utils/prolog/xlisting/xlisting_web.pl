@@ -94,7 +94,7 @@
             pp_item_html_now/2,
             pp_now/0,
             print_request/1,
-            %prover_name/2,
+            %web_prover_name/2,
             
             reply_object_sub_page/1,
             reset_assertion_display/0,
@@ -160,7 +160,6 @@
             user:file_search_path/2
             */
           ]).
-
 
 :- set_module(class(library)).
 /*
@@ -362,8 +361,6 @@ weto(G):-
  
 
 
-
-
 % :- portray_text(false).  % or Enable portray of strings
 
 
@@ -384,7 +381,7 @@ weto(G):-
 singleValueInArg(baseKB:param_default_value,2).
 singleValueInArg(combo_default_value,3).
 baseKB:param_default_value(Pred,Arity,_Value)==> {kb_shared(Pred/Arity)}.
-search_filter_name_comment(N,_,D)==>baseKB:param_default_value(N,D).
+search_filter_name_comment(N,_,D)baseKB:param_default_value(N,D).
 % % % combo_default_value(N,_,V) ==> baseKB:param_default_value(N,V)
 % % % combo_default_value(Pred,Arity,_Value) ==> {kb_shared(Pred/Arity)}.
 % :- ensure_loaded('xlisting_web.pfc').
@@ -393,10 +390,33 @@ search_filter_name_comment(N,_,D)==>baseKB:param_default_value(N,D).
 :- style_check(-discontiguous).
 %:- endif.
 
+% % % OFF :- system:use_module(library(pfc_lib)).
 
 
+% @TODO DMILES UNCOMMENT THIS :- expects_dialect(pfc).
+%:- include('xlisting_web.pfc.pl').
 
+%:- set_defaultAssertMt(xlisting_web).
+%:- set_fileAssertMt(xlisting_web).% WAS OFF  :- system:use_module(library(pfc)).
 
+/*
+:- baseKB:export(baseKB:never_assert_u/2).
+:- xlisting_web:import(baseKB:never_assert_u/2).
+:- baseKB:export(baseKB:never_retract_u/2).
+:- xlisting_web:import(baseKB:never_retract_u/2).
+*/
+
+%% param_default_value( ?ARG1, ?ARG2) is det.
+%
+% Param Default Value.
+%
+
+% :- mpred_trace_exec.
+:- kb_global(baseKB:param_default_value/2).
+==>singleValueInArg(param_default_value,2).
+
+:- kb_global(xlisting_web:combo_default_value/3).
+==>singleValueInArg(combo_default_value,3).
 
 combo_default_value(human_language,1,'EnglishLanguage').
 
@@ -405,7 +425,7 @@ combo_default_value(human_language,1,'EnglishLanguage').
 % Param Default Value.
 %
 baseKB:param_default_value(N,V):- combo_default_value(N,_,V).
-
+% combo_default_value(Pred,Arity,_Value) ==> {kb_shared(Pred/Arity)}.
 %:- brea.
 
 
@@ -413,7 +433,7 @@ baseKB:param_default_value(N,V):- combo_default_value(N,_,V).
 %
 % Human Language.
 %
-%:- kb_global(baseKB:human_language/1).
+:- kb_global(baseKB:human_language/1).
 human_language("AlbanianLanguage").
 human_language("ArabicLanguage").
 human_language("BasqueLanguage").
@@ -475,16 +495,16 @@ logic_lang_name('OWL',"OWL").
 
 
 
-combo_default_value(prover_name,2,'proverPTTP').
-%% prover_name( ?ARG1, ?ARG2) is det.
+combo_default_value(web_prover_name,2,'proverPTTP').
+%% web_prover_name( ?ARG1, ?ARG2) is det.
 %
 % Prover Name.
 %
-:- kb_global(prover_name/2).
-prover_name(proverCyc,"CycL (LogicMOO)").
-prover_name(proverPFC,"PFC").
-prover_name(proverPTTP,"PTTP (LogicMOO)").
-prover_name(proverDOLCE,"DOLCE (LogicMOO)").
+%:- kb_global(web_prover_name/2).
+web_prover_name(proverCyc,"CycL (LogicMOO)").
+web_prover_name(proverPFC,"PFC").
+web_prover_name(proverPTTP,"PTTP (LogicMOO)").
+web_prover_name(proverDOLCE,"DOLCE (LogicMOO)").
 
 
 
@@ -522,12 +542,13 @@ search_filter_name_comment(skipVarnames,'Skip Varnames','0').
 search_filter_name_comment(hideClauseInfo,'Skip ClauseInfo','0').
 search_filter_name_comment(hideXRef,'Skip XREF','1').
 search_filter_name_comment(showAll,'Show All','0').
-
+  
 
 %:- add_import_module(baseKB, xlisting_web,end).
 
 
-% % %search_filter_name_comment(N,_,D)==>baseKB:param_default_value(N,D).
+% % %
+:- ain((search_filter_name_comment(N,_,D)==>baseKB:param_default_value(N,D))).
 
 combo_default_value(is_context,2,'BaseKB').
 
@@ -557,7 +578,9 @@ xaction_menu_item('prologPfc',"Impl $item in PFC").
 xaction_menu_item('Monotonic',"Treat $item Monotonic").
 xaction_menu_item('NonMonotonic',"Treat $item NonMonotonic").   
 
-% % %:- expects_dialect(swi).
+
+
+:- expects_dialect(swi).
 
 
 %% print_request( :TermARG1) is det.
@@ -2104,7 +2127,7 @@ show_edit_term_c(Term,Vs):-
  inline_html_format([ 
 '<form action="/swish/lm_xref/?webproc=edit1term"> <table width="90%" cellspacing="0" cellpadding="0" height="121" id="table4">',
 '<tbody><tr><td align="left" valign="top" width="36"><img src="/swish/lm_xref/pixmapx/sigmaSymbol-gray.gif"></td><td></td><td align="left" valign="top" width="711" rowspan="2"><img src="/swish/lm_xref/pixmapx/logoText-gray.gif">&nbsp;&nbsp;Prover:&nbsp;',
- show_select2(prover, xlisting_web:prover_name,[]),
+ show_select2(prover, xlisting_web:web_prover_name,[]),
 '<table cellspacing="0" cellpadding="0" id="table5" width="658" height="97"><tbody><tr><td align="right"><b>Fml:</b></td><td align="left" valign="top" colspan="2">',
 '<textarea style="white-space: pre; overflow: auto; font-size: 7pt; font-weight: bold; font-family: Verdana, Arial, Helvetica, sans-serif; border: 1px solid black; margin: 0px; width: 1020px; height: 259px;" wrap="off" rows="20" cols="70" name="term">',print_pretty_string(Term,Vs),'</textarea></td><td align="left" valign="top" height="68"><label>',
 action_menu_applied('action_above',"Item",""),
@@ -3236,7 +3259,7 @@ baseKB:shared_hide_data(MFA):- nonvar(MFA), shared_hide_data_sp(MFA).
 xlisting_web_file.
 
           
-:- baseKB:import(xlisting_web:prover_name/2).
+:- baseKB:import(xlisting_web:web_prover_name/2).
 
 write_non_pre(G):- must_run_html(setup_call_cleanup(write('\n</pre>'),G,write('<pre>\n'))).
 write_pre(G):- must_run_html(setup_call_cleanup(write('<pre>'),G,write('</pre>'))).

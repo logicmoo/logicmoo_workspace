@@ -34,6 +34,7 @@ baseKB:sanity_test:- test_corenlp.
 :- use_module(library(http/json_convert)).
 :- use_module(library(http/http_json)).
 :- use_module(library(http/json)).
+:- use_module(library(uri)).
 
 :- use_module(library(http/http_client)).
 :- use_module(library(http/http_open)).

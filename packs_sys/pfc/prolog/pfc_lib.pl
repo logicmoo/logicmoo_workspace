@@ -401,7 +401,6 @@ lmbase:skip_module_decl:-
 
 
 baseKB:mpred_skipped_module(eggdrop).
-baseKB:mpred_skipped_module(pfc_dialect).
 :- forall(current_module(CM),assert(baseKB:mpred_skipped_module(CM))).
 :- retractall(baseKB:mpred_skipped_module(pfc_lib)).
 
@@ -716,9 +715,6 @@ simple_IM(IM):- atomic(IM),(sub_atom(IM,';');sub_atom(IM,'(');sub_atom(IM,' ')).
 %base_clause_expansion(:-(I),O):- strip_module(I,MZ,II), I\=II,!, fail,  base_clause_expansion(MZ,':-'(II),OO),!,O=MZ:(OO).
 %base_clause_expansion(I,O):- strip_module(I,MZ,II), I\=II,!, base_clause_expansion(MZ,II,OO),!,O=MZ:(OO).
 %base_clause_expansion(I,O):- strip_mz(I,MZ,II), !, base_clause_expansion(MZ,II,O),!.
-
-base_clause_expansion(I,I):- prolog_flag(loading_pfc_dialect,true),!.
-
 base_clause_expansion(I,O):- strip_mz(I,MZ,_), !, base_clause_expansion(MZ,I,O),!.
 
 base_clause_expansion(_MZ,Var,Var):-var(Var),!.
@@ -852,7 +848,6 @@ pfc_goal_expansion(I,O):-
      \+ source_location(_,_),
      \+ current_prolog_flag(xref,true), 
      \+ current_prolog_flag(mpred_te,false),
-     \+ current_prolog_flag(loading_pfc_dialect,true),
      '$current_typein_module'(CM),
      prolog_load_context(module,SM),
      % trace,

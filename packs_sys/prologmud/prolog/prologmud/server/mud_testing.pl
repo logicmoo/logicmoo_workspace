@@ -84,7 +84,7 @@ test_true(SomeGoal):- test_call(SomeGoal) *-> test_result(passed,SomeGoal) ;  te
 test_false(SomeGoal):- test_true(not(SomeGoal)).
 
 run_mud_test(Filter):-
-   catch(ignore(noguitracer),_,true),
+   catch(ignore(gui_tracer:noguitracer),_,true),
    doall((
    member(F/A,[baseKB:mud_test/0,baseKB:mud_test/1,baseKB:mud_test/2]),
    current_predicate(M:F/A),

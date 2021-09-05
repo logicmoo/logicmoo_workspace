@@ -5,6 +5,7 @@ Allows you to read xml files from prolog.
 - @author Douglas R. Miles
 - @license LGPL 
 */
+:- use_module(library(sgml)).
 
 atrace:-trace.
 useCateID:- fail.

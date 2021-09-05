@@ -294,7 +294,8 @@ libhook:maybe_save_lm:- qsave_lm(lm_repl4),!.
 :- set_prolog_flag(do_renames,restore).
 :- gripe_time(60,baseKB:ensure_loaded(library('logicmoo/plarkc/logicmoo_i_cyc_rewriting'))).
 
-logicmoo_webbot:- whenever_flag_permits(load_network,load_library_system(library(logicmoo_webbot))).
+logicmoo_webbot:- whenever_flag_permits(load_network,
+load_library_system(library(logicmoo_webbot))).
 /*
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 :- dmsg("[Optional] Load the Logicmoo Web System").

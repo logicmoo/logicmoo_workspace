@@ -1,10 +1,9 @@
 
 
 
-% % % OFF :- system:use_module(library(pfc_lib)).
-:- expects_dialect(pfc).
 
 %:- set_defaultAssertMt(xlisting_web).
+
 :- set_fileAssertMt(xlisting_web).% WAS OFF  :- system:use_module(library(pfc)).
 
 /*
@@ -27,7 +26,12 @@ singleValueInArg(param_default_value,2).
 singleValueInArg(combo_default_value,3).
 
 combo_default_value(human_language,1,'EnglishLanguage').
-param_default_value(N,V):- combo_default_value(N,_,V).
+
+%% baseKB:param_default_value( ?ARG1, ?ARG2) is det.
+%
+% Param Default Value.
+%
+baseKB:param_default_value(N,V):- combo_default_value(N,_,V).
 % combo_default_value(Pred,Arity,_Value) ==> {kb_shared(Pred/Arity)}.
 %:- brea.
 
@@ -63,23 +67,23 @@ human_language("ThaiLanguage").
 human_language("de").
 
 
-param_default_value(request_uri,'/logicmoo/').
-param_default_value(olang,'CLIF').
-param_default_value(find,'tHumanHead').
+baseKB:param_default_value(request_uri,'/swish/lmxref/').
+baseKB:param_default_value(olang,'CLIF').
+baseKB:param_default_value(fa,'tHumanHead').
 
 :- forall(
   member(N=V,[
      webproc=edit1term,
      'prover'='proverPTTP',
-     'apply'='find',
+     'apply'='fa',
      'term'='',
      action_below=query,
      'action_above'='query',
      'context'='BaseKB',
-     'flang'='CLIF','find'='tHumanHead','xref'='Overlap','POS'='N',
-     'humanLang'='EnglishLanguage','olang'='CLIF','sExprs'='1',
-     'webDebug'='1','displayStart'='0','displayMax'='100000']),
-  xlisting_web:ain(param_default_value(N,V))).
+     'flang'='CLIF','fa'='tHumanHead','xref'='Overlap','POS'='N',
+     'humanLang'='EnglishLanguage','olang'='CLIF','sExprs'='0','webDebug'='1',
+     'displayStart'='0','displayMax'='100000']),
+  xlisting_web:ain(baseKB:param_default_value(N,V))).
 
 
 combo_default_value(logic_lang_name,2,'CLIF').
@@ -87,6 +91,7 @@ combo_default_value(logic_lang_name,2,'CLIF').
 %
 % Logic Language Name.
 %
+logic_lang_name('E2C',"Logicmoo English (E2C)").
 logic_lang_name('CLIF',"Common Logic (CLIF)").
 logic_lang_name('CycL',"CycL").
 logic_lang_name('Prolog',"Prolog").
@@ -149,7 +154,8 @@ search_filter_name_comment(showAll,'Show All','0').
 %:- add_import_module(baseKB, xlisting_web,end).
 
 
-search_filter_name_comment(N,_,D)==>param_default_value(N,D).
+% % %
+search_filter_name_comment(N,_,D)==>baseKB:param_default_value(N,D).
 
 combo_default_value(is_context,2,'BaseKB').
 

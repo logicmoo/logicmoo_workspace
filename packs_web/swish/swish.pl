@@ -428,6 +428,6 @@ swish_highlight:style(olwrdf_predicate, olwrdf_predicate, [text, base(symbol)]).
 :- use_module(swish(lib/render/gvterm),   []).
 
 :- if( current_prolog_flag(xpce, true) ).
-:- noguitracer.
+:- gui_tracer:noguitracer.
 :- endif.
 

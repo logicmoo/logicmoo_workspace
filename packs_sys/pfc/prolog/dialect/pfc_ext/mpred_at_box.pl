@@ -360,7 +360,7 @@ is_pfc_module_file(M,F,TF):- (module_property(M,file(F)),pfc_lib:is_pfc_file(F))
 
 maybe_ensure_abox(M):- is_pfc_module_file(M,F,_), (F \== (-)), !,   
   (pfc_lib:is_pfc_file(F)->show_call(pfc_lib:is_pfc_file(F),ensure_abox_hybrid(M));
-     (dmsg_pretty(not_is_pfc_module_file(M,F)),ensure_abox_support(M,baseKB))).
+     (dmsg_pretty(not_is_pfc_module_file(M,F)),ensure_abox_support(M))).
 maybe_ensure_abox(M):- show_call(not_is_pfc_file,ensure_abox_hybrid(M)).
 
 
@@ -372,14 +372,17 @@ ensure_abox(M):- clause_bq(M:defaultTBoxMt(_)),!.
 ensure_abox(M):- 
   %ignore(((M==user;M==pfc_lib;M==baseKB)->true;add_import_module(M,pfc_lib,end))),
   dynamic(M:defaultTBoxMt/1),
-  must(ensure_abox_support(M,baseKB)),!.
+  must(ensure_abox_support(M)),!.
 
 %setup_database_term(_:F/A):- F\=='$spft', current_predicate(system:F/A),!.
 setup_database_term(_:(==>)/1):- !.
 setup_database_term(M:F/A):-  
   dynamic(M:F/A),multifile(M:F/A),public(M:F/A),module_transparent(M:F/A),
   discontiguous(M:F/A),
-  ignore((M\==baseKB,functor(P,F,A),assertz_new(M:(P :- zwc, inherit_above(M, P))))).
+  ignore((M\==baseKB,
+  IAssertion = (M:(P :- zwc, inherit_above(M, P))),
+  functor(P,F,A),assertz_new(IAssertion),
+  wdmsg(IAssertion))).
 
 :- dynamic(lmconfig:pfc_module_prop/3).
 pfc_set_module(M,Pred,Q):- retractall(lmconfig:pfc_module_prop(M,Pred,_)),assert(lmconfig:pfc_module_prop(M,Pred,Q)).
@@ -418,6 +421,8 @@ clear_import_modules(M):-
 
 :- module_transparent((ensure_abox_support)/2).
 %ensure_abox_support(M):- module_property(M,class(library)),!.
+ensure_abox_support(M):- ensure_abox_support(M,baseKB).
+
 ensure_abox_support(M,TBox):- (M==system;M==pfc_lib),break,!,ensure_abox_support(baseKB,TBox).
 ensure_abox_support(M,TBox):- clause_bq(M:defaultTBoxMt(TBox)),!.
 ensure_abox_support(M,TBox):- 
@@ -448,7 +453,8 @@ ensure_abox_support_pt2_non_baseKB(M):-
    '$current_source_module'(SM),
    '$set_typein_module'(M),
    '$set_source_module'(M),
-   pfc_iri:include_module_file(M:library('pfclib/system_each_module.pfc'),M),!,
+   %dumpST,
+    wdmsg(pfc_iri:include_module_file(M:library('pfclib/system_each_module.pfc'),M)),!,
    '$set_typein_module'(TM),
    '$set_source_module'(SM),!.
 

@@ -1181,12 +1181,14 @@ mpred_add(P):- mpred_ain(P).
 %  asserts P into the dataBase with support from S.
 %
 
-decl_assertable_module(AM):-  must_ex(ensure_abox_support(AM,baseKB)).
+decl_assertable_module(AM):- ignore((AM\==baseKB,dmsg(must_ex(ensure_abox_support(AM,baseKB))))).
 
 bad_assert_module(pfc_lib).
 bad_assert_module(system).
 % check_bad_assert_module(user).
 
+% @TODO comment out this next line!
+mpred_ain_cm(MTP,P,AM,SM):- mpred_ain_cm0(MTP,P,_AM,_SM), !, AM=baseKB,SM=baseKB.
 mpred_ain_cm(MTP,P,AM,SM):- mpred_ain_cm0(MTP,P,AM,SM), 
   ((bad_assert_module(AM);bad_assert_module(SM))->(rtrace(mpred_ain_cm0(MTP,_P,_AM,_SM)),break);true).
 % mpred_ain_cm(SM:(==>(AM:P)),P,AM,SM):- SM\==AM, current_predicate(SM:'$spft'/4),!,decl_assertable_module(SM).

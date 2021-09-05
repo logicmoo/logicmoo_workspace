@@ -26,13 +26,13 @@
 % :- break.
 
 
-:- use_module(library(pfc_lib)).
-:- use_module(nl_pipeline).
+%:- use_module(library(pfc_lib)).
+%:- use_module(nl_pipeline).
 
 
 :- '$set_source_module'(baseKB).
 :- module(baseKB).
-:- use_module(library(pfc)).
+%:- use_module(library(pfc)).
 
 :- share_mp(common_logic_kb_hooks:cyckb_t/1).
 :- share_mp(common_logic_kb_hooks:cyckb_t/2).

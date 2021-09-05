@@ -378,10 +378,11 @@ now_inherit_above(Reason,CallerMt,F,A):-
 
 % get_inherit_above_clause(CallerMt,Goal,Head,Body)
 
-system:get_inherit_above_clause(From,Goal,IAHead,IABody):-
+system:get_inherit_above_clause(From,Goal,IAHead,IABody):- 
    (nonvar(Goal)->(strip_module(Goal,_,Call), functor(Call,F,A),functor(Head,F,A)) ; Goal=Head),
-   IAHead = From:Head,
-   IABody = (zwc,inherit_above(From,Head)).
+   IAHead = From:Head,   
+   IABody = (zwc,inherit_above(From,Head)),
+   wdmsg(IABody).
 
 %awc:-true.
 %zwc:-true.

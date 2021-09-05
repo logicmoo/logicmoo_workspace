@@ -11,6 +11,7 @@
 :- module(verbnet_iface, []).
 
 :- use_module(library(logicmoo_common)).
+:- use_module(library(sgml)).
 :- use_module(library(logicmoo/xml_reader)).
 
 

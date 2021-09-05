@@ -3,23 +3,21 @@
 [ -z "$TESTING_TEMP" ] && [ -d "$(pwd)/test_results" ] && export TESTING_TEMP=$(pwd)/test_results/$(whomai)
 [ -z "$TESTING_TEMP" ] && [ -d "${LOGICMOO_WS}/test_results" ] && export TESTING_TEMP=${LOGICMOO_WS}/test_results/$(whomai)
 [ -z "$TESTING_TEMP" ] && export TESTING_TEMP=$(mktemp -d -t logicmoo_testing-$(date +%Y-%m-%d-%H-%M-%S)-XXXXXXXXXX)
-
 export TESTING_TEMP
+mkdir -p $TESTING_TEMP/
 
 export GLOB="$*"
-# [ -z "$GLOB" ] && GLOB="*_01.*"
-export TEST_STEM=Report-$(echo "${GLOB}-Units" | sed -e "s/[*]/vSTARv/g" -e "s/[?]/vQUESTv/g" -e "s/[.]/vDOTv/g" -e "s/[^a-Z0-9_]/-/g" -e "s/--/-/g" -e "s/-/-/g"  -e "s/--/-/g" )
+[ -z "$GLOB" ] && GLOB="*_01.*"
+[ -z "${TEST_STEM}" ] && export TEST_STEM=Report-$(echo "${GLOB}-Units" | sed -e "s/[*]/vSTARv/g" -e "s/[?]/vQUESTv/g" -e "s/[.]/vDOTv/g" -e "s/[^a-Z0-9_]/-/g" -e "s/--/-/g" -e "s/-/-/g"  -e "s/--/-/g" )
 TEST_STEM=$(expr substr "${TEST_STEM}" 1 110)
 echo "<!-- TEST_STEM=${TEST_STEM} -->"
-export TEST_STEM_PATH=$TESTING_TEMP/$TEST_STEM
+[ -z "${TEST_STEM_PATH}" ] && export TEST_STEM_PATH=$TESTING_TEMP/$TEST_STEM
 TEST_STEM_PATH=$(expr substr "${TEST_STEM_PATH}" 1 130)
 echo "<!-- TEST_STEM_PATH=${TEST_STEM_PATH} -->"
 
 
 export CAPTURE_TEST_ANSI=$TEST_STEM_PATH.ansi
 echo -e "<!-- Running release (all) tests\n ( cd $PWD ; $BASH_SOURCE $GLOB) > $CAPTURE_TEST_ANSI -->"
-
-mkdir -p $TESTING_TEMP/
 
 cat /dev/null > $CAPTURE_TEST_ANSI
 

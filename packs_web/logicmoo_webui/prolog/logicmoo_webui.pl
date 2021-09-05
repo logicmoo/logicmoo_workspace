@@ -86,6 +86,7 @@ load_web_package_dirs:-
 :- use_module(library(sandbox)).
 :- use_module(library(pengines_sandbox)).
 % :- rtrace.
+
 :- system:use_module(library(console_input)).
 :- system:use_module(library(date)).
 :- system:use_module(library(make)).
@@ -96,7 +97,7 @@ load_web_package_dirs:-
 :- system:use_module(library(edit)).
 :- system:use_module(library(prolog_trace)).
 :- system:use_module(library(threadutil)).
-:- system:use_module(library(yall)).
+% :- system:use_module(library(yall)).
 :- system:use_module(library(time)).
 :- abolish(system:time/1).
 :- system:use_module(library(statistics)).
@@ -170,13 +171,13 @@ load_web_package_dirs:-
 :- system:use_module(library(when)).
 :- system:use_module(library(writef)).
 :- system:use_module(library(zlib)).
-
 %:- system:use_module(library(jpl)).
 %:- use_module(library(wfs)).
 :- system:use_module(library(wfs),[call_residual_program/2,call_delays/2,delays_residual_program/2,answer_residual/2]).
 %:- system:use_module(library(gui_tracer)). % autoloading swi_ide:guitracer/0 from /usr/lib/swipl/xpce/prolog/lib/gui_tracer
 %:- system:use_module(library(swi_compatibility)). %% autoloading swi_ide:auto_call/1 from /usr/lib/swipl/xpce/prolog/lib/swi_compatibility
 :- endif.
+
 
 sandbox:safe_primitive(dumpst:dumpST).
 sandbox:safe_meta_predicate(system:notrace/1).

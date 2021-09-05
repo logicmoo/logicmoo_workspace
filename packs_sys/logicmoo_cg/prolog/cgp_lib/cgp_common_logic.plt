@@ -1,7 +1,10 @@
 
-:- begin_tests(cgp_common_logic).
+:- use_module(library(plunit)).
+:- use_module(library(test_cover)).
 
 :- ensure_loaded(library(cgp_lib/cgp_common_logic)).
+
+:- begin_tests(cgp_common_logic).
 
 % ==========================================================================
 %% run_1_test(+String)

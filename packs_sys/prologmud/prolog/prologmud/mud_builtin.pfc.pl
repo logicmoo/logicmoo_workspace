@@ -555,7 +555,9 @@ prologMultiValued(pathDirLeadsTo(tRegion,vtDirection,tRegion),prologHybrid).
 prologMultiValued(pathName(tRegion,vtDirection,ftString),prologHybrid).
 prologMultiValued(genls(tCol,tCol),prologHybrid).
 ==> prologSingleValued(typeGrid(tCol,ftInt,ftListFn(ftString)),prologHybrid).
+
 prologMultiValued(typeGrid(tCol,ftInt,ftListFn(ftString)),prologHybrid).
+
 prologMultiValued(verbAsWell(ftTerm,ftAction,ftAction),prologHybrid).
 
 prologNegByFailure(mudNeedsLook(tObj,ftBoolean),prologHybrid).

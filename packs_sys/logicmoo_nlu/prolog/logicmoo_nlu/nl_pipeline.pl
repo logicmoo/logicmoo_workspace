@@ -29,7 +29,7 @@
 :- (abolish(apply_macros:expand_apply, 4), asserta((apply_macros:expand_apply(_In, _, _, _):- !, fail))).
 :- (abolish(apply_macros:expand_apply, 2), asserta((apply_macros:expand_apply(_In, _):- !, fail))).
 
-:- use_module(library(pfc_lib)).
+%:- use_module(library(pfc_lib)).
 %:- '$set_typein_module'(baseKB).
 %:- '$set_source_module'(baseKB).
 :- use_module(library(logicmoo_utils)).

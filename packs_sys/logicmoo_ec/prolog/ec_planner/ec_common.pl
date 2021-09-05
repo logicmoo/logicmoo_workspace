@@ -198,7 +198,7 @@ ec_current_domain_db1(G):- G \= axiom(_,_),!, ec_current_domain_db1(axiom(G,B)),
 %ec_current_domain_db1(axiom(G,Gs)):- !, axiom(G,Gs).
 %ec_current_domain_db1(event(G)):- var(G),!, ec_current_domain_db1(predicate(Ax)), functor(Ax,F,A), functor(G,F,A).
 
-
+:- use_module(library(system)).
 :- lock_predicate(ec_current_domain_db1/1).
 
 

@@ -12,7 +12,6 @@ This module makes LOGICMOO load the LPS server UI through Swish. Logicmoo interf
 */
 % [Required] Load the Logicmoo Library Utils
 :- ensure_loaded(library(logicmoo_common)).
-
 :- reexport(logicmoo_planner).
 
 :- if(\+ exists_source(swish(lib/render))).
@@ -73,6 +72,9 @@ abolish_lps_module(M):-
 
 load_lps_corner:-!.
 load_lps_corner:- lps_corner:use_module(library(lps_corner)).
+
+:- use_module(library(ec_planner/ec_lps_convert)).
+:- use_module(library(ec_planner/lps_pddl_convert)).
 
 test_logicmoo_lps(Files):- run_lps(Files).
 

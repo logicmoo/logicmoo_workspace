@@ -994,12 +994,12 @@ kif_to_boxlog(P):-
 
    length(O,L),
    in_box((format('% Results in the following ~w entailment(s): ~n',[L]),
-           call(maplist,writeqln,O))),
+           call(maplist,writeqln1,O))),
 
    show_boxlog(O),
    format("============================================"),!.
 
-writeqln(O):- writeq(O),writeln('.').
+writeqln1(O):- writeq(O),writeln('.').
 
 %% kif_to_boxlog( ?Wff, ?Out) is det.
 %
