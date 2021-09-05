@@ -696,9 +696,9 @@ tCol(vtVerb).
 :- dynamic(stat_total/2).
 :- dynamic(spawn_rate/2).
 tCol(mobMonster).
-%prologDynamic(baseKB:action_info(vtActionTemplate,ftText)).
-prologDynamic(baseKB:agent_command(tAgent,ftAction)).
-:- ain(prologSideEffects(baseKB:agent_command(tAgent,ftAction))).
+%prologDynamic(action_info(vtActionTemplate,ftText)).
+prologDynamic(agent_command(tAgent,ftAction)).
+:- ain(prologSideEffects(agent_command(tAgent,ftAction))).
 %prologBuiltin(member(ftTerm,ftTerm)).
 prologDynamic(mud_test(ftTerm,ftCallable)).
 prologDynamic(use_action_templates(ftTerm)).
@@ -763,7 +763,7 @@ prologHybrid(instVerbOverride(ftTerm,ftAction,ftAction)).
 %isa(mudMaxHitPoints,prologHybrid).
 isa(vtDirection,ttValueType).
 
-prologMultiValued(baseKB:agent_text_command(tAgent,ftText,tAgent,ftAction)).
+prologMultiValued(agent_text_command(tAgent,ftText,tAgent,ftAction)).
 
 formatted_resultIsa(apathFn(tRegion,vtDirection),tPathway).
 
@@ -892,7 +892,7 @@ meta_argtypes(mudWearing(tAgent,tWearAble)).
 meta_argtypes(pathName(tRegion,vtDirection,ftString)).
 meta_argtypes(resultIsa(tFunction,tCol)).
 meta_argtypes(wasSuccess(tAgent,vtActionTemplate,ftBoolean)).
-meta_argtypes(baseKB:type_action_info(tCol,vtActionTemplate,ftText)).
+meta_argtypes(type_action_info(tCol,vtActionTemplate,ftText)).
 %NEXT TODO predTypeMax(mudEnergy,tObj,130).
 %NEXT TODO predTypeMax(mudHealth,tObj,500).
 

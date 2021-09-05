@@ -1438,7 +1438,7 @@ mpred_remove_exactly(P):- remove_if_unsupported(P).
 :- export(mpred_post12/2).
 
 leave_some_vars_at_el(action_rules).
-leave_some_vars_at_el(baseKB:agent_text_command).
+leave_some_vars_at_el(agent_text_command).
 leave_some_vars_at_el(rtArgsVerbatum).
 leave_some_vars_at_el(==>).
 

@@ -381,7 +381,7 @@ weto(G):-
 singleValueInArg(baseKB:param_default_value,2).
 singleValueInArg(combo_default_value,3).
 baseKB:param_default_value(Pred,Arity,_Value)==> {kb_shared(Pred/Arity)}.
-search_filter_name_comment(N,_,D)baseKB:param_default_value(N,D).
+search_filter_name_comment(N,_,D)==>baseKB:param_default_value(N,D).
 % % % combo_default_value(N,_,V) ==> baseKB:param_default_value(N,V)
 % % % combo_default_value(Pred,Arity,_Value) ==> {kb_shared(Pred/Arity)}.
 % :- ensure_loaded('xlisting_web.pfc').
@@ -390,33 +390,10 @@ search_filter_name_comment(N,_,D)baseKB:param_default_value(N,D).
 :- style_check(-discontiguous).
 %:- endif.
 
-% % % OFF :- system:use_module(library(pfc_lib)).
 
 
-% @TODO DMILES UNCOMMENT THIS :- expects_dialect(pfc).
-%:- include('xlisting_web.pfc.pl').
 
-%:- set_defaultAssertMt(xlisting_web).
-%:- set_fileAssertMt(xlisting_web).% WAS OFF  :- system:use_module(library(pfc)).
 
-/*
-:- baseKB:export(baseKB:never_assert_u/2).
-:- xlisting_web:import(baseKB:never_assert_u/2).
-:- baseKB:export(baseKB:never_retract_u/2).
-:- xlisting_web:import(baseKB:never_retract_u/2).
-*/
-
-%% param_default_value( ?ARG1, ?ARG2) is det.
-%
-% Param Default Value.
-%
-
-% :- mpred_trace_exec.
-:- kb_global(baseKB:param_default_value/2).
-==>singleValueInArg(param_default_value,2).
-
-:- kb_global(xlisting_web:combo_default_value/3).
-==>singleValueInArg(combo_default_value,3).
 
 combo_default_value(human_language,1,'EnglishLanguage').
 
@@ -425,7 +402,7 @@ combo_default_value(human_language,1,'EnglishLanguage').
 % Param Default Value.
 %
 baseKB:param_default_value(N,V):- combo_default_value(N,_,V).
-% combo_default_value(Pred,Arity,_Value) ==> {kb_shared(Pred/Arity)}.
+
 %:- brea.
 
 
@@ -433,7 +410,7 @@ baseKB:param_default_value(N,V):- combo_default_value(N,_,V).
 %
 % Human Language.
 %
-:- kb_global(baseKB:human_language/1).
+%:- kb_global(baseKB:human_language/1).
 human_language("AlbanianLanguage").
 human_language("ArabicLanguage").
 human_language("BasqueLanguage").
@@ -500,7 +477,7 @@ combo_default_value(web_prover_name,2,'proverPTTP').
 %
 % Prover Name.
 %
-%:- kb_global(web_prover_name/2).
+:- kb_global(web_prover_name/2).
 web_prover_name(proverCyc,"CycL (LogicMOO)").
 web_prover_name(proverPFC,"PFC").
 web_prover_name(proverPTTP,"PTTP (LogicMOO)").
@@ -547,8 +524,7 @@ search_filter_name_comment(showAll,'Show All','0').
 %:- add_import_module(baseKB, xlisting_web,end).
 
 
-% % %
-:- ain((search_filter_name_comment(N,_,D)==>baseKB:param_default_value(N,D))).
+% % %search_filter_name_comment(N,_,D)==>baseKB:param_default_value(N,D).
 
 combo_default_value(is_context,2,'BaseKB').
 
@@ -578,9 +554,7 @@ xaction_menu_item('prologPfc',"Impl $item in PFC").
 xaction_menu_item('Monotonic',"Treat $item Monotonic").
 xaction_menu_item('NonMonotonic',"Treat $item NonMonotonic").   
 
-
-
-:- expects_dialect(swi).
+% % %:- expects_dialect(swi).
 
 
 %% print_request( :TermARG1) is det.
@@ -3259,7 +3233,7 @@ baseKB:shared_hide_data(MFA):- nonvar(MFA), shared_hide_data_sp(MFA).
 xlisting_web_file.
 
           
-:- baseKB:import(xlisting_web:web_prover_name/2).
+%:- baseKB:import(xlisting_web:web_prover_name/2).
 
 write_non_pre(G):- must_run_html(setup_call_cleanup(write('\n</pre>'),G,write('<pre>\n'))).
 write_pre(G):- must_run_html(setup_call_cleanup(write('<pre>'),G,write('</pre>'))).

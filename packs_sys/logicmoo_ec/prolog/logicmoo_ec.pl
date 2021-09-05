@@ -17,6 +17,16 @@ This module combines all LOGICMOO EventCalc modules into a unified interface for
 :- use_module(library(ec_planner/ec_reader)).
 :- use_module(library(ec_planner/ec_planner_dmiles)).
 
+
+ensure_lps_now:- 
+(use_module(library(logicmoo_lps)),
+ use_module(library(ec_planner/ec_lps_convert)),
+ listing(test_lps_pddl_convert),
+ use_module(library(ec_planner/lps_pddl_convert)),
+ listing(test_logicmoo_ec_lps_reader/0)).
+
+% :- ensure_lps_now.
+
 :- reexport(logicmoo_planner).
 
 %test_logicmoo_ec:- run_tests.
@@ -27,10 +37,9 @@ This module combines all LOGICMOO EventCalc modules into a unified interface for
 user:prolog_file_type(pel, prolog).
 user:prolog_file_type(e, prolog).
 
-ensure_lps:- current_module(swish) 
- ->( use_module(library(logicmoo_lps)),
-     listing(test_lps_pddl_convert), 
-     listing(test_logicmoo_ec_lps_reader/0))
+ensure_lps:- 
+  current_module(swish) 
+   -> ensure_lps_now
   ; fmt("Once SWISH is loaded, try: ?-ensure_lps.").
 
 :- listing(ensure_lps/0).

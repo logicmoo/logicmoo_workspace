@@ -39,8 +39,6 @@ This module extends the LPS engine to run PPDL files.
 %:- use_module(library(pddl_planner/pddl_reader)).
 
 :- use_module(library(lps_corner)).
-:- user:use_module(library(ec_planner/ec_lps_convert)).
-:- user:reexport(library(ec_planner/ec_lps_convert)).
 
 :- set_prolog_flag(lps_translation_only_HIDE,false).
 :- set_prolog_flag(lps_translation_only,false).
