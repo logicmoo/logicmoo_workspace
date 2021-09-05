@@ -191,7 +191,6 @@ push_current_choice/1,
 :- set_module(class(library)).
 :- endif.
 
-:- meta_predicate(nr_lc_ex(:)).
 nr_lc_ex(G):- no_repeats(loop_check(G,trace_or_throw(looped(G)))).
 
 %:- use_module(mpred_kb_ops).
@@ -225,49 +224,54 @@ remove_PFC(P) :- mpred_remove(P).
 % remove_PFC(P,S) :- mpred_remove(P,S).
 
 
+make_meta_predicate(X):- is_list(X), !, maplist(make_meta_predicate,X).
+make_meta_predicate(X):- functor(X,F,A), module_transparent(F/A), 
+   subst(X,'0','*',Y), subst(Y,':','*',Z), meta_predicate(Z).
+  
 
 
 %:- include(library(pfc_test)).
-:- meta_predicate
-      %call_mp(+,:,+),
-      call_u(:),
-      call_u_mp_lc(:,:,:,:),
-      call_u_no_bc(+),
-      clause_asserted_u(+),
+:- make_meta_predicate([
+      %call_mp(+,0,+),
+      call_u(0),
+      call_u_mp_lc(0,0,0,0),
+      call_u_no_bc(0),
+      clause_asserted_u(:),
       clause_u(:),
-      clause_u(:,:,-),
-      clause_u(:,-),
-      each_E(:,+,+),
-      fc_eval_action(:,:),
+      clause_u(:,?,?),
+      clause_u(0,-),
+      each_E(0,+,+),
+      with_each_item(:,+,+),
+      fc_eval_action(0,0),
       fix_mp(+,+,-,-),
-      %foreach(:,?),
-      %lookup_kb(?,:),
-      %lookup_kb(?,:,?),
-      quietly(:),
-      ain_expanded(:),
-      mpred_add(:),
-      mpred_ain(:),
+      %foreach(0,?),
+      %lookup_kb(?,0),
+      %lookup_kb(?,0,?),
+      ain_expanded(0),
+      mpred_add(0),
+      mpred_ain(0),
       %mpred_BC_CACHE(+,+),
       %mpred_BC_CACHE0(+,+),
-      mpred_call_no_bc0(:),
-      mpred_fact_mp(?,:),      
-      mpred_METACALL(:,+),
-      mpred_METACALL(:,-,+), % 1,-,+
+      mpred_call_no_bc0(0),
+      mpred_fact_mp(?,0),      
+      mpred_METACALL(+,+),
+      mpred_METACALL(+,-,+), % 1,-,+
       
-      % pfcl_do(:), % not all arg1s are callable
+      % pfcl_do(0), % not all arg1s are callable
       retract_u0(+),
-      with_no_breaks(:),
+      with_no_breaks(0),
       with_umt(+,+),
-      brake(:),
-      with_no_mpred_trace_exec(:),
-      with_mpred_trace_exec(:),
-      with_fc_mode(+,:).
+      brake(+),
+      with_no_mpred_trace_exec(0),
+      with_mpred_trace_exec(0),
+      with_fc_mode(+,0),
+      mpred_retract_i_or_warn(:),
+      mpred_retract_i_or_warn_1(:),
+      not_not_ignore_quietly_ex(:),
+      must_notrace_pfc(:),
+      nr_lc_ex(:)]).
       
-
-:- meta_predicate mpred_retract_i_or_warn(:).
-:- meta_predicate mpred_retract_i_or_warn_1(:).
-:- meta_predicate not_not_ignore_quietly_ex(:).
-:- meta_predicate must_notrace_pfc(:).
+      
 :- multifile(baseKB:safe_wrap/4).
 :- dynamic(baseKB:safe_wrap/4).
 
@@ -290,7 +294,6 @@ must_notrace_pfc(G):- must_ex((G)).
    IN=f2(N,A),OUT=f2(N,B),copy_term_vn(IN,OUT),
   asserta_u(IN),clause_asserted_u(OUT),!. % ,nl,writeq(A=@=B).
 */
-:- meta_predicate with_each_item(:,+,+).
 %% with_each_item(:P2,+EleList,+ArgList) is nondet.
 %
 % Call apply(P,[Ele|ArgList]) on each Ele(ment) in the EleList.

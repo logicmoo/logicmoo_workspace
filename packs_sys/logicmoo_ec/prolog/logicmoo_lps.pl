@@ -94,10 +94,6 @@ test_logicmoo_lps_sanity:-
   test_logicmoo_lps('/opt/logicmoo_workspace/packs_sys/logicmoo_ec/test/lps_user_examples/*goat*.pl'),!,
   nodebug(lps(term_expand)),!.
 
-:- use_module(library(ec_planner/ec_lps_convert)).
-:- use_module(library(ec_planner/lps_pddl_convert)).
-
-
 :- dynamic user:prolog_file_type/2.
 :- multifile user:prolog_file_type/2.
 

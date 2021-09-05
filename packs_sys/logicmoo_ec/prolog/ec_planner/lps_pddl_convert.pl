@@ -241,7 +241,7 @@ test_lps_pddl_convert([solve]):- !,
       pddl('orig_pddl_parser/test/blocks/blocks-03-0.pddl')),!.
     
 
-
+:- listing(test_lps_pddl_convert).
 
 into_pterm( Ctx,I,O):- must_or_rtrace_l((with_kif_ok(to_untyped(I,M)),our_sterm2pterm(Ctx,M,O))).
 
