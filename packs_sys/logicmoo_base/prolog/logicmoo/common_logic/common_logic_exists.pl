@@ -663,7 +663,7 @@ skolem_from_set(Set,X,SKF):-
 
 range_int(Which,N,Cardin):- '#>='(Which,N), '#=<'(Which, Cardin).
 
-which_skv_soft(_SkV,Cardin,Which):- kif_option_value(gvar_skolem_combine,true),!, range_int(Which,1,Cardin),!.
+which_skv_soft(_SkV,Cardin,Which):- common_logic_utils:kif_option_value(gvar_skolem_combine,true),!, range_int(Which,1,Cardin),!.
 which_skv(SkV,Cardin,Which):- var(SkV),!, between(1,Cardin,Which).
 which_skv(SkV,Cardin,Which):-
   nb_get_next(SkV,Cardin,Offset),between(1,Cardin,For),

@@ -920,6 +920,9 @@ export_most(M:F/A):-
 :- if(exists_source(library(filesex))).
 :- use_module(library(filesex)).
 :- endif.
+:- if(exists_source(library(qsave))).
+:- use_module(library(qsave)).
+:- endif.
 
 qsave_pfc:-
   getenv('LOGICMOO_WS',Dir),

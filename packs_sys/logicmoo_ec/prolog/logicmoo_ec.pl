@@ -21,7 +21,6 @@ This module combines all LOGICMOO EventCalc modules into a unified interface for
 ensure_lps_now:- 
 (use_module(library(logicmoo_lps)),
  use_module(library(ec_planner/ec_lps_convert)),
- listing(test_lps_pddl_convert),
  use_module(library(ec_planner/lps_pddl_convert)),
  listing(test_logicmoo_ec_lps_reader/0)).
 

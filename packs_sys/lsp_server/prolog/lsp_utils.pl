@@ -15,11 +15,13 @@ source and stuff.
 
 @author James Cash
 */
+:- op(1200,xfx,'=>').
 
 :- use_module(library(apply_macros)).
 :- use_module(library(apply), [maplist/3, exclude/3]).
 :- use_module(library(prolog_xref)).
 :- use_module(library(prolog_source), [read_source_term_at_location/3]).
+:- use_module(library(help), []).
 :- prolog_help:(export(help_html/3),export(help_objects/3)).
 :- use_module(library(help), [help_html/3, help_objects/3]).
 :- use_module(library(lynx/html_text), [html_text/1]).

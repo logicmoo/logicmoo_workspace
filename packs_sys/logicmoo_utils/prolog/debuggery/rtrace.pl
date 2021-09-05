@@ -474,3 +474,5 @@ ignore_must(Goal):- how_must(fail, Goal).
 :- totally_hide('$toplevel':save_debug/1).
 :- totally_hide('$toplevel':no_lco/1).
 %:- ignore(rtrace(non_user_console)).
+:- '$hide'(rtrace/1).
+

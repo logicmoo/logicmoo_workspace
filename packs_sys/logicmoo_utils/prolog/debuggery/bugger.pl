@@ -3181,8 +3181,7 @@ disabled_this:- asserta((user:prolog_exception_hook(Exception, Exception, Frame,
 % :- '$hide'(tlbugger:_/_).
 % :- '$hide'(tlbugger:A/0).
 
-% :- '$hide'(dmsg/1).
-% :-'$hide'(system:notrace/1). 
+:-'$hide'(system:notrace/1). 
 
 
 

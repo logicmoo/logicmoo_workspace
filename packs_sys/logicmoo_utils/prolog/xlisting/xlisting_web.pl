@@ -94,7 +94,7 @@
             pp_item_html_now/2,
             pp_now/0,
             print_request/1,
-            %web_prover_name/2,
+            web_prover_name/2,
             
             reply_object_sub_page/1,
             reset_assertion_display/0,
@@ -477,7 +477,8 @@ combo_default_value(web_prover_name,2,'proverPTTP').
 %
 % Prover Name.
 %
-:- kb_global(web_prover_name/2).
+
+%:- kb_global(web_prover_name/2).
 web_prover_name(proverCyc,"CycL (LogicMOO)").
 web_prover_name(proverPFC,"PFC").
 web_prover_name(proverPTTP,"PTTP (LogicMOO)").
@@ -503,7 +504,7 @@ partOfSpeech("Z","Adverb").
 % Search Filter Name Comment.
 %
 
-:- xlisting_web:kb_global(search_filter_name_comment/3).
+%:- xlisting_web:kb_global(search_filter_name_comment/3).
 
 %:- xlisting_web:dynamic(xlisting_web:search_filter_name_comment/3).
 %:- baseKB:import(xlisting_web:search_filter_name_comment/3).
@@ -524,7 +525,7 @@ search_filter_name_comment(showAll,'Show All','0').
 %:- add_import_module(baseKB, xlisting_web,end).
 
 
-% % %search_filter_name_comment(N,_,D)==>baseKB:param_default_value(N,D).
+:- forall(search_filter_name_comment(N,_,D),ain(baseKB:param_default_value(N,D))).
 
 combo_default_value(is_context,2,'BaseKB').
 
@@ -2101,7 +2102,7 @@ show_edit_term_c(Term,Vs):-
  inline_html_format([ 
 '<form action="/swish/lm_xref/?webproc=edit1term"> <table width="90%" cellspacing="0" cellpadding="0" height="121" id="table4">',
 '<tbody><tr><td align="left" valign="top" width="36"><img src="/swish/lm_xref/pixmapx/sigmaSymbol-gray.gif"></td><td></td><td align="left" valign="top" width="711" rowspan="2"><img src="/swish/lm_xref/pixmapx/logoText-gray.gif">&nbsp;&nbsp;Prover:&nbsp;',
- show_select2(prover, xlisting_web:web_prover_name,[]),
+ show_select2(prover, web_prover_name,[]),
 '<table cellspacing="0" cellpadding="0" id="table5" width="658" height="97"><tbody><tr><td align="right"><b>Fml:</b></td><td align="left" valign="top" colspan="2">',
 '<textarea style="white-space: pre; overflow: auto; font-size: 7pt; font-weight: bold; font-family: Verdana, Arial, Helvetica, sans-serif; border: 1px solid black; margin: 0px; width: 1020px; height: 259px;" wrap="off" rows="20" cols="70" name="term">',print_pretty_string(Term,Vs),'</textarea></td><td align="left" valign="top" height="68"><label>',
 action_menu_applied('action_above',"Item",""),

@@ -64,6 +64,11 @@ init_objects :-
   with_mutex(get_advstate,
     init_objects_from_mutex).
 
+:- set_prolog_flag(access_level,system).
+:- '$set_predicate_attribute'(system:'$expand_term'(_,_), system, false).
+:- '$set_predicate_attribute'(system:'$expand_term'(_,_,_,_), system, false).
+:- '$set_predicate_attribute'(system:'$expand_term'(_,_), hide_childs, false).
+:- '$set_predicate_attribute'(system:'$expand_term'(_,_,_,_), hide_childs, false).
 init_objects_from_mutex :-
  get_advstate(S0),
  retractall(advstate_db(_)),
@@ -76,7 +81,22 @@ init_objects_from_mutex :-
  dbug1(newObjectList = NewObjectList),
  apply_mapl_state(mu_create_object(), ObjectList, S1, S2),
  set_advstate(S2).
-
+%:- break.
+%:- rtrace.
+init_objects_from_mutex2 :-
+ get_advstate(S0),
+ retractall(advstate_db(_)),
+ must_mw1(get_objects(true, OldObjectList, S0)),
+ create_missing_instances(S0, S1), !,
+ set_advstate(S1),
+ must_mw1(call((get_objects(true, ObjectList, S1), ObjectList\==[]))),
+ dbug1(oldObjectList = OldObjectList),
+ subtract(ObjectList, OldObjectList, NewObjectList),
+ dbug1(newObjectList = NewObjectList),
+ apply_mapl_state(mu_create_object(), ObjectList, S1, S2),
+ set_advstate(S2).
+:- nortrace.
+%:- break.
 
 create_missing_instances(S0, S2):-
  current_world_adv_suffix(Suffix),

@@ -129,20 +129,20 @@ nonvar_subterm(Bound, Data):- sub_term(E, Data), nonvar(E), '=@='(E, Bound).
 % CODE FILE SECTION
 % :- nop(ensure_loaded('adv_util_subst')).
 % %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-apply_mapl_state(Goal, List, S0, S2):- apply_all(List, Goal, S0, S2).
+apply_mapl_state(GoalP2, List, S0, S2):- apply_all(List, GoalP2, S0, S2).
 
 apply_all([], _Goal, S0, S0) :- !.
-apply_all([Arg], Goal, S0, S2) :- !, apply_first_arg_state(Arg, Goal, S0, S2).
+apply_all([Arg], GoalP2, S0, S2) :- !, apply_first_arg_state(Arg, GoalP2, S0, S2).
 
-apply_all(List, Goal, S0, S2) :- xnotrace((list_to_set(List, Set),
+apply_all(List, GoalP2, S0, S2) :- xnotrace((list_to_set(List, Set),
  List\==Set)), !,
- apply_all(Set, Goal, S0, S2).
+ apply_all(Set, GoalP2, S0, S2).
 
-apply_all([Arg|ArgTail], Goal, S0, S2) :-
- runnable_goal(Goal, Runnable),
+apply_all([Arg|ArgTail], GoalP2, S0, S2) :-
+ runnable_goal(GoalP2, Runnable),
  apply_first_arg_state(Arg, Runnable, S0, S1),
  !, % Don''t allow future failure to redo successful agents.
- apply_all(ArgTail, Goal, S1, S2).
+ apply_all(ArgTail, GoalP2, S1, S2).
 
 
 apply_mapl_rest_state(_Front, [], _Rest, S, S).
@@ -163,16 +163,16 @@ apply_to_call(Front, APPLYARGS, Call):-
 apply_to_call(Front, APPLYARGS, Call):-
   Call = apply(Front, APPLYARGS), !.
 
-append_goal_mw(Goal, List, Call):-
- xnotrace((compound_name_arguments(Goal, F, GoalL),
+append_goal_mw(GoalP2, List, Call):-
+ xnotrace((compound_name_arguments(GoalP2, F, GoalL),
   append(GoalL, List, NewGoalL), Call univ_safe [F|NewGoalL])).
 
 
 
 
-runnable_goal(Goal, Goal) :- ground(Goal), !.
-%runnable_goal(Goal, Goal_Copy):- copy_term(Goal, Goal_Copy).
-runnable_goal(Goal, Goal).
+runnable_goal(GoalP2, GoalP2) :- ground(GoalP2), !.
+%runnable_goal(GoalP2, Goal_Copy):- copy_term(GoalP2, Goal_Copy).
+runnable_goal(GoalP2, GoalP2).
 
 
 :- module_transparent(apply_forall_frames//3).
@@ -188,16 +188,16 @@ apply_forall(Forall, Apply, S0, S1):-
  findall(Forall, Forall, Frames),
   apply_forall_frames(Frames, Forall, Apply, S0, S1).
 
-findall(E, Goal, L, S0, S2):- apply_state(call, findall(E, Goal, L), S0, S2).
+findall(E, GoalP2, L, S0, S2):- apply_state(call, findall(E, GoalP2, L), S0, S2).
 
-apply_to_goal(Goal, M1, M2):- call(Goal, M1, M2).
+apply_to_goal(GoalP2, M1, M2):- call(GoalP2, M1, M2).
 
 
 %unless(G, Else, S0, S2):- apply_state(Z, unless(G, Else), S0, S2).
-ignore(Goal, S0, S2):- apply_state(call, ignore(Goal), S0, S2).
+ignore(GoalP2, S0, S2):- apply_state(call, ignore(GoalP2), S0, S2).
 
 :- meta_predicate with_state(*, 0, *, *).
-with_state(S, Goal, S0, S2):- S0=S, call(Goal), S0=S2.
+with_state(S, GoalP2, S0, S2):- S0=S, call(GoalP2), S0=S2.
 
 is_state_getter(P):- compound(P), safe_functor(P, F, Am1), A is Am1+1, current_predicate(F/A), !.
 is_state_getter(P):- \+ atom(P), !, compound(P), safe_functor(P, F, _), !, is_state_getter(F).
@@ -248,22 +248,22 @@ mw_numbervars(G, S, E):- numbervars(G, S, E, [attvar(skip)]).
 :- meta_predicate(apply_state(1, *, +, -, +, -)).
 
 
-apply_state(Z, Goal, S0, S2, DCG0, DCG2):-
+apply_state(Z, GoalP2, S0, S2, DCG0, DCG2):-
   DCG0=S0,
-  apply_state(Z, Goal, S0, S2),
+  apply_state(Z, GoalP2, S0, S2),
   DCG2=S2.
 
-rapply_state(Z, S0, S2, Goal):- apply_state(Z, Goal, S0, S2).
+rapply_state(Z, S0, S2, GoalP2):- apply_state(Z, GoalP2, S0, S2).
 
 :- module_transparent(apply_state//2).
 
 apply_state(_, _NonGoal, S0, _S2) :- xnotrace(must_input_state(S0)), fail.
 apply_state(_, NonGoal, S0, S2) :- \+ callable(NonGoal), !, trace, S0=S2.
-apply_state(Z, M:Goal, S0, S2) :- !, assertion(atom(M)),
- M:apply_state(Z, Goal, S0, S2).
-apply_state(Z, {Goal}, S0, S0) :- !, call_z(Z, Goal).
-apply_state(Z, M:{Goal}, S0, S0) :- !, call_z(Z, M:Goal).
-apply_state(_, Goal, S0, S0):- Goal==[], !.
+apply_state(Z, M:GoalP2, S0, S2) :- !, assertion(atom(M)),
+ M:apply_state(Z, GoalP2, S0, S2).
+apply_state(Z, {GoalP2}, S0, S0) :- !, call_z(Z, GoalP2).
+apply_state(Z, M:{GoalP2}, S0, S0) :- !, call_z(Z, M:GoalP2).
+apply_state(_, GoalP2, S0, S0):- GoalP2==[], !.
 
 apply_state(_, List, S0, S2) :- is_list(List), !, append(S0, List, S2), !.
 apply_state(Z, G12, S0, S2) :- G12 = [_|_], !,
@@ -271,19 +271,19 @@ apply_state(Z, G12, S0, S2) :- G12 = [_|_], !,
 
 %apply_state(Z, (unless(Unless, Error), More), S0, S2) :- !, (apply_state(Z, Unless, S0, S1)->apply_state(Z, More, S1, S2);apply_state(Z, Error, S0, S2)).
 %apply_state(Z, unless(Unless, Error), S0, S2) :- !, (apply_state(Z, Unless, S0, S2)->true;apply_state(Z, Error, S0, S2)).
-apply_state(Z, ignore(Goal), S0, S2) :- !, apply_state(Z, Goal, S0, S2)->true;S0=S2.
-apply_state(Z, findall(E, Goal, L), S0, S2) :- !, findall(E, apply_state(Z, Goal, S0, _), L), S0=S2.
+apply_state(Z, ignore(GoalP2), S0, S2) :- !, apply_state(Z, GoalP2, S0, S2)->true;S0=S2.
+apply_state(Z, findall(E, GoalP2, L), S0, S2) :- !, findall(E, apply_state(Z, GoalP2, S0, _), L), S0=S2.
 apply_state(_, i_o(S0, S2), S0, S2) :- !.
 apply_state(_, nop(_), S0, S2) :- !, S0=S2.
 apply_state(_, current_state(S0), S0, S2) :- !, S0=S2.
-apply_state(Z, rtrace(Goal), S0, S2) :- !, rtrace(apply_state(Z, Goal, S0, S2)).
+apply_state(Z, rtrace(GoalP2), S0, S2) :- !, rtrace(apply_state(Z, GoalP2, S0, S2)).
 apply_state(Z, dmust_tracing((G1, G2)), S0, S2) :- !, apply_state(Z, dmust_tracing(G1), S0, S1), apply_state(Z, dmust_tracing(G2), S1, S2).
-apply_state(Z, dmust_tracing(Goal), S0, S2) :- !, dmust_tracing(apply_state(Z, Goal, S0, S2)).
+apply_state(Z, dmust_tracing(GoalP2), S0, S2) :- !, dmust_tracing(apply_state(Z, GoalP2, S0, S2)).
 apply_state(Z, dshow_failure((G1, G2)), S0, S2) :- !, apply_state(Z, dshow_failure(G1), S0, S1), apply_state(Z, dshow_failure(G2), S1, S2).
-apply_state(Z, dshow_failure(Goal), S0, S2) :- !, dshow_failure(apply_state(Z, Goal, S0, S2)).
+apply_state(Z, dshow_failure(GoalP2), S0, S2) :- !, dshow_failure(apply_state(Z, GoalP2, S0, S2)).
 apply_state(Z, must_mw1((G1, G2)), S0, S2) :- !, apply_state(Z, must_mw1(G1), S0, S1), apply_state(Z, must_mw1(G2), S1, S2).
-apply_state(Z, must_mw1(Goal), S0, S2) :- !, must_mw1(apply_state(Z, Goal, S0, S2)).
-apply_state(Z, must_mw(Goal), S0, S2) :- !, must_mw(apply_state(Z, Goal, S0, S2)).
+apply_state(Z, must_mw1(GoalP2), S0, S2) :- !, must_mw1(apply_state(Z, GoalP2, S0, S2)).
+apply_state(Z, must_mw(GoalP2), S0, S2) :- !, must_mw(apply_state(Z, GoalP2, S0, S2)).
 apply_state(Z, (('->'(G1, G2));G3), S0, S2) :- !,
  apply_state(Z, G1, S0, If) ->
  apply_state(Z, G2, If, S2);
@@ -299,31 +299,31 @@ apply_state(Z, (G1;G2), S0, S2) :- !,
  apply_state(Z, G1, S0, S2);
  apply_state(Z, G2, S0, S2).
 
-apply_state(Z, Goal, S0, S2) :- is_state_ignorer(Goal), !, call_z(Z, Goal), S0=S2.
-apply_state(Z, Goal, S0, S2) :- is_state_getter(Goal), !, call_z(Z, call(Goal, S0)), S0=S2.
-apply_state(Z, sg(Goal), S0, S2) :- !, call_z(Z, call(Goal, S0)), S0 = S2.
-apply_state(Z, Goal, S0, S2) :- is_state_setter(Goal), !, call_z(Z, call(Goal, S0, S2)), !, xnotrace(must_output_state(S2)).
+apply_state(Z, GoalP2, S0, S2) :- is_state_ignorer(GoalP2), !, call_z(Z, GoalP2), S0=S2.
+apply_state(Z, GoalP2, S0, S2) :- is_state_getter(GoalP2), !, call_z(Z, call(GoalP2, S0)), S0=S2.
+apply_state(Z, sg(GoalP2), S0, S2) :- !, call_z(Z, call(GoalP2, S0)), S0 = S2.
+apply_state(Z, GoalP2, S0, S2) :- is_state_setter(GoalP2), !, call_z(Z, call(GoalP2, S0, S2)), !, xnotrace(must_output_state(S2)).
 apply_state(Z, Meta, S0, S2) :- 
    is_state_meta(Meta, N), 
    length(Left, N), 
    Meta univ_safe [F|MetaL], !,
-   append(Left, [Goal|MetaR], MetaL),
-   append(Left, [apply_state(Z, Goal, S0, S2)|MetaR], MetaC),
+   append(Left, [GoalP2|MetaR], MetaL),
+   append(Left, [apply_state(Z, GoalP2, S0, S2)|MetaR], MetaC),
    apply(call(F), MetaC),
    xnotrace(must_output_state(S2)).
 
-apply_state(Z, Goal, S0, S2) :- 
-   call_z(Z, call(Goal, S0, S2)), !, xnotrace(must_output_state(S2)).
+apply_state(Z, GoalP2, S0, S2) :- 
+   call_z(Z, call(GoalP2, S0, S2)), !, xnotrace(must_output_state(S2)).
 
-% apply_state(Z, Goal, S0, S2) :- xnotrace(append_goal_mw(Goal, [S0, S2], Call)), must_mw1(Call), xnotrace(must_output_state(S2)).
+% apply_state(Z, GoalP2, S0, S2) :- xnotrace(append_goal_mw(GoalP2, [S0, S2], Call)), must_mw1(Call), xnotrace(must_output_state(S2)).
 
- %apply_state(Z, Goal, S0, S2):- phrase(Goal, S0, S2).
+ %apply_state(Z, GoalP2, S0, S2):- phrase(GoalP2, S0, S2).
 
 
 
 %:- meta_predicate(apply_first_arg_state(+, 3, +, -)).
-apply_first_arg_state(Arg, Goal, S0, S2) :-
- xnotrace((compound_name_arguments(Goal, F, GoalL),
+apply_first_arg_state(Arg, GoalP2, S0, S2) :-
+ xnotrace((compound_name_arguments(GoalP2, F, GoalL),
  append(GoalL, [S0, S2], NewGoalL),
  must_input_state(S0),
  Call univ_safe [F, Arg|NewGoalL])),
@@ -331,8 +331,8 @@ apply_first_arg_state(Arg, Goal, S0, S2) :-
  xnotrace(must_output_state(S2)).
 
 %:- meta_predicate(apply_first(+, 3, +, -)).
-apply_first_arg(Arg, Goal, S0, S2):-
- apply_first_arg_state(Arg, Goal, S0, S2).
+apply_first_arg(Arg, GoalP2, S0, S2):-
+ apply_first_arg_state(Arg, GoalP2, S0, S2).
 
 % --------
 
@@ -353,7 +353,7 @@ user:adv_subst(Prop, Find, Replace, NewProp):- adv_subst(equivalent, Find, Repla
 
 % Substitute 'Replace' for 'Find' in T0, yielding T.
 % TODO: add ^ handling like with bagof/setof.
-% bagof(Template, X^Goal, List) means to never instantiate X
+% bagof(Template, X^GoalP2, List) means to never instantiate X
 % Current behavior:
 % adv_subst(copy_term, macro(Code), expanded(Code, X), macro(foo), expanded(foo, Y))
 %  departing X unbound. Suppose I wanted X left bound?

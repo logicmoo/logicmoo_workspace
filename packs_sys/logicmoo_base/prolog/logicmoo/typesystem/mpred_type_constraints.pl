@@ -97,7 +97,7 @@
 
 :- kb_global(baseKB:call_e_tru/2).
 :- kb_global(baseKB:is_fort/1).
-:- kb_global(common_logic_snark:kif_option_value/2).
+:- kb_global(common_logic_utils:kif_option_value/2).
 :- kb_global(baseKB:member_eqz/2).
 
 :- op(300,fx,('~')).

@@ -133,7 +133,7 @@ partOfSpeech("Z","Adverb").
 % Search Filter Name Comment.
 %
 
-:- xlisting_web:kb_global(search_filter_name_comment/3).
+% :- kb_global(search_filter_name_comment/3).
 
 %:- xlisting_web:dynamic(xlisting_web:search_filter_name_comment/3).
 %:- baseKB:import(xlisting_web:search_filter_name_comment/3).

@@ -2139,4 +2139,5 @@ cls:- ignore(catch(system:shell(cls,0),_,fail)).
 
 :- '$hide'(wdmsg/1).
 :- '$hide'(wdmsg/2).
+:- '$hide'(dmsg/1).
 
