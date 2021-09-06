@@ -5,6 +5,8 @@
 :- module(common_logic_utils,
           [ ]).
 
+:- use_module(library(logicmoo_utils)).
+
 :- include(library('logicmoo/common_logic/common_header.pi')).
 
 
