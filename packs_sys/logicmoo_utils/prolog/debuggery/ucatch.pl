@@ -1819,7 +1819,8 @@ slow_sanity(Goal):- ( tlbugger:skip_use_slow_sanity ; must(Goal)),!.
 
 :- meta_predicate(hide_trace(0)).
 
-hide_trace(G):- \+ tracing,!,call(G).
+hide_trace(G):- %JUNIT \+ tracing,
+ !,call(G).
 hide_trace(G):- !,call(G).
 hide_trace(G):- skipWrapper,!,call(G).
 hide_trace(G):-

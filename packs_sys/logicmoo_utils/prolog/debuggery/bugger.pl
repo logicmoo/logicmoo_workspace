@@ -469,7 +469,9 @@ if_debug_module(MG):- strip_module(MG,M,_),(debugging(M)-> MG; true).
 
 % bugger:isa(_,_).
 
-not_debugging:- \+ ( nb_current('$inprint_message', Messages), Messages\==[] ), \+ tracing, \+ current_prolog_flag(debug,true).
+not_debugging:- \+ ( nb_current('$inprint_message', Messages), Messages\==[] ), 
+ \+ tracing, 
+ \+ current_prolog_flag(debug,true).
 
 /*
 %% all_source_file_predicates_are_transparent() is det.

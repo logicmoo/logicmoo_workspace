@@ -214,7 +214,9 @@ quietly3(Goal):- \+ tracing -> Goal ;
   (trace,!,notrace(fail)))).
 
 % version 4 
-quietly(M:Goal):- \+ tracing -> M:Goal ;
+quietly(M:Goal):- %JUNIT  \+ tracing 
+ true
+ -> M:Goal ;
   (get_trace_reset(W), scce_orig(notrace(visible(-all)),M:Goal,W)).
 
 
@@ -222,7 +224,9 @@ quietly(M:Goal):- \+ tracing -> M:Goal ;
 :- old_set_predicate_attribute(rtrace:quietly/1, hide_childs, true).
 
 % Alt version?
-quietlySE(Goal):- \+ tracing -> Goal ; 
+quietlySE(Goal):- %JUNIT \+ tracing 
+ true
+ -> Goal ; 
  notrace((S = notrace, E = trace)),
  (S,
   (((Goal,deterministic(YN))) *->

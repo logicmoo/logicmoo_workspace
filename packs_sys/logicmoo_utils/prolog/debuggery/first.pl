@@ -525,7 +525,8 @@ first_scce_orig(Setup0,Goal,Cleanup0):-
      Cleanup,
      (notrace(DET == true) -> ! ; (true;(Setup,notrace(fail)))).
 
-zzotrace(G):- notrace(\+ tracing)->call(G) ; first_scce_orig(notrace,G,trace).
+zzotrace(G):-  
+  notrace(\+ tracing) ->call(G) ; first_scce_orig(notrace,G,trace).
 :- '$hide'(zzotrace/1).
 
 put_variable_names(NewVs):-  check_variable_names(NewVs,Checked),call(b_setval,'$variable_names',Checked).
@@ -570,16 +571,24 @@ unnumbervars4('$VAR'(Name),VsIn,NewVs,Var):- nonvar(Name),!, (member(Name=Var,Vs
 unnumbervars4(PTermIn,VsIn,NewVs,PTermOut):- compound_name_arguments(PTermIn,F,TermIn),
   unnumbervars4(TermIn,VsIn,NewVs,TermOut),
   compound_name_arguments(PTermOut,F,TermOut).
-   
+
+
+oc_sub_term(X, X).
+oc_sub_term(X, Term) :-
+     compound(Term),
+     arg(_, Term, Arg),
+     oc_sub_term(X, Arg).
+ 
+
 maybe_fix_varnumbering(MTP,_NewMTP):- term_attvars(MTP,Vs),Vs\==[],!,fail.
-maybe_fix_varnumbering(MTP,NewMTP):- ground(MTP), sub_term(E,MTP),compound(E), E = '$VAR'(N),atomic(N),!, format(string(S),' ~q .',[(MTP)]),
+maybe_fix_varnumbering(MTP,NewMTP):- ground(MTP), oc_sub_term(E,MTP),compound(E), E = '$VAR'(N),atomic(N),!, format(string(S),' ~q .',[(MTP)]),
  notrace(catch( atom_to_term(S,(NewMTP),Vs),E,((ignore(source_location(F,L)),writeq(S->E=F:L),fail)))), \+ ground(NewMTP),
   (prolog_load_context(variable_names,SVs);SVs=[]),!,
    align_variables(Vs,SVs,ExtraVs),
    append(SVs,ExtraVs,NewVs),
    put_variable_names(NewVs).
 
-fix_varnumbering(MTP,NewMTP):- maybe_fix_varnumbering(MTP,NewMTP),!.
+fix_varnumbering(MTP,NewMTP):- notrace(maybe_fix_varnumbering(MTP,NewMTP)),!.
 fix_varnumbering(MTP,NewMTP):- MTP=NewMTP.
 
 

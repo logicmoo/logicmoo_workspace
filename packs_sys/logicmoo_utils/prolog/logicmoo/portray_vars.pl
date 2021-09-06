@@ -854,7 +854,7 @@ portray_pretty_numbervars(Term):-
 :- multifile(user:portray/1).
 :- dynamic(user:portray/1).
 
-user:portray(Term):- \+ tracing,
+user:portray(Term):- %JUNIT  \+ tracing,
   % \+ current_prolog_flag(debug, true),
   % fail,
   portray_pretty_numbervars(Term),!.
