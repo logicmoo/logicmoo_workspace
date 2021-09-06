@@ -10,7 +10,7 @@ if [[ $EUID -eq 0 ]]; then
    exit 0
 fi
 
-source /opt/logicmoo_workspace/logicmoo_env.sh -v
+source $LOGICMOO_WS/logicmoo_env.sh -v
 
 # google-chrome --no-sandbox "http://localhost:6081/vnc.html"
 google-chrome "http://localhost:6081/vnc.html"

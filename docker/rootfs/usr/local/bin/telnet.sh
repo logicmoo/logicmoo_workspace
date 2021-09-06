@@ -20,7 +20,7 @@ if [ $# -eq 0 ]
    PORT=$1
 fi
 
-export WD=/opt/logicmoo_workspace/prologmud_server
+export WD=$LOGICMOO_WS/prologmud_server
 export HIST_COMP=/tmp/tempDir
 export PATH=/usr/bin:$PATH
 

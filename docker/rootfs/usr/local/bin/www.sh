@@ -10,7 +10,7 @@ fi
 
 set -o pipefail
 
-source /opt/logicmoo_workspace/logicmoo_env.sh
+source $LOGICMOO_WS/logicmoo_env.sh
 
 URL="http://localhost"
 if [$# -neq 0];  then 

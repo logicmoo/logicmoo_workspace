@@ -1,5 +1,8 @@
 #!/bin/bash -x
 
+DIR0="$( cd "$( dirname "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )"
+(
+cd $DIR0
 source ./logicmoo_env.sh -v
 
 rm -f bin/pfc bin/clif bin/swipl-lm
@@ -31,4 +34,4 @@ find $WAS_PWD -mindepth 2 -name "test_on_*.sh" -execdir bash -c "source '{}' \"$
 #find $TESTING_TEMP -name "Report-*.xml" -exec sed -e "s/<testsuites>//g" -e "s|</testsuites>||g" {} >> $TESTING_TEMP/junit.xml  \;
 #echo "</testsuites>" >> $TESTING_TEMP/junit.xml
 
-
+)

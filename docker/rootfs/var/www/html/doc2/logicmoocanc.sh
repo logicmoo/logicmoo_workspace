@@ -3,7 +3,7 @@
 #cd "$(dirname "$(realpath "$0")")";
 #cd /mnt/gggg/c/Users/logicmoo/AppData/Local/swi-prolog/pack/logicmoo_nlu/ext/candc
 # echo "$*" > /tmp/candc_query.txt
-cd /opt/logicmoo_workspace/packs_sys/logicmoo_nlu/ext/candc
+cd $LOGICMOO_WS/packs_sys/logicmoo_nlu/ext/candc
 bin/candc --models models/boxer --models models/questions --models models --candc-printer boxer --input $1 > $1.ccg
 
 if [ ! "${4}" == "0" ]; then

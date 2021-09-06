@@ -40,7 +40,7 @@ SAVE_PROOF=no
 PROOF_LAYOUT=readable
 
 # set TPTP library path
-TPTP=/opt/logicmoo_workspace/packs_sys/logicmoo_base/t/inference_test/TPTP-v7.1.0
+TPTP=$LOGICMOO_WS/packs_sys/logicmoo_base/t/inference_test/TPTP-v7.1.0
 
 #----------
 # Functions
