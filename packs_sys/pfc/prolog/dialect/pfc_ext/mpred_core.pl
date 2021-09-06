@@ -434,7 +434,7 @@ import_everywhere:-
 :- thread_local(t_l:whybuffer/2).
 % :- dynamic(baseKB:que/2).
 
-:- meta_predicate show_mpred_success(*,*).
+:- meta_predicate(show_mpred_success(+,:)).
 show_mpred_success(Type,G):- G*->mpred_trace_msg(success(Type,G)) ; fail.
 
 % :- ensure_loaded(library(logicmoo_utils)).
@@ -1184,10 +1184,13 @@ mpred_add(P):- mpred_ain(P).
 %  asserts P into the dataBase with support from S.
 %
 
-decl_assertable_module(AM):- ignore((AM\==baseKB,dmsg(must_ex(ensure_abox_support(AM,baseKB))))).
+decl_assertable_module(AM):- nop(ignore((AM\==baseKB,dmsg(must_ex(ensure_abox_support(AM,baseKB)))))).
 
 bad_assert_module(pfc_lib).
 bad_assert_module(system).
+bad_assert_module(mpred_type_wff).
+bad_assert_module(hook_database).
+bad_assert_module(user).
 % check_bad_assert_module(user).
 
 % @TODO comment out this next line!
@@ -4282,7 +4285,7 @@ set_file_abox_module_wa(User):- set_file_abox_module(User),set_defaultAssertMt(U
 %
 % Show If Debug.
 %
-:- meta_predicate(show_if_debug(0)).
+:- meta_predicate(show_if_debug(:)).
 % show_if_debug(A):- !,show_call(why,A).
 show_if_debug(A):-  get_mpred_is_tracing(A) -> show_call(mpred_is_tracing,call_u(A)) ; call_u(A).
 

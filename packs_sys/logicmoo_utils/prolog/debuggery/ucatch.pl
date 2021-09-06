@@ -172,7 +172,7 @@ main_self(W):-atom(W),atom_concat('pdt_',_,W),!.
 main_self(W):-atom(W),atom_concat('client',_,W),!.
 main_self(W):-lmcache:thread_main(user,W),!.
 
-thread_self_main:- zotrace((thread_self(W),!,main_self(W))).
+thread_self_main:- notrace((thread_self(W),!,main_self(W))).
 
 %% hide_non_user_console is semidet.
 %
@@ -666,6 +666,7 @@ ddmsg(F,A):- format_to_error(F,A),!.
 % Ddmsg Call.
 %
 ddmsg_call(D):- ( (ddmsg(ddmsg_call(D)),call(D),ddmsg(ddmsg_exit(D))) *-> true ; ddmsg(ddmsg_failed(D))).
+:- module_transparent(ddmsg_call/1).
 
 
 
@@ -674,9 +675,11 @@ ddmsg_call(D):- ( (ddmsg(ddmsg_call(D)),call(D),ddmsg(ddmsg_exit(D))) *-> true ;
 % Doall And Fail.
 %
 doall_and_fail(Call):- time_call(once(doall(Call))),fail.
+:- module_transparent(doall_and_fail/1).
+
 
 quietly_must(G):- quietly(must(G)).
-
+:- module_transparent(quietly_must/1).
 
 :- module_transparent((if_defined/1,if_defined/2)).
 
@@ -685,6 +688,7 @@ quietly_must(G):- quietly(must(G)).
 % If Defined.
 %
 if_defined(Goal):- if_defined(Goal,((dmsg(warn_undefined(Goal)),!,fail))).
+:- module_transparent(if_defined/1).
 
 %% if_defined( ?Goal, :GoalElse) is semidet.
 %
@@ -692,6 +696,7 @@ if_defined(Goal):- if_defined(Goal,((dmsg(warn_undefined(Goal)),!,fail))).
 %
 if_defined((A,B),Else):-!, if_defined(A,Else),if_defined(B,Else).
 if_defined(Goal,Else):- current_predicate(_,Goal)*->Goal;Else.
+:- module_transparent(if_defined/2).
 % if_defined(M:Goal,Else):- !, current_predicate(_,OM:Goal),!,OM:Goal;Else.
 %if_defined(Goal,  Else):- current_predicate(_,OM:Goal)->OM:Goal;Else.
 
@@ -1101,7 +1106,7 @@ not_ftCompound(A):- \+ is_ftCompound(A).
 %
 % If Is A Format Type Variable.
 %
-is_ftVar(V):- zotrace(is_ftVar0(V)).
+is_ftVar(V):- notrace(is_ftVar0(V)).
 is_ftVar0(V):- \+ compound(V),!,var(V).
 is_ftVar0('$VAR'(_)).
 is_ftVar0('aVar'(_,_)).
@@ -1187,7 +1192,7 @@ bad_functor(L) :- arg(_,v('|',[],':','/'),L). % .
 %
 % Warn Bad Functor.
 %
-warn_bad_functor(L):-ignore((zotrace(bad_functor(L)),!,dtrace,call(ddmsg(bad_functor(L))),break)).
+warn_bad_functor(L):-ignore((notrace(bad_functor(L)),!,dtrace,call(ddmsg(bad_functor(L))),break)).
 
 :- export(strip_f_module/2).
 
@@ -1873,7 +1878,7 @@ need_speed:-current_prolog_flag(unsafe_speedups , true) .
 is_release:- current_prolog_flag(unsafe_speedups, false) ,!,fail.
 is_release:- !,fail.
 is_release:- current_prolog_flag(unsafe_speedups , true) ,!.
-is_release:- zotrace((\+ flag_call(runtime_debug == true) , \+ (1 is random(4)))).
+is_release:- notrace((\+ flag_call(runtime_debug == true) , \+ (1 is random(4)))).
 
 
 
@@ -1926,7 +1931,7 @@ y_must(Y,Goal):- catchv(Goal,E,(wdmsg(E:must_xI__xI__xI__xI__xI_(Y,Goal)),fail))
 %=
 
 
-dumpST_error(Msg):- zotrace((ddmsg(error,Msg),dumpST,wdmsg(error,Msg))).
+dumpST_error(Msg):- notrace((ddmsg(error,Msg),dumpST,wdmsg(error,Msg))).
 
 
 :- thread_self_main->true;writeln(user_error,not_thread_self_main_consulting_ucatch).

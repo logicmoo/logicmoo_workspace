@@ -61,7 +61,7 @@ locate_library(Pack):-  prolog_load_context(directory,Dir),  atomic_list_concat(
 :- set_prolog_flag(retry_undefined, none).
 :- use_module(library(logicmoo_utils)).
 :- use_module(library(logicmoo/predicate_inheritance)).
-:- use_module(library(dialect/pfc)).
+:- use_module(library(dialect/pfc_dia)).
 :- use_module(library(pfc_iri_resource)).
 :- if( \+ current_predicate(each_call_cleanup/3)).
 :- use_module(library(each_call_cleanup)).

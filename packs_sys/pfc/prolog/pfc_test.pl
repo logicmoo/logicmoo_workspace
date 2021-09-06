@@ -25,9 +25,13 @@
 :- use_module(library(must_trace)).
 
 %quietly_must_ex(G):- !, must_or_rtrace(G).
+:- meta_predicate(quietly_must_ex(:)).
 quietly_must_ex(G):- tracing -> (notrace,call_cleanup(must_or_rtrace(G),trace)); quietly_must(G).
+:- module_transparent(quietly_must_ex/1).
 
+:- meta_predicate(must_ex(:)).
 must_ex(G):- !, must_or_rtrace(G).
+:- module_transparent(must_ex/1).
 %must_ex(G):- !, must(G).
 %must_ex(G):- !, (catch(G,Error,(wdmsg(error_must_ex(G,Error)),fail))*->true;(wdmsg(must_ex(G)),if_interactive((ignore(rtrace(G)),wdmsg(must_ex(G)), break)))).
 %must_ex(G):- (catch(quietly(G),Error,(wdmsg(error_must_ex(G,Error)),fail))*->true;(wdmsg(must_ex(G)),if_interactive((ignore(rtrace(G)),wdmsg(must_ex(G)), break)))).
@@ -192,6 +196,8 @@ save_info_to(TestResult,Goal):- with_output_to(string(S),
    ignore(Goal))), write(S),
   add_test_info(TestResult,S).
 
+here_dumpST:- !.
+here_dumpST:- dumpST.
 
 add_test_info(Type,Info):- ignore(((get_current_testcase(Testcase), add_test_info(Testcase,Type,Info)))).
 
@@ -216,7 +222,6 @@ inform_message_hook(ignored_weak_import(header_sane,_),_,_).
 inform_message_hook(error(existence_error(procedure,'$toplevel':_),_),error,_).
 % inform_message_hook(_,warning,_).
 
-
 inform_message_hook(T,Type,Term):- atom(Type),
   memberchk(Type,[error,warning]),!, 
   once((dmsg_pretty(message_hook_type(Type)),dmsg_pretty(message_hook(T,Type,Term)),  
@@ -234,10 +239,10 @@ inform_message_hook(T,Type,Term):-
   ignore(source_location(File,Line)),
   once((nl,dmsg_pretty(message_hook(T,Type,Term)),nl,
   add_test_info(Type,{type:Type,info:T,data:Term,src:(File:Line)}),
-  dumpST,nl,dmsg_pretty(message_hook(File:Line:T,Type,Term)),nl)),
+  here_dumpST, nl,dmsg_pretty(message_hook(File:Line:T,Type,Term)),nl)),
   fail.
 
-inform_message_hook(T,Type,Term):- dmsg_pretty(message_hook(T,Type,Term)),dumpST,dmsg_pretty(message_hook(T,Type,Term)),!,fail.
+inform_message_hook(T,Type,Term):- dmsg_pretty(message_hook(T,Type,Term)),here_dumpST,dmsg_pretty(message_hook(T,Type,Term)),!,fail.
 inform_message_hook(_,error,_):- current_prolog_flag(runtime_debug, N),N>2,break.
 inform_message_hook(_,warning,_):- current_prolog_flag(runtime_debug, N),N>2,break.
 
@@ -602,8 +607,9 @@ message_hook_handle(T,Type,Term):-
 :- multifile message_hook/3.
 :- module_transparent message_hook/3.
 user:message_hook(T,Type,Term):- 
+   notrace((
    Type \== silent, Type \== debug, Type \== informational,
-   current_prolog_flag(logicmoo_message_hook,Was),Was\==none,
+   current_prolog_flag(logicmoo_message_hook,Was),Was\==none,Was\==false)),
    once(message_hook_handle(T,Type,Term)),!.
 
 system:term_expansion(I,P,O,PO):- notrace((nonvar(P), junit_term_expansion(I,O))),P=PO.

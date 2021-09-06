@@ -332,14 +332,17 @@ expanding_at_file(In):- prolog_load_context(term,TermIn), strip_module(In,_,A),s
 :- module_transparent(system:goal_expansion/2).
 :- system:import(clif_dialect_ge/2).
 :- system:import(expanding_at_file/2).
-system:goal_expansion(In, Out) :- notrace(prolog_load_context(dialect, clif)), clif_dialect_ge(In, Out), In\=@=Out.
+system:goal_expansion(In, Out) :- notrace(prolog_load_context(dialect, clif)),
+  \+ current_prolog_flag(loading_pfc_dialect,true),
+  clif_dialect_ge(In, Out), In\=@=Out.
 
 system:term_expansion(In, P, Out, PO) :- 
+ notrace(prolog_load_context(dialect, clif)),
+  \+ current_prolog_flag(loading_pfc_dialect,true),
  In\==end_of_file,In\==begin_of_file,
  (tracing->break;true),
  expanding_at_file(In),
  nonvar(P),
- notrace(prolog_load_context(dialect, clif)),
  clif_dialect_te(In, Out), In\=@=Out,
  P = PO.
 
@@ -357,6 +360,7 @@ term_expansion_clif_eof(M):-
 system:term_expansion(MIn, _Out):- 
    notrace(strip_module(MIn,MM,In)),
    notrace(In == end_of_file),
+   \+ current_prolog_flag(loading_pfc_dialect,true),
    (MIn==In->prolog_load_context(module, M);MM=M),
    term_expansion_clif_eof(M),
    fail.

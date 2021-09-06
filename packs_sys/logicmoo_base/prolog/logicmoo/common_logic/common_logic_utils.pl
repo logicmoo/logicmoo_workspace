@@ -40,7 +40,9 @@ is_kif_clause(R):- is_clif(R),!.
 %
 % Knowledge Interchange Format Hook.
 %
-:- use_module(library(pfc_lib)).
+
+:- include(library(pfc_syntax)).
+
 kif_hook(C):- not_ftCompound(C),!,fail.
 kif_hook(_H :- _):-  !,fail.
 kif_hook(_H <- _):-  !,fail.
@@ -60,8 +62,6 @@ kif_hook(C):- callable(C),functor(C,F,A),kif_hook(C,F,A).
 kif_hook(_,F,_):- atom_concat('sk',_,F),atom_concat(_,'Fn',F),!.
 kif_hook(C,_,_):- leave_as_is(C),!,fail.
 kif_hook(C,F,_):- is_sentence_functor(F),!,arg(_,C,E),kif_hook(E).
-
-:- fixup_exports.
 
 %% kif_hook_skel(+TermC) is det.
 %
@@ -95,9 +95,6 @@ kif_hook_skel( not(H)):- loop_check(kif_hook(H)).
 kif_hook_skel( Compound):- arg(_,v(poss,nesc,until,always,release,cir),F),between(2,3,A),functor( Compound,F,A).
 kif_hook_skel( Compound):- compound( Compound),!,functor(Compound,F,_),arg(_,v(and,or,xor),F).
 kif_hook_skel( Compound):- var(Compound),!,arg(_,v(and,or,xor),F),between(1,12,A),functor( Compound,F,A).
-
-
-
 
 
 :- thread_local(t_l:kif_option/2).

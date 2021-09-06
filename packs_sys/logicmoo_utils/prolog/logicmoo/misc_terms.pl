@@ -428,7 +428,7 @@ list_to_conjuncts(_,H,H).
 list_to_conjuncts_yfx(_,H,[],H):-!.
 list_to_conjuncts_yfx(OP,Ac,[H|T],Body):- !,
    conjoin_op(OP,Ac,H,MBody),
-   list_to_conjuncts_yxf(OP,MBody,T,Body).
+   list_to_conjuncts_yfx(OP,MBody,T,Body).
 list_to_conjuncts_yfx(OP,Ac,T,Body):-
    conjoin_op(OP,Ac,T,Body).
 

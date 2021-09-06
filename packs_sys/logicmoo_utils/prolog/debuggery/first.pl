@@ -512,6 +512,7 @@ add_var_to_list(Name,Var,Vs,NewName,NewVar,NewVs):-
 unnumbervars(X,Y):- must(zotrace(unnumbervars_and_save(X,Y))).
 
 zotrace(G):- call(G).
+:- module_transparent(zotrace/1).
 %zotrace(G):- notrace(tracing)->notrace(G);call(G).
 :- '$hide'(zotrace/1).
 :- 'old_set_predicate_attribute'(zotrace/1, hide_childs, true).
@@ -1152,9 +1153,9 @@ quiet_all_module_predicates_are_transparent(ModuleName):-
                    (module_transparent(ModuleName:F/A))))).
 
 
-:- multifile(user:term_expansion/2).
-:- dynamic(user:term_expansion/2).
-:- module_transparent(user:term_expansion/2).
+%:- multifile(user:term_expansion/2).
+%:- dynamic(user:term_expansion/2).
+%:- module_transparent(user:term_expansion/2).
 % user:term_expansion( (:-export(FA) ),(:- export_if_noconflict(M,FA))):-  current_prolog_flag(subclause_expansion,true),prolog_load_context(module,M).
 
 
