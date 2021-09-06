@@ -102,18 +102,12 @@ maybe_load_clif_file(Spec, Options):-
 %:-system:use_module(library(make)).
 
 :- add_history(use_module(library(logicmoo_clif))).
-:-system:use_module(library(filesex)).
-:-system:use_module(library(qsave)).
-qsave_clif:-
-  getenv('LOGICMOO_WS',Dir),
-  directory_file_path(Dir,'bin/clif',Path),
-  writeln(qsave_clif=Path),
-  qsave_program(Path,[class(development),toplevel(prolog),goal(true)]).
 
 :- use_module(library(logicmoo_cg)).
+:- use_module(library(logicmoo_ec)).
 :- use_module(library(logicmoo_nlu)).
 
-:- add_history(qsave_clif).
+:- add_history(qsave_bin(clif)).
 
 :- dynamic user:prolog_load_file/2.
 :- multifile user:prolog_load_file/2.
@@ -122,5 +116,8 @@ user:prolog_load_file(Spec, Options):- maybe_load_clif_file(Spec, Options),!.
 
 :- fixup_exports.
 
-:- qsave_clif.
+:- if(qsave_bin(clif)).
+% :- break.
+:- endif.
+
 

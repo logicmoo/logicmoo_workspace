@@ -68,6 +68,1000 @@
 		</Folder>
 	</CustomFolders>
 	<Files AutoFolders="DirectoryView">
+		<Folder Name="docker">
+			<Folder Name="rootfs">
+				<Folder Name="usr">
+					<Folder Name="local">
+						<Folder Name="lib">
+							<Folder Name="swipl">
+								<Folder Name="boot">
+									<F N="docker/rootfs/usr/local/lib/swipl/boot/apply.pl"/>
+									<F N="docker/rootfs/usr/local/lib/swipl/boot/attvar.pl"/>
+									<F N="docker/rootfs/usr/local/lib/swipl/boot/autoload.pl"/>
+									<F N="docker/rootfs/usr/local/lib/swipl/boot/bags.pl"/>
+									<F N="docker/rootfs/usr/local/lib/swipl/boot/dcg.pl"/>
+									<F N="docker/rootfs/usr/local/lib/swipl/boot/dicts.pl"/>
+									<F N="docker/rootfs/usr/local/lib/swipl/boot/dwim.pl"/>
+									<F N="docker/rootfs/usr/local/lib/swipl/boot/engines.pl"/>
+									<F N="docker/rootfs/usr/local/lib/swipl/boot/expand.pl"/>
+									<F N="docker/rootfs/usr/local/lib/swipl/boot/gc.pl"/>
+									<F N="docker/rootfs/usr/local/lib/swipl/boot/history.pl"/>
+									<F N="docker/rootfs/usr/local/lib/swipl/boot/init.pl"/>
+									<F N="docker/rootfs/usr/local/lib/swipl/boot/iri.pl"/>
+									<F N="docker/rootfs/usr/local/lib/swipl/boot/license.pl"/>
+									<F N="docker/rootfs/usr/local/lib/swipl/boot/load.pl"/>
+									<F N="docker/rootfs/usr/local/lib/swipl/boot/messages.pl"/>
+									<F N="docker/rootfs/usr/local/lib/swipl/boot/packs.pl"/>
+									<F N="docker/rootfs/usr/local/lib/swipl/boot/predopts.pl"/>
+									<F N="docker/rootfs/usr/local/lib/swipl/boot/qlf.pl"/>
+									<F N="docker/rootfs/usr/local/lib/swipl/boot/rc.pl"/>
+									<F N="docker/rootfs/usr/local/lib/swipl/boot/syspred.pl"/>
+									<F N="docker/rootfs/usr/local/lib/swipl/boot/tabling.pl"/>
+									<F N="docker/rootfs/usr/local/lib/swipl/boot/toplevel.pl"/>
+									<F N="docker/rootfs/usr/local/lib/swipl/boot/topvars.pl"/>
+								</Folder>
+								<Folder Name="customize">
+									<F N="docker/rootfs/usr/local/lib/swipl/customize/init.pl"/>
+								</Folder>
+								<Folder Name="demo">
+									<F N="docker/rootfs/usr/local/lib/swipl/demo/likes.pl"/>
+								</Folder>
+								<Folder Name="doc">
+									<Folder Name="packages">
+										<Folder Name="examples">
+											<Folder Name="chr">
+												<F N="docker/rootfs/usr/local/lib/swipl/doc/packages/examples/chr/bool.chr"/>
+												<F N="docker/rootfs/usr/local/lib/swipl/doc/packages/examples/chr/chrdif.chr"/>
+												<F N="docker/rootfs/usr/local/lib/swipl/doc/packages/examples/chr/chrfreeze.chr"/>
+												<F N="docker/rootfs/usr/local/lib/swipl/doc/packages/examples/chr/family.chr"/>
+												<F N="docker/rootfs/usr/local/lib/swipl/doc/packages/examples/chr/fib.chr"/>
+												<F N="docker/rootfs/usr/local/lib/swipl/doc/packages/examples/chr/fibonacci.chr"/>
+												<F N="docker/rootfs/usr/local/lib/swipl/doc/packages/examples/chr/gcd.chr"/>
+												<F N="docker/rootfs/usr/local/lib/swipl/doc/packages/examples/chr/leq.chr"/>
+												<F N="docker/rootfs/usr/local/lib/swipl/doc/packages/examples/chr/listdom.chr"/>
+												<F N="docker/rootfs/usr/local/lib/swipl/doc/packages/examples/chr/primes.chr"/>
+											</Folder>
+											<Folder Name="cpp">
+												<F N="docker/rootfs/usr/local/lib/swipl/doc/packages/examples/cpp/likes.pl"/>
+												<F N="docker/rootfs/usr/local/lib/swipl/doc/packages/examples/cpp/test.pl"/>
+											</Folder>
+											<Folder Name="cql">
+												<F N="docker/rootfs/usr/local/lib/swipl/doc/packages/examples/cql/cql_demo.pl"/>
+											</Folder>
+											<Folder Name="http">
+												<Folder Name="pwp">
+													<F N="docker/rootfs/usr/local/lib/swipl/doc/packages/examples/http/pwp/pwpdb.pl"/>
+												</Folder>
+												<F N="docker/rootfs/usr/local/lib/swipl/doc/packages/examples/http/calc.pl"/>
+												<F N="docker/rootfs/usr/local/lib/swipl/doc/packages/examples/http/demo_body.pl"/>
+												<F N="docker/rootfs/usr/local/lib/swipl/doc/packages/examples/http/demo_client.pl"/>
+												<F N="docker/rootfs/usr/local/lib/swipl/doc/packages/examples/http/demo_daemon.pl"/>
+												<F N="docker/rootfs/usr/local/lib/swipl/doc/packages/examples/http/demo_files.pl"/>
+												<F N="docker/rootfs/usr/local/lib/swipl/doc/packages/examples/http/demo_hello.pl"/>
+												<F N="docker/rootfs/usr/local/lib/swipl/doc/packages/examples/http/demo_login.pl"/>
+												<F N="docker/rootfs/usr/local/lib/swipl/doc/packages/examples/http/demo_openid.pl"/>
+												<F N="docker/rootfs/usr/local/lib/swipl/doc/packages/examples/http/demo_pwp.pl"/>
+												<F N="docker/rootfs/usr/local/lib/swipl/doc/packages/examples/http/demo_rest.pl"/>
+												<F N="docker/rootfs/usr/local/lib/swipl/doc/packages/examples/http/demo_threads.pl"/>
+											</Folder>
+											<Folder Name="inclpr">
+												<F N="docker/rootfs/usr/local/lib/swipl/doc/packages/examples/inclpr/benchmarks.pl"/>
+											</Folder>
+											<Folder Name="jpl">
+												<Folder Name="java">
+													<Folder Name="db">
+														<F N="docker/rootfs/usr/local/lib/swipl/doc/packages/examples/jpl/java/db/db.pl"/>
+													</Folder>
+													<Folder Name="factorial">
+														<F N="docker/rootfs/usr/local/lib/swipl/doc/packages/examples/jpl/java/factorial/fact.pl"/>
+													</Folder>
+													<Folder Name="family">
+														<F N="docker/rootfs/usr/local/lib/swipl/doc/packages/examples/jpl/java/family/family.pl"/>
+													</Folder>
+													<Folder Name="test">
+														<F N="docker/rootfs/usr/local/lib/swipl/doc/packages/examples/jpl/java/test/test.pl"/>
+													</Folder>
+													<Folder Name="testGC">
+														<F N="docker/rootfs/usr/local/lib/swipl/doc/packages/examples/jpl/java/testGC/test.pl"/>
+													</Folder>
+													<Folder Name="thread">
+														<F N="docker/rootfs/usr/local/lib/swipl/doc/packages/examples/jpl/java/thread/program.pl"/>
+													</Folder>
+													<Folder Name="time">
+														<F N="docker/rootfs/usr/local/lib/swipl/doc/packages/examples/jpl/java/time/time.pl"/>
+													</Folder>
+													<Folder Name="zahed">
+														<F N="docker/rootfs/usr/local/lib/swipl/doc/packages/examples/jpl/java/zahed/run.sh"/>
+														<F N="docker/rootfs/usr/local/lib/swipl/doc/packages/examples/jpl/java/zahed/zahed.pl"/>
+													</Folder>
+												</Folder>
+												<Folder Name="prolog">
+													<F N="docker/rootfs/usr/local/lib/swipl/doc/packages/examples/jpl/prolog/jpl_colour_choose_demo.pl"/>
+													<F N="docker/rootfs/usr/local/lib/swipl/doc/packages/examples/jpl/prolog/jpl_jlist_demo.pl"/>
+													<F N="docker/rootfs/usr/local/lib/swipl/doc/packages/examples/jpl/prolog/jpl_table_demo.pl"/>
+													<F N="docker/rootfs/usr/local/lib/swipl/doc/packages/examples/jpl/prolog/jpl_text_entry_demo.pl"/>
+													<F N="docker/rootfs/usr/local/lib/swipl/doc/packages/examples/jpl/prolog/jpl_versions_demo.pl"/>
+												</Folder>
+											</Folder>
+											<Folder Name="pengines">
+												<F N="docker/rootfs/usr/local/lib/swipl/doc/packages/examples/pengines/client.pl"/>
+												<F N="docker/rootfs/usr/local/lib/swipl/doc/packages/examples/pengines/server.pl"/>
+											</Folder>
+											<Folder Name="pldoc">
+												<F N="docker/rootfs/usr/local/lib/swipl/doc/packages/examples/pldoc/man_server.pl"/>
+											</Folder>
+											<Folder Name="plunit">
+												<F N="docker/rootfs/usr/local/lib/swipl/doc/packages/examples/plunit/read.pl"/>
+												<F N="docker/rootfs/usr/local/lib/swipl/doc/packages/examples/plunit/simple.pl"/>
+											</Folder>
+											<Folder Name="protobufs">
+												<Folder Name="demo">
+													<F N="docker/rootfs/usr/local/lib/swipl/doc/packages/examples/protobufs/demo/vector_demo.pl"/>
+												</Folder>
+												<Folder Name="interop">
+													<F N="docker/rootfs/usr/local/lib/swipl/doc/packages/examples/protobufs/interop/addressbook.pl"/>
+													<F N="docker/rootfs/usr/local/lib/swipl/doc/packages/examples/protobufs/interop/test_interop.pl"/>
+													<F N="docker/rootfs/usr/local/lib/swipl/doc/packages/examples/protobufs/interop/test_templates.pl"/>
+												</Folder>
+												<F N="docker/rootfs/usr/local/lib/swipl/doc/packages/examples/protobufs/eventually_implies.pl"/>
+											</Folder>
+											<Folder Name="redis">
+												<F N="docker/rootfs/usr/local/lib/swipl/doc/packages/examples/redis/common.pl"/>
+												<F N="docker/rootfs/usr/local/lib/swipl/doc/packages/examples/redis/prime-node.pl"/>
+												<F N="docker/rootfs/usr/local/lib/swipl/doc/packages/examples/redis/primes.pl"/>
+											</Folder>
+											<Folder Name="ssl">
+												<F N="docker/rootfs/usr/local/lib/swipl/doc/packages/examples/ssl/client.pl"/>
+												<F N="docker/rootfs/usr/local/lib/swipl/doc/packages/examples/ssl/https.pl"/>
+												<F N="docker/rootfs/usr/local/lib/swipl/doc/packages/examples/ssl/server.pl"/>
+											</Folder>
+											<Folder Name="stomp">
+												<F N="docker/rootfs/usr/local/lib/swipl/doc/packages/examples/stomp/ping.pl"/>
+												<F N="docker/rootfs/usr/local/lib/swipl/doc/packages/examples/stomp/pong.pl"/>
+												<F N="docker/rootfs/usr/local/lib/swipl/doc/packages/examples/stomp/server-loop.sh"/>
+												<F N="docker/rootfs/usr/local/lib/swipl/doc/packages/examples/stomp/simple.pl"/>
+												<F N="docker/rootfs/usr/local/lib/swipl/doc/packages/examples/stomp/stress_client.pl"/>
+												<F N="docker/rootfs/usr/local/lib/swipl/doc/packages/examples/stomp/stress_server.pl"/>
+											</Folder>
+										</Folder>
+									</Folder>
+								</Folder>
+								<Folder Name="include">
+									<Folder Name="sicstus">
+										<F N="docker/rootfs/usr/local/lib/swipl/include/sicstus/sicstus.h"/>
+									</Folder>
+									<Folder Name="Yap">
+										<F N="docker/rootfs/usr/local/lib/swipl/include/Yap/YapInterface.h"/>
+									</Folder>
+									<F N="docker/rootfs/usr/local/lib/swipl/include/SWI-cpp.h"/>
+									<F N="docker/rootfs/usr/local/lib/swipl/include/SWI-Prolog.h"/>
+									<F N="docker/rootfs/usr/local/lib/swipl/include/SWI-Stream.h"/>
+								</Folder>
+								<Folder Name="library">
+									<Folder Name="chr">
+										<F N="docker/rootfs/usr/local/lib/swipl/library/chr/a_star.pl"/>
+										<F N="docker/rootfs/usr/local/lib/swipl/library/chr/binomialheap.pl"/>
+										<F N="docker/rootfs/usr/local/lib/swipl/library/chr/builtins.pl"/>
+										<F N="docker/rootfs/usr/local/lib/swipl/library/chr/chr_compiler_errors.pl"/>
+										<F N="docker/rootfs/usr/local/lib/swipl/library/chr/chr_compiler_options.pl"/>
+										<F N="docker/rootfs/usr/local/lib/swipl/library/chr/chr_compiler_utility.pl"/>
+										<F N="docker/rootfs/usr/local/lib/swipl/library/chr/chr_debug.pl"/>
+										<F N="docker/rootfs/usr/local/lib/swipl/library/chr/chr_hashtable_store.pl"/>
+										<F N="docker/rootfs/usr/local/lib/swipl/library/chr/chr_integertable_store.pl"/>
+										<F N="docker/rootfs/usr/local/lib/swipl/library/chr/chr_messages.pl"/>
+										<F N="docker/rootfs/usr/local/lib/swipl/library/chr/chr_op.pl"/>
+										<F N="docker/rootfs/usr/local/lib/swipl/library/chr/chr_runtime.pl"/>
+										<F N="docker/rootfs/usr/local/lib/swipl/library/chr/chr_translate.pl"/>
+										<F N="docker/rootfs/usr/local/lib/swipl/library/chr/clean_code.pl"/>
+										<F N="docker/rootfs/usr/local/lib/swipl/library/chr/find.pl"/>
+										<F N="docker/rootfs/usr/local/lib/swipl/library/chr/guard_entailment.pl"/>
+										<F N="docker/rootfs/usr/local/lib/swipl/library/chr/listmap.pl"/>
+										<F N="docker/rootfs/usr/local/lib/swipl/library/chr/pairlist.pl"/>
+									</Folder>
+									<Folder Name="clp">
+										<Folder Name="clpq">
+											<F N="docker/rootfs/usr/local/lib/swipl/library/clp/clpq/bb_q.pl"/>
+											<F N="docker/rootfs/usr/local/lib/swipl/library/clp/clpq/bv_q.pl"/>
+											<F N="docker/rootfs/usr/local/lib/swipl/library/clp/clpq/fourmotz_q.pl"/>
+											<F N="docker/rootfs/usr/local/lib/swipl/library/clp/clpq/ineq_q.pl"/>
+											<F N="docker/rootfs/usr/local/lib/swipl/library/clp/clpq/itf_q.pl"/>
+											<F N="docker/rootfs/usr/local/lib/swipl/library/clp/clpq/nf_q.pl"/>
+											<F N="docker/rootfs/usr/local/lib/swipl/library/clp/clpq/store_q.pl"/>
+										</Folder>
+										<Folder Name="clpqr">
+											<F N="docker/rootfs/usr/local/lib/swipl/library/clp/clpqr/class.pl"/>
+											<F N="docker/rootfs/usr/local/lib/swipl/library/clp/clpqr/dump.pl"/>
+											<F N="docker/rootfs/usr/local/lib/swipl/library/clp/clpqr/geler.pl"/>
+											<F N="docker/rootfs/usr/local/lib/swipl/library/clp/clpqr/highlight.pl"/>
+											<F N="docker/rootfs/usr/local/lib/swipl/library/clp/clpqr/itf.pl"/>
+											<F N="docker/rootfs/usr/local/lib/swipl/library/clp/clpqr/ordering.pl"/>
+											<F N="docker/rootfs/usr/local/lib/swipl/library/clp/clpqr/project.pl"/>
+											<F N="docker/rootfs/usr/local/lib/swipl/library/clp/clpqr/redund.pl"/>
+										</Folder>
+										<Folder Name="clpr">
+											<F N="docker/rootfs/usr/local/lib/swipl/library/clp/clpr/bb_r.pl"/>
+											<F N="docker/rootfs/usr/local/lib/swipl/library/clp/clpr/bv_r.pl"/>
+											<F N="docker/rootfs/usr/local/lib/swipl/library/clp/clpr/fourmotz_r.pl"/>
+											<F N="docker/rootfs/usr/local/lib/swipl/library/clp/clpr/ineq_r.pl"/>
+											<F N="docker/rootfs/usr/local/lib/swipl/library/clp/clpr/itf_r.pl"/>
+											<F N="docker/rootfs/usr/local/lib/swipl/library/clp/clpr/nf_r.pl"/>
+											<F N="docker/rootfs/usr/local/lib/swipl/library/clp/clpr/store_r.pl"/>
+										</Folder>
+										<Folder Name="inclpr">
+											<F N="docker/rootfs/usr/local/lib/swipl/library/clp/inclpr/inclpr_consistency.pl"/>
+											<F N="docker/rootfs/usr/local/lib/swipl/library/clp/inclpr/inclpr_core.pl"/>
+											<F N="docker/rootfs/usr/local/lib/swipl/library/clp/inclpr/inclpr_interval_arithmetic.pl"/>
+											<F N="docker/rootfs/usr/local/lib/swipl/library/clp/inclpr/inclpr_inversion.pl"/>
+											<F N="docker/rootfs/usr/local/lib/swipl/library/clp/inclpr/inclpr_natural_interval_extension.pl"/>
+											<F N="docker/rootfs/usr/local/lib/swipl/library/clp/inclpr/inclpr_newton.pl"/>
+											<F N="docker/rootfs/usr/local/lib/swipl/library/clp/inclpr/inclpr_ordering.pl"/>
+											<F N="docker/rootfs/usr/local/lib/swipl/library/clp/inclpr/inclpr_symbolic_processing.pl"/>
+										</Folder>
+										<F N="docker/rootfs/usr/local/lib/swipl/library/clp/bounds.pl"/>
+										<F N="docker/rootfs/usr/local/lib/swipl/library/clp/clp_distinct.pl"/>
+										<F N="docker/rootfs/usr/local/lib/swipl/library/clp/clp_events.pl"/>
+										<F N="docker/rootfs/usr/local/lib/swipl/library/clp/clpb.pl"/>
+										<F N="docker/rootfs/usr/local/lib/swipl/library/clp/clpfd.pl"/>
+										<F N="docker/rootfs/usr/local/lib/swipl/library/clp/clpq.pl"/>
+										<F N="docker/rootfs/usr/local/lib/swipl/library/clp/clpr.pl"/>
+										<F N="docker/rootfs/usr/local/lib/swipl/library/clp/inclpr.pl"/>
+										<F N="docker/rootfs/usr/local/lib/swipl/library/clp/INDEX.pl"/>
+										<F N="docker/rootfs/usr/local/lib/swipl/library/clp/simplex.pl"/>
+									</Folder>
+									<Folder Name="cql">
+										<F N="docker/rootfs/usr/local/lib/swipl/library/cql/cql.pl"/>
+										<F N="docker/rootfs/usr/local/lib/swipl/library/cql/cql_autoschema.pl"/>
+										<F N="docker/rootfs/usr/local/lib/swipl/library/cql/cql_database.pl"/>
+										<F N="docker/rootfs/usr/local/lib/swipl/library/cql/cql_hooks.pl"/>
+										<F N="docker/rootfs/usr/local/lib/swipl/library/cql/INDEX.pl"/>
+										<F N="docker/rootfs/usr/local/lib/swipl/library/cql/sql_keywords.pl"/>
+										<F N="docker/rootfs/usr/local/lib/swipl/library/cql/sql_parser.pl"/>
+										<F N="docker/rootfs/usr/local/lib/swipl/library/cql/sql_tokenizer.pl"/>
+										<F N="docker/rootfs/usr/local/lib/swipl/library/cql/sql_write.pl"/>
+									</Folder>
+									<Folder Name="dcg">
+										<F N="docker/rootfs/usr/local/lib/swipl/library/dcg/basics.pl"/>
+										<F N="docker/rootfs/usr/local/lib/swipl/library/dcg/high_order.pl"/>
+										<F N="docker/rootfs/usr/local/lib/swipl/library/dcg/INDEX.pl"/>
+									</Folder>
+									<Folder Name="dialect">
+										<Folder Name="eclipse">
+											<F N="docker/rootfs/usr/local/lib/swipl/library/dialect/eclipse/test_util_iso.pl"/>
+										</Folder>
+										<Folder Name="hprolog">
+											<F N="docker/rootfs/usr/local/lib/swipl/library/dialect/hprolog/format.pl"/>
+										</Folder>
+										<Folder Name="iso">
+											<F N="docker/rootfs/usr/local/lib/swipl/library/dialect/iso/iso_predicates.pl"/>
+										</Folder>
+										<Folder Name="sicstus">
+											<F N="docker/rootfs/usr/local/lib/swipl/library/dialect/sicstus/arrays.pl"/>
+											<F N="docker/rootfs/usr/local/lib/swipl/library/dialect/sicstus/block.pl"/>
+											<F N="docker/rootfs/usr/local/lib/swipl/library/dialect/sicstus/lists.pl"/>
+											<F N="docker/rootfs/usr/local/lib/swipl/library/dialect/sicstus/ordsets.pl"/>
+											<F N="docker/rootfs/usr/local/lib/swipl/library/dialect/sicstus/sockets.pl"/>
+											<F N="docker/rootfs/usr/local/lib/swipl/library/dialect/sicstus/swipl-lfr.pl"/>
+											<F N="docker/rootfs/usr/local/lib/swipl/library/dialect/sicstus/system.pl"/>
+											<F N="docker/rootfs/usr/local/lib/swipl/library/dialect/sicstus/terms.pl"/>
+											<F N="docker/rootfs/usr/local/lib/swipl/library/dialect/sicstus/timeout.pl"/>
+										</Folder>
+										<Folder Name="sicstus4">
+											<F N="docker/rootfs/usr/local/lib/swipl/library/dialect/sicstus4/aggregate.pl"/>
+											<F N="docker/rootfs/usr/local/lib/swipl/library/dialect/sicstus4/between.pl"/>
+											<F N="docker/rootfs/usr/local/lib/swipl/library/dialect/sicstus4/clpfd.pl"/>
+											<F N="docker/rootfs/usr/local/lib/swipl/library/dialect/sicstus4/file_systems.pl"/>
+											<F N="docker/rootfs/usr/local/lib/swipl/library/dialect/sicstus4/lists.pl"/>
+											<F N="docker/rootfs/usr/local/lib/swipl/library/dialect/sicstus4/ordsets.pl"/>
+											<F N="docker/rootfs/usr/local/lib/swipl/library/dialect/sicstus4/samsort.pl"/>
+											<F N="docker/rootfs/usr/local/lib/swipl/library/dialect/sicstus4/sets.pl"/>
+											<F N="docker/rootfs/usr/local/lib/swipl/library/dialect/sicstus4/sockets.pl"/>
+											<F N="docker/rootfs/usr/local/lib/swipl/library/dialect/sicstus4/system.pl"/>
+											<F N="docker/rootfs/usr/local/lib/swipl/library/dialect/sicstus4/terms.pl"/>
+											<F N="docker/rootfs/usr/local/lib/swipl/library/dialect/sicstus4/timeout.pl"/>
+											<F N="docker/rootfs/usr/local/lib/swipl/library/dialect/sicstus4/types.pl"/>
+										</Folder>
+										<Folder Name="swi">
+											<F N="docker/rootfs/usr/local/lib/swipl/library/dialect/swi/syspred_options.pl"/>
+										</Folder>
+										<Folder Name="xsb">
+											<F N="docker/rootfs/usr/local/lib/swipl/library/dialect/xsb/basics.pl"/>
+											<F N="docker/rootfs/usr/local/lib/swipl/library/dialect/xsb/consult.pl"/>
+											<F N="docker/rootfs/usr/local/lib/swipl/library/dialect/xsb/curr_sym.pl"/>
+											<F N="docker/rootfs/usr/local/lib/swipl/library/dialect/xsb/error_handler.pl"/>
+											<F N="docker/rootfs/usr/local/lib/swipl/library/dialect/xsb/gensym.pl"/>
+											<F N="docker/rootfs/usr/local/lib/swipl/library/dialect/xsb/gpp.pl"/>
+											<F N="docker/rootfs/usr/local/lib/swipl/library/dialect/xsb/intern.pl"/>
+											<F N="docker/rootfs/usr/local/lib/swipl/library/dialect/xsb/lists.pl"/>
+											<F N="docker/rootfs/usr/local/lib/swipl/library/dialect/xsb/machine.pl"/>
+											<F N="docker/rootfs/usr/local/lib/swipl/library/dialect/xsb/ordsets.pl"/>
+											<F N="docker/rootfs/usr/local/lib/swipl/library/dialect/xsb/setof.pl"/>
+											<F N="docker/rootfs/usr/local/lib/swipl/library/dialect/xsb/source.pl"/>
+											<F N="docker/rootfs/usr/local/lib/swipl/library/dialect/xsb/standard.pl"/>
+											<F N="docker/rootfs/usr/local/lib/swipl/library/dialect/xsb/storage.pl"/>
+											<F N="docker/rootfs/usr/local/lib/swipl/library/dialect/xsb/string.pl"/>
+											<F N="docker/rootfs/usr/local/lib/swipl/library/dialect/xsb/thread.pl"/>
+											<F N="docker/rootfs/usr/local/lib/swipl/library/dialect/xsb/timed_call.pl"/>
+										</Folder>
+										<F N="docker/rootfs/usr/local/lib/swipl/library/dialect/bim.pl"/>
+										<F N="docker/rootfs/usr/local/lib/swipl/library/dialect/commons.pl"/>
+										<F N="docker/rootfs/usr/local/lib/swipl/library/dialect/hprolog.pl"/>
+										<F N="docker/rootfs/usr/local/lib/swipl/library/dialect/ifprolog.pl"/>
+										<F N="docker/rootfs/usr/local/lib/swipl/library/dialect/sicstus.pl"/>
+										<F N="docker/rootfs/usr/local/lib/swipl/library/dialect/sicstus4.pl"/>
+										<F N="docker/rootfs/usr/local/lib/swipl/library/dialect/xsb.pl"/>
+										<F N="docker/rootfs/usr/local/lib/swipl/library/dialect/yap.pl"/>
+									</Folder>
+									<Folder Name="http">
+										<F N="docker/rootfs/usr/local/lib/swipl/library/http/ax.pl"/>
+										<F N="docker/rootfs/usr/local/lib/swipl/library/http/dcg_basics.pl"/>
+										<F N="docker/rootfs/usr/local/lib/swipl/library/http/html_head.pl"/>
+										<F N="docker/rootfs/usr/local/lib/swipl/library/http/html_quasiquotations.pl"/>
+										<F N="docker/rootfs/usr/local/lib/swipl/library/http/html_write.pl"/>
+										<F N="docker/rootfs/usr/local/lib/swipl/library/http/http_authenticate.pl"/>
+										<F N="docker/rootfs/usr/local/lib/swipl/library/http/http_client.pl"/>
+										<F N="docker/rootfs/usr/local/lib/swipl/library/http/http_cookie.pl"/>
+										<F N="docker/rootfs/usr/local/lib/swipl/library/http/http_cors.pl"/>
+										<F N="docker/rootfs/usr/local/lib/swipl/library/http/http_digest.pl"/>
+										<F N="docker/rootfs/usr/local/lib/swipl/library/http/http_dirindex.pl"/>
+										<F N="docker/rootfs/usr/local/lib/swipl/library/http/http_dispatch.pl"/>
+										<F N="docker/rootfs/usr/local/lib/swipl/library/http/http_dyn_workers.pl"/>
+										<F N="docker/rootfs/usr/local/lib/swipl/library/http/http_error.pl"/>
+										<F N="docker/rootfs/usr/local/lib/swipl/library/http/http_exception.pl"/>
+										<F N="docker/rootfs/usr/local/lib/swipl/library/http/http_files.pl"/>
+										<F N="docker/rootfs/usr/local/lib/swipl/library/http/http_header.pl"/>
+										<F N="docker/rootfs/usr/local/lib/swipl/library/http/http_hook.pl"/>
+										<F N="docker/rootfs/usr/local/lib/swipl/library/http/http_host.pl"/>
+										<F N="docker/rootfs/usr/local/lib/swipl/library/http/http_json.pl"/>
+										<F N="docker/rootfs/usr/local/lib/swipl/library/http/http_load.pl"/>
+										<F N="docker/rootfs/usr/local/lib/swipl/library/http/http_log.pl"/>
+										<F N="docker/rootfs/usr/local/lib/swipl/library/http/http_multipart_plugin.pl"/>
+										<F N="docker/rootfs/usr/local/lib/swipl/library/http/http_open.pl"/>
+										<F N="docker/rootfs/usr/local/lib/swipl/library/http/http_openid.pl"/>
+										<F N="docker/rootfs/usr/local/lib/swipl/library/http/http_parameters.pl"/>
+										<F N="docker/rootfs/usr/local/lib/swipl/library/http/http_path.pl"/>
+										<F N="docker/rootfs/usr/local/lib/swipl/library/http/http_proxy.pl"/>
+										<F N="docker/rootfs/usr/local/lib/swipl/library/http/http_pwp.pl"/>
+										<F N="docker/rootfs/usr/local/lib/swipl/library/http/http_redis_plugin.pl"/>
+										<F N="docker/rootfs/usr/local/lib/swipl/library/http/http_server.pl"/>
+										<F N="docker/rootfs/usr/local/lib/swipl/library/http/http_server_files.pl"/>
+										<F N="docker/rootfs/usr/local/lib/swipl/library/http/http_session.pl"/>
+										<F N="docker/rootfs/usr/local/lib/swipl/library/http/http_sgml_plugin.pl"/>
+										<F N="docker/rootfs/usr/local/lib/swipl/library/http/http_ssl_plugin.pl"/>
+										<F N="docker/rootfs/usr/local/lib/swipl/library/http/http_stream.pl"/>
+										<F N="docker/rootfs/usr/local/lib/swipl/library/http/http_unix_daemon.pl"/>
+										<F N="docker/rootfs/usr/local/lib/swipl/library/http/http_wrapper.pl"/>
+										<F N="docker/rootfs/usr/local/lib/swipl/library/http/hub.pl"/>
+										<F N="docker/rootfs/usr/local/lib/swipl/library/http/INDEX.pl"/>
+										<F N="docker/rootfs/usr/local/lib/swipl/library/http/jquery.pl"/>
+										<F N="docker/rootfs/usr/local/lib/swipl/library/http/js_grammar.pl"/>
+										<F N="docker/rootfs/usr/local/lib/swipl/library/http/js_write.pl"/>
+										<F N="docker/rootfs/usr/local/lib/swipl/library/http/json.pl"/>
+										<F N="docker/rootfs/usr/local/lib/swipl/library/http/json_convert.pl"/>
+										<F N="docker/rootfs/usr/local/lib/swipl/library/http/mimepack.pl"/>
+										<F N="docker/rootfs/usr/local/lib/swipl/library/http/mimetype.pl"/>
+										<F N="docker/rootfs/usr/local/lib/swipl/library/http/term_html.pl"/>
+										<F N="docker/rootfs/usr/local/lib/swipl/library/http/thread_httpd.pl"/>
+										<F N="docker/rootfs/usr/local/lib/swipl/library/http/websocket.pl"/>
+										<F N="docker/rootfs/usr/local/lib/swipl/library/http/yadis.pl"/>
+									</Folder>
+									<Folder Name="iri_scheme">
+										<F N="docker/rootfs/usr/local/lib/swipl/library/iri_scheme/file.pl"/>
+									</Folder>
+									<Folder Name="latex2html">
+										<F N="docker/rootfs/usr/local/lib/swipl/library/latex2html/latex2html.pl"/>
+										<F N="docker/rootfs/usr/local/lib/swipl/library/latex2html/sty_pldoc.pl"/>
+										<F N="docker/rootfs/usr/local/lib/swipl/library/latex2html/sty_xpce.pl"/>
+									</Folder>
+									<Folder Name="lynx">
+										<F N="docker/rootfs/usr/local/lib/swipl/library/lynx/format.pl"/>
+										<F N="docker/rootfs/usr/local/lib/swipl/library/lynx/html_style.pl"/>
+										<F N="docker/rootfs/usr/local/lib/swipl/library/lynx/html_text.pl"/>
+										<F N="docker/rootfs/usr/local/lib/swipl/library/lynx/INDEX.pl"/>
+										<F N="docker/rootfs/usr/local/lib/swipl/library/lynx/pldoc_style.pl"/>
+									</Folder>
+									<Folder Name="pldoc">
+										<F N="docker/rootfs/usr/local/lib/swipl/library/pldoc/doc_access.pl"/>
+										<F N="docker/rootfs/usr/local/lib/swipl/library/pldoc/doc_colour.pl"/>
+										<F N="docker/rootfs/usr/local/lib/swipl/library/pldoc/doc_html.pl"/>
+										<F N="docker/rootfs/usr/local/lib/swipl/library/pldoc/doc_htmlsrc.pl"/>
+										<F N="docker/rootfs/usr/local/lib/swipl/library/pldoc/doc_index.pl"/>
+										<F N="docker/rootfs/usr/local/lib/swipl/library/pldoc/doc_library.pl"/>
+										<F N="docker/rootfs/usr/local/lib/swipl/library/pldoc/doc_man.pl"/>
+										<F N="docker/rootfs/usr/local/lib/swipl/library/pldoc/doc_modes.pl"/>
+										<F N="docker/rootfs/usr/local/lib/swipl/library/pldoc/doc_pack.pl"/>
+										<F N="docker/rootfs/usr/local/lib/swipl/library/pldoc/doc_process.pl"/>
+										<F N="docker/rootfs/usr/local/lib/swipl/library/pldoc/doc_register.pl"/>
+										<F N="docker/rootfs/usr/local/lib/swipl/library/pldoc/doc_search.pl"/>
+										<F N="docker/rootfs/usr/local/lib/swipl/library/pldoc/doc_util.pl"/>
+										<F N="docker/rootfs/usr/local/lib/swipl/library/pldoc/doc_wiki.pl"/>
+										<F N="docker/rootfs/usr/local/lib/swipl/library/pldoc/doc_words.pl"/>
+										<F N="docker/rootfs/usr/local/lib/swipl/library/pldoc/hooks.pl"/>
+										<F N="docker/rootfs/usr/local/lib/swipl/library/pldoc/man_index.pl"/>
+									</Folder>
+									<Folder Name="protobufs">
+										<Folder Name="protoc_gen_prolog_pb">
+											<Folder Name="google">
+												<Folder Name="protobuf">
+													<Folder Name="compiler">
+														<F N="docker/rootfs/usr/local/lib/swipl/library/protobufs/protoc_gen_prolog_pb/google/protobuf/compiler/INDEX.pl"/>
+														<F N="docker/rootfs/usr/local/lib/swipl/library/protobufs/protoc_gen_prolog_pb/google/protobuf/compiler/plugin_pb.pl"/>
+													</Folder>
+													<F N="docker/rootfs/usr/local/lib/swipl/library/protobufs/protoc_gen_prolog_pb/google/protobuf/descriptor_pb.pl"/>
+													<F N="docker/rootfs/usr/local/lib/swipl/library/protobufs/protoc_gen_prolog_pb/google/protobuf/INDEX.pl"/>
+												</Folder>
+											</Folder>
+										</Folder>
+									</Folder>
+									<Folder Name="semweb">
+										<F N="docker/rootfs/usr/local/lib/swipl/library/semweb/INDEX.pl"/>
+										<F N="docker/rootfs/usr/local/lib/swipl/library/semweb/rdf11.pl"/>
+										<F N="docker/rootfs/usr/local/lib/swipl/library/semweb/rdf11_containers.pl"/>
+										<F N="docker/rootfs/usr/local/lib/swipl/library/semweb/rdf_cache.pl"/>
+										<F N="docker/rootfs/usr/local/lib/swipl/library/semweb/rdf_compare.pl"/>
+										<F N="docker/rootfs/usr/local/lib/swipl/library/semweb/rdf_db.pl"/>
+										<F N="docker/rootfs/usr/local/lib/swipl/library/semweb/rdf_edit.pl"/>
+										<F N="docker/rootfs/usr/local/lib/swipl/library/semweb/rdf_http_plugin.pl"/>
+										<F N="docker/rootfs/usr/local/lib/swipl/library/semweb/rdf_library.pl"/>
+										<F N="docker/rootfs/usr/local/lib/swipl/library/semweb/rdf_litindex.pl"/>
+										<F N="docker/rootfs/usr/local/lib/swipl/library/semweb/rdf_ntriples.pl"/>
+										<F N="docker/rootfs/usr/local/lib/swipl/library/semweb/rdf_persistency.pl"/>
+										<F N="docker/rootfs/usr/local/lib/swipl/library/semweb/rdf_portray.pl"/>
+										<F N="docker/rootfs/usr/local/lib/swipl/library/semweb/rdf_prefixes.pl"/>
+										<F N="docker/rootfs/usr/local/lib/swipl/library/semweb/rdf_sandbox.pl"/>
+										<F N="docker/rootfs/usr/local/lib/swipl/library/semweb/rdf_turtle.pl"/>
+										<F N="docker/rootfs/usr/local/lib/swipl/library/semweb/rdf_turtle_write.pl"/>
+										<F N="docker/rootfs/usr/local/lib/swipl/library/semweb/rdf_zlib_plugin.pl"/>
+										<F N="docker/rootfs/usr/local/lib/swipl/library/semweb/rdfa.pl"/>
+										<F N="docker/rootfs/usr/local/lib/swipl/library/semweb/rdfs.pl"/>
+										<F N="docker/rootfs/usr/local/lib/swipl/library/semweb/sparql_client.pl"/>
+										<F N="docker/rootfs/usr/local/lib/swipl/library/semweb/turtle.pl"/>
+									</Folder>
+									<Folder Name="theme">
+										<F N="docker/rootfs/usr/local/lib/swipl/library/theme/auto.pl"/>
+										<F N="docker/rootfs/usr/local/lib/swipl/library/theme/dark.pl"/>
+									</Folder>
+									<Folder Name="tipc">
+										<F N="docker/rootfs/usr/local/lib/swipl/library/tipc/INDEX.pl"/>
+										<F N="docker/rootfs/usr/local/lib/swipl/library/tipc/tipc.pl"/>
+										<F N="docker/rootfs/usr/local/lib/swipl/library/tipc/tipc_broadcast.pl"/>
+										<F N="docker/rootfs/usr/local/lib/swipl/library/tipc/tipc_linda.pl"/>
+										<F N="docker/rootfs/usr/local/lib/swipl/library/tipc/tipc_paxos.pl"/>
+									</Folder>
+									<Folder Name="unicode">
+										<F N="docker/rootfs/usr/local/lib/swipl/library/unicode/blocks.pl"/>
+										<F N="docker/rootfs/usr/local/lib/swipl/library/unicode/INDEX.pl"/>
+										<F N="docker/rootfs/usr/local/lib/swipl/library/unicode/unicode_data.pl"/>
+									</Folder>
+									<F N="docker/rootfs/usr/local/lib/swipl/library/aggregate.pl"/>
+									<F N="docker/rootfs/usr/local/lib/swipl/library/ansi_term.pl"/>
+									<F N="docker/rootfs/usr/local/lib/swipl/library/apply.pl"/>
+									<F N="docker/rootfs/usr/local/lib/swipl/library/apply_macros.pl"/>
+									<F N="docker/rootfs/usr/local/lib/swipl/library/archive.pl"/>
+									<F N="docker/rootfs/usr/local/lib/swipl/library/arithmetic.pl"/>
+									<F N="docker/rootfs/usr/local/lib/swipl/library/assoc.pl"/>
+									<F N="docker/rootfs/usr/local/lib/swipl/library/atom.pl"/>
+									<F N="docker/rootfs/usr/local/lib/swipl/library/backcomp.pl"/>
+									<F N="docker/rootfs/usr/local/lib/swipl/library/base32.pl"/>
+									<F N="docker/rootfs/usr/local/lib/swipl/library/base64.pl"/>
+									<F N="docker/rootfs/usr/local/lib/swipl/library/bdb.pl"/>
+									<F N="docker/rootfs/usr/local/lib/swipl/library/broadcast.pl"/>
+									<F N="docker/rootfs/usr/local/lib/swipl/library/c14n2.pl"/>
+									<F N="docker/rootfs/usr/local/lib/swipl/library/cgi.pl"/>
+									<F N="docker/rootfs/usr/local/lib/swipl/library/charsio.pl"/>
+									<F N="docker/rootfs/usr/local/lib/swipl/library/check.pl"/>
+									<F N="docker/rootfs/usr/local/lib/swipl/library/check_installation.pl"/>
+									<F N="docker/rootfs/usr/local/lib/swipl/library/checklast.pl"/>
+									<F N="docker/rootfs/usr/local/lib/swipl/library/checkselect.pl"/>
+									<F N="docker/rootfs/usr/local/lib/swipl/library/chr.pl"/>
+									<F N="docker/rootfs/usr/local/lib/swipl/library/codesio.pl"/>
+									<F N="docker/rootfs/usr/local/lib/swipl/library/coinduction.pl"/>
+									<F N="docker/rootfs/usr/local/lib/swipl/library/console_input.pl"/>
+									<F N="docker/rootfs/usr/local/lib/swipl/library/crypt.pl"/>
+									<F N="docker/rootfs/usr/local/lib/swipl/library/crypto.pl"/>
+									<F N="docker/rootfs/usr/local/lib/swipl/library/csv.pl"/>
+									<F N="docker/rootfs/usr/local/lib/swipl/library/ctypes.pl"/>
+									<F N="docker/rootfs/usr/local/lib/swipl/library/date.pl"/>
+									<F N="docker/rootfs/usr/local/lib/swipl/library/debug.pl"/>
+									<F N="docker/rootfs/usr/local/lib/swipl/library/dialect.pl"/>
+									<F N="docker/rootfs/usr/local/lib/swipl/library/dicts.pl"/>
+									<F N="docker/rootfs/usr/local/lib/swipl/library/dif.pl"/>
+									<F N="docker/rootfs/usr/local/lib/swipl/library/doc_files.pl"/>
+									<F N="docker/rootfs/usr/local/lib/swipl/library/doc_http.pl"/>
+									<F N="docker/rootfs/usr/local/lib/swipl/library/doc_latex.pl"/>
+									<F N="docker/rootfs/usr/local/lib/swipl/library/double_metaphone.pl"/>
+									<F N="docker/rootfs/usr/local/lib/swipl/library/edinburgh.pl"/>
+									<F N="docker/rootfs/usr/local/lib/swipl/library/edit.pl"/>
+									<F N="docker/rootfs/usr/local/lib/swipl/library/editline.pl"/>
+									<F N="docker/rootfs/usr/local/lib/swipl/library/error.pl"/>
+									<F N="docker/rootfs/usr/local/lib/swipl/library/explain.pl"/>
+									<F N="docker/rootfs/usr/local/lib/swipl/library/fastrw.pl"/>
+									<F N="docker/rootfs/usr/local/lib/swipl/library/files.pl"/>
+									<F N="docker/rootfs/usr/local/lib/swipl/library/filesex.pl"/>
+									<F N="docker/rootfs/usr/local/lib/swipl/library/gensym.pl"/>
+									<F N="docker/rootfs/usr/local/lib/swipl/library/git.pl"/>
+									<F N="docker/rootfs/usr/local/lib/swipl/library/hash_stream.pl"/>
+									<F N="docker/rootfs/usr/local/lib/swipl/library/hashtable.pl"/>
+									<F N="docker/rootfs/usr/local/lib/swipl/library/heaps.pl"/>
+									<F N="docker/rootfs/usr/local/lib/swipl/library/help.pl"/>
+									<F N="docker/rootfs/usr/local/lib/swipl/library/hotfix.pl"/>
+									<F N="docker/rootfs/usr/local/lib/swipl/library/increval.pl"/>
+									<F N="docker/rootfs/usr/local/lib/swipl/library/INDEX.pl"/>
+									<F N="docker/rootfs/usr/local/lib/swipl/library/intercept.pl"/>
+									<F N="docker/rootfs/usr/local/lib/swipl/library/iostream.pl"/>
+									<F N="docker/rootfs/usr/local/lib/swipl/library/iso_639.pl"/>
+									<F N="docker/rootfs/usr/local/lib/swipl/library/isub.pl"/>
+									<F N="docker/rootfs/usr/local/lib/swipl/library/jpl.pl"/>
+									<F N="docker/rootfs/usr/local/lib/swipl/library/language_server.pl"/>
+									<F N="docker/rootfs/usr/local/lib/swipl/library/lazy_lists.pl"/>
+									<F N="docker/rootfs/usr/local/lib/swipl/library/listing.pl"/>
+									<F N="docker/rootfs/usr/local/lib/swipl/library/lists.pl"/>
+									<F N="docker/rootfs/usr/local/lib/swipl/library/main.pl"/>
+									<F N="docker/rootfs/usr/local/lib/swipl/library/make.pl"/>
+									<F N="docker/rootfs/usr/local/lib/swipl/library/mallocinfo.pl"/>
+									<F N="docker/rootfs/usr/local/lib/swipl/library/md5.pl"/>
+									<F N="docker/rootfs/usr/local/lib/swipl/library/memfile.pl"/>
+									<F N="docker/rootfs/usr/local/lib/swipl/library/modules.pl"/>
+									<F N="docker/rootfs/usr/local/lib/swipl/library/mqi.pl"/>
+									<F N="docker/rootfs/usr/local/lib/swipl/library/nb_rbtrees.pl"/>
+									<F N="docker/rootfs/usr/local/lib/swipl/library/nb_set.pl"/>
+									<F N="docker/rootfs/usr/local/lib/swipl/library/obfuscate.pl"/>
+									<F N="docker/rootfs/usr/local/lib/swipl/library/occurs.pl"/>
+									<F N="docker/rootfs/usr/local/lib/swipl/library/odbc.pl"/>
+									<F N="docker/rootfs/usr/local/lib/swipl/library/operators.pl"/>
+									<F N="docker/rootfs/usr/local/lib/swipl/library/option.pl"/>
+									<F N="docker/rootfs/usr/local/lib/swipl/library/optparse.pl"/>
+									<F N="docker/rootfs/usr/local/lib/swipl/library/ordsets.pl"/>
+									<F N="docker/rootfs/usr/local/lib/swipl/library/oset.pl"/>
+									<F N="docker/rootfs/usr/local/lib/swipl/library/pairs.pl"/>
+									<F N="docker/rootfs/usr/local/lib/swipl/library/paxos.pl"/>
+									<F N="docker/rootfs/usr/local/lib/swipl/library/pcre.pl"/>
+									<F N="docker/rootfs/usr/local/lib/swipl/library/pdt_console.pl"/>
+									<F N="docker/rootfs/usr/local/lib/swipl/library/pengines.pl"/>
+									<F N="docker/rootfs/usr/local/lib/swipl/library/pengines_io.pl"/>
+									<F N="docker/rootfs/usr/local/lib/swipl/library/pengines_sandbox.pl"/>
+									<F N="docker/rootfs/usr/local/lib/swipl/library/persistency.pl"/>
+									<F N="docker/rootfs/usr/local/lib/swipl/library/pio.pl"/>
+									<F N="docker/rootfs/usr/local/lib/swipl/library/pldoc.pl"/>
+									<F N="docker/rootfs/usr/local/lib/swipl/library/plunit.pl"/>
+									<F N="docker/rootfs/usr/local/lib/swipl/library/porter_stem.pl"/>
+									<F N="docker/rootfs/usr/local/lib/swipl/library/portray_text.pl"/>
+									<F N="docker/rootfs/usr/local/lib/swipl/library/pprint.pl"/>
+									<F N="docker/rootfs/usr/local/lib/swipl/library/predicate_options.pl"/>
+									<F N="docker/rootfs/usr/local/lib/swipl/library/process.pl"/>
+									<F N="docker/rootfs/usr/local/lib/swipl/library/prolog_autoload.pl"/>
+									<F N="docker/rootfs/usr/local/lib/swipl/library/prolog_breakpoints.pl"/>
+									<F N="docker/rootfs/usr/local/lib/swipl/library/prolog_clause.pl"/>
+									<F N="docker/rootfs/usr/local/lib/swipl/library/prolog_code.pl"/>
+									<F N="docker/rootfs/usr/local/lib/swipl/library/prolog_codewalk.pl"/>
+									<F N="docker/rootfs/usr/local/lib/swipl/library/prolog_colour.pl"/>
+									<F N="docker/rootfs/usr/local/lib/swipl/library/prolog_config.pl"/>
+									<F N="docker/rootfs/usr/local/lib/swipl/library/prolog_debug.pl"/>
+									<F N="docker/rootfs/usr/local/lib/swipl/library/prolog_deps.pl"/>
+									<F N="docker/rootfs/usr/local/lib/swipl/library/prolog_format.pl"/>
+									<F N="docker/rootfs/usr/local/lib/swipl/library/prolog_history.pl"/>
+									<F N="docker/rootfs/usr/local/lib/swipl/library/prolog_install.pl"/>
+									<F N="docker/rootfs/usr/local/lib/swipl/library/prolog_jiti.pl"/>
+									<F N="docker/rootfs/usr/local/lib/swipl/library/prolog_metainference.pl"/>
+									<F N="docker/rootfs/usr/local/lib/swipl/library/prolog_pack.pl"/>
+									<F N="docker/rootfs/usr/local/lib/swipl/library/prolog_server.pl"/>
+									<F N="docker/rootfs/usr/local/lib/swipl/library/prolog_source.pl"/>
+									<F N="docker/rootfs/usr/local/lib/swipl/library/prolog_stack.pl"/>
+									<F N="docker/rootfs/usr/local/lib/swipl/library/prolog_stream.pl"/>
+									<F N="docker/rootfs/usr/local/lib/swipl/library/prolog_trace.pl"/>
+									<F N="docker/rootfs/usr/local/lib/swipl/library/prolog_wrap.pl"/>
+									<F N="docker/rootfs/usr/local/lib/swipl/library/prolog_xref.pl"/>
+									<F N="docker/rootfs/usr/local/lib/swipl/library/protobufs.pl"/>
+									<F N="docker/rootfs/usr/local/lib/swipl/library/pure_input.pl"/>
+									<F N="docker/rootfs/usr/local/lib/swipl/library/pwp.pl"/>
+									<F N="docker/rootfs/usr/local/lib/swipl/library/qpforeign.pl"/>
+									<F N="docker/rootfs/usr/local/lib/swipl/library/qsave.pl"/>
+									<F N="docker/rootfs/usr/local/lib/swipl/library/quasi_quotations.pl"/>
+									<F N="docker/rootfs/usr/local/lib/swipl/library/quintus.pl"/>
+									<F N="docker/rootfs/usr/local/lib/swipl/library/random.pl"/>
+									<F N="docker/rootfs/usr/local/lib/swipl/library/rbtrees.pl"/>
+									<F N="docker/rootfs/usr/local/lib/swipl/library/rdf.pl"/>
+									<F N="docker/rootfs/usr/local/lib/swipl/library/rdf_diagram.pl"/>
+									<F N="docker/rootfs/usr/local/lib/swipl/library/rdf_parser.pl"/>
+									<F N="docker/rootfs/usr/local/lib/swipl/library/rdf_triple.pl"/>
+									<F N="docker/rootfs/usr/local/lib/swipl/library/rdf_write.pl"/>
+									<F N="docker/rootfs/usr/local/lib/swipl/library/readline.pl"/>
+									<F N="docker/rootfs/usr/local/lib/swipl/library/readln.pl"/>
+									<F N="docker/rootfs/usr/local/lib/swipl/library/readutil.pl"/>
+									<F N="docker/rootfs/usr/local/lib/swipl/library/record.pl"/>
+									<F N="docker/rootfs/usr/local/lib/swipl/library/redis.pl"/>
+									<F N="docker/rootfs/usr/local/lib/swipl/library/redis_streams.pl"/>
+									<F N="docker/rootfs/usr/local/lib/swipl/library/rewrite_term.pl"/>
+									<F N="docker/rootfs/usr/local/lib/swipl/library/rlimit.pl"/>
+									<F N="docker/rootfs/usr/local/lib/swipl/library/saml.pl"/>
+									<F N="docker/rootfs/usr/local/lib/swipl/library/sandbox.pl"/>
+									<F N="docker/rootfs/usr/local/lib/swipl/library/settings.pl"/>
+									<F N="docker/rootfs/usr/local/lib/swipl/library/sgml.pl"/>
+									<F N="docker/rootfs/usr/local/lib/swipl/library/sgml_write.pl"/>
+									<F N="docker/rootfs/usr/local/lib/swipl/library/sha.pl"/>
+									<F N="docker/rootfs/usr/local/lib/swipl/library/shell.pl"/>
+									<F N="docker/rootfs/usr/local/lib/swipl/library/shlib.pl"/>
+									<F N="docker/rootfs/usr/local/lib/swipl/library/snowball.pl"/>
+									<F N="docker/rootfs/usr/local/lib/swipl/library/socket.pl"/>
+									<F N="docker/rootfs/usr/local/lib/swipl/library/solution_sequences.pl"/>
+									<F N="docker/rootfs/usr/local/lib/swipl/library/sort.pl"/>
+									<F N="docker/rootfs/usr/local/lib/swipl/library/ssl.pl"/>
+									<F N="docker/rootfs/usr/local/lib/swipl/library/statistics.pl"/>
+									<F N="docker/rootfs/usr/local/lib/swipl/library/stomp.pl"/>
+									<F N="docker/rootfs/usr/local/lib/swipl/library/streaminfo.pl"/>
+									<F N="docker/rootfs/usr/local/lib/swipl/library/streampool.pl"/>
+									<F N="docker/rootfs/usr/local/lib/swipl/library/strings.pl"/>
+									<F N="docker/rootfs/usr/local/lib/swipl/library/syslog.pl"/>
+									<F N="docker/rootfs/usr/local/lib/swipl/library/system.pl"/>
+									<F N="docker/rootfs/usr/local/lib/swipl/library/table.pl"/>
+									<F N="docker/rootfs/usr/local/lib/swipl/library/table_util.pl"/>
+									<F N="docker/rootfs/usr/local/lib/swipl/library/tables.pl"/>
+									<F N="docker/rootfs/usr/local/lib/swipl/library/tabling.pl"/>
+									<F N="docker/rootfs/usr/local/lib/swipl/library/term_to_json.pl"/>
+									<F N="docker/rootfs/usr/local/lib/swipl/library/terms.pl"/>
+									<F N="docker/rootfs/usr/local/lib/swipl/library/test_cover.pl"/>
+									<F N="docker/rootfs/usr/local/lib/swipl/library/test_wizard.pl"/>
+									<F N="docker/rootfs/usr/local/lib/swipl/library/thread.pl"/>
+									<F N="docker/rootfs/usr/local/lib/swipl/library/thread_pool.pl"/>
+									<F N="docker/rootfs/usr/local/lib/swipl/library/threadutil.pl"/>
+									<F N="docker/rootfs/usr/local/lib/swipl/library/time.pl"/>
+									<F N="docker/rootfs/usr/local/lib/swipl/library/tty.pl"/>
+									<F N="docker/rootfs/usr/local/lib/swipl/library/udp_broadcast.pl"/>
+									<F N="docker/rootfs/usr/local/lib/swipl/library/ugraphs.pl"/>
+									<F N="docker/rootfs/usr/local/lib/swipl/library/uid.pl"/>
+									<F N="docker/rootfs/usr/local/lib/swipl/library/unicode.pl"/>
+									<F N="docker/rootfs/usr/local/lib/swipl/library/unix.pl"/>
+									<F N="docker/rootfs/usr/local/lib/swipl/library/uri.pl"/>
+									<F N="docker/rootfs/usr/local/lib/swipl/library/url.pl"/>
+									<F N="docker/rootfs/usr/local/lib/swipl/library/utf8.pl"/>
+									<F N="docker/rootfs/usr/local/lib/swipl/library/uuid.pl"/>
+									<F N="docker/rootfs/usr/local/lib/swipl/library/varnumbers.pl"/>
+									<F N="docker/rootfs/usr/local/lib/swipl/library/vm.pl"/>
+									<F N="docker/rootfs/usr/local/lib/swipl/library/wfs.pl"/>
+									<F N="docker/rootfs/usr/local/lib/swipl/library/when.pl"/>
+									<F N="docker/rootfs/usr/local/lib/swipl/library/win_menu.pl"/>
+									<F N="docker/rootfs/usr/local/lib/swipl/library/writef.pl"/>
+									<F N="docker/rootfs/usr/local/lib/swipl/library/www_browser.pl"/>
+									<F N="docker/rootfs/usr/local/lib/swipl/library/xmldsig.pl"/>
+									<F N="docker/rootfs/usr/local/lib/swipl/library/xmlenc.pl"/>
+									<F N="docker/rootfs/usr/local/lib/swipl/library/xpath.pl"/>
+									<F N="docker/rootfs/usr/local/lib/swipl/library/xsdp_types.pl"/>
+									<F N="docker/rootfs/usr/local/lib/swipl/library/yall.pl"/>
+									<F N="docker/rootfs/usr/local/lib/swipl/library/yaml.pl"/>
+									<F N="docker/rootfs/usr/local/lib/swipl/library/zip.pl"/>
+									<F N="docker/rootfs/usr/local/lib/swipl/library/zlib.pl"/>
+								</Folder>
+								<Folder Name="xpce">
+									<Folder Name="prolog">
+										<Folder Name="boot">
+											<F N="docker/rootfs/usr/local/lib/swipl/xpce/prolog/boot/pce_autoload.pl"/>
+											<F N="docker/rootfs/usr/local/lib/swipl/xpce/prolog/boot/pce_editor.pl"/>
+											<F N="docker/rootfs/usr/local/lib/swipl/xpce/prolog/boot/pce_error.pl"/>
+											<F N="docker/rootfs/usr/local/lib/swipl/xpce/prolog/boot/pce_expand.pl"/>
+											<F N="docker/rootfs/usr/local/lib/swipl/xpce/prolog/boot/pce_expansion.pl"/>
+											<F N="docker/rootfs/usr/local/lib/swipl/xpce/prolog/boot/pce_global.pl"/>
+											<F N="docker/rootfs/usr/local/lib/swipl/xpce/prolog/boot/pce_goal_expansion.pl"/>
+											<F N="docker/rootfs/usr/local/lib/swipl/xpce/prolog/boot/pce_keybinding.pl"/>
+											<F N="docker/rootfs/usr/local/lib/swipl/xpce/prolog/boot/pce_pl.pl"/>
+											<F N="docker/rootfs/usr/local/lib/swipl/xpce/prolog/boot/pce_portray.pl"/>
+											<F N="docker/rootfs/usr/local/lib/swipl/xpce/prolog/boot/pce_principal.pl"/>
+											<F N="docker/rootfs/usr/local/lib/swipl/xpce/prolog/boot/pce_realise.pl"/>
+										</Folder>
+										<Folder Name="contrib">
+											<Folder Name="rubik">
+												<F N="docker/rootfs/usr/local/lib/swipl/xpce/prolog/contrib/rubik/maplist.pl"/>
+												<F N="docker/rootfs/usr/local/lib/swipl/xpce/prolog/contrib/rubik/rubik.pl"/>
+												<F N="docker/rootfs/usr/local/lib/swipl/xpce/prolog/contrib/rubik/rubikpce.pl"/>
+											</Folder>
+											<F N="docker/rootfs/usr/local/lib/swipl/xpce/prolog/contrib/contrib.pl"/>
+										</Folder>
+										<Folder Name="demo">
+											<F N="docker/rootfs/usr/local/lib/swipl/xpce/prolog/demo/chess.pl"/>
+											<F N="docker/rootfs/usr/local/lib/swipl/xpce/prolog/demo/colour.pl"/>
+											<F N="docker/rootfs/usr/local/lib/swipl/xpce/prolog/demo/constraint.pl"/>
+											<F N="docker/rootfs/usr/local/lib/swipl/xpce/prolog/demo/cursor.pl"/>
+											<F N="docker/rootfs/usr/local/lib/swipl/xpce/prolog/demo/event_hierarchy.pl"/>
+											<F N="docker/rootfs/usr/local/lib/swipl/xpce/prolog/demo/fontviewer.pl"/>
+											<F N="docker/rootfs/usr/local/lib/swipl/xpce/prolog/demo/ftplog.pl"/>
+											<F N="docker/rootfs/usr/local/lib/swipl/xpce/prolog/demo/graph.pl"/>
+											<F N="docker/rootfs/usr/local/lib/swipl/xpce/prolog/demo/hsvcolour.pl"/>
+											<F N="docker/rootfs/usr/local/lib/swipl/xpce/prolog/demo/imageviewer.pl"/>
+											<F N="docker/rootfs/usr/local/lib/swipl/xpce/prolog/demo/ispell.pl"/>
+											<F N="docker/rootfs/usr/local/lib/swipl/xpce/prolog/demo/juggler.pl"/>
+											<F N="docker/rootfs/usr/local/lib/swipl/xpce/prolog/demo/kangaroo.pl"/>
+											<F N="docker/rootfs/usr/local/lib/swipl/xpce/prolog/demo/pce_demo.pl"/>
+										</Folder>
+										<Folder Name="lib">
+											<Folder Name="compatibility">
+												<F N="docker/rootfs/usr/local/lib/swipl/xpce/prolog/lib/compatibility/bitmap.pl"/>
+												<F N="docker/rootfs/usr/local/lib/swipl/xpce/prolog/lib/compatibility/event_speak.pl"/>
+												<F N="docker/rootfs/usr/local/lib/swipl/xpce/prolog/lib/compatibility/frozen.pl"/>
+												<F N="docker/rootfs/usr/local/lib/swipl/xpce/prolog/lib/compatibility/global.pl"/>
+												<F N="docker/rootfs/usr/local/lib/swipl/xpce/prolog/lib/compatibility/resource.pl"/>
+												<F N="docker/rootfs/usr/local/lib/swipl/xpce/prolog/lib/compatibility/send.pl"/>
+											</Folder>
+											<Folder Name="dialog">
+												<F N="docker/rootfs/usr/local/lib/swipl/xpce/prolog/lib/dialog/attribute.pl"/>
+												<F N="docker/rootfs/usr/local/lib/swipl/xpce/prolog/lib/dialog/behaviour.pl"/>
+												<F N="docker/rootfs/usr/local/lib/swipl/xpce/prolog/lib/dialog/dialog.pl"/>
+												<F N="docker/rootfs/usr/local/lib/swipl/xpce/prolog/lib/dialog/font.pl"/>
+												<F N="docker/rootfs/usr/local/lib/swipl/xpce/prolog/lib/dialog/generate.pl"/>
+												<F N="docker/rootfs/usr/local/lib/swipl/xpce/prolog/lib/dialog/image_item.pl"/>
+												<F N="docker/rootfs/usr/local/lib/swipl/xpce/prolog/lib/dialog/label.pl"/>
+												<F N="docker/rootfs/usr/local/lib/swipl/xpce/prolog/lib/dialog/layout.pl"/>
+												<F N="docker/rootfs/usr/local/lib/swipl/xpce/prolog/lib/dialog/load.pl"/>
+												<F N="docker/rootfs/usr/local/lib/swipl/xpce/prolog/lib/dialog/menuitem.pl"/>
+												<F N="docker/rootfs/usr/local/lib/swipl/xpce/prolog/lib/dialog/meta.pl"/>
+												<F N="docker/rootfs/usr/local/lib/swipl/xpce/prolog/lib/dialog/pretty_print.pl"/>
+												<F N="docker/rootfs/usr/local/lib/swipl/xpce/prolog/lib/dialog/prompter.pl"/>
+												<F N="docker/rootfs/usr/local/lib/swipl/xpce/prolog/lib/dialog/proto.pl"/>
+												<F N="docker/rootfs/usr/local/lib/swipl/xpce/prolog/lib/dialog/util.pl"/>
+											</Folder>
+											<Folder Name="doc">
+												<F N="docker/rootfs/usr/local/lib/swipl/xpce/prolog/lib/doc/browser.pl"/>
+												<F N="docker/rootfs/usr/local/lib/swipl/xpce/prolog/lib/doc/emit.pl"/>
+												<F N="docker/rootfs/usr/local/lib/swipl/xpce/prolog/lib/doc/form.pl"/>
+												<F N="docker/rootfs/usr/local/lib/swipl/xpce/prolog/lib/doc/html.pl"/>
+												<F N="docker/rootfs/usr/local/lib/swipl/xpce/prolog/lib/doc/layout.pl"/>
+												<F N="docker/rootfs/usr/local/lib/swipl/xpce/prolog/lib/doc/load.pl"/>
+												<F N="docker/rootfs/usr/local/lib/swipl/xpce/prolog/lib/doc/objects.pl"/>
+												<F N="docker/rootfs/usr/local/lib/swipl/xpce/prolog/lib/doc/sp_errors.pl"/>
+												<F N="docker/rootfs/usr/local/lib/swipl/xpce/prolog/lib/doc/t2.pl"/>
+												<F N="docker/rootfs/usr/local/lib/swipl/xpce/prolog/lib/doc/table.pl"/>
+												<F N="docker/rootfs/usr/local/lib/swipl/xpce/prolog/lib/doc/test.pl"/>
+												<F N="docker/rootfs/usr/local/lib/swipl/xpce/prolog/lib/doc/url_fetch.pl"/>
+												<F N="docker/rootfs/usr/local/lib/swipl/xpce/prolog/lib/doc/util.pl"/>
+												<F N="docker/rootfs/usr/local/lib/swipl/xpce/prolog/lib/doc/vfont.pl"/>
+												<F N="docker/rootfs/usr/local/lib/swipl/xpce/prolog/lib/doc/window.pl"/>
+												<F N="docker/rootfs/usr/local/lib/swipl/xpce/prolog/lib/doc/xml_browse.pl"/>
+												<F N="docker/rootfs/usr/local/lib/swipl/xpce/prolog/lib/doc/xml_hierarchy.pl"/>
+											</Folder>
+											<Folder Name="draw">
+												<F N="docker/rootfs/usr/local/lib/swipl/xpce/prolog/lib/draw/align.pl"/>
+												<F N="docker/rootfs/usr/local/lib/swipl/xpce/prolog/lib/draw/attribute.pl"/>
+												<F N="docker/rootfs/usr/local/lib/swipl/xpce/prolog/lib/draw/canvas.pl"/>
+												<F N="docker/rootfs/usr/local/lib/swipl/xpce/prolog/lib/draw/config.pl"/>
+												<F N="docker/rootfs/usr/local/lib/swipl/xpce/prolog/lib/draw/draw.pl"/>
+												<F N="docker/rootfs/usr/local/lib/swipl/xpce/prolog/lib/draw/exportpl.pl"/>
+												<F N="docker/rootfs/usr/local/lib/swipl/xpce/prolog/lib/draw/gesture.pl"/>
+												<F N="docker/rootfs/usr/local/lib/swipl/xpce/prolog/lib/draw/importpl.pl"/>
+												<F N="docker/rootfs/usr/local/lib/swipl/xpce/prolog/lib/draw/menu.pl"/>
+												<F N="docker/rootfs/usr/local/lib/swipl/xpce/prolog/lib/draw/shapes.pl"/>
+												<F N="docker/rootfs/usr/local/lib/swipl/xpce/prolog/lib/draw/undo.pl"/>
+											</Folder>
+											<Folder Name="emacs">
+												<F N="docker/rootfs/usr/local/lib/swipl/xpce/prolog/lib/emacs/annotate_mode.pl"/>
+												<F N="docker/rootfs/usr/local/lib/swipl/xpce/prolog/lib/emacs/application.pl"/>
+												<F N="docker/rootfs/usr/local/lib/swipl/xpce/prolog/lib/emacs/bookmarks.pl"/>
+												<F N="docker/rootfs/usr/local/lib/swipl/xpce/prolog/lib/emacs/buffer.pl"/>
+												<F N="docker/rootfs/usr/local/lib/swipl/xpce/prolog/lib/emacs/buffer_menu.pl"/>
+												<F N="docker/rootfs/usr/local/lib/swipl/xpce/prolog/lib/emacs/c_mode.pl"/>
+												<F N="docker/rootfs/usr/local/lib/swipl/xpce/prolog/lib/emacs/chr_mode.pl"/>
+												<F N="docker/rootfs/usr/local/lib/swipl/xpce/prolog/lib/emacs/cmake_mode.pl"/>
+												<F N="docker/rootfs/usr/local/lib/swipl/xpce/prolog/lib/emacs/cpp_mode.pl"/>
+												<F N="docker/rootfs/usr/local/lib/swipl/xpce/prolog/lib/emacs/dde_server.pl"/>
+												<F N="docker/rootfs/usr/local/lib/swipl/xpce/prolog/lib/emacs/emacs.pl"/>
+												<F N="docker/rootfs/usr/local/lib/swipl/xpce/prolog/lib/emacs/emacs_chrome_server.pl"/>
+												<F N="docker/rootfs/usr/local/lib/swipl/xpce/prolog/lib/emacs/find.pl"/>
+												<F N="docker/rootfs/usr/local/lib/swipl/xpce/prolog/lib/emacs/fundamental_mode.pl"/>
+												<F N="docker/rootfs/usr/local/lib/swipl/xpce/prolog/lib/emacs/gdb.pl"/>
+												<F N="docker/rootfs/usr/local/lib/swipl/xpce/prolog/lib/emacs/help.pl"/>
+												<F N="docker/rootfs/usr/local/lib/swipl/xpce/prolog/lib/emacs/help_buffer.pl"/>
+												<F N="docker/rootfs/usr/local/lib/swipl/xpce/prolog/lib/emacs/history.pl"/>
+												<F N="docker/rootfs/usr/local/lib/swipl/xpce/prolog/lib/emacs/hit_list.pl"/>
+												<F N="docker/rootfs/usr/local/lib/swipl/xpce/prolog/lib/emacs/html_mode.pl"/>
+												<F N="docker/rootfs/usr/local/lib/swipl/xpce/prolog/lib/emacs/java_mode.pl"/>
+												<F N="docker/rootfs/usr/local/lib/swipl/xpce/prolog/lib/emacs/javascript_mode.pl"/>
+												<F N="docker/rootfs/usr/local/lib/swipl/xpce/prolog/lib/emacs/language_mode.pl"/>
+												<F N="docker/rootfs/usr/local/lib/swipl/xpce/prolog/lib/emacs/latex_mode.pl"/>
+												<F N="docker/rootfs/usr/local/lib/swipl/xpce/prolog/lib/emacs/logtalk_mode.pl"/>
+												<F N="docker/rootfs/usr/local/lib/swipl/xpce/prolog/lib/emacs/man_mode.pl"/>
+												<F N="docker/rootfs/usr/local/lib/swipl/xpce/prolog/lib/emacs/outline_mode.pl"/>
+												<F N="docker/rootfs/usr/local/lib/swipl/xpce/prolog/lib/emacs/prolog_mode.pl"/>
+												<F N="docker/rootfs/usr/local/lib/swipl/xpce/prolog/lib/emacs/prompt.pl"/>
+												<F N="docker/rootfs/usr/local/lib/swipl/xpce/prolog/lib/emacs/rdf_mode.pl"/>
+												<F N="docker/rootfs/usr/local/lib/swipl/xpce/prolog/lib/emacs/script_mode.pl"/>
+												<F N="docker/rootfs/usr/local/lib/swipl/xpce/prolog/lib/emacs/server.pl"/>
+												<F N="docker/rootfs/usr/local/lib/swipl/xpce/prolog/lib/emacs/sgml_mode.pl"/>
+												<F N="docker/rootfs/usr/local/lib/swipl/xpce/prolog/lib/emacs/shell.pl"/>
+												<F N="docker/rootfs/usr/local/lib/swipl/xpce/prolog/lib/emacs/swi_prolog.pl"/>
+												<F N="docker/rootfs/usr/local/lib/swipl/xpce/prolog/lib/emacs/text_mode.pl"/>
+												<F N="docker/rootfs/usr/local/lib/swipl/xpce/prolog/lib/emacs/turtle_mode.pl"/>
+												<F N="docker/rootfs/usr/local/lib/swipl/xpce/prolog/lib/emacs/window.pl"/>
+												<F N="docker/rootfs/usr/local/lib/swipl/xpce/prolog/lib/emacs/xsb_mode.pl"/>
+												<F N="docker/rootfs/usr/local/lib/swipl/xpce/prolog/lib/emacs/yaml_mode.pl"/>
+											</Folder>
+											<Folder Name="english">
+												<F N="docker/rootfs/usr/local/lib/swipl/xpce/prolog/lib/english/pce_messages.pl"/>
+											</Folder>
+											<Folder Name="http">
+												<F N="docker/rootfs/usr/local/lib/swipl/xpce/prolog/lib/http/html_hierarchy.pl"/>
+												<F N="docker/rootfs/usr/local/lib/swipl/xpce/prolog/lib/http/html_refman.pl"/>
+												<F N="docker/rootfs/usr/local/lib/swipl/xpce/prolog/lib/http/html_write.pl"/>
+												<F N="docker/rootfs/usr/local/lib/swipl/xpce/prolog/lib/http/http_image.pl"/>
+												<F N="docker/rootfs/usr/local/lib/swipl/xpce/prolog/lib/http/http_man.pl"/>
+												<F N="docker/rootfs/usr/local/lib/swipl/xpce/prolog/lib/http/httpd.pl"/>
+												<F N="docker/rootfs/usr/local/lib/swipl/xpce/prolog/lib/http/run.pl"/>
+												<F N="docker/rootfs/usr/local/lib/swipl/xpce/prolog/lib/http/xref.pl"/>
+											</Folder>
+											<Folder Name="man">
+												<F N="docker/rootfs/usr/local/lib/swipl/xpce/prolog/lib/man/behaviour_item.pl"/>
+												<F N="docker/rootfs/usr/local/lib/swipl/xpce/prolog/lib/man/classmap.pl"/>
+												<F N="docker/rootfs/usr/local/lib/swipl/xpce/prolog/lib/man/man_index.pl"/>
+												<F N="docker/rootfs/usr/local/lib/swipl/xpce/prolog/lib/man/p_card.pl"/>
+												<F N="docker/rootfs/usr/local/lib/swipl/xpce/prolog/lib/man/p_data.pl"/>
+												<F N="docker/rootfs/usr/local/lib/swipl/xpce/prolog/lib/man/pce_op.pl"/>
+												<F N="docker/rootfs/usr/local/lib/swipl/xpce/prolog/lib/man/showevent.pl"/>
+												<F N="docker/rootfs/usr/local/lib/swipl/xpce/prolog/lib/man/util.pl"/>
+												<F N="docker/rootfs/usr/local/lib/swipl/xpce/prolog/lib/man/v_card.pl"/>
+												<F N="docker/rootfs/usr/local/lib/swipl/xpce/prolog/lib/man/v_class.pl"/>
+												<F N="docker/rootfs/usr/local/lib/swipl/xpce/prolog/lib/man/v_editor.pl"/>
+												<F N="docker/rootfs/usr/local/lib/swipl/xpce/prolog/lib/man/v_error.pl"/>
+												<F N="docker/rootfs/usr/local/lib/swipl/xpce/prolog/lib/man/v_global.pl"/>
+												<F N="docker/rootfs/usr/local/lib/swipl/xpce/prolog/lib/man/v_group.pl"/>
+												<F N="docker/rootfs/usr/local/lib/swipl/xpce/prolog/lib/man/v_hierarchy.pl"/>
+												<F N="docker/rootfs/usr/local/lib/swipl/xpce/prolog/lib/man/v_inherit.pl"/>
+												<F N="docker/rootfs/usr/local/lib/swipl/xpce/prolog/lib/man/v_inspector.pl"/>
+												<F N="docker/rootfs/usr/local/lib/swipl/xpce/prolog/lib/man/v_instance.pl"/>
+												<F N="docker/rootfs/usr/local/lib/swipl/xpce/prolog/lib/man/v_manual.pl"/>
+												<F N="docker/rootfs/usr/local/lib/swipl/xpce/prolog/lib/man/v_module.pl"/>
+												<F N="docker/rootfs/usr/local/lib/swipl/xpce/prolog/lib/man/v_search.pl"/>
+												<F N="docker/rootfs/usr/local/lib/swipl/xpce/prolog/lib/man/v_select.pl"/>
+												<F N="docker/rootfs/usr/local/lib/swipl/xpce/prolog/lib/man/v_statistics.pl"/>
+												<F N="docker/rootfs/usr/local/lib/swipl/xpce/prolog/lib/man/v_summary.pl"/>
+												<F N="docker/rootfs/usr/local/lib/swipl/xpce/prolog/lib/man/v_tile.pl"/>
+												<F N="docker/rootfs/usr/local/lib/swipl/xpce/prolog/lib/man/v_topic.pl"/>
+												<F N="docker/rootfs/usr/local/lib/swipl/xpce/prolog/lib/man/v_visual.pl"/>
+											</Folder>
+											<Folder Name="math">
+												<F N="docker/rootfs/usr/local/lib/swipl/xpce/prolog/lib/math/expandmath.pl"/>
+											</Folder>
+											<Folder Name="plot">
+												<F N="docker/rootfs/usr/local/lib/swipl/xpce/prolog/lib/plot/axis.pl"/>
+												<F N="docker/rootfs/usr/local/lib/swipl/xpce/prolog/lib/plot/barchart.pl"/>
+												<F N="docker/rootfs/usr/local/lib/swipl/xpce/prolog/lib/plot/demo.pl"/>
+												<F N="docker/rootfs/usr/local/lib/swipl/xpce/prolog/lib/plot/plotter.pl"/>
+											</Folder>
+											<Folder Name="swi">
+												<F N="docker/rootfs/usr/local/lib/swipl/xpce/prolog/lib/swi/pce_debug_monitor.pl"/>
+												<F N="docker/rootfs/usr/local/lib/swipl/xpce/prolog/lib/swi/pce_profile.pl"/>
+												<F N="docker/rootfs/usr/local/lib/swipl/xpce/prolog/lib/swi/swi_console.pl"/>
+												<F N="docker/rootfs/usr/local/lib/swipl/xpce/prolog/lib/swi/thread_monitor.pl"/>
+											</Folder>
+											<Folder Name="trace">
+												<F N="docker/rootfs/usr/local/lib/swipl/xpce/prolog/lib/trace/browse.pl"/>
+												<F N="docker/rootfs/usr/local/lib/swipl/xpce/prolog/lib/trace/browse_xref.pl"/>
+												<F N="docker/rootfs/usr/local/lib/swipl/xpce/prolog/lib/trace/clause.pl"/>
+												<F N="docker/rootfs/usr/local/lib/swipl/xpce/prolog/lib/trace/emacs_debug_modes.pl"/>
+												<F N="docker/rootfs/usr/local/lib/swipl/xpce/prolog/lib/trace/exceptions.pl"/>
+												<F N="docker/rootfs/usr/local/lib/swipl/xpce/prolog/lib/trace/gui.pl"/>
+												<F N="docker/rootfs/usr/local/lib/swipl/xpce/prolog/lib/trace/pprint.pl"/>
+												<F N="docker/rootfs/usr/local/lib/swipl/xpce/prolog/lib/trace/query.pl"/>
+												<F N="docker/rootfs/usr/local/lib/swipl/xpce/prolog/lib/trace/settings.pl"/>
+												<F N="docker/rootfs/usr/local/lib/swipl/xpce/prolog/lib/trace/source.pl"/>
+												<F N="docker/rootfs/usr/local/lib/swipl/xpce/prolog/lib/trace/stack.pl"/>
+												<F N="docker/rootfs/usr/local/lib/swipl/xpce/prolog/lib/trace/status.pl"/>
+												<F N="docker/rootfs/usr/local/lib/swipl/xpce/prolog/lib/trace/test.pl"/>
+												<F N="docker/rootfs/usr/local/lib/swipl/xpce/prolog/lib/trace/trace.pl"/>
+												<F N="docker/rootfs/usr/local/lib/swipl/xpce/prolog/lib/trace/util.pl"/>
+												<F N="docker/rootfs/usr/local/lib/swipl/xpce/prolog/lib/trace/viewterm.pl"/>
+											</Folder>
+											<Folder Name="xref">
+												<F N="docker/rootfs/usr/local/lib/swipl/xpce/prolog/lib/xref/common.pl"/>
+												<F N="docker/rootfs/usr/local/lib/swipl/xpce/prolog/lib/xref/mkcommon.pl"/>
+												<F N="docker/rootfs/usr/local/lib/swipl/xpce/prolog/lib/xref/quintus.pl"/>
+												<F N="docker/rootfs/usr/local/lib/swipl/xpce/prolog/lib/xref/sicstus.pl"/>
+											</Folder>
+											<F N="docker/rootfs/usr/local/lib/swipl/xpce/prolog/lib/area.pl"/>
+											<F N="docker/rootfs/usr/local/lib/swipl/xpce/prolog/lib/autowin.pl"/>
+											<F N="docker/rootfs/usr/local/lib/swipl/xpce/prolog/lib/CLASSINDEX.pl"/>
+											<F N="docker/rootfs/usr/local/lib/swipl/xpce/prolog/lib/dragdict.pl"/>
+											<F N="docker/rootfs/usr/local/lib/swipl/xpce/prolog/lib/dragdrop.pl"/>
+											<F N="docker/rootfs/usr/local/lib/swipl/xpce/prolog/lib/draw_extend.pl"/>
+											<F N="docker/rootfs/usr/local/lib/swipl/xpce/prolog/lib/edit_dialog.pl"/>
+											<F N="docker/rootfs/usr/local/lib/swipl/xpce/prolog/lib/emacs_extend.pl"/>
+											<F N="docker/rootfs/usr/local/lib/swipl/xpce/prolog/lib/emacs_tags.pl"/>
+											<F N="docker/rootfs/usr/local/lib/swipl/xpce/prolog/lib/file_item.pl"/>
+											<F N="docker/rootfs/usr/local/lib/swipl/xpce/prolog/lib/find_file.pl"/>
+											<F N="docker/rootfs/usr/local/lib/swipl/xpce/prolog/lib/find_file_dialog.pl"/>
+											<F N="docker/rootfs/usr/local/lib/swipl/xpce/prolog/lib/getpass.pl"/>
+											<F N="docker/rootfs/usr/local/lib/swipl/xpce/prolog/lib/gradient.pl"/>
+											<F N="docker/rootfs/usr/local/lib/swipl/xpce/prolog/lib/gui_tracer.pl"/>
+											<F N="docker/rootfs/usr/local/lib/swipl/xpce/prolog/lib/help_message.pl"/>
+											<F N="docker/rootfs/usr/local/lib/swipl/xpce/prolog/lib/http_client.pl"/>
+											<F N="docker/rootfs/usr/local/lib/swipl/xpce/prolog/lib/hyper.pl"/>
+											<F N="docker/rootfs/usr/local/lib/swipl/xpce/prolog/lib/imageops.pl"/>
+											<F N="docker/rootfs/usr/local/lib/swipl/xpce/prolog/lib/INDEX.pl"/>
+											<F N="docker/rootfs/usr/local/lib/swipl/xpce/prolog/lib/isocomp.pl"/>
+											<F N="docker/rootfs/usr/local/lib/swipl/xpce/prolog/lib/keybinding.pl"/>
+											<F N="docker/rootfs/usr/local/lib/swipl/xpce/prolog/lib/make_dialog.pl"/>
+											<F N="docker/rootfs/usr/local/lib/swipl/xpce/prolog/lib/MKINDEX.pl"/>
+											<F N="docker/rootfs/usr/local/lib/swipl/xpce/prolog/lib/password_item.pl"/>
+											<F N="docker/rootfs/usr/local/lib/swipl/xpce/prolog/lib/pce.pl"/>
+											<F N="docker/rootfs/usr/local/lib/swipl/xpce/prolog/lib/pce_arm.pl"/>
+											<F N="docker/rootfs/usr/local/lib/swipl/xpce/prolog/lib/pce_arrow_item.pl"/>
+											<F N="docker/rootfs/usr/local/lib/swipl/xpce/prolog/lib/pce_class_index.pl"/>
+											<F N="docker/rootfs/usr/local/lib/swipl/xpce/prolog/lib/pce_colour_item.pl"/>
+											<F N="docker/rootfs/usr/local/lib/swipl/xpce/prolog/lib/pce_config.pl"/>
+											<F N="docker/rootfs/usr/local/lib/swipl/xpce/prolog/lib/pce_configeditor.pl"/>
+											<F N="docker/rootfs/usr/local/lib/swipl/xpce/prolog/lib/pce_cxx_headers.pl"/>
+											<F N="docker/rootfs/usr/local/lib/swipl/xpce/prolog/lib/pce_debug.pl"/>
+											<F N="docker/rootfs/usr/local/lib/swipl/xpce/prolog/lib/pce_dispatch.pl"/>
+											<F N="docker/rootfs/usr/local/lib/swipl/xpce/prolog/lib/pce_drag_and_drop.pl"/>
+											<F N="docker/rootfs/usr/local/lib/swipl/xpce/prolog/lib/pce_drag_and_drop_dict_item.pl"/>
+											<F N="docker/rootfs/usr/local/lib/swipl/xpce/prolog/lib/pce_edit.pl"/>
+											<F N="docker/rootfs/usr/local/lib/swipl/xpce/prolog/lib/pce_editable_text.pl"/>
+											<F N="docker/rootfs/usr/local/lib/swipl/xpce/prolog/lib/pce_emacs.pl"/>
+											<F N="docker/rootfs/usr/local/lib/swipl/xpce/prolog/lib/pce_float_item.pl"/>
+											<F N="docker/rootfs/usr/local/lib/swipl/xpce/prolog/lib/pce_font_item.pl"/>
+											<F N="docker/rootfs/usr/local/lib/swipl/xpce/prolog/lib/pce_grapher.pl"/>
+											<F N="docker/rootfs/usr/local/lib/swipl/xpce/prolog/lib/pce_graphical_browser.pl"/>
+											<F N="docker/rootfs/usr/local/lib/swipl/xpce/prolog/lib/pce_help_file.pl"/>
+											<F N="docker/rootfs/usr/local/lib/swipl/xpce/prolog/lib/pce_helper.pl"/>
+											<F N="docker/rootfs/usr/local/lib/swipl/xpce/prolog/lib/pce_history.pl"/>
+											<F N="docker/rootfs/usr/local/lib/swipl/xpce/prolog/lib/pce_identifier_item.pl"/>
+											<F N="docker/rootfs/usr/local/lib/swipl/xpce/prolog/lib/pce_image.pl"/>
+											<F N="docker/rootfs/usr/local/lib/swipl/xpce/prolog/lib/pce_image_browser.pl"/>
+											<F N="docker/rootfs/usr/local/lib/swipl/xpce/prolog/lib/pce_image_item.pl"/>
+											<F N="docker/rootfs/usr/local/lib/swipl/xpce/prolog/lib/pce_loadcxx.pl"/>
+											<F N="docker/rootfs/usr/local/lib/swipl/xpce/prolog/lib/pce_main.pl"/>
+											<F N="docker/rootfs/usr/local/lib/swipl/xpce/prolog/lib/pce_manual.pl"/>
+											<F N="docker/rootfs/usr/local/lib/swipl/xpce/prolog/lib/pce_meta.pl"/>
+											<F N="docker/rootfs/usr/local/lib/swipl/xpce/prolog/lib/pce_objects.pl"/>
+											<F N="docker/rootfs/usr/local/lib/swipl/xpce/prolog/lib/pce_postscript.pl"/>
+											<F N="docker/rootfs/usr/local/lib/swipl/xpce/prolog/lib/pce_progress.pl"/>
+											<F N="docker/rootfs/usr/local/lib/swipl/xpce/prolog/lib/pce_prolog_xref.pl"/>
+											<F N="docker/rootfs/usr/local/lib/swipl/xpce/prolog/lib/pce_prompter.pl"/>
+											<F N="docker/rootfs/usr/local/lib/swipl/xpce/prolog/lib/pce_regex_compat.pl"/>
+											<F N="docker/rootfs/usr/local/lib/swipl/xpce/prolog/lib/pce_renew.pl"/>
+											<F N="docker/rootfs/usr/local/lib/swipl/xpce/prolog/lib/pce_report.pl"/>
+											<F N="docker/rootfs/usr/local/lib/swipl/xpce/prolog/lib/pce_require.pl"/>
+											<F N="docker/rootfs/usr/local/lib/swipl/xpce/prolog/lib/pce_select_set_item.pl"/>
+											<F N="docker/rootfs/usr/local/lib/swipl/xpce/prolog/lib/pce_selection.pl"/>
+											<F N="docker/rootfs/usr/local/lib/swipl/xpce/prolog/lib/pce_server.pl"/>
+											<F N="docker/rootfs/usr/local/lib/swipl/xpce/prolog/lib/pce_set_item.pl"/>
+											<F N="docker/rootfs/usr/local/lib/swipl/xpce/prolog/lib/pce_shell.pl"/>
+											<F N="docker/rootfs/usr/local/lib/swipl/xpce/prolog/lib/pce_style_item.pl"/>
+											<F N="docker/rootfs/usr/local/lib/swipl/xpce/prolog/lib/pce_tagged_connection.pl"/>
+											<F N="docker/rootfs/usr/local/lib/swipl/xpce/prolog/lib/pce_template.pl"/>
+											<F N="docker/rootfs/usr/local/lib/swipl/xpce/prolog/lib/pce_tick_box.pl"/>
+											<F N="docker/rootfs/usr/local/lib/swipl/xpce/prolog/lib/pce_toc.pl"/>
+											<F N="docker/rootfs/usr/local/lib/swipl/xpce/prolog/lib/pce_type.pl"/>
+											<F N="docker/rootfs/usr/local/lib/swipl/xpce/prolog/lib/pce_unclip.pl"/>
+											<F N="docker/rootfs/usr/local/lib/swipl/xpce/prolog/lib/pce_util.pl"/>
+											<F N="docker/rootfs/usr/local/lib/swipl/xpce/prolog/lib/pce_xref.pl"/>
+											<F N="docker/rootfs/usr/local/lib/swipl/xpce/prolog/lib/pcedraw.pl"/>
+											<F N="docker/rootfs/usr/local/lib/swipl/xpce/prolog/lib/persistent_frame.pl"/>
+											<F N="docker/rootfs/usr/local/lib/swipl/xpce/prolog/lib/portray_object.pl"/>
+											<F N="docker/rootfs/usr/local/lib/swipl/xpce/prolog/lib/print_graphics.pl"/>
+											<F N="docker/rootfs/usr/local/lib/swipl/xpce/prolog/lib/print_text.pl"/>
+											<F N="docker/rootfs/usr/local/lib/swipl/xpce/prolog/lib/prolog_predicate.pl"/>
+											<F N="docker/rootfs/usr/local/lib/swipl/xpce/prolog/lib/prolog_predicate_item.pl"/>
+											<F N="docker/rootfs/usr/local/lib/swipl/xpce/prolog/lib/qrecompile.pl"/>
+											<F N="docker/rootfs/usr/local/lib/swipl/xpce/prolog/lib/scaledbitmap.pl"/>
+											<F N="docker/rootfs/usr/local/lib/swipl/xpce/prolog/lib/scan_arguments.pl"/>
+											<F N="docker/rootfs/usr/local/lib/swipl/xpce/prolog/lib/sp_fcompile.pl"/>
+											<F N="docker/rootfs/usr/local/lib/swipl/xpce/prolog/lib/splash_screen.pl"/>
+											<F N="docker/rootfs/usr/local/lib/swipl/xpce/prolog/lib/stayup_popup.pl"/>
+											<F N="docker/rootfs/usr/local/lib/swipl/xpce/prolog/lib/swi_compatibility.pl"/>
+											<F N="docker/rootfs/usr/local/lib/swipl/xpce/prolog/lib/swi_edit.pl"/>
+											<F N="docker/rootfs/usr/local/lib/swipl/xpce/prolog/lib/swi_hooks.pl"/>
+											<F N="docker/rootfs/usr/local/lib/swipl/xpce/prolog/lib/swi_ide.pl"/>
+											<F N="docker/rootfs/usr/local/lib/swipl/xpce/prolog/lib/swi_preferences.pl"/>
+											<F N="docker/rootfs/usr/local/lib/swipl/xpce/prolog/lib/tabbed_window.pl"/>
+											<F N="docker/rootfs/usr/local/lib/swipl/xpce/prolog/lib/tabular.pl"/>
+											<F N="docker/rootfs/usr/local/lib/swipl/xpce/prolog/lib/toc_filesystem.pl"/>
+											<F N="docker/rootfs/usr/local/lib/swipl/xpce/prolog/lib/toolbar.pl"/>
+											<F N="docker/rootfs/usr/local/lib/swipl/xpce/prolog/lib/url_image.pl"/>
+											<F N="docker/rootfs/usr/local/lib/swipl/xpce/prolog/lib/Xserver.pl"/>
+										</Folder>
+									</Folder>
+								</Folder>
+							</Folder>
+						</Folder>
+					</Folder>
+				</Folder>
+			</Folder>
+		</Folder>
 		<Folder Name="packs_sys">
 			<Folder Name="dictoo">
 				<Folder Name="prolog">
@@ -869,16 +1863,10 @@
 						</Folder>
 						<Folder Name="fol">
 							<Folder Name="fiveof">
-								<F N="packs_sys/logicmoo_base/t/examples/fol/fiveof/ddd"/>
 								<F N="packs_sys/logicmoo_base/t/examples/fol/fiveof/five_leftof_02.pl"/>
 								<F N="packs_sys/logicmoo_base/t/examples/fol/fiveof/five_leftof_03.pl"/>
-								<F N="packs_sys/logicmoo_base/t/examples/fol/fiveof/five_leftof_all_01.pl"/>
-								<F N="packs_sys/logicmoo_base/t/examples/fol/fiveof/five_leftof_exactly_01.pl"/>
-								<F N="packs_sys/logicmoo_base/t/examples/fol/fiveof/five_leftof_insts_01.pl"/>
-								<F N="packs_sys/logicmoo_base/t/examples/fol/fiveof/five_leftof_skollem_01.pl"/>
 								<F N="packs_sys/logicmoo_base/t/examples/fol/fiveof/five_leftof_type_01.pl"/>
 								<F N="packs_sys/logicmoo_base/t/examples/fol/fiveof/five_leftof_type_02.pl"/>
-								<F N="packs_sys/logicmoo_base/t/examples/fol/fiveof/five_leftof_up_down_01.pl"/>
 								<F N="packs_sys/logicmoo_base/t/examples/fol/fiveof/leftof_tests.pl"/>
 								<F N="packs_sys/logicmoo_base/t/examples/fol/fiveof/monotonic_type_01.pl"/>
 								<F N="packs_sys/logicmoo_base/t/examples/fol/fiveof/nonmonotonic_type_01.pl"/>
@@ -3022,7 +4010,6 @@
 						<F N="packs_sys/pfc/prolog/pfclib/system_module_inheritance.pfc.pl"/>
 						<F N="packs_sys/pfc/prolog/pfclib/system_singleValued.pfc.pl"/>
 					</Folder>
-					<F N="packs_sys/pfc/prolog/pfc.pl"/>
 					<F N="packs_sys/pfc/prolog/pfc_dcg.pl"/>
 					<F N="packs_sys/pfc/prolog/pfc_iri_resource.pl"/>
 					<F N="packs_sys/pfc/prolog/pfc_lib.pl"/>
@@ -4024,6 +5011,1104 @@
 				</Folder>
 				<F N="packs_sys/wam_common_lisp/pack.pl"/>
 			</Folder>
+		</Folder>
+		<Folder Name="packs_web">
+			<Folder Name="ClioPatria">
+				<Folder Name="api">
+					<F N="packs_web/ClioPatria/api/export.pl"/>
+					<F N="packs_web/ClioPatria/api/journal.pl"/>
+					<F N="packs_web/ClioPatria/api/json.pl"/>
+					<F N="packs_web/ClioPatria/api/lod.pl"/>
+					<F N="packs_web/ClioPatria/api/lod_crawler.pl"/>
+					<F N="packs_web/ClioPatria/api/pengines.pl"/>
+					<F N="packs_web/ClioPatria/api/rdflib.pl"/>
+					<F N="packs_web/ClioPatria/api/sesame.pl"/>
+					<F N="packs_web/ClioPatria/api/sparql.pl"/>
+					<F N="packs_web/ClioPatria/api/void.pl"/>
+				</Folder>
+				<Folder Name="applications">
+					<Folder Name="help">
+						<F N="packs_web/ClioPatria/applications/help/ac_predicate.pl"/>
+						<F N="packs_web/ClioPatria/applications/help/doc_components.pl"/>
+						<F N="packs_web/ClioPatria/applications/help/http_help.pl"/>
+						<F N="packs_web/ClioPatria/applications/help/http_tree.pl"/>
+						<F N="packs_web/ClioPatria/applications/help/load.pl"/>
+						<F N="packs_web/ClioPatria/applications/help/version.pl"/>
+						<F N="packs_web/ClioPatria/applications/help/wiki.pl"/>
+					</Folder>
+					<F N="packs_web/ClioPatria/applications/admin.pl"/>
+					<F N="packs_web/ClioPatria/applications/browse.pl"/>
+					<F N="packs_web/ClioPatria/applications/config.pl"/>
+					<F N="packs_web/ClioPatria/applications/flint.pl"/>
+					<F N="packs_web/ClioPatria/applications/user.pl"/>
+					<F N="packs_web/ClioPatria/applications/yasgui.pl"/>
+				</Folder>
+				<Folder Name="client">
+					<F N="packs_web/ClioPatria/client/sesame_client.pl"/>
+				</Folder>
+				<Folder Name="components">
+					<F N="packs_web/ClioPatria/components/basics.pl"/>
+					<F N="packs_web/ClioPatria/components/graphviz.pl"/>
+					<F N="packs_web/ClioPatria/components/label.pl"/>
+					<F N="packs_web/ClioPatria/components/menu.pl"/>
+					<F N="packs_web/ClioPatria/components/messages.pl"/>
+					<F N="packs_web/ClioPatria/components/query.pl"/>
+					<F N="packs_web/ClioPatria/components/server_statistics.pl"/>
+					<F N="packs_web/ClioPatria/components/simple_search.pl"/>
+				</Folder>
+				<Folder Name="config-available">
+					<F N="packs_web/ClioPatria/config-available/020-prefixes.pl"/>
+					<F N="packs_web/ClioPatria/config-available/authenticate.pl"/>
+					<F N="packs_web/ClioPatria/config-available/cache.pl"/>
+					<F N="packs_web/ClioPatria/config-available/config.pl"/>
+					<F N="packs_web/ClioPatria/config-available/debug.pl"/>
+					<F N="packs_web/ClioPatria/config-available/flint.pl"/>
+					<F N="packs_web/ClioPatria/config-available/https.pl"/>
+					<F N="packs_web/ClioPatria/config-available/https_only.pl"/>
+					<F N="packs_web/ClioPatria/config-available/localhost.pl"/>
+					<F N="packs_web/ClioPatria/config-available/lod.pl"/>
+					<F N="packs_web/ClioPatria/config-available/logging.pl"/>
+					<F N="packs_web/ClioPatria/config-available/network.pl"/>
+					<F N="packs_web/ClioPatria/config-available/pengines.pl"/>
+					<F N="packs_web/ClioPatria/config-available/rdfpath.pl"/>
+					<F N="packs_web/ClioPatria/config-available/skin_fix_menu.pl"/>
+					<F N="packs_web/ClioPatria/config-available/store.pl"/>
+					<F N="packs_web/ClioPatria/config-available/winpath.pl"/>
+					<F N="packs_web/ClioPatria/config-available/zlib.pl"/>
+				</Folder>
+				<Folder Name="entailment">
+					<F N="packs_web/ClioPatria/entailment/load.pl"/>
+					<F N="packs_web/ClioPatria/entailment/none.pl"/>
+					<F N="packs_web/ClioPatria/entailment/rdf.pl"/>
+					<F N="packs_web/ClioPatria/entailment/rdfs.pl"/>
+					<F N="packs_web/ClioPatria/entailment/rdfs_lite.pl"/>
+					<F N="packs_web/ClioPatria/entailment/skosxl.pl"/>
+				</Folder>
+				<Folder Name="lib">
+					<Folder Name="bundles">
+						<F N="packs_web/ClioPatria/lib/bundles/html_page.pl"/>
+					</Folder>
+					<Folder Name="cpack">
+						<F N="packs_web/ClioPatria/lib/cpack/cpack.pl"/>
+					</Folder>
+					<Folder Name="http">
+						<F N="packs_web/ClioPatria/lib/http/cp_jquery.pl"/>
+						<F N="packs_web/ClioPatria/lib/http/http_jspath.pl"/>
+						<F N="packs_web/ClioPatria/lib/http/http_monitor.pl"/>
+						<F N="packs_web/ClioPatria/lib/http/http_request_value.pl"/>
+						<F N="packs_web/ClioPatria/lib/http/url_cache.pl"/>
+						<F N="packs_web/ClioPatria/lib/http/yui_resources.pl"/>
+					</Folder>
+					<Folder Name="semweb">
+						<F N="packs_web/ClioPatria/lib/semweb/owl.pl"/>
+						<F N="packs_web/ClioPatria/lib/semweb/rdf_abstract.pl"/>
+						<F N="packs_web/ClioPatria/lib/semweb/rdf_bnode.pl"/>
+						<F N="packs_web/ClioPatria/lib/semweb/rdf_describe.pl"/>
+						<F N="packs_web/ClioPatria/lib/semweb/rdf_description.pl"/>
+						<F N="packs_web/ClioPatria/lib/semweb/rdf_file_type.pl"/>
+						<F N="packs_web/ClioPatria/lib/semweb/rdf_graphviz.pl"/>
+						<F N="packs_web/ClioPatria/lib/semweb/rdf_history.pl"/>
+						<F N="packs_web/ClioPatria/lib/semweb/rdf_json.pl"/>
+						<F N="packs_web/ClioPatria/lib/semweb/rdf_label.pl"/>
+						<F N="packs_web/ClioPatria/lib/semweb/rdf_optimise.pl"/>
+						<F N="packs_web/ClioPatria/lib/semweb/rdf_schema.pl"/>
+					</Folder>
+					<F N="packs_web/ClioPatria/lib/bundle.pl"/>
+					<F N="packs_web/ClioPatria/lib/conf_d.pl"/>
+					<F N="packs_web/ClioPatria/lib/count.pl"/>
+					<F N="packs_web/ClioPatria/lib/git.pl"/>
+					<F N="packs_web/ClioPatria/lib/http_settings.pl"/>
+					<F N="packs_web/ClioPatria/lib/setup.pl"/>
+					<F N="packs_web/ClioPatria/lib/version.pl"/>
+				</Folder>
+				<Folder Name="rdfql">
+					<F N="packs_web/ClioPatria/rdfql/jena_functions.pl"/>
+					<F N="packs_web/ClioPatria/rdfql/jena_properties.pl"/>
+					<F N="packs_web/ClioPatria/rdfql/rdf_html.pl"/>
+					<F N="packs_web/ClioPatria/rdfql/rdf_io.pl"/>
+					<F N="packs_web/ClioPatria/rdfql/rdf_turtle_io.pl"/>
+					<F N="packs_web/ClioPatria/rdfql/rdfql_runtime.pl"/>
+					<F N="packs_web/ClioPatria/rdfql/rdfql_util.pl"/>
+					<F N="packs_web/ClioPatria/rdfql/serql.pl"/>
+					<F N="packs_web/ClioPatria/rdfql/serql_runtime.pl"/>
+					<F N="packs_web/ClioPatria/rdfql/serql_xml_result.pl"/>
+					<F N="packs_web/ClioPatria/rdfql/sparql.pl"/>
+					<F N="packs_web/ClioPatria/rdfql/sparql_csv_result.pl"/>
+					<F N="packs_web/ClioPatria/rdfql/sparql_grammar.pl"/>
+					<F N="packs_web/ClioPatria/rdfql/sparql_json_result.pl"/>
+					<F N="packs_web/ClioPatria/rdfql/sparql_runtime.pl"/>
+					<F N="packs_web/ClioPatria/rdfql/sparql_xml_result.pl"/>
+					<F N="packs_web/ClioPatria/rdfql/text_properties.pl"/>
+				</Folder>
+				<Folder Name="skin">
+					<F N="packs_web/ClioPatria/skin/cliopatria.pl"/>
+				</Folder>
+				<Folder Name="test">
+					<F N="packs_web/ClioPatria/test/serql_test.pl"/>
+					<F N="packs_web/ClioPatria/test/sesame_tests.pl"/>
+					<F N="packs_web/ClioPatria/test/test.pl"/>
+					<F N="packs_web/ClioPatria/test/test_client.pl"/>
+					<F N="packs_web/ClioPatria/test/test_errors.pl"/>
+					<F N="packs_web/ClioPatria/test/test_manifest.pl"/>
+					<F N="packs_web/ClioPatria/test/test_sparql.pl"/>
+				</Folder>
+				<Folder Name="user">
+					<F N="packs_web/ClioPatria/user/openid.pl"/>
+					<F N="packs_web/ClioPatria/user/preferences.pl"/>
+					<F N="packs_web/ClioPatria/user/user_db.pl"/>
+				</Folder>
+				<Folder Name="web">
+					<Folder Name="FlintSparqlEditor">
+						<Folder Name="ll1">
+							<F N="packs_web/ClioPatria/web/FlintSparqlEditor/ll1/gen_ll1.pl"/>
+							<F N="packs_web/ClioPatria/web/FlintSparqlEditor/ll1/gen_sparql10query.pl"/>
+							<F N="packs_web/ClioPatria/web/FlintSparqlEditor/ll1/gen_sparql11query.pl"/>
+							<F N="packs_web/ClioPatria/web/FlintSparqlEditor/ll1/gen_sparql11update.pl"/>
+							<F N="packs_web/ClioPatria/web/FlintSparqlEditor/ll1/ll1.pl"/>
+							<F N="packs_web/ClioPatria/web/FlintSparqlEditor/ll1/output_to_javascript.pl"/>
+							<F N="packs_web/ClioPatria/web/FlintSparqlEditor/ll1/parser.pl"/>
+							<F N="packs_web/ClioPatria/web/FlintSparqlEditor/ll1/prune.pl"/>
+							<F N="packs_web/ClioPatria/web/FlintSparqlEditor/ll1/rewrite.pl"/>
+							<F N="packs_web/ClioPatria/web/FlintSparqlEditor/ll1/sparql10grammar.pl"/>
+							<F N="packs_web/ClioPatria/web/FlintSparqlEditor/ll1/sparql11grammar.pl"/>
+						</Folder>
+					</Folder>
+					<Folder Name="help">
+						<Folder Name="howto">
+							<F N="packs_web/ClioPatria/web/help/howto/prophier.pl"/>
+						</Folder>
+						<F N="packs_web/ClioPatria/web/help/mbox.pl"/>
+					</Folder>
+					<Folder Name="tutorial">
+						<Folder Name="Parsia">
+							<F N="packs_web/ClioPatria/web/tutorial/Parsia/dcgscript.pl"/>
+						</Folder>
+					</Folder>
+					<Folder Name="yasqe">
+						<Folder Name="lib">
+							<Folder Name="grammar">
+								<Folder Name="util">
+									<F N="packs_web/ClioPatria/web/yasqe/lib/grammar/util/gen_ll1.pl"/>
+									<F N="packs_web/ClioPatria/web/yasqe/lib/grammar/util/gen_sparql11.pl"/>
+									<F N="packs_web/ClioPatria/web/yasqe/lib/grammar/util/ll1.pl"/>
+									<F N="packs_web/ClioPatria/web/yasqe/lib/grammar/util/output_to_javascript.pl"/>
+									<F N="packs_web/ClioPatria/web/yasqe/lib/grammar/util/prune.pl"/>
+									<F N="packs_web/ClioPatria/web/yasqe/lib/grammar/util/rewrite.pl"/>
+								</Folder>
+								<F N="packs_web/ClioPatria/web/yasqe/lib/grammar/sparql11-grammar.pl"/>
+							</Folder>
+						</Folder>
+					</Folder>
+				</Folder>
+				<F N="packs_web/ClioPatria/cliopatria.pl"/>
+				<F N="packs_web/ClioPatria/hooks.pl"/>
+				<F N="packs_web/ClioPatria/parms.pl"/>
+				<F N="packs_web/ClioPatria/setup.pl"/>
+			</Folder>
+			<Folder Name="logicmoo_webui">
+				<Folder Name="prolog">
+					<F N="packs_web/logicmoo_webui/prolog/logicmoo_cliop.pl"/>
+					<F N="packs_web/logicmoo_webui/prolog/logicmoo_pldoc.pl"/>
+					<F N="packs_web/logicmoo_webui/prolog/logicmoo_plweb.pl"/>
+					<F N="packs_web/logicmoo_webui/prolog/logicmoo_run_clio.pl"/>
+					<F N="packs_web/logicmoo_webui/prolog/logicmoo_run_pldoc.pl"/>
+					<F N="packs_web/logicmoo_webui/prolog/logicmoo_run_swish.pl"/>
+					<F N="packs_web/logicmoo_webui/prolog/logicmoo_swish.pl"/>
+					<F N="packs_web/logicmoo_webui/prolog/logicmoo_swish_unit.pl"/>
+					<F N="packs_web/logicmoo_webui/prolog/logicmoo_web_long_message.pl"/>
+					<F N="packs_web/logicmoo_webui/prolog/logicmoo_webbot.pl"/>
+					<F N="packs_web/logicmoo_webui/prolog/logicmoo_webui.pl"/>
+				</Folder>
+				<F N="packs_web/logicmoo_webui/pack.pl"/>
+			</Folder>
+			<Folder Name="plweb">
+				<Folder Name="logs">
+					<F N="packs_web/plweb/logs/log2clf.pl"/>
+					<F N="packs_web/plweb/logs/logstat.pl"/>
+					<F N="packs_web/plweb/logs/plstat.pl"/>
+					<F N="packs_web/plweb/logs/stat.pl"/>
+				</Folder>
+				<Folder Name="packs">
+					<Folder Name="googleclient">
+						<Folder Name="demo">
+							<F N="packs_web/plweb/packs/googleclient/demo/test.pl"/>
+						</Folder>
+						<Folder Name="prolog">
+							<F N="packs_web/plweb/packs/googleclient/prolog/google_client.pl"/>
+							<F N="packs_web/plweb/packs/googleclient/prolog/jwt.pl"/>
+						</Folder>
+						<F N="packs_web/plweb/packs/googleclient/pack.pl"/>
+					</Folder>
+					<Folder Name="recaptcha">
+						<Folder Name="examples">
+							<F N="packs_web/plweb/packs/recaptcha/examples/demo.pl"/>
+						</Folder>
+						<Folder Name="prolog">
+							<Folder Name="http">
+								<F N="packs_web/plweb/packs/recaptcha/prolog/http/recaptcha.pl"/>
+							</Folder>
+						</Folder>
+						<F N="packs_web/plweb/packs/recaptcha/pack.pl"/>
+					</Folder>
+					<Folder Name="smtp">
+						<Folder Name="prolog">
+							<F N="packs_web/plweb/packs/smtp/prolog/smtp.pl"/>
+						</Folder>
+						<F N="packs_web/plweb/packs/smtp/pack_renamed.pl"/>
+					</Folder>
+				</Folder>
+				<Folder Name="stress">
+					<F N="packs_web/plweb/stress/http_cookie.pl"/>
+					<F N="packs_web/plweb/stress/maps.pl"/>
+					<F N="packs_web/plweb/stress/replay.pl"/>
+					<F N="packs_web/plweb/stress/stress.pl"/>
+				</Folder>
+				<Folder Name="www">
+					<Folder Name="build">
+						<Folder Name="issues">
+							<F N="packs_web/plweb/www/build/issues/topics.pl"/>
+						</Folder>
+					</Folder>
+					<Folder Name="howto">
+						<Folder Name="http">
+							<F N="packs_web/plweb/www/howto/http/demo_upload_file.pl"/>
+							<F N="packs_web/plweb/www/howto/http/hello_html.pl"/>
+							<F N="packs_web/plweb/www/howto/http/hello_world.pl"/>
+							<F N="packs_web/plweb/www/howto/http/list_modules.pl"/>
+							<F N="packs_web/plweb/www/howto/http/lod.pl"/>
+							<F N="packs_web/plweb/www/howto/http/lod_crawler.pl"/>
+							<F N="packs_web/plweb/www/howto/http/modules.pl"/>
+							<F N="packs_web/plweb/www/howto/http/scale.pl"/>
+							<F N="packs_web/plweb/www/howto/http/sindice.pl"/>
+							<F N="packs_web/plweb/www/howto/http/sindice_v2.pl"/>
+						</Folder>
+					</Folder>
+					<Folder Name="Tutorials">
+						<F N="packs_web/plweb/www/Tutorials/dcgscript.pl"/>
+					</Folder>
+					<Folder Name="web">
+						<Folder Name="ClioPatria">
+							<F N="packs_web/plweb/www/web/ClioPatria/mbox.pl"/>
+						</Folder>
+					</Folder>
+				</Folder>
+				<F N="packs_web/plweb/annotateit.pl"/>
+				<F N="packs_web/plweb/annotation.pl"/>
+				<F N="packs_web/plweb/api.pl"/>
+				<F N="packs_web/plweb/autocomplete.pl"/>
+				<F N="packs_web/plweb/blog.pl"/>
+				<F N="packs_web/plweb/changelog.pl"/>
+				<F N="packs_web/plweb/changes.pl"/>
+				<F N="packs_web/plweb/contents.pl"/>
+				<F N="packs_web/plweb/customise.pl"/>
+				<F N="packs_web/plweb/daemon.pl"/>
+				<F N="packs_web/plweb/debug.pl"/>
+				<F N="packs_web/plweb/did_you_know.pl"/>
+				<F N="packs_web/plweb/download.pl"/>
+				<F N="packs_web/plweb/examples.pl"/>
+				<F N="packs_web/plweb/fastly.pl"/>
+				<F N="packs_web/plweb/footer.pl"/>
+				<F N="packs_web/plweb/fork.pl"/>
+				<F N="packs_web/plweb/forum.pl"/>
+				<F N="packs_web/plweb/generics.pl"/>
+				<F N="packs_web/plweb/git_html.pl"/>
+				<F N="packs_web/plweb/gitweb.pl"/>
+				<F N="packs_web/plweb/holidays.pl"/>
+				<F N="packs_web/plweb/http_cgi.pl"/>
+				<F N="packs_web/plweb/http_fork.pl"/>
+				<F N="packs_web/plweb/load.pl"/>
+				<F N="packs_web/plweb/log.pl"/>
+				<F N="packs_web/plweb/make.pl"/>
+				<F N="packs_web/plweb/markdown.pl"/>
+				<F N="packs_web/plweb/markitup.pl"/>
+				<F N="packs_web/plweb/messages.pl"/>
+				<F N="packs_web/plweb/news.pl"/>
+				<F N="packs_web/plweb/notify.pl"/>
+				<F N="packs_web/plweb/object_support.pl"/>
+				<F N="packs_web/plweb/openid.pl"/>
+				<F N="packs_web/plweb/pack.pl"/>
+				<F N="packs_web/plweb/pack_analyzer.pl"/>
+				<F N="packs_web/plweb/pack_info.pl"/>
+				<F N="packs_web/plweb/pack_mirror.pl"/>
+				<F N="packs_web/plweb/page.pl"/>
+				<F N="packs_web/plweb/parms.pl"/>
+				<F N="packs_web/plweb/plweb.pl"/>
+				<F N="packs_web/plweb/post.pl"/>
+				<F N="packs_web/plweb/proxy.pl"/>
+				<F N="packs_web/plweb/rating.pl"/>
+				<F N="packs_web/plweb/register.pl"/>
+				<F N="packs_web/plweb/review.pl"/>
+				<F N="packs_web/plweb/stats.pl"/>
+				<F N="packs_web/plweb/tagit.pl"/>
+				<F N="packs_web/plweb/test_plweb.pl"/>
+				<F N="packs_web/plweb/test_recaptcha.pl"/>
+				<F N="packs_web/plweb/tests.pl"/>
+				<F N="packs_web/plweb/update.pl"/>
+				<F N="packs_web/plweb/watchdog.pl"/>
+				<F N="packs_web/plweb/wiki.pl"/>
+				<F N="packs_web/plweb/wiki_edit.pl"/>
+			</Folder>
+			<Folder Name="shrdlu">
+				<Folder Name="prolog">
+					<F N="packs_web/shrdlu/prolog/logicmoo_shrdlu.pl"/>
+				</Folder>
+			</Folder>
+			<Folder Name="swish">
+				<Folder Name="applications">
+					<F N="packs_web/swish/applications/swish.pl"/>
+				</Folder>
+				<Folder Name="config-available">
+					<F N="packs_web/swish/config-available/allow_remote.pl"/>
+					<F N="packs_web/swish/config-available/auth_google.pl"/>
+					<F N="packs_web/swish/config-available/auth_http.pl"/>
+					<F N="packs_web/swish/config-available/auth_http_always.pl"/>
+					<F N="packs_web/swish/config-available/auth_scz.pl"/>
+					<F N="packs_web/swish/config-available/auth_stackoverflow.pl"/>
+					<F N="packs_web/swish/config-available/auth_unity.pl"/>
+					<F N="packs_web/swish/config-available/branding.pl"/>
+					<F N="packs_web/swish/config-available/chat80.pl"/>
+					<F N="packs_web/swish/config-available/clpqr.pl"/>
+					<F N="packs_web/swish/config-available/cplint_r.pl"/>
+					<F N="packs_web/swish/config-available/data.pl"/>
+					<F N="packs_web/swish/config-available/debug.pl"/>
+					<F N="packs_web/swish/config-available/dim.pl"/>
+					<F N="packs_web/swish/config-available/dim_large.pl"/>
+					<F N="packs_web/swish/config-available/email.pl"/>
+					<F N="packs_web/swish/config-available/gitty_files.pl"/>
+					<F N="packs_web/swish/config-available/gitty_plugins.pl"/>
+					<F N="packs_web/swish/config-available/hdt.pl"/>
+					<F N="packs_web/swish/config-available/landing.pl"/>
+					<F N="packs_web/swish/config-available/logging.pl"/>
+					<F N="packs_web/swish/config-available/network.pl"/>
+					<F N="packs_web/swish/config-available/notifications.pl"/>
+					<F N="packs_web/swish/config-available/plugin_slider.pl"/>
+					<F N="packs_web/swish/config-available/provenance.pl"/>
+					<F N="packs_web/swish/config-available/r_serve.pl"/>
+					<F N="packs_web/swish/config-available/rdf.pl"/>
+					<F N="packs_web/swish/config-available/repack.pl"/>
+					<F N="packs_web/swish/config-available/rlimit.pl"/>
+					<F N="packs_web/swish/config-available/rpc.pl"/>
+					<F N="packs_web/swish/config-available/sshd.pl"/>
+					<F N="packs_web/swish/config-available/tasks.pl"/>
+					<F N="packs_web/swish/config-available/user_profile.pl"/>
+					<F N="packs_web/swish/config-available/version_info.pl"/>
+					<F N="packs_web/swish/config-available/wordnet.pl"/>
+				</Folder>
+				<Folder Name="examples">
+					<Folder Name="aleph">
+						<F N="packs_web/swish/examples/aleph/abduce.pl"/>
+						<F N="packs_web/swish/examples/aleph/animals.pl"/>
+						<F N="packs_web/swish/examples/aleph/constraints.pl"/>
+						<F N="packs_web/swish/examples/aleph/features.pl"/>
+						<F N="packs_web/swish/examples/aleph/gcws.pl"/>
+						<F N="packs_web/swish/examples/aleph/good.pl"/>
+						<F N="packs_web/swish/examples/aleph/interactive_animals.pl"/>
+						<F N="packs_web/swish/examples/aleph/interactive_mem.pl"/>
+						<F N="packs_web/swish/examples/aleph/modes.pl"/>
+						<F N="packs_web/swish/examples/aleph/numbers_guess.pl"/>
+						<F N="packs_web/swish/examples/aleph/numbers_ineq.pl"/>
+						<F N="packs_web/swish/examples/aleph/numbers_line.pl"/>
+						<F N="packs_web/swish/examples/aleph/numbers_miline.pl"/>
+						<F N="packs_web/swish/examples/aleph/portray_train.pl"/>
+						<F N="packs_web/swish/examples/aleph/posonly.pl"/>
+						<F N="packs_web/swish/examples/aleph/recursion.pl"/>
+						<F N="packs_web/swish/examples/aleph/refine.pl"/>
+						<F N="packs_web/swish/examples/aleph/train.pl"/>
+						<F N="packs_web/swish/examples/aleph/weather.pl"/>
+						<F N="packs_web/swish/examples/aleph/wedge.pl"/>
+					</Folder>
+					<Folder Name="inference">
+						<F N="packs_web/swish/examples/inference/admission.pl"/>
+						<F N="packs_web/swish/examples/inference/alarm.pl"/>
+						<F N="packs_web/swish/examples/inference/alarm_R.pl"/>
+						<F N="packs_web/swish/examples/inference/arithm.pl"/>
+						<F N="packs_web/swish/examples/inference/arithm_R.pl"/>
+						<F N="packs_web/swish/examples/inference/bag_1.pl"/>
+						<F N="packs_web/swish/examples/inference/bag_game_mpe.pl"/>
+						<F N="packs_web/swish/examples/inference/bag_game_vit.pl"/>
+						<F N="packs_web/swish/examples/inference/bag_mpe.pl"/>
+						<F N="packs_web/swish/examples/inference/barabasiGraph.pl"/>
+						<F N="packs_web/swish/examples/inference/binomial.pl"/>
+						<F N="packs_web/swish/examples/inference/bitcoin_attack.pl"/>
+						<F N="packs_web/swish/examples/inference/bitcoin_two_phase.pl"/>
+						<F N="packs_web/swish/examples/inference/bloodtype.pl"/>
+						<F N="packs_web/swish/examples/inference/bloodtype_R.pl"/>
+						<F N="packs_web/swish/examples/inference/coin.pl"/>
+						<F N="packs_web/swish/examples/inference/coin2.pl"/>
+						<F N="packs_web/swish/examples/inference/coin2_R.pl"/>
+						<F N="packs_web/swish/examples/inference/coin_R.pl"/>
+						<F N="packs_web/swish/examples/inference/coinmc.pl"/>
+						<F N="packs_web/swish/examples/inference/coinmc_R.pl"/>
+						<F N="packs_web/swish/examples/inference/coinmsw.pl"/>
+						<F N="packs_web/swish/examples/inference/coinmsw_R.pl"/>
+						<F N="packs_web/swish/examples/inference/cora.pl"/>
+						<F N="packs_web/swish/examples/inference/cora_R.pl"/>
+						<F N="packs_web/swish/examples/inference/coupon.pl"/>
+						<F N="packs_web/swish/examples/inference/dice.pl"/>
+						<F N="packs_web/swish/examples/inference/dice_R.pl"/>
+						<F N="packs_web/swish/examples/inference/dirichlet_process.pl"/>
+						<F N="packs_web/swish/examples/inference/dirichlet_process_R.pl"/>
+						<F N="packs_web/swish/examples/inference/dp_chinese.pl"/>
+						<F N="packs_web/swish/examples/inference/dp_chinese_R.pl"/>
+						<F N="packs_web/swish/examples/inference/dp_mix.pl"/>
+						<F N="packs_web/swish/examples/inference/dp_mix_R.pl"/>
+						<F N="packs_web/swish/examples/inference/earthquake.pl"/>
+						<F N="packs_web/swish/examples/inference/earthquake_R.pl"/>
+						<F N="packs_web/swish/examples/inference/epidemic.pl"/>
+						<F N="packs_web/swish/examples/inference/epidemic_R.pl"/>
+						<F N="packs_web/swish/examples/inference/eruption.pl"/>
+						<F N="packs_web/swish/examples/inference/eruption_mpe.pl"/>
+						<F N="packs_web/swish/examples/inference/eruption_R.pl"/>
+						<F N="packs_web/swish/examples/inference/eruption_vit.pl"/>
+						<F N="packs_web/swish/examples/inference/flexprob.pl"/>
+						<F N="packs_web/swish/examples/inference/gambling.pl"/>
+						<F N="packs_web/swish/examples/inference/gauss_mean_est.pl"/>
+						<F N="packs_web/swish/examples/inference/gauss_mean_est_R.pl"/>
+						<F N="packs_web/swish/examples/inference/gaussian_mixture.pl"/>
+						<F N="packs_web/swish/examples/inference/gaussian_mixture_R.pl"/>
+						<F N="packs_web/swish/examples/inference/gaussian_process.pl"/>
+						<F N="packs_web/swish/examples/inference/gpl.pl"/>
+						<F N="packs_web/swish/examples/inference/gpr.pl"/>
+						<F N="packs_web/swish/examples/inference/gpr_R.pl"/>
+						<F N="packs_web/swish/examples/inference/h_index.pl"/>
+						<F N="packs_web/swish/examples/inference/hhmm.pl"/>
+						<F N="packs_web/swish/examples/inference/hmm.pl"/>
+						<F N="packs_web/swish/examples/inference/hmm_R.pl"/>
+						<F N="packs_web/swish/examples/inference/hmm_vit.pl"/>
+						<F N="packs_web/swish/examples/inference/hmmpos.pl"/>
+						<F N="packs_web/swish/examples/inference/hmmpos2.pl"/>
+						<F N="packs_web/swish/examples/inference/indian_gpa.pl"/>
+						<F N="packs_web/swish/examples/inference/indian_gpadc.pl"/>
+						<F N="packs_web/swish/examples/inference/iris.pl"/>
+						<F N="packs_web/swish/examples/inference/iris_c3.pl"/>
+						<F N="packs_web/swish/examples/inference/jail.pl"/>
+						<F N="packs_web/swish/examples/inference/kalman_filter.pl"/>
+						<F N="packs_web/swish/examples/inference/kalman_filter_R.pl"/>
+						<F N="packs_web/swish/examples/inference/kalman_filtermsw.pl"/>
+						<F N="packs_web/swish/examples/inference/kalman_filtermsw_R.pl"/>
+						<F N="packs_web/swish/examples/inference/lda.pl"/>
+						<F N="packs_web/swish/examples/inference/light.pl"/>
+						<F N="packs_web/swish/examples/inference/markov_chain.pl"/>
+						<F N="packs_web/swish/examples/inference/markov_chain_R.pl"/>
+						<F N="packs_web/swish/examples/inference/markov_chaindb.pl"/>
+						<F N="packs_web/swish/examples/inference/markov_factor.pl"/>
+						<F N="packs_web/swish/examples/inference/markov_network.pl"/>
+						<F N="packs_web/swish/examples/inference/mendel.pl"/>
+						<F N="packs_web/swish/examples/inference/mendelc.pl"/>
+						<F N="packs_web/swish/examples/inference/meta.pl"/>
+						<F N="packs_web/swish/examples/inference/metacomb.pl"/>
+						<F N="packs_web/swish/examples/inference/mln.pl"/>
+						<F N="packs_web/swish/examples/inference/monty.pl"/>
+						<F N="packs_web/swish/examples/inference/monty_simple.pl"/>
+						<F N="packs_web/swish/examples/inference/multiple_paths.pl"/>
+						<F N="packs_web/swish/examples/inference/multiple_paths_simple.pl"/>
+						<F N="packs_web/swish/examples/inference/mvg.pl"/>
+						<F N="packs_web/swish/examples/inference/nballs.pl"/>
+						<F N="packs_web/swish/examples/inference/nballsdc.pl"/>
+						<F N="packs_web/swish/examples/inference/path.pl"/>
+						<F N="packs_web/swish/examples/inference/path_tabling.pl"/>
+						<F N="packs_web/swish/examples/inference/pcfg.pl"/>
+						<F N="packs_web/swish/examples/inference/pcfglr.pl"/>
+						<F N="packs_web/swish/examples/inference/pcfglr_R.pl"/>
+						<F N="packs_web/swish/examples/inference/pcfglrdb.pl"/>
+						<F N="packs_web/swish/examples/inference/pctl_slep.pl"/>
+						<F N="packs_web/swish/examples/inference/persons.pl"/>
+						<F N="packs_web/swish/examples/inference/pitampe_hmm.pl"/>
+						<F N="packs_web/swish/examples/inference/plcg.pl"/>
+						<F N="packs_web/swish/examples/inference/plcg_R.pl"/>
+						<F N="packs_web/swish/examples/inference/pre_plcg.pl"/>
+						<F N="packs_web/swish/examples/inference/prefix.pl"/>
+						<F N="packs_web/swish/examples/inference/prefix_R.pl"/>
+						<F N="packs_web/swish/examples/inference/rmc.pl"/>
+						<F N="packs_web/swish/examples/inference/seven_scientists.pl"/>
+						<F N="packs_web/swish/examples/inference/seven_scientists_R.pl"/>
+						<F N="packs_web/swish/examples/inference/simpson.pl"/>
+						<F N="packs_web/swish/examples/inference/slp_pcfg.pl"/>
+						<F N="packs_web/swish/examples/inference/slp_pdcg.pl"/>
+						<F N="packs_web/swish/examples/inference/slp_pdcg_R.pl"/>
+						<F N="packs_web/swish/examples/inference/smoking.pl"/>
+						<F N="packs_web/swish/examples/inference/sneezing.pl"/>
+						<F N="packs_web/swish/examples/inference/sneezing_simple.pl"/>
+						<F N="packs_web/swish/examples/inference/sneezing_simple_msw.pl"/>
+						<F N="packs_web/swish/examples/inference/sneezing_simple_pb.pl"/>
+						<F N="packs_web/swish/examples/inference/testdb.pl"/>
+						<F N="packs_web/swish/examples/inference/threesideddice.pl"/>
+						<F N="packs_web/swish/examples/inference/threesideddicemc.pl"/>
+						<F N="packs_web/swish/examples/inference/tile_map.pl"/>
+						<F N="packs_web/swish/examples/inference/tile_mapcond.pl"/>
+						<F N="packs_web/swish/examples/inference/tile_mapnocut.pl"/>
+						<F N="packs_web/swish/examples/inference/tiny_event_calculus.pl"/>
+						<F N="packs_web/swish/examples/inference/tiny_event_calculusmc.pl"/>
+						<F N="packs_web/swish/examples/inference/trigger.pl"/>
+						<F N="packs_web/swish/examples/inference/truel.pl"/>
+						<F N="packs_web/swish/examples/inference/truncated_dirichlet_process.pl"/>
+						<F N="packs_web/swish/examples/inference/uwcse.pl"/>
+						<F N="packs_web/swish/examples/inference/var_obj.pl"/>
+						<F N="packs_web/swish/examples/inference/var_obj_geom.pl"/>
+						<F N="packs_web/swish/examples/inference/var_obj_geom_R.pl"/>
+						<F N="packs_web/swish/examples/inference/var_obj_R.pl"/>
+						<F N="packs_web/swish/examples/inference/var_objdb.pl"/>
+						<F N="packs_web/swish/examples/inference/viral.pl"/>
+						<F N="packs_web/swish/examples/inference/viralpb.pl"/>
+						<F N="packs_web/swish/examples/inference/viraltab.pl"/>
+						<F N="packs_web/swish/examples/inference/widget.pl"/>
+						<F N="packs_web/swish/examples/inference/widget_R.pl"/>
+						<F N="packs_web/swish/examples/inference/widgetmsw.pl"/>
+						<F N="packs_web/swish/examples/inference/widgetmsw_R.pl"/>
+					</Folder>
+					<Folder Name="learning">
+						<F N="packs_web/swish/examples/learning/bongard.pl"/>
+						<F N="packs_web/swish/examples/learning/bongard_fixed.pl"/>
+						<F N="packs_web/swish/examples/learning/bongard_ind.pl"/>
+						<F N="packs_web/swish/examples/learning/bongard_initial.pl"/>
+						<F N="packs_web/swish/examples/learning/bongard_R.pl"/>
+						<F N="packs_web/swish/examples/learning/bongardkeys.pl"/>
+						<F N="packs_web/swish/examples/learning/exauc.pl"/>
+						<F N="packs_web/swish/examples/learning/exauc_R.pl"/>
+						<F N="packs_web/swish/examples/learning/hmmlearn.pl"/>
+						<F N="packs_web/swish/examples/learning/learn_effect_axioms.pl"/>
+						<F N="packs_web/swish/examples/learning/mach.pl"/>
+						<F N="packs_web/swish/examples/learning/mach_R.pl"/>
+						<F N="packs_web/swish/examples/learning/multiple_paths_learning.pl"/>
+						<F N="packs_web/swish/examples/learning/multiple_paths_simple_learning.pl"/>
+						<F N="packs_web/swish/examples/learning/muta.pl"/>
+						<F N="packs_web/swish/examples/learning/registration.pl"/>
+						<F N="packs_web/swish/examples/learning/shop.pl"/>
+						<F N="packs_web/swish/examples/learning/university.pl"/>
+					</Folder>
+					<Folder Name="lemur">
+						<F N="packs_web/swish/examples/lemur/bongard.pl"/>
+						<F N="packs_web/swish/examples/lemur/bongardkeys.pl"/>
+						<F N="packs_web/swish/examples/lemur/mach.pl"/>
+						<F N="packs_web/swish/examples/lemur/registration.pl"/>
+					</Folder>
+					<Folder Name="logicmoo">
+						<Folder Name="extra">
+							<F N="packs_web/swish/examples/logicmoo/extra/animals.pl"/>
+						</Folder>
+					</Folder>
+					<Folder Name="lps_corner">
+						<Folder Name="CLOUT_workshop">
+							<Folder Name="simulation">
+								<F N="packs_web/swish/examples/lps_corner/CLOUT_workshop/simulation/cookingMachine.pl"/>
+								<F N="packs_web/swish/examples/lps_corner/CLOUT_workshop/simulation/simpleConveyor.pl"/>
+								<F N="packs_web/swish/examples/lps_corner/CLOUT_workshop/simulation/SimulationKit.pl"/>
+							</Folder>
+							<F N="packs_web/swish/examples/lps_corner/CLOUT_workshop/badlight.pl"/>
+							<F N="packs_web/swish/examples/lps_corner/CLOUT_workshop/badlight_user.pl"/>
+							<F N="packs_web/swish/examples/lps_corner/CLOUT_workshop/ballot.pl"/>
+							<F N="packs_web/swish/examples/lps_corner/CLOUT_workshop/bankTransfer.pl"/>
+							<F N="packs_web/swish/examples/lps_corner/CLOUT_workshop/bankTransfer_lazy2d.pl"/>
+							<F N="packs_web/swish/examples/lps_corner/CLOUT_workshop/bubbleSort.pl"/>
+							<F N="packs_web/swish/examples/lps_corner/CLOUT_workshop/burning.pl"/>
+							<F N="packs_web/swish/examples/lps_corner/CLOUT_workshop/concurrent_towers.pl"/>
+							<F N="packs_web/swish/examples/lps_corner/CLOUT_workshop/concurrentTowers.pl"/>
+							<F N="packs_web/swish/examples/lps_corner/CLOUT_workshop/consolidatedLoan.pl"/>
+							<F N="packs_web/swish/examples/lps_corner/CLOUT_workshop/d_test.pl"/>
+							<F N="packs_web/swish/examples/lps_corner/CLOUT_workshop/deliveryDelay.pl"/>
+							<F N="packs_web/swish/examples/lps_corner/CLOUT_workshop/derivative_contract.pl"/>
+							<F N="packs_web/swish/examples/lps_corner/CLOUT_workshop/diningPhilosophers-client.pl"/>
+							<F N="packs_web/swish/examples/lps_corner/CLOUT_workshop/diningPhilosophers-table.pl"/>
+							<F N="packs_web/swish/examples/lps_corner/CLOUT_workshop/diningPhilosophers-table.pl_f1_.P"/>
+							<F N="packs_web/swish/examples/lps_corner/CLOUT_workshop/diningPhilosophers-table.pl_f2_.P"/>
+							<F N="packs_web/swish/examples/lps_corner/CLOUT_workshop/diningPhilosophers.pl"/>
+							<F N="packs_web/swish/examples/lps_corner/CLOUT_workshop/email.pl"/>
+							<F N="packs_web/swish/examples/lps_corner/CLOUT_workshop/employment_contract.pl"/>
+							<F N="packs_web/swish/examples/lps_corner/CLOUT_workshop/employment_contract_base.pl"/>
+							<F N="packs_web/swish/examples/lps_corner/CLOUT_workshop/Escrow.pl"/>
+							<F N="packs_web/swish/examples/lps_corner/CLOUT_workshop/fire_recurrent.pl"/>
+							<F N="packs_web/swish/examples/lps_corner/CLOUT_workshop/fireRecurrent.pl"/>
+							<F N="packs_web/swish/examples/lps_corner/CLOUT_workshop/fireSimple.pl"/>
+							<F N="packs_web/swish/examples/lps_corner/CLOUT_workshop/GameWithOracle.pl"/>
+							<F N="packs_web/swish/examples/lps_corner/CLOUT_workshop/GameWithOracleSimpler.pl"/>
+							<F N="packs_web/swish/examples/lps_corner/CLOUT_workshop/goat.pl"/>
+							<F N="packs_web/swish/examples/lps_corner/CLOUT_workshop/goto_with_ifthenelse.pl"/>
+							<F N="packs_web/swish/examples/lps_corner/CLOUT_workshop/helloemail.pl"/>
+							<F N="packs_web/swish/examples/lps_corner/CLOUT_workshop/life.pl"/>
+							<F N="packs_web/swish/examples/lps_corner/CLOUT_workshop/life_lazyGUI.pl"/>
+							<F N="packs_web/swish/examples/lps_corner/CLOUT_workshop/loan_agreement.pl"/>
+							<F N="packs_web/swish/examples/lps_corner/CLOUT_workshop/loanAgreementPostConditions.pl"/>
+							<F N="packs_web/swish/examples/lps_corner/CLOUT_workshop/loanAgreementPostConditionsRT.pl"/>
+							<F N="packs_web/swish/examples/lps_corner/CLOUT_workshop/loanAgreementPostConditionsRTbase.pl"/>
+							<F N="packs_web/swish/examples/lps_corner/CLOUT_workshop/loanAgreementPostConditionsRTbaseBorrowerCures.pl"/>
+							<F N="packs_web/swish/examples/lps_corner/CLOUT_workshop/loanAgreementPostConditionsRTbaseBorrowerCuresRep.pl"/>
+							<F N="packs_web/swish/examples/lps_corner/CLOUT_workshop/loanAgreementPostConditionsRTbaseBorrowerDefaults.pl"/>
+							<F N="packs_web/swish/examples/lps_corner/CLOUT_workshop/loanAgreementPostConditionsRTbaseNoComplications.pl"/>
+							<F N="packs_web/swish/examples/lps_corner/CLOUT_workshop/loanAgreementPostConditionsRTbasePaysEarly.pl"/>
+							<F N="packs_web/swish/examples/lps_corner/CLOUT_workshop/loanAgreementPostConditionsRTbasePaysEarlyTricky.pl"/>
+							<F N="packs_web/swish/examples/lps_corner/CLOUT_workshop/loanAgreementPostConditionsRTbasePaysLate.pl"/>
+							<F N="packs_web/swish/examples/lps_corner/CLOUT_workshop/mapColouring.pl"/>
+							<F N="packs_web/swish/examples/lps_corner/CLOUT_workshop/negatedEvents-FS.pl"/>
+							<F N="packs_web/swish/examples/lps_corner/CLOUT_workshop/negatedEvents.pl"/>
+							<F N="packs_web/swish/examples/lps_corner/CLOUT_workshop/prisoners.pl"/>
+							<F N="packs_web/swish/examples/lps_corner/CLOUT_workshop/quicksort.pl"/>
+							<F N="packs_web/swish/examples/lps_corner/CLOUT_workshop/redis_toggler.pl"/>
+							<F N="packs_web/swish/examples/lps_corner/CLOUT_workshop/RockPaperScissors-Minimal-en.pl"/>
+							<F N="packs_web/swish/examples/lps_corner/CLOUT_workshop/RockPaperScissors-Minimal.pl"/>
+							<F N="packs_web/swish/examples/lps_corner/CLOUT_workshop/RockPaperScissors.pl"/>
+							<F N="packs_web/swish/examples/lps_corner/CLOUT_workshop/RockPaperScissorsBase.pl"/>
+							<F N="packs_web/swish/examples/lps_corner/CLOUT_workshop/RockPaperScissorsBaseEN.pl"/>
+							<F N="packs_web/swish/examples/lps_corner/CLOUT_workshop/RockPaperScissorsEthereum.pl"/>
+							<F N="packs_web/swish/examples/lps_corner/CLOUT_workshop/RockPaperScissorsEthereumFEn.pl"/>
+							<F N="packs_web/swish/examples/lps_corner/CLOUT_workshop/RockPaperScissorsServer-noProspectivePCs.pl"/>
+							<F N="packs_web/swish/examples/lps_corner/CLOUT_workshop/RockPaperScissorsServer.pl"/>
+							<F N="packs_web/swish/examples/lps_corner/CLOUT_workshop/RockPaperScissorsServer.pl_f1_.P"/>
+							<F N="packs_web/swish/examples/lps_corner/CLOUT_workshop/rstapi_test.pl"/>
+							<F N="packs_web/swish/examples/lps_corner/CLOUT_workshop/simulateExternalEvent.pl"/>
+							<F N="packs_web/swish/examples/lps_corner/CLOUT_workshop/smartHomePrimitives.pl"/>
+							<F N="packs_web/swish/examples/lps_corner/CLOUT_workshop/sortWithTime.pl"/>
+							<F N="packs_web/swish/examples/lps_corner/CLOUT_workshop/sos.pl"/>
+							<F N="packs_web/swish/examples/lps_corner/CLOUT_workshop/SzaboLanguage_futures.pl"/>
+							<F N="packs_web/swish/examples/lps_corner/CLOUT_workshop/SzaboLanguage_futures_failing.pl"/>
+							<F N="packs_web/swish/examples/lps_corner/CLOUT_workshop/SzaboLanguage_insurance_base.pl"/>
+							<F N="packs_web/swish/examples/lps_corner/CLOUT_workshop/SzaboLanguage_insurance_eternal.pl"/>
+							<F N="packs_web/swish/examples/lps_corner/CLOUT_workshop/SzaboLanguage_insurance_foreclosing.pl"/>
+							<F N="packs_web/swish/examples/lps_corner/CLOUT_workshop/SzaboLanguage_insurance_irrelevant_events.pl"/>
+							<F N="packs_web/swish/examples/lps_corner/CLOUT_workshop/SzaboLanguage_insurance_noncompliant.pl"/>
+							<F N="packs_web/swish/examples/lps_corner/CLOUT_workshop/SzaboLanguage_insurance_normal_claim.pl"/>
+							<F N="packs_web/swish/examples/lps_corner/CLOUT_workshop/SzaboLanguage_insurance_tricky_claim.pl"/>
+							<F N="packs_web/swish/examples/lps_corner/CLOUT_workshop/trash.pl"/>
+							<F N="packs_web/swish/examples/lps_corner/CLOUT_workshop/turingTest.pl"/>
+							<F N="packs_web/swish/examples/lps_corner/CLOUT_workshop/use_insulin.pl"/>
+						</Folder>
+						<Folder Name="external_interfaces">
+							<F N="packs_web/swish/examples/lps_corner/external_interfaces/interprolog_api.P"/>
+							<F N="packs_web/swish/examples/lps_corner/external_interfaces/myHook.pl"/>
+							<F N="packs_web/swish/examples/lps_corner/external_interfaces/myJavaHook.pl"/>
+						</Folder>
+						<Folder Name="forTesting">
+							<F N="packs_web/swish/examples/lps_corner/forTesting/authoriseCard.pl"/>
+							<F N="packs_web/swish/examples/lps_corner/forTesting/backgroundBankTransfer.pl"/>
+							<F N="packs_web/swish/examples/lps_corner/forTesting/backgroundBankTransfer.pl_f7_.P"/>
+							<F N="packs_web/swish/examples/lps_corner/forTesting/backgroundRain.pl"/>
+							<F N="packs_web/swish/examples/lps_corner/forTesting/backgroundRain2.pl"/>
+							<F N="packs_web/swish/examples/lps_corner/forTesting/backtrackExample1.lpsw_.P"/>
+							<F N="packs_web/swish/examples/lps_corner/forTesting/backtrackExample2.lpsw_.P"/>
+							<F N="packs_web/swish/examples/lps_corner/forTesting/backtrackExample3.lpsw_.P"/>
+							<F N="packs_web/swish/examples/lps_corner/forTesting/backtrackingAcrossCycles.pl"/>
+							<F N="packs_web/swish/examples/lps_corner/forTesting/badlight2.pl"/>
+							<F N="packs_web/swish/examples/lps_corner/forTesting/ballotTest.pl"/>
+							<F N="packs_web/swish/examples/lps_corner/forTesting/bank account.lpsw_.P"/>
+							<F N="packs_web/swish/examples/lps_corner/forTesting/bank_account_realtime.pl"/>
+							<F N="packs_web/swish/examples/lps_corner/forTesting/bank_transferWithhappened.pl"/>
+							<F N="packs_web/swish/examples/lps_corner/forTesting/bankDoubleTransfer.pl"/>
+							<F N="packs_web/swish/examples/lps_corner/forTesting/bankTransfer1.pl"/>
+							<F N="packs_web/swish/examples/lps_corner/forTesting/bankTransfer2.pl"/>
+							<F N="packs_web/swish/examples/lps_corner/forTesting/bobObservationBug.pl"/>
+							<F N="packs_web/swish/examples/lps_corner/forTesting/bubble sort.lpsw_.P"/>
+							<F N="packs_web/swish/examples/lps_corner/forTesting/BugEndingWithSimulatedRealTime.pl"/>
+							<F N="packs_web/swish/examples/lps_corner/forTesting/changingFluentInAntecedent.pl"/>
+							<F N="packs_web/swish/examples/lps_corner/forTesting/compositeEventInconsistency.pl"/>
+							<F N="packs_web/swish/examples/lps_corner/forTesting/compositeEventsInPostConditions.pl"/>
+							<F N="packs_web/swish/examples/lps_corner/forTesting/compositeInitiateBug.pl"/>
+							<F N="packs_web/swish/examples/lps_corner/forTesting/DelayPenalty.pl"/>
+							<F N="packs_web/swish/examples/lps_corner/forTesting/diningTable.pl_f1_.P"/>
+							<F N="packs_web/swish/examples/lps_corner/forTesting/diningTable.pl_f2_.P"/>
+							<F N="packs_web/swish/examples/lps_corner/forTesting/diningTable.pl_f3_.P"/>
+							<F N="packs_web/swish/examples/lps_corner/forTesting/editingActions.pl"/>
+							<F N="packs_web/swish/examples/lps_corner/forTesting/external_stuff.pl"/>
+							<F N="packs_web/swish/examples/lps_corner/forTesting/externalPrologEvents.pl"/>
+							<F N="packs_web/swish/examples/lps_corner/forTesting/failBetter.pl"/>
+							<F N="packs_web/swish/examples/lps_corner/forTesting/failBetter2.pl"/>
+							<F N="packs_web/swish/examples/lps_corner/forTesting/fariba_sam_bug.pl"/>
+							<F N="packs_web/swish/examples/lps_corner/forTesting/fluentAfterEvent.pl"/>
+							<F N="packs_web/swish/examples/lps_corner/forTesting/fluentInCompositeEvent.pl"/>
+							<F N="packs_web/swish/examples/lps_corner/forTesting/futuresContractCompliant.pl"/>
+							<F N="packs_web/swish/examples/lps_corner/forTesting/futuresContractFailing.pl"/>
+							<F N="packs_web/swish/examples/lps_corner/forTesting/if_then.pl"/>
+							<F N="packs_web/swish/examples/lps_corner/forTesting/if_then_else.pl"/>
+							<F N="packs_web/swish/examples/lps_corner/forTesting/if_then_else_with_writes.pl"/>
+							<F N="packs_web/swish/examples/lps_corner/forTesting/implicitTimeOrdering.pl"/>
+							<F N="packs_web/swish/examples/lps_corner/forTesting/inLineTimeExpressions.pl"/>
+							<F N="packs_web/swish/examples/lps_corner/forTesting/intensFluentBindingTime.pl"/>
+							<F N="packs_web/swish/examples/lps_corner/forTesting/manual_minimal.pl"/>
+							<F N="packs_web/swish/examples/lps_corner/forTesting/mapColouring.pl"/>
+							<F N="packs_web/swish/examples/lps_corner/forTesting/meta.pl"/>
+							<F N="packs_web/swish/examples/lps_corner/forTesting/negatedFluentInConjunction.pl"/>
+							<F N="packs_web/swish/examples/lps_corner/forTesting/negatedFluentShouldNotSucceed.pl"/>
+							<F N="packs_web/swish/examples/lps_corner/forTesting/negatedIntentionslFluent.pl"/>
+							<F N="packs_web/swish/examples/lps_corner/forTesting/neverEndingEvent.pl"/>
+							<F N="packs_web/swish/examples/lps_corner/forTesting/paralellConjunctions.pl"/>
+							<F N="packs_web/swish/examples/lps_corner/forTesting/prisoners-dilemma-latest.lpsw_.P"/>
+							<F N="packs_web/swish/examples/lps_corner/forTesting/prospectiveGoat.pl"/>
+							<F N="packs_web/swish/examples/lps_corner/forTesting/prospectiveGoat2.pl"/>
+							<F N="packs_web/swish/examples/lps_corner/forTesting/quicksort.lpsw_.P"/>
+							<F N="packs_web/swish/examples/lps_corner/forTesting/real_time_constants.pl"/>
+							<F N="packs_web/swish/examples/lps_corner/forTesting/realTimeObservations.pl"/>
+							<F N="packs_web/swish/examples/lps_corner/forTesting/rock_scissor_paper_bug.pl"/>
+							<F N="packs_web/swish/examples/lps_corner/forTesting/RockPaperScissors-3players-badFluent.pl"/>
+							<F N="packs_web/swish/examples/lps_corner/forTesting/RockPaperScissors-3players.pl"/>
+							<F N="packs_web/swish/examples/lps_corner/forTesting/saver.pl"/>
+							<F N="packs_web/swish/examples/lps_corner/forTesting/serializedDice.pl"/>
+							<F N="packs_web/swish/examples/lps_corner/forTesting/simple_example1.lpsw_.P"/>
+							<F N="packs_web/swish/examples/lps_corner/forTesting/simulatedTime.pl"/>
+							<F N="packs_web/swish/examples/lps_corner/forTesting/simulatedTimeCompositeEvent.pl"/>
+							<F N="packs_web/swish/examples/lps_corner/forTesting/simulatedTimeCompositeEvent2.pl"/>
+							<F N="packs_web/swish/examples/lps_corner/forTesting/sos.pl"/>
+							<F N="packs_web/swish/examples/lps_corner/forTesting/switchingWithTimeExpression.pl"/>
+							<F N="packs_web/swish/examples/lps_corner/forTesting/terminator.pl"/>
+							<F N="packs_web/swish/examples/lps_corner/forTesting/testlevent.lpsw_.P"/>
+							<F N="packs_web/swish/examples/lps_corner/forTesting/testNLPhook.pl"/>
+							<F N="packs_web/swish/examples/lps_corner/forTesting/trash_disposal.lpsw_.P"/>
+							<F N="packs_web/swish/examples/lps_corner/forTesting/trash_forall.pl"/>
+							<F N="packs_web/swish/examples/lps_corner/forTesting/trash_two_locked.pl"/>
+							<F N="packs_web/swish/examples/lps_corner/forTesting/two_initiate.pl"/>
+							<F N="packs_web/swish/examples/lps_corner/forTesting/unserializedDice.pl"/>
+							<F N="packs_web/swish/examples/lps_corner/forTesting/variant_clauses.lpsw_.P"/>
+						</Folder>
+						<F N="packs_web/swish/examples/lps_corner/Ballot.pl"/>
+						<F N="packs_web/swish/examples/lps_corner/bank account_terse.pl"/>
+						<F N="packs_web/swish/examples/lps_corner/binaryChop.pl"/>
+						<F N="packs_web/swish/examples/lps_corner/binaryChop2.pl"/>
+						<F N="packs_web/swish/examples/lps_corner/dining_philosophers_terse.pl"/>
+						<F N="packs_web/swish/examples/lps_corner/ethereumAntecedent.pl"/>
+						<F N="packs_web/swish/examples/lps_corner/ethereumAsync.pl"/>
+						<F N="packs_web/swish/examples/lps_corner/goat.pl"/>
+						<F N="packs_web/swish/examples/lps_corner/just rains.pl"/>
+						<F N="packs_web/swish/examples/lps_corner/lamport_clock.pl"/>
+						<F N="packs_web/swish/examples/lps_corner/lps_dialect_test.pl"/>
+						<F N="packs_web/swish/examples/lps_corner/Melee.pl"/>
+						<F N="packs_web/swish/examples/lps_corner/oneprisoner.pl"/>
+						<F N="packs_web/swish/examples/lps_corner/party.pl"/>
+						<F N="packs_web/swish/examples/lps_corner/party_minimal.pl"/>
+						<F N="packs_web/swish/examples/lps_corner/restaurant.pl"/>
+						<F N="packs_web/swish/examples/lps_corner/server_space_monitor.pl"/>
+						<F N="packs_web/swish/examples/lps_corner/simple-smart-contract.pl"/>
+						<F N="packs_web/swish/examples/lps_corner/slamodel.pl"/>
+						<F N="packs_web/swish/examples/lps_corner/tictactoe.pl"/>
+					</Folder>
+					<Folder Name="pfc">
+						<F N="packs_web/swish/examples/pfc/system_autoexec.pfc.pl"/>
+						<F N="packs_web/swish/examples/pfc/system_autoexec_3_0.pfc.pl"/>
+						<F N="packs_web/swish/examples/pfc/system_base.pfc.pl"/>
+						<F N="packs_web/swish/examples/pfc/system_each_module.pfc.pl"/>
+						<F N="packs_web/swish/examples/pfc/system_mdefault.pfc.pl"/>
+						<F N="packs_web/swish/examples/pfc/system_module_inheritance.pfc.pl"/>
+						<F N="packs_web/swish/examples/pfc/system_singleValued.pfc.pl"/>
+					</Folder>
+					<Folder Name="phil">
+						<F N="packs_web/swish/examples/phil/bongard.pl"/>
+						<F N="packs_web/swish/examples/phil/bongardkeys.pl"/>
+						<F N="packs_web/swish/examples/phil/muta.pl"/>
+						<F N="packs_web/swish/examples/phil/pyrimidine.pl"/>
+						<F N="packs_web/swish/examples/phil/university.pl"/>
+						<F N="packs_web/swish/examples/phil/uwcse.pl"/>
+						<F N="packs_web/swish/examples/phil/uwcsekeys.pl"/>
+					</Folder>
+					<Folder Name="trill">
+						<F N="packs_web/swish/examples/trill/biopaxLevel3.pl"/>
+						<F N="packs_web/swish/examples/trill/BRCA.pl"/>
+						<F N="packs_web/swish/examples/trill/commander.pl"/>
+						<F N="packs_web/swish/examples/trill/DBPedia.pl"/>
+						<F N="packs_web/swish/examples/trill/johnEmployee.pl"/>
+						<F N="packs_web/swish/examples/trill/peoplePets.pl"/>
+						<F N="packs_web/swish/examples/trill/rdf_queries.pl"/>
+						<F N="packs_web/swish/examples/trill/vicodi.pl"/>
+					</Folder>
+					<F N="packs_web/swish/examples/clpfd_queens.pl"/>
+					<F N="packs_web/swish/examples/clpfd_sudoku.pl"/>
+					<F N="packs_web/swish/examples/database.pl"/>
+					<F N="packs_web/swish/examples/eliza.pl"/>
+					<F N="packs_web/swish/examples/expert_system.pl"/>
+					<F N="packs_web/swish/examples/grammar.pl"/>
+					<F N="packs_web/swish/examples/houses_puzzle.pl"/>
+					<F N="packs_web/swish/examples/io.pl"/>
+					<F N="packs_web/swish/examples/japanese.pl"/>
+					<F N="packs_web/swish/examples/kb.pl"/>
+					<F N="packs_web/swish/examples/knights_and_knaves.pl"/>
+					<F N="packs_web/swish/examples/lists.pl"/>
+					<F N="packs_web/swish/examples/member.pl"/>
+					<F N="packs_web/swish/examples/movies.pl"/>
+					<F N="packs_web/swish/examples/queens.pl"/>
+					<F N="packs_web/swish/examples/zenls.pfc"/>
+				</Folder>
+				<Folder Name="lib">
+					<Folder Name="data">
+						<F N="packs_web/swish/lib/data/csv.pl"/>
+						<F N="packs_web/swish/lib/data/scrape.pl"/>
+						<F N="packs_web/swish/lib/data/sparql.pl"/>
+					</Folder>
+					<Folder Name="plugin">
+						<F N="packs_web/swish/lib/plugin/email.pl"/>
+						<F N="packs_web/swish/lib/plugin/hdt.pl"/>
+						<F N="packs_web/swish/lib/plugin/http_authenticate.pl"/>
+						<F N="packs_web/swish/lib/plugin/http_dyn_workers.pl"/>
+						<F N="packs_web/swish/lib/plugin/login.pl"/>
+						<F N="packs_web/swish/lib/plugin/notify.pl"/>
+						<F N="packs_web/swish/lib/plugin/profile.pl"/>
+					</Folder>
+					<Folder Name="render">
+						<F N="packs_web/swish/lib/render/bdd.pl"/>
+						<F N="packs_web/swish/lib/render/c3.pl"/>
+						<F N="packs_web/swish/lib/render/chess.pl"/>
+						<F N="packs_web/swish/lib/render/codes.pl"/>
+						<F N="packs_web/swish/lib/render/cp_rdf.pl"/>
+						<F N="packs_web/swish/lib/render/graphviz.pl"/>
+						<F N="packs_web/swish/lib/render/gvterm.pl"/>
+						<F N="packs_web/swish/lib/render/html.pl"/>
+						<F N="packs_web/swish/lib/render/ide.pl"/>
+						<F N="packs_web/swish/lib/render/lpad.pl"/>
+						<F N="packs_web/swish/lib/render/mathjax.pl"/>
+						<F N="packs_web/swish/lib/render/prolog.pl"/>
+						<F N="packs_web/swish/lib/render/rdf.pl"/>
+						<F N="packs_web/swish/lib/render/sldnf.pl"/>
+						<F N="packs_web/swish/lib/render/sudoku.pl"/>
+						<F N="packs_web/swish/lib/render/svgtree.pl"/>
+						<F N="packs_web/swish/lib/render/swish.pl"/>
+						<F N="packs_web/swish/lib/render/table.pl"/>
+						<F N="packs_web/swish/lib/render/tiles.pl"/>
+						<F N="packs_web/swish/lib/render/url.pl"/>
+						<F N="packs_web/swish/lib/render/wordnet.pl"/>
+					</Folder>
+					<F N="packs_web/swish/lib/attvar.pl"/>
+					<F N="packs_web/swish/lib/authenticate.pl"/>
+					<F N="packs_web/swish/lib/avatar.pl"/>
+					<F N="packs_web/swish/lib/bootstrap.pl"/>
+					<F N="packs_web/swish/lib/chat.pl"/>
+					<F N="packs_web/swish/lib/chatstore.pl"/>
+					<F N="packs_web/swish/lib/config.pl"/>
+					<F N="packs_web/swish/lib/content_filter.pl"/>
+					<F N="packs_web/swish/lib/cp_authenticate.pl"/>
+					<F N="packs_web/swish/lib/cron.pl"/>
+					<F N="packs_web/swish/lib/dashboard.pl"/>
+					<F N="packs_web/swish/lib/data_source.pl"/>
+					<F N="packs_web/swish/lib/download.pl"/>
+					<F N="packs_web/swish/lib/examples.pl"/>
+					<F N="packs_web/swish/lib/filesystems.pl"/>
+					<F N="packs_web/swish/lib/flags.pl"/>
+					<F N="packs_web/swish/lib/form.pl"/>
+					<F N="packs_web/swish/lib/gitty.pl"/>
+					<F N="packs_web/swish/lib/gitty_bdb.pl"/>
+					<F N="packs_web/swish/lib/gitty_driver_bdb.pl"/>
+					<F N="packs_web/swish/lib/gitty_driver_files.pl"/>
+					<F N="packs_web/swish/lib/gitty_tools.pl"/>
+					<F N="packs_web/swish/lib/help.pl"/>
+					<F N="packs_web/swish/lib/highlight.pl"/>
+					<F N="packs_web/swish/lib/html_output.pl"/>
+					<F N="packs_web/swish/lib/http_version.pl"/>
+					<F N="packs_web/swish/lib/include.pl"/>
+					<F N="packs_web/swish/lib/jquery.pl"/>
+					<F N="packs_web/swish/lib/logging.pl"/>
+					<F N="packs_web/swish/lib/markdown.pl"/>
+					<F N="packs_web/swish/lib/md_eval.pl"/>
+					<F N="packs_web/swish/lib/messages.pl"/>
+					<F N="packs_web/swish/lib/noble_avatar.pl"/>
+					<F N="packs_web/swish/lib/oauth2.pl"/>
+					<F N="packs_web/swish/lib/page.pl"/>
+					<F N="packs_web/swish/lib/patch.pl"/>
+					<F N="packs_web/swish/lib/paths.pl"/>
+					<F N="packs_web/swish/lib/pep.pl"/>
+					<F N="packs_web/swish/lib/procps.pl"/>
+					<F N="packs_web/swish/lib/profiles.pl"/>
+					<F N="packs_web/swish/lib/projection.pl"/>
+					<F N="packs_web/swish/lib/provenance.pl"/>
+					<F N="packs_web/swish/lib/r_swish.pl"/>
+					<F N="packs_web/swish/lib/render.pl"/>
+					<F N="packs_web/swish/lib/replay.pl"/>
+					<F N="packs_web/swish/lib/replay_cm.pl"/>
+					<F N="packs_web/swish/lib/search.pl"/>
+					<F N="packs_web/swish/lib/session.pl"/>
+					<F N="packs_web/swish/lib/ssl_certificate.pl"/>
+					<F N="packs_web/swish/lib/storage.pl"/>
+					<F N="packs_web/swish/lib/swish_chr.pl"/>
+					<F N="packs_web/swish/lib/swish_csv.pl"/>
+					<F N="packs_web/swish/lib/swish_debug.pl"/>
+					<F N="packs_web/swish/lib/template_hint.pl"/>
+					<F N="packs_web/swish/lib/trace.pl"/>
+					<F N="packs_web/swish/lib/tutorial.pl"/>
+					<F N="packs_web/swish/lib/version.pl"/>
+					<F N="packs_web/swish/lib/web.pl"/>
+				</Folder>
+				<Folder Name="pack">
+					<Folder Name="chat80">
+						<Folder Name="prolog">
+							<Folder Name="chat80">
+								<F N="packs_web/swish/pack/chat80/prolog/chat80/aggreg.pl"/>
+								<F N="packs_web/swish/pack/chat80/prolog/chat80/border.pl"/>
+								<F N="packs_web/swish/pack/chat80/prolog/chat80/chat.pl"/>
+								<F N="packs_web/swish/pack/chat80/prolog/chat80/chatops.pl"/>
+								<F N="packs_web/swish/pack/chat80/prolog/chat80/chattop.pl"/>
+								<F N="packs_web/swish/pack/chat80/prolog/chat80/cities.pl"/>
+								<F N="packs_web/swish/pack/chat80/prolog/chat80/clotab.pl"/>
+								<F N="packs_web/swish/pack/chat80/prolog/chat80/contai.pl"/>
+								<F N="packs_web/swish/pack/chat80/prolog/chat80/countr.pl"/>
+								<F N="packs_web/swish/pack/chat80/prolog/chat80/ndtabl.pl"/>
+								<F N="packs_web/swish/pack/chat80/prolog/chat80/newdic.pl"/>
+								<F N="packs_web/swish/pack/chat80/prolog/chat80/newg.pl"/>
+								<F N="packs_web/swish/pack/chat80/prolog/chat80/ptree.pl"/>
+								<F N="packs_web/swish/pack/chat80/prolog/chat80/qplan.pl"/>
+								<F N="packs_web/swish/pack/chat80/prolog/chat80/readin.pl"/>
+								<F N="packs_web/swish/pack/chat80/prolog/chat80/rivers.pl"/>
+								<F N="packs_web/swish/pack/chat80/prolog/chat80/scopes.pl"/>
+								<F N="packs_web/swish/pack/chat80/prolog/chat80/slots.pl"/>
+								<F N="packs_web/swish/pack/chat80/prolog/chat80/talkr.pl"/>
+								<F N="packs_web/swish/pack/chat80/prolog/chat80/templa.pl"/>
+								<F N="packs_web/swish/pack/chat80/prolog/chat80/world0.pl"/>
+								<F N="packs_web/swish/pack/chat80/prolog/chat80/xgrun.pl"/>
+							</Folder>
+							<F N="packs_web/swish/pack/chat80/prolog/chat80.pl"/>
+						</Folder>
+						<F N="packs_web/swish/pack/chat80/pack.pl"/>
+					</Folder>
+					<Folder Name="hdt">
+						<Folder Name="prolog">
+							<F N="packs_web/swish/pack/hdt/prolog/hdt.pl"/>
+						</Folder>
+						<Folder Name="test">
+							<F N="packs_web/swish/pack/hdt/test/test.pl"/>
+						</Folder>
+						<F N="packs_web/swish/pack/hdt/pack.pl"/>
+					</Folder>
+					<Folder Name="libssh">
+						<Folder Name="examples">
+							<F N="packs_web/swish/pack/libssh/examples/password.pl"/>
+							<F N="packs_web/swish/pack/libssh/examples/start.pl"/>
+						</Folder>
+						<Folder Name="prolog">
+							<F N="packs_web/swish/pack/libssh/prolog/ssh_server.pl"/>
+						</Folder>
+						<F N="packs_web/swish/pack/libssh/pack.pl"/>
+					</Folder>
+					<Folder Name="pcache">
+						<Folder Name="prolog">
+							<F N="packs_web/swish/pack/pcache/prolog/cache_rocks.pl"/>
+							<F N="packs_web/swish/pack/pcache/prolog/signature.pl"/>
+						</Folder>
+						<Folder Name="test">
+							<F N="packs_web/swish/pack/pcache/test/demo.pl"/>
+							<F N="packs_web/swish/pack/pcache/test/test_pcache.pl"/>
+						</Folder>
+						<F N="packs_web/swish/pack/pcache/pack.pl"/>
+					</Folder>
+					<Folder Name="profile">
+						<Folder Name="examples">
+							<F N="packs_web/swish/pack/profile/examples/profile_demo.pl"/>
+						</Folder>
+						<Folder Name="prolog">
+							<Folder Name="profile">
+								<Folder Name="backend">
+									<F N="packs_web/swish/pack/profile/prolog/profile/backend/profile_empty.pl"/>
+									<F N="packs_web/swish/pack/profile/prolog/profile/backend/profile_prolog.pl"/>
+								</Folder>
+							</Folder>
+							<F N="packs_web/swish/pack/profile/prolog/user_profile.pl"/>
+						</Folder>
+						<F N="packs_web/swish/pack/profile/pack.pl"/>
+					</Folder>
+					<Folder Name="rserve_client">
+						<Folder Name="prolog">
+							<Folder Name="r">
+								<F N="packs_web/swish/pack/rserve_client/prolog/r/r_call.pl"/>
+								<F N="packs_web/swish/pack/rserve_client/prolog/r/r_data.pl"/>
+								<F N="packs_web/swish/pack/rserve_client/prolog/r/r_expand_dot.pl"/>
+								<F N="packs_web/swish/pack/rserve_client/prolog/r/r_grammar.pl"/>
+								<F N="packs_web/swish/pack/rserve_client/prolog/r/r_sandbox.pl"/>
+								<F N="packs_web/swish/pack/rserve_client/prolog/r/r_serve.pl"/>
+								<F N="packs_web/swish/pack/rserve_client/prolog/r/r_term.pl"/>
+							</Folder>
+						</Folder>
+						<F N="packs_web/swish/pack/rserve_client/pack.pl"/>
+					</Folder>
+					<Folder Name="smtp">
+						<Folder Name="prolog">
+							<F N="packs_web/swish/pack/smtp/prolog/smtp.pl"/>
+						</Folder>
+						<F N="packs_web/swish/pack/smtp/pack.pl"/>
+					</Folder>
+					<Folder Name="wordnet">
+						<Folder Name="prolog">
+							<F N="packs_web/swish/pack/wordnet/prolog/wn.pl"/>
+							<F N="packs_web/swish/pack/wordnet/prolog/wn_portray.pl"/>
+						</Folder>
+						<F N="packs_web/swish/pack/wordnet/pack.pl"/>
+					</Folder>
+				</Folder>
+				<Folder Name="profiles">
+					<F N="packs_web/swish/profiles/00-Empty.pl"/>
+					<F N="packs_web/swish/profiles/10-PITA.pl"/>
+					<F N="packs_web/swish/profiles/10-TRILL.pl"/>
+					<F N="packs_web/swish/profiles/11-PFC.pl"/>
+					<F N="packs_web/swish/profiles/12-LogicMOO.pl"/>
+					<F N="packs_web/swish/profiles/13-MUD.pl"/>
+					<F N="packs_web/swish/profiles/20-MCINTYRE.pl"/>
+					<F N="packs_web/swish/profiles/20-TRILLP.pl"/>
+					<F N="packs_web/swish/profiles/30-SLIPCOVER.pl"/>
+					<F N="packs_web/swish/profiles/30-TORNADO.pl"/>
+					<F N="packs_web/swish/profiles/31-PHIL.pl"/>
+					<F N="packs_web/swish/profiles/35-LEMUR.pl"/>
+					<F N="packs_web/swish/profiles/40-ALEPH.pl"/>
+					<F N="packs_web/swish/profiles/40-LPS.pl"/>
+					<F N="packs_web/swish/profiles/40-OWLRDF.pl"/>
+					<F N="packs_web/swish/profiles/50-Student.pl"/>
+					<F N="packs_web/swish/profiles/60-CLP.pl"/>
+				</Folder>
+				<Folder Name="test">
+					<F N="packs_web/swish/test/test_gitty.pl"/>
+					<F N="packs_web/swish/test/test_patch.pl"/>
+				</Folder>
+				<Folder Name="web">
+					<Folder Name="css">
+						<F N="packs_web/swish/web/css/css-inline.pl"/>
+					</Folder>
+					<Folder Name="js">
+						<F N="packs_web/swish/web/js/mkjsbuild.pl"/>
+					</Folder>
+					<Folder Name="node_modules">
+						<Folder Name="ace">
+							<Folder Name="build">
+								<Folder Name="demo">
+									<Folder Name="kitchen-sink">
+										<Folder Name="docs">
+											<F N="packs_web/swish/web/node_modules/ace/build/demo/kitchen-sink/docs/perl.pl"/>
+										</Folder>
+									</Folder>
+								</Folder>
+							</Folder>
+						</Folder>
+					</Folder>
+				</Folder>
+				<F N="packs_web/swish/daemon.pl"/>
+				<F N="packs_web/swish/ide.pl"/>
+				<F N="packs_web/swish/myswish.pl"/>
+				<F N="packs_web/swish/remote_ide.pl"/>
+				<F N="packs_web/swish/run.pl"/>
+				<F N="packs_web/swish/run_swish_and_clio.pl"/>
+				<F N="packs_web/swish/runcpl.pl"/>
+				<F N="packs_web/swish/server.pl"/>
+				<F N="packs_web/swish/swish.pl"/>
+				<F N="packs_web/swish/trill_on_swish.pl"/>
+			</Folder>
+		</Folder>
+		<Folder Name="Patch">
+			<Folder Name="rootfs">
+				<Folder Name="usr">
+					<Folder Name="local">
+						<Folder Name="lib">
+							<Folder Name="swipl">
+								<Folder Name="boot">
+									<F N="Patch/rootfs/usr/local/lib/swipl/boot/autoload.pl"/>
+									<F N="Patch/rootfs/usr/local/lib/swipl/boot/init.pl"/>
+								</Folder>
+								<Folder Name="lib">
+									<Folder Name="x86_64-linux">
+										<F N="Patch/rootfs/usr/local/lib/swipl/lib/x86_64-linux/libjpeg.so.8"/>
+									</Folder>
+								</Folder>
+								<Folder Name="library">
+									<F N="Patch/rootfs/usr/local/lib/swipl/library/pprint.pl"/>
+									<F N="Patch/rootfs/usr/local/lib/swipl/library/qsave.pl"/>
+									<F N="Patch/rootfs/usr/local/lib/swipl/library/sandbox.pl"/>
+									<F N="Patch/rootfs/usr/local/lib/swipl/library/ssl.pl"/>
+								</Folder>
+							</Folder>
+						</Folder>
+					</Folder>
+				</Folder>
+			</Folder>
+			<F N="Patch/dmiles-attvar.patch"/>
+			<F N="Patch/dmiles-no-sandbox.patch"/>
+			<F N="Patch/dmiles-save-reference-error.patch"/>
+			<F N="Patch/dmiles-ssl.patch"/>
 		</Folder>
 	</Files>
 </Project>

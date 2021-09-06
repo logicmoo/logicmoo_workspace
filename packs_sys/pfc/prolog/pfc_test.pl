@@ -219,6 +219,8 @@ inform_message_hook(compiler_warnings(_,[always(true,var,_),always(false,integer
 inform_message_hook(import_private(_,_),_,_).
 inform_message_hook(check(undefined(_, _)),_,_).
 inform_message_hook(ignored_weak_import(header_sane,_),_,_).
+% warning, "/opt/logicmoo_workspace/lib/swipl/xpce/prolog/boot/pce_editor.pl:136: Initialization goal failed")
+
 inform_message_hook(error(existence_error(procedure,'$toplevel':_),_),error,_).
 % inform_message_hook(_,warning,_).
 

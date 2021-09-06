@@ -672,7 +672,7 @@ fixup_module(M,_L):- skip_user(M).
 fixup_modules:-  trace_or_throw(unexpected(fixup_modules)),
    doall((current_module(M),once((findall(I,import_module(M,I),L))),once(fixup_module(M,L)))).
 
-% :- autoload([verbose(false)]).
+% :- autoload_all([verbose(false)]).
 :- flag_call(runtime_debug=true).
 
 % :- fixup_modules.

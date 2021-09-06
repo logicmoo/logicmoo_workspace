@@ -23,6 +23,8 @@ bc_p(a).
 bc_p(b).
 :- listing(bc_p/1).
 
+:- mpred_trace_exec.
+
 :- mpred_test(call_u(bc_p(b))).
 
 %= nothing cached ?

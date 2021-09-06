@@ -2977,6 +2977,7 @@ load_files(Module:Files, Options) :-
 %   Test  that  a  non-module  file  is  not  loaded  into  multiple
 %   contexts.
 
+'$check_load_non_module'(_, _) :- !.
 '$check_load_non_module'(File, _) :-
     '$current_module'(_, File),
     !.          % File is a module file

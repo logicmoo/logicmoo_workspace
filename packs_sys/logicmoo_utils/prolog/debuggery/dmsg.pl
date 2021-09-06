@@ -156,7 +156,7 @@ dmsg000/1,
         with_output_to_stream(?, 0),
         with_show_dmsg(?, 0).
 
-:- expects_dialect(swi).
+%:- expects_dialect(swi).
 
 :- use_module(library(lists)).
 /*lists:selectchk(Elem, List, Rest) :-
@@ -2119,7 +2119,7 @@ cls:- ignore(catch(system:shell(cls,0),_,fail)).
 %:- list_autoload.
 %:- ensure_loaded(logicmoo_util_varnames).
 %:- ensure_loaded(logicmoo_util_catch).
-% :- autoload([verbose(false)]).
+% :- autoload_all([verbose(false)]).
 
 /*
 :- 'mpred_trace_none'(fmt(_)).

@@ -31,7 +31,7 @@ expects_dialect/1:
 */
 
 :- module(clif_dialect, [clif_pop_dialect/2, clif_expects_dialect/1, expecting_clif_dialect/0, 
-   clif_debug/1, clif_expects_dialect/4,dialect_input_stream_clif/1]).
+   clif_debug/1, clif_expects_dialect/4,dialect_input_name_clif/1]).
 % :- asserta(swish:is_a_module).
 
 :- autoload(library(operators)).
@@ -117,17 +117,18 @@ clif_expects_dialect(Dialect):-
  prolog_load_context(module, M),  
  notrace((clif_dialect:(
   prolog_load_context(dialect, Was),
-  dialect_input_stream_clif(Source),
-  clif_debug(clif_expects_dialect(Dialect,Source,Was,M))))),
-  clif_expects_dialect(Dialect,Source,Was,M),
+  dialect_input_name_clif(SourceFile),
+  clif_debug(clif_expects_dialect(Dialect,SourceFile,Was,M))))),
+  clif_expects_dialect(Dialect,SourceFile,Was,M),
   clif_debug(state).
 
 expecting_clif_dialect:- 
  notrace((
+  \+ current_prolog_flag(loading_pfc_dialect,true),
   prolog_load_context(dialect, clif),
   prolog_load_context(module, M),
-  dialect_input_stream_clif(Source),
-  cliftmp:module_dialect_clif(clif,Source,_,M,_Undo))).
+  dialect_input_name_clif(SourceFile),
+  cliftmp:module_dialect_clif(clif,SourceFile,_,M,_Undo))).
 
 
   %prolog_load_context(dialect, Was)
@@ -171,7 +172,7 @@ expecting_clif_dialect:-
 				 file_errors(fail)
 			       ]),
       asserta((user:file_search_path(library, Dir) :-
-	prolog_load_context(dialect, clif))).
+	expecting_clif_dialect)).
 */
 :- user:file_search_path(clif_library, Dir) -> true;
     ignore((prolog_load_context(directory, ThisDir),
@@ -191,8 +192,7 @@ expecting_clif_dialect:-
 %	dialect is =clif=.
 
 push_clif_file_extension :-
-	asserta((user:prolog_file_type(clif, prolog) :-
-		    prolog_load_context(dialect, clif))).
+	asserta((user:prolog_file_type(clif, prolog) :- expecting_clif_dialect)).
 
 
 :- push_clif_file_extension.
@@ -242,8 +242,8 @@ likely_reserved_module(M):- M=user;
 
 
 :- system:module_transparent(prolog_dialect:expects_dialect/1). 
-:- system:module_transparent(clif_dialect:setup_dialect/0). 
-clif_dialect:setup_dialect:- clif_expects_dialect(clif).
+:- system:module_transparent(clif:setup_dialect/0). 
+clif:setup_dialect:- clif_expects_dialect(clif).
    
 
 clif_operators(M,[ 
@@ -266,39 +266,40 @@ other_dialect(Dialect):- Dialect\==clif.
 
 :- system:module_transparent(clif_dialect:clif_expects_dialect/4).
 :- system:import(clif_dialect:clif_expects_dialect/4).
-clif_expects_dialect(SWI,Source,_,M):- other_dialect(SWI),!,clif_pop_dialect(Source,M), expects_dialect(SWI).
+clif_expects_dialect(SWI,SourceFile,_,M):- other_dialect(SWI),!,clif_pop_dialect(SourceFile,M), expects_dialect(SWI).
 %clif_expects_dialect(SWI,_,Bin,_):- other_dialect(SWI),other_dialect(Bin),!, expects_dialect(SWI).
 %clif_expects_dialect(WAS,_,WAS,_):- WAS==clif, 
 %clif_expects_dialect(WAS,_,WAS,_):- !. % expects_dialect(WAS).
-%clif_expects_dialect(Next,Source,Was,M):- cliftmp:module_dialect_clif(Next,Source,Was,M,_Undo), !.
+%clif_expects_dialect(Next,SourceFile,Was,M):- cliftmp:module_dialect_clif(Next,SourceFile,Was,M,_Undo), !.
 clif_expects_dialect(Next,StreamNow,Was,M):- 
    cliftmp:module_dialect_clif(Next,StreamBefore,Was,M,_Undo),
    StreamNow \== StreamBefore,!,
    retract(cliftmp:module_dialect_clif(Next,StreamBefore,Was,M,Undo)),   
    asserta(cliftmp:module_dialect_clif(Next,StreamNow,Was,M,Undo)),!.
-clif_expects_dialect(clif,Source,Was,M):-
+clif_expects_dialect(clif,SourceFile,Was,M):-
    %notrace(M:ensure_loaded(library(clif_lib))),
-   %ignore(retract(cliftmp:module_dialect_clif(Dialect,Source,_,_,_))), 
+   %ignore(retract(cliftmp:module_dialect_clif(Dialect,SourceFile,_,_,_))), 
    M:use_module(library(dialect/clif)),  
    M:use_module(library(logicmoo_clif)),
    clif_operators(M, Ops),
    push_operators(M:Ops, Undo),
-   asserta(cliftmp:module_dialect_clif(clif,Source,Was,M,Undo)),!.
+   asserta(cliftmp:module_dialect_clif(clif,SourceFile,Was,M,Undo)),!.
 
 
-dialect_input_stream_clif(Source):- prolog_load_context(source,Source)->true; Source = user_input.
+dialect_input_name_clif(SourceFile):-   
+  prolog_load_context(source,SourceFile)->true; source_location(SourceFile) -> true ; SourceFile = user_input.
 
 :- system:module_transparent(clif_dialect:clif_pop_dialect/2).
 :- system:import(clif_dialect:clif_pop_dialect/2).
-clif_pop_dialect(Source,M):-
-    retract(cliftmp:module_dialect_clif(clif,Source,Was,M,Undo)),!,
-    %print_message(warning, format('~q', [warn_pop_clif_dialect_fallback(Source,M->Was)])),
-    clif_debug(pop_clif_dialect2(Source,M->Was)),
+clif_pop_dialect(SourceFile,M):-
+    retract(cliftmp:module_dialect_clif(clif,SourceFile,Was,M,Undo)),!,
+    %print_message(warning, format('~q', [warn_pop_clif_dialect_fallback(SourceFile,M->Was)])),
+    clif_debug(pop_clif_dialect2(SourceFile,M->Was)),
     pop_operators(Undo),    
     %nop('$set_source_module'(Was)),!,
     clif_debug(state).
-clif_pop_dialect(Source,M):- 
-   clif_debug(print_message(warning, format('~q', [missing_pop_clif_dialect_fallback(Source,M)]))),
+clif_pop_dialect(SourceFile,M):- 
+   clif_debug(print_message(warning, format('~q', [missing_pop_clif_dialect_fallback(SourceFile,M)]))),
    clif_debug(state).
 
 
@@ -332,35 +333,32 @@ expanding_at_file(In):- prolog_load_context(term,TermIn), strip_module(In,_,A),s
 :- module_transparent(system:goal_expansion/2).
 :- system:import(clif_dialect_ge/2).
 :- system:import(expanding_at_file/2).
-system:goal_expansion(In, Out) :- notrace(prolog_load_context(dialect, clif)),
-  \+ current_prolog_flag(loading_pfc_dialect,true),
+system:goal_expansion(In, Out) :- notrace(expecting_clif_dialect),
   clif_dialect_ge(In, Out), In\=@=Out.
 
 system:term_expansion(In, P, Out, PO) :- 
- notrace(prolog_load_context(dialect, clif)),
-  \+ current_prolog_flag(loading_pfc_dialect,true),
+ notrace(expecting_clif_dialect),
  In\==end_of_file,In\==begin_of_file,
- (tracing->break;true),
+ %(tracing->break;true),
  expanding_at_file(In),
  nonvar(P),
  clif_dialect_te(In, Out), In\=@=Out,
  P = PO.
 
-
 term_expansion_clif_eof(M):-   
-   prolog_load_context(dialect, clif),
-   prolog_load_context(file, Source),
-   cliftmp:module_dialect_clif(clif,Source,_,M,_Undo),
-   clif_pop_dialect(Source,M),!.
+   expecting_clif_dialect,
+   prolog_load_context(file, SourceFile),
+   cliftmp:module_dialect_clif(clif,SourceFile,_,M,_Undo),
+   clif_pop_dialect(SourceFile,M),!.
 
 :- multifile(system:term_expansion/2).
 :- module_transparent(system:term_expansion/2).
 :- system:import(term_expansion_clif_eof/1).
 
 system:term_expansion(MIn, _Out):- 
+   notrace(expecting_clif_dialect),
    notrace(strip_module(MIn,MM,In)),
    notrace(In == end_of_file),
-   \+ current_prolog_flag(loading_pfc_dialect,true),
    (MIn==In->prolog_load_context(module, M);MM=M),
    term_expansion_clif_eof(M),
    fail.

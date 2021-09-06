@@ -14,7 +14,7 @@
 :- endif.
 :- set_file_abox_module(user).
 
-:- autoload([verbose(false)]).
+:- autoload_all([verbose(false)]).
 :- set_prolog_flag(runtime_debug,3).
 
 
@@ -86,7 +86,7 @@ ca:- clause_asserted_i(sk1_in(avar([vn='Ex',sk1='SKF-6667']))).
 
 :- abolish(sk1_in/1).
 
-:- with_fc_mode(zdirect,must((get_fc_mode(xx,(xxxf,ax),DMode),DMode=zdirect))).
+:- with_fc_mode(zdirect,must((get_fc_mode((xxxf,ax),DMode),DMode=zdirect))).
 
 sk1_in(avar([vn='Ex',sk1='SKF-666'])).
 :- ((sk1_in(Ex),oo_get_attr(Ex,sk1,What),What='SKF-666')).

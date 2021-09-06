@@ -44,7 +44,7 @@ This module manages logicmoo startup (adding history and tests, etc).
 :- dynamic   user:file_search_path/2.
 :- multifile user:file_search_path/2.
 
-:- expects_dialect(swi).
+%:- expects_dialect(swi).
 
 :- autoload(library(lists),[member/2,append/3]).
 :- autoload(library(debug),[debug/3]).
@@ -1575,6 +1575,15 @@ install_logicmoo:-
 % :- pack_list_installed.
 
 
+
+:-system:use_module(library(filesex)).
+:-system:use_module(library(qsave)).
+qsave_bin(Clif):-
+  getenv('LOGICMOO_WS',Dir),
+  directory_file_path('bin',Clif,Bin),
+  directory_file_path(Dir,Bin,Path),
+  writeln(qsave_bin(Clif)=Path),
+  qsave_program(Path,[class(development),toplevel(prolog),goal(true)]).
 
 
 %:- use_module(library(logicmoo/each_call)).

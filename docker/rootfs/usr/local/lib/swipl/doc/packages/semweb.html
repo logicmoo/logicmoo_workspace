@@ -3789,6 +3789,34 @@ Write a URI as <code>&lt;...&gt;</code></dd>
 +Stream, :Options</var>)</a></dt>
 <dd class="defbody">
 (Turtle clauses)</dd>
+<dt class="pubdef"><span class="pred-tag">[det]</span><a id="rdf_save_canonical_turtle/2"><strong>rdf_save_canonical_turtle</strong>(<var>+Spec, 
+:Options</var>)</a></dt>
+<dd class="defbody">
+Save triples in a canonical format. This is the same as
+<a class="pred" href="#rdf_save_turtle/2">rdf_save_turtle/2</a>, but 
+using different defaults. In particular:
+
+<p>
+<ul class="compact">
+<li><code>encoding(utf8)</code>,
+<li><code>indent(0)</code>,
+<li><code>tab_distance(0)</code>,
+<li><code>subject_white_lines(1)</code>,
+<li><code>align_prefixes(false)</code>,
+<li><code>user_prefixes(false)</code>
+<li><code>comment(false)</code>,
+<li><code>group(false)</code>,
+<li><code>single_line_bnodes(true)</code>
+</ul>
+
+<dl class="tags">
+<dt class="tag">To be done</dt>
+<dd>
+Work in progress. Notably blank-node handling is incomplete.
+</dd>
+</dl>
+
+</dd>
 <dt class="pubdef"><span class="pred-tag">[det]</span><a id="rdf_save_turtle/2"><strong>rdf_save_turtle</strong>(<var>+Out, 
 :Options</var>)</a></dt>
 <dd class="defbody">
@@ -3930,34 +3958,6 @@ option:
 <dd class="defbody">
 List of graphs to save. When omitted, all graphs in the RDF store are 
 stored in the TriG file.
-</dd>
-</dl>
-
-</dd>
-<dt class="pubdef"><span class="pred-tag">[det]</span><a id="rdf_save_canonical_turtle/2"><strong>rdf_save_canonical_turtle</strong>(<var>+Spec, 
-:Options</var>)</a></dt>
-<dd class="defbody">
-Save triples in a canonical format. This is the same as
-<a class="pred" href="#rdf_save_turtle/2">rdf_save_turtle/2</a>, but 
-using different defaults. In particular:
-
-<p>
-<ul class="compact">
-<li><code>encoding(utf8)</code>,
-<li><code>indent(0)</code>,
-<li><code>tab_distance(0)</code>,
-<li><code>subject_white_lines(1)</code>,
-<li><code>align_prefixes(false)</code>,
-<li><code>user_prefixes(false)</code>
-<li><code>comment(false)</code>,
-<li><code>group(false)</code>,
-<li><code>single_line_bnodes(true)</code>
-</ul>
-
-<dl class="tags">
-<dt class="tag">To be done</dt>
-<dd>
-Work in progress. Notably blank-node handling is incomplete.
 </dd>
 </dl>
 

@@ -3,8 +3,7 @@
     Author:        Jan Wielemaker
     E-mail:        J.Wielemaker@vu.nl
     WWW:           http://www.swi-prolog.org
-    Copyright (c)  2014-2021, VU University Amsterdam
-                              SWI-Prolog Solutions b.v.
+    Copyright (c)  2014-2015, VU University Amsterdam
     All rights reserved.
 
     Redistribution and use in source and binary forms, with or without
@@ -34,8 +33,7 @@
 */
 
 :- module(modules,
-          [ in_temporary_module/3,              % ?Module, :Setup, :Goal
-            current_temporary_module/1          % ?Module
+          [ in_temporary_module/3               % ?Module, :Setup, :Goal
           ]).
 
 
@@ -102,11 +100,10 @@ prepare_temporary_module(Module) :-
         atomic_list_concat([tmp, Tid, I], -, Module),
         catch(set_module(Module:class(temporary)),
               error(permission_error(_,_,_),_), fail)
-    ->  b_setval('$tmp_module', Module)
+    ->  true
     ).
 prepare_temporary_module(Module) :-
-    set_module(Module:class(temporary)),
-    b_setval('$tmp_module', Module).
+    set_module(Module:class(temporary)).
 
 :- if(current_prolog_flag(threads, true)).
 thread_id(Id) :-
@@ -119,11 +116,4 @@ thread_id(main).
 destroy_module(Module) :-
     retractall(system:'$load_context_module'(_File, Module, _Options)),
     '$destroy_module'(Module).
-
-%!  current_temporary_module(-Module) is semidet.
-%
-%   True when we are executing in the given temporary module context.
-
-current_temporary_module(Module) :-
-    nb_current('$tmp_module', Module).
 

@@ -2014,32 +2014,14 @@ reeval_node(ATrie) :-
 reeval_node(ATrie) :-
     '$mono_reeval_prepare'(ATrie, Size),
     !,
-    reeval_monotonic_node(ATrie, Size).
+    setup_call_cleanup(
+        '$tbl_propagate_start'(Old),
+        reeval_monotonic_node(ATrie, Size),
+        '$tbl_propagate_end'(Old)).
 reeval_node(ATrie) :-
     \+ is_invalid(ATrie).
 
 reeval_monotonic_node(ATrie, Size) :-
-    setup_call_cleanup(
-        '$tbl_propagate_start'(Old),
-        reeval_monotonic_node(ATrie, Size, Deps),
-        '$tbl_propagate_end'(Old)),
-    (   Deps == []
-    ->  tdebug(reeval, 'Re-evaluation for ~p complete', [ATrie])
-    ;   Deps == false
-    ->  tdebug(reeval, 'Re-evaluation for ~p queued new answers', [ATrie]),
-        reeval_node(ATrie)
-    ;   tdebug(reeval, 'Re-evaluation for ~p: new invalid deps: ~p',
-               [ATrie, Deps]),
-        reeval_nodes(Deps),
-        reeval_node(ATrie)
-    ).
-
-reeval_nodes([]).
-reeval_nodes([H|T]) :-
-    reeval_node(H),
-    reeval_nodes(T).
-
-reeval_monotonic_node(ATrie, Size, Deps) :-
     tdebug(reeval, 'Re-evaluating lazy monotonic ~p', [ATrie]),
     (   '$idg_mono_affects_lazy'(ATrie, _0SrcTrie, Dep, DepRef, Answers),
         length(Answers, Count),
@@ -2068,8 +2050,22 @@ reeval_monotonic_node(ATrie, Size, Deps) :-
                    [Dep, Answers])
         ),
         fail
-    ;   '$mono_reeval_done'(ATrie, Size, Deps)
+    ;   '$mono_reeval_done'(ATrie, Size, Deps),
+        (   Deps == []
+        ->  tdebug(reeval, 'Re-evaluation for ~p complete', [ATrie])
+        ;   Deps == false
+        ->  tdebug(reeval, 'Re-evaluation for ~p queued new answers', [ATrie]),
+            reeval_node(ATrie)
+        ;   tdebug(reeval, 'Re-evaluation for ~p: new invalid deps: ~p', [ATrie, Deps]),
+            reeval_nodes(Deps),
+            reeval_node(ATrie)
+        )
     ).
+
+reeval_nodes([]).
+reeval_nodes([H|T]) :-
+    reeval_node(H),
+    reeval_nodes(T).
 
 
 		 /*******************************

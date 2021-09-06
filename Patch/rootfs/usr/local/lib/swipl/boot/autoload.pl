@@ -514,17 +514,17 @@ system:term_expansion((:- autoload_path(Alias)),
 '$autoload2'(PI) :-
     setup_call_cleanup(
         leave_sandbox(Old),
-        'safe_autoload3'(PI),
+        safe_autoload3(PI),
         restore_sandbox(Old)).
-
-safe_autoload3(M:_/_):-  \+ ground(M),!.
-safe_autoload3(PI) :- '$autoload3'(PI).
 
 leave_sandbox(Sandboxed) :-
     current_prolog_flag(sandboxed_load, Sandboxed),
     set_prolog_flag(sandboxed_load, false).
 restore_sandbox(Sandboxed) :-
     set_prolog_flag(sandboxed_load, Sandboxed).
+
+safe_autoload3(M:_/_):-  \+ ground(M),!.
+safe_autoload3(PI) :- '$autoload3'(PI).
 
 '$autoload3'(PI) :-
     autoload_from(PI, LoadModule, FullFile),
@@ -799,8 +799,10 @@ autoload(M:File) :-
 autoload(M:File) :-
     '$must_be'(filespec, File),
     source_context(Context),
-    retractall(M:'$autoload'(File, _, _)),
-    assert_autoload(M:'$autoload'(File, Context, all)).
+    (   current_autoload(M:File, _, import(all))
+    ->  true
+    ;   assert_autoload(M:'$autoload'(File, Context, all))
+    ).
 
 autoload(M:File, Imports) :-
     (   \+ autoload_in(M, explicit)

@@ -630,7 +630,7 @@ save_autoload(Options) :-
     !,
     setup_call_cleanup(
         current_prolog_flag(autoload, Old),
-        autoload_all(Options),
+        prolog_autoload:autoload_all(Options),
         set_prolog_flag(autoload, Old)).
 save_autoload(_).
 

@@ -40,6 +40,8 @@ sk_in(_DUNNO).
 
 sk_in(Ex)==>sk_out(Ex).
 
+:- rtrace.
 :- must((sk_out(FOUND),get_attr(FOUND,sk,What),What='SKF-666')),dmsg(fOUND=FOUND).
+:- break.
 :- must((findall(Ex,(clause_u(sk_out(Ex),_,_),wdmsg(sk_out(Ex))),L),length(L,THREE),THREE=3)).
 

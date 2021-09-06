@@ -430,7 +430,7 @@ baseKB:mpred_skipped_module(eggdrop).
 :- pfc_lib:consult(library('pfc2.0/mpred_terms.pl')).
 */
 
-%:- autoload([verbose(false)]).
+%:- autoload_all([verbose(false)]).
 
 
 
@@ -759,7 +759,7 @@ maybe_builtin(I) :- nonvar(I),get_unnegated_functor(I,F,A),
 */
 
 :- if(false).
-%:- autoload([verbose(false)]).
+%:- autoload_all([verbose(false)]).
 :- statistics.
 :- endif.
 
@@ -924,14 +924,8 @@ export_most(M:F/A):-
 :- use_module(library(qsave)).
 :- endif.
 
-qsave_pfc:-
-  getenv('LOGICMOO_WS',Dir),
-  directory_file_path(Dir,'bin/pfc',Path),
-  writeln(qsave_pfc=Path),
-  qsave_program(Path,[class(development),toplevel(prolog),goal(true)]).
 
-
-:- autoload_all.
+%:- autoload_all.
 
 
 
@@ -979,4 +973,4 @@ system:term_expansion(I,PI,O,PO):-
 
 :- fixup_exports.
 
-:- qsave_pfc.
+:- qsave_bin(pfc).

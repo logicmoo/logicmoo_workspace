@@ -571,9 +571,9 @@ unnumbervars4(PTermIn,VsIn,NewVs,PTermOut):- compound_name_arguments(PTermIn,F,T
   unnumbervars4(TermIn,VsIn,NewVs,TermOut),
   compound_name_arguments(PTermOut,F,TermOut).
    
-
-maybe_fix_varnumbering(MTP,NewMTP):- ground(MTP), sformat(S,'~q',[(MTP)]),
- notrace(catch( atom_to_term(S,(NewMTP),Vs),E,(writeq(S->E),fail))), \+ ground(NewMTP),
+maybe_fix_varnumbering(MTP,_NewMTP):- term_attvars(MTP,Vs),Vs\==[],!,fail.
+maybe_fix_varnumbering(MTP,NewMTP):- ground(MTP), format(string(S),'~q',[(MTP)]),
+ notrace(catch( atom_to_term(S,(NewMTP),Vs),E,((ignore(source_location(F,L)),writeq(S->E=F:L),fail)))), \+ ground(NewMTP),
   (prolog_load_context(variable_names,SVs);SVs=[]),!,
    align_variables(Vs,SVs,ExtraVs),
    append(SVs,ExtraVs,NewVs),

@@ -207,7 +207,7 @@ checkKB:m1:- gripe_time(40,wsce(library(xlisting_web))),if_defined(ensure_webser
 ensure_autoexec:- !. % call_u(consult(logicmoo(pfc/'autoexec.pfc'))).
 
 %:- use_listing_vars.
-%:- autoload([verbose(false)]).
+%:- autoload_all([verbose(false)]).
 %:- use_listing_vars.
 %:- nop((autoload,scan_for_varnames)).
 

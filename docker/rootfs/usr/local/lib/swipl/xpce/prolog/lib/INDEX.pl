@@ -21,7 +21,6 @@ index((gtrace), 0, gui_tracer, gui_tracer).
 index((gtrace), 1, gui_tracer, gui_tracer).
 index((gspy), 1, gui_tracer, gui_tracer).
 index((gdebug), 0, gui_tracer, gui_tracer).
-index((gtrap), 1, gui_tracer, gui_tracer).
 index((iso_check_file), 1, isocomp, isocomp).
 index((iso_check_directory), 1, isocomp, isocomp).
 index((iso_check_application), 1, isocomp, isocomp).

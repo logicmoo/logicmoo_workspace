@@ -2,6 +2,7 @@
 
 source ./logicmoo_env.sh -v
 
+rm -f bin/pfc bin/clif bin/swipl-lm
 swipl -g "[library(logicmoo_clif)]" -t halt
 
 WAS_PWD=$PWD

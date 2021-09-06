@@ -191,8 +191,6 @@ push_current_choice/1,
 :- set_module(class(library)).
 :- endif.
 
-nr_lc_ex(G):- no_repeats(loop_check(G,trace_or_throw(looped(G)))).
-
 %:- use_module(mpred_kb_ops).
 %:- use_module(library(util_varnames)).
 %:- use_module(library(no_repeats)).
@@ -270,7 +268,9 @@ make_meta_predicate(X):- functor(X,F,A), module_transparent(F/A),
       not_not_ignore_quietly_ex(:),
       must_notrace_pfc(:),
       nr_lc_ex(:)]).
-      
+
+:- meta_predicate(nr_lc_ex(:)).
+nr_lc_ex(G):- no_repeats(loop_check(G,trace_or_throw(looped(G)))).
       
 :- multifile(baseKB:safe_wrap/4).
 :- dynamic(baseKB:safe_wrap/4).
@@ -3103,7 +3103,7 @@ call_u_mp_lc(M,P,_,_):- !, M:call(P).
 
 mpred_BC_w_cache(W,P):- must_ex(mpred_BC_CACHE(W,P)),clause_u(P,true).
 
-mpred_BC_CACHE(M,P0):-  ignore( \+ loop_check_early(mpred_BC_CACHE0(M,P0),trace_or_throw(mpred_BC_CACHE(P0)))).
+mpred_BC_CACHE(M,P0):-  ignore( \+ loop_check_early(mpred_BC_CACHE0(M,P0),trace_or_throw(looped(mpred_BC_CACHE(M,P0))))).
 
 mpred_BC_CACHE0(_,P00):- var(P00),!.
 mpred_BC_CACHE0(M,must_ex(P00)):-!,mpred_BC_CACHE0(M,P00).
@@ -3119,11 +3119,11 @@ mpred_BC_CACHE0(_,P):-
  % trigger any bc rules.
   lookup_u('$bt'(P,Trigger)),
   copy_term_vn('$bt'(P,Trigger),'$bt'(CP,CTrigger)),
-  must_ex(lookup_spft('$bt'(CP,_Trigger),F,T)),
+  must_lookup_spft('$bt'(CP,_Trigger),F,T),
   mpred_eval_lhs_full(CTrigger,(F,T)),
   fail)).
 
-
+must_lookup_spft(P,F,T):- lookup_spft(P,F,T) *-> true ; ( rtrace(lookup_spft(P,F,T)), break).
 
 % I''d like to remove this soon
 %call_u_no_bc(P0):- strip_module(P0,M,P), sanity(stack_check),var(P),!, M:mpred_fact(P).

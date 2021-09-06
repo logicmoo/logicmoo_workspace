@@ -792,7 +792,7 @@ isa(iBar,tFoo).
 
 
 /*
-:- locally(set_prolog_flag_until_eof(expect_pfc_file,always),autoload([verbose(true)]))).
+:- locally(set_prolog_flag_until_eof(expect_pfc_file,always),autoload_all([verbose(true)]))).
 */
 % :- xlisting(tFoo).
 

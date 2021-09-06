@@ -165,7 +165,6 @@
                   fdset_complement/2
                  ]).
 
-:- meta_predicate with_local_attributes(?, ?, 0, ?).
 :- public                               % called from goal_expansion
         clpfd_equal/2,
         clpfd_geq/2.
@@ -5556,44 +5555,40 @@ min_max_factor(L1, U1, L2, U2, L3, U3, Min, Max) :-
             L2 cis_lt n(0), U2 cis_gt n(0),
             L3 cis_lt n(0), U3 cis_gt n(0) ->
             maplist(in_(L1,U1), [Z1,Z2]),
-            with_local_attributes([X1,Y1,X2,Y2], [], (
-                in_(L2, n(-1), X1), in_(n(1), U3, Y1),
-                (   X1*Y1 #= Z1 ->
-                    (   fd_get(Y1, _, Inf1, Sup1, _) -> true
-                    ;   Inf1 = n(Y1), Sup1 = n(Y1)
-                    )
-                ;   Inf1 = inf, Sup1 = n(-1)
-                ),
-                in_(n(1), U2, X2), in_(L3, n(-1), Y2),
-                (   X2*Y2 #= Z2 ->
-                    (   fd_get(Y2, _, Inf2, Sup2, _) -> true
-                    ;   Inf2 = n(Y2), Sup2 = n(Y2)
-                    )
-                ;   Inf2 = n(1), Sup2 = sup
+            in_(L2, n(-1), X1), in_(n(1), U3, Y1),
+            (   X1*Y1 #= Z1 ->
+                (   fd_get(Y1, _, Inf1, Sup1, _) -> true
+                ;   Inf1 = n(Y1), Sup1 = n(Y1)
                 )
-            ), [Inf1,Sup1,Inf2,Sup2]),
+            ;   Inf1 = inf, Sup1 = n(-1)
+            ),
+            in_(n(1), U2, X2), in_(L3, n(-1), Y2),
+            (   X2*Y2 #= Z2 ->
+                (   fd_get(Y2, _, Inf2, Sup2, _) -> true
+                ;   Inf2 = n(Y2), Sup2 = n(Y2)
+                )
+            ;   Inf2 = n(1), Sup2 = sup
+            ),
             Min cis max(min(Inf1,Inf2), L3),
             Max cis min(max(Sup1,Sup2), U3)
         ;   L1 cis_gt n(0),
             L2 cis_lt n(0), U2 cis_gt n(0),
             L3 cis_lt n(0), U3 cis_gt n(0) ->
             maplist(in_(L1,U1), [Z1,Z2]),
-            with_local_attributes([X1,Y1,X2,Y2], [], (
-                in_(L2, n(-1), X1), in_(L3, n(-1), Y1),
-                (   X1*Y1 #= Z1 ->
-                    (   fd_get(Y1, _, Inf1, Sup1, _) -> true
-                    ;   Inf1 = n(Y1), Sup1 = n(Y1)
-                    )
-                ;   Inf1 = n(1), Sup1 = sup
-                ),
-                in_(n(1), U2, X2), in_(n(1), U3, Y2),
-                (   X2*Y2 #= Z2 ->
-                    (   fd_get(Y2, _, Inf2, Sup2, _) -> true
-                    ;   Inf2 = n(Y2), Sup2 = n(Y2)
-                    )
-                ;   Inf2 = inf, Sup2 = n(-1)
+            in_(L2, n(-1), X1), in_(L3, n(-1), Y1),
+            (   X1*Y1 #= Z1 ->
+                (   fd_get(Y1, _, Inf1, Sup1, _) -> true
+                ;   Inf1 = n(Y1), Sup1 = n(Y1)
                 )
-            ), [Inf1,Sup1,Inf2,Sup2]),
+            ;   Inf1 = n(1), Sup1 = sup
+            ),
+            in_(n(1), U2, X2), in_(n(1), U3, Y2),
+            (   X2*Y2 #= Z2 ->
+                (   fd_get(Y2, _, Inf2, Sup2, _) -> true
+                ;   Inf2 = n(Y2), Sup2 = n(Y2)
+                )
+            ;   Inf2 = inf, Sup2 = n(-1)
+            ),
             Min cis max(min(Inf1,Inf2), L3),
             Max cis min(max(Sup1,Sup2), U3)
         ;   min_factor(L1, U1, L2, U2, Min0),
