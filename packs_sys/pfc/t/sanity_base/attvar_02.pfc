@@ -52,7 +52,9 @@ sk2:attr_unify_hook(_,_).
 %:- call(break).
 
 :- read_attvars(true).
+:- call((true,rtrace)).
 :- must(clause_asserted_i(sk2_in(avar([vn='Ex',sk2='SKF-6667'])))).       
+:- call((true,break)).
 :- read_attvars(false).
 :- must( \+ clause_asserted_i(sk2_in(avar([vn='Ex',sk2='SKF-6667'])))).       
 

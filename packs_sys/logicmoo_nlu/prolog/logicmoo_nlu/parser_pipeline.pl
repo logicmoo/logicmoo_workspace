@@ -51,7 +51,7 @@ load_parser_interface(File):- call(File:ensure_loaded_no_mpreds(File)).
 
 :- export(load_parser_interface/1).
 % load_parser_interface(File):- \+ exists_source(File), !, call(File:ensure_loaded_no_mpreds(logicmoo_nlu_ext(File))).
-dont_load_parser_interface(Why,File):- dmsg(dont_load_parser_interface(Why,File)).
+dont_load_parser_interface(Why,File):- fmt(dont_load_parser_interface(Why,File)).
 %:- parser_chat80:import(load_parser_interface/1).
 
 
