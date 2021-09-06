@@ -23,7 +23,7 @@
 
 
 %:- ensure_loaded(readin).
-:- ensure_loaded('/opt/logicmoo_workspace/packs_sys/logicmoo_nlu/prolog/logicmoo_nlu/parser_tokenize').
+% :- ensure_loaded('/opt/logicmoo_workspace/packs_sys/logicmoo_nlu/prolog/logicmoo_nlu/parser_tokenize').
 
 
 :-thread_local t_l:old_text/0.
