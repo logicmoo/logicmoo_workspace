@@ -6,7 +6,7 @@
 
 :- include(test_header).
 % :- set_prolog_flag(lm_pfc_lean,true).
-% :- use_module(library(pfc)).
+% :- expects_dialect(pfc).
 
 :- kb_local(aa/2).
 

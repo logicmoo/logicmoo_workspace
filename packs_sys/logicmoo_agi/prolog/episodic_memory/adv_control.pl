@@ -3,7 +3,7 @@
 
 :- set_prolog_flag(ec_loader, false).
 
-%:- use_module(library(pfc)).
+%:- expects_dialect(pfc).
 :- use_module(library(nomic_mu)).
 
 :- expects_dialect(pfc).

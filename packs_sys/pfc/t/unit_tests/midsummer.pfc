@@ -1,6 +1,6 @@
 % -*-Prolog-*-
 
-:- use_module(library(pfc)).
+:- expects_dialect(pfc).
 
 %this will require a better tms to work!
 

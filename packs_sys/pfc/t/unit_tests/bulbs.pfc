@@ -1,6 +1,6 @@
 % -*-Prolog-*-
 
-:- use_module(library(pfc)).
+:- expects_dialect(pfc).
 
 %% a simple Pfc example - the three bulb problem (see DeKleer and
 %% Williams, IJCAI89)

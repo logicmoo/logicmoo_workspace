@@ -1,6 +1,6 @@
 % -*-Prolog-*-
 
-:- use_module(library(pfc)).
+:- expects_dialect(pfc).
 
 :- ensure_loaded('/sun/nlp/nlp/pde/experimental/send.pl').
 

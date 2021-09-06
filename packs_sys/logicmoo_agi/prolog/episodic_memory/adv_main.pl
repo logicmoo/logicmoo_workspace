@@ -16,7 +16,7 @@
 % Main file.
 %
 */
-%:- use_module(library(pfc)).
+%:- expects_dialect(pfc).
 
 :- use_module(library(logicmoo_common)).
 :- '$set_source_module'(mu).

@@ -1,6 +1,6 @@
 % -*-Prolog-*-
 
-:- use_module(library(pfc)).
+:- expects_dialect(pfc).
 
 % this Pfc example shows how to maintain a sum.	
 % Given a set of asssertions matching value(N), this rule

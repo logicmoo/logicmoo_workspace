@@ -1,6 +1,6 @@
 % -*-Prolog-*-
 
-:- use_module(library(pfc)).
+:- expects_dialect(pfc).
 % this example works in a serial Pfc, but has problems in a parallel one.
 
 p, ~a ==> b.

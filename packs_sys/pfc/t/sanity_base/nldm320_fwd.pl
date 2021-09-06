@@ -33,7 +33,7 @@ assert_1adj(N):-
 :- assert_adj(10).
 % 37.451337628 = 256
 
-:- use_module(library(pfc)).
+:- expects_dialect(pfc).
 :- cls.
 /*
 :- table(tc/2).

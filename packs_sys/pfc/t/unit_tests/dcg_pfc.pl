@@ -1,6 +1,6 @@
 % dcg_pfc: translation of dcg-like grammar rules into pfc rules.
 
-:- use_module(library(pfc)).
+:- expects_dialect(pfc).
 
 :- op(1200,xfx,'-->>').
 :- op(1200,xfx,'--*>>').

@@ -1,6 +1,6 @@
 % -*-Prolog-*-
 
-:- use_module(library(pfc)).
+:- expects_dialect(pfc).
 
 % thisis similar to the sum example.
 % given a set of assertions of the form:

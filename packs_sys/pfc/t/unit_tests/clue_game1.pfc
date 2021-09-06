@@ -1,5 +1,5 @@
 
-:- use_module(library(pfc)).
+:- expects_dialect(pfc).
 
 player(tim).
 player(janet).

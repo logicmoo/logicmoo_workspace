@@ -1,5 +1,5 @@
 
-:- use_module(library(pfc)).
+:- expects_dialect(pfc).
 % has(Player,Card)
 % ask(Player,Set).
 % answer(Player,Set)

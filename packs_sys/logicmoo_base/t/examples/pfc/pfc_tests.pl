@@ -1,5 +1,5 @@
 %% some simple tests to see if Pfc is working properly
-% :-use_module(library(pfc)).
+% :-expects_dialect(pfc).
 % :- 'lmcode':ensure_loaded(logicmoo(mpred/logicmoo_props)).
 
 :- dynamic(b/1).

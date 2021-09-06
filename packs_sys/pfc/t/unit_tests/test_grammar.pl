@@ -2,7 +2,7 @@
 
 :- dynamic ('-->>'/2).
 
-:- use_module(library(pfc)).
+:- expects_dialect(pfc).
 
 s(Np,Vp) -->> np(Np), vp(Vp).
 vp(V,Np) -->> verb(V), np(Np).

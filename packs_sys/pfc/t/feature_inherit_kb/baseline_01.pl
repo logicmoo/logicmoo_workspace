@@ -3,7 +3,7 @@
 
 :- module(user).
 
-:- use_module(library(pfc)).
+:- expects_dialect(pfc).
 
 :- guess_source_to(_).
 

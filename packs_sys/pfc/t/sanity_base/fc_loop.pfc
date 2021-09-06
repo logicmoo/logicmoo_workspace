@@ -10,7 +10,7 @@
 :- include(test_header).
 
 :- if(prolog_load_context(module,user)).
-:- use_module(library(pfc)).
+:- expects_dialect(pfc).
 :- endif.
 :- set_file_abox_module(user).
 

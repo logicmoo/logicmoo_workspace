@@ -1,6 +1,6 @@
 % -*-Prolog-*-
 
-:- use_module(library(pfc)).
+:- expects_dialect(pfc).
 % here is an interesting rule!
 
 (~P , P) ==> contradiction(P).

@@ -1,6 +1,6 @@
 % -*-Prolog-*-
 
-:- use_module(library(pfc)).
+:- expects_dialect(pfc).
 % here is an example which defines default facts and rules.  Will it work?
 
 % BWD chaining

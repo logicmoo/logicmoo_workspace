@@ -1,6 +1,6 @@
 ~P,P ==> contrradiction.
 
-:- use_module(library(pfc)).
+:- expects_dialect(pfc).
 
 (bird(X), \+ ~fly(X)) ==> fly(X).
 

@@ -49,6 +49,12 @@ load_parser_interface(File):- call(File:ensure_loaded_no_mpreds(File)).
 %:- parser_chat80:import(load_parser_interface/1).
 
 
+:- export(load_parser_interface/1).
+% load_parser_interface(File):- \+ exists_source(File), !, call(File:ensure_loaded_no_mpreds(logicmoo_nlu_ext(File))).
+dont_load_parser_interface(Why,File):- dmsg(dont_load_parser_interface(Why,File)).
+%:- parser_chat80:import(load_parser_interface/1).
+
+
 :- debug(pipeline).
 
 while_tracing_pipeline(_):- catch( \+ thread_self(1),_,fail),!.

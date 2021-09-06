@@ -1,6 +1,6 @@
 % -*-Prolog-*-
 
-:- use_module(library(pfc)).
+:- expects_dialect(pfc).
 %% this is a planning problem from C. Elkan,  "Incremental Approximate
 %% Planning: Abductive Default Reasoning, AAAI Spring Symposium on
 %% Automated Abduction, 1990.

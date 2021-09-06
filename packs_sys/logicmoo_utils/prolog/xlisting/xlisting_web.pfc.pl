@@ -4,7 +4,7 @@
 
 %:- set_defaultAssertMt(xlisting_web).
 
-:- set_fileAssertMt(xlisting_web).% WAS OFF  :- system:use_module(library(pfc)).
+:- set_fileAssertMt(xlisting_web).% WAS OFF  :- system:expects_dialect(pfc).
 
 /*
 :- baseKB:export(baseKB:never_assert_u/2).

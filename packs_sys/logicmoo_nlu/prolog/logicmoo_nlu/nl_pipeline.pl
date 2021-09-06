@@ -305,33 +305,33 @@ do_el_assertions :-
 
 % ================================================================================================
 % TODO Not yet started
-:-  nop(load_parser_interface(parser_CURT)).
+:-  dont_load_parser_interface(todo_grovel_preds,parser_CURT).
 % ================================================================================================
 
 % ================================================================================================
 % TODO - grovel the API
-:-  load_parser_interface(parser_regulus).
+:-  dont_load_parser_interface(todo_grovel_preds,parser_regulus).
 % ================================================================================================
 
 % ================================================================================================
 % TODO - grovel the API
-:-  load_parser_interface(parser_SUPPLE).
+:-  dont_load_parser_interface(todo_grovel_preds,parser_SUPPLE).
 % ================================================================================================
 
 % ================================================================================================
 % TODO - grovel the API
-:-  load_parser_interface(parser_jpaine).
+:-  dont_load_parser_interface(not_good_enough,parser_jpaine).
 % ================================================================================================
 
 % ================================================================================================
 % TODO - grovel the API
-:-  load_parser_interface(parser_SIRIDUS).
+:-  dont_load_parser_interface(todo_grovel_preds,parser_SIRIDUS).
 % ================================================================================================
 
 
 % ================================================================================================
 % TODO - grovel the API
-:-  load_parser_interface(parser_ProNTo).
+:-  dont_load_parser_interface(todo_grovel_preds,parser_ProNTo).
 % ================================================================================================
 
 :- ensure_loaded(parser_pldata).

@@ -1,6 +1,6 @@
 % is this how to define constraints?
 
-:- use_module(library(pfc)).
+:- expects_dialect(pfc).
 
 either(P,Q) ==> (~P ==> Q), (~Q ==> P).
 

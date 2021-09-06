@@ -32,3 +32,5 @@ a.
 
 :- must_clause_asserted(a).
 
+
+

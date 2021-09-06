@@ -32,7 +32,7 @@
 
 :- '$set_source_module'(baseKB).
 :- module(baseKB).
-%:- use_module(library(pfc)).
+%:- expects_dialect(pfc).
 
 :- share_mp(common_logic_kb_hooks:cyckb_t/1).
 :- share_mp(common_logic_kb_hooks:cyckb_t/2).
