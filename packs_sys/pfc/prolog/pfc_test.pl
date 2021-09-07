@@ -39,7 +39,7 @@ must_ex(G):- !, must_or_rtrace(G).
 %:- dumpST.
 
 test_red_lined(Failed):- notrace((
-  format('~N',[]),
+  format('~N'),
   quietly((doall((between(1,3,_),
   ansifmt(red,"%%%%%%%%%%%%%%%%%%%%%%%%%%% find ~q in srcs %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%\n",[Failed]),
   ansifmt(yellow,"%%%%%%%%%%%%%%%%%%%%%%%%%%% find test_red_lined in srcs %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%\n"))))))).
@@ -94,8 +94,8 @@ mpred_test_fok_2(Testcase, G):-
    read_file_to_string(Tee,Str,[]),
    add_test_info(Testcase,out,Str),
    save_single_testcase(Testcase),
-   sformat(Exec,'cat /dev/null > ~w',[Tee]),
-   shell(Exec))))).
+   nop(sformat(Exec,'cat /dev/null > ~w',[Tee])),
+   nop(shell(Exec)))))).
 
 mpred_test_fok_4(\+ G, TestResult, Elapsed):- !,
  must_det_l((
@@ -248,24 +248,25 @@ inform_message_hook(T,Type,Term):- dmsg_pretty(message_hook(T,Type,Term)),here_d
 inform_message_hook(_,error,_):- current_prolog_flag(runtime_debug, N),N>2,break.
 inform_message_hook(_,warning,_):- current_prolog_flag(runtime_debug, N),N>2,break.
 
-inform_message_to_string(Term,Str):-message_to_string(Term,Str),string(Str),\+ atom_contains(Str,"Unknown message"),!.
+inform_message_to_string(Term,Str):- catch(message_to_string(Term,Str),_,fail),string(Str),\+ atom_contains(Str,"Unknown message"),!.
 inform_message_to_string(Term,Str):-
-    '$messages':actions_to_format(Term, Fmt, Args),
-    format(string(Str), Fmt, Args),!.
+    catch('$messages':actions_to_format(Term, Fmt, Args),_,fail),
+    catch(format(string(Str), Fmt, Args),_,fail),!.
+inform_message_to_string(Term,Str):- format(string(Str), '~q', [Term]),!.
 
 %list_test_results:- !.
 list_test_results:-
-  format('\n<!--  \n'),
+  write('\n<!--  \n'),
   % listing(j_u:junit_prop/3), 
   show_all_junit_suites,
-  format(' -->\n').
+  write(' -->\n').
 
 show_all_junit_suites:- 
   %listing(j_u:junit_prop/3),
-  outer_junit(format('<?xml version="1.0" encoding="utf-8"?>\n<testsuites>\n',[])),
+  outer_junit(write('<?xml version="1.0" encoding="utf-8"?>\n<testsuites>\n')),
   findall(File,j_u:junit_prop(testsuite,file,File),L),list_to_set(L,S),
   maplist(show_junit_suite,S),
-  outer_junit(format('</testsuites>\n',[])).
+  outer_junit(write('</testsuites>\n')).
 
 outer_junit(G):- nop(G).
 
@@ -426,28 +427,28 @@ save_junit_results:-
 save_junit_results:- wdmsg(unused(save_junit_results)).
 
 show_junit_suite_xml(File):- 
-  format('<?xml version="1.0" encoding="utf-8"?>~n'),
-  format('<testsuites>\n',[]),
+  writeln('<?xml version="1.0" encoding="utf-8"?>'),
+  writeln('<testsuites>'),
   maplist(show_junit_suite,File),
-  format('</testsuites>\n',[]).
+  writeln('</testsuites>').
 
 show_junit_suite(File):- 
    (getenv('JUNIT_SUITE',SuiteName);SuiteName=File),!,
    format("  <testsuite name=\"~w\">\n", [SuiteName]),
    findall(Name,j_u:junit_prop(testsuite,testcase,Name),L),list_to_set(L,S),
     maplist(show_junit_testcase(File),S),
-   format("  </testsuite>\n", []).
+   writeln("  </testsuite>").
 
 save_single_testcase(Name):- 
  with_output_to(string(Text),
-  (format('<?xml version="1.0" encoding="utf-8"?>~n'),
+  (write('<?xml version="1.0" encoding="utf-8"?>\n'),
    j_u:junit_prop(testsuite,file,File),
-   format("  <testsuites>\n", []),
+   write("  <testsuites>\n"),
    (getenv('JUNIT_SUITE',SuiteName);SuiteName=File),!,
    format("  <testsuite name=\"~w\">\n", [SuiteName]),
    show_junit_testcase(File,Name),
-   format("  </testsuite>\n", []),
-   format(" </testsuites>\n", []))),
+   write("  </testsuite>\n"),
+   write(" </testsuites>\n"))),
  % write(Text), 
  
  shorten_and_clean_name(File,SFile),
@@ -491,13 +492,12 @@ save_to_junit_file(Name,DirtyText):-
   must_det_l(( 
   atomic_list_concat([Dir,'-',Name,'_junit.xml'],Full), 
   format('~N% saving_junit: ~w~n',[Full]),
-    open(Full, write, _, [alias(junit)]),
-      format(junit,'~w',Text), 
-      close(junit))).
+  setup_call_cleanup(open(Full, write, Out),writeln(Out,Text), close(Out)))).
+
 save_to_junit_file(Name,DirtyText):- 
   clean_away_ansi(DirtyText,Text),
    format('<Test name="~w">',[Name]),
-   format('~w',Text),!,
+   writeln(Text),!,
    format('<!-- ~w--></Test>',[Name]).
 
 save_junit_results_single:-
@@ -530,52 +530,56 @@ show_junit_testcase(Suite,Testcase):-
  sformat(DisplayName,'~w@~w: ~p',[ShortClass,Testcase,Goal]),
  escape_attribute(DisplayName,EDisplayName),
  ignore((
- format('
-     <testcase name=~q ', [EDisplayName]),
+ format('\n     <testcase name=~q ', [EDisplayName]),
   format('package="~w" ', [Package]),
   format('classname="~w" ', [Classname]),
  ignore((j_u:junit_prop(Testcase,time,Time),format('time="~20f"', [Time]))),
- format('>\n\n', []),
+ writeln('>\n'),
  ignore((write_testcase_info(Testcase))),
- format("\n    </testcase>\n", []))),!.
+ writeln("\n    </testcase>"))),!.
 
 
 testcase_props(Testcase):-
  ignore((j_u:junit_prop(Testcase,out,Str),
-  format("\n    <system-out><![CDATA[\n", []),
+  write("\n    <system-out><![CDATA[\n"),
   format('~w',[Str]),
-  format("\n    ]]></system-out>\n", []))),    
- format("\n    <system-err><![CDATA[\n", []),
+  write("\n    ]]></system-out>\n"))),    
+ write("\n    <system-err><![CDATA[\n"),
  forall(j_u:junit_prop(Testcase,Type,Term), write_testcase_prop(Type,Term)),
- format("\n    ]]></system-err>\n", []).
+ write("\n    ]]></system-err>\n").
 
 write_testcase_prop(_Type,[]):-!.
 write_testcase_prop(info,S):- !, format('~N~w~n',[S]).
 write_testcase_prop(out,_).
 write_testcase_prop(url,Term):- !, format('~N\t~w \t= <pre>~w</pre>~n',[url,Term]).
 write_testcase_prop(Type,Term):- string(Term),!,format('~N\t~w \t=~w~n',[Type,Term]).
-write_testcase_prop(Type,Term):- format('~N\t~w \t= ~w.~n',[Type,Term]).
+write_testcase_prop(Type,Term):- format('~N\t~w \t= ~q.~n',[Type,Term]).
 
 :- use_module(library(sgml)).
 escape_attribute(I,O):-xml_quote_attribute(I,O).
 
+
+get_nongood_strings(Testcase,NonGood):- 
+  with_output_to(string(NonGood), 
+    forall((j_u:junit_prop(Testcase,Type,Term), nongood_type(Type)), 
+      format('~N~w = ~q.~n',[Type,Term]))).
+
 write_testcase_info(Testcase):- j_u:junit_prop(Testcase,result,failure),!,
-  with_output_to(string(NonGood), forall((j_u:junit_prop(Testcase,Type,Term), nongood_type(Type)), format('~N~w = ~q.~n',[Type,Term]))),
+  get_nongood_strings(Testcase,NonGood),
   write_message_ele('failure',NonGood),
-  testcase_props(Testcase).
+  testcase_props(Testcase),!.
 
 write_testcase_info(Testcase):- \+ j_u:junit_prop(Testcase,result,passed),!,
-  with_output_to(string(NonGood), forall((j_u:junit_prop(Testcase,Type,Term), nongood_type(Type)), format('~N~w = ~q.~n',[Type,Term]))),
+   get_nongood_strings(Testcase,NonGood),
   write_message_ele('error',NonGood),
-  testcase_props(Testcase).  
+  testcase_props(Testcase),!.
 
-write_testcase_info(Testcase):- testcase_props(Testcase).
+write_testcase_info(Testcase):- testcase_props(Testcase),!.
 
 write_message_ele(Ele,NonGood):-
   text_to_string(NonGood,SNonGood), 
   escape_attribute(SNonGood,ENonGood),
-  text_to_string(ENonGood,SENonGood),
-  format("      <~w message=~q ><system-err><![CDATA[  ~w  ]]></system-err></~w>\n", [Ele,SENonGood,SNonGood,Ele]).
+  format("      <~w message=\"~w\" ><system-out><![CDATA[  ~w  ]]></system-out></~w>\n", [Ele,ENonGood,SNonGood,Ele]).
 
 
 :- multifile prolog:message//1, user:message_hook/3.

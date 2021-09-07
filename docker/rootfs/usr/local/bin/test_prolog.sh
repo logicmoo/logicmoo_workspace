@@ -154,7 +154,8 @@ for ele2 in "${listOfNames[@]}"
            fi
       		#// Runs the test -f .swiplrc
             #//CMD="swipl -g 'set_prolog_flag(runtime_testing,${runtime_testing})' -g \"thread_create(['${ele}'],Id),thread_join(Id),$test_completed\" "
-            CMD="$SWIPL -g 'set_prolog_flag(runtime_testing,${runtime_testing})' -g \"(['${ele}'])\" -g \"$test_completed\" "
+            #//CMD="$SWIPL -g 'set_prolog_flag(runtime_testing,${runtime_testing})' -g \"(['${ele}'])\" -g \"$test_completed\" "
+            CMD="timeout --foreground --preserve-status -s SIGKILL -k 10s 10s $SWIPL ${ele}"
             INFO "CMD=$CMD"
         fi
 
@@ -164,7 +165,7 @@ for ele2 in "${listOfNames[@]}"
         INFO "${date} (cd $PWD ; $CMD)" > $TEE_FILE
         INFO "${date} (cd $PWD ; $CMD)" > $TEE_FILE2
         startTime=$(date +%s);
-        ( timeout --foreground --preserve-status -s SIGKILL -k 10s 10s $CMD ) 2>&1 | sed -r "s/\x1B\[(([0-9]{1,2})?(;)?([0-9]{1,2})?)?[m,K,H,f,J]//g" | tee -a $TEE_FILE | tee $TEE_FILE2
+        ( eval $CMD ) 2>&1 | sed -r "s/\x1B\[(([0-9]{1,2})?(;)?([0-9]{1,2})?)?[m,K,H,f,J]//g" | tee -a $TEE_FILE | tee $TEE_FILE2
         exitcode=${PIPESTATUS[0]}
         endTime=$(date +%s);
         totalTime=$(($endTime-$startTime));        
