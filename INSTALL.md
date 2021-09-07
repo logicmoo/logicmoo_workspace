@@ -14,8 +14,7 @@ if [[ $EUID -ne 0 ]]; then
    echo "#* "
    echo -e "\e[1;31mWARNING: This script ${BASH_SOURCE[0]} should be run as root. \e[0m"
    echo "#* "
-   return 0 2>/dev/null
-   exit 0
+   return 0 2>/dev/null ; exit 0
 fi
 
 
