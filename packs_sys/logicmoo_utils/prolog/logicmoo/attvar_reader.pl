@@ -76,7 +76,8 @@ read_attvars(TF):-
   (TF==true->
      install_attvar_expander(M);
      uninstall_attvar_expander(M)).
-
+:- export(read_attvars/1).
+:- system:import(read_attvars/1).
 
 
 user:expand_query(Goal, Expanded, Bindings, ExpandedBindings):- fail,
