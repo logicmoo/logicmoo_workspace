@@ -6,7 +6,9 @@ cd $DIR0
 source ./logicmoo_env.sh -v
 
 rm -f bin/pfc bin/clif bin/swipl-lm
-swipl --pce=false -g "[library(logicmoo_clif)]" -t halt
+swipl --pce=false -g "use_module(library(logicmoo_clif))" -t halt  2>&1 | grep -3 -i 'WARN\|ERROR'
+chmod 777 bin/pfc bin/clif
+
 
 WAS_PWD=$PWD
 
