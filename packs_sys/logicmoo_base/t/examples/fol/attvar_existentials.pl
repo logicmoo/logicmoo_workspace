@@ -3,9 +3,11 @@
 %:- if(\+ current_module(baseKB)).
 :- module(kbt,[]).
 
-:- ensure_loaded(library(pfc)).
-:- ensure_loaded(library(dictoo)).
 :- ensure_loaded(library(logicmoo_clif)).
+:- if(\+ current_module(dictoo_lib)).
+:- ensure_loaded(library(dictoo)).
+:- endif.
+
 % :- include(test_header).
 
 :- '$current_source_module'(M),ensure_abox(M).

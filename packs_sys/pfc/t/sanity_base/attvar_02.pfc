@@ -13,7 +13,9 @@
 :- endif.
 :- include(test_header).
 
+:- if(\+ current_module(dictoo_lib)).
 :- ensure_loaded(library(dictoo)).
+:- endif.
 :- if(\+ current_module(attvar_reader)).
 :- use_module(library(logicmoo/attvar_reader)).
 :- endif.
