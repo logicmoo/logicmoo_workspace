@@ -21,7 +21,9 @@
 
 :- must(mpred_trace_exec).
 :- expects_dialect(pfc).
-:- ensure_loaded(library(attvar_reader)).
+:- if( \+ current_module(attvar_reader)). 
+:- use_module(library(logicmoo/attvar_reader)). 
+:- endif.
 :- read_attvars(true).
 
 sk_in(fl(X,Y,X,Y)).

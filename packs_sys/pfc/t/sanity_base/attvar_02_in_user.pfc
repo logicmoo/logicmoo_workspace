@@ -9,7 +9,9 @@
 
 :- set_file_abox_module(user).
 
-:- ensure_loaded(library(attvar_reader)).
+:- if(\+ current_module(attvar_reader)).
+:- use_module(library(logicmoo/attvar_reader)).
+:- endif.
 
 % Tests Non-module Forward chaining of assertable attributed variables
 

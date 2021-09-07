@@ -9,7 +9,9 @@
 
 :- include(test_header).
 
-:- ensure_loaded(library(attvar_reader)).
+:- if( \+ current_module(attvar_reader)). 
+:- use_module(library(logicmoo/attvar_reader)). 
+:- endif.
 
 sk6_in(Ex)==>sk6_out(Ex).
 sk6a_in(Ex)==>sk6a_out(Ex).

@@ -19,7 +19,9 @@
 
 % :- process_this_script.
 
-:- ensure_loaded(library(attvar_reader)).
+:- if( \+ current_module(attvar_reader)). 
+:- use_module(library(logicmoo/attvar_reader)). 
+:- endif.
 :- read_attvars(true).
 :- set_prolog_flag(assert_attvars,true).
 

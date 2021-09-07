@@ -42,8 +42,9 @@ Now everyone can get dictoo! Dict-like OO Syntax - allows dictionary to be used 
 :- set_prolog_flag(generate_debug_info, false).
 :- reexport(library(gvar_lib)).
 :- use_module(library(dicts)).
+:- if(\+ current_module(attvar_serializer)).
 :- use_module(library(logicmoo/attvar_serializer)).
-
+:- endif.
 :- multifile(dot_cfg:using_dot_type/2).
 :- dynamic(dot_cfg:using_dot_type/2).
 

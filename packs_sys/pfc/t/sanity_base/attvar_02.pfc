@@ -14,7 +14,9 @@
 :- include(test_header).
 
 :- ensure_loaded(library(dictoo)).
-:- ensure_loaded(library(attvar_reader)).
+:- if(\+ current_module(attvar_reader)).
+:- use_module(library(logicmoo/attvar_reader)).
+:- endif.
 
 %:- dynamic(sk2_out/1).
 %:- dynamic(sk2_in/1).

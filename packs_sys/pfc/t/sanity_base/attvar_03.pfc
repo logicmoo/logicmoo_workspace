@@ -11,7 +11,9 @@
 :- use_module(library(pfc_test)).
 
 :- include(test_header).
-:- use_module(library(attvar_reader)).
+:- if(\+ current_module(attvar_reader)).
+:- use_module(library(logicmoo/attvar_reader)).
+:- endif.
 % :- '$set_source_module'(ABox),'$set_typein_module'(ABox).
 
 :- ABox = user, '$set_source_module'(ABox),'$set_typein_module'(ABox).

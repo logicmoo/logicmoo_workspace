@@ -188,7 +188,9 @@
 
 
 :- use_module(library(apply)).
+:- if(\+ current_module(attvar_serializer)).
 :- use_module(library(logicmoo/attvar_serializer)).
+:- endif.
 
 %= :- kb_shared(was_chain_rule/1).
 %= :- kb_shared(baseKB:rtReformulatorDirectivePredicate/1).

@@ -4,7 +4,9 @@
 
 :- include(test_header).
 
-:- ensure_loaded(library(attvar_reader)).
+:- if(\+ current_module(attvar_reader)).
+:- use_module(library(logicmoo/attvar_reader)).
+:- endif.
 
 % Tests assertable attributed variables
 

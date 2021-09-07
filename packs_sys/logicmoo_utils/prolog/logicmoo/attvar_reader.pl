@@ -23,8 +23,9 @@ This module works with Utility LOGICMOO_ATTVAR_SERIALIZER to allows us to keep a
 :- module_transparent((read_attvars/1,read_attvars/0)).
 
 :- use_module((toplevel_variable_names)).
-:- use_module((attvar_serializer)).
-
+:- if(\+ current_module(attvar_serializer)).
+:- use_module(library(logicmoo/attvar_serializer)).
+:- endif.
 
 :- multifile(lmcache:use_attvar_expander/1).
 :- dynamic(lmcache:use_attvar_expander/1).

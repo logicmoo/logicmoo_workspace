@@ -34,7 +34,9 @@
 :- mpred_trace_msg(beginxxxxxxxxxxxxxxxxXXXXXXXXXXXXXXXXXXXXXXXXxxxxxxxxxxxxxxxxxxxxxxxx_abc).
 
 
-:- ensure_loaded(library(attvar_reader)).
+:- if( \+ current_module(attvar_reader)). 
+:- use_module(library(logicmoo/attvar_reader)). 
+:- endif.
 
 % :- rtrace,trace.
 sk1:attr_unify_hook(_,_).
