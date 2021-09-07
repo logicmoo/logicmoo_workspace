@@ -10,7 +10,7 @@ swipl -g "[library(logicmoo_clif)]" -t halt
 
 WAS_PWD=$PWD
 
-unset TESTING_TEMP
+#unset TESTING_TEMP
 
 [ -z "$TESTING_TEMP" ] && [ -d "$(pwd)/test_results" ] && export TESTING_TEMP=$(pwd)/test_results/$(whoami)
 [ -z "$TESTING_TEMP" ] && export TESTING_TEMP=$(mktemp -d -t logicmoo_testing-$(date +%Y-%m-%d-%H-%M-%S)-XXXXXXXXXX)
