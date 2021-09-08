@@ -332,12 +332,12 @@ inform1([H|T]) :- write(H), put(32), inform1(T).
 	Top level processing for verification and performance analysis
    ---------------------------------------------------------------------- */
 
-test_chat80 :- test_chat80(_,off).
+test_chat80 :- test_chat80(_,on).
 
 :- share_mp(test_chat80/1).
 test_chat80(N):- test_chat80(N, on), !.
 %test_chat80(L):- ignore(control80(L)).
-test_chat80(U):-
+test_chat80(U):- nonvar(U), \+ number(U),
  locally(t_l:tracing80_nop,
            locally(t_l:chat80_interactive_nop,
             locally_hide(t_l:useOnlyExternalDBs,
@@ -347,25 +347,30 @@ test_chat80(U):-
 test_chat80(N, OnOff) :- (number(N);var(N)),!,
 	(var(N)->show_title ;true),
 	forall(ed(N,Sentence,CorrectAnswer),
-   test_chat80(N, Sentence, OnOff, CorrectAnswer)).
+   ignore(mpred_test(baseKB:test_chat80_mpred(N, Sentence, OnOff, CorrectAnswer)))).
 
 test_chat80(Sentence, OnOff) :-
   test_chat80(0, Sentence, OnOff, _CorrectAnswer).
 
 test_chat80(N, Sentence, OnOff, CorrectAnswer):-
-  mpred_test(test_chat80_mpred(N, Sentence, OnOff, CorrectAnswer)),!.
-
-test_chat80(_,_,_,_).
-
-test_chat80_mpred(N, Sentence, OnOff, CorrectAnswer) :-
-    report_item0(print_test,Sentence),
-	  process5(test,Sentence,CorrectAnswer,Status,Times),
-	  show_results(N,Status,Times),
+  ignore((baseKB:test_chat80_mpred(N, Sentence, OnOff, CorrectAnswer))),!.
+ 
+baseKB_test_chat80_mpred(N, Sentence, OnOff, CorrectAnswer) :-
+    report_item0(print_test,Sentence),!,
+	  process5(test,Sentence,CorrectAnswer,Status,Times),!,
+	  show_results(N,Status,Times),!,
     OnOff \= off,
     tracing ~= OnOff,
-    process(normal,Sentence),
-	fail.
+    process(normal,Sentence),!.
 
+% register so works in unit tests
+/*
+:- prolog_load_context(module,M),
+  assert_if_new(baseKB:test_chat80_mpred(N, Sentence, OnOff, CorrectAnswer):- 
+                     M:baseKB_test_chat80_mpred(N, Sentence, OnOff, CorrectAnswer)).
+*/
+baseKB:test_chat80_mpred(N, Sentence, OnOff, CorrectAnswer):- 
+                     parser_chat80:baseKB_test_chat80_mpred(N, Sentence, OnOff, CorrectAnswer),!.
 test :-
 	time(rtest_chats(30)).
 
@@ -487,7 +492,7 @@ ask80(File,P) :-
    see(Old).
 
 
-print_test(X):- doing80(X ,0),!.
+print_test(X):- notrace(doing80(X ,0)),!.
 print_test(X):- write(X).
 
 doing80([],_) :- !. %,nl.
@@ -569,7 +574,7 @@ trace_chat80(U):-
 process5(How,Sentence,CorrectAnswer,Status,Times) :-
 	process4(How,Sentence,Answer,Times),
 	!,
-	check_answer(Sentence,Answer,CorrectAnswer,Status).
+	check_answer(Sentence,Answer,CorrectAnswer,Status),!.
 process5(_How,_,_,failed,[0,0,0,0,0]).
 
 process(How,Sentence) :-
@@ -583,7 +588,7 @@ eng_to_logic(U,S):- sentence80(E,U,[],[],[]), sent_to_prelogic(E,S).
 
 
 
-into_lexical_segs(Sent,U):- quietly(into_chat80_segs0(Sent,U)),!.
+into_lexical_segs(Sent,U):- notrace(into_chat80_segs0(Sent,U)),!.
 %into_lexical_segs(Sent,  WordsA):- enotrace((into_text80( Sent,  Words),into_combines(Words,WordsA))),!.
 
 into_chat80_segs0(Sent,Sent):- is_list(Sent),maplist(parser_penn_trees:is_word_or_span,Sent),!.

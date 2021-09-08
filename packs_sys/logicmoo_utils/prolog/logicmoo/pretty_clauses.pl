@@ -466,7 +466,10 @@ print_et_to_string(T,S,Options):-
 
 % plpp(T):- !, print(T).
 plpp(T):- plpp(T,[]).
-plpp(T, Opts):- 
+
+plpp(T, Opts):- notrace(plpp(T, Opts)).
+
+plpp0(T, Opts):- 
  get_varname_list(Vs),
   numbervars_using_vs(T,TT,Vs),
    Old = [% numbervars(true),
@@ -489,7 +492,7 @@ plpp(TT,WriteOpts,PrintOpts):-
                  write_options(WriteOpts)|PrintOpts]).
 
    
-print_tree_plpp(Term,Opts):-print_tree_loop(Term,Opts).
+print_tree_plpp(Term,Opts):- notrace(print_tree_loop(Term,Opts)).
 % print_tree_loop(Term):- current_print_write_options(Options), print_tree_loop(Term,Options).
  
 print_tree_loop(Term,Options):- \+ pretty_tl:in_pretty,!,
@@ -525,11 +528,11 @@ duplicate_nat(P0,P1):- copy_term_nat(P0,P),duplicate_term(P,P1).
 
 :- export(pprint_ecp_cmt/2).
 pprint_ecp_cmt(C, P):- 
- mort((echo_newline_if_needed,  
+ notrace((mort((echo_newline_if_needed,  
   print_e_to_string(P, S0),
   into_space_cmt(S0,S),
   to_ansi(C, C0),
-  real_ansi_format(C0, '~s', [S]))).
+  real_ansi_format(C0, '~s', [S]))))).
 
 :- export(pprint_ecp/2).
 pprint_ecp(C, P):- \+ is_output_lang(C), !, pprint_ecp_cmt(C, P).
@@ -624,11 +627,13 @@ pprint_ec_no_newline(C, P):-
   real_ansi_format(C0, '~s', [S]).
   
 
+%print_e_to_string(P, S):-  notrace(with_output_to(string(S),fmt(P))),!.
 print_e_to_string(P, S):- 
-   mort((
+  quietly(( mort((
    pretty_numbervars(P, T),
    get_operators(T, Ops))),!,
-   maybe_bfly_html((print_e_to_string(T, Ops, S))).
+   % maybe_bfly_html
+   print_e_to_string(T, Ops, S))),!.
 /*
 print_e_to_string(P, S):- 
    get_operators(P, Ops),
@@ -869,7 +874,7 @@ write_simple(A,Options):- get_portrayal_vars(Vs),
      simple_write_term(A,OptionsNew),
      erase(Ref)))).
 
-portray_with_vars(A):- portray_with_vars(A,[]).
+portray_with_vars(A):- portray_with_vars(A,[]),!.
 
 portray_with_vars(A,Options):- 
    Ing = A+final,
@@ -878,7 +883,7 @@ portray_with_vars(A,Options):-
    setup_call_cleanup(
    nb_setval('$in_portray_with_vars',[Ing|P]),
    maybe_bfly_html(portray_with_vars1(A,Options)),
-   nb_setval('$in_portray_with_vars',P)).
+   nb_setval('$in_portray_with_vars',P)),!.
 
 % portray_with_vars(A,Options):- dumpST, break, throw(looped(portray_with_vars(A,Options))).
 
@@ -1047,16 +1052,17 @@ should_print_mode_html(_).
 %with_pp(swish,Goal):- toplevel_pp(swish),!,with_pp(bfly,Goal).
 %with_pp(http,Goal):- toplevel_pp(swish),!,with_pp(bfly,Goal).
 
+with_pp(Mode,Goal):- quietly(with_pp0(Mode,Goal)).
 
-with_pp(ansi,Goal):- \+ t_l:print_mode(plain), !, locally_tl(print_mode(plain),with_pp(ansi,Goal)).
-with_pp(Mode,Goal):- \+ t_l:print_mode(html), should_print_mode_html(Mode),!, locally_tl(print_mode(html),with_pp(Mode,Goal)).
-with_pp(Where,Goal):- \+ is_pp_set(Where), !,
+with_pp0(ansi,Goal):- \+ t_l:print_mode(plain), !, locally_tl(print_mode(plain),with_pp0(ansi,Goal)).
+with_pp0(Mode,Goal):- \+ t_l:print_mode(html), should_print_mode_html(Mode),!, locally_tl(print_mode(html),with_pp0(Mode,Goal)).
+with_pp0(Where,Goal):- \+ is_pp_set(Where), !,
     setup_call_cleanup(
       asserta(bfly_tl:bfly_setting(pp_output,Where),Ref),
-      with_pp(Where,Goal),
+      with_pp0(Where,Goal),
       erase(Ref)),!.
 
-with_pp(Where,Goal):- toplevel_pp(Real), ttyflush, with_real_pp(Real,Where,Goal), ttyflush.
+with_pp0(Where,Goal):- toplevel_pp(Real), ttyflush, with_real_pp(Real,Where,Goal), ttyflush.
 
 write_bfly_html(S):- empty_str(S),!.
 write_bfly_html(S):- split_string(S, "", "\s\t\n",L),atomics_to_string(L,LL),LL\==S,!,write_bfly_html(LL).

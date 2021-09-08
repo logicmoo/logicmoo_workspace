@@ -645,8 +645,8 @@ any_to_atom(Any,A):- any_to_string(Any,T), format(atom(A),'~w',[T]).
 %
 % Any Converted To String Or Variable.
 %
-any_to_string_or_var(StringO,String):- (var(StringO);var(String)),!,String=StringO.
-any_to_string_or_var(StringO,String):- any_to_string(StringO,StringOS1),any_to_string(String,StringOS2),!,StringOS1=StringOS2.
+any_to_string_or_var(StringO,String):- notrace(((var(StringO);var(String)),!,String=StringO)),!.
+any_to_string_or_var(StringO,String):- notrace((any_to_string(StringO,StringOS1),any_to_string(String,StringOS2),!,StringOS1=StringOS2)).
 
 
 %= 	 	 

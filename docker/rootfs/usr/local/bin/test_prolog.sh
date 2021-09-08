@@ -7,6 +7,7 @@
 export TESTING_TEMP
 mkdir -p $TESTING_TEMP/
 
+
 export GLOB="$*"
 [ -z "$GLOB" ] && GLOB="*_01.*"
 [ -z "${TEST_STEM}" ] && export TEST_STEM=Report-$(echo "${GLOB}-Units" | sed -e "s/[*]/vSTARv/g" -e "s/[?]/vQUESTv/g" -e "s/[.]/vDOTv/g" -e "s/[^a-Z0-9_]/-/g" -e "s/--/-/g" -e "s/-/-/g"  -e "s/--/-/g" )
@@ -130,6 +131,10 @@ for ele2 in "${listOfNames[@]}"
 	  while [ $retry == 1 ]
 	   do
 	    retry=0
+
+        [-z "${CMD_TIMEOUT}" ] CMD_TIMEOUT="10s"
+        [-z "${CMD_WRAPPER}" ] CMD_WRAPPER="timeout --foreground --preserve-status -s SIGKILL -k ${CMD_TIMEOUT} ${CMD_TIMEOUT}"
+
         export FILENAME=${ele}
         export JUNIT_SHORTCLASS=`echo "${FILENAME^^}" | cut -d'.' -f1`
         export JUNIT_SUITE=$JUNIT_PACKAGE.$(echo "${JUNIT_SHORTCLASS^^}" | sed -e "s/_[0-9]//g" -e "s/[0-9]//g" )
@@ -155,10 +160,12 @@ for ele2 in "${listOfNames[@]}"
       		#// Runs the test -f .swiplrc
             #//CMD="swipl -g 'set_prolog_flag(runtime_testing,${runtime_testing})' -g \"thread_create(['${ele}'],Id),thread_join(Id),$test_completed\" "
             #//CMD="$SWIPL -g 'set_prolog_flag(runtime_testing,${runtime_testing})' -g \"(['${ele}'])\" -g \"$test_completed\" "
-            CMD="timeout --foreground --preserve-status -s SIGKILL -k 10s 10s $SWIPL ${ele}"
-            INFO "CMD=$CMD"
+            CMD="$SWIPL ${ele}"
         fi
 
+[! -z "${CMD_WRAPPER}" ]  CMD="${CMD_WRAPPER} ${CMD}"
+
+        INFO "CMD=$CMD"
         export TEE_FILE=$TESTING_TEMP/CMD_LAST.ansi
         export TEE_FILE2=${TEE_FILE}.too
         ####JECHO "<system-out><![CDATA["

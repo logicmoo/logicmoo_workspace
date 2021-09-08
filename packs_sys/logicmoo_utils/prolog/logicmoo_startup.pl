@@ -1652,12 +1652,18 @@ qsave_bin(Clif):-
 %= REGISTER FOR INIT EVENTS
 %=======================================
 
+% These are mainly so we can later understand the restore phasing
+:- initialization(dmsg(init_phase(program)),program).
+:- initialization(dmsg(init_phase(after_load)),after_load).
+:- initialization(dmsg(init_phase(restore)),restore).
+:- initialization(dmsg(init_phase(restore_state)),restore_state).
+:- initialization(dmsg(init_phase(prepare_state)),prepare_state).
+
+
 %= Register a hook after restore
 :- initialization(init_why(during_boot,restore),restore).
-
 %= Register a hook
 :- initialization(init_why(after_boot,program),program).
-
 %= Register a hook
 %:- initialization(init_why(runtime,main),main).
 

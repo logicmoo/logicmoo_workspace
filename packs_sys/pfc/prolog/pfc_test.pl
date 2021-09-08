@@ -51,6 +51,8 @@ test_red_lined(Failed):- notrace((
 % PFC Test.
 %
 
+:- meta_predicate(mpred_test(:)).
+:- module_transparent(mpred_test/1).
 %mpred_test(G):- notrace(mpred_test0(G)) -> true ; with_no_breaks(with_mpred_trace_exec(must(mpred_test_fok(G)))),!.
 mpred_test(_):- notrace((compiling; current_prolog_flag(xref,true))),!.
 mpred_test(G):- mpred_test_fok(G).
@@ -97,23 +99,28 @@ mpred_test_fok_2(Testcase, G):-
    nop(sformat(Exec,'cat /dev/null > ~w',[Tee])),
    nop(shell(Exec)))))).
 
-mpred_test_fok_4(\+ G, TestResult, Elapsed):- !,
- must_det_l((
-  get_time(Start),
-  catch(( ( \+ call_u_hook(G) ) -> TestResult = passed; TestResult = failure),E, TestResult=error(E)),
-  get_time(End),
-  Elapsed is End - Start,
-  (TestResult == failure -> Retry = G ;  Retry = ( \+ G)),
-  save_info_to(TestResult,why_was_true(Retry)))).
+negate_call(\+ G, G).
+negate_call(M:G,M:NG):- !, negate_call(G, NG).
+negate_call(G, \+ G).
+
 mpred_test_fok_4(G, TestResult, Elapsed):- !,
  must_det_l((
   get_time(Start),
   catch(( (  call_u_hook(G) ) -> TestResult = passed; TestResult = failure),E, TestResult=error(E)),
   get_time(End),
   Elapsed is End - Start,
-  (TestResult == failure -> Retry = ( \+ G ) ;  Retry = G),
-  save_info_to(TestResult,why_was_true(Retry)))).
+  process_test_result(TestResult, G))).
 
+process_test_result(TestResult, G):- TestResult == passed, !, save_info_to(TestResult, why_was_true(G)).
+process_test_result(TestResult, G):- TestResult \== failure, !, save_info_to(TestResult, catch(rtrace(call_u_hook(G)), E, writeln(E))).
+process_test_result(TestResult, G):- !, 
+  negate_call(G, Retry),
+  save_info_to(TestResult, 
+    (why_was_true(Retry),
+     rtrace(G))).
+
+call_u_hook(\+ G):- !, \+ call_u_hook(G).
+call_u_hook(M:( \+ G)):- !, \+ call_u_hook(M:G).
 call_u_hook(G):- current_predicate(call_u/1),!,catch_timeout(call(call,call_u,G)).
 call_u_hook(G):- catch_timeout(G).
 
@@ -125,9 +132,11 @@ why_was_true(P):- % predicate_property(P,dynamic),
                   catch_timeout(mpred_why_hook(P)),!.
 why_was_true(P):- dmsg_pretty(justfied_true(P)),!.
 
+catch_timeout(P):- tracing,!,call(P).
 catch_timeout(P):- catch(call_with_time_limit(30,w_o_c(P)),E,wdmsg(P->E)).
    
 generate_test_name(baseKB:G,Testcase):- nonvar(G), !, generate_test_name(G,Testcase).
+generate_test_name(M: G, Name):- nonvar(G), !, generate_test_name(G,Name1), sformat(Name,'~w in ~w',[Name1, M]).
 generate_test_name(\+ G, Name):- nonvar(G), !, generate_test_name(G,Name1), sformat(Name,'\naf ~w',[Name1]).
 generate_test_name(call_u(G), Name):- nonvar(G), !, generate_test_name(G,Name).
 generate_test_name(G,Name):- callable(G), (source_location(_,L); (_='',L=0)), 
@@ -190,8 +199,11 @@ skip_warning(T):- \+ compound(T),!,fail.
 skip_warning(_:T):- !, compound(T),functor(T,F,_),skip_warning(F).
 skip_warning(T):-compound(T),functor(T,F,_),skip_warning(F).
 
+with_output_to_tracing(Where,Goal):- \+ tracing,!,with_output_to(Where,Goal).
+with_output_to_tracing(_Where,Goal):- call(Goal).
 
-save_info_to(TestResult,Goal):- with_output_to(string(S),
+save_info_to(TestResult,Goal):- 
+ with_output_to_tracing(string(S),
   (fmt(TestResult=info(Goal)),
    ignore(Goal))), write(S),
   add_test_info(TestResult,S).
@@ -270,7 +282,6 @@ show_all_junit_suites:-
 
 outer_junit(G):- nop(G).
 
-:- multifile prolog:message//1, user:message_hook/3.
 
 system:halt_junit:- j_u:junit_prop(system,halted_junit,true),!.
 system:halt_junit:- asserta(j_u:junit_prop(system,halted_junit,true)),!,
@@ -609,9 +620,10 @@ message_hook_handle(T,Type,Term):-
 :- system:import(junit_term_expansion/2).
 :- system:import(junit_goal_expansion/2).
 
-:- dynamic message_hook/3.
-:- multifile message_hook/3.
-:- module_transparent message_hook/3.
+:- multifile prolog:message//1, user:message_hook/3.
+:- dynamic prolog:message//1, user:message_hook/3.
+:- module_transparent prolog:message//1, user:message_hook/3.
+
 user:message_hook(T,Type,Term):- 
    notrace((
    Type \== silent, Type \== debug, Type \== informational,

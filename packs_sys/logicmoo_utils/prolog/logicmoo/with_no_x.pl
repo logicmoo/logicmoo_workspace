@@ -21,7 +21,7 @@ Suspends use of X Windows temporarily for headless code.
 
 :- meta_predicate with_no_x(0).
 
-:- thread_local(tlbugger:show_must_go_on/0).
+:- thread_local(tlbugger:show_must_go_on/1).
 % WAS OFF  :- system:use_module(library(gui_tracer)).
 
 %% with_no_x( :Goal) is nondet.
@@ -31,7 +31,7 @@ Suspends use of X Windows temporarily for headless code.
 with_no_x(G):- getenv('DISPLAY',DISP),!,call_cleanup((unsetenv('DISPLAY'),with_no_x(G)),setenv('DISPLAY',DISP)).
 with_no_x(G):- current_prolog_flag(gui,true),!,call_cleanup((set_prolog_flag(gui,false),with_no_x(G)),set_prolog_flag(gui,true)).
 with_no_x(G):- current_prolog_flag(gui_tracer,true),!,call_cleanup((set_prolog_flag(gui,false),with_no_x(G)),set_prolog_flag(gui,true)).
-with_no_x(G):- locally_each(tlbugger:show_must_go_on,call(G)).
+with_no_x(G):- locally_each(tlbugger:show_must_go_on(true),call(G)).
 
 
 

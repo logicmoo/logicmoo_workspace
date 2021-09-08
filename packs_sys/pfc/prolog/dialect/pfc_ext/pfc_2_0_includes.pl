@@ -20,9 +20,9 @@ fixundef(Info):-
 
 fixundef_later:- with_no_retry_undefined((forall(retract(fixundef_later(M1P2)),fixundef(M1P2)),check:list_undefined)).
 
-:- dynamic message_hook/3.
-:- multifile message_hook/3.
-:- module_transparent message_hook/3.
+:- multifile prolog:message//1, user:message_hook/3.
+:- dynamic prolog:message//1, user:message_hook/3.
+:- module_transparent prolog:message//1, user:message_hook/3.
 
 user:message_hook(check(undefined_procedures,List),_Type,_Warn):- fail, 
    rtrace,

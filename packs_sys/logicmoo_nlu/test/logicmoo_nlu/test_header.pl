@@ -18,3 +18,4 @@ interactive_test(G):- add_history(G), fmt("?- ~q.",[G]), nop(mpred_why(G)).
 
 :- use_module(library(logicmoo_nlu)).
 
+:- make.

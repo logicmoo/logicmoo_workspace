@@ -350,15 +350,17 @@ merge_lists(L,R):- (L==[] ; R ==[]),!.
 merge_lists(L,R):- nb_set_add(L,R),nb_set_add(R,L).
 
 :- export(lex_winfo/2).
-lex_winfo(W2,R):- is_list(W2),!, maplist(lex_winfo,W2,R),!.
-lex_winfo(W2,R):- (var(W2);W2=span(_)),!,R=W2.
+lex_winfo(W2,R):- notrace(lex_winfo0(W2,R)).
+
+lex_winfo0(W2,R):- is_list(W2),!, maplist(lex_winfo0,W2,R),!.
+lex_winfo0(W2,R):- (var(W2);W2=span(_)),!,R=W2.
 %lex_winfo(W2,W2):-!.
-lex_winfo(W2,W2O):- W2=W2O, W2 = w(Word, Had),!, 
+lex_winfo0(W2,W2O):- W2=W2O, W2 = w(Word, Had),!, 
   nonvar(Word), !,  is_list(Had), 
   (member(lex_winfo,Had) -> true; 
      (lex_winfo_r(Word,R),unlevelize(R,R2),nb_set_add(W2,[lex_winfo|R2]))).
-lex_winfo(Word,W2):- lex_winfo_r(Word,Had),  W2 = w(Word, [lex_winfo|Had]),!.
-lex_winfo(W,W):-!.
+lex_winfo0(Word,W2):- lex_winfo_r(Word,Had),  W2 = w(Word, [lex_winfo|Had]),!.
+lex_winfo0(W,W):-!.
 
 
 lex_winfo_r(Word,R):- lex_tinfo(text(a), Word, R).
@@ -847,7 +849,7 @@ get_lex_info(Kind, Type, DCAtom, Out):- do_lex_info(Kind, Type, DCAtom, Out), as
 
 
 do_lex_info(Kind, text(Type), AString, OutS):-
- findall([cycWord(P, C), Kind], text_to_cycword(AString, P, C, Kind), More1),
+ notrace((findall([cycWord(P, C), Kind], text_to_cycword(AString, P, C, Kind), More1))),
  NewDone = [txt(AString)],
  cvt_to_atom(AString, Atom),
  Level = 0,

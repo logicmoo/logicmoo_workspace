@@ -1157,7 +1157,7 @@ nodebugx(X):-
  locally(set_prolog_flag(nodebugx,true),
   locally(-tlbugger:ifCanTrace,
    locally(tlbugger:ifWontTrace,
-    locally(tlbugger:show_must_go_on,
+    locally(tlbugger:show_must_go_on(true),
        locally(tlbugger:ifHideTrace,quietly(X)))))).
 
 debugging_logicmoo(Mask):- logicmoo_topic(Mask,Topic),prolog_debug:debugging(Topic, TF, _),!,TF=true.

@@ -147,13 +147,13 @@
           ]).
 
 
-:- thread_local tlbugger:show_must_go_on/0.
+:- thread_local tlbugger:show_must_go_on/1.
 
 keep_going:- notrace(keep_going0).
 
 keep_going0:- getenv(keep_going,'-k').
 keep_going0:- non_user_console.
-keep_going0:- tlbugger:show_must_go_on.
+keep_going0:- tlbugger:show_must_go_on(X)->X==true,!.
 keep_going0:- current_prolog_flag(runtime_must,keep_going),!.
 keep_going0:- current_prolog_flag(debug_on_error,true), !, fail.
 

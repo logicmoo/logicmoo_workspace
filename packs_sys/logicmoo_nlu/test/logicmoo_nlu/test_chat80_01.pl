@@ -14,6 +14,7 @@
 %
 
 %:- ensure_loaded(library(parser_chat80)).
+:- module(parser_chat80).
 
 :- test_chat80.
 

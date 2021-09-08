@@ -24,7 +24,7 @@ expire_rdf_caches :- forall(clause(expire_one_rdf_cache,Body),must(Body)).
 
 :- kb_shared(mpred_online:semweb_startup/0).
 
-mpred_online:semweb_startup:- retractall((tlbugger:show_must_go_on)).
+mpred_online:semweb_startup:- retractall((tlbugger:show_must_go_on(_))).
 mpred_online:semweb_startup:- expire_rdf_caches.
 
 /* <module> MUD STORE

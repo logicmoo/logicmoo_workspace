@@ -1200,7 +1200,8 @@ color_line(C,N):-
 %
 dmsg(_):- t_l:hide_dmsg, \+ tlbugger:no_slow_io, !.
 dmsg(C):- dzotrace((tlbugger:no_slow_io,!,stream_property(X,file_no(2)),writeln(X,dmsg(C)))).
-dmsg(V):- likely_folded(quietly((locally(set_prolog_flag(retry_undefined,none), if_defined_local(dmsg0(V),logicmoo_util_catch:ddmsg(V)))))),!.
+dmsg(V):- quietly(likely_folded((locally(set_prolog_flag(retry_undefined,none), 
+  if_defined_local(dmsg0(V),logicmoo_util_catch:ddmsg(V)))))),!.
 %dmsg(F,A):- dzotrace((tlbugger:no_slow_io,on_x_fail(smart_format(atom(S),F,A))->writeln(dmsg(S));writeln(dmsg_fail(F,A)))),!.
 
 :- system:import(dmsg/1).
@@ -1347,8 +1348,8 @@ dmsg(L,F,A):-loggerReFmt(L,LR),loggerFmtReal(LR,F,A).
 %
 % (debug)message Primary Helper.
 %
-dmsg0(V):-quietly(locally(local_override(no_kif_var_coroutines,true),
-   ignore(with_output_to_main_error(dmsg00(V))))),!.
+dmsg0(V):-notrace((locally(local_override(no_kif_var_coroutines,true),
+   ignore(with_output_to_main_error(dmsg00(V)))))),!.
 
 %= 	 	 
 

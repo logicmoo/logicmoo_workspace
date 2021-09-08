@@ -214,8 +214,7 @@ quietly3(Goal):- \+ tracing -> Goal ;
   (trace,!,notrace(fail)))).
 
 % version 4 
-quietly(M:Goal):- %JUNIT  \+ tracing 
- true
+quietly(M:Goal):- \+ tracing 
  -> M:Goal ;
   (get_trace_reset(W), scce_orig(notrace(visible(-all)),M:Goal,W)).
 
