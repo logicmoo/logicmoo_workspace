@@ -352,7 +352,12 @@ test_chat80(N, OnOff) :- (number(N);var(N)),!,
 test_chat80(Sentence, OnOff) :-
   test_chat80(0, Sentence, OnOff, _CorrectAnswer).
 
-test_chat80(N, Sentence, OnOff, CorrectAnswer) :-
+test_chat80(N, Sentence, OnOff, CorrectAnswer):-
+  mpred_test(test_chat80_mpred(N, Sentence, OnOff, CorrectAnswer)),!.
+
+test_chat80(_,_,_,_).
+
+test_chat80_mpred(N, Sentence, OnOff, CorrectAnswer) :-
     report_item0(print_test,Sentence),
 	  process5(test,Sentence,CorrectAnswer,Status,Times),
 	  show_results(N,Status,Times),
@@ -360,7 +365,6 @@ test_chat80(N, Sentence, OnOff, CorrectAnswer) :-
     tracing ~= OnOff,
     process(normal,Sentence),
 	fail.
-test_chat80(_,_,_,_).
 
 test :-
 	time(rtest_chats(30)).
