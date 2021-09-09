@@ -132,9 +132,6 @@ for ele2 in "${listOfNames[@]}"
 	   do
 	    retry=0
 
-        [-z "${CMD_TIMEOUT}" ] CMD_TIMEOUT="10s"
-        [-z "${CMD_WRAPPER}" ] CMD_WRAPPER="timeout --foreground --preserve-status -s SIGKILL -k ${CMD_TIMEOUT} ${CMD_TIMEOUT}"
-
         export FILENAME=${ele}
         export JUNIT_SHORTCLASS=`echo "${FILENAME^^}" | cut -d'.' -f1`
         export JUNIT_SUITE=$JUNIT_PACKAGE.$(echo "${JUNIT_SHORTCLASS^^}" | sed -e "s/_[0-9]//g" -e "s/[0-9]//g" )
@@ -163,7 +160,9 @@ for ele2 in "${listOfNames[@]}"
             CMD="$SWIPL ${ele}"
         fi
 
-[! -z "${CMD_WRAPPER}" ]  CMD="${CMD_WRAPPER} ${CMD}"
+        [-z "${CMD_TIMEOUT}" ] CMD_TIMEOUT="10s"
+        [-z "${CMD_WRAPPER}" ] CMD_WRAPPER="timeout --foreground --preserve-status -s SIGKILL -k ${CMD_TIMEOUT} ${CMD_TIMEOUT}"
+        CMD="${CMD_WRAPPER} ${CMD}"
 
         INFO "CMD=$CMD"
         export TEE_FILE=$TESTING_TEMP/CMD_LAST.ansi
