@@ -8,7 +8,7 @@ mkdir -p $TESTING_TEMP/
 
 export GLOB="$*"
 [ -z "$GLOB" ] && GLOB="*_01.*"
-[ -z "${TEST_STEM}" ] && export TEST_STEM=$(echo "${GLOB}" | sed -e "s/[*]/vSTARv/g" -e "s/[?]/vQUESTv/g" -e "s/[.]/vDOTv/g" -e "s/[^_0123456789A-z]/-/g" -e "s/--/-/g" -e "s/-/-/g"  -e "s/--/-/g" )
+[ -z "${TEST_STEM}" ] && export TEST_STEM=Report-$(echo "${GLOB}" | sed -e "s/[*]/vSTARv/g" -e "s/[?]/vQUESTv/g" -e "s/[.]/vDOTv/g" -e "s/[^_0123456789A-z]/-/g" -e "s/--/-/g" -e "s/-/-/g"  -e "s/--/-/g"  | rev | cut -c 1-110 | rev)-Units
 TEST_STEM=Report-$(echo "${TEST_STEM}" | rev | expr substr 1 110 | rev)-Units
 echo "<!-- TEST_STEM=${TEST_STEM} -->"
 [ -z "${TEST_STEM_PATH}" ] && export TEST_STEM_PATH=$TESTING_TEMP/$TEST_STEM
