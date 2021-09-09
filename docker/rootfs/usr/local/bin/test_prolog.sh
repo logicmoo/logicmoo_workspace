@@ -10,13 +10,10 @@ mkdir -p $TESTING_TEMP/
 
 export GLOB="$*"
 [ -z "$GLOB" ] && GLOB="*_01.*"
-[ -z "${TEST_STEM}" ] && export TEST_STEM=Report-$(echo "${GLOB}-Units" | sed -e "s/[*]/vSTARv/g" -e "s/[?]/vQUESTv/g" -e "s/[.]/vDOTv/g" -e "s/[^_0123456789A-z]/-/g" -e "s/--/-/g" -e "s/-/-/g"  -e "s/--/-/g" )
-TEST_STEM=$(expr substr "${TEST_STEM}" 1 110)
+[ -z "${TEST_STEM}" ] && export TEST_STEM=Report-$(echo "${GLOB}" | sed -e "s/[*]/vSTARv/g" -e "s/[?]/vQUESTv/g" -e "s/[.]/vDOTv/g" -e "s/[^_0123456789A-z]/-/g" -e "s/--/-/g" -e "s/-/-/g"  -e "s/--/-/g"  | rev | expr substr 1 110 | rev)-Units
 echo "<!-- TEST_STEM=${TEST_STEM} -->"
 [ -z "${TEST_STEM_PATH}" ] && export TEST_STEM_PATH=$TESTING_TEMP/$TEST_STEM
-TEST_STEM_PATH=$(expr substr "${TEST_STEM_PATH}" 1 130)
 echo "<!-- TEST_STEM_PATH=${TEST_STEM_PATH} -->"
-
 
 
 SWIPL=swipl
@@ -102,13 +99,12 @@ echo "<!-- PACK_DIR=${PACK_DIR} -->"
 
 echo "<!-- JUNIT_PACKAGE=${JUNIT_PACKAGE} -->"
 
-REPORT_STEM=$(echo "$TEST_STEM-${PWD}" | sed -e "s/[*]/vSTARv/g" -e "s/[?]/vQUESTv/g" -e "s/[.]/vDOTv/g" -re "s/[^_0123456789A-z]/-/g" -e "s/--/-/g" -e "s/_/-/g"  -e "s/--/-/g" )
-REPORT_STEM=$(expr substr "${REPORT_STEM}" 1 120)
+REPORT_STEM=$(echo "${PWD}" | sed -e "s/[*]/vSTARv/g" -e "s/[?]/vQUESTv/g" -e "s/[.]/vDOTv/g" -re "s/[^_0123456789A-z]/-/g" -e "s/--/-/g" -e "s/_/-/g"  -e "s/--/-/g" )
+REPORT_STEM=${TEST_STEM}-$(echo "${REPORT_STEM}" | rev | expr substr 1 120 | rev)
 
 echo "<!-- REPORT_STEM=${REPORT_STEM} -->"
 
 JUNIT_TESTS_GLOBBED="${TESTING_TEMP}/${REPORT_STEM}"
-JUNIT_TESTS_GLOBBED=$(expr substr "${JUNIT_TESTS_GLOBBED}" 1 130)-glob
 echo "<!-- JUNIT_TESTS_GLOBBED=${JUNIT_TESTS_GLOBBED} -->"
 echo "" > $JUNIT_TESTS_GLOBBED
 
