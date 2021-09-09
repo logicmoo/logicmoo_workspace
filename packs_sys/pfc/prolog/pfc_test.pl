@@ -454,7 +454,7 @@ junit_count(skipped).
 junit_count(failures).
 
 
-clear_suite_attribs:- forall(junit_count(F),flag(tests,_,0)),
+clear_suite_attribs:- forall(junit_count(F),flag(F,_,0)),
   retractall(j_u:junit_prop(testsuite,start,_)),
   get_time(Start),asserta(j_u:junit_prop(testsuite,start,Start)).
 
