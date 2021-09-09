@@ -1,4 +1,5 @@
 #!/bin/bash -x
+#--help # Runs Secondary JUnit Tests that must be ran from Docker
 
 apt update
 apt install -y gawk
