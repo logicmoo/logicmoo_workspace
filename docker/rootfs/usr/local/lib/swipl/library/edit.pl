@@ -39,12 +39,8 @@
           ]).
 :- autoload(library(lists),[member/2,append/3,nth1/3]).
 :- autoload(library(make),[make/0]).
-:- if(exists_source(library(pce))).
 :- autoload(library(pce),[in_pce_thread/1]).
-:- endif.
-:- if(exists_source(library(pce_emacs))).
 :- autoload(library(pce_emacs),[emacs/1]).
-:- endif.
 :- autoload(library(prolog_breakpoints),[breakpoint_property/2]).
 
 

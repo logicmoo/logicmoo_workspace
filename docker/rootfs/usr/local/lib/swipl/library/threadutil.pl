@@ -56,14 +56,10 @@
 :- autoload(library(apply),[maplist/3]).
 :- autoload(library(backcomp),[thread_at_exit/1]).
 :- autoload(library(edinburgh),[nodebug/0]).
-:- if(exists_source(library(gui_tracer))).
 :- autoload(library(gui_tracer),[gdebug/0]).
-:- endif.
 :- autoload(library(lists),[max_list/2,append/2]).
 :- autoload(library(option),[merge_options/3,option/3]).
-:- if(exists_source(library(gui_tracer))).
 :- autoload(library(pce),[send/2]).
-:- endif.
 :- autoload(library(prolog_stack),
 	    [print_prolog_backtrace/2,get_prolog_backtrace/3]).
 :- autoload(library(statistics),[thread_statistics/2,show_profile/1]).
