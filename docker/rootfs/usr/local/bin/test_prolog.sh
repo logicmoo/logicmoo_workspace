@@ -115,7 +115,7 @@ function JECHO {
 }
 function INFO {
  willBe=$(echo "${*}" | sed -e 's/-/=/g' ) 
- echo -e "${willBe}\n"
+ echo -e "${*}\n"
  JECHO "<!-- ${willBe}  -->"
 }
 
