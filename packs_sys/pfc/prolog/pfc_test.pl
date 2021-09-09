@@ -444,13 +444,13 @@ show_junit_suite_xml(File):-
   writeln('<?xml version="1.0" encoding="utf-8"?>'),
   writeln('<testsuites>'),
   maplist(show_junit_suite,File),
-  writeln('</testsuites>'),
+  writeln('</testsuites>'),!.
   
 
 junit_count(tests).
 junit_count(errors).
 junit_count(skipped).
-junit_count(disabled).
+%junit_count(disabled).
 junit_count(failures).
 
 
