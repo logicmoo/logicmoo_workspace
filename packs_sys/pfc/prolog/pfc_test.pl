@@ -461,7 +461,7 @@ clear_suite_attribs:- forall(junit_count(F),flag(tests,_,0)),
 get_suite_attribs(SuiteAttribs):-    
   with_output_to(string(SuiteAttribs),
 (( ignore((getenv('JUNIT_PACKAGE',Package), format(' package="~w"', [Package]))),
-   ignore((j_u:junit_prop(testsuite,start,Start),get_time(End),Elapsed is End - Start,format(' time="~20f"',[Elapsed]))),
+   ignore((j_u:junit_prop(testsuite,start,Start),get_time(End),Elapsed is End - Start,format(' time="~3f"',[Elapsed]))),
    forall((junit_count(F),flag(F,C,C)),format(' ~w="~w"',[F,C]))))).
 
 show_junit_suite(File):- 
@@ -569,7 +569,7 @@ show_junit_testcase(Suite,Testcase):-
  format('\n     <testcase name=~q ', [EDisplayName]),
   % format('package="~w" ', [Package]),
   format('classname="~w" ', [Classname]),
- ignore((j_u:junit_prop(Testcase,time,Time),format('time="~20f"', [Time]))),
+ ignore((j_u:junit_prop(Testcase,time,Time),format('time="~3f"', [Time]))),
  writeln('>\n'),
  ignore((write_testcase_info(Testcase))),
  writeln("\n    </testcase>"))),!.
