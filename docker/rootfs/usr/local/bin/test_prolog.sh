@@ -91,20 +91,17 @@ parent-find() {
 }
 
 export PACK_DIR=$(parent-find "pack.pl" .  )
-PACK_DIR=$(basename $PACK_DIR)
-
+export PACK_DIR=$(basename $PACK_DIR)
 echo "<!-- PACK_DIR=${PACK_DIR} -->"
 
-[ -z "${JUNIT_PACKAGE}" ] && export JUNIT_PACKAGE="$PACK_DIR.$(basename `realpath .. | sed -e 's|/[^.]/|/|g' `).$(basename `realpath .`)"
-
+export JUNIT_PACKAGE="$PACK_DIR.$(basename `realpath .. | sed -e 's|/[^.]/|/|g' `).$(basename `realpath .`)"
 echo "<!-- JUNIT_PACKAGE=${JUNIT_PACKAGE} -->"
 
-REPORT_STEM=$(echo "${PWD}" | sed -e "s/[*]/vSTARv/g" -e "s/[?]/vQUESTv/g" -e "s/[.]/vDOTv/g" -re "s/[^_0123456789A-z]/-/g" -e "s/--/-/g" -e "s/_/-/g"  -e "s/--/-/g" )
-REPORT_STEM=${TEST_STEM}-$(echo "${REPORT_STEM}" | rev | expr substr 1 120 | rev)
-
+export REPORT_STEM=$(echo "${PWD}" | sed -e "s/[*]/vSTARv/g" -e "s/[?]/vQUESTv/g" -e "s/[.]/vDOTv/g" -re "s/[^_0123456789A-z]/-/g" -e "s/--/-/g" -e "s/_/-/g"  -e "s/--/-/g" )
+export REPORT_STEM=${TEST_STEM}-$(echo "${REPORT_STEM}" | rev | expr substr 1 120 | rev)
 echo "<!-- REPORT_STEM=${REPORT_STEM} -->"
 
-JUNIT_TESTS_GLOBBED="${TESTING_TEMP}/${REPORT_STEM}"
+export JUNIT_TESTS_GLOBBED="${TESTING_TEMP}/${REPORT_STEM}"
 echo "<!-- JUNIT_TESTS_GLOBBED=${JUNIT_TESTS_GLOBBED} -->"
 echo "" > $JUNIT_TESTS_GLOBBED
 
