@@ -8,7 +8,7 @@ mkdir -p $TESTING_TEMP/
 
 export GLOB="$*"
 [ -z "$GLOB" ] && GLOB="*_01.*"
-[ -z "${TEST_STEM}" ] && export TEST_STEM=Report-$(echo "${GLOB}" | sed -e "s/[*]/vSTARv/g" -e "s/[?]/vQUESTv/g" -e "s/[.]/vDOTv/g" -e "s/[^_0123456789A-z]/-/g" -e "s/--/-/g" -e "s/-/-/g"  -e "s/--/-/g"  | rev | cut -c 1-110 | rev)-Units
+[ -z "${TEST_STEM}" ] && export TEST_STEM=Report-$(echo "${GLOB}-$(pwd)" | sed -e "s/[*]/vSTARv/g" -e "s/[?]/vQUESTv/g" -e "s/[.]/vDOTv/g" -e "s/[^_0123456789A-z]/-/g" -e "s/--/-/g" -e "s/-/-/g"  -e "s/--/-/g"  | rev | cut -c 1-110 | rev)-Units
 TEST_STEM=Report-$(echo "${TEST_STEM}" | rev | expr substr 1 110 | rev)-Units
 echo "<!-- TEST_STEM=${TEST_STEM} -->"
 [ -z "${TEST_STEM_PATH}" ] && export TEST_STEM_PATH=$TESTING_TEMP/$TEST_STEM
@@ -27,9 +27,11 @@ cat /dev/null > $CAPTURE_TEST_ANSI
 junitCombined=$TEST_STEM_PATH-junitCombined
 
 # Generate JUnit Results
-echo "<testsuites>" > $junitCombined
-sed -r "s/\x1B\[(([0-9]{1,2})?(;)?([0-9]{1,2})?)?[m,K,H,f,J]//g" $TESTING_TEMP/?*-junit.xml | sed -e "s|<testsuites>||g" -e "s|</testsuites>||g" >> $junitCombined
-echo "</testsuites>" >> $junitCombined
+( 
+echo "<testsuites>" 
+sed -r "s/\x1B\[(([0-9]{1,2})?(;)?([0-9]{1,2})?)?[m,K,H,f,J]//g" ${TEST_STEM_PATH}?*-junit.xml | sed -e "s|<testsuites>||g" -e "s|</testsuites>||g"
+echo -e "\n</testsuites>\n\n\n" 
+) > ${junitCombined}
 
 PATH=~/.npm-packages/bin:$PATH
 

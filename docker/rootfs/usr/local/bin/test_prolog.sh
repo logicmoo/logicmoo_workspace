@@ -10,7 +10,7 @@ mkdir -p $TESTING_TEMP/
 
 export GLOB="$*"
 [ -z "$GLOB" ] && GLOB="*_01.*"
-[ -z "${TEST_STEM}" ] && export TEST_STEM=Report-$(echo "${GLOB}" | sed -e "s/[*]/vSTARv/g" -e "s/[?]/vQUESTv/g" -e "s/[.]/vDOTv/g" -e "s/[^_0123456789A-z]/-/g" -e "s/--/-/g" -e "s/-/-/g"  -e "s/--/-/g"  | rev | cut -c 1-110 | rev)-Units
+[ -z "${TEST_STEM}" ] && export TEST_STEM=Report-$(echo "${GLOB}-$(pwd)" | sed -e "s/[*]/vSTARv/g" -e "s/[?]/vQUESTv/g" -e "s/[.]/vDOTv/g" -e "s/[^_0123456789A-z]/-/g" -e "s/--/-/g" -e "s/-/-/g"  -e "s/--/-/g"  | rev | cut -c 1-110 | rev)-Units
 echo "<!-- TEST_STEM=${TEST_STEM} -->"
 [ -z "${TEST_STEM_PATH}" ] && export TEST_STEM_PATH=$TESTING_TEMP/$TEST_STEM
 echo "<!-- TEST_STEM_PATH=${TEST_STEM_PATH} -->"
@@ -97,16 +97,21 @@ echo "<!-- PACK_DIR=${PACK_DIR} -->"
 export JUNIT_PACKAGE="$PACK_DIR.$(basename `realpath .. | sed -e 's|/[^.]/|/|g' `).$(basename `realpath .`)"
 echo "<!-- JUNIT_PACKAGE=${JUNIT_PACKAGE} -->"
 
-export REPORT_STEM=$(echo "${PWD}" | sed -e "s/[*]/vSTARv/g" -e "s/[?]/vQUESTv/g" -e "s/[.]/vDOTv/g" -re "s/[^_0123456789A-z]/-/g" -e "s/--/-/g" -e "s/_/-/g"  -e "s/--/-/g" )
-export REPORT_STEM=${TEST_STEM}-$(echo "${REPORT_STEM}" | rev | expr substr 1 120 | rev)
+export REPORT_STEM=$(echo "$(pwd)" | sed -e "s/[*]/vSTARv/g" -e "s/[?]/vQUESTv/g" -e "s/[.]/vDOTv/g" -re "s/[^_0123456789A-z]/-/g" -e "s/--/-/g" -e "s/_/-/g"  -e "s/--/-/g" )
+export REPORT_STEM=${TEST_STEM}-${JUNIT_PACKAGE}-$(echo "${REPORT_STEM}" | rev | expr substr 1 120 | rev)
 echo "<!-- REPORT_STEM=${REPORT_STEM} -->"
 
 export JUNIT_TESTS_GLOBBED="${TESTING_TEMP}/${REPORT_STEM}"
+JUNIT_TESTS_GLOBBED_TESTS=0
+JUNIT_TESTS_GLOBBED_FAILURES=0
+JUNIT_TESTS_GLOBBED_SKIPPED=0
+JUNIT_TESTS_GLOBBED_PASSED=0
+JUNIT_TESTS_GLOBBED_ERRORS=0
 echo "<!-- JUNIT_TESTS_GLOBBED=${JUNIT_TESTS_GLOBBED} -->"
-echo "" > $JUNIT_TESTS_GLOBBED
+echo "" > ${JUNIT_TESTS_GLOBBED}.tmp
 
 function JECHO {
- (echo -e "${*}\n") >> $JUNIT_TESTS_GLOBBED
+ (echo -e "${*}\n") >> ${JUNIT_TESTS_GLOBBED}.tmp
 }
 function INFO {
  willBe=$(echo "${*}" | sed -e 's/-/=/g' ) 
@@ -114,7 +119,6 @@ function INFO {
  JECHO "<!-- ${willBe}  -->"
 }
 
-JECHO "<testsuite name=\"${REPORT_STEM}\">"
 me="${BASH_SOURCE[${#BASH_SOURCE[@]} - 1]}"
 INFO "Running Matching Tests: $me $keep_going ${listOfNames[*]}"
 
@@ -159,7 +163,7 @@ for ele2 in "${listOfNames[@]}"
         [ -z "${CMD_TIMEOUT}" ] && CMD_TIMEOUT="10s"
         [ -z "${CMD_WRAPPER}" ] && CMD_WRAPPER="timeout --foreground --preserve-status -s SIGKILL -k ${CMD_TIMEOUT} ${CMD_TIMEOUT}"
         CMD="${CMD_WRAPPER} ${CMD}"
-
+        JUNIT_TESTS_GLOBBED_TESTS=$((JUNIT_TESTS_GLOBBED_TESTS+1))
         INFO "CMD=$CMD"
         export TEE_FILE=$TESTING_TEMP/CMD_LAST.ansi
         export TEE_FILE2=${TEE_FILE}.too
@@ -175,16 +179,18 @@ for ele2 in "${listOfNames[@]}"
 
         if [ $exitcode -eq $good_exit ]; then
 			[ "${next_cls}" == 1 ] && cls && next_cls=0			
-         JECHO "<testcase name=\"$FileTestCase\" package='$JUNIT_PACKAGE' classname='$JUNIT_CLASSNAME' time='$totalTime'>"         
+         JECHO "<testcase name=\"$FileTestCase\" classname='$JUNIT_CLASSNAME' time='$totalTime'>"         
          JECHO "<system-out><![CDATA[$(cat $TEE_FILE2)]]></system-out>\n"
          JECHO "</testcase>"
          INFO "SUCCESS: $0 ${keep_going} ${ele} (returned ${exitcode})"
+           JUNIT_TESTS_GLOBBED_PASSED=$((JUNIT_TESTS_GLOBBED_PASSED+1))
 			continue
 	     fi
-        JECHO "<testcase name=\"$FileTestCase\" package='$JUNIT_PACKAGE' classname='$JUNIT_CLASSNAME' time='$totalTime'>"
+        JECHO "<testcase name=\"$FileTestCase\" classname='$JUNIT_CLASSNAME' time='$totalTime'>"
         JECHO " <failure message='FAILED: $0 ${keep_going} ${ele} (returned ${exitcode})'>"
            JECHO "<system-err><![CDATA[$(cat $TEE_FILE2)]]></system-err>\n"
         JECHO " </failure></testcase>"
+           JUNIT_TESTS_GLOBBED_FAILURES=$((JUNIT_TESTS_GLOBBED_FAILURES+1))
 
         next_cls=0
 
@@ -246,6 +252,8 @@ for ele2 in "${listOfNames[@]}"
   return $exitcode 2>/dev/null ; exit $exitcode
 ) 
 
-JECHO "</testsuite>\n\n\n\n"
-sed -r "s/\x1B\[(([0-9]{1,2})?(;)?([0-9]{1,2})?)?[m,K,H,f,J]//g" $JUNIT_TESTS_GLOBBED > $JUNIT_TESTS_GLOBBED-junit.xml
-
+( 
+echo "<testsuite name=\"Rollup ${JUNIT_PACKAGE} in $(pwd)\" package=\"${JUNIT_PACKAGE}\" tests=\"${JUNIT_TESTS_GLOBBED_TESTS}\" failures=\"${JUNIT_TESTS_GLOBBED_FAILURES}\" errors=\"${JUNIT_TESTS_GLOBBED_ERRORS}\"  skipped=\"${JUNIT_TESTS_GLOBBED_SKIPPED}\">"
+sed -r "s/\x1B\[(([0-9]{1,2})?(;)?([0-9]{1,2})?)?[m,K,H,f,J]//g" ${JUNIT_TESTS_GLOBBED}.tmp
+echo -e "\n</testsuite>\n\n\n\n" 
+) > ${JUNIT_TESTS_GLOBBED}-junit.xml

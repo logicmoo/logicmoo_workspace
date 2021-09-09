@@ -460,7 +460,7 @@ clear_suite_attribs:- forall(junit_count(F),flag(tests,_,0)),
 
 get_suite_attribs(SuiteAttribs):-    
   with_output_to(string(SuiteAttribs),
-(( ignore(getenv('JUNIT_PACKAGE',Package), format(' package="~w"', [Package])),
+(( ignore((getenv('JUNIT_PACKAGE',Package), format(' package="~w"', [Package]))),
    ignore((j_u:junit_prop(testsuite,start,Start),get_time(End),Elapsed is End - Start,format(' time="~20f"',[Elapsed]))),
    forall((junit_count(F),flag(F,C,C)),format(' ~w="~w"',[F,C]))))).
 
