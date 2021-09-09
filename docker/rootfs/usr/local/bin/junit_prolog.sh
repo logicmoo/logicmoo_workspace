@@ -24,7 +24,7 @@ cat /dev/null > $CAPTURE_TEST_ANSI
 # Run tests for JUnit Results
 ( test_prolog.sh -k $GLOB ) 2>&1 | tee -a $CAPTURE_TEST_ANSI
 
-junitCombined=$TEST_STEM_PATH-junitCombined
+junitCombined=$TEST_STEM_PATH-junitCombined-rollup.html
 
 # Generate JUnit Results
 ( 
@@ -37,13 +37,13 @@ PATH=~/.npm-packages/bin:$PATH
 
 echo "<!-- "
 # Generate Html Reports
-(cat $CAPTURE_TEST_ANSI | ansi2html.sh > $TEST_STEM_PATH-README.html)  ; /bin/true
+(cat $CAPTURE_TEST_ANSI | ansi2html.sh > $TEST_STEM_PATH-README-rollup.html)  ; /bin/true
 #npm install -g junit-viewer
-(junit-viewer --results=$junitCombined --save=$TEST_STEM_PATH-junit-viewer.html &> $TEST_STEM_PATH-junit-viewer.debug.html )  ; /bin/true
+(junit-viewer --results=$junitCombined --save=$TEST_STEM_PATH-junit-viewer-rollup.html &> $TEST_STEM_PATH-junit-viewer.debug.html )  ; /bin/true
 #npm install -g xunit-viewer
-#(xunit-viewer --results $junitCombined -o $TEST_STEM_PATH-xunit-viewer.html )  ; /bin/true
+#(xunit-viewer --results $junitCombined -o $TEST_STEM_PATH-xunit-viewer-rollup.html )  ; /bin/true
 #pip3 install junit2html
-(junit2html $junitCombined $TEST_STEM_PATH-junitCombined.html) ; /bin/true
+(junit2html $junitCombined $TEST_STEM_PATH-junitCombined-rollup.html) ; /bin/true
 echo "TEST_STEM_PATH=${TEST_STEM_PATH}"
 find $TESTING_TEMP*
 echo "-->"
