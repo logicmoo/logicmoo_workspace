@@ -580,10 +580,8 @@ show_junit_testcase(Suite,Testcase):-
 
 testcase_props(Testcase):-
  ignore((j_u:junit_prop(Testcase,out,Str),
-  write("\n    <system-out><![CDATA[\n"),
+  write("\n    <system-err><![CDATA[\n"),
   format('~w',[Str]),
-  write("\n    ]]></system-out>\n"))),    
- write("\n    <system-err><![CDATA[\n"),
  forall(j_u:junit_prop(Testcase,Type,Term), write_testcase_prop(Type,Term)),
  write("\n    ]]></system-err>\n").
 
@@ -618,7 +616,7 @@ write_testcase_info(Testcase):- testcase_props(Testcase),!.
 write_message_ele(Ele,NonGood):-
   text_to_string(NonGood,SNonGood), 
   escape_attribute(SNonGood,ENonGood),
-  format("      <~w message=\"~w\" ><system-out><![CDATA[  ~w  ]]></system-out></~w>\n", [Ele,ENonGood,SNonGood,Ele]).
+  format("      <~w message=\"~w\" ><system-err><![CDATA[  ~w  ]]></system-err></~w>\n", [Ele,ENonGood,SNonGood,Ele]).
 
 
 :- multifile prolog:message//1, user:message_hook/3.
