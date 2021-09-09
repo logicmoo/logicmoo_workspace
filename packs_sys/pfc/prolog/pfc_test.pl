@@ -105,22 +105,23 @@ negate_call(G, \+ G).
 
 mpred_test_fok_4(G, TestResult, Elapsed):- !,
  must_det_l((
-  get_time(Start),
-  flag(tests,T,T+1),
+  junit_incr(tests),
+  get_time(Start),  
   catch(( (  call_u_hook(G) ) -> TestResult = passed; TestResult = failure),E, TestResult=error(E)),
   get_time(End),
   Elapsed is End - Start,
   process_test_result(TestResult, G))).
 
 process_test_result(TestResult, G):- TestResult == passed, !, save_info_to(TestResult, why_was_true(G)).
-process_test_result(TestResult, G):- TestResult \== failure,flag(errors,T,T+1), !, save_info_to(TestResult, catch(rtrace(call_u_hook(G)), E, writeln(E))).
+process_test_result(TestResult, G):- TestResult \== failure,junit_incr(errors), !, save_info_to(TestResult, catch(rtrace(call_u_hook(G)), E, writeln(E))).
 process_test_result(TestResult, G):- !, 
-  flag(failures,T,T+1),
+  junit_incr(failures),
   negate_call(G, Retry),
   save_info_to(TestResult, 
     (why_was_true(Retry),
      rtrace(G))).
 
+junit_incr(Count):- flag(Count,T,T+1).
 call_u_hook(\+ G):- !, \+ call_u_hook(G).
 call_u_hook(M:( \+ G)):- !, \+ call_u_hook(M:G).
 call_u_hook(G):- current_predicate(call_u/1),!,catch_timeout(call(call,call_u,G)).
@@ -154,7 +155,7 @@ pfc_feature(test_a_feature).
 :- module_transparent(pfc_test_feature/2).
 :- export(pfc_test_feature/2).
 
-pfc_test_feature(Feature,Test):- pfc_feature(Feature)*-> mpred_test(Test) ; flag(skipped,T,T+1).
+pfc_test_feature(Feature,Test):- pfc_feature(Feature)*-> mpred_test(Test) ; junit_incr(skipped).
 
 :- system:import(pfc_feature/1).
 :- system:export(pfc_feature/1).
@@ -453,19 +454,20 @@ junit_count(disabled).
 junit_count(failures).
 
 
-clear_suite_attribs:- forall(junit_count(F),flag(tests,_,0)),get_time(Start),
+clear_suite_attribs:- forall(junit_count(F),flag(tests,_,0)),
   retractall(j_u:junit_prop(testsuite,start,_)),
   get_time(Start),asserta(j_u:junit_prop(testsuite,start,Start)).
+
 get_suite_attribs(SuiteAttribs):-    
   with_output_to(string(SuiteAttribs),
-    ((ignore((j_u:junit_prop(testsuite,start,Start),
-      get_time(End),Elapsed is End - Start,format(' time="~20f"',[Elapsed]))),
-    forall(junit_count(F),(flag,C,C),format(' ~w="~w"',[F,C]))))).
+(( ignore(getenv('JUNIT_PACKAGE',Package), format(' package="~w"', [Package])),
+   ignore((j_u:junit_prop(testsuite,start,Start),get_time(End),Elapsed is End - Start,format(' time="~20f"',[Elapsed]))),
+   forall((junit_count(F),flag(F,C,C)),format(' ~w="~w"',[F,C]))))).
 
 show_junit_suite(File):- 
    (getenv('JUNIT_SUITE',SuiteName);SuiteName=File),!,
-   get_suite_attribs(SuiteAttribs),
-   format("  <testsuite name=\"~w\" ~w>\n", [SuiteName, SuiteAttribs]),
+  get_suite_attribs(SuiteAttribs),
+  format("  <testsuite name=\"~w\" ~w>\n", [SuiteName, SuiteAttribs]),
    findall(Name,j_u:junit_prop(testsuite,testcase,Name),L),list_to_set(L,S),
     maplist(show_junit_testcase(File),S),
    writeln("  </testsuite>"),
@@ -477,7 +479,8 @@ save_single_testcase(Name):-
    j_u:junit_prop(testsuite,file,File),
    write("  <testsuites>\n"),
    (getenv('JUNIT_SUITE',SuiteName);SuiteName=File),!,
-   format("  <testsuite name=\"~w\">\n", [SuiteName]),
+  get_suite_attribs(SuiteAttribs),
+  format("  <testsuite name=\"~w\" ~w>\n", [SuiteName, SuiteAttribs]),
    show_junit_testcase(File,Name),
    write("  </testsuite>\n"),
    write(" </testsuites>\n"))),
