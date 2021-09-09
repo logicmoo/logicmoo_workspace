@@ -96,14 +96,16 @@ parent-find() {
 export PACK_DIR=$(parent-find "pack.pl" .  )
 PACK_DIR=$(basename $PACK_DIR)
 
-echo "<!-- PACK_DIR=$PACK_DIR -->"
+echo "<!-- PACK_DIR=${PACK_DIR} -->"
 
-[ -z "$JUNIT_PACKAGE" ] && export JUNIT_PACKAGE="$PACK_DIR.$(basename `realpath .. | sed -e 's|/[^.]/|/|g' `).$(basename `realpath .`)"
+[ -z "${JUNIT_PACKAGE}" ] && export JUNIT_PACKAGE="$PACK_DIR.$(basename `realpath .. | sed -e 's|/[^.]/|/|g' `).$(basename `realpath .`)"
 
+echo "<!-- JUNIT_PACKAGE=${JUNIT_PACKAGE} -->"
 
-
-REPORT_STEM=$(echo "$TEST_STEM-${PWD}" | sed -e "s/[*]/vSTARv/g" -e "s/[?]/vQUESTv/g" -e "s/[.]/vDOTv/g" -e "s/[^a-Z0-9_]/-/g" -e "s/--/-/g" -e "s/_/-/g"  -e "s/--/-/g" )
+REPORT_STEM=$(echo "$TEST_STEM-${PWD}" | sed -e "s/[*]/vSTARv/g" -e "s/[?]/vQUESTv/g" -e "s/[.]/vDOTv/g" -re "s/[^_0123456789A-z]/-/g" -e "s/--/-/g" -e "s/_/-/g"  -e "s/--/-/g" )
 REPORT_STEM=$(expr substr "${REPORT_STEM}" 1 120)
+
+echo "<!-- REPORT_STEM=${REPORT_STEM} -->"
 
 JUNIT_TESTS_GLOBBED="${TESTING_TEMP}/${REPORT_STEM}"
 JUNIT_TESTS_GLOBBED=$(expr substr "${JUNIT_TESTS_GLOBBED}" 1 130)-glob
@@ -160,8 +162,8 @@ for ele2 in "${listOfNames[@]}"
             CMD="$SWIPL ${ele}"
         fi
 
-        [-z "${CMD_TIMEOUT}" ] CMD_TIMEOUT="10s"
-        [-z "${CMD_WRAPPER}" ] CMD_WRAPPER="timeout --foreground --preserve-status -s SIGKILL -k ${CMD_TIMEOUT} ${CMD_TIMEOUT}"
+        [ -z "${CMD_TIMEOUT}" ] CMD_TIMEOUT="10s"
+        [ -z "${CMD_WRAPPER}" ] CMD_WRAPPER="timeout --foreground --preserve-status -s SIGKILL -k ${CMD_TIMEOUT} ${CMD_TIMEOUT}"
         CMD="${CMD_WRAPPER} ${CMD}"
 
         INFO "CMD=$CMD"

@@ -3,12 +3,10 @@
 apt update
 apt install -y gawk
 
+(
 cd /opt/logicmoo_workspace
 export TESTING_TEMP=$(pwd)/test_results/jenkins
 
-DIR0="$( cd "$( dirname "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )"
-(
-cd $DIR0/../
 source ./logicmoo_env.sh -v
 
 WAS_PWD=$PWD
