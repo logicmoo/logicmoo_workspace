@@ -106,14 +106,16 @@ negate_call(G, \+ G).
 mpred_test_fok_4(G, TestResult, Elapsed):- !,
  must_det_l((
   get_time(Start),
+  flag(tests,T,T+1),
   catch(( (  call_u_hook(G) ) -> TestResult = passed; TestResult = failure),E, TestResult=error(E)),
   get_time(End),
   Elapsed is End - Start,
   process_test_result(TestResult, G))).
 
 process_test_result(TestResult, G):- TestResult == passed, !, save_info_to(TestResult, why_was_true(G)).
-process_test_result(TestResult, G):- TestResult \== failure, !, save_info_to(TestResult, catch(rtrace(call_u_hook(G)), E, writeln(E))).
+process_test_result(TestResult, G):- TestResult \== failure,flag(errors,T,T+1), !, save_info_to(TestResult, catch(rtrace(call_u_hook(G)), E, writeln(E))).
 process_test_result(TestResult, G):- !, 
+  flag(failures,T,T+1),
   negate_call(G, Retry),
   save_info_to(TestResult, 
     (why_was_true(Retry),
@@ -152,7 +154,7 @@ pfc_feature(test_a_feature).
 :- module_transparent(pfc_test_feature/2).
 :- export(pfc_test_feature/2).
 
-pfc_test_feature(Feature,Test):- pfc_feature(Feature)*-> mpred_test(Test) ; true.
+pfc_test_feature(Feature,Test):- pfc_feature(Feature)*-> mpred_test(Test) ; flag(skipped,T,T+1).
 
 :- system:import(pfc_feature/1).
 :- system:export(pfc_feature/1).
@@ -441,14 +443,27 @@ show_junit_suite_xml(File):-
   writeln('<?xml version="1.0" encoding="utf-8"?>'),
   writeln('<testsuites>'),
   maplist(show_junit_suite,File),
-  writeln('</testsuites>').
+  writeln('</testsuites>'),
+  
+
+junit_count(tests).
+junit_count(errors).
+junit_count(skipped).
+junit_count(disabled).
+junit_count(failures).
+
+clear_suite_attribs:- forall(junit_count(F),flag(tests,_,0)).
+get_suite_attribs(SuiteAttribs):-
+  with_output_to(string(SuiteAttribs),forall(junit_count(F),(flag,C,C),format(' ~w="~w"',[F,C]))).
 
 show_junit_suite(File):- 
    (getenv('JUNIT_SUITE',SuiteName);SuiteName=File),!,
-   format("  <testsuite name=\"~w\">\n", [SuiteName]),
+   get_suite_attribs(SuiteAttribs),
+   format("  <testsuite name=\"~w\" ~w>\n", [SuiteName, SuiteAttribs]),
    findall(Name,j_u:junit_prop(testsuite,testcase,Name),L),list_to_set(L,S),
     maplist(show_junit_testcase(File),S),
-   writeln("  </testsuite>").
+   writeln("  </testsuite>"),
+   clear_suite_attribs.
 
 save_single_testcase(Name):- 
  with_output_to(string(Text),
@@ -503,7 +518,8 @@ save_to_junit_file(Name,DirtyText):-
   must_det_l(( 
   atomic_list_concat([Dir,'-',Name,'_junit.xml'],Full), 
   format('~N% saving_junit: ~w~n',[Full]),
-  setup_call_cleanup(open(Full, write, Out),writeln(Out,Text), close(Out)))).
+  setup_call_cleanup(open(Full, write, Out),writeln(Out,Text), close(Out)))),
+  clear_suite_attribs.
 
 save_to_junit_file(Name,DirtyText):- 
   clean_away_ansi(DirtyText,Text),
@@ -517,7 +533,7 @@ save_junit_results_single:-
   directory_file_path(Dir,'junit_single.ansi',Full),!,
   tell(Full),
   show_all_junit_suites,
-  told.
+  told, clear_suite_attribs.
 save_junit_results_single.
 
 
@@ -542,7 +558,7 @@ show_junit_testcase(Suite,Testcase):-
  escape_attribute(DisplayName,EDisplayName),
  ignore((
  format('\n     <testcase name=~q ', [EDisplayName]),
-  format('package="~w" ', [Package]),
+  % format('package="~w" ', [Package]),
   format('classname="~w" ', [Classname]),
  ignore((j_u:junit_prop(Testcase,time,Time),format('time="~20f"', [Time]))),
  writeln('>\n'),
