@@ -452,9 +452,15 @@ junit_count(skipped).
 junit_count(disabled).
 junit_count(failures).
 
-clear_suite_attribs:- forall(junit_count(F),flag(tests,_,0)).
-get_suite_attribs(SuiteAttribs):-
-  with_output_to(string(SuiteAttribs),forall(junit_count(F),(flag,C,C),format(' ~w="~w"',[F,C]))).
+
+clear_suite_attribs:- forall(junit_count(F),flag(tests,_,0)),get_time(Start),
+  retractall(j_u:junit_prop(testsuite,start,_)),
+  get_time(Start),asserta(j_u:junit_prop(testsuite,start,Start)).
+get_suite_attribs(SuiteAttribs):-    
+  with_output_to(string(SuiteAttribs),
+    ((ignore((j_u:junit_prop(testsuite,start,Start),
+      get_time(End),Elapsed is End - Start,format(' time="~20f"',[Elapsed]))),
+    forall(junit_count(F),(flag,C,C),format(' ~w="~w"',[F,C]))))).
 
 show_junit_suite(File):- 
    (getenv('JUNIT_SUITE',SuiteName);SuiteName=File),!,
