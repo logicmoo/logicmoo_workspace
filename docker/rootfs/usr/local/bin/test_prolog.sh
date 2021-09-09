@@ -109,8 +109,9 @@ function JECHO {
  (echo -e "${*}\n") >> $JUNIT_TESTS_GLOBBED
 }
 function INFO {
-   JECHO "<!-- ${*} -->"
- echo -e "${*}\n"
+ willBe=$(echo "${*}" | sed -e 's/-/=/g' ) 
+ echo -e "${willBe}\n"
+ JECHO "<!-- ${willBe}  -->"
 }
 
 JECHO "<testsuite name=\"${REPORT_STEM}\">"
