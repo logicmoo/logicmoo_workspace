@@ -183,6 +183,7 @@ warn_fail_TODO(G):- dmsg_pretty(:-warn_fail_TODO(G)).
 :- create_prolog_flag(logicmoo_message_hook,none,[keep(true),type(term)]).
 
 
+skip_warning(T):- \+ callable(T),!,fail.
 skip_warning(informational).
 skip_warning(information).
 skip_warning(debug).
@@ -196,11 +197,13 @@ skip_warning(break).
 skip_warning(io_warning).
 skip_warning(interrupt).
 skip_warning(statistics).
+skip_warning(editline).
 % skip_warning(check).
 skip_warning(compiler_warnings).
 skip_warning(T):- \+ compound(T),!,fail.
-skip_warning(_:T):- !, compound(T),functor(T,F,_),skip_warning(F).
-skip_warning(T):-compound(T),functor(T,F,_),skip_warning(F).
+%skip_warning(M:T):- !, skip_warning(M),skip_warning(T).
+skip_warning(C):- compound_name_arguments(C,N,A),member(E,[N|A]),skip_warning(E).
+
 
 with_output_to_tracing(Where,Goal):- \+ tracing,!,with_output_to(Where,Goal).
 with_output_to_tracing(_Where,Goal):- call(Goal).
