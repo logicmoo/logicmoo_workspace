@@ -1,0 +1,35 @@
+#!/bin/sh
+
+ECLIPSE=/opt/logicmoo_workspace/packs_xtra/logicmoo_pldata/eclipse/eclipse
+
+inject_update_site(){
+    if [ ! -e "$1" ] ; then
+	echo "W: Cannot find $1" 2>&1
+	return 1
+    fi
+    cat - >>"$1" <<EOF
+repositories/http\:__download.eclipse.org_releases_indigo/enabled=true
+repositories/http\:__download.eclipse.org_releases_indigo/isSystem=false
+repositories/http\:__download.eclipse.org_releases_indigo/nickname=Indigo Update Site
+repositories/http\:__download.eclipse.org_releases_indigo/uri=http\://download.eclipse.org/releases/indigo/
+EOF
+
+}
+
+
+if [ ! -d ~/.eclipse/ ] ; then
+    $ECLIPSE -clean -initialize || exit $?
+    artifact=$(find ~/.eclipse \
+        -regex .*/profileRegistry/.*/org.eclipse.equinox.p2.artifact.repository.prefs)
+    metadata=$(find ~/.eclipse \
+        -regex .*/profileRegistry/.*/org.eclipse.equinox.p2.metadata.repository.prefs)
+    if [ -z "$artifact" ] || [ -z "$metadata" ]; then
+	echo "W: Cannot inject update-sites, cannot find the correct config." 2>&1
+    else
+	( inject_update_site "$artifact" && \
+	  inject_update_site "$metadata" && \
+	  echo "I: Injected update sites" ) || echo "W: Could not inject update sites." 2>&1
+    fi
+fi
+
+exec $ECLIPSE "$@"

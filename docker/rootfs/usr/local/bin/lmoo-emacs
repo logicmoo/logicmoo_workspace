@@ -1,0 +1,20 @@
+#!/bin/bash
+#--help # Opens IDE in a web browser
+  
+if [ ! -f /.dockerenv ]; then
+   docker exec -it logicmoo $(basename "${BASH_SOURCE[0]}") $*
+   return 0 2>/dev/null
+   exit 0
+fi
+
+
+
+set -o pipefail
+
+source $LOGICMOO_WS/logicmoo_env.sh -q
+
+
+sudo -u prologmud_server -- google-chrome "http://localhost:4125"
+
+return 0 2>/dev/null
+exit 0

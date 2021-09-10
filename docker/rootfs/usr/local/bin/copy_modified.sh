@@ -1,4 +1,4 @@
-#--help # Backs up modified files from GIT
+#--ahelp # Backs up modified files from GIT
 
 export FileStem=modified-files-$(date +"%Y%m%d_%H%M%S")
 

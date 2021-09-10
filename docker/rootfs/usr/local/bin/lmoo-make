@@ -1,0 +1,12 @@
+#!/bin/bash
+#--help # Builds the CLIF Binary
+
+RDIR=$( cd "$( dirname "${BASH_SOURCE[0]}" )/.." && pwd )
+(
+cd $RDIR
+source ./logicmoo_env.sh
+rm -f bin/lmoo-pfc bin/lmoo-clif bin/lmoo-swipl
+swipl --pce=false -g "use_module(library(logicmoo_clif))" $* -t halt  2>&1 | grep -3 -i 'WARN\|ERROR'
+chmod 777 bin/lmoo-pfc bin/lmoo-clif
+#chmod 777 bin/lmoo-swipl
+)

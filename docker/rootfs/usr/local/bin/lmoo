@@ -23,7 +23,9 @@ function show_lm_help {
    export TAB=`printf '\033[25\`' `
    echo -e "\n Executes one of the following commands in the LOGICMOO docker."
    echo -e "\n   lmoo [--no-x] [--no-env] [-v|-q] [--wd <path>] [--] <cmd> [<args>]\n"
-   bash -c "cd $ROOT_DIRECTORY ; grep -H '\\#\\-\\-help' . -r | sed  -e 's|^./|   |1' -e 's/\\#\\-\\-help//1' -e 's/.sh:/$TAB/1' -e 's/[:]/$TAB/1' "
+   echo "   clif                  # Common Logic Interchange Format (with CG/EC)"
+   echo "   pfc                   # Prolog with Forward Chaining "
+   bash -c "cd $ROOT_DIRECTORY ; grep -H '\\#\\-\\-help' . -r | sed  -e 's|^./|   |1' -e 's/\\#\\-\\-help//1' -e 's/.sh:/$TAB/1' -e 's/lmoo-//g' -e 's/[:]/$TAB/1' " | sort
    echo -e "\n"
 }
 
@@ -91,9 +93,12 @@ echo STUFF=$STUFF
   $SCREEN_CMD -S LogicmooServer -p0 -X stuff "${STUFF}"
   $SCREEN_CMD -rx LogicmooServer
 )
+elif [ -f "$ROOT_DIRECTORY/lmoo-${cmd}" ]; then
+  bash -c "$ROOT_DIRECTORY/lmoo-${cmd} $*" 
 elif [ -f "$ROOT_DIRECTORY/${cmd}.sh" ]; then
-
   bash -c "$ROOT_DIRECTORY/${cmd}.sh $*" 
+elif [ -f "$ROOT_DIRECTORY/${cmd}" ]; then
+  bash -c "$ROOT_DIRECTORY/${cmd} $*" 
 else
 
     export WHICH=`cd $ROOT_DIRECTORY ; which ${cmd}.sh`

@@ -1,0 +1,47 @@
+#!/bin/bash -x
+#--help # Runs Secondary JUnit Tests that must be ran from Docker
+
+if [ ! -f /.dockerenv ]; then
+  lmoo $0 $*
+  return 0 2>/dev/null
+  exit 0
+fi
+
+apt update
+apt install -y gawk
+
+if [ ! -d /var/lib/jenkins/workspace/ ]; then
+mkdir -p /var/lib/jenkins/workspace/
+ln -s /opt/logicmoo_workspace /var/lib/jenkins/workspace/logicmoo_workspace
+
+fi
+
+
+(
+cd /opt/logicmoo_workspace
+export TESTING_TEMP=$(pwd)/test_results/jenkins
+
+source ./logicmoo_env.sh -v
+
+WAS_PWD=$PWD
+
+#unset TESTING_TEMP
+
+
+[ -z "$TESTING_TEMP" ] && [ -d "$(pwd)/test_results" ] && export TESTING_TEMP=$(pwd)/test_results/$(whoami)
+[ -z "$TESTING_TEMP" ] && [ -d "${LOGICMOO_WS}/test_results" ] && export TESTING_TEMP=${LOGICMOO_WS}/test_results/$(whoami)
+[ -z "$TESTING_TEMP" ] && export TESTING_TEMP=$(mktemp -d -t logicmoo_testing-$(date +%Y-%m-%d-%H-%M-%S)-XXXXXXXXXX)
+export TESTING_TEMP
+mkdir -p $TESTING_TEMP/
+
+TEST_PARAMS="$*"
+if [ -z "$TEST_PARAMS" ]; then 
+  TEST_PARAMS="*0*.p*"
+fi
+
+echo -e "Running release (all) tests\nTESTING_TEMP=$TESTING_TEMP\n( cd $PWD ; $BASH_SOURCE $TEST_PARAMS )"
+
+find $WAS_PWD -mindepth 2 -name "test_from_docker.sh" -execdir bash -c "source '{}' \"$TEST_PARAMS\"" \;
+
+)
+

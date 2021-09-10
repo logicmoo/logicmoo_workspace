@@ -75,32 +75,22 @@
 				<F N="bin/old-scripts/preconfig.sh"/>
 			</Folder>
 			<F N="bin/aliases.sh"/>
-			<F N="bin/ansi.sh"/>
 			<F N="bin/ansi2html.sh"/>
-			<F N="bin/bfly.sh"/>
 			<F N="bin/bump_packs.sh"/>
 			<F N="bin/clean_git_repository.sh"/>
-			<F N="bin/clif"/>
 			<F N="bin/cls"/>
 			<F N="bin/copy_modified.sh"/>
-			<F N="bin/eclipse"/>
-			<F N="bin/emacs.sh"/>
 			<F N="bin/git-mv-with-history"/>
 			<F N="bin/git-patch-submodules.sh"/>
 			<F N="bin/git-submodules.sh"/>
-			<F N="bin/junit_prolog.sh"/>
 			<F N="bin/killchilds.sh"/>
 			<F N="bin/lmoo"/>
-			<F N="bin/make_clif.sh"/>
 			<F N="bin/maybe.gitmodules"/>
 			<F N="bin/mkcert"/>
 			<F N="bin/mkcert-v1.4.3-linux-amd64"/>
-			<F N="bin/module_tree.sh"/>
 			<F N="bin/pandoc_xm"/>
-			<F N="bin/pfc"/>
 			<F N="bin/print_html.sh"/>
 			<F N="bin/rsync.sh"/>
-			<F N="bin/run_for_jenkins.sh"/>
 			<F N="bin/StartMUDServer.bat"/>
 			<F N="bin/startMUDServer.sh"/>
 			<F N="bin/swipl"/>
@@ -108,12 +98,8 @@
 			<F N="bin/swipl-prologmud"/>
 			<F N="bin/swipl-win"/>
 			<F N="bin/swipl-yesbot"/>
-			<F N="bin/telnet.sh"/>
 			<F N="bin/test_biomake.sh"/>
-			<F N="bin/test_prolog.sh"/>
-			<F N="bin/vnc.sh"/>
 			<F N="bin/websocket_redir.sh"/>
-			<F N="bin/www.sh"/>
 			<F N="bin/xpce-client"/>
 		</Folder>
 		<Folder Name="docker">
@@ -4379,7 +4365,6 @@
 						<F N="packs_sys/pfc/t/sanity_base/sv_in_arg_01d.pfc"/>
 						<F N="packs_sys/pfc/t/sanity_base/sv_in_arg_01e.pfc"/>
 						<F N="packs_sys/pfc/t/sanity_base/sv_or_01.pfc"/>
-						<F N="packs_sys/pfc/t/sanity_base/swipl-junit"/>
 						<F N="packs_sys/pfc/t/sanity_base/test_header.pl"/>
 						<F N="packs_sys/pfc/t/sanity_base/test_header_1_8.pl"/>
 						<F N="packs_sys/pfc/t/sanity_base/test_on_release.sh"/>
