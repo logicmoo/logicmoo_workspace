@@ -25,7 +25,7 @@ echo "<!-- JUNIT_PACKAGE=${JUNIT_PACKAGE} -->"
 
 export GLOB="$*"
 [ -z "$GLOB" ] && GLOB="*_01.*"
-GLOBSTEM=$(echo "${GLOB}-${JUNIT_PACKAGE}" | sed -e "s/[*]/vSTARv/g" -e "s/[?]/vQUESTv/g" -e "s/[^_0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz]/-/g" -e "s/--/-/g" -e "s/-/-/g"  -e "s/--/-/g"  | rev | cut -c 1-110 | rev)
+GLOBSTEM=$(echo "${GLOB}-${JUNIT_PACKAGE}" | sed -e "s/[*]/vSTARv/g" -e "s/[?]/vQUESTv/g" -e "s/[.]/vDOTv/g" -e "s/[^_0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz]/-/g" -e "s/--/-/g" -e "s/-/-/g"  -e "s/--/-/g"  | rev | cut -c 1-110 | rev)
 echo "<!-- GLOBSTEM=${GLOBSTEM} -->"
 [ -z "${TEST_STEM}" ] && export TEST_STEM=Report-${GLOBSTEM}-Units
 echo "<!-- TEST_STEM=${TEST_STEM} -->"
