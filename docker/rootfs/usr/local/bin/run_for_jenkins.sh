@@ -1,8 +1,21 @@
 #!/bin/bash -x
 #--help # Runs Secondary JUnit Tests that must be ran from Docker
 
+if [ ! -f /.dockerenv ]; then
+  lm $0 $*
+  return 0 2>/dev/null
+  exit 0
+fi
+
 apt update
 apt install -y gawk
+
+if [ ! -d /var/lib/jenkins/workspace/ ]; then
+mkdir -p /var/lib/jenkins/workspace/
+ln -s /opt/logicmoo_workspace /var/lib/jenkins/workspace/logicmoo_workspace
+
+fi
+
 
 (
 cd /opt/logicmoo_workspace

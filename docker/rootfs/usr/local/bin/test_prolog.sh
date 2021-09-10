@@ -133,7 +133,7 @@ for ele2 in "${listOfNames[@]}"
 	    retry=0
 
         export FILENAME=${ele}
-        export JUNIT_SHORTCLASS=`echo "${FILENAME^^}" | cut -d'.' -f1`
+        export JUNIT_SHORTCLASS=`echo "${FILENAME^^}" | cut -d'.' -f1 `
         export JUNIT_SUITE=$JUNIT_PACKAGE.$(echo "${JUNIT_SHORTCLASS^^}" | sed -e "s/_[0-9]//g" -e "s/[0-9]//g" )
         export JUNIT_CLASSNAME=$JUNIT_PACKAGE.$JUNIT_SHORTCLASS
         export FileTestCase="${JUNIT_SUITE} run $JUNIT_SHORTCLASS ( $FILENAME )"
