@@ -2544,7 +2544,7 @@ mpred_fwc1(Prop):-'$current_source_module'(Sm),mpred_m_fwc1(Sm,Prop).
 :-thread_local(t_l:busy_s/1).
 
 mpred_m_fwc1(Sm,Prop):- fixed_syntax(Prop,After),!,must(Prop\=@=After),mpred_m_fwc1(Sm,After).
-mpred_m_fwc1(Sm,Prop):- clause_asserted(t_l:busy_s(Prop)),dmsg_pretty(Sm:warn(busy_mpred_m_fwc1(Prop))),!.
+mpred_m_fwc1(Sm,Prop):- clause_asserted(t_l:busy_s(Prop)),nop(dmsg_pretty(Sm:warn(busy_mpred_m_fwc1(Prop)))),!.
 mpred_m_fwc1(Sm,Prop):- clause_asserted(t_l:busy_f(Prop)),dmsg_pretty(Sm:warn(busy_mpred_m_fwc1_f(Prop))),!.
 mpred_m_fwc1(Sm,Prop):- % clause_asserted(t_l:busy_f(Prop)),!,
    setup_call_cleanup(
