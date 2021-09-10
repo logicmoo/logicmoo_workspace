@@ -1,4 +1,4 @@
-#!/usr/bin/env swipl
+#!/usr/bin/env clif
 %
 %  PFC is a language extension for prolog.. there is so much that can be done in this language extension to Prolog
 %
@@ -10,7 +10,7 @@
 
 %  was_module(bc_01,[]).
 
-:- include(test_header).
+:- include(library(logicmoo_test_header)).
 
 
 :- dynamic(bc_q/1).

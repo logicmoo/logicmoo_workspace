@@ -1,4 +1,4 @@
-#!/usr/bin/env swipl
+#!/usr/bin/env clif
 %
 % Tests Emulation of assertable attributed variables
 %

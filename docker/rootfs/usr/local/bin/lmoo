@@ -22,7 +22,7 @@ function show_lm_help {
    #bash -c "cd $ROOT_DIRECTORY ; ls --color"
    export TAB=`printf '\033[25\`' `
    echo -e "\n Executes one of the following commands in the LOGICMOO docker."
-   echo -e "\n   lm [--no-x] [--no-env] [-v|-q] [--wd <path>] [--] <cmd> [<args>]\n"
+   echo -e "\n   lmoo [--no-x] [--no-env] [-v|-q] [--wd <path>] [--] <cmd> [<args>]\n"
    bash -c "cd $ROOT_DIRECTORY ; grep -H '\\#\\-\\-help' . -r | sed  -e 's|^./|   |1' -e 's/\\#\\-\\-help//1' -e 's/.sh:/$TAB/1' -e 's/[:]/$TAB/1' "
    echo -e "\n"
 }

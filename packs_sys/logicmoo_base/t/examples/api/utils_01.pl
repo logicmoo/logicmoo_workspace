@@ -1,4 +1,4 @@
-#!/usr/bin/env swipl
+#!/usr/bin/env clif
 
 :- ensure_loaded(system:library(logicmoo_utils)).
 

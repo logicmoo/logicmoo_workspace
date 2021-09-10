@@ -1,4 +1,4 @@
-#!/usr/bin/env swipl
+#!/usr/bin/env clif
 
 /**
 The Prolog Technology Theorem Prover is an extension of Prolog that is complete for the full first­order predicate calculus (Stickel, 1988).   

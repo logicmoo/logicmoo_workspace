@@ -137,15 +137,18 @@ why_was_true(P):- dmsg_pretty(justfied_true(P)),!.
 
 catch_timeout(P):- tracing,!,call(P).
 catch_timeout(P):- catch(call_with_time_limit(30,w_o_c(P)),E,wdmsg(P->E)).
-   
-generate_test_name(baseKB:G,Testcase):- nonvar(G), !, generate_test_name(G,Testcase).
-generate_test_name(M: G, Name):- nonvar(G), !, generate_test_name(G,Name1), sformat(Name,'~w in ~w',[Name1, M]).
-generate_test_name(\+ G, Name):- nonvar(G), !, generate_test_name(G,Name1), sformat(Name,'\naf ~w',[Name1]).
-generate_test_name(call_u(G), Name):- nonvar(G), !, generate_test_name(G,Name).
-generate_test_name(G,Name):- callable(G), (source_location(_,L); (_='',L=0)), 
-  sformat(Name1,'Line_~4d',[L]),!,replace_in_string(['_0.'='_'],Name1,Name2), generate_test_name(Name2,Name).
-generate_test_name(SName,RSName):- atomic(SName),shorten_and_clean_name(SName,RSName),!.
-generate_test_name(G,G).
+
+generate_test_name(G,Name):- getenv('JUNIT_CLASSNAME',Class), gtn_no_pack(G,NPack),sformat(Name,'~w ~w',[Class, NPack]),!.
+generate_test_name(G,Name):- gtn_no_pack(G,Name),!.
+  
+gtn_no_pack(baseKB:G,Testcase):- nonvar(G), !, gtn_no_pack(G,Testcase).
+gtn_no_pack(M: G, Name):- nonvar(G), !, gtn_no_pack(G,Name1), sformat(Name,'~w in ~w',[Name1, M]).
+gtn_no_pack(\+ G, Name):- nonvar(G), !, gtn_no_pack(G,Name1), sformat(Name,'\naf ~w',[Name1]).
+gtn_no_pack(call_u(G), Name):- nonvar(G), !, gtn_no_pack(G,Name).
+gtn_no_pack(G,Name):- callable(G), (source_location(_,L); (_='',L=0)), 
+  sformat(Name1,'Line_~4d',[L]),!,replace_in_string(['_0.'='_'],Name1,Name2), gtn_no_pack(Name2,Name).
+gtn_no_pack(SName,RSName):- atomic(SName),shorten_and_clean_name(SName,RSName),!.
+gtn_no_pack(G,G).
                     
 :- module_transparent(pfc_feature/1).
 :- dynamic(pfc_feature/1).
@@ -568,7 +571,7 @@ show_junit_testcase(Suite,Testcase):-
  (getenv('JUNIT_PACKAGE',Package) -> true ; classname_to_package(Classname,Package,ShortClass)),
  ignore((getenv('JUNIT_SHORTCLASS',ShortClass))),
  (nonvar(ShortClass)-> true; atom_concat(Package,ShortClass,Classname)),
- sformat(DisplayName,'~w@~w: ~p',[ShortClass,Testcase,Goal]),
+ sformat(DisplayName,'~w@~w: ~p',[Testcase,Goal]),
  escape_attribute(DisplayName,EDisplayName),
  ignore((
  format('\n     <testcase name=~q ', [EDisplayName]),

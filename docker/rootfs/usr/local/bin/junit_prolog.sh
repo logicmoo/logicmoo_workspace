@@ -1,5 +1,7 @@
 #!/bin/bash
 
+% junit_prolog
+
 [ -z "$TESTING_TEMP" ] && [ -d "$(pwd)/test_results" ] && export TESTING_TEMP=$(pwd)/test_results/$(whoami)
 [ -z "$TESTING_TEMP" ] && [ -d "${LOGICMOO_WS}/test_results" ] && export TESTING_TEMP=${LOGICMOO_WS}/test_results/$(whoami)
 [ -z "$TESTING_TEMP" ] && export TESTING_TEMP=$(mktemp -d -t logicmoo_testing-$(date +%Y-%m-%d-%H-%M-%S)-XXXXXXXXXX)
@@ -25,7 +27,7 @@ echo "<!-- JUNIT_PACKAGE=${JUNIT_PACKAGE} -->"
 export JUNIT_PACKAGE_STEM=$(echo "${JUNIT_PACKAGE}" | sed -e "s/\./-/g" -e "s/--/-/g" | rev | cut -c 1-110 | rev)
 
 export GLOB="$*"
-[ -z "$GLOB" ] && GLOB="*_01.*"
+[ -z "$GLOB" ] && GLOB="*_0*.*"
 GLOBSTEM=$(echo "${JUNIT_PACKAGE_STEM}-${GLOB}" | sed -e "s/[*]/vSTARv/g" -e "s/[?]/vQUESTv/g" -e "s/[.]/vDOTv/g" -e "s/[^_0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz]/-/g" -e "s/--/-/g" | rev | cut -c 1-110 | rev)
 echo "<!-- GLOBSTEM=${GLOBSTEM} -->"
 [ -z "${TEST_STEM}" ] && export TEST_STEM=Report-${GLOBSTEM}-Units

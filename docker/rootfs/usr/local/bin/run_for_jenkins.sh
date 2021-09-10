@@ -2,7 +2,7 @@
 #--help # Runs Secondary JUnit Tests that must be ran from Docker
 
 if [ ! -f /.dockerenv ]; then
-  lm $0 $*
+  lmoo $0 $*
   return 0 2>/dev/null
   exit 0
 fi

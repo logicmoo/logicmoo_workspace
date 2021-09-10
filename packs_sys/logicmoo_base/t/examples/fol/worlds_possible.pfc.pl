@@ -1,4 +1,4 @@
-#!/usr/bin/env swipl
+#!/usr/bin/env clif
 :- include(test_header).
 % Module - Test Puzzle  for SWI-Prolog
 % Maintainer: Douglas Miles

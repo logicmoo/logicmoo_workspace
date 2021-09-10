@@ -1,4 +1,4 @@
-#!/usr/bin/env swipl
+#!/usr/bin/env clif
 :- if(set_prolog_flag(runtime_testing_module,user)).
 :- if(set_prolog_flag(test_module,user)).
 :- include(test_header).

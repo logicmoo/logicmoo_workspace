@@ -66,14 +66,14 @@ OUTER_TEE=""
 
 
 #// For test_prolog  (no args)
- declare -a listOfNames=(
+
+declare -a listOfNames=(
                         # // sanity tests
-                           "*_01*.p*" "*_02*.p*"
+                         "*_01*.p*" "*_02*.p*"
                         # // full tests
-                         "*_03*.p*" "*_04*.p*" "*_05*.p*" "*_06*.p*" "*_07*.p*"
-						 "*_08*.p*" "*_09*.p*" "*_10*.p*" "*_11*.p*" "*_12*.p*"
+                         "*_03*.p*" "*_04*.p*" "*_05*.p*" "*_06*.p*" "*_07*.p*" "*_08*.p*" "*_09*.p*" "*_10*.p*" "*_11*.p*" "*_12*.p*"
                         # // feature tests
-                        # "*_f01*.p*" "*_f02*.p*" "*_f03*.p*" "_f04*.p*" "*_f05*.p*" "*_f06*.p*" "*_f07*.p*" "*_f08*.p*" "*_f09*.p*" "*_f10*.p*" "*_f11*.p*" "*_f12*.p*"
+                        "*_f01*.p*" "*_f02*.p*" "*_f03*.p*" "_f04*.p*" "*_f05*.p*" "*_f06*.p*" "*_f07*.p*" "*_f08*.p*" "*_f09*.p*" "*_f10*.p*" "*_f11*.p*" "*_f12*.p*"
 ) 
 
 # kill old dead jobs
@@ -97,7 +97,7 @@ else
 fi
 
 
-export REPORT_STEM=${TEST_STEM}-REPORT
+export REPORT_STEM=${TEST_STEM}-Rollup
 echo "<!-- REPORT_STEM=${REPORT_STEM} -->"
 
 export JUNIT_TESTS_GLOBBED="${TESTING_TEMP}/${REPORT_STEM}"

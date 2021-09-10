@@ -1,4 +1,4 @@
-#!/usr/bin/env swipl
+#!/usr/bin/env clif
 
 :- use_module(library(dcg/basics)).
 :- use_module(library(pio)).

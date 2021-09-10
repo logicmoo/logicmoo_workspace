@@ -1,4 +1,4 @@
-#!/usr/bin/env swipl 
+#!/usr/bin/env clif 
 
 % :- throw('dont call lauchclio!').
 

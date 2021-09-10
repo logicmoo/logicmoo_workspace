@@ -1,4 +1,4 @@
-#!/usr/bin/env swipl
+#!/usr/bin/env clif
 %
 %  PFC is a language extension for prolog.
 %
