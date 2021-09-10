@@ -578,11 +578,10 @@ show_junit_testcase(Suite,Testcase):-
  writeln("\n    </testcase>"))),!.
 
 
-testcase_props(Testcase):-
- ignore((j_u:junit_prop(Testcase,out,Str),
-  write("\n    <system-err><![CDATA[\n"),
-  format('~w',[Str]),
- forall(j_u:junit_prop(Testcase,Type,Term), write_testcase_prop(Type,Term)),
+write_testcase_std_info(Testcase):-
+ write("\n    <system-err><![CDATA[\n"),
+ ignore((j_u:junit_prop(Testcase,out,Str),format('~w',[Str]))),
+  forall(j_u:junit_prop(Testcase,Type,Term), write_testcase_prop(Type,Term)),
  write("\n    ]]></system-err>\n").
 
 write_testcase_prop(_Type,[]):-!.
@@ -604,19 +603,19 @@ get_nongood_strings(Testcase,NonGood):-
 write_testcase_info(Testcase):- j_u:junit_prop(Testcase,result,failure),!,
   get_nongood_strings(Testcase,NonGood),
   write_message_ele('failure',NonGood),
-  testcase_props(Testcase),!.
+  write_testcase_std_info(Testcase),!.
 
 write_testcase_info(Testcase):- \+ j_u:junit_prop(Testcase,result,passed),!,
-   get_nongood_strings(Testcase,NonGood),
+  get_nongood_strings(Testcase,NonGood),
   write_message_ele('error',NonGood),
-  testcase_props(Testcase),!.
+  write_testcase_std_info(Testcase),!.
 
-write_testcase_info(Testcase):- testcase_props(Testcase),!.
+write_testcase_info(Testcase):- write_testcase_std_info(Testcase),!.
 
 write_message_ele(Ele,NonGood):-
   text_to_string(NonGood,SNonGood), 
   escape_attribute(SNonGood,ENonGood),
-  format("      <~w message=\"~w\" ><system-err><![CDATA[  ~w  ]]></system-err></~w>\n", [Ele,ENonGood,SNonGood,Ele]).
+  format("      <~w message=\"~w\" />\n", [Ele,ENonGood]).
 
 
 :- multifile prolog:message//1, user:message_hook/3.
