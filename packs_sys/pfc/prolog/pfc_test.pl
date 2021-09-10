@@ -182,6 +182,7 @@ warn_fail_TODO(G):- dmsg_pretty(:-warn_fail_TODO(G)).
 % break = break on warnings and errors
 :- create_prolog_flag(logicmoo_message_hook,none,[keep(true),type(term)]).
 
+system:is_junit_test:- getenv('JUNIT_PACKAGE',_).
 
 skip_warning(T):- \+ callable(T),!,fail.
 skip_warning(informational).
@@ -309,13 +310,12 @@ junit_term_expansion((:- I),O):- !, junit_dirrective_expansion(I,M), (is_list(M)
 
 junit_dirrective_expansion(I,O):- junit_expansion(junit_dirrective_exp,I,O).
 junit_dirrective_exp( I , O ) :- junit_goal_exp(I,O), I\=@=O. 
-junit_dirrective_exp( listing(X), dmsg(listing(X)) ):- keep_going. 
+% % junit_dirrective_exp( listing(X), dmsg(listing(X)) ):- keep_going. 
 junit_dirrective_exp( \+ X, mpred_test( \+ X ) ).
-junit_dirrective_exp( X, X  ):- predicate_property(X,static).
-junit_dirrective_exp( X, X  ):- predicate_property(X,built_in).
-junit_dirrective_exp( X, X  ):- !.
+%junit_dirrective_exp( X, X  ):- predicate_property(X,static).
+%junit_dirrective_exp( X, X  ):- predicate_property(X,built_in).
 %junit_dirrective_exp( X, mpred_test( X ) ).
-%junit_dirrective_exp( must(A),mpred_test(A)).
+junit_dirrective_exp( X, X  ):- !.
 
 junit_expansion(_,Var , Var ):- var(Var),!.
 junit_expansion(P,(A,B),(AO,BO)):- !,junit_expansion(P,A,AO),junit_expansion(P,B,BO).
@@ -326,7 +326,8 @@ junit_expansion(P,I,O):-call(P,I,O).
 junit_goal_expansion(I,O):- junit_expansion(junit_goal_exp,I,O).
 junit_goal_exp( break, dmsg(break) ):- keep_going. 
 junit_goal_exp( cls, dmsg(cls) ):- keep_going. 
-junit_goal_exp( rtrace, dmsg(rtrace) ):- keep_going. 
+% junit_goal_exp( must(A),mpred_test(A)) :- is_junit_test.
+% % junit_goal_exp( rtrace, dmsg(rtrace) ):- keep_going. 
 
 
 
@@ -340,7 +341,7 @@ test_completed_exit(_):- once((listing(j_u:junit_prop(_,warn,_)),
                                listing(j_u:junit_prop(_,error,_)))),fail.
 
 test_completed_exit(N):- keep_going,!, halt(N).
-test_completed_exit(N):- (debugging-> true ; halt(N)).
+test_completed_exit(N):- (current_prolog_flag(debug,true)-> true ; halt(N)).
 
 test_completed_exit_maybe(_):- j_u:junit_prop(_,error,_), test_completed_exit(9).
 test_completed_exit_maybe(_):- j_u:junit_prop(_,warning,_),test_completed_exit(3).
@@ -656,6 +657,6 @@ user:message_hook(T,Type,Term):-
    current_prolog_flag(logicmoo_message_hook,Was),Was\==none,Was\==false)),
    once(message_hook_handle(T,Type,Term)),!.
 
-system:term_expansion(I,P,O,PO):- notrace((nonvar(P), junit_term_expansion(I,O))),P=PO.
-system:goal_expansion(I,P,O,PO):- notrace((nonvar(P), junit_goal_expansion(I,O))),P=PO.
+system:term_expansion(I,P,O,PO):- notrace((nonvar(P),is_junit_test, junit_term_expansion(I,O))),P=PO.
+system:goal_expansion(I,P,O,PO):- notrace((nonvar(P),is_junit_test, junit_goal_expansion(I,O))),P=PO.
   

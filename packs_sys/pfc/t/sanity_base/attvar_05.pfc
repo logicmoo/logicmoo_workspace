@@ -7,7 +7,7 @@
 
 %  was_module(sanity_attvar_05,[]).
 
-:- include(test_header).
+:- include(library(logicmoo_test_header)).
 
 :- if(\+ current_module(attvar_reader)).
 :- use_module(library(logicmoo/attvar_reader)).
@@ -29,12 +29,22 @@
 
 sk5_in(Ex)==>sk5_out(Ex).
 
-:- listing('$pt').
+%:- listing('$pt').
+
+:- mpred_trace_exec.
+%sk5_in(avar([vn='ExIn',sk5='SKF-666'])).
 
 :- must(ain(sk5_in(avar([vn='ExIn',sk5='SKF-666'])))).
+:- flush_output.
 
-:- must(lookup_u(sk5_in(avar([vn='ZEx',sk5='SKF-666'])))).
+:- listing(sk5_in/1).
+:- flush_output.
+:- listing(sk5_out/1).
+:- flush_output.
+
+%:- call(call,rtrace).
+%:- must(lookup_u(sk5_in(avar([vn='ZEx',sk5='SKF-666'])))).
 
 
-:- must(lookup_u(pt(sk5_in(avar([vn='IS',sk5='SKF-666'])),FOUND))),dmsg(fOUND=FOUND).
+%:- must(lookup_u(pt(sk5_in(avar([vn='IS',sk5='SKF-666'])),FOUND))),dmsg(fOUND=FOUND).
 

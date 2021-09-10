@@ -62,8 +62,8 @@ This module includes predicate utilities that allows program to detect unwanted 
 % Must Be Successfull.
 %
 
-must(M:Goal):- (M:Goal*->true;must_0(M:Goal)).
-must_0(Goal):- quietly(get_must(Goal,MGoal))-> call(MGoal).
+must(MGoal):- (call(MGoal)*->true;must_0(MGoal)).
+must_0(MGoal):- quietly(get_must(MGoal,Must))-> call(Must).
 
 
 

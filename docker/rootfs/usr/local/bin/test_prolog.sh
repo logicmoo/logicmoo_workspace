@@ -1,11 +1,17 @@
 #!/bin/bash
 
-
-[ -z "$TESTING_TEMP" ] && [ -d "$(pwd)/test_results" ] && export TESTING_TEMP=$(pwd)/test_results/$(whoami)
-[ -z "$TESTING_TEMP" ] && [ -d "${LOGICMOO_WS}/test_results" ] && export TESTING_TEMP=${LOGICMOO_WS}/test_results/$(whoami)
-[ -z "$TESTING_TEMP" ] && export TESTING_TEMP=$(mktemp -d -t logicmoo_testing-$(date +%Y-%m-%d-%H-%M-%S)-XXXXXXXXXX)
-export TESTING_TEMP
-mkdir -p $TESTING_TEMP/
+good_exit=7
+exitcode=$good_exit
+[ -z "${keep_going}" ] && export keep_going=""
+[ "$*" == *"-k"* ] && export keep_going="-k"
+runtime_testing=4
+export next_cls=0
+export test_completed=test_completed
+if [ "$1" == "-k" ]; then
+  keep_going="-k"
+  runtime_testing=5
+  shift
+fi
 
 
 [ -z "$TESTING_TEMP" ] && [ -d "$(pwd)/test_results" ] && export TESTING_TEMP=$(pwd)/test_results/$(whoami)
@@ -30,7 +36,7 @@ echo "<!-- PACK_DIR=${PACK_DIR} -->"
 
 export JUNIT_PACKAGE="$PACK_DIR.$(basename `realpath .. | sed -e 's|/[^.]/|/|g' `).$(basename `realpath .`)"
 echo "<!-- JUNIT_PACKAGE=${JUNIT_PACKAGE} -->"
-export JUNIT_PACKAGE_STEM=$(echo "${JUNIT_PACKAGE}" | sed -e "s/[^_0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz]/-/g" -e "s/--/-/g" | rev | cut -c 1-110 | rev)
+export JUNIT_PACKAGE_STEM=$(echo "${JUNIT_PACKAGE}" | sed -e "s/\./-/g" -e "s/--/-/g" | rev | cut -c 1-110 | rev)
 
 export GLOB="$*"
 [ -z "$GLOB" ] && GLOB="*_01.*"
@@ -40,7 +46,6 @@ echo "<!-- GLOBSTEM=${GLOBSTEM} -->"
 echo "<!-- TEST_STEM=${TEST_STEM} -->"
 [ -z "${TEST_STEM_PATH}" ] && export TEST_STEM_PATH=$TESTING_TEMP/$TEST_STEM
 echo "<!-- TEST_STEM_PATH=${TEST_STEM_PATH} -->"
-sleep 3
 
 
 SWIPL=swipl
@@ -59,22 +64,6 @@ fi
 OUTER_TEE=""
 [ -t 1 ] && OUTER_TEE="1"
 
-good_exit=7
-exitcode=$good_exit
-
-[ -z "${keep_going}" ] && export keep_going=""
-[ "$*" == *"-k"* ] && export keep_going="-k"
-
-runtime_testing=4
-export next_cls=0
-export test_completed=test_completed
-
-
-if [ "$1" == "-k" ]; then
-  keep_going="-k"
-  runtime_testing=5
-  shift
-fi
 
 #// For test_prolog  (no args)
  declare -a listOfNames=(
@@ -108,8 +97,7 @@ else
 fi
 
 
-export REPORT_STEM=$(echo "$(pwd)" | sed -e "s/[*]/vSTARv/g" -e "s/[?]/vQUESTv/g" -e "s/[.]/vDOTv/g" -re "s/[^_0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz]/-/g" -e "s/--/-/g" -e "s/_/-/g"  -e "s/--/-/g" )
-export REPORT_STEM=${TEST_STEM}-${JUNIT_PACKAGE}-$(echo "${REPORT_STEM}" | rev | cut -c 1-120 | rev)
+export REPORT_STEM=${TEST_STEM}-REPORT
 echo "<!-- REPORT_STEM=${REPORT_STEM} -->"
 
 export JUNIT_TESTS_GLOBBED="${TESTING_TEMP}/${REPORT_STEM}"
