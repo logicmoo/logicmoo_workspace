@@ -68,6 +68,15 @@
 		</Folder>
 	</CustomFolders>
 	<Files AutoFolders="DirectoryView">
+		<Folder Name="bin">
+			<F N="bin/junit_prolog.sh"/>
+			<F N="bin/print_html.sh"/>
+			<F N="bin/run_for_jenkins.sh"/>
+			<F N="bin/StartMUDServer.bat"/>
+			<F N="bin/startMUDServer.sh"/>
+			<F N="bin/test_biomake.sh"/>
+			<F N="bin/test_prolog.sh"/>
+		</Folder>
 		<Folder Name="docker">
 			<Folder Name="rootfs">
 				<Folder Name="usr">
@@ -601,7 +610,6 @@
 									<F N="docker/rootfs/usr/local/lib/swipl/library/md5.pl"/>
 									<F N="docker/rootfs/usr/local/lib/swipl/library/memfile.pl"/>
 									<F N="docker/rootfs/usr/local/lib/swipl/library/modules.pl"/>
-									<F N="docker/rootfs/usr/local/lib/swipl/library/mqi.pl"/>
 									<F N="docker/rootfs/usr/local/lib/swipl/library/nb_rbtrees.pl"/>
 									<F N="docker/rootfs/usr/local/lib/swipl/library/nb_set.pl"/>
 									<F N="docker/rootfs/usr/local/lib/swipl/library/obfuscate.pl"/>
@@ -635,7 +643,6 @@
 									<F N="docker/rootfs/usr/local/lib/swipl/library/prolog_codewalk.pl"/>
 									<F N="docker/rootfs/usr/local/lib/swipl/library/prolog_colour.pl"/>
 									<F N="docker/rootfs/usr/local/lib/swipl/library/prolog_config.pl"/>
-									<F N="docker/rootfs/usr/local/lib/swipl/library/prolog_debug.pl"/>
 									<F N="docker/rootfs/usr/local/lib/swipl/library/prolog_deps.pl"/>
 									<F N="docker/rootfs/usr/local/lib/swipl/library/prolog_format.pl"/>
 									<F N="docker/rootfs/usr/local/lib/swipl/library/prolog_history.pl"/>
@@ -3818,6 +3825,18 @@
 					<F N="packs_sys/logicmoo_nlu/prolog/nomic_mu.pl"/>
 				</Folder>
 				<Folder Name="test">
+					<Folder Name="logicmoo_nlu">
+						<F N="packs_sys/logicmoo_nlu/test/logicmoo_nlu/core"/>
+						<F N="packs_sys/logicmoo_nlu/test/logicmoo_nlu/parser_e2c.plt"/>
+						<F N="packs_sys/logicmoo_nlu/test/logicmoo_nlu/ping_stanford_01.pl"/>
+						<F N="packs_sys/logicmoo_nlu/test/logicmoo_nlu/test_charniak_01.pl"/>
+						<F N="packs_sys/logicmoo_nlu/test/logicmoo_nlu/test_chat80_01.pl"/>
+						<F N="packs_sys/logicmoo_nlu/test/logicmoo_nlu/test_from_docker.sh"/>
+						<F N="packs_sys/logicmoo_nlu/test/logicmoo_nlu/test_header.pl"/>
+						<F N="packs_sys/logicmoo_nlu/test/logicmoo_nlu/test_pos_01.pl"/>
+					</Folder>
+					<F N="packs_sys/logicmoo_nlu/test/fracas-problems.dtd"/>
+					<F N="packs_sys/logicmoo_nlu/test/fracas.xml"/>
 					<F N="packs_sys/logicmoo_nlu/test/sanity_tests.pl"/>
 				</Folder>
 				<F N="packs_sys/logicmoo_nlu/pack.pl"/>
@@ -4180,7 +4199,6 @@
 						<F N="packs_sys/pfc/t/sanity_base/mpred_pfc_test_04.pl"/>
 						<F N="packs_sys/pfc/t/sanity_base/mt_01.pl"/>
 						<F N="packs_sys/pfc/t/sanity_base/mt_01a.pl"/>
-						<F N="packs_sys/pfc/t/sanity_base/mt_01a_0a.pl"/>
 						<F N="packs_sys/pfc/t/sanity_base/mt_01b.pl"/>
 						<F N="packs_sys/pfc/t/sanity_base/mt_01c.pl"/>
 						<F N="packs_sys/pfc/t/sanity_base/mt_01c_0a.pl"/>
@@ -4223,12 +4241,8 @@
 						<F N="packs_sys/pfc/t/sanity_base/never_retract_01b.pfc"/>
 						<F N="packs_sys/pfc/t/sanity_base/nldm.pfc"/>
 						<F N="packs_sys/pfc/t/sanity_base/nldm10.pfc"/>
-						<F N="packs_sys/pfc/t/sanity_base/nldm1000.pfc"/>
 						<F N="packs_sys/pfc/t/sanity_base/nldm2.pfc"/>
 						<F N="packs_sys/pfc/t/sanity_base/nldm20.pfc"/>
-						<F N="packs_sys/pfc/t/sanity_base/nldm2000.pfc"/>
-						<F N="packs_sys/pfc/t/sanity_base/nldm320_dra.pl"/>
-						<F N="packs_sys/pfc/t/sanity_base/nldm320_fwd.pl"/>
 						<F N="packs_sys/pfc/t/sanity_base/nldm40.pfc"/>
 						<F N="packs_sys/pfc/t/sanity_base/no_reload_pfc_test.pl"/>
 						<F N="packs_sys/pfc/t/sanity_base/pl_01.pfc"/>

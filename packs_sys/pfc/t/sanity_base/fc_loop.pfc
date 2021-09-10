@@ -118,7 +118,7 @@ sk1_in(Ex)==>sk1_out(Ex).
 
 sk5_in(Ex)==>sk5_out(Ex).
 
-:- listing(pt).
+:- listing('$pt').
 
 :- ain(sk5_in(avar([vn='ExIn',sk5='SKF-666']))).
 

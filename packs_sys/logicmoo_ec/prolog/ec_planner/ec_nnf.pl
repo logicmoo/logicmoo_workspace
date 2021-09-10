@@ -795,7 +795,7 @@ $p.$\\
 where $p$ is an atomic symbol means any Theorist call to $p$ should
 be proven in Prolog. This allows us to use built-in predicates of pure Prolog.
 One should not expect Prolog's control predicates to work.
-\item[\bf explain]
+\item[\bf ec_explain]
 $w.$\\
 where $w$ is an arbitrary wff,
 gives all explanations of $\exists w$.
@@ -824,7 +824,7 @@ reads commands from {\em filename} ',' translates them into Prolog
 code in the file {\em filename.pl}.
 \item[\bf thcompile] {\em filename.}\\
 reads commands from {\em filename}, translates them into the file
-{\em filename.pl} ',' then compiles this file. ``explain'' commands in
+{\em filename.pl} ',' then compiles this file. ``ec_explain'' commands in
 the file are not interpreted.
 \item[\bf dyn] {\em atom.}\\
 should be in a file ',' declares that anything matching the atom
@@ -852,7 +852,7 @@ not prevent the system from finding a proof which previously existed.
 
 The basic idea of the implementation follows the definition on explainability:
 \begin{algorithm}\em \label{basic-alg}
-to explain $g$
+to ec_explain $g$
 \begin{enumerate}
 \item try to prove $g$ from ${\cal F}\cup \Delta$. If no proof exists, then
 $g$ is not explainable. If there is a proof, let $D$ be the set of instances of
@@ -918,7 +918,7 @@ ${\cal F} \wedge C \wedge \{d_1,...,d_{i-1}\}\vdash \ /**/ not d_i$ for any $i$.
 
 This leads us to the refinement of algorithm \ref{basic-alg}:
 \begin{algorithm} \em
-to explain $g$ from ${\cal F},\Delta$
+to ec_explain $g$ from ${\cal F},\Delta$
 \begin{enumerate}
 \item Build a ground proof of $g$ from ${\cal F}\cup \Delta$. Make $D$ 
 the set of instances of elements of $\Delta$ used in the proof.
@@ -971,7 +971,7 @@ Herbrand universe of ${\cal F}\cup \Delta \cup C$ to determine explainability.
 \begin{proof}
 consider the example above; the Herbrand universe is just
 the set $\{a\}$. Within this domain there is no consistent 
-explanation to explain $g$.
+explanation to ec_explain $g$.
 \end{proof}
 
 This shows that Herbrand's theorem is not applicable to the whole system.
@@ -1029,7 +1029,7 @@ Consider the two alternate set of facts:
 &&\ /**/ not p(a),\\
 &&q(a) \ \}
 \end{eqnarray*}
-Suppose we try to explain $g$ by first explaining $p$ ',' then explaining $q$.
+Suppose we try to ec_explain $g$ by first explaining $p$ ',' then explaining $q$.
 Once we have generated the hypothesis $p(X)$, we have not enough information to
 determine whether the consistency check should succeed ';' fail.
 The consistency check for ${\cal F}_1$ should succeed (i.e, we should conclude
@@ -1176,7 +1176,7 @@ symbols, with the following informal meanings:
 \end{description}
 
 The arguments to these built predicate symbols will contain all
-of the information that we need to prove ';' explain instances of the source
+of the information that we need to prove ';' ec_explain instances of the source
 predicates.
 \subsubsection{Proving}
 For relation $r(-args-)$ in the source code we want to produce object
@@ -1237,9 +1237,9 @@ proven consistent ',' one of the
 deferred defaults. $Ths$ is of the form
 \[ths(T_1,T_2,D_1,D_2)\]
 which is to mean that $T_1$ is the consistent hypotheses before
-we try to explain $r$, ','
+we try to ec_explain $r$, ','
 ',' $T_2$ is the list of consistent hypotheses which includes
-$T_1$ ',' those hypotheses assumed to explain $r$.
+$T_1$ ',' those hypotheses assumed to ec_explain $r$.
 Similarly, $D_1$ is the list of deferred hypotheses before we consider the goal
 ',' $D_2$ is the list of resulting deferred hypotheses used in explaining $r$.
 
@@ -1307,7 +1307,7 @@ called a ``rule''.
 Rules are statements of how to conclude
 the value of some relation. Each Theorist fact corresponds to a number
 of rules (one for each literal in the fact).
-Each rule gets translated into Prolog rules to explain
+Each rule gets translated into Prolog rules to ec_explain
 ',' prove the head of the rule. 
 
 Rules use the intermediate form called a ``literal''.
@@ -1329,7 +1329,7 @@ $...$\AND
 $ex\_tru\_b_n(-x_n-,ths(T_{n-1},T_n,D_{n-1},D_n), anc([h(-x-)|P],N),
 ans(A_{n-1},A_n)).$
 \end{prolog}
-That is, we explain $h$ if we explain each of the $b_i$,
+That is, we ec_explain $h$ if we ec_explain each of the $b_i$,
 accumulating the explanations ',' the answers.
 Note that if $h$ is negated, then the head of the clause will be of
 the form $ex\_not\_h$, ',' the ancestor form will be
@@ -1347,10 +1347,10 @@ $ex\_tru\_gr(X,Y,ths(D,E,F,G),anc(H,I),ans(J,K))$\IF
 $ex\_tru\_f(X,Z,ths(D,M,F,N),anc([gr(X,Y)|H],I),ans(J,O))$\AND
 $ex\_tru\_p(Z,Y,ths(M,E,N,G),anc([gr(X,Y)|H],I),ans(O,K)).$
 \end{prolog}
-To explain $gr$ we explain both $f$ ',' $p$.
+To ec_explain $gr$ we ec_explain both $f$ ',' $p$.
 The initial assumptions for $f$ should be the initial assumptions for
 $gr$, ',' the initial assumptions for $p$ should be the initial assumptions
-plus those made to explain $f$. The resulting assumptions after proving $p$ are
+plus those made to ec_explain $f$. The resulting assumptions after proving $p$ are
 are the assumptions made in explaining $gr$.
 \end{example}
 
@@ -1362,7 +1362,7 @@ gets translated into
 \begin{quote}
 $ex\_tru\_father(randy,jodi,ths(T,T,D,D),\_,ans(A,A)).$
 \end{quote}
-We can explain $father(randy,jodi)$ independently of the ancestors;
+We can ec_explain $father(randy,jodi)$ independently of the ancestors;
 we need no extra assumptions, ',' we create no extra answers.
 \end{example}
 
@@ -1750,12 +1750,12 @@ then we want to form the target code as follows:
 $prv\_tru\_d(-args-,Ths,Anc) $\IF
 $member(d(-args-),Ths).$
 \end{prolog}
-\item We can explain a default if we have already assumed it:
+\item We can ec_explain a default if we have already assumed it:
 \begin{prolog}
 $ex\_tru\_d(-args-,ths(T,T,D,D),Anc,ans(A,A)) $\IF
 $member(d(-args-),T).$
 \end{prolog}
-\item We can explain a hypothesis by assuming it,
+\item We can ec_explain a hypothesis by assuming it,
 if it has no free variables, we have not
 already assumed it ',' it is consistent with everything assumed before:
 \begin{prolog} \em
@@ -1995,7 +1995,7 @@ self contained.
 :- op(1150,fx,'fact').
 :- op(1150,fx,constraint).
 %:- op(1150,fx,prolog).
-:- op(1150,fx,explain).
+:- op(1150,fx,ec_explain).
 :- op(1150,fx,predict).
 :- op(1150,fx,define).
 :- op(1150,fx,set).
@@ -2199,7 +2199,7 @@ The $explain$ command keeps writing out all of the explanations found.
 This is done by finding one, writing the answer, ',' then retrying so that
 the next answer is found. This is done so that the computation is left in
 an appropriate state at the end of the computation.
-\index{explain}
+\index{ec_explain}
 \begin{verbatim} */
 explain_th(G) :- 
   ignore((explain_goal(G)*->fail;(format('~nUntrue: ~p.~n',[G]),forall(explain_goal('~'(G)),true)))).

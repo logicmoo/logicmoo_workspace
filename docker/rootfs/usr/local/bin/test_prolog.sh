@@ -8,12 +8,38 @@ export TESTING_TEMP
 mkdir -p $TESTING_TEMP/
 
 
+[ -z "$TESTING_TEMP" ] && [ -d "$(pwd)/test_results" ] && export TESTING_TEMP=$(pwd)/test_results/$(whoami)
+[ -z "$TESTING_TEMP" ] && [ -d "${LOGICMOO_WS}/test_results" ] && export TESTING_TEMP=${LOGICMOO_WS}/test_results/$(whoami)
+[ -z "$TESTING_TEMP" ] && export TESTING_TEMP=$(mktemp -d -t logicmoo_testing-$(date +%Y-%m-%d-%H-%M-%S)-XXXXXXXXXX)
+export TESTING_TEMP
+mkdir -p $TESTING_TEMP/
+
+
+parent-find() {
+  local file="$1"
+  local dir="$(realpath $2)"
+  # echo parent-find "$file" "$(dirname "$dir")"
+  test -e "$dir/$file" && echo "$dir" && return 0
+  [ '/' = "$dir" ] && return 1
+  parent-find "$file" "$(dirname "$dir")"
+}
+
+export PACK_DIR=$(parent-find "pack.pl" .  )
+export PACK_DIR=$(basename $PACK_DIR)
+echo "<!-- PACK_DIR=${PACK_DIR} -->"
+
+export JUNIT_PACKAGE="$PACK_DIR.$(basename `realpath .. | sed -e 's|/[^.]/|/|g' `).$(basename `realpath .`)"
+echo "<!-- JUNIT_PACKAGE=${JUNIT_PACKAGE} -->"
+
 export GLOB="$*"
 [ -z "$GLOB" ] && GLOB="*_01.*"
-[ -z "${TEST_STEM}" ] && export TEST_STEM=Report-$(echo "${GLOB}-$(pwd)" | sed -e "s/[*]/vSTARv/g" -e "s/[?]/vQUESTv/g" -e "s/[.]/vDOTv/g" -e "s/[^_0123456789A-z]/-/g" -e "s/--/-/g" -e "s/-/-/g"  -e "s/--/-/g"  | rev | cut -c 1-110 | rev)-Units
+GLOBSTEM=$(echo "${GLOB}-${JUNIT_PACKAGE}" | sed -e "s/[*]/vSTARv/g" -e "s/[?]/vQUESTv/g" -e "s/[.]/vDOTv/g" -e "s/[^_0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz]/-/g" -e "s/--/-/g" -e "s/-/-/g"  -e "s/--/-/g"  | rev | cut -c 1-110 | rev)
+echo "<!-- GLOBSTEM=${GLOBSTEM} -->"
+[ -z "${TEST_STEM}" ] && export TEST_STEM=Report-${GLOBSTEM}-Units
 echo "<!-- TEST_STEM=${TEST_STEM} -->"
 [ -z "${TEST_STEM_PATH}" ] && export TEST_STEM_PATH=$TESTING_TEMP/$TEST_STEM
 echo "<!-- TEST_STEM_PATH=${TEST_STEM_PATH} -->"
+sleep 3
 
 
 SWIPL=swipl
@@ -81,23 +107,7 @@ else
 fi
 
 
-parent-find() {
-  local file="$1"
-  local dir="$(realpath $2)"
-  # echo parent-find "$file" "$(dirname "$dir")"
-  test -e "$dir/$file" && echo "$dir" && return 0
-  [ '/' = "$dir" ] && return 1
-  parent-find "$file" "$(dirname "$dir")"
-}
-
-export PACK_DIR=$(parent-find "pack.pl" .  )
-export PACK_DIR=$(basename $PACK_DIR)
-echo "<!-- PACK_DIR=${PACK_DIR} -->"
-
-export JUNIT_PACKAGE="$PACK_DIR.$(basename `realpath .. | sed -e 's|/[^.]/|/|g' `).$(basename `realpath .`)"
-echo "<!-- JUNIT_PACKAGE=${JUNIT_PACKAGE} -->"
-
-export REPORT_STEM=$(echo "$(pwd)" | sed -e "s/[*]/vSTARv/g" -e "s/[?]/vQUESTv/g" -e "s/[.]/vDOTv/g" -re "s/[^_0123456789A-z]/-/g" -e "s/--/-/g" -e "s/_/-/g"  -e "s/--/-/g" )
+export REPORT_STEM=$(echo "$(pwd)" | sed -e "s/[*]/vSTARv/g" -e "s/[?]/vQUESTv/g" -e "s/[.]/vDOTv/g" -re "s/[^_0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz]/-/g" -e "s/--/-/g" -e "s/_/-/g"  -e "s/--/-/g" )
 export REPORT_STEM=${TEST_STEM}-${JUNIT_PACKAGE}-$(echo "${REPORT_STEM}" | rev | expr substr 1 120 | rev)
 echo "<!-- REPORT_STEM=${REPORT_STEM} -->"
 
