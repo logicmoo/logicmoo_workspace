@@ -515,8 +515,9 @@ last_n_chars(SName,SName).
 
 clean_away_ansi(DirtyText,CleanText):- atom_codes(DirtyText,Codes),clean_ansi_codes(Codes,CodesC),sformat(CleanText,'~s',[CodesC]),!.
 clean_away_ansi(DirtyText,DirtyText).
-  is_control_code(10):-!, fail. is_control_code(13):-!, fail.
-  is_control_code(C):- C < 32. is_control_code(C):- \+ char_type(C,print),!.
+
+  is_control_code(10):-!, fail.  is_control_code(13):-!, fail.
+  is_control_code(C):- C < 32.  is_control_code(C):- \+ char_type(C,print),!.
   
   clean_ansi_codes([],[]).
   clean_ansi_codes([27,_|Codes],CodesC):- !, clean_ansi_codes(Codes,CodesC).
