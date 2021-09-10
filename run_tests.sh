@@ -1,1 +1,0 @@
-../logicmoo_testing/run_tests.sh
