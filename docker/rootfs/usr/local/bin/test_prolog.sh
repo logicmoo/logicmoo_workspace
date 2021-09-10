@@ -30,12 +30,13 @@ echo "<!-- PACK_DIR=${PACK_DIR} -->"
 
 export JUNIT_PACKAGE="$PACK_DIR.$(basename `realpath .. | sed -e 's|/[^.]/|/|g' `).$(basename `realpath .`)"
 echo "<!-- JUNIT_PACKAGE=${JUNIT_PACKAGE} -->"
+export JUNIT_PACKAGE_STEM=$(echo "${JUNIT_PACKAGE}" | sed -e "s/[^_0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz]/-/g" -e "s/--/-/g" | rev | cut -c 1-110 | rev)
 
 export GLOB="$*"
 [ -z "$GLOB" ] && GLOB="*_01.*"
-GLOBSTEM=$(echo "${GLOB}" | sed -e "s/[*]/vSTARv/g" -e "s/[?]/vQUESTv/g" -e "s/[.]/vDOTv/g" -e "s/[^_0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz]/-/g" -e "s/--/-/g" -e "s/-/-/g"  -e "s/--/-/g"  | rev | cut -c 1-110 | rev)
+GLOBSTEM=$(echo "${JUNIT_PACKAGE_STEM}-${GLOB}" | sed -e "s/[*]/vSTARv/g" -e "s/[?]/vQUESTv/g" -e "s/[.]/vDOTv/g" -e "s/[^_0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz]/-/g" -e "s/--/-/g" | rev | cut -c 1-110 | rev)
 echo "<!-- GLOBSTEM=${GLOBSTEM} -->"
-[ -z "${TEST_STEM}" ] && export TEST_STEM=Report-${JUNIT_PACKAGE}-${GLOBSTEM}-Units
+[ -z "${TEST_STEM}" ] && export TEST_STEM=Report-${GLOBSTEM}-Units
 echo "<!-- TEST_STEM=${TEST_STEM} -->"
 [ -z "${TEST_STEM_PATH}" ] && export TEST_STEM_PATH=$TESTING_TEMP/$TEST_STEM
 echo "<!-- TEST_STEM_PATH=${TEST_STEM_PATH} -->"
@@ -108,7 +109,7 @@ fi
 
 
 export REPORT_STEM=$(echo "$(pwd)" | sed -e "s/[*]/vSTARv/g" -e "s/[?]/vQUESTv/g" -e "s/[.]/vDOTv/g" -re "s/[^_0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz]/-/g" -e "s/--/-/g" -e "s/_/-/g"  -e "s/--/-/g" )
-export REPORT_STEM=${TEST_STEM}-${JUNIT_PACKAGE}-$(echo "${REPORT_STEM}" | rev | expr substr 1 120 | rev)
+export REPORT_STEM=${TEST_STEM}-${JUNIT_PACKAGE}-$(echo "${REPORT_STEM}" | rev | cut -c 1-120 | rev)
 echo "<!-- REPORT_STEM=${REPORT_STEM} -->"
 
 export JUNIT_TESTS_GLOBBED="${TESTING_TEMP}/${REPORT_STEM}"
