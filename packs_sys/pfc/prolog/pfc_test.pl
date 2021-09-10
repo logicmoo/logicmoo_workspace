@@ -528,7 +528,7 @@ save_to_junit_file(Name,DirtyText):-
  clean_away_ansi(DirtyText,Text),
   getenv('TEST_STEM_PATH',Dir),!,
   must_det_l(( 
-  atomic_list_concat([Dir,'-',Name,'_junit.xml'],Full), 
+  atomic_list_concat([Dir,'-',Name,'-junit.xml'],Full), 
   format('~N% saving_junit: ~w~n',[Full]),
   setup_call_cleanup(open(Full, write, Out),writeln(Out,Text), close(Out)))),
   clear_suite_attribs.
