@@ -43,8 +43,9 @@ sk5_in(Ex)==>sk5_out(Ex).
 :- flush_output.
 
 %:- call(call,rtrace).
-%:- must(lookup_u(sk5_in(avar([vn='ZEx',sk5='SKF-666'])))).
+:- must(lookup_u(sk5_in(avar([vn='ZEx',sk5='SKF-666'])))).
 
 
-%:- must(lookup_u(pt(sk5_in(avar([vn='IS',sk5='SKF-666'])),FOUND))),dmsg(fOUND=FOUND).
+:- must(lookup_u(pt(sk5_in(avar([vn='IS',sk5='SKF-666'])),FOUND))),dmsg(fOUND=FOUND).
+
 
