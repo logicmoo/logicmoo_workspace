@@ -1,4 +1,4 @@
-#!/usr/bin/env clif
+#!/usr/bin/env lmoo-junit
 
 :- consult('abc_01.pfc').
 

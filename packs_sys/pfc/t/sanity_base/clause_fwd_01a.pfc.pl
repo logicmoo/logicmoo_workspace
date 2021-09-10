@@ -1,4 +1,4 @@
-#!/usr/bin/env clif
+#!/usr/bin/env lmoo-junit
 % 
 % Dec 13, 2034
 % Douglas Miles

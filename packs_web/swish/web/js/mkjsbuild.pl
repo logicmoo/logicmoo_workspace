@@ -1,4 +1,4 @@
-#!/usr/bin/env clif
+#!/usr/bin/env lmoo-clif
 
 :- use_module(library(dcg/basics)).
 :- use_module(library(pio)).

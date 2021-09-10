@@ -1,4 +1,4 @@
-#!/usr/bin/env clif
+#!/usr/bin/env lmoo-junit
 %
 %  PFC is a language extension for prolog.
 %

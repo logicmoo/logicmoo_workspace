@@ -1,4 +1,4 @@
-#!/usr/bin/env clif
+#!/usr/bin/env lmoo-junit
 :- include(test_header).
 % Module - Test Puzzle  for SWI-Prolog
 % Maintainer: Douglas Miles

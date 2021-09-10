@@ -1,4 +1,4 @@
-#!/usr/bin/env clif
+#!/usr/bin/env lmoo-clif
 
 % Tests Emulation of assertable attributed variables
 :- include(test_header).
