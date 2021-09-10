@@ -187,9 +187,9 @@ for ele2 in "${listOfNames[@]}"
 			continue
 	     fi
         JECHO "<testcase name=\"$FileTestCase\" classname='$JUNIT_CLASSNAME' time='$totalTime'>"
-        JECHO " <failure message='FAILED: $0 ${keep_going} ${ele} (returned ${exitcode})'>"
+        JECHO " <failure message='FAILED: $0 ${keep_going} ${ele} (returned ${exitcode})'/>"
            JECHO "<system-err><![CDATA[$(cat $TEE_FILE2)]]></system-err>\n"
-        JECHO " </failure></testcase>"
+        JECHO "</testcase>"
            JUNIT_TESTS_GLOBBED_FAILURES=$((JUNIT_TESTS_GLOBBED_FAILURES+1))
 
         next_cls=0
