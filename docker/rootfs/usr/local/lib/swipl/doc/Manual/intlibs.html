@@ -2,7 +2,7 @@
 
 <html>
 <head>
-<title>SWI-Prolog 8.3.28 Reference Manual: Section B.8</title><link rel="home" href="index.html">
+<title>SWI-Prolog 8.3.29 Reference Manual: Section B.8</title><link rel="home" href="index.html">
 <link rel="contents" href="Contents.html">
 <link rel="index" href="DocIndex.html">
 <link rel="summary" href="summary.html">
@@ -253,8 +253,8 @@ Hook, normally not defined. This hook is called by the&rsquo;L' command
 of the tracer in the module <code>user</code> to list the currently 
 called predicate. This hook may be defined to list only relevant clauses 
 of the indicated <var>Goal</var> and/or show the actual source code in 
-an editor. See also <a id="idx:portray1:2666"></a><a class="pred" href="termrw.html#portray/1">portray/1</a> 
-and <a id="idx:multifile1:2667"></a><a class="pred" href="dynamic.html#multifile/1">multifile/1</a>.</dd>
+an editor. See also <a id="idx:portray1:2667"></a><a class="pred" href="termrw.html#portray/1">portray/1</a> 
+and <a id="idx:multifile1:2668"></a><a class="pred" href="dynamic.html#multifile/1">multifile/1</a>.</dd>
 <dt class="pubdef"><a id="prolog:debug_control_hook/1"><strong>prolog:debug_control_hook</strong>(<var>:Action</var>)</a></dt>
 <dd class="defbody">
 Hook for the debugger control predicates that allows the creator of more 
@@ -265,38 +265,38 @@ spying methods rather than predicates. <var>Action</var> is one of:
 <dl class="latex">
 <dt><strong>spy</strong>(<var>Spec</var>)</dt>
 <dd class="defbody">
-Hook in <a id="idx:spy1:2668"></a><a class="pred" href="debugger.html#spy/1">spy/1</a>. 
-If the hook succeeds <a id="idx:spy1:2669"></a><a class="pred" href="debugger.html#spy/1">spy/1</a> 
+Hook in <a id="idx:spy1:2669"></a><a class="pred" href="debugger.html#spy/1">spy/1</a>. 
+If the hook succeeds <a id="idx:spy1:2670"></a><a class="pred" href="debugger.html#spy/1">spy/1</a> 
 takes no further action.
 </dd>
 <dt><strong>nospy</strong>(<var>Spec</var>)</dt>
 <dd class="defbody">
-Hook in <a id="idx:nospy1:2670"></a><a class="pred" href="debugger.html#nospy/1">nospy/1</a>. 
-If the hook succeeds <a id="idx:nospy1:2671"></a><a class="pred" href="debugger.html#nospy/1">nospy/1</a> 
-takes no further action. If <a id="idx:spy1:2672"></a><a class="pred" href="debugger.html#spy/1">spy/1</a> 
+Hook in <a id="idx:nospy1:2671"></a><a class="pred" href="debugger.html#nospy/1">nospy/1</a>. 
+If the hook succeeds <a id="idx:nospy1:2672"></a><a class="pred" href="debugger.html#nospy/1">nospy/1</a> 
+takes no further action. If <a id="idx:spy1:2673"></a><a class="pred" href="debugger.html#spy/1">spy/1</a> 
 is hooked, it is advised to place a complementary hook for
-<a id="idx:nospy1:2673"></a><a class="pred" href="debugger.html#nospy/1">nospy/1</a>.
+<a id="idx:nospy1:2674"></a><a class="pred" href="debugger.html#nospy/1">nospy/1</a>.
 </dd>
 <dt><strong>nospyall</strong></dt>
 <dd class="defbody">
-Hook in <a id="idx:nospyall0:2674"></a><a class="pred" href="debugger.html#nospyall/0">nospyall/0</a>. 
+Hook in <a id="idx:nospyall0:2675"></a><a class="pred" href="debugger.html#nospyall/0">nospyall/0</a>. 
 Should remove all spy points. This hook is called in a failure-driven 
 loop.
 </dd>
 <dt><strong>debugging</strong></dt>
 <dd class="defbody">
-Hook in <a id="idx:debugging0:2675"></a><a class="pred" href="debugger.html#debugging/0">debugging/0</a>. 
+Hook in <a id="idx:debugging0:2676"></a><a class="pred" href="debugger.html#debugging/0">debugging/0</a>. 
 It can be used in two ways. It can report the status of the additional 
 debug points controlled by the above hooks and fail to let the system 
-report the others, or it succeeds, overruling the entire behaviour of <a id="idx:debugging0:2676"></a><a class="pred" href="debugger.html#debugging/0">debugging/0</a>.
+report the others, or it succeeds, overruling the entire behaviour of <a id="idx:debugging0:2677"></a><a class="pred" href="debugger.html#debugging/0">debugging/0</a>.
 </dd>
 </dl>
 
 </dd>
 <dt class="pubdef"><a id="prolog:help_hook/1"><strong>prolog:help_hook</strong>(<var>+Action</var>)</a></dt>
 <dd class="defbody">
-Hook into <a id="idx:help0:2677"></a><a class="pred" href="online-help.html#help/0">help/0</a> 
-and <a id="idx:help1:2678"></a><a class="pred" href="online-help.html#help/1">help/1</a>. 
+Hook into <a id="idx:help0:2678"></a><a class="pred" href="online-help.html#help/0">help/0</a> 
+and <a id="idx:help1:2679"></a><a class="pred" href="online-help.html#help/1">help/1</a>. 
 If the hook succeeds, the built-in actions are not executed. For 
 example, <code>?- help(picture).</code> is caught by the XPCE help hook 
 to give help on the class <em>picture</em>. Defined actions are:
@@ -304,19 +304,19 @@ to give help on the class <em>picture</em>. Defined actions are:
 <dl class="latex">
 <dt><strong>help</strong></dt>
 <dd class="defbody">
-User entered plain <a id="idx:help0:2679"></a><a class="pred" href="online-help.html#help/0">help/0</a> 
+User entered plain <a id="idx:help0:2680"></a><a class="pred" href="online-help.html#help/0">help/0</a> 
 to give default help. The default performs
-<code>help(<a id="idx:help1:2680"></a><a class="pred" href="online-help.html#help/1">help/1</a>)</code>, 
+<code>help(<a id="idx:help1:2681"></a><a class="pred" href="online-help.html#help/1">help/1</a>)</code>, 
 giving help on help.
 </dd>
 <dt><strong>help</strong>(<var>What</var>)</dt>
 <dd class="defbody">
-Hook in <a id="idx:help1:2681"></a><a class="pred" href="online-help.html#help/1">help/1</a> 
+Hook in <a id="idx:help1:2682"></a><a class="pred" href="online-help.html#help/1">help/1</a> 
 on the topic <var>What</var>.
 </dd>
 <dt><strong>apropos</strong>(<var>What</var>)</dt>
 <dd class="defbody">
-Hook in <a id="idx:apropos1:2682"></a><a class="pred" href="online-help.html#apropos/1">apropos/1</a> 
+Hook in <a id="idx:apropos1:2683"></a><a class="pred" href="online-help.html#apropos/1">apropos/1</a> 
 on the topic <var>What</var>.
 </dd>
 </dl>

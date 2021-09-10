@@ -2,7 +2,7 @@
 
 <html>
 <head>
-<title>SWI-Prolog 8.3.28 Reference Manual: Section 4.13</title><link rel="home" href="index.html">
+<title>SWI-Prolog 8.3.29 Reference Manual: Section 4.13</title><link rel="home" href="index.html">
 <link rel="contents" href="Contents.html">
 <link rel="index" href="DocIndex.html">
 <link rel="summary" href="summary.html">
@@ -238,7 +238,7 @@ Grammar rules</span></a></h2>
 
 <a id="sec:DCG"></a>
 
-<p><a id="idx:DCG:886"></a><a id="idx:serialize:887"></a><a id="idx:deserialize:888"></a>Grammar 
+<p><a id="idx:DCG:887"></a><a id="idx:serialize:888"></a><a id="idx:deserialize:889"></a>Grammar 
 rules form a comfortable interface to <em>difference lists</em>. They 
 are designed both to support writing parsers that build a parse tree 
 from a list of characters or tokens and for generating a flat list from 
@@ -246,7 +246,7 @@ a term.
 
 <p>Grammar rules look like ordinary clauses using <code><code>--&gt;</code>/2</code> 
 for separating the head and body rather than <code><code>:-</code>/2</code>. 
-Expanding grammar rules is done by <a id="idx:expandterm2:889"></a><a class="pred" href="consulting.html#expand_term/2">expand_term/2</a>, 
+Expanding grammar rules is done by <a id="idx:expandterm2:890"></a><a class="pred" href="consulting.html#expand_term/2">expand_term/2</a>, 
 which adds two additional arguments to each term for representing the 
 difference list.
 
@@ -281,8 +281,8 @@ digit(D) --&gt;
         }.
 </pre>
 
-<p>Grammar rule sets are called using the built-in predicates <a id="idx:phrase2:890"></a><a class="pred" href="DCG.html#phrase/2">phrase/2</a> 
-and <a id="idx:phrase3:891"></a><a class="pred" href="DCG.html#phrase/3">phrase/3</a>:
+<p>Grammar rule sets are called using the built-in predicates <a id="idx:phrase2:891"></a><a class="pred" href="DCG.html#phrase/2">phrase/2</a> 
+and <a id="idx:phrase3:892"></a><a class="pred" href="DCG.html#phrase/3">phrase/3</a>:
 
 <dl class="latex">
 <dt class="pubdef"><a id="phrase/2"><strong>phrase</strong>(<var>:DCGBody, 
@@ -330,13 +330,13 @@ Major = 3,
 Minor = 4.
 </pre>
 
-<p>The SWI-Prolog implementation of <a id="idx:phrase3:892"></a><a class="pred" href="DCG.html#phrase/3">phrase/3</a> 
+<p>The SWI-Prolog implementation of <a id="idx:phrase3:893"></a><a class="pred" href="DCG.html#phrase/3">phrase/3</a> 
 verifies that the <var>List</var> and <var>Rest</var> arguments are 
 unbound, bound to the empty list or a list
-<em>cons cell</em>. Other values raise a type error.<sup class="fn">78<span class="fn-text">The 
+<em>cons cell</em>. Other values raise a type error.<sup class="fn">79<span class="fn-text">The 
 ISO standard allows for both raising a type error and accepting any term 
 as input and output. Note the tail of the list is not checked for 
-performance reasons.</span></sup> The predicate <a id="idx:calldcg3:893"></a><a class="pred" href="DCG.html#call_dcg/3">call_dcg/3</a> 
+performance reasons.</span></sup> The predicate <a id="idx:calldcg3:894"></a><a class="pred" href="DCG.html#call_dcg/3">call_dcg/3</a> 
 is provided to use grammar rules with terms that are not lists.
 
 <p>Note that the syntax for lists of codes changed in SWI-Prolog version&nbsp;7 
@@ -344,32 +344,32 @@ is provided to use grammar rules with terms that are not lists.
 DCG body is translated, both <code>"text"</code> and <code>`text`</code> 
 is a valid code-list literal in version&nbsp;7. A version&nbsp;7 string 
 (<code>"text"</code>) is <b>not</b> acceptable for the second and third 
-arguments of <a id="idx:phrase3:894"></a><a class="pred" href="DCG.html#phrase/3">phrase/3</a>. 
+arguments of <a id="idx:phrase3:895"></a><a class="pred" href="DCG.html#phrase/3">phrase/3</a>. 
 This is typically not a problem for applications as the input of a DCG 
 rarely appears in the source code. For testing in the toplevel, one must 
 use double quoted text in versions prior to&nbsp;7 and back quoted text 
 in version&nbsp;7 or later.
 
-<p>See also <a id="idx:portraytext1:895"></a><a class="pred" href="portraytext.html#portray_text/1">portray_text/1</a>, 
+<p>See also <a id="idx:portraytext1:896"></a><a class="pred" href="portraytext.html#portray_text/1">portray_text/1</a>, 
 which can be used to print lists of character codes as a string to the 
 top level and debugger to facilitate debugging DCGs that process 
-character codes. The library <code>library(apply_macros)</code> compiles <a id="idx:phrase3:896"></a><a class="pred" href="DCG.html#phrase/3">phrase/3</a> 
+character codes. The library <code>library(apply_macros)</code> compiles <a id="idx:phrase3:897"></a><a class="pred" href="DCG.html#phrase/3">phrase/3</a> 
 if the argument is sufficiently instantiated, eliminating the runtime 
 overhead of translating <var>DCGBody</var> and meta-calling.</dd>
 <dt class="pubdef"><a id="call_dcg/3"><strong>call_dcg</strong>(<var>:DCGBody, 
 ?State0, ?State</var>)</a></dt>
 <dd class="defbody">
-As <a id="idx:phrase3:897"></a><a class="pred" href="DCG.html#phrase/3">phrase/3</a>, 
+As <a id="idx:phrase3:898"></a><a class="pred" href="DCG.html#phrase/3">phrase/3</a>, 
 but without type checking <var>State0</var> and <var>State</var>. This 
 allows for using DCG rules for threading an arbitrary state variable. 
 This predicate was introduced after type checking was added to
-<a id="idx:phrase3:898"></a><a class="pred" href="DCG.html#phrase/3">phrase/3</a>.<sup class="fn">79<span class="fn-text">After 
+<a id="idx:phrase3:899"></a><a class="pred" href="DCG.html#phrase/3">phrase/3</a>.<sup class="fn">80<span class="fn-text">After 
 discussion with Samer Abdallah.</span></sup>
 
 <p>A portable solution for threading state through a DCG can be 
 implemented by wrapping the state in a list and use the DCG semicontext 
 facility. Subsequently, the following predicates may be used to access 
-and modify the state:<sup class="fn">80<span class="fn-text">This 
+and modify the state:<sup class="fn">81<span class="fn-text">This 
 solution was proposed by Markus Triska.</span></sup>
 
 <pre class="code">
@@ -382,7 +382,7 @@ state(S0, S), [S] --&gt; [S0].
 
 <p>As stated above, grammar rules are a general interface to difference 
 lists. To illustrate, we show a DCG-based implementation of
-<a id="idx:reverse2:899"></a><a class="pred" href="lists.html#reverse/2">reverse/2</a>:
+<a id="idx:reverse2:900"></a><a class="pred" href="lists.html#reverse/2">reverse/2</a>:
 
 <pre class="code">
 reverse(List, Reversed) :-

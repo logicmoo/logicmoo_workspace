@@ -2,7 +2,7 @@
 
 <html>
 <head>
-<title>SWI-Prolog 8.3.28 Reference Manual: Section 7.11</title><link rel="home" href="index.html">
+<title>SWI-Prolog 8.3.29 Reference Manual: Section 7.11</title><link rel="home" href="index.html">
 <link rel="contents" href="Contents.html">
 <link rel="index" href="DocIndex.html">
 <link rel="summary" href="summary.html">
@@ -248,13 +248,13 @@ individual specification is either a <em>predicate indicator</em>
 (name/arity or name//arity) or head specifying tabling with <em>answer 
 subsumption</em>.
 
-<p>Although <a id="idx:table1:2090"></a><a class="pred" href="tabling-preds.html#table/1">table/1</a> 
+<p>Although <a id="idx:table1:2091"></a><a class="pred" href="tabling-preds.html#table/1">table/1</a> 
 is normally used as a directive, SWI-Prolog allows calling it as a 
 runtime predicate to prepare an existing predicate for tabled execution. 
-The predicate <a id="idx:untable1:2091"></a><a class="pred" href="tabling-preds.html#untable/1">untable/1</a> 
+The predicate <a id="idx:untable1:2092"></a><a class="pred" href="tabling-preds.html#untable/1">untable/1</a> 
 can be used to remove the tabling instrumentation from a predicate.
 
-<p>The example below prepares the predicate <a id="idx:edge2:2092"></a><span class="pred-ext">edge/2</span> 
+<p>The example below prepares the predicate <a id="idx:edge2:2093"></a><span class="pred-ext">edge/2</span> 
 and the non-terminal statement//1 for tabled execution.
 
 <pre class="code">
@@ -323,7 +323,7 @@ enclosed in parenthesis. For example:
 </dd>
 <dt class="pubdef"><a id="tnot/1"><strong>tnot</strong>(<var>:Goal</var>)</a></dt>
 <dd class="defbody">
-The <a id="idx:tnot1:2093"></a><a class="pred" href="tabling-preds.html#tnot/1">tnot/1</a> 
+The <a id="idx:tnot1:2094"></a><a class="pred" href="tabling-preds.html#tnot/1">tnot/1</a> 
 predicate implements <em>tabled negation</em>. This predicate realises <em>Well 
 Founded Semantics</em>. See <a class="sec" href="WFS.html#sec:7.6">section 
 7.6</a> for details.</dd>
@@ -331,20 +331,20 @@ Founded Semantics</em>. See <a class="sec" href="WFS.html#sec:7.6">section
 <dd class="defbody">
 Handles tabled negation for non-ground (<em>floundering</em>) <var>Goal</var> 
 as well as non tabled goals. If <var>Goal</var> is ground and tabled
-<a id="idx:notexists1:2094"></a><a class="pred" href="tabling-preds.html#not_exists/1">not_exists/1</a> 
-calls <a id="idx:tnot1:2095"></a><a class="pred" href="tabling-preds.html#tnot/1">tnot/1</a>. 
+<a id="idx:notexists1:2095"></a><a class="pred" href="tabling-preds.html#not_exists/1">not_exists/1</a> 
+calls <a id="idx:tnot1:2096"></a><a class="pred" href="tabling-preds.html#tnot/1">tnot/1</a>. 
 Otherwise it used <code>tabled_call(Goal)</code> to create a table and 
-subsequently uses <a id="idx:tnot1:2096"></a><a class="pred" href="tabling-preds.html#tnot/1">tnot/1</a> 
+subsequently uses <a id="idx:tnot1:2097"></a><a class="pred" href="tabling-preds.html#tnot/1">tnot/1</a> 
 on the created table.
 
 <p>Logically, <code>not_exists(p(X))</code> is defined as tnot(<var>&exist</var><var>X</var>(p(<var>X</var>)))
 
-<p>Note that each <var>Goal</var> variant populates a table for <a id="idx:tabledcall1:2097"></a><a class="pred" href="tabling-preds.html#tabled_call/1">tabled_call/1</a>. 
+<p>Note that each <var>Goal</var> variant populates a table for <a id="idx:tabledcall1:2098"></a><a class="pred" href="tabling-preds.html#tabled_call/1">tabled_call/1</a>. 
 Applications may need to abolish such tables to limit memory usage or 
 guarantee consistency&lsquo;after the world changed'.</dd>
 <dt class="pubdef"><a id="tabled_call/1"><strong>tabled_call</strong>(<var>:Goal</var>)</a></dt>
 <dd class="defbody">
-Helper predicate for <a id="idx:notexists1:2098"></a><a class="pred" href="tabling-preds.html#not_exists/1">not_exists/1</a>. 
+Helper predicate for <a id="idx:notexists1:2099"></a><a class="pred" href="tabling-preds.html#not_exists/1">not_exists/1</a>. 
 Defined as below. The helper is public because application may need to 
 abolish its tables.
 
@@ -361,7 +361,7 @@ True when <var>Trie</var> is the answer table for <var>Variant</var>.</dd>
 <dt class="pubdef"><a id="untable/1"><strong>untable</strong>(<var>:Specification</var>)</a></dt>
 <dd class="defbody">
 Remove the tabling instrumentation for the specified predicates.
-<var>Specification</var> is compatible with <a id="idx:table1:2099"></a><a class="pred" href="tabling-preds.html#table/1">table/1</a>, 
+<var>Specification</var> is compatible with <a id="idx:table1:2100"></a><a class="pred" href="tabling-preds.html#table/1">table/1</a>, 
 although tabling with
 <em>answer subsumption</em> may be removed using a name/arity 
 specification.</dd>
@@ -375,10 +375,10 @@ the tables with a changed environment. Tables may be abolished
 regardless of the current state of the table. <em>Incomplete</em> tables 
 are flagged for destruction when they are completed. See <a class="sec" href="tabling-shared.html#sec:7.9.1">section 
 7.9.1</a> for the semantics of destroying shared tables and the 
-following predicates for destroying a subset of the tables: <a id="idx:abolishprivatetables0:2100"></a><a class="pred" href="tabling-preds.html#abolish_private_tables/0">abolish_private_tables/0</a>,
-<a id="idx:abolishsharedtables0:2101"></a><a class="pred" href="tabling-preds.html#abolish_shared_tables/0">abolish_shared_tables/0</a>, <a id="idx:abolishtablesubgoals1:2102"></a><a class="pred" href="tabling-preds.html#abolish_table_subgoals/1">abolish_table_subgoals/1</a> 
+following predicates for destroying a subset of the tables: <a id="idx:abolishprivatetables0:2101"></a><a class="pred" href="tabling-preds.html#abolish_private_tables/0">abolish_private_tables/0</a>,
+<a id="idx:abolishsharedtables0:2102"></a><a class="pred" href="tabling-preds.html#abolish_shared_tables/0">abolish_shared_tables/0</a>, <a id="idx:abolishtablesubgoals1:2103"></a><a class="pred" href="tabling-preds.html#abolish_table_subgoals/1">abolish_table_subgoals/1</a> 
 and
-<a id="idx:abolishmoduletables1:2103"></a><a class="pred" href="tabling-preds.html#abolish_module_tables/1">abolish_module_tables/1</a>.</dd>
+<a id="idx:abolishmoduletables1:2104"></a><a class="pred" href="tabling-preds.html#abolish_module_tables/1">abolish_module_tables/1</a>.</dd>
 <dt class="pubdef"><a id="abolish_private_tables/0"><strong>abolish_private_tables</strong></a></dt>
 <dd class="defbody">
 Abolish all tables that are private to this thread.</dd>
@@ -406,7 +406,7 @@ Remove all tables that belong to predicates in <var>Module</var>.</dd>
 <dt class="pubdef"><a id="abolish_nonincremental_tables/0"><strong>abolish_nonincremental_tables</strong></a></dt>
 <dt class="pubdef"><a id="abolish_nonincremental_tables/1"><strong>abolish_nonincremental_tables</strong>(<var>+Options</var>)</a></dt>
 <dd class="defbody">
-Similar to <a id="idx:abolishalltables0:2104"></a><a class="pred" href="tabling-preds.html#abolish_all_tables/0">abolish_all_tables/0</a>, 
+Similar to <a id="idx:abolishalltables0:2105"></a><a class="pred" href="tabling-preds.html#abolish_all_tables/0">abolish_all_tables/0</a>, 
 but does not abolish
 <em>incremental</em> tables as their consistency is maintained by the 
 system. Options:

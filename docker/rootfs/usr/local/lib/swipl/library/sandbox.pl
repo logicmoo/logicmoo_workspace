@@ -3,8 +3,9 @@
     Author:        Jan Wielemaker
     E-mail:        J.Wielemaker@vu.nl
     WWW:           http://www.swi-prolog.org
-    Copyright (c)  2013-2020, VU University Amsterdam
+    Copyright (c)  2013-2021, VU University Amsterdam
                               CWI, Amsterdam
+                              SWI-Prolog Solutions b.v
     All rights reserved.
 
     Redistribution and use in source and binary forms, with or without
@@ -74,16 +75,6 @@ safe_goal/1, which determines whether it is safe to call its argument.
 */
 
 :- create_prolog_flag(no_sandbox, false, [type(boolean), keep(true)]).
-
-do_permission_error(Operation, PermissionType, Culprit) :-
-   do_permission_error(Operation, PermissionType, Culprit, _).
-
-do_permission_error(_Operation, _PermissionType, _Culprit, _MoreInfo) :-  current_prolog_flag(no_sandbox, true), !.
-do_permission_error(Operation, PermissionType, Culprit, MoreInfo) :-
-    throw(error(permission_error(Operation,
-                                 PermissionType,
-                                 Culprit),
-                MoreInfo)).
 
 :- meta_predicate
     safe_goal(:),
@@ -156,7 +147,7 @@ safe(V, _, Parents, _, _) :-
     nb_setval(sandbox_last_error, Error),
     throw(Error).
 
-safe(_, _, _Parents, _Safe0, true):- current_prolog_flag(no_sandbox, true), !.
+safe(_,_,_Parents,_Safe0,true):-current_prolog_flag(no_sandbox,true),!.
 
 safe(M:G, _, Parents, Safe0, Safe) :-
     !,
@@ -179,8 +170,8 @@ safe(M:G, _, Parents, Safe0, Safe) :-
         ;   memberchk(M:_, Parents)
         )
     ->  safe(G, M, Parents, Safe0, Safe)
-    ;   do_permission_error(call, sandboxed, M:G,
-                    sandbox(M:G, Parents))
+    ;   throw(error(permission_error(call, sandboxed, M:G),
+                    sandbox(M:G, Parents)))
     ).
 safe(G, _, Parents, _, _) :-
     debugging(sandbox(show)),
@@ -262,9 +253,8 @@ safe_clauses(G, M, Parents, Safe0, Safe) :-
 safe_clauses(G, M, [_|Parents], _, _) :-
     predicate_property(M:G, visible),
     !,
-    do_permission_error(call, sandboxed, G,
-                sandbox(M:G, Parents)).
-
+    throw(error(permission_error(call, sandboxed, G),
+                sandbox(M:G, Parents))).
 safe_clauses(_, _, [G|Parents], _, _) :-
     throw(error(existence_error(procedure, G),
                 sandbox(G, Parents))).
@@ -276,8 +266,8 @@ known_module(M:_, _) :-
     !.
 known_module(_,_):- current_prolog_flag(no_sandbox, true), !, fail.    
 known_module(M:G, Parents) :-
-    do_permission_error(call, sandboxed, M:G,
-                sandbox(M:G, Parents)).
+    throw(error(permission_error(call, sandboxed, M:G),
+                sandbox(M:G, Parents))).
 
 add_iso_parent(G, Parents, Parents) :-
     is_control(G),
@@ -465,7 +455,6 @@ verify_safe_declaration(Var) :-
     var(Var),
     !,
     instantiation_error(Var).
-
 verify_safe_declaration(_):- current_prolog_flag(no_sandbox, true), !.
 verify_safe_declaration(Module:Goal) :-
     !,
@@ -480,14 +469,14 @@ verify_safe_declaration(Module:Goal) :-
         \+ predicate_property(Module:Goal, imported_from(_)),
         \+ predicate_property(Module:Goal, meta_predicate(_))
     ->  true
-    ;   do_permission_error(declare, safe_goal, Module:Goal)
+    ;   permission_error(declare, safe_goal, Module:Goal)
     ).
 verify_safe_declaration(Goal) :-
     must_be(callable, Goal),
     (   predicate_property(system:Goal, iso),
         \+ predicate_property(system:Goal, meta_predicate())
     ->  true
-    ;   do_permission_error(declare, safe_goal, Goal)
+    ;   permission_error(declare, safe_goal, Goal)
     ).
 
 ok_meta(system:assert(_)).
@@ -535,7 +524,10 @@ safe_primitive(nonvar(_)).
 safe_primitive(system:attvar(_)).
 safe_primitive(integer(_)).
 safe_primitive(float(_)).
+:- if(current_predicate(rational/1)).
 safe_primitive(system:rational(_)).
+safe_primitive(system:rational(_,_,_)).
+:- endif.
 safe_primitive(number(_)).
 safe_primitive(atom(_)).
 safe_primitive(system:blob(_,_)).
@@ -1071,6 +1063,7 @@ safe_meta(system:setup_call_catcher_cleanup(0,0,*,0)).
 safe_meta('$attvar':call_residue_vars(0,*)).
 safe_meta('$syspreds':call_with_inference_limit(0,*,*)).
 safe_meta('$syspreds':call_with_depth_limit(0,*,*)).
+safe_meta('$syspreds':undo(0)).
 safe_meta(^(*,0)).
 safe_meta(\+(0)).
 safe_meta(call(0)).
@@ -1143,22 +1136,22 @@ format_callables([_|TT], [_|TA], TG) :-
 prolog:sandbox_allowed_directive(Directive) :-
     debug(sandbox(directive), 'Directive: ~p', [Directive]),
     fail.
+prolog:sandbox_allowed_directive(_):- current_prolog_flag(no_sandbox, true), !.    
 prolog:sandbox_allowed_directive(Directive) :-
     safe_directive(Directive),
     !.
-prolog:sandbox_allowed_directive(_):- current_prolog_flag(no_sandbox, true), !.    
 prolog:sandbox_allowed_directive(M:PredAttr) :-
     \+ prolog_load_context(module, M),
     !,
     debug(sandbox(directive), 'Cross-module directive', []),
-    do_permission_error(execute, sandboxed_directive, (:- M:PredAttr)).
+    permission_error(execute, sandboxed_directive, (:- M:PredAttr)).
 prolog:sandbox_allowed_directive(M:PredAttr) :-
     safe_pattr(PredAttr),
     !,
     PredAttr =.. [Attr, Preds],
     (   safe_pattr(Preds, Attr)
     ->  true
-    ;   do_permission_error(execute, sandboxed_directive, (:- M:PredAttr))
+    ;   permission_error(execute, sandboxed_directive, (:- M:PredAttr))
     ).
 prolog:sandbox_allowed_directive(_:Directive) :-
     safe_source_directive(Directive),
@@ -1212,7 +1205,7 @@ safe_pattr(M:G, Attr) :-
         prolog_load_context(module, M)
     ->  true
     ;   Goal =.. [Attr,M:G],
-        do_permission_error(directive, sandboxed, (:- Goal))
+        permission_error(directive, sandboxed, (:- Goal))
     ).
 safe_pattr(_, _).
 

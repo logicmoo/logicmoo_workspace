@@ -6571,5 +6571,8 @@
 			<F N="Patch/dmiles-save-reference-error.patch"/>
 			<F N="Patch/dmiles-ssl.patch"/>
 		</Folder>
+		<Folder Name="prologmud_server">
+			<F N="prologmud_server/compile_mud_server.pl"/>
+		</Folder>
 	</Files>
 </Project>

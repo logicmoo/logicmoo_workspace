@@ -588,6 +588,10 @@ index((memory_file_substring), 5, memory_file, memfile).
 index((memory_file_line_position), 4, memory_file, memfile).
 index((utf8_position_memory_file), 3, memory_file, memfile).
 index((in_temporary_module), 3, modules, modules).
+index((current_temporary_module), 1, modules, modules).
+index((mqi_start), 0, mqi, mqi).
+index((mqi_start), 1, mqi, mqi).
+index((mqi_stop), 1, mqi, mqi).
 index((nb_rb_insert), 3, nb_rbtrees, nb_rbtrees).
 index((nb_rb_get_node), 3, nb_rbtrees, nb_rbtrees).
 index((nb_rb_node_value), 2, nb_rbtrees, nb_rbtrees).
@@ -821,6 +825,12 @@ index((syntax_colour), 2, prolog_colour, prolog_colour).
 index((syntax_message), 3, prolog_colour, prolog_colour).
 index((prolog_dump_runtime_variables), 0, prolog_config, prolog_config).
 index((apple_bundle_libdir), 1, prolog_config, prolog_config).
+index((spy), 1, prolog_debug_tools, prolog_debug).
+index((nospy), 1, prolog_debug_tools, prolog_debug).
+index((nospyall), 0, prolog_debug_tools, prolog_debug).
+index((debugging), 0, prolog_debug_tools, prolog_debug).
+index((trap), 1, prolog_debug_tools, prolog_debug).
+index((notrap), 1, prolog_debug_tools, prolog_debug).
 index((file_autoload_directives), 3, prolog_deps, prolog_deps).
 index((file_auto_import), 2, prolog_deps, prolog_deps).
 index((format_spec), 2, prolog_format, prolog_format).

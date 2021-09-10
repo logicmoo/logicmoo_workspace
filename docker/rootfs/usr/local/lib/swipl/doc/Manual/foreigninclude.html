@@ -2,7 +2,7 @@
 
 <html>
 <head>
-<title>SWI-Prolog 8.3.28 Reference Manual: Section 12.4</title><link rel="home" href="index.html">
+<title>SWI-Prolog 8.3.29 Reference Manual: Section 12.4</title><link rel="home" href="index.html">
 <link rel="contents" href="Contents.html">
 <link rel="index" href="DocIndex.html">
 <link rel="summary" href="summary.html">
@@ -509,7 +509,7 @@ atom</var>)</a></dt>
 <dd class="defbody">
 Increment the reference count of the atom by one. <a class="func" href="foreigninclude.html#PL_new_atom()">PL_new_atom()</a> 
 performs this automatically, returning an atom with a reference count of 
-at least one.<sup class="fn">200<span class="fn-text">Otherwise 
+at least one.<sup class="fn">201<span class="fn-text">Otherwise 
 asynchronous atom garbage collection might destroy the atom before it is 
 used.</span></sup></dd>
 <dt class="pubdef"><a id="PL_unregister_atom()"><var>void</var> <strong>PL_unregister_atom</strong>(<var>atom_t 
@@ -541,7 +541,7 @@ Terms via the Foreign Interface</span></a></h3>
 <p>Each argument of a foreign function (except for the control argument) 
 is of type <code>term_t</code>, an opaque handle to a Prolog term. Three 
 groups of functions are available for the analysis of terms. The first 
-just validates the type, like the Prolog predicates <a id="idx:var1:2409"></a><a class="pred" href="typetest.html#var/1">var/1</a>, <a id="idx:atom1:2410"></a><a class="pred" href="typetest.html#atom/1">atom/1</a>, 
+just validates the type, like the Prolog predicates <a id="idx:var1:2410"></a><a class="pred" href="typetest.html#var/1">var/1</a>, <a id="idx:atom1:2411"></a><a class="pred" href="typetest.html#atom/1">atom/1</a>, 
 etc., and are called <code>PL_is_*()</code>. The second group attempts 
 to translate the argument into a C primitive type. These predicates take 
 a <code>term_t</code> and a pointer to the appropriate C type and return <code>TRUE</code> 
@@ -619,7 +619,7 @@ functions below. All these functions return either <code>TRUE</code> or <code>FA
 Returns non-zero if <var>term</var> is a variable.</dd>
 <dt class="pubdef"><a id="PL_is_ground()"><var>int</var> <strong>PL_is_ground</strong>(<var>term_t</var>)</a></dt>
 <dd class="defbody">
-Returns non-zero if <var>term</var> is a ground term. See also <a id="idx:ground1:2411"></a><a class="pred" href="typetest.html#ground/1">ground/1</a>. 
+Returns non-zero if <var>term</var> is a ground term. See also <a id="idx:ground1:2412"></a><a class="pred" href="typetest.html#ground/1">ground/1</a>. 
 This function is cycle-safe.</dd>
 <dt class="pubdef"><a id="PL_is_atom()"><var>int</var> <strong>PL_is_atom</strong>(<var>term_t</var>)</a></dt>
 <dd class="defbody">
@@ -646,7 +646,7 @@ corresponding
 converts rationals (and thus integers).</dd>
 <dt class="pubdef"><a id="PL_is_callable()"><var>int</var> <strong>PL_is_callable</strong>(<var>term_t</var>)</a></dt>
 <dd class="defbody">
-Returns non-zero if <var>term</var> is a callable term. See <a id="idx:callable1:2412"></a><a class="pred" href="typetest.html#callable/1">callable/1</a> 
+Returns non-zero if <var>term</var> is a callable term. See <a id="idx:callable1:2413"></a><a class="pred" href="typetest.html#callable/1">callable/1</a> 
 for details.</dd>
 <dt class="pubdef"><a id="PL_is_compound()"><var>int</var> <strong>PL_is_compound</strong>(<var>term_t</var>)</a></dt>
 <dd class="defbody">
@@ -757,7 +757,7 @@ Convert if term is an integer.</dd>
 <dt><strong>CVT_FLOAT</strong></dt>
 <dd class="defbody">
 Convert if term is a float. The characters returned are the same as
-<a id="idx:write1:2413"></a><a class="pred" href="termrw.html#write/1">write/1</a> 
+<a id="idx:write1:2414"></a><a class="pred" href="termrw.html#write/1">write/1</a> 
 would write for the floating point number.</dd>
 <dt><strong>CVT_NUMBER</strong></dt>
 <dd class="defbody">
@@ -771,14 +771,14 @@ Convert variable to print-name</dd>
 <dt><strong>CVT_WRITE</strong></dt>
 <dd class="defbody">
 Convert any term that is not converted by any of the other flags using
-<a id="idx:write1:2414"></a><a class="pred" href="termrw.html#write/1">write/1</a>. 
+<a id="idx:write1:2415"></a><a class="pred" href="termrw.html#write/1">write/1</a>. 
 If no <code>BUF_*</code> is provided, <code>BUF_STACK</code> is implied.</dd>
 <dt><strong>CVT_WRITE_CANONICAL</strong></dt>
 <dd class="defbody">
-As <code>CVT_WRITE</code>, but using <a id="idx:writecanonical2:2415"></a><a class="pred" href="termrw.html#write_canonical/2">write_canonical/2</a>.</dd>
+As <code>CVT_WRITE</code>, but using <a id="idx:writecanonical2:2416"></a><a class="pred" href="termrw.html#write_canonical/2">write_canonical/2</a>.</dd>
 <dt><strong>CVT_WRITEQ</strong></dt>
 <dd class="defbody">
-As <code>CVT_WRITE</code>, but using <a id="idx:writeq2:2416"></a><a class="pred" href="termrw.html#writeq/2">writeq/2</a>.</dd>
+As <code>CVT_WRITE</code>, but using <a id="idx:writeq2:2417"></a><a class="pred" href="termrw.html#writeq/2">writeq/2</a>.</dd>
 <dt><strong>CVT_ALL</strong></dt>
 <dd class="defbody">
 Convert if term is any of the above, except for <code>CVT_VARIABLE</code> 
@@ -1166,9 +1166,9 @@ example: defining write/1 in C</span></a></h4>
 <a id="sec:foreign-write"></a>
 
 <p><a class="fig" href="foreigninclude.html#fig:pl-display">Figure 6</a> 
-shows a simplified definition of <a id="idx:write1:2418"></a><a class="pred" href="termrw.html#write/1">write/1</a> 
+shows a simplified definition of <a id="idx:write1:2419"></a><a class="pred" href="termrw.html#write/1">write/1</a> 
 to illustrate the described functions. This simplified version does not 
-deal with operators. It is called <a id="idx:display1:2419"></a><span class="pred-ext">display/1</span>, 
+deal with operators. It is called <a id="idx:display1:2420"></a><span class="pred-ext">display/1</span>, 
 because it mimics closely the behaviour of this Edinburgh predicate.
 
 <pre class="code">
@@ -1212,7 +1212,7 @@ pl_display(term_t t)
 }
 </pre>
 
-<div class="caption"><b>Figure 6 : </b>A Foreign definition of <a id="idx:display1:2420"></a><span class="pred-ext">display/1</span></div>
+<div class="caption"><b>Figure 6 : </b>A Foreign definition of <a id="idx:display1:2421"></a><span class="pred-ext">display/1</span></div>
 <a id="fig:pl-display"></a>
 
 <p><h3 id="sec:foreign-term-construct"><a id="sec:12.4.4"><span class="sec-nr">12.4.4</span> <span class="sec-title">Constructing 
@@ -1236,7 +1236,7 @@ and
 -t</var>)</a></dt>
 <dd class="defbody">
 Put a fresh variable in the term, resetting the term reference to its 
-initial state.<sup class="fn">201<span class="fn-text">Older versions 
+initial state.<sup class="fn">202<span class="fn-text">Older versions 
 created a variable on the global stack.</span></sup>
 </dd>
 <dt class="pubdef"><a id="PL_put_atom()"><var>void</var> <strong>PL_put_atom</strong>(<var>term_t 
@@ -1863,7 +1863,7 @@ Parse the string <var>chars</var> and put the resulting Prolog term into
 full-stop (i.e., a dot followed by a blank). Returns <code>FALSE</code> 
 if a syntax error was encountered and <code>TRUE</code> after successful 
 completion. In addition to returning <code>FALSE</code>, the 
-exception-term is returned in <var>t</var> on a syntax error. See also <a id="idx:termtoatom2:2421"></a><a class="pred" href="manipatom.html#term_to_atom/2">term_to_atom/2</a>.
+exception-term is returned in <var>t</var> on a syntax error. See also <a id="idx:termtoatom2:2422"></a><a class="pred" href="manipatom.html#term_to_atom/2">term_to_atom/2</a>.
 
 <p>The following example builds a goal term from a string and calls it.
 
@@ -2071,40 +2071,40 @@ culprit</var>)</a></dt>
 <dd class="defbody">
 Raise <code>instantiation_error</code>. <var>Culprit</var> is ignored, 
 but should be bound to the term that is insufficiently instantiated. See
-<a id="idx:instantiationerror1:2422"></a><a class="pred" href="error.html#instantiation_error/1">instantiation_error/1</a>.</dd>
+<a id="idx:instantiationerror1:2423"></a><a class="pred" href="error.html#instantiation_error/1">instantiation_error/1</a>.</dd>
 <dt class="pubdef"><a id="PL_uninstantiation_error()"><var>int</var> <strong>PL_uninstantiation_error</strong>(<var>term_t 
 culprit</var>)</a></dt>
 <dd class="defbody">
 Raise <code>uninstantiation_error(culprit)</code>. This should be called 
 if an argument that must be unbound at entry is bound to <var>culprit</var>. 
 This error is typically raised for a pure output arguments such as a 
-newly created stream handle (e.g., the third argument of <a id="idx:open3:2423"></a><a class="pred" href="IO.html#open/3">open/3</a>).</dd>
+newly created stream handle (e.g., the third argument of <a id="idx:open3:2424"></a><a class="pred" href="IO.html#open/3">open/3</a>).</dd>
 <dt class="pubdef"><a id="PL_representation_error()"><var>int</var> <strong>PL_representation_error</strong>(<var>const 
 char *resource</var>)</a></dt>
 <dd class="defbody">
-Raise <code>representation_error(resource)</code>. See <a id="idx:representationerror1:2424"></a><a class="pred" href="error.html#representation_error/1">representation_error/1</a>.</dd>
+Raise <code>representation_error(resource)</code>. See <a id="idx:representationerror1:2425"></a><a class="pred" href="error.html#representation_error/1">representation_error/1</a>.</dd>
 <dt class="pubdef"><a id="PL_type_error()"><var>int</var> <strong>PL_type_error</strong>(<var>const 
 char *expected, term_t culprit</var>)</a></dt>
 <dd class="defbody">
-Raise <code>type_error(expected, culprit)</code>. See <a id="idx:typeerror2:2425"></a><a class="pred" href="error.html#type_error/2">type_error/2</a>.</dd>
+Raise <code>type_error(expected, culprit)</code>. See <a id="idx:typeerror2:2426"></a><a class="pred" href="error.html#type_error/2">type_error/2</a>.</dd>
 <dt class="pubdef"><a id="PL_domain_error()"><var>int</var> <strong>PL_domain_error</strong>(<var>const 
 char *expected, term_t culprit</var>)</a></dt>
 <dd class="defbody">
-Raise <code>domain_error(expected, culprit)</code>. See <a id="idx:domainerror2:2426"></a><a class="pred" href="error.html#domain_error/2">domain_error/2</a>.</dd>
+Raise <code>domain_error(expected, culprit)</code>. See <a id="idx:domainerror2:2427"></a><a class="pred" href="error.html#domain_error/2">domain_error/2</a>.</dd>
 <dt class="pubdef"><a id="PL_existence_error()"><var>int</var> <strong>PL_existence_error</strong>(<var>const 
 char *type, term_t culprit</var>)</a></dt>
 <dd class="defbody">
-Raise <code>existence_error(type, culprit)</code>. See <a id="idx:typeerror2:2427"></a><a class="pred" href="error.html#type_error/2">type_error/2</a>.</dd>
+Raise <code>existence_error(type, culprit)</code>. See <a id="idx:typeerror2:2428"></a><a class="pred" href="error.html#type_error/2">type_error/2</a>.</dd>
 <dt class="pubdef"><a id="PL_permission_error()"><var>int</var> <strong>PL_permission_error</strong>(<var>const 
 char *operation, const char *type, term_t culprit</var>)</a></dt>
 <dd class="defbody">
 Raise <code>permission_error(operation, type, culprit)</code>. See
-<a id="idx:permissionerror3:2428"></a><a class="pred" href="error.html#permission_error/3">permission_error/3</a>.
+<a id="idx:permissionerror3:2429"></a><a class="pred" href="error.html#permission_error/3">permission_error/3</a>.
 </dd>
 <dt class="pubdef"><a id="PL_resource_error()"><var>int</var> <strong>PL_resource_error</strong>(<var>const 
 char *resource</var>)</a></dt>
 <dd class="defbody">
-Raise <code>resource_error(resource)</code>. See <a id="idx:resourceerror1:2429"></a><a class="pred" href="error.html#resource_error/1">resource_error/1</a>.
+Raise <code>resource_error(resource)</code>. See <a id="idx:resourceerror1:2430"></a><a class="pred" href="error.html#resource_error/1">resource_error/1</a>.
 </dd>
 <dt class="pubdef"><a id="PL_syntax_error()"><var>int</var> <strong>PL_syntax_error</strong>(<var>const 
 char *message, IOSTREAM *in</var>)</a></dt>
@@ -2134,7 +2134,7 @@ not required, to be closed by a full stop (.).
 <p>If parsing produces an exception the behaviour depends on the
 <code>CVT_EXCEPTION</code> flag. If present, the exception is propagated 
 into the environment. Otherwise, the exception is placed in <var>t</var> 
-and the return value is <code>FALSE</code>.<sup class="fn">202<span class="fn-text">The <code>CVT_EXCEPTION</code> 
+and the return value is <code>FALSE</code>.<sup class="fn">203<span class="fn-text">The <code>CVT_EXCEPTION</code> 
 was added in version 8.3.12</span></sup>.
 </dd>
 </dl>
@@ -2144,7 +2144,7 @@ Using atoms to store arbitrary binary data</span></a></h3>
 
 <a id="sec:blob"></a>
 
-<p><a id="idx:Java:2430"></a><a id="idx:COM:2431"></a>SWI-Prolog atoms 
+<p><a id="idx:Java:2431"></a><a id="idx:COM:2432"></a>SWI-Prolog atoms 
 as well as strings can represent arbitrary binary data of arbitrary 
 length. This facility is attractive for storing foreign data such as 
 images in an atom. An atom is a unique handle to this data and the atom 
@@ -2210,7 +2210,7 @@ rather than the data pointed at.
 </dl>
 
 <p>The <var>name</var> field represents the type name as available to 
-Prolog. See also <a id="idx:currentblob2:2432"></a><a class="pred" href="examineprog.html#current_blob/2">current_blob/2</a>. 
+Prolog. See also <a id="idx:currentblob2:2433"></a><a class="pred" href="examineprog.html#current_blob/2">current_blob/2</a>. 
 The other fields are function pointers that must be initialised to 
 proper functions or <code>NULL</code> to get the default behaviour of 
 built-in atoms. Below are the defined member functions:
@@ -2249,7 +2249,7 @@ in
 undocumented <code>SWI-Stream.h</code> is included <em>before</em>
 <code>SWI-Prolog.h</code>.
 
-<p>If this function is not provided, <a id="idx:write1:2433"></a><a class="pred" href="termrw.html#write/1">write/1</a> 
+<p>If this function is not provided, <a id="idx:write1:2434"></a><a class="pred" href="termrw.html#write/1">write/1</a> 
 emits the content of the blob for blobs of type <code>PL_BLOB_TEXT</code> 
 or a string of the format <code>&lt;#</code><i>hex data</i><code>&gt;</code> 
 for binary blobs.
@@ -2424,7 +2424,7 @@ Prolog from C</span></a></h3>
 
 <p>The Prolog engine can be called from C. There are two interfaces for 
 this. For the first, a term is created that could be used as an argument 
-to <a id="idx:call1:2434"></a><a class="pred" href="metacall.html#call/1">call/1</a>, 
+to <a id="idx:call1:2435"></a><a class="pred" href="metacall.html#call/1">call/1</a>, 
 and then <a class="func" href="foreigninclude.html#PL_call()">PL_call()</a> 
 is used to call Prolog. This system is simple, but does not allow to 
 inspect the different answers to a non-deterministic goal and is 
@@ -2501,9 +2501,9 @@ ctx, int flags, predicate_t p, term_t +t0</var>)</a></dt>
 module</em> of the goal. When <code>NULL</code>, the context module of 
 the calling context will be used, or <code>user</code> if there is no 
 calling context (as may happen in embedded systems). Note that the 
-context module only matters for <em>meta-predicates</em>. See <a id="idx:metapredicate1:2435"></a><a class="pred" href="metapred.html#meta_predicate/1">meta_predicate/1</a>,
-<a id="idx:contextmodule1:2436"></a><a class="pred" href="ctxmodule.html#context_module/1">context_module/1</a> 
-and <a id="idx:moduletransparent1:2437"></a><a class="pred" href="ctxmodule.html#module_transparent/1">module_transparent/1</a>. 
+context module only matters for <em>meta-predicates</em>. See <a id="idx:metapredicate1:2436"></a><a class="pred" href="metapred.html#meta_predicate/1">meta_predicate/1</a>,
+<a id="idx:contextmodule1:2437"></a><a class="pred" href="ctxmodule.html#context_module/1">context_module/1</a> 
+and <a id="idx:moduletransparent1:2438"></a><a class="pred" href="ctxmodule.html#module_transparent/1">module_transparent/1</a>. 
 The <var>p</var> argument specifies the predicate, and should be the 
 result of a call to <a class="func" href="foreigninclude.html#PL_pred()">PL_pred()</a> 
 or <a class="func" href="foreigninclude.html#PL_predicate()">PL_predicate()</a>. 
@@ -2521,15 +2521,15 @@ of the following values:
 <dd class="defbody">
 Normal operation. The debugger inherits its settings from the 
 environment. If an exception occurs that is not handled in Prolog, a 
-message is printed and the tracer is started to debug the error.<sup class="fn">203<span class="fn-text">Do 
+message is printed and the tracer is started to debug the error.<sup class="fn">204<span class="fn-text">Do 
 not pass the integer 0 for normal operation, as this is interpreted as <code>PL_Q_NODEBUG</code> 
 for backward compatibility reasons.</span></sup>
 </dd>
 <dt><b><code>PL_Q_NODEBUG</code></b></dt>
 <dd class="defbody">
 Switch off the debugger while executing the goal. This option is used by 
-many calls to hook-predicates to avoid tracing the hooks. An example is <a id="idx:print1:2438"></a><a class="pred" href="termrw.html#print/1">print/1</a> 
-calling <a id="idx:portray1:2439"></a><a class="pred" href="termrw.html#portray/1">portray/1</a> 
+many calls to hook-predicates to avoid tracing the hooks. An example is <a id="idx:print1:2439"></a><a class="pred" href="termrw.html#print/1">print/1</a> 
+calling <a id="idx:portray1:2440"></a><a class="pred" href="termrw.html#portray/1">portray/1</a> 
 from foreign code.
 </dd>
 <dt><b><code>PL_Q_CATCH_EXCEPTION</code></b></dt>
@@ -2609,7 +2609,7 @@ Discards the query, but does not delete any of the data created by the
 query. It just invalidates <var>qid</var>, allowing for a new call to
 <a class="func" href="foreigninclude.html#PL_open_query()">PL_open_query()</a> 
 in this context. <a class="func" href="foreigninclude.html#PL_cut_query()">PL_cut_query()</a> 
-may invoke cleanup handlers (see <a id="idx:setupcallcleanup3:2440"></a><a class="pred" href="metacall.html#setup_call_cleanup/3">setup_call_cleanup/3</a>) 
+may invoke cleanup handlers (see <a id="idx:setupcallcleanup3:2441"></a><a class="pred" href="metacall.html#setup_call_cleanup/3">setup_call_cleanup/3</a>) 
 and therefore may experience exceptions. If an exception occurs the 
 return value is <code>FALSE</code> and the exception is accessible 
 through <code><a class="func" href="foreigninclude.html#PL_exception()">PL_exception(0)</a></code>.</dd>
@@ -2633,7 +2633,7 @@ the return value is the same as <a class="func" href="foreigninclude.html#PL_nex
 <dt class="pubdef"><a id="PL_call()"><var>int</var> <strong>PL_call</strong>(<var>term_t 
 t, module_t m</var>)</a></dt>
 <dd class="defbody">
-Call term <var>t</var> just like the Prolog predicate <a id="idx:once1:2441"></a><a class="pred" href="metacall.html#once/1">once/1</a>. <var>t</var> 
+Call term <var>t</var> just like the Prolog predicate <a id="idx:once1:2442"></a><a class="pred" href="metacall.html#once/1">once/1</a>. <var>t</var> 
 is called in the module <var>m</var>, or in the context module if <var>m</var> 
 == NULL. Returns <code>TRUE</code> if the call succeeds, <code>FALSE</code> 
 otherwise.
@@ -2816,91 +2816,74 @@ exceptions in foreign code</span></a></h3>
 
 <a id="sec:foreign-exceptions"></a>
 
-<p>This section discusses <a class="func" href="foreigninclude.html#PL_exception()">PL_exception()</a>, <a class="func" href="foreigninclude.html#PL_throw()">PL_throw()</a> 
-and
-<a class="func" href="foreigninclude.html#PL_raise_exception()">PL_raise_exception()</a>, 
+<p>This section discusses <a class="func" href="foreigninclude.html#PL_exception()">PL_exception()</a> 
+and <a class="func" href="foreigninclude.html#PL_raise_exception()">PL_raise_exception()</a>, 
 the interface functions to detect and generate Prolog exceptions from C 
-code. <a class="func" href="foreigninclude.html#PL_throw()">PL_throw()</a> 
-and <a class="func" href="foreigninclude.html#PL_raise_exception()">PL_raise_exception()</a> 
-from the C interface raise an exception from foreign code. <a class="func" href="foreigninclude.html#PL_throw()">PL_throw()</a> 
-exploits the C function longjmp() to return immediately to the innermost
-<a class="func" href="foreigninclude.html#PL_next_solution()">PL_next_solution()</a>. <a class="func" href="foreigninclude.html#PL_raise_exception()">PL_raise_exception()</a> 
-registers the exception term and returns <code>FALSE</code>. If a 
-foreign predicate returns <code>FALSE</code>, while an exception term is 
-registered, a Prolog exception will be raised by the virtual machine.
+code. <a class="func" href="foreigninclude.html#PL_raise_exception()">PL_raise_exception()</a> 
+from the C interface registers the exception term and returns <code>FALSE</code>. 
+If a foreign predicate returns
+<code>FALSE</code>, while an exception term is registered, a Prolog 
+exception will be raised by the virtual machine. This implies for a 
+foreign function that implements a predicate and wishes to raise an 
+exception, the function shall call <a class="func" href="foreigninclude.html#PL_raise_exception()">PL_raise_exception()</a>, 
+perform any necessary cleanup and return the return code of <a class="func" href="foreigninclude.html#PL_raise_exception()">PL_raise_exception()</a> 
+or explicitly
+<code>FALSE</code>. Calling <a class="func" href="foreigninclude.html#PL_raise_exception()">PL_raise_exception()</a> 
+outside the context of a function implementing a foreign predicate 
+results in undefined behaviour.
 
-<p>Calling these functions outside the context of a function 
-implementing a foreign predicate results in undefined behaviour.
+<p>Note that many of the C API functions may call <a class="func" href="foreigninclude.html#PL_raise_exception()">PL_raise_exception()</a> 
+and return <code>FALSE</code>. The user shall test for this, cleanup and 
+make the foreign function return <code>FALSE</code>.
 
 <p><a class="func" href="foreigninclude.html#PL_exception()">PL_exception()</a> 
-may be used after a call to <a class="func" href="foreigninclude.html#PL_next_solution()">PL_next_solution()</a> 
-fails, and returns a term reference to an exception term if an exception 
-was raised, and 0 otherwise.
+may be used to inspect the currently registered exception. It is 
+normally called after a call to <a class="func" href="foreigninclude.html#PL_next_solution()">PL_next_solution()</a> 
+returns <code>FALSE</code>, and returns a term reference to an exception 
+term if an exception is pedning, and <code>(term_t)0</code> otherwise. 
+It may also be called after, e.g., <a class="func" href="foreigninclude.html#PL_unify()">PL_unify()</a> 
+to distinguish a normal failing unification from a unification that 
+raised an resource error exception.
 
-<p>If a C function implementing a predicate calls Prolog and detects an 
-exception using <a class="func" href="foreigninclude.html#PL_exception()">PL_exception()</a>, 
-it can handle this exception or return with the exception. Some caution 
-is required though. It is
-<strong>not</strong> allowed to call <a class="func" href="foreigninclude.html#PL_close_query()">PL_close_query()</a> 
-or
-<a class="func" href="foreigninclude.html#PL_discard_foreign_frame()">PL_discard_foreign_frame()</a> 
-afterwards, as this will invalidate the exception term. Below is the 
-code that calls a Prolog-defined arithmetic function (see <a id="idx:arithmeticfunction1:2442"></a><span class="pred-ext">arithmetic_function/1</span>).
+<p>If a C function implementing a predicate that calls Prolog should use
+<a class="func" href="foreigninclude.html#PL_open_query()">PL_open_query()</a> 
+with the flag <code>PL_Q_PASS_EXCEPTION</code> and make the function 
+return FALSE if <a class="func" href="foreigninclude.html#PL_next_solution()">PL_next_solution()</a> 
+returns <code>FALSE</code> and
+<a class="func" href="foreigninclude.html#PL_exception()">PL_exception()</a> 
+indicates an exception is pending.
 
-<p>If <a class="func" href="foreigninclude.html#PL_next_solution()">PL_next_solution()</a> 
-succeeds, the result is analysed and translated to a number, after which 
-the query is closed and all Prolog data created after <a class="func" href="foreigninclude.html#PL_open_foreign_frame()">PL_open_foreign_frame()</a> 
-is destroyed. On the other hand, if
-<a class="func" href="foreigninclude.html#PL_next_solution()">PL_next_solution()</a> 
-fails and if an exception was raised, just pass it. Otherwise generate 
-an exception (<b>PL_error()</b> is an internal call for building the 
-standard error terms and calling <a class="func" href="foreigninclude.html#PL_raise_exception()">PL_raise_exception()</a>). 
-After this, the Prolog environment should be discarded using
-<a class="func" href="foreigninclude.html#PL_cut_query()">PL_cut_query()</a> 
-and <a class="func" href="foreigninclude.html#PL_close_foreign_frame()">PL_close_foreign_frame()</a> 
-to avoid invalidating the exception term.
-
-<pre class="code">
-static int
-prologFunction(ArithFunction f, term_t av, Number r)
-{ int arity = f-&gt;proc-&gt;definition-&gt;functor-&gt;arity;
-  fid_t fid = PL_open_foreign_frame();
-  qid_t qid;
-  int rval;
-
-  qid = PL_open_query(NULL, PL_Q_NORMAL, f-&gt;proc, av);
-
-  if ( PL_next_solution(qid) )
-  { rval = valueExpression(av+arity-1, r);
-    PL_close_query(qid);
-    PL_discard_foreign_frame(fid);
-  } else
-  { term_t except;
-
-    if ( (except = PL_exception(qid)) )
-    { rval = PL_throw(except);          /* pass exception */
-    } else
-    { char *name = stringAtom(f-&gt;proc-&gt;definition-&gt;functor-&gt;name);
-
-                                        /* generate exception */
-      rval = PL_error(name, arity-1, NULL, ERR_FAILED, f-&gt;proc);
-    }
-
-    PL_cut_query(qid);                  /* do not destroy data */
-    PL_close_foreign_frame(fid);        /* same */
-  }
-
-  return rval;
-}
-</pre>
+<p>Both for C functions implementing a predicate and when Prolog is 
+called while the main control of the process is in C, user code should 
+always check for exceptions. As explained above, C functions 
+implementing a predicate should normally cleanup and return with <code>FALSE</code>. 
+If the C function whishes to continue it may call <a class="func" href="foreigninclude.html#PL_clear_exception()">PL_clear_exception()</a>. 
+Note that this may cause any exeption to be ignored, including <em>time 
+outs</em> and <em>abort</em>. Typically the user should check the 
+exeption details before ignoring an exception. If the C code does not 
+implement a predicate it normally prints the exception and calls
+<a class="func" href="foreigninclude.html#PL_clear_exception()">PL_clear_exception()</a> 
+to discard it. Exceptions may be printed by calling
+<a id="idx:printmessage2:2443"></a><a class="pred" href="printmsg.html#print_message/2">print_message/2</a> 
+through the C interface.
 
 <dl class="latex">
 <dt class="pubdef"><a id="PL_raise_exception()"><var>int</var> <strong>PL_raise_exception</strong>(<var>term_t 
 exception</var>)</a></dt>
 <dd class="defbody">
-Generate an exception (as <a id="idx:throw1:2443"></a><a class="pred" href="exception.html#throw/1">throw/1</a>) 
-and return <code>FALSE</code>. Below is an example returning an 
-exception from a foreign predicate:
+Generate an exception (as <a id="idx:throw1:2444"></a><a class="pred" href="exception.html#throw/1">throw/1</a>) 
+and return <code>FALSE</code>. This function is rarely used directly. 
+Instead, errors are typically raised using the functions in <a class="sec" href="foreigninclude.html#sec:12.4.6">section 
+12.4.6</a> or the C api functions that end in <code>_ex</code> such as <a class="func" href="foreigninclude.html#PL_get_atom_ex()">PL_get_atom_ex()</a>. 
+Below we give an example returning an exception from a foreign predicate 
+the verbose way. Note that the exception is raised in a sequence of 
+actions connected using
+<code>&amp;&amp;</code>. This ensures that a proper exception is raised 
+should any of the calls used to build or raise the exception themselves 
+raise an exception. In this simple case <a class="func" href="foreigntypes.html#PL_new_term_ref()">PL_new_term_ref()</a> 
+is guaranteed to succeed because the system guarantees at least 10 
+available term references before entering the foreign predicate. <a class="func" href="foreigninclude.html#PL_unify_term()">PL_unify_term()</a> 
+however may raise a resource exception for the global stack.
 
 <pre class="code">
 foreign_t
@@ -2910,17 +2893,41 @@ pl_hello(term_t to)
   if ( PL_get_atom_chars(to, &amp;s) )
   { Sprintf("Hello \"%s\"\n", s);
 
-    PL_succeed;
+    return TRUE;
   } else
-  { term_t except = PL_new_term_ref();
+  { term_t except;
 
-    PL_unify_term(except,
-                  PL_FUNCTOR_CHARS, "type_error", 2,
-                    PL_CHARS, "atom",
-                    PL_TERM, to);
-
-    return PL_raise_exception(except);
+    return  ( (except=PL_new_term_ref()) &amp;&amp;
+              PL_unify_term(except,
+                            PL_FUNCTOR_CHARS, "type_error", 2,
+                              PL_CHARS, "atom",
+                              PL_TERM, to) &amp;&amp;
+              PL_raise_exception(except) );
   }
+}
+</pre>
+
+<p>For reference, the preferred implementation of the above is below. 
+The
+<code>CVT_EXCEPTION</code> tells the system to generate an exception if 
+the conversion fails. The other <code>CVT_</code> flags define the 
+admissible types and <code>REP_MB</code> requests the string to be 
+provided in the current <em>locale</em> representation. This implies 
+that Unicode text is printed correctly if the current environment can 
+represent it. If not, a <code>representation_error</code> is raised.
+
+<pre class="code">
+foreign_t
+pl_hello(term_t to)
+{ char *s;
+
+  if ( PL_get_chars(to, &amp;s, CVT_ATOM|CVT_STRING|CVT_EXCEPTION|REP_MB) )
+  { Sprintf("Hello \"%s\"\n", s);
+
+    return TRUE;
+  }
+
+  return FALSE;
 }
 </pre>
 
@@ -2929,28 +2936,29 @@ pl_hello(term_t to)
 exception</var>)</a></dt>
 <dd class="defbody">
 Similar to <a class="func" href="foreigninclude.html#PL_raise_exception()">PL_raise_exception()</a>, 
-but returns using the C longjmp() function to the innermost <a class="func" href="foreigninclude.html#PL_next_solution()">PL_next_solution()</a>.</dd>
+but returns using the C longjmp() function to the innermost <a class="func" href="foreigninclude.html#PL_next_solution()">PL_next_solution()</a>. 
+This function is deprecated as it does not provide the opportunity to 
+cleanup.</dd>
 <dt class="pubdef"><a id="PL_exception()"><var>term_t</var> <strong>PL_exception</strong>(<var>qid_t 
 qid</var>)</a></dt>
 <dd class="defbody">
 If <a class="func" href="foreigninclude.html#PL_next_solution()">PL_next_solution()</a> 
 fails, this can be due to normal failure of the Prolog call, or because 
-an exception was raised using <a id="idx:throw1:2444"></a><a class="pred" href="exception.html#throw/1">throw/1</a>. 
+an exception was raised using <a id="idx:throw1:2445"></a><a class="pred" href="exception.html#throw/1">throw/1</a>. 
 This function returns a handle to the exception term if an exception was 
-raised, or 0 if the Prolog goal simply failed. If there is an exception,
-<a class="func" href="foreigninclude.html#PL_exception()">PL_exception()</a> 
-allocates a term-handle using <a class="func" href="foreigntypes.html#PL_new_term_ref()">PL_new_term_ref()</a> 
-that is used to return the exception term.
+raised, or <code>(term_t)0</code> if the Prolog goal simply failed. If 
+there is an exception, <a class="func" href="foreigninclude.html#PL_exception()">PL_exception()</a> 
+returns a term reference that contains the exception term.
 
 <p>Additionally, <code>PL_exception(0)</code> returns the pending 
-exception in the current query or 0 if no exception is pending. This can 
-be used to check the error status after a failing call to, e.g., one of 
-the unification functions.</dd>
+exception in the current query or <code>(term_t)0</code> if no exception 
+is pending. This can be used to check the error status after a failing 
+call to, e.g., one of the unification functions.</dd>
 <dt class="pubdef"><a id="PL_clear_exception()"><var>void</var> <strong>PL_clear_exception</strong>(<var>void</var>)</a></dt>
 <dd class="defbody">
 Tells Prolog that the encountered exception must be ignored. This 
 function must be called if control remains in C after a previous API 
-call fails with an exception.<sup class="fn">204<span class="fn-text">This 
+call fails with an exception.<sup class="fn">205<span class="fn-text">This 
 feature is non-portable. Other Prolog systems (e.g., YAP) have no 
 facilities to ignore raised exceptions, and the design of YAP's 
 exception handling does not support such a facility.</span></sup>
@@ -3032,7 +3040,7 @@ using <a class="func" href="foreigninclude.html#PL_raise()">PL_raise()</a>,
 which is checked by <a class="func" href="foreigninclude.html#PL_handle_signals()">PL_handle_signals()</a> 
 at the call- and redo-port. This behaviour is realised by <em>or</em>-ing <var>sig</var> 
 with the constant
-<code>PL_SIGSYNC</code>.<sup class="fn">205<span class="fn-text">A 
+<code>PL_SIGSYNC</code>.<sup class="fn">206<span class="fn-text">A 
 better default would be to use synchronous handling, but this interface 
 preserves backward compatibility.</span></sup>
 
@@ -3047,7 +3055,7 @@ sig</var>)</a></dt>
 Register <var>sig</var> for <em>synchronous</em> handling by Prolog. 
 Synchronous signals are handled at the call-port or if foreign code 
 calls <a class="func" href="foreigninclude.html#PL_handle_signals()">PL_handle_signals()</a>. 
-See also <a id="idx:threadsignal2:2445"></a><a class="pred" href="threadcom.html#thread_signal/2">thread_signal/2</a>.</dd>
+See also <a id="idx:threadsignal2:2446"></a><a class="pred" href="threadcom.html#thread_signal/2">thread_signal/2</a>.</dd>
 <dt class="pubdef"><a id="PL_handle_signals()"><var>int</var> <strong>PL_handle_signals</strong>(<var>void</var>)</a></dt>
 <dd class="defbody">
 Handle any signals pending from <a class="func" href="foreigninclude.html#PL_raise()">PL_raise()</a>. <a class="func" href="foreigninclude.html#PL_handle_signals()">PL_handle_signals()</a> 
@@ -3086,7 +3094,7 @@ Comparison</span></a></h4>
 t1, term_t t2</var>)</a></dt>
 <dd class="defbody">
 Compares two terms using the standard order of terms and returns -1, 0 
-or 1. See also <a id="idx:compare3:2446"></a><a class="pred" href="compare.html#compare/3">compare/3</a>.
+or 1. See also <a id="idx:compare3:2447"></a><a class="pred" href="compare.html#compare/3">compare/3</a>.
 </dd>
 <dt class="pubdef"><a id="PL_same_compound()"><var>int</var> <strong>PL_same_compound</strong>(<var>term_t 
 t1, term_t t2</var>)</a></dt>
@@ -3113,7 +3121,7 @@ are the only functions that can operate on the stored term.
 
 <p>Two groups of functions are provided. The first group (<a class="func" href="foreigninclude.html#PL_record()">PL_record()</a> 
 and friends) store Prolog terms on the Prolog heap for retrieval during 
-the same session. These functions are also used by <a id="idx:recorda3:2447"></a><a class="pred" href="db.html#recorda/3">recorda/3</a> 
+the same session. These functions are also used by <a id="idx:recorda3:2448"></a><a class="pred" href="db.html#recorda/3">recorda/3</a> 
 and friends. The recorded database may be used to communicate Prolog 
 terms between threads.
 
@@ -3121,7 +3129,7 @@ terms between threads.
 <dt class="pubdef"><a id="PL_record()"><var>record_t</var> <strong>PL_record</strong>(<var>term_t 
 +t</var>)</a></dt>
 <dd class="defbody">
-Record the term <var>t</var> into the Prolog database as <a id="idx:recorda3:2448"></a><a class="pred" href="db.html#recorda/3">recorda/3</a> 
+Record the term <var>t</var> into the Prolog database as <a id="idx:recorda3:2449"></a><a class="pred" href="db.html#recorda/3">recorda/3</a> 
 and return an opaque handle to the term. The returned handle remains 
 valid until <a class="func" href="foreigninclude.html#PL_erase()">PL_erase()</a> 
 is called on it. <a class="func" href="foreigninclude.html#PL_recorded()">PL_recorded()</a> 
@@ -3181,7 +3189,7 @@ compatibility with older records.
 <dt class="pubdef"><a id="PL_record_external()"><var>char *</var> <strong>PL_record_external</strong>(<var>term_t 
 +t, size_t *len</var>)</a></dt>
 <dd class="defbody">
-Record the term <var>t</var> into the Prolog database as <a id="idx:recorda3:2449"></a><a class="pred" href="db.html#recorda/3">recorda/3</a> 
+Record the term <var>t</var> into the Prolog database as <a id="idx:recorda3:2450"></a><a class="pred" href="db.html#recorda/3">recorda/3</a> 
 and return an opaque handle to the term. The returned handle remains 
 valid until <a class="func" href="foreigninclude.html#PL_erase_external()">PL_erase_external()</a> 
 is called on it.
@@ -3218,30 +3226,30 @@ associated memory resources.
 <dt class="pubdef"><a id="PL_assert()"><var>int</var> <strong>PL_assert</strong>(<var>term_t 
 t, module_t m, int flags</var>)</a></dt>
 <dd class="defbody">
-Provides direct access to <a id="idx:asserta1:2450"></a><a class="pred" href="db.html#asserta/1">asserta/1</a> 
-and <a id="idx:assertz1:2451"></a><a class="pred" href="db.html#assertz/1">assertz/1</a> 
+Provides direct access to <a id="idx:asserta1:2451"></a><a class="pred" href="db.html#asserta/1">asserta/1</a> 
+and <a id="idx:assertz1:2452"></a><a class="pred" href="db.html#assertz/1">assertz/1</a> 
 by asserting <var>t</var> into the database in the module <var>m</var>. 
 Defined flags are:
 
 <dl class="latex">
 <dt><strong>PL_ASSERTZ</strong></dt>
 <dd class="defbody">
-Add the new clause as last. Calls <a id="idx:assertz1:2452"></a><a class="pred" href="db.html#assertz/1">assertz/1</a>. 
+Add the new clause as last. Calls <a id="idx:assertz1:2453"></a><a class="pred" href="db.html#assertz/1">assertz/1</a>. 
 This macros is defined as 0 and thus the default.
 </dd>
 <dt><strong>PL_ASSERTA</strong></dt>
 <dd class="defbody">
-Add the new clause as first. Calls <a id="idx:asserta1:2453"></a><a class="pred" href="db.html#asserta/1">asserta/1</a>.
+Add the new clause as first. Calls <a id="idx:asserta1:2454"></a><a class="pred" href="db.html#asserta/1">asserta/1</a>.
 </dd>
 <dt><strong>PL_CREATE_THREAD_LOCAL</strong></dt>
 <dd class="defbody">
 If the predicate is not defined, create it as thread-local. See
-<a id="idx:threadlocal1:2454"></a><a class="pred" href="threadcom.html#thread_local/1">thread_local/1</a>.
+<a id="idx:threadlocal1:2455"></a><a class="pred" href="threadcom.html#thread_local/1">thread_local/1</a>.
 </dd>
 <dt><strong>PL_CREATE_INCREMENTAL</strong></dt>
 <dd class="defbody">
 If the predicate is not defined, create it as <em>incremental</em> see
-<a id="idx:table1:2455"></a><a class="pred" href="tabling-preds.html#table/1">table/1</a> 
+<a id="idx:table1:2456"></a><a class="pred" href="tabling-preds.html#table/1">table/1</a> 
 and <a class="sec" href="tabling-incremental.html#sec:7.7">section 7.7</a>.
 </dd>
 </dl>
@@ -3251,7 +3259,7 @@ is returned and an exception is left in the environment that describes
 the reason of failure. See <a class="func" href="foreigninclude.html#PL_exception()">PL_exception()</a>.
 
 <p>This predicate bypasses creating a Prolog callback environment and is 
-faster than setting up a call to <a id="idx:assertz1:2456"></a><a class="pred" href="db.html#assertz/1">assertz/1</a>. 
+faster than setting up a call to <a id="idx:assertz1:2457"></a><a class="pred" href="db.html#assertz/1">assertz/1</a>. 
 It may be used together with
 <a class="func" href="foreigninclude.html#PL_chars_to_term()">PL_chars_to_term()</a>, 
 but the typical use case will create a number of clauses for the same 
@@ -3323,7 +3331,7 @@ file names</span></a></h4>
 
 <p>The function <a class="func" href="foreigninclude.html#PL_get_file_name()">PL_get_file_name()</a> 
 provides access to Prolog filenames and its file-search mechanism 
-described with <a id="idx:absolutefilename3:2457"></a><a class="pred" href="files.html#absolute_file_name/3">absolute_file_name/3</a>. 
+described with <a id="idx:absolutefilename3:2458"></a><a class="pred" href="files.html#absolute_file_name/3">absolute_file_name/3</a>. 
 Its existence is motivated to realise a uniform interface to deal with 
 file properties, search, naming conventions, etc., from foreign code.
 
@@ -3351,8 +3359,8 @@ the canonical
 </dd>
 <dt><b><code>PL_FILE_SEARCH</code></b></dt>
 <dd class="defbody">
-Invoke <a id="idx:absolutefilename3:2458"></a><a class="pred" href="files.html#absolute_file_name/3">absolute_file_name/3</a>. 
-This implies rules from <a id="idx:filesearchpath2:2459"></a><a class="pred" href="consulting.html#file_search_path/2">file_search_path/2</a> 
+Invoke <a id="idx:absolutefilename3:2459"></a><a class="pred" href="files.html#absolute_file_name/3">absolute_file_name/3</a>. 
+This implies rules from <a id="idx:filesearchpath2:2460"></a><a class="pred" href="consulting.html#file_search_path/2">file_search_path/2</a> 
 are used.
 </dd>
 <dt><b><code>PL_FILE_EXIST</code></b></dt>
@@ -3395,8 +3403,8 @@ with Prolog flags from C</span></a></h4>
 <a id="sec:cprologflags"></a>
 
 <p>Foreign code can set or create Prolog flags using <a class="func" href="foreigninclude.html#PL_set_prolog_flag()">PL_set_prolog_flag()</a>. 
-See <a id="idx:setprologflag2:2460"></a><a class="pred" href="flags.html#set_prolog_flag/2">set_prolog_flag/2</a> 
-and <a id="idx:createprologflag3:2461"></a><a class="pred" href="flags.html#create_prolog_flag/3">create_prolog_flag/3</a>. 
+See <a id="idx:setprologflag2:2461"></a><a class="pred" href="flags.html#set_prolog_flag/2">set_prolog_flag/2</a> 
+and <a id="idx:createprologflag3:2462"></a><a class="pred" href="flags.html#create_prolog_flag/3">create_prolog_flag/3</a>. 
 To retrieve the value of a flag you can use <a class="func" href="foreigninclude.html#PL_current_prolog_flag()">PL_current_prolog_flag()</a>.
 
 <dl class="latex">
@@ -3436,7 +3444,7 @@ Create a flag with an integer as value. The argument must be of type
 name, int type, void *value</var>)</a></dt>
 <dd class="defbody">
 Retrieve the value of a Prolog flag from C. <var>name</var> is the name 
-of the flag as an <code>atom_t</code> (see <a id="idx:currentprologflag2:2462"></a><a class="pred" href="flags.html#current_prolog_flag/2">current_prolog_flag/2</a>).
+of the flag as an <code>atom_t</code> (see <a id="idx:currentprologflag2:2463"></a><a class="pred" href="flags.html#current_prolog_flag/2">current_prolog_flag/2</a>).
 <var>type</var> specifies the kind of value to be retrieved, it is one 
 of the values below. <var>value</var> is a pointer to a location where 
 to store the value. The user is responsible for making sure this memory 
@@ -3508,11 +3516,11 @@ are listed below:
 <dl class="latex">
 <dt><strong>PL_ACTION_TRACE</strong></dt>
 <dd class="defbody">
-Start Prolog tracer (<a id="idx:trace0:2463"></a><a class="pred" href="debugger.html#trace/0">trace/0</a>). 
+Start Prolog tracer (<a id="idx:trace0:2464"></a><a class="pred" href="debugger.html#trace/0">trace/0</a>). 
 Requires no arguments.</dd>
 <dt><strong>PL_ACTION_DEBUG</strong></dt>
 <dd class="defbody">
-Switch on Prolog debug mode (<a id="idx:debug0:2464"></a><a class="pred" href="debugger.html#debug/0">debug/0</a>). 
+Switch on Prolog debug mode (<a id="idx:debug0:2465"></a><a class="pred" href="debugger.html#debug/0">debug/0</a>). 
 Requires no arguments.</dd>
 <dt><strong>PL_ACTION_BACKTRACE</strong></dt>
 <dd class="defbody">
@@ -3522,14 +3530,14 @@ is the number of frames printed.</dd>
 <dd class="defbody">
 Halt Prolog execution. This action should be called rather than Unix 
 exit() to give Prolog the opportunity to clean up. This call does not 
-return. The argument (an <code>int</code>) is the exit code. See <a id="idx:halt1:2465"></a><a class="pred" href="toplevel.html#halt/1">halt/1</a>.</dd>
+return. The argument (an <code>int</code>) is the exit code. See <a id="idx:halt1:2466"></a><a class="pred" href="toplevel.html#halt/1">halt/1</a>.</dd>
 <dt><strong>PL_ACTION_ABORT</strong></dt>
 <dd class="defbody">
-Generate a Prolog abort (<a id="idx:abort0:2466"></a><a class="pred" href="toplevel.html#abort/0">abort/0</a>). 
+Generate a Prolog abort (<a id="idx:abort0:2467"></a><a class="pred" href="toplevel.html#abort/0">abort/0</a>). 
 This call does not return. Requires no arguments.</dd>
 <dt><strong>PL_ACTION_BREAK</strong></dt>
 <dd class="defbody">
-Create a standard Prolog break environment (<a id="idx:break0:2467"></a><a class="pred" href="toplevel.html#break/0">break/0</a>). 
+Create a standard Prolog break environment (<a id="idx:break0:2468"></a><a class="pred" href="toplevel.html#break/0">break/0</a>). 
 Returns after the user types the end-of-file character. Requires no 
 arguments.</dd>
 <dt><strong>PL_ACTION_GUIAPP</strong></dt>
@@ -3552,7 +3560,7 @@ Flush the current output stream. Requires no arguments.</dd>
 <dt><strong>PL_ACTION_ATTACH_CONSOLE</strong></dt>
 <dd class="defbody">
 Attach a console to a thread if it does not have one. See
-<a id="idx:attachconsole0:2468"></a><a class="pred" href="thutil.html#attach_console/0">attach_console/0</a>.</dd>
+<a id="idx:attachconsole0:2469"></a><a class="pred" href="thutil.html#attach_console/0">attach_console/0</a>.</dd>
 <dt><strong>PL_GMP_SET_ALLOC_FUNCTIONS</strong></dt>
 <dd class="defbody">
 Takes an integer argument. If <code>TRUE</code>, the GMP allocations are 
@@ -3589,7 +3597,7 @@ a way that breaks backward compatibility.
 <dd class="defbody">
 Incremented if the binary representation of terms as used by
 <a class="func" href="foreigninclude.html#PL_record_external()">PL_record_external()</a> 
-and <a id="idx:fastwrite2:2469"></a><a class="pred" href="IO.html#fast_write/2">fast_write/2</a> 
+and <a id="idx:fastwrite2:2470"></a><a class="pred" href="IO.html#fast_write/2">fast_write/2</a> 
 changes.
 </dd>
 <dt><strong>PL_VERSION_QLF</strong></dt>
@@ -3625,7 +3633,7 @@ Prolog</span></a></h3>
 <dd class="defbody">
 Obtain status information on the Prolog system. The actual argument type 
 depends on the information required. <var>int</var> describes what 
-information is wanted.<sup class="fn">206<span class="fn-text">Returning 
+information is wanted.<sup class="fn">207<span class="fn-text">Returning 
 pointers and integers as a long is bad style. The signature of this 
 function should be changed.</span></sup> The options are given in <a class="tab" href="foreigninclude.html#tab:query">table 
 9</a>.
@@ -3697,12 +3705,12 @@ takes one extra argument. This argument is of type <code>const char*</code>.
 This string must be exactly as long as the number of arguments of the 
 predicate and filled with characters from the set <code>0-9:^-+?</code>. 
 See
-<a id="idx:metapredicate1:2470"></a><a class="pred" href="metapred.html#meta_predicate/1">meta_predicate/1</a> 
+<a id="idx:metapredicate1:2471"></a><a class="pred" href="metapred.html#meta_predicate/1">meta_predicate/1</a> 
 for details. <code>PL_FA_TRANSPARENT</code> is implied if at least one 
 meta-argument is provided (<code>0-9:^</code>). Note that meta-arguments 
 are <em>not always</em> passed as &lt;<var>module</var>&gt;:&lt;<var>term</var>&gt;. 
 Always use <a class="func" href="foreigninclude.html#PL_strip_module()">PL_strip_module()</a> 
-to extract the module and plain term from a meta-argument.<sup class="fn">207<span class="fn-text">It 
+to extract the module and plain term from a meta-argument.<sup class="fn">208<span class="fn-text">It 
 is encouraged to pass an additional <code>NULL</code> pointer for 
 non-meta-predicates.</span></sup>
 
@@ -3830,8 +3838,8 @@ typedef int  (*PL_dispatch_hook_t)(void);
 </dd>
 <dt class="pubdef"><a id="PL_abort_hook()"><var>void</var> <strong>PL_abort_hook</strong>(<var>PL_abort_hook_t</var>)</a></dt>
 <dd class="defbody">
-Install a hook when <a id="idx:abort0:2471"></a><a class="pred" href="toplevel.html#abort/0">abort/0</a> 
-is executed. SWI-Prolog <a id="idx:abort0:2472"></a><a class="pred" href="toplevel.html#abort/0">abort/0</a> 
+Install a hook when <a id="idx:abort0:2472"></a><a class="pred" href="toplevel.html#abort/0">abort/0</a> 
+is executed. SWI-Prolog <a id="idx:abort0:2473"></a><a class="pred" href="toplevel.html#abort/0">abort/0</a> 
 is implemented using C setjmp()/longjmp() construct. The hooks are 
 executed in the reverse order of their registration after the longjmp() 
 took place and before the Prolog top level is reinvoked. The type
@@ -3855,10 +3863,10 @@ The function is called with two arguments: the exit code of the process
 (0 if this cannot be determined) and the <var>closure</var> argument 
 passed to the <a class="func" href="foreigninclude.html#PL_on_halt()">PL_on_halt()</a> 
 call. Handlers <em>must</em> return 0. Other return values are reserved 
-for future use. See also <a id="idx:athalt1:2473"></a><a class="pred" href="consulting.html#at_halt/1">at_halt/1</a>.<sup class="fn">bug<span class="fn-text">Although 
+for future use. See also <a id="idx:athalt1:2474"></a><a class="pred" href="consulting.html#at_halt/1">at_halt/1</a>.<sup class="fn">bug<span class="fn-text">Although 
 both <a class="func" href="foreigninclude.html#PL_on_halt()">PL_on_halt()</a> 
-and <a id="idx:athalt1:2474"></a><a class="pred" href="consulting.html#at_halt/1">at_halt/1</a> 
-are called in FIFO order, <em>all</em> <a id="idx:athalt1:2475"></a><a class="pred" href="consulting.html#at_halt/1">at_halt/1</a> 
+and <a id="idx:athalt1:2475"></a><a class="pred" href="consulting.html#at_halt/1">at_halt/1</a> 
+are called in FIFO order, <em>all</em> <a id="idx:athalt1:2476"></a><a class="pred" href="consulting.html#at_halt/1">at_halt/1</a> 
 handlers are called before <em>all</em> <a class="func" href="foreigninclude.html#PL_on_halt()">PL_on_halt()</a> 
 handlers.</span></sup> These handlers are called <em>before</em> system 
 cleanup and can therefore access all normal Prolog resources. See also <a class="func" href="foreigninclude.html#PL_exit_hook()">PL_exit_hook()</a>.</dd>
@@ -3873,7 +3881,7 @@ just before calling exit().</dd>
 new</var>)</a></dt>
 <dd class="defbody">
 Register a hook with the atom-garbage collector (see
-<a id="idx:garbagecollectatoms0:2476"></a><a class="pred" href="memory.html#garbage_collect_atoms/0">garbage_collect_atoms/0</a>) 
+<a id="idx:garbagecollectatoms0:2477"></a><a class="pred" href="memory.html#garbage_collect_atoms/0">garbage_collect_atoms/0</a>) 
 that is called on any atom that is reclaimed. The old hook is returned. 
 If no hook is currently defined, <code>NULL</code> is returned. The 
 argument of the called hook is the atom that is to be garbage collected. 
@@ -3944,7 +3952,7 @@ and retrieved using
 <a class="func" href="foreigninclude.html#PL_get_string_chars()">PL_get_string_chars()</a>. 
 It is good practice to wrap the string in a compound term with arity 1, 
 so Prolog can identify the type. The hook
-<a id="idx:portray1:2477"></a><a class="pred" href="termrw.html#portray/1">portray/1</a> 
+<a id="idx:portray1:2478"></a><a class="pred" href="termrw.html#portray/1">portray/1</a> 
 rules may be used to streamline printing such terms during development.
 
 <p>
@@ -4160,7 +4168,7 @@ main(int argc, char **argv)
 argc, char **argv</var>)</a></dt>
 <dd class="defbody">
 Initialises the SWI-Prolog heap and stacks, restores the Prolog state, 
-loads the system and personal initialisation files, runs the <a id="idx:initialization1:2478"></a><a class="pred" href="consulting.html#initialization/1">initialization/1</a> 
+loads the system and personal initialisation files, runs the <a id="idx:initialization1:2479"></a><a class="pred" href="consulting.html#initialization/1">initialization/1</a> 
 hooks and finally runs the initialization goals registered using <strong>-g</strong> <var>goal</var>.
 
 <p>Special consideration is required for <code>argv[0]</code>. On <b>Unix</b>, 
@@ -4176,7 +4184,7 @@ purposes:
 <ul class="latex">
 <li>See whether a Prolog saved state is appended to the file. If this is 
 the case, this state will be loaded instead of the default <code>boot.prc</code> 
-file from the SWI-Prolog home directory. See also <a id="idx:qsaveprogram12:2479"></a><a class="pred" href="saved-states.html#qsave_program/1">qsave_program/[1,2]</a> 
+file from the SWI-Prolog home directory. See also <a id="idx:qsaveprogram12:2480"></a><a class="pred" href="saved-states.html#qsave_program/1">qsave_program/[1,2]</a> 
 and <a class="sec" href="plld.html#sec:12.5">section 12.5</a>.
 <li>Find the Prolog home directory. This process is described in detail 
 in <a class="sec" href="findhome.html#sec:12.6">section 12.6</a>.
@@ -4241,13 +4249,13 @@ This function must be called at most once and <em>before</em> calling
 <a class="func" href="foreigninclude.html#PL_initialise()">PL_initialise()</a>. 
 The memory area designated by <var>data</var> and <var>size</var> must 
 contain the resource data and be in the format as produced by
-<a id="idx:qsaveprogram2:2480"></a><a class="pred" href="saved-states.html#qsave_program/2">qsave_program/2</a>. 
+<a id="idx:qsaveprogram2:2481"></a><a class="pred" href="saved-states.html#qsave_program/2">qsave_program/2</a>. 
 The memory area is accessed by <a class="func" href="foreigninclude.html#PL_initialise()">PL_initialise()</a> 
-as well as calls to <a id="idx:openresource3:2481"></a><a class="pred" href="program-resources.html#open_resource/3">open_resource/3</a>.<sup class="fn">208<span class="fn-text">This 
+as well as calls to <a id="idx:openresource3:2482"></a><a class="pred" href="program-resources.html#open_resource/3">open_resource/3</a>.<sup class="fn">209<span class="fn-text">This 
 implies that the data must remain accessible during the lifetime of the 
-process if <a id="idx:openresource3:2482"></a><a class="pred" href="program-resources.html#open_resource/3">open_resource/3</a> 
+process if <a id="idx:openresource3:2483"></a><a class="pred" href="program-resources.html#open_resource/3">open_resource/3</a> 
 is used. Future versions may provide a function to detach the resource 
-database and cause <a id="idx:openresource3:2483"></a><a class="pred" href="program-resources.html#open_resource/3">open_resource/3</a> 
+database and cause <a id="idx:openresource3:2484"></a><a class="pred" href="program-resources.html#open_resource/3">open_resource/3</a> 
 to raise an exception.</span></sup>
 
 <p>For example, we can include the bootstrap data into an embedded 
@@ -4256,7 +4264,7 @@ it is fully supported by any OS and you obtain a single file executable.
 
 <p>
 <ol class="latex">
-<li>Create a saved state using <a id="idx:qsaveprogram2:2484"></a><a class="pred" href="saved-states.html#qsave_program/2">qsave_program/2</a> 
+<li>Create a saved state using <a id="idx:qsaveprogram2:2485"></a><a class="pred" href="saved-states.html#qsave_program/2">qsave_program/2</a> 
 or
 
 <pre class="code">
@@ -4336,7 +4344,7 @@ which contains a portability layer on top of the above idea.</dd>
 <dt class="pubdef"><a id="PL_toplevel()"><var>int</var> <strong>PL_toplevel</strong>(<var></var>)</a></dt>
 <dd class="defbody">
 Runs the goal of the <strong>-t</strong> <var>toplevel</var> switch 
-(default <a id="idx:prolog0:2485"></a><a class="pred" href="toplevel.html#prolog/0">prolog/0</a>) 
+(default <a id="idx:prolog0:2486"></a><a class="pred" href="toplevel.html#prolog/0">prolog/0</a>) 
 and returns 1 if successful, 0 otherwise.</dd>
 <dt class="pubdef"><a id="PL_cleanup()"><var>int</var> <strong>PL_cleanup</strong>(<var>int 
 status</var>)</a></dt>
@@ -4344,7 +4352,7 @@ status</var>)</a></dt>
 This function performs the reverse of <a class="func" href="foreigninclude.html#PL_initialise()">PL_initialise()</a>. 
 It runs the
 <a class="func" href="foreigninclude.html#PL_on_halt()">PL_on_halt()</a> 
-and <a id="idx:athalt1:2486"></a><a class="pred" href="consulting.html#at_halt/1">at_halt/1</a> 
+and <a id="idx:athalt1:2487"></a><a class="pred" href="consulting.html#at_halt/1">at_halt/1</a> 
 handlers, closes all streams (except for the&lsquo;standard I/O' streams 
 which are flushed only), deallocates all memory if <var>status</var> 
 equals&lsquo;0' and restores all signal handlers. The
@@ -4354,7 +4362,7 @@ and indicates the <em>exit-status</em>.
 <p>The function returns <code>TRUE</code> if successful and <code>FALSE</code> 
 otherwise. Currently, <code>FALSE</code> is returned when an attempt is 
 made to call <a class="func" href="foreigninclude.html#PL_cleanup()">PL_cleanup()</a> 
-recursively or if one of the exit handlers cancels the termination using <a id="idx:cancelhalt1:2487"></a><a class="pred" href="consulting.html#cancel_halt/1">cancel_halt/1</a>. 
+recursively or if one of the exit handlers cancels the termination using <a id="idx:cancelhalt1:2488"></a><a class="pred" href="consulting.html#cancel_halt/1">cancel_halt/1</a>. 
 Exit handlers may only cancel termination if <var>status</var> is 0.
 
 <p>In theory, this function allows deleting and restarting the Prolog 
@@ -4368,7 +4376,7 @@ process. If you want to be able to reset Prolog, your options are
 (again) a separate process, modules or threads.</dd>
 <dt class="pubdef"><a id="PL_cleanup_fork()"><var>void</var> <strong>PL_cleanup_fork</strong>(<var></var>)</a></dt>
 <dd class="defbody">
-Stop intervaltimer that may be running on behalf of <a id="idx:profile1:2488"></a><a class="pred" href="profile.html#profile/1">profile/1</a>. 
+Stop intervaltimer that may be running on behalf of <a id="idx:profile1:2489"></a><a class="pred" href="profile.html#profile/1">profile/1</a>. 
 The call is intended to be used in combination with fork():
 
 <pre class="code">
@@ -4417,7 +4425,7 @@ signals:
 <dd>
 has an empty signal handler. This signal is sent to a thread after 
 sending a thread-signal (see
-<a id="idx:threadsignal2:2489"></a><a class="pred" href="threadcom.html#thread_signal/2">thread_signal/2</a>). 
+<a id="idx:threadsignal2:2490"></a><a class="pred" href="threadcom.html#thread_signal/2">thread_signal/2</a>). 
 It causes blocking system calls to return with <code>EINTR</code>, which 
 gives them the opportunity to react to thread-signals.
 

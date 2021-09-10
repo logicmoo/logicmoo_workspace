@@ -2,7 +2,7 @@
 
 <html>
 <head>
-<title>SWI-Prolog 8.3.28 Reference Manual: Section 5.4</title><link rel="home" href="index.html">
+<title>SWI-Prolog 8.3.29 Reference Manual: Section 5.4</title><link rel="home" href="index.html">
 <link rel="contents" href="Contents.html">
 <link rel="index" href="DocIndex.html">
 <link rel="summary" href="summary.html">
@@ -337,10 +337,10 @@ add_postal_code(Dict, Dict.put(postal_code, Code)) :-
 
 <p>Note that expansion of <code><code>.</code>/2</code> terms implies 
 that such terms cannot be created by writing them explicitly in your 
-source code. Such terms can still be created with <a id="idx:functor3:1881"></a><a class="pred" href="manipterm.html#functor/3">functor/3</a>, <a class="pred" href="manipterm.html#=../2">=../2</a>,
-<a id="idx:compoundnamearity3:1882"></a><a class="pred" href="manipterm.html#compound_name_arity/3">compound_name_arity/3</a> 
+source code. Such terms can still be created with <a id="idx:functor3:1882"></a><a class="pred" href="manipterm.html#functor/3">functor/3</a>, <a class="pred" href="manipterm.html#=../2">=../2</a>,
+<a id="idx:compoundnamearity3:1883"></a><a class="pred" href="manipterm.html#compound_name_arity/3">compound_name_arity/3</a> 
 and
-<a id="idx:compoundnamearguments3:1883"></a><a class="pred" href="manipterm.html#compound_name_arguments/3">compound_name_arguments/3</a>.<sup class="fn">165<span class="fn-text">Traditional 
+<a id="idx:compoundnamearguments3:1884"></a><a class="pred" href="manipterm.html#compound_name_arguments/3">compound_name_arguments/3</a>.<sup class="fn">166<span class="fn-text">Traditional 
 code is unlikely to use <code><code>.</code>/2</code> terms because they 
 were practically reserved for usage in lists. We do not provide a 
 quoting mechanism as found in functional languages because it would only 
@@ -378,8 +378,8 @@ notation uses a compound term, this calls the goal below.
 provides a more convenient syntax for representing the head of such 
 predicates without worrying about the argument calling conventions. The 
 code below defines a function <code>multiply(Times)</code> on a point 
-that creates a new point by multiplying both coordinates. and <code>len</code><sup class="fn">166<span class="fn-text">as <code>length</code> 
-would result in a predicate <a id="idx:length2:1884"></a><a class="pred" href="builtinlist.html#length/2">length/2</a>, 
+that creates a new point by multiplying both coordinates. and <code>len</code><sup class="fn">167<span class="fn-text">as <code>length</code> 
+would result in a predicate <a id="idx:length2:1885"></a><a class="pred" href="builtinlist.html#length/2">length/2</a>, 
 this name cannot be used. This might change in future versions.</span></sup> 
 to compute the length from the origin. The . and <code>:=</code> 
 operators are used to abstract the location of the predicate arguments. 
@@ -438,7 +438,7 @@ x
 <dt class="pubdef"><a id="m-put-1"><strong>put</strong>(<var>+New</var>)</a></dt>
 <dd class="defbody">
 Evaluates to a new dict where the key-values in <var>New</var> replace 
-or extend the key-values in the original dict. See <a id="idx:putdict3:1885"></a><a class="pred" href="bidicts.html#put_dict/3">put_dict/3</a>.</dd>
+or extend the key-values in the original dict. See <a id="idx:putdict3:1886"></a><a class="pred" href="bidicts.html#put_dict/3">put_dict/3</a>.</dd>
 <dt class="pubdef"><a id="m-get-2"><strong>get</strong>(<var>?KeyPath, 
 +Default</var>)</a></dt>
 <dd class="defbody">
@@ -451,11 +451,11 @@ pattern has no matches.</dd>
 <dd class="defbody">
 Evaluates to a new dict where the <var>KeyPath</var>-<var>Value</var> 
 replaces or extends the key-values in the original dict. <var>KeyPath</var> 
-is either a key or a term <var>KeyPath</var>/<var>Key</var>,<sup class="fn">167<span class="fn-text">Note 
+is either a key or a term <var>KeyPath</var>/<var>Key</var>,<sup class="fn">168<span class="fn-text">Note 
 that we do not use the&rsquo;.' functor here, because the <code><code>.</code>/2</code> 
 would <em>evaluate</em>.</span></sup> replacing the value associated 
 with <var>Key</var> in a sub-dict of the dict on which the function 
-operates. See <a id="idx:putdict4:1886"></a><a class="pred" href="bidicts.html#put_dict/4">put_dict/4</a>. 
+operates. See <a id="idx:putdict4:1887"></a><a class="pred" href="bidicts.html#put_dict/4">put_dict/4</a>. 
 Below are some examples:
 
 <pre class="code">
@@ -544,7 +544,7 @@ A.30</a>).</dd>
 <dd class="defbody">
 <var>DictOut</var> is a new dict created by replacing or adding 
 key-value pairs from <var>New</var> to <var>Dict</var>. <var>New</var> 
-is either a dict or a valid input for <a id="idx:dictcreate3:1887"></a><a class="pred" href="bidicts.html#dict_create/3">dict_create/3</a>. 
+is either a dict or a valid input for <a id="idx:dictcreate3:1888"></a><a class="pred" href="bidicts.html#dict_create/3">dict_create/3</a>. 
 This predicate is normally accessed using the functional notation. Below 
 are some examples:
 
@@ -638,7 +638,7 @@ dicts, find dicts that represent a point with X equal to zero:
     Dict &gt;:&lt; point{x:0, y:Y}.
 </pre>
 
-<p>See also <a class="pred" href="bidicts.html#:</2">:&lt;/2</a> and <a id="idx:selectdict3:1888"></a><a class="pred" href="bidicts.html#select_dict/3">select_dict/3</a>.
+<p>See also <a class="pred" href="bidicts.html#:</2">:&lt;/2</a> and <a id="idx:selectdict3:1889"></a><a class="pred" href="bidicts.html#select_dict/3">select_dict/3</a>.
 </dd>
 </dl>
 
@@ -657,7 +657,7 @@ argument.
 with care because the system may copy or share identical Prolog terms at 
 any time. Some of this behaviour can be avoided by adding an additional 
 unbound value to the dict. This prevents unwanted sharing and ensures 
-that <a id="idx:copyterm2:1889"></a><a class="pred" href="manipterm.html#copy_term/2">copy_term/2</a> 
+that <a id="idx:copyterm2:1890"></a><a class="pred" href="manipterm.html#copy_term/2">copy_term/2</a> 
 actually copies the dict. This pitfall is demonstrated in the example 
 below:
 
@@ -678,9 +678,9 @@ Destructively update the value associated with <var>Key</var> in <var>Dict</var>
 to
 <var>Value</var>. The update is trailed and undone on backtracking. This 
 predicate raises an existence error if <var>Key</var> does not appear in
-<var>Dict</var>. The update semantics are equivalent to <a id="idx:setarg3:1890"></a><a class="pred" href="manipterm.html#setarg/3">setarg/3</a> 
+<var>Dict</var>. The update semantics are equivalent to <a id="idx:setarg3:1891"></a><a class="pred" href="manipterm.html#setarg/3">setarg/3</a> 
 and
-<a id="idx:bsetval2:1891"></a><a class="pred" href="gvar.html#b_setval/2">b_setval/2</a>.</dd>
+<a id="idx:bsetval2:1892"></a><a class="pred" href="gvar.html#b_setval/2">b_setval/2</a>.</dd>
 <dt class="pubdef"><span class="pred-tag">[det]</span><a id="nb_set_dict/3"><strong>nb_set_dict</strong>(<var>+Key, 
 !Dict, +Value</var>)</a></dt>
 <dd class="defbody">
@@ -688,9 +688,9 @@ Destructively update the value associated with <var>Key</var> in <var>Dict</var>
 to a copy of <var>Value</var>. The update is <em>not</em> undone on 
 backtracking. This predicate raises an existence error if <var>Key</var> 
 does not appear in
-<var>Dict</var>. The update semantics are equivalent to <a id="idx:nbsetarg3:1892"></a><a class="pred" href="manipterm.html#nb_setarg/3">nb_setarg/3</a> 
+<var>Dict</var>. The update semantics are equivalent to <a id="idx:nbsetarg3:1893"></a><a class="pred" href="manipterm.html#nb_setarg/3">nb_setarg/3</a> 
 and
-<a id="idx:nbsetval2:1893"></a><a class="pred" href="gvar.html#nb_setval/2">nb_setval/2</a>.</dd>
+<a id="idx:nbsetval2:1894"></a><a class="pred" href="gvar.html#nb_setval/2">nb_setval/2</a>.</dd>
 <dt class="pubdef"><span class="pred-tag">[det]</span><a id="nb_link_dict/3"><strong>nb_link_dict</strong>(<var>+Key, 
 !Dict, +Value</var>)</a></dt>
 <dd class="defbody">
@@ -699,11 +699,11 @@ to
 <var>Value</var>. The update is <em>not</em> undone on backtracking. 
 This predicate raises an existence error if <var>Key</var> does not 
 appear in
-<var>Dict</var>. The update semantics are equivalent to <a id="idx:nblinkarg3:1894"></a><a class="pred" href="manipterm.html#nb_linkarg/3">nb_linkarg/3</a> 
+<var>Dict</var>. The update semantics are equivalent to <a id="idx:nblinkarg3:1895"></a><a class="pred" href="manipterm.html#nb_linkarg/3">nb_linkarg/3</a> 
 and
-<a id="idx:nblinkval2:1895"></a><a class="pred" href="gvar.html#nb_linkval/2">nb_linkval/2</a>. 
+<a id="idx:nblinkval2:1896"></a><a class="pred" href="gvar.html#nb_linkval/2">nb_linkval/2</a>. 
 Use with extreme care and consult the documentation of
-<a id="idx:nblinkval2:1896"></a><a class="pred" href="gvar.html#nb_linkval/2">nb_linkval/2</a> 
+<a id="idx:nblinkval2:1897"></a><a class="pred" href="gvar.html#nb_linkval/2">nb_linkval/2</a> 
 before use.
 </dd>
 </dl>
@@ -795,8 +795,8 @@ few update operations), all keys are atoms or (small) integers and the
 code does not rely on ordered operations.</dd>
 <dt><b>Library <code>library(option)</code></b></dt>
 <dd>
-Option lists are introduced by ISO Prolog, for example for <a id="idx:readterm3:1897"></a><a class="pred" href="termrw.html#read_term/3">read_term/3</a>,
-<a id="idx:open4:1898"></a><a class="pred" href="IO.html#open/4">open/4</a>, 
+Option lists are introduced by ISO Prolog, for example for <a id="idx:readterm3:1898"></a><a class="pred" href="termrw.html#read_term/3">read_term/3</a>,
+<a id="idx:open4:1899"></a><a class="pred" href="IO.html#open/4">open/4</a>, 
 etc. The <code>library(option)</code> library provides operations to 
 extract options, merge options lists, etc. Dicts are well suited to 
 replace option lists because they are cheaper, can be processed faster 
@@ -805,14 +805,14 @@ and have a more natural syntax.</dd>
 <dd>
 This library is commonly used to process large name-value associations. 
 In many cases this concerns short-lived data structures that result from
-<a id="idx:findall3:1899"></a><a class="pred" href="allsolutions.html#findall/3">findall/3</a>, <a id="idx:maplist3:1900"></a><a class="pred" href="apply.html#maplist/3">maplist/3</a> 
+<a id="idx:findall3:1900"></a><a class="pred" href="allsolutions.html#findall/3">findall/3</a>, <a id="idx:maplist3:1901"></a><a class="pred" href="apply.html#maplist/3">maplist/3</a> 
 and similar list processing predicates. Dicts may play a role if 
 frequent random key lookups are needed on the resulting association. For 
 example, the skeleton&lsquo;create a pairs list',&lsquo;use
-<a id="idx:listtoassoc2:1901"></a><a class="pred" href="assoc.html#list_to_assoc/2">list_to_assoc/2</a> 
+<a id="idx:listtoassoc2:1902"></a><a class="pred" href="assoc.html#list_to_assoc/2">list_to_assoc/2</a> 
 to create an assoc', followed by frequent usage of
-<a id="idx:getassoc3:1902"></a><a class="pred" href="assoc.html#get_assoc/3">get_assoc/3</a> 
-to extract key values can be replaced using <a id="idx:dictpairs3:1903"></a><a class="pred" href="bidicts.html#dict_pairs/3">dict_pairs/3</a> 
+<a id="idx:getassoc3:1903"></a><a class="pred" href="assoc.html#get_assoc/3">get_assoc/3</a> 
+to extract key values can be replaced using <a id="idx:dictpairs3:1904"></a><a class="pred" href="bidicts.html#dict_pairs/3">dict_pairs/3</a> 
 and the dict access functions. Using dicts in this scenario is more 
 efficient and provides a more pleasant access syntax.
 </dd>
@@ -852,7 +852,7 @@ Library
 <code>library(assoc)</code> allows for efficient manipulation of 
 changing associations, but the syntactical representation of an assoc is 
 complex, which makes them unsuitable for e.g., <em>options lists</em> as 
-seen in predicates such as <a id="idx:open4:1904"></a><a class="pred" href="IO.html#open/4">open/4</a>.
+seen in predicates such as <a id="idx:open4:1905"></a><a class="pred" href="IO.html#open/4">open/4</a>.
 
 <p><h3 id="sec:ext-dicts-implementation"><a id="sec:5.4.5"><span class="sec-nr">5.4.5</span> <span class="sec-title">Implementation 
 notes about dicts</span></a></h3>

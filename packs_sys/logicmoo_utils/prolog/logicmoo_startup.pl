@@ -1578,13 +1578,37 @@ install_logicmoo:-
 
 :-system:use_module(library(filesex)).
 :-system:use_module(library(qsave)).
+
+qsave_bin(_):- current_prolog_flag(logicmoo_compiling,mud_server),!.
+qsave_bin(_):- current_prolog_flag(logicmoo_compiling,done),!.
+qsave_bin(Clif):- current_prolog_flag(logicmoo_compiling,Clif),!.
+
 qsave_bin(Clif):-
+  (current_prolog_flag(logicmoo_compiling,Was);Was=false),
+  setup_call_cleanup(
+    set_prolog_flag(logicmoo_compiling,Clif),
+    qsave_bin_now(Clif),
+    set_prolog_flag(logicmoo_compiling,Was)).
+
+qsave_bin_now(Clif):-
   atom_concat('lmoo-',Clif,Lmoo),
-  getenv('LOGICMOO_WS',Dir),
   directory_file_path('bin',Lmoo,Bin),
+  getenv('LOGICMOO_WS',Dir),
   directory_file_path(Dir,Bin,Path),
   writeln(qsave_bin(Clif)=Path),
-  qsave_program(Path,[class(development),toplevel(prolog),goal(true)]).
+  current_prolog_flag(stack_limit,Stack_limit),
+  qsave_program(Path,
+    [ class(development),
+      % verbose(true),
+      stack_limit(Stack_limit),
+      toplevel(prolog),
+      goal(true),
+      undefined(ignore),
+      op(save),
+      % map('logicmoo_server.map'),
+      foreign(no_save),
+      autoload(true),
+      stand_alone(false)]).
 
 
 %:- use_module(library(logicmoo/each_call)).

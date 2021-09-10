@@ -176,7 +176,8 @@ do_compile_1file_to_stream(_Keys,File0,Stream):-
   get_time(Epoch),format_time(string(EpochS), '%+', Epoch),
   working_directory(PWD,PWD),
   statistics(runtime,[Start,_]),
-  format(Stream,'#!/usr/bin/env lmoo-clif
+  format(Stream,
+'#!/usr/bin/env swipl
 %; WAM-CL translated Lisp File (see https://github.com/logicmoo/wam_common_lisp/tree/master/prolog/wam_cl )
 %; File: ~q (~w)
 %; PWD: ~w

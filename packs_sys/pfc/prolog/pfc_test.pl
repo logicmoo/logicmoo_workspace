@@ -138,7 +138,7 @@ why_was_true(P):- dmsg_pretty(justfied_true(P)),!.
 catch_timeout(P):- tracing,!,call(P).
 catch_timeout(P):- catch(call_with_time_limit(30,w_o_c(P)),E,wdmsg(P->E)).
 
-generate_test_name(G,Name):- getenv('JUNIT_CLASSNAME',Class), gtn_no_pack(G,NPack),sformat(Name,'~w ~w',[Class, NPack]),!.
+%generate_test_name(G,Name):- getenv('JUNIT_CLASSNAME',Class), gtn_no_pack(G,NPack),sformat(Name,'~w ~w',[Class, NPack]),!.
 generate_test_name(G,Name):- gtn_no_pack(G,Name),!.
   
 gtn_no_pack(baseKB:G,Testcase):- nonvar(G), !, gtn_no_pack(G,Testcase).
@@ -236,11 +236,10 @@ add_test_info(Testcase,Type,Info):- assertz(j_u:junit_prop(Testcase,Type,Info)).
 
 inform_message_hook(T1,T2,_):- (skip_warning(T1);skip_warning(T2);(\+ thread_self_main)),!.
 inform_message_hook(_,_,_):- \+ current_predicate(dumpST/0),!.
+
 inform_message_hook(compiler_warnings(_,[always(true,var,_),always(false,integer,_),
    always(false,integer,_),always(true,var,_),always(false,integer,_),always(false,integer,_)]),warning,[]):- !.
-inform_message_hook(import_private(_,_),_,_).
-inform_message_hook(check(undefined(_, _)),_,_).
-inform_message_hook(ignored_weak_import(header_sane,_),_,_).
+
 % warning, "/opt/logicmoo_workspace/lib/swipl/xpce/prolog/boot/pce_editor.pl:136: Initialization goal failed")
 
 inform_message_hook(error(existence_error(procedure,'$toplevel':_),_),error,_).
@@ -571,7 +570,7 @@ show_junit_testcase(Suite,Testcase):-
  (getenv('JUNIT_PACKAGE',Package) -> true ; classname_to_package(Classname,Package,ShortClass)),
  ignore((getenv('JUNIT_SHORTCLASS',ShortClass))),
  (nonvar(ShortClass)-> true; atom_concat(Package,ShortClass,Classname)),
- sformat(DisplayName,'~w@~w: ~p',[Testcase,Goal]),
+ sformat(DisplayName,'~w@~w: ~p',[Classname,Testcase,Goal]),
  escape_attribute(DisplayName,EDisplayName),
  ignore((
  format('\n     <testcase name=~q ', [EDisplayName]),
@@ -625,9 +624,16 @@ write_message_ele(Ele,NonGood):-
 
 :- multifile prolog:message//1, user:message_hook/3.
 % message_hook_handle(import_private(pfc_lib,_:_/_),warning,_):- source_location(_,_),!.
-message_hook_handle(io_warning(_,'Illegal UTF-8 start'),warning,_):- source_location(_,_),!.
-message_hook_handle(undefined_export(jpl, _), error, _):- source_location(_,_),!.
-message_hook_handle(_, error, _):- source_location(File,4235),atom_concat(_,'/jpl.pl',File),!.
+
+message_hook_dontcare(import_private(_,_),_,_).
+message_hook_dontcare(check(undefined(_, _)),_,_).
+message_hook_dontcare(ignored_weak_import(header_sane,_),_,_).
+message_hook_dontcare(io_warning(_,'Illegal UTF-8 start'),warning,_):- source_location(_,_),!.
+message_hook_dontcare(undefined_export(jpl, _), error, _):- source_location(_,_),!.
+message_hook_dontcare(_, error, _):- source_location(File,4235),atom_concat(_,'/jpl.pl',File),!.
+
+
+message_hook_handle(Term, Kind, Lines):- message_hook_dontcare(Term, Kind, Lines),!.
 message_hook_handle(message_lines(_),error,['~w'-[_]]). 
 message_hook_handle(error(resource_error(portray_nesting),_),
    error, ['Not enough resources: ~w'-[portray_nesting], nl,

@@ -2,7 +2,7 @@
 
 <html>
 <head>
-<title>SWI-Prolog 8.3.28 Reference Manual: Section 8.1</title><link rel="home" href="index.html">
+<title>SWI-Prolog 8.3.29 Reference Manual: Section 8.1</title><link rel="home" href="index.html">
 <link rel="contents" href="Contents.html">
 <link rel="index" href="DocIndex.html">
 <link rel="summary" href="summary.html">
@@ -253,7 +253,7 @@ page</a>).
 first possible opportunity. In the current implementation the hooks are 
 executed immediately after a successful unification of the clause-head 
 or successful completion of a foreign language (built-in) predicate. 
-Each attribute is associated to a module, and the hook (<a id="idx:attrunifyhook2:2118"></a><a class="pred" href="attvar.html#attr_unify_hook/2">attr_unify_hook/2</a>) 
+Each attribute is associated to a module, and the hook (<a id="idx:attrunifyhook2:2119"></a><a class="pred" href="attvar.html#attr_unify_hook/2">attr_unify_hook/2</a>) 
 is executed in this module. The example below realises a very simple and 
 incomplete finite domain reasoner:
 
@@ -310,7 +310,7 @@ a </td></tr>
 clause) the variable a <em>domain</em>, a set of values the variable can 
 be unified with. In the second clause, domain/2 first associates the 
 domain with a fresh variable (Y) and then unifies X to this variable to 
-deal with the possibility that X already has a domain. The predicate <a id="idx:attrunifyhook2:2119"></a><a class="pred" href="attvar.html#attr_unify_hook/2">attr_unify_hook/2</a> 
+deal with the possibility that X already has a domain. The predicate <a id="idx:attrunifyhook2:2120"></a><a class="pred" href="attvar.html#attr_unify_hook/2">attr_unify_hook/2</a> 
 (see below) is a hook called after a variable with a domain is assigned 
 a value. In the simple case where the variable is bound to a concrete 
 value, we simply check whether this value is in the domain. Otherwise we 
@@ -326,7 +326,7 @@ attributes that correspond to equivalent constraints.
 8</a>) is the most common, but not the only use case for attributed 
 variables: If you implement algorithms that require efficient 
 destructive modifications, then using attributed variables is often a 
-more convenient and somewhat more declarative alternative for <a id="idx:setarg3:2120"></a><a class="pred" href="manipterm.html#setarg/3">setarg/3</a> 
+more convenient and somewhat more declarative alternative for <a id="idx:setarg3:2121"></a><a class="pred" href="manipterm.html#setarg/3">setarg/3</a> 
 and related predicates whose sharing semantics are harder to understand. 
 In particular, attributed variables make it easy to express graph 
 networks and graph-oriented algorithms, since each variable can store 
@@ -342,10 +342,10 @@ manipulation predicates</span></a></h3>
 <dl class="latex">
 <dt class="pubdef"><a id="attvar/1"><strong>attvar</strong>(<var>@Term</var>)</a></dt>
 <dd class="defbody">
-Succeeds if <var>Term</var> is an attributed variable. Note that <a id="idx:var1:2121"></a><a class="pred" href="typetest.html#var/1">var/1</a> 
+Succeeds if <var>Term</var> is an attributed variable. Note that <a id="idx:var1:2122"></a><a class="pred" href="typetest.html#var/1">var/1</a> 
 also succeeds on attributed variables. Attributed variables are created 
 with
-<a id="idx:putattr3:2122"></a><a class="pred" href="attvar.html#put_attr/3">put_attr/3</a>.</dd>
+<a id="idx:putattr3:2123"></a><a class="pred" href="attvar.html#put_attr/3">put_attr/3</a>.</dd>
 <dt class="pubdef"><a id="put_attr/3"><strong>put_attr</strong>(<var>+Var, 
 +Module, +Value</var>)</a></dt>
 <dd class="defbody">
@@ -353,7 +353,7 @@ If <var>Var</var> is a variable or attributed variable, set the value
 for the attribute named <var>Module</var> to <var>Value</var>. If an 
 attribute with this name is already associated with <var>Var</var>, the 
 old value is replaced. Backtracking will restore the old value (i.e., an 
-attribute is a mutable term; see also <a id="idx:setarg3:2123"></a><a class="pred" href="manipterm.html#setarg/3">setarg/3</a>). 
+attribute is a mutable term; see also <a id="idx:setarg3:2124"></a><a class="pred" href="manipterm.html#setarg/3">setarg/3</a>). 
 This predicate raises an uninstantiation error if
 <var>Var</var> is not a variable, and a type error if <var>Module</var> 
 is not an atom.</dd>
@@ -398,7 +398,7 @@ If this predicate fails, the unification fails. If <var>VarValue</var>
 is another attributed variable the hook often combines the two 
 attributes and associates the combined attribute with <var>VarValue</var> 
 using
-<a id="idx:putattr3:2124"></a><a class="pred" href="attvar.html#put_attr/3">put_attr/3</a>.
+<a id="idx:putattr3:2125"></a><a class="pred" href="attvar.html#put_attr/3">put_attr/3</a>.
 
 <dl class="tags">
 <dt class="tag">To be done</dt>
@@ -444,26 +444,26 @@ correctly. It is this property that makes it possible to thoroughly test
 constraint solvers by contrasting obtained residual goals with expected 
 answers.
 
-<p>This nonterminal is used by <a id="idx:copyterm3:2125"></a><a class="pred" href="attvar.html#copy_term/3">copy_term/3</a>, 
+<p>This nonterminal is used by <a id="idx:copyterm3:2126"></a><a class="pred" href="attvar.html#copy_term/3">copy_term/3</a>, 
 on which the Prolog top level relies to ensure the basic invariant of 
 pure Prolog programs: The answer is <i>declaratively equivalent</i> to 
 the query.
 
-<p>The <a id="idx:copyterm3:2126"></a><a class="pred" href="attvar.html#copy_term/3">copy_term/3</a> 
-primitive uses attribute_goals//1 inside a <a id="idx:findall3:2127"></a><a class="pred" href="allsolutions.html#findall/3">findall/3</a> 
+<p>The <a id="idx:copyterm3:2127"></a><a class="pred" href="attvar.html#copy_term/3">copy_term/3</a> 
+primitive uses attribute_goals//1 inside a <a id="idx:findall3:2128"></a><a class="pred" href="allsolutions.html#findall/3">findall/3</a> 
 call. This implies that attribute_goals//1 can unify variables and 
 modify attributes, for example, to tell other hooks that some attribute 
 has already been taken care of. This nonterminal is also used by
-<a id="idx:frozen2:2128"></a><a class="pred" href="coroutining.html#frozen/2">frozen/2</a> 
+<a id="idx:frozen2:2129"></a><a class="pred" href="coroutining.html#frozen/2">frozen/2</a> 
 which does <em>not</em> create a copy. Ideally attribute_goals//1 should 
-not modify anything to allow direct application in <a id="idx:frozen2:2129"></a><a class="pred" href="coroutining.html#frozen/2">frozen/2</a>. 
-In the current implementation <a id="idx:frozen2:2130"></a><a class="pred" href="coroutining.html#frozen/2">frozen/2</a> 
+not modify anything to allow direct application in <a id="idx:frozen2:2130"></a><a class="pred" href="coroutining.html#frozen/2">frozen/2</a>. 
+In the current implementation <a id="idx:frozen2:2131"></a><a class="pred" href="coroutining.html#frozen/2">frozen/2</a> 
 backtracks over attribute_goals//1 to tolerate the current behavior. 
-This work-around harms the performance of <a id="idx:frozen2:2131"></a><a class="pred" href="coroutining.html#frozen/2">frozen/2</a>. 
+This work-around harms the performance of <a id="idx:frozen2:2132"></a><a class="pred" href="coroutining.html#frozen/2">frozen/2</a>. 
 New implementations of attribute_goals//1 should avoid relying on 
-backtracking when feasible. Future versions of <a id="idx:frozen2:2132"></a><a class="pred" href="coroutining.html#frozen/2">frozen/2</a> 
+backtracking when feasible. Future versions of <a id="idx:frozen2:2133"></a><a class="pred" href="coroutining.html#frozen/2">frozen/2</a> 
 and
-<a id="idx:copyterm3:2133"></a><a class="pred" href="attvar.html#copy_term/3">copy_term/3</a> 
+<a id="idx:copyterm3:2134"></a><a class="pred" href="attvar.html#copy_term/3">copy_term/3</a> 
 may require attribute_goals//1 not to modify any variables or 
 attributes.
 
@@ -478,7 +478,7 @@ A hook that can be defined in each module to project constraints on
 newly introduced variables back to the query variables.
 <var>QueryVars</var> is the list of variables occurring in the query and
 <var>ResidualVars</var> is a list of variables that have attributes 
-attached. There may be variables that occur in both lists. If possible, <a id="idx:projectattributes2:2134"></a><a class="pred" href="attvar.html#project_attributes/2">project_attributes/2</a> 
+attached. There may be variables that occur in both lists. If possible, <a id="idx:projectattributes2:2135"></a><a class="pred" href="attvar.html#project_attributes/2">project_attributes/2</a> 
 should change the attributes so that all constraints are expressed as 
 residual goals that refer only to
 <var>QueryVars</var>, while other variables are existentially 
@@ -486,13 +486,13 @@ quantified.</dd>
 <dt class="pubdef"><span class="pred-tag">[deprecated]</span><a id="attr_portray_hook/2"><strong>attr_portray_hook</strong>(<var>+AttValue, 
 +Var</var>)</a></dt>
 <dd class="defbody">
-Called by <a id="idx:writeterm2:2135"></a><a class="pred" href="termrw.html#write_term/2">write_term/2</a> 
+Called by <a id="idx:writeterm2:2136"></a><a class="pred" href="termrw.html#write_term/2">write_term/2</a> 
 and friends for each attribute if the option
 <code>attributes(portray)</code> is in effect. If the hook succeeds the 
 attribute is considered printed. Otherwise <code>Module = ...</code> is 
 printed to indicate the existence of a variable. This predicate is 
 deprecated because it cannot work with pure interface predicates like
-<a id="idx:copyterm3:2136"></a><a class="pred" href="attvar.html#copy_term/3">copy_term/3</a>. 
+<a id="idx:copyterm3:2137"></a><a class="pred" href="attvar.html#copy_term/3">copy_term/3</a>. 
 Use attribute_goals//1 instead to map attributes to residual goals.
 </dd>
 </dl>
@@ -523,14 +523,14 @@ about the constraints in which <code>Term</code> is involved.</dd>
 <dt class="pubdef"><a id="copy_term_nat/2"><strong>copy_term_nat</strong>(<var>+Term, 
 -Copy</var>)</a></dt>
 <dd class="defbody">
-As <a id="idx:copyterm2:2137"></a><a class="pred" href="manipterm.html#copy_term/2">copy_term/2</a>. 
+As <a id="idx:copyterm2:2138"></a><a class="pred" href="manipterm.html#copy_term/2">copy_term/2</a>. 
 Attributes, however, are <em>not</em> copied but replaced by fresh 
 variables.</dd>
 <dt class="pubdef"><a id="term_attvars/2"><strong>term_attvars</strong>(<var>+Term, 
 -AttVars</var>)</a></dt>
 <dd class="defbody">
 <var>AttVars</var> is a list of all attributed variables in <var>Term</var> 
-and its attributes. That is, <a id="idx:termattvars2:2138"></a><a class="pred" href="attvar.html#term_attvars/2">term_attvars/2</a> 
+and its attributes. That is, <a id="idx:termattvars2:2139"></a><a class="pred" href="attvar.html#term_attvars/2">term_attvars/2</a> 
 works recursively through attributes. This predicate is cycle-safe. The 
 goal
 <code>term_attvars(Term,[])</code> in an efficient test that <var>Term</var> 
@@ -545,8 +545,8 @@ purpose predicates for attributes</span></a></h3>
 
 <a id="sec:attvar-low-level-preds"></a>
 
-<p>Normal user code should deal with <a id="idx:putattr3:2139"></a><a class="pred" href="attvar.html#put_attr/3">put_attr/3</a>, <a id="idx:getattr3:2140"></a><a class="pred" href="attvar.html#get_attr/3">get_attr/3</a> 
-and <a id="idx:delattr2:2141"></a><a class="pred" href="attvar.html#del_attr/2">del_attr/2</a>. 
+<p>Normal user code should deal with <a id="idx:putattr3:2140"></a><a class="pred" href="attvar.html#put_attr/3">put_attr/3</a>, <a id="idx:getattr3:2141"></a><a class="pred" href="attvar.html#get_attr/3">get_attr/3</a> 
+and <a id="idx:delattr2:2142"></a><a class="pred" href="attvar.html#del_attr/2">del_attr/2</a>. 
 The routines in this section fetch or set the entire attribute list of a 
 variable. Use of these predicates is anticipated to be restricted to 
 printing and other special purpose operations.
@@ -563,7 +563,7 @@ is
 <dt class="pubdef"><a id="put_attrs/2"><strong>put_attrs</strong>(<var>+Var, 
 -Attributes</var>)</a></dt>
 <dd class="defbody">
-Set all attributes of <var>Var</var>. See <a id="idx:getattrs2:2142"></a><a class="pred" href="attvar.html#get_attrs/2">get_attrs/2</a> 
+Set all attributes of <var>Var</var>. See <a id="idx:getattrs2:2143"></a><a class="pred" href="attvar.html#get_attrs/2">get_attrs/2</a> 
 for a description of
 <var>Attributes</var>.</dd>
 <dt class="pubdef"><a id="del_attrs/1"><strong>del_attrs</strong>(<var>+Var</var>)</a></dt>

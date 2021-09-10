@@ -2,7 +2,7 @@
 
 <html>
 <head>
-<title>SWI-Prolog 8.3.28 Reference Manual: Section 4.12</title><link rel="home" href="index.html">
+<title>SWI-Prolog 8.3.29 Reference Manual: Section 4.12</title><link rel="home" href="index.html">
 <link rel="contents" href="Contents.html">
 <link rel="index" href="DocIndex.html">
 <link rel="summary" href="summary.html">
@@ -263,7 +263,7 @@ As with similar environment control predicates, the current value is
 retrieved using <code>on_signal(Signal, Current, Current)</code>.
 
 <p>The action description is an atom denoting the name of the predicate 
-that will be called if <var>Signal</var> arrives. <a id="idx:onsignal3:879"></a><a class="pred" href="signal.html#on_signal/3">on_signal/3</a> 
+that will be called if <var>Signal</var> arrives. <a id="idx:onsignal3:880"></a><a class="pred" href="signal.html#on_signal/3">on_signal/3</a> 
 is a meta-predicate, which implies that &lt;<var>Module</var>&gt;:&lt;<var>Name</var>&gt; 
 refers to &lt;<var>Name</var>&gt;/1 in module &lt;<var>Module</var>&gt;. 
 The handler is called with a single argument: the name of the signal as 
@@ -288,7 +288,7 @@ raised has the following structure:
 <p>The signal names are defined by the POSIX standard as symbols of the 
 form <code>SIG</code>&lt;<var>SIGNAME</var>&gt;. The Prolog name for a 
 signal is the lowercase version of &lt;<var>SIGNAME</var>&gt;. The 
-predicate <a id="idx:currentsignal3:880"></a><a class="pred" href="signal.html#current_signal/3">current_signal/3</a> 
+predicate <a id="idx:currentsignal3:881"></a><a class="pred" href="signal.html#current_signal/3">current_signal/3</a> 
 may be used to map between names and signals.
 
 <p>Initially, the following signals are handled unless the command line 
@@ -303,12 +303,12 @@ and start the tracer.
 <dt><b>usr2</b></dt>
 <dd class="defbody">
 Bound to an empty signal handler used to make blocking system calls 
-return. This allows <a id="idx:threadsignal2:881"></a><a class="pred" href="threadcom.html#thread_signal/2">thread_signal/2</a> 
-to interrupt threads blocked in a system call. See also <a id="idx:prologalertsignal2:882"></a><a class="pred" href="signal.html#prolog_alert_signal/2">prolog_alert_signal/2</a>.
+return. This allows <a id="idx:threadsignal2:882"></a><a class="pred" href="threadcom.html#thread_signal/2">thread_signal/2</a> 
+to interrupt threads blocked in a system call. See also <a id="idx:prologalertsignal2:883"></a><a class="pred" href="signal.html#prolog_alert_signal/2">prolog_alert_signal/2</a>.
 </dd>
 <dt><b>hup, term, abrt, quit</b></dt>
 <dd class="defbody">
-Causes normal Prolog cleanup (e.g., <a id="idx:athalt1:883"></a><a class="pred" href="consulting.html#at_halt/1">at_halt/1</a>) 
+Causes normal Prolog cleanup (e.g., <a id="idx:athalt1:884"></a><a class="pred" href="consulting.html#at_halt/1">at_halt/1</a>) 
 before terminating the process with the same signal.
 </dd>
 <dt><b>segv, ill, bus, sys</b></dt>
@@ -328,7 +328,7 @@ Throw a Prolog exception (see above).
 <dd class="defbody">
 Enumerate the currently defined signal handling. <var>Name</var> is the 
 signal name, <var>Id</var> is the numerical identifier and <var>Handler</var> 
-is the currently defined handler (see <a id="idx:onsignal3:884"></a><a class="pred" href="signal.html#on_signal/3">on_signal/3</a>).</dd>
+is the currently defined handler (see <a id="idx:onsignal3:885"></a><a class="pred" href="signal.html#on_signal/3">on_signal/3</a>).</dd>
 <dt class="pubdef"><a id="prolog_alert_signal/2"><strong>prolog_alert_signal</strong>(<var>?Old, 
 +New</var>)</a></dt>
 <dd class="defbody">
@@ -352,7 +352,7 @@ consider the following:
 On MS-Windows, the signal interface is severely limited. Different Unix 
 brands support different sets of signals, and the relation between 
 signal name and number may vary. Currently, the system only supports 
-signals numbered 1 to 32<sup class="fn">77<span class="fn-text">TBD: the 
+signals numbered 1 to 32<sup class="fn">78<span class="fn-text">TBD: the 
 system should support the Unix realtime signals</span></sup>. Installing 
 a signal outside the limited set of supported signals in MS-Windows 
 crashes the application.
@@ -363,7 +363,7 @@ Immediately delivered signals (see below) are unsafe. This implies that
 foreign functions called from a handler cannot safely use the SWI-Prolog 
 API and cannot use C longjmp(). Handlers defined as <code>throw</code> 
 are unsafe. Handlers defined to call a predicate are safe. Note that the 
-predicate can call <a id="idx:throw1:885"></a><a class="pred" href="exception.html#throw/1">throw/1</a>, 
+predicate can call <a id="idx:throw1:886"></a><a class="pred" href="exception.html#throw/1">throw/1</a>, 
 but the delivery is delayed until Prolog is in a safe state.
 
 <p>The C-interface described in <a class="sec" href="foreigninclude.html#sec:12.4.15">section 

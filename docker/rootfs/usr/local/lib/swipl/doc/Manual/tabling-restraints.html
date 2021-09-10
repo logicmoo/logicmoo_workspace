@@ -2,7 +2,7 @@
 
 <html>
 <head>
-<title>SWI-Prolog 8.3.28 Reference Manual: Section 7.10</title><link rel="home" href="index.html">
+<title>SWI-Prolog 8.3.29 Reference Manual: Section 7.10</title><link rel="home" href="index.html">
 <link rel="contents" href="Contents.html">
 <link rel="index" href="DocIndex.html">
 <link rel="summary" href="summary.html">
@@ -266,9 +266,9 @@ is triggered, the system takes the steps below.
 
 <p>
 <ol class="latex">
-<li>Call the <a id="idx:prologtripwire2:2083"></a><a class="pred" href="tabling-restraints.html#prolog:tripwire/2">prolog:tripwire/2</a> 
+<li>Call the <a id="idx:prologtripwire2:2084"></a><a class="pred" href="tabling-restraints.html#prolog:tripwire/2">prolog:tripwire/2</a> 
 hook.
-<li>If <a id="idx:prologtripwire2:2084"></a><a class="pred" href="tabling-restraints.html#prolog:tripwire/2">prolog:tripwire/2</a> 
+<li>If <a id="idx:prologtripwire2:2085"></a><a class="pred" href="tabling-restraints.html#prolog:tripwire/2">prolog:tripwire/2</a> 
 fails, take one of the predefined actions:
 
 <dl class="latex">
@@ -285,7 +285,7 @@ Throw an exception
 </dd>
 <dt><strong>suspend</strong></dt>
 <dd class="defbody">
-Print a message and start a <em>break level</em> (see <a id="idx:break0:2085"></a><a class="pred" href="toplevel.html#break/0">break/0</a>).
+Print a message and start a <em>break level</em> (see <a id="idx:break0:2086"></a><a class="pred" href="toplevel.html#break/0">break/0</a>).
 </dd>
 </dl>
 
@@ -314,7 +314,7 @@ count.
 
 <p><em>Radial restraints</em> limit the sizes of subgoals or answers. 
 Abstraction of a term according to the size limit is implemented by
-<a id="idx:sizeabstractterm3:2086"></a><a class="pred" href="tabling-restraints.html#size_abstract_term/3">size_abstract_term/3</a>.
+<a id="idx:sizeabstractterm3:2087"></a><a class="pred" href="tabling-restraints.html#size_abstract_term/3">size_abstract_term/3</a>.
 
 <dl class="latex">
 <dt class="pubdef"><span class="pred-tag">[det]</span><a id="size_abstract_term/3"><strong>size_abstract_term</strong>(<var>+Size, 
@@ -344,7 +344,7 @@ x(_)) </td></tr>
 <dd class="defbody">
 This predicate is <em>undefined</em> in the sense of well founded 
 semantics (see <a class="sec" href="WFS.html#sec:7.6">section 7.6</a> 
-and <a id="idx:undefined0:2087"></a><a class="pred" href="WFS.html#undefined/0">undefined/0</a>). 
+and <a id="idx:undefined0:2088"></a><a class="pred" href="WFS.html#undefined/0">undefined/0</a>). 
 Any answer that depends on this condition is undefined because either 
 the restraint on the subgoal size or answer size was violated.
 </dd>
@@ -424,7 +424,7 @@ answer count</span></a></h3>
 the Prolog flag
 <a class="flag" href="flags.html#flag:max_answers_for_subgoal">max_answers_for_subgoal</a>, 
 the number of answers in a table is restrained. In addition to the 
-tripwire actions this restraint supports the action <code>bounded_rationality</code><sup class="fn">177<span class="fn-text">The 
+tripwire actions this restraint supports the action <code>bounded_rationality</code><sup class="fn">178<span class="fn-text">The 
 action <code>complete_soundly</code> is supported as a synonym for XSB 
 compatibility</span></sup>. If the restraint is reached in the bounded 
 rationality mode the system takes the following actions:
@@ -434,7 +434,7 @@ rationality mode the system takes the following actions:
 <li>Ignore the answer that triggered the restraint.
 <li>Prune the choice points of the tabled goal to avoid more answers.
 <li>Add an new answer to the table that does not bind any variables, 
-i.e., an empty answer substitution. This answer is conditional on <a id="idx:answercountrestraint0:2088"></a><a class="pred" href="tabling-restraints.html#answer_count_restraint/0">answer_count_restraint/0</a>.
+i.e., an empty answer substitution. This answer is conditional on <a id="idx:answercountrestraint0:2089"></a><a class="pred" href="tabling-restraints.html#answer_count_restraint/0">answer_count_restraint/0</a>.
 </ul>
 
 <dl class="latex">
@@ -442,7 +442,7 @@ i.e., an empty answer substitution. This answer is conditional on <a id="idx:ans
 <dd class="defbody">
 This predicate is <em>undefined</em> in the sense of well founded 
 semantics (see <a class="sec" href="WFS.html#sec:7.6">section 7.6</a> 
-and <a id="idx:undefined0:2089"></a><a class="pred" href="WFS.html#undefined/0">undefined/0</a>). 
+and <a id="idx:undefined0:2090"></a><a class="pred" href="WFS.html#undefined/0">undefined/0</a>). 
 Any answer that depends on this condition is undefined because the <code>max_answers</code> 
 restraint on some table was violated.
 </dd>

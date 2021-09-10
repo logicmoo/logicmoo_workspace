@@ -2,7 +2,7 @@
 
 <html>
 <head>
-<title>SWI-Prolog 8.3.28 Reference Manual: Section 4.7</title><link rel="home" href="index.html">
+<title>SWI-Prolog 8.3.29 Reference Manual: Section 4.7</title><link rel="home" href="index.html">
 <link rel="contents" href="Contents.html">
 <link rel="index" href="DocIndex.html">
 <link rel="summary" href="summary.html">
@@ -243,8 +243,9 @@ the constructs in this section, except for <a id="idx:repeat0:712"></a><a class=
 are translated by the compiler. Please note that complex goals passed as 
 arguments to meta-predicates such as <a id="idx:findall3:713"></a><a class="pred" href="allsolutions.html#findall/3">findall/3</a> 
 below cause the goal to be compiled to a temporary location before 
-execution. It is faster to define a sub-predicate (i.e. one_character_atoms/1 
-in the example below) and make a call to this simple predicate.
+execution. It is faster to define a sub-predicate (i.e., 
+one_character_atoms/1 in the example below) and make a call to this 
+simple predicate. See also the Prolog flag <a class="flag" href="flags.html#flag:compile_meta_arguments">compile_meta_arguments</a>.
 
 <pre class="code">
 one_character_atoms(As) :-
@@ -291,32 +292,54 @@ choice point created by <var>X</var>&rdquo; .
 <tr><td><code>t0 :- (a, !, b).</code> </td><td>% prunes a/0 and t0/0 </td></tr>
 <tr><td><code>t1 :- (a, !, fail ; b).</code> </td><td>% prunes a/0 and t1/0 </td></tr>
 <tr><td><code>t2 :- (a -&gt; b, ! ; c).</code> </td><td>% prunes b/0 and t2/0 </td></tr>
-<tr><td><code>t3 :- call((a, !, fail ; b)).</code> </td><td>% prunes a/0 </td></tr>
-<tr><td><code>t4 :- <code>\+</code>(a, !, fail).</code> </td><td>% 
+<tr><td><code>t3 :- (a, !, b -&gt; c ; d).</code> </td><td>% prunes a/0 </td></tr>
+<tr><td><code>t4 :- call((a, !, fail ; b)).</code> </td><td>% prunes a/0 </td></tr>
+<tr><td><code>t5 :- <code>\+</code>(a, !, fail).</code> </td><td>% 
 prunes a/0 </td></tr>
 </table>
 </dd>
 <dt class="pubdef"><span class="pred-tag">[ISO]</span><a id=",/2"><var>:Goal1</var> <strong>,</strong> <var>:Goal2</var></a></dt>
 <dd class="defbody">
-Conjunction. True if both&lsquo;Goal1' and&lsquo;Goal2' can be proved. 
-It is defined as follows (this definition does not lead to a loop as the 
-second comma is handled by the compiler):
-
-<pre class="code">
-Goal1, Goal2 :- Goal1, Goal2.
-</pre>
-
-</dd>
+Conjunction (<em>and</em>). True if both <var>Goal1</var> and <var>Goal2</var> 
+are true.</dd>
 <dt class="pubdef"><span class="pred-tag">[ISO]</span><a id=";/2"><var>:Goal1</var> <strong>;</strong> <var>:Goal2</var></a></dt>
 <dd class="defbody">
-The&lsquo;or' predicate is defined as:
+Disjunction (<em>or</em>). True if either <var>Goal1</var> or <var>Goal2</var> 
+succeeds. Note that the semantics change if <var>Goal1</var> contains
+<a class="pred" href="control.html#->/2">-&gt;/2</a> or <a class="pred" href="control.html#*->/2">*-&gt;/2</a>. <a class="pred" href="control.html#;/2">;/2</a> 
+is transparent to cuts. See <a class="pred" href="control.html#!/0">!/0</a> 
+for details. For example:
 
 <pre class="code">
-Goal1 ; _Goal2 :- Goal1.
-_Goal1 ; Goal2 :- Goal2.
+?- (between(1,2,X) ; X = a).
+X = 1 ;
+X = 2 ;
+X = a.
 </pre>
 
-</dd>
+<p>It is strongly adviced to <em>always</em> use parenthesis around 
+disjunctions. Conjunctions inside a disjunction should not use 
+parenthesis. Traditionally the <code><code>;</code></code> is placed at 
+the start of the line rather than at the end because a <code><code>;</code></code> 
+at the end of a line is easily overlooked. Below is an example of the 
+preferred style used in SWI-Prolog.<sup class="fn">69<span class="fn-text">Some 
+users prefer a newline after the <code><code>;</code></code>.</span></sup>
+
+<pre class="code">
+p :-
+    a,
+    (   b,
+        c
+    ;   d
+    ).
+</pre>
+
+<p>Although <a class="pred" href="control.html#;/2">;/2</a> is a <em>control 
+structure</em> that is normally handled by the compiler, SWI-Prolog 
+implements <a class="pred" href="control.html#;/2">;/2</a> as a true 
+predicate to support <a id="idx:call2:717"></a><a class="pred" href="metacall.html#call/2">call/2</a> 
+and friends as well as to allow for querying predicate properties, for 
+example to support code analysis.</dd>
 <dt class="pubdef"><a id="|/2"><var>:Goal1</var> <strong>|</strong> <var>:Goal2</var></a></dt>
 <dd class="defbody">
 Equivalent to <a class="pred" href="control.html#;/2">;/2</a>. Retained 
@@ -328,9 +351,10 @@ construct commits to the choices made at its left-hand side, destroying
 choice points created inside the clause (by <a class="pred" href="control.html#;/2">;/2</a>), 
 or by goals called by this clause. Unlike <a class="pred" href="control.html#!/0">!/0</a>, 
 the choice point of the predicate as a whole (due to multiple clauses) 
-is <strong>not</strong> destroyed. The combination <a class="pred" href="control.html#;/2">;/2</a> 
-and <a class="pred" href="control.html#->/2">-&gt;/2</a> acts as if 
-defined as:
+is <strong>not</strong> destroyed. Disregarding the interaction with <a class="pred" href="control.html#!/0">!/0</a>, 
+the combination
+<a class="pred" href="control.html#;/2">;/2</a> and <a class="pred" href="control.html#->/2">-&gt;/2</a> 
+acts as if defined as:
 
 <pre class="code">
 If -&gt; Then; _Else :- If, !, Then.
@@ -351,15 +375,34 @@ individual constructs, i.e., the semantics of
 <a class="pred" href="control.html#->/2">-&gt;/2</a> <em>changes</em> 
 when embedded in <a class="pred" href="control.html#;/2">;/2</a>. See 
 also
-<a id="idx:once1:717"></a><a class="pred" href="metacall.html#once/1">once/1</a>.</dd>
+<a id="idx:once1:718"></a><a class="pred" href="metacall.html#once/1">once/1</a>.
+
+<p>As with <a class="pred" href="control.html#;/2">;/2</a>, this 
+construct is always nested in parenthesis. Here is an example of the 
+preferred layout for SWI-Prolog.
+
+<pre class="code">
+p :-
+    a,
+    (   b,
+        c
+    -&gt;  d,
+        e
+    ;   f
+    -&gt;  g
+    ;   h
+    ).
+</pre>
+
+</dd>
 <dt class="pubdef"><a id="*->/2"><var>:Condition</var> <strong>*-&gt;</strong> <var>:Action 
 ; :Else</var></a></dt>
 <dd class="defbody">
 This construct implements the so-called&lsquo;soft-cut'. The control is 
 defined as follows: If <var>Condition</var> succeeds at least once, the 
 semantics is the same as (<code>call(Condition)</code>,
-<var>Action</var>).<sup class="fn">69<span class="fn-text">Note that the <var>Condition</var> 
-is wrapped in <a id="idx:call1:718"></a><a class="pred" href="metacall.html#call/1">call/1</a>, 
+<var>Action</var>).<sup class="fn">70<span class="fn-text">Note that the <var>Condition</var> 
+is wrapped in <a id="idx:call1:719"></a><a class="pred" href="metacall.html#call/1">call/1</a>, 
 limiting the scope of the cut (<a class="pred" href="control.html#!/0">!/0</a></span></sup> 
 If
 <var>Condition</var> does not succeed, the semantics is that of (<code>\+</code>
@@ -396,9 +439,9 @@ True if&lsquo;Goal' cannot be proven (mnemonic: <code><code>+</code></code>
 refers to <em>provable</em> and the backslash (<code><code>\</code></code>) 
 is normally used to indicate negation in Prolog).
 
-<p>Many Prolog implementations (including SWI-Prolog) provide <a id="idx:not1:719"></a><a class="pred" href="metacall.html#not/1">not/1</a>. 
+<p>Many Prolog implementations (including SWI-Prolog) provide <a id="idx:not1:720"></a><a class="pred" href="metacall.html#not/1">not/1</a>. 
 The
-<a id="idx:not1:720"></a><a class="pred" href="metacall.html#not/1">not/1</a> 
+<a id="idx:not1:721"></a><a class="pred" href="metacall.html#not/1">not/1</a> 
 alternative is deprecated due to its strong link to logical negation.
 
 <p></dd>

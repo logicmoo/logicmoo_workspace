@@ -1,4 +1,3 @@
-#!/usr/bin/env lmoo-clif
 
 :- module(logicmoo_wamcl,[]).
 

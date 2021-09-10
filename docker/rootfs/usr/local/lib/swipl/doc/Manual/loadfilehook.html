@@ -2,7 +2,7 @@
 
 <html>
 <head>
-<title>SWI-Prolog 8.3.28 Reference Manual: Section B.9</title><link rel="home" href="index.html">
+<title>SWI-Prolog 8.3.29 Reference Manual: Section B.9</title><link rel="home" href="index.html">
 <link rel="contents" href="Contents.html">
 <link rel="index" href="DocIndex.html">
 <link rel="summary" href="summary.html">
@@ -238,9 +238,9 @@ for loading files</span></a></h2>
 
 <a id="sec:loadfilehook"></a>
 
-<p>All loading of source files is achieved by <a id="idx:loadfiles2:2683"></a><a class="pred" href="consulting.html#load_files/2">load_files/2</a>. 
+<p>All loading of source files is achieved by <a id="idx:loadfiles2:2684"></a><a class="pred" href="consulting.html#load_files/2">load_files/2</a>. 
 The hook
-<a id="idx:prologloadfile2:2684"></a><a class="pred" href="loadfilehook.html#prolog_load_file/2">prolog_load_file/2</a> 
+<a id="idx:prologloadfile2:2685"></a><a class="pred" href="loadfilehook.html#prolog_load_file/2">prolog_load_file/2</a> 
 can be used to load Prolog code from non-files or even load entirely 
 different information, such as foreign files.
 
@@ -248,7 +248,7 @@ different information, such as foreign files.
 <dt class="pubdef"><a id="prolog_load_file/2"><strong>prolog_load_file</strong>(<var>+Spec, 
 +Options</var>)</a></dt>
 <dd class="defbody">
-Load a single object. If this call succeeds, <a id="idx:loadfiles2:2685"></a><a class="pred" href="consulting.html#load_files/2">load_files/2</a> 
+Load a single object. If this call succeeds, <a id="idx:loadfiles2:2686"></a><a class="pred" href="consulting.html#load_files/2">load_files/2</a> 
 assumes the action has been taken care of. This hook is only called if <var>Options</var> 
 does not contain the <code>stream(Input)</code> option. The hook must be 
 defined in the module <code>user</code>.
@@ -257,27 +257,27 @@ defined in the module <code>user</code>.
 Prolog code that is not represented as a Prolog source text (for example 
 some binary representation). For example, library <code>library(http/http_load)</code> 
 loads Prolog directly from an HTTP server. See also
-<a id="idx:prologopensourcehook3:2686"></a><a class="pred" href="loadfilehook.html#prolog:open_source_hook/3">prolog:open_source_hook/3</a>, 
+<a id="idx:prologopensourcehook3:2687"></a><a class="pred" href="loadfilehook.html#prolog:open_source_hook/3">prolog:open_source_hook/3</a>, 
 which merely allows for changing how a physical file is opened.</dd>
 <dt class="pubdef"><a id="prolog:open_source_hook/3"><strong>prolog:open_source_hook</strong>(<var>+Path, 
 -Stream, +Options</var>)</a></dt>
 <dd class="defbody">
-This hooks is called by the compiler to overrule the default <a id="idx:open3:2687"></a><a class="pred" href="IO.html#open/3">open/3</a> 
+This hooks is called by the compiler to overrule the default <a id="idx:open3:2688"></a><a class="pred" href="IO.html#open/3">open/3</a> 
 call
 <code>open(Path, read, Stream)</code>. <var>Options</var> provide the 
-options as provided to <a id="idx:loadfiles2:2688"></a><a class="pred" href="consulting.html#load_files/2">load_files/2</a>. 
+options as provided to <a id="idx:loadfiles2:2689"></a><a class="pred" href="consulting.html#load_files/2">load_files/2</a>. 
 If the hook succeeds compilation continues by loading from the returned 
 (input) stream. This hook is particularly suited to support running the 
 code to a preprocessor. See also
-<a id="idx:prologloadfile2:2689"></a><a class="pred" href="loadfilehook.html#prolog_load_file/2">prolog_load_file/2</a>.</dd>
+<a id="idx:prologloadfile2:2690"></a><a class="pred" href="loadfilehook.html#prolog_load_file/2">prolog_load_file/2</a>.</dd>
 <dt class="pubdef"><a id="prolog:comment_hook/3"><strong>prolog:comment_hook</strong>(<var>+Comments, 
 +Pos, +Term</var>)</a></dt>
 <dd class="defbody">
 This hook allows for processing comments encountered by the compiler. If 
-this hook is defined, the compiler calls <a id="idx:readterm2:2690"></a><a class="pred" href="termrw.html#read_term/2">read_term/2</a> 
+this hook is defined, the compiler calls <a id="idx:readterm2:2691"></a><a class="pred" href="termrw.html#read_term/2">read_term/2</a> 
 with the option
 <code>comments(Comments)</code>. If the list of comments returned by
-<a id="idx:readterm2:2691"></a><a class="pred" href="termrw.html#read_term/2">read_term/2</a> 
+<a id="idx:readterm2:2692"></a><a class="pred" href="termrw.html#read_term/2">read_term/2</a> 
 is not empty it calls this comment hook with the following arguments.
 
 <p>
@@ -293,8 +293,8 @@ position of <var>Term</var>
 </ul>
 
 <p>This hook is exploited by the documentation system. See
-<a id="idx:streampositiondata3:2692"></a><a class="pred" href="IO.html#stream_position_data/3">stream_position_data/3</a>. 
-See also <a id="idx:readterm3:2693"></a><a class="pred" href="termrw.html#read_term/3">read_term/3</a>.
+<a id="idx:streampositiondata3:2693"></a><a class="pred" href="IO.html#stream_position_data/3">stream_position_data/3</a>. 
+See also <a id="idx:readterm3:2694"></a><a class="pred" href="termrw.html#read_term/3">read_term/3</a>.
 </dd>
 </dl>
 

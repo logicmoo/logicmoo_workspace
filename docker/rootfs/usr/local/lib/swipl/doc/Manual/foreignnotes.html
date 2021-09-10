@@ -2,7 +2,7 @@
 
 <html>
 <head>
-<title>SWI-Prolog 8.3.28 Reference Manual: Section 12.8</title><link rel="home" href="index.html">
+<title>SWI-Prolog 8.3.29 Reference Manual: Section 12.8</title><link rel="home" href="index.html">
 <link rel="contents" href="Contents.html">
 <link rel="index" href="DocIndex.html">
 <link rel="summary" href="summary.html">
@@ -317,9 +317,9 @@ or
 <p>The Prolog kernel sources use the macro <b>DEBUG(Topic, Code)</b>. 
 These macros are disabled in the production version and must be enabled 
 by recompiling the system as described above. Specific topics can be 
-enabled and disabled using the predicates <a id="idx:prologdebug1:2493"></a><a class="pred" href="foreignnotes.html#prolog_debug/1">prolog_debug/1</a> 
+enabled and disabled using the predicates <a id="idx:prologdebug1:2494"></a><a class="pred" href="foreignnotes.html#prolog_debug/1">prolog_debug/1</a> 
 and
-<a id="idx:prolognodebug1:2494"></a><a class="pred" href="foreignnotes.html#prolog_nodebug/1">prolog_nodebug/1</a>. 
+<a id="idx:prolognodebug1:2495"></a><a class="pred" href="foreignnotes.html#prolog_nodebug/1">prolog_nodebug/1</a>. 
 In addition, they can be activated from the commandline using 
 commandline option <code>-d topics</code>, where
 <var>topics</var> is a comma-separated list of debug topics to enable. 
@@ -360,8 +360,8 @@ char *topic</var>)</a></dt>
 <dd class="defbody">
 (De)activate debug topics. The <var>topics</var> argument is a 
 comma-separated string of topics to enable or disable. Matching is 
-case-insensitive. See also <a id="idx:prologdebug1:2495"></a><a class="pred" href="foreignnotes.html#prolog_debug/1">prolog_debug/1</a> 
-and <a id="idx:prolognodebug1:2496"></a><a class="pred" href="foreignnotes.html#prolog_nodebug/1">prolog_nodebug/1</a>.
+case-insensitive. See also <a id="idx:prologdebug1:2496"></a><a class="pred" href="foreignnotes.html#prolog_debug/1">prolog_debug/1</a> 
+and <a id="idx:prolognodebug1:2497"></a><a class="pred" href="foreignnotes.html#prolog_nodebug/1">prolog_nodebug/1</a>.
 
 <p>These functions require the system to be compiled for debugging using
 <code>cmake -DCMAKE_BUILD_TYPE=Debug</code>.
@@ -425,7 +425,7 @@ extensions between different Prolog versions. Only the much less
 frequently used stream interface has been responsible for binary 
 incompatibilities.
 
-<p><a id="idx:PLVERSION:2497"></a>Source code that relies on new 
+<p><a id="idx:PLVERSION:2498"></a>Source code that relies on new 
 features of the foreign interface can use the macro <code>PLVERSION</code> 
 to find the version of
 <code>SWI-Prolog.h</code> and <a class="func" href="foreigninclude.html#PL_query()">PL_query()</a> 
@@ -517,7 +517,7 @@ and profiling foreign code (valgrind)</span></a></h3>
 
 <a id="sec:foreign-debug-and-profile"></a>
 
-<p><a id="idx:valgrind:2498"></a><a id="idx:profilingforeigncode:2499"></a>This 
+<p><a id="idx:valgrind:2499"></a><a id="idx:profilingforeigncode:2500"></a>This 
 section is only relevant for Unix users on platforms supported by
 <a class="url" href="http://valgrind.org/">valgrind</a>. Valgrind is an 
 excellent binary instrumentation platform. Unlike many other 
@@ -530,7 +530,7 @@ option to <b>gcc</b> or <b>swipl-ld</b>. By setting the environment
 variable <code>VALGRIND</code> to <code>yes</code>, SWI-Prolog will <em>not</em> 
 release loaded shared objects using dlclose(). This trick is required to 
 get source information on the loaded library. Without, valgrind claims 
-that the shared object has no debugging information.<sup class="fn">209<span class="fn-text">Tested 
+that the shared object has no debugging information.<sup class="fn">210<span class="fn-text">Tested 
 using valgrind version 3.2.3 on x64.</span></sup> Here is the complete 
 sequence using <b>bash</b> as login shell:
 

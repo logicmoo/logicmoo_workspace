@@ -97,7 +97,7 @@ uuid(UUID) :-
 %   If SWI-Prolog was not built with the  OSSP UUID dependency library a
 %   simple Prolog alternative that  only   implements  version  4 random
 %   UUIDs is provided. In this case  the   default  version is 4 and the
-%   only admissible options are version(4) and format(atom).
+%   only admissible options are version(4) and format(Format).
 
 :- if(current_predicate(ossp_uuid/2)).
 uuid(UUID, Options) :-
@@ -110,9 +110,12 @@ uuid(UUID, []) :-
     random_uuid(UUID).
 uuid(UUID, Options) :-
     option(version(4), Options, 4),
-    option(format(atom), Options, atom),
-    !,
-    random_uuid(UUID).
+    option(format(Format), Options, atom),
+    (   Format == atom
+    ->  !, random_uuid(UUID)
+    ;   Format == integer
+    ->  !, random_int_uuid(UUID)
+    ).
 uuid(_UUID, Options) :-
     domain_error(uuid_options, Options).
 
@@ -129,6 +132,16 @@ random_uuid(UUID) :-
             ~`0t~16r~4+-~|\c
             ~`0t~16r~4+-~|\c
             ~`0t~16r~12+', [A,B,C,D,E]).
+
+random_int_uuid(UUID) :-
+    Version = 4,
+    A is random(0xffffffff),
+    B is random(0xffff),
+    C is random(0x0fff) \/ Version<<12,
+    D is random(0xffff) \/ 0x8000,
+    E is random(0xffffffffffff),
+    UUID is (A<<96)+(B<<80)+(C<<84)+(D<<48)+E.
+
 :- endif.
 
 %!  uuid_property(+UUID, ?Property)

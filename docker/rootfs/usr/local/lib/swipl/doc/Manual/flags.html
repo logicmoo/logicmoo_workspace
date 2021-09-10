@@ -2,7 +2,7 @@
 
 <html>
 <head>
-<title>SWI-Prolog 8.3.28 Reference Manual: Section 2.12</title><link rel="home" href="index.html">
+<title>SWI-Prolog 8.3.29 Reference Manual: Section 2.12</title><link rel="home" href="index.html">
 <link rel="contents" href="Contents.html">
 <link rel="index" href="DocIndex.html">
 <link rel="summary" href="summary.html">
@@ -1365,6 +1365,12 @@ recorded database (see <a class="sec" href="db.html#sec:4.14.2">section
 <a class="sec" href="chr.html#sec:9">section 9</a>),<sup class="fn">23<span class="fn-text">Suggested 
 by Falco Nogatz</span></sup> which maintains the global constraint store 
 in backtrackable global variables.</dd>
+<dt class="pubdef"><a id="flag:toplevel_name_variables"><strong>toplevel_name_variables</strong>(<var>bool</var>, changeable)</a></dt>
+<dd class="defbody">
+If <code>true</code> (default), give names to variables at the toplevel 
+instead of printing them as <var>_NNN</var>. The variables are named
+<var>_A</var>, <var>_B</var>, ... Variables that appear only once 
+(singletons) are printed as <var>_</var>.</dd>
 <dt class="pubdef"><a id="flag:toplevel_print_anon"><strong>toplevel_print_anon</strong>(<var>bool</var>, changeable)</a></dt>
 <dd class="defbody">
 If <code>true</code>, top-level variables starting with an underscore (<code>_</code>) 

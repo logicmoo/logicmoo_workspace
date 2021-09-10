@@ -61,7 +61,7 @@
 :- endif.
 :- autoload(library(lists),[max_list/2,append/2]).
 :- autoload(library(option),[merge_options/3,option/3]).
-:- if(exists_source(library(gui_tracer))).
+:- if(exists_source(library(pce))).
 :- autoload(library(pce),[send/2]).
 :- endif.
 :- autoload(library(prolog_stack),

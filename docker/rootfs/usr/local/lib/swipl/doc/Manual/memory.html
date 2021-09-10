@@ -2,7 +2,7 @@
 
 <html>
 <head>
-<title>SWI-Prolog 8.3.28 Reference Manual: Section 4.43</title><link rel="home" href="index.html">
+<title>SWI-Prolog 8.3.29 Reference Manual: Section 4.43</title><link rel="home" href="index.html">
 <link rel="contents" href="Contents.html">
 <link rel="index" href="DocIndex.html">
 <link rel="summary" href="summary.html">
@@ -250,14 +250,14 @@ Invoke the global and trail stack garbage collector. Normally the
 garbage collector is invoked automatically if necessary. Explicit 
 invocation might be useful to reduce the need for garbage collections in 
 time-critical segments of the code. After the garbage collection
-<a id="idx:trimstacks0:1807"></a><a class="pred" href="memory.html#trim_stacks/0">trim_stacks/0</a> 
+<a id="idx:trimstacks0:1808"></a><a class="pred" href="memory.html#trim_stacks/0">trim_stacks/0</a> 
 is invoked to release the collected memory resources.</dd>
 <dt class="pubdef"><a id="garbage_collect_atoms/0"><strong>garbage_collect_atoms</strong></a></dt>
 <dd class="defbody">
 Reclaim unused atoms. Normally invoked after <a class="flag" href="flags.html#flag:agc_margin">agc_margin</a> 
 (a Prolog flag) atoms have been created. On multithreaded versions the 
 actual collection is delayed until there are no threads performing 
-normal garbage collection. In this case <a id="idx:garbagecollectatoms0:1808"></a><a class="pred" href="memory.html#garbage_collect_atoms/0">garbage_collect_atoms/0</a> 
+normal garbage collection. In this case <a id="idx:garbagecollectatoms0:1809"></a><a class="pred" href="memory.html#garbage_collect_atoms/0">garbage_collect_atoms/0</a> 
 returns immediately. Note that there is no guarantee it will <em>ever</em> 
 happen, as there may always be threads performing garbage collection.</dd>
 <dt class="pubdef"><a id="garbage_collect_clauses/0"><strong>garbage_collect_clauses</strong></a></dt>
@@ -268,7 +268,7 @@ implies setting the <em>erased generation</em> to the current
 Keeping the clause around is both needed to realise the <em>logical 
 update view</em> and deal with the fact that other threads may be 
 executing the clause. Both static and dynamic code is processed this 
-way.<sup class="fn">154<span class="fn-text">Up to version 7.3.11, 
+way.<sup class="fn">155<span class="fn-text">Up to version 7.3.11, 
 dynamic code was handled using <em>reference counts</em>.</span></sup>.
 
 <p>The clause garbage collector (CGC) scans the environment stacks of 
@@ -294,7 +294,7 @@ Control whether or not atom and clause garbage collection are executed
 in a dedicated thread. The default is <code>true</code>. Values for
 <var>Status</var> are <code>true</code>, <code>false</code> and <code>stop</code>. 
 The latter stops the <code>gc</code> thread but allows is to be 
-recreated lazily. This is use by e.g., <a id="idx:fork1:1809"></a><span class="pred-ext">fork/1</span> 
+recreated lazily. This is use by e.g., <a id="idx:fork1:1810"></a><span class="pred-ext">fork/1</span> 
 to avoid forking a multi-threaded application. See also <a class="flag" href="flags.html#flag:gc_thread">gc_thread</a>.</dd>
 <dt class="pubdef"><a id="trim_stacks/0"><strong>trim_stacks</strong></a></dt>
 <dd class="defbody">
@@ -313,9 +313,9 @@ loop :-
 </pre>
 
 <p>The Prolog top-level loop is written this way, reclaiming memory 
-resources after every user query. See also <a id="idx:trimheap0:1810"></a><a class="pred" href="memory.html#trim_heap/0">trim_heap/0</a> 
+resources after every user query. See also <a id="idx:trimheap0:1811"></a><a class="pred" href="memory.html#trim_heap/0">trim_heap/0</a> 
 and
-<a id="idx:threadidle2:1811"></a><a class="pred" href="memory.html#thread_idle/2">thread_idle/2</a>.</dd>
+<a id="idx:threadidle2:1812"></a><a class="pred" href="memory.html#thread_idle/2">thread_idle/2</a>.</dd>
 <dt class="pubdef"><a id="set_prolog_stack/2"><strong>set_prolog_stack</strong>(<var>+Stack, 
 +KeyValue</var>)</a></dt>
 <dd class="defbody">
@@ -323,7 +323,7 @@ Set a parameter for one of the Prolog runtime stacks. <var>Stack</var>
 is one of <code>local</code>, <code>global</code> or <code>trail</code>. 
 The table below describes the <var>Key</var>(<var>Value</var>) pairs.
 
-<p>Current settings can be retrieved with <a id="idx:prologstackproperty2:1812"></a><a class="pred" href="memory.html#prolog_stack_property/2">prolog_stack_property/2</a>.
+<p>Current settings can be retrieved with <a id="idx:prologstackproperty2:1813"></a><a class="pred" href="memory.html#prolog_stack_property/2">prolog_stack_property/2</a>.
 
 <dl class="latex">
 <dt><strong>min_free</strong>(<var>+Cells</var>)</dt>
@@ -334,8 +334,8 @@ and stack-shifts at the cost of higher memory usage. The amount is
 reported and specified in <em>cells</em>. A cell is 4 bytes in the 
 32-bit version and 8 bytes on the 64-bit version. See
 <a class="flag" href="flags.html#flag:address_bits">address_bits</a>. 
-See also <a id="idx:trimstacks0:1813"></a><a class="pred" href="memory.html#trim_stacks/0">trim_stacks/0</a> 
-and <a id="idx:debug0:1814"></a><a class="pred" href="debugger.html#debug/0">debug/0</a>.</dd>
+See also <a id="idx:trimstacks0:1814"></a><a class="pred" href="memory.html#trim_stacks/0">trim_stacks/0</a> 
+and <a id="idx:debug0:1815"></a><a class="pred" href="debugger.html#debug/0">debug/0</a>.</dd>
 <dt><strong>low</strong>(<var>+Cells</var>)</dt>
 <dt><strong>factor</strong>(<var>+Number</var>)</dt>
 <dd class="defbody">
@@ -348,16 +348,16 @@ started if <var>used &gt; factor &times; lastused + low</var>.</dd>
 <dd class="defbody">
 All stacks trigger overflow before actually reaching the limit, so the 
 resulting error can be handled gracefully. The spare stack is used for
-<a id="idx:printmessage2:1815"></a><a class="pred" href="printmsg.html#print_message/2">print_message/2</a> 
+<a id="idx:printmessage2:1816"></a><a class="pred" href="printmsg.html#print_message/2">print_message/2</a> 
 from the garbage collector and for handling exceptions. The default 
 suffices, unless the user redefines related hooks. Do
 <b>not</b> specify large values for this because it reduces the amount 
 of memory available for your real task.
 
-<p>Related hooks are <a id="idx:messagehook3:1816"></a><a class="pred" href="printmsg.html#message_hook/3">message_hook/3</a> 
+<p>Related hooks are <a id="idx:messagehook3:1817"></a><a class="pred" href="printmsg.html#message_hook/3">message_hook/3</a> 
 (redefining GC messages),
-<a id="idx:prologtraceinterception4:1817"></a><a class="pred" href="tracehook.html#prolog_trace_interception/4">prolog_trace_interception/4</a> 
-and <a id="idx:prologexceptionhook4:1818"></a><a class="pred" href="excepthook.html#prolog_exception_hook/4">prolog_exception_hook/4</a>.
+<a id="idx:prologtraceinterception4:1818"></a><a class="pred" href="tracehook.html#prolog_trace_interception/4">prolog_trace_interception/4</a> 
+and <a id="idx:prologexceptionhook4:1819"></a><a class="pred" href="excepthook.html#prolog_exception_hook/4">prolog_exception_hook/4</a>.
 </dd>
 </dl>
 
@@ -367,7 +367,7 @@ and <a id="idx:prologexceptionhook4:1818"></a><a class="pred" href="excepthook.h
 <dd class="defbody">
 True if <var>KeyValue</var> is a current property of <var>Stack</var>. 
 See
-<a id="idx:setprologstack2:1819"></a><a class="pred" href="memory.html#set_prolog_stack/2">set_prolog_stack/2</a> 
+<a id="idx:setprologstack2:1820"></a><a class="pred" href="memory.html#set_prolog_stack/2">set_prolog_stack/2</a> 
 for defined properties.
 </dd>
 </dl>
@@ -380,11 +380,11 @@ memory (malloc)</span></a></h3>
 
 <a id="sec:malloc"></a>
 
-<p><a id="idx:tcmalloc:1820"></a><a id="idx:ptmalloc:1821"></a>SWI-Prolog's 
+<p><a id="idx:tcmalloc:1821"></a><a id="idx:ptmalloc:1822"></a>SWI-Prolog's 
 memory management is based on the C runtime malloc() function and 
 related functions. The characteristics of the malloc() implementation 
 may affect performance and overall memory usage of the system. For most 
-Prolog programs the performance impact of the allocator is small.<sup class="fn">155<span class="fn-text">Multi-threaded 
+Prolog programs the performance impact of the allocator is small.<sup class="fn">156<span class="fn-text">Multi-threaded 
 applications may suffer from allocators that do not effectively avoid <em>false 
 sharing</em> that affect CPU cache behaviour or operate using a single 
 lock to provide thread safety. Such allocators should be rare in modern 
@@ -402,9 +402,9 @@ this requirement.
 <p>
 <li>Atoms and clauses are allocated by the thread that requires them, 
 but this memory is freed by the thread running the atom or clause 
-garbage collector (see <a id="idx:garbagecollectatoms0:1822"></a><a class="pred" href="memory.html#garbage_collect_atoms/0">garbage_collect_atoms/0</a> 
+garbage collector (see <a id="idx:garbagecollectatoms0:1823"></a><a class="pred" href="memory.html#garbage_collect_atoms/0">garbage_collect_atoms/0</a> 
 and
-<a id="idx:garbagecollectclauses0:1823"></a><a class="pred" href="memory.html#garbage_collect_clauses/0">garbage_collect_clauses/0</a>). 
+<a id="idx:garbagecollectclauses0:1824"></a><a class="pred" href="memory.html#garbage_collect_clauses/0">garbage_collect_clauses/0</a>). 
 Normally these run in the thread
 <code>gc</code>, which means that all deallocation happens in this 
 thread. Notably the <a class="url" href="http://www.malloc.de/en/">ptmalloc</a> 
@@ -427,7 +427,7 @@ be achieved using the environment variable <code>LD_PRELOAD</code>:
 
 <p>SWI-Prolog attempts to detect the currently active allocator and sets 
 the Prolog flag <a class="flag" href="flags.html#flag:malloc">malloc</a> 
-if the detection succeeds. regardless of the malloc implementation, <a id="idx:trimheap0:1824"></a><a class="pred" href="memory.html#trim_heap/0">trim_heap/0</a> 
+if the detection succeeds. regardless of the malloc implementation, <a id="idx:trimheap0:1825"></a><a class="pred" href="memory.html#trim_heap/0">trim_heap/0</a> 
 is provided.
 
 <dl class="latex">
@@ -437,7 +437,7 @@ his predicate attempts to return heap memory to the operating system.
 There is no portable way of doing so. If the system detects tcmalloc it 
 calls MallocExtension_ReleaseFreeMemory(). If the system detects 
 ptmalloc as provided by the GNU runtime library it calls malloc_trim(). 
-In other cases this predicate simply succeeds. See also <a id="idx:trimstacks0:1825"></a><a class="pred" href="memory.html#trim_stacks/0">trim_stacks/0</a>
+In other cases this predicate simply succeeds. See also <a id="idx:trimstacks0:1826"></a><a class="pred" href="memory.html#trim_stacks/0">trim_stacks/0</a>
 </dd>
 </dl>
 
@@ -455,7 +455,7 @@ provides the following additional predicates.
 True when <var>Property</var> is a property of the current allocator. 
 The properties are defined by the allocator. The properties of tcmalloc 
 are defined in
-<code>gperftools/malloc_extension.h</code>:<sup class="fn">156<span class="fn-text">Documentation 
+<code>gperftools/malloc_extension.h</code>:<sup class="fn">157<span class="fn-text">Documentation 
 copied from the header.</span></sup>
 
 <dl class="latex">
@@ -518,7 +518,7 @@ towards physical memory usage.
 </dd>
 <dt class="pubdef"><span class="pred-tag">[det]</span><a id="set_malloc/1"><strong>set_malloc</strong>(<var>+Property</var>)</a></dt>
 <dd class="defbody">
-Set properties described in <a id="idx:mallocproperty1:1826"></a><a class="pred" href="memory.html#malloc_property/1">malloc_property/1</a>. 
+Set properties described in <a id="idx:mallocproperty1:1827"></a><a class="pred" href="memory.html#malloc_property/1">malloc_property/1</a>. 
 Currently the only writable property is
 <code>tcmalloc.max_total_thread_cache_bytes</code>. Setting an unknown 
 property raises a <code>domain_error</code> and setting a read-only 
@@ -527,7 +527,7 @@ property raises a <code>permission_error</code> exception.</dd>
 +Duration</var>)</a></dt>
 <dd class="defbody">
 Indicates to the system that the calling thread will idle for some time 
-while calling <var>Goal</var> as <a id="idx:once1:1827"></a><a class="pred" href="metacall.html#once/1">once/1</a>. 
+while calling <var>Goal</var> as <a id="idx:once1:1828"></a><a class="pred" href="metacall.html#once/1">once/1</a>. 
 This call releases resources to the OS to minimise the footprint of the 
 calling thread while it waits. Despite the name this predicate is always 
 provided, also if the system is not configured with tcmalloc or is 
@@ -537,14 +537,14 @@ single threaded.
 <dl class="latex">
 <dt><strong>short</strong></dt>
 <dd class="defbody">
-Calls <a id="idx:trimstacks0:1828"></a><a class="pred" href="memory.html#trim_stacks/0">trim_stacks/0</a> 
+Calls <a id="idx:trimstacks0:1829"></a><a class="pred" href="memory.html#trim_stacks/0">trim_stacks/0</a> 
 and, if tcmalloc is used, calls 
 MallocExtension_MarkThreadTemporarilyIdle() which empties the thread's 
 malloc cache but preserves the cache itself.</dd>
 <dt><strong>long</strong></dt>
 <dd class="defbody">
-Calls <a id="idx:garbagecollect0:1829"></a><a class="pred" href="memory.html#garbage_collect/0">garbage_collect/0</a> 
-and <a id="idx:trimstacks0:1830"></a><a class="pred" href="memory.html#trim_stacks/0">trim_stacks/0</a> 
+Calls <a id="idx:garbagecollect0:1830"></a><a class="pred" href="memory.html#garbage_collect/0">garbage_collect/0</a> 
+and <a id="idx:trimstacks0:1831"></a><a class="pred" href="memory.html#trim_stacks/0">trim_stacks/0</a> 
 and, if tcmalloc is used, calls MallocExtension_MarkThreadIdle() which 
 releases all thread-specific allocation data structures.
 </dd>

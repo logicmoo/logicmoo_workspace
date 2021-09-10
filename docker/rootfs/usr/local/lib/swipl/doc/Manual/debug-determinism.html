@@ -2,7 +2,7 @@
 
 <html>
 <head>
-<title>SWI-Prolog 8.3.28 Reference Manual: Section 4.40</title><link rel="home" href="index.html">
+<title>SWI-Prolog 8.3.29 Reference Manual: Section 4.40</title><link rel="home" href="index.html">
 <link rel="contents" href="Contents.html">
 <link rel="index" href="DocIndex.html">
 <link rel="summary" href="summary.html">
@@ -288,7 +288,7 @@ ERROR:   [10] p(a)
 The <a class="pred" href="debug-determinism.html#$/0">$/0</a> constructs 
 acts similar to the <a class="pred" href="control.html#!/0">!/0</a>, but 
 in addition declares that the remainder of the clause body shall succeed 
-deterministically. It exploits the same underlying mechanism as the <a id="idx:det1:1788"></a><a class="pred" href="debug-determinism.html#det/1">det/1</a> 
+deterministically. It exploits the same underlying mechanism as the <a id="idx:det1:1789"></a><a class="pred" href="debug-determinism.html#det/1">det/1</a> 
 declaration. See also <a class="pred" href="debug-determinism.html#$/1">$/1</a>.</dd>
 <dt class="pubdef"><span class="pred-tag">[experimental]</span><a id="$/1"><strong>$</strong>(<var>:Goal</var>)</a></dt>
 <dd class="defbody">
@@ -299,11 +299,11 @@ Otherwise the result depends on the Prolog flag <a class="flag" href="flags.html
 <dl class="latex">
 <dt><strong>silent</strong></dt>
 <dd class="defbody">
-Act as <a id="idx:once1:1789"></a><a class="pred" href="metacall.html#once/1">once/1</a>.
+Act as <a id="idx:once1:1790"></a><a class="pred" href="metacall.html#once/1">once/1</a>.
 </dd>
 <dt><strong>warning</strong></dt>
 <dd class="defbody">
-Print a warning and act as <a id="idx:once1:1790"></a><a class="pred" href="metacall.html#once/1">once/1</a>.
+Print a warning and act as <a id="idx:once1:1791"></a><a class="pred" href="metacall.html#once/1">once/1</a>.
 </dd>
 <dt><strong>error</strong></dt>
 <dd class="defbody">
@@ -329,7 +329,7 @@ last predicate is a normal predicate the requirement to succeed
 deterministically is transferred to the new goal. As last-call 
 optimization causes the information which predicate initially claimed to 
 be deterministic to be lost, the error is associated with the called 
-predicate. Debug mode (see <a id="idx:debug0:1791"></a><a class="pred" href="debugger.html#debug/0">debug/0</a> 
+predicate. Debug mode (see <a id="idx:debug0:1792"></a><a class="pred" href="debugger.html#debug/0">debug/0</a> 
 or the Prolog flag <a class="flag" href="flags.html#flag:debug">debug</a>) 
 may be used to avoid last call optimization and find the call stack that 
 causes the issue.

@@ -2,7 +2,7 @@
 
 <html>
 <head>
-<title>SWI-Prolog 8.3.28 Reference Manual: Section 6.2</title><link rel="home" href="index.html">
+<title>SWI-Prolog 8.3.29 Reference Manual: Section 6.2</title><link rel="home" href="index.html">
 <link rel="contents" href="Contents.html">
 <link rel="index" href="DocIndex.html">
 <link rel="summary" href="summary.html">
@@ -239,13 +239,13 @@ a Module</span></a></h2>
 <a id="sec:defmodule"></a>
 
 <p>Modules are normally created by loading a <em>module file</em>. A 
-module file is a file holding a <a id="idx:module2:1923"></a><a class="pred" href="defmodule.html#module/2">module/2</a> 
+module file is a file holding a <a id="idx:module2:1924"></a><a class="pred" href="defmodule.html#module/2">module/2</a> 
 directive as its first term. The
-<a id="idx:module2:1924"></a><a class="pred" href="defmodule.html#module/2">module/2</a> 
+<a id="idx:module2:1925"></a><a class="pred" href="defmodule.html#module/2">module/2</a> 
 directive declares the name and the public (i.e., externally visible) 
 predicates of the module. The rest of the file is loaded into the 
-module. Below is an example of a module file, defining <a id="idx:reverse2:1925"></a><a class="pred" href="lists.html#reverse/2">reverse/2</a> 
-and hiding the helper predicate <a id="idx:rev3:1926"></a><span class="pred-ext">rev/3</span>. 
+module. Below is an example of a module file, defining <a id="idx:reverse2:1926"></a><a class="pred" href="lists.html#reverse/2">reverse/2</a> 
+and hiding the helper predicate <a id="idx:rev3:1927"></a><span class="pred-ext">rev/3</span>. 
 A module can use all built-in predicates and, by default, cannot 
 redefine system predicates.
 
@@ -287,9 +287,9 @@ unified with the basename without extension of the file being loaded.</dd>
 <dt class="pubdef"><a id="module/3">:- <strong>module</strong>(<var>+Module, 
 +PublicList, +Dialect</var>)</a></dt>
 <dd class="defbody">
-Same as <a id="idx:module2:1927"></a><a class="pred" href="defmodule.html#module/2">module/2</a>. 
+Same as <a id="idx:module2:1928"></a><a class="pred" href="defmodule.html#module/2">module/2</a>. 
 The additional <var>Dialect</var> argument provides a list of <em>language 
-options</em>. Each atom in the list <var>Dialect</var> is mapped to a <a id="idx:usemodule1:1928"></a><a class="pred" href="import.html#use_module/1">use_module/1</a> 
+options</em>. Each atom in the list <var>Dialect</var> is mapped to a <a id="idx:usemodule1:1929"></a><a class="pred" href="import.html#use_module/1">use_module/1</a> 
 goal as given below. See also <a class="sec" href="dialect.html#sec:C">section 
 C</a>. The third argument is supported for compatibility with the
 <a class="url" href="http://prolog-commons.org/">Prolog Commons project</a>.
