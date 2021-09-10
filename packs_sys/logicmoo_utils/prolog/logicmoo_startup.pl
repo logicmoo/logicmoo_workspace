@@ -1579,7 +1579,7 @@ install_logicmoo:-
 :-system:use_module(library(filesex)).
 :-system:use_module(library(qsave)).
 qsave_bin(Clif):-
-  atom_comcat('lmoo-',Clif,Lmoo),
+  atom_concat('lmoo-',Clif,Lmoo),
   getenv('LOGICMOO_WS',Dir),
   directory_file_path('bin',Lmoo,Bin),
   directory_file_path(Dir,Bin,Path),

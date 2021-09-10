@@ -1,4 +1,4 @@
-#!/usr/bin/env lmoo-junit
+#!/usr/bin/env lmoo-jenkins-minor
 
 :- include(test_header).
 
