@@ -27,10 +27,9 @@ fi
 
 echo -e "Running release (all) tests\nTESTING_TEMP=$TESTING_TEMP\n( cd $PWD ; $BASH_SOURCE $TEST_PARAMS )"
 
-lmoo-make 2>&1 | grep -3 -i 'WARN\|ERROR'
+lmoo-make 2>&1 | grep -2 -i 'WARN\|ERROR'
 
-# base ./packs_sys/pfc/t
-find $WAS_PWD -mindepth 2 -name "test_on_*.sh" -execdir bash -c "source '{}' \"$TEST_PARAMS\"" \;
+find $WAS_PWD -mindepth 2 -name "test_on_*.sh" -execdir {} "$TEST_PARAMS" \;
 
 lmoo jenkins-minor "$TEST_PARAMS"
 

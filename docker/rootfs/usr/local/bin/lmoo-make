@@ -7,6 +7,6 @@ cd $RDIR
 source ./logicmoo_env.sh
 swipl --pce=false -g "use_module(library(logicmoo_clif))" $* -t halt
 chmod 777 bin/lmoo-pfc bin/lmoo-clif
-(cd prologmud_server ; lmoo-clif compile_mud_server.pl )
-chmod 777 bin/lmoo-swipl
+#(cd prologmud_server ; lmoo-clif compile_mud_server.pl )
+#chmod 777 bin/lmoo-swipl
 )

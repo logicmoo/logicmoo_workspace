@@ -34,7 +34,6 @@ echo "<!-- GLOBSTEM=${GLOBSTEM} -->"
 echo "<!-- TEST_STEM=${TEST_STEM} -->"
 [ -z "${TEST_STEM_PATH}" ] && export TEST_STEM_PATH=$TESTING_TEMP/$TEST_STEM
 echo "<!-- TEST_STEM_PATH=${TEST_STEM_PATH} -->"
-sleep 1
 
 
 export CAPTURE_TEST_ANSI=$TEST_STEM_PATH.ansi

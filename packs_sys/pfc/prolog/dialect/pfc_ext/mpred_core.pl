@@ -4291,7 +4291,7 @@ show_if_debug(A):-  get_mpred_is_tracing(A) -> show_call(mpred_is_tracing,call_u
 
 :- thread_local(t_l:mpred_debug_local/0).
 
-pfc_mpred_test_hook(G):- notrace(mpred_is_silent),!, with_no_mpred_trace_exec(must(mpred_test_fok(G))),!.
+pfc_mpred_test_hook(G):- notrace(mpred_is_silent),!, with_no_mpred_trace_exec(must(mpred_test(G))),!.
 pfc_mpred_test_hook(G):- notrace((dmsg_pretty(:-mpred_test(G)),fail)).
 pfc_mpred_test_hook(G):- notrace((current_prolog_flag(runtime_debug,D),D<1)),!,with_no_mpred_trace_exec(must((G))),!.
 pfc_mpred_test_hook(G):- notrace((var(G),dmsg_pretty(var_mpred_test(G)))),!,trace_or_throw(var_mpred_test(G)).

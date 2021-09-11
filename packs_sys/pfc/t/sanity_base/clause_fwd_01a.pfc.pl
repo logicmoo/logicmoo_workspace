@@ -8,7 +8,7 @@
 % :- set_prolog_flag(lm_pfc_lean,true).
 % :- expects_dialect(pfc).
 
-mpred_test_cf(P):- dmsg_pretty((:- mpred_test(P))),mpred_test_fok(P).
+mpred_test_cf(P):- dmsg_pretty((:- mpred_test(P))),mpred_test(P).
 
 % never_assert_u(early_aa_H(Var),var):- cwc, is_ftVar(Var).
 foo.                   

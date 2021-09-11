@@ -624,13 +624,12 @@ t_to_w2(S,w(S,open)):-!.
 %t_to_w2(X,w(X,[])):-!.
 from_wordlist_atoms( Sentence,  Words):- enotrace((must_maplist(w2_to_t,Sentence, Words))).
 
-
 %into_chat80_segs_pt2(Sentence,U):- check_words(Sentence,U).
 
 process4(How,Sentence,Answer,Times) :-
    Times = [ParseTime,SemTime,TimePlan,TimeAns,TotalTime],
   quietly(( runtime(StartSeg),
-   into_lexical_segs(Sentence,U),
+   mpred_test_mok(into_lexical_segs(Sentence,U)),
    runtime(StopSeg),
    SegTime is StopSeg - StartSeg,
    report(How,U,'segs',SegTime,tree),
@@ -643,9 +642,9 @@ process4(How,Sentence,Answer,Times) :-
     report(How,E,'Parse',ParseTime,tree),
     % !, %%%%%%%%%%%%%%%% added by JPO but breaks "london"
     runtime(StartSem))),
-   must_or_rtrace(deepen_pos(i_sentence(E,E1))),
+   must_or_rtrace(mpred_test_mok(deepen_pos(i_sentence(E,E1)))),
    report(How,E1,'i_sentence',ParseTime,cmt),
-   clausify80(E1,E2),
+   mpred_test_mok(clausify80(E1,E2)),
    report(How,E2,'clausify80',ParseTime,cmt),
    simplify80(E2,E3),simplify80(E3,S))),
    runtime(StopSem),

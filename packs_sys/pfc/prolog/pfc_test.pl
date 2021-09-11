@@ -44,7 +44,7 @@ test_red_lined(Failed):- notrace((
   ansifmt(red,"%%%%%%%%%%%%%%%%%%%%%%%%%%% find ~q in srcs %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%\n",[Failed]),
   ansifmt(yellow,"%%%%%%%%%%%%%%%%%%%%%%%%%%% find test_red_lined in srcs %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%\n"))))))).
 
-% mpred_test/1,mpred_test_fok/1, mpred_test(+),mpred_test_fok(+),
+% mpred_test/1,mpred_test/1, mpred_test(+),mpred_test(+),
 
 %% mpred_test(+P) is semidet.
 %
@@ -53,64 +53,70 @@ test_red_lined(Failed):- notrace((
 
 :- meta_predicate(mpred_test(:)).
 :- module_transparent(mpred_test/1).
-%mpred_test(G):- notrace(mpred_test0(G)) -> true ; with_no_breaks(with_mpred_trace_exec(must(mpred_test_fok(G)))),!.
-mpred_test(_):- notrace((compiling; current_prolog_flag(xref,true))),!.
-mpred_test(G):- mpred_test_fok(G).
-
-
 :- if(false).
+%mpred_test(G):- notrace(mpred_test0(G)) -> true ; with_no_breaks(with_mpred_trace_exec(must(mpred_test(G)))),!.
+%mpred_test(_):- notrace((compiling; current_prolog_flag(xref,true))),!.
 mpred_test(MPRED):- must(mpred_to_pfc(MPRED,PFC)),!,(show_call(umt(PFC))*->true;(call_u(PFC)*->mpred_why2(MPRED);test_red_lined(mpred_test(MPRED)),!,fail)).
 %mpred_test(MPRED):- must(mpred_to_pfc(MPRED,PFC)),!,(show_call(call_u(PFC))*->true;(call(PFC)*->mpred_why2(MPRED);test_red_lined(mpred_test(MPRED)),!,fail)).
-mpred_why2(MPRED):- must(mpred_to_pfc(MPRED,PFC)),!,(show_call(mpred_why(PFC))*->true;(test_red_lined(mpred_why(MPRED)),!,fail)).
+% % mpred_why2(MPRED):- must(mpred_to_pfc(MPRED,PFC)),!,(show_call(mpred_why(PFC))*->true;(test_red_lined(mpred_why(MPRED)),!,fail)).
 :- endif.
+mpred_test(G):- mpred_test(_Testcase, G).
 
-
-
-% mpred_test_fok(G):- source_file(_,_),!,mpred_test_fok_0(G),!.
 :- meta_predicate(mpred_test_fok(:)).
-mpred_test_fok(G):- must((generate_test_name(G, Testcase), mpred_test_fok(Testcase, G))).
-
-:- thread_local(t_l:mpred_current_testcase/1).
-
-:- dynamic(j_u:junit_prop/3).
-
-mpred_test_fok(Testcase, G):- 
-  add_test_info(testsuite,testcase,Testcase),
-  locally(t_l:mpred_current_testcase(Testcase), mpred_test_fok_2(Testcase, G)).
-
-mpred_test_fok_2(Testcase, G):- 
- must_det_l((
-  add_test_info(Testcase,goal,G),
-  ignore((source_location(S,L),atom(S),add_test_info(Testcase,src,S:L),
-   sformat(URI,'~w#L~w',[S,L]),
-   replace_in_string(
-    [ "/opt/logicmoo_workspace"="https://logicmoo.org:2082/gitlab/logicmoo/logicmoo_workspace/-/blob/master"],
-    URI,URL),
-   add_test_info(Testcase,url,URL))),
-  mpred_test_fok_4(G, TestResult, Elapsed),
-  add_test_info(Testcase,time,Elapsed),
-  TestResult=..[Type|Info],add_test_info(Testcase,Type,Info),
-  add_test_info(Testcase,result,Type))),
- ignore((getenv('TEE_FILE',Tee),
- must_det_l((
-   read_file_to_string(Tee,Str,[]),
-   add_test_info(Testcase,out,Str),
-   save_single_testcase(Testcase),
-   nop(sformat(Exec,'cat /dev/null > ~w',[Tee])),
-   nop(shell(Exec)))))).
+:- module_transparent(mpred_test_fok/1).
+mpred_test_fok(G):- !, call(G).
+mpred_test_fok(G):- mpred_test_fok(_Testcase, G).
+:- meta_predicate(mpred_test_mok(:)).
+:- module_transparent(mpred_test_mok/1).
+mpred_test_mok(G):- !, call(G).
+mpred_test_mok(G):- mpred_test_fok(_Testcase, G).
 
 negate_call(\+ G, G).
 negate_call(M:G,M:NG):- !, negate_call(G, NG).
 negate_call(G, \+ G).
 
-mpred_test_fok_4(G, TestResult, Elapsed):- !,
- must_det_l((
-  junit_incr(tests),
-  get_time(Start),  
-  catch(( (  call_u_hook(G) ) -> TestResult = passed; TestResult = failure),E, TestResult=error(E)),
-  get_time(End),
-  Elapsed is End - Start,
-  process_test_result(TestResult, G))).
+:- thread_local(t_l:mpred_current_testcase/1).
+:- dynamic(j_u:junit_prop/3).
+
+mpred_test(_,_):- notrace((compiling; current_prolog_flag(xref,true))),!.
+mpred_test(Testcase, G):- ignore(mpred_test_fok(Testcase, G)).
+
+
+mpred_test_fok(Testcase, G):-   
+  junit_incr(tests), 
+  junit_incr(test_number), 
+  ignore((var(Testcase),generate_test_name(G, Testcase))),
+  add_test_info(testsuite,testcase,Testcase),
+  locally(t_l:mpred_current_testcase(Testcase), 
+  (must_det_l((
+    wdmsg(mpred_test(Testcase, G)),
+    add_test_info(Testcase,goal,G),
+    ignore((source_location(S,L),atom(S),add_test_info(Testcase,src,S:L),
+    sformat(URI,'~w#L~w',[S,L]),
+    replace_in_string( [ "/opt/logicmoo_workspace"
+        ="https://logicmoo.org:2082/gitlab/logicmoo/logicmoo_workspace/-/blob/master"],
+        URI,URL),
+    add_test_info(Testcase,url,URL))),    
+    get_time(Start))),
+    Answers = nb(0),
+    catch( ( call_u_hook(G) *-> TestResult = passed; TestResult = failure), E, TestResult=error(E)),
+    ignore((Answers = nb(0),
+      must_det_l((get_time(End),
+      Elapsed is End - Start,
+      add_test_info(Testcase,time,Elapsed),
+      process_test_result(TestResult, G),    
+      TestResult=..[Type|Info],add_test_info(Testcase,Type,Info),
+      add_test_info(Testcase,result,Type),
+      ignore((getenv('TEE_FILE',Tee),
+      must_det_l((
+        read_file_to_string(Tee,Str,[]),
+        add_test_info(Testcase,out,Str),
+        save_single_testcase(Testcase),
+        nop(sformat(Exec,'cat /dev/null > ~w',[Tee])),
+        nop(shell(Exec)))))))))),
+    (TestResult=error(E)-> throw(E) ; true),
+    nb_setarg(1,Answers,1))),
+    Type == passed.
 
 process_test_result(TestResult, G):- TestResult == passed, !, save_info_to(TestResult, why_was_true(G)).
 process_test_result(TestResult, G):- TestResult \== failure,junit_incr(errors), !, save_info_to(TestResult, catch(rtrace(call_u_hook(G)), E, writeln(E))).
@@ -120,6 +126,8 @@ process_test_result(TestResult, G):- !,
   save_info_to(TestResult, 
     (why_was_true(Retry),
      rtrace(G))).
+
+
 
 junit_incr(Count):- flag(Count,T,T+1).
 call_u_hook(\+ G):- !, \+ call_u_hook(G).
@@ -139,16 +147,32 @@ catch_timeout(P):- tracing,!,call(P).
 catch_timeout(P):- catch(call_with_time_limit(30,w_o_c(P)),E,wdmsg(P->E)).
 
 %generate_test_name(G,Name):- getenv('JUNIT_CLASSNAME',Class), gtn_no_pack(G,NPack),sformat(Name,'~w ~w',[Class, NPack]),!.
-generate_test_name(G,Name):- gtn_no_pack(G,Name),!.
-  
+generate_test_name(G,Name):- source_context_name(SCName), gtn_no_pack(G,GName),
+  (atom_length(GName,0)-> SCName = Name ; sformat(Name,'~w__~w',[SCName,GName])).
+
+gtn_no_pack(G,''):- \+ callable(G), !.
 gtn_no_pack(baseKB:G,Testcase):- nonvar(G), !, gtn_no_pack(G,Testcase).
-gtn_no_pack(M: G, Name):- nonvar(G), !, gtn_no_pack(G,Name1), sformat(Name,'~w in ~w',[Name1, M]).
-gtn_no_pack(\+ G, Name):- nonvar(G), !, gtn_no_pack(G,Name1), sformat(Name,'\naf ~w',[Name1]).
-gtn_no_pack(call_u(G), Name):- nonvar(G), !, gtn_no_pack(G,Name).
-gtn_no_pack(G,Name):- callable(G), (source_location(_,L); (_='',L=0)), 
-  sformat(Name1,'Line_~4d',[L]),!,replace_in_string(['_0.'='_'],Name1,Name2), gtn_no_pack(Name2,Name).
-gtn_no_pack(SName,RSName):- atomic(SName),shorten_and_clean_name(SName,RSName),!.
-gtn_no_pack(G,G).
+gtn_no_pack(M: G, Name):- nonvar(G), !, gtn_no_pack(G,Name1), sformat(Name,'~w_in_~w',[Name1, M]).
+gtn_no_pack(\+ G, Name):- nonvar(G), !, gtn_no_pack(G,Name1), sformat(Name,'naf_~w',[Name1]).
+gtn_no_pack(G,Name):- atom(G), sformat(Name1,'~w',[G]), !, shorten_and_clean_name(Name1,Name).
+gtn_no_pack(G,Name):- \+ compound(G), sformat(Name1,'~w',[G]), !, shorten_and_clean_name(Name1,Name).
+gtn_no_pack(G,Name):- arg(_,G,A), compound(A), \+ is_list(A), !, gtn_no_pack(A,Name).
+gtn_no_pack(G,Name):- arg(_,G,A), atom(A), !, gtn_no_pack(A,Name).
+gtn_no_pack(G,Name):- compound_name_arity(G,F,A),sformat(Name,'~w_~w',[F,A]).
+/*
+gtn_no_pack(G,Name):- \+ compound(G), !,
+  sformat(Name1,'~w',[G]),
+  shorten_and_clean_name(Name1,Name2),
+  replace_in_string(['_c32_'='_','__'='_'],Name2,Name).
+gtn_no_pack(G,Name):- is_list(G),!,maplist(gtn_no_pack,G,NameL), atomic_list_concat(NameL,'_',Name).
+gtn_no_pack(G,Name):- compound_name_arguments(G,F,A), gtn_no_pack([F|A],Name).
+*/
+  
+
+source_context_name(SCName):- 
+  (source_location(_,L); (_='',L=0)), flag(test_number,X,X), 
+  sformat(Name,'Test_~4d_Line_~4d',[X,L]),
+  replace_in_string(['_0.'='_'],Name,SCName). 
                     
 :- module_transparent(pfc_feature/1).
 :- dynamic(pfc_feature/1).
@@ -165,8 +189,8 @@ pfc_test_feature(Feature,Test):- pfc_feature(Feature)*-> mpred_test(Test) ; juni
 :- system:import(pfc_test_feature/2).
 :- system:export(pfc_test_feature/2).
 
-:- system:import(pfc_feature/1).
-:- system:export(pfc_feature/1).
+:- baseKB:import(pfc_feature/1).
+:- baseKB:export(pfc_feature/1).
 :- baseKB:import(pfc_test_feature/2).
 :- baseKB:export(pfc_test_feature/2).
 
@@ -490,14 +514,13 @@ save_single_testcase(Name):-
    show_junit_testcase(File,Name),
    write("  </testsuite>\n"),
    write(" </testsuites>\n"))),
- % write(Text), 
- 
  shorten_and_clean_name(File,SFile),
  shorten_and_clean_name(Name,SName),
  atomic_list_concat([SFile,'-',SName],RSName),
  save_to_junit_file(RSName,Text).
 
 classname_to_package(CN,P,C):- atomic_list_concat(List,'.',CN), append(Left,[C],List),atomic_list_concat(Left,'.',P).
+
 shorten_and_clean_name(Name,RSName):- atomic_list_concat([L,_|_],'.',Name),!,shorten_and_clean_name(L,RSName).
 shorten_and_clean_name(Name,RSName):- atomic_list_concat(List,'/',Name),append(_,[N1,N2,N3,N4],List),
   atomic_list_concat(['prolog.',test_,N1,'.',N2,'.',N3,'.',N4],'',RSName).
@@ -530,12 +553,12 @@ clean_away_ansi(DirtyText,DirtyText).
 
 :- dynamic(j_u:last_saved_junit/1).
 
-save_to_junit_file_text(Name,Full,Text):- j_u:last_saved_junit(Full),!,
+save_to_junit_file_text(Full,Text):- j_u:last_saved_junit(Full),!,
     flag(Full,X,X+1),
     atomic_list_concat([Full,'_',X,'-junit.xml'],FullF),
     format('~N% saving_junit: ~w~n',[FullF]),
   setup_call_cleanup(open(FullF, write, Out),writeln(Out,Text), close(Out)),!.
-save_to_junit_file_text(Name,Full,Text):- 
+save_to_junit_file_text(Full,Text):- 
     asserta(j_u:last_saved_junit(Full)),
     atomic_list_concat([Full,'-junit.xml'],FullF),
     format('~N% saving_junit: ~w~n',[FullF]),    
@@ -547,13 +570,12 @@ save_to_junit_file(Name,DirtyText):-
   must_det_l(( 
   atomic_list_concat([Dir,'-',Name],Full),
   write_testcase_env(Name),
-  save_to_junit_file_text(Name,Full,Text),
+  save_to_junit_file_text(Full,Text),
   clear_suite_attribs)).
 
 save_to_junit_file(Name,DirtyText):- 
   clean_away_ansi(DirtyText,Text),
    format('<Test name="~w">',[Name]),
-   writeln(testcase=Testcase),
    writeln(Text),!,
    format('<!-- ~w--></Test>',[Name]).
 
