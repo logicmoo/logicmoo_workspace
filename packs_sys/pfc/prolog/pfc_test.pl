@@ -521,27 +521,39 @@ clean_away_ansi(DirtyText,DirtyText).
 
   is_control_code(10):-!, fail.  is_control_code(13):-!, fail.
   is_control_code(C):- C < 32.  is_control_code(C):- \+ char_type(C,print),!.
+  is_control_code(C):- C>128.
   
   clean_ansi_codes([],[]).
   clean_ansi_codes([27,_|Codes],CodesC):- !, clean_ansi_codes(Codes,CodesC).
   clean_ansi_codes([C|Codes],CodesC):- is_control_code(C),!, clean_ansi_codes(Codes,CodesC).
   clean_ansi_codes([C|Codes],[C|CodesC]):- clean_ansi_codes(Codes,CodesC).
 
+:- dynamic(j_u:last_saved_junit/1).
+
+save_to_junit_file_text(Name,Full,Text):- j_u:last_saved_junit(Full),!,
+    flag(Full,X,X+1),
+    atomic_list_concat([Full,'_',X,'-junit.xml'],FullF),
+    format('~N% saving_junit: ~w~n',[FullF]),
+  setup_call_cleanup(open(FullF, write, Out),writeln(Out,Text), close(Out)),!.
+save_to_junit_file_text(Name,Full,Text):- 
+    asserta(j_u:last_saved_junit(Full)),
+    atomic_list_concat([Full,'-junit.xml'],FullF),
+    format('~N% saving_junit: ~w~n',[FullF]),    
+  setup_call_cleanup(open(FullF, write, Out),writeln(Out,Text), close(Out)),!.
 
 save_to_junit_file(Name,DirtyText):-
  clean_away_ansi(DirtyText,Text),
   getenv('TEST_STEM_PATH',Dir),!,
   must_det_l(( 
-  atomic_list_concat([Dir,'-',Name,'-junit.xml'],Full),
+  atomic_list_concat([Dir,'-',Name],Full),
   write_testcase_env(Name),
-  format('~N% saving_junit: ~w~n',[Full]),
-  
-  setup_call_cleanup(open(Full, write, Out),writeln(Out,Text), close(Out)))),
-  clear_suite_attribs.
+  save_to_junit_file_text(Name,Full,Text),
+  clear_suite_attribs)).
 
 save_to_junit_file(Name,DirtyText):- 
   clean_away_ansi(DirtyText,Text),
    format('<Test name="~w">',[Name]),
+   writeln(testcase=Testcase),
    writeln(Text),!,
    format('<!-- ~w--></Test>',[Name]).
 
