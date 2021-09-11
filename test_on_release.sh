@@ -5,8 +5,6 @@ DIR0="$( cd "$( dirname "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )"
 cd $DIR0
 source ./logicmoo_env.sh -v
 
-lmoo make 2>&1 | grep -3 -i 'WARN\|ERROR'
-
 WAS_PWD=$PWD
 
 #unset TESTING_TEMP
@@ -16,6 +14,7 @@ WAS_PWD=$PWD
 [ -z "$TESTING_TEMP" ] && export TESTING_TEMP=$(mktemp -d -t logicmoo_testing-$(date +%Y-%m-%d-%H-%M-%S)-XXXXXXXXXX)
 export TESTING_TEMP
 mkdir -p $TESTING_TEMP/   
+
 
 find $TESTING_TEMP -type f -name "*-junit.xml" -delete
 find $TESTING_TEMP -type f -name "*-rollup.html" -delete
@@ -27,6 +26,8 @@ if [ -z "$TEST_PARAMS" ]; then
 fi
 
 echo -e "Running release (all) tests\nTESTING_TEMP=$TESTING_TEMP\n( cd $PWD ; $BASH_SOURCE $TEST_PARAMS )"
+
+lmoo-make 2>&1 | grep -3 -i 'WARN\|ERROR'
 
 # base ./packs_sys/pfc/t
 find $WAS_PWD -mindepth 2 -name "test_on_*.sh" -execdir bash -c "source '{}' \"$TEST_PARAMS\"" \;

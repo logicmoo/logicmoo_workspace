@@ -569,7 +569,7 @@ suite_to_package(Suite,Package):- shorten_and_clean_name(Suite,Suite0),
 show_junit_testcase(Suite,Testcase):- 
  j_u:junit_prop(Testcase,goal,Goal),
  (getenv('JUNIT_CLASSNAME',Classname)-> true ; suite_to_package(Suite,Classname)),
- (getenv('JUNIT_PACKAGE',Package) -> true ; classname_to_package(Classname,Package,_ShortClass)),
+ %(getenv('JUNIT_PACKAGE',Package) -> true ; classname_to_package(Classname,Package,_ShortClass)),
  %ignore((getenv('JUNIT_SHORTCLASS',ShortClass))),
  %ignore((getenv('JUNIT_SUITE',JUNIT_SUITE))),
  %(nonvar(ShortClass)-> true; atom_concat(Package,ShortClass,Classname)),
