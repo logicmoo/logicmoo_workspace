@@ -532,8 +532,10 @@ save_to_junit_file(Name,DirtyText):-
  clean_away_ansi(DirtyText,Text),
   getenv('TEST_STEM_PATH',Dir),!,
   must_det_l(( 
-  atomic_list_concat([Dir,'-',Name,'-junit.xml'],Full), 
+  atomic_list_concat([Dir,'-',Name,'-junit.xml'],Full),
+  write_testcase_env(Name),
   format('~N% saving_junit: ~w~n',[Full]),
+  
   setup_call_cleanup(open(Full, write, Out),writeln(Out,Text), close(Out)))),
   clear_suite_attribs.
 
@@ -569,8 +571,9 @@ show_junit_testcase(Suite,Testcase):-
  (getenv('JUNIT_CLASSNAME',Classname)-> true ; suite_to_package(Suite,Classname)),
  (getenv('JUNIT_PACKAGE',Package) -> true ; classname_to_package(Classname,Package,ShortClass)),
  ignore((getenv('JUNIT_SHORTCLASS',ShortClass))),
+ ignore((getenv('JUNIT_SUITE',JUNIT_SUITE))),
  (nonvar(ShortClass)-> true; atom_concat(Package,ShortClass,Classname)),
- sformat(DisplayName,'~w@~w: ~p',[Classname,Testcase,Goal]),
+ sformat(DisplayName,'~w@~w: ~p',[JUNIT_SUITE,Testcase,Goal]),
  escape_attribute(DisplayName,EDisplayName),
  ignore((
  format('\n     <testcase name=~q ', [EDisplayName]),
@@ -581,8 +584,8 @@ show_junit_testcase(Suite,Testcase):-
  ignore((write_testcase_info(Testcase))),
  writeln("\n    </testcase>"))),!.
 
-write_testcase_env(Testcase):-
-  write_testcase_prop(name,Testcase),
+write_testcase_env(Name):-
+  write_testcase_prop(name,Name),
   forall(junit_env_var(N),ignore((getenv(N,V),write_testcase_prop(N,V)))),
 
 junit_env_var('JUNIT_CLASSNAME').
