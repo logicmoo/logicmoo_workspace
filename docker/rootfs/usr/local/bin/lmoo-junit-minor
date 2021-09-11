@@ -136,7 +136,7 @@ for ele2 in "${listOfNames[@]}"
         export JUNIT_SHORTCLASS=`echo "${FILENAME^^}" | cut -d'.' -f1 `
         export JUNIT_CLASSNAME=${JUNIT_PACKAGE}.${JUNIT_SHORTCLASS}
 	export JUNIT_SUITE=${JUNIT_CLASSNAME}
-        export FileTestCase="${JUNIT_CLASSNAME} RUN ( ${FILENAME} )"
+        export FileTestCase="${JUNIT_CLASSNAME}@Line_9999 RUN ( ${FILENAME} )"
         INFO "FileTestCase=${FileTestCase}"
 		  [[ "$ele" == *".ansi" ]] && continue
         [[ "$ele" == *".html" ]] && continue

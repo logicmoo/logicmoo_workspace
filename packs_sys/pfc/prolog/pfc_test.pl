@@ -569,10 +569,10 @@ suite_to_package(Suite,Package):- shorten_and_clean_name(Suite,Suite0),
 show_junit_testcase(Suite,Testcase):- 
  j_u:junit_prop(Testcase,goal,Goal),
  (getenv('JUNIT_CLASSNAME',Classname)-> true ; suite_to_package(Suite,Classname)),
- (getenv('JUNIT_PACKAGE',Package) -> true ; classname_to_package(Classname,Package,ShortClass)),
- ignore((getenv('JUNIT_SHORTCLASS',ShortClass))),
+ (getenv('JUNIT_PACKAGE',Package) -> true ; classname_to_package(Classname,Package,_ShortClass)),
+ %ignore((getenv('JUNIT_SHORTCLASS',ShortClass))),
  %ignore((getenv('JUNIT_SUITE',JUNIT_SUITE))),
- (nonvar(ShortClass)-> true; atom_concat(Package,ShortClass,Classname)),
+ %(nonvar(ShortClass)-> true; atom_concat(Package,ShortClass,Classname)),
  sformat(DisplayName,'~w@~w: ~p',[Classname,Testcase,Goal]),
  escape_attribute(DisplayName,EDisplayName),
  ignore((
@@ -586,7 +586,7 @@ show_junit_testcase(Suite,Testcase):-
 
 write_testcase_env(Name):-
   write_testcase_prop(name,Name),
-  forall(junit_env_var(N),ignore((getenv(N,V),write_testcase_prop(N,V)))),
+  forall(junit_env_var(N),ignore((getenv(N,V),write_testcase_prop(N,V)))),!.
 
 junit_env_var('JUNIT_CLASSNAME').
 junit_env_var('JUNIT_PACKAGE').
