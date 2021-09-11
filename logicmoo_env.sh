@@ -40,17 +40,17 @@ unset LOGICMOO_WS
 export LOGICMOO_WS=""
 
 if [[ -z "${LOGICMOO_WS}" ]]; then
- WS_MAYBE="$(cd "$(dirname "${BASH_SOURCE[0]}")"; pwd -P)"
- if [[ -d "${WS_MAYBE}/packs_sys" ]]; then
-  export LOGICMOO_WS=$WS_MAYBE
- fi
-fi
 
-if [[ -z "${LOGICMOO_WS}" ]]; then
-
-    WS_MAYBE=`find . -mindepth 1 -maxdepth 10 -type d -name logicmoo_workspace -printf "%T@\t%p\0" | sort -z -n | cut -z -f2- | tail -z -n1 | xargs -0 realpath`
+    WS_MAYBE="$(cd "$(dirname "${BASH_SOURCE[0]}")"; pwd -P)"
     if [[ -d "${WS_MAYBE}/packs_sys" ]]; then
-       export LOGICMOO_WS=$WS_MAYBE
+     export LOGICMOO_WS=$WS_MAYBE
+    fi
+
+    if [[ -z "${LOGICMOO_WS}" ]]; then
+       WS_MAYBE=`find . -mindepth 1 -maxdepth 10 -type d -name logicmoo_workspace -printf "%T@\t%p\0" | sort -z -n | cut -z -f2- | tail -z -n1 | xargs -0 realpath`
+       if [[ -d "${WS_MAYBE}/packs_sys" ]]; then
+          export LOGICMOO_WS=$WS_MAYBE
+       fi
     fi
 
    if [[ -z "${LOGICMOO_WS}" ]]; then
