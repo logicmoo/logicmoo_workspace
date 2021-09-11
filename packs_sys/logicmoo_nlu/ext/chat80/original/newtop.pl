@@ -352,8 +352,9 @@ test_chat80(N, OnOff) :- (number(N);var(N)),!,
 test_chat80(Sentence, OnOff) :-
   test_chat80(0, Sentence, OnOff, _CorrectAnswer).
 
-test_chat80(N, Sentence, OnOff, CorrectAnswer):-
-  ignore((baseKB:test_chat80_mpred(N, Sentence, OnOff, CorrectAnswer))),!.
+test_chat80(N, Sentence, OnOff, CorrectAnswer):-  
+  ignore((baseKB:test_chat80_mpred(N, Sentence, OnOff, CorrectAnswer))),!,
+  kill_junit_tee.
  
 baseKB_test_chat80_mpred(N, Sentence, OnOff, CorrectAnswer) :-
     report_item0(print_test,Sentence),!,

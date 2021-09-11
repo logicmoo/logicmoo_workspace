@@ -112,11 +112,15 @@ mpred_test_fok(Testcase, G):-
         read_file_to_string(Tee,Str,[]),
         add_test_info(Testcase,out,Str),
         save_single_testcase(Testcase),
-        nop(sformat(Exec,'cat /dev/null > ~w',[Tee])),
-        nop(shell(Exec)))))))))),
+        nop(kill_junit_tee))))))))),
     (TestResult=error(E)-> throw(E) ; true),
     nb_setarg(1,Answers,1))),
     Type == passed.
+
+kill_junit_tee:- 
+  ignore((getenv('TEE_FILE',Tee),
+          sformat(Exec,'cat /dev/null > ~w',[Tee]),
+          shell(Exec))).
 
 process_test_result(TestResult, G):- TestResult == passed, !, save_info_to(TestResult, why_was_true(G)).
 process_test_result(TestResult, G):- TestResult \== failure,junit_incr(errors), !, save_info_to(TestResult, catch(rtrace(call_u_hook(G)), E, writeln(E))).
@@ -157,6 +161,8 @@ gtn_no_pack(\+ G, Name):- nonvar(G), !, gtn_no_pack(G,Name1), sformat(Name,'naf_
 gtn_no_pack(G,Name):- atom(G), sformat(Name1,'~w',[G]), !, shorten_and_clean_name(Name1,Name).
 gtn_no_pack(G,Name):- \+ compound(G), sformat(Name1,'~w',[G]), !, shorten_and_clean_name(Name1,Name).
 gtn_no_pack(G,Name):- arg(_,G,A), compound(A), \+ is_list(A), !, gtn_no_pack(A,Name).
+gtn_no_pack(G,Name):- is_list(G), member(E,G),!,gtn_no_pack(E,Name).
+gtn_no_pack(G,Name):- arg(_,G,A), integer(A), !, functor(G,F,_),sformat(Name,'~w_~w',[F,A]).
 gtn_no_pack(G,Name):- arg(_,G,A), atom(A), !, gtn_no_pack(A,Name).
 gtn_no_pack(G,Name):- compound_name_arity(G,F,A),sformat(Name,'~w_~w',[F,A]).
 /*
