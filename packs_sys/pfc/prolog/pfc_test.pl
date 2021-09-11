@@ -581,9 +581,19 @@ show_junit_testcase(Suite,Testcase):-
  ignore((write_testcase_info(Testcase))),
  writeln("\n    </testcase>"))),!.
 
+write_testcase_env(Testcase):-
+  write_testcase_prop(name,Testcase),
+  forall(junit_env_var(N),ignore((getenv(N,V),write_testcase_prop(N,V)))),
+
+junit_env_var('JUNIT_CLASSNAME').
+junit_env_var('JUNIT_PACKAGE').
+junit_env_var('JUNIT_SHORTCLASS').
+junit_env_var('JUNIT_SUITE').
+junit_env_var('JUNIT_CMD').
 
 write_testcase_std_info(Testcase):-
  write("\n    <system-err><![CDATA[\n"),
+ write_testcase_env(Testcase),
  ignore((j_u:junit_prop(Testcase,out,Str),format('~w',[Str]))),
   forall(j_u:junit_prop(Testcase,Type,Term), write_testcase_prop(Type,Term)),
  write("\n    ]]></system-err>\n").

@@ -14,11 +14,11 @@ if [ "$1" == "-k" ]; then
 fi
 
 
-[ -z "$TESTING_TEMP" ] && [ -d "$(pwd)/test_results" ] && export TESTING_TEMP=$(pwd)/test_results/$(whoami)
-[ -z "$TESTING_TEMP" ] && [ -d "${LOGICMOO_WS}/test_results" ] && export TESTING_TEMP=${LOGICMOO_WS}/test_results/$(whoami)
-[ -z "$TESTING_TEMP" ] && export TESTING_TEMP=$(mktemp -d -t logicmoo_testing-$(date +%Y-%m-%d-%H-%M-%S)-XXXXXXXXXX)
+[ -z "${TESTING_TEMP}" ] && [ -d "$(pwd)/test_results" ] && export TESTING_TEMP=$(pwd)/test_results/$(whoami)
+[ -z "${TESTING_TEMP}" ] && [ -d "${LOGICMOO_WS}/test_results" ] && export TESTING_TEMP=${LOGICMOO_WS}/test_results/$(whoami)
+[ -z "${TESTING_TEMP}" ] && export TESTING_TEMP=$(mktemp -d -t logicmoo_testing-$(date +%Y-%m-%d-%H-%M-%S)-XXXXXXXXXX)
 export TESTING_TEMP
-mkdir -p $TESTING_TEMP/
+mkdir -p ${TESTING_TEMP}/
 
 
 parent-find() {
@@ -44,7 +44,7 @@ GLOBSTEM=$(echo "${JUNIT_PACKAGE_STEM}-${GLOB}" | sed -e "s/[*]/vSTARv/g" -e "s/
 echo "<!-- GLOBSTEM=${GLOBSTEM} -->"
 [ -z "${TEST_STEM}" ] && export TEST_STEM=Report-${GLOBSTEM}-Units
 echo "<!-- TEST_STEM=${TEST_STEM} -->"
-[ -z "${TEST_STEM_PATH}" ] && export TEST_STEM_PATH=$TESTING_TEMP/$TEST_STEM
+[ -z "${TEST_STEM_PATH}" ] && export TEST_STEM_PATH="${TESTING_TEMP}/${TEST_STEM}"
 echo "<!-- TEST_STEM_PATH=${TEST_STEM_PATH} -->"
 
 
@@ -133,10 +133,10 @@ for ele2 in "${listOfNames[@]}"
 
         export FILENAME=${ele}
         export JUNIT_SHORTCLASS=`echo "${FILENAME^^}" | cut -d'.' -f1 `
-        export JUNIT_SUITE=$JUNIT_PACKAGE.$(echo "${JUNIT_SHORTCLASS^^}" | sed -e "s/_[0-9]//g" -e "s/[0-9]//g" )
-        export JUNIT_CLASSNAME=$JUNIT_PACKAGE.$JUNIT_SHORTCLASS
-        export FileTestCase="${JUNIT_SUITE} run $JUNIT_SHORTCLASS ( $FILENAME )"
-        INFO "FileTestCase=$FileTestCase"
+        export JUNIT_CLASSNAME=${JUNIT_PACKAGE}.${JUNIT_SHORTCLASS}
+	export JUNIT_SUITE=${JUNIT_CLASSNAME}
+        export FileTestCase="${JUNIT_CLASSNAME} RUN ( ${FILENAME} )"
+        INFO "FileTestCase=${FileTestCase}"
 		  [[ "$ele" == *".ansi" ]] && continue
         [[ "$ele" == *".html" ]] && continue
         [[ "$ele" == *".xml" ]] && continue
@@ -162,15 +162,16 @@ for ele2 in "${listOfNames[@]}"
         [ -z "${CMD_TIMEOUT}" ] && CMD_TIMEOUT="10s"
         [ -z "${CMD_WRAPPER}" ] && CMD_WRAPPER="timeout --foreground --preserve-status -s SIGKILL -k ${CMD_TIMEOUT} ${CMD_TIMEOUT}"
         CMD="${CMD_WRAPPER} ${CMD}"
+	export JUNIT_CMD="${CMD}"
         JUNIT_TESTS_GLOBBED_TESTS=$((JUNIT_TESTS_GLOBBED_TESTS+1))
         INFO "CMD=$CMD"
-        export TEE_FILE=$TESTING_TEMP/CMD_LAST.ansi
+        export TEE_FILE=${TESTING_TEMP}/CMD_LAST.ansi
         export TEE_FILE2=${TEE_FILE}.too
         ####JECHO "<system-out><![CDATA["
-        INFO "${date} (cd $PWD ; $CMD)" > $TEE_FILE
-        INFO "${date} (cd $PWD ; $CMD)" > $TEE_FILE2
+        INFO "${date} (cd $PWD ; $CMD)" > ${TEE_FILE}
+        INFO "${date} (cd $PWD ; $CMD)" > ${TEE_FILE2}
         startTime=$(date +%s);
-        ( eval $CMD ) 2>&1 | sed -r "s/\x1B\[(([0-9]{1,2})?(;)?([0-9]{1,2})?)?[m,K,H,f,J]//g" | tee -a $TEE_FILE | tee $TEE_FILE2
+        ( eval $CMD ) 2>&1 | sed -r "s/\x1B\[(([0-9]{1,2})?(;)?([0-9]{1,2})?)?[m,K,H,f,J]//g" | tee -a ${TEE_FILE} | tee ${TEE_FILE2}
         exitcode=${PIPESTATUS[0]}
         endTime=$(date +%s);
         totalTime=$(($endTime-$startTime));        
@@ -178,16 +179,16 @@ for ele2 in "${listOfNames[@]}"
 
         if [ $exitcode -eq $good_exit ]; then
 			[ "${next_cls}" == 1 ] && cls && next_cls=0			
-         JECHO "<testcase name=\"$FileTestCase\" classname='$JUNIT_CLASSNAME' time='$totalTime'>"         
-         JECHO "<system-out><![CDATA[$(cat $TEE_FILE2)]]></system-out>\n"
+         JECHO "<testcase name=\"${FileTestCase}\" classname='${JUNIT_CLASSNAME}' time='$totalTime'>"         
+         JECHO "<system-out><![CDATA[$(cat ${TEE_FILE2})]]></system-out>\n"
          JECHO "</testcase>"
          INFO "SUCCESS: $0 ${keep_going} ${ele} (returned ${exitcode})"
            JUNIT_TESTS_GLOBBED_PASSED=$((JUNIT_TESTS_GLOBBED_PASSED+1))
 			continue
 	     fi
-        JECHO "<testcase name=\"$FileTestCase\" classname='$JUNIT_CLASSNAME' time='$totalTime'>"
+        JECHO "<testcase name=\"${FileTestCase}\" classname='${JUNIT_CLASSNAME}' time='$totalTime'>"
         JECHO " <failure message='FAILED: $0 ${keep_going} ${ele} (returned ${exitcode})'/>"
-           JECHO "<system-err><![CDATA[$(cat $TEE_FILE2)]]></system-err>\n"
+           JECHO "<system-err><![CDATA[$(cat ${TEE_FILE2})]]></system-err>\n"
         JECHO "</testcase>"
            JUNIT_TESTS_GLOBBED_FAILURES=$((JUNIT_TESTS_GLOBBED_FAILURES+1))
 
