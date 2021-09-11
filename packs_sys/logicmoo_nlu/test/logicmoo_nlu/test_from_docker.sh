@@ -1,7 +1,7 @@
 #!/bin/bash -x
 
-#source `which junit_prolog.sh`
-
 export CMD_TIMEOUT=3m 
-lmoo-junit "$*"
+export GLOB="$*"
+[ -z "$GLOB" ] && GLOB="*0*.*"
+lmoo-junit "$GLOB"
 

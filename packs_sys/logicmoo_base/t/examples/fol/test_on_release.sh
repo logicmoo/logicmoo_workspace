@@ -1,5 +1,6 @@
 #!/bin/bash -x
 
-#source `which junit_prolog.sh`
-source $LOGICMOO_WS/bin/junit_prolog.sh "$*"
+export GLOB="$*"
+[ -z "$GLOB" ] && GLOB="*0*.*"
+lmoo-junit "$GLOB"
 
