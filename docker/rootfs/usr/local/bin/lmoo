@@ -2,7 +2,6 @@
 # if [ "${cmd}" == "emacs" ]; then sudo -u prologmud_server -- google-chrome "http://localhost:4125"
 
 if [ ! -f /.dockerenv ]; then
-   #docker exec -it logicmoo bin/$(basename "${BASH_SOURCE[0]}") $*
    docker exec -it logicmoo "${BASH_SOURCE[0]}" $*
    return 0 2>/dev/null ; exit 0
 fi

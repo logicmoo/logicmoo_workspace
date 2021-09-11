@@ -51,7 +51,7 @@ junitCombined=$TEST_STEM_PATH-junitCombined-rollup.html
 echo "<testsuites>" 
 sed -r "s/\x1B\[(([0-9]{1,2})?(;)?([0-9]{1,2})?)?[m,K,H,f,J]//g" ${TEST_STEM_PATH}?*-junit.xml | sed -e "s|<testsuites>||g" -e "s|</testsuites>||g"
 echo -e "\n</testsuites>\n\n\n" 
-) > ${junitCombined}
+) | iconv -c -t utf-8  > ${junitCombined}
 
 PATH=~/.npm-packages/bin:$PATH
 
