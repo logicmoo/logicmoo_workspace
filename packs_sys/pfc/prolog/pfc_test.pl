@@ -571,9 +571,9 @@ show_junit_testcase(Suite,Testcase):-
  (getenv('JUNIT_CLASSNAME',Classname)-> true ; suite_to_package(Suite,Classname)),
  (getenv('JUNIT_PACKAGE',Package) -> true ; classname_to_package(Classname,Package,ShortClass)),
  ignore((getenv('JUNIT_SHORTCLASS',ShortClass))),
- ignore((getenv('JUNIT_SUITE',JUNIT_SUITE))),
+ %ignore((getenv('JUNIT_SUITE',JUNIT_SUITE))),
  (nonvar(ShortClass)-> true; atom_concat(Package,ShortClass,Classname)),
- sformat(DisplayName,'~w@~w: ~p',[JUNIT_SUITE,Testcase,Goal]),
+ sformat(DisplayName,'~w@~w: ~p',[Classname,Testcase,Goal]),
  escape_attribute(DisplayName,EDisplayName),
  ignore((
  format('\n     <testcase name=~q ', [EDisplayName]),
