@@ -312,7 +312,7 @@ junit_term_expansion((:- I),O):- !, junit_dirrective_expansion(I,M), (is_list(M)
 
 junit_dirrective_expansion(I,O):- junit_expansion(junit_dirrective_exp,I,O).
 junit_dirrective_exp( I , O ) :- junit_goal_exp(I,O), I\=@=O. 
-% % junit_dirrective_exp( listing(X), dmsg(listing(X)) ):- keep_going. 
+junit_dirrective_exp( listing(X), dmsg(listing(X)) ):- keep_going. 
 junit_dirrective_exp( \+ X, mpred_test( \+ X ) ).
 %junit_dirrective_exp( X, X  ):- predicate_property(X,static).
 %junit_dirrective_exp( X, X  ):- predicate_property(X,built_in).
@@ -329,7 +329,7 @@ junit_goal_expansion(I,O):- junit_expansion(junit_goal_exp,I,O).
 junit_goal_exp( break, dmsg(break) ):- keep_going. 
 junit_goal_exp( cls, dmsg(cls) ):- keep_going. 
 % junit_goal_exp( must(A),mpred_test(A)) :- is_junit_test.
-% % junit_goal_exp( rtrace, dmsg(rtrace) ):- keep_going. 
+junit_goal_exp( trace, dmsg(trace) ):- keep_going. 
 
 
 
