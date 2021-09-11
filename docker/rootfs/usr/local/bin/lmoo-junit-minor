@@ -46,6 +46,7 @@ echo "<!-- GLOBSTEM=${GLOBSTEM} -->"
 echo "<!-- TEST_STEM=${TEST_STEM} -->"
 [ -z "${TEST_STEM_PATH}" ] && export TEST_STEM_PATH="${TESTING_TEMP}/${TEST_STEM}"
 echo "<!-- TEST_STEM_PATH=${TEST_STEM_PATH} -->"
+echo "<!-- LOGICMOO_WS=${LOGICMOO_WS} -->"
 
 
 SWIPL=swipl
@@ -144,11 +145,11 @@ for ele2 in "${listOfNames[@]}"
         if [[ "$ele" == *".sh" && -x "$ele" ]]; then
          CMD="./${ele}"
         else
-           if type pfc > /dev/null 2>&1; then
-             SWIPL=pfc
+           if type lmoo-pfc > /dev/null 2>&1; then
+             SWIPL=lmoo-clif
            fi
-           if type clif > /dev/null 2>&1; then
-             SWIPL=clif
+           if type lmoo-clif > /dev/null 2>&1; then
+             SWIPL=lmoo-clif
            fi
            if type ./swipl-junit > /dev/null 2>&1; then
              SWIPL=./swipl-junit
