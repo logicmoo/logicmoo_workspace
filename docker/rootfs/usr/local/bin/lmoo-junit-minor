@@ -5,12 +5,19 @@ exitcode=${good_exit}
 [ -z "${keep_going}" ] && export keep_going=""
 [ "$*" == *"-k"* ] && export keep_going="-k"
 runtime_testing=4
+INTERACTIVE=1
 export next_cls=0
 export test_completed=test_completed
 if [ "$1" == "-k" ]; then
   keep_going="-k"
+  INTERACTIVE=0
   runtime_testing=5
   shift
+fi
+
+
+if [ "$(whoami)" == "jenkins" ]; then
+    INTERACTIVE=0
 fi
 
 
@@ -220,23 +227,31 @@ for ele2 in "${listOfNames[@]}"
 		[ $exitcode -ne 1 ] && [ "${keep_going}" == "-k" ] && continue
 
 		echo "<!-- Do you wish to continue? [y]es, [a]lways [Up/r]etry or [N]o: "
-		read -sN1 -r -t 0.0001 k1
-		export k1
-		
+
+		if [ ${INTERACTIVE} -eq 1 ]; then
+		    read -sN1 -r -t 0.0001 k1
+		    export k1
+		fi	
+			
 		while true
 		do
-			read -r -sn1 ans
+			if [ ${INTERACTIVE} -eq 1 ]; then
+			    read -r -sn1 ans
+	 		 else
+			    ans = "y"
+			fi
+			
 			[ "$ans" == "" ] && break;
 			case $ans in
 			    A) break;;
-				B) break;;
-				r) break;;
-            a) break;;
-				y) break;;
-				n) break;;
-				e) break;;
-				E) break;;
-            D) break;;
+			    B) break;;
+			    r) break;;
+			    a) break;;
+			    y) break;;
+			    n) break;;
+			    e) break;;
+			    E) break;;
+			    D) break;;
 			esac
 			INFO "ans=$ans"
 		done

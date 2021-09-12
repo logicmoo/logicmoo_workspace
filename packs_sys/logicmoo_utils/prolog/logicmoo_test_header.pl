@@ -93,3 +93,14 @@
 :- if((dmsg(this_test_might_need(:- expects_dialect(pfc))))).  :- endif.
 :- endif.
 :- if((prolog_load_context(source,F),echo_source_file(F))).  :- endif.
+
+% iTMS=
+% eyJhbGciOiJIUzM4NCJ9.eyJjb21wYW55X25hbWUiOiJsb2dpY21vbyIsInByb2plY3RfaWQiOiI5MDUyOCIsImRhdGVfY3JlYXRlZCI6MTYzMTQ3NzIyOH0.g50WKW3Kx8eVF3WXi2u7n5GNQ4FYwkTHQHN0xFaX4ec7UZ7Hh9d8ZmctGNPYW871
+% d4df831536f0c1887666481d9a1d7843e624d3055add462fa958070ae9e8c5bdc74c7b209750e3670d666aaee01185b0350462cf7520386e2bcc67b5d4308c5e
+% jira
+%Tz9AA2QNBQRrhWgWjkyqtccSKX1JGTcC
+%lmBFZbJPxk8d_tpNCqrIzu4bEkz5G5u_rXbkjDKSkjLkZ8sUKMJVslZY59ol3tjX
+% gitlab PAT u2Ly6Gg5_zRxtATXpWwQ
+%Consumer key	testquality.com
+%Consumer name	Test Quality
+%Public key	MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCw1qpd8ymF0j3EmcgDUBbrErCrbwEQwBNXVGXmrsdMiJlgCcFQzv7auSYW/vvPqthGRnOpE4FoDs5CbXxadhM/iBOP9pL2Zv7jpsetDYW13/cWjMcyKBbPJaWhSqJvbX91Yu5dOC4AOt9RRB3AWDyFqqr9PT4mrxbdwRgW+DYa1wIDAQAB
