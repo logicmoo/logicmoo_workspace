@@ -1,0 +1,88 @@
+#!/usr/bin/env lmoo-junit
+% 
+% Dec 13, 2035
+% Douglas Miles
+%  cls ; kill -9 %1 ; swipl -g "ensure_loaded(pack(logicmoo_base/t/sanity_base/fc_01.pfc'))."
+
+:- include(test_header).
+% about to process
+
+:- set_prolog_flag(gc,true).
+
+ acc:-b. % acc-->b.
+
+:- true.
+:- true .
+:- true  .
+:- true. 
+:- true . 
+:- true  . 
+%:- rtrace.
+
+%:- use_module(library(pfc)).
+%:- use_module(library(pfc_test)).
+/*~
+% invisible
+~*/
+
+% visible
+ % mvisible
+%~not visible
+
+:- true.
+:- expects_dialect(  /* pfc */  pfc).
+
+:- true.
+:- expects_dialect(  
+  % pfc2
+  pfc).
+
+:- true.
+:- expects_dialect(  
+  pfc).   % pfc3
+
+:- true.
+/*pfc 4*/:- expects_dialect(  
+  pfc).
+:- true.
+
+% :- set_prolog_flag(lm_pfc_lean,true).
+%:- trace.
+%:- break.
+% :- mpred_trace_exec  .
+
+aa(bb).
+
+aa.
+
+
+a11 ==> b11.
+a11.
+
+:- listing(a11).
+
+% :- pp_DB.
+:- mpred_why(b11).
+
+:- mpred_test(b11).
+
+
+i_get_file_from_stream(S,F):- stream_property(S,file_name(F)).
+
+i_catch_up_stream(S,Pos):- \+ t_l:stream_for_file(_,S,_),get_file_from_stream(S,F), print_file_range(F,S,0,Pos),!.
+i_catch_up_stream(S,Pos):- t_l:stream_for_file(F,S,PosBefore), Pos>PosBefore, print_file_range(F,S,PosBefore,Pos).
+i_catch_up_stream(S):- character_count(S,Pos),catch_up_stream(S,Pos).
+
+:- fixup_exports.
+
+
+end_of_file.
+
+:- break.
+
+:- mpred_test(a11).
+
+:- break.
+
+
+

@@ -1,0 +1,120 @@
+#!/usr/bin/env lmoo-junit
+%
+% Dec 13, 2035
+% Douglas Miles
+%  cls ; kill -9 %1 ; swipl -g "ensure_loaded(pack(logicmoo_base/t/sanity_base/fc_01.pfc'))."
+
+:- include(test_header).
+% about to process
+
+:- set_prolog_flag(gc,true).
+
+ acc:-b. % acc-->b.
+
+:- true.
+:- true .
+:- true  .
+:- true.
+:- true .
+:- true  .
+%:- rtrace.
+
+%:- use_module(library(pfc)).
+%:- use_module(library(pfc_test)).
+:- true.
+:- expects_dialect(  /* pfc */  pfc).
+
+:- true.
+:- expects_dialect(
+  % pfc2
+  pfc).
+
+:- true.
+:- expects_dialect(
+  pfc).   % pfc3
+
+:- true.
+/*pfc 4*/:- expects_dialect(
+  pfc).
+:- true.
+
+% :- set_prolog_flag(lm_pfc_lean,true).
+%:- trace.
+%:- break.
+% :- mpred_trace_exec  .
+
+aa(bb).
+
+aa.
+
+
+a11 ==> b11.
+a11.
+
+:- listing(a11).
+
+% :- pp_DB.
+/*~
+:- dynamic a11/0.
+:- multifile a11/0.
+:- public a11/0.
+:- module_transparent a11/0.
+
+a11.
+
+~*/
+:- mpred_why(b11).
+
+%~ FIlE: * https://logicmoo.org:2082/gitlab/logicmoo/logicmoo_workspace/-/blob/master/packs_sys/pfc/t/sanity_base/echo_test_fc_02.pfc#L69
+/*~
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+Justifications for b11:
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+    1.1 a11  % [* https://logicmoo.org:2082/gitlab/logicmoo/logicmoo_workspace/-/blob/master/packs_sys/pfc/t/sanity_base/echo_test_fc_02.pfc#L54 ]
+    1.2 a11==>b11  % [* https://logicmoo.org:2082/gitlab/logicmoo/logicmoo_workspace/-/blob/master/packs_sys/pfc/t/sanity_base/echo_test_fc_02.pfc#L52 ]
+    1.3 mfl4(_,baseKB,'* https://logicmoo.org:2082/gitlab/logicmoo/logicmoo_workspace/-/blob/master/packs_sys/pfc/t/sanity_base/echo_test_fc_02.pfc#L54 ',54)
+    1.4 mfl4(_,baseKB,'* https://logicmoo.org:2082/gitlab/logicmoo/logicmoo_workspace/-/blob/master/packs_sys/pfc/t/sanity_base/echo_test_fc_02.pfc#L52 ',52)
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+~*/
+:- mpred_test(b11).
+
+
+
+%~ mpred_test("Test_0001_Line_0000__B11",baseKB:b11)
+%~ FIlE: * https://logicmoo.org:2082/gitlab/logicmoo/logicmoo_workspace/-/blob/master/packs_sys/pfc/t/sanity_base/echo_test_fc_02.pfc#L93
+
+/*~
+%~ mpred_test("Test_0001_Line_0000__B11",baseKB:b11)
+passed=info(why_was_true(baseKB:b11))
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+Justifications for b11:
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+    1.1 a11  % [* https://logicmoo.org:2082/gitlab/logicmoo/logicmoo_workspace/-/blob/master/packs_sys/pfc/t/sanity_base/echo_test_fc_02.pfc#L54 ]
+    1.2 a11==>b11  % [* https://logicmoo.org:2082/gitlab/logicmoo/logicmoo_workspace/-/blob/master/packs_sys/pfc/t/sanity_base/echo_test_fc_02.pfc#L52 ]
+    1.3 mfl4(_,baseKB,'* https://logicmoo.org:2082/gitlab/logicmoo/logicmoo_workspace/-/blob/master/packs_sys/pfc/t/sanity_base/echo_test_fc_02.pfc#L54 ',54)
+    1.4 mfl4(_,baseKB,'* https://logicmoo.org:2082/gitlab/logicmoo/logicmoo_workspace/-/blob/master/packs_sys/pfc/t/sanity_base/echo_test_fc_02.pfc#L52 ',52)
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+~*/
+i_get_file_from_stream(S,F):- stream_property(S,file_name(F)).
+
+i_catch_up_stream(S,Pos):- \+ t_l:stream_for_file(_,S,_),get_file_from_stream(S,F), print_file_range(F,S,0,Pos),!.
+i_catch_up_stream(S,Pos):- t_l:stream_for_file(F,S,PosBefore), Pos>PosBefore, print_file_range(F,S,PosBefore,Pos).
+i_catch_up_stream(S):- character_count(S,Pos),catch_up_stream(S,Pos).
+
+:- fixup_exports.

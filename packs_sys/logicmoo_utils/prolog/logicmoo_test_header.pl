@@ -92,3 +92,4 @@
 :- else.
 :- if((dmsg(this_test_might_need(:- expects_dialect(pfc))))).  :- endif.
 :- endif.
+:- if((prolog_load_context(source,F),echo_source_file(F))).  :- endif.

@@ -809,7 +809,7 @@ show_new_src_location(FL):-input_key(K),!,show_new_src_location(K,FL).
 %
 show_new_src_location(_,F:_):-F==user_input,!.
 show_new_src_location(K,FL):- t_l:last_src_loc(K,FL),!.
-show_new_src_location(K,FL):- retractall(t_l:last_src_loc(K,_)),format_to_error('~N% ~w ',[FL]),!,asserta(t_l:last_src_loc(K,FL)).
+show_new_src_location(K,FL):- retractall(t_l:last_src_loc(K,_)),format_to_error('~N%~~ ~w ~n',[FL]),!,asserta(t_l:last_src_loc(K,FL)).
 
 
 :- thread_local(t_l:current_why_source/1).
@@ -1019,11 +1019,11 @@ show_current_source_location:- ignore((get_source_location(FL),!, show_current_s
 show_current_source_location(FL):- t_l:last_shown_current_source_location(FL),!,
                                    retractall(t_l:last_shown_current_source_location(_)),
                                    public_file_link(FL,FLO),
-                                   format_to_error('~N% FILE: ~w ~N',[FLO]),!.
+                                   format_to_error('~N%~~ FILE: ~w ~N',[FLO]),!.
 show_current_source_location(FL):- retractall(t_l:last_shown_current_source_location(_)),
                                    asserta(t_l:last_shown_current_source_location(FL)),!,
                                    public_file_link(FL,FLO),
-                                   format_to_error('~N% FIlE: ~w ~N',[FLO]),!. 
+                                   format_to_error('~N%~~ FIlE: ~w ~N',[FLO]),!. 
 
 get_source_location(FL):- current_source_file(FL),nonvar(FL),!.
 get_source_location(F:L):- source_location(F,L),!.

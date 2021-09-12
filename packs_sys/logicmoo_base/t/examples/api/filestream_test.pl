@@ -11,11 +11,15 @@
 
 :- process_this_script.
 
+% this is a file stream 1
+
 :- dynamic(fooBar/0).
 
 ~fooBar.
 
 :- mpred_test(~fooBar).
+
+% this is a file stream 2
 
 fooBar.
 

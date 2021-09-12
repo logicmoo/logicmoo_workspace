@@ -100,7 +100,7 @@
 %
 % Dump Stack Trace.
 %
-dump_st:- prolog_current_frame(Frame),dumpST0(Frame,10).
+dump_st:- prolog_current_frame(Current),dumpST0(Current,10).
 
 
 %= 	 	 
@@ -109,8 +109,8 @@ dump_st:- prolog_current_frame(Frame),dumpST0(Frame,10).
 %
 % Dump S True Stucture Primary Helper.
 %
-dumpST0:- dbreak, 
-   prolog_current_frame(Frame),(tracing->zotrace((CU=dtrace,notrace));CU=true),dumpST0(Frame,800),!,CU.
+dumpST0:- prolog_current_frame(Current),
+  dbreak,(tracing->zotrace((CU=dtrace,notrace));CU=true),dumpST0(Current,800),!,CU.
 
 %= 	 	 
 
@@ -118,7 +118,7 @@ dumpST0:- dbreak,
 %
 % Dump S True Stucture Primary Helper.
 %
-dumpST0(Opts):- once(nb_current('$dump_frame',Frame);prolog_current_frame(Frame)),dumpST0(Frame,Opts).
+dumpST0(Opts):- prolog_current_frame(Current), once(nb_current('$dump_frame',Frame);Frame=Current),dumpST0(Frame,Opts).
 
 %= 	 	 
 
@@ -128,8 +128,8 @@ dumpST0(Opts):- once(nb_current('$dump_frame',Frame);prolog_current_frame(Frame)
 %
 :- thread_local(tlbugger:ifHideTrace/0).
 dumpST0(_,_):- tlbugger:ifHideTrace,!.
-dumpST0(Frame,MaxDepth):- ignore(MaxDepth=5000),Term = dumpST(MaxDepth),
-   (var(Frame)->once(nb_current('$dump_frame',Frame);prolog_current_frame(Frame));true),
+dumpST0(Frame,MaxDepth):-  prolog_current_frame(Current),(number(Frame);get_dump_frame(Current,Frame)),!,
+   ignore(MaxDepth=5000),Term = dumpST(MaxDepth),!,
    ignore(( get_prolog_backtrace(MaxDepth, Trace,[frame(Frame),goal_depth(13)]),
     format(user_error, '% dumpST ~p', [Term]), nl(user_error),
     attach_console,dtrace,
@@ -147,7 +147,8 @@ dumpST0(Frame,MaxDepth):- ignore(MaxDepth=5000),Term = dumpST(MaxDepth),
 %
 % Dump S True Stucture.
 %
-dumpST:- no_bfly(zotrace(with_all_dmsg((prolog_current_frame(Frame),b_setval('$dump_frame',Frame),dumpST1)))).
+dumpST:- prolog_current_frame(Current),get_dump_frame(Current,Frame),
+  no_bfly(zotrace(with_all_dmsg((b_setval('$dump_frame',Frame),dumpST1)))).
 
 
 :- thread_local(tlbugger:no_slow_io/0).
@@ -171,7 +172,8 @@ dumpST1:- show_current_source_location,!,loop_check_early(dumpST9,dumpST0).
 % Dump S True Stucture.
 %
 dumpST(Depth):- 
-   no_bfly((zotrace((prolog_current_frame(Frame),b_setval('$dump_frame',Frame))),
+   prolog_current_frame(Current),
+   no_bfly((zotrace((b_setval('$dump_frame',Current))),
    loop_check_early(dumpST9(Depth),dumpST0(Depth)))).
 
 
@@ -191,7 +193,7 @@ get_m_opt(Opts,Max_depth,D100,RetVal):- univ_safe_2(E,[Max_depth,V]),(((member(E
 %
 % Dump S T9.
 %
-dumpST9:- zotrace((once(nb_current('$dump_frame',Frame);prolog_current_frame(Frame)), dumpST9(Frame,5000))).
+dumpST9:- prolog_current_frame(Current),get_dump_frame(Current,Frame),dumpST9(Frame,5000).
 
 %= 	 	 
 
@@ -199,8 +201,10 @@ dumpST9:- zotrace((once(nb_current('$dump_frame',Frame);prolog_current_frame(Fra
 %
 % Dump S T9.
 %
-dumpST9(Depth):- once(nb_current('$dump_frame',Frame);prolog_current_frame(Frame)), dumpST9(Frame,Depth).
+dumpST9(Depth):-prolog_current_frame(Current),get_dump_frame(Current,Frame),dumpST9(Frame,Depth).
 
+
+get_dump_frame(Current,Frame):- (nb_current('$dump_frame',Frame),number(Frame))->true;Frame=Current.
 
 %= 	 	 
 
@@ -244,8 +248,9 @@ drain_framelist_ele(Opts):-
 %
 % Dump S True Stucture Now.
 %
-dumpST_now(FrameIn,Opts):-
-  once(number(FrameIn);prolog_current_frame(FrameIn)),
+dumpST_now(FrameInto,Opts):-
+   prolog_current_frame(Current),
+  (number(FrameInto) -> FrameIn=FrameInto ; FrameIn=Current),
    nb_setval('$hide_rest_frames',false),
    b_setval('$current_stack_frame_depth',0),
    b_setval('$current_stack_frame_list',[]),

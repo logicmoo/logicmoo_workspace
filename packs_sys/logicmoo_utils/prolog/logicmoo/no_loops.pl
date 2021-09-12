@@ -323,15 +323,15 @@ get_where0(baseKB:0):-!.
 %
 
 lco_goal_expansion(V,VV):- \+ compound(V),!,V=VV.
-lco_goal_expansion(loop_check(G),O):-!,lco_goal_expansion(loop_check(G,fail),O).
-lco_goal_expansion(no_loop_check(G),O):-!,lco_goal_expansion(no_loop_check(G,fail),O).
-lco_goal_expansion(loop_check(G,LoopCaught),loop_check_term(G,info(G,W),LoopCaught)):- get_where(W).
-lco_goal_expansion(no_loop_check(G,LoopCaught),no_loop_check_term(G,info(G,W),LoopCaught)):- get_where(W).
+lco_goal_expansion(loop_check(G),O):-lco_goal_expansion(loop_check(G,fail),O),!.
+lco_goal_expansion(no_loop_check(G),O):-lco_goal_expansion(no_loop_check(G,fail),O),!.
+lco_goal_expansion(loop_check(G,LoopCaught),loop_check_term(G,info(G,W),LoopCaught)):- get_where(W),!.
+lco_goal_expansion(no_loop_check(G,LoopCaught),no_loop_check_term(G,info(G,W),LoopCaught)):- get_where(W),!.
 lco_goal_expansion(B,A):- 
   compound_name_arguments(B,F,ARGS),
   F \== (meta_predicate),
   maplist(lco_goal_expansion,ARGS,AARGS),
-  compound_name_arguments(A,F,AARGS).
+  compound_name_arguments(A,F,AARGS),!.
 lco_goal_expansion(A,A).
 
 :- if(current_predicate(fixup_exports/0)).
@@ -340,7 +340,7 @@ lco_goal_expansion(A,A).
 
 :- multifile system:goal_expansion/4.
 :- dynamic system:goal_expansion/4.
-system:goal_expansion(LC,Pos,LCO,Pos):- notrace((compound(LC),lco_goal_expansion(LC,LCO)))->LC\=@=LCO.
+system:goal_expansion(LC,Pos,LCO,Pos):- notrace((compound(LC),lco_goal_expansion(LC,LCO),LC\=@=LCO)).
 
 
 end_of_file.

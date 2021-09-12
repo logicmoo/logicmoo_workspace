@@ -1,7 +1,7 @@
 #!/bin/bash
 
 good_exit=7
-exitcode=$good_exit
+exitcode=${good_exit}
 [ -z "${keep_going}" ] && export keep_going=""
 [ "$*" == *"-k"* ] && export keep_going="-k"
 runtime_testing=4
@@ -32,7 +32,7 @@ parent-find() {
 
 export PACK_DIR=$(parent-find "pack.pl" .  )
 export PACK_DIR=$(basename $PACK_DIR)
-echo "<!-- PACK_DIR=${PACK_DIR} -->"
+echo "<!-- PACK_DIR=${PACK_DIR}-->"
 
 export JUNIT_PACKAGE="$PACK_DIR.$(basename `realpath .. | sed -e 's|/[^.]/|/|g' `).$(basename `realpath .`)"
 echo "<!-- JUNIT_PACKAGE=${JUNIT_PACKAGE} -->"
@@ -78,10 +78,10 @@ declare -a listOfNames=(
 ) 
 
 # kill old dead jobs
-kill -9  %1 %2 %6 %5 %4 %3 %2 %1 &>/dev/null
-kill -9  %1 %2 %6 %5 %4 %3 %2 %1 &>/dev/null
+(kill -9  %1 %2 %6 %5 %4 %3 %2 %1) &>/dev/null
+(kill -9  %1 %2 %6 %5 %4 %3 %2 %1) &>/dev/null
 #[ -z "${OUTER_TEE}" ] && echo "<!--" && cls && echo -e "\n-->"
-kill -9  %1 %2 %6 %5 %4 %3 %2 %1 &>/dev/null
+(kill -9  %1 %2 %6 %5 %4 %3 %2 %1) &>/dev/null
 
 if [ $# -ne 0 ]
 then
@@ -254,9 +254,9 @@ for ele2 in "${listOfNames[@]}"
 ) 
 
 ( 
-echo "<testsuite name=\"Rollup ${JUNIT_PACKAGE} in $(pwd)\" package=\"${JUNIT_PACKAGE}\" tests=\"${JUNIT_TESTS_GLOBBED_TESTS}\" failures=\"${JUNIT_TESTS_GLOBBED_FAILURES}\" errors=\"${JUNIT_TESTS_GLOBBED_ERRORS}\"  skipped=\"${JUNIT_TESTS_GLOBBED_SKIPPED}\">"
+echo "<testsuites><testsuite name=\"Rollup ${JUNIT_PACKAGE} in $(pwd)\" package=\"${JUNIT_PACKAGE}\" tests=\"${JUNIT_TESTS_GLOBBED_TESTS}\" failures=\"${JUNIT_TESTS_GLOBBED_FAILURES}\" errors=\"${JUNIT_TESTS_GLOBBED_ERRORS}\"  skipped=\"${JUNIT_TESTS_GLOBBED_SKIPPED}\">"
 sed -r "s/\x1B\[(([0-9]{1,2})?(;)?([0-9]{1,2})?)?[m,K,H,f,J]//g" ${JUNIT_TESTS_GLOBBED}.tmp
-echo -e "\n</testsuite>\n\n\n\n" 
+echo -e "\n</testsuite></testsuites>\n\n\n\n" 
 ) | iconv -c -t utf-8 | perl -p -e 's/[\x00-\x08\x0b-\x0c\x0e-\x1f\x7f]//g' > ${JUNIT_TESTS_GLOBBED}-Globbed-Report-junit.xml
 
 # iconv -c -f utf-8 -t ascii ${JUNIT_TESTS_GLOBBED}.tmp2 > 

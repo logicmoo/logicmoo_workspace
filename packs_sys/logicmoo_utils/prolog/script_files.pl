@@ -30,6 +30,8 @@ This module allows running prolog files as scripts.
 
 */
 
+:- reexport(echo_source_files).
+
 :- set_module(class(library)).
 
 :- use_module(library(occurs)).

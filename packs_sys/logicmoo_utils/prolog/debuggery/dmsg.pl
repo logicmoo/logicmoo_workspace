@@ -1051,7 +1051,7 @@ print_prepended_line(Pre,S):- prepend_trim(S,H),
 
 % in_cmt(Goal):- tlbugger:no_slow_io,!,format('~N/*~n',[]),call_cleanup(Goal,format('~N*/~n',[])).
 % in_cmt(Goal):- use_html_styles,!, Goal.
-in_cmt(Goal):- maybe_bfly_html(prepend_each_line('% ',Goal)),!.
+in_cmt(Goal):- maybe_bfly_html(prepend_each_line('%~ ',Goal)),!.
 
 
 %= 	 	 
