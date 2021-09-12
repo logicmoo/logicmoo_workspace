@@ -66,8 +66,8 @@ conc_forall(Cond, Action) :-
 %!  conc_forall(:Cond, :Action, :Join) is semidet.
 %
 %   Join is called after the execution of Action in the main thread. Sometimes
-%   we still need to execute a part of the code serialized.  Is equivalent to
-%   forall(Cond, (Action, ignore(Join))).
+%   we still need to execute a part of the code serialized.  Without concurrency,
+%   it is equivalent to forall(Cond, (Action, ignore(Join))).
 
 conc_forall(Cond, Action, Join) :-
     current_prolog_flag(cpu_count, CPUCount),
