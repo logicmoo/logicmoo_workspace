@@ -34,7 +34,7 @@ export PACK_DIR=$(parent-find "pack.pl" .  )
 export PACK_DIR=$(basename $PACK_DIR)
 echo "<!-- PACK_DIR=${PACK_DIR}-->"
 
-export JUNIT_PACKAGE="$PACK_DIR.$(basename `realpath .. | sed -e 's|/[^.]/|/|g' `).$(basename `realpath .`)"
+export JUNIT_PACKAGE="${PACK_DIR}.$(basename `realpath .. | sed -e 's|/[^.]/|/|g' `).$(basename `realpath .`)"
 echo "<!-- JUNIT_PACKAGE=${JUNIT_PACKAGE} -->"
 export JUNIT_PACKAGE_STEM=$(echo "${JUNIT_PACKAGE}" | sed -e "s/\./-/g" -e "s/--/-/g" | rev | cut -c 1-110 | rev)
 
@@ -138,11 +138,13 @@ for ele2 in "${listOfNames[@]}"
 	export JUNIT_SUITE=${JUNIT_CLASSNAME}
         export FileTestCase="${JUNIT_CLASSNAME}@Line_9999 RUN ( ${FILENAME} )"
         INFO "FileTestCase=${FileTestCase}"
-		  [[ "$ele" == *".ansi" ]] && continue
+        [[ "$ele" == *".ansi" ]] && continue
+	[[ "$ele" == *".txt" ]] && continue
+	[[ "$ele" == *".tmp" ]] && continue
         [[ "$ele" == *".html" ]] && continue
         [[ "$ele" == *".xml" ]] && continue
         [[ "$ele" == *".sh" ]] && continue
-        if [[ "$ele" == *".sh" && -x "$ele" ]]; then
+        if [[ "$ele" == *".sh" && -x "./$ele" ]]; then
          CMD="./${ele}"
         else
            if type lmoo-pfc > /dev/null 2>&1; then
@@ -154,7 +156,12 @@ for ele2 in "${listOfNames[@]}"
            if type ./swipl-junit > /dev/null 2>&1; then
              SWIPL=./swipl-junit
            fi
-      		#// Runs the test -f .swiplrc
+	   EXT=`echo "$ele" | cut -d'.' -f2`
+           if type lmoo-${EXT} > /dev/null 2>&1; then
+             SWIPL=lmoo-${EXT}
+           fi
+           
+            #// Runs the test -f .swiplrc
             #//CMD="swipl -g 'set_prolog_flag(runtime_testing,${runtime_testing})' -g \"thread_create(['${ele}'],Id),thread_join(Id),$test_completed\" "
             #//CMD="$SWIPL -g 'set_prolog_flag(runtime_testing,${runtime_testing})' -g \"(['${ele}'])\" -g \"$test_completed\" "
             CMD="$SWIPL ${ele}"
@@ -172,7 +179,8 @@ for ele2 in "${listOfNames[@]}"
         INFO "${date} (cd $PWD ; $CMD)" > ${TEE_FILE}
         INFO "${date} (cd $PWD ; $CMD)" > ${TEE_FILE2}
         startTime=$(date +%s);
-        ( eval $CMD ) 2>&1 | sed -r "s/\x1B\[(([0-9]{1,2})?(;)?([0-9]{1,2})?)?[m,K,H,f,J]//g" | tee -a ${TEE_FILE} | tee ${TEE_FILE2}
+	# CMD is allowed to clobber TEE_FILE
+        ( eval $CMD ) 2>&1 | tee -a ${TEE_FILE} | sed -r "s/\x1B\[(([0-9]{1,2})?(;)?([0-9]{1,2})?)?[m,K,H,f,J]//g" | tee ${TEE_FILE2}
         exitcode=${PIPESTATUS[0]}
         endTime=$(date +%s);
         totalTime=$(($endTime-$startTime));        

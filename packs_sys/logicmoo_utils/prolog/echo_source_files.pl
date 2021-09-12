@@ -74,7 +74,9 @@ feedback_open(F):- t_l:feedback_started(F,_),!, format('~N/*~~~n'),
 feedback_open(F):- current_prolog_flag(capture_feedback,true),
   current_input(I),current_output(O),c_es(E),
   new_memory_file(MF),open_memory_file(MF,write,S,[free_on_close(false)]),
-  asserta(t_l:feedback_started(F,mf_s(MF,S,I,O,E))),!,tell(S),set_prolog_IO(I,S,S).
+  asserta(t_l:feedback_started(F,mf_s(MF,S,I,O,E))),!,tell(S),set_prolog_IO(I,S,S),
+  % for ansi color
+  set_stream(S,tty(true)).
 feedback_open(F):-  format('~N/*~~~n'),assert(t_l:feedback_started(F,current_output)).
 
 feedback_close(F):- retract(t_l:feedback_started(F,current_output)),!,format('~N~~*/~n').

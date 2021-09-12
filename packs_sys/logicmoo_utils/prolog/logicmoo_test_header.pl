@@ -33,7 +33,6 @@
  op(600,yfx,('&')), op(600,yfx,('v')),op(350,xfx,('xor')), op(300,fx,('-')),
  op(300,fx,('~'))))))).   :- endif.
 
-
 :- if((prolog_load_context(source,S),format(user_error,'~N~q,~n',[running(S)]))). :- endif.
 :- if(( \+ current_prolog_flag(test_module,_),set_prolog_flag(test_module,baseKB),assert(baseKB:this_is_baseKB))). :- endif.
 :- if(( \+ current_prolog_flag(test_typein_module,_), set_prolog_flag(test_typein_module,baseKB))). :- endif.
@@ -77,6 +76,7 @@
  true)).
 :- endif.
 
+:- if((set_stream(current_output,tty(true)))).  :- endif.
 % :- if(('$current_source_module'(W), '$set_typein_module'(W))). :- endif.
 :- if((current_prolog_flag(test_typein_module,Module), '$set_typein_module'(Module), module(Module))). :- endif.
 :- if((current_prolog_flag(test_typein_module,Module), clifops:clif_op_decls(OPS), call(Module:OPS))). :- endif.
