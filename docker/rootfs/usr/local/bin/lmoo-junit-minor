@@ -120,7 +120,7 @@ function INFO {
 }
 
 me="${BASH_SOURCE[${#BASH_SOURCE[@]} - 1]}"
-INFO "Running Matching Tests: $me $keep_going ${listOfNames[*]}"
+INFO "Running Matching Tests: $me ${keep_going} ${listOfNames[*]}"
 
 (
 for ele2 in "${listOfNames[@]}"
@@ -203,13 +203,13 @@ for ele2 in "${listOfNames[@]}"
 
 		# // 2 -> 1
 		if [ $exitcode -eq 2 ]; then
-         [ "$keep_going" == "-k" ] && INFO "...keep going..." && continue
-         INFO "...NOT keep going..."
-         exit 1
-      fi
+		     [ "${keep_going}" == "-k" ] && INFO "...keep going..." && continue
+		     INFO "...NOT keep going..."
+		     exit 1
+	        fi
 		
 		# // Not Abort
-		[ $exitcode -ne 1 ] && [ "$keep_going" == "-k" ] && continue
+		[ $exitcode -ne 1 ] && [ "${keep_going}" == "-k" ] && continue
 
 		echo "<!-- Do you wish to continue? [y]es, [a]lways [Up/r]etry or [N]o: "
 		read -sN1 -r -t 0.0001 k1
@@ -233,17 +233,22 @@ for ele2 in "${listOfNames[@]}"
 			INFO "ans=$ans"
 		done
 
-      INFO "ans=$ans"
-
-      [ "$ans" == '' ] && [ $exitcode -eq 0 ] && [ "$test_completed" == 'true' ]  && retry=1 && continue
-
-      [ "$ans" == '' ] && [ $exitcode -eq 7 ] && retry=1 && cls && continue  # 7 + enter
-
-		[ "$ans" == 'y' ] && continue
-      [ "$ans" == 'a' ] && KEEP_GOING=1 && continue
+		INFO "ans=$ans"
+		
+		[ "$ans" == '' ] && [ $exitcode -eq 0 ] && [ "$test_completed" == 'true' ]  && retry=1 && continue
+		
+		[ "$ans" == '' ] && [ $exitcode -eq 7 ] && retry=1 && cls && continue  # 7 + enter
+		
+		[ "$ans" == 'y' ] && continue # yes		
+		[ "$ans" == 'a' ] && keep_going="-k" && continue # always
 		[ "$ans" == 'B' ] && continue # down arrow
 		[ "$ans" == 'A' ] && retry=1 && cls && continue  # up arrow
-		[ "$ans" == 'r' ] && retry=1 && continue
+		[ "$ans" == 'r' ] && retry=1 && continue # retry 
+
+		[ "$ans" == 'x' ] && return $exitcode 2>/dev/null ; exit $exitcode  # e(x)it
+		[ "$ans" == 'n' ] && keep_going="" # no
+		
+		[ "${keep_going}" == "-k" ] && retry=0 && continue
 
 		INFO "Exiting the script. Have a nice day!"
 		return $exitcode 2>/dev/null ; exit $exitcode
