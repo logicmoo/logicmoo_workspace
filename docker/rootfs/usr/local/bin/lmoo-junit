@@ -21,7 +21,7 @@ export PACK_DIR=$(basename $PACK_DIR)
 echo "<!-- PACK_DIR=${PACK_DIR} -->"
 
 export JUNIT_PACKAGE="${PACK_DIR}.$(basename `realpath .. | sed -e 's|/[^.]/|/|g' `).$(basename `realpath .`)"
-JUNIT_PACKAGE=$(echo $JUNIT_PACKAGE | sed -e "s/logicmoo_//g" )
+JUNIT_PACKAGE=$(echo $JUNIT_PACKAGE | sed -e "s/logicmoo_//g" -e "s|\.t\.|\test\.|g" -e "s|tests|test|g" )
 JUNIT_PACKAGE="logicmoo.${JUNIT_PACKAGE}"
 echo "<!-- JUNIT_PACKAGE=${JUNIT_PACKAGE} -->"
 
