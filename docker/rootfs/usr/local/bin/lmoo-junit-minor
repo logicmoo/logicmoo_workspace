@@ -46,7 +46,6 @@ JUNIT_PACKAGE=$(echo $JUNIT_PACKAGE | sed -e "s/logicmoo_//g" -e "s|\.t\.|\test\
 JUNIT_PACKAGE="logicmoo.${JUNIT_PACKAGE}"
 echo "<!-- JUNIT_PACKAGE=${JUNIT_PACKAGE} -->"
 
-
 export JUNIT_PACKAGE_STEM=$(echo "${JUNIT_PACKAGE}" | sed -e "s/\./-/g" -e "s/--/-/g" | rev | cut -c 1-110 | rev)
 
 export GLOB="$*"
@@ -159,17 +158,14 @@ for ele2 in "${listOfNames[@]}"
          CMD="./${ele}"
         else
            if type lmoo-pfc > /dev/null 2>&1; then
-             SWIPL=lmoo-clif
-           fi
-           if type lmoo-clif > /dev/null 2>&1; then
-             SWIPL=lmoo-clif
-           fi
-           if type ./swipl-junit > /dev/null 2>&1; then
-             SWIPL=./swipl-junit
+             SWIPL=lmoo-pfc
            fi
 	   EXT=`echo "$ele" | cut -d'.' -f2`
            if type lmoo-${EXT} > /dev/null 2>&1; then
              SWIPL=lmoo-${EXT}
+           fi
+           if type lmoo-clif > /dev/null 2>&1; then
+             SWIPL=lmoo-clif
            fi
            
             #// Runs the test -f .swiplrc
