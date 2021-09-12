@@ -21,7 +21,10 @@ export PACK_DIR=$(basename $PACK_DIR)
 echo "<!-- PACK_DIR=${PACK_DIR} -->"
 
 export JUNIT_PACKAGE="${PACK_DIR}.$(basename `realpath .. | sed -e 's|/[^.]/|/|g' `).$(basename `realpath .`)"
+JUNIT_PACKAGE=$(echo $JUNIT_PACKAGE | sed -e "s/logicmoo_//g" )
+JUNIT_PACKAGE="logicmoo.${JUNIT_PACKAGE}"
 echo "<!-- JUNIT_PACKAGE=${JUNIT_PACKAGE} -->"
+
 export JUNIT_PACKAGE_STEM=$(echo "${JUNIT_PACKAGE}" | sed -e "s/\./-/g" -e "s/--/-/g" | rev | cut -c 1-110 | rev)
 
 export GLOB="$*"
@@ -35,12 +38,16 @@ echo "<!-- TEST_STEM_PATH=${TEST_STEM_PATH} -->"
 
 
 export CAPTURE_TEST_ANSI=${TEST_STEM_PATH}.ansi
-echo -e "<!-- Running release (all) tests\n ( cd $PWD ; $BASH_SOURCE $GLOB) > ${CAPTURE_TEST_ANSI} -->"
-
-cat /dev/null > ${CAPTURE_TEST_ANSI}
 
 # Run tests for JUnit Results
-( lmoo-junit-minor -k "$GLOB" ) 2>&1 | tee -a ${CAPTURE_TEST_ANSI}
+if test ! -z "${CAPTURE_TEST_ANSI+}"; then
+    echo -e "<!-- Running release (all) tests\n ( cd $PWD ; $BASH_SOURCE $GLOB) > ${CAPTURE_TEST_ANSI} -->"
+    cat /dev/null > ${CAPTURE_TEST_ANSI}
+    lmoo-junit-minor -k "$GLOB" 2>&1 | tee -a ${CAPTURE_TEST_ANSI}
+else
+    echo -e "<!-- Running release (all) tests\n ( cd $PWD ; $BASH_SOURCE $GLOB) -->"
+    lmoo-junit-minor -k "$GLOB" 2>&1
+fi
 
 junitCombined=${TEST_STEM_PATH}-junitCombined-rollup.tmp
 
@@ -53,9 +60,18 @@ echo -e "\n</testsuites>\n\n\n"
 
 PATH=~/.npm-packages/bin:$PATH
 
-echo "<!-- "
 # Generate Html Reports
-(cat ${CAPTURE_TEST_ANSI} | ansi2html.sh > ${TEST_STEM_PATH}-README-rollup.html)  ; /bin/true
+echo "<!-- "
+if test ! -z "${CAPTURE_TEST_ANSI+}"; then
+ ansi2html=ansi2html.sh
+ # check for the faster one instead of our script
+ if type ansi2html > /dev/null 2>&1; then
+    ansi2html="ansi2html"
+ fi
+ echo "cat ${CAPTURE_TEST_ANSI} | $ansi2html > ${TEST_STEM_PATH}-README-rollup.html"
+ (cat ${CAPTURE_TEST_ANSI} | $ansi2html > ${TEST_STEM_PATH}-README-rollup.html)  ; /bin/true
+fi
+
 #npm install -g junit-viewer
 echo "junit-viewer --results=${junitCombined} --save=${TEST_STEM_PATH}-junit-viewer-rollup.html &> ${TEST_STEM_PATH}-junit-viewer.debug.html"
 (junit-viewer --results=${junitCombined} --save=${TEST_STEM_PATH}-junit-viewer-rollup.html &> ${TEST_STEM_PATH}-junit-viewer.debug.html )  ; /bin/true
