@@ -8,7 +8,7 @@
 % Douglas Miles
 */
 
-:- include(test_header).
+:- include(library(logicmoo_test_header)).
 
 :- pfc_test_feature(mt,must_not_be_pfc_file).
 :- pfc_test_feature(mt,\+ mtHybrid(header_sane)).

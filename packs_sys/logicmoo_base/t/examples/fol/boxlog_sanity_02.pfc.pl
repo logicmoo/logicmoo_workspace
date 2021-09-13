@@ -4,7 +4,7 @@
 
 :- ensure_loaded(library(script_files)).
 
-:- process_this_script.
+% :- process_this_script.
 
 % Initially Dmiles thought LEM was the culprit, it was not.
 % this is a more generalized problem in Nomics

@@ -1,5 +1,5 @@
 
-:- include(test_header).
+:- include(library(logicmoo_test_header)).
 
 :- begin_tests(mpred_pfc_test_02_plt).
 

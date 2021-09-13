@@ -8,7 +8,7 @@
 :- dynamic(t123:ttExpressionType/1).
 
 
-:- process_this_script.
+% :- process_this_script.
 
 :- statistics.
 

@@ -8,7 +8,7 @@
 % Douglas Miles
 */
 
-:- include(test_header).
+:- include(library(logicmoo_test_header)).
 
 baseKB:mtHybrid(socialMt).
 

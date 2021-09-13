@@ -10,7 +10,7 @@
 
 %  was_module(bc_01,[]).
 
-:- include(test_header).
+:- include(library(logicmoo_test_header)).
 
 
 :- dynamic(cond_POST/1).

@@ -9,7 +9,7 @@
 */
 %  was_module(header_sane,[]).
 
-:- include(test_header).
+:- include(library(logicmoo_test_header)).
 
 :- expects_dialect(pfc).
 

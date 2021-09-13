@@ -79,7 +79,7 @@ We start by sending all axioms to the PTTP compiler, which, in turn, transforms 
 out.
 */
 
-:- process_this_script.
+% :- process_this_script.
 
 %=  setup pfc
 :- expects_dialect(pfc).

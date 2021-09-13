@@ -10,7 +10,7 @@
 
 %  was_module(sanity_bc,[]).
 
-:- include(test_header).
+:- include(library(logicmoo_test_header)).
 
 :- flag_call(runtime_debug=true).
 :- set_prolog_flag(retry_undefined, kb_shared).

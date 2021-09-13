@@ -1,6 +1,6 @@
 #!/usr/bin/env swipl
 :- if(use_module(library(logicmoo_utils))). :- endif.
-:- include(test_header).
+:- include(library(logicmoo_test_header)).
 :- kif_io.
 ;; Module - Test Puzzle in CLIF for SWI-Prolog
 ;; Maintainer: Douglas Miles

@@ -1,6 +1,6 @@
 :- include(test_header).
 
-:- process_this_script.
+% :- process_this_script.
 
 :- prolog_load_context(module,Module),
    listing(Module:_).

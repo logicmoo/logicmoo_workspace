@@ -9,7 +9,7 @@
 */
 %  was_module(mt_01,[]).
 
-:- include(test_header).
+:- include(library(logicmoo_test_header)).
 
 
 %:- add_import_module(mt_01,baseKB,end).

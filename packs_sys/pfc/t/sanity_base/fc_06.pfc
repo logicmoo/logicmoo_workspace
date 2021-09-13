@@ -9,7 +9,7 @@
 %  cls ; kill -9 %1 ; swipl -g "ensure_loaded(pack(logicmoo_base/t/examples/base/'sanity_abc.pfc'))."
 
 
-:- include(test_header).
+:- include(library(logicmoo_test_header)).
 
 :- dmsg(begin_abc).
               

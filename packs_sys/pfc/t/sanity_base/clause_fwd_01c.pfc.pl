@@ -4,7 +4,7 @@
 % Douglas Miles
 %  cls ; kill -9 %1 ; swipl -g "ensure_loaded(pack(logicmoo_base/t/sanity_base/clause_fwd_01c.pfc'))."
 
-:- include(test_header).
+:- include(library(logicmoo_test_header)).
 % :- set_prolog_flag(lm_pfc_lean,true).
 % :- use_module(library(pfc)).
 

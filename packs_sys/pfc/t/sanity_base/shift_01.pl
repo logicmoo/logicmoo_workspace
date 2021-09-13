@@ -1,6 +1,6 @@
 
 
-:- include(test_header).
+:- include(library(logicmoo_test_header)).
 
 
 w(W):-writeln(W).

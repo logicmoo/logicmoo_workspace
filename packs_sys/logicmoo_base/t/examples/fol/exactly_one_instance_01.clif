@@ -1,4 +1,4 @@
-:- include(test_header).
+:- include(library(logicmoo_test_header)).
 ;; Maintainer: Douglas Miles
 ;; Load with  ?- load_clif(pack(logicmoo_base/t/examples/fol/exactly_one_instance)).
 (:- (module exactly_one_instance ()))

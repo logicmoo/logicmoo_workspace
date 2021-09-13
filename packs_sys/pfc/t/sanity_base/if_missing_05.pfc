@@ -8,7 +8,7 @@
 
 % %  was_module(sanity,[]).
 
-:- include(test_header).
+:- include(library(logicmoo_test_header)).
 
 :- op(500,fx,'-').
 :- op(300,fx,'~').

@@ -9,7 +9,7 @@
 */
 %  was_module(mt_09,[]).
 
-:- include(test_header).
+:- include(library(logicmoo_test_header)).
 
 :- pfc_test_feature(pfc_file_detect,must(\+ is_pfc_file)).
 

@@ -11,7 +11,7 @@
 
 ==>(isEach(system(X),system(Y)) :- related(X,Y)).
 
-:- process_this_script.
+% :- process_this_script.
 
 :- dynamic(fooBar/0).
 

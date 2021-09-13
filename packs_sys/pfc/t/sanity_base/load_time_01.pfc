@@ -5,6 +5,6 @@
 % Dec 13, 2035
 % Douglas Miles
 */
-:- include(test_header).
+:- include(library(logicmoo_test_header)).
 :- statistics.
     

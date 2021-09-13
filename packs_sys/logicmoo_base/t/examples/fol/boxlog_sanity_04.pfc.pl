@@ -13,7 +13,7 @@
 :- set_fileAssertMt(kbii).
 
 
-:- process_this_script.
+% :- process_this_script.
 
 
 :- set_prolog_flag(os_argv,[swipl, '-f', '/dev/null','--nonet']).

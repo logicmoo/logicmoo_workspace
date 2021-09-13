@@ -1,7 +1,7 @@
 #!/usr/bin/env lmoo-junit
 
 % Quick fwd test
-:- include(test_header).
+:- include(library(logicmoo_test_header)).
 
 :- use_module(library(statistics)).
 :- statistics.

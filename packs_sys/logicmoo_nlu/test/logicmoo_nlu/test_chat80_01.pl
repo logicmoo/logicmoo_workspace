@@ -1,6 +1,6 @@
 #!/usr/bin/env lmoo-jenkins-minor
 
-:- include(test_header).
+:- include(library(logicmoo_test_header)).
 
 % =============================================
 % File 'mpred_builtin.pfc'

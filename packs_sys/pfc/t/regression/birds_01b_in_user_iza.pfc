@@ -23,7 +23,7 @@
 
 %# Tests Finin original defeasabilty system is working over 2nd order
 
-:- include(test_header).
+:- include(library(logicmoo_test_header)).
 :- set_file_abox_module(user).
 :- expects_dialect(pfc).
 

@@ -1,6 +1,6 @@
 #!/usr/bin/env lmoo-junit
 
-:- include(test_header).
+:- include(library(logicmoo_test_header)).
 
 % =============================================
 % File 'mpred_builtin.pfc'

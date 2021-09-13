@@ -11,7 +11,7 @@
 
 :- if(autoload_all([verbose(false)])).
 :- endif.
-:- include(test_header).
+:- include(library(logicmoo_test_header)).
 
 :- if(\+ current_module(dictoo_lib)).
 :- ensure_loaded(library(dictoo)).

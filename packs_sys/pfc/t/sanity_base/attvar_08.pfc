@@ -7,7 +7,7 @@
 
 %  was_module(sanity_attvar_08,[]).
 
-:- include(test_header).
+:- include(library(logicmoo_test_header)).
 
 :- debug_logicmoo(_).
 :- nodebug_logicmoo(http(_)).

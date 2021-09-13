@@ -2,7 +2,7 @@
 
 %  was_module(sanity_ks_two,[]).
 
-:- include(test_header).
+:- include(library(logicmoo_test_header)).
 
 :- if(\+ current_module(attvar_reader)).
 :- use_module(library(logicmoo/attvar_reader)).

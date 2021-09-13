@@ -3,7 +3,7 @@
 % Tests if this will lazily define new predicates
 %
 
-:- include(test_header).
+:- include(library(logicmoo_test_header)).
 
 :- if((pfc_test_feature(localMt,X=1),X==1)).
 

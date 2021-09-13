@@ -1,7 +1,7 @@
 
 %  was_module(nd_01,[]).
 % :- if(rtrace). :-endif.
-:- include(test_header).
+:- include(library(logicmoo_test_header)).
 
 % :- use_listing_vars.
 

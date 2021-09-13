@@ -1,6 +1,6 @@
 %  was_module(red_test03,[]).
 
-:- include(test_header).
+:- include(library(logicmoo_test_header)).
 % :- use_listing_vars.
 
 
@@ -14,9 +14,9 @@
 
 % :- set_prolog_flag(umt_local,false).
 % :- ensure_loaded(library(logicmoo/mpred/mpred_core)).
-% :- include(test_header).
-%:- include(test_header).
-% :- include(test_header).
+% :- include(library(logicmoo_test_header)).
+%:- include(library(logicmoo_test_header)).
+% :- include(library(logicmoo_test_header)).
 
 % :- rtrace(mpred_reset).
 

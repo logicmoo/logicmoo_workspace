@@ -1,6 +1,6 @@
 % -*-Prolog-*-
 
-:- include(test_header).
+:- include(library(logicmoo_test_header)).
 
 % this Pfc example shows how to maintain a sum_01a.	
 % Given a set of asssertions matching value_01a(N), this rule

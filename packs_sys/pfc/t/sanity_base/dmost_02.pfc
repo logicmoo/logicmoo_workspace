@@ -8,7 +8,7 @@
  
 %  was_module(sanity,[]).
 
-:- include(test_header).
+:- include(library(logicmoo_test_header)).
 
 :- asserta((was_missing(Q):- mpred_literal_nv(Q), \+ ~Q, if_missing_mask(Q,R,Test),!, lookup_u(R), Test)).
 

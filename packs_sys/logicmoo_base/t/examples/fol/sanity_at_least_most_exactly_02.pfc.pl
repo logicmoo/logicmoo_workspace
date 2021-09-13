@@ -10,7 +10,7 @@
 
 :- set_prolog_flag(logicmoo_modality,full).
 
-:- process_this_script.
+% :- process_this_script.
 
 :- statistics.
 

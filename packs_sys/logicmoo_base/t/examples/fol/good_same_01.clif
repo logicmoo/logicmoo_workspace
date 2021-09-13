@@ -1,4 +1,4 @@
-:- include(test_header).
+:- include(library(logicmoo_test_header)).
 
 (instance superset BinaryPredicate)
 (domain superset 1 DependantSet)

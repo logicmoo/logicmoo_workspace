@@ -10,7 +10,7 @@
 
 :- if(set_prolog_flag(test_module,baseKB)). :- endif.
 
-:- include(test_header).
+:- include(library(logicmoo_test_header)).
 % :- baseKB:ensure_loaded(library('pfclib/system_autoexec.pfc')).
 :- set_prolog_flag(retry_undefined, kb_shared).
 

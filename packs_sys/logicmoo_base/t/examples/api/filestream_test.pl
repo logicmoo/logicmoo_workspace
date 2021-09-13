@@ -9,7 +9,7 @@
 
 :- expects_dialect(pfc).
 
-:- process_this_script.
+% :- process_this_script.
 
 % this is a file stream 1
 

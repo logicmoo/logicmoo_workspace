@@ -1,7 +1,7 @@
 #!/usr/bin/env lmoo-clif
 
 % Tests Emulation of assertable attributed variables
-% :- include(test_header).
+% :- include(library(logicmoo_test_header)).
 
 :- ensure_loaded(library(pfc_test)).
 

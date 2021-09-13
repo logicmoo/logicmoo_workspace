@@ -2,7 +2,7 @@
 
 :- expects_dialect(pfc).
 
-:- process_this_script.
+% :- process_this_script.
 
 %= save compiled clauses using forward chaining storage (by default)
 %= we are using forward chaining just so any logical errors, performance and program bugs manefest

@@ -1,6 +1,6 @@
 %% some simple tests to see if Pfc is working properly
 
-:- include(test_header).
+:- include(library(logicmoo_test_header)).
 
 :- mpred_trace.
 

@@ -6,7 +6,7 @@
 
 :- expects_dialect(pfc).
 
-:- include(test_header).
+:- include(library(logicmoo_test_header)).
 % :- set_prolog_flag(lm_pfc_lean,true).
 % :- expects_dialect(pfc).
 

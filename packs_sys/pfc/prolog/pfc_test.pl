@@ -307,17 +307,17 @@ inform_message_to_string(Term,Str):- format(string(Str), '~q', [Term]),!.
 
 %list_test_results:- !.
 list_test_results:-
-  write('\n<!--  \n'),
+  writeln('\n<!-- '),
   % listing(j_u:junit_prop/3), 
   show_all_junit_suites,
-  write(' -->\n').
+  writeln(' -->').
 
 show_all_junit_suites:- 
   %listing(j_u:junit_prop/3),
-  outer_junit(write('<?xml version="1.0" encoding="utf-8"?>\n<testsuites>\n')),
+  outer_junit(writeln('<?xml version="1.0" encoding="utf-8"?>\n<testsuites>')),
   findall(File,j_u:junit_prop(testsuite,file,File),L),list_to_set(L,S),
   maplist(show_junit_suite,S),
-  outer_junit(write('</testsuites>\n')).
+  outer_junit(writeln('</testsuites>')).
 
 outer_junit(G):- nop(G).
 
@@ -341,7 +341,8 @@ junit_term_expansion(M:I,M:O):- !, junit_term_expansion(I,O).
 junit_term_expansion((:- I),O):- !, junit_dirrective_expansion(I,M), (is_list(M) -> O=M ; O=(:-M)).
 
 junit_dirrective_expansion(I,O):- junit_expansion(junit_dirrective_exp,I,O).
-junit_dirrective_exp( I , O ) :- junit_goal_exp(I,O), I\=@=O. 
+
+junit_dirrective_exp( I , O ) :- junit_goal_exp(I,O) -> I\=@=O. 
 junit_dirrective_exp( listing(X), dmsg(skipped(listing(X))) ):- keep_going. 
 junit_dirrective_exp( \+ X, mpred_test( \+ X ) ).
 %junit_dirrective_exp( X, X  ):- predicate_property(X,static).
@@ -356,10 +357,19 @@ junit_expansion(P,M:I,M:O):- !, junit_expansion(P,I,O).
 junit_expansion(P,I,O):-call(P,I,O).
 
 junit_goal_expansion(I,O):- junit_expansion(junit_goal_exp,I,O).
-junit_goal_exp( break, dmsg(skipped(break))):- keep_going. 
-junit_goal_exp( cls, dmsg(skipped(cls)) ):- keep_going. 
+junit_goal_exp( Break, dmsg(skipped(blocks_on_input,Break))):- blocks_on_input(Break), keep_going. 
+junit_goal_exp( Messy, dmsg(skipped(messy_on_output,Messy))):- messy_on_output(Messy), keep_going. 
 % junit_goal_exp( must(A),mpred_test(A)) :- is_junit_test.
-junit_goal_exp( trace, dmsg(trace) ):- keep_going. 
+
+
+
+messy_on_output( cls ).
+messy_on_output( listing ).
+messy_on_output( xlisting(_) ).
+
+blocks_on_input( trace ).
+blocks_on_input( break ).
+blocks_on_input( prolog ).
 
 
 
@@ -511,15 +521,15 @@ show_junit_suite(File):-
 
 save_single_testcase(Name):- 
  with_output_to(string(Text),
-  (write('<?xml version="1.0" encoding="utf-8"?>\n'),
+  (writeln('<?xml version="1.0" encoding="utf-8"?>'),
    j_u:junit_prop(testsuite,file,File),
-   write("  <testsuites>\n"),
+   writeln("  <testsuites>"),
    (getenv('JUNIT_SUITE',SuiteName);SuiteName=File),!,
   get_suite_attribs(SuiteAttribs),
   format("  <testsuite name=\"~w\" ~w>\n", [SuiteName, SuiteAttribs]),
    show_junit_testcase(File,Name),
-   write("  </testsuite>\n"),
-   write(" </testsuites>\n"))),
+   writeln("  </testsuite>"),
+   writeln(" </testsuites>"))),
  shorten_and_clean_name(File,SFile),
  shorten_and_clean_name(Name,SName),
  atomic_list_concat([SFile,'-',SName],RSName),
@@ -620,7 +630,7 @@ show_junit_testcase(Suite,Testcase):-
   % format('package="~w" ', [Package]),
   format('classname="~w" ', [Classname]),
  ignore((j_u:junit_prop(Testcase,time,Time),format('time="~3f"', [Time]))),
- writeln('>\n'),
+ writeln('>'),
  ignore((write_testcase_info(Testcase))),
  writeln("\n    </testcase>"))),!.
 
@@ -635,11 +645,11 @@ junit_env_var('JUNIT_SUITE').
 junit_env_var('JUNIT_CMD').
 
 write_testcase_std_info(Testcase):-
- write("\n    <system-err><![CDATA[\n"),
+ writeln("\n    <system-err><![CDATA["),
  write_testcase_env(Testcase),
  ignore((j_u:junit_prop(Testcase,out,Str),format('~w',[Str]))),
   forall(j_u:junit_prop(Testcase,Type,Term), write_testcase_prop(Type,Term)),
- write("\n    ]]></system-err>\n").
+ writeln("\n    ]]></system-err>").
 
 write_testcase_prop(_Type,[]):-!.
 write_testcase_prop(info,S):- !, format('~N~w~n',[S]).

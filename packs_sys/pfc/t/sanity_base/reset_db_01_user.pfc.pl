@@ -7,10 +7,10 @@
 
 % Tests if Rule database can clear correctly
 
-:- include(test_header).
+:- include(library(logicmoo_test_header)).
 :- set_file_abox_module(user).
 :- expects_dialect(pfc).
-:- include(test_header).
+:- include(library(logicmoo_test_header)).
 
 
 :- dynamic(cond_POST/1).
