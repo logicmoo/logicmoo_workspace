@@ -537,9 +537,9 @@ save_single_testcase(Name):-
 
 classname_to_package(CN,P,C):- atomic_list_concat(List,'.',CN), append(Left,[C],List),atomic_list_concat(Left,'.',P).
 
-shorten_and_clean_name(Name,RSName):- atomic_list_concat([L,_|_],'.',Name),!,shorten_and_clean_name(L,RSName).
-shorten_and_clean_name(Name,RSName):- atomic_list_concat(List,'/',Name),append(_,[N1,N2,N3,N4],List),
-  atomic_list_concat(['prolog.',test_,N1,'.',N2,'.',N3,'.',N4],'',RSName).
+%shorten_and_clean_name(Name,RSName):- atomic_list_concat([L,_|_],'.',Name),!,shorten_and_clean_name(L,RSName).
+%shorten_and_clean_name(Name,RSName):- atomic_list_concat(List,'/',Name),append(_,[N1,N2,N3,N4],List),
+%  atomic_list_concat(['prolog.',test_,N1,'.',N2,'.',N3,'.',N4],'',RSName).
 shorten_and_clean_name(Name,RSName):- 
   ensure_compute_file_link(Name,Name0),
   replace_in_string(
@@ -551,7 +551,7 @@ shorten_and_clean_name(Name,RSName):-
   replace_in_string(['__'='_'],Name2,Name3),
   last_n_chars(Name3,RSName),!.
 
-last_n_chars(SName,RSName):- sub_atom(SName,0,20,0,RSName),!.
+%last_n_chars(SName,RSName):- sub_atom(SName,0,20,0,RSName),!.
 last_n_chars(SName,SName).
 
 

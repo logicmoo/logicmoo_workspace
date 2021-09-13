@@ -81,7 +81,8 @@ mutex_call(Goal,Id):-
 please_tcp_bind(ServerSocket, Port):-
 	catch((tcp_bind(ServerSocket, Port),
 	flush_output,
-	writeSTDERR('cs.\nSigma server started on port ~w. \n\nYes\n?- ',[Port]),flush_output),
+	%writeSTDERR('%~ cs.\nSigma server started on port ~w. \n\nYes\n?- ',[Port]),flush_output),
+  writeSTDERR('%~ Sigma server started on port ~w.',[Port]),flush_output),
 	error(E,_),
 	(nop(writeSTDERR('\nWaiting for OS to release port ~w. \n(sleeping 4 secs becasue "~w")\n',[Port,E])),
 	sleep(4),

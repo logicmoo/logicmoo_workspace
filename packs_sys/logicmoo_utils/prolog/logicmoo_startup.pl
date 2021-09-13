@@ -1318,19 +1318,20 @@ default_history_file(File):-
  
 :- set_prolog_flag(history, 5000).
 
-carelessly(G):- ignore(notrace(catch(G,E,(dmsg(E),!,fail)))).
+carelessly(G):- ignore(notrace(catch(G,E,(nop(dmsg(E)),!,fail)))).
 add_history0(_):- notrace(app_argv('--no-history')),!.
 add_history0(A):-
    carelessly(prolog_history:prolog_history(enable)),
    current_input(S),
+   (current_prolog_flag(readline,readline) -> User_input = libedit_input; User_input = user_input),
    forall(retract('$history':'$history'(_,A)),true),
                   carelessly(prolog:history(S,add(A))),
                   ignore((
                      stream_property(UI,file_no(0)),
                      ( \+ same_streams(S,UI)),
                         forall(retract('$history':'$history'(_,A)),true),
-                        carelessly(prolog:history(user_input,add(A))))),!,
-   carelessly((default_history_file(File),prolog:history(user_input, save(File)))).
+                        carelessly(prolog:history(User_input,add(A))))),!,
+   carelessly((default_history_file(File),prolog:history(User_input, save(File)))).
 
 
 
