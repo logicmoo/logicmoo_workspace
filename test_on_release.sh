@@ -18,7 +18,7 @@ mkdir -p $TESTING_TEMP/
 
 find $TESTING_TEMP -type f -name "*-junit.xml" -delete
 find $TESTING_TEMP -type f -name "*-rollup.html" -delete
-# rm -f $TESTING_TEMP/?*
+rm -f $TESTING_TEMP/???*
 
 TEST_PARAMS="$*"
 if [ -z "$TEST_PARAMS" ]; then 
