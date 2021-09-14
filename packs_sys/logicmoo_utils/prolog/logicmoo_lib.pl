@@ -22,33 +22,6 @@
 
 :- use_module(library(logicmoo_utils)).
 
-/*
-
-:- current_prolog_flag(readline,Base),writeln(readline=Base).
-:- if(exists_source(library(editline))).
-:- set_prolog_flag(readline,editline).
-:- endif.
-% :- set_prolog_flag(readline,true).
-
-:- if(current_prolog_flag(readline,editline)).
-:- system:ensure_loaded(library(readline)).
-:- listing(prolog:history/2).
-:- abolish(prolog:history/2).
-:- system:reconsult(library(editline)).
-:- else.
-:- if(exists_source(library(readline))).
-:- if(exists_source(library(editline))).
-:- system:ensure_loaded(library(editline)).
-:- listing(prolog:history/2).
-:- abolish(prolog:history/2).
-:- endif.
-:- unload_file(library(readline)).
-:- system:consult(library(readline)).
-:- endif.
-:- endif.
-:- current_prolog_flag(readline,Base),writeln(readline=Base).
-*/        
-
 
 
 % :- multifile prolog:message//1, prolog:message_hook/3.

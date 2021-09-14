@@ -83,9 +83,10 @@ text_to_charniak_tree(Text,LExpr):-
   lxpr_to_list(String, LExpr),
   nop(print_tree(charniak=LExpr)).
 
-
+:- if( \+ getenv('keep_going','-k')).
 :- use_module(library(editline)).
 :- add_history((call(make),call(test_corenlp1))).
+:- endif.
 
 baseKB:regression_test:- test_charniak(1,X),!,test_charniak(X).
 baseKB:sanity_test:- make, forall(test_charniak(1,X),test_charniak(X)).

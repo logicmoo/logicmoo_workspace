@@ -253,6 +253,7 @@ add_pack_path(Y):-  \+ user:file_search_path(pack,Y) ->asserta(user:file_search_
 % ==============================================
 % Enable History
 % ==============================================
+:- if( \+ getenv('keep_going','-k')).
 :- if(\+ current_predicate(setup_hist0/0)).
 :- if(current_prolog_flag(windows, false)).
 
@@ -271,7 +272,7 @@ setup_hist0:-  '$toplevel':setup_history.
 :- endif.
 :- endif.
 :- endif.
-
+:- endif. % keep_going
 
 :- if(false).
 

@@ -7,6 +7,8 @@ source ./logicmoo_env.sh -v
 
 WAS_PWD=$PWD
 
+export keep_going="-k"
+
 #unset TESTING_TEMP
 
 [ -z "$TESTING_TEMP" ] && [ -d "$(pwd)/test_results" ] && export TESTING_TEMP=$(pwd)/test_results/$(whoami)

@@ -412,9 +412,11 @@ pipeline_file_loading:-
   assert_if_new(pipeline_file_loaded),!,
   nop(Loaded=false-> break ; true).
 
+:- if( \+ getenv('keep_going','-k')).
 :- use_module(library(editline)).
 :- add_history((call(make),call(pipeline_file_loading))).
 :- findnsols(6,X,(chat80(X),add_history((call(make),call(run_pipeline(X))))),_).
+:- endif.
 
 :- fixup_exports.
 
