@@ -101,6 +101,7 @@
 % Access Key=eyJhbGciOiJIUzM4NCJ9.eyJjb21wYW55X25hbWUiOiJsb2dpY21vbyIsInByb2plY3RfaWQiOiI5MDUyOCIsImRhdGVfY3JlYXRlZCI6MTYzMTQ3NzIyOH0.g50WKW3Kx8eVF3WXi2u7n5GNQ4FYwkTHQHN0xFaX4ec7UZ7Hh9d8ZmctGNPYW871
 % Secret Key=d4df831536f0c1887666481d9a1d7843e624d3055add462fa958070ae9e8c5bdc74c7b209750e3670d666aaee01185b0350462cf7520386e2bcc67b5d4308c5e
 
+%https://logicmoo.atlassian.net/rest/api/2/project/10000","id":"10000","key":"LOGICMOO","name":"logicmoo",
 % jira
 %Tz9AA2QNBQRrhWgWjkyqtccSKX1JGTcC
 %lmBFZbJPxk8d_tpNCqrIzu4bEkz5G5u_rXbkjDKSkjLkZ8sUKMJVslZY59ol3tjX

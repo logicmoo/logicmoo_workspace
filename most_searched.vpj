@@ -3966,6 +3966,7 @@
 					</Folder>
 					<F N="packs_sys/logicmoo_utils/prolog/assert_db_local.pl"/>
 					<F N="packs_sys/logicmoo_utils/prolog/each_call_cleanup.pl"/>
+					<F N="packs_sys/logicmoo_utils/prolog/echo_source_files.pl"/>
 					<F N="packs_sys/logicmoo_utils/prolog/file_scope.pl"/>
 					<F N="packs_sys/logicmoo_utils/prolog/hook_database.pl"/>
 					<F N="packs_sys/logicmoo_utils/prolog/hook_hybrid.pl"/>
@@ -3976,6 +3977,7 @@
 					<F N="packs_sys/logicmoo_utils/prolog/logicmoo_packs.pl"/>
 					<F N="packs_sys/logicmoo_utils/prolog/logicmoo_remote.pl"/>
 					<F N="packs_sys/logicmoo_utils/prolog/logicmoo_startup.pl"/>
+					<F N="packs_sys/logicmoo_utils/prolog/logicmoo_test_header.pl"/>
 					<F N="packs_sys/logicmoo_utils/prolog/logicmoo_util_common.pl"/>
 					<F N="packs_sys/logicmoo_utils/prolog/logicmoo_util_strings.pl"/>
 					<F N="packs_sys/logicmoo_utils/prolog/logicmoo_utils.pl"/>
@@ -3986,6 +3988,7 @@
 					<F N="packs_sys/logicmoo_utils/prolog/must_sanity.pl"/>
 					<F N="packs_sys/logicmoo_utils/prolog/must_trace.pl"/>
 					<F N="packs_sys/logicmoo_utils/prolog/script_files.pl"/>
+					<F N="packs_sys/logicmoo_utils/prolog/shared_test_header.pl"/>
 					<F N="packs_sys/logicmoo_utils/prolog/xlisting.pl"/>
 				</Folder>
 				<Folder Name="t">

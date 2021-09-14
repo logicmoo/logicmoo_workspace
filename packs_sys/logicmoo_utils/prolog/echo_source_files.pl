@@ -113,13 +113,20 @@ mco(F,S,I,Start,End,O):- catch_up_to_stream(S,Start), fail.
 mco(F,S,I,Start,End,O):- mco_p(F,S,I,Start,End) -> fail; (print_tree(I), fail).
 mco(F,S,I,Start,End,O):- assume_caughtup_to(F,S,End),fail.
 mco(F,S,I,Start,End,O):- character_count(S,Pos), catch_up_to_stream(S,Pos), fail.
-mco(F,S,I,Start,End,O):- consume_white_space(S),fail.
+mco(F,S,I,Start,End,O):- consume_white_space(F,S),fail.
 mco(F,S,I,Start,End,O):- character_count(S,Pos), assume_caughtup_to(F,S,Pos), fail.  % for the peek/getch
 %mco(F,S,I,Start,End,O):- mco_info(F,S,I,Start,End),fail.
 mco(F,S,I,Start,End,O):- mco_i(F,S,I,O),!,feedback_open(F),!.
 mco(F,S,I,Start,End,O):- feedback_open(F),fail.
 
-consume_white_space(S):- consume_white(S),!,consume_white_space(S).
+consume_white_space(_,S):- at_end_of_stream(S),!,fail.
+
+consume_white_space(F,S):- character_count(S,Start),get_file_from(F,Start,SubStr),
+  open_string(SubStr,S2),consume_white_space_proxy(S2),character_count(S2,Consumed),
+  NewPos is Start + Consumed,
+  assume_caughtup_to(F,S,NewPos),!.
+
+consume_white_space_proxy(S):- consume_white(S),!,consume_white_space_proxy(S).
 
 consume_white(S):- at_end_of_stream(S),!,fail.
 consume_white(S):- peek_char(S,C),char_type(C,space),get_char(S,C),put_char(C).
@@ -161,6 +168,10 @@ get_file_range(F,Start,End,SubStr):-
   Len is End-Start, 
   read_file_to_string(F,Str,[]),
   sub_string(Str,Start,Len,_,SubStr).
+get_file_from(F,Start,SubStr):-
+  read_file_to_string(F,Str,[]),
+  sub_string(Str,Start,_,0,SubStr).
+
 
 print_file_range(F,S,Start,End):- 
   get_file_range(F,Start,End,SubStr),
