@@ -24,7 +24,7 @@ rm -f $TESTING_TEMP/???*
 
 TEST_PARAMS="$*"
 if [ -z "$TEST_PARAMS" ]; then 
-  TEST_PARAMS="*c01.p*"
+  TEST_PARAMS="*0*.*"
 fi
 
 echo -e "Running release (all) tests\nTESTING_TEMP=$TESTING_TEMP\n( cd $PWD ; $BASH_SOURCE $TEST_PARAMS )"
