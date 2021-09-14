@@ -285,6 +285,6 @@ for ele2 in "${listOfNames[@]}"
 echo "<testsuites><testsuite name=\"Rollup ${JUNIT_PACKAGE} in $(pwd)\" package=\"${JUNIT_PACKAGE}\" tests=\"${JUNIT_TESTS_GLOBBED_TESTS}\" failures=\"${JUNIT_TESTS_GLOBBED_FAILURES}\" errors=\"${JUNIT_TESTS_GLOBBED_ERRORS}\"  skipped=\"${JUNIT_TESTS_GLOBBED_SKIPPED}\">"
 sed -r "s/\x1B\[(([0-9]{1,2})?(;)?([0-9]{1,2})?)?[m,K,H,f,J]//g" ${JUNIT_TESTS_GLOBBED}.tmp
 echo -e "\n</testsuite></testsuites>\n\n\n\n" 
-) | iconv -c -t utf-8 | perl -p -e 's/[\x00-\x08\x0b-\x0c\x0e-\x1f\x7f]//g' > ${JUNIT_TESTS_GLOBBED}-Globbed-Report-junit.xml
+) | iconv -c -t utf-8 | perl -p -e 's/[\x00-\x08\x0b-\x0c\x0e-\x1f\x7f]//g' > ${JUNIT_TESTS_GLOBBED}-Globbed-Rollup-junit.xml
 
 # iconv -c -f utf-8 -t ascii ${JUNIT_TESTS_GLOBBED}.tmp2 > 
