@@ -6,9 +6,11 @@
 
 % Load Editline/Readline
 :- if( \+ current_module(prolog_history)).
-:- if((ignore(exists_source(library(editline))->use_module(library(editline))
-       ;(exists_source(library(readline)),use_module(library(readline)))),
-   '$toplevel':setup_history)). :- endif.
+:- if(( %ignore(exists_source(library(editline))->use_module(library(editline))
+       %;(exists_source(library(readline)),use_module(library(readline)))),
+   '$toplevel':(  setup_colors,
+                  setup_history,
+                  setup_readline))). :- endif.
 :- endif.
 
 % Load SWI Utils
