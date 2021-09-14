@@ -106,3 +106,10 @@
 %Consumer key	testquality.com
 %Consumer name	Test Quality
 %Public key	MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCw1qpd8ymF0j3EmcgDUBbrErCrbwEQwBNXVGXmrsdMiJlgCcFQzv7auSYW/vvPqthGRnOpE4FoDs5CbXxadhM/iBOP9pL2Zv7jpsetDYW13/cWjMcyKBbPJaWhSqJvbX91Yu5dOC4AOt9RRB3AWDyFqqr9PT4mrxbdwRgW+DYa1wIDAQAB
+
+/*
+proj=LOGICMOO
+YourCloudInstanceName=logicmoo
+email=logicmoo@gmail.com
+APItoken=afbe63be30d1aa51e68a0638add67a1b
+*/

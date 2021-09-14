@@ -37,14 +37,14 @@ parent-find() {
   parent-find "$file" "$(dirname "$dir")"
 }
 
-export PACK_DIR=$(parent-find "pack.pl" .  )
-export PACK_DIR=$(basename $PACK_DIR)
-echo "<!-- PACK_DIR=${PACK_DIR}-->"
+export PACK_DIR=$(basename junit/$(parent-find "pack.pl" .  ))
+echo "<!-- PACK_DIR=${PACK_DIR} -->"
 
 export JUNIT_PACKAGE="${PACK_DIR}.$(basename `realpath .. | sed -e 's|/[^.]/|/|g' `).$(basename `realpath .`)"
 JUNIT_PACKAGE=$(echo $JUNIT_PACKAGE | sed -e "s/logicmoo_//g" -e "s|\.t\.|\.test\.|g" -e "s|tests|test|g" )
 JUNIT_PACKAGE="logicmoo.${JUNIT_PACKAGE}"
 echo "<!-- JUNIT_PACKAGE=${JUNIT_PACKAGE} -->"
+
 
 export JUNIT_PACKAGE_STEM=$(echo "${JUNIT_PACKAGE}" | sed -e "s/\./-/g" -e "s/--/-/g" | rev | cut -c 1-110 | rev)
 
@@ -64,7 +64,7 @@ if [ -z `which swipl` ]; then
     # default locations on OS X
     SWIPL=/Applications/SWI-Prolog.app/Contents/MacOS/swipl;
     if [ ! -e $SWIPL ]; then
-        SWIPL=~/bin/swipl;
+        SWIPL=~/bin/swipl; 
     fi
     if [ ! -e $SWIPL ]; then
         INFO PFC requires SWI-Prolog. Please download from http://www.swi-prolog.org/
@@ -108,20 +108,20 @@ else
 fi
 
 
-export REPORT_STEM=${TEST_STEM}-Rollup
-echo "<!-- REPORT_STEM=${REPORT_STEM} -->"
+export ROLLUP_STEM=${TEST_STEM}-Rollup
+echo "<!-- ROLLUP_STEM=${ROLLUP_STEM} -->"
 
-export JUNIT_TESTS_GLOBBED="${TESTING_TEMP}/${REPORT_STEM}"
-JUNIT_TESTS_GLOBBED_TESTS=0
-JUNIT_TESTS_GLOBBED_FAILURES=0
-JUNIT_TESTS_GLOBBED_SKIPPED=0
-JUNIT_TESTS_GLOBBED_PASSED=0
-JUNIT_TESTS_GLOBBED_ERRORS=0
-echo "<!-- JUNIT_TESTS_GLOBBED=${JUNIT_TESTS_GLOBBED} -->"
-echo "" > ${JUNIT_TESTS_GLOBBED}.tmp
+export ROLLUP_TMP="${TESTING_TEMP}/${ROLLUP_STEM}.tmp"
+JUNIT_TESTS_GTOTAL_TESTS=0
+JUNIT_TESTS_GTOTAL_FAILURES=0
+JUNIT_TESTS_GTOTAL_SKIPPED=0
+JUNIT_TESTS_GTOTAL_PASSED=0
+JUNIT_TESTS_GTOTAL_ERRORS=0
+echo "<!-- ROLLUP_TMP=${ROLLUP_TMP} -->"
+echo "" > ${ROLLUP_TMP}.tmp
 
 function JECHO {
- (echo -e "${*}\n") >> ${JUNIT_TESTS_GLOBBED}.tmp
+ (echo -e "${*}\n") >> ${ROLLUP_TMP}.tmp
 }
 function INFO {
  willBe=$(echo "${*}" | sed -e 's/-/=/g' ) 
@@ -178,7 +178,7 @@ for ele2 in "${listOfNames[@]}"
         [ -z "${CMD_WRAPPER}" ] && CMD_WRAPPER="timeout --foreground --preserve-status -s SIGKILL -k ${CMD_TIMEOUT} ${CMD_TIMEOUT}"
         CMD="${CMD_WRAPPER} ${CMD}"
 	export JUNIT_CMD="${CMD}"
-        JUNIT_TESTS_GLOBBED_TESTS=$((JUNIT_TESTS_GLOBBED_TESTS+1))
+        JUNIT_TESTS_GTOTAL_TESTS=$((JUNIT_TESTS_GTOTAL_TESTS+1))
         INFO "CMD=$CMD"
         export TEE_FILE=${TESTING_TEMP}/CMD_LAST.ansi
         export TEE_FILE2=${TEE_FILE}.too
@@ -199,14 +199,14 @@ for ele2 in "${listOfNames[@]}"
          JECHO "<system-out><![CDATA[$(cat ${TEE_FILE2})]]></system-out>\n"
          JECHO "</testcase>"
          INFO "SUCCESS: $0 ${keep_going} ${ele} (returned ${exitcode})"
-           JUNIT_TESTS_GLOBBED_PASSED=$((JUNIT_TESTS_GLOBBED_PASSED+1))
+           JUNIT_TESTS_GTOTAL_PASSED=$((JUNIT_TESTS_GTOTAL_PASSED+1))
 			continue
 	     fi
         JECHO "<testcase name=\"${FileTestCase}\" classname='${JUNIT_CLASSNAME}' time='$totalTime'>"
         JECHO " <failure message='FAILED: $0 ${keep_going} ${ele} (returned ${exitcode})'/>"
            JECHO "<system-err><![CDATA[$(cat ${TEE_FILE2})]]></system-err>\n"
         JECHO "</testcase>"
-           JUNIT_TESTS_GLOBBED_FAILURES=$((JUNIT_TESTS_GLOBBED_FAILURES+1))
+           JUNIT_TESTS_GTOTAL_FAILURES=$((JUNIT_TESTS_GTOTAL_FAILURES+1))
 
         next_cls=0
 
@@ -282,9 +282,9 @@ for ele2 in "${listOfNames[@]}"
 ) 
 
 ( 
-echo "<testsuites><testsuite name=\"Rollup ${JUNIT_PACKAGE} in $(pwd)\" package=\"${JUNIT_PACKAGE}\" tests=\"${JUNIT_TESTS_GLOBBED_TESTS}\" failures=\"${JUNIT_TESTS_GLOBBED_FAILURES}\" errors=\"${JUNIT_TESTS_GLOBBED_ERRORS}\"  skipped=\"${JUNIT_TESTS_GLOBBED_SKIPPED}\">"
-sed -r "s/\x1B\[(([0-9]{1,2})?(;)?([0-9]{1,2})?)?[m,K,H,f,J]//g" ${JUNIT_TESTS_GLOBBED}.tmp
+echo "<testsuites><testsuite name=\"Rollup ${JUNIT_PACKAGE} in $(pwd)\" package=\"${JUNIT_PACKAGE}\" tests=\"${JUNIT_TESTS_GTOTAL_TESTS}\" failures=\"${JUNIT_TESTS_GTOTAL_FAILURES}\" errors=\"${JUNIT_TESTS_GTOTAL_ERRORS}\"  skipped=\"${JUNIT_TESTS_GTOTAL_SKIPPED}\">"
+sed -r "s/\x1B\[(([0-9]{1,2})?(;)?([0-9]{1,2})?)?[m,K,H,f,J]//g" ${ROLLUP_TMP}.tmp
 echo -e "\n</testsuite></testsuites>\n\n\n\n" 
-) | iconv -c -t utf-8 | perl -p -e 's/[\x00-\x08\x0b-\x0c\x0e-\x1f\x7f]//g' > ${JUNIT_TESTS_GLOBBED}-Globbed-Rollup-junit.xml
+) | iconv -c -t utf-8 | perl -p -e 's/[\x00-\x08\x0b-\x0c\x0e-\x1f\x7f]//g' >  "${TESTING_TEMP}/Globbed-${ROLLUP_STEM}-Globbed-junit.xml"
 
-# iconv -c -f utf-8 -t ascii ${JUNIT_TESTS_GLOBBED}.tmp2 > 
+
