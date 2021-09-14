@@ -382,7 +382,7 @@ setup_database_term(M:F/A):-
   ignore((M\==baseKB,
   IAssertion = (M:(P :- zwc, inherit_above(M, P))),
   functor(P,F,A),assertz_new(IAssertion),
-  wdmsg(IAssertion))).
+  nop(wdmsg(IAssertion)))).
 
 :- dynamic(lmconfig:pfc_module_prop/3).
 pfc_set_module(M,Pred,Q):- retractall(lmconfig:pfc_module_prop(M,Pred,_)),assert(lmconfig:pfc_module_prop(M,Pred,Q)).

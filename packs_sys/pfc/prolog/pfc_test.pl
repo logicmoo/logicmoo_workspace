@@ -731,4 +731,61 @@ user:message_hook(T,Type,Term):-
 
 system:term_expansion(I,P,O,PO):- notrace((nonvar(P),is_junit_test, junit_term_expansion(I,O))),P=PO.
 system:goal_expansion(I,P,O,PO):- notrace((nonvar(P),is_junit_test, junit_goal_expansion(I,O))),P=PO.
-  
+/*
+
+<testng-results>
+  <suite name="Suite1">
+    <groups>
+      <group name="group1">
+        <method signature="com.test.TestOne.test2()" name="test2" class="com.test.TestOne"/>
+        <method signature="com.test.TestOne.test1()" name="test1" class="com.test.TestOne"/>
+      </group>
+      <group name="group2">
+        <method signature="com.test.TestOne.test2()" name="test2" class="com.test.TestOne"/>
+      </group>
+    </groups>
+    <test name="test1">
+      <class name="com.test.TestOne">
+        <test-method status="FAIL" signature="test1()" name="test1" duration-ms="0"
+              started-at="2007-05-28T12:14:37Z" description="someDescription2"
+              finished-at="2007-05-28T12:14:37Z">
+          <exception class="java.lang.AssertionError">
+            <short-stacktrace>
+              <![CDATA[
+                java.lang.AssertionError
+                ... Removed 22 stack frames
+              ]]>
+            </short-stacktrace>
+          </exception>
+        </test-method>
+        <test-method status="PASS" signature="test2()" name="test2" duration-ms="0"
+              started-at="2007-05-28T12:14:37Z" description="someDescription1"
+              finished-at="2007-05-28T12:14:37Z">
+        </test-method>
+        <test-method status="PASS" signature="setUp()" name="setUp" is-config="true" duration-ms="15"
+              started-at="2007-05-28T12:14:37Z" finished-at="2007-05-28T12:14:37Z">
+        </test-method>
+      </class>
+    </test>
+  </suite>
+</testng-results>
+
+
+<suite name="SingleSuite" verbose="2" thread-count="4">
+ 
+  <parameter name="n" value="42" />
+ 
+  <test name="Regression2">
+    <groups>
+      <run>
+        <exclude name="broken" />
+      </run>
+    </groups>
+ 
+    <classes>
+      <class name="test.listeners.ResultEndMillisTest" />
+    </classes>
+  </test>
+</suite>
+
+*/
