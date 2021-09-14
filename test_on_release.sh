@@ -24,12 +24,12 @@ rm -f $TESTING_TEMP/???*
 
 TEST_PARAMS="$*"
 if [ -z "$TEST_PARAMS" ]; then 
-  TEST_PARAMS="*c01*.*"
+  TEST_PARAMS="*c01.p*"
 fi
 
 echo -e "Running release (all) tests\nTESTING_TEMP=$TESTING_TEMP\n( cd $PWD ; $BASH_SOURCE $TEST_PARAMS )"
 
-lmoo-make 2>&1 | grep -2 -i 'WARN\|ERROR'
+lmoo-make 2>&1 | grep -1 -i 'WARN\|ERROR'
 
 find $WAS_PWD -mindepth 2 -name "test_on_*.sh" -execdir {} "$TEST_PARAMS" \;
 

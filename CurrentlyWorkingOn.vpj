@@ -2791,6 +2791,57 @@
 				</Folder>
 			</Folder>
 		</Folder>
+		<Folder Name="bin">
+			<Folder Name="old-scripts">
+				<F N="bin/old-scripts/build"/>
+				<F N="bin/old-scripts/build.unstable"/>
+				<F N="bin/old-scripts/preconfig.sh"/>
+			</Folder>
+			<F N="bin/aliases.sh"/>
+			<F N="bin/ansi2html.sh"/>
+			<F N="bin/bump_packs.sh"/>
+			<F N="bin/clean_git_repository.sh"/>
+			<F N="bin/cls"/>
+			<F N="bin/copy_modified.sh"/>
+			<F N="bin/git-mv-with-history"/>
+			<F N="bin/git-patch-submodules.sh"/>
+			<F N="bin/git-submodules.sh"/>
+			<F N="bin/killchilds.sh"/>
+			<F N="bin/lmoo"/>
+			<F N="bin/lmoo-ansi"/>
+			<F N="bin/lmoo-bfly"/>
+			<F N="bin/lmoo-clif"/>
+			<F N="bin/lmoo-eclipse"/>
+			<F N="bin/lmoo-emacs"/>
+			<F N="bin/lmoo-jenkins-minor"/>
+			<F N="bin/lmoo-junit"/>
+			<F N="bin/lmoo-junit-minor"/>
+			<F N="bin/lmoo-make"/>
+			<F N="bin/lmoo-module-tree"/>
+			<F N="bin/lmoo-pfc"/>
+			<F N="bin/lmoo-report"/>
+			<F N="bin/lmoo-run"/>
+			<F N="bin/lmoo-swipl"/>
+			<F N="bin/lmoo-telnet"/>
+			<F N="bin/lmoo-vnc"/>
+			<F N="bin/lmoo-www"/>
+			<F N="bin/maybe.gitmodules"/>
+			<F N="bin/mkcert"/>
+			<F N="bin/mkcert-v1.4.3-linux-amd64"/>
+			<F N="bin/pandoc_xm"/>
+			<F N="bin/print_html.sh"/>
+			<F N="bin/rsync.sh"/>
+			<F N="bin/StartMUDServer.bat"/>
+			<F N="bin/startMUDServer.sh"/>
+			<F N="bin/swipl"/>
+			<F N="bin/swipl-ld"/>
+			<F N="bin/swipl-prologmud"/>
+			<F N="bin/swipl-win"/>
+			<F N="bin/swipl-yesbot"/>
+			<F N="bin/test_biomake.sh"/>
+			<F N="bin/websocket_redir.sh"/>
+			<F N="bin/xpce-client"/>
+		</Folder>
 		<Folder Name="body_reordering">
 			<F
 				N="body_reordering/*.*"

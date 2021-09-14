@@ -1,0 +1,10 @@
+#!/bin/bash
+#--help # Runs the CLIF Binary
+
+RDIR=$( cd "$( dirname "${BASH_SOURCE[0]}" )/.." && pwd )
+( cd $RDIR 
+./bin/lmoo-make -q
+)
+
+lmoo-clif $*
+
