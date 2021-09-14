@@ -12,10 +12,14 @@ Note (santi):
   be a full sound and complete resolution engine.
 
 */
-var __spreadArray = (this && this.__spreadArray) || function (to, from) {
-    for (var i = 0, il = from.length, j = to.length; i < il; i++, j++)
-        to[j] = from[i];
-    return to;
+var __spreadArray = (this && this.__spreadArray) || function (to, from, pack) {
+    if (pack || arguments.length === 2) for (var i = 0, l = from.length, ar; i < l; i++) {
+        if (ar || !(i in from)) {
+            if (!ar) ar = Array.prototype.slice.call(from, 0, i);
+            ar[i] = from[i];
+        }
+    }
+    return to.concat(ar || Array.prototype.slice.call(from));
 };
 var DEBUG_resolution = false;
 var DEBUG_resolution_detailed = false;
@@ -735,7 +739,7 @@ var InterruptibleResolution = /** @class */ (function () {
                     }
                 }
                 var r2 = new InferenceNode(r.sentence, bindings, r.parent1, r.parent2);
-                var missingValues = __spreadArray([], forAllValues);
+                var missingValues = __spreadArray([], forAllValues, true);
                 var v = r.getValueForVariableName(forAllVariableName);
                 for (var i = 0; i < missingValues.length; i++) {
                     if (Term.equalsNoBindingsAttribute(missingValues[i], v) == 1) {
