@@ -1324,7 +1324,7 @@ add_history0(_):- notrace(app_argv('--no-history')),!.
 add_history0(A):-
    carelessly(prolog_history:prolog_history(enable)),
    current_input(S),
-   (current_prolog_flag(readline,readline) -> User_input = libedit_input; User_input = user_input),
+   (current_prolog_flag(readline,editline) -> User_input = libedit_input; User_input = user_input),
    forall(retract('$history':'$history'(_,A)),true),
                   carelessly(prolog:history(S,add(A))),
                   ignore((

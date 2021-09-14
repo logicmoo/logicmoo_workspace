@@ -29,33 +29,6 @@ This module constrains arguments for faster and more exact search.
 */
 :- set_module(class(library)).
 
-/*
-
-:- current_prolog_flag(readline,Was),writeln(readline=Was).
-:- if(exists_source(library(editline))).
-:- set_prolog_flag(readline,editline).
-:- endif.
-% :- set_prolog_flag(readline,true).
-
-:- if(current_prolog_flag(readline,editline)).
-:- system:ensure_loaded(library(readline)).
-:- listing(prolog:history/2).
-:- abolish(prolog:history/2).
-:- system:reconsult(library(editline)).
-:- else.
-:- if(exists_source(library(readline))).
-:- if(exists_source(library(editline))).
-:- system:ensure_loaded(library(editline)).
-:- listing(prolog:history/2).
-:- abolish(prolog:history/2).
-:- endif.
-:- unload_file(library(readline)).
-:- system:consult(library(readline)).
-:- endif.
-:- endif.
-:- current_prolog_flag(readline,Was),writeln(readline=Was).
-*/
-
 :- set_prolog_flag(report_error,true).
 %:- set_prolog_flag(access_level,system).
 %:- set_prolog_flag(debug_on_error,true).
