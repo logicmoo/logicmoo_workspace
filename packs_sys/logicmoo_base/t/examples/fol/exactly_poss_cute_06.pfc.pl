@@ -8,7 +8,7 @@
 :- use_module(library(occurs)). % sub_term/2
 :- use_module(library(sort)). % predsort/3
 :- use_module(library(backcomp)). % concat_atom/2
-:- user:autoload.
+:- user:autoload_all.
 
 :- module_transparent(system: = /2).
 :- module_transparent('$attvar':'$wakeup'/1).
@@ -20,7 +20,7 @@
 :- install_retry_undefined(user,error).
 :- install_retry_undefined(kbii,error).
 :- install_retry_undefined(kbi,error).
-% :- set_prolog_flag(autoload,false).
+% :- set_prolog_flag(autoload_all,false).
 :- set_prolog_flag(retry_undefined, false).
 :- set_prolog_flag(access_level, system).
 

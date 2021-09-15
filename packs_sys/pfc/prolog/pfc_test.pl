@@ -530,9 +530,10 @@ save_single_testcase(Name):-
    show_junit_testcase(File,Name),
    writeln("  </testsuite>"),
    writeln(" </testsuites>"))),
- shorten_and_clean_name(File,SFile),
- shorten_and_clean_name(Name,SName),
- atomic_list_concat([SFile,'-',SName],RSName),
+ %shorten_and_clean_name(File,SFile),
+ %shorten_and_clean_name(Name,SName),
+ %atomic_list_concat([SFile,'-',SName],RSName),
+ atomic_list_concat([SuiteName,'-',Name],RSName),
  save_to_junit_file(RSName,Text).
 
 classname_to_package(CN,P,C):- atomic_list_concat(List,'.',CN), append(Left,[C],List),atomic_list_concat(Left,'.',P).
@@ -639,9 +640,9 @@ write_testcase_env(Name):-
   forall(junit_env_var(N),ignore((getenv(N,V),write_testcase_prop(N,V)))),!.
 
 junit_env_var('JUNIT_CLASSNAME').
-junit_env_var('JUNIT_PACKAGE').
-junit_env_var('JUNIT_SHORTCLASS').
-junit_env_var('JUNIT_SUITE').
+%junit_env_var('JUNIT_PACKAGE').
+%junit_env_var('JUNIT_SHORTCLASS').
+%junit_env_var('JUNIT_SUITE').
 junit_env_var('JUNIT_CMD').
 
 write_testcase_std_info(Testcase):-
