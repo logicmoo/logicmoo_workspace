@@ -547,6 +547,8 @@ thread_call_blocking_one(Thread,G):- thread_self(Self),
 %
 % Format Converted To Error.
 %
+format_to_error(F,A):-F==error,!,format_to_error('~q',A).
+format_to_error(F,A):-\+ is_list(A),!,format_to_error(F,[A]).
 format_to_error(F,A):-get_thread_current_error(Err),!,foRmat(Err,F,A).
 
 %=
