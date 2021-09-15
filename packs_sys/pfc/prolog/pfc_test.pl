@@ -680,10 +680,17 @@ write_testcase_info(Testcase):- \+ j_u:junit_prop(Testcase,result,passed),!,
 
 write_testcase_info(Testcase):- write_testcase_std_info(Testcase),!.
 
-write_message_ele(Ele,NonGood):-
+write_message_ele(Ele,NonGood):-  
   text_to_string(NonGood,SNonGood), 
-  escape_attribute(SNonGood,ENonGood),
+  shrink_to(SNonGood,250,NonGoodTrimmed),
+  ignore((SNonGood\== NonGoodTrimmed, 
+   format(user_error,"~N~n<~w message=\"~w\" />\n", [Ele,NonGoodTrimmed]))),
+  escape_attribute(NonGoodTrimmed,ENonGood),  
   format("      <~w message=\"~w\" />\n", [Ele,ENonGood]).
+
+shrink_to(I,Max,O):- \+ shrink_to(SNonGood,0,Max,_,_),!,I=O.
+shrink_to(I,Mx,O):- replace_in_string(['%%'='%','==='='=','\x1B'=' ','\[32m'=' ','\[0m'=' ','  '=' '],I,M),I\==M,!,shrink_to(M,Mx,O).
+shrink_to(SNonGood,Max,NonGoodTrimmed):- sub_string(SNonGood,_,Max,0,NonGoodTrimmed),!.
 
 
 :- multifile prolog:message//1, user:message_hook/3.

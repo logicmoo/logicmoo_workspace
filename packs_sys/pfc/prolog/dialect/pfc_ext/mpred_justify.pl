@@ -371,8 +371,10 @@ mpred_why:-
 
 pp_why(A):-mpred_why_1(A).
 
-clear_proofs:- retractall(t_l:whybuffer(_P,_Js)),color_line(cyan,1).
+clear_proofs:- retractall(t_l:whybuffer(_P,_Js)),color_line_t(cyan,1).
 
+color_line_t(C,L):- keep_going,!,format('~N').
+color_line_t(C,L):- color_line(C,L).
 
 :- thread_local(t_l:shown_why/1).
 
@@ -401,25 +403,25 @@ mpred_why_justs(P):- mpred_why_justs_1a(P)*->true;forall(mpred_why_justs_1b(P),t
 
 /*
 mpred_why_justs_1a(P) :-    
-  color_line(green,2),!,
+  color_line_t(green,2),!,
   findall(Js,((no_repeats(P-Js,(justifications(P,Js))),
-    must((color_line(yellow,1),
+    must((color_line_t(yellow,1),
       ignore(pfcShowJustifications(P,Js)))))),Count),
   (Count==[]-> format("~N No justifications for ~p. ~n~n",[P]) ; true),
-  color_line(green,2).
+  color_line_t(green,2).
 */
 mpred_why_justs_1a(\+ P) :- !, mpred_why_justs_1a(\+ P, ~(P)),!.
 mpred_why_justs_1a(P) :- mpred_why_justs_1a(P,P).
 
 mpred_why_justs_1a(DP,P) :-    
-  color_line(green,2),
+  color_line_t(green,2),
   Found=fnd(0),!,
   forall(justifications(P,Js),
-    (color_line(yellow,1),
+    (color_line_t(yellow,1),
      nb_setarg(1,Found,1),
      pfcShowJustifications(P,Js))),
-  (Found==fnd(0)-> format("~N No justifications for ~p. ~n~n",[DP]) ; true),
-  color_line(green,2),!,
+  (Found==fnd(0)-> format("~N.~n~n",[no_proof_for(DP)]) ; true),
+  color_line_t(green,2),!,
   Found\==fnd(0).
 
 mpred_why_justs_1b(P) :- term_variables(P,VarsPC), 
@@ -429,16 +431,16 @@ mpred_why_justs_1b(P) :- term_variables(P,VarsPC),
 
 /*
 mpred_why_justs_2(P) :-    
-  color_line(green,2),!,
+  color_line_t(green,2),!,
   findall(Js,((no_repeats(P-Js,deterministically_must(justifications(P,Js))),
-    must((color_line(yellow,1),
+    must((color_line_t(yellow,1),
       ignore(pfcShowJustifications(P,Js)))))),Count),
   (Count==[]-> format("~N No justifications for ~p. ~n~n",[P]) ; true),
-  color_line(green,2).
+  color_line_t(green,2).
 */
 /*
 
-mpred_why_1(P):- loop_check(quietly((must_ex(mpred_why_try_each(P)),color_line(green,2))),true).
+mpred_why_1(P):- loop_check(quietly((must_ex(mpred_why_try_each(P)),color_line_t(green,2))),true).
 
 % user:mpred_why_1((user:prolog_exception_hook(A, B, C, D) :- exception_hook(A, B, C, D))).
 % mpred_why_1((prolog_exception_hook(A, B, C, D) :- exception_hook(A, B, C, D))).
@@ -453,7 +455,7 @@ mpred_why_try_each(clause_u(P)):-!,mpred_why_try_each(P).
 mpred_why_try_each(clause_u(H,B)):-!,mpred_why_try_each(H:-B).
 mpred_why_try_each(clause_u(H,B,_)):-!,mpred_why_try_each(H:-B).
 
-mpred_why_try_each(P):- once((retractall(t_l:whybuffer(P,_)),color_line(green,2),
+mpred_why_try_each(P):- once((retractall(t_l:whybuffer(P,_)),color_line_t(green,2),
     show_current_source_location,format("~NJustifications for ~p:",[P]))),
     fail.
 
@@ -470,7 +472,7 @@ mpred_why_try_each_0(\+ P):- mpred_why_try_each_0(~P)*->true;(call_u(\+ P),wdmsg
 
 mpred_why_try_each_1(P,Js):-
   ((no_repeats(P-Js,deterministically_must(justifications(P,Js))),
-    ((color_line(yellow,1), pfcShowJustifications(P,Js))))).
+    ((color_line_t(yellow,1), pfcShowJustifications(P,Js))))).
 mpred_why_try_each_1(\+ P,[MFL]):- !, find_mfl(P,MFL),ansi_format([fg(cyan)],"~N    ~q",[MFL]),fail.
 mpred_why_try_each_1( P,[MFL]):-  find_mfl(P,MFL), \+ clause_asserted(t_l:shown_why(MFL)), ansi_format([fg(cyan)],"~N    ~q",[MFL]).
 
@@ -535,12 +537,12 @@ pfcWhyCommand0(X,_,_) :-
  format("~n~w is an unrecognized command, enter h. for help.",[X]),
  fail.
 
-reset_shown_justs:- retractall(t_l:shown_why(_)),color_line(red,1).
+reset_shown_justs:- retractall(t_l:shown_why(_)),color_line_t(red,1).
   
 pfcShowJustifications(P,Js) :-
   show_current_source_location,
   reset_shown_justs,
-  color_line(yellow,1),
+  color_line_t(yellow,1),
   format("~N~nJustifications for ~p:~n",[P]),  
 
   pfcShowJustification1(Js,1),!.

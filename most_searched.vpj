@@ -4102,20 +4102,9 @@
 							<F N="packs_sys/pfc/t/sanity_base/gets_stuck/mt_01a_0a.pl"/>
 						</Folder>
 						<Folder Name="long_tests">
-							<F N="packs_sys/pfc/t/sanity_base/long_tests/nldm1000.P"/>
-							<F N="packs_sys/pfc/t/sanity_base/long_tests/nldm1000.pfc"/>
-							<F N="packs_sys/pfc/t/sanity_base/long_tests/nldm1000_fwd.subl"/>
-							<F N="packs_sys/pfc/t/sanity_base/long_tests/nldm1280.P"/>
 							<F N="packs_sys/pfc/t/sanity_base/long_tests/nldm2000.P"/>
 							<F N="packs_sys/pfc/t/sanity_base/long_tests/nldm2000.pfc"/>
 							<F N="packs_sys/pfc/t/sanity_base/long_tests/nldm2000_fwd.subl"/>
-							<F N="packs_sys/pfc/t/sanity_base/long_tests/nldm320.P"/>
-							<F N="packs_sys/pfc/t/sanity_base/long_tests/nldm320_dra.pl"/>
-							<F N="packs_sys/pfc/t/sanity_base/long_tests/nldm320_fwd.pl"/>
-							<F N="packs_sys/pfc/t/sanity_base/long_tests/nldm400.P"/>
-							<F N="packs_sys/pfc/t/sanity_base/long_tests/nldm640.P"/>
-							<F N="packs_sys/pfc/t/sanity_base/long_tests/nldm80.P"/>
-							<F N="packs_sys/pfc/t/sanity_base/long_tests/nldm800.P"/>
 						</Folder>
 						<Folder Name="quick_test">
 							<F N="packs_sys/pfc/t/sanity_base/quick_test/attvar_03.pfc"/>
@@ -5119,17 +5108,7 @@
 				<F N="packs_sys/prologmud_samples/pack.pl"/>
 			</Folder>
 			<Folder Name="sigma_ace">
-				<Folder Name="Corpus%20Testing">
-					<F N="packs_sys/sigma_ace/Corpus%20Testing/BrownCorpus.txt"/>
-					<F N="packs_sys/sigma_ace/Corpus%20Testing/OpenMind.txt"/>
-					<F N="packs_sys/sigma_ace/Corpus%20Testing/read_corpus.pl"/>
-					<F N="packs_sys/sigma_ace/Corpus%20Testing/results_browncorpus.txt"/>
-					<F N="packs_sys/sigma_ace/Corpus%20Testing/results_openmind-pt2.txt"/>
-					<F N="packs_sys/sigma_ace/Corpus%20Testing/results_openmind.txt"/>
-					<F N="packs_sys/sigma_ace/Corpus%20Testing/Summary_Of_Results.txt"/>
-				</Folder>
 				<Folder Name="engine">
-					<F N="packs_sys/sigma_ace/engine/alarm.so"/>
 					<F N="packs_sys/sigma_ace/engine/console.bat"/>
 					<F N="packs_sys/sigma_ace/engine/javastartsigma"/>
 					<F N="packs_sys/sigma_ace/engine/load_sigma"/>
@@ -5204,108 +5183,6 @@
 					<F N="packs_sys/sigma_ace/engine/sigmaconsole"/>
 					<F N="packs_sys/sigma_ace/engine/sigmaserver"/>
 					<F N="packs_sys/sigma_ace/engine/swiserver.bat"/>
-				</Folder>
-				<Folder Name="Grammar%20Rules">
-					<Folder Name="Utilities">
-						<F N="packs_sys/sigma_ace/Grammar%20Rules/Utilities/WN2CELT-nouns.pl"/>
-						<F N="packs_sys/sigma_ace/Grammar%20Rules/Utilities/WN2CELT-verbs.pl"/>
-						<F N="packs_sys/sigma_ace/Grammar%20Rules/Utilities/WN2KIF.pl"/>
-					</Folder>
-					<F N="packs_sys/sigma_ace/Grammar%20Rules/adj_excepts.pl"/>
-					<F N="packs_sys/sigma_ace/Grammar%20Rules/adv_excepts.pl"/>
-					<F N="packs_sys/sigma_ace/Grammar%20Rules/atp_interface.pl"/>
-					<F N="packs_sys/sigma_ace/Grammar%20Rules/bugs.txt"/>
-					<F N="packs_sys/sigma_ace/Grammar%20Rules/celt_common_noun_lexicon"/>
-					<F N="packs_sys/sigma_ace/Grammar%20Rules/celt_proper_noun_lexicon"/>
-					<F N="packs_sys/sigma_ace/Grammar%20Rules/celt_verb_lexicon"/>
-					<F N="packs_sys/sigma_ace/Grammar%20Rules/Description.txt"/>
-					<F N="packs_sys/sigma_ace/Grammar%20Rules/infer_sumo.pl"/>
-					<F N="packs_sys/sigma_ace/Grammar%20Rules/infer_wordnet.pl"/>
-					<F N="packs_sys/sigma_ace/Grammar%20Rules/Issues.txt"/>
-					<F N="packs_sys/sigma_ace/Grammar%20Rules/KIF.PL"/>
-					<F N="packs_sys/sigma_ace/Grammar%20Rules/LEXICON.PL"/>
-					<F N="packs_sys/sigma_ace/Grammar%20Rules/Morphy.pl"/>
-					<F N="packs_sys/sigma_ace/Grammar%20Rules/noun_excepts.pl"/>
-					<F N="packs_sys/sigma_ace/Grammar%20Rules/NP.PL"/>
-					<F N="packs_sys/sigma_ace/Grammar%20Rules/NP_TRACE.TXT"/>
-					<F N="packs_sys/sigma_ace/Grammar%20Rules/query.pl"/>
-					<F N="packs_sys/sigma_ace/Grammar%20Rules/query_trace.txt"/>
-					<F N="packs_sys/sigma_ace/Grammar%20Rules/semantics.pl"/>
-					<F N="packs_sys/sigma_ace/Grammar%20Rules/sent_trace.txt"/>
-					<F N="packs_sys/sigma_ace/Grammar%20Rules/SENTENCE.PL"/>
-					<F N="packs_sys/sigma_ace/Grammar%20Rules/STARTUP.PL"/>
-					<F N="packs_sys/sigma_ace/Grammar%20Rules/SWI_GULP_IFF_SIGN.pl"/>
-					<F N="packs_sys/sigma_ace/Grammar%20Rules/test_suite.pl"/>
-					<F N="packs_sys/sigma_ace/Grammar%20Rules/TESTS.PL"/>
-					<F N="packs_sys/sigma_ace/Grammar%20Rules/tools.pl"/>
-					<F N="packs_sys/sigma_ace/Grammar%20Rules/trace.txt"/>
-					<F N="packs_sys/sigma_ace/Grammar%20Rules/user_lexicon.pl"/>
-					<F N="packs_sys/sigma_ace/Grammar%20Rules/verb_excepts.pl"/>
-					<F N="packs_sys/sigma_ace/Grammar%20Rules/Version Info.txt"/>
-					<F N="packs_sys/sigma_ace/Grammar%20Rules/WARNINGS.PL"/>
-				</Folder>
-				<Folder Name="GULP">
-					<F N="packs_sys/sigma_ace/GULP/Figure_2.pl"/>
-					<F N="packs_sys/sigma_ace/GULP/Figure_3.pl"/>
-					<F N="packs_sys/sigma_ace/GULP/Figure_4.pl"/>
-					<F N="packs_sys/sigma_ace/GULP/Figure_5.pl"/>
-					<F N="packs_sys/sigma_ace/GULP/Figure_6.pl"/>
-					<F N="packs_sys/sigma_ace/GULP/SWI_GULP_IFF_SIGN.pl"/>
-				</Folder>
-				<Folder Name="Importing%20WordNet%20Lexicon">
-					<F N="packs_sys/sigma_ace/Importing%20WordNet%20Lexicon/celt_common_noun_lexicon"/>
-					<F N="packs_sys/sigma_ace/Importing%20WordNet%20Lexicon/celt_proper_noun_lexicon"/>
-					<F N="packs_sys/sigma_ace/Importing%20WordNet%20Lexicon/celt_verb_lexicon"/>
-					<F N="packs_sys/sigma_ace/Importing%20WordNet%20Lexicon/CHANGES.TXT"/>
-					<F N="packs_sys/sigma_ace/Importing%20WordNet%20Lexicon/create_lexicon.pl"/>
-					<F N="packs_sys/sigma_ace/Importing%20WordNet%20Lexicon/infer_sumo.pl"/>
-					<F N="packs_sys/sigma_ace/Importing%20WordNet%20Lexicon/infer_wordnet.pl"/>
-					<F N="packs_sys/sigma_ace/Importing%20WordNet%20Lexicon/instructions.txt"/>
-					<F N="packs_sys/sigma_ace/Importing%20WordNet%20Lexicon/kif.pl"/>
-					<F N="packs_sys/sigma_ace/Importing%20WordNet%20Lexicon/mapped_nouns.pl"/>
-					<F N="packs_sys/sigma_ace/Importing%20WordNet%20Lexicon/mapped_verbs.pl"/>
-					<F N="packs_sys/sigma_ace/Importing%20WordNet%20Lexicon/mass_vs_count.pl"/>
-					<F N="packs_sys/sigma_ace/Importing%20WordNet%20Lexicon/noun_types.pl"/>
-					<F N="packs_sys/sigma_ace/Importing%20WordNet%20Lexicon/style_declarations.txt"/>
-					<F N="packs_sys/sigma_ace/Importing%20WordNet%20Lexicon/transitivity.pl"/>
-					<F N="packs_sys/sigma_ace/Importing%20WordNet%20Lexicon/verb_forms.pl"/>
-					<F N="packs_sys/sigma_ace/Importing%20WordNet%20Lexicon/Version Info.txt"/>
-					<F N="packs_sys/sigma_ace/Importing%20WordNet%20Lexicon/WN2assoc3.perl"/>
-					<F N="packs_sys/sigma_ace/Importing%20WordNet%20Lexicon/WN_AT.PL"/>
-					<F N="packs_sys/sigma_ace/Importing%20WordNet%20Lexicon/WN_FR.PL"/>
-					<F N="packs_sys/sigma_ace/Importing%20WordNet%20Lexicon/WN_G.PL"/>
-					<F N="packs_sys/sigma_ace/Importing%20WordNet%20Lexicon/WN_HYP.PL"/>
-					<F N="packs_sys/sigma_ace/Importing%20WordNet%20Lexicon/WordNetMappings-Top.txt"/>
-					<F N="packs_sys/sigma_ace/Importing%20WordNet%20Lexicon/WordNetMappings-verbs.txt"/>
-				</Folder>
-				<Folder Name="KIF%20to%20Prolog%20Translation">
-					<F N="packs_sys/sigma_ace/KIF%20to%20Prolog%20Translation/instructions.txt"/>
-					<F N="packs_sys/sigma_ace/KIF%20to%20Prolog%20Translation/kif.pl"/>
-					<F N="packs_sys/sigma_ace/KIF%20to%20Prolog%20Translation/kif.txt"/>
-					<F N="packs_sys/sigma_ace/KIF%20to%20Prolog%20Translation/readKIF.pl"/>
-					<F N="packs_sys/sigma_ace/KIF%20to%20Prolog%20Translation/style_declarations.txt"/>
-				</Folder>
-				<Folder Name="prolog">
-					<F N="packs_sys/sigma_ace/prolog/sigma_ace.pl"/>
-				</Folder>
-				<Folder Name="Server">
-					<Folder Name="web">
-						<Folder Name="com">
-							<Folder Name="tks">
-								<Folder Name="celt">
-									<F N="packs_sys/sigma_ace/Server/web/com/tks/celt/PrologHandler.java"/>
-									<F N="packs_sys/sigma_ace/Server/web/com/tks/celt/QueryHandler.java"/>
-									<F N="packs_sys/sigma_ace/Server/web/com/tks/celt/ResponseProcessor.java"/>
-								</Folder>
-								<Folder Name="speech">
-									<F N="packs_sys/sigma_ace/Server/web/com/tks/speech/SpeechApplet.java"/>
-								</Folder>
-							</Folder>
-						</Folder>
-						<F N="packs_sys/sigma_ace/Server/web/query.jsp"/>
-						<F N="packs_sys/sigma_ace/Server/web/result.jsp"/>
-					</Folder>
-					<F N="packs_sys/sigma_ace/Server/CELT_server.P"/>
 				</Folder>
 				<F N="packs_sys/sigma_ace/ace.swi"/>
 				<F N="packs_sys/sigma_ace/ace_doc.txt"/>
@@ -6559,10 +6436,8 @@
 									</Folder>
 								</Folder>
 								<Folder Name="library">
-									<F N="Patch/rootfs/usr/local/lib/swipl/library/pprint.pl"/>
 									<F N="Patch/rootfs/usr/local/lib/swipl/library/qsave.pl"/>
 									<F N="Patch/rootfs/usr/local/lib/swipl/library/sandbox.pl"/>
-									<F N="Patch/rootfs/usr/local/lib/swipl/library/ssl.pl"/>
 								</Folder>
 							</Folder>
 						</Folder>

@@ -97,30 +97,4 @@
 :- endif.
 :- if((prolog_load_context(source,F),echo_source_file_no_catchup(F))).  :- endif.
 
-% iTMS=
-% Access Key=eyJhbGciOiJIUzM4NCJ9.eyJjb21wYW55X25hbWUiOiJsb2dpY21vbyIsInByb2plY3RfaWQiOiI5MDUyOCIsImRhdGVfY3JlYXRlZCI6MTYzMTQ3NzIyOH0.g50WKW3Kx8eVF3WXi2u7n5GNQ4FYwkTHQHN0xFaX4ec7UZ7Hh9d8ZmctGNPYW871
-% Secret Key=d4df831536f0c1887666481d9a1d7843e624d3055add462fa958070ae9e8c5bdc74c7b209750e3670d666aaee01185b0350462cf7520386e2bcc67b5d4308c5e
 
-%https://logicmoo.atlassian.net/rest/api/2/project/10000","id":"10000","key":"LOGICMOO","name":"logicmoo",
-% jira
-%Tz9AA2QNBQRrhWgWjkyqtccSKX1JGTcC
-%lmBFZbJPxk8d_tpNCqrIzu4bEkz5G5u_rXbkjDKSkjLkZ8sUKMJVslZY59ol3tjX
-
-% gitlab PAT u2Ly6Gg5_zRxtATXpWwQ
-% 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
-
-%Consumer key	testquality.com
-%Consumer name	Test Quality
-%Public key	MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCw1qpd8ymF0j3EmcgDUBbrErCrbwEQwBNXVGXmrsdMiJlgCcFQzv7auSYW/vvPqthGRnOpE4FoDs5CbXxadhM/iBOP9pL2Zv7jpsetDYW13/cWjMcyKBbPJaWhSqJvbX91Yu5dOC4AOt9RRB3AWDyFqqr9PT4mrxbdwRgW+DYa1wIDAQAB
-
-/*
-https://logicmoo.atlassian.net/ logicmoo@gmail.com zbXoGaR9CkFgvnjASzfRC751
-proj=LOGICMOO
-YourCloudInstanceName=logicmoo
-email=logicmoo@gmail.com
-APItoken=afbe63be30d1aa51e68a0638add67a1b
-APItoken=zbXoGaR9CkFgvnjASzfRC751
-
-899F3AE509C84709AAC2F094277FA962
-a08ebc5ecc032e40e420b5fdfd94500f422d061e1eddd205d30e29f5393129fe
-*/

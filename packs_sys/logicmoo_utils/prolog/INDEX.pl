@@ -41,6 +41,7 @@ index((disable_L), 0, assert_db_Local, assert_db_local).
 index((enable_L), 0, assert_db_Local, assert_db_local).
 index((each_call_cleanup), 3, ecc_legacy, each_call_cleanup).
 index((check_current_echo), 0, echo_files, echo_source_files).
+index((echo_source_file_no_catchup), 1, echo_files, echo_source_files).
 index((echo_source_file), 1, echo_files, echo_source_files).
 index((loading_source_file), 1, file_scope, file_scope).
 index((assert_until_eof), 2, file_scope, file_scope).
