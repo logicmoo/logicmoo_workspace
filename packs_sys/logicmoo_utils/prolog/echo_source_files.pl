@@ -14,6 +14,7 @@
 % File:  $PACKDIR/subclause_expansion/prolog/echo_files.pl
 :- module(echo_files, [
           check_current_echo/0,
+          echo_source_file_no_catchup/1,
           echo_source_file/1]).
 
 /** <module> Utility LOGICMOO_PREDICATE_STREAMS
@@ -43,6 +44,13 @@ This module allows running prolog files as echos.
 echo_source_file(F):- 
  (\+ t_l:echoing_file(F) -> asserta(t_l:echoing_file(F)) ; true),
  check_current_echo(F).
+
+echo_source_file_no_catchup(F):-
+ ignore((  
+   \+ t_l:echoing_file(F),
+   asserta(t_l:echoing_file(F)),!,
+   get_file_from_stream(S,F), character_count(S,Pos),
+   assume_caughtup_to(F,S,Pos))),!.
 
 check_current_echo:- 
    source_location(F,_), prolog_load_context(source,S), S\==F,!,
@@ -120,7 +128,6 @@ mco(F,S,I,Start,End,O):- mco_i(F,S,I,O),!,feedback_open(F),!.
 mco(F,S,I,Start,End,O):- feedback_open(F),fail.
 
 consume_white_space(_,S):- at_end_of_stream(S),!,fail.
-
 consume_white_space(F,S):- character_count(S,Start),get_file_from(F,Start,SubStr),
   open_string(SubStr,S2),consume_white_space_proxy(S2),character_count(S2,Consumed),
   NewPos is Start + Consumed,

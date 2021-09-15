@@ -95,7 +95,7 @@
 :- else.
 :- if((dmsg(this_test_might_need(:- expects_dialect(pfc))))).  :- endif.
 :- endif.
-:- if((prolog_load_context(source,F),echo_source_file(F))).  :- endif.
+:- if((prolog_load_context(source,F),echo_source_file_no_catchup(F))).  :- endif.
 
 % iTMS=
 % Access Key=eyJhbGciOiJIUzM4NCJ9.eyJjb21wYW55X25hbWUiOiJsb2dpY21vbyIsInByb2plY3RfaWQiOiI5MDUyOCIsImRhdGVfY3JlYXRlZCI6MTYzMTQ3NzIyOH0.g50WKW3Kx8eVF3WXi2u7n5GNQ4FYwkTHQHN0xFaX4ec7UZ7Hh9d8ZmctGNPYW871
@@ -121,4 +121,6 @@ email=logicmoo@gmail.com
 APItoken=afbe63be30d1aa51e68a0638add67a1b
 APItoken=zbXoGaR9CkFgvnjASzfRC751
 
+899F3AE509C84709AAC2F094277FA962
+a08ebc5ecc032e40e420b5fdfd94500f422d061e1eddd205d30e29f5393129fe
 */

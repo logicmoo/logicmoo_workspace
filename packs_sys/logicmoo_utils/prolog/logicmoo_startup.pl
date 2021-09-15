@@ -1014,7 +1014,7 @@ is_loads_file(_:SFile,File):-!,is_loads_file(SFile,File).
 %
 :- meta_predicate(if_file_exists(:)).
 if_file_exists(M:Call):- arg(1,Call,MMFile),strip_module(MMFile,_,File),
- (exists_source(File)-> must(M:Call);dmsg(warning,not_installing(M,Call))),!.
+ (exists_source(File)-> must(M:Call);nop(dmsg(warning,not_installing(M,Call)))),!.
 
 
 
@@ -1680,15 +1680,15 @@ qsave_bin_now(Clif):-
 %=======================================
 
 % These are mainly so we can later understand the restore phasing
-:- initialization(dmsg(init_phase(program)),program).
-:- initialization(dmsg(init_phase(after_load)),after_load).
-:- initialization(dmsg(init_phase(restore)),restore).
-:- initialization(dmsg(init_phase(restore_state)),restore_state).
-:- initialization(dmsg(init_phase(prepare_state)),prepare_state).
+:- initialization(nop(dmsg(init_phase(program))),program).
+:- initialization(nop(dmsg(init_phase(after_load))),after_load).
+:- initialization(nop(dmsg(init_phase(restore))),restore).
+:- initialization(nop(dmsg(init_phase(restore_state))),restore_state).
+:- initialization(nop(dmsg(init_phase(prepare_state))),prepare_state).
 
 
 %= Register a hook after restore
-:- initialization(init_why(during_boot,restore),restore).
+:- initialization(nop(init_why(during_boot,restore)),restore).
 %= Register a hook
 :- initialization(init_why(after_boot,program),program).
 %= Register a hook
